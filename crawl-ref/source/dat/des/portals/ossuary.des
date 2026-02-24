@@ -49,7 +49,7 @@ function ossuary_portal(e)
   e.kfeat("O = enter_ossuary")
   e.colour("123' = yellow")
   e.colour("c = white")
-  e.ftile("123'O = floor_sandstone")
+  e.ftile("123'OG = floor_sandstone")
   e.tile("c = stone_wall_ossuary")
 end
 
@@ -247,7 +247,6 @@ ENDMAP
 
 NAME: nicolae_ossuary_entry_monument
 TAGS: transparent
-FTILE: G = floor_sandstone
 : ossuary_portal(_G)
 MAP
 ..G..
@@ -281,7 +280,6 @@ ENDMAP
 
 NAME: nicolae_ossuary_entry_ruins
 TAGS: transparent
-FTILE: GO = floor_sandstone
 SUBST: c = -c, - = ''., ^ = '..
 : ossuary_portal(_G)
 MAP

@@ -1089,3 +1089,6 @@ vine_corner_SW VINE_OVERLAY_SW
 %blank 32 32
 %finish HIGHLIGHT_BRIGHT_YELLOW
 %syn RAY_MULTI
+
+%sdir effect
+east_wind OVERLAY_EAST_WIND

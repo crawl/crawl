@@ -2,7 +2,7 @@ enum: SP_TENGU
 monster: MONS_TENGU
 name: Tengu
 difficulty: Intermediate
-difficulty_priority: 40
+difficulty_priority: 15
 species_flags:
   - no_hair
   - no_ears

@@ -62,12 +62,12 @@ The contents of this text are:
                 consumable_shortcut, ability_slot, autofight_stop,
                 autofight_warning, autofight_fires, autofight_nomove_fires,
                 autofight_fire_stop, autofight_caught, autofight_wait,
-                autofight_prompt_range, automagic_enable, automagic_slot,
-                automagic_fight, automagic_stop, fail_severity_to_confirm,
-                easy_door, warn_hatches, enable_recast_spell, confirm_action,
-                regex_search, autopickup_search, bad_item_prompt,
-                auto_hide_spells, menu_arrow_control, single_column_item_menus,
-                show_paged_inventory
+                autofight_prompt_range, autofight_no_stampede, automagic_enable,
+		automagic_slot, automagic_fight, automagic_stop,
+		fail_severity_to_confirm, easy_door, warn_hatches,
+		enable_recast_spell, confirm_action, regex_search, autopickup_search,
+		bad_item_prompt, auto_hide_spells, menu_arrow_control,
+		single_column_item_menus, show_paged_inventory
 3-h     Message and Display Enhancements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
@@ -1487,6 +1487,11 @@ autofight_prompt_range = true
         if this option is true then the prompt will be displayed when autofight
         tries to walk towards an enemy, instead of only when actually trying
         to attack.
+
+autofight_no_stampede = false
+	When able to stampede as an anemocentaur, if this option is true,
+	autofight will opt to attack in place instead of pushing enemies,
+	cancelling stampede.
 
 automagic_enable = false
         Option to enable the old automagic system; new players are recommended

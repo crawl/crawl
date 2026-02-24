@@ -482,19 +482,6 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
-    case DUR_RAMPAGE_HEAL:
-    {
-        const int rh_pwr = you.props[RAMPAGE_HEAL_KEY].get_int();
-        if (rh_pwr > 0)
-        {
-            const int rh_lvl = you.get_mutation_level(MUT_ROLLPAGE);
-            inf.light_colour = rh_lvl < 2 ? LIGHTBLUE : LIGHTMAGENTA;
-            inf.light_text   = make_stringf(rh_lvl < 2 ? "MPRegen (%d)"
-                                                       : "Regen (%d)", rh_pwr);
-        }
-        break;
-    }
-
     case STATUS_INVISIBLE:
         _describe_invisible(inf);
         break;
@@ -1039,6 +1026,16 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_text = "Sunder";
         }
         break;
+
+    case DUR_INDOMITABLE:
+        inf.light_text = make_stringf("Indom (%d)", you.duration[DUR_INDOMITABLE] / 100);
+        inf.short_text = make_stringf("indomitable (%d)", you.duration[DUR_INDOMITABLE] / 100);
+        break;
+
+    case DUR_SALVO:
+        inf.light_text = make_stringf("Salvo (%d)", you.props[SALVO_KEY].get_int());
+        inf.short_text = make_stringf("salvo (%d)", you.props[SALVO_KEY].get_int());
+    break;
 
     default:
         if (!found)

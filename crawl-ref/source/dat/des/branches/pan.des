@@ -2450,7 +2450,7 @@ KMONS:  p = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
             revenant / tengu ; nothing / merfolk ; nothing / poltergeist / \
             felid / octopode ; nothing / djinni ; nothing / \
             gargoyle ; nothing / formicid ; nothing / vine stalker ; nothing / \
-            barachi ; nothing / gnoll ; nothing / armataur ; nothing / \
+            barachi ; nothing / gnoll ; nothing / centaur ; nothing / \
             oni ; nothing / goblin ; nothing
 NSUBST: t = 10:p / *:', b = 10:p / *:'
 KPROP:  p' = no_tele_into

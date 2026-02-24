@@ -271,6 +271,12 @@ formless_2
 trickster TRICKSTER
 spellclaws SPELLCLAWS
 mnemophage MNEMOPHAGE
+stampede_1 STAMPEDE
+stampede_2
+stampede_north STAMPEDE_NORTH
+stampede_south STAMPEDE_SOUTH
+stampede_east STAMPEDE_EAST
+stampede_west STAMPEDE_WEST
 
 # Makhleb mutations
 major_destruction_of_cocytus MAJOR_DESTRUCTION_OF_COCYTUS

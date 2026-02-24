@@ -2,7 +2,7 @@ enum: SP_SPRIGGAN
 monster: MONS_SPRIGGAN
 name: Spriggan
 difficulty: Intermediate
-difficulty_priority: 60
+difficulty_priority: 50
 aptitudes:
   xp: -1
   hp: -3

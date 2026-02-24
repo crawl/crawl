@@ -1,8 +1,8 @@
 %%%%
-Armataur
+Anemocentaur
 
-Scaled mammals the size of horses, Armataurs are fast-rolling and tenacious when
-pursuing enemies, but lack dexterity.
+Powerful equine hybrids who trace their ancestry to the four winds themselves,
+Anemocentaurs are at their strongest while galloping swiftly towards foes.
 %%%%
 Barachi
 

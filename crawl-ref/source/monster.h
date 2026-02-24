@@ -505,7 +505,8 @@ public:
              string source = "",
              string aux = "",
              bool cleanup_dead = true,
-             bool attacker_effects = true) override;
+             bool attacker_effects = true,
+             bool is_attack_damage = false) override;
     bool heal(int amount) override;
     void blame_damage(const actor *attacker, int amount);
     void blink(bool ignore_stasis = false) override;

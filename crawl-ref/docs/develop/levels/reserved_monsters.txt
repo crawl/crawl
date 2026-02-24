@@ -59,7 +59,7 @@ This list is sorted by branch usage, rather than by individual monsters:
    Pandemonium, or the orb run.
  * The following monsters are essentially player species dummies that should
    only be deployed as decoration behind glass or corpses rather than as enemies
-   to fight in-and-of themselves: armataurs, barachi, demigods, djinn,
+   to fight in-and-of themselves: barachi, demigods, djinn,
    colourless draconians, dwarves, felids, formicids, octopodes, oni,
    poltergeists, revenants, and vine stalkers.
 

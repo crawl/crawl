@@ -2525,15 +2525,16 @@ KMONS:   M = merfolk siren
 KMONS:   N = merfolk avatar
 KMONS:   S = satyr
 KFEAT:   N = w
-SUBST:   ' = xx", " = WW., - = Www, ` = _x
-NSUBST:  N = N / w, < = { / [[< / ((< / <, p = M / 1=M. / 1=MS... / ., \
-         q = M / 1=M. / 1=MS... / ., r = S / 1=S. / 1=SM... / .
-SHUFFLE: {[(
+NSUBST:  N = 1:N / *:w, < = 1:{ / 1:[[< / 1:((< / <, p = M / 1:M. / 1:MS... / *:.
+NSUBST:  q = 1:M / 1:M. / 1:MS... / ., r = 1:S / 1:S. / 1:SM... / *:.
+SHUFFLE: {[(, +- / +- / +- / +- / +- / +- / +- / +- / zz
+NSUBST:  - = 1 = x:5 .:4 / *:.
+SUBST:   ' = xx", " = WW., - = Www, ` = _x, z = x
 CLEAR:   _
 : decorative_floor(_G, 'V', "floral vase")
 MAP
         `x++x`
-       `xx''xx`
+       `xx--xx`
        xx'rr'xx
       `xxr..rxx`
       xxx."".xxx

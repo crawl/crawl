@@ -3515,22 +3515,24 @@ string get_monster_equipment_desc(const monster_info& mi,
     }
 #undef uninteresting
 
+    vector<string> item_descriptions;
+
+    // Dancing weapons have all their weapon information in their full_name, so
+    // we don't need to add another weapon description here (see Mantis 11887).
+    if (!weap.empty() && !mons_class_is_animated_weapon(mi.type)
+        && (level >= DESC_NOTEWORTHY_AND_WEAPON
+            || item_is_worth_listing(*mon_wpn)
+            || (mi.wields_two_weapons() && mon_alt && item_is_worth_listing(*mon_alt))))
+    {
+        item_descriptions.push_back(weap.substr(1)); // strip leading space
+    }
+
     // _describe_monster_weapon already took care of this
     if (mi.wields_two_weapons())
         mon_alt = 0;
 
     const bool mon_has_wand = mon_wnd;
     const bool mon_carry = mon_alt || mon_has_wand;
-
-    vector<string> item_descriptions;
-
-    // Dancing weapons have all their weapon information in their full_name, so
-    // we don't need to add another weapon description here (see Mantis 11887).
-    if (!weap.empty() && !mons_class_is_animated_weapon(mi.type)
-        && (level >= DESC_NOTEWORTHY_AND_WEAPON || item_is_worth_listing(*mon_wpn)))
-    {
-        item_descriptions.push_back(weap.substr(1)); // strip leading space
-    }
 
     // as with dancing weapons, don't claim armour echoes 'wear' their armour
     if (mon_arm && mi.type != MONS_ARMOUR_ECHO && mi.type != MONS_HAUNTED_ARMOUR)

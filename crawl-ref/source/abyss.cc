@@ -54,6 +54,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "rltiles/tiledef-dngn.h"
+#include "rltiles/tiledef-gui.h"
 #include "tileview.h"
 #include "timed-effects.h"
 #include "traps.h"
@@ -2235,6 +2236,8 @@ static void _corrupt_level_features_monster(const corrupt_env &cenv, monster mon
 
         const int roll = random2(3000);
 
+        bool shimmer = you.see_cell(*ri) && env.grid(*ri) != DNGN_SHALLOW_WATER &&
+                       !feat_is_deep_water(env.grid(*ri)) && !feat_is_lava(env.grid(*ri));
         // In the monster version of the effect we have an extra check here
         // which will prevent the effect from triggering _corrupt_square
         // on anything other than clear dungeon floor.
@@ -2246,10 +2249,22 @@ static void _corrupt_level_features_monster(const corrupt_env &cenv, monster mon
             if (roll < corrupt_perc_chance && _is_grid_corruptible(*ri))
                 _corrupt_square_monster(cenv, *ri);
             else if (roll < corrupt_flavor_chance && _is_grid_corruptible(*ri))
+            {
+                if (shimmer)
+                {
+                    flash_tile(*ri, random_choose(RED, BLUE, YELLOW,
+                                MAGENTA), 8, TILE_BOLT_CORRUPTION);
+                }
                 _corrupt_square_flavor(cenv, *ri);
+            }
         }
         else
         {
+            if (shimmer )
+            {
+                flash_tile(*ri, random_choose(RED, BLUE, YELLOW,
+                            MAGENTA), 8, TILE_BOLT_CORRUPTION);
+            }
             // chance to change the colour of any grid
             if (roll < corrupt_flavor_chance && _is_grid_corruptible(*ri))
                 _corrupt_square_flavor(cenv, *ri);
@@ -2332,8 +2347,6 @@ void lugonu_corrupt_level_monster(const monster &who)
     if (is_level_incorruptible_monster())
         return;
 
-    flash_view_delay(UA_MONSTER, MAGENTA, 200);
-
     corrupt_env cenv;
     _corrupt_choose_colours(&cenv);
     _corrupt_level_features_monster(cenv, who);
@@ -2345,8 +2358,8 @@ void lugonu_corrupt_level_monster(const monster &who)
     for (int i = 0; i < count; ++i)
         _spawn_corrupted_servant_near_monster(who);
 
-    // Allow extra time for the flash to linger.
-    scaled_delay(300);
+    // Allow extra time for the tile effects to linger.
+    scaled_delay(250);
 }
 
 /// Splash decorative corruption around the given space.

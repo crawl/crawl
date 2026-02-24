@@ -42,11 +42,6 @@ public:
     int       attack_number;
     int       effective_attack_number;
 
-    // A tally of all direct weapon + brand damage inflicted by this attack
-    // (including damage against cleave targets, both hits of quick blades,
-    // and aux attacks).
-    int       total_damage_done;
-
     list<actor*> cleave_targets;
 
     // Important: any parameters that may be set from outside before attack()
@@ -63,10 +58,6 @@ public:
     int          charge_pow;      // electric charge bonus damage
     bool         never_cleave;    // if this attack shouldn't trigger cleave
                                   // followups, even if it ordinariy would.
-    int          dmg_mult;        // percentage multiplier to max damage roll
-                                  // (0 = +0% damage, 50 = +50% damage, etc.)
-    int          flat_dmg_bonus;  // flat damage to add to this attack, pre-AC
-    int          to_hit_bonus;    // flat to-hit bonus on this attack
     bool         is_involuntary;  // whether this attack was forced (eg: by Vex)
                                   // and should neither prompt the player nor
                                   // upset their god.
@@ -114,7 +105,7 @@ private:
     bool using_weapon() const override;
     int weapon_damage() const override;
     int calc_mon_to_hit_base() override;
-    int apply_damage_modifiers(int damage) override;
+    int apply_mon_damage_modifiers(int damage) override;
     int calc_damage() override;
     bool apply_damage_brand(const char *what = nullptr) override;
 
@@ -226,7 +217,7 @@ private:
     item_def *offhand_weapon() const;
 
     // XXX: set up a copy constructor instead?
-    void copy_params_to(melee_attack &other);
+    void copy_params_to(melee_attack &other) const;
 
     bool do_followup_attacks(list<actor*>& targets, bool is_cleaving);
 

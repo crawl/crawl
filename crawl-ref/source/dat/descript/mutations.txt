@@ -1015,8 +1015,48 @@ accursed mutation
 
 Your accursed nature makes it harder to dispel malignant energies from your
 being, reducing the rate at which you can recover from Doom and Banes.
-# ------ Fakemut descriptions ------
 %%%%
+stampede mutation
+
+You rampage swiftly towards enemies and can continue to trample forward once
+you reach them, pushing entire lines of enemies backwards as you attack.
+
+Performing any action besides a rampage movement will end your stampede.
+
+The second level of this mutation augments your stampede with the blessing of
+one of the four winds, based on your highest skill:
+
+ North Wind: Melee weapon skills (except Short Blades)\n
+South Wind: Short Blades or Stealth\n
+East Wind:  Magic skills (except Spellcasting)\n
+West Wind:  Ranged Weapons skill\n
+%%%%
+North Wind's embodiment mutation
+
+You rapidly regenerate up to 70% of all damage you suffer while Stampeding. The
+rate of this regeneration increases with your maximum HP.
+%%%%
+West Wind's embodiment mutation
+
+Whenever you rampage towards foes while wielding a ranged weapon, you also fire
+a penetrating shot that does increased damage and your next normal attack
+becomes empowered to fire at multiple foes at once.
+%%%%
+East Wind's embodiment mutation
+
+Whenever you Rampage, you regain a small percentage of your maxmimum MP and
+unleash a bitter wind that makes all enemies within 2 spaces of you Exposed,
+increasing the damage they take from non-attack sources by 35% and also their
+chance to be hit or affected by them.
+
+Additionally, casting spells will not cause you to stop Stampeding.
+%%%%
+South Wind's embodiment mutation
+
+Your stealth is increased by 50% while Rampaging and whenever you successfully
+stab an enemy, your next Rampage movement becomes instant.
+%%%%
+# ------ Fakemut descriptions ------
 vampire fangs mutation
 
 When you perform a stab attack against a living monster with blood, you heal for

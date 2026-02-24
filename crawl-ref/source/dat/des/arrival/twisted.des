@@ -108,7 +108,7 @@ KMONS:   U = vine stalker ; nothing
 KMONS:   V = barachi ; nothing
 KMONS:   W = gnoll ; nothing
 KMONS:   X = djinni ; nothing
-KMONS:   Y = armataur ; nothing
+KMONS:   Y = centaur ; nothing
 KMONS:   Z = oni ; nothing
 KMONS:   1 = goblin ; nothing
 SUBST:   - = ABCDEFGHIJKLMNOPQRSTUVWXYZ1
@@ -144,7 +144,7 @@ KMONS: M = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
            revenant / tengu ; nothing / merfolk ; nothing / poltergeist / \
            felid / octopode ; nothing / djinni ; nothing / \
            gargoyle ; nothing / formicid ; nothing / vine stalker ; nothing / \
-           barachi ; nothing / gnoll ; nothing / armataur ; nothing / \
+           barachi ; nothing / gnoll ; nothing / centaur ; nothing / \
            oni ; nothing / goblin ; nothing
 # Player monsters, zombie versions (undead, vine stalkers, gargoyles and djinni
 # don't leave corpses):
@@ -152,7 +152,7 @@ KMONS: N = human zombie / elf zombie / dwarf zombie / kobold zombie / \
            naga zombie / troll zombie / draconian zombie / demigod zombie / \
            spriggan zombie / minotaur zombie / demonspawn zombie / \
            tengu zombie / merfolk zombie / felid zombie / octopode zombie / \
-           formicid zombie / barachi zombie / gnoll zombie / armataur zombie / \
+           formicid zombie / barachi zombie / gnoll zombie / centaur zombie / \
            oni zombie / goblin zombie
 # Player monsters, skeletonish versions (octopodes and formicids drop out
 # because they have no bones):
@@ -162,7 +162,7 @@ KMONS: N = human zombie / elf zombie / dwarf zombie / kobold zombie / \
 :           "draconian " .. d .. " / demigod " .. d .. " / spriggan " .. d .. " / " ..
 :           "minotaur " .. d .. " / demonspawn " .. d .. " / tengu " .. d .. " / " ..
 :           "merfolk " .. d .. " / felid " .. d .. " / barachi " .. d .. " / " ..
-:           "gnoll " .. d .. " / armataur " .. d .. " / oni " .. d .. " / " ..
+:           "gnoll " .. d .. " / centaur " .. d .. " / oni " .. d .. " / " ..
 :           "goblin " .. d .. " / revenant")
 # And now for something completely different (if any of these turn out to be
 # able to escape or project spells out of their cells, they should be removed):
@@ -704,7 +704,7 @@ KMONS:  ! = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
             revenant / tengu ; nothing / merfolk ; nothing / poltergeist / \
             felid / octopode ; nothing / djinni ; nothing / \
             gargoyle ; nothing / formicid ; nothing / vine stalker ; nothing / \
-            barachi ; nothing / gnoll ; nothing / armataur ; nothing / \
+            barachi ; nothing / gnoll ; nothing / centaur ; nothing / \
             oni ; nothing / goblin ; nothing
 KPROP:  Kw'! = no_tele_into
 KMASK:  '! = no_item_gen
@@ -738,7 +738,7 @@ KMONS:  ! = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
             revenant / tengu ; nothing / merfolk ; nothing / poltergeist / \
             felid / octopode ; nothing / djinni ; nothing / \
             gargoyle ; nothing / formicid ; nothing / vine stalker ; nothing / \
-            barachi ; nothing / gnoll ; nothing / armataur ; nothing / \
+            barachi ; nothing / gnoll ; nothing / centaur ; nothing / \
             oni ; nothing / goblin ; nothing
 KPROP:  Kw'! = no_tele_into
 KMASK:  '! = no_item_gen

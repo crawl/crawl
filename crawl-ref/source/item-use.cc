@@ -1286,11 +1286,15 @@ bool warn_about_changing_gear(const vector<item_def*>& to_remove, item_def* to_e
             needs_delay = true;
     }
 
-    if (needs_delay && !i_feel_safe(true)
-        && !yesno("Spend multiple turns changing equipment while enemies are nearby?", true, 'n'))
+    string reason;
+    if (needs_delay && !i_feel_safe(false, false, false, true, -1, &reason))
     {
-        canned_msg(MSG_OK);
-        return false;
+        string warning = make_stringf("Spend multiple turns changing equipment while %s?", reason.c_str());
+        if (!yesno(warning.c_str(), true, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
     }
 
     // Check whether removing any of this sequence of items would cause us to

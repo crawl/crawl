@@ -282,7 +282,7 @@ static const armour_def Armour_prop[] =
     }},
 
     // Following all ARM_ entries for the benefit of util/gather_items
-    DRAGON_ARMOUR(STEAM,       "steam",                   5,   0,   400,
+    DRAGON_ARMOUR(STEAM,       "steam",                   5,   0,   375,
         ARMF_RES_STEAM),
     DRAGON_ARMOUR(ACID,        "acid",                    6,  -50,  400,
         ARMF_RES_CORR),
@@ -298,7 +298,7 @@ static const armour_def Armour_prop[] =
         ARMF_RES_NEG),
     DRAGON_ARMOUR(STORM,       "storm",                  10, -150,  650,
         ARMF_RES_ELEC),
-    DRAGON_ARMOUR(SHADOW,      "shadow",                 11, -150,  650,
+    DRAGON_ARMOUR(SHADOW,      "shadow",                 11, -150,  575,
         ARMF_STEALTH),
     DRAGON_ARMOUR(GOLDEN,      "golden",                 12, -230,  800,
         ARMF_RES_FIRE | ARMF_RES_COLD | ARMF_RES_POISON),

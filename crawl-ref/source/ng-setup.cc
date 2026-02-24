@@ -631,6 +631,8 @@ static void _setup_generic(const newgame_def& ng,
     if (you.has_mutation(MUT_INNATE_CASTER))
         cleanup_innate_magic_skills();
 
+    init_four_winds();
+
     // Apply autoinscribe rules to inventory.
     request_autoinscribe();
     autoinscribe();

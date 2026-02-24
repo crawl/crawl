@@ -63,6 +63,9 @@ function hall_of_blades_extra_rewards(e)
     e.kitem("d = scroll of enchant weapon pre_id q:1")
     e.kitem("e = scroll of brand weapon pre_id q:1")
     e.kitem("f = blade talisman / blade talisman randart w:2")
+    e.kitem("g = manual of maces & flails /  manual of axes / \
+                 manual of polearms / manual of staves / \
+                 manual of long blades / manual of short blades")
 end
 
 -- Lua functions to simplify Elf:$
@@ -1029,10 +1032,10 @@ ENDMAP
 NAME:  minmay_elf_necromancy
 TAGS:  misc_elf_vault
 DEPTH: Elf
-MONS:  elf zombie w:4 / large abomination w:4 / \
-       necromancer w:3 / nothing
+MONS:  elf zombie w:4 / large abomination w:4 / necromancer w:3 / nothing
 KMONS: 2 = deep elf death mage
 KITEM: 2 = randbook disc:necromancy slevels:16
+FTILE: .12+ = floor_necro_squares
 MAP
 xxxxxxxxxxx
 xxx1..x112x
@@ -1051,7 +1054,9 @@ DEPTH:  Elf
 MONS:   deep elf pyromancer w:15 / deep elf zephyrmancer w:15 / nothing
 KMONS:  2 = deep elf sorcerer w:90 / deep elf annihilator / deep elf demonologist
 KITEM:  2 = randbook disc:conjuration disc2:summoning slevels:16
+KFEAT:  z = x
 SUBST:  x : xxc, G : Gm, m : mmcxb
+TILE:   z = wall_baleful
 : vault_metal_statue_setup(_G, "G", "arcane conduit")
 MAP
 ...........1............
@@ -1063,7 +1068,7 @@ MAP
 ..mmmm..1.........mmmm..
  ..mmmm......1...mmmm.1
   ..mmmmm......mmmmm..
-   ...mmxxx++xxxmm...
+   ...mmxxz++zxxmm...
      1..xx%..%xx...
       ..x......x..
        .x......x1
@@ -1104,29 +1109,34 @@ MAP
         ...
 ENDMAP
 
-NAME:  minmay_elf_demonology
-TAGS:  misc_elf_vault transparent
-DEPTH: Elf
-KMONS: 12 = deep elf pyromancer / deep elf zephyrmancer
-KMONS: 3 = deep elf demonologist w:90 / deep elf sorcerer / deep elf high priest
-KITEM: 3 = randbook disc:summoning slevels:16
-SUBST: 1 = 1., 2 = 2'
-FTILE: '23% : floor_mystic_chasm / floor_hall
+NAME:    minmay_elf_demonology
+TAGS:    misc_elf_vault transparent
+DEPTH:   Elf
+KMONS:   123 = deep elf pyromancer / deep elf zephyrmancer
+KMONS:   45 = deep elf demonologist w:90 / deep elf sorcerer / \
+              deep elf high priest
+KITEM:   45 = randbook disc:summoning slevels:16
+KFEAT:   z = x
+SUBST:   1 = 1., 2 = 2'
+SHUFFLE: 24'y / 35"z
+SUBST:   y = x, " = .
+FTILE:   '23% : floor_mystic_chasm
+TILE:    z = wall_baleful
 MAP
         ..
        ....
       ......
      ..1xx...
     ..'xxxx'..
-   ..''xxxx2'1.
+   ..''xyyx2'1.
   ..'2''xx''''..
  ..xx'''''2''xx1.
-..xxxx''xx''xxxx..
-..xxxx2x'3x'xxxx..
+..xxyx''xx''xyxx..
+..xxyx2x'4x'xyxx..
  ..xx''x%'x''xx..
   .'2'''xx''''2.
    .'xx''''xx2.
-   .xxxx''xxxx.
+   .xyyx''xyyx.
    .xxxx1.xxxx.
    ..xx...1xx..
     ..1.......
@@ -1335,25 +1345,27 @@ TAGS:  transparent
 DEPTH: Elf:2-
 MONS:  deep elf pyromancer / deep elf zephyrmancer / thermic dynamo w:2
 MONS:  deep elf death mage / deep elf demonologist
-KFEAT: v = general shop type:Elven suffix:Fire count:7 ; \
+KFEAT: C = general shop type:Elven suffix:Fire count:7 ; \
            scroll of immolation w:5 | \
            ring of protection from fire w:10 | \
            any weapon ego:flaming w:4 | hand cannon ego:flaming w:4 | \
            wand of flame w:4 | any armour ego:fire_resistance w:9 | \
            staff of fire w:7 | randbook disc:fire w:20
+KFEAT: z = x
 SUBST: ? = .l1
 SUBST: - = .l
+TILE:  z = wall_baleful
 MAP
 .............
 .xxxx-..-xxxx.
 .xllll-.llllx.
 .xllll.-llllx.
-.xllll-.llllx.
-.-lll?..vlll-.
+.xllll-.llllz.
+.-lll?..Clll-.
 ...-..12...-..
 ..-.-.11..-.-.
 .-lll?..?lll-.
-.xllll.-llllx.
+.zllll.-llllx.
 .xllll-.llllx.
 .xllll.-llllx.
 .xxxx...-xxxx.
@@ -1687,6 +1699,7 @@ KMONS: 3 = lost soul / weeping skull / spectral deep elf blademaster / \
            deep elf knight simulacrum
 KFEAT: 1V = V
 SUBST: 2 = 22., 3 = 33., D = 32., G = G:85 S B:5
+FTILE: .+%*|12GVSB = floor_necro_squares
 : vault_granite_statue_setup(_G, "G", "gravestone")
 MAP
 cccccccccccccccccccccc
@@ -1806,17 +1819,18 @@ MONS:  patrolling dancing weapon ; short sword ego:distortion \
            | whip ego:distortion | spear ego:distortion
 MONS:  deep elf sorcerer / deep elf demonologist
 KFEAT: E = enter_abyss
-KFEAT: - = x
+KFEAT: -z = x
 FTILE: DE'- = floor_nerves
 TILE:  - = wall_abyss
+TILE:  z = wall_baleful
 MAP
-   ...x
+   ...z
    ....x
   ...11.x
 ....1'''-x
 ...1'''2-x
 ..1'''''-x
-x.1'''3--x
+z.1'''3--x
  x.'2'--xx
   x----xx
    xxxxx
@@ -2482,8 +2496,9 @@ NAME:     elven_hall_of_blades_hangedman_original
 ORIENT:   north
 : hall_of_blades_monsters(_G)
 : hall_of_blades_extra_rewards(_G)
-# Two enchant weapon scrolls, third or a brand weapon, coinflip for a talisman.
-SUBST:    e = ed, f = f.
+# Two enchant weapon scrolls, third or a brand weapon,
+# 33% chance for a blade talisman or 2% chance for a weapons manual.
+SUBST:    e = ed, f = f:33 g:2 .:65
 SHUFFLE:  CD / CD / DC / DC / DD
 SUBST:    C = c, D = ., E : c--, F : c--, c : cv
 : hall_of_blades_setup(_G, "-")
@@ -2545,7 +2560,7 @@ WEIGHT:   5
 ORIENT:   north
 : hall_of_blades_monsters(_G)
 : hall_of_blades_extra_rewards(_G)
-SUBST:    e = ed, f = f.
+SUBST:    e = ed, f = f:33 g:2 .:65
 SHUFFLE:  CD / CD / DC / DC / DD
 SUBST:    C = c, D = ., E : c--, F : c--, c : cv
 NSUBST:   . = 6=1 / 3=2 / 34 / 4=4 / 2=42 / 6=14...
@@ -2594,7 +2609,7 @@ ORIENT:   northwest
 : hall_of_blades_monsters(_G)
 KMONS:    8 = patrolling dancing weapon ; dagger good_item | mundane falchion w:6
 : hall_of_blades_extra_rewards(_G)
-SUBST:    e = ed, f = f.
+SUBST:    e = ed, f = f:33 g:2 .:65
 : if crawl.one_chance_in(4) then
 SUBST:    FJH = b
 : else
@@ -2664,7 +2679,7 @@ ORIENT:   north
 : hall_of_blades_monsters(_G)
 KMONS:    E = dancing weapon
 : hall_of_blades_extra_rewards(_G)
-SUBST:    e = ed, f = f.
+SUBST:    e = ed, f = f:33 g:2 .:65
 # 1/4 chance each of the scalloped edges being 0/1/2/3 tiles around.
 SUBST:    P : Q., Q : RR., R : ccc.
 : hall_of_blades_setup(_G, "7-")

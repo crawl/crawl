@@ -1111,9 +1111,9 @@ xx............xxxsssxxxxxxx...xx
   xx---xxxxxxxxx...S..x.....xxxx
  xx-----xxxxxxxxx.xx.R...Sxxx
  x---A---xxxxxccccc.R.R.ccccc
- x-------xxxxxc...cccFccc...c
- xx--<--xxxxxxc.f...FEF...h.c
-  xx---xxxxxxxc...cc*i*cc...c
+ x-------xxxxxc*.$cccFccc$.*c
+ xx--<--xxxxxxc.....FEF.....c
+  xx---xxxxxxxcf.$cc*i*cc$.hc
    xxxxxxxxxxxcccccccbccccccc
          xxxxx
 ENDMAP

@@ -269,7 +269,7 @@ Willpower
 
 Size
   Different species have different sizes: Spriggans and Felids are very small;
-  Kobolds are small; Oni and Trolls are large; Nagas and Armataurs are large
+  Kobolds are small; Oni and Trolls are large; Nagas and Anemocentaurs are large
   with a medium torso; all other species are medium-sized. Many talismans will
   change your size. Size affects your evasion: the smaller your character, the
   more evasive it is. On the other hand, characters of larger than medium size
@@ -1646,17 +1646,16 @@ Deep Elves (DE)
    melee combat and physical defence, although they are capable at using bows
    and other ranged weapons.
 
-Armataurs (At)
-  The Armataurs are a large, scaled mammalian species, walking on four feet
-  and swinging a powerful tail behind them. Their elephant-back armies
-  terrorise the lands outside the Dungeon.
+Barachim (Ba)
+  Barachim are an amphibious humanoid species, spawned at the dawn of time as
+  servants for the gods. Inevitably, they rebelled and fled into the mortal
+  world; but even uncounted years later, the darkness still flees at their
+  approach, remembering those who they once served.
 
-  Armataurs instinctively roll when moving toward foes, getting a free move and
-  regenerating magic. They have great aptitudes with armour and shields, though
-  their body shape reduces the protection offered by body armour early on. At
-  higher levels they also regenerate both health and magic when rolling, making
-  them truly resilient.
-
+  Barachim's most remarkable trait is their grossly overmuscled legs, which
+  allow them to leap great distances. When not leaping, they are somewhat
+  slow-moving, and the long sight-lines that their heritage creates can be a
+  major disadvantage, but they can master almost any skill.
 
 Intermediate Species
 ====================
@@ -1774,16 +1773,18 @@ Oni (On)
   Their large size prevents them from wearing most forms of armour, and are poor
   at dodging, relying on their enormous bulk to survive battles instead.
 
-Barachim (Ba)
-  Barachim are an amphibious humanoid species, spawned at the dawn of time as
-  servants for the gods. Inevitably, they rebelled and fled into the mortal
-  world; but even uncounted years later, the darkness still flees at their
-  approach, remembering those who they once served.
+Anemocentaur (An)
+  Anemocentaurs are hardy hybrids with the lower body of a horse and the torso
+  of a human. Distant descendants of the Four Winds, they can stampede swiftly
+  towards enemies in battle and trample entire groups of them backward. As they
+  become more experienced, one of the Four Winds will further augment their
+  combat prowess based on the skills they have trained the most.
 
-  Barachim's most remarkable trait is their grossly overmuscled legs, which
-  allow them to leap great distances. When not leaping, they are somewhat
-  slow-moving, and the long sight-lines that their heritage creates can be a
-  major disadvantage, but they can master almost any skill.
+  Their lineage gives them an excellent affinity for air and translocations
+  magic as well as invocations. Their defensive aptitudes are solid, though
+  their size impairs their evasion and unusual body shape reduces the benefit
+  they get from heavy armour. They learn many other skills slowly, but the
+  strength of their winds make them a force to be reckoned with nonetheless.
 
 Advanced Species
 ================
@@ -1896,7 +1897,7 @@ Nagas (Na)
   invisible creatures, and have tough skin, but their tails are relatively slow
   and cannot move them around as quickly as can other creatures' legs (this only
   affects their movement rate; all other actions are at normal speed). Like
-  Armataurs, their body shape also prevents them from gaining full protection
+  Anemocentaurs, their body shape also prevents them from gaining full protection
   from body armour. A Naga's biggest forte is stealth: Nagas are very good at
   moving unnoticed. Their tails eventually grow strong enough to constrict
   their foes in combat.
@@ -2243,7 +2244,7 @@ command to target a specific monster with a reaching attack, or use Autofight
 
 Finally, Unarmed Combat skill increases the accuracy, damage, and speed of
 attacks made while unarmed. Note that most auxiliary attacks, such as an
-Armataur's tail-slap or a Minotaur's headbutt, are not affected by Unarmed
+Draconian's tail-slap or a Minotaur's headbutt, are not affected by Unarmed
 Combat. The only exception is the off-hand punch attack granted by using
 neither weapon nor shield, which Unarmed Combat makes somewhat more effective.
 

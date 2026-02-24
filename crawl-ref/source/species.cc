@@ -358,10 +358,8 @@ namespace species
      */
     string walking_title(species_type sp)
     {
-        if (sp == SP_ARMATAUR)
-            return "Roll";
         // XXX: To form 'hopping' and 'hopper' properly
-        else if (sp == SP_BARACHI)
+        if (sp == SP_BARACHI)
             return "Hopp";
         return walking_verb(sp);
     }
@@ -770,6 +768,9 @@ void change_species_to(species_type sp)
 
     // Sanitize skills.
     fixup_skills();
+
+    you.prevailing_wind = -1;
+    update_four_winds(true);
 
     calc_hp();
     calc_mp();

@@ -107,6 +107,8 @@ void save_notes(writer&);
 void load_notes(reader&);
 void make_user_note();
 
+bool is_noteworthy_hp(int hp, int maxhp);
+
 /**
  * Disable notes in a dynamic scope. Restores the original note status when
  * the object goes out of scope or is otherwise destroyed.

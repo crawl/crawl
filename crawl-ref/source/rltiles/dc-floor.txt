@@ -536,6 +536,27 @@ mystic_chasm5
 mystic_chasm6
 mystic_chasm7
 
+%weight 14
+necro_squares00 FLOOR_NECRO_SQUARES
+necro_squares01
+necro_squares02
+necro_squares03
+%weight 6
+necro_squares04
+necro_squares05
+necro_squares06
+necro_squares07
+%weight 4
+necro_squares08
+necro_squares09
+%weight 2
+necro_squares10
+necro_squares11
+necro_squares12
+necro_squares13
+necro_squares14
+necro_squares15
+
 %sdir dngn/floor/grass
 %weight 12
 grass0 FLOOR_GRASS
@@ -638,10 +659,14 @@ floor_nerves5
 floor_nerves6
 
 %variation FLOOR_NERVES blue
-%hue 0 240
-%hue 15 255
-%hue 17 257
-%hue 18 258
+%hue 0 225
+%hue 15 218
+%hue 17 219
+%hue 18 215
+%lum 0 3
+%lum 15 3
+%lum 17 3
+%lum 18 3
 %repeat FLOOR_NERVES FLOOR_NERVES_BLUE
 %resetcol
 

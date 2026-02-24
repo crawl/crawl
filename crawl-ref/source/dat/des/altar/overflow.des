@@ -140,8 +140,8 @@ function callback.five_deadly_venoms(data, triggerable, triggerer, marker, ev)
 end
 
 function species_mock(e)
-  if you.race() == "Armataur" then
-    return "rat"
+  if you.race() == "Anemocentaur" then
+    return "wind drake"
   elseif you.race() == "Barachi" then
     return "cane toad"
   elseif you.race() == "Coglin" then
@@ -1966,6 +1966,7 @@ MONS:   zombie, wight, burial acolyte
 :   else
 MONS:   zombie, phantom, shadow imp, draugr ; dagger
 :   end
+FTILE:  .+?1234_ = floor_necro_squares
 : end
 NSUBST: ? = 1:_ / *:1
 SUBST:  1 = 1:30 2 3 4:5
@@ -2107,10 +2108,11 @@ MONS:    patrolling burial acolyte, patrolling shadow imp
 MONS:    kobold zombie / gnoll zombie, adder zombie / hound zombie
 SHUFFLE: ABCD
 NSUBST:  A = 1:2 / *:3, B = 1:2 / *:4
-SUBST:   C = $, D = .
+SUBST:   C = $, D = `
 SUBST:   X : x', Y : x', y : x., z : c.., G : Gxx
 : vault_metal_statue_setup(_G, "G", "soul conduit")
 CLEAR:   '
+FTILE:   `_$1234+ = floor_necro_squares
 : standard_overflow_setup(_G, { { "kikubaaqudgha", "_" } }, true)
 MAP
  Xxxxx.....xxxxY
@@ -2120,9 +2122,9 @@ xAxxxx.....xxxxxx
 xAAxGc..z..cxxxxx
 xx+xc.......xxxx
 ......cc+cc
-.y....c4.3c
-......+._.c
-.y....c3.1c
+.y....c4`3c
+......+`_`c
+.y....c3`1c
 ......ccccc
 xx+xc.
 xDDxxx
@@ -2198,7 +2200,7 @@ TILE:    G = dngn_statue_imp / dngn_statue_demonic_bust
 : standard_overflow_setup(_G, { { "makhleb", "_" } }, false)
 MAP
 xxxxxxxxxxxxxxx
-x............x
+x.............x
 x.ll.......ll.x
 x.ll'.._..'ll.x
 x.ll...3...ll.x
@@ -2254,7 +2256,8 @@ KMONS:  2 = spectral hound
 : end
 KFEAT:  X = x
 KPROP:  y' = bloody
-TILE:   X = wall_hall
+TILE:   X = wall_baleful / wall_hall_darkgray
+TILE:   c = dngn_stone_wall_darkgray
 SUBST:  ' = ., y = x, G = GGx
 : vault_metal_statue_setup(_G, "G", "mystic cage")
 : standard_overflow_setup(_G, { { "makhleb", "_" } }, true)
@@ -2266,9 +2269,9 @@ MAP
  xxxxxx.'yx
  xxxGxxy'.x
 xxxx.'y'.xx
-xXX.12'.xx
+xcc.12'.xx
 xXA_'.xxx
-xXX..xxx
+xcc..xxx
 xxxxxx
 ENDMAP
 
@@ -2279,12 +2282,13 @@ DEPTH:  D:4-7
 KMONS:  _ = patrolling hound
 KFEAT:  X = x
 SUBST:  y = xx., G = GXXX
-TILE:   X = wall_hall
+TILE:   X : wall_baleful / wall_hall_darkgray
+TILE:   c = dngn_stone_wall_darkgray
 : vault_metal_statue_setup(_G, "G", "mystic cage")
 : standard_overflow_setup(_G, { { "makhleb", "_" } }, true)
 MAP
  xxxxx
-xxXGXxx
+xxcGcxx
 xyXAXyx
 x.._..x
 xy...yx
@@ -2297,14 +2301,15 @@ TAGS:   transparent no_monster_gen
 # white imp depth
 DEPTH:  D:5-8
 MONS:   shadow imp w:2 / drude w:4 / crimson imp w:6
-TILE:   c = wall_hall
+KFEAT:  X = x
+TILE:   X = wall_hall
 FTILE:  A_'1 = floor_grey_dirt
 SUBST:  ' = .
 : standard_overflow_setup(_G, { { "makhleb", "_" } }, true)
 MAP
  xxxxx
-xxcccxx
-xwcAcwx
+xxXXXxx
+xwXAXwx
 xww_wwx
 xww1wwx
 x.w'w.x
@@ -5161,12 +5166,13 @@ ENDMAP
 NAME:   yredelemnul_altar_generic
 TAGS:   transparent decor
 KMONS:  f = withered plant
+FTILE:  '_ = floor_necro_squares
 : standard_overflow_setup(_G, { { "yredelemnul", "_" } }, true)
 MAP
 .....
-.f.f.
-.._..
-.f.f.
+.f'f.
+.'_'.
+.f'f.
 .....
 ENDMAP
 
@@ -5286,10 +5292,6 @@ NAME:   nicolae_yredelemnul_ghost_church
 TAGS:   transparent no_trap_gen
 WEIGHT: 5
 DEPTH:  D:3-
-KPROP:  dO' = no_tele_into
-KMASK:  dO' = no_monster_gen
-NSUBST: d = * / $ / %
-KFEAT:  _ = altar_yredelemnul
 : if you.depth() < 5 then
 KMONS:  O = spectral orc warrior
 : elseif you.depth() < 8 then
@@ -5300,6 +5302,10 @@ KMONS:  O = flayed ghost
 KMONS:  O = phantasmal warrior
 : end
 KMONS:  z = patrolling zombie
+NSUBST: d = * / $ / %
+KPROP:  'O$%* = no_tele_into
+KMASK:  'O$%* = no_monster_gen
+FTILE:  ='*O$%* = floor_necro_squares
 : standard_overflow_setup(_G, { { "yredelemnul", "_" } }, true)
 MAP
 xxxxxxxxxxx
@@ -6561,8 +6567,8 @@ SUBST: 2 = 12--
 MONS: mummy / wight / zombie / steam dragon draugr w:2 / \
       howler monkey draugr w:2 / centaur draugr w:2 / phantom w:5 / \
       bes kemwar w:5
-MONS: wraith / vampire / shadowghast / w:5 death knight / w:5 skeletal warrior
-MONS: flayed ghost / death knight
+MONS: wraith / vampire / shadowghast / freezing wraith w:5 / skeletal warrior w:5
+MONS: flayed ghost / phantasmal warrior
 NSUBST: 2 = 2 / 2-
 : end
 SUBST:  1 = 11-

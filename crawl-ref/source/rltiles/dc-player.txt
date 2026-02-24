@@ -113,6 +113,12 @@ djinni_gold_m
 djinni_purple_f
 djinni_purple_m
 coglin COGLIN
+anemocentaur_m ANEMOCENTAUR
+anemocentaur_f
+anemocentaur_cloud_m
+anemocentaur_cloud_f
+anemocentaur_sky_m
+anemocentaur_sky_f
 %rim 1
 formicid FORMICID
 vine_stalker_green_f VINE_STALKER
@@ -133,7 +139,6 @@ draconian_purple DRACONIAN_PURPLE
 draconian_red DRACONIAN_RED
 draconian_white DRACONIAN_WHITE DRACONIAN_LAST
 
-armataur ARMATAUR
 demigod_f DEMIGOD
 demigod_m
 spriggan_m SPRIGGAN
@@ -232,7 +237,7 @@ fungal_fisticloak_back FUNGAL_FISTICLOAK_BACK
 
 ### Must be before scarves to render behind the player!
 %sdir player/transform
-medusa_form_armataur_back MEDUSA_FORM_ARMATAUR
+medusa_form_anemocentaur_back MEDUSA_FORM_ANEMOCENTAUR
 medusa_form_humanoid_back MEDUSA_FORM_HUMANOID
 blade_form_humanoid BLADE_FORM_HUMANOID
 
@@ -572,7 +577,7 @@ justicar JUSTICAR
 %sdir player/transform
 maw_form0 MAW_FORM
 maw_form1
-quill_form_armataur QUILL_ARMATAUR
+quill_form_anemocentaur QUILL_ANEMOCENTAUR
 quill_form_djinn QUILL_DJINN
 quill_form_gargoyle QUILL_GARGOYLE
 quill_form_humanoid QUILL_HUMANOID
@@ -1129,7 +1134,7 @@ pj PJ
 torch2 TORCH2
 
 %sdir player/transform
-spore_form_armataur SPORE_FORM_ARMATAUR
+spore_form_anemocentaur SPORE_FORM_ANEMOCENTAUR
 spore_form_djinni SPORE_FORM_DJINNI
 spore_form_humanoid SPORE_FORM_HUMANOID
 spore_form_naga SPORE_FORM_NAGA
@@ -1427,7 +1432,7 @@ hood_purple HOOD_PURPLE
 hood_assassin HOOD_ASSASSIN
 
 %sdir player/transform
-medusa_form_armataur_front MEDUSA_FORM_ARMATAUR
+medusa_form_anemocentaur_front MEDUSA_FORM_ANEMOCENTAUR
 medusa_form_humanoid_front MEDUSA_FORM_HUMANOID
 
 %end_ctg
@@ -1445,3 +1450,9 @@ drcwing_purple PURPLE
 drcwing_red RED
 drcwing_white WHITE
 %end_ctg
+%rim 0
+stampeding_wind_default STAMPEDE_WIND
+stampeding_wind_north STAMPEDE_WIND_NORTH
+stampeding_wind_south STAMPEDE_WIND_SOUTH
+stampeding_wind_east STAMPEDE_WIND_EAST
+stampeding_wind_west STAMPEDE_WIND_WEST

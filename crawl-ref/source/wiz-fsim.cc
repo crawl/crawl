@@ -418,7 +418,7 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
         }
         else // otherwise, melee combat
         {
-            fight_melee(&you, &mon, false, &did_hit, true);
+            player_fight(&mon, false, &did_hit, true);
             if (did_hit)
                 fd.player.hits++;
         }
@@ -431,7 +431,7 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
     }
     else
     {
-        fight_melee(&mon, &you, false, &did_hit, true);
+        mons_fight(&mon, &you, &did_hit, true);
         int time_taken = 1000 / (mon.speed ? mon.speed : 10);
         fd.monster.time_taken += time_taken;
         fd.player.time_taken += time_taken;

@@ -382,9 +382,6 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_FIRE_RESISTANCE:
             case SPARM_SEE_INVISIBLE:
             case SPARM_SNIPING:
-            case SPARM_COMMAND:
-            case SPARM_DEATH:
-            case SPARM_RESONANCE:
             case SPARM_INTELLIGENCE:
             case SPARM_FLYING:
             case SPARM_STEALTH:
@@ -403,6 +400,12 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_PARRYING:
             case SPARM_MAYHEM:
                 valued += 50;
+                break;
+
+            case SPARM_COMMAND:
+            case SPARM_DEATH:
+            case SPARM_RESONANCE:
+                valued += 35;
                 break;
 
             case SPARM_POSITIVE_ENERGY:
@@ -711,7 +714,7 @@ unsigned int item_value(item_def item, bool ident)
         {
         case TALISMAN_DEATH:
         case TALISMAN_STORM:
-            valued += 400;
+            valued += 550;
             break;
 
         case TALISMAN_DRAGON:
@@ -740,11 +743,14 @@ unsigned int item_value(item_def item, bool ident)
             valued += 125;
             break;
 
+        case TALISMAN_PROTEAN:
+            valued += 100;
+            break;
+
         case TALISMAN_QUILL:
         case TALISMAN_INKWELL:
-        case TALISMAN_PROTEAN:
         default:
-            valued += 100;
+            valued += 75;
             break;
         }
         if (is_artefact(item))

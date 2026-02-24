@@ -715,10 +715,6 @@ A wizard fond of spectacle and destruction. They scorn the cowardice of other
 magicians, who hide from their foes rather than simply blasting them out of
 existence.
 %%%%
-armataur
-
-A curious quadraped, resembling a cross between an armadillo and a yaktaur.
-%%%%
 armour echo
 
 The sweat and toil of the armourer working leather and steel infuses an
@@ -1982,7 +1978,7 @@ for underhanded tactics.
 %%%%
 kobold blastminer
 
-A kobold, ready with multiple armaments to defends itself from the many
+A kobold, ready with multiple armaments to defend itself from the many
 dangers of the depths. The blastmote-packed cannon on its shoulder bears its
 maker's mark, and is fiercely loyal; it will fire for none other.
 %%%%

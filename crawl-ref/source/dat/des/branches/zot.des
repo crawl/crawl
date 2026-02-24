@@ -2644,11 +2644,11 @@ DEPTH:  Zot, !Zot:$
 ORIENT: centre
 MONS:   orb of fire, fire elemental
 MONS:   red draconian, any nonbase red draconian
-MONS:   efreet, sun moth
+MONS:   efreet, sun moth, red draconian scorcher
 : if dgn.zot_orb_type() == "orb of fire" then
 SUBST:  1 = 122, 6 = '
 : else
-NSUBST: 16 = 2:6 / * = 662
+NSUBST: 16 = 2:7 / * = 667
 : end
 SUBST:  3 = 322, 4 = 2:20 4:5 3:15 ':20, G : G.
 FTILE:  @ = floor_pebble_lightmagenta

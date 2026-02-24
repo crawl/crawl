@@ -337,8 +337,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_GRUNN:
     case TILEP_MONS_GNOLL_BOUDA:
     case TILEP_MONS_NESSOS_BOWLESS:
-    case TILEP_MONS_ARMATAUR:
-    case TILEP_MONS_PLAYER_SHADOW_ARMATAUR:
     case TILEP_MONS_TENGU:
     case TILEP_MONS_PLAYER_SHADOW_TENGU:
     case TILEP_MONS_TENGU_CONJURER:
@@ -1013,11 +1011,6 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_ARACHNE_STAVELESS:
         *ofs_x = -6;
         *ofs_y = 1;
-        break;
-
-    case TILEP_MONS_ARMATAUR:
-        *ofs_x = -9;
-        *ofs_y = 2;
         break;
 
     case TILEP_MONS_WIGLAF:

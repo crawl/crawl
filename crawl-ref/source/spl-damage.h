@@ -124,7 +124,8 @@ spret cast_ignition(const actor *caster, int pow, bool fail);
 
 spret cast_starburst(int pow, bool fail, bool tracer=false);
 
-void seeker_attack(monster& seeker, actor& target);
+void seeker_attack(monster& seeker, actor& target,
+                   coord_def attack_pos = coord_def());
 
 spret cast_hailstorm(int pow, bool fail, bool tracer=false);
 

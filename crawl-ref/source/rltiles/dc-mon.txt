@@ -710,7 +710,7 @@ terence MONS_TERENCE
 player_shadow MONS_PLAYER_SHADOW
 %sdir mon/nonliving/shadows
 %rim 0
-shadow_armataur MONS_PLAYER_SHADOW_ARMATAUR
+shadow_anemocentaur MONS_PLAYER_SHADOW_ANEMOCENTAUR
 shadow_barachi MONS_PLAYER_SHADOW_BARACHI
 shadow_coglin MONS_PLAYER_SHADOW_COGLIN
 shadow_demigod MONS_PLAYER_SHADOW_DEMIGOD
@@ -906,7 +906,6 @@ minotaur MONS_MINOTAUR
 %rim 0
 jorogumo MONS_JOROGUMO
 fenstrider_witch MONS_FENSTRIDER_WITCH
-armataur MONS_ARMATAUR
 %rim 1
 tengu MONS_TENGU
 tengu_conjurer MONS_TENGU_CONJURER
@@ -1455,7 +1454,7 @@ serpent_form_gargoyle TRAN_SERPENT_GARGOYLE
 serpent_form_felid TRAN_SERPENT_FELID
 statue_form_humanoid TRAN_STATUE_HUMANOID
 %syn TRAN_STATUE_EQUIP_FIRST
-statue_form_armataur TRAN_STATUE_ARMATAUR
+statue_form_anemocentaur TRAN_STATUE_ANEMOCENTAUR
 statue_form_naga TRAN_STATUE_NAGA
 statue_form_octopode TRAN_STATUE_OCTOPODE
 statue_form_djinni TRAN_STATUE_DJINN
@@ -1475,7 +1474,7 @@ dragon_form_octopode TRAN_DRAGON_OCTOPODE
 dragon_form_felid TRAN_DRAGON_FELID
 lich_form_humanoid TRAN_LICH_HUMANOID
 %syn TRAN_LICH_EQUIP_FIRST
-lich_form_armataur TRAN_LICH_ARMATAUR
+lich_form_anemocentaur TRAN_LICH_ANEMOCENTAUR
 lich_form_djinn TRAN_LICH_DJINN
 lich_form_gargoyle TRAN_LICH_GARGOYLE
 lich_form_naga TRAN_LICH_NAGA
@@ -1487,7 +1486,7 @@ tree_form TRAN_TREE
 bat_swarm_form TRAN_BAT_SWARM
 bat_swarm_form_gargoyle TRAN_BAT_SWARM_GARGOYLE
 vampire_form_humanoid TRAN_VAMPIRE
-vampire_form_armataur TRAN_VAMPIRE_ARMATAUR
+vampire_form_anemocentaur TRAN_VAMPIRE_ANEMOCENTAUR
 vampire_form_djinn TRAN_VAMPIRE_DJINN
 vampire_form_gargoyle TRAN_VAMPIRE_GARGOYLE
 vampire_form_felid TRAN_VAMPIRE_FELID
@@ -1497,9 +1496,10 @@ vampire_form_tengu TRAN_VAMPIRE_TENGU
 mushroom_form TRAN_MUSHROOM
 wisp_form TRAN_WISP
 storm_form TRAN_STORM_HUMANOID
+storm_form_anemocentaur TRANS_STORM_ANEMOCENTAUR
 storm_form_felid TRAN_STORM_FELID
 storm_form_octopode TRAN_STORM_OCTOPODE
-slaughter_form_armataur TRAN_SLAUGHTER_ARMATAUR
+slaughter_form_anemocentaur TRAN_SLAUGHTER_ANEMOCENTAUR
 slaughter_form_felid TRAN_SLAUGHTER_FELID
 slaughter_form_gargoyle TRAN_SLAUGHTER_GARGOYLE
 slaughter_form_humanoid TRAN_SLAUGHTER_HUMANOID
@@ -1511,7 +1511,7 @@ quill_form_felid TRAN_QUILL_FELID
 quill_form_octopode TRAN_QUILL_OCTOPODE
 hive_form_felid TRAN_HIVE_FELID
 hive_form_octopode TRAN_HIVE_OCTOPODE
-aqua_form_armataur TRAN_AQUA_ARMATAUR
+aqua_form_anemocentaur TRAN_AQUA_ANEMOCENTAUR
 aqua_form_djinn TRAN_AQUA_DJINN
 aqua_form_felid TRAN_AQUA_FELID
 aqua_form_gargoyle TRAN_AQUA_GARGOYLE
@@ -1523,13 +1523,13 @@ sphinx_form_barding TRAN_SPHINX_BARDING
 sphinx_form_gargoyle TRAN_SPHINX_GARGOYLE
 sphinx_form_barding_gargoyle TRAN_SPHINX_BARDING_GARGOYLE
 sphinx_form_felid TRAN_SPHINX_FELID
-werewolf_form_armataur TRAN_WEREWOLF_ARMATAUR
 werewolf_form_djinn TRAN_WEREWOLF_DJINN
 werewolf_form_felid TRAN_WEREWOLF_FELID
 werewolf_form_gargoyle TRAN_WEREWOLF_GARGOYLE
 werewolf_form_humanoid TRAN_WEREWOLF_HUMANOID
 werewolf_form_naga TRAN_WEREWOLF_NAGA
 werewolf_form_octopode TRAN_WEREWOLF_OCTOPODE
+werewolf_form_anemocentaur TRAN_WEREWOLF_ANEMOCENTAUR
 walking_scroll_form TRAN_WALKING_SCROLL
 fortress_crab_form TRAN_FORTRESS_CRAB
 fortress_crab_form_gargoyle TRAN_FORTRESS_CRAB_GARGOYLE

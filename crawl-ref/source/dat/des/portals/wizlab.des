@@ -1537,6 +1537,7 @@ TILE:       W = dngn_zonguldrok_shrine
 TILE:       c = wall_stone_shrine
 TILE:       t = dngn_tree_dead
 FTILE:      " = floor_nerves_darkgray
+FTILE:      `WRS = floor_necro_squares
 LFLOORCOL:  darkgrey
 LROCKCOL:   darkgrey
 LFLOORTILE: floor_tomb
@@ -1569,12 +1570,12 @@ x?!G.G.G.cdddcdddc.G.G.G!?x
 x?!.G.G.ccdd'+'ddcc.G.G.!?x
 x?!G.Gcccddcc+ccddcccG.G!?x
 x?!.G.c$dddcLLLcddd$c.G.!?x
-x?!G.Gc$$ccc'''ccc$$cG.G!?x
-x?!.G.c$$c'''''''c$$c.G.!?x
-x?!G.Gcccc'RW'WS'ccccG.G!?x
-x?!.G.c''+'RR'SS'+''c.G.!?x
-x?!G.Gc'3ccc'''ccc2'cG.G!?x
-x?!.G.c''3'c'''c'1''c.G.!?x
+x?!G.Gc$$ccc```ccc$$cG.G!?x
+x?!.G.c$$c```````c$$c.G.!?x
+x?!G.Gcccc`RW`WS`ccccG.G!?x
+x?!.G.c''+`RR`SS`+''c.G.!?x
+x?!G.Gc'3ccc```ccc2'cG.G!?x
+x?!.G.c''3'c```c'1''c.G.!?x
 x?!G.GcCc''ccccc1'cCcG.G!?x
 x?!.G.G.cc'''+'''cc.G.G.!?x
 x?!G.G.G.c'''c'''c.G.G.G!?x

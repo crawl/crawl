@@ -108,7 +108,7 @@ end
 
 
 species = {"mountain dwarf", "minotaur", "merfolk", "gargoyle", "draconian", "troll", "deep elf",
-           "armataur", "gnoll", "human", "kobold", "revenant", "djinni", "spriggan", "tengu", "oni",
+           "anemocentaur", "gnoll", "human", "kobold", "revenant", "djinni", "spriggan", "tengu", "oni",
            "barachi", "coglin", "vine stalker", "poltergeist", "demigod", "formicid", "naga",
            "octopode", "felid", "mummy"}
 

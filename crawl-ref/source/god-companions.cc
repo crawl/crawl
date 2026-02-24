@@ -77,6 +77,7 @@ void remove_bound_soul_companion()
             mons = &entry.second.mons.mons;
         if (mons->type == MONS_BOUND_SOUL)
         {
+            mprf("%s is freed.", mons->name(DESC_THE, true).c_str());
             remove_companion(mons);
             return;
         }

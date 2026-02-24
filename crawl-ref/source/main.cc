@@ -129,6 +129,7 @@
 #include "startup.h"
 #include "stash.h"
 #include "state.h"
+#include "stepdown.h"
 #include "stringutil.h"
 #include "tags.h"
 #include "target.h"
@@ -2466,7 +2467,7 @@ void process_command(command_type cmd, command_type prev_cmd)
                                             ? " and return to the main menu"
                                             : " and quit the game")))
         {
-            ouch(INSTANT_DEATH, KILLED_BY_QUITTING);
+            player_die(KILLED_BY_QUITTING);
         }
         else
             canned_msg(MSG_OK);
@@ -2515,6 +2516,7 @@ static void _prep_input()
     you.reprisals.clear();
     you.triggers_done.init(0);
     you.attempted_attack = false;
+    you.pos_at_turn_start = you.pos();
 
     you.redraw_status_lights = true;
     you.redraw_title = true;
@@ -2671,7 +2673,7 @@ void world_reacts()
         // Please do not give it a custom ktyp or make it cool in any way
         // whatsoever, because players are insane. Usually, not being dragged
         // down by sanity is good, but this is not the case here.
-        ouch(INSTANT_DEATH, KILLED_BY_QUITTING);
+        player_die(KILLED_BY_QUITTING);
     }
 
     handle_time();

@@ -79,11 +79,10 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
-    total_damage_done(0),
     cleaving(false), is_followup(false), is_riposte(false),
     is_projected(false), is_bestial_takedown(false), is_sunder(false),
     charge_pow(0),
-    never_cleave(false), dmg_mult(0), flat_dmg_bonus(0), to_hit_bonus(0),
+    never_cleave(false),
     is_involuntary(false),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1),
@@ -222,8 +221,6 @@ bool melee_attack::handle_phase_attempted()
         || attk_flavour == AF_CRUSH
            && !attacker->can_constrict(*defender, CONSTRICT_MELEE))
     {
-        --effective_attack_number;
-
         return false;
     }
 
@@ -1298,7 +1295,7 @@ void melee_attack::handle_phase_killed()
     if (unrand_entry && weapon && weapon->unrand_idx == UNRAND_WYRMBANE)
     {
         unrand_entry->melee_effects(mutable_wpn, attacker, defender,
-                                    true, special_damage);
+                                    special_damage, nullptr);
     }
 
     // We test this *before* the monster dies, but only trigger afterward,
@@ -1445,7 +1442,7 @@ void melee_attack::handle_phase_end()
 // Copy over initial melee-specific attack parameters (ie: things that must be
 // defined before attack() or launch_attack_set() are called). Things calculated
 // after this point should not be copied.
-void melee_attack::copy_params_to(melee_attack &other)
+void melee_attack::copy_params_to(melee_attack &other) const
 {
     other.cleaving              = cleaving;
     other.is_followup           = is_followup;
@@ -1455,13 +1452,11 @@ void melee_attack::copy_params_to(melee_attack &other)
     other.is_sunder             = is_sunder;
     other.charge_pow            = charge_pow;
     other.never_cleave          = never_cleave;
-    other.dmg_mult              = dmg_mult;
-    other.flat_dmg_bonus        = flat_dmg_bonus;
-    other.to_hit_bonus          = to_hit_bonus;
     other.is_involuntary        = is_involuntary;
     other.wu_jian_attack        = wu_jian_attack;
     other.wu_jian_number_of_targets = wu_jian_number_of_targets;
-    other.simu                  = simu;
+
+    attack::copy_params_to(other);
 }
 
 // Perform followup attacks (from cleaving or quick blades).
@@ -1658,6 +1653,9 @@ bool melee_attack::run_monster_attack_set()
         // Charge up for monsters (player is handled in player_attempted_attack)
         if (melee_attk.is_sundering_weapon() && !is_projected && attack_succeeded)
             charge_sunder = true;
+
+        if (!attack_succeeded)
+            --effective_attack_num;
 
         fire_final_effects();
     }
@@ -1903,7 +1901,7 @@ bool melee_attack::attack()
     if (attacker->is_player() && attacker != defender)
     {
         set_attack_conducts(conducts, *defender->as_monster(),
-                            you.can_see(*defender) && !you.duration[DUR_VEXED]);
+                            you.can_see(*defender) && !is_involuntary);
 
         // Check for stab (and set stab_attempt and stab_bonus)
         player_stab_check();
@@ -1981,8 +1979,6 @@ bool melee_attack::attack()
     if (!defender->alive())
         handle_phase_killed();
 
-    total_damage_done += damage_done + special_damage;
-
     handle_phase_aux();
 
     handle_phase_end();
@@ -1994,16 +1990,14 @@ bool melee_attack::check_unrand_effects()
 {
     if (unrand_entry && unrand_entry->melee_effects && weapon)
     {
-        const bool died = !defender->alive();
-
         // Don't trigger the Wyrmbane death effect yet; that is done in
         // handle_phase_killed().
-        if (weapon->unrand_idx == UNRAND_WYRMBANE && died)
+        if (weapon->unrand_idx == UNRAND_WYRMBANE && !defender->alive())
             return true;
 
-        // Recent merge added damage_done to this method call
+        unwind_var<brand_type> unwind(damage_brand, SPWPN_NORMAL);
         unrand_entry->melee_effects(mutable_wpn, attacker, defender,
-                                    died, damage_done);
+                                    damage_done, this);
         return !defender->alive(); // may have changed
     }
 
@@ -2710,8 +2704,6 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     else // defender was just alive, so this call should be ok?
         player_announce_aux_hit(atk);
 
-    total_damage_done += damage_done;
-
     if (defender->as_monster()->hit_points < 1)
     {
         handle_phase_killed();
@@ -2753,8 +2745,6 @@ int melee_attack::player_apply_misc_modifiers(int damage)
     if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
         damage += 1 + random2(10);
 
-    damage += flat_dmg_bonus;
-
     return damage;
 }
 
@@ -2783,9 +2773,6 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
         damage = div_rand_round(damage * 3, 4);
 
     apply_rev_penalty(damage);
-
-    if (dmg_mult)
-        damage = damage * (100 + dmg_mult) / 100;
 
     if (you.has_mutation(MUT_RECKLESS) && weapon
         && hands_reqd(&you, weapon->base_type, weapon->sub_type) == HANDS_TWO)
@@ -3303,7 +3290,7 @@ void melee_attack::decapitate()
         }
 
         if (!simu)
-            defender->hurt(attacker, INSTANT_DEATH);
+            monster_die(*defender->as_monster(), attacker);
 
         return;
     }
@@ -3499,7 +3486,7 @@ int melee_attack::post_roll_to_hit_modifiers(int mhit, bool random)
     if (charge_pow > 0)
         modifiers += 5;
 
-    return modifiers + to_hit_bonus;
+    return modifiers;
 }
 
 void melee_attack::player_stab_check()
@@ -3730,7 +3717,9 @@ bool melee_attack::mons_attack_effects()
         if (attacker->as_monster()->has_ench(ENCH_FIRE_CHAMPION))
             mons_apply_attack_flavour(AF_FIRE);
 
-        if (attacker->as_monster()->has_ench(ENCH_CHAOS_LACE))
+        // XXX: If we try this on a reset monster, the resist check to determine
+        //      chaos brand will assert.
+        if (defender->alive() && attacker->as_monster()->has_ench(ENCH_CHAOS_LACE))
             mons_apply_attack_flavour(AF_CHAOTIC);
     }
 
@@ -5089,10 +5078,9 @@ int melee_attack::calc_mon_to_hit_base()
 }
 
 /**
- * Add modifiers to the base damage.
- * Currently only relevant for monsters.
+ * Add modifiers to a monster's base damage.
  */
-int melee_attack::apply_damage_modifiers(int damage)
+int melee_attack::apply_mon_damage_modifiers(int damage)
 {
     ASSERT(attacker->is_monster());
     monster *as_mon = attacker->as_monster();

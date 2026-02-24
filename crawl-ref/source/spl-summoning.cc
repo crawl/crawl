@@ -1496,11 +1496,13 @@ spret cast_summon_forest(actor* caster, int pow, bool fail, bool test)
     for (distance_iterator di(caster->pos(), false, true,
                               LOS_DEFAULT_RANGE); di; ++di)
     {
+        actor* act = actor_at(*di);
         if ((feat_is_wall(env.grid(*di)) && !feat_is_permarock(env.grid(*di))
              && !feat_is_endless(env.grid(*di))
-             && x_chance_in_y(pow, 150))
+             && x_chance_in_y(pow, 150)
+             && (!act || act->is_habitable_feat(DNGN_TREE)))
             || (env.grid(*di) == DNGN_FLOOR && x_chance_in_y(pow, 1250)
-                && !actor_at(*di) && !plant_forbidden_at(*di, true)))
+                && !act && !plant_forbidden_at(*di, true)))
         {
             temp_change_terrain(*di, DNGN_TREE, duration,
                     TERRAIN_CHANGE_FORESTED);
@@ -4207,7 +4209,7 @@ void paragon_attack_trigger()
         return;
 
     mpr("Your paragon attacks with you!");
-    fight_melee(paragon, targ);
+    mons_fight(paragon, targ);
     paragon->speed_increment += paragon->action_energy(EUT_ATTACK);
     you.did_trigger(DID_PARAGON);
 }
@@ -4541,45 +4543,19 @@ static bool _push_line_back(const coord_def& center, const coord_def& dir)
     return !actor_at(center + dir);
 }
 
+static bool _wall_is_okay(const coord_def& pos, bool water_okay)
+{
+    return !cell_is_solid(pos)
+            && env.grid(pos) != DNGN_LAVA
+            && (water_okay || env.grid(pos) != DNGN_DEEP_WATER)
+            && !feat_is_trap(env.grid(pos));
+}
 
 vector<coord_def> get_wall_ring_spots(const coord_def& center,
                                       const coord_def& aim,
                                       int num_walls, bool water_okay)
 {
-    vector<coord_def> spots;
-
-    // Convert aim to a compass direction
-    coord_def delta = (aim - center).sgn();
-
-    int dir = 0;
-    for (int i = 0; i < 8; ++i)
-    {
-        if (Compass[i] == delta)
-        {
-            dir = i;
-            break;
-        }
-    }
-
-    // Now choose adjacent compass spots to test
-    int start = dir - ((num_walls - 1) / 2);
-    if (start < 0)
-        start = start + 8;
-
-    for (int i = start; i < start + num_walls; ++i)
-    {
-        const int index = i % 8;
-        const coord_def spot = center + Compass[index];
-        if (in_bounds(spot) && !cell_is_solid(spot)
-            && env.grid(spot) != DNGN_LAVA
-            && (water_okay || env.grid(spot) != DNGN_DEEP_WATER)
-            && !feat_is_trap(env.grid(spot)))
-        {
-            spots.push_back(spot);
-        }
-    }
-
-    return spots;
+    return get_ring_spots(center, aim, num_walls, bind(_wall_is_okay, placeholders::_1, water_okay));
 }
 
 spret cast_splinterfrost_shell(const actor& agent, const coord_def& aim,

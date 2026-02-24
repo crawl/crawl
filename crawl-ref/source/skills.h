@@ -145,6 +145,9 @@ void set_training_status(skill_type sk, training_status st);
 void set_magic_training(training_status st);
 void cleanup_innate_magic_skills();
 
+void init_four_winds();
+void update_four_winds(bool force_recheck = false);
+
 static const skill_type skill_display_order[] =
 {
     SK_TITLE,

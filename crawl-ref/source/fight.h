@@ -29,8 +29,10 @@ enum stab_type
     NUM_STABS
 };
 
-bool fight_melee(actor *attacker, actor *defender, bool is_rampage = false,
-                 bool *did_hit = nullptr, bool simu = false);
+bool mons_fight(monster* attacker, actor* defender,
+                bool* did_hit = nullptr, bool simu = false);
+bool player_fight(monster* defender, bool is_rampage = false,
+                  bool* did_hit = nullptr, bool simu = false);
 
 void player_attempted_attack(bool trigger_effects, bool maintain_statuses = true,
                              actor* primary_target = nullptr);
@@ -106,7 +108,8 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         function<bool(const actor *victim)> affects = nullptr,
                         bool *prompted = nullptr,
                         const monster *mons = nullptr,
-                        bool check_only = false);
+                        bool check_only = false,
+                        bool include_player = false);
 
 string stop_summoning_reason(resists_t resists, monclass_flags_t flags);
 bool stop_summoning_prompt(resists_t resists = MR_NO_FLAGS,

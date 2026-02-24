@@ -885,8 +885,8 @@ void floor_transition(dungeon_feature_type how,
     {
         you.depth = 0;
         mpr("You have escaped!");
-        ouch(INSTANT_DEATH, player_has_orb() ? KILLED_BY_WINNING
-                                             : KILLED_BY_LEAVING);
+        player_die(player_has_orb() ? KILLED_BY_WINNING
+                                    : KILLED_BY_LEAVING);
     }
 
     if (how == DNGN_ENTER_ZIGGURAT)

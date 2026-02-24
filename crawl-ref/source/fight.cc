@@ -403,7 +403,91 @@ static void _do_medusa_stinger()
 }
 
 /**
- * Handle melee combat between attacker and defender.
+ * Handle combat between the player and some monster. This is usually a standard
+ * melee attack, but can also be a ranged attack performed at melee range.
+ * Sets up the attacks, handles some prompts, and deducts energy, as appropriate.
+ *
+ * @param defender     The monster the player is attacking.
+ * @param is_rampage   Is this an attack caused by rampaging? Adjusts damage of
+ *                     the attack based on movement speed and possibly staggers
+ *                     the target.
+ * @param[out] did_hit If non-null, receives true if the attack hit the
+ *                     defender, and false otherwise.
+ * @param simu Is this a simulated attack?  Disables a few problematic
+ *             effects such as blood spatter and distortion teleports.
+ *
+ * @return Whether the attack took time (i.e. wasn't cancelled).
+ */
+bool player_fight(monster* defender, bool is_rampage,
+                  bool *did_hit, bool simu)
+{
+    if (!simu && you.weapon() && !you.confused())
+    {
+        if (Options.auto_switch && _autoswitch_to_melee())
+            return true; // Is this right? We did take time, but we didn't melee
+
+        // If wielding a ranged weapon, perform a ranged attack instead.
+        if (_can_shoot_with(you.weapon()) && !you.duration[DUR_CONFUSING_TOUCH])
+        {
+            if (do_west_wind_shot())
+                return true;
+            else if (do_player_ranged_attack(defender->pos()))
+            {
+                you.time_taken = you.attack_delay().roll();
+                you.turn_is_over = true;
+                return true;
+            }
+            else
+                return false;
+        }
+    }
+
+    melee_attack attk(&you, defender);
+
+    if (simu)
+        attk.simu = true;
+
+    // We're trying to hit a monster, break out of travel/explore now.
+    interrupt_activity(activity_interrupt::hit_monster, defender);
+
+    // Check if the player is fighting with something unsuitable,
+    // or someone unsuitable.
+    if (you.can_see(*defender) && !simu && !wielded_weapon_check())
+    {
+        you.turn_is_over = false;
+        return false;
+    }
+
+    // Rampage attacks happen at movement speed, so proportionally lower the
+    // damage of an attack which would otherwise have been slower than this.
+    if (is_rampage)
+    {
+        const int attack_delay = you.attack_delay().roll() * BASELINE_DELAY;
+        const int move_delay = player_movement_speed() * player_speed();
+        if (attack_delay > move_delay)
+            attk.dmg_mult = (move_delay * 100 / attack_delay) - 100;
+    }
+
+    const bool success = attk.launch_attack_set();
+    if (attk.cancel_attack)
+        you.turn_is_over = false;
+    else
+        you.time_taken = you.melee_attack_delay().roll();
+
+    if (!success)
+        return !attk.cancel_attack;
+
+    if (did_hit)
+        *did_hit = attk.did_hit;
+
+    count_action(CACT_ATTACK, ATTACK_NORMAL);
+
+    return true;
+}
+
+/**
+ * Handle melee combat between an attacking monster and some defender.
+ * Sets up the melee_attack and deducts energy, as appropriate.
  *
  * Combat effects should generally not go here, unless intended to be once per
  * complete attack action (including all of a monster's multiple attacks). This
@@ -413,16 +497,12 @@ static void _do_medusa_stinger()
  *                              Either may be killed as a result of the attack.
  * @param[out] did_hit If non-null, receives true if the attack hit the
  *                     defender, and false otherwise.
- * @param is_rampage   Is this an attack caused by rampaging? Adjusts damage of
- *                     the attack based on movement speed and possibly staggers
- *                     the target. (Only effect for player attackers)
  * @param simu Is this a simulated attack?  Disables a few problematic
  *             effects such as blood spatter and distortion teleports.
  *
  * @return Whether the attack took time (i.e. wasn't cancelled).
  */
-bool fight_melee(actor *attacker, actor *defender, bool is_rampage,
-                 bool *did_hit, bool simu)
+bool mons_fight(monster *attacker, actor *defender, bool *did_hit, bool simu)
 {
     ASSERT(attacker); // XXX: change to actor &attacker
     ASSERT(defender); // XXX: change to actor &defender
@@ -434,9 +514,7 @@ bool fight_melee(actor *attacker, actor *defender, bool is_rampage,
     {
         if (defender->alive_or_reviving())
         {
-            // Still consume energy so we don't cause an infinite loop
-            if (monster* mon = attacker->as_monster())
-                mon->lose_energy(EUT_ATTACK);
+            attacker->lose_energy(EUT_ATTACK);
             return true;
         }
         else
@@ -450,101 +528,26 @@ bool fight_melee(actor *attacker, actor *defender, bool is_rampage,
     {
         ASSERT(!crawl_state.game_is_arena());
         // Friendly and good neutral monsters won't attack unless confused.
-        if (attacker->as_monster()->wont_attack()
-            && !mons_is_confused(*attacker->as_monster())
-            && !attacker->as_monster()->has_ench(ENCH_FRENZIED))
+        if (attacker->wont_attack()
+            && !mons_is_confused(*attacker)
+            && !attacker->has_ench(ENCH_FRENZIED))
         {
             return false;
         }
 
         // In case the monster hasn't noticed you, bumping into it will
         // change that.
-        behaviour_event(attacker->as_monster(), ME_ALERT, defender);
+        behaviour_event(attacker, ME_ALERT, defender);
     }
-    else if (attacker->is_player())
-    {
-        ASSERT(!crawl_state.game_is_arena());
-        // Can't damage orbs this way.
-        if (mons_is_projectile(defender->type) && !you.confused())
-        {
-            you.turn_is_over = false;
-            return false;
-        }
-
-        if (!simu && you.weapon() && !you.confused())
-        {
-            if (Options.auto_switch && _autoswitch_to_melee())
-                return true; // Is this right? We did take time, but we didn't melee
-
-            if (_can_shoot_with(you.weapon()) && !you.duration[DUR_CONFUSING_TOUCH])
-            {
-                if (do_player_ranged_attack(defender->pos()))
-                {
-                    you.time_taken = you.attack_delay().roll();
-                    you.turn_is_over = true;
-                    return true;
-                }
-                else
-                    return false;
-            }
-        }
-
-        melee_attack attk(&you, defender);
-
-        if (simu)
-            attk.simu = true;
-
-        // We're trying to hit a monster, break out of travel/explore now.
-        interrupt_activity(activity_interrupt::hit_monster,
-                           defender->as_monster());
-
-        // Check if the player is fighting with something unsuitable,
-        // or someone unsuitable.
-        if (you.can_see(*defender) && !simu && !wielded_weapon_check())
-        {
-            you.turn_is_over = false;
-            return false;
-        }
-
-        // Rampage attacks happen at movement speed, so proportionally lower the
-        // damage of an attack which would otherwise have been slower than this.
-        if (is_rampage)
-        {
-            const int attack_delay = you.attack_delay().roll() * BASELINE_DELAY;
-            const int move_delay = player_movement_speed() * player_speed();
-            if (attack_delay > move_delay)
-                attk.dmg_mult =  (move_delay * 100 / attack_delay) - 100;
-        }
-
-        const bool success = attk.launch_attack_set();
-        if (attk.cancel_attack)
-            you.turn_is_over = false;
-        else
-            you.time_taken = you.melee_attack_delay().roll();
-
-        if (!success)
-            return !attk.cancel_attack;
-
-        if (did_hit)
-            *did_hit = attk.did_hit;
-
-        count_action(CACT_ATTACK, ATTACK_NORMAL);
-
-        return true;
-    }
-
-    // If execution gets here, attacker != Player, so we can safely continue
-    // with processing the number of attacks a monster has without worrying
-    // about unpredictable or weird results from players.
 
     // Spectral weapons should only attack when triggered by their summoner,
     // which is handled via spectral_weapon_fineff. But if they bump into a
     // valid attack target during their subsequent wanderings, they will still
     // attempt to attack it via this method, which they should not.
-    if (attacker->as_monster()->type == MONS_SPECTRAL_WEAPON)
+    if (attacker->type == MONS_SPECTRAL_WEAPON)
     {
         // Still consume energy so we don't cause an infinite loop
-        attacker->as_monster()->lose_energy(EUT_ATTACK);
+        attacker->lose_energy(EUT_ATTACK);
         return false;
     }
 
@@ -552,21 +555,24 @@ bool fight_melee(actor *attacker, actor *defender, bool is_rampage,
     attk.simu = simu;
     attk.launch_attack_set();
 
+    if (did_hit)
+        *did_hit = attk.did_hit;
+
     if (!attacker->alive())
         return true;
 
     // Lose energy for the attack.
-    int energy = attacker->as_monster()->action_energy(EUT_ATTACK);
+    int energy = attacker->action_energy(EUT_ATTACK);
     int delay = attacker->attack_delay().roll();
     dprf(DIAG_COMBAT, "Attack delay %d, multiplier %1.1f", delay, energy * 0.1);
     ASSERT(energy > 0);
     ASSERT(delay > 0);
-    attacker->as_monster()->speed_increment -= div_rand_round(energy * delay, 10);
+    attacker->speed_increment -= div_rand_round(energy * delay, 10);
 
     // Here, rather than in melee_attack, so that it only triggers on attack
     // actions, rather than additional times for bonus attacks (ie: from Autumn Katana)
-    if (attacker->as_monster()->type == MONS_PLATINUM_PARAGON)
-        paragon_charge_up(*attacker->as_monster());
+    if (attacker->type == MONS_PLATINUM_PARAGON)
+        paragon_charge_up(*attacker);
 
     return true;
 }
@@ -1450,7 +1456,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
 bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         function<bool(const actor *victim)> affects,
                         bool *prompted, const monster *defender,
-                        bool check_only)
+                        bool check_only, bool include_player)
 {
     if (crawl_state.disables[DIS_CONFIRMATIONS])
         return false;
@@ -1489,7 +1495,9 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
         }
     }
 
-    if (victims.empty())
+    const bool hits_player = include_player && hitfunc.is_affected(you.pos());
+
+    if (victims.empty() && !hits_player)
         return false;
 
     // We have already determined that this attack *would* prompt, so stop here
@@ -1497,8 +1505,16 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
         return true;
 
     // Listed in the form: "your rat", "Blorkula the orcula".
-    string mon_name = victims.describe();
+    string mon_name = !victims.empty() ? victims.describe() : "";
     const bool penance = victims.penance();
+
+    if (hits_player)
+    {
+        if (mon_name.empty())
+            mon_name = "yourself";
+        else
+            mon_name = "yourself and " + mon_name;
+    }
 
     const string prompt = make_stringf("Really %s%s %s%s?%s",
              verb, defender_ok ? " near" : "", mon_name.c_str(),

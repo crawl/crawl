@@ -238,7 +238,6 @@ static const mutation_conflict mut_conflicts[] =
     { MUT_HP_CASTING,          MUT_HIGH_MAGIC,             false},
     { MUT_HP_CASTING,          MUT_LOW_MAGIC,              false},
     { MUT_HP_CASTING,          MUT_EFFICIENT_MAGIC,        false},
-    { MUT_ROLLPAGE,            MUT_INHIBITED_REGENERATION, false},
 
 #if TAG_MAJOR_VERSION == 34
     { MUT_NO_REGENERATION,     MUT_INHIBITED_REGENERATION, false},
@@ -704,13 +703,13 @@ static vector<pair<string,string>> _get_form_fakemuts()
         && you_can_wear(SLOT_BODY_ARMOUR, false) != false)
     {
         const int penalty_percent = form->get_body_ac_mult();
-        if (penalty_percent)
+        if (penalty_percent < 0)
         {
             result.push_back({"blade armour",
                     _badmut(make_stringf("Your body armour is %s at protecting you.",
-                          penalty_percent >=  60 ? "much less effective"
-                        : penalty_percent >=  30 ? "less effective"
-                                                 : "slightly less effective"
+                          penalty_percent <=  -45 ? "much less effective"
+                        : penalty_percent <   -20 ? "less effective"
+                                                  : "slightly less effective"
             ))});
         }
     }
@@ -2063,6 +2062,9 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                 set_evolution_mut_xp(mutat == MUT_DEVOLUTION);
             }
             break;
+
+        case MUT_STAMPEDE:
+            update_four_winds(true);
 
         default:
             break;

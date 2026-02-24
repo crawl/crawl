@@ -54,7 +54,6 @@
 #define DESCENT_DEBT_KEY "descent_debt"
 #define DESCENT_WATER_BRANCH_KEY "descent_water_branch"
 #define DESCENT_POIS_BRANCH_KEY "descent_poison_branch"
-#define RAMPAGE_HEAL_KEY "rampage_heal_strength"
 #define RAMPAGE_HEAL_MAX 7
 #define BLIND_COLOUR_KEY "blind_colour"
 #define TRICKSTER_POW_KEY "trickster_power"
@@ -64,6 +63,7 @@
 #define WEREFURY_KEY "werefury_bonus"
 #define DEVIOUS_KEY "devious_stacks"
 #define FORCED_MESMERISE_KEY "forced_mesmerise"
+#define SALVO_KEY "salvo_stacks"
 
 constexpr int ENKINDLE_CHARGE_COST = 40;
 #define ENKINDLE_CHARGES_KEY "enkindle_charges"
@@ -128,11 +128,12 @@ enum reprisal_type
 
 enum player_trigger_type
 {
-    DID_PARAGON,        // Platinum Paragon follow-up attack
-    DID_DITH_SHADOW,    // Dithmenos shadow mimic
-    DID_MEDUSA_STINGER, // Medusa form stinger attack
-    DID_SOLAR_EMBER,    // Sun scarab ember attack
-    DID_REV_UP,         // Coglin rev
+    DID_PARAGON,         // Platinum Paragon follow-up attack
+    DID_DITH_SHADOW,     // Dithmenos shadow mimic
+    DID_MEDUSA_STINGER,  // Medusa form stinger attack
+    DID_SOLAR_EMBER,     // Sun scarab ember attack
+    DID_REV_UP,          // Coglin rev
+    DID_WEST_WIND_SHOT,  // Anemocentaur West Wind ranged attack
     NUM_PLAYER_TRIGGER_TYPES,
 };
 
@@ -450,6 +451,13 @@ public:
     map<int,int> last_pickup;
     int last_unequip;
 
+    // Highest skill level for each of anemocentaur winds
+    FixedVector<int, 4> wind_category_weight;
+    // Whether a category increased since the last call to update_four_winds()
+    FixedVector<bool, 4> wind_category_inc;
+    int prevailing_wind;
+    bool gave_wind_change_warning;
+
     // ---------------------------
     // Volatile (same-turn) state:
     // ---------------------------
@@ -465,6 +473,14 @@ public:
     // Position from which the player made an involuntary shout this turn.
     // (To reduce message spam when encountering many monsters at once.)
     coord_def shouted_pos;
+
+    // Position of the player before performing any movement in a turn.
+    coord_def pos_at_turn_start;
+
+    // Whether the player made a rampage move with the East Wind active last turn.
+    // (Is an int instead of a bool so that the visual for it can persist into
+    // the start of the next turn without more complicated cleanup)
+    int did_east_wind;
 
     // If true, player has triggered a trap effect by exploring.
     bool trapped;
@@ -820,7 +836,8 @@ public:
              string source = "",
              string aux = "",
              bool cleanup_dead = true,
-             bool attacker_effects = true) override;
+             bool attacker_effects = true,
+             bool is_attack_damage = false) override;
 
     bool wont_attack() const override { return true; };
     mon_attitude_type temp_attitude() const override { return ATT_FRIENDLY; };
@@ -1113,6 +1130,7 @@ int player_prot_life(bool allow_random = true, bool temp = true,
 
 bool regeneration_is_inhibited(const monster *m=nullptr);
 int player_regen();
+int player_indomitable_regen_rate();
 int player_mp_regen();
 
 bool player_kiku_res_torment();
@@ -1274,8 +1292,6 @@ void dec_elixir_player(int delay);
 void dec_ambrosia_player(int delay);
 void dec_channel_player(int delay);
 void dec_frozen_ramparts(int delay);
-void reset_rampage_heal_duration();
-void apply_rampage_heal(int distance_moved);
 void trickster_trigger(const monster& victim, enchant_type ench);
 int trickster_bonus();
 int enkindle_max_charges();

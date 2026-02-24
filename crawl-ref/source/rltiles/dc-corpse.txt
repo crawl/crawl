@@ -287,7 +287,6 @@ sphinx_marauder CORPSE_SPHINX_MARAUDER
 guardian_sphinx CORPSE_GUARDIAN_SPHINX
 tengu CORPSE_TENGU
 jorogumo CORPSE_JOROGUMO
-armataur CORPSE_ARMATAUR
 mon/unique/arachne_staveless CORPSE_ARACHNE
 %sdir mon/mutantbeast
 base3 CORPSE_MUTANT_BEAST

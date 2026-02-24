@@ -1205,7 +1205,7 @@ void dithmenos_shadow_melee(actor* initial_target)
     mon->target     = target->pos();
     mon->foe        = target->mindex();
 
-    fight_melee(mon, target);
+    mons_fight(mon, target);
 
     // Store this action's target so that it can be reused on future turns.
     if (target->alive())

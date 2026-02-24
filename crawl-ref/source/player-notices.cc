@@ -75,7 +75,7 @@ static bool _check_monster_alert(const monster& mon)
         // And if it wasn't a monster that would get an encounter warning due to
         // being a summon, make sure to say something.
         if (mon.is_summoned())
-            mprf(MSGCH_WARN, "%s comes into view.", mon.name(DESC_A).c_str());
+            mprf(MSGCH_MONSTER_WARNING, "%s comes into view.", mon.name(DESC_A).c_str());
 
         more(true);
         return true;

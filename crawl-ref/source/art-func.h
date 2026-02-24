@@ -91,7 +91,7 @@ static void _equip_mpr(bool* show_msgs, const char* msg,
 
 ////////////////////////////////////////////////////
 static void _CEREBOV_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                   actor* defender, bool mondied, int dam)
+                                   actor* defender, int dam, melee_attack*)
 {
     if (dam)
     {
@@ -103,7 +103,7 @@ static void _CEREBOV_melee_effects(item_def* /*weapon*/, actor* attacker,
             you.increase_duration(DUR_FIRE_VULN, 3 + random2(dam), 50);
         }
         if (defender->is_monster()
-            && !mondied
+            && defender->alive()
             && !defender->as_monster()->has_ench(ENCH_FIRE_VULN))
         {
             if (you.can_see(*attacker))
@@ -133,9 +133,9 @@ static void _CONDEMNATION_unequip(item_def */*item*/, bool *show_msgs)
 }
 
 static void _CONDEMNATION_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                        actor* defender, bool mondied, int dam)
+                                        actor* defender, int dam, melee_attack*)
 {
-    if (!dam || mondied || defender->is_player())
+    if (!dam || !defender->alive() || defender->is_player())
         return;
     monster *mons = defender->as_monster();
     if (mons_intel(*mons) <= I_BRAINLESS)
@@ -156,23 +156,23 @@ static void _CURSES_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
 }
 
 static void _CURSES_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                  actor* defender, bool mondied, int dam)
+                                  actor* defender, int dam, melee_attack*)
 {
     if (attacker->is_player())
         did_god_conduct(DID_EVIL, 3);
-    if (!mondied && defender->holiness() & (MH_NATURAL | MH_PLANT))
+    if (defender->alive() && defender->holiness() & (MH_NATURAL | MH_PLANT))
         death_curse(*defender, attacker, "the scythe of Curses", min(dam, 27));
 }
 
 ////////////////////////////////////////////////////
 
 static void _FINISHER_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                  actor* defender, bool mondied, int dam)
+                                  actor* defender, int dam, melee_attack*)
 {
     // Can't kill a monster that's already dead.
     // Can't kill a monster if we don't do damage.
     // Don't insta-kill the player
-    if (mondied || dam == 0 || defender->is_player())
+    if (!defender->alive() || dam == 0 || defender->is_player())
         return;
 
     // Chance to insta-kill based on HD. From 1/4 for small HD popcorn down to
@@ -182,18 +182,18 @@ static void _FINISHER_melee_effects(item_def* /*weapon*/, actor* attacker,
     {
         monster* mons = defender->as_monster();
         mons->flags |= MF_EXPLODE_KILL;
-        mons->hurt(attacker, INSTANT_DEATH);
+        monster_die(*mons, attacker);
     }
 }
 
 ////////////////////////////////////////////////////
 
 static void _THROATCUTTER_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                        actor* defender, bool mondied, int /*dam*/)
+                                        actor* defender, int /*dam*/, melee_attack*)
 {
     // Can't kill a monster that's already dead.
     // Don't insta-kill the player
-    if (mondied || defender->is_player())
+    if (!defender->alive() || defender->is_player())
         return;
 
     // Chance to insta-kill based on HP.
@@ -226,7 +226,7 @@ static void _THROATCUTTER_melee_effects(item_def* /*weapon*/, actor* attacker,
         }
         if (mons->num_heads > 1)
             mons->num_heads = 1; // mass chop those hydra heads
-        mons->hurt(attacker, INSTANT_DEATH);
+        monster_die(*mons, attacker);
     }
 }
 
@@ -260,12 +260,11 @@ static int _calc_olgreb_damage(actor* attacker, actor* defender)
 
 
 static void _OLGREB_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                  actor* defender, bool mondied,
-                                  int /*dam*/)
+                                  actor* defender, int /*dam*/, melee_attack* atk)
 {
     const int bonus_dam = _calc_olgreb_damage(attacker, defender);
 
-    if (!mondied && bonus_dam)
+    if (defender->alive() && bonus_dam)
     {
         mprf("%s %s %s%s",
              attacker->name(DESC_THE).c_str(),
@@ -273,7 +272,7 @@ static void _OLGREB_melee_effects(item_def* /*weapon*/, actor* attacker,
              defender->name(DESC_THE).c_str(),
              attack_strength_punctuation(bonus_dam).c_str());
 
-        defender->hurt(attacker, bonus_dam);
+        atk->inflict_damage(bonus_dam);
         if (defender->alive())
             defender->poison(attacker, 2, true);
     }
@@ -345,7 +344,7 @@ static void _SINGING_SWORD_world_reacts(item_def *item)
 
 static void _SINGING_SWORD_melee_effects(item_def* weapon, actor* attacker,
                                          actor* /* defender */,
-                                         bool /*mondied*/, int /*dam*/)
+                                         int /*dam*/, melee_attack*)
 {
     int tier;
 
@@ -418,8 +417,7 @@ static void _TORMENT_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 }
 
 static void _TORMENT_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                   actor* /*defender*/, bool /*mondied*/,
-                                   int /*dam*/)
+                                   actor* /*defender*/, int /*dam*/, melee_attack*)
 {
     if (one_chance_in(5))
         torment(attacker, TORMENT_SCEPTRE, attacker->pos());
@@ -441,8 +439,8 @@ static void _TROG_unequip(item_def */*item*/, bool *show_msgs)
 ///////////////////////////////////////////////////
 
 static void _VARIABILITY_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                       actor* /*defender*/, bool /*mondied*/,
-                                       int /*dam*/)
+                                       actor* /*defender*/, int /*dam*/,
+                                       melee_attack*)
 {
     if (one_chance_in(5))
     {
@@ -462,8 +460,8 @@ static void _ZONGULDROK_equip(item_def */*item*/, bool *show_msgs,
 }
 
 static void _ZONGULDROK_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                      actor* /*defender*/, bool /*mondied*/,
-                                      int /*dam*/)
+                                      actor* /*defender*/, int /*dam*/,
+                                      melee_attack*)
 {
     if (attacker->is_player())
         did_god_conduct(DID_EVIL, 3);
@@ -472,8 +470,7 @@ static void _ZONGULDROK_melee_effects(item_def* /*weapon*/, actor* attacker,
 ///////////////////////////////////////////////////
 
 static void _GONG_melee_effects(item_def* /*item*/, actor* wearer,
-                                actor* /*attacker*/, bool /*dummy*/,
-                                int /*dam*/)
+                                actor* /*attacker*/, int /*dam*/, melee_attack*)
 {
     if (silenced(wearer->pos()))
         return;
@@ -489,8 +486,7 @@ static void _GONG_melee_effects(item_def* /*item*/, actor* wearer,
 ///////////////////////////////////////////////////
 
 static void _STORM_QUEEN_melee_effects(item_def* /*item*/, actor* wearer,
-                                       actor* attacker, bool /*dummy*/,
-                                       int /*dam*/)
+                                       actor* attacker, int /*dam*/, melee_attack*)
 {
     // Discharge does 3d(4 + pow*3/2) damage, so each point of power does
     // an average of another 9/4 points of retaliation damage (~2).
@@ -507,8 +503,7 @@ static void _STORM_QUEEN_melee_effects(item_def* /*item*/, actor* wearer,
 ///////////////////////////////////////////////////
 
 static void _DEMON_AXE_melee_effects(item_def* /*item*/, actor* attacker,
-                                     actor* defender, bool /*mondied*/,
-                                     int /*dam*/)
+                                     actor* defender, int /*dam*/, melee_attack*)
 {
     if (defender->is_peripheral())
         return;
@@ -608,8 +603,8 @@ static void _WYRMBANE_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/
                    : "You feel an overwhelming desire to slay dragons!");
 }
 
-static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
-                                    actor* defender, bool mondied, int dam)
+static void _WYRMBANE_melee_effects(item_def* weapon, actor* /*attacker*/,
+                                    actor* defender, int dam, melee_attack* atk)
 {
     if (!defender || !defender->is_dragonkind())
         return;
@@ -619,7 +614,7 @@ static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
     const int hd = defender->dragon_level();
     string name = defender->name(DESC_THE);
 
-    if (!mondied)
+    if (defender->alive())
     {
         int bonus_dam = 1 + random2(3 * dam / 2);
         mprf("%s %s%s",
@@ -627,12 +622,10 @@ static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
             defender->conj_verb("convulse").c_str(),
             attack_strength_punctuation(bonus_dam).c_str());
 
-        defender->hurt(attacker, bonus_dam);
-
-        mondied = !defender->alive();
+        atk->inflict_damage(bonus_dam);
     }
 
-    if (!mondied || !hd)
+    if (defender->alive() || !hd)
         return;
 
     // The cap can be reached by:
@@ -666,18 +659,18 @@ static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static void _UNDEADHUNTER_melee_effects(item_def* /*item*/, actor* attacker,
-                                        actor* defender, bool mondied, int dam)
+static void _UNDEADHUNTER_melee_effects(item_def* /*item*/, actor* /*attacker*/,
+                                        actor* defender, int dam, melee_attack* atk)
 {
     if (defender->holiness() & MH_UNDEAD && !one_chance_in(3)
-        && !mondied && dam)
+        && defender->alive() && dam)
     {
         int bonus_dam = random2avg((1 + (dam * 3)), 3);
         mprf("%s %s blasted by disruptive energy%s",
               defender->name(DESC_THE).c_str(),
               defender->conj_verb("be").c_str(),
               attack_strength_punctuation(bonus_dam).c_str());
-        defender->hurt(attacker, bonus_dam);
+        atk->inflict_damage(bonus_dam);
     }
 }
 
@@ -722,8 +715,7 @@ static void _DEVASTATOR_equip(item_def */*item*/, bool *show_msgs,
 }
 
 static void _DEVASTATOR_melee_effects(item_def* /*item*/, actor* attacker,
-                                      actor* defender, bool /*mondied*/,
-                                      int dam)
+                                      actor* defender, int dam, melee_attack*)
 {
     if (dam)
         shillelagh(attacker, defender->pos(), dam);
@@ -767,9 +759,9 @@ static const vector<string> plutonium_player_msg = {
 
 static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon,
                                            actor* attacker, actor* defender,
-                                           bool mondied, int /*dam*/)
+                                           int /*dam*/, melee_attack* atk)
 {
-    if (!mondied && one_chance_in(5) && defender->can_mutate())
+    if (defender->alive() && one_chance_in(5) && defender->can_mutate())
     {
         if (you.can_see(*attacker))
         {
@@ -795,23 +787,23 @@ static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon,
                               "Your body is flooded with magical radiation."));
             contaminate_player(random_range(700, 1350));
         }
-        defender->hurt(attacker, random_range(5, 25));
+        atk->inflict_damage(random_range(5, 25));
     }
 }
 
 ///////////////////////////////////////////////////
 
 static void _SNAKEBITE_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                     actor* defender, bool mondied, int /*dam*/)
+                                     actor* defender, int /*dam*/, melee_attack*)
 {
-    if (!mondied && x_chance_in_y(2, 5))
+    if (defender->alive() && x_chance_in_y(2, 5))
         curare_actor(attacker, defender, "curare", attacker->name(DESC_PLAIN));
 }
 
 ///////////////////////////////////////////////////
 
 static void _WOE_melee_effects(item_def* /*weapon*/, actor* attacker,
-                               actor* defender, bool mondied, int /*dam*/)
+                               actor* defender, int /*dam*/, melee_attack* atk)
 {
     const char *verb = "bugger", *adv = "";
     switch (random2(8))
@@ -834,8 +826,8 @@ static void _WOE_melee_effects(item_def* /*weapon*/, actor* attacker,
              adv);
     }
 
-    if (!mondied)
-        defender->hurt(attacker, defender->stat_hp());
+    if (defender->alive())
+        atk->inflict_damage(defender->stat_hp());
 
     if (defender->as_monster()->has_blood())
     {
@@ -867,6 +859,16 @@ static void _DAMNATION_launch(bolt* beam)
 
 ///////////////////////////////////////////////////
 
+static void _ZEPHYR_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
+{
+    _equip_mpr(show_msgs, "You feel the wind guiding your aim.");
+}
+
+static void _ZEPHYR_unequip(item_def */*item*/, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, "The winds around you sigh wistfully and grow still.");
+}
+
 /**
  * Calculate the bonus damage that the Elemental Staff does with an attack of
  * the given flavour.
@@ -893,11 +895,10 @@ static int _calc_elemental_staff_damage(beam_type flavour,
 }
 
 static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,
-                                           actor* defender, bool mondied,
-                                           int)
+                                           actor* defender, int, melee_attack* atk)
 {
     const int evoc = attacker->skill(SK_EVOCATIONS, 27);
-    if (mondied || !(x_chance_in_y(evoc, 27*27) || x_chance_in_y(evoc, 27*27)))
+    if (!defender->alive() || !(x_chance_in_y(evoc, 27*27) || x_chance_in_y(evoc, 27*27)))
         return;
 
     const char *verb = nullptr;
@@ -939,7 +940,7 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,
                                : defender->name(DESC_THE)).c_str(),
          attack_strength_punctuation(bonus_dam).c_str());
 
-    defender->hurt(attacker, bonus_dam, flavour);
+    atk->inflict_damage(bonus_dam, flavour);
 
     if (defender->alive() && flavour != BEAM_NONE)
         defender->expose_to_element(flavour, 2, attacker);
@@ -958,8 +959,7 @@ static void _ARC_BLADE_unequip(item_def */*item*/, bool *show_msgs)
 }
 
 static void _ARC_BLADE_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                     actor* defender, bool /*mondied*/,
-                                     int /*dam*/)
+                                     actor* defender, int /*dam*/, melee_attack*)
 {
     if (one_chance_in(3))
     {
@@ -980,12 +980,10 @@ static void _ARC_BLADE_melee_effects(item_def* /*weapon*/, actor* attacker,
 ///////////////////////////////////////////////////
 
 static void _SPELLBINDER_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                       actor* defender, bool mondied,
-                                       int dam)
+                                       actor* defender, int dam, melee_attack*)
 {
     // Only cause miscasts if the target has magic to disrupt.
-    if (defender->antimagic_susceptible()
-        && !mondied)
+    if (defender->alive() && defender->antimagic_susceptible())
     {
         miscast_effect(*defender, attacker, {miscast_source::melee},
                        spschool::random, random_range(1, 9), dam,
@@ -995,10 +993,10 @@ static void _SPELLBINDER_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static void _ORDER_melee_effects(item_def* /*item*/, actor* attacker,
-                                         actor* defender, bool mondied, int dam)
+static void _ORDER_melee_effects(item_def* /*item*/, actor* /*attacker*/,
+                                 actor* defender, int dam, melee_attack* atk)
 {
-    if (!mondied)
+    if (defender->alive())
     {
         string msg = "";
         int silver_dam = silver_damages_victim(defender, dam, msg);
@@ -1006,10 +1004,10 @@ static void _ORDER_melee_effects(item_def* /*item*/, actor* attacker,
         {
             if (you.can_see(*defender))
                 mpr(msg);
-            defender->hurt(attacker, silver_dam);
+            atk->inflict_damage(silver_dam);
         }
         else if (dam > 0)
-            defender->hurt(attacker, 1 + random2(dam) / 3);
+            atk->inflict_damage(1 + random2(dam) / 3);
     }
 }
 
@@ -1027,12 +1025,12 @@ static void _FIRESTARTER_unequip(item_def */*item*/, bool *show_msgs)
 }
 
 static void _FIRESTARTER_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                   actor* defender, bool mondied, int dam)
+                                   actor* defender, int dam, melee_attack*)
 {
     if (dam)
     {
         if (defender->is_monster()
-            && !mondied
+            && defender->alive()
             && !defender->as_monster()->has_ench(ENCH_INNER_FLAME))
         {
             mprf("%s is filled with an inner flame.",
@@ -1046,9 +1044,10 @@ static void _FIRESTARTER_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ////////////////////////////////////////////////////
 static void _FORCE_LANCE_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                       actor* defender, bool mondied, int dam)
+                                       actor* defender, int dam, melee_attack*)
 {
-    if (mondied || !dam || !one_chance_in(3)) return;
+    if (!defender->alive() || !dam || !one_chance_in(3))
+        return;
     // max power on a !!! hit (ie 36+ damage), but try to make some damage
     // quite likely to beat AC on any collision.
     const int collide_damage = 7 + roll_dice(3, div_rand_round(min(36, dam), 4));
@@ -1070,12 +1069,12 @@ static void _CHILLY_DEATH_unequip(item_def */*item*/, bool *show_msgs)
 }
 
 static void _CHILLY_DEATH_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                   actor* defender, bool mondied, int dam)
+                                        actor* defender, int dam, melee_attack*)
 {
     if (dam)
     {
         if (defender->is_monster()
-            && !mondied
+            && defender->alive()
             && !defender->as_monster()->has_ench(ENCH_FROZEN))
         {
             mprf("%s is flash-frozen.",
@@ -1109,9 +1108,9 @@ static void _FLAMING_DEATH_unequip(item_def */*item*/, bool *show_msgs)
 }
 
 static void _FLAMING_DEATH_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                   actor* defender, bool mondied, int dam)
+                                         actor* defender, int dam, melee_attack*)
 {
-    if (!mondied && (dam > 2 && one_chance_in(3)))
+    if (defender->alive() && (dam > 2 && one_chance_in(3)))
     {
         if (defender->is_player())
             sticky_flame_player(5, 10, attacker->name(DESC_A, true));
@@ -1188,7 +1187,7 @@ static void _OCTOPUS_KING_world_reacts(item_def *item)
 ///////////////////////////////////////////////////
 
 static void _CAPTAIN_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                actor* defender, bool mondied, int dam)
+                                   actor* defender, int dam, melee_attack* atk)
 {
     // Player disarming sounds like a bad idea; monster-on-monster might
     // work but would be complicated.
@@ -1197,7 +1196,7 @@ static void _CAPTAIN_melee_effects(item_def* /*weapon*/, actor* attacker,
         && !x_chance_in_y(defender->get_hit_dice(), random2(20) + dam*4)
         && attacker->is_player()
         && defender->is_monster()
-        && !mondied)
+        && defender->alive())
     {
         item_def *wpn = defender->as_monster()->disarm();
         if (wpn)
@@ -1207,7 +1206,7 @@ static void _CAPTAIN_melee_effects(item_def* /*weapon*/, actor* attacker,
             mprf("%s %s falls to the floor!",
                 apostrophise(defender->name(DESC_THE)).c_str(),
                 wpn->name(DESC_PLAIN).c_str());
-            defender->hurt(attacker, 18 + random2(18));
+            atk->inflict_damage(18 + random2(18));
         }
     }
 }
@@ -1287,8 +1286,7 @@ static void _KRYIAS_unequip(item_def */*item*/, bool *show_msgs)
 ///////////////////////////////////////////////////
 
 static void _FROSTBITE_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                     actor* defender, bool /*mondied*/,
-                                     int /*dam*/)
+                                     actor* defender, int /*dam*/, melee_attack*)
 {
     coord_def spot = defender->pos();
     if (one_chance_in(5))
@@ -1301,10 +1299,10 @@ static void _FROSTBITE_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 // Big killing blows give a bloodsplosion effect sometimes
 static void _LEECH_melee_effects(item_def* /*item*/, actor* attacker,
-                                 actor* defender, bool mondied, int dam)
+                                 actor* defender, int dam, melee_attack*)
 {
     if (attacker->is_player() && defender->has_blood()
-        && mondied && x_chance_in_y(dam, 729))
+        && !defender->alive() && x_chance_in_y(dam, 729))
     {
         simple_monster_message(*(defender->as_monster()),
                                " liquefies into a cloud of blood!");
@@ -1328,7 +1326,7 @@ static void _THERMIC_ENGINE_unequip(item_def *item, bool *show_msgs)
 }
 
 static void _THERMIC_ENGINE_melee_effects(item_def* weapon, actor* attacker,
-                                   actor* defender, bool mondied, int dam)
+                                          actor* defender, int dam, melee_attack* atk)
 {
     if (weapon->plus < 14)
     {
@@ -1340,7 +1338,7 @@ static void _THERMIC_ENGINE_melee_effects(item_def* weapon, actor* attacker,
         you.wield_change = true;
     }
 
-    if (mondied)
+    if (!defender->alive())
         return;
 
     // the flaming brand has already been applied at this point
@@ -1354,7 +1352,7 @@ static void _THERMIC_ENGINE_melee_effects(item_def* weapon, actor* attacker,
             (attacker == defender ? defender->pronoun(PRONOUN_REFLEXIVE)
                                 : defender->name(DESC_THE)).c_str());
 
-        defender->hurt(attacker, bonus_dam, BEAM_COLD);
+        atk->inflict_damage(bonus_dam, BEAM_COLD);
         if (defender->alive())
             defender->expose_to_element(BEAM_COLD, 2, attacker);
     }
@@ -1624,7 +1622,7 @@ static void _DREAMSHARD_NECKLACE_unequip(item_def * /* item */, bool * show_msgs
 ////////////////////////////////////////////////////
 
 static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,
-    actor* defender, bool /*mondied*/, int /*dam*/)
+                                         actor* defender, int /*dam*/, melee_attack*)
 {
     // HACK: yes this is in a header but it's only included once
     static bool _slicing = false;
@@ -1732,8 +1730,7 @@ static void _VICTORY_equip(item_def *item, bool */*show_msgs*/, bool /*unmeld*/)
 ////////////////////////////////////////////////////
 
 static void _ASMODEUS_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                    actor* defender, bool /*mondied*/,
-                                    int /*dam*/)
+                                    actor* defender, int /*dam*/, melee_attack*)
 {
     if (!attacker->is_player() || you.allies_forbidden())
         return;
@@ -1762,17 +1759,17 @@ static void _ASMODEUS_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ////////////////////////////////////////////////////
 
-static void _DREAD_KNIGHT_melee_effects(item_def* /*item*/, actor* attacker,
-                                        actor* defender, bool mondied, int /*dam*/)
+static void _DREAD_KNIGHT_melee_effects(item_def* /*item*/, actor* /*attacker*/,
+                                        actor* defender, int /*dam*/, melee_attack* atk)
 {
-    if (!mondied)
+    if (defender->alive())
     {
         int bonus_dam = random2avg((1 + defender->stat_maxhp() / 10), 3);
         mprf("%s %s%s",
             defender->name(DESC_THE).c_str(),
             defender->conj_verb("convulse").c_str(),
             attack_strength_punctuation(bonus_dam).c_str());
-        defender->hurt(attacker, bonus_dam);
+        atk->inflict_damage(bonus_dam);
     }
 }
 

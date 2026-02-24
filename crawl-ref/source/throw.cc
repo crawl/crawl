@@ -10,6 +10,7 @@
 #include <cmath>
 #include <sstream>
 
+#include "act-iter.h"
 #include "art-enum.h"
 #include "artefact.h"
 #include "chardump.h"
@@ -427,7 +428,7 @@ void fire_item_no_quiver(dist *target)
         canned_msg(MSG_OK);
 }
 
-static void _player_shoot(ranged_attack_beam &pbolt);
+static void _player_shoot(ranged_attack_beam &pbolt, bool allow_salvo = true);
 
 static bool _returning(const item_def &item)
 {
@@ -579,7 +580,7 @@ static vector<ranged_attack_beam> _construct_player_ranged_beams(item_def* throw
 }
 
 // Returns true if the player aborted for any reason.
-static bool _trace_player_ranged_attacks(vector<ranged_attack_beam>& atks, bool auto_abort = false)
+static bool _trace_player_ranged_attacks(vector<ranged_attack_beam>& atks, bool no_harm_allies = false)
 {
     // Don't trace at all when confused.
     if (you.confused())
@@ -590,13 +591,15 @@ static bool _trace_player_ranged_attacks(vector<ranged_attack_beam>& atks, bool 
     for (size_t i = 0; i < atks.size(); ++i)
     {
         atks[i].beam.overshoot_prompt = false;
+        if (no_harm_allies)
+            atks[i].beam.stop_at_allies = true;
         atks[i].beam.fire(tracer);
         if (atks[i].beam.friendly_past_target)
             atks[i].beam.aimed_at_spot = true;
         using_mule |= is_unrandom_artefact(*atks[i].atk.weapon, UNRAND_MULE);
     }
 
-    if (auto_abort && tracer.has_any_warnings())
+    if (no_harm_allies && tracer.has_any_warnings())
         return true;
 
     if (cancel_beam_prompt(atks[0].beam, tracer, atks.size()))
@@ -617,7 +620,7 @@ static bool _trace_player_ranged_attacks(vector<ranged_attack_beam>& atks, bool 
     return false;
 }
 
-static void _fire_player_ranged_attacks(vector<ranged_attack_beam>& atks)
+static void _fire_player_ranged_attacks(vector<ranged_attack_beam>& atks, bool allow_salvo = true)
 {
     // If attacking with more than one weapon, do so in a random order.
     if (atks.size() > 1)
@@ -633,7 +636,7 @@ static void _fire_player_ranged_attacks(vector<ranged_attack_beam>& atks)
     bool shot_at_enemy = false;
     for (ranged_attack_beam& atk : atks)
     {
-        _player_shoot(atk);
+        _player_shoot(atk, allow_salvo);
         if (atk.beam.foes_hurt)
             shot_at_enemy = true;
     }
@@ -703,20 +706,103 @@ void aim_player_ranged_attack(quiver::action &a)
 
 // Make the player immediately perform a ranged attack at a given target, optionally
 // with a specific projectile. Does not handle spending time.
-bool do_player_ranged_attack(const coord_def& targ, item_def* thrown_projectile, bool auto_abort)
+bool do_player_ranged_attack(const coord_def& targ, item_def* thrown_projectile,
+                             const ranged_attack* prototype, bool no_harm_allies,
+                             bool allow_salvo)
 {
     vector<ranged_attack_beam> atks = _construct_player_ranged_beams(thrown_projectile);
     for (ranged_attack_beam& atk : atks)
+    {
         atk.beam.target = targ;
-    if (_trace_player_ranged_attacks(atks, auto_abort))
+        if (prototype)
+            prototype->copy_params_to(atk.atk);
+    }
+    if (_trace_player_ranged_attacks(atks, no_harm_allies))
         return false;
-    _fire_player_ranged_attacks(atks);
+    _fire_player_ranged_attacks(atks, allow_salvo);
     return true;
+}
+
+// Runs a simple tracer from source to target, stopping before any allies and
+// adding affected enemies to the affected param.
+//
+// Returns true of a given target will hit at least one enemy without also
+// hitting any enemy already stored in affected.
+static bool _salvo_shot_tracer(coord_def source, coord_def target, bool pierce,
+                               set<mid_t>* affected)
+{
+    bolt tracer;
+    tracer.attitude = ATT_FRIENDLY;
+    tracer.range = LOS_RADIUS;
+    tracer.source = source;
+    tracer.target = target;
+    tracer.source_id = MID_PLAYER;
+    tracer.stop_at_allies = true;
+    tracer.damage = dice_def(100, 1);
+    tracer.pierce = pierce;
+    targeting_tracer target_tracer;
+    tracer.fire(target_tracer);
+
+    if (target_tracer.friend_info.power != 0 || target_tracer.foe_info.power == 0)
+        return false;
+
+    if (affected)
+    {
+        for (std::map<mid_t,int>::iterator it = tracer.hit_count.begin(); it != tracer.hit_count.end(); ++it)
+        {
+            if (affected->count(it->first))
+                return false;
+            else
+                affected->insert(it->first);
+        }
+    }
+
+    return true;
+}
+
+static void _fire_salvo(const ranged_attack_beam &pbolt)
+{
+    set<mid_t> affected_mons;
+    vector<monster*> targs;
+
+    // Add affected targets from the originating shot.
+    _salvo_shot_tracer(you.pos(), pbolt.beam.target, false, &affected_mons);
+
+    // Trace all visiable monsters in LoS, starting with the closest, and see
+    // how many 'different' shots are available (without overlapping against
+    // one target)
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS, true); ri; ++ri)
+    {
+        monster* targ = monster_at(*ri);
+        if (!targ || targ->wont_attack() || targ->is_firewood() || !you.can_see(*targ)
+            || affected_mons.count(targ->mid))
+        {
+            continue;
+        }
+
+        if (_salvo_shot_tracer(you.pos(), targ->pos(), false, &affected_mons))
+            targs.push_back(targ);
+    }
+
+    const int MAX_SHOTS = 5;
+    if (targs.size() > MAX_SHOTS)
+        shuffle_array(targs);
+
+    // Now fire up to 5 bonus shots at random valid targets.
+    for (size_t i = 0; i < targs.size() && i < MAX_SHOTS; ++i)
+    {
+        // We copy the ranged_attack_beam and fire manually to avoid
+        // printing superfluous messages and triggering conducts repeatedly.
+        ranged_attack_beam salvo = pbolt;
+        salvo.beam.chose_ray = false;
+        salvo.beam.target = targs[i]->pos();
+        salvo.fire();
+    }
 }
 
 // Once the player has committed to a target, shoot/throw/toss at it.
 // Handles conducts, action counts, ammunition use, etc.
-static void _player_shoot(ranged_attack_beam &pbolt)
+static void _player_shoot(ranged_attack_beam &pbolt, bool allow_salvo)
 {
     const item_def& item = *pbolt.atk.weapon;
     const int bow_brand = get_weapon_brand(item);
@@ -742,10 +828,16 @@ static void _player_shoot(ranged_attack_beam &pbolt)
         count_action(CACT_THROW, item.sub_type, OBJ_MISSILES);
     }
 
+    const bool do_salvo = allow_salvo
+                            && (you.duration[DUR_SALVO] && is_range_weapon(item)
+                                || is_unrandom_artefact(item, UNRAND_ZEPHYR));
+    const string proj_name = do_salvo ? make_stringf("a salvo of %ss", pbolt.atk.projectile_name().c_str())
+                                      : article_a(pbolt.atk.projectile_name()).c_str();
+
     // Create message.
     mprf("You %s %s%s.",
           is_thrown ? "throw" : "shoot" ,
-          article_a(pbolt.atk.projectile_name()).c_str(),
+          proj_name.c_str(),
           you.current_vision == 0 ? " into the darkness" : "");
 
     pbolt.beam.set_is_tracer(false);
@@ -776,7 +868,21 @@ static void _player_shoot(ranged_attack_beam &pbolt)
         }
     }
     else
+    {
         pbolt.fire();
+
+        if (do_salvo)
+        {
+            _fire_salvo(pbolt);
+            if (!is_unrandom_artefact(item, UNRAND_ZEPHYR))
+            {
+                if (--you.props[SALVO_KEY] == 0)
+                    you.duration[DUR_SALVO] = 0;
+                else
+                    you.duration[DUR_SALVO] = random_range(30, 50);
+            }
+        }
+    }
 
     if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
         did_god_conduct(DID_CHAOS, 2 + random2(3), bow_brand == SPWPN_CHAOS);
@@ -853,6 +959,7 @@ bool mons_throw(monster* mons, ranged_attack_beam& ratk, bool teleport, bool was
     if (teleport)
     {
         beam.use_target_as_pos = true;
+        unwind_var<ranged_attack*> old_atk(beam.ranged_atk, &ratk.atk);
         beam.affect_cell();
         beam.affect_endpoint();
     }
@@ -893,4 +1000,60 @@ static bool _thrown_object_destroyed(const item_def &item)
         return false;
 
     return one_chance_in(ammo_destroy_chance(item));
+}
+
+bool do_west_wind_shot()
+{
+    // Perform at most one gale-force shot per turn, and only if the player moved.
+    if (!you.has_mutation(MUT_WEST_WIND) || you.triggers_done[DID_WEST_WIND_SHOT]
+        || you.pos() == you.pos_at_turn_start)
+    {
+        return false;
+    }
+
+    const item_def* wpn = you.weapon();
+    if (!wpn || !is_range_weapon(*wpn) || you.berserk() || you.confused())
+        return false;
+
+    you.did_trigger(DID_WEST_WIND_SHOT);
+
+    const coord_def targ = (you.pos() - you.pos_at_turn_start).sgn() + you.pos();
+    ranged_attack prototype(&you, nullptr, wpn);
+
+    prototype.dmg_mult = 33;
+    prototype.pierce = true;
+    prototype.set_projectile_prefix("wind-blessed");
+
+    // Downscale damage from slow weapons versus the player's movement speed.
+    const int attack_delay = you.attack_delay().roll() * BASELINE_DELAY;
+    const int move_delay = player_movement_speed() * player_speed();
+    if (attack_delay > move_delay)
+        prototype.dmg_mult += (move_delay * 100 / attack_delay) - 100;
+
+    if (_salvo_shot_tracer(you.pos(), targ, true, nullptr))
+    {
+        bolt wind;
+        wind.source = you.pos();
+        wind.target = targ;
+        wind.pierce = true;
+        wind.range  = you.current_vision;
+        wind.set_is_tracer(true);
+        wind.fire();
+
+        // Push monsters from back to front (but never pushing them out of sight)
+        for (int i = wind.path_taken.size() - 2; i >= 0; --i)
+        {
+            const int dist = min((int)wind.path_taken.size() - i - 1, random_range(1, 2));
+            if (monster* mon = monster_at(wind.path_taken[i]))
+                mon->knockback(you, dist, 0, "wind");
+        }
+
+        do_player_ranged_attack(targ, nullptr, &prototype, true, false);
+
+        you.duration[DUR_SALVO] = random_range(20, 40);
+        int& stacks = you.props[SALVO_KEY].get_int();
+        stacks = min(5, stacks + 1);
+    }
+
+    return true;
 }

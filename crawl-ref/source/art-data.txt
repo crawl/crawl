@@ -499,13 +499,16 @@ BOOL:    rCorr
 
 NAME:     longbow "Zephyr"
 OBJ:      OBJ_WEAPONS/WPN_LONGBOW
-PLUS:     +8
+PLUS:     +12
 COLOUR:   ETC_GOLD
 TILE:     urand_zephyr
 TILE_EQ:  ZEPHYR
-BRAND:    SPWPN_SPEED
-DEX:      3
-BOOL:     seeinv
+FB_BRAND: SPWPN_SPEED
+INSCRIP:  Salvo,
+DBRAND:   Salvo: Any attack performed with it also shoots at up to 5 other
+ unobstructed targets in range.
+DEX:      5
+BOOL:     fly
 
 NAME:    giant club "Skullcrusher"
 OBJ:     OBJ_WEAPONS/WPN_GIANT_CLUB
@@ -1113,7 +1116,7 @@ LIFE:    2
 BOOL:    elec, poison, notelep, deleted
 # end TAG_MAJOR_VERSION
 
-NAME:    amulet of the Four Winds
+NAME:    amulet of Tranquility
 OBJ:     OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:  ETC_POISON
 TILE:    urand_four_winds

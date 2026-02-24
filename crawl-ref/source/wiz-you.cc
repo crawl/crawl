@@ -462,6 +462,8 @@ void wizard_set_skill_level(skill_type skill)
                                       old_amount > amount ? "Lowered"
                                                           : "Reset"),
          skill_name(skill), amount);
+
+    update_four_winds(true);
 }
 
 void wizard_set_all_skills()
@@ -498,6 +500,8 @@ void wizard_set_all_skills()
 
         you.redraw_armour_class = true;
         you.redraw_evasion = true;
+
+        update_four_winds(true);
     }
 }
 

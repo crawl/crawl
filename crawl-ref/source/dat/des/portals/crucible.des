@@ -37,7 +37,7 @@ function crucible_original_subvault_setup(e, branch)
   e.kitem("s : " .. n .. " human corpse / " .. n .. " kobold corpse / " ..
                     n .. " orc corpse / " .. n .. " naga corpse / " ..
                     n .. " merfolk corpse / " .. n .. " merfolk corpse")
-  e.kitem("S : " .. n .. " armataur corpse / " .. n .. " barachi corpse / " ..
+  e.kitem("S : " .. n .. " centaur corpse / " .. n .. " barachi corpse / " ..
                     n .. " demonspawn corpse / " .. n .. " dwarf corpse / " ..
                     n .. " felid corpse / " .. n .. " formicid corpse / " ..
                     n .. " octopode corpse / " .. n .. " oni corpse")

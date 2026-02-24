@@ -762,7 +762,7 @@ static bool _yred_bind_soul(monster* mons, killer_type killer)
 
 static bool _vampire_make_thrall(monster* mons, killer_type killer)
 {
-    if (!mons->props.exists(VAMPIRIC_THRALL_KEY) || you.allies_forbidden())
+    if (you.allies_forbidden() || mons->has_ench(ENCH_SUMMON_TIMER))
         return false;
 
     // Check if another thrall is already alive.
@@ -787,7 +787,6 @@ static bool _vampire_make_thrall(monster* mons, killer_type killer)
 
     mons->hit_points = mons->max_hit_points;
     mons->flags |= MF_FAKE_UNDEAD;
-    mons->props.erase(VAMPIRIC_THRALL_KEY);
 
     // End constriction and all status effects.
     mons->stop_constricting_all();
@@ -1115,6 +1114,12 @@ static void _blorkula_bat_merge_message(monster* blork, int bat_count)
 static bool _monster_avoided_death(monster* mons, killer_type killer,
                                    int killer_index)
 {
+    // We need to clean this property up no matter how the monster returns to
+    // life as it should only be on dead monsters
+    const bool can_be_thrall = mons->props.exists(VAMPIRIC_THRALL_KEY);
+    if (can_be_thrall)
+        mons->props.erase(VAMPIRIC_THRALL_KEY);
+
     if (mons->max_hit_points <= 0 || mons->get_hit_dice() < 1)
         return false;
 
@@ -1171,7 +1176,7 @@ static bool _monster_avoided_death(monster* mons, killer_type killer,
     if (_ely_heal_monster(mons, killer, killer_index))
         return true;
 
-    if (_vampire_make_thrall(mons, killer))
+    if (can_be_thrall && _vampire_make_thrall(mons, killer))
         return true;
 
     return false;
@@ -2803,7 +2808,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     else if (mons.type == MONS_PLAYER_SHADOW)
         dithmenos_cleanup_player_shadow(&mons);
     else if (mons.type == MONS_ORB_GUARDIAN
-             && real_death
+             && (real_death || killer == KILL_BANISHED)
              && level_id::current() == level_id(BRANCH_ZOT, 5)
              && !player_on_orb_run()
              && !you.props.exists(TESSERACT_SPAWN_COUNTER_KEY))
@@ -2835,6 +2840,11 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
     else if (mons.type == MONS_ERYTHROSPITE && !mons.is_abjurable())
         bleed_onto_floor(mons.pos(), MONS_ERYTHROSPITE, 100, false);
+    else if (mons.type == MONS_ROYAL_JELLY && mons.hit_points > 0
+             && real_death && !summoned)
+    {
+        schedule_trj_spawn_fineff(&you, &mons, mons.pos(), mons.hit_points);
+    }
 
     if (mons.has_ench(ENCH_MAGNETISED))
     {

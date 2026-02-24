@@ -228,10 +228,10 @@ Fw JOB_FORGEWRIGHT
 felids/cat3 SP_RECOMMENDED_FELID
 base/poltergeist SP_RECOMMENDED_POLTERGEIST
 %start
-%compose base/armataur
+%compose base/anemocentaur_m
 %compose body/animal_skin
-%compose hair/short_black
-%finish SP_RECOMMENDED_ARMATAUR
+%compose hair/fem_yellow
+%finish SP_RECOMMENDED_ANEMOCENTAUR
 %start
 %compose base/deep_elf_f
 %compose body/animal_skin
@@ -345,7 +345,7 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %texture disabled-fg
 enum:SP_RECOMMENDED_FELID SP_FELID
 enum:SP_RECOMMENDED_POLTERGEIST SP_POLTERGEIST
-enum:SP_RECOMMENDED_ARMATAUR SP_ARMATAUR
+enum:SP_RECOMMENDED_ANEMOCENTAUR SP_ANEMOCENTAUR
 enum:SP_RECOMMENDED_DEEP_ELF SP_DEEP_ELF
 enum:SP_RECOMMENDED_DEMIGOD SP_DEMIGOD
 enum:SP_RECOMMENDED_DEMONSPAWN SP_DEMONSPAWN

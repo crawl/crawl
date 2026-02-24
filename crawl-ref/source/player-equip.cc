@@ -1503,7 +1503,7 @@ static void _calc_hp_artefact()
 {
     calc_hp();
     if (you.hp_max <= 0) // Borgnjor's abusers...
-        ouch(0, KILLED_BY_DRAINING);
+        player_die(KILLED_BY_DRAINING);
 }
 
 static void _flight_equip()
@@ -1735,7 +1735,7 @@ void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     }
 
     if (proprt[ARTP_RAMPAGING] && msg && !unmeld
-        && !you.has_mutation(MUT_ROLLPAGE))
+        && !you.has_mutation(MUT_STAMPEDE))
     {
         mpr("You feel ready to rampage towards enemies.");
     }
@@ -2305,7 +2305,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             break;
 
         case SPARM_RAMPAGING:
-            if (!you.has_mutation(MUT_ROLLPAGE))
+            if (!you.has_mutation(MUT_STAMPEDE))
                 mpr("You feel ready to rampage towards enemies.");
             break;
 

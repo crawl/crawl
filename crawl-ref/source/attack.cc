@@ -60,7 +60,7 @@ attack::attack(actor *attk, actor *defn, actor *blame)
       cancel_attack(false), did_hit(false),
       needs_message(false), attacker_visible(false), defender_visible(false),
       perceived_attack(false), obvious_effect(false), to_hit(0),
-      damage_done(0), special_damage(0), aux_damage(0),
+      damage_done(0), special_damage(0), aux_damage(0), total_damage_done(0),
       special_damage_flavour(BEAM_NONE),
       stab_attempt(false), stab_bonus(0), ev_margin(0), weapon(nullptr),
       damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT),
@@ -68,6 +68,7 @@ attack::attack(actor *attk, actor *defn, actor *blame)
       attacker_to_hit_penalty(0), attack_verb("bug"), verb_degree(),
       no_damage_message(), special_damage_message(), aux_attack(), aux_verb(),
       defender_shield(nullptr), simu(false),
+      dmg_mult(0), flat_dmg_bonus(0), to_hit_bonus(0),
       aux_source(""), kill_type(KILLED_BY_MONSTER)
 {
     // No effective code should execute, we'll call init_attack again from
@@ -248,6 +249,8 @@ int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
     // Penalties for both players and monsters:
     modifiers -= attacker->inaccuracy_penalty();
 
+    modifiers += to_hit_bonus;
+
     if (attacker->confused())
         modifiers += CONFUSION_TO_HIT_MALUS;
 
@@ -424,6 +427,17 @@ void attack::init_attack(int attack_number)
         attk_type    = AT_HIT;
         attk_flavour = AF_PLAIN;
     }
+}
+
+// Copy over initial attack parameters (ie: things that must be defined before
+// attack() or launch_attack_set() are called). Things calculated after that
+// point should not be copied.
+void attack::copy_params_to(attack &other) const
+{
+    other.dmg_mult              = dmg_mult;
+    other.flat_dmg_bonus        = flat_dmg_bonus;
+    other.to_hit_bonus          = to_hit_bonus;
+    other.simu                  = simu;
 }
 
 void attack::alert_defender()
@@ -676,7 +690,7 @@ void attack::drain_defender_speed()
     defender->slow_down(attacker, 5 + random2(7));
 }
 
-int attack::inflict_damage(int dam, beam_type flavour, bool clean)
+int attack::inflict_damage(int dam, beam_type flavour)
 {
     if (flavour == NUM_BEAMS)
         flavour = special_damage_flavour;
@@ -691,10 +705,12 @@ int attack::inflict_damage(int dam, beam_type flavour, bool clean)
         defender->props[REAPER_KEY].get_int() = attacker->mid;
     }
     const int final = defender->hurt(responsible, dam, flavour, kill_type,
-                                     "", aux_source.c_str(), clean);
+                                     "", aux_source.c_str(), false);
 
     if (defender->is_monster() && !defender->alive())
         defender->props[ATTACK_KILL_KEY] = true;
+
+    total_damage_done += final;
 
     return final;
 }
@@ -806,6 +822,8 @@ string attack::defender_name(bool allow_reflexive)
 
 int attack::player_apply_misc_modifiers(int damage)
 {
+    damage += flat_dmg_bonus;
+
     return damage;
 }
 
@@ -863,6 +881,9 @@ int attack::player_apply_final_multipliers(int damage, bool /*aux*/)
     // owner would, matching cleaving.
     if (attacker->type == MONS_SPECTRAL_WEAPON)
         damage = div_rand_round(damage * 7, 10);
+
+    if (dmg_mult)
+        damage = damage * (100 + dmg_mult) / 100;
 
     return damage;
 }
@@ -938,7 +959,7 @@ int attack::calc_damage()
         damage_max += attk_damage;
         damage     += 1 + random2(attk_damage);
 
-        damage = apply_damage_modifiers(damage);
+        damage = apply_mon_damage_modifiers(damage);
 
         set_attack_verb(damage);
         return apply_defender_ac(damage, damage_max);
@@ -1477,6 +1498,13 @@ int attack::player_stab(int damage)
             int& stacks = you.props[DEVIOUS_KEY].get_int();
             stacks = min(stacks + 1, 3);
             you.redraw_evasion = true;
+        }
+
+        if (you.has_mutation(MUT_SOUTH_WIND) && !defender->wont_attack())
+        {
+            if (!you.duration[DUR_TAILWIND])
+                mprf(MSGCH_DURATION, "The winds around you quicken.");
+            you.duration[DUR_TAILWIND] = max(you.duration[DUR_TAILWIND], random_range(50, 90));
         }
     }
     else

@@ -1066,6 +1066,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         monster_die(*this, KILL_TIMEOUT, NON_MONSTER);
         break;
 
+    case ENCH_EXPOSED:
+        if (!quiet)
+            simple_monster_message(*this, " is no longer exposed.");
+        break;
+
     default:
         break;
     }
@@ -1387,6 +1392,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_MIRROR_DAMAGE:
     case ENCH_DRAINED:
     case ENCH_SUNDER_CHARGE:
+    case ENCH_EXPOSED:
         decay_enchantment(en);
         break;
 
@@ -2149,6 +2155,7 @@ static const char *enchant_names[] =
     "vampire_thrall", "pyrrhic_recollection", "clockwork_bee_cast",
     "phalanx_barrier", "figment", "paradox-touched", "warding",
     "diminished_spells", "orb_cooldown", "sunder_charge",
+    "exposed",
     "buggy", // NUM_ENCHANTMENTS
 };
 

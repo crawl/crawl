@@ -1333,7 +1333,8 @@ MONS:   necromancer
 : mons("phantasmal warrior w:" .. 9 - d .. " / flayed ghost w:" .. d)
 SUBST:  0 : 0000z
 NSUBST: 0 = 1:0 / 2:. / * = 0009..
-NSUBST: z = 2:1 / 2:2 / 1:3 / 2:% / * = 11113...
+NSUBST: z = 2:1 / 2:2 / 1:3 / 2:% / * = 11113'''
+FTILE:  '123% = floor_necro_squares
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx
 xx00xx00xx00xx00xx00xx00xx

@@ -2174,7 +2174,8 @@ MONS:   ancient champion
 KMONS:  D = draugr place:Depths:$ w:16 / lich w:4 / bone dragon w:2 / \
             ancient lich w:1 / dread lich w:1
 KITEM:  D = star_item / superb_item
-NSUBST: D = 1:D / 3:$ / * = D$$$
+NSUBST: $ = 1:D / 3:$ / * = D$$$
+FTILE:  .1D$} = floor_necro_squares
 MAP
 ccccccccccccc
 c$$$ccccc$$$c
@@ -2465,9 +2466,8 @@ MONS:    freezing wraith / phantasmal warrior / flayed ghost / shadow wraith
 MONS:    spectre place:Crypt:$
 MONS:    vampire mage / deep elf death mage w:5
 MONS:    revenant soulmonger / eidolon / lich w:5
-: kmons("7 = jory / vampire bloodprince, vampire bloodprince w:20 / " .. vamp_def)
-# Depths
-: else
+:   kmons("7 = jory / vampire bloodprince, vampire bloodprince w:20 / " .. vamp_def)
+: else -- Depths
 MONS:    zombie / laughing skull w:15 / spectral thing / simulacrum
 MONS:    chonchon w:2 / jiangshi / sin beast / caustic shrike simulacrum w:2
 MONS:    freezing wraith / phantasmal warrior / flayed ghost / shadow wraith
@@ -2483,11 +2483,12 @@ KFEAT:   _ = altar_yredelemnul / altar_kikubaaqudgha
 SHUFFLE: apqr
 SUBST:   a = +, pqr = x, D = 56, G : Ggg
 NSUBST:  1 = 10:1 / 8 = 1. / *:.
+FTILE:   .+1234567_Y*| = floor_necro_squares
 : vault_metal_statue_setup(_G, "g", "mystic cage")
 MAP
-G..wwwwwWwwWwwWwwwww..G
-..wwwwwWwwwWwwwWwwwww..
-.wWw111xxxx+xxxx111wWw.
+G''wwwwwWwwWwwWwwwww''G
+''wwwwwWwwwWwwwWwwwww''
+'wWw111xxxx+xxxx111wWw'
 www113xxx22422xxx311www
 ww111xx.+24542+.xx111ww
 ww13ax..ccccccc..xp31ww
@@ -2504,9 +2505,9 @@ ww1xx..cc.....cc..xx1ww
 ww13qx..ccc.ccc..xr31ww
 ww111xx..cc+cc..xx111ww
 www113xx..333..xx311www
-.wWw111xxxxxxxxx111wWw.
-..wwwwwWwwwwwwwWwwwww..
-G..wwwwwWwwwwwWwwwww..G
+'wWw111xxxxxxxxx111wWw'
+''wwwwwWwwwwwwwWwwwww''
+G''wwwwwWwwwwwWwwwww''G
 ENDMAP
 
 ##############################################################################
@@ -2875,7 +2876,8 @@ TILE:   G = depths_column
 : else
 MONS:   laughing skull band, vampire, unseen horror
 MONS:   phantasmal warrior, orange crystal statue
-SUBST:  'gU = ., | = *
+SUBST:  gU = ', | = *
+FTILE:  'V12345$%G = floor_necro_squares
 : end
 KMONS:  P = plant
 SUBST:  p = P.
@@ -3322,21 +3324,24 @@ MONS:    lich / revenant soulmonger /  bone dragon
 KMONS:   5 = Jory / vampire bloodprince / revenant, \
              vampire bloodprince / revenant soulmonger
 SUBST:   x = v
-: elseif you.in_branch("Depths") then
+: else
+:   if you.in_branch("Depths") then
 MONS:    vampire knight / jiangshi / flayed ghost
 MONS:    lich / vampire mage
 KMONS:   5 = Boris / vampire bloodprince w:5 / ancient lich, \
              vampire bloodprince w:5 / ancient lich
-: elseif you.absdepth() > 13 then
+:   elseif you.absdepth() > 13 then
 MONS:    phantasmal warrior / skeletal warrior / eidolon
 MONS:    vampire mage / death knight
 # Really, nobody else even slightly undead? >_>
 KMONS:   5 = Frances / vampire mage / death knight, vampire mage / death knight
-: else
+:   else
 MONS:    wight / wraith / shadowghast
 MONS:    skeletal warrior / necromancer
 KMONS:   5 = Josephine / skeletal warrior / necromancer, \
              skeletal warrior / necromancer
+:   end
+FTILE:   *2345+ = floor_necro_squares
 : end
 SHUFFLE: Aa / Bb / Cc / Dd / Ee / Ff
 SUBST:   5 = 5 3:2, 2 = 2 3:2, ABCD = ., abcd = @, EeFf = x
@@ -3673,31 +3678,43 @@ KMONS:   N = chonchon w:5 / tengu warrior / tengu conjurer / tengu reaver
 KMONS:   O = spriggan berserker / spriggan air mage / spriggan defender
 KMONS:   P = balrug w:12 / blizzard demon w:12 / shadow demon w:12 / \
              sin beast w:12 / hellion / reaper / tormentor
-SHUFFLE: DEFHJKLMNOP
+SHUFFLE: Dd / Ee / Ff / Hh / Jj / Kk / L' / M" / N` / O; / P~
+FTILE:   Dd = floor_pebble_blue
+FTILE:   Ee = floor_pebble_cyan
+FTILE:   Ff = floor_volcanic
+FTILE:   Hh = floor_pebble_brown
+FTILE:   Jj = floor_tomb
+FTILE:   Kk = floor_hall
+FTILE:   L' = floor_slime
+FTILE:   M" = floor_necro_squares
+FTILE:   N` = floor_moss
+FTILE:   O; = floor_sprouting_squares
+FTILE:   P~ = floor_infernal_blank
+FTILE:   .+ = floor_pebble_darkgray
 MAP
 xxvvvvvvvvvvvvvxx
-xvv..vvvvvvv..vvx
-vv.DD.vvvvv....vv
-v..DD.+...+.EEE.v
-v..DD.+...+.EEE.v
-vv....vvvvv....vv
+xvvddvvvvvvveevvx
+vvdDDdvvvvveeeevv
+vddDDd+...+eEEEev
+vddDDd+...+eEEEev
+vvddddvvvvveeeevv
 xvv++vv|||vv++vvx
 xxv..v*****v..vxx
 xxv..v%%%%%v..vxx
 xvv++vv%%%vv++vvx
-vv.FF.vv+vv....vv
-v..FF..v.v..HH..v
-v..FF..v.v..HH..v
-vv....vv+vv.HH.vv
-xvv++vv...vv++vvx
-xxv..v.JJJ.v..vxx
-xxv..v.JJJ.v..vxx
-xvv++vv...vv++vvx
-vv.KK.vv+vv....vv
-v..KK..v.v..LL..v
-v..KK..v.+..LL..v
-vv....vvvvv.LL.vv
-xvv..vvvvvvv..vvx
+vvfFFfvv+vvhhhhvv
+vffFFffv.vhhHHhhv
+vffFFffv.vhhHHhhv
+vvffffvv+vvhHHhvv
+xvv++vvjjjvv++vvx
+xxv..vjJJJjv..vxx
+xxv..vjJJJjv..vxx
+xvv++vvjjjvv++vvx
+vvkKKkvv+vv''''vv
+vkkKKkkv.v''LL''v
+vkkKKkkv.+''LL''v
+vvkkkkvvvvv'LL'vv
+xvvkkvvvvvvv''vvx
 xxv==vvvvvvvvvvxx
    @@
 ENDMAP
@@ -4798,6 +4815,9 @@ DEPTH:   Depths, Crypt
 MONS:    mummy priest, royal mummy
 KITEM:   d = sceptre_of_torment no_pickup pre_id
 KMONS:   d = royal mummy
+: if you.in_branch("Depths") then
+FTILE:   .12d = floor_necro_squares
+: end
 MAP
 ccccccccccc@ccccccccccc
  cc2.....cc..c.....1cc
@@ -4905,8 +4925,8 @@ SUBST:  b = bmm
 TILE:   b = bedevilled_crystal_cocytus
 :   set_feature_name("crystal_wall", "bedevilled crystal wall")
 : end
-KMONS:  3 = ice statue
-KFEAT:  3 = >
+KMONS:  8 = ice statue
+KFEAT:  8 = >
 NSUBST: ' = 5=*$ / *:%, $ = 1:dd$ / *:$
 KPROP:  -W1238$%* = no_tele_into
 KMASK:  -W1238$%* = opaque
@@ -4920,7 +4940,7 @@ MAP
   ..wWW-----WWw..
  ..wwW-bm-mm-Www..
 ..xwW--m'''m--Wwx..
-@xxwW---'3'---Wwxx@
+@xxwW---'8'---Wwxx@
 ..xwW--m'''m--Wwx..
  ..wwW-mm-mb-Www..
   ..wWW-----WWw..
@@ -4966,7 +4986,7 @@ NAME:   cheibrodos_quashed
 TAGS:   no_item_gen no_monster_gen
 DEPTH:  D:4-8
 ORIENT: float
-MONS:   ufetubus
+MONS:   drude
 KPROP:  -A = no_tele_into
 NSUBST: - = 2:1 / 2=1. / 1:* / 5=%$.
 MAP
@@ -5104,7 +5124,8 @@ ORIENT: float
 MONS: tzitzimitl, hell knight / skeletal warrior / w:2 lich
 : else
 MONS: tormentor
-MONS: death knight / wraith w:5 / freezing wraith w:1 / skeletal warrior w:4
+MONS: skeletal warrior / phantasmal warrior w:5 / \
+      wraith w:5 / freezing wraith w:1
 : end
 ITEM: demon whip ego:pain / demon whip ego:draining / demon blade ego:pain / \
       demon blade ego:draining / demon trident ego:pain / \
@@ -6097,7 +6118,7 @@ KITEM:  ?1 = kobold skeleton
 KPROP:  ?A1 = bloody
 KFEAT:  O = altar_kikubaaqudgha
 NSUBST: ' = 1:* / 4:%%- / *:-
-FTILE:  uk-?A12O*%V = floor_pebble_darkgray
+FTILE:  uk-?A12O*%V = floor_necro_squares
 : decorative_floor(_G, 'V', "mourning vase")
 MAP
        ccccc
@@ -6284,7 +6305,8 @@ ORIENT:  float
 # Item qualities that can upgrade with depth.
 ITEM:    whip good_item w:20 / snakebite w:1
 ITEM:    whip randart w:15 / demon whip w:4 / snakebite w:1
-ITEM:    demon whip good_item, hat good_item tile:thelm_hat_explorer, hat randart tile:thelm_hat_explorer
+ITEM:    demon whip good_item, hat good_item tile:thelm_hat_explorer
+ITEM:    hat randart tile:thelm_hat_explorer
 ITEM:    any jewellery good_item, any jewellery randart
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
 # We use boulder beetles at every depth, and lava snakes need a shared marker
@@ -6742,7 +6764,7 @@ NSUBST:  - = 2=1 / 3=1- / 3=2 / 5=2- / -
 SHUFFLE: 2p / 3q
 COLOUR:  c = white
 TILE:    G = dngn_statue_demonic_bust
-TILE:    c = wall_brick_white
+TILE:    x = wall_brick_white
 FTILE:   -+G123pqd = floor_rough_white
 MAP
  .ccccccccccccccc
@@ -7158,7 +7180,7 @@ COLOUR:  g = mountain
 TILE:    x = wall_undead_magenta / wall_undead_darkgray
 TILE:    v = dngn_metal_wall_red / dngn_metal_wall_cyan
 FTILE:   `+ = floor_pebble_magenta / floor_pebble_red
-FTILE:   .^f_$%*|?!12345670BCDEF = floor_tomb
+FTILE:   .^f_$%*|?!12345670BCDEF : floor_tomb / floor_necro_squares w:5
 : vault_granite_statue_setup(_G, "g", "scintillating statue")
 : decorative_floor(_G, 'f', "broken floral vase")
 MAP
@@ -10199,7 +10221,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_cut_squares
-DEPTH:  D:8-, Depths
+DEPTH:  D:11-, Depths
 TAGS:   transparent
 ORIENT: float
 SUBST:  9 = 9.

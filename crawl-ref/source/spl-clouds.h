@@ -15,7 +15,7 @@ void explode_blastmotes_at(coord_def p);
 void big_cloud(cloud_type cl_type, const actor *agent, const coord_def& where,
                int pow, int size, int spread_rate = -1);
 
-spret cast_freezing_cloud(int pow, bolt &beam, bool fail);
+spret cast_freezing_cloud(int pow, const coord_def& target, bool fail);
 
 void holy_flames(monster* caster, actor* defender);
 

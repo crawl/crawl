@@ -880,20 +880,18 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_ROLLPAGE, 0, 2, mutflag::good,
-  "rollpage",
+{ MUT_STAMPEDE, 0, 2, mutflag::good,
+  "stampede",
 
-  {"You regenerate magic when rolling toward enemies. (Rampage MPRegen)",
-   "You regenerate magic and health when rolling toward enemies. (Rampage Regen)",
-   ""},
+  {"You stampede swiftly towards enemies and can push them backward.",
+    "You stampede swiftly towards enemies and can push them backward.", ""},
+  {"You become able to stampede towards enemies.",
+   "Your stampede becomes supported by the winds.", ""},
+  {"You can no longer stampede toward enemies.", "", ""},
 
-  {"You begin to regenerate magic when rolling toward enemies.",
-   "You begin to regenerate health when rolling toward enemies.",
-   ""},
+  TILEG_MUT_STAMPEDE,
 
-  {"You can no longer roll toward enemies.",
-   "You can no longer regenerate health when rolling toward enemies.",
-   ""},
+  {0, "One of the Four Winds will empower you as you Stampede.", 0}
 },
 
 { MUT_SHAGGY_FUR, 2, 3, mutflag::good | mutflag::anatomy,
@@ -2449,6 +2447,42 @@ static const mutation_def mut_data[] =
   {"Your blood calms down again.",
    "Your blood feels a little less spiteful.", ""},
   TILEG_MUT_SPITEFUL_BLOOD,
+},
+
+{ MUT_NORTH_WIND, 0, 1, mutflag::good,
+  "North Wind's embodiment",
+
+  {"The North Wind lets you shrug off injuries taken while stampeding.", "", ""},
+  {"You feel the indomitable North Wind bolstering your fortitude.", "", ""},
+  {"The winds are changing....", "", ""},
+  TILEG_MUT_STAMPEDE_NORTH,
+},
+
+{ MUT_SOUTH_WIND, 0, 1, mutflag::good,
+  "South Wind's embodiment",
+
+  {"The South Wind quickens your rampage movements after stabbing.", "", ""},
+  {"You feel the capricious South Wind quickening your steps.", "", ""},
+  {"The winds are changing....", "", ""},
+  TILEG_MUT_STAMPEDE_SOUTH,
+},
+
+{ MUT_WEST_WIND, 0, 1, mutflag::good,
+  "West Wind's embodiment",
+
+  {"The West Wind empowers your ranged attacks as you Rampage.", "", ""},
+  {"You feel the generous West Wind guiding your aim.", "", ""},
+  {"The winds are changing....", "", ""},
+  TILEG_MUT_STAMPEDE_WEST,
+},
+
+{ MUT_EAST_WIND, 0, 1, mutflag::good,
+  "East Wind's embodiment",
+
+  {"The East Wind leaves your foes to susceptible to magic after you Rampage.", "", ""},
+  {"You feel the spiteful East Wind laying your enemies bare.", "", ""},
+  {"The winds are changing....", "", ""},
+  TILEG_MUT_STAMPEDE_EAST,
 },
 
 // Makhleb-specific mutations

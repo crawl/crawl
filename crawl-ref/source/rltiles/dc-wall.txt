@@ -1776,6 +1776,7 @@ crucible_of_flesh8
 crucible_of_flesh9
 
 ## Vault tiles without specific homes
+## First, rock walls.
 
 # These 15 variants are referenced from tileview.cc
 pebble_red0 WALL_PEBBLE WALL_PEBBLE_RED
@@ -2021,6 +2022,17 @@ catacombs14
 catacombs15
 %weight 10
 
+wall_baleful0 WALL_BALEFUL
+wall_baleful1
+%weight 8
+wall_baleful2
+%weight 4
+wall_baleful3
+wall_baleful4
+%weight 3
+wall_baleful5
+
+%weight 10
 beehives0 WALL_WAX
 beehives1
 beehives2
@@ -2031,6 +2043,8 @@ beehives6
 beehives7
 beehives8
 beehives9
+
+## Stone walls start here.
 
 %weight 5
 marble_wall1 WALL_MARBLE
@@ -2130,6 +2144,8 @@ stone_wall_scorched0 WALL_STONE_SCORCHED
 stone_wall_scorched1
 stone_wall_scorched2
 stone_wall_scorched3
+
+# Other vault wall types start here.
 
 mirrored_wall DNGN_MIRROR_WALL
 

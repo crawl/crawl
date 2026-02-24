@@ -28,6 +28,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "message.h"
+#include "mutation.h"
 #include "notes.h"
 #include "output.h"
 #include "random.h"
@@ -1196,6 +1197,9 @@ void train_skills(bool simu)
 
     // We might have disabled some skills on level up.
     reset_training();
+
+    // Check if we need to update an anemocentaur's prevailing wind.
+    update_four_winds();
 }
 
 //#define DEBUG_TRAINING_COST
@@ -1494,6 +1498,160 @@ void change_skill_points(skill_type sk, int points, bool do_level_up)
     check_skill_level_change(sk, do_level_up);
 }
 
+enum wind_skill_type
+{
+    WIND_MELEE,
+    WIND_RANGED,
+    WIND_STEALTH,
+    WIND_MAGIC,
+
+    WIND_NONE = -1
+};
+
+static wind_skill_type _skill_to_wind(skill_type sk)
+{
+    switch (sk)
+    {
+        case SK_LONG_BLADES:
+        case SK_UNARMED_COMBAT:
+        case SK_MACES_FLAILS:
+        case SK_AXES:
+        case SK_STAVES:
+        case SK_POLEARMS:
+            return WIND_MELEE;
+
+        case SK_RANGED_WEAPONS:
+            return WIND_RANGED;
+
+        case SK_SHORT_BLADES:
+        case SK_STEALTH:
+            return WIND_STEALTH;
+
+        case SK_AIR_MAGIC:
+        case SK_EARTH_MAGIC:
+        case SK_FIRE_MAGIC:
+        case SK_ICE_MAGIC:
+        case SK_NECROMANCY:
+        case SK_FORGECRAFT:
+        case SK_SUMMONINGS:
+        case SK_ALCHEMY:
+        case SK_CONJURATIONS:
+        case SK_TRANSLOCATIONS:
+        case SK_HEXES:
+            return WIND_MAGIC;
+
+        default:
+            return WIND_NONE;
+    }
+}
+
+// Initialize tracking for four winds skills. (Called at game start and in some
+// other cases of direct skill changes.)
+void init_four_winds()
+{
+    you.wind_category_weight.init(0);
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+    {
+        wind_skill_type wind = _skill_to_wind(sk);
+        if (wind == WIND_NONE)
+            continue;
+
+        const int sk_lv = you.skill(sk, 10, true, false);
+        you.wind_category_weight[wind] = max(you.wind_category_weight[wind], sk_lv);
+    }
+
+    // Set the current prevailing wind based on any mutations the player may
+    // already have (in case of ties, on file load).
+    for (int i = 0; i < 3; ++i)
+        if (you.has_mutation(static_cast<mutation_type>(MUT_NORTH_WIND + i)))
+            you.prevailing_wind = i;
+}
+
+// Checks if the prevailing wind has changed (or is nearing change) and gives
+// appropriate messages and mutation adjustments
+void update_four_winds(bool force_recheck)
+{
+    if (you.get_mutation_level(MUT_STAMPEDE) < 2)
+        return;
+
+    if (force_recheck)
+        init_four_winds();
+
+    wind_skill_type prevailing = WIND_MELEE;
+    int prevailing_amount = 0;
+
+    // In case of ties, stay with the wind you already had.
+    // (This is especially important once the player reaches 27 in a skill, so
+    // that the skill that first reaches that becomes 'locked in'.)
+    if (you.prevailing_wind != -1)
+    {
+        prevailing_amount = you.wind_category_weight[you.prevailing_wind];
+        prevailing = static_cast<wind_skill_type>(you.prevailing_wind);
+    }
+
+    for (int i = 0; i < 4; ++i)
+    {
+        if (you.wind_category_weight[i] > prevailing_amount)
+        {
+            prevailing_amount = you.wind_category_weight[i];
+            prevailing = static_cast<wind_skill_type>(i);
+        }
+    }
+
+    if (you.prevailing_wind != prevailing)
+    {
+        you.gave_wind_change_warning = false;
+
+        // Lose old wind mutation (if one exists) and gain new one.
+        // (Messaging is handled by the mutations themselves.)
+        if (you.innate_mutation[MUT_NORTH_WIND + you.prevailing_wind])
+        {
+            you.innate_mutation[MUT_NORTH_WIND + you.prevailing_wind]--;
+            delete_mutation(static_cast<mutation_type>(MUT_NORTH_WIND + you.prevailing_wind), "Changing winds", false, true, false);
+        }
+        perma_mutate(static_cast<mutation_type>(MUT_NORTH_WIND + prevailing), 1, "Changing winds");
+        you.prevailing_wind = prevailing;
+    }
+    else if (!you.gave_wind_change_warning)
+    {
+        for (int i = 0; i < 4; ++i)
+        {
+            if (i == prevailing)
+                continue;
+
+            // If the player gained skill in a category that is within 1 level of being
+            // the top skill, and has never been warned about this, warn them now.
+            if (you.wind_category_inc[i]
+                && you.wind_category_weight[i] + 10 >= prevailing_amount)
+            {
+                mprf(MSGCH_WARN, "You feel the winds around you beginning to shift...");
+                you.gave_wind_change_warning = true;
+                break;
+            }
+        }
+    }
+    // If we've previously given a warning, check to see if a gap has opened up
+    // again, even if the player's wind has not actually changed.
+    else
+    {
+        int gap = INT_MAX;
+        for (int i = 0; i < 4; ++i)
+        {
+            if (i == prevailing)
+                continue;
+
+            gap = min(gap, you.wind_category_weight[prevailing] - you.wind_category_weight[i]);
+        }
+        if (gap >= 15)
+        {
+            you.gave_wind_change_warning = false;
+            mpr("Turning warning back on.");
+        }
+    }
+
+    you.wind_category_inc.init(false);
+}
+
 // Calculates the skill points required to reach the training target
 // Does not currently consider Ashenzari skill boost for experience currently being gained
 // so this may still result in some overtraining
@@ -1597,6 +1755,18 @@ static int _train(skill_type exsk, int &max_exp, bool simu, bool check_targets)
     ASSERT(you.exp_available >= 0);
     ASSERT(max_exp >= 0);
     you.redraw_experience = true;
+
+    // If this raises the highest skill of one of our skill categories, update it.
+    // (We don't check if this changes the prevailing wind until later.)
+    if (_skill_to_wind(exsk) != WIND_NONE)
+    {
+        int sk_val = you.skill(exsk, 10, true, false);
+        if (you.wind_category_weight[_skill_to_wind(exsk)] < sk_val)
+        {
+            you.wind_category_weight[_skill_to_wind(exsk)] = sk_val;
+            you.wind_category_inc[_skill_to_wind(exsk)] = true;
+        }
+    }
 
     return skill_inc;
 }
@@ -2039,11 +2209,6 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Death Knight";
             break;
 
-        case SK_POLEARMS:
-            if (species == SP_ARMATAUR && skill_rank == 5)
-                result = "Prickly Pangolin";
-            break;
-
         case SK_UNARMED_COMBAT:
             if (species == SP_MUMMY && skill_rank == 5)
                 result = "Pharaoh";
@@ -2229,10 +2394,6 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Black Lotus";
             else if (species == SP_VINE_STALKER && skill_rank == 5 && god == GOD_DITHMENOS)
                 result = "Nightshade";
-            else if (species == SP_ARMATAUR && skill_rank == 5 && god == GOD_QAZLAL)
-                result = "Rolling Thunder";
-            else if (species == SP_ARMATAUR && skill_rank == 5 && is_good_god(god))
-                result = "Holy Roller";
             else if (species == SP_COGLIN && skill_rank == 5 && god == GOD_FEDHAS)
                 result = "Cobgoblin"; // hm.
             else if (species == SP_REVENANT && skill_rank == 5 && god == GOD_XOM)

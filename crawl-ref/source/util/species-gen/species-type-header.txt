@@ -71,8 +71,8 @@ enum species_type
     SP_VINE_STALKER,
     SP_BARACHI,
     SP_GNOLL,
-    SP_ARMATAUR,
 #if TAG_MAJOR_VERSION == 34
+    SP_ARMATAUR,
     SP_MAYFLYTAUR,
     SP_METEORAN,
 #endif
@@ -80,5 +80,6 @@ enum species_type
     SP_COGLIN,
     SP_POLTERGEIST,
     SP_REVENANT,
+    SP_ANEMOCENTAUR,
 
     // Auto-generated enums start here

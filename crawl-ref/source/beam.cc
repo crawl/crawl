@@ -1300,9 +1300,15 @@ void bolt::do_fire()
             return;
         }
 
-        // If requested to stop before hitting allies, do so now.
+        // If requested to stop before hitting allies (or neutrals our god would
+        // object to us harming), do so now.
         const actor* act_at = actor_at(pos());
-        if (act_at && stop_at_allies && mons_atts_aligned(attitude, act_at->temp_attitude())
+        if (act_at && stop_at_allies
+            && (mons_atts_aligned(attitude, act_at->temp_attitude())
+                || (act_at->temp_attitude() == ATT_NEUTRAL
+                    && (is_good_god(you.religion)
+                        || you_worship(GOD_BEOGH) && mons_genus(act_at->type) == MONS_ORC)
+                    && !(act_at->is_monster() && act_at->as_monster()->has_ench(ENCH_FRENZIED))))
             && can_affect_actor(act_at) && !aimed_at_feet
             && !(act_at->is_player() && ignores_player() || ignores_monster(act_at->as_monster())))
         {
@@ -3184,18 +3190,18 @@ void bolt::internal_ouch(int dam)
     if (monst && mons_is_wrath_avatar(*monst))
     {
         ouch(dam, KILLED_BY_DIVINE_WRATH, MID_NOBODY,
-             aux_source.empty() ? nullptr : aux_source.c_str(), true,
+             aux_source.empty() ? nullptr : aux_source.c_str(),
              source_name.empty() ? nullptr : source_name.c_str());
     }
     else if (is_death_effect)
     {
         ouch(dam, KILLED_BY_DEATH_EXPLOSION, source_id,
-             aux_source.c_str(), true,
+             aux_source.c_str(),
              source_name.empty() ? nullptr : source_name.c_str());
     }
     else if (flavour == BEAM_MINDBURST || flavour == BEAM_DESTRUCTION)
     {
-        ouch(dam, KILLED_BY_DISINT, source_id, what, true,
+        ouch(dam, KILLED_BY_DISINT, source_id, what,
              source_name.empty() ? nullptr : source_name.c_str());
     }
     else if (YOU_KILL(thrower) && aux_source.empty())
@@ -3214,8 +3220,7 @@ void bolt::internal_ouch(int dam)
     }
     else if (MON_KILL(thrower))
     {
-        ouch(dam, KILLED_BY_BEAM, source_id,
-             what, true,
+        ouch(dam, KILLED_BY_BEAM, source_id, what,
              source_name.empty() ? nullptr : source_name.c_str());
     }
     else // KILL_NON_ACTOR || (YOU_KILL && aux_source)
@@ -3480,7 +3485,7 @@ void bolt::tracer_affect_player()
     extra_range_used += range_used_on_hit();
 }
 
-int bolt::apply_lighting(int base_hit, const actor &targ) const
+int bolt::apply_to_hit_modifiers(int base_hit, const actor &targ) const
 {
     if (targ.invisible() && !can_see_invis)
         base_hit /= 2;
@@ -3494,6 +3499,9 @@ int bolt::apply_lighting(int base_hit, const actor &targ) const
     // Malus is already negative so must still be ADDED to the base_hit
     if (!nightvision && targ.umbra())
         base_hit += UMBRA_TO_HIT_MALUS * 2;
+
+    if (targ.is_monster() && targ.as_monster()->has_ench(ENCH_EXPOSED))
+        base_hit *= 2;
 
     return base_hit;
 }
@@ -3516,7 +3524,7 @@ bool bolt::misses_player()
     int real_tohit  = hit;
 
     if (real_tohit != AUTOMATIC_HIT)
-        real_tohit = apply_lighting(real_tohit, you);
+        real_tohit = apply_to_hit_modifiers(real_tohit, you);
 
     const int SH = player_shield_class();
     if ((player_omnireflects() && is_omnireflectable()
@@ -5651,7 +5659,7 @@ void bolt::affect_monster(monster* mon)
     int beam_hit = hit;
 
     if (beam_hit != AUTOMATIC_HIT)
-        beam_hit = apply_lighting(beam_hit, *mon);
+        beam_hit = apply_to_hit_modifiers(beam_hit, *mon);
 
     // The monster may block the beam.
     if (!engulfs && is_blockable() && attempt_block(mon))
@@ -8006,7 +8014,7 @@ void bolt::do_ranged_attack(actor& targ)
         foes_hurt++;
 
     ranged_attack attk(ag, &targ, ranged_atk->weapon, use_target_as_pos, agent());
-    attk.will_mulch = ranged_atk->will_mulch;
+    ranged_atk->copy_params_to(attk);
 
     attk.attack();
     // XXX: hit_verb is used later to make Damnation bolts only explode on it.

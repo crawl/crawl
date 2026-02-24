@@ -91,7 +91,7 @@ A long pole with an enormous, cleaving blade on one end.
 %%%%
 barding
 
-Armour for the scaly midsections of nagas and armataurs.
+Armour for the scaly midsections of nagas and centaurs.
 %%%%
 battleaxe
 

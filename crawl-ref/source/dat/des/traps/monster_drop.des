@@ -40,23 +40,24 @@ DEPTH:  D:12-, Depths, Vaults, Elf, Spider, Snake, Zot
 TAGS:   allow_dup extra luniq_monster_drop transparent
 WEIGHT: 100 (D:12-, Depths, Vaults, Elf, Spider, Snake), 20 (Zot)
 KFEAT:  ^ = pressure plate trap
+SUBST:  { = {([})]
 {{
  local trigger_data
  if you.in_branch("Zot") then
    trigger_data={triggered=false,
                  mons="generate_awake killer klown",
                  msg="With a honk a tiny klown kar falls from above, and Killer Klowns tumble out!",
-                 max=crawl.random_range(3, 8)}
+                 max=crawl.random_range(3, 6)}
  elseif you.in_branch("Snake") then
    trigger_data={triggered=false,
                  mons="generate_awake black mamba / generate_awake mana viper",
                  msg="A basket of snakes falls from above!",
-                 max=8}
+                 max=crawl.random_range(5, 8)}
  else
    trigger_data={triggered=false,
                  mons="generate_awake redback",
                  msg="A basket of spiders falls from above!",
-                 max=8}
+                 max=crawl.random_range(5, 7)}
  end
  local tm = TriggerableFunction:new{func="callback.drop_trap_stepped",
               repeated=true,
@@ -65,7 +66,8 @@ KFEAT:  ^ = pressure plate trap
  lua_marker('^', tm)
 }}
 MAP
-...
-.^.
+ ...
+..{.
+.^..
 ...
 ENDMAP

@@ -135,9 +135,8 @@ static void _ouch(actor& target, actor * source, miscast_source_info mc_info, in
         else
             method = KILLED_BY_SOMETHING;
 
-        bool see_source = source && you.can_see(*source);
         ouch(dam, method, source ? source->mid : MID_NOBODY,
-             cause.c_str(), see_source,
+             cause.c_str(),
              source ? source->name(DESC_A, true).c_str() : nullptr);
     }
 }

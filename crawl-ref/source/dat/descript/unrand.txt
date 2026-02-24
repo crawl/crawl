@@ -147,11 +147,10 @@ less savoury hands.
 %%%%
 longbow "Zephyr"
 
-This bow was woven from the air itself by Eiolaiphi the air mage as a gift for
-one of the children of Uskayaw. The bow can be pulled with incredible speed,
-and it launches swift and true. It is also nearly indestructible, which is
-fortunate given that the original owner was ripped to pieces by jealous
-celebrants.
+A golden bow, strung with a lock of hair from the West Wind themselves. Tales
+say it was crafted as a gift to an unrequited love and even centuries after their
+untimely death, one can still feel longing carried on the gentle breeze that
+surrounds its wielder.
 %%%%
 giant club "Skullcrusher"
 
@@ -445,7 +444,7 @@ amulet of Cekugob
 A strange-looking piece of crystal on an ordinary-looking string, with an odd
 selection of powers.
 %%%%
-amulet of the Four Winds
+amulet of Tranquility
 
 A pendant made of purest jade. It grants its wearer immense willpower and
 mental fortitude.

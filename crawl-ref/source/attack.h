@@ -46,6 +46,11 @@ public:
     int     special_damage; // TODO: We'll see if we can remove this
     int     aux_damage;     // TODO: And this too
 
+    // A tally of all direct weapon + brand damage inflicted by this attack
+    // (including damage against cleave targets, both hits of quick blades,
+    // and aux attacks).
+    int       total_damage_done;
+
     beam_type special_damage_flavour;
 
     bool    stab_attempt;
@@ -81,6 +86,13 @@ public:
 
     bool simu;
 
+    // Parameters that may be edited outside of attack and must be included in
+    // attack::copy_params_to()
+    int          dmg_mult;        // percentage multiplier to max damage roll
+                                  // (0 = +0% damage, 50 = +50% damage, etc.)
+    int          flat_dmg_bonus;  // flat damage to add to this attack, pre-AC
+    int          to_hit_bonus;    // flat to-hit bonus on this attack
+
 // Public Methods
 public:
     attack(actor *attk, actor *defn, actor *blame = 0);
@@ -101,6 +113,11 @@ public:
     // until we refactor the whole pronoun / desc usage from these lowly
     // classes all the way up to monster/player (and actor) classes.
     string defender_name(bool allow_reflexive);
+
+    void copy_params_to(attack &other) const;
+
+    // Generally should not be called externally, but unrand melee effects need this.
+    int inflict_damage(int dam, beam_type flavour = NUM_BEAMS);
 
 // Private Properties
     string aux_source;
@@ -126,7 +143,7 @@ protected:
     virtual int get_weapon_plus();
     virtual int calc_base_unarmed_damage() const;
     virtual int calc_mon_to_hit_base() = 0;
-    virtual int apply_damage_modifiers(int damage) = 0;
+    virtual int apply_mon_damage_modifiers(int damage) = 0;
     int apply_rev_penalty(int damage) const;
     virtual int calc_damage();
     int lighting_effects();
@@ -161,9 +178,6 @@ protected:
     void maybe_trigger_autodazzler();
 
     bool paragon_defends_player();
-
-    virtual int inflict_damage(int dam, beam_type flavour = NUM_BEAMS,
-                               bool clean = false);
 
     /* Output */
     string debug_damage_number();

@@ -272,7 +272,7 @@ amulet of Cekugob
 なんの変哲もない紐で括られたおかしな見た目の水晶の欠片だ。
 これには様々な能力が秘められている。
 %%%%
-amulet of the Four Winds
+amulet of Tranquility
 
 この透き通った翡翠の首飾りは着用者に敵対的な魔術に対する素晴らしい耐性を授ける。
 %%%%

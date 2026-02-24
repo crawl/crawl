@@ -56,7 +56,10 @@ void fire_item_no_quiver(dist *target=nullptr);
 
 void aim_player_ranged_attack(quiver::action &a);
 bool do_player_ranged_attack(const coord_def& targ, item_def* thrown_projectile = nullptr,
-                             bool auto_abort = false);
+                             const ranged_attack* prototype = nullptr,
+                             bool no_harm_allies = false, bool allow_salvo = true);
 
 bool mons_throw(monster* mons, ranged_attack_beam& beam, bool teleport = false,
                 bool was_redirected = false);
+
+bool do_west_wind_shot();

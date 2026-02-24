@@ -22,7 +22,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "english.h"
-#include "god-abil.h" // fedhas_passthrough for armataur charge
+#include "god-abil.h"
 #include "god-conduct.h"
 #include "item-prop.h"
 #include "items.h"
@@ -31,14 +31,14 @@
 #include "los.h"
 #include "losglobal.h"
 #include "losparam.h"
-#include "melee-attack.h" // armataur charge
+#include "melee-attack.h"
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
-#include "movement.h" // armataur charge
+#include "movement.h"
 #include "nearby-danger.h"
 #include "orb.h"
 #include "output.h"

@@ -156,6 +156,14 @@ bool is_evil_item(const item_def& item, bool calc_unid)
             return is_evil_brand(get_weapon_brand(item));
     }
 
+    if (item.base_type == OBJ_TALISMANS)
+    {
+        if (item.sub_type == TALISMAN_DEATH || item.sub_type == TALISMAN_VAMPIRE)
+            return true;
+    }
+    else if (item.is_type(OBJ_MISCELLANY, MISC_HORN_OF_GERYON))
+        return true;
+
     if (!calc_unid && !item.is_identified())
         return false;
 
@@ -167,11 +175,6 @@ bool is_evil_item(const item_def& item, bool calc_unid)
         return item.sub_type == STAFF_NECROMANCY;
     case OBJ_ARMOUR:
         return get_armour_ego_type(item) == SPARM_DEATH;
-    case OBJ_MISCELLANY:
-        return item.sub_type == MISC_HORN_OF_GERYON;
-    case OBJ_TALISMANS:
-        return item.sub_type == TALISMAN_DEATH
-                || item.sub_type == TALISMAN_VAMPIRE;
     default:
         return false;
     }
@@ -215,6 +218,9 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
         return is_chaotic_brand(get_weapon_brand(item));
     }
 
+    if (item.base_type == OBJ_TALISMANS)
+        return true;
+
     if (!calc_unid && !item.is_identified())
         return false;
 
@@ -235,7 +241,6 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
         return item.sub_type == MISC_BOX_OF_BEASTS;
     case OBJ_JEWELLERY:
         return item.sub_type == AMU_WILDSHAPE;
-    case OBJ_TALISMANS:
     case OBJ_BAUBLES:
         return true;
     default:

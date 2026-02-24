@@ -159,28 +159,13 @@ function trove.portal(e)
     e.lua_marker("O", stair)
     e.kfeat("O = enter_trove")
     e.colour(". = blue")
-    e.ftile(".OcG+ = floor_marble")
-    e.tile("c = wall_stone_dark")
-end
-
--- "any scroll good_item" still gets you 'scroll of noise' etc so let's limit
--- it better scrolls: more varied than dgn.loot_scrolls with such handed
--- out in higher numbers, but still weighted towards more value than before.
-function trove.good_scroll (e)
-    local scrolls = {"acquirement w:1", "teleportation w:15", "blinking w:8",
-                     "revelation w:8", "fear w:8", "poison w:3", "silence w:3",
-                     "vulnerability w:3", "torment w:1"}
-    local eq_scrolls = {"enchant weapon", "brand weapon w:3", "enchant armour"}
-
-    local item_def = "scroll of " .. table.concat(scrolls, " / scroll of ") ..
-                     " / any ally scroll w:8"
-
-    if you.race() ~= "Felid" then
-        item_def = item_def .. " / scroll of " ..
-                   table.concat(eq_scrolls, " / scroll of ")
+    if you.in_branch("Shoals") then
+      e.ftile(".12$%OcbG+ = floor_sprouting_ruin")
+    else
+      e.ftile(".12$%OcbG+ = floor_marble")
     end
-
-    e.item(item_def)
+    e.colour(".12$% = blue")
+    e.tile("c = wall_stone_dark")
 end
 
 function trove_weapon_skills (e)
@@ -246,39 +231,63 @@ function no_evil(e)
          you.god() == "Zin"
 end
 
-function aux_check(e, mutations, minlevel, octohat)
-  local valid = true
-  if you.race() == "Felid" or (you.race() == "Octopode" and not octohat) then
-    valid = false
+-- On average, give slightly more acquirement weapons than other weapons,
+-- which are top tier and always technically usable but otherwise deliberately
+-- mostly blind about one's actual stats and skills and apts situation.
+function trove_weap_brand(e, brand, ranged_valid)
+  local w = "acquire weapon ego:" .. brand .. " w:32"
+  local two_hands = you.race() ~= "Coglin" and you.mutation("missing a hand") ~= 1
+  local big_enough = you.race() ~= "Spriggan" and you.race() ~= "Kobold"
+  local big_for_small = (you.race() ~= "Spriggan" and you.race() ~= "Kobold") or
+                        you.mutation("missing a hand") ~= 1
+  local range = trove_other_weapon_specialty(_G, "Ranged Weapons")
+  local wnames = {
+    ["eveningstar"] = {2, true},
+    ["demon whip"] = {2, not no_evil},
+    ["executioner's axe"] = {2, two_hands and big_enough},
+    ["broad axe"] = {2, big_for_small},
+    ["bardiche"] = {2, two_hands and big_enough},
+    ["partisan"] = {1, big_for_small},
+    ["demon trident"] = {1, big_for_small and not no_evil},
+    ["lajatang"] = {4, two_hands and big_for_small},
+    ["quick blade"] = {4, true},
+    ["triple sword"] = {2, two_hands and big_enough},
+    ["double sword"] = {1, big_for_small},
+    ["demon blade"] = {1, big_for_small},
+    ["longbow"] = {4, range and big_enough and two_hands},
+    ["hand cannon"] = {2, range},
+    ["triple crossbow"] = {2, range and you.race() ~= "Spriggan" and two_hands},
+  }
+  for weap, props in pairs(wnames) do
+    if props[2] then
+      w = w .. " / " .. weap .. " useful good_item ego:" .. brand .. " w:" .. props[1]
+    end
   end
-  return valid
-end
-
--- TODO: standardize top-tier and high-tier weapon calls as is provided
---       in Crypt's shop and the Hall of Blades, then use it for this
---       instead of the many dud rolls of "any weapon".
-function trove_weap_brand(e, brand)
-  local w = "acquire weapon ego:" .. brand .. " w:12 / " ..
-            "any useful weapon good_item ego:" .. brand
   return w
 end
 
--- For troves with brands incompatible with ranged weapons, check if one's
--- ranged weapons skill is higher than any other weapon skill.
-function trove_ranged_specialty(e)
+-- For troves with brands incompatible with ranged weapons, and for unarmed
+-- characters being given talismans, check if one's ranged weapons skill or is
+-- higher than any other weapon skill.
+function trove_other_weapon_specialty(e, other_sch)
   local weapon_skills = { "Short Blades", "Long Blades", "Axes",
                            "Maces & Flails", "Polearms", "Staves"}
-  local other = 0
+  local other_sk = 0
   for _, skill in ipairs(weapon_skills) do
-    other = math.max(you.base_skill(skill), other)
+    other_sk = math.max(you.base_skill(skill), other_sk)
   end
-  return you.base_skill("Ranged Weapons") > other
+  return you.base_skill(other_sch) > other_sk
 end
 
 -- Since there are no full-magic troves any more and troves reward less
 -- items overall, book quality has to be pushed up in compensation.
-function trove_book(_G, school)
-  return "randbook disc:" .. school .. " splevels:33 numspells:5"
+function trove_book(_G, school, secondary)
+  if secondary == nil then
+    secondary = "conjurations"
+  end
+  local attr = " splevels:33 numspells:5"
+  return "randbook disc:" .. school .. attr .. " w:6 / " ..
+         "randbook disc:" .. school .. " disc2:" .. secondary .. attr .. " w:4"
 end
 
 -- A repeated function for spellbooks, staves, manuals, and orbs for a school,
@@ -296,7 +305,8 @@ function trove_standard_magic(e, school, use_staff)
     ["air"] = {"air", "Air", "air magic"},
     ["alchemy"] = {"alchemy", "Alch", "alchemy"}
   }
-  local staff, orb, manual, output = "", "", "", ""
+  local staff, orb, manual, output, schname, secondary = "", "", "", "", "", ""
+  local max_other = 0
   local orbs = {"glass w:1", "mesmerism w:1", "attunement w:1"}
   if you.mutation("hp casting") ~= 1 then
     table.insert(orbs, "energy w:2")
@@ -308,11 +318,19 @@ function trove_standard_magic(e, school, use_staff)
       orb = "orb randart artprops:" .. iname[2] .. " ego:" ..
             table.concat(orbs, " / orb randart artprops:" .. iname[2] .. " ego:")
       manual = "manual of " .. iname[3] .. " w:8"
+      schname = iname[3]
+    elseif crawl.game_started() and you.base_skill(iname[3]) > max_other then
+      max_other = you.base_skill(iname[3])
+      secondary = sc
     end
   end
-  output = manual
+  if crawl.game_started() and you.base_skill(schname) < 27 then
+    output = manual
+  elseif you.mutation("innate caster") == 1 and you.mutation("missing a hand") then
+    output = "gold good_item"
+  end
   if you.mutation("innate caster") ~= 1 then
-    output = output .. " / " .. trove_book(_G, school) .. " w:34 "
+    output = output .. " / " .. trove_book(_G, school, secondary) .. " w:34 "
   end
   if you.mutation("no armour") ~= 1 and you.race ~= "Coglin" and
    you.mutation("missing a hand") ~= 1 then
@@ -435,7 +453,7 @@ end
 -- having sacrificed artifice, and item sets.
 function trove_cons(e, scrolls, potions, wands, set_wand, set_misc)
   local cons = "scroll of " .. table.concat(scrolls, " pre_id / scroll of ") ..
-               " pre_id"
+               " pre_id / scroll of acquirement q:1 pre_id w:1"
   if potions ~= nil and you.mutation("no potions") ~= 1 then
     cons = cons .. " / potion of " .. table.concat(potions, " pre_id / potion of ") ..
            " pre_id"
@@ -464,8 +482,10 @@ function trove_offense(e, weapons, magic, talismans, magic_school)
   -- pivoting, unless Ru sacrifices or species restrictions are involved, so
   -- given obscure combinations aren't handed that much better troves.
   local no_magic = you.god() == "Trog" or you.mutation("no " .. magic_school) == 1
+  local no_forms = you.mutation("no forms") == 1 or species_is_undead(_G)
+  local uc_tal = not no_forms and trove_other_weapon_specialty(_G, "Unarmed Combat")
   if you.mutation("no weapons or thrown items") == 1 then
-    if you.mutation("no forms") == 1 or species_is_undead(_G) then
+    if no_forms then
       if no_magic then
         e.subst("d = i")
       else
@@ -474,7 +494,7 @@ function trove_offense(e, weapons, magic, talismans, magic_school)
     else
       e.nsubst("d = 2:e / 2:f / * = ef")
     end
-  elseif you.mutation("no forms") or species_is_undead(_G) then
+  elseif no_forms then
     if no_magic then
       e.nsubst("d = 2:i / *:d")
     else
@@ -484,7 +504,13 @@ function trove_offense(e, weapons, magic, talismans, magic_school)
     e.nsubst("d = 2:d / 2:f / * = ddf")
   else
     local f_chance = crawl.x_chance_in_y(5, 6)
-    if no_magic or (trove_weapon_skills(_G) > trove_spell_skills(_G) and f_chance) then
+    if (uc_tal) then
+      if no_magic then
+        e.nsubst("d = 2:f / 2:i / * = fi")
+      else
+        e.nsubst("d = 2:f / 2:e / * = effi")
+      end
+    elseif no_magic or (trove_weapon_skills(_G) > trove_spell_skills(_G) and f_chance) then
       e.nsubst("d = 2:d / 1:f / * = ddfi")
     elseif trove_weapon_skills(_G) * 2 < trove_spell_skills(_G) and f_chance then
       e.nsubst("d = 1:d / 2:e / 1:f / * = ddeef")
@@ -549,16 +575,12 @@ ENDMAP
 # Of course, not everyone is willing for you to take their treasure...
 NAME:   enter_trove_5
 TAGS:   transparent no_descent
-: trove.portal(_G)
-: if you.absdepth() <= 15 then
 # Got drafted in from Vaults, while the mages try and close the portal down.
-KMONS:  e = vault guard
-: else
-# And this time he brought some friends...
-KMONS:  el = vault guard
+KMONS:  12 = vault guard
+: if you.absdepth() >= 15 then
+SUBST:  l = 2
 : end
-COLOUR: e1 = blue
-FTILE:  e1 = floor_marble
+: trove.portal(_G)
 MAP
 ccccc
 c...c
@@ -566,7 +588,7 @@ c.O.c
 c...c
 cc+cc
 cl.lc
-c.e.c
+c.2.c
 cl.lc
 cc+cc
 ENDMAP
@@ -575,15 +597,14 @@ ENDMAP
 NAME:   enter_trove_6
 TAGS:   transparent no_descent
 : trove.portal(_G)
-KFEAT:  X = +
-MARKER: X = lua: props_marker { connected_exclude="true" }
-COLOUR: $X = blue
+MARKER: + = lua: props_marker { connected_exclude="true" }
+COLOUR: $+ = blue
 MAP
 ccccccc
 c$$$$$c
-c$XXX$c
-c$XOX$c
-c$XXX$c
+c$+++$c
+c$+O+$c
+c$+++$c
 c$$$$$c
 ccc+ccc
 ENDMAP
@@ -636,8 +657,6 @@ ENDMAP
 NAME: nicolae_trove_entry_free_sample
 TAGS: transparent no_descent
 : trove.portal(_G)
-COLOUR: % = blue
-FTILE: % = floor_marble
 MAP
 %.%
 .O.
@@ -648,7 +667,6 @@ NAME: nicolae_trove_entry_isolated
 TAGS: no_pool_fixup transparent no_descent
 KPROP: .O = no_tele_into
 KMASK: .O = opaque
-KFEAT: ' = .
 : trove.portal(_G)
 MAP
 '''''''
@@ -662,17 +680,15 @@ ENDMAP
 
 NAME: nicolae_trove_entry_path_of_doom
 TAGS: transparent no_descent
-KMONS: O = patrolling guardian mummy
-KMONS: m = patrolling guardian mummy / nothing w:20
+KMONS: O1 = patrolling guardian mummy
+SUBST: 1 = 1..
 : trove.portal(_G)
-COLOUR: $m = blue
-FTILE: $m = floor_marble
 MAP
   ccccc
  cc.O.cc
 cc.....cc
 c$.G.G.$c
-c$..m..$c
+c$..1..$c
 c$.G.G.$c
 cc.....cc
  cc...cc
@@ -720,6 +736,7 @@ KMONS:    F = fire vortex
 KMONS:    L = generate_awake creeping inferno
 {{
 local aux = ""
+local magic = trove_standard_magic(_G, "fire", true)
 if you.mutation("claws") ~= 3 and you.mutation("demonic touch") < 1 then
   aux = " / pair of gloves ego:fire good_item w:2 / " ..
            "pair of gloves ego:fire randart w:2"
@@ -728,7 +745,10 @@ if you.mutation("weakness stinger") < 1 then
   aux = " / scarf ego:resistance w:4 / scarf ego:resistance randart w:2 / " ..
            "scarf ego:harm w:4 / scarf ego:harm randart w:2"
 end
-trove_offense(_G, trove_weap_brand(_G, "flaming"),
+if you.mutation("no conjurations magic") ~= 1 then
+  magic = magic .. " / manual of conjurations w:4"
+end
+trove_offense(_G, trove_weap_brand(_G, "flaming", true),
                   trove_standard_magic(_G, "fire", true),
                   trove_good_talisman(_G, "rF", nil), "fire magic")
 trove_defense(_G, "robe ego:resistance good_item w:8 / \
@@ -818,10 +838,15 @@ if you.mutation("antennae") == 0 and you.mutation("horns") == 0 and
    armour = armour .. " / helmet ego:ice good_item w:2"
 end
 if you.mutation("weakness stinger") < 1 then
-  armour = armour .. " / scarf ego:resistance"
+  armour = armour .. " / scarf ego:resistance w:8"
+end
+-- Not really armour, but close enough to defenses. Meant to round out how
+-- the earth trove gets Armour and the air trove gets Shields.
+if you.base_skill("dodging") < 27 and you.mutation("inability to train dodging") ~= 1 then
+  armour = armour .. " / manual of dodging w:4"
 end
 
-trove_offense(_G, trove_weap_brand(_G, "freezing"),
+trove_offense(_G, trove_weap_brand(_G, "freezing", true),
                   trove_standard_magic(_G, "ice", true),
                   trove_good_talisman(_G, "rC"), "ice magic")
 trove_defense(_G, armour, trove_ego_gen_armour(_G, "cold_resistance", "rC"),
@@ -875,23 +900,24 @@ NAME:   regret_index_trove_storm_queen
 : trove_setup(_G)
 NSUBST: d = 6:d / 6:g / *:.
 {{
-local aux1 = ""
+local arm = "steam dragon scales randart artprops:rElec / " ..
+            "storm dragon scales good_item / storm dragon scales randart "
 if you.mutation("weakness stinger") < 1 then
-  aux1 = " / cloak ego:repulsion w:2 / scarf ego:repulsion randart w:2"
+  arm = arm .. " / cloak ego:air w:4 / scarf ego:repulsion randart w:2"
 end
-trove_offense(_G, trove_weap_brand(_G, "electrocution"),
+if you.mutation("no armour") < 1 and you.race ~= "Coglin" and
+   you.mutation("missing a hand") < 1 and you.base_skill("Shields") < 27 then
+  arm = arm .. " / manual of shields w:4 / " .. trove_ego_shield(_G, nil, "rElec")
+end
+trove_offense(_G, trove_weap_brand(_G, "electrocution", true),
                   trove_standard_magic(_G, "air", true),
                   trove_good_talisman(_G, "rElec",
                   "eel talisman / storm talisman"), "air magic")
-trove_defense(_G, "steam dragon scales randart artprops:rElec / \
-                   storm dragon scales good_item / \
-                   storm dragon scales randart" ..
-                   aux1 .. " / " .. trove_ego_shield(_G, nil, "rElec"),
-                   "pair of gloves randart artprops:rElec w:2",
-                   trove_jewel_type(_G, "rElec"),
-                   trove_cons(_G, {"enchant armour q:2"},
-                              {"resistance q:2 w:5", "attraction q:3 w:5"},
-                              nil, nil, "lightning rod w:5"))
+trove_defense(_G, arm, "pair of gloves randart artprops:rElec w:2",
+                  trove_jewel_type(_G, "rElec"),
+                  trove_cons(_G, {"enchant armour q:2"},
+                            {"resistance q:2 w:5", "attraction q:3 w:5"},
+                             nil, nil, "lightning rod w:5"))
 local sh = you.race() == "Spriggan" or you.race() == "Kobold" or
            you.race() == "Felid" or you.mutation("missing a hand") == 1
 trove_unrand_chances(_G, "dgh", {"storm_queen's_shield", "storm_bow"},
@@ -955,24 +981,29 @@ ENDMAP
 NAME:   regret_index_trove_leda
 {{
 trove_setup(_G)
-local pon = "ego:ponderousness plus:" .. crawl.random_range(7, 10)
+local pon = "ego:ponderousness plus:" .. crawl.random_range(7, 10) .. " w:4"
+local lim_armour = "any useful armour randart artprops:Str:4 w:5 / "
+if you.base_skill("Armour") < 27 and you.mutation("inability to train armour") ~= 1 then
+  lim_armour = lim_armour .. " / manual of armour w:2"
+end
 local gen_armour = ""
-if species_has_size_limits(_G) == false then
+if species_has_size_limits(_G) == false and
+ you.base_skill("Armour") > you.base_skill("Dodging") * 3 then
   gen_armour = "plate armour " .. pon .. " / crystal plate armour " .. pon
 end
-if you.race() == "armataur" or you.race() == "naga" then
-  gen_armour = gen_armour .. " / barding good_item / barding randart w:2"
+if you.race() == "Anemocentaur" or you.race() == "Naga" then
+  gen_armour = gen_armour .. " / barding good_item w:20 / barding randart w:4"
 elseif you.mutation("hooves") ~= 3 and you.mutation("talons") ~= 3 then
-  gen_armour = gen_armour .. " / pair of boots good_item w:4 " ..
-                             " / pair of boots ego:earth good_item" ..
+  gen_armour = gen_armour .. " / pair of boots good_item w:6 " ..
+                             " / pair of boots ego:earth good_item w:12" ..
                              " / pair of boots randart w:2"
 end
-trove_offense(_G, trove_weap_brand(_G, "heavy"),
+trove_offense(_G, trove_weap_brand(_G, "heavy", true),
                   trove_standard_magic(_G, "earth", true),
                   trove_good_talisman(_G, nil, "granite talisman"),
                   "earth magic")
-trove_defense(_G, "any useful armour randart artprops:Str:4 w:5",
-                   gen_armour, trove_jewel_type(_G, "Str:4 w:5") .. " / " ..
+trove_defense(_G, lim_armour, gen_armour,
+                  trove_jewel_type(_G, "Str:4 w:5") .. " / " ..
                    trove_jewel_type(_G, "*Slow&AC:4&Str:4"),
                    trove_cons(_G, {"enchant armour"}, nil,
                               "wand of digging charges:9 w:30 / " ..
@@ -1040,8 +1071,8 @@ else
 end
 
 -- No spectral ranged weapons, so just offer longbows as suits the forest.
-local weapon = trove_weap_brand(_G, "spectral")
-if trove_ranged_specialty(_G) then
+local weapon = trove_weap_brand(_G, "spectral", false)
+if trove_other_weapon_specialty(_G, "Ranged Weapons") then
   weapon = "longbow good_item / longbow randart"
 end
 
@@ -1151,7 +1182,7 @@ if not no_evil(e) then
   talis = " w:30 / sanguine talisman"
 end
 
-trove_offense(_G, trove_weap_brand(_G, "venom") .. " / quick blade randart / " ..
+trove_offense(_G, trove_weap_brand(_G, "venom", false) .. " / quick blade randart / " ..
                   "rapier randart w:8 / quick blade ego:devious w:4 / " ..
                   "manual of Stealth w:8",
                   trove_standard_magic(_G, "Hexes", false) .. " / " ..
@@ -1208,13 +1239,14 @@ veto {{ return crawl.game_started() and no_evil(_G) }}
 WEIGHT: 5
 {{
 local scroll = {"silence q:3 w:3"}
-local weap = trove_weap_brand(_G, "draining")
+local weap = trove_weap_brand(_G, "draining", true)
 local manual = "manual of fighting w:4"
 local jewelery = trove_jewel_type(_G, "Will") .. " / " ..
                  trove_jewel_type(_G, "Slay:4") .. " / " ..
                  "amulet of regeneration randart artprops:*Silence&Will w:3"
-if no_friendlies(_G) == false and trove_ranged_specialty(_G) == false then
-  weap = weap .. " / " .. trove_weap_brand(_G, "reaping w:5")
+if no_friendlies(_G) == false and
+trove_other_weapon_specialty(_G, "Ranged Weapons") == false then
+  weap = weap .. " / " .. weap .. " / " .. trove_weap_brand(_G, "reaping", false)
   subst("? = f")
 else
   subst("? = i")
@@ -1289,7 +1321,7 @@ ENDMAP
 NAME:   regret_index_trove_justicar
 : trove_setup(_G)
 {{
-kitem("d = " .. trove_weap_brand(_G, "holy_wrath"))
+kitem("d = " .. trove_weap_brand(_G, "holy_wrath", true))
 local arm = "pearl dragon scales good_item w:20 / \
              pearl dragon scales randart w:5 "
 if species_has_size_limits(_G) == false then
@@ -1309,6 +1341,9 @@ end
 kitem("h = " .. cons)
 kitem("i = scroll of brand weapon q:2 pre_id")
 
+if trove_other_weapon_specialty(_G, "Unarmed Combat") then
+  subst("d = e")
+end
 if you.mutation("no armour") == 1 then
   subst("de = g")
 else
@@ -1568,8 +1603,8 @@ local extra = "any manual w:1"
 if no_evil(_G) then
   weap = "acquire weapon / any useful weapon good_item"
 else
-  weap = trove_weap_brand(_G, "chaos") .. " / " ..
-         trove_weap_brand(_G, "distortion")
+  weap = trove_weap_brand(_G, "chaos", true) .. " / " ..
+         trove_weap_brand(_G, "distortion", false)
   if no_friendlies(_G) == false and you.mutation("innate caster") ~= 1 then
     magic = magic .. " / grand grimoire"
   end
@@ -1591,8 +1626,9 @@ end
 trove_offense(_G, weap, magic,
                   trove_good_talisman(_G, nil, nil), "translocations magic")
 trove_defense(_G, "acquire armour / any useful armour randart" .. aux1,
-                  "robe randart artprops:Stlth:2 plus:2",
-                   trove_jewel_type(_G, "+Blink&^Contam"),
+                  "robe randart artprops:Stlth:2 plus:2 w:5",
+                   trove_jewel_type(_G, "+Blink&^Contam") .. " / " ..
+                   "any amulet randart artprops:Stlth:2",
                    trove_cons(_G, {"fog q:3"},
                               {"enlightenment q:2 w:5", "attraction q:3 w:5"},
                               "", "wand of warping charges:8", nil))
@@ -1695,7 +1731,7 @@ end
 if you.mutation("antennae") ~= 3 and you.mutation("horns") ~= 3 then
   aux = " / helmet randart artprops:Int w:15 / helmet randart artprops:Will w:15"
 end
-trove_offense(_G, trove_weap_brand(_G, "antimagic"), magic,
+trove_offense(_G, trove_weap_brand(_G, "antimagic", true), magic,
                   trove_good_talisman(_G, "Int:3", "granite talisman"),
                   "earth magic")
 trove_defense(_G, "robe ego:archmagi w:1", "crystal plate armour good_item w:30 / \

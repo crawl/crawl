@@ -186,6 +186,7 @@ struct bolt
     bool   is_death_effect = false; // effect of e.g. ballistomycete spore
     bool   aimed_at_spot = false; // aimed at (x, y), should not cross
     bool   stop_at_allies = false; // Should beam automatically stop before reaching allies
+                                   // (or neutrals that would anger your god to harm.)
     bool   safe_to_user = false;  //
     string aux_source = "";       // source of KILL_NON_ACTOR beams
 
@@ -353,7 +354,7 @@ private:
     int range_used_on_hit() const;
     bool bush_immune(const monster &mons) const;
     bool at_blocking_monster() const;
-    int apply_lighting(int base_hit, const actor &target) const;
+    int apply_to_hit_modifiers(int base_hit, const actor &target) const;
 
     void do_ranged_attack(actor& target);
 
@@ -487,9 +488,6 @@ void bolt_parent_init(const bolt &parent, bolt &child);
 int explosion_noise(int rad);
 
 int omnireflect_chance_denom(int SH);
-
-void glaciate_freeze(monster* mon, killer_type englaciator,
-                             int kindex);
 
 void fill_chain_targets(const bolt& beam, coord_def centre,
                         vector<coord_def> &targs, bool random);

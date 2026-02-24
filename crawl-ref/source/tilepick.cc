@@ -2760,6 +2760,8 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_STRONG_WILLED, TILEI_STRONG_WILLED },
     { MB_TESSERACT_SPAWN, TILEI_TESSERACT_SPAWN },
     { MB_SUNDERING_READY, TILEI_SUNDERING },
+    { MB_MUTE, TILEI_MUTE },
+    { MB_EXPOSED, TILEI_EXPOSED },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
@@ -2910,7 +2912,7 @@ tileidx_t tileidx_player_shadow()
 
     switch (you.species)
     {
-        case SP_ARMATAUR:       return TILEP_MONS_PLAYER_SHADOW_ARMATAUR;
+        case SP_ANEMOCENTAUR:   return TILEP_MONS_PLAYER_SHADOW_ANEMOCENTAUR;
         case SP_BARACHI:        return TILEP_MONS_PLAYER_SHADOW_BARACHI;
         case SP_COGLIN:         return TILEP_MONS_PLAYER_SHADOW_COGLIN;
         case SP_DEMIGOD:        return TILEP_MONS_PLAYER_SHADOW_DEMIGOD;
@@ -3886,6 +3888,8 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
     case TILE_BOLT_CHAOS_BUFF:
     case TILE_BOLT_GLOOM:
     case TILE_BOLT_SUNDERING:
+    case TILE_BOLT_WIND_HUSH:
+    case TILE_BOLT_CORRUPTION:
         return tile + ui_random(tile_main_count(tile));
 
     case TILE_MI_BOOMERANG0:
@@ -4756,8 +4760,6 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_TROLL;
         case SP_BASE_DRACONIAN:
             return TILEG_SP_DRACONIAN;
-        case SP_ARMATAUR:
-            return TILEG_SP_ARMATAUR;
         case SP_DEMIGOD:
             return TILEG_SP_DEMIGOD;
         case SP_SPRIGGAN:
@@ -4799,6 +4801,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_POLTERGEIST;
         case SP_REVENANT:
             return TILEG_SP_REVENANT;
+        case SP_ANEMOCENTAUR:
+            return TILEG_SP_ANEMOCENTAUR;
         default:
             return TILEP_ERROR;
     }

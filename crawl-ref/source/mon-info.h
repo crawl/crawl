@@ -268,6 +268,7 @@ enum monster_info_flags
     MB_TESSERACT_SPAWN,
     MB_SUNDERING_READY,
     MB_SEE_INVIS,
+    MB_EXPOSED,
     NUM_MB_FLAGS
 };
 

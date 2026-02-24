@@ -523,11 +523,6 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_PURPLE_DRACONIAN:
     case SP_PALE_DRACONIAN:
         return TILEP_BASE_DRACONIAN + _draconian_colour(sp, level);
-    case SP_ARMATAUR:
-#if TAG_MAJOR_VERSION == 34
-    case SP_CENTAUR:
-#endif
-        return TILEP_BASE_ARMATAUR;
 #if TAG_MAJOR_VERSION == 34
     case SP_METEORAN:
         return TILEP_BASE_METEORAN;
@@ -571,6 +566,11 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_POLTERGEIST;
     case SP_REVENANT:
         return TILEP_BASE_REVENANT;
+#if TAG_MAJOR_VERSION == 34
+    case SP_CENTAUR:
+#endif
+    case SP_ANEMOCENTAUR:
+        return TILEP_BASE_ANEMOCENTAUR;
     default:
         return TILEP_BASE_HUMAN;
     }
@@ -943,7 +943,9 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
 
     if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_NAGA)
-        || is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_ARMATAUR))
+        || is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_ANEMOCENTAUR)
+        || is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_TRAN_WEREWOLF_NAGA)
+        || is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_TRAN_WEREWOLF_ANEMOCENTAUR))
     {
         flag[TILEP_PART_BOOTS] = flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_BOTTOM;

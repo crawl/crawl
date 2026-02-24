@@ -724,10 +724,12 @@ WEIGHT: 3
 :      " / vault warden draugr w:" .. d)
 : mons("death knight w:" .. 7 - d .. " / deep elf death mage w:" .. d)
 : mons("phantasmal warrior w:" .. 7 - d .. " / flayed ghost w:" .. d)
+ITEM:   %
 SUBST:  0 : 0000z
 NSUBST: 0 = 1:0 / 3:% / * = 0009..
-NSUBST: z = 2:1 / 2:2 / 1:3 / 3:% / * = 11113$..
-: vaults_hard_standard(_G)
+NSUBST: z = 2:1 / 2:2 / 1:3 / 3:d / * = 11113$''
+FTILE:  '123$d = floor_necro_squares
+: vaults_hard_standard(_G, true, ".%09")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx
 xx00xx00xx00xx00xx00xx00xx
@@ -1688,8 +1690,9 @@ ENDMAP
 
 NAME:    nicolae_vaults_shipping_containers_1
 SHUFFLE: DE, FH, JK, LM, NO
-SUBST:   DFJLN = +, E : xxxx+, H : xxxx+, K : xxxx+, M : xxxx+, O : xxxx+, \
-         - = ......%0, % = %%%**|, 0 = 000998
+SUBST:   DFJLN = +, E : xxxx+, H : xxxx+, K : xxxx+, M : xxxx+, O : xxxx+
+NSUBST:  - = 1:%$ / 1:9 / 2:. / *:-
+SUBST:   - = ......%0, % = %%%**|, 0 = 000998
 : vaults_hard_standard(_G)
 MAP
 ........................
@@ -1706,8 +1709,9 @@ ENDMAP
 
 NAME:    nicolae_vaults_shipping_containers_2
 SHUFFLE: DE, FH, JK, LM
-SUBST:   DFJL = +, E : xxxx+, H : xxxx+, K : xxxx+, M : xxxx+, \
-         - = ......%0, % = %%%**|, 0 = 000998
+SUBST:   DFJL = +, E : xxxx+, H : xxxx+, K : xxxx+, M : xxxx+
+NSUBST:  - = 1:%$ / 1:9 / 2:. / *:-
+SUBST:   - = ......%0, % = %%%**|, 0 = 000998
 : vaults_hard_standard(_G)
 MAP
 .......xxxxxx.
@@ -1728,8 +1732,9 @@ ENDMAP
 
 NAME:    nicolae_vaults_shipping_containers_3
 SHUFFLE: DE, FH, JK
-SUBST:   DFJ = +, E : xxxx+, H : xxxx+, K : xxxx+, \
-         - = ......%0, % = %%%**|, 0 = 000998
+SUBST:   DFJ = +, E : xxxx+, H : xxxx+, K : xxxx+
+NSUBST:  - = 1:%$ / 1:9 / 2:. / *:-
+SUBST:   - = ......%0, % = %%%**|, 0 = 000998
 : vaults_hard_standard(_G)
 MAP
 ..............
@@ -1747,8 +1752,9 @@ ENDMAP
 
 NAME:    nicolae_vaults_shipping_containers_4
 SHUFFLE: DE, FH
-SUBST:   DF = +, E : xxxx+, H : xxxx+, \
-         - = ......%0, % = %%%**|, 0 = 000998
+SUBST:   DF = +, E : xxxx+, H : xxxx+
+NSUBST:  - = 1:%$ / 1:9 / 2:. / *:-
+SUBST:   - = ......%0, % = %%%**|, 0 = 000998
 : vaults_hard_standard(_G)
 MAP
 .xxxxxx..
@@ -1764,7 +1770,9 @@ ENDMAP
 
 NAME:    nicolae_vaults_shipping_containers_5
 SHUFFLE: DEFH
-SUBST:   DEF = +, H : xxxx+, - = ......%0, % = %%%**|, 0 = 000998
+SUBST:   DEF = +, H : xxxx+
+NSUBST:  - = 1:%$ / 1:9 / 2:. / *:-
+SUBST:   - = ......%0, % = %%%**|, 0 = 000998
 : vaults_hard_standard(_G)
 MAP
 xxxxxx.......
@@ -1784,8 +1792,9 @@ ENDMAP
 
 NAME:    nicolae_vaults_shipping_containers_6
 SHUFFLE: DE, FH, JK/ML, LM
-SUBST:   DFJL = +, E : xxxx+, H : xxxx+, K = x, M : ++++x, \
-         - = ......%0, % = %%%**|, 0 = 000998
+SUBST:   DFJL = +, E : xxxx+, H : xxxx+, K = x, M : ++++x
+NSUBST:  - = 1:%$ / 1:9 / 2:. / *:-
+SUBST:   - = ......%0, % = %%%**|, 0 = 000998
 : vaults_hard_standard(_G)
 MAP
 ................
@@ -1808,8 +1817,9 @@ ENDMAP
 
 NAME:    nicolae_vaults_shipping_containers_7
 SHUFFLE: DE/FH/JK, FH, JK
-SUBST:   DEFJ = +, H : xxxx+, K : xxxx+, \
-         - = ......%0, % = %%%**|, 0 = 000998
+SUBST:   DEFJ = +, H : xxxx+, K : xxxx+
+NSUBST:  - = 1:%$ / 1:9 / 2:. / *:-
+SUBST:   - = ......%0, % = %%%**|, 0 = 000998
 : vaults_hard_standard(_G)
 MAP
 .....xxxxxx.

@@ -1,0 +1,65 @@
+enum: SP_ANEMOCENTAUR
+monster: MONS_CENTAUR
+name: Anemocentaur
+short_name: An
+adjective: Equine
+genus: Centaur
+difficulty: Intermediate
+difficulty_priority: 60
+species_flags:
+  - small_torso
+  - barding
+aptitudes:
+  xp: -1
+  hp: 1
+  mp_mod: 0
+  wl: 3
+  short_blades: -1
+  long_blades: -1
+  axes: -2
+  maces_and_flails: -1
+  polearms: -1
+  staves: -1
+  unarmed_combat: -1
+  throwing: -2
+  dodging: 1
+  stealth: 2
+  shields: 1
+  spellcasting: -2
+  conjurations: -1
+  hexes: -1
+  summoning: -2
+  forgecraft: -2
+  necromancy: -2
+  translocations: 1
+  shapeshifting: -2
+  fire_magic: -1
+  ice_magic: -1
+  air_magic: 2
+  earth_magic: -1
+  alchemy: -2
+  invocations: 2
+  evocations: -1
+size: large
+str: 9
+int: 7
+dex: 7
+levelup_stat_frequency: 4
+mutations:
+  1:
+    MUT_STAMPEDE: 1
+    MUT_DEFORMED: 1
+    MUT_HOOVES: 3
+  5:
+    MUT_STAMPEDE: 1
+recommended_jobs:
+  - gladiator
+  - brigand
+  - hunter
+  - conjurer
+  - air elementalist
+  - fire elementalist
+
+walking_verb: Trott
+child_name: Foal
+orc_name: Orcataur

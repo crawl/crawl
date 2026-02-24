@@ -6772,27 +6772,6 @@ coord_def dgn_find_feature_marker(dungeon_feature_type feat)
     return coord_def();
 }
 
-// Make hatches and shafts land the player a bit away from the wall.
-// Specifically, the adjacent cell with least slime walls next to it.
-// XXX: This can still give bad situations if the layout is not bubbly,
-//      e.g. when a vault is placed with connecting corridors.
-static void _fixup_slime_hatch_dest(coord_def* pos)
-{
-    int max_walls = 9;
-    for (adjacent_iterator ai(*pos, false); ai; ++ai)
-    {
-        if (!feat_is_traversable(env.grid(*ai)))
-            continue;
-        const int walls = count_adjacent_slime_walls(*ai);
-        if (walls < max_walls)
-        {
-            *pos = *ai;
-            max_walls = walls;
-        }
-    }
-    ASSERT(max_walls < 9);
-}
-
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                                 coord_def base_pos, bool find_closest,
                                 string hatch_name)
@@ -6807,8 +6786,6 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
         || stair_to_find == DNGN_TRAP_SHAFT)
     {
         coord_def pos(_get_feat_dest(base_pos, stair_to_find, hatch_name));
-        if (player_in_branch(BRANCH_SLIME))
-            _fixup_slime_hatch_dest(&pos);
         if (in_bounds(pos))
             return pos;
     }

@@ -1099,11 +1099,14 @@ bool evoke_item(item_def& item, dist *preselect)
         return true;
 
     case OBJ_BAUBLES:
+        if (!check_transform_into(transformation::flux, false))
+            return false;
+
         mprf("You crush the flux bauble in your %s and feel its energy "
             "flooding your body.", you.hand_name(false).c_str());
         ASSERT(in_inventory(item));
         dec_inv_item_quantity(item.link, 1);
-        transform(0, transformation::flux);
+        transform(0, transformation::flux, true);
         you.props[FLUX_ENERGY_KEY] = 45;
         return true;
 

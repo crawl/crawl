@@ -299,6 +299,8 @@ string walk_verb_to_present(string verb)
 {
     if (verb == "wriggl")
         return "wriggle";
+    if (verb == "trott")
+        return "trot";
     if (verb == "glid")
     {
         return "walk"; // it's a lie! tengu only get this

@@ -19,3 +19,5 @@ bool prompt_dangerous_portal(dungeon_feature_type ftype);
 bool prompt_descent_shortcut(dungeon_feature_type ftype);
 monster *get_rampage_target(coord_def move);
 void move_player_action(coord_def move);
+
+void east_wind_expose_monster(monster* mon);

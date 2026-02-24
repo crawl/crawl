@@ -95,3 +95,43 @@ coord_def clamp_in_bounds(const coord_def &p)
         min(X_BOUND_2 - 1, max(X_BOUND_1 + 1, p.x)),
         min(Y_BOUND_2 - 1, max(Y_BOUND_1 + 1, p.y)));
 }
+
+extern const struct coord_def Compass[9];
+
+// Returns an array of coordinates representing a given number of spaces rotated
+// around a given direction and center point, optionally with a selector function.
+vector<coord_def> get_ring_spots(const coord_def& center, const coord_def& aim, int num,
+                                 function<bool(const coord_def& pos)> is_okay)
+{
+    vector<coord_def> spots;
+
+    // Convert aim to a compass direction
+    coord_def delta = (aim - center).sgn();
+
+    int dir = 0;
+    for (int i = 0; i < 8; ++i)
+    {
+        if (Compass[i] == delta)
+        {
+            dir = i;
+            break;
+        }
+    }
+
+    // Now choose adjacent compass spots to test
+    int start = dir - ((num - 1) / 2);
+    if (start < 0)
+        start = start + 8;
+
+    for (int i = start; i < start + num; ++i)
+    {
+        const int index = i % 8;
+        const coord_def spot = center + Compass[index];
+
+        // Ensure that this spot satisfies our given criteria
+        if (in_bounds(spot) && is_okay(spot))
+            spots.push_back(spot);
+    }
+
+    return spots;
+}

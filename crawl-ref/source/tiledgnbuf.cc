@@ -615,7 +615,12 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_MAGIC_MAP_MESH, x, y);
 
     if (bg & TILE_FLAG_RAMPAGE)
-        m_buf_icons.add(TILEI_RAMPAGE, x, y);
+    {
+        if (you.duration[DUR_TAILWIND])
+            m_buf_icons.add(TILEI_RAMPAGE_INSTANT, x, y);
+        else
+            m_buf_icons.add(TILEI_RAMPAGE, x, y);
+    }
 
     // Don't let the "new stair" icon cover up any existing icons, but
     // draw it otherwise.

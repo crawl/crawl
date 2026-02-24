@@ -44,12 +44,22 @@ AUTOFIGHT_WAIT = false
 AUTOFIGHT_PROMPT_RANGE = true
 AUTOMAGIC_ACTIVE = false
 AUTOFIGHT_FORCE_FIRE = false
+AUTOFIGHT_NO_STAMPEDE = false
 
 local function delta_to_cmd(dx, dy)
   local d2v = {
     [-1] = { [-1] = "CMD_MOVE_UP_LEFT",  [0] = "CMD_MOVE_LEFT",  [1] = "CMD_MOVE_DOWN_LEFT"},
     [0]  = { [-1] = "CMD_MOVE_UP",                               [1] = "CMD_MOVE_DOWN"},
     [1]  = { [-1] = "CMD_MOVE_UP_RIGHT", [0] = "CMD_MOVE_RIGHT", [1] = "CMD_MOVE_DOWN_RIGHT"},
+  }
+  return d2v[dx][dy]
+end
+
+local function delta_to_attack_cmd(dx, dy)
+  local d2v = {
+    [-1] = { [-1] = "CMD_ATTACK_UP_LEFT",  [0] = "CMD_ATTACK_LEFT",  [1] = "CMD_ATTACK_DOWN_LEFT"},
+    [0]  = { [-1] = "CMD_ATTACK_UP",                                 [1] = "CMD_ATTACK_DOWN"},
+    [1]  = { [-1] = "CMD_ATTACK_UP_RIGHT", [0] = "CMD_ATTACK_RIGHT", [1] = "CMD_ATTACK_DOWN_RIGHT"},
   }
   return d2v[dx][dy]
 end
@@ -355,7 +365,11 @@ local function attack_reach(x,y)
 end
 
 local function attack_melee(x,y)
-  crawl.do_commands({delta_to_cmd(x, y)})
+  if AUTOFIGHT_NO_STAMPEDE then
+    crawl.do_commands({delta_to_attack_cmd(x, y)})
+  else
+    crawl.do_commands({delta_to_cmd(x, y)})
+  end
 end
 
 local function set_stop_level(key, value, mode)
@@ -368,6 +382,10 @@ end
 
 local function set_af_throw(key, value, mode)
   AUTOFIGHT_THROW = string.lower(value) ~= "false"
+end
+
+local function set_af_no_stampede(key, value, mode)
+  AUTOFIGHT_NO_STAMPEDE = string.lower(value) ~= "false"
 end
 
 local function set_af_throw_nomove(key, value, mode)
@@ -522,6 +540,7 @@ chk_lua_option.autofight_stop = set_stop_level
 chk_lua_option.autofight_caught = set_af_caught
 chk_lua_option.autofight_fires = set_af_throw
 chk_lua_option.autofight_nomove_fires = set_af_throw_nomove
+chk_lua_option.autofight_no_stampede = set_af_no_stampede
 -- the following two options are here for backwards compatibility
 chk_lua_option.autofight_throw = set_af_throw
 chk_lua_option.autofight_throw_nomove = set_af_throw_nomove

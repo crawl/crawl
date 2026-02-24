@@ -192,7 +192,7 @@ end
 -- Lair, Snake, Swamp, Shoals, Spider, Slime,
 -- Orc, Elf, Vaults, Crypt, Tomb,
 -- Abyss, Gehenna, Cocytus, Dis, Tartarus,
--- Fire, Ice, Air, Earth, Negative Energy, Holy, Chaos,
+-- Fire, Ice, Air, Earth, Negative Energy, Acid, Holy, Chaos,
 -- Giants, Dragons, Draconians, Archers, Conjurers, Summoners,
 -- Pan, Lair Roulette, Vestibule / all Hells
 -- By using spec_fn to wrap monster-spec functions, monster weights
@@ -388,11 +388,22 @@ mset(with_props(spec_fn(function ()
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
+  local d = 10 + you.zigs_completed() * 5
+  local e = math.min(20, you.zigs_completed() + 4)
+  local f = 5 + you.zigs_completed() * you.zigs_completed() * 10
+  return "jelly w:1 / rust devil w:15 / entropy weaver w:15 / " ..
+         "yellow draconian w:15 / deep elf sorcerer w:5 / ancient lich w:1 / " ..
+         "yellow draconian annihilator w:" .. d .. " / " ..
+         "caustic shrike w:" .. d .. " / acid blob w:" .. d + 5 .. " / " ..
+         e .. "-headed slymdra w:" .. -5 + d * 3 .. " / orb of entropy w:" .. f
+end), { weight = 2 }))
+
+mset(with_props(spec_fn(function ()
   local d = math.max(2, math.floor((32 - you.depth()) / 5))
   local e = math.max(1, 4 - you.zigs_completed())
   local f = math.min(8, math.floor((you.depth()) / 5) + 4 + you.zigs_completed())
   local g = math.max(1, you.depth() + you.zigs_completed() * 2 - 4)
-  local h = math.max(4, you.zigs_completed() * 2)
+  local h = math.max(4, you.zigs_completed() * 2 - 4)
   return "soul eater w:" .. d .. " / laughing skull w:" .. d .. " / " ..
          "eye of draining w:" .. e .. " / deep elf death mage w:2 / " ..
          "shadow dragon w:8 / ghost crab w:4 / eidolon w:4 / " ..

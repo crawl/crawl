@@ -100,44 +100,22 @@ void explode_blastmotes_at(coord_def p)
                               nullptr, "");
 }
 
-spret cast_freezing_cloud(int pow, bolt &beam, bool fail)
+spret cast_freezing_cloud(int pow, const coord_def& target, bool fail)
 {
-    if (grid_distance(beam.target, you.pos()) > beam.range
-        || !in_bounds(beam.target))
+    targeter_cloud hitfunc(&you, CLOUD_COLD, LOS_RADIUS);
+    hitfunc.set_aim(target);
+
+    if (stop_attack_prompt(hitfunc, "conjure a freezing cloud",
+                            [](const actor *act) { return act->is_player() || act->res_cold() < 3;},
+                            nullptr, nullptr, false, true))
     {
-        mpr("That is beyond the maximum range.");
         return spret::abort;
     }
-
-    if (cell_is_solid(beam.target))
-    {
-        const char *feat = feat_type_name(env.grid(beam.target));
-        mprf("You can't place clouds on %s.", article_a(feat).c_str());
-        return spret::abort;
-    }
-
-    if (is_sanctuary(beam.target))
-    {
-        mpr("You can't place harmful clouds in a sanctuary.");
-        return spret::abort;
-    }
-
-    beam.thrower           = KILL_YOU;
-    beam.hit               = AUTOMATIC_HIT;
-    beam.damage            = CONVENIENT_NONZERO_DAMAGE;
-    beam.use_target_as_pos = true;
-    beam.origin_spell      = SPELL_FREEZING_CLOUD;
-    beam.flavour           = BEAM_COLD;
-    beam.name              = "freezing blast";
-    player_beam_tracer tracer;
-    beam.affect_endpoint(tracer);
-    if (cancel_beam_prompt(beam, tracer))
-        return spret::abort;
 
     fail_check();
 
-    big_cloud(CLOUD_COLD, &you, beam.target, pow, 8 + random2(3), -1);
-    noisy(spell_effect_noise(SPELL_FREEZING_CLOUD), beam.target);
+    big_cloud(CLOUD_COLD, &you, target, pow, 8 + random2(3), -1);
+    noisy(spell_effect_noise(SPELL_FREEZING_CLOUD), target);
     return spret::success;
 }
 

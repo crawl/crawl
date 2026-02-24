@@ -511,34 +511,40 @@ ORIENT: southwest
 DEPTH:  D:12-, !D:$
 MONS:   hell hound, necromancer, occultist / arcanist, orange demon, rust devil
 MONS:   hell knight, great orb of eyes
+KFEAT:  yz = x
+TILE:   x = wall_pebble_darkgray
+TILE:   y = wall_baleful
+TILE:   c = wall_stone_dark
+TILE:   v = dngn_metal_wall_blue
+TILE:   b = dngn_crystal_red
 MAP
-xx.@.xxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxx...xxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxx..........................xx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx..xx
-x.............................xx
-xx...xx+xxxxxxxxxxxxxxxxxxxxxxxx
-xxx.....11....xxxxxxxx..xxxxxxxx
-xxxx..x.1..6..xxx........xx..xxx
-xxxxx.xxxxxxxxx...vvvvv...x...xx
-x6..1...x.........+1..v.......xx
-x..1....x.........vvvvv........x
-x..5...xx......................x
-xxxxxx.++...........vvvvvvv....x
-xxxxxx.xx...xx=xx...vv$%$vvvvv.x
-xxxxxx.x...xxv1vxx...vvv*2...v.x
-xxxxxx.x..vvvv7.vvvv...vv.vv+v.x
-x..xxx...vvvb....bvvv...vvv....x
-x%%.xx..vvvvb....bvvvv.......xxx
-xx.....vvbbb......bbbvv.....xxxx
-xxx....vvb....66....bvvxxxxxxxxx
-xxxxxxvvvb..llllll..bvvvxxxxxxxx
-xvvvvvvvvb..ll45ll..bvvvvvvvvxxx
-xccc***+.+..l3.2.l..cccccccccxxx
-xccc+cccbb....ll....c..$$$$+$*cx
-xcc|||cbb...3llll2...cc%*%*c$|cx
-xcccccccbbbbbbbbbbbccccccccccccx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+zz.@.zzzzzzzzzzzzzzzzzzzzzzzzzzz
+zzz...zzzzzzzzzzzzzzzzzzzzzzzzzz
+zzzz..........................zz
+zzzzzzzzzzzzzzzzzzzzzzzzzzzz..zz
+z.............................zz
+zz...zz+zzzzzzzzzzzzzzzzzzzzzzzz
+zzz.....11....xxxxxxxy..yxxxxxxz
+zzzz..y.1..6..xxx........xx..xxz
+zxxxy.xxxxxxxxx...vvvvv...y...xz
+z6..1...x.........+1..v.......yz
+z..1....x.........vvvvv........z
+z..5...xx......................z
+zxxxxx.++...........vvvvvvv....z
+zxxxxx.xx...xy=yx...vv$%$vvvvv.z
+zxxxxx.x...xxv1vxx...vvv*2...v.z
+zyxxxx.y..vvvv7.vvvv...vv.vv+v.z
+z..xxx...vvvb....bvvv...vvv....z
+z%%.xy..vvvvb....bvvvv.......xyz
+zy.....vvbbb......bbbvv.....xxxz
+zxx....vvb....66....bvvyxxxxxxxz
+zxxxxyvvvb..llllll..bvvvxxxxxxxz
+zvvvvvvvvb..ll45ll..bvvvvvvvvxxz
+zccc***+.+..l3.2.l..cccccccccccz
+zccc+cccbb....ll....c..$$$$+$*cz
+zcc|||cbb...3llll2...cc%*%*c$|cz
+zcccccccbbbbbbbbbbbccccccccccccz
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
 ENDMAP
 
 NAME:   kennysheep_water_balloons

@@ -225,6 +225,12 @@ unimpaired.
 
 [[low-tier stab monstatus]]
 %%%%
+exposed monstatus
+
+This creature takes increased damage from all non-attack sources (except poison),
+non-attack projectiles are more accurate against them, and their Willpower is
+mildly reduced.
+%%%%
 extremely poisoned monstatus
 
 This creature suffers poison damage every turn and cannot be poisoned any

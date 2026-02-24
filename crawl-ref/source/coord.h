@@ -1,7 +1,9 @@
 #pragma once
 
+#include <functional>
 #include <vector>
 
+using std::function;
 using std::vector;
 
 coord_def random_in_bounds();
@@ -66,6 +68,9 @@ coord_def grid2player(const coord_def& pc) PURE;
 coord_def rotate_adjacent(coord_def vector, int direction) PURE;
 
 coord_def clamp_in_bounds(const coord_def &p) PURE;
+
+vector<coord_def> get_ring_spots(const coord_def& center, const coord_def& aim, int num,
+                                 function<bool(const coord_def& pos)> is_okay = [](const coord_def&){return true;});
 
 #ifdef ASSERTS
 #  define ASSERT_IN_BOUNDS(where)                                           \

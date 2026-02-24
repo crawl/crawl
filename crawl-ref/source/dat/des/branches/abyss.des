@@ -1213,6 +1213,7 @@ KFEAT:  " = runelight
 SUBST:  x = xxccn, . = ...W
 NSUBST: 0 = 4:1 / 2:2 / *:3
 FTILE:  AO = floor_crystal_squares
+FTILE:  .1234O = floor_necro_squares
 COLOUR: O = lightmagenta
 MAP
     """"""""
@@ -1294,11 +1295,11 @@ TAGS:   abyss_rune unrand no_monster_gen
 KMONS:  1 = glowing orange brain
 KMONS:  2 = golden eye / glass eye w:4
 KMONS:  3O = laughing skull
-KMONS:  4 = small abomination / weeping skull w:2
+KMONS:  4 = small abomination / weeping skull w:3
 KMONS:  5 = zykzyl
 KMONS:  6 = executioner
 KMONS:  7 = shining eye
-KMONS:  8 = titanic slime creature
+KMONS:  8 = very large slime creature
 KITEM:  O = abyssal rune of Zot
 KFEAT:  A = stone_arch
 KFEAT:  n = iron_grate
@@ -1336,12 +1337,13 @@ KMONS:  O = queen bee
 # flavor: abyss creature wandered into the hive.
 : dgn.delayed_decay(_G, '1', 'any corpse')
 KITEM:  O = abyssal rune of Zot
+KITEM:  d = potion of ambrosia pre_id
 KFEAT:  a = x
 KFEAT:  A = stone_arch
 KFEAT:  t = demonic_tree
 KFEAT:  " = runelight
-NSUBST: 1 = 3:5 / 1:15 / 3:2 / 1:1 / 10 = 11. / * = .
-NSUBST: ' = 1:d / * = d:1 .:199
+NSUBST: 1 = 1:1 / / 3:2 / 2:3 / 3:5 / 1:15 / 10 = 11. / * = .
+NSUBST: ' = 1:d / 4:d / * = d:1 .:199
 SUBST:  t = tbb
 TILE:   a = wall_wax
 FTILE:  A4O = floor_crystal_squares
@@ -1354,7 +1356,7 @@ MAP
       xxxxattOttaaxxx
     xxxaaaad1t1daaaxxx
    xxaa1aa21'1'12aa1axxx
-  xxaa'a'."a"."a".'a'aaxx
+  xxaa'a'1"a"."a"1'a'aaxx
  xxaa4aaa1aaa4aaa1aaa4aaxx
 xxaa..'a'."a"."a".'a'.'aaxx
 xaa.'a'.'a'.'a'.'a'.'a'.aax
@@ -1455,7 +1457,7 @@ KITEM:  O = abyssal rune of Zot
 KFEAT:  " = runelight
 COLOUR: n = lightmagenta
 NSUBST: - = 4:d / 2 = d. / *:.
-NSUBST: . = 2:1 / 1:3 / 1:4 / 1:155 / 1:114 / 2 = 224... / *:.
+NSUBST: . = 2:1 / 1:3 / 1:4 / 1:15 / 1:114 / 2 = 224... / *:.
 SUBST:  l : lw
 : dgn.delayed_decay(_G, 'd', 'minotaur corpse / troll corpse / ogre corpse')
 MAP
@@ -1624,7 +1626,7 @@ ENDMAP
 NAME:   due_evilmike_abyss_rune_seething_liches
 TAGS:   abyss_rune unrand no_monster_gen
 MONS:   fire bat, chaos spawn, cognitogaunt, ogre mage
-KMONS:  OL = lich / ancient lich w:1 / dread lich w:1
+KMONS:  OL = lich w:9 / ancient lich w:1 / dread lich w:1
 KITEM:  O = abyssal rune of Zot
 KFEAT:  A = stone_arch
 KFEAT:  ^ = harlequin's trap / devourer's trap w:4
@@ -1665,8 +1667,8 @@ MONS:   occultist god:Lugonu hd:16 name:mad_acolyte_of_Lugonu n_rpl n_des n_noc 
                blink.10.priest;blink_other.10.priest;\
                invisibility.10.priest ; \
         robe good_item . quarterstaff ego:distortion | dagger ego:distortion
-MONS:   generate_awake merfolk avatar, blink frog
-MONS:   tentacled monstrosity / tentacled starspawn / thrashing horror w:6
+MONS:   generate_awake merfolk avatar, blink frog / raiju w:4
+MONS:   tentacled monstrosity / tentacled starspawn w:6
 KMONS:  O = starcursed mass
 KITEM:  O = abyssal rune of Zot
 KFEAT:  _ = altar_lugonu
@@ -1681,12 +1683,12 @@ MAP
  XbbbXXXXXXXXXX@
 XXb1bbbbbcccccc+
 XXbblblblccwc..c"
-XXbb+^.....3...c
+XXbb+^1....3...c
 Xbb4n.N...llb3cc"
-XbOnn^1_.3l2l^wcA
-Xbb4n.N...llb3cc
-XXbb+^.....3...c"
-XXbblblblccwc..c
+XbOnn^._.3l2l^wcA
+Xbb4n.N...llb3cc"
+XXbb+^1....3...c
+XXbblblblccwc..c"
 XXb1bbbbbcccccc+
  XbbbXXXXXXXXXX@
 ENDMAP
@@ -1735,7 +1737,7 @@ ENDMAP
 NAME:   evilmike_nicolae_abyss_rune_containment_curve
 TAGS:   abyss_rune unrand patrolling no_monster_gen no_item_gen
 MONS:   brain worm w:4 / weeping skull w:2 / raiju / worldbinder / \
-        thrashing horror / shapeshifter / screaming refraction w:2
+        thrashing horror / shapeshifter w:6 / screaming refraction w:2
 MONS:   cognitogaunt w:4 / tormentor / hellion / shadow demon / \
         bone dragon / iron dragon zombie w:4
 KMONS:  3O = spatial maelstrom
@@ -1752,7 +1754,7 @@ MAP
 ..^.....1nnnnnnnnxxxxx
 ....X.....^xxnnnnnxxxx
 .........2..nnnn33xxxx
-A.....X...x.2$mm3Oxxxx
+A.....X1..x.2$mm3Oxxxx
 .........2..nnnn33xxxx
 ....X.....^xxnnnnnxxxx
 ..^.....1nnnnnnnnxxxxx
@@ -1834,7 +1836,7 @@ TILE:    t = dngn_demonic_tree_1 / dngn_demonic_tree_8 / \
 MAP
     ..'.'.
   ....XXX....
- ..XWwtttwWX..
+ .2XWwtttwWX..
  .X.Tt.w.tT1X..'..
 '.WT.WXAXW.xxxxxxx.
 1.wt.tt'xxxxcccccx'
@@ -1844,7 +1846,7 @@ aXtw....+-U-+-O4cx1
 1.wt.tt'xxxxcccccx'
 '.WT..XCXW.xxxxxxx.
  .X.Tt.w.tT1X..'..
- ..XWwtttwWX..
+ .2XWwtttwWX..
   ....XXX....
     ..'.'.
 ENDMAP
@@ -1880,7 +1882,7 @@ MAP
  ..c"""WWW"""c..
  ..c"""WwW"""c..
  .cccWWwwwWWccc.
- .c22WwwKwwW33c.
+ .c22WwKwKwW33c.
  .cccWWwwwWWccc.
  ...""""A""""...
 ENDMAP

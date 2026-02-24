@@ -228,6 +228,8 @@ public:
     void send_milestone(const xlog_fields &xl);
     void send_options();
 
+    void invalidate_item(int index);
+
 protected:
     int m_sock;
     int m_max_msg_size;

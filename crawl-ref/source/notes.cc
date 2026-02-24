@@ -44,7 +44,7 @@ static bool _is_highest_skill(int skill)
     return true;
 }
 
-static bool _is_noteworthy_hp(int hp, int maxhp)
+bool is_noteworthy_hp(int hp, int maxhp)
 {
     return hp > 0 && Options.note_hp_percent
            && hp <= (maxhp * Options.note_hp_percent) / 100;
@@ -145,7 +145,7 @@ static bool _is_noteworthy(const Note& note)
 
     // HP noteworthiness is handled in its own function.
     if (note.type == NOTE_HP_CHANGE
-        && !_is_noteworthy_hp(note.first, note.second))
+        && !is_noteworthy_hp(note.first, note.second))
     {
         return false;
     }

@@ -2300,16 +2300,17 @@ KMONS:  2 = anaconda zombie w:5 / spectral anaconda / anaconda simulacrum
 KFEAT:  2 = W / . w:30
 NSUBST: D = 2=% / 2=* / *| / -'
 # About 18.5 snek on-average.
-SUBST:  ' = 2:40 W .:50, - = xwW.
+SUBST:  ' = 2:40 W ':50, - = xwW"
+FTILE:  '"$%*|2 = floor_necro_squares
 MAP
   xxxxxxx
  xxxxxxxxx..@
 xxxDDD--xx...x
 xxDD''''-xx1.x
-xxD''''''.+..x
+xxD''''''"+..x
 xxD''''''-xxxx
 xxD''''''-xxxx
-xxD''''''.+..x
+xxD''''''"+..x
 xxDD''''-xx1.x
 xxxDDD--xx...x
  xxxxxxxxx..@
@@ -2633,12 +2634,13 @@ NAME:    nicolae_snake_shooting_gallery
 TAGS:    no_pool_fixup transparent
 DEPTH:   Snake, !Snake:$
 ORIENT:  float
+MONS:    naga sharpshooter
 ITEM:    shortbow / orcbow / longbow w:4 / hand cannon w:1 / \
          arbalest w:6 / triple crossbow w:1
-MONS:    naga sharpshooter
+KITEM:   $ = $ no_pickup
 SUBST:   s = 1'
 SHUFFLE: }])
-KMASK:   1dw'+}]) = opaque
+KMASK:   1d$w'+}]) = opaque
 MAP
  xxxxxxxxx.@@@.xxxxxxxxx
 xxxxxxxxxxx...xxxxxxxxxxx
@@ -2650,7 +2652,7 @@ xx....wwwwwwwwwwwww....xx
 xx....wwwwwwwwwwwww....xx
 xx....ww1'''s'''1ww....xx
 xxx...ww'ccccccc'ww...xxx
-.xx...ww'c'''''c'ww...xx.
+.xx...ww'c$$$$$c'ww...xx.
 @.....ww'+''s''c'ww.....@
 @.....wws+''1'}csww.....@
 @.....ww'+''s''c'ww.....@

@@ -262,7 +262,7 @@ static void _do_wizard_command(int wiz_command)
 
 static void _log_wizmode_entrance()
 {
-    scorefile_entry se(INSTANT_DEATH, MID_NOBODY, KILLED_BY_WIZMODE, nullptr);
+    scorefile_entry se(0, MID_NOBODY, KILLED_BY_WIZMODE, nullptr);
     logfile_new_entry(se);
 }
 
@@ -403,7 +403,7 @@ void enter_explore_mode()
         take_note(Note(NOTE_MESSAGE, 0, 0, "Entered explore mode."));
 
 #ifndef SCORE_WIZARD_CHARACTERS
-        scorefile_entry se(INSTANT_DEATH, MID_NOBODY, KILLED_BY_EXPLORING, nullptr);
+        scorefile_entry se(0, MID_NOBODY, KILLED_BY_EXPLORING, nullptr);
         logfile_new_entry(se);
 #endif
 

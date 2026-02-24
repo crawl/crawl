@@ -213,6 +213,7 @@ function sroom_morgue(e)
     e.kmons("! = " .. mons[1] .. " / " .. mons[2] .. " / " .. mons[3] ..
             " / " .. mons[4] .. " / " .. mons[5] .. " / " .. mons[6])
     e.kfeat("_ = .")
+    e.ftile(".1!2})]>_ = floor_necro_squares")
 
     dgn.delayed_decay(e, '!_', bodies)
 end

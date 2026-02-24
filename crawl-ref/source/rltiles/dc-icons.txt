@@ -19,6 +19,7 @@ cursor_green CURSOR3
 tutorial_cursor TUTORIAL_CURSOR
 travel_exclusion DISABLED
 rampage_indicator RAMPAGE
+rampage_indicator_instant RAMPAGE_INSTANT
 %sdir dngn/traps
 %alpha 128
 cobweb_none_0 TRAP_WEB
@@ -119,6 +120,8 @@ sentinel_mark SENTINEL_MARK
 strong_willed STRONG_WILLED
 tesseract_spawn TESSERACT_SPAWN
 sundering SUNDERING
+mute MUTE
+exposed EXPOSED
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

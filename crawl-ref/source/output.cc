@@ -2599,9 +2599,12 @@ static vector<formatted_string> _get_overview_resistances(
 
     out += _stealth_bar(cwidth, 20) + "\n";
 
-    const int regen = player_regen(); // round up
+    const int regen = player_regen() + (player_indomitable_regen_rate() * 10); // round up
     out += chop_string("HPRegen", cwidth);
-    out += make_stringf("%d.%02d/turn\n", regen/100, regen%100);
+    out += make_stringf("%s%d.%02d%s/turn\n",
+                            you.duration[DUR_INDOMITABLE] ? "<lightblue>" : "",
+                            regen/100, regen%100,
+                            you.duration[DUR_INDOMITABLE] ? "</lightblue>" : "");
 
     if (!you.has_mutation(MUT_HP_CASTING))
     {
@@ -2709,7 +2712,7 @@ static string _rampage_passive_string()
     const int rampage = you.rampaging();
     if (rampage)
     {
-        desc += you.has_mutation(MUT_ROLLPAGE) ? "roll" : "rampage";
+        desc += you.has_mutation(MUT_STAMPEDE) ? "stampede" : "rampage";
 
         const bool infinite = you.unrand_equipped(UNRAND_SEVEN_LEAGUE_BOOTS);
         const char *inf = Options.char_set == CSET_ASCII ? "+inf"
