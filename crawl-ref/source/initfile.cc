@@ -771,12 +771,12 @@ const vector<GameOption*> game_options::build_options_list()
              {"true", travel_open_doors_type::_true}}),
         new MultipleChoiceGameOption<longwalk_range_mode>(
             SIMPLE_NAME(longwalk_range),
-            longwalk_range_mode::LWR_LOS,
+            longwalk_range_mode::LWR_CONSTANT,
             {{"los", longwalk_range_mode::LWR_LOS},
             {"visible", LWR_VISIBLE},
             {"unlimited", LWR_UNLIMITED},
             {"constant", LWR_CONSTANT}}),
-        new IntGameOption(SIMPLE_NAME(longwalk_range_constant), 7, 1, 100),
+        new IntGameOption(SIMPLE_NAME(longwalk_range_constant), 15, 1, 100),
 
         new MultipleChoiceGameOption<level_gen_type>(
             SIMPLE_NAME(pregen_dungeon),

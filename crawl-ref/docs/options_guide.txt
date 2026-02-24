@@ -1155,9 +1155,9 @@ longwalk_range = (los | visible | unlimited | constant)
           unlimited = No distance limitation. You'll keep moving until something
                 else stops you.
           constant = A constant maximum distance that you provide in
-                longwalk_range_constant.
+                longwalk_range_constant. (default)
 
-longwalk_range_constant = 7
+longwalk_range_constant = 15
         If longwalk_range is set to constant, this will set the maximum distance
         for longwalking (shift+direction by default). Otherwise, it will do
         nothing.
