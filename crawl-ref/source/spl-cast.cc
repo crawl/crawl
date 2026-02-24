@@ -575,7 +575,7 @@ int calc_spell_power(spell_type spell)
         power /= 10 + (you.props[HORROR_PENALTY_KEY].get_int() * 3) / 2;
     }
 
-    if (you.duration[DUR_ENKINDLED] && spell_can_be_enkindled(spell))
+    if (you.duration[DUR_ENKINDLED] && spell_can_be_enkindled(spell) && !you.divine_exegesis)
         power = (power + (you.experience_level * 300)) * 3 / 2;
 
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_COMMAND) && spell_typematch(spell, spschool::summoning))

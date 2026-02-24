@@ -551,8 +551,11 @@ int spell_mana(spell_type which_spell, bool real_spell)
 
     if (real_spell)
     {
-        if (you.duration[DUR_ENKINDLED] && spell_can_be_enkindled(which_spell))
+        if (you.duration[DUR_ENKINDLED] && spell_can_be_enkindled(which_spell)
+            && !you.divine_exegesis)
+        {
             return 0;
+        }
 
         int cost = level;
         if (you.wearing_ego(OBJ_GIZMOS, SPGIZMO_SPELLMOTOR))
