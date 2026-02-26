@@ -4678,11 +4678,10 @@ int get_tension(god_type god)
     return max(tension_min, tension);
 }
 
-int get_fuzzied_monster_difficulty(const monster& mons)
+int okawaru_monster_difficulty(const monster& mons)
 {
     double factor = sqrt(exp_needed(you.experience_level) / 30.0);
     int exp = exp_value(mons) * 100;
-    exp = random2(exp) + random2(exp);
     return exp / (1 + factor);
 }
 
