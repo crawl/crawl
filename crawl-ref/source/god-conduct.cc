@@ -571,8 +571,8 @@ static like_response okawaru_kill(const char* desc)
         desc, false,
         0, 0, nullptr, [] (int &piety, int &denom, const monster* victim)
         {
-            piety = get_fuzzied_monster_difficulty(*victim);
-            dprf("fuzzied monster difficulty: %4.2f", piety * 0.01);
+            piety = okawaru_monster_difficulty(*victim);
+            dprf("monster difficulty: %4.2f", piety * 0.01);
             denom = 600;
 
             if (piety > 3200)
