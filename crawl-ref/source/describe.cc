@@ -1547,6 +1547,20 @@ static void _append_skill_needed(string &description, const item_def &item,
         _append_skill_target_desc(description, skill, target_skill);
 }
 
+static string _weapon_accuracy_description(const item_def& item)
+{
+    int hit = property(item, PWPN_HIT);
+    string description = "";
+
+    if (hit == 0)
+        return "Normal";
+    else if (abs(hit) > 1)
+        description += "Very ";
+
+    description += hit > 0 ? "High" : "Low";
+    return description;
+}
+
 static void _append_weapon_stats(string &description, const item_def &item)
 {
     const int base_dam = property(item, PWPN_DAMAGE);
@@ -1574,8 +1588,8 @@ static void _append_weapon_stats(string &description, const item_def &item)
     else
     {
         description += make_stringf(
-            "Base accuracy: %+d  Base damage: %d  ",
-            property(item, PWPN_HIT),
+            "Base accuracy: %s  Base damage: %d  ",
+            _weapon_accuracy_description(item).c_str(),
             base_dam);
     }
 
@@ -5868,7 +5882,7 @@ static void _describe_mons_to_hit(const monster_info& mi, ostringstream &result)
     const bool melee = weapon == nullptr || !is_range_weapon(*weapon);
     const bool skilled = mons_class_flag(mi.type, melee ? M_FIGHTER : M_ARCHER);
     const int base_to_hit = mon_to_hit_base(mi.hd, skilled);
-    const int weapon_to_hit = weapon ? weapon->plus + property(*weapon, PWPN_HIT) : 0;
+    const int weapon_to_hit = weapon ? weapon->plus + property(*weapon, PWPN_HIT) * 4 : 0;
     const int total_base_hit = base_to_hit + weapon_to_hit;
 
     int post_roll_modifiers = 0;
