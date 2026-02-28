@@ -298,7 +298,11 @@ void leaving_level_now(dungeon_feature_type stair_used)
         clear_abyssal_rune_knowledge();
     }
 
-    dungeon_events.fire_position_event(DET_PLAYER_CLIMBS, you.pos());
+    // XXX: Don't consider things like banishment or Duel, which use 'stairs'
+    //      internally, to actually be taking the stairs the player is standing
+    //      on or it will also consume portal entrances.
+    if (stair_used == env.grid(you.pos()))
+        dungeon_events.fire_position_event(DET_PLAYER_CLIMBS, you.pos());
     dungeon_events.fire_event(DET_LEAVING_LEVEL);
 
     _clear_golubria_traps();
