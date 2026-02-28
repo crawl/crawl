@@ -1086,6 +1086,7 @@ void blorkula_bat_merge(monster& bat)
     blork->move_to(pos, MV_INTERNAL);
 
     _blorkula_bat_merge_message(blork, bat_count);
+    behaviour_event(blork, ME_ALERT);
 }
 
 static void _blorkula_bat_merge_message(monster* blork, int bat_count)
