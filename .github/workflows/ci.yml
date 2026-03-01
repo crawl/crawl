@@ -170,23 +170,29 @@ jobs:
       - if: matrix.debug == 'FULLDEBUG=1' && (matrix.build_opts == '' || matrix.build_opts == 'WEBTILES=1') && matrix.tag_upgrade == false
         id: tests
         run: |
+          # allow Ubuntu to make core dumps, and ensure that apport doesn't send them to Canonical
           ulimit -c unlimited
           sudo sh -c 'echo core > /proc/sys/kernel/core_pattern'
           make -j$(nproc) ${{ matrix.build_opts }} ${{ matrix.debug }} ${{ matrix.build_all }} test
         working-directory: crawl-ref/source
         env:
           TERM: dumb
-      # Upload an artifact containing the executable, core if any, and morgue if the tests failed
+      # Upload an artifact containing the executable, core, and morgue if the tests crashed
       # `failure()` ensures this step runs even if a failure (such as the one we want to catch) happens
       # see https://docs.github.com/en/actions/reference/workflows-and-actions/expressions#failure
       # `conclusion` will be 'skipped' if it didn't run, so the condition doesn't need to be repeated
-      - if: failure() && steps.tests.conclusion == 'failure'
-        uses: actions/upload-artifact@v6
+      # hashFiles ensures we only do this if there's a core file (can't test directly in a condition)
+      - if: >-
+          failure() &&
+          steps.tests.conclusion == 'failure' &&
+          hashFiles('crawl-ref/source/core') != ''
+        uses: actions/upload-artifact@v7
         with:
           name: morgue-${{ matrix.compiler }}-${{ matrix.build_opts }}
+          retention-days: 7
           path: |
             crawl-ref/source/morgue
-            crawl-ref/source/saves
+            crawl-ref/source/saves/*.cs
             crawl-ref/source/crawl
             crawl-ref/source/core
 
