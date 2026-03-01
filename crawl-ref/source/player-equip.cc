@@ -1666,15 +1666,16 @@ void unequip_effect(int item_slot, bool meld, bool msg)
 
     const interrupt_block block_meld_interrupts(meld);
 
-   if (is_artefact(item))
-        unequip_artefact_effect(item, &msg, meld);
-
     if (is_weapon(item))
         _unequip_weapon_effect(item, msg, meld);
     else if (item.base_type == OBJ_ARMOUR)
         _unequip_armour_effect(item, meld);
     else if (item.base_type == OBJ_JEWELLERY)
         _unequip_jewellery_effect(item, meld);
+
+    // Artprops includes ^Fragile so the item may be destroyed after this.
+    if (is_artefact(item))
+        unequip_artefact_effect(item, &msg, meld);
 
     // Cursed items should always be destroyed on unequip.
     if (item.cursed() && !meld)
