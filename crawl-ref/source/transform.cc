@@ -1763,7 +1763,7 @@ bool feat_dangerous_for_form(transformation which_trans,
  */
 bool transforming_is_unsafe(transformation which_trans)
 {
-    if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
+    if (feat_dangerous_for_form(which_trans, env.grid(you.pos())))
     {
         mprf(MSGCH_PROMPT, "%s right now would cause you to %s!",
                 which_trans == transformation::none ? "Untransforming" : "Transforming",
