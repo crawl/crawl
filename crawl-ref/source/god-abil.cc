@@ -2151,6 +2151,7 @@ static map<curse_type, curse_data> _ashenzari_curses =
         "Ranged Combat", "Range",
         { SK_RANGED_WEAPONS, SK_THROWING },
     } },
+#if TAG_MAJOR_VERSION == 34
     { CURSE_ELEMENTS, {
         "Elements", "Elem",
         { SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC },
@@ -2179,11 +2180,97 @@ static map<curse_type, curse_data> _ashenzari_curses =
         "Cunning", "Cun",
         { SK_DODGING, SK_STEALTH },
     } },
+#endif
     { CURSE_DEVICES, {
         "Devices", "Dev",
         { SK_EVOCATIONS, SK_SHAPESHIFTING },
     } },
+    { CURSE_FIRE_MAGIC, {
+        "Fire Magic", "Fire",
+        { SK_FIRE_MAGIC },
+    } },
+    { CURSE_ICE_MAGIC, {
+        "Fire Magic", "Fire",
+        { SK_ICE_MAGIC },
+    } },
+    { CURSE_AIR_MAGIC, {
+        "Air Magic", "Air",
+        { SK_AIR_MAGIC },
+    } },
+    { CURSE_EARTH_MAGIC, {
+        "Earth Magic", "Earth",
+        { SK_EARTH_MAGIC },
+    } },
+    { CURSE_CONJURATIONS, {
+        "Conjurations", "Conj",
+        { SK_CONJURATIONS },
+    } },
+    { CURSE_ALCHEMY, {
+        "Alchemy", "Alch",
+        { SK_ALCHEMY },
+    } },
+    { CURSE_SUMMONINGS, {
+        "Summonings", "Summ",
+        { SK_SUMMONINGS },
+    } },
+    { CURSE_NECROMANCY, {
+        "Necromancy", "Necro",
+        { SK_NECROMANCY },
+    } },
+    { CURSE_FORGECRAFT, {
+        "Forgecraft", "Forge",
+        { SK_FORGECRAFT },
+    } },
+    { CURSE_HEXES, {
+        "Hexes", "Hex",
+        { SK_HEXES },
+    } },
+    { CURSE_TRANSLOCATIONS, {
+        "Translocations", "Tloc",
+        { SK_TRANSLOCATIONS },
+    } },
+    { CURSE_SPELLCASTING, {
+        "Spellcasting", "Splcast",
+        { SK_SPELLCASTING },
+    } },
+    { CURSE_ARMOUR, {
+        "Armour", "Arm",
+        { SK_ARMOUR },
+    } },
+    { CURSE_SHIELDS, {
+        "Shields", "Shld",
+        { SK_SHIELDS },
+    } },
+    { CURSE_DODGING, {
+        "Dodging", "Dodg",
+        { SK_DODGING },
+    } },
+    { CURSE_STEALTH, {
+        "Stealth", "Stlth",
+        { SK_STEALTH },
+    } },
+    { CURSE_FIGHTING, {
+        "Fighting", "Fight",
+        { SK_FIGHTING },
+    } },
 };
+
+static bool _curse_is_removed(curse_type curse)
+{
+    switch (curse)
+    {
+        case CURSE_ELEMENTS:
+        case CURSE_SORCERY:
+        case CURSE_COMPANIONS:
+        case CURSE_BEGUILING:
+        case CURSE_SELF:
+        case CURSE_FORTITUDE:
+        case CURSE_CUNNING:
+            return true;
+        default:
+            return false;
+    }
+}
 
 static bool _can_use_curse(const curse_data& c)
 {
@@ -2246,41 +2333,23 @@ string desc_curse_skills(const CrawlStoreValue& curse)
  */
 static void _choose_curse_knowledge()
 {
-    // This loop choses two available skills without replacement,
-    // it is a two element version of a reservoir sampling algorithm.
-    //
-    // If Ashenzari curses need some fancier weighting this is the
-    // place to do that weighting.
-    curse_type first_choice = NUM_CURSES;
-    curse_type second_choice = NUM_CURSES;
-    int valid_curses = 0;
+    // Updated from a reservoir sample to shuffling an array since we now use
+    // three curse choices rather than two.
+    vector <curse_type> valid_curses;
     for (auto const& curse : _ashenzari_curses)
     {
-        if (_can_use_curse(curse.second))
-        {
-            ++valid_curses;
-            if (valid_curses == 1)
-                first_choice = curse.first;
-            else if (valid_curses == 2)
-            {
-                second_choice = curse.first;
-                if (coinflip())
-                    swap(first_choice, second_choice);
-            }
-            else if (one_chance_in(valid_curses))
-                first_choice = curse.first;
-            else if (one_chance_in(valid_curses - 1))
-                second_choice = curse.first;
-        }
+        if (_can_use_curse(curse.second) && !_curse_is_removed(curse.first))
+            valid_curses.push_back(curse.first);
     }
 
     you.props.erase(CURSE_KNOWLEDGE_KEY);
     CrawlVector &curses = you.props[CURSE_KNOWLEDGE_KEY].get_vector();
 
-    if (first_choice != NUM_CURSES)
-        curses.push_back(first_choice);
-    if (second_choice != NUM_CURSES)
-        curses.push_back(second_choice);
+    shuffle_array(valid_curses);
+    int num_valid = static_cast<int>(valid_curses.size());
+
+    for (int i = 0; i < min(num_valid, 3); ++i)
+        curses.push_back(valid_curses[i]);
 
     // It's not an error for this to be empty, curses are still useful for
     // piety alone
