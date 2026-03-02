@@ -454,6 +454,7 @@
     Zooko
     Zhang Haocheng
     Brian 'buehler' Faires
+    Dossy Shiobara
 
 The Dungeon Crawl Stone Soup development team is:
     advil
