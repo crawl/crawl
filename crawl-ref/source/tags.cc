@@ -2037,15 +2037,15 @@ static void _tag_construct_you_items(writer &th)
     // how many unique items?
     marshallUByte(th, MAX_UNRANDARTS);
     for (int j = 0; j < MAX_UNRANDARTS; ++j)
-        marshallByte(th,you.unique_items[j]);
+        marshallByte(th, you.unique_items[j]);
 
     marshallShort(th, NUM_WEAPONS);
     for (int j = 0; j < NUM_WEAPONS; ++j)
-        marshallInt(th,you.seen_weapon[j]);
+        marshallInt(th, you.seen_weapon[j]);
 
     marshallShort(th, NUM_ARMOURS);
     for (int j = 0; j < NUM_ARMOURS; ++j)
-        marshallInt(th,you.seen_armour[j]);
+        marshallInt(th, you.seen_armour[j]);
 
     _marshallFixedBitVector<NUM_MISCELLANY>(th, you.seen_misc);
     _marshallFixedBitVector<NUM_TALISMANS>(th, you.seen_talisman);
@@ -2182,7 +2182,7 @@ static void _tag_construct_you_dungeon(writer &th)
     // how many unique creatures?
     marshallShort(th, NUM_MONSTERS);
     for (int j = 0; j < NUM_MONSTERS; ++j)
-        marshallByte(th,you.unique_creatures[j]); // unique beasties
+        marshallByte(th, you.unique_creatures[j]); // unique beasties
 
     // how many branches?
     marshallByte(th, NUM_BRANCHES);

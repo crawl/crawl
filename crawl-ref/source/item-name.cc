@@ -134,14 +134,16 @@ static string _item_inscription(const item_def &item)
 }
 
 string item_def::name(description_level_type descrip, bool terse, bool ident,
-                      bool with_inscription, bool quantity_in_words) const
+                      bool with_inscription, bool quantity_in_words,
+                      bool consider_corrosion) const
 {
     if (descrip == DESC_NONE)
         return "";
 
     ostringstream buff;
 
-    const string auxname = name_aux(descrip, terse, ident, with_inscription);
+    const string auxname = name_aux(descrip, terse, ident, with_inscription,
+                                    consider_corrosion);
 
     const bool startvowel     = is_vowel(auxname[0]);
     const bool qualname       = (descrip == DESC_QUALNAME);
@@ -1384,11 +1386,12 @@ static bool _use_basename(const item_def &item, description_level_type desc,
 /**
  * The plus-describing prefix to a weapon's name, including trailing space.
  */
-static string _plus_prefix(const item_def &weap)
+static string _plus_prefix(const item_def &weap, bool consider_corrosion = false)
 {
     if (is_unrandom_artefact(weap, UNRAND_WOE))
         return Options.char_set == CSET_ASCII ? "+inf " : "+\u221e "; // ∞
-    return make_stringf("%+d ", weap.plus);
+    return make_stringf("%+d ", weap.plus - (consider_corrosion ?
+                                             you.corrosion_amount() : 0));
 }
 
 /**
@@ -1453,11 +1456,12 @@ string weapon_brand_desc(const char *body, const item_def &weap,
  * @param ident         Whether the weapon should be named as if it were
  *                      identified.
  * @param inscr         Whether an inscription will be added later.
+ * @param corr          Whether to consider corrosion.
  * @return              A name for the weapon.
  *                      TODO: example
  */
 static string _name_weapon(const item_def &weap, description_level_type desc,
-                           bool terse, bool ident, bool inscr)
+                           bool terse, bool ident, bool inscr, bool corr)
 {
     const bool dbname   = (desc == DESC_DBNAME);
     const bool basename = _use_basename(weap, desc, ident);
@@ -1465,10 +1469,14 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
 
     const bool identified = ident || weap.is_identified();
 
-    const string curse_prefix = !dbname && !terse && weap.cursed() ? "cursed " : "";
-    const string plus_text = identified && !dbname && !qualname ? _plus_prefix(weap) : "";
-    const string chaotic = testbits(weap.flags, ISFLAG_CHAOTIC) ? "chaotic " : "";
-    const string replica = testbits(weap.flags, ISFLAG_REPLICA) ? "replica " : "";
+    const string curse_prefix = !dbname && !terse && weap.cursed() ?
+                                "cursed " : "";
+    const string plus_text = identified && !dbname && !qualname ?
+                             _plus_prefix(weap, corr) : "";
+    const string chaotic = testbits(weap.flags, ISFLAG_CHAOTIC) ?
+                           "chaotic " : "";
+    const string replica = testbits(weap.flags, ISFLAG_REPLICA) ?
+                           "replica " : "";
 
     if (is_artefact(weap) && !dbname)
     {
@@ -1533,7 +1541,7 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
 // Note that "terse" is only currently used for the "in hand" listing on
 // the game screen.
 string item_def::name_aux(description_level_type desc, bool terse, bool ident,
-                          bool with_inscription) const
+                          bool with_inscription, bool consider_corrosion) const
 {
     // Shortcuts
     const int item_typ   = sub_type;
@@ -1557,7 +1565,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     switch (base_type)
     {
     case OBJ_WEAPONS:
-        buff << _name_weapon(*this, desc, terse, ident, with_inscription);
+        buff << _name_weapon(*this, desc, terse, ident, with_inscription,
+                             consider_corrosion);
         break;
 
     case OBJ_MISSILES:
