@@ -44,7 +44,7 @@ AUTOFIGHT_WAIT = false
 AUTOFIGHT_PROMPT_RANGE = true
 AUTOMAGIC_ACTIVE = false
 AUTOFIGHT_FORCE_FIRE = false
-AUTOFIGHT_NO_STAMPEDE = false
+AUTOFIGHT_STAMPEDE = false
 
 -- A list of monster positions to exclude on the next pass of get_target()
 -- (Must be cleared with the same call to autofight.)
@@ -382,10 +382,10 @@ local function attack_reach(x,y)
 end
 
 local function attack_melee(x,y)
-  if AUTOFIGHT_NO_STAMPEDE then
-    crawl.do_commands({delta_to_attack_cmd(x, y)})
-  else
+  if AUTOFIGHT_STAMPEDE then
     crawl.do_commands({delta_to_cmd(x, y)})
+  else
+    crawl.do_commands({delta_to_attack_cmd(x, y)})
   end
 end
 
@@ -401,8 +401,8 @@ local function set_af_throw(key, value, mode)
   AUTOFIGHT_THROW = string.lower(value) ~= "false"
 end
 
-local function set_af_no_stampede(key, value, mode)
-  AUTOFIGHT_NO_STAMPEDE = string.lower(value) ~= "false"
+local function set_af_stampede(key, value, mode)
+  AUTOFIGHT_STAMPEDE = string.lower(value) ~= "false"
 end
 
 local function set_af_throw_nomove(key, value, mode)
@@ -560,7 +560,7 @@ chk_lua_option.autofight_stop = set_stop_level
 chk_lua_option.autofight_caught = set_af_caught
 chk_lua_option.autofight_fires = set_af_throw
 chk_lua_option.autofight_nomove_fires = set_af_throw_nomove
-chk_lua_option.autofight_no_stampede = set_af_no_stampede
+chk_lua_option.autofight_stampede = set_af_stampede
 -- the following two options are here for backwards compatibility
 chk_lua_option.autofight_throw = set_af_throw
 chk_lua_option.autofight_throw_nomove = set_af_throw_nomove
