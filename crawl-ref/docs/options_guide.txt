@@ -1489,7 +1489,7 @@ autofight_prompt_range = true
         to attack.
 
 autofight_no_stampede = false
-	When able to stampede as an anemocentaur, if this option is true,
+	When able to stampede as a gale centaur, if this option is true,
 	autofight will opt to attack in place instead of pushing enemies,
 	cancelling stampede.
 

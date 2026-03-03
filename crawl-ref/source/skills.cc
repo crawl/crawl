@@ -1198,7 +1198,7 @@ void train_skills(bool simu)
     // We might have disabled some skills on level up.
     reset_training();
 
-    // Check if we need to update an anemocentaur's prevailing wind.
+    // Check if we need to update a gale centaur's prevailing wind.
     update_four_winds();
 }
 

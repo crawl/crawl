@@ -330,7 +330,7 @@ void fill_doll_equipment(dolls_data &result)
 #if TAG_MAJOR_VERSION == 34
         case SP_CENTAUR:
 #endif
-        case SP_ANEMOCENTAUR: ch = TILEP_TRAN_STATUE_ANEMOCENTAUR;  break;
+        case SP_GALE_CENTAUR: ch = TILEP_TRAN_STATUE_GALE_CENTAUR;  break;
         case SP_NAGA:         ch = TILEP_TRAN_STATUE_NAGA;          break;
         case SP_FELID:        ch = TILEP_TRAN_STATUE_FELID;         break;
         case SP_OCTOPODE:     ch = TILEP_TRAN_STATUE_OCTOPODE;      break;
@@ -378,7 +378,7 @@ void fill_doll_equipment(dolls_data &result)
 #if TAG_MAJOR_VERSION == 34
         case SP_CENTAUR:
 #endif
-        case SP_ANEMOCENTAUR:  ch = TILEP_TRAN_LICH_ANEMOCENTAUR;  break;
+        case SP_GALE_CENTAUR:  ch = TILEP_TRAN_LICH_GALE_CENTAUR;  break;
         case SP_DJINNI:        ch = TILEP_TRAN_LICH_DJINN;     break;
         case SP_GARGOYLE:      ch = TILEP_TRAN_LICH_GARGOYLE;  break;
         case SP_NAGA:          ch = TILEP_TRAN_LICH_NAGA;      break;
@@ -460,7 +460,7 @@ void fill_doll_equipment(dolls_data &result)
             {
             case SP_OCTOPODE:       ch = TILEP_TRAN_QUILL_OCTOPODE;     break;
             case SP_FELID:          ch = TILEP_TRAN_QUILL_FELID;        break;
-            case SP_ANEMOCENTAUR:   ch = TILEP_BODY_QUILL_ANEMOCENTAUR; break;
+            case SP_GALE_CENTAUR:   ch = TILEP_BODY_QUILL_GALE_CENTAUR; break;
             case SP_DJINNI:         ch = TILEP_BODY_QUILL_DJINN;        break;
             case SP_GARGOYLE:       ch = TILEP_BODY_QUILL_GARGOYLE;     break;
             case SP_NAGA:           ch = TILEP_BODY_QUILL_NAGA;         break;
@@ -528,8 +528,8 @@ void fill_doll_equipment(dolls_data &result)
     case transformation::spore:
         switch (you.species)
         {
-        case SP_ANEMOCENTAUR:
-            result.parts[TILEP_PART_HAND2] = TILEP_HAND2_SPORE_FORM_ANEMOCENTAUR;
+        case SP_GALE_CENTAUR:
+            result.parts[TILEP_PART_HAND2] = TILEP_HAND2_SPORE_FORM_GALE_CENTAUR;
             break;
         case SP_DJINNI:
             result.parts[TILEP_PART_HAND2] = TILEP_HAND2_SPORE_FORM_DJINNI;
@@ -552,7 +552,7 @@ void fill_doll_equipment(dolls_data &result)
     {
         switch (you.species)
         {
-        case SP_ANEMOCENTAUR:   ch = TILEP_TRAN_SLAUGHTER_ANEMOCENTAUR; break;
+        case SP_GALE_CENTAUR:   ch = TILEP_TRAN_SLAUGHTER_GALE_CENTAUR; break;
         case SP_GARGOYLE:       ch = TILEP_TRAN_SLAUGHTER_GARGOYLE;     break;
         case SP_NAGA:           ch = TILEP_TRAN_SLAUGHTER_NAGA;         break;
         case SP_FELID:          ch = TILEP_TRAN_SLAUGHTER_FELID;        break;
@@ -569,7 +569,7 @@ void fill_doll_equipment(dolls_data &result)
 #if TAG_MAJOR_VERSION == 34
         case SP_CENTAUR:
 #endif
-        case SP_ANEMOCENTAUR:   ch = TILEP_TRAN_VAMPIRE_ANEMOCENTAUR;   break;
+        case SP_GALE_CENTAUR:   ch = TILEP_TRAN_VAMPIRE_GALE_CENTAUR;   break;
         case SP_DJINNI:         ch = TILEP_TRAN_VAMPIRE_DJINN;          break;
         case SP_GARGOYLE:       ch = TILEP_TRAN_VAMPIRE_GARGOYLE;       break;
         case SP_NAGA:           ch = TILEP_TRAN_VAMPIRE_NAGA;           break;
@@ -623,7 +623,7 @@ void fill_doll_equipment(dolls_data &result)
     case transformation::aqua:
         switch (you.species)
         {
-        case SP_ANEMOCENTAUR:   ch = TILEP_TRAN_AQUA_ANEMOCENTAUR;  break;
+        case SP_GALE_CENTAUR:   ch = TILEP_TRAN_AQUA_GALE_CENTAUR;  break;
         case SP_DJINNI:         ch = TILEP_TRAN_AQUA_DJINN;         break;
         case SP_GARGOYLE:       ch = TILEP_TRAN_AQUA_GARGOYLE;      break;
         case SP_NAGA:           ch = TILEP_TRAN_AQUA_NAGA;          break;
@@ -654,7 +654,7 @@ void fill_doll_equipment(dolls_data &result)
     case transformation::werewolf:
         switch (you.species)
         {
-        case SP_ANEMOCENTAUR:   ch = TILEP_TRAN_WEREWOLF_ANEMOCENTAUR;  break;
+        case SP_GALE_CENTAUR:   ch = TILEP_TRAN_WEREWOLF_GALE_CENTAUR;  break;
         case SP_DJINNI:         ch = TILEP_TRAN_WEREWOLF_DJINN;         break;
         case SP_GARGOYLE:       ch = TILEP_TRAN_WEREWOLF_GARGOYLE;      break;
         case SP_NAGA:           ch = TILEP_TRAN_WEREWOLF_NAGA;          break;
@@ -687,9 +687,9 @@ void fill_doll_equipment(dolls_data &result)
         case SP_FELID:
             result.parts[TILEP_PART_BASE] = TILEP_TRAN_MEDUSA_FELID;
             break;
-        case SP_ANEMOCENTAUR:
-            result.parts[TILEP_PART_HELM] = TILEP_HELM_MEDUSA_FORM_ANEMOCENTAUR;
-            result.parts[TILEP_PART_CLOAK] = TILEP_CLOAK_MEDUSA_FORM_ANEMOCENTAUR;
+        case SP_GALE_CENTAUR:
+            result.parts[TILEP_PART_HELM] = TILEP_HELM_MEDUSA_FORM_GALE_CENTAUR;
+            result.parts[TILEP_PART_CLOAK] = TILEP_CLOAK_MEDUSA_FORM_GALE_CENTAUR;
             break;
         default:
             result.parts[TILEP_PART_HELM] = TILEP_HELM_MEDUSA_FORM_HUMANOID;
@@ -709,7 +709,7 @@ void fill_doll_equipment(dolls_data &result)
     if (you.species == SP_FELID
         || you.species == SP_OCTOPODE
         || you.species == SP_DJINNI
-        || you.species == SP_ANEMOCENTAUR
+        || you.species == SP_GALE_CENTAUR
         || you.species == SP_NAGA)
     {
         result.parts[TILEP_PART_LEG] = 0;
@@ -927,7 +927,7 @@ void reveal_bardings(const tileidx_t *parts, int (&flags)[TILEP_PART_MAX])
 {
     const tileidx_t base = parts[TILEP_PART_BASE];
     if (is_player_tile(base, TILEP_BASE_NAGA)
-        || is_player_tile(base, TILEP_BASE_ANEMOCENTAUR))
+        || is_player_tile(base, TILEP_BASE_GALE_CENTAUR))
     {
         flags[TILEP_PART_BOOTS] = TILEP_FLAG_NORMAL;
     }

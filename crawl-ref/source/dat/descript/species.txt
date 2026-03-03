@@ -1,9 +1,4 @@
 %%%%
-Anemocentaur
-
-Powerful equine hybrids who trace their ancestry to the four winds themselves,
-Anemocentaurs are at their strongest while galloping swiftly towards foes.
-%%%%
 Barachi
 
 Barachim are slow-moving, amphibious humanoids who can hop long distances.
@@ -47,6 +42,11 @@ strong and they live in a state of permanent stasis.
 Felid
 
 Felids are many-lived sentient cats. They cannot use armour or weapons.
+%%%%
+Gale Centaur
+
+Powerful equine hybrids who trace their ancestry to the four winds themselves,
+Gale Centaurs are at their strongest while galloping swiftly towards foes.
 %%%%
 Gargoyle
 

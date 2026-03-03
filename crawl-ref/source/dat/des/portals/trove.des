@@ -999,7 +999,7 @@ if species_has_size_limits(_G) == false and
  you.base_skill("Armour") > you.base_skill("Dodging") * 3 then
   gen_armour = "plate armour " .. pon .. " / crystal plate armour " .. pon
 end
-if you.race() == "Anemocentaur" or you.race() == "Naga" then
+if you.race() == "Gale Centaur" or you.race() == "Naga" then
   gen_armour = gen_armour .. " / barding good_item w:20 / barding randart w:4"
 elseif you.mutation("hooves") ~= 3 and you.mutation("talons") ~= 3 then
   gen_armour = gen_armour .. " / pair of boots good_item w:6 " ..

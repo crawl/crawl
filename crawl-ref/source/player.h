@@ -133,7 +133,7 @@ enum player_trigger_type
     DID_MEDUSA_STINGER,  // Medusa form stinger attack
     DID_SOLAR_EMBER,     // Sun scarab ember attack
     DID_REV_UP,          // Coglin rev
-    DID_WEST_WIND_SHOT,  // Anemocentaur West Wind ranged attack
+    DID_WEST_WIND_SHOT,  // Gale Centaur West Wind ranged attack
     NUM_PLAYER_TRIGGER_TYPES,
 };
 
@@ -452,7 +452,7 @@ public:
     int last_unequip;
     int last_fired;     // Item slot last used with the 'F'ire command
 
-    // Highest skill level for each of anemocentaur winds
+    // Highest skill level for each gale centaur wind
     FixedVector<int, 4> wind_category_weight;
     // Whether a category increased since the last call to update_four_winds()
     FixedVector<bool, 4> wind_category_inc;

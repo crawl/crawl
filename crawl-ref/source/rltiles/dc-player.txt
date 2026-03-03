@@ -113,12 +113,12 @@ djinni_gold_m
 djinni_purple_f
 djinni_purple_m
 coglin COGLIN
-anemocentaur_m ANEMOCENTAUR
-anemocentaur_f
-anemocentaur_cloud_m
-anemocentaur_cloud_f
-anemocentaur_sky_m
-anemocentaur_sky_f
+gale_centaur_m GALE_CENTAUR
+gale_centaur_f
+gale_centaur_cloud_m
+gale_centaur_cloud_f
+gale_centaur_sky_m
+gale_centaur_sky_f
 %rim 1
 formicid FORMICID
 vine_stalker_green_f VINE_STALKER
@@ -237,7 +237,7 @@ fungal_fisticloak_back FUNGAL_FISTICLOAK_BACK
 
 ### Must be before scarves to render behind the player!
 %sdir player/transform
-medusa_form_anemocentaur_back MEDUSA_FORM_ANEMOCENTAUR
+medusa_form_gale_centaur_back MEDUSA_FORM_GALE_CENTAUR
 medusa_form_humanoid_back MEDUSA_FORM_HUMANOID
 blade_form_humanoid BLADE_FORM_HUMANOID
 
@@ -577,7 +577,7 @@ justicar JUSTICAR
 %sdir player/transform
 maw_form0 MAW_FORM
 maw_form1
-quill_form_anemocentaur QUILL_ANEMOCENTAUR
+quill_form_gale_centaur QUILL_GALE_CENTAUR
 quill_form_djinn QUILL_DJINN
 quill_form_gargoyle QUILL_GARGOYLE
 quill_form_humanoid QUILL_HUMANOID
@@ -1139,7 +1139,7 @@ pj PJ
 torch2 TORCH2
 
 %sdir player/transform
-spore_form_anemocentaur SPORE_FORM_ANEMOCENTAUR
+spore_form_gale_centaur SPORE_FORM_GALE_CENTAUR
 spore_form_djinni SPORE_FORM_DJINNI
 spore_form_humanoid SPORE_FORM_HUMANOID
 spore_form_naga SPORE_FORM_NAGA
@@ -1437,7 +1437,7 @@ hood_purple HOOD_PURPLE
 hood_assassin HOOD_ASSASSIN
 
 %sdir player/transform
-medusa_form_anemocentaur_front MEDUSA_FORM_ANEMOCENTAUR
+medusa_form_gale_centaur_front MEDUSA_FORM_GALE_CENTAUR
 medusa_form_humanoid_front MEDUSA_FORM_HUMANOID
 
 %end_ctg

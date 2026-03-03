@@ -269,7 +269,7 @@ Willpower
 
 Size
   Different species have different sizes: Spriggans and Felids are very small;
-  Kobolds are small; Oni and Trolls are large; Nagas and Anemocentaurs are large
+  Kobolds are small; Oni and Trolls are large; Nagas and Gale Centaurs are large
   with a medium torso; all other species are medium-sized. Many talismans will
   change your size. Size affects your evasion: the smaller your character, the
   more evasive it is. On the other hand, characters of larger than medium size
@@ -1773,8 +1773,8 @@ Oni (On)
   Their large size prevents them from wearing most forms of armour, and are poor
   at dodging, relying on their enormous bulk to survive battles instead.
 
-Anemocentaur (An)
-  Anemocentaurs are hardy hybrids with the lower body of a horse and the torso
+Gale Centaur (GC)
+  Gale Centaurs are hardy hybrids with the lower body of a horse and the torso
   of a human. Distant descendants of the Four Winds, they can stampede swiftly
   towards enemies in battle and trample entire groups of them backward. As they
   become more experienced, one of the Four Winds will further augment their
@@ -1897,10 +1897,10 @@ Nagas (Na)
   invisible creatures, and have tough skin, but their tails are relatively slow
   and cannot move them around as quickly as can other creatures' legs (this only
   affects their movement rate; all other actions are at normal speed). Like
-  Anemocentaurs, their body shape also prevents them from gaining full protection
-  from body armour. A Naga's biggest forte is stealth: Nagas are very good at
-  moving unnoticed. Their tails eventually grow strong enough to constrict
-  their foes in combat.
+  Gale Centaurs, their body shape also prevents them from gaining full
+  protection from body armour. A Naga's biggest forte is stealth: Nagas are very
+  good at moving unnoticed. Their tails eventually grow strong enough to
+  constrict their foes in combat.
 
   Nagas can spit poison; the accuracy and damage of this poison increases with
   the Naga's experience level.
