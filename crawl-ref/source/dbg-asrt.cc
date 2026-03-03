@@ -587,6 +587,7 @@ void do_crash_dump()
         // free'd and invalid, plus their content likely wouldn't help
         // tracking it down anyway. Thus, just do the bare bones
         // info to stderr and quit.
+#if !(defined(TARGET_COMPILER_VC) && defined(USE_TILE))
         fprintf(stderr, "Crashed while calling exit()!!!!\n");
 
         _dump_ver_stuff(stderr);
@@ -594,6 +595,7 @@ void do_crash_dump()
         fprintf(stderr, "%s\n\n", crash_signal_info().c_str());
         write_stack_trace(stderr);
         call_gdb(stderr);
+#endif
 
         return;
     }
@@ -616,6 +618,7 @@ void do_crash_dump()
     const string signal_info = crash_signal_info();
     const string cause_msg = _assert_msg.empty() ? signal_info : _assert_msg;
 
+#if !(defined(TARGET_COMPILER_VC) && defined(USE_TILE))
     if (!crawl_state.test && !cause_msg.empty())
         fprintf(stderr, "\n%s", cause_msg.c_str());
     // This message is parsed by the WebTiles server. In particular, if you
@@ -632,6 +635,7 @@ void do_crash_dump()
             "\n- A description of what you were doing when this crash occurred.\n\n",
             name, get_savedir_filename(you.your_name).c_str(),
             CRAWL, Version::Long, CRAWL_BUILD_NAME);
+#endif
     errno = 0;
     // TODO: this freopen of stderr persists into a recursive crash, making it
     // hard to directly log in webtiles...
@@ -642,6 +646,11 @@ void do_crash_dump()
     // only freak out if freopen() returned nullptr!
     if (!file)
     {
+#if defined(TARGET_COMPILER_VC) && defined(USE_TILE)
+        // stdout is invalid in this build configuration
+        return;
+#endif
+
         fprintf(stdout, "\nUnable to open file '%s' for writing: %s\n",
                 name, strerror(errno));
         file = stdout;
@@ -806,9 +815,13 @@ NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
         DebugBreak();
 #endif
 
+#ifdef USE_UNIX_SIGNALS
     // MSVCRT's abort() give's a funny message ...
     raise(SIGABRT);
     abort();
+#else
+    crash_signal_handler(SIGABRT);
+#endif
 }
 
 #ifdef ASSERTS
