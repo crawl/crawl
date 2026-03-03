@@ -1663,8 +1663,11 @@ void equip_effect(int item_slot, bool unmeld, bool msg)
 static void _unequip_maybe_destroy_item(item_def& item)
 {
     // Cursed and fragile items should always be destroyed on unequip.
-    if (artefact_property(item, ARTP_FRAGILE) || item.cursed())
+    if ((is_artefact(item) && artefact_property(item, ARTP_FRAGILE))
+        || item.cursed())
+    {
         dec_inv_item_quantity(item.link, 1);
+    }
 }
 
 void unequip_effect(int item_slot, bool meld, bool msg)
