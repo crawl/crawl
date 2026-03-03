@@ -1660,11 +1660,21 @@ void equip_effect(int item_slot, bool unmeld, bool msg)
         ash_check_bondage();
 }
 
+static void _unequip_maybe_destroy_item(item_def& item)
+{
+    // Cursed and fragile items should always be destroyed on unequip.
+    if (artefact_property(item, ARTP_FRAGILE) || item.cursed())
+        dec_inv_item_quantity(item.link, 1);
+}
+
 void unequip_effect(int item_slot, bool meld, bool msg)
 {
     item_def& item = you.inv[item_slot];
 
     const interrupt_block block_meld_interrupts(meld);
+
+    if (is_artefact(item))
+        unequip_artefact_effect(item, &msg, meld);
 
     if (is_weapon(item))
         _unequip_weapon_effect(item, msg, meld);
@@ -1673,13 +1683,8 @@ void unequip_effect(int item_slot, bool meld, bool msg)
     else if (item.base_type == OBJ_JEWELLERY)
         _unequip_jewellery_effect(item, meld);
 
-    // Artprops includes ^Fragile so the item may be destroyed after this.
-    if (is_artefact(item))
-        unequip_artefact_effect(item, &msg, meld);
-
-    // Cursed items should always be destroyed on unequip.
-    if (item.cursed() && !meld)
-        destroy_item(item);
+    if (!meld)
+        _unequip_maybe_destroy_item(item);
 }
 
 ///////////////////////////////////////////////////////////
@@ -1823,7 +1828,6 @@ void unequip_artefact_effect(item_def &item,  bool *show_msgs, bool meld)
     if (artefact_property(item, ARTP_FRAGILE) && !meld)
     {
         mprf("%s crumbles to dust!", item.name(DESC_THE).c_str());
-        dec_inv_item_quantity(item.link, 1);
 
         // Hide unwield messages for weapons that have already been destroyed.
         if (item.base_type == OBJ_WEAPONS)
