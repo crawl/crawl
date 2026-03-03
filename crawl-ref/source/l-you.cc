@@ -1126,6 +1126,16 @@ LUAFN(you_reach_range)
     return 1;
 }
 
+/*** How long to take the next step (including form, terrain, speed adjustments)?
+ * @treturn int movement cost as aut per step
+ * @function movement_cost
+ */
+ LUAFN(you_movement_cost)
+ {
+    int cost = (player_movement_speed() * player_speed()) / 10;
+    PLUARET(number, cost);
+ }
+
 /*** Get the mutation level of a mutation.
  * If all optional parameters are false this returns zero.
  * @tparam string mutationname
@@ -1532,6 +1542,7 @@ static const struct luaL_Reg you_clib[] =
     { "status",       you_status },
     { "immune_to_hex", you_immune_to_hex },
     { "reach_range", you_reach_range },
+    { "movement_cost", you_movement_cost },
 
     { "stop_activity", you_stop_activity },
     { "taking_stairs", you_taking_stairs },
