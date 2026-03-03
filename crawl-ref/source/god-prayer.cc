@@ -233,7 +233,7 @@ int zin_tithe(const item_def& item, int quant, bool converting)
             tithe *= 47;
             denom *= 20 + env.absdepth0;
         }
-        gain_piety(tithe * 3, denom);
+        gain_piety(tithe * 5, denom * 2);
     }
     you.attribute[ATTR_TITHE_BASE] = due;
     return taken;
