@@ -795,7 +795,10 @@ NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
     // so it's in the message history if we call Crawl from a shell.
 #endif
 #endif
+
+#if !(defined(TARGET_COMPILER_VC) && defined(USE_TILE))
     fprintf(stderr, "%s\n", mesg);
+#endif
 
 #if defined(TARGET_OS_WINDOWS)
     OutputDebugString(mesg);
