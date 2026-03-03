@@ -1773,28 +1773,6 @@ Oni (On)
   Their large size prevents them from wearing most forms of armour, and are poor
   at dodging, relying on their enormous bulk to survive battles instead.
 
-Gale Centaur (GC)
-  Gale Centaurs are hardy hybrids with the lower body of a horse and the torso
-  of a human. Distant descendants of the Four Winds, they can stampede swiftly
-  towards enemies in battle and trample entire groups of them backward. As they
-  become more experienced, one of the Four Winds will further augment their
-  combat prowess based on the skills they have trained the most.
-
-  Their lineage gives them an excellent affinity for air and translocations
-  magic as well as invocations. Their defensive aptitudes are solid, though
-  their size impairs their evasion and unusual body shape reduces the benefit
-  they get from heavy armour. They learn many other skills slowly, but the
-  strength of their winds make them a force to be reckoned with nonetheless.
-
-Advanced Species
-================
-
-*Advanced* species have some substantial weaknesses, and/or add multiple complex
-new mechanics to gameplay. This category includes several species that
-experienced players may not find difficult per se, but that may require quite
-a bit of experience to adapt to. It also includes species that are just
-plain difficult, such as Mummies.
-
 Coglins (Co)
    Unlike most of their goblin kin, Coglins augment their tiny frames with
    charm-wrought steel. Their exoskeletons, capable of wielding weapons
@@ -1813,6 +1791,28 @@ Coglins (Co)
    that spirits of steel and sandalwood come to rest within every thing that
    draws blood, slowly and carefully re-attuning their exoskeletons to those
    spirits whenever they wield or remove weapons. Never scorn the spirits!
+
+Advanced Species
+================
+
+*Advanced* species have some substantial weaknesses, and/or add multiple complex
+new mechanics to gameplay. This category includes several species that
+experienced players may not find difficult per se, but that may require quite
+a bit of experience to adapt to. It also includes species that are just
+plain difficult, such as Mummies.
+
+Gale Centaur (GC)
+  Gale Centaurs are hardy hybrids with the lower body of a horse and the torso
+  of a human. Distant descendants of the Four Winds, they can stampede swiftly
+  towards enemies in battle and trample entire groups of them backward. As they
+  become more experienced, one of the Four Winds will further augment their
+  combat prowess based on the skills they have trained the most.
+
+  Their lineage gives them an excellent affinity for air and translocations
+  magic as well as invocations. Their defensive aptitudes are solid, though
+  their size impairs their evasion and unusual body shape reduces the benefit
+  they get from heavy armour. They learn many other skills slowly, but the
+  strength of their winds make them a force to be reckoned with nonetheless.
 
 Vine Stalkers (VS)
   Limber in shape, Vine Stalkers are anthropomorphic masses of thick vines.

@@ -4,8 +4,8 @@ name: Gale Centaur
 short_name: GC
 adjective: Equine
 genus: Centaur
-difficulty: Intermediate
-difficulty_priority: 60
+difficulty: Advanced
+difficulty_priority: 200
 species_flags:
   - small_torso
   - barding
