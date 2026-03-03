@@ -4281,7 +4281,7 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
     {
         if (state.plain())
         {
-            always_use_static_ability_targeters = false;
+            always_use_static_scroll_targeters = false;
             force_scroll_targeter.clear();
         }
 
