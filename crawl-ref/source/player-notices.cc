@@ -490,8 +490,14 @@ void notice_new_monsters(vector<monster*>& monsters, vector<monster*>& to_announ
 
 
     if (crawl_state.is_repeating_cmd() || you_are_delayed())
+    {
         for (monster* mon : monsters)
+        {
+            if (!mon->alive())
+                continue;
             _try_seen_interrupt(*mon, to_announce.empty() ? SC_NONE : SC_NEWLY_SEEN);
+        }
+    }
 }
 
 void queue_monster_announcement(monster& mons, seen_context_type sc)
