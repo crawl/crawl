@@ -623,6 +623,9 @@ static void _collect_foe_positions(monster *mons,
 {
     coord_def foe_pos(-1, -1);
     actor * foe = mons->get_foe();
+    // We put the foe in the vector first, though note that the
+    // pathfinding algorithm that uses this don't actually care about
+    // the order, so in fact tentacles ignore their foe.
     if (foe && sight_check(foe))
     {
         foe_positions.push_back(mons->get_foe()->pos());
@@ -708,6 +711,12 @@ void move_solo_tentacle(monster* tentacle)
         _collect_foe_positions(tentacle, foe_positions,
                 [tentacle, base_position](const actor *test) -> bool
                 {
+                    if (tentacle->friendly()
+                        && !you.see_cell_no_trans(test->pos()))
+                    {
+                        // Friendly tentacles should only attack in our LoS.
+                        return false;
+                    }
                     return test->visible_to(tentacle)
                         && cell_see_cell(base_position, test->pos(),
                                          LOS_SOLID_SEE);
