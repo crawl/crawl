@@ -2240,10 +2240,11 @@ static bool _add_connecting_escape_hatches()
     if (branches[you.where_are_you].branch_flags & brflag::islanded)
         return true;
 
-    // Veto D:1 or Pan if there are disconnected areas.
-    // Veto any  non-abyss descent level with disconnected areas
+    // Veto D:1, Elf:2 (for Blade), or Pan if there are disconnected areas.
+    // Veto any non-abyss descent level with disconnected areas, too.
     if (player_in_branch(BRANCH_PANDEMONIUM)
         || (player_in_branch(BRANCH_DUNGEON) && you.depth == 1)
+        || (player_in_branch(BRANCH_ELF) && you.depth == 2)
         || (crawl_state.game_is_descent() && !player_in_branch(BRANCH_ABYSS)))
     {
         // Allow == 0 in case the entire level is one opaque vault.
