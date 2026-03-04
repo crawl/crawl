@@ -1761,7 +1761,7 @@ const unrandart_entry* get_unrand_entry(int unrand_index)
 
 static int _unrand_weight(int unrand_index, int item_level)
 {
-    const unrandart_entry* entry = &unranddata[unrand_index];
+    const unrandart_entry* entry = &unranddata[unrand_index - UNRAND_START];
 
     // Early-game unrands (with a preferred max depth != 0) are
     // weighted higher within their depth and lower past it.
