@@ -72,6 +72,7 @@ const enchant_type dispellable_enchantments[] =
     ENCH_BLINKITIS,
     ENCH_DIMINISHED_SPELLS,
     ENCH_VEXED,
+    ENCH_EXPOSED,
 };
 
 bool player_is_debuffable();
