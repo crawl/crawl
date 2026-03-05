@@ -380,7 +380,6 @@ mset(with_props(spec_fn(function ()
   return "gargoyle w:20 / earth elemental w:20 / mountainshell w:20 / " ..
          "torpor snail w:" .. d .. " / iron golem w:" .. d .. " / " ..
          "war gargoyle w:" .. d .. " / stone giant w:" .. d .. " / " ..
-         "caustic shrike w:" .. d .. " / entropy weaver w:" .. d .. " / " ..
          "iron dragon w:" .. d .. " / iron troll w:" .. d .. " / " ..
          "walking crystal tome w:" .. d .. " / walking earthen tome w:" .. d - 10 .. " / " ..
          "crystal guardian w:" .. e .. " / undying armoury w:" .. e .. " / " ..

@@ -295,12 +295,13 @@ ENDMAP
 # Slime Pit specific non-ending non-entry vaults
 ################################################################################
 
+default-depth: Slime, !Slime:$
+
 # With the slimy staircase changes, it's now much harder for potential converts
 # to reach Jiyva on Slime:5. For the sake of divers and emergency exits alike,
 # this vault guarantees some altars on earlier floors.
 NAME:    regret_index_scattered_jiyva_altar
 TAGS:    transparent allow_dup extra luniq no_dump
-DEPTH:   Slime, !Slime:$
 CHANCE:  50% (Slime:1), 100%
 KFEAT:   _ = altar_jiyva
 SHUFFLE: ABCDEFGH
@@ -317,7 +318,6 @@ ENDMAP
 ################################################################################
 NAME:    nicolae_slime_pool
 TAGS:    transparent
-DEPTH:   Slime, !Slime:$
 ORIENT:  float
 MONS:    slime creature
 SHUFFLE: abcd
@@ -344,7 +344,6 @@ ENDMAP
 
 
 NAME: nicolae_slime_jelly_donut
-DEPTH: Slime, !Slime:$
 ORIENT: float
 KMONS: j = jelly
 SHUFFLE: abcdefgh
@@ -369,11 +368,10 @@ g...x.x.x.x.x...c
       eeeee
 ENDMAP
 
-NAME: nicolae_slime_barrier
-TAGS: transparent extra
-DEPTH: Slime, !Slime:$
+NAME:    nicolae_slime_barrier
+TAGS:    transparent extra
 SHUFFLE: abcde
-SUBST: a = @, bcde = .
+SUBST:   a = @, bcde = .
 MAP
   aaaaa
  .........
@@ -427,7 +425,6 @@ ENDMAP
 
 NAME:   nicolae_slime_phagocytosis
 TAGS:   transparent luniq_slime_stairvault
-DEPTH:  Slime, !Slime:$
 KMONS:  1 = colossal amoeba
 KFEAT:  1 = W
 SUBST:  a : .x, b : .x, c : .x, d : .x, e : .x, { = {[(, X = Wx, ' = ._
@@ -496,8 +493,7 @@ ENDMAP
 # XXX: Would prefer to have different tiles for slimy rock rather than
 #      break the rule of no regular walls for early Slime floors....
 NAME:   nicolae_slime_ancient_tower_intersection
-TAGS:   extra decor transparent
-DEPTH:  Slime, !Slime:$
+TAGS:   extra decor transparent luniq_slime_other_features
 WEIGHT: 2
 KFEAT:  + = broken_door
 SUBST:  c = ccc., z = xx., X = x_, V = V..
@@ -528,7 +524,6 @@ ENDMAP
 
 NAME:   cheibrodos_slime_lost_civilization_1
 TAGS:   decor transparent ruin
-DEPTH:  Slime, !Slime:$
 SUBST:  B = xxxW., C = W., D = VVW.
 MAP
 xxxxxxxxxxxxxxxxx
@@ -551,9 +546,7 @@ xxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   cheibrodos_slime_lost_civilization_2
-TAGS:   decor
-DEPTH:  Slime, !Slime:$
-ORIENT: float
+TAGS:   decor extra luniq_slime_other_features
 MAP
    xxxxx
   xxxxxxx
@@ -569,8 +562,7 @@ xxxx...xxxx
 ENDMAP
 
 NAME:    cheibrodos_slime_lost_civilization_3
-TAGS:    decor transparent
-DEPTH:   Slime, !Slime:$
+TAGS:    decor transparent luniq_slime_other_features
 SHUFFLE: W.
 SUBST:   W = WW.
 KMASK:   W = no_monster_gen
@@ -589,8 +581,7 @@ xxxxxxxxxxxxx
 ENDMAP
 
 NAME:  cheibrodos_slime_lost_civilization_4
-TAGS:  decor
-DEPTH: Slime, !Slime:$
+TAGS:  decor extra luniq_slime_other_features
 MAP
 .x...x.
 .......
@@ -601,7 +592,6 @@ ENDMAP
 
 NAME:    cheibrodos_slime_lost_civilization_5
 TAGS:    decor
-DEPTH:   Slime, !Slime:$
 SHUFFLE: AB
 SUBST:   A = x,  B = .
 MAP
@@ -642,7 +632,7 @@ MAP
 ENDMAP
 
 NAME:  cheibrodos_slime_lost_civilization_7
-TAGS:  decor
+TAGS:  decor luniq_slime_other_features
 DEPTH: Slime, !Slime:$
 KFEAT: V = dry_fountain / fountain_eyes
 MAP
@@ -660,8 +650,7 @@ MAP
 ENDMAP
 
 NAME:   cheibrodos_slime_lost_civilization_8
-TAGS:   decor
-DEPTH:  Slime, !Slime:$
+TAGS:   decor luniq_slime_other_features
 ORIENT: float
 SUBST:  - = xxx., " = ...x
 MAP
@@ -681,10 +670,9 @@ MAP
 .-------xxxxxx
 ENDMAP
 
-NAME:   cheibrodos_slime_lost_civilization_9
-TAGS:   decor transparent
-DEPTH:  Slime, !Slime:$
-SUBST:  x = xxx., G = G..
+NAME:  cheibrodos_slime_lost_civilization_9
+TAGS:  transparent decor luniq_slime_other_features
+SUBST: x = xxx., G = G..
 MAP
 .............
 .xx.xx.xx.xx.
@@ -700,8 +688,7 @@ MAP
 ENDMAP
 
 NAME:  cheibrodos_slime_lost_civilization_10
-TAGS:  transparent decor
-DEPTH: Slime, !Slime:$
+TAGS:  transparent decor luniq_slime_other_features
 SUBST: x = xxxx.
 KFEAT: V = dry_fountain / fountain_eyes
 MAP
@@ -737,7 +724,7 @@ ENDMAP
 # On average, generates the equivalent of 15 slime creatures.
 NAME:  nicolae_slime_crime_time
 TAGS:  transparent luniq_slime_stairvault
-DEPTH: Slime:2-
+DEPTH: Slime:2-, !Slime:$
 KMONS: S = nothing / slime creature / large slime creature / \
            very large slime creature / enormous slime creature / \
            titanic slime creature
@@ -757,7 +744,6 @@ ENDMAP
 
 NAME:    nicolae_slime_getting_an_eyeful
 TAGS:    transparent patrolling
-DEPTH:   Slime
 KMONS:   1 = glowing orange brain
 KMONS:   2 = glass eye / golden eye / shining eye / eye of devastation / \
              great orb of eyes / eye of draining
@@ -782,7 +768,6 @@ ENDMAP
 
 NAME:    nicolae_slime_infinislime
 TAGS:    transparent
-DEPTH:   Slime, !Slime:$
 ORIENT:  float
 SHUFFLE: Pp, Qq, Rr, Ss
 NSUBST:  y = x. / ., z = x. / .
@@ -909,7 +894,6 @@ ENDMAP
 
 NAME:    tekkud_slime_guarded_stairs_1
 TAGS:    transparent luniq_slime_stairvault
-DEPTH:   Slime, !Slime:$
 SUBST:   0 = 0x
 SUBST:   x = xxxxx.
 SHUFFLE: {}
@@ -927,7 +911,6 @@ ENDMAP
 
 NAME:  tekkud_slime_guarded_stairs_2
 TAGS:  transparent luniq_slime_stairvault
-DEPTH: Slime, !Slime:$
 SUBST: 0 = 0009., } = })]
 MAP
   x     x
@@ -945,7 +928,6 @@ ENDMAP
 
 NAME:  tekkud_slime_guarded_stairs_3
 TAGS:  transparent luniq_slime_stairvault
-DEPTH: Slime, !Slime:$
 SUBST: 0 = 0009., ) = ). , ] = ].
 MAP
 xxxxxxxxx
@@ -961,7 +943,6 @@ ENDMAP
 
 NAME:   tekkud_slime_guarded_stairs_4
 TAGS:   transparent ruin luniq_slime_stairvault
-DEPTH:  Slime, !Slime:$
 MONS:   glowing orange brain
 NSUBST: 1 = 1:}] / 1:01)) / * = 001.
 MAP
@@ -989,7 +970,6 @@ ENDMAP
 # This vault would greatly appreciate slimy stone walls
 NAME:   tekkud_slime_eye_spy
 TAGS:   transparent no_monster_gen luniq_slime_stairvault
-DEPTH:  Slime, !Slime:$
 MONS:   eye of devastation / eye of draining / \
         great orb of eyes / shining eye w:5
 MONS:   glass eye / golden eye band
@@ -1016,7 +996,6 @@ ENDMAP
 
 NAME:   tekkud_slime_crosshair
 TAGS:   extra
-DEPTH:  Slime, !Slime:$
 SUBST:  ' = x., { = {([
 NSUBST: - = 1:})] / 2:0 / *:.
 MAP
@@ -1041,7 +1020,6 @@ ENDMAP
 
 NAME:   tekkud_slime_acid_pillars
 TAGS:   transparent luniq_slime_stairvault
-DEPTH:  Slime, !Slime:$
 MONS:   patrolling rockslime
 NSUBST: y = 1:})] / 4=111xx. / *:x
 MAP
@@ -1064,7 +1042,6 @@ ENDMAP
 
 NAME:    tekkud_slime_sleeper_cell
 TAGS:    transparent luniq_slime_stairvault
-DEPTH:   Slime, !Slime:$
 ORIENT:  centre
 MONS:    colossal amoeba
 KMONS:   2 = creeping plasmodium
@@ -1101,6 +1078,8 @@ ENDMAP
 ################################################################################
 # Slime Pit
 ################################################################################
+
+default-depth:
 
 # The original!
 NAME:    slime_pit

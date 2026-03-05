@@ -1147,24 +1147,23 @@ KMONS:      | = ancient lich / royal mummy / executioner / tzitzimitl
 #           Hints.
 KITEM:      ' = wand of digging charges:1 pre_id
 KITEM:      " = scroll of revelation q:1 pre_id
-#           Loot.
-#           0 = scrolls. 1 = armours. 2 = mixed.
-:           local lrnd = crawl.random2(3)
-:           if lrnd == 0 then
-KITEM:      % = any scroll / any scroll q:2 w:3 / any scroll q:3 w:1
+#           Loot: Scrolls or armour.
+:           if crawl.coinflip() then
+KITEM:      % = any scroll / any scroll q:2 w:3, $ / parchment disc:earth q:2
 :           kitem("* = " .. dgn.good_scrolls)
-KITEM:      | = scroll of acquirement q:1 pre_id / \
-                scroll of enchant weapon q:3 pre_id / \
-                scroll of blinking q:2 pre_id, scroll of fog q:2 pre_id
-:           elseif lrnd == 1 then
-KITEM:      % = any armour
-KITEM:      * = any good_item armour
-KITEM:      | = granite talisman randart artprops:Int:6&Stlth:1 / \
-                golden dragon scales
+KITEM:      | = $, scroll of acquirement q:1 pre_id / \
+                   scroll of enchant weapon q:3 pre_id / \
+                   scroll of blinking q:2 pre_id, scroll of fog q:2 pre_id
 :           else
-KITEM:      % = any / star_item w:2
-KITEM:      * = star_item / superb_item w:2
-KITEM:      | = superb_item
+KITEM:      % = any armour good_item
+KITEM:      * = $, hat ego:intelligence good_item w:6 / \
+                   cloak ego:stealth good_item w:4 / \
+                   pair of boots ego:earth good_item / \
+                   plate armour ego:death good_item w:8 / \
+                   kite shield ego:positive_energy w:4 / \
+                   crystal plate armour good_item w:4
+KITEM:      | = $, granite talisman randart artprops:Int:6&Stlth:1 / \
+                   golden dragon scales
 :           end
 #           Boxification:
 :           box_glyph('%', '!')
@@ -1926,9 +1925,9 @@ MONS:       cacodemon
 MONS:       quicksilver dragon / war gargoyle / crystal guardian / \
             wretched star
 MONS:       orange crystal statue name:lunar_statue n_rpl n_des \
-                spells:brain_bite.24.magical;antimagic_gaze.24.magical;\
-                       lehudib's_crystal_spear.24.magical;\
-                       shadow_creatures.48.magical \
+                spells:antimagic_gaze.25.magical;\
+                       lehudib's_crystal_spear.25.magical;\
+                       shadow_creatures.50.magical \
                 col:lightmagenta tile:mons_zot_statue
 MONS:       moon troll ; moon troll leather armour
 KMONS:      8 = cognitogaunt

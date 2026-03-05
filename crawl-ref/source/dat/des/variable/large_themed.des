@@ -2357,12 +2357,12 @@ SUBST:  3 = 3G
 # Depths
 : else
 MONS:   ice dragon / white very ugly thing / freezing wraith / simulacrum
-MONS:   ettin simulacrum / spriggan defender simulacrum \
-        / golden dragon simulacrum / caustic shrike simulacrum
+MONS:   ettin simulacrum / spriggan defender simulacrum / \
+        golden dragon simulacrum / caustic shrike simulacrum
 MONS:   orange crystal statue
 :   mons("frost giant / blizzard demon / reaper ; " .. scythe("freezing"))
-MONS:   titan / wendigo / nargun
-MONS:   ice fiend / walking frostbound tome
+MONS:   titan w:20 / nargun
+MONS:   ice fiend / walking frostbound tome w:15
 : end
 # Monster, loot, and terrain handling common to all depths.
 NSUBST: . = 3=1 / 6=1. / 2=2 / 4=2. / 2=4 / 2=4. / 5 / 2=5. / .

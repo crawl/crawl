@@ -55,8 +55,7 @@ end
 function st_box_setup(e)
   e.tags("no_item_gen")
   e.subst("% = %%%**|$")
-  e.kmons("7 = patrolling vault guard")
-  e.kmons("Z = frost giant / fire giant / titan w:5 / ettin / shadow dragon /\
+  e.kmons("6 = frost giant / fire giant / titan w:5 / ettin / shadow dragon /\
                golden dragon w:5 / storm dragon / quicksilver dragon w:2 /\
                iron dragon w:2 / swamp dragon / fire dragon / ice dragon /\
                catoblepas / crystal guardian / eye of devastation / \
@@ -65,8 +64,9 @@ function st_box_setup(e)
                deep elf death mage / deep elf demonologist /\
                deep elf annihilator / deep elf high priest / orc warlord /\
                base draconian w:15 / guardian sphinx / glowing shapeshifter")
-  e.subst("0 = 0:9 Z:1")
-  e.subst("9 = 9:3 Z:1")
+  e.kmons("7 = patrolling vault guard")
+  e.subst("0 = 0:9 6:1")
+  e.subst("9 = 9:3 6:1")
 end
 }}
 
@@ -417,11 +417,10 @@ xd.1xx.C.xx2%%x
 xxxxxx...xxxxxx
 ENDMAP
 
-NAME: grunt_vaults_funneled_arena
+NAME:  grunt_vaults_funneled_arena
+KMONS:  0 = 0 band
 NSUBST: 9 = 1:8 / *:9
-SUBST: 0 = 90000000
-KMONS: 0 = 0 band
-SUBST: $ = |***$$$$
+SUBST:  0 = 90000000, $ = |***$$$$
 : vaults_hard_standard(_G)
 MAP
   x.....xxxxx...xxxxx.....x
@@ -459,12 +458,9 @@ ENDMAP
 # st's greater box vaults!
 
 # 32 monsters, 38 %
-NAME:     st_greater_box_1
-TAGS:     vaults_orient_s
-NSUBST:   ' = 5:9 / 3:0 / *:.
-NSUBST:   " = 8:9 / *:.
-NSUBST:   - = 8:9 / *:.
-NSUBST:   8 = 2:8 / *:.
+NAME:   st_greater_box_1
+TAGS:   vaults_orient_s
+NSUBST: ' = 5:9 / 3:0 / *:., " = 8:9 / *:., - = 8:9 / *:., 8 = 2:8 / *:.
 : st_box_setup(_G)
 : vaults_hard_standard(_G)
 MAP
@@ -491,14 +487,11 @@ vvvvvvvvvvvvvv..vvvvvvvvvvvvvv
 ENDMAP
 
 # 32 monsters, 36 %
-NAME:     st_greater_box_2
-TAGS:     vaults_orient_s
-SHUFFLE:  ab
-SUBST:    a = +, b = v, c : v., d : v.
-NSUBST:   ' = 8:9 / *:.
-NSUBST:   " = 8:9 / *:.
-NSUBST:   - = 8:9 / *:.
-NSUBST:   8 = 2:8 / *:.
+NAME:    st_greater_box_2
+TAGS:    vaults_orient_s
+SHUFFLE: ab
+SUBST:   a = +, b = v, c : v., d : v.
+NSUBST:  ' = 8:9 / *:., " = 8:9 / *:., - = 8:9 / *:., 8 = 2:8 / *:.
 : st_box_setup(_G)
 : vaults_hard_standard(_G)
 MAP
@@ -527,8 +520,7 @@ ENDMAP
 # 36 monsters, 42 %
 NAME:     st_greater_box_3
 TAGS:     vaults_orient_s
-NSUBST:   ' = 12:9 / *:.
-NSUBST:   " = 10:9 / *:.
+NSUBST:   ' = 12:9 / *:., " = 10:9 / *:.
 : st_box_setup(_G)
 : vaults_hard_standard(_G)
 MAP
@@ -555,11 +547,9 @@ vvvvvvvvvvvvvv..vvvvvvvvvvvvvv
 ENDMAP
 
 # 31 monsters, 28 %, 8 |
-NAME:     st_greater_box_4
-TAGS:     vaults_orient_s
-NSUBST:   ' = 5:9 / 3:0 / *:.
-NSUBST:   " = 8:9 / *:.
-NSUBST:   - = 8:9 / 2:8 / *:.
+NAME:    st_greater_box_4
+TAGS:    vaults_orient_s
+NSUBST:  ' = 5:9 / 3:0 / *:., " = 8:9 / *:., - = 8:9 / 2:8 / *:.
 : st_box_setup(_G)
 : vaults_hard_standard(_G)
 MAP
@@ -586,11 +576,11 @@ vvvvvvvvvvvvvv..vvvvvvvvvvvvvv
 ENDMAP
 
 # 26 monsters, 36 %
-NAME:     st_greater_box_5
-TAGS:     vaults_orient_s
-NSUBST:   ' = 15:9 / 3:8 / *:.
-SHUFFLE:  abc
-SUBST:    a = +, b = v, c = v
+NAME:    st_greater_box_5
+TAGS:    vaults_orient_s
+NSUBST:  ' = 15:9 / 3:8 / *:.
+SHUFFLE: abc
+SUBST:   a = +, b = v, c = v
 : st_box_setup(_G)
 : vaults_hard_standard(_G)
 MAP
@@ -618,13 +608,13 @@ ENDMAP
 
 ####
 
-NAME: ontoclasm_vaults_water_temple
-TAGS: no_pool_fixup
+NAME:   ontoclasm_vaults_water_temple
+TAGS:   no_pool_fixup
 WEIGHT: 3
-KMASK: wW = no_monster_gen
+KMONS:  0 = 0 band
 NSUBST: 0 = 1:9 / *:0
-KMONS: 0 = 0 band
-SUBST: G : GU, % = %%%%*.
+SUBST:  G : GU, % = %%%%*.
+KMASK:  wW = no_monster_gen
 : vaults_hard_standard(_G)
 MAP
      ........
@@ -643,12 +633,12 @@ MAP
    xwwwxxxxwwwx
 ENDMAP
 
-NAME: ontoclasm_vaults_fire_temple
+NAME:   ontoclasm_vaults_fire_temple
 WEIGHT: 3
-KMASK: l = no_monster_gen
+KMONS:  0 = 0 band
 NSUBST: 0 = 1:9 / *:0
-KMONS: 0 = 0 band
-SUBST: G : GY, % = %%%%*.
+SUBST:  G : GY, % = %%%%*.
+KMASK:  l = no_monster_gen
 : vaults_hard_standard(_G)
 MAP
      ........
@@ -667,7 +657,7 @@ MAP
    xlllxxxxlllx
 ENDMAP
 
-NAME: ontoclasm_vaults_shout
+NAME:  ontoclasm_vaults_shout
 KMONS: 0 = 0 band
 : vaults_hard_standard(_G)
 MAP
@@ -683,7 +673,7 @@ MAP
 ..xxxxxxx
 ENDMAP
 
-NAME: ontoclasm_vaults_gallery
+NAME:   ontoclasm_vaults_gallery
 NSUBST: 9 = 1:0 / 1:8 / *:9
 : vaults_hard_standard(_G)
 MAP

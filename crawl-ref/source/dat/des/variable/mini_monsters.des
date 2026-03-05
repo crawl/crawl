@@ -2796,6 +2796,93 @@ xS+.3.x
 xxxxxxx
 ENDMAP
 
+NAME:   kennysheep_orc_chapel
+DEPTH:  D:3-4, Orc
+: if you.in_branch("Orc") then
+KMONS:  1 = orc high priest band
+: else
+KMONS:  1 = orc priest band
+: end
+KFEAT:  1 = altar_beogh
+SUBST:  $ = $.
+: if you.in_branch("D") then
+TILE:   x = wall_pebble_brown
+: else
+TILE:   x = wall_pebble_darkgray
+: end
+MAP
+ xxxxx
+xx$1$xx
+x$I$I$x
+x$$$$$x
+x$I.I$x
+xx...xx
+ xx+xx
+ENDMAP
+
+NAME:   kennysheep_jessica_study
+TAGS:   transparent no_mons_gen
+DEPTH:  D:2-3
+: if crawl.x_chance_in_y(3, 10) then
+NSUBST: d = 1:e / *:d
+: end
+KITEM:  d = any potion / any scroll / nothing w:30
+KITEM:  e = randbook disc:necromancy slevels:2 owner:Jessica / \
+            randbook disc:hexes slevels:2 owner:Jessica / \
+            randbook disc:translocation slevels:2 owner:Jessica
+MONS:   jessica, quokka
+veto {{ return you.uniques("Jessica") }}
+MAP
+   .....
+  .......
+ ..xxxxx..
+..xx.12xx..
+..xd...dx..
+..xd...dx..
+..xd...dx..
+..xx...xx..
+ ..xx+xx..
+  .......
+   .....
+ENDMAP
+
+NAME:   kennysheep_underground_church
+TAGS:   no_pool_fixup no_wall_fixup misc_elf_vault vaults_hard vaults_orient_s
+DEPTH:  Vaults, !Vaults:$, Elf, Zot
+: if you.in_branch("Elf") then
+MONS:   deep elf high priest, deep elf pyromancer / deep elf zephyrmancer
+SUBST:  - = +
+: elseif you.in_branch("Vaults") then
+KMONS:  1| = deep elf high priest
+KMONS:  2 = orc knight / ironbound preserver / war gargoyle
+: else -- Zot
+MONS:   draconian stormcaller, base draconian / draconian monk w:2
+KFEAT:  t = petrified_tree
+SUBST:  - = +
+: end
+COLOUR: c = white
+TILE:   c = wall_church
+FTILE:  -.mcwFt12|*+ = floor_limestone
+: single_cloud(_G, "F", "flame", false)
+KPROP:  wF = no_tele_into
+KMASK:  wF = no_monster_gen
+SUBST:  F = w
+KMASK:  w = opaque
+MAP
+ ccccccccccc
+ cwwwwwwwwwc
+ccwwwmmmwwwcc
+cwwFmm|mmFwwc
+cwwmm*1*mmwwc
+cccc*222*cccc
+ctcc.....cctc
+c2.cc+++cc.2c
+c...........c
+cc.........cc
+ cccc...cccc
+    cc-cc
+ENDMAP
+
 NAME:  lightli_minifort
 TAGS:  no_pool_fixup
 DEPTH: D:4-, Depths
@@ -7070,89 +7157,6 @@ c.x|x.c
 c.xxx.c
 cc...cc
  cc+cc
-ENDMAP
-
-NAME:   kennysheep_orc_chapel
-DEPTH:  D:3-4, Orc
-SUBST:  $ = $.
-: if you.in_branch("Orc") then
-KMONS:  1 = orc high priest band
-: else
-KMONS:  1 = orc priest band
-: end
-KFEAT:  1 = altar_beogh
-TILE:   x = wall_zot_yellow
-MAP
- xxxxx
-xx$1$xx
-x$I$I$x
-x$$$$$x
-x$I.I$x
-xx...xx
- xx+xx
-ENDMAP
-
-NAME:   kennysheep_jessica_study
-TAGS:   transparent no_mons_gen
-DEPTH:  D:2-3
-: if crawl.x_chance_in_y(3, 10) then
-NSUBST: d = 1:e / *:d
-: end
-KITEM:  d = any potion / any scroll / nothing w:30
-KITEM:  e = randbook disc:necromancy slevels:2 owner:Jessica / \
-            randbook disc:hexes slevels:2 owner:Jessica / \
-            randbook disc:translocation slevels:2 owner:Jessica
-MONS:   jessica, quokka
-veto {{ return you.uniques("Jessica") }}
-MAP
-   .....
-  .......
- ..xxxxx..
-..xx.12xx..
-..xd...dx..
-..xd...dx..
-..xd...dx..
-..xx...xx..
- ..xx+xx..
-  .......
-   .....
-ENDMAP
-
-NAME:   kennysheep_underground_church
-TAGS:   no_pool_fixup no_wall_fixup misc_elf_vault vaults_hard vaults_orient_s
-DEPTH:  Vaults, !Vaults:$, Elf, Zot
-: if you.in_branch("Elf") then
-MONS:   deep elf high priest, deep elf pyromancer / deep elf zephyrmancer
-SUBST:  - = +
-: elseif you.in_branch("Vaults") then
-KMONS:  1| = deep elf high priest
-KMONS:  2 = orc knight / ironbound preserver / war gargoyle
-: else -- Zot
-MONS:   draconian stormcaller, base draconian / draconian monk w:2
-KFEAT:  t = petrified_tree
-SUBST:  - = +
-: end
-COLOUR: c = white
-TILE:   c = wall_church
-FTILE:  -.mcwFt12|*+ = floor_limestone
-: single_cloud(_G, "F", "flame", false)
-KPROP:  wF = no_tele_into
-KMASK:  wF = no_monster_gen
-SUBST:  F = w
-KMASK:  w = opaque
-MAP
- ccccccccccc
- cwwwwwwwwwc
-ccwwwmmmwwwcc
-cwwFmm|mmFwwc
-cwwmm*1*mmwwc
-cccc*222*cccc
-ctcc.....cctc
-c2.cc+++cc.2c
-c...........c
-cc.........cc
- cccc...cccc
-    cc-cc
 ENDMAP
 
 NAME:  kennysheep_potato
