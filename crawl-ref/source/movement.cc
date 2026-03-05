@@ -884,6 +884,7 @@ static bool _try_stampede(const coord_def& target)
 // Handles the player trying to move/attack/swap into a given location.
 // Returns true if handling of further steps should continue after this.
 static bool _handle_player_step(const coord_def& targ, int& delay, bool rampaging,
+                                bool first_step,
                                 bool& did_stampede,
                                 bool& did_move, bool& did_attack, bool& did_open_door)
 {
@@ -931,13 +932,13 @@ static bool _handle_player_step(const coord_def& targ, int& delay, bool rampagin
                 if (!mon || (mon->pos() - you.pos()) != (targ - initial_pos))
                     return false;
             }
-            if (!player_fight(mon, rampaging))
+            if (!player_fight(mon, rampaging && !first_step))
             {
                 stop_running();
                 return false;
             }
 
-            if (rampaging && mon->alive())
+            if (rampaging && !first_step && mon->alive())
                 mon->stagger(5);
 
             did_attack = true;
@@ -1214,7 +1215,7 @@ void move_player_action(coord_def move)
             break;
         }
 
-        if (!_handle_player_step(targ, delay, num_steps > 1,
+        if (!_handle_player_step(targ, delay, num_steps > 1, steps_taken == 0,
                                  did_stampede,
                                  did_move, did_attack, did_open_door))
         {
