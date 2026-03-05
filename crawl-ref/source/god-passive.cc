@@ -1500,7 +1500,7 @@ void dithmenos_shadow_shoot(const coord_def& targ, missile_type thrown_projectil
         && is_range_weapon(*mon->mslot_item(MSLOT_ALT_WEAPON)))
     {
         mon->swap_weapons(false);
-        ranged_attack_beam atk2(*mon, *launcher);
+        ranged_attack_beam atk2(*mon, *launcher, atk.beam);
         mons_throw(mon, atk2);
     }
 
