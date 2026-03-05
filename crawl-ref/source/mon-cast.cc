@@ -7437,7 +7437,7 @@ static bool _cast_dominate_undead(const monster& caster, int pow, bool check_onl
             }
 
             simple_monster_message(*mon, " is compelled to serve!");
-            mon->add_ench(mon_enchant(ENCH_HEXED, &caster));
+            mon->add_ench(mon_enchant(caster.wont_attack() ? ENCH_CHARM : ENCH_HEXED, &caster));
             flash_tile(mon->pos(), BLUE);
         }
         else if (targ->is_player())
