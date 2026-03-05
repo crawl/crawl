@@ -4350,7 +4350,7 @@ void bolt::affect_player()
              you.hp > 0 ? "you" : "your lifeless body",
              real_flavour != BEAM_CHAOS ? ""
                     : make_stringf(" with %s", _beam_type_name(flavour).c_str()).c_str(),
-             final_dam ? "" : " but does no damage",
+             final_dam || damage.num == 0 ? "" : " but does no damage",
              attack_strength_punctuation(final_dam).c_str());
     }
 
