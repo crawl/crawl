@@ -151,6 +151,7 @@ static void _do_wizard_command(int wiz_command)
     case CONTROL('T'): debug_terp_dlua(); break;
 
     case 'u': wizard_level_travel(false); break;
+    case 'U': wizard_unobtain_unrands(); break;
     // case 'U': break;
     case CONTROL('U'): debug_terp_dlua(clua); break;
 
@@ -518,6 +519,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>+</w>      make randart from item\n"
                        "<w>'</w>      list items\n"
                        "<w>J</w>      Jiyva off-level sacrifice\n"
+                       "<w>U</w>      mark all unrands as never generated\n"
                        "<w>Z</w>      Unobtain runes and Orb of Zot\n"
                        "\n"
                        "<yellow>Debugging commands</yellow>\n"
