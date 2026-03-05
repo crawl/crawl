@@ -3473,6 +3473,9 @@ void handle_channelled_spell()
         return;
     }
 
+    if (you.duration[DUR_STAMPEDE] && you.has_mutation(MUT_EAST_WIND))
+        you.duration[DUR_STAMPEDE] += you.time_taken;
+
     switch (you.attribute[ATTR_CHANNELLED_SPELL])
     {
         case SPELL_MAXWELLS_COUPLING:
@@ -3494,9 +3497,6 @@ void handle_channelled_spell()
         default:
             mprf(MSGCH_WARN, "Attempting to channel buggy spell: %s", spell_title(spell));
     }
-
-    if (you.duration[DUR_STAMPEDE] && you.has_mutation(MUT_EAST_WIND))
-        you.duration[DUR_STAMPEDE] += you.time_taken;
 }
 
 void stop_channelling_spells(bool quiet)
