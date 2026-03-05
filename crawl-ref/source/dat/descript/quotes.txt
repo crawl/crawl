@@ -3744,6 +3744,12 @@ rakshasa
     -_Mahābhārata_, Adi Parva, Hidimva-vadha Parva, section CLIV. ca. 500 B.C.
      trans. Kisari Mohan Ganguli, 1883.
 %%%%
+raven
+
+“The Hatter opened his eyes very wide on hearing this; but all he said was ‘Why
+is a raven like a writing-desk?’”
+    -Lewis Carroll, Alice’s Adventures in Wonderland
+%%%%
 reaper
 
 “All our times have come.
