@@ -909,7 +909,7 @@ static bool _handle_player_step(const coord_def& targ, int& delay, bool rampagin
         // Attempt to attack the monster.
         if (!mon->wont_attack() || you.confused())
         {
-            if (you.duration[DUR_STAMPEDE] && !you.confused() && !rampaging
+            if (you.duration[DUR_STAMPEDE] && !you.confused() && first_step
                 && _try_stampede(targ))
             {
                 if (you_worship(GOD_WU_JIAN))
