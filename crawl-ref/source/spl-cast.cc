@@ -1771,7 +1771,7 @@ static vector<string> _desc_gloom_chance(const monster_info& mi, int pow)
     if (mons_res_blind(mi.type))
         return vector<string>{"not susceptible"};
 
-    return vector<string>{make_stringf("chance to dazzle: %d%%", gloom_success_chance(pow, mi.hd))};
+    return vector<string>{make_stringf("chance to blind: %d%%", gloom_success_chance(pow, mi.hd))};
 }
 
 static vector<string> _desc_airstrike_bonus(const monster_info& mi)
