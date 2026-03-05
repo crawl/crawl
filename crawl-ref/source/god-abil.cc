@@ -2997,7 +2997,9 @@ static bool _marionette_spell_attempt(monster& caster, spell_type spell,
 
     for (monster* targ : targs)
     {
-        if (!targ->alive())
+        // We verify alignment again at this point, just in case it's changed
+        // in the middle of Marionette (eg: by the monster charming something).
+        if (!targ->alive() || targ->wont_attack())
             continue;
 
         caster.foe = targ->mindex();
