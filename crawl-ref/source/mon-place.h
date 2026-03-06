@@ -15,6 +15,7 @@
 #include "mgen-enum.h"
 #include "mon-enum.h"
 #include "monster-type.h"
+#include "spell-type.h"
 #include "tag-version.h"
 #include "trap-type.h"
 
