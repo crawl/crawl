@@ -3261,14 +3261,15 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
 }
 
 bool you_can_see_habitable_spot_near(habitat_type habitat, int max_radius,
-                                     int exclude_radius)
+                                     int exclude_radius, spell_type ignore_summons_of)
 {
     return you_can_see_habitable_spot_near(you.pos(), habitat, max_radius,
-                                           exclude_radius);
+                                           exclude_radius, ignore_summons_of);
 }
 
 bool you_can_see_habitable_spot_near(coord_def pos, habitat_type habitat,
-                                     int max_radius, int exclude_radius)
+                                     int max_radius, int exclude_radius,
+                                     spell_type ignore_summons_of)
 {
     for (radius_iterator ri(pos, max_radius, C_SQUARE, exclude_radius >= 0);
         ri; ++ri)
@@ -3277,8 +3278,12 @@ bool you_can_see_habitable_spot_near(coord_def pos, habitat_type habitat,
             continue;
 
         actor* blocking_actor = actor_at(*ri);
-        if (blocking_actor && blocking_actor->visible_to(&you))
+        if (blocking_actor && blocking_actor->visible_to(&you)
+            && (ignore_summons_of == SPELL_NO_SPELL
+                || !blocking_actor->was_created_by(you, ignore_summons_of)))
+        {
             continue;
+        }
 
         if (!cell_see_cell(pos, *ri, LOS_NO_TRANS))
             continue;

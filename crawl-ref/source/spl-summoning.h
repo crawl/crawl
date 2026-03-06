@@ -38,9 +38,11 @@ constexpr int PARAGON_FINISHER_MID_CHARGE = 8;
 constexpr int PARAGON_FINISHER_MAX_CHARGE = 14;
 
 bool player_summon_check(const vector<monster_type>& types, int max_range = 2,
-                         int exclude_range = 0, coord_def pos = coord_def());
+                         int exclude_range = 0, coord_def pos = coord_def(),
+                         spell_type origin_spell = SPELL_NO_SPELL);
 bool player_summon_check(monster_type type, int max_range = 2,
-                         int exclude_range = 0, coord_def pos = coord_def());
+                         int exclude_range = 0, coord_def pos = coord_def(),
+                         spell_type origin_spell = SPELL_NO_SPELL);
 
 spret cast_summon_small_mammal(int pow, bool fail);
 
