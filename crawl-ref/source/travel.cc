@@ -23,6 +23,7 @@
 #include "cloud.h"
 #include "clua.h"
 #include "command.h"
+#include "coord-def.h"
 #include "coordit.h"
 #include "daction-type.h"
 #include "dactions.h"
@@ -41,12 +42,14 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
+#include "longwalk-range-mode.h"
 #include "macro.h"
 #include "mapmark.h"
 #include "menu.h"
 #include "message.h"
 #include "mon-death.h"
 #include "nearby-danger.h"
+#include "options.h"
 #include "output.h"
 #include "place.h"
 #include "prompt.h"
@@ -4635,6 +4638,8 @@ void runrest::initialise(int dir, int mode)
     notified_ancestor_hp_full = false;
     turns_passed = 0;
     skip_autorest = false;
+    starting_pos = you.pos();
+    max_longwalk_distance = -1; // Default to no maximum.
 
     if (dir == RDIR_REST)
     {
@@ -4656,6 +4661,36 @@ void runrest::initialise(int dir, int mode)
         set_run_check(0, left);
         set_run_check(1, dir);
         set_run_check(2, right);
+
+        switch (Options.longwalk_range)
+        {
+            case LWR_LOS:
+                max_longwalk_distance = get_los_radius();
+                break;
+            case LWR_CONSTANT:
+                max_longwalk_distance = Options.longwalk_range_constant;
+                break;
+            case LWR_VISIBLE:
+
+                // See how far we can go in the "pos" direction to find the furthest
+                // visible tile. We don't need to worry about impassible tiles too
+                // much because max_distance is only one limitation. We'll never set
+                // the distance to 0 because we will always attempt to move at least
+                // 1 tile so that wouldn't do anything anyway.
+                max_longwalk_distance = 1;
+                for (int dist = 2;
+                    you.see_cell_no_trans(coord_def(
+                                                pos.x * dist + starting_pos.x,
+                                                pos.y * dist + starting_pos.y))
+                        && dist <= get_los_radius();
+                    dist++)
+                {
+                    max_longwalk_distance = dist;
+                }
+                break;
+            case LWR_UNLIMITED: ; // do nothing. It's already initialized.
+        }
+
     }
 
     if (runmode == RMODE_REST_DURATION || runmode == RMODE_WAIT_DURATION)
@@ -4708,6 +4743,13 @@ bool runrest::run_should_stop() const
 {
     const coord_def targ = you.pos() + pos;
     const map_cell& tcell = env.map_knowledge(targ);
+
+    if (max_longwalk_distance >= 0
+        && starting_pos.distance_from(targ) > max_longwalk_distance)
+    {
+        return true;
+    }
+
 
     if (!_is_safe_cloud(targ))
         return true;
