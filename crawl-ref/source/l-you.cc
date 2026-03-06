@@ -1426,6 +1426,25 @@ LUARET1(you_is_web_immune, boolean, you.is_web_immune())
  */
 LUARET1(you_has_good_stab, boolean, you.has_good_stab())
 
+/*** What type of orb monster will you face in Zot?
+ * @treturn string|nil The name of the orb monster in Zot, or nil if the
+ *                     player doesn't yet know this.
+ * @function orb_monster
+ */
+LUAFN(you_zot_orb_monster)
+{
+    if (you.zot_orb_monster_known)
+    {
+        const string monname = pluralise_monster(
+                mons_type_name(you.zot_orb_monster, DESC_DBNAME)).c_str();
+        lua_pushstring(ls, monname.c_str());
+    }
+    else
+        lua_pushnil(ls);
+
+    return 1;
+}
+
 static const struct luaL_Reg you_clib[] =
 {
     { "turn_is_over", you_turn_is_over },
@@ -1572,6 +1591,7 @@ static const struct luaL_Reg you_clib[] =
     { "activate_ability",        you_activate_ability},
     { "is_web_immune",     you_is_web_immune },
     { "has_good_stab",      you_has_good_stab },
+    { "zot_orb_monster", you_zot_orb_monster },
 
     { nullptr, nullptr },
 };
