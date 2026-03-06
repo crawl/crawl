@@ -6023,7 +6023,7 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
         break;
 
     case BEAM_PETRIFY:
-        rc = !mon->res_petrify();
+        rc = !mon->res_petrify() && !mon->petrifying() && !mon->petrified();
         break;
 
     case BEAM_INFESTATION:
