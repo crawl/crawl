@@ -868,10 +868,16 @@ bool string_matches_ability_name(const string& key)
     return ability_by_name(key) != ABIL_NON_ABILITY;
 }
 
-static bool _invis_causes_drain()
+static bool _abil_causes_drain(ability_type ability)
 {
-    return !you.unrand_equipped(UNRAND_AMULET_INVISIBILITY)
+    if (ability == ABIL_EVOKE_TURN_INVISIBLE)
+    {
+        return    !you.unrand_equipped(UNRAND_AMULET_INVISIBILITY)
                && !you.unrand_equipped(UNRAND_SCARF_INVISIBILITY);
+    }
+    if (ability == ABIL_SIPHON_ESSENCE)
+        return !you.unrand_equipped(UNRAND_PHYLACTERY, true);
+    return false;
 }
 
 /**
@@ -1008,11 +1014,8 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::instant)
         ret += ", Instant"; // not really a cost, more of a bonus - bwr
 
-    if (abil.flags & abflag::max_hp_drain
-        && (ability != ABIL_EVOKE_TURN_INVISIBLE || _invis_causes_drain()))
-    {
+    if (abil.flags & abflag::max_hp_drain || _abil_causes_drain(ability))
         ret += ", Drain";
-    }
 
     if (abil.flags & abflag::curse)
         ret += ", Cursed item";
@@ -1130,8 +1133,7 @@ static const string _detailed_cost_description(ability_type ability)
     if (abil.flags & abflag::conf_ok)
         ret << "\nYou can use this ability even if confused.";
 
-    if (abil.flags & abflag::max_hp_drain
-        && (ability != ABIL_EVOKE_TURN_INVISIBLE || _invis_causes_drain()))
+    if (abil.flags & abflag::max_hp_drain || _abil_causes_drain(ability))
     {
         ret << "\nThis ability will temporarily drain your maximum health when used";
         if (ability == ABIL_EVOKE_TURN_INVISIBLE)
@@ -3080,6 +3082,11 @@ static spret _siphon_essence(bool fail)
     else
         mpr("You feel stolen life flooding into you from an unseen source!");
 
+    if (you.unrand_equipped(UNRAND_PHYLACTERY))
+    {
+        mpr("The phylactery takes its cut of your soul!");
+        drain_player(40, false, true);
+    }
     if (you.hp == you.hp_max)
         return spret::success;
 
@@ -3394,7 +3401,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             return spret::abort;
         if (Options.show_invis_targeter && !invisibility_target_check("Confirm evoke"))
             return spret::abort;
-        if (_invis_causes_drain())
+        if (_abil_causes_drain(abil.ability))
             drain_player(40, false, true); // yes, before the fail check!
         fail_check();
         potionlike_effect(POT_INVISIBILITY, you.skill(SK_EVOCATIONS, 2) + 5);

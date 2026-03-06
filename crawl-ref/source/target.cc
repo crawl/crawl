@@ -1264,7 +1264,7 @@ aff_type targeter_flame_wave::is_affected(coord_def loc)
 }
 
 targeter_siphon_essence::targeter_siphon_essence()
-    : targeter_radius(&you, LOS_NO_TRANS, 2, 0, 1)
+    : targeter_radius(&you, LOS_NO_TRANS, siphon_essence_range(), 0, 1)
 { }
 
 aff_type targeter_siphon_essence::is_affected(coord_def loc)
