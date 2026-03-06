@@ -2348,18 +2348,15 @@ targeter_magnavolt::targeter_magnavolt(const actor* act, int _range) :
 
 bool targeter_magnavolt::valid_aim(coord_def a)
 {
-    if (!targeter_smite::valid_aim(a))
-        return false;
-
-    if (!monster_at(a) || !you.can_see(*monster_at(a)))
-        return notify_fail("You don't see a valid target there.");
-
-    return true;
+    // Allow targeting any valid smite location, including empty spaces
+    // (which may contain invisible enemies).
+    return targeter_smite::valid_aim(a);
 }
 
 bool targeter_magnavolt::preferred_aim(coord_def a)
 {
-    return !monster_at(a)->has_ench(ENCH_MAGNETISED);
+    const monster* mon = monster_at(a);
+    return mon && !mon->has_ench(ENCH_MAGNETISED);
 }
 
 bool targeter_magnavolt::set_aim(coord_def a)
