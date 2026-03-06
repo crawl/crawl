@@ -305,7 +305,7 @@ bool wizard_create_feature(dist &target, dungeon_feature_type feat, bool mimic)
             direction_chooser_args args;
             args.range = you.wizard_vision ? -1 : LOS_MAX_RANGE;
             args.restricts = DIR_TARGET;
-            args.mode = TARG_ANY;
+            args.mode = TARG_NON_ACTOR;
             args.needs_path = false;
             // TODO: a way to switch features while targeting?
             args.top_prompt = make_stringf(
