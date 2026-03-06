@@ -601,6 +601,7 @@ static bool _is_branch_stair(const coord_def& pos)
 }
 
 #define ES_item   (Options.explore_stop & ES_ITEM)
+#define ES_talisman (Options.explore_stop & ES_TALISMAN)
 #define ES_greedy (Options.explore_stop & ES_GREEDY_ITEM)
 #define ES_glow   (Options.explore_stop & ES_GLOWING_ITEM)
 #define ES_art    (Options.explore_stop & ES_ARTEFACT)
@@ -5052,7 +5053,10 @@ void explore_discoveries::add_item(const item_def &i)
 
 void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
 {
-    if (you.running == RMODE_EXPLORE_GREEDY)
+    const bool greed_mode = you.running == RMODE_EXPLORE_GREEDY;
+    const bool is_talisman = i.base_type == OBJ_TALISMANS;
+
+    if (greed_mode)
     {
         // The things we need to do...
         if (!current_level)
@@ -5067,26 +5071,54 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
             if (greed_inducing && (Options.explore_stop & ES_GREEDY_ITEM))
                 ; // Stop for this condition
             else if (!greed_inducing
-                     && (Options.explore_stop & ES_ITEM
-                         || Options.explore_stop & ES_GLOWING_ITEM
-                            && i.flags & ISFLAG_COSMETIC_MASK
-                         || Options.explore_stop & ES_ARTEFACT
-                            && i.flags & ISFLAG_ARTEFACT_MASK
-                         || Options.explore_stop & ES_RUNE
-                            && (i.base_type == OBJ_RUNES
-                                || i.base_type == OBJ_GEMS /*enh*/)))
+                     && (((Options.explore_stop & ES_ITEM)
+                          || (Options.explore_stop & ES_GLOWING_ITEM
+                              && i.flags & ISFLAG_COSMETIC_MASK)
+                          || (Options.explore_stop & ES_ARTEFACT
+                              && i.flags & ISFLAG_ARTEFACT_MASK)
+                          || (Options.explore_stop & ES_RUNE
+                              && (i.base_type == OBJ_RUNES
+                                  || i.base_type == OBJ_GEMS /*enh*/)))
+                         || (is_talisman && (Options.explore_stop & ES_TALISMAN))))
             {
                 ; // More conditions to stop for
             }
             else
                 return; // No conditions met, don't stop for this item
         }
-    } // if (you.running == RMODE_EXPLORE_GREEDY)
+    }
+    else
+    {
+        bool stop_here = false;
+
+        if (is_talisman)
+            stop_here = ES_talisman;
+        else
+            stop_here = ES_item;
+
+        if (!stop_here
+            && ((Options.explore_stop & ES_GLOWING_ITEM
+                    && i.flags & ISFLAG_COSMETIC_MASK)
+                || (Options.explore_stop & ES_ARTEFACT
+                    && i.flags & ISFLAG_ARTEFACT_MASK)
+                || (Options.explore_stop & ES_RUNE
+                    && (i.base_type == OBJ_RUNES
+                        || i.base_type == OBJ_GEMS /*enh*/))))
+        {
+            stop_here = true;
+        }
+
+        if (!stop_here)
+            return;
+    }
 
     add_item(i);
-    es_flags |=
-        (you.running == RMODE_EXPLORE_GREEDY) ? ES_GREEDY_PICKUP_MASK :
-        (Options.explore_stop & ES_ITEM) ? ES_ITEM : ES_NONE;
+    if (greed_mode)
+        es_flags |= ES_GREEDY_PICKUP_MASK;
+    else if (is_talisman && ES_talisman)
+        es_flags |= ES_TALISMAN;
+    else if (!is_talisman && ES_item)
+        es_flags |= ES_ITEM;
 }
 
 // Expensive O(n^2) duplicate search, but we can live with that.
