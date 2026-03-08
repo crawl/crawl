@@ -1498,8 +1498,11 @@ static string _derived_undead_message(const monster &mons, monster_type which_z,
         return "The dead are flying!";
 
     const auto shape = get_mon_shape(mons);
-    if (shape == MON_SHAPE_SNAKE || shape == MON_SHAPE_SNAIL)
+    if (shape == MON_SHAPE_SNAKE || shape == MON_SHAPE_SNAIL
+        || shape == MON_SHAPE_NAGA)
+    {
         return "The dead are slithering!";
+    }
     if (shape == MON_SHAPE_ARACHNID || shape == MON_SHAPE_CENTIPEDE)
         return "The dead are crawling!"; // to say nothing of creeping
 
