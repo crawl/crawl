@@ -891,7 +891,8 @@ HEADER_END
         next if ($artefact->{NAME} =~ /DUMMY/);
         if (not(defined $artefact->{TILE_EQ}) || $artefact->{TILE_EQ} eq "")
         {
-            if ($artefact->{base_type} ne "OBJ_JEWELLERY")
+            if ($artefact->{base_type} ne "OBJ_JEWELLERY" &&
+                $artefact->{base_type} ne "OBJ_TALISMANS")
             {
                 print STDERR "TILE_EQ not defined for '$artefact->{NAME}'\n";
             }

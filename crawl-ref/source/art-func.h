@@ -1870,3 +1870,52 @@ static void _VAINGLORY_unequip(item_def */*item*/, bool */*show_msgs*/)
 {
     invalidate_agrid(true);
 }
+
+static void _PHYLACTERY_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
+{
+    _equip_mpr(show_msgs, you.species == SP_DEMONSPAWN
+               ? "You feel black tendrils from the phylactery latch onto your demonic soul!"
+               : "You feel the phylactery bind a piece of your soul.");
+}
+
+static void _PHYLACTERY_death_effects(item_def */*item*/, monster* /*mons*/,
+                                      killer_type /*killer*/)
+{
+    // Okawaru / Ru love sac
+    if (you.allies_forbidden())
+        return;
+
+    // TODO: derive `pow` from shapeshifting skill
+    int pow = 0;
+    if (!you.duration[DUR_DEATH_CHANNEL])
+    {
+        pow = 125;
+        mpr(you.species == SP_DEMONSPAWN
+            ? "The phylactery vibrates violently and begins channeling a vortex of raging spirits!"
+            : "The phylactery rattles and begins channeling your kills.");
+    }
+    else if (one_chance_in(10))
+    {
+        pow = 25;
+        mpr(you.species == SP_DEMONSPAWN && one_chance_in(5)
+            ? "You hear a disembodied voice ecstatically rasp, \"Your soul is mine!\""
+            : "The phylactery intensifies its channeling of the dead.");
+    }
+
+    if (!pow)
+        return;
+    // below is the formula for the spell, this one keeps adding to lengthen it, reduce somewhat?
+    you.increase_duration(DUR_DEATH_CHANNEL,
+                          30 + random2(1 + div_rand_round(2 * pow, 3)),
+                          200);
+}
+
+static void _PHYLACTERY_unequip(item_def */*item*/, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, you.species == SP_DEMONSPAWN
+               ? "As you come back to life, the black tendrils from the phylactery rip a splinter from your demonic soul!"
+               : "The piece of your soul bound by the phylactery breaks off as you come back to life.");
+    if (you.duration[DUR_DEATH_CHANNEL])
+        you.duration[DUR_DEATH_CHANNEL] = 1;
+    you.equipment.update();
+}

@@ -4743,13 +4743,45 @@ spret cast_noxious_bog(int pow, bool fail)
     return spret::success;
 }
 
-int siphon_essence_range() { return 2; }
+int siphon_essence_range()
+{
+    return you.unrand_equipped(UNRAND_PHYLACTERY, true) ? 3 : 2;
+}
 
 bool siphon_essence_affects(const monster &m)
 {
-    return !m.wont_attack()
-        && !m.res_torment()
-        && !m.is_peripheral();
+    if (m.wont_attack() || m.is_peripheral())
+        return false;
+    const bool res_torment = m.res_torment();
+    if (!you.unrand_equipped(UNRAND_PHYLACTERY, true))
+        return !res_torment;
+
+    if (m.holiness() != MH_DEMONIC)
+        return !res_torment;
+    switch (m.type)
+    {
+        // Hell and Pan lords + Ignacio
+        case MONS_GERYON:
+        case MONS_DISPATER:
+        case MONS_ASMODEUS:
+        case MONS_ANTAEUS:
+        case MONS_ERESHKIGAL:
+        case MONS_MNOLEG:
+        case MONS_LOM_LOBON:
+        case MONS_CEREBOV:
+        case MONS_GLOORX_VLOQ:
+        case MONS_PANDEMONIUM_LORD:
+        case MONS_IGNACIO:
+        case MONS_SERPENT_OF_HELL:
+#if TAG_MAJOR_VERSION > 34
+        case MONS_SERPENT_OF_HELL_COCYTUS:
+        case MONS_SERPENT_OF_HELL_DIS:
+        case MONS_SERPENT_OF_HELL_TARTARUS:
+#endif
+            return false;
+        default:
+            return true;
+    }
 }
 
 dice_def boulder_damage(int pow, bool random)

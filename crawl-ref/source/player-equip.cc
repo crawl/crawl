@@ -619,8 +619,14 @@ void player_equip_set::update()
         }
     }
 
-    if (you.active_talisman() && is_artefact(*you.active_talisman())
-        && you.form == you.default_form)
+    auto* tali = you.active_talisman();
+    if (tali && is_unrandom_artefact(*tali))
+    {
+        const int idx = tali->unrand_idx - UNRAND_START;
+        unrand_active.set(idx);
+        unrand_equipped.set(idx);
+    }
+    if (tali && is_artefact(*tali) && you.form == you.default_form)
     {
         artefact_properties(*you.active_talisman(), artprops);
 

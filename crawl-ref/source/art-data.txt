@@ -1936,6 +1936,18 @@ TILE:     urand_scarf_invisibility
 TILE_EQ:  SCARF_INVISIBILITY
 BOOL:     inv, nogen
 
+ENUM:    PHYLACTERY
+NAME:    Malkavia's Phylactery
+INSCRIP: ^Siphon Siphon+ *Death Channel
+OBJ:     OBJ_TALISMANS/TALISMAN_DEATH
+BOOL:    drain
+COLOUR:  YELLOW
+#TILE:    talisman_death
+DESCRIP: ^Siphon:   The phylactery drains a small amount of your maximum HP when you siphon essence.
++Siphon+: The siphon essence ability granted by this item can additionally affect demons,
+ but not the lords of pandemonium or hell. It also has increased range.
++*Death Channel: The spirits of those you kill will be animated to fight for you.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
