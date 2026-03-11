@@ -4890,7 +4890,7 @@ void bolt::tracer_affect_monster(monster* mon)
 {
     // Ignore unseen monsters.
     if ((agent() && !agent()->can_see(*mon))
-        || !cell_see_cell(source, mon->pos(), LOS_NO_TRANS))
+        || !cell_see_cell(source, mon->pos(), LOS_DEFAULT))
     {
         return;
     }

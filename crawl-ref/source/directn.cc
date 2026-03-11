@@ -1186,7 +1186,7 @@ void direction_chooser::calculate_target_info()
 
     harmful_to_player = hitfunc ? hitfunc->harmful_to_player() : true;
 
-    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+    for (monster_near_iterator mi(&you, LOS_DEFAULT); mi; ++mi)
     {
         if (!you.can_see(**mi))
             continue;
