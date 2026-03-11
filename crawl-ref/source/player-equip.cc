@@ -1025,11 +1025,9 @@ void player_equip_set::remove(const item_def& item)
 {
     for (int i = (int)items.size() - 1; i >= 0; --i)
     {
+        // Preserve order to avoid swapping Coglin weapons display order.
         if (items[i].item == item.link)
-        {
-            items[i] = items[items.size() - 1];
-            items.pop_back();
-        }
+            items.erase(items.begin() + i);
     }
 
     if (is_unrandom_artefact(item))
