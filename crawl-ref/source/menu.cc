@@ -2040,6 +2040,12 @@ bool Menu::process_key(int keyin)
         // Even if we do return early, lastch needs to be set first,
         // as it's sometimes checked when leaving a menu.
         lastch = keyin; // TODO: remove lastch?
+
+        // Derived classes may override disambiguate to handle overloaded keypresses.
+        // When disambiguate wants to handle the keypress it should return true.
+        if (!is_set(MF_PAGED_INVENTORY) && disambiguate(keyin))
+            return true;
+
         const int primary_index = hotkey_to_index(keyin, true);
         const int key_index = hotkey_to_index(keyin, false);
 
@@ -2099,6 +2105,11 @@ bool Menu::process_key(int keyin)
 #endif
 
     return true;
+}
+
+bool Menu::disambiguate(int keyin)
+{
+    return false;
 }
 
 string Menu::get_select_count_string(int) const
