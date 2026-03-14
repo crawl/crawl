@@ -451,6 +451,9 @@ void ash_check_bondage()
 
     calc_hp(true);
     calc_mp(true);
+
+    // We may have reached training targets for some skills.
+    check_training_targets();
 }
 
 void ash_id_inventory()
