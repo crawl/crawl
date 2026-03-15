@@ -767,6 +767,10 @@ static bool _lost_soul_affectable(const monster &mons)
     if (!(mons.holiness() & (MH_UNDEAD | MH_NATURAL)))
         return false;
 
+    // Slowly dying monsters should not be made permanently alive
+    if (mons.has_ench(ENCH_SLOWLY_DYING))
+        return false;
+
     // already been revived once
     if (testbits(mons.flags, MF_SPECTRALISED))
         return false;
