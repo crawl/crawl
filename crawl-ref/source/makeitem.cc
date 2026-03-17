@@ -364,6 +364,9 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
         return false;
 #endif
 
+    case SPWPN_LIGHTWEIGHT:
+        return property(item, PWPN_SPEED) >= 17;
+
     case SPWPN_CONFUSE:
     case SPWPN_WEAKNESS:
     case SPWPN_VULNERABILITY:

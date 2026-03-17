@@ -80,6 +80,11 @@ It has been blessed by the Shining One, dealing an additional three-quarters of
 any damage that pierces undead and demons' armour. Undead and demons cannot use
 this.
 %%%%
+lightweight (lightweight) weapon ego
+
+It is unusally light and easy to wield, reducing the skill required to reach
+minimum delay compared to other weapons of its type.
+%%%%
 pain (pain) weapon ego
 
 It inflicts extra damage on living creatures proportional to your Necromancy

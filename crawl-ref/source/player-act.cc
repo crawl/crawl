@@ -290,10 +290,13 @@ random_var player::attack_delay_with(const item_def *weap, bool melee_only) cons
         if (is_unrandom_artefact(*weap, UNRAND_WOODCUTTERS_AXE))
             return attk_delay;
 
+        const brand_type brand = get_weapon_brand(*weap);
+        if (brand == SPWPN_LIGHTWEIGHT)
+            attk_delay -= div_rand_round(random_var(80), DELAY_SCALE);
+
         attk_delay -= div_rand_round(random_var(wpn_sklev), DELAY_SCALE);
         // we should really use weapon_adjust_delay here,
         // but we'd need to support random_var
-        const brand_type brand = get_weapon_brand(*weap);
         if (brand == SPWPN_SPEED)
             attk_delay = div_rand_round(attk_delay * 2, 3);
         else if (brand == SPWPN_HEAVY)
