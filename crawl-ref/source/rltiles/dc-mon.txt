@@ -189,6 +189,7 @@ wolf_spider MONS_WOLF_SPIDER
 redback MONS_REDBACK
 orb_spider MONS_ORB_SPIDER
 broodmother MONS_BROODMOTHER
+rust_mite MONS_RUST_MITE
 %rim 0
 culicivora MONS_CULICIVORA
 %sdir mon/demons

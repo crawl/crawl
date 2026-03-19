@@ -1,0 +1,19 @@
+name: "rust mite"
+glyph: {char: "s", colour: red}
+flags: [web_immune, no_skeleton]
+resists: {poison: -1}
+exp: 16
+genus: spider
+will: 10
+attacks:
+ - {type: bite, flavour: corrode, damage: 3}
+ - {type: bite, damage: 3}
+ - {type: bite, damage: 3}
+hd: 2
+hp_10x: 140
+ac: 1
+ev: 7
+has_corpse: true
+intelligence: animal
+size: little
+shape: arachnid

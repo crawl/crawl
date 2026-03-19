@@ -2691,6 +2691,10 @@ rust devil
 A hideous humanoid figure with rust-spotted metal skin, spreading corrosion
 and decay to all it touches.
 %%%%
+rust mite
+
+A large acarine creature adapted to eat away at iron and steel.
+%%%%
 sacred lotus
 
 A large and vivid bloom drifting placidly upon the surface of the water. The
