@@ -458,7 +458,7 @@ static int _spell_hd(spell_type spell, const monster_info &mon_owner)
     if (spell == SPELL_COLD_BREATH && mons_is_draconian(mon_owner.type))
         return mon_owner.hd * 5 / 6;
     if (mons_spell_is_spell(spell))
-        return mon_owner.spell_hd();
+        return mon_owner.spell_hd(spell);
     return mon_owner.hd;
 }
 
@@ -637,9 +637,9 @@ static void _describe_book(const spellbook_contents &book,
     const bool doublecolumn = source_item == nullptr;
 
     bool first_line_element = true;
-    const int hd = mon_owner ? mon_owner->spell_hd() : 0;
     for (auto spell : book.spells)
     {
+        const int hd = mon_owner ? mon_owner->spell_hd(spell) : 0;
         description.cprintf(" ");
 
         if (!mon_owner)
@@ -753,10 +753,10 @@ static void _write_book(const spellbook_contents &book,
 {
     tiles.json_open_object();
     tiles.json_write_string("label", book.label);
-    const int hd = mon_owner ? mon_owner->spell_hd() : 0;
     tiles.json_open_array("spells");
     for (auto spell : book.spells)
     {
+        const int hd = mon_owner ? mon_owner->spell_hd(spell) : 0;
         tiles.json_open_object();
 
         const string dith_marker = mon_owner

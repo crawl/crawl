@@ -53,7 +53,6 @@
 #endif
 #include "traps.h"
 
-#define SPELL_HD_KEY "spell_hd"
 #define NIGHTVISION_KEY "nightvision"
 
 /// Simple 1:1 mappings between monster enchantments & info flags.
@@ -746,6 +745,14 @@ monster_info::monster_info(const monster* m, int milev)
         spells = m->spells;
     }
 
+    // assumes spell hd modifying effects are always public
+    spellpower.clear();
+    for (mon_spell_slot slot : get_unique_spells(*this))
+    {
+        const spell_type spell = slot.spell;
+        spellpower[spell] = m->spell_hd(spell);
+    }
+
     if (m->is_priest())
         props[PRIEST_KEY] = true;
     else if (m->is_actual_spellcaster())
@@ -756,11 +763,6 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (m->no_tele())
         mb.set(MB_NO_TELE);
-
-    // assumes spell hd modifying effects are always public
-    const int spellhd = m->spell_hd();
-    if (spellhd != hd)
-        props[SPELL_HD_KEY] = spellhd;
 
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
@@ -1869,10 +1871,7 @@ bool monster_info::antimagic_susceptible() const
 /// What hd does this monster cast spells with? May vary from actual HD.
 int monster_info::spell_hd(spell_type spell) const
 {
-    UNUSED(spell);
-    if (!props.exists(SPELL_HD_KEY))
-        return hd;
-    return props[SPELL_HD_KEY].get_int();
+    return spellpower.at(spell);
 }
 
 /// What spell does this monster know because of the wand it's holding (if any)?
