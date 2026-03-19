@@ -2131,10 +2131,10 @@ int make_mons_armour(monster_type type, int level)
     case MONS_CENTAUR_WARRIOR:
     case MONS_YAKTAUR:
     case MONS_YAKTAUR_CAPTAIN:
-        if (one_chance_in(type == MONS_CENTAUR              ? 1000 :
-                          type == MONS_CENTAUR_WARRIOR      ?  500 :
-                          type == MONS_YAKTAUR              ?  300
-                       /* type == MONS_YAKTAUR_CAPTAIN ? */ :  200))
+        if (one_chance_in(type == MONS_CENTAUR              ?  200 :
+                          type == MONS_CENTAUR_WARRIOR      ?  100 :
+                          type == MONS_YAKTAUR              ?  100
+                       /* type == MONS_YAKTAUR_CAPTAIN ? */ :  50))
         {
             item.base_type = OBJ_ARMOUR;
             item.sub_type  = ARM_BARDING;
@@ -2149,10 +2149,10 @@ int make_mons_armour(monster_type type, int level)
     case MONS_NAGA_SHARPSHOOTER:
     case MONS_NAGA_WARRIOR:
     case MONS_NAGARAJA:
-        if (one_chance_in(type == MONS_NAGA         ?  800 :
-                          type == MONS_NAGA_WARRIOR ?  300 :
-                          type == MONS_NAGARAJA     ?  100
-                                                    :  200))
+        if (one_chance_in(type == MONS_NAGA         ?  200 :
+                          type == MONS_NAGA_WARRIOR ?  100 :
+                          type == MONS_NAGARAJA     ?  50
+                                                    :  100))
         {
             item.base_type = OBJ_ARMOUR;
             item.sub_type  = ARM_BARDING;
