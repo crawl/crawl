@@ -2765,6 +2765,12 @@ void bolt::affect_endpoint()
         if (actor_at(p) || !monster_habitable_grid(MONS_PILE_OF_FLESH, p))
             p = get_last_affected_pos(0);
 
+        // If the bolt didn't affect anything, we can't create the flesh. This
+        // can for example happen if the bolt was redirected by Ru at something
+        // the monster can't actually hit.
+        if (p.origin())
+            break;
+
         create_monster(mgen_data(MONS_PILE_OF_FLESH,
                        SAME_ATTITUDE(agent(true)->as_monster()),
                        p, agent(true)->as_monster()->foe)
