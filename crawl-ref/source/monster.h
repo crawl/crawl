@@ -570,21 +570,7 @@ public:
     int  dragon_level() const override;
     bool is_jumpy() const;
 
-    int spec_death() const;
-    int spec_fire() const;
-    int spec_cold() const;
-    int spec_earth() const;
-    int spec_air() const;
-    int spec_conj() const;
-    int spec_hex() const;
-    int spec_summ() const;
-    int spec_forgecraft() const;
-    int spec_alchemy() const;
-    int spec_tloc() const;
-
-    int spell_enhancement(spell_type spell) const;
-
-    int  spell_hd(spell_type spell = SPELL_NO_SPELL) const;
+    int  spell_hd(spell_type spell) const;
     void remove_summons(bool check_attitude = false);
 
     virtual void clear_constricted() override;

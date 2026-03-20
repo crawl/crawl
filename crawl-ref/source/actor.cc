@@ -15,6 +15,7 @@
 #include "env.h"
 #include "fight.h" // apply_chunked_ac
 #include "fprop.h"
+#include "god-abil.h"
 #include "god-passive.h"
 #include "item-prop.h"
 #include "los.h"
@@ -1186,4 +1187,163 @@ void actor::clear_deferred_move()
     // Defer to the other function. Since it returns only act, nullptr, or you,
     // none of which points to a const object, the const_cast here is safe.
     return const_cast<actor *>(ensure_valid_actor(static_cast<const actor *>(act)));
+}
+
+static artefact_prop_type _enhancer_prop_for_school(spschool school)
+{
+    // special cases by school
+        switch (school)
+        {
+            case spschool::conjuration:
+                return ARTP_ENHANCE_CONJ;
+            case spschool::hexes:
+                return ARTP_ENHANCE_HEXES;
+            case spschool::fire:
+                return ARTP_ENHANCE_FIRE;
+            case spschool::ice:
+                return ARTP_ENHANCE_ICE;
+            case spschool::necromancy:
+                return ARTP_ENHANCE_NECRO;
+            case spschool::summoning:
+                return ARTP_ENHANCE_SUMM;
+            case spschool::translocation:
+                return ARTP_ENHANCE_TLOC;
+            case spschool::alchemy:
+                return ARTP_ENHANCE_ALCHEMY;
+            case spschool::earth:
+                return ARTP_ENHANCE_EARTH;
+            case spschool::air:
+                return ARTP_ENHANCE_AIR;
+            case spschool::forgecraft:
+                return ARTP_ENHANCE_FORGECRAFT;
+            default:
+                ASSERT(false); // unreachable
+        }
+}
+
+static stave_type _enhancer_staff_for_school(spschool school)
+{
+    // special cases by school
+        switch (school)
+        {
+            case spschool::conjuration:
+                return STAFF_CONJURATION;
+            case spschool::fire:
+                return STAFF_FIRE;
+            case spschool::ice:
+                return STAFF_COLD;
+            case spschool::necromancy:
+                return STAFF_NECROMANCY;
+            case spschool::alchemy:
+                return STAFF_ALCHEMY;
+            case spschool::earth:
+                return STAFF_EARTH;
+            case spschool::air:
+                return STAFF_AIR;
+
+            // intentional fallthrough
+            case spschool::forgecraft:
+            case spschool::hexes:
+            case spschool::summoning:
+            case spschool::translocation:
+            default:
+                return NUM_STAVES;
+        }
+}
+
+int actor::spell_enhancement(spell_type spell) const
+{
+    const spschools_type typeflags = get_spell_disciplines(spell);
+    int enhanced = 0;
+
+    for (int i = 1; i <= typeflags.last_exponent; i++)
+    {
+        const spschool school = typeflags.exponent(i);
+        if (!(typeflags & school))
+            continue;
+
+        enhanced += scan_artefacts(_enhancer_prop_for_school(school));
+
+        const stave_type staff = _enhancer_staff_for_school(school);
+        if (staff != NUM_STAVES && wearing(OBJ_STAVES, staff))
+            enhanced += 1 + wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
+
+        // special cases by school and a final special case for Elemental Staff
+        switch (school)
+        {
+            case spschool::hexes:
+                if (is_player())
+                    enhanced += you.get_mutation_level(MUT_HEX_ENHANCER);
+                break;
+            case spschool::fire:
+                enhanced += wearing_ego(OBJ_ARMOUR, SPARM_FIRE);
+                enhanced += wearing_ego(OBJ_ARMOUR, SPARM_PYROMANIA);
+                break;
+            case spschool::ice:
+                enhanced += wearing_ego(OBJ_ARMOUR, SPARM_ICE);
+                break;
+            case spschool::necromancy:
+                enhanced += wearing_ego(OBJ_ARMOUR, SPARM_DEATH);
+                if (is_player())
+                    enhanced += you.get_mutation_level(MUT_NECRO_ENHANCER);
+                break;
+            case spschool::alchemy:
+                enhanced += wearing_jewellery(AMU_CHEMISTRY);
+                if (unrand_equipped(UNRAND_OLGREB))
+                    enhanced += 1 + wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
+                break;
+            case spschool::earth:
+                enhanced += wearing_ego(OBJ_ARMOUR, SPARM_EARTH);
+                break;
+            case spschool::air:
+                enhanced += wearing_ego(OBJ_ARMOUR, SPARM_AIR);
+                break;
+            case spschool::summoning: break;
+            case spschool::translocation: break;
+            case spschool::conjuration: break;
+            case spschool::forgecraft: break;
+            default: break;
+        }
+
+        if (school == spschool::fire || school == spschool::ice
+            || school == spschool::air || school == spschool::earth)
+        {
+            if (unrand_equipped(UNRAND_ELEMENTAL_STAFF))
+                    enhanced += 1 + wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
+        }
+    }
+
+    if (unrand_equipped(UNRAND_BATTLE))
+    {
+        if (vehumet_supports_spell(spell))
+            enhanced++;
+        else
+            enhanced--;
+    }
+
+    enhanced += archmagi();
+
+    if (is_monster())
+    {
+        if (as_monster()->has_ench(ENCH_EMPOWERED_SPELLS)
+            || unrand_equipped(UNRAND_FOLLY))
+        {
+            enhanced += 2;
+        }
+
+        if (as_monster()->has_ench(ENCH_DIMINISHED_SPELLS))
+            enhanced -= 3;
+    }
+    else
+    {
+        enhanced += you.duration[DUR_BRILLIANCE] > 0
+                || you.unrand_equipped(UNRAND_FOLLY);
+    }
+
+    if (enhanced > 3)
+        enhanced = 3;
+    else if (enhanced < -3)
+        enhanced = -3;
+
+    return enhanced;
 }
