@@ -1871,7 +1871,10 @@ bool monster_info::antimagic_susceptible() const
 /// What hd does this monster cast spells with? May vary from actual HD.
 int monster_info::spell_hd(spell_type spell) const
 {
-    return spellpower.at(spell);
+    if (spellpower.size())
+        return spellpower.at(spell);
+    // In cases where monster_info wasn't constructed with an actual monster
+    return hd;
 }
 
 /// What spell does this monster know because of the wand it's holding (if any)?
