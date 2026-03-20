@@ -30,6 +30,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "externs.h"
 #include "fight.h"
 #include "fineff.h"
 #include "fprop.h"
@@ -6687,6 +6688,11 @@ int monster::spell_hd(spell_type spell) const
         if (props.exists(DITH_SHADOW_SPELLPOWER_KEY))
             hd = props[DITH_SHADOW_SPELLPOWER_KEY].get_int();
     }
+
+    // Don't count enhancers unless it's a real spell.
+    // Should magical abilities (MON_SPELL_MAGICAL) count too?
+    if (!(spell_slot_flags(spell) & MON_SPELL_WIZARD))
+        return hd;
 
     const int enhancers = spell_enhancement(spell);
 
