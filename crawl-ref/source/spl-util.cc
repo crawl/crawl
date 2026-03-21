@@ -1793,7 +1793,7 @@ bool spell_no_hostile_in_range(spell_type spell)
         return permafrost_targets(you, false).empty();
 
     case SPELL_PLASMA_BEAM:
-        return plasma_beam_targets(you, pow, false).empty();
+        return cast_plasma_beam(-1, you, false, true) == spret::abort;
 
     default:
         break;

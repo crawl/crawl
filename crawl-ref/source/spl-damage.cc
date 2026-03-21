@@ -3105,8 +3105,8 @@ vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual)
     return targets;
 }
 
-static ai_action::goodness _fire_plasma_beam_at(const actor &agent, int pow,
-                                                coord_def target, bool is_tracer)
+static targeting_tracer _fire_plasma_beam_at(const actor &agent, int pow,
+                                             coord_def target, bool is_tracer)
 {
     int range = grid_distance(agent.pos(), target);
     const bool mon = agent.is_monster();
@@ -3121,7 +3121,6 @@ static ai_action::goodness _fire_plasma_beam_at(const actor &agent, int pow,
     beam.attitude     = mon ? mons_attitude(*agent.as_monster()) : ATT_FRIENDLY;
     beam.origin_spell = SPELL_PLASMA_BEAM;
     beam.draw_delay   = 5;
-    beam.foe_ratio    = 80; // default
     targeting_tracer tracer;
     zappy(ZAP_PLASMA_LIGHTNING, pow, mon, beam);
     if (is_tracer)
@@ -3139,7 +3138,7 @@ static ai_action::goodness _fire_plasma_beam_at(const actor &agent, int pow,
     else
         beam.fire();
 
-    return tracer.good_to_fire(beam.foe_ratio);
+    return tracer;
 }
 
 bool mons_should_fire_plasma(int pow, const actor &agent)
@@ -3148,7 +3147,9 @@ bool mons_should_fire_plasma(int pow, const actor &agent)
     bool ever_good = false;
     for (auto target : targets)
     {
-        const ai_action::goodness result = _fire_plasma_beam_at(agent, pow, target, true);
+        int foe_ratio = 80; // default
+        const ai_action::goodness result = _fire_plasma_beam_at(
+            agent, pow, target, true).good_to_fire(foe_ratio);
         if (result == ai_action::bad())
             return false; // be very careful!
         if (result == ai_action::good())
@@ -3157,8 +3158,22 @@ bool mons_should_fire_plasma(int pow, const actor &agent)
     return ever_good;
 }
 
-spret cast_plasma_beam(int pow, const actor &agent, bool fail)
+spret cast_plasma_beam(int pow, const actor &agent, bool fail, bool is_tracer)
 {
+    if (is_tracer)
+    {
+        vector<coord_def> known_targs = plasma_beam_targets(agent, pow, false);
+        for (coord_def target : known_targs)
+        {
+            const targeting_tracer tracer = _fire_plasma_beam_at(agent, pow, target, true);
+            if (tracer.foe_info.count > 0)
+                return spret::success;
+        }
+
+        // Didn't find any susceptible targets
+        return spret::abort;
+    }
+
     if (agent.is_player())
     {
         vector<coord_def> known_targs = plasma_beam_targets(agent, pow, false);
