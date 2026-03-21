@@ -136,6 +136,7 @@ force_more_message += hear a distant wind
 force_more_message += Beware! This is a limited time offer
 
 # Religion
+force_more_message += warns you to remove
 force_more_message += press .* to convert to Beogh
 force_more_message += welcomes you( back)?!
 force_more_message += You have lost your religion

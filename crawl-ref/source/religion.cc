@@ -3366,6 +3366,7 @@ static void _god_welcome_handle_gear()
     {
         if (god_hates_item(*item))
         {
+            // included in default force_more_message
             mprf(MSGCH_GOD, "%s warns you to remove %s.",
                  uppercase_first(god_name(you.religion)).c_str(),
                  item->name(DESC_YOUR, false, false, false).c_str());
