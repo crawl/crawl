@@ -4178,7 +4178,7 @@ void seen_monsters_react()
         if (!mi->visible_to(&you))
             continue;
 
-        if (!mi->has_ench(ENCH_FRENZIED) && mi->can_see(you))
+        if (!mi->has_ench(ENCH_FRENZIED) && you.see_cell(mi->pos()))
         {
             // Trigger Duvessa & Dowan upgrades
             if (mi->props.exists(ELVEN_ENERGIZE_KEY))

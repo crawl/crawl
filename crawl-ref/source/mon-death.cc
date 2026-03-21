@@ -4235,7 +4235,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     }
 
     // Finally give them new energy
-    if (mons->can_see(you) && !mons->has_ench(ENCH_FRENZIED))
+    if (you.see_cell(mons->pos()) && !mons->has_ench(ENCH_FRENZIED))
         elven_twin_energize(mons);
     else
         mons->props[ELVEN_ENERGIZE_KEY] = true;
