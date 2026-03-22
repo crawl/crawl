@@ -1,0 +1,108 @@
+name: gettext
+
+on:
+  push:
+    paths:
+      - '.github/workflows/gettext.yml'
+      - 'INSTALL.md'
+      - 'docs/develop/translation.txt'
+      - 'source/Makefile'
+      - 'source/gettext.h'
+      - 'source/main.cc'
+      - 'source/message.cc'
+      - 'source/mpr.h'
+      - 'source/prompt.cc'
+      - 'source/format.h'
+      - 'source/format.cc'
+  pull_request:
+    paths:
+      - '.github/workflows/gettext.yml'
+      - 'INSTALL.md'
+      - 'docs/develop/translation.txt'
+      - 'source/Makefile'
+      - 'source/gettext.h'
+      - 'source/main.cc'
+      - 'source/message.cc'
+      - 'source/mpr.h'
+      - 'source/prompt.cc'
+      - 'source/format.h'
+      - 'source/format.cc'
+
+jobs:
+  build-boundaries:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            setup: |
+              sudo apt-get update
+              sudo apt-get install -y build-essential libncursesw5-dev bison flex \
+                liblua5.4-dev libsqlite3-dev libz-dev pkg-config python3-yaml \
+                gettext ccache mold
+            build: mold -run ccache make -j10 main.o message.o prompt.o format.o
+          - os: macos-latest
+            setup: |
+              brew install gettext pkg-config lua sqlite ncurses ccache bison flex
+              python3 -m pip install --user pyyaml
+              echo "$(brew --prefix gettext)/bin" >> "$GITHUB_PATH"
+              echo "PKG_CONFIG_PATH=$(brew --prefix gettext)/lib/pkgconfig:$(brew --prefix ncurses)/lib/pkgconfig:${PKG_CONFIG_PATH}" >> "$GITHUB_ENV"
+            build: ccache make -j10 main.o message.o prompt.o format.o
+          - os: windows-latest
+            msys2: true
+            setup: |
+              pacman -S --noconfirm --needed \
+                base-devel git bison flex \
+                mingw-w64-x86_64-toolchain mingw-w64-x86_64-ncurses \
+                mingw-w64-x86_64-lua mingw-w64-x86_64-sqlite3 \
+                mingw-w64-x86_64-python mingw-w64-x86_64-python-yaml \
+                mingw-w64-x86_64-gettext mingw-w64-x86_64-pkgconf \
+                mingw-w64-x86_64-ccache
+            build: ccache make -j10 main.o message.o prompt.o format.o
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: crawl-ref
+      - name: Set up MSYS2
+        if: matrix.msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            base-devel git bison flex
+            mingw-w64-x86_64-toolchain mingw-w64-x86_64-ncurses
+            mingw-w64-x86_64-lua mingw-w64-x86_64-sqlite3
+            mingw-w64-x86_64-python mingw-w64-x86_64-python-yaml
+            mingw-w64-x86_64-gettext mingw-w64-x86_64-pkgconf
+            mingw-w64-x86_64-ccache
+      - name: Install dependencies
+        if: ${{ !matrix.msys2 }}
+        run: ${{ matrix.setup }}
+      - name: Build gettext boundaries
+        if: ${{ !matrix.msys2 }}
+        working-directory: crawl-ref/source
+        run: ${{ matrix.build }}
+      - name: Build gettext boundaries (MSYS2)
+        if: matrix.msys2
+        shell: msys2 {0}
+        working-directory: crawl-ref/source
+        run: ${{ matrix.build }}
+
+  extract-pot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: crawl-ref
+      - name: Install extraction dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libncursesw5-dev bison flex \
+            liblua5.4-dev libsqlite3-dev libz-dev pkg-config python3-yaml gettext
+      - name: Regenerate gettext POT
+        working-directory: crawl-ref/source
+        run: make -j10 i18n-pot

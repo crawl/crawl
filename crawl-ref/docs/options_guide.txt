@@ -3120,8 +3120,9 @@ language = <two-letter language code>
         Displays some text in the given language. Not all text in Dungeon Crawl
         has translations in every supported language, but volunteer translators
         have offered translations of particularly wordy text such as god and
-        monster descriptions. Text with no known translation will be displayed
-        in English. Some languages may require changing the font.
+        monster descriptions, and gettext-backed code messages now follow this
+        setting as well. Text with no known translation will be displayed in
+        English. Some languages may require changing the font.
 
         Partially supported language codes:
         cs: Czech

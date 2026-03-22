@@ -21,6 +21,7 @@ class formatted_string
 {
 public:
     explicit formatted_string(int init_colour = 0);
+    explicit formatted_string(const char *s, int init_colour = 0);
     explicit formatted_string(const string &s, int init_colour = 0);
 
     operator string() const;

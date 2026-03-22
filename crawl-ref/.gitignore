@@ -265,3 +265,6 @@ source/.tx/config
 # generated files for appimage
 /source/appimage
 /source/stone_soup-*.AppImage
+
+# generated files for gettext
+source/po/crawl-data.pot

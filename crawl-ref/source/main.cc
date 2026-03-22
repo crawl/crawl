@@ -73,6 +73,7 @@
 #include "god-conduct.h"
 #include "god-passive.h"
 #include "god-prayer.h"
+#include "gettext.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "initfile.h"
@@ -245,6 +246,11 @@ int main(int argc, char *argv[])
 #else
     setlocale(LC_ALL, "");
 #endif
+    const string locale_dir = datafile_path("locale", false, false, dir_exists);
+    if (!locale_dir.empty())
+        bindtextdomain("crawl-data", locale_dir.c_str());
+    bind_textdomain_codeset("crawl-data", "UTF-8");
+    textdomain("crawl-data");
 #ifdef USE_TILE_WEB
     if (strcasecmp(nl_langinfo(CODESET), "UTF-8"))
     {

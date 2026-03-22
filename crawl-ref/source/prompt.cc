@@ -11,6 +11,7 @@
 
 #include "clua.h"
 #include "delay.h"
+#include "gettext.h"
 #include "libutil.h"
 #include "macro.h"
 #include "menu.h"
@@ -140,7 +141,8 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
     if (res.is_bool())
         return bool(res);
 
-    string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
+    const char *prompt_text = str ? gettext(str) : "Buggy prompt?";
+    string prompt = make_stringf("%s ", prompt_text);
 
     bool use_popup = !crawl_state.need_save // not in game, no message pane
         || ui::has_layout() // already in a popup; no choice but to use another one
