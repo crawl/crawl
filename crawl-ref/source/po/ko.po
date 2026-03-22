@@ -1,0 +1,200 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: crawl-data\n"
+"PO-Revision-Date: 2026-03-23 00:00+0900\n"
+"Last-Translator: OpenCode <opencode@example.com>\n"
+"Language-Team: Korean\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "<white>[L]</white> choose language"
+msgstr "<white>[L]</white> 언어 선택"
+
+msgid "<white>[ctrl-p]</white> view rc file information and log"
+msgstr "<white>[ctrl-p]</white> rc 파일 정보와 로그 보기"
+
+msgid ""
+"A mostly normal game that provides more advanced hints than the tutorial."
+msgstr "대체로 일반 게임과 같지만 튜토리얼보다 더 심화된 힌트를 제공합니다."
+
+msgid "Choices:"
+msgstr "선택 항목:"
+
+msgid "Choose Game Seed"
+msgstr "게임 시드 선택"
+
+msgid "Choose the language used for menu text."
+msgstr "메뉴 텍스트에 사용할 언어를 선택합니다."
+
+msgid "Dungeon Crawl"
+msgstr "던전 크롤"
+
+msgid "Dungeon Crawl: The main game: full of monsters, items, gods and danger!"
+msgstr "던전 크롤: 몬스터, 아이템, 신, 그리고 위험으로 가득한 기본 게임입니다!"
+
+msgid "Dungeon Descent"
+msgstr "던전 디센트"
+
+msgid "Dungeon Sprint"
+msgstr "던전 스프린트"
+
+msgid "Enter your name:"
+msgstr "이름을 입력하세요:"
+
+msgid "Hard, fixed single level game mode."
+msgstr "난도가 높고 고정된 단일 레벨 게임 모드입니다."
+
+msgid "Help menu."
+msgstr "도움말 메뉴입니다."
+
+msgid "High Scores"
+msgstr "최고 점수"
+
+msgid "Hints Mode for Dungeon Crawl"
+msgstr "던전 크롤 힌트 모드"
+
+msgid "Instructions"
+msgstr "설명"
+
+msgid "Language:"
+msgstr "언어:"
+
+msgid "Mode with a branching, one-way path through the Dungeon."
+msgstr "던전을 따라 갈림길이 있는 일방통행 경로로 진행하는 모드입니다."
+
+msgid "New Game"
+msgstr "새 게임"
+
+msgid "Pit computer controlled teams versus each other!"
+msgstr "컴퓨터가 조종하는 팀끼리 서로 대결시킵니다!"
+
+msgid "Play with a chosen custom dungeon seed."
+msgstr "선택한 사용자 지정 던전 시드로 플레이합니다."
+
+msgid "Saved games:"
+msgstr "저장된 게임:"
+
+msgid "Select language"
+msgstr "언어 선택"
+
+msgid "The Arena"
+msgstr "투기장"
+
+msgid "Tutorial for Dungeon Crawl"
+msgstr "던전 크롤 튜토리얼"
+
+msgid "Tutorial that covers the basics of Dungeon Crawl survival."
+msgstr "던전 크롤에서 살아남기 위한 기본을 익히는 튜토리얼입니다."
+
+msgid "View the high score list."
+msgstr "최고 점수 목록을 봅니다."
+
+msgctxt "main menu"
+msgid "Dungeon Crawl"
+msgstr "던전 크롤"
+
+msgctxt "main menu"
+msgid "Dungeon Crawl: The main game: full of monsters, items, gods and danger!"
+msgstr "던전 크롤: 몬스터, 아이템, 신, 그리고 위험으로 가득한 기본 게임입니다!"
+
+msgctxt "main menu"
+msgid "Choose Game Seed"
+msgstr "게임 시드 선택"
+
+msgctxt "main menu"
+msgid "Play with a chosen custom dungeon seed."
+msgstr "선택한 사용자 지정 던전 시드로 플레이합니다."
+
+msgctxt "main menu"
+msgid "Tutorial for Dungeon Crawl"
+msgstr "던전 크롤 튜토리얼"
+
+msgctxt "main menu"
+msgid "Tutorial that covers the basics of Dungeon Crawl survival."
+msgstr "던전 크롤에서 살아남기 위한 기본을 익히는 튜토리얼입니다."
+
+msgctxt "main menu"
+msgid "Hints Mode for Dungeon Crawl"
+msgstr "던전 크롤 힌트 모드"
+
+msgctxt "main menu"
+msgid "A mostly normal game that provides more advanced hints than the tutorial."
+msgstr "대체로 일반 게임과 같지만 튜토리얼보다 더 심화된 힌트를 제공합니다."
+
+msgctxt "main menu"
+msgid "Dungeon Descent"
+msgstr "던전 디센트"
+
+msgctxt "main menu"
+msgid "Mode with a branching, one-way path through the Dungeon."
+msgstr "던전을 따라 갈림길이 있는 일방통행 경로로 진행하는 모드입니다."
+
+msgctxt "main menu"
+msgid "Dungeon Sprint"
+msgstr "던전 스프린트"
+
+msgctxt "main menu"
+msgid "Hard, fixed single level game mode."
+msgstr "난도가 높고 고정된 단일 레벨 게임 모드입니다."
+
+msgctxt "main menu"
+msgid "Instructions"
+msgstr "설명"
+
+msgctxt "main menu"
+msgid "Help menu."
+msgstr "도움말 메뉴입니다."
+
+msgctxt "main menu"
+msgid "The Arena"
+msgstr "투기장"
+
+msgctxt "main menu"
+msgid "Pit computer controlled teams versus each other!"
+msgstr "컴퓨터가 조종하는 팀끼리 서로 대결시킵니다!"
+
+msgctxt "main menu"
+msgid "High Scores"
+msgstr "최고 점수"
+
+msgctxt "main menu"
+msgid "View the high score list."
+msgstr "최고 점수 목록을 봅니다."
+
+msgctxt "main menu"
+msgid "New Game"
+msgstr "새 게임"
+
+msgctxt "main menu"
+msgid "Select language"
+msgstr "언어 선택"
+
+msgctxt "main menu"
+msgid "Enter your name:"
+msgstr "이름을 입력하세요:"
+
+msgctxt "main menu"
+msgid "Language:"
+msgstr "언어:"
+
+msgctxt "main menu"
+msgid "Choose the language used for menu text."
+msgstr "메뉴 텍스트에 사용할 언어를 선택합니다."
+
+msgctxt "main menu"
+msgid "Choices:"
+msgstr "선택 항목:"
+
+msgctxt "main menu"
+msgid "Saved games:"
+msgstr "저장된 게임:"
+
+msgctxt "main menu"
+msgid "<white>[ctrl-p]</white> view rc file information and log"
+msgstr "<white>[ctrl-p]</white> rc 파일 정보와 로그 보기"
+
+msgctxt "main menu"
+msgid "<white>[L]</white> choose language"
+msgstr "<white>[L]</white> 언어 선택"

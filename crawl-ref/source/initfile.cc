@@ -42,6 +42,7 @@
 #include "explore-stop-options.h"
 #include "files.h"
 #include "game-options.h"
+#include "gettext.h"
 #include "ghost.h"
 #include "invent.h"
 #include "item-prop.h"
@@ -2428,6 +2429,8 @@ newgame_def read_startup_prefs()
         // them as needed. (This is not very elegant..)
         unwind_var<newgame_def> cur_game_opts(Options.game);
         Options.merge(temp);
+        if (!Options.language_option.empty())
+            Options.apply_language(Options.language_option.c_str());
     }
 
 #ifndef DGAMELAUNCH
@@ -4433,6 +4436,7 @@ struct language_def
 {
     lang_t lang;
     const char *code;
+    const char *locale;
     const char *display_name;
     set<string> names;
 };
@@ -4442,29 +4446,29 @@ static const vector<language_def> &get_lang_data()
     static const vector<language_def> lang_data =
     {
         // Use null, not "en", for English so we don't try to look up translations.
-        { lang_t::EN, nullptr, "English", { "english", "en", "c" } },
-        { lang_t::CS, "cs", "Cestina", { "czech", "český", "cesky" } },
-        { lang_t::DA, "da", "Dansk", { "danish", "dansk" } },
-        { lang_t::DE, "de", "Deutsch", { "german", "deutsch" } },
-        { lang_t::EL, "el", "Ellinika", { "greek", "ελληνικά", "ελληνικα" } },
-        { lang_t::ES, "es", "Espanol", { "spanish", "español", "espanol" } },
-        { lang_t::FI, "fi", "Suomi", { "finnish", "suomi" } },
-        { lang_t::FR, "fr", "Francais", { "french", "français", "francais" } },
-        { lang_t::HU, "hu", "Magyar", { "hungarian", "magyar" } },
-        { lang_t::IT, "it", "Italiano", { "italian", "italiano" } },
+        { lang_t::EN, nullptr, nullptr, "English", { "english", "en", "c" } },
+        { lang_t::CS, "cs", "cs_CZ.UTF-8", "Čeština", { "czech", "český", "cesky" } },
+        { lang_t::DA, "da", "da_DK.UTF-8", "Dansk", { "danish", "dansk" } },
+        { lang_t::DE, "de", "de_DE.UTF-8", "Deutsch", { "german", "deutsch" } },
+        { lang_t::EL, "el", "el_GR.UTF-8", "Ελληνικά", { "greek", "ελληνικά", "ελληνικα" } },
+        { lang_t::ES, "es", "es_ES.UTF-8", "Español", { "spanish", "español", "espanol" } },
+        { lang_t::FI, "fi", "fi_FI.UTF-8", "Suomi", { "finnish", "suomi" } },
+        { lang_t::FR, "fr", "fr_FR.UTF-8", "Français", { "french", "français", "francais" } },
+        { lang_t::HU, "hu", "hu_HU.UTF-8", "Magyar", { "hungarian", "magyar" } },
+        { lang_t::IT, "it", "it_IT.UTF-8", "Italiano", { "italian", "italiano" } },
         // The last of these for compatibility, since it has been accepted ever
         // since Japanese support was added.
-        { lang_t::JA, "ja", "Nihongo", { "japanese", "日本語", "日本人" } },
-        { lang_t::KO, "ko", "Hangug-eo", { "korean", "한국의" } },
-        { lang_t::LT, "lt", "Lietuviu", { "lithuanian", "lietuvos" } },
-        { lang_t::LV, "lv", "Latviesu", { "latvian", "lettish", "latvijas", "latviešu",
+        { lang_t::JA, "ja", "ja_JP.UTF-8", "日本語", { "japanese", "日本語", "日本人" } },
+        { lang_t::KO, "ko", "ko_KR.UTF-8", "한국어", { "korean", "한국의" } },
+        { lang_t::LT, "lt", "lt_LT.UTF-8", "Lietuvių", { "lithuanian", "lietuvos" } },
+        { lang_t::LV, "lv", "lv_LV.UTF-8", "Latviešu", { "latvian", "lettish", "latvijas", "latviešu",
                               "latvieshu", "latviesu" } },
-        { lang_t::NL, "nl", "Nederlands", { "dutch", "nederlands" } },
-        { lang_t::PL, "pl", "Polski", { "polish", "polski" } },
-        { lang_t::PT, "pt", "Portugues", { "portuguese", "português", "portugues" } },
-        { lang_t::RU, "ru", "Russkii", { "russian", "русский", "русскии" } },
-        { lang_t::SV, "sv", "Svenska", { "swedish", "svenska" } },
-        { lang_t::ZH, "zh", "Zhongwen", { "chinese", "中国的", "中國的" } },
+        { lang_t::NL, "nl", "nl_NL.UTF-8", "Nederlands", { "dutch", "nederlands" } },
+        { lang_t::PL, "pl", "pl_PL.UTF-8", "Polski", { "polish", "polski" } },
+        { lang_t::PT, "pt", "pt_PT.UTF-8", "Português", { "portuguese", "português", "portugues" } },
+        { lang_t::RU, "ru", "ru_RU.UTF-8", "Русский", { "russian", "русский", "русскии" } },
+        { lang_t::SV, "sv", "sv_SE.UTF-8", "Svenska", { "swedish", "svenska" } },
+        { lang_t::ZH, "zh", "zh_CN.UTF-8", "中文", { "chinese", "中国的", "中國的" } },
     };
     return lang_data;
 }
@@ -4490,17 +4494,51 @@ static string _supported_language_listing()
                               [](language_def){return true;});
 }
 
-static void _apply_gettext_language(const char *code)
+static void _rebind_gettext_domain()
+{
+    const string locale_dir = datafile_path("locale", false, false, dir_exists);
+    if (!locale_dir.empty())
+        bindtextdomain("crawl-data", locale_dir.c_str());
+    bind_textdomain_codeset("crawl-data", "UTF-8");
+    textdomain("crawl-data");
+}
+
+static void _apply_gettext_language(const char *code, const char *locale)
 {
 #ifdef TARGET_COMPILER_VC
     _putenv_s("LANGUAGE", code ? code : "");
+    _putenv_s("LANG", locale ? locale : "");
+    _putenv_s("LC_MESSAGES", locale ? locale : "");
+    _putenv_s("LC_ALL", "");
+    if (!setlocale(LC_ALL, locale ? locale : ""))
+        setlocale(LC_ALL, "");
 #else
     if (code)
         setenv("LANGUAGE", code, 1);
     else
         unsetenv("LANGUAGE");
+
+    if (locale)
+    {
+        setenv("LANG", locale, 1);
+        setenv("LC_MESSAGES", locale, 1);
+    }
+    else
+    {
+        unsetenv("LANG");
+        unsetenv("LC_MESSAGES");
+    }
+    unsetenv("LC_ALL");
+
+    if ((!locale || !setlocale(LC_ALL, locale))
+        && !setlocale(LC_ALL, ""))
+    {
+        setenv("LANG", "en_US.UTF-8", 1);
+        setenv("LC_MESSAGES", "en_US.UTF-8", 1);
+        setlocale(LC_ALL, "en_US.UTF-8");
+    }
 #endif
-    setlocale(LC_MESSAGES, "");
+    _rebind_gettext_domain();
 }
 
 bool game_options::set_lang(const char *lc)
@@ -4521,7 +4559,7 @@ bool game_options::set_lang(const char *lc)
         {
             language = ldef.lang;
             lang_name = ldef.code;
-            _apply_gettext_language(lang_name);
+            _apply_gettext_language(lang_name, ldef.locale);
             return true;
         }
     }

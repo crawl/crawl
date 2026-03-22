@@ -429,6 +429,7 @@ public:
     void write_webtiles_options(const string &name);
 #endif
     void write_prefs(FILE *f); // should be in superclass
+    bool apply_language(const char *s) { return set_lang(s); }
 
 public:
     // View options

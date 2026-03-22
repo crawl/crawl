@@ -421,23 +421,23 @@ struct game_modes_menu_item
 
 static const vector<game_modes_menu_item> entries =
 {
-    {GAME_TYPE_NORMAL, N_("Dungeon Crawl"),
-        N_("Dungeon Crawl: The main game: full of monsters, items, gods and danger!") },
-    {GAME_TYPE_CUSTOM_SEED, N_("Choose Game Seed"),
-        N_("Play with a chosen custom dungeon seed.") },
-    {GAME_TYPE_TUTORIAL, N_("Tutorial for Dungeon Crawl"),
-        N_("Tutorial that covers the basics of Dungeon Crawl survival.") },
-    {GAME_TYPE_HINTS, N_("Hints Mode for Dungeon Crawl"),
-        N_("A mostly normal game that provides more advanced hints than the tutorial.")},
-    {GAME_TYPE_DESCENT, N_("Dungeon Descent"),
-        N_("Mode with a branching, one-way path through the Dungeon.") },
-    {GAME_TYPE_SPRINT, N_("Dungeon Sprint"),
-        N_("Hard, fixed single level game mode.") },
-    {GAME_TYPE_INSTRUCTIONS, N_("Instructions"), N_("Help menu.") },
-    {GAME_TYPE_ARENA, N_("The Arena"),
-        N_("Pit computer controlled teams versus each other!") },
-    {GAME_TYPE_HIGH_SCORES, N_("High Scores"),
-        N_("View the high score list.") },
+    {GAME_TYPE_NORMAL, NC_("main menu", "Dungeon Crawl"),
+        NC_("main menu", "Dungeon Crawl: The main game: full of monsters, items, gods and danger!") },
+    {GAME_TYPE_CUSTOM_SEED, NC_("main menu", "Choose Game Seed"),
+        NC_("main menu", "Play with a chosen custom dungeon seed.") },
+    {GAME_TYPE_TUTORIAL, NC_("main menu", "Tutorial for Dungeon Crawl"),
+        NC_("main menu", "Tutorial that covers the basics of Dungeon Crawl survival.") },
+    {GAME_TYPE_HINTS, NC_("main menu", "Hints Mode for Dungeon Crawl"),
+        NC_("main menu", "A mostly normal game that provides more advanced hints than the tutorial.")},
+    {GAME_TYPE_DESCENT, NC_("main menu", "Dungeon Descent"),
+        NC_("main menu", "Mode with a branching, one-way path through the Dungeon.") },
+    {GAME_TYPE_SPRINT, NC_("main menu", "Dungeon Sprint"),
+        NC_("main menu", "Hard, fixed single level game mode.") },
+    {GAME_TYPE_INSTRUCTIONS, NC_("main menu", "Instructions"), NC_("main menu", "Help menu.") },
+    {GAME_TYPE_ARENA, NC_("main menu", "The Arena"),
+        NC_("main menu", "Pit computer controlled teams versus each other!") },
+    {GAME_TYPE_HIGH_SCORES, NC_("main menu", "High Scores"),
+        NC_("main menu", "View the high score list.") },
 };
 
 static const int STARTUP_LANG_PICK = -1000;
@@ -472,7 +472,7 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
         hbox->add_child(label);
 #endif
 
-        label->set_text(formatted_string(gettext(entry.label), WHITE));
+        label->set_text(formatted_string(pgettext("main menu", entry.label), WHITE));
 
         auto btn = make_shared<MenuButton>();
 #ifdef USE_TILE_LOCAL
@@ -482,7 +482,7 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
         btn->set_child(std::move(label));
 #endif
         btn->id = entry.id;
-        btn->description = gettext(entry.description);
+        btn->description = pgettext("main menu", entry.description);
         btn->highlight_colour = LIGHTGREY;
         container->add_button(std::move(btn), 0, i);
     }
@@ -490,7 +490,7 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
 
 static shared_ptr<MenuButton> _make_newgame_button(int num_chars)
 {
-    auto label = make_shared<Text>(formatted_string("New Game", WHITE));
+    auto label = make_shared<Text>(formatted_string(pgettext("main menu", "New Game"), WHITE));
 
 #ifdef USE_TILE_LOCAL
     auto hbox = make_shared<Box>(Box::HORZ);
@@ -533,7 +533,7 @@ static string _show_language_picker_popup(const string &current_code)
     auto vbox = make_shared<Box>(Box::VERT);
     vbox->set_cross_alignment(Widget::Align::STRETCH);
 
-    auto title = make_shared<Text>(formatted_string(gettext("Select language"), WHITE));
+    auto title = make_shared<Text>(formatted_string(pgettext("main menu", "Select language"), WHITE));
     title->set_margin_for_crt(0, 0, 1, 0);
     title->set_margin_for_sdl(0, 0, 10, 0);
     vbox->add_child(title);
@@ -670,7 +670,7 @@ public:
         auto grid = make_shared<Grid>();
         grid->set_margin_for_crt(0, 0, 1, 0);
 
-        auto name_prompt = make_shared<Text>(gettext("Enter your name:"));
+        auto name_prompt = make_shared<Text>(pgettext("main menu", "Enter your name:"));
         name_prompt->set_margin_for_crt(0, 1, 1, 0);
         name_prompt->set_margin_for_sdl(0, 0, 10, 0);
 
@@ -684,14 +684,14 @@ public:
         grid->add_child(std::move(name_prompt), 0, 0);
         grid->add_child(input_text, 1, 0);
 
-        auto language_prompt = make_shared<Text>(gettext("Language:"));
+        auto language_prompt = make_shared<Text>(pgettext("main menu", "Language:"));
         language_prompt->set_margin_for_crt(0, 1, 1, 0);
         language_prompt->set_margin_for_sdl(0, 0, 10, 0);
 
         auto language_box = make_shared<Box>(Box::HORZ);
         language_box->set_cross_alignment(Widget::Align::CENTER);
         language_button = _make_language_button("", STARTUP_LANG_PICK, 'L');
-        language_button->description = gettext("Choose the language used for menu text.");
+        language_button->description = pgettext("main menu", "Choose the language used for menu text.");
         language_box->add_child(language_button);
         _refresh_language_text();
 
@@ -700,7 +700,7 @@ public:
 
         descriptions = make_shared<Switcher>();
 
-        auto mode_prompt = make_shared<Text>(gettext("Choices:"));
+        auto mode_prompt = make_shared<Text>(pgettext("main menu", "Choices:"));
         mode_prompt->set_margin_for_crt(0, 1, 1, 0);
         mode_prompt->set_margin_for_sdl(0, 0, 10, 0);
         game_modes_menu = make_shared<OuterMenu>(true, 1, entries.size());
@@ -721,7 +721,7 @@ public:
         save_games_menu = make_shared<OuterMenu>(num_saves > 1, 1, num_saves + 1);
         if (num_saves > 0)
         {
-            auto save_prompt = make_shared<Text>(gettext("Saved games:"));
+            auto save_prompt = make_shared<Text>(pgettext("main menu", "Saved games:"));
             save_prompt->set_margin_for_crt(0, 1, 1, 0);
             save_prompt->set_margin_for_sdl(0, 0, 10, 0);
             save_games_menu->set_margin_for_sdl(0, 0, 10, 10);
@@ -789,11 +789,11 @@ public:
                     + newgame_char_description(defaults) + "\n";
         }
         instructions_text +=
-            string(gettext("<white>[ctrl-p]</white> view rc file information and log"));
+            string(pgettext("main menu", "<white>[ctrl-p]</white> view rc file information and log"));
         instructions_text += "\n";
-        instructions_text += string(gettext("<white>[L]</white> choose language"));
+        instructions_text += string(pgettext("main menu", "<white>[L]</white> choose language"));
         if (recent_error_messages())
-            instructions_text += " (<red>Errors during initialization!</red>)";
+            instructions_text += pgettext("main menu", " (<red>Errors during initialization!</red>)");
 
         m_root->add_child(make_shared<Text>(
                         formatted_string::parse_string(instructions_text)));
@@ -842,7 +842,9 @@ private:
         if (next_code == current_code)
             return;
 
-        read_options(make_stringf("language = %s\n", next_code.c_str()), false);
+        Options.language_option = next_code;
+        if (!Options.apply_language(next_code.c_str()))
+            return;
 
         Options.prefs_dirty = true;
         write_newgame_options_file(defaults);
