@@ -2457,6 +2457,8 @@ void game_options::write_prefs(FILE *f)
 {
     // TODO: generalize, probably some polymorphic functions on GameOption
     // classes. Not worth doing until more stuff is serialized though...
+    if (!language_option.empty())
+        fprintf(f, "language = %s\n", language_option.c_str());
     fprintf(f, "default_manual_training = %s\n",
                         default_manual_training ? "yes" : "no");
     fprintf(f, "quiver_menu_focus = %s\n",
@@ -4431,39 +4433,52 @@ struct language_def
 {
     lang_t lang;
     const char *code;
+    const char *display_name;
     set<string> names;
 };
 
-static const vector<language_def> get_lang_data()
+static const vector<language_def> &get_lang_data()
 {
     static const vector<language_def> lang_data =
     {
         // Use null, not "en", for English so we don't try to look up translations.
-        { lang_t::EN, nullptr, { "english", "en", "c" } },
-        { lang_t::CS, "cs", { "czech", "český", "cesky" } },
-        { lang_t::DA, "da", { "danish", "dansk" } },
-        { lang_t::DE, "de", { "german", "deutsch" } },
-        { lang_t::EL, "el", { "greek", "ελληνικά", "ελληνικα" } },
-        { lang_t::ES, "es", { "spanish", "español", "espanol" } },
-        { lang_t::FI, "fi", { "finnish", "suomi" } },
-        { lang_t::FR, "fr", { "french", "français", "francais" } },
-        { lang_t::HU, "hu", { "hungarian", "magyar" } },
-        { lang_t::IT, "it", { "italian", "italiano" } },
+        { lang_t::EN, nullptr, "English", { "english", "en", "c" } },
+        { lang_t::CS, "cs", "Cestina", { "czech", "český", "cesky" } },
+        { lang_t::DA, "da", "Dansk", { "danish", "dansk" } },
+        { lang_t::DE, "de", "Deutsch", { "german", "deutsch" } },
+        { lang_t::EL, "el", "Ellinika", { "greek", "ελληνικά", "ελληνικα" } },
+        { lang_t::ES, "es", "Espanol", { "spanish", "español", "espanol" } },
+        { lang_t::FI, "fi", "Suomi", { "finnish", "suomi" } },
+        { lang_t::FR, "fr", "Francais", { "french", "français", "francais" } },
+        { lang_t::HU, "hu", "Magyar", { "hungarian", "magyar" } },
+        { lang_t::IT, "it", "Italiano", { "italian", "italiano" } },
         // The last of these for compatibility, since it has been accepted ever
         // since Japanese support was added.
-        { lang_t::JA, "ja", { "japanese", "日本語", "日本人" } },
-        { lang_t::KO, "ko", { "korean", "한국의" } },
-        { lang_t::LT, "lt", { "lithuanian", "lietuvos" } },
-        { lang_t::LV, "lv", { "latvian", "lettish", "latvijas", "latviešu",
+        { lang_t::JA, "ja", "Nihongo", { "japanese", "日本語", "日本人" } },
+        { lang_t::KO, "ko", "Hangug-eo", { "korean", "한국의" } },
+        { lang_t::LT, "lt", "Lietuviu", { "lithuanian", "lietuvos" } },
+        { lang_t::LV, "lv", "Latviesu", { "latvian", "lettish", "latvijas", "latviešu",
                               "latvieshu", "latviesu" } },
-        { lang_t::NL, "nl", { "dutch", "nederlands" } },
-        { lang_t::PL, "pl", { "polish", "polski" } },
-        { lang_t::PT, "pt", { "portuguese", "português", "portugues" } },
-        { lang_t::RU, "ru", { "russian", "русский", "русскии" } },
-        { lang_t::SV, "sv", { "swedish", "svenska" } },
-        { lang_t::ZH, "zh", { "chinese", "中国的", "中國的" } },
+        { lang_t::NL, "nl", "Nederlands", { "dutch", "nederlands" } },
+        { lang_t::PL, "pl", "Polski", { "polish", "polski" } },
+        { lang_t::PT, "pt", "Portugues", { "portuguese", "português", "portugues" } },
+        { lang_t::RU, "ru", "Russkii", { "russian", "русский", "русскии" } },
+        { lang_t::SV, "sv", "Svenska", { "swedish", "svenska" } },
+        { lang_t::ZH, "zh", "Zhongwen", { "chinese", "中国的", "中國的" } },
     };
     return lang_data;
+}
+
+const vector<supported_language_def> &get_supported_languages()
+{
+    static const vector<supported_language_def> langs = []()
+    {
+        vector<supported_language_def> result;
+        for (const auto &ldef : get_lang_data())
+            result.push_back({ ldef.code ? ldef.code : "en", ldef.display_name });
+        return result;
+    }();
+    return langs;
 }
 
 static string _supported_language_listing()

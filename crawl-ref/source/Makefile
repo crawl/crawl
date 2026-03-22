@@ -1323,6 +1323,7 @@ i18n-pot:
 		--flag=mprf_nocap:1:c-format \
 		--flag=mprfc_nocap:2:c-format \
 		--flag=mprfcp_nocap:3:c-format \
+		--keyword=N_:1 \
 		--keyword=mpr:1 \
 		--keyword=mprf:1 \
 		--keyword=mprfc:2 \

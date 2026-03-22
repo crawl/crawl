@@ -20,3 +20,7 @@
 #define bind_textdomain_codeset(Domain, Codeset) (Domain)
 #define textdomain(Domain) (Domain)
 #endif
+
+#ifndef N_
+#define N_(String) (String)
+#endif
