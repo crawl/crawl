@@ -2523,7 +2523,8 @@ tile_font_lbl_file  = Vera.ttf
         Fonts used in various sections of the screen for local tiles. For
         WebTiles use tile_font_*_family instead. If you want to use another
         font, you'll have to place the corresponding *.ttf file into the
-        dat/tiles/ folder.
+        dat/tiles/ folder. Crawl also ships with a GNU Unifont fallback for
+        missing CJK glyphs in local tiles.
         Screen regions are as follows:
             crt  - non-map screens (menus, message history, etc.)
             stat - stat area (hit points, AC, etc.)

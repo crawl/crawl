@@ -101,6 +101,8 @@ protected:
     unsigned int map_unicode(char32_t uchar);
     void load_glyph(unsigned int c, char32_t uchar);
     void draw_m_buf(unsigned int x_pos, unsigned int y_pos, bool drop_shadow);
+    FT_Face get_face_for_char(char32_t uchar);
+    bool ensure_cjk_fallback_font();
 
     struct GlyphInfo
     {
@@ -151,6 +153,8 @@ protected:
 
     FT_Byte *ttf;
     FT_Face face;
+    FT_Byte *fallback_ttf;
+    FT_Face fallback_face;
     unsigned char *pixels;
     unsigned int fsize;
 };

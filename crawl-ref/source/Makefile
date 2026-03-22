@@ -1016,6 +1016,7 @@ ifdef TILES
 
 OUR_PROPORTIONAL_FONT=DejaVuSans.ttf
 OUR_MONOSPACED_FONT=DejaVuSansMono.ttf
+OUR_CJK_MONOSPACED_FONT=unifont-17.0.04.otf
 
 ifdef PROPORTIONAL_FONT
   DEFINES += -DPROPORTIONAL_FONT=\"$(PROPORTIONAL_FONT)\"
@@ -1054,6 +1055,20 @@ else
   else
     DEFINES += -DMONOSPACED_FONT=\"$(FONTDIR)$(OUR_MONOSPACED_FONT)\"
     INSTALL_FONTS += "contrib/fonts/$(OUR_MONOSPACED_FONT)"
+  endif
+endif
+
+ifdef CJK_MONOSPACED_FONT
+  DEFINES += -DCJK_MONOSPACED_FONT=\"$(CJK_MONOSPACED_FONT)\"
+  ifneq (,$(COPY_FONTS))
+    INSTALL_FONTS += "$(CJK_MONOSPACED_FONT)"
+  endif
+else
+  ifeq (,$(COPY_FONTS))
+    DEFINES += -DCJK_MONOSPACED_FONT=\"vendor-fonts/$(OUR_CJK_MONOSPACED_FONT)\"
+  else
+    DEFINES += -DCJK_MONOSPACED_FONT=\"$(FONTDIR)$(OUR_CJK_MONOSPACED_FONT)\"
+    INSTALL_FONTS += "vendor-fonts/$(OUR_CJK_MONOSPACED_FONT)"
   endif
 endif
 
@@ -1323,6 +1338,8 @@ i18n-pot:
 		--flag=mprf_nocap:1:c-format \
 		--flag=mprfc_nocap:2:c-format \
 		--flag=mprfcp_nocap:3:c-format \
+		--keyword=NC_:1c,2 \
+		--keyword=pgettext:1c,2 \
 		--keyword=N_:1 \
 		--keyword=mpr:1 \
 		--keyword=mprf:1 \
