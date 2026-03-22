@@ -1191,7 +1191,7 @@ void ghost_demon::announce_ghost(const ghost_demon &g)
 {
     UNUSED(g);
 #if defined(DEBUG_BONES) || defined(DEBUG_DIAGNOSTICS)
-    mprf(MSGCH_DIAGNOSTICS, "Saving ghost: %s", g.name.c_str());
+    mprfc(MSGCH_DIAGNOSTICS, "Saving ghost: %s", g.name.c_str());
 #endif
 }
 

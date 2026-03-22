@@ -1722,7 +1722,7 @@ spret cast_shatter(int pow, bool fail)
     else
     {
         noisy(spell_effect_noise(SPELL_SHATTER), you.pos());
-        mprf(MSGCH_SOUND, "The dungeon rumbles!");
+        mprfc(MSGCH_SOUND, "The dungeon rumbles!");
     }
 
     run_animation(ANIMATION_SHAKE_VIEWPORT, UA_PLAYER);
@@ -1739,7 +1739,7 @@ spret cast_shatter(int pow, bool fail)
     }
 
     if (dest && !silence)
-        mprf(MSGCH_SOUND, "Ka-crash!");
+        mprfc(MSGCH_SOUND, "Ka-crash!");
 
     return spret::success;
 }
@@ -1782,7 +1782,7 @@ bool mons_shatter(monster* caster, bool actual)
         else
         {
             noisy(spell_effect_noise(SPELL_SHATTER), caster->pos(), caster->mid);
-            mprf(MSGCH_SOUND, "The dungeon rumbles around %s!",
+            mprfc(MSGCH_SOUND, "The dungeon rumbles around %s!",
                  caster->name(DESC_THE).c_str());
         }
     }
@@ -1817,7 +1817,7 @@ bool mons_shatter(monster* caster, bool actual)
     }
 
     if (dest && !silence)
-        mprf(MSGCH_SOUND, "Ka-crash!");
+        mprfc(MSGCH_SOUND, "Ka-crash!");
 
     if (actual)
         run_animation(ANIMATION_SHAKE_VIEWPORT, UA_MONSTER);
@@ -1960,7 +1960,7 @@ spret cast_scorch(const actor& agent, int pow, bool fail)
         }
         else
         {
-            mprf(MSGCH_DANGER, "Your fire resistance burns away!");
+            mprfc(MSGCH_DANGER, "Your fire resistance burns away!");
             you.duration[DUR_FIRE_VULN] += dur * 3 / 2;
         }
     }
@@ -2324,7 +2324,7 @@ static int _ignite_poison_player(coord_def where, int pow, actor *agent)
     if (damage > 0)
         you.expose_to_element(BEAM_FIRE, 2);
 
-    mprf(MSGCH_RECOVERY, "You are no longer poisoned.");
+    mprfc(MSGCH_RECOVERY, "You are no longer poisoned.");
     you.duration[DUR_POISONING] = 0;
 
     return damage ? 1 : 0;
@@ -3407,7 +3407,7 @@ void forest_message(const coord_def pos, const string &msg, msg_channel_type ch)
         if (feat_is_tree(env.grid(*ri))
             && cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
         {
-            mprf(ch, "%s", msg.c_str());
+            mprfc(ch, "%s", msg.c_str());
             return;
         }
 }
@@ -5125,7 +5125,7 @@ void fire_fusillade()
     you.duration[DUR_FUSILLADE] -= 1;
 
     if (!you.duration[DUR_FUSILLADE])
-        mprf(MSGCH_DURATION, "Your rain of reagents ends.");
+        mprfc(MSGCH_DURATION, "Your rain of reagents ends.");
 }
 
 spret cast_grave_claw(actor& caster, coord_def targ, int pow, bool fail)
@@ -5161,7 +5161,7 @@ spret cast_grave_claw(actor& caster, coord_def targ, int pow, bool fail)
     if (caster.is_player())
     {
         if (you.props[GRAVE_CLAW_CHARGES_KEY].get_int() == 0)
-            mprf(MSGCH_DURATION, "The last of your harvested death is exhausted.");
+            mprfc(MSGCH_DURATION, "The last of your harvested death is exhausted.");
     }
 
     return spret::success;
@@ -5186,12 +5186,12 @@ void gain_grave_claw_soul(bool silent, bool wizard)
 
         if (charges == GRAVE_CLAW_MAX_CHARGES)
         {
-            mprf(MSGCH_DURATION, "You have harvested as much death for "
+            mprfc(MSGCH_DURATION, "You have harvested as much death for "
                                  "Grave Claw as you can hold at once.");
         }
         else
         {
-            mprf(MSGCH_DURATION, "You have harvested enough death to cast "
+            mprfc(MSGCH_DURATION, "You have harvested enough death to cast "
                                  "Grave Claw an additional time.");
         }
     }
@@ -5230,7 +5230,7 @@ void unleash_fortress_blast(actor& caster)
             desc = "a very strong";
         else if (power > 80)
             desc = "a strong";
-        mprf(MSGCH_DURATION, "You unleash %s concussive blast!", desc.c_str());
+        mprfc(MSGCH_DURATION, "You unleash %s concussive blast!", desc.c_str());
     }
 
     bolt blast;

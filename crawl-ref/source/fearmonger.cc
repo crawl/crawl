@@ -25,7 +25,7 @@ bool player::add_fearmonger(const monster* mon)
     {
         set_duration(DUR_AFRAID, 7, 12);
         fearmongers.push_back(mon->mid);
-        mprf(MSGCH_WARN, "You are terrified of %s!",
+        mprfc(MSGCH_WARN, "You are terrified of %s!",
                          mon->name(DESC_THE).c_str());
     }
     else
@@ -147,7 +147,7 @@ void player::_removed_fearmonger(bool quiet)
     {
         duration[DUR_AFRAID] = 0;
         if (!quiet)
-            mprf(MSGCH_DURATION, "You are no longer terrified.");
+            mprfc(MSGCH_DURATION, "You are no longer terrified.");
     }
 }
 

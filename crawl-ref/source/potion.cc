@@ -284,7 +284,7 @@ public:
     {
         const bool were_mighty = you.duration[DUR_MIGHT] > 0;
 
-        mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
+        mprfc(MSGCH_DURATION, "You feel %s all of a sudden.",
              were_mighty ? "mightier" : "very mighty");
         const int dur = _scale_pot_duration(35 + random2(pow), is_potion);
         you.increase_duration(DUR_MIGHT, dur);
@@ -326,7 +326,7 @@ public:
     {
         const bool were_brilliant = you.duration[DUR_BRILLIANCE] > 0;
 
-        mprf(MSGCH_DURATION, "You feel %sclever all of a sudden.",
+        mprfc(MSGCH_DURATION, "You feel %sclever all of a sudden.",
              were_brilliant ? "more " : "");
         const int dur = _scale_pot_duration(35 + random2(pow), is_potion);
         you.increase_duration(DUR_BRILLIANCE, dur);
@@ -353,7 +353,7 @@ public:
     {
         const bool was_attractive = you.duration[DUR_ATTRACTIVE] > 0;
 
-        mprf(MSGCH_DURATION, "You feel %sattractive to monsters.",
+        mprfc(MSGCH_DURATION, "You feel %sattractive to monsters.",
              was_attractive ? "more " : "");
 
         const int dur = _scale_pot_duration((20 + random2(pow)/2), is_potion);
@@ -483,7 +483,7 @@ public:
                 afflictions.push_back("!!!QUAD DAMAGE!!!");
             if (you.form == transformation::flux)
                 afflictions.push_back("form");
-            mprf(MSGCH_DURATION,
+            mprfc(MSGCH_DURATION,
                  "You become %stransparent, but the glow from %s "
                  "%s prevents you from becoming completely invisible.",
                  you.duration[DUR_INVIS] ? "more " : "",
@@ -493,7 +493,7 @@ public:
         }
         else
         {
-            mprf(MSGCH_DURATION, !you.duration[DUR_INVIS]
+            mprfc(MSGCH_DURATION, !you.duration[DUR_INVIS]
                  ? "You fade into invisibility!"
                  : "You fade further into invisibility.");
         }
@@ -718,7 +718,7 @@ public:
 
     bool effect(bool=true, int pow = 40, bool is_potion = true) const override
     {
-        mprf(MSGCH_DURATION, "You feel protected.");
+        mprfc(MSGCH_DURATION, "You feel protected.");
         const int add = _scale_pot_duration(35 + random2(pow), is_potion);;
         you.increase_duration(DUR_RESISTANCE, add);
         return true;

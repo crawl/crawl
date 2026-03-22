@@ -140,7 +140,7 @@ void wizard_cast_spec_spell()
     char specs[80], *end;
     int spell;
 
-    mprf(MSGCH_PROMPT, "Cast which spell? ");
+    mprfc(MSGCH_PROMPT, "Cast which spell? ");
     if (cancellable_get_line_autohist(specs, sizeof(specs))
         || specs[0] == '\0')
     {
@@ -170,7 +170,7 @@ void wizard_memorise_spec_spell()
     char specs[80], *end;
     int spell;
 
-    mprf(MSGCH_PROMPT, "Memorise which spell? ");
+    mprfc(MSGCH_PROMPT, "Memorise which spell? ");
     if (cancellable_get_line_autohist(specs, sizeof(specs))
         || specs[0] == '\0')
     {
@@ -302,7 +302,7 @@ void wizard_set_piety_to(int newpiety, bool force)
             char buf[30];
 
             // For Xom, also allow setting interest.
-            mprf(MSGCH_PROMPT,
+            mprfc(MSGCH_PROMPT,
                  "Enter new interest (current = %d, Enter for 0): ",
                  you.gift_timeout);
 
@@ -352,7 +352,7 @@ void wizard_set_piety_to(int newpiety, bool force)
 void wizard_set_gold()
 {
     const int default_gold = you.gold + 1000;
-    mprf(MSGCH_PROMPT, "Enter new gold value (current = %d, Enter for %d): ",
+    mprfc(MSGCH_PROMPT, "Enter new gold value (current = %d, Enter for %d): ",
          you.gold, default_gold);
 
     char buf[30];
@@ -385,7 +385,7 @@ void wizard_set_piety()
             you.props[RU_SACRIFICE_DELAY_KEY].get_int());
     }
 
-    mprf(MSGCH_PROMPT, "Enter new piety value (current = %d, Enter for 0): ",
+    mprfc(MSGCH_PROMPT, "Enter new piety value (current = %d, Enter for 0): ",
          you.raw_piety);
     char buf[30];
     if (cancellable_get_line_autohist(buf, sizeof buf))
@@ -652,7 +652,7 @@ bool wizard_toggle_bane()
 void wizard_set_abyss()
 {
     char buf[80];
-    mprf(MSGCH_PROMPT, "Enter values for X, Y, Z (space separated) or return: ");
+    mprfc(MSGCH_PROMPT, "Enter values for X, Y, Z (space separated) or return: ");
     if (!cancellable_get_line_autohist(buf, sizeof buf))
         abyss_teleport();
 
@@ -664,7 +664,7 @@ void wizard_set_abyss()
 void wizard_set_stats()
 {
     char buf[80];
-    mprf(MSGCH_PROMPT, "Enter values for Str, Int, Dex (space separated): ");
+    mprfc(MSGCH_PROMPT, "Enter values for Str, Int, Dex (space separated): ");
     if (cancellable_get_line_autohist(buf, sizeof buf) || buf[0] == '\0')
     {
         canned_msg(MSG_OK);
@@ -692,7 +692,7 @@ static bool _wizard_enter_duration_name(duration_type &choice)
     char buf[80];
     vector<string> match_names;
 
-    mprf(MSGCH_PROMPT, "Edit which duration (name)? ");
+    mprfc(MSGCH_PROMPT, "Edit which duration (name)? ");
 
     if (cancellable_get_line_autohist(buf, sizeof buf) || !*buf
         || !strlcpy(buf, lowercase_string(trimmed_string(buf)).c_str(),
@@ -720,7 +720,7 @@ static bool _wizard_enter_duration_name(duration_type &choice)
         return true;
     else if (match_names.empty())
     {
-        mprf(MSGCH_PROMPT, "No durations matching '%s'.", buf);
+        mprfc(MSGCH_PROMPT, "No durations matching '%s'.", buf);
         return false;
     }
     else
@@ -767,7 +767,7 @@ void wizard_edit_durations()
 
     if (num == 0)
     {
-        mprf(MSGCH_PROMPT, "Can't set duration directly to 0, setting it to 1 instead.");
+        mprfc(MSGCH_PROMPT, "Can't set duration directly to 0, setting it to 1 instead.");
         num = 1;
     }
     you.duration[choice] = num;
@@ -775,7 +775,7 @@ void wizard_edit_durations()
 
 void wizard_list_props()
 {
-    mprf(MSGCH_DIAGNOSTICS, "props: %s",
+    mprfc(MSGCH_DIAGNOSTICS, "props: %s",
          you.describe_props().c_str());
 }
 
@@ -873,7 +873,7 @@ static void debug_downtick_xl(int newxl)
 
 void wizard_set_xl(bool change_skills)
 {
-    mprf(MSGCH_PROMPT, "Enter new experience level: ");
+    mprfc(MSGCH_PROMPT, "Enter new experience level: ");
     char buf[30];
     if (cancellable_get_line_autohist(buf, sizeof buf))
     {

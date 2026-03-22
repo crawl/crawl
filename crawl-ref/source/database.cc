@@ -287,14 +287,14 @@ void TextDB::_regenerate_db()
 #if defined(DEBUG_DIAGNOSTICS) && !(defined(TARGET_COMPILER_VC) && defined(USE_TILE))
         printf("Regenerating db: %s [%s]\n", _db_name, Options.lang_name);
 #endif
-        mprf(MSGCH_PLAIN, "Regenerating db: %s [%s]", _db_name, Options.lang_name);
+        mprfc(MSGCH_PLAIN, "Regenerating db: %s [%s]", _db_name, Options.lang_name);
     }
     else
     {
 #if defined(DEBUG_DIAGNOSTICS) && !(defined(TARGET_COMPILER_VC) && defined(USE_TILE))
         printf("Regenerating db: %s\n", _db_name);
 #endif
-        mprf(MSGCH_PLAIN, "Regenerating db: %s", _db_name);
+        mprfc(MSGCH_PLAIN, "Regenerating db: %s", _db_name);
     }
 
     string db_path = _db_cache_path(_db_name, lang());
@@ -442,7 +442,7 @@ static void _execute_embedded_lua(string &str)
         string::size_type end = str.find("}}", pos + 2);
         if (end == string::npos)
         {
-            mprf(MSGCH_DIAGNOSTICS, "Unbalanced {{, bailing.");
+            mprfc(MSGCH_DIAGNOSTICS, "Unbalanced {{, bailing.");
             break;
         }
 
@@ -477,7 +477,7 @@ static void _substitute_descriptions(TextDB &db, string &str,
         string::size_type end = str.find("]]", pos + 2);
         if (end == string::npos)
         {
-            mprf(MSGCH_DIAGNOSTICS, "Unbalanced [[, bailing.");
+            mprfc(MSGCH_DIAGNOSTICS, "Unbalanced [[, bailing.");
             break;
         }
 
@@ -674,7 +674,7 @@ static string _getRandomisedStr(TextDB &db, const string &key,
     recursion_depth++;
     if (recursion_depth > MAX_RECURSION_DEPTH)
     {
-        mprf(MSGCH_DIAGNOSTICS, "Too many nested replacements, bailing.");
+        mprfc(MSGCH_DIAGNOSTICS, "Too many nested replacements, bailing.");
 
         return "TOO MUCH RECURSION";
     }
@@ -700,14 +700,14 @@ static void _call_recursive_replacement(string &str, TextDB &db,
         num_replacements++;
         if (num_replacements > MAX_REPLACEMENTS)
         {
-            mprf(MSGCH_DIAGNOSTICS, "Too many string replacements, bailing.");
+            mprfc(MSGCH_DIAGNOSTICS, "Too many string replacements, bailing.");
             return;
         }
 
         string::size_type end = str.find("@", pos + 1);
         if (end == string::npos)
         {
-            mprf(MSGCH_DIAGNOSTICS, "Unbalanced @, bailing.");
+            mprfc(MSGCH_DIAGNOSTICS, "Unbalanced @, bailing.");
             break;
         }
 

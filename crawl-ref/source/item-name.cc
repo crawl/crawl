@@ -3691,7 +3691,7 @@ void init_item_name_cache()
                 }
                 else if (name.find("buggy") != string::npos)
                 {
-                    mprf(MSGCH_ERROR, "Bad name for item name cache: %s",
+                    mprfc(MSGCH_ERROR, "Bad name for item name cache: %s",
                                                                 name.c_str());
                     continue;
                 }

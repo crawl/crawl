@@ -804,30 +804,30 @@ void qazlal_element_adapt(beam_type flavour, int strength)
 
     if (what != BEAM_FIRE && you.duration[DUR_QAZLAL_FIRE_RES])
     {
-        mprf(MSGCH_DURATION, "Your resistance to fire fades away.");
+        mprfc(MSGCH_DURATION, "Your resistance to fire fades away.");
         you.duration[DUR_QAZLAL_FIRE_RES] = 0;
     }
 
     if (what != BEAM_COLD && you.duration[DUR_QAZLAL_COLD_RES])
     {
-        mprf(MSGCH_DURATION, "Your resistance to cold fades away.");
+        mprfc(MSGCH_DURATION, "Your resistance to cold fades away.");
         you.duration[DUR_QAZLAL_COLD_RES] = 0;
     }
 
     if (what != BEAM_ELECTRICITY && you.duration[DUR_QAZLAL_ELEC_RES])
     {
-        mprf(MSGCH_DURATION, "Your resistance to electricity fades away.");
+        mprfc(MSGCH_DURATION, "Your resistance to electricity fades away.");
         you.duration[DUR_QAZLAL_ELEC_RES] = 0;
     }
 
     if (what != BEAM_MISSILE && you.duration[DUR_QAZLAL_AC])
     {
-        mprf(MSGCH_DURATION, "Your resistance to physical damage fades away.");
+        mprfc(MSGCH_DURATION, "Your resistance to physical damage fades away.");
         you.duration[DUR_QAZLAL_AC] = 0;
         you.redraw_armour_class = true;
     }
 
-    mprf(MSGCH_GOD, "You feel %sprotected from %s.",
+    mprfc(MSGCH_GOD, "You feel %sprotected from %s.",
          you.duration[dur] > 0 ? "more " : "", descript.c_str());
 
     // was scaled by 10 * strength. But the strength parameter is used so inconsistently that
@@ -1909,7 +1909,7 @@ void wu_jian_end_heavenly_storm()
     you.duration[DUR_HEAVENLY_STORM] = 0;
     you.redraw_evasion = true;
     invalidate_agrid(true);
-    mprf(MSGCH_GOD, "The heavenly storm settles.");
+    mprfc(MSGCH_GOD, "The heavenly storm settles.");
 }
 
 bool wu_jian_has_momentum(wu_jian_attack_type attack_type)
@@ -2354,8 +2354,8 @@ void makhleb_celebrant_bloodrite()
 void makhleb_execution_activate()
 {
     string talk = getSpeakString("Makhleb executioner chatter");
-    mprf(MSGCH_TALK, "<lightred>%s</lightred>", talk.c_str());
-    mprf(MSGCH_DURATION, "A whirlwind of blades manifests around you!");
+    mprfc(MSGCH_TALK, "<lightred>%s</lightred>", talk.c_str());
+    mprfc(MSGCH_DURATION, "A whirlwind of blades manifests around you!");
 
     you.duration[DUR_EXECUTION] = random_range(50, 70);
 #ifdef USE_TILE

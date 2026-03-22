@@ -298,7 +298,7 @@ static monster* _init_fsim()
         if (mtype == MONS_PROGRAM_BUG)
         {
             char specs[100];
-            mprf(MSGCH_PROMPT, "Enter monster name (or MONS spec): ");
+            mprfc(MSGCH_PROMPT, "Enter monster name (or MONS spec): ");
             if (cancellable_get_line_autohist(specs, sizeof specs) || !*specs)
             {
                 canned_msg(MSG_OK);
@@ -736,7 +736,7 @@ void wizard_fight_sim(bool double_scale)
     FILE * o = fopen_u(fightstat, "a");
     if (!o)
     {
-        mprf(MSGCH_ERROR, "Can't write %s: %s", fightstat, strerror(errno));
+        mprfc(MSGCH_ERROR, "Can't write %s: %s", fightstat, strerror(errno));
         _uninit_fsim(mon);
         return;
     }
@@ -750,7 +750,7 @@ void wizard_fight_sim(bool double_scale)
     }
     else
     {
-        mprf(MSGCH_PROMPT, "(A)ttack or (D)efence?");
+        mprfc(MSGCH_PROMPT, "(A)ttack or (D)efence?");
 
         switch (toalower(getch_ck()))
         {

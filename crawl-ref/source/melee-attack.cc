@@ -723,12 +723,12 @@ static void _apply_flux_contam(monster &m)
 
     if (energy <= 0)
     {
-        mprf(MSGCH_DURATION, "The last of your unstable energy dissipates and "
+        mprfc(MSGCH_DURATION, "The last of your unstable energy dissipates and "
                              "you return to your previous form.");
         return_to_default_form();
     }
     else if (above_warning && energy < FLUX_ENERGY_WARNING)
-        mprf(MSGCH_DURATION, "You feel the transmutational energy in your body is nearly expended.");
+        mprfc(MSGCH_DURATION, "You feel the transmutational energy in your body is nearly expended.");
 }
 
 void melee_attack::maybe_do_mesmerism()
@@ -4385,7 +4385,7 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
                     }
                     else
                     {
-                        mprf(MSGCH_DANGER, "You %s!",
+                        mprfc(MSGCH_DANGER, "You %s!",
                             initial ? "start to liquefy" : "liquefy further");
                     }
                 }

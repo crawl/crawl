@@ -37,7 +37,7 @@ int lua_element_colour_calc::get(const coord_def& loc, bool non_random) const
     lua_pushinteger(ls, loc.y);
     if (!dlua.callfn(nullptr, 3, 1))
     {
-        mprf(MSGCH_WARN, "%s", dlua.error.c_str());
+        mprfc(MSGCH_WARN, "%s", dlua.error.c_str());
         return BLACK;
     }
 

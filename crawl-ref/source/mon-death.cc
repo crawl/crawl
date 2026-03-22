@@ -250,7 +250,7 @@ static int _calc_player_experience(const monster* mons)
 
     if (!mons->damage_total)
     {
-        mprf(MSGCH_WARN, "Error, exp for monster with no damage: %s",
+        mprfc(MSGCH_WARN, "Error, exp for monster with no damage: %s",
              mons->name(DESC_PLAIN, true).c_str());
         return 0;
     }
@@ -844,7 +844,7 @@ static bool _beogh_forcibly_convert_orc(monster &mons, killer_type killer)
     // checks are made against your stats. You're the potential
     // messiah, after all.
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Death convert attempt on %s, HD: %d, "
+    mprfc(MSGCH_DIAGNOSTICS, "Death convert attempt on %s, HD: %d, "
          "your xl: %d",
          mons.name(DESC_PLAIN).c_str(),
          mons.get_hit_dice(),
@@ -1006,7 +1006,7 @@ static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
 
     if (you.can_see(blorkula))
     {
-        mprf(MSGCH_MONSTER_SPELL,
+        mprfc(MSGCH_MONSTER_SPELL,
             "%s avoids the killing blow by scattering into a rainbow of bats!",
             blorkula.name(DESC_THE).c_str());
     }
@@ -1101,7 +1101,7 @@ static void _blorkula_bat_merge_message(monster* blork, int bat_count)
         msg += " and " + blork->name(DESC_THE)
             +  " reappears in a puff of iridescent mist.";
 
-        mprf(MSGCH_MONSTER_SPELL, "%s", msg.c_str());
+        mprfc(MSGCH_MONSTER_SPELL, "%s", msg.c_str());
     }
 }
 
@@ -1624,7 +1624,7 @@ static void _druid_final_boon(const monster* mons)
 
     if (you.can_see(*mons))
     {
-        mprf(MSGCH_MONSTER_SPELL, "With its final breath, %s offers up its power "
+        mprfc(MSGCH_MONSTER_SPELL, "With its final breath, %s offers up its power "
                                   "to the beasts of the wild!",
                                   mons->name(DESC_THE).c_str());
     }
@@ -1687,7 +1687,7 @@ static void _protean_explosion(monster* mons)
 
     if (you.can_see(*mons))
     {
-        mprf(MSGCH_MONSTER_WARNING, "For just a moment, %s begins to "
+        mprfc(MSGCH_MONSTER_WARNING, "For just a moment, %s begins to "
                                     "look like %s, then it explodes!",
                                     mons->name(DESC_THE).c_str(),
                                     mons_type_name(target, DESC_A).c_str());
@@ -1756,13 +1756,13 @@ static void _martyr_death_wail(monster &mons)
     {
         if (mons.friendly())
         {
-            mprf(MSGCH_FRIEND_SPELL,
+            mprfc(MSGCH_FRIEND_SPELL,
                  "%s wails in agony as it relives its own death.",
                  mons.name(DESC_YOUR).c_str());
         }
         else
         {
-            mprf(MSGCH_MONSTER_SPELL,
+            mprfc(MSGCH_MONSTER_SPELL,
                  "%s wails in agony as it relives its own death.",
                  mons.name(DESC_THE).c_str());
         }
@@ -2223,7 +2223,7 @@ void handle_monster_dies_lua(monster& mons, killer_type killer)
         }
         else
         {
-            mprf(MSGCH_ERROR,
+            mprfc(MSGCH_ERROR,
                  "Lua death function for monster '%s' didn't load: %s",
                  mons.full_name(DESC_PLAIN).c_str(),
                  dlua.error.c_str());
@@ -2354,7 +2354,7 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
 
             you.increase_duration(DUR_BERSERK, bonus);
 
-            mprf(MSGCH_GOD, you.religion,
+            mprfcp(MSGCH_GOD, you.religion,
                  "You feel the power of %s in you as your rage grows.",
                  uppercase_first(god_name(you.religion)).c_str());
         }
@@ -2657,7 +2657,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             else if (source->is_player())
             {
                 you.duration[DUR_WEAK] = 0;
-                mprf(MSGCH_RECOVERY, "You feel your strength returning.");
+                mprfc(MSGCH_RECOVERY, "You feel your strength returning.");
             }
 
             silent = true;
@@ -2696,7 +2696,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         // Only blow up if non-dormant
         if (grid_distance(mons.pos(), you.pos()) <= 1)
         {
-            mprf(MSGCH_WARN, "%s falls apart, revealing its core!",
+            mprfc(MSGCH_WARN, "%s falls apart, revealing its core!",
                  mons.name(DESC_YOUR).c_str());
 
             int old_hd = mons.get_hit_dice();
@@ -2773,7 +2773,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         you.props[SOLAR_EMBER_REVIVAL_KEY].get_int() = you.elapsed_time + random_range(200, 320);
         if (!you.can_see(mons))
-            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You feel your sun fade away.");
+            mprfcp(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You feel your sun fade away.");
     }
     else if (mons.type == MONS_BATTLESPHERE)
         end_battlesphere(&mons, true);
@@ -2781,7 +2781,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         end_spectral_weapon(&mons, true, true);
     else if (mons.type == MONS_RENDING_BLADE)
     {
-        mprf(MSGCH_DURATION, "Your magic returns to you!");
+        mprfc(MSGCH_DURATION, "Your magic returns to you!");
         inc_mp(you.props[RENDING_BLADE_MP_KEY].get_int());
         you.props.erase(RENDING_BLADE_MP_KEY);
     }
@@ -2810,12 +2810,12 @@ item_def* monster_die(monster& mons, killer_type killer,
         {
             if (you.can_see(mons))
             {
-                mprf(MSGCH_WARN, "%s broadcasts a psychic alarm as it %s.",
+                mprfc(MSGCH_WARN, "%s broadcasts a psychic alarm as it %s.",
                     mons.name(DESC_THE).c_str(),
                     (was_banished || !real_death) ? "disappears" : "dies");
             }
             else
-                mprf(MSGCH_WARN, "You feel something broadcast a psychic alarm.");
+                mprfc(MSGCH_WARN, "You feel something broadcast a psychic alarm.");
 
             activate_tesseracts();
         }
@@ -2845,7 +2845,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         did_death_message = true;
         if (you.see_cell(mons.pos()))
         {
-            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD,
+            mprfcp(MSGCH_MONSTER_DAMAGE, MDAM_DEAD,
                  "Tendrils of ice devour %s body!", mons.name(DESC_ITS).c_str());
         }
         schedule_death_spawn_fineff(MONS_PILLAR_OF_RIME,
@@ -2970,7 +2970,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         {
             if (you.can_see(mons))
             {
-                mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, silenced(mons.pos()) ?
+                mprfcp(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, silenced(mons.pos()) ?
                     "The tentacle is hauled back through the portal!" :
                     "With a roar, the tentacle is hauled back through the portal!");
             }
@@ -3011,7 +3011,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                 if (killer == KILL_YOU_CONF
                     && (anon || !invalid_monster_index(killer_index)))
                 {
-                    mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s is %s!",
+                    mprfcp(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s is %s!",
                          mons.name(DESC_THE).c_str(),
                          exploded   ? "blown up" :
                          destroyed  ? "destroyed"
@@ -3019,7 +3019,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                 }
                 else
                 {
-                    mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You %s %s!",
+                    mprfcp(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You %s %s!",
                          exploded  ? "blow up" :
                          destroyed ? "destroy"
                                    : "kill",
@@ -3225,7 +3225,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                     mprf("A nearby %s perishes wretchedly.", mons.name(DESC_PLAIN, false).c_str());
                 else if (mons_class_is_fragile(mons.type))
                 {
-                    mprf(MSGCH_MONSTER_TIMEOUT, "A nearby %s withers and dies.",
+                    mprfc(MSGCH_MONSTER_TIMEOUT, "A nearby %s withers and dies.",
                          mons.name(DESC_PLAIN, false).c_str());
                 }
                 // Default message so that at least *something* is printed.
@@ -3349,7 +3349,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     {
         you.props.erase(TESSERACT_SPAWN_COUNTER_KEY);
 
-        mprf(MSGCH_ORB, "A wave of disorienting energy ripples outward as you feel the reach of Zot diminish.");
+        mprfc(MSGCH_ORB, "A wave of disorienting energy ripples outward as you feel the reach of Zot diminish.");
         mark_milestone("tesseract.kill", "destroyed the tesseracts.");
 
         draw_ring_animation(mons.pos(), LOS_RADIUS, MAGENTA, BLUE, true, 5);
@@ -3370,7 +3370,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             {
                 if (you.can_see(**mi))
                 {
-                    mprf(MSGCH_MONSTER_TIMEOUT, "%s is cast back into %s original reality.",
+                    mprfc(MSGCH_MONSTER_TIMEOUT, "%s is cast back into %s original reality.",
                             mi->name(DESC_THE).c_str(), mi->pronoun(PRONOUN_POSSESSIVE).c_str());
                 }
                 monster_die(**mi, KILL_RESET, NON_MONSTER);

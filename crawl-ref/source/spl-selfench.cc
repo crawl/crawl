@@ -35,7 +35,7 @@ spret cast_deaths_door(int pow, bool fail)
 {
     fail_check();
     mpr("You stand defiantly in death's doorway!");
-    mprf(MSGCH_SOUND, "You seem to hear sand running through an hourglass...");
+    mprfc(MSGCH_SOUND, "You seem to hear sand running through an hourglass...");
 
     you.set_duration(DUR_DEATHS_DOOR, 10 + random2avg(13, 3)
                                        + div_rand_round(random2(pow), 10));
@@ -51,7 +51,7 @@ spret cast_deaths_door(int pow, bool fail)
 
 void remove_ice_armour()
 {
-    mprf(MSGCH_DURATION, "Your icy armour melts away.");
+    mprfc(MSGCH_DURATION, "Your icy armour melts away.");
     you.redraw_armour_class = true;
     you.duration[DUR_ICY_ARMOUR] = 0;
 }
@@ -100,7 +100,7 @@ spret cast_revivification(int pow, bool fail)
 
     if (you.duration[DUR_DEATHS_DOOR])
     {
-        mprf(MSGCH_DURATION, "Your life is in your own hands once again.");
+        mprfc(MSGCH_DURATION, "Your life is in your own hands once again.");
         // XXX: better cause name?
         you.paralyse(&you, random_range(2, 5), "breaking free from death's doorway");
         you.duration[DUR_DEATHS_DOOR] = 0;

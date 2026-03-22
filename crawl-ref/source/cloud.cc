@@ -1931,7 +1931,7 @@ void start_still_winds()
 {
     delete_all_clouds();
     env.level_state |= LSTATE_STILL_WINDS;
-    mprf(MSGCH_WARN, "%s", "The air becomes perfectly still.");
+    mprfc(MSGCH_WARN, "%s", "The air becomes perfectly still.");
 }
 
 void end_still_winds()

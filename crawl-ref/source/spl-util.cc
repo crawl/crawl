@@ -375,14 +375,14 @@ bool add_spell_to_memory(spell_type spell)
     // A hint, for those who may not be aware.
     if (spell == SPELL_SPELLSPARK_SERVITOR)
     {
-        mprf(MSGCH_TUTORIAL,
+        mprfc(MSGCH_TUTORIAL,
              "(You may use Imbue Servitor from the <w>%s</w>bility menu to change "
              "which spell your servitor casts.)",
                 command_to_string(CMD_USE_ABILITY).c_str());
     }
     else if (spell == SPELL_PLATINUM_PARAGON)
     {
-        mprf(MSGCH_TUTORIAL,
+        mprfc(MSGCH_TUTORIAL,
              "(You may use Imprint Weapon from the <w>%s</w>bility menu to change "
              "which weapon your Paragon wields.)",
                 command_to_string(CMD_USE_ABILITY).c_str());

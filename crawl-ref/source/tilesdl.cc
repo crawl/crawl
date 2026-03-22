@@ -464,7 +464,7 @@ FontWrapper* TilesFramework::load_font(const char *font_file, int font_size,
             // TODO: this never happens because load_font will die on a missing
             // font file. This setup needs to be smoothed out, but also maybe
             // MONOSPACE_FONT needs to be validated first.
-            mprf(MSGCH_ERROR, "Couldn't find font '%s', falling back on '%s'",
+            mprfc(MSGCH_ERROR, "Couldn't find font '%s', falling back on '%s'",
                                             font_file, MONOSPACED_FONT);
             return load_font(MONOSPACED_FONT, 12, false);
         }
@@ -1042,7 +1042,7 @@ void TilesFramework::zoom_dungeon(bool in)
     do_layout(); // recalculate the viewport setup
     redraw_screen(false);
     if (current_scale != orig)
-        mprf(MSGCH_PROMPT, "Zooming to %.2f", (float) current_scale);
+        mprfc(MSGCH_PROMPT, "Zooming to %.2f", (float) current_scale);
     update_screen();
 #endif
 }

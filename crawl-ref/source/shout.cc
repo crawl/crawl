@@ -374,7 +374,7 @@ void item_noise(const item_def &item, actor &act, string msg, int loudness)
     msg = maybe_pick_random_substring(msg);
     msg = maybe_capitalise_substring(msg);
 
-    mprf(channel, "%s", msg.c_str());
+    mprfc(channel, "%s", msg.c_str());
 
     if (channel != MSGCH_TALK_VISUAL)
         noisy(loudness, act.pos());
@@ -470,7 +470,7 @@ static void _set_allies_withdraw(const coord_def &target)
 /// Prompt the player to issue orders. Returns the key pressed.
 static int _issue_orders_prompt()
 {
-    mprf(MSGCH_PROMPT, "What are your orders?");
+    mprfc(MSGCH_PROMPT, "What are your orders?");
     if (!you.cannot_speak())
     {
         string cap_shout = you.shout_verb(false);
@@ -738,7 +738,7 @@ void yell(const actor* target)
     {
         const char *fugue_suff = you.duration[DUR_FUGUE] ?
             ", and the damned howl along" : "";
-        mprf(MSGCH_SOUND, "You %s%s%s!",
+        mprfc(MSGCH_SOUND, "You %s%s%s!",
              shout_verb.c_str(),
              you.berserk() ? " wildly" : " for attention",
              fugue_suff);
@@ -826,7 +826,7 @@ bool noisy(int original_loudness, const coord_def& where,
     if (player_distance <= dist && player_can_hear(where))
     {
         if (msg && !fake_noise)
-            mprf(MSGCH_SOUND, "%s", msg);
+            mprfc(MSGCH_SOUND, "%s", msg);
         return true;
     }
     return false;
@@ -1004,7 +1004,7 @@ void noise_grid::propagate_noise()
 #ifdef DEBUG_NOISE_PROPAGATION
     if (affected_actor_count)
     {
-        mprf(MSGCH_WARN, "Writing noise grid with %d noise sources",
+        mprfc(MSGCH_WARN, "Writing noise grid with %d noise sources",
              (int) noises.size());
         dump_noise_grid("noise-grid.html");
     }

@@ -283,7 +283,7 @@ void spawn_random_monsters()
     }
 
 #ifdef DEBUG_MON_CREATION
-    mprf(MSGCH_DIAGNOSTICS, "in spawn_random_monsters()");
+    mprfc(MSGCH_DIAGNOSTICS, "in spawn_random_monsters()");
 #endif
 
     const int rate = _get_monster_spawn_rate();
@@ -630,7 +630,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     rng::subgenerator monster_rng;
 
 #ifdef DEBUG_MON_CREATION
-    mprf(MSGCH_DIAGNOSTICS, "in place_monster()");
+    mprfc(MSGCH_DIAGNOSTICS, "in place_monster()");
 #endif
 
     const int mon_count = count_if(begin(env.mons), end(env.mons),
@@ -690,7 +690,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (create_band)
     {
 #ifdef DEBUG_MON_CREATION
-        mprf(MSGCH_DIAGNOSTICS, "Choose band members...");
+        mprfc(MSGCH_DIAGNOSTICS, "Choose band members...");
 #endif
         band = _choose_band(mg.cls, &band_size, &leader);
         band_size++;
@@ -1510,7 +1510,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // A rare case of a debug message NOT showing in the debug mode.
     if (mons_class_flag(mon->type, M_UNFINISHED))
     {
-        mprf(MSGCH_WARN, "Warning: monster '%s' is not yet fully coded.",
+        mprfc(MSGCH_WARN, "Warning: monster '%s' is not yet fully coded.",
              mon->name(DESC_PLAIN, true).c_str());
     }
 #endif
@@ -2093,7 +2093,7 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
                               bool *natural_leader_p)
 {
 #ifdef DEBUG_MON_CREATION
-    mprf(MSGCH_DIAGNOSTICS, "in _choose_band()");
+    mprfc(MSGCH_DIAGNOSTICS, "in _choose_band()");
 #endif
     // Access outparameters by reference, or local dummies if they were null.
     int bs, &band_size = band_size_p ? *band_size_p : bs;
@@ -2909,13 +2909,13 @@ static monster_type _pick_zot_exit_defender()
 monster* mons_place(mgen_data mg)
 {
 #ifdef DEBUG_MON_CREATION
-    mprf(MSGCH_DIAGNOSTICS, "in mons_place()");
+    mprfc(MSGCH_DIAGNOSTICS, "in mons_place()");
 #endif
 
     if (mg.cls == WANDERING_MONSTER)
     {
 #ifdef DEBUG_MON_CREATION
-        mprf(MSGCH_DIAGNOSTICS, "Set class RANDOM_MONSTER");
+        mprfc(MSGCH_DIAGNOSTICS, "Set class RANDOM_MONSTER");
 #endif
         mg.cls = RANDOM_MONSTER;
     }
@@ -2926,7 +2926,7 @@ monster* mons_place(mgen_data mg)
         && !player_in_branch(BRANCH_ABYSS) && !mg.is_summoned())
     {
 #ifdef DEBUG_MON_CREATION
-        mprf(MSGCH_DIAGNOSTICS, "Call _pick_zot_exit_defender()");
+        mprfc(MSGCH_DIAGNOSTICS, "Call _pick_zot_exit_defender()");
 #endif
         mg.cls    = _pick_zot_exit_defender();
         mg.flags |= MG_PERMIT_BANDS;

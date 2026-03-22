@@ -166,7 +166,7 @@ static void _print_converted_orc_speech(const string& key,
     {
         msg = do_mon_str_replacements(msg, *mon);
         strip_channel_prefix(msg, channel);
-        mprf(channel, "%s", msg.c_str());
+        mprfc(channel, "%s", msg.c_str());
     }
 }
 
@@ -269,14 +269,14 @@ static void _jiyva_convert_slime(monster* slime)
     {
         if (mons_genus(slime->type) == MONS_FLOATING_EYE)
         {
-            mprf(MSGCH_GOD, "%s stares at you suspiciously for a moment, "
+            mprfc(MSGCH_GOD, "%s stares at you suspiciously for a moment, "
                             "then relaxes.",
 
             slime->name(DESC_THE).c_str());
         }
         else
         {
-            mprf(MSGCH_GOD, "%s trembles before you.",
+            mprfc(MSGCH_GOD, "%s trembles before you.",
                  slime->name(DESC_THE).c_str());
         }
     }
@@ -364,7 +364,7 @@ void gozag_check_bribe(monster* traitor)
         msg_channel_type channel = MSGCH_FRIEND_ENCHANT;
         msg = do_mon_str_replacements(msg, *traitor);
         strip_channel_prefix(msg, channel);
-        mprf(channel, "%s", msg.c_str());
+        mprfc(channel, "%s", msg.c_str());
         // !msg.empty means a monster was bribed.
         gozag_deduct_bribe(branch, cost);
     }

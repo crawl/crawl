@@ -99,7 +99,7 @@ static int _report(lua_State *ls, int status)
         const char *msg = lua_tostring(ls, -1);
         if (msg == nullptr)
             msg = "(error object is not a string)";
-        mprf(MSGCH_ERROR, "%s", msg);
+        mprfc(MSGCH_ERROR, "%s", msg);
         lua_pop(ls, 1);
     }
     return status;
@@ -124,7 +124,7 @@ static void _run_dlua_interpreter(lua_State *ls)
             lua_insert(ls, 1);
             if (lua_pcall(ls, lua_gettop(ls) - 1, 0, 0) != 0)
             {
-                mprf(MSGCH_ERROR, "error calling __echo (%s)",
+                mprfc(MSGCH_ERROR, "error calling __echo (%s)",
                                   lua_tostring(ls, -1));
             }
         }
@@ -150,7 +150,7 @@ void debug_terp_dlua(CLua &vm)
         {
             vm.execfile(file.c_str(), false, false);
             if (!vm.error.empty())
-                mprf(MSGCH_ERROR, "Lua error: %s", vm.error.c_str());
+                mprfc(MSGCH_ERROR, "Lua error: %s", vm.error.c_str());
         }
         _loaded_terp_files = true;
     }

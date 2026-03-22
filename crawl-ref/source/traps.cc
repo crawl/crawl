@@ -412,7 +412,7 @@ void trigger_trap(actor& triggerer)
                                                                    pos, buff_time);
 
         if (buffed_mons.size() == 0)
-           mprf(MSGCH_WARN, "Your power is siphoned away!");
+           mprfc(MSGCH_WARN, "Your power is siphoned away!");
         else
         {
             string m_list = describe_monsters_condensed(buffed_mons);
@@ -421,7 +421,7 @@ void trigger_trap(actor& triggerer)
                 mprf("The spells of %s are empowered!", m_list.c_str());
             else
             {
-                mprf(MSGCH_WARN, "Your power is siphoned away as the spells of %s are empowered!",
+                mprfc(MSGCH_WARN, "Your power is siphoned away as the spells of %s are empowered!",
                      m_list.c_str());
             }
         }
@@ -450,13 +450,13 @@ void trigger_trap(actor& triggerer)
             }
 
             string m_list = describe_monsters_condensed(buffed_mons);
-            mprf(MSGCH_MONSTER_ENCHANT, "%s the attacks of %s are laced with chaos!",
+            mprfc(MSGCH_MONSTER_ENCHANT, "%s the attacks of %s are laced with chaos!",
                  getMiscString("harlequin_trap_lines").c_str(),  m_list.c_str());
 
             // Almost certainly not worth setting up any penance;
             // player-triggered Zot traps summoning demons don't either.
             if (you_trigger && is_good_god(you.religion))
-                mprf(MSGCH_GOD, "You feel a twinge of divine disapproval.");
+                mprfc(MSGCH_GOD, "You feel a twinge of divine disapproval.");
         }
         else if (!you_trigger)
             mprf("%s enters a harlequin's trap.", triggerer.name(DESC_THE).c_str());
@@ -618,7 +618,7 @@ void trigger_trap(actor& triggerer)
 
             // Give the player a chance to figure out what happened
             if (player_can_hear(pos))
-                mprf(MSGCH_SOUND, "You hear a loud \"Zot\"!");
+                mprfc(MSGCH_SOUND, "You hear a loud \"Zot\"!");
 
             if (you.see_cell_no_trans(pos) && one_chance_in(5))
                 _zot_trap();

@@ -1932,7 +1932,7 @@ static bool _write_dump(const string &fname, const dump_params &par, bool quiet)
 #endif
     }
     else
-        mprf(MSGCH_ERROR, "Error opening file '%s'", file_name.c_str());
+        mprfc(MSGCH_ERROR, "Error opening file '%s'", file_name.c_str());
 
     return succeeded;
 }

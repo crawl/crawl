@@ -1250,7 +1250,7 @@ static void _get_randart_properties(const item_def &item,
             {
                 item_def item_copy = item;
                 item_copy.flags |= ISFLAG_IDENTIFIED;
-                mprf(MSGCH_ERROR, "Ignoring fixed artefact property %s with"
+                mprfc(MSGCH_ERROR, "Ignoring fixed artefact property %s with"
                      " value %d that's incompatible with the item %s.",
                      artp_name(prop), final_val,
                      item_copy.name(DESC_PLAIN).c_str());

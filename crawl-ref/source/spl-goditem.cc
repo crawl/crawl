@@ -63,7 +63,7 @@ static void _print_holy_pacification_speech(const string &key,
     {
         msg = do_mon_str_replacements(msg, mon);
         strip_channel_prefix(msg, channel);
-        mprf(channel, "%s", msg.c_str());
+        mprfc(channel, "%s", msg.c_str());
     }
 }
 
@@ -517,13 +517,13 @@ void debuff_player(bool ignore_resistance)
         if (duration == DUR_TELEPORT)
         {
             len = 0;
-            mprf(MSGCH_DURATION, "You feel strangely stable.");
+            mprfc(MSGCH_DURATION, "You feel strangely stable.");
             you.props.erase(TELEPORTITIS_SOURCE);
         }
         else if (duration == DUR_PETRIFYING)
         {
             len = 0;
-            mprf(MSGCH_DURATION, "You feel limber!");
+            mprfc(MSGCH_DURATION, "You feel limber!");
             you.redraw_evasion = true;
         }
         else if (duration == DUR_FLAYED)
@@ -533,13 +533,13 @@ void debuff_player(bool ignore_resistance)
         }
         else if (duration == DUR_STICKY_FLAME)
         {
-            mprf(MSGCH_DURATION, "You are no longer on fire.");
+            mprfc(MSGCH_DURATION, "You are no longer on fire.");
             end_sticky_flame_player();
         }
         else if (duration == DUR_FORTRESS_BLAST_TIMER)
         {
             len = 0;
-            mprf(MSGCH_DURATION, "Your fortress blast dissipates harmlessly.");
+            mprfc(MSGCH_DURATION, "Your fortress blast dissipates harmlessly.");
         }
         else if (len > 1)
         {
@@ -549,7 +549,7 @@ void debuff_player(bool ignore_resistance)
     }
 
     if (need_msg)
-        mprf(MSGCH_WARN, "Your magical effects are unravelling.");
+        mprfc(MSGCH_WARN, "Your magical effects are unravelling.");
 }
 
 /**

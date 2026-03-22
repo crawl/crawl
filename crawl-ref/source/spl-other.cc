@@ -474,7 +474,7 @@ spret cast_intoxicate(int pow, bool fail, bool tracer)
 
     if (count > 0)
     {
-        mprf(MSGCH_WARN, "The world spins around you!");
+        mprfc(MSGCH_WARN, "The world spins around you!");
         you.increase_duration(DUR_VERTIGO, 4 + count + random2(count + 1));
         you.redraw_evasion = true;
     }
@@ -597,7 +597,7 @@ void trigger_binding_sigil(actor& actor)
 
     if (actor.is_player())
     {
-        mprf(MSGCH_WARN, "You move over the binding sigil and are bound in place!");
+        mprfc(MSGCH_WARN, "You move over the binding sigil and are bound in place!");
         you.increase_duration(DUR_NO_MOMENTUM, random_range(3, 6));
         revert_terrain_change(you.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
         return;

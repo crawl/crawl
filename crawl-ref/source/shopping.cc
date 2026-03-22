@@ -1538,7 +1538,7 @@ void shop()
 {
     if (!shop_at(you.pos()))
     {
-        mprf(MSGCH_ERROR, "Help! Non-existent shop.");
+        mprfc(MSGCH_ERROR, "Help! Non-existent shop.");
         return;
     }
 

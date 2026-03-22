@@ -600,7 +600,7 @@ static like_response okawaru_kill(const char* desc)
 
             if (piety > 3200)
             {
-                mprf(MSGCH_GOD, you.religion,
+                mprfcp(MSGCH_GOD, you.religion,
                      "<white>%s is honoured by your kill.</white>",
                      uppercase_first(god_name(you.religion)).c_str());
             }
@@ -642,13 +642,13 @@ static const like_response _yred_kill_response()
                     //Print a reminder if the torch isn't lit, but *could* be
                     if (yred_cannot_light_torch_reason().empty())
                     {
-                        mprf(MSGCH_GOD, "With your torch unlit, %s soul goes wasted...",
+                        mprfc(MSGCH_GOD, "With your torch unlit, %s soul goes wasted...",
                              you.can_see(*victim) ? victim->pronoun(PRONOUN_POSSESSIVE).c_str() : "a");
                     }
                 }
                 else
                 {
-                    mprf(MSGCH_GOD, "%s %ssoul becomes fuel for the torch.",
+                    mprfc(MSGCH_GOD, "%s %ssoul becomes fuel for the torch.",
                          you.can_see(*victim) ? victim->pronoun(PRONOUN_POSSESSIVE).c_str() : "A",
                          mons_is_unique(victim->type) ? "potent "
                              : victim->holiness() & MH_HOLY ? "unsullied " : "");

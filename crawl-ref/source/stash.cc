@@ -132,7 +132,7 @@ void describe_stash(const coord_def& c)
 {
     string desc = get_stash_desc(c);
     if (!desc.empty())
-        mprf(MSGCH_EXAMINE_FILTER, "%s", desc.c_str());
+        mprfc(MSGCH_EXAMINE_FILTER, "%s", desc.c_str());
 }
 
 vector<item_def> Stash::get_items() const
@@ -1407,7 +1407,7 @@ void StashTracker::search_stashes(string search_term)
 
     if (!search->valid() && csearch != "*")
     {
-        mprf(MSGCH_PLAIN, "Your search expression is invalid.");
+        mprfc(MSGCH_PLAIN, "Your search expression is invalid.");
         return ;
     }
 
@@ -1422,7 +1422,7 @@ void StashTracker::search_stashes(string search_term)
 
     if (results.empty())
     {
-        mprf(MSGCH_PLAIN, "Can't find anything matching that.");
+        mprfc(MSGCH_PLAIN, "Can't find anything matching that.");
         return;
     }
 
@@ -1431,7 +1431,7 @@ void StashTracker::search_stashes(string search_term)
 
     if (dedup_results.size() > SEARCH_SPAM_THRESHOLD)
     {
-        mprf(MSGCH_PLAIN, "Too many matches; use a more specific search.");
+        mprfc(MSGCH_PLAIN, "Too many matches; use a more specific search.");
         return;
     }
 

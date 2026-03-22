@@ -871,7 +871,7 @@ spret controlled_blink(bool safe_cancel, dist *target)
         if (!_find_cblink_target(*target, safe_cancel, "blink", &tgt))
             return spret::abort;
         target->target = _fuzz_blink_destination(target->target);
-        mprf(MSGCH_ORB, "You feel the Orb interfering with your translocation!");
+        mprfc(MSGCH_ORB, "You feel the Orb interfering with your translocation!");
     }
     else
     {
@@ -940,9 +940,9 @@ void you_teleport(bool is_hostile, mid_t teleportitis_source)
     else
     {
         if (teleportitis_source == MID_PLAYER)
-            mprf(MSGCH_WARN, "You feel space start to destabilise around you!");
+            mprfc(MSGCH_WARN, "You feel space start to destabilise around you!");
         else if (is_hostile)
-            mprf(MSGCH_WARN, "You feel a distressing malevolence running through your instability!");
+            mprfc(MSGCH_WARN, "You feel a distressing malevolence running through your instability!");
         else
             mpr("You feel strangely unstable.");
 
@@ -955,7 +955,7 @@ void you_teleport(bool is_hostile, mid_t teleportitis_source)
         }
         else if (orb_limits_translocation())
         {
-            mprf(MSGCH_ORB, "You feel the Orb delaying your translocation!");
+            mprfc(MSGCH_ORB, "You feel the Orb delaying your translocation!");
             teleport_delay += 5 + random2(5);
         }
 
@@ -1080,7 +1080,7 @@ static bool _teleport_player(bool wizard_tele, string reason="")
             // location, so cancel the teleport.
             if (crawl_state.seen_hups)
             {
-                mprf(MSGCH_ERROR, "Controlled teleport interrupted by HUP signal, "
+                mprfc(MSGCH_ERROR, "Controlled teleport interrupted by HUP signal, "
                                   "cancelling teleport.");
                 return false;
             }
@@ -1098,7 +1098,7 @@ static bool _teleport_player(bool wizard_tele, string reason="")
 
         if (cell_vetoes_teleport(pos, true, wizard_tele))
         {
-            mprf(MSGCH_WARN, "Even you can't go there right now. Sorry!");
+            mprfc(MSGCH_WARN, "Even you can't go there right now. Sorry!");
             return false;
         }
         else
@@ -1248,7 +1248,7 @@ bool hostile_teleport_player(monster* source)
             _place_tloc_cloud(source->pos());
             source->move_to(source_newpos, MV_DELIBERATE | MV_TRANSLOCATION, true);
             source->target = you.pos();
-            mprf(MSGCH_WARN, "%s tunnels through space-time and arrives with you!",
+            mprfc(MSGCH_WARN, "%s tunnels through space-time and arrives with you!",
                  source->name(DESC_THE).c_str());
             source->finalise_movement();
         }
@@ -1644,7 +1644,7 @@ spret cast_golubrias_passage(int pow, const coord_def& where, bool fail)
 {
     if (player_in_branch(BRANCH_GAUNTLET))
     {
-        mprf(MSGCH_ORB, "A magic seal in the Gauntlet prevents you from "
+        mprfc(MSGCH_ORB, "A magic seal in the Gauntlet prevents you from "
                 "opening a passage!");
         return spret::abort;
     }

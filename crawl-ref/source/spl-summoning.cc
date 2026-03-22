@@ -243,7 +243,7 @@ spret cast_call_canine_familiar(int pow, bool fail)
 
     if (old_dog && !you.can_see(*old_dog))
     {
-        mprf(MSGCH_PROMPT, "Your familiar is too far away to imbue with magic.");
+        mprfc(MSGCH_PROMPT, "Your familiar is too far away to imbue with magic.");
         return spret::abort;
     }
 
@@ -1324,7 +1324,7 @@ void create_malign_gateway(coord_def point, mid_t owner, beh_type beh,
                             beh));
     temp_change_terrain(point, DNGN_MALIGN_GATEWAY, INFINITE_DURATION, TERRAIN_CHANGE_MALIGN_GATEWAY);
     noisy(spell_effect_noise(SPELL_MALIGN_GATEWAY), point);
-    mprf(MSGCH_WARN, "The dungeon shakes, a horrible noise fills the air, "
+    mprfc(MSGCH_WARN, "The dungeon shakes, a horrible noise fills the air, "
                      "and a portal to some otherworldly place is opened!");
 }
 
@@ -4215,9 +4215,9 @@ void paragon_charge_up(monster& paragon)
     if (new_charge > old_charge)
     {
         if (new_charge == 2)
-            mprf(MSGCH_DURATION, "Your paragon has reached its maximum power!");
+            mprfc(MSGCH_DURATION, "Your paragon has reached its maximum power!");
         else if (new_charge == 1)
-            mprf(MSGCH_DURATION, "Your paragon is now ready to unleash a masterful attack.");
+            mprfc(MSGCH_DURATION, "Your paragon is now ready to unleash a masterful attack.");
     }
 }
 

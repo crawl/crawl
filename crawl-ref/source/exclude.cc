@@ -119,7 +119,7 @@ void add_auto_excludes()
     if (mons.empty())
         return;
 
-    mprf(MSGCH_WARN, "Marking area around %s as unsafe for travelling.",
+    mprfc(MSGCH_WARN, "Marking area around %s as unsafe for travelling.",
             describe_monsters_condensed(mons).c_str());
     learned_something_new(HINT_AUTO_EXCLUSION);
 }
@@ -168,7 +168,7 @@ bool travel_exclude::affects(const coord_def& p) const
 {
     if (!uptodate)
     {
-        mprf(MSGCH_ERROR, "exclusion not up-to-date: e (%d,%d) p (%d,%d)",
+        mprfc(MSGCH_ERROR, "exclusion not up-to-date: e (%d,%d) p (%d,%d)",
              pos.x, pos.y, p.x, p.y);
     }
     if (radius == 0)

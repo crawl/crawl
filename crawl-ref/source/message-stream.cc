@@ -80,9 +80,9 @@ namespace msg
             // null-terminate and print the string
             internal_buf[internal_count] = 0;
             if (capitalise)
-                mprf(channel, param, "%s", internal_buf);
+                mprfcp(channel, param, "%s", internal_buf);
             else
-                mprf_nocap(channel, param, "%s", internal_buf);
+                mprfcp_nocap(channel, param, "%s", internal_buf);
 
             internal_count = 0;
 
@@ -96,7 +96,7 @@ namespace msg
 
         if (internal_count + 3 > INTERNAL_LENGTH)
         {
-            mprf(MSGCH_ERROR, "oops, hit overflow");
+            mprfc(MSGCH_ERROR, "oops, hit overflow");
             internal_count = 0;
             return streambuf::traits_type::eof();
         }

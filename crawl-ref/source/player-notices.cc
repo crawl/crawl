@@ -75,7 +75,7 @@ static bool _check_monster_alert(const monster& mon)
         // And if it wasn't a monster that would get an encounter warning due to
         // being a summon, make sure to say something.
         if (mon.is_summoned())
-            mprf(MSGCH_MONSTER_WARNING, "%s comes into view.", mon.name(DESC_A).c_str());
+            mprfc(MSGCH_MONSTER_WARNING, "%s comes into view.", mon.name(DESC_A).c_str());
 
         more(true);
         return true;
@@ -427,7 +427,7 @@ static void _handle_encounter_messages(const vector<monster*> monsters,
             string msg = _abyss_monster_creation_message(sp.mon);
             for (int i = 0; i < sp.count; ++i)
             {
-                mprf(MSGCH_MONSTER_WARNING, "%s%s", sp.mon->name(DESC_A).c_str(),
+                mprfc(MSGCH_MONSTER_WARNING, "%s%s", sp.mon->name(DESC_A).c_str(),
                                                     msg.c_str());
             }
         }
@@ -446,7 +446,7 @@ static void _handle_encounter_messages(const vector<monster*> monsters,
 
     string msg = out.str();
     if (!msg.empty())
-        mprf(MSGCH_MONSTER_WARNING, "%s", out.str().c_str());
+        mprfc(MSGCH_MONSTER_WARNING, "%s", out.str().c_str());
 }
 
 static bool _monster_needs_warning(const monster& mon)
@@ -685,7 +685,7 @@ void seen_monster(monster* mons, bool do_encounter_message)
         && coinflip()
         && mons->get_experience_level() >= random2(you.experience_level))
     {
-        mprf(MSGCH_GOD, GOD_GOZAG, "Gozag incites %s against you.",
+        mprfcp(MSGCH_GOD, GOD_GOZAG, "Gozag incites %s against you.",
                 mons->name(DESC_THE).c_str());
         gozag_incite(mons);
     }

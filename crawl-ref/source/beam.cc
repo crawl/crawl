@@ -866,7 +866,7 @@ void bolt::digging_wall_effect()
             {
                 if (!silenced(you.pos()))
                 {
-                    mprf(MSGCH_SOUND, "You hear a grinding noise.");
+                    mprfc(MSGCH_SOUND, "You hear a grinding noise.");
                     obvious_effect = true; // You may still see the caster.
                     msg_generated = true;
                 }
@@ -3001,7 +3001,7 @@ void bolt::affect_place_clouds()
             || (cloud->type == CLOUD_FIRE && flavour == BEAM_COLD))
         {
             if (player_can_hear(p))
-                mprf(MSGCH_SOUND, "You hear a sizzling sound!");
+                mprfc(MSGCH_SOUND, "You hear a sizzling sound!");
 
             delete_cloud(p);
             extra_range_used += 5;
@@ -3803,7 +3803,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_CHARM:
-        mprf(MSGCH_WARN, "Your will is overpowered!");
+        mprfc(MSGCH_WARN, "Your will is overpowered!");
         confuse_player(5 + random2(3));
         obvious_effect = true;
         break;     // charming - confusion?
@@ -3992,7 +3992,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_SAP_MAGIC:
-        mprf(MSGCH_WARN, "Your magic feels %stainted.",
+        mprfc(MSGCH_WARN, "Your magic feels %stainted.",
              you.duration[DUR_SAP_MAGIC] ? "more " : "");
         flash_tile(you.pos(), GREEN, 120, TILE_BOLT_SAP_MAGIC);
         you.increase_duration(DUR_SAP_MAGIC, random_range(20, 30), 50);
@@ -4511,7 +4511,7 @@ void bolt::affect_player()
     {
         if (!you.duration[DUR_FROZEN])
         {
-            mprf(MSGCH_WARN, "You are encased in ice.");
+            mprfc(MSGCH_WARN, "You are encased in ice.");
             you.duration[DUR_FROZEN] = (random_range(3, 5)) * BASELINE_DELAY;
         }
     }
@@ -5535,7 +5535,7 @@ void bolt::affect_monster(monster* mon)
     {
         if (!is_tracer() && you.see_cell(mon->pos()))
         {
-            mprf(MSGCH_GOD, GOD_JIYVA,
+            mprfcp(MSGCH_GOD, GOD_JIYVA,
                  "%s absorbs the %s as it strikes your slime.",
                  god_speaker(GOD_JIYVA).c_str(), !name.empty() ? name.c_str()
                  : _beam_type_name(flavour).c_str());
@@ -5595,7 +5595,7 @@ void bolt::affect_monster(monster* mon)
                      mon->name(DESC_THE).c_str());
             }
             else if (heard && !hit_noise_msg.empty())
-                mprf(MSGCH_SOUND, "%s", hit_noise_msg.c_str());
+                mprfc(MSGCH_SOUND, "%s", hit_noise_msg.c_str());
         }
         // no to-hit check
         enchantment_affect_monster(mon);
@@ -5738,7 +5738,7 @@ void bolt::affect_monster(monster* mon)
         }
     }
     else if (heard && !hit_noise_msg.empty())
-        mprf(MSGCH_SOUND, "%s", hit_noise_msg.c_str());
+        mprfc(MSGCH_SOUND, "%s", hit_noise_msg.c_str());
 
     // Spell vampirism
     if (agent() && agent()->is_player() && is_player_book_spell(origin_spell))
@@ -6915,7 +6915,7 @@ void bolt::refine_for_explosion(const string& explode_msg)
             if (!heard)
                 msg_generated = false;
             else
-                mprf(MSGCH_SOUND, "%s", hearMsg.c_str());
+                mprfc(MSGCH_SOUND, "%s", hearMsg.c_str());
         }
     }
 }
@@ -6992,7 +6992,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     {
         if (!is_tracer() && you.see_cell(pos()) && !name.empty())
         {
-            mprf(MSGCH_GOD, "By Zin's power, the %s is contained.",
+            mprfc(MSGCH_GOD, "By Zin's power, the %s is contained.",
                  name.c_str());
             return true;
         }
@@ -7048,7 +7048,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
         heard = heard || heard_expl;
 
         if (heard_expl && !explode_noise_msg.empty() && !you.see_cell(pos()))
-            mprf(MSGCH_SOUND, "%s", explode_noise_msg.c_str());
+            mprfc(MSGCH_SOUND, "%s", explode_noise_msg.c_str());
     }
 
     // Run DFS to determine which cells are influenced

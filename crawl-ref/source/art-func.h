@@ -79,7 +79,7 @@ static void _equip_mpr(bool* show_msgs, const char* msg,
         show_msgs = &do_show;
 
     if (*show_msgs)
-        mprf(chan, "%s", msg);
+        mprfc(chan, "%s", msg);
 
     // Caller shouldn't give any more messages.
     *show_msgs = false;
@@ -306,11 +306,11 @@ static void _SINGING_SWORD_equip(item_def *item, bool *show_msgs, bool /*unmeld*
 
     if (!item->props.exists(SS_WELCOME_KEY))
     {
-        mprf(MSGCH_TALK, "The sword says, \"Hi! I'm the Singing Sword!\"");
+        mprfc(MSGCH_TALK, "The sword says, \"Hi! I'm the Singing Sword!\"");
         item->props[SS_WELCOME_KEY].get_bool() = true;
     }
     else
-        mprf(MSGCH_TALK, "The Singing Sword hums in delight!");
+        mprfc(MSGCH_TALK, "The Singing Sword hums in delight!");
 
     *show_msgs = false;
 }
@@ -478,7 +478,7 @@ static void _GONG_melee_effects(item_def* /*item*/, actor* wearer,
     string msg = getSpeakString("shield of the gong");
     if (msg.empty())
         msg = "You hear a strange loud sound.";
-    mprf(MSGCH_SOUND, "%s", msg.c_str());
+    mprfc(MSGCH_SOUND, "%s", msg.c_str());
 
     noisy(40, wearer->pos());
 }
@@ -1086,7 +1086,7 @@ static void _CHILLY_DEATH_melee_effects(item_def* /*weapon*/, actor* attacker,
         else if (defender->is_player()
             && !you.duration[DUR_FROZEN])
         {
-            mprf(MSGCH_WARN, "You are encased in ice.");
+            mprfc(MSGCH_WARN, "You are encased in ice.");
             you.increase_duration(DUR_FROZEN, 5 + random2(dam));
         }
     }
@@ -1139,7 +1139,7 @@ static void _MAJIN_equip(item_def *item, bool *show_msgs, bool /*unmeld*/)
     {
         const string msg = "A voice whispers, \"" +
                            getSpeakString("majin-bo greeting") + "\"";
-        mprf(MSGCH_TALK, "%s", msg.c_str());
+        mprfc(MSGCH_TALK, "%s", msg.c_str());
         item->props[MB_WELCOME_KEY].get_bool() = true;
     }
 }
@@ -1663,7 +1663,7 @@ static void _reset_victory_stats(item_def *item)
         item->plus = get_unrand_entry(item->unrand_idx)->plus;
         artefact_set_property(*item, ARTP_SLAYING, bonus_stats);
         artefact_set_property(*item, ARTP_INTELLIGENCE, bonus_stats);
-        mprf(MSGCH_WARN, "%s stops glowing.", item->name(DESC_THE, false, true,
+        mprfc(MSGCH_WARN, "%s stops glowing.", item->name(DESC_THE, false, true,
                                                          false).c_str());
 
         you.redraw_armour_class = true;
@@ -1703,7 +1703,7 @@ static void _VICTORY_death_effects(item_def *item, monster* mons,
             artefact_set_property(*item, ARTP_SLAYING, bonus_stats);
             artefact_set_property(*item, ARTP_INTELLIGENCE, bonus_stats);
             you.equipment.update();
-            mprf(MSGCH_GOD, GOD_OKAWARU, "%s glows%s.",
+            mprfcp(MSGCH_GOD, GOD_OKAWARU, "%s glows%s.",
                  item->name(DESC_THE, false, true, false).c_str(),
                  bonus_stats == VICTORY_STAT_CAP ? " brightly" : "");
 
@@ -1799,7 +1799,7 @@ static void _SKULL_OF_ZONGULDROK_equip(item_def *item, bool *show_msgs, bool /*u
                                 : "zonguldrok reprise";
 
         const string msg = "A voice whispers, \"" + getSpeakString(key) + "\"";
-        mprf(MSGCH_TALK, "%s", msg.c_str());
+        mprfc(MSGCH_TALK, "%s", msg.c_str());
         item->props[ZONGULDROK_WELCOME_KEY].get_bool() = true;
     }
 }
@@ -1811,7 +1811,7 @@ static void _SKULL_OF_ZONGULDROK_unequip(item_def */*item*/, bool *show_msgs)
     {
         const string msg = "A voice whispers, \"" +
                             getSpeakString("zonguldrok farewell") + "\"";
-        mprf(MSGCH_TALK, "%s", msg.c_str());
+        mprfc(MSGCH_TALK, "%s", msg.c_str());
     }
 }
 
@@ -1838,7 +1838,7 @@ static void _FISTICLOAK_world_reacts(item_def */*item*/)
 {
     // First, a chance of flavor message.
     if (one_chance_in(1500))
-        mprf(MSGCH_TALK, "%s", getSpeakString("fungus thoughts").c_str());
+        mprfc(MSGCH_TALK, "%s", getSpeakString("fungus thoughts").c_str());
 
     // Now, the chance for our shroompunch
     if (!one_chance_in(4))

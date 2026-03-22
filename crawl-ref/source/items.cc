@@ -212,7 +212,7 @@ static int _cull_items()
 
     // XXX: Not the prettiest of messages, but the player
     // deserves to know whenever this kicks in. -- bwr
-    mprf(MSGCH_WARN, "Too many items on level, removing some.");
+    mprfc(MSGCH_WARN, "Too many items on level, removing some.");
 
     // Rules:
     //  1. Don't cleanup anything nearby the player
@@ -511,7 +511,7 @@ void unlink_item(int dest)
                 return;
             }
         }
-        mprf(MSGCH_ERROR, "Item %s claims to be held by monster %s, but "
+        mprfc(MSGCH_ERROR, "Item %s claims to be held by monster %s, but "
                           "it isn't in the monster's inventory.",
              env.item[dest].name(DESC_PLAIN, false, true).c_str(),
              mons->name(DESC_PLAIN, true).c_str());
@@ -565,7 +565,7 @@ void unlink_item(int dest)
 
 #ifdef DEBUG
     // Okay, the sane ways are gone... let's warn the player:
-    mprf(MSGCH_ERROR, "BUG WARNING: Problems unlinking item '%s', (%d, %d)!!!",
+    mprfc(MSGCH_ERROR, "BUG WARNING: Problems unlinking item '%s', (%d, %d)!!!",
          env.item[dest].name(DESC_PLAIN).c_str(),
          env.item[dest].pos.x, env.item[dest].pos.y);
 
@@ -617,7 +617,7 @@ void unlink_item(int dest)
 
     // Okay, finally warn player if we didn't do anything.
     if (!linked)
-        mprf(MSGCH_ERROR, "BUG WARNING: Item didn't seem to be linked at all.");
+        mprfc(MSGCH_ERROR, "BUG WARNING: Item didn't seem to be linked at all.");
 #endif
 }
 
@@ -932,7 +932,7 @@ void item_check()
     string desc_string = item_message(items);
     // Stack summary case
     if (static_cast<int>(items.size()) >= Options.item_stack_summary_minimum)
-        mprf_nojoin(MSGCH_FLOOR_ITEMS, "Items here: %s.", desc_string.c_str());
+        mprfc_nojoin(MSGCH_FLOOR_ITEMS, "Items here: %s.", desc_string.c_str());
     else if (items.size() <= msgwin_lines() - 1)
     {
         mpr_nojoin(MSGCH_FLOOR_ITEMS, "Things that are here:");
@@ -1505,7 +1505,7 @@ void pickup(bool partial_quantity)
             {
                 string prompt = "Pick up %s? ((y)es/(n)o/(a)ll/(m)enu/*?g,/q)";
 
-                mprf(MSGCH_PROMPT, prompt.c_str(),
+                mprfc(MSGCH_PROMPT, prompt.c_str(),
                      menu_colour_item_name(env.item[o], DESC_A).c_str());
 
                 mouse_control mc(MOUSE_MODE_YESNO);
@@ -2021,7 +2021,7 @@ static void _get_orb()
 {
     run_animation(ANIMATION_ORB, UA_PICKUP);
 
-    mprf(MSGCH_ORB, "You pick up the Orb of Zot!");
+    mprfc(MSGCH_ORB, "You pick up the Orb of Zot!");
 
     if (bezotted())
         mpr("Zot can harm you no longer.");
@@ -2853,7 +2853,7 @@ bool drop_item(int item_dropped, int quant_drop)
         const bool is_wpn = is_weapon(item);
         if (!Options.easy_unequip && !is_wpn)
         {
-            mprf(MSGCH_PROMPT, "You will have to take that off first.");
+            mprfc(MSGCH_PROMPT, "You will have to take that off first.");
             return false;
         }
 
@@ -3205,7 +3205,7 @@ static bool _is_option_autopickup(const item_def &item, bool ignore_force)
                                       &item, iname.c_str());
     if (!clua.error.empty())
     {
-        mprf(MSGCH_ERROR, "ch_force_autopickup failed: %s",
+        mprfc(MSGCH_ERROR, "ch_force_autopickup failed: %s",
              clua.error.c_str());
     }
 
@@ -4444,12 +4444,12 @@ bool item_def::is_valid(bool iinfo, bool error) const
     if (base_type == OBJ_DETECTED)
     {
         if (!iinfo)
-            mprf(channel, "weird detected item");
+            mprfc(channel, "weird detected item");
         return iinfo;
     }
     else if (!defined())
     {
-        mprf(channel, "undefined item");
+        mprfc(channel, "undefined item");
         return false;
     }
     const int max_sub = get_max_subtype(base_type);
@@ -4458,22 +4458,22 @@ bool item_def::is_valid(bool iinfo, bool error) const
         if (!iinfo || sub_type > max_sub || !item_type_has_unidentified(base_type))
         {
             if (!iinfo)
-                mprf(channel, "weird item subtype and no info");
+                mprfc(channel, "weird item subtype and no info");
             if (sub_type > max_sub)
-                mprf(channel, "huge item subtype");
+                mprfc(channel, "huge item subtype");
             if (!item_type_has_unidentified(base_type))
-                mprf(channel, "unided item of a type that can't be");
+                mprfc(channel, "unided item of a type that can't be");
             return false;
         }
     }
     if (get_colour() == 0)
     {
-        mprf(channel, "item color invalid"); // 0 = BLACK and so invisible
+        mprfc(channel, "item color invalid"); // 0 = BLACK and so invisible
         return false;
     }
     if (!appearance_initialized())
     {
-        mprf(channel, "item has uninitialized rnd");
+        mprfc(channel, "item has uninitialized rnd");
         return false; // no items with uninitialized rnd
     }
     return true;
@@ -4547,11 +4547,11 @@ static void _rune_from_specs(const char* _specs, item_def &item)
             line += make_stringf("[%c] %-10s ", i + 'a', rune_type_name(i));
             if (i % 5 == 4 || i == NUM_RUNE_TYPES - 1)
             {
-                mprf(MSGCH_PROMPT, "%s", line.c_str());
+                mprfc(MSGCH_PROMPT, "%s", line.c_str());
                 line.clear();
             }
         }
-        mprf(MSGCH_PROMPT, "Which rune (ESC to exit)? ");
+        mprfc(MSGCH_PROMPT, "Which rune (ESC to exit)? ");
 
         int keyin = toalower(get_ch());
 

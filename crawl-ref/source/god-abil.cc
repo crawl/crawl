@@ -223,7 +223,7 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     wpn.flags |= ISFLAG_NOTED_ID;
     wpn.props[FORCED_ITEM_COLOUR_KEY] = colour;
 
-    mprf(MSGCH_GOD, "Your %s shines brightly!", wpn.name(DESC_QUALNAME).c_str());
+    mprfc(MSGCH_GOD, "Your %s shines brightly!", wpn.name(DESC_QUALNAME).c_str());
     flash_view(UA_PLAYER, colour);
     simple_god_message(" booms: Use this gift wisely!");
     you.one_time_ability_used.set(you.religion);
@@ -282,7 +282,7 @@ bool zin_donate_gold()
     const int donation = _gold_to_donation(donation_cost);
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE) || defined(DEBUG_PIETY)
-    mprf(MSGCH_DIAGNOSTICS, "A donation of $%d amounts to an "
+    mprfc(MSGCH_DIAGNOSTICS, "A donation of $%d amounts to an "
          "increase of piety by %d.", donation_cost, donation);
 #endif
     // Take a note of the donation.
@@ -1269,7 +1269,7 @@ bool zin_vitalisation()
 
 void zin_remove_divine_stamina()
 {
-    mprf(MSGCH_DURATION, "Your divine stamina fades away.");
+    mprfc(MSGCH_DURATION, "Your divine stamina fades away.");
     notify_stat_change(STAT_STR, -you.attribute[ATTR_DIVINE_STAMINA], true);
     notify_stat_change(STAT_INT, -you.attribute[ATTR_DIVINE_STAMINA], true);
     notify_stat_change(STAT_DEX, -you.attribute[ATTR_DIVINE_STAMINA], true);
@@ -1309,7 +1309,7 @@ void zin_sanctuary()
 
     // Yes, shamelessly stolen from NetHack...
     if (!silenced(you.pos())) // How did you manage that?
-        mprf(MSGCH_SOUND, "You hear a choir sing!");
+        mprfc(MSGCH_SOUND, "You hear a choir sing!");
     else
         mpr("You are suddenly bathed in radiance!");
 
@@ -1337,7 +1337,7 @@ void tso_expend_divine_shield_charge()
 {
     if (you.duration[DUR_DIVINE_SHIELD] && --you.duration[DUR_DIVINE_SHIELD] <= 0)
     {
-        mprf(MSGCH_DURATION, "Your divine shield fades away.");
+        mprfc(MSGCH_DURATION, "Your divine shield fades away.");
         you.duration[DUR_DIVINE_SHIELD] = 0;
     }
 }
@@ -1384,7 +1384,7 @@ void elyvilon_divine_vigour()
 
 void elyvilon_remove_divine_vigour()
 {
-    mprf(MSGCH_DURATION, "Your divine vigour fades away.");
+    mprfc(MSGCH_DURATION, "Your divine vigour fades away.");
     you.duration[DUR_DIVINE_VIGOUR] = 0;
     you.attribute[ATTR_DIVINE_VIGOUR] = 0;
     calc_hp();
@@ -1406,13 +1406,13 @@ void trog_do_trogs_hand(int pow)
     you.increase_duration(DUR_TROGS_HAND,
                           5 + roll_dice(2, pow / 3 + 1), 100,
                           "Your skin crawls.");
-    mprf(MSGCH_DURATION, "You feel strong-willed.");
+    mprfc(MSGCH_DURATION, "You feel strong-willed.");
 }
 
 void trog_remove_trogs_hand()
 {
-    mprf(MSGCH_DURATION, "Your skin stops crawling.");
-    mprf(MSGCH_DURATION, "You feel less strong-willed.");
+    mprfc(MSGCH_DURATION, "Your skin stops crawling.");
+    mprfc(MSGCH_DURATION, "You feel less strong-willed.");
     you.duration[DUR_TROGS_HAND] = 0;
 }
 
@@ -1527,7 +1527,7 @@ void yred_end_conquest()
     else
         msg+= " and feel Yredelemnul's disdain for your failure.";
 
-    mprf(MSGCH_GOD, "%s", msg.c_str());
+    mprfc(MSGCH_GOD, "%s", msg.c_str());
 
     // Actually end the torch effect
     you.props.erase(YRED_TORCH_POWER_KEY);
@@ -1571,7 +1571,7 @@ void yred_feed_torch(const monster* mons)
         return;
 
     // Gain one torchlight charge for each unique killed
-    mprf(MSGCH_GOD, "The black torch howls with new intensity!");
+    mprfc(MSGCH_GOD, "The black torch howls with new intensity!");
     you.props[YRED_TORCH_POWER_KEY].get_int() += 1;
 }
 
@@ -2306,7 +2306,7 @@ void ashenzari_offer_new_curse()
     const string offer_string = curse_names.empty() ? "" :
                                 (" of " + curse_names);
 
-    mprf(MSGCH_GOD, "Ashenzari invites you to partake of a vision"
+    mprfc(MSGCH_GOD, "Ashenzari invites you to partake of a vision"
                     " and a curse%s.", offer_string.c_str());
 }
 
@@ -2352,7 +2352,7 @@ bool ashenzari_curse_item()
 
     if (!item_is_selected(item, OSEL_CURSABLE))
     {
-        mprf(MSGCH_PROMPT, "You cannot curse that!");
+        mprfc(MSGCH_PROMPT, "You cannot curse that!");
         return false;
     }
 
@@ -2386,13 +2386,13 @@ bool ashenzari_uncurse_item()
 
     if (!item_is_selected(item, OSEL_CURSED_WORN))
     {
-        mprf(MSGCH_PROMPT, "You cannot uncurse and destroy that!");
+        mprfc(MSGCH_PROMPT, "You cannot uncurse and destroy that!");
         return false;
     }
 
     if (item_is_melded(item))
     {
-        mprf(MSGCH_PROMPT, "You cannot shatter the curse on %s while it is "
+        mprfc(MSGCH_PROMPT, "You cannot shatter the curse on %s while it is "
                            "melded with your body!",
              item.name(DESC_THE).c_str());
         return false;
@@ -2486,7 +2486,7 @@ void spare_beogh_convert()
     if (you.one_time_ability_used[GOD_BEOGH])
     {
         // You still get to convert, but orcs will remain hostile.
-        mprf(MSGCH_TALK, "%s", getSpeakString("orc_priest_apostate").c_str());
+        mprfc(MSGCH_TALK, "%s", getSpeakString("orc_priest_apostate").c_str());
         return;
     }
 
@@ -2712,7 +2712,7 @@ void beogh_blood_for_blood_tick(int delay)
 
 void beogh_end_blood_for_blood()
 {
-    mprf(MSGCH_DURATION,
+    mprfc(MSGCH_DURATION,
          "You reach the end of your prayer and your brethren are recalled.");
     for (monster_iterator mi; mi; ++mi)
     {
@@ -2806,14 +2806,14 @@ void beogh_increase_orcification()
     if (you.props.exists(ORCIFICATION_LEVEL_KEY))
     {
         you.props[ORCIFICATION_LEVEL_KEY] = 2;
-        mprf(MSGCH_MUTATION, "Your orcish features manifest fully.");
+        mprfc(MSGCH_MUTATION, "Your orcish features manifest fully.");
         return;
     }
 
     // Adjust the message we give to the player's physiology.
     string msg = species::orcification_msg(you.species);
 
-    mprf(MSGCH_MUTATION, "%s", msg.c_str());
+    mprfc(MSGCH_MUTATION, "%s", msg.c_str());
     you.props[ORCIFICATION_LEVEL_KEY] = 1;
 }
 
@@ -3345,7 +3345,7 @@ bool gozag_potion_petition()
             line += comma_separated_line(pot_names.begin(), pot_names.end());
             mpr_nojoin(MSGCH_PLAIN, line);
         }
-        mprf(MSGCH_PROMPT, "Purchase which effect?");
+        mprfc(MSGCH_PROMPT, "Purchase which effect?");
         keyin = toalower(get_ch()) - 'a';
         if (keyin < 0 || keyin > GOZAG_MAX_POTIONS - 1)
             continue;
@@ -3536,7 +3536,7 @@ static int _gozag_choose_shop()
     for (int i = 0; i < GOZAG_MAX_SHOPS; i++)
         mpr_nojoin(MSGCH_PLAIN, _describe_gozag_shop(i).c_str());
 
-    mprf(MSGCH_PROMPT, "Fund which merchant?");
+    mprfc(MSGCH_PROMPT, "Fund which merchant?");
     const int shop_index = toalower(get_ch()) - 'a';
     if (shop_index < 0 || shop_index > GOZAG_MAX_SHOPS - 1)
         return _gozag_choose_shop(); // tail recurse
@@ -3601,7 +3601,7 @@ static void _gozag_place_shop(int index)
     const gender_type gender = random_choose(GENDER_FEMALE, GENDER_MALE,
                                              GENDER_NEUTRAL);
 
-    mprf(MSGCH_GOD, "%s invites you to visit %s %s%s%s.",
+    mprfc(MSGCH_GOD, "%s invites you to visit %s %s%s%s.",
                     shop->shop_name.c_str(),
                     decline_pronoun(gender, PRONOUN_POSSESSIVE),
                     shop_type_name(shop->type).c_str(),
@@ -3749,7 +3749,7 @@ void gozag_deduct_bribe(branch_type br, int amount)
     branch_bribe[br] = max(0, branch_bribe[br] - amount);
     if (branch_bribe[br] <= 0)
     {
-        mprf(MSGCH_DURATION, "Your bribe of %s has been exhausted.",
+        mprfc(MSGCH_DURATION, "Your bribe of %s has been exhausted.",
              branches[br].longname);
         add_daction(DACT_BRIBE_TIMEOUT);
     }
@@ -4035,7 +4035,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     {
         scaled_delay(200); // This is here to make it easy for the player to
                            // see the overall impact of the upheaval
-        mprf(MSGCH_GOD, "%s", message.c_str());
+        mprfc(MSGCH_GOD, "%s", message.c_str());
     }
 
     beam.animate = false; // already drawn
@@ -4145,7 +4145,7 @@ spret qazlal_elemental_force(bool fail)
     }
 
     if (placed)
-        mprf(MSGCH_GOD, "Clouds arounds you coalesce and take form!");
+        mprfc(MSGCH_GOD, "Clouds arounds you coalesce and take form!");
     else
         canned_msg(MSG_NOTHING_HAPPENS); // can this ever happen?
 
@@ -4206,7 +4206,7 @@ spret qazlal_disaster_area(bool fail)
 
     fail_check();
 
-    mprf(MSGCH_GOD, "Nature churns violently around you!");
+    mprfc(MSGCH_GOD, "Nature churns violently around you!");
 
     // TODO: should count get a cap proportional to targets.size()?
     int count = max(1, min((int)targets.size(),
@@ -5316,31 +5316,31 @@ void ru_do_retribution(monster* mons, int damage)
 
     if (power > 50 && (mons->antimagic_susceptible()))
     {
-        mprf(MSGCH_GOD, "You focus your inner power and drain %s's magic in "
+        mprfc(MSGCH_GOD, "You focus your inner power and drain %s's magic in "
                 "retribution!", mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, act, power+random2(320)));
     }
     else if (power > 35)
     {
-        mprf(MSGCH_GOD, "You focus your inner power and paralyse %s in retribution!",
+        mprfc(MSGCH_GOD, "You focus your inner power and paralyse %s in retribution!",
                 mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_PARALYSIS, act, power+random2(60)));
     }
     else if (power > 25)
     {
-        mprf(MSGCH_GOD, "You focus your inner power and slow %s in retribution!",
+        mprfc(MSGCH_GOD, "You focus your inner power and slow %s in retribution!",
                 mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_SLOW, act, power+random2(100)));
     }
     else if (power > 10)
     {
-        mprf(MSGCH_GOD, "You focus your inner power and blind %s in retribution!",
+        mprfc(MSGCH_GOD, "You focus your inner power and blind %s in retribution!",
                 mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_BLIND, act, power+random2(100)));
     }
     else if (power > 0)
     {
-        mprf(MSGCH_GOD, "You focus your inner power and illuminate %s in retribution!",
+        mprfc(MSGCH_GOD, "You focus your inner power and illuminate %s in retribution!",
                 mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_CORONA, act, power+random2(150)));
     }
@@ -6229,7 +6229,7 @@ static void _hepliaklqana_choose_gender()
     const string* desc = map_find(gender_map, current_gender);
     ASSERT(desc);
 
-    mprf(MSGCH_PROMPT,
+    mprfc(MSGCH_PROMPT,
          "Was %s a) male, b) female, or c) neither? (Currently %s.)",
          hepliaklqana_ally_name().c_str(),
          desc->c_str());
@@ -6482,7 +6482,7 @@ spret wu_jian_wall_jump_ability()
 
 void wu_jian_heavenly_storm()
 {
-    mprf(MSGCH_GOD, "The air is filled with shimmering golden clouds!");
+    mprfc(MSGCH_GOD, "The air is filled with shimmering golden clouds!");
     wu_jian_sifu_message(" says: The storm will not cease as long as you "
                          "keep fighting, disciple!");
 
@@ -6578,7 +6578,7 @@ void okawaru_duel_healing()
 
 void okawaru_remove_heroism()
 {
-    mprf(MSGCH_DURATION, "You feel like a meek peon again.");
+    mprfc(MSGCH_DURATION, "You feel like a meek peon again.");
     you.duration[DUR_HEROISM] = 0;
     you.redraw_evasion      = true;
     you.redraw_armour_class = true;
@@ -6586,7 +6586,7 @@ void okawaru_remove_heroism()
 
 void okawaru_remove_finesse()
 {
-    mprf(MSGCH_DURATION, "%s", you.hands_act("slow", "down.").c_str());
+    mprfc(MSGCH_DURATION, "%s", you.hands_act("slow", "down.").c_str());
     you.duration[DUR_FINESSE] = 0;
 }
 
@@ -7039,17 +7039,17 @@ void makhleb_infernal_servant()
             {
                 if (tyrant)
                 {
-                    mprf(MSGCH_WARN, "A traitorous %s dares provoke your wrath!",
+                    mprfc(MSGCH_WARN, "A traitorous %s dares provoke your wrath!",
                         bad_demon->name(DESC_PLAIN).c_str());
                 }
                 else if (coinflip())
                 {
-                    mprf(MSGCH_WARN, "A jealous %s pursues it!",
+                    mprfc(MSGCH_WARN, "A jealous %s pursues it!",
                         bad_demon->name(DESC_PLAIN).c_str());
                 }
                 else
                 {
-                    mprf(MSGCH_WARN, "A rebellious %s escapes with it!",
+                    mprfc(MSGCH_WARN, "A rebellious %s escapes with it!",
                         bad_demon->name(DESC_PLAIN).c_str());
                 }
             }

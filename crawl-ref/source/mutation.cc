@@ -1835,7 +1835,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         if (!god_gift && _resist_mutation(mutclass, beneficial))
         {
             if (failMsg)
-                mprf(MSGCH_MUTATION, "You feel odd for a moment.");
+                mprfc(MSGCH_MUTATION, "You feel odd for a moment.");
             return false;
         }
 
@@ -1858,7 +1858,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                 return false;
             // fallthrough to normal mut
         case MUTCLASS_NORMAL:
-            mprf(MSGCH_MUTATION, "Your body decomposes!");
+            mprfc(MSGCH_MUTATION, "Your body decomposes!");
             drain_player(30, false, true, true);
             return true;
         case MUTCLASS_INNATE:
@@ -1917,7 +1917,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                     you.attribute[ATTR_TEMP_MUT_KILLS] = 0;
             }
             you.mutation[mutat]--;
-            mprf(MSGCH_MUTATION, "Your %s mutation feels more permanent.",
+            mprfc(MSGCH_MUTATION, "Your %s mutation feels more permanent.",
                                   mutation_name(mutat));
             take_note(Note(NOTE_PERM_MUTATION, mutat,
                     you.get_base_mutation_level(mutat), reason.c_str()));
@@ -1969,14 +1969,14 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         {
         case MUT_STRONG: case MUT_AGILE:  case MUT_CLEVER:
         case MUT_WEAK:   case MUT_CLUMSY: case MUT_DOPEY:
-            mprf(MSGCH_MUTATION, "You feel %s.", _stat_mut_desc(mutat, true));
+            mprfc(MSGCH_MUTATION, "You feel %s.", _stat_mut_desc(mutat, true));
             gain_msg = false;
             break;
 
         case MUT_LARGE_BONE_PLATES:
             {
                 const string arms = pluralise(species::arm_name(you.species));
-                mprf(MSGCH_MUTATION, "%s",
+                mprfc(MSGCH_MUTATION, "%s",
                      replace_all(mdef.gain[cur_base_level - 1], "arms",
                                  arms).c_str());
                 gain_msg = false;
@@ -1989,7 +1989,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                 // this point the mut has already applied, and hand_name takes
                 // it into account.
                 const string hands = pluralise(you.hand_name(false));
-                mprf(MSGCH_MUTATION, "%s",
+                mprfc(MSGCH_MUTATION, "%s",
                      replace_all(mdef.gain[cur_base_level - 1], "hands",
                                  hands).c_str());
                 gain_msg = false;
@@ -2014,7 +2014,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         notify_stat_change();
 
         if (gain_msg)
-            mprf(MSGCH_MUTATION, "%s", mdef.gain[cur_base_level - 1]);
+            mprfc(MSGCH_MUTATION, "%s", mdef.gain[cur_base_level - 1]);
 
         // Do post-mutation effects.
         switch (mutat)
@@ -2174,7 +2174,7 @@ bool _delete_single_mutation_level(mutation_type mutat,
     {
     case MUT_STRONG: case MUT_AGILE:  case MUT_CLEVER:
     case MUT_WEAK:   case MUT_CLUMSY: case MUT_DOPEY:
-        mprf(MSGCH_MUTATION, "You feel %s.", _stat_mut_desc(mutat, false));
+        mprfc(MSGCH_MUTATION, "You feel %s.", _stat_mut_desc(mutat, false));
         lose_msg = false;
         break;
 
@@ -2230,7 +2230,7 @@ bool _delete_single_mutation_level(mutation_type mutat,
     you.equipment.update();
 
     if (lose_msg)
-        mprf(MSGCH_MUTATION, "%s", mdef.lose[you.mutation[mutat]]);
+        mprfc(MSGCH_MUTATION, "%s", mdef.lose[you.mutation[mutat]]);
 
     // Do post-mutation effects.
     if (mutat == MUT_FRAIL || mutat == MUT_ROBUST
@@ -2340,7 +2340,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
                     || coinflip()))
             {
                 if (failMsg)
-                    mprf(MSGCH_MUTATION, "You feel rather odd for a moment.");
+                    mprfc(MSGCH_MUTATION, "You feel rather odd for a moment.");
                 return false;
             }
         }
@@ -2421,7 +2421,7 @@ bool delete_temp_mutation()
         // games.
         if (mutat == NUM_MUTATIONS)
         {
-            mprf(MSGCH_ERROR, "Found no temp mutations, clearing.");
+            mprfc(MSGCH_ERROR, "Found no temp mutations, clearing.");
             you.attribute[ATTR_TEMP_MUTATIONS] = 0;
             return false;
         }
@@ -3077,7 +3077,7 @@ bool temp_mutation_wanes()
 
     const int num_remove = min(starting_tmuts, random_range(2, 3));
 
-    mprf(MSGCH_DURATION, "You feel the corruption within you wane %s.",
+    mprfc(MSGCH_DURATION, "You feel the corruption within you wane %s.",
         (num_remove >= starting_tmuts ? "completely" : "somewhat"));
 
     for (int i = 0; i < num_remove; ++i)
@@ -3489,9 +3489,9 @@ bool add_bane(bane_type bane, string reason, int duration, int mult)
     duration = duration * mult / 100;
 
     if (you.banes[bane] == 0)
-        mprf(MSGCH_WARN, "You are stricken with the %s.", bane_name(bane).c_str());
+        mprfc(MSGCH_WARN, "You are stricken with the %s.", bane_name(bane).c_str());
     else
-        mprf(MSGCH_WARN, "Your %s grows stronger.", bane_name(bane).c_str());
+        mprfc(MSGCH_WARN, "Your %s grows stronger.", bane_name(bane).c_str());
 
     you.banes[bane] += duration;
 
@@ -3506,7 +3506,7 @@ bool add_bane(bane_type bane, string reason, int duration, int mult)
 
 void remove_bane(bane_type bane)
 {
-    mprf(MSGCH_RECOVERY, "The %s upon you is lifted.", bane_name(bane).c_str());
+    mprfc(MSGCH_RECOVERY, "The %s upon you is lifted.", bane_name(bane).c_str());
     you.banes[bane] = 0;
 
     if (bane == BANE_MORTALITY)

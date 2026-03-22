@@ -481,7 +481,7 @@ static string _get_hint(string key, const string& arg1 = "", const string& arg2 
 {
     string text = getHintString(key);
     if (text.empty())
-        mprf(MSGCH_ERROR, "Error, no hint for '%s'.", key.c_str());
+        mprfc(MSGCH_ERROR, "Error, no hint for '%s'.", key.c_str());
 
     _replace_static_tags(text);
     text = untag_tiles_console(text);
@@ -506,7 +506,7 @@ void print_hint(string key, const string& arg1, const string& arg2)
 
     // "\n" preserves indented parts and paragraphs
     for (const string &chunk : split_string("\n", text))
-        mprf(MSGCH_TUTORIAL, "%s", chunk.c_str());
+        mprfc(MSGCH_TUTORIAL, "%s", chunk.c_str());
 
     stop_running();
 }
@@ -569,10 +569,10 @@ void hints_death_screen()
 
         print_hint(make_stringf("death random %d", hint));
     }
-    mprf(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
+    mprfc(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
     more();
 
-    mprf(MSGCH_TUTORIAL, "See you next game!");
+    mprfc(MSGCH_TUTORIAL, "See you next game!");
 
     Hints.hints_events.init(false);
 }
@@ -679,7 +679,7 @@ static void _hints_healing_reminder()
                         "health in the first place. To use your abilities "
                         "press <w>a</w>.";
             }
-            mprf(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
+            mprfc(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
 
             if (is_resting())
                 stop_running();
@@ -755,7 +755,7 @@ void hints_gained_new_skill(skill_type skill)
     case SK_THROWING:
     case SK_SPELLCASTING:
     {
-        mprf(MSGCH_TUTORIAL, "%s", get_skill_description(skill).c_str());
+        mprfc(MSGCH_TUTORIAL, "%s", get_skill_description(skill).c_str());
         stop_running();
         break;
     }
@@ -892,7 +892,7 @@ void hints_monster_seen(const monster& mon)
             "death by misclicking.";
     }
 
-    mprf(MSGCH_TUTORIAL, "%s", text.c_str());
+    mprfc(MSGCH_TUTORIAL, "%s", text.c_str());
 
     if (Hints.hints_type == HINT_RANGER_CHAR)
     {
@@ -916,7 +916,7 @@ void hints_monster_seen(const monster& mon)
                     "shortbow will also let you read its description.</tiles>";
         }
 
-        mprf(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
+        mprfc(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
 
     }
     else if (Hints.hints_type == HINT_MAGIC_CHAR)
@@ -925,7 +925,7 @@ void hints_monster_seen(const monster& mon)
                 "magic. If you look at the help entry for the "
                 "<w>M</w>emorisation screen you'll find an explanation of how "
                 "to do this.";
-        mprf(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
+        mprfc(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
 
     }
 }
@@ -1790,7 +1790,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             insert_commands(output, cmd);
         else
             output = untag_tiles_console(output); // also in insert_commands
-        mprf(MSGCH_TUTORIAL, "%s", output.c_str());
+        mprfc(MSGCH_TUTORIAL, "%s", output.c_str());
 
         stop_running();
     }
@@ -2848,7 +2848,7 @@ void tutorial_msg(const char *key, bool end)
 {
     string text = getHintString(key);
     if (text.empty())
-        return mprf(MSGCH_ERROR, "Error, no message for '%s'.", key);
+        return mprfc(MSGCH_ERROR, "Error, no message for '%s'.", key);
 
     _replace_static_tags(text);
     text = untag_tiles_console(text);
@@ -2861,7 +2861,7 @@ void tutorial_msg(const char *key, bool end)
     // "\n" to preserve indented parts, the rest is unwrapped, or split into
     // paragraphs by "\n\n", split_string() will ignore the empty line.
     for (const string &chunk : split_string("\n", text, false))
-        mprf(MSGCH_TUTORIAL, "%s", chunk.c_str());
+        mprfc(MSGCH_TUTORIAL, "%s", chunk.c_str());
 
     // tutorial_msg can get called in an vault epilogue during --builddb,
     // which can lead to a crash on tiles builds in runrest::stop as

@@ -317,7 +317,7 @@ bool gift_cards()
             const deck_type_data *deck_data = map_find(all_decks, deck);
             deck_names.push_back(deck_data ? deck_data->name : "bugginess");
         }
-        mprf(MSGCH_GOD, you.religion,
+        mprfcp(MSGCH_GOD, you.religion,
              "%s goes to deal, but finds you have enough %s cards.",
              god_name(you.religion).c_str(),
              join_strings(deck_names.begin(), deck_names.end(), " and ").c_str());

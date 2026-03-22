@@ -1347,7 +1347,7 @@ void explosion_fineff::fire()
     if (is_sanctuary(beam.target))
     {
         if (you.see_cell(beam.target))
-            mprf(MSGCH_GOD, "%s", sanctuary_message.c_str());
+            mprfc(MSGCH_GOD, "%s", sanctuary_message.c_str());
         return;
     }
 
@@ -1356,7 +1356,7 @@ void explosion_fineff::fire()
         if (typ == EXPLOSION_FINEFF_CONCUSSION || typ == EXPLOSION_FINEFF_PYROMANIA)
             mpr(boom_message);
         else
-            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s", boom_message.c_str());
+            mprfcp(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s", boom_message.c_str());
     }
 
     if (typ == EXPLOSION_FINEFF_INNER_FLAME)
@@ -1394,7 +1394,7 @@ void explosion_fineff::fire()
     }
 
     if (you.see_cell(beam.target) && !poof_message.empty())
-        mprf(MSGCH_MONSTER_TIMEOUT, "%s", poof_message.c_str());
+        mprfc(MSGCH_MONSTER_TIMEOUT, "%s", poof_message.c_str());
 }
 
 void delayed_action_fineff::fire()
@@ -1429,7 +1429,7 @@ void rakshasa_clone_fineff::fire()
 
     if (you.can_see(*rakshasa))
     {
-        mprf(MSGCH_MONSTER_SPELL,
+        mprfc(MSGCH_MONSTER_SPELL,
              "The injured %s weaves a defensive illusion!",
              rakshasa->name(DESC_PLAIN).c_str());
     }
@@ -1563,10 +1563,10 @@ void mummy_death_curse_fineff::fire()
         return;
 
     if (victim->is_player())
-        mprf(MSGCH_MONSTER_SPELL, "You feel extremely nervous for a moment...");
+        mprfc(MSGCH_MONSTER_SPELL, "You feel extremely nervous for a moment...");
     else if (you.can_see(*victim))
     {
-        mprf(MSGCH_MONSTER_SPELL, "A malignant aura surrounds %s.",
+        mprfc(MSGCH_MONSTER_SPELL, "A malignant aura surrounds %s.",
              victim->name(DESC_THE).c_str());
     }
     // The real mummy is dead, but we pass along a cached copy save at the time
@@ -1678,7 +1678,7 @@ void death_spawn_fineff::fire()
 void splinterfrost_fragment_fineff::fire()
 {
     if (!msg.empty())
-        mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s", msg.c_str());
+        mprfcp(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s", msg.c_str());
 
     beam.fire();
 }

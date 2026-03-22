@@ -122,7 +122,7 @@ bool fatal_error_notification(string error_msg)
         // in these cases we don't want to attempt the ui popup for the error
         // message, just print the error to the log. In the non-crash case,
         // this will also echo to stderr.
-        mprf(MSGCH_ERROR, "%s", error_msg.c_str());
+        mprfc(MSGCH_ERROR, "%s", error_msg.c_str());
         return false;
     }
 

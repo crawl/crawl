@@ -530,7 +530,7 @@ void validate_basedirs()
             // to a weird mix of data files.
             if (!found)
             {
-                mprf(MSGCH_ERROR,
+                mprfc(MSGCH_ERROR,
                     "Incomplete or corrupted data directory '%s'",
                             d.c_str());
             }
@@ -538,7 +538,7 @@ void validate_basedirs()
         else // true -- found a complete data directory
         {
             if (!found)
-                mprf(MSGCH_PLAIN, "Data directory '%s' found.", d.c_str());
+                mprfc(MSGCH_PLAIN, "Data directory '%s' found.", d.c_str());
             found = true;
         }
     }
@@ -1399,7 +1399,7 @@ static bool _leave_level(dungeon_feature_type stair_taken,
         if (you.wizard)
         {
             // warn about breakage so testers know it's an abnormal situation.
-            mprf(MSGCH_ERROR, "Error: you smelly wizard, how dare you enter "
+            mprfc(MSGCH_ERROR, "Error: you smelly wizard, how dare you enter "
                  "the same level (%s) twice! It will be trampled upon return.\n"
                  "The stack has: %s.",
                  level_id::current().describe().c_str(),
@@ -1651,7 +1651,7 @@ void update_portal_entrances()
                          whither.branch) == 1);
             if (brentry[whither.branch] != level_id())
             {
-                mprf(MSGCH_ERROR, "Second portal entrance for %s!",
+                mprfc(MSGCH_ERROR, "Second portal entrance for %s!",
                     whither.describe().c_str());
             }
             brentry[whither.branch] = cur_level;
@@ -1696,7 +1696,7 @@ static int _generate_portal_levels()
             // Should this crash? Reaching this case means that multiple
             // entrances to a non-reusable portal generated.
             if (you.save->has_chunk(lid.describe()))
-                mprf(MSGCH_ERROR, "Portal %s already exists!", lid.describe().c_str());
+                mprfc(MSGCH_ERROR, "Portal %s already exists!", lid.describe().c_str());
             else
                 return -1;
         }
@@ -1994,7 +1994,7 @@ static void _rescue_player_from_wall()
         // position relative to where they were. Rescue them by trying to find
         // a seen staircase, with a clear space near the wall as just a
         // a fallback.
-        mprf(MSGCH_ERROR, "Emergency fixup: removing player from wall "
+        mprfc(MSGCH_ERROR, "Emergency fixup: removing player from wall "
                           "at %d,%d. Please report this as a bug!",
                           you.pos().x, you.pos().y);
         vector<coord_def> upstairs;
@@ -2116,7 +2116,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     unwind_bool ylev(you.entering_level, load_mode != LOAD_VISITOR, false);
 
 #ifdef DEBUG_LEVEL_LOAD
-    mprf(MSGCH_DIAGNOSTICS, "Loading... branch: %d, level: %d",
+    mprfc(MSGCH_DIAGNOSTICS, "Loading... branch: %d, level: %d",
                             you.where_are_you, you.depth);
 #endif
 
@@ -2192,7 +2192,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 || you.props.exists(FORCE_MINIVAULT_KEY))
             {
                 // TODO: is there a good way of doing this without the crash?
-                mprf(MSGCH_ERROR, "&P with '%s' failed; clearing force props and trying with random generation next.",
+                mprfc(MSGCH_ERROR, "&P with '%s' failed; clearing force props and trying with random generation next.",
                     you.props.exists(FORCE_MAP_KEY)
                     ? you.props[FORCE_MAP_KEY].get_string().c_str()
                     : you.props[FORCE_MINIVAULT_KEY].get_string().c_str());
@@ -2342,7 +2342,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         && !get_level_annotation().empty()
         && !crawl_state.level_annotation_shown)
     {
-        mprf(MSGCH_PLAIN, YELLOW, "Level annotation: %s",
+        mprfcp(MSGCH_PLAIN, YELLOW, "Level annotation: %s",
              get_level_annotation().c_str());
     }
 
@@ -2368,7 +2368,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         you.global_info += delta;
 #ifdef DEBUG_LEVEL_LOAD
-        mprf(MSGCH_DIAGNOSTICS,
+        mprfc(MSGCH_DIAGNOSTICS,
              "global_info:: num_visits: %d, levels_seen: %d",
              you.global_info.num_visits, you.global_info.levels_seen);
 #endif
@@ -2376,7 +2376,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         curr_PlaceInfo += delta;
 #ifdef DEBUG_LEVEL_LOAD
-        mprf(MSGCH_DIAGNOSTICS,
+        mprfc(MSGCH_DIAGNOSTICS,
              "curr_PlaceInfo:: num_visits: %d, levels_seen: %d",
              curr_PlaceInfo.num_visits, curr_PlaceInfo.levels_seen);
 #endif
@@ -2401,7 +2401,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         {
             if (crawl_state.prev_cmd != CMD_WIZARD)
             {
-                mprf(MSGCH_ERROR,
+                mprfc(MSGCH_ERROR,
                     "Fixing up corrupted PlaceInfo for %s (levels_seen is %d)",
                     branches[curr_PlaceInfo.branch].shortname,
                     curr_PlaceInfo.levels_seen);
@@ -2733,14 +2733,14 @@ static string _bones_permastore_file()
     FILE *src = fopen_u(dist_full_path.c_str(), "rb");
     if (!src)
     {
-        mprf(MSGCH_ERROR, "Bones file exists but can't be opened: %s",
+        mprfc(MSGCH_ERROR, "Bones file exists but can't be opened: %s",
             dist_full_path.c_str());
         return "";
     }
     FILE *target = lk_open("wb", full_path);
     if (!target)
     {
-        mprf(MSGCH_ERROR, "Unable to open bones file %s for writing",
+        mprfc(MSGCH_ERROR, "Unable to open bones file %s for writing",
             full_path.c_str());
         fclose(src);
         return "";
@@ -2758,11 +2758,11 @@ static string _bones_permastore_file()
 
     if (!feof(src))
     {
-        mprf(MSGCH_ERROR, "Error installing bones file to %s",
+        mprfc(MSGCH_ERROR, "Error installing bones file to %s",
                                                     full_path.c_str());
         if (unlink(full_path.c_str()) != 0)
         {
-            mprf(MSGCH_ERROR,
+            mprfc(MSGCH_ERROR,
                 "Failed to unlink probably corrupt bones file: %s",
                 full_path.c_str());
         }
@@ -2858,14 +2858,14 @@ static bool _backup_bones_for_upgrade(string ghost_filename, save_version &v)
     FILE *backup_src = lk_open("rb", ghost_filename);
     if (!backup_src)
     {
-        mprf(MSGCH_ERROR, "Bones file to back up doesn't exist: %s",
+        mprfc(MSGCH_ERROR, "Bones file to back up doesn't exist: %s",
             ghost_filename.c_str());
         return false;
     }
     FILE *backup_target = lk_open("wb", upgrade_filename);
     if (!backup_target)
     {
-        mprf(MSGCH_ERROR, "Unable to open bones backup file %s for writing",
+        mprfc(MSGCH_ERROR, "Unable to open bones backup file %s for writing",
             upgrade_filename.c_str());
         lk_close(backup_src);
         return false;
@@ -2881,11 +2881,11 @@ static bool _backup_bones_for_upgrade(string ghost_filename, save_version &v)
 
     if (!feof(backup_src))
     {
-        mprf(MSGCH_ERROR, "Error backing up bones file to %s",
+        mprfc(MSGCH_ERROR, "Error backing up bones file to %s",
                                                     upgrade_filename.c_str());
         if (unlink(upgrade_filename.c_str()) != 0)
         {
-            mprf(MSGCH_ERROR,
+            mprfc(MSGCH_ERROR,
                 "Failed to unlink probably corrupt bones file: %s",
                 upgrade_filename.c_str());
         }
@@ -2925,7 +2925,7 @@ save_version read_ghost_header(reader &inf)
     }
     catch (const short_read_exception&)
     {
-        mprf(MSGCH_ERROR,
+        mprfc(MSGCH_ERROR,
              "Ghost file \"%s\" seems to be invalid (short read); deleting it.",
              inf.filename().c_str());
         return save_version();
@@ -3006,13 +3006,13 @@ static vector<ghost_demon> _load_ghosts_core(string filename,
                 return load_bones_file(old_bones, false);
             }
             else
-                mprf(MSGCH_ERROR, "Mismatch between bones backup "
+                mprfc(MSGCH_ERROR, "Mismatch between bones backup "
                     "filename '%s' and version %d.%d!", filename.c_str(),
                     err.version.major, err.version.minor);
             // intentional fallthrough -- unlink the misnamed file
         }
         else
-            mprf(MSGCH_ERROR, "%s", err.what());
+            mprfc(MSGCH_ERROR, "%s", err.what());
         string report;
         // if we get to this point the bones file is unreadable and needs to
         // be scrapped
@@ -3020,7 +3020,7 @@ static vector<ghost_demon> _load_ghosts_core(string filename,
             report = "Failed to unlink bad bones file";
         else
             report = "Clearing bad bones file";
-        mprf(MSGCH_ERROR, "%s: %s", report.c_str(), filename.c_str());
+        mprfc(MSGCH_ERROR, "%s: %s", report.c_str(), filename.c_str());
     }
     return results;
 
@@ -3041,7 +3041,7 @@ static vector<ghost_demon> _load_ephemeral_ghosts()
 
     if (unlink(ghost_filename.c_str()) != 0)
     {
-        mprf(MSGCH_ERROR, "Failed to unlink bones file: %s",
+        mprfc(MSGCH_ERROR, "Failed to unlink bones file: %s",
                 ghost_filename.c_str());
     }
     return results;
@@ -3083,10 +3083,10 @@ bool define_ghost_from_bones(monster& mons)
     mons.ghost_init(false);
 
     if (!mons.alive())
-        mprf(MSGCH_ERROR, "Placed ghost is not alive.");
+        mprfc(MSGCH_ERROR, "Placed ghost is not alive.");
     else if (mons.type != MONS_PLAYER_GHOST)
     {
-        mprf(MSGCH_ERROR, "Placed ghost is not MONS_PLAYER_GHOST, but %s",
+        mprfc(MSGCH_ERROR, "Placed ghost is not MONS_PLAYER_GHOST, but %s",
              mons.name(DESC_PLAIN, true).c_str());
     }
 
@@ -3980,7 +3980,7 @@ FILE *lk_open(const char *mode, const string &file)
     const bool write_lock = mode[0] != 'r' || strchr(mode, '+');
     if (!lock_file_handle(handle, write_lock))
     {
-        mprf(MSGCH_ERROR, "ERROR: Could not lock file %s", file.c_str());
+        mprfc(MSGCH_ERROR, "ERROR: Could not lock file %s", file.c_str());
         fclose(handle);
         handle = nullptr;
     }
@@ -4004,7 +4004,7 @@ FILE *lk_open_exclusive(const string &file)
 
     if (!lock_file(fd, true))
     {
-        mprf(MSGCH_ERROR, "ERROR: Could not lock file %s", file.c_str());
+        mprfc(MSGCH_ERROR, "ERROR: Could not lock file %s", file.c_str());
         close(fd);
         return nullptr;
     }

@@ -794,7 +794,7 @@ void player_equip_set::find_removable_items_for_slot(equipment_slot base_slot,
     }
 
     if (!quiet && !found_item && cursed_item)
-        mprf(MSGCH_PROMPT, "%s is stuck to your body!", cursed_item->name(DESC_YOUR).c_str());
+        mprfc(MSGCH_PROMPT, "%s is stuck to your body!", cursed_item->name(DESC_YOUR).c_str());
 }
 
 /**
@@ -1907,7 +1907,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         case SPWPN_ELECTROCUTION:
             if (!silenced(you.pos()))
             {
-                mprf(MSGCH_SOUND,
+                mprfc(MSGCH_SOUND,
                         "You hear the crackle of electricity.");
             }
             else
@@ -1939,7 +1939,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             const string your_arm = you.arm_name(false);
             if (you_worship(GOD_TROG))
             {
-                mprf(MSGCH_GOD, "Trog suppresses %s necromantic effect.",
+                mprfc(MSGCH_GOD, "Trog suppresses %s necromantic effect.",
                         apostrophise(item_name).c_str());
             }
             else if (you.skill(SK_NECROMANCY) == 0)
@@ -2231,7 +2231,7 @@ static void _zonguldrok_comment_on_hat(const item_def& hat)
     }
 
     const string msg = "A voice whispers, \"" + getSpeakString(key) + "\"";
-        mprf(MSGCH_TALK, "%s", msg.c_str());
+        mprfc(MSGCH_TALK, "%s", msg.c_str());
 }
 
 static void _equip_armour_effect(item_def& arm, bool unmeld)
@@ -2513,7 +2513,7 @@ static void _remove_amulet_of_faith(item_def &item)
 
     const int piety_loss = div_rand_round(you.raw_piety, 3);
     // Piety penalty for removing the Amulet of Faith.
-    mprf(MSGCH_GOD, "You feel less pious.");
+    mprfc(MSGCH_GOD, "You feel less pious.");
     dprf("%s: piety drain: %d", item.name(DESC_PLAIN).c_str(), piety_loss);
     lose_piety(piety_loss);
 }
@@ -2658,7 +2658,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
             simple_god_message(ignore_reason.c_str());
         else
         {
-            mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",
+            mprfc(MSGCH_GOD, "You feel a %ssurge of divine interest.",
                             you_worship(GOD_NO_GOD) ? "strange " : "");
         }
     }

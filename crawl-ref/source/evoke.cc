@@ -85,7 +85,7 @@ static bool _evoke_horn_of_geryon()
 
     bool created = false;
 
-    mprf(MSGCH_SOUND, "You produce a hideous howling noise!");
+    mprfc(MSGCH_SOUND, "You produce a hideous howling noise!");
     noisy(15, you.pos()); // same as hell effect noise
     did_god_conduct(DID_EVIL, 3);
     int num = 1;

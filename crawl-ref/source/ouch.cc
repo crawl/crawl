@@ -88,9 +88,9 @@ void maybe_melt_player_enchantments(beam_type flavour, int damage)
             if (!you.duration[DUR_ICEMAIL_DEPLETED])
             {
                 if (you.has_mutation(MUT_ICEMAIL))
-                    mprf(MSGCH_DURATION, "Your icy defences dissipate!");
+                    mprfc(MSGCH_DURATION, "Your icy defences dissipate!");
                 else
-                    mprf(MSGCH_DURATION, "Your condensation shield dissipates!");
+                    mprfc(MSGCH_DURATION, "Your condensation shield dissipates!");
             }
             you.duration[DUR_ICEMAIL_DEPLETED] = ICEMAIL_TIME;
             you.redraw_armour_class = true;
@@ -387,7 +387,7 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
 
         if (x_chance_in_y(chance, 100))
         {
-            mprf(MSGCH_WARN, "The heat overwhelms you.");
+            mprfc(MSGCH_WARN, "The heat overwhelms you.");
             you.slow_down(0, random_range(4, 8));
         }
     }
@@ -404,7 +404,7 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
 
         if (x_chance_in_y(chance, 100))
         {
-            mprf(MSGCH_WARN, "The cold chills your senses.");
+            mprfc(MSGCH_WARN, "The cold chills your senses.");
             const int dur = random_range(5, 10);
             blind_player(dur, LIGHTBLUE);
             you.increase_duration(DUR_WEAK, dur, 50);
@@ -424,14 +424,14 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
 
         if (x_chance_in_y(chance, 100))
         {
-            mprf(MSGCH_WARN, "The electricity makes your body seize.");
+            mprfc(MSGCH_WARN, "The electricity makes your body seize.");
             you.increase_duration(DUR_NO_MOMENTUM, random_range(3, 7), 10);
         }
     }
 
     if (flavour == BEAM_WATER && you.duration[DUR_STICKY_FLAME])
     {
-        mprf(MSGCH_WARN, "The flames go out!");
+        mprfc(MSGCH_WARN, "The flames go out!");
         end_sticky_flame_player();
     }
 
@@ -457,7 +457,7 @@ void lose_level()
 
     you.experience_level--;
 
-    mprf(MSGCH_WARN,
+    mprfc(MSGCH_WARN,
          "You are now level %d!", you.experience_level);
 
     calc_hp();
@@ -810,7 +810,7 @@ static void _maybe_spawn_monsters(int dam, kill_method_type death_type,
         {
             if (mon == MONS_BUTTERFLY)
             {
-                mprf(MSGCH_GOD, "A shower of butterflies erupts from you!");
+                mprfc(MSGCH_GOD, "A shower of butterflies erupts from you!");
                 take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "butterfly on damage"), true);
             }
             else
@@ -864,7 +864,7 @@ static void _maybe_fog(int dam)
     const int upper_threshold = you.hp_max / 2;
     if (you_worship(GOD_XOM) && x_chance_in_y(dam, 30 * upper_threshold))
     {
-        mprf(MSGCH_GOD, "You emit a cloud of colourful smoke!");
+        mprfc(MSGCH_GOD, "You emit a cloud of colourful smoke!");
         big_cloud(CLOUD_XOM_TRAIL, &you, you.pos(), 50, 4 + random2(5), -1);
         take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, "smoke on damage"), true);
     }
@@ -1236,7 +1236,7 @@ static void _god_death_messages(kill_method_type death_type,
     if (left_corpse)
     {
         if (will_have_passive(passive_t::goldify_corpses))
-            mprf(MSGCH_GOD, "Your body crumbles into a pile of gold.");
+            mprfc(MSGCH_GOD, "Your body crumbles into a pile of gold.");
 
         if (you.religion == GOD_NEMELEX_XOBEH)
             nemelex_death_message();
@@ -1432,7 +1432,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     // Even if we have low HP messages off, we'll still give a
     // big hit warning (in this case, a hit for half our HPs) -- bwr
     if (dam > 0 && you.hp_max <= dam * 2)
-        mprf(MSGCH_DANGER, "Ouch! That really hurt!");
+        mprfc(MSGCH_DANGER, "Ouch! That really hurt!");
 
     if (you.hp > 0 && dam > 0)
     {

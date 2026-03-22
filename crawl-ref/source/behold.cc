@@ -29,7 +29,7 @@ void player::add_beholder(monster& mon, bool forced, int dur)
         beholders.push_back(mon.mid);
         if (!forced)
         {
-            mprf(MSGCH_WARN, "You are mesmerised by %s!",
+            mprfc(MSGCH_WARN, "You are mesmerised by %s!",
                              mon.name(DESC_THE).c_str());
         }
     }
@@ -201,7 +201,7 @@ void player::_removed_beholder(bool quiet)
         duration[DUR_MESMERISED] = 0;
         you.duration[DUR_MESMERISE_IMMUNE] = random_range(21, 40);
         if (!quiet)
-            mprf(MSGCH_DURATION, "You are no longer mesmerised.");
+            mprfc(MSGCH_DURATION, "You are no longer mesmerised.");
     }
 }
 

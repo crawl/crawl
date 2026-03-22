@@ -33,7 +33,7 @@ static void _show_message_line(string line)
         string sender = line.substr(0, sender_pos);
         line = line.substr(sender_pos + 1);
         trim_string(line);
-        mprf_nocap(MSGCH_DGL_MESSAGE, "<white>%s:</white> %s", sender.c_str(),
+        mprfc_nocap(MSGCH_DGL_MESSAGE, "<white>%s:</white> %s", sender.c_str(),
                                                                line.c_str());
         if (Options.note_dgl_messages)
         {
@@ -57,7 +57,7 @@ static void _read_each_message()
     FILE *mf = fopen_u(SysEnv.messagefile.c_str(), "r+");
     if (!mf)
     {
-        mprf(MSGCH_ERROR, "Couldn't read %s: %s", SysEnv.messagefile.c_str(),
+        mprfc(MSGCH_ERROR, "Couldn't read %s: %s", SysEnv.messagefile.c_str(),
              strerror(errno));
         _kill_messaging(mf);
         return;
@@ -68,7 +68,7 @@ static void _read_each_message()
 
     if (!lock_file_handle(mf, false))
     {
-        mprf(MSGCH_ERROR, "Failed to lock %s: %s", SysEnv.messagefile.c_str(),
+        mprfc(MSGCH_ERROR, "Failed to lock %s: %s", SysEnv.messagefile.c_str(),
              strerror(errno));
         _kill_messaging(mf);
         return;
@@ -86,7 +86,7 @@ static void _read_each_message()
 
             if (say_got_msg)
             {
-                mprf(MSGCH_DGL_MESSAGE, "Your messages:");
+                mprfc(MSGCH_DGL_MESSAGE, "Your messages:");
                 say_got_msg = false;
             }
 
@@ -95,7 +95,7 @@ static void _read_each_message()
 
         if (!lock_file_handle(mf, false))
         {
-            mprf(MSGCH_ERROR, "Failed to lock %s: %s",
+            mprfc(MSGCH_ERROR, "Failed to lock %s: %s",
                  SysEnv.messagefile.c_str(),
                  strerror(errno));
             _kill_messaging(mf);
@@ -104,7 +104,7 @@ static void _read_each_message()
     }
     if (!lock_file_handle(mf, true))
     {
-        mprf(MSGCH_ERROR, "Unable to write lock %s: %s",
+        mprfc(MSGCH_ERROR, "Unable to write lock %s: %s",
              SysEnv.messagefile.c_str(),
              strerror(errno));
     }
@@ -125,7 +125,7 @@ void read_messages()
 static void _announce_messages()
 {
     // XXX: We could do a NetHack-like mail daemon here at some point.
-    mprf(MSGCH_DGL_MESSAGE, "Beep! Your pager goes off! Use _ to check your messages.");
+    mprfc(MSGCH_DGL_MESSAGE, "Beep! Your pager goes off! Use _ to check your messages.");
 }
 
 void check_messages()

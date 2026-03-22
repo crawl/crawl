@@ -53,7 +53,7 @@
 void wizard_create_spec_monster_name()
 {
     char specs[1024];
-    mprf(MSGCH_PROMPT, "Enter monster name (or MONS spec) (? for help): ");
+    mprfc(MSGCH_PROMPT, "Enter monster name (or MONS spec) (? for help): ");
     if (cancellable_get_line_autohist(specs, sizeof specs) || !*specs)
     {
         canned_msg(MSG_OK);
@@ -91,7 +91,7 @@ void wizard_create_spec_monster_name()
     mons_spec mspec = mlist.get_monster(0);
     if (mspec.type == MONS_NO_MONSTER)
     {
-        mprf(MSGCH_DIAGNOSTICS, "Such a monster couldn't be found.");
+        mprfc(MSGCH_DIAGNOSTICS, "Such a monster couldn't be found.");
         return;
     }
 
@@ -109,7 +109,7 @@ void wizard_create_spec_monster_name()
 
     if (!in_bounds(place))
     {
-        mprf(MSGCH_DIAGNOSTICS, "Found no space to place monster.");
+        mprfc(MSGCH_DIAGNOSTICS, "Found no space to place monster.");
         return;
     }
 
@@ -120,7 +120,7 @@ void wizard_create_spec_monster_name()
 
     if (!dgn_place_monster(mspec, place, true, false))
     {
-        mprf(MSGCH_DIAGNOSTICS, "Unable to place monster.");
+        mprfc(MSGCH_DIAGNOSTICS, "Unable to place monster.");
         return;
     }
 }
@@ -271,7 +271,7 @@ void debug_stethoscope(int mon)
         i = mon;
     else
     {
-        mprf(MSGCH_PROMPT, "Which monster?");
+        mprfc(MSGCH_PROMPT, "Which monster?");
 
         direction(stth, direction_chooser_args());
 
@@ -285,13 +285,13 @@ void debug_stethoscope(int mon)
 
         if (cloud_struct* cloud = cloud_at(stethpos))
         {
-            mprf(MSGCH_DIAGNOSTICS, "cloud type: %d delay: %d",
+            mprfc(MSGCH_DIAGNOSTICS, "cloud type: %d delay: %d",
                  cloud->type, cloud->decay);
         }
 
         if (!monster_at(stethpos))
         {
-            mprf(MSGCH_DIAGNOSTICS, "item grid = %d", env.igrid(stethpos));
+            mprfc(MSGCH_DIAGNOSTICS, "item grid = %d", env.igrid(stethpos));
             return;
         }
 
@@ -301,7 +301,7 @@ void debug_stethoscope(int mon)
     monster& mons(env.mons[i]);
 
     // Print type of monster.
-    mprf(MSGCH_DIAGNOSTICS, "%s (id #%d; type=%d loc=(%d,%d) align=%s)",
+    mprfc(MSGCH_DIAGNOSTICS, "%s (id #%d; type=%d loc=(%d,%d) align=%s)",
          mons.name(DESC_THE, true).c_str(),
          i, mons.type, mons.pos().x, mons.pos().y,
          ((mons.attitude == ATT_HOSTILE)        ? "hostile" :
@@ -311,7 +311,7 @@ void debug_stethoscope(int mon)
                                                 : "unknown alignment"));
 
     // Print stats and other info.
-    mprf(MSGCH_DIAGNOSTICS,
+    mprfc(MSGCH_DIAGNOSTICS,
          "HD=%d/%d HP=%d/%d AC=%d(%d) EV=%d(%d) WL=%d XP=%d SP=%d "
          "energy=%d%s%s mid=%u num=%d stealth=%d flags=%04" PRIx64,
          mons.get_hit_dice(),
@@ -329,7 +329,7 @@ void debug_stethoscope(int mon)
 
     if (mons.damage_total)
     {
-        mprf(MSGCH_DIAGNOSTICS,
+        mprfc(MSGCH_DIAGNOSTICS,
              "pdam=%d/%d (%d%%)",
              mons.damage_friendly, mons.damage_total,
              50 * mons.damage_friendly / mons.damage_total);
@@ -337,7 +337,7 @@ void debug_stethoscope(int mon)
 
     // Print habitat and behaviour information.
     const actor * const summoner = actor_by_mid(mons.summoner);
-    mprf(MSGCH_DIAGNOSTICS,
+    mprfc(MSGCH_DIAGNOSTICS,
          "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d) "
          "firing_pos=(%d,%d) patrol_point=(%d,%d) god=%s%s",
          _habitat_debug_name(mons_habitat(mons)).c_str(),
@@ -367,7 +367,7 @@ void debug_stethoscope(int mon)
                    : ""));
 
     // Print resistances.
-    mprf(MSGCH_DIAGNOSTICS, "resist: fire=%d cold=%d elec=%d pois=%d neg=%d "
+    mprfc(MSGCH_DIAGNOSTICS, "resist: fire=%d cold=%d elec=%d pois=%d neg=%d "
                             "acid=%d sticky=%s miasma=%s",
          mons.res_fire(),
          mons.res_cold(),
@@ -378,10 +378,10 @@ void debug_stethoscope(int mon)
          mons.res_sticky_flame() ? "yes" : "no",
          mons.res_miasma() ? "yes" : "no");
 
-    mprf(MSGCH_DIAGNOSTICS, "ench: %s",
+    mprfc(MSGCH_DIAGNOSTICS, "ench: %s",
          mons.describe_enchantments().c_str());
 
-    mprf(MSGCH_DIAGNOSTICS, "props: %s",
+    mprfc(MSGCH_DIAGNOSTICS, "props: %s",
          mons.describe_props().c_str());
 
     ostringstream spl;
@@ -426,7 +426,7 @@ void debug_stethoscope(int mon)
         spl << " (#" << static_cast<int>(hspell_pass[k].spell) << ")";
     }
     if (found_spell)
-        mprf(MSGCH_DIAGNOSTICS, "spells: %s", spl.str().c_str());
+        mprfc(MSGCH_DIAGNOSTICS, "spells: %s", spl.str().c_str());
 
     ostringstream inv;
     bool found_item = false;
@@ -444,13 +444,13 @@ void debug_stethoscope(int mon)
         inv << " (" << static_cast<int>(ii->index()) << ")";
     }
     if (found_item)
-        mprf(MSGCH_DIAGNOSTICS, "inv: %s", inv.str().c_str());
+        mprfc(MSGCH_DIAGNOSTICS, "inv: %s", inv.str().c_str());
 
     if (mons_is_ghost_demon(mons.type))
     {
         ASSERT(mons.ghost);
         const ghost_demon &ghost = *mons.ghost;
-        mprf(MSGCH_DIAGNOSTICS, "Ghost damage: %d; brand: %d; att_type: %d; "
+        mprfc(MSGCH_DIAGNOSTICS, "Ghost damage: %d; brand: %d; att_type: %d; "
                                 "att_flav: %d",
              ghost.damage, ghost.brand, ghost.att_type, ghost.att_flav);
     }
@@ -479,7 +479,7 @@ void wizard_dismiss_all_monsters(bool force_all)
     char buf[1024] = "";
     if (!force_all)
     {
-        mprf(MSGCH_PROMPT, "What monsters to dismiss (ENTER for all, "
+        mprfc(MSGCH_PROMPT, "What monsters to dismiss (ENTER for all, "
                            "\"harmful\", \"mobile\", \"los\" or a regex, "
                            "\"keepitem\" to leave items)? ");
         bool validline = !cancellable_get_line_autohist(buf, sizeof buf);
@@ -500,7 +500,7 @@ void wizard_dismiss_all_monsters(bool force_all)
 
 void debug_make_monster_shout(monster* mon)
 {
-    mprf(MSGCH_PROMPT, "Make the monster (S)hout or (T)alk? ");
+    mprfc(MSGCH_PROMPT, "Make the monster (S)hout or (T)alk? ");
 
     char type = (char) getchm(KMC_DEFAULT);
     type = toalower(type);
@@ -549,7 +549,7 @@ void debug_make_monster_shout(monster* mon)
 
 void wizard_apply_monster_blessing(monster* mon)
 {
-    mprf(MSGCH_PROMPT, "Apply blessing of the (S)hining One? ");
+    mprfc(MSGCH_PROMPT, "Apply blessing of the (S)hining One? ");
 
     char type = (char) getchm(KMC_DEFAULT);
     type = toalower(type);
@@ -694,7 +694,7 @@ void wizard_make_monster_summoned(monster* mon)
 {
     if (mon->is_summoned())
     {
-        mprf(MSGCH_PROMPT, "Monster is already summoned.");
+        mprfc(MSGCH_PROMPT, "Monster is already summoned.");
         return;
     }
 
@@ -736,7 +736,7 @@ void wizard_make_monster_summoned(monster* mon)
         spell_type spell = spell_by_name(specs, true);
         if (spell == SPELL_NO_SPELL)
         {
-            mprf(MSGCH_PROMPT, "No such spell.");
+            mprfc(MSGCH_PROMPT, "No such spell.");
             return;
         }
         type = (int) spell;
@@ -758,7 +758,7 @@ void wizard_polymorph_monster(monster* mon)
 
     if (invalid_monster_type(type))
     {
-        mprf(MSGCH_PROMPT, "Invalid monster type.");
+        mprfc(MSGCH_PROMPT, "Invalid monster type.");
         return;
     }
 
@@ -778,7 +778,7 @@ void wizard_polymorph_monster(monster* mon)
 
     if (!mon->alive())
     {
-        mprf(MSGCH_ERROR, "Polymorph killed monster?");
+        mprfc(MSGCH_ERROR, "Polymorph killed monster?");
         return;
     }
 
@@ -790,7 +790,7 @@ void wizard_polymorph_monster(monster* mon)
         change_monster_type(mon, type);
         if (!mon->alive())
         {
-            mprf(MSGCH_ERROR, "Polymorph killed monster?");
+            mprfc(MSGCH_ERROR, "Polymorph killed monster?");
             return;
         }
 
@@ -886,7 +886,7 @@ void debug_miscast(int target_index)
     }
 
     char specs[100];
-    mprf(MSGCH_PROMPT, "Miscast which school or spell, by name? ");
+    mprfc(MSGCH_PROMPT, "Miscast which school or spell, by name? ");
     if (cancellable_get_line_autohist(specs, sizeof specs) || !*specs)
     {
         canned_msg(MSG_OK);
@@ -935,9 +935,9 @@ void debug_miscast(int target_index)
         mprf("Miscasting school %s.", spelltype_long_name(school));
 
     if (spell != SPELL_NO_SPELL)
-        mprf(MSGCH_PROMPT, "Enter fail: ");
+        mprfc(MSGCH_PROMPT, "Enter fail: ");
     else
-        mprf(MSGCH_PROMPT, "Enter level, fail: ");
+        mprfc(MSGCH_PROMPT, "Enter level, fail: ");
 
     if (cancellable_get_line_autohist(specs, sizeof specs) || !*specs)
     {
@@ -1013,7 +1013,7 @@ void debug_miscast(int target_index)
 #ifdef DEBUG_BONES
 void debug_ghosts()
 {
-    mprf(MSGCH_PROMPT, "(C)reate, create (T)emporary, or (L)oad bones file?");
+    mprfc(MSGCH_PROMPT, "(C)reate, create (T)emporary, or (L)oad bones file?");
     const char c = toalower(getchm());
 
     if (c == 'c')

@@ -167,7 +167,7 @@ mlc_mapping::mlc_mapping(const string &s)
     // let -1 for "" through
     if ((scolour >= 16 || scolour < 0) && (thesplit.size() > 1 && !thesplit[1].empty()))
     {
-        mprf(MSGCH_ERROR, "Options error: Bad monster_list_colour: '%s'",
+        mprfc(MSGCH_ERROR, "Options error: Bad monster_list_colour: '%s'",
             thesplit[1].c_str());
         return;
     }
@@ -175,7 +175,7 @@ mlc_mapping::mlc_mapping(const string &s)
     category = _str_to_mlc(thesplit[0]);
     if (category == NUM_MLC)
     {
-        mprf(MSGCH_ERROR, "Bad monster_list_colour key: %s\n",
+        mprfc(MSGCH_ERROR, "Bad monster_list_colour key: %s\n",
                      thesplit[0].c_str());
     }
 }
@@ -189,7 +189,7 @@ colour_remapping::colour_remapping(const string &s)
     // let -1 for "" through
     if ((scolour >= 16 || scolour < 0) && (thesplit.size() > 1 && !thesplit[0].empty()))
     {
-        mprf(MSGCH_ERROR, "Options error: Bad custom_text_colours key: '%s'",
+        mprfc(MSGCH_ERROR, "Options error: Bad custom_text_colours key: '%s'",
             thesplit[1].c_str());
         return;
     }
@@ -198,7 +198,7 @@ colour_remapping::colour_remapping(const string &s)
     colour_def = str_to_tile_colour(thesplit[1]);
     if (colour_index == NUM_TERM_COLOURS)
     {
-        mprf(MSGCH_ERROR, "Bad custom_text_colours: %s\n",
+        mprfc(MSGCH_ERROR, "Bad custom_text_colours: %s\n",
                      thesplit[0].c_str());
     }
 }
@@ -1304,7 +1304,7 @@ static species_type _str_to_species(const string &str)
         ret = SP_UNKNOWN;
 
     if (ret == SP_UNKNOWN)
-        mprf(MSGCH_ERROR, "Unknown species choice: %s\n", str.c_str());
+        mprfc(MSGCH_ERROR, "Unknown species choice: %s\n", str.c_str());
 
     return ret;
 }
@@ -1339,7 +1339,7 @@ job_type str_to_job(const string &str)
         job = JOB_UNKNOWN;
 
     if (job == JOB_UNKNOWN)
-        mprf(MSGCH_ERROR, "Unknown background choice: %s\n", str.c_str());
+        mprfc(MSGCH_ERROR, "Unknown background choice: %s\n", str.c_str());
 
     return job;
 }
@@ -1737,7 +1737,7 @@ char32_t get_glyph_override(int c)
         c = -c;
     if (wcwidth(c) != 1)
     {
-        mprf(MSGCH_ERROR, "Invalid glyph override: %X", c);
+        mprfc(MSGCH_ERROR, "Invalid glyph override: %X", c);
         c = 0;
     }
     return c;
@@ -2299,7 +2299,7 @@ void read_init_file(bool runscripts)
         {
             clua.execfile(builtin, false, false);
             if (!clua.error.empty())
-                mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+                mprfc(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         }
     }
 
@@ -2794,14 +2794,14 @@ void base_game_options::read_options(LineInput &il, bool runscripts,
 #ifdef CLUA_BINDINGS
                 if (luacode.run(clua))
                 {
-                    mprf(MSGCH_ERROR, "Lua error: %s",
+                    mprfc(MSGCH_ERROR, "Lua error: %s",
                          luacode.orig_error().c_str());
                 }
                 luacode.clear();
 #else
                 if (!clua_error_printed)
                 {
-                    mprf(MSGCH_ERROR, "User lua is disabled in this build! `%s`", str.c_str());
+                    mprfc(MSGCH_ERROR, "User lua is disabled in this build! `%s`", str.c_str());
                     clua_error_printed = true;
                 }
 #endif
@@ -2817,14 +2817,14 @@ void base_game_options::read_options(LineInput &il, bool runscripts,
             {
                 if (luacode.run(clua))
                 {
-                    mprf(MSGCH_ERROR, "Lua error: %s",
+                    mprfc(MSGCH_ERROR, "Lua error: %s",
                          luacode.orig_error().c_str());
                 }
             }
 #else
             if (!clua_error_printed)
             {
-                mprf(MSGCH_ERROR, "User lua is disabled in this build! `%s`", str.c_str());
+                mprfc(MSGCH_ERROR, "User lua is disabled in this build! `%s`", str.c_str());
                 clua_error_printed = true;
             }
 #endif
@@ -2858,11 +2858,11 @@ void base_game_options::read_options(LineInput &il, bool runscripts,
         if (l_init)
             luacond.add(line, "]==])");
         if (luacond.run(clua))
-            mprf(MSGCH_ERROR, "Lua error: %s", luacond.orig_error().c_str());
+            mprfc(MSGCH_ERROR, "Lua error: %s", luacond.orig_error().c_str());
 #else
         if (!clua_error_printed)
         {
-            mprf(MSGCH_ERROR, "User lua is disabled in this build! (file: %s)", filename.c_str());
+            mprfc(MSGCH_ERROR, "User lua is disabled in this build! (file: %s)", filename.c_str());
             clua_error_printed = true;
         }
 #endif
@@ -3400,7 +3400,7 @@ message_colour_mapping::message_colour_mapping(const string &s)
 
     if (cmap.size() != 2)
     {
-        mprf(MSGCH_ERROR, "Options error: Missing colour in message_colour setting: '%s'", s.c_str());
+        mprfc(MSGCH_ERROR, "Options error: Missing colour in message_colour setting: '%s'", s.c_str());
         return; // XX better error handling??
     }
 
@@ -3409,7 +3409,7 @@ message_colour_mapping::message_colour_mapping(const string &s)
         colour = MSGCOL_MUTED;
     else if (col < 0 || col >= NUM_TERM_COLOURS)
     {
-        mprf(MSGCH_ERROR, "Options error: Bad colour '%s' in message_colour setting: '%s'",
+        mprfc(MSGCH_ERROR, "Options error: Bad colour '%s' in message_colour setting: '%s'",
             cmap[0].c_str(), s.c_str());
         return;
     }
@@ -3426,7 +3426,7 @@ colour_mapping::colour_mapping(const string &s)
     string tagname, colname;
     if (subseg.size() < 2)
     {
-        mprf(MSGCH_ERROR, "Options error: Missing tag/color in colour mapping: '%s'", s.c_str());
+        mprfc(MSGCH_ERROR, "Options error: Missing tag/color in colour mapping: '%s'", s.c_str());
         return;
     }
     else if (subseg.size() == 3)
@@ -3445,7 +3445,7 @@ colour_mapping::colour_mapping(const string &s)
     const int col = str_to_colour(colname);
     if (col < 0 || col > NUM_TERM_COLOURS)
     {
-        mprf(MSGCH_ERROR, "Options error: Unknown color in colour mapping: '%s'", s.c_str());
+        mprfc(MSGCH_ERROR, "Options error: Unknown color in colour mapping: '%s'", s.c_str());
         return;
     }
 
@@ -3467,7 +3467,7 @@ sound_mapping::sound_mapping(const string &s)
     string::size_type cpos = s.find(":", 0); // TODO: allow escaping?
     if (cpos == string::npos)
     {
-        mprf(MSGCH_ERROR, "Options error: invalid sound mapping '%s'", s.c_str());
+        mprfc(MSGCH_ERROR, "Options error: invalid sound mapping '%s'", s.c_str());
         return;
     }
 #if !defined(USE_SOUND) || !defined(WINMM_PLAY_SOUNDS) || !defined(SOUND_PLAY_COMMAND) || !defined(USE_SDL)
@@ -3478,7 +3478,7 @@ sound_mapping::sound_mapping(const string &s)
         // This might be a bit non-ideal, as it only shows up in the main menu
         // message log...
         _sound_warning_issued = true;
-        mprf(MSGCH_PLAIN, "Options warning: `sound` will have no effect on this build.");
+        mprfc(MSGCH_PLAIN, "Options warning: `sound` will have no effect on this build.");
     }
 #endif
 
@@ -3492,7 +3492,7 @@ static pair<text_pattern,string> _slot_mapping(const string &s)
     vector<string> thesplit = split_string(":", s, true, false, 1);
     if (thesplit.size() != 2)
     {
-        mprf(MSGCH_ERROR, "Error parsing slot mapping: '%s'\n",
+        mprfc(MSGCH_ERROR, "Error parsing slot mapping: '%s'\n",
                             s.c_str());
         return make_pair(text_pattern(), ""); // pattern is marked as invalid
     }
@@ -3504,7 +3504,7 @@ static pair<string, char> _consumable_mapping(const string &s)
     vector<string> thesplit = split_string(":", s, true, false, 1);
     if (thesplit.size() != 2)
     {
-        mprf(MSGCH_ERROR, "Error parsing consumable mapping: '%s'\n",
+        mprfc(MSGCH_ERROR, "Error parsing consumable mapping: '%s'\n",
                             s.c_str());
         return make_pair("", '-'); // pattern is marked as invalid
     }
@@ -3592,7 +3592,7 @@ static void _bindkey(string field)
         || end_bracket == string::npos
         || start_bracket > end_bracket)
     {
-        mprf(MSGCH_ERROR, "Bad bindkey bracketing in '%s'",
+        mprfc(MSGCH_ERROR, "Bad bindkey bracketing in '%s'",
              field.c_str());
         return;
     }
@@ -3614,7 +3614,7 @@ static void _bindkey(string field)
 
     if (wchars.size() == 0)
     {
-        mprf(MSGCH_ERROR, "No key in bindkey directive '%s'",
+        mprfc(MSGCH_ERROR, "No key in bindkey directive '%s'",
              field.c_str());
         return;
     }
@@ -3626,7 +3626,7 @@ static void _bindkey(string field)
         keyseq ks = parse_keyseq(key_str);
         if (ks.size() != 1)
         {
-            mprf(MSGCH_ERROR, "Invalid keyseq '%s' in bindkey directive '%s'",
+            mprfc(MSGCH_ERROR, "Invalid keyseq '%s' in bindkey directive '%s'",
                 key_str.c_str(), field.c_str());
         }
         key = ks[0];
@@ -3639,7 +3639,7 @@ static void _bindkey(string field)
         key = read_key_code(key_str);
         if (key == CK_NO_KEY)
         {
-            mprf(MSGCH_ERROR, "Invalid key '%s' in bindkey directive '%s'",
+            mprfc(MSGCH_ERROR, "Invalid key '%s' in bindkey directive '%s'",
                  key_str.c_str(), field.c_str());
             return;
         }
@@ -3648,7 +3648,7 @@ static void _bindkey(string field)
     const size_t start_name = field.find_first_not_of(' ', end_bracket + 1);
     if (start_name == string::npos)
     {
-        mprf(MSGCH_ERROR, "No command name for bindkey directive '%s'",
+        mprfc(MSGCH_ERROR, "No command name for bindkey directive '%s'",
              field.c_str());
         return;
     }
@@ -3657,7 +3657,7 @@ static void _bindkey(string field)
     const command_type cmd  = name_to_command(name);
     if (cmd == CMD_NO_CMD)
     {
-        mprf(MSGCH_ERROR, "No command named '%s'", name.c_str());
+        mprfc(MSGCH_ERROR, "No command named '%s'", name.c_str());
         return;
     }
 
@@ -3868,10 +3868,10 @@ void base_game_options::read_option_line(const string &str, bool runscripts)
         {
             clua.execfile(state.raw_field.c_str(), false, false);
             if (!clua.error.empty())
-                mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+                mprfc(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         }
 #else
-        mprf(MSGCH_ERROR, "lua_file failed: clua not enabled on this build!");
+        mprfc(MSGCH_ERROR, "lua_file failed: clua not enabled on this build!");
 #endif
         return;
     }
@@ -3942,7 +3942,7 @@ void base_game_options::read_option_line(const string &str, bool runscripts)
                 state.key.c_str(), state.raw_field.c_str(), state.lua_mode()))
         {
             if (!clua.error.empty())
-                mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+                mprfc(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
             named_options[state.key] = state.raw_field;
         }
     }
@@ -4475,6 +4475,19 @@ static string _supported_language_listing()
                               [](language_def){return true;});
 }
 
+static void _apply_gettext_language(const char *code)
+{
+#ifdef TARGET_COMPILER_VC
+    _putenv_s("LANGUAGE", code ? code : "");
+#else
+    if (code)
+        setenv("LANGUAGE", code, 1);
+    else
+        unsetenv("LANGUAGE");
+#endif
+    setlocale(LC_MESSAGES, "");
+}
+
 bool game_options::set_lang(const char *lc)
 {
     if (!lc)
@@ -4493,6 +4506,7 @@ bool game_options::set_lang(const char *lc)
         {
             language = ldef.lang;
             lang_name = ldef.code;
+            _apply_gettext_language(lang_name);
             return true;
         }
     }
@@ -4670,7 +4684,7 @@ void base_game_options::report_error(const char* format, ...)
     string error = vmake_stringf(format, args);
     va_end(args);
 
-    mprf(MSGCH_ERROR, "Options error: %s (%s:%d)", error.c_str(),
+    mprfc(MSGCH_ERROR, "Options error: %s (%s:%d)", error.c_str(),
          basefilename.c_str(), line_num);
 }
 

@@ -238,11 +238,11 @@ static monster* _get_current_target()
 void direction_chooser::print_top_prompt() const
 {
     if (!top_prompt.empty())
-        mprf(MSGCH_PROMPT, "%s", top_prompt.c_str());
+        mprfc(MSGCH_PROMPT, "%s", top_prompt.c_str());
     else if (moves.fire_context)
     {
         // TODO: consolidate top prompt construction more
-        mprf(MSGCH_PROMPT, "%s",
+        mprfc(MSGCH_PROMPT, "%s",
             moves.fire_context->get()->quiver_description().tostring().c_str());
     }
 }
@@ -294,7 +294,7 @@ void direction_chooser::print_key_hints() const
     }
 
     // Display the prompt.
-    mprf(MSGCH_PROMPT, "%s", prompt.c_str());
+    mprfc(MSGCH_PROMPT, "%s", prompt.c_str());
 }
 
 bool direction_chooser::targets_objects() const
@@ -316,7 +316,7 @@ void direction_chooser::describe_cell() const
     {
         const coord_def relpos = target() - you.pos();
         string location_str = make_stringf("Location (%d, %d)", relpos.x, -relpos.y);
-        mprf(MSGCH_PLAIN, "%s", location_str.c_str());
+        mprfc(MSGCH_PLAIN, "%s", location_str.c_str());
     }
     if (!you.see_cell(target()))
     {
@@ -336,7 +336,7 @@ void direction_chooser::describe_cell() const
             {
                 string str = _get_cloud_desc(target());
                 if (!str.empty())
-                    mprf(MSGCH_EXAMINE, "%s", str.c_str());
+                    mprfc(MSGCH_EXAMINE, "%s", str.c_str());
             }
         }
     }
@@ -982,7 +982,7 @@ bool direction_chooser::move_is_ok() const
             if (hitfunc && hitfunc->can_affect_unseen())
                 return true; // is this too broad?
             if (you.see_cell(target()))
-                mprf(MSGCH_EXAMINE_FILTER, "There's something in the way.");
+                mprfc(MSGCH_EXAMINE_FILTER, "There's something in the way.");
             // XXX: Hack to let bump attack with a ranged weapon still work
             //      when Primordial Nightfall is active. Hopefully doesn't
             //      affect anything else?
@@ -992,7 +992,7 @@ bool direction_chooser::move_is_ok() const
                 return true;
             }
             else
-                mprf(MSGCH_EXAMINE_FILTER, "You can't see that place.");
+                mprfc(MSGCH_EXAMINE_FILTER, "You can't see that place.");
             return false;
         }
 
@@ -1008,9 +1008,9 @@ bool direction_chooser::move_is_ok() const
                     if (moves.interactive)
                     {
                         if (harmful_to_player)
-                            mprf(MSGCH_EXAMINE_FILTER, "That would be overly suicidal.");
+                            mprfc(MSGCH_EXAMINE_FILTER, "That would be overly suicidal.");
                         else
-                            mprf(MSGCH_EXAMINE_FILTER, "That would be pointless.");
+                            mprfc(MSGCH_EXAMINE_FILTER, "That would be pointless.");
                     }
                     return false;
                 }
@@ -1032,7 +1032,7 @@ bool direction_chooser::move_is_ok() const
                 // avoid printing this message when autotargeting -- it doesn't
                 // make much sense
                 if (moves.interactive)
-                    mprf(MSGCH_EXAMINE_FILTER, "Sorry, you can't target yourself.");
+                    mprfc(MSGCH_EXAMINE_FILTER, "Sorry, you can't target yourself.");
                 return false;
             }
         }
@@ -1674,7 +1674,7 @@ bool direction_chooser::pickup_item()
         ii = env.map_knowledge(target()).item();
     if (!ii || !ii->is_valid(true))
     {
-        mprf(MSGCH_EXAMINE_FILTER, "You can't see any item there.");
+        mprfc(MSGCH_EXAMINE_FILTER, "You can't see any item there.");
         return false;
     }
     ii->flags |= ISFLAG_THROWN; // make autoexplore greedy
@@ -1703,7 +1703,7 @@ bool direction_chooser::pickup_item()
 
     if (!just_looking) // firing/casting prompt
     {
-        mprf(MSGCH_EXAMINE_FILTER, "Marked for pickup.");
+        mprfc(MSGCH_EXAMINE_FILTER, "Marked for pickup.");
         return false;
     }
 
@@ -1723,7 +1723,7 @@ bool direction_chooser::handle_signals()
         moves.isCancel = true;
         moves.cmd_result = CMD_NO_CMD;
 
-        mprf(MSGCH_ERROR, "Targeting interrupted by HUP signal.");
+        mprfc(MSGCH_ERROR, "Targeting interrupted by HUP signal.");
         return true;
     }
     return false;
@@ -1740,7 +1740,7 @@ void direction_chooser::show_initial_prompt()
     describe_cell();
     const string err = behaviour ? behaviour->get_error() : "";
     if (!err.empty())
-        mprf(MSGCH_PROMPT, "%s", err.c_str()); // can this push the prompt one line too tall?
+        mprfc(MSGCH_PROMPT, "%s", err.c_str()); // can this push the prompt one line too tall?
 }
 
 void direction_chooser::print_target_description(bool &did_cloud) const
@@ -1752,7 +1752,7 @@ void direction_chooser::print_target_description(bool &did_cloud) const
 
     if (!in_range(target()))
     {
-        mprf(MSGCH_EXAMINE_FILTER, "%s",
+        mprfc(MSGCH_EXAMINE_FILTER, "%s",
              hitfunc ? hitfunc->why_not.c_str() : "Out of range.");
     }
 }
@@ -1813,7 +1813,7 @@ void direction_chooser::print_target_monster_description(bool &did_cloud) const
     string text = target_description();
     if (text > "")
     {
-        mprf(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
+        mprfc(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
             target_prefix ? target_prefix : !behaviour->targeted() ? "Look" : "Aim",
             text.c_str());
         // If there's a cloud here, it's been described.
@@ -1907,7 +1907,7 @@ void direction_chooser::print_target_object_description() const
         return;
 
     // FIXME: remove the duplication with print_items_description().
-    mprf(MSGCH_PROMPT, "%s: %s",
+    mprfc(MSGCH_PROMPT, "%s: %s",
          target_prefix ? target_prefix : "Aim",
          menu_colour_item_name(*item, DESC_A).c_str());
 }
@@ -1934,7 +1934,7 @@ void direction_chooser::print_items_description() const
     if (items.empty())
         return;
 
-    mprf(MSGCH_FLOOR_ITEMS, "%s", items.c_str());
+    mprfc(MSGCH_FLOOR_ITEMS, "%s", items.c_str());
 }
 
 string cell_floor_description(const coord_def& pos, bool boring_too)
@@ -1959,7 +1959,7 @@ void direction_chooser::print_floor_description(bool boring_too) const
     else
 #endif
 
-    mprf(MSGCH_EXAMINE_FILTER, "%s.", desc.c_str());
+    mprfc(MSGCH_EXAMINE_FILTER, "%s.", desc.c_str());
 }
 
 // Get a brief of monster, items, and features in a given cell.
@@ -2031,7 +2031,7 @@ void direction_chooser::toggle_beam()
 {
     if (!needs_path)
     {
-        mprf(MSGCH_EXAMINE_FILTER, "This spell doesn't need a beam path.");
+        mprfc(MSGCH_EXAMINE_FILTER, "This spell doesn't need a beam path.");
         return;
     }
 
@@ -2101,13 +2101,13 @@ void direction_chooser::handle_wizard_command(command_type key_command,
         return;
 
     case CMD_TARGET_WIZARD_DEBUG_PORTAL:
-        mprf(MSGCH_DIAGNOSTICS, "Trying to run portal debug at %d/%d...",
+        mprfc(MSGCH_DIAGNOSTICS, "Trying to run portal debug at %d/%d...",
             target().x, target().y);
 
         marker_result =
             env.markers.property_at(target(), MAT_ANY, "portal_debug");
 
-        mprf(MSGCH_DIAGNOSTICS, "Got result: %s!",
+        mprfc(MSGCH_DIAGNOSTICS, "Got result: %s!",
             marker_result.empty() ? "nothing" : marker_result.c_str());
 
         return;
@@ -2306,7 +2306,7 @@ void direction_chooser::full_describe()
 
     if (list_mons.empty() && list_items.empty() && list_features.empty())
     {
-        mprf(MSGCH_EXAMINE_FILTER, "There are no valid targets to list.");
+        mprfc(MSGCH_EXAMINE_FILTER, "There are no valid targets to list.");
         flush_prev_message();
         return;
     }
@@ -2895,7 +2895,7 @@ static void _extend_move_to_edge(dist &moves)
 // cache and noted in the Dungeon (O)verview, names the stair.
 static void _describe_oos_square(const coord_def& where)
 {
-    mprf(MSGCH_EXAMINE_FILTER, "You can't see that place.");
+    mprfc(MSGCH_EXAMINE_FILTER, "You can't see that place.");
 
     if (!in_bounds(where) || !env.map_knowledge(where).seen())
     {
@@ -2960,7 +2960,7 @@ static void _describe_oos_feature(const coord_def& where)
     string desc = feature_description(env.map_knowledge(where).feat()) + ".";
 
     if (!desc.empty())
-        mprf(MSGCH_EXAMINE_FILTER, "[%s]", desc.c_str());
+        mprfc(MSGCH_EXAMINE_FILTER, "[%s]", desc.c_str());
 }
 
 // Returns a vector of features matching the given pattern.
@@ -3013,9 +3013,9 @@ void describe_floor()
     if (feat_is_water(grid) || feat_is_lava(grid))
         return;
 
-    mprf(channel, "%s%s here.", prefix, feat.c_str());
+    mprfc(channel, "%s%s here.", prefix, feat.c_str());
     if (grid == DNGN_ENTER_GAUNTLET)
-        mprf(MSGCH_EXAMINE, "Beware, the minotaur awaits!");
+        mprfc(MSGCH_EXAMINE, "Beware, the minotaur awaits!");
     else if (feat_is_fountain(grid) || feat_is_food(grid))
         _walk_on_decor(grid);
 }
@@ -3099,7 +3099,7 @@ void _walk_on_decor(dungeon_feature_type new_grid)
         decorLine = do_mon_name_replacements(decorLine);
 
         if (!(decorLine == "" || decorLine == "__NONE"))
-            mprf(MSGCH_DECOR_FLAVOUR, "%s", decorLine.c_str());
+            mprfc(MSGCH_DECOR_FLAVOUR, "%s", decorLine.c_str());
     }
 }
 

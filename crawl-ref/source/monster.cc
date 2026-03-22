@@ -741,7 +741,7 @@ void monster::equip_weapon_message(item_def &item)
         mpr("It glows horrifically with a foul blackness!");
         break;
     case SPWPN_ELECTROCUTION:
-        mprf(MSGCH_SOUND, "You hear the crackle of electricity.");
+        mprfc(MSGCH_SOUND, "You hear the crackle of electricity.");
         break;
     case SPWPN_VENOM:
         mpr("It begins to drip with poison!");
@@ -1007,14 +1007,14 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
         {
             if (inv[slot] == item.index())
             {
-                mprf(MSGCH_DIAGNOSTICS, "Monster %s already holding item %s.",
+                mprfc(MSGCH_DIAGNOSTICS, "Monster %s already holding item %s.",
                      name(DESC_PLAIN, true).c_str(),
                      item.name(DESC_PLAIN, false, true).c_str());
                 return false;
             }
             else
             {
-                mprf(MSGCH_DIAGNOSTICS, "Item %s thinks it's already held by "
+                mprfc(MSGCH_DIAGNOSTICS, "Item %s thinks it's already held by "
                                         "monster %s.",
                      item.name(DESC_PLAIN, false, true).c_str(),
                      name(DESC_PLAIN, true).c_str());
@@ -1022,14 +1022,14 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
         }
         else if (other_mon->type == MONS_NO_MONSTER)
         {
-            mprf(MSGCH_DIAGNOSTICS, "Item %s, held by dead monster, being "
+            mprfc(MSGCH_DIAGNOSTICS, "Item %s, held by dead monster, being "
                                     "picked up by monster %s.",
                  item.name(DESC_PLAIN, false, true).c_str(),
                  name(DESC_PLAIN, true).c_str());
         }
         else
         {
-            mprf(MSGCH_DIAGNOSTICS, "Item %s, held by monster %s, being "
+            mprfc(MSGCH_DIAGNOSTICS, "Item %s, held by monster %s, being "
                                     "picked up by monster %s.",
                  item.name(DESC_PLAIN, false, true).c_str(),
                  other_mon->name(DESC_PLAIN, true).c_str(),
@@ -2625,7 +2625,7 @@ bool monster::fumbles_attack()
                  : "splashes around in the water.");
         }
         else if (player_can_hear(pos(), LOS_RADIUS))
-            mprf(MSGCH_SOUND, "You hear a splashing noise.");
+            mprfc(MSGCH_SOUND, "You hear a splashing noise.");
 
         return true;
     }
@@ -6174,7 +6174,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
         if (observable())
         {
-            mprf(MSGCH_WARN,
+            mprfc(MSGCH_WARN,
                 "%s roars in fury and transforms into a fierce dragon!",
                 name(DESC_THE).c_str());
         }
@@ -6228,7 +6228,7 @@ void monster::steal_item_from_player()
         if (!msg.empty() && msg != "__NONE")
         {
             msg = replace_all(msg, "@The_monster@", name(DESC_THE));
-            mprf(MSGCH_TALK, "%s", msg.c_str());
+            mprfc(MSGCH_TALK, "%s", msg.c_str());
         }
         return;
     }
@@ -6300,7 +6300,7 @@ void monster::steal_item_from_player()
             {
                 complaint = replace_all(complaint, "@The_monster@",
                                         name(DESC_THE));
-                mprf(MSGCH_TALK, "%s", complaint.c_str());
+                mprfc(MSGCH_TALK, "%s", complaint.c_str());
             }
 
             return;

@@ -127,7 +127,7 @@ namespace quiver
                && !clua.callfn("af_mp_is_low", ">b", &af_mp_check))
         {
             if (!clua.error.empty())
-                mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+                mprfc(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
             return true;
         }
         if (af_hp_check)

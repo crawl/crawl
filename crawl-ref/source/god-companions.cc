@@ -309,7 +309,7 @@ void fixup_bad_priest_monster(monster &mons)
 {
     if (!maybe_bad_priest_monster(mons))
         return;
-    mprf(MSGCH_ERROR, "Removing corrupted ex-follower from level: %s.",
+    mprfc(MSGCH_ERROR, "Removing corrupted ex-follower from level: %s.",
                                             mons.full_name(DESC_PLAIN).c_str());
     monster_die(mons, KILL_RESET, -1, true);
 }
@@ -354,7 +354,7 @@ static void _remove_offlevel_companion(mid_t mid)
 
 void beogh_do_ostracism()
 {
-    mprf(MSGCH_GOD, "Beogh sends your followers elsewhere.");
+    mprfc(MSGCH_GOD, "Beogh sends your followers elsewhere.");
     for (unsigned int i = FIRST_RECRUITED_APOSTLE; i < apostles.size(); ++i)
     {
         if (apostles[i].state == STATE_ALIVE)
@@ -586,8 +586,8 @@ bool maybe_generate_apostle_challenge()
 
 void flee_apostle_challenge()
 {
-    mprf(MSGCH_GOD, "Beogh is disappointed with your cowardice.");
-    mprf(MSGCH_GOD, "\"Reflect upon your actions, mortal!\"");
+    mprfc(MSGCH_GOD, "Beogh is disappointed with your cowardice.");
+    mprfc(MSGCH_GOD, "\"Reflect upon your actions, mortal!\"");
     dock_piety(0, 15, true);
 
     // Remove the apostle (and its band)
@@ -651,7 +651,7 @@ void win_apostle_challenge(monster& apostle)
                             command_to_string(CMD_USE_ABILITY).c_str());
     }
 
-    mprf(MSGCH_GOD, "%s", msg.c_str());
+    mprfc(MSGCH_GOD, "%s", msg.c_str());
 
     // Remove the rest of the apostle's band
     for (monster_iterator mi; mi; ++mi)
@@ -934,7 +934,7 @@ void beogh_swear_vengeance(const monster& apostle)
     }
 
     if (new_targets)
-        mprf(MSGCH_DURATION, "You swear to avenge %s death!", apostle.name(DESC_ITS, true).c_str());
+        mprfc(MSGCH_DURATION, "You swear to avenge %s death!", apostle.name(DESC_ITS, true).c_str());
 
     apostle_data& a = _get_saved_apostle(apostle);
     a.state = STATE_DEAD;
@@ -971,7 +971,7 @@ void beogh_progress_vengeance()
     you.duration[DUR_BEOGH_SEEKING_VENGEANCE] -= 1;
     if (you.duration[DUR_BEOGH_SEEKING_VENGEANCE] == 0)
     {
-        mprf(MSGCH_DURATION, "You feel as though your fallen companions have been avenged.");
+        mprfc(MSGCH_DURATION, "You feel as though your fallen companions have been avenged.");
 
         // This cleanup should usually be unnecessary, since we are only supposed
         // to end when we've killed EVERY marked target, but slime creature
@@ -1063,7 +1063,7 @@ void beogh_resurrect_followers(bool end_ostracism_only)
     // The rest of the bookkeeping only applies to real resurrections
     if (end_ostracism_only)
     {
-        mprf(MSGCH_GOD, "Your apostles return to your side.");
+        mprfc(MSGCH_GOD, "Your apostles return to your side.");
         return;
     }
 

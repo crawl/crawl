@@ -340,7 +340,7 @@ static void _list_equipment(equipment_slot first_slot, equipment_slot last_slot)
     if (!split)
     {
         for (size_t i = 0; i < entries.size(); ++i)
-            mprf(MSGCH_EQUIPMENT, "%s", entries[i].c_str());
+            mprfc(MSGCH_EQUIPMENT, "%s", entries[i].c_str());
     }
     else
     {
@@ -351,11 +351,11 @@ static void _list_equipment(equipment_slot first_slot, equipment_slot last_slot)
                 // XXX: Must strip color tags out to get the proper actual string
                 //      length to pad.
                 int pad = max(0, (int)(width - formatted_string::parse_string(entries[i]).tostring().length()));
-                mprf(MSGCH_EQUIPMENT, "%s%s", (entries[i].c_str() + string(pad, ' ')).c_str(),
+                mprfc(MSGCH_EQUIPMENT, "%s%s", (entries[i].c_str() + string(pad, ' ')).c_str(),
                                               entries[i+1].c_str());
             }
             else
-                mprf(MSGCH_EQUIPMENT, "%s", entries[i].c_str());
+                mprfc(MSGCH_EQUIPMENT, "%s", entries[i].c_str());
         }
     }
 }

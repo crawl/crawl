@@ -423,7 +423,7 @@ bool UseItemMenu::empty_check() const
     if (any_items_of_type(item_type_filter, -1, oper != OPER_EVOKE))
         return false;
 
-    mprf(MSGCH_PROMPT, "%s",
+    mprfc(MSGCH_PROMPT, "%s",
         no_selectables_message(item_type_filter).c_str());
     return true;
 }
@@ -907,10 +907,10 @@ static bool _can_generically_use_armour(bool wear=true)
     if (you.has_mutation(MUT_NO_ARMOUR))
     {
         if (wear)
-            mprf(MSGCH_PROMPT, "You can't wear anything.");
+            mprfc(MSGCH_PROMPT, "You can't wear anything.");
         else
         {
-            mprf(MSGCH_PROMPT, "You can't remove your %s, sorry.",
+            mprfc(MSGCH_PROMPT, "You can't remove your %s, sorry.",
                 species::skin_name(you.species).c_str());
         }
         return false;
@@ -918,7 +918,7 @@ static bool _can_generically_use_armour(bool wear=true)
 
     if (!form_can_wear())
     {
-        mprf(MSGCH_PROMPT, "You can't %s anything in your present form.",
+        mprfc(MSGCH_PROMPT, "You can't %s anything in your present form.",
             wear ? "wear" : "remove");
         return false;
     }
@@ -933,7 +933,7 @@ static bool _can_wield_anything()
     string veto_reason;
     bool ret = can_equip_item(dummy_weapon, true, &veto_reason);
     if (!veto_reason.empty())
-        mprf(MSGCH_PROMPT, "%s", veto_reason.c_str());
+        mprfc(MSGCH_PROMPT, "%s", veto_reason.c_str());
 
     return ret;
 }
@@ -976,7 +976,7 @@ static bool _can_generically_use(operation_types oper)
             && you_can_wear(SLOT_AMULET, true) == false
             && you.transform_uncancellable)
         {
-            mprf(MSGCH_PROMPT, "You can't %s jewellery%s.",
+            mprfc(MSGCH_PROMPT, "You can't %s jewellery%s.",
                 oper == OPER_PUTON ? "wear" : "remove",
                 you.has_mutation(MUT_NO_JEWELLERY) ? "" :  " in your present form");
             return false;
@@ -992,7 +992,7 @@ static bool _can_generically_use(operation_types oper)
 
     if (!err.empty())
     {
-        mprf(MSGCH_PROMPT, "%s", err.c_str());
+        mprfc(MSGCH_PROMPT, "%s", err.c_str());
         return false;
     }
     return true;
@@ -1179,9 +1179,9 @@ static item_def* _item_swap_prompt(const vector<item_def*>& candidates)
 
     clear_messages();
 
-    mprf(MSGCH_PROMPT,
+    mprfc(MSGCH_PROMPT,
          "To do this, you must remove one of the following items:");
-    mprf(MSGCH_PROMPT, "(<w>?</w> for menu, <w>Esc</w> to cancel)");
+    mprfc(MSGCH_PROMPT, "(<w>?</w> for menu, <w>Esc</w> to cancel)");
 
     for (size_t i = 0; i < candidates.size(); i++)
     {
@@ -1310,7 +1310,7 @@ bool warn_about_changing_gear(const vector<item_def*>& to_remove, item_def* to_e
             {
                 if (++removed_flight >= equipped_flight)
                 {
-                    mprf(MSGCH_PROMPT, "Removing %s right now would cause you to %s!",
+                    mprfc(MSGCH_PROMPT, "Removing %s right now would cause you to %s!",
                             item->name(DESC_YOUR).c_str(),
                             env.grid(you.pos()) == DNGN_DEEP_WATER ? "drown" : "burn");
                     return false;
@@ -1330,7 +1330,7 @@ bool try_equip_item(item_def& item)
     string reason;
     if (!can_equip_item(item, true, &reason))
     {
-        mprf(MSGCH_PROMPT, "%s", reason.c_str());
+        mprfc(MSGCH_PROMPT, "%s", reason.c_str());
         return false;
     }
 
@@ -1489,7 +1489,7 @@ bool handle_chain_removal(vector<item_def*>& to_remove, bool interactive)
         {
             if ((int)chain_remove.size() < chain_remove_num)
             {
-                mprf(MSGCH_PROMPT, "A cursed item is preventing you from removing %s.",
+                mprfc(MSGCH_PROMPT, "A cursed item is preventing you from removing %s.",
                         item.name(DESC_INVENTORY).c_str());
                 return false;
             }
@@ -1616,7 +1616,7 @@ bool can_unequip_item(item_def& item, bool silent)
     {
         if (!silent)
         {
-            mprf(MSGCH_PROMPT, "%s is melded into your body!",
+            mprfc(MSGCH_PROMPT, "%s is melded into your body!",
                                item.name(DESC_YOUR).c_str());
         }
         return false;
@@ -1626,7 +1626,7 @@ bool can_unequip_item(item_def& item, bool silent)
     {
         if (!silent)
         {
-            mprf(MSGCH_PROMPT, "%s is stuck to your body!",
+            mprfc(MSGCH_PROMPT, "%s is stuck to your body!",
                                 item.name(DESC_YOUR).c_str());
         }
         return false;
@@ -1636,7 +1636,7 @@ bool can_unequip_item(item_def& item, bool silent)
     {
         if (!silent)
         {
-            mprf(MSGCH_PROMPT, "Your thirst for blood prevents you from unwielding "
+            mprfc(MSGCH_PROMPT, "Your thirst for blood prevents you from unwielding "
                                "your weapon!");
         }
         return false;
@@ -1646,7 +1646,7 @@ bool can_unequip_item(item_def& item, bool silent)
     {
         if (!silent)
         {
-            mprf(MSGCH_PROMPT, "It would be unfitting for someone so glorious to "
+            mprfc(MSGCH_PROMPT, "It would be unfitting for someone so glorious to "
                                "remove their crown in front of an audience.");
         }
         return false;
@@ -2282,7 +2282,7 @@ static bool _handle_brand_weapon(bool alreadyknown, const string &pre_msg)
     if (!clua.callfn("c_choose_brand_weapon", ">s", &letter))
     {
         if (!clua.error.empty())
-            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+            mprfc(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
     }
     else if (isalpha(letter.c_str()[0]))
     {
@@ -2350,7 +2350,7 @@ static bool _identify(bool alreadyknown, const string &pre_msg)
     if (!clua.callfn("c_choose_identify", ">s", &letter))
     {
         if (!clua.error.empty())
-            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+            mprfc(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
     }
     else if (isalpha(letter.c_str()[0]))
     {
@@ -2422,7 +2422,7 @@ static bool _handle_enchant_weapon(bool alreadyknown, const string &pre_msg)
     if (!clua.callfn("c_choose_enchant_weapon", ">s", &letter))
     {
         if (!clua.error.empty())
-            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+            mprfc(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
     }
     else if (isalpha(letter.c_str()[0]))
     {
@@ -2491,7 +2491,7 @@ static bool _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
     if (!clua.callfn("c_choose_enchant_armour", ">s", &letter))
     {
         if (!clua.error.empty())
-            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+            mprfc(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
     }
     else if (isalpha(letter.c_str()[0]))
     {

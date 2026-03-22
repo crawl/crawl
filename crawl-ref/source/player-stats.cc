@@ -82,18 +82,18 @@ bool attribute_increase()
                                                   (statgain > 2) ?
                                                   " dramatic" : "n");
     crawl_state.stat_gain_prompt = true;
-    mprf(MSGCH_INTRINSIC_GAIN, "%s", stat_gain_message.c_str());
+    mprfc(MSGCH_INTRINSIC_GAIN, "%s", stat_gain_message.c_str());
     learned_something_new(HINT_CHOOSE_STAT);
     if (innate_stat(STAT_STR) != you.strength()
         || innate_stat(STAT_INT) != you.intel()
         || innate_stat(STAT_DEX) != you.dex())
     {
-        mprf(MSGCH_PROMPT, "Your base attributes are Str %d, Int %d, Dex %d.",
+        mprfc(MSGCH_PROMPT, "Your base attributes are Str %d, Int %d, Dex %d.",
              innate_stat(STAT_STR),
              innate_stat(STAT_INT),
              innate_stat(STAT_DEX));
     }
-    mprf(MSGCH_PROMPT, need_caps
+    mprfc(MSGCH_PROMPT, need_caps
         ? "Increase (S)trength, (I)ntelligence, or (D)exterity? "
         : "Increase (s)trength, (i)ntelligence, or (d)exterity? ");
     mouse_control mc(MOUSE_MODE_PROMPT);
@@ -152,7 +152,7 @@ bool attribute_increase()
         case 's':
         case 'i':
         case 'd':
-            mprf(MSGCH_PROMPT, "Uppercase letters only, please.");
+            mprfc(MSGCH_PROMPT, "Uppercase letters only, please.");
             break;
         }
     }
@@ -183,7 +183,7 @@ void modify_stat(stat_type which_stat, int amount, bool suppress_msg)
 
     if (!suppress_msg)
     {
-        mprf((amount > 0) ? MSGCH_INTRINSIC_GAIN : MSGCH_WARN,
+        mprfc((amount > 0) ? MSGCH_INTRINSIC_GAIN : MSGCH_WARN,
              "You feel %s.",
              stat_desc(which_stat, (amount > 0) ? SD_INCREASE : SD_DECREASE));
     }
@@ -206,7 +206,7 @@ void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg)
 
     if (!suppress_msg)
     {
-        mprf((amount > 0) ? MSGCH_INTRINSIC_GAIN : MSGCH_WARN,
+        mprfc((amount > 0) ? MSGCH_INTRINSIC_GAIN : MSGCH_WARN,
              "You feel %s.",
              stat_desc(which_stat, (amount > 0) ? SD_INCREASE : SD_DECREASE));
     }
@@ -392,7 +392,7 @@ static int _stat_modifier(stat_type stat, bool innate_only)
     case STAT_INT: return _int_modifier(innate_only);
     case STAT_DEX: return _dex_modifier(innate_only);
     default:
-        mprf(MSGCH_ERROR, "Bad stat: %d", stat);
+        mprfc(MSGCH_ERROR, "Bad stat: %d", stat);
         return 0;
     }
 }
@@ -407,14 +407,14 @@ static void _handle_stat_change(stat_type stat)
     if (val <= 0 && !was_zero)
     {
         // Notify the player and make the penalty explicit.
-        mprf(MSGCH_WARN, "You have lost all your %s. It will be difficult to act "
+        mprfc(MSGCH_WARN, "You have lost all your %s. It will be difficult to act "
                          "quickly in this state!", stat_desc(stat, SD_NAME));
 
         you.attribute[ATTR_STAT_ZERO] |= 1 << (int)stat;
     }
     else if (was_zero && val > 0)
     {
-        mprf(MSGCH_RECOVERY, "You have recovered your %s.", stat_desc(stat, SD_NAME));
+        mprfc(MSGCH_RECOVERY, "You have recovered your %s.", stat_desc(stat, SD_NAME));
         you.attribute[ATTR_STAT_ZERO] &= ~(1 << (int)stat);
     }
 

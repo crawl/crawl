@@ -113,14 +113,14 @@ void mpr_nojoin(msg_channel_type channel, string text);
 void mpr(const formatted_string &) = delete;
 
 // 4.1-style mpr, currently named mprf for minimal disruption.
-void mprf(msg_channel_type channel, int param, PRINTF(2, ));
-void mprf(msg_channel_type channel, PRINTF(1, ));
+void mprfcp(msg_channel_type channel, int param, PRINTF(2, ));
+void mprfc(msg_channel_type channel, PRINTF(1, ));
 void mprf(PRINTF(0, ));
-void mprf_nojoin(msg_channel_type channel, PRINTF(1,));
+void mprfc_nojoin(msg_channel_type channel, PRINTF(1,));
 void mprf_nojoin(PRINTF(0,));
 
-void mprf_nocap(msg_channel_type channel, int param, PRINTF(2, ));
-void mprf_nocap(msg_channel_type channel, PRINTF(1, ));
+void mprfcp_nocap(msg_channel_type channel, int param, PRINTF(2, ));
+void mprfc_nocap(msg_channel_type channel, PRINTF(1, ));
 void mprf_nocap(PRINTF(0, ));
 
 #ifdef DEBUG_DIAGNOSTICS

@@ -824,7 +824,7 @@ static void _majin_speak(spell_type spell)
     const bool weak = level <= 4;
     const string lookup = weak ? "majin-bo cast weak" : "majin-bo cast";
     const string msg = "A voice whispers, \"" + getSpeakString(lookup) + "\"";
-    mprf(MSGCH_TALK, "%s", msg.c_str());
+    mprfc(MSGCH_TALK, "%s", msg.c_str());
 }
 
 static bool _majin_charge_hp()
@@ -892,7 +892,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         if (!clua.callfn("c_choose_spell", ">s", &luachoice))
         {
             if (!clua.error.empty())
-                mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+                mprfc(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         }
         else if (!luachoice.empty() && isalpha(luachoice[0]))
         {
@@ -936,14 +936,14 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
                 if (you.last_cast_spell == SPELL_NO_SPELL
                     || !Options.enable_recast_spell)
                 {
-                    mprf(MSGCH_PROMPT, "Cast which spell? (? or * to list) ");
+                    mprfc(MSGCH_PROMPT, "Cast which spell? (? or * to list) ");
                 }
                 else
                 {
-                    mprf(MSGCH_PROMPT, "Casting: <w>%s</w> <lightgrey>(%s)</lightgrey>",
+                    mprfc(MSGCH_PROMPT, "Casting: <w>%s</w> <lightgrey>(%s)</lightgrey>",
                                        spell_title(you.last_cast_spell),
                                        _spell_failure_rate_description(you.last_cast_spell).c_str());
-                    mprf(MSGCH_PROMPT, "Confirm with . or Enter, or press "
+                    mprfc(MSGCH_PROMPT, "Confirm with . or Enter, or press "
                                        "? or * to list all spells.");
                 }
 
@@ -1140,7 +1140,7 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
     {
         if (you.duration[DUR_SAP_MAGIC] && !fake_spell)
         {
-            mprf(MSGCH_WARN, "You lose access to your magic!");
+            mprfc(MSGCH_WARN, "You lose access to your magic!");
             you.increase_duration(DUR_NO_CAST, 3 + random2(3));
         }
 
@@ -1257,7 +1257,7 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
     {
         if (failure_rate_to_int(raw_spell_fail(spell)) == 100)
         {
-            mprf(MSGCH_WARN, "It is impossible to cast this spell "
+            mprfc(MSGCH_WARN, "It is impossible to cast this spell "
                     "(100%% risk of failure)!");
             return true;
         }
@@ -2432,11 +2432,11 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
 
         if (is_valid_spell(spell))
         {
-            mprf(MSGCH_ERROR, "Spell '%s' is not a player castable spell.",
+            mprfc(MSGCH_ERROR, "Spell '%s' is not a player castable spell.",
                  spell_title(spell));
         }
         else
-            mprf(MSGCH_ERROR, "Invalid spell!");
+            mprfc(MSGCH_ERROR, "Invalid spell!");
 
         return spret::abort;
     }
@@ -3495,7 +3495,7 @@ void handle_channelled_spell()
             return;
 
         default:
-            mprf(MSGCH_WARN, "Attempting to channel buggy spell: %s", spell_title(spell));
+            mprfc(MSGCH_WARN, "Attempting to channel buggy spell: %s", spell_title(spell));
     }
 }
 

@@ -78,7 +78,7 @@ namespace ui
         return ms.get_lastch();
     }
 
-    // slightly smarter error msging than just `mprf(MSGCH_ERROR, ...)`: if
+    // slightly smarter error msging than just `mprfc(MSGCH_ERROR, ...)`: if
     // there are ui elements on the stack, show a popup on top of them; either
     // way, log the error to MSGCH_ERROR.
     int error(string err, string title, bool force_popup)
@@ -86,7 +86,7 @@ namespace ui
         // unlike `message` above, does not accept color formatting in title,
         // so that it can auto-wrap it in an angry red
         // XX direct errorf version of this fn?
-        mprf(MSGCH_ERROR, "%s", err.c_str());
+        mprfc(MSGCH_ERROR, "%s", err.c_str());
         // assumes UI init! See end.cc::fatal_error_notification for a wrapped
         // version that does not.
         // XX unify the two?
@@ -116,7 +116,7 @@ bool confirm_prompt(const char* require, const char* fmt, ...)
     va_end(args);
     buf[sizeof(buf)-1] = 0;
 
-    mprf(MSGCH_PROMPT, "%s (Confirm with \"%s\".) ", buf, require);
+    mprfc(MSGCH_PROMPT, "%s (Confirm with \"%s\".) ", buf, require);
 
     if (cancellable_get_line(buf, sizeof buf))
         return false;
@@ -247,7 +247,7 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
             else
             {
                 if (!noprompt)
-                    mprf(MSGCH_PROMPT, "%s", prompt.c_str());
+                    mprfc(MSGCH_PROMPT, "%s", prompt.c_str());
 
                 tmp = ui::getch(KMC_CONFIRM);
                 if (pop.f_keyfilter)
@@ -299,7 +299,7 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
             if (use_popup)
                 pop.set_more(pr); // replaces keyhint if it's there
             else
-                mprf(MSGCH_PROMPT, "%s", pr.c_str());
+                mprfc(MSGCH_PROMPT, "%s", pr.c_str());
         }
     }
 }
@@ -542,7 +542,7 @@ vector<MenuEntry *> PromptMenu::show_in_msgpane()
         // line of a multi-line mpr, whereas console/tiles builds do.)
         for (const auto &line : menu_text)
             formatted_mpr(line, MSGCH_PROMPT);
-        mprf(MSGCH_PROMPT, "%s", prompt_text.c_str());
+        mprfc(MSGCH_PROMPT, "%s", prompt_text.c_str());
 
         int key = get_ch();
         if (remap_numpad)

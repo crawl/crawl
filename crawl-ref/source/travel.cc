@@ -981,7 +981,7 @@ static void _find_travel_pos(const coord_def& youpos, int *move_x, int *move_y)
                 new_dest = dest;
             }
 #ifdef DEBUG_SAFE_EXPLORE
-            mprf(MSGCH_DIAGNOSTICS, "youpos: (%d, %d), dest: (%d, %d), "
+            mprfc(MSGCH_DIAGNOSTICS, "youpos: (%d, %d), dest: (%d, %d), "
                      "unseen: (%d, %d), new_dest: (%d, %d)",
                  youpos.x, youpos.y, dest.x, dest.y, unseen.x, unseen.y,
                  new_dest.x, new_dest.y);
@@ -1078,7 +1078,7 @@ command_type travel()
             && you.props.exists(AUTO_REST_STATUS_POS)
             && you.props[AUTO_REST_STATUS_POS].get_coord() == you.pos())
         {
-            mprf(MSGCH_ERROR,
+            mprfc(MSGCH_ERROR,
                     "You appear to be waiting for the end of something which may "
                     "never occur. Examine your explore_auto_rest_status option.");
             stop_running();
@@ -2812,7 +2812,7 @@ static level_pos _prompt_travel_depth(const level_id &id, bool remember_targ)
     while (true)
     {
         msgwin_clear_temporary();
-        mprf(MSGCH_PROMPT, "What level of %s? "
+        mprfc(MSGCH_PROMPT, "What level of %s? "
              "(default %s, ? - help) ",
              branches[target.id.branch].longname,
              _get_trans_travel_dest(target, true).c_str());
@@ -4342,7 +4342,7 @@ void TravelCache::delete_waypoint()
         clear_messages();
         mpr("Existing waypoints:");
         list_waypoints();
-        mprf(MSGCH_PROMPT, "Delete which waypoint? (* - delete all, Esc - exit) ");
+        mprfc(MSGCH_PROMPT, "Delete which waypoint? (* - delete all, Esc - exit) ");
 
         int key = getchm();
         if (key >= '0' && key <= '9')
@@ -4383,10 +4383,10 @@ void TravelCache::add_waypoint(int x, int y)
     }
 
     if (you.where_are_you == BRANCH_ABYSS)
-        mprf(MSGCH_PROMPT, "Waypoints on this level may disappear at any time.");
+        mprfc(MSGCH_PROMPT, "Waypoints on this level may disappear at any time.");
     else if (!is_connected_branch(you.where_are_you))
-        mprf(MSGCH_PROMPT, "Waypoints will disappear once you leave this level.");
-    mprf(MSGCH_PROMPT, "Assign waypoint to what number? (0-9%s) ",
+        mprfc(MSGCH_PROMPT, "Waypoints will disappear once you leave this level.");
+    mprfc(MSGCH_PROMPT, "Assign waypoint to what number? (0-9%s) ",
          waypoints_exist? ", D - delete waypoint" : "");
 
     int keyin = toalower(get_ch());
@@ -4709,7 +4709,7 @@ bool runrest::run_should_stop() const
     {
 #ifndef USE_TILE_LOCAL
         // XXX: Remove this once exclusions are visible.
-        mprf(MSGCH_WARN, "Stopped running for exclusion.");
+        mprfc(MSGCH_WARN, "Stopped running for exclusion.");
 #endif
         return true;
     }

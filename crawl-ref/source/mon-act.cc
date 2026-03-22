@@ -213,7 +213,7 @@ static void _melee_attack_player(monster &mons, monster* ru_target)
         // attack that target
         mons.target = ru_target->pos();
         mons.foe = ru_target->mindex();
-        mprf(MSGCH_GOD, "You redirect %s's attack!",
+        mprfc(MSGCH_GOD, "You redirect %s's attack!",
              mons.name(DESC_THE).c_str());
         mons_fight(&mons, ru_target);
     }
@@ -1421,7 +1421,7 @@ static void _mons_fire_wand(monster& mons, spell_type mzap, bolt &beem)
     if (!simple_monster_message(mons, " zaps a wand."))
     {
         if (!silenced(you.pos()))
-            mprf(MSGCH_SOUND, "You hear a zap.");
+            mprfc(MSGCH_SOUND, "You hear a zap.");
     }
     mons_cast(&mons, beem, mzap, MON_SPELL_EVOKE, false);
     mons.lose_energy(EUT_ITEM);
@@ -1599,7 +1599,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only, bo
         }
         else if (interference == DO_REDIRECT_ATTACK)
         {
-            mprf(MSGCH_GOD, "You redirect %s's attack!",
+            mprfc(MSGCH_GOD, "You redirect %s's attack!",
                     mons->name(DESC_THE).c_str());
             int pfound = 0;
             for (radius_iterator ri(you.pos(),
@@ -1664,12 +1664,12 @@ static void _monster_add_energy(monster& mons)
 #ifdef DEBUG
 #    define DEBUG_ENERGY_USE(problem) \
     if (mons->speed_increment == old_energy && mons->alive()) \
-             mprf(MSGCH_DIAGNOSTICS, \
+             mprfc(MSGCH_DIAGNOSTICS, \
                   problem " for monster '%s' consumed no energy", \
                   mons->name(DESC_PLAIN).c_str());
 #    define DEBUG_ENERGY_USE_REF(problem) \
     if (mons.speed_increment == old_energy && mons.alive()) \
-             mprf(MSGCH_DIAGNOSTICS, \
+             mprfc(MSGCH_DIAGNOSTICS, \
                   problem " for monster '%s' consumed no energy", \
                   mons.name(DESC_PLAIN).c_str());
 #else
@@ -1966,18 +1966,18 @@ void handle_monster_move(monster* mons)
     if (!monster_was_floating
         && env.mgrid(mons->pos()) != mons->mindex())
     {
-        mprf(MSGCH_ERROR, "Monster %s became detached from env.mgrid "
+        mprfc(MSGCH_ERROR, "Monster %s became detached from env.mgrid "
                           "in handle_monster_move() loop",
              mons->name(DESC_PLAIN, true).c_str());
-        mprf(MSGCH_WARN, "[[[[[[[[[[[[[[[[[[");
+        mprfc(MSGCH_WARN, "[[[[[[[[[[[[[[[[[[");
         debug_mons_scan();
-        mprf(MSGCH_WARN, "]]]]]]]]]]]]]]]]]]");
+        mprfc(MSGCH_WARN, "]]]]]]]]]]]]]]]]]]");
         monster_was_floating = true;
     }
     else if (monster_was_floating
              && env.mgrid(mons->pos()) == mons->mindex())
     {
-        mprf(MSGCH_DIAGNOSTICS, "Monster %s re-attached itself to env.mgrid "
+        mprfc(MSGCH_DIAGNOSTICS, "Monster %s re-attached itself to env.mgrid "
                                 "in handle_monster_move() loop",
              mons->name(DESC_PLAIN, true).c_str());
         monster_was_floating = false;
@@ -2015,7 +2015,7 @@ void handle_monster_move(monster* mons)
                                            MSGCH_WARN);
                 }
                 else
-                    mprf(MSGCH_SOUND, "You hear a loud crackle.");
+                    mprfc(MSGCH_SOUND, "You hear a loud crackle.");
             }
             // Done this way to keep the detonation timer predictable
             mons->speed_increment -= BASELINE_DELAY;
@@ -2536,7 +2536,7 @@ static void _ancient_zyme_sicken(monster* mons)
         {
             if (!you.duration[DUR_SICKENING])
             {
-                mprf(MSGCH_WARN, "You feel yourself growing ill in the "
+                mprfc(MSGCH_WARN, "You feel yourself growing ill in the "
                                  "presence of %s.",
                     mons->name(DESC_THE).c_str());
             }
@@ -2739,7 +2739,7 @@ void print_mons_left_view_messages()
             // The monster should be visible to be in this queue.
             if (in_bounds(m->pos()) && !you.see_cell(m->pos()))
             {
-                mprf(MSGCH_PLAIN, "%s leaves your sight.",
+                mprfc(MSGCH_PLAIN, "%s leaves your sight.",
                      m->name(DESC_THE, true).c_str());
             }
         }
@@ -2859,7 +2859,7 @@ static bool _jelly_divide(monster& parent)
     if (!simple_monster_message(parent, " splits in two!")
         && (player_can_hear(parent.pos()) || player_can_hear(child->pos())))
     {
-        mprf(MSGCH_SOUND, "You hear a squelching noise.");
+        mprfc(MSGCH_SOUND, "You hear a squelching noise.");
     }
 
     if (crawl_state.game_is_arena())
@@ -2911,7 +2911,7 @@ static bool _monster_eat_item(monster* mons)
 
         if (eaten && !shown_msg && player_can_hear(mons->pos()))
         {
-            mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
+            mprfc(MSGCH_SOUND, "You hear a%s slurping noise.",
                  you.see_cell(mons->pos()) ? "" : " distant");
             shown_msg = true;
         }
@@ -3540,7 +3540,7 @@ static void _jelly_grows(monster& mons)
 {
     if (player_can_hear(mons.pos()))
     {
-        mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
+        mprfc(MSGCH_SOUND, "You hear a%s slurping noise.",
              you.see_cell(mons.pos()) ? "" : " distant");
     }
 
@@ -3821,7 +3821,7 @@ static bool _monster_move(monster* mons, coord_def& delta)
 
     // TODO: move the below logic out of move code.
     if (one_chance_in(10) && you.can_see(*mons) && mons->berserk())
-        mprf(MSGCH_TALK_VISUAL, "%s rages.", mons->name(DESC_THE).c_str());
+        mprfc(MSGCH_TALK_VISUAL, "%s rages.", mons->name(DESC_THE).c_str());
     // Look, this is silly.
     if (one_chance_in(5)
         && mons->has_ench(ENCH_FRENZIED)
@@ -4015,7 +4015,7 @@ static bool _monster_move(monster* mons, coord_def& delta)
         // Dissolution dissolves walls.
         else if (player_can_hear(target))
         {
-            mprf(MSGCH_SOUND, mons->type == MONS_DISSOLUTION
+            mprfc(MSGCH_SOUND, mons->type == MONS_DISSOLUTION
                                 ? "You hear a sizzling sound."
                                 : "You hear a grinding noise.");
         }
@@ -4157,7 +4157,7 @@ void seen_monsters_react()
 
 #ifdef DEBUG_STEALTH
     // Too annoying for regular diagnostics.
-    mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth);
+    mprfc(MSGCH_DIAGNOSTICS, "stealth: %d", stealth);
 #endif
 
     for (monster_near_iterator mi(you.pos()); mi; ++mi)

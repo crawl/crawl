@@ -124,11 +124,11 @@ bool check_next_floor_warning()
     const string bezotting_warning = _bezotting_warning(next_level_id.branch);
 
     if (annotation_warning != "")
-        mprf(MSGCH_PROMPT, "%s", annotation_warning.c_str());
+        mprfc(MSGCH_PROMPT, "%s", annotation_warning.c_str());
     if (target_warning != "")
-        mprf(MSGCH_PROMPT, "%s", target_warning.c_str());
+        mprfc(MSGCH_PROMPT, "%s", target_warning.c_str());
     if (bezotting_warning != "")
-        mprf(MSGCH_PROMPT, "%s", bezotting_warning.c_str());
+        mprfc(MSGCH_PROMPT, "%s", bezotting_warning.c_str());
 
     const bool might_be_dangerous = annotation_warning != ""
                                  || target_warning != ""
@@ -485,7 +485,7 @@ static void _gauntlet_effect()
     if (you.stasis())
         return;
 
-    mprf(MSGCH_WARN, "The nature of this place prevents you from teleporting.");
+    mprfc(MSGCH_WARN, "The nature of this place prevents you from teleporting.");
 
     if (you.get_base_mutation_level(MUT_TELEPORTITIS))
         mpr("You feel stable on this floor.");
@@ -508,7 +508,7 @@ static void _hell_effects()
     if (msg.empty())
         msg = "Something hellishly buggy happens.";
 
-    mprf(MSGCH_HELL_EFFECT, "%s", msg.c_str());
+    mprfc(MSGCH_HELL_EFFECT, "%s", msg.c_str());
     if (loud)
         noisy(15, you.pos());
 
@@ -536,7 +536,7 @@ static void _vainglory_arrival()
 
     if (!mons.empty())
     {
-        mprf(MSGCH_WARN, "You announce your regal presence to all who would look upon you.");
+        mprfc(MSGCH_WARN, "You announce your regal presence to all who would look upon you.");
         for (monster* mon : mons)
             behaviour_event(mon, ME_ANNOY, &you);
 
@@ -821,7 +821,7 @@ void floor_transition(dungeon_feature_type how,
     if (you.duration[DUR_CACOPHONY])
     {
         you.duration[DUR_CACOPHONY] = 0;
-        mprf(MSGCH_DURATION, "Your cacophony subsides as you depart the area.");
+        mprfc(MSGCH_DURATION, "Your cacophony subsides as you depart the area.");
         for (monster_iterator mi; mi; ++mi)
             if (mi->was_created_by(MON_SUMM_CACOPHONY))
                 monster_die(**mi, KILL_RESET, NON_MONSTER, true);
@@ -934,7 +934,7 @@ void floor_transition(dungeon_feature_type how,
             break;
         if (old_level.branch == BRANCH_ABYSS)
         {
-            mprf(MSGCH_BANISHMENT, "You plunge deeper into the Abyss.");
+            mprfc(MSGCH_BANISHMENT, "You plunge deeper into the Abyss.");
             if (!you.runes[RUNE_ABYSSAL] && you.depth >= ABYSSAL_RUNE_MIN_LEVEL)
                 mpr("The abyssal rune of Zot can be found at this depth.");
             break;
@@ -946,7 +946,7 @@ void floor_transition(dungeon_feature_type how,
         mpr("Killing monsters will force the Abyss to allow you passage.");
         if (have_passive(passive_t::slow_abyss))
         {
-            mprf(MSGCH_GOD, you.religion,
+            mprfcp(MSGCH_GOD, you.religion,
                  "You feel %s slowing down the madness of this place.",
                  god_name(you.religion).c_str());
         }
@@ -1220,7 +1220,7 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
         {
             if (for_real)
             {
-                mprf(MSGCH_ERROR, "Error: no Hell exit level, how in the "
+                mprfc(MSGCH_ERROR, "Error: no Hell exit level, how in the "
                                   "Vestibule did you get here? Let's go to D:1.");
             }
             return level_id(BRANCH_DUNGEON, 1);
@@ -1296,7 +1296,7 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
             {
                 if (for_real)
                 {
-                    mprf(MSGCH_ERROR, "Error: no return path. You did create "
+                    mprfc(MSGCH_ERROR, "Error: no return path. You did create "
                          "the exit manually, didn't you? Let's go to D:1.");
                 }
                 return level_id(BRANCH_DUNGEON, 1);

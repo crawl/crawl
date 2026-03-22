@@ -330,17 +330,17 @@ static void _change_skill_level(skill_type exsk, int n)
     // are you drained/crosstrained/ash'd in the relevant skill?
     const bool specify_base = you.skill(exsk, 1) != you.skill(exsk, 1, true);
     if (you.skills[exsk] == MAX_SKILL_LEVEL)
-        mprf(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
+        mprfc(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
     else if (abs(n) == 1 && you.num_turns)
     {
-        mprf(MSGCH_INTRINSIC_GAIN, "Your %s%s skill %s to level %d!",
+        mprfc(MSGCH_INTRINSIC_GAIN, "Your %s%s skill %s to level %d!",
              specify_base ? "base " : "",
              skill_name(exsk), (n > 0) ? "increases" : "decreases",
              you.skills[exsk]);
     }
     else if (you.num_turns)
     {
-        mprf(MSGCH_INTRINSIC_GAIN, "Your %s%s skill %s %d levels and is now "
+        mprfc(MSGCH_INTRINSIC_GAIN, "Your %s%s skill %s %d levels and is now "
              "at level %d!",
              specify_base ? "base " : "",
              skill_name(exsk),
@@ -1624,7 +1624,7 @@ void update_four_winds(bool force_recheck)
             if (you.wind_category_inc[i]
                 && you.wind_category_weight[i] + 10 >= prevailing_amount)
             {
-                mprf(MSGCH_WARN, "You feel the winds around you beginning to shift...");
+                mprfc(MSGCH_WARN, "You feel the winds around you beginning to shift...");
                 you.gave_wind_change_warning = true;
                 break;
             }

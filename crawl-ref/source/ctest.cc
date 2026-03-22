@@ -62,7 +62,7 @@ static void _reset_test_data()
 
 static int crawl_begin_test(lua_State *ls)
 {
-    mprf(MSGCH_PROMPT, "Starting %s: %s",
+    mprfc(MSGCH_PROMPT, "Starting %s: %s",
          activity,
          luaL_checkstring(ls, 1));
     lua_pushinteger(ls, ++ntests);
@@ -72,7 +72,7 @@ static int crawl_begin_test(lua_State *ls)
 static int crawl_test_success(lua_State *ls)
 {
     if (!crawl_state.script)
-        mprf(MSGCH_PROMPT, "Test success: %s", luaL_checkstring(ls, 1));
+        mprfc(MSGCH_PROMPT, "Test success: %s", luaL_checkstring(ls, 1));
     lua_pushinteger(ls, ++nsuccess);
     return 1;
 }
@@ -135,7 +135,7 @@ static void run_test(const string &file)
     ++ntests;
     if (!crawl_state.script)
         fprintf(stderr, "Running test #%d: '%s'.\n", ntests, file.c_str());
-    mprf(MSGCH_DIAGNOSTICS, "Running %s %d: %s",
+    mprfc(MSGCH_DIAGNOSTICS, "Running %s %d: %s",
          activity, ntests, file.c_str());
     flush_prev_message();
 

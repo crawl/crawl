@@ -788,7 +788,7 @@ void macro_save()
     f = fopen_u(macrofile.c_str(), "w");
     if (!f)
     {
-        mprf(MSGCH_ERROR, "Couldn't open %s for writing!", macrofile.c_str());
+        mprfc(MSGCH_ERROR, "Couldn't open %s for writing!", macrofile.c_str());
         return;
     }
 
@@ -826,7 +826,7 @@ static keyseq _getch_mul()
     // get new keys from the user.
     if (crawl_state.is_replaying_keys())
     {
-        mprf(MSGCH_ERROR, "(Key replay ran out of keys)");
+        mprfc(MSGCH_ERROR, "(Key replay ran out of keys)");
         crawl_state.cancel_cmd_repeat();
         crawl_state.cancel_cmd_again();
     }
@@ -957,13 +957,13 @@ void flush_input_buffer(int reason)
         {
             if (you.wizard) // crash -- intended for tests
             {
-                mprf(MSGCH_ERROR,
+                mprfc(MSGCH_ERROR,
                     "Flushing non-empty key buffer (Buffer is '%s')",
                     _buffer_to_string().c_str());
                 ASSERT(Buffer.empty());
             }
             else
-                mprf(MSGCH_ERROR, "Flushing non-empty key buffer");
+                mprfc(MSGCH_ERROR, "Flushing non-empty key buffer");
         }
         while (!Buffer.empty())
         {
@@ -2176,7 +2176,7 @@ command_type key_to_command(int key, KeymapContext context)
 
         if (cmd_context != context)
         {
-            mprf(MSGCH_ERROR,
+            mprfc(MSGCH_ERROR,
                  "key_to_command(): command '%s' (%d:%d) wrong for desired "
                  "context %d",
                  command_to_name(cmd).c_str(), -key - CMD_NO_CMD,
@@ -2285,12 +2285,12 @@ void bind_command_to_key(command_type cmd, int key)
     {
         if (command_name == "CMD_NO_CMD")
         {
-            mprf(MSGCH_ERROR, "Cannot bind command #%d to a key.",
+            mprfc(MSGCH_ERROR, "Cannot bind command #%d to a key.",
                  (int) cmd);
             return;
         }
 
-        mprf(MSGCH_ERROR, "Cannot bind command '%s' to a key.",
+        mprfc(MSGCH_ERROR, "Cannot bind command '%s' to a key.",
              command_name.c_str());
         return;
     }
@@ -2300,7 +2300,7 @@ void bind_command_to_key(command_type cmd, int key)
     {
         // disable because they interact badly with webtiles client code.
         // TODO: is there any way to get these to work on webtiles?
-        mprf(MSGCH_ERROR, "Ignoring menu bindkey of %s for webtiles client",
+        mprfc(MSGCH_ERROR, "Ignoring menu bindkey of %s for webtiles client",
             command_name.c_str());
         return;
     }
@@ -2308,19 +2308,19 @@ void bind_command_to_key(command_type cmd, int key)
 
     if (is_userfunction(key))
     {
-        mprf(MSGCH_ERROR, "Cannot bind user function keys to a command.");
+        mprfc(MSGCH_ERROR, "Cannot bind user function keys to a command.");
         return;
     }
 
     if (is_synthetic_key(key))
     {
-        mprf(MSGCH_ERROR, "Cannot bind synthetic keys to a command.");
+        mprfc(MSGCH_ERROR, "Cannot bind synthetic keys to a command.");
         return;
     }
 
     if (!_allow_rebinding(key, context))
     {
-        mprf(MSGCH_ERROR, "Key %d in context %d cannot be rebound.",
+        mprfc(MSGCH_ERROR, "Key %d in context %d cannot be rebound.",
             key, (int) context);
         return;
     }

@@ -1374,7 +1374,7 @@ static bool _lua_map_place_valid(const map_def &map,
     // Lua error invalidates place.
     if (err)
     {
-        mprf(MSGCH_ERROR, "Lua error: %s", lua_tostring(ls, -1));
+        mprfc(MSGCH_ERROR, "Lua error: %s", lua_tostring(ls, -1));
         return true;
     }
 

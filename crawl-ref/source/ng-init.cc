@@ -154,7 +154,7 @@ void initialise_temples()
     const unsigned int main_temple_size = altar_count;
 
 #ifdef DEBUG_TEMPLES
-    mprf(MSGCH_DIAGNOSTICS, "Chose main temple %s, size %u",
+    mprfc(MSGCH_DIAGNOSTICS, "Chose main temple %s, size %u",
          main_temple->name.c_str(), main_temple_size);
 #endif
 
@@ -173,7 +173,7 @@ void initialise_temples()
     }
 
 #ifdef DEBUG_TEMPLES
-    mprf(MSGCH_DIAGNOSTICS, "%u overflow altars", (unsigned int)overflow_gods.size());
+    mprfc(MSGCH_DIAGNOSTICS, "%u overflow altars", (unsigned int)overflow_gods.size());
 #endif
 
     you.props.erase(TEMPLE_GODS_KEY);      // shouldn't be set normally, but
@@ -237,7 +237,7 @@ void initialise_temples()
             string temple_tag = tag_without_prefix(tag, "temple_overflow_");
             if (temple_tag.empty())
             {
-                mprf(MSGCH_ERROR, "Malformed temple tag '%s' in map %s",
+                mprfc(MSGCH_ERROR, "Malformed temple tag '%s' in map %s",
                     tag.c_str(), map->name.c_str());
                 continue;
             }
@@ -250,7 +250,7 @@ void initialise_temples()
                 god_type this_god = str_to_god(temple_tag);
                 if (this_god == GOD_NO_GOD)
                 {
-                    mprf(MSGCH_ERROR, "Malformed temple tag '%s' in map %s",
+                    mprfc(MSGCH_ERROR, "Malformed temple tag '%s' in map %s",
                         tag.c_str(), map->name.c_str());
                     continue;
                 }
@@ -260,7 +260,7 @@ void initialise_temples()
             {
                 if (this_temple_gods.size() > 0)
                 {
-                    mprf(MSGCH_ERROR,
+                    mprfc(MSGCH_ERROR,
                         "Map %s has temple_overflow_god tags but no count tag",
                         map->name.c_str());
                 }
