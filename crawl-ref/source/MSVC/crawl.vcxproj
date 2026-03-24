@@ -81,7 +81,7 @@ python.exe util/gen-all.py</Command>
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>./include;.;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles;../contrib/sdl2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_ALLOW_KEYWORD_MACROS;WIZARD;USE_TILE;USE_TILE_LOCAL;PROPORTIONAL_FONT="..\\..\\contrib\\fonts\\DejaVuSans.ttf";MONOSPACED_FONT="..\\..\\contrib\\fonts\\DejaVuSansMono.ttf";USE_FT;FT_FREETYPE_H="freetype.h";USE_GL;USE_SDL;FULLDEBUG;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_ALLOW_KEYWORD_MACROS;WIZARD;USE_TILE;USE_TILE_LOCAL;PROPORTIONAL_FONT="..\\..\\contrib\\fonts\\DejaVuSans.ttf";MONOSPACED_FONT="..\\..\\contrib\\fonts\\DejaVuSansMono.ttf";CJK_MONOSPACED_FONT="..\\..\\vendor-fonts\\unifont-17.0.04.otf";USE_FT;FT_FREETYPE_H="freetype.h";USE_GL;USE_SDL;FULLDEBUG;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -134,7 +134,7 @@ python.exe util/gen-all.py</Command>
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>./include;.;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles;../contrib/sdl2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_ALLOW_KEYWORD_MACROS;WIZARD;USE_TILE;USE_TILE_LOCAL;PROPORTIONAL_FONT="..\\..\\contrib\\fonts\\DejaVuSans.ttf";MONOSPACED_FONT="..\\..\\contrib\\fonts\\DejaVuSansMono.ttf";USE_FT;FT_FREETYPE_H="freetype.h";USE_GL;USE_SDL;FULLDEBUG;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_ALLOW_KEYWORD_MACROS;WIZARD;USE_TILE;USE_TILE_LOCAL;PROPORTIONAL_FONT="..\\..\\contrib\\fonts\\DejaVuSans.ttf";MONOSPACED_FONT="..\\..\\contrib\\fonts\\DejaVuSansMono.ttf";CJK_MONOSPACED_FONT="..\\..\\vendor-fonts\\unifont-17.0.04.otf";USE_FT;FT_FREETYPE_H="freetype.h";USE_GL;USE_SDL;FULLDEBUG;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -184,7 +184,7 @@ python.exe util/gen-all.py</Command>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">
     <ClCompile>
       <AdditionalIncludeDirectories>./include;../sdl2;.;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles;../contrib/sdl2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_ALLOW_KEYWORD_MACROS;WIZARD;USE_TILE;USE_TILE_LOCAL;PROPORTIONAL_FONT="..\\..\\contrib\\fonts\\DejaVuSans.ttf";MONOSPACED_FONT="..\\..\\contrib\\fonts\\DejaVuSansMono.ttf";USE_FT;FT_FREETYPE_H="freetype.h";USE_GL;USE_SDL;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_ALLOW_KEYWORD_MACROS;WIZARD;USE_TILE;USE_TILE_LOCAL;PROPORTIONAL_FONT="..\\..\\contrib\\fonts\\DejaVuSans.ttf";MONOSPACED_FONT="..\\..\\contrib\\fonts\\DejaVuSansMono.ttf";CJK_MONOSPACED_FONT="..\\..\\vendor-fonts\\unifont-17.0.04.otf";USE_FT;FT_FREETYPE_H="freetype.h";USE_GL;USE_SDL;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>AppHdr.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
@@ -237,7 +237,7 @@ python.exe util/gen-all.py</Command>
     </Midl>
     <ClCompile>
       <AdditionalIncludeDirectories>./include;.;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles;../contrib/sdl2/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_ALLOW_KEYWORD_MACROS;WIZARD;USE_TILE;USE_TILE_LOCAL;PROPORTIONAL_FONT="..\\..\\contrib\\fonts\\DejaVuSans.ttf";MONOSPACED_FONT="..\\..\\contrib\\fonts\\DejaVuSansMono.ttf";USE_FT;FT_FREETYPE_H="freetype.h";USE_GL;USE_SDL;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_ALLOW_KEYWORD_MACROS;WIZARD;USE_TILE;USE_TILE_LOCAL;PROPORTIONAL_FONT="..\\..\\contrib\\fonts\\DejaVuSans.ttf";MONOSPACED_FONT="..\\..\\contrib\\fonts\\DejaVuSansMono.ttf";CJK_MONOSPACED_FONT="..\\..\\vendor-fonts\\unifont-17.0.04.otf";USE_FT;FT_FREETYPE_H="freetype.h";USE_GL;USE_SDL;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>AppHdr.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
