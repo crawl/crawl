@@ -3,18 +3,17 @@
 #include <cstring>
 #include <string>
 
-#if defined(TARGET_COMPILER_VC) && defined(__has_include)
+#if defined(__has_include)
 #if __has_include(<libintl.h>)
 #include <libintl.h>
 #define DCSS_GETTEXT_AVAILABLE 1
 #endif
 #endif
 
-#ifndef DCSS_GETTEXT_AVAILABLE
-#ifndef TARGET_COMPILER_VC
+#if !defined(DCSS_GETTEXT_AVAILABLE) && !defined(__has_include) \
+    && !defined(TARGET_COMPILER_VC)
 #include <libintl.h>
 #define DCSS_GETTEXT_AVAILABLE 1
-#endif
 #endif
 
 #ifndef DCSS_GETTEXT_AVAILABLE
