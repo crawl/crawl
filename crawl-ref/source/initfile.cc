@@ -4503,38 +4503,47 @@ static void _rebind_gettext_domain()
     textdomain("crawl-data");
 }
 
+static void _set_locale_env(const char *name, const char *value)
+{
+#ifdef TARGET_OS_WINDOWS
+    _putenv_s(name, value ? value : "");
+#else
+    if (value)
+        setenv(name, value, 1);
+    else
+        unsetenv(name);
+#endif
+}
+
 static void _apply_gettext_language(const char *code, const char *locale)
 {
 #ifdef TARGET_COMPILER_VC
-    _putenv_s("LANGUAGE", code ? code : "");
-    _putenv_s("LANG", locale ? locale : "");
-    _putenv_s("LC_MESSAGES", locale ? locale : "");
-    _putenv_s("LC_ALL", "");
+    _set_locale_env("LANGUAGE", code);
+    _set_locale_env("LANG", locale);
+    _set_locale_env("LC_MESSAGES", locale);
+    _set_locale_env("LC_ALL", nullptr);
     if (!setlocale(LC_ALL, locale ? locale : ""))
         setlocale(LC_ALL, "");
 #else
-    if (code)
-        setenv("LANGUAGE", code, 1);
-    else
-        unsetenv("LANGUAGE");
+    _set_locale_env("LANGUAGE", code);
 
     if (locale)
     {
-        setenv("LANG", locale, 1);
-        setenv("LC_MESSAGES", locale, 1);
+        _set_locale_env("LANG", locale);
+        _set_locale_env("LC_MESSAGES", locale);
     }
     else
     {
-        unsetenv("LANG");
-        unsetenv("LC_MESSAGES");
+        _set_locale_env("LANG", nullptr);
+        _set_locale_env("LC_MESSAGES", nullptr);
     }
-    unsetenv("LC_ALL");
+    _set_locale_env("LC_ALL", nullptr);
 
     if ((!locale || !setlocale(LC_ALL, locale))
         && !setlocale(LC_ALL, ""))
     {
-        setenv("LANG", "en_US.UTF-8", 1);
-        setenv("LC_MESSAGES", "en_US.UTF-8", 1);
+        _set_locale_env("LANG", "en_US.UTF-8");
+        _set_locale_env("LC_MESSAGES", "en_US.UTF-8");
         setlocale(LC_ALL, "en_US.UTF-8");
     }
 #endif
