@@ -4414,9 +4414,9 @@ static bool _bog_can_affect(const actor *caster, const actor *target)
         return !you.duration[DUR_NOXIOUS_BOG] && !you.can_water_walk();
 
     const monster *mons = target->as_monster();
-    return (mons
-            && mons->type != MONS_FENSTRIDER_WITCH  // stilting above the muck!
-            && mons->type != MONS_ORC_APOSTLE);  // walking on top of it
+    return mons
+           && mons->type != MONS_FENSTRIDER_WITCH  // stilting above the muck!
+           && mons->type != MONS_ORC_APOSTLE;  // walking on top of it
 }
 
 void actor_apply_toxic_bog(actor * act)
@@ -4731,7 +4731,9 @@ spret cast_noxious_bog(int pow, bool fail)
     targeter_bog hitfunc(&you);
     if (stop_attack_prompt(hitfunc, "create a bog",
         [](const actor *a) { return _bog_can_affect(&you, a); }))
+    {
         return spret::abort;
+    }
 
     fail_check();
 
