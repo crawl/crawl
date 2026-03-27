@@ -188,6 +188,7 @@ dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
 #if TAG_MAJOR_VERSION == 34
         || feature == DNGN_TELEPORTER
 #endif
+        || feat_is_forge(feature)
         || feature == DNGN_TRANSPORTER
         || feature == DNGN_TRANSPORTER_LANDING)
     {

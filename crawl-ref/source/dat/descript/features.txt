@@ -479,6 +479,19 @@ A statue of an orb of entropy
 A statue of a terrifying globe of profound nothingness, said to dwell within the
 Realm of Zot.
 %%%%
+A body forge
+
+A forge meant not for weapons or armour, but for living beings. Activating the
+forge will modify the user's flesh with one or more beneficial mutations.
+
+{{
+    if you.god() == "Zin" then
+        return "Using such a device is anathema to the laws of Zin."
+    else
+        return ""
+    end
+}}
+%%%%
 ########################################################################
 ### Branch entrances and exits
 ########################################################################

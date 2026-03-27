@@ -2454,6 +2454,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         {
             dungeon_feature_type feat = env.grid(you.pos());
             if (feat != DNGN_ENTER_SHOP
+                && !feat_is_forge(feat)
                 && feat_stair_direction(feat) != CMD_NO_CMD
                 && feat_stair_direction(stair_taken) != CMD_NO_CMD)
             {

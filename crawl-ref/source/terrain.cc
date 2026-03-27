@@ -41,8 +41,10 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-util.h"
+#include "mutation.h"
 #include "ouch.h"
 #include "player.h"
+#include "prompt.h"
 #include "random.h"
 #include "religion.h"
 #include "species.h"
@@ -319,6 +321,17 @@ bool feat_is_gate(dungeon_feature_type feat)
     }
 }
 
+bool feat_is_forge(dungeon_feature_type feat)
+{
+    switch (feat)
+    {
+    case DNGN_BODY_FORGE:
+        return true;
+    default:
+        return false;
+    }
+}
+
 /** What command do you use to traverse this feature?
  *
  *  @param feat the feature.
@@ -339,6 +352,9 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     }
 
     if (feat_is_altar(feat))
+        return CMD_GO_DOWNSTAIRS; // arbitrary; consistent with shops
+
+    if (feat_is_forge(feat))
         return CMD_GO_DOWNSTAIRS; // arbitrary; consistent with shops
 
     switch (feat)
@@ -2013,6 +2029,8 @@ const char* feat_type_name(dungeon_feature_type feat)
         return "lava";
     if (feat_is_altar(feat))
         return "altar";
+    if (feat_is_forge(feat))
+        return "forge";
     if (feat_is_trap(feat))
         return "trap";
     if (feat_is_escape_hatch(feat))
@@ -2753,4 +2771,55 @@ dungeon_feature_type feat_at_no_mimic(coord_def pos)
     if (current_feature_is_mimic_at(pos))
         return DNGN_FLOOR;
     return env.grid(pos);
+}
+
+static bool _body_forge()
+{
+    if (!you.can_safely_mutate(false))
+    {
+        mpr("Your body cannot mutate, so the forge is useless to you.");
+        return false;
+    }
+    else if (!you.can_safely_mutate(true))
+    {
+        mpr("You cannot mutate safely in your present form.");
+        return false;
+    }
+
+    const string prompt = make_stringf("Mutate yourself using the forge? %s",
+    you_worship(GOD_ZIN) ? "Zin would disapprove of such an act!" : "");
+
+    if (!yesno(prompt.c_str(), true, 'n', false))
+        return false;
+
+    for (int i = 2 + coinflip(); i > 0; i--)
+        mutate(RANDOM_GOOD_MUTATION, "body forge", false);
+
+    return true;
+}
+
+void activate_forge()
+{
+    coord_def pos = you.pos();
+    dungeon_feature_type feat = env.grid(pos);
+    bool used = false;
+
+    switch (feat)
+    {
+        case DNGN_BODY_FORGE:
+            if (_body_forge())
+                used = true;
+            break;
+        default:
+            break;
+    }
+
+    if (used)
+    {
+        mpr("The forge crumbles to dust.");
+        dungeon_change_base_terrain(pos, DNGN_FLOOR);
+        env.map_knowledge(pos).set_feature(DNGN_FLOOR);
+        set_terrain_mapped(pos);
+        redraw_view_at(pos);
+    }
 }

@@ -69,6 +69,7 @@ bool feat_is_metal(dungeon_feature_type feat);
 bool feat_is_stair(dungeon_feature_type feat);
 bool feat_is_travelable_stair(dungeon_feature_type feat);
 bool feat_is_gate(dungeon_feature_type feat);
+bool feat_is_forge(dungeon_feature_type feat);
 
 string feat_preposition(dungeon_feature_type feat, bool active = false,
                         const actor* who = nullptr);
@@ -190,3 +191,5 @@ void descent_crumble_stairs();
 void descent_reveal_stairs();
 
 dungeon_feature_type feat_at_no_mimic(coord_def pos);
+
+void activate_forge();

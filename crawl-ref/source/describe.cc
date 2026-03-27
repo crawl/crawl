@@ -3179,6 +3179,7 @@ static string _feat_action_desc(const vector<command_type>& actions,
                 (feat == DNGN_ENTER_SHOP
                     || feat_is_portal(feat)
                     || feat_is_gate(feat)
+                    || feat_is_forge(feat)
                     || feat == DNGN_TRANSPORTER))
             {
                 // XX disable for portals without item? The command still works.
@@ -3356,6 +3357,14 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
                     _esc_cmd_to_str(stair_dir).c_str(),
                     (feat == DNGN_ENTER_ZOT || feat == DNGN_EXIT_VAULTS)
                         ? " if you have enough runes" : "");
+        }
+        else if (feat_is_forge(feat))
+        {
+            long_desc += make_stringf(
+                    "\nWhile standing here, you can activate %s"
+                    "with the <w>%s</w> key; it will vanish after you do so.",
+                    desc_the.c_str(),
+                    _esc_cmd_to_str(stair_dir).c_str());
         }
     }
     else if (feat_is_altar(feat))
