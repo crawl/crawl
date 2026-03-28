@@ -7881,8 +7881,13 @@ bool cancel_beam_prompt(const bolt& beam, const player_beam_tracer& tracer,
     ASSERT(beams_fired >= tracer.blocked_count);
     if (tracer.blocked_count >= beams_fired)
     {
-        mpr(tracer.blocked_message);
-        return true;
+        string prompt = make_stringf("%s Continue anyway?",
+                                     tracer.blocked_message.c_str());
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return true;
+        }
     }
 
     const spell_type spell = beam.origin_spell;
