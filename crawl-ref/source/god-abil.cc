@@ -6909,10 +6909,10 @@ static const vector<random_pick_entry<monster_type>> _makhleb_servants =
   { 17,  27,  220, SEMI, MONS_EXECUTIONER },
 
   // Accessible only through the Mark of the Tyrant
-  { 19,  27,  260, SEMI, MONS_TZITZIMITL },
-  { 21,  27,  280, SEMI, MONS_ICE_FIEND },
-  { 22,  27,  300, SEMI, MONS_BRIMSTONE_FIEND },
-  { 26,  27,  150, SEMI, MONS_HELL_SENTINEL },
+  { 19,  30,  260, SEMI, MONS_TZITZIMITL },
+  { 21,  30,  280, SEMI, MONS_ICE_FIEND },
+  { 22,  30,  300, SEMI, MONS_BRIMSTONE_FIEND },
+  { 26,  27,  180, SEMI, MONS_HELL_SENTINEL },
 };
 
 static monster* _find_carnage_target(monster_type demon_type, coord_def& demon_spot)
