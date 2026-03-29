@@ -78,6 +78,9 @@ bool is_unknown_transporter(const coord_def &p);
 
 void fill_travel_point_distance(const coord_def& youpos,
                      vector<coord_def>* coords = nullptr);
+void fill_travel_point_distance_multiple(
+    const vector<coord_def>& positions,
+    vector<coord_def>* coords = nullptr);
 
 bool is_stair_exclusion(const coord_def &p);
 
@@ -458,7 +461,9 @@ public:
     // sealed doors as traversable
     coord_def pathfind(run_mode_type rt, bool fallback_explore = false);
 
-    // For flood-fills (explore), sets starting (seed) square.
+    // For flood-fills (explore), sets starting (seed) square(s).
+    void set_floodseeds(const vector<coord_def> &seeds,
+                        bool double_flood = false);
     void set_floodseed(const coord_def &seed, bool double_flood = false);
 
     // For regular travel, set starting point (usually the character's current
@@ -496,6 +501,7 @@ protected:
     bool square_slows_movement(const coord_def &c);
     void check_square_greed(const coord_def &c);
     void good_square(const coord_def &c);
+    void populate_stair_distances();
 
 protected:
     static const int UNFOUND_DIST  = -30000;
@@ -506,7 +512,8 @@ protected:
 
     // Where pathfinding starts, and the destination. Note that dest is not
     // relevant for explore!
-    coord_def start, dest;
+    vector<coord_def> starts;
+    coord_def dest;
 
     // This is the square adjacent to the starting position to move
     // along the shortest path to the destination. Does *not* apply
@@ -566,6 +573,9 @@ protected:
 
     // Which index of the circumference array are we currently looking at?
     int circ_index;
+
+    // The distances of points on the level from the nearest upstair.
+    int stair_distances[GXM][GYM];
 
     // Used by all instances of travel_pathfind. Happily, we do not need to be
     // re-entrant or thread-safe.
