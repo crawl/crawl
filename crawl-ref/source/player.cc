@@ -8359,7 +8359,7 @@ bool player::attempt_escape()
         = constricted_type == CONSTRICT_ROOTS      ? "the roots'"
           : constricted_type == CONSTRICT_BVC      ? "the zombie hands'"
           : constricted_type == CONSTRICT_ENTANGLE ? "the vines'"
-                                        : themonst->name(DESC_ITS, true);
+          : you.can_see(*themonst) ? themonst->name(DESC_ITS, true) : "something's";
 
     if (x_chance_in_y(_constriction_escape_chance(escape_attempts), 100))
     {
