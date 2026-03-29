@@ -482,7 +482,8 @@ Realm of Zot.
 A body forge
 
 A forge meant not for weapons or armour, but for living beings. Activating the
-forge will modify the user's flesh with one or more beneficial mutations.
+forge will modify the user's flesh with one or more beneficial mutations, though
+it can only be used once.
 
 {{
     if you.god() == "Zin" then
@@ -491,6 +492,13 @@ forge will modify the user's flesh with one or more beneficial mutations.
         return ""
     end
 }}
+%%%%
+A weapon forge
+
+A forge purpose-built for improving weapons. Though long disused, it has enough
+power to reforge a weapon once. Using the forge will increase a weapon's
+enchantment by a variable amount and may also rebrand it or, rarely, make it
+into an artefact. 
 %%%%
 ########################################################################
 ### Branch entrances and exits

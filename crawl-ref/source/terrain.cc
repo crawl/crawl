@@ -28,7 +28,9 @@
 #include "feature.h"
 #include "fprop.h"
 #include "god-abil.h"
+#include "invent.h"
 #include "item-prop.h"
+#include "item-use.h"
 #include "items.h"
 #include "level-state-type.h"
 #include "libutil.h"
@@ -326,6 +328,7 @@ bool feat_is_forge(dungeon_feature_type feat)
     switch (feat)
     {
     case DNGN_BODY_FORGE:
+    case DNGN_WEAPON_FORGE:
         return true;
     default:
         return false;
@@ -2798,6 +2801,50 @@ static bool _body_forge()
     return true;
 }
 
+bool weapon_forge()
+{
+    if (!any_items_of_type(OSEL_BLESSABLE_WEAPON))
+    {
+        mpr("You don't have any weapons that can be forged!");
+        return false;
+    }
+    
+    int item_slot = prompt_invent_item("Forge which weapon?",
+                                       menu_type::invlist,
+                                       OSEL_BLESSABLE_WEAPON, OPER_ANY,
+                                       invprompt_flag::escape_only);
+                                       
+    if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+    
+    item_def& wpn(you.inv[item_slot]);
+    
+    bool rebrand = one_chance_in(3) || wpn.plus >= MAX_WPN_ENCHANT;
+    
+    if (rebrand)
+    {
+        brand_weapon(wpn);
+        enchant_weapon(wpn, true);
+    }
+    else
+    {
+        for (int i = 2 + coinflip() + coinflip() + one_chance_in(4); i > 0; i--)
+            enchant_weapon(wpn, true);
+    }
+    
+    if (one_chance_in(10))
+    {
+        enchant_weapon(wpn, true);
+        make_forge_randart(wpn);
+    }
+    
+    return true;
+    
+}
+
 void activate_forge()
 {
     coord_def pos = you.pos();
@@ -2810,6 +2857,9 @@ void activate_forge()
             if (_body_forge())
                 used = true;
             break;
+        case DNGN_WEAPON_FORGE:
+            if (weapon_forge())
+                used = true;
         default:
             break;
     }

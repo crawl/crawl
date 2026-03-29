@@ -771,4 +771,11 @@ FOUNTAIN(DNGN_RUNELIGHT, "runelight", "runelight", ETC_DISJUNCTION),
     FFT_NONE, MF_FEATURE,
 },
 
+{
+    DNGN_WEAPON_FORGE, "weapon forge", "weapon_forge",
+    DCHAR_ARCH, NUM_DCHAR_TYPES,
+    RED, LIGHTGREY, RED, RED, LIGHTGREY,
+    FFT_NONE, MF_FEATURE,
+},
+
 };

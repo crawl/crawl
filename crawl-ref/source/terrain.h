@@ -193,3 +193,4 @@ void descent_reveal_stairs();
 dungeon_feature_type feat_at_no_mimic(coord_def pos);
 
 void activate_forge();
+bool weapon_forge();

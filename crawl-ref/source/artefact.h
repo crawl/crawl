@@ -122,6 +122,7 @@ int artefact_property(const item_def &item, artefact_prop_type prop);
 
 bool make_item_randart(item_def &item, bool ignore_mundane = false);
 void make_ashenzari_randart(item_def &item);
+void make_forge_randart(item_def &item);
 bool make_item_unrandart(item_def &item, int unrand_index);
 void setup_unrandart(item_def &item, bool creating = true);
 
