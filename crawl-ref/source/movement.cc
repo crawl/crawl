@@ -889,6 +889,17 @@ static bool _handle_player_step(const coord_def& targ, int& delay, bool rampagin
                                 bool& did_move, bool& did_attack, bool& did_open_door)
 {
     const coord_def initial_pos = you.pos();
+
+    // If we can't move, and don't have a non-move action, stop. We sometimes want
+    // to hit invisible monsters, but if we can't see them and can't move, it leaks
+    // information to allow the player to hit them.
+    const monster_info *mi = env.map_knowledge(targ).monsterinfo();
+    if (!mi && you.cannot_move() && !feat_is_closed_door(env.grid(targ)))
+    {
+        canned_msg(MSG_CANNOT_MOVE);
+        return false;
+    }
+
     monster* mon = monster_at(targ);
     coord_def mon_swap_dest;
     bool fedhas_move = false;
@@ -984,12 +995,7 @@ static bool _handle_player_step(const coord_def& targ, int& delay, bool rampagin
     // Now we know we actually want to move *into* this spot, let's see if we can.
     // XXX: Liquids the player cannot enter are handled by check_moveto_terrain(),
     //      which has already been called, so no need to check again.
-    if (you.cannot_move())
-    {
-        canned_msg(MSG_CANNOT_MOVE);
-        return false;
-    }
-    else if (_cannot_step_into(targ))
+    if (_cannot_step_into(targ))
     {
         _handle_trying_to_move_into_unpassable_terrain(targ);
         you.digging = false;
