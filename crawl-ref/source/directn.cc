@@ -3297,7 +3297,7 @@ string feature_description_at(const coord_def& where, bool covering,
             dtype = DESC_THE;
         // fallthrough
     default:
-        const string featdesc = grid == env.grid(where)
+        const string featdesc = grid == env.grid(where) && !is_temp_terrain(where)
                               ? raw_feature_description(where)
                               : _base_feature_desc(grid);
         return thing_do_grammar(dtype, featdesc + covering_description,
