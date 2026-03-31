@@ -955,8 +955,7 @@ static tileidx_t _tileidx_feature_no_overrides(const coord_def &gc)
                         && feat != DNGN_PASSAGE_OF_GOLUBRIA
                         && feat != DNGN_MALIGN_GATEWAY
                         && feat != DNGN_BINDING_SIGIL
-                        && feat != DNGN_UNKNOWN_PORTAL
-                        && feat != DNGN_TREE; // summon forest spell
+                        && feat != DNGN_UNKNOWN_PORTAL;
     if (override && can_override)
         return override;
 
