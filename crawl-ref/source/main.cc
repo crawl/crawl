@@ -1176,7 +1176,8 @@ static void _input()
     if (you_are_delayed()
         && !dynamic_cast<MacroProcessKeyDelay*>(current_delay().get()))
     {
-        stop_channelling_spells();
+        if (!dynamic_cast<MacroDelay*>(current_delay().get()))
+            stop_channelling_spells();
         handle_delay();
 
         // Some delays set you.turn_is_over.
