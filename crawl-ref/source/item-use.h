@@ -57,7 +57,8 @@ bool try_equip_item(item_def& item);
 bool try_unequip_item(item_def& item);
 bool can_unequip_item(item_def& item, bool silent = false);
 bool warn_about_changing_gear(const vector<item_def*>& to_remove,
-                              item_def* to_equip = nullptr);
+                              item_def* to_equip = nullptr,
+                              equipment_slot equip_slot = SLOT_UNUSED);
 
 void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
                          vector<item_def*> to_remove);

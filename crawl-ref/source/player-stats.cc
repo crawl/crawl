@@ -25,7 +25,7 @@
 #include "tag-version.h"
 #include "transform.h"
 
-static int _stat_modifier(stat_type stat, bool innate_only);
+static int _stat_modifier(stat_type stat, bool innate_only, const player_equip_set& equip);
 
 /**
  * What's the player's value for a given stat?
@@ -38,7 +38,13 @@ static int _stat_modifier(stat_type stat, bool innate_only);
  */
 int player::stat(stat_type s, bool nonneg, bool innate_only) const
 {
-    const int val = min(base_stats[s] + _stat_modifier(s, innate_only), MAX_STAT_VALUE);
+    return stat_with_equipment(s, you.equipment, nonneg, innate_only);
+}
+
+int player::stat_with_equipment(
+    stat_type s, const player_equip_set& equip, bool nonneg, bool innate_only) const
+{
+    const int val = min(base_stats[s] + _stat_modifier(s, innate_only, equip), MAX_STAT_VALUE);
     return nonneg ? max(val, 0) : val;
 }
 
@@ -273,7 +279,7 @@ static int _get_mut_effects(stat_type which_stat, bool innate_only)
     return total;
 }
 
-static int _strength_modifier(bool innate_only)
+static int _strength_modifier(bool innate_only, const player_equip_set& equipment)
 {
     int result = 0;
 
@@ -285,13 +291,13 @@ static int _strength_modifier(bool innate_only)
         result += chei_stat_boost();
 
         // ego items of strength
-        result += 3 * you.wearing_ego(OBJ_ARMOUR, SPARM_STRENGTH);
+        result += 3 * equipment.wearing_ego(OBJ_ARMOUR, SPARM_STRENGTH);
 
         // rings of strength
-        result += you.wearing_jewellery(RING_STRENGTH);
+        result += equipment.wearing_jewellery(RING_STRENGTH);
 
         // randarts of strength
-        result += you.scan_artefacts(ARTP_STRENGTH);
+        result += equipment.scan_artefacts(ARTP_STRENGTH);
 
         // form
         result += get_form()->str_mod;
@@ -303,7 +309,7 @@ static int _strength_modifier(bool innate_only)
     return result;
 }
 
-static int _int_modifier(bool innate_only)
+static int _int_modifier(bool innate_only, const player_equip_set& equipment)
 {
     int result = 0;
 
@@ -315,13 +321,13 @@ static int _int_modifier(bool innate_only)
         result += chei_stat_boost();
 
         // ego items of intelligence
-        result += 3 * you.wearing_ego(OBJ_ARMOUR, SPARM_INTELLIGENCE);
+        result += 3 * equipment.wearing_ego(OBJ_ARMOUR, SPARM_INTELLIGENCE);
 
         // rings of intelligence
-        result += you.wearing_jewellery(RING_INTELLIGENCE);
+        result += equipment.wearing_jewellery(RING_INTELLIGENCE);
 
         // randarts of intelligence
-        result += you.scan_artefacts(ARTP_INTELLIGENCE);
+        result += equipment.scan_artefacts(ARTP_INTELLIGENCE);
     }
 
     // mutations
@@ -330,7 +336,7 @@ static int _int_modifier(bool innate_only)
     return result;
 }
 
-static int _dex_modifier(bool innate_only)
+static int _dex_modifier(bool innate_only, const player_equip_set& equipment)
 {
     int result = 0;
 
@@ -342,13 +348,13 @@ static int _dex_modifier(bool innate_only)
         result += chei_stat_boost();
 
         // ego items of dexterity
-        result += 3 * you.wearing_ego(OBJ_ARMOUR, SPARM_DEXTERITY);
+        result += 3 * equipment.wearing_ego(OBJ_ARMOUR, SPARM_DEXTERITY);
 
         // rings of dexterity
-        result += you.wearing_jewellery(RING_DEXTERITY);
+        result += equipment.wearing_jewellery(RING_DEXTERITY);
 
         // randarts of dexterity
-        result += you.scan_artefacts(ARTP_DEXTERITY);
+        result += equipment.scan_artefacts(ARTP_DEXTERITY);
 
         // form
         result += get_form()->dex_mod;
@@ -384,13 +390,13 @@ bool mutation_causes_stat_zero(mutation_type mut)
         || _base_stat_with_new_mut(STAT_DEX, mut) <= 0;
 }
 
-static int _stat_modifier(stat_type stat, bool innate_only)
+static int _stat_modifier(stat_type stat, bool innate_only, const player_equip_set& equipment)
 {
     switch (stat)
     {
-    case STAT_STR: return _strength_modifier(innate_only);
-    case STAT_INT: return _int_modifier(innate_only);
-    case STAT_DEX: return _dex_modifier(innate_only);
+    case STAT_STR: return _strength_modifier(innate_only, equipment);
+    case STAT_INT: return _int_modifier(innate_only, equipment);
+    case STAT_DEX: return _dex_modifier(innate_only, equipment);
     default:
         mprf(MSGCH_ERROR, "Bad stat: %d", stat);
         return 0;

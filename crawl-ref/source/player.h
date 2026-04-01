@@ -591,6 +591,8 @@ public:
     bool level_visited(const level_id &level);
 
     int stat(stat_type stat, bool nonneg = true, bool innate_only = false) const;
+    int stat_with_equipment(stat_type s, const player_equip_set& equipment,
+                            bool nonneg = true, bool innate_only = false) const;
     int strength(bool nonneg = true) const;
     int intel(bool nonneg = true) const;
     int dex(bool nonneg = true) const;

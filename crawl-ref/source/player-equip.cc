@@ -395,6 +395,40 @@ int player_equip_set::wearing(object_class_type obj_type, int sub_type,
     return total;
 }
 
+int player_equip_set::wearing_jewellery(int sub_type) const
+{
+    return wearing(OBJ_JEWELLERY, sub_type,
+                   jewellery_type_has_pluses(sub_type),
+                   sub_type == AMU_REGENERATION || sub_type == AMU_MANA_REGENERATION);
+}
+
+int player_equip_set::scan_artefacts(artefact_prop_type which_property,
+                           vector<const item_def *> *matches) const
+{
+    // First, fetch the property total from our cache.
+    int retval = get_artprop(which_property);
+
+    // Don't bother iterating through each artefact individually unless we're
+    // actually trying to retrieve a list of them.
+    if (!matches)
+        return retval;
+
+    for (auto& entry : items)
+    {
+        const item_def& item = entry.get_item();
+        if (is_artefact(item) && artefact_property(item, which_property))
+            matches->push_back(&item);
+    }
+
+    if (you.active_talisman() && is_artefact(*you.active_talisman())
+        && artefact_property(*you.active_talisman(), which_property))
+    {
+        matches->push_back(you.active_talisman());
+    }
+
+    return retval;
+}
+
 int player_equip_set::get_artprop(artefact_prop_type prop) const
 {
     return artprop_cache[prop];

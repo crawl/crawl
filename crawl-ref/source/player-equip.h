@@ -77,6 +77,9 @@ struct player_equip_set
     int wearing_ego(object_class_type obj_type, int ego) const;
     int wearing(object_class_type obj_type, int sub_type,
                 bool count_plus, bool check_attunement) const;
+    int wearing_jewellery(int sub_type) const;
+    int scan_artefacts(artefact_prop_type which_property,
+                       vector<const item_def *> *matches = nullptr) const;
     int get_artprop(artefact_prop_type prop) const;
     vector<item_def*> get_slot_items(equipment_slot slot, bool include_melded = false,
                                      bool attuned_only = false) const;

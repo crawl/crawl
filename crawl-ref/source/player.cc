@@ -3791,28 +3791,7 @@ int player::slaying(bool throwing, bool random) const
 int player::scan_artefacts(artefact_prop_type which_property,
                            vector<const item_def *> *matches) const
 {
-    // First, fetch the property total from our cache.
-    int retval = you.equipment.get_artprop(which_property);
-
-    // Don't bother iterating through each artefact individually unless we're
-    // actually trying to retrieve a list of them.
-    if (!matches)
-        return retval;
-
-    for (auto& entry : you.equipment.items)
-    {
-        const item_def& item = entry.get_item();
-        if (is_artefact(item) && artefact_property(item, which_property))
-            matches->push_back(&item);
-    }
-
-    if (active_talisman() && is_artefact(*active_talisman())
-        && artefact_property(*active_talisman(), which_property))
-    {
-        matches->push_back(active_talisman());
-    }
-
-    return retval;
+    return you.equipment.scan_artefacts(which_property, matches);
 }
 
 /**

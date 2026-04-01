@@ -1253,7 +1253,10 @@ static bool _is_slow_equip(const item_def& item)
  *         no warnings, or the player chose to accept them). False, if we should
  *         abort the process.
  */
-bool warn_about_changing_gear(const vector<item_def*>& to_remove, item_def* to_equip)
+bool warn_about_changing_gear(
+    const vector<item_def*>& to_remove,
+    item_def* to_equip,
+    equipment_slot equip_slot)
 {
     // Switching to a launcher while berserk is likely a mistake.
     if (to_equip && you.berserk() && is_range_weapon(*to_equip))
@@ -1313,6 +1316,60 @@ bool warn_about_changing_gear(const vector<item_def*>& to_remove, item_def* to_e
                     mprf(MSGCH_PROMPT, "Removing %s right now would cause you to %s!",
                             item->name(DESC_YOUR).c_str(),
                             env.grid(you.pos()) == DNGN_DEEP_WATER ? "drown" : "burn");
+                    return false;
+                }
+            }
+        }
+    }
+
+    // Check whether this sequence of removals and equips would cause us to hit
+    // stat zero.
+    // We only warn once per stat, and not for stats that start below zero.
+    bool been_below_zero[NUM_STATS] = {};
+    for (int i = 0; i < NUM_STATS; ++i)
+        been_below_zero[i] = you.stat(static_cast<stat_type>(i)) <= 0;
+    player_equip_set equipment_copy = you.equipment;
+    for (item_def* item : to_remove)
+    {
+        equipment_copy.remove(*item);
+        equipment_copy.update();
+        for (int i = 0; i < NUM_STATS; ++i)
+        {
+            stat_type stat = static_cast<stat_type>(i);
+            if (!been_below_zero[i]
+                && you.stat_with_equipment(stat, equipment_copy) <= 0)
+            {
+                been_below_zero[i] = true;
+                string warning = make_stringf(
+                    "Removing %s would reduce your %s to zero! Really remove it?",
+                    item->name(DESC_YOUR).c_str(), stat_desc(stat, SD_NAME)
+                );
+                if (!yesno(warning.c_str(), false, 'n'))
+                {
+                    canned_msg(MSG_OK);
+                    return false;
+                }
+            }
+        }
+    }
+    if (to_equip)
+    {
+        equipment_copy.add(*to_equip, equip_slot);
+        equipment_copy.update();
+        for (int i = 0; i < NUM_STATS; ++i)
+        {
+            stat_type stat = static_cast<stat_type>(i);
+            if (!been_below_zero[i]
+                && you.stat_with_equipment(stat, equipment_copy) <= 0)
+            {
+                been_below_zero[i] = true;
+                string warning = make_stringf(
+                    "Equipping %s would reduce your %s to zero! Really equip it?",
+                    to_equip->name(DESC_YOUR).c_str(), stat_desc(stat, SD_NAME)
+                );
+                if (!yesno(warning.c_str(), false, 'n'))
+                {
+                    canned_msg(MSG_OK);
                     return false;
                 }
             }
@@ -1442,7 +1499,7 @@ bool try_equip_item(item_def& item)
     // Note: What we pass to this method may be a link to a temporary item copy
     //       in our inventory, if the item we are testing is currently on the
     //       foor.
-    if (!warn_about_changing_gear(to_remove, &item))
+    if (!warn_about_changing_gear(to_remove, &item, slot))
         return false;
 
     // Now do the actual removal and equipping.
