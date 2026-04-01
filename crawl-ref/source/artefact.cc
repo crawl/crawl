@@ -2110,37 +2110,37 @@ void make_forge_randart(item_def &item)
 {
     if (item.base_type != OBJ_WEAPONS)
         return;
-    
+
     const auto brand = item.brand;
-    
+
     _artefact_setup_prop_vectors(item);
     item.flags |= ISFLAG_RANDART;
     item.flags |= ISFLAG_IDENTIFIED;
-    
+
     // these use a more limited pool of good props and only give 1-2 of them
-    artefact_prop_type prop = random_choose(ARTP_FIRE, 
-                                            ARTP_COLD, 
+    artefact_prop_type prop = random_choose(ARTP_FIRE,
+                                            ARTP_COLD,
                                             ARTP_ELECTRICITY,
                                             ARTP_POISON,
                                             ARTP_NEGATIVE_ENERGY,
                                             ARTP_WILLPOWER,
                                             ARTP_RCORR,
                                             ARTP_SEE_INVISIBLE);
-                                                                                                        
+
     artefact_set_property(item, prop, 1);
-    
+
     if (one_chance_in(4))
     {
         artefact_prop_type prop2 = random_choose(ARTP_STRENGTH,
                                                  ARTP_INTELLIGENCE,
                                                  ARTP_DEXTERITY);
-                                                 
+
         artefact_set_property(item, prop2, _gen_good_stat_artp());
     }
-    
+
     if (brand != SPWPN_NORMAL)
         set_artefact_brand(item, brand);
-    
+
     set_artefact_name(item, make_artefact_name(item, false));
 }
 

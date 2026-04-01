@@ -2111,6 +2111,33 @@ static string _item_name(item_def &item)
     return item.name(in_inventory(item) ? DESC_YOUR : DESC_THE);
 }
 
+void rebrand_armour(item_def &arm)
+{
+    // no rebranding hides or scales
+    if (armour_is_hide(arm))
+        return;
+
+    special_armour_type old_brand = get_armour_ego_type(arm);
+    special_armour_type new_brand = old_brand;
+
+    int tries = 500;
+
+    while (new_brand == old_brand && tries > 0)
+    {
+        new_brand = static_cast<special_armour_type>(random2(NUM_REAL_SPECIAL_ARMOURS));
+
+        if (!is_armour_brand_ok(arm.sub_type, new_brand, true))
+            new_brand = old_brand;
+
+        if (new_brand == SPARM_NORMAL)
+            new_brand = old_brand;
+
+        tries--;
+    }
+
+    set_item_ego_type(arm, OBJ_ARMOUR, new_brand);
+}
+
 void brand_weapon(item_def &wpn)
 {
     you.wield_change = true;

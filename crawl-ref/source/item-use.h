@@ -72,4 +72,5 @@ bool uncancel_enchant_armour();
 bool uncancel_amnesia();
 bool uncancel_blinking();
 
+void rebrand_armour(item_def &arm);
 void brand_weapon(item_def &wpn);

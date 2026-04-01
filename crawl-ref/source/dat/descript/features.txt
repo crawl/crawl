@@ -498,7 +498,13 @@ A weapon forge
 A forge purpose-built for improving weapons. Though long disused, it has enough
 power to reforge a weapon once. Using the forge will increase a weapon's
 enchantment by a variable amount and may also rebrand it or, rarely, make it
-into an artefact. 
+into an artefact.
+%%%%
+An armour forge
+
+A forge purpose-built for improving armour. Though long disused, it has enough
+power to reforge an enchantable piece of armour, once. Using the forge will
+increase the chosen armour's enchantment by one and will also rebrand it.
 %%%%
 ########################################################################
 ### Branch entrances and exits

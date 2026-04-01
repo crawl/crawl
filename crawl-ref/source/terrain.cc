@@ -329,6 +329,7 @@ bool feat_is_forge(dungeon_feature_type feat)
     {
     case DNGN_BODY_FORGE:
     case DNGN_WEAPON_FORGE:
+    case DNGN_ARMOUR_FORGE:
         return true;
     default:
         return false;
@@ -2808,22 +2809,22 @@ bool weapon_forge()
         mpr("You don't have any weapons that can be forged!");
         return false;
     }
-    
+
     int item_slot = prompt_invent_item("Forge which weapon?",
                                        menu_type::invlist,
                                        OSEL_BLESSABLE_WEAPON, OPER_ANY,
                                        invprompt_flag::escape_only);
-                                       
+
     if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
     {
         canned_msg(MSG_OK);
         return false;
     }
-    
+
     item_def& wpn(you.inv[item_slot]);
-    
+
     bool rebrand = one_chance_in(3) || wpn.plus >= MAX_WPN_ENCHANT;
-    
+
     if (rebrand)
     {
         brand_weapon(wpn);
@@ -2834,15 +2835,40 @@ bool weapon_forge()
         for (int i = 2 + coinflip() + coinflip() + one_chance_in(4); i > 0; i--)
             enchant_weapon(wpn, true);
     }
-    
+
     if (one_chance_in(10))
     {
         enchant_weapon(wpn, true);
         make_forge_randart(wpn);
     }
-    
+
     return true;
-    
+
+}
+
+static bool _armour_forge()
+{
+    if (!any_items_of_type(OSEL_ENCHANTABLE_ARMOUR))
+    {
+        mpr("You don't have any armour that can be forged!");
+        return false;
+    }
+
+    int item_slot = prompt_invent_item("Forge which armour?",
+                                       menu_type::invlist,
+                                       OSEL_ENCHANTABLE_ARMOUR, OPER_ANY,
+                                       invprompt_flag::escape_only);
+
+    if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    item_def& arm(you.inv[item_slot]);
+
+    enchant_armour(arm, true);
+    rebrand_armour(arm);
 }
 
 void activate_forge()
@@ -2859,6 +2885,9 @@ void activate_forge()
             break;
         case DNGN_WEAPON_FORGE:
             if (weapon_forge())
+                used = true;
+        case DNGN_ARMOUR_FORGE:
+            if (_armour_forge())
                 used = true;
         default:
             break;
