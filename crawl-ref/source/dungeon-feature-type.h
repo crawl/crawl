@@ -114,6 +114,7 @@ enum dungeon_feature_type
     DNGN_BODY_FORGE,
     DNGN_WEAPON_FORGE,
     DNGN_ARMOUR_FORGE,
+    DNGN_SOUL_FORGE,
 #endif
 #if TAG_MAJOR_VERSION == 34
     DNGN_UNDISCOVERED_TRAP,
@@ -404,6 +405,7 @@ enum dungeon_feature_type
     DNGN_BODY_FORGE,
     DNGN_WEAPON_FORGE,
     DNGN_ARMOUR_FORGE,
+    DNGN_SOUL_FORGE,
 #endif
 
     NUM_FEATURES

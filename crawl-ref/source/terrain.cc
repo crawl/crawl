@@ -46,9 +46,11 @@
 #include "mutation.h"
 #include "ouch.h"
 #include "player.h"
+#include "player-stats.h"
 #include "prompt.h"
 #include "random.h"
 #include "religion.h"
+#include "skills.h"
 #include "species.h"
 #include "spl-damage.h" // ramparts_damage
 #include "spl-transloc.h"
@@ -330,6 +332,7 @@ bool feat_is_forge(dungeon_feature_type feat)
     case DNGN_BODY_FORGE:
     case DNGN_WEAPON_FORGE:
     case DNGN_ARMOUR_FORGE:
+    case DNGN_SOUL_FORGE:
         return true;
     default:
         return false;
@@ -2869,6 +2872,89 @@ static bool _armour_forge()
 
     enchant_armour(arm, true);
     rebrand_armour(arm);
+
+    return true;
+}
+
+static bool _highest_stat(int stat)
+{
+    for (int i = 0; i < NUM_STATS; ++i)
+    {
+        if (i == stat)
+            continue;
+        if (you.base_stats[i] > you.base_stats[stat])
+            return false;
+    }
+
+    // returns ties as true
+    return true;
+}
+
+static bool _soul_forge()
+{
+    const string prompt = make_stringf("Activate the soul forge? This will "
+                          "permanently change your attributes or aptitudes.");
+
+    if (!yesno(prompt.c_str(), true, 'n', false))
+        return false;
+
+    // choose two skill aptitudes and boost one while lowering the other
+    if (!you.attribute[ATTR_APT_BOOSTED] && trainable_skills() && coinflip())
+    {
+        vector<skill_type> skills;
+
+        for (int i = 0; i < NUM_SKILLS; ++i)
+        {
+            skill_type sk = static_cast<skill_type>(i);
+
+            // no useless skills
+            if (is_useless_skill(sk))
+                continue;
+
+            // no skills that already have significant training
+            // randomized to reduce weird skilling incentives
+            if (you.skill(sk) > random2(7))
+                continue;
+
+            skills.emplace_back(sk);
+        }
+
+        if (skills.size() > 2)
+        {
+            shuffle_array(skills);
+            you.attribute[ATTR_APT_BOOSTED] = static_cast<int>(skills[0]);
+            you.attribute[ATTR_APT_DIMINISHED] = static_cast<int>(skills[1]);
+            return true;
+        }
+    }
+
+    // if we didn't change apts, shuffle stats
+    int perm[] = { 0, 1, 2 };
+    shuffle_array(perm, NUM_STATS);
+
+    FixedVector<int8_t, NUM_STATS> new_base;
+    for (int i = 0; i < NUM_STATS; ++i)
+        new_base[perm[i]]  = you.base_stats[i];
+
+    for (int i = 0; i < NUM_STATS; ++i)
+    {
+        modify_stat(static_cast<stat_type>(i),
+                    new_base[i] - you.base_stats[i],
+                    false);
+    }
+
+    // now check the new highest stat and add 2, break ties randomly
+    vector<int> highests;
+    for (int i = 0; i < NUM_STATS; ++i)
+    {
+        if (_highest_stat(i))
+            highests.emplace_back(i);
+    }
+
+    shuffle_array(highests);
+    modify_stat(static_cast<stat_type>(highests[0]), 2, true);
+
+    return true;
 }
 
 void activate_forge()
@@ -2888,6 +2974,9 @@ void activate_forge()
                 used = true;
         case DNGN_ARMOUR_FORGE:
             if (_armour_forge())
+                used = true;
+        case DNGN_SOUL_FORGE:
+            if (_soul_forge())
                 used = true;
         default:
             break;

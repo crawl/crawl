@@ -2727,8 +2727,15 @@ int species_apt(skill_type skill, species_type species)
         spec_skills_initialised = true;
     }
 
+    int adj = 0;
+    if (skill == static_cast<skill_type>(you.attribute[ATTR_APT_BOOSTED]))
+        adj += 4;
+    else if (skill == static_cast<skill_type>(you.attribute[ATTR_APT_DIMINISHED]))
+        adj -= 4;
+
     return max(UNUSABLE_SKILL, _spec_skills[species][skill]
-                               - you.get_mutation_level(MUT_UNSKILLED));
+                               - you.get_mutation_level(MUT_UNSKILLED)
+                               + adj);
 }
 
 float species_apt_factor(skill_type sk, species_type sp)

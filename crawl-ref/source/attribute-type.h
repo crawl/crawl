@@ -113,5 +113,7 @@ enum attribute_type
     ATTR_SUNDERING_CHARGE,     // Number of standard attack actions that have
                                // happened since the last time the player spent
                                // a turn without attempting an attack.
+    ATTR_APT_BOOSTED,          // which apt was boosted using a soul forge
+    ATTR_APT_DIMINISHED,       // which apt was diminished using a soul forge
     NUM_ATTRIBUTES
 };
