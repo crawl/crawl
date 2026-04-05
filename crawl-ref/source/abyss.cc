@@ -298,11 +298,16 @@ static void _update_abyssal_map_knowledge(coord_def map_shift = coord_def(0, 0))
         you.props[ABYSSAL_RUNE_LOC_KEY].get_coord() = coord_def(-1,-1);
     coord_def &cur_loc = you.props[ABYSSAL_RUNE_LOC_KEY].get_coord();
     const bool existed = in_bounds(cur_loc);
-    // Adjust the rune location by the shift we've applied to the map, if any
     if (existed)
+    {
+        // Adjust the rune location by the shift we've applied to the map, if any.
         cur_loc += map_shift;
-    if (existed && _sync_rune_knowledge(cur_loc))
-        return; // still exists in the same place, no need to do anything more
+        // If the rune has gone out of bounds, forget it.
+        if (!in_bounds(cur_loc))
+            cur_loc = coord_def(-1,-1);
+        else if (_sync_rune_knowledge(cur_loc))
+            return; // still exists in the same place, no need to do anything more
+    }
 
     // now we need to check if a new or moved rune appeared
 
