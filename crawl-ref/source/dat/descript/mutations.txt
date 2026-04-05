@@ -1264,7 +1264,8 @@ Mark of the Tyrant mutation
 Your Infernal Servants have a longer duration, and you can summon even stronger
 ones at very high Invocations (at the cost of additional piety). When you slay
 enemies, a random servant may gain one of: Haste, Might, Regeneration, or
-Brilliance.
+Brilliance. You may also unleash Makhleb's Destruction through your summoned
+demons without harming them.
 %%%%
 Mark of Carnage mutation
 
