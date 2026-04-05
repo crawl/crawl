@@ -7158,9 +7158,6 @@ void makhleb_infernal_legion_tick(int delay)
 
 void makhleb_vessel_of_slaughter()
 {
-    const int boost = div_rand_round((100 - (you.hp * 100 / you.hp_max)) * 2, 3);
-    you.props[MAKHLEB_SLAUGHTER_BOOST_KEY] = boost;
-
     mpr("You offer yourself as an instrument of Makhleb's will and feel "
         "overwhelming power flowing through you!");
 
