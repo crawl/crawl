@@ -1653,7 +1653,8 @@ void travel_pathfind::check_square_greed(const coord_def &c)
 
 bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
 {
-    if (!in_bounds(dc) || unreachables.count(dc))
+    // Squares outside the map cannot be explored or moved to.
+    if (!map_bounds(dc) || unreachables.count(dc))
         return false;
 
     if (floodout
@@ -1716,8 +1717,11 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
                     {
                         const coord_def ddc = dc + Compass[dir];
 
-                        if (feat_is_wall(env.map_knowledge(ddc).feat()))
+                        if (map_bounds(ddc)
+                            && feat_is_wall(env.map_knowledge(ddc).feat()))
+                        {
                             dist -= Options.explore_wall_bias;
+                        }
                     }
 
                     if (Options.explore_wall_bias < 0 &&
@@ -1769,6 +1773,10 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
         if (unexplored_dist != UNFOUND_DIST && greedy_dist != UNFOUND_DIST)
             return true;
     }
+
+    // Don't consider moving to squares outside the playable area.
+    if (!in_bounds(dc))
+        return false;
 
     // We don't want to follow the transporter at c if it's excluded. We also
     // don't want to update point_distance for the destination based on
