@@ -6831,7 +6831,7 @@ static void _makhleb_atrocity_trigger(int power)
 
     // Will fire up to 4 times, aimed at random distant targets. Can fire up to
     // twice at a single target, if there aren't actually 4 of them alive.
-    int shots_remain = 4;
+    int shots_remain = 3;
     for (int n = 0; n < 2 && shots_remain; ++n)
     {
         bool found_alive = false;

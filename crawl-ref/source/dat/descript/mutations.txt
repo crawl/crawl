@@ -1349,7 +1349,7 @@ demonic presence will go dormant inside you once again.
 Mark of Atrocity mutation
 
 Your Unleash Destruction is empowered the more times you use it consecutively
-without pause, increasing in both damage and health cost. Upon using it a fourth
+without pause, increasing in both damage and health cost. Upon using it a three
 time in a row, you will automatically unleash a wild barrage of additional bolts
 aimed at random targets and reset this boost.
 %%%%
