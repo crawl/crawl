@@ -717,6 +717,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_GLOW_WORM,
+      {
+       { SPELL_BOLT_OF_LIGHT, 60, MON_SPELL_NATURAL },
+      }
+    },
+
     {  MST_RIBBON_WORM,
       {
        { SPELL_ENSNARE, 60, MON_SPELL_NATURAL | MON_SPELL_BREATH },
