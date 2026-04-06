@@ -3941,8 +3941,6 @@ bool surprising_crocodile_can_drag(const actor& agent, const coord_def& target,
 
 spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bool fail)
 {
-    fail_check();
-
     const coord_def start_pos = agent.pos();
     const coord_def drag_shift = -(targ - agent.pos()).sgn();
 
@@ -3965,6 +3963,8 @@ spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bo
         else if (!check_moveto(one_square_move, verb))
             return spret::abort;
     }
+
+    fail_check();
 
     // The targeter will prevent casting this at times where the player *knows*
     // it won't work, but it's possible there's still an invisible creature in
