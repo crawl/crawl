@@ -4638,6 +4638,17 @@ static const struct spell_desc spelldata[] =
     TILEG_SEISMIC_STOMP,
 },
 
+{
+    SPELL_SELF_DECONSTRUCT, "Self Deconstruct",
+    spschool::earth,
+    spflag::monster,
+    5,
+    200,
+    2, 2,
+    10,
+    TILEG_LEES_RAPID_DECONSTRUCTION,
+},
+
 #if TAG_MAJOR_VERSION == 34
 #define AXED_SPELL(tag, name) \
     { tag, name, spschool::none, spflag::none, 7, 0, -1, -1, 0, TILEG_ERROR },

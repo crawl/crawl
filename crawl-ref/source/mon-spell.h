@@ -1883,6 +1883,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_RUBBLE_GOLEM,
+      {
+       { SPELL_SELF_DECONSTRUCT, 30, MON_SPELL_NATURAL },
+      }
+    },
+
     {  MST_NARGUN,
       {
        { SPELL_PETRIFY, 66, MON_SPELL_NATURAL },

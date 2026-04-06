@@ -279,6 +279,11 @@ static string mi_calc_airstrike_damage(monster* mons, spell_type spell_cast)
                         spell_cast == SPELL_SLEETSTRIKE ? 3 : 2);
 }
 
+static string mi_calc_self_deconstruct_damage(monster* mons)
+{
+    return make_stringf("3d%d*", 2 + mons->get_hit_dice() * 12);
+}
+
 static string mi_calc_glaciate_damage(monster* mons)
 {
     int pow = 12 * mons->get_experience_level();
@@ -363,6 +368,8 @@ static string mons_human_readable_spell_damage_string(monster* monster,
         case SPELL_AIRSTRIKE:
         case SPELL_SLEETSTRIKE:
             return mi_calc_airstrike_damage(monster, sp);
+        case SPELL_SELF_DECONSTRUCT:
+            return mi_calc_self_deconstruct_damage(monster);
         case SPELL_GLACIATE:
             return mi_calc_glaciate_damage(monster);
         case SPELL_CHAIN_LIGHTNING:

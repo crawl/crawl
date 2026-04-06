@@ -2747,6 +2747,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_GLOOM:
     case SPELL_SLEETSTRIKE:
     case SPELL_LAUNCH_SPORANGIUM:
+    case SPELL_SELF_DECONSTRUCT:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -7716,6 +7717,18 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
+    case SPELL_SELF_DECONSTRUCT:
+    {
+        pbolt.flavour = BEAM_FRAG;
+        pbolt.is_explosion = true;
+        pbolt.damage = dice_def(3, splpow);
+        pbolt.ex_size = 2;
+        pbolt.source = mons->pos();
+        pbolt.target = mons->pos();
+        pbolt.fire();
+        return;
+    }
+
     case SPELL_HOLY_FLAMES:
         holy_flames(mons, foe);
         return;
@@ -9503,6 +9516,9 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
 
     case SPELL_MAJOR_HEALING:
         return ai_action::good_or_bad(mon->hit_points <= mon->max_hit_points / 2);
+
+    case SPELL_SELF_DECONSTRUCT:
+        return ai_action::good_or_bad(foe && grid_distance(foe->pos(), mon->pos()) <= 2);
 
     case SPELL_WOODWEAL:
     {
