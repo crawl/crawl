@@ -540,6 +540,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    { MST_FORGE_SERVANT,
+      {
+       { SPELL_SLOW, 20, MON_SPELL_WIZARD },
+       { SPELL_RESONANCE_STRIKE, 20, MON_SPELL_WIZARD },
+      }
+    },
+
     { MST_IMPERIAL_MYRMIDON,
       {
        { SPELL_SLOW, 13, MON_SPELL_WIZARD },
