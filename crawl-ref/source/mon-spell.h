@@ -697,6 +697,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_CURSED_EMBER,
+      {
+       { SPELL_THROW_FLAME, 40, MON_SPELL_MAGICAL },
+      }
+    },
+
     {  MST_UNDYING_ARMOURY,
       {
        { SPELL_BESTOW_ARMS, 40, MON_SPELL_NATURAL },

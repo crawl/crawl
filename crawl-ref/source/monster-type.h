@@ -1412,6 +1412,7 @@ enum monster_type                      // env.mons[].type
     MONS_STAR_JELLY,
     MONS_BURSTSHROOM,
     MONS_RUST_MITE,
+    MONS_CURSED_EMBER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

@@ -12,6 +12,7 @@
 #include "daction-type.h"
 #include "god-type.h"
 #include "killer-type.h"
+#include "mon-attitude-type.h"
 #include "monster-type.h"
 #include "spell-type.h"
 
@@ -46,6 +47,8 @@ void schedule_deferred_damage_fineff(const actor* attack, const actor* defend,
                                      int dam, bool attacker_effects,
                                      bool fatal = true);
 void schedule_starcursed_merge_fineff(const actor* merger);
+void schedule_ember_curse_fineff(const actor* discharger, coord_def pos,
+                                    mon_attitude_type tude, int pow);
 void schedule_shock_discharge_fineff(const actor* discharger, actor& oppressor,
                                      coord_def pos, int pow,
                                      string shock_source);
