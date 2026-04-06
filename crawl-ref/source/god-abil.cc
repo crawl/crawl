@@ -7013,12 +7013,6 @@ void makhleb_infernal_servant()
                                         beam.get_short_name().c_str());
 
             beam.explode();
-            // Skill 19+ bonus, mirroring Tyrant's top-end unlock
-            if (you.skill(SK_INVOCATIONS) >= 19)
-            {
-                mpr("The infernal blast surges again!");
-                beam.explode();
-            }
         }
         else if (tyrant)
         {

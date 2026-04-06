@@ -1272,7 +1272,6 @@ Mark of Carnage mutation
 Your Infernal Servants are now summoned adjacent to a random enemy instead of
 near you. When they appear, they do so in a blast of your characteristic
 Destruction (which cannot hurt you or other allies).
-And at very high Invocations, the blast occurs a second time.
 
 (Your servants unleash blasts of either
 {{
