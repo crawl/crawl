@@ -93,7 +93,7 @@ TextureID get_tile_texture(tileidx_t idx)
     else if (idx < TILEI_ICONS_MAX)
         return TEX_ICONS;
     else
-        die("Cannot get texture for bad tileidx %" PRIu64, idx);
+        die("Cannot get texture for bad tileidx %u", (unsigned)idx);
 }
 #endif
 
@@ -622,11 +622,8 @@ static int _get_door_offset(tileidx_t base_tile,
     return offset + gateway_type;
 }
 
-static tileidx_t _apply_branch_tile_overrides(tileidx_t tile, coord_def gc)
+static tileidx_t _apply_branch_tile_overrides(tileidx_t orig, coord_def gc)
 {
-    tileidx_t orig = tile & TILE_FLAG_MASK;
-    tileidx_t flag = tile & (~TILE_FLAG_MASK);
-
     // TODO: allow the stone type to be set in a cleaner way.
     if (player_in_branch(BRANCH_GAUNTLET))
     {
@@ -797,7 +794,7 @@ static tileidx_t _apply_branch_tile_overrides(tileidx_t tile, coord_def gc)
                 orig = TILE_DNGN_GRANITE_STATUE_DEPTHS_ZOT;
         }
     }
-    return orig | flag;
+    return orig;
 }
 
 static colour_t _feat_colour(coord_def gc)
@@ -862,8 +859,7 @@ static colour_t _feat_colour(coord_def gc)
 void apply_variations(const tile_flavour &flv, tileidx_t *bg,
                       const coord_def &gc)
 {
-    tileidx_t tile = (*bg) & TILE_FLAG_MASK;
-    tileidx_t flag = (*bg) & (~TILE_FLAG_MASK);
+    tileidx_t tile = *bg;
 
     if (tile == TILE_DNGN_UNSEEN)
         return;
@@ -922,7 +918,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
 
     if (!needs_tile_picking)
     {
-        *bg = tile | flag;
+        *bg = tile;
         return;
     }
 
@@ -941,7 +937,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     else if (tile < TILE_DNGN_MAX)
         tile = pick_dngn_tile(tile, flv.special);
 
-    *bg = tile | flag;
+    *bg = tile;
 }
 
 static tileidx_t _tileidx_feature_no_overrides(const coord_def &gc)
@@ -1267,7 +1263,7 @@ tileidx_t tileidx_tentacle(const monster_info& mon)
 }
 
 #ifdef USE_TILE
-tileidx_t tileidx_out_of_bounds(int branch)
+tile_with_flags_t tileidx_out_of_bounds(int branch)
 {
     if (branch == BRANCH_SHOALS)
         return TILE_DNGN_OPEN_SEA | TILE_FLAG_UNSEEN;
@@ -1275,11 +1271,14 @@ tileidx_t tileidx_out_of_bounds(int branch)
         return TILE_DNGN_UNSEEN | TILE_FLAG_UNSEEN;
 }
 
-void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const coord_def& gc)
+void tileidx_out_of_los(tile_with_flags_t *fg,
+                        tile_with_flags_t *bg,
+                        tileidx_t *cloud,
+                        const coord_def& gc)
 {
     // Player memory.
-    tileidx_t mem_fg = tile_env.bk_fg(gc);
-    tileidx_t mem_bg = tile_env.bk_bg(gc);
+    tile_with_flags_t mem_fg = tile_env.bk_fg(gc);
+    tile_with_flags_t mem_bg = tile_env.bk_bg(gc);
     tileidx_t mem_cloud = tile_env.bk_cloud(gc);
 
     // Detected info is just stored in map_knowledge and doesn't get
@@ -1957,7 +1956,7 @@ static tileidx_t _mon_cycle(tileidx_t tile, int offset)
 // extra parameters that have reasonable defaults for monsters where
 // only the type is known are pushed here.
 tileidx_t tileidx_monster_base(int type, int mon_id, bool in_water, int colour,
-                               int number, int tile_num_prop, bool vary)
+                            int number, int tile_num_prop, bool vary)
 {
     switch (type)
     {
@@ -2235,7 +2234,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
     const bool in_water = feat_is_water(env.map_knowledge(mon.pos).feat());
 
     if (mon.props.exists(MONSTER_TILE_KEY))
-        return mon.props[MONSTER_TILE_KEY].get_int();
+        return (tileidx_t)mon.props[MONSTER_TILE_KEY].get_int();
 
     // Show only base class for detected monsters.
     if (mons_class_is_zombified(mon.type))
@@ -2247,9 +2246,9 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
 
     bool vary = !(mon.props.exists(FAKE_MON_KEY) && mon.props[FAKE_MON_KEY].get_bool());
     const tileidx_t base = tileidx_monster_base(mon.type,
-                                                mon.pos.y*GXM + mon.pos.x,
-                                                in_water, mon.colour(true),
-                                                mon.number, tile_num, vary);
+                                             mon.pos.y*GXM + mon.pos.x,
+                                             in_water, mon.colour(true),
+                                             mon.number, tile_num, vary);
 
     switch (mon.type)
     {
@@ -2529,11 +2528,12 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
     }
 }
 
-tileidx_t tileidx_monster(const monster_info& mons)
+tile_with_flags_t tileidx_monster(const monster_info& mons)
 {
-    tileidx_t ch = _tileidx_monster_no_props(mons);
+    tileidx_t tile = _tileidx_monster_no_props(mons);
+    tile_with_flags_t ch = tile;
 
-    if ((mons.airborne() && !_tentacle_tile_not_flying(ch))
+    if ((mons.airborne() && !_tentacle_tile_not_flying(tile))
         || mons.type == MONS_ORC_APOSTLE || mons.type == MONS_SACRED_LOTUS)
     {
         ch |= TILE_FLAG_FLYING;
@@ -3823,7 +3823,7 @@ tileidx_t tileidx_cloud(const cloud_info &cl)
 
 #ifdef USE_TILE
 tileidx_t vary_bolt_tile(tileidx_t tile, const coord_def& origin,
-                         const coord_def& target, const coord_def& pos)
+                      const coord_def& target, const coord_def& pos)
 {
     const coord_def diff = target - origin;
     const int dir = _tile_bolt_dir(diff.x, diff.y);
@@ -4918,7 +4918,7 @@ tileidx_t tileidx_known_brand(const item_def &item)
 }
 
 #ifdef USE_TILE
-tileidx_t tileidx_unseen_flag(const coord_def &gc)
+tile_flag_t tileidx_unseen_flag(const coord_def &gc)
 {
     if (!map_bounds(gc))
         return TILE_FLAG_UNSEEN;
@@ -5017,10 +5017,11 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile)
 }
 
 #ifdef USE_TILE
-string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
+string tile_debug_string(tile_with_flags_t fg, tile_with_flags_t bg,
+                         char prefix)
 {
-    tileidx_t fg_idx = fg & TILE_FLAG_MASK;
-    tileidx_t bg_idx = bg & TILE_FLAG_MASK;
+    tileidx_t fg_idx = fg.tile();
+    tileidx_t bg_idx = bg.tile();
 
     string fg_name;
     if (fg_idx < TILE_FLOOR_MAX)
@@ -5062,15 +5063,15 @@ string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
     }
 
     string tile_string = make_stringf(
-        "%cFG: %4" PRIu64" | 0x%8llu (%s)\n"
-        "%cBG: %4" PRIu64" | 0x%8llu (%s)\n",
+        "%cFG: %4u | 0x%8llu (%s)\n"
+        "%cBG: %4u | 0x%8llu (%s)\n",
         prefix,
-        fg_idx,
-        fg & ~TILE_FLAG_MASK,
+        (unsigned)fg_idx,
+        (unsigned long long)fg.flags(),
         fg_name.c_str(),
         prefix,
-        bg_idx,
-        bg & ~TILE_FLAG_MASK,
+        (unsigned)bg_idx,
+        (unsigned long long)bg.flags(),
         tile_dngn_name(bg_idx));
 
     return tile_string;

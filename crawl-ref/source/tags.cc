@@ -8263,21 +8263,19 @@ static void _debug_count_tiles()
 {
 #ifdef DEBUG_DIAGNOSTICS
 # ifdef USE_TILE
-    map<int,bool> found;
-    int t, cnt = 0;
-    for (int i = 0; i < GXM; i++)
-        for (int j = 0; j < GYM; j++)
-        {
-            t = tile_env.bk_bg[i][j];
-            if (!found.count(t))
-                cnt++, found[t] = true;
-            t = tile_env.bk_fg[i][j];
-            if (!found.count(t))
-                cnt++, found[t] = true;
-            t = tile_env.bk_cloud[i][j];
-            if (!found.count(t))
-                cnt++, found[t] = true;
-        }
+    set<tileidx_t> found;
+    tileidx_t t = 0;
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        coord_def pos = *ri;
+        t = tile_env.bk_bg(pos).tile();
+        found.insert(t);
+        t = ((tile_with_flags_t)tile_env.bk_fg(pos)).tile();
+        found.insert(t);
+        t = tile_env.bk_cloud(pos);
+        found.insert(t);
+    }
+    const int cnt = (int)found.size();
     dprf("Unique tiles found: %d", cnt);
 # endif
 #endif

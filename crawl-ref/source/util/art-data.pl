@@ -967,7 +967,7 @@ HEADER_END
 #include "rltiles/tiledef-main.h"
 #include "rltiles/tiledef-player.h"
 
-int unrandart_to_tile(int unrand)
+tileidx_t unrandart_to_tile(int unrand)
 {
     switch (unrand)
     {
@@ -995,7 +995,7 @@ HEADER_END
     $text .= (" " x 4) . "}\n";
     $text .= "}\n\n";
 
-    $text .= "int unrandart_to_doll_tile(int unrand)\n{\n";
+    $text .= "tileidx_t unrandart_to_doll_tile(int unrand)\n{\n";
     $text .= (" " x 4) . "switch (unrand)\n";
     $text .= (" " x 4) . "{\n";
     foreach my $part (sort keys %parts)

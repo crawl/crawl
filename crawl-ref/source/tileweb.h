@@ -221,7 +221,7 @@ public:
 
     void send_mcache(mcache_entry *entry, bool submerged,
                      bool send = true);
-    void write_tileidx(tileidx_t t);
+    void write_tile_with_flags(tile_with_flags_t t);
 
     void zoom_dungeon(bool in);
 

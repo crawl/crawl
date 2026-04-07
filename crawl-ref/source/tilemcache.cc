@@ -125,22 +125,24 @@ protected:
 /////////////////////////////////////////////////////////////////////////////
 // tile_fg_store
 
-tileidx_t tile_fg_store::operator=(tileidx_t tile)
+tile_with_flags_t tile_fg_store::operator=(tile_with_flags_t tile)
 {
-    if ((tile & TILE_FLAG_MASK) == (m_tile & TILE_FLAG_MASK))
+    if (tile.tile() == m_tile.tile())
     {
         // Update, as flags may have changed.
         m_tile = tile;
         return m_tile;
     }
 
-    mcache_entry *old_entry = mcache.get(m_tile);
+    tileidx_t old_tile = m_tile.tile();
+    mcache_entry *old_entry = mcache.get(old_tile);
     if (old_entry)
         old_entry->dec_ref();
 
     m_tile = tile;
 
-    mcache_entry *new_entry = mcache.get(m_tile);
+    tileidx_t new_tile = m_tile.tile();
+    mcache_entry *new_entry = mcache.get(new_tile);
     if (new_entry)
         new_entry->inc_ref();
 
@@ -155,7 +157,7 @@ mcache_manager::~mcache_manager()
     clear_all();
 }
 
-unsigned int mcache_manager::register_monster(const monster_info& minf)
+tileidx_t mcache_manager::register_monster(const monster_info& minf)
 {
     // TODO enne - is it worth it to search against all mcache entries?
     // TODO enne - pool mcache types to avoid too much alloc/dealloc?
@@ -186,7 +188,7 @@ unsigned int mcache_manager::register_monster(const monster_info& minf)
 
     tileidx_t idx = ~0;
 
-    for (unsigned int i = 0; i < m_entries.size(); i++)
+    for (tileidx_t i = 0; i < (tileidx_t)m_entries.size(); i++)
     {
         if (!m_entries[i])
         {
@@ -198,7 +200,7 @@ unsigned int mcache_manager::register_monster(const monster_info& minf)
 
     if (idx > m_entries.size())
     {
-        idx = m_entries.size();
+        idx = (tileidx_t)m_entries.size();
         m_entries.push_back(entry);
     }
 
@@ -222,9 +224,8 @@ void mcache_manager::clear_all()
     deleteAll(m_entries);
 }
 
-mcache_entry *mcache_manager::get(tileidx_t tile)
+mcache_entry *mcache_manager::get(tileidx_t idx)
 {
-    tileidx_t idx = tile & TILE_FLAG_MASK;
     if (idx < TILEP_MCACHE_START)
         return nullptr;
 
@@ -243,7 +244,7 @@ mcache_monster::mcache_monster(const monster_info& mon)
     ASSERT(mcache_monster::valid(mon));
 
     mtype = mon.type;
-    m_mon_tile = tileidx_monster(mon) & TILE_FLAG_MASK;
+    m_mon_tile = tileidx_monster(mon).tile();
 
     const item_def* mon_weapon = mon.inv[MSLOT_WEAPON].get();
     m_equ_tile = (mon_weapon != nullptr) ? tilep_equ_weapon(*mon_weapon) : 0;
@@ -1461,7 +1462,7 @@ int mcache_monster::info(tile_draw_info *dinfo) const
 
 bool mcache_monster::valid(const monster_info& mon)
 {
-    tileidx_t mon_tile = tileidx_monster(mon) & TILE_FLAG_MASK;
+    tileidx_t mon_tile = tileidx_monster(mon).tile();
 
     int ox, oy;
     bool have_weapon_offs = (mon.type == MONS_PLAYER
@@ -1675,7 +1676,7 @@ mcache_armour::mcache_armour(const monster_info& mon)
 {
     ASSERT(mcache_armour::valid(mon));
 
-    m_mon_tile = tileidx_monster(mon) & TILE_FLAG_MASK;
+    m_mon_tile = tileidx_monster(mon).tile();
 
     const item_def* mon_armour = mon.inv[MSLOT_ARMOUR].get();
     if (mon_armour)

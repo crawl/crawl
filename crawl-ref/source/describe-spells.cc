@@ -771,7 +771,7 @@ static void _write_book(const spellbook_contents &book,
         tiles.json_write_string("title", dith_marker + spell_title(spell));
         tiles.json_write_int("colour", _spell_colour(spell, source_item));
         tiles.json_write_name("tile");
-        tiles.write_tileidx(tileidx_spell(spell));
+        tiles.json_write_int(tileidx_spell(spell));
 
         // don't crash if we have more spells than letters.
         auto entry = find_if(spell_map.begin(), spell_map.end(),

@@ -1561,14 +1561,9 @@ void TilesFramework::send_mcache(mcache_entry *entry, bool submerged, bool send)
     tiles.json_close_array();
 }
 
-static bool _in_water(const packed_cell &cell)
-{
-    return (cell.bg & TILE_FLAG_WATER) && !(cell.fg & TILE_FLAG_FLYING);
-}
-
 static bool _needs_flavour(const packed_cell &cell)
 {
-    tileidx_t bg_idx = cell.bg & TILE_FLAG_MASK;
+    tileidx_t bg_idx = cell.bg.tile();
     if (bg_idx >= TILE_DNGN_FIRST_TRANSPARENT)
         return true; // Needs flv.floor
     if (cell.is_liquefied || cell.is_bloody)
@@ -1593,11 +1588,11 @@ static inline unsigned _get_highlight(int col)
                                             : unsigned{CHATTR_NORMAL};
 }
 
-void TilesFramework::write_tileidx(tileidx_t t)
+void TilesFramework::write_tile_with_flags(tile_with_flags_t t)
 {
     // JS can only handle signed ints
-    const int lo = t & 0xFFFFFFFF;
-    const int hi = t >> 32;
+    const int lo = t.value & 0xFFFFFFFF;
+    const int hi = t.value >> 32;
     if (hi == 0)
         tiles.write_message("%d", lo);
     else
@@ -1648,9 +1643,9 @@ void TilesFramework::_send_cell(const coord_def &gc,
         const packed_cell &next_pc = next_sc.tile;
         const packed_cell &current_pc = current_sc.tile;
 
-        const tileidx_t fg_idx = next_pc.fg & TILE_FLAG_MASK;
+        const tileidx_t fg_idx = next_pc.fg.tile();
 
-        const bool in_water = _in_water(next_pc);
+        const bool in_water = is_in_water(next_pc);
         bool fg_changed = false;
 
         if (next_pc.fg != current_pc.fg)
@@ -1658,7 +1653,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
             fg_changed = true;
 
             json_write_name("fg");
-            write_tileidx(next_pc.fg);
+            write_tile_with_flags(next_pc.fg);
             if (get_tile_texture(fg_idx) == TEX_DEFAULT)
                 json_write_int("base", (int) tileidx_known_base_item(fg_idx));
 
@@ -1683,13 +1678,13 @@ void TilesFramework::_send_cell(const coord_def &gc,
         if (next_pc.bg != current_pc.bg)
         {
             json_write_name("bg");
-            write_tileidx(next_pc.bg);
+            write_tile_with_flags(next_pc.bg);
         }
 
         if (next_pc.cloud != current_pc.cloud)
         {
             json_write_name("cloud");
-            write_tileidx(next_pc.cloud);
+            json_write_int(next_pc.cloud);
         }
 
         if (next_pc.icons != current_pc.icons)
@@ -1883,7 +1878,7 @@ void TilesFramework::_mcache_ref(bool inc)
         {
             coord_def gc(x, y);
 
-            int fg_idx = m_current_view(gc).tile.fg & TILE_FLAG_MASK;
+            int fg_idx = m_current_view(gc).tile.fg.tile();
             if (fg_idx >= TILEP_MCACHE_START)
             {
                 mcache_entry *entry = mcache.get(fg_idx);
@@ -2615,10 +2610,7 @@ void TilesFramework::json_write_icons(const set<tileidx_t> &icons)
 {
     json_open_array("icons");
     for (const tileidx_t icon : icons)
-    {
-        json_write_comma(); // skipped for the first one
-        write_tileidx(icon);
-    }
+        json_write_int(icon);
     json_close_array();
 }
 

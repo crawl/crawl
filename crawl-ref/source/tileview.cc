@@ -58,15 +58,15 @@ void tile_new_level(bool first_time, bool init_unseen)
     for (unsigned int x = 0; x < GXM; x++)
         for (unsigned int y = 0; y < GYM; y++)
         {
-            unsigned int tile = tile_env.bk_bg[x][y];
-            if ((tile & TILE_FLAG_NEW_STAIR)
+            tile_with_flags_t tile = tile_env.bk_bg[x][y];
+            if ((tile.has_flag(TILE_FLAG_NEW_STAIR))
                 && !is_unknown_stair(coord_def(x,y)))
             {
-                tile_env.bk_bg[x][y] &= ~TILE_FLAG_NEW_STAIR;
+                tile_env.bk_bg[x][y].remove_flag(TILE_FLAG_NEW_STAIR);
             }
-            else if ((tile & TILE_FLAG_NEW_TRANSPORTER)
+            else if ((tile.has_flag(TILE_FLAG_NEW_TRANSPORTER))
                      && !is_unknown_transporter(coord_def(x,y)))
-                tile_env.bk_bg[x][y] &= ~TILE_FLAG_NEW_TRANSPORTER;
+                tile_env.bk_bg[x][y].remove_flag(TILE_FLAG_NEW_TRANSPORTER);
         }
 
     tiles.clear_minimap();
@@ -909,9 +909,9 @@ void tile_draw_map_cells()
         }
 }
 
-static tileidx_t _get_floor_bg(const coord_def& gc)
+static tile_with_flags_t _get_floor_bg(const coord_def& gc)
 {
-    tileidx_t bg = TILE_DNGN_UNSEEN | tileidx_unseen_flag(gc);
+    tile_with_flags_t bg(TILE_DNGN_UNSEEN, tileidx_unseen_flag(gc));
 
     if (map_bounds(gc))
     {
@@ -943,7 +943,7 @@ void tile_draw_floor()
             if (!you.see_cell(gc))
                 continue;
 
-            tileidx_t bg = _get_floor_bg(gc);
+            tile_with_flags_t bg = _get_floor_bg(gc);
 
             // init tiles
             tile_env.bk_bg(gc) = bg;
@@ -966,7 +966,7 @@ void tile_forget_map(const coord_def &gc)
 static void _tile_place_item(const coord_def &gc, const item_def &item,
                              bool more_items)
 {
-    tileidx_t t = tileidx_item(item);
+    tile_with_flags_t t = tileidx_item(item);
     if (more_items)
         t |= TILE_FLAG_S_UNDER;
 
@@ -978,7 +978,8 @@ static void _tile_place_item(const coord_def &gc, const item_def &item,
 
 static void _tile_place_item_marker(const coord_def &gc, const item_def &item)
 {
-    tile_env.bk_fg(gc) = ((tileidx_t)tile_env.bk_fg(gc)) | TILE_FLAG_S_UNDER;
+    tile_with_flags_t fg = tile_env.bk_fg(gc);
+    tile_env.bk_fg(gc) = fg | TILE_FLAG_S_UNDER;
 
     if (item_needs_autopickup(item))
         tile_env.bk_bg(gc) |= TILE_FLAG_CURSOR3;
@@ -1007,9 +1008,8 @@ static void _tile_place_invisible_monster(const coord_def &gc)
 
 static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
 {
-    tileidx_t t    = tileidx_monster(mon);
-    tileidx_t t0   = t & TILE_FLAG_MASK;
-    tileidx_t flag = t & (~TILE_FLAG_MASK);
+    tile_with_flags_t t = tileidx_monster(mon);
+    tileidx_t t0 = t.tile();
 
     if (mons_class_is_stationary(mon.type)
         && mon.type != MONS_TRAINING_DUMMY)
@@ -1026,7 +1026,8 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
     else
     {
         tileidx_t mcache_idx = mcache.register_monster(mon);
-        t = flag | (mcache_idx ? mcache_idx : t0);
+        t0 = mcache_idx ? mcache_idx : t0;
+        t.set_tile(t0);
     }
 
     tile_env.bk_fg(gc) = t;
@@ -1070,7 +1071,7 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
 void tile_reset_fg(const coord_def &gc)
 {
     // remove autopickup cursor, it will be added back if necessary
-    tile_env.bk_bg(gc) &= ~TILE_FLAG_CURSOR3;
+    tile_env.bk_bg(gc).remove_flag(TILE_FLAG_CURSOR3);
     tile_draw_map_cell(gc, true);
     tiles.update_minimap(gc);
 }
@@ -1140,11 +1141,9 @@ static bool _tile_has_random_misc_animation(tileidx_t tile)
 
 // Updates the "flavour" of tiles that are animated.
 // Unfortunately, these are all hard-coded for now.
-void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
+void tile_apply_animations(tileidx_t bg_idx, tile_flavour *flv)
 {
 #ifndef USE_TILE_WEB
-    tileidx_t bg_idx = bg & TILE_FLAG_MASK;
-
     if (_tile_has_cycling_misc_animation(bg_idx))
         flv->special = (flv->special + 1) % tile_dngn_count(bg_idx);
     else if (bg_idx == TILE_DNGN_LAVA && Options.tile_water_anim)
@@ -1163,7 +1162,7 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
     else if (_tile_has_random_misc_animation(bg_idx))
         flv->special = random2(256);
 #else
-    UNUSED(bg, flv);
+    UNUSED(bg_idx, flv);
 #endif
 }
 
@@ -1215,7 +1214,9 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (!map_bounds(gc))
         return;
 
-    apply_variations(tile_env.flv(gc), &cell.bg, gc);
+    tileidx_t bg_tile = cell.bg.tile();
+    apply_variations(tile_env.flv(gc), &bg_tile, gc);
+    cell.bg.set_tile(bg_tile);
 
     const map_cell& mc = env.map_knowledge(gc);
 
@@ -1239,7 +1240,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (mc.flags & MAP_LIQUEFIED)
         cell.is_liquefied = true;
     else if (print_blood && (feat_suppress_blood(mc.feat())
-                             || _suppress_blood((cell.bg) & TILE_FLAG_MASK)))
+                             || _suppress_blood(bg_tile)))
     {
         print_blood = false;
     }
@@ -1316,8 +1317,9 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     {
         // Use the id of the underlying tile to randomize the rock appearance.
         // XXX: This doesn't look great when the underlying tile is animated.
-        tileidx_t tile = TILE_FLOOR_SEISMOROCK
-                            + cell.bg % tile_dngn_count(TILE_FLOOR_SEISMOROCK);
+        unsigned int tile_count = tile_dngn_count(TILE_FLOOR_SEISMOROCK);
+        tileidx_t offset = (tileidx_t)(cell.bg.value % tile_count);
+        tileidx_t tile = TILE_FLOOR_SEISMOROCK + offset;
 
         cell.add_overlay(tile);
     }

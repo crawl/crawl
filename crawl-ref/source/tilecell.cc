@@ -84,7 +84,7 @@ enum wave_type
 };
 
 
-void packed_cell::add_overlay(int tileidx)
+void packed_cell::add_overlay(tileidx_t tileidx)
 {
     // Deduplicate existing identical overlays
     // There's a ton of ways to implement this.
@@ -538,5 +538,11 @@ void pack_cell_overlays(const coord_def &gc, crawl_view_buffer &vbuf)
             shadow_tile = TILE_DNGN_WALL_SHADOW_DARK;
         _pack_wall_shadows(gc, vbuf, shadow_tile);
     }
+}
+
+bool is_in_water(const packed_cell& cell)
+{
+    return cell.bg.has_flag(TILE_FLAG_WATER)
+           && !cell.fg.has_flag(TILE_FLAG_FLYING);
 }
 #endif //TILECELL.CC

@@ -36,10 +36,13 @@ tileidx_t tileidx_feature_for_cache(coord_def gc);
 tileidx_t tileidx_feature(const coord_def &gc);
 tileidx_t tileidx_shop(const shop_struct *shop);
 tileidx_t tileidx_feature_base(dungeon_feature_type feat);
-tileidx_t tileidx_out_of_bounds(int branch);
-void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const coord_def& gc);
+tile_with_flags_t tileidx_out_of_bounds(int branch);
+void tileidx_out_of_los(tile_with_flags_t *fg,
+                        tile_with_flags_t *bg,
+                        tileidx_t *cloud,
+                        const coord_def& gc);
 
-tileidx_t tileidx_monster(const monster_info& mon);
+tile_with_flags_t tileidx_monster(const monster_info& mon);
 tileidx_t tileidx_draco_base(const monster_info& mon);
 tileidx_t tileidx_draco_job(const monster_info& mon);
 tileidx_t tileidx_player_mons();
@@ -53,7 +56,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label);
 tileidx_t tileidx_cloud(const cloud_info &cl);
 tileidx_t tileidx_bolt(const bolt &bolt);
 tileidx_t vary_bolt_tile(tileidx_t tile, const coord_def& origin,
-                         const coord_def& target, const coord_def& pos);
+                      const coord_def& target, const coord_def& pos);
 tileidx_t vary_bolt_tile(tileidx_t tile, int dir = 0, int dist = 0);
 tileidx_t tileidx_zap(int colour, coord_def pos);
 tileidx_t tileidx_spell(const spell_type spell);
@@ -67,7 +70,7 @@ tileidx_t tileidx_player_species(const species_type species, bool recommended);
 
 tileidx_t tileidx_known_brand(const item_def &item);
 
-tileidx_t tileidx_unseen_flag(const coord_def &gc);
+tile_flag_t tileidx_unseen_flag(const coord_def &gc);
 
 set<tileidx_t> status_icons_for(const monster_info &mon);
 set<tileidx_t> status_icons_for_player();
@@ -81,12 +84,13 @@ void bind_item_tile(item_def &item);
 
 // For a given fg/bg set of tile indices and a 1 character prefix,
 // return index, flag, and tile name as a printable string.
-string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix);
+string tile_debug_string(tile_with_flags_t fg, tile_with_flags_t bg,
+                         char prefix);
 
 void tile_init_props(monster* mon);
 tileidx_t tileidx_monster_base(int type, int mon_id, bool in_water = false,
-                               int colour = 0, int number = 4, int tile_num_prop = 0,
-                               bool vary = true);
+                            int colour = 0, int number = 4, int tile_num_prop = 0,
+                            bool vary = true);
 tileidx_t tileidx_mon_clamp(tileidx_t tile, int offset);
 
 void init_parchment_overlays();

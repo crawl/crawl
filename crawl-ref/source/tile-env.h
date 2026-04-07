@@ -13,7 +13,7 @@ struct crawl_tile_environment
     // indexed by grid coords
 #ifdef USE_TILE // TODO: separate out this stuff from crawl_environment
     FixedArray<tile_fg_store, GXM, GYM> bk_fg;
-    FixedArray<tileidx_t, GXM, GYM> bk_bg;
+    FixedArray<tile_with_flags_t, GXM, GYM> bk_bg;
     FixedArray<tileidx_t, GXM, GYM> bk_cloud;
     map<coord_def, set<tileidx_t>> icons;
 #endif

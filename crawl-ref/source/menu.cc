@@ -2534,7 +2534,7 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
     }
     else
     {
-        tileidx_t idx = tileidx_monster(*m) & TILE_FLAG_MASK;
+        tileidx_t idx = tileidx_monster(*m).tile();
         tileset.emplace_back(idx);
     }
 

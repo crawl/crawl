@@ -32,11 +32,6 @@ DungeonCellBuffer::DungeonCellBuffer(const ImageManager *im) :
 {
 }
 
-static bool _in_water(const packed_cell &cell)
-{
-    return (cell.bg & TILE_FLAG_WATER) && !(cell.fg & TILE_FLAG_FLYING);
-}
-
 void DungeonCellBuffer::add_glyph(const char32_t &g, const VColour &col, int x, int y)
 {
     float sx = x;
@@ -55,10 +50,10 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
 {
     pack_background(x, y, cell);
 
-    const tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
-    const bool in_water = _in_water(cell);
+    const tileidx_t fg_idx = cell.fg.tile();
+    const bool in_water = is_in_water(cell);
 
-    tileidx_t cloud_idx = cell.cloud & TILE_FLAG_MASK;
+    tileidx_t cloud_idx = cell.cloud;
 
     // in the shoals, ink is handled in pack_cell_overlays(): don't overdraw
     if (cloud_idx == TILE_CLOUD_INK && player_in_branch(BRANCH_SHOALS))
@@ -109,16 +104,15 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
 
 void DungeonCellBuffer::add_monster(const monster_info &mon, int x, int y)
 {
-    tileidx_t t    = tileidx_monster(mon);
-    tileidx_t t0   = t & TILE_FLAG_MASK;
-    tileidx_t flag = t & (~TILE_FLAG_MASK);
+    tile_with_flags_t t = tileidx_monster(mon);
+    tileidx_t t0   = t.tile();
 
     // Copied from _tile_place_monster()
     if (!mons_class_is_stationary(mon.type) || mon.type == MONS_TRAINING_DUMMY)
     {
         tileidx_t mcache_idx = mcache.register_monster(mon);
-        t = flag | (mcache_idx ? mcache_idx : t0);
-        t0 = t & TILE_FLAG_MASK;
+        t0 = mcache_idx ? mcache_idx : t0;
+        t.set_tile(t0);
     }
 
     // Copied from ::add()
@@ -280,8 +274,8 @@ void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
 
 void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
 {
-    const tileidx_t bg = cell.bg;
-    const tileidx_t bg_idx = cell.bg & TILE_FLAG_MASK;
+    const tile_with_flags_t bg = cell.bg;
+    const tileidx_t bg_idx = bg.tile();
 
     if (bg_idx >= TILE_DNGN_FIRST_TRANSPARENT)
         add_dngn_tile(cell.flv.floor, x, y);
@@ -305,80 +299,80 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 add_dngn_tile(tile, x, y);
         }
 
-        if (!(bg & TILE_FLAG_UNSEEN))
+        if (!bg.has_flag(TILE_FLAG_UNSEEN))
         {
             // Add tentacle corner overlays.
-            if (bg & TILE_FLAG_TENTACLE_NW)
+            if (bg.has_flag(TILE_FLAG_TENTACLE_NW))
             {
-                if (bg & TILE_FLAG_TENTACLE_KRAKEN)
+                if (bg.has_flag(TILE_FLAG_TENTACLE_KRAKEN))
                     m_buf_feat.add(TILE_KRAKEN_OVERLAY_NW, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_ELDRITCH)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_ELDRITCH))
                     m_buf_feat.add(TILE_ELDRITCH_OVERLAY_NW, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_STARSPAWN)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_STARSPAWN))
                     m_buf_feat.add(TILE_STARSPAWN_OVERLAY_NW, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_VINE)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_VINE))
                     m_buf_feat.add(TILE_VINE_OVERLAY_NW, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_ZOMBIE_KRAKEN)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_ZOMBIE_KRAKEN))
                     m_buf_feat.add(TILE_KRAKEN_ZOMBIE_OVERLAY_NW, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_SIMULACRUM_KRAKEN)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_SIMULACRUM_KRAKEN))
                     m_buf_feat.add(TILE_KRAKEN_SIMULACRUM_OVERLAY_NW, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_SPECTRAL_KRAKEN)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_SPECTRAL_KRAKEN))
                     m_buf_feat.add(TILE_KRAKEN_SPECTRAL_OVERLAY_NW, x, y);
             }
-            else if (bg & TILE_FLAG_TENTACLE_NE)
+            else if (bg.has_flag(TILE_FLAG_TENTACLE_NE))
             {
-                if (bg & TILE_FLAG_TENTACLE_KRAKEN)
+                if (bg.has_flag(TILE_FLAG_TENTACLE_KRAKEN))
                     m_buf_feat.add(TILE_KRAKEN_OVERLAY_NE, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_ELDRITCH)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_ELDRITCH))
                     m_buf_feat.add(TILE_ELDRITCH_OVERLAY_NE, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_STARSPAWN)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_STARSPAWN))
                     m_buf_feat.add(TILE_STARSPAWN_OVERLAY_NE, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_VINE)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_VINE))
                     m_buf_feat.add(TILE_VINE_OVERLAY_NE, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_ZOMBIE_KRAKEN)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_ZOMBIE_KRAKEN))
                     m_buf_feat.add(TILE_KRAKEN_ZOMBIE_OVERLAY_NE, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_SIMULACRUM_KRAKEN)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_SIMULACRUM_KRAKEN))
                     m_buf_feat.add(TILE_KRAKEN_SIMULACRUM_OVERLAY_NE, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_SPECTRAL_KRAKEN)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_SPECTRAL_KRAKEN))
                     m_buf_feat.add(TILE_KRAKEN_SPECTRAL_OVERLAY_NE, x, y);
             }
-            else if (bg & TILE_FLAG_TENTACLE_SW)
+            else if (bg.has_flag(TILE_FLAG_TENTACLE_SW))
             {
-                if (bg & TILE_FLAG_TENTACLE_KRAKEN)
+                if (bg.has_flag(TILE_FLAG_TENTACLE_KRAKEN))
                     m_buf_feat.add(TILE_KRAKEN_OVERLAY_SW, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_ELDRITCH)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_ELDRITCH))
                     m_buf_feat.add(TILE_ELDRITCH_OVERLAY_SW, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_STARSPAWN)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_STARSPAWN))
                     m_buf_feat.add(TILE_STARSPAWN_OVERLAY_SW, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_VINE)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_VINE))
                     m_buf_feat.add(TILE_VINE_OVERLAY_SW, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_ZOMBIE_KRAKEN)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_ZOMBIE_KRAKEN))
                     m_buf_feat.add(TILE_KRAKEN_ZOMBIE_OVERLAY_SW, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_SIMULACRUM_KRAKEN)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_SIMULACRUM_KRAKEN))
                     m_buf_feat.add(TILE_KRAKEN_SIMULACRUM_OVERLAY_SW, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_SPECTRAL_KRAKEN)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_SPECTRAL_KRAKEN))
                     m_buf_feat.add(TILE_KRAKEN_SPECTRAL_OVERLAY_SW, x, y);
             }
-            else if (bg & TILE_FLAG_TENTACLE_SE)
+            else if (bg.has_flag(TILE_FLAG_TENTACLE_SE))
             {
-                if (bg & TILE_FLAG_TENTACLE_KRAKEN)
+                if (bg.has_flag(TILE_FLAG_TENTACLE_KRAKEN))
                     m_buf_feat.add(TILE_KRAKEN_OVERLAY_SE, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_ELDRITCH)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_ELDRITCH))
                     m_buf_feat.add(TILE_ELDRITCH_OVERLAY_SE, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_STARSPAWN)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_STARSPAWN))
                     m_buf_feat.add(TILE_STARSPAWN_OVERLAY_SE, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_VINE)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_VINE))
                     m_buf_feat.add(TILE_VINE_OVERLAY_SE, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_ZOMBIE_KRAKEN)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_ZOMBIE_KRAKEN))
                     m_buf_feat.add(TILE_KRAKEN_ZOMBIE_OVERLAY_SE, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_SIMULACRUM_KRAKEN)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_SIMULACRUM_KRAKEN))
                     m_buf_feat.add(TILE_KRAKEN_SIMULACRUM_OVERLAY_SE, x, y);
-                else if (bg & TILE_FLAG_TENTACLE_SPECTRAL_KRAKEN)
+                else if (bg.has_flag(TILE_FLAG_TENTACLE_SPECTRAL_KRAKEN))
                     m_buf_feat.add(TILE_KRAKEN_SPECTRAL_OVERLAY_SE, x, y);
             }
         }
 
-        if (!(bg & TILE_FLAG_UNSEEN))
+        if (!bg.has_flag(TILE_FLAG_UNSEEN))
         {
             if (cell.is_sanctuary)
                 m_buf_feat.add(TILE_SANCTUARY, x, y);
@@ -405,9 +399,9 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
             if (cell.has_bfb_corpse)
                 m_buf_feat.add(TILE_BLOOD_FOR_BLOOD, x, y);
 
-            if (cell.fg)
+            if (cell.fg != 0)
             {
-                const tileidx_t att_flag = cell.fg & TILE_FLAG_ATT_MASK;
+                const tile_flag_t att_flag = cell.fg.flags(TILE_FLAG_ATT_MASK);
                 if (att_flag == TILE_FLAG_PET)
                     m_buf_feat.add(TILE_HALO_FRIENDLY, x, y);
                 else if (att_flag == TILE_FLAG_GD_NEUTRAL)
@@ -415,9 +409,9 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 else if (att_flag == TILE_FLAG_NEUTRAL)
                     m_buf_feat.add(TILE_HALO_NEUTRAL, x, y);
 
-                const tileidx_t threat_flag = cell.fg & TILE_FLAG_THREAT_MASK;
+                const tile_flag_t threat_flag = cell.fg.flags(TILE_FLAG_THREAT_MASK);
 
-                if (cell.fg & TILE_FLAG_GHOST)
+                if (cell.fg.has_flag(TILE_FLAG_GHOST))
                 {
                     if (threat_flag == TILE_FLAG_TRIVIAL)
                         m_buf_feat.add(TILE_THREAT_GHOST_TRIVIAL, x, y);
@@ -450,9 +444,9 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
 
             // Apply the travel exclusion under the foreground if the cell is
             // visible. It will be applied later if the cell is unseen.
-            if (bg & TILE_FLAG_EXCL_CTR)
+            if (bg.has_flag(TILE_FLAG_EXCL_CTR))
                 m_buf_feat.add(TILE_TRAVEL_EXCLUSION_CENTRE_BG, x, y);
-            else if (bg & TILE_FLAG_TRAV_EXCL)
+            else if (bg.has_flag(TILE_FLAG_TRAV_EXCL))
                 m_buf_feat.add(TILE_TRAVEL_EXCLUSION_BG, x, y);
         }
 
@@ -461,10 +455,10 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
 
 void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
 {
-    const tileidx_t fg = cell.fg;
-    const tileidx_t bg = cell.bg;
-    const tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
-    const bool in_water = _in_water(cell);
+    const tile_with_flags_t fg = cell.fg;
+    const tile_with_flags_t bg = cell.bg;
+    const tileidx_t fg_idx = fg.tile();
+    const bool in_water = is_in_water(cell);
 
     if (get_tile_texture(fg_idx) == TEX_DEFAULT)
     {
@@ -514,19 +508,19 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         }
     }
 
-    if (fg & TILE_FLAG_NET)
+    if (fg.has_flag(TILE_FLAG_NET))
         m_buf_icons.add(TILEI_TRAP_NET, x, y);
 
-    if (fg & TILE_FLAG_WEB)
+    if (fg.has_flag(TILE_FLAG_WEB))
         m_buf_icons.add(TILEI_TRAP_WEB, x, y);
 
-    if (fg & TILE_FLAG_S_UNDER)
+    if (fg.has_flag(TILE_FLAG_S_UNDER))
         m_buf_icons.add(TILEI_SOMETHING_UNDER, x, y);
 
     // Pet mark
-    if (fg & TILE_FLAG_ATT_MASK)
+    if (fg.has_flag(TILE_FLAG_ATT_MASK))
     {
-        const tileidx_t att_flag = fg & TILE_FLAG_ATT_MASK;
+        const tile_flag_t att_flag = fg.flags(TILE_FLAG_ATT_MASK);
         if (att_flag == TILE_FLAG_PET)
             m_buf_icons.add(TILEI_FRIENDLY, x, y);
         else if (att_flag == TILE_FLAG_GD_NEUTRAL)
@@ -536,9 +530,9 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     }
 
     int status_shift = 0;
-    if (fg & TILE_FLAG_BEH_MASK)
+    if (fg.has_flag(TILE_FLAG_BEH_MASK))
     {
-        const tileidx_t beh_flag = fg & TILE_FLAG_BEH_MASK;
+        const tile_flag_t beh_flag = fg.flags(TILE_FLAG_BEH_MASK);
         if (beh_flag == TILE_FLAG_PARALYSED)
         {
             m_buf_icons.add(TILEI_PARALYSED, x, y);
@@ -561,9 +555,9 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         }
     }
 
-    if (fg & TILE_FLAG_POISON_MASK)
+    if (fg.has_flag(TILE_FLAG_POISON_MASK))
     {
-        const tileidx_t poison_flag = fg & TILE_FLAG_POISON_MASK;
+        const tile_flag_t poison_flag = fg.flags(TILE_FLAG_POISON_MASK);
         if (poison_flag == TILE_FLAG_POISON)
         {
             m_buf_icons.add(TILEI_POISON, x, y, -status_shift, 0);
@@ -597,7 +591,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(icon, x, y, -status_shift, 0);
         if (size < 0)
         {
-            mprf(MSGCH_ERROR, "unknown size for icon %" PRIu64, icon);
+            mprf(MSGCH_ERROR, "unknown size for icon %u", (unsigned)icon);
             size = 7; // could maybe crash here?
         }
         status_shift += size;
@@ -605,16 +599,19 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         // the tile. Oh well! (Could skip those..?)
     }
 
-    if (bg & TILE_FLAG_UNSEEN && (bg != TILE_FLAG_UNSEEN || fg))
+    if (bg.has_flag(TILE_FLAG_UNSEEN) && (bg != TILE_FLAG_UNSEEN || fg != 0))
         m_buf_icons.add(TILEI_MESH, x, y);
 
-    if (bg & TILE_FLAG_OOR && (bg != TILE_FLAG_OOR || fg))
+    if (bg.has_flag(TILE_FLAG_OOR) && (bg != TILE_FLAG_OOR || fg != 0))
         m_buf_icons.add(TILEI_OOR_MESH, x, y);
 
-    if (bg & TILE_FLAG_MM_UNSEEN && (bg != TILE_FLAG_MM_UNSEEN || fg))
+    if (bg.has_flag(TILE_FLAG_MM_UNSEEN)
+        && (bg != TILE_FLAG_MM_UNSEEN || fg != 0))
+    {
         m_buf_icons.add(TILEI_MAGIC_MAP_MESH, x, y);
+    }
 
-    if (bg & TILE_FLAG_RAMPAGE)
+    if (bg.has_flag(TILE_FLAG_RAMPAGE))
     {
         if (you.duration[DUR_TAILWIND])
             m_buf_icons.add(TILEI_RAMPAGE_INSTANT, x, y);
@@ -624,27 +621,28 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
 
     // Don't let the "new stair" icon cover up any existing icons, but
     // draw it otherwise.
-    if (bg & TILE_FLAG_NEW_STAIR && status_shift == 0)
+    if (bg.has_flag(TILE_FLAG_NEW_STAIR) && status_shift == 0)
         m_buf_icons.add(TILEI_NEW_STAIR, x, y);
 
-    if (bg & TILE_FLAG_NEW_TRANSPORTER && status_shift == 0)
+    if (bg.has_flag(TILE_FLAG_NEW_TRANSPORTER) && status_shift == 0)
         m_buf_icons.add(TILEI_NEW_TRANSPORTER, x, y);
 
-    if (bg & TILE_FLAG_EXCL_CTR && (bg & TILE_FLAG_UNSEEN))
+    if (bg.has_flag(TILE_FLAG_EXCL_CTR) && bg.has_flag(TILE_FLAG_UNSEEN))
         m_buf_icons.add(TILEI_TRAVEL_EXCLUSION_CENTRE_FG, x, y);
-    else if (bg & TILE_FLAG_TRAV_EXCL && (bg & TILE_FLAG_UNSEEN))
+    else if (bg.has_flag(TILE_FLAG_TRAV_EXCL) && bg.has_flag(TILE_FLAG_UNSEEN))
         m_buf_icons.add(TILEI_TRAVEL_EXCLUSION_FG, x, y);
 
     // Tutorial cursor takes precedence over other cursors.
-    if (bg & TILE_FLAG_TUT_CURSOR)
+    if (bg.has_flag(TILE_FLAG_TUT_CURSOR))
         m_buf_icons.add(TILEI_TUTORIAL_CURSOR, x, y);
-    else if (bg & TILE_FLAG_CURSOR)
+    else if (bg.has_flag(TILE_FLAG_CURSOR))
     {
-        int type = ((bg & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR1) ?
-            TILEI_CURSOR : TILEI_CURSOR2;
-
-        if ((bg & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR3)
-           type = TILEI_CURSOR3;
+        const tile_flag_t cursor_flag = bg.flags(TILE_FLAG_CURSOR);
+        tileidx_t type = TILEI_CURSOR2;
+        if (cursor_flag == TILE_FLAG_CURSOR3)
+            type = TILEI_CURSOR3;
+        else if (cursor_flag == TILE_FLAG_CURSOR1)
+            type = TILEI_CURSOR;
 
         m_buf_icons.add(type, x, y);
     }
@@ -660,9 +658,9 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
                         ((cell.travel_trail & 0xF0) >> 4) - 1, x, y);
     }
 
-    if (fg & TILE_FLAG_MDAM_MASK)
+    if (fg.has_flag(TILE_FLAG_MDAM_MASK))
     {
-        tileidx_t mdam_flag = fg & TILE_FLAG_MDAM_MASK;
+        const tile_flag_t mdam_flag = fg.flags(TILE_FLAG_MDAM_MASK);
         if (mdam_flag == TILE_FLAG_MDAM_LIGHT)
             m_buf_icons.add(TILEI_MDAM_LIGHTLY_DAMAGED, x, y);
         else if (mdam_flag == TILE_FLAG_MDAM_MOD)
@@ -675,9 +673,9 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
             m_buf_icons.add(TILEI_MDAM_ALMOST_DEAD, x, y);
     }
 
-    if (fg & TILE_FLAG_DEMON)
+    if (fg.has_flag(TILE_FLAG_DEMON))
     {
-        tileidx_t demon_flag = fg & TILE_FLAG_DEMON;
+        const tile_flag_t demon_flag = fg.flags(TILE_FLAG_DEMON);
         if (demon_flag == TILE_FLAG_DEMON_1)
             m_buf_icons.add(TILEI_DEMON_NUM1, x, y);
         else if (demon_flag == TILE_FLAG_DEMON_2)

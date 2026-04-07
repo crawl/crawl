@@ -54,10 +54,10 @@ struct tile_flavour
     unsigned short wall_idx;
     unsigned short feat_idx;
 
-    unsigned short floor;
-    unsigned short wall;
+    tileidx_t floor;
+    tileidx_t wall;
     // Used (primarily) by the vault 'TILE' overlay.
-    unsigned short feat;
+    tileidx_t feat;
 
     // Used as a random value or for special cases e.g. (bazaars, gates).
     unsigned short special;
@@ -71,11 +71,11 @@ class tile_fg_store
 {
 public:
     tile_fg_store() : m_tile(0) {}
-    tile_fg_store(tileidx_t tile) : m_tile(tile) {}
-    operator tileidx_t() { return m_tile; }
-    tileidx_t operator=(tileidx_t tile);
+    tile_fg_store(tile_with_flags_t tile) : m_tile(tile) {}
+    operator tile_with_flags_t() { return m_tile; }
+    tile_with_flags_t operator=(tile_with_flags_t tile);
 protected:
-    tileidx_t m_tile;
+    tile_with_flags_t m_tile;
 };
 
 #define MAX_NAME_LENGTH 30

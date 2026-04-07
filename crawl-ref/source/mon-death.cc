@@ -957,7 +957,7 @@ static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
                                   random_range(450, 900) * BASELINE_DELAY));
 
 #ifdef USE_TILE
-    static vector<int> bat_colours =
+    static vector<tileidx_t> bat_colours =
     {
         TILEP_MONS_VAMPIRE_BAT_GREEN,
         TILEP_MONS_VAMPIRE_BAT_ORANGE,
@@ -984,7 +984,7 @@ static bool _blorkula_bat_split(monster& blorkula, killer_type ktype)
         {
             bat->props[BLORKULA_REVIVAL_TIMER_KEY] = revive_timer;
 #ifdef USE_TILE
-            bat->props[MONSTER_TILE_KEY] = bat_colours[i];
+            bat->props[MONSTER_TILE_KEY] = (int)bat_colours[i];
 #endif
             saved_blork.write_to_prop(bat->props[SAVED_BLORKULA_KEY].get_vector());
             mons_add_blame(bat, "manifested out of " + blorkula.name(DESC_A, true));

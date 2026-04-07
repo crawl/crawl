@@ -72,8 +72,7 @@ struct cloud_info
     // for clouds with duration: decay/20, clamped to 0-3
     // for vortex clouds: the vortex phase
     uint8_t variety;
-    // TODO: should this be tileidx_t?
-    unsigned short tile;
+    tileidx_t tile;
     coord_def pos;
     killer_type killer;
 };

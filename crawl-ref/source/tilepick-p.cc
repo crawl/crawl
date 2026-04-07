@@ -418,9 +418,9 @@ tileidx_t tilep_equ_boots(const item_def &item)
     return tile ? tileidx_enchant_equ(item, tile) : 0;
 }
 
-tileidx_t tileidx_player()
+tile_with_flags_t tileidx_player()
 {
-    tileidx_t ch = TILEP_PLAYER;
+    tile_with_flags_t ch = TILEP_PLAYER;
 
     // Currently, the flying flag is only used for not drawing the tile in the
     // water. in_water() checks Beogh's water walking. If the flying flag is
