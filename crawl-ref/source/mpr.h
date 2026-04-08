@@ -6,6 +6,7 @@
 #pragma once
 
 #include "format.h"
+#include "gettext.h"
 
 // if you mess with this list, you'll need to make changes in initfile.cc
 // to message_channel_names, and probably also to message.cc to colour
@@ -102,21 +103,24 @@ void do_message_print(msg_channel_type channel, int param, bool cap,
                              bool nojoin, const char *format, va_list argp);
 
 void mpr(const string &text);
-// static inline void mpr(const char *text) { mpr(string(text)); }
+static inline void mpr(const char *text)
+{
+    mpr(string(text ? gettext(text) : ""));
+}
 void mpr_nojoin(msg_channel_type channel, string text);
 
 // prevent implicit cast from formatted_string, use formatted_mpr instead
 void mpr(const formatted_string &) = delete;
 
 // 4.1-style mpr, currently named mprf for minimal disruption.
-void mprf(msg_channel_type channel, int param, PRINTF(2, ));
-void mprf(msg_channel_type channel, PRINTF(1, ));
+void mprfcp(msg_channel_type channel, int param, PRINTF(2, ));
+void mprfc(msg_channel_type channel, PRINTF(1, ));
 void mprf(PRINTF(0, ));
-void mprf_nojoin(msg_channel_type channel, PRINTF(1,));
+void mprfc_nojoin(msg_channel_type channel, PRINTF(1,));
 void mprf_nojoin(PRINTF(0,));
 
-void mprf_nocap(msg_channel_type channel, int param, PRINTF(2, ));
-void mprf_nocap(msg_channel_type channel, PRINTF(1, ));
+void mprfcp_nocap(msg_channel_type channel, int param, PRINTF(2, ));
+void mprfc_nocap(msg_channel_type channel, PRINTF(1, ));
 void mprf_nocap(PRINTF(0, ));
 
 #ifdef DEBUG_DIAGNOSTICS

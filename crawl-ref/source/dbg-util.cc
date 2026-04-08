@@ -29,7 +29,7 @@ monster_type debug_prompt_for_monster()
 {
     char specs[1024];
 
-    mprf(MSGCH_PROMPT, "Which monster by name? ");
+    mprfc(MSGCH_PROMPT, "Which monster by name? ");
     if (!cancellable_get_line_autohist(specs, sizeof specs))
     {
         if (specs[0] == '\0')
@@ -401,8 +401,8 @@ void debug_dump_item(const char *name, int num, const item_def &item,
     string msg = vmake_stringf(format, args);
     va_end(args);
 
-    mprf(chan, "%s", msg.c_str());
-    mprf(chan, "%s", name);
+    mprfc(chan, "%s", msg.c_str());
+    mprfc(chan, "%s", name);
 
     mprf("    item #%d:  base: %d; sub: %d; plus: %d; plus2: %d; special: %d",
          num, item.base_type, item.sub_type,
@@ -563,11 +563,11 @@ void wizard_toggle_dprf()
                                  Options.quiet_debug_messages[i] ? "</white>" : "");
             if (i % 5 == 4 || i == NUM_DIAGNOSTICS - 1)
             {
-                mprf(MSGCH_PROMPT, "%s", line.c_str());
+                mprfc(MSGCH_PROMPT, "%s", line.c_str());
                 line.clear();
             }
         }
-        mprf(MSGCH_PROMPT, "Toggle which debug class (ESC to exit)? ");
+        mprfc(MSGCH_PROMPT, "Toggle which debug class (ESC to exit)? ");
 
         int keyin = toalower(get_ch());
 

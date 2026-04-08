@@ -6,6 +6,7 @@
 
 #include "cio.h"
 #include "colour.h"
+#include "gettext.h"
 #include "lang-fake.h"
 #include "libutil.h"
 #include "stringutil.h"
@@ -25,6 +26,14 @@ formatted_string::formatted_string(const string &s, int init_colour)
     if (init_colour)
         textcolour(init_colour);
     cprintf(s);
+}
+
+formatted_string::formatted_string(const char *s, int init_colour)
+    : ops()
+{
+    if (init_colour)
+        textcolour(init_colour);
+    cprintf(string(s ? gettext(s) : ""));
 }
 
 /**

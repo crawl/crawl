@@ -319,7 +319,7 @@ bool xom_is_nice(int tension)
         ASSERT_RANGE(effective_piety, 0, MAX_PIETY + 1);
 
 #ifdef DEBUG_XOM
-        mprf(MSGCH_DIAGNOSTICS,
+        mprfc(MSGCH_DIAGNOSTICS,
              "Xom: tension: %d, piety: %d -> tension bonus = %d, eff. piety: %d",
              tension, you.raw_piety, tension_bonus, effective_piety);
 #endif
@@ -347,7 +347,7 @@ static void _xom_is_stimulated(int maxinterestingness,
     interestingness = min(200, interestingness);
 
 #if defined(DEBUG_RELIGION) || defined(DEBUG_GIFTS) || defined(DEBUG_XOM)
-    mprf(MSGCH_DIAGNOSTICS,
+    mprfc(MSGCH_DIAGNOSTICS,
          "Xom: gift_timeout: %d, maxinterestingness = %d, interestingness = %d",
          you.gift_timeout, maxinterestingness, interestingness);
 #endif
@@ -488,7 +488,7 @@ void xom_tick()
                 //updating piety status line
                 you.redraw_title = true;
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
-                mprf(MSGCH_DIAGNOSTICS,
+                mprfc(MSGCH_DIAGNOSTICS,
                      "tension %d (chance: %d) -> increase interest to %d",
                      tension, chance, you.gift_timeout);
 #endif
@@ -547,7 +547,7 @@ static void _xom_random_spell(int sever)
     god_speaks(GOD_XOM, _get_xom_speech("spell effect").c_str());
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
-    mprf(MSGCH_DIAGNOSTICS,
+    mprfc(MSGCH_DIAGNOSTICS,
          "_xom_makes_you_cast_random_spell(); spell: %d",
          spell);
 #endif
@@ -851,7 +851,7 @@ static void _xom_bazaar_trip(int /*sever*/)
     if (brdepth[BRANCH_ABYSS] == -1)
     {
         // Only possible in wizmode, as the message implies, but it crashes.
-        mprf(MSGCH_ERROR, "Not even Xom can make wizards leave Sprint. "
+        mprfc(MSGCH_ERROR, "Not even Xom can make wizards leave Sprint. "
                           "Aborting Xom's Bazaar banishment.");
     }
     else
@@ -1045,7 +1045,7 @@ static monster_type _xom_random_pal(int roll, bool isFriendly)
     variance = min(33, variance);
 
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "_xom_random_pal(); xl variance roll: %d", roll);
+    mprfc(MSGCH_DIAGNOSTICS, "_xom_random_pal(); xl variance roll: %d", roll);
 #endif
 
     monster_type mon_type = xom_picker.pick(_xom_summons, variance, MONS_CRIMSON_IMP);
@@ -1887,7 +1887,7 @@ static void _xom_door_ring(bool good)
         else
             message = "The dungeon churns and shimmers intensely around you.";
 
-        mprf(good ? MSGCH_GOD : MSGCH_WARN, "%s", message.c_str());
+        mprfc(good ? MSGCH_GOD : MSGCH_WARN, "%s", message.c_str());
 
         string note = "";
         if (good)
@@ -1999,7 +1999,7 @@ static void _xom_fake_shatter(int /*sever*/)
     else
     {
         noisy(spell_effect_noise(SPELL_SHATTER), you.pos());
-        mprf(MSGCH_SOUND, "The dungeon rumbles... harmlessly?");
+        mprfc(MSGCH_SOUND, "The dungeon rumbles... harmlessly?");
     }
 
     run_animation(ANIMATION_SHAKE_VIEWPORT, UA_PLAYER);
@@ -2948,7 +2948,7 @@ static void _xom_wave_of_despair(int sever)
         mpr("Skeletons, inanimate yet cursed, drop down from the ceiling.");
 
     draw_ring_animation(you.pos(), you.current_vision, DARKGRAY, MAGENTA, true, 35);
-    mprf(MSGCH_DANGER, "A draining tide of despair and horror washes over you and your surroundings!");
+    mprfc(MSGCH_DANGER, "A draining tide of despair and horror washes over you and your surroundings!");
 
     const int pow = 50 + random_range(sever / 2, sever);
 
@@ -2991,7 +2991,7 @@ static void _xom_blinding_blinkitis(int /* sever */)
         if (!mi->wont_attack() && !mi->is_peripheral() && !mi->stasis())
             target.push_back(*mi);
 
-    mprf(MSGCH_MONSTER_ENCHANT, "%s %s blinded and untethered in space!",
+    mprfc(MSGCH_MONSTER_ENCHANT, "%s %s blinded and untethered in space!",
          multimonster_name_string(target).c_str(), target.size() > 1 ? "are" : "is");
 
     for (monster *mon : target)
@@ -3058,7 +3058,7 @@ static void _xom_chaos_vex(int /* sever */)
         target.push_back(*mi);
     }
 
-    mprf(MSGCH_MONSTER_ENCHANT, "%s %s interlaced with infuriating chaos!",
+    mprfc(MSGCH_MONSTER_ENCHANT, "%s %s interlaced with infuriating chaos!",
          multimonster_name_string(target).c_str(),
          target.size() > 1 ? "are" : "is");
 
@@ -3146,7 +3146,7 @@ static void _xom_time_control(int sever)
 
     god_speaks(GOD_XOM, _get_xom_speech(xomline).c_str());
 
-    mprf(bad ? MSGCH_WARN : MSGCH_GOD, "%s", message.c_str());
+    mprfc(bad ? MSGCH_WARN : MSGCH_GOD, "%s", message.c_str());
 
     if (!you.stasis())
         you.increase_duration(dur, time / 10);
@@ -3610,7 +3610,7 @@ static void _xom_player_confusion_effect(int sever)
     if (you.can_drink())
     {
         god_speaks(GOD_XOM, _get_xom_speech("confusion").c_str());
-        mprf(MSGCH_WARN, "You are %sconfused.", conf ? "more " : "");
+        mprfc(MSGCH_WARN, "You are %sconfused.", conf ? "more " : "");
     }
     else
     {
@@ -3619,7 +3619,7 @@ static void _xom_player_confusion_effect(int sever)
         const bool was_mighty = you.duration[DUR_MIGHT];
         you.increase_duration(DUR_MIGHT, dur);
         god_speaks(GOD_XOM, _get_xom_speech("drinkless confusion").c_str());
-        mprf(MSGCH_WARN, "You feel %s and %sconfused.",
+        mprfc(MSGCH_WARN, "You feel %s and %sconfused.",
             was_mighty ? "mightier" : "very mighty", conf ? "more " : "");
     }
 
@@ -3717,7 +3717,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
     ray_def ray;
     if (!find_ray(begin, towards, ray, opc_solid_see))
     {
-        mprf(MSGCH_ERROR, "Couldn't find ray between player and stairs.");
+        mprfc(MSGCH_ERROR, "Couldn't find ray between player and stairs.");
         return stairs_moved;
     }
 
@@ -3752,7 +3752,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
             return stairs_moved;
         }
 
-        mprf(MSGCH_ERROR, "Ray didn't cross stairs.");
+        mprfc(MSGCH_ERROR, "Ray didn't cross stairs.");
     }
 
     if (away && past_stairs <= 0)
@@ -3805,7 +3805,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
 
     if (!swap_features(stair_pos, ray.pos(), false, false))
     {
-        mprf(MSGCH_ERROR, "_move_stair(): failed to move %s",
+        mprfc(MSGCH_ERROR, "_move_stair(): failed to move %s",
              stair_str.c_str());
         return stairs_moved;
     }
@@ -4228,12 +4228,12 @@ static void _xom_brain_drain(int sever)
             react = maybe_pick_random_substring(react);
 
             const string note = make_stringf("drained mp, created monsters");
-            mprf(MSGCH_WARN, "%s", react.c_str());
+            mprfc(MSGCH_WARN, "%s", react.c_str());
             take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
         }
         else
         {
-            mprf(MSGCH_WARN, "You feel nearly all of your power leaking away!");
+            mprfc(MSGCH_WARN, "You feel nearly all of your power leaking away!");
             const string note = make_stringf("drained mp");
             take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, note), true);
         }
@@ -4320,7 +4320,7 @@ static void _xom_grants_word_of_recall(int /*sever*/)
         xom_speech = "grant voiceless word of recall";
 
     god_speaks(GOD_XOM, _get_xom_speech(xom_speech).c_str());
-    mprf(MSGCH_WARN, "%s is forced to slowly start %s a word of recall!",
+    mprfc(MSGCH_WARN, "%s is forced to slowly start %s a word of recall!",
                      targetable[0]->name(DESC_A, true, false).c_str(),
                      phrasing.c_str());
     mon_enchant chant_timer = mon_enchant(ENCH_WORD_OF_RECALL, targetable[0], duration);
@@ -4442,14 +4442,14 @@ static void _xom_cleaving(int sever)
     if (const item_def* const weapon = you.weapon())
     {
         const bool axe = item_attack_skill(*weapon) == SK_AXES;
-        mprf(MSGCH_DURATION,
+        mprfc(MSGCH_DURATION,
              "%s %s sharp%s", weapon->name(DESC_YOUR).c_str(),
              conjugate_verb("look", weapon->quantity > 1).c_str(),
              (axe) ? " (like it always does)." : ".");
     }
     else
     {
-        mprf(MSGCH_DURATION, "%s",
+        mprfc(MSGCH_DURATION, "%s",
              you.hands_act("look", "sharp.").c_str());
     }
 
@@ -5141,9 +5141,9 @@ xom_event_type xom_choose_action(bool niceness, int sever, int tension)
         ASSERT(you.wizard);
         ASSERT(!you.did_escape_death());
         if (is_feat_dangerous(env.grid(you.pos())))
-            mprf(MSGCH_DIAGNOSTICS, "Player is standing in deadly terrain, skipping Xom act.");
+            mprfc(MSGCH_DIAGNOSTICS, "Player is standing in deadly terrain, skipping Xom act.");
         else
-            mprf(MSGCH_DIAGNOSTICS, "Player is already dead, skipping Xom act.");
+            mprfc(MSGCH_DIAGNOSTICS, "Player is already dead, skipping Xom act.");
         return XOM_PLAYER_DEAD;
     }
 
@@ -5258,13 +5258,13 @@ void xom_take_action(xom_event_type action, int sever)
                                              : random2avg(badness * 60, 2);
 
         if (mostly_explored)
-            mprf(MSGCH_WARN, "Xom feels this floor is too known and too boring!");
+            mprfc(MSGCH_WARN, "Xom feels this floor is too known and too boring!");
 
         you.gift_timeout   = min(interest, 255);
         //updating piety status line
         you.redraw_title = true;
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
-        mprf(MSGCH_DIAGNOSTICS, "badness: %d, new interest: %d",
+        mprfc(MSGCH_DIAGNOSTICS, "badness: %d, new interest: %d",
              badness, you.gift_timeout);
 #endif
     }
@@ -5320,7 +5320,7 @@ xom_event_type xom_acts(int sever, maybe_bool nice, int tension, bool debug)
         // anyway. (jpeg)
 
         // these numbers (sever, tension) may be modified later...
-        mprf(MSGCH_DIAGNOSTICS, "xom_acts(%u, %d, %d); piety: %u, interest: %u",
+        mprfc(MSGCH_DIAGNOSTICS, "xom_acts(%u, %d, %d); piety: %u, interest: %u",
              niceness, sever, tension, you.raw_piety, you.gift_timeout);
 
         static char xom_buf[100];
@@ -5337,7 +5337,7 @@ xom_event_type xom_acts(int sever, maybe_bool nice, int tension, bool debug)
     // No message during heavy-duty wizmode testing:
     // Instead all results are written into xom_debug.stat.
     if (!debug)
-        mprf(MSGCH_DIAGNOSTICS, "Xom tension: %d", tension);
+        mprfc(MSGCH_DIAGNOSTICS, "Xom tension: %d", tension);
 #endif
 
     _calculate_exploration_estimate(true);
@@ -5794,7 +5794,7 @@ void debug_xom_effects()
     FILE *ostat = fopen_u("xom_debug.stat", "w");
     if (!ostat)
     {
-        mprf(MSGCH_ERROR, "Can't write 'xom_debug.stat'. Aborting.");
+        mprfc(MSGCH_ERROR, "Can't write 'xom_debug.stat'. Aborting.");
         return;
     }
 

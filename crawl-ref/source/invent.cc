@@ -1822,7 +1822,7 @@ int prompt_invent_item(const char *prompt,
     if (!any_items_of_type(type_expect) && type_expect != OSEL_WIELD
         && type_expect != OSEL_QUIVER_ACTION)
     {
-        mprf(MSGCH_PROMPT, "%s",
+        mprfc(MSGCH_PROMPT, "%s",
              no_selectables_message(type_expect).c_str());
         return PROMPT_NOTHING;
     }
@@ -1851,7 +1851,7 @@ int prompt_invent_item(const char *prompt,
         }
 
         if (need_prompt)
-            mprf(MSGCH_PROMPT, "%s (<w>?</w> for menu, <w>Esc</w> to quit)", prompt);
+            mprfc(MSGCH_PROMPT, "%s (<w>?</w> for menu, <w>Esc</w> to quit)", prompt);
         else
             flush_prev_message();
 

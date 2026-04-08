@@ -21,6 +21,9 @@ using std::vector;
 #ifndef MONOSPACED_FONT
 # error MONOSPACED_FONT not defined
 #endif
+#ifndef CJK_MONOSPACED_FONT
+# error CJK_MONOSPACED_FONT not defined
+#endif
 
 class Popup;
 class Region;

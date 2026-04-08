@@ -1071,7 +1071,7 @@ void shoals_release_tide(monster* mons)
     {
         if (player_can_hear(mons->pos()))
         {
-            mprf(MSGCH_SOUND, "The tide is released from %s call.",
+            mprfc(MSGCH_SOUND, "The tide is released from %s call.",
                  apostrophise(mons->name(DESC_YOUR, true)).c_str());
             if (you.see_cell(mons->pos()))
                 flash_view_delay(UA_MONSTER, ETC_WATER, 150);
@@ -1107,14 +1107,14 @@ void wizard_mod_tide()
 {
     if (!player_in_branch(BRANCH_SHOALS) || !env.heightmap)
     {
-        mprf(MSGCH_WARN, "Not in Shoals or no heightmap; tide not available.");
+        mprfc(MSGCH_WARN, "Not in Shoals or no heightmap; tide not available.");
         return;
     }
 
     char buf[80];
     while (true)
     {
-        mprf(MSGCH_PROMPT,
+        mprfc(MSGCH_PROMPT,
              "Tide inertia: %d. New value "
              "(smaller = faster tide) or use +/- to change tide: ",
              TIDE_MULTIPLIER);

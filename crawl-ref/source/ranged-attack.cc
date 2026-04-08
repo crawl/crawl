@@ -708,7 +708,7 @@ bool ranged_attack::apply_missile_brand()
 
         if (defender->is_player())
         {
-            mprf(MSGCH_WARN, "You become untethered in space!");
+            mprfc(MSGCH_WARN, "You become untethered in space!");
             you.duration[DUR_BLINKITIS] = random_range(30, 40);
             you.props[BLINKITIS_SOURCE_KEY] = attacker->name(DESC_A, true);
             you.props[BLINKITIS_AUX_KEY] = proj_name;

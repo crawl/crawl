@@ -400,7 +400,7 @@ static void _debug_marker_scan()
 
         if (marker == nullptr)
         {
-            mprf(MSGCH_ERROR, "Marker #%d is nullptr", i);
+            mprfc(MSGCH_ERROR, "Marker #%d is nullptr", i);
             continue;
         }
 
@@ -408,13 +408,13 @@ static void _debug_marker_scan()
 
         if (type < MAT_FEATURE || type >= NUM_MAP_MARKER_TYPES)
         {
-            mprf(MSGCH_ERROR, "Marker #%d at (%d, %d) has invalid type %d",
+            mprfc(MSGCH_ERROR, "Marker #%d at (%d, %d) has invalid type %d",
                  i, marker->pos.x, marker->pos.y, (int) type);
         }
 
         if (!in_bounds(marker->pos))
         {
-            mprf(MSGCH_ERROR, "Marker #%d, type %d at (%d, %d) out of bounds",
+            mprfc(MSGCH_ERROR, "Marker #%d, type %d at (%d, %d) out of bounds",
                  i, (int) type, marker->pos.x, marker->pos.y);
             continue;
         }
@@ -422,7 +422,7 @@ static void _debug_marker_scan()
         vector<map_marker*> at_pos = env.markers.get_markers_at(marker->pos);
         if (find(begin(at_pos), end(at_pos), marker) == end(at_pos))
         {
-            mprf(MSGCH_ERROR, "Marker #%d, type %d at (%d, %d) unlinked",
+            mprfc(MSGCH_ERROR, "Marker #%d, type %d at (%d, %d) unlinked",
                  i, (int) type, marker->pos.x, marker->pos.y);
         }
     }
@@ -439,19 +439,19 @@ static void _debug_marker_scan()
 
             if (marker == nullptr)
             {
-                mprf(MSGCH_ERROR, "Marker #%d at (%d, %d) nullptr",
+                mprfc(MSGCH_ERROR, "Marker #%d at (%d, %d) nullptr",
                      i, ri->x, ri->y);
                 continue;
             }
             if (marker->pos != *ri)
             {
-                mprf(MSGCH_ERROR, "Marker #%d, type %d at (%d, %d) "
+                mprfc(MSGCH_ERROR, "Marker #%d, type %d at (%d, %d) "
                                   "thinks it's at (%d, %d)",
                      i, (int) marker->get_type(), ri->x, ri->y,
                      marker->pos.x, marker->pos.y);
 
                 if (!in_bounds(marker->pos))
-                    mprf(MSGCH_ERROR, "Further, it thinks it's out of bounds.");
+                    mprfc(MSGCH_ERROR, "Further, it thinks it's out of bounds.");
             }
         }
     }
@@ -468,7 +468,7 @@ static void _debug_dump_markers()
         if (marker == nullptr || marker->get_type() == MAT_LUA_MARKER)
             continue;
 
-        mprf(MSGCH_DIAGNOSTICS, "Marker #%d, type %d at (%d, %d): %s",
+        mprfc(MSGCH_DIAGNOSTICS, "Marker #%d, type %d at (%d, %d): %s",
              i, marker->get_type(),
              marker->pos.x, marker->pos.y,
              marker->debug_describe().c_str());

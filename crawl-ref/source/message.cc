@@ -13,6 +13,7 @@
 #include "colour.h"
 #include "delay.h"
 #include "english.h"
+#include "gettext.h"
 #include "hints.h"
 #include "initfile.h"
 #include "libutil.h"
@@ -1258,23 +1259,24 @@ int channel_to_colour(msg_channel_type channel, int param)
 void do_message_print(msg_channel_type channel, int param, bool cap,
                              bool nojoin, const char *format, va_list argp)
 {
+    const char *translated = format ? gettext(format) : "";
     va_list ap;
     va_copy(ap, argp);
     char buff[200];
-    size_t len = vsnprintf(buff, sizeof(buff), format, argp);
+    size_t len = vsnprintf(buff, sizeof(buff), translated, argp);
     if (len < sizeof(buff))
         _mpr(buff, channel, param, nojoin, cap);
     else
     {
         char *heapbuf = (char*)malloc(len + 1);
-        vsnprintf(heapbuf, len + 1, format, ap);
+        vsnprintf(heapbuf, len + 1, translated, ap);
         _mpr(heapbuf, channel, param, nojoin, cap);
         free(heapbuf);
     }
     va_end(ap);
 }
 
-void mprf_nocap(msg_channel_type channel, int param, const char *format, ...)
+void mprfcp_nocap(msg_channel_type channel, int param, const char *format, ...)
 {
     va_list argp;
     va_start(argp, format);
@@ -1282,7 +1284,7 @@ void mprf_nocap(msg_channel_type channel, int param, const char *format, ...)
     va_end(argp);
 }
 
-void mprf_nocap(msg_channel_type channel, const char *format, ...)
+void mprfc_nocap(msg_channel_type channel, const char *format, ...)
 {
     va_list argp;
     va_start(argp, format);
@@ -1299,7 +1301,7 @@ void mprf_nocap(const char *format, ...)
     va_end(argp);
 }
 
-void mprf(msg_channel_type channel, int param, const char *format, ...)
+void mprfcp(msg_channel_type channel, int param, const char *format, ...)
 {
     va_list argp;
     va_start(argp, format);
@@ -1307,7 +1309,7 @@ void mprf(msg_channel_type channel, int param, const char *format, ...)
     va_end(argp);
 }
 
-void mprf(msg_channel_type channel, const char *format, ...)
+void mprfc(msg_channel_type channel, const char *format, ...)
 {
     va_list argp;
     va_start(argp, format);
@@ -1324,7 +1326,7 @@ void mprf(const char *format, ...)
     va_end(argp);
 }
 
-void mprf_nojoin(msg_channel_type channel, const char *format, ...)
+void mprfc_nojoin(msg_channel_type channel, const char *format, ...)
 {
     va_list argp;
     va_start(argp, format);
@@ -1612,7 +1614,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
 
 static string show_prompt(string prompt)
 {
-    mprf(MSGCH_PROMPT, "%s", prompt.c_str());
+    mprfc(MSGCH_PROMPT, "%s", prompt.c_str());
 
     // FIXME: duplicating mpr code.
     msg_colour_type colour = prepare_message(prompt, MSGCH_PROMPT, 0);
@@ -1631,7 +1633,7 @@ void msgwin_reply(string reply)
     msgwin_clear_temporary();
     msgwin_set_temporary(false);
     reply = replace_all(reply, "<", "<<");
-    mprf(MSGCH_PROMPT, "%s<lightgrey>%s</lightgrey>", _prompt.c_str(), reply.c_str());
+    mprfc(MSGCH_PROMPT, "%s<lightgrey>%s</lightgrey>", _prompt.c_str(), reply.c_str());
     msgwin.got_input();
 }
 
@@ -1989,7 +1991,7 @@ void canned_msg(canned_message_type which_message)
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_OK:
-            mprf(MSGCH_PROMPT, "Okay, then.");
+            mprfc(MSGCH_PROMPT, "Okay, then.");
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_UNTHINKING_ACT:
@@ -2008,7 +2010,7 @@ void canned_msg(canned_message_type which_message)
             mpr("The spell fizzles.");
             break;
         case MSG_HUH:
-            mprf(MSGCH_EXAMINE_FILTER, "Huh?");
+            mprfc(MSGCH_EXAMINE_FILTER, "Huh?");
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_EMPTY_HANDED_ALREADY:
@@ -2073,7 +2075,7 @@ void canned_msg(canned_message_type which_message)
             if (you.has_mutation(MUT_HP_CASTING))
                 mpr("You feel momentarily drained.");
             else
-                mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
+                mprfc(MSGCH_WARN, "You suddenly feel drained of magical energy!");
             break;
         }
         case MSG_SOMETHING_IN_WAY:
@@ -2113,7 +2115,7 @@ bool simple_monster_message(const monster& mons, const char *event,
         if (channel == MSGCH_PLAIN && mons.wont_attack())
             channel = MSGCH_FRIEND_ACTION;
 
-        mprf(channel, param, "%s", msg.c_str());
+        mprfcp(channel, param, "%s", msg.c_str());
         return true;
     }
 

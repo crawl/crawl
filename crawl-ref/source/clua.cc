@@ -170,7 +170,7 @@ void CLua::save_persist()
     f = fopen_u(persistfile.c_str(), "w");
     if (!f)
     {
-        mprf(MSGCH_ERROR, "Couldn't open %s for writing!", persistfile.c_str());
+        mprfc(MSGCH_ERROR, "Couldn't open %s for writing!", persistfile.c_str());
         return;
     }
 

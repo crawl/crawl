@@ -1182,7 +1182,7 @@ static int _prompt_annotate_branch(level_id lid)
         if (is_known_branch_id(it->id))
             brs.push_back(it->id);
 
-    mprf(MSGCH_PROMPT, "Annotate which branch? (. - %s, ? - help, ! - show branch list)",
+    mprfc(MSGCH_PROMPT, "Annotate which branch? (. - %s, ? - help, ! - show branch list)",
         lid.describe(false, true).c_str());
 
     while (true)
@@ -1285,7 +1285,7 @@ void annotate_level(level_id li)
     const string old = get_level_annotation(li, true, true);
     if (!old.empty())
     {
-        mprf(MSGCH_PROMPT, "Current level annotation: <lightgrey>%s</lightgrey>",
+        mprfc(MSGCH_PROMPT, "Current level annotation: <lightgrey>%s</lightgrey>",
              old.c_str());
     }
 

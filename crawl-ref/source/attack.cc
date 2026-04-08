@@ -1528,7 +1528,7 @@ int attack::player_stab(int damage)
         {
             if (!you.duration[DUR_DEVIOUS])
             {
-                mprf(MSGCH_DURATION, "You feel devious.");
+                mprfc(MSGCH_DURATION, "You feel devious.");
                 you.props.erase(DEVIOUS_KEY);
             }
 
@@ -1542,7 +1542,7 @@ int attack::player_stab(int damage)
         if (you.has_mutation(MUT_SOUTH_WIND) && !defender->wont_attack())
         {
             if (!you.duration[DUR_TAILWIND])
-                mprf(MSGCH_DURATION, "The winds around you quicken.");
+                mprfc(MSGCH_DURATION, "The winds around you quicken.");
             you.duration[DUR_TAILWIND] = max(you.duration[DUR_TAILWIND], random_range(50, 90));
         }
     }

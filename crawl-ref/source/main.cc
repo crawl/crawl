@@ -73,6 +73,7 @@
 #include "god-conduct.h"
 #include "god-passive.h"
 #include "god-prayer.h"
+#include "gettext.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "initfile.h"
@@ -245,6 +246,11 @@ int main(int argc, char *argv[])
 #else
     setlocale(LC_ALL, "");
 #endif
+    const string locale_dir = datafile_path("locale", false, false, dir_exists);
+    if (!locale_dir.empty())
+        bindtextdomain("crawl-data", locale_dir.c_str());
+    bind_textdomain_codeset("crawl-data", "UTF-8");
+    textdomain("crawl-data");
 #ifdef USE_TILE_WEB
     if (strcasecmp(nl_langinfo(CODESET), "UTF-8"))
     {
@@ -718,7 +724,7 @@ static string _welcome_spam_suffix()
 static void _announce_goal_message()
 {
     const string type = _welcome_spam_suffix();
-    mprf(MSGCH_PLAIN, "<yellow>%s</yellow>",
+    mprfc(MSGCH_PLAIN, "<yellow>%s</yellow>",
          getMiscString("welcome_spam" + type).c_str());
 }
 
@@ -1224,7 +1230,7 @@ static void _input()
         if (!has_pending_input() && !kbhit())
         {
             if (++crawl_state.lua_calls_no_turn > 1000)
-                mprf(MSGCH_ERROR, "Infinite lua loop detected, aborting.");
+                mprfc(MSGCH_ERROR, "Infinite lua loop detected, aborting.");
             else if (!crawl_state.lua_ready_throttled)
             {
                 if (!clua.callfn("ready", 0, 0) && !clua.error.empty())
@@ -1236,10 +1242,10 @@ static void _input()
                     if (crawl_state.lua_script_killed)
                         crawl_state.lua_ready_throttled = true;
 
-                    mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+                    mprfc(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
                     if (crawl_state.lua_ready_throttled)
                     {
-                        mprf(MSGCH_ERROR, "Banning ready() after %d throttles",
+                        mprfc(MSGCH_ERROR, "Banning ready() after %d throttles",
                             CLua::MAX_THROTTLE_SLEEPS);
                     }
 
@@ -1503,7 +1509,7 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
     // Prompt for entering excluded transporters.
     if (ygrd == DNGN_TRANSPORTER && is_exclude_root(you.pos()))
     {
-        mprf(MSGCH_WARN, "This transporter is marked as excluded!");
+        mprfc(MSGCH_WARN, "This transporter is marked as excluded!");
         if (!yesno("Enter transporter anyway?", true, 'n', true, false))
         {
             canned_msg(MSG_OK);
@@ -1795,7 +1801,7 @@ static void _experience_check()
     }
 
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Turns spent on this level: %d",
+    mprfc(MSGCH_DIAGNOSTICS, "Turns spent on this level: %d",
          env.turns_on_level);
 #endif
 }
@@ -1806,7 +1812,7 @@ static void _do_rest()
 #ifdef WIZARD
     if (you.props.exists(FREEZE_TIME_KEY))
     {
-        mprf(MSGCH_WARN, "Cannot rest while time is frozen.");
+        mprfc(MSGCH_WARN, "Cannot rest while time is frozen.");
         return;
     }
 #endif
@@ -1903,7 +1909,7 @@ static bool _check_recklessness(command_type prev_cmd)
             || prev_cmd == CMD_AUTOFIGHT_NOMOVE
             || prev_cmd == CMD_AUTOFIRE))
     {
-        mprf(MSGCH_DANGER, "You should not fight recklessly!");
+        mprfc(MSGCH_DANGER, "You should not fight recklessly!");
         return true;
     }
     return false;
@@ -1953,7 +1959,7 @@ static void _handle_autofight(command_type cmd, command_type prev_cmd)
             if (!clua.callfn("get_af_fire_stop", ">b", &target.isEndpoint))
             {
                 if (!clua.error.empty())
-                    mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+                    mprfc(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
                 // just continue with the default value in this case
             }
             // set this so that it prints appropriate error messages for
@@ -1971,7 +1977,7 @@ static void _handle_autofight(command_type cmd, command_type prev_cmd)
     const string fnname = _autofight_lua_fn(cmd);
 
     if (!clua.callfn(fnname.c_str(), 0, 0))
-        mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+        mprfc(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
 }
 
 class GameMenu : public Menu
@@ -2492,7 +2498,7 @@ void process_command(command_type cmd, command_type prev_cmd)
         if (crawl_state.game_is_hints())
             mpr("Unknown command. (For a list of commands type <w>?\?</w>.)");
         else // well, not examine, but...
-            mprf(MSGCH_EXAMINE_FILTER, "Unknown command.");
+            mprfc(MSGCH_EXAMINE_FILTER, "Unknown command.");
 
         if (feat_is_altar(env.grid(you.pos())))
         {
@@ -2536,9 +2542,9 @@ static void _prep_input()
     {
         ASSERT(have_passive(passive_t::detect_portals));
         if (you.seen_portals == 1)
-            mprf(MSGCH_GOD, "You have a vision of a gate.");
+            mprfc(MSGCH_GOD, "You have a vision of a gate.");
         else
-            mprf(MSGCH_GOD, "You have a vision of multiple gates.");
+            mprfc(MSGCH_GOD, "You have a vision of multiple gates.");
 
         you.seen_portals = 0;
     }
@@ -2685,7 +2691,7 @@ void world_reacts()
 
 #if defined(DEBUG_TENSION) || defined(DEBUG_RELIGION)
     if (!you_worship(GOD_NO_GOD))
-        mprf(MSGCH_DIAGNOSTICS, "TENSION = %d", get_tension());
+        mprfc(MSGCH_DIAGNOSTICS, "TENSION = %d", get_tension());
 #endif
 
     if (you.num_turns != -1)
@@ -2838,13 +2844,13 @@ static void _do_berserk_no_combat_penalty()
         switch (you.berserk_penalty)
         {
         case 2:
-            mprf(MSGCH_DURATION, "You feel a strong urge to attack something.");
+            mprfc(MSGCH_DURATION, "You feel a strong urge to attack something.");
             break;
         case 4:
-            mprf(MSGCH_DURATION, "You feel your anger nearly subside.");
+            mprfc(MSGCH_DURATION, "You feel your anger nearly subside.");
             break;
         case 6:
-            mprf(MSGCH_DURATION, "Your blood rage is quickly leaving you.");
+            mprfc(MSGCH_DURATION, "Your blood rage is quickly leaving you.");
             break;
         }
 
@@ -2944,7 +2950,7 @@ static void _run_input_with_keys(const keyseq& keys)
 
     if (get_macro_buf_size() < old_buf_size)
     {
-        mprf(MSGCH_ERROR, "(Key replay stole keys)");
+        mprfc(MSGCH_ERROR, "(Key replay stole keys)");
         crawl_state.cancel_cmd_all();
     }
 }
@@ -2987,7 +2993,7 @@ static void _do_cmd_repeat()
     c_input_reset(true);
     if (ch == ' ' || ch == CK_ENTER)
     {
-        mprf(MSGCH_PROMPT, "Enter command to be repeated: ");
+        mprfc(MSGCH_PROMPT, "Enter command to be repeated: ");
         // Enable the cursor to read input.
         cursor_control con(true);
 
@@ -3080,7 +3086,7 @@ static void _do_prev_cmd_again()
 
     if (crawl_state.doing_prev_cmd_again)
     {
-        mprf(MSGCH_ERROR, "Trying to re-do re-do command, aborting.");
+        mprfc(MSGCH_ERROR, "Trying to re-do re-do command, aborting.");
         crawl_state.cancel_cmd_all();
         return;
     }

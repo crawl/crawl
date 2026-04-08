@@ -79,7 +79,8 @@ These instructions may work for other DPKG-based distros.
 ```sh
 # python-is-python3 is required for Ubuntu 20.04 and newer
 sudo apt install build-essential libncursesw5-dev bison flex liblua5.4-dev \
-libsqlite3-dev libz-dev pkg-config python3-yaml binutils-gold python-is-python3
+ libsqlite3-dev libz-dev pkg-config python3-yaml binutils-gold python-is-python3 \
+ gettext
 
 # Dependencies for tiles builds
 sudo apt install libsdl2-image-dev libsdl2-mixer-dev libsdl2-dev \
@@ -95,7 +96,7 @@ These instructions may work for other RPM-based distros.
 
 ```sh
 sudo dnf install gcc gcc-c++ make bison flex ncurses-devel compat-lua-devel \
-sqlite-devel zlib-devel pkgconfig python3-yaml
+ sqlite-devel zlib-devel pkgconfig python3-yaml gettext-devel gettext
 
 # Dependencies for tiles builds:
 sudo dnf install SDL2-devel SDL2_image-devel libpng-devel freetype-devel \
@@ -114,6 +115,7 @@ You need the following dependencies:
 * pkg-config
 * Python 3 and PyYAML
 * libncurses
+* gettext (required for gettext-backed code message catalogs)
 * flex / bison (optional)
 
 You can install these dependencies from your OS package manager, or use DCSS's
@@ -190,7 +192,16 @@ a prerequisite for building, we do not support building within the Xcode app.
     this package in other ways, via package managers such as anaconda,
     macports, or homebrew.
 
-4. Then follow [the above command-line compilation steps](#compiling).
+4. Install gettext if you want gettext-backed code message extraction and
+   runtime catalogs:
+
+    ```sh
+    brew install gettext
+    export PATH="$(brew --prefix gettext)/bin:$PATH"
+    export PKG_CONFIG_PATH="$(brew --prefix gettext)/lib/pkgconfig:$PKG_CONFIG_PATH"
+    ```
+
+5. Then follow [the above command-line compilation steps](#compiling).
 
 ### Building a mac app
 
@@ -284,8 +295,8 @@ from within the MSYS2 Shell.
     (However, you may want to consider just upgrading MSYS2 at this point.)
 
 4. There is one more package dependency needed, the python package PyYAML. This
-  can be installed either via the MSYS2 package or (if you know what you're
-  doing) via pip.
+   can be installed either via the MSYS2 package or (if you know what you're
+   doing) via pip.
 
     ```sh
     pacman -S mingw-w64-x86_64-python-yaml
@@ -307,7 +318,14 @@ from within the MSYS2 Shell.
     you to also uninstall other packages that are part of the `base-devel`
     group, but they aren't needed for developing with python.
 
-5. Actually there's a final dependency to install, for advcomp and pngcrush.
+5. Install gettext if you want gettext-backed code message catalogs and POT
+   generation.
+
+   ```sh
+   pacman -S mingw-w64-x86_64-gettext
+   ```
+
+6. Actually there's a final dependency to install, for advcomp and pngcrush.
    Technically they're optional but you'll get warnings (and, clearly, inflated
    image sizes) if you don't do this.
 
@@ -315,7 +333,7 @@ from within the MSYS2 Shell.
    pacman -S mingw-w64-x86_64-advancecomp
    ```
 
-6. To get the DCSS source, follow the steps in the [Getting The
+7. To get the DCSS source, follow the steps in the [Getting The
    Source](#getting-the-source) section above to clone DCSS into your MSYS2
    home directory. We recommend using the MSYS2-installed version of git for
    these steps. In brief:
@@ -327,7 +345,7 @@ from within the MSYS2 Shell.
     3. Run `cd crawl/crawl-ref/source`.
     4. Run `git submodule update --init`.
 
-7. Build DCSS by simply running:
+8. Build DCSS by simply running:
 
     ```sh
     # for the console build:
@@ -339,7 +357,7 @@ from within the MSYS2 Shell.
     If you want a debug build, add the target `debug` to the above commands (eg
     `make debug TILES=y`).
 
-8. When the build process finishes, you can run crawl.exe directly from the
+9. When the build process finishes, you can run crawl.exe directly from the
    source directory in the MSYS2 shell. For Tiles, type `./crawl.exe`, and for
    console, type `start crawl`, which will open DCSS in a new command.exe
    window (the Windows version of DCSS requires a command.exe shell and will
@@ -607,3 +625,9 @@ chat.
 
 You can also try [any of the community forums detailed in the
 README](../README.md#community).
+Install gettext along with the normal build dependencies if you want gettext
+runtime support and POT generation.
+
+```sh
+pacman -S mingw-w64-x86_64-gettext
+```

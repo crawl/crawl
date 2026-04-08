@@ -4652,7 +4652,7 @@ string do_mon_str_replacements(const string& in_msg, const monster& mons,
 
     if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
     {
-        mprf(MSGCH_DIAGNOSTICS, "Invalid @says@ type.");
+        mprfc(MSGCH_DIAGNOSTICS, "Invalid @says@ type.");
         msg = replace_all(msg, "@says@", "buggily says");
     }
     else

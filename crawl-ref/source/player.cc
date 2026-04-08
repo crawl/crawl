@@ -2520,7 +2520,7 @@ static void _handle_hp_drain(int exp)
     calc_hp();
 
     if (drain_removed)
-        mprf(MSGCH_RECOVERY, "Your life force feels restored.");
+        mprfc(MSGCH_RECOVERY, "Your life force feels restored.");
 }
 
 static void _handle_breath_recharge(int exp)
@@ -2544,7 +2544,7 @@ static void _handle_breath_recharge(int exp)
     {
         you.props.erase(DRACONIAN_BREATH_RECHARGE_KEY);
         gain_draconian_breath_uses(1);
-        mprf(MSGCH_DURATION, "You feel power welling in your lungs.");
+        mprfc(MSGCH_DURATION, "You feel power welling in your lungs.");
     }
 }
 
@@ -2559,7 +2559,7 @@ static void _handle_cacophony_recharge(int exp)
     if (you.props[CACOPHONY_XP_KEY].get_int() <= 0)
     {
         you.props.erase(CACOPHONY_XP_KEY);
-        mprf(MSGCH_DURATION, "You feel ready to make another cacophony.");
+        mprfc(MSGCH_DURATION, "You feel ready to make another cacophony.");
     }
 }
 
@@ -2577,7 +2577,7 @@ static void _handle_batform_recharge(int exp)
     if (you.props[BATFORM_XP_KEY].get_int() <= 0)
     {
         you.props.erase(BATFORM_XP_KEY);
-        mprf(MSGCH_DURATION, "You feel ready to scatter into bats once more.");
+        mprfc(MSGCH_DURATION, "You feel ready to scatter into bats once more.");
     }
 }
 
@@ -2595,7 +2595,7 @@ static void _handle_watery_grave_recharge(int exp)
     if (you.props[WATERY_GRAVE_XP_KEY].get_int() <= 0)
     {
         you.props.erase(WATERY_GRAVE_XP_KEY);
-        mprf(MSGCH_DURATION, "You feel ready to drown your foes once more.");
+        mprfc(MSGCH_DURATION, "You feel ready to drown your foes once more.");
     }
 }
 
@@ -2611,7 +2611,7 @@ static void _handle_banes(int exp)
         you.attribute[ATTR_DOOM] -= div_rand_round(loss, 60);
         if (you.attribute[ATTR_DOOM] <= 0)
         {
-            mprf(MSGCH_DURATION, "You feel the doom around you dissipate.");
+            mprfc(MSGCH_DURATION, "You feel the doom around you dissipate.");
             you.attribute[ATTR_DOOM] = 0;
         }
 
@@ -2742,7 +2742,7 @@ static bool _felid_extra_life()
         && you.lives < 2)
     {
         you.lives++;
-        mprf(MSGCH_INTRINSIC_GAIN, "Extra life!");
+        mprfc(MSGCH_INTRINSIC_GAIN, "Extra life!");
         you.attribute[ATTR_LIFE_GAINED] = you.max_level;
         // Should play the 1UP sound from SMB...
         return true;
@@ -2998,7 +2998,7 @@ void level_change(bool skip_attribute_increase)
 
         if (new_exp <= you.max_level)
         {
-            mprf(MSGCH_INTRINSIC_GAIN,
+            mprfc(MSGCH_INTRINSIC_GAIN,
                  "Welcome back to level %d!", new_exp);
 
             // No more prompts for this XL past this point.
@@ -3012,13 +3012,13 @@ void level_change(bool skip_attribute_increase)
             update_screen();
 
             if (new_exp == 27)
-                mprf(MSGCH_INTRINSIC_GAIN, "You have reached level 27, the final one!");
+                mprfc(MSGCH_INTRINSIC_GAIN, "You have reached level 27, the final one!");
             else if (new_exp == you.get_max_xl())
-                mprf(MSGCH_INTRINSIC_GAIN, "You have reached level %d, the highest you will ever reach!",
+                mprfc(MSGCH_INTRINSIC_GAIN, "You have reached level %d, the highest you will ever reach!",
                         you.get_max_xl());
             else
             {
-                mprf(MSGCH_INTRINSIC_GAIN, "You have reached level %d!",
+                mprfc(MSGCH_INTRINSIC_GAIN, "You have reached level %d!",
                      new_exp);
             }
 
@@ -3053,7 +3053,7 @@ void level_change(bool skip_attribute_increase)
             case SP_NAGA:
                 if (!(you.experience_level % 3))
                 {
-                    mprf(MSGCH_INTRINSIC_GAIN, "Your skin feels tougher.");
+                    mprfc(MSGCH_INTRINSIC_GAIN, "Your skin feels tougher.");
                     you.redraw_armour_class = true;
                 }
                 break;
@@ -3086,7 +3086,7 @@ void level_change(bool skip_attribute_increase)
 #ifdef USE_TILE
                     init_player_doll();
 #endif
-                    mprf(MSGCH_INTRINSIC_GAIN,
+                    mprfc(MSGCH_INTRINSIC_GAIN,
                          "Your scales start taking on %s colour.",
                          article_a(species::scale_type(you.species)).c_str());
 
@@ -3099,7 +3099,7 @@ void level_change(bool skip_attribute_increase)
                         const int newapt = species_apt(sk, you.species);
                         if (oldapt != newapt)
                         {
-                            mprf(MSGCH_INTRINSIC_GAIN, "You learn %s %s%s.",
+                            mprfc(MSGCH_INTRINSIC_GAIN, "You learn %s %s%s.",
                                  skill_name(sk),
                                  abs(oldapt - newapt) > 1 ? "much " : "",
                                  oldapt > newapt ? "slower" : "quicker");
@@ -3116,7 +3116,7 @@ void level_change(bool skip_attribute_increase)
 
                     // Tell the player about their new species
                     for (auto &mut : species::fake_mutations(you.species, false))
-                        mprf(MSGCH_INTRINSIC_GAIN, "%s", mut.c_str());
+                        mprfc(MSGCH_INTRINSIC_GAIN, "%s", mut.c_str());
 
                     gain_draconian_breath_uses(2);
 
@@ -3147,7 +3147,7 @@ void level_change(bool skip_attribute_increase)
                         {
                             if (you.experience_level == level)
                             {
-                                mprf(MSGCH_MUTATION, "You feel monstrous as "
+                                mprfc(MSGCH_MUTATION, "You feel monstrous as "
                                      "your demonic heritage exerts itself.");
                                 mark_milestone("monstrous", "discovered their "
                                                "monstrous ancestry!");
@@ -3171,7 +3171,7 @@ void level_change(bool skip_attribute_increase)
                     {
                         if (!gave_message)
                         {
-                            mprf(MSGCH_INTRINSIC_GAIN,
+                            mprfc(MSGCH_INTRINSIC_GAIN,
                                  "Your demonic ancestry asserts itself...");
 
                             gave_message = true;
@@ -3224,7 +3224,7 @@ void level_change(bool skip_attribute_increase)
 
         if (species::is_draconian(you.species) && !(you.experience_level % 3))
         {
-            mprf(MSGCH_INTRINSIC_GAIN, "Your scales feel tougher.");
+            mprfc(MSGCH_INTRINSIC_GAIN, "Your scales feel tougher.");
             you.redraw_armour_class = true;
         }
         if (!updated_maxhp)
@@ -3889,7 +3889,7 @@ void flush_mp()
         && you.magic_points < you.max_magic_points
                               * Options.magic_point_warning / 100)
     {
-        mprf(MSGCH_DANGER, "* * * LOW MAGIC WARNING * * *");
+        mprfc(MSGCH_DANGER, "* * * LOW MAGIC WARNING * * *");
     }
 
     take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
@@ -3902,7 +3902,7 @@ void flush_hp()
         && you.hp <= (you.hp_max * Options.hp_warning) / 100)
     {
         flash_view_delay(UA_HP, RED, 50);
-        mprf(MSGCH_DANGER, "* * * LOW HITPOINT WARNING * * *");
+        mprfc(MSGCH_DANGER, "* * * LOW HITPOINT WARNING * * *");
         dungeon_events.fire_event(DET_HP_WARNING);
     }
     you.redraw_hit_points = true;
@@ -4383,7 +4383,7 @@ void contaminate_player(int change, bool controlled, bool msg)
     {
         if (msg)
         {
-            mprf(player_harmful_contamination() ? MSGCH_WARN : MSGCH_PLAIN,
+            mprfc(player_harmful_contamination() ? MSGCH_WARN : MSGCH_PLAIN,
                  "%s", describe_contamination().c_str());
         }
         if (player_harmful_contamination())
@@ -4393,7 +4393,7 @@ void contaminate_player(int change, bool controlled, bool msg)
     {
         if (!player_harmful_contamination() && was_glowing)
         {
-            mprf(MSGCH_RECOVERY,
+            mprfc(MSGCH_RECOVERY,
                  "Your magical contamination has faded to a safe level.");
         }
 
@@ -4467,7 +4467,7 @@ bool confuse_player(int amount, bool quiet, bool force)
 
         if (!quiet)
         {
-            mprf(MSGCH_WARN, "You are %sconfused.",
+            mprfc(MSGCH_WARN, "You are %sconfused.",
                  old_value > 0 ? "more " : "");
         }
 
@@ -4516,10 +4516,10 @@ bool poison_player(int amount, string source, string source_aux, bool force)
     if (you.duration[DUR_POISONING] > old_value)
     {
         if (poison_is_lethal() && !was_fatal)
-            mprf(MSGCH_DANGER, "You are lethally poisoned!");
+            mprfc(MSGCH_DANGER, "You are lethally poisoned!");
         else
         {
-            mprf(MSGCH_WARN, "You are %spoisoned.",
+            mprfc(MSGCH_WARN, "You are %spoisoned.",
                 old_value > 0 ? "more " : "");
         }
 
@@ -4657,7 +4657,7 @@ void handle_player_poison(int delay)
         int oldhp = you.hp;
         ouch(dmg, KILLED_BY_POISON);
         if (you.hp < oldhp)
-            mprf(channel, "You feel %ssick.", adj);
+            mprfc(channel, "You feel %ssick.", adj);
     }
 
     // Now decrease the poison in our system
@@ -4680,7 +4680,7 @@ void reduce_player_poison(int amount)
         you.duration[DUR_POISONING] = 0;
         you.props.erase(POISONER_KEY);
         you.props.erase(POISON_AUX_KEY);
-        mprf(MSGCH_RECOVERY, "You are no longer poisoned.");
+        mprfc(MSGCH_RECOVERY, "You are no longer poisoned.");
     }
 
     you.redraw_hit_points = true;
@@ -4828,12 +4828,12 @@ bool sticky_flame_player(int intensity, int duration, string source, string sour
 
     if (you.duration[DUR_STICKY_FLAME] > 0)
     {
-        mprf(MSGCH_WARN, "You are even more covered in %sliquid fire!",
+        mprfc(MSGCH_WARN, "You are even more covered in %sliquid fire!",
                           intensity_str.c_str());
     }
     else
     {
-        mprf(MSGCH_WARN, "You are covered in %sliquid fire! Move or burn!",
+        mprfc(MSGCH_WARN, "You are covered in %sliquid fire! Move or burn!",
                          intensity_str.c_str());
     }
 
@@ -4849,7 +4849,7 @@ void dec_sticky_flame_player(int delay)
 
     if (feat_is_water(env.grid(you.pos())))
     {
-        mprf(MSGCH_RECOVERY, "You dip into the water, and the flames go out!");
+        mprfc(MSGCH_RECOVERY, "You dip into the water, and the flames go out!");
         end_sticky_flame_player();
         return;
     }
@@ -4857,7 +4857,7 @@ void dec_sticky_flame_player(int delay)
     int base_damage = roll_dice(2, you.props[STICKY_FLAME_POWER_KEY].get_int());
     int damage = resist_adjust_damage(&you, BEAM_FIRE, base_damage);
 
-    mprf(MSGCH_WARN, "The liquid fire burns you%s!",
+    mprfc(MSGCH_WARN, "The liquid fire burns you%s!",
          damage > base_damage ? " terribly" : "");
 
     damage = div_rand_round(damage * delay, BASELINE_DELAY);
@@ -4872,7 +4872,7 @@ void dec_sticky_flame_player(int delay)
 
     if (you.duration[DUR_STICKY_FLAME == 0])
     {
-        mprf(MSGCH_RECOVERY, "The liquid fire finally exhausts itself.");
+        mprfc(MSGCH_RECOVERY, "The liquid fire finally exhausts itself.");
         end_sticky_flame_player();
     }
 }
@@ -4894,7 +4894,7 @@ void shake_off_sticky_flame()
     // (20 aut is picked fairly arbitrarily to include even most slowed actions)
     if (dur <= 20)
     {
-        mprf(MSGCH_RECOVERY, "You shake off the liquid fire.");
+        mprfc(MSGCH_RECOVERY, "You shake off the liquid fire.");
         end_sticky_flame_player();
     }
     else
@@ -4950,9 +4950,9 @@ bool slow_player(int turns)
     else
     {
         if (you.duration[DUR_SLOW] == 0)
-            mprf(MSGCH_WARN, "You feel yourself slow down.");
+            mprfc(MSGCH_WARN, "You feel yourself slow down.");
         else
-            mprf(MSGCH_WARN, "You feel as though you will be slow longer.");
+            mprfc(MSGCH_WARN, "You feel as though you will be slow longer.");
 
         you.increase_duration(DUR_SLOW, turns, threshold);
         learned_something_new(HINT_YOU_ENCHANTED);
@@ -4985,7 +4985,7 @@ void dec_slow_player(int delay)
     {
         you.duration[DUR_SLOW] = 0;
         if (!have_stat_zero())
-            mprf(MSGCH_DURATION, "You feel yourself speed up.");
+            mprfc(MSGCH_DURATION, "You feel yourself speed up.");
     }
 }
 
@@ -5064,7 +5064,7 @@ void dec_berserk_recovery_player(int delay)
 
     if (you.duration[DUR_BERSERK_COOLDOWN] <= BASELINE_DELAY)
     {
-        mprf(MSGCH_DURATION, "You recover from your berserk rage.");
+        mprfc(MSGCH_DURATION, "You recover from your berserk rage.");
         you.duration[DUR_BERSERK_COOLDOWN] = 0;
     }
 }
@@ -5119,7 +5119,7 @@ void dec_haste_player(int delay)
         // message if we cross the threshold
         if (old_dur > threshold && you.duration[DUR_HASTE] <= threshold)
         {
-            mprf(MSGCH_DURATION, "Your extra speed is starting to run out.");
+            mprfc(MSGCH_DURATION, "Your extra speed is starting to run out.");
             if (coinflip())
                 you.duration[DUR_HASTE] -= BASELINE_DELAY;
         }
@@ -5127,7 +5127,7 @@ void dec_haste_player(int delay)
     else if (you.duration[DUR_HASTE] <= BASELINE_DELAY)
     {
         if (!you.duration[DUR_BERSERK])
-            mprf(MSGCH_DURATION, "You feel yourself slow down.");
+            mprfc(MSGCH_DURATION, "You feel yourself slow down.");
         you.duration[DUR_HASTE] = 0;
     }
 }
@@ -5314,7 +5314,7 @@ void fly_player(int pow, bool already_flying)
 
     bool standing = !you.airborne() && !already_flying;
     if (!already_flying)
-        mprf(MSGCH_DURATION, "You feel %s buoyant.", standing ? "very" : "more");
+        mprfc(MSGCH_DURATION, "You feel %s buoyant.", standing ? "very" : "more");
 
     you.increase_duration(DUR_FLIGHT, 25 + random2(pow), 100);
 
@@ -7506,7 +7506,7 @@ void player::petrify(const actor *who, bool force)
         props.erase(DISABLED_BY_KEY);
 
     redraw_evasion = true;
-    mprf(MSGCH_WARN, "You are slowing down.");
+    mprfc(MSGCH_WARN, "You are slowing down.");
 }
 
 bool player::fully_petrify(bool /*quiet*/)
@@ -7540,9 +7540,9 @@ bool player::vex(const actor* who, int dur, string source, string special_msg)
         return false;
 
     if (!special_msg.empty())
-        mprf(MSGCH_WARN, "You %s", special_msg.c_str());
+        mprfc(MSGCH_WARN, "You %s", special_msg.c_str());
     else
-        mprf(MSGCH_WARN, "You feel overwhelmed by frustration!");
+        mprfc(MSGCH_WARN, "You feel overwhelmed by frustration!");
     you.duration[DUR_VEXED] = dur * BASELINE_DELAY;
 
     const bool use_actor_name = source.empty() && who != nullptr;
@@ -8023,7 +8023,7 @@ bool player::doom(int amount)
     if (you.attribute[ATTR_DOOM] >= 100)
     {
         you.attribute[ATTR_DOOM] = 0;
-        mprf(MSGCH_WARN, "Doom befalls you....");
+        mprfc(MSGCH_WARN, "Doom befalls you....");
         add_bane();
         return true;
     }
@@ -8138,7 +8138,7 @@ void player::wake_up(bool break_sleep, bool break_daze)
     {
         duration[DUR_SLEEP] = 0;
         give_stun_immunity(random_range(3, 5));
-        mprf(MSGCH_RECOVERY, "You wake up.");
+        mprfc(MSGCH_RECOVERY, "You wake up.");
         flash_view(UA_MONSTER, BLACK);
         redraw_armour_class = true;
         redraw_evasion = true;
@@ -8149,7 +8149,7 @@ void player::wake_up(bool break_sleep, bool break_daze)
     {
         duration[DUR_DAZED] = 0;
         give_stun_immunity(1);
-        mprf(MSGCH_RECOVERY, "You snap out of your daze.");
+        mprfc(MSGCH_RECOVERY, "You snap out of your daze.");
     }
 }
 
@@ -8398,7 +8398,7 @@ void player::sentinel_mark(bool trap)
     }
     else
     {
-        mprf(MSGCH_WARN, "A sentinel's mark forms upon you.");
+        mprfc(MSGCH_WARN, "A sentinel's mark forms upon you.");
         increase_duration(DUR_SENTINEL_MARK, trap ? random_range(25, 40)
                                                   : random_range(35, 60),
                           250);
@@ -8450,9 +8450,9 @@ bool player::made_nervous_by(const monster *mons)
 void player::weaken(const actor */*attacker*/, int pow)
 {
     if (!duration[DUR_WEAK])
-        mprf(MSGCH_WARN, "You feel your attacks grow feeble.");
+        mprfc(MSGCH_WARN, "You feel your attacks grow feeble.");
     else
-        mprf(MSGCH_WARN, "You feel as though you will be weak longer.");
+        mprfc(MSGCH_WARN, "You feel as though you will be weak longer.");
 
     increase_duration(DUR_WEAK, pow + random2(pow + 3), 50);
 }
@@ -8460,9 +8460,9 @@ void player::weaken(const actor */*attacker*/, int pow)
 void player::diminish(const actor */*attacker*/, int pow)
 {
     if (!duration[DUR_DIMINISHED_SPELLS])
-        mprf(MSGCH_WARN, "You feel your spells grow feeble.");
+        mprfc(MSGCH_WARN, "You feel your spells grow feeble.");
     else
-        mprf(MSGCH_WARN, "You feel as though your spells will be weakened for longer.");
+        mprfc(MSGCH_WARN, "You feel as though your spells will be weakened for longer.");
 
     increase_duration(DUR_DIMINISHED_SPELLS, pow + random2(pow + 3), 50);
 }
@@ -8485,7 +8485,7 @@ bool player::drain_magic(actor */*attacker*/, int pow)
     if (!amount)
         return false;
 
-    mprf(MSGCH_WARN, "You feel your power leaking away.");
+    mprfc(MSGCH_WARN, "You feel your power leaking away.");
     drain_mp(amount);
     return true;
 }
@@ -8507,7 +8507,7 @@ void player::vitrify(const actor* /*attacker*/, int dur, bool quiet)
     if (!quiet)
     {
         if (!you.duration[DUR_VITRIFIED])
-            mprf(MSGCH_WARN, "Your body becomes as fragile as glass!");
+            mprfc(MSGCH_WARN, "Your body becomes as fragile as glass!");
         else
             mpr("You feel your fragility will last longer.");
     }
@@ -8528,7 +8528,7 @@ bool player::floodify(const actor* attacker, int dur, const char* substance)
     props[WATER_HOLDER_KEY].get_int() = attacker->mid;
     props[WATER_HOLDER_NAME_KEY] = attacker->name(DESC_A, true);
 
-    mprf(MSGCH_WARN, "%s floods into your lungs!", substance);
+    mprfc(MSGCH_WARN, "%s floods into your lungs!", substance);
 
     return true;
 }
@@ -8890,20 +8890,20 @@ void player_open_door(coord_def doorpos)
                     berserk_open += " " + berserk_adjective;
                 else
                     berserk_open += ".";
-                mprf(MSGCH_SOUND, berserk_open.c_str(), adj, noun);
+                mprfc(MSGCH_SOUND, berserk_open.c_str(), adj, noun);
             }
             else
-                mprf(MSGCH_SOUND, "The %s%s flies open with a bang!", adj, noun);
+                mprfc(MSGCH_SOUND, "The %s%s flies open with a bang!", adj, noun);
             noisy(15, you.pos());
         }
     }
     else if (one_chance_in(skill) && !silenced(you.pos()))
     {
         if (!door_open_creak.empty())
-            mprf(MSGCH_SOUND, door_open_creak.c_str(), adj, noun);
+            mprfc(MSGCH_SOUND, door_open_creak.c_str(), adj, noun);
         else
         {
-            mprf(MSGCH_SOUND, "As you open the %s%s, it creaks loudly!",
+            mprfc(MSGCH_SOUND, "As you open the %s%s, it creaks loudly!",
                  adj, noun);
         }
         noisy(10, you.pos());
@@ -9060,11 +9060,11 @@ void player_close_door(coord_def doorpos)
                     berserk_close += " " + berserk_adjective;
                 else
                     berserk_close += ".";
-                mprf(MSGCH_SOUND, berserk_close.c_str(), adj, noun);
+                mprfc(MSGCH_SOUND, berserk_close.c_str(), adj, noun);
             }
             else
             {
-                mprf(MSGCH_SOUND, "You slam the %s%s shut with a bang%s!",
+                mprfc(MSGCH_SOUND, "You slam the %s%s shut with a bang%s!",
                                   adj, noun, items_msg);
             }
 
@@ -9074,10 +9074,10 @@ void player_close_door(coord_def doorpos)
     else if (one_chance_in(skill) && !silenced(you.pos()))
     {
         if (!door_close_creak.empty())
-            mprf(MSGCH_SOUND, door_close_creak.c_str(), adj, noun);
+            mprfc(MSGCH_SOUND, door_close_creak.c_str(), adj, noun);
         else
         {
-            mprf(MSGCH_SOUND, "As you close the %s%s%s, it creaks loudly!",
+            mprfc(MSGCH_SOUND, "As you close the %s%s%s, it creaks loudly!",
                               adj, noun, items_msg);
         }
 
@@ -9192,7 +9192,7 @@ int player::inaccuracy() const
 void player_end_berserk()
 {
     if (!you.duration[DUR_PARALYSIS] && !you.petrified())
-        mprf(MSGCH_WARN, "You are exhausted.");
+        mprfc(MSGCH_WARN, "You are exhausted.");
 
     you.berserk_penalty = 0;
 
@@ -9355,7 +9355,7 @@ void trickster_trigger(const monster& victim, enchant_type ench)
     if (!you.props.exists(TRICKSTER_POW_KEY))
     {
         you.props[TRICKSTER_POW_KEY].get_int() = 0;
-        mprf(MSGCH_DURATION, "You feel bolstered by spreading misfortune.");
+        mprfc(MSGCH_DURATION, "You feel bolstered by spreading misfortune.");
     }
 
     // Start the bonus off at meaningful level, but give less for each effect
@@ -9472,7 +9472,7 @@ bool player::immune_to_hex(const spell_type hex) const
 void player::be_agile(int pow)
 {
     const bool were_agile = you.duration[DUR_AGILITY] > 0;
-    mprf(MSGCH_DURATION, "You feel %sagile all of a sudden.",
+    mprfc(MSGCH_DURATION, "You feel %sagile all of a sudden.",
          were_agile ? "more " : "");
 
     you.increase_duration(DUR_AGILITY, 35 + random2(pow), 80);

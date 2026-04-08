@@ -209,7 +209,7 @@ map_lua_marker::map_lua_marker(const lua_datum &fn)
     lua_stack_cleaner clean(dlua);
     fn.push();
     if (fn.is_function() && !dlua.callfn("dgn_run_map", 1, 1))
-        mprf(MSGCH_ERROR, "lua_marker exec error: %s", dlua.error.c_str());
+        mprfc(MSGCH_ERROR, "lua_marker exec error: %s", dlua.error.c_str());
     else
         check_register_table();
 }
@@ -222,15 +222,15 @@ map_lua_marker::map_lua_marker(const string &s, const string &,
     if (mapdef_marker)
     {
         if (dlua.loadstring(("return " + s).c_str(), "lua_marker"))
-            mprf(MSGCH_ERROR, "lua_marker load error: %s", dlua.error.c_str());
+            mprfc(MSGCH_ERROR, "lua_marker load error: %s", dlua.error.c_str());
         if (!dlua.callfn("dgn_run_map", 1, 1))
-            mprf(MSGCH_ERROR, "lua_marker exec error: %s", dlua.error.c_str());
+            mprfc(MSGCH_ERROR, "lua_marker exec error: %s", dlua.error.c_str());
     }
     else
     {
         if (dlua.execstring(("return " + s).c_str(), "lua_marker_mapless", 1))
         {
-            mprf(MSGCH_ERROR, "lua_marker_mapless exec error: %s",
+            mprfc(MSGCH_ERROR, "lua_marker_mapless exec error: %s",
                  dlua.error.c_str());
         }
     }
@@ -254,7 +254,7 @@ void map_lua_marker::check_register_table()
 {
     if (!lua_istable(dlua, -1))
     {
-        mprf(MSGCH_ERROR, "lua_marker: Expected table, didn't get it.");
+        mprfc(MSGCH_ERROR, "lua_marker: Expected table, didn't get it.");
         initialised = false;
         return;
     }
@@ -283,7 +283,7 @@ void map_lua_marker::write(writer &outf) const
     bool lua_init = initialised;
     if (!get_table())
     {
-        mprf(MSGCH_ERROR, "Couldn't find table.");
+        mprfc(MSGCH_ERROR, "Couldn't find table.");
         lua_init = false;
     }
 
@@ -360,7 +360,7 @@ bool map_lua_marker::callfn(const char *fn, bool warn_err, int args) const
     }
     const bool res = dlua.callfn("dlua_marker_method", args, 1);
     if (!res && warn_err)
-        mprf(MSGCH_ERROR, "mlua error: %s", dlua.error.c_str());
+        mprfc(MSGCH_ERROR, "mlua error: %s", dlua.error.c_str());
     return res;
 }
 
@@ -386,7 +386,7 @@ bool map_lua_marker::notify_dgn_event(const dgn_event &e)
     clua_push_dgn_event(dlua, &e);
     if (!dlua.callfn("dlua_marker_method", 4, 1))
     {
-        mprf(MSGCH_ERROR, "notify_dgn_event: Lua error: %s",
+        mprfc(MSGCH_ERROR, "notify_dgn_event: Lua error: %s",
              dlua.error.c_str());
 
         // Lua error prevents veto if the event is vetoable.
@@ -426,7 +426,7 @@ string map_lua_marker::property(const string &pname) const
     lua_pushstring(dlua, pname.c_str());
     if (!callfn("property", false, 4))
     {
-        mprf(MSGCH_ERROR, "Lua marker property (%s) error: %s",
+        mprfc(MSGCH_ERROR, "Lua marker property (%s) error: %s",
              pname.c_str(), dlua.error.c_str());
         return make_stringf("error (prop:%s): %s",
                             pname.c_str(), dlua.error.c_str());

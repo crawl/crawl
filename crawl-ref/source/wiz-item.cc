@@ -75,7 +75,7 @@ static void _make_all_books()
 void wizard_create_spec_object_by_name()
 {
     char buf[1024];
-    mprf(MSGCH_PROMPT, "Enter name of item (or ITEM spec): ");
+    mprfc(MSGCH_PROMPT, "Enter name of item (or ITEM spec): ");
     if (cancellable_get_line_autohist(buf, sizeof buf) || !*buf)
     {
         canned_msg(MSG_OK);
@@ -86,7 +86,7 @@ void wizard_create_spec_object_by_name()
     create_item_named(buf, you.pos(), &error);
     if (!error.empty())
     {
-        mprf(MSGCH_ERROR, "Error: %s", error.c_str());
+        mprfc(MSGCH_ERROR, "Error: %s", error.c_str());
         return;
     }
     id_floor_items();
@@ -231,7 +231,7 @@ static void _tweak_randart(item_def &item)
 {
     if (item_is_equipped(item))
     {
-        mprf(MSGCH_PROMPT, "You can't tweak the randart properties of an equipped item.");
+        mprfc(MSGCH_PROMPT, "You can't tweak the randart properties of an equipped item.");
         return;
     }
     else
@@ -269,7 +269,7 @@ static void _tweak_randart(item_def &item)
     switch (artp_value_type(prop))
     {
     case ARTP_VAL_BOOL:
-        mprf(MSGCH_PROMPT, "Toggling %s to %s.", artp_name(prop),
+        mprfc(MSGCH_PROMPT, "Toggling %s to %s.", artp_name(prop),
              props[prop] ? "off" : "on");
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              !props[prop]);
@@ -277,12 +277,12 @@ static void _tweak_randart(item_def &item)
 
     case ARTP_VAL_POS:
     {
-        mprf(MSGCH_PROMPT, "%s was %d.", artp_name(prop), props[prop]);
+        mprfc(MSGCH_PROMPT, "%s was %d.", artp_name(prop), props[prop]);
         const int val = prompt_for_int("New value? ", true);
 
         if (val < 0)
         {
-            mprf(MSGCH_PROMPT, "Value for %s must be non-negative",
+            mprfc(MSGCH_PROMPT, "Value for %s must be non-negative",
                  artp_name(prop));
             return;
         }
@@ -292,7 +292,7 @@ static void _tweak_randart(item_def &item)
     }
     case ARTP_VAL_ANY:
     {
-        mprf(MSGCH_PROMPT, "%s was %d.", artp_name(prop), props[prop]);
+        mprfc(MSGCH_PROMPT, "%s was %d.", artp_name(prop), props[prop]);
         const int val = prompt_for_int("New value? ", false);
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              val);
@@ -301,7 +301,7 @@ static void _tweak_randart(item_def &item)
 
     case ARTP_VAL_BRAND:
     {
-        mprf(MSGCH_PROMPT, "%s was %s.", artp_name(prop),
+        mprfc(MSGCH_PROMPT, "%s was %s.", artp_name(prop),
              props[prop] ? ego_type_string(item, false).c_str() : "normal");
 
         char specs[80];
@@ -437,7 +437,7 @@ static bool _make_book_randart(item_def &book)
 
     do
     {
-        mprf(MSGCH_PROMPT, "Make book fixed [t]heme or fixed [l]evel? ");
+        mprfc(MSGCH_PROMPT, "Make book fixed [t]heme or fixed [l]evel? ");
         type = toalower(getch_ck());
     }
     while (type != 't' && type != 'l');
@@ -511,7 +511,7 @@ void wizard_create_all_artefacts(bool override_unique)
             islot = items(true, entry->base_type, 0, 0, -index, -1);
             if (islot == NON_ITEM)
             {
-                mprf(MSGCH_ERROR, "Failed to generate item for '%s'",
+                mprfc(MSGCH_ERROR, "Failed to generate item for '%s'",
                     entry->name);
                 continue;
             }
@@ -522,7 +522,7 @@ void wizard_create_all_artefacts(bool override_unique)
         if (!is_artefact(item))
         {
             // for now, staves are ok...
-            mprf(item.base_type == OBJ_STAVES ? MSGCH_DIAGNOSTICS : MSGCH_ERROR,
+            mprfc(item.base_type == OBJ_STAVES ? MSGCH_DIAGNOSTICS : MSGCH_ERROR,
                 "Made non-artefact '%s' when trying to make '%s'",
                 item.name(DESC_A).c_str(), entry->name);
         }
@@ -601,7 +601,7 @@ void wizard_make_object_randart()
         item.props.clear();
     }
 
-    mprf(MSGCH_PROMPT, "Fake item as gift from which god (ENTER to leave alone): ");
+    mprfc(MSGCH_PROMPT, "Fake item as gift from which god (ENTER to leave alone): ");
     char name[80];
     if (!cancellable_get_line(name, sizeof(name)) && name[0])
     {
@@ -788,7 +788,7 @@ static void _debug_acquirement_stats()
     FILE *ostat = fopen_u("acquirement_stats.txt", "a");
     if (!ostat)
     {
-        mprf(MSGCH_ERROR, "Can't write to acquirement_stats.txt: %s",
+        mprfc(MSGCH_ERROR, "Can't write to acquirement_stats.txt: %s",
                 strerror(errno));
         return;
     }
@@ -1122,7 +1122,7 @@ static int _median(vector<int> &counts)
 static void _debug_randart_stats()
 {
     char buf[1024];
-    mprf(MSGCH_PROMPT, "Enter name of item (or ITEM spec): ");
+    mprfc(MSGCH_PROMPT, "Enter name of item (or ITEM spec): ");
     if (cancellable_get_line_autohist(buf, sizeof buf) || !*buf)
     {
         canned_msg(MSG_OK);
@@ -1133,7 +1133,7 @@ static void _debug_randart_stats()
     const string err = ilist.add_item(buf, false);
     if (!err.empty())
     {
-        mprf(MSGCH_ERROR, "Error: %s", err.c_str());
+        mprfc(MSGCH_ERROR, "Error: %s", err.c_str());
         return;
     }
 
@@ -1171,7 +1171,7 @@ static void _debug_randart_stats()
     FILE *ostat = fopen_u("randart_stats.txt", "a");
     if (!ostat)
     {
-        mprf(MSGCH_ERROR, "Can't write to randart_stats.txt: %s",
+        mprfc(MSGCH_ERROR, "Can't write to randart_stats.txt: %s",
                 strerror(errno));
         return;
     }
@@ -1202,7 +1202,7 @@ static void _debug_randart_stats()
 
         if (ind == NON_ITEM)
         {
-            mprf(MSGCH_ERROR, "Unable to make artefact from '%s'", buf);
+            mprfc(MSGCH_ERROR, "Unable to make artefact from '%s'", buf);
             return;
         }
 

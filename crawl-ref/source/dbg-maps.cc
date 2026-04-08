@@ -91,7 +91,7 @@ static bool _do_build_level()
     msg::suppress mx;
     if (kbhit() && key_is_escape(getch_ck()))
     {
-        mprf(MSGCH_WARN, "User requested cancel");
+        mprfc(MSGCH_WARN, "User requested cancel");
         return false;
     }
 
@@ -171,7 +171,7 @@ static bool _do_build_level()
         dump_map(fp, true);
         fclose(fp);
 
-        mprf(MSGCH_ERROR,
+        mprfc(MSGCH_ERROR,
              "Bad (disconnected) level on %s%s",
              level_id::current().describe().c_str(),
              vaults.c_str());

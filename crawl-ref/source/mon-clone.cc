@@ -215,7 +215,7 @@ int mons_summon_illusion_from(monster* mons, actor *foe,
             if (card_power >= 0)
                 mpr("Suddenly you stand beside yourself.");
             else
-                mprf(MSGCH_WARN, "There is a horrible, sudden wrenching feeling in your soul!");
+                mprfc(MSGCH_WARN, "There is a horrible, sudden wrenching feeling in your soul!");
 
             get_monster_data(MONS_PLAYER_ILLUSION)->holiness = you.holiness();
             _mons_load_player_enchantments(mons, clone);

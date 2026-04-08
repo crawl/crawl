@@ -282,7 +282,7 @@ void handle_wizard_command()
 
     if (you.suppress_wizard)
     {
-        mprf(MSGCH_WARN, "Re-activating wizard mode.");
+        mprfc(MSGCH_WARN, "Re-activating wizard mode.");
         you.wizard = true;
         you.suppress_wizard = false;
 #ifdef USE_TILE_LOCAL
@@ -299,11 +299,11 @@ void handle_wizard_command()
     }
     else if (!you.wizard)
     {
-        mprf(MSGCH_WARN, "WARNING: ABOUT TO ENTER WIZARD MODE!");
+        mprfc(MSGCH_WARN, "WARNING: ABOUT TO ENTER WIZARD MODE!");
 
 #ifndef SCORE_WIZARD_CHARACTERS
         if (!you.explore)
-            mprf(MSGCH_WARN, "If you continue, your game will not be scored!");
+            mprfc(MSGCH_WARN, "If you continue, your game will not be scored!");
 #endif
 
         if (!confirm_prompt("wiz", "Do you really want to enter wizard mode?"))
@@ -336,7 +336,7 @@ void handle_wizard_command()
     }
 
     {
-        mprf(MSGCH_PROMPT, "Enter Wizard Command (? - help): ");
+        mprfc(MSGCH_PROMPT, "Enter Wizard Command (? - help): ");
         cursor_control con(true);
         wiz_command = getchm();
         if (wiz_command == '*')
@@ -386,12 +386,12 @@ void enter_explore_mode()
         handle_wizard_command();
     else if (!you.explore)
     {
-        mprf(MSGCH_WARN, "WARNING: ABOUT TO ENTER EXPLORE MODE!");
+        mprfc(MSGCH_WARN, "WARNING: ABOUT TO ENTER EXPLORE MODE!");
         mpr("In explore mode, death is optional.");
         mpr("Once you set a character to explore mode, you can't switch back.");
 
 #ifndef SCORE_WIZARD_CHARACTERS
-        mprf(MSGCH_WARN, "If you continue, your game will not be scored!");
+        mprfc(MSGCH_WARN, "If you continue, your game will not be scored!");
 #endif
 
         if (!confirm_prompt("explore", "Do you really want to enter explore mode?"))

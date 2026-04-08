@@ -166,9 +166,9 @@ static bool _decrement_a_duration(duration_type dur, int delay,
             if (you.duration[dur] <= 0)
                 you.duration[dur] = 1;
             if (need_expiration_warning(dur))
-                mprf(MSGCH_DANGER, "Careful! %s", expmsg);
+                mprfc(MSGCH_DANGER, "Careful! %s", expmsg);
             else
-                mprf(chan, "%s", expmsg);
+                mprfc(chan, "%s", expmsg);
         }
     }
 
@@ -176,7 +176,7 @@ static bool _decrement_a_duration(duration_type dur, int delay,
     {
         you.duration[dur] = 0;
         if (endmsg && *endmsg != '\0')
-            mprf(chan, "%s", endmsg);
+            mprfc(chan, "%s", endmsg);
         return true;
     }
 
@@ -197,7 +197,7 @@ static void _decrement_petrification(int delay)
                                             "flesh" :
                                             get_form()->flesh_equivalent;
 
-        mprf(MSGCH_DURATION, "You turn to %s%s.",
+        mprfc(MSGCH_DURATION, "You turn to %s%s.",
              flesh_equiv.c_str(),
              you.paralysed() ? "" : " and can act again");
     }
@@ -253,7 +253,7 @@ static void _decrement_paralysis(int delay)
 
     you.give_stun_immunity(random_range(1, 3));
 
-    mprf(MSGCH_DURATION, "You can act again.");
+    mprfc(MSGCH_DURATION, "You can act again.");
     you.redraw_armour_class = true;
     you.redraw_evasion = true;
 }
@@ -270,7 +270,7 @@ static void _maybe_melt_armour()
     if (you.props.exists(MELT_ARMOUR_KEY))
     {
         you.props.erase(MELT_ARMOUR_KEY);
-        mprf(MSGCH_DURATION, "The heat melts your icy armour.");
+        mprfc(MSGCH_DURATION, "The heat melts your icy armour.");
     }
 }
 
@@ -564,7 +564,7 @@ void player_reacts_to_monsters()
         && !there_are_monsters_nearby(true, true, false))
     {
         if (_decrement_a_duration(DUR_STARDUST_COOLDOWN, you.time_taken))
-            mprf(MSGCH_DURATION, "Your orb has finished recharging its magic.");
+            mprfc(MSGCH_DURATION, "Your orb has finished recharging its magic.");
     }
 
 
@@ -610,7 +610,7 @@ static bool _check_recite()
         || you.petrified()
         || you.berserk())
     {
-        mprf(MSGCH_DURATION, "Your recitation is interrupted.");
+        mprfc(MSGCH_DURATION, "Your recitation is interrupted.");
         you.duration[DUR_RECITE] = 0;
         you.set_duration(DUR_RECITE_COOLDOWN, 1 + random2(10) + random2(30));
         return false;
@@ -650,7 +650,7 @@ static void _handle_recitation(int step)
             if (!closure.empty())
                 speech << ' ' << closure;
         }
-        mprf(MSGCH_DURATION, "You finish reciting %s", speech.str().c_str());
+        mprfc(MSGCH_DURATION, "You finish reciting %s", speech.str().c_str());
         you.set_duration(DUR_RECITE_COOLDOWN, 1 + random2(10) + random2(30));
     }
 }
@@ -711,7 +711,7 @@ static void _handle_trickster_decay(int delay)
     if (stacks <= 0)
     {
         you.props.erase(TRICKSTER_POW_KEY);
-        mprf(MSGCH_DURATION, "You feel your existence waver again.");
+        mprfc(MSGCH_DURATION, "You feel your existence waver again.");
     }
 
     if (reduction > 0)
@@ -821,10 +821,10 @@ static void _decrement_durations()
         gain_piety(1, 1);
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE) || defined(DEBUG_PIETY)
-        mprf(MSGCH_DIAGNOSTICS, "Piety increases by 1 due to piety pool.");
+        mprfc(MSGCH_DIAGNOSTICS, "Piety increases by 1 due to piety pool.");
 
         if (you.duration[DUR_PIETY_POOL] == 0)
-            mprf(MSGCH_DIAGNOSTICS, "Piety pool is now empty.");
+            mprfc(MSGCH_DIAGNOSTICS, "Piety pool is now empty.");
 #endif
     }
 
@@ -846,7 +846,7 @@ static void _decrement_durations()
     {
         if (you.pos() != you.props[FORTRESS_BLAST_POS_KEY].get_coord())
         {
-            mprf(MSGCH_DURATION, "Your fortress blast dissipates harmlessly.");
+            mprfc(MSGCH_DURATION, "Your fortress blast dissipates harmlessly.");
             you.duration[DUR_FORTRESS_BLAST_TIMER] = 0;
         }
         else
@@ -912,13 +912,13 @@ static void _decrement_durations()
             you.duration[DUR_FLOODED] = 0;
         else if (_decrement_a_duration(DUR_FLOODED, delay))
         {
-            mprf(MSGCH_RECOVERY, "You finish coughing all the %s out of your lungs.",
+            mprfc(MSGCH_RECOVERY, "You finish coughing all the %s out of your lungs.",
                  you.props[WATER_HOLD_SUBSTANCE_KEY].get_string().c_str());
             you.duration[DUR_FLOODED_IMMUNITY] = you.time_taken + 1;
         }
         else
         {
-            mprf(MSGCH_WARN, "Your lungs strain for air.");
+            mprfc(MSGCH_WARN, "Your lungs strain for air.");
             const int dmg = roll_dice(2, 5);
             ouch(div_rand_round(dmg * delay, BASELINE_DELAY), KILLED_BY_WATER,
                                                 you.props[WATER_HOLDER_KEY].get_int());
@@ -1037,7 +1037,7 @@ static void _decrement_durations()
         }
         if (!found)
         {
-            mprf(MSGCH_DURATION, "As the last of your armour is driven back to "
+            mprfc(MSGCH_DURATION, "As the last of your armour is driven back to "
                   "you, your cacophony ends.");
             you.duration[DUR_CACOPHONY] = 0;
         }
@@ -1057,7 +1057,7 @@ static void _decrement_durations()
 
     if (you.duration[DUR_CELEBRANT_COOLDOWN] && you.hp == you.hp_max)
     {
-        mprf(MSGCH_DURATION, "You are ready to perform a blood rite again.");
+        mprfc(MSGCH_DURATION, "You are ready to perform a blood rite again.");
         you.duration[DUR_CELEBRANT_COOLDOWN] = 0;
     }
 
@@ -1066,20 +1066,20 @@ static void _decrement_durations()
         // Don't print it the message if the mutation is lost
         // before the cooldown wears off.
         if (you.get_mutation_level(MUT_TIME_WARPED_BLOOD))
-            mprf(MSGCH_DURATION, "Your time-warped blood is ready to ripple again.");
+            mprfc(MSGCH_DURATION, "Your time-warped blood is ready to ripple again.");
 
         you.duration[DUR_TIME_WARPED_BLOOD_COOLDOWN] = 0;
     }
 
     if (you.duration[DUR_HIVE_COOLDOWN] && you.hp == you.hp_max)
     {
-        mprf(MSGCH_DURATION, "The buzzing within you returns to its normal rhythm.");
+        mprfc(MSGCH_DURATION, "The buzzing within you returns to its normal rhythm.");
         you.duration[DUR_HIVE_COOLDOWN] = 0;
     }
 
     if (you.duration[DUR_MEDUSA_COOLDOWN] && you.hp == you.hp_max)
     {
-        mprf(MSGCH_DURATION, "You feel your defenses recover.");
+        mprfc(MSGCH_DURATION, "You feel your defenses recover.");
         you.duration[DUR_MEDUSA_COOLDOWN] = 0;
     }
 
@@ -1088,7 +1088,7 @@ static void _decrement_durations()
 
     if (you.duration[DUR_EELJOLT_COOLDOWN] && you.hp == you.hp_max)
     {
-        mprf(MSGCH_DURATION, "Your %s have fully recharged.", you.hand_name(true).c_str());
+        mprfc(MSGCH_DURATION, "Your %s have fully recharged.", you.hand_name(true).c_str());
         you.duration[DUR_EELJOLT_COOLDOWN] = 0;
     }
 
@@ -1283,7 +1283,7 @@ static void _do_eel_flavour_msg()
 
     msg = replace_all(msg, "@skin@", species::skin_name(you.species).c_str());
 
-    mprf(MSGCH_TALK, "%s", msg.c_str());
+    mprfc(MSGCH_TALK, "%s", msg.c_str());
 }
 
 void player_reacts()

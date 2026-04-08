@@ -40,7 +40,7 @@ namespace opengl
         glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
         if (width > max_texture_size || height > max_texture_size)
         {
-            mprf(MSGCH_ERROR,
+            mprfc(MSGCH_ERROR,
                 "Texture %s is bigger than maximum driver texture size "
                 "(%d,%d vs. %d). Sprites from this texture will not display "
                 "properly.",
@@ -95,7 +95,7 @@ namespace opengl
                 errors = true;
                 if (e == GL_OUT_OF_MEMORY)
                     fatal = true;
-                mprf(MSGCH_ERROR, "OpenGL error %s",
+                mprfc(MSGCH_ERROR, "OpenGL error %s",
                                         _gl_error_to_string(e).c_str());
             }
         } while (e != GL_NO_ERROR);

@@ -22,7 +22,7 @@
     <ProjectName>SDL2_image</ProjectName>
     <ProjectGuid>{2BD5534E-00E2-4BEA-AC96-D9A92EA24696}</ProjectGuid>
     <RootNamespace>SDL2_image</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(WindowsTargetPlatformVersion)'==''">10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="Common.props" />

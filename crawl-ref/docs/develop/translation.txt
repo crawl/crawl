@@ -1,6 +1,23 @@
 Guide to translating and improving Crawl's text
 ===============================================
 
+Code message gettext support
+============================
+
+Some player-facing code strings now extract through gettext.
+
+- Boundary APIs covered by gettext: `mprf`, `mprfc`, `mprfcp`, the matching
+  `*_nocap` / `*_nojoin` variants, `mpr` string literals, `yesno`, and
+  `formatted_string` string literals.
+- These strings are extracted into `crawl-ref/source/po/crawl-data.pot`.
+- Translations for these code strings should go into `crawl-ref/source/po/*.po`.
+- Rebuild the POT with `make -C crawl-ref/source i18n-pot`.
+- Compile catalogs with `make -C crawl-ref/source i18n-compile`.
+
+This is only for code literals routed through those APIs. `source/dat/descript`
+and `source/dat/database` still use the existing data-file translation workflow
+described below.
+
 Text Improvement
 ================
 

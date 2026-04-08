@@ -649,7 +649,7 @@ bool SDLWrapper::set_window_icon(const char* icon_name)
     string icon_path = datafile_path(icon_name, false, true);
     if (!icon_path.size())
     {
-        mprf(MSGCH_ERROR, "Unable to find window icon '%s'", icon_name);
+        mprfc(MSGCH_ERROR, "Unable to find window icon '%s'", icon_name);
         return false;
     }
 
@@ -660,7 +660,7 @@ bool SDLWrapper::set_window_icon(const char* icon_name)
         __android_log_print(ANDROID_LOG_INFO, "Crawl",
                             "Failed to load icon: %s", SDL_GetError());
 #endif
-        mprf(MSGCH_ERROR, "Failed to load icon '%s': %s\n", icon_path.c_str(),
+        mprfc(MSGCH_ERROR, "Failed to load icon '%s': %s\n", icon_path.c_str(),
                                                                 SDL_GetError());
         return false;
     }

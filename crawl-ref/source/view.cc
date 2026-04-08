@@ -1056,7 +1056,7 @@ static void _config_layers_menu()
     {
         viewwindow();
         update_screen();
-        mprf(MSGCH_PROMPT, "Select layers to display:\n"
+        mprfc(MSGCH_PROMPT, "Select layers to display:\n"
                            "<%s>(m)onsters</%s>|"
                            "<%s>(p)layer</%s>|"
                            "<%s>(i)tems</%s>|"
@@ -1083,7 +1083,7 @@ static void _config_layers_menu()
            _layers & Layer::MONSTER_HEALTH  ? "lightgrey" : "darkgrey"
 #endif
         );
-        mprf(MSGCH_PROMPT, "Press 'a' to toggle all layers. "
+        mprfc(MSGCH_PROMPT, "Press 'a' to toggle all layers. "
                            "Press any other key to exit.");
 
         switch (get_ch())
@@ -1144,7 +1144,7 @@ void toggle_show_terrain()
 void reset_show_terrain()
 {
     if (_layers != LAYERS_ALL)
-        mprf(MSGCH_PROMPT, "Restoring view layers.");
+        mprfc(MSGCH_PROMPT, "Restoring view layers.");
 
     _layers = LAYERS_ALL;
     crawl_state.viewport_weapons    = !!(_layers & Layer::MONSTER_WEAPONS);

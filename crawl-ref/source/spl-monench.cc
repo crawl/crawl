@@ -242,7 +242,7 @@ bool start_ranged_constriction(actor& caster, actor& target, int duration,
         else if (type == CONSTRICT_BVC)
             msg = make_stringf("Zombie hands grab %s from below!", target.name(DESC_THE).c_str());
 
-        mprf(target.is_player() ? MSGCH_WARN : MSGCH_PLAIN, "%s", msg.c_str());
+        mprfc(target.is_player() ? MSGCH_WARN : MSGCH_PLAIN, "%s", msg.c_str());
     }
 
     caster.start_constricting(target, type, duration);
@@ -384,7 +384,7 @@ spret cast_sign_of_ruin(actor& caster, coord_def target, int duration, bool chec
     {
         if (act->is_player())
         {
-            mprf(MSGCH_WARN, "The sign of ruin forms upon you!");
+            mprfc(MSGCH_WARN, "The sign of ruin forms upon you!");
             you.duration[DUR_SIGN_OF_RUIN] = random_range(duration, duration * 3 / 2);
         }
         else

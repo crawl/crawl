@@ -63,13 +63,13 @@ void debug_item_scan()
             {
                 if (env.igrid(*ri) == obj)
                 {
-                    mprf(MSGCH_ERROR, "env.igrid has invalid item index %d "
+                    mprfc(MSGCH_ERROR, "env.igrid has invalid item index %d "
                                       "at (%d, %d)",
                          obj, ri->x, ri->y);
                 }
                 else
                 {
-                    mprf(MSGCH_ERROR, "Item in stack at (%d, %d) has "
+                    mprfc(MSGCH_ERROR, "Item in stack at (%d, %d) has "
                                       "invalid link %d",
                          ri->x, ri->y, obj);
                 }
@@ -94,7 +94,7 @@ void debug_item_scan()
             // this will also keep this from being an infinite loop.
             if (visited[obj])
             {
-                mprf(MSGCH_ERROR,
+                mprfc(MSGCH_ERROR,
                      "Potential INFINITE STACK at (%d, %d)", ri->x, ri->y);
                 break;
             }
@@ -124,7 +124,7 @@ void debug_item_scan()
 
             if (!in_bounds(env.item[i].pos))
             {
-                mprf(MSGCH_ERROR, "Item position (%d, %d) is out of bounds",
+                mprfc(MSGCH_ERROR, "Item position (%d, %d) is out of bounds",
                      env.item[i].pos.x, env.item[i].pos.y);
             }
             else
@@ -196,8 +196,8 @@ void debug_item_scan()
 
         if (mons.name(DESC_PLAIN, true).find("questionable") != string::npos)
         {
-            mprf(MSGCH_ERROR, "Program bug detected!");
-            mprf(MSGCH_ERROR,
+            mprfc(MSGCH_ERROR, "Program bug detected!");
+            mprfc(MSGCH_ERROR,
                  "Buggy monster detected: monster #%d; position (%d,%d)",
                  i, mons.pos().x, mons.pos().y);
         }
@@ -211,8 +211,8 @@ static void _announce_level_prob(bool warned)
 {
     if (!warned && crawl_state.generating_level)
     {
-        mprf(MSGCH_ERROR, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        mprf(MSGCH_ERROR, "env.mgrid problem occurred during level generation");
+        mprfc(MSGCH_ERROR, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        mprfc(MSGCH_ERROR, "env.mgrid problem occurred during level generation");
 
         debug_dump_levgen();
     }
@@ -280,7 +280,7 @@ void debug_mons_scan()
 
             if (invalid_monster_index(mons))
             {
-                mprf(MSGCH_ERROR, "env.mgrid at (%d, %d) has invalid monster "
+                mprfc(MSGCH_ERROR, "env.mgrid at (%d, %d) has invalid monster "
                                   "index %d",
                      x, y, mons);
                 continue;
@@ -294,19 +294,19 @@ void debug_mons_scan()
                 bogus_idx.push_back(mons);
 
                 _announce_level_prob(warned);
-                mprf(MSGCH_WARN,
+                mprfc(MSGCH_WARN,
                      "Bogosity: env.mgrid at (%d,%d) points at %s, "
                      "but monster is at (%d,%d)",
                      x, y, m->name(DESC_PLAIN, true).c_str(),
                      m->pos().x, m->pos().y);
                 if (!m->alive())
-                    mprf(MSGCH_WARN, "Additionally, it isn't alive.");
+                    mprfc(MSGCH_WARN, "Additionally, it isn't alive.");
                 warned = true;
             }
             else if (!m->alive())
             {
                 _announce_level_prob(warned);
-                mprf_nocap(MSGCH_ERROR,
+                mprfc_nocap(MSGCH_ERROR,
                      "env.mgrid at (%d,%d) points at dead monster %s",
                      x, y, m->name(DESC_PLAIN, true).c_str());
                 warned = true;
@@ -332,13 +332,13 @@ void debug_mons_scan()
 
         if (invalid_monster_type(m->type))
         {
-            mprf(MSGCH_ERROR, "Bogus monster type %d at (%d, %d), midx = %d",
+            mprfc(MSGCH_ERROR, "Bogus monster type %d at (%d, %d), midx = %d",
                               m->type, pos.x, pos.y, i);
         }
 
         if (!in_bounds(pos))
         {
-            mprf(MSGCH_ERROR, "Out of bounds monster: %s at (%d, %d), "
+            mprfc(MSGCH_ERROR, "Out of bounds monster: %s at (%d, %d), "
                               "midx = %d",
                  m->full_name(DESC_PLAIN).c_str(),
                  pos.x, pos.y, i);
@@ -349,7 +349,7 @@ void debug_mons_scan()
             is_floating[i] = true;
 
             _announce_level_prob(warned);
-            mprf(MSGCH_WARN, "Floating monster: %s at (%d,%d), midx = %d",
+            mprfc(MSGCH_WARN, "Floating monster: %s at (%d,%d), midx = %d",
                  m->full_name(DESC_PLAIN).c_str(),
                  pos.x, pos.y, i);
             warned = true;
@@ -366,12 +366,12 @@ void debug_mons_scan()
                 string full = m2->full_name(DESC_PLAIN);
                 if (m2->alive())
                 {
-                    mprf(MSGCH_WARN, "Also at (%d, %d): %s, midx = %d",
+                    mprfc(MSGCH_WARN, "Also at (%d, %d): %s, midx = %d",
                          pos.x, pos.y, full.c_str(), j);
                 }
                 else if (m2->type != MONS_NO_MONSTER)
                 {
-                    mprf(MSGCH_WARN, "Dead mon also at (%d, %d): %s,"
+                    mprfc(MSGCH_WARN, "Dead mon also at (%d, %d): %s,"
                                      "midx = %d",
                          pos.x, pos.y, full.c_str(), j);
                 }
@@ -384,7 +384,7 @@ void debug_mons_scan()
             // if we're going to dump, point out the culprit
             env.pgrid(pos) |= FPROP_HIGHLIGHT;
 #endif
-            mprf(MSGCH_ERROR, "Monster %s in %s at (%d, %d)%s",
+            mprfc(MSGCH_ERROR, "Monster %s in %s at (%d, %d)%s",
                  m->full_name(DESC_PLAIN).c_str(),
                  dungeon_feature_name(env.grid(pos)),
                  pos.x, pos.y,
@@ -399,7 +399,7 @@ void debug_mons_scan()
 
             if (idx < 0 || idx > MAX_ITEMS)
             {
-                mprf(MSGCH_ERROR, "Monster %s (%d, %d) has invalid item "
+                mprfc(MSGCH_ERROR, "Monster %s (%d, %d) has invalid item "
                                   "index %d in slot %d.",
                      m->full_name(DESC_PLAIN).c_str(),
                      pos.x, pos.y, idx, j);
@@ -411,7 +411,7 @@ void debug_mons_scan()
             {
                 _announce_level_prob(warned);
                 warned = true;
-                mprf(MSGCH_WARN, "Monster %s (%d, %d) holding invalid item in "
+                mprfc(MSGCH_WARN, "Monster %s (%d, %d) holding invalid item in "
                                  "slot %d (midx = %d)",
                      m->full_name(DESC_PLAIN).c_str(),
                      pos.x, pos.y, j, i);
@@ -437,7 +437,7 @@ void debug_mons_scan()
             {
                 _announce_level_prob(warned);
                 warned = true;
-                mprf(MSGCH_WARN, "Monster %s (%d, %d) [midx = %d] holding "
+                mprfc(MSGCH_WARN, "Monster %s (%d, %d) [midx = %d] holding "
                                  "item %s, but item thinks it's held by "
                                  "monster %s (%d, %d) [midx = %d]",
                      m->full_name(DESC_PLAIN).c_str(),
@@ -451,13 +451,13 @@ void debug_mons_scan()
                 {
                     if (holder->inv[k] == idx)
                     {
-                        mprf(MSGCH_WARN, "Other monster thinks it's holding the item, too.");
+                        mprfc(MSGCH_WARN, "Other monster thinks it's holding the item, too.");
                         found = true;
                         break;
                     }
                 }
                 if (!found)
-                    mprf(MSGCH_WARN, "Other monster isn't holding it, though.");
+                    mprfc(MSGCH_WARN, "Other monster isn't holding it, though.");
             } // if (holder != m)
         } // for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
 
@@ -468,7 +468,7 @@ void debug_mons_scan()
                 die("mid cache bogosity: no monster for %d", m->mid);
             else if (m1->mid == m->mid)
             {
-                mprf(MSGCH_ERROR,
+                mprfc(MSGCH_ERROR,
                      "Error: monster %s(%d) has same mid as %s(%d) (%d)",
                      m->name(DESC_PLAIN, true).c_str(), m->mindex(),
                      m1->name(DESC_PLAIN, true).c_str(), m1->mindex(), m->mid);
@@ -479,7 +479,7 @@ void debug_mons_scan()
 
         if (you.constricted_by == m->mid && !m->is_constricting(you))
         {
-            mprf(MSGCH_ERROR, "Error: constricting[you] entry missing for monster %s(%d)",
+            mprfc(MSGCH_ERROR, "Error: constricting[you] entry missing for monster %s(%d)",
                  m->name(DESC_PLAIN, true).c_str(), m->mindex());
         }
 
@@ -488,12 +488,12 @@ void debug_mons_scan()
             const actor *h = actor_by_mid(m->constricted_by);
             if (!h)
             {
-                mprf(MSGCH_ERROR, "Error: constrictor missing for monster %s(%d)",
+                mprfc(MSGCH_ERROR, "Error: constrictor missing for monster %s(%d)",
                      m->name(DESC_PLAIN, true).c_str(), m->mindex());
             }
             else if (!h->is_constricting(*m))
             {
-                mprf(MSGCH_ERROR, "Error: constricting[%s(mindex=%d mid=%d)] "
+                mprfc(MSGCH_ERROR, "Error: constricting[%s(mindex=%d mid=%d)] "
                                   "entry missing for monster %s(mindex=%d mid=%d)",
                      m->name(DESC_PLAIN, true).c_str(), m->mindex(), m->mid,
                      h->name(DESC_PLAIN, true).c_str(), h->mindex(), h->mid);
@@ -518,7 +518,7 @@ void debug_mons_scan()
         if (const monster* m = monster_at(you.pos()))
             if (!fedhas_passthrough(m))
             {
-                mprf(MSGCH_ERROR, "Error: player on same spot as monster: %s(%d)",
+                mprfc(MSGCH_ERROR, "Error: player on same spot as monster: %s(%d)",
                       m->name(DESC_PLAIN, true).c_str(), m->mindex());
             }
 
@@ -538,7 +538,7 @@ void debug_mons_scan()
     // No vaults to report on?
     if (env.level_vaults.empty() && Temp_Vaults.empty())
     {
-        mprf(MSGCH_ERROR, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        mprfc(MSGCH_ERROR, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         // Force the dev to notice problems. :P
         more();
         return;
@@ -556,7 +556,7 @@ void debug_mons_scan()
                                   mon->pos().x, mon->pos().y);
 
         if (vaults.empty())
-            mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());
+            mprfc(MSGCH_WARN, "%s not in any vaults.", str.c_str());
         else
         {
             mpr_comma_separated_list(str + " in vault(s) ", vaults,
@@ -578,7 +578,7 @@ void debug_mons_scan()
         vector<string> vaults = _in_vaults(pos);
 
         if (vaults.empty())
-            mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());
+            mprfc(MSGCH_WARN, "%s not in any vaults.", str.c_str());
         else
         {
             mpr_comma_separated_list(str + " in vault(s) ", vaults,
@@ -593,7 +593,7 @@ void debug_mons_scan()
         vaults = _in_vaults(mon->pos());
 
         if (vaults.empty())
-            mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());
+            mprfc(MSGCH_WARN, "%s not in any vaults.", str.c_str());
         else
         {
             mpr_comma_separated_list(str + " in vault(s) ", vaults,
@@ -601,7 +601,7 @@ void debug_mons_scan()
         }
     }
 
-    mprf(MSGCH_ERROR, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    mprfc(MSGCH_ERROR, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     // Force the dev to notice problems. :P
     more();
 }

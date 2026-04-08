@@ -611,10 +611,10 @@ namespace arena
         int orig_b = faction_b.active_members;
 
         if (orig_a < 0)
-            mprf(MSGCH_ERROR, "Book-keeping says faction_a has negative active members.");
+            mprfc(MSGCH_ERROR, "Book-keeping says faction_a has negative active members.");
 
         if (orig_b < 0)
-            mprf(MSGCH_ERROR, "Book-keeping says faction_b has negative active members.");
+            mprfc(MSGCH_ERROR, "Book-keeping says faction_b has negative active members.");
 
         faction_a.active_members = 0;
         faction_b.active_members = 0;
@@ -632,7 +632,7 @@ namespace arena
         if (orig_a != faction_a.active_members
             || orig_b != faction_b.active_members)
         {
-            mprf(MSGCH_ERROR, "Book-keeping error in faction member count: "
+            mprfc(MSGCH_ERROR, "Book-keeping error in faction member count: "
                               "%d:%d instead of %d:%d",
                               orig_a, orig_b,
                               faction_a.active_members, faction_b.active_members);
@@ -659,7 +659,7 @@ namespace arena
         {
             if (faction_a.won || faction_b.won)
             {
-                mprf(MSGCH_ERROR, "Both factions alive but one declared the winner.");
+                mprfc(MSGCH_ERROR, "Both factions alive but one declared the winner.");
                 faction_a.won = false;
                 faction_b.won = false;
             }
@@ -683,7 +683,7 @@ namespace arena
 
         if (faction_a.active_members == 0 || faction_b.active_members == 0)
         {
-            mprf(MSGCH_ERROR, "ERROR: Both sides have spawners, but the active "
+            mprfc(MSGCH_ERROR, "ERROR: Both sides have spawners, but the active "
                  "member count of one side has been reduced to zero!");
             return;
         }
@@ -784,7 +784,7 @@ namespace arena
                 {
                     // The other monster isn't a respawner itself, so
                     // just get rid of it.
-                    mprf(MSGCH_DIAGNOSTICS,
+                    mprfc(MSGCH_DIAGNOSTICS,
                          "Dismissing non-respawner %s to make room for "
                          "respawner whose side has 0 active members.",
                          other.name(DESC_PLAIN, true).c_str());
@@ -793,7 +793,7 @@ namespace arena
                 else
                 {
                     // Other monster is a respawner, try to move it.
-                    mprf(MSGCH_DIAGNOSTICS,
+                    mprfc(MSGCH_DIAGNOSTICS,
                          "Teleporting respawner %s to make room for "
                          "other respawner whose side has 0 active members.",
                          other.name(DESC_PLAIN, true).c_str());
@@ -882,13 +882,13 @@ namespace arena
         {
             if (faction_a.active_members > 0)
             {
-                mprf(MSGCH_ERROR, "Tie declared, but faction_a won.");
+                mprfc(MSGCH_ERROR, "Tie declared, but faction_a won.");
                 team_a_wins++;
                 faction_a.won = true;
             }
             else if (faction_b.active_members > 0)
             {
-                mprf(MSGCH_ERROR, "Tie declared, but faction_b won.");
+                mprfc(MSGCH_ERROR, "Tie declared, but faction_b won.");
                 faction_b.won = true;
             }
             else
@@ -902,21 +902,21 @@ namespace arena
             faction_a.won = false;
             faction_b.won = false;
 
-            mprf(MSGCH_ERROR, "*BOTH* factions won?!");
+            mprfc(MSGCH_ERROR, "*BOTH* factions won?!");
             if (faction_a.active_members > 0)
             {
-                mprf(MSGCH_ERROR, "Faction_a real winner.");
+                mprfc(MSGCH_ERROR, "Faction_a real winner.");
                 team_a_wins++;
                 faction_a.won = true;
             }
             else if (faction_b.active_members > 0)
             {
-                mprf(MSGCH_ERROR, "Faction_b real winner.");
+                mprfc(MSGCH_ERROR, "Faction_b real winner.");
                 faction_b.won = true;
             }
             else
             {
-                mprf(MSGCH_ERROR, "Both sides dead.");
+                mprfc(MSGCH_ERROR, "Both sides dead.");
                 ties++;
                 was_tied = true;
             }

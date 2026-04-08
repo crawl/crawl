@@ -161,7 +161,7 @@ static string _seen_monsters_announcement(const vector<monster*> &visible,
 
 static void _announce_monsters(string announcement, vector<monster*> &visible)
 {
-    mprf(MSGCH_WARN, "%s!", announcement.c_str());
+    mprfc(MSGCH_WARN, "%s!", announcement.c_str());
 
     if (Options.use_animations & UA_MONSTER_IN_SIGHT)
     {
@@ -230,7 +230,7 @@ vector<monster* > get_nearby_monsters(bool want_move,
     if (announce || reason)                         \
     {                                               \
         if (announce)                               \
-            mprf(MSGCH_WARN, "%s!", msg);           \
+            mprfc(MSGCH_WARN, "%s!", msg);           \
         if (reason)                                 \
             *reason = msg;                          \
         return false;                               \

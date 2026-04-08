@@ -86,7 +86,7 @@ static void _apply_contam_over_time()
 // Bad effects from magic contamination.
 static void _magic_contamination_effects()
 {
-    mprf(MSGCH_WARN, "Your body shudders with the violent release "
+    mprfc(MSGCH_WARN, "Your body shudders with the violent release "
                      "of wild energies!");
 
     const bool severe = you.magic_contamination >= 2000;
@@ -139,7 +139,7 @@ static void _check_contamination_effects(int /*time_delta*/)
     {
         if (is_sanctuary(you.pos()))
         {
-            mprf(MSGCH_GOD, "Your body momentarily shudders from a surge of wild "
+            mprfc(MSGCH_GOD, "Your body momentarily shudders from a surge of wild "
                             "energies until Zin's power calms it.");
         }
         else
@@ -204,7 +204,7 @@ static void _jiyva_effects(int /*time_delta*/)
                     simple_god_message(" gurgles merrily.");
                     break;
                 case 1:
-                    mprf(MSGCH_SOUND, "You hear %s splatter%s.",
+                    mprfc(MSGCH_SOUND, "You hear %s splatter%s.",
                          total_jellies > 1 ? "a series of" : "a",
                          total_jellies > 1 ? "s" : "");
                     break;
@@ -735,7 +735,7 @@ static void _drop_tomb(const coord_def& pos, bool premature, bool zin)
         else
         {
             if (!silenced(you.pos()))
-                mprf(MSGCH_SOUND, "You hear a deep rumble.");
+                mprfc(MSGCH_SOUND, "You hear a deep rumble.");
             else
                 mpr("You feel the ground shudder.");
         }
@@ -894,7 +894,7 @@ bool end_terrain_changes(terrain_change_type type, mid_t source_mid)
 
 void end_enkindled_status()
 {
-    mprf(MSGCH_DURATION, "Your flames quiet as the last of your memories are burnt away.");
+    mprfc(MSGCH_DURATION, "Your flames quiet as the last of your memories are burnt away.");
     you.duration[DUR_ENKINDLED] = 0;
     you.props.erase(ENKINDLE_CHARGES_KEY);
 }
@@ -1003,9 +1003,9 @@ void timeout_terrain_changes(int duration, bool force)
         mpr("The runic seal fades away.");
 
     if (num_seen[TERRAIN_CHANGE_BINDING_SIGIL] > 1)
-        mprf(MSGCH_DURATION, "Your binding sigils disappear.");
+        mprfc(MSGCH_DURATION, "Your binding sigils disappear.");
     else if (num_seen[TERRAIN_CHANGE_BINDING_SIGIL] > 0)
-        mprf(MSGCH_DURATION, "Your binding sigil disappears.");
+        mprfc(MSGCH_DURATION, "Your binding sigil disappears.");
 }
 
 ////////////////////////////////////////////////////////////////////////////

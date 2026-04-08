@@ -26,9 +26,9 @@
 static void _end_invis()
 {
     if (you.invisible())
-        mprf(MSGCH_DURATION, "You feel more conspicuous.");
+        mprfc(MSGCH_DURATION, "You feel more conspicuous.");
     else
-        mprf(MSGCH_DURATION, "You flicker back into view.");
+        mprfc(MSGCH_DURATION, "You flicker back into view.");
 }
 
 static void _end_corrosion()
@@ -69,14 +69,14 @@ static void _maybe_expire_jinxbite()
 {
     if (!jinxbite_targets_available())
     {
-        mprf(MSGCH_DURATION, "The sprites lose interest in your situation.");
+        mprfc(MSGCH_DURATION, "The sprites lose interest in your situation.");
         you.duration[DUR_JINXBITE] = 0;
     }
 }
 
 static void _post_shackles_effect()
 {
-    mprf(MSGCH_DURATION, "You lose your grip on the chains of life and death.");
+    mprfc(MSGCH_DURATION, "You lose your grip on the chains of life and death.");
     yred_end_blasphemy();
 }
 
@@ -237,7 +237,7 @@ static const duration_def duration_data[] =
       "confusing by touch", "confusing touch",
       "" , D_DISPELLABLE,
       {{ "", []() {
-          mprf(MSGCH_DURATION, "%s",
+          mprfc(MSGCH_DURATION, "%s",
                you.hands_act("stop", "glowing.").c_str());
       }}}, 20},
     { DUR_CORONA, // Has custom long_text
@@ -246,7 +246,7 @@ static const duration_def duration_data[] =
       "", D_DISPELLABLE | D_NEGATIVE,
       {{ "", []() {
           if (!you.backlit())
-              mprf(MSGCH_DURATION, "You are no longer glowing.");
+              mprfc(MSGCH_DURATION, "You are no longer glowing.");
       }}}},
     { DUR_DEATH_CHANNEL,
       MAGENTA, "DChan",
@@ -308,7 +308,7 @@ static const duration_def duration_data[] =
       "vexed", "vex",
       "You are vexed.", D_DISPELLABLE | D_NEGATIVE,
       {{ "", []() {
-            mprf(MSGCH_DURATION, "You feel more in control of yourself again.");
+            mprfc(MSGCH_DURATION, "You feel more in control of yourself again.");
             you.give_stun_immunity(random_range(3, 5));
       }}}},
     { DUR_PETRIFYING,
@@ -359,7 +359,7 @@ static const duration_def duration_data[] =
       "in death's door", "deaths door",
       "You are standing in death's doorway.", D_EXPIRES,
       {{ "", []() {
-            mprf(MSGCH_DURATION, "Your life is in your own %s again!",
+            mprfc(MSGCH_DURATION, "Your life is in your own %s again!",
                  you.hand_name(true).c_str());
             you.duration[DUR_DEATHS_DOOR_COOLDOWN] = random_range(10, 30);
       }}, { "Your time is quickly running out!", 5 }}, 10},
@@ -712,7 +712,7 @@ static const duration_def duration_data[] =
     { DUR_CANINE_FAMILIAR_DEAD, YELLOW, "-Dog", "unable to call your familiar",
       "canine familiar cooldown", "You are unable to call your canine familiar.",
       D_EXPIRES, {{ "",
-        [](){mprf(MSGCH_RECOVERY, "Your familiar recovers from its injuries.");}}}},
+        [](){mprfc(MSGCH_RECOVERY, "Your familiar recovers from its injuries.");}}}},
     { DUR_BEOGH_CAN_RECRUIT, LIGHTBLUE, "Recruit", "", "can recruit",
       "You may recruit a defeated apostle into your service", D_EXPIRES,
        {{ "", end_beogh_recruit_window}}},
@@ -723,7 +723,7 @@ static const duration_def duration_data[] =
     { DUR_BLIND, RED, "Blind", "blinded", "blindness",
       "The further away your target is the more your accuracy is reduced.",
       D_DISPELLABLE | D_EXPIRES | D_NEGATIVE, {{ "",
-        [](){mprf(MSGCH_RECOVERY, "Your vision returns to normal.");}}}},
+        [](){mprfc(MSGCH_RECOVERY, "Your vision returns to normal.");}}}},
     { DUR_SIGN_OF_RUIN, RED, "Ruin",
       "sign of ruin", "ruin",
       "The sign of ruin enfeebles you when you suffer attacks.", D_DISPELLABLE | D_NEGATIVE,
@@ -840,12 +840,12 @@ static const duration_def duration_data[] =
     { DUR_NO_POTIONS, 0, "", "", "no potions", "", D_NEGATIVE,
       {{ "", []() {
           if (you.can_drink() && !player_in_branch(BRANCH_COCYTUS))
-              mprf(MSGCH_RECOVERY, "You can drink potions again.");
+              mprfc(MSGCH_RECOVERY, "You can drink potions again.");
       }}}},
     { DUR_NO_SCROLLS, 0, "", "", "no scrolls", "", D_NEGATIVE,
       {{ "", []() {
           if (!player_in_branch(BRANCH_GEHENNA))
-              mprf(MSGCH_RECOVERY, "You can read scrolls again.");
+              mprfc(MSGCH_RECOVERY, "You can read scrolls again.");
       }}}},
     { DUR_REVELATION, 0, "", "", "revelation", "", D_NO_FLAGS, {{""}}},
     { DUR_JINXBITE_LOST_INTEREST, 0, "", "", "", "", D_EXPIRES, {{"", _maybe_expire_jinxbite}}},

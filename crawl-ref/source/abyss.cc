@@ -408,7 +408,7 @@ void banished(const string &who)
         else
         {
             // On Abyss:$ we can't go deeper; cause a shift to a new area
-            mprf(MSGCH_BANISHMENT, "You are banished to a different region of the Abyss.");
+            mprfc(MSGCH_BANISHMENT, "You are banished to a different region of the Abyss.");
             abyss_teleport();
         }
         return;
@@ -444,11 +444,11 @@ void check_banished()
         mons_reset_just_seen();
         ASSERT(brdepth[BRANCH_ABYSS] != -1);
         if (!player_in_branch(BRANCH_ABYSS))
-            mprf(MSGCH_BANISHMENT, "You are cast into the Abyss!");
+            mprfc(MSGCH_BANISHMENT, "You are cast into the Abyss!");
         else if (you.depth < brdepth[BRANCH_ABYSS])
-            mprf(MSGCH_BANISHMENT, "You are cast deeper into the Abyss!");
+            mprfc(MSGCH_BANISHMENT, "You are cast deeper into the Abyss!");
         else
-            mprf(MSGCH_BANISHMENT, "The Abyss bends around you!");
+            mprfc(MSGCH_BANISHMENT, "The Abyss bends around you!");
         // these are included in default force_more_message
         banished(you.banished_by);
     }
@@ -1761,7 +1761,7 @@ void abyss_teleport(bool wizard_tele)
         return;
     }
 
-    mprf(MSGCH_BANISHMENT, "You are suddenly pulled into a different region of"
+    mprfc(MSGCH_BANISHMENT, "You are suddenly pulled into a different region of"
         " the Abyss!");
     _abyss_generate_new_area();
     _write_abyssal_features();
@@ -2370,7 +2370,7 @@ void abyss_maybe_spawn_xp_exit()
     big_cloud(CLOUD_TLOC_ENERGY, &you, you.pos(), 3 + random2(3), 3, 3);
     redraw_screen(); // before the force-more
     update_screen();
-    mprf(MSGCH_BANISHMENT,
+    mprfc(MSGCH_BANISHMENT,
          "The substance of the Abyss twists violently,"
          " and a gateway leading %s appears!", stairs ? "down" : "out");
 

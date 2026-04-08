@@ -871,7 +871,7 @@ bool mons_speaks_msg(monster* mons, const string &msg,
         if (msg_type == MSGCH_TALK_VISUAL && !you.can_see(*mons))
             noticed = old_noticed;
         else
-            mprf(msg_type, "%s", line.c_str());
+            mprfc(msg_type, "%s", line.c_str());
     }
     return noticed;
 }

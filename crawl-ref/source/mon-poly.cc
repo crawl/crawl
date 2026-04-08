@@ -118,7 +118,7 @@ void monster_drop_things(monster* mons,
             {
                 string msg = make_stringf("%s dazzles you with the glint of coin.",
                     god_name(GOD_GOZAG).c_str());
-                mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
+                mprfcp(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
                 blind_player(10 + random2(8), ETC_GOLD);
             }
             mons->inv[i] = NON_ITEM;

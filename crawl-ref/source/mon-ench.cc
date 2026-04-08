@@ -944,7 +944,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
         if (you.can_see(*this))
         {
-            mprf(MSGCH_MONSTER_SPELL, "%s shapes itself into a furious %s!",
+            mprfc(MSGCH_MONSTER_SPELL, "%s shapes itself into a furious %s!",
                     name(DESC_THE).c_str(),
                     mons_type_name(poly_target, DESC_PLAIN).c_str());
         }

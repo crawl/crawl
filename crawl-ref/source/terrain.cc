@@ -987,11 +987,11 @@ void feat_splash_noise(dungeon_feature_type feat)
     {
     case DNGN_SHALLOW_WATER:
     case DNGN_DEEP_WATER:
-        mprf(MSGCH_SOUND, "You hear a splash.");
+        mprfc(MSGCH_SOUND, "You hear a splash.");
         return;
 
     case DNGN_LAVA:
-        mprf(MSGCH_SOUND, "You hear a sizzling splash.");
+        mprfc(MSGCH_SOUND, "You hear a sizzling splash.");
         return;
 
     default:
@@ -1552,7 +1552,7 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
 
     if (!in_bounds(temp))
     {
-        mprf(MSGCH_ERROR, "swap_features(): No boring squares on level?");
+        mprfc(MSGCH_ERROR, "swap_features(): No boring squares on level?");
         return false;
     }
 
@@ -2251,7 +2251,7 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
         if (you.see_cell(pos))
             mpr("Your passage of Golubria closes with a snap!");
         else
-            mprf(MSGCH_SOUND, "You hear a snapping sound.");
+            mprfc(MSGCH_SOUND, "You hear a snapping sound.");
         noisy(spell_effect_noise(SPELL_GOLUBRIAS_PASSAGE), pos);
     }
 

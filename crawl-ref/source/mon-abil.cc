@@ -712,8 +712,8 @@ static void _starcursed_scream(monster* mon, actor* target)
         if (you.see_cell(target->pos()))
         {
             bool mind = mons_intel(*target->as_monster()) > I_BRAINLESS;
-            mprf(mon->friendly() ? MSGCH_FRIEND_SPELL
-                                 : MSGCH_MONSTER_SPELL,
+            mprfc(target->as_monster()->friendly() ? MSGCH_FRIEND_SPELL
+                                                   : MSGCH_MONSTER_SPELL,
                  "%s writhes%s as voices assail %s %s.",
                  target->name(DESC_THE).c_str(),
                  mind ? " in pain" : "",
@@ -722,7 +722,7 @@ static void _starcursed_scream(monster* mon, actor* target)
         }
     }
     else
-        mprf(MSGCH_MONSTER_SPELL, "%s", message);
+        mprfc(MSGCH_MONSTER_SPELL, "%s", message);
     target->hurt(mon, dam, BEAM_MISSILE, KILLED_BY_BEAM, "",
                  "accursed screaming");
 
@@ -1435,7 +1435,7 @@ bool pyrrhic_recollection(monster& nobody)
 
     if (can_see)
     {
-        mprf(MSGCH_MONSTER_SPELL, "%s ignites a memory of %s%s.",
+        mprfc(MSGCH_MONSTER_SPELL, "%s ignites a memory of %s%s.",
                 nobody.name(DESC_THE).c_str(),
                 comma_separated_line(spell_names.begin(), spell_names.end()).c_str(),
                 was_injured ? " to re-knit themselves" : "");
@@ -1595,7 +1595,7 @@ void activate_tesseracts()
 
         if (!did_activate)
         {
-            mprf(MSGCH_WARN, "You feel the power of Zot begin to gather its forces!");
+            mprfc(MSGCH_WARN, "You feel the power of Zot begin to gather its forces!");
             take_note(Note(NOTE_TESSERACT_ACTIVATED));
             mark_milestone("tesseract.activate", "activated a tesseract");
             // Tracked on the player instead of the monster so status lookup is quicker.

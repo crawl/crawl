@@ -345,9 +345,9 @@ static spell_list _get_spell_list(bool just_check = false,
         if (!just_check)
         {
             if (you.has_mutation(MUT_INNATE_CASTER))
-                mprf(MSGCH_PROMPT, "You need no library to learn spells.");
+                mprfc(MSGCH_PROMPT, "You need no library to learn spells.");
             else
-                mprf(MSGCH_PROMPT, "Your library has no spells.");
+                mprfc(MSGCH_PROMPT, "Your library has no spells.");
         }
         return mem_spells;
     }
@@ -424,7 +424,7 @@ static spell_list _get_spell_list(bool just_check = false,
     }
 
     if (!just_check && *unavail_reason)
-        mprf(MSGCH_PROMPT, "%s", unavail_reason);
+        mprfc(MSGCH_PROMPT, "%s", unavail_reason);
     return mem_spells;
 }
 
@@ -1084,10 +1084,10 @@ bool learn_spell(spell_type specspell, bool wizard, bool interactive)
         const int severity = fail_severity(specspell);
 
         if (raw_spell_fail(specspell) >= 100 && !vehumet_is_offering(specspell))
-            mprf(MSGCH_WARN, "This spell is impossible to cast!");
+            mprfc(MSGCH_WARN, "This spell is impossible to cast!");
         else if (severity > 0)
         {
-            mprf(MSGCH_WARN, "This spell is %s to cast%s",
+            mprfc(MSGCH_WARN, "This spell is %s to cast%s",
                              fail_severity_adjs[severity],
                              severity > 1 ? "!" : ".");
         }
@@ -1117,7 +1117,7 @@ bool learn_spell(spell_type specspell, bool wizard, bool interactive)
     else
     {
         if (!wizard && !mem_spell_warning_string.empty())
-            mprf(MSGCH_WARN, "%s", mem_spell_warning_string.c_str());
+            mprfc(MSGCH_WARN, "%s", mem_spell_warning_string.c_str());
     }
 
     if (wizard)

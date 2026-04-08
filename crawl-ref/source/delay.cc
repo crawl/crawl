@@ -457,14 +457,14 @@ void clear_macro_process_key_delay()
 
 void EquipOnDelay::start()
 {
-    mprf(MSGCH_MULTITURN_ACTION, "You start %s your %s.",
+    mprfc(MSGCH_MULTITURN_ACTION, "You start %s your %s.",
          get_verb(),
          _eq_category(equip).c_str());
 }
 
 void EquipOffDelay::start()
 {
-    mprf(MSGCH_MULTITURN_ACTION, "You start %s your %s.",
+    mprfc(MSGCH_MULTITURN_ACTION, "You start %s your %s.",
          get_verb(),
          _eq_category(equip).c_str());
 }
@@ -477,38 +477,38 @@ void MemoriseDelay::start()
             spell_title(spell));
         simple_god_message(message.c_str());
     }
-    mprf(MSGCH_MULTITURN_ACTION, "You start memorising the spell.");
+    mprfc(MSGCH_MULTITURN_ACTION, "You start memorising the spell.");
 }
 
 void PasswallDelay::start()
 {
-    mprf(MSGCH_MULTITURN_ACTION, "You begin to meditate on the wall.");
+    mprfc(MSGCH_MULTITURN_ACTION, "You begin to meditate on the wall.");
 }
 
 void ShaftSelfDelay::start()
 {
-    mprf(MSGCH_MULTITURN_ACTION, "You begin to dig a shaft.");
+    mprfc(MSGCH_MULTITURN_ACTION, "You begin to dig a shaft.");
 }
 
 void ImbueDelay::start()
 {
-    mprf(MSGCH_MULTITURN_ACTION, "You begin to imbue your servitor with "
+    mprfc(MSGCH_MULTITURN_ACTION, "You begin to imbue your servitor with "
          "knowledge of %s.",
          spell_title(spell));
 }
 
 void ImprintDelay::start()
 {
-    mprf(MSGCH_MULTITURN_ACTION, "You begin to imprint %s upon your paragon.",
+    mprfc(MSGCH_MULTITURN_ACTION, "You begin to imprint %s upon your paragon.",
          wpn.name(DESC_THE).c_str());
 }
 
 void TransformDelay::start()
 {
     if (form == transformation::none)
-        mprf(MSGCH_MULTITURN_ACTION, "You begin untransforming.");
+        mprfc(MSGCH_MULTITURN_ACTION, "You begin untransforming.");
     else
-        mprf(MSGCH_MULTITURN_ACTION, "You begin transforming.");
+        mprfc(MSGCH_MULTITURN_ACTION, "You begin transforming.");
 }
 
 command_type RunDelay::move_cmd() const
@@ -670,9 +670,9 @@ void DropItemDelay::tick()
 void TransformDelay::tick()
 {
     if (form == transformation::none)
-        mprf(MSGCH_MULTITURN_ACTION, "You continue untransforming.");
+        mprfc(MSGCH_MULTITURN_ACTION, "You continue untransforming.");
     else
-        mprf(MSGCH_MULTITURN_ACTION, "You continue transforming.");
+        mprfc(MSGCH_MULTITURN_ACTION, "You continue transforming.");
 }
 
 void Delay::handle()
@@ -914,7 +914,7 @@ void run_macro(const char *macroname)
 #ifdef CLUA_BINDINGS
     if (!clua)
     {
-        mprf(MSGCH_DIAGNOSTICS, "Lua not initialised");
+        mprfc(MSGCH_DIAGNOSTICS, "Lua not initialised");
         stop_delay();
         return;
     }
@@ -935,14 +935,14 @@ void run_macro(const char *macroname)
     {
         if (!clua.error.empty())
         {
-            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+            mprfc(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
             stop_delay();
         }
         else if (delay->duration > 0)
             --delay->duration;
     }
 #else
-    mprf(MSGCH_ERROR, "CLua bindings not available on this build!");
+    mprfc(MSGCH_ERROR, "CLua bindings not available on this build!");
     UNUSED(macroname);
     stop_delay();
 #endif
@@ -1038,7 +1038,7 @@ void autotoggle_autopickup(bool off)
         if (Options.autopickup_on > 0)
         {
             Options.autopickup_on = -1;
-            mprf(MSGCH_WARN,
+            mprfc(MSGCH_WARN,
                  "Deactivating autopickup; reactivate with <w>%s</w>.",
                  command_to_string(CMD_TOGGLE_AUTOPICKUP).c_str());
         }
@@ -1051,7 +1051,7 @@ void autotoggle_autopickup(bool off)
     else if (Options.autopickup_on < 0) // was turned off automatically
     {
         Options.autopickup_on = 1;
-        mprf(MSGCH_WARN, "Reactivating autopickup.");
+        mprfc(MSGCH_WARN, "Reactivating autopickup.");
     }
 }
 
@@ -1068,7 +1068,7 @@ void monster_interrupt_message(activity_interrupt ai, const activity_interrupt_d
 
     if (ai == activity_interrupt::sense_monster)
     {
-        mprf(MSGCH_WARN, "You sense a monster nearby.");
+        mprfc(MSGCH_WARN, "You sense a monster nearby.");
         return;
     }
 
@@ -1076,9 +1076,9 @@ void monster_interrupt_message(activity_interrupt ai, const activity_interrupt_d
     ASSERT(mon);
 
     if (at.context == SC_ALREADY_IN_VIEW)
-        mprf(MSGCH_MONSTER_WARNING, "%s is now too close for your liking.", mon->name(DESC_THE).c_str());
+        mprfc(MSGCH_MONSTER_WARNING, "%s is now too close for your liking.", mon->name(DESC_THE).c_str());
     else
-        mprf(MSGCH_MONSTER_WARNING, "%s comes into view.", mon->name(DESC_A).c_str());
+        mprfc(MSGCH_MONSTER_WARNING, "%s comes into view.", mon->name(DESC_A).c_str());
 }
 
 // Returns true if any activity was stopped. Not reentrant.

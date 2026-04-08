@@ -77,6 +77,14 @@ bool parse_args(int argc, char **argv, bool rc_only);
 struct newgame_def;
 void write_newgame_options_file(const newgame_def& prefs);
 
+struct supported_language_def
+{
+    const char *code;
+    const char *display_name;
+};
+
+const vector<supported_language_def> &get_supported_languages();
+
 void save_player_name();
 void save_game_prefs();
 

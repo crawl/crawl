@@ -2100,7 +2100,7 @@ dlua_set_map::dlua_set_map(map_def *map)
     clua_push_map(dlua, map);
     if (!dlua.callfn("dgn_set_map", 1, 1))
     {
-        mprf(MSGCH_ERROR, "dgn_set_map failed for '%s': %s",
+        mprfc(MSGCH_ERROR, "dgn_set_map failed for '%s': %s",
              map->name.c_str(), dlua.error.c_str());
     }
     // Save the returned map as a lua_datum
@@ -2111,7 +2111,7 @@ dlua_set_map::~dlua_set_map()
 {
     old_map->push();
     if (!dlua.callfn("dgn_set_map", 1, 0))
-        mprf(MSGCH_ERROR, "dgn_set_map failed: %s", dlua.error.c_str());
+        mprfc(MSGCH_ERROR, "dgn_set_map failed: %s", dlua.error.c_str());
 }
 
 ///////////////////////////////////////////////
@@ -2632,7 +2632,7 @@ void map_def::copy_hooks_from(const map_def &other_map, const string &hook_name)
     if (!dlua.callfn("dgn_map_copy_hooks_from", "ss",
                      other_map.name.c_str(), hook_name.c_str()))
     {
-        mprf(MSGCH_ERROR, "Lua error copying hook (%s) from '%s' to '%s': %s",
+        mprfc(MSGCH_ERROR, "Lua error copying hook (%s) from '%s' to '%s': %s",
              hook_name.c_str(), other_map.name.c_str(),
              name.c_str(), dlua.error.c_str());
     }
@@ -2657,7 +2657,7 @@ bool map_def::run_hook(const string &hook_name, bool die_on_lua_error)
             }
             else
             {
-                mprf(MSGCH_ERROR, "Lua error running hook '%s' on map '%s': %s",
+                mprfc(MSGCH_ERROR, "Lua error running hook '%s' on map '%s': %s",
                      hook_name.c_str(), name.c_str(), error.c_str());
             }
         }
@@ -2685,7 +2685,7 @@ bool map_def::test_lua_boolchunk(dlua_chunk &chunk, bool defval,
         if (die_on_lua_error)
             end(1, false, "Lua error: %s", chunk.orig_error().c_str());
         else
-            mprf(MSGCH_ERROR, "Lua error: %s", chunk.orig_error().c_str());
+            mprfc(MSGCH_ERROR, "Lua error: %s", chunk.orig_error().c_str());
         return result;
     }
     if (dlua.callfn("dgn_run_map", 1, 1))
@@ -2699,7 +2699,7 @@ bool map_def::test_lua_boolchunk(dlua_chunk &chunk, bool defval,
         }
         else
         {
-            mprf(MSGCH_ERROR, "Lua error: %s",
+            mprfc(MSGCH_ERROR, "Lua error: %s",
                  rewrite_chunk_errors(dlua.error).c_str());
         }
     }
@@ -4455,7 +4455,7 @@ mons_spec mons_list::get_hydra_spec(const string &name, monster_type mtype) cons
     else if (nheads > 20)
     {
 #if defined(DEBUG) || defined(DEBUG_DIAGNOSTICS)
-        mprf(MSGCH_DIAGNOSTICS, "Hydra spec wants %d heads, clamping to 20.",
+        mprfc(MSGCH_DIAGNOSTICS, "Hydra spec wants %d heads, clamping to 20.",
              nheads);
 #endif
         nheads = 20;
@@ -4483,7 +4483,7 @@ mons_spec mons_list::get_slime_spec(const string &name) const
     else
     {
 #if defined(DEBUG) || defined(DEBUG_DIAGNOSTICS)
-        mprf(MSGCH_DIAGNOSTICS, "Slime spec wants invalid size '%s'",
+        mprfc(MSGCH_DIAGNOSTICS, "Slime spec wants invalid size '%s'",
              prefix.c_str());
 #endif
     }

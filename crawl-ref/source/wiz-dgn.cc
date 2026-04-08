@@ -197,9 +197,9 @@ dungeon_feature_type wizard_select_feature(bool mimic, bool allow_fprop)
     char specs[256];
     // TODO: this sub-ui is very annoying to use
     if (mimic)
-        mprf(MSGCH_PROMPT, "Create what kind of feature mimic? ");
+        mprfc(MSGCH_PROMPT, "Create what kind of feature mimic? ");
     else
-        mprf(MSGCH_PROMPT, "Create which feature? ");
+        mprfc(MSGCH_PROMPT, "Create which feature? ");
 
     if (cancellable_get_line_autohist(specs, sizeof(specs)) || specs[0] == 0)
     {
@@ -232,7 +232,7 @@ dungeon_feature_type wizard_select_feature(bool mimic, bool allow_fprop)
                 }
                 else
                 {
-                    mprf(MSGCH_DIAGNOSTICS, "No features matching '%s'",
+                    mprfc(MSGCH_DIAGNOSTICS, "No features matching '%s'",
                          name.c_str());
                 }
                 return DNGN_UNSEEN;
@@ -373,12 +373,12 @@ void wizard_list_branches()
             continue;
         else if (brentry[it->id].is_valid())
         {
-            mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) is on %s",
+            mprfc(MSGCH_DIAGNOSTICS, "Branch %d (%s) is on %s",
                  it->id, it->longname, brentry[it->id].describe().c_str());
         }
         else if (is_random_subbranch(it->id))
         {
-            mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) was not generated "
+            mprfc(MSGCH_DIAGNOSTICS, "Branch %d (%s) was not generated "
                  "this game", it->id, it->longname);
         }
     }
@@ -386,8 +386,8 @@ void wizard_list_branches()
     if (!you.props.exists(OVERFLOW_TEMPLES_KEY))
         return;
 
-    mprf(MSGCH_DIAGNOSTICS, "----");
-    mprf(MSGCH_DIAGNOSTICS, "Overflow temples: ");
+    mprfc(MSGCH_DIAGNOSTICS, "----");
+    mprfc(MSGCH_DIAGNOSTICS, "Overflow temples: ");
 
     CrawlVector &levels = you.props[OVERFLOW_TEMPLES_KEY].get_vector();
 
@@ -424,7 +424,7 @@ void wizard_list_branches()
                 comma_separated_line(god_names.begin(), god_names.end()));
         }
 
-        mprf(MSGCH_DIAGNOSTICS, "%u on D:%u (%s)", temples.size(),
+        mprfc(MSGCH_DIAGNOSTICS, "%u on D:%u (%s)", temples.size(),
              i + 1,
              comma_separated_line(temple_strings.begin(),
                                   temple_strings.end(), "; ", "; ").c_str()
@@ -628,7 +628,7 @@ void debug_place_map(bool primary)
 {
     char what_to_make[100];
     clear_messages();
-    mprf(MSGCH_PROMPT, primary ? "Enter map name: " :
+    mprfc(MSGCH_PROMPT, primary ? "Enter map name: " :
          "Enter map name (prefix it with * for local placement): ");
     if (cancellable_get_line(what_to_make, sizeof what_to_make,
                             primary ? &primary_hist : &mini_hist))
@@ -730,7 +730,7 @@ void wizard_list_levels()
         mpr("Level stack:");
         for (unsigned int i = 0; i < you.level_stack.size(); i++)
         {
-            mprf(MSGCH_DIAGNOSTICS, i+1, // inhibit merging
+            mprfcp(MSGCH_DIAGNOSTICS, i+1, // inhibit merging
                  "%-10s (%d,%d)", you.level_stack[i].id.describe().c_str(),
                  you.level_stack[i].pos.x, you.level_stack[i].pos.y);
         }
@@ -750,7 +750,7 @@ void wizard_list_levels()
         for (int j = 0; j < NUM_DACTION_COUNTERS; j++)
             cnts += make_stringf("%d/", lv->daction_counters[j]);
 
-        mprf(MSGCH_DIAGNOSTICS, i+1, // inhibit merging
+        mprfcp(MSGCH_DIAGNOSTICS, i+1, // inhibit merging
              "%-10s : %s", levs[i].describe().c_str(), cnts.c_str());
     }
 
@@ -827,7 +827,7 @@ void wizard_clear_used_vaults()
 void wizard_abyss_speed()
 {
     char specs[256];
-    mprf(MSGCH_PROMPT, "Set Abyss speed to what? (now %d, higher value = "
+    mprfc(MSGCH_PROMPT, "Set Abyss speed to what? (now %d, higher value = "
                        "higher speed) ", you.abyss_speed);
 
     if (!cancellable_get_line(specs, sizeof(specs)))

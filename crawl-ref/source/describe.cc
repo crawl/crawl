@@ -4105,7 +4105,7 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc, bool do_
 
 void inscribe_item(item_def &item)
 {
-    mprf_nocap(MSGCH_EQUIPMENT, "%s", item.name(DESC_INVENTORY).c_str());
+    mprfc_nocap(MSGCH_EQUIPMENT, "%s", item.name(DESC_INVENTORY).c_str());
 
     const bool is_inscribed = !item.inscription.empty();
     string prompt = is_inscribed ? "Replace inscription with what? "
@@ -4131,7 +4131,7 @@ void inscribe_item(item_def &item)
 
     item.inscription = new_inscrip;
 
-    mprf_nocap(MSGCH_EQUIPMENT, "%s", item.name(DESC_INVENTORY).c_str());
+    mprfc_nocap(MSGCH_EQUIPMENT, "%s", item.name(DESC_INVENTORY).c_str());
     you.wield_change  = true;
     quiver::set_needs_redraw();
 }

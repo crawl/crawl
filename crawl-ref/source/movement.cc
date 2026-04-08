@@ -146,7 +146,7 @@ static void _apply_barbs_damage()
 {
     if (you.duration[DUR_BARBS])
     {
-        mprf(MSGCH_WARN, "The barbed spikes dig painfully into your body "
+        mprfc(MSGCH_WARN, "The barbed spikes dig painfully into your body "
                          "as you move.");
         ouch(roll_dice(2, you.attribute[ATTR_BARBS_POW]), KILLED_BY_BARBS);
         bleed_onto_floor(you.pos(), MONS_PLAYER, 2, false);
@@ -206,7 +206,7 @@ void remove_ice_movement()
 {
     if (you.duration[DUR_ICY_ARMOUR])
     {
-        mprf(MSGCH_DURATION, "Your icy armour cracks and falls away as "
+        mprfc(MSGCH_DURATION, "Your icy armour cracks and falls away as "
                              "you move.");
         you.duration[DUR_ICY_ARMOUR] = 0;
         you.redraw_armour_class = true;
@@ -216,7 +216,7 @@ void remove_ice_movement()
     {
         you.duration[DUR_FROZEN_RAMPARTS] = 0;
         end_frozen_ramparts();
-        mprf(MSGCH_DURATION, "The frozen ramparts melt away as you move.");
+        mprfc(MSGCH_DURATION, "The frozen ramparts melt away as you move.");
     }
 }
 

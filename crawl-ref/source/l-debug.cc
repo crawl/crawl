@@ -203,7 +203,7 @@ LUAFN(debug_cull_monsters)
         if (mons.type == MONS_NO_MONSTER)
             return 0;
 
-    mprf(MSGCH_DIAGNOSTICS, "env.mons[] is full, dismissing non-near monsters");
+    mprfc(MSGCH_DIAGNOSTICS, "env.mons[] is full, dismissing non-near monsters");
 
     // env.mons[] is full
     for (monster_iterator mi; mi; ++mi)
@@ -329,7 +329,7 @@ static bool _check_uniques()
             || was_set && !is_set
             || !was_set && is_set && !placed)
         {
-            mprf(MSGCH_ERROR,
+            mprfc(MSGCH_ERROR,
                  "Bad unique tracking: %s placed=%d was_set=%d is_set=%d",
                  mons_type_name(mt, DESC_PLAIN).c_str(),
                  placed, was_set, is_set);

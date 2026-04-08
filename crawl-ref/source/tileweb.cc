@@ -525,7 +525,7 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         string m = "<red>Serverwide announcement:</red> ";
         m += content->string_;
 
-        mprf(MSGCH_DGL_MESSAGE, "%s", m.c_str());
+        mprfc(MSGCH_DGL_MESSAGE, "%s", m.c_str());
         // The following two lines are a magic incantation to get this mprf
         // to actually render without waiting on player input
         flush_prev_message();

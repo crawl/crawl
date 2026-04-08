@@ -419,7 +419,7 @@ bool explode_monster(monster* mons, killer_type killer, bool pet_kill)
     if (is_sanctuary(mons->pos()))
     {
         if (you.can_see(*mons))
-            mprf(MSGCH_GOD, "%s", sanct_msg.c_str());
+            mprfc(MSGCH_GOD, "%s", sanct_msg.c_str());
         return false;
     }
 

@@ -203,7 +203,7 @@ void logfile_new_entry(const scorefile_entry &ne)
     logfile = _hs_open("a", _log_file_name());
     if (logfile == nullptr)
     {
-        mprf(MSGCH_ERROR, "ERROR: failure writing to the logfile.");
+        mprfc(MSGCH_ERROR, "ERROR: failure writing to the logfile.");
         return;
     }
 

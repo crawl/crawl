@@ -1204,7 +1204,7 @@ static void _ensure_entry(branch_type br)
                 {
                     env.grid(*di) = entry; // No need to update LOS, etc.
                     // Announce the repair even in non-debug builds.
-                    mprf(MSGCH_ERROR, "Placing missing branch entry: %s.",
+                    mprfc(MSGCH_ERROR, "Placing missing branch entry: %s.",
                          dungeon_feature_name(entry));
                     return;
                 }
@@ -1232,7 +1232,7 @@ static void _ensure_exit(branch_type br)
                 {
                     env.grid(*di) = exit; // No need to update LOS, etc.
                     // Announce the repair even in non-debug builds.
-                    mprf(MSGCH_ERROR, "Placing missing branch exit: %s.",
+                    mprfc(MSGCH_ERROR, "Placing missing branch exit: %s.",
                          dungeon_feature_name(exit));
                     return;
                 }
@@ -1363,7 +1363,7 @@ static void _shunt_monsters_out_of_walls()
                     // Could have been a rock worm or a dryad from old saves.
                     if (m.type != MONS_GHOST)
 #endif
-                    mprf(MSGCH_ERROR, "Error: monster %s in %s at (%d,%d)",
+                    mprfc(MSGCH_ERROR, "Error: monster %s in %s at (%d,%d)",
                          m.name(DESC_PLAIN, true).c_str(),
                          dungeon_feature_name(env.grid(m.pos())),
                          m.pos().x, m.pos().y);
@@ -1601,7 +1601,7 @@ void tag_read(reader &inf, tag_type tag_id)
                 auto exit = DNGN_EXIT_GAUNTLET;
                 env.grid(you.pos()) = exit;
                 // Announce the repair even in non-debug builds.
-                mprf(MSGCH_ERROR, "Placing emergency exit: %s.",
+                mprfc(MSGCH_ERROR, "Placing emergency exit: %s.",
                      dungeon_feature_name(exit));
             }
         }
@@ -1993,7 +1993,7 @@ static void _tag_construct_you(writer &th)
         ASSERT(!_calc_score_exists());
 
     if (!dlua.callfn("dgn_save_data", "u", &th))
-        mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
+        mprfc(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
 
     CANARY;
 
@@ -2342,7 +2342,7 @@ static m_transit_list unmarshall_follower_list(reader &th)
         follower f = unmarshall_follower(th);
         if (!f.mons.alive())
         {
-            mprf(MSGCH_ERROR,
+            mprfc(MSGCH_ERROR,
                  "Dead monster %s in transit list in saved game, ignoring.",
                  f.mons.name(DESC_PLAIN, true).c_str());
         }
@@ -3671,7 +3671,7 @@ static void _tag_read_you(reader &th)
             }
             else
             {
-                mprf(MSGCH_ERROR, "Mutation #%d out of sync, fixing up.", j);
+                mprfc(MSGCH_ERROR, "Mutation #%d out of sync, fixing up.", j);
                 you.mutation[j] = you.innate_mutation[j] + you.temp_mutation[j];
             }
         }
@@ -4310,7 +4310,7 @@ static void _tag_read_you(reader &th)
             }
             else
 #endif
-            mprf(MSGCH_ERROR, "Timer %d next trigger in the past [%d < %d]",
+            mprfc(MSGCH_ERROR, "Timer %d next trigger in the past [%d < %d]",
                 j, you.next_timer_effect[j], you.elapsed_time);
         }
     }
@@ -4632,7 +4632,7 @@ static void _tag_read_you(reader &th)
 
     if (!dlua.callfn("dgn_load_data", "u", &th))
     {
-        mprf(MSGCH_ERROR, "Failed to load Lua persist table: %s",
+        mprfc(MSGCH_ERROR, "Failed to load Lua persist table: %s",
              dlua.error.c_str());
     }
 
@@ -4714,7 +4714,7 @@ static void _tag_read_you(reader &th)
 
     if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY) && !you.duration[DUR_HEAVENLY_STORM])
     {
-        mprf(MSGCH_ERROR, "Fixing up incorrect heavenly storm key");
+        mprfc(MSGCH_ERROR, "Fixing up incorrect heavenly storm key");
         wu_jian_end_heavenly_storm();
     }
 
@@ -4930,7 +4930,7 @@ static void _tag_read_you_items(reader &th)
 #if TAG_MAJOR_VERSION == 34
     if (!bad_slots.empty())
     {
-        mprf(MSGCH_ERROR, "Fixed bad positions for inventory slots %s",
+        mprfc(MSGCH_ERROR, "Fixed bad positions for inventory slots %s",
                           bad_slots.c_str());
     }
 
@@ -5481,7 +5481,7 @@ static void _tag_read_you_dungeon(reader &th)
             // save except at the end.
 
             const branch_type branch_to_fix = places[i].branch;
-            mprf(MSGCH_ERROR,
+            mprfc(MSGCH_ERROR,
                 "Save file has uninitialized PlaceInfo for branch %s",
                 branches[places[i].branch].shortname);
             // these are the known cases where this fix applies. It would
@@ -7113,12 +7113,12 @@ static void _tag_construct_level_monsters(writer &th)
         {
             if (invalid_monster_type(m.type))
             {
-                mprf(MSGCH_ERROR, "Marshalled monster #%d %s",
+                mprfc(MSGCH_ERROR, "Marshalled monster #%d %s",
                      i, m.name(DESC_PLAIN, true).c_str());
             }
             if (!in_bounds(m.pos()))
             {
-                mprf(MSGCH_ERROR,
+                mprfc(MSGCH_ERROR,
                      "Marshalled monster #%d %s out of bounds at (%d, %d)",
                      i, m.name(DESC_PLAIN, true).c_str(),
                      m.pos().x, m.pos().y);
@@ -8114,7 +8114,7 @@ void unmarshallMonster(reader &th, monster& m)
 
     if (m.type == MONS_ORC_APOSTLE && m.damage_friendly > m.damage_total)
     {
-        mprf(MSGCH_ERROR, "apostle \"%s\" had incorrect damage tracking: %d > %d",
+        mprfc(MSGCH_ERROR, "apostle \"%s\" had incorrect damage tracking: %d > %d",
             m.full_name(DESC_PLAIN).c_str(), m.damage_friendly, m.damage_total);
         m.damage_total = m.damage_friendly = 0;
     }
@@ -8202,7 +8202,7 @@ static void _tag_read_level_monsters(reader &th)
             // avoid "mid cache bogosity" if there's an unhandled clone bug
             if (dup_m && dup_m->alive())
             {
-                mprf(MSGCH_ERROR, "elsewhere companion has duplicate mid %d: %s",
+                mprfc(MSGCH_ERROR, "elsewhere companion has duplicate mid %d: %s",
                     dup_m->mid, dup_m->full_name(DESC_PLAIN).c_str());
                 env.mid_cache[dup_m->mid] = dup_m->mindex();
             }
@@ -8212,12 +8212,12 @@ static void _tag_read_level_monsters(reader &th)
 #if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
         if (invalid_monster_type(m.type))
         {
-            mprf(MSGCH_ERROR, "Unmarshalled monster #%d %s",
+            mprfc(MSGCH_ERROR, "Unmarshalled monster #%d %s",
                  i, m.name(DESC_PLAIN, true).c_str());
         }
         if (!in_bounds(m.pos()))
         {
-            mprf(MSGCH_ERROR,
+            mprfc(MSGCH_ERROR,
                  "Unmarshalled monster #%d %s out of bounds at (%d, %d)",
                  i, m.name(DESC_PLAIN, true).c_str(),
                  m.pos().x, m.pos().y);
@@ -8225,7 +8225,7 @@ static void _tag_read_level_monsters(reader &th)
         int midx = env.mgrid(m.pos());
         if (midx != NON_MONSTER)
         {
-            mprf(MSGCH_ERROR, "(%d, %d) for %s already occupied by %s",
+            mprfc(MSGCH_ERROR, "(%d, %d) for %s already occupied by %s",
                  m.pos().x, m.pos().y,
                  m.name(DESC_PLAIN, true).c_str(),
                  env.mons[midx].name(DESC_PLAIN, true).c_str());

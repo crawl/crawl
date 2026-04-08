@@ -468,7 +468,7 @@ void polar_vortex_damage(actor *caster, int dur)
             && !need_expiration_warning(old_player_pos)
             && need_expiration_warning(new_player_pos))
         {
-            mprf(MSGCH_DANGER, "Careful! You are now flying above %s.",
+            mprfc(MSGCH_DANGER, "Careful! You are now flying above %s.",
                  feature_description_at(new_player_pos, false, DESC_PLAIN)
                      .c_str());
         }

@@ -1765,7 +1765,7 @@ bool transforming_is_unsafe(transformation which_trans)
 {
     if (feat_dangerous_for_form(which_trans, env.grid(you.pos())))
     {
-        mprf(MSGCH_PROMPT, "%s right now would cause you to %s!",
+        mprfc(MSGCH_PROMPT, "%s right now would cause you to %s!",
                 which_trans == transformation::none ? "Untransforming" : "Transforming",
                 env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
         return true;
@@ -1791,7 +1791,7 @@ bool transforming_is_unsafe(transformation which_trans)
         if (item->cursed()
             || (is_artefact(*item) && artefact_property(*item, ARTP_FRAGILE)))
         {
-            mprf(MSGCH_PROMPT, "%s right now would shatter %s!",
+            mprfc(MSGCH_PROMPT, "%s right now would shatter %s!",
                  which_trans == transformation::none ? "Untransforming" : "Transforming",
                  item->name(DESC_YOUR).c_str());
             return true;
@@ -1958,7 +1958,7 @@ static void _on_enter_form(transformation which_trans)
     case transformation::maw:
         if (have_passive(passive_t::goldify_corpses))
         {
-            mprf(MSGCH_WARN, "Gozag's golden gift will leave your new mouth "
+            mprfc(MSGCH_WARN, "Gozag's golden gift will leave your new mouth "
                              "with nothing to eat.");
         }
         break;
@@ -2205,7 +2205,7 @@ void untransform(bool skip_move, bool scale_hp, bool preserve_equipment,
 
     const string message = get_form(old_form)->get_untransform_message();
     if (!message.empty())
-        mprf(MSGCH_DURATION, "%s", message.c_str());
+        mprfc(MSGCH_DURATION, "%s", message.c_str());
 
     set_form(transformation::none, 0, scale_hp);
 
@@ -2238,7 +2238,7 @@ void untransform(bool skip_move, bool scale_hp, bool preserve_equipment,
         if (monster* ember = get_solar_ember())
         {
             monster_die(*ember, KILL_RESET, NON_MONSTER);
-            mprf(MSGCH_DURATION, "Your tiny sun winks out.");
+            mprfc(MSGCH_DURATION, "Your tiny sun winks out.");
         }
     }
     else if (old_form == transformation::rime_yak)
@@ -2557,7 +2557,7 @@ void sun_scarab_spawn_ember(bool first_time)
     if (monster* mon = create_monster(mg))
     {
         you.props[SOLAR_EMBER_MID_KEY].get_int() = mon->mid;
-        mprf(MSGCH_DURATION, first_time ? "A tiny sun coalesces beside you."
+        mprfc(MSGCH_DURATION, first_time ? "A tiny sun coalesces beside you."
                                         : "You reconstitute your solar ember.");
         you.props.erase(SOLAR_EMBER_REVIVAL_KEY);
     }

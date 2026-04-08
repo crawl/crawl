@@ -1654,7 +1654,7 @@ bool activate_ability()
     if (!clua.callfn("c_choose_ability", ">s", &luachoice))
     {
         if (!clua.error.empty())
-            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+            mprfc(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
     }
     else if (!luachoice.empty())
     {
@@ -3313,7 +3313,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
             if (god_hates_item(*wpn))
             {
-                mprf(MSGCH_WARN, "%s forbids using such a weapon!",
+                mprfc(MSGCH_WARN, "%s forbids using such a weapon!",
                      god_name(you.religion).c_str());
                 return spret::abort;
             }
@@ -3426,7 +3426,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_ENKINDLE:
     {
         draw_ring_animation(you.pos(), 3, LIGHTCYAN, CYAN, true);
-        mprf(MSGCH_DURATION, "Your flames flare with remembrance!");
+        mprfc(MSGCH_DURATION, "Your flames flare with remembrance!");
         you.duration[DUR_ENKINDLED] = (random_range(12, 20)
                                        + (you.props[ENKINDLE_CHARGES_KEY].get_int() * 3))
                                             * BASELINE_DELAY;
@@ -3550,7 +3550,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     case ABIL_YRED_FATHOMLESS_SHACKLES:
         fail_check();
-        mprf(MSGCH_DURATION, "You call down Yredelemnul's inexorable grip.");
+        mprfc(MSGCH_DURATION, "You call down Yredelemnul's inexorable grip.");
         // XXX: Some invo formula
         you.duration[DUR_FATHOMLESS_SHACKLES] = random_range(15, 25) * BASELINE_DELAY;
         yred_make_blasphemy();
@@ -3583,7 +3583,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     case ABIL_OKAWARU_HEROISM:
         fail_check();
-        mprf(MSGCH_DURATION, you.duration[DUR_HEROISM]
+        mprfc(MSGCH_DURATION, you.duration[DUR_HEROISM]
              ? "You feel more confident with your borrowed prowess."
              : "You gain the combat prowess of a mighty hero.");
 
@@ -3599,11 +3599,11 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         if (you.duration[DUR_FINESSE])
         {
             // "Your [hand(s)] get{s} new energy."
-            mprf(MSGCH_DURATION, "%s",
+            mprfc(MSGCH_DURATION, "%s",
                  you.hands_act("get", "new energy.").c_str());
         }
         else
-            mprf(MSGCH_DURATION, "You can now deal lightning-fast blows.");
+            mprfc(MSGCH_DURATION, "You can now deal lightning-fast blows.");
 
         you.increase_duration(DUR_FINESSE,
                               10 + random2avg(you.skill(SK_INVOCATIONS, 6), 2),
@@ -3871,7 +3871,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         const item_def* const weapon = you.weapon();
         const string msg = weapon ? weapon->name(DESC_YOUR)
                                   : ("your " + you.hand_name(true));
-        mprf(MSGCH_DURATION, "A thick mucus forms on %s.", msg.c_str());
+        mprfc(MSGCH_DURATION, "A thick mucus forms on %s.", msg.c_str());
         you.increase_duration(DUR_SLIMIFY,
                               random2avg(you.piety() / 4, 2) + 3, 100);
         break;
@@ -4025,7 +4025,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_WU_JIAN_SERPENTS_LASH:
-        mprf(MSGCH_GOD, "Your muscles tense, ready for explosive movement...");
+        mprfc(MSGCH_GOD, "Your muscles tense, ready for explosive movement...");
         you.attribute[ATTR_SERPENTS_LASH] = 2;
         you.redraw_status_lights = true;
         return spret::success;

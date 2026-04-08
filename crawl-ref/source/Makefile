@@ -106,7 +106,7 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
         clean-coverage clean-coverage-full \
         appimage distclean debug debug-lite profile package-source source \
         build-windows package-windows-installer docs greet api api-dev android FORCE \
-        monster catch2-tests plug-and-play-tests \
+        monster catch2-tests plug-and-play-tests i18n-pot i18n-compile \
         crawl-universal crawl-arm64-apple-macos11 crawl-x86_64-apple-macos10.7 clean-mac
 
 include Makefile.obj
@@ -183,6 +183,11 @@ DOXYGEN = doxygen
 DOXYGEN_SIMPLE_CONF = crawl_simple.doxy
 DOXYGEN_ALL_CONF = crawl_all.doxy
 DOXYGEN_HTML_GEN = html/
+XGETTEXT = xgettext
+MSGFMT = msgfmt
+GETTEXT_DOMAIN = crawl-data
+GETTEXT_POT = po/$(GETTEXT_DOMAIN).pot
+I18N_SOURCE_FILES = $(shell git -C .. ls-files 'source/*.cc' 'source/*.h' | sed -e 's#^source/##' -e '/^contrib\//d' -e '/^prebuilt\//d')
 # Prefer python3, if available
 PYTHON = python
 ifneq (, $(shell which python3 2>&1))
@@ -714,6 +719,14 @@ ifndef BUILD_SQLITE
   endif
 endif
 
+ifndef NO_PKGCONFIG
+ ifeq ($(shell $(PKGCONFIG) libintl --exists >/dev/null 2>&1 && echo yes),yes)
+   INCLUDES_L += $(shell $(PKGCONFIG) libintl --cflags-only-I | sed -e 's/-I/-isystem /')
+   CFLAGS_L += $(shell $(PKGCONFIG) libintl --cflags-only-other)
+   LIBS += $(shell $(PKGCONFIG) libintl --libs)
+ endif
+endif
+
 ifndef BUILD_ZLIB
   LIBS += -lz
 else
@@ -1003,6 +1016,7 @@ ifdef TILES
 
 OUR_PROPORTIONAL_FONT=DejaVuSans.ttf
 OUR_MONOSPACED_FONT=DejaVuSansMono.ttf
+OUR_CJK_MONOSPACED_FONT=unifont-17.0.04.otf
 
 ifdef PROPORTIONAL_FONT
   DEFINES += -DPROPORTIONAL_FONT=\"$(PROPORTIONAL_FONT)\"
@@ -1041,6 +1055,20 @@ else
   else
     DEFINES += -DMONOSPACED_FONT=\"$(FONTDIR)$(OUR_MONOSPACED_FONT)\"
     INSTALL_FONTS += "contrib/fonts/$(OUR_MONOSPACED_FONT)"
+  endif
+endif
+
+ifdef CJK_MONOSPACED_FONT
+  DEFINES += -DCJK_MONOSPACED_FONT=\"$(CJK_MONOSPACED_FONT)\"
+  ifneq (,$(COPY_FONTS))
+    INSTALL_FONTS += "$(CJK_MONOSPACED_FONT)"
+  endif
+else
+  ifeq (,$(COPY_FONTS))
+    DEFINES += -DCJK_MONOSPACED_FONT=\"vendor-fonts/$(OUR_CJK_MONOSPACED_FONT)\"
+  else
+    DEFINES += -DCJK_MONOSPACED_FONT=\"$(FONTDIR)$(OUR_CJK_MONOSPACED_FONT)\"
+    INSTALL_FONTS += "vendor-fonts/$(OUR_CJK_MONOSPACED_FONT)"
   endif
 endif
 
@@ -1298,6 +1326,42 @@ greet:
 	fi
 
 docs: $(GENERATED_DOCS)
+
+i18n-pot:
+	@mkdir -p po
+	$(XGETTEXT) --from-code=UTF-8 --language=C++ \
+		--flag=mprf:1:c-format \
+		--flag=mprfc:2:c-format \
+		--flag=mprfcp:3:c-format \
+		--flag=mprf_nojoin:1:c-format \
+		--flag=mprfc_nojoin:2:c-format \
+		--flag=mprf_nocap:1:c-format \
+		--flag=mprfc_nocap:2:c-format \
+		--flag=mprfcp_nocap:3:c-format \
+		--keyword=NC_:1c,2 \
+		--keyword=pgettext:1c,2 \
+		--keyword=N_:1 \
+		--keyword=mpr:1 \
+		--keyword=mprf:1 \
+		--keyword=mprfc:2 \
+		--keyword=mprfcp:3 \
+		--keyword=mprf_nojoin:1 \
+		--keyword=mprfc_nojoin:2 \
+		--keyword=mprf_nocap:1 \
+		--keyword=mprfc_nocap:2 \
+		--keyword=mprfcp_nocap:3 \
+		--keyword=yesno:1 \
+		--keyword=formatted_string:1 \
+		-o $(GETTEXT_POT) $(I18N_SOURCE_FILES)
+
+i18n-compile:
+	@if ls po/*.po >/dev/null 2>&1; then \
+		for po in po/*.po; do \
+			lang=`basename "$$po" .po`; \
+			mkdir -p "locale/$$lang/LC_MESSAGES"; \
+			$(MSGFMT) -o "locale/$$lang/LC_MESSAGES/$(GETTEXT_DOMAIN).mo" "$$po"; \
+		done; \
+	fi
 
 
 # Webtiles data

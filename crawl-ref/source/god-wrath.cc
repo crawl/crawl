@@ -380,13 +380,13 @@ static bool _cheibriados_retribution()
     {
         if (you.hp >= (you.hp_max * 3 / 4))
         {
-            mprf(MSGCH_DANGER, "You lose track of time!");
+            mprfc(MSGCH_DANGER, "You lose track of time!");
             you.put_to_sleep(nullptr, random_range(5, 10) * BASELINE_DELAY);
             dec_penance(god, 1);
         }
         else
         {
-            mprf(MSGCH_DANGER, "The world leaves you behind!");
+            mprfc(MSGCH_DANGER, "The world leaves you behind!");
             dec_haste_player(10000);
             slow_player(81 + random2(10));
         }
@@ -673,7 +673,7 @@ static bool _kikubaaqudgha_retribution()
         int doom_pow = random_range(35, 50);
 
         if (!(you.attribute[ATTR_DOOM] + doom_pow >= 100))
-            mprf(MSGCH_DANGER, "Your doom draws closer.");
+            mprfc(MSGCH_DANGER, "Your doom draws closer.");
 
         you.doom(doom_pow);
     }
@@ -1463,7 +1463,7 @@ static void _qazlal_elemental_vulnerability()
     if (banes.empty())
     {
         bane_type bane = random_choose(BANE_HEATSTROKE, BANE_SNOW_BLINDNESS, BANE_ELECTROSPASM);
-        mprf(MSGCH_WARN, "Your %s grows more durable.", bane_name(bane).c_str());
+        mprfc(MSGCH_WARN, "Your %s grows more durable.", bane_name(bane).c_str());
         you.banes[bane] += 1000;
     }
     else
@@ -1803,7 +1803,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
 
     default:
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_RELIGION)
-        mprf(MSGCH_DIAGNOSTICS, "No retribution defined for %s.",
+        mprfc(MSGCH_DIAGNOSTICS, "No retribution defined for %s.",
              god_name(god).c_str());
 #endif
         return false;
@@ -1821,13 +1821,13 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
         {
             if (!you.confused())
             {
-                mprf(MSGCH_WARN, "The divine experience confuses you!");
+                mprfc(MSGCH_WARN, "The divine experience confuses you!");
                 confuse_player(5 + random2(3));
             }
         }
         else
         {
-            mprf(MSGCH_WARN, "The divine experience drains your vigour!");
+            mprfc(MSGCH_WARN, "The divine experience drains your vigour!");
             slow_player(10 + random2(5));
         }
     }
