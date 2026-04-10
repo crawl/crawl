@@ -6541,7 +6541,12 @@ bool monster::attempt_escape()
     else
     {
         const monster* themonst = monster_by_mid(constricted_by);
-        ASSERT(themonst);
+        if (!themonst)
+        {
+            // The constricting monster is gone (e.g. died off-level).
+            stop_being_constricted(true);
+            return true;
+        }
 
         // Monsters use the same escape formula for all forms of constriction.
         hold_pow = 40 + themonst->get_hit_dice() * 3;
