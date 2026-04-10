@@ -71,7 +71,7 @@ eveningstar3 WPN_EVENINGSTAR_RANDART
 hammer1 WPN_HAMMER
 %enchant_variation WPN_HAMMER shiny runed glowing
 hammer2 WPN_HAMMER_MAGIC
-%enchant_variation WPN_HAMMER shiny runed glowing randart
+%enchant_variation WPN_HAMMER randart
 hammer3 WPN_HAMMER_RANDART
 bullwhip WPN_WHIP
 %enchant_variation WPN_WHIP shiny runed glowing
