@@ -623,9 +623,12 @@ static void _WYRMBANE_melee_effects(item_def* weapon, actor* /*attacker*/,
             attack_strength_punctuation(bonus_dam).c_str());
 
         atk->inflict_damage(bonus_dam);
+        // The defender may be dead, but even if so we dont want to power up
+        // the lance, as this will happen on another call in the kill phase.
+        return;
     }
 
-    if (defender->alive() || !hd)
+    if (!hd)
         return;
 
     // The cap can be reached by:
