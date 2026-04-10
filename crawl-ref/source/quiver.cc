@@ -1373,6 +1373,7 @@ namespace quiver
             {
             case ABIL_HOP:
             case ABIL_BLINKBOLT:
+            case ABIL_GOLDEN_BREATH:
             case ABIL_COMBUSTION_BREATH:
             case ABIL_GLACIAL_BREATH:
             case ABIL_GALVANIC_BREATH:
