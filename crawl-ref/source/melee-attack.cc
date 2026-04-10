@@ -3472,7 +3472,8 @@ bool melee_attack::apply_staff_damage()
             defender->poison(attacker, 2);
     }
 
-    if (you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT)
+    if (attacker->is_player()
+        && you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT)
         && you.magic_points < you.max_magic_points)
     {
         mpr("You draw in some of the released energy.");
