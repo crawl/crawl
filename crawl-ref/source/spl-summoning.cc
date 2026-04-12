@@ -3956,6 +3956,16 @@ spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bo
              agent.pronoun(PRONOUN_POSSESSIVE).c_str());
     }
 
+    // We need to finalize the movement before making the temporary water, so
+    // because the temporary terrain change will clear deferred movement
+    // effects.
+    //
+    // This means that any existing terrain effects will be triggered, even if
+    // they would be suppressed by water. However, since we only create water
+    // on plain DNGN_FLOOR tiles, there should not be any such effects to worry
+    // about.
+    agent.finalise_movement();
+
     // Make the temporary water (after the movement, so we don't get slash
     // messages before the main part appears to happen).)
     for (int i = 0; i < 3; ++i)
@@ -3967,8 +3977,6 @@ spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bo
                                 TERRAIN_CHANGE_FLOOD);
         }
     }
-
-    agent.finalise_movement();
 
     return spret::success;
 }
