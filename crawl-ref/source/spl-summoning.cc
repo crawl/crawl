@@ -4016,6 +4016,8 @@ spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bo
              agent.pronoun(PRONOUN_POSSESSIVE).c_str());
     }
 
+    agent.finalise_movement();
+
     // Make the temporary water (after the movement, so we don't get slash
     // messages before the main part appears to happen).)
     for (int i = 0; i < 3; ++i)
@@ -4027,8 +4029,6 @@ spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bo
                                 TERRAIN_CHANGE_FLOOD);
         }
     }
-
-    agent.finalise_movement();
 
     return spret::success;
 }
