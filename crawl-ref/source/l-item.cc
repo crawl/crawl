@@ -215,7 +215,7 @@ static int l_item_do_drop(lua_State *ls)
  * Optionally specify how many for partially dropping a stack.
  * @tparam[opt] int qty
  * @treturn boolean successfully dropped
- * @function drop
+ * @function item.drop
  */
 IDEFN(drop, do_drop)
 
@@ -254,7 +254,7 @@ static int l_item_do_inscribe(lua_State *ls)
  * @tparam[opt=""] string inscription to add
  * @tparam[opt=true] boolean append to existing inscription; if false, replace
  * @treturn boolean successfully inscribed
- * @function inscribe
+ * @function item.inscribe
  */
 IDEFN(inscribe, do_inscribe)
 
@@ -289,7 +289,7 @@ static int l_item_do_class(lua_State *ls)
 /*** What is the item class?
  * @tparam[opt=false] boolean terse
  * @treturn string
- * @function class
+ * @function item.class
  */
 IDEFN(class, do_class)
 
@@ -336,7 +336,7 @@ static int l_item_do_subtype(lua_State *ls)
 /*** What is the subtype?
  * @tparam[opt=true] boolean armour_slots return slot, not subtype, for armour
  * @treturn string|nil the item's subtype, if any
-  * @function subtype
+ * @function item.subtype
  */
 IDEFN(subtype, do_subtype)
 
@@ -391,7 +391,7 @@ static int l_item_do_ego(lua_State *ls)
 /*** What is the ego?
  * @tparam[opt=false] boolean terse
  * @treturn string|nil the item's ego, if any
- * @function ego
+ * @function item.ego
  */
 IDEFN(ego, do_ego)
 
@@ -431,7 +431,7 @@ static int l_item_do_name(lua_State *ls)
  * @tparam[opt="plain"] string desc description type
  * @tparam[opt="false"] boolean terse
  * @treturn string
- * @function name
+ * @function item.name
  */
 IDEFN(name, do_name)
 
@@ -461,7 +461,7 @@ static int l_item_do_name_coloured(lua_State *ls)
  * @tparam[opt="plain"] string desc description type
  * @tparam[opt="false"] boolean terse
  * @treturn string
- * @function name_coloured
+ * @function item.name_coloured
  */
 IDEFN(name_coloured, do_name_coloured)
 
