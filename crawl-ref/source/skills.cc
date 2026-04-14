@@ -2101,10 +2101,10 @@ bool body_armour_used_or_melded()
 {
     bool x = true;
     int body_melding_forms[12] = {1, 3, 4, 5, 17, 20, 24, 25, 26, 27, 29, 31};
-    for(int i = 0; i <= NUM_ARMOURS; i++){
+    for (int i = 0; i <= NUM_ARMOURS; i++){
         x = x && !you.action_count.count(make_pair(CACT_ARMOUR, caction_compound(i)));
     }
-    for(int i = 0; i < 12; i++){
+    for (int i = 0; i < 12; i++){
         x = x && !you.action_count.count(make_pair(CACT_FORM,
             caction_compound(body_melding_forms[i])));
     }
