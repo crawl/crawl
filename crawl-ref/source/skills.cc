@@ -2097,6 +2097,20 @@ unsigned get_skill_rank(unsigned skill_lev)
                            /* level 27 */    : 4;
 }
 
+bool body_armour_used_or_melded()
+{
+    bool x = true;
+    int body_melding_forms[12] = {1, 3, 4, 5, 17, 20, 24, 25, 26, 27, 29, 31};
+    for(int i = 0; i <= NUM_ARMOURS; i++){
+        x = x && !you.action_count.count(make_pair(CACT_ARMOUR, caction_compound(i)));
+    }
+    for(int i = 0; i < 12; i++){
+        x = x && !you.action_count.count(make_pair(CACT_FORM,
+            caction_compound(body_melding_forms[i])));
+    }
+    return x;
+}
+
 /**
  * Special conduct skill title tracking, extending the range of skill titles
  * beyond what's covered in skill_title_by_rank. These titles are used only if
@@ -2160,6 +2174,17 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         && best_skill == SK_SHAPESHIFTING && skill_rank == 5)
     {
         return "Pinnacle of Evolution";
+    }
+
+    // No body armour, all non body armour using species and forms not allowed!
+    if (you.species != SP_FELID
+        && you.species != SP_OCTOPODE
+        && you.species != SP_POLTERGEIST
+        && body_armour_used_or_melded()
+        && you.action_count.count(make_pair(CACT_ARMOUR, caction_compound(-1)))
+    )
+    {
+        return "Unburdened";
     }
 
     return title;

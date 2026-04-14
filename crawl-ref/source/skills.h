@@ -92,6 +92,7 @@ const char *skill_name(skill_type which_skill);
 const char *skill_abbr(skill_type which_skill);
 skill_type str_to_skill(const string &skill);
 skill_type str_to_skill_safe(const string &skill);
+bool body_armour_used_or_melded();
 
 string special_conduct_title(skill_type best_skill, uint8_t skill_rank);
 string skill_title_by_rank(
