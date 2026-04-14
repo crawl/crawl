@@ -4615,6 +4615,9 @@ void bolt::tracer_enchantment_affect_monster(monster* mon)
     }
 
     tracer->monster_hit(*this, *mon);
+
+    // Potentially chain to adjacent monsters.
+    handle_enchant_chaining(mon->pos());
     extra_range_used += range_used_on_hit();
 }
 
@@ -4969,7 +4972,8 @@ static void _add_chain_candidates(const bolt& beam, coord_def pos,
         if (!act
             || mons_aligned(beam.agent(), act)
             || act->is_peripheral()
-            || shoot_through_actor(beam.agent(), act))
+            || shoot_through_actor(beam.agent(), act)
+            || (beam.is_tracer() && !act->visible_to(beam.agent())))
         {
             continue;
         }
