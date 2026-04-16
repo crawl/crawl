@@ -56,3 +56,8 @@ void reautomap_level();
  */
 std::pair<coord_def, coord_def> known_map_bounds();
 bool in_known_map_bounds(const coord_def& p);
+
+void update_terrain_knowledge(coord_def pos,
+                              bool partial_knowledge_only = false);
+void update_grid_colour_knowledge(coord_def pos,
+                             bool partial_knowledge_only = false);

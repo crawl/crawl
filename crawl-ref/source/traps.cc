@@ -28,6 +28,7 @@
 #include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
+#include "map-knowledge.h"
 #include "mapmark.h"
 #include "mon-cast.h" // recall for zot traps
 #include "mon-enum.h"
@@ -679,7 +680,7 @@ void destroy_trap(const coord_def& pos)
     dungeon_terrain_changed(pos, DNGN_FLOOR);
     if (you.see_cell(pos))
     {
-        env.map_knowledge(pos).set_feature(DNGN_FLOOR);
+        update_terrain_knowledge(pos);
         StashTrack.update_stash(pos);
     }
 }

@@ -30,6 +30,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
+#include "tile-env.h"
 #include "tileview.h"
 #include "tiles-build-specific.h"
 #include "travel.h"

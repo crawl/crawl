@@ -871,7 +871,8 @@ spret cast_tomb(int pow, actor* victim, int source, bool fail)
                 tile_env.flv(*ai).feat = TILE_DNGN_SILVER_WALL;
                 if (env.map_knowledge(*ai).seen())
                 {
-                    env.map_knowledge(*ai).set_feature(DNGN_METAL_WALL);
+                    update_terrain_knowledge(*ai);
+                    update_grid_colour_knowledge(*ai);
                     env.map_knowledge(*ai).clear_item();
 #ifdef USE_TILE
                     tile_env.bk_bg(*ai) = TILE_DNGN_SILVER_WALL;
@@ -891,7 +892,8 @@ spret cast_tomb(int pow, actor* victim, int source, bool fail)
                 tile_env.flv(*ai).feat = TILE_WALL_SANDSTONE;
                 if (env.map_knowledge(*ai).seen())
                 {
-                    env.map_knowledge(*ai).set_feature(DNGN_ROCK_WALL);
+                    update_terrain_knowledge(*ai);
+                    update_grid_colour_knowledge(*ai);
                     env.map_knowledge(*ai).clear_item();
 #ifdef USE_TILE
                     tile_env.bk_bg(*ai) = TILE_WALL_SANDSTONE;

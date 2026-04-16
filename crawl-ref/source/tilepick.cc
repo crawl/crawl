@@ -944,17 +944,13 @@ static tileidx_t _tileidx_feature_no_overrides(const coord_def &gc)
 {
     dungeon_feature_type feat = env.map_knowledge(gc).feat();
 
-    tileidx_t override = tile_env.flv(gc).feat;
-    bool can_override = !feat_is_door(feat)
-                        && feat != DNGN_FLOOR
-                        && feat != DNGN_UNSEEN
-                        && feat != DNGN_PASSAGE_OF_GOLUBRIA
-                        && feat != DNGN_MALIGN_GATEWAY
-                        && feat != DNGN_BINDING_SIGIL
-                        && feat != DNGN_UNKNOWN_PORTAL
-                        && feat != DNGN_TREE; // summon forest spell
-    if (override && can_override)
+    tileidx_t override = tile_env.remembered_flavour.feat_flavour(gc);
+    // Door tile overrides get special handling in apply_variations
+    if (override && !feat_is_door(feat)
+        && env.map_knowledge(gc).feat_known())
+    {
         return override;
+    }
 
     // Any grid-specific tiles.
     switch (feat)

@@ -6520,7 +6520,8 @@ void unmarshallMapCell(reader &th, map_cell& cell)
 #endif
     }
 
-    cell.set_feature(feature, feat_colour);
+    cell.set_feature(feature);
+    cell.set_feat_colour(feat_colour);
 
     if (flags & MAP_SERIALIZE_CLOUD)
     {
@@ -7165,6 +7166,15 @@ void _tag_construct_level_tiles(writer &th)
             marshallShort(th, tile_env.flv[count_x][count_y].floor);
             marshallShort(th, tile_env.flv[count_x][count_y].feat);
             marshallShort(th, tile_env.flv[count_x][count_y].special);
+        }
+
+    const flavour_knowledge& remembered = tile_env.remembered_flavour;
+    for (int count_x = 0; count_x < GXM; count_x++)
+        for (int count_y = 0; count_y < GYM; count_y++)
+        {
+            coord_def pos(count_x, count_y);
+            unsigned short tile_idx = remembered.feat_flavour_idx(pos);
+            marshallShort(th, tile_idx);
         }
 
     marshallInt(th, TILE_WALL_MAX);
@@ -8290,6 +8300,33 @@ static void _debug_count_tiles()
 #endif
 }
 
+#if TAG_MAJOR_VERSION == 34
+static void _fixup_flavour_knowledge()
+{
+    flavour_knowledge& knowledge = tile_env.remembered_flavour;
+    const MapKnowledge& map = env.map_knowledge;
+
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        const dungeon_feature_type feat = map(*ri).feat();
+        // We used to ignore tile overrides on these features
+        if (feat != DNGN_FLOOR
+            && feat != DNGN_UNSEEN
+            && feat != DNGN_PASSAGE_OF_GOLUBRIA
+            && feat != DNGN_MALIGN_GATEWAY
+            && feat != DNGN_BINDING_SIGIL
+            && feat != DNGN_UNKNOWN_PORTAL
+            && feat != DNGN_TREE)
+        {
+            unsigned short tile_idx = tile_env.flv(*ri).feat_idx;
+            knowledge.set_feat_flavour(*ri, 0, tile_idx);
+        }
+        else
+            knowledge.set_feat_flavour(*ri, 0, 0);
+    }
+}
+#endif
+
 void _tag_read_level_tiles(reader &th)
 {
     // Map grids.
@@ -8331,6 +8368,22 @@ void _tag_read_level_tiles(reader &th)
             tile_env.flv[x][y].feat    = unmarshallShort(th);
             tile_env.flv[x][y].special = unmarshallShort(th);
         }
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_FLAVOUR_KNOWLEDGE)
+        _fixup_flavour_knowledge();
+    else
+#endif
+    {
+        flavour_knowledge& remembered = tile_env.remembered_flavour;
+        for (int x = 0; x < gx; x++)
+            for (int y = 0; y < gy; y++)
+            {
+                coord_def pos(x, y);
+                unsigned short feat_idx = unmarshallShort(th);
+                remembered.set_feat_flavour(pos, 0, feat_idx);
+            }
+    }
 
     _debug_count_tiles();
 
@@ -8428,9 +8481,23 @@ static void _regenerate_tile_flavour()
             else
                 flv.feat = new_feat;
         }
+
+        unsigned short remembered_feat_idx =
+            tile_env.remembered_flavour.feat_flavour_idx(*ri);
+        if (remembered_feat_idx)
+        {
+            tileidx_t new_feat = _get_tile_from_vector(remembered_feat_idx);
+            if (!new_feat)
+                remembered_feat_idx = 0;
+            tile_env.remembered_flavour.set_feat_flavour(*ri, new_feat,
+                                                         remembered_feat_idx);
+        }
     }
 
     tile_new_level(true, false);
+
+    for (rectangle_iterator ri(0); ri; ++ri)
+        tile_init_remembered_flavour(*ri);
 }
 
 static void _draw_tiles()

@@ -777,6 +777,7 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
     env.map_knowledge(p).clear();
     if (env.map_forgotten)
         (*env.map_forgotten)(p).clear();
+    tile_env.remembered_flavour.clear_at(p);
     env.map_seen.set(p, false);
 #ifdef USE_TILE
     tile_forget_map(p);

@@ -28,6 +28,7 @@
 #include "god-passive.h"
 #include "items.h"
 #include "libutil.h"
+#include "map-knowledge.h"
 #include "mapmark.h"
 #include "message.h"
 #include "mgen-data.h"
@@ -990,7 +991,8 @@ void timeout_terrain_changes(int duration, bool force)
         // so forcibly redraw anything the player could see at the start of them.
         if (m_pos.was_in_los)
         {
-            env.map_knowledge(m_pos.pos).set_feature(env.grid(m_pos.pos));
+            update_terrain_knowledge(m_pos.pos);
+            update_grid_colour_knowledge(m_pos.pos);
 #ifdef USE_TILE
             tile_env.bk_bg(m_pos.pos) = tileidx_feature_base(env.grid(m_pos.pos));
 #endif

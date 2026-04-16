@@ -654,8 +654,8 @@ static void _handle_trying_to_move_into_unpassable_terrain(coord_def targ)
         map_cell& knowledge = env.map_knowledge(targ);
         if (!knowledge.mapped() || knowledge.changed())
         {
-            dungeon_feature_type newfeat = env.grid(targ);
-            knowledge.set_feature(newfeat, env.grid_colours(targ));
+            update_terrain_knowledge(targ);
+            update_grid_colour_knowledge(targ);
             set_terrain_mapped(targ);
         }
     }

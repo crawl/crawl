@@ -26,6 +26,7 @@
 #include "stairs.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tile-env.h"
 #include "tileview.h"
 #include "unique-creature-list-type.h"
 #include "unwind.h"
@@ -103,6 +104,8 @@ LUAFN(debug_generate_level)
 {
     msg::suppress mx;
     env.map_knowledge.init(map_cell());
+    env.map_forgotten.reset();
+    tile_env.remembered_flavour.reset();
     los_changed();
     tile_init_default_flavour();
     tile_clear_flavour();

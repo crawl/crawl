@@ -32,6 +32,7 @@
 #include "items.h"
 #include "losglobal.h"
 #include "makeitem.h"
+#include "map-knowledge.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -1921,8 +1922,7 @@ void gozag_abandon_shops_on_level()
             dungeon_change_base_terrain(pos, DNGN_ABANDONED_SHOP);
             if (env.map_knowledge(pos).feat() == DNGN_ENTER_SHOP)
             {
-                const colour_t col = env.map_knowledge(pos).feat_colour();
-                env.map_knowledge(pos).set_feature(DNGN_ABANDONED_SHOP, col);
+                update_terrain_knowledge(pos, !env.map_knowledge(pos).seen());
                 redraw_view_at(pos);
             }
             env.markers.remove(feat);

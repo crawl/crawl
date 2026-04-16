@@ -1558,6 +1558,7 @@ void dgn_reset_level(bool enable_random_maps)
     env.grid_colours.init(BLACK);
     env.map_knowledge.init(map_cell());
     env.map_forgotten.reset();
+    tile_env.remembered_flavour.reset();
     env.map_seen.reset();
 
     // Initialise all items.

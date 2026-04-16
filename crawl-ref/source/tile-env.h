@@ -8,6 +8,52 @@
 #include "fixedarray.h"
 #include "rltiles/tiledef_defines.h"
 
+struct flavour_knowledge
+{
+    flavour_knowledge()
+    {
+        reset();
+    }
+
+    void reset()
+    {
+        _feat_flavour.init(0);
+        _feat_flavour_idx.init(0);
+    }
+
+    tileidx_t feat_flavour(coord_def pos) const
+    {
+        return _feat_flavour(pos);
+    }
+
+    unsigned short feat_flavour_idx(coord_def pos) const
+    {
+        return _feat_flavour_idx(pos);
+    }
+
+    void set_feat_flavour(coord_def pos, tileidx_t tile,
+                          unsigned short tile_idx)
+    {
+        _feat_flavour(pos) = tile;
+        _feat_flavour_idx(pos) = tile_idx;
+    }
+
+    void copy_at(coord_def pos, const flavour_knowledge& source)
+    {
+        _feat_flavour(pos) = source._feat_flavour(pos);
+        _feat_flavour_idx(pos) = source._feat_flavour_idx(pos);
+    }
+
+    void clear_at(coord_def pos)
+    {
+        set_feat_flavour(pos, 0, 0);
+    }
+
+private:
+    FixedArray<tileidx_t, GXM, GYM> _feat_flavour;
+    FixedArray<unsigned short, GXM, GYM> _feat_flavour_idx;
+};
+
 struct crawl_tile_environment
 {
     // indexed by grid coords
@@ -19,6 +65,7 @@ struct crawl_tile_environment
 #endif
     FixedArray<tile_flavour, GXM, GYM> flv;
     tile_flavour default_flavour;
+    flavour_knowledge remembered_flavour;
     std::vector<std::string> names;
 };
 

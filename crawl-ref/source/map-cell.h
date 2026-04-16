@@ -169,9 +169,13 @@ struct map_cell
         return _feat_colour;
     }
 
-    void set_feature(dungeon_feature_type nfeat, unsigned colour = 0)
+    void set_feature(dungeon_feature_type nfeat)
     {
         _feat = nfeat;
+    }
+
+    void set_feat_colour(colour_t colour = 0)
+    {
         _feat_colour = colour;
     }
 
@@ -307,6 +311,11 @@ struct map_cell
     bool mapped() const
     {
         return !!(flags & MAP_MAGIC_MAPPED_FLAG);
+    }
+
+    bool feat_known() const
+    {
+        return !!(flags & (MAP_MAGIC_MAPPED_FLAG | MAP_SEEN_FLAG));
     }
 
 #ifdef USE_TILE

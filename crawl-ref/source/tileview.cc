@@ -506,6 +506,46 @@ static bool _same_door_at(dungeon_feature_type feat, const coord_def &gc)
            && (feat_is_sealed(feat) || feat_is_sealed(door));
 }
 
+static void _init_feat_flavour(tileidx_t& flavour, dungeon_feature_type feat)
+{
+    if (feat_is_stone_stair(feat))
+    {
+        const bool up = feat_stair_direction(feat) == CMD_GO_UPSTAIRS;
+        if (player_in_branch(BRANCH_SHOALS))
+        {
+            flavour = up ? TILE_DNGN_SHOALS_STAIRS_UP
+                         : TILE_DNGN_SHOALS_STAIRS_DOWN;
+        }
+        else if (player_in_branch(BRANCH_VAULTS))
+        {
+            if (you.depth == branches[BRANCH_VAULTS].numlevels - 1 && !up)
+                flavour = TILE_DNGN_METAL_STAIRS_DOWN;
+            else if (you.depth == branches[BRANCH_VAULTS].numlevels && up)
+                flavour = TILE_DNGN_METAL_STAIRS_UP;
+        }
+        else if (player_in_branch(BRANCH_ZOT))
+        {
+            if (you.depth == branches[BRANCH_VAULTS].numlevels - 1 && !up)
+                flavour = TILE_DNGN_ZOT_STAIRS_DOWN;
+            else if (you.depth == branches[BRANCH_VAULTS].numlevels && up)
+                flavour = TILE_DNGN_ZOT_STAIRS_UP;
+        }
+        else if (player_in_branch(BRANCH_SLIME) && !you.royal_jelly_dead)
+        {
+            if (up)
+                flavour = TILE_DNGN_SLIMY_STAIRS_UP;
+            else
+                flavour = TILE_DNGN_SLIMY_STAIRS_DOWN;
+        }
+    }
+    else if (feat_is_escape_hatch(feat) && player_in_branch(BRANCH_TOMB))
+    {
+        const bool up = feat_stair_direction(feat) == CMD_GO_UPSTAIRS;
+        flavour = up ? TILE_DNGN_ONE_WAY_STAIRS_UP
+                     : TILE_DNGN_ONE_WAY_STAIRS_DOWN;
+    }
+}
+
 void tile_init_flavour(const coord_def &gc, const int domino)
 {
     if (!map_bounds(gc))
@@ -557,43 +597,7 @@ void tile_init_flavour(const coord_def &gc, const int domino)
     else
         tile_env.flv(gc).wall = pick_dngn_tile(tile_env.flv(gc).wall, rand2);
 
-    if (feat_is_stone_stair(env.grid(gc)))
-    {
-        const bool up = feat_stair_direction(env.grid(gc)) == CMD_GO_UPSTAIRS;
-        if (player_in_branch(BRANCH_SHOALS))
-        {
-            tile_env.flv(gc).feat = up ? TILE_DNGN_SHOALS_STAIRS_UP
-                                       : TILE_DNGN_SHOALS_STAIRS_DOWN;
-        }
-        else if (player_in_branch(BRANCH_VAULTS))
-        {
-            if (you.depth == branches[BRANCH_VAULTS].numlevels - 1 && !up)
-                tile_env.flv(gc).feat = TILE_DNGN_METAL_STAIRS_DOWN;
-            else if (you.depth == branches[BRANCH_VAULTS].numlevels && up)
-                tile_env.flv(gc).feat = TILE_DNGN_METAL_STAIRS_UP;
-        }
-        else if (player_in_branch(BRANCH_ZOT))
-        {
-            if (you.depth == branches[BRANCH_VAULTS].numlevels - 1 && !up)
-                tile_env.flv(gc).feat = TILE_DNGN_ZOT_STAIRS_DOWN;
-            else if (you.depth == branches[BRANCH_VAULTS].numlevels && up)
-                tile_env.flv(gc).feat = TILE_DNGN_ZOT_STAIRS_UP;
-        }
-        else if (player_in_branch(BRANCH_SLIME) && !you.royal_jelly_dead)
-        {
-            if (up)
-                tile_env.flv(gc).feat = TILE_DNGN_SLIMY_STAIRS_UP;
-            else
-                tile_env.flv(gc).feat = TILE_DNGN_SLIMY_STAIRS_DOWN;
-        }
-    }
-
-    if (feat_is_escape_hatch(env.grid(gc)) && player_in_branch(BRANCH_TOMB))
-    {
-        const bool up = feat_stair_direction(env.grid(gc)) == CMD_GO_UPSTAIRS;
-        tile_env.flv(gc).feat = up ? TILE_DNGN_ONE_WAY_STAIRS_UP
-                                   : TILE_DNGN_ONE_WAY_STAIRS_DOWN;
-    }
+    _init_feat_flavour(tile_env.flv(gc).feat, env.grid(gc));
 
     if (feat_is_door(env.grid(gc)))
     {
@@ -629,6 +633,17 @@ void tile_init_flavour(const coord_def &gc, const int domino)
     }
     else if (!tile_env.flv(gc).special)
         tile_env.flv(gc).special = hash_with_seed(256, seed, 10);
+}
+
+void tile_init_remembered_flavour(coord_def pos)
+{
+    dungeon_feature_type feat = env.map_knowledge(pos).feat();
+    if (!env.map_knowledge(pos).feat_known() && env.map_forgotten)
+        feat = (*env.map_forgotten)(pos).feat();
+    tileidx_t tile = tile_env.remembered_flavour.feat_flavour(pos);
+    _init_feat_flavour(tile, feat);
+    unsigned short idx = tile_env.remembered_flavour.feat_flavour_idx(pos);
+    tile_env.remembered_flavour.set_feat_flavour(pos, tile, idx);
 }
 
 enum SpecialIdx

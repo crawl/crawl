@@ -2255,11 +2255,16 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
         noisy(spell_effect_noise(SPELL_GOLUBRIAS_PASSAGE), pos);
     }
 
-    if (ctype == TERRAIN_CHANGE_BOG)
-        env.map_knowledge(pos).set_feature(newfeat, colour);
     _current_terrain_changed(pos, newfeat, false, true, false, newfeat_flv,
                              newfeat_flv_idx);
     env.grid_colours(pos) = colour;
+
+    if (ctype == TERRAIN_CHANGE_BOG)
+    {
+        update_terrain_knowledge(pos);
+        update_grid_colour_knowledge(pos);
+    }
+
     return true;
 }
 
@@ -2657,7 +2662,7 @@ void descent_crumble_stairs()
             mpr("The exit collapses.");
         if (env.map_knowledge(*ri).feat() == original_feat)
         {
-            env.map_knowledge(*ri).set_feature(DNGN_FLOOR);
+            update_terrain_knowledge(*ri, !env.map_knowledge(*ri).seen());
             set_terrain_mapped(*ri);
             redraw_view_at(*ri);
         }

@@ -72,6 +72,7 @@
 #include "tag-version.h"
 #include "target.h"
 #include "terrain.h"
+#include "tile-env.h"
 #ifdef USE_TILE
 #include "rltiles/tiledef-player.h"
 #endif
@@ -1247,6 +1248,17 @@ void fire_monster_death_event(monster* mons,
             {
                 tile_clear_flavour(*ri);
                 tile_init_flavour(*ri);
+            }
+            if (!env.map_knowledge(*ri).feat_known()
+                && env.map_forgotten
+                && feat_is_stone_stair((*env.map_forgotten)(*ri).feat()))
+            {
+                tile_env.remembered_flavour.set_feat_flavour(*ri, 0, 0);
+            }
+            else if (feat_is_stone_stair(env.map_knowledge(*ri).feat()))
+            {
+                tile_env.remembered_flavour.set_feat_flavour(*ri, 0, 0);
+                redraw_view_at(*ri);
             }
         }
     }

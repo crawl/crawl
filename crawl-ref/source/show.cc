@@ -111,9 +111,9 @@ bool show_type::is_cleanable_monster() const
 static void _update_feat_at(const coord_def &gp)
 {
     dungeon_feature_type feat = env.grid(gp);
-    unsigned colour = env.grid_colours(gp);
 
-    env.map_knowledge(gp).set_feature(feat, colour);
+    update_terrain_knowledge(gp);
+    update_grid_colour_knowledge(gp);
 
     if (haloed(gp))
         env.map_knowledge(gp).flags |= MAP_HALOED;

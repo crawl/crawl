@@ -13,6 +13,7 @@
 #include "religion.h"
 #include "stringutil.h"
 #include "terrain.h"
+#include "tile-env.h"
 #ifdef USE_TILE
  #include "tilepick.h"
  #include "tileview.h"
@@ -486,7 +487,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             if (knowledge.seen()
                 || env.map_forgotten && (*env.map_forgotten)(pos).seen())
             {
-                knowledge.set_feature(env.grid(pos), env.grid_colours(pos));
+                update_terrain_knowledge(pos);
+                update_grid_colour_knowledge(pos);
                 redraw_view_at(pos);
             }
             else
@@ -503,13 +505,10 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         if (!full_info && (knowledge.seen() || already_mapped))
             continue;
 
-        dungeon_feature_type feat = env.grid(pos);
-        if (!full_info)
-            feat = magic_map_base_feat(feat);
-
         bool open = true;
 
-        if (feat_is_solid(feat) && !feat_is_closed_door(feat))
+        if (feat_is_solid(env.grid(pos))
+            && !feat_is_closed_door(env.grid(pos)))
         {
             open = false;
             for (adjacent_iterator ai(pos); ai; ++ai)
@@ -525,9 +524,10 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
         if (open)
         {
-            knowledge.set_feature(feat, _feat_default_map_colour(feat));
-            if (is_notable_terrain(feat))
-                seen_notable_thing(feat, pos);
+            update_terrain_knowledge(pos, !full_info);
+            update_grid_colour_knowledge(pos, !full_info);
+            if (is_notable_terrain(knowledge.feat()))
+                seen_notable_thing(knowledge.feat(), pos);
 
             if (emphasise(pos))
                 knowledge.flags |= MAP_EMPHASIZE;
@@ -544,9 +544,9 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             else
             {
                 set_terrain_mapped(pos);
-                if (get_feature_dchar(feat) == DCHAR_ALTAR)
+                if (get_feature_dchar(knowledge.feat()) == DCHAR_ALTAR)
                     num_altars++;
-                else if (get_feature_dchar(feat) == DCHAR_ARCH)
+                else if (get_feature_dchar(knowledge.feat()) == DCHAR_ARCH)
                     num_shops_portals++;
             }
 
@@ -581,4 +581,33 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     }
 
     return did_map;
+}
+
+void update_terrain_knowledge(coord_def pos,
+                              bool partial_knowledge_only)
+{
+    dungeon_feature_type feat = env.grid(pos);
+    tileidx_t feat_tile = tile_env.flv(pos).feat;
+    unsigned short feat_tile_idx = tile_env.flv(pos).feat_idx;
+    if (partial_knowledge_only)
+    {
+        feat = magic_map_base_feat(feat);
+        if (feat == DNGN_UNKNOWN_PORTAL || feat == DNGN_UNKNOWN_ALTAR)
+        {
+            feat_tile = 0;
+            feat_tile_idx = 0;
+        }
+    }
+    env.map_knowledge(pos).set_feature(feat);
+    tile_env.remembered_flavour.set_feat_flavour(pos, feat_tile,
+                                                 feat_tile_idx);
+}
+
+void update_grid_colour_knowledge(coord_def pos,
+                             bool partial_knowledge_only)
+{
+    colour_t colour = env.grid_colours(pos);
+    if (partial_knowledge_only)
+        colour = _feat_default_map_colour(env.map_knowledge(pos).feat());
+    env.map_knowledge(pos).set_feat_colour(colour);
 }

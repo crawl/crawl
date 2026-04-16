@@ -1193,6 +1193,7 @@ static void _clear_env_map()
 {
     env.map_knowledge.init(map_cell());
     env.map_forgotten.reset();
+    tile_env.remembered_flavour.reset();
 }
 
 static void _grab_follower(monster* fol)

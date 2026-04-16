@@ -53,6 +53,7 @@
 #include "level-state-type.h"
 #include "libutil.h"
 #include "macro.h"
+#include "map-knowledge.h"
 #include "melee-attack.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -2398,6 +2399,7 @@ void forget_map(bool rot)
         env.map_knowledge(p).clear();
         if (env.map_forgotten)
             (*env.map_forgotten)(p).clear();
+        tile_env.remembered_flavour.clear_at(p);
         StashTrack.update_stash(p);
 #ifdef USE_TILE
         tile_forget_map(p);
@@ -8943,7 +8945,7 @@ void player_open_door(coord_def doorpos)
         // door!
         if (env.map_knowledge(dc).seen())
         {
-            env.map_knowledge(dc).set_feature(env.grid(dc));
+            update_terrain_knowledge(dc);
 #ifdef USE_TILE
             tile_env.bk_bg(dc) = tileidx_feature_base(env.grid(dc));
 #endif
@@ -9114,7 +9116,7 @@ void player_close_door(coord_def doorpos)
         // want the entire door to be updated.
         if (env.map_knowledge(dc).seen())
         {
-            env.map_knowledge(dc).set_feature(env.grid(dc));
+            update_terrain_knowledge(dc);
 #ifdef USE_TILE
             tile_env.bk_bg(dc) = tileidx_feature_base(env.grid(dc));
 #endif

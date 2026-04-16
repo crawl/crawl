@@ -54,6 +54,7 @@
 #include "libutil.h"
 #include "losglobal.h"
 #include "macro.h"
+#include "map-knowledge.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
@@ -7366,7 +7367,7 @@ void makhleb_crucible_kill(monster& victim)
         simple_god_message(" acknowledges your contrition and permits you to"
                            " depart the Crucible.", false, GOD_MAKHLEB);
 
-        env.map_knowledge(pos).set_feature(DNGN_EXIT_CRUCIBLE);
+        update_terrain_knowledge(pos);
 #ifdef USE_TILE
         tile_env.bk_bg(pos) = TILE_DNGN_PORTAL;
         tiles.update_minimap(pos);

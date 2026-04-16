@@ -1552,8 +1552,8 @@ static void _xom_lights_up_webs(int /*sever*/)
         place_cloud(CLOUD_FIRE, pos, blaze_time, nullptr, 0);
 
         webs_count++;
-        env.map_knowledge(pos).set_feature(DNGN_FLOOR);
         dungeon_terrain_changed(pos, DNGN_FLOOR);
+        update_terrain_knowledge(pos);
 
         if (actor* act = actor_at(pos))
             if (act->caught_by() == CAUGHT_WEB)
