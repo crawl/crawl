@@ -862,7 +862,7 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
     if (!aux && using_weapon())
         damage_plus = get_weapon_plus();
 
-    const bool throwing = !weapon && wpn_skill == SK_THROWING;
+    const bool throwing = wpn_skill == SK_THROWING;
     const bool ranged = throwing
                         || (weapon && is_range_weapon(*weapon)
                                    && using_weapon());
