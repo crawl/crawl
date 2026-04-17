@@ -744,7 +744,10 @@ void handle_behaviour(monster* mon)
             // Batty monsters don't automatically reseek so that
             // they'll flitter away, we'll reset them just before
             // they get movement in handle_monsters() instead. -- bwr
-            if ((proxFoe || mons_foe_is_marked(*mon)) && !mons_is_batty(*mon))
+            // The exception is friendly batty monsters targetting the player,
+            // who should seek the player.
+            if ((proxFoe || mons_foe_is_marked(*mon))
+                && (!mons_is_batty(*mon) || (isFriendly && mon->foe == MHITYOU)))
             {
                 new_beh = BEH_SEEK;
                 break;
