@@ -553,19 +553,32 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
         string desc = "";
         if (!defer_updates)
         {
-            // Don't list a monster in the exclusion annotation if the
-            // exclusion was triggered by e.g. the flamethrowers' lua check.
-            const map_cell& cell = env.map_knowledge(p);
-            if (cell.monster() != MONS_NO_MONSTER)
+            monster* m = monster_at(p);
+            if (autoexcl && m)
             {
-                desc = mons_type_name(cell.monster(), DESC_PLAIN);
-                if (cell.detected_monster())
-                    desc += " (detected)";
+                // Autoexcludes use the ground truth monster, not the map
+                // knowledge, since sometimes this isn't set when placing
+                // autoexclusions for a newly visible monster, and the caller
+                // has already check that there's an autoexclude-worthy monster
+                // here.
+                desc = mons_type_name(m->type, DESC_PLAIN);
             }
             else
             {
-                const dungeon_feature_type feat = cell.feat();
-                desc = feat_type_name(feat);
+                // Don't list a monster in the exclusion annotation if the
+                // exclusion was triggered by e.g. the flamethrowers' lua check.
+                const map_cell& cell = env.map_knowledge(p);
+                if (cell.monster() != MONS_NO_MONSTER)
+                {
+                    desc = mons_type_name(cell.monster(), DESC_PLAIN);
+                    if (cell.detected_monster())
+                        desc += " (detected)";
+                }
+                else
+                {
+                    const dungeon_feature_type feat = cell.feat();
+                    desc = feat_type_name(feat);
+                }
             }
         }
         else if (cloud_struct* cloud = cloud_at(p))
