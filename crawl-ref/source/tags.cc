@@ -2114,6 +2114,7 @@ static void marshallRankPietyInfo(writer &th, RankPietyInfo r)
     marshallInt(th, r.piety_on_penance);
     marshallInt(th, r.piety_on_gifts);
     marshallInt(th, r.piety_on_stepdowns);
+    marshallInt(th, r.piety_at_max);
 }
 
 static void marshallConductInfo(writer &th, const ConductPietyInfo &cp_info)
@@ -2153,6 +2154,11 @@ static RankPietyInfo unmarshallRankPietyInfo(reader &th)
     r.piety_on_penance = unmarshallInt(th);
     r.piety_on_gifts = unmarshallInt(th);
     r.piety_on_stepdowns = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_MAX_PIETY_LOGGING)
+#endif
+        r.piety_at_max = unmarshallInt(th);
+
     return r;
 }
 

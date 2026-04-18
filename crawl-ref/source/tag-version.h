@@ -357,6 +357,7 @@ enum tag_minor_version
     TAG_MINOR_EXEGESIS_HIDDEN,     // Divine exegesis gets a separate list of hidden spells
     TAG_MINOR_FIX_DOOR_INFO_LEAK,  // Don't leak whether an out of view door has been covered in temporary terrain
     TAG_MINOR_SWIFTNESS_REFACTOR,  // Split swiftness's backlash into DUR_ANTISWIFT
+    TAG_MINOR_MAX_PIETY_LOGGING,   // Separately log stepdown events and max piety wastage
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
