@@ -590,11 +590,11 @@ static string _sdump_rank_piety_info(RankPietyInfo r)
     string name = god_name(r.god);
 
     out =
-        make_stringf(" %16s | %1d | %7d | %3d | %3d | %3d | %3d | %3d | %3d | %3d \n",
+        make_stringf(" %16s | %1d | %7d | %3d | %3d | %3d | %3d | %3d | %3d | %3d | %3d \n",
                      chop_string(name, 16).c_str(), rank, r.start_time,
                      r.initial_piety, r.piety_gained, r.piety_on_gifts,
-                     r.piety_on_penance, r.piety_on_stepdowns, r.piety_decayed,
-                     r.piety_lost);
+                     r.piety_on_penance, r.piety_on_stepdowns, r.piety_at_max,
+                     r.piety_decayed, r.piety_lost);
 
     return out;
 }
@@ -706,17 +706,18 @@ static void _sdump_piety_info(dump_params &par)
 " F = Piety on gifts\n"
 " G = Piety on penance\n"
 " H = Piety on stepdowns\n"
-" I = Piety decays\n"
-" J = Piety lost (inc. decay)\n"
+" I = Piety wasted at max piety\n"
+" J = Piety decays\n"
+" K = Piety lost (inc. decay)\n"
 ;
 
-    text += "         A          B      C       D     E     F     G     H     I     J   \n";
-    text += "+-----------------+---+---------+-----+-----+-----+-----+-----+-----+-----+\n";
+    text += "         A          B      C       D     E     F     G     H     I     J     K   \n";
+    text += "+-----------------+---+---------+-----+-----+-----+-----+-----+-----+-----+-----+\n";
 
     for (const RankPietyInfo &mi : all_info)
         text += _sdump_rank_piety_info(mi);
 
-    text += "+-----------------+---+---------+-----+-----+-----+-----+-----+-----+-----+\n";
+    text += "+-----------------+---+---------+-----+-----+-----+-----+-----+-----+-----+-----+\n";
 
     text += "\n";
 
