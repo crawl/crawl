@@ -72,6 +72,7 @@ static const char *conducts[] =
 #endif
     "Kill Nonliving", "Exploration",
     "Seen Monster", "Sacrificed Love", "Hurt Foe", "Use Wizardly Item",
+    "Tithed"
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
