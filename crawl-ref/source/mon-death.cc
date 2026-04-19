@@ -2671,7 +2671,7 @@ item_def* monster_die(monster& mons, killer_type killer,
              && timeout)
     {
         mgen_data simu = mgen_data(MONS_SIMULACRUM, BEH_COPY, mons.pos(),
-                            BEH_FRIENDLY, MG_AUTOFOE | MG_FORCE_PLACE)
+                            MHITYOU, MG_AUTOFOE | MG_FORCE_PLACE)
                          .set_summoned(&you, SPELL_SIMULACRUM, summ_dur(3), false);
         simu.base_type = (monster_type)mons.props[SIMULACRUM_TYPE_KEY].get_int();
 
