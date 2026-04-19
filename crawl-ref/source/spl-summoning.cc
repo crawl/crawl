@@ -421,11 +421,6 @@ spret cast_sphinx_sisters(const actor& caster, int pow, bool fail)
 
     fail_check();
 
-    // Remove old sphinxes first, so that we can ensure getting one of each type.
-    for (monster_iterator mi; mi; ++mi)
-        if (mi->was_created_by(caster, SPELL_SPHINX_SISTERS))
-            monster_die(**mi, KILL_TIMEOUT, NON_MONSTER);
-
     int dur = summ_dur(2);
 
     mgen_data mdata = _summon_data(caster, MONS_SPHINX_MARAUDER, dur,
@@ -2415,6 +2410,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_MANA_VIPER,        { 1, 3 } },
     { SPELL_CALL_IMP,                 { 1, 3 } },
     { SPELL_MONSTROUS_MENAGERIE,      { 2, 3 } },
+    // Cap applied separately to the sphinx types.
     { SPELL_SPHINX_SISTERS,           { 2, 2 } },
     { SPELL_SUMMON_HORRIBLE_THINGS,   { 8, 8 } },
     { SPELL_FORGE_LIGHTNING_SPIRE,    { 1, 1 } },
@@ -2533,6 +2529,9 @@ void summoned_monster(const monster *mons, const actor *caster,
         cap = (mons->type == MONS_ABOMINATION_LARGE ? cap * 3 / 4
                                                     : cap * 1 / 4);
     }
+    // Cap the two sphinx types separately.
+    else if (spell == SPELL_SPHINX_SISTERS)
+        cap = cap / 2;
     // Only the simulacra themselves are capped with this spell. Blocks of ice
     // are free.
     else if (spell == SPELL_SIMULACRUM && mons->type != MONS_SIMULACRUM)
@@ -2562,9 +2561,11 @@ void summoned_monster(const monster *mons, const actor *caster,
         if (summ.degree != spell)
             continue;
 
-        // Count large abominations and tentacled monstrosities separately.
+        // Count the different summons of various spells separately.
         // (And don't count blocks of ice at all.)
-        if ((spell == SPELL_SUMMON_HORRIBLE_THINGS || spell == SPELL_SIMULACRUM)
+        if ((spell == SPELL_SUMMON_HORRIBLE_THINGS
+            || spell == SPELL_SIMULACRUM
+            || spell == SPELL_SPHINX_SISTERS)
             && mi->type != mons->type)
         {
             continue;
