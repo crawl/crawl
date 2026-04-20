@@ -4613,12 +4613,7 @@ void handle_player_poison(int delay)
 
     const int decrease = you.duration[DUR_POISONING] - (int) new_dur;
 
-    // Transforming into a form with no metabolism merely suspends the poison
-    // but doesn't let your body get rid of it.
-    if (you.is_nonliving() || you.is_lifeless_undead())
-        return;
-
-    // Other sources of immunity (Zin, staff of Olgreb) let poison dissipate.
+    // Poison immunity means poison does no damage but dissipates.
     bool do_dmg = (player_res_poison() >= 3 ? false : true);
 
     int dmg = (you.duration[DUR_POISONING] / 1000)
