@@ -2548,7 +2548,10 @@ static void _gain_piety_point()
             || you.raw_piety >= piety_breakpoint(5) && one_chance_in(3)
             || you.raw_piety >= piety_breakpoint(3) && one_chance_in(3))
         {
-            you.piety_info.register_piety_gain(PG_EVENT_STEPDOWN);
+            PietyGainEvent event = (you.raw_piety >= MAX_PIETY
+                                    ? PG_EVENT_MAX_PIETY
+                                    : PG_EVENT_STEPDOWN);
+            you.piety_info.register_piety_gain(event);
             do_god_gift();
             return;
         }
