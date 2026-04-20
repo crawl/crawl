@@ -2045,6 +2045,14 @@ static void _enter_form(int dur, transformation which_trans, bool using_talisman
         you.digging = false;
     }
 
+    if ((you.is_nonliving() || you.is_lifeless_undead())
+        && you.duration[DUR_POISONING])
+    {
+        you.duration[DUR_POISONING] = 0;
+        mprf(MSGCH_RECOVERY, "You are no longer poisoned.");
+        you.redraw_hit_points = true;
+    }
+
     _on_enter_form(which_trans);
 
     // Stop constricting, if appropriate. In principle, we could be switching
