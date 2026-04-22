@@ -2774,7 +2774,7 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
     if (you.duration[DUR_WEAK])
         damage = div_rand_round(damage * 3, 4);
 
-    apply_rev_penalty(damage);
+    damage = apply_rev_penalty(damage);
 
     if (you.has_mutation(MUT_RECKLESS) && weapon
         && hands_reqd(&you, weapon->base_type, weapon->sub_type) == HANDS_TWO)
