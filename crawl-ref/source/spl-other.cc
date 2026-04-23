@@ -13,6 +13,7 @@
 #include "coordit.h"
 #include "delay.h"
 #include "env.h"
+#include "fight.h"
 #include "god-companions.h"
 #include "libutil.h"
 #include "message.h"
@@ -24,6 +25,7 @@
 #include "potion.h"
 #include "religion.h"
 #include "spl-util.h"
+#include "target.h"
 #include "terrain.h"
 #include "timed-effects.h"
 #include "view.h"
@@ -427,18 +429,22 @@ spret cast_passwall(const coord_def& c, int pow, bool fail)
     return spret::success;
 }
 
+static int _intoxicate_can_affect(const actor *actor)
+{
+    const monster *mons = actor->as_monster();
+    return mons
+           && mons_intel(*mons) >= I_HUMAN
+           && !mons->clarity()
+           && mons->res_poison() < 3;
+}
+
 static int _intoxicate_monsters(coord_def where, int pow, bool tracer)
 {
     monster* mons = monster_at(where);
-    if (mons == nullptr
-        || mons_intel(*mons) < I_HUMAN
-        || mons->clarity()
-        || mons->res_poison() >= 3)
-    {
+    if (!mons || !_intoxicate_can_affect(mons))
         return 0;
-    }
 
-    if (tracer && !you.can_see(*mons))
+    if (tracer && (!you.can_see(*mons) || mons_aligned(mons, &you)))
         return 0;
 
     if (!tracer && monster_resists_this_poison(*mons))
@@ -464,6 +470,10 @@ spret cast_intoxicate(int pow, bool fail, bool tracer)
 
         return work > 0 ? spret::success : spret::abort;
     }
+
+    targeter_radius hitfunc(&you, LOS_NO_TRANS);
+    if (stop_attack_prompt(hitfunc, "intoxicate", _intoxicate_can_affect))
+        return spret::abort;
 
     fail_check();
     mpr("You attempt to intoxicate your foes!");
