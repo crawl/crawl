@@ -2554,6 +2554,9 @@ bool targeter_surprising_crocodile::set_aim(coord_def a)
 
 aff_type targeter_surprising_crocodile::is_affected(coord_def loc)
 {
+    if (loc == aim)
+        return AFF_YES;
+
     for (coord_def spot : landing_spots)
         if (spot == loc)
             return AFF_YES;
