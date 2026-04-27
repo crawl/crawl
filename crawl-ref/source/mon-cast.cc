@@ -2329,7 +2329,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_SLEEP:
     case SPELL_DIG:
     case SPELL_CHARMING:
-    case SPELL_BOLT_OF_LIGHT:
+    case SPELL_LIGHT_BALL:
     case SPELL_FASTROOT:
     case SPELL_WARP_SPACE:
     case SPELL_QUICKSILVER_BOLT:
@@ -7721,8 +7721,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     {
         pbolt.flavour = BEAM_FRAG;
         pbolt.is_explosion = true;
-        pbolt.damage = dice_def(3, splpow);
+        pbolt.damage = dice_def(3, splpow / 4);
         pbolt.ex_size = 2;
+        pbolt.name   = "blast of rubble";
+        pbolt.origin_spell = SPELL_SELF_DECONSTRUCT;
         pbolt.source = mons->pos();
         pbolt.target = mons->pos();
         pbolt.fire();

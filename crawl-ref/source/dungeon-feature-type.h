@@ -406,6 +406,8 @@ enum dungeon_feature_type
     DNGN_WEAPON_FORGE,
     DNGN_ARMOUR_FORGE,
     DNGN_SOUL_FORGE,
+    DNGN_ENTER_FORGE,
+    DNGN_EXIT_FORGE,
 #endif
 
     NUM_FEATURES

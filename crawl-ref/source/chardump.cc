@@ -244,6 +244,7 @@ static branch_type single_portals[] =
 {
     BRANCH_TROVE,
     BRANCH_SEWER,
+    BRANCH_FORGE,
     BRANCH_OSSUARY,
     BRANCH_BAILEY,
     BRANCH_GAUNTLET,

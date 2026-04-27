@@ -1349,7 +1349,7 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
                              bool known_shaft)
 {
     // Up and down both work for shops, portals, forges, and altars.
-    if (ftype == DNGN_ENTER_SHOP || feat_is_altar(ftype))
+    if (ftype == DNGN_ENTER_SHOP || feat_is_altar(ftype) || feat_is_forge(ftype))
     {
         if (crawl_state.doing_prev_cmd_again)
         {

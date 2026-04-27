@@ -110,6 +110,11 @@ Awaken Vines spell
 Causes vines to grow from the ground. The vines will reach out and grab
 interlopers, dragging them towards any nearby trees.
 %%%%
+Ball of Light spell
+
+Hurls a blast of searing light, which may blind any living, demonic, or holy
+creature caught in its radius.
+%%%%
 Banishment spell
 
 Banishes a creature into the Abyss.
@@ -1766,6 +1771,11 @@ ground beneath multiple nearby enemies. Flying creatures take greatly reduced
 damage from this attack, but those on the ground may sometimes to lose their
 footing altogether, delaying their next action as they struggle to regain
 balance on the uneven terrain.
+%%%%
+Self Deconstruct spell
+
+Explodes part of the caster's body in a burst of stone fragments. Its damage is
+strongly reduced by armour.
 %%%%
 Sentinel's Mark spell
 

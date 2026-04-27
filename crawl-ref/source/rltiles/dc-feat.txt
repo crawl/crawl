@@ -476,6 +476,12 @@ disco_ball DNGN_DISCO_BALL
 ## The Orb of Zot's pedestal
 orb_dais DNGN_ORB_DAIS
 
+## Forges for the forge portal
+soul_forge DNGN_SOUL_FORGE
+body_forge DNGN_BODY_FORGE
+armour_forge DNGN_ARMOUR_FORGE
+weapon_forge DNGN_WEAPON_FORGE
+
 ## Loose floor deco.
 mop_1 DNGN_MOP
 mop_2 DNGN_MOP_BLOODY
@@ -728,6 +734,10 @@ desolation_portal DNGN_PORTAL_DESOLATION
 desolation_exit DNGN_EXIT_DESOLATION
 desolation_portal_closed DNGN_PORTAL_DESOLATION_GONE
 crucible_exit DNGN_EXIT_CRUCIBLE
+forge_portal DNGN_PORTAL_FORGE
+forge_exit DNGN_EXIT_FORGE
+forge_portal_closed DNGN_PORTAL_FORGE_GONE
+
 
 portal_unknown DNGN_UNKNOWN_PORTAL
 

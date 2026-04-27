@@ -726,7 +726,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_GLOW_WORM,
       {
-       { SPELL_BOLT_OF_LIGHT, 60, MON_SPELL_NATURAL },
+       { SPELL_LIGHT_BALL, 60, MON_SPELL_NATURAL },
       }
     },
 

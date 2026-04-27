@@ -28,6 +28,7 @@
 #include "feature.h"
 #include "fprop.h"
 #include "god-abil.h"
+#include "god-conduct.h"
 #include "invent.h"
 #include "item-prop.h"
 #include "item-use.h"
@@ -2802,6 +2803,7 @@ static bool _body_forge()
     for (int i = 2 + coinflip(); i > 0; i--)
         mutate(RANDOM_GOOD_MUTATION, "body forge", false);
 
+    did_god_conduct(DID_DELIBERATE_MUTATING, 50, true);
     return true;
 }
 
@@ -2826,12 +2828,15 @@ bool weapon_forge()
 
     item_def& wpn(you.inv[item_slot]);
 
-    bool rebrand = one_chance_in(3) || wpn.plus >= MAX_WPN_ENCHANT;
+    bool rebrand = x_chance_in_y(4, 10) || wpn.plus >= MAX_WPN_ENCHANT;
+
+    mprf("You beat %s into a new shape.",
+            wpn.name(in_inventory(wpn) ? DESC_YOUR : DESC_THE).c_str());
 
     if (rebrand)
     {
-        brand_weapon(wpn);
         enchant_weapon(wpn, true);
+        brand_weapon(wpn);
     }
     else
     {
@@ -2844,6 +2849,8 @@ bool weapon_forge()
         enchant_weapon(wpn, true);
         make_forge_randart(wpn);
     }
+    else if (!rebrand)
+        mprf_nocap("%s", wpn.name(DESC_INVENTORY_EQUIP).c_str());
 
     return true;
 
@@ -2872,6 +2879,7 @@ static bool _armour_forge()
 
     enchant_armour(arm, true);
     rebrand_armour(arm);
+    mprf_nocap("%s", arm.name(DESC_INVENTORY_EQUIP).c_str());
 
     return true;
 }
@@ -2924,13 +2932,16 @@ static bool _soul_forge()
             shuffle_array(skills);
             you.attribute[ATTR_APT_BOOSTED] = static_cast<int>(skills[0]);
             you.attribute[ATTR_APT_DIMINISHED] = static_cast<int>(skills[1]);
+            mprf("You feel better equipped to learn %s.", skill_name(skills[0]));
+            mprf("You feel incompetent at %s.", skill_name(skills[1]));
             return true;
         }
     }
 
     // if we didn't change apts, shuffle stats
     int perm[] = { 0, 1, 2 };
-    shuffle_array(perm, NUM_STATS);
+    while (perm[0] == 0 && perm[1] == 1 && perm[2] == 2)
+        shuffle_array(perm, NUM_STATS);
 
     FixedVector<int8_t, NUM_STATS> new_base;
     for (int i = 0; i < NUM_STATS; ++i)
@@ -2952,13 +2963,14 @@ static bool _soul_forge()
     }
 
     shuffle_array(highests);
-    modify_stat(static_cast<stat_type>(highests[0]), 2, true);
+    modify_stat(static_cast<stat_type>(highests[0]), 3, false);
 
     return true;
 }
 
 void activate_forge()
 {
+    mpr("attempting to activate forge");
     coord_def pos = you.pos();
     dungeon_feature_type feat = env.grid(pos);
     bool used = false;
@@ -2972,12 +2984,15 @@ void activate_forge()
         case DNGN_WEAPON_FORGE:
             if (weapon_forge())
                 used = true;
+            break;
         case DNGN_ARMOUR_FORGE:
             if (_armour_forge())
                 used = true;
+            break;
         case DNGN_SOUL_FORGE:
             if (_soul_forge())
                 used = true;
+            break;
         default:
             break;
     }

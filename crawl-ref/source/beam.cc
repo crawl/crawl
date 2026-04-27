@@ -6860,6 +6860,14 @@ const map<spell_type, explosion_sfx> spell_explosions = {
         "The ball of acid explodes!",
         "a violent squelch",
     } },
+    { SPELL_LIGHT_BALL, {
+        "The ball of light explodes!",
+        "an explosion",
+    } },
+    { SPELL_SELF_DECONSTRUCT, {
+        "The blast of rubble explodes!",
+        "an explosion",
+    } },
 };
 
 // Takes a bolt and refines it for use in the explosion function.

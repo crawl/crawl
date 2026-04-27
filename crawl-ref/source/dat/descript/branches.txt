@@ -248,6 +248,15 @@ distant relatives of the pharaohs, along with the corpses of their retainers
 and household animals. It is undoubtedly riddled with many traps, and its
 undead denizens are unlikely to take kindly to looting.
 %%%%
+Forge
+
+Once used to make and remake the gleaming weapons and armour wielded by the
+Dungeon's guards and guardians, this forge is long abandoned. The forgemasters
+left, or perhaps fled, and gave up this place to decay and ruin. Yet a bit of
+the forge's power and one or two of its last works might remain for those daring
+enough to overcome the remnants and interlopers that linger in these
+rubble-strewn passages.
+%%%%
 Bailey
 
 The bailey is the occupied and well-guarded fortress of a ruthless warlord.

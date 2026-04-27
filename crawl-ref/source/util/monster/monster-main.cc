@@ -281,7 +281,7 @@ static string mi_calc_airstrike_damage(monster* mons, spell_type spell_cast)
 
 static string mi_calc_self_deconstruct_damage(monster* mons)
 {
-    return make_stringf("3d%d*", 2 + mons->get_hit_dice() * 12);
+    return make_stringf("3d%d*", 2 + mons->get_hit_dice() * 3);
 }
 
 static string mi_calc_glaciate_damage(monster* mons)

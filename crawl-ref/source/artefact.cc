@@ -2135,13 +2135,14 @@ void make_forge_randart(item_def &item)
                                                  ARTP_INTELLIGENCE,
                                                  ARTP_DEXTERITY);
 
-        artefact_set_property(item, prop2, _gen_good_stat_artp());
+        artefact_set_property(item, prop2, _gen_good_stat_artp() + _gen_good_stat_artp());
     }
 
     if (brand != SPWPN_NORMAL)
         set_artefact_brand(item, brand);
 
     set_artefact_name(item, make_artefact_name(item, false));
+    mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
 enum gizmo_prop_type

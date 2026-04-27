@@ -197,5 +197,6 @@ enum zap_type
     ZAP_VALOUR_BEAM,
     ZAP_LANDBREAKER,
     ZAP_BURSTSPORE,
+    ZAP_LIGHT_BALL,
     NUM_ZAPS
 };

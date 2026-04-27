@@ -46,6 +46,7 @@ enum branch_type                // you.where_are_you
 #endif
 #if TAG_MAJOR_VERSION > 34
     BRANCH_NECROPOLIS,
+    BRANCH_FORGE,
 #endif
     BRANCH_BAZAAR,
     BRANCH_TROVE,
@@ -69,6 +70,7 @@ enum branch_type                // you.where_are_you
     BRANCH_CRUCIBLE,
 #if TAG_MAJOR_VERSION == 34
     BRANCH_NECROPOLIS,
+    BRANCH_FORGE,
 #endif
     NUM_BRANCHES,
 

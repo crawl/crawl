@@ -2776,4 +2776,20 @@ _mon_hex_zap(ZAP_ILL_OMEN, BEAM_ILL_OMEN),
     false,
 },
 
+{
+    ZAP_LIGHT_BALL,
+    "ball of light",
+    nullptr,
+    nullptr,
+    new dicedef_calculator<3, 3, 1, 12>,
+    new tohit_calculator<40>,
+    WHITE,
+    false,
+    BEAM_LIGHT,
+    DCHAR_FIRED_ZAP,
+    false,
+    true,
+    TILE_BOLT_LIGHT,
+},
+
 };

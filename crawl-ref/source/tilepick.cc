@@ -415,6 +415,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_PORTAL_NECROPOLIS;
     case DNGN_ENTER_SEWER:
         return TILE_DNGN_PORTAL_SEWER;
+    case DNGN_ENTER_FORGE:
+        return TILE_DNGN_PORTAL_FORGE;
     case DNGN_ENTER_OSSUARY:
         return TILE_DNGN_PORTAL_OSSUARY;
     case DNGN_ENTER_BAILEY:
@@ -476,6 +478,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_EXIT_SEWER;
     case DNGN_EXIT_OSSUARY:
         return TILE_DNGN_EXIT_OSSUARY;
+    case DNGN_EXIT_FORGE:
+        return TILE_DNGN_EXIT_FORGE;
     case DNGN_EXIT_BAILEY:
         return TILE_DNGN_EXIT_BAILEY;
     case DNGN_EXIT_ICE_CAVE:
@@ -592,6 +596,14 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_SPIKE_LAUNCHER;
     case DNGN_FRIGID_WALL:
         return TILE_DNGN_WALL_FRIGID;
+    case DNGN_SOUL_FORGE:
+        return TILE_DNGN_SOUL_FORGE;
+    case DNGN_ARMOUR_FORGE:
+        return TILE_DNGN_ARMOUR_FORGE;
+    case DNGN_WEAPON_FORGE:
+        return TILE_DNGN_WEAPON_FORGE;
+    case DNGN_BODY_FORGE:
+        return TILE_DNGN_BODY_FORGE;
     default:
         return TILE_DNGN_ERROR;
     }
@@ -4650,6 +4662,8 @@ tileidx_t tileidx_branch(const branch_type br)
         return TILE_DNGN_PORTAL_NECROPOLIS;
     case BRANCH_SEWER:
         return TILE_DNGN_PORTAL_SEWER;
+    case BRANCH_FORGE:
+        return TILE_DNGN_PORTAL_FORGE;
     case BRANCH_OSSUARY:
         return TILE_DNGN_PORTAL_OSSUARY;
     case BRANCH_BAILEY:

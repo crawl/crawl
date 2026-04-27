@@ -1101,6 +1101,12 @@ curse toe
 A disembodied toe, hanging in the air and radiating an intense field of
 negative energy.
 %%%%
+cursed ember
+
+A malevolent elemental born from the last spark of a dying fire. It yearns for
+other beings to embrace its warmth, and will curse those who dare attack it from
+a distance.
+%%%%
 cyclops
 
 A giant with one eye in the centre of its forehead. Despite its lack of
@@ -1514,6 +1520,11 @@ A hideous floating undead creature, the anguished spirit of a tortured victim,
 with torn skin hanging from an emaciated body. It restlessly stalks the
 dungeon, inflicting the anguish it felt in life upon those still living.
 %%%%
+forge servant
+
+The last remnants of whatever power once stoked the forges, wielding what scraps
+they can find in its defence.
+%%%%
 fravashi
 
 A beneficent remnant of the countless mortal knights who serve the Shining One.
@@ -1587,6 +1598,11 @@ glass eye
 
 A floating eyeball formed from living glass. Only the divine Jiyva could form
 such a curious servitor.
+%%%%
+glow worm
+
+A large and slightly luminous worm. Fighting it may leave you radiant and holey,
+if not enlightened.
 %%%%
 glowing orange brain
 
@@ -2685,6 +2701,10 @@ royal mummy
 
 An ancient pharaoh, embalmed and cursed to undeath, now capable of great and
 terrifying feats of magic.
+%%%%
+rubble golem
+
+The weathered remains of a golem operating well past its expected lifespan.
 %%%%
 rust devil
 

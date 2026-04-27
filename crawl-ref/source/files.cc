@@ -1624,6 +1624,7 @@ static const vector<branch_type> portal_generation_order =
     // do not pregenerate trove
     BRANCH_WIZLAB,
     BRANCH_DESOLATION,
+    BRANCH_FORGE,
 };
 
 void update_portal_entrances()

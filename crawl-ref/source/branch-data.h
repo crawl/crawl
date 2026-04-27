@@ -443,6 +443,16 @@ const Branch branches[NUM_BRANCHES] =
       '%', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
       {}
     },
+
+    { BRANCH_FORGE, NUM_BRANCHES, -1, -1, 1, 0,
+      brflag::no_x_level_travel | brflag::no_items,
+      DNGN_ENTER_FORGE, DNGN_EXIT_FORGE, NUM_FEATURES,
+      "Forge", "a forge", "Forge",
+      "You enter a forge!",
+      LIGHTRED, BROWN,
+      '0', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {}
+    },
 };
 
 /*
