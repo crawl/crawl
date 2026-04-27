@@ -1,0 +1,18 @@
+name: "cursed ember"
+glyph: {char: "v", colour: magenta}
+flags: [flies, insubstantial]
+resists: {elec: 1, fire: 3, cold: -1}
+exp: 23
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, flavour: pure_fire, damage: 0}
+hd: 2
+hp_10x: 120
+ac: 0
+ev: 9
+spells: cursed_ember
+intelligence: brainless
+speed: 13
+size: small
+shape: misc

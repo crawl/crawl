@@ -1,0 +1,16 @@
+name: "glow worm"
+glyph: {char: "w", colour: blue}
+flags: [no_skeleton]
+exp: 8
+will: 10
+attacks:
+ - {type: bite, damage: 11}
+hd: 1
+hp_10x: 210
+ac: 4
+ev: 4
+spells: glow_worm
+has_corpse: true
+intelligence: animal
+size: small
+shape: snake

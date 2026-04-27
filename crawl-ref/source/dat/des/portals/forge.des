@@ -1,0 +1,491 @@
+##############################################################################
+#
+# The Forge (Hellmonk)
+#
+# The Forge is an early portal with custom features that can alter items or the
+# player, but must be used immediately. This is intended to provide a different
+# playfeel than other early portals, which provide a lot of consumable loot,
+# while providing power in other ways.
+#
+# This place is slightly cursed, and monsters err toward the weird and gimmicky.
+# There is some loose fire theming, but in general it is too early (and 
+# too redundant with volcano) to use many fire monsters.
+#
+# Other loot consists of one or two specific, directed useful items.
+#
+##############################################################################
+
+: crawl_require('dlua/vault.lua')
+
+{{
+
+-- Forge entry vaults should call this function to place the portal and have a
+-- single `O' glyph for the portal location.
+function forge_portal(e)
+  local timeout_turns = crawl.random_range(600, 800)
+
+  local messager =
+    timed_msg {
+       initmsg = { "You hear the clang of a hammer on an anvil.",
+                   "There is an entrance to a forge on this level. "
+                   .. "Hurry and find it before the portal closes forever!" },
+      finalmsg = "The clanging of the forge suddenly grows quiet.",
+
+      verb = 'clanging',
+      noisemaker = 'forge',
+      ranges = {
+        { 5000, 'slow ' },  { 4000, '' },
+        { 2500, 'brisk ' }, { 1500, 'quick ' },
+        { 0, 'rapid ' }
+      }
+    }
+
+  e.lua_marker('O',
+      timed_marker {
+        disappear = "The portal collapses.",
+        entity = 'forge',
+        turns = timeout_turns,
+        single_timed = true,
+        floor = "expired_portal",
+        feat_tile = "dngn_forge_portal_closed",
+        msg = messager })
+  e.tags("uniq_forge no_monster_gen chance_forge")
+  e.chance(800)
+  e.kfeat("O = enter_forge")
+end
+
+function make_lightweight_weapon (e, weapon)
+    local weapon_string = ""
+    for _, wt in ipairs(weapon) do
+       weapon_string = weapon_string .. " / " .. wt .. " plus:0 ego:lightweight pre_id"
+    end
+    local n_weapon = string.gsub(weapon_string, "%s*/$", "")
+    e.item(n_weapon)
+end
+
+-- always one weapon or armour and one other item
+-- occasionally, the weapon slot will swap for a more unique item
+function setup_loot (e)
+    e.item("any weapon ego:none plus:3 / any armour ego:none plus:2")
+    e.item("scroll of enchant weapon pre_id / scroll of enchant armour pre_id" ..
+           " / any scroll w:40 / any potion / scroll of brand weapon pre_id w:3" ..
+           " / boomerang q:6 / javelin q:3 / any jewellery")
+    e.item("any weapon randart artprops:bane")
+    e.item(make_lightweight_weapon(e, {"great mace w:20", "great sword w:16", 
+                                 "triple sword w:4", "battleaxe w:16",
+                                 "executioner's axe w:4", "partisan w:6", 
+                                 "glaive w:12", "bardiche w:2",
+                                 "longbow w:6", "arbalest w:12",
+                                 "triple crossbow w:2"}))
+end
+
+function forge_setup(e)
+  setup_loot(e)
+  e.shuffle("de")
+  e.subst("d = d:90 f:5 g:5")
+  e.kfeat("< = exit_forge")
+  if crawl.x_chance_in_y(1, 10) then
+    e.kfeat("F = body_forge")
+  elseif crawl.x_chance_in_y(1, 9) then
+    e.kfeat("F = soul_forge")
+  elseif crawl.coinflip() then
+    e.kfeat("F = armour_forge")
+  else
+    e.kfeat("F = weapon_forge")
+  end
+end
+}}
+
+# Forge entries ##########################################
+default-depth: D:5-7
+
+NAME: enter_forge_basic
+: forge_portal(_G)
+NSUBST: . = 4=0. / *:.
+TILE:   G = dngn_statue_sword
+MAP
+x.G.x
+.....
+G.O.G
+.....
+x.G.x
+ENDMAP
+
+NAME: enter_forge_fiery
+: forge_portal(_G)
+NSUBST: . = 1:9000 / *:.
+MAP
+xxxxx
+xlOlx
+xl.lx
+xl.lx
+xl.lx
+xl.lx
+xl.lx
+xl.lx
+ENDMAP
+
+NAME: enter_forge_decaying
+: forge_portal(_G)
+KMONS:   p = plant
+TILE:    G = dngn_crumbled_column
+FTILE:   O0pG = floor_sand
+NSUBST:  G = 2:G / *=G-
+NSUBST:  - = 4:p / 10=p.. / *:.
+NSUBST:  . = 1:0 / 4=0. / *:.
+MAP
+xxxxxxxxxx
+xxxx......
+xxx.--G--.
+xx.G-----.
+xO..--G--.
+xx-G-----.
+xx----G--.
+xxxx-----.
+xxxxxx....
+ENDMAP
+
+NAME:   enter_forge_metal
+: forge_portal(_G)
+NSUBST: 1 = 1:1 / *=1.
+MONS:   rubble golem
+MAP
+ vvvvv
+vv.1.vv
+vv.O.vv
+vv...vv
+ vv+vv
+  v.v
+  v1v
+  v.v
+ vv+vv
+vv...vv
+vv.1.vv
+vv...vv
+ vv+vv
+   @
+ENDMAP
+
+NAME:   enter_forge_crystal
+: forge_portal(_G)
+NSUBST: . = 2:0 / 2=0. / *:.
+TILE:    G = dngn_crumbled_column
+MAP
+b  .G.  b
+ b  .  b
+. b...b .
+G..bOb..G
+. b...b .
+ b  .  b
+b  .G.  b
+ENDMAP
+
+NAME:   enter_forge_gateways
+: forge_portal(_G)
+NSUBST: 0 = 3:0 / *=0.
+NSUBST: . = 5:~ / *:.
+KFEAT:  ^ = web
+MAP
+          @
+ccccc   cc+cc
+c0O0c   c---c
+c.0.c   c-0-c
+c.-.c   c...c
+ccAcccccccAcc
+c.-.c...c.--c
+c00-A00-A.0-c
+c...c...c...c
+ccccccccccccc
+ENDMAP
+
+NAME:   enter_forge_cursed
+: forge_portal(_G)
+SUBST: - = xxl
+NSUBST: 1 = 1:1 / *=1..
+MONS: drude / cursed ember
+MAP
+  xxxxxxxxxx
+xxx-.1O1-xx
+ xx...1..-xxx
+  x-..--...-xx
+ xxx-.--.-xxx
+  xxx-..--x
+ xx......xxx
+ xxx-.-xxxx
+ENDMAP
+
+###############################################################################
+
+###############################################################################
+default-depth: Forge
+
+NAME:   hellmonk_forge_ruination
+TAGS:   no_item_gen no_monster_gen no_rotate
+ORIENT: encompass
+PLACE:  Forge
+MONS:   glow worm / clockroach / rust mite
+MONS:   rubble golem / sleepcap / rock fish / drude
+MONS:   forge servant
+NSUBST: 1 = 2:1 / *=1.., 2 = 2:2 / *=2..
+SUBST: x = x.
+: forge_setup(_G)
+MAP
+    ccccccc                                                
+  ccc..A..ccc                                              
+ cc....<....cc                                             
+ c...........c                                             
+ c.x.x.x.x.x.c                                             
+ cccx.x.x.xccc                                             
+  cccx.x.xccc                                              
+ccc.x.x.x.x.ccc                                            
+cx.x.x.x.x.x.xc                                            
+c1x.c.x.x.c.x1c                                            
+cccccx.x.xccccc                                            
+  ccccc.ccccc                                              
+ ccx.x.x.x.xcc                                             
+ cx.x.x1x.x.xc                                             
+ c2x.x.x.x.x2c                                             
+ cx.x.x2x.x.xc                                             
+ ccx.x.x.x.xcc                                             
+  ccc.x2x.ccc                                              
+  c2.x.x.x.2c                                              
+  ccx.x.x.xcc                                              
+   ccx.x.xcc                                               
+    cdx3xec                                                
+    ccl3lcc                                                
+     ccFcc                                                 
+      ccc                                                  
+ENDMAP
+
+NAME:   hellmonk_forge_encircled
+TAGS:   no_item_gen no_monster_gen no_rotate
+KMONS:  F = unseen horror
+ORIENT: encompass
+PLACE:  Forge
+MONS:   rubble golem / sleepcap / bes kemwar / kobold geomancer / phantom
+NSUBST: 1 = 3:1 / *=1..
+: forge_setup(_G)
+MAP
+      ccccc                                                 
+     cc.1.cc                                                
+    cc..1..cc                                               
+   cc.......cc                                              
+   c...c+c...c                                              
+  cc..nc.cn..cc                                             
+ccc..cc...cc..ccc                                             
+cd1..nl.F.ln..1ec                                             
+ccc..cn...nc..ccc                                             
+  cc..cclcc..cc                                             
+   c...cnc...c                                              
+   cc...1...cc                                              
+    cc.....cc                                               
+     cc...cc                                                
+      cc1cc                                                 
+    cccc.cccc                                                  
+    c1.....1c
+    cccc.cccc       
+      cc.cc                                                 
+      c...c                                                 
+     cc...cc                                                
+     c.....c                                                
+     c..<..c                                                
+     cc...cc                                                
+      ccAcc                                                 
+       ccc                                                  
+ENDMAP
+
+# loosely based off the robbiemu forge concept layout
+NAME:   hellmonk_forge_siderooms
+TAGS:   no_item_gen no_monster_gen no_rotate
+ORIENT: encompass
+PLACE:  Forge
+MONS:   glow worm / clockroach / bombardier beetle / phantom / rust mite
+MONS:   shadow imp / sleepcap / bes kemwar / rubble golem / kobold geomancer
+MONS:   forge servant
+MONS:   cursed ember / drude
+NSUBST: 1 = 4:1 / *=1..
+NSUBST: - = 2:1 / 1:2 / 4=2111........ / *:.
+NSUBST: ' = 2:1 / 1:2 / 4=2111........ / *:.
+NSUBST: ~ = 2:1 / 1:2 / 8=21.... / *:.
+NSUBST: ; = 1:3 / 1=21 / 1=21.. / *:.
+NSUBST: 4 = 2:4 / 2=4421 / 2=4.... / *:.
+TILE:   G = dngn_crumbled_column
+: forge_setup(_G)
+MAP
+              ccccccccccc                                   
+            ccc;;;;;;;;;ccc                                 
+            cc~~~;;;;;~~~cc                                 
+           cc~~~ccc+ccc~~~cc                                
+          cc~~~cc.....cc~~~cc                               
+          c~~~cc.......cc~~~c                               
+        ccc~~cc4.44444.4cc~~ccc                             
+   cccccc~~~~cl4444F4444lc~~~~cccccc                        
+   c1....~~~~ccllcccccllcc~~~~....1c                        
+   c..c1.ccccccccccccccccccccc.1c..c                        
+   c..c..1..cc..ccccccc..cc..1..c..c                        
+   c1cc.....1...ccG.Gcc..1......cc1c                        
+   c.ccccccc...cc..<..cc...ccccccc.c                        
+cccc+cccc  cc..cc.....cc..cc  cccc+cccc                     
+cc.....cc   c......A......c   cc.....cc                     
+c.-----.c   c.............c   c.'''''.c                     
+c.-----.c   cccc.......cccc   c.'''''.c                     
+c.-----.c      ccGlllGcc      c.'''''.c                     
+c.-----.c      ccccccccc      c.'''''.c                     
+cc..d..cc                     cc..e..cc                     
+ccccccccc                     ccccccccc                     
+ENDMAP
+
+NAME: hellmonk_forge_split_passage
+TAGS:   no_item_gen no_monster_gen no_rotate
+ORIENT: encompass
+PLACE:  Forge
+SHUFFLE: hijk
+SUBST: h=+, ijk=c
+SUBST: -:+.
+NSUBST: ' = 3:1 / 6=1. / *:.
+NSUBST: ~ = 1:2 / 3=21 / 6=1. / *:.
+MONS: clockroach / glow worm / bombardier beetle / rust mite
+MONS: rock fish w:15 / kobold geomancer / cursed ember / shadow imp
+KMONS: F = forge servant
+KMONS: R = rubble golem
+: forge_setup(_G)
+MAP
+ccccccccccccccccccc                                         
+clGlGlG.RFR.GlGlGlc                                         
+cG...............Gc                                         
+cl......GlG......lc                                         
+ccchcccjccckccciccc                                         
+ c~~~c~~~c~~~c~~~c                                          
+ c~~~c~~~c~~~c~~~c                                          
+ c~~~c~~~c~~~c~~~c                                          
+ c~~~c~~~c~~~c~~~c                                          
+ c...cd..c..ec...c                                          
+ cc..cc..c..cc...c                                          
+  c...cc.c.cc...cc                                          
+  cc...c.c.c...cc                                           
+   cc--c-c-c--cc                                            
+    cc'''c'''cc                                             
+     c'''c'''c                                              
+     c'''c'''c                                              
+     c...c...c                                              
+     cc--c--cc                                              
+      cc'''cc                                               
+       c'''c                                                
+       c...c                                                
+       c...c                                                
+       cc-cc                                                
+       cc.cc                                                
+      cc...cc                                               
+      c.....c 
+      cV.<.Vc 
+      c.....c                                               
+      cc.A.cc                                               
+       ccccc                                                
+ENDMAP
+
+NAME: hellmonk_forge_cave
+TAGS:   no_item_gen no_monster_gen no_rotate
+ORIENT: encompass
+PLACE:  Forge
+SHUFFLE: ab, hjk, 34
+SUBST: ah=c
+SUBST: - = x:50 .:45 l:5
+NSUBST: 1 = 4:1 / *=1..
+NSUBST: 2 = 2:2 / *=21...
+MONS: clockroach / glow worm / bombardier beetle / rust mite
+MONS: rock fish / kobold geomancer / cursed ember / shadow imp / phantom
+MONS: rubble golem
+MONS: forge servant
+: forge_setup(_G)
+MAP
+             xxxxxxxxxx                                     
+           xxx-xxxxxxxxxx                                   
+         xxxx-..-xxxxxxxxxx                                 
+        xxxxxx2.xxxxxxk.-.xx                                
+      xxxxxxxx.1xxxxxkk..1-xxx                              
+     xxxxxxxxxx.xxxxkkx....xxxx                             
+    xx-xxxxxxx.-xxxkkkx.--...xx                                                                              
+   xx-.xxxxxxx.1kkkkxxxxxxx.2.xxx                           
+  xx...-xxxxx-..-xxxxxxxxxxx-1.xxx                          
+  xxx...xxxxx-.1-xxxxxxxxxxx..-xxx                          
+  xxx-..-xxxh....jxxxxxxxxxx.-xxxx                          
+ xx......hhhh...jj.--xxxxxxx...xxxx                         
+ xx-.1...hhh...jjj..exxxxxxx--...bx                         
+ x......hhh..-.jjj..--xxxxx-....bbx                         
+xx....x.xxxxxxxxxj.11.xxxxx...xbbbxx                        
+xbb..xxxxxxxxxxxxxxx..-xxx-1.xxxbb.x                        
+x.bbxxxxxxxxxxxxxxxxx....h...xxxb..x                        
+x..xxxxxxxxxxxxxxxxxxx..hhh.xxxxx.2cccccc                   
+x..axxxxxxxxxxxxxxxxx..xxxxxxxxxx..cc..lcc                  
+x..aaxxxxxxxxxxxxxxx..xxxxxxxxx...Gc...3lc                  
+x..aa...xxxxxxjjx..-.xxxxxxxxx.1...2..j<lc                  
+x..aa-...xxxxjjjjx....xxxxxxxxx...Gc...4lc                  
+x..axxx-...xjjxxjj..21.xxxxxxxxxx..cc..lcc                  
+x..xxxxx.1.jjxxxxx-.1..hh.--xxxxx.-cccccc                   
+x..xxxxx-..xxxxxxx-.dxxxhh..xxxxx1.x                        
+xA<xxxxx..-xxxxxxx-.xxxxxh.-xxxxx.-x                        
+xxxxxxxxx..xxxxxxx..xxxxx....xxx-.xx                        
+ xxxxxxxx.hxxxxxxx.xxxxxxx-.axxx..x                         
+ xxxxxxxxhhhxxxxxk.xxxxxxx..aax...x                         
+ xxxxxxxx...xxxxxkkxxxxxxx-..aa.2xx                         
+  xxxxxxxx-..xxxkkkxxxxxxx.1xxx..x                                                
+   xxxxxxxxx-..-....xxxxx.-xxxxxx                           
+   xxxxxx-.....--..1.xxx...xxxxxx                           
+   xxxxx-...1...-.......2..-xxxx                            
+    xxxxxxx-..-xx...--...--.xxx                             
+     xxxxxxx-.xxx-..--.xxxxxxxx                             
+      xxxxxxxxxxxxx....-xxxxxx                              
+        xxxxxxxxxxxx.1xxxxxx                                
+         xxxxxxxxxxxxxxxxxx                                 
+           xxxxxxxxxxxxxx                                   
+             xxxxxxxxxx                                     
+ENDMAP
+
+NAME:   hellmonk_forge_grid
+TAGS:   no_item_gen no_monster_gen no_rotate
+ORIENT: encompass
+PLACE:  Forge
+SHUFFLE: deF
+SUBST:  k = GlV
+NSUBST: h = 1:.+c / *:c, i = 1:.+c / *:c, n = 1:.+c / *:c, r = 1:.+c / *:c
+NSUBST: j = 1:.+P / *:c, m = 1:.+P / *:c, p = 1:.+P / *:c, q = 1:.+P / *:c
+NSUBST: 1 = 7:1 / 1:2, 3 = 1:3 / 1:2 / 1:1
+MONS:   glow worm / clockroach / rust mite
+MONS:   rubble golem / sleepcap / rock fish / drude
+MONS:   forge servant
+KMONS:  P = plant
+TILE:   G = dngn_crumbled_column
+: forge_setup(_G)
+MAP
+            ccccccc                                         
+            cG.<.Gc                                         
+            c..3..c                                         
+            c..F..c                                         
+            c.....c                                         
+            c.....c                                         
+      ccccccccc+ccccccccc                                   
+      cG....c.....c....Gc                                   
+      c.....p.....q.....c                                   
+      c..1..p..1..q..1..c                                   
+      c.....p.....q.....c                                   
+      c.....c.....c.....c                                   
+ccccccccnnncccc+ccccrrrcccccccc                             
+cG....c.....c..2..c.....c....Gc                             
+c.....c.....c.....c.....c.....c                             
+c<3d..+..1..+..k..+..1..+..e3<c                             
+c.....c.....c.....c.....c.....c                             
+cG....c.....c.....c.....c....Gc                             
+ccccccccjjjcccc+ccccmmmcccccccc                             
+      c.....c.....c.....c                                   
+      c.....h.....i.....c                                   
+      c..1..h..1..i..1..c                                   
+      c.....h.....i.....c                                   
+      cG....c.....c....Gc                                   
+      ccccccccc+ccccccccc                                   
+            c.....c                                         
+            c.....c                                         
+            c..A..c                                         
+            c.....c                                         
+            c..<..c                                         
+            ccccccc                                         
+ENDMAP

@@ -1,0 +1,19 @@
+name: "forge servant"
+glyph: {char: "a", colour: yellow}
+flags: [speaks, warm_blood]
+exp: 91
+species: human
+will: 40
+attacks:
+ - {type: hit, damage: 8}
+hd: 4
+hp_10x: 210
+ac: 0
+ev: 10
+spells: forge_servant
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid
