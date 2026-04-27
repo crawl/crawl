@@ -604,6 +604,7 @@ static const vector<pop_entry> population[] =
   {  0,  5,  125, FLAT, MONS_VAMPIRE_MAGE },
   {  0,  5,   65, SEMI, MONS_COGNITOGAUNT },
   {  0,  5,   70, PEAK, MONS_GHOUL },
+  {  0,  5,   50, PEAK, MONS_REVEPHANT },
   {  0,  5,  105, FLAT, MONS_VAMPIRE_KNIGHT },
   {  1,  4,   75, FLAT, MONS_SKELETAL_WARRIOR },
   {  1,  5,   55, SEMI, MONS_SOUL_EATER },

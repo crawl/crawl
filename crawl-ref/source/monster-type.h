@@ -98,6 +98,9 @@ enum monster_type                      // env.mons[].type
     MONS_ELEPHANT,
     MONS_DIRE_ELEPHANT,
     MONS_HELLEPHANT,
+#if TAG_MAJOR_VERSION > 34
+    MONS_REVEPHANT,
+#endif
     MONS_MANTICORE,
     MONS_HIPPOGRIFF,
 #if TAG_MAJOR_VERSION == 34
@@ -1411,6 +1414,7 @@ enum monster_type                      // env.mons[].type
     MONS_NASCENT_PLASMODIUM,
     MONS_STAR_JELLY,
     MONS_BURSTSHROOM,
+    MONS_REVEPHANT,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

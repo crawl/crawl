@@ -4901,7 +4901,12 @@ bool melee_attack::do_knockback(bool slippery)
     // is a player, a shaft trap will unload the level. If trampling will
     // somehow fail, move attempt will be ignored.
     if (!attacker->cannot_move())
+    {
+        if (attacker->is_monster() && attacker->as_monster()->type == MONS_REVEPHANT)
+            place_cloud(CLOUD_SPECTRAL, attacker->pos(), 6 + random2(4), attacker);
+
         schedule_trample_follow_fineff(attacker, old_pos);
+    }
     defender->move_to(new_pos);
     return true;
 }

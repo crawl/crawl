@@ -301,6 +301,7 @@ catoblepas MONS_CATOBLEPAS
 elephant MONS_ELEPHANT
 elephant_dire MONS_DIRE_ELEPHANT
 elephant_demonic MONS_HELLEPHANT
+revephant MONS_REVEPHANT
 %rim 1
 ice_beast MONS_ICE_BEAST
 %rim 0

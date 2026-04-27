@@ -1,0 +1,17 @@
+name: "revephant"
+glyph: {char: "Y", colour: magenta}
+resists: {cold: 2}
+exp: 1280
+holiness: [undead]
+will: invuln
+attacks:
+ - {type: trample, flavour: trample, damage: 20}
+ - {type: trunk_slap, damage: 5}
+hd: 14
+hp_10x: 1675
+ac: 10
+ev: 2
+shout: trumpet
+intelligence: animal
+size: giant
+shape: quadruped
