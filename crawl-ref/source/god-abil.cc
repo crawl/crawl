@@ -2190,7 +2190,7 @@ static map<curse_type, curse_data> _ashenzari_curses =
         { SK_FIRE_MAGIC },
     } },
     { CURSE_ICE_MAGIC, {
-        "Fire Magic", "Fire",
+        "Ice Magic", "Ice",
         { SK_ICE_MAGIC },
     } },
     { CURSE_AIR_MAGIC, {
@@ -2259,6 +2259,7 @@ static bool _curse_is_removed(curse_type curse)
 {
     switch (curse)
     {
+#if TAG_MAJOR_VERSION == 34
         case CURSE_ELEMENTS:
         case CURSE_SORCERY:
         case CURSE_COMPANIONS:
@@ -2267,6 +2268,7 @@ static bool _curse_is_removed(curse_type curse)
         case CURSE_FORTITUDE:
         case CURSE_CUNNING:
             return true;
+#endif
         default:
             return false;
     }
