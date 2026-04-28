@@ -1212,7 +1212,6 @@ struct frag_effect
     string name;
     const char* terrain_name;
     bool direct;
-    bool hit_centre;
 };
 
 // Initializes the provided frag_effect with the appropriate Lee's Rapid
@@ -1412,9 +1411,6 @@ static bool _init_frag_grid(frag_effect &effect,
     if (what)
         *what = frag.what;
 
-    if (!feat_is_solid(grid))
-        effect.hit_centre = true; // to hit monsters standing on doors
-
    // If it was recoloured, use that colour instead.
    if (env.grid_colours(target))
        effect.colour = env.grid_colours(target);
@@ -1450,7 +1446,7 @@ static bool _init_frag_effect(frag_effect &effect, const actor &caster,
 
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool quiet,
-                              const char **what, bool &hole)
+                              const char **what)
 {
     beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.source_id    = caster->mid;
@@ -1498,9 +1494,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             break;
     }
 
-    if (effect.hit_centre)
-        hole = false;
-
     beam.source_name = caster->name(DESC_PLAIN, true);
     beam.target = target;
 
@@ -1510,23 +1503,17 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
 spret cast_fragmentation(int pow, const actor *caster,
                               const coord_def target, bool fail)
 {
-    bool hole                = true;
     const char *what         = nullptr;
 
     bolt beam;
 
-    if (!setup_fragmentation_beam(beam, pow, caster, target, false, &what,
-                                  hole))
-    {
+    if (!setup_fragmentation_beam(beam, pow, caster, target, false, &what))
         return spret::abort;
-    }
 
     if (caster->is_player())
     {
         bolt tempbeam;
-        bool temp;
-        setup_fragmentation_beam(tempbeam, pow, caster, target, true, nullptr,
-                                 temp);
+        setup_fragmentation_beam(tempbeam, pow, caster, target, true, nullptr);
         player_beam_tracer tracer;
         tempbeam.explode(tracer, false);
         if (cancel_beam_prompt(tempbeam, tracer))
@@ -1534,8 +1521,8 @@ spret cast_fragmentation(int pow, const actor *caster,
     }
 
     fail_check();
-
-    if (what != nullptr) // Terrain explodes.
+    bool is_terrain = what != nullptr;
+    if (is_terrain)
     {
         if (you.see_cell(target))
             mprf("The %s shatters!", what);
@@ -1574,7 +1561,9 @@ spret cast_fragmentation(int pow, const actor *caster,
             mon->hurt(caster, dam, BEAM_MINDBURST);
     }
 
-    beam.explode(true, hole);
+    // The explosion has a hole if it was a monster or the player which
+    // exploded, to prevent hitting them twice.
+    beam.explode(true, !is_terrain);
 
     return spret::success;
 }

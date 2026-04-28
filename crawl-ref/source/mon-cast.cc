@@ -6277,14 +6277,12 @@ static coord_def _mons_fragment_target(const monster &mon)
     int maxpower = 0;
     for (distance_iterator di(mons->pos(), true, true, range); di; ++di)
     {
-        bool temp;
-
         if (!cell_see_cell(mons->pos(), *di, LOS_NO_TRANS))
             continue;
 
         bolt beam;
         const char *what = nullptr;
-        if (!setup_fragmentation_beam(beam, pow, mons, *di, true, &what, temp))
+        if (!setup_fragmentation_beam(beam, pow, mons, *di, true, &what))
             continue;
 
         beam.range = range;
