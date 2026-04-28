@@ -1,0 +1,19 @@
+name: "wooden wasp"
+glyph: {char: "y", colour: lightgreen}
+flags: [flies]
+exp: 140
+genus: hornet
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: sting, damage: 11}
+hd: 4
+hp_10x: 250
+ac: 4
+ev: 12
+spells: wooden_wasp
+shout: buzz
+intelligence: animal
+speed: 13
+size: tiny
+shape: insect_winged

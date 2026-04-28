@@ -2750,6 +2750,10 @@ void lose_piety(int pgn)
 /// Whether Fedhas would set `target` to a neutral attitude
 bool fedhas_neutralises(const monster& target)
 {
+    // by popular demand
+    if (target.type == MONS_WOODEN_WASP)
+        return true;
+
     return mons_is_plant(target)
            && target.holiness() & MH_PLANT
            && target.type != MONS_SNAPLASHER_VINE

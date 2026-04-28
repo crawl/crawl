@@ -458,6 +458,10 @@ Hurl Torchlight cast
 Landbreaker natural cast
 
 @The_monster@ fractures the ground with @possessive@ footsteps.
+%%%%
+Sting natural cast
+
+@The_monster@ fires a poisoned stinger.
 ########################################################################
 # Unique monsters
 ########################################################################

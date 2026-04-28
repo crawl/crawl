@@ -807,6 +807,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_WOODEN_WASP,
+      {
+       { SPELL_STING, 40, MON_SPELL_NATURAL },
+      }
+    },
+
     // ('z') Corporeal semi-humanoid undead.
     {  MST_ANCIENT_CHAMPION,
       {
