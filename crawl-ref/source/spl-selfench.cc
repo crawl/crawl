@@ -19,6 +19,7 @@
 #include "items.h" // stack_iterator
 #include "libutil.h"
 #include "message.h"
+#include "mutation.h" // add_bane
 #include "output.h"
 #include "player.h"
 #include "prompt.h"
@@ -92,10 +93,22 @@ void fiery_armour()
 spret cast_revivification(int pow, bool fail)
 {
     fail_check();
-    mpr("Your body is healed in an amazingly painful way.");
+    mpr("Your body is completely healed.");
 
-    const int loss = 6 + binomial(9, 8, pow);
-    dec_max_hp(loss * you.hp_max / 100);
+    // we can't actually call player::doom directly because 1) that downscales
+    // based on current banes, and 2) we want a residual amount of doom after
+    // the (very likely) first bane is applied, so spellpower does something.
+    int doom = 135 - div_rand_round(pow, 4);
+    doom = random_range(doom, doom + 25) + you.attribute[ATTR_DOOM];
+
+    while (doom > 100)
+    {
+        mprf(MSGCH_WARN, "Doom befalls you....");
+        add_bane();
+        doom = doom - 100;
+    }
+
+    you.attribute[ATTR_DOOM] = doom;
     set_hp(you.hp_max);
 
     if (you.duration[DUR_DEATHS_DOOR])
