@@ -8259,7 +8259,7 @@ ENDMAP
 
 NAME:   minmay_shattered_shrine
 DEPTH:  D:7-, Depths, Lair
-TAGS:   transparent
+TAGS:   transparent no_hmirror no_vmirror
 KMONS:  p = plant
 SUBST:  9 = 9., " = .:190 0:5 %:5, ' = .:30 0:5 %:5
 MAP
