@@ -1838,16 +1838,21 @@ use_animations += branch_entry
           branch_entry     - Animations that run when you enter a new branch.
                              Currently only the Abyss and Zot have animations.
 
+unusual_monster_items = wand, disto, chaos, curare, atropa, datura, dispersal, disjunction,
+                        throwing net, vulnerable:holy_wrath, vulnerable:entangling, reflect,
+                        Reflect
 unusual_monster_items += <regex>, <regex>, ...
         (List option)
         Monsters whose inventory items match a regex in this comma-separated
-        list will display with unusual threat level. E.g.
-            unusual_monster_items =  wand
-            unusual_monster_items += disto,chaos
-            unusual_monster_items += curare,atropa,datura,dispersal
-            unusual_monster_items += throwing net
+        list will display with unusual threat level.
         The item descriptions matched against are the short item names that
         ordinarily display when a monster is examined with 'xv'.
+        Adding a "vulnerable:" prefix to a weapon brand will match dangerous weapon brands
+        that your character is affected by. These include holy wrath, entangling, venom, draining,
+        pain and electrocution, the latter being the only one that checks resistance and not complete immunity.
+        This behaviour can be further adjusted by adding a numerical suffix to the entry, which makes the vulnerability
+        check only apply if you are not above the specified XL (for example, "vulnerable:venom:13" would only match
+        venom weapons if you are both not poison immune and at XL 13 or below).
 
         This option determines which monsters will be regarded as "unusual" for
         the options tile_show_threat_levels (tiles only), monster_list_colour,

@@ -3167,6 +3167,7 @@ void game_options::update_consumable_shortcuts()
 // Extract 'vulnerable brand' options from unusual_monster_items
 void game_options::process_unusual_items()
 {
+    vulnerable_brand_warning.clear();
     for (int i = (int)unusual_monster_items.size() - 1; i >= 0; --i)
     {
         text_pattern& pattern = unusual_monster_items[i];
