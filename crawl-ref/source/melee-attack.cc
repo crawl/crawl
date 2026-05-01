@@ -4855,6 +4855,7 @@ bool melee_attack::do_knockback(bool slippery)
     if (!slippery && !x_chance_in_y(size_diff + 3, 6)
         // need a valid tile
         || !defender->is_habitable(new_pos)
+        || !in_bounds(new_pos)
         // don't trample anywhere the attacker can't follow
         || !attacker->is_habitable(old_pos)
         // don't trample into a monster - or do we want to cause a chain
