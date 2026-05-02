@@ -404,6 +404,8 @@ static vector<duration_type> _dispellable_player_buffs()
             continue;
         else if (i == DUR_SENTINEL_MARK && aura_is_active_on_player(OPHAN_MARK_KEY))
             continue;
+        else if (i == DUR_BLIND && aura_is_active_on_player(RADIANT_BLIND_KEY))
+            continue;
 
         dispellables.push_back((duration_type) i);
         // this includes some buffs that won't be reduced in duration -

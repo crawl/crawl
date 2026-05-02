@@ -80,6 +80,7 @@ enum monster_type                      // env.mons[].type
 #else
     MONS_DART_SLUG,
     MONS_TORPOR_SNAIL,
+    MONS_RADIANT_SNAIL,
 #endif
     MONS_ELEPHANT_SLUG,
     MONS_TYRANT_LEECH,
@@ -1433,6 +1434,7 @@ enum monster_type                      // env.mons[].type
     MONS_SEWAGE_SOVEREIGN,
     MONS_SCRAPSHELL_CHIMERA,
     MONS_GLOWMURK_GHAST,
+    MONS_RADIANT_SNAIL,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

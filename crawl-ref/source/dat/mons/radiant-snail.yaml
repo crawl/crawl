@@ -1,0 +1,17 @@
+name: "radiant snail"
+glyph: {char: "w", colour: yellow}
+flags: [web_immune, no_skeleton, has_aura]
+exp: 208
+genus: elephant_slug
+will: 60
+attacks:
+ - {type: bite, damage: 17}
+hd: 7
+hp_10x: 430
+ac: 8
+ev: 1
+has_corpse: true
+intelligence: animal
+habitat: amphibious
+size: large
+shape: snail

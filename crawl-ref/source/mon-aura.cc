@@ -46,6 +46,14 @@ static const vector<mon_aura_data> aura_map =
                         source.name(DESC_THE).c_str());
             }},
 
+    {MONS_RADIANT_SNAIL,
+        ENCH_BLIND, 1, true, DUR_BLIND, RADIANT_BLIND_KEY,
+         [](const actor& targ, const monster&) { return !targ.stasis();},
+         [](const monster& source)
+            {  mprf("The radiance of %s blinds you.",
+                        source.name(DESC_THE).c_str());
+            }},
+
     {MONS_OPHAN,
         ENCH_NONE, 1, true, DUR_SENTINEL_MARK, OPHAN_MARK_KEY,
          nullptr,
