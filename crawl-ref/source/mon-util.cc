@@ -1446,6 +1446,13 @@ int mons_class_colour(monster_type mc)
     {
         return Options.mon_glyph_overrides[MONS_PLAYER].col;
     }
+    // Ditto for merged slime creatures.
+    if (mc == MONS_MERGED_SLIME_CREATURE
+        && Options.mon_glyph_overrides.count(MONS_MERGED_SLIME_CREATURE)
+        && Options.mon_glyph_overrides[MONS_MERGED_SLIME_CREATURE].col)
+    {
+        return Options.mon_glyph_overrides[MONS_MERGED_SLIME_CREATURE].col;
+    }
     else
         return monster_symbols[mc].colour;
 }

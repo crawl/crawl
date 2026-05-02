@@ -1074,9 +1074,7 @@ enum monster_type                      // env.mons[].type
     MONS_SEISMOSAURUS_EGG,
 #endif
     MONS_HELL_LORD,             // genus
-#if TAG_MAJOR_VERSION == 34
     MONS_MERGED_SLIME_CREATURE, // used only for recolouring
-#endif
     MONS_SENSED,                // dummy monster for unspecified sensed mons
     MONS_SENSED_TRIVIAL,
     MONS_SENSED_EASY,

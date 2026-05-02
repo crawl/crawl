@@ -3080,6 +3080,7 @@ mon_glyph -= <monster name or symbol>
              player
              sensed monster
              {trivial,easy,tough,nasty,friendly} sensed monster
+             merged slime creature
 
         Playable species that normally have no monster of the same name can
         also be redefined, for use with show_player_species = true.

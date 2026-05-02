@@ -152,6 +152,8 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
 
 static monster_type _show_mons_type(const monster_info& mi)
 {
+    if (mi.type == MONS_SLIME_CREATURE && mi.slime_size > 1)
+        return MONS_MERGED_SLIME_CREATURE;
     if (mi.type == MONS_SENSED)
         return mi.base_type;
     else
@@ -174,9 +176,7 @@ static int _get_mons_colour(const monster_info& mi)
     // assuming the user has not remapped their colour.
     if (col == mons_class_colour(mi.type))
     {
-        if (mi.type == MONS_SLIME_CREATURE && mi.slime_size > 1)
-            col = LIGHTGREEN;
-        else if (mi.type == MONS_ZOMBIE && mons_zombie_size(mi.base_type) == Z_BIG)
+        if (mi.type == MONS_ZOMBIE && mons_zombie_size(mi.base_type) == Z_BIG)
             col = YELLOW;
         else if (mi.type == MONS_SIMULACRUM && mons_zombie_size(mi.base_type) == Z_BIG)
             col = LIGHTCYAN;
@@ -185,6 +185,11 @@ static int _get_mons_colour(const monster_info& mi)
         else if (mi.type == MONS_SPECTRAL_THING && mons_zombie_size(mi.base_type) == Z_BIG)
             col = LIGHTGREEN;
     }
+
+    // Exception to the above for display-only "merged slime creature" pseudo-monster,
+    // so that their colour can be set independently of the base slime creature's colour.
+    if (mi.type == MONS_SLIME_CREATURE && mi.slime_size > 1)
+        col = mons_class_colour(MONS_MERGED_SLIME_CREATURE);
 
     if (mi.is(MB_ROLLING))
         col = ETC_BONE;
