@@ -1846,17 +1846,30 @@ unusual_monster_items += <regex>, <regex>, ...
         Monsters whose inventory items match a regex in this comma-separated
         list will display with unusual threat level.
         The item descriptions matched against are the short item names that
-        ordinarily display when a monster is examined with 'xv'.
+        ordinarily display when a monster is examined with 'xv'. Menu prefixes are
+        supported, but regex matching and vulnerability checks are mutually exclusive.
+
         Adding a "vulnerable:" prefix to a weapon brand will match dangerous weapon brands
-        that your character is affected by. These include holy wrath, entangling, venom, draining,
-        pain and electrocution, the latter being the only one that checks resistance and not complete immunity.
-        This behaviour can be further adjusted by adding a numerical suffix to the entry, which makes the vulnerability
-        check only apply if you are not above the specified XL (for example, "vulnerable:venom:13" would only match
-        venom weapons if you are both not poison immune and at XL 13 or below).
+        that your character is affected by. Supported brands are holy_wrath, entangling, venom,
+        draining, pain, vampirism, flaming, freezing and electrocution. The last three require one
+        rank of resistance for you to not be considered vulnerable, all others require complete
+        immunity. Note that vulnerability is only checked for these specific brand values and other
+        items will be matched even if you're immune to their effects. More sophisticated checks
+        (e.g. curare darts for undead species or throwing nets for Poltergeists) require custom
+        Lua scripting.
+
+        All entries can be made XL-conditional by adding the corresponding XL value as a suffix
+        following a colon. Such an entry will only be checked against if your XL is equal to or
+        lower than that value.
 
         This option determines which monsters will be regarded as "unusual" for
         the options tile_show_threat_levels (tiles only), monster_list_colour,
         and unusual_highlight (console only).
+
+        Examples:
+          "wand of flame:7" will mark all monsters with a wand of flame as unusual, but only at XL<=7;
+          "artefact" will mark all monsters with artifact equipment, including unrands;
+          "vulnerable:venom:15" will mark all monsters with venom weapons at XL<=15;
 
 darken_beyond_range = true
         If set to true, everything beyond range when targeting will be
