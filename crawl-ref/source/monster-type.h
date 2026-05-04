@@ -338,6 +338,7 @@ enum monster_type                      // env.mons[].type
     MONS_RUSTED_INSPECTOR,
     MONS_SALTLING,
     MONS_PEACEKEEPER,
+    MONS_COMBAT_FRAME,
 #endif
     MONS_IRON_GOLEM,
     MONS_CRYSTAL_GUARDIAN,
@@ -1433,6 +1434,7 @@ enum monster_type                      // env.mons[].type
     MONS_SEWAGE_SOVEREIGN,
     MONS_SCRAPSHELL_CHIMERA,
     MONS_GLOWMURK_GHAST,
+    MONS_COMBAT_FRAME,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

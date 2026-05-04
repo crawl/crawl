@@ -1040,6 +1040,11 @@ A mechanical insect powered by an intricate array of gears and springs. It is
 vicious and resilient to damage, but its clockwork naturally winds down as it
 attacks, eventually leaving it unable to move until its creator winds it again.
 %%%%
+%%%%
+combat frame
+
+A semiautonomous weapon forged by unknown persons, designed to fight at every
+range.
 colossal amoeba
 
 An unfathomably massive pile of mystic pulsating protoplasm. The slightest
