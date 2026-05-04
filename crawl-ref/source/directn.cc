@@ -1196,6 +1196,11 @@ void direction_chooser::calculate_target_info()
         if (!you.can_see(**mi))
             continue;
 
+        // We may be able to hit monsters we can't target directly, but only if
+        // we have a hitfunc.
+        if (!hitfunc && !cell_see_cell(you.pos(), mi->pos(), LOS_NO_TRANS))
+            continue;
+
         if (_want_target_monster(*mi, mode, hitfunc))
         {
             valid_targs.push_back(*mi);
