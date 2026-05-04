@@ -1101,6 +1101,12 @@ curse toe
 A disembodied toe, hanging in the air and radiating an intense field of
 negative energy.
 %%%%
+cursed ember
+
+A malevolent elemental born from the last spark of a dying fire. It yearns for
+other beings to embrace its warmth, and will doom those who dare attack it from
+a distance.
+%%%%
 cyclops
 
 A giant with one eye in the centre of its forehead. Despite its lack of
