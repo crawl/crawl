@@ -3315,7 +3315,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
         else if (you.form == transformation::death)
         {
             long_desc += make_stringf(
-            "\nYou must first return to come back to life before you may mutate.");
+            "\nYou must first come back to life before you may mutate.");
         }
         else if (you.is_lifeless_undead()
              && you.get_mutation_level(MUT_MUTATION_RESISTANCE) != 3)
