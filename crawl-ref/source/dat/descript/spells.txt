@@ -232,8 +232,8 @@ Borgnjor's Revivification spell
 
 Instantly heals any and all wounds suffered by the caster. Meddling with fate in
 such a way comes at a cost; casting this spell also inflicts heavy doom on the
-caster, usually enough to inflict a bane outright. Spellpower reduces the amount
-of doom inflicted.
+caster and temporarily drains their maximum health. Spellpower decreases the
+amount of doom and draining applied.
 
 It is powerful enough to cancel the effects of Death's Door, although doing so
 will briefly paralyse the caster. It has no effect on the undead.
