@@ -4940,7 +4940,7 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
         {
             const int explored = you.explore_estimate;
 
-            return ((!player_in_branch(BRANCH_ABYSS) || _teleportation_check()))
+            return ((!player_in_branch(BRANCH_ABYSS) && _teleportation_check()))
                  && !((_xom_feels_nasty() && (explored >= 40 || tn > 10))
                      || (explored >= 60 + random2(40)));
         }
