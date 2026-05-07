@@ -677,7 +677,8 @@ void destroy_trap(const coord_def& pos)
     if (!feat_is_trap(env.grid(pos)))
         return;
 
-    dungeon_terrain_changed(pos, DNGN_FLOOR);
+    if (!revert_terrain_change(pos, TERRAIN_CHANGE_GOLUBRIA, false))
+        dungeon_terrain_changed(pos, DNGN_FLOOR);
     if (you.see_cell(pos))
     {
         update_terrain_knowledge(pos);
