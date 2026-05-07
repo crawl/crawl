@@ -242,6 +242,9 @@ static void _establish_connection(monster* tentacle,
 
             connect->max_hit_points = tentacle->max_hit_points;
             connect->hit_points = tentacle->hit_points;
+
+            if (head->props.exists(TREE_POSITION_KEY))
+                connect->props[TREE_POSITION_KEY].get_coord() = head->props[TREE_POSITION_KEY].get_coord();
         }
         else
         {
