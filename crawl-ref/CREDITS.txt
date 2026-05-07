@@ -309,6 +309,7 @@
     Eva Myers
     Mystic Sailboat
     nagdon
+    NagyDonat
     Naruni
     neofelis
     nirrattner
@@ -363,6 +364,7 @@
     RealzHS
     Robert J. Redelmeier
     Terence Reeves
+    refracta
     Tobias Rehbein
     Remsleep
     Chris Rendle-Short
