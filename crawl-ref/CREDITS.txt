@@ -364,7 +364,6 @@
     RealzHS
     Robert J. Redelmeier
     Terence Reeves
-    refracta
     Tobias Rehbein
     Remsleep
     Chris Rendle-Short
