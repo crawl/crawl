@@ -2432,6 +2432,13 @@ void map_def::read_full(reader& inf)
 
 int map_def::weight(const level_id &lid) const
 {
+    // Over several decades, less than a dozen vaults are left with >99 weight,
+    // and only one has above 1000. This should be fine for catching mistakes.
+    if (_weight.depth_value(lid) > 5000)
+    {
+        mprf(MSGCH_DANGER, "Error: testing weight of %d deployed for vault %s.",
+                           _weight.depth_value(lid), map_def::name.c_str());
+    }
     return _weight.depth_value(lid);
 }
 
