@@ -1036,19 +1036,15 @@ tileidx_t tileidx_tentacle(const monster_info& mon)
         // Get the parent tentacle's location.
         h_pos = t_pos + mon.props[INWARDS_KEY].get_coord();
     }
-    if (no_head_connect && (mon.type == MONS_SNAPLASHER_VINE
-                            || mon.type == MONS_SNAPLASHER_VINE_SEGMENT))
+    // Vines next to trees don't have an inwards key, but they remember
+    // the position of the tree they spawned from.
+    if (no_head_connect
+        && (mon.type == MONS_SNAPLASHER_VINE
+            || mon.type == MONS_SNAPLASHER_VINE_SEGMENT)
+        && mon.props.exists(TREE_POSITION_KEY))
     {
-        // Find an adjacent tree to pretend we're connected to.
-        for (adjacent_iterator ai(t_pos); ai; ++ai)
-        {
-            if (feat_is_tree(env.grid(*ai)))
-            {
-                h_pos = *ai;
-                no_head_connect = false;
-                break;
-            }
-        }
+        h_pos = mon.props[TREE_POSITION_KEY].get_coord();
+        no_head_connect = false;
     }
 
     // Is there a connection to the given direction?

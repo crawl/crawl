@@ -52,6 +52,7 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-util.h"
+#include "mon-tentacle.h"
 #include "mutation.h"
 #include "nearby-danger.h"
 #include "options.h"
@@ -963,6 +964,9 @@ void bolt::burn_wall_effect()
                 place_cloud(CLOUD_FIRE, *ai, random_range(11, 25), agent());
         }
     }
+
+    // Fix or destroy vines anchored to the destroyed tree.
+    reanchor_or_destroy_vines(pos(), agent());
 
     obvious_effect = true;
 

@@ -30,3 +30,6 @@ bool destroy_tentacle(monster* head);
 
 int mons_available_tentacles(monster* head);
 void mons_create_tentacles(monster* head);
+
+coord_def tree_anchor_pos(const coord_def vine_pos);
+void reanchor_or_destroy_vines(const coord_def tree_pos, actor *agent);

@@ -314,6 +314,7 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define OUTWARDS_KEY "outwards"
 #define INWARDS_KEY "inwards"
 #define BASE_POSITION_KEY "base_position"
+#define TREE_POSITION_KEY "tree_position"
 #define SUMMON_ID_KEY "summon_id"
 #define FLAY_BLOOD_KEY "flay_blood"
 #define IDEAL_RANGE_KEY "ideal_range"

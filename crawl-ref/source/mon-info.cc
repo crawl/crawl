@@ -256,7 +256,8 @@ static bool _is_public_key(string key)
      || key == POLY_SET_KEY
      || key == NOBODY_MEMORIES_KEY
      || key == ORIGINAL_TYPE_KEY
-     || key == SPLINTERFROST_POWER_KEY)
+     || key == SPLINTERFROST_POWER_KEY
+     || key == TREE_POSITION_KEY)
     {
         return true;
     }

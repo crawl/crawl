@@ -4180,6 +4180,9 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
                         MG_FORCE_PLACE, mon->god)
             .set_summoned(mon, SPELL_AWAKEN_VINES, random_range(250, 380), false)))
         {
+            // Stash a tree position so that we can draw the vine connecting
+            // to it.
+            vine->props[TREE_POSITION_KEY].get_coord() = tree_anchor_pos(spot);
             --num_vines;
             if (you.can_see(*vine))
                 seen = true;
