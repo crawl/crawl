@@ -1,6 +1,7 @@
 name: "sewage sovereign"
 glyph: {char: "Y", colour: etc_earth}
 flags: [warm_blood, herd, fast_regen]
+resists: {poison: 1}
 exp: 1850
 genus: hog
 will: 120
