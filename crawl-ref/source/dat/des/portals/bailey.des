@@ -516,17 +516,16 @@ NSUBST:  E = 1:+ / *:c, C = 1:+ / *:c
 SUBST:   BD = c
 SUBST:   W = w:2 .:1 W:1, H = W., ~ = W
 SUBST:   ? = c., N = nc
-SUBST:   1 = 1., ^ = ^^.
-#
+SUBST:   1 = 1., ^ = ^^^., _ = -..
 : bailey_setup(_G)
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccccccccc
 cccccccccccccccccccccccccc..??.d.??d<cccccccccccccc
 ccccccccccccccccccccccccc.??..???.e?ccccccccccccccc
 ccccccccccccccccccccccccc2ccccccccccccccccccccccccc
-ccccccccccccc14.........1.1........1ccccccccccccccc
+ccccccccccccc14....-....1.1....-...1ccccccccccccccc
 cccccccccc1.......111ccccccccc1......cccccccccccccc
-ccccccccc4...2....c+cc..e3eX.ccccCc..cccccccccccccc
+ccccccccc4...2....c+cc3.e.eX3ccccCc..cccccccccccccc
 cccccccc1...2T2...+..c.2.d.2.c21CdC..1ccccccccccccc
 ccccccccc1...2..cEc..c.2.2.2.c.2cDc...1cccccccccccc
 ccccccccccc.....EdB4.ccnc+cncc.4+dc..Wwwwwwwxxxxxxx
@@ -535,20 +534,19 @@ xxxxxwwwwwwwW...wwc1.ccnc+cncc.1c1.wwwwwwwxxxxxxxxx
 xxxxxxxwwwwwww~wwwcncc2.2.2.2ccncwwwwwwxxxxxxxxxxxx
 xxxxxxxxx....~w~wwww>c.2.g.2.c>wwwwwxxxxxxxxxxxxxxx
 xxxxxxxxxx......Wwwwwcccccccccwwwwxxxxxxxxxxxxxxxxx
-xxxxxxxxxxx.......Wwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx.......WwwwwwwwwWxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx.....ww......xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx...w~..<.xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.._....Wwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx..._...WwwwwwwwwWxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.....ww....xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx...w~.<..xxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxx.~w....xxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx.-.xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx.-.xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx.-.xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxx....A....xxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxx.........xxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx....A....xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx.........xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 

@@ -989,15 +989,15 @@ NAME:    vts_original
 TAGS:    volcano_tomb_subvault no_item_gen no_monster_gen no_rotate no_hmirror
 TAGS:    no_vmirror unrand
 MONS:    gargoyle w:99 / toenail golem w:1
-MONS:    salamander draugr ; trident ego:flaming / \
-         centaur draugr ; long sword ego:flaming / \
-         ogre draugr ; mace ego:flaming
-MONS:    wyvern draugr ; hand axe ego:flaming / \
-         elephant draugr ; mace ego:flaming / \
-         black mamba draugr ; short sword ego:flaming
-MONS:    skeletal warrior ; halberd ego:flaming pre_id | \
-                            dire flail ego:flaming pre_id | \
-                            great sword ego:flaming pre_id
+MONS:    salamander draugr ; damaged trident ego:flaming / \
+         centaur draugr ; damaged long sword ego:flaming / \
+         ogre draugr ; damaged mace ego:flaming
+MONS:    wyvern draugr ; damaged hand axe ego:flaming / \
+         elephant draugr ; damaged mace ego:flaming / \
+         water moccasin draugr ; damaged spear ego:flaming
+MONS:    skeletal warrior ; halberd ego:flaming | \
+                            dire flail ego:flaming | \
+                            great sword ego:flaming
 KMONS:   D = pile of debris
 KFEAT:   ? = broken_door
 # Only one loot chamber. Scatter tomb residents.
@@ -1032,15 +1032,15 @@ NAME:    vts_chambers
 TAGS:    volcano_tomb_subvault no_item_gen no_monster_gen no_rotate no_hmirror
 TAGS:    no_vmirror unrand
 MONS:    gargoyle w:99 / toenail golem w:1
-MONS:    salamander draugr ; trident ego:flaming / \
-         centaur draugr ; long sword ego:flaming / \
-         ogre draugr ; mace ego:flaming
-MONS:    wyvern draugr ; hand axe ego:flaming / \
-         elephant draugr ; mace ego:flaming / \
-         black mamba draugr ; short sword ego:flaming
-MONS:    skeletal warrior ; halberd ego:flaming pre_id | \
-                            dire flail ego:flaming pre_id | \
-                            great sword ego:flaming pre_id
+MONS:    salamander draugr ; damaged trident ego:flaming / \
+         centaur draugr ; damaged long sword ego:flaming / \
+         ogre draugr ; damaged mace ego:flaming
+MONS:    wyvern draugr ; damaged hand axe ego:flaming / \
+         elephant draugr ; damaged mace ego:flaming / \
+         water moccasin draugr ; damaged spear ego:flaming
+MONS:    skeletal warrior ; halberd ego:flaming | \
+                            dire flail ego:flaming | \
+                            great sword ego:flaming
 SHUFFLE: 23
 NSUBST:  5 = 1:1 / 1:23 / 1:4
 NSUBST:  X = 1:+ / *:v, Y = 1:+ / *:c
@@ -1487,13 +1487,14 @@ local collapse_marker = TriggerableFunction:new (
 
 collapse_marker:add_triggerer(DgnTriggerer:new {
   type="turn",
-  delay_min=50,
+  delay_min=100,
   delay_max=200
 })
 
 }}
-SUBST: Z = c., 4 = 332.
+SUBST: Z = c., 4 = 333222.
 SUBST: * = ddeeffgg$
+FTILE: M = floor_pebble_darkgray
 : fiery_guardians(_G)
 : lua_marker("M", Triggerable.synchronized_markers(collapse_marker))
 : volcano_setup(_G)
@@ -1501,34 +1502,34 @@ MAP
   lllllllllllllllllllllllll
  lllllllllllllllllllllllllll
 llllllllllllllllllllllllllllll
-llll.......4......llllllllllll
-llll.cccc...........lllllllllll
+llll..............llllllllllll
+llll.cccc........4..lllllllllll
 lll..cZZcccccccZZ.....llllllllll
-lll.ccZ<ZZ.ccZccc..4..llllllllll
+lll.ccZ<ZZ.ccZccc.....llllllllll
 lll.=*2....M.ZZ.=...........llll
 lll.=*1..ZZc..Z.=...........llll
 lll.cc**ccccZ...cccccccccc..llll
-lll..cccc<ccc...cc..Z<Z.Zc...lll
-lll....c2..Zc.1..M...1..*=...lll
+lll..cccc<ccc.1.cc..Z<Z.Zc...lll
+lll....c2..Zc....M...1..*=...lll
 lll.4..c*..Zc....cZZ...Z*=...lll
 lll....=*..cc...Zccccccccc...lll
 lll....=*..M...ZZc..ZZc.....llll
 llll...c*..c.c...M...*=.....llll
-llll...c11cccc...cc.1*=..4..llll
-llll...cZZcZ.M.1..cZ<ccc...lllll
+llll...c11cccc.1.cc.1*=..4..llll
+llll...cZZcZ.M....cZ<ccc...lllll
 lllll..cccc..c..Zccccc*=...lllll
 lllll...cZ...cZ..cZ.Z.*=...lllll
-lllll..cc..Zccc..M..1.cc...lllll
-lllll4.=*1ZccZZ1.cccZ<c....lllll
+lllll..cc..Zccc1.M..1.cc...lllll
+lllll4.=*1ZccZZ..cccZ<c....lllll
 lllll..=*<Zc..Z.Zc.ccccc....llll
 lllll..cccccc......M..Zcc...llll
 lllll..ccc..M......c<1.Zcc...lll
-lllll..cZ<..c.....ZccZ..Zc..4lll
+lllll..cZ<..c.....ZccZ..Zc...lll
 lllll..cZ.1ZccZ.A<..ccZ**c...lll
 llllll.ccc**ccc.....ccc==c...lll
-llllll...c==cccZ..Zcc.......llll
+llllll...c==cccZ..Zcc.....4.llll
 llllll.......ccc.Zcc........llll
-llllll....4...ccccc....4....llll
+llllll.....4..ccccc.........llll
  llllllll................llllll
   llllllllllllllllllllllllllll
    llllllllllllllllllllllllll
@@ -1545,8 +1546,9 @@ WEIGHT:  10
 # groups of lesser enemies led by a few nastier ones
 MONS:    patrolling fire dragon
 MONS:    salamander
-MONS:    ogre w:5 / two-headed ogre w:5 / steam dragon w:5 / wyvern / \
-         komodo dragon / fire bat
+MONS:    ogre w:4 ; great mace ego:flaming / \
+         two-headed ogre w:6 ; great mace ego:flaming . great mace ego:flaming / \
+         steam dragon w:5 / wyvern / komodo dragon / fire bat w:5
 MONS:    patrolling fire bat band
 KMONS:   p = plant
 KITEM:   C = human skeleton

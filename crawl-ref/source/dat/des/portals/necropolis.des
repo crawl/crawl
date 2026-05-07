@@ -3646,7 +3646,6 @@ ENDMAP
 
 # Map inspired by trog_three_pillars_becter
 NAME:    gammafunk_necropolis_ghost_wrathful_warriors
-WEIGHT:  999999
 : necropolis_depth_tagging(_G, {"pre_lair_d", "lair", "post_lair_d",
 :                               "orc", "snake", "shoals", "swamp",
 :                               "vaults_elf", "depths_crypt"})

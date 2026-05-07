@@ -1547,7 +1547,7 @@ kitem("g = serpent talisman randart w:2 / dragon-coil talisman w:6 / \
 local book = trove_book(_G, "fire", "ice") .. " / " ..
              trove_book(_G, "air", "earth")
 if no_friendlies == false then
-  book = book .. trove_book(_G, "summoning spells:dragon's_call") .. " w:25"
+  book = book .. " / " .. trove_book(_G, "summoning spells:dragon's_call") .. " w:20"
 end
 kitem("h = " .. book)
 kitem("i = ring of slaying randart w:15 / any amulet randart artprops:rF / \
