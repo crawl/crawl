@@ -563,6 +563,7 @@ chonchon2
 %sdir mon/aquatic
 %rim 0
 octopode MONS_OCTOPODE
+octopode_monk MONS_OCTOPODE_MONK
 %sdir mon/unique
 erica MONS_ERICA
 erica_swordless MONS_ERICA_SWORDLESS

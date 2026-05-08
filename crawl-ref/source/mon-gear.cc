@@ -523,6 +523,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_OGRE_MAGE,               { GNOLL_WEAPONS } },
         { MONS_NAGA_MAGE,               { GNOLL_WEAPONS } },
         { MONS_NAGARAJA,            { GNOLL_WEAPONS } },
+        { MONS_OCTOPODE_MONK,       { ORC_WEAPONS } },
         { MONS_GNOLL_BOUDA,
             { { { WPN_CLUB,             1 },
                 { WPN_WHIP,             1 },
@@ -1803,6 +1804,13 @@ static void _give_shield(monster* mon, int level)
                                                    : ARM_KITE_SHIELD,
                                   level);
         }
+        break;
+
+    case MONS_OCTOPODE_MONK:
+        if (one_chance_in(5))
+            make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER, level);
+        else if (one_chance_in(15))
+            make_item_for_monster(mon, OBJ_ARMOUR, ARM_HAT, level);
         break;
 
     case MONS_DRACONIAN_KNIGHT:
