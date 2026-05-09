@@ -5123,6 +5123,7 @@ int dgn_place_item(const item_spec &spec,
 
                 item_made = items(spec.allow_uniques, base_type,
                                   spec.sub_type, level, spec.ego, NO_AGENT,
+                                  spec.level == ISPEC_ACQUIREMENT,
                                   _get_custom_name(spec), fixed_props);
 
                 if (spec.level == ISPEC_MUNDANE)
@@ -5228,7 +5229,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
 
                 item_made = items(spec.allow_uniques, spec.base_type,
                                   spec.sub_type, item_level, spec.ego, NO_AGENT,
-                                  _get_custom_name(spec), fixed_props);
+                                  false, _get_custom_name(spec), fixed_props);
 
                 if (spec.level == ISPEC_MUNDANE)
                     squash_plusses(item_made);

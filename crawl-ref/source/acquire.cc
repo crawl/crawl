@@ -1245,7 +1245,7 @@ int acquirement_create_item(object_class_type class_wanted,
             want_arts = false;
 
         thing_created = items(want_arts, class_wanted, type_wanted,
-                              item_level, force_ego, agent);
+                              item_level, force_ego, agent, true);
 
         if (thing_created == NON_ITEM)
         {

@@ -1439,7 +1439,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     // and subtype and create a new item. - bwr
     const int thing_created =
         ((force_item) ? get_mitm_slot() : items(false, xitc, xitt, level,
-                                                item.brand, NO_AGENT,
+                                                item.brand, NO_AGENT, false,
                                                 custom_name));
 
     if (thing_created == NON_ITEM)
