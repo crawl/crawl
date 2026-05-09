@@ -1806,16 +1806,6 @@ hands_reqd_type basic_hands_reqd(const item_def &item, size_type size)
                                                                    : HANDS_TWO;
 }
 
-hands_reqd_type hands_reqd(const actor* ac, object_class_type base_type, int sub_type)
-{
-    item_def item;
-    item.base_type = base_type;
-    item.sub_type  = sub_type;
-    // This function is used for item generation only, so use the actor's
-    // (player's) base size, not its current form.
-    return ac->hands_reqd(item, true);
-}
-
 /**
  * Is the provided type a kind of giant club?
  *

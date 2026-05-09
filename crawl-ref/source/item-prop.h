@@ -149,7 +149,6 @@ int weapon_rarity(int w_type) IMMUTABLE;
 bool is_weapon_too_large(const item_def &item, size_type size) PURE;
 
 hands_reqd_type basic_hands_reqd(const item_def &item, size_type size) PURE;
-hands_reqd_type hands_reqd(const actor* ac, object_class_type base_type, int sub_type);
 
 bool is_giant_club_type(int wpn_type) IMMUTABLE;
 bool is_ranged_weapon_type(int wpn_type) IMMUTABLE;
