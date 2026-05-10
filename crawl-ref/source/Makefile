@@ -925,7 +925,7 @@ endif
 
 ifneq ($(strip $(SAVEDIR)),)
   ifneq ($(filter ~%,$(SAVEDIR))$(ANDROID),)
-    CFOTHERS_L += -DSAVE_DIR_PATH=\"$(SAVEDIR)\"
+    INSTALL_PATH_CFLAGS_L += -DSAVE_DIR_PATH=\"$(SAVEDIR)\"
     savedir_fp :=
     shareddir_fp :=
   else
@@ -934,7 +934,7 @@ ifneq ($(strip $(SAVEDIR)),)
 	override SAVEDIR := $(strip $(prefix))/$(strip $(SAVEDIR))
       endif
     endif
-    CFOTHERS_L += -DSAVE_DIR_PATH=\"$(abspath $(SAVEDIR))\"
+    INSTALL_PATH_CFLAGS_L += -DSAVE_DIR_PATH=\"$(abspath $(SAVEDIR))\"
     savedir_fp := $(abspath $(strip $(DESTDIR))$(strip $(SAVEDIR)))
     shareddir_fp := $(savedir_fp)/saves
   endif
@@ -942,7 +942,7 @@ endif
 
 ifneq ($(strip $(SHAREDDIR)),)
   ifneq ($(filter ~%,$(SHAREDDIR)),)
-    CFOTHERS_L += -DSHARED_DIR_PATH=\"$(SHAREDDIR)\"
+    INSTALL_PATH_CFLAGS_L += -DSHARED_DIR_PATH=\"$(SHAREDDIR)\"
     shareddir_fp :=
   else
     ifeq ($(filter /%,$(SHAREDDIR)),)
@@ -950,7 +950,7 @@ ifneq ($(strip $(SHAREDDIR)),)
 	override SHAREDDIR := $(strip $(prefix))/$(strip $(SHAREDDIR))
       endif
     endif
-    CFOTHERS_L += -DSHARED_DIR_PATH=\"$(abspath $(SHAREDDIR))\"
+    INSTALL_PATH_CFLAGS_L += -DSHARED_DIR_PATH=\"$(abspath $(SHAREDDIR))\"
     shareddir_fp := $(abspath $(strip $(DESTDIR))$(strip $(SHAREDDIR)))
   endif
 endif
@@ -962,7 +962,7 @@ ifneq ($(strip $(DATADIR)),)
 	override DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
     endif
   endif
-  CFOTHERS_L += -DDATA_DIR_PATH=\"$(abspath $(DATADIR))/\"
+  INSTALL_PATH_CFLAGS_L += -DDATA_DIR_PATH=\"$(abspath $(DATADIR))/\"
   FONTDIR = $(abspath $(DATADIR))/dat/tiles/
 else
   ifneq ($(prefix),)
@@ -989,7 +989,7 @@ ifneq ($(strip $(WEBDIR)),)
 	override WEBDIR := $(strip $(prefix))/$(strip $(WEBDIR))
     endif
   endif
-  CFOTHERS_L += -DWEB_DIR_PATH=\"$(abspath $(WEBDIR))/\"
+  INSTALL_PATH_CFLAGS_L += -DWEB_DIR_PATH=\"$(abspath $(WEBDIR))/\"
 else
   ifneq ($(prefix),)
 	WEBDIR := $(strip $(prefix))/$(strip $(WEBDIR))
@@ -1259,6 +1259,11 @@ CFLAGS_L := $(CFOPTIMIZE_L) $(DEFINES_L) $(CFWARN_L) $(INCLUDES_L) $(CFOTHERS_L)
 ALL_CFLAGS := $(CFLAGS) $(CFLAGS_L)
 YACC_CFLAGS  := $(ALL_CFLAGS) -Wno-unused-function -Wno-sign-compare -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0 -Wno-null-conversion
 RLTILES_CFLAGS := $(ALL_CFLAGS) -Wno-tautological-compare
+# These objects embed install path macros such as SAVE_DIR_PATH,
+# SHARED_DIR_PATH, DATA_DIR_PATH, and WEB_DIR_PATH. Keep those macros out of
+# global CFLAGS so unrelated objects can reuse ccache across trunk revisions.
+INSTALL_PATH_CFLAGS_OBJECTS := files.o initfile.o tilesdl.o tileweb.o
+$(INSTALL_PATH_CFLAGS_OBJECTS): ALL_CFLAGS += $(INSTALL_PATH_CFLAGS_L)
 
 
 DOC_BASE        := ../docs
@@ -1388,9 +1393,16 @@ TRACK_CFLAGS = $(strip $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS)))
         # (stray ' for highlights)
 OLD_CFLAGS = $(strip $(subst ','\'',$(shell cat .cflags 2>/dev/null)))
         # (stray ' for highlights)
+TRACK_INSTALL_PATH_CFLAGS = $(strip $(subst ','\'',$(INSTALL_PATH_CFLAGS_L)))
+        # (stray ' for highlights)
+OLD_INSTALL_PATH_CFLAGS = $(strip $(subst ','\'',$(shell cat .install-path-cflags 2>/dev/null)))
+        # (stray ' for highlights)
 
 ifneq ($(TRACK_CFLAGS),$(OLD_CFLAGS))
   NEED_REBUILD = y
+endif
+ifneq ($(TRACK_INSTALL_PATH_CFLAGS),$(OLD_INSTALL_PATH_CFLAGS))
+  NEED_INSTALL_PATH_REBUILD = y
 endif
 
 .cflags: .force-cflags
@@ -1399,6 +1411,14 @@ ifdef NEED_REBUILD
 	@echo 'TRACK_CFLAGS = $(TRACK_CFLAGS) #EOL'
 	@echo 'OLD_CFLAGS   = $(OLD_CFLAGS) #EOL'
 	@echo '$(TRACK_CFLAGS)' > .cflags
+endif
+
+.install-path-cflags: .force-cflags
+ifdef NEED_INSTALL_PATH_REBUILD
+	@echo "    * rebuilding install-path-dependent objects: new paths"
+	@echo 'TRACK_INSTALL_PATH_CFLAGS = $(TRACK_INSTALL_PATH_CFLAGS) #EOL'
+	@echo 'OLD_INSTALL_PATH_CFLAGS   = $(OLD_INSTALL_PATH_CFLAGS) #EOL'
+	@echo '$(TRACK_INSTALL_PATH_CFLAGS)' > .install-path-cflags
 endif
 
 .android-cflags: .cflags
@@ -1655,7 +1675,7 @@ clean: clean-rltiles clean-webserver clean-android clean-monster clean-catch2 \
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
-	    .contrib-libs .cflags AppHdr.h.gch AppHdr.h.d util/fake_pty \
+	    .contrib-libs .cflags .install-path-cflags AppHdr.h.gch AppHdr.h.d util/fake_pty \
             rltiles/tiledef-unrand.cc
 	$(RM) -r build-win
 	$(RM) -r build
@@ -1783,6 +1803,10 @@ $(OBJECTS:%.o=%.cc) main.cc: $(CONTRIB_LIBS)
 
 $(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
 $(TILEDEFOBJS): ALL_CFLAGS=$(RLTILES_CFLAGS)
+
+ifneq ($(strip $(INSTALL_PATH_CFLAGS_L)),)
+$(INSTALL_PATH_CFLAGS_OBJECTS): .install-path-cflags
+endif
 
 # The "|" designates "order-only" dependencies. See: (make) Prerequisite Types.
 #
