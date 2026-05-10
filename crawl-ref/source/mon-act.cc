@@ -3668,13 +3668,16 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
 
     const coord_def orig_m2_pos = m2->pos();
 
-    if (!mon->swap_with(m2, MV_DELIBERATE))
+    if (!mon->swap_with(m2, MV_DELIBERATE, true))
         return false;
 
     _swim_or_move_energy(*mon);
 
     mon->check_redraw(m2->pos());
     m2->check_redraw(mon->pos());
+
+    mon->finalise_movement();
+    m2->finalise_movement();
 
     // Pushing into a seeker gets you hit (only opposed monsters will try).
     // (This is to keep things repeatable actions like Foxfire from being overly
@@ -3895,8 +3898,9 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
         return false;
     }
 
-    mons.move_to(f, MV_DELIBERATE);
-    mons.check_redraw(mons.pos() - delta);
+    mons.move_to(f, MV_DELIBERATE, true);
+    mons.check_redraw(orig_pos);
+    mons.finalise_movement();
 
     _swim_or_move_energy(mons);
 
