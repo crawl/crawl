@@ -1422,12 +1422,6 @@ bool tile_list_processor::write_data(bool image, bool code)
                 lcname.c_str(), m_start_value.c_str());
         fprintf(fp, "}\n\n");
 
-        fprintf(fp, "static int _tile_%s_dominoes[%s - %s] =\n{\n",
-                lcname.c_str(), max.c_str(), m_start_value.c_str());
-        for (unsigned int i = 0; i < m_page.m_domino.size(); i++)
-            fprintf(fp, "    %u,\n", m_page.m_domino[i]);
-        fprintf(fp, "};\n\n");
-
         fprintf(fp, "static const char *_tile_%s_name[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
 
