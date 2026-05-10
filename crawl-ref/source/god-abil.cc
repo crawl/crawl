@@ -4085,6 +4085,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
 static const map<cloud_type, monster_type> elemental_clouds = {
     { CLOUD_FIRE,           MONS_FIRE_ELEMENTAL },
     { CLOUD_FOREST_FIRE,    MONS_FIRE_ELEMENTAL },
+    { CLOUD_BLASTMOTES,     MONS_FIRE_ELEMENTAL },
     { CLOUD_COLD,           MONS_WATER_ELEMENTAL },
     { CLOUD_RAIN,           MONS_WATER_ELEMENTAL },
     { CLOUD_DUST,           MONS_EARTH_ELEMENTAL },
@@ -4093,6 +4094,7 @@ static const map<cloud_type, monster_type> elemental_clouds = {
     { CLOUD_GREY_SMOKE,     MONS_AIR_ELEMENTAL },
     { CLOUD_BLUE_SMOKE,     MONS_AIR_ELEMENTAL },
     { CLOUD_PURPLE_SMOKE,   MONS_AIR_ELEMENTAL },
+    { CLOUD_FLUFFY,         MONS_AIR_ELEMENTAL },
     { CLOUD_STORM,          MONS_AIR_ELEMENTAL },
 };
 
