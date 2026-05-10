@@ -1070,7 +1070,13 @@ coord_def direction_chooser::find_acceptable_aim(const monster* focus)
 
     // Without a targeter, we can't refine this any better.
     if (!hitfunc)
-        return focus->pos();
+    {
+        if (cell_see_cell(you.pos(), focus->pos(), LOS_NO_TRANS))
+            return focus->pos();
+        else
+            return coord_def();
+    }
+
 
     const aff_type desired_aff = try_multizap ? AFF_MULTIPLE : AFF_YES;
 
@@ -1289,8 +1295,8 @@ coord_def direction_chooser::find_default_monster_target()
         // so verify it first.
         if (_want_target_monster(targ, mode, hitfunc))
         {
-            // If we shouldn't (or can't) refine our target, just return it.
-            if (Options.simple_targeting || !hitfunc && !is_ranged_attack)
+            // If we shouldn't refine our target, just return it.
+            if (Options.simple_targeting)
                 return targ->pos();
 
             // Possibly adjust our aim at this monster to avoid hitting
@@ -1585,6 +1591,13 @@ void direction_chooser::fill_feature_cycle_points(char feature_class)
     feature_cache_type = feature_class;
 }
 
+static bool _is_affected(coord_def where, targeter* hitfunc)
+{
+    if (!hitfunc)
+        return cell_see_cell(you.pos(), where, LOS_NO_TRANS);
+    return hitfunc->is_affected(where);
+}
+
 // Determine what monster or position to remember for the next time the player
 // brings up the targeting interface.
 void direction_chooser::update_previous_target() const
@@ -1628,13 +1641,11 @@ void direction_chooser::update_previous_target() const
 
             // If our previous monster target is among affected targets, prefer that
             // one for consistency's sake.
-            if (old_m && _want_target_monster(old_m, mode, hitfunc))
+            if (old_m && _want_target_monster(old_m, mode, hitfunc)
+                && _is_affected(old_m->pos(), hitfunc))
             {
-                if (hitfunc && hitfunc->is_affected(old_m->pos()))
-                {
-                    you.prev_targ = old_m->mid;
-                    return;
-                }
+                you.prev_targ = old_m->mid;
+                return;
             }
 
             // Otherwise, pick the closest one to the center of our aim.
@@ -1647,7 +1658,7 @@ void direction_chooser::update_previous_target() const
                 {
                     if (you.can_see(*mon)
                         && _want_target_monster(mon, mode, hitfunc)
-                        && (!hitfunc || hitfunc->is_affected(mon->pos())))
+                        && _is_affected(mon->pos(), hitfunc))
                     {
                         you.prev_targ = mon->mid;
                         return;
