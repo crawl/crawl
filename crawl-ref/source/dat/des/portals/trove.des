@@ -309,16 +309,18 @@ end
 -- also meant to handle the disjoint item names across schools.
 function trove_standard_magic(e, school, use_staff)
   local inames = {
-    ["conjuration"] = {"conjuration", "Conj", "conjurations"},
-    ["summoning"] = {"ERROR: set use_staff to false", "Summ", "summonings"},
-    ["necromancy"] = {"necromancy", "Necro", "necromancy"},
-    ["translocation"] = {"ERROR: set use_staff to false", "Tloc", "translocations"},
-    ["hexes"] = {"ERROR: set use_staff to false", "Hexes", "hexes"},
-    ["fire"] = {"fire", "Fire", "fire magic"},
-    ["ice"] = {"cold", "Ice", "ice magic"},
-    ["earth"] = {"earth", "Earth", "earth magic"},
-    ["air"] = {"air", "Air", "air magic"},
-    ["alchemy"] = {"alchemy", "Alch", "alchemy"}
+    -- Staff, enhancer artprop, randbook school spec, manual name.
+    -- TODO: make the parsings for each of these accept each of their terms.
+    ["conjuration"] = {"conjuration", "Conj", "conj", "conjurations"},
+    ["summoning"] = {"ERROR: set use_staff to false", "Summ", "Summ", "summonings"},
+    ["necromancy"] = {"necromancy", "Necro", "necr", "necromancy"},
+    ["translocation"] = {"ERROR: set use_staff to false", "Tloc", "tloc", "translocations"},
+    ["hexes"] = {"ERROR: set use_staff to false", "Hexes", "hex", "hexes"},
+    ["fire"] = {"fire", "Fire", "fire", "fire magic"},
+    ["ice"] = {"cold", "Ice", "ice", "ice magic"},
+    ["earth"] = {"earth", "Earth", "earth", "earth magic"},
+    ["air"] = {"air", "Air", "air", "air magic"},
+    ["alchemy"] = {"alchemy", "Alch", "alch", "alchemy"}
   }
   local staff, orb, manual, output, schname, secondary = "", "", "", "", "", ""
   local max_other = 0
@@ -332,11 +334,11 @@ function trove_standard_magic(e, school, use_staff)
       staff = "staff of " .. iname[1]
       orb = "orb randart artprops:" .. iname[2] .. " ego:" ..
             table.concat(orbs, " / orb randart artprops:" .. iname[2] .. " ego:")
-      manual = "manual of " .. iname[3] .. " w:8"
-      schname = iname[3]
-    elseif crawl.game_started() and you.base_skill(iname[3]) > max_other then
-      max_other = you.base_skill(iname[3])
-      secondary = iname[2]
+      manual = "manual of " .. iname[4] .. " w:8"
+      schname = iname[4]
+    elseif crawl.game_started() and you.base_skill(iname[4]) > max_other then
+      max_other = you.base_skill(iname[4])
+      secondary = iname[3]
     end
   end
   if crawl.game_started() and you.base_skill(schname) < 27 then
