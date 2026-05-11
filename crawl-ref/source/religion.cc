@@ -1454,10 +1454,6 @@ static bool _handle_uskayaw_ability_unlocks()
 
 static bool _give_sif_gift(bool forced)
 {
-    // Smokeless fire and books don't get along.
-    if (you.has_mutation(MUT_INNATE_CASTER))
-        return false;
-
     // Break early if giving a gift now means it would be lost.
     if (feat_eliminates_items(env.grid(you.pos())))
         return false;
@@ -1497,10 +1493,6 @@ static bool _sort_spell_level(spell_type spell1, spell_type spell2)
 
 static bool _give_kiku_gift(bool forced)
 {
-    // Djinn can't receive spell gifts.
-    if (you.has_mutation(MUT_INNATE_CASTER))
-        return false;
-
     const bool first_gift = !you.num_total_gifts[you.religion];
 
     // Kikubaaqudgha gives two sets of spells in a quick succession.
@@ -1578,7 +1570,6 @@ static bool _handle_veh_gift(bool forced)
     bool success = false;
     const int gifts = you.num_total_gifts[you.religion];
     if (forced || !you.duration[DUR_VEHUMET_GIFT]
-                  && !you.has_mutation(MUT_INNATE_CASTER)
                   && (gifts == 0
                       || you.raw_piety >= piety_breakpoint(0) + random2(6) + 18 * gifts && gifts <= 5
                       || you.raw_piety >= piety_breakpoint(4) && gifts <= 11 && one_chance_in(20)

@@ -864,7 +864,7 @@ static formatted_string _describe_god_powers(god_type which_god)
                                : "some of Vehumet's most lethal spells";
             desc.cprintf("You can memorise %s.\n", offer);
         }
-        else if (!you.has_mutation(MUT_INNATE_CASTER))
+        else
         {
             desc.textcolour(DARKGREY);
             desc.cprintf("You can memorise some of Vehumet's spells.\n");
