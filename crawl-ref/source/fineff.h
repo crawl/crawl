@@ -54,6 +54,7 @@ void schedule_explosion_fineff(bolt& beam, string boom, string sanct,
                                const actor* flame_agent,
                                string poof);
 void schedule_splinterfrost_fragment_fineff(bolt& beam, string msg);
+void schedule_soul_syphon_fineff(bolt& beam, string msg);
 void schedule_delayed_action_fineff(daction_type action,
                                     const string& final_msg);
 void schedule_kirke_death_fineff(const string& final_msg);

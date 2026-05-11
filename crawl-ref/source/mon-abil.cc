@@ -1043,6 +1043,33 @@ void seismosaurus_egg_hatch(monster* mons)
     mons->update_ench(hatch);
 }
 
+void syphon_souls(monster* mons)
+{
+    for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mons_aligned(*mi, mons) && !mi->is_firewood()
+            && grid_distance(mons->pos(), mi->pos()) <= 3)
+        {
+            bool affected = false;
+            //stepdown repeated draining of the same monster
+            const mon_enchant drain_ench = mi->get_ench(ENCH_DRAINED);
+            if (!x_chance_in_y(drain_ench.degree, 1 + drain_ench.degree))
+            {
+                mi->drain(mons);
+                affected = true;
+            }
+            if (mi->is_abjurable())
+            {
+                monster_abjure_target(*mi, 60, true);
+                affected = true;
+            }
+            if (affected)
+                mons->props[SYPHON_SOUL_POWER]++;
+        }
+    }
+}
+
+
 // Attempt to merge with any nearby aligned slime creatures
 static bool _slymdra_try_merge(monster* mons)
 {

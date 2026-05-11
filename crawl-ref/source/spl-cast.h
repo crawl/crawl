@@ -87,6 +87,7 @@ enum class spret
 #define IOOD_MID "iood_mid"
 #define IOOD_FLAWED "iood_flawed"
 #define IOOD_TPOS "iood_tpos"
+#define SYPHON_SOUL_POWER "syphon_soul_power"
 
 #define INNATE_SPELLS_KEY "innate_spells"
 

@@ -5414,7 +5414,7 @@ bool spell_has_marionette_override(spell_type spell)
     return map_find(marionette_spell_to_logic, spell) != nullptr;
 }
 
-static int _monster_abjure_target(monster* target, int pow, bool actual)
+int monster_abjure_target(monster* target, int pow, bool actual)
 {
     if (!target->is_abjurable())
         return 0;
@@ -5479,7 +5479,7 @@ static int _monster_abjuration(const monster& caster, bool actual)
     for (monster_near_iterator mi(caster.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (!mons_aligned(&caster, *mi))
-            maffected += _monster_abjure_target(*mi, pow, actual);
+            maffected += monster_abjure_target(*mi, pow, actual);
     }
 
     return maffected;

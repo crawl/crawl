@@ -43,6 +43,7 @@ void check_grasping_roots(actor& act, bool quiet = false);
 
 void seismosaurus_egg_hatch(monster* mons);
 bool egg_is_incubating(const monster& egg);
+void syphon_souls(monster* mons);
 
 void initialize_nobody_memories(monster& nobody);
 bool pyrrhic_recollection(monster& nobody);

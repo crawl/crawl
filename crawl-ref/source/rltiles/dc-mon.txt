@@ -654,6 +654,7 @@ lightning_spire MONS_LIGHTNING_SPIRE
 hoarfrost_cannon MONS_HOARFROST_CANNON
 hellfire_mortar MONS_HELLFIRE_MORTAR
 shadow_turret MONS_SHADOW_TURRET
+soul_syphon MONS_SOUL_SYPHON
 %sdir mon/nonliving
 spellspark_servitor MONS_SPELLSPARK_SERVITOR
 %rim 1

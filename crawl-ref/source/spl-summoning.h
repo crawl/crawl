@@ -73,6 +73,9 @@ int mons_ball_lightning_per_cast(int pow, bool random = true);
 dice_def lightning_spire_damage(int pow);
 spret cast_forge_lightning_spire(int pow, bool fail);
 
+spret cast_forge_soul_syphon(int pow, bool fail);
+void fire_soul_syphon(monster& mons);
+
 spret cast_call_imp(int pow, bool fail);
 spret summon_shadow_creatures();
 spret cast_summon_horrible_things(int pow, bool fail);

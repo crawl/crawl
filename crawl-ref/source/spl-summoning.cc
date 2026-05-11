@@ -1057,6 +1057,89 @@ spret cast_forge_lightning_spire(int pow, bool fail)
     return spret::success;
 }
 
+spret cast_forge_soul_syphon(int pow, bool fail)
+{
+    if (!player_summon_check(MONS_SOUL_SYPHON))
+        return spret::abort;
+
+    fail_check();
+
+    mgen_data syphon = _pal_data(MONS_SOUL_SYPHON, random_range(70, 120),
+                                SPELL_FORGE_SOUL_SYPHON, false);
+    syphon.hd = 6 + div_rand_round(pow, 15);
+
+    monster* mons = create_monster(syphon);
+
+    if (mons)
+        mpr("A twisted pillar of iron and bone rises up.");
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    mons->props[SYPHON_SOUL_POWER].get_int() = 0;
+
+    // Mark all terrain in range.
+    for (distance_iterator di(mons->pos(), false, false, 3); di; ++di)
+        env.pgrid(*di) |= FPROP_SYPHON_RANGE;
+
+    return spret::success;
+}
+
+static dice_def _calc_soul_syphon_damage(monster& mons)
+{
+    int pow = mons.props[SYPHON_SOUL_POWER].get_int();
+    pow = min (pow, div_rand_round(mons.get_hit_dice() * 3, 2));
+
+    return dice_def(9, pow);
+}
+
+void fire_soul_syphon(monster& mons)
+{
+    vector<coord_def> targets;
+
+    // failed to drain anything
+    if (mons.props[SYPHON_SOUL_POWER].get_int() == 0)
+        return;
+
+    for (distance_iterator di(mons.pos(), false, false, 3); di; ++di)
+    {
+        monster* targ = monster_at(*di);
+        if (targ && !mons_aligned(targ, &mons))
+            targets.emplace_back(*di);
+    }
+
+    if (targets.empty())
+    {
+        mprf("%s's negative energies ebb without release.",
+            mons.name(DESC_THE).c_str());
+        return;
+    }
+
+    coord_def foe = targets[random2(targets.size())];
+    actor* agent = actor_by_mid(mons.summoner);
+
+    bolt beam;
+    beam.name        = "blast of negative energy";
+    beam.hit         = AUTOMATIC_HIT;
+    beam.damage      = _calc_soul_syphon_damage(mons);
+    beam.source      = foe;
+    beam.attitude    = mons.attitude;
+    beam.set_agent(agent);
+    beam.target      = foe;
+    beam.range       = LOS_RADIUS;
+    beam.colour      = DARKGREY;
+    beam.flavour     = BEAM_NEG;
+    beam.seen        = true;
+
+    string msg;
+    if (you.can_see(mons))
+    {
+        msg = make_stringf("%s unleashes a torrent of negative energy!",
+                            mons.name(DESC_THE).c_str());
+    }
+
+    schedule_soul_syphon_fineff(beam, msg);
+}
+
 spret cast_forge_blazeheart_golem(int pow, bool fail)
 {
     if (!player_summon_check(MONS_BLAZEHEART_GOLEM))
@@ -2429,6 +2512,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_SEISMOSAURUS_EGG,  { 1, 1 } },
     { SPELL_PHALANX_BEETLE,           { 1, 1 } },
     { SPELL_RENDING_BLADE,            { 1, 1 } },
+    { SPELL_FORGE_SOUL_SYPHON,        { 1, 1 } },
     // Monster-only spells
     { SPELL_SHADOW_CREATURES,         { 0, 4 } },
     { SPELL_SUMMON_SPIDERS,           { 0, 5 } },
