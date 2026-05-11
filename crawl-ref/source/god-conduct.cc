@@ -561,9 +561,6 @@ static const like_response kill_nonliving_response(int scaled_piety = 90)
     return _on_kill("you destroy nonliving beings", scaled_piety);
 }
 
-// Note that holy deaths are special - they're always noticed...
-// If you or any friendly kills one, you'll get the credit/blame.
-
 static like_response okawaru_kill(const char* desc)
 {
     return
