@@ -59,10 +59,13 @@ class MainHandler(tornado.web.RequestHandler):
                 logging.warning("Recovery token error from %s", self.request.remote_ip)
 
         with util.SlowWarning("Slow IO: render client.html"):
+            user_agent = self.request.headers.get("User-Agent", "")
+            pwa_enabled = self.get_argument("pwa", "") == "1" or "iPhone" in user_agent or "iPod" in user_agent
             self.render("client.html", socket_server = protocol + host + "/socket",
                     game_version = _crawl_version,
                     username = None,
                     config = config,
+                    pwa_enabled = pwa_enabled,
                     reset_token = recovery_token, reset_token_error = recovery_token_error)
 
 class NoCacheHandler(tornado.web.StaticFileHandler):

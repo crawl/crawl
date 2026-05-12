@@ -2,6 +2,11 @@
 <html>
   <head>
     <title>WebTiles - Dungeon Crawl Stone Soup</title>
+{% if pwa_enabled %}
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+{% else %}
+    <meta name="viewport" content="width=860, initial-scale=1.0">
+{% end %}
     <link rel="icon" href="/static/stone_soup_icon-32x32.png" type="image/png">
     <link rel="manifest" href="/static/pwa/manifest.webmanifest">
     <link rel="apple-touch-icon" href="{{ static_url("pwa/icons/apple-touch-icon.png") }}">
@@ -17,8 +22,8 @@
     <link rel="stylesheet" type="text/css" href="{{ static_url("pwa/mobile-pwa.css") }}">
     <script src="{{ static_url("pwa/mobile-pwa.js") }}"></script>
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="viewport" content="width=860, initial-scale=1.0">
   </head>
   <body>
     <noscript>Please enable javascript!</noscript>

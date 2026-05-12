@@ -28,7 +28,10 @@ class GameDataHandler(tornado.web.StaticFileHandler):
         import sys
         version, url_path = url_path.split("/", 1)
         if version not in GameDataHandler._client_paths:
-            raise tornado.web.HTTPError(404)
+            if config.get('dgl_mode'):
+                raise tornado.web.HTTPError(404)
+            GameDataHandler._client_paths[version] = os.path.abspath(
+                os.path.join(config.get('static_path'), "..", "game_data", "static"))
         return super(GameDataHandler, self).parse_url_path(
                         GameDataHandler._client_paths[version] + "/" + url_path)
 

@@ -27,10 +27,37 @@ function ($, comm) {
         return options[name];
     }
 
+    function pwa_minimum_option(name, value)
+    {
+        var pwa = window.DCSS_PWA;
+        if (!pwa || !pwa.enabled || !pwa.optionMinimums
+            || !pwa.optionMinimums.hasOwnProperty(name))
+        {
+            return value;
+        }
+
+        var minimum = pwa.optionMinimums[name];
+        if (typeof value === "number" && value < minimum)
+            return minimum;
+
+        return value;
+    }
+
+    function apply_pwa_minimums(values)
+    {
+        if (!values)
+            return;
+
+        for (var name in values)
+            if (values.hasOwnProperty(name))
+                values[name] = pwa_minimum_option(name, values[name]);
+    }
+
     // writes all options at once: usable only on first connecting.
     function handle_options_message(data)
     {
         options = data.options;
+        apply_pwa_minimums(options);
         listeners.fire();
     }
 
@@ -42,10 +69,10 @@ function ($, comm) {
     function set_option(name, value, fire_listeners=true)
     {
         var old = get_option(name);
-        options[name] = value;
+        options[name] = pwa_minimum_option(name, value);
         if (fire_listeners)
             listeners.fire();
-        return old != value;
+        return old != options[name];
     }
 
     function send_option(name)

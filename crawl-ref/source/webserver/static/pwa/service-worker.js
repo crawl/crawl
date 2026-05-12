@@ -1,4 +1,4 @@
-const CACHE_NAME = "dcss-pwa-shell-v1";
+const CACHE_NAME = "dcss-pwa-shell-v12";
 const SHELL_ASSETS = [
   "/static/pwa/manifest.webmanifest",
   "/static/pwa/mobile-pwa.css",
@@ -38,7 +38,12 @@ self.addEventListener("fetch", event => {
     return;
 
   event.respondWith(
-    caches.match(event.request)
-      .then(cached => cached || fetch(event.request))
+    fetch(event.request)
+      .then(response => {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });

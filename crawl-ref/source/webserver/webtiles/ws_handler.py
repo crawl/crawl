@@ -346,6 +346,22 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "admin_pw_reset_clear": self.admin_pw_reset_clear
             }
 
+    def local_dglless_username(self):
+        # Keep local clients from purging one shared dgl-less lock.
+        pwa_session = self.get_argument("pwa_session", None)
+        if pwa_session:
+            safe_session = "".join(
+                ch if ch.isalnum() else "_" for ch in pwa_session)
+            safe_session = safe_session[:48] or "client"
+            return "local_%s" % safe_session
+
+        remote_ip = self.request.remote_ip or "client"
+        safe_ip = "".join(ch if ch.isalnum() else "_" for ch in remote_ip)
+        safe_ip = safe_ip[:32] or "client"
+        user_agent = self.request.headers.get("User-Agent", "")
+        user_agent_hash = zlib.crc32(utf8(user_agent)) & 0xffffffff
+        return "local_%s_%08x" % (safe_ip, user_agent_hash)
+
     @admin_required
     def admin_announce(self, text):
         self.reset_lobby_timeout()
@@ -785,7 +801,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.process = process_handler.CrawlProcessHandler(
                             config.games[game_id], self.username, self.logger)
         else:
-            self.process = process_handler.DGLLessCrawlProcessHandler(self.logger)
+            self.process = process_handler.DGLLessCrawlProcessHandler(
+                            self.logger, self.local_dglless_username())
 
         # now that `process` is set, clear the lobby timeout and reset the
         # play timeout

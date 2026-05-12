@@ -1,12 +1,64 @@
-html.dcss-pwa-mobile,
+html.dcss-pwa-mobile {
+    --dcss-pwa-crt-font-size: clamp(7px, 2vw, 12px);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+html.dcss-pwa-mobile #game,
+html.dcss-pwa-mobile #crt,
+html.dcss-pwa-mobile #ui-stack {
+    max-width: 100vw;
+    overflow: hidden;
+}
+
 html.dcss-pwa-mobile body {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top);
+}
+
+html.dcss-pwa-mobile #crt,
+html.dcss-pwa-mobile #ui-stack,
+html.dcss-pwa-mobile .menu {
+    font-size: var(--dcss-pwa-crt-font-size) !important;
+}
+
+html.dcss-pwa-mobile .menu {
+    min-width: 0 !important;
+    max-width: calc(100vw - 16px);
+}
+
+html.dcss-pwa-mobile .menu_txt:not(.menu_crt_shrink) {
+    width: auto !important;
+    max-width: calc(100vw - 16px);
+}
+
+html.dcss-pwa-mobile .ui-popup {
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+html.dcss-pwa-mobile .ui-popup-outer {
+    margin: 8px;
+    max-width: calc(100vw - 16px);
+    max-height: calc(100vh - 16px - var(--dcss-pwa-controls-height, 56px));
+    padding: 6px;
+    box-sizing: border-box;
+}
+
+html.dcss-pwa-mobile .ui-popup-inner {
+    max-width: 100%;
+    max-height: calc(100vh - 28px - var(--dcss-pwa-controls-height, 56px));
+}
+
+html.dcss-pwa-mobile.dcss-pwa-in-game,
+html.dcss-pwa-mobile.dcss-pwa-in-game body {
     height: 100%;
     overflow: hidden;
     overscroll-behavior: none;
     touch-action: manipulation;
 }
 
-html.dcss-pwa-mobile body {
+html.dcss-pwa-mobile.dcss-pwa-in-game body {
     padding-bottom: calc(var(--dcss-pwa-controls-height, 56px) + env(safe-area-inset-bottom));
 }
 
@@ -25,17 +77,25 @@ html.dcss-pwa-mobile #messages {
 }
 
 html.dcss-pwa-mobile #dungeon {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
     max-width: 100vw;
 }
 
-html.dcss-pwa-mobile #mobile_input {
-    bottom: calc(var(--dcss-pwa-controls-height, 56px) + env(safe-area-inset-bottom) + 12px);
-    z-index: 2500;
+html.dcss-pwa-mobile #messages_container {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
 }
 
-html.dcss-pwa-mobile #mobile_input input {
-    width: calc(100vw - 24px) !important;
-    box-sizing: border-box;
+html.dcss-pwa-mobile #mobile_input {
+    display: none !important;
+}
+
+html.dcss-pwa-mobile #chat,
+html.dcss-pwa-mobile #chat_hidden {
+    display: none !important;
 }
 
 #dcss-pwa-controls {
@@ -48,53 +108,83 @@ html.dcss-pwa-mobile #dcss-pwa-controls {
     right: 0;
     bottom: 0;
     z-index: 2400;
-    display: grid;
-    grid-template-rows: auto auto;
-    gap: 6px;
-    padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+    display: block;
+    padding:
+        6px calc(8px + env(safe-area-inset-right))
+        calc(8px + env(safe-area-inset-bottom))
+        calc(8px + env(safe-area-inset-left));
     box-sizing: border-box;
-    background: rgba(0, 0, 0, 0.92);
-    border-top: 1px solid #404040;
+    background: rgba(0, 0, 0, 0.96);
+    border-top: 1px solid #242424;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    --dcss-pwa-key-gap: 8px;
 }
 
 #dcss-pwa-controls button {
     appearance: none;
-    min-height: 42px;
-    border: 1px solid #5c5c5c;
-    border-radius: 6px;
-    background: #171717;
-    color: #f2f2f2;
-    font: 15px var(--crt-font);
+    grid-column: span var(--dcss-pwa-key-span, 1);
+    min-width: 0;
+    min-height: 52px;
+    border: 0;
+    border-radius: 5px;
+    background: #3c3c3c;
+    color: #f4f4f4;
+    font: 700 19px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1;
+    white-space: nowrap;
     touch-action: manipulation;
 }
 
 #dcss-pwa-controls button:active {
-    background: #3a3a3a;
+    filter: brightness(1.28);
 }
 
-#dcss-pwa-controls .dcss-pwa-move-pad {
-    display: none;
-    grid-template-columns: repeat(3, minmax(48px, 1fr));
-    gap: 6px;
-}
-
-#dcss-pwa-controls.is-open .dcss-pwa-move-pad {
+#dcss-pwa-controls .dcss-pwa-keyboard {
     display: grid;
+    gap: var(--dcss-pwa-key-gap);
 }
 
-#dcss-pwa-controls .dcss-pwa-command-row {
+#dcss-pwa-controls .dcss-pwa-key-row {
     display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(58px, 1fr);
-    gap: 6px;
-    overflow-x: auto;
-    scrollbar-width: none;
+    grid-template-columns:
+        repeat(var(--dcss-pwa-key-columns, 10), minmax(0, 1fr));
+    gap: var(--dcss-pwa-key-gap);
 }
 
-#dcss-pwa-controls .dcss-pwa-command-row::-webkit-scrollbar {
-    display: none;
+#dcss-pwa-controls .is-move {
+    background: #084a51;
 }
 
-#dcss-pwa-controls .dcss-pwa-wide {
-    grid-column: span 3;
+#dcss-pwa-controls .is-action {
+    background: #2f8f70;
+}
+
+#dcss-pwa-controls .is-enter {
+    background: #268c72;
+}
+
+#dcss-pwa-controls .is-modifier {
+    background: #883de0;
+}
+
+#dcss-pwa-controls .is-system {
+    background: #4a4a4a;
+}
+
+#dcss-pwa-controls .is-active {
+    box-shadow: inset 0 0 0 2px #ffffff;
+    filter: brightness(1.16);
+}
+
+@media (max-height: 680px) {
+    #dcss-pwa-controls {
+        --dcss-pwa-key-gap: 6px;
+    }
+
+    #dcss-pwa-controls button {
+        min-height: 44px;
+        font-size: 17px;
+    }
 }

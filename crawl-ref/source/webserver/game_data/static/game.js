@@ -11,6 +11,14 @@ function ($, exports, comm, client, key_conversion, dungeon_renderer, display,
     var msg_height;
     var show_diameter = 17;
 
+    function viewport_show_diameter()
+    {
+        var pwa = window.DCSS_PWA;
+        if (pwa && pwa.enabled && pwa.viewportMinDiameter)
+            return pwa.viewportMinDiameter;
+        return show_diameter;
+    }
+
     function setup_keycodes()
     {
         key_conversion.reset_keycodes();
@@ -136,7 +144,7 @@ function ($, exports, comm, client, key_conversion, dungeon_renderer, display,
             "width": remaining_width
         });
         dungeon_renderer.fit_to(remaining_width, remaining_height,
-                                show_diameter);
+                                viewport_show_diameter());
 
         minimap.fit_to(stat_width_px, layout_parameters);
 
@@ -222,7 +230,7 @@ function ($, exports, comm, client, key_conversion, dungeon_renderer, display,
         {
             dungeon_renderer.fit_to(layout_parameters.remaining_width,
                                     layout_parameters.remaining_height,
-                                    show_diameter);
+                                    viewport_show_diameter());
             $("#right_column").show();
             $(".action-panel").show();
             messages.show();

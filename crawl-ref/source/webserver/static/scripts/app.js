@@ -1,7 +1,8 @@
 require.config({
     baseUrl: '/static/scripts',
     shim: {
-        'client': ['jquery']
+        'client': ['jquery'],
+        'contrib/jquery.json': ['jquery']
     },
     paths: {
         'jquery': '/static/scripts/contrib/jquery'

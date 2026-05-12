@@ -1214,7 +1214,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
 
 class DGLLessCrawlProcessHandler(CrawlProcessHandler):
-    def __init__(self, logger):
+    def __init__(self, logger, username="game"):
         # used when dgl_mode = False
         game_params = config.GameConfig(dict(
             name = "DCSS",
@@ -1224,7 +1224,7 @@ class DGLLessCrawlProcessHandler(CrawlProcessHandler):
             socket_path = "./",
             client_path = "./webserver/game_data"))
         super(DGLLessCrawlProcessHandler, self).__init__(game_params,
-                                                         "game",
+                                                         username,
                                                          logger)
 
     def _base_call(self):

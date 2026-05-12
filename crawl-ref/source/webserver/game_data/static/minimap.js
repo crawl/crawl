@@ -13,6 +13,16 @@ function ($, map_knowledge, dungeon_renderer, view_data,
     var display_x = 0, display_y = 0;
     var enabled = true;
 
+    function pwa_suppressed()
+    {
+        return window.DCSS_PWA && window.DCSS_PWA.enabled;
+    }
+
+    function drawing_enabled()
+    {
+        return enabled && !pwa_suppressed();
+    }
+
     function vcolour_to_css_colour(colour)
     {
         return "rgba(" + colour.r + "," + colour.g + "," + colour.b + ","
@@ -21,6 +31,9 @@ function ($, map_knowledge, dungeon_renderer, view_data,
 
     function update_overlay()
     {
+        if (!drawing_enabled() || !overlay_ctx || !overlay)
+            return;
+
         // Update the minimap overlay
         var view = dungeon_renderer.view;
         overlay_ctx.clearRect(0, 0, overlay.width, overlay.height);
@@ -34,6 +47,9 @@ function ($, map_knowledge, dungeon_renderer, view_data,
 
     function fit_to(width)
     {
+        if (pwa_suppressed())
+            return;
+
         var gxm = enums.gxm;
         var gym = enums.gym;
         var display = $("#minimap").css("display");
@@ -71,6 +87,9 @@ function ($, map_knowledge, dungeon_renderer, view_data,
 
     function clear()
     {
+        if (!drawing_enabled() || !ctx)
+            return;
+
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0,
                      $("#minimap").width(),
@@ -79,7 +98,7 @@ function ($, map_knowledge, dungeon_renderer, view_data,
 
     function center()
     {
-        if (!enabled) return;
+        if (!drawing_enabled()) return;
 
         stop_minimap_farview();
 
@@ -119,7 +138,7 @@ function ($, map_knowledge, dungeon_renderer, view_data,
 
     function set(cx, cy, colour)
     {
-        if (!enabled || colour === undefined) return;
+        if (!drawing_enabled() || colour === undefined) return;
 
         var x = cx - cell_x;
         var y = cy - cell_y;
@@ -198,6 +217,9 @@ function ($, map_knowledge, dungeon_renderer, view_data,
     var farview_old_vc;
     function minimap_farview(ev)
     {
+        if (pwa_suppressed())
+            return;
+
         if (ev.which == 3 || farview_old_vc)
         {
             var offset = $("#minimap").offset();
@@ -218,6 +240,9 @@ function ($, map_knowledge, dungeon_renderer, view_data,
 
     function stop_minimap_farview()
     {
+        if (pwa_suppressed())
+            return;
+
         if (farview_old_vc !== undefined)
         {
             vgrdc(farview_old_vc.x, farview_old_vc.y);
