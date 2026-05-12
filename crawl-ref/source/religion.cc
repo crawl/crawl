@@ -1400,7 +1400,7 @@ static bool _give_trog_oka_gift(bool forced)
         _inc_gift_timeout(26 + random2avg(19, 2));
         break;
     case OBJ_WEAPONS:
-        _inc_gift_timeout(30 + random2avg(19, 2));
+        _inc_gift_timeout(40 + random2avg(22, 2));
         break;
     default:
         break;
@@ -2507,19 +2507,9 @@ static void _gain_piety_point()
     {
         you.gift_timeout--;
 
-        // Slow down piety gain to account for the fact that gifts
-        // no longer have a piety cost for getting them.
-        if (!one_chance_in(4) && !you_worship(GOD_JIYVA)
-            && !you_worship(GOD_NEMELEX_XOBEH)
-            && !you_worship(GOD_ELYVILON)
-            && !you_worship(GOD_BEOGH))
-        {
-#ifdef DEBUG_PIETY
-            mprf(MSGCH_DIAGNOSTICS, "Piety slowdown due to gift timeout.");
-#endif
-            you.piety_info.register_piety_gain(PG_EVENT_GIFT_PENALTY);
+        // Slow down Vehumet piety gain to control their gifting schedule.
+        if (!one_chance_in(4) && you_worship(GOD_VEHUMET))
             return;
-        }
     }
 
     // Increment our progress to the next companion resurrection, as well as

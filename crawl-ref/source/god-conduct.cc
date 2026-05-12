@@ -570,7 +570,9 @@ static like_response okawaru_kill(const char* desc)
         {
             piety = okawaru_monster_difficulty(*victim);
             dprf("monster difficulty: %4.2f", piety * 0.01);
-            denom = 600;
+
+            // Give gradually less piety as the player rises above 5*
+            denom = 750 + max(0, min(piety_breakpoint(5), (int)you.raw_piety) - piety_breakpoint(4)) * 20;
 
             if (piety > 3200)
             {
