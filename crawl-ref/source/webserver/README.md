@@ -67,6 +67,16 @@ When developing, you may want to automatically log in as a testing user and
 disable caching of non-game-data files; see the `autologin` and `no_cache`
 options in webserver/config.py for this.
 
+For a local iPhone PWA smoke test without the lobby or account flow, create
+`webserver/config.yml` with:
+
+```yaml
+dgl_mode: false
+```
+
+Then open [localhost:8080/?pwa=1](http://localhost:8080/?pwa=1). This starts a
+single local Crawl session directly and uses the additive mobile PWA controls.
+
 **Locale issues**: the server requires a UTF-8 locale. If this isn't set, it
 is likely as simple as setting an environment variable. For example, when
 starting up the server, instead of the above, try:

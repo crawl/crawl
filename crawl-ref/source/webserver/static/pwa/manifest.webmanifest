@@ -1,0 +1,29 @@
+{
+  "name": "Dungeon Crawl Stone Soup",
+  "short_name": "DCSS",
+  "description": "Play Dungeon Crawl Stone Soup through WebTiles.",
+  "start_url": "/?pwa=1",
+  "scope": "/",
+  "display": "fullscreen",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/static/pwa/icons/icon-48.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/pwa/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/pwa/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -72,6 +72,13 @@ class NoCacheHandler(tornado.web.StaticFileHandler):
         self.set_header("Expires", "0")
 
 
+class ServiceWorkerHandler(NoCacheHandler):
+    def set_extra_headers(self, path):
+        super(ServiceWorkerHandler, self).set_extra_headers(path)
+        self.set_header("Content-Type", "application/javascript; charset=utf-8")
+        self.set_header("Service-Worker-Allowed", "/")
+
+
 _crawl_version = "unknown"
 
 def load_version():
@@ -277,6 +284,8 @@ def bind_server(nonsecure_sockets, secure_sockets):
 
     handlers = [
             (r"/", MainHandler),
+            (r"/(service-worker\.js)", ServiceWorkerHandler,
+                {"path": os.path.join(config.get('static_path'), "pwa")}),
             (r"/socket", ws_handler.CrawlWebSocket),
             (r"/gamedata/([0-9a-f]*\/.*)", game_data_handler.GameDataHandler),
             (r"/status/lobby/", status.LobbyHandler),

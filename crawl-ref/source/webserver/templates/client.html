@@ -3,6 +3,9 @@
   <head>
     <title>WebTiles - Dungeon Crawl Stone Soup</title>
     <link rel="icon" href="/static/stone_soup_icon-32x32.png" type="image/png">
+    <link rel="manifest" href="/static/pwa/manifest.webmanifest">
+    <link rel="apple-touch-icon" href="{{ static_url("pwa/icons/apple-touch-icon.png") }}">
+    <meta name="theme-color" content="#000000">
     <script type="text/javascript">
       {% set fail_safe_game_version = globals().get('game_version', '') %}
       var socket_server = "{{ socket_server }}";
@@ -11,6 +14,8 @@
     <script src="{{ static_url("scripts/contrib/require.js") }}" data-main="/static/scripts/app"></script>
     <link rel="stylesheet" type="text/css" href="{{ static_url("style.css") }}">
     <link rel="stylesheet" type="text/css" href="{{ static_url("fonts/fonts.css") }}">
+    <link rel="stylesheet" type="text/css" href="{{ static_url("pwa/mobile-pwa.css") }}">
+    <script src="{{ static_url("pwa/mobile-pwa.js") }}"></script>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="viewport" content="width=860, initial-scale=1.0">

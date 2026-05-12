@@ -1,0 +1,100 @@
+html.dcss-pwa-mobile,
+html.dcss-pwa-mobile body {
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+    touch-action: manipulation;
+}
+
+html.dcss-pwa-mobile body {
+    padding-bottom: calc(var(--dcss-pwa-controls-height, 56px) + env(safe-area-inset-bottom));
+}
+
+html.dcss-pwa-mobile #right_column,
+html.dcss-pwa-mobile #stats,
+html.dcss-pwa-mobile #minimap_block,
+html.dcss-pwa-mobile #monster_list {
+    display: none !important;
+}
+
+html.dcss-pwa-mobile #left_column,
+html.dcss-pwa-mobile #message_pane,
+html.dcss-pwa-mobile #messages_container,
+html.dcss-pwa-mobile #messages {
+    width: 100% !important;
+}
+
+html.dcss-pwa-mobile #dungeon {
+    max-width: 100vw;
+}
+
+html.dcss-pwa-mobile #mobile_input {
+    bottom: calc(var(--dcss-pwa-controls-height, 56px) + env(safe-area-inset-bottom) + 12px);
+    z-index: 2500;
+}
+
+html.dcss-pwa-mobile #mobile_input input {
+    width: calc(100vw - 24px) !important;
+    box-sizing: border-box;
+}
+
+#dcss-pwa-controls {
+    display: none;
+}
+
+html.dcss-pwa-mobile #dcss-pwa-controls {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2400;
+    display: grid;
+    grid-template-rows: auto auto;
+    gap: 6px;
+    padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, 0.92);
+    border-top: 1px solid #404040;
+}
+
+#dcss-pwa-controls button {
+    appearance: none;
+    min-height: 42px;
+    border: 1px solid #5c5c5c;
+    border-radius: 6px;
+    background: #171717;
+    color: #f2f2f2;
+    font: 15px var(--crt-font);
+    touch-action: manipulation;
+}
+
+#dcss-pwa-controls button:active {
+    background: #3a3a3a;
+}
+
+#dcss-pwa-controls .dcss-pwa-move-pad {
+    display: none;
+    grid-template-columns: repeat(3, minmax(48px, 1fr));
+    gap: 6px;
+}
+
+#dcss-pwa-controls.is-open .dcss-pwa-move-pad {
+    display: grid;
+}
+
+#dcss-pwa-controls .dcss-pwa-command-row {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(58px, 1fr);
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+#dcss-pwa-controls .dcss-pwa-command-row::-webkit-scrollbar {
+    display: none;
+}
+
+#dcss-pwa-controls .dcss-pwa-wide {
+    grid-column: span 3;
+}
