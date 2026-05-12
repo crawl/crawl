@@ -22,32 +22,44 @@ html.dcss-pwa-mobile .menu {
     font-size: var(--dcss-pwa-crt-font-size) !important;
 }
 
-html.dcss-pwa-mobile .menu {
+html.dcss-pwa-mobile .menu,
+html.dcss-pwa-mobile .menu_txt {
     min-width: 0 !important;
+    width: 100% !important;
     max-width: calc(100vw - 16px);
+    box-sizing: border-box;
 }
 
 html.dcss-pwa-mobile .menu_txt:not(.menu_crt_shrink) {
-    width: auto !important;
+    width: 100% !important;
     max-width: calc(100vw - 16px);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 html.dcss-pwa-mobile .ui-popup {
     align-items: flex-start;
     justify-content: flex-start;
+    bottom: var(--dcss-pwa-controls-height, 56px);
+    box-sizing: border-box;
 }
 
 html.dcss-pwa-mobile .ui-popup-outer {
     margin: 8px;
+    width: calc(100vw - 16px);
     max-width: calc(100vw - 16px);
     max-height: calc(100vh - 16px - var(--dcss-pwa-controls-height, 56px));
     padding: 6px;
     box-sizing: border-box;
+    min-width: 0;
 }
 
 html.dcss-pwa-mobile .ui-popup-inner {
+    width: 100%;
+    min-width: 0;
     max-width: 100%;
     max-height: calc(100vh - 28px - var(--dcss-pwa-controls-height, 56px));
+    overflow: hidden;
 }
 
 html.dcss-pwa-mobile.dcss-pwa-in-game,
@@ -119,20 +131,28 @@ html.dcss-pwa-mobile #dcss-pwa-controls {
     overflow: hidden;
     user-select: none;
     -webkit-user-select: none;
-    --dcss-pwa-key-gap: 8px;
+    --dcss-pwa-key-gap: 6px;
+    --dcss-pwa-key-font-size: 18px;
 }
 
 #dcss-pwa-controls button {
     appearance: none;
     grid-column: span var(--dcss-pwa-key-span, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     min-width: 0;
     min-height: 52px;
+    padding: 0 4px;
     border: 0;
     border-radius: 5px;
     background: #3c3c3c;
     color: #f4f4f4;
-    font: 700 19px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font: 700 var(--dcss-pwa-key-font-size) system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     line-height: 1;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: clip;
     white-space: nowrap;
     touch-action: manipulation;
 }
@@ -155,6 +175,7 @@ html.dcss-pwa-mobile #dcss-pwa-controls {
 
 #dcss-pwa-controls .is-move {
     background: #084a51;
+    font-size: calc(var(--dcss-pwa-key-font-size) - 1px);
 }
 
 #dcss-pwa-controls .is-action {
@@ -167,10 +188,12 @@ html.dcss-pwa-mobile #dcss-pwa-controls {
 
 #dcss-pwa-controls .is-modifier {
     background: #883de0;
+    font-size: calc(var(--dcss-pwa-key-font-size) - 1px);
 }
 
 #dcss-pwa-controls .is-system {
     background: #4a4a4a;
+    font-size: calc(var(--dcss-pwa-key-font-size) - 2px);
 }
 
 #dcss-pwa-controls .is-active {
@@ -180,11 +203,23 @@ html.dcss-pwa-mobile #dcss-pwa-controls {
 
 @media (max-height: 680px) {
     #dcss-pwa-controls {
-        --dcss-pwa-key-gap: 6px;
+        --dcss-pwa-key-gap: 5px;
+        --dcss-pwa-key-font-size: 16px;
     }
 
     #dcss-pwa-controls button {
         min-height: 44px;
-        font-size: 17px;
+    }
+}
+
+@media (max-width: 390px) {
+    #dcss-pwa-controls {
+        --dcss-pwa-key-gap: 5px;
+        --dcss-pwa-key-font-size: 16px;
+    }
+
+    #dcss-pwa-controls button {
+        min-height: 48px;
+        padding: 0 3px;
     }
 }
