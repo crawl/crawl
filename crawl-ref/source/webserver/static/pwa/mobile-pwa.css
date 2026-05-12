@@ -75,6 +75,11 @@ html.dcss-pwa-mobile.dcss-pwa-in-game body {
     padding-bottom: calc(var(--dcss-pwa-controls-height, 56px) + env(safe-area-inset-bottom));
 }
 
+html.dcss-pwa-mobile.dcss-pwa-in-game.dcss-pwa-side-controls body {
+    padding-right: calc(var(--dcss-pwa-controls-width, 0px) + env(safe-area-inset-right));
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
 html.dcss-pwa-mobile #right_column,
 html.dcss-pwa-mobile #stats,
 html.dcss-pwa-mobile #minimap_block,
@@ -144,6 +149,24 @@ html.dcss-pwa-mobile #dcss-pwa-controls {
     --dcss-pwa-key-font-size: 18px;
 }
 
+html.dcss-pwa-mobile.dcss-pwa-side-controls #dcss-pwa-controls {
+    left: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(38vw, 320px);
+    min-width: 252px;
+    padding:
+        calc(6px + env(safe-area-inset-top))
+        calc(8px + env(safe-area-inset-right))
+        calc(8px + env(safe-area-inset-bottom))
+        8px;
+    border-top: 0;
+    border-left: 1px solid #242424;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
 #dcss-pwa-controls button {
     appearance: none;
     grid-column: span var(--dcss-pwa-key-span, 1);
@@ -180,6 +203,63 @@ html.dcss-pwa-mobile #dcss-pwa-controls {
     grid-template-columns:
         repeat(var(--dcss-pwa-key-columns, 10), minmax(0, 1fr));
     gap: var(--dcss-pwa-key-gap);
+}
+
+#dcss-pwa-controls.is-keyboard-mode .dcss-pwa-status {
+    display: none;
+}
+
+#dcss-pwa-controls .dcss-pwa-status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 24px;
+    margin: 0 1px 5px;
+    color: #d8d8d8;
+    font: 700 12px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#dcss-pwa-controls .dcss-pwa-status span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#dcss-pwa-controls .dcss-pwa-compact {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: var(--dcss-pwa-key-gap);
+}
+
+#dcss-pwa-controls.is-compact-mode {
+    --dcss-pwa-key-gap: 5px;
+    --dcss-pwa-key-font-size: 17px;
+    padding-top: 5px;
+}
+
+#dcss-pwa-controls.is-compact-mode button {
+    min-height: 42px;
+    font-size: var(--dcss-pwa-key-font-size);
+}
+
+html.dcss-pwa-mobile.dcss-pwa-side-controls #dcss-pwa-controls .dcss-pwa-status {
+    flex-wrap: wrap;
+    align-content: center;
+    min-height: 34px;
+    row-gap: 5px;
+    margin-bottom: 6px;
+}
+
+html.dcss-pwa-mobile.dcss-pwa-side-controls #dcss-pwa-controls .dcss-pwa-compact {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+html.dcss-pwa-mobile.dcss-pwa-side-controls #dcss-pwa-controls.is-compact-mode button {
+    min-height: 39px;
+    font-size: 16px;
 }
 
 #dcss-pwa-controls .is-move {
@@ -230,5 +310,10 @@ html.dcss-pwa-mobile #dcss-pwa-controls {
     #dcss-pwa-controls button {
         min-height: 48px;
         padding: 0 3px;
+    }
+
+    #dcss-pwa-controls.is-compact-mode button {
+        min-height: 42px;
+        padding: 0 2px;
     }
 }

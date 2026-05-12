@@ -33,6 +33,11 @@
     var patchedJquery = false;
     var resizeQueued = false;
     var dispatchingResize = false;
+    var controlsMode = "keyboard";
+    var userSelectedControlsMode = false;
+    var statusRoot = null;
+    var statusObserver = null;
+    var renderingControls = false;
 
     function setMobileViewport()
     {
@@ -133,11 +138,18 @@
     function syncGameState()
     {
         setInGameState(hasGameSurface());
+        bindStatusObserver();
+        maybeAutoControlsMode();
     }
 
     function controlsHeight()
     {
         return controlsRoot ? controlsRoot.offsetHeight : 0;
+    }
+
+    function controlsWidth()
+    {
+        return controlsRoot ? controlsRoot.offsetWidth : 0;
     }
 
     function visualHeight()
@@ -154,13 +166,30 @@
         return Number.isFinite(value) ? value : 0;
     }
 
+    function sideControlsActive()
+    {
+        return isInGame() && window.matchMedia
+            && window.matchMedia("(orientation: landscape) and (max-height: 520px)").matches;
+    }
+
     function usableGameHeight()
     {
         if (!isInGame())
             return null;
 
+        if (sideControlsActive())
+            return Math.max(240, Math.floor(visualHeight() - safeTopInset()));
+
         var usable = visualHeight() - controlsHeight() - safeTopInset();
         return Math.max(240, Math.floor(usable));
+    }
+
+    function usableGameWidth()
+    {
+        if (!sideControlsActive())
+            return null;
+
+        return Math.max(320, Math.floor(window.innerWidth - controlsWidth()));
     }
 
     function requestRelayout()
@@ -265,7 +294,7 @@
             actionKey("⇧", "shift", "is-modifier", 2),
             actionKey("Ctrl", "ctrl", "is-modifier", 2),
             keycodeKey("Esc", 27, "is-action"),
-            inputKey("5"), inputKey("-"), inputKey("+"),
+            inputKey("5"), actionKey("Pad", "compact", "is-system", 2),
             keycodeKey("↵", 13, "is-enter", 2),
             actionKey("123", "symbols", "is-modifier", 2)
         ]
@@ -291,9 +320,28 @@
             actionKey("⇧", "shift", "is-modifier", 2),
             actionKey("Ctrl", "ctrl", "is-modifier", 2),
             keycodeKey("Esc", 27, "is-action"),
-            inputKey("`"), inputKey("-"), inputKey("+"),
+            inputKey("-"), inputKey("+"),
+            actionKey("Pad", "compact", "is-system", 2),
             keycodeKey("↵", 13, "is-enter", 2),
             actionKey("ABC", "symbols", "is-modifier", 2)
+        ]
+    ];
+
+    var compactRows = [
+        [
+            movementKey("y", "y", "↖"), movementKey("k", "k", "↑"),
+            movementKey("u", "u", "↗"), keycodeKey("Tab", 9, "is-action"),
+            keycodeKey("Esc", 27, "is-action"), keycodeKey("↵", 13, "is-enter")
+        ],
+        [
+            movementKey("h", "h", "←"), inputKey("5", "5", "is-move"),
+            movementKey("l", "l", "→"), inputKey("o"), inputKey("i"),
+            inputKey("g")
+        ],
+        [
+            movementKey("b", "b", "↙"), movementKey("j", "j", "↓"),
+            movementKey("n", "n", "↘"), inputKey("<"), inputKey(">"),
+            actionKey("ABC", "keyboard", "is-modifier")
         ]
     ];
 
@@ -353,8 +401,121 @@
 
     function updateControlsHeight(root)
     {
+        var sideControls = sideControlsActive();
+        document.documentElement.classList.toggle(
+            "dcss-pwa-side-controls", sideControls);
         document.documentElement.style.setProperty(
-            "--dcss-pwa-controls-height", root.offsetHeight + "px");
+            "--dcss-pwa-controls-height",
+            (sideControls ? 0 : root.offsetHeight) + "px");
+        document.documentElement.style.setProperty(
+            "--dcss-pwa-controls-width",
+            (sideControls ? root.offsetWidth : 0) + "px");
+    }
+
+    function statText(id)
+    {
+        var element = document.getElementById(id);
+        return element ? element.textContent.trim() : "";
+    }
+
+    function compactPlace()
+    {
+        return statText("stats_place").replace(/^Dungeon:/, "D:");
+    }
+
+    function hasLiveStats()
+    {
+        var maxHp = parseInt(statText("stats_hp_max"), 10);
+        return Number.isFinite(maxHp) && maxHp > 0;
+    }
+
+    function hasVisiblePopup()
+    {
+        var popups = document.querySelectorAll("#ui-stack > .ui-popup");
+        return Array.prototype.some.call(popups, function (popup) {
+            var rect = popup.getBoundingClientRect();
+            return rect.width > 0 && rect.height > 0
+                && !popup.classList.contains("hidden");
+        });
+    }
+
+    function preferredControlsMode()
+    {
+        if (hasVisiblePopup())
+            return "keyboard";
+        if (hasLiveStats())
+            return "compact";
+        return "keyboard";
+    }
+
+    function maybeAutoControlsMode()
+    {
+        if (!controlsRoot)
+        {
+            return;
+        }
+
+        if (!hasVisiblePopup() && userSelectedControlsMode)
+            return;
+
+        var mode = preferredControlsMode();
+        if (mode === controlsMode)
+            return;
+
+        controlsMode = mode;
+        if (!renderingControls)
+            renderControls(controlsRoot);
+    }
+
+    function syncStatus()
+    {
+        if (!statusRoot)
+            return;
+
+        var items = [
+            "HP " + statText("stats_hp") + "/" + statText("stats_hp_max"),
+            "MP " + statText("stats_mp") + "/" + statText("stats_mp_max"),
+            "XL" + statText("stats_xl"),
+            "AC" + statText("stats_ac"),
+            "EV" + statText("stats_ev"),
+            "SH" + statText("stats_sh"),
+            compactPlace()
+        ].filter(function (item) {
+            return !/\/$/.test(item) && !/[A-Z]$/.test(item);
+        });
+
+        statusRoot.textContent = "";
+        items.forEach(function (item) {
+            var span = document.createElement("span");
+            span.textContent = item;
+            statusRoot.appendChild(span);
+        });
+
+        maybeAutoControlsMode();
+    }
+
+    function renderStatus(root)
+    {
+        statusRoot = document.createElement("div");
+        statusRoot.className = "dcss-pwa-status";
+        root.appendChild(statusRoot);
+        syncStatus();
+    }
+
+    function bindStatusObserver()
+    {
+        var stats = document.getElementById("stats");
+        if (!stats || statusObserver)
+            return;
+
+        statusObserver = new MutationObserver(syncStatus);
+        statusObserver.observe(stats, {
+            childList: true,
+            characterData: true,
+            subtree: true,
+            attributes: true
+        });
+        syncStatus();
     }
 
     function patchJqueryHeight($)
@@ -364,6 +525,7 @@
 
         patchedJquery = true;
         var originalHeight = $.fn.height;
+        var originalWidth = $.fn.width;
         $.fn.height = function () {
             if (arguments.length === 0 && this.length && this[0] === window)
             {
@@ -374,6 +536,16 @@
 
             return originalHeight.apply(this, arguments);
         };
+        $.fn.width = function () {
+            if (arguments.length === 0 && this.length && this[0] === window)
+            {
+                var width = usableGameWidth();
+                if (width !== null)
+                    return width;
+            }
+
+            return originalWidth.apply(this, arguments);
+        };
     }
 
     function keyboardRowsToRender()
@@ -381,13 +553,36 @@
         return keyboardState.symbols ? symbolRows : keyboardRows;
     }
 
-    function renderKeyboard(root)
+    function makeControlButton(key)
     {
-        root.textContent = "";
-        root.classList.toggle("is-shift-active", keyboardState.shift);
-        root.classList.toggle("is-ctrl-active", keyboardState.ctrl);
-        root.classList.toggle("is-symbols-active", keyboardState.symbols);
+        var button = makeButton(key.label, {
+            "class": key.className || "",
+            "aria-label": key.ariaLabel || key.label
+        });
 
+        button.style.setProperty("--dcss-pwa-key-span", key.span || 1);
+        if (key.input)
+            button.dataset.input = key.input;
+        if (key.keycode)
+            button.dataset.key = key.keycode;
+        if (key.action)
+        {
+            button.dataset.action = key.action;
+            button.setAttribute("aria-pressed",
+                keyboardState[key.action] ? "true" : "false");
+            if (keyboardState[key.action]
+                || (key.action === "compact" && controlsMode === "compact")
+                || (key.action === "keyboard" && controlsMode === "keyboard"))
+            {
+                button.classList.add("is-active");
+            }
+        }
+
+        return button;
+    }
+
+    function renderFullKeyboard(root)
+    {
         var keyboard = document.createElement("div");
         keyboard.className = "dcss-pwa-keyboard";
 
@@ -402,33 +597,85 @@
             rowElement.style.setProperty("--dcss-pwa-key-columns", columns);
 
             row.forEach(function (key) {
-                var button = makeButton(key.label, {
-                    "class": key.className || "",
-                    "aria-label": key.ariaLabel || key.label
-                });
-                button.style.setProperty(
-                    "--dcss-pwa-key-span", key.span || 1);
-                if (key.input)
-                    button.dataset.input = key.input;
-                if (key.keycode)
-                    button.dataset.key = key.keycode;
-                if (key.action)
-                {
-                    button.dataset.action = key.action;
-                    button.setAttribute("aria-pressed",
-                        keyboardState[key.action] ? "true" : "false");
-                    if (keyboardState[key.action])
-                        button.classList.add("is-active");
-                }
-                rowElement.appendChild(button);
+                rowElement.appendChild(makeControlButton(key));
             });
 
             keyboard.appendChild(rowElement);
         });
 
         root.appendChild(keyboard);
+    }
+
+    function renderCompactControls(root)
+    {
+        var compact = document.createElement("div");
+        compact.className = "dcss-pwa-compact";
+
+        compactRows.forEach(function (row) {
+            row.forEach(function (key) {
+                compact.appendChild(makeControlButton(key));
+            });
+        });
+
+        root.appendChild(compact);
+    }
+
+    function renderControls(root)
+    {
+        renderingControls = true;
+        root.textContent = "";
+        root.classList.toggle("is-compact-mode", controlsMode === "compact");
+        root.classList.toggle("is-keyboard-mode", controlsMode === "keyboard");
+        root.classList.toggle("is-shift-active", keyboardState.shift);
+        root.classList.toggle("is-ctrl-active", keyboardState.ctrl);
+        root.classList.toggle("is-symbols-active", keyboardState.symbols);
+
+        renderStatus(root);
+        if (controlsMode === "compact")
+            renderCompactControls(root);
+        else
+            renderFullKeyboard(root);
+
         updateControlsHeight(root);
+        renderingControls = false;
         requestRelayout();
+    }
+
+    function handleControlAction(button, root)
+    {
+        var action = button.dataset.action;
+        if (action === "compact" || action === "keyboard")
+        {
+            controlsMode = action;
+            userSelectedControlsMode = true;
+            keyboardState.shift = false;
+            keyboardState.ctrl = false;
+            keyboardState.symbols = false;
+            renderControls(root);
+            return true;
+        }
+
+        keyboardState[action] = !keyboardState[action];
+        if (action === "symbols")
+        {
+            keyboardState.shift = false;
+            keyboardState.ctrl = false;
+        }
+        renderControls(root);
+        return true;
+    }
+
+    function sendButtonInput(button, comm)
+    {
+        if (button.dataset.key)
+            sendKey(comm, parseInt(button.dataset.key, 10));
+        else if (button.dataset.input)
+        {
+            if (keyboardState.ctrl)
+                sendCtrlInput(comm, button.dataset.input);
+            else
+                sendInput(comm, applyShift(button.dataset.input));
+        }
     }
 
     function buildControls(comm)
@@ -441,7 +688,7 @@
         root.setAttribute("aria-label", "Crawl touch controls");
         document.body.appendChild(root);
         controlsRoot = root;
-        renderKeyboard(root);
+        renderControls(root);
 
         root.addEventListener("click", function (event) {
             var button = event.target.closest("button");
@@ -451,29 +698,14 @@
             event.preventDefault();
             if (button.dataset.action)
             {
-                keyboardState[button.dataset.action] =
-                    !keyboardState[button.dataset.action];
-                if (button.dataset.action === "symbols")
-                {
-                    keyboardState.shift = false;
-                    keyboardState.ctrl = false;
-                }
-                renderKeyboard(root);
+                handleControlAction(button, root);
                 return;
             }
 
-            if (button.dataset.key)
-                sendKey(comm, parseInt(button.dataset.key, 10));
-            else if (button.dataset.input)
-            {
-                if (keyboardState.ctrl)
-                    sendCtrlInput(comm, button.dataset.input);
-                else
-                    sendInput(comm, applyShift(button.dataset.input));
-            }
+            sendButtonInput(button, comm);
 
             clearOneShotModifiers();
-            renderKeyboard(root);
+            renderControls(root);
         });
 
         if ("ResizeObserver" in window)
@@ -483,6 +715,7 @@
             });
             observer.observe(root);
         }
+        bindStatusObserver();
         updateControlsHeight(root);
     }
 
@@ -509,6 +742,7 @@
 
         gameStateObserver = new MutationObserver(syncGameState);
         gameStateObserver.observe(document.body, {
+            attributes: true,
             childList: true,
             subtree: true
         });
