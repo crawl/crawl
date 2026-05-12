@@ -1,4 +1,4 @@
-const CACHE_NAME = "dcss-pwa-shell-v12";
+const CACHE_NAME = "dcss-pwa-shell-v15";
 const SHELL_ASSETS = [
   "/static/pwa/manifest.webmanifest",
   "/static/pwa/mobile-pwa.css",

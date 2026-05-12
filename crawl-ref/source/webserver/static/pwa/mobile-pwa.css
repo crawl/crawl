@@ -107,6 +107,9 @@ html.dcss-pwa-mobile #dungeon {
     margin-left: auto;
     margin-right: auto;
     max-width: 100vw;
+    touch-action: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 html.dcss-pwa-mobile #messages_container {
@@ -145,6 +148,8 @@ html.dcss-pwa-mobile #dcss-pwa-controls {
     overflow: hidden;
     user-select: none;
     -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
     --dcss-pwa-key-gap: 6px;
     --dcss-pwa-key-font-size: 18px;
 }
@@ -186,10 +191,15 @@ html.dcss-pwa-mobile.dcss-pwa-side-controls #dcss-pwa-controls {
     overflow: hidden;
     text-overflow: clip;
     white-space: nowrap;
-    touch-action: manipulation;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
-#dcss-pwa-controls button:active {
+#dcss-pwa-controls button:active,
+#dcss-pwa-controls button.is-pressed {
     filter: brightness(1.28);
 }
 

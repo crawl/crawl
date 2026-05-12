@@ -30,6 +30,7 @@
 
     var controlsRoot = null;
     var gameStateObserver = null;
+    var jqueryApi = null;
     var patchedJquery = false;
     var resizeQueued = false;
     var dispatchingResize = false;
@@ -38,6 +39,19 @@
     var statusRoot = null;
     var statusObserver = null;
     var renderingControls = false;
+    var activePointerButton = null;
+    var activePointerId = null;
+    var repeatDelayTimer = null;
+    var repeatIntervalTimer = null;
+    var suppressClickUntil = 0;
+    var holdRepeatDelay = 300;
+    var holdRepeatInterval = 85;
+    var dungeonTouchElement = null;
+    var dungeonTouchCleanup = null;
+    var dungeonPress = null;
+    var dungeonLongPressTimer = null;
+    var dungeonLongPressDelay = 425;
+    var dungeonTapMoveSlop = 14;
 
     function setMobileViewport()
     {
@@ -137,7 +151,12 @@
 
     function syncGameState()
     {
-        setInGameState(hasGameSurface());
+        var active = hasGameSurface();
+        setInGameState(active);
+        if (active && jqueryApi)
+            bindDungeonTouch(jqueryApi);
+        else if (!active && dungeonTouchCleanup)
+            dungeonTouchCleanup();
         bindStatusObserver();
         maybeAutoControlsMode();
     }
@@ -385,8 +404,10 @@
 
     function clearOneShotModifiers()
     {
+        var changed = keyboardState.shift || keyboardState.ctrl;
         keyboardState.shift = false;
         keyboardState.ctrl = false;
+        return changed;
     }
 
     function sendCtrlInput(comm, input)
@@ -516,6 +537,201 @@
             attributes: true
         });
         syncStatus();
+    }
+
+    function resetDungeonTouchState()
+    {
+        if (dungeonLongPressTimer)
+        {
+            window.clearTimeout(dungeonLongPressTimer);
+            dungeonLongPressTimer = null;
+        }
+        dungeonPress = null;
+    }
+
+    function touchPoint(touch)
+    {
+        return {
+            clientX: touch.clientX,
+            clientY: touch.clientY,
+            pageX: touch.pageX,
+            pageY: touch.pageY
+        };
+    }
+
+    function movedBeyondDungeonTapSlop(point)
+    {
+        if (!dungeonPress || !point)
+            return true;
+
+        var dx = point.clientX - dungeonPress.start.clientX;
+        var dy = point.clientY - dungeonPress.start.clientY;
+        return dx * dx + dy * dy > dungeonTapMoveSlop * dungeonTapMoveSlop;
+    }
+
+    function updateDungeonPress(point)
+    {
+        if (!dungeonPress || !point)
+            return;
+
+        dungeonPress.latest = point;
+        if (movedBeyondDungeonTapSlop(point))
+            dungeonPress.moved = true;
+    }
+
+    function clearDungeonLongPressTimer()
+    {
+        if (!dungeonLongPressTimer)
+            return;
+
+        window.clearTimeout(dungeonLongPressTimer);
+        dungeonLongPressTimer = null;
+    }
+
+    function triggerDungeonMouse($, element, point, which)
+    {
+        if (!point)
+            return;
+
+        $(element).trigger($.Event("mousedown", {
+            which: which,
+            button: which === 3 ? 2 : 0,
+            buttons: which === 3 ? 2 : 1,
+            clientX: point.clientX,
+            clientY: point.clientY,
+            pageX: point.pageX,
+            pageY: point.pageY
+        }));
+    }
+
+    function startDungeonPress($, element, point)
+    {
+        resetDungeonTouchState();
+        dungeonPress = {
+            start: point,
+            latest: point,
+            moved: false,
+            longPressed: false
+        };
+
+        dungeonLongPressTimer = window.setTimeout(function () {
+            dungeonLongPressTimer = null;
+            if (!dungeonPress || dungeonPress.moved)
+                return;
+
+            dungeonPress.longPressed = true;
+            triggerDungeonMouse($, element, dungeonPress.latest, 3);
+        }, dungeonLongPressDelay);
+    }
+
+    function finishDungeonPress($, element)
+    {
+        if (!dungeonPress)
+            return;
+
+        clearDungeonLongPressTimer();
+        if (!dungeonPress.longPressed && !dungeonPress.moved)
+            triggerDungeonMouse($, element, dungeonPress.latest, 1);
+
+        resetDungeonTouchState();
+    }
+
+    function bindDungeonTouch($)
+    {
+        var dungeon = document.getElementById("dungeon");
+        if (!dungeon)
+            return;
+
+        if (dungeonTouchElement === dungeon)
+            return;
+
+        if (dungeonTouchElement)
+        {
+            if (dungeonTouchCleanup)
+                dungeonTouchCleanup();
+            else
+                dungeonTouchElement = null;
+        }
+
+        dungeonTouchElement = dungeon;
+
+        function cancelEvent(event)
+        {
+            event.preventDefault();
+        }
+
+        function onTouchStart(event)
+        {
+            cancelEvent(event);
+            if (event.touches.length !== 1)
+            {
+                resetDungeonTouchState();
+                return;
+            }
+
+            startDungeonPress($, dungeon, touchPoint(event.touches[0]));
+        }
+
+        function onTouchMove(event)
+        {
+            if (!dungeonPress)
+                return;
+
+            cancelEvent(event);
+            if (event.touches.length !== 1)
+            {
+                resetDungeonTouchState();
+                return;
+            }
+
+            updateDungeonPress(touchPoint(event.touches[0]));
+            if (dungeonPress && dungeonPress.moved)
+                clearDungeonLongPressTimer();
+        }
+
+        function onTouchEnd(event)
+        {
+            if (!dungeonPress)
+                return;
+
+            cancelEvent(event);
+            if (event.changedTouches.length)
+                updateDungeonPress(touchPoint(event.changedTouches[0]));
+
+            if (event.touches.length === 0)
+                finishDungeonPress($, dungeon);
+            else
+                resetDungeonTouchState();
+        }
+
+        function onTouchCancel(event)
+        {
+            cancelEvent(event);
+            resetDungeonTouchState();
+        }
+
+        function onContextMenu(event)
+        {
+            cancelEvent(event);
+        }
+
+        dungeon.addEventListener("touchstart", onTouchStart, { passive: false });
+        dungeon.addEventListener("touchmove", onTouchMove, { passive: false });
+        dungeon.addEventListener("touchend", onTouchEnd, { passive: false });
+        dungeon.addEventListener("touchcancel", onTouchCancel,
+            { passive: false });
+        dungeon.addEventListener("contextmenu", onContextMenu);
+
+        dungeonTouchCleanup = function () {
+            dungeon.removeEventListener("touchstart", onTouchStart);
+            dungeon.removeEventListener("touchmove", onTouchMove);
+            dungeon.removeEventListener("touchend", onTouchEnd);
+            dungeon.removeEventListener("touchcancel", onTouchCancel);
+            dungeon.removeEventListener("contextmenu", onContextMenu);
+            resetDungeonTouchState();
+            dungeonTouchCleanup = null;
+            dungeonTouchElement = null;
+        };
     }
 
     function patchJqueryHeight($)
@@ -678,6 +894,86 @@
         }
     }
 
+    function isRepeatableButton(button)
+    {
+        return !button.dataset.action && button.classList.contains("is-move");
+    }
+
+    function clearHoldRepeat()
+    {
+        if (repeatDelayTimer)
+        {
+            window.clearTimeout(repeatDelayTimer);
+            repeatDelayTimer = null;
+        }
+        if (repeatIntervalTimer)
+        {
+            window.clearInterval(repeatIntervalTimer);
+            repeatIntervalTimer = null;
+        }
+    }
+
+    function startHoldRepeat(button, comm)
+    {
+        clearHoldRepeat();
+        if (!isRepeatableButton(button) || !controlsRoot.contains(button))
+            return;
+
+        repeatDelayTimer = window.setTimeout(function () {
+            repeatDelayTimer = null;
+            if (controlsRoot.contains(button))
+                sendButtonInput(button, comm);
+            else
+                return;
+            repeatIntervalTimer = window.setInterval(function () {
+                if (controlsRoot.contains(button))
+                    sendButtonInput(button, comm);
+                else
+                    clearHoldRepeat();
+            }, holdRepeatInterval);
+        }, holdRepeatDelay);
+    }
+
+    function releaseActivePointer(event)
+    {
+        clearHoldRepeat();
+        if (activePointerButton)
+        {
+            activePointerButton.classList.remove("is-pressed");
+            if (activePointerButton.releasePointerCapture
+                && activePointerId !== null)
+            {
+                try
+                {
+                    activePointerButton.releasePointerCapture(activePointerId);
+                }
+                catch (error)
+                {
+                }
+            }
+        }
+        activePointerButton = null;
+        activePointerId = null;
+        if (event)
+            event.preventDefault();
+    }
+
+    function invokeControlButton(button, root, comm)
+    {
+        if (button.dataset.action)
+        {
+            handleControlAction(button, root);
+            return false;
+        }
+
+        sendButtonInput(button, comm);
+
+        if (clearOneShotModifiers())
+            renderControls(root);
+
+        return true;
+    }
+
     function buildControls(comm)
     {
         if (document.getElementById("dcss-pwa-controls"))
@@ -690,22 +986,68 @@
         controlsRoot = root;
         renderControls(root);
 
+        root.addEventListener("pointerdown", function (event) {
+            if (event.button !== undefined && event.button !== 0)
+                return;
+
+            var button = event.target.closest("button");
+            if (!button || !root.contains(button))
+                return;
+
+            event.preventDefault();
+            suppressClickUntil = Date.now() + 700;
+            releaseActivePointer();
+            activePointerButton = button;
+            activePointerId = event.pointerId;
+            button.classList.add("is-pressed");
+            if (button.setPointerCapture && event.pointerId !== undefined)
+            {
+                try
+                {
+                    button.setPointerCapture(event.pointerId);
+                }
+                catch (error)
+                {
+                }
+            }
+
+            if (invokeControlButton(button, root, comm))
+                startHoldRepeat(button, comm);
+        });
+
+        root.addEventListener("pointerup", function (event) {
+            if (activePointerId !== null && event.pointerId !== activePointerId)
+                return;
+            releaseActivePointer(event);
+        });
+
+        root.addEventListener("pointercancel", function (event) {
+            if (activePointerId !== null && event.pointerId !== activePointerId)
+                return;
+            releaseActivePointer(event);
+        });
+
+        root.addEventListener("pointerleave", function (event) {
+            if (activePointerId !== null && event.pointerId !== activePointerId)
+                return;
+            releaseActivePointer(event);
+        });
+
         root.addEventListener("click", function (event) {
             var button = event.target.closest("button");
             if (!button)
                 return;
 
             event.preventDefault();
-            if (button.dataset.action)
-            {
-                handleControlAction(button, root);
+            if (Date.now() < suppressClickUntil)
                 return;
-            }
 
-            sendButtonInput(button, comm);
+            invokeControlButton(button, root, comm);
+        });
 
-            clearOneShotModifiers();
-            renderControls(root);
+        root.addEventListener("contextmenu", function (event) {
+            if (event.target.closest("button"))
+                event.preventDefault();
         });
 
         if ("ResizeObserver" in window)
@@ -724,11 +1066,16 @@
         function enterGame()
         {
             setInGameState(true);
+            bindDungeonTouch($);
         }
 
         function exitGame()
         {
             setInGameState(false);
+            if (dungeonTouchCleanup)
+                dungeonTouchCleanup();
+            else
+                resetDungeonTouchState();
         }
 
         $(document).off(".dcss_pwa");
@@ -736,6 +1083,7 @@
         $(document).on("game_cleanup.dcss_pwa", exitGame);
 
         syncGameState();
+        bindDungeonTouch($);
 
         if (gameStateObserver)
             return;
@@ -779,6 +1127,7 @@
         registerServiceWorker();
         configureRequire();
         window.require(["jquery", "comm"], function ($, comm) {
+            jqueryApi = $;
             patchJqueryHeight($);
             bindGameLifecycle($);
             buildControls(comm);
