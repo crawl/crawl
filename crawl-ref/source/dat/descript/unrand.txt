@@ -863,3 +863,12 @@ historians, as it is uncertain whether it was made from some renowned witch's
 pet dragon, or her frequent prey, or from her own non-human body itself.
 Regardless of its origins, the magic woven into it freely rains toxins all
 over its bearer's especially misfortunate foes.
+%%%%
+athame "Fimbulwinter"
+
+An instrument of terror crafted by some of Qazlal's most infamous prophets,
+meant to coax forth a three-year winter preceding the end of time. Those chilled
+by its wielder will feel fate's icy grip upon their throat.
+
+As with all athames, blows made with it against those suffering baleful negative
+statuses (other than poison) have increased base damage.

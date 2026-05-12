@@ -4367,7 +4367,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 schedule_mirror_damage_fineff(valid_agent, this, amount * 2 / 3);
         }
 
-        // Trigger corrupting presence and orbs of glass
+        // Trigger corrupting presence, elemental-check unrands, orbs of glass
         if (agent && agent->is_player() && alive())
         {
             if (you.get_mutation_level(MUT_CORRUPTING_PRESENCE))
@@ -4379,6 +4379,12 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 {
                     this->malmutate(&you, "Your corrupting presence");
                 }
+            }
+            if (you.unrand_equipped(UNRAND_FIMBULWINTER)
+                && (flavour == BEAM_COLD || flavour == BEAM_ICE)
+                && this->res_cold() < 3)
+            {
+                this->doom(5 + roll_dice(4, 3));
             }
         }
 
@@ -5248,10 +5254,14 @@ bool monster::doom(int amount)
     if (stacks >= 50)
     {
         stacks = 0;
-        if (you.can_see(*this))
-            mprf("Doom befalls %s.", name(DESC_THE).c_str());
-
         enchant_type ench = random_choose(ENCH_SLOW, ENCH_VITRIFIED, ENCH_WEAK, ENCH_BLIND, ENCH_DRAINED);
+        if (you.can_see(*this))
+        {
+            mprf("Doom befalls %s, leaving %s %s.", name(DESC_THE).c_str(),
+                 pronoun(PRONOUN_OBJECTIVE).c_str(),
+                 ench == ENCH_DRAINED ? "deeply drained" :
+                 description_for_ench(ench).c_str());
+        }
 
         // High degree specifically for Draining
         add_ench(mon_enchant(ench, nullptr, random_range(1000, 2000), 7));

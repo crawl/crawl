@@ -1949,6 +1949,23 @@ DESCRIP: TrickPois: Whenever you inflict a negative status on an enemy, you also
  fully poison it. Those with rPois+ will only be lightly poisoned, and
  those with rPois∞ won't be poisoned at all.
 
+ENUM:    FIMBULWINTER
+NAME:    athame "Fimbulwinter"
+INSCRIP: IceDoom
+OBJ:     OBJ_WEAPONS/WPN_ATHAME
+PLUS:    +9
+BOOL:    bane
+COLOUR:  ETC_ICE
+TILE:    urand_fimbulwinter
+TILE_EQ: FIMBULWINTER
+BRAND:   SPWPN_FREEZING
+COLD:    2
+FIRE:    -1
+DESCRIP: IceDoom:   Whenever you deal cold damage to an enemy without rCold∞,
+ you inflict some doom upon it. Sufficient doom upon those who do not defy fate
+ as you do will eventually result in long amounts of slowing, weakness,
+ vitrification, blinding, or heavy draining.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

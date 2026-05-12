@@ -1198,6 +1198,7 @@ bool attack::apply_damage_brand(const char *what)
         calc_elemental_brand_damage(BEAM_FIRE,
                                     defender->is_icy() ? "melt" : "burn",
                                     what);
+        special_damage_flavour = BEAM_FIRE;
         defender->expose_to_element(BEAM_FIRE, 2);
         if (defender->is_player())
             maybe_melt_player_enchantments(BEAM_FIRE, special_damage);
@@ -1205,6 +1206,7 @@ bool attack::apply_damage_brand(const char *what)
 
     case SPWPN_FREEZING:
         calc_elemental_brand_damage(BEAM_COLD, "freeze", what);
+        special_damage_flavour = BEAM_COLD;
         defender->expose_to_element(BEAM_COLD, 2, attacker);
         break;
 
@@ -1217,6 +1219,7 @@ bool attack::apply_damage_brand(const char *what)
 
         if (special_damage && defender_visible)
         {
+            special_damage_flavour = BEAM_HOLY;
             special_damage_message =
                 make_stringf(
                     "%s %s%s",
@@ -1239,6 +1242,7 @@ bool attack::apply_damage_brand(const char *what)
 
         if (defender_visible && special_damage)
         {
+            special_damage_flavour = BEAM_FOUL_FLAME;
             special_damage_message =
                 make_stringf(
                     "%s %s%s",
@@ -1270,10 +1274,12 @@ bool attack::apply_damage_brand(const char *what)
         break;
 
     case SPWPN_VENOM:
+        special_damage_flavour = BEAM_POISON;
         obvious_effect = apply_poison_damage_brand();
         break;
 
     case SPWPN_DRAINING:
+        special_damage_flavour = BEAM_NEG;
         drain_defender();
         break;
 
@@ -1293,6 +1299,7 @@ bool attack::apply_damage_brand(const char *what)
         int hp_boost = is_unrandom_artefact(*weapon, UNRAND_VAMPIRES_TOOTH)
                        ? damage_done : 1 + random2(damage_done);
         hp_boost = resist_adjust_damage(defender, BEAM_NEG, hp_boost);
+        special_damage_flavour = BEAM_VAMPIRIC_DRAINING;
 
         if (hp_boost)
         {
@@ -1327,6 +1334,7 @@ bool attack::apply_damage_brand(const char *what)
             break;
         }
 
+        special_damage_flavour = BEAM_PAIN;
         pain_affects_defender();
         break;
 
@@ -1395,6 +1403,7 @@ bool attack::apply_damage_brand(const char *what)
     }
 
     case SPWPN_CHAOS:
+        special_damage_flavour = BEAM_CHAOS;
         obvious_effect = chaos_affects_actor(defender, attacker);
         break;
 
@@ -1403,6 +1412,7 @@ bool attack::apply_damage_brand(const char *what)
         break;
 
     case SPWPN_ACID:
+        special_damage_flavour = BEAM_ACID;
         defender->splash_with_acid(attacker);
         break;
 
