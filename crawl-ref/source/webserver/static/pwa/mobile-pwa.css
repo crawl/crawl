@@ -1,5 +1,6 @@
 html.dcss-pwa-mobile {
     --dcss-pwa-crt-font-size: clamp(7px, 2vw, 12px);
+    --dcss-pwa-message-font-size: clamp(13px, 3.4vw, 18px);
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
 }
@@ -86,6 +87,14 @@ html.dcss-pwa-mobile #message_pane,
 html.dcss-pwa-mobile #messages_container,
 html.dcss-pwa-mobile #messages {
     width: 100% !important;
+}
+
+html.dcss-pwa-mobile #message_pane {
+    font-size: var(--dcss-pwa-message-font-size) !important;
+}
+
+html.dcss-pwa-mobile #messages {
+    line-height: 1.22em;
 }
 
 html.dcss-pwa-mobile #dungeon {
