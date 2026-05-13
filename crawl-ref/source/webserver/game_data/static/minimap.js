@@ -11,16 +11,13 @@ function ($, map_knowledge, dungeon_renderer, view_data,
     var cell_w, cell_h;
     var cell_x = 0, cell_y = 0;
     var display_x = 0, display_y = 0;
-    var enabled = true;
-
-    function pwa_suppressed()
-    {
-        return window.DCSS_PWA && window.DCSS_PWA.enabled;
-    }
+    // PWA mode owns the dungeon viewport and renders its own controls, so
+    // the minimap is fully disabled when the PWA shell is active.
+    var enabled = !(window.DCSS_PWA && window.DCSS_PWA.enabled);
 
     function drawing_enabled()
     {
-        return enabled && !pwa_suppressed();
+        return enabled;
     }
 
     function vcolour_to_css_colour(colour)
@@ -47,7 +44,7 @@ function ($, map_knowledge, dungeon_renderer, view_data,
 
     function fit_to(width)
     {
-        if (pwa_suppressed())
+        if (!enabled)
             return;
 
         var gxm = enums.gxm;
@@ -217,7 +214,7 @@ function ($, map_knowledge, dungeon_renderer, view_data,
     var farview_old_vc;
     function minimap_farview(ev)
     {
-        if (pwa_suppressed())
+        if (!enabled)
             return;
 
         if (ev.which == 3 || farview_old_vc)
@@ -240,7 +237,7 @@ function ($, map_knowledge, dungeon_renderer, view_data,
 
     function stop_minimap_farview()
     {
-        if (pwa_suppressed())
+        if (!enabled)
             return;
 
         if (farview_old_vc !== undefined)

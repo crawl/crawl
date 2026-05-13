@@ -60,7 +60,13 @@ class MainHandler(tornado.web.RequestHandler):
 
         with util.SlowWarning("Slow IO: render client.html"):
             user_agent = self.request.headers.get("User-Agent", "")
-            pwa_enabled = self.get_argument("pwa", "") == "1" or "iPhone" in user_agent or "iPod" in user_agent
+            pwa_arg = self.get_argument("pwa", "")
+            if pwa_arg == "0":
+                pwa_enabled = False
+            elif pwa_arg == "1":
+                pwa_enabled = True
+            else:
+                pwa_enabled = "iPhone" in user_agent or "iPod" in user_agent
             self.render("client.html", socket_server = protocol + host + "/socket",
                     game_version = _crawl_version,
                     username = None,

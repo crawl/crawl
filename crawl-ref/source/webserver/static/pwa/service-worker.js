@@ -1,28 +1,15 @@
-const CACHE_NAME = "dcss-pwa-shell-v21";
-const SHELL_ASSETS = [
-  "/static/pwa/manifest.webmanifest",
-  "/static/pwa/mobile-pwa.css",
-  "/static/pwa/mobile-pwa-control-keymaps.js",
-  "/static/pwa/mobile-pwa-status-strip.js",
-  "/static/pwa/mobile-pwa-controls.js",
-  "/static/pwa/mobile-pwa-dungeon-touch.js",
-  "/static/pwa/mobile-pwa.js",
-  "/static/pwa/icons/apple-touch-icon.png",
-  "/static/pwa/icons/icon-48.png",
-  "/static/pwa/icons/icon-192.png",
-  "/static/pwa/icons/icon-512.png"
-];
+const CACHE_NAME = "dcss-pwa-shell-v23";
 
 const sw = /** @type {ServiceWorkerGlobalScope} */ (
   /** @type {unknown} */ (self)
 );
 
+// No precache list: shell assets are served by Tornado's static_url() with a
+// ?v=<hash> query, so precaching bare paths never matches the runtime request.
+// Runtime stale-while-revalidate below caches them on first visit instead.
+
 sw.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(SHELL_ASSETS))
-      .then(() => sw.skipWaiting())
-  );
+  event.waitUntil(sw.skipWaiting());
 });
 
 sw.addEventListener("activate", event => {
