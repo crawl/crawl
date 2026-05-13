@@ -1,6 +1,6 @@
 html.dcss-pwa-mobile {
-    --dcss-pwa-crt-font-size: clamp(7px, 2vw, 12px);
-    --dcss-pwa-message-font-size: clamp(13px, 3.4vw, 18px);
+    --dcss-pwa-crt-font-size: clamp(10px, 2.9vw, 15px);
+    --dcss-pwa-message-font-size: clamp(14px, 3.7vw, 19px);
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
 }
@@ -145,13 +145,24 @@ html.dcss-pwa-mobile #dcss-pwa-controls {
     box-sizing: border-box;
     background: rgba(0, 0, 0, 0.96);
     border-top: 1px solid #242424;
-    overflow: hidden;
+    overflow: visible;
     user-select: none;
     -webkit-user-select: none;
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
     --dcss-pwa-key-gap: 6px;
     --dcss-pwa-key-font-size: 18px;
+}
+
+html.dcss-pwa-mobile #dcss-pwa-controls.is-minimized {
+    left: auto;
+    width: auto;
+    padding:
+        6px calc(8px + env(safe-area-inset-right))
+        calc(8px + env(safe-area-inset-bottom))
+        8px;
+    background: transparent;
+    border-top: 0;
 }
 
 html.dcss-pwa-mobile.dcss-pwa-side-controls #dcss-pwa-controls {
@@ -162,7 +173,7 @@ html.dcss-pwa-mobile.dcss-pwa-side-controls #dcss-pwa-controls {
     width: min(38vw, 320px);
     min-width: 252px;
     padding:
-        calc(6px + env(safe-area-inset-top))
+        calc(48px + env(safe-area-inset-top))
         calc(8px + env(safe-area-inset-right))
         calc(8px + env(safe-area-inset-bottom))
         8px;
@@ -170,6 +181,14 @@ html.dcss-pwa-mobile.dcss-pwa-side-controls #dcss-pwa-controls {
     border-left: 1px solid #242424;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+}
+
+html.dcss-pwa-mobile.dcss-pwa-side-controls #dcss-pwa-controls.is-minimized {
+    top: auto;
+    left: auto;
+    width: auto;
+    min-width: 0;
+    border-left: 0;
 }
 
 #dcss-pwa-controls button {
@@ -219,6 +238,34 @@ html.dcss-pwa-mobile.dcss-pwa-side-controls #dcss-pwa-controls {
     display: none;
 }
 
+#dcss-pwa-controls .dcss-pwa-hide-control {
+    position: absolute;
+    top: -40px;
+    right: calc(8px + env(safe-area-inset-right));
+    min-width: 64px;
+    min-height: 34px;
+    padding: 0 12px;
+    border: 1px solid #555;
+    background: rgba(36, 36, 36, 0.94);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+    font-size: 13px;
+}
+
+html.dcss-pwa-mobile.dcss-pwa-side-controls #dcss-pwa-controls .dcss-pwa-hide-control {
+    top: calc(8px + env(safe-area-inset-top));
+    right: calc(8px + env(safe-area-inset-right));
+    left: auto;
+}
+
+#dcss-pwa-controls.is-minimized button {
+    min-width: 56px;
+    min-height: 48px;
+    padding: 0 14px;
+    border: 1px solid #555;
+    background: rgba(36, 36, 36, 0.94);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
 #dcss-pwa-controls .dcss-pwa-status {
     display: flex;
     align-items: center;
@@ -251,7 +298,7 @@ html.dcss-pwa-mobile.dcss-pwa-side-controls #dcss-pwa-controls {
 }
 
 #dcss-pwa-controls.is-compact-mode button {
-    min-height: 42px;
+    min-height: 46px;
     font-size: var(--dcss-pwa-key-font-size);
 }
 
@@ -268,7 +315,7 @@ html.dcss-pwa-mobile.dcss-pwa-side-controls #dcss-pwa-controls .dcss-pwa-compact
 }
 
 html.dcss-pwa-mobile.dcss-pwa-side-controls #dcss-pwa-controls.is-compact-mode button {
-    min-height: 39px;
+    min-height: 44px;
     font-size: 16px;
 }
 

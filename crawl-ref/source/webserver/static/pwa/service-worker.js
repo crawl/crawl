@@ -1,7 +1,11 @@
-const CACHE_NAME = "dcss-pwa-shell-v15";
+const CACHE_NAME = "dcss-pwa-shell-v21";
 const SHELL_ASSETS = [
   "/static/pwa/manifest.webmanifest",
   "/static/pwa/mobile-pwa.css",
+  "/static/pwa/mobile-pwa-control-keymaps.js",
+  "/static/pwa/mobile-pwa-status-strip.js",
+  "/static/pwa/mobile-pwa-controls.js",
+  "/static/pwa/mobile-pwa-dungeon-touch.js",
   "/static/pwa/mobile-pwa.js",
   "/static/pwa/icons/apple-touch-icon.png",
   "/static/pwa/icons/icon-48.png",
