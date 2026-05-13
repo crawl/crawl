@@ -1,11 +1,11 @@
-define(["jquery"], function ($) {
+define(["jquery", "contrib/jquery.json"], function ($) {
     window.socket = null;
 
     function send_message(msg, data)
     {
         data = data || {};
         data["msg"] = msg;
-        socket.send(JSON.stringify(data));
+        socket.send($.toJSON(data));
     }
 
     // JSON message handlers
