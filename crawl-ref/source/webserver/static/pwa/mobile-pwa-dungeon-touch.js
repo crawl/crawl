@@ -1,7 +1,8 @@
 (function () {
     "use strict";
 
-    var pwaApi = window.DCSS_PWA = window.DCSS_PWA || {};
+    window.DCSS_PWA = window.DCSS_PWA || {};
+    var pwaApi = window.DCSS_PWA;
 
     pwaApi.createDungeonTouch = function (options) {
         var $ = options.$;
@@ -121,7 +122,8 @@
             if (cleanup)
                 cleanup();
 
-            touchElement = dungeon;
+            var boundDungeon = dungeon;
+            touchElement = boundDungeon;
 
             function cancelEvent(event)
             {
@@ -137,7 +139,7 @@
                     return;
                 }
 
-                startPress(dungeon, touchPoint(event.touches[0]));
+                startPress(boundDungeon, touchPoint(event.touches[0]));
             }
 
             function onTouchMove(event)
@@ -167,7 +169,7 @@
                     updatePress(touchPoint(event.changedTouches[0]));
 
                 if (event.touches.length === 0)
-                    finishPress(dungeon);
+                    finishPress(boundDungeon);
                 else
                     resetPress();
             }
@@ -183,18 +185,18 @@
                 cancelEvent(event);
             }
 
-            dungeon.addEventListener("touchstart", onTouchStart, { passive: false });
-            dungeon.addEventListener("touchmove", onTouchMove, { passive: false });
-            dungeon.addEventListener("touchend", onTouchEnd, { passive: false });
-            dungeon.addEventListener("touchcancel", onTouchCancel, { passive: false });
-            dungeon.addEventListener("contextmenu", onContextMenu);
+            boundDungeon.addEventListener("touchstart", onTouchStart, { passive: false });
+            boundDungeon.addEventListener("touchmove", onTouchMove, { passive: false });
+            boundDungeon.addEventListener("touchend", onTouchEnd, { passive: false });
+            boundDungeon.addEventListener("touchcancel", onTouchCancel, { passive: false });
+            boundDungeon.addEventListener("contextmenu", onContextMenu);
 
             cleanup = function () {
-                dungeon.removeEventListener("touchstart", onTouchStart);
-                dungeon.removeEventListener("touchmove", onTouchMove);
-                dungeon.removeEventListener("touchend", onTouchEnd);
-                dungeon.removeEventListener("touchcancel", onTouchCancel);
-                dungeon.removeEventListener("contextmenu", onContextMenu);
+                boundDungeon.removeEventListener("touchstart", onTouchStart);
+                boundDungeon.removeEventListener("touchmove", onTouchMove);
+                boundDungeon.removeEventListener("touchend", onTouchEnd);
+                boundDungeon.removeEventListener("touchcancel", onTouchCancel);
+                boundDungeon.removeEventListener("contextmenu", onContextMenu);
                 resetPress();
                 cleanup = null;
                 touchElement = null;

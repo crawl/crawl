@@ -1,7 +1,8 @@
 (function () {
     "use strict";
 
-    var pwaApi = window.DCSS_PWA = window.DCSS_PWA || {};
+    window.DCSS_PWA = window.DCSS_PWA || {};
+    var pwaApi = window.DCSS_PWA;
 
     pwaApi.createTouchControls = function (options) {
         var sendInput = options.sendInput;
@@ -38,6 +39,11 @@
                 button.setAttribute(name, attrs[name]);
             });
             return button;
+        }
+
+        function closestButton(target)
+        {
+            return target instanceof Element ? target.closest("button") : null;
         }
 
         var shiftedInputs = {
@@ -192,7 +198,8 @@
                 row.forEach(function (key) {
                     columns += key.span || 1;
                 });
-                rowElement.style.setProperty("--dcss-pwa-key-columns", columns);
+                rowElement.style.setProperty(
+                    "--dcss-pwa-key-columns", String(columns));
 
                 row.forEach(function (key) {
                     rowElement.appendChild(makeControlButton(key));
@@ -365,7 +372,7 @@
                     {
                         activePointerButton.releasePointerCapture(activePointerId);
                     }
-                    catch (error)
+                    catch
                     {
                     }
                 }
@@ -412,7 +419,7 @@
                 if (event.button !== undefined && event.button !== 0)
                     return;
 
-                var button = event.target.closest("button");
+                var button = closestButton(event.target);
                 if (!button || !root.contains(button))
                     return;
 
@@ -428,7 +435,7 @@
                     {
                         button.setPointerCapture(event.pointerId);
                     }
-                    catch (error)
+                    catch
                     {
                     }
                 }
@@ -465,7 +472,7 @@
             });
 
             root.addEventListener("click", function (event) {
-                var button = event.target.closest("button");
+                var button = closestButton(event.target);
                 if (!button)
                     return;
 
@@ -477,7 +484,7 @@
             });
 
             root.addEventListener("contextmenu", function (event) {
-                if (event.target.closest("button"))
+                if (closestButton(event.target))
                     event.preventDefault();
             });
 

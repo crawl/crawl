@@ -97,7 +97,7 @@
             }
             return id;
         }
-        catch (error)
+        catch
         {
             return makeSessionId();
         }

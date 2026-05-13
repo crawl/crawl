@@ -1,7 +1,8 @@
 (function () {
     "use strict";
 
-    var pwaApi = window.DCSS_PWA = window.DCSS_PWA || {};
+    window.DCSS_PWA = window.DCSS_PWA || {};
+    var pwaApi = window.DCSS_PWA;
 
     pwaApi.createStatusStrip = function (options) {
         var statusRoot = null;

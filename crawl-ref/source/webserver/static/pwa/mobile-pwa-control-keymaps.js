@@ -1,7 +1,8 @@
 (function () {
     "use strict";
 
-    var pwaApi = window.DCSS_PWA = window.DCSS_PWA || {};
+    window.DCSS_PWA = window.DCSS_PWA || {};
+    var pwaApi = window.DCSS_PWA;
 
     pwaApi.createControlKeymaps = function () {
         function movementKey(label, input, direction)
@@ -23,12 +24,13 @@
             };
         }
 
-        function keycodeKey(label, keycode, className)
+        function keycodeKey(label, keycode, className, span)
         {
             return {
                 label: label,
                 keycode: keycode,
-                className: className || "is-action"
+                className: className || "is-action",
+                span: span || 1
             };
         }
 
