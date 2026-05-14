@@ -4597,9 +4597,6 @@ int get_monster_tension(const monster& mons, god_type god)
         exp = -exp / 2;
     }
 
-    if (mons.asleep() || mons_is_fleeing(mons))
-        exp /= 20;
-
     if (att != ATT_FRIENDLY && att != ATT_GOOD_NEUTRAL)
     {
         if (!you.visible_to(&mons))
@@ -4620,9 +4617,9 @@ int get_monster_tension(const monster& mons, god_type god)
         { mons.has_ench(ENCH_VEXED),                        {2, 3} },
         { mons.is_silenced() && (mons.is_actual_spellcaster()
             || mons.is_priest()),                           {2, 3} },
+        { mons.asleep(),                                    {4, 5} },
         { mons.confused() || mons.caught(),                 {1, 2} },
-        { mons_is_fleeing(mons),                           {10, 1} },
-        { mons.asleep() || mons.has_ench(ENCH_PARALYSIS),  {20, 1} }
+        { mons_is_fleeing(mons),                            {1, 2} },
     };
 
     for (auto &checks : tension_monster_status_checks) {
