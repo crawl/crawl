@@ -1966,6 +1966,36 @@ DESCRIP: IceDoom:   Whenever you deal cold damage to an enemy without rCold∞,
  as you do will eventually result in long amounts of slowing, weakness,
  vitrification, blinding, or heavy draining.
 
+ENUM:    FIRE_DRAGON_OCCULTIST_SCALES
+NAME:    fire dragon occultist's scales
+INSCRIP: FireExpos FireWiz
+OBJ:     OBJ_ARMOUR/ARM_FIRE_DRAGON_ARMOUR
+PLUS:    +6
+INT:     +3
+COLOUR:  ETC_FIRE
+TILE:    urand_fire_dragon_occultist_scales
+TILE_EQ: OCCULTIST_SCALES
+DESCRIP: FireExpos: Whenever you deal fire damage to an enemy without rFire∞,
+ you may briefly leave it exposed, making it take increased damage for
+ non-attack sources, less capable of dodging non-attack projectiles, and mildly
+ reducing its Willpower.
++FireWiz:  It increases the success rate of your Fire Magic spells.
+
+ENUM:    ICE_DRAGON_ARCANIST_SCALES
+NAME:    ice dragon arcanist's scales
+INSCRIP: IceExpos IceWiz
+OBJ:     OBJ_ARMOUR/ARM_ICE_DRAGON_ARMOUR
+PLUS:    +7
+STR:     +3
+COLOUR:  ETC_ICE
+TILE:    urand_ice_dragon_arcanist_scales
+TILE_EQ: ARCANIST_SCALES
+DESCRIP: IceExpos:  Whenever you deal cold damage to an enemy without rCold∞,
+ you may briefly leave it exposed, making it take increased damage for
+ non-attack sources, less capable of dodging non-attack projectiles, and mildly
+ reducing its Willpower.
++IceWiz:   It increases the success rate of your Ice Magic spells.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

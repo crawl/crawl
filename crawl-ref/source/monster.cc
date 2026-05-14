@@ -4367,7 +4367,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 schedule_mirror_damage_fineff(valid_agent, this, amount * 2 / 3);
         }
 
-        // Trigger corrupting presence, elemental-check unrands, orbs of glass
+        // Trigger corrupting presence, elemental damage checks, orbs of glass
         if (agent && agent->is_player() && alive())
         {
             if (you.get_mutation_level(MUT_CORRUPTING_PRESENCE))
@@ -4380,11 +4380,27 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                     this->malmutate(&you, "Your corrupting presence");
                 }
             }
-            if (you.unrand_equipped(UNRAND_FIMBULWINTER)
-                && (flavour == BEAM_COLD || flavour == BEAM_ICE)
-                && this->res_cold() < 3)
+
+            if ((flavour == BEAM_FIRE || flavour == BEAM_LAVA
+                || flavour == BEAM_STICKY_FLAME) && this->res_fire() < 3)
             {
-                this->doom(5 + roll_dice(4, 3));
+                if (you.unrand_equipped(UNRAND_FIRE_DRAGON_OCCULTIST_SCALES)
+                    && !this->has_ench(ENCH_EXPOSED) && coinflip())
+                {
+                    this->add_ench(mon_enchant(ENCH_EXPOSED, &you, random_range(30, 50)));
+                }
+            }
+            else if ((flavour == BEAM_COLD || flavour == BEAM_ICE)
+                      && this->res_cold() < 3)
+            {
+                if (you.unrand_equipped(UNRAND_FIMBULWINTER))
+                    this->doom(5 + roll_dice(4, 3));
+
+                if (you.unrand_equipped(UNRAND_ICE_DRAGON_ARCANIST_SCALES)
+                    && !this->has_ench(ENCH_EXPOSED) && coinflip())
+                {
+                    this->add_ench(mon_enchant(ENCH_EXPOSED, &you, random_range(30, 50)));
+                }
             }
         }
 

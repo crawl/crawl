@@ -872,3 +872,21 @@ by its wielder will feel fate's icy grip upon their throat.
 
 As with all athames, blows made with it against those suffering baleful negative
 statuses (other than poison) have increased base damage.
+%%%%
+fire dragon occultist's scales
+
+The resonating scales of the great fire-breathing dragon Zmysua, an ancient
+occultist fond of debilitation and devastation. Her loving rivalry with the
+elder dragon arcanist Ynzoia was legendarily destructive, and lead to the both
+of them seeking out endless mystic augmentations to triumph over one another-
+even now, these scales still hum with thirst to confront what remains of their
+opposite beyond death.
+%%%%
+ice dragon arcanist's scales
+
+The thrumming scales of the great frost-breathing dragon Yntzoia, an ancient
+arcanist fond of spectacle and destruction. Her tumultous relationship with the
+elder dragon occultist Zsymua was quite infamous, and lead to the both of them
+seeking out endless mystic augmentations seeking more time for reconciliation-
+even now, these scales still reverberate with hunger to return to what remains
+of their opposite beyond death.

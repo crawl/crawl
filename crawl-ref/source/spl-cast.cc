@@ -398,6 +398,12 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_RESONANCE) && spell_typematch(spell, spschool::forgecraft))
         fail_reduce = fail_reduce * 2 / 3;
 
+    if (you.unrand_equipped(UNRAND_FIRE_DRAGON_OCCULTIST_SCALES) && spell_typematch(spell, spschool::fire))
+        fail_reduce = fail_reduce * 3 / 4;
+
+    if (you.unrand_equipped(UNRAND_ICE_DRAGON_ARCANIST_SCALES) && spell_typematch(spell, spschool::ice))
+        fail_reduce = fail_reduce * 3 / 4;
+
     const int wizardry = player_wizardry();
 
     if (wizardry > 0)

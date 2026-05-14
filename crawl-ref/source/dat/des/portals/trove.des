@@ -784,7 +784,8 @@ trove_defense(_G, "robe ego:resistance good_item w:8 / \
                               nil, nil, nil))
 local small = you.race() == "Spriggan" or you.race() == "Kobold" or
               you.race() == "Felid"
-trove_unrand_chances(_G, "def", {"firestarter"}, {small}, {"?"})
+trove_unrand_chances(_G, "def", {"firestarter", "fire dragon occultist's scales"},
+                                {small,  no_body_armour_species(_G)}, {"?", "!"})
 }}
 KFEAT:    FL = l
 KFEAT:    y = x
@@ -885,9 +886,11 @@ trove_defense(_G, armour, trove_ego_gen_armour(_G, "cold_resistance", "rC"),
 local small = you.race() == "Spriggan" or you.race() == "Kobold" or
               you.race() == "Felid"
 trove_unrand_chances(_G, "defghi", {"frostbite", "partisan of prune",
-                                    "fimbulwinter", "skin of zhor"},
-                                    {small, small, true, no_body_armour_species(_G)},
-                                    {"y", "z", "Z", "@"})
+                                    "fimbulwinter", "skin of zhor",
+                                    "ice dragon arcanist's scales"},
+                                    {small, small, true, no_body_armour_species(_G),
+                                    no_body_armour_species(_G)},
+                                    {"y", "z", "Z", "@", "&"})
 }}
 KFEAT:   ? = cache_of_meat / cache_of_fruit / cache_of_baked_goods
 KFEAT:   + = closed_clear_door
@@ -1587,8 +1590,11 @@ if you.mutation("antennae") == 3 or you.mutation("horns") == 1 or
    you.mutation("no armour") == 1 then
   subst("j = defk")
 end
-trove_unrand_chances(_G, "defij", {"scales of the dragon king", "mask of the dragon"},
-                     {no_body_armour_species(_G), n_hat}, {"Y", "Z"})
+local nbas = no_body_armour_species(_G)
+trove_unrand_chances(_G, "defij", {"scales of the dragon king",
+                     "fire dragon occultist's scales",
+                     "ice dragon arcanist's scales", "mask of the dragon"},
+                     {nbas, n_hat}, {"Y", "Z", "@", "&"})
 
 -- Decorative dragon skeletons under matching element clouds.
 local dr = {"steam", "acid", "swamp", "fire", "ice", "storm", "shadow", "pearl"}

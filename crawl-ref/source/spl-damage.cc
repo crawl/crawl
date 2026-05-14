@@ -2252,9 +2252,9 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
     dprf("Dice: %dd%d; Damage: %d", dam_dice.num, dam_dice.size, damage);
 
     if (agent && agent->is_player())
-        _player_hurt_monster(*mon, damage, BEAM_MMISSILE);
+        _player_hurt_monster(*mon, damage, BEAM_FIRE);
     else
-        mon->hurt(agent, damage);
+        mon->hurt(agent, damage, BEAM_FIRE);
 
     if (mon->alive())
     {

@@ -2063,3 +2063,41 @@ Your eel nuzzles against your @head@.
 A quiet electric buzzing fills the air.
 
 Your eel wriggles against you, leaving your @skin@ tingling.
+
+###############################################################################
+###############################################################################
+#
+# Fire dragon occultist scales and ice dragon arcanist scales
+#
+###############################################################################
+###############################################################################
+%%%%
+fire dragon occultist scales greeting
+
+You feel a tender gaze of renewed flame flicker just behind you.
+
+Curious cinders crackle about, eager for new kindling.
+
+w:5
+You feel the weight of ages crawl through your mind and magic.
+%%%%
+fire dragon occultist scales farewell
+
+Your hear a draconic huff of impatience grumble through your mind.
+
+The scales rumble violently with feverish dissatisfaction.
+%%%%
+ice dragon arcanist scales greeting
+
+You feel a knowing smirk of echoing frost flicker just behind you.
+
+Ripples of frost crackle about, eager for new victims.
+
+w:5
+You feel the weight of ages crawl through your mind and magic.
+%%%%
+ice dragon arcanist scales farewell
+
+You almost hear a draconic scoff of disaproval growl through your mind.
+
+The scales rattle violently with cold frustration.

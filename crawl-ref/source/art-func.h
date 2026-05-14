@@ -1880,3 +1880,28 @@ static void _SWAMP_WITCH_SCALES_equip(item_def */*item*/, bool *show_msgs, bool 
     if (!unmeld)
         _equip_mpr(show_msgs, "The air around you shimmers with cruel toxic glee.");
 }
+
+/////////////////////////////////////////////////////
+static void _FIRE_DRAGON_OCCULTIST_SCALES_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
+{
+    if (!show_msgs || *show_msgs)
+        mprf(MSGCH_TALK, "%s", getSpeakString("fire dragon occultist scales greeting").c_str());
+}
+
+static void _FIRE_DRAGON_OCCULTIST_SCALES_unequip(item_def */*item*/, bool *show_msgs)
+{
+    if (!show_msgs || *show_msgs)
+        mprf(MSGCH_TALK, "%s", getSpeakString("fire dragon occultist scales farewell").c_str());
+}
+
+static void _ICE_DRAGON_ARCANIST_SCALES_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
+{
+    if (!show_msgs || *show_msgs)
+        mprf(MSGCH_TALK, "%s", getSpeakString("ice dragon arcanist scales greeting").c_str());
+}
+
+static void _ICE_DRAGON_ARCANIST_SCALES_unequip(item_def */*item*/, bool *show_msgs)
+{
+    if (!show_msgs || *show_msgs)
+        mprf(MSGCH_TALK, "%s", getSpeakString("ice dragon arcanist scales farewell").c_str());
+}
