@@ -339,7 +339,6 @@ summon_scarabs SUMMON_SCARABS
 summon_scorpions SUMMON_SCORPIONS
 summon_spectral_orcs SUMMON_SPECTRAL_ORCS
 summon_spiders SUMMON_SPIDERS
-summon_ufetubus SUMMON_UFETUBUS
 summon_tzitzimitl SUMMON_TZITZIMITL
 summon_undead SUMMON_UNDEAD
 summon_vermin SUMMON_VERMIN
@@ -348,6 +347,7 @@ throw_barbs THROW_BARBS
 throw_bolas THROW_BOLAS
 throw_klown_pie THROW_KLOWN_PIE
 thorn_volley THORN_VOLLEY
+ufetubi_swarm UFETUBI_SWARM
 vex VEX
 virulence VIRULENCE
 vitrify VITRIFY

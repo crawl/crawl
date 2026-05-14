@@ -1191,6 +1191,8 @@ floor_gulch_trash5
 floor_gulch_trash6
 floor_gulch_trash7
 
+floor_gulch_catalyst FLOOR_GULCH_CATALYST
+
 studio0 FLOOR_STUDIO
 studio1
 studio2

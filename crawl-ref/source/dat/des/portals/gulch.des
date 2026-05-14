@@ -115,6 +115,7 @@ function gulch_setup(e, main_vault, trap_count)
   e.colour("W = lightgreen")
   e.ftile("`0123456 = floor_gulch / floor_gulch_trash")
   e.ftile("|;?$ = floor_gulch_trash")
+  e.ftile("} = floor_gulch_catalyst")
   e.tile("c = wall_stone_gulch")
   e.tile("v = metal_wall_gulch")
 end

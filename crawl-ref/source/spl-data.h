@@ -1393,7 +1393,7 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     0,
-    TILEG_SUMMON_UFETUBUS,
+    TILEG_UFETUBI_SWARM,
 },
 
 {
