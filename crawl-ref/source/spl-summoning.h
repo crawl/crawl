@@ -58,9 +58,7 @@ spret cast_sphinx_sisters(const actor& caster, int pow, bool fail);
 spret cast_summon_dragon(actor *caster, int pow, bool fail = false);
 spret cast_summon_hydra(actor *caster, int pow, bool fail = false);
 spret cast_summon_mana_viper(int pow, bool fail);
-bool summon_berserker(int pow, actor *caster,
-                      monster_type override_mons = MONS_PROGRAM_BUG);
-spret cast_summon_berserker(int pow, bool fail);
+bool summon_berserker(actor *caster, monster_type type);
 bool summon_holy_warrior(int pow, bool punish);
 spret cast_summon_holy_warrior(int pow, bool fail);
 

@@ -528,7 +528,7 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 2, -1, {fail_basis::invo, piety_breakpoint(2), 0, 1},
             abflag::none },
         { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
-            0, 0, 5, -1, {fail_basis::invo, piety_breakpoint(5), 0, 1},
+            0, 0, 6, -1, {fail_basis::invo, 88, 0, 2},
             abflag::none },
 
         // Elyvilon
@@ -3673,12 +3673,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_TROG_BROTHERS_IN_ARMS:
-    {
-        int pow = you.piety() + random2(you.piety() / 4);
-        // force a sequence point between random calls
-        pow -= random2(you.piety() / 4);
-        return cast_summon_berserker(pow, fail);
-    }
+        return trog_brothers_in_arms(fail);
 
     case ABIL_SIF_MUNA_FORGET_SPELL:
         if (cast_selective_amnesia() <= 0)

@@ -505,6 +505,8 @@ also fortifies the user's willpower, protecting against many magical effects.
 Brothers in Arms ability
 
 Summons huge angry allies to wreak havoc.
+
+The strength of the summoned allies increases with the user's experience level.
 %%%%
 # Elyvilon
 Purification ability

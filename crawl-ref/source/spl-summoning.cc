@@ -687,60 +687,15 @@ spret cast_summon_mana_viper(int pow, bool fail)
     return spret::success;
 }
 
-// This assumes that the specified monster can go berserk.
-static void _make_mons_berserk_summon(monster* mon)
+// Used by Brothers in Arms (both player and monster-cast) and Trog wrath.
+bool summon_berserker(actor *caster, monster_type type)
 {
-    mon->go_berserk(false);
-    mon_enchant berserk = mon->get_ench(ENCH_BERSERK);
-    mon_enchant timer = mon->get_ench(ENCH_SUMMON_TIMER);
-
-    // Let Trog's gifts berserk longer, and set the abjuration timeout
-    // to the berserk timeout.
-    berserk.duration = berserk.duration * 3 / 2;
-    timer.duration = berserk.duration;
-    mon->update_ench(berserk);
-    mon->update_ench(timer);
-}
-
-// This is actually one of Trog's wrath effects.
-bool summon_berserker(int pow, actor *caster, monster_type override_mons)
-{
-    monster_type mon = MONS_PROGRAM_BUG;
-
-    const int dur = min(2 + (random2(pow) / 4), 6);
-
-    if (override_mons != MONS_PROGRAM_BUG)
-        mon = override_mons;
-    else
-    {
-        if (pow <= 100)
-        {
-            // bears
-            mon = random_choose(MONS_BLACK_BEAR, MONS_POLAR_BEAR);
-        }
-        else if (pow <= 140)
-        {
-            // ogres
-            mon = random_choose_weighted(1, MONS_TWO_HEADED_OGRE, 2, MONS_OGRE);
-        }
-        else if (pow <= 180)
-        {
-            // trolls
-            mon = random_choose_weighted(3, MONS_TROLL,
-                                         3, MONS_DEEP_TROLL,
-                                         2, MONS_IRON_TROLL);
-        }
-        else
-        {
-            // giants
-            mon = random_choose(MONS_CYCLOPS, MONS_STONE_GIANT);
-        }
-    }
-
-    mgen_data mg(mon, caster ? BEH_COPY : BEH_HOSTILE,
+    mgen_data mg(type, caster ? BEH_COPY : BEH_HOSTILE,
                  caster ? caster->pos() : you.pos(),
                  _auto_autofoe(caster),
                  MG_AUTOFOE, GOD_TROG);
+
+    const int dur = (24 + random2avg(24, 2)) * BASELINE_DELAY;
 
     if (!caster)
     {
@@ -749,35 +704,18 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
         mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
     }
     else
-        mg.set_summoned(caster, MON_SUMM_AID, summ_dur(dur));
+        mg.set_summoned(caster, MON_SUMM_AID, dur);
 
     monster *mons = create_monster(mg);
 
     if (!mons)
         return false;
 
-    _make_mons_berserk_summon(mons);
+    // Make the berserking last slightly less time than the berserker themselves,
+    // so we can see them looking exhausted at the end. It's flavourful!
+    mons->add_ench(mon_enchant(ENCH_BERSERK, mons, dur - random_range(30, 60)));
+    simple_monster_message(*mons, " goes berserk!");
     return true;
-}
-
-spret cast_summon_berserker(int pow, bool fail)
-{
-    static const vector<monster_type> types = { MONS_BLACK_BEAR,
-                                                MONS_POLAR_BEAR,
-                                                MONS_TWO_HEADED_OGRE,
-                                                MONS_OGRE,
-                                                MONS_TROLL,
-                                                MONS_DEEP_TROLL,
-                                                MONS_IRON_TROLL,
-                                                MONS_CYCLOPS,
-                                                MONS_STONE_GIANT };
-    if (!player_summon_check(types))
-        return spret::abort;
-
-    fail_check();
-
-    summon_berserker(pow, &you);
-    return spret::success;
 }
 
 // Not a spell. Rather, this is TSO's doing.

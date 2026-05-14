@@ -126,6 +126,8 @@ bool vehumet_supports_spell(spell_type spell);
 
 void trog_do_trogs_hand(int power);
 void trog_remove_trogs_hand();
+monster_type trog_get_brother_type(int power);
+spret trog_brothers_in_arms(bool fail);
 
 string yred_cannot_light_torch_reason();
 bool yred_light_the_torch();

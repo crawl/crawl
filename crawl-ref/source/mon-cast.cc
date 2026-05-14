@@ -8091,12 +8091,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_BROTHERS_IN_ARMS:
     {
-        // Invocation; don't use spell_hd
-        int power = (mons->get_hit_dice() * 20)
-                          + random2(mons->get_hit_dice() * 5);
-        power -= random2(mons->get_hit_dice() * 5); // force a sequence point
         monster_type to_summon;
-
         if (mons->type == MONS_SPRIGGAN_BERSERKER)
         {
             monster_type berserkers[] = { MONS_POLAR_BEAR, MONS_ELEPHANT,
@@ -8106,12 +8101,12 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         else
         {
             monster_type berserkers[] = { MONS_BLACK_BEAR, MONS_OGRE, MONS_TROLL,
-                                           MONS_TWO_HEADED_OGRE, MONS_DEEP_TROLL };
+                                          MONS_TWO_HEADED_OGRE, MONS_DEEP_TROLL };
             to_summon = RANDOM_ELEMENT(berserkers);
         }
 
-        summon_berserker(power, mons, to_summon);
-        mons->props[BROTHERS_KEY].get_int()++;
+        if (summon_berserker(mons, to_summon))
+            mons->props[BROTHERS_KEY].get_int()++;
         return;
     }
 

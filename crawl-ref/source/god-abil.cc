@@ -90,6 +90,7 @@
 #include "spl-book.h"
 #include "spl-goditem.h"
 #include "spl-monench.h"
+#include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
 #include "sprint.h"
@@ -1415,6 +1416,55 @@ void trog_remove_trogs_hand()
     mprf(MSGCH_DURATION, "Your skin stops crawling.");
     mprf(MSGCH_DURATION, "You feel less strong-willed.");
     you.duration[DUR_TROGS_HAND] = 0;
+}
+
+static const vector<random_pick_entry<monster_type>> _trog_brothers =
+{
+  { -3,  10,  150, PEAK, MONS_BLACK_BEAR },
+  { -1,  13,  150, PEAK, MONS_POLAR_BEAR },
+  {  3,  19,  250, PEAK, MONS_OGRE },
+  {  6,  19,  200, PEAK, MONS_TROLL },
+  {  8,  19,  150, PEAK, MONS_ELEPHANT },
+  {  10, 20,  100, PEAK, MONS_SKYSHARK },
+  {  12, 23,  200, PEAK, MONS_CYCLOPS },
+  {  13, 24,  125, PEAK, MONS_DEATH_YAK },
+  {  13, 27,  200, PEAK, MONS_TWO_HEADED_OGRE },
+  {  13, 27,  100, RISE, MONS_TWO_HEADED_OGRE },
+  {  15, 30,  200, PEAK, MONS_DEEP_TROLL },
+  {  18, 31,  150, PEAK, MONS_IRON_TROLL },
+  {  19, 35,  150, PEAK, MONS_STONE_GIANT },
+  {  20, 37,   90, PEAK, MONS_DIRE_ELEPHANT },
+  {  22, 38,   90, PEAK, MONS_ETTIN },
+};
+
+monster_type trog_get_brother_type(int power)
+{
+    monster_picker picker;
+    return picker.pick(_trog_brothers, power, MONS_OGRE);
+}
+
+spret trog_brothers_in_arms(bool fail)
+{
+    static const vector<monster_type> types = { MONS_BLACK_BEAR,
+                                                MONS_POLAR_BEAR,
+                                                MONS_OGRE,
+                                                MONS_TROLL,
+                                                MONS_ELEPHANT,
+                                                MONS_SKYSHARK,
+                                                MONS_CYCLOPS,
+                                                MONS_DEATH_YAK,
+                                                MONS_TWO_HEADED_OGRE,
+                                                MONS_DEEP_TROLL,
+                                                MONS_IRON_TROLL,
+                                                MONS_STONE_GIANT,
+                                                MONS_ETTIN };
+    if (!player_summon_check(types))
+        return spret::abort;
+
+    fail_check();
+
+    summon_berserker(&you, trog_get_brother_type(you.experience_level));
+    return spret::success;
 }
 
 // Return whether the player can light the torch on their current floor
