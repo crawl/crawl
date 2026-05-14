@@ -2702,6 +2702,7 @@ tile_with_flags_t tileidx_monster(const monster_info& mons)
 #endif
 
 static const map<monster_info_flags, tileidx_t> monster_status_icons = {
+    { MB_GLOWING, TILEI_GLOWING },
     { MB_CONFUSED, TILEI_CONFUSED },
     { MB_BURNING, TILEI_STICKY_FLAME },
     { MB_INNER_FLAME, TILEI_INNER_FLAME },

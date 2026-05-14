@@ -185,6 +185,14 @@ reckless mutation
 Your recklessness halves your SH, but the damage you deal with two-handed melee
 weapons is increased by 15%.
 %%%%
+spark swarm mutation
+
+A subtle flock of eager sparks and bright cinders chases after your movements.
+Whenever you deal fire damage to a foe without rFire∞ or electric damage to a
+foe without rElec∞, you have a chance to outline it with a soft glow of light,
+which makes it easier to hit and reveals it if invisible. Each level of this
+mutation increases the chance this happens.
+%%%%
 # ------ Auxes -----
 horns mutation
 

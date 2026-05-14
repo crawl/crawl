@@ -37,6 +37,7 @@ vitrified: 6
 confused: 6
 sentinel_mark: 6
 dimmed: 6
+glowing: 6
 
 laced_with_chaos: 7
 conc_venom: 7

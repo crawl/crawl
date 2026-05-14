@@ -2774,7 +2774,19 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
 
     // Electric charge bonus.
     if (charge_pow > 0 && defender->res_elec() <= 0)
+    {
         damage += div_rand_round(damage * charge_pow, 150);
+
+       // HACK: We'd need another refactor to make this fit the elemental checks
+       // made in monster.cc, since this isn't actually _doing_ electric damage.
+       if (attacker->is_player() && defender->is_monster()
+           && you.has_mutation(MUT_SPARK_SWARM)
+           && !defender->as_monster()->has_ench(ENCH_CORONA)
+           && x_chance_in_y(you.get_mutation_level(MUT_SPARK_SWARM) * 3, 9))
+        {
+            defender->as_monster()->add_ench(mon_enchant(ENCH_CORONA, &you, random_range(90, 150)));
+        }
+    }
 
     if (you.duration[DUR_WEAK])
         damage = div_rand_round(damage * 3, 4);

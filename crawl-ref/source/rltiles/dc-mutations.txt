@@ -158,6 +158,8 @@ protean_grace PROTEAN_GRACE
 regeneration_1 REGENERATION
 regeneration_2
 regeneration_3
+spark_swarm_1 SPARK_SWARM
+spark_swarm_2
 time_warped_blood_1 TIME_WARPED_BLOOD
 time_warped_blood_2
 
