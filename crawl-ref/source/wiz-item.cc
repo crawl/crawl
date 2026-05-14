@@ -86,7 +86,7 @@ void wizard_create_spec_object_by_name()
     create_item_named(buf, you.pos(), &error);
     if (!error.empty())
     {
-        mprf(MSGCH_ERROR, "Error: %s", error.c_str());
+        mprf(MSGCH_ERROR, "%s", error.c_str());
         return;
     }
     id_floor_items();
