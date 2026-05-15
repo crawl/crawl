@@ -311,5 +311,6 @@ enum duration_type
     DUR_INDOMITABLE,
     DUR_SALVO,
     DUR_TAILWIND,
+    DUR_EXEGESIS,
     NUM_DURATIONS
 };

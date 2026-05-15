@@ -520,6 +520,8 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 8, -1, {fail_basis::invo}, abflag::none },
         { ABIL_SIF_MUNA_DIVINE_EXEGESIS, "Divine Exegesis",
             0, 0, 12, -1, {fail_basis::invo, 80, 4, 25}, abflag::none },
+        { ABIL_SIF_MUNA_REPEAT_EXEGESIS, "Repeat Exegesis",
+            0, 0, 3, -1, {fail_basis::invo}, abflag::none },
 
         // Trog
         { ABIL_TROG_BERSERK, "Berserk",
@@ -1209,6 +1211,11 @@ ability_type fixup_ability(ability_type ability)
         else
             return ability;
 
+    case ABIL_SIF_MUNA_REPEAT_EXEGESIS:
+        if (!you.duration[DUR_EXEGESIS])
+            return ABIL_NON_ABILITY;
+        return ability;
+
     case ABIL_BEOGH_RECRUIT_APOSTLE:
         if (!you.duration[DUR_BEOGH_CAN_RECRUIT])
             return ABIL_NON_ABILITY;
@@ -1355,6 +1362,12 @@ string ability_name(ability_type ability, bool dbname)
                 return make_stringf("Accept %s",
                                     mutation_name(makhleb_ability_to_mutation(ability)));
             }
+
+        case ABIL_SIF_MUNA_REPEAT_EXEGESIS:
+            if (dbname)
+                return "Repeat Exegesis";
+            else
+                return make_stringf("Recast %s", spell_title(static_cast<spell_type>(you.props[EXEGESIS_SPELL].get_int())));
 
         default:
             return get_ability_def(ability).name;
@@ -1582,6 +1595,13 @@ string get_ability_desc(const ability_type ability, bool need_title)
         {
             const mutation_type mut = makhleb_ability_to_mutation(ability);
             lookup += "\n" + get_mutation_desc(mut);
+        }
+        break;
+
+        case ABIL_SIF_MUNA_REPEAT_EXEGESIS:
+        {
+            const char* spell_name = spell_title(static_cast<spell_type>(you.props[EXEGESIS_SPELL].get_int()));
+            lookup = getLongDescription(make_stringf("%s spell", spell_name));
         }
         break;
 
@@ -2028,6 +2048,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
 
     case ABIL_SIF_MUNA_DIVINE_EXEGESIS:
+    case ABIL_SIF_MUNA_REPEAT_EXEGESIS:
         return can_cast_spells(quiet);
 
     case ABIL_FEDHAS_WALL_OF_BRIARS:
@@ -3692,6 +3713,12 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     case ABIL_SIF_MUNA_DIVINE_EXEGESIS:
         return divine_exegesis(fail);
+
+    case ABIL_SIF_MUNA_REPEAT_EXEGESIS:
+    {
+        unwind_var<bool> exegesis(you.divine_exegesis, true);
+        return cast_a_spell(false, static_cast<spell_type>(you.props[EXEGESIS_SPELL].get_int()), nullptr);
+    }
 
     case ABIL_ELYVILON_HEAL_SELF:
     {

@@ -4413,6 +4413,11 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_SIF_MUNA_AMNESIA;
     case ABIL_SIF_MUNA_DIVINE_EXEGESIS:
         return TILEG_ABILITY_SIF_MUNA_EXEGESIS;
+    case ABIL_SIF_MUNA_REPEAT_EXEGESIS:
+        if (you.props.exists(EXEGESIS_SPELL))
+            return tileidx_spell(static_cast<spell_type>(you.props[EXEGESIS_SPELL].get_int()));
+        else
+            return TILEG_ABILITY_SIF_MUNA_EXEGESIS;
     // Trog
     case ABIL_TROG_BERSERK:
         return TILEG_ABILITY_TROG_BERSERK;

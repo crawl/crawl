@@ -1313,3 +1313,8 @@ shots at other targets in sight.
 Tailwind status
 
 Your next Rampage movement will be instant.
+%%%%
+Exegesis status
+
+You have recently used Divine Exegesis and may repeat the same spell you can
+this way at a greatly reduced piety cost.

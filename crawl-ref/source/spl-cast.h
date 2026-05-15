@@ -90,6 +90,8 @@ enum class spret
 
 #define INNATE_SPELLS_KEY "innate_spells"
 
+#define EXEGESIS_SPELL "exegesis_spell"
+
 #define fail_check() if (fail) return spret::fail
 
 void surge_power(const int enhanced);
