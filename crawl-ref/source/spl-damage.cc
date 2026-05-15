@@ -5070,7 +5070,7 @@ static void _calc_fusillade_explosion(coord_def center, beam_type flavour,
 {
     for (adjacent_iterator ai(center, false); ai; ++ai)
     {
-        if (feat_is_solid(env.grid(*ai)))
+        if (feat_is_solid(env.grid(*ai)) && !monster_at(*ai))
             continue;
 
         exp_map.push_back(*ai);
