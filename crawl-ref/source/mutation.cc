@@ -2325,9 +2325,9 @@ void use_mutation_catalyst()
 #ifdef USE_TILE
         tile_env.bk_bg(you.pos()) = TILE_DNGN_EMPTY_MUTATION_CATALYST;
         tile_env.bk_fg(you.pos()) = 0;
+#endif
         tile_env.flv(you.pos()).floor = idx + random2(tile_dngn_count(idx));
         tile_env.flv(you.pos()).floor_idx = store_tilename_get_index(tile_dngn_name(idx));
-#endif
         update_terrain_knowledge(you.pos());
         update_grid_colour_knowledge(you.pos());
         you.turn_is_over = true;
