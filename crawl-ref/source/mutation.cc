@@ -51,6 +51,7 @@
 #include "terrain.h"
 #include "rltiles/tiledef-dngn.h"
 #include "tile-env.h"
+#include "tileview.h"
 #include "transform.h"
 #include "unicode.h"
 #include "view.h"
@@ -2326,8 +2327,9 @@ void use_mutation_catalyst()
         tile_env.bk_bg(you.pos()) = TILE_DNGN_EMPTY_MUTATION_CATALYST;
         tile_env.bk_fg(you.pos()) = 0;
 #endif
-        tile_env.flv(you.pos()).floor = idx + random2(tile_dngn_count(idx));
+        tile_env.flv(you.pos()).floor = idx;
         tile_env.flv(you.pos()).floor_idx = store_tilename_get_index(tile_dngn_name(idx));
+        tile_init_flavour(you.pos());
         update_terrain_knowledge(you.pos());
         update_grid_colour_knowledge(you.pos());
         you.turn_is_over = true;
