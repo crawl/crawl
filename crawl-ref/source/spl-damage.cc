@@ -4794,8 +4794,10 @@ void do_boulder_impact(monster& boulder, actor& victim, bool quiet)
 
     if (victim.is_player())
         ouch(dam, KILLED_BY_ROLLING, boulder.mid);
-    else
+    else if (boulder.summoner == MID_PLAYER)
         _player_hurt_monster(*victim.as_monster(), dam, BEAM_MISSILE);
+    else
+        victim.hurt(&boulder, dam);
 }
 
 dice_def electrolunge_damage(int pow)
