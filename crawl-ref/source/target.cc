@@ -58,11 +58,6 @@ bool targeter::preferred_aim(coord_def)
     return false;
 }
 
-bool targeter::can_affect_outside_range()
-{
-    return false;
-}
-
 bool targeter::can_affect_unseen()
 {
     return false;
@@ -280,12 +275,6 @@ bool targeter_beam::valid_aim(coord_def a)
     return true;
 }
 
-bool targeter_beam::can_affect_outside_range()
-{
-    // XXX is this everything?
-    return max_expl_rad > 0;
-}
-
 aff_type targeter_beam::is_affected(coord_def loc)
 {
     bool on_path = false;
@@ -479,12 +468,6 @@ bool targeter_smite::set_aim(coord_def a)
     return true;
 }
 
-bool targeter_smite::can_affect_outside_range()
-{
-    // XXX is this everything?
-    return exp_range_max > 0;
-}
-
 bool targeter_smite::can_affect_walls()
 {
     return affects_walls;
@@ -583,11 +566,6 @@ aff_type targeter_passwall::is_affected(coord_def loc)
         if (p == loc)
             return AFF_YES;
     return AFF_NO;
-}
-
-bool targeter_passwall::can_affect_outside_range()
-{
-    return true;
 }
 
 bool targeter_passwall::can_affect_unseen()
@@ -1136,11 +1114,6 @@ bool targeter_cloud::set_aim(coord_def a)
         }
     }
 
-    return true;
-}
-
-bool targeter_cloud::can_affect_outside_range()
-{
     return true;
 }
 

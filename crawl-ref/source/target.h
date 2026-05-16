@@ -55,7 +55,6 @@ public:
     virtual bool set_aim(coord_def a);
     virtual bool valid_aim(coord_def a) = 0;
     virtual bool preferred_aim(coord_def a);
-    virtual bool can_affect_outside_range();
     virtual bool can_affect_walls();
 
     virtual aff_type is_affected(coord_def loc) = 0;
@@ -76,7 +75,6 @@ public:
     bolt beam;
     virtual bool set_aim(coord_def a) override;
     bool valid_aim(coord_def a) override;
-    bool can_affect_outside_range() override;
     virtual aff_type is_affected(coord_def loc) override;
     virtual bool affects_monster(const monster_info& mon) override;
     bool harmful_to_player() override;
@@ -109,7 +107,6 @@ public:
                     bool (*affects_pos_func)(const coord_def &) = 0);
     virtual bool set_aim(coord_def a) override;
     virtual bool valid_aim(coord_def a) override;
-    virtual bool can_affect_outside_range() override;
     bool can_affect_walls() override;
     aff_type is_affected(coord_def loc) override;
     bool harmful_to_player() override;
@@ -190,7 +187,6 @@ public:
     targeter_airstrike();
     aff_type is_affected(coord_def loc) override;
     bool valid_aim(coord_def a) override;
-    bool can_affect_outside_range() override { return false; };
     bool can_affect_walls() override { return false; };
     bool can_affect_unseen() override { return true; }; // show empty space outside LOS
 };
@@ -230,7 +226,6 @@ public:
                    int count_min = 8, int count_max = 10);
     bool set_aim(coord_def a) override;
     bool valid_aim(coord_def a) override;
-    bool can_affect_outside_range() override;
     aff_type is_affected(coord_def loc) override;
     bool harmful_to_player() override;
     cloud_type ctype;
@@ -344,7 +339,6 @@ public:
     bool set_aim(coord_def a) override;
     bool valid_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
-    bool can_affect_outside_range() override;
     bool can_affect_unseen() override;
     bool affects_monster(const monster_info& mon) override;
 
