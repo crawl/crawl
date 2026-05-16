@@ -1069,7 +1069,7 @@ coord_def direction_chooser::find_acceptable_aim(const monster* focus)
         return best_ranged_aim(focus->pos(), is_piercing);
 
     // Without a targeter, we can't refine this any better.
-    if (!hitfunc)
+    if (!hitfunc || !behaviour->targeted())
     {
         if (cell_see_cell(you.pos(), focus->pos(), LOS_NO_TRANS))
             return focus->pos();

@@ -1590,7 +1590,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         break;
     }
 
-    if (spell_to_zap(spell) != NUM_ZAPS)
+    if (get_spell_flags(spell) & spflag::targeting_mask
+        && spell_to_zap(spell) != NUM_ZAPS)
     {
         return make_unique<targeter_beam>(&you, range, spell_to_zap(spell),
                                           pow, 0, 0);
