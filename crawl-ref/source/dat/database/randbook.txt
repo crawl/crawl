@@ -21,10 +21,10 @@
 #
 #   @book_name@ @<primary school>@
 #
-# Fixed level books are categorised into "starting" (level 1),
-# "easy" (level 2-4), "moderate" (level 4-6) and "difficult" (level 7-9),
-# a keyword that is used as a prefix for "level book".
-# @level@ is parsed to the word describing the spell level.
+# Books whose spells all fall within a certain level range may get a title based
+# on the difficulty of that level range: "starting" (level 1),
+# "easy" (level 2-4), "moderate" (level 4-6) or "difficult" (level 7-9).
+# @level@ is parsed to the word describing the highest level spell in that book.
 #
 # Books also may get previous "owners" (or authors) that may be the gifting
 # god (if gifted), a name depending on school(s) as defined in this file,
@@ -414,7 +414,8 @@ wrinkled
 
 yellowed
 %%%%
-_the_book_magic_
+# 'Mixed' book subjects
+Random
 
 the @_occult_adjective_@ Arts
 
@@ -445,11 +446,6 @@ the Wisdom of the Ancients
 the Wizard's Wisdom
 
 the Words of Power
-
-w:300
-@_book_magic_@
-%%%%
-_book_magic_
 
 @_occult_adjective_@ Insight
 
@@ -599,150 +595,148 @@ Dummies
 starting level book
 
 w:2
-@_the_book_magic_@ 101
+@_the_subject_@ 101
 
-@_the_book_magic_@ for @_beginners_@
+@_the_subject_@ for @_beginners_@
 
-@_the_book_magic_@, Part @level@
+@_the_subject_@, Part @level@
 
-@_the_book_magic_@, Volume @level@
+@_the_subject_@, Volume @level@
 
 A @book_name@ Starting Spells
 
-A Beginning Course on @_the_book_magic_@
+A Beginning Course on @_the_subject_@
 
-A Prolegomenon to @_the_book_magic_@
+A Prolegomenon to @_the_subject_@
 
-A Tutorial on @_the_book_magic_@
+A Tutorial on @_the_subject_@
 
-An Exordium to @_the_book_magic_@
+An Exordium to @_the_subject_@
 
-An Initiation into @_the_book_magic_@
+An Initiation into @_the_subject_@
 
-An Induction into @_the_book_magic_@
+An Induction into @_the_subject_@
 
-An Introduction to @_the_book_magic_@
-
-w:2
-Anyone Can Learn @_the_book_magic_@
-
-Beginning @_the_book_magic_@
-
-Commencing @_the_book_magic_@
-
-Dabbling in @_the_book_magic_@
-
-Elementary @_book_magic_@
+An Introduction to @_the_subject_@
 
 w:2
-Even @_beginners_@ Can Learn @_the_book_magic_@!
+Anyone Can Learn @_the_subject_@
 
-First Steps in @_the_book_magic_@
+Beginning @_the_subject_@
 
-Practicing @_the_book_magic_@
+Commencing @_the_subject_@
 
-Preliminaries of @_the_book_magic_@
+Dabbling in @_the_subject_@
 
-Simple @_book_magic_@
+Elementary @_subject_@
 
 w:2
-So You Want to Learn @_the_book_magic_@
+Even @_beginners_@ Can Learn @_the_subject_@!
 
-Starting @_the_book_magic_@
+First Steps in @_the_subject_@
 
-The Basics of @_the_book_magic_@
+Practicing @_the_subject_@
+
+Preliminaries of @_the_subject_@
+
+Simple @_subject_@
+
+w:2
+So You Want to Learn @_the_subject_@
+
+Starting @_the_subject_@
+
+The Basics of @_the_subject_@
 %%%%
 ##################
 # level 2-4
 easy level book
 
-@_book_magic_@ and How To Use It
+@_the_subject_@ and How To Use It
 
-@_the_book_magic_@ and You
+@_the_subject_@ and You
 
-@_the_book_magic_@ Continued
+@_the_subject_@ Continued
 
-@_the_book_magic_@ in Simple Steps
+@_the_subject_@ in Simple Steps
 
-@_the_book_magic_@, Part @level@
+@_the_subject_@, Part @level@
 
-@_the_book_magic_@, Volume @level@
+@_the_subject_@, Volume @level@
 
-A @book_name@ Supplementary Spells
+A Primer on @_the_subject_@
 
-A Primer on @_the_book_magic_@
+An Early Guide to @_the_subject_@
 
-An Early Guide to @_the_book_magic_@
+Continuing @_the_subject_@
 
-Continuing @_the_book_magic_@
+Easy @_subject_@
 
-Easy @_book_magic_@
+Everyday @_subject_@
 
-Everyday @_book_magic_@
+More @_subject_@
 
-More @_book_magic_@
+More Studies in @_the_subject_@
 
-More Studies in @_the_book_magic_@
+Performing Successful @_subject_@
 
-Performing Successful @_book_magic_@
-
-Quotidian @_book_magic_@
+Quotidian @_subject_@
 
 w:2
-The Antepenultimate Guide to @_the_book_magic_@
+The Antepenultimate Guide to @_the_subject_@
 
-The Foundations of @_the_book_magic_@
+The Foundations of @_the_subject_@
 
-The Fundamentals of @_the_book_magic_@
+The Fundamentals of @_the_subject_@
 
 w:2
-The Joy of @_book_magic_@
+The Joy of @_subject_@
 
-The Keys to @_the_book_magic_@
+The Keys to @_the_subject_@
 %%%%
 ##################
 # level 4-6
 moderate level book
 
-@_the_book_magic_@, Part @level@
+@_the_subject_@, Part @level@
 
-@_the_book_magic_@, Volume @level@
+@_the_subject_@, Volume @level@
 
 A @book_name@ Spells
 
-Advanced @_book_magic_@
+Advanced @_subject_@
 
-Advanced Steps in @_the_book_magic_@
+Advanced Steps in @_the_subject_@
 
-Even More @_book_magic_@
+Even More @_subject_@
 
-Experienced @_book_magic_@
+Experienced @_subject_@
 
-Further Progress in @_the_book_magic_@
+Further Progress in @_the_subject_@
 
-Further Steps in @_the_book_magic_@
+Further Steps in @_the_subject_@
 
-Improving Your @_book_magic_@
+Improving Your @_subject_@
 
-Practical @_book_magic_@
+Practical @_subject_@
 
-Progressing With @_book_magic_@
+Progressing With @_subject_@
 
-Sophisticated @_book_magic_@
+Sophisticated @_subject_@
 
-The Advanced Guide to @_the_book_magic_@
+The Advanced Guide to @_the_subject_@
 
-The Path to @_the_book_magic_@
-
-w:2
-The Penultimate Guide to @_the_book_magic_@
-
-The Second Course in @_book_magic_@
-
-Useful @_book_magic_@
+The Path to @_the_subject_@
 
 w:2
-Yet Another @book_noun@ About @_the_book_magic_@
+The Penultimate Guide to @_the_subject_@
+
+The Second Course in @_subject_@
+
+Useful @_subject_@
+
+w:2
+Yet Another @book_noun@ About @_the_subject_@
 %%%%
 ##############################################
 # powerful casters, used for high level books
@@ -888,35 +882,35 @@ Writings
 # Prefixed articles will be filtered out.
 _difficult level book owner_
 
-@_the_book_magic_@, Part @level@
+@_the_subject_@, Part @level@
 
-@_the_book_magic_@, Volume @level@
+@_the_subject_@, Volume @level@
 
 A @book_name@ Superlative Spells
 
-A Thorough Guide to @_the_book_magic_@
+A Thorough Guide to @_the_subject_@
 
-Mastering @_the_book_magic_@
+Mastering @_the_subject_@
 
-Mastery of @_the_book_magic_@
+Mastery of @_the_subject_@
 
-The Final @book_noun@ of @_the_book_magic_@
+The Final @book_noun@ of @_the_subject_@
 
-The Final @_book_noun_on_@ on @_the_book_magic_@
+The Final @_book_noun_on_@ on @_the_subject_@
 
-The @_last_or_lost_@ Secrets of @_the_book_magic_@
+The @_last_or_lost_@ Secrets of @_the_subject_@
 
 The @book_noun@ of Greatest Risks and Utility
 
-The Arcane Secrets of @_book_magic_@
+The Arcane Secrets of @_subject_@
 
-The Highest Levels of @_the_book_magic_@
+The Highest Levels of @_the_subject_@
 
-The Intricacies of @_the_book_magic_@
+The Intricacies of @_the_subject_@
 
-The Ultimate Guide to @_the_book_magic_@
+The Ultimate Guide to @_the_subject_@
 
-Total Understanding of @_the_book_magic_@
+Total Understanding of @_the_subject_@
 %%%%
 # level 7-9, books without being named after their owner/author
 difficult level book
@@ -927,7 +921,7 @@ w:50
 The @_last_or_lost_@ @book_noun@ of @_the_powerful_caster_@
 
 w:5
-@_the_book_magic_@ of @_the_powerful_caster_@
+@_the_subject_@ of @_the_powerful_caster_@
 
 w:5
 The @_last_or_lost_@ @_testament_noun_@ of @_the_powerful_caster_@

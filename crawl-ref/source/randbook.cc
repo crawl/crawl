@@ -20,8 +20,9 @@
 #include "spl-book.h"
 #include "stringutil.h"
 
-static string _gen_randbook_name(string subject, string owner,
-                                 spschool disc1, spschool disc2);
+static string _gen_randbook_name(string subject, string owner, string difficulty,
+                                 int highest_level,
+                                 spschool disc1, spschool disc2, bool& has_title);
 static string _gen_randbook_owner(god_type god, spschool disc1,
                                   spschool disc2,
                                   const vector<spell_type> &spells);
@@ -395,6 +396,62 @@ void init_book_theme_randart(item_def &book, vector<spell_type> spells)
     _set_book_spell_list(book, std::move(spells));
 }
 
+// If the spells in a randbook are all in a consistent difficulty range, return
+// a string representing that range (used for naming the book).
+static string _get_randbook_difficulty(const vector<spell_type>& spells,
+                                       int& highest_level)
+{
+    int lowest_level = 10;
+    highest_level = 0;
+    for (auto spell : spells)
+    {
+        const int level = spell_difficulty(spell);
+        highest_level = max(level, highest_level);
+        lowest_level = min(level, lowest_level);
+    }
+
+    if (highest_level == 1)
+        return "starting";
+    else if (highest_level <= 4)
+        return "easy";
+    else if (highest_level <= 6 && lowest_level >= 4)
+        return "moderate";
+    else if (lowest_level >= 7)
+        return "difficult";
+    // No uniform difficulty
+    else
+        return "";
+}
+
+static bool _is_mixed_randbook(const vector<spell_type>& spells)
+{
+    map<spschool, int> discipline_weights;
+    int highest = 0;
+    for (spell_type spell : spells)
+    {
+        const spschools_type disciplines = get_spell_disciplines(spell);
+        for (const auto disc : spschools_type::range())
+        {
+            if (disciplines & disc)
+            {
+                discipline_weights[disc]++;
+                if (highest < discipline_weights[disc])
+                    highest = discipline_weights[disc];
+            }
+        }
+    }
+
+    // Consider it mixed if there is a 3-way tie for most common school.
+    int count = 0;
+    for (auto weight : discipline_weights)
+    {
+        if (weight.second == highest)
+            ++count;
+    }
+
+    return count >= 3;
+}
+
 /**
  * Generate and apply a name for a themed randbook.
  *
@@ -408,16 +465,27 @@ void name_book_theme_randart(item_def &book, spschool discipline_1,
                              spschool discipline_2,
                              string owner, string subject)
 {
+    const vector<spell_type> spells = spells_in_book(book);
     if (owner.empty())
     {
-        const vector<spell_type> spells = spells_in_book(book);
         owner = _gen_randbook_owner(origin_as_god_gift(book), discipline_1,
                                     discipline_2, spells);
     }
 
-    book.props[BOOK_TITLED_KEY].get_bool() = !owner.empty();
-    const string name = _gen_randbook_name(subject, owner,
-                                           discipline_1, discipline_2);
+    // Spellbooks with an even mix of 3 or more schools can get more general
+    // names.
+    if (_is_mixed_randbook(spells))
+    {
+        discipline_1 = spschool::random;
+        discipline_2 = spschool::random;
+    }
+
+    int highest_level = 0;
+    string difficulty = _get_randbook_difficulty(spells, highest_level);
+    bool has_title = false;
+    const string name = _gen_randbook_name(subject, owner, difficulty, highest_level,
+                                           discipline_1, discipline_2, has_title);
+    book.props[BOOK_TITLED_KEY].get_bool() = !owner.empty() || has_title;
     set_artefact_name(book, replace_name_parts(name, book));
 }
 
@@ -438,6 +506,21 @@ static string _maybe_gen_book_subject(string owner)
     return "";
 }
 
+// Strips leading articles from a string. Returns true if any were stripped.
+static bool _strip_articles(string& str)
+{
+    if (starts_with(str, "A ") || starts_with(str, "a "))
+        str = str.substr(2);
+    else if (starts_with(str, "The ") || starts_with(str, "the "))
+        str = str.substr(4);
+    else if (starts_with(str, "An ") || starts_with(str, "an "))
+        str = str.substr(3);
+    else
+        return false;
+
+    return true;
+}
+
 /**
  * Generates a random, vaguely appropriate name for a randbook.
  *
@@ -447,13 +530,20 @@ static string _maybe_gen_book_subject(string owner)
  *                      (E.g., Xom, Cerebov, Boris...)
  *                      Prepended to the book's name (Foo's...); "Xom" has
  *                      further effects.
+ * @param   difficulty  If the spells in a book are all of similar level, how
+ *                      high level are they? (eg: "starting", "moderate")
+ * @param   highest_level   The highest level of any spell in this book.
  * @param   disc1       A spellschool (discipline) associated with the book.
  * @param   disc2       A spellschool (discipline) associated with the book.
+ * @param   has_title[out]  True if the book name is already titled (and should
+ *                          not get 'the' automatically prepended to it elsewhere).
  * @return              A book name. May contain placeholders (@foo@).
  */
 static string _gen_randbook_name(string subject, string owner,
+                                 string difficulty, int highest_level,
                                  spschool disc1,
-                                 spschool disc2)
+                                 spschool disc2,
+                                 bool& has_title)
 {
     const string apostrophised_owner = owner.empty() ?
         "" :
@@ -471,16 +561,26 @@ static string _gen_randbook_name(string subject, string owner,
                             real_subject.c_str());
     }
 
-    string name = apostrophised_owner;
+    string name;
 
-    // Give a name that reflects the primary and secondary
-    // spell disciplines of the spells contained in the book.
-    name += getRandNameString("book_name") + " ";
+    // Books whose spells are all similar in difficulty can get a title reflecting this.
+    bool level_book = false;
+    if (!difficulty.empty() && !one_chance_in(4))
+    {
+        name += getRandNameString(difficulty + " level book");
+        level_book = true;
+        has_title = true;
+    }
+    else
+        name += getRandNameString("book_name") + " ";
+
+    string type_name;
+    // If the schools of a book are very mixed, give a chance of using a generic
+    // spellcasting term instead of school-specific ones.
 
     // For the actual name there's a 66% chance of getting something like
     //  <book> of the Fiery Traveller (Translocation/Fire), else
     //  <book> of Displacement and Flames.
-    string type_name;
     if (disc1 != disc2 && !one_chance_in(3))
     {
         string lookup = spelltype_long_name(disc2);
@@ -492,41 +592,65 @@ static string _gen_randbook_name(string subject, string owner,
         // No adjective found, use the normal method of combining two nouns.
         type_name = getRandNameString(spelltype_long_name(disc1));
         if (type_name.empty())
-            name += spelltype_long_name(disc1);
-        else
-            name += type_name;
+            type_name = spelltype_long_name(disc1);
 
         if (disc1 != disc2)
         {
-            name += " and ";
-            type_name = getRandNameString(spelltype_long_name(disc2));
+            type_name += " and ";
+            string type_name2 = getRandNameString(spelltype_long_name(disc2));
 
-            if (type_name.empty())
-                name += spelltype_long_name(disc2);
+            if (type_name2.empty())
+                type_name += spelltype_long_name(disc2);
             else
-                name += type_name;
+                type_name += type_name2;
         }
     }
     else
     {
-        string bookname = type_name + " ";
+        type_name += " ";
 
         // Add the noun for the first discipline.
-        type_name = getRandNameString(spelltype_long_name(disc1));
-        if (type_name.empty())
-            bookname += spelltype_long_name(disc1);
+        string type_name2 = getRandNameString(spelltype_long_name(disc1));
+        if (type_name2.empty())
+            type_name += spelltype_long_name(disc1);
         else
         {
-            if (type_name.find("the ", 0) != string::npos)
+            if (type_name2.find("the ", 0) != string::npos)
             {
-                type_name = replace_all(type_name, "the ", "");
-                bookname = "the " + bookname;
+                type_name2 = replace_all(type_name2, "the ", "");
+                type_name = "the " + type_name;
             }
-            bookname += type_name;
+            type_name += type_name2;
         }
-        name += bookname;
     }
 
+    if (level_book)
+    {
+        // If this title can't accept a subject with an article, strip the
+        // article and pluralise it.
+        if (name.find("@_subject_@", 0) != string::npos)
+        {
+            if (_strip_articles(type_name))
+                type_name = pluralise(type_name);
+            name = replace_all(name, "@_subject_@", type_name);
+        }
+        else
+            name = replace_all(name, "@_the_subject_@", type_name);
+
+        // Try to convert things like 'Plog's a Guide to' into 'Plog's Guide to'
+        if (!owner.empty())
+            _strip_articles(name);
+
+        if (name.find("@level@", 0) != string::npos)
+        {
+            const string level_name = uppercase_first(number_in_words(highest_level));
+            name = replace_all(name, "@level@", level_name);
+        }
+    }
+    else
+        name += type_name;
+
+    name = apostrophised_owner + name;
     return name;
 }
 
