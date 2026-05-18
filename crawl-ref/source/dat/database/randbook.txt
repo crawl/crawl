@@ -10,9 +10,8 @@
 #  - fixed theme, varying level (Conjurations, Summoning/Earth, ...)
 #  - fixed level, varying theme (level 2 spells etc.)
 #
-# The books are filled with spells matching their type in randbook.cc,
-# either build_themed_book() or make_book_level_randart().
-# The name should likewise take into account the book's type.
+# The books are filled with spells matching their type in randbook.cc, via
+# build_themed_book().
 #
 # Themed books use one of the following two naming schemes:
 #   a) @book_name@ @<secondary school> adj@ @<primary school>@
@@ -42,8 +41,8 @@
 # See the explanation in the main file, randname.txt, for more general
 # information on randart naming.
 ######################################################
-# Book name should be set in make_book_level_randart() or
-# build_themed_book(), so if this gets picked there's a bug.
+# Book name should be set in build_themed_book(), so if this gets picked there's
+# a bug.
 book
 
 Book of Bugginess

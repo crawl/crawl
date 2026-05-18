@@ -4775,11 +4775,6 @@ bool get_item_by_name(item_def *item, const char* specs,
         }
         else if (type_wanted == BOOK_RANDART_THEME)
             build_themed_book(*item, capped_spell_filter(20));
-        else if (type_wanted == BOOK_RANDART_LEVEL)
-        {
-            int level = random_range(1, 9);
-            make_book_level_randart(*item, level);
-        }
         break;
 
     case OBJ_WANDS:

@@ -1322,7 +1322,7 @@ NAME: nicolae_rare_books
 TAGS: transparent extra
 DEPTH: Elf, Depths
 KFEAT: S = book shop type:One-of-a-Kind suffix:Books count:5 ; \
-       any fixed theme book | any fixed level book
+       any fixed theme book
 MAP
  c.c
 .....

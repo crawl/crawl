@@ -5771,13 +5771,6 @@ void item_list::parse_random_by_class(string c, item_spec &spec)
         spec.plus      = -1;
         return;
     }
-    else if (c == "fixed level book")
-    {
-        spec.base_type = OBJ_BOOKS;
-        spec.sub_type  = BOOK_RANDART_LEVEL;
-        spec.plus      = -1;
-        return;
-    }
     else if (c == "ring")
     {
         spec.base_type = OBJ_JEWELLERY;

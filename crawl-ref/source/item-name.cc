@@ -1157,7 +1157,6 @@ static const char* _book_type_name(int booktype)
     case BOOK_METALWORKING:           return "Metalworking";
     case BOOK_DUALITY:                return "Duality";
     case BOOK_CONTRAPTIONS:           return "Contraptions";
-    case BOOK_RANDART_LEVEL:          return "Fixed Level";
     case BOOK_RANDART_THEME:          return "Fixed Theme";
     default:                          return "Bugginess";
     }
@@ -3654,15 +3653,8 @@ void init_item_name_cache()
 
         for (const auto sub_type : all_item_subtypes(base_type))
         {
-            if (base_type == OBJ_BOOKS)
-            {
-                if (sub_type == BOOK_RANDART_LEVEL
-                    || sub_type == BOOK_RANDART_THEME)
-                {
-                    // These are randart only and have no fixed names.
-                    continue;
-                }
-            }
+            if (base_type == OBJ_BOOKS && sub_type == BOOK_RANDART_THEME)
+                continue;
 
             int npluses = 0;
             // this iterates through all skills for manuals, caching the

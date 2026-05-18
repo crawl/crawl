@@ -471,9 +471,7 @@ static string _item_name(item_base_type base_type, int sub_type)
     if (base_type == ITEM_SPELLBOOKS)
     {
         const int orig_type = _item_orig_sub_type(base_type, sub_type);
-        if (orig_type == BOOK_RANDART_LEVEL)
-            return "Level Artefact Book";
-        if (orig_type == BOOK_RANDART_LEVEL)
+        if (orig_type == BOOK_RANDART_THEME)
             return "Theme Artefact Book";
     }
 

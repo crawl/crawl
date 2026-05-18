@@ -59,7 +59,6 @@ void name_book_theme_randart(item_def &book, spschool discipline_1,
                              spschool discipline_2,
                              string owner = "", string subject = "");
 
-bool make_book_level_randart(item_def &book, int level = -1, bool sif = false);
 void acquire_themed_randbook(item_def &book, int agent);
 
 /* Public for testing purposes only: do not use elsewhere */

@@ -163,7 +163,6 @@ bool book_exists(book_type bt)
 {
     switch (bt)
     {
-    case BOOK_RANDART_LEVEL:
     case BOOK_RANDART_THEME:
     case BOOK_MANUAL:
     case BOOK_PARCHMENT:

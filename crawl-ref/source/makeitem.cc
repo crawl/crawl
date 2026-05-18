@@ -1540,12 +1540,6 @@ static void _generate_book_item(item_def& item, int force_type, int item_level)
         item.plus = static_cast<int>(choose_parchment_spell(item_level));
     else if (item.sub_type == BOOK_RANDART_THEME)
         build_themed_book(item, capped_spell_filter(20));
-    else if (item.sub_type == BOOK_RANDART_LEVEL)
-    {
-        int max_level  = min(9, max(1, item_level / 3));
-        int spl_level  = random_range(1, max_level);
-        make_book_level_randart(item, spl_level);
-    }
 }
 
 static stave_type _get_random_stave_type()

@@ -305,7 +305,9 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_DEATHS_DOOR,
 },
 
+#if TAG_MAJOR_VERSION == 34
 { }, // BOOK_RANDART_LEVEL
+#endif
 { }, // BOOK_RANDART_THEME
 { }, // BOOK_MANUAL
 #if TAG_MAJOR_VERSION == 34

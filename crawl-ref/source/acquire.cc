@@ -842,7 +842,6 @@ static int _book_weight(book_type book)
     ASSERT_RANGE(book, 0, NUM_BOOKS);
     ASSERT(book != BOOK_MANUAL);
     ASSERT(book != BOOK_PARCHMENT);
-    ASSERT(book != BOOK_RANDART_LEVEL);
     ASSERT(book != BOOK_RANDART_THEME);
 
     int total_weight = 0;
@@ -973,8 +972,8 @@ static bool _do_book_acquirement(item_def &book, int agent)
         return _acquire_manual(book);
     const int choice = random_choose_weighted(
                                     30, BOOK_RANDART_THEME,
-       agent == GOD_SIF_MUNA ? 10 : 40, NUM_BOOKS, // normal books
-                                     1, BOOK_RANDART_LEVEL);
+                                    // Normal books
+       agent == GOD_SIF_MUNA ? 10 : 40, NUM_BOOKS);
 
     switch (choice)
     {
@@ -1008,18 +1007,6 @@ static bool _do_book_acquirement(item_def &book, int agent)
     case BOOK_RANDART_THEME:
         acquire_themed_randbook(book, agent);
         break;
-
-    case BOOK_RANDART_LEVEL:
-    {
-        const int level = agent == GOD_XOM ?
-            random_range(1, 9) :
-            max(1, (_skill_rdiv(SK_SPELLCASTING) + 2) / 3);
-
-        book.sub_type  = BOOK_RANDART_LEVEL;
-        if (!make_book_level_randart(book, level, agent == GOD_SIF_MUNA))
-            return false;
-        break;
-    }
     } // switch book choice
 
 
