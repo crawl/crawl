@@ -475,7 +475,7 @@ debt paid.
 Channel Magic ability
 
 Dramatically increases the user's regeneration of magical power for a duration
-that increases with Invocations skill.
+that increases with Spellcasting skill.
 %%%%
 Forget Spell ability
 
@@ -484,8 +484,8 @@ Removes a known spell from memory, so as to free memory to learn others.
 Divine Exegesis ability
 
 Casts any spell from your spell library with guaranteed success. You receive a
-bonus to spell power based on your Invocations skill that is worth 50% more
-than equivalent levels of training in the relevant skills of the spell itself.
+bonus to spell power based on your Spellcasting skill that is worth the same as
+equivalent levels of training in the relevant skills of the spell itself.
 %%%%
 # Trog
 Berserk ability

@@ -171,6 +171,9 @@ skill_type invo_skill(god_type god)
         case GOD_KIKUBAAQUDGHA:
             return SK_NECROMANCY;
 
+        case GOD_SIF_MUNA:
+            return SK_SPELLCASTING;
+
 #if TAG_MAJOR_VERSION == 34
         case GOD_PAKELLAS:
             return SK_EVOCATIONS;
@@ -515,11 +518,11 @@ static vector<ability_def> &_get_ability_list()
 
         // Sif Muna
         { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Magic",
-            0, 0, 2, -1, {fail_basis::invo, 60, 4, 25}, abflag::none },
+            0, 0, 3, -1, {fail_basis::invo, 65, 4, 25}, abflag::none },
         { ABIL_SIF_MUNA_FORGET_SPELL, "Forget Spell",
             0, 0, 8, -1, {fail_basis::invo}, abflag::none },
         { ABIL_SIF_MUNA_DIVINE_EXEGESIS, "Divine Exegesis",
-            0, 0, 12, -1, {fail_basis::invo, 80, 4, 25}, abflag::none },
+            0, 0, 12, -1, {fail_basis::invo, 100, 4, 25}, abflag::none },
         { ABIL_SIF_MUNA_REPEAT_EXEGESIS, "Repeat Exegesis",
             0, 0, 3, -1, {fail_basis::invo}, abflag::none },
 
@@ -3708,7 +3711,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         fail_check();
         mpr("You channel some magical energy.");
         you.increase_duration(DUR_CHANNEL_ENERGY,
-            4 + random2avg(you.skill_rdiv(SK_INVOCATIONS, 2, 3), 2), 100);
+            4 + random2avg(you.skill_rdiv(SK_SPELLCASTING, 3, 10), 2), 100);
         break;
 
     case ABIL_SIF_MUNA_DIVINE_EXEGESIS:

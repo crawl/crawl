@@ -558,7 +558,7 @@ int calc_spell_power(spell_type spell)
     int power = _skill_power(spell);
 
     if (you.divine_exegesis)
-        power += you.skill(SK_INVOCATIONS, 300);
+        power += you.skill(SK_SPELLCASTING, 200);
 
     power = (power * you.intel()) / 10;
 
