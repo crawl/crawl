@@ -694,7 +694,7 @@ static string _gen_randbook_owner(god_type god, spschool disc1,
 
     // name of gifting god?
     const bool god_gift = god != GOD_NO_GOD;
-    if (god_gift && !one_chance_in(4))
+    if (god_gift && (god == GOD_XOM ? !one_chance_in(4) : one_chance_in(5)))
         return god_name(god, false);
 
     // thematically appropriate name?
