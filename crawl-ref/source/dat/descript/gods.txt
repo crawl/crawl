@@ -153,10 +153,10 @@ foes.
 Sif Muna
 
 Sif Muna the Loreminder is a contemplative but powerful deity, served by those
-who seek magical knowledge. Followers who triumph over their foes can call upon
-the Loreminder for magical power and the ability to cast spells beyond their
-magical training. The devout are rewarded with a supply of spellbooks taken
-directly from Sif Muna's legendary library.
+who seek magical knowledge. Followers who tireless pursue new horizons can call
+upon the Loreminder for magical power and the ability to cast spells beyond
+their magical training. The devout are rewarded with a supply of spellbooks
+taken directly from Sif Muna's legendary library.
 %%%%
 the Shining One
 

@@ -720,7 +720,9 @@ static like_map divine_likes[] =
     // GOD_MAKHLEB,
     DEFAULT_KILL_CONDUCT,
     // GOD_SIF_MUNA,
-    DEFAULT_KILL_CONDUCT,
+    {
+        { DID_EXPLORATION, explore_response(75) },
+    },
     // GOD_TROG,
     default_kill_conduct_with_extra(
         {

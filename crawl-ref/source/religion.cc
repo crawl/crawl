@@ -1459,11 +1459,8 @@ static bool _give_sif_gift(bool forced)
     if (feat_eliminates_items(env.grid(you.pos())))
         return false;
 
-    if (!forced && (you.piety() < piety_breakpoint(4)
-                    || random2(you.piety()) < 121 || one_chance_in(4)))
-    {
+    if (!forced && (you.piety() < piety_breakpoint(5) || !one_chance_in(3)))
         return false;
-    }
 
     // Sif Muna special: Keep quiet if acquirement fails
     // because the player already has seen all spells.
@@ -1478,7 +1475,7 @@ static bool _give_sif_gift(bool forced)
     you.num_current_gifts[you.religion]++;
     you.num_total_gifts[you.religion]++;
     const int n_spells = spells_in_book(env.item[item_index]).size();
-    _inc_gift_timeout(10 + n_spells * 6 + random2avg(19, 2));
+    _inc_gift_timeout(10 + n_spells * 7 + random2avg(13, 2));
     take_note(Note(NOTE_GOD_GIFT, you.religion));
 
     return true;
