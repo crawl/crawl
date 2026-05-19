@@ -3395,6 +3395,8 @@ w:50
 %%%%
 Earth owner
 
+Brom
+
 Jorgrun
 
 Lehudib
@@ -3428,6 +3430,8 @@ the Cloud Mage
 Maxwell
 
 Nikola
+
+Vhi
 
 __NONE
 %%%%
@@ -3513,6 +3517,12 @@ w:5
 Terpsichore
 
 Tukima
+
+__NONE
+%%%%
+Forgecraft owner
+
+Nazja
 
 __NONE
 %%%%
