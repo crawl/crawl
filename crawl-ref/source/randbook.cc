@@ -787,7 +787,9 @@ static int _randbook_spell_weight(spell_type spell, int agent)
             num_skills++;
         }
     }
-    int skill_weight = 1;
+    // Sif cares somewhat less about the player's skills when weighting spellbooks
+    // (both to encourage diversifying and also because they can use them with Exegesis).
+    int skill_weight = agent == GOD_SIF_MUNA ? 10 : 1;
     if (num_skills > 0)
         skill_weight = (2 + (total_skill / num_skills)) / 3;
     skill_weight = max(1, skill_weight);
