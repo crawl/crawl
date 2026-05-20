@@ -3720,6 +3720,9 @@ string mons_inner_flame_immune_reason(const monster *mons)
                             mons->name(DESC_THE).c_str());
     }
 
+    if (!could_harm(&you, mons))
+        return make_stringf("You cannot harm %s.", mons->name(DESC_THE).c_str());
+
     return "";
 }
 
