@@ -36,6 +36,7 @@ enum monster_type                      // env.mons[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_SHOCK_SERPENT,
     MONS_MANA_VIPER,
+    MONS_COATL,
 #endif
     MONS_RAT,
 #if TAG_MAJOR_VERSION == 34
@@ -1433,6 +1434,7 @@ enum monster_type                      // env.mons[].type
     MONS_SEWAGE_SOVEREIGN,
     MONS_SCRAPSHELL_CHIMERA,
     MONS_GLOWMURK_GHAST,
+    MONS_COATL,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
