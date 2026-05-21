@@ -1,0 +1,20 @@
+name: "coatl"
+glyph: {char: "S", colour: gold}
+flags: [cold_blood]
+resists: {elec: 3}
+exp: 999
+genus: snake
+will: 100
+attacks:
+ - {type: bite, flavour: elec, damage: 20}
+hd: 12
+hp_10x: 550
+ac: 4
+ev: 15
+spells: coatl
+has_corpse: true
+shout: hiss
+intelligence: animal
+speed: 15
+size: medium
+shape: snake
