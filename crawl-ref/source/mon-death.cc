@@ -803,6 +803,12 @@ static bool _vampire_make_thrall(monster* mons, killer_type killer)
         mons->props[CUSTOM_SPELLS_KEY] = true;
     }
 
+    // Remove level annotation. Do this before we add the enchantment to avoid
+    // the monster's name changing to "Vampire <name>" and breaking the
+    // annotation removal logic.
+    mons->props[NO_ANNOTATE_KEY] = true;
+    remove_unique_annotation(mons);
+
     mons->attitude = ATT_FRIENDLY;
     mons->add_ench(mon_enchant(ENCH_VAMPIRE_THRALL, &you, INFINITE_DURATION));
 
@@ -816,10 +822,6 @@ static bool _vampire_make_thrall(monster* mons, killer_type killer)
 
     // Cancel fleeing and such.
     mons->behaviour = BEH_SEEK;
-
-    // Remove level annotation.
-    mons->props[NO_ANNOTATE_KEY] = true;
-    remove_unique_annotation(mons);
 
     behaviour_event(mons, ME_EVAL);
 
