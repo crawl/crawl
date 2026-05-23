@@ -1498,7 +1498,7 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
         }
     }
 
-    const bool hits_player = include_player && hitfunc.is_affected(you.pos());
+    const bool hits_player = include_player && hitfunc.is_affected(you.pos()) && affects(&you);
 
     if (victims.empty() && !hits_player)
         return false;
