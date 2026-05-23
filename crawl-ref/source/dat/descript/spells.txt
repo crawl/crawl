@@ -54,8 +54,7 @@ will leaving the floor.
 Antimagic Gaze spell
 
 Causes the target's magic to leak into the air, as though they were hit by an
-antimagic weapon, and heals the caster for the amount of magic drained,
-with no direct line of fire required.
+antimagic weapon, with no direct line of fire required.
 %%%%
 Apportation spell
 
