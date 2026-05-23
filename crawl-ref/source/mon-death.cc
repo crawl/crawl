@@ -2782,6 +2782,8 @@ item_def* monster_die(monster& mons, killer_type killer,
                                                         * BASELINE_DELAY;
         }
     }
+    else if (mons.type == MONS_SOUL_SYPHON && duration <= 0 && timeout)
+        fire_soul_syphon(mons);
     // Note that 'timeout' deaths happen when the player leaves the floor.
     else if (mons.type == MONS_SOLAR_EMBER && real_death && !timeout)
     {
@@ -3741,6 +3743,9 @@ void monster_cleanup(monster* mons)
         const int dur = hellfire_mortar_cooldown_length(mons->props[HELLFIRE_PATH_KEY].get_vector().size());
         you.duration[DUR_HELLFIRE_MORTAR_COOLDOWN] = dur;
     }
+    else if (mons->type == MONS_SOUL_SYPHON)
+        for (distance_iterator di(mons->pos(), false, false, 3); di; ++di)
+            env.pgrid(*di) &= ~FPROP_SYPHON_RANGE;
 
     // May have been constricting something. No message because that depends
     // on the order in which things are cleaned up: If the constrictee is

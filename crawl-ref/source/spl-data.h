@@ -2529,6 +2529,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_FORGE_SOUL_SYPHON, "Forge Soul Syphon",
+    spschool::forgecraft | spschool::necromancy,
+    spflag::none,
+    5,
+    200,
+    -1, -1,
+    0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_FORGE_BLAZEHEART_GOLEM, "Forge Blazeheart Golem",
     spschool::forgecraft | spschool::fire,
     spflag::none,

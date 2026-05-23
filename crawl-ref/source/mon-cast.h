@@ -68,3 +68,4 @@ monster* cast_phantom_mirror(monster* mons, monster* targ,
                              int clone_index = 0);
 
 ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell);
+int monster_abjure_target(monster* target, int pow, bool actual);

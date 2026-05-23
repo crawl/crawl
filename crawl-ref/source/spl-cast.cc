@@ -2606,6 +2606,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_FORGE_LIGHTNING_SPIRE:
         return cast_forge_lightning_spire(powc, fail);
 
+    case SPELL_FORGE_SOUL_SYPHON:
+        return cast_forge_soul_syphon(powc, fail);
+
     case SPELL_FORGE_BLAZEHEART_GOLEM:
         return cast_forge_blazeheart_golem(powc, fail);
 

@@ -786,6 +786,15 @@ to them over any other concern.
 Spellpower increases the magnitude of the AC increase, as well as the beetle's
 own durability.
 %%%%
+Forge Soul Syphon spell
+
+Constructs a wretched obelisk of iron and bone. The syphon drains the lifeforce
+of hostile living beings and rapidly eats away at the threads binding summoned
+creatures to this plane, though it has a limited radius. The vitality thus
+consumed is harvested and unleashed in a devastating torrent of negative energy
+when the syphon's work is at its end, provided that it survives unbroken until
+that time.
+%%%%
 Fortress Blast spell
 
 Draws upon the caster's own physical integrity to create a kinetic shockwave
@@ -2456,5 +2465,3 @@ If cast upon a creature already blessed (or cursed) with magical enchantments,
 those enchantments will be torn apart, transforming into a spray of
 destructive mutagenic radiation. The victim and anyone adjacent will be
 blasted and heavily deformed, weakening them and reducing their armour.
-Summoned creatures are particularly vulnerable, as the enchantments binding
-them to this plane will unravel and cause them to be dismissed immediately.

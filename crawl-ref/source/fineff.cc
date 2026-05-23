@@ -302,6 +302,22 @@ protected:
     string msg;
 };
 
+class soul_syphon_fineff : public final_effect
+{
+public:
+    void fire() override;
+
+    soul_syphon_fineff(bolt beem, string _msg)
+        : final_effect(0, 0, coord_def()), beam(beem), msg(_msg)
+    {
+    }
+protected:
+    bool mergeable(const final_effect&) const override { return false; }
+
+    bolt beam;
+    string msg;
+};
+
 // A fineff that triggers a daction; otherwise the daction
 // occurs immediately (and then later) -- this might actually
 // be too soon in some cases.
@@ -724,6 +740,11 @@ void schedule_explosion_fineff(bolt& beam, string boom, string sanct,
 void schedule_splinterfrost_fragment_fineff(bolt& beam, string msg)
 {
     _schedule_final_effect(new splinterfrost_fragment_fineff(beam, msg));
+}
+
+void schedule_soul_syphon_fineff(bolt& beam, string msg)
+{
+    _schedule_final_effect(new soul_syphon_fineff(beam, msg));
 }
 
 void schedule_delayed_action_fineff(daction_type action,
@@ -1697,6 +1718,14 @@ void death_spawn_fineff::fire()
 }
 
 void splinterfrost_fragment_fineff::fire()
+{
+    if (!msg.empty())
+        mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s", msg.c_str());
+
+    beam.fire();
+}
+
+void soul_syphon_fineff::fire()
 {
     if (!msg.empty())
         mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s", msg.c_str());

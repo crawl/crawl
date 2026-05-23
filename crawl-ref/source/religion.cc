@@ -1539,6 +1539,7 @@ static bool _give_kiku_gift(bool forced)
                          SPELL_PUTREFACTION,
                          SPELL_CURSE_OF_AGONY,
                          SPELL_BORGNJORS_VILE_CLUTCH,
+                         SPELL_FORGE_SOUL_SYPHON,
                          SPELL_DEATH_CHANNEL,
                          SPELL_RIMEBLIGHT};
     }

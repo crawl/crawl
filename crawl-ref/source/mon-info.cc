@@ -1931,9 +1931,6 @@ bool monster_info::has_trivial_ench(enchant_type ench) const
 // the player's knowledge?
 bool monster_info::unravellable() const
 {
-    if (is(MB_ABJURABLE))
-        return true;
-
     // NOTE: assumes that all debuffable enchantments are trivially mapped
     // to MBs.
 

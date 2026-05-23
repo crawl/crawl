@@ -2704,6 +2704,9 @@ static void _post_monster_move(monster* mons)
     if (mons->type == MONS_SEISMOSAURUS_EGG && egg_is_incubating(*mons))
         seismosaurus_egg_hatch(mons);
 
+    if (mons->type == MONS_SOUL_SYPHON)
+        syphon_souls(mons);
+
     if (mons->type == MONS_THORN_HUNTER)
         thorn_hunter_raise_barrier(*mons);
 
