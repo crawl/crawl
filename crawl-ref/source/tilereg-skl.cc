@@ -95,7 +95,6 @@ int SkillRegion::handle_mouse(wm_mouse_event &event)
     {
         describe_skill(skill);
         redraw_screen();
-        update_screen();
         return CK_MOUSE_CMD;
     }
     return 0;

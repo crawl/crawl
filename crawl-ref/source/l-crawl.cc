@@ -202,7 +202,6 @@ LUAFN(crawl_redraw_screen)
     UNUSED(ls);
 
     redraw_screen();
-    update_screen();
     return 0;
 }
 
@@ -1632,7 +1631,6 @@ LUAFN(_crawl_redraw_view)
     UNUSED(ls);
 
     viewwindow();
-    update_screen();
     return 0;
 }
 
@@ -1659,7 +1657,6 @@ LUAFN(_crawl_redraw_stats)
 
 
     print_stats();
-    update_screen();
     return 0;
 }
 

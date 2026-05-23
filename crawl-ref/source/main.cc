@@ -456,7 +456,6 @@ NORETURN static void _launch_game()
 
 #ifdef USE_TILE
     viewwindow();
-    update_screen();
 #endif
 
     if (game_start)
@@ -1098,7 +1097,6 @@ static void _input()
         revive();
         bring_to_safety();
         redraw_screen();
-        update_screen();
     }
 
     if (you.props.exists(DREAMSHARD_KEY))
@@ -1336,7 +1334,6 @@ static void _input()
         // This else will be triggered by instantaneous actions, such as
         // Chei's temporal distortion.
         viewwindow();
-        update_screen();
     }
 
     update_can_currently_train();
@@ -2291,28 +2288,23 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_DISPLAY_COMMANDS:
         show_help();
         redraw_screen();
-        update_screen();
         break;
     case CMD_DISPLAY_INVENTORY:        display_inventory();            break;
     case CMD_DISPLAY_KNOWN_OBJECTS:
         check_item_knowledge();
         redraw_screen();
-        update_screen();
         break;
     case CMD_DISPLAY_MUTATIONS:
         display_mutations();
         redraw_screen();
-        update_screen();
         break;
     case CMD_DISPLAY_RUNES:
         display_runes();
         redraw_screen();
-        update_screen();
         break;
     case CMD_DISPLAY_SKILLS:
         skill_menu();
         redraw_screen();
-        update_screen();
         break;
     case CMD_EXPERIENCE_CHECK:         _experience_check();            break;
     case CMD_FULL_VIEW:                full_describe_view();           break;
@@ -2324,7 +2316,6 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_REPLAY_MESSAGES:
         replay_messages();
         redraw_screen();
-        update_screen();
         break;
     case CMD_RESISTS_SCREEN:           print_overview_screen();        break;
     case CMD_LOOKUP_HELP:
@@ -2336,7 +2327,6 @@ void process_command(command_type cmd, command_type prev_cmd)
     {
         describe_god(you.religion);
         redraw_screen();
-        update_screen();
         break;
     }
 
@@ -2420,7 +2410,6 @@ void process_command(command_type cmd, command_type prev_cmd)
         // Game commands.
     case CMD_REDRAW_SCREEN:
         redraw_screen();
-        update_screen();
         break;
 
 #ifdef USE_UNIX_SIGNALS
@@ -2435,7 +2424,6 @@ void process_command(command_type cmd, command_type prev_cmd)
         console_startup();
 #endif
         redraw_screen();
-        update_screen();
         break;
 #endif
 
@@ -2529,10 +2517,7 @@ static void _prep_input()
         you.refresh_rampage_hints();
     }
     print_stats();
-    update_screen();
-
     viewwindow();
-    update_screen(); // ???
     if (check_for_interesting_features() && you.running.is_explore())
         stop_running();
 
@@ -2588,7 +2573,6 @@ void world_reacts()
         crawl_state.viewport_monster_hp = false;
         crawl_state.viewport_weapons = false;
         viewwindow();
-        update_screen();
     }
 
     update_monsters_in_view();
@@ -2676,7 +2660,6 @@ void world_reacts()
     add_auto_excludes();
 
     viewwindow();
-    update_screen();
 
     _check_trapped();
 
@@ -2788,10 +2771,7 @@ static keycode_type _get_next_keycode()
     {
         keyin = unmangle_direction_keys(getch_with_command_macros());
         if (keyin == CK_REDRAW)
-        {
             redraw_screen();
-            update_screen();
-        }
         else
             break;
     }

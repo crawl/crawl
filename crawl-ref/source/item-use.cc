@@ -1774,7 +1774,6 @@ operation_types use_an_item_menu(item_def *&target, operation_types oper, int it
         }
 
         redraw_screen();
-        update_screen();
 
         // equip cases are handled in followup calls
         // TODO: cleanup

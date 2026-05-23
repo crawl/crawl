@@ -942,10 +942,7 @@ static spell_type _choose_mem_spell(spell_list &spells)
 
     const vector<MenuEntry*> sel = spell_menu.show();
     if (!crawl_state.doing_prev_cmd_again)
-    {
         redraw_screen();
-        update_screen();
-    }
     if (sel.empty())
         return SPELL_NO_SPELL;
     const spell_type spell = *static_cast<spell_type*>(sel[0]->data);
@@ -1175,10 +1172,7 @@ spret divine_exegesis(bool fail)
 
     const vector<MenuEntry*> sel = spell_menu.show();
     if (!crawl_state.doing_prev_cmd_again)
-    {
         redraw_screen();
-        update_screen();
-    }
 
     if (sel.empty())
         return spret::abort;
@@ -1215,10 +1209,7 @@ spret imbue_servitor()
 
     const vector<MenuEntry*> sel = spell_menu.show();
     if (!crawl_state.doing_prev_cmd_again)
-    {
         redraw_screen();
-        update_screen();
-    }
 
     if (sel.empty())
         return spret::abort;

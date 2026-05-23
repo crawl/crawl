@@ -726,7 +726,6 @@ void dec_penance(god_type god, int val)
             {
                 simple_god_message(" restores the support of your attributes.");
                 redraw_screen();
-                update_screen();
                 notify_stat_change();
             }
             if (have_passive(passive_t::storm_shield))
@@ -900,7 +899,6 @@ static void _inc_penance(god_type god, int val)
         if (will_have_passive(passive_t::stat_boost))
         {
             redraw_screen();
-            update_screen();
             notify_stat_change();
         }
 
@@ -2399,7 +2397,6 @@ static void _handle_piety_gain(int old_piety)
     #ifdef USE_TILE_LOCAL
                     tiles.layout_statcol();
                     redraw_screen();
-                    update_screen();
     #endif
                     learned_something_new(HINT_NEW_ABILITY_GOD);
                 }
@@ -2658,7 +2655,6 @@ static void _handle_piety_loss(int old_piety)
 #ifdef USE_TILE_LOCAL
         tiles.layout_statcol();
         redraw_screen();
-        update_screen();
 #endif
 
         if (will_have_passive(passive_t::frail) && !have_passive(passive_t::frail))
@@ -2959,7 +2955,6 @@ void excommunication(bool voluntary, god_type new_god)
     if (had_stat_boost)
     {
         redraw_screen();
-        update_screen();
         notify_stat_change();
     }
 
@@ -3202,7 +3197,6 @@ void excommunication(bool voluntary, god_type new_god)
 #ifdef USE_TILE_LOCAL
     tiles.layout_statcol();
     redraw_screen();
-    update_screen();
 #endif
 
     // Evil hack.
@@ -3677,7 +3671,6 @@ static void _join_gozag()
 #ifdef USE_TILE_LOCAL
         tiles.layout_statcol();
         redraw_screen();
-        update_screen();
 #else
         ;
 #endif
@@ -3848,7 +3841,6 @@ void join_religion(god_type which_god)
     ASSERT(!you.has_mutation(MUT_FORLORN));
 
     redraw_screen();
-    update_screen();
 
     const god_type old_god = you.religion;
     if (you.previous_good_god == GOD_NO_GOD)
@@ -3931,7 +3923,6 @@ void join_religion(god_type which_god)
 #ifdef USE_TILE_LOCAL
     tiles.layout_statcol();
     redraw_screen();
-    update_screen();
 #endif
 
     learned_something_new(HINT_CONVERT);
@@ -3974,7 +3965,6 @@ void god_pitch(god_type which_god)
     {
         you.turn_is_over = false;
         redraw_screen();
-        update_screen();
     }
 }
 

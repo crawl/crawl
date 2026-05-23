@@ -134,7 +134,6 @@ int cast_selective_amnesia(const string &pre_msg)
     // Pick a spell to forget.
     keyin = list_spells(false, false, false, false, "forget");
     redraw_screen();
-    update_screen();
 
     if (isaalpha(keyin))
     {

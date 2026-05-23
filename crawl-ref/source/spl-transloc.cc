@@ -989,7 +989,6 @@ static void _handle_teleport_update(bool large_change)
     if (large_change)
     {
         viewwindow();
-        update_screen();
         for (monster_iterator mi; mi; ++mi)
         {
             const bool see_cell = you.see_cell(mi->pos());
@@ -1049,7 +1048,6 @@ static bool _teleport_player(bool wizard_tele, string reason="")
     // in case something happened in the exact turn that we teleported
     // (like picking up/dropping an item).
     viewwindow();
-    update_screen();
 
     if (player_in_branch(BRANCH_ABYSS) && !wizard_tele)
     {
@@ -1074,7 +1072,6 @@ static bool _teleport_player(bool wizard_tele, string reason="")
             bool chose = show_map(lpos, false, false);
             pos = lpos.pos;
             redraw_screen();
-            update_screen();
 
             // If we've received a HUP signal then the user can't choose a
             // location, so cancel the teleport.
