@@ -1608,7 +1608,7 @@ static bool _has_warning_inscription(const item_def& item,
                     return true;
                 else if (item.base_type == OBJ_ARMOUR && r[i+1] == 'T')
                     return true;
-                else if (is_weapon(item) && r[i+i] == 'w')
+                else if (is_weapon(item) && r[i+1] == 'w')
                     return true;
             }
             else if (oper == OPER_EQUIP)
@@ -1617,7 +1617,7 @@ static bool _has_warning_inscription(const item_def& item,
                     return true;
                 else if (item.base_type == OBJ_ARMOUR && r[i+1] == 'W')
                     return true;
-                else if (is_weapon(item) && r[i+i] == 'w')
+                else if (is_weapon(item) && r[i+1] == 'w')
                     return true;
             }
         }
