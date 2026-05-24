@@ -4413,7 +4413,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             {
                 if (you.has_mutation(MUT_SPARK_SWARM)
                     && !this->has_ench(ENCH_CORONA)
-                    && x_chance_in_y(you.get_mutation_level(MUT_SPARK_SWARM) * 3, 9))
+                    && x_chance_in_y(you.get_mutation_level(MUT_SPARK_SWARM) * 4, 10))
                 {
                     this->add_ench(mon_enchant(ENCH_CORONA, &you, random_range(90, 150)));
                 }

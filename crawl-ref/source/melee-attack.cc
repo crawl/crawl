@@ -2782,7 +2782,7 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
        if (attacker->is_player() && defender->is_monster()
            && you.has_mutation(MUT_SPARK_SWARM)
            && !defender->as_monster()->has_ench(ENCH_CORONA)
-           && x_chance_in_y(you.get_mutation_level(MUT_SPARK_SWARM) * 3, 9))
+           && x_chance_in_y(you.get_mutation_level(MUT_SPARK_SWARM) * 4, 10))
         {
             defender->as_monster()->add_ench(mon_enchant(ENCH_CORONA, &you, random_range(90, 150)));
         }

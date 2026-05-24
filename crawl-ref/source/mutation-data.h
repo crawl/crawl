@@ -249,7 +249,7 @@ static const mutation_def mut_data[] =
     TILEG_MUT_FEED_OFF_SUFFERING,
 },
 
-{ MUT_SPARK_SWARM, 2, 2, mutflag::good,
+{ MUT_SPARK_SWARM, 3, 2, mutflag::good,
   "spark swarm",
 
   {"Foes burned or shocked in your presence may be outlined in light.",

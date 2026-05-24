@@ -706,10 +706,10 @@ static void _maybe_summon_demonic_guardian(int dam, kill_method_type death_type)
 }
 
 // The time-warped blood mutation grants haste to
-// your allies when you're brought below half health.
+// your allies when you're brought below 66% health.
 void _maybe_blood_hastes_allies()
 {
-    if (you.hp * 2 > you.hp_max
+    if (you.hp > you.hp_max * 2 / 3
         || !you.has_mutation(MUT_TIME_WARPED_BLOOD)
         || you.duration[DUR_TIME_WARPED_BLOOD_COOLDOWN])
     {
