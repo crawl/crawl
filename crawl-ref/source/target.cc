@@ -2588,7 +2588,7 @@ aff_type targeter_wall_arc::is_affected(coord_def loc)
 }
 
 targeter_tempering::targeter_tempering() :
-    targeter_smite(&you, LOS_RADIUS, 1, 1)
+    targeter_smite(&you, LOS_RADIUS, 1, 1, true)
 {
 }
 
