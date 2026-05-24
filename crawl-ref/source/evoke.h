@@ -36,3 +36,4 @@ int mesmerism_orb_radius(bool max = false);
 int stardust_orb_max(bool max = false);
 int stardust_orb_power(int mp_spent, bool max_evo = false);
 void stardust_orb_trigger(int mp_spent);
+bool mirror_can_effect(monster *victim);
