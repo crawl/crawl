@@ -288,7 +288,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_ZOMBIE_OCTOPODE:
     case TILEP_MONS_ANCESTOR:
     case TILEP_MONS_ANCESTOR_KNIGHT:
-    case TILEP_MONS_ANCESTOR_BATTLEMAGE:
+    case TILEP_MONS_ANCESTOR_ELEMENTALIST:
     case TILEP_MONS_RAGGED_HIEROPHANT:
     case TILEP_MONS_VAMPIRE_MAGE:
     case TILEP_MONS_NORRIS:

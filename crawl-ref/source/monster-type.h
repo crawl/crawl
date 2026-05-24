@@ -1088,7 +1088,7 @@ enum monster_type                      // env.mons[].type
     MONS_PLAYER_SHADOW,         // Dithmenos
     MONS_ANCESTOR,              // Hepliaklqana
     MONS_ANCESTOR_KNIGHT,
-    MONS_ANCESTOR_BATTLEMAGE,
+    MONS_ANCESTOR_ELEMENTALIST,
     MONS_ANCESTOR_HEXER,
 #endif
     MONS_TEST_SPAWNER,
@@ -1256,7 +1256,7 @@ enum monster_type                      // env.mons[].type
     MONS_HOWLER_MONKEY,
     MONS_ANCESTOR,
     MONS_ANCESTOR_KNIGHT,
-    MONS_ANCESTOR_BATTLEMAGE,
+    MONS_ANCESTOR_ELEMENTALIST,
     MONS_ANCESTOR_HEXER,
     MONS_MELIAI,
     MONS_BAI_SUZHEN,

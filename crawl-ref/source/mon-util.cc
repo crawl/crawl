@@ -1850,11 +1850,12 @@ static mon_attack_def _hepliaklqana_ancestor_attack(const monster &mon,
         return { };
 
     const int HD = mon.get_experience_level();
-    const int dam = HD + 3; // 4 at 1 HD, 21 at 18 HD (max)
-    // battlemages do double base melee damage (+25-50% including their weapon)
-    const int dam_mult = mon.type == MONS_ANCESTOR_BATTLEMAGE ? 2 : 1;
+    const int base_dam = HD + 3; // 4 at 1 HD, 21 at 18 HD (max)
+    // elementalists do reduced base melee damage
+    const int dam = mon.type == MONS_ANCESTOR_ELEMENTALIST ? base_dam * 2 / 3
+                                                           : base_dam;
 
-    return { AT_HIT, AF_PLAIN, dam * dam_mult };
+    return { AT_HIT, AF_PLAIN, dam };
 }
 
 /** Get the attack type, attack flavour and damage for a monster attack.
@@ -5614,13 +5615,25 @@ void set_ancestor_spells(monster &ancestor, bool notify)
     const int HD = ancestor.get_experience_level();
     switch (ancestor.type)
     {
-    case MONS_ANCESTOR_BATTLEMAGE:
-        _add_ancestor_spell(ancestor.spells, HD >= 10 ?
-                                             SPELL_BOLT_OF_MAGMA :
-                                             SPELL_THROW_FROST);
-        _add_ancestor_spell(ancestor.spells, HD >= 16 ?
-                                             SPELL_LEHUDIBS_CRYSTAL_SPEAR :
-                                             SPELL_STONE_ARROW);
+    case MONS_ANCESTOR_ELEMENTALIST:
+        ancestor.spells.emplace_back(SPELL_DEFLECT_MISSILES, 200, MON_SPELL_WIZARD);
+
+        if (HD < 10)
+            ancestor.spells.emplace_back(SPELL_SHOCK, 35, MON_SPELL_WIZARD);
+        if (HD < 13)
+            ancestor.spells.emplace_back(SPELL_STONE_ARROW, 35, MON_SPELL_WIZARD);
+        if (HD >= 10 && HD < 16)
+        {
+            ancestor.spells.emplace_back(SPELL_ICEBLAST, 35, MON_SPELL_WIZARD);
+            ancestor.spells.emplace_back(SPELL_BOLT_OF_MAGMA, 35, MON_SPELL_WIZARD);
+        }
+        if (HD >= 13)
+            ancestor.spells.emplace_back(SPELL_LRD, 40, MON_SPELL_WIZARD);
+        if (HD >= 16)
+            ancestor.spells.emplace_back(SPELL_PLASMA_BEAM, 30, MON_SPELL_WIZARD);
+        if (HD >= 16)
+            ancestor.spells.emplace_back(SPELL_PERMAFROST_ERUPTION, 30, MON_SPELL_WIZARD);
+
         break;
     case MONS_ANCESTOR_HEXER:
         _add_ancestor_spell(ancestor.spells, HD >= 10 ? SPELL_PARALYSE
@@ -5632,7 +5645,7 @@ void set_ancestor_spells(monster &ancestor, bool notify)
         break;
     }
 
-    if (HD >= 13)
+    if (HD >= 13 && ancestor.type != MONS_ANCESTOR_ELEMENTALIST)
         ancestor.spells.emplace_back(SPELL_HASTE, 25, MON_SPELL_WIZARD);
 
     if (ancestor.spells.size())

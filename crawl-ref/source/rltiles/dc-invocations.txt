@@ -31,7 +31,7 @@ hep_identity ABILITY_HEP_IDENTITY
 hep_transference ABILITY_HEP_TRANSFERENCE
 hep_recall ABILITY_HEP_RECALL
 hep_knight ABILITY_HEP_KNIGHT
-hep_battlemage ABILITY_HEP_BATTLEMAGE
+hep_elementalist ABILITY_HEP_ELEMENTALIST
 hep_hexer ABILITY_HEP_HEXER
 ignis_fiery_armour ABILITY_IGNIS_FIERY_ARMOUR
 ignis_foxfire_swarm ABILITY_IGNIS_FOXFIRE

@@ -139,7 +139,7 @@ void vehumet_accept_gift(spell_type spell);
 
 mgen_data hepliaklqana_ancestor_gen_data();
 string hepliaklqana_ally_name();
-int hepliaklqana_ally_hp();
+int hepliaklqana_ally_hp(monster_type type);
 
 void upgrade_hepliaklqana_ancestor(bool quiet_force = false);
 void upgrade_hepliaklqana_weapon(monster_type mtyp, item_def &item);

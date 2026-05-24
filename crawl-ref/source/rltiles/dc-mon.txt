@@ -511,7 +511,7 @@ wendigo MONS_WENDIGO
 %sdir mon/nonliving
 ancestor MONS_ANCESTOR
 ancestor_knight MONS_ANCESTOR_KNIGHT
-ancestor_battlemage MONS_ANCESTOR_BATTLEMAGE
+ancestor_elementalist MONS_ANCESTOR_ELEMENTALIST
 ancestor_hexer MONS_ANCESTOR_HEXER
 
 ## Abominations ('X')

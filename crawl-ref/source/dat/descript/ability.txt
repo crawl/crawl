@@ -985,10 +985,11 @@ Ancestor Life: Knight ability
 Remembers your ancestor as a knight, a strong melee combatant with superior
 defences. This choice is permanent and cannot be undone.
 %%%%
-Ancestor Life: Battlemage ability
+Ancestor Life: Elementalist ability
 
-Remembers your ancestor as a battlemage, a warrior capable of relentless offence
-with both melee and conjurations. This choice is permanent and cannot be undone.
+Remembers your ancestor as a elementalist, a powerful but fragile mage capable
+of unleashing destructive spells from a safe distance. This choice is permanent
+and cannot be undone.
 %%%%
 Ancestor Life: Hexer ability
 

@@ -6723,7 +6723,11 @@ int monster::spell_hd(spell_type spell) const
     UNUSED(spell);
     int hd = get_hit_dice();
     if (mons_is_hepliaklqana_ancestor(type))
+    {
         hd = max(1, hd * 2 / 3);
+        if (type == MONS_ANCESTOR_ELEMENTALIST && get_experience_level() >= 13)
+            hd += 5;
+    }
     if (has_ench(ENCH_IDEALISED))
         hd *= 2;
     if (has_ench(ENCH_FIGMENT))

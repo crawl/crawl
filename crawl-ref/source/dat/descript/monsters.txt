@@ -773,13 +773,6 @@ bat
 A large grey bat that, despite being herbivorous, is quite aggressive. It is
 myopic and uses echolocation to navigate.
 %%%%
-battlemage
-
-A humanoid construct of insubstantial memory, floating through the air. Though
-perhaps somewhat changed in shape and bearing few discernable features, still
-it seems somehow to resemble a warrior from the distantly remembered past,
-skilled with both conjurations and melee combat.
-%%%%
 battlesphere
 
 A small globe of destructive energy. Each time its creator casts an offensive
@@ -1408,6 +1401,13 @@ elemental wellspring
 
 A swirling conflux of elemental water streaming from the elemental plane into
 this one, with powerful spirits and mighty floods flowing from it.
+%%%%
+elementalist
+
+A humanoid construct of insubstantial memory, floating through the air. Though
+perhaps somewhat changed in shape and bearing few discernable features, still
+it seems somehow to resemble a mage from the distantly remembered past, skilled
+with destructive elemental magic.
 %%%%
 elephant
 

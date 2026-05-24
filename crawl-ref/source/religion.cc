@@ -1714,13 +1714,18 @@ static int _hepliaklqana_ally_hd()
 /**
  * How much max HP should the ally granted by Hepliaklqana have?
  *
+ * @param   type    Which type of ancestor is this?
  * @return      5/hd from 1-11 HD, 10/hd from 12-18.
  *              (That is, 5 HP at 1 HD, 120 at 18.)
  */
-int hepliaklqana_ally_hp()
+int hepliaklqana_ally_hp(monster_type type)
 {
     const int HD = _hepliaklqana_ally_hd();
-    return HD * 5 + max(0, (HD - 12) * 5);
+    const int base_hp = HD * 5 + max(0, (HD - 12) * 5);
+    if (type == MONS_ANCESTOR_ELEMENTALIST)
+        return base_hp * 3 / 5;
+    else
+        return base_hp;
 }
 
 /**
@@ -1772,7 +1777,7 @@ mgen_data hepliaklqana_ancestor_gen_data()
     mgen_data mg(type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE,
                  GOD_HEPLIAKLQANA);
     mg.hd = _hepliaklqana_ally_hd();
-    mg.hp = hepliaklqana_ally_hp();
+    mg.hp = hepliaklqana_ally_hp(type);
     mg.extra_flags |= MF_NO_REWARD;
     mg.mname = hepliaklqana_ally_name();
     mg.props[MON_GENDER_KEY]
@@ -1856,7 +1861,7 @@ void upgrade_hepliaklqana_ancestor(bool quiet_force)
         return; // assume nothing changes except at different HD
 
     const int old_mhp = ancestor->max_hit_points;
-    ancestor->max_hit_points = hepliaklqana_ally_hp();
+    ancestor->max_hit_points = hepliaklqana_ally_hp(ancestor->type);
     ancestor->props[KNOWN_MAX_HP_KEY] = ancestor->max_hit_points;
     ancestor->hit_points =
         div_rand_round(ancestor->hit_points * ancestor->max_hit_points,
@@ -1870,6 +1875,14 @@ void upgrade_hepliaklqana_ancestor(bool quiet_force)
     }
 
     set_ancestor_spells(*ancestor, !quiet_force);
+
+    if (!quiet_force && ancestor->type == MONS_ANCESTOR_ELEMENTALIST
+        && old_hd < 13 && hd >= 13)
+    {
+        mprf("%s remembers how to cast %s spells more powerfully.",
+                ancestor->name(DESC_YOUR, true).c_str(),
+                ancestor->pronoun(PRONOUN_POSSESSIVE, true).c_str());
+    }
 
     const bool ancestor_offlevel = companion_is_elsewhere(ancestor->mid);
     if (ancestor_offlevel)
@@ -1937,8 +1950,8 @@ static weapon_type _hepliaklqana_weapon_type(monster_type mc, int HD)
         return HD < 16 ? WPN_DAGGER : WPN_QUICK_BLADE;
     case MONS_ANCESTOR_KNIGHT:
         return HD < 10 ? WPN_FLAIL : WPN_BROAD_AXE;
-    case MONS_ANCESTOR_BATTLEMAGE:
-        return HD < 13 ? WPN_QUARTERSTAFF : WPN_LAJATANG;
+    case MONS_ANCESTOR_ELEMENTALIST:
+        return WPN_STAFF;
     default:
         return NUM_WEAPONS; // should never happen
     }
@@ -1962,9 +1975,7 @@ static brand_type _hepliaklqana_weapon_brand(monster_type mc, int HD)
             return HD < 10 ?   SPWPN_NORMAL :
                    HD < 16 ?   SPWPN_FLAMING :
                                SPWPN_SPEED;
-        case MONS_ANCESTOR_BATTLEMAGE:
-            return HD < 13 ?   SPWPN_NORMAL :
-                               SPWPN_FREEZING;
+        case MONS_ANCESTOR_ELEMENTALIST:
         default:
             return SPWPN_NORMAL;
     }

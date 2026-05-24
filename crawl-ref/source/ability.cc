@@ -724,7 +724,7 @@ static vector<ability_def> &_get_ability_list()
 
         { ABIL_HEPLIAKLQANA_TYPE_KNIGHT, "Ancestor Life: Knight",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
-        { ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE, "Ancestor Life: Battlemage",
+        { ABIL_HEPLIAKLQANA_TYPE_ELEMENTALIST, "Ancestor Life: Elementalist",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
         { ABIL_HEPLIAKLQANA_TYPE_HEXER, "Ancestor Life: Hexer",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
@@ -4031,7 +4031,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         return hepliaklqana_transference(fail); // TODO: dist arg
 
     case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
-    case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
+    case ABIL_HEPLIAKLQANA_TYPE_ELEMENTALIST:
     case ABIL_HEPLIAKLQANA_TYPE_HEXER:
         if (!hepliaklqana_choose_ancestor_type(abil.ability))
             return spret::abort;
@@ -4669,7 +4669,7 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_RU_SACRIFICE_FORMS:
     case ABIL_RU_REJECT_SACRIFICES:
     case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
-    case ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE:
+    case ABIL_HEPLIAKLQANA_TYPE_ELEMENTALIST:
     case ABIL_HEPLIAKLQANA_TYPE_HEXER:
     case ABIL_HEPLIAKLQANA_IDENTITY: // move this?
     case ABIL_ASHENZARI_CURSE:

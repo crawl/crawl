@@ -1409,7 +1409,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         break;
 
     case MONS_ANCESTOR_HEXER:
-    case MONS_ANCESTOR_BATTLEMAGE:
+    case MONS_ANCESTOR_ELEMENTALIST:
     case MONS_ANCESTOR_KNIGHT:
         force_item = true;
         upgrade_hepliaklqana_weapon(type, item);
