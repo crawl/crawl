@@ -72,7 +72,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         tile = TILEP_HAND1_FLAIL;
         break;
     case WPN_DIRE_FLAIL:
-        tile = TILEP_HAND1_GREAT_FLAIL;
+        tile = TILEP_HAND1_DIRE_FLAIL;
         break;
     case WPN_MORNINGSTAR:
         tile = TILEP_HAND1_MORNINGSTAR;
@@ -98,7 +98,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
 
     // Edge
     case WPN_DAGGER:
-        tile = TILEP_HAND1_DAGGER_SLANT;
+        tile = TILEP_HAND1_DAGGER;
         break;
     case WPN_SHORT_SWORD:
         tile = TILEP_HAND1_SHORT_SWORD_SLANT;
@@ -107,7 +107,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         tile = TILEP_HAND1_LONG_SWORD_SLANT;
         break;
     case WPN_GREAT_SWORD:
-        tile = TILEP_HAND1_GREAT_SWORD_SLANT;
+        tile = TILEP_HAND1_GREAT_SWORD;
         break;
     case WPN_SCIMITAR:
         tile = TILEP_HAND1_SCIMITAR;
@@ -125,7 +125,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         tile = TILEP_HAND1_DEMON_BLADE;
         break;
     case WPN_QUICK_BLADE:
-        tile = TILEP_HAND1_DAGGER;
+        tile = TILEP_HAND1_QUICK_BLADE;
         break;
     case WPN_DOUBLE_SWORD:
         tile = TILEP_HAND1_DOUBLE_SWORD;
@@ -154,7 +154,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         tile = TILEP_HAND1_EXECUTIONERS_AXE;
         break;
     case WPN_BARDICHE:
-        tile = TILEP_HAND1_GLAIVE3;
+        tile = TILEP_HAND1_BARDICHE;
         break;
 
     // Pole

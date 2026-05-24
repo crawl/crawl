@@ -7,15 +7,30 @@
 # from 8 to 24 monsters. Very random, middle part is all subvaults.
 #
 # There is a lair variant that is (mostly) a joke vault; all other variants
-# appear no earlier than D:14.
+# appear no earlier than Snake and Elf.
+
+: crawl_require('dlua/vault.lua')
+
 {{
-function ambush_stairs(e)
+function ambush_setup(e, section)
+  e.tags("allow_dup")
+  if section == "outer" then
+    e.tags("evilmike_ambush_outer")
+    e.tags("unrand")
+  elseif section == "inner" then
+    e.tags("evilmike_ambush_inner")
     if you.in_branch("Dis") or you.in_branch("Coc") or you.in_branch("Tar")
-       or you.in_branch("Geh") then
-        e.nsubst("< = 1:{ / 1:}. / 1:>. / *:.")
+     or you.in_branch("Geh") then
+      e.nsubst("< = 1:{ / 1:}. / 1:>. / *:.")
     else
-        e.nsubst("< = 1:{ / 1:( / 1:[} / 1:>")
+      e.nsubst("< = 1:{ / 1:( / 1:[} / 1:>")
     end
+  end
+  if you.in_branch("Depths") then
+    e.ftile(".{([])}>Gmxcv+ = floor_etched")
+  elseif you.in_branch("Dis") then
+    vault_metal_statue_setup(e, "G", "iron statue")
+  end
 end
 }}
 
@@ -71,6 +86,9 @@ SUBST:    1 = 0., 2 = 9
 : else
 SUBST:    1 = 0.., 2 = 9.
 : end
+: if you.in_branch("Depths") then
+FTILE:    .098 = floor_etched
+: end
 NSUBST:   8 = 1:&&8 / *:8
 MAP
   2...0...9
@@ -90,14 +108,9 @@ ENDMAP
 
 # Outer ring subvaults
 NAME:   evilmike_ambush_outer_basic
-TAGS:   evilmike_ambush_outer allow_dup unrand
 WEIGHT: 25
-SUBST:  G : Gx..
-SUBST:  x : xcbwnm
-: if you.in_branch("Dis") then
-KFEAT:  G = metal_statue
-TILE:   G = dngn_statue_iron
-: end
+SUBST:  G : Gx.., x : xcbwnm
+: ambush_setup(_G, "outer")
 MAP
  ...G...
 .G     G.
@@ -111,13 +124,9 @@ G       G
 ENDMAP
 
 NAME:    evilmike_ambush_outer_pillars
-TAGS:    evilmike_ambush_outer allow_dup unrand
 SHUFFLE: x.
 SUBST:   x : xxxccvvbmG
-: if you.in_branch("Dis") then
-KFEAT:  G = metal_statue
-TILE:   G = dngn_statue_iron
-: end
+: ambush_setup(_G, "outer")
 MAP
  .x.x.x.
 .x     x.
@@ -131,8 +140,8 @@ x       x
 ENDMAP
 
 NAME:    evilmike_ambush_outer_corners
-TAGS:    evilmike_ambush_outer allow_dup unrand
 SUBST:   y : x., x : xxxcccvvbm
+: ambush_setup(_G, "outer")
 MAP
  xy...yx
 xx     xx
@@ -146,10 +155,10 @@ xx     xx
 ENDMAP
 
 NAME:    evilmike_ambush_outer_doors
-TAGS:    evilmike_ambush_outer allow_dup unrand
 WEIGHT:  5
 SHUFFLE: +D
 SUBST:   D : +x
+: ambush_setup(_G, "outer")
 MAP
  x+D+D+x
 xx     xx
@@ -162,18 +171,13 @@ xx     xx
  x+D+D+x
 ENDMAP
 
-# Inner subvaults. Always contains two stairs, with a large chance of having all 3
+# Inner subvaults. Always contains two stairs, with a large chance of having 3
 # In hell always has the upstair, with a chance of downstairs or hatch
 NAME:    evilmike_ambush_inner_basic
-TAGS:    evilmike_ambush_inner allow_dup
 WEIGHT:  25
 SHUFFLE: <AB
 SUBST:   AB = .
-: if you.in_branch("Dis") then
-KFEAT:   G = metal_statue
-TILE:    G = dngn_statue_iron
-: end
-: ambush_stairs(_G)
+: ambush_setup(_G, "inner")
 MAP
  ..A..
 ...<...
@@ -185,17 +189,10 @@ A<BGB<A
 ENDMAP
 
 NAME:    evilmike_ambush_inner_wall_1
-TAGS:    evilmike_ambush_inner allow_dup
 WEIGHT:  3
-SHUFFLE: AB / {<
-SUBST:   { = <
-SUBST:   AB = .
-SHUFFLE: yxX / "">
-SUBST:   " = .
-SUBST:   y : x., X = x
-SUBST:   x : xxxccvvbmm
-SUBST:   > = }>
-: ambush_stairs(_G)
+SHUFFLE: AB / {<, yxX / "">
+SUBST:   AB" = ., { = <, > = }>, y : x., X = x, x : xxxccvvbmm
+: ambush_setup(_G, "inner")
 MAP
  .....
 ...y...
@@ -207,16 +204,10 @@ A{.X.<B
 ENDMAP
 
 NAME:    evilmike_ambush_inner_wall_2
-TAGS:    evilmike_ambush_inner allow_dup
 WEIGHT:  3
-SHUFFLE: AB / {<
-SUBST:   AB = .
-SHUFFLE: yxX / ""<
-SUBST:   " = .
-SUBST:   y : x., X = x
-SUBST:   x : xxxccvvbmm
-SUBST:   > = }>
-: ambush_stairs(_G)
+SHUFFLE: AB / {<, yxX / ""<
+SUBST:   AB" = ., y : x., X = x, x : xxxccvvbmm, > = }>
+: ambush_setup(_G, "inner")
 MAP
  .....
 ..y.y..
@@ -228,18 +219,13 @@ A{X>X<B
 ENDMAP
 
 NAME:    evilmike_ambush_inner_pond
-TAGS:    evilmike_ambush_inner allow_dup
-SUBST:   w : wwwWWlm...
-SUBST:   > : >..
-: if you.in_branch("Dis") then
-KFEAT:   G = metal_statue
-TILE:    G = dngn_statue_iron
-: elseif you.in_branch("Coc") or you.in_branch("Tar") then
+SUBST:   w : wwwWWlm..., > : >..
+: if you.in_branch("Coc") or you.in_branch("Tar") then
 SUBST:   l = w
 : elseif you.in_branch("Geh") then
 SUBST:   wW = l
 : end
-: ambush_stairs(_G)
+: ambush_setup(_G, "inner")
 MAP
  .....
 ..>w<..
@@ -251,10 +237,9 @@ MAP
 ENDMAP
 
 NAME:    evilmike_ambush_inner_cross
-TAGS:    evilmike_ambush_inner allow_dup
 WEIGHT:  5
 SUBST:   y : x., z : x., x : xxxccvvbmm
-: ambush_stairs(_G)
+: ambush_setup(_G, "inner")
 MAP
  ..y..
 ...x...

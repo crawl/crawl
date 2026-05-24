@@ -9460,47 +9460,48 @@ SUBST:   X = x, 23 = 9, = : y:3 x:1, | : |:4 D:1
 SUBST:   C : C:3 T:17, T = T:5 U:2 V:2 Y:1
 SUBST:   x : x:13 y:1 c:1, G : G:1 c:1 y:8
 SUBST:   z : y:3 v:1 b:1 x:1, y : c:13 v:1 b:1
+FTILE:   .1489d$%*|+CTUVYGD = floor_etched
 MAP
-               .........
-               .xxx-xxx......
-          ......x1...1xx-xxx.
-          .xxx-xcxx+xxc1..1x...
-        ...x1..1c.....cxx+xxxx.
-        .xxxx+xxc..2..c....x1x.
-        .x1x....c..G..+..9.+.x.
-        .x.+.9..+..T..c....x.-.x
-       x.-.x....c.....c....x1x......
-   ......x1x....ccx+xcccc+ccccx-xxx.
-   .xxx-xcccc+cccc1.1ccc.....c1..1x...
- ...x1..1c.....ccyy=yy1x...3.cxx+xxxx.
- .xxxx+xxc.3...x1y...y.+..G..c....x1x.
- .x1x....c..G..+.y.W.=.x.C...+..9.+.x.
- .x.+.9..+...C.x.=.0.y1x.....c....x.-.
- .-.x....c.....x1y.%.yyyxx+xcc....x1x...
-..x1x....ccx+xxyyy.z.%9y1..1cccc+ccccxx.
-.xxccc+cccc1..1y9%....%yy=yyycc.....x1x.
-.x1x.....ccyy=yy%.8*|8......y1x.....x.x.
-.x.x.....x1y......|ww*.z%0W.=.+.TG2.+.-.
-.-.+.2GT.+.=.W0%z.*ww|......y1x.....x.x.
-.x.x.....x1y......8|*8.%yy=yycc.....x1x.
-.x1x.....ccyyy=yy%....%9y1..1cccc+cccxx.
-.xxcccc+cccc1..1y9%.z.yyyxx+xcc....x1x..
-...x1x....ccx+xxyyy.%.y1x.....c....x.-.
-  .-.x....c.....x1y.0.=.x.C...+..9.+.x.
-  .x.+.9..+...C.x.=.W.y.+..G..c....x1x.
-  .x1x....c..G..+.y...y1x...3.cxx+xxxx.
-  .xxxx+xxc.3...x1yy=yycc.....c1..1x...
-  ...x1..1c.....ccc1.1cccc+ccccx-xxx.
-    .xxx-xcccc+ccccx+xcc....x1x......
-    ......x1x....c.....c....x.-.x
-        x.-.x....c..T..+..9.+.x.
-         .x.+.9..+..G..c....x1x.
-         .x1x....c..2..cxx+xxxx.
-         .xxxx+xxc.....c1..1x...
-         ...x1..1cxx+xxcx-xxx.
-           .xxx-xx1...1x......
-           ......xxx-xxx.
-                .........
+               '''''''''
+               'xxx-xxx''''''
+          ''''''x1...1xx-xxx'
+          'xxx-xcxx+xxc1..1x'''
+        '''x1..1c.....cxx+xxxx'
+        'xxxx+xxc..2..c....x1x'
+        'x1x....c..G..+..9.+.x'
+        'x.+.9..+..T..c....x.-'x
+       x'-.x....c.....c....x1x''''''
+   ''''''x1x....ccx+xcccc+ccccx-xxx'
+   'xxx-xcccc+cccc1.1ccc.....c1..1x'''
+ '''x1..1c.....ccyy=yy1x...3.cxx+xxxx'
+ 'xxxx+xxc.3...x1y...y.+..G..c....x1x'
+ 'x1x....c..G..+.y.W.=.x.C...+..9.+.x'
+ 'x.+.9..+...C.x.=.0.y1x.....c....x.-'
+ '-.x....c.....x1y.%.yyyxx+xcc....x1x'''
+''x1x....ccx+xxyyy.z.%9y1..1cccc+ccccxx'
+'xxccc+cccc1..1y9%....%yy=yyycc.....x1x'
+'x1x.....ccyy=yy%.8*|8......y1x.....x.x'
+'x.x.....x1y......|ww*.z%0W.=.+.TG2.+.-'
+'-.+.2GT.+.=.W0%z.*ww|......y1x.....x.x'
+'x.x.....x1y......8|*8.%yy=yycc.....x1x'
+'x1x.....ccyyy=yy%....%9y1..1cccc+cccxx'
+'xxcccc+cccc1..1y9%.z.yyyxx+xcc....x1x''
+'''x1x....ccx+xxyyy.%.y1x.....c....x.-'
+  '-.x....c.....x1y.0.=.x.C...+..9.+.x'
+  'x.+.9..+...C.x.=.W.y.+..G..c....x1x'
+  'x1x....c..G..+.y...y1x...3.cxx+xxxx'
+  'xxxx+xxc.3...x1yy=yycc.....c1..1x'''
+  '''x1..1c.....ccc1.1cccc+ccccx-xxx'
+    'xxx-xcccc+ccccx+xcc....x1x''''''
+    ''''''x1x....c.....c....x.-'x
+        x'-.x....c..T..+..9.+.x'
+         'x.+.9..+..G..c....x1x'
+         'x1x....c..2..cxx+xxxx'
+         'xxxx+xxc.....c1..1x'''
+         '''x1..1cxx+xxcx-xxx'
+           'xxx-xx1...1x''''''
+           ''''''xxx-xxx'
+                '''''''''
 ENDMAP
 
 ###############################################################################
@@ -9990,6 +9991,7 @@ KPROP:  | = no_tele_into
 KMASK:  | = opaque
 SUBST:  x : x:7 c:3, c : c:8 v:1 b:1
 SUBST:  9 = 999.
+FTILE:  .09%*|xm = floor_etched
 MAP
             ....             ....
             .xx...           .xx...
@@ -10108,8 +10110,8 @@ MAP
 ENDMAP
 
 NAME:   minmay_octo_star
-DEPTH:  D:12-, Depths
 TAGS:   transparent
+DEPTH:  D:12-, Depths
 ORIENT: float
 SUBST:  x : x:7 c:3, c : c:8 v:1 b:1
 SUBST:  9 = 999.
@@ -10148,50 +10150,51 @@ MAP
 ENDMAP
 
 NAME:   minmay_central_circle
-DEPTH:  Depths
 TAGS:   transparent
+DEPTH:  Depths
 ORIENT: float
 SUBST:  x : x:8 c:2, c : c:8 v:2
-SUBST:  9 = 999., 8 = 888.
+SUBST:  9 = 999', 8 = 888'
+FTILE:  '*98+x = floor_etched
 MAP
 .................................
 ...xxxxx.......xxx.......xxxxx...
-..xx...xx.....xx.xx.....xx...xx..
-.xx..9..xx....x.9.x....xx..9..xx.
-.x.......x....xx.xx....x.......x.
-.x.9.8.9.x.....x.x.....x.9.8.9.x.
-.x.......x.............x.......x.
-.xx..9...x....cc+cc....x...9..xx.
-..xx........ccc...ccc........xx..
-...xxxxx..ccc.......ccc..xxxxx...
-.........c+.....9.....+c.........
-.........c....9...9....c.........
-........cc..9.xx+xx.9..cc........
-........c....+x***x+....c........
-..xxx..cc..9xx**b**xx9..cc..xxx..
-.xx.xx.c....x***b***x....c.xx.xx.
-.x.9...+..9.+*bbbbb*+.9..+...9.x.
-.xx.xx.c....x***b***x....c.xx.xx.
-..xxx..cc..9xx**b**xx9..cc..xxx..
-........c....+x***x+....c........
-........cc..9.xx+xx.9..cc........
-.........c....9...9....c.........
-.........c+.....9.....+c.........
-...xxxxx..ccc.......ccc..xxxxx...
-..xx........ccc...ccc........xx..
-.xx..9...x....cc+cc....x...9..xx.
-.x.......x.............x.......x.
-.x.9.8.9.x.....x.x.....x.9.8.9.x.
-.x.......x....xx.xx....x.......x.
-.xx..9..xx....x.9.x....xx..9..xx.
-..xx...xx.....xx.xx.....xx...xx..
+..xx'''xx.....xx'xx.....xx'''xx..
+.xx''9''xx....x'9'x....xx''9''xx.
+.x'''''''x....xx'xx....x'''''''x.
+.x'9'8'9'x.....x'x.....x'9'8'9'x.
+.x'''''''x.............x'''''''x.
+.xx''9'''x....cc+cc....x'''9''xx.
+..xx'''''...ccc'''ccc...'''''xx..
+...xxxxx..ccc'''''''ccc..xxxxx...
+.........c+'''''9'''''+c.........
+.........c''''9'''9''''c.........
+........cc''9'xx+xx'9''cc........
+........c''''+x***x+''''c........
+..xxx..cc''9xx**b**xx9''cc..xxx..
+.xx'xx.c''''x***b***x''''c.xx'xx.
+.x'9''.+''9'+*bbbbb*+'9''+.''9'x.
+.xx'xx.c''''x***b***x''''c.xx'xx.
+..xxx..cc''9xx**b**xx9''cc..xxx..
+........c''''+x***x+''''c........
+........cc''9'xx+xx'9''cc........
+.........c''''9'''9''''c.........
+.........c+'''''9'''''+c.........
+...xxxxx..ccc'''''''ccc..xxxxx...
+..xx'''''...ccc'''ccc...'''''xx..
+.xx''9'''x....cc+cc....x'''9''xx.
+.x'''''''x.............x'''''''x.
+.x'9'8'9'x.....x'x.....x'9'8'9'x.
+.x'''''''x....xx'xx....x'''''''x.
+.xx''9''xx....x'9'x....xx''9''xx.
+..xx'''xx.....xx'xx.....xx'''xx..
 ...xxxxx.......xxx.......xxxxx...
 .................................
 ENDMAP
 
 NAME:   minmay_strange_plus
-DEPTH:  D:12-, Depths
 TAGS:   transparent
+DEPTH:  D:12-, Depths
 ORIENT: float
 SUBST:  9 = 999., 8 = 888.
 MAP
@@ -10722,6 +10725,7 @@ KMONS:  0 = 0 band
 KITEM:  O = superb_item
 KITEM:  9 = any good_item
 NSUBST: 0 = 4:. / *:0, 98 = 1:.
+FTILE:  @.|O098+x = floor_etched
 : end
 MAP
       x@x
@@ -11675,10 +11679,11 @@ SUBST:   BCDEF = A, HIJKL = G
 SUBST:   A = *, G = 0009, 8 = 998
 # feature randomization
 SUBST:   x : xcvb
-SUBST:   ! : xcvb m:3 G:3 t:3 .:49
-SUBST:   ? : xcvb m:1 t:1 .:44
-SUBST:   " : xcvbTmGt .:80
-SUBST:   ' : xcvbTmGt d:80
+SUBST:   ! : xcvb m:3 G:3 t:3 .:49, ? : xcvb m:1 t:1 .:44
+SUBST:   " : xcvbTmGt .:80, ' : xcvbTmGt d:80
+: if you.in_branch("Depths") then
+FTILE:   .098d*|TmGt+ = floor_etched
+: end
 MAP
           xxxNxxx
          xxF...Fxx
@@ -13202,6 +13207,7 @@ DEPTH:   D:11-, Depths
 # average of 16 0s, 8 9s, and 4 8s
 SUBST:   0 = 0 .:170, 9 = 9 .:140, 8 = 8 .:50
 SUBST:   x : xcvb, ! = .xcvbTV|9, ? : .:100 TTTTV
+FTILE:   .098TV| = floor_etched
 MAP
             xxx@G@xxx
           xxx0000000xxx
@@ -13323,6 +13329,9 @@ TAGS:   transparent
 DEPTH:  D:12-, Depths
 ORIENT: float
 SUBST:  0 = .....0009, 9 = ....9999, % = %%%%***|
+: if you.in_branch("Depths") then
+FTILE:  .%*|098G+xvc = floor_etched
+: end
 MAP
 ccccc                 ccccc
 cG%%ccc             ccc%%Gc

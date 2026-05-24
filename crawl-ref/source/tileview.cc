@@ -242,6 +242,13 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         break;
 
     case BRANCH_ZIGGURAT:
+        flv.wall  = TILE_WALL_VAULT;
+        if (you.zigs_completed > 0)
+            flv.floor = TILE_FLOOR_ETCHED;
+        else
+            flv.floor = TILE_FLOOR_VAULT;
+        return;
+
     case BRANCH_BAZAAR:
     case BRANCH_TROVE:
         flv.wall  = TILE_WALL_VAULT;

@@ -1136,6 +1136,15 @@ demonic_red9
 %resetcol
 
 %weight 10
+swirlstone0 FLOOR_SWIRLSTONE
+swirlstone1
+swirlstone2
+swirlstone3
+swirlstone4
+swirlstone5
+swirlstone6
+swirlstone7
+
 green_bones01 FLOOR_GREEN_BONES
 green_bones02
 green_bones03

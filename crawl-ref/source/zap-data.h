@@ -380,12 +380,13 @@ static const zap_info zap_data[] =
     new tohit_calculator<AUTOMATIC_HIT>,
     new dicedef_calculator<3, 7, 1, 20>,
     new tohit_calculator<AUTOMATIC_HIT>,
-    LIGHTGREY,
+    YELLOW,
     false,
     BEAM_MMISSILE,
     DCHAR_FIRED_MISSILE,
     false,
     false,
+    TILE_BOLT_PERMAFROST_EARTH,
 },
 
 {

@@ -43,6 +43,12 @@ icicle7
 iceblast0 BOLT_ICEBLAST
 iceblast1
 
+permafrost_earth0 BOLT_PERMAFROST_EARTH
+permafrost_earth1
+
+permafrost_cold0 BOLT_PERMAFROST_COLD
+permafrost_cold1
+
 icicle_salvo0 BOLT_ICICLE_SALVO
 icicle_salvo1
 icicle_salvo2

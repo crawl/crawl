@@ -86,7 +86,7 @@ function pan_lord_setup(_G, name)
     elseif name == "Lom Lobon" then
         _G.lfloorcol("lightgrey")
         _G.lrockcol("white")
-        _G.lfloortile("floor_rough_lightgray")
+        _G.lfloortile("floor_swirlstone")
         _G.lrocktile("wall_hall_white")
         _G.tile ("b = wall_crystal_bookcase")
         _G.tile ("c = stone_wall_shoals")

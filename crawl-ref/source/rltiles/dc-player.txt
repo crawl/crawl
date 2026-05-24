@@ -569,8 +569,10 @@ lears_hauberk LEARS_HAUBERK
 faerie_dragon_armour FAERIE_DRAGON_ARMOUR
 moon_troll_leather_armour MOON_TROLL_LEATHER_ARMOUR
 swamp_witch SWAMP_WITCH
+%rim 0
 occultist_scales OCCULTIST_SCALES
 arcanist_scales ARCANIST_SCALES
+%rim 1
 orange_crystal ORANGE_CRYSTAL
 vines VINES
 kryias KRYIAS
@@ -718,15 +720,22 @@ skullcrusher SKULLCRUSHER
 %sdir player/hand1
 # blades
 dagger DAGGER
-%enchant_variation DAGGER shiny runed glowing randart
+%enchant_variation DAGGER shiny runed glowing
 dagger2 DAGGER_MAGIC
-dagger_slant DAGGER_SLANT
-%enchant_variation DAGGER_SLANT shiny runed glowing randart
-dagger_slant2 DAGGER_SLANT_MAGIC
+%enchant_variation DAGGER randart
+dagger3 DAGGER_RANDART
+quick_blade QUICK_BLADE
+%enchant_variation QUICK_BLADE shiny runed glowing
+quick_blade2 QUICK_BLADE_MAGIC
+%enchant_variation QUICK_BLADE randart
+quick_blade3 QUICK_BLADE_RANDART
 short_sword SHORT_SWORD
 short_sword_slant SHORT_SWORD_SLANT
-%enchant_variation SHORT_SWORD_SLANT shiny runed glowing randart
+%enchant_variation SHORT_SWORD_SLANT shiny runed glowing
 short_sword_slant2 SHORT_SWORD_SLANT_MAGIC
+%enchant_variation SHORT_SWORD_SLANT randart
+short_sword_slant3 SHORT_SWORD_SLANT_RANDART
+short_sword_slant_two SHORT_SWORD_SLANT2
 short_sword_two SHORT_SWORD2
 sword_thief SWORD_THIEF
 double_sword DOUBLE_SWORD
@@ -735,22 +744,32 @@ double_sword2 DOUBLE_SWORD_MAGIC
 %enchant_variation DOUBLE_SWORD randart
 double_sword3 DOUBLE_SWORD_RANDART
 long_sword_slant LONG_SWORD_SLANT
-%enchant_variation LONG_SWORD_SLANT shiny runed glowing randart
+%enchant_variation LONG_SWORD_SLANT shiny runed glowing
 long_sword_slant2 LONG_SWORD_SLANT_MAGIC
+%enchant_variation LONG_SWORD_SLANT randart
+long_sword_slant3 LONG_SWORD_SLANT_RANDART
 blessed_blade BLESSED_BLADE
-great_sword_slant GREAT_SWORD_SLANT
-%enchant_variation GREAT_SWORD_SLANT shiny runed glowing randart
-great_sword_slant2 GREAT_SWORD_SLANT_MAGIC
+great_sword GREAT_SWORD
+%enchant_variation GREAT_SWORD shiny runed glowing
+great_sword2 GREAT_SWORD_MAGIC
+%enchant_variation GREAT_SWORD randart
+great_sword3 GREAT_SWORD_RANDART
 triple_sword TRIPLE_SWORD
-%enchant_variation TRIPLE_SWORD shiny runed glowing randart
+%enchant_variation TRIPLE_SWORD shiny runed glowing
 triple_sword2 TRIPLE_SWORD_MAGIC
+%enchant_variation TRIPLE_SWORD randart
+triple_sword3 TRIPLE_SWORD_RANDART
 katana_slant KATANA_SLANT
 scimitar SCIMITAR
-%enchant_variation SCIMITAR shiny runed glowing randart
+%enchant_variation SCIMITAR shiny runed glowing
 scimitar2 SCIMITAR_MAGIC
+%enchant_variation SCIMITAR randart
+scimitar3 SCIMITAR_RANDART
 falchion FALCHION
-%enchant_variation FALCHION shiny runed glowing randart
+%enchant_variation FALCHION shiny runed glowing
 falchion2 FALCHION_MAGIC
+%enchant_variation FALCHION randart
+falchion3 FALCHION_RANDART
 sword_two SWORD2
 broadsword BROADSWORD
 black_sword BLACK_SWORD
@@ -763,11 +782,13 @@ rapier RAPIER
 rapier2 RAPIER_MAGIC
 %enchant_variation RAPIER randart
 rapier3 RAPIER_RANDART
+%rim 0
 athame ATHAME
 %enchant_variation ATHAME shiny runed glowing
 athame2 ATHAME_MAGIC
 %enchant_variation ATHAME randart
 athame3 ATHAME_RANDART
+%rim 1
 sword_three SWORD3
 sword_breaker SWORD_BREAKER
 sword_jag SWORD_JAG
@@ -788,29 +809,39 @@ giant_club_spike GIANT_CLUB_SPIKE
 giant_club_spike_slant GIANT_CLUB_SPIKE_SLANT
 giant_club_plain GIANT_CLUB_PLAIN
 whip WHIP
-%enchant_variation WHIP shiny runed glowing randart
+%enchant_variation WHIP shiny runed glowing
 whip2 WHIP_MAGIC
+%enchant_variation WHIP randart
+whip3 WHIP_RANDART
 sceptre SCEPTRE
 mace_two MACE2
 mace MACE
-%enchant_variation MACE shiny runed glowing randart
+%enchant_variation MACE shiny runed glowing
 mace2 MACE_MAGIC
+%enchant_variation MACE randart
+mace3 MACE_RANDART
 great_mace GREAT_MACE
-%enchant_variation GREAT_MACE shiny runed glowing randart
+%enchant_variation GREAT_MACE shiny runed glowing
 great_mace2 GREAT_MACE_MAGIC
+%enchant_variation GREAT_MACE randart
+great_mace3 GREAT_MACE_RANDART
 mace_ruby MACE_RUBY
 morningstar_two MORNINGSTAR2
 morningstar MORNINGSTAR
-%enchant_variation MORNINGSTAR shiny runed glowing randart
+%enchant_variation MORNINGSTAR shiny runed glowing
 morningstar2 MORNINGSTAR_MAGIC
+%enchant_variation MORNINGSTAR randart
+morningstar3 MORNINGSTAR_RANDART
 eveningstar EVENINGSTAR
 %enchant_variation EVENINGSTAR shiny runed glowing
 eveningstar2 EVENINGSTAR_MAGIC
 %enchant_variation EVENINGSTAR randart
 eveningstar3 EVENINGSTAR_RANDART
 hammer HAMMER
-%enchant_variation HAMMER shiny runed glowing randart
+%enchant_variation HAMMER shiny runed glowing
 hammer2 HAMMER_MAGIC
+%enchant_variation HAMMER randart
+hammer3 HAMMER_RANDART
 hammer_one HAMMER1
 hammer_two HAMMER2
 large_mace LARGE_MACE
@@ -819,13 +850,17 @@ black_whip BLACK_WHIP
 randart_demon_whip BLACK_WHIP_RANDART
 sacred_scourge SACRED_SCOURGE
 sacred_scourge_two SACRED_SCOURGE2
+flail FLAIL
+%enchant_variation FLAIL shiny runed glowing
+flail2 FLAIL_MAGIC
+%enchant_variation FLAIL randart
+flail3 FLAIL_RANDART
+dire_flail DIRE_FLAIL
+%enchant_variation DIRE_FLAIL shiny runed glowing
+dire_flail2 DIRE_FLAIL_MAGIC
+%enchant_variation DIRE_FLAIL randart
+dire_flail3 DIRE_FLAIL_RANDART
 flail_stick FLAIL_STICK
-flail_ball FLAIL
-%enchant_variation FLAIL shiny runed glowing randart
-flail_ball2 FLAIL_MAGIC
-flail_great GREAT_FLAIL
-%enchant_variation GREAT_FLAIL shiny runed glowing randart
-flail_great2 GREAT_FLAIL_MAGIC
 flail_stick_slant FLAIL_STICK_SLANT
 flail_ball_two FLAIL_BALL2
 flail_balls FLAIL_BALLS
@@ -835,16 +870,20 @@ nunchaku NUNCHAKU
 
 ## polearms
 spear SPEAR
-%enchant_variation SPEAR shiny runed glowing randart
+%enchant_variation SPEAR shiny runed glowing
 spear2 SPEAR_MAGIC
+%enchant_variation SPEAR randart
+spear3 SPEAR_RANDART
 spear_two SPEAR2
 spear_three SPEAR3
 spear_four SPEAR4
 spear_five SPEAR5
 hook HOOK
 halberd HALBERD
-%enchant_variation HALBERD shiny runed glowing randart
+%enchant_variation HALBERD shiny runed glowing
 halberd2 HALBERD_MAGIC
+%enchant_variation HALBERD randart
+halberd3 HALBERD_RANDART
 pick_axe PICK_AXE
 trident TRIDENT
 trident_demon DEMON_TRIDENT
@@ -865,26 +904,34 @@ partisan_3 PARTISAN_RANDART
 lance LANCE
 lance_two LANCE2
 scythe SCYTHE
-%enchant_variation SCYTHE shiny runed glowing randart
+%enchant_variation SCYTHE shiny runed glowing
 scythe2 SCYTHE_MAGIC
+%enchant_variation SCYTHE randart
+scythe3 SCYTHE_RANDART
 scythe_slant SCYTHE_SLANT
 pike PIKE
 staff STAFF
 quarterstaff QUARTERSTAFF1
-%enchant_variation QUARTERSTAFF1 shiny runed glowing randart
+%enchant_variation QUARTERSTAFF1 shiny runed glowing
 quarterstaff2 QUARTERSTAFF1_MAGIC
+%enchant_variation QUARTERSTAFF1 randart
+quarterstaff3 QUARTERSTAFF1_RANDART
 quarterstaff_two QUARTERSTAFF2
 quarterstaff_three QUARTERSTAFF3
 quarterstaff_four QUARTERSTAFF4
 quarterstaff_jester QUARTERSTAFF_JESTER
 sickle SICKLE
 glaive GLAIVE
-%enchant_variation GLAIVE shiny runed glowing randart
+%enchant_variation GLAIVE shiny runed glowing
 glaive2 GLAIVE_MAGIC
+%enchant_variation GLAIVE randart
+glaive3 GLAIVE_RANDART
 glaive_two GLAIVE2
-glaive_three GLAIVE3
-%enchant_variation GLAIVE3 shiny runed glowing randart
-glaive_three2 GLAIVE3_MAGIC
+bardiche BARDICHE
+%enchant_variation BARDICHE shiny runed glowing
+bardiche2 BARDICHE_MAGIC
+%enchant_variation BARDICHE randart
+bardiche3 BARDICHE_RANDART
 d_glaive D_GLAIVE
 pole_forked POLE_FORKED
 fork FORK2
@@ -928,22 +975,30 @@ staff-artefact7
 ## axes
 axe_small AXE_SMALL
 hand_axe HAND_AXE
-%enchant_variation HAND_AXE shiny runed glowing randart
+%enchant_variation HAND_AXE shiny runed glowing
 hand_axe2 HAND_AXE_MAGIC
+%enchant_variation HAND_AXE randart
+hand_axe3 HAND_AXE_RANDART
 war_axe WAR_AXE
-%enchant_variation WAR_AXE shiny runed glowing randart
+%enchant_variation WAR_AXE shiny runed glowing
 war_axe2 WAR_AXE_MAGIC
+%enchant_variation WAR_AXE randart
+war_axe3 WAR_AXE_RANDART
 broad_axe BROAD_AXE
 %enchant_variation BROAD_AXE shiny runed glowing
 broad_axe2 BROAD_AXE_MAGIC
 %enchant_variation BROAD_AXE randart
 broad_axe3 BROAD_AXE_RANDART
 battleaxe BATTLEAXE
-%enchant_variation BATTLEAXE shiny runed glowing randart
+%enchant_variation BATTLEAXE shiny runed glowing
 battleaxe2 BATTLEAXE_MAGIC
+%enchant_variation BATTLEAXE randart
+battleaxe3 BATTLEAXE_RANDART
 axe_executioner EXECUTIONERS_AXE
-%enchant_variation EXECUTIONERS_AXE shiny runed glowing randart
+%enchant_variation EXECUTIONERS_AXE shiny runed glowing
 axe_executioner2 EXECUTIONERS_AXE_MAGIC
+%enchant_variation EXECUTIONERS_AXE randart
+axe_executioner3 EXECUTIONERS_AXE_RANDART
 axe_double AXE_DOUBLE
 axe_blood AXE_BLOOD
 axe_short AXE_SHORT

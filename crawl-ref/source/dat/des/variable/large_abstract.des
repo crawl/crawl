@@ -1306,12 +1306,13 @@ MAP
 xxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:  grunt_bent_corner
-DEPTH: Depths, !Depths:$
+NAME:   grunt_bent_corner
+DEPTH:  Depths, !Depths:$
 ORIENT: northwest
-KMONS: 8 = 8 band w:20 / 9 band
-KMONS: 9 = 9 band w:20 / 0 band
-KMONS: 0 = 0 band w:20 / nothing
+KMONS:  8 = 8 band w:15 / 9 band
+KMONS:  9 = 9 band w:15 / 0 band
+KMONS:  0 = 0 band w:15 / nothing
+FTILE:  @%*|098.+Gc = floor_etched
 MAP
 xxxxxxxxxxxxxxxxxxcccccc
 xxcccccxxxxxxcccccc....ccccc
@@ -1351,6 +1352,8 @@ DEPTH:  Depths, !Depths:$
 KMONS:  0 = 0 band
 KMONS:  9 = 9 band
 KMONS:  8 = 8 band
+FTILE:  @ = floor_rough_darkgray
+FTILE:  .*|098G+ = floor_etched
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxc@
 xxxxxxx........ccxxxxxxxxxx.@

@@ -1572,11 +1572,11 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
     {
     case SK_MACES_FLAILS:
         if (dam > 30)
-            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_GREAT_FLAIL;
-        else if (dam > 25)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_GREAT_MACE;
-        else if (dam > 20)
+        else if (dam > 25)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_EVENINGSTAR;
+        else if (dam > 20)
+            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_DIRE_FLAIL;
         else if (dam > 15)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_MORNINGSTAR;
         else if (dam > 10)
@@ -1588,17 +1588,21 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
         break;
 
     case SK_SHORT_BLADES:
-        if (dam > 20)
+        if (dam > 25)
+            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_QUICK_BLADE;
+        else if (dam > 20)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_RAPIER;
         else if (dam > 10)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_SHORT_SWORD_SLANT;
         else
-            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_DAGGER_SLANT;
+            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_DAGGER;
         break;
 
     case SK_LONG_BLADES:
-        if (dam > 25)
-            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_GREAT_SWORD_SLANT;
+        if (dam > 35)
+            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_TRIPLE_SWORD;
+        else if (dam > 25)
+            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_GREAT_SWORD;
         else if (dam > 20)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_KATANA_SLANT;
         else if (dam > 15)
@@ -1623,6 +1627,8 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
         break;
 
     case SK_POLEARMS:
+        if (dam > 40)
+            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_BARDICHE;
         if (dam > 30)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_GLAIVE;
         else if (dam > 20)

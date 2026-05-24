@@ -1077,7 +1077,7 @@ static ai_action::goodness _fire_permafrost_at(const actor &agent, int pow,
 {
     const bool mon = agent.is_monster();
 
-    bolt beam;
+    bolt beam, visual;
     targeting_tracer tracer;
     beam.set_is_tracer(is_tracer);
     beam.set_agent(&agent);
@@ -1089,17 +1089,37 @@ static ai_action::goodness _fire_permafrost_at(const actor &agent, int pow,
     if (is_tracer)
         beam.fire(tracer);
     else
+    {
         beam.fire();
+        flash_tile(target, YELLOW, 0, TILE_BOLT_PERMAFROST_EARTH);
+    }
+
+    // To provide a different center graphic from the rest without changing
+    // effect messaging order, split the vfx off into BEAM_VISUAL explosions.
+    visual.flavour       = BEAM_VISUAL;
+    visual.colour        = WHITE;
+    visual.set_agent(&agent);
+    visual.tile_explode  = TILE_BOLT_PERMAFROST_COLD;
+    visual.glyph         = dchar_glyph(DCHAR_EXPLOSION);
+    visual.range         = 1;
+    visual.ex_size       = 1;
+    visual.is_explosion  = true;
+    visual.explode_delay = beam.explode_delay * 3 / 2;
+    visual.target        = target;
 
     zappy(ZAP_PERMAFROST_ERUPTION_COLD, pow, mon, beam);
     beam.ex_size       = 1;
     beam.ac_rule       = ac_type::none;
+    beam.animate       = false;
     beam.apply_beam_conducts();
     beam.refine_for_explosion();
     if (is_tracer)
         beam.explode(tracer);
     else
+    {
+        visual.explode(true, true);
         beam.explode();
+    }
 
     return tracer.good_to_fire(beam.foe_ratio);
 }

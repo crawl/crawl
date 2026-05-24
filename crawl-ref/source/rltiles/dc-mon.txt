@@ -719,9 +719,9 @@ zenata MONS_ZENATA
 %rim 1
 terence MONS_TERENCE
 %sdir mon/nonliving
+%rim 0
 player_shadow MONS_PLAYER_SHADOW
 %sdir mon/nonliving/shadows
-%rim 0
 shadow_gale_centaur MONS_PLAYER_SHADOW_GALE_CENTAUR
 shadow_barachi MONS_PLAYER_SHADOW_BARACHI
 shadow_coglin MONS_PLAYER_SHADOW_COGLIN
@@ -1296,6 +1296,7 @@ boggart MONS_BOGGART
 spriggan MONS_SPRIGGAN
 spriggan_rider MONS_SPRIGGAN_RIDER
 spriggan_druid MONS_SPRIGGAN_DRUID
+spriggan_druid_staffless MONS_SPRIGGAN_DRUID_STAFFLESS
 spriggan_berserker MONS_SPRIGGAN_BERSERKER
 spriggan_defender MONS_SPRIGGAN_DEFENDER
 %rim 0

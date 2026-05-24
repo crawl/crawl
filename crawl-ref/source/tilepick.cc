@@ -2291,6 +2291,15 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 return TILEP_MONS_REAPER_SCYTHELESS;
         }
 
+        case MONS_SPRIGGAN_DRUID:
+        {
+            const item_def * const weapon = mon.inv[MSLOT_WEAPON].get();
+            if (weapon && weapon->is_type(OBJ_WEAPONS, WPN_QUARTERSTAFF))
+                return TILEP_MONS_SPRIGGAN_DRUID;
+            else
+                return TILEP_MONS_SPRIGGAN_DRUID_STAFFLESS;
+        }
+
         case MONS_CEREBOV:
         case MONS_SERAPH:
             return base + (mon.inv[MSLOT_WEAPON] ? 0 : 1);
@@ -3896,6 +3905,8 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
     case TILE_BOLT_IGNITE_POISON_TERRAIN:
     case TILE_BOLT_MAGMA:
     case TILE_BOLT_ICEBLAST:
+    case TILE_BOLT_PERMAFROST_EARTH:
+    case TILE_BOLT_PERMAFROST_COLD:
     case TILE_BOLT_ALEMBIC_POTION:
     case TILE_BOLT_WEAK_AIR:
     case TILE_BOLT_MEDIUM_AIR:

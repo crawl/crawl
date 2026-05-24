@@ -1184,7 +1184,7 @@ WEIGHT:  0 (D:1), 10
 SHUFFLE: {[(<
 SUBST:   x : xxxm, c : cccb
 FTILE:   {[(<_cbxm; : floor_black_cobalt / floor_cobble_blood / floor_crypt / \
-         floor_crystal_squares / floor_etched / floor_grass_dark / \
+         floor_crystal_squares / floor_grass_dark / \
          floor_limestone / floor_moss / floor_mud / floor_sand / \
          floor_sandstone / floor_vines / floor_w_marble
 COLOUR:  ; : blue / green / cyan / red / magenta / brown / lightgrey / \
