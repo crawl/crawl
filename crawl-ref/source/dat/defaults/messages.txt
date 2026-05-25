@@ -68,6 +68,7 @@ msc += $warning:slides
 msc += $warning:settles down
 msc += white:There is a(n entrance| portal| gateway) to.*on this level
 msc += white:caravan has stopped on this level
+msc += lightcyan:(There is|Found).*purified mutation catalyst
 
 msc += lightcyan:LOW MAGIC WARNING
 msc += $warning:no longer ripe

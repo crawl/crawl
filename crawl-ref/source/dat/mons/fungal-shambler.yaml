@@ -6,11 +6,11 @@ genus: fungus
 holiness: [plant]
 will: 60
 attacks:
- - {type: hit, flavour: weakness, damage: 17}
- - {type: spore, flavour: burstshroom, damage: 18}
-hd: 14
-hp_10x: 840
-ac: 6
+ - {type: hit, flavour: weakness, damage: 20}
+ - {type: spore, flavour: burstshroom, damage: 20}
+hd: 15
+hp_10x: 930
+ac: 8
 ev: 11
 intelligence: brainless
 uses: starting_equipment

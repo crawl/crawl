@@ -6,17 +6,17 @@ exp: 844
 genus: drake
 will: 60
 attacks:
- - {type: bite, flavour: poison_strong, damage: 27}
- - {type: kick, damage: 14}
+ - {type: bite, flavour: poison_strong, damage: 33}
+ - {type: headbutt, damage: 17}
 hd: 11
-hp_10x: 625
-ac: 6
-ev: 12
+hp_10x: 685
+ac: 7
+ev: 13
 spells: mongrel_wurm
 has_corpse: true
 shout: roar
 intelligence: animal
 habitat: amphibious
-speed: 12
+speed: 13
 size: large
 shape: snake

@@ -3318,7 +3318,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
             "\nYou must first come back to life before you may mutate.");
         }
         else if (you.is_lifeless_undead()
-             && you.get_mutation_level(MUT_MUTATION_RESISTANCE) != 3)
+             || you.get_mutation_level(MUT_MUTATION_RESISTANCE) == 3)
         {
             long_desc += make_stringf(
             "\nThis is completely useless to you, as you cannot mutate.");
@@ -3326,8 +3326,8 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
         else
         {
             long_desc += make_stringf(
-                      "\nWhile standing here, you can crack open %s with "
-                      "the <w>%s</w> key.", desc_the.c_str(),
+                      "<w>\nWhile standing here, you can crack open %s with "
+                      "the</w> <cyan>%s</cyan> <w>key</w>.", desc_the.c_str(),
                        command_to_string(CMD_GO_DOWNSTAIRS).c_str());
         }
     }

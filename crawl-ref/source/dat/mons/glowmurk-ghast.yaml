@@ -7,7 +7,7 @@ genus: phantom
 holiness: [undead]
 will: 60
 attacks:
- - {type: touch, flavour: contam_water, damage: 18}
+ - {type: touch, flavour: contam_water, damage: 24}
 hd: 13
 hp_10x: 245
 ac: 0

@@ -3,14 +3,14 @@ glyph: {char: "H", colour: cyan}
 flags: [see_invis, no_poly_to, no_gen_derived]
 resists: {elec: 1, poison: 1, fire: 2, cold: 2}
 exp: 2332
-will: 100
+will: 120
 attacks:
- - {type: bite, flavour: drag, damage: 38}
- - {type: kick, damage: 34}
- - {type: sting, damage: 30}
+ - {type: bite, flavour: drag, damage: 39}
+ - {type: kick, damage: 36}
+ - {type: sting, damage: 31}
 hd: 21
-hp_10x: 1065
-ac: 23
+hp_10x: 1235
+ac: 27
 ev: 4
 spells: scrapshell_chimera
 shout: gurgle

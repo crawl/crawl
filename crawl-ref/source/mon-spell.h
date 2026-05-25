@@ -347,7 +347,7 @@ static const mon_spellbook mspell_list[] =
 
     { MST_MONGREL_WURM,
       {
-        { SPELL_HARPOON_SHOT, 54, MON_SPELL_NATURAL | MON_SPELL_BREATH },
+        { SPELL_HARPOON_SHOT, 62, MON_SPELL_NATURAL | MON_SPELL_BREATH },
         { SPELL_SCORCH, 54, MON_SPELL_NATURAL | MON_SPELL_BREATH },
       }
     },
@@ -1178,7 +1178,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SCRAPSHELL_CHIMERA,
       {
-       { SPELL_MURKY_LEGION, 54, MON_SPELL_MAGICAL },
+       { SPELL_MURKY_LEGION, 60, MON_SPELL_MAGICAL },
       }
     },
 

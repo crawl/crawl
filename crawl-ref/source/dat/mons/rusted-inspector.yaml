@@ -6,10 +6,10 @@ exp: 816
 holiness: [nonliving]
 will: 100
 attacks:
- - {type: bite, flavour: corrode, damage: 32}
+ - {type: bite, flavour: corrode, damage: 34}
 hd: 14
 hp_10x: 815
-ac: 14
+ac: 16
 ev: 2
 spells: rusted_inspector
 shout: squeak

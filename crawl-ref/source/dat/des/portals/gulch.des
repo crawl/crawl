@@ -150,8 +150,6 @@ function gulch_loot(e, item_nsubst, potion_count)
   local prop_c = "randart artprops:rCorr"
   local def = { { i = "cloak " .. res_p, w = 6 }, { i = "cloak " .. prop_p, w = 2 },
                 { i = "cloak " .. res_c, w = 10 }, { i = "cloak " .. prop_c, w = 2 },
-                { i = "pair of boots ego:flying good_item, " ..
-                      "barding ego:flying good_item", w = 10 },
                 { i = "kite shield " .. res_c, w = 8 },
                 { i = "kite shield " .. prop_c, w = 2 },
                 { i = "scale mail ego:resonance good_item", w = 4 },
@@ -160,6 +158,14 @@ function gulch_loot(e, item_nsubst, potion_count)
                 { i = "any ring " .. prop_c, w = 12 },
                 { i = "any ring randart artprops:Fly", w = 2 },
                 { i = "amulet of chemistry randart", w = 15 }, }
+  local def_grab_1 = util.random_weighted_from("w", def).i
+  local def_grab_2 = util.random_weighted_from("w", def).i
+  if crawl.one_chance_in(7) then
+    def_grab_1 = "pair of boots ego:flying good_item, " ..
+                 "barding ego:flying good_item"
+  end
+  crawl.mpr(def_grab_1)
+  crawl.mpr(def_grab_2)
   e.kitem("d = " .. n_weapon .. " / athame ego:draining w:4 / " ..
                "hand cannon good_item w:20")
   e.kitem("e = staff of alchemy randart artprops:Hexes w:5 / " ..
@@ -171,7 +177,7 @@ function gulch_loot(e, item_nsubst, potion_count)
           "orb ego:guile randart artprops:" .. orbprop .. " w:2 / " ..
           "orb ego:glass randart artprops:" .. orbprop .. " w:2 / " ..
           "manual of alchemy w:5 / manual of forgecraft w:5")
-  e.kitem("f = " .. util.random_weighted_from("w", def).i)
+  e.kitem("f = " .. def_grab_1)
   e.kitem("g = maw talisman w:8 " .. prop_p .. " / maw talisman w:12 " .. prop_c .. " / " ..
               "eel talisman w:8 " .. prop_p .. " / eel talisman w:12 " .. prop_c .. " / " ..
               "fortress talisman randart w:20 / lupine talisman w:8 " .. prop_p .. " / " ..
@@ -192,8 +198,7 @@ function gulch_loot(e, item_nsubst, potion_count)
   e.kitem("| = " .. n_weapon .. " / athame ego:draining w:4 / " ..
                "hand cannon good_item w:20 / " ..
                "randbook splevels:33 numspells:5 w:20 / " ..
-               util.random_weighted_from("w", def).i .. " w:30 / " ..
-               "swamp dragon scales randart w:30 / " ..
+               def_grab_2 .. " w:30 / swamp dragon scales randart w:30 / " ..
                "any aux armour randart w:14 / any control misc / " ..
                "any jewellery randart w:4 / any manual w:4")
   e.kitem("$ = $ no_pickup")
@@ -593,7 +598,7 @@ ccBBBBBBBBBBBcv....v$....v....$v....vcDDDDDDDDDDDcc
 ccBBBBBBBBBBBcv...'v'.'.vvv.'.'v'...vcDDDDDDDDDDDcc
 ccBBBBBBBBBBBcv.^v'v$?..vvv..?$v'v^.vcDDDDDDDDDDDcc
 ccBBBBBBBBBBBcv...'v'.1.vvv.1.'v'...vcDDDDDDDDDDDcc
-ccBBBBBBBBBBBcv....v$..0$v$0..$v....vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv....v$0.0$v$0.0$v....vcDDDDDDDDDDDcc
 ccBBBBBBBBBBBcv..vvvvv0.6v6.0vvvvv..vcDDDDDDDDDDDcc
 ccBBBBBBBBBBBcv..z...vv||6||vv...z..vcDDDDDDDDDDDcc
 ccBBBBBBBBBBBcv.......vv|}|vv.......vcDDDDDDDDDDDcc
@@ -606,7 +611,7 @@ cccc+c+B+c+ccccvvvv+v+v+vvvvvvvvvvvvcccc+c+c+c+cccc
 cc...W.W.W....xxxxxxPxPxccccxxxxxxxxx....W.W.W...cc
 cc.....^......~~~~~~~.~~ccc~~~~~~~~~~......^.....cc
 cci.v..............3.2<.ccc.A.W...1.3.........v.icc
-cc~'..............2^1...ccc..W.<...2...........'~cc
+cc~'..............2^1...ccc..W.<...2.1.........'~cc
 ccx~|i~i~i~i~i~~~~~~~~~~ccc~~~~~~~~~~i~i~i~i~i|~xcc
 ccxxxxxxxxxxxxxxxxxxxxxcccccxxxxxxxxxxxxxxxxxxxxxcc
 ccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -1888,7 +1893,7 @@ ENDMAP
 #  * green death + deep elf demonologists
 #  * death knights + merfolk impaler draugr
 #  * extra formless jellyfish + spectral kraken
-#  * acid blobs + 1 eye of draining
+#  * acid blobs + one (1) eye of draining
 #
 # -- Branchform --
 # If this were to become a branch, with these layouts converted to endvaults,

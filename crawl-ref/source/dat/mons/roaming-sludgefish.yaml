@@ -7,9 +7,9 @@ will: 80
 attacks:
  - {type: bite, flavour: antimagic, damage: 34}
 hd: 14
-hp_10x: 680
+hp_10x: 710
 ac: 5
-ev: 17
+ev: 19
 spells: roaming_sludgefish
 has_corpse: true
 intelligence: human

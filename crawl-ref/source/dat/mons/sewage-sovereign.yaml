@@ -6,11 +6,11 @@ exp: 1850
 genus: hog
 will: 120
 attacks:
- - {type: gore, damage: 42}
+ - {type: gore, damage: 46}
 hd: 16
-hp_10x: 1520
-ac: 7
-ev: 2
+hp_10x: 1560
+ac: 9
+ev: 3
 spells: sewage_sovereign
 has_corpse: true
 shout: squeal
