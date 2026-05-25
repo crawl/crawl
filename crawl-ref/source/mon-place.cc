@@ -2984,13 +2984,13 @@ public:
         :  habitat_wanted(ht_wanted), maxdistance(maxdist),
            best_distance(0), nfound(0), levelgen(_levelgen)
     {
-        start = pos;
+        starts = {pos};
     }
 
     // This is an overload, not an override!
     coord_def pathfind()
     {
-        set_floodseed(start);
+        set_floodseeds(starts);
         return travel_pathfind::pathfind(RMODE_CONNECTIVITY);
     }
 

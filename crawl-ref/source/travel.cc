@@ -1302,7 +1302,7 @@ FixedVector<coord_def, GXM * GYM> travel_pathfind::circumference[2];
 // const int travel_pathfind::INFINITE_DIST;
 
 travel_pathfind::travel_pathfind()
-    : runmode(RMODE_NOT_RUNNING), start(), dest(), next_travel_move(),
+    : runmode(RMODE_NOT_RUNNING), starts(), dest(), next_travel_move(),
       floodout(false), double_flood(false), ignore_hostile(false),
       ignore_danger(false), annotate_map(false), ls(nullptr),
       need_for_greed(false), autopickup(false),
@@ -1332,19 +1332,24 @@ void travel_pathfind::set_src_dst(const coord_def &src, const coord_def &dst)
 {
     // Yes, this is backwards - for travel, we always start from the destination
     // and search outwards for the starting position.
-    start = dst;
+    starts = {dst};
     dest  = src;
 
     floodout = double_flood = false;
 }
 
-void travel_pathfind::set_floodseed(const coord_def &seed, bool dblflood)
+void travel_pathfind::set_floodseeds(const vector<coord_def> &seeds, bool dblflood)
 {
-    start = seed;
+    starts = seeds;
     dest.reset();
 
     floodout = true;
     double_flood = dblflood;
+}
+
+void travel_pathfind::set_floodseed(const coord_def &seed, bool dblflood)
+{
+    set_floodseeds({seed}, dblflood);
 }
 
 void travel_pathfind::set_feature_vector(vector<coord_def> *feats)
@@ -1373,6 +1378,30 @@ const coord_def travel_pathfind::explore_target() const
     return coord_def(0, 0);
 }
 
+void travel_pathfind::populate_stair_distances()
+{
+    LevelInfo &li = travel_cache.get_level_info(level_id::current());
+    vector<coord_def> stair_positions = {};
+    for (auto s : li.get_stairs())
+    {
+        if (feat_stair_direction(s.grid) == CMD_GO_UPSTAIRS)
+            stair_positions.push_back(s.position);
+    }
+    if (stair_positions.empty())
+    {
+        for (int x = 0; x < GXM; ++x)
+            for (int y = 0; y < GYM; ++y)
+                stair_distances[x][y] = INFINITE_DIST;
+    }
+    else
+    {
+        fill_travel_point_distance_multiple(stair_positions);
+        for (int x = 0; x < GXM; ++x)
+            for (int y = 0; y < GYM; ++y)
+                stair_distances[x][y] = travel_point_distance[x][y];
+    }
+}
+
 // The travel algorithm is based on the NetHack travel code written by Warwick
 // Allison - used with his permission.
 coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
@@ -1397,6 +1426,12 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
         {
             autopickup = can_autopickup();
             need_for_greed = autopickup;
+        }
+        if (Options.explore_stair_bias
+            && (runmode == RMODE_EXPLORE || runmode == RMODE_EXPLORE_GREEDY))
+        {
+            // Need distances from stairs to implement stair bias.
+            populate_stair_distances();
         }
     }
 
@@ -1433,21 +1468,24 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
     // point, i.e. the distance travelled to get there.
     memset(point_distance, 0, sizeof(travel_distance_grid_t));
 
-    if (!in_bounds(start))
-        return coord_def();
-
-    // Abort run if we're trying to go someplace evil. Travel to traps is
-    // specifically allowed here if the player insists on it.
-    if (!floodout
-        && !is_travelsafe_square(start, false, ignore_danger, true)
-        && !is_trap(start))          // player likes pain
+    bool any_valid = false;
+    for (auto start : starts)
     {
-        return coord_def();
+        if (!in_bounds(start))
+            continue;
+
+        // Nothing to do?
+        if (!floodout && start == dest)
+            return start;
+
+        if (floodout
+            || is_travelsafe_square(start, false, ignore_danger, true)
+            || is_trap(start))          // player likes pain
+            any_valid = true;
     }
 
-    // Nothing to do?
-    if (!floodout && start == dest)
-        return start;
+    if (!any_valid)
+        return coord_def();
 
     unwind_bool slime_wall_check(g_Slime_Wall_Check,
                                  !ignore_player_traversability
@@ -1478,7 +1516,8 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
     // the "next round" becomes the current one, and the old points can be
     // overwritten with newer ones. Since we count the number of points for
     // next round in next_iter_points, we don't even need to reset the array.
-    circumference[circ_index][0] = start;
+    for (unsigned int i = 0; i < starts.size(); ++i)
+        circumference[circ_index][i] = starts[i];
 
     bool found_target = false;
 
@@ -1496,7 +1535,8 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
                 if (runmode == RMODE_TRAVEL)
                     return next_travel_move;
                 else if (runmode == RMODE_CONNECTIVITY
-                         || !Options.explore_wall_bias)
+                         || (!Options.explore_wall_bias
+                             && !Options.explore_stair_bias))
                 {
                     return explore_target();
                 }
@@ -1505,7 +1545,7 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
             }
         }
 
-        // Handle exploration with wall bias
+        // Handle exploration with wall/stair bias
         if (next_iter_points == 0 && found_target)
             return explore_target();
 
@@ -1646,6 +1686,10 @@ void travel_pathfind::check_square_greed(const coord_def &c)
         if (Options.explore_wall_bias > 0)
             dist += Options.explore_wall_bias * 3;
 
+        // Penalize distance to favour exploring near stairs
+        if (Options.explore_stair_bias)
+            dist += Options.explore_stair_bias * stair_distances[c.x][c.y] / 10;
+
         greedy_dist = dist;
         greedy_place = c;
     }
@@ -1733,6 +1777,10 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
                     }
                 }
 
+                // Penalize distance to favour exploring near stairs
+                if (Options.explore_stair_bias)
+                    dist += Options.explore_stair_bias * stair_distances[c.x][c.y] / 10;
+
                 // Replace old target if nearer (or less penalized)
                 // don't let dist get < 0
                 if (dist < unexplored_dist || unexplored_dist < 0)
@@ -1778,6 +1826,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
     if (!in_bounds(dc))
         return false;
 
+    bool dc_is_start = find(starts.begin(), starts.end(), dc) != starts.end();
     // We don't want to follow the transporter at c if it's excluded. We also
     // don't want to update point_distance for the destination based on
     // taking this transporter.
@@ -1803,7 +1852,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
         // trap, we'll want to put it on the feature vector anyway.
         if (_is_reseedable(dc, ignore_danger)
             && !point_distance[dc.x][dc.y]
-            && dc != start)
+            && !dc_is_start)
         {
             if (features && (is_trap(dc) || is_exclude_root(dc))
                 && find(features->begin(), features->end(), dc)
@@ -1848,7 +1897,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
         {
             dungeon_feature_type feature = env.map_knowledge(dc).feat();
 
-            if (dc != start
+            if (!dc_is_start
                 && (feature != DNGN_FLOOR
                        && !feat_is_water(feature)
                        && feature != DNGN_LAVA
@@ -1861,7 +1910,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
             }
         }
 
-        if (features && dc != start && is_exclude_root(dc)
+        if (features && !dc_is_start && is_exclude_root(dc)
             && find(features->begin(), features->end(), dc)
                == features->end())
         {
@@ -1982,19 +2031,20 @@ int travel_pathfind::explore_status()
     return status;
 }
 
-
 /**
- * Run the travel_pathfind algorithm, from the given position in floodout mode
- * to populate travel_point_distance relative to that starting point.
+ * Run the travel_pathfind algorithm, from the given positions in floodout mode
+ * to populate travel_point_distance relative to those positions. The distance
+ * is the minimum distance from any of the positions.
  *
  * @param      youpos The starting position.
  * @param[in]  features A vector of features to give to travel_pathfind.
  */
-void fill_travel_point_distance(const coord_def& youpos,
-                                vector<coord_def>* features)
+void fill_travel_point_distance_multiple(
+    const vector<coord_def>& positions,
+    vector<coord_def>* features)
 {
     travel_pathfind tp;
-    tp.set_floodseed(youpos);
+    tp.set_floodseeds(positions);
     tp.set_feature_vector(features);
 
     // Calling pathfind() twice like this changes the order of *features, but
@@ -2002,6 +2052,20 @@ void fill_travel_point_distance(const coord_def& youpos,
     if (features)
         tp.pathfind(RMODE_NOT_RUNNING, false);
     tp.pathfind(RMODE_NOT_RUNNING, true);
+}
+
+
+/**
+ * Run the travel_pathfind algorithm, from the given position in floodout mode
+ * to populate travel_point_distance relative to the point.
+ *
+ * @param      youpos The starting position.
+ * @param[in]  features A vector of features to give to travel_pathfind.
+ */
+void fill_travel_point_distance(const coord_def& youpos,
+                                vector<coord_def>* features)
+{
+    fill_travel_point_distance_multiple({youpos}, features);
 }
 
 extern map<branch_type, set<level_id> > stair_level;
