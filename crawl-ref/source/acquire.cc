@@ -56,8 +56,8 @@
 #include "ui.h"
 
 static equipment_slot _acquirement_armour_slot(int);
-static armour_type _acquirement_armour_for_slot(equipment_slot);
-static armour_type _acquirement_shield_type();
+static armour_type _acquirement_armour_for_slot(equipment_slot, int);
+static armour_type _acquirement_shield_type(int);
 static armour_type _acquirement_body_armour();
 static armour_type _useless_armour_type();
 static bool _armour_slot_seen(equipment_slot);
@@ -90,7 +90,7 @@ static int _skill_rdiv(skill_type skill, int mult = 1)
 static int _acquirement_armour_subtype(int & /*quantity*/, int agent)
 {
     const equipment_slot slot_type = _acquirement_armour_slot(agent);
-    return _acquirement_armour_for_slot(slot_type);
+    return _acquirement_armour_for_slot(slot_type, agent);
 }
 
 /**
@@ -169,7 +169,7 @@ static equipment_slot _acquirement_armour_slot(int agent)
  *
  * @return          The armour_type of the armour to be generated.
  */
-static armour_type _acquirement_armour_for_slot(equipment_slot slot_type)
+static armour_type _acquirement_armour_for_slot(equipment_slot slot_type, int agent)
 {
     switch (slot_type)
     {
@@ -186,7 +186,7 @@ static armour_type _acquirement_armour_for_slot(equipment_slot slot_type)
                 return random_choose(ARM_HELMET, ARM_HAT);
             return ARM_HAT;
         case SLOT_OFFHAND:
-            return _acquirement_shield_type();
+            return _acquirement_shield_type(agent);
         case SLOT_BODY_ARMOUR:
             return _acquirement_body_armour();
         default:
@@ -198,17 +198,19 @@ static armour_type _acquirement_armour_for_slot(equipment_slot slot_type)
  * Choose a random type of shield to be generated via acquirement or god gifts.
  *
  * Weighted by Shields skill: at 0 skill orb/buckler/kite/tower are equally
- * likely, while at 27 skill you get 25% kite and 75% tower.
+ * likely, while at 27 skill you get ~25% kite and 75% tower.
  *
  * @return A potentially wearable type of shield.
  */
-static armour_type _acquirement_shield_type()
+static armour_type _acquirement_shield_type(int agent)
 {
+    int orb_weight = agent == GOD_OKAWARU ? 0 : 28 - _skill_rdiv(SK_SHIELDS);
+
     vector<pair<armour_type, int>> weights = {
-        { ARM_ORB,           27 - _skill_rdiv(SK_SHIELDS) },
-        { ARM_BUCKLER,       27 - _skill_rdiv(SK_SHIELDS) },
-        { ARM_KITE_SHIELD,   27},
-        { ARM_TOWER_SHIELD,  27 + _skill_rdiv(SK_SHIELDS, 2) },
+        { ARM_ORB,           orb_weight },
+        { ARM_BUCKLER,       28 - _skill_rdiv(SK_SHIELDS) },
+        { ARM_KITE_SHIELD,   28},
+        { ARM_TOWER_SHIELD,  28 + _skill_rdiv(SK_SHIELDS, 2) },
     };
 
     return filtered_vector_select<armour_type>(weights, [] (armour_type shtyp) {
