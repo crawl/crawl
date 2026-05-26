@@ -44,4 +44,5 @@ void wizard_change_job_to(job_type job);
 void wizard_xom_acts();
 void wizard_suppress();
 void wizard_set_zot_clock();
+void wizard_reset_god_capstones();
 #endif

@@ -1105,4 +1105,30 @@ void wizard_set_zot_clock()
     else
         set_turns_until_zot(turns_left);
 }
+
+void wizard_reset_god_capstones()
+{
+    // generic
+    you.one_time_ability_used.reset();
+
+    // Makhleb
+    for (int i = 0; i < NUM_MUTATIONS; i++)
+    {
+        if (you.innate_mutation[i] && is_makhleb_mark((mutation_type)i))
+        {
+            you.innate_mutation[i]--;
+            delete_mutation((mutation_type)i,"wizard power", false, true, false);
+        }
+    }
+    you.props.erase(MAKHLEB_OFFERED_MARKS_KEY);
+    makhleb_initialize_marks();
+
+    // Okawaru
+    you.props.erase(OKAWARU_WEAPON_GIFTED_KEY);
+    you.props.erase(OKAWARU_ARMOUR_GIFTED_KEY);
+    you.props.erase(OKAWARU_WEAPONS_KEY);
+    you.props.erase(OKAWARU_ARMOUR_KEY);
+
+    mpr("Reset capstone god abilities.");
+}
 #endif
