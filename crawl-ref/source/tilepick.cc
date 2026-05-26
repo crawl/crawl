@@ -958,7 +958,9 @@ static tileidx_t _tileidx_feature_no_overrides(const coord_def &gc)
     tileidx_t override = tile_env.remembered_flavour.feat_flavour(gc);
     // Door tile overrides get special handling in apply_variations
     if (override && !feat_is_door(feat)
-        && env.map_knowledge(gc).feat_known())
+        && env.map_knowledge(gc).feat_known()
+        // XXX: level generation creates floors with wall feat flavour
+        && feat != DNGN_FLOOR)
     {
         return override;
     }
