@@ -1272,7 +1272,8 @@ Mark of the Tyrant mutation
 Your Infernal Servants have a longer duration, and you can summon even stronger
 ones at very high Invocations (at the cost of additional piety). When you slay
 enemies, a random servant may gain one of: Haste, Might, Regeneration, or
-Brilliance.
+Brilliance. You may also unleash Makhleb's Destruction through your summoned
+demons without harming them.
 %%%%
 Mark of Carnage mutation
 
@@ -1355,7 +1356,7 @@ demonic presence will go dormant inside you once again.
 Mark of Atrocity mutation
 
 Your Unleash Destruction is empowered the more times you use it consecutively
-without pause, increasing in both damage and health cost. Upon using it a fourth
+without pause, increasing in both damage and health cost. Upon using it a three
 time in a row, you will automatically unleash a wild barrage of additional bolts
 aimed at random targets and reset this boost.
 %%%%

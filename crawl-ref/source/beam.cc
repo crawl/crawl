@@ -5796,9 +5796,11 @@ bool bolt::ignores_monster(const monster* mon) const
         return in_explosion_phase && mons_aligned(agent(), mon);
 
     // Explosions caused by Mark of Carnage don't cause friendly fire, and Mark
-    // of the Legion allows firing through allies at all times.
+    // of the Legion, Mark of the Tyrant allows firing through allies at all times.
     if ((origin_spell == SPELL_UNLEASH_DESTRUCTION && mon->friendly())
-        && (is_explosion || you.has_mutation(MUT_MAKHLEB_MARK_LEGION)))
+        && (is_explosion
+            || you.has_mutation(MUT_MAKHLEB_MARK_LEGION)
+            || you.has_mutation(MUT_MAKHLEB_MARK_TYRANT)))
     {
         return true;
     }
