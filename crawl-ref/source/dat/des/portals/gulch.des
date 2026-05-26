@@ -83,6 +83,7 @@ function gulch_boss_theme_sets(e, even_odds)
                 "telencephalon w:4 / crawling flesh cage w:2")
     e.kmons("6 = scrapshell chimera")
     e.kmons("? = stack of scrap")
+    e.kfeat("? = .")
     e.subst("' = ;;?")
     e.nsubst("6 = 1:6 / 1:600 / *:0")
     e.nsubst("0 = 1:` / 1:0; / *:0")
@@ -164,8 +165,6 @@ function gulch_loot(e, item_nsubst, potion_count)
     def_grab_1 = "pair of boots ego:flying good_item, " ..
                  "barding ego:flying good_item"
   end
-  crawl.mpr(def_grab_1)
-  crawl.mpr(def_grab_2)
   e.kitem("d = " .. n_weapon .. " / athame ego:draining w:4 / " ..
                "hand cannon good_item w:20")
   e.kitem("e = staff of alchemy randart artprops:Hexes w:5 / " ..
