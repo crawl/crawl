@@ -3816,10 +3816,32 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
         }
     }
 
-    // We should have handled all cases of a monster attempting to attack instead of *just* move, so it should fine to simply silently
-    // stand in place here.
+    // If a bound monster cannot perform an attack or movement towards what it
+    // *wants* to, first check if there's anything nearby it could hit instead
+    // of doing literally nothing.
     if (mons.cannot_move())
-        return false;
+    {
+        int count = 0;
+        actor* targ = nullptr;
+        for (radius_iterator ri(mons.pos(), mons.reach_range(), C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+        {
+            if (actor* act = actor_at(*ri))
+            {
+                if (could_harm_enemy(&mons, act)
+                    && !act->is_firewood()
+                    && one_chance_in(++count))
+                {
+                    targ = act;
+                }
+            }
+        }
+
+        if (targ)
+            return mons_fight(&mons, targ);
+        // Nothing nearby to attack, so just wait in place.
+        else
+           return false;
+    }
 
     ASSERT(!cell_is_runed(f)); // should be checked in mons_can_traverse
 
