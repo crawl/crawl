@@ -11,6 +11,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "evoke.h"
 #include "fight.h"
 #include "god-abil.h"
 #include "god-passive.h"
@@ -694,6 +695,22 @@ bool targeter_transference::affects_monster(const monster_info& mon)
     return !mons_is_hepliaklqana_ancestor(mon.type)
             && !mons_class_is_stationary(mon.type)
             && !mons_is_tentacle_or_tentacle_segment(mon.type);
+}
+
+targeter_phantom_mirror::targeter_phantom_mirror(const actor* act) :
+    targeter_smite(act, LOS_RADIUS)
+{
+}
+
+bool targeter_phantom_mirror::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    monster *victim = monster_at(a);
+    if (victim && you.can_see(*victim) && !mirror_can_effect(victim))
+        return notify_fail("The mirror can't reflect that.");
+    return true;
 }
 
 targeter_permafrost::targeter_permafrost(const actor &act) :

@@ -346,6 +346,13 @@ private:
     unique_ptr<passwall_path> cur_path;
 };
 
+class targeter_phantom_mirror : public targeter_smite
+{
+public:
+    targeter_phantom_mirror(const actor *act);
+    bool valid_aim(coord_def a) override;
+};
+
 class targeter_dig : public targeter_beam
 {
 public:
