@@ -402,6 +402,41 @@ static void _do_medusa_stinger()
     you.did_trigger(DID_MEDUSA_STINGER);
 }
 
+static void _knight_pinning_attack(monster* mon)
+{
+    for (adjacent_iterator ai(mon->pos()); ai; ++ai)
+    {
+        if (monster* targ = monster_at(*ai))
+        {
+            if (could_harm_enemy(mon, targ) && monster_los_is_valid(mon, targ))
+            {
+                // Doesn't stack duration, but has a higher chance to refresh
+                // duration on already-bound monsters than to bind them initially.
+                if (targ->has_ench(ENCH_BOUND))
+                {
+                    if (!one_chance_in(10))
+                    {
+                        mon_enchant bind = targ->get_ench(ENCH_BOUND);
+                        bind.duration = max(20, bind.duration);
+                        targ->update_ench(bind);
+                    }
+                }
+                else if (!one_chance_in(3))
+                {
+                    if (you.can_see(*mon))
+                    {
+                        mprf("%s pins %s in place with %s attack.",
+                            mon->name(DESC_THE).c_str(),
+                            targ->name(DESC_THE).c_str(),
+                            mon->pronoun(PRONOUN_POSSESSIVE).c_str());
+                    }
+                    targ->add_ench(mon_enchant(ENCH_BOUND, mon, 20));
+                }
+            }
+        }
+    }
+}
+
 /**
  * Handle combat between the player and some monster. This is usually a standard
  * melee attack, but can also be a ranged attack performed at melee range.
@@ -576,6 +611,9 @@ bool mons_fight(monster *attacker, actor *defender, bool *did_hit, bool simu)
     // actions, rather than additional times for bonus attacks (ie: from Autumn Katana)
     if (attacker->type == MONS_PLATINUM_PARAGON)
         paragon_charge_up(*attacker);
+
+    if (attacker->type == MONS_ANCESTOR_KNIGHT && attacker->get_experience_level() >= 10)
+        _knight_pinning_attack(attacker);
 
     return true;
 }

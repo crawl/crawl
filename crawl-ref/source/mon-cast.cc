@@ -251,6 +251,22 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _fire_simple_beam,
         _selfench_beam_setup(BEAM_HASTE),
     } },
+    { SPELL_BOLSTER, {
+        [](const monster &caster)
+        {
+            return ai_action::good_or_bad(!caster.has_ench(ENCH_MIGHT)
+                                          || !caster.has_ench(ENCH_RESISTANCE));
+        },
+        [](monster &caster, mon_spell_slot, bolt&)
+        {
+            simple_monster_message(caster, " vitality is bolstered.", true);
+            flash_tile(caster.pos(), LIGHTBLUE);
+            const int dur = random_range(220, 300);
+            caster.add_ench(mon_enchant(ENCH_MIGHT, &caster, dur));
+            caster.add_ench(mon_enchant(ENCH_RESISTANCE, &caster, dur));
+        },
+        nullptr,
+    } },
     { SPELL_MINOR_HEALING, {
         [](const monster &caster) {
             return ai_action::good_or_bad(caster.hit_points <= caster.max_hit_points / 2);

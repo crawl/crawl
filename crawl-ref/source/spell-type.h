@@ -658,5 +658,6 @@ enum spell_type : int
     SPELL_BOLT_OF_ANTIMAGIC,
     SPELL_STAMPEDE,
     SPELL_MURKY_LEGION,
+    SPELL_BOLSTER,
     NUM_SPELLS
 };

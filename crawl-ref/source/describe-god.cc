@@ -319,9 +319,11 @@ static const map<monster_type, vector<ancestor_upgrade> > ancestor_data =
         { 1,  "Shield" },
         { 1,  "Chain mail (+AC)" },
         { 15, "Broad axe (flame)" },
+        { 15, "Binding melee attacks" },
         { 19, "Tower shield (reflect)" },
-        { 19, "Haste" },
+        { 19, "Bolster" },
         { 24, "Broad axe (speed)" },
+        { 24, "Increased hit points" },
       }
     },
     { MONS_ANCESTOR_ELEMENTALIST,

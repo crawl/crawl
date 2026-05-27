@@ -5590,12 +5590,6 @@ void throw_monster_bits(const monster& mon)
     }
 }
 
-/// Add an ancestor spell to the given list.
-static void _add_ancestor_spell(monster_spells &spells, spell_type spell)
-{
-    spells.emplace_back(spell, 25, MON_SPELL_WIZARD);
-}
-
 /**
  * Set the correct spells for a given ancestor, corresponding to their HD and
  * type.
@@ -5635,18 +5629,29 @@ void set_ancestor_spells(monster &ancestor, bool notify)
             ancestor.spells.emplace_back(SPELL_PERMAFROST_ERUPTION, 30, MON_SPELL_WIZARD);
 
         break;
+
     case MONS_ANCESTOR_HEXER:
-        _add_ancestor_spell(ancestor.spells, HD >= 10 ? SPELL_PARALYSE
-                                                      : SPELL_SLOW);
-        _add_ancestor_spell(ancestor.spells, HD >= 13 ? SPELL_MASS_CONFUSION
-                                                      : SPELL_CONFUSE);
+        if (HD < 10)
+            ancestor.spells.emplace_back(SPELL_SLOW, 25, MON_SPELL_WIZARD);
+        if (HD < 13)
+            ancestor.spells.emplace_back(SPELL_CONFUSE, 25, MON_SPELL_WIZARD);
+        if (HD >= 10)
+            ancestor.spells.emplace_back(SPELL_PARALYSE, 25, MON_SPELL_WIZARD);
+        if (HD >= 13)
+        {
+            ancestor.spells.emplace_back(SPELL_HASTE, 25, MON_SPELL_WIZARD);
+            ancestor.spells.emplace_back(SPELL_MASS_CONFUSION, 25, MON_SPELL_WIZARD);
+        }
         break;
+
+    case MONS_ANCESTOR_KNIGHT:
+        if (HD >= 13)
+            ancestor.spells.emplace_back(SPELL_BOLSTER, 50, MON_SPELL_WIZARD);
+        break;
+
     default:
         break;
     }
-
-    if (HD >= 13 && ancestor.type != MONS_ANCESTOR_ELEMENTALIST)
-        ancestor.spells.emplace_back(SPELL_HASTE, 25, MON_SPELL_WIZARD);
 
     if (ancestor.spells.size())
         ancestor.props[CUSTOM_SPELLS_KEY] = true;

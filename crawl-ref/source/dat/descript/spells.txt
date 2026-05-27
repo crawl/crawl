@@ -191,6 +191,11 @@ Bolt of Antimagic spell
 Fires a penetrating bolt of ontologically-paradoxical antimagic, draining its
 victims' reserves of magic.
 %%%%
+Bolster spell
+
+Enhances the caster's physical form, greatly increasing the damage they deal in
+melee as well as their resistance to all elements.
+%%%%
 Bolt of Cold spell
 
 Fires a penetrating bolt of frost.

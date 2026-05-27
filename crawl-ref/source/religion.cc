@@ -1724,6 +1724,8 @@ int hepliaklqana_ally_hp(monster_type type)
     const int base_hp = HD * 5 + max(0, (HD - 12) * 5);
     if (type == MONS_ANCESTOR_ELEMENTALIST)
         return base_hp * 3 / 5;
+    else if (type == MONS_ANCESTOR_KNIGHT && HD >= 16)
+        return base_hp * 5 / 4;
     else
         return base_hp;
 }
@@ -1872,17 +1874,30 @@ void upgrade_hepliaklqana_ancestor(bool quiet_force)
         mprf("%s remembers more of %s old skill.",
              ancestor->name(DESC_YOUR, true).c_str(),
              ancestor->pronoun(PRONOUN_POSSESSIVE, true).c_str());
+
+        if (ancestor->type == MONS_ANCESTOR_ELEMENTALIST && old_hd < 13 && hd >= 13)
+        {
+            mprf("%s remembers how to cast %s spells more powerfully.",
+                    ancestor->name(DESC_YOUR, true).c_str(),
+                    ancestor->pronoun(PRONOUN_POSSESSIVE, true).c_str());
+        }
+
+        if (ancestor->type == MONS_ANCESTOR_KNIGHT && old_hd < 10 && hd >= 10)
+        {
+            mprf("%s remembers how to pin enemies in place with %s attacks.",
+                    ancestor->name(DESC_YOUR, true).c_str(),
+                    ancestor->pronoun(PRONOUN_POSSESSIVE, true).c_str());
+        }
+
+        if (ancestor->type == MONS_ANCESTOR_KNIGHT && old_hd < 16 && hd >= 16)
+        {
+            mprf("%s remembers the full extent of %s fortitude.",
+                ancestor->name(DESC_YOUR, true).c_str(),
+                ancestor->pronoun(PRONOUN_POSSESSIVE, true).c_str());
+        }
     }
 
     set_ancestor_spells(*ancestor, !quiet_force);
-
-    if (!quiet_force && ancestor->type == MONS_ANCESTOR_ELEMENTALIST
-        && old_hd < 13 && hd >= 13)
-    {
-        mprf("%s remembers how to cast %s spells more powerfully.",
-                ancestor->name(DESC_YOUR, true).c_str(),
-                ancestor->pronoun(PRONOUN_POSSESSIVE, true).c_str());
-    }
 
     const bool ancestor_offlevel = companion_is_elsewhere(ancestor->mid);
     if (ancestor_offlevel)
