@@ -2275,6 +2275,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Cogmind";
             else if (species == SP_DEMIGOD && skill_rank == 5)
                 result = "Ascendant";
+            else if (god == GOD_SIF_MUNA)
+                result = god_title(god, species, piety);
             break;
 
         case SK_CONJURATIONS:
