@@ -30,8 +30,6 @@ enum class invprompt_flag
     unthings_ok        = 1 << 2,
     /// Don't start in the '?' list InvMenu.
     manual_list        = 1 << 3,
-    /// Only allow exiting with escape, not also space.
-    escape_only        = 1 << 4,
 };
 DEF_BITFIELD(invent_prompt_flags, invprompt_flag);
 

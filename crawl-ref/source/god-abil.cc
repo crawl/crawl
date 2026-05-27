@@ -167,8 +167,7 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
 
     int item_slot = prompt_invent_item("Brand which weapon?",
                                        menu_type::invlist,
-                                       OSEL_BLESSABLE_WEAPON, OPER_ANY,
-                                       invprompt_flag::escape_only);
+                                       OSEL_BLESSABLE_WEAPON, OPER_ANY);
 
     if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
     {
@@ -2394,8 +2393,7 @@ bool ashenzari_curse_item()
     const string prompt_msg = make_stringf("Curse which item? (Esc to abort)");
     const int item_slot = prompt_invent_item(prompt_msg.c_str(),
                                              menu_type::invlist,
-                                             OSEL_CURSABLE, OPER_ANY,
-                                             invprompt_flag::escape_only);
+                                             OSEL_CURSABLE, OPER_ANY);
     if (prompt_failed(item_slot))
         return false;
 
@@ -2428,8 +2426,7 @@ bool ashenzari_uncurse_item()
 {
     int item_slot = prompt_invent_item("Uncurse and destroy which item?",
                                        menu_type::invlist,
-                                       OSEL_CURSED_WORN, OPER_ANY,
-                                       invprompt_flag::escape_only);
+                                       OSEL_CURSED_WORN, OPER_ANY);
     if (prompt_failed(item_slot))
         return false;
 
