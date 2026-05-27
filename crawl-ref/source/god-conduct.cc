@@ -3,6 +3,7 @@
 #include "god-conduct.h"
 
 #include "areas.h"
+#include "env.h"
 #include "fprop.h"
 #include "god-abil.h" // ru sac key
 #include "god-item.h" // is_*_spell
@@ -647,7 +648,19 @@ static like_response explore_response(int chance, const char* desc = "you explor
         false,
         chance,
         10000,
-        nullptr
+        nullptr,
+        [] (int &gain, int &denom, const monster*)
+        {
+            // Give increased (and normalized) piety in Zigs, so that exploration
+            // piety gods don't fall hopelessly behind kill piety gods.
+            //
+            // (The formula below is copied from what ziggurat.lua uses to control map size.)
+            if (player_in_branch(BRANCH_ZIGGURAT))
+            {
+                gain = gain * (30 + 18 * you.depth + you.depth * you.depth);
+                denom = 2500 * env.density;
+            }
+        }
     };
 }
 
