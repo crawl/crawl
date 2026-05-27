@@ -63,11 +63,11 @@ The contents of this text are:
                 autofight_warning, autofight_fires, autofight_nomove_fires,
                 autofight_fire_stop, autofight_caught, autofight_wait,
                 autofight_prompt_range, autofight_stampede, automagic_enable,
-		automagic_slot, automagic_fight, automagic_stop,
-		fail_severity_to_confirm, easy_door, warn_hatches,
-		enable_recast_spell, confirm_action, regex_search, autopickup_search,
-		bad_item_prompt, auto_hide_spells, menu_arrow_control,
-		single_column_item_menus, show_paged_inventory
+                automagic_slot, automagic_fight, automagic_stop,
+                fail_severity_to_confirm, easy_door, warn_hatches,
+                enable_recast_spell, confirm_action, regex_search, autopickup_search,
+                bad_item_prompt, auto_hide_spells, menu_arrow_control,
+                single_column_item_menus, show_paged_inventory
 3-h     Message and Display Enhancements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
@@ -746,8 +746,8 @@ unusual_highlight = hi:magenta
 
 stab_highlight = hi:blue
         This option highlights monsters that are fully unaware of the player
-        and therefore are will not attack, and are guaranteed to take stab
-        damage if attacked appropriately by the player.
+        and therefore will not attack, and are guaranteed to take stab damage
+        if attacked appropriately by the player.
 
 may_stab_highlight = hi:brown
         This option highlights monsters that are having trouble paying
@@ -1054,9 +1054,9 @@ interrupt_<delay> += <activity_interrupt_type>, <activity_interrupt_type>, ...
 
         Possible delay types are: equip_on, equip_off, ascending_stairs,
         descending_stairs, imbue_servitor, imprint_weapon, macro,
-	macro_process_key, memorise, multidrop, passwall, rest, run,
-	shaft_self, transform, travel. (These are derived from the `name()`
-	functions in delay.h.)
+        macro_process_key, memorise, multidrop, passwall, rest, run,
+        shaft_self, transform, travel. (These are derived from the `name()`
+        functions in delay.h.)
 
         Possible interrupt types are: abyss_exit_spawned, ally_attacked,
         ancestor_hp, force, full_hp, full_mp, hp_loss, hit_monster, keypress,
@@ -1094,9 +1094,9 @@ rest_wait_both = false
 
 rest_wait_ignore_mp = false
         Never continue to rest because MP are depleted. This option
-	overrules rest_wait_both. It is provided for characters who
-	are intermittently wielding antimagic weapons and have no use
-	for MP.
+        overrules rest_wait_both. It is provided for characters who
+        are intermittently wielding antimagic weapons and have no use
+        for MP.
 
 rest_wait_ancestor = false
         If rest_wait_ancestor is set to true then resting will only stop when
@@ -1457,16 +1457,15 @@ autofight_warning = 0
         or equal to zero disables this check.
 
 autofight_fires = false
-        If your quiver contains contains a fireable action that does direct
-        damage to the enemy, regular CMD_AUTOFIGHT (tab on the default
-        binding) will trigger it at enemies out of melee range. Without this
-        option, only a wielded launcher (a bow, crossbow or sling) will be
-        triggered by CMD_AUTOFIGHT. If an action that does direct damage is
-        quivered but out of range, you will move towards the enemy. If an
-        action is quivered that does not do direct damage, CMD_AUTOFIGHT will
-        ignore it entirely. To prevent moving altogether, rebind with
-        CMD_AUTOFIGHT_NOMOVE instead of CMD_AUTOFIGHT. (Legacy name:
-        `autofight_throw`.)
+        If your quiver contains a fireable action that does direct damage to
+        damage to the enemy, regular CMD_AUTOFIGHT (tab on the default binding)
+        will trigger it at enemies out of melee range. Without this option,
+        only a wielded launcher (a bow, crossbow or sling) will be triggered by
+        CMD_AUTOFIGHT. If an action that does direct damage is quivered but out
+        of range, you will move towards the enemy. If an action is quivered
+        that does not do direct damage, CMD_AUTOFIGHT will ignore it entirely.
+        To prevent moving altogether, rebind with CMD_AUTOFIGHT_NOMOVE instead
+        of CMD_AUTOFIGHT. (Legacy name: `autofight_throw`.)
 
 autofight_nomove_fires = true
         This option modifies the behavior of CMD_AUTOFIGHT_NOMOVE (unbound by
@@ -1488,14 +1487,13 @@ autofight_wait = false
         wait for a turn instead of aborting autofight.
 
 autofight_prompt_range = true
-        When wielding a weapon that would normally cause a prompt on attacking
-        (such as a weapon with a !a inscription, or one disliked by your god),
-        if this option is true then the prompt will be displayed when autofight
-        tries to walk towards an enemy, instead of only when actually trying
-        to attack.
+        If true, when wielding a weapon that would normally cause a prompt on
+        attacking (such as a weapon with a !a inscription, or one disliked by
+        your god), then its prompt will be displayed when autofight tries to
+        walk towards an enemy, instead of only when actually trying to attack.
 
 autofight_stampede = false
-	When playing a gale centaur, if this option is true, autofight will opt
+        When playing a gale centaur, if this option is true, autofight will opt
         to continue stampeding through adjacent monsters, rather than fighting
         in place, when possible.
 
@@ -1642,9 +1640,9 @@ enemy_hp_colour = green green brown brown magenta red
         omitted colour slots will be set to the default.
 
 clear_messages = false
-        Setting this option to true will cause messages to cleared
-        between player actions (default is false which will delay the
-        clearing of messages until the message space is full).
+        Setting this option to true will cause messages to be cleared between
+        player actions (default is false which will delay the clearing of
+        messages until the message space is full).
 
 show_more = false
         Setting this option to true will cause the game to prompt if more
@@ -2590,8 +2588,8 @@ tile_realtime_anim = false
         This option is only available on WebTiles.
 
 tile_show_player_species = false
-        If enabled, displays the player using the monster tile for her species,
-        instead of using the normal doll and showing equipment.
+        If enabled, displays the player using the monster tile for their
+        species, instead of using the normal doll and showing equipment.
 
 tile_show_threat_levels = nasty, unusual
         This option controls which monsters will be highlighted with their
@@ -2602,10 +2600,10 @@ tile_show_threat_levels = nasty, unusual
         determine which items cause a monster to highlight as unusual.
 
 tile_player_status_icons = slow, constr
-        This option constrols which icons will be displayed on top of the
-        player's tile when they are afflicted by certain status effects.
-        Valid values include: slow, fragile, petr, mark, will/2, haste, weak,
-        corr, might, brill, -move.
+        This option controls which icons will be displayed on top of the
+        player's tile when they are afflicted by certain status effects. Valid
+        values include: slow, fragile, petr, mark, will/2, haste, weak, corr,
+        might, brill, -move.
 
 tile_layout_priority = minimap, inventory, command, spell, monster
         (Ordered list option)
@@ -2638,7 +2636,7 @@ tile_level_map_hide_sidebar = false
 
 tile_player_tile = (normal | playermons | mons:<monster> | tile:<monster-tile>)
         If set to playermons, displays the player using the monster tile for
-        her species, instead of using the normal doll.
+        their species, instead of using the normal doll.
 
         If set to a value of the form mons:<monster>, where <monster> is the
         name of a monster, use the base tile of <monster> as the player
