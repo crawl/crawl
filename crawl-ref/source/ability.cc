@@ -1367,7 +1367,7 @@ string ability_name(ability_type ability, bool dbname)
             }
 
         case ABIL_SIF_MUNA_REPEAT_EXEGESIS:
-            if (dbname)
+            if (dbname || !you.props.exists(EXEGESIS_SPELL))
                 return "Repeat Exegesis";
             else
                 return make_stringf("Recast %s", spell_title(static_cast<spell_type>(you.props[EXEGESIS_SPELL].get_int())));
