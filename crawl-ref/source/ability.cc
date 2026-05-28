@@ -4395,9 +4395,15 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     case ABIL_ENKINDLE:
         return you.has_mutation(MUT_MNEMOPHAGE);
     case ABIL_IMBUE_SERVITOR:
-        return you.has_spell(SPELL_SPELLSPARK_SERVITOR);
+        return you.has_spell(SPELL_SPELLSPARK_SERVITOR)
+                || (you.spell_library[SPELL_SPELLSPARK_SERVITOR]
+                    && you_worship(GOD_SIF_MUNA)
+                    && player_has_ability(ABIL_SIF_MUNA_DIVINE_EXEGESIS));
     case ABIL_IMPRINT_WEAPON:
-        return you.has_spell(SPELL_PLATINUM_PARAGON);
+        return you.has_spell(SPELL_PLATINUM_PARAGON)
+                || (you.spell_library[SPELL_PLATINUM_PARAGON]
+                    && you_worship(GOD_SIF_MUNA)
+                    && player_has_ability(ABIL_SIF_MUNA_DIVINE_EXEGESIS));
     // mutations
     case ABIL_DAMNATION:
         return you.get_mutation_level(MUT_HURL_DAMNATION);
