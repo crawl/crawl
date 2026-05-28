@@ -673,9 +673,6 @@ int getch_ck()
         }
 #endif
 
-        switch (-c)
-        {
-        case 127:
         // 127 is ASCII DEL, which some terminals (all mac, some linux) use for
         // the backspace key. ncurses does not typically map this to
         // KEY_BACKSPACE (though this may depend on TERM settings?). '\b' (^H)
@@ -684,6 +681,11 @@ int getch_ck()
         // reliably does get mapped to KEY_DC by ncurses. Some background:
         //     https://invisible-island.net/xterm/xterm.faq.html#xterm_erase
         // (I've never found documentation for the mac situation.)
+        if (c == 127)
+            return CK_BKSP;
+
+        switch (-c)
+        {
         case KEY_BACKSPACE: return CK_BKSP;
         case KEY_IC:        return CK_INSERT;
         case KEY_DC:        return CK_DELETE;
