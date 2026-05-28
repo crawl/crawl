@@ -1449,7 +1449,9 @@ static bool _init_frag_grid(frag_effect &effect,
 static bool _init_frag_effect(frag_effect &effect, const actor &caster,
                               coord_def target, const char **what)
 {
-    if (target == you.pos() && _init_frag_player(effect))
+    if (target == you.pos()
+        && could_harm(&caster, &you)
+        && _init_frag_player(effect))
     {
         effect.direct = true;
         return true;
@@ -1458,6 +1460,7 @@ static bool _init_frag_effect(frag_effect &effect, const actor &caster,
     const actor* victim = actor_at(target);
     if (victim && victim->alive() && victim->is_monster()
         && caster.can_see(*victim)
+        && could_harm(&caster, victim)
         && _init_frag_monster(effect, *victim->as_monster()))
     {
         return true;
@@ -1473,7 +1476,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.source_id    = caster->mid;
     beam.thrower      = caster->is_player() ? KILL_YOU : KILL_MON;
-    beam.source       = you.pos();
+    beam.source       = caster->pos();
     beam.origin_spell = SPELL_LRD;
     beam.hit          = AUTOMATIC_HIT;
 
