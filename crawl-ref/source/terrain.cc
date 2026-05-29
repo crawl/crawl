@@ -77,6 +77,7 @@ bool feat_is_floor(dungeon_feature_type feat)
 {
     return feat == DNGN_FLOOR
             || feat == DNGN_DECORATIVE_FLOOR
+            || feat == DNGN_RUNELIGHT
             || feat_is_fountain(feat)
             || feat_is_food(feat);
 }
@@ -2213,7 +2214,7 @@ static bool _revert_terrain_to(coord_def pos, dungeon_feature_type feat)
 
 // If ctype == NUM_TERRAIN_CHANGE_TYPES, will revert *all* terrain changes on
 // the given pos.
-bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
+bool revert_terrain_change(coord_def pos, terrain_change_type ctype, bool expire)
 {
     dungeon_feature_type newfeat = DNGN_UNSEEN;
     unsigned short newfeat_flv = 0;
@@ -2256,7 +2257,7 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
     if (feat_is_door(newfeat) && env.grid(pos) == DNGN_OPEN_DOOR)
         return false;
 
-    if (env.grid(pos) == DNGN_PASSAGE_OF_GOLUBRIA)
+    if (env.grid(pos) == DNGN_PASSAGE_OF_GOLUBRIA && expire)
     {
         if (you.see_cell(pos))
             mpr("Your passage of Golubria closes with a snap!");

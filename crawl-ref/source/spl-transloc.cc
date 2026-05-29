@@ -1635,7 +1635,7 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
 bool golubria_valid_cell(coord_def p, bool just_check)
 {
     return in_bounds(p)
-           && env.grid(p) == DNGN_FLOOR
+           && feat_is_floor(env.grid(p))
            && (!monster_at(p) || just_check && !you.can_see(*monster_at(p)))
            && cell_see_cell(you.pos(), p, LOS_NO_TRANS);
 }
@@ -1662,6 +1662,8 @@ spret cast_golubrias_passage(int pow, const coord_def& where, bool fail)
         return spret::abort;
     }
 
+    // XXX: this can abort nondeterministically and should be rewritten to use
+    //reservoir sampling or something
     int tries = 0;
     int tries2 = 0;
     const int range = GOLUBRIA_FUZZ_RANGE;
