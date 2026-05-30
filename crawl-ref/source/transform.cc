@@ -1848,9 +1848,6 @@ string cant_transform_reason(transformation which_trans,
     if (you.transform_uncancellable && which_trans != transformation::slaughter)
         return "You are stuck in your current form!";
 
-    if (which_trans == transformation::death && you.duration[DUR_DEATHS_DOOR])
-        return "You cannot mock death while in death's door.";
-
     return "";
 }
 
@@ -1894,6 +1891,17 @@ bool check_transform_into(transformation which_trans, bool involuntary,
     {
         if (!yesno("This transformation would significantly lower your maximum hit points. "
                   "Transform anyway?", true, 'n'))
+        {
+            return false;
+        }
+    }
+
+    if (!involuntary && you.duration[DUR_DEATHS_DOOR]
+                     && (which_trans == transformation::vampire
+                        || which_trans == transformation::death))
+    {
+        if (!yesno("Becoming undead will pull you out of death's doorway! "
+                   "Transform anyway?", true, 'n'))
         {
             return false;
         }
@@ -1950,9 +1958,14 @@ static void _on_enter_form(transformation which_trans)
         break;
 
     case transformation::death:
+        you.duration[DUR_DEATHS_DOOR] = 0;
         you.redraw_status_lights = true;
         _print_death_brand_changes(you.weapon(), true);
         _print_death_brand_changes(you.offhand_weapon(), true);
+        break;
+
+    case transformation::vampire:
+        you.duration[DUR_DEATHS_DOOR] = 0;
         break;
 
     case transformation::maw:
