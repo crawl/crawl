@@ -20,9 +20,8 @@ also discuss changes with the community in the #dcss channel of the
 there as well.
 
 The #crawl-dev channel is bridged to Libera IRC for public participation, and is
-[*logged*](http://crawl.akrasiac.org/logs/cheibriados/) if you’d like to read
-or search previous discussions. Older discussions (back to ~2010) were logged
-[*here*](http://s-z.org/crawl-dev/#).
+logged [here](http://crawl.akrasiac.org/logs/cheibriados/) if you’d like to read
+or search previous discussions.
 
 Although most changes are simply discussed on Discord, it can be helpful to
 have a place to coordinate and organize larger-scale release plans. We have
