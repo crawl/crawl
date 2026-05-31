@@ -300,9 +300,9 @@ function trove_book(_G, school, secondary)
   if secondary == nil then
     secondary = "conjurations"
   end
-  local attr = " splevels:33 numspells:5"
-  return "randbook disc:" .. school .. attr .. " w:6 / " ..
-         "randbook disc:" .. school .. " disc2:" .. secondary .. attr .. " w:4"
+  local ns = " numspells:5"
+  return "randbook disc:" .. school .. ns .. " w:6 / " ..
+         "randbook disc:" .. school .. " disc2:" .. secondary .. ns .. " w:4"
 end
 
 -- A repeated function for spellbooks, staves, manuals, and orbs for a school,

@@ -426,7 +426,7 @@ KMONS:  1 = great orb of eyes
 KMONS:  23 = entropy weaver
 KMONS:  S = stack of scrap
 : local d = you.depth()
-: subst("? = 113 .:" .. 40 - d * 10)
+: subst("? = 113 .:" .. 42 - d * 10)
 SUBST:  a : x., y = y., S = S..
 : gulch_portal(_G, "13W", "w")
 MAP

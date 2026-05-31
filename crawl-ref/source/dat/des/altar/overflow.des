@@ -5096,8 +5096,9 @@ SUBST:   y : x., z = ., - = +, " = ., ? : x..
 : if you.in_branch("D") then
 :   if you.depth() < 8 then
 MONS:    drude, ufetubus band / phantom
-:   elseif  you.depth() < 12 then
-MONS:    draugr, boggart / vampire
+:   elseif you.depth() < 12 then
+:     mons("place:D:" .. you.depth() - 2 .. " draugr")
+MONS:    boggart / vampire
 SUBST:   $ = $%
 :   else
 MONS:    draugr ; mace ego:chaos

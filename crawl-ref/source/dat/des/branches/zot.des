@@ -2798,7 +2798,7 @@ ITEM:    ring of flight randart pre_id no_pickup
 SHUFFLE: defg, hi
 SUBST:   HIJ = c
 SUBST:   1 = 112., 2 = 221.
-FTILE:   .123defg$%*|GF = floor_zot_diamonds
+FTILE:   .>123defg$%*|GF = floor_zot_diamonds
 MAP
 xx'''''''''''''''''''@@'''''''''''''''''''
 xx'WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW'
@@ -2813,8 +2813,8 @@ xx'Wwcccc..........................ccccwW'
 xx'Wwwwwc...ccccccccGccGcccccccc...cwwwwW'
 xx'Wwwwwc...HccccccccccccccccccH...cwwwwW'
 xx'Wwwwwc...cccccccccccccccccccc...cwwwwW'
-xx'Wwwwwc.2.ccc*|*cccccccc*|*ccc.2.cwwwwW'
-xx'Wwwwwc...ccc$$$cccccccc$$$ccc...cwwwwW'
+xx'Wwwwwc.2.ccc*>*cccccccc*>*ccc.2.cwwwwW'
+xx'Wwwwwc...ccc$|$cccccccc$|$ccc...cwwwwW'
 xx'Wwwwwc...ccc...cccccccc...ccc...cwwwwW'
 xx'Wwwwwc...ccc.F.cccccccc.F.ccc...cwwwwW'
 xx'Wwwwwc...Icc...cccccccc...ccI...cwwwwW'
@@ -2831,10 +2831,10 @@ xx'Wwwwwc...cccccccJc..cJccccccc...cwwwwW'
 xx'Wwwwwc...Hcccccccc..ccccccccH...cwwwwW'
 xx'Wwwwwc...cccccccGc..cGccccccc...cwwwwW'
 xx'Wwcccc..........................ccccwW'
-xx'Wwc1........2............2........1cwW'
-xx'Wwc$$$$........................$$$$cwW'
+xx'Wwc1$.......2............2.......$1cwW'
+xx'Wwc$$$..........................$$$cwW'
 xx'Wwc%$$$.cccccccccccccccccccccc.$$$%cwW'
-xx'Wwc*i$$.cwwwwwwwwwwwwwwwwwwwwc.$$h*cwW'
+xx'Wwc*i$$$cwwwwwwwwwwwwwwwwwwwwc$$$h*cwW'
 xx'Wwce*%$1cwwwwwwwwwwwwwwwwwwwwc1$%*fcwW'
 xx'WwcccccccwwwwwwwwwwwwwwwwwwwwcccccccwW'
 xx'WwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW'
@@ -4690,7 +4690,7 @@ XXXXXXXXXXXXeeeeeeeeeeeeeeeeeeeXcccccccccccccccccXjjjjjjjjjjjjjjjjjjjXXXXXXXXXXX
 XXXXXXXXXXXXXeeeeee2eeeeeeeeXXXXcccccccccccccccccXXXXjjjjjjjj2jjjjjjXXXXXXXXXXXX
 XXXXXXXXXXXXXX.111.ccXXXXXXXXXXXcccccccccccccccccXXXXXXXXXXXcc.111.XXXXXXXXXXXXX
 XXXXXXXXXXXccddddddGdddddddODDo1ccccccccccccccccc1pHHPhhhhhhhGhhhhhhccXXXXXXXXXX
-XXXXXXXXXXccddddddddddddddddcc1...ccccccccccccc...1cchhhhhhhhhhhhhhhhccXXXXXXXXX
+XXXXXXXXXXccddddddddddddddd.cc1...ccccccccccccc...1cc.hhhhhhhhhhhhhhhccXXXXXXXXX
 XXXXXXXXXccddddddddddddddddddccc...ccccccccccc...ccchhhhhhhhhhhhhhhhhhccXXXXXXXX
 XXXXXXXXXcddddddddddddddddddddccc.1.....1.....1.ccchhhhhhhhhhhhhhhhhhhhcXXXXXXXX
 XXXXXXXXXcddddddddddddddddddddcXcc......R......ccXchhhhhhhhhhhhhhhhhhhhcXXXXXXXX

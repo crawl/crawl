@@ -4780,30 +4780,32 @@ DEPTH:   D:12-, Vaults, !Vaults:$
 MONS:    crystal guardian, thermic dynamo
 MONS:    orange crystal statue, ironbound mechanist
 KFEAT:   + = closed_clear_door
+KFEAT:   ^ = trap_teleport
 SUBST:   . = .:80 %$*|
 : if you.in_branch("D") then
-SUBST:   14 = 0, + = =
+SUBST:   14 = 0, + = =, B = b
 KPROP:   .$%*|023 = no_tele_into
 CLEAR:   `
 : else
 FTILE:   .1234$%*|+ = floor_crystal
+CLEAR:   B^
 : end
 MAP
-````````````````
-`WWWWWWWWWWWWWW`
-`WbbbbbbbbbbbbW`
-`Wbb2.......1bW`
-`Wbb.........bW`
-`Wbb.........bW`
-`Wnn.........bW`
-`WW+....3.4..bW`
-`Wnn.........bW`
-`Wbb.........bW`
-`Wbb.........bW`
-`Wbb2.......1bW`
-`WbbbbbbbbbbbbW`
-`WWWWWWWWWWWWWW`
-````````````````
+  ````````````````
+  `WWWWWWWWWWWWWW`
+  `WbbbbbbbbbbbbW`
+  `Wbb1........bW`
+  `Wbb....2....bW`
+  `Wbb.........bW`
+BB`Wnn.........bW`
+B^'WW+....3...4bW`
+BB`Wnn.........bW`
+  `Wbb.........bW`
+  `Wbb....2....bW`
+  `Wbb1........bW`
+  `WbbbbbbbbbbbbW`
+  `WWWWWWWWWWWWWW`
+  ````````````````
 ENDMAP
 
 NAME:  minmay_more_statues
