@@ -5934,7 +5934,7 @@ spret uskayaw_grand_finale(bool fail)
             continue;
         }
 
-        if (!check_moveto(beam.target, "move", false))
+        if (!check_moveto(beam.target, "move", false, false))
         {
             // try again (messages handled by check_moveto)
         }
@@ -6197,7 +6197,7 @@ spret hepliaklqana_transference(bool fail)
     }
 
     const coord_def destination = ancestor->pos();
-    if (victim == &you && !check_moveto(destination, "transfer", false))
+    if (victim == &you && !check_moveto(destination, "transfer", false, false))
         return spret::abort;
 
     const bool uninhabitable = victim && !victim->is_habitable(destination);

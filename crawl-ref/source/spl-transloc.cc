@@ -288,7 +288,7 @@ static bool _find_cblink_target(dist &target, bool safe_cancel,
             continue;
         }
 
-        if (!check_moveto(target.target, verb, false))
+        if (!check_moveto(target.target, verb, false, false))
         {
             continue;
             // try again (messages handled by check_moveto)
@@ -348,7 +348,7 @@ void wizard_blink()
         return wizard_blink();
     }
 
-    if (!check_moveto(beam.target, "blink", false))
+    if (!check_moveto(beam.target, "blink", false, false))
     {
         return wizard_blink();
         // try again (messages handled by check_moveto)

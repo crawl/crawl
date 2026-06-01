@@ -54,6 +54,7 @@
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-speak.h"
+#include "movement.h"
 #include "mutation.h"
 #include "place.h" // absdungeon_depth
 #include "player-equip.h"
@@ -3873,12 +3874,13 @@ spret cast_surprising_crocodile(actor& agent, const coord_def& targ, int pow, bo
             // crocodile in one_square_move. Check the crocodile position only
             // for traps, which it will trigger.
             if (!check_moveto_trap(one_square_move, verb)
-                || !check_moveto(one_square_move + drag_shift, verb))
+                || !check_moveto(one_square_move + drag_shift, verb,
+                                 true, false))
             {
                 return spret::abort;
             }
         }
-        else if (!check_moveto(one_square_move, verb))
+        else if (!check_moveto(one_square_move, verb, true, false))
             return spret::abort;
     }
 

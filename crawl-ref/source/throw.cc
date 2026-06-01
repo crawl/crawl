@@ -613,7 +613,7 @@ static bool _trace_player_ranged_attacks(vector<ranged_attack_beam>& atks, bool 
         const coord_def back = you.stumble_pos(atks[0].beam.target);
         if (!back.origin()
             && back != you.pos()
-            && !check_moveto(back, "potentially stumble back", false))
+            && !check_moveto(back, "potentially stumble back", false, false))
         {
             return true;
         }

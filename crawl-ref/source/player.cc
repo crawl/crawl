@@ -384,15 +384,18 @@ bool check_moveto_exclusion(const coord_def& p, const string &move_verb,
  * Confirm that the player really does want to go to the indicated place.
  * May give many prompts, or no prompts if the move is safe.
  *
- * @param p          The location the player wants to go to
- * @param move_verb  The method of locomotion the player is using
- * @param physically Whether the player is considered to be "walking" for the
- *                   purposes of barbs causing damage and ice spells expiring
+ * @param p              The location the player wants to go to
+ * @param move_verb      The method of locomotion the player is using
+ * @param check_harmful  Whether to check if a generic move is harmful, as well
+ *                       as the specific destination.  
+ * @param physically     Whether the player is considered to be "walking" for
+ *                       the purposes of barbs causing damage.
  * @return If true, continue with the move, otherwise cancel it
  */
-bool check_moveto(const coord_def& p, const string &move_verb, bool physically)
+bool check_moveto(const coord_def& p, const string &move_verb,
+                  bool check_harmful, bool physically)
 {
-    return !(physically && cancel_harmful_move(physically))
+    return !(check_harmful && cancel_harmful_move(physically))
            && check_moveto_terrain(p, move_verb, "")
            && check_moveto_cloud(p, move_verb)
            && check_moveto_trap(p, move_verb)

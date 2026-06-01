@@ -1084,7 +1084,7 @@ public:
 };
 
 bool check_moveto(const coord_def& p, const string &move_verb = "step",
-                  bool physically = true);
+                  bool check_harmful = true, bool physically = true);
 bool check_moveto_terrain(const coord_def& p, const string &move_verb,
                           const string &msg = "", bool *prompted = nullptr);
 bool check_moveto_cloud(const coord_def& p, const string &move_verb = "step",

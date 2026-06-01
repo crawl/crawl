@@ -2295,7 +2295,8 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
             const coord_def back = you.stumble_pos(target->target);
             if (!back.origin()
                 && back != you.pos()
-                && !check_moveto(back, "potentially stumble back", false))
+                && !check_moveto(back, "potentially stumble back",
+                                 false, false))
             {
                 return spret::abort;
             }
