@@ -2673,9 +2673,12 @@ void world_reacts()
 
     clear_monster_flags();
 
+    viewwindow();
+
+    // Needs to happen after viewwindow() so that the map knowledge is up to
+    // date to decide which monsters to exclude.
     add_auto_excludes();
 
-    viewwindow();
     update_screen();
 
     _check_trapped();
