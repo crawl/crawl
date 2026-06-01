@@ -6815,6 +6815,7 @@ void makhleb_setup_destruction_beam(bolt& beam, int power, bool signature_only)
         case BEAM_ELECTRICITY:
             beam.name = "torrent of electricity";
             beam.colour = LIGHTCYAN;
+            beam.tile_beam = TILE_BOLT_STRONG_ELEC;
             break;
 
         case BEAM_NEG:
@@ -6827,11 +6828,13 @@ void makhleb_setup_destruction_beam(bolt& beam, int power, bool signature_only)
         case BEAM_LAVA:
             beam.name = "gout of magma";
             beam.colour = RED;
+            beam.tile_beam = TILE_BOLT_MAGMA;
             break;
 
         case BEAM_ICE:
             beam.name = "flurry of ice";
             beam.colour = ETC_ICE;
+            beam.tile_beam = TILE_BOLT_ICEBLAST;
             break;
 
         case BEAM_DEVASTATION:

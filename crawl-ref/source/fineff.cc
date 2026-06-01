@@ -47,6 +47,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
+#include "rltiles/tiledef-main.h"
 #include "transform.h"
 #include "view.h"
 
@@ -1347,10 +1348,14 @@ void shock_discharge_fineff::fire()
     }
 
     bolt beam;
-    beam.flavour = BEAM_ELECTRICITY;
+    beam.flavour   = BEAM_ELECTRICITY;
+    beam.tile_beam = power < 4 ? TILE_BOLT_WEAK_ELEC : TILE_BOLT_STRONG_ELEC;
+    int dur = power < 4 ? 20 : 30;
     const string name = serpent && serpent->alive_or_reviving() ?
                         serpent->name(DESC_A, true) :
                         "a shock serpent"; // dubious
+
+    flash_tile(oppressor.pos(), CYAN, dur, beam.tile_beam);
     oppressor.hurt(serpent, final_dmg, beam.flavour, KILLED_BY_BEAM,
                    name.c_str(), shock_source.c_str());
 

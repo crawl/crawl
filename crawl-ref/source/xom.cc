@@ -2103,6 +2103,7 @@ static void _xom_drop_lightning()
     beam.target       = you.pos();
     beam.name         = "blast of lightning";
     beam.colour       = LIGHTCYAN;
+    beam.tile_explode = TILE_BOLT_ELECTRIC_BLAST;
     beam.thrower      = KILL_NON_ACTOR;
     beam.source_id    = MID_NOBODY;
     beam.aux_source   = "Xom's lightning strike";
@@ -2127,6 +2128,7 @@ static void _xom_spray_lightning(coord_def position)
         beam.target.x     += random_range(-1, 1);
         beam.target.y     += random_range(-1, 1);
     }
+    beam.tile_beam    = TILE_BOLT_STRONG_ELEC;
     beam.thrower      = KILL_NON_ACTOR;
     beam.source_id    = MID_NOBODY;
     beam.aux_source   = "Xom's lightning strike";

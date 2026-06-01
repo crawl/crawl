@@ -133,6 +133,7 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
     beam.name      = "blast of lightning";
     beam.explode_noise_msg = "You hear a clap of thunder!";
     beam.colour    = LIGHTCYAN;
+    beam.tile_explode = TILE_BOLT_ELECTRIC_BLAST;
     beam.ex_size   = x_chance_in_y(origin.get_hit_dice(), 24) ? 3 : 2;
     if (origin.summoner)
         beam.origin_spell = SPELL_CONJURE_BALL_LIGHTNING;

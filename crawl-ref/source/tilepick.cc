@@ -3913,6 +3913,10 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
     case TILE_BOLT_WEAK_AIR:
     case TILE_BOLT_MEDIUM_AIR:
     case TILE_BOLT_STRONG_AIR:
+    case TILE_BOLT_WEAK_ELEC:
+    case TILE_BOLT_STRONG_ELEC:
+    case TILE_BOLT_ELECTRIC_BLAST:
+    case TILE_BOLT_ELECTRIC_ARC:
     case TILE_BOLT_IRRADIATE:
     case TILE_BOLT_POTION_PETITION:
     case TILE_BOLT_SHADOW_BLAST:

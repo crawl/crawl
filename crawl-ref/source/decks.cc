@@ -1500,6 +1500,7 @@ static void _storm_card(int power)
         beam.explode_noise_msg = "You hear a clap of thunder!";
         beam.real_flavour      = beam.flavour;
         beam.colour            = LIGHTCYAN;
+        beam.tile_explode      = TILE_BOLT_ELECTRIC_BLAST;
         beam.source_id         = MID_PLAYER;
         beam.thrower           = KILL_YOU;
         beam.is_explosion      = true;

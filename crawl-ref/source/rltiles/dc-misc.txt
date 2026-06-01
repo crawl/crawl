@@ -71,6 +71,23 @@ medium_air1
 strong_air0 BOLT_STRONG_AIR
 strong_air1
 
+weak_elec_shot0 BOLT_WEAK_ELEC
+weak_elec_shot1
+weak_elec_shot2
+
+strong_elec_shot0 BOLT_STRONG_ELEC
+strong_elec_shot1
+strong_elec_shot2
+
+electric_blast0 BOLT_ELECTRIC_BLAST
+electric_blast1
+
+electric_arc0 BOLT_ELECTRIC_ARC
+electric_arc1
+electric_arc2
+electric_arc3
+electric_arc4
+
 # Earth bolts
 sandblast0 BOLT_SANDBLAST
 sandblast1

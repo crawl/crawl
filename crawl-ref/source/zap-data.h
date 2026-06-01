@@ -478,6 +478,7 @@ static const zap_info zap_data[] =
     DCHAR_FIRED_ZAP,
     true,
     false,
+    TILE_BOLT_WEAK_ELEC,
 },
 
 {
@@ -797,6 +798,7 @@ _mon_hex_zap(ZAP_TUKIMAS_DANCE, BEAM_TUKIMAS_DANCE),
     DCHAR_FIRED_ZAP,
     true,
     false,
+    TILE_BOLT_STRONG_ELEC,
 },
 
 _mon_hex_zap(ZAP_POLYMORPH, BEAM_POLYMORPH),
@@ -1052,6 +1054,7 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH),
     DCHAR_FIRED_ZAP,
     true,
     false,
+    TILE_BOLT_WEAK_ELEC,
 },
 
 {
@@ -1067,6 +1070,8 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH),
     DCHAR_FIRED_ZAP,
     false,
     true,
+    TILE_BOLT_ZAP,
+    TILE_BOLT_ELECTRIC_BLAST,
 },
 
 {
@@ -1581,6 +1586,7 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     DCHAR_FIRED_ZAP,
     true,
     false,
+    TILE_BOLT_WEAK_ELEC,
 },
 
 {
@@ -1924,6 +1930,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     DCHAR_FIRED_ZAP,
     true,
     false,
+    TILE_BOLT_STRONG_ELEC,
 },
 
 {
@@ -2093,6 +2100,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     DCHAR_FIRED_ZAP,
     true,
     false,
+    TILE_BOLT_STRONG_ELEC,
 },
 
 {

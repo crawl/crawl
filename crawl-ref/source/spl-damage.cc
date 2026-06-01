@@ -2651,6 +2651,7 @@ static int _discharge_monsters(const coord_def &where, int pow,
     beam.flavour    = BEAM_ELECTRICITY; // used for mons_adjust_flavoured
     beam.glyph      = dchar_glyph(DCHAR_FIRED_ZAP);
     beam.colour     = LIGHTBLUE;
+    beam.tile_beam  = TILE_BOLT_ELECTRIC_ARC;
     beam.draw_delay = 0;
 
     dprf("Static discharge on (%d,%d) pow: %d", where.x, where.y, pow);
@@ -2896,6 +2897,7 @@ static void _do_chain_jolt(const actor& agent, vector<coord_def>& targets, dice_
     beam.thrower = agent.is_player() ? KILL_YOU : KILL_MON;
     beam.glyph      = dchar_glyph(DCHAR_FIRED_ZAP);
     beam.colour     = LIGHTBLUE;
+    beam.tile_beam  = TILE_BOLT_ELECTRIC_ARC;
     beam.draw_delay = 10;
 
     // Do the full animation first, so it doesn't get interrupted mid-way by messages
@@ -3355,6 +3357,7 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     beam.origin_spell      = SPELL_THUNDERBOLT;
     beam.flavour           = BEAM_ELECTRICITY;
     beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.tile_beam         = TILE_BOLT_ELECTRIC_BLAST;
     beam.colour            = LIGHTCYAN;
     beam.range             = 1;
     beam.hit               = AUTOMATIC_HIT;
@@ -5004,6 +5007,7 @@ static void _show_fusillade_explosion(map<coord_def, beam_type>& hit_map,
         {
             colour_t colour = concoction_colour[hit_map[pos]];
             flash_tile(pos, concoction_colour[hit_map[pos]], 0,
+                       colour == LIGHTCYAN ? int{TILE_BOLT_ELECTRIC_BLAST} :
                        colour == YELLOW ? int{TILE_BOLT_IRRADIATE} : 0);
 
             // Flash a visible flask at the center spot after the explosion.
