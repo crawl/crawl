@@ -387,7 +387,7 @@ bool check_moveto_exclusion(const coord_def& p, const string &move_verb,
  * @param p              The location the player wants to go to
  * @param move_verb      The method of locomotion the player is using
  * @param check_harmful  Whether to check if a generic move is harmful, as well
- *                       as the specific destination.  
+ *                       as the specific destination.
  * @param physically     Whether the player is considered to be "walking" for
  *                       the purposes of barbs causing damage.
  * @return If true, continue with the move, otherwise cancel it
