@@ -929,7 +929,7 @@ void floor_transition(dungeon_feature_type how,
     {
     case BRANCH_ABYSS:
         if (from_arena)
-            return;
+            break;
         // There are no abyssal stairs that go up, so this whole case is only
         // when going down.
         // -- unless you're a rocketeer!
