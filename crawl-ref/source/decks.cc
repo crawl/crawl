@@ -888,7 +888,16 @@ spret deck_deal(bool fail)
     const int num_to_deal = min(num_cards, 4);
 
     for (int i = 0; i < num_to_deal; ++i)
+    {
         _evoke_deck(choice, true);
+        if (choice == DECK_OF_DESTRUCTION && i < num_to_deal - 1)
+        {
+            // Update the screen after each card is dealt, so the player can
+            // see the results of each card to make choices for the next.
+            redraw_screen();
+            update_screen();
+        }
+    }
 
     return spret::success;
 }
@@ -1131,6 +1140,8 @@ static void _damaging_card(card_type card, int power,
                        && coinflip()
                        && mons.corrode(&you);
             });
+            redraw_screen();
+            update_screen();
         }
         ztype = acidzaps[power_level];
         break;
@@ -1144,6 +1155,8 @@ static void _damaging_card(card_type card, int power,
         {
             mpr("You reveal a symbol of torment!");
             torment(&you, TORMENT_CARD_PAIN, you.pos());
+            redraw_screen();
+            update_screen();
         }
 
         ztype = painzaps[min(power_level, (int)ARRAYSZ(painzaps)-1)];
