@@ -923,9 +923,13 @@ void floor_transition(dungeon_feature_type how,
     if (shaft)
         how = DNGN_TRAP_SHAFT;
 
+    bool from_arena = old_level.branch == BRANCH_ARENA;
+
     switch (you.where_are_you)
     {
     case BRANCH_ABYSS:
+        if (from_arena)
+            return;
         // There are no abyssal stairs that go up, so this whole case is only
         // when going down.
         // -- unless you're a rocketeer!
@@ -1020,7 +1024,7 @@ void floor_transition(dungeon_feature_type how,
         if (branch == BRANCH_ARENA)
             okawaru_duel_healing();
 
-        if (branch == BRANCH_GULCH)
+        if (branch == BRANCH_GULCH && !from_arena)
         {
             mpr("Mutagenic energy floods into you!");
             if (you.can_safely_mutate())
@@ -1104,14 +1108,18 @@ void floor_transition(dungeon_feature_type how,
 
     new_level();
 
-    if (is_hell_subbranch(you.where_are_you))
-        _hell_effects();
+    if (is_hell_subbranch(you.where_are_you) && !from_arena)
+            _hell_effects();
+
+    // this checks both new and old floor because of Okawaru duel
+    if (old_level.branch == BRANCH_SLIME && !going_up && !you.royal_jelly_dead
+        && player_in_branch(BRANCH_SLIME))
+    {
+        you.duration[DUR_OOZE_REGEN] = random_range(170, 210);
+    }
 
     if (you.unrand_equipped(UNRAND_VAINGLORY))
         _vainglory_arrival();
-
-    if (old_level.branch == BRANCH_SLIME && !going_up && !you.royal_jelly_dead)
-        you.duration[DUR_OOZE_REGEN] = random_range(170, 210);
 
     trackers_init_new_level();
 
