@@ -3341,9 +3341,9 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
         }
     }
 
-    // mention that permanent trees are usually flammable
+    // mention that trees are usually flammable
     // (except for autumnal trees in Wucad Mu's Monastery)
-    if (feat_is_flammable(feat) && !is_temp_terrain(pos) && in_bounds(pos)
+    if (feat_is_flammable(feat) && in_bounds(pos)
         && env.markers.property_at(pos, MAT_ANY, "veto_destroy") != "veto")
     {
         if (feat == DNGN_TREE)
