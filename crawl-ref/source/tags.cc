@@ -7209,6 +7209,28 @@ static void _fixup_cloud_varieties(MapKnowledge& map_knowledge)
             ci->variety = get_vortex_phase(*ri);
     }
 }
+
+static void _fixup_tree_positions(MapKnowledge& map_knowledge)
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        monster_info* mi = map_knowledge(*ri).monsterinfo();
+        if (mi
+            && (mi->type == MONS_SNAPLASHER_VINE
+                || mi->type == MONS_SNAPLASHER_VINE_SEGMENT)
+            && !mi->props.exists(INWARDS_KEY))
+        {
+            for (adjacent_iterator ai(mi->pos); ai; ++ai)
+            {
+                if (feat_is_tree(env.grid(*ai)))
+                {
+                    mi->props[TREE_POSITION_KEY].get_coord() = *ai;
+                    break;
+                }
+            }
+        }
+    }
+}
 #endif
 
 static void _tag_read_level(reader &th)
@@ -7273,6 +7295,8 @@ static void _tag_read_level(reader &th)
         _fixup_blood_knowledge(env.map_knowledge);
     if (th.getMinorVersion() <= TAG_MINOR_FIX_POLAR_VORTEX_INFO_LEAK)
         _fixup_cloud_varieties(env.map_knowledge);
+    if (th.getMinorVersion() < TAG_MINOR_TREE_POSITIONS)
+        _fixup_tree_positions(env.map_knowledge);
 #endif
 
 #if TAG_MAJOR_VERSION == 34
@@ -8273,6 +8297,46 @@ static void _tag_read_level_monsters(reader &th)
             }
             if (mons_is_tentacle_or_tentacle_segment(mi->type))
                 mi->tentacle_connect = env.mons[mi->tentacle_connect].mid;
+        }
+    }
+    if (th.getMinorVersion() < TAG_MINOR_TREE_POSITIONS)
+    {
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->type != MONS_SNAPLASHER_VINE
+                && mi->type != MONS_SNAPLASHER_VINE_SEGMENT)
+            {
+                continue;
+            }
+
+            if (mi->props.exists(INWARDS_KEY)
+                && mi->props[INWARDS_KEY].get_int() != MID_NOBODY)
+            {
+                continue;
+            }
+
+            coord_def tree_pos;
+            for (adjacent_iterator ai(mi->pos()); ai; ++ai)
+            {
+                if (feat_is_tree(env.grid(*ai)))
+                {
+                    tree_pos = *ai;
+                    break;
+                }
+            }
+
+            if (tree_pos.origin())
+                continue;
+
+            mi->props[TREE_POSITION_KEY].get_coord() = tree_pos;
+            // Walk outwards fixing all the tree positions.
+            int midx = mi->props[OUTWARDS_KEY].get_int();
+            while (midx != MID_NOBODY)
+            {
+                monster *m = monster_by_mid(midx);
+                m->props[TREE_POSITION_KEY] = tree_pos;
+                midx = m->props[OUTWARDS_KEY].get_int();
+            }
         }
     }
 #endif

@@ -290,6 +290,9 @@ static void _establish_connection(monster* tentacle,
 
             if (head->holiness() & MH_UNDEAD)
                 connect->flags |= MF_FAKE_UNDEAD;
+
+            if (head->props.exists(TREE_POSITION_KEY))
+                connect->props[TREE_POSITION_KEY].get_coord() = head->props[TREE_POSITION_KEY].get_coord();
         }
         else
         {
