@@ -33,6 +33,7 @@
 #include "prompt.h"
 #include "random-pick.h"
 #include "religion.h"
+#include "shopping.h"
 #include "spl-cast.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -441,14 +442,18 @@ bool library_add_spells(vector<spell_type> spells, bool quiet)
                 you.hidden_spells.set(st, true);
         }
     }
-    if (!new_spells.empty() && !quiet)
+    if (!new_spells.empty())
     {
-        vector<string> spellnames(new_spells.size());
-        transform(new_spells.begin(), new_spells.end(), spellnames.begin(), spell_title);
-        mprf("You add the spell%s %s to your library.",
-             spellnames.size() > 1 ? "s" : "",
-             comma_separated_line(spellnames.begin(),
-                                  spellnames.end()).c_str());
+        if (!quiet)
+        {
+            vector<string> spellnames(new_spells.size());
+            transform(new_spells.begin(), new_spells.end(), spellnames.begin(), spell_title);
+            mprf("You add the spell%s %s to your library.",
+                spellnames.size() > 1 ? "s" : "",
+                comma_separated_line(spellnames.begin(),
+                                    spellnames.end()).c_str());
+        }
+        shopping_list.spells_added_to_library(new_spells, quiet);
     }
     return !new_spells.empty();
 }
