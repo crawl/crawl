@@ -427,7 +427,11 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     loc = you.pos();
 
     if (you.cannot_move())
+    {
+        if (!quiet)
+            canned_msg(MSG_CANNOT_MOVE);
         return false;
+    }
 
     // Don't move onto dangerous terrain.
     if (is_feat_dangerous(env.grid(mons->pos())))
