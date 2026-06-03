@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "actor.h"
+#include "coord-def.h"
 #include "monster-type.h"
 
 class monster;
