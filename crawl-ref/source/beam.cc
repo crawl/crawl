@@ -964,6 +964,49 @@ void bolt::burn_wall_effect()
         }
     }
 
+    // When burning a tree, check for any vines it is supporting. These must
+    // find a new home or die.
+    for (adjacent_iterator ai(pos()); ai; ai++)
+    {
+        monster *m = monster_at(*ai);
+        if (!m || (m->type != MONS_SNAPLASHER_VINE
+                   && m->type != MONS_SNAPLASHER_VINE_SEGMENT))
+        {
+            continue;
+        }
+
+        if (!m->props.exists(TREE_POSITION_KEY)
+            || m->props[TREE_POSITION_KEY].get_coord() != pos())
+        {
+            continue;
+        }
+
+        // Try to find a new tree for the vine.
+        coord_def new_tree;
+        for (adjacent_iterator tree_it(*ai); tree_it; tree_it++)
+        {
+            if (feat_is_tree(env.grid(*tree_it)))
+            {
+                new_tree = *tree_it;
+                break;
+            }
+        }
+
+        if (new_tree.origin())
+            monster_die(*m, agent());
+        else
+        {
+            // Walk the vine fixing the tree positions.
+            while (m)
+            {
+                m->props[TREE_POSITION_KEY].get_coord() = new_tree;
+                if (!m->props.exists(OUTWARDS_KEY))
+                    break;
+                m = monster_by_mid(m->props[OUTWARDS_KEY].get_int());
+            }
+        }
+    }
+
     obvious_effect = true;
 
     finish_beam();
