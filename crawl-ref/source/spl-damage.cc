@@ -1304,6 +1304,7 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     { MONS_BOMBLET,           { "metal", CYAN, frag_damage_type::metal } },
     { MONS_PHALANX_BEETLE,    { "metal", CYAN, frag_damage_type::metal } },
     { MONS_SPELLSPARK_SERVITOR, { "metal", CYAN, frag_damage_type::metal } },
+    { MONS_COMBAT_FRAME,      { "metal", CYAN, frag_damage_type::metal } },
     { MONS_PLATINUM_PARAGON,  { "platinum", CYAN, frag_damage_type::metal } },
     { MONS_GLASS_EYE,         { "glass", LIGHTCYAN,
                                 frag_damage_type::crystal } },
