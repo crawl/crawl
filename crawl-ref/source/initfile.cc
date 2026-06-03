@@ -2017,7 +2017,7 @@ cglyph_t game_options::parse_mon_glyph(const string &s) const
     vector<string> phrases = split_string(" ", s);
     for (const string &p : phrases)
     {
-        const int col = str_to_colour(p, -1, false);
+        const int col = str_to_colour(p, -1, false, true);
         if (col != -1)
             md.col = col;
         else
