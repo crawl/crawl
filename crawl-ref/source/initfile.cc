@@ -1995,7 +1995,7 @@ static monster_type _mons_class_by_string(const string &name)
     return MONS_0;
 }
 
-static set<monster_type> _mons_classes_by_glyph(const char letter)
+static set<monster_type> _mons_classes_by_glyph(const char32_t letter)
 {
     set<monster_type> matches;
     for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)

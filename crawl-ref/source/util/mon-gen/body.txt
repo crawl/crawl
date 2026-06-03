@@ -1,5 +1,5 @@
 {{
-    {enum}, '{glyph.char}', {glyph.colour}, "{name}",
+    {enum}, {glyph.char}, {glyph.colour}, "{name}",
     {joined_flags},
     {joined_resists},
     {exp}, {exp_is_mult}, {genus}, {species}, {joined_holiness}, {will},

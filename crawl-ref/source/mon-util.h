@@ -123,7 +123,7 @@ struct monsterentry
 {
     short mc;            // monster number
 
-    char basechar;
+    char32_t basechar;
     colour_t colour;
     const char *name;
 
@@ -340,7 +340,7 @@ void name_zombie_from_mon(monster& mon, const monster& orig);
 int mons_power(monster_type mc);
 
 char32_t mons_char(monster_type mc);
-char mons_base_char(monster_type mc);
+char32_t mons_base_char(monster_type mc);
 
 int mons_class_colour(monster_type mc);
 

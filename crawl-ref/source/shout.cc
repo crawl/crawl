@@ -177,7 +177,7 @@ void monster_shout(monster &mons, int shout)
         message = getShoutString(default_msg_key, suffix);
     else if (message.empty())
     {
-        char mchar = mons_base_char(mons.type);
+        char32_t mchar = mons_base_char(mons.type);
 
         // See if there's a shout for all monsters using the
         // same glyph/symbol
@@ -187,7 +187,7 @@ void monster_shout(monster &mons, int shout)
         if (isaupper(mchar))
             glyph_key += "cap-";
 
-        glyph_key += mchar;
+        glyph_key += stringize_glyph(mchar);
         glyph_key += "'";
         message = getShoutString(glyph_key, suffix);
 

@@ -1415,7 +1415,7 @@ char32_t mons_char(monster_type mc)
         return monster_symbols[mc].glyph;
 }
 
-char mons_base_char(monster_type mc)
+char32_t mons_base_char(monster_type mc)
 {
     const monsterentry *me = get_monster_data(mc);
     return me ? me->basechar : 0;

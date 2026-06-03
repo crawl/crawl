@@ -172,7 +172,9 @@ def parse_glyph_char(s):
         raise ValueError("glyph isn't a string")
     if len(s) != 1:
         raise ValueError("glyph must be exactly one character")
-    return s
+    if (ord(s) > 127):
+        return "U\'\\" + hex(ord(s)).lstrip('0') + "\'"
+    return "\'" + s + "\'"
 
 def parse_flags(s):
     flags = []

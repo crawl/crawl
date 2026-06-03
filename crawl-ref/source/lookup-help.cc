@@ -52,6 +52,7 @@
 #include "tilepick.h"
 #include "tileview.h"
 #include "ui.h"
+#include "unicode.h"
 #include "viewchar.h"
 #include "view.h"
 
@@ -371,7 +372,8 @@ static vector<string> _get_monster_keys(char32_t showchar)
         if (me->mc != i)
             continue;
 
-        if ((char32_t)me->basechar != showchar)
+        // Match either the default glyph or any player-remapped glyph for this monster.
+        if (me->basechar != showchar && mons_char(i) != showchar)
             continue;
 
         if (mons_species(i) == MONS_SERPENT_OF_HELL)
@@ -883,8 +885,12 @@ vector<string> LookupType::matching_keys(string regex) const
 
     if (no_search())
         key_list = simple_key_fetch();
-    else if (regex.size() == 1 && supports_glyph_lookup())
-        key_list = glyph_fetch(regex[0]);
+    else if (strwidth(regex) == 1 && supports_glyph_lookup())
+    {
+        char32_t c;
+        utf8towc(&c, &regex[0]);
+        key_list = glyph_fetch(c);
+    }
     else
         key_list = get_desc_keys(regex);
 
@@ -1490,7 +1496,7 @@ static bool _exact_lookup_match(const LookupType &lookup_type,
     if (lookup_type.no_search())
         return false; // no search, no exact match
 
-    if (lookup_type.supports_glyph_lookup() && regex.size() == 1)
+    if (lookup_type.supports_glyph_lookup() && strwidth(regex) == 1)
         return false; // glyph search doesn't have the concept
 
     if (lookup_type.filter_forbid && (*lookup_type.filter_forbid)(regex, ""))
@@ -1577,7 +1583,7 @@ bool LookupType::find_description(string &response) const
 
     vector<string> key_list = matching_keys(regex);
 
-    const bool by_symbol = supports_glyph_lookup() && regex.size() == 1;
+    const bool by_symbol = supports_glyph_lookup() && strwidth(regex) == 1;
     response = _keylist_invalid_reason(key_list, lowercase_string(type),
                                        regex, by_symbol);
     if (!response.empty())

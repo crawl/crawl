@@ -2231,9 +2231,9 @@ string monster::hand_name(bool plural, bool *can_plural) const
     *can_plural = true;
 
     string str;
-    char ch = mons_base_char(mons_is_pghost(type)
-                             ? species::to_mons_species(ghost->species)
-                             : type);
+    char32_t ch = mons_base_char(mons_is_pghost(type)
+                                 ? species::to_mons_species(ghost->species)
+                                 : type);
 
     const bool rand = (type == MONS_CHAOS_SPAWN);
 
@@ -2365,9 +2365,9 @@ string monster::foot_name(bool plural, bool *can_plural) const
 
     string str;
 
-    char ch = mons_base_char(mons_is_pghost(type)
-                             ? species::to_mons_species(ghost->species)
-                             : type);
+    char32_t ch = mons_base_char(mons_is_pghost(type)
+                                 ? species::to_mons_species(ghost->species)
+                                 : type);
 
     const bool rand = (type == MONS_CHAOS_SPAWN);
 
