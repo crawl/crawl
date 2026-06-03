@@ -224,6 +224,7 @@ dart_slug MONS_DART_SLUG
 steelbarb_worm MONS_STEELBARB_WORM
 %rim 0
 torpor_snail MONS_TORPOR_SNAIL
+radiant_snail MONS_RADIANT_SNAIL
 %rim 1
 
 ## Flying insects ('y')
