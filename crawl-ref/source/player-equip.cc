@@ -1726,11 +1726,11 @@ void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
 
     // Modify ability scores.
     notify_stat_change(STAT_STR, proprt[ARTP_STRENGTH],
-                       !(msg && proprt[ARTP_STRENGTH] && !unmeld));
+                       !(msg && proprt[ARTP_STRENGTH]));
     notify_stat_change(STAT_INT, proprt[ARTP_INTELLIGENCE],
-                       !(msg && proprt[ARTP_INTELLIGENCE] && !unmeld));
+                       !(msg && proprt[ARTP_INTELLIGENCE]));
     notify_stat_change(STAT_DEX, proprt[ARTP_DEXTERITY],
-                       !(msg && proprt[ARTP_DEXTERITY] && !unmeld));
+                       !(msg && proprt[ARTP_DEXTERITY]));
 
     if (proprt[ARTP_FLY])
         _flight_equip();
@@ -1745,13 +1745,10 @@ void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
         add_bane(NUM_BANES, "Equipping an artefact");
     }
 
-    if (proprt[ARTP_RAMPAGING] && msg && !unmeld
-        && !you.has_mutation(MUT_STAMPEDE))
-    {
+    if (proprt[ARTP_RAMPAGING] && msg && !you.has_mutation(MUT_STAMPEDE))
         mpr("You feel ready to rampage towards enemies.");
-    }
 
-    if (proprt[ARTP_ARCHMAGI] && msg && !unmeld)
+    if (proprt[ARTP_ARCHMAGI] && msg)
     {
         if (!you.skill(SK_SPELLCASTING))
             mpr("You feel strangely lacking in power.");
@@ -1813,13 +1810,10 @@ void unequip_artefact_effect(item_def &item,  bool *show_msgs, bool meld,
         notify_stat_change(STAT_DEX, -proprt[ARTP_DEXTERITY],
                            !(msg && proprt[ARTP_DEXTERITY]));
 
-        if (proprt[ARTP_RAMPAGING] && msg
-            && !you.rampaging() && !meld)
-        {
+        if (proprt[ARTP_RAMPAGING] && msg && !you.rampaging())
             mpr("You no longer feel able to rampage towards enemies.");
-        }
 
-        if (proprt[ARTP_ARCHMAGI] && msg && !meld)
+        if (proprt[ARTP_ARCHMAGI] && msg)
             mpr("You feel strangely numb.");
 
         if (proprt[ARTP_SEE_INVISIBLE])
