@@ -1271,16 +1271,13 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
 bool item_is_selected(const item_def &i, int selector)
 {
     const object_class_type itype = i.base_type;
-    if (selector == OSEL_ANY || selector == itype
-                                && itype != OBJ_ARMOUR)
-    {
+    if (selector == OSEL_ANY || selector == itype)
         return true;
-    }
 
     switch (selector)
     {
     case OBJ_ARMOUR:
-        return itype == OBJ_ARMOUR && can_equip_item(i, true);
+        return itype == OBJ_ARMOUR;
 
     case OSEL_WORN_ARMOUR:
         return itype == OBJ_ARMOUR && item_is_equipped(i);
