@@ -196,7 +196,6 @@ private:
     string charge_desc();
     string weapon_desc();
     void player_warn_miss();
-    void player_weapon_upsets_god();
     bool bad_attempt();
     bool player_unrand_bad_attempt(bool check_only = false);
     void _defender_die();

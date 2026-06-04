@@ -11,6 +11,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "god-abil.h"
+#include "god-item.h"
 #include "god-passive.h"
 #include "hiscores.h"
 #include "invent.h"
@@ -18,6 +19,7 @@
 #include "makeitem.h"
 #include "message.h"
 #include "notes.h"
+#include "player-equip.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
@@ -25,6 +27,7 @@
 #include "stepdown.h"
 #include "stringutil.h"
 #include "terrain.h"
+#include "transform.h"
 #include "unwind.h"
 #include "xom.h"
 
@@ -104,6 +107,37 @@ static bool _pray_ecumenical_altar()
         return false;
     }
 
+    // The unknown god might not tolerate our current form or some of our gear.
+    // Warn about whatever they might make us give up.
+    bool form_at_risk = false;
+    bool gear_at_risk = false;
+    for (god_type god : gods)
+    {
+        if (!transformed_player_can_join_god(god))
+            form_at_risk = true;
+        for (item_def* item : you.equipment.get_slot_items(SLOT_ALL_EQUIPMENT, true))
+            if (god_hates_item(*item, god))
+                gear_at_risk = true;
+    }
+
+    if (form_at_risk || gear_at_risk)
+    {
+        vector<string> consequences;
+        if (form_at_risk)
+            consequences.emplace_back("leave your current form");
+        if (gear_at_risk)
+            consequences.emplace_back("remove some of your equipment");
+        const string prompt = "Praying here may force you to "
+            + comma_separated_line(consequences.begin(), consequences.end(),
+                                   " or ")
+            + ". Pray anyway?";
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
     const god_type altar_god = *random_iterator(gods);
     dungeon_terrain_changed(you.pos(), altar_for_god(altar_god));
     take_note(Note(NOTE_MESSAGE, 0, 0,
@@ -112,10 +146,39 @@ static bool _pray_ecumenical_altar()
     {
         // Don't check for or charge a Gozag service fee.
         unwind_var<int> fakepoor(you.attribute[ATTR_GOLD_GENERATED], 0);
-        if (!player_can_join_god(altar_god))
+
+        string rejection_message =
+            cannot_join_god_reason(altar_god, true, false);
+        if (!rejection_message.empty())
         {
-            print_god_rejection(altar_god);
+            mprf(MSGCH_GOD, "%s", rejection_message.c_str());
             return true;
+        }
+
+        // Remove our form if the new god forbids it.
+        //
+        // This will remove any temporary forms on top of the forbidden form,
+        // like flux or hostile polymorphs. Possibly we could just call
+        // unset_default_form without untransform in that case.
+        if (!transformed_player_can_join_god(altar_god))
+        {
+            mprf(MSGCH_GOD, "%s dispels your loathsome form.",
+                  uppercase_first(god_name(altar_god)).c_str());
+            unset_default_form();
+            untransform();
+        }
+
+        // Remove gear the chosen god forbids.
+        for (item_def* item : you.equipment.get_slot_items(SLOT_ALL_EQUIPMENT, true))
+        {
+            if (god_hates_item(*item, altar_god))
+            {
+                // included in default force_more_message
+                mprf(MSGCH_GOD, "%s removes %s.",
+                    uppercase_first(god_name(altar_god)).c_str(),
+                    item->name(DESC_YOUR, false, false, false).c_str());
+                unequip_item(*item, false);
+            }
         }
 
         mprf(MSGCH_GOD, "%s accepts your prayer!",

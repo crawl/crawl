@@ -1061,12 +1061,17 @@ string get_god_likes(god_type which_god)
     return text;
 }
 
-conduct_type god_hates_item_handling(const item_def& item)
+conduct_type god_hates_item_handling(const item_def& item, god_type god)
 {
     for (conduct_type conduct : item_conducts(item))
-        if (divine_peeves[you.religion].count(conduct))
+        if (divine_peeves[god].count(conduct))
             return conduct;
     return DID_NOTHING;
+}
+
+conduct_type god_hates_item_handling(const item_def& item)
+{
+    return god_hates_item_handling(item, you.religion);
 }
 
 /**

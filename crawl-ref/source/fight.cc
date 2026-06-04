@@ -337,11 +337,10 @@ static bool _autoswitch_to_melee()
         return false;
 
     item_def* weapon = you.weapon();
-    bool penance;
     if (!weapon
         // don't autoswitch from a weapon that needs a warning
         || is_melee_weapon(*weapon)
-            && !needs_handle_warning(*weapon, OPER_ATTACK, penance))
+            && !needs_handle_warning(*weapon, OPER_ATTACK))
     {
         return false;
     }
@@ -358,7 +357,7 @@ static bool _autoswitch_to_melee()
     // don't autoswitch to a weapon that needs a warning, or to a non-weapon
     if (!you.inv[item_slot].defined()
         || !is_melee_weapon(you.inv[item_slot])
-        || needs_handle_warning(you.inv[item_slot], OPER_ATTACK, penance))
+        || needs_handle_warning(you.inv[item_slot], OPER_ATTACK))
     {
         return false;
     }
@@ -962,11 +961,11 @@ int apply_chunked_AC(int dam, int ac)
 
 ///////////////////////////////////////////////////////////////////////////
 
-static bool _weapon_is_bad(const item_def *weapon, bool &penance)
+static bool _weapon_is_bad(const item_def *weapon)
 {
     if (!weapon)
         return false;
-    return needs_handle_warning(*weapon, OPER_ATTACK, penance)
+    return needs_handle_warning(*weapon, OPER_ATTACK)
            || !is_melee_weapon(*weapon) && !_can_shoot_with(weapon);
 }
 
@@ -1014,13 +1013,12 @@ bool wielded_weapon_check(string attack_verb)
     if (you.received_weapon_warning || you.confused())
         return true;
 
-    bool penance = false;
-    const bool primary_bad = _weapon_is_bad(weapon, penance);
+    const bool primary_bad = _weapon_is_bad(weapon);
     // Important: check rangedness_matches *before* checking weapon_is_bad
     // for the offhand, so that we don't incorrectly claim you'll get penance
     // for a weapon that won't even attack!
     const bool offhand_bad = !_rangedness_matches(weapon, offhand)
-                             || _weapon_is_bad(offhand, penance);
+                             || _weapon_is_bad(offhand);
 
     if (!primary_bad && !offhand_bad && !_missing_weapon(weapon, offhand))
         return true;
@@ -1031,8 +1029,6 @@ bool wielded_weapon_check(string attack_verb)
     prompt = make_stringf("Really %s while wielding %s?",
         attack_verb.size() ? attack_verb.c_str() : "attack",
         wpn_desc.c_str());
-    if (penance)
-        prompt += " This could place you under penance!";
 
     const bool result = yesno(prompt.c_str(), true, 'n');
 

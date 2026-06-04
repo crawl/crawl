@@ -459,15 +459,29 @@ bool slot_is_melded(equipment_slot slot)
  *                          is melded by our current form.
  * @param veto_reason[out]  If the player cannot use this item, and this is
  *                          non-null, it is set to the reason why they can't.
+ * @param god_forbids[out]  If the player cannot use this item, set to whether
+ *                          the reason is god-based.
  *
  * @return True if the player is capable of theoretically wearing this item.
  */
-bool can_equip_item(const item_def& item, bool include_form, string* veto_reason)
+bool can_equip_item(const item_def& item, bool include_form, string* veto_reason,
+                    bool *god_forbids)
 {
 #define NO_EQUIP(x) {if (veto_reason) { *veto_reason = x; }; return 0;}
 
+    if (god_forbids)
+        *god_forbids = false;
     if (!item_type_is_equipment(item.base_type))
         NO_EQUIP("That isn't an equippable item.")
+
+    // Your god won't let you make use of gear they abhor.
+    if (god_hates_item(item))
+    {
+        if (god_forbids)
+            *god_forbids = true;
+        NO_EQUIP(make_stringf("%s forbids the use of this item.",
+                              uppercase_first(god_name(you.religion)).c_str()))
+    }
 
     vector<equipment_slot> slots = get_all_item_slots(item);
 
@@ -1631,15 +1645,11 @@ static void _equip_armour_effect(item_def& arm, bool unmeld);
 static void _unequip_armour_effect(item_def& item, bool meld, bool was_melded);
 static void _equip_jewellery_effect(item_def &item, bool unmeld);
 static void _unequip_jewellery_effect(item_def &item, bool meld, bool was_melded);
-static void _equip_use_warning(const item_def& item);
 static void _handle_regen_item_equip(const item_def& item);
 
 void equip_effect(int item_slot, bool unmeld, bool msg)
 {
     item_def& item = you.inv[item_slot];
-
-    if (msg)
-        _equip_use_warning(item);
 
     const interrupt_block block_unmeld_interrupts(unmeld);
 
@@ -1849,22 +1859,6 @@ void unequip_artefact_effect(item_def &item,  bool *show_msgs, bool meld,
                 *show_msgs = false;
         }
     }
-}
-
-static void _equip_use_warning(const item_def& item)
-{
-    if (is_holy_item(item) && you_worship(GOD_YREDELEMNUL))
-        mpr("You really shouldn't be using a holy item like this.");
-    else if (is_evil_item(item) && is_good_god(you.religion))
-        mpr("You really shouldn't be using an evil item like this.");
-    else if (is_unclean_item(item) && you_worship(GOD_ZIN))
-        mpr("You really shouldn't be using an unclean item like this.");
-    else if (is_chaotic_item(item) && you_worship(GOD_ZIN))
-        mpr("You really shouldn't be using a chaotic item like this.");
-    else if (is_hasty_item(item) && you_worship(GOD_CHEIBRIADOS))
-        mpr("You really shouldn't be using a hasty item like this.");
-    else if (is_wizardly_item(item) && you_worship(GOD_TROG))
-        mpr("You really shouldn't be using a wizardly item like this.");
 }
 
 // Provide a function for handling initial wielding of 'special' weapons
