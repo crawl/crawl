@@ -1203,7 +1203,7 @@ void player_equip_set::handle_melding(vector<item_def*>& to_meld, bool skip_effe
 
     // Now, simultaneously do unequip effects for all melded items.
     for (item_def* meld_item : to_meld)
-        unequip_effect(meld_item->link, true, true);
+        unequip_effect(meld_item->link, true, true, false);
 }
 
 /**
@@ -1594,11 +1594,12 @@ bool unequip_item(item_def& item, bool msg, bool skip_effects)
         say_farewell_to_weapon(item);
 
     const int item_slot = item.link;
+    bool was_melded = item_is_melded(item);
     you.equipment.remove(item);
     you.equipment.update();
 
     if (!skip_effects)
-        unequip_effect(item_slot, false, msg);
+        unequip_effect(item_slot, false, msg, was_melded);
 
     ash_check_bondage();
     you.last_unequip = item_slot;
@@ -1624,11 +1625,12 @@ bool unequip_item(item_def& item, bool msg, bool skip_effects)
 }
 
 static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld);
-static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld);
+static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld,
+                                   bool was_melded);
 static void _equip_armour_effect(item_def& arm, bool unmeld);
-static void _unequip_armour_effect(item_def& item, bool meld);
+static void _unequip_armour_effect(item_def& item, bool meld, bool was_melded);
 static void _equip_jewellery_effect(item_def &item, bool unmeld);
-static void _unequip_jewellery_effect(item_def &item, bool meld);
+static void _unequip_jewellery_effect(item_def &item, bool meld, bool was_melded);
 static void _equip_use_warning(const item_def& item);
 static void _handle_regen_item_equip(const item_def& item);
 
@@ -1670,21 +1672,21 @@ static void _unequip_maybe_destroy_item(item_def& item)
     }
 }
 
-void unequip_effect(int item_slot, bool meld, bool msg)
+void unequip_effect(int item_slot, bool meld, bool msg, bool was_melded)
 {
     item_def& item = you.inv[item_slot];
 
     const interrupt_block block_meld_interrupts(meld);
 
     if (is_artefact(item))
-        unequip_artefact_effect(item, &msg, meld);
+        unequip_artefact_effect(item, &msg, meld, was_melded);
 
     if (is_weapon(item))
-        _unequip_weapon_effect(item, msg, meld);
+        _unequip_weapon_effect(item, msg, meld, was_melded);
     else if (item.base_type == OBJ_ARMOUR)
-        _unequip_armour_effect(item, meld);
+        _unequip_armour_effect(item, meld, was_melded);
     else if (item.base_type == OBJ_JEWELLERY)
-        _unequip_jewellery_effect(item, meld);
+        _unequip_jewellery_effect(item, meld, was_melded);
 
     if (!meld)
         _unequip_maybe_destroy_item(item);
@@ -1765,7 +1767,8 @@ void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
         calc_mp();
 }
 
-void unequip_artefact_effect(item_def &item,  bool *show_msgs, bool meld)
+void unequip_artefact_effect(item_def &item,  bool *show_msgs, bool meld,
+                             bool was_melded)
 {
     ASSERT(is_artefact(item));
 
@@ -1773,68 +1776,84 @@ void unequip_artefact_effect(item_def &item,  bool *show_msgs, bool meld)
     artefact_properties(item, proprt);
     const bool msg = !show_msgs || *show_msgs;
 
-    if (proprt[ARTP_AC] || proprt[ARTP_SHIELDING])
-        you.redraw_armour_class = true;
-
-    if (proprt[ARTP_EVASION])
-        you.redraw_evasion = true;
-
-    if (proprt[ARTP_HP])
-        _calc_hp_artefact();
-
-    if (proprt[ARTP_MAGICAL_POWER] && !you.has_mutation(MUT_HP_CASTING))
+    // Almost all effects should trigger exactly once if this function is
+    // called twice to meld and then destroy an object - that is, either on
+    // !was_melded or on !meld and not on both.
+    if (!was_melded)
     {
-        const bool gives_mp = proprt[ARTP_MAGICAL_POWER] > 0;
-        if (msg)
-            canned_msg(gives_mp ? MSG_MANA_DECREASE : MSG_MANA_INCREASE);
-        if (gives_mp)
-            pay_mp(proprt[ARTP_MAGICAL_POWER]);
-        calc_mp();
+        // This doesn't trigger for melding because we must finish the
+        // transformation before landing the player (in case we are going into
+        // a flying form).
+        if (proprt[ARTP_FLY] != 0 && !meld)
+            land_player();
+
+        if (proprt[ARTP_AC] || proprt[ARTP_SHIELDING])
+            you.redraw_armour_class = true;
+
+        if (proprt[ARTP_EVASION])
+            you.redraw_evasion = true;
+
+        if (proprt[ARTP_HP])
+            _calc_hp_artefact();
+
+        if (proprt[ARTP_MAGICAL_POWER] && !you.has_mutation(MUT_HP_CASTING))
+        {
+            const bool gives_mp = proprt[ARTP_MAGICAL_POWER] > 0;
+            if (msg)
+                canned_msg(gives_mp ? MSG_MANA_DECREASE : MSG_MANA_INCREASE);
+            if (gives_mp)
+                pay_mp(proprt[ARTP_MAGICAL_POWER]);
+            calc_mp();
+        }
+
+        notify_stat_change(STAT_STR, -proprt[ARTP_STRENGTH],
+                           !(msg && proprt[ARTP_STRENGTH]));
+        notify_stat_change(STAT_INT, -proprt[ARTP_INTELLIGENCE],
+                           !(msg && proprt[ARTP_INTELLIGENCE]));
+        notify_stat_change(STAT_DEX, -proprt[ARTP_DEXTERITY],
+                           !(msg && proprt[ARTP_DEXTERITY]));
+
+        if (proprt[ARTP_RAMPAGING] && msg
+            && !you.rampaging() && !meld)
+        {
+            mpr("You no longer feel able to rampage towards enemies.");
+        }
+
+        if (proprt[ARTP_ARCHMAGI] && msg && !meld)
+            mpr("You feel strangely numb.");
+
+        if (proprt[ARTP_SEE_INVISIBLE])
+            _mark_unseen_monsters();
+
+        if (is_unrandom_artefact(item))
+        {
+            const unrandart_entry *entry = get_unrand_entry(item.unrand_idx);
+
+            if (entry->unequip_func)
+                entry->unequip_func(&item, show_msgs);
+        }
     }
 
-    notify_stat_change(STAT_STR, -proprt[ARTP_STRENGTH],     true);
-    notify_stat_change(STAT_INT, -proprt[ARTP_INTELLIGENCE], true);
-    notify_stat_change(STAT_DEX, -proprt[ARTP_DEXTERITY],    true);
-
-    if (proprt[ARTP_FLY] != 0 && !meld)
-        land_player();
-
-    if (proprt[ARTP_CONTAM] && !meld)
+    // On-removal effects get skipped when melding.
+    if (!meld)
     {
-        mpr("Mutagenic energies flood into your body!");
-        contaminate_player(1200, true);
-    }
+        if (proprt[ARTP_CONTAM])
+        {
+            mpr("Mutagenic energies flood into your body!");
+            contaminate_player(1200, true);
+        }
 
-    if (proprt[ARTP_RAMPAGING] && msg && !meld
-        && !you.rampaging())
-    {
-        mpr("You no longer feel able to rampage towards enemies.");
-    }
+        if (proprt[ARTP_DRAIN])
+            drain_player(150, true, true);
 
-    if (proprt[ARTP_ARCHMAGI] && msg && !meld)
-        mpr("You feel strangely numb.");
+        if (artefact_property(item, ARTP_FRAGILE))
+        {
+            mprf("%s crumbles to dust!", item.name(DESC_THE).c_str());
 
-    if (proprt[ARTP_DRAIN] && !meld)
-        drain_player(150, true, true);
-
-    if (proprt[ARTP_SEE_INVISIBLE])
-        _mark_unseen_monsters();
-
-    if (is_unrandom_artefact(item))
-    {
-        const unrandart_entry *entry = get_unrand_entry(item.unrand_idx);
-
-        if (entry->unequip_func)
-            entry->unequip_func(&item, show_msgs);
-    }
-
-    if (artefact_property(item, ARTP_FRAGILE) && !meld)
-    {
-        mprf("%s crumbles to dust!", item.name(DESC_THE).c_str());
-
-        // Hide unwield messages for weapons that have already been destroyed.
-        if (item.base_type == OBJ_WEAPONS)
-            *show_msgs = false;
+            // Hide unwield messages for weapons that have already been destroyed.
+            if (item.base_type == OBJ_WEAPONS)
+                *show_msgs = false;
+        }
     }
 }
 
@@ -2058,8 +2077,19 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
-static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
+static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld,
+                                   bool was_melded)
 {
+    if (was_melded)
+    {
+        if (item.base_type == OBJ_WEAPONS
+            && get_weapon_brand(item) == SPWPN_DISTORTION)
+        {
+            unwield_distortion();
+        }
+        return;
+    }
+
     you.wield_change = true;
     quiver::on_weapon_changed();
 
@@ -2367,8 +2397,11 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
     }
 }
 
-static void _unequip_armour_effect(item_def& item, bool meld)
+static void _unequip_armour_effect(item_def& item, bool meld, bool was_melded)
 {
+    // No armour brands have an effect when destroyed from melded.
+    if (was_melded)
+        return;
     you.redraw_armour_class = true;
     you.redraw_evasion = true;
 
@@ -2700,8 +2733,15 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
-static void _unequip_jewellery_effect(item_def &item, bool meld)
+static void _unequip_jewellery_effect(item_def &item, bool meld, bool was_melded)
 {
+    // Only faith does anything when destroyed from melded.
+    if (was_melded)
+    {
+        if (item.sub_type == AMU_FAITH)
+            _remove_amulet_of_faith(item);
+        return;
+    }
     // The ring/amulet must already be removed from you.equipment at this point.
     switch (item.sub_type)
     {
