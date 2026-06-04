@@ -24,5 +24,6 @@ bool is_chaotic_spell(spell_type spell);
 bool is_hasty_spell(spell_type spell);
 vector<conduct_type> item_conducts(const item_def &item);
 bool god_hates_item(const item_def &item);
+bool god_hates_item(const item_def &item, god_type which_god);
 bool god_likes_item_type(const item_def &item, god_type which_god);
 bool god_despises_item(const item_def &item, god_type which_god);

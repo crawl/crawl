@@ -131,7 +131,8 @@ FixedVector<int, NUM_EQUIP_SLOTS> get_total_player_equip_slots();
 const vector<equipment_slot>& get_alternate_slots(equipment_slot slot);
 
 bool can_equip_item(const item_def& item, bool include_form = false,
-                    string* veto_reason = nullptr);
+                    string* veto_reason = nullptr,
+                    bool* is_divine = nullptr);
 
 // XXX: the msg flag isn't implemented in all cases.
 void equip_item(equipment_slot slot, int item_slot, bool msg=true,

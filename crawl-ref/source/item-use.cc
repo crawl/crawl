@@ -932,9 +932,11 @@ static bool _can_wield_anything()
     item_def dummy_weapon;
     dummy_weapon.base_type = OBJ_WEAPONS;
     string veto_reason;
-    bool ret = can_equip_item(dummy_weapon, true, &veto_reason);
+    bool is_divine;
+    bool ret = can_equip_item(dummy_weapon, true, &veto_reason, &is_divine);
+    msg_channel_type veto_channel = is_divine ? MSGCH_GOD : MSGCH_PROMPT;
     if (!veto_reason.empty())
-        mprf(MSGCH_PROMPT, "%s", veto_reason.c_str());
+        mprf(veto_channel, "%s", veto_reason.c_str());
 
     return ret;
 }
@@ -1329,9 +1331,11 @@ bool try_equip_item(item_def& item)
         return use_talisman(item);
 
     string reason;
-    if (!can_equip_item(item, true, &reason))
+    bool is_divine;
+    if (!can_equip_item(item, true, &reason, &is_divine))
     {
-        mprf(MSGCH_PROMPT, "%s", reason.c_str());
+        msg_channel_type channel = is_divine ? MSGCH_GOD : MSGCH_PROMPT;
+        mprf(channel, "%s", reason.c_str());
         return false;
     }
 
@@ -3355,9 +3359,13 @@ bool invisibility_target_check(const char* prompt)
     return target.isValid && !target.isCancel;
 }
 
-string cannot_put_on_talisman_reason(const item_def& talisman, bool temp)
+string cannot_put_on_talisman_reason(const item_def& talisman, bool temp,
+                                     bool* is_divine)
 {
     ASSERT(talisman.base_type == OBJ_TALISMANS);
+
+    if (is_divine)
+        *is_divine = false;
 
     if (talisman.sub_type == TALISMAN_PROTEAN)
     {
@@ -3373,6 +3381,17 @@ string cannot_put_on_talisman_reason(const item_def& talisman, bool temp)
     }
 
     const transformation trans = form_for_talisman(talisman);
+    if (god_hates_form(you.religion, trans))
+    {
+        if (is_divine)
+            *is_divine = true;
+
+        if (you_worship(GOD_OKAWARU))
+            return "you have forsworn all allies in Okawaru's name.";
+
+        return make_stringf("%s forbids the use of this talisman.",
+                            uppercase_first(god_name(you.religion)).c_str());
+    }
     const string form_unreason = cant_transform_reason(trans, false, temp);
     if (!form_unreason.empty())
         return lowercase_first(form_unreason);
@@ -3382,8 +3401,6 @@ string cannot_put_on_talisman_reason(const item_def& talisman, bool temp)
 
     if (trans == transformation::hive)
     {
-        if (you_worship(GOD_OKAWARU))
-            return "you have forsworn all allies in Okawaru's name.";
         if (you.get_mutation_level(MUT_NO_LOVE))
             return "you are loveless.";
     }
@@ -3393,10 +3410,12 @@ string cannot_put_on_talisman_reason(const item_def& talisman, bool temp)
 
 bool use_talisman(item_def& talisman)
 {
-    string reason = cannot_put_on_talisman_reason(talisman);
+    bool is_divine;
+    string reason = cannot_put_on_talisman_reason(talisman, true, &is_divine);
     if (!reason.empty())
     {
-        mpr(reason);
+        msg_channel_type channel = is_divine ? MSGCH_GOD : MSGCH_PLAIN;
+        mprf(channel, "%s", reason.c_str());
         return false;
     }
 
@@ -3438,8 +3457,6 @@ bool use_talisman(item_def& talisman)
 
     count_action(CACT_FORM, (int)trans);
     start_delay<TransformDelay>(trans, &real_item);
-    if (god_despises_item(real_item, you.religion))
-        excommunication();
     you.turn_is_over = true;
     return true;
 }

@@ -414,9 +414,14 @@ vector<conduct_type> item_conducts(const item_def &item)
     return conducts;
 }
 
+bool god_hates_item(const item_def &item, god_type which_god)
+{
+    return god_hates_item_handling(item, which_god) != DID_NOTHING;
+}
+
 bool god_hates_item(const item_def &item)
 {
-    return god_hates_item_handling(item) != DID_NOTHING;
+    return god_hates_item(item, you.religion);
 }
 
 bool god_despises_item(const item_def &item, god_type which_god)

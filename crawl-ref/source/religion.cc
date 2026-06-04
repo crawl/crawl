@@ -3251,7 +3251,7 @@ bool god_hates_attacking_friend(god_type god, const monster& fr)
     }
 }
 
-static bool _god_hates_form(god_type which_god, transformation which_trans)
+bool god_hates_form(god_type which_god, transformation which_trans)
 {
     if (which_god == GOD_ZIN && which_trans != transformation::none)
         return true; // zin hates everything
@@ -3267,15 +3267,15 @@ static bool _god_hates_form(god_type which_god, transformation which_trans)
     return false;
 }
 
-static bool _transformed_player_can_join_god(god_type which_god)
+bool transformed_player_can_join_god(god_type which_god)
 {
-    if (_god_hates_form(which_god, you.form))
+    if (god_hates_form(which_god, you.form))
         return false;
 
     // Check our talisman rather than our form, as we are not allowed to
     // join a god when our form is masked by a polymorph.
     if (you.active_talisman()
-        && _god_hates_form(which_god, form_for_talisman(*you.active_talisman())))
+        && god_hates_form(which_god, form_for_talisman(*you.active_talisman())))
     {
         return false;
     }
@@ -3314,6 +3314,84 @@ static bool _god_rejects_loveless(god_type god)
 }
 
 /**
+ * Why can the player not worship which_god?
+ *
+ * @param which_god  god to query
+ * @param temp       If true (default), test if you can worship which_god now.
+ *                   If false, test if you may ever be able to worship the god.
+ * @param check_gear If true (default), test items and forms.
+ * @return           A complete, ready-to-print message (including the god's
+ *                   name) explaining why worship is refused, or the empty
+ *                   string if the player can worship which_god.
+ */
+string cannot_join_god_reason(god_type which_god, bool temp, bool check_gear)
+{
+    const string god = god_speaker(which_god);
+
+    // Only check permanent statuses here, as we will have more specific
+    // messages for e.g. temporary forms further down.
+    if (you.has_mutation(MUT_FORLORN)
+        || (is_good_god(which_god) && you.undead_or_demonic(false))
+        || (you.has_mutation(MUT_INNATE_CASTER)
+            && (which_god == GOD_SIF_MUNA
+                || which_god == GOD_VEHUMET
+                || which_god == GOD_KIKUBAAQUDGHA)))
+    {
+        return god + " does not accept worship from those such as you!";
+    }
+
+    if (which_god == GOD_GOZAG && temp && you.gold < gozag_service_fee())
+    {
+        const int fee = gozag_service_fee();
+        string reason = god + " does not accept service from beggars like you! ";
+        if (you.gold == 0)
+        {
+            reason += make_stringf("The service fee for joining is currently %d"
+                                   " gold; you have none.", fee);
+        }
+        else
+        {
+            reason += make_stringf("The service fee for joining is currently %d"
+                                   " gold; you only have %d.", fee, you.gold);
+        }
+        return reason;
+    }
+
+    if (you.get_base_mutation_level(MUT_NO_LOVE, true, temp, temp)
+        && _god_rejects_loveless(which_god))
+    {
+        return god + " does not accept worship from the loveless!";
+    }
+
+    if (temp && !transformed_player_can_join_god(which_god) && check_gear)
+    {
+        if (which_god == GOD_OKAWARU)
+        {
+            return god + " says: You must forswear the aid of any and all before"
+                         " you are fit to worship.";
+        }
+        return god + " says: How dare you approach in such a loathsome form!";
+    }
+
+    // You can't join a god while wearing gear they hate.
+    if (temp && check_gear)
+    {
+        vector<string> hated;
+        for (item_def* item : you.equipment.get_slot_items(SLOT_ALL_EQUIPMENT, true))
+            if (god_hates_item(*item, which_god))
+                hated.push_back(item->name(DESC_YOUR, false, false, false));
+        if (!hated.empty())
+        {
+            return god + " will not accept your worship while you use "
+                   + comma_separated_line(hated.begin(), hated.end(), " or ")
+                   + ".";
+        }
+    }
+
+    return "";
+}
+
+/**
  * Return true if the player can worship which_god.
  *
  * @param which_god  god to query
@@ -3323,30 +3401,7 @@ static bool _god_rejects_loveless(god_type god)
  */
 bool player_can_join_god(god_type which_god, bool temp)
 {
-    if (you.has_mutation(MUT_FORLORN))
-        return false;
-
-    if (is_good_god(which_god) && you.undead_or_demonic(temp))
-        return false;
-
-    if (you.has_mutation(MUT_INNATE_CASTER)
-        && (which_god == GOD_SIF_MUNA
-            || which_god == GOD_VEHUMET
-            || which_god == GOD_KIKUBAAQUDGHA))
-    {
-        return false;
-    }
-
-    if (which_god == GOD_GOZAG && temp && you.gold < gozag_service_fee())
-        return false;
-
-    if (you.get_base_mutation_level(MUT_NO_LOVE, true, temp, temp)
-        && _god_rejects_loveless(which_god))
-    {
-        return false;
-    }
-
-    return !temp || _transformed_player_can_join_god(which_god);
+    return cannot_join_god_reason(which_god, temp).empty();
 }
 
 // Handle messaging and identification for items/equipment on conversion.
@@ -3365,19 +3420,6 @@ static void _god_welcome_handle_gear()
 
     if (have_passive(passive_t::detect_portals))
         ash_detect_portals(true);
-
-    // Give a reminder to remove any disallowed equipment.
-    vector<item_def*> all_eq = you.equipment.get_slot_items(SLOT_ALL_EQUIPMENT, true);
-    for (item_def* item : all_eq)
-    {
-        if (god_hates_item(*item))
-        {
-            // included in default force_more_message
-            mprf(MSGCH_GOD, "%s warns you to remove %s.",
-                 uppercase_first(god_name(you.religion)).c_str(),
-                 item->name(DESC_YOUR, false, false, false).c_str());
-        }
-    }
 
     if (you.props.exists(PARAGON_WEAPON_KEY))
     {
@@ -3955,10 +3997,11 @@ void god_pitch(god_type which_god)
     // return, or not allow worshippers from other religions. - bwr
 
     // Gods can be racist...
-    if (!player_can_join_god(which_god))
+    string rejection_message = cannot_join_god_reason(which_god);
+    if (!rejection_message.empty())
     {
         you.turn_is_over = false;
-        print_god_rejection(which_god);
+        mprf(MSGCH_GOD, "%s", rejection_message.c_str());
         return;
     }
 
@@ -3978,51 +4021,6 @@ void god_pitch(god_type which_god)
         redraw_screen();
         update_screen();
     }
-}
-
-void print_god_rejection(god_type which_god)
-{
-
-    if (which_god == GOD_GOZAG)
-    {
-        simple_god_message(" does not accept service from beggars like you!",
-                           false, which_god);
-        const int fee = gozag_service_fee();
-        if (you.gold == 0)
-        {
-            mprf("The service fee for joining is currently %d gold; you have"
-                 " none.", fee);
-        }
-        else
-        {
-            mprf("The service fee for joining is currently %d gold; you only"
-                 " have %d.", fee, you.gold);
-        }
-        return;
-    }
-    if (you.get_mutation_level(MUT_NO_LOVE) && _god_rejects_loveless(which_god))
-    {
-        simple_god_message(" does not accept worship from the loveless!",
-                           false, which_god);
-        return;
-    }
-    if (!_transformed_player_can_join_god(which_god))
-    {
-        if (which_god == GOD_OKAWARU)
-        {
-            simple_god_message(" says: You must forswear the aid of any and all "
-                               "before you are fit to worship.", false, which_god);
-        }
-        else
-        {
-            simple_god_message(" says: How dare you approach in such a loathsome "
-                               "form!", false, which_god);
-        }
-        return;
-    }
-
-    simple_god_message(" does not accept worship from those such as you!",
-                       false, which_god);
 }
 
 /** Ask the user for a god by name.
