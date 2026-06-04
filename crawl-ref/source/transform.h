@@ -216,6 +216,7 @@ public:
     /// What does this form change the player's holiness to? (MH_NONE if it leaves it unchanged)
     /// Note that vampire is special-cased in player::holiness().
     const mon_holy_type holiness;
+    const undead_state_type undead_state;
     /// Is this form considered 'bad' (ie: hostile)
     const bool is_badform;
 

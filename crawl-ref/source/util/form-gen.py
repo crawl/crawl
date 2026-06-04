@@ -350,6 +350,7 @@ keyfns = {
     'changes_anatomy': Field(parse_bool),
     'changes_substance': Field(parse_bool),
     'holiness': Field(lambda s: "MH_" + s.upper()),
+    'undead_state': Field(lambda s: "US_" + s.upper()),
 
     'is_badform': Field(parse_bool),
     'has_blood': Field(parse_capability),
@@ -412,6 +413,7 @@ defaults = {
     'changes_anatomy': "false",
     'changes_substance': "false",
     'holiness': "MH_NONE",
+    'undead_state': 'US_ALIVE',
 
     'is_badform': 'false',
     'has_blood': "FC_DEFAULT",

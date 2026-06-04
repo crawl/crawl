@@ -3251,16 +3251,34 @@ bool god_hates_attacking_friend(god_type god, const monster& fr)
     }
 }
 
+static bool _god_hates_form(god_type which_god, transformation which_trans)
+{
+    if (which_god == GOD_ZIN && which_trans != transformation::none)
+        return true; // zin hates everything
+
+    if (is_good_god(which_god)
+        && get_form(which_trans)->undead_state != US_ALIVE)
+    {
+        return true;
+    }
+
+    if (which_god == GOD_OKAWARU && which_trans == transformation::hive)
+        return true;
+    return false;
+}
+
 static bool _transformed_player_can_join_god(god_type which_god)
 {
-    if (which_god == GOD_ZIN && you.form != transformation::none)
-        return false; // zin hates everything
-
-    if (is_good_god(which_god) && you.form == transformation::death)
+    if (_god_hates_form(which_god, you.form))
         return false;
 
-    if (which_god == GOD_OKAWARU && you.form == transformation::hive)
+    // Check our talisman rather than our form, as we are not allowed to
+    // join a god when our form is masked by a polymorph.
+    if (you.active_talisman()
+        && _god_hates_form(which_god, form_for_talisman(*you.active_talisman())))
+    {
         return false;
+    }
 
     return true;
 }

@@ -55,6 +55,7 @@ struct form_entry
     bool changes_anatomy;
     bool changes_substance;
     mon_holy_type holiness;
+    undead_state_type undead_state;
 
     // Row 9:
     bool is_badform;

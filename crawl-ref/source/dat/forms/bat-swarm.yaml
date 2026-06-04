@@ -7,6 +7,7 @@ description: a swarm of vampire bats.
 skill: {min: 17, max: 25}
 melds: [physical]
 resists: {cold: 1, neg: 2}
+undead_state: "SEMI_UNDEAD"
 dex: 5
 ev: {base: 15, scaling: 20}
 size: tiny
