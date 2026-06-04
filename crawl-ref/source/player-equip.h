@@ -143,11 +143,12 @@ bool slot_is_melded(equipment_slot slot);
 void autoequip_item(item_def& item);
 
 void equip_effect(int item_slot, bool unmeld, bool msg);
-void unequip_effect(int item_slot, bool meld, bool msg);
+void unequip_effect(int item_slot, bool meld, bool msg, bool was_melded);
 
 struct item_def;
 void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld);
-void unequip_artefact_effect(item_def &item, bool *show_msgs, bool meld);
+void unequip_artefact_effect(item_def &item, bool *show_msgs, bool meld,
+                             bool was_melded = false);
 
 bool acrobat_boost_active();
 bool parrying_boost_active();
