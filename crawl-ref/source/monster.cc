@@ -2247,8 +2247,13 @@ string monster::hand_name(bool plural, bool *can_plural) const
     case MON_SHAPE_HUMANOID_WINGED:
     case MON_SHAPE_HUMANOID_TAILED:
     case MON_SHAPE_HUMANOID_WINGED_TAILED:
-        if (ch == 'T' || ch == 'n' || mons_is_demon(type))
+        if (mons_is_demon(type)
+            || mons_genus(type) == MONS_TROLL
+            || mons_genus(type) == MONS_REVENANT
+            || mons_genus(type) == MONS_GHOUL)
+        {
             str = "claw";
+        }
         break;
 
     case MON_SHAPE_QUADRUPED:
@@ -2384,7 +2389,7 @@ string monster::foot_name(bool plural, bool *can_plural) const
     case MON_SHAPE_HUMANOID_WINGED:
     case MON_SHAPE_HUMANOID_TAILED:
     case MON_SHAPE_HUMANOID_WINGED_TAILED:
-        if (type == MONS_MINOTAUR)
+        if (mons_genus(type) == MONS_MINOTAUR)
             str = "hoof";
         else if (swimming() && mons_genus(type) == MONS_MERFOLK)
         {
@@ -2407,18 +2412,21 @@ string monster::foot_name(bool plural, bool *can_plural) const
         }
         else if (mons_genus(type) == MONS_HOG)
             str = "trotter";
-        else if (ch == 'h')
-            str = "paw";
-        else if (ch == 'l' || ch == 'D')
-            str = "talon";
-        else if (type == MONS_YAK || type == MONS_DEATH_YAK)
-            str = "hoof";
-        else if (ch == 'H')
+        else if (mons_genus(type) == MONS_HOUND
+                 || mons_genus(type) == MONS_FELID
+                 || mons_genus(type) == MONS_SPHINX
+                 || type == MONS_MANTICORE)
         {
-            if (type == MONS_MANTICORE || mons_genus(type) == MONS_SPHINX)
-                str = "paw";
-            else
-                str = "talon";
+            str = "paw";
+        }
+        else if (mons_genus(type) == MONS_DRAGON)
+            str = "talon";
+        else if (mons_genus(type) == MONS_YAK
+                 || mons_genus(type) == MONS_ELEPHANT
+                 || type == MONS_DREAM_SHEEP
+                 || type == MONS_APIS)
+        {
+            str = "hoof";
         }
         break;
 

@@ -19,3 +19,4 @@ uses: open_doors
 size: medium
 shape: humanoid
 tile_variance: cycle
+species: revenant
