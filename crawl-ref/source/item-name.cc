@@ -3087,8 +3087,11 @@ static string _general_cannot_read_reason()
  * reason why. Otherwise (if they are able to read it), returns "", the empty
  * string. If item is nullptr, do only general reading checks.
  */
-string cannot_read_item_reason(const item_def *item, bool temp, bool ident)
+string cannot_read_item_reason(const item_def *item, bool temp, bool ident,
+                               bool *god_forbids)
 {
+    if (god_forbids)
+        *god_forbids = false;
     // convoluted ordering is because the general checks below need to go before
     // the item id check, but non-temp messages go before general checks
     if (item && item->base_type == OBJ_SCROLLS
@@ -3149,6 +3152,15 @@ string cannot_read_item_reason(const item_def *item, bool temp, bool ident)
     if (!item)
         return "";
 
+    // Your god won't let you read scrolls they forbid.
+    if (god_hates_item(*item))
+    {
+        if (god_forbids)
+            *god_forbids = true;
+        return make_stringf("%s forbids the use of this item.",
+                            uppercase_first(god_name(you.religion)).c_str());
+    }
+
     // item-specific checks
 
     // still possible to use * at the `r` prompt. (Why do we allow this now?)
@@ -3202,8 +3214,10 @@ string cannot_read_item_reason(const item_def *item, bool temp, bool ident)
 }
 
 string cannot_drink_item_reason(const item_def *item, bool temp,
-                                bool use_check, bool ident)
+                                bool use_check, bool ident, bool *god_forbids)
 {
+    if (god_forbids)
+        *god_forbids = false;
     // general permanent reasons
     if (!you.can_drink(false))
         return "You can't drink.";
@@ -3221,6 +3235,16 @@ string cannot_drink_item_reason(const item_def *item, bool temp,
         get_potion_effect(ptyp)->can_quaff(&r, false);
         if (!r.empty())
             return r;
+
+        // Your god won't let you drink potions they forbid. Religion counts as
+        // permanent uselessness.
+        if (god_hates_item(*item))
+        {
+            if (god_forbids)
+                *god_forbids = true;
+            return make_stringf("%s forbids the use of this item.",
+                                uppercase_first(god_name(you.religion)).c_str());
+        }
     }
 
     // general temp reasons
