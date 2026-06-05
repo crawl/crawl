@@ -1983,6 +1983,20 @@ void game_options::remove_force_scroll_targeter(const string &s)
 static monster_type _mons_class_by_string(const string &name)
 {
     const string match = lowercase_string(name);
+
+    // These are cases of multiple enums sharing the same in-game name, and must
+    // be handled separately
+    if (match == "bai suzhen (dragon)")
+        return MONS_BAI_SUZHEN_DRAGON;
+    else if (match == "serpent of hell (geh)")
+        return MONS_SERPENT_OF_HELL;
+    else if (match == "serpent of hell (coc)")
+        return MONS_SERPENT_OF_HELL_COCYTUS;
+    else if (match == "serpent of hell (tar)")
+        return MONS_SERPENT_OF_HELL_TARTARUS;
+    else if (match == "serpent of hell (dis)")
+        return MONS_SERPENT_OF_HELL_DIS;
+
     for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
     {
         const monsterentry *me = get_monster_data(i);
