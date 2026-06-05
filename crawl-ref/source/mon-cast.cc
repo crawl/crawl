@@ -8087,16 +8087,26 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
            if (living)
            {
-#ifdef USE_TILE
                 if (spell == SPELL_LEHUDIBS_CRYSTAL_SPEAR)
+                {
                     living->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_CRYSTAL;
+                    living->colour = YELLOW;
+                }
                 else if (spell == SPELL_PETRIFY)
+                {
                     living->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_EARTH;
+                    living->colour = BROWN;
+                }
                 else if (spell == SPELL_SMITING)
+                {
                     living->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_HOLY;
+                    living->colour = LIGHTGREEN;
+                }
                 else if (spell == SPELL_ICEBLAST)
+                {
                     living->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_ICE;
-#endif
+                    living->colour = LIGHTBLUE;
+                }
            }
         }
         return;

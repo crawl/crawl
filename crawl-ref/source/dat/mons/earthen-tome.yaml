@@ -1,6 +1,6 @@
 name: "walking earthen tome"
 enum: earthen_tome
-glyph: {char: ";", colour: magenta}
+glyph: {char: ";", colour: brown}
 exp: 1737
 genus: walking_tome
 holiness: [nonliving]
