@@ -848,21 +848,15 @@ public:
         if (was_known && !check_known_quaff())
             return false;
 
-        string msg = "Really drink that potion of mutation";
-        msg += you.rmut_from_item() ? " while resistant to mutation?" : "?";
-        const bool zin_check = you_worship(GOD_ZIN)
-                            && !have_passive(passive_t::cleanse_mut_potions);
-        if (zin_check)
-            msg += " Zin will disapprove.";
-        if (was_known && (zin_check || you.rmut_from_item())
-                      && !yesno(msg.c_str(), false, 'n'))
+        if (was_known && you.rmut_from_item()
+            && !yesno("Really drink that potion of mutation while resistant to mutation?", false, 'n'))
         {
             canned_msg(MSG_OK);
             return false;
         }
 
         effect();
-        if (zin_check)
+        if (!have_passive(passive_t::cleanse_mut_potions))
             did_god_conduct(DID_DELIBERATE_MUTATING, 15, was_known);
         return true;
     }
