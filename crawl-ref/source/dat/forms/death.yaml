@@ -8,7 +8,7 @@ unarmed: {base: 6}
 unarmed_brand: draining
 unarmed_colour: magenta
 holiness: undead
-undead_state: "UNDEAD"
+undead_state: undead
 has_blood: no
 flesh_name: fossilised flesh
 # rC+, rN+++, poison immunity added separately

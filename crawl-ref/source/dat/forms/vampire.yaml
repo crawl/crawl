@@ -4,7 +4,7 @@ description: a living vampire.
 skill: {min: 17, max: 25}
 talisman: vampire
 resists: {cold: 1, neg: 2}
-undead_state: "SEMI_UNDEAD"
+undead_state: semi_undead
 unarmed_colour: lightmagenta
 fakemuts:
   - ["vampire fangs", "Your fangs allow you to drain the lifeblood from your enemies."]
