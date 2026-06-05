@@ -2514,10 +2514,9 @@ bool is_dumpable_artefact(const item_def &item)
     return is_artefact(item) && item.is_identified();
 }
 
-static string &_trogsafe_lowercase(string &s)
+static string &_godsafe_lowercase(string &s)
 {
-    // hardcoding because of amnesia and brilliance msgs
-    if (!starts_with(s, "Trog"))
+    if (!starts_with(s, god_name(you.religion)))
         s = lowercase_first(s);
     return s;
 }
@@ -2583,7 +2582,7 @@ static void _uselessness_desc(ostringstream &description, const item_def &item)
             r = _cannot_use_reason(item, true);
         }
         if (!r.empty())
-            description << ": " << _trogsafe_lowercase(r);
+            description << ": " << _godsafe_lowercase(r);
         else
             description << "."; // reasons always come with punctuation
     }

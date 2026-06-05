@@ -1913,10 +1913,11 @@ bool oni_drunken_swing()
 
 bool drink(item_def* potion)
 {
-    string r = cannot_drink_item_reason(potion, true, true);
+    bool is_divine = false;
+    string r = cannot_drink_item_reason(potion, true, true, false, &is_divine);
     if (!r.empty())
     {
-        mpr(r);
+        mprf(is_divine ? MSGCH_GOD : MSGCH_PLAIN, "%s", r.c_str());
         return false;
     }
     ASSERT(potion);
@@ -2848,10 +2849,12 @@ static bool _scroll_has_forced_targeter(scroll_type scroll)
  */
 bool read(item_def* scroll, dist *target)
 {
-    string failure_reason = cannot_read_item_reason(scroll);
+    bool is_divine = false;
+    string failure_reason = cannot_read_item_reason(scroll, true, false,
+                                                    &is_divine);
     if (!failure_reason.empty())
     {
-        mpr(failure_reason);
+        mprf(is_divine ? MSGCH_GOD : MSGCH_PLAIN, "%s", failure_reason.c_str());
         return false;
     }
     ASSERT(scroll);
@@ -2861,14 +2864,7 @@ bool read(item_def* scroll, dist *target)
     if (item_type_known(*scroll))
     {
         const bool hostile_check = scroll_hostile_check(which_scroll);
-        bool penance = god_hates_item(*scroll);
         string verb_object = "read the " + scroll->name(DESC_DBNAME);
-
-        string penance_prompt = make_stringf("Really %s? This action would"
-                                             " place you under penance%s!",
-                                             verb_object.c_str(),
-                                             hostile_check ? ""
-                    : " and you can't even see any enemies this would affect");
 
         targeter_radius hitfunc(&you, LOS_NO_TRANS);
 
@@ -2885,11 +2881,6 @@ bool read(item_def* scroll, dist *target)
                                },
                                nullptr, nullptr))
         {
-            return false;
-        }
-        else if (penance && !yesno(penance_prompt.c_str(), false, 'n'))
-        {
-            canned_msg(MSG_OK);
             return false;
         }
         else if (bad_item
