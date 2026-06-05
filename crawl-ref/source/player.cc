@@ -7260,8 +7260,9 @@ bool player::spellcasting_unholy() const
  */
 undead_state_type player::undead_state(bool temp) const
 {
-    if (temp)
-        return get_form()->undead_state;
+    undead_state_type form_state = get_form()->undead_state;
+    if (temp && form_state != US_ALIVE)
+        return form_state;
     return species::undead_type(species);
 }
 
