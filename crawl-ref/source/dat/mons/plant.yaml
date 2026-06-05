@@ -1,5 +1,5 @@
 name: "plant"
-glyph: {char: "P", colour: green}
+glyph: {char: "◊", colour: green}
 flags: [fragile, stationary, no_exp_gain, no_threat]
 resists: {poison: 1}
 holiness: [plant]

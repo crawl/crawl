@@ -1,5 +1,5 @@
 name: "death cob"
-glyph: {char: "z", colour: yellow}
+glyph: {char: "f", colour: yellow}
 flags: [speaks]
 resists: {cold: 1}
 exp: 1513

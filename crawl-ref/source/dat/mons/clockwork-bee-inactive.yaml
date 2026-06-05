@@ -1,6 +1,6 @@
 name: "dormant clockwork bee"
 enum: clockwork_bee_inactive
-glyph: {char: "*", colour: cyan}
+glyph: {char: "λ", colour: lightcyan}
 genus: killer_bee
 resists: {fire: 1, elec: 1}
 flags: [stationary]

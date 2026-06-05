@@ -1,5 +1,5 @@
 name: "deep elf high priest"
-glyph: {char: "e", colour: lightgreen}
+glyph: {char: "E", colour: lightgreen}
 flags: [speaks, warm_blood]
 exp: 896
 species: elf

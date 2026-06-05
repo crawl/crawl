@@ -1,5 +1,5 @@
 name: "Natasha"
-glyph: {char: "h", colour: magenta}
+glyph: {char: "a", colour: magenta}
 flags: [see_invis, speaks, warm_blood, unique, female]
 exp: 35
 species: felid

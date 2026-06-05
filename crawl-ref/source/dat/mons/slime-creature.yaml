@@ -1,5 +1,5 @@
 name: "slime creature"
-glyph: {char: "J", colour: green}
+glyph: {char: "j", colour: green}
 flags: [unblindable, amorphous, no_skeleton, herd]
 resists: {poison: 1, corr: 3}
 exp: 236

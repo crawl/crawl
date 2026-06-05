@@ -1,5 +1,5 @@
 name: "sphinx"
-glyph: {char: "H", colour: lightgrey}
+glyph: {char: "Þ", colour: lightgrey}
 flags: [cant_spawn]
 holiness: [nonliving]
 will: 10

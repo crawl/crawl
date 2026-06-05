@@ -1,5 +1,5 @@
 name: "toadstool"
-glyph: {char: "P", colour: colour_undef}
+glyph: {char: "◊", colour: colour_undef}
 flags: [stationary, no_exp_gain, no_threat]
 resists: {poison: 1}
 genus: fungus

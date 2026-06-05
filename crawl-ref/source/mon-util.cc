@@ -214,6 +214,40 @@ void init_monsters()
     init_monster_symbols();
 }
 
+// XXX: This is a very imperfect fallback, since it will result in color overlaps
+//      and in a few cases result in incorrectly-themed groupings. For instance,
+//      only *almost* all ◊ used to be P, but a few were I (and are not plants).
+//      However, it does strictly replace unicode characters with a 'best guess'
+//      and anything else can be edited by the player.
+static const map<char32_t, char32_t> mons_ascii_remap =
+{
+    {U'\xc5',   'A'}, // Å
+    {U'\xc6',   'R'}, // Æ
+    {U'\x10c',  'C'}, // Č
+    {U'\x10e',  'D'}, // Ď
+    {U'\x11f',  'g'}, // ğ
+    {U'\xf6',   'o'}, // ö
+    {U'\x175',  'W'}, // ŵ
+    {U'\x174',  'W'}, // Ŵ
+    {U'\x17e',  'z'}, // ž
+
+    {U'\x14b',  '9'}, // ŋ
+    {U'\xde',   'H'}, // Þ
+    {U'\x2021', 'I'}, // ‡
+
+    {U'\x394',  'I'}, // Δ
+    {U'\x398',  '*'}, // Θ
+    {U'\x3bb',  'y'}, // λ
+    {U'\x3a3',  'E'}, // Σ
+    {U'\x3c8',  'p'}, // ψ
+    {U'\x3c9',  'w'}, // ω
+
+    {U'\x25ca', 'P'}, // ◊
+    {U'\xa4',   '*'}, // ¤
+    {U'\x25cf', '*'}, // ●
+    {U'\x256c', 'I'}, // ╬
+};
+
 void init_monster_symbols()
 {
     map<unsigned, monster_type> base_mons;
@@ -237,6 +271,15 @@ void init_monster_symbols()
     for (monster_type i = MONS_PROGRAM_BUG; i < NUM_MONSTERS; ++i)
         if (wcwidth(monster_symbols[i].glyph) != 1)
             monster_symbols[i].glyph = mons_base_char(i);
+
+    if (Options.char_set == CSET_ASCII)
+    {
+        for (monster_type i = MONS_PROGRAM_BUG; i < NUM_MONSTERS; ++i)
+        {
+            if (const char32_t* ascii_char = map_find(mons_ascii_remap, monster_symbols[i].glyph))
+                monster_symbols[i].glyph = *ascii_char;
+        }
+    }
 }
 
 void set_resist(resists_t &all, mon_resist_flags res, int lev)
@@ -1055,7 +1098,7 @@ int mons_demon_tier(monster_type mc)
 {
     switch (mons_base_char(mc))
     {
-    case 'C':
+    case U'\x010C': // 'Č':
         if (mc != MONS_ANTAEUS)
             return 0;
         // intentional fall-through for Antaeus

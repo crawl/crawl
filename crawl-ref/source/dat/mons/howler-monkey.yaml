@@ -1,5 +1,5 @@
 name: "howler monkey"
-glyph: {char: "h", colour: lightgreen}
+glyph: {char: "a", colour: lightgreen}
 flags: [warm_blood]
 exp: 54
 will: 10

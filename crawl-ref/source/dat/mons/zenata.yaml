@@ -1,5 +1,5 @@
 name: "Zenata"
-glyph: {char: "a", colour: lightgray}
+glyph: {char: "@", colour: lightgray}
 flags: [speaks, warm_blood, unique, female]
 exp: 1864
 species: human

@@ -1,5 +1,5 @@
 name: "seraph"
-glyph: {char: "A", colour: lightmagenta}
+glyph: {char: "Å", colour: lightmagenta}
 flags: [flies, fighter, see_invis, speaks, tall_tile]
 resists: {elec: 1, poison: 1, fire: 3}
 exp: 6070

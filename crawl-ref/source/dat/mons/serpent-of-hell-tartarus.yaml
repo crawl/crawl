@@ -1,6 +1,6 @@
 name: "Serpent of Hell"
 enum: serpent_of_hell_tartarus
-glyph: {char: "D", colour: etc_death}
+glyph: {char: "Ď", colour: etc_death}
 flags: [name_the, crash_doors, flies, see_invis, unique, tall_tile]
 resists: {poison: 1, cold: 2}
 exp: 6666

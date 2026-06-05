@@ -1,5 +1,5 @@
 name: "Polyphemus"
-glyph: {char: "C", colour: blue}
+glyph: {char: "Č", colour: blue}
 flags: [speaks, warm_blood, unique, male]
 exp: 1540
 species: cyclops

@@ -1,5 +1,5 @@
 name: "foxfire"
-glyph: {char: "v", colour: lightred}
+glyph: {char: "●", colour: red}
 flags: [flies, see_invis, insubstantial, no_exp_gain, no_poly_to, peripheral, no_threat]
 resists: {fire: 3}
 exp: 0

@@ -1,5 +1,5 @@
 name: "necrophage"
-glyph: {char: "n", colour: lightgray}
+glyph: {char: "U", colour: lightgray}
 flags: [no_zombie]
 resists: {cold: 1}
 exp: 76

@@ -1,5 +1,5 @@
 name: "iron golem"
-glyph: {char: "9", colour: cyan}
+glyph: {char: "8", colour: cyan}
 resists: {elec: 3, fire: 3, cold: 3}
 exp: 940
 genus: golem

@@ -1,5 +1,5 @@
 name: "hippogriff"
-glyph: {char: "H", colour: yellow}
+glyph: {char: "Þ", colour: yellow}
 flags: [flies, warm_blood]
 exp: 263
 will: 20

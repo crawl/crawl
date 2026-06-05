@@ -1,5 +1,5 @@
 name: "black bear"
-glyph: {char: "h", colour: blue}
+glyph: {char: "a", colour: blue}
 flags: [warm_blood]
 exp: 128
 genus: bear

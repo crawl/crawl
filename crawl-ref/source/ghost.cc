@@ -795,6 +795,7 @@ void ghost_demon::init_orc_apostle(apostle_type type, int pow)
     {
         default:
         case APOSTLE_WARRIOR:
+            colour = YELLOW;
             max_hp = max_hp * 6 / 5;
             damage = 5 + div_rand_round(pow, 4);
             if (pow > 50)
@@ -802,6 +803,7 @@ void ghost_demon::init_orc_apostle(apostle_type type, int pow)
             break;
 
         case APOSTLE_WIZARD:
+            colour = LIGHTMAGENTA;
             max_hp = max_hp * 5 / 6;
             damage = 2 + div_rand_round(pow, 8);
             ev += div_rand_round(pow, 12);
@@ -813,6 +815,7 @@ void ghost_demon::init_orc_apostle(apostle_type type, int pow)
             break;
 
         case APOSTLE_PRIEST:
+            colour = LIGHTCYAN;
             damage = 3 + div_rand_round(pow, 6);
             break;
     }

@@ -1,5 +1,5 @@
 name: "guardian sphinx"
-glyph: {char: "H", colour: lightgray}
+glyph: {char: "Þ", colour: lightgray}
 flags: [flies, see_invis, speaks, warm_blood]
 exp: 1729
 genus: sphinx

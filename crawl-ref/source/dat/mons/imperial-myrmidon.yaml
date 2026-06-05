@@ -1,5 +1,5 @@
 name: "imperial myrmidon"
-glyph: {char: "a", colour: lightcyan}
+glyph: {char: "ψ", colour: lightcyan}
 flags: [speaks, warm_blood]
 exp: 1223
 species: human

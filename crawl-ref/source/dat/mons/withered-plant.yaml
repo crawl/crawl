@@ -1,5 +1,5 @@
 name: "withered plant"
-glyph: {char: "P", colour: darkgray}
+glyph: {char: "◊", colour: darkgray}
 flags: [fragile, stationary, no_exp_gain, no_threat]
 resists: {poison: 3, neg: 3}
 genus: plant

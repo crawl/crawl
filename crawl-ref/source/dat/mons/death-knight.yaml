@@ -1,5 +1,5 @@
 name: "death knight"
-glyph: {char: "p", colour: green}
+glyph: {char: "ψ", colour: green}
 flags: [fighter, speaks, warm_blood]
 exp: 1020
 species: human

@@ -1,5 +1,5 @@
 name: "Fannar"
-glyph: {char: "e", colour: lightblue}
+glyph: {char: "E", colour: lightblue}
 flags: [speaks, warm_blood, unique, gender_neutral]
 exp: 882
 species: elf

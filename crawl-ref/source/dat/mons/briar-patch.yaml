@@ -1,5 +1,5 @@
 name: "briar patch"
-glyph: {char: "P", colour: yellow}
+glyph: {char: "◊", colour: yellow}
 flags: [stationary, no_exp_gain, spiny, no_threat]
 resists: {poison: 1, fire: -1}
 genus: plant

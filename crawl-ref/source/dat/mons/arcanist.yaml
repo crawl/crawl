@@ -1,5 +1,5 @@
 name: "arcanist"
-glyph: {char: "p", colour: lightred}
+glyph: {char: "p", colour: magenta}
 flags: [speaks, warm_blood]
 exp: 695
 species: human

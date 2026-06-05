@@ -1,5 +1,5 @@
 name: "stack of scrap"
-glyph: {char: "I", colour: green}
+glyph: {char: "Δ", colour: yellow}
 flags: [fragile, stationary, no_exp_gain, no_threat]
 resists: {fire: 3, cold: 3, elec: 3}
 holiness: [nonliving]

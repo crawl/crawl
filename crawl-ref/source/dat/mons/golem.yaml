@@ -1,5 +1,5 @@
 name: "golem"
-glyph: {char: "9", colour: lightgray}
+glyph: {char: "8", colour: lightgray}
 flags: [cant_spawn]
 holiness: [nonliving]
 will: 10

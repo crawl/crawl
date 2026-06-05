@@ -1,5 +1,5 @@
 name: "eleionoma"
-glyph: {char: "R", colour: green}
+glyph: {char: "n", colour: green}
 flags: [speaks, warm_blood]
 exp: 1028
 will: 100

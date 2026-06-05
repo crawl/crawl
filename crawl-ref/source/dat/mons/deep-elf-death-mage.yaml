@@ -1,5 +1,5 @@
 name: "deep elf death mage"
-glyph: {char: "e", colour: white}
+glyph: {char: "E", colour: white}
 flags: [see_invis, speaks, warm_blood]
 exp: 1027
 species: elf

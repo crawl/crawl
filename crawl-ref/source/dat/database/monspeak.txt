@@ -926,6 +926,10 @@ default 'cap-J'
 
 VISUAL:@The_monster@ jiggles.
 %%%%
+default 'j'
+
+VISUAL:@The_monster@ jiggles.
+%%%%
 'l'
 
 @The_monster@ hisses menacingly.
@@ -938,7 +942,6 @@ default confused 'r'
 
 VISUAL:@The_monster@ runs around in a circle.
 %%%%
-# Bees and hornets - moths and giant fireflies have separate speech.
 default confused 'y'
 
 SOUND:@The_monster@ buzzes around in tight circles.
@@ -946,12 +949,6 @@ SOUND:@The_monster@ buzzes around in tight circles.
 default silenced confused 'y'
 
 VISUAL:@The_monster@ flies around in tight circles.
-%%%%
-# Statues and golems never speak unless assigned a message to their
-# specific species.
-default '8'
-
-__NONE
 #########################################
 # Speech strings by monster genus
 #########################################
@@ -8229,19 +8226,31 @@ neutral good god 'cap-A'
 
 __NONE
 
-w:1
+w:5
 @_holy_being_@
 %%%%
 friendly good god 'cap-A'
 
-w:19
-__NONE
-
-w:1
 @_holy_being_@
 %%%%
 # Otherwise, they'll stay silent.
 default 'cap-A'
+
+__NONE
+%%%%
+neutral good god 'Å'
+
+__NONE
+
+w:5
+@_holy_being_@
+%%%%
+friendly good god 'Å'
+
+@_holy_being_@
+%%%%
+# Otherwise, they'll stay silent.
+default 'Å'
 
 __NONE
 %%%%

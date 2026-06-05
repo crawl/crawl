@@ -1,5 +1,5 @@
 name: "pillar of rime"
-glyph: {char: "I", colour: etc_ice}
+glyph: {char: "Δ", colour: etc_ice}
 flags: [stationary, no_exp_gain, remnant, no_threat]
 resists: {fire: -1, cold: 3}
 holiness: [nonliving]

@@ -1,5 +1,5 @@
 name: "crystal guardian"
-glyph: {char: "9", colour: green}
+glyph: {char: "8", colour: green}
 flags: [see_invis, speaks]
 resists: {elec: 3, fire: 3, cold: 3}
 exp: 918

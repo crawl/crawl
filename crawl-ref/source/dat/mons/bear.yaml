@@ -1,5 +1,5 @@
 name: "bear"
-glyph: {char: "h", colour: lightgray}
+glyph: {char: "a", colour: lightgray}
 flags: [cant_spawn]
 holiness: [nonliving]
 will: 10

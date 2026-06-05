@@ -1,5 +1,5 @@
 name: "manticore"
-glyph: {char: "H", colour: red}
+glyph: {char: "Þ", colour: red}
 flags: [flies, warm_blood]
 exp: 529
 will: 40

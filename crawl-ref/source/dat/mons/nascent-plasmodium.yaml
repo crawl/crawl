@@ -1,5 +1,5 @@
 name: "nascent plasmodium"
-glyph: {char: "J", colour: blue}
+glyph: {char: "j", colour: blue}
 flags: [see_invis, unblindable, amorphous, no_skeleton]
 resists: {poison: 1, corr: 3}
 exp: 450

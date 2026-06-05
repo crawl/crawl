@@ -1,5 +1,5 @@
 name: "ragged hierophant"
-glyph: {char: "a", colour: lightmagenta}
+glyph: {char: "ψ", colour: lightmagenta}
 flags: [speaks, warm_blood]
 exp: 897
 species: human

@@ -1,5 +1,5 @@
 name: "deep elf master archer"
-glyph: {char: "e", colour: lightgray}
+glyph: {char: "E", colour: lightgray}
 flags: [speaks, warm_blood, archer, prefer_ranged]
 exp: 1640
 species: elf

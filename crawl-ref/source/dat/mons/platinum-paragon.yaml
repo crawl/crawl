@@ -1,5 +1,5 @@
 name: "platinum paragon"
-glyph: {char: "9", colour: white}
+glyph: {char: "8", colour: white}
 flags: [see_invis, ghost_demon]
 exp: 2700
 resists: {elec: 1, fire: 1, cold: 1}

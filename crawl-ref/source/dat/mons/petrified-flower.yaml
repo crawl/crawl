@@ -1,5 +1,5 @@
 name: "petrified flower"
-glyph: {char: "P", colour: etc_silver}
+glyph: {char: "◊", colour: lightgrey}
 flags: [stationary, no_exp_gain, no_threat]
 resists: {fire: 1, cold: 1, elec: 1}
 holiness: [nonliving, plant]

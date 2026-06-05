@@ -1,5 +1,5 @@
 name: "blazeheart golem"
-glyph: {char: "9", colour: magenta}
+glyph: {char: "9", colour: lightred}
 flags: [fighter]
 exp: 140
 resists: {elec: 1, fire: 2, cold: 1}

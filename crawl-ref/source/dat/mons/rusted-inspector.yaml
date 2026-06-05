@@ -1,5 +1,5 @@
 name: "rusted inspector"
-glyph: {char: "9", colour: etc_earth}
+glyph: {char: "9", colour: brown}
 flags: [see_invis, no_skeleton]
 resists: {elec: 1, corr: 1}
 exp: 816

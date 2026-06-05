@@ -1,5 +1,5 @@
 name: "shadow puppet"
-glyph: {char: "E", colour: magenta}
+glyph: {char: "Σ", colour: magenta}
 flags: [flies, fighter, insubstantial, no_exp_gain, no_poly_to]
 holiness: [nonliving]
 will: invuln

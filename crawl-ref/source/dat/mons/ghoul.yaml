@@ -1,5 +1,5 @@
 name: "ghoul"
-glyph: {char: "n", colour: red}
+glyph: {char: "U", colour: red}
 flags: [no_zombie]
 resists: {cold: 1}
 exp: 1148

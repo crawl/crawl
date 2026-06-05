@@ -1,5 +1,5 @@
 name: "holy swine"
-glyph: {char: "h", colour: yellow}
+glyph: {char: "a", colour: yellow}
 flags: [flies]
 exp: 792
 genus: hog

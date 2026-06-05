@@ -1,5 +1,5 @@
 name: "eidolon"
-glyph: {char: "W", colour: brown}
+glyph: {char: "Ŵ", colour: brown}
 flags: [flies, see_invis, insubstantial]
 resists: {cold: 1}
 exp: 944

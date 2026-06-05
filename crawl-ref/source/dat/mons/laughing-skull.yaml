@@ -1,5 +1,5 @@
 name: "laughing skull"
-glyph: {char: "z", colour: lightred}
+glyph: {char: "ž", colour: lightred}
 flags: [flies]
 resists: {fire: 2}
 exp: 125

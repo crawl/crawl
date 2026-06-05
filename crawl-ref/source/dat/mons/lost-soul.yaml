@@ -1,5 +1,5 @@
 name: "lost soul"
-glyph: {char: "*", colour: lightgreen}
+glyph: {char: "ŵ", colour: lightgreen}
 flags: [flies, see_invis, insubstantial, no_exp_gain, maintain_range]
 resists: {elec: 1, fire: 1, cold: 1}
 exp: 2

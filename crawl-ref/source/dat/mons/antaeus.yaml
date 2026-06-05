@@ -1,5 +1,5 @@
 name: "Antaeus"
-glyph: {char: "C", colour: white}
+glyph: {char: "Č", colour: white}
 flags: [fighter, see_invis, speaks, warm_blood, unique, male, tall_tile]
 resists: {elec: 3, fire: -1, cold: 2}
 exp: 8877

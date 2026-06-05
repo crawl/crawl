@@ -1,5 +1,5 @@
 name: "flayed ghost"
-glyph: {char: "W", colour: red}
+glyph: {char: "Ŵ", colour: red}
 flags: [flies, speaks, insubstantial]
 exp: 715
 genus: phantom

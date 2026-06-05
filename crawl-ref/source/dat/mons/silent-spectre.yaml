@@ -1,5 +1,5 @@
 name: "silent spectre"
-glyph: {char: "W", colour: cyan}
+glyph: {char: "ŵ", colour: cyan}
 flags: [flies, see_invis, speaks, insubstantial]
 exp: 312
 resists: {cold: 3}

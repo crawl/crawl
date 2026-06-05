@@ -1,5 +1,5 @@
 name: "endoplasm"
-glyph: {char: "J", colour: lightgray}
+glyph: {char: "j", colour: lightgray}
 flags: [see_invis, unblindable, amorphous, no_skeleton]
 resists: {corr: 3}
 exp: 2

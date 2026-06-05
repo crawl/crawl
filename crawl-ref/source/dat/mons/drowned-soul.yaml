@@ -1,5 +1,5 @@
 name: "drowned soul"
-glyph: {char: "W", colour: lightcyan}
+glyph: {char: "ŵ", colour: lightblue}
 flags: [flies, see_invis, speaks, insubstantial]
 resists: {cold: 3}
 exp: 8

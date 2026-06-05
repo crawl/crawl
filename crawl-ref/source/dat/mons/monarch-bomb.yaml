@@ -1,5 +1,5 @@
 name: "monarch bomb"
-glyph: {char: "E", colour: lightred}
+glyph: {char: "8", colour: lightred}
 flags: [flies]
 resists: {fire: 3}
 exp: 800

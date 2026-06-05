@@ -1,5 +1,5 @@
 name: "sewage sovereign"
-glyph: {char: "Y", colour: etc_earth}
+glyph: {char: "a", colour: etc_earth}
 flags: [warm_blood, herd, fast_regen]
 resists: {poison: 1}
 exp: 1850

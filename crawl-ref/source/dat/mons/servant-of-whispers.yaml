@@ -1,5 +1,5 @@
 name: "servant of whispers"
-glyph: {char: "a", colour: brown}
+glyph: {char: "p", colour: lightcyan}
 flags: [speaks, warm_blood]
 exp: 870
 species: human

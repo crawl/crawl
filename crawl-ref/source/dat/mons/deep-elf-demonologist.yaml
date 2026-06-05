@@ -1,5 +1,5 @@
 name: "deep elf demonologist"
-glyph: {char: "e", colour: yellow}
+glyph: {char: "E", colour: yellow}
 flags: [see_invis, speaks, warm_blood]
 exp: 1031
 species: elf

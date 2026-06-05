@@ -1,5 +1,5 @@
 name: "snaplasher vine"
-glyph: {char: "w", colour: lightgreen}
+glyph: {char: "ω", colour: lightgreen}
 flags: [stationary, no_exp_gain, no_poly_to, peripheral]
 resists: {poison: 1}
 genus: plant

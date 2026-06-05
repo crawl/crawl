@@ -1,5 +1,5 @@
 name: "weeping skull"
-glyph: {char: "z", colour: lightblue}
+glyph: {char: "ž", colour: lightblue}
 flags: [flies]
 resists: {cold: 1}
 exp: 98

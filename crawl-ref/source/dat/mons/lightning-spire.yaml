@@ -1,5 +1,5 @@
 name: "lightning spire"
-glyph: {char: "I", colour: etc_electricity}
+glyph: {char: "‡", colour: etc_electricity}
 flags: [stationary, no_poly_to]
 resists: {elec: 3, fire: 2, cold: 2, petrify: 1}
 exp: 613

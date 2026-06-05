@@ -1,5 +1,5 @@
 name: "molten gargoyle"
-glyph: {char: "9", colour: lightred}
+glyph: {char: "ŋ", colour: lightred}
 flags: [flies]
 resists: {elec: 1, fire: 3, petrify: 1}
 exp: 431

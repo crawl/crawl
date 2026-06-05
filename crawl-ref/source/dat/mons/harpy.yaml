@@ -1,5 +1,5 @@
 name: "harpy"
-glyph: {char: "H", colour: green}
+glyph: {char: "Q", colour: green}
 flags: [flies, batty, warm_blood]
 resists: {poison: 1}
 exp: 622

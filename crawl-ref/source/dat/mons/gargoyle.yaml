@@ -1,5 +1,5 @@
 name: "gargoyle"
-glyph: {char: "9", colour: lightgray}
+glyph: {char: "ŋ", colour: lightgray}
 flags: [flies]
 resists: {elec: 1, petrify: 1}
 exp: 414

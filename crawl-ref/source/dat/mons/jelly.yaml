@@ -1,5 +1,5 @@
 name: "jelly"
-glyph: {char: "J", colour: lightred}
+glyph: {char: "j", colour: lightred}
 flags: [eat_doors, see_invis, unblindable, splits, amorphous, acid_splash, no_skeleton]
 resists: {poison: 1, corr: 3}
 exp: 42

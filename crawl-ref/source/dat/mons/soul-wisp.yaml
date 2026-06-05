@@ -1,5 +1,5 @@
 name: "soul wisp"
-glyph: {char: "*", colour: lightblue}
+glyph: {char: "W", colour: yellow}
 flags: [flies, see_invis, insubstantial]
 exp: 11
 holiness: [undead]

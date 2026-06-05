@@ -1,5 +1,5 @@
 name: "hell hog"
-glyph: {char: "h", colour: lightred}
+glyph: {char: "a", colour: lightred}
 resists: {fire: 3}
 exp: 804
 genus: hog

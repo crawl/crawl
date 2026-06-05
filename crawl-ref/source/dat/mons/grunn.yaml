@@ -1,5 +1,5 @@
 name: "Grunn"
-glyph: {char: "j", colour: lightgreen}
+glyph: {char: "ğ", colour: lightgreen}
 flags: [speaks, unique, male, no_zombie]
 exp: 1718
 species: gnoll

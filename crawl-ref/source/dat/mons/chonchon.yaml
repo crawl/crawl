@@ -1,5 +1,5 @@
 name: "chonchon"
-glyph: {char: "x", colour: lightgreen}
+glyph: {char: "Q", colour: lightgreen}
 flags: [flies, batty, warm_blood, no_poly_to]
 exp: 1250
 will: 60

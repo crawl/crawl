@@ -1,5 +1,5 @@
 name: "occultist"
-glyph: {char: "p", colour: magenta}
+glyph: {char: "ψ", colour: magenta}
 flags: [speaks, warm_blood]
 exp: 794
 species: human

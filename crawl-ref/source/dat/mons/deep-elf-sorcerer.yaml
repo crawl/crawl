@@ -1,5 +1,5 @@
 name: "deep elf sorcerer"
-glyph: {char: "e", colour: lightmagenta}
+glyph: {char: "E", colour: lightmagenta}
 flags: [see_invis, speaks, warm_blood]
 exp: 1237
 species: elf

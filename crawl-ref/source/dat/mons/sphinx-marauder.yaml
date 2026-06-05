@@ -1,5 +1,5 @@
 name: "sphinx marauder"
-glyph: {char: "H", colour: lightgreen}
+glyph: {char: "Þ", colour: lightgreen}
 flags: [flies, fighter, see_invis, speaks, warm_blood]
 exp: 1615
 genus: sphinx

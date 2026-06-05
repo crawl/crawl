@@ -1,5 +1,5 @@
 name: "Chuck"
-glyph: {char: "C", colour: white}
+glyph: {char: "Č", colour: white}
 flags: [speaks, warm_blood, unique, male]
 exp: 1460
 species: stone_giant

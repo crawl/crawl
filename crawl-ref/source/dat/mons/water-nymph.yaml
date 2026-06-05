@@ -1,5 +1,5 @@
 name: "water nymph"
-glyph: {char: "m", colour: magenta}
+glyph: {char: "n", colour: magenta}
 flags: [speaks, warm_blood]
 exp: 660
 will: 100

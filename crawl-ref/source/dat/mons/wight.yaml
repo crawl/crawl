@@ -1,5 +1,5 @@
 name: "wight"
-glyph: {char: "z", colour: green}
+glyph: {char: "U", colour: brown}
 resists: {cold: 2}
 exp: 73
 holiness: [undead]
