@@ -36,7 +36,7 @@ static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
             '$', U'\x2666', // ♦
          U'\x2022', // •
           '"',
-         U'\xa7', U'\x263c', U'\x25CB', U'\xB0', // §, ☼, ○, °
+         U'\xa7', U'\x03BE', U'\x03B6', U'\x2113', // §, ξ, ζ, ℓ
             U'\x2663', //♣
 #if TAG_MAJOR_VERSION == 34
          U'\xa9', //©
