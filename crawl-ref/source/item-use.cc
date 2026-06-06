@@ -3064,8 +3064,8 @@ bool read(item_def* scroll, dist *target)
     case SCR_TORMENT:
         torment(&you, TORMENT_SCROLL, you.pos());
 
-        // This is only naughty if you know you're doing it.
-        did_god_conduct(DID_EVIL, 10, item_type_known(*scroll));
+        if (!item_type_known(*scroll))
+            god_forgive_inadvertent_act(FORBID_EVIL);
         bad_effect = !you.res_torment();
         break;
 
@@ -3369,7 +3369,7 @@ string cannot_put_on_talisman_reason(const item_def& talisman, bool temp,
     }
 
     const transformation trans = form_for_talisman(talisman);
-    if (god_hates_form(you.religion, trans))
+    if (god_forbids_form(you.religion, trans))
     {
         if (god_forbids)
             *god_forbids = true;

@@ -58,21 +58,33 @@ god_conduct_trigger::~god_conduct_trigger()
 static const char *conducts[] =
 {
     "",
-    "Evil", "Holy", "Attack Holy", "Attack Neutral", "Attack Friend",
+#if TAG_MAJOR_VERSION == 34
+    "Evil", "Holy",
+#endif
+    "Attack Holy", "Attack Neutral", "Attack Friend",
     "Kill Living", "Kill Undead", "Kill Demon", "Kill Natural Evil",
     "Kill Unclean", "Kill Chaotic", "Kill Wizard", "Kill Priest", "Kill Holy",
-    "Kill Fast", "Banishment", "Spell Memorise", "Spell Cast",
-    "Spell Practise", "Cannibalism", "Deliberate Mutation",
-    "Cause Glowing", "Use Unclean", "Use Chaos",
+    "Kill Fast", "Banishment",
 #if TAG_MAJOR_VERSION == 34
-    "Desecrate Orcish Remains", "Kill Slime",
+    "Spell Memorise", "Spell Cast", "Spell Practise",
+    "Cannibalism", "Deliberate Mutation",
 #endif
-    "Was Hasty",
+    "Cause Glowing",
 #if TAG_MAJOR_VERSION == 34
+    "Use Unclean", "Use Chaos",
+    "Desecrate Orcish Remains", "Kill Slime",
+    "Was Hasty",
     "Attack In Sanctuary",
 #endif
     "Kill Nonliving", "Exploration",
-    "Seen Monster", "Sacrificed Love", "Hurt Foe", "Use Wizardly Item",
+    "Seen Monster",
+#if TAG_MAJOR_VERSION == 34
+    "Sacrificed Love",
+#endif
+    "Hurt Foe",
+#if TAG_MAJOR_VERSION == 34
+    "Use Wizardly Item",
+#endif
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
@@ -142,6 +154,127 @@ typedef function<bool (const monster *)> valid_victim_t;
 typedef function<void (int &piety, int &denom, const monster* victim)>
     special_piety_t;
 #endif
+
+/// A definition of an action a god outright forbids.
+struct forbidden_conduct
+{
+    /// How to describe the forbidden action on the god description screen,
+    /// as a gerund phrase completing "<God> forbids you from ...".
+    const char* desc;
+    /// Something your god says when you accidentally did the forbidden action
+    /// (i.e. before you knew it was forbidden). May be nullptr.
+    const char *forgiveness_message;
+};
+typedef map<forbidden_act_type, forbidden_conduct> forbidden_map;
+
+/// a per-god map of the actions that god forbids outright.
+static forbidden_map divine_prohibitions[] =
+{
+    // GOD_NO_GOD
+    forbidden_map(),
+    // GOD_ZIN,
+    {
+        { FORBID_EVIL, {
+            "using evil magic or items",
+            " forgives your inadvertent evil act, just this once."
+        } },
+        { FORBID_CHAOS, {
+            "using chaotic magic or items",
+            " forgives your inadvertent chaotic act, just this once."
+        } },
+        { FORBID_TRANSFORMATION, {
+            "mutating or transforming yourself or others",
+            " forgives your inadvertent chaotic act, just this once."
+        } }
+    },
+    // GOD_SHINING_ONE,
+    {
+        { FORBID_EVIL, {
+            "using evil magic or items",
+            " forgives your inadvertent evil act, just this once."
+        } },
+    },
+    // GOD_KIKUBAAQUDGHA,
+    forbidden_map(),
+    // GOD_YREDELEMNUL,
+    {
+        { FORBID_HOLY, {
+            "using holy magic or items",
+            " forgives your inadvertent holy act, just this once."
+        } },
+    },
+    // GOD_XOM,
+    forbidden_map(),
+    // GOD_VEHUMET,
+    forbidden_map(),
+    // GOD_OKAWARU,
+    forbidden_map(),
+    // GOD_MAKHLEB,
+    forbidden_map(),
+    // GOD_SIF_MUNA,
+    forbidden_map(),
+    // GOD_TROG,
+    {
+        { FORBID_SPELL_MEMORISE, {
+            "memorising spells",
+            nullptr
+        } },
+        { FORBID_SPELLCASTING, {
+            "casting spells",
+            nullptr
+        } },
+        { FORBID_WIZARDLY_ITEM, {
+            "using magical staves or other wizardly items",
+            nullptr
+        } },
+    },
+    // GOD_NEMELEX_XOBEH,
+    forbidden_map(),
+    // GOD_ELYVILON,
+    {
+        { FORBID_EVIL, {
+            "using evil magic or items",
+            " forgives your inadvertent evil act, just this once."
+        } },
+    },
+    // GOD_LUGONU,
+    forbidden_map(),
+    // GOD_BEOGH,
+    forbidden_map(),
+    // GOD_JIYVA,
+    forbidden_map(),
+    // GOD_FEDHAS,
+    forbidden_map(),
+    // GOD_CHEIBRIADOS,
+    {
+        { FORBID_HASTY, {
+            "hastening yourself or using unnaturally quick items",
+            " forgives your accidental hurry, just this once."
+        } },
+    },
+    // GOD_ASHENZARI,
+    forbidden_map(),
+    // GOD_DITHMENOS,
+    forbidden_map(),
+    // GOD_GOZAG,
+    forbidden_map(),
+    // GOD_QAZLAL,
+    forbidden_map(),
+    // GOD_RU,
+    forbidden_map(),
+#if TAG_MAJOR_VERSION == 34
+    // GOD_PAKELLAS
+    forbidden_map(),
+#endif
+    // GOD_USKAYAW,
+    forbidden_map(),
+    // GOD_HEPLIAKLQANA,
+    forbidden_map(),
+    // GOD_WU_JIAN,
+    forbidden_map(),
+    // GOD_IGNIS,
+    forbidden_map(),
+};
 
 /// A definition of the way in which a god dislikes a conduct being taken.
 struct dislike_response
@@ -217,12 +350,6 @@ struct dislike_response
     }
 };
 
-/// Zin and Ely's responses to evil actions. TODO: parameterize & merge w/TSO
-static const dislike_response GOOD_EVIL_RESPONSE = {
-    "you use evil magic or items", true,
-    1, 1, " forgives your inadvertent evil act, just this once."
-};
-
 /// Zin and Ely's responses to the player attacking holy creatures.
 static const dislike_response GOOD_ATTACK_HOLY_RESPONSE = {
     "you attack non-hostile holy beings", true,
@@ -266,24 +393,11 @@ static peeve_map divine_peeves[] =
     {
         { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
-        { DID_EVIL, GOOD_EVIL_RESPONSE },
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },
         { DID_ATTACK_NEUTRAL, {
             "you attack neutral beings", false,
             1, 0,
             " forgives your inadvertent attack on a neutral, just this once."
-        } },
-        { DID_UNCLEAN, {
-            "you use unclean or chaotic magic or items", true,
-            1, 1, " forgives your inadvertent unclean act, just this once."
-        } },
-        { DID_CHAOS, {
-            "you polymorph monsters", true,
-            1, 1, " forgives your inadvertent chaotic act, just this once."
-        } },
-        { DID_DELIBERATE_MUTATING, {
-            "you deliberately mutate or transform yourself", true,
-            1, 0, " forgives your inadvertent chaotic act, just this once."
         } },
         { DID_CAUSE_GLOWING, { nullptr, false, 1 } },
     },
@@ -294,22 +408,13 @@ static peeve_map divine_peeves[] =
             1, 2, nullptr, nullptr, _attacking_holy_matters
         } },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
-        { DID_EVIL, {
-            "you use evil magic or items", true,
-            1, 2, " forgives your inadvertent evil act, just this once."
-        } },
         { DID_ATTACK_NEUTRAL, GOOD_ATTACK_NEUTRAL_RESPONSE },
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },
     },
     // GOD_KIKUBAAQUDGHA,
     peeve_map(),
     // GOD_YREDELEMNUL,
-    {
-        { DID_HOLY, {
-            "you use holy magic or items", true,
-            1, 2, " forgives your inadvertent holy act, just this once."
-        } },
-    },
+    peeve_map(),
     // GOD_XOM,
     peeve_map(),
     // GOD_VEHUMET,
@@ -322,21 +427,9 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_TROG,
     {
-        { DID_SPELL_MEMORISE, {
-            "you memorise spells", true,
-            10, 10
-        } },
-        { DID_SPELL_CASTING, {
-            "you attempt to cast spells", true,
-            1, 5,
-        } },
         { DID_SPELL_PRACTISE, {
             "you train magic skills", true,
             1, 0, nullptr, " does not appreciate your training of magic skills!"
-        } },
-        { DID_WIZARDLY_ITEM, {
-            "you use magical staves or other wizardly items", true,
-            1, 0, nullptr, " does not appreciate your use of wizardly items!"
         } },
     },
     // GOD_NEMELEX_XOBEH,
@@ -345,7 +438,6 @@ static peeve_map divine_peeves[] =
     {
         { DID_ATTACK_HOLY, GOOD_ATTACK_HOLY_RESPONSE },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
-        { DID_EVIL, GOOD_EVIL_RESPONSE },
         { DID_ATTACK_NEUTRAL, GOOD_ATTACK_NEUTRAL_RESPONSE },
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },
     },
@@ -368,13 +460,7 @@ static peeve_map divine_peeves[] =
     // GOD_FEDHAS,
     peeve_map(),
     // GOD_CHEIBRIADOS,
-    {
-        { DID_HASTY, {
-            "you hasten yourself or others", true,
-            1, 1, " forgives your accidental hurry, just this once.",
-            " thinks you should slow down.", nullptr, -5
-        } },
-    },
+    peeve_map(),
     // GOD_ASHENZARI,
     peeve_map(),
     // GOD_DITHMENOS,
@@ -429,9 +515,6 @@ string get_god_dislikes(god_type which_god)
         }
     }
 
-    if (which_god == GOD_CHEIBRIADOS)
-        really_dislikes.emplace_back("use unnaturally quick items");
-
     if (dislikes.empty() && really_dislikes.empty())
         return "";
 
@@ -458,6 +541,25 @@ string get_god_dislikes(god_type which_god)
     }
 
     return text;
+}
+
+string get_god_forbids(god_type which_god)
+{
+    // Return early for the special cases.
+    if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
+        return "";
+
+    vector<string> forbids;
+    for (const auto& entry : divine_prohibitions[which_god])
+        if (entry.second.desc)
+            forbids.emplace_back(entry.second.desc);
+
+    if (forbids.empty())
+        return "";
+
+    return uppercase_first(god_name(which_god)) + " forbids you from "
+           + comma_separated_line(forbids.begin(), forbids.end(), " or ", ", ")
+           + ".";
 }
 
 /// A definition of the way in which a god likes a conduct being taken.
@@ -891,6 +993,7 @@ static bool _god_likes_killing(const monster& victim)
 static void _handle_your_gods_response(conduct_type thing_done, int level,
                                        bool known, const monster* victim)
 {
+    COMPILE_CHECK(ARRAYSZ(divine_prohibitions) == NUM_GODS);
     COMPILE_CHECK(ARRAYSZ(divine_peeves) == NUM_GODS);
     COMPILE_CHECK(ARRAYSZ(divine_likes) == NUM_GODS);
 
@@ -1060,18 +1163,33 @@ string get_god_likes(god_type which_god)
 
     return text;
 }
-
-conduct_type god_hates_item_handling(const item_def& item, god_type god)
+forbidden_act_type god_forbids_item_handling(const item_def& item, god_type god)
 {
-    for (conduct_type conduct : item_conducts(item))
-        if (divine_peeves[god].count(conduct))
-            return conduct;
-    return DID_NOTHING;
+    for (forbidden_act_type act : forbidden_acts(item))
+        if (divine_prohibitions[god].count(act))
+            return act;
+    return FORBID_NONE;
 }
 
-conduct_type god_hates_item_handling(const item_def& item)
+forbidden_act_type god_forbids_item_handling(const item_def& item)
 {
-    return god_hates_item_handling(item, you.religion);
+    return god_forbids_item_handling(item, you.religion);
+}
+
+/**
+ * Print the current god's forgiveness message for inadvertently committing a
+ * forbidden act -- e.g. drinking or reading an unidentified item that turned
+ * out to be forbidden. A no-op if the god doesn't forbid the act, or has no
+ * forgiveness message for it.
+ */
+void god_forgive_inadvertent_act(forbidden_act_type act)
+{
+    if (const forbidden_conduct *forbid
+            = map_find(divine_prohibitions[you.religion], act))
+    {
+        if (forbid->forgiveness_message)
+            simple_god_message(forbid->forgiveness_message);
+    }
 }
 
 /**
@@ -1114,23 +1232,6 @@ void did_hurt_monster(const monster &victim, int damage_done,
 }
 
 /**
- * Does your god forbid memorising spells?
- *
- * This is as opposed to a likelihood.
- *
- * @param spell the spell to be cast
- * @param god   the god to check against
- * @returns true if you will definitely lose piety/get penance/be excommunicated
- */
-bool god_forbids_memorising_spells(god_type god)
-{
-    if (map_find(divine_peeves[god], DID_SPELL_MEMORISE))
-        return true;
-
-    return false;
-}
-
-/**
  * Does your god hate all spellcasting?
  *
  * @param god           The god to check against
@@ -1138,7 +1239,7 @@ bool god_forbids_memorising_spells(god_type god)
  */
 bool god_hates_spellcasting(god_type god)
 {
-    return god == GOD_TROG;
+    return map_find(divine_prohibitions[god], FORBID_SPELLCASTING) != nullptr;
 }
 
 /**
@@ -1152,25 +1253,21 @@ bool god_hates_spellcasting(god_type god)
  */
 bool god_forbids_spell(spell_type spell, god_type god)
 {
-    if (god_hates_spellcasting(god))
+    const forbidden_map &prohibitions = divine_prohibitions[god];
+
+    if (map_find(prohibitions, FORBID_SPELLCASTING))
         return true;
 
-    if (map_find(divine_peeves[god], DID_SPELL_CASTING))
-        return true;
-
-    if (map_find(divine_peeves[god], DID_EVIL)
+    if (map_find(prohibitions, FORBID_EVIL)
         && (is_evil_spell(spell) || you.spellcasting_unholy()))
     {
         return true;
     }
 
-    if (map_find(divine_peeves[god], DID_UNCLEAN) && is_unclean_spell(spell))
+    if (map_find(prohibitions, FORBID_CHAOS) && is_chaotic_spell(spell))
         return true;
 
-    if (map_find(divine_peeves[god], DID_CHAOS) && is_chaotic_spell(spell))
-        return true;
-
-    if (map_find(divine_peeves[god], DID_HASTY) && is_hasty_spell(spell))
+    if (map_find(prohibitions, FORBID_HASTY) && is_hasty_spell(spell))
         return true;
 
     return false;

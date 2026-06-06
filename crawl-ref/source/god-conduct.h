@@ -7,6 +7,7 @@
 
 #include "beam-type.h"
 #include "conduct-type.h"
+#include "forbidden-act-type.h"
 #include "god-type.h"
 #include "kill-method-type.h"
 
@@ -41,13 +42,14 @@ void did_hurt_monster(const monster &victim, int damage_done,
 
 void god_conduct_turn_start();
 
-bool god_forbids_memorising_spells(god_type god);
 bool god_forbids_spell(spell_type spell, god_type god);
 bool god_hates_spellcasting(god_type god);
 
-conduct_type god_hates_item_handling(const item_def& item);
-conduct_type god_hates_item_handling(const item_def& item, god_type god);
+forbidden_act_type god_forbids_item_handling(const item_def& item);
+forbidden_act_type god_forbids_item_handling(const item_def& item, god_type god);
+void god_forgive_inadvertent_act(forbidden_act_type act);
 
 string get_god_likes(god_type which_god);
 string get_god_dislikes(god_type which_god);
+string get_god_forbids(god_type which_god);
 string conduct_description(conduct_type conduct);

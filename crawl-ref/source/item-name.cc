@@ -3153,7 +3153,7 @@ string cannot_read_item_reason(const item_def *item, bool temp, bool ident,
         return "";
 
     // Your god won't let you read scrolls they forbid.
-    if (god_hates_item(*item))
+    if (god_forbids_item(*item))
     {
         if (god_forbids)
             *god_forbids = true;
@@ -3238,7 +3238,7 @@ string cannot_drink_item_reason(const item_def *item, bool temp,
 
         // Your god won't let you drink potions they forbid. Religion counts as
         // permanent uselessness.
-        if (god_hates_item(*item))
+        if (god_forbids_item(*item))
         {
             if (god_forbids)
                 *god_forbids = true;
@@ -3337,7 +3337,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return true;
 
         // Your god won't let you throw ammo they hate (e.g. chaos, frenzy).
-        if (god_hates_item(item))
+        if (god_forbids_item(item))
             return true;
 
         return !is_throwable(&you, item);
@@ -3567,7 +3567,7 @@ string item_prefix(const item_def &item, bool temp)
     else
         prefixes.push_back("unidentified");
 
-    if (god_hates_item(item))
+    if (god_forbids_item(item))
     {
         prefixes.push_back("evil_item");
         prefixes.push_back("forbidden");

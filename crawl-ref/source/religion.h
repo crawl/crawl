@@ -70,7 +70,7 @@ int gozag_service_fee();
 string cannot_join_god_reason(god_type which_god, bool temp = true,
                               bool check_gear = true);
 bool player_can_join_god(god_type which_god, bool temp = true);
-bool god_hates_form(god_type which_god, transformation which_trans);
+bool god_forbids_form(god_type which_god, transformation which_trans);
 bool transformed_player_can_join_god(god_type which_god);
 void join_trog_skills(void);
 void join_religion(god_type which_god);

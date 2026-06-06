@@ -3,8 +3,10 @@
 enum conduct_type
 {
     DID_NOTHING,
-    DID_EVIL,                             // hated by good gods
-    DID_HOLY,                             // holy wrath
+#if TAG_MAJOR_VERSION == 34
+    DID_EVIL,                             // now forbidden
+    DID_HOLY,                             // now forbidden
+#endif
     DID_ATTACK_HOLY,
     DID_ATTACK_NEUTRAL,
     DID_ATTACK_FRIEND,
@@ -19,27 +21,33 @@ enum conduct_type
     DID_KILL_HOLY,
     DID_KILL_FAST,                        // Cheibriados
     DID_BANISH,
-    DID_SPELL_MEMORISE,
-    DID_SPELL_CASTING,
+#if TAG_MAJOR_VERSION == 34
+    DID_SPELL_MEMORISE,                   // now forbidden
+    DID_SPELL_CASTING,                    // now forbidden
+#endif
     DID_SPELL_PRACTISE,
+#if TAG_MAJOR_VERSION == 34
     DID_CANNIBALISM,
     DID_DELIBERATE_MUTATING,              // Zin
+#endif
     DID_CAUSE_GLOWING,                    // Zin
-    DID_UNCLEAN,                          // Zin (used unclean weapon/magic)
-    DID_CHAOS,                            // Zin (used chaotic weapon/magic)
 #if TAG_MAJOR_VERSION == 34
+    DID_UNCLEAN,                          // now forbidden
+    DID_CHAOS,                            // now forbidden
     DID_DESECRATE_ORCISH_REMAINS,         // Beogh
     DID_KILL_SLIME,                       // Jiyva
-#endif
-    DID_HASTY,                            // Cheibriados
-#if TAG_MAJOR_VERSION == 34
+    DID_HASTY,                            // now forbidden
     DID_ATTACK_IN_SANCTUARY,              // Zin
 #endif
     DID_KILL_NONLIVING,
     DID_EXPLORATION,                      // Ashenzari, wrath timers
     DID_SEE_MONSTER,                      // TSO
+#if TAG_MAJOR_VERSION == 34
     DID_SACRIFICE_LOVE,                   // Ru
+#endif
     DID_HURT_FOE,                         // Uskayaw
-    DID_WIZARDLY_ITEM,                    // Trog
+#if TAG_MAJOR_VERSION == 34
+    DID_WIZARDLY_ITEM,                    // now forbidden
+#endif
     NUM_CONDUCTS
 };

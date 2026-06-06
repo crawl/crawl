@@ -475,7 +475,7 @@ bool can_equip_item(const item_def& item, bool include_form, string* veto_reason
         NO_EQUIP("That isn't an equippable item.")
 
     // Your god won't let you make use of gear they abhor.
-    if (god_hates_item(item))
+    if (god_forbids_item(item))
     {
         if (god_forbids)
             *god_forbids = true;
