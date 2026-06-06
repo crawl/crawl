@@ -6016,6 +6016,10 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         }
     }
 
+    // doom everything nonadjacent when damaged
+    if (type == MONS_CURSED_EMBER && oppressor && oppressor != this)
+        schedule_ember_curse_fineff(this, pos(), this->attitude, 1);
+
     // The (real) royal jelly objects to taking damage and will SULK. :-)
     if (type == MONS_ROYAL_JELLY && !is_summoned())
         schedule_trj_spawn_fineff(oppressor, this, pos(), damage);

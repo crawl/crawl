@@ -241,6 +241,26 @@ protected:
     bool mergeable(const final_effect& a) const override;
 };
 
+class ember_curse_fineff : public final_effect
+{
+public:
+    void merge(const final_effect& a) override;
+    void fire() override;
+
+    ember_curse_fineff(const actor* discharger, coord_def pos,
+            mon_attitude_type tude, int pow)
+        : final_effect(0, discharger, coord_def()), position(pos),
+            attitude(tude), power(pow)
+    {
+    }
+protected:
+    bool mergeable(const final_effect& a) const override;
+
+    coord_def position;
+    mon_attitude_type attitude;
+    int power;
+};
+
 class shock_discharge_fineff : public final_effect
 {
 public:
@@ -706,6 +726,12 @@ void schedule_starcursed_merge_fineff(const actor* merger)
     _schedule_final_effect(new starcursed_merge_fineff(merger));
 }
 
+void schedule_ember_curse_fineff(const actor* discharger, coord_def pos,
+                                    mon_attitude_type tude, int pow)
+{
+    _schedule_final_effect(new ember_curse_fineff(discharger, pos, tude, pow));
+}
+
 void schedule_shock_discharge_fineff(const actor* discharger, actor& oppressor,
                                      coord_def pos, int pow,
                                      string shock_source)
@@ -927,6 +953,13 @@ bool starcursed_merge_fineff::mergeable(const final_effect &fe) const
     return def == o.def;
 }
 
+bool ember_curse_fineff::mergeable(const final_effect &fe) const
+{
+    const ember_curse_fineff& o =
+        static_cast<const ember_curse_fineff&>(fe);
+    return def == o.def;
+}
+
 bool shock_discharge_fineff::mergeable(const final_effect &fe) const
 {
     const shock_discharge_fineff& o =
@@ -1005,6 +1038,13 @@ void deferred_damage_fineff::merge(const final_effect &fe)
     ASSERT(ddamfe);
     ASSERT(is_mergeable(*ddamfe));
     damage += ddamfe->damage;
+}
+
+void ember_curse_fineff::merge(const final_effect &fe)
+{
+    const ember_curse_fineff *ssdfe =
+        dynamic_cast<const ember_curse_fineff *>(&fe);
+    power += ssdfe->power;
 }
 
 void shock_discharge_fineff::merge(const final_effect &fe)
@@ -1314,6 +1354,32 @@ void starcursed_merge_fineff::fire()
                 mon->speed_increment -= 10;
                 mon->finalise_movement();
             }
+        }
+    }
+}
+
+void ember_curse_fineff::fire()
+{
+    const actor *ember = defender();
+
+    if (ember && you.can_see(*ember))
+    {
+        mprf("%s emits a baleful curse.",
+             ember->name(DESC_ITS).c_str());
+    }
+    else if (you.see_cell(position))
+        mpr("You feel a baleful curse.");
+
+    for (actor_near_iterator ai(position, LOS_NO_TRANS); ai; ++ai)
+    {
+        // the player is friendly to themselves
+        mon_attitude_type fr = ai->is_monster() ? ai->as_monster()->attitude :
+            ATT_FRIENDLY;
+
+        if (ai->pos().distance_from(position) > 1
+                && !mons_atts_aligned(fr, attitude))
+        {
+            ai->doom(power * 10 + random2(10 * power));
         }
     }
 }

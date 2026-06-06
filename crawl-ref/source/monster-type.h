@@ -618,6 +618,7 @@ enum monster_type                      // env.mons[].type
     MONS_POLTERGEIST,
     MONS_POLTERGUARDIAN,
     MONS_UNDYING_ARMOURY,
+    MONS_CURSED_EMBER,
 #endif
     MONS_KILLER_KLOWN,
     MONS_SHAPESHIFTER,
@@ -1433,6 +1434,7 @@ enum monster_type                      // env.mons[].type
     MONS_SEWAGE_SOVEREIGN,
     MONS_SCRAPSHELL_CHIMERA,
     MONS_GLOWMURK_GHAST,
+    MONS_CURSED_EMBER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
