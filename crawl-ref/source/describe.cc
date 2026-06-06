@@ -1473,6 +1473,23 @@ static void _append_skill_needed(string &description, const item_def &item,
         _append_skill_target_desc(description, skill, target_skill);
 }
 
+static void _append_penalty(string &description, const string& default_name,
+                            const item_def *source, const int penalty)
+{
+    description += "\n";
+    description += (source ? uppercase_first(source->name(DESC_YOUR))
+                           : "Your " + default_name);
+
+    const int penalty_scale = 100;
+    if (penalty >= penalty_scale)
+        description += make_stringf(" slows your attacks with this weapon by %.1f",
+                       penalty / (10.0f * penalty_scale));
+    else
+        description += " slightly slows your attacks with this weapon";
+
+    description += ".";
+}
+
 static void _append_weapon_stats(string &description, const item_def &item)
 {
     const int base_dam = property(item, PWPN_DAMAGE);
@@ -1514,34 +1531,35 @@ static void _append_weapon_stats(string &description, const item_def &item)
 
     _append_skill_needed(description, item);
 
-    if (is_slowed_by_armour(&item))
-    {
-        const int penalty_scale = 100;
-        const int armour_penalty = you.adjusted_body_armour_penalty(penalty_scale, true);
-        description += "\n";
-        if (armour_penalty)
-        {
-            const item_def *body_armour = you.body_armour();
-            description += (body_armour ? uppercase_first(
-                                              body_armour->name(DESC_YOUR))
-                                        : "Your heavy armour");
+    const int penalty_scale = 100;
+    const int body_armour_penalty = you.adjusted_body_armour_penalty(penalty_scale, true);
+    const bool slowed_by_armour = is_slowed_by_armour(&item);
 
-            const bool significant = armour_penalty >= penalty_scale;
-            if (significant)
-            {
-                description +=
-                    make_stringf(" slows your attacks with this weapon by %.1f",
-                                 armour_penalty / (10.0f * penalty_scale));
-            }
-            else
-                description += " slightly slows your attacks with this weapon";
-        }
-        else
-        {
-            description += "Wearing heavy armour would reduce your attack "
-                           "speed with this weapon";
-        }
-        description += ".";
+    if (slowed_by_armour && body_armour_penalty)
+        _append_penalty(description, "heavy body armour",
+                        you.body_armour(), body_armour_penalty);
+
+    const item_def *shield = you.shield();
+    const bool not_max_shield = you.skill(SK_SHIELDS) < MAX_SKILL_LEVEL;
+
+    if (not_max_shield && shield)
+        _append_penalty(description, "shield", shield,
+                        you.adjusted_shield_penalty(penalty_scale));
+
+    const bool could_body_armour_enc = (slowed_by_armour && !body_armour_penalty);
+    const bool could_shield_enc = (not_max_shield && !shield);
+    if (could_body_armour_enc || could_shield_enc)
+    {
+        description += "\nWearing ";
+
+        if (could_body_armour_enc && could_shield_enc)
+            description += "heavy armour";
+        else if (could_body_armour_enc)
+            description += "heavy body armour";
+        else // could_shield_enc
+            description += "a shield";
+
+        description += " would reduce your attack speed with this weapon.";
     }
 
     const bool want_player_stats = !is_useless_item(item) && crawl_state.need_save;
