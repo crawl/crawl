@@ -217,7 +217,7 @@ int default_osel(operation_types oper)
     case OPER_READ:
         return OBJ_SCROLLS;
     case OPER_EVOKE:
-        return OSEL_EVOKABLE;
+        return OSEL_EVOKABLE_ALL;
     case OPER_EQUIP:
         return OSEL_EQUIPABLE;
     case OPER_TAKEOFF:

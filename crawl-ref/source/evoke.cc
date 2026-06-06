@@ -987,8 +987,11 @@ static bool _evoke_ally_only(const item_def &item, bool ident)
     return false;
 }
 
-string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
+string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident,
+                                bool *is_divine)
 {
+    if (is_divine)
+        *is_divine = false;
     // id is not at issue here
     if (temp && you.berserk())
         return "You are too berserk!";
@@ -1007,6 +1010,16 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
         // TODO: zigfig has some terrain/level constraints that aren't handled
         // here
         return "";
+    }
+
+    // Your god won't let you evoke items they forbid. (Religion counts as
+    // permanent uselessness, so this isn't gated on temp.)
+    if (god_hates_item(*item))
+    {
+        if (is_divine)
+            *is_divine = true;
+        return make_stringf("%s forbids the use of this item.",
+                            uppercase_first(god_name(you.religion)).c_str());
     }
 
     if (item->is_type(OBJ_BAUBLES, BAUBLE_FLUX))
@@ -1065,9 +1078,10 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
 
 bool item_currently_evokable(const item_def *item)
 {
-    const string err = cannot_evoke_item_reason(item);
+    bool is_divine = false;
+    const string err = cannot_evoke_item_reason(item, true, true, &is_divine);
     if (!err.empty())
-        mpr(err);
+        mprf(is_divine ? MSGCH_GOD : MSGCH_PLAIN, "%s", err.c_str());
     return err.empty();
 }
 
