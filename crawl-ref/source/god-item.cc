@@ -231,9 +231,7 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
     case OBJ_WANDS:
         return item.sub_type == WAND_POLYMORPH;
     case OBJ_POTIONS:
-        return (item.sub_type == POT_MUTATION
-                            && !have_passive(passive_t::cleanse_mut_potions))
-                 || item.sub_type == POT_LIGNIFY;
+        return item.sub_type == POT_LIGNIFY;
     case OBJ_BOOKS:
         return item.sub_type == BOOK_MANUAL && item.plus == SK_SHAPESHIFTING
                || _is_book_type(item, is_chaotic_spell);
@@ -382,38 +380,63 @@ bool is_hasty_spell(spell_type spell)
  */
 vector<conduct_type> item_conducts(const item_def &item)
 {
-    vector<conduct_type> conducts;
+    vector<conduct_type> acts;
 
-    if (is_evil_item(item, false))
-        conducts.push_back(DID_EVIL);
+    // Potions of mutation are hated by Zin, but outright forbidding them would
+    // be very harsh after bad malmutation rolls.
+    if (item.base_type == OBJ_POTIONS
+        && item.sub_type == POT_MUTATION
+        && item.is_identified()
+        && !have_passive(passive_t::cleanse_mut_potions))
+    {
+        acts.push_back(DID_DELIBERATE_MUTATING);
+    }
 
-    if (is_unclean_item(item, false))
-        conducts.push_back(DID_UNCLEAN);
-
-    if (is_chaotic_item(item, false))
-        conducts.push_back(DID_CHAOS);
-
-    if (is_holy_item(item, false))
-        conducts.push_back(DID_HOLY);
-
-    if (item_is_spellbook(item))
-        conducts.push_back(DID_SPELL_MEMORISE);
-
-    if ((item.sub_type == BOOK_MANUAL && is_magic_skill((skill_type)item.plus)))
-        conducts.push_back(DID_SPELL_PRACTISE);
-
-    if (is_wizardly_item(item, false))
-        conducts.push_back(DID_WIZARDLY_ITEM);
-
-    if (_is_potentially_hasty_item(item) || is_hasty_item(item, false))
-        conducts.push_back(DID_HASTY);
-
-    if (is_potentially_evil_item(item, false))
-        conducts.push_back(DID_EVIL);
-
-    return conducts;
+    return acts;
 }
 
+/**
+ * What forbidden acts can one commit using this item?
+ * This should only be based on the player's knowledge.
+ *
+ * @param item  The item in question.
+ * @return      List of forbidden acts that can be committed with this; empty if none.
+ */
+vector<forbidden_act_type> forbidden_acts(const item_def &item)
+{
+    vector<forbidden_act_type> acts;
+
+    if (is_evil_item(item, false))
+        acts.push_back(FORBID_EVIL);
+
+    if (is_unclean_item(item, false))
+        acts.push_back(FORBID_UNCLEAN);
+
+    if (is_chaotic_item(item, false))
+        acts.push_back(FORBID_CHAOS);
+
+    if (is_holy_item(item, false))
+        acts.push_back(FORBID_HOLY);
+
+    if (item_is_spellbook(item))
+        acts.push_back(FORBID_SPELL_MEMORISE);
+
+    if (is_wizardly_item(item, false))
+        acts.push_back(FORBID_WIZARDLY_ITEM);
+
+    if (_is_potentially_hasty_item(item) || is_hasty_item(item, false))
+        acts.push_back(FORBID_HASTY);
+
+    if (is_potentially_evil_item(item, false))
+        acts.push_back(FORBID_EVIL);
+
+    return acts;
+}
+
+/**
+ * Does the god hate, but still allow, the use of this item? Such items are not
+ * forbidden, but using them will displease the god.
+ */
 bool god_hates_item(const item_def &item, god_type which_god)
 {
     return god_hates_item_handling(item, which_god) != DID_NOTHING;
@@ -422,6 +445,20 @@ bool god_hates_item(const item_def &item, god_type which_god)
 bool god_hates_item(const item_def &item)
 {
     return god_hates_item(item, you.religion);
+}
+
+/**
+ * Does the god outright forbid the use of this item, such that the player
+ * cannot equip, wield, read, drink, evoke or otherwise use it at all?
+ */
+bool god_forbids_item(const item_def &item, god_type which_god)
+{
+    return god_forbids_item_handling(item, which_god) != FORBID_NONE;
+}
+
+bool god_forbids_item(const item_def &item)
+{
+    return god_forbids_item(item, you.religion);
 }
 
 bool god_despises_item(const item_def &item, god_type which_god)
@@ -447,7 +484,7 @@ bool god_likes_item_type(const item_def &item, god_type which_god)
 {
     if (god_despises_item(item, which_god))
         return false;
-    // XXX: also check god_hates_item()?
+    // XXX: also check god_forbids_item()?
     // XXXX: if someone does this, make sure to generalize so that it doesn't
     // use `you.religion`; this code is potentially called in item generation
     // for artefact names

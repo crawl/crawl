@@ -1930,12 +1930,16 @@ bool drink(item_def* potion)
         return false;
     }
 
-    bool penance = god_hates_item(*potion);
-    string prompt = make_stringf("Really quaff the %s?%s",
-                                 potion->name(DESC_DBNAME).c_str(),
-                                 penance ? " This action would place"
-                                           " you under penance!" : "");
-    if (alreadyknown && (is_dangerous_item(*potion, true) || penance)
+    const bool disapproved = god_hates_item(*potion);
+    string prompt = make_stringf("Really quaff the %s?",
+                                 potion->name(DESC_DBNAME).c_str());
+    if (disapproved)
+    {
+        prompt += " ";
+        prompt += uppercase_first(god_name(you.religion));
+        prompt += " would disapprove of this!";
+    }
+    if (alreadyknown && (is_dangerous_item(*potion, true) || disapproved)
         && Options.bad_item_prompt
         && !yesno(prompt.c_str(), false, 'n'))
     {
@@ -3067,8 +3071,8 @@ bool read(item_def* scroll, dist *target)
     case SCR_TORMENT:
         torment(&you, TORMENT_SCROLL, you.pos());
 
-        // This is only naughty if you know you're doing it.
-        did_god_conduct(DID_EVIL, 10, item_type_known(*scroll));
+        if (!item_type_known(*scroll))
+            god_forgive_inadvertent_act(FORBID_EVIL);
         bad_effect = !you.res_torment();
         break;
 

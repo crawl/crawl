@@ -783,7 +783,8 @@ public:
         if (effect(was_known))
         {
             you.transform_uncancellable = true;
-            did_god_conduct(DID_CHAOS, 10, was_known);
+            if (!was_known)
+                god_forgive_inadvertent_act(FORBID_CHAOS);
         }
         else
             mpr("You feel woody for a moment.");

@@ -1128,8 +1128,6 @@ bool learn_spell(spell_type specspell, bool wizard, bool interactive)
         if (!already_learning_spell(specspell))
             start_delay<MemoriseDelay>(spell_difficulty(specspell), specspell);
         you.turn_is_over = true;
-
-        did_god_conduct(DID_SPELL_MEMORISE, 2 + random2(5));
     }
 
     quiver::on_actions_changed();

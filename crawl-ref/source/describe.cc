@@ -2523,8 +2523,6 @@ static string &_godsafe_lowercase(string &s)
 
 static string _cannot_use_reason(const item_def &item, bool temp=true)
 {
-    // right now, description uselessness reasons only work for these four
-    // item types..
     switch (item.base_type)
     {
     case OBJ_SCROLLS: return cannot_read_item_reason(&item, temp);
@@ -2532,6 +2530,13 @@ static string _cannot_use_reason(const item_def &item, bool temp=true)
     case OBJ_BAUBLES:
     case OBJ_MISCELLANY:
     case OBJ_WANDS:   return cannot_evoke_item_reason(&item, temp);
+    case OBJ_WEAPONS:
+    case OBJ_ARMOUR:
+        {
+            string reason;
+            can_equip_item(item, temp, &reason);
+            return reason;
+        }
     default: return "";
     }
 }
@@ -2712,6 +2717,8 @@ string get_item_description(const item_def &item,
             need_extra_line = false;
         else
             description << desc;
+        if (verbose && mode != IDM_MONSTER)
+            _uselessness_desc(description, item);
         break;
 
     case OBJ_ARMOUR:
@@ -2720,6 +2727,8 @@ string get_item_description(const item_def &item,
             need_extra_line = false;
         else
             description << desc;
+        if (verbose && mode != IDM_MONSTER)
+            _uselessness_desc(description, item);
         break;
 
     case OBJ_JEWELLERY:
@@ -2968,6 +2977,7 @@ string get_item_description(const item_def &item,
         }
     }
 
+    // Items that your god disapproves of (but does not forbid).
     if (god_hates_item(item))
     {
         description << "\n\n" << uppercase_first(god_name(you.religion))

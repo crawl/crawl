@@ -116,7 +116,7 @@ static bool _pray_ecumenical_altar()
         if (!transformed_player_can_join_god(god))
             form_at_risk = true;
         for (item_def* item : you.equipment.get_slot_items(SLOT_ALL_EQUIPMENT, true))
-            if (god_hates_item(*item, god))
+            if (god_forbids_item(*item, god))
                 gear_at_risk = true;
     }
 
@@ -172,7 +172,7 @@ static bool _pray_ecumenical_altar()
         // below.
         for (item_def* item : you.equipment.get_slot_items(SLOT_ALL_EQUIPMENT, true))
         {
-            if (god_hates_item(*item, altar_god))
+            if (god_forbids_item(*item, altar_god))
             {
                 // included in default force_more_message
                 mprf(MSGCH_GOD, "%s removes %s.",

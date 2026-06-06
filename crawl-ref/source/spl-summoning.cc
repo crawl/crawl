@@ -837,7 +837,7 @@ static bool _check_tukima_validity(const actor *target)
     }
 
     // Our god won't let us animate a weapon they abhor.
-    if (god_hates_item(*wpn))
+    if (god_forbids_item(*wpn))
     {
         simple_god_message(" forbids you from animating such a foul weapon!");
         return false;

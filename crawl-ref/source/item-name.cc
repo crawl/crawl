@@ -3153,7 +3153,7 @@ string cannot_read_item_reason(const item_def *item, bool temp, bool ident,
         return "";
 
     // Your god won't let you read scrolls they forbid.
-    if (god_hates_item(*item))
+    if (god_forbids_item(*item))
     {
         if (is_divine)
             *is_divine = true;
@@ -3237,11 +3237,9 @@ string cannot_drink_item_reason(const item_def *item, bool temp,
             return r;
 
         // Your god won't let you drink potions they forbid. Religion counts as
-        // permanent uselessness.
-        //
-        // We make an exception for potions of mutation, because they are pretty
-        // important and may be worth a penance cost.
-        if (god_hates_item(*item) && item->sub_type != POT_MUTATION)
+        // permanent uselessness. (Potions of mutation are disapproved of rather
+        // than forbidden; see god_forbids_item / god_hates_item.)
+        if (god_forbids_item(*item))
         {
             if (is_divine)
                 *is_divine = true;
@@ -3340,7 +3338,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return true;
 
         // Your god won't let you throw ammo it hates (e.g. chaos, frenzy).
-        if (god_hates_item(item))
+        if (god_forbids_item(item))
             return true;
 
         return !is_throwable(&you, item);

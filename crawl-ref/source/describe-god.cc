@@ -512,6 +512,7 @@ static formatted_string _god_wrath_description(god_type which_god)
 {
     formatted_string desc;
 
+    _add_par(desc, get_god_forbids(which_god));
     _add_par(desc, get_god_dislikes(which_god));
     _add_par(desc, _describe_god_wrath_causes(which_god));
     _add_par(desc, getLongDescription(god_name(which_god) + " wrath"));

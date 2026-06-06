@@ -311,8 +311,8 @@ static string _god_forbids_target_reason(const monster* mon, spell_type spell)
     {
         const item_def * const first = mon->weapon(0);
         const item_def * const second = mon->weapon(1);
-        bool forbidden = first && god_hates_item(*first)
-                         || second && god_hates_item(*second);
+        bool forbidden = first && god_forbids_item(*first)
+                         || second && god_forbids_item(*second);
         if (forbidden)
         {
             return make_stringf("%s forbids you from animating such a foul weapon!",

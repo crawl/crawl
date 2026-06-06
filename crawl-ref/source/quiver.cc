@@ -297,7 +297,7 @@ namespace quiver
             if (!item.defined())
                 continue;
 
-            if (god_hates_item(item))
+            if (god_forbids_item(item))
                 continue;
 
             // =F prevents item from being in fire order.
@@ -867,7 +867,7 @@ namespace quiver
             if (!is_valid())
                 return false;
 
-            if (god_hates_item(you.inv[item_slot]))
+            if (god_forbids_item(you.inv[item_slot]))
                 return false;
 
             if (fire_warn_if_impossible(true, nullptr))
@@ -918,7 +918,7 @@ namespace quiver
                 return;
             if (!is_enabled())
             {
-                if (god_hates_item(you.inv[item_slot]))
+                if (god_forbids_item(you.inv[item_slot]))
                 {
                     mprf(MSGCH_GOD, "%s forbids the use of this item.",
                          uppercase_first(god_name(you.religion)).c_str());

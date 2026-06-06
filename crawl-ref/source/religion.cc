@@ -3378,7 +3378,7 @@ string cannot_join_god_reason(god_type which_god, bool temp, bool check_gear)
     {
         vector<string> hated;
         for (item_def* item : you.equipment.get_slot_items(SLOT_ALL_EQUIPMENT, true))
-            if (god_hates_item(*item, which_god))
+            if (god_forbids_item(*item, which_god))
                 hated.push_back(item->name(DESC_YOUR, false, false, false));
         if (!hated.empty())
         {
@@ -3424,7 +3424,7 @@ static void _god_welcome_handle_gear()
     if (you.props.exists(PARAGON_WEAPON_KEY))
     {
         item_def wpn = you.props[PARAGON_WEAPON_KEY].get_item();
-        if (god_hates_item(wpn))
+        if (god_forbids_item(wpn))
         {
             mprf(MSGCH_GOD, "%s removes the imprint of %s from your paragon.",
                  god_name(you.religion).c_str(),

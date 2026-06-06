@@ -3326,7 +3326,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             if (success == OPER_NONE)
                 return spret::abort;
 
-            if (god_hates_item(*wpn))
+            if (god_forbids_item(*wpn))
             {
                 mprf(MSGCH_WARN, "%s forbids using such a weapon!",
                      god_name(you.religion).c_str());
