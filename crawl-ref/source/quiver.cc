@@ -1685,7 +1685,10 @@ namespace quiver
             if (!is_enabled())
             {
                 const item_def *item = item_slot == -1 ? nullptr : &you.inv[item_slot];
-                mpr(cannot_evoke_item_reason(item));
+                bool god_forbids = false;
+                const string reason = cannot_evoke_item_reason(item, true, true,
+                                                               &god_forbids);
+                mprf(god_forbids ? MSGCH_GOD : MSGCH_PLAIN, "%s", reason.c_str());
                 return;
             }
 
