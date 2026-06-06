@@ -27,6 +27,7 @@
 #include "gender-type.h"
 #include "ghost.h"
 #include "god-abil.h"
+#include "god-conduct.h"
 #include "god-passive.h" // passive_t::slow_abyss, slow_orb_run
 #include "libutil.h"
 #include "losglobal.h"

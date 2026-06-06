@@ -16,6 +16,7 @@
 #include "item-name.h"
 #include "item-status-flag-type.h"
 #include "items.h"
+#include "god-conduct.h"
 #include "religion.h"
 #include "spl-book.h"
 #include "stringutil.h"
@@ -110,7 +111,7 @@ static bool _agent_spell_filter(int agent, spell_type spell)
     // Don't include spells a god dislikes, if this is an acquirement
     // or a god gift.
     const god_type god = agent >= AQ_SCROLL ? you.religion : (god_type)agent;
-    if (god_hates_spell(spell, god))
+    if (god_forbids_spell(spell, god))
         return false;
 
     return true;

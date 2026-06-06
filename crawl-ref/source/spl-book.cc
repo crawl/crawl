@@ -1099,9 +1099,6 @@ bool learn_spell(spell_type specspell, bool wizard, bool interactive)
 
     string mem_spell_warning_string = "";
 
-    if (!wizard)
-        mem_spell_warning_string = god_spell_warn_string(specspell, you.religion);
-
     if (interactive)
     {
         const string prompt = make_stringf(

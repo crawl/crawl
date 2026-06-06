@@ -1114,7 +1114,7 @@ void did_hurt_monster(const monster &victim, int damage_done,
 }
 
 /**
- * Will this god definitely be upset if you memorise spells?
+ * Does your god forbid memorising spells?
  *
  * This is as opposed to a likelihood.
  *
@@ -1122,7 +1122,7 @@ void did_hurt_monster(const monster &victim, int damage_done,
  * @param god   the god to check against
  * @returns true if you will definitely lose piety/get penance/be excommunicated
  */
-bool god_punishes_memorising_spells(god_type god)
+bool god_forbids_memorising_spells(god_type god)
 {
     if (map_find(divine_peeves[god], DID_SPELL_MEMORISE))
         return true;
@@ -1131,17 +1131,30 @@ bool god_punishes_memorising_spells(god_type god)
 }
 
 /**
- * Will this god definitely be upset if you cast this spell?
+ * Does your god hate all spellcasting?
  *
- * This is as opposed to a likelihood.
- * TODO: deduplicate with spl-cast.cc:_spellcasting_god_conduct
- *
- * @param spell the spell to be cast
- * @param god   the god to check against
- * @returns true if you will definitely lose piety/get penance/be excommunicated
+ * @param god           The god to check against
+ * @return              Whether the god hates spellcasting
  */
-bool god_punishes_spell(spell_type spell, god_type god)
+bool god_hates_spellcasting(god_type god)
 {
+    return god == GOD_TROG;
+}
+
+/**
+ * Does your god forbid casting a spell?
+ *
+ * @param spell         The spell to check against
+ * @param god           The god to check against
+ * @param fake_spell    true if the spell is evoked or from an innate or divine ability
+ *                      false if it is a spell being cast normally.
+ * @return              true if the god hates the spell
+ */
+bool god_forbids_spell(spell_type spell, god_type god)
+{
+    if (god_hates_spellcasting(god))
+        return true;
+
     if (map_find(divine_peeves[god], DID_SPELL_CASTING))
         return true;
 
@@ -1157,8 +1170,7 @@ bool god_punishes_spell(spell_type spell, god_type god)
     if (map_find(divine_peeves[god], DID_CHAOS) && is_chaotic_spell(spell))
         return true;
 
-    // not is_hasty_spell: see spl-cast.cc:_spellcasting_god_conduct
-    if (map_find(divine_peeves[god], DID_HASTY) && spell == SPELL_SWIFTNESS)
+    if (map_find(divine_peeves[god], DID_HASTY) && is_hasty_spell(spell))
         return true;
 
     return false;
