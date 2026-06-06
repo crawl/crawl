@@ -3089,7 +3089,7 @@ coord_def find_newmons_square(monster_type mons_class, const coord_def &p,
     return pos;
 }
 
-conduct_type god_hates_monster(monster_type type)
+bool god_hates_monster(monster_type type)
 {
     monster dummy;
     dummy.type = type;
@@ -3127,40 +3127,35 @@ void check_lovelessness(monster &mons)
 }
 
 /**
- * Does the player's current religion conflict with the given monster? If so,
- * why?
- *
- * XXX: this should ideally return a list of conducts that can be filtered by
- *      callers by god; we're duplicating god-conduct.cc right now.
+ * Does the player's current religion conflict with the given monster?
  *
  * @param mon   The monster in question.
- * @return      The reason the player's religion conflicts with the monster
- *              (e.g. DID_EVIL for evil monsters), or DID_NOTHING.
+ * @return      Whether the player's religion conflicts with the monster
  */
-conduct_type god_hates_monster(const monster &mon)
+bool god_hates_monster(const monster &mon)
 {
     // Player angers all real monsters
     if (mons_can_hate(mon.type))
-        return DID_SACRIFICE_LOVE;
+        return true;
 
     if (is_good_god(you.religion) && mon.evil())
-        return DID_EVIL;
+        return true;
 
     if (is_evil_god(you.religion) && mon.is_holy())
-        return DID_HOLY;
+        return true;
 
     if (you_worship(GOD_ZIN))
     {
         if (mon.how_unclean())
-            return DID_UNCLEAN;
+            return true;
         if (mon.how_chaotic())
-            return DID_CHAOS;
+            return true;
     }
 
     if (god_hates_spellcasting(you.religion) && mon.is_actual_spellcaster())
-        return DID_SPELL_CASTING;
+        return true;
 
-    return DID_NOTHING;
+    return false;
 }
 
 monster* create_monster(mgen_data mg, bool fail_msg)
