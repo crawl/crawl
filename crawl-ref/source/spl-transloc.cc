@@ -1662,59 +1662,53 @@ spret cast_golubrias_passage(int pow, const coord_def& where, bool fail)
         return spret::abort;
     }
 
-    // XXX: this can abort nondeterministically and should be rewritten to use
-    //reservoir sampling or something
-    int tries = 0;
-    int tries2 = 0;
+    vector<coord_def> randomized_here;
+    vector<coord_def> randomized_where;
     const int range = GOLUBRIA_FUZZ_RANGE;
-    coord_def randomized_where = where;
-    coord_def randomized_here = you.pos();
-    do
-    {
-        tries++;
-        randomized_where = where;
-        randomized_where.x += random_range(-range, range);
-        randomized_where.y += random_range(-range, range);
-    }
-    while ((!golubria_valid_cell(randomized_where)
-            || randomized_where == you.pos())
-           && tries < 100);
+    coord_def here;
+    coord_def there;
 
-    do
+    for (int r = -range; r <= range; r++)
     {
-        tries2++;
-        randomized_here = you.pos();
-        randomized_here.x += random_range(-range, range);
-        randomized_here.y += random_range(-range, range);
-    }
-    while ((!golubria_valid_cell(randomized_here)
-            || randomized_here == randomized_where)
-           && tries2 < 100);
-
-    if (tries >= 100 || tries2 >= 100)
-    {
-        if (you.trans_wall_blocking(randomized_where))
+        for (int r2 = -range; r2 <= range; r2++)
         {
-            mpr("You cannot create a passage on the other side of the "
-                "transparent wall.");
+            here = you.pos();
+            there = where;
+            here.x += r;
+            here.y += r2;
+            there.x += r;
+            there.y += r2;
+
+            if (golubria_valid_cell(here))
+                randomized_here.emplace_back(here);
+
+            if (golubria_valid_cell(there) && there != you.pos())
+                randomized_where.emplace_back(there);
         }
-        else
-        {
-            // XXX: bleh, dumb message
-            mpr("Creating a passage of Golubria requires sufficient empty "
+    }
+
+    if (randomized_here.size() == 0 || randomized_where.size() == 0
+        || (randomized_here.size() == 1 && randomized_where.size() == 1
+            && randomized_here[0] == randomized_where[0]))
+    {
+        mpr("Creating a passage of Golubria requires sufficient empty "
                 "space.");
-        }
-
-        return spret::abort;
     }
+
+    do
+    {
+        here = randomized_here[random2(randomized_here.size())];
+        there = randomized_where[random2(randomized_where.size())];
+    }
+    while (here == there);
 
     fail_check();
 
-    temp_change_terrain(randomized_where, DNGN_PASSAGE_OF_GOLUBRIA,
+    temp_change_terrain(there, DNGN_PASSAGE_OF_GOLUBRIA,
                         random_range(10, 19) * BASELINE_DELAY,
                         TERRAIN_CHANGE_GOLUBRIA);
 
-    temp_change_terrain(randomized_here, DNGN_PASSAGE_OF_GOLUBRIA,
+    temp_change_terrain(here, DNGN_PASSAGE_OF_GOLUBRIA,
                         random_range(10, 19) * BASELINE_DELAY,
                         TERRAIN_CHANGE_GOLUBRIA);
 
