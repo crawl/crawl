@@ -366,22 +366,22 @@ static int _base_stat_with_muts(stat_type s)
     return min(you.base_stats[s] + _get_mut_effects(s, false), MAX_STAT_VALUE);
 }
 
-static int _base_stat_with_new_mut(stat_type which_stat, mutation_type mut)
+static bool _decreases_to_below_zero(stat_type which_stat, mutation_type mut)
 {
     int base = _base_stat_with_muts(which_stat);
+    int with_mut = base;
     for (const auto &e : mut_stat_effects)
         if (e.mut == mut)
-            base += e.apply(which_stat, false);
-    return base;
+            with_mut += e.apply(which_stat, false);
+    return with_mut <= 0 && with_mut < base;
 }
 
 /// whether a mutation innately causes stat zero. Does not look at equpment etc.
 bool mutation_causes_stat_zero(mutation_type mut)
 {
-    // not very elegant...
-    return _base_stat_with_new_mut(STAT_STR, mut) <= 0
-        || _base_stat_with_new_mut(STAT_INT, mut) <= 0
-        || _base_stat_with_new_mut(STAT_DEX, mut) <= 0;
+    return _decreases_to_below_zero(STAT_STR, mut)
+        || _decreases_to_below_zero(STAT_INT, mut)
+        || _decreases_to_below_zero(STAT_DEX, mut);
 }
 
 static int _stat_modifier(stat_type stat, bool innate_only)
