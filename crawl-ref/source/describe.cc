@@ -4497,12 +4497,7 @@ static string _player_spell_desc(spell_type spell)
                     << " summoned by this spell.\n";
     }
 
-    if (god_hates_spell(spell, you.religion))
-    {
-        description << uppercase_first(god_name(you.religion))
-                    << " frowns upon the use of this spell.\n";
-    }
-    else if (god_likes_spell(spell, you.religion))
+    if (god_likes_spell(spell, you.religion))
     {
         description << uppercase_first(god_name(you.religion))
                     << " supports the use of this spell.\n";

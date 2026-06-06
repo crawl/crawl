@@ -6,6 +6,7 @@
 #include "l-libs.h"
 
 #include "cluautil.h"
+#include "god-conduct.h"
 #include "religion.h"
 #include "spl-util.h"
 #include "spl-zap.h"
@@ -303,7 +304,7 @@ LUAFN(l_spells_god_hates)
         const char *godname = luaL_checkstring(ls, 2);
         god = str_to_god(godname);
     }
-    PLUARET(boolean, god_hates_spell(spell, god));
+    PLUARET(boolean, god_forbids_spell(spell, god));
 }
 
 /*** Cast a spell at a target. If the target is not provided, enters interactive

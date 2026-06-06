@@ -24,6 +24,7 @@
 #include "dungeon.h"
 #include "english.h"
 #include "god-abil.h"
+#include "god-conduct.h"
 #include "god-item.h"
 #include "god-passive.h"
 #include "item-name.h"
@@ -850,7 +851,7 @@ static int _book_weight(book_type book)
         // Skip over spells already in library.
         if (you.spell_library[stype])
             continue;
-        if (god_hates_spell(stype, you.religion))
+        if (god_forbids_spell(stype, you.religion))
             continue;
 
         total_weight += _spell_weight(stype);
