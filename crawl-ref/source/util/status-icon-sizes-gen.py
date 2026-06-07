@@ -2,9 +2,6 @@
 
 """
 Generate status-icon-sizes.h, and status-icon-sizes.js
-
-Works with both Python 2 & 3. If that changes, update how the Makefile calls
-this.
 """
 
 from __future__ import print_function
@@ -12,7 +9,7 @@ from __future__ import print_function
 import sys
 
 def parse_icon_sizes(file_name, icon_sizes):
-    with open(file_name) as input_file:
+    with open(file_name, encoding='utf-8') as input_file:
         line_num = 0
         for line in input_file:
             line_num += 1
@@ -35,7 +32,7 @@ def parse_icon_sizes(file_name, icon_sizes):
     return True
 
 def output_icon_sizes(icon_sizes, input_file_name):
-    with open('rltiles/status-icon-sizes.h', 'w') as file:
+    with open('rltiles/status-icon-sizes.h', 'w', encoding='utf-8') as file:
         file.write('#pragma once\n')
         file.write('\n')
         file.write('// This file is auto generated, edit ' + input_file_name
@@ -56,7 +53,7 @@ def output_icon_sizes(icon_sizes, input_file_name):
         file.write('    }\n')
         file.write('}\n')
 
-    with open('rltiles/status-icon-sizes.js', 'w') as file:
+    with open('rltiles/status-icon-sizes.js', 'w', encoding='utf-8') as file:
         file.write('define(["./tileinfo-icons"], function (icons) {\n')
         file.write('// This file is auto generated, edit ' + input_file_name
                    + ' instead.\n')

@@ -2,9 +2,6 @@
 
 """
 Generate species-data.h, aptitudes.h, species-groups.h, and species-type.h
-
-Works with both Python 2 & 3. If that changes, update how the Makefile calls
-this.
 """
 
 from __future__ import print_function
@@ -352,12 +349,12 @@ def generate_species_type_data(s):
 def maybe_write(filename, text):
     """Write `text` to `filename`, but only if the file would be created or changed"""
     if os.path.exists(filename):
-        with open(filename, 'r') as f:
+        with open(filename, 'r', encoding='utf-8') as f:
             cur = f.read()
         if cur == text:
             return
 
-    with open(filename, 'w') as f:
+    with open(filename, 'w', encoding='utf-8') as f:
         f.write(text)
 
 
@@ -388,7 +385,7 @@ def main():
             continue
         f_path = os.path.join(args.datadir, f_name)
         try:
-            species_spec = yaml.safe_load(open(f_path))
+            species_spec = yaml.safe_load(open(f_path, encoding='utf-8'))
         except yaml.YAMLError as e:
             print("Failed to load %s: %s" % (f_name, e))
             sys.exit(1)
