@@ -2531,13 +2531,23 @@ static string _cannot_use_reason(const item_def &item, bool temp=true)
     case OBJ_MISCELLANY:
     case OBJ_WANDS:   return cannot_evoke_item_reason(&item, temp);
     case OBJ_WEAPONS:
+    case OBJ_STAVES:
     case OBJ_ARMOUR:
+    case OBJ_JEWELLERY:
         {
             string reason;
             can_equip_item(item, temp, &reason);
             return reason;
         }
-    default: return "";
+    default:
+        // Non-equippable types (e.g. ammo) have no can_equip_item reason, but
+        // can still be outright forbidden by your god.
+        if (god_forbids_item(item))
+        {
+            return make_stringf("%s forbids the use of this item.",
+                                uppercase_first(god_name(you.religion)).c_str());
+        }
+        return "";
     }
 }
 
@@ -2735,6 +2745,8 @@ string get_item_description(const item_def &item,
         desc = _describe_jewellery(item, verbose);
         if (!desc.empty())
             description << desc;
+        if (verbose && mode != IDM_MONSTER)
+            _uselessness_desc(description, item);
         break;
 
     case OBJ_BOOKS:
@@ -2755,6 +2767,8 @@ string get_item_description(const item_def &item,
 
     case OBJ_MISSILES:
         description << _describe_ammo(item);
+        if (verbose && mode != IDM_MONSTER)
+            _uselessness_desc(description, item);
         break;
 
     case OBJ_CORPSES:
@@ -2781,6 +2795,8 @@ string get_item_description(const item_def &item,
             description << "\n\nIt falls into the 'Staves' category. ";
             description << _handedness_string(item);
         }
+        if (verbose && mode != IDM_MONSTER)
+            _uselessness_desc(description, item);
         break;
 
     case OBJ_MISCELLANY:
