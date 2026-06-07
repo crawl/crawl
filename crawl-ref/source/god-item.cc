@@ -461,15 +461,6 @@ bool god_forbids_item(const item_def &item)
     return god_forbids_item(item, you.religion);
 }
 
-bool god_despises_item(const item_def &item, god_type which_god)
-{
-    if (item.base_type != OBJ_TALISMANS)
-        return false;
-    return (item.sub_type == TALISMAN_DEATH || item.sub_type == TALISMAN_VAMPIRE)
-                && is_good_god(which_god)
-           || which_god == GOD_ZIN;
-}
-
 /**
  * Does the given god like items of the given kind enough to make artefacts
  * from them? (Thematically.)
@@ -480,26 +471,28 @@ bool god_despises_item(const item_def &item, god_type which_god)
  *                      artefact out of the given item. Thematically.
  *                      (E.g., Ely shouldn't be forging swords.)
  */
-bool god_likes_item_type(const item_def &item, god_type which_god)
+bool god_likes_item_type(const object_class_type &base_type,
+                         const uint16_t sub_type, god_type which_god)
 {
-    if (god_despises_item(item, which_god))
+    item_def dummy;
+    dummy.base_type = base_type;
+    dummy.sub_type = sub_type;
+    dummy.plus = 1; // empty wands would be useless
+    dummy.flags |= ISFLAG_IDENTIFIED;
+    if (god_forbids_item(dummy, which_god) || god_hates_item(dummy, which_god))
         return false;
-    // XXX: also check god_forbids_item()?
-    // XXXX: if someone does this, make sure to generalize so that it doesn't
-    // use `you.religion`; this code is potentially called in item generation
-    // for artefact names
     switch (which_god)
     {
         case GOD_ELYVILON: // Peaceful healer god: no weapons.
         case GOD_SIF_MUNA: // The magic gods: no weapons.
         case GOD_VEHUMET:
-            if (item.base_type == OBJ_WEAPONS)
+            if (base_type == OBJ_WEAPONS)
                 return false;
             break;
 
         case GOD_TROG:
             // Berserker god: weapons only.
-            if (item.base_type != OBJ_WEAPONS)
+            if (base_type != OBJ_WEAPONS)
                 return false;
             break;
 
