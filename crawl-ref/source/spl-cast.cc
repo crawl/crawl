@@ -1702,7 +1702,7 @@ static int _to_hit_pct(const monster_info& mi, int acc)
             hit_sum += 100;
     }
 
-    int base_chance = base_ev >= 0 ? hit_sum / base_ev : 100;
+    int base_chance = base_ev > 0 ? hit_sum / base_ev : 100;
     base_chance = base_chance * (100 - player_blind_miss_chance(you.pos().distance_from(mi.pos))) / 100;
     return base_chance;
 }
