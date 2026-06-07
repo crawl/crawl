@@ -1668,33 +1668,41 @@ static int _to_hit_pct(const monster_info& mi, int acc)
 
     const int base_ev = mi.ev + (mi.is(MB_DEFLECT_MSL) ? DEFLECT_MISSILES_EV_BONUS : 0);
 
-    int hits = 0;
-    int iters = 0;
+    // This exhaustively tests every combination of hit and evasion rolls to determine
+    // the real chance of a hit.
+    //
+    // Since target evasion is rolled twice, and the range of the second roll depends
+    // on the first, we independently calculate the chance of a hit for each possible
+    // result of the first roll, then average all of those chances at the end.
+    int hit_sum = 0;
     for (int outer_ev_roll = 0; outer_ev_roll < base_ev; outer_ev_roll++)
     {
+        int hits = 0;
+        int iters = 0;
         for (int inner_ev_roll_a = 0; inner_ev_roll_a < outer_ev_roll; inner_ev_roll_a++)
         {
-            for (int inner_ev_roll_b = 0; inner_ev_roll_b < outer_ev_roll; inner_ev_roll_b++)
+            for (int inner_ev_roll_b = 0; inner_ev_roll_b < outer_ev_roll + 1; inner_ev_roll_b++)
             {
-                const int ev = (inner_ev_roll_a + inner_ev_roll_b) / 2; // not right but close
+                const int ev = (inner_ev_roll_a + inner_ev_roll_b) / 2;
                 for (int rolled_mhit = 0; rolled_mhit < acc; rolled_mhit++)
                 {
                     iters++;
-                    if (iters >= 1000000)
+                    if (iters >= 100000)
                         return -1; // sanity breakout to not kill servers
                     if (rolled_mhit >= ev)
                         hits++;
                 }
             }
         }
+
+        // Add overall chance of hitting if the monster rolls this result on their first EV roll
+        if (iters > 0)
+            hit_sum += (hits * 100 / iters);
+        else
+            hit_sum += 100;
     }
 
-    int base_chance = 0;
-    if (iters <= 0) // probably low monster ev?
-        base_chance = 100;
-    else
-        base_chance = hits * 100 / iters;
-
+    int base_chance = base_ev >= 0 ? hit_sum / base_ev : 100;
     base_chance = base_chance * (100 - player_blind_miss_chance(you.pos().distance_from(mi.pos))) / 100;
     return base_chance;
 }
