@@ -1,0 +1,21 @@
+name: "octopode monk"
+glyph: {char: "x", colour: blue}
+flags: [speaks, no_skeleton, fighter]
+exp: 119
+will: 10
+attacks:
+ - {type: hit, damage: 2}
+ - {type: tentacle_slap, damage: 8}
+ - {type: tentacle_slap, damage: 8}
+ - {type: constrict, flavour: crush, damage: 2}
+hd: 4
+hp_10x: 240
+ac: 1
+ev: 8
+has_corpse: true
+shout: shout
+intelligence: human
+habitat: amphibious
+uses: weapons_armour
+size: medium
+shape: misc

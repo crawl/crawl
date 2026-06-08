@@ -326,6 +326,8 @@ chonchon0 CORPSE_CHONCHON
 base/octopode1 CORPSE_OCTOPODE
 %sdir mon/animals
 bunyip CORPSE_BUNYIP
+%sdir mon/aquatic
+octopode_monk CORPSE_OCTOPODE_MONK
 
 ## Draconians ('d')
 %sdir player
