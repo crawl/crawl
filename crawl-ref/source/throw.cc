@@ -829,8 +829,6 @@ static void _fire_salvo(const ranged_attack_beam &pbolt)
 static void _player_shoot(ranged_attack_beam &pbolt, bool allow_salvo)
 {
     const item_def& item = *pbolt.atk.weapon;
-    const int bow_brand = get_weapon_brand(item);
-    const int ammo_brand = get_ammo_brand(item);
     const bool returning = _returning(item);
     const bool is_thrown = is_throwable(&you, item);
     const bool will_mulch = _thrown_object_destroyed(item);
@@ -907,15 +905,6 @@ static void _player_shoot(ranged_attack_beam &pbolt, bool allow_salvo)
             }
         }
     }
-
-    if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
-        did_god_conduct(DID_CHAOS, 2 + random2(3), bow_brand == SPWPN_CHAOS);
-
-    if (bow_brand == SPWPN_SPEED)
-        did_god_conduct(DID_HASTY, 1, true);
-
-    if (ammo_brand == SPMSL_FRENZY)
-        did_god_conduct(DID_HASTY, 6 + random2(3), true);
 
     if (returning && !will_mulch)
     {

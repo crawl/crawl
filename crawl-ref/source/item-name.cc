@@ -3336,6 +3336,10 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         if (you.has_mutation(MUT_NO_GRASPING))
             return true;
 
+        // Your god won't let you throw ammo they hate (e.g. chaos, frenzy).
+        if (god_hates_item(item))
+            return true;
+
         return !is_throwable(&you, item);
 
     case OBJ_ARMOUR:
