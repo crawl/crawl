@@ -1868,7 +1868,9 @@ targeter_discord::targeter_discord()
 
 bool targeter_discord::affects_monster(const monster_info& mon)
 {
-    return mon.willpower() != WILL_INVULN && mon.can_go_frenzy;
+    return mon.willpower() != WILL_INVULN
+           && mon.can_go_frenzy
+           && could_harm(&you, monster_at(mon.pos));
 }
 
 targeter_englaciate::targeter_englaciate()
