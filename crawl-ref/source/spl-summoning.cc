@@ -836,6 +836,13 @@ static bool _check_tukima_validity(const actor *target)
         return false;
     }
 
+    // Our god won't let us animate a weapon they abhor.
+    if (god_hates_item(*wpn))
+    {
+        simple_god_message(" forbids you from animating such a foul weapon!");
+        return false;
+    }
+
     return true;
 }
 
@@ -885,16 +892,7 @@ static void _animate_weapon(int pow, actor* target)
 
     montarget->unequip(wp_slot, false, true);
 
-    // Find out what our god thinks before killing the item.
-    conduct_type why = god_hates_item_handling(*wpn);
-
     wpn->clear();
-
-    if (why)
-    {
-        simple_god_message(" booms: How dare you animate that foul thing!");
-        did_god_conduct(why, 10, true, mons);
-    }
 }
 
 /**

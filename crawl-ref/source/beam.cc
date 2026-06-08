@@ -303,32 +303,24 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
     return true;
 }
 
-// Returns true if the player wants / needs to abort based on god displeasure
-// with targeting this target with this spell. Returns false otherwise.
-static bool _stop_because_god_hates_target_prompt(const monster* mon,
-                                                  spell_type spell,
-                                                  bool check_only = false)
+// If the cast must be aborted because the player's god forbids it, this
+// returns the reason. Otherwise returns "".
+static string _god_forbids_target_reason(const monster* mon, spell_type spell)
 {
     if (spell == SPELL_TUKIMAS_DANCE)
     {
         const item_def * const first = mon->weapon(0);
         const item_def * const second = mon->weapon(1);
-        bool prompt = first && god_hates_item(*first)
-                      || second && god_hates_item(*second);
-        if (prompt)
+        bool forbidden = first && god_hates_item(*first)
+                         || second && god_hates_item(*second);
+        if (forbidden)
         {
-            if (check_only)
-                return true;
-            if (!yesno("Animating this weapon would place you under penance. "
-                "Really cast this spell?", false, 'n'))
-            {
-                canned_msg(MSG_OK);
-                return true;
-            }
+            return make_stringf("%s forbids you from animating such a foul weapon!",
+                                uppercase_first(god_name(you.religion)).c_str());
         }
     }
 
-    return false;
+    return "";
 }
 
 struct zap_info
@@ -7741,6 +7733,9 @@ void player_beam_tracer::monster_hit(const bolt& beam, const monster& mon)
     if (beam.is_harmless(&mon))
         return;
 
+    if (!_god_forbids_target_reason(&mon, beam.origin_spell).empty())
+        god_hated_target = &mon;
+
     bool penance = false;
     string adj, suffix;
     if (bad_attack(&mon, adj, suffix, penance))
@@ -7760,8 +7755,6 @@ void player_beam_tracer::monster_hit(const bolt& beam, const monster& mon)
                                            std::move(suffix), penance });
         }
     }
-    else if (_stop_because_god_hates_target_prompt(&mon, beam.origin_spell, true))
-        god_hated_target = &mon;
     // Handle charming monsters when a nasty dur is up: give a prompt for
     // attempting to charm monsters that might be affected.
     else if (beam.flavour == BEAM_CHARM)
@@ -7822,10 +7815,10 @@ bool cancel_beam_prompt(const bolt& beam, const player_beam_tracer& tracer)
 {
     const spell_type spell = beam.origin_spell;
 
-    if (tracer.god_hated_target
-        && _stop_because_god_hates_target_prompt(tracer.god_hated_target,
-                                                 spell))
+    if (tracer.god_hated_target)
     {
+        mprf(MSGCH_GOD, "%s",
+            _god_forbids_target_reason(tracer.god_hated_target, spell).c_str());
         return true;
     }
 
