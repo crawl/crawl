@@ -554,6 +554,14 @@ Iskenderun's Battlesphere spell
     -Howard Tayler, _The Seventy Maxims of Maximally Effective Mercenaries_,
      in _Schlock Mercenary_. 2008.
 %%%%
+Launch Clockwork Bee spell
+
+“According to all known laws of aviation, there is no way a bee should be able
+ to fly. Its wings are too small to get its fat little body off the ground.
+ The bee, of course, flies anyway, because bees don't care what humans think
+ is impossible.”
+    -Bee Movie. 2007.
+%%%%
 Lee's Rapid Deconstruction spell
 
 “Now the house was full of men and women; and all the lords of the Philistines
@@ -2818,6 +2826,10 @@ chonchon
  and have been known to suck the blood of sleepers.”
     - _A Book of Creatures_, 2015.
 %%%%
+clockwork bee
+
+<Launch Clockwork Bee spell>
+%%%%
 crimson imp
 
 “The Devil, too, sometimes steals human children; it is not infrequent for him
@@ -2885,6 +2897,10 @@ diamond obelisk
  culture and in the culture of future observers.”
     -“Expert Judgment on Markers to Deter Inadvertent Human Intrusion into the
       Waste Isolation Pilot Plant”, Sandia National Laboratories report. 1993
+%%%%
+dormant clockwork bee
+
+<Launch Clockwork Bee spell>
 %%%%
 oblivion hound
 
@@ -4230,6 +4246,14 @@ vampire bat
 “For something is amiss and out of place
  When mice with wings can wear a human face.”
     -Theodore Roethke, “The Bat”. 1938.
+%%%%
+vampire mosquito
+
+“I lit a thin green candle
+ To make you jealous of me
+ But the room just filled up with mosquitoes
+ They heard that my body was free”
+    -Leonard Cohen, “One of Us Cannot Be Wrong”. 1967.
 %%%%
 very ugly thing
 
