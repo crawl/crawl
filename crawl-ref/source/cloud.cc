@@ -1221,11 +1221,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         dam = timescale_damage(act, dam);
 
         if (dam > 0)
-        {
             act->hurt(agent, dam, BEAM_NEG, KILLED_BY_CLOUD, "", cloud.cloud_name(true));
-            if (cloud.whose == KC_YOU)
-                did_god_conduct(DID_EVIL, 5 + random2(3));
-        }
 
         return true;
     }

@@ -33,7 +33,6 @@
 #include "exercise.h"      // For practise_evoking
 #include "fight.h"
 #include "fineff.h"        // For the Storm Queen's Shield
-#include "god-conduct.h"   // did_god_conduct
 #include "mgen-data.h"     // For Sceptre of Asmodeus
 #include "melee-attack.h"  // For Fungal Fisticloak
 #include "message.h"
@@ -158,8 +157,6 @@ static void _CURSES_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
 static void _CURSES_melee_effects(item_def* /*weapon*/, actor* attacker,
                                   actor* defender, int dam, melee_attack*)
 {
-    if (attacker->is_player())
-        did_god_conduct(DID_EVIL, 3);
     if (defender->alive() && defender->holiness() & (MH_NATURAL | MH_PLANT))
         death_curse(*defender, attacker, "the scythe of Curses", min(dam, 27));
 }
@@ -459,14 +456,6 @@ static void _ZONGULDROK_equip(item_def */*item*/, bool *show_msgs,
     _equip_mpr(show_msgs, "You sense an extremely unholy aura.");
 }
 
-static void _ZONGULDROK_melee_effects(item_def* /*weapon*/, actor* attacker,
-                                      actor* /*defender*/, int /*dam*/,
-                                      melee_attack*)
-{
-    if (attacker->is_player())
-        did_god_conduct(DID_EVIL, 3);
-}
-
 ///////////////////////////////////////////////////
 
 static void _GONG_melee_effects(item_def* /*item*/, actor* wearer,
@@ -734,13 +723,6 @@ static void _DRAGONSKIN_unequip(item_def */*item*/, bool *show_msgs)
 }
 
 ///////////////////////////////////////////////////
-static void _BLACK_KNIGHT_HORSE_world_reacts(item_def */*item*/)
-{
-    if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY))
-        did_god_conduct(DID_EVIL, 1);
-}
-
-///////////////////////////////////////////////////
 static void _NIGHT_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {
     update_vision_range();
@@ -769,9 +751,6 @@ static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon,
             mprf("Mutagenic energy flows through %s!",
                  weapon->name(DESC_THE, false, false, false).c_str());
         }
-
-        if (attacker->is_player())
-            did_god_conduct(DID_CHAOS, 3);
 
         if (one_chance_in(10))
         {
@@ -1247,13 +1226,6 @@ static void _ETERNAL_TORMENT_equip(item_def */*item*/, bool */*show_msgs*/,
     calc_hp();
 }
 
-static void _ETERNAL_TORMENT_world_reacts(item_def */*item*/)
-{
-    if (one_chance_in(10))
-        did_god_conduct(DID_EVIL, 1);
-}
-
-
 static void _ETERNAL_TORMENT_unequip(item_def */*item*/, bool */*show_msgs*/)
 {
     calc_hp();
@@ -1401,7 +1373,6 @@ static void _BATTLE_world_reacts(item_def */*item*/)
     {
         const int pow = div_rand_round(15 + you.skill(SK_CONJURATIONS, 15), 3);
         cast_battlesphere(&you, pow, false);
-        did_god_conduct(DID_WIZARDLY_ITEM, 10);
     }
 }
 
@@ -1441,8 +1412,6 @@ static int _harvest_corpses()
                 = static_cast<monster_type>(item.orig_monnum);
             if (you.religion == GOD_BEOGH && mons_genus(monnum) == MONS_ORC)
                 continue;
-
-            did_god_conduct(DID_EVIL, 1);
 
             ++harvested;
 
@@ -1648,13 +1617,6 @@ static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static void _FINGER_AMULET_world_reacts(item_def */*item*/)
-{
-    did_god_conduct(DID_EVIL, 1);
-}
-
-///////////////////////////////////////////////////
-
 static void _reset_victory_stats(item_def *item)
 {
     int &bonus_stats = item->props[VICTORY_STAT_KEY].get_int();
@@ -1751,10 +1713,7 @@ static void _ASMODEUS_melee_effects(item_def* /*weapon*/, actor* attacker,
         mg.set_summoned(&you, SPELL_HELLFIRE_COURT, summ_dur(4));
 
         if (create_monster(mg))
-        {
             mpr("The sceptre summons one of its terrible servants.");
-            did_god_conduct(DID_EVIL, 3);
-        }
     }
 }
 

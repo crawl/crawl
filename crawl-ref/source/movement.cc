@@ -1267,12 +1267,6 @@ void move_player_action(coord_def move)
         if (you.duration[DUR_MESMERISM_COOLDOWN])
             you.duration[DUR_MESMERISM_COOLDOWN] += you.time_taken;
 
-        if (you.unrand_equipped(UNRAND_LIGHTNING_SCALES)
-            || num_steps > 1 && !you.has_mutation(MUT_STAMPEDE))
-        {
-            did_god_conduct(DID_HASTY, 1, true);
-        }
-
         if (!did_attack && (num_steps > 1 || did_stampede) && you.has_mutation(MUT_STAMPEDE))
             did_attack |= do_west_wind_shot();
 

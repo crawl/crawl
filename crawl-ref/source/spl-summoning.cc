@@ -4450,7 +4450,6 @@ spret monarch_detonation(const actor& agent, int pow, bool fail)
     zappy(ZAP_MONARCH_DETONATION, pow, false, detonation);
     detonation.set_agent(&agent);
     detonation.ex_size       = 0;
-    detonation.apply_beam_conducts();
     detonation.in_explosion_phase = true;
 
     for (coord_def spot : spots)

@@ -109,7 +109,6 @@ static void _pruneify()
         return;
 
     mpr("The curse of the Prune overcomes you.");
-    did_god_conduct(DID_CHAOS, 10);
 }
 
 static void _moveto_maybe_repel_stairs()

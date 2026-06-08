@@ -392,7 +392,6 @@ private:
 public:
     mon_resist_type try_enchant_monster(monster* mon, int &res_margin);
     mon_resist_type apply_enchantment_to_monster(monster* mon);
-    void apply_beam_conducts();
 private:
     void apply_bolt_paralysis(monster* mons);
     void apply_bolt_petrify(monster* mons);

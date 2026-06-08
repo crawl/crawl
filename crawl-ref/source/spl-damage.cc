@@ -140,7 +140,6 @@ spret cast_fire_storm(int pow, bolt &beam, bool fail)
 
     fail_check();
 
-    beam.apply_beam_conducts();
     beam.refine_for_explosion();
     beam.explode(false);
 
@@ -1111,7 +1110,6 @@ static ai_action::goodness _fire_permafrost_at(const actor &agent, int pow,
     beam.ex_size       = 1;
     beam.ac_rule       = ac_type::none;
     beam.animate       = false;
-    beam.apply_beam_conducts();
     beam.refine_for_explosion();
     if (is_tracer)
         beam.explode(tracer);
@@ -2587,7 +2585,6 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
     zappy(ZAP_IGNITION, pow, false, beam_actual);
     beam_actual.set_agent(agent);
     beam_actual.ex_size       = 0;
-    beam_actual.apply_beam_conducts();
 
 #ifdef DEBUG_DIAGNOSTICS
     dprf(DIAG_BEAM, "ignition dam=%dd%d",
@@ -3870,7 +3867,6 @@ void handle_flame_wave(int lvl)
         return;
     }
 
-    beam.apply_beam_conducts();
     beam.refine_for_explosion();
     beam.explode(true, true);
     trigger_battlesphere(&you);
@@ -5359,7 +5355,6 @@ void do_catalyst_explosion(coord_def center, const item_def* wpn)
     beam_actual.flavour     = BEAM_FIRE;
     beam_actual.ex_size     = 0;
     beam_actual.set_agent(&you);
-    beam_actual.apply_beam_conducts();
 
     // XXX: would be nice to refactor this bit too, but it's a bit annoying
     // because it uses both beams and needs a different center condition.

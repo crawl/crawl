@@ -706,24 +706,6 @@ void bolt::precalc_agent_properties()
     can_see_invis = a->can_see_invisible();
 }
 
-void bolt::apply_beam_conducts()
-{
-    if (is_tracer() && BLAME_KILL(thrower))
-    {
-        switch (flavour)
-        {
-        case BEAM_DAMNATION:
-        {
-            const int level = 2 + random2(3);
-            did_god_conduct(DID_EVIL, level, god_cares());
-            break;
-        }
-        default:
-            break;
-        }
-    }
-}
-
 void bolt::choose_ray()
 {
     if ((!chose_ray || reflections > 0)
@@ -1224,7 +1206,6 @@ void bolt::do_fire()
         return;
     }
 
-    apply_beam_conducts();
     cursor_control coff(false);
 
     msg_generated = false;
@@ -1647,9 +1628,6 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                 pbolt.obvious_effect = true;
 
             mons->drain(pbolt.agent());
-
-            if (BLAME_KILL(pbolt.thrower))
-                did_god_conduct(DID_EVIL, 2, pbolt.god_cares());
         }
         break;
 
@@ -1668,9 +1646,6 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                 return hurted;
 
             miasma_monster(mons, pbolt.agent());
-
-            if (BLAME_KILL(pbolt.thrower))
-                did_god_conduct(DID_UNCLEAN, 2, pbolt.god_cares());
         }
         break;
 
@@ -1939,9 +1914,6 @@ spret mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
     if (!did_msg)
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    if (wh_enchant == ENCH_FRENZIED)
-        did_god_conduct(DID_HASTY, 8, true);
-
     return spret::success;
 }
 
@@ -2051,9 +2023,6 @@ bool miasma_monster(monster* mons, const actor* who)
         mons->hurt(who, roll_dice(2, 4), BEAM_MMISSILE, KILLED_BY_CLOUD);
         success = true;
     }
-
-    if (who && who->is_player() && is_good_god(you.religion))
-        did_god_conduct(DID_EVIL, 5 + random2(3));
 
     if (mons->alive() && one_chance_in(3))
     {
@@ -3682,7 +3651,6 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_HASTE:
         haste_player(40 + random2(ench_power));
-        did_god_conduct(DID_HASTY, 10, blame_player);
         obvious_effect = true;
         nasty = false;
         nice  = true;
@@ -6270,8 +6238,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     }
 
     case BEAM_HASTE:
-        if (BLAME_KILL(thrower))
-            did_god_conduct(DID_HASTY, 6, god_cares());
 
         if (mon->stasis())
             return MON_AFFECTED;
