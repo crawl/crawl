@@ -2578,6 +2578,12 @@ HAMLET [Drawing his sword.]: How now! a rat? Dead, for a ducat, dead
     -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, III, 4.
 1603.
 %%%%
+__s_suffix
+
+“Ere the worm pierce your winding-sheet, ere the spider
+ Make a thin curtain for your epitaphs.”
+    - John Webster, _The White Devil_, V, 6. 1612.
+%%%%
 __cap-D_suffix
 
 “On the other hand, Confucius is made to say to his disciples, ‘I know how
