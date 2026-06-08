@@ -881,6 +881,9 @@ endif
 ifndef NOWIZARD
 DEFINES += -DWIZARD
 endif
+ifdef PROFILING
+CFOTHERS := -pg $(CFOTHERS)
+endif
 ifdef NO_OPTIMIZE
 CFOPTIMIZE  := -O0
 endif
@@ -1112,6 +1115,9 @@ ifeq (,$(shell echo 'int main(){return 1;}'|$(GXX) -x c++ - -o /dev/null -fuse-l
   LINKER_LDFLAG = -fuse-ld=gold
 endif
 endif
+endif
+ifdef PROFILING
+LINKER_LDFLAG += -pg
 endif
 ifneq ($(LINKER_LDFLAG),)
 LDFLAGS += $(LINKER_LDFLAG)
