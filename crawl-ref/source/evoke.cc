@@ -87,7 +87,6 @@ static bool _evoke_horn_of_geryon()
 
     mprf(MSGCH_SOUND, "You produce a hideous howling noise!");
     noisy(15, you.pos()); // same as hell effect noise
-    did_god_conduct(DID_EVIL, 3);
     int num = 1;
     const int adjusted_power = you.skill(SK_EVOCATIONS, 10);
     if (adjusted_power + random2(90) > 130)
@@ -294,7 +293,6 @@ static bool _box_of_beasts()
 
     mprf("...and %s %s out!",
          mons->name(DESC_A).c_str(), mons->airborne() ? "flies" : "leaps");
-    did_god_conduct(DID_CHAOS, random_range(5,10));
 
     return true;
 }

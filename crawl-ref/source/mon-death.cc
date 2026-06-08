@@ -1683,10 +1683,7 @@ static void _orb_of_mayhem(actor& maniac, const monster& victim)
             witnesses.push_back(*mi);
 
     if (coinflip() && !witnesses.empty())
-    {
         (*random_iterator(witnesses))->go_frenzy(&maniac);
-        did_god_conduct(DID_HASTY, 8, true);
-    }
 }
 
 static void _protean_explosion(monster* mons)

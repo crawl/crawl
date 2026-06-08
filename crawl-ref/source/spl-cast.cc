@@ -812,7 +812,6 @@ static void _handle_energy_orb(int cost, spret cast_result)
         mpr("Magical energy flows into your mind!");
         inc_mp(cost, true);
     }
-    did_god_conduct(DID_WIZARDLY_ITEM, 10);
 }
 
 /**
@@ -1070,7 +1069,6 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         stardust_orb_trigger(cost);
         if (you.unrand_equipped(UNRAND_MAJIN) && one_chance_in(500))
             _majin_speak(spell);
-        did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
         count_action(CACT_CAST, spell);
     }
 
