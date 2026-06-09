@@ -1106,7 +1106,7 @@ void tile_list_processor::write_variations(FILE* fp,
             "{\n",
             lcname, name);
 
-    for (const pair<variation, int>& v : variations)
+    for (const pair<const variation, int>& v : variations)
     {
         int to_idx = v.second;
         if (to_idx < 0)
