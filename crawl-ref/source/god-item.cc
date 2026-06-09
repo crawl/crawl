@@ -378,7 +378,7 @@ vector<forbidden_act_type> forbidden_acts(const item_def &item)
         acts.push_back(FORBID_HOLY);
 
     if (item_is_spellbook(item))
-        acts.push_back(FORBID_SPELL_MEMORISE);
+        acts.push_back(FORBID_SPELLCASTING);
 
     if (is_wizardly_item(item, false))
         acts.push_back(FORBID_WIZARDLY_ITEM);

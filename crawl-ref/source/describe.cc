@@ -4342,11 +4342,11 @@ string get_skill_description(skill_type skill, bool need_title)
                     " of Invocations skill.";
     }
 
-    if (is_harmful_skill(skill))
+    if (is_forbidden_skill(skill))
     {
         result += "\n";
         result += uppercase_first(god_name(you.religion))
-                  + " strongly dislikes when you train this skill.";
+                  + " forbids the training of this skill.";
     }
 
     return result;

@@ -131,7 +131,7 @@ static skill_set _shown_skills(skill_menu_state state)
         break;
     case SKM_SHOW_ALL:
         for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
-            if (!is_useless_skill(sk))
+            if (!is_useless_skill(sk, false))
                 shown.insert(sk);
         break;
     default:
@@ -143,6 +143,9 @@ static skill_set _shown_skills(skill_menu_state state)
 bool SkillMenuEntry::is_selectable(bool)
 {
     if (is_invalid_skill(m_sk))
+        return false;
+
+    if (is_useless_skill(m_sk))
         return false;
 
     if (is_set(SKMF_HELP))
@@ -173,7 +176,7 @@ void SkillMenuEntry::refresh(bool keep_hotkey)
 {
     if (m_sk == SK_TITLE)
         set_title();
-    else if (is_invalid_skill(m_sk) || is_useless_skill(m_sk))
+    else if (is_invalid_skill(m_sk) || is_useless_skill(m_sk, false))
         _clear();
     else
     {
@@ -1812,10 +1815,7 @@ bool UISkillMenu::on_event(const Event& ev)
 
 void skill_menu(int flag, int exp)
 {
-    // experience potion; you may elect to put experience in normally
-    // untrainable skills (e.g. skills that your god hates). The only
-    // case where we abort is if all in-principle trainable skills are maxed.
-    if (flag & SKMF_EXPERIENCE && !trainable_skills(true))
+    if (flag & SKMF_EXPERIENCE && !trainable_skills())
     {
         mpr("You feel omnipotent.");
         return;

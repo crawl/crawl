@@ -24,9 +24,7 @@ enum conduct_type
 #if TAG_MAJOR_VERSION == 34
     DID_SPELL_MEMORISE,                   // now forbidden
     DID_SPELL_CASTING,                    // now forbidden
-#endif
-    DID_SPELL_PRACTISE,
-#if TAG_MAJOR_VERSION == 34
+    DID_SPELL_PRACTISE,                   // now forbidden
     DID_CANNIBALISM,
     DID_DELIBERATE_MUTATING,              // Zin
 #endif
