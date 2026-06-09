@@ -3104,10 +3104,6 @@ string cannot_read_item_reason(const item_def *item, bool temp, bool ident,
         case SCR_AMNESIA:
             if (you.has_mutation(MUT_INNATE_CASTER))
                 return "You don't have control over your spell memory.";
-            // XX possibly amnesia should be allowed to work under Trog, despite
-            // being marked useless..
-            if (you_worship(GOD_TROG))
-                return "Trog doesn't allow you to memorise spells!";
             break;
         case SCR_ENCHANT_WEAPON:
         case SCR_BRAND_WEAPON:
