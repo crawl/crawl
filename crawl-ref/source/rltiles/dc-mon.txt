@@ -233,6 +233,8 @@ spark_wasp MONS_SPARK_WASP
 ghost_moth MONS_GHOST_MOTH
 moth_of_wrath MONS_MOTH_OF_WRATH
 sun_moth MONS_SUN_MOTH
+%sdir mon/nonliving
+wooden_wasp MONS_WOODEN_WASP
 
 ## Aquatics (';')
 %sdir mon/aquatic
