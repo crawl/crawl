@@ -129,7 +129,7 @@ static bool _show_skill(skill_type sk, skill_menu_state state)
         return should_show_skill(sk)
             || (!is_useless_skill(sk) && you.training[sk])
             || you.skill(sk, 10, false, false);
-    case SKM_SHOW_ALL:     return true;
+    case SKM_SHOW_ALL:     return !is_useless_skill(sk);
     default:               return false;
     }
 }
