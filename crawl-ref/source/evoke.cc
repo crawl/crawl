@@ -654,6 +654,12 @@ static spret _phantom_mirror(dist *target)
         return spret::abort;
     }
 
+    if (god_hates_monster(*victim))
+    {
+        simple_god_message(" forbids reflecting that.");
+        return spret::abort;
+    }
+
     monster_info mi(victim);
     habitat_type habitat = mons_habitat(*victim);
     monclass_flags_t mf = M_NO_FLAGS;

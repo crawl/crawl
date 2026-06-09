@@ -710,6 +710,12 @@ bool targeter_phantom_mirror::valid_aim(coord_def a)
     monster *victim = monster_at(a);
     if (victim && you.can_see(*victim) && !mirror_can_effect(victim))
         return notify_fail("The mirror can't reflect that.");
+
+    if (victim && you.can_see(*victim) && god_hates_monster(*victim))
+    {
+        return notify_fail(make_stringf("%s forbids reflecting that.",
+                           uppercase_first(god_name(you.religion)).c_str()));
+    }
     return true;
 }
 
