@@ -180,25 +180,6 @@ bool is_evil_item(const item_def& item, bool calc_unid)
     }
 }
 
-bool is_unclean_item(const item_def& item, bool calc_unid)
-{
-    if (is_unrandom_artefact(item))
-    {
-        const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
-
-        if ((entry->flags & (UNRAND_FLAG_EVIL)
-            || testbits(item.flags, ISFLAG_CHAOTIC)))
-        {
-            return true;
-        }
-    }
-
-    if (item.has_spells() && (item.is_identified() || calc_unid))
-        return _is_book_type(item, is_unclean_spell);
-
-    return false;
-}
-
 bool is_chaotic_item(const item_def& item, bool calc_unid)
 {
     if (is_unrandom_artefact(item))
@@ -218,9 +199,6 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
         return is_chaotic_brand(get_weapon_brand(item));
     }
 
-    if (item.base_type == OBJ_TALISMANS)
-        return true;
-
     if (!calc_unid && !item.is_identified())
         return false;
 
@@ -228,19 +206,11 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
     {
     case OBJ_MISSILES:
         return get_ammo_brand(item) == SPMSL_CHAOS;
-    case OBJ_WANDS:
-        return item.sub_type == WAND_POLYMORPH;
-    case OBJ_POTIONS:
-        return item.sub_type == POT_LIGNIFY;
     case OBJ_BOOKS:
         return item.sub_type == BOOK_MANUAL && item.plus == SK_SHAPESHIFTING
                || _is_book_type(item, is_chaotic_spell);
     case OBJ_MISCELLANY:
         return item.sub_type == MISC_BOX_OF_BEASTS;
-    case OBJ_JEWELLERY:
-        return item.sub_type == AMU_WILDSHAPE;
-    case OBJ_BAUBLES:
-        return true;
     default:
         return false;
     }
@@ -334,6 +304,30 @@ bool is_wizardly_item(const item_def& item, bool calc_unid)
     return item.base_type == OBJ_STAVES;
 }
 
+bool is_transforming_item(const item_def &item, bool calc_unid)
+{
+    if (item.base_type == OBJ_BAUBLES || item.base_type == OBJ_TALISMANS)
+        return true;
+
+    if (!calc_unid && !item.is_identified())
+        return false;
+
+    switch (item.base_type)
+    {
+        case OBJ_WANDS:
+            return item.sub_type == WAND_POLYMORPH;
+        case OBJ_POTIONS:
+            if (item.sub_type == POT_LIGNIFY)
+                return true;
+            return item.sub_type == POT_MUTATION
+                   && !have_passive(passive_t::cleanse_mut_potions);
+        case OBJ_JEWELLERY:
+            return item.sub_type == AMU_WILDSHAPE;
+        default:
+            return false;
+    }
+}
+
 /**
  * Do the good gods hate use of this spell?
  *
@@ -348,13 +342,6 @@ bool is_evil_spell(spell_type spell)
     if (flags & spflag::unholy)
         return true;
     return bool(disciplines & spschool::necromancy);
-}
-
-bool is_unclean_spell(spell_type spell)
-{
-    spell_flags flags = get_spell_flags(spell);
-
-    return bool(flags & spflag::unclean);
 }
 
 bool is_chaotic_spell(spell_type spell)
@@ -372,30 +359,6 @@ bool is_hasty_spell(spell_type spell)
 }
 
 /**
- * What conducts can one violate using this item?
- * This should only be based on the player's knowledge.
- *
- * @param item  The item in question.
- * @return      List of conducts that can be violated with this; empty if none.
- */
-vector<conduct_type> item_conducts(const item_def &item)
-{
-    vector<conduct_type> acts;
-
-    // Potions of mutation are hated by Zin, but outright forbidding them would
-    // be very harsh after bad malmutation rolls.
-    if (item.base_type == OBJ_POTIONS
-        && item.sub_type == POT_MUTATION
-        && item.is_identified()
-        && !have_passive(passive_t::cleanse_mut_potions))
-    {
-        acts.push_back(DID_DELIBERATE_MUTATING);
-    }
-
-    return acts;
-}
-
-/**
  * What forbidden acts can one commit using this item?
  * This should only be based on the player's knowledge.
  *
@@ -408,9 +371,6 @@ vector<forbidden_act_type> forbidden_acts(const item_def &item)
 
     if (is_evil_item(item, false))
         acts.push_back(FORBID_EVIL);
-
-    if (is_unclean_item(item, false))
-        acts.push_back(FORBID_UNCLEAN);
 
     if (is_chaotic_item(item, false))
         acts.push_back(FORBID_CHAOS);
@@ -430,21 +390,10 @@ vector<forbidden_act_type> forbidden_acts(const item_def &item)
     if (is_potentially_evil_item(item, false))
         acts.push_back(FORBID_EVIL);
 
+    if (is_transforming_item(item, false))
+        acts.push_back(FORBID_TRANSFORMATION);
+
     return acts;
-}
-
-/**
- * Does the god hate, but still allow, the use of this item? Such items are not
- * forbidden, but using them will displease the god.
- */
-bool god_hates_item(const item_def &item, god_type which_god)
-{
-    return god_hates_item_handling(item, which_god) != DID_NOTHING;
-}
-
-bool god_hates_item(const item_def &item)
-{
-    return god_hates_item(item, you.religion);
 }
 
 /**
@@ -479,7 +428,7 @@ bool god_likes_item_type(const object_class_type &base_type,
     dummy.sub_type = sub_type;
     dummy.plus = 1; // empty wands would be useless
     dummy.flags |= ISFLAG_IDENTIFIED;
-    if (god_forbids_item(dummy, which_god) || god_hates_item(dummy, which_god))
+    if (god_forbids_item(dummy, which_god))
         return false;
     switch (which_god)
     {

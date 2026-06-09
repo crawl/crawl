@@ -3233,8 +3233,7 @@ string cannot_drink_item_reason(const item_def *item, bool temp,
             return r;
 
         // Your god won't let you drink potions they forbid. Religion counts as
-        // permanent uselessness. (Potions of mutation are disapproved of rather
-        // than forbidden; see god_forbids_item / god_hates_item.)
+        // permanent uselessness.
         if (god_forbids_item(*item))
         {
             if (god_forbids)
@@ -3564,7 +3563,7 @@ string item_prefix(const item_def &item, bool temp)
     else
         prefixes.push_back("unidentified");
 
-    if (god_hates_item(item))
+    if (god_forbids_item(item))
     {
         prefixes.push_back("evil_item");
         prefixes.push_back("forbidden");

@@ -8,8 +8,8 @@ enum forbidden_act_type
     FORBID_NONE,
     FORBID_EVIL,            // evil magic or items (good gods)
     FORBID_HOLY,            // holy magic or items (Yredelemnul)
-    FORBID_UNCLEAN,         // unclean magic or items (Zin)
     FORBID_CHAOS,           // chaotic magic or items (Zin)
+    FORBID_TRANSFORMATION,  // transformation/mutation (Zin)
     FORBID_HASTY,           // hasting effects or items (Cheibriados)
     FORBID_SPELLCASTING,    // casting any spell (Trog)
     FORBID_SPELL_MEMORISE,  // memorising spells (Trog)

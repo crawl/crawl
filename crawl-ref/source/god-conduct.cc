@@ -181,14 +181,14 @@ static forbidden_map divine_prohibitions[] =
             "using evil magic or items",
             " forgives your inadvertent evil act, just this once."
         } },
-        { FORBID_UNCLEAN, {
-            "using unclean magic or items",
-            " forgives your inadvertent unclean act, just this once."
-        } },
         { FORBID_CHAOS, {
-            "using chaotic magic or items, including items which transform you",
+            "using chaotic magic or items",
             " forgives your inadvertent chaotic act, just this once."
         } },
+        { FORBID_TRANSFORMATION, {
+            "mutating or transforming yourself or others",
+            " forgives your inadvertent chaotic act, just this once."
+        } }
     },
     // GOD_SHINING_ONE,
     {
@@ -1170,15 +1170,6 @@ string get_god_likes(god_type which_god)
 
     return text;
 }
-
-conduct_type god_hates_item_handling(const item_def& item, god_type god)
-{
-    for (conduct_type act : item_conducts(item))
-        if (divine_peeves[god].count(act))
-            return act;
-    return DID_NOTHING;
-}
-
 forbidden_act_type god_forbids_item_handling(const item_def& item, god_type god)
 {
     for (forbidden_act_type act : forbidden_acts(item))
@@ -1279,9 +1270,6 @@ bool god_forbids_spell(spell_type spell, god_type god)
     {
         return true;
     }
-
-    if (map_find(prohibitions, FORBID_UNCLEAN) && is_unclean_spell(spell))
-        return true;
 
     if (map_find(prohibitions, FORBID_CHAOS) && is_chaotic_spell(spell))
         return true;

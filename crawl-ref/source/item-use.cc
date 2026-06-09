@@ -1930,16 +1930,9 @@ bool drink(item_def* potion)
         return false;
     }
 
-    const bool disapproved = god_hates_item(*potion);
     string prompt = make_stringf("Really quaff the %s?",
                                  potion->name(DESC_DBNAME).c_str());
-    if (disapproved)
-    {
-        prompt += " ";
-        prompt += uppercase_first(god_name(you.religion));
-        prompt += " would disapprove of this!";
-    }
-    if (alreadyknown && (is_dangerous_item(*potion, true) || disapproved)
+    if (alreadyknown && is_dangerous_item(*potion, true)
         && Options.bad_item_prompt
         && !yesno(prompt.c_str(), false, 'n'))
     {

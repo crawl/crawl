@@ -1509,11 +1509,6 @@ bool monster::wants_weapon(const item_def &weap) const
     if ((is_holy() || is_good_god(god)) && is_evil_item(weap))
         return false;
 
-    // Monsters that are gifts/worshippers of Zin won't use unclean
-    // weapons.
-    if (god == GOD_ZIN && is_unclean_item(weap))
-        return false;
-
     // Holy monsters that aren't gifts/worshippers of chaotic gods
     // and monsters that are gifts/worshippers of good gods won't
     // use chaotic weapons.
@@ -2827,9 +2822,16 @@ bool monster::immune_to_silence() const
     return true;
 }
 
+static bool _is_unclean_spell(spell_type spell)
+{
+    spell_flags flags = get_spell_flags(spell);
+
+    return bool(flags & spflag::unclean);
+}
+
 bool monster::has_unclean_spell() const
 {
-    return search_spells(is_unclean_spell);
+    return search_spells(_is_unclean_spell);
 }
 
 bool monster::has_chaotic_spell() const
