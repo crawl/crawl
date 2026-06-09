@@ -12,7 +12,7 @@ enum forbidden_act_type
     FORBID_TRANSFORMATION,  // transformation/mutation (Zin)
     FORBID_HASTY,           // hasting effects or items (Cheibriados)
     FORBID_SPELLCASTING,    // casting any spell (Trog)
-    FORBID_SPELL_MEMORISE,  // memorising spells (Trog)
+    FORBID_TRAIN_MAGIC,     // training magic skills (Trog)
     FORBID_WIZARDLY_ITEM,   // staves and other wizardly items (Trog)
     NUM_FORBIDS
 };

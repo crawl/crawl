@@ -218,12 +218,12 @@ static forbidden_map divine_prohibitions[] =
     forbidden_map(),
     // GOD_TROG,
     {
-        { FORBID_SPELL_MEMORISE, {
-            "memorising spells",
+        { FORBID_SPELLCASTING, {
+            "casting or memorising spells",
             nullptr
         } },
-        { FORBID_SPELLCASTING, {
-            "casting spells",
+        { FORBID_TRAIN_MAGIC, {
+            "training magic skills",
             nullptr
         } },
         { FORBID_WIZARDLY_ITEM, {
@@ -433,12 +433,7 @@ static peeve_map divine_peeves[] =
     // GOD_SIF_MUNA,
     peeve_map(),
     // GOD_TROG,
-    {
-        { DID_SPELL_PRACTISE, {
-            "you train magic skills", true,
-            1, 0, nullptr, " does not appreciate your training of magic skills!"
-        } },
-    },
+    peeve_map(),
     // GOD_NEMELEX_XOBEH,
     peeve_map(),
     // GOD_ELYVILON,
@@ -504,15 +499,6 @@ string get_god_dislikes(god_type which_god)
 
     for (const auto& entry : divine_peeves[which_god])
     {
-        // Trog forgives Gnolls practising spellcasting since they do it
-        // without choice. XXX: Rework the peeve_map to allow checking this.
-        if (which_god == GOD_TROG
-            && you.has_mutation(MUT_DISTRIBUTED_TRAINING)
-            && entry.first == DID_SPELL_PRACTISE)
-        {
-            continue;
-        }
-
         if (entry.second.desc)
         {
             if (entry.second.really_dislike)
@@ -558,8 +544,19 @@ string get_god_forbids(god_type which_god)
 
     vector<string> forbids;
     for (const auto& entry : divine_prohibitions[which_god])
+    {
+        // Trog forgives Gnolls practising spellcasting since they do it
+        // without choice.
+        if (which_god == GOD_TROG
+            && you.has_mutation(MUT_DISTRIBUTED_TRAINING)
+            && entry.first == FORBID_TRAIN_MAGIC)
+        {
+            continue;
+        }
+
         if (entry.second.desc)
             forbids.emplace_back(entry.second.desc);
+    }
 
     if (forbids.empty())
         return "";
@@ -1009,15 +1006,6 @@ static void _handle_your_gods_response(conduct_type thing_done, int level,
     if (you_worship(GOD_LUGONU) && player_in_branch(BRANCH_ABYSS))
         return;
 
-    // Trog forgives Gnolls practising spellcasting since they do it without
-    // choice. XXX: Rework the peeve_map to allow checking this.
-    if (you_worship(GOD_TROG)
-        && you.has_mutation(MUT_DISTRIBUTED_TRAINING)
-        && thing_done == DID_SPELL_PRACTISE)
-    {
-        return;
-    }
-
     // If your god disliked the action, evaluate its response.
     if (auto peeve = map_find(divine_peeves[you.religion], thing_done))
         (*peeve)(thing_done, level, known, victim);
@@ -1247,6 +1235,11 @@ void did_hurt_monster(const monster &victim, int damage_done,
 bool god_hates_spellcasting(god_type god)
 {
     return map_find(divine_prohibitions[god], FORBID_SPELLCASTING) != nullptr;
+}
+
+bool god_forbids_training_magic(god_type god)
+{
+    return map_find(divine_prohibitions[god], FORBID_TRAIN_MAGIC) != nullptr;
 }
 
 /**

@@ -6202,7 +6202,7 @@ int player::skill(skill_type sk, int scale, bool real, bool temp) const
     // SkillMenuSwitch::get_help() to reflect that
 
     // wizard racechange, or upgraded old save
-    if (is_useless_skill(sk))
+    if (is_useless_skill(sk, false))
         return 0;
 
     // skills[sk] might not be updated yet if this is in the middle of

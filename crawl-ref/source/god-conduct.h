@@ -44,6 +44,7 @@ void god_conduct_turn_start();
 
 bool god_forbids_spell(spell_type spell, god_type god);
 bool god_hates_spellcasting(god_type god);
+bool god_forbids_training_magic(god_type god);
 
 forbidden_act_type god_forbids_item_handling(const item_def& item);
 forbidden_act_type god_forbids_item_handling(const item_def& item, god_type god);

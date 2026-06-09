@@ -212,7 +212,7 @@ int one_level_cost(skill_type sk)
  */
 float scaled_skill_cost(skill_type sk)
 {
-    if (you.skills[sk] == MAX_SKILL_LEVEL || is_useless_skill(sk))
+    if (you.skills[sk] == MAX_SKILL_LEVEL || is_useless_skill(sk, false))
         return 0;
     int baseline = skill_cost_baseline();
     int next_level = one_level_cost(sk);
@@ -229,7 +229,7 @@ void cleanup_innate_magic_skills()
     unsigned int n_skills = 0;
     for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; sk++)
     {
-        if (is_useless_skill(sk))
+        if (is_useless_skill(sk, false))
             continue;
         magic_xp += you.skill_points[sk];
         ++n_skills;
@@ -243,7 +243,7 @@ void cleanup_innate_magic_skills()
 
     for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; sk++)
     {
-        if (is_useless_skill(sk))
+        if (is_useless_skill(sk, false))
             continue;
         you.skill_points[sk] = xp_per;
         you.skills[sk] = lvl;
@@ -260,7 +260,7 @@ void reassess_starting_skills(bool balance_djinn)
     for (skill_type next = NUM_SKILLS; next > SK_FIRST_SKILL; )
     {
         skill_type sk = --next;
-        ASSERT(you.skills[sk] == 0 || !is_useless_skill(sk));
+        ASSERT(you.skills[sk] == 0 || !is_useless_skill(sk, false));
 
         // Grant the amount of skill points required for a human.
         you.skill_points[sk] = you.skills[sk] ?
@@ -552,7 +552,7 @@ bool skill_default_shown(skill_type sk)
     case SK_STEALTH:
     case SK_UNARMED_COMBAT:
     case SK_SPELLCASTING:
-        return !is_harmful_skill(sk);
+        return !is_useless_skill(sk);
     default:
         return false;
     }
@@ -1246,9 +1246,6 @@ static void _train_skills(int exp, const int cost, const bool simu)
     // (by inflated XP and inflated piety gain)
     if (crawl_state.game_is_sprint())
         magic_gain = sprint_modify_exp_inverse(magic_gain);
-
-    if (magic_gain && !simu)
-        did_god_conduct(DID_SPELL_PRACTISE, div_rand_round(magic_gain, 10));
 }
 
 bool skill_trained(int i)
@@ -2526,31 +2523,28 @@ static bool _is_sacrificed_skill(skill_type skill)
     return false;
 }
 
-bool is_useless_skill(skill_type skill)
+bool is_forbidden_skill(skill_type skill)
+{
+    return is_magic_skill(skill)
+           && god_forbids_training_magic(you.religion)
+           && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
+}
+
+bool is_useless_skill(skill_type skill, bool include_god)
 {
     return is_removed_skill(skill)
        || _is_sacrificed_skill(skill)
-       || species_apt(skill) == UNUSABLE_SKILL;
+       || species_apt(skill) == UNUSABLE_SKILL
+       || (include_god && is_forbidden_skill(skill));
 }
 
-bool is_harmful_skill(skill_type skill)
-{
-    return is_magic_skill(skill) && you_worship(GOD_TROG);
-}
-
-/**
- * Does the player have trainable skills?
- *
- * @param check_all If true, also consider skills that are harmful and/or
- *        currently untrainable. Useless skills are never considered.
- *        Defaults to false.
- */
-bool trainable_skills(bool check_all)
+/// Does the player have trainable skills?
+bool trainable_skills()
 {
     for (skill_type i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
         skill_type sk = static_cast<skill_type>(i);
-        if (can_enable_skill(sk, check_all))
+        if (can_enable_skill(sk))
             return true;
     }
 
@@ -2765,9 +2759,12 @@ void fixup_skills()
 {
     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
     {
+        // Skills we innately can't train should be zeroed, god-hated
+        // ones should not be trained.
+        if (is_useless_skill(sk, false))
+            you.skill_points[sk] = 0;
         if (is_useless_skill(sk))
         {
-            you.skill_points[sk] = 0;
             // gnolls have everything existent enabled, so that the
             // training percentage is calculated correctly. (Useless
             // skills still won't be trained for them.)
@@ -2800,17 +2797,14 @@ void fixup_skills()
 /** Can the player enable training for this skill?
  *
  * @param sk The skill to check.
- * @param override if true, don't consider whether the skill is currently
- *                 untrainable / harmful.
  * @returns True if the skill can be enabled for training, false otherwise.
  */
-bool can_enable_skill(skill_type sk, bool override)
+bool can_enable_skill(skill_type sk)
 {
     // TODO: should this check you.skill_points or you.skills?
     return !you.has_mutation(MUT_DISTRIBUTED_TRAINING)
        && you.skills[sk] < MAX_SKILL_LEVEL
-       && !is_useless_skill(sk)
-       && (override || !is_harmful_skill(sk));
+       && !is_useless_skill(sk);
 }
 
 void set_training_status(skill_type sk, training_status st)

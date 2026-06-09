@@ -112,10 +112,10 @@ void init_skill_order();
 bool is_removed_skill(skill_type skill);
 skill_type random_skill();
 bool can_sacrifice_skill(mutation_type mut);
-bool is_useless_skill(skill_type skill);
-bool is_harmful_skill(skill_type skill);
-bool can_enable_skill(skill_type sk, bool override = false);
-bool trainable_skills(bool check_all = false);
+bool is_forbidden_skill(skill_type skill);
+bool is_useless_skill(skill_type skill, bool include_god = true);
+bool can_enable_skill(skill_type sk);
+bool trainable_skills();
 bool skills_being_trained();
 
 int species_apt(skill_type skill, species_type species = you.species);
