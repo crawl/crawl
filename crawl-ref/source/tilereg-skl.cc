@@ -71,7 +71,7 @@ int SkillRegion::handle_mouse(wm_mouse_event &event)
         }
 #endif
         m_last_clicked_item = item_idx;
-        if (!you.can_currently_train[skill])
+        if (is_useless_skill(skill))
             mpr("You cannot train this skill.");
         else if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
             mpr("You can't change your training allocations!");
@@ -252,7 +252,7 @@ void SkillRegion::update()
         desc.idx      = idx;
         desc.quantity = you.skills[skill];
 
-        if (!you.can_currently_train[skill] || you.skills[skill] >= 27)
+        if (is_useless_skill(skill) || you.skills[skill] >= 27)
             desc.flag |= TILEI_FLAG_INVALID;
 
         m_items.push_back(desc);

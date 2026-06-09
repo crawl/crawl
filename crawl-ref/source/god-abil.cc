@@ -2238,7 +2238,7 @@ static map<curse_type, curse_data> _ashenzari_curses =
 static bool _can_use_curse(const curse_data& c)
 {
     for (skill_type sk : c.boosted)
-        if (you.can_currently_train[sk])
+        if (!is_useless_skill(sk))
             return true;
 
     return false;
@@ -2284,7 +2284,7 @@ string desc_curse_skills(const CrawlStoreValue& curse)
     vector<skill_type> trainable;
 
     for (skill_type sk : c.boosted)
-        if (you.can_currently_train[sk])
+        if (!is_useless_skill(sk))
             trainable.push_back(sk);
 
     return c.name + ": "
@@ -5027,7 +5027,6 @@ static bool _execute_sacrifice(ability_type sac, const char* message)
 static void _ru_kill_skill(skill_type skill)
 {
     change_skill_points(skill, -you.skill_points[skill], true);
-    you.can_currently_train.set(skill, false);
     reset_training();
     check_selected_skills();
     update_four_winds(true);

@@ -5671,7 +5671,6 @@ void player::init_skills()
     train.init(TRAINING_DISABLED);
     train_alt.init(TRAINING_DISABLED);
     training.init(0);
-    can_currently_train.reset();
     skill_points.init(0);
     skill_order.init(MAX_SKILL_ORDER);
     skill_manual_points.init(0);

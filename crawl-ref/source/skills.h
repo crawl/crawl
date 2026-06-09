@@ -16,7 +16,6 @@ struct skill_state
 {
     skill_state();
 
-    FixedBitVector<NUM_SKILLS>            can_currently_train;
     FixedVector<uint8_t, NUM_SKILLS>      skills;
     FixedVector<int, NUM_SKILLS>          real_skills;    // Those two are
     FixedVector<int, NUM_SKILLS>          changed_skills; // scaled by 10.

@@ -250,7 +250,7 @@ LUAFN(you_can_train_skill)
     skill_type sk = l_skill(ls);
     if (sk > NUM_SKILLS)
         return 0;
-    PLUARET(boolean, you.can_currently_train[sk]);
+    PLUARET(boolean, !is_useless_skill(sk));
 }
 
 /*** Is this skill useless (removed, sacrificed, or unusable) to the player?

@@ -632,15 +632,14 @@ bool skill_default_shown(skill_type sk)
 }
 
 /*
- * Init the can_currently_train array by examining inventory and spell list to
- * see which skills can be trained.
+ * Init which skills are shown by default, examining inventory and spell list
+ * to see which skills are worth showing.
  */
 void init_can_currently_train()
 {
     // Clear everything out, in case this isn't the first game.
     you.skills_to_show.clear();
     you.skills_to_hide.clear();
-    you.can_currently_train.reset();
 
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
@@ -649,7 +648,6 @@ void init_can_currently_train()
         if (is_useless_skill(sk))
             continue;
 
-        you.can_currently_train.set(sk);
         you.should_show_skill.set(sk);
         if (!skill_default_shown(sk))
             you.skills_to_hide.insert(sk);
@@ -662,7 +660,7 @@ void init_train()
 {
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
-        if (you.can_currently_train[i] && you.skill_points[i])
+        if (!is_useless_skill((skill_type) i) && you.skill_points[i])
             you.train[i] = you.train_alt[i] = TRAINING_ENABLED;
         else
         {
@@ -935,7 +933,7 @@ void reset_training()
         // Focused skills get at least 20% training.
         for (int sk = 0; sk < NUM_SKILLS; ++sk)
             if (you.train[sk] == 2 && you.training[sk] < 20
-                && you.can_currently_train[sk])
+                && !is_useless_skill((skill_type) sk))
             {
                 you.training[sk] += 5 * (5 - you.training[sk] / 4);
             }
@@ -1353,7 +1351,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
 
 bool skill_trained(int i)
 {
-    return you.can_currently_train[i] && you.train[i];
+    return !is_useless_skill((skill_type) i) && you.train[i];
 }
 
 /**
@@ -2783,7 +2781,7 @@ void dump_skills(string &text)
         {
             text += make_stringf(" %c Level %.*f%s %s\n",
                                  real == 270       ? 'O' :
-                                 !you.can_currently_train[i] ? ' ' :
+                                 is_useless_skill((skill_type) i) ? ' ' :
                                  you.train[i] == 2 ? '*' :
                                  you.train[i]      ? '+' :
                                                      '-',
@@ -2807,7 +2805,6 @@ skill_state::skill_state() :
 
 void skill_state::save()
 {
-    can_currently_train = you.can_currently_train;
     skills              = you.skills;
     train               = you.train;
     training            = you.training;
@@ -2856,7 +2853,6 @@ void skill_state::restore_training()
         }
     }
 
-    you.can_currently_train         = can_currently_train;
     you.auto_training               = auto_training;
     reset_training();
     check_training_targets();
@@ -2913,7 +2909,7 @@ bool can_enable_skill(skill_type sk, bool override)
     return !you.has_mutation(MUT_DISTRIBUTED_TRAINING)
        && you.skills[sk] < MAX_SKILL_LEVEL
        && !is_useless_skill(sk)
-       && (override || (you.can_currently_train[sk] && !is_harmful_skill(sk)));
+       && (override || !is_harmful_skill(sk));
 }
 
 void set_training_status(skill_type sk, training_status st)
