@@ -459,26 +459,26 @@ bool slot_is_melded(equipment_slot slot)
  *                          is melded by our current form.
  * @param veto_reason[out]  If the player cannot use this item, and this is
  *                          non-null, it is set to the reason why they can't.
- * @param is_divine[out]    If the player cannot use this item, set to whether
- *                          the reason is god-based. Otherwise set to garbage.
+ * @param god_forbids[out]  If the player cannot use this item, set to whether
+ *                          the reason is god-based.
  *
  * @return True if the player is capable of theoretically wearing this item.
  */
 bool can_equip_item(const item_def& item, bool include_form, string* veto_reason,
-                    bool *is_divine)
+                    bool *god_forbids)
 {
 #define NO_EQUIP(x) {if (veto_reason) { *veto_reason = x; }; return 0;}
 
-    if (is_divine)
-        *is_divine = false;
+    if (god_forbids)
+        *god_forbids = false;
     if (!item_type_is_equipment(item.base_type))
         NO_EQUIP("That isn't an equippable item.")
 
     // Your god won't let you make use of gear they abhor.
     if (god_forbids_item(item))
     {
-        if (is_divine)
-            *is_divine = true;
+        if (god_forbids)
+            *god_forbids = true;
         NO_EQUIP(make_stringf("%s forbids the use of this item.",
                               uppercase_first(god_name(you.religion)).c_str()))
     }
@@ -2721,8 +2721,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
 static void _unequip_jewellery_effect(item_def &item, bool meld, bool was_melded)
 {
 
-    // Only faith does anything when destroyed from melded (not that amulets can
-    // actually be melded at time of writing; rings can be, e.g. in spider form).
+    // Only faith does anything when destroyed from melded.
     if (was_melded)
     {
         if (item.sub_type == AMU_FAITH)

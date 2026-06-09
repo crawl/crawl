@@ -1223,8 +1223,7 @@ int acquirement_create_item(object_class_type class_wanted,
         else
         {
             // This may clobber class_wanted (e.g. staves)
-            type_wanted = _find_acquirement_subtype(class_wanted, quant,
-                                                    agent);
+            type_wanted = _find_acquirement_subtype(class_wanted, quant, agent);
         }
         ASSERT(type_wanted != -1);
 

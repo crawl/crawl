@@ -1185,15 +1185,17 @@ bool casting_is_useless(spell_type spell, bool temp)
  * groups of spells (e.g. entire schools). Includes MP (which does use the
  * spell level if provided), confusion state, banned schools.
  *
- * @param spell      The spell in question.
- * @param temp       Include checks for volatile or temporary states
- *                   (status effects, mana)
- # @return           A reason why casting is useless, or "" if it isn't.
+ * @param spell             The spell in question.
+ * @param temp              Include checks for volatile or temporary states
+ *                          (status effects, mana)
+ * @param god_forbids[out]  If the player cannot use this item, set to whether
+ *                          the reason is god-based.
+ # @return                  A reason why casting is useless, or "" if it isn't.
  */
-string casting_uselessness_reason(spell_type spell, bool temp, bool *is_divine)
+string casting_uselessness_reason(spell_type spell, bool temp, bool *god_forbids)
 {
-    if (is_divine)
-        *is_divine = false;
+    if (god_forbids)
+        *god_forbids = false;
     if (temp)
     {
         if (you.duration[DUR_CONF] > 0)
@@ -1229,8 +1231,8 @@ string casting_uselessness_reason(spell_type spell, bool temp, bool *is_divine)
     // Trog's blanket dislike of spellcasting is handled separately.
     if (god_forbids_spell(spell, you.religion))
     {
-        if (is_divine)
-            *is_divine = true;
+        if (god_forbids)
+            *god_forbids = true;
         return make_stringf("%s won't allow you to cast this spell.",
                             uppercase_first(god_name(you.religion)).c_str());
     }

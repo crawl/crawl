@@ -932,9 +932,9 @@ static bool _can_wield_anything()
     item_def dummy_weapon;
     dummy_weapon.base_type = OBJ_WEAPONS;
     string veto_reason;
-    bool is_divine;
-    bool ret = can_equip_item(dummy_weapon, true, &veto_reason, &is_divine);
-    msg_channel_type veto_channel = is_divine ? MSGCH_GOD : MSGCH_PROMPT;
+    bool god_forbids;
+    bool ret = can_equip_item(dummy_weapon, true, &veto_reason, &god_forbids);
+    msg_channel_type veto_channel = god_forbids ? MSGCH_GOD : MSGCH_PROMPT;
     if (!veto_reason.empty())
         mprf(veto_channel, "%s", veto_reason.c_str());
 
@@ -1331,10 +1331,10 @@ bool try_equip_item(item_def& item)
         return use_talisman(item);
 
     string reason;
-    bool is_divine;
-    if (!can_equip_item(item, true, &reason, &is_divine))
+    bool god_forbids;
+    if (!can_equip_item(item, true, &reason, &god_forbids))
     {
-        msg_channel_type channel = is_divine ? MSGCH_GOD : MSGCH_PROMPT;
+        msg_channel_type channel = god_forbids ? MSGCH_GOD : MSGCH_PROMPT;
         mprf(channel, "%s", reason.c_str());
         return false;
     }
@@ -1913,11 +1913,11 @@ bool oni_drunken_swing()
 
 bool drink(item_def* potion)
 {
-    bool is_divine = false;
-    string r = cannot_drink_item_reason(potion, true, true, false, &is_divine);
+    bool god_forbids = false;
+    string r = cannot_drink_item_reason(potion, true, true, false, &god_forbids);
     if (!r.empty())
     {
-        mprf(is_divine ? MSGCH_GOD : MSGCH_PLAIN, "%s", r.c_str());
+        mprf(god_forbids ? MSGCH_GOD : MSGCH_PLAIN, "%s", r.c_str());
         return false;
     }
     ASSERT(potion);
@@ -2853,12 +2853,12 @@ static bool _scroll_has_forced_targeter(scroll_type scroll)
  */
 bool read(item_def* scroll, dist *target)
 {
-    bool is_divine = false;
+    bool god_forbids = false;
     string failure_reason = cannot_read_item_reason(scroll, true, false,
-                                                    &is_divine);
+                                                    &god_forbids);
     if (!failure_reason.empty())
     {
-        mprf(is_divine ? MSGCH_GOD : MSGCH_PLAIN, "%s", failure_reason.c_str());
+        mprf(god_forbids ? MSGCH_GOD : MSGCH_PLAIN, "%s", failure_reason.c_str());
         return false;
     }
     ASSERT(scroll);
@@ -3355,12 +3355,12 @@ bool invisibility_target_check(const char* prompt)
 }
 
 string cannot_put_on_talisman_reason(const item_def& talisman, bool temp,
-                                     bool* is_divine)
+                                     bool* god_forbids)
 {
     ASSERT(talisman.base_type == OBJ_TALISMANS);
 
-    if (is_divine)
-        *is_divine = false;
+    if (god_forbids)
+        *god_forbids = false;
 
     if (talisman.sub_type == TALISMAN_PROTEAN)
     {
@@ -3378,8 +3378,8 @@ string cannot_put_on_talisman_reason(const item_def& talisman, bool temp,
     const transformation trans = form_for_talisman(talisman);
     if (god_hates_form(you.religion, trans))
     {
-        if (is_divine)
-            *is_divine = true;
+        if (god_forbids)
+            *god_forbids = true;
 
         if (you_worship(GOD_OKAWARU))
             return "you have forsworn all allies in Okawaru's name.";
@@ -3405,11 +3405,11 @@ string cannot_put_on_talisman_reason(const item_def& talisman, bool temp,
 
 bool use_talisman(item_def& talisman)
 {
-    bool is_divine;
-    string reason = cannot_put_on_talisman_reason(talisman, true, &is_divine);
+    bool god_forbids;
+    string reason = cannot_put_on_talisman_reason(talisman, true, &god_forbids);
     if (!reason.empty())
     {
-        msg_channel_type channel = is_divine ? MSGCH_GOD : MSGCH_PLAIN;
+        msg_channel_type channel = god_forbids ? MSGCH_GOD : MSGCH_PLAIN;
         mprf(channel, "%s", reason.c_str());
         return false;
     }

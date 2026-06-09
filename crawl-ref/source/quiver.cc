@@ -1698,10 +1698,10 @@ namespace quiver
             if (!is_enabled())
             {
                 const item_def *item = item_slot == -1 ? nullptr : &you.inv[item_slot];
-                bool is_divine = false;
+                bool god_forbids = false;
                 const string reason = cannot_evoke_item_reason(item, true, true,
-                                                               &is_divine);
-                mprf(is_divine ? MSGCH_GOD : MSGCH_PLAIN, "%s", reason.c_str());
+                                                               &god_forbids);
+                mprf(god_forbids ? MSGCH_GOD : MSGCH_PLAIN, "%s", reason.c_str());
                 return;
             }
 

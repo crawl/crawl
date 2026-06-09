@@ -147,8 +147,8 @@ static bool _pray_ecumenical_altar()
         // Don't check for or charge a Gozag service fee.
         unwind_var<int> fakepoor(you.attribute[ATTR_GOLD_GENERATED], 0);
 
-        string rejection_message = cannot_join_god_reason(altar_god, true,
-                                                          false);
+        string rejection_message =
+            cannot_join_god_reason(altar_god, true, false);
         if (!rejection_message.empty())
         {
             mprf(MSGCH_GOD, "%s", rejection_message.c_str());

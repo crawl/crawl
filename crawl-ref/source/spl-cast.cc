@@ -1007,12 +1007,12 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     }
 
     // MP, confusion, Ru sacs
-    bool is_divine = false;
-    const auto reason = casting_uselessness_reason(spell, true, &is_divine);
+    bool god_forbids = false;
+    const auto reason = casting_uselessness_reason(spell, true, &god_forbids);
     if (!reason.empty())
     {
         // A god's refusal to let you cast should come on the god channel.
-        mprf(is_divine ? MSGCH_GOD : MSGCH_PLAIN, "%s", reason.c_str());
+        mprf(god_forbids ? MSGCH_GOD : MSGCH_PLAIN, "%s", reason.c_str());
         crawl_state.zero_turns_taken();
         return spret::abort;
     }

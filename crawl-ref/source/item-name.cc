@@ -3088,10 +3088,10 @@ static string _general_cannot_read_reason()
  * string. If item is nullptr, do only general reading checks.
  */
 string cannot_read_item_reason(const item_def *item, bool temp, bool ident,
-                               bool *is_divine)
+                               bool *god_forbids)
 {
-    if (is_divine)
-        *is_divine = false;
+    if (god_forbids)
+        *god_forbids = false;
     // convoluted ordering is because the general checks below need to go before
     // the item id check, but non-temp messages go before general checks
     if (item && item->base_type == OBJ_SCROLLS
@@ -3155,8 +3155,8 @@ string cannot_read_item_reason(const item_def *item, bool temp, bool ident,
     // Your god won't let you read scrolls they forbid.
     if (god_forbids_item(*item))
     {
-        if (is_divine)
-            *is_divine = true;
+        if (god_forbids)
+            *god_forbids = true;
         return make_stringf("%s forbids the use of this item.",
                             uppercase_first(god_name(you.religion)).c_str());
     }
@@ -3214,10 +3214,10 @@ string cannot_read_item_reason(const item_def *item, bool temp, bool ident,
 }
 
 string cannot_drink_item_reason(const item_def *item, bool temp,
-                                bool use_check, bool ident, bool *is_divine)
+                                bool use_check, bool ident, bool *god_forbids)
 {
-    if (is_divine)
-        *is_divine = false;
+    if (god_forbids)
+        *god_forbids = false;
     // general permanent reasons
     if (!you.can_drink(false))
         return "You can't drink.";
@@ -3241,8 +3241,8 @@ string cannot_drink_item_reason(const item_def *item, bool temp,
         // than forbidden; see god_forbids_item / god_hates_item.)
         if (god_forbids_item(*item))
         {
-            if (is_divine)
-                *is_divine = true;
+            if (god_forbids)
+                *god_forbids = true;
             return make_stringf("%s forbids the use of this item.",
                                 uppercase_first(god_name(you.religion)).c_str());
         }

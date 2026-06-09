@@ -986,10 +986,10 @@ static bool _evoke_ally_only(const item_def &item, bool ident)
 }
 
 string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident,
-                                bool *is_divine)
+                                bool *god_forbids)
 {
-    if (is_divine)
-        *is_divine = false;
+    if (god_forbids)
+        *god_forbids = false;
     // id is not at issue here
     if (temp && you.berserk())
         return "You are too berserk!";
@@ -1014,8 +1014,8 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident,
     // permanent uselessness, so this isn't gated on temp.)
     if (god_forbids_item(*item))
     {
-        if (is_divine)
-            *is_divine = true;
+        if (god_forbids)
+            *god_forbids = true;
         return make_stringf("%s forbids the use of this item.",
                             uppercase_first(god_name(you.religion)).c_str());
     }
@@ -1076,10 +1076,10 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident,
 
 bool item_currently_evokable(const item_def *item)
 {
-    bool is_divine = false;
-    const string err = cannot_evoke_item_reason(item, true, true, &is_divine);
+    bool god_forbids = false;
+    const string err = cannot_evoke_item_reason(item, true, true, &god_forbids);
     if (!err.empty())
-        mprf(is_divine ? MSGCH_GOD : MSGCH_PLAIN, "%s", err.c_str());
+        mprf(god_forbids ? MSGCH_GOD : MSGCH_PLAIN, "%s", err.c_str());
     return err.empty();
 }
 

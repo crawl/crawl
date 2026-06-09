@@ -63,7 +63,7 @@ void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
                          vector<item_def*> to_remove);
 
 string cannot_put_on_talisman_reason(const item_def& talisman, bool temp = true,
-                                     bool* is_divine = nullptr);
+                                     bool* god_forbids = nullptr);
 bool use_talisman(item_def& talisman);
 
 bool uncancel_brand_weapon();
