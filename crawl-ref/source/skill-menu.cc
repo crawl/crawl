@@ -126,8 +126,8 @@ static bool _show_skill(skill_type sk, skill_menu_state state)
     switch (state)
     {
     case SKM_SHOW_DEFAULT:
-        return you.can_currently_train[sk] && (you.should_show_skill[sk]
-                                               || you.training[sk])
+        return !is_useless_skill(sk) && (you.should_show_skill[sk]
+                                         || you.training[sk])
             || you.skill(sk, 10, false, false);
     case SKM_SHOW_ALL:     return true;
     default:               return false;
@@ -302,7 +302,7 @@ string SkillMenuEntry::get_prefix()
     else
         letter = ' ';
 
-    const int sign = (!you.can_currently_train[m_sk] || mastered()) ? ' ' :
+    const int sign = (is_useless_skill(m_sk) || mastered()) ? ' ' :
                                    (you.train[m_sk] == TRAINING_FOCUSED) ? '*' :
                                           you.train[m_sk] ? '+'
                                                           : '-';
@@ -764,16 +764,6 @@ void SkillMenu::init_experience()
         you.auto_training = false;
         reset_training();
         you.clear_training_targets();
-
-        for (int i = 0; i < NUM_SKILLS; ++i)
-        {
-            const skill_type sk = skill_type(i);
-            if (!is_useless_skill(sk) && !you.can_currently_train[sk])
-            {
-                you.can_currently_train.set(sk);
-                you.train[sk] = TRAINING_DISABLED;
-            }
-        }
     }
 }
 
@@ -1587,7 +1577,7 @@ void SkillMenu::set_skills()
 
 void SkillMenu::toggle_practise(skill_type sk, int keyn)
 {
-    ASSERT(you.can_currently_train[sk]);
+    ASSERT(!is_useless_skill(sk));
     if (keyn >= 'A' && keyn <= 'Z')
         you.train.init(TRAINING_DISABLED);
     if (get_state(SKM_DO) == SKM_DO_PRACTISE)
