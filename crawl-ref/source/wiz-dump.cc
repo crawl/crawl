@@ -617,7 +617,6 @@ bool chardump_parser::_parse_from_file(const string &full_filename)
     if (seen_skills)
     {
         init_skill_order();
-        init_can_currently_train();
         init_train();
         init_training();
     }

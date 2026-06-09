@@ -121,17 +121,22 @@ skill_type SkillMenuEntry::get_skill() const
     return m_sk;
 }
 
-static bool _show_skill(skill_type sk, skill_menu_state state)
+static skill_set _shown_skills(skill_menu_state state)
 {
+    skill_set shown;
     switch (state)
     {
     case SKM_SHOW_DEFAULT:
-        return !is_useless_skill(sk) && (you.should_show_skill[sk]
-                                         || you.training[sk])
-            || you.skill(sk, 10, false, false);
-    case SKM_SHOW_ALL:     return true;
-    default:               return false;
+        shown = default_shown_skills();
+        break;
+    case SKM_SHOW_ALL:
+        for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+            shown.insert(sk);
+        break;
+    default:
+        break;
     }
+    return shown;
 }
 
 bool SkillMenuEntry::is_selectable(bool)
@@ -1036,8 +1041,8 @@ bool SkillMenu::do_skill_enabled_check()
         if (get_state(SKM_SHOW) == SKM_SHOW_DEFAULT)
         {
             bool showing_trainable = false;
-            for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
-                if (_show_skill(sk, SKM_SHOW_DEFAULT) && can_enable_skill(sk))
+            for (skill_type sk : _shown_skills(SKM_SHOW_DEFAULT))
+                if (can_enable_skill(sk))
                 {
                     showing_trainable = true;
                     break;
@@ -1540,6 +1545,8 @@ void SkillMenu::set_skills()
 
     int col = 0, ln = 0;
 
+    const skill_set shown = _shown_skills(get_state(SKM_SHOW));
+
     for (int i = 0; i < ndisplayed_skills; ++i)
     {
         skill_type sk = skill_display_order[i];
@@ -1556,7 +1563,7 @@ void SkillMenu::set_skills()
             ln = 0;
             continue;
         }
-        else if (!is_invalid_skill(sk) && !_show_skill(sk, get_state(SKM_SHOW)))
+        else if (!is_invalid_skill(sk) && !shown.count(sk))
             continue;
         else
         {

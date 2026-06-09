@@ -258,7 +258,6 @@ public:
     FixedVector<training_status, NUM_SKILLS> train; ///< see enum def
     FixedVector<training_status, NUM_SKILLS> train_alt; ///< config of other mode
     FixedVector<unsigned int, NUM_SKILLS>  training; ///< percentage of XP used
-    FixedBitVector<NUM_SKILLS> should_show_skill; ///< Is this skill shown by default?
     FixedVector<unsigned int, NUM_SKILLS> skill_points;
     FixedVector<unsigned int, NUM_SKILLS> training_targets; ///< Training targets, scaled by 10 (so [0,270]).  0 means no target.
     int experience_pool; ///< XP waiting to be applied.
@@ -270,8 +269,6 @@ public:
     bool auto_training;
     list<skill_type> exercises;     ///< recent practise events
     list<skill_type> exercises_all; ///< also include events for disabled skills
-    set<skill_type> skills_to_hide;     ///< need to check if it should still be shown in the skill menu
-    set<skill_type> skills_to_show;    ///< we can un-hide in the skill menu
 
     // Skill menu states
     skill_menu_state skill_menu_do;

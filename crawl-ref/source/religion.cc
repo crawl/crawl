@@ -2987,7 +2987,6 @@ void excommunication(bool voluntary, god_type new_god)
         if (you.duration[DUR_TROGS_HAND])
             trog_remove_trogs_hand();
         schedule_dismiss_divine_allies_fineff(GOD_TROG);
-        you.skills_to_show.insert(SK_SPELLCASTING);
         break;
 
     case GOD_BEOGH:
@@ -3197,10 +3196,6 @@ void excommunication(bool voluntary, god_type new_god)
     learned_something_new(HINT_EXCOMMUNICATE,
                           coord_def((int)new_god, old_piety));
 
-    for (ability_type abil : get_god_abilities())
-        you.skills_to_hide.insert(abil_skill(abil));
-
-    update_can_currently_train();
     reset_training();
 
     // Perhaps we abandoned Trog with everything but Spellcasting maxed out.
@@ -3761,7 +3756,6 @@ void join_trog_skills()
 {
     if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         set_magic_training(TRAINING_DISABLED);
-    you.skills_to_hide.insert(SK_SPELLCASTING);
 }
 
 // Setup for joining the orderly ascetics of Zin.
@@ -3960,11 +3954,9 @@ void join_religion(god_type which_god)
     if (you_worship(GOD_VEHUMET))
         do_god_gift();
 
-    // Allow training all divine ability skills immediately.
-    vector<ability_type> abilities = get_god_abilities();
-    for (ability_type abil : abilities)
-        you.skills_to_show.insert(abil_skill(abil));
-    update_can_currently_train();
+    // Divine ability skills become trainable (and shown by default) now that
+    // we have a god; recompute training in case that changed anything.
+    reset_training();
 
     // now that you have a god, you can't save any piety from your prev god
     you.previous_good_god = GOD_NO_GOD;

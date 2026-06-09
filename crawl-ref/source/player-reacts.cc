@@ -499,10 +499,6 @@ static void _handle_hoarding()
  */
 void player_reacts_to_monsters()
 {
-    // In case Maurice managed to steal a needed item for example.
-    if (!you_are_delayed())
-        update_can_currently_train();
-
     check_monster_detect();
 
     if (have_passive(passive_t::detect_items) || you.has_mutation(MUT_JELLY_GROWTH)

@@ -2082,11 +2082,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
         return false;
 
     if (item.is_type(OBJ_BOOKS, BOOK_MANUAL))
-    {
-        const skill_type skill = static_cast<skill_type>(item.plus);
-        if (!skill_default_shown(skill))
-            skills.insert(skill);
-    }
+        skills.insert(static_cast<skill_type>(item.plus));
 
     if (item.base_type == OBJ_STAVES)
     {

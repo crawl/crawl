@@ -468,151 +468,13 @@ static void _init_queue(list<skill_type> &queue, FixedVector<T, SIZE> &array)
     ASSERT(queue.size() == (unsigned)EXERCISE_QUEUE_SIZE);
 }
 
-static void _erase_from_skills_to_hide(const skill_set &can_train)
-{
-    for (skill_type sk : can_train)
-        you.skills_to_hide.erase(sk);
-}
-
-/*
- * Check the inventory to see what skills are likely to be useful
- * among the ones in you.skills_to_hide.
- * Useful skills are removed from the set.
- */
-static void _check_inventory_skills()
-{
-    for (const auto &item : you.inv)
-    {
-        // Exit early if there's no more skill to check.
-        if (you.skills_to_hide.empty())
-            return;
-
-        skill_set skills;
-        if (!item.defined() || !item_skills(item, skills))
-            continue;
-
-        _erase_from_skills_to_hide(skills);
-    }
-}
-
-static void _check_spell_skills()
-{
-    for (spell_type spell : you.spells)
-    {
-        // Exit early if there's no more skill to check.
-        if (you.skills_to_hide.empty())
-            return;
-
-        if (spell == SPELL_NO_SPELL)
-            continue;
-
-        skill_set skills;
-        spell_skills(spell, skills);
-        _erase_from_skills_to_hide(skills);
-    }
-}
-
-static void _check_abil_skills()
-{
-    for (ability_type abil : get_god_abilities())
-    {
-        // Exit early if there's no more skill to check.
-        if (you.skills_to_hide.empty())
-            return;
-
-        you.skills_to_hide.erase(abil_skill(abil));
-    }
-}
-
-static void _check_active_talisman_skills()
-{
-    skill_set skills;
-    if (you.active_talisman()
-        && item_skills(*you.active_talisman(), skills))
-    {
-        _erase_from_skills_to_hide(skills);
-    }
-}
-
-/// Check to see if the player is a djinn with at least one magic skill
-/// un-hidden. If so, unhide all of them.
-static void _check_innate_magic_skills()
-{
-    if (!you.has_mutation(MUT_INNATE_CASTER))
-        return;
-
-    bool any_magic = false;
-    for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
-        if (!is_removed_skill(sk) && !you.skills_to_hide.count(sk))
-            any_magic = true;
-    if (!any_magic)
-        return;
-
-    for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
-        you.skills_to_hide.erase(sk);
-}
-
 string skill_names(const skill_set &skills)
 {
     return comma_separated_fn(begin(skills), end(skills), skill_name);
 }
 
-static void _check_skills_to_show()
-{
-    for (skill_type sk : you.skills_to_show)
-    {
-        if (is_invalid_skill(sk) || is_useless_skill(sk))
-            continue;
-
-        you.should_show_skill.set(sk);
-    }
-
-    reset_training();
-    you.skills_to_show.clear();
-}
-
-static void _check_skills_to_hide()
-{
-    // Gnolls can't stop training skills.
-    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
-        return;
-
-    _check_inventory_skills();
-    _check_spell_skills();
-    _check_abil_skills();
-    _check_active_talisman_skills();
-    _check_innate_magic_skills();
-
-    if (you.skills_to_hide.empty())
-        return;
-
-    skill_set skills;
-    for (skill_type sk : you.skills_to_hide)
-    {
-        if (is_invalid_skill(sk))
-            continue;
-        if (you.skill_manual_points[sk])
-            continue;
-
-        if (skill_trained(sk) && you.training[sk])
-            skills.insert(sk);
-        you.should_show_skill.set(sk, false);
-    }
-
-    reset_training();
-    you.skills_to_hide.clear();
-}
-
-void update_can_currently_train()
-{
-    if (!you.skills_to_show.empty())
-        _check_skills_to_show();
-
-    if (!you.skills_to_hide.empty())
-        _check_skills_to_hide();
-}
-
-bool skill_default_shown(skill_type sk)
+/// Do we show this skill regardless of equipment, abilities and spells?
+static bool _skill_always_shown(skill_type sk)
 {
     if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         return true;
@@ -631,29 +493,59 @@ bool skill_default_shown(skill_type sk)
     }
 }
 
-/*
- * Init which skills are shown by default, examining inventory and spell list
- * to see which skills are worth showing.
+/**
+ * Which skills should be shown in the skill menu when not showing all skills?
+ *
+ * This is the set of skills which are worth showing by default, examining the
+ * player's inventory, spells and god abilities to see which skills are useful.
  */
-void init_can_currently_train()
+skill_set default_shown_skills()
 {
-    // Clear everything out, in case this isn't the first game.
-    you.skills_to_show.clear();
-    you.skills_to_hide.clear();
+    skill_set shown;
 
-    for (int i = 0; i < NUM_SKILLS; ++i)
+    // Skills that we show by default or have a manual for
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+        if (_skill_always_shown(sk) || you.skill_manual_points[sk])
+            shown.insert(sk);
+
+    // Skills for items
+    for (const auto &item : you.inv)
+        if (item.defined())
+            item_skills(item, shown);
+
+    // Skills for spells
+    for (spell_type spell : you.spells)
+        if (spell != SPELL_NO_SPELL)
+            spell_skills(spell, shown);
+
+    // Skills for gods
+    for (ability_type abil : get_god_abilities())
+        shown.insert(abil_skill(abil));
+
+    // Skills we are training or have experience in
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+        if (you.training[sk] || you.skill(sk, 10, false, false))
+            shown.insert(sk);
+
+    // Drop any invalid or useless skills
+    for (auto it = shown.begin(); it != shown.end(); )
     {
-        const skill_type sk = skill_type(i);
-
-        if (is_useless_skill(sk))
-            continue;
-
-        you.should_show_skill.set(sk);
-        if (!skill_default_shown(sk))
-            you.skills_to_hide.insert(sk);
+        if (is_invalid_skill(*it) || is_useless_skill(*it))
+            it = shown.erase(it);
+        else
+            ++it;
     }
 
-    _check_skills_to_hide();
+    // Djinn show all of their magic skills if any one of them is shown.
+    if (you.has_mutation(MUT_INNATE_CASTER)
+        && any_of(begin(shown), end(shown), is_magic_skill))
+    {
+        for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
+            if (!is_useless_skill(sk))
+                shown.insert(sk);
+    }
+
+    return shown;
 }
 
 void init_train()
@@ -2883,7 +2775,6 @@ void fixup_skills()
                                    skill_exp_needed(MAX_SKILL_LEVEL, sk));
         check_skill_level_change(sk);
     }
-    init_can_currently_train();
     reset_training();
 
     if (you.exp_available >= 10 * calc_skill_cost(you.skill_cost_level)
