@@ -109,7 +109,7 @@ is required() by the .des file prelude), and that the function must be
 specified by its global name.
 
 "Triggerer" is regularly used in randomised functions to determine whether or
-not the function is actually being fired. For example, if the Triggerer is not
+not the function is actually being fired. (For example, if the Triggerer is not
 of the "turns" type and "countdown" subtype; see the WarningMachines in
 dat/dlua/lm_fog.lua for examples of functions being triggered randomly, and
 being triggered a certain number of turns before a FogMachine is fired).
