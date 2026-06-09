@@ -131,7 +131,8 @@ static skill_set _shown_skills(skill_menu_state state)
         break;
     case SKM_SHOW_ALL:
         for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
-            shown.insert(sk);
+            if (!is_useless_skill(sk))
+                shown.insert(sk);
         break;
     default:
         break;
