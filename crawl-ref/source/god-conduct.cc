@@ -66,13 +66,10 @@ static const char *conducts[] =
     "Kill Unclean", "Kill Chaotic", "Kill Wizard", "Kill Priest", "Kill Holy",
     "Kill Fast", "Banishment",
 #if TAG_MAJOR_VERSION == 34
-    "Spell Memorise", "Spell Cast",
+    "Spell Memorise", "Spell Cast", "Spell Practise",
+    "Cannibalism", "Deliberate Mutation",
 #endif
-    "Spell Practise",
-#if TAG_MAJOR_VERSION == 34
-    "Cannibalism",
-#endif
-    "Deliberate Mutation", "Cause Glowing",
+    "Cause Glowing",
 #if TAG_MAJOR_VERSION == 34
     "Use Unclean", "Use Chaos",
     "Desecrate Orcish Remains", "Kill Slime",
@@ -401,10 +398,6 @@ static peeve_map divine_peeves[] =
             "you attack neutral beings", false,
             1, 0,
             " forgives your inadvertent attack on a neutral, just this once."
-        } },
-        { DID_DELIBERATE_MUTATING, {
-            "you deliberately mutate yourself", true,
-            1, 0, " forgives your inadvertent chaotic act, just this once."
         } },
         { DID_CAUSE_GLOWING, { nullptr, false, 1 } },
     },

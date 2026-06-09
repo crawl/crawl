@@ -784,7 +784,7 @@ public:
         {
             you.transform_uncancellable = true;
             if (!was_known)
-                god_forgive_inadvertent_act(FORBID_CHAOS);
+                god_forgive_inadvertent_act(FORBID_TRANSFORMATION);
         }
         else
             mpr("You feel woody for a moment.");
@@ -856,8 +856,8 @@ public:
         }
 
         effect();
-        if (!have_passive(passive_t::cleanse_mut_potions))
-            did_god_conduct(DID_DELIBERATE_MUTATING, 15, was_known);
+        if (!was_known)
+            god_forgive_inadvertent_act(FORBID_TRANSFORMATION);
         return true;
     }
 };

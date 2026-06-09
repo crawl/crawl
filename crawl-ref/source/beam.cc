@@ -6089,22 +6089,12 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_POLYMORPH:
         if (mon->polymorph(0))
             obvious_effect = true;
-        if (BLAME_KILL(thrower))
-        {
-            const int level = 2 + random2(3);
-            did_god_conduct(DID_DELIBERATE_MUTATING, level, god_cares());
-        }
         return MON_AFFECTED;
 
     case BEAM_MALMUTATE:
     case BEAM_UNRAVELLED_MAGIC:
         if (mon->malmutate(agent())) // exact source doesn't matter
             obvious_effect = true;
-        if (BLAME_KILL(thrower))
-        {
-            const int level = 2 + random2(3);
-            did_god_conduct(DID_DELIBERATE_MUTATING, level, god_cares());
-        }
         return MON_AFFECTED;
 
     case BEAM_BANISH:
