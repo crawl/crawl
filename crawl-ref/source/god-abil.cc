@@ -2463,7 +2463,6 @@ bool ashenzari_uncurse_item()
         return false;
 
     mprf("You shatter the curse binding %s!", item.name(DESC_THE).c_str());
-    item_skills(item, you.skills_to_hide);
 
     for (item_def* _item : to_remove)
     {

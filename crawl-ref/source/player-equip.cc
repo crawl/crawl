@@ -1569,7 +1569,6 @@ void equip_item(equipment_slot slot, int item_slot, bool msg, bool skip_effects)
         equip_effect(item_slot, false, msg);
 
     you.gear_change = true;
-    update_can_currently_train();
 
     if (is_weapon(item))
     {

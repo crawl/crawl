@@ -379,8 +379,6 @@ bool dec_inv_item_quantity(int obj, int amount)
 
     if (you.inv[obj].quantity <= amount)
     {
-        item_skills(you.inv[obj], you.skills_to_hide);
-
         you.inv[obj].base_type = OBJ_UNASSIGNED;
         you.inv[obj].quantity  = 0;
         you.inv[obj].props.clear();
@@ -984,10 +982,7 @@ void identify_item(item_def& item)
         identify_item_type(item.base_type, item.sub_type);
 
     if (in_inventory(item))
-    {
         shopping_list.cull_identical_items(item);
-        item_skills(item, you.skills_to_show);
-    }
 
     if (notes_are_active()
         && is_interesting_item(item)
@@ -1887,7 +1882,6 @@ static void _get_book(item_def& it)
     else
         mprf("You pick up %s and begin studying.", it.name(DESC_A).c_str());
     you.skill_manual_points[sk] += it.skill_points;
-    you.skills_to_show.insert(sk);
 }
 
 static void _get_voucher(item_def& it)
@@ -2432,7 +2426,6 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     you.last_pickup[item.link] = quant_got;
     quiver::on_item_pickup(freeslot);
     quiver::on_actions_changed();
-    item_skills(item, you.skills_to_show);
 
     if (const item_def* newitem = auto_assign_item_slot(item))
         return newitem->link;

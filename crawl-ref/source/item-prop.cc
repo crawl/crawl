@@ -2076,63 +2076,68 @@ ac_type staff_ac_check(stave_type s)
     return Staff_prop[Staff_index[s]].ac_check;
 }
 
-bool item_skills(const item_def &item, set<skill_type> &skills)
+bool item_grants_skill(const item_def &item, skill_type skill)
 {
     if (is_useless_item(item))
         return false;
 
     if (item.is_type(OBJ_BOOKS, BOOK_MANUAL))
     {
-        const skill_type skill = static_cast<skill_type>(item.plus);
-        if (!skill_default_shown(skill))
-            skills.insert(skill);
+        const skill_type manual_sk = static_cast<skill_type>(item.plus);
+        if (skill == manual_sk && !skill_default_shown(manual_sk))
+            return true;
     }
 
     if (item.base_type == OBJ_STAVES)
     {
         const skill_type staff_sk
                     = staff_skill(static_cast<stave_type>(item.sub_type));
-        if (staff_sk != SK_NONE)
-            skills.insert(staff_sk);
+        if (skill == staff_sk && staff_sk != SK_NONE)
+            return true;
     }
 
-    if (item.base_type == OBJ_WEAPONS
+    if (skill == SK_NECROMANCY
+        && item.base_type == OBJ_WEAPONS
         && get_weapon_brand(item) == SPWPN_PAIN
         && !you_worship(GOD_TROG))
     {
-        skills.insert(SK_NECROMANCY);
+        return true;
     }
 
     const skill_type sk = item_attack_skill(item);
-    if (sk != SK_FIGHTING)
-        skills.insert(sk);
+    if (skill == sk && sk != SK_FIGHTING)
+        return true;
 
-    if (is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
+    if ((skill == SK_POLEARMS || skill == SK_AXES)
+        && is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
     {
-        skills.insert(SK_POLEARMS);
-        skills.insert(SK_AXES);
+        return true;
     }
 
-    if (is_shield(item))
-        skills.insert(SK_SHIELDS);
+    if (skill == SK_SHIELDS && is_shield(item))
+        return true;
 
-    if (item.base_type == OBJ_TALISMANS || item.base_type == OBJ_BAUBLES)
-        skills.insert(SK_SHAPESHIFTING);
+    if (skill == SK_SHAPESHIFTING
+        && (item.base_type == OBJ_TALISMANS || item.base_type == OBJ_BAUBLES))
+    {
+        return true;
+    }
 
     // Artefacts with evokable abilities, wands and similar unwielded
     // evokers allow training. Talismans usually don't use evo (unless it's
     // an artefact with, say, +Blink).
-    if (item_ever_evokable(item) && !item.is_type(OBJ_MISCELLANY, MISC_ZIGGURAT)
-                                 && item.base_type != OBJ_TALISMANS
-                                 && item.base_type != OBJ_BAUBLES
-        || gives_ability(item)
-        || _orb_uses_evocations(item)
-        || _staff_uses_evocations(item))
+    if (skill == SK_EVOCATIONS
+        && (item_ever_evokable(item) && !item.is_type(OBJ_MISCELLANY, MISC_ZIGGURAT)
+                                     && item.base_type != OBJ_TALISMANS
+                                     && item.base_type != OBJ_BAUBLES
+            || gives_ability(item)
+            || _orb_uses_evocations(item)
+            || _staff_uses_evocations(item)))
     {
-        skills.insert(SK_EVOCATIONS);
+        return true;
     }
 
-    return !skills.empty();
+    return false;
 }
 
 /**

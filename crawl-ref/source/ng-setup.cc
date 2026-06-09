@@ -623,7 +623,6 @@ static void _setup_generic(const newgame_def& ng,
 
     reassess_starting_skills(false);
     init_skill_order();
-    init_can_currently_train();
     init_train();
     if (you.religion == GOD_TROG)
         join_trog_skills();

@@ -171,7 +171,7 @@ bool is_brandable_weapon(const item_def &wpn, bool allow_ranged, bool divine = f
 skill_type item_attack_skill(const item_def &item) PURE;
 skill_type item_attack_skill(object_class_type wclass, int wtype) IMMUTABLE;
 
-bool item_skills(const item_def &item, set<skill_type> &skills);
+bool item_grants_skill(const item_def &item, skill_type skill);
 
 // launcher and ammo functions:
 bool is_range_weapon(const item_def &item) PURE;

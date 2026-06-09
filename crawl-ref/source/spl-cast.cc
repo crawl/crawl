@@ -3362,12 +3362,14 @@ string spell_schools_string(spell_type spell)
     return desc;
 }
 
-void spell_skills(spell_type spell, set<skill_type> &skills)
+skill_set spell_skills(spell_type spell)
 {
+    skill_set skills;
     const spschools_type disciplines = get_spell_disciplines(spell);
     for (const auto bit : spschools_type::range())
         if (disciplines & bit)
             skills.insert(spell_type2skill(bit));
+    return skills;
 }
 
 void do_demonic_magic(int pow, int rank)

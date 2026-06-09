@@ -2462,19 +2462,14 @@ void set_default_form(transformation t, const item_def *talisman)
 
             unequip_artefact_effect(*old_talisman, nullptr, false);
         }
-        item_skills(*old_talisman, you.skills_to_hide);
     }
 
     if (talisman)
     {
         ASSERT(in_inventory(*talisman));
         you.cur_talisman = talisman->link;
-        item_skills(*talisman, you.skills_to_show);
     }
 
-    // This has to be done after checking item skills, otherwise the new active
-    // talisman might count as a useless item (the you.form != you.default_form
-    // check in cannot_evoke_item_reason)
     you.default_form = t;
 }
 
