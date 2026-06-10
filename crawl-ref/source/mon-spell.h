@@ -1523,6 +1523,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_COATL,
+      {
+        { SPELL_AIRSTRIKE, 18, MON_SPELL_WIZARD },
+       { SPELL_SILENCE, 17, MON_SPELL_WIZARD },
+       { SPELL_MEPHITIC_CLOUD, 18, MON_SPELL_WIZARD },
+      }
+    },
+
     // ('T') Trolls.
     {  MST_DEEP_TROLL_EARTH_MAGE,
       {
