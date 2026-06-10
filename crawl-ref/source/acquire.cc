@@ -799,8 +799,8 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
         dummy.plus = 1; // empty wands would be useless
         dummy.flags |= ISFLAG_IDENTIFIED;
 
-        if (!is_useless_item(dummy, false) && !god_forbids_item(dummy)
-            && (agent >= NUM_GODS || god_likes_item_type(dummy,
+        if (!is_useless_item(dummy, false)
+            && (agent >= NUM_GODS || god_likes_item_type(class_wanted, type_wanted,
                                                          (god_type)agent)))
         {
             break;
@@ -1223,8 +1223,7 @@ int acquirement_create_item(object_class_type class_wanted,
         else
         {
             // This may clobber class_wanted (e.g. staves)
-            type_wanted = _find_acquirement_subtype(class_wanted, quant,
-                                                    agent);
+            type_wanted = _find_acquirement_subtype(class_wanted, quant, agent);
         }
         ASSERT(type_wanted != -1);
 

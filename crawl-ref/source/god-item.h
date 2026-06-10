@@ -25,5 +25,5 @@ bool is_hasty_spell(spell_type spell);
 vector<forbidden_act_type> forbidden_acts(const item_def &item);
 bool god_forbids_item(const item_def &item);
 bool god_forbids_item(const item_def &item, god_type which_god);
-bool god_likes_item_type(const item_def &item, god_type which_god);
-bool god_despises_item(const item_def &item, god_type which_god);
+bool god_likes_item_type(const object_class_type &base_type,
+                         const uint16_t sub_type, god_type which_god);
