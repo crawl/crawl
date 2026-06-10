@@ -1455,7 +1455,7 @@ static int _handle_conflicting_mutations(mutation_type mutation,
         // We can never delete innate mutations this way, so if there are no
         // non-innate mutations (and we're not trying to apply to temporary
         // invertable mutation, which is allowed), immediately fail.
-        if (innate_only && !conflict.is_inverse && !temp)
+        if (innate_only && !(conflict.is_inverse && temp))
         {
             dprf("Delete mutation failed: %s conflicting with innate mutation %s.",
                     mutation_name(mutation), mutation_name(confl_mut));
