@@ -226,10 +226,12 @@ static const mutation_conflict mut_conflicts[] =
     { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY,      true},
     { MUT_SHOCK_RESISTANCE,    MUT_SHOCK_VULNERABILITY,     true},
     { MUT_STRONG_WILLED,       MUT_WEAK_WILLED,             true},
+    // It is slightly odd to have two inverses for devolution, but it makes
+    // sense as long as those inverses are themselves conflicting.
     { MUT_MUTATION_RESISTANCE, MUT_DEVOLUTION,              true},
     { MUT_EVOLUTION,           MUT_DEVOLUTION,              true},
-    { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,               true},
 
+    { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,              false},
     { MUT_FANGS,               MUT_BEAK,                   false},
     { MUT_ANTENNAE,            MUT_HORNS,                  false},
     { MUT_BEAK,                MUT_HORNS,                  false},
