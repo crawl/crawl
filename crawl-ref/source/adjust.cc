@@ -146,11 +146,7 @@ static void _adjust_spell()
         // without spells from this menu.
         // XX this does not really work well with new menu code
         if (keyin == '?' || keyin == '*')
-        {
             keyin = list_spells(true, false, false, false, "adjust it to");
-            if (keyin < 'a' || keyin > 'Z')
-                continue;
-        }
     }
 
     const int input_2 = keyin;
