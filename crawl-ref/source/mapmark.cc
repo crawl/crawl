@@ -1096,8 +1096,14 @@ void map_markers::add(map_marker *marker)
     markers.insert(dgn_pos_marker(marker->pos, marker));
     if (marker->needs_activation())
         have_inactive_markers = true;
-    if (marker->is_dynamic())
+    // The marker may already be in the dynamic_markers array if this is a
+    // move - add it if not.
+    if (marker->is_dynamic()
+        && std::find(dynamic_markers.begin(), dynamic_markers.end(), marker)
+               == dynamic_markers.end())
+    {
         dynamic_markers.push_back(marker);
+    }
 }
 
 void map_markers::unlink_marker(const map_marker *marker)
