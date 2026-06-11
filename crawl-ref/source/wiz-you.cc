@@ -1002,13 +1002,13 @@ void wizard_transform()
 
     vector<WizardEntry> choices;
     choices.emplace_back(WizardEntry(0, "None", 0));
-    for (size_t i = 0; i < form_names.size(); ++i)
-        choices.emplace_back(WizardEntry(0, form_names[i].second, i));
+    for (const auto &form_name : form_names)
+        choices.emplace_back(WizardEntry(0, form_name.second, form_name.first));
 
     auto menu = WizardMenu("Which form (ESC to exit)?", choices);
     if (!menu.run(true))
         return;
-    auto form = static_cast<transformation>(form_names[menu.result()].first);
+    auto form = static_cast<transformation>(menu.result());
 
     you.transform_uncancellable = false;
     if (you.default_form == you.form && you.form != transformation::none)
