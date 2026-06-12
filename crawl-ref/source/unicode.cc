@@ -14,6 +14,7 @@
 #include <cstring>
 #include <string>
 
+#include "colour.h"
 #include "syscalls.h"
 
 // there must be at least 4 bytes free, NOT CHECKED!
@@ -556,4 +557,87 @@ string chop_string(const char *s, int width, bool spaces)
 string chop_string(const string &s, int width, bool spaces)
 {
     return chop_string(s.c_str(), width, spaces);
+}
+
+string chop_string_ignore_tags(const char *s, int width, bool spaces)
+{
+    char32_t c;
+    vector<string> opened_tags;
+    ostringstream result;
+
+    while (int clen = utf8towc(&c, s))
+    {
+        if (*s == '<')
+        {
+            const char *end = s+1;
+            while (*end && *end != '>')
+                end++;
+
+            if (*end == '>')
+            {
+                end++;
+                string tag(s, end - s);
+                bool valid_tag = false;
+
+                if (tag[1] != '/')
+                {
+                  // It's an opening tag
+                  string tag_name = tag.substr(1, tag.length() - 2);
+                  if (str_to_colour(tag_name, -1) != -1)
+                  {
+                    // It's a real colour tag
+                    result.write(s, end - s);
+                    opened_tags.push_back(tag_name);
+                    valid_tag = true;
+                  }
+                }
+                else
+                {
+                    // It's a closing tag
+                    string tag_name = tag.substr(2, tag.length() - 3);
+                    for (int i = opened_tags.size() - 1; i >= 0; i--)
+                    {
+                        if (opened_tags[i] == tag_name)
+                        {
+                            opened_tags.erase(opened_tags.begin() + i);
+                            result.write(s, end - s);
+                            valid_tag = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (valid_tag)
+                {
+                  s = end;
+                  continue;
+                }
+            }
+        }
+
+        int cw = wcwidth(c);
+        if (cw > width)
+            break;
+        if (cw >= 0)
+        {
+            width -= cw;
+            result.write(s, clen);
+        }
+
+        s += clen;
+    }
+
+    // Add closing tags for any opened tags that weren't closed
+    for (int i = opened_tags.size() - 1; i >= 0; i--)
+        result << "</" << opened_tags[i] << ">";
+
+    if (spaces && width)
+        result << string(width, ' ');
+
+    return result.str();
+}
+
+string chop_string_ignore_tags(const string &s, int width, bool spaces)
+{
+    return chop_string_ignore_tags(s.c_str(), width, spaces);
 }
