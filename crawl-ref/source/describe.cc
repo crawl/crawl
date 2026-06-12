@@ -1537,7 +1537,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
     // Add penalties for armour and shield.
     const int penalty_scale = 100;
     vector<string> would_slow;
-    if (is_slowed_by_armour(&item))
+    if (is_slowed_by_armour(&item) && you_can_wear(SLOT_BODY_ARMOUR) != false)
     {
         const int body_armour_penalty =
             you.adjusted_body_armour_penalty(penalty_scale, true);
@@ -1551,7 +1551,8 @@ static void _append_weapon_stats(string &description, const item_def &item)
     }
 
     const item_def *shield = you.shield();
-    if (you.skill(SK_SHIELDS) < MAX_SKILL_LEVEL)
+    if (you.skill(SK_SHIELDS) < MAX_SKILL_LEVEL
+        && you_can_wear(SLOT_OFFHAND) != false)
     {
         if (shield)
         {
