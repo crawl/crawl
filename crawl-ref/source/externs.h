@@ -174,6 +174,8 @@ public:
     int direction;
     int turns_passed;
     bool skip_autorest;
+    coord_def starting_pos; // For long-walking
+    int max_longwalk_distance;
 
     FixedVector<run_check_dir,3> run_check; // array of grids to check
 
