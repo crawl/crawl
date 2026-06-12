@@ -1318,12 +1318,13 @@ static void _input()
         you.turn_is_over = false;
 #endif
 
+    if (you.turn_is_over && !handle_channelled_spell())
+        you.turn_is_over = false;
+
     if (you.turn_is_over)
     {
         if (you.apply_berserk_penalty)
             _do_berserk_no_combat_penalty();
-
-        handle_channelled_spell();
 
         world_reacts();
     }

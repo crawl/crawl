@@ -3857,14 +3857,15 @@ spret cast_flame_wave(int pow, bool fail)
     return spret::success;
 }
 
-void handle_flame_wave(int lvl)
+// return false if aborting due to warning prompt
+bool handle_flame_wave(int lvl)
 {
     const int pow = you.props[FLAME_WAVE_POWER_KEY].get_int();
     bolt beam;
     if (!_prep_flame_wave(beam, pow, lvl, lvl == 1))
     {
         stop_channelling_spells();
-        return;
+        return false;
     }
 
     beam.refine_for_explosion();
@@ -3882,6 +3883,8 @@ void handle_flame_wave(int lvl)
         mpr("Your wave of flame reaches its maximum intensity and dissipates.");
         stop_channelling_spells(true);
     }
+
+    return true;
 }
 
 spret cast_searing_ray(actor& agent, int pow, bolt &beam, bool fail)

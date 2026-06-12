@@ -3411,15 +3411,23 @@ void start_channelling_spell(spell_type spell, string reminder_msg, bool do_effe
     }
 }
 
-void handle_channelled_spell()
+static void _update_east_wind_for_channeling()
+{
+    if (you.duration[DUR_STAMPEDE] && you.has_mutation(MUT_EAST_WIND))
+        you.duration[DUR_STAMPEDE] += you.time_taken;
+}
+
+// return false if we must abort a channeled spell due to a warning prompt
+// return true otherwise, even if not channeling a spell
+bool handle_channelled_spell()
 {
     if (you.attribute[ATTR_CHANNELLED_SPELL] == SPELL_NO_SPELL)
-        return;
+        return true;
 
     // Skip processing at the end of the turn this is cast (since that already
     // happened *as* it was cast and shouldn't happen a second time.)
     if (++you.attribute[ATTR_CHANNEL_DURATION] == 1)
-        return;
+        return true;
 
     const spell_type spell = (spell_type)you.attribute[ATTR_CHANNELLED_SPELL];
 
@@ -3433,7 +3441,7 @@ void handle_channelled_spell()
     if (turn > 1 && crawl_state.prev_cmd != CMD_WAIT || !can_cast_spells(true))
     {
         stop_channelling_spells();
-        return;
+        return true;
     }
 
     if ((spell == SPELL_FLAME_WAVE || spell == SPELL_SEARING_RAY)
@@ -3442,33 +3450,38 @@ void handle_channelled_spell()
         mprf("Without enough magic to sustain it, your %s dissipates.",
              spell_title(spell));
         stop_channelling_spells(true);
-        return;
+        return true;
     }
-
-    if (you.duration[DUR_STAMPEDE] && you.has_mutation(MUT_EAST_WIND))
-        you.duration[DUR_STAMPEDE] += you.time_taken;
 
     switch (you.attribute[ATTR_CHANNELLED_SPELL])
     {
         case SPELL_MAXWELLS_COUPLING:
             handle_maxwells_coupling();
-            return;
+            _update_east_wind_for_channeling();
+            return true;
 
         case SPELL_FLAME_WAVE:
-            handle_flame_wave(turn);
-            return;
+            if (!handle_flame_wave(turn))
+                return false;
+            _update_east_wind_for_channeling();
+            return true;
 
         case SPELL_SEARING_RAY:
-            handle_searing_ray(you, turn);
-            return;
+            if (!handle_searing_ray(you, turn))
+                return false;
+            _update_east_wind_for_channeling();
+            return true;
 
         case SPELL_CLOCKWORK_BEE:
             handle_clockwork_bee_spell(turn);
-            return;
+            _update_east_wind_for_channeling();
+            return true;
 
         default:
             mprf(MSGCH_WARN, "Attempting to channel buggy spell: %s", spell_title(spell));
     }
+
+    return true;
 }
 
 void stop_channelling_spells(bool quiet)
