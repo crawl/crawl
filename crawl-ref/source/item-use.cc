@@ -2319,6 +2319,9 @@ bool enchant_weapon(item_def &wpn, bool quiet)
     if (is_enchantable_weapon(wpn))
     {
         wpn.plus++;
+        // Ensure newly enchanted mundane weapons use an enchanted tile variant.
+        if (!get_equip_desc(wpn))
+            set_equip_desc(wpn, ISFLAG_GLOWING);
         success = true;
         if (!quiet)
         {
@@ -2473,6 +2476,9 @@ bool enchant_armour(item_def &arm, bool quiet)
     string name = _item_name(arm);
 
     ++arm.plus;
+    // Ensure newly enchanted mundane armour uses an enchanted tile variant.
+    if (!get_equip_desc(arm))
+        set_equip_desc(arm, ISFLAG_GLOWING);
 
     if (!quiet)
     {
