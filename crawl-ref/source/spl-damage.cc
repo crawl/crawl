@@ -4486,9 +4486,12 @@ void actor_apply_toxic_bog(actor * act)
     else if (final_damage > 0)
     {
         behaviour_event(mons, ME_DISTURB, 0, act->pos());
-        mprf("%s festers in the toxic bog%s",
-                mons->name(DESC_THE).c_str(),
-                attack_strength_punctuation(final_damage).c_str());
+        if (you.see_cell(mons->pos()))
+        {
+            mprf("%s festers in the toxic bog%s",
+                    mons->name(DESC_THE).c_str(),
+                    attack_strength_punctuation(final_damage).c_str());
+        }
     }
 
     if (final_damage > 0 && resist > 0)
