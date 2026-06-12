@@ -567,7 +567,7 @@ public:
     int  dragon_level() const override;
     bool is_jumpy() const;
 
-    int  spell_hd(spell_type spell = SPELL_NO_SPELL) const;
+    int  spell_hd(spell_type spell) const;
     void remove_summons(bool check_attitude = false);
 
     virtual void clear_constricted() override;

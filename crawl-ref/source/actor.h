@@ -367,6 +367,8 @@ public:
 
     virtual bool has_spell(spell_type spell) const = 0;
 
+    int spell_enhancement(spell_type spell) const;
+
     virtual bool     will_trigger_shaft() const;
     virtual level_id shaft_dest() const;
     virtual bool     do_shaft() = 0;

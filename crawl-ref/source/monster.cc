@@ -30,6 +30,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "externs.h"
 #include "fight.h"
 #include "fineff.h"
 #include "fprop.h"
@@ -6727,10 +6728,10 @@ bool monster::is_jumpy() const
 }
 
 // HD for spellcasting purposes.
-// Currently only used for Brilliance buffs and Hep ancestors.
+// Specialized in the case of Dith Shadow or Hep ancestors.
+// Takes spell enhancers into account.
 int monster::spell_hd(spell_type spell) const
 {
-    UNUSED(spell);
     int hd = get_hit_dice();
     if (mons_is_hepliaklqana_ancestor(type))
     {
@@ -6749,12 +6750,25 @@ int monster::spell_hd(spell_type spell) const
             hd = props[DITH_SHADOW_SPELLPOWER_KEY].get_int();
     }
 
-    if (has_ench(ENCH_EMPOWERED_SPELLS))
-        hd += 5;
-    if (has_ench(ENCH_DIMINISHED_SPELLS))
-        hd = max(1, hd - 7);
+    // Don't count enhancers unless it's a real spell.
+    // Should magical abilities (MON_SPELL_MAGICAL) count too?
+    if (!(spell_slot_flags(spell) & MON_SPELL_WIZARD))
+        return hd;
 
-    return hd;
+    const int enhancers = spell_enhancement(spell);
+
+    // +/- 3 stages of enhancers with diminishing returns; similar to players.
+    // It might be a good idea to cap the bonus for low-HD monsters but those
+    // tend to have spells that scale weakly anyway. It's probably fine.
+    hd += enhancers >=  3 ?  7 :
+          enhancers ==  2 ?  6 :
+          enhancers ==  1 ?  4 :
+          enhancers ==  0 ?  0 :
+          enhancers == -1 ? -4 :
+          enhancers == -2 ? -6 :
+                 /* <= -3*/ -7 ;
+
+    return max(1, hd);
 }
 
 /**
