@@ -749,25 +749,30 @@ bool item_is_branded(const item_def& item)
     }
 }
 
-static bool _immune_to_brand(brand_type brand)
+static bool _is_dangerous_brand(brand_type brand)
 {
     switch (brand)
     {
         case SPWPN_HOLY_WRATH:
-            return !you.holy_wrath_susceptible();
+            return you.holy_wrath_susceptible();
 
         case SPWPN_VENOM:
-            return you.res_poison() == 3;
+            return you.res_poison() < 3;
 
         case SPWPN_DRAINING:
         case SPWPN_PAIN:
-            return you.res_negative_energy() == 3;
+        case SPWPN_VAMPIRISM:
+            return you.res_negative_energy() < 3;
 
         case SPWPN_ELECTROCUTION:
-            return you.res_elec() >= 1;
+            return you.res_elec() < 1;
+        case SPWPN_FLAMING:
+          return you.res_fire() < 1;
+        case SPWPN_FREEZING:
+          return you.res_cold() < 1;
 
         case SPWPN_ENTANGLING:
-            return you.res_constrict();
+            return !you.res_constrict();
 
         default:
             return false;
@@ -776,25 +781,31 @@ static bool _immune_to_brand(brand_type brand)
 
 bool item_is_unusual(const item_def& item)
 {
-    if (item.base_type == OBJ_WEAPONS)
-    {
-        for (auto& match : Options.vulnerable_brand_warning)
+    // All items need to be checked for satisfying XL requirements, but checking for brand vulnerability
+    // and regex match is not necessary - item needs to satisfy either brand + XL or XL + regex.
+    // This means that menu prefix matching won't work for entries that specify "vulnerable:". There is
+    // probably never a legitimate need to filter for both at the same time.
+
+    return any_of(begin(Options.unusual_item_patterns), end(Options.unusual_item_patterns),
+                      [&](const unusual_item_pattern &entry) -> bool
         {
-            if (get_weapon_brand(item) == match.first
-                && you.experience_level <= match.second
-                && !_immune_to_brand(match.first))
-            {
-                return true;
-            }
-        }
-    }
+          bool vuln_to_brand = false;
+          if (item.base_type == OBJ_WEAPONS && entry.brand != SPWPN_FORBID_BRAND)
+          {
+            if (get_weapon_brand(item) != entry.brand || !_is_dangerous_brand(entry.brand))
+              return false;
+            vuln_to_brand = true;
+          }
 
-    const auto &patterns = Options.unusual_monster_items;
-    const string name = item.name(DESC_A, false, false, true, false);
+          if (entry.xl_threshold > 0 && you.experience_level > entry.xl_threshold)
+            return false;
 
-    return any_of(begin(patterns), end(patterns),
-                  [&](const text_pattern &p) -> bool
-                  { return p.matches(name); });
+          if (vuln_to_brand)
+            return true;
+
+          const string name = item.name(DESC_A, false, false, true, false);
+          return entry.pattern.matches(item_prefix(item, false) + name);
+        });
 }
 
 bool item_is_worth_listing(const item_def& item)

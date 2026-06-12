@@ -3178,33 +3178,44 @@ void game_options::update_consumable_shortcuts()
     }
 }
 
-// Extract 'vulnerable brand' options from unusual_monster_items
+// Extract 'vulnerable brand' and XL-conditional options from unusual_monster_items
 void game_options::process_unusual_items()
 {
+    unusual_item_patterns.clear();
     for (int i = (int)unusual_monster_items.size() - 1; i >= 0; --i)
     {
         text_pattern& pattern = unusual_monster_items[i];
         string str = pattern.tostring();
-
-        if (!starts_with(str, "vulnerable:"))
-            continue;
-
         vector<string> splits = split_string(":", str, true, true, -1, true);
+
+        text_pattern stripped_pattern;
+        brand_type vuln_brand = SPWPN_FORBID_BRAND;
+        int xl_threshold = -1;
 
         if (splits.size() >= 2)
         {
-            int brand = str_to_ego(OBJ_WEAPONS, splits[1]);
-            if (brand <= 0)
-                continue;
+            if (splits[0] == "vulnerable")
+            {
+              int brand = str_to_ego(OBJ_WEAPONS, splits[1]);
+              if (brand >= 0)
+                vuln_brand = static_cast<brand_type>(brand);
 
-            int xl = 27;
-            if (splits.size() >= 3)
-                parse_int(splits[2].c_str(), xl);
-
-            vulnerable_brand_warning.push_back({static_cast<brand_type>(brand), xl});
+              if (splits.size() >= 3)
+              {
+                  stripped_pattern = text_pattern(splits[1]);
+                  parse_int(splits[2].c_str(), xl_threshold);
+              }
+            }
+            else
+            {
+              stripped_pattern = text_pattern(splits[0]);
+              parse_int(splits[1].c_str(), xl_threshold);
+            }
         }
+        else
+          stripped_pattern = text_pattern(splits[0]);
 
-        unusual_monster_items.erase(unusual_monster_items.begin() + i);
+        unusual_item_patterns.push_back({stripped_pattern, vuln_brand, xl_threshold});
     }
 }
 
