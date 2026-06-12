@@ -1331,9 +1331,9 @@ static string _desc_attack_delay(const item_def &item)
             artefact_set_property(dummy, ARTP_BRAND, SPWPN_NORMAL);
     }
 
-    const int cur_delay = you.attack_delay_with(&dummy).expected();
+    const float cur_delay = you.attack_delay_with(&dummy).expected();
 
-    return make_stringf("\n    Current attack delay: %.1f.", (float)cur_delay / 10);
+    return make_stringf("\n    Current attack delay: %.1f.", cur_delay / 10);
 }
 
 static string _describe_missile_dmg_brand(const item_def &item)
@@ -1535,7 +1535,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
     _append_skill_needed(description, item);
 
     // Add penalties for armour and shield.
-    const int penalty_scale = 100;
+    const int penalty_scale = 20;
     vector<string> would_slow;
     if (is_slowed_by_armour(&item) && you_can_wear(SLOT_BODY_ARMOUR) != false)
     {
