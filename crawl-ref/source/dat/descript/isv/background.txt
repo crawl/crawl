@@ -17,42 +17,44 @@ malo čto može ostanoviti råzjarjenogo berserkera, kromě nadųtosti.
 %%%%
 Brigand
 
-Brigands carry poisoned darts and a small number of nasty curare darts.
+Råzbojniki nesųt otravjene tŕny i nemnogo gnusnyh tŕnov kurare.
 %%%%
 Chaos Knight
 
-Chaos Knights are playthings of the unpredictable Xom, and are subject to the
-god's constantly changing moods.
+Rycari Haosa sųt igrački neprědvidlivogo Ksoma, i oni sųt podležęt vlivu
+neprěstanno izměnjajųćemu sę nastrojeńju boga.
 %%%%
 Cinder Acolyte
 
-Cinder Acolytes worship Ignis, drawing upon the flame of a dying god until
-there is nothing left. They have both melee and fire magic capabilities.
+Pepelavi Akoliti služęt Ignisu, črpųći sily iz plåmenja umirajųćego boga,
+dopoka ničego ne ostane. U njih sųt sposobnosti i bližnjego boja, i ognjenoj
+magije.
 %%%%
 Conjurer
 
-Conjurers begin with the Magic Dart spell, and can learn other non-elemental
-spells to reliably blast their foes.
+Zaklinatelji startujųt s zaklinańjem "Magičny tŕn" i mogųt izučiti druge
+neelementarne zaklinańja, da by věrodostojno poražati svojih neprijateljev.
 %%%%
 Delver
 
-Delvers start their quest five levels below the surface. A set of powerful magic
-items helps them survive the dangerous journey upward.
+Råzvědyvatelji počinajųt svoj pųt́ na pęt́ uråvnjev niže než povŕšina. Sbirka
+moćnyh magičnyh prědmětov pomagaje jim prěžiti nebezpečno pųtovańje vgorų.
 %%%%
 Earth Elementalist
 
-Earth Elementalists know the Sandblast spell, and can later learn more earthen
-spells suitable for subtle stabbing or brute-force blasting.
+Elementalisty zemje vědųt zaklinańje "Pěsȯčna struja" i potom mogųt izučiti
+druge zaklinańja zemje, godęći sę dlja skrytyh koljųćih udarov ili izbuhov
+okrutnoj sily.
 %%%%
 Enchanter
 
-Enchanters know a variety of Hexes that can incapacitate their foes, and are
-equipped with an enchanted dagger and potions of invisibility.
+Čarovatelji vědųt množstvo Proklętij, ktore sųt sposobne oslabiti jih
+neprijateljev, i takože sųt orųdovani začarovanym nožom i napojami nevidimosti.
 %%%%
 Fighter
 
-Fighters are equipped with armour and shield, as well as a weapon of their
-choice and potions of might.
+Bojci sųt orųdovani bronjejų i ščitom, a takože orųžjem po jih izboru i
+napojami moći.
 %%%%
 Fire Elementalist
 
