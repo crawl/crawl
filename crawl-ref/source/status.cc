@@ -114,7 +114,8 @@ bool duration_dispellable(duration_type dur)
 
 bool duration_negative(duration_type dur)
 {
-    return _lookup_duration(dur)->duration_has_flag(D_NEGATIVE);
+    return _lookup_duration(dur)->duration_has_flag(D_NEGATIVE)
+        || (dur == DUR_SWIFTNESS && you.attribute[ATTR_SWIFTNESS] < 0);
 }
 
 bool duration_extended_by_attacks(duration_type dur)
