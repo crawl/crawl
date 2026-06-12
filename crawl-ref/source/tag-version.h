@@ -353,6 +353,7 @@ enum tag_minor_version
     TAG_MINOR_FLAVOUR_KNOWLEDGE,   // Save player knowledge of feature flavour
     TAG_MINOR_REMOVE_PIETY_DECAY,  // Remove piety decay and hysteresis mechanics
     TAG_MINOR_TREE_POSITIONS,      // Save tree positions for forest vines
+    TAG_MINOR_DANGLING_CONSTRICTION, // Fix recalled companions leaving dangling constriction state
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
