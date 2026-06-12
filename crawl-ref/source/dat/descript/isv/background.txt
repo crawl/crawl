@@ -1,7 +1,7 @@
 %%%%
 Air Elementalist
 
-Elementalisty vȯzduha izučili zaklinańje "Šok". Jih električna magija može
+Elementalisti vȯzduha izučili zaklinańje "Šok". Jih električna magija može
 poškoditi grupy neprijateljev, a zaklinańja vȯzduha pomagajųt v boju ili
 izběgańji.
 %%%%
@@ -12,7 +12,7 @@ lěpše orųžje i brȯnjų prěđe bųdųt skončiti sę.
 %%%%
 Berserker
 
-Berserkery věręt v Troga, boga běsnosti, ktory nenavidi magijų. Na ranjih etapah
+Berserkeri věręt v Troga, boga běsnosti, ktory nenavidi magijų. Na ranjih etapah
 malo čto može ostanoviti råzjarjenogo berserkera, kromě nadųtosti.
 %%%%
 Brigand
@@ -42,7 +42,7 @@ moćnyh magičnyh prědmětov pomagaje jim prěžiti nebezpečno pųtovańje vgo
 %%%%
 Earth Elementalist
 
-Elementalisty zemje vědųt zaklinańje "Pěsȯčna struja" i potom mogųt izučiti
+Elementalisti zemje vědųt zaklinańje "Pěsȯčna struja" i potom mogųt izučiti
 druge zaklinańja zemje, godęći sę dlja skrytyh koljųćih udarov ili izbuhov
 okrutnoj sily.
 %%%%
@@ -58,48 +58,50 @@ napojami moći.
 %%%%
 Fire Elementalist
 
-Fire Elementalists have learned the Foxfire spell. Their other starting spells
-are likewise focused on fiery and explosive destruction.
+Elementalisti ognja sųt izučili zaklinańje "Liśji Ogȯnj". Jih druge počętkove
+zaklinańja takože sųsrědotočene na ognjenom i eksplozivnom izniščeńju.
 %%%%
 Gladiator
 
-Gladiators are ready for the arena with light armour, a weapon of their choice,
-and a few throwing weapons and nets.
+Gladiatori sųt gotovi izȯjdti na arenų v lėgkoj bronjě, s orųžjem po svojemu
+izboru i s nekolikymi metajemymi orųžjami i sětkami.
 %%%%
 Hedge Wizard
 
-Hedge Wizards are magic generalists, good at using a wide variety of tools to
-frustrate their foes and gain an edge in the battlefield.
+Samoučni čarovniki sųt universali v magije, umějųći koristati široko množstvo
+instrumentov, da by råzočarovati neprijateljev i dobyti prědnost́ na polju boja.
 %%%%
 Hunter
 
-Hunters carry a shortbow, light armour and a scroll of butterflies.
+Lovci nesųt kråtky lųk, lėgkų bronjų i svitȯk motyljev.
 # TODO: fix this for coglins
 %%%%
 Hexslinger
 
-Hexslingers carry a sling, and use hex magic to make their foes more vulnerable
-to attacks from afar.
+Pračniki Proklętij nesųt pračkų i koristajųt magijų proklętij, da by sdělati
+svojih neprijateljev vyše bezzaščitnymi dlja atak izdaleka.
 %%%%
 Ice Elementalist
 
-Ice Elementalists begin with the Freeze spell. Their later spells provide strong
-offence and defence, but may restrict their movement.
+Elementalisti leda startujųt s zaklinańjem "Leděněńje". Jih pozdnějše zaklinańja
+zabezpečajųt siĺnų atakų i zaščitų, ale mogųt ograničati jih ruh.
 %%%%
 Monk
 
-Monks start with a simple weapon of their choice, an orb of light, and a potion
-of divine ambrosia, and gain additional piety with the first god they worship.
+Mnihi startujųt s prostym orųžjem po jih izboru, kuljejų světla i napojem božskoj
+ambrozije, a takože dobyvajųt dodatnų pobožnost́ k pŕvogmu bogu, ktoromu oni
+bųdųt služiti.
 %%%%
 Necromancer
 
-Necromancers start out with the Soul Splinter spell. Eventually, they can turn
-the dead into allies and use the life force of the living to restore themselves.
+Nekromanti startujųt s zaklinańjem "Odlomȯk Duše". V koncu oni bųdųt smogti
+obraćati mŕtvyh v sȯjųznikov i koristati žitove sily živyh dlja rekreacije
+svojih sil.
 %%%%
 Reaver
 
-Reavers start with a weapon of their choice and deadly magic to supplement it
-when in need. They start with the Kiss of Death spell.
+Grabitelji startujųt s orųžjem po jih izboru i smŕteljnojų magijejų kako
+dopȯlnjeńje, kȯgda to je potrěbno. Oni startujųt s zaklinańjem "Pocěluj Smŕti".
 %%%%
 Summoner
 
@@ -108,25 +110,25 @@ spells to summon stronger and more exotic allies in their library.
 %%%%
 Forgewright
 
-Forgewrights are mages who specialise in the creation of turrets and mechanical
-companions to fight alongside.
+Kovači sųt čarovniki, ktori specializujųt sę v stvorjeńju vežic i mehaničnyh
+sųpųtnikov dlja bitvy.
 %%%%
 Shapeshifter
 
-Shapeshifters use talismans to shift their form, making them powerful melee
-fighters (especially when unarmed) at the cost of armour.
+Něnjatelji koristajųt talismany dlja izměnjeńja svojej formy, čto dělaje
+jih siĺnymi bojcami bližnjego boja (osoblivo bez orųžja) cěnojų izguby brȯnje.
 %%%%
 Alchemist
 
-Alchemists start with the Poisonous Vapours spell, and their magic is very
-effective against foes susceptible to poison.
+Alhimiki startujųt s zaklinańjem "Otravne pary" i jih magija jest veĺmi
+efektivna protiv neprijateljev, poddavajemyh otravě.
 %%%%
 Wanderer
 
-Wanderers start with random equipment and skills.
+Pųtniki startujųt s slučajnym orųdovańjem i uměńjami.
 %%%%
 Warper
 
-Warpers start with a weapon of their choice, a scroll of blinking, darts of
-disjunction, and some Translocation spells in their library.
+Prěměščatelji startujųt s orųžjem po jih izboru, svitkom migańja, tŕnami
+dizjunkcije i něktorymi zaklinańjami Prěměščeńja v jih bibliotekě.
 %%%%
