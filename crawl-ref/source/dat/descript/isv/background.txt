@@ -1,0 +1,130 @@
+%%%%
+Air Elementalist
+
+Elementalisty vȯzduha izučili zaklinańje "Šok". Jih električna magija može
+poškoditi grupy neprijateljev, a zaklinańja vȯzduha pomagajųt v boju ili
+izběgańji.
+%%%%
+Artificer
+
+Umětniki startujųt s několikymi magičnymi palkami i prųtom. Jim potrěbno najdti
+lěpše orųžje i brȯnjų prěđe bųdųt skončiti sę.
+%%%%
+Berserker
+
+Berserkery věręt v Troga, boga běsnosti, ktory nenavidi magijų. Na ranjih etapah
+malo čto može ostanoviti råzjarjenogo berserkera, kromě nadųtosti.
+%%%%
+Brigand
+
+Brigands carry poisoned darts and a small number of nasty curare darts.
+%%%%
+Chaos Knight
+
+Chaos Knights are playthings of the unpredictable Xom, and are subject to the
+god's constantly changing moods.
+%%%%
+Cinder Acolyte
+
+Cinder Acolytes worship Ignis, drawing upon the flame of a dying god until
+there is nothing left. They have both melee and fire magic capabilities.
+%%%%
+Conjurer
+
+Conjurers begin with the Magic Dart spell, and can learn other non-elemental
+spells to reliably blast their foes.
+%%%%
+Delver
+
+Delvers start their quest five levels below the surface. A set of powerful magic
+items helps them survive the dangerous journey upward.
+%%%%
+Earth Elementalist
+
+Earth Elementalists know the Sandblast spell, and can later learn more earthen
+spells suitable for subtle stabbing or brute-force blasting.
+%%%%
+Enchanter
+
+Enchanters know a variety of Hexes that can incapacitate their foes, and are
+equipped with an enchanted dagger and potions of invisibility.
+%%%%
+Fighter
+
+Fighters are equipped with armour and shield, as well as a weapon of their
+choice and potions of might.
+%%%%
+Fire Elementalist
+
+Fire Elementalists have learned the Foxfire spell. Their other starting spells
+are likewise focused on fiery and explosive destruction.
+%%%%
+Gladiator
+
+Gladiators are ready for the arena with light armour, a weapon of their choice,
+and a few throwing weapons and nets.
+%%%%
+Hedge Wizard
+
+Hedge Wizards are magic generalists, good at using a wide variety of tools to
+frustrate their foes and gain an edge in the battlefield.
+%%%%
+Hunter
+
+Hunters carry a shortbow, light armour and a scroll of butterflies.
+# TODO: fix this for coglins
+%%%%
+Hexslinger
+
+Hexslingers carry a sling, and use hex magic to make their foes more vulnerable
+to attacks from afar.
+%%%%
+Ice Elementalist
+
+Ice Elementalists begin with the Freeze spell. Their later spells provide strong
+offence and defence, but may restrict their movement.
+%%%%
+Monk
+
+Monks start with a simple weapon of their choice, an orb of light, and a potion
+of divine ambrosia, and gain additional piety with the first god they worship.
+%%%%
+Necromancer
+
+Necromancers start out with the Soul Splinter spell. Eventually, they can turn
+the dead into allies and use the life force of the living to restore themselves.
+%%%%
+Reaver
+
+Reavers start with a weapon of their choice and deadly magic to supplement it
+when in need. They start with the Kiss of Death spell.
+%%%%
+Summoner
+
+Summoners are able to cast Summon Small Mammal from the start, and begin with
+spells to summon stronger and more exotic allies in their library.
+%%%%
+Forgewright
+
+Forgewrights are mages who specialise in the creation of turrets and mechanical
+companions to fight alongside.
+%%%%
+Shapeshifter
+
+Shapeshifters use talismans to shift their form, making them powerful melee
+fighters (especially when unarmed) at the cost of armour.
+%%%%
+Alchemist
+
+Alchemists start with the Poisonous Vapours spell, and their magic is very
+effective against foes susceptible to poison.
+%%%%
+Wanderer
+
+Wanderers start with random equipment and skills.
+%%%%
+Warper
+
+Warpers start with a weapon of their choice, a scroll of blinking, darts of
+disjunction, and some Translocation spells in their library.
+%%%%
