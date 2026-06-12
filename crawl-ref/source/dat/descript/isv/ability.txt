@@ -9,36 +9,36 @@ Pljuvaje otravų v pricěljeny stvor.
 %%%%
 Combustion Breath ability
 
-Izdyhaje
-Breathes a blast of volatile embers that explode violently around each creature
-they touch. It is harmless to its user.
+Izdyhaje potok ekzplozivnyh tlějųćih vųgljev, ktore nasiĺno eksplodujųt
+okolo vśakogo stvora, ktorogo one dotykajųt. To je neškodlivo dlja
+koristnika sposobnosti.
 %%%%
 Glacial Breath ability
 
-Exhales a powerful wave of frost which encases anything it kills in a solid
-block of durable ice.
+Izdyhaje moćnų valų mråza, ktora vvŕgaje vsih ubityh v krěpkų kostkų
+trvalogo leda.
 %%%%
 Nullifying Breath ability
 
-Breathes a large blast of pure antimagic that dispels magical effects from
-every creature it hits and also significantly interferes with their ability to
-cast spells for a while. It is harmless to its user.
+Izdyhaje veliky potok čistoj antimagije, ktory råzganjaje magične efekty
+iz vśakogo poraženogo stvora i takože značno otęgčaje jim izgovarjati
+zaklinańja na něktory čas. To je neškodlivo dlja koristnika sposobnosti.
 %%%%
 Steam Breath ability
 
-Breathes a powerful blast of steam, scalding a target and leaving
-sight-obscuring steam clouds in its wake.
+Izdyhaje moćny potok pary, oparjajųći cělj i ostavjajųći za sobojų
+oblåky pary, ktore zatėmnjajųt vid.
 %%%%
 Galvanic Breath ability
 
-Exhales a charged burst of electricity that will arc through a target and every
-other creature that is connected to it.
+Izdyhaje nabity poryv električnosti, ktory bųde projdti skroz cělj i vsih
+ostalyh stvorov, svęzanyh s njim.
 %%%%
 Mud Breath ability
 
-Spits an enormous ball of mud that knocks back whatever it hits and drenches the
-surrounding area in a mud slick which impedes enemy movement and causes them to
-sometimes fumble their attacks.
+Pljuvaje ogromnų krųglų kala, ktora odkydaje vse čto poražaje, i råzlivaje
+na okolicě blåtnų kalužų, ktora otęgčaje ruh neprijatelja i poněkȯgda
+prinuđaje jego nesrųčno napadati.
 %%%%
 Caustic Breath ability
 
