@@ -2569,7 +2569,7 @@ static string _cannot_use_reason(const item_def &item, bool temp=true)
     default:
         // Non-equippable types (e.g. ammo) have no can_equip_item reason, but
         // can still be outright forbidden by your god.
-        if (god_forbids_item(item))
+        if (god_forbids_item(item, temp))
         {
             return make_stringf("%s forbids the use of this item.",
                                 uppercase_first(god_name(you.religion)).c_str());

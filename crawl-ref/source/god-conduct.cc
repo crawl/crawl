@@ -1151,9 +1151,10 @@ string get_god_likes(god_type which_god)
 
     return text;
 }
-forbidden_act_type god_forbids_item_handling(const item_def& item, god_type god)
+forbidden_act_type god_forbids_item_handling(const item_def& item,
+                                             god_type god, bool temp)
 {
-    for (forbidden_act_type act : forbidden_acts(item))
+    for (forbidden_act_type act : forbidden_acts(item, temp))
         if (divine_prohibitions[god].count(act))
             return act;
     return FORBID_NONE;

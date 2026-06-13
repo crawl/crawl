@@ -28,7 +28,7 @@ bool oni_drunken_swing();
 bool drink(item_def* potion = nullptr);
 bool invisibility_target_check(const char* prompt);
 
-bool god_hates_brand(const int brand);
+bool god_hates_brand(const brand_type brand);
 
 bool scroll_hostile_check(scroll_type which_scroll);
 bool scroll_has_targeter(scroll_type which_scroll);

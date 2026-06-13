@@ -70,7 +70,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     if (type_bad)
         return false;
 
-    const int brand = get_weapon_brand(item);
+    const brand_type brand = get_weapon_brand(item);
     const int ego   = get_armour_ego_type(item);
 
     if (is_evil_god(which_god) && brand == SPWPN_HOLY_WRATH)
