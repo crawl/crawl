@@ -251,7 +251,7 @@ bool fill_status_info(int status, status_info& inf)
 
     case STATUS_DRACONIAN_BREATH:
     {
-        if ((!species::is_draconian(you.species) || you.experience_level < 7)
+        if ((!species::is_draconian(you.species) || you.experience_level < 7 || form_changes_anatomy())
                 && you.form != transformation::dragon)
         {
             break;
