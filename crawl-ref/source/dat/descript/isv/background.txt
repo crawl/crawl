@@ -1,14 +1,14 @@
 %%%%
 Air Elementalist
 
-Elementalisti vȯzduha izučili zaklinańje "Šok". Jih električna magija može
+Elementalisti Vȯzduha izučili zaklinańje "Šok". Jih električna magija može
 poškoditi grupy neprijateljev, a zaklinańja vȯzduha pomagajųt v boju ili
-izběgańji.
+izběgańju.
 %%%%
 Artificer
 
 Umětniki startujųt s několikymi magičnymi palkami i prųtom. Jim potrěbno najdti
-lěpše orųžje i brȯnjų prěđe bųdųt skončiti sę.
+lěpše orųžje i brȯnjų prěđe, čim oni bųdųt skončiti sę.
 %%%%
 Berserker
 
@@ -42,8 +42,8 @@ moćnyh magičnyh prědmětov pomagaje jim prěžiti nebezpečno pųtovańje vgo
 %%%%
 Earth Elementalist
 
-Elementalisti zemje vědųt zaklinańje "Pěsȯčna struja" i potom mogųt izučiti
-druge zaklinańja zemje, godęći sę dlja skrytyh koljųćih udarov ili izbuhov
+Elementalisti Zemje vědųt zaklinańje "Pěsȯčna struja" i potom mogųt izučiti
+druge zaklinańja zemje, godęće sę dlja skrytyh koljųćih udarov ili izbuhov
 okrutnoj sily.
 %%%%
 Enchanter
@@ -58,17 +58,17 @@ napojami moći.
 %%%%
 Fire Elementalist
 
-Elementalisti ognja sųt izučili zaklinańje "Liśji Ogȯnj". Jih druge počętkove
-zaklinańja takože sųsrědotočene na ognjenom i eksplozivnom izniščeńju.
+Elementalisti Ognja sųt izučili zaklinańje "Liśji Ogȯnj". Jih druge počętkove
+zaklinańja sųt takože sųsrědotočene na ognjenom i eksplozivnom izniščeńju.
 %%%%
 Gladiator
 
-Gladiatori sųt gotovi izȯjdti na arenų v lėgkoj bronjě, s orųžjem po svojemu
+Gladiatori sųt gotovi izȯjdti na arenų v lėgkoj bronji, s orųžjem po svojemu
 izboru i s nekolikymi metajemymi orųžjami i sětkami.
 %%%%
 Hedge Wizard
 
-Samoučni čarovniki sųt universali v magije, umějųći koristati široko množstvo
+Samoučni Čarovniki sųt universali v magiji, umějųći koristati široko množstvo
 instrumentov, da by råzočarovati neprijateljev i dobyti prědnost́ na polju boja.
 %%%%
 Hunter
@@ -83,7 +83,7 @@ svojih neprijateljev vyše bezzaščitnymi dlja atak izdaleka.
 %%%%
 Ice Elementalist
 
-Elementalisti leda startujųt s zaklinańjem "Leděněńje". Jih pozdnějše zaklinańja
+Elementalisti Leda startujųt s zaklinańjem "Leděněńje". Jih pozdnějše zaklinańja
 zabezpečajųt siĺnų atakų i zaščitų, ale mogųt ograničati jih ruh.
 %%%%
 Monk
@@ -105,8 +105,9 @@ dopȯlnjeńje, kȯgda to je potrěbno. Oni startujųt s zaklinańjem "Pocěluj S
 %%%%
 Summoner
 
-Summoners are able to cast Summon Small Mammal from the start, and begin with
-spells to summon stronger and more exotic allies in their library.
+Prizyvatelji iz počętka mogųt čarovati "Prizyv Malogo Sȯsavca" i
+startujųt sȯ svojejų bibliotekojų zaklinanij dlja prizyva vyše egzotičnyh
+sȯjųznikov.
 %%%%
 Forgewright
 
@@ -115,7 +116,7 @@ sųpųtnikov dlja bitvy.
 %%%%
 Shapeshifter
 
-Něnjatelji koristajųt talismany dlja izměnjeńja svojej formy, čto dělaje
+Měnjatelji koristajųt talismany dlja izměnjeńja svojej formy, čto dělaje
 jih siĺnymi bojcami bližnjego boja (osoblivo bez orųžja) cěnojų izguby brȯnje.
 %%%%
 Alchemist
