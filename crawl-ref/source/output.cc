@@ -2871,7 +2871,7 @@ static string _status_mut_rune_list(int sw)
             status.emplace_back(inf.short_text);
     }
 
-    int move_cost = (player_speed() * player_movement_speed()) / 10;
+    int move_cost = player_overall_move_delay();
     if (move_cost != 10)
     {
         const char *help = (move_cost <   8) ? "very quick" :

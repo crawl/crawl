@@ -5915,7 +5915,7 @@ bool monster::matches_player_speed() const
 
 int monster::player_speed_energy() const
 {
-    const int pmove = player_movement_speed() * player_speed();
+    const int pmove = player_overall_move_delay(BASELINE_DELAY);
     return div_rand_round(speed * pmove, 100);
 }
 

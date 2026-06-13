@@ -1935,7 +1935,7 @@ static int _wu_jian_number_of_attacks(int& dmg_penalty, bool wall_jump)
     // 10 aut for every character, to avoid punishing fast races.
     const int move_delay = (you.attribute[ATTR_SERPENTS_LASH]
                             ? 100
-                            : player_movement_speed() * player_speed())
+                            : player_overall_move_delay(BASELINE_DELAY))
                                                         * (wall_jump ? 2 : 1);
 
     int attack_delay = you.attack_delay().roll() * BASELINE_DELAY;

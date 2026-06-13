@@ -1125,8 +1125,6 @@ int player_shield_racial_factor();
 int player_armour_shield_spell_penalty();
 int player_armour_stealth_penalty();
 
-int player_movement_speed(bool check_terrain = true, bool temp = true);
-
 int player_icemail_armour_class();
 int player_condensation_shield_class();
 int sanguine_armour_bonus();
@@ -1179,7 +1177,14 @@ int player_spec_summ();
 int player_spec_forgecraft();
 int player_spec_tloc();
 
-int player_speed();
+// Delay for a normally-10-aut action
+int player_speed(int scale = 1);
+// Delay for a movement action (ignoring player_speed)
+int player_movement_speed(bool check_terrain = true, bool temp = true,
+                          int scale = 1);
+// Final delay for a movement action, including speed and movement speed
+int player_overall_move_delay(int scale = 1, bool check_terrain = true,
+                              bool temp = true);
 
 int player_spell_levels(bool floored = true);
 int player_total_spell_levels();

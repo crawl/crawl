@@ -892,7 +892,8 @@ static bool _try_stampede(const coord_def& target)
 
 // Handles the player trying to move/attack/swap into a given location.
 // Returns true if handling of further steps should continue after this.
-static bool _handle_player_step(const coord_def& targ, int& delay, bool rampaging,
+static bool _handle_player_step(const coord_def& targ, int& delay, const int delay_scale,
+                                bool rampaging,
                                 bool first_step,
                                 bool& did_stampede,
                                 bool& did_move, bool& did_attack, bool& did_open_door)
@@ -936,11 +937,11 @@ static bool _handle_player_step(const coord_def& targ, int& delay, bool rampagin
                     did_attack |= wu_jian_post_move_effects(false, initial_pos, false);
 
                 // Accumulate cost of moving across terrain, then average it.
-                int stampede_delay = player_movement_speed();
+                int stampede_delay = player_movement_speed(true, true, delay_scale);
                 // Move a second time (assuming we ended up where we expected to).
                 if (you.pos() == targ && _try_stampede(you.pos() + (targ - initial_pos)))
                 {
-                    stampede_delay = div_rand_round(stampede_delay + player_movement_speed(), 2);
+                    stampede_delay = div_rand_round(stampede_delay + player_movement_speed(true, true, delay_scale), 2);
                     if (you_worship(GOD_WU_JIAN))
                         did_attack |= wu_jian_post_move_effects(false, initial_pos, false);
                 }
@@ -1048,7 +1049,7 @@ static bool _handle_player_step(const coord_def& targ, int& delay, bool rampagin
         {
             // Moving over plants is slow. We will print a message about it but
             // only when moving from open space->plant.
-            delay += 5;
+            delay += 5 * delay_scale;
 
             const monster* current = monster_at(you.pos());
             if (!current || !fedhas_passthrough(current))
@@ -1078,7 +1079,7 @@ static bool _handle_player_step(const coord_def& targ, int& delay, bool rampagin
 
     // Calculate delay based on the tile we moved *into* (before any traps trigger
     // and potentially move us somewhere else).
-    delay += player_movement_speed();
+    delay += player_movement_speed(true, true, delay_scale);
     did_move = true;
 
     if (mon && !fedhas_move)
@@ -1208,6 +1209,7 @@ void move_player_action(coord_def move)
     const coord_def initial_pos = you.pos();
     targ = you.pos();
     int delay = 0;
+    int delay_scale = 60;
     int steps_taken = 0;
     bool did_move = false;
     bool did_attack = false;
@@ -1230,8 +1232,8 @@ void move_player_action(coord_def move)
             break;
         }
 
-        if (!_handle_player_step(targ, delay, num_steps > 1, steps_taken == 0,
-                                 did_stampede,
+        if (!_handle_player_step(targ, delay, delay_scale,
+                                 num_steps > 1, steps_taken == 0, did_stampede,
                                  did_move, did_attack, did_open_door))
         {
             // Need to mark another step here so that move delay will avoid a div-by-0
@@ -1246,8 +1248,8 @@ void move_player_action(coord_def move)
     // player_fight())
     if (did_move)
     {
-        delay = div_rand_round(delay, steps_taken);
-        you.time_taken = div_rand_round(player_speed() * delay, BASELINE_DELAY);
+        you.time_taken = div_rand_round(player_speed(delay_scale) * delay,
+                                        BASELINE_DELAY * delay_scale * delay_scale * steps_taken);
         you.turn_is_over = true;
     }
 
