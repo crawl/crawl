@@ -53,23 +53,23 @@ takyh oblåkov bųdųt měnjati sę v zavisnosti od moći kart.
 # Destruction
 Vitriol card
 
-The card depicts an oklob plant, dripping with its distinctive corrosive sap.
+Na kartě jest izobražena råstlina oklob, kapajųće svoj samobytny råzjedajųći sok.
 
-Drawing this card will unleash a corrosive attack spell.
+Iztęgańje tutoj karty bųde aktivovati zaklinańje råzjedajųćej ataky.
 %%%%
 the Storm card
 
-The card depicts a ship at sea sinking in a thunderstorm.
+Na kartě jest izobraženy tonųći v morju korab v čas gromovoj burje.
 
-Drawing this card unleashes a storm of wind and electrical discharges.
-Increasing card power will result in a stronger wind force and stronger, more
-numerous discharges.
+Iztęgańje tutoj karty bųde aktivovati burjų větra i električne iskry. Ulěpšeńje
+moći karty bųde privesti k usiljeńju sily větra i k siĺnějšim, mnogočislnějšim
+iskram.
 %%%%
 Pain card
 
-The card depicts an iron wheel, menacing with spikes and rusted with blood.
+Na kartě jest izobraženo želězno kolo, grozęće bodcami i zarđavěvše od krvi.
 
-Drawing this card unleashes a necromantic attack spell.
+Iztęgańje tutoj karty bųde aktivovati nekromantično zaklinańje ataky.
 %%%%
 the Orb card
 
