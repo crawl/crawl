@@ -2,14 +2,19 @@
 # Escape
 Velocity card
 
-The card depicts an empty, well-worn pair of boots. Sand, ashes, and turf
-coat the boots' soles.
+Na kartě jest izobražena pusta, vetha dvojka obuvij. Jih podȯšvy sųt pokryte
+pěskom, pepelom i drnom.
 
-Drawing this card can grant great speed to allies or terrible slowness to foes.
+Iztęgańje tutoj karty može darovati velikų bystrost́ sȯjųznikam ili odstrašajųćų
+pomalost́ neprijateljam.
 %%%%
 the Tomb card
 
-The card depicts a royal crypt, its entrance sealed by a heavy stone slab.
+Na kartě jest izobražena kråljevska kripta, vhod ktoroj jest zapečatany tęžkojų
+kamennojų dȯskojų.
+
+Iztęgańje tutoj karty pogrebaje jų koristnika v zaščitne, dočasne stěny iz tvŕdoj
+skaly.
 
 Drawing this card entombs its user in protective, temporary walls of solid rock.
 At lower power levels or with adjacent creatures, the tomb may be imperfect.
