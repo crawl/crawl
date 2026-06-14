@@ -102,81 +102,80 @@ the Elements card
 
 Na kartě sųt izobražene figury velikyh zvěŕev, skryvajųćih sę v pěsȯčnoj burji.
 
-Iztęgańje tutoj karty bųde pozvati trěh zvěŕev od četyrěh elementov.
+Iztęgańje tutoj karty bųde prizvati trěh zvěŕev od četyrěh elementov.
 %%%%
 the Pentagram card
 
-The card depicts cultists marking out a ritual pentagram on the floor.
+Na kartě sųt izobražene kultniki, rysujųći na podlogě rituaĺnų pentagramų.
 
-Drawing this card will summon a pair of demons to the user's aid. There is a
-small chance one of the demons will be hostile.
+Iztęgańje tutoj karty bųde prizvati dvojkų demonov dlja pomoći koristniku.
+Jest maly šans že jedin iz demonov bųde neprijateljskym.
 %%%%
 the Dance card
 
-The card depicts an extravagantly-dressed, masked figure dancing alone in a
-vast room.
+Na kartě jest izobražena ekstravagantno oblěčena figura v maskě, tancujųća
+sama v bezměrnoj komnatě.
 
-Drawing this card will summon a dancing weapon. Its quality, brand, and
-friendliness are all affected by card power.
+Iztęgańje tutoj karty bųde prizvati tancujųće orųžje. Jego kvalitet, brend
+i privětlivost́ zavisęt od moći kart.
 %%%%
 the Swarm card
 
-The card depicts a bear surrounded by a swarm of bees. It hums ominously.
+Na kartě jest izobraženy medvěd́, okrųženy rojem pčel. Oni zlověšće brenčaje.
 
-Drawing this card will summon bees.
+Iztęgańje tutoj karty bųde prizvati pčel.
 %%%%
 the Rangers card
 
-The card depicts an arrow in a bull's-eye, which has been split by a second
-arrow.
+Na kartě jest izobražena strěla v centru cělja, ktora byla råzděljena drugojų strělojų.
 
-Drawing this card will summon several archers.
+Iztęgańje tutoj karty bųde prizvati několikyh lųčnikov.
 %%%%
 the Illusion card
 
-The card depicts someone standing in a hall of mirrors, surrounded by their own
-reflections.
+Na kartě jest izobraženy někto stojęći v salě zŕcal, okrųženy svojimi vlastnymi
+odrazami.
 
-Drawing this card will summon an illusion of the user. Its power will depend
-upon one's own.
+Iztęgańje tutoj karty bųde prizvati iluzijų koristnika. Jej moć bųde zavisěti
+od jej vlastnyh sil.
 %%%%
 # Punishment
 Wrath card
 
-The card depicts the hand of the divine, reaching down from the heavens to hurl
-furious lightning.
+Na kartě jest izobražena rųka božskogo, dosęgajųća iz nebes do zemje, da by metnųti
+zlobne blěskavice.
 
-Drawing this card will draw a god's wrath against the user.
+Iztęgańje tutoj karty bųde izzvati gněv boga protiv koristnika.
 %%%%
 the Wraith card
 
-The card depicts absolutely nothing.
+Na kartě ne jest izobraženo ničego.
 
-Drawing this card will drain the user.
+Iztęgańje tutoj karty bųde osušiti koristnika.
 %%%%
 the Swine card
 
-The card depicts several feral hogs wallowing in a mud pit.
+Na kartě sųt izobražene několiko dikyh vepŕev, valjajųćih sę v blåtnoj jamě.
 
-Drawing this card will make its user turn pink and root for truffles.
+Iztęgańje tutoj karty bųde sdělati jej koristnika rozovym ryteljem trufelev.
 %%%%
 Torment card
 
-The card depicts a screaming figure being tortured on the rack.
+Na kartě jest izobražena kričęća figura, ktorų mųčęt na věšalkě.
 
-Drawing this card will cause agonising injury to the user.
+Iztęgańje tutoj karty bųde pričiniti mųčiteljno poranjeńje.
 %%%%
 # buggy cards
 a buggy card
 
-The card depicts a Crawl player filing a bug report on Mantis.
+Na kartě jest izobražany igrač v Crawlm ktory piše bug report v Mantis.
 
-Drawing this card is a bug, if one ever encounters it as such.
+Iztęgańje tutoj karty jest bug, jestli on kȯgdakoli tobě bųde strěsti sę.
 %%%%
 a very buggy card
 
-The card depicts several Crawl players angrily filing several bug reports on
-Mantis.
+Na kartě sųt izobraženi několiko igračev v Crawl, ktori pišųt několiko
+bug reportov v Mantis.
 
-Drawing this card is a bug, if one ever encounters it as such.
+Iztęgańje tutoj karty jest bug, jestli on kȯgdakoli tobě bųde strěsti sę.
 %%%%
