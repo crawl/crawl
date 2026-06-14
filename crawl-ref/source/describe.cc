@@ -6647,7 +6647,9 @@ static string _desc_shooting_star_dam(const monster_info &mi)
 static string _desc_splinterfrost_dam(const monster_info &mi)
 {
     bolt beam;
-    const int pow = mi.props[SPLINTERFROST_POWER_KEY].get_int();
+    int pow = mi.hd;
+    if (mi.props.exists(SPLINTERFROST_POWER_KEY))
+        pow = mi.props[SPLINTERFROST_POWER_KEY].get_int();
     zappy(ZAP_SPLINTERFROST_FRAGMENT, pow, mi.summoner_id != MID_PLAYER, beam);
     return make_stringf("%dd%d", beam.damage.num, beam.damage.size);
 }
