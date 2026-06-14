@@ -39,7 +39,7 @@ jego neprijateljami.
 %%%%
 the Elixir card
 
-Na kartě jest izobražena samodovoljny usměh, stvorjeny iz devęti čaš.
+Na kartě jest izobraženy samodovoljny usměh, stvorjeny iz devęti čaš.
 
 Iztęgańje tutoj karty bystro lěči zdråvje i magijų koristnika.
 %%%%
@@ -106,7 +106,7 @@ Iztęgańje tutoj karty bųde prizvati trěh zvěŕev od četyrěh elementov.
 %%%%
 the Pentagram card
 
-Na kartě sųt izobražene kultniki, rysujųći na podlogě rituaĺnų pentagramų.
+Na kartě sųt izobraženi kultniki, rysujųći na podlogě rituaĺnų pentagramų.
 
 Iztęgańje tutoj karty bųde prizvati dvojkų demonov dlja pomoći koristniku.
 Jest maly šans že jedin iz demonov bųde neprijateljskym.
@@ -142,7 +142,7 @@ od jej vlastnyh sil.
 # Punishment
 Wrath card
 
-Na kartě jest izobražena rųka božskogo, dosęgajųća iz nebes do zemje, da by metnųti
+Na kartě jest izobražena božska rųka, dosęgajųća iz nebes do zemje, da by metnųti
 zlobne blěskavice.
 
 Iztęgańje tutoj karty bųde izzvati gněv boga protiv koristnika.
@@ -155,7 +155,7 @@ Iztęgańje tutoj karty bųde osušiti koristnika.
 %%%%
 the Swine card
 
-Na kartě sųt izobražene několiko dikyh vepŕev, valjajųćih sę v blåtnoj jamě.
+Na kartě sųt izobraženi několiko dikyh vepŕev, valjajųćih sę v blåtnoj jamě.
 
 Iztęgańje tutoj karty bųde sdělati jej koristnika rozovym ryteljem trufelev.
 %%%%
@@ -168,7 +168,7 @@ Iztęgańje tutoj karty bųde pričiniti mųčiteljno poranjeńje.
 # buggy cards
 a buggy card
 
-Na kartě jest izobražany igrač v Crawlm ktory piše bug report v Mantis.
+Na kartě jest izobraženy igrač v Crawlm ktory piše bug report v Mantis.
 
 Iztęgańje tutoj karty jest bug, jestli on kȯgdakoli tobě bųde strěsti sę.
 %%%%
