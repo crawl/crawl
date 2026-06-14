@@ -1494,16 +1494,6 @@ bool monster::wants_weapon(const item_def &weap) const
         return false;
     }
 
-    // Holy monsters that aren't gifts/worshippers of chaotic gods
-    // and monsters that are gifts/worshippers of good gods won't
-    // use potentially evil weapons.
-    if (((is_holy() && !is_chaotic_god(god))
-            || is_good_god(god))
-        && is_potentially_evil_item(weap))
-    {
-        return false;
-    }
-
     // Holy monsters and monsters that are gifts/worshippers of good
     // gods won't use evil weapons.
     if ((is_holy() || is_good_god(god)) && is_evil_item(weap))

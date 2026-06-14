@@ -84,33 +84,6 @@ bool is_holy_item(const item_def& item, bool calc_unid, bool temp)
                          calc_unid, temp);
 }
 
-bool is_potentially_evil_item(const item_def& item, bool calc_unid, bool temp)
-{
-    if (_has_brand_matching(item, [](brand_type b) { return b == SPWPN_CHAOS; },
-                      false, temp))
-    {
-        return true;
-    }
-
-    if (!calc_unid && !item.is_identified())
-        return false;
-
-    switch (item.base_type)
-    {
-    case OBJ_MISSILES:
-        {
-        const int item_brand = get_ammo_brand(item);
-        if (item_brand == SPMSL_CHAOS)
-            return true;
-        }
-        break;
-    default:
-        break;
-    }
-
-    return false;
-}
-
 bool is_evil_brand(brand_type brand)
 {
     switch (brand)
@@ -180,6 +153,8 @@ bool is_evil_item(const item_def& item, bool calc_unid, bool temp)
 
     switch (item.base_type)
     {
+    case OBJ_MISSILES:
+        return get_ammo_brand(item) == SPMSL_CHAOS;
     case OBJ_SCROLLS:
         return item.sub_type == SCR_TORMENT;
     case OBJ_STAVES:
@@ -400,9 +375,6 @@ vector<forbidden_act_type> forbidden_acts(const item_def &item, bool temp)
     {
         acts.push_back(FORBID_HASTY);
     }
-
-    if (is_potentially_evil_item(item, false, temp))
-        acts.push_back(FORBID_EVIL);
 
     if (is_transforming_item(item, false, temp))
         acts.push_back(FORBID_TRANSFORMATION);
