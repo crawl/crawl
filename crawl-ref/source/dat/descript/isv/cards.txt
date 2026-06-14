@@ -18,7 +18,7 @@ skaly. Na nizkyh rangah moći ili iz-za sųsědnyh stvorov kripta može byti
 nesȯvŕšenojų.
 
 Kripta poddŕživaje sę blågodarę prisųtstvu jej tvorca v njej, vśako dvigańje
-iz centra kripty bųde privoditi k råzdrobjeńju jej stěn.
+iz centra kripty bųde privesti k råzdrobjeńju jej stěn.
 %%%%
 Exile card
 
@@ -26,7 +26,7 @@ Na kartě sųt izobražene mnogočisĺne rųky, izhodęće iz zějajųćego port
 odolěvajųće panikujųćų figurų.
 
 Iztęgańje tutoj karty može izgnati bližnjih stvorov v Bezdnų, i čim vyše rang moći,
-tym vyše stvorov dostupno dlja izgnańja. Tuta karta nikȯgda ne bųde izganjati jų
+tym vyše stvorov dostupno dlja izgnańja. Tuta karta nikȯgda ne bųde izgnati jej
 koristnika.
 %%%%
 the Shaft card
@@ -73,32 +73,36 @@ Iztęgańje tutoj karty bųde aktivovati nekromantično zaklinańje ataky.
 %%%%
 the Orb card
 
-The card depicts a figure surrounded by floating, glowing orbs of energy.
+Na kartě jest izobražena figura, ktora okrųžena světęćimi sę, plavajųćimi
+v vȯzduhu kuljami energije.
 
-Drawing this card unleashes one or possibly more destructive orbs of pure magic.
+Iztęgańje tutoj karty bųde izpustiti jednų ili, možlivo, vyše niščivyh kulej
+čistoj magije.
 %%%%
 Degeneration card
 
-The card depicts a dragon whose scales are sloughing off, revealing a sheep
-underneath.
+Na kartě jest izobraženy drakon, od ktorogo spadaje luska, izjavjajųći ovcų
+pod njejų.
 
-Drawing this card will attempt to polymorph and malmutate nearby enemies into
-weaker forms, and will briefly daze those that cannot be polymorphed.
+Iztęgańje tutoj karty bųde dozvoliti polimorfovati i malmutovati bližnjih
+neprijateljev v slabe formy i bųde ne na dȯlgo otųpiti tyh, kogo ne možno
+polimorfovati.
 %%%%
 Wild Magic card
 
-The card depicts a pointy wizard's hat, scorched and resting on a pile of ashes.
+Na kartě jest izobražena ostrokonėčna šapka čarovnika, ktora obžžena i
+odpočivaje na kupě pepela.
 
-Drawing this card causes wild magic (as if from miscasting a spell) to act upon
-its user's enemies. Each creature affected will restore some of the user's
-magic.
-# Summoning
+Iztęgańje tutoj karty porađaje vliv dikoj magije (kako by od neuspěšnogo
+čarovańja zaklinańja) na neprijateljev koristnika. Vśaky stvor bųde izlěčiti
+čęst́ magije koristnika.
 %%%%
+# Summoning
 the Elements card
 
-The card depicts the figures of great beasts lurking in a sandstorm.
+Na kartě sųt izobražene figury velikyh zvěŕev, skryvajųćih sę v pěsȯčnoj burji.
 
-Drawing this card will summon three beasts of the four elements.
+Iztęgańje tutoj karty bųde pozvati trěh zvěŕev od četyrěh elementov.
 %%%%
 the Pentagram card
 
