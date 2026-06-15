@@ -314,6 +314,13 @@ struct opt_parse_state
     }
 };
 
+struct unusual_item_pattern
+{
+    text_pattern pattern;
+    brand_type brand;
+    int xl_threshold;
+};
+
 /// This class is used to separate out general option handling (parsing,
 /// meta-state, include file loading, lua handling) from specific option field
 /// handling; the latter should be implemented on the subclass `game_options`.
@@ -559,10 +566,9 @@ public:
     bool        reduce_animations;   // if true, don't show interim steps for animations
     bool        drop_disables_autopickup;   // if true, automatically remove drops from autopickup
 
-    vector<text_pattern> unusual_monster_items; // which monster items to
-                                                // highlight as unusual
-    vector<pair<brand_type, int>> vulnerable_brand_warning; // Monster brands to hilight the monster
-                                                // as having, below a given XL, while vulnerable
+    vector<text_pattern> unusual_monster_items;         // raw entries from the options file
+    vector<unusual_item_pattern> unusual_item_patterns; // structured entries with brand
+                                                        // vulnerability and XL thresholds
 
     int         hp_warning;      // percentage hp for danger warning
     int         magic_point_warning;    // percentage mp for danger warning
