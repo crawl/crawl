@@ -1962,6 +1962,9 @@ int player_movement_speed(bool check_terrain, bool temp, int scale)
 int player_overall_move_delay(int scale, bool check_terrain,
                               bool temp, bool sampled)
 {
+    // We use a scale of 60 because its many factors leads to exact calculation
+    // in many cases, e.g. when the player is hasted and so we will multiply by
+    // 2/3.
     int delay_scale = 60;
     int val = player_speed(delay_scale)
               * player_movement_speed(check_terrain, temp, delay_scale)
