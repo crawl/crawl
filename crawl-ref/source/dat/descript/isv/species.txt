@@ -12,7 +12,7 @@ těles.
 %%%%
 Deep Elf
 
-Glųbinni Elfi imajųt vysokų naklonnost́ kȯ vsim sortam magije, ale oni sųt veĺmi
+Glųbinni Elfi imajųt vysokų naklonnost́ kȯ vsim školam magije, ale oni sųt veĺmi
 krěhki. Oni bystro regenerujųt magičnų silų.
 %%%%
 Demigod
@@ -28,7 +28,7 @@ demonične mutacije.
 Djinni
 
 Džini sųt věčno goręći duhi. S jih råstom oni avtomatično učęt sę novym zaklinańjam
-i čarujųt jih, črpajųći silų iz svojego ognja.
+i čarujųt jih, črpajųći silų iz svojego plåmenja.
 %%%%
 Draconian
 
@@ -37,7 +37,7 @@ svoj kolor.
 %%%%
 Formicid
 
-Formicidi sųt podobne člověku mråvji, ktori umětno kopajųt zemjų. Jih rųky i nogy
+Formicidi sųt podobne člověku mråvji, ktori izkusno kopajųt zemjų. Jih rųky i nogy
 sųt izključiteljno siĺne, i oni živųt v stańju stalogo stazisa.
 %%%%
 Felid
@@ -57,81 +57,82 @@ jest nizko zdråvje, ale jih kamenne tělesa sųt nevěrojętno tųge.
 %%%%
 Gnoll
 
-Gnolls are canine-like humanoids. They are unable to specialise in any single
-skill, but instead gradually become proficient in all skills at once.
+Gnoli sųt humanoidi, podobni psam. Oni ne mogųt specializovati sę v kakom-libo
+jednom uměńjų, zatože oni učęt sę vsim uměńjam jednočasno.
 %%%%
 Human
 
-Humans are natural explorers. Discovering new places refreshes and invigorates them.
-They are otherwise completely average.
+Ljudi od prirody sųt izslědovatelji. Odkryt́je novyh měst osvěžaje i nadyhaje jih.
+V ostalom oni sųt vpȯlně srědnji.
 %%%%
 Tengu
 
-Tengu are bird-people who love to fight, both with weapons and spells. They are
-fragile but agile, and eventually learn to fly.
+Tengu sųt ljudi-ptici, ktori ljubęt vojevati orųžjem i zaklinańjami. Oni sųt
+krěhki, ale srųčni i v koncu učęt sę lětati.
 %%%%
 Kobold
 
-Kobolds are attuned to the shadows and can only see or be seen at a close range.
-They are small and a little fragile, and are talented in most skills.
+Koboĺdi naležęt těnjam i mogųt uględěti ili byti uględěnymi jedino s blizkogo
+dalja. Oni sųt mali i nemnogo krěhki, a takože izkusni v vęćiństvu svojih uměnij.
 %%%%
 Merfolk
 
-Half fish, half human, Merfolk are citizens of both water and land. They are
-strong combatants, and adept at using magic to assist in battle.
+Polu-ljudi, polu-rybi, Merfolki sųt žitelji vody i zemje. Oni sųt siĺni bojci
+i izkusno koristajųt magijų v boju.
 %%%%
 Minotaur
 
-Minotaurs are large muscular humans with bovine heads. They excel at all forms
-of close and ranged combat.
+Minotavri sųt veliki muskuĺni ljudi s byčjini glåvami. Oni pŕvorędno vlådějųt vsimi
+tipami bližnjego i daljnjego boja.
 %%%%
 Mountain Dwarf
 
-Mountain Dwarves are strong melee fighters and capable heavy-armoured casters.
-They can use scrolls to enchant even some artefacts.
+Goŕski Dvarfi sųt siĺni bojci bližnjego boja i sposobni čarovniki v tęžkoj bronji.
+Oni mogųt koristati svitki dlja začarovańja až něktoryh artefaktov.
 %%%%
 Mummy
 
-Compelled to walk by an ancient curse, Mummies have innate faith and are adept
-at Necromancy, but learn other skills very slowly. They cannot drink potions.
+Mumiji, prinuđeni hoditi pod antičnym proklęt́jem, imajųt vrođenų věrų i dobro
+vlådějųt Nekromantijejų, ale učęt sę drugym uměńjam veĺmi pomalo. Oni ne mogųt
+piti napoje.
 %%%%
 Naga
 
-Nagas are hybrids: human from the waist up, with a snake-like tail instead of
-legs. They move very slowly but are naturally resilient.
+Nagi sųt hibridi: od talije i vyše oni sųt ljudi, ale zaměsto nog u njih jest
+zmijiny hvost. Oni hodęt veĺmi pomalo, ale imajųt prirodnų elastičnost́.
 %%%%
 Octopode
 
-Octopodes are a species of amphibious cephalopods. They can wear eight rings,
-but almost no armour fits them.
+Ośmonogi sųt vid zemnovodnyh glåvonožcev. Oni mogųt nositi osm pŕstėnjev, ale
+bliz nikaka bronja jim ne podhodi.
 %%%%
 Oni
 
-Large, robust, and extremely fond of drinking, Oni make capable brawlers and
-spellcasters and gain extra benefits from healing potions.
+Veliki, krěpki i krajni ljubitelji napojev, Oni sųt izkusni bojci i čarovniki,
+ktori dobyvajųt dodatnų korist́ od lěčęćih napojev.
 %%%%
 Poltergeist
 
-Formless ghosts who delight in hexing their enemies. They can equip many
-different hats, gloves, boots, or cloaks at once, but cannot wear body armour.
+Bezformeni duhi, ktori zloradujųt sę od čarovańja proklętij na svojih neprijateljev.
+Oni mogųt jednočasno nositi mnogo råznyh šapȯk, obuvij ili plaščev, ale ne mogųt
+nositi natělnų bronjų.
 %%%%
 Revenant
 
-Revenants are skeletal undead who are strong at melee combat and can empower
-damage-dealing spells by consuming memories they harvest from their victims.
+Revenanti sųt skeletni mŕtvėci, siĺni v bližnjem boju i sposobni usiljati
+škodęći zaklinańja posrědstvom vpivańja vȯzpomněnij, ktore oni žnųt u svojih žrtv.
 %%%%
 Spriggan
 
-Very small, very frail and very fast, Spriggans are highly competent stabbers
-and spellcasters.
+Veĺmi mali, veĺmi krěhki i veĺmi bystri, Sprigani sųt izkusni majstri skrytyh udarov
+i čarovanij zaklinanij.
 %%%%
 Troll
 
-Trolls are monstrous creatures with powerful claws. They regenerate health
-rapidly.
+Troli sųt monstruozni stvory s moćnymi nogt́ami. Oni bystro regenerujųt zdråvje.
 %%%%
 Vine Stalker
 
-Frail symbionts, Vine Stalkers cannot regain health from potions. Their magical
-reserves absorb damage, and they pack a magic-restoring bite.
+Krěhki simbioniti, Lozovi Stalkeri ne mogųt lěčiti zdråvje posrědstvom napojev. Jih
+magične rezervy vpivajųt škodų i oni vlådějųt ukųšeńjem, lěčęćim magijų.
 %%%%
