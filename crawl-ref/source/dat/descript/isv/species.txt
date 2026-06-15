@@ -52,8 +52,8 @@ sųt najsiĺni, kȯgda bystro galopujųt do svojih neprijateljev.
 %%%%
 Gargoyle
 
-Made of living stone, Gargoyles have a preternatural affinity for earth magic.
-They have low health, but their stone bodies are incredibly tough.
+Stvorjeni iz živogo kamenja, Gargulji imajųt nadprirodnų sposobnost́ k magiji zemje. U njih
+jest nizko zdråvje, ale jih kamenne tělesa sųt nevěrojętno tųge.
 %%%%
 Gnoll
 
