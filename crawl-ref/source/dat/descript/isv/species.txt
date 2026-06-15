@@ -1,52 +1,54 @@
 %%%%
 Barachi
 
-Barachim are slow-moving, amphibious humanoids who can hop long distances.
-Their extended range of vision also allows them to be seen from further away.
+Barači sųt pomali zemnovodni humanoidi, ktori mogųt skakati na velike dalje.
+Iz-za jih råzširjenogo vida jih takože možno lėgko uględěti s velikogo dalja.
 %%%%
 Coglin
 
-Coglins ride enchanted exoskeletons able to wield weapons in both hands,
-wrapping slow-revving metal around their puny goblinoid frames.
+Koglini nosęt začarovane ekzoskelety, ktore sposobne vlåděti orųžjem v oboh
+rųkah, ovivajųći pomalo prěměšćajųći sę metal okolo svojih krěhkyh goblinoidnyh
+těles.
 %%%%
 Deep Elf
 
-Deep Elves have a strong affinity for all kinds of magic, but are very fragile.
-They regenerate magical power rapidly.
+Glųbinni Elfi imajųt vysokų naklonnost́ kȯ vsim sortam magije, ale oni sųt veĺmi
+krěhki. Oni bystro regenerujųt magičnų silų.
 %%%%
 Demigod
 
-Demigods refuse to worship any god, but make up for this with divine attributes
-and high reserves of health and magic.
+Polubogi odkazyvajųt sę služiti vśakomu bogu, ale kompensujųt to božskymi atributami
+i vysokymi rezervami zdråvja i magije.
 %%%%
 Demonspawn
 
-Demonspawn are half human, half demon. They acquire strong demonic mutations as
-they grow.
+Demonični Potomki sųt polu-ljudi, polu-demoni. S jih råstom oni nabyvajųt siĺne
+demonične mutacije.
 %%%%
 Djinni
 
-Djinn are ever-burning spirits. They learn spells automatically as they grow,
-and cast by drawing down their own fires.
+Džini sųt věčno goręći duhi. S jih råstom oni avtomatično učęt sę novym zaklinańjam
+i čarujųt jih, črpajųći silų iz svojego ognja.
 %%%%
 Draconian
 
-Draconians are versatile hybrids. They mature when reaching level 7 and develop
-a colour.
+Drakonianci sųt universaĺni hibridi. Oni dosęgajųt zrělosti na 7 rangu i dobyvajųt
+svoj kolor.
 %%%%
 Formicid
 
-Formicids are humanoid ants adept at digging. Their limbs are exceptionally
-strong and they live in a state of permanent stasis.
+Formicidi sųt podobne člověku mråvji, ktori umětno kopajųt zemjų. Jih rųky i nogy
+sųt izključiteljno siĺne, i oni živųt v stańju stalogo stazisa.
 %%%%
 Felid
 
-Felids are many-lived sentient cats. They cannot use armour or weapons.
+Felidi sųt råzumni koti s několikymi žit́jami. Oni ne mogųt koristati bronjų ili
+orųžje.
 %%%%
 Gale Centaur
 
-Powerful equine hybrids who trace their ancestry to the four winds themselves,
-Gale Centaurs are at their strongest while galloping swiftly towards foes.
+Mogųći hibridi konjev, čiji prědki proizhodęt od samyh četyrěh větrov, Kentavri Větra
+sųt najsiĺni, kȯgda bystro galopujųt do svojih neprijateljev.
 %%%%
 Gargoyle
 
