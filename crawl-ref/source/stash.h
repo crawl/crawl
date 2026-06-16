@@ -15,6 +15,13 @@ class input_history;
 class reader;
 class writer;
 
+enum stash_sort_mode
+{
+    STASH_SORT_TYPE,
+    STASH_SORT_NAME,
+    STASH_SORT_DIST,
+};
+
 struct stash_search_result;
 class Stash
 {
@@ -265,7 +272,7 @@ private:
                               vector<stash_search_result> &results,
                               bool curr_lev = false) const;
     bool display_search_results(vector<stash_search_result> &results,
-                                bool& sort_by_dist,
+                                stash_sort_mode& sort_mode,
                                 bool& filter_useless,
                                 bool& default_execute,
                                 base_pattern* search,
