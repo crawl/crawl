@@ -1,7 +1,7 @@
 %%%%
 Fighting
 
-Uměńje Bitvy povyšaje tvojų akuratnost́, škodų v fizičnom boju i takože tvoje
+Uměńje Boja povyšaje tvojų akuratnost́, škodų v fizičnom boju i takože tvoje
 maksimaĺno zdråvje.
 %%%%
 Short Blades
@@ -66,49 +66,50 @@ Prųtovymi Orųžjami i obråtno.
 %%%%
 Ranged Weapons
 
-Uměńje vlåděti Orųžjami Daljnjego Boja bųde dopustiti tobě atakovati bystrěje
+Uměńje vlåděti Daljnjimi Orųžjami bųde dopustiti tobě atakovati bystrěje
 ljubymi lųkami, samostrělami i pračkami, a takože bųde povysiti tvojų akuratnost́
 i škodų, pričinjajemų jimi.
 %%%%
 Throwing
 
-Training Throwing will make thrown weapons (such as javelins) more accurate
-and damaging. It also makes certain magical darts more likely to have an
-effect.
+Trenovańje Metańja bųde sdělati metajemo orųžje (kako napriklad kopja) vyše
+akuratnym i škodlivym. Takože ono bųde povysiti pravdopodobnost́ togo, že magične tŕny
+bųdųt imati poslědstva.
 %%%%
 Armour
 
-Armour skill multiplies the AC gained from wearing armour of all kinds, both
-from body armour and cloaks, gloves, etc. It also slightly lessens penalties
-to spellcasting and ranged weapon speed from heavy armour.
+Uměńje Brȯnje množi bonus dlja AC, dobyvajemy pri nošeńju brȯnje vsih tipov,
+vključajųći tělesnų brȯnjų, plašče, rųkavice i tako dalje. Ono takože nemnogo
+smėnšaje kaznj dlja bystrosti čarovańja zaklinanij i daljnjego orųžja, objavjajųćų sę
+pri nošeńju tęžkoj brȯnje.
 %%%%
 Dodging
 
-The Dodging skill will affect your chance of dodging an attack, be it melee,
-ranged or magical. Certain types of attack cannot be dodged, however, such as
-enchantments (which must be resisted with willpower) and explosions.
+Uměńje Izběgańja bųde vlivati na tvoj šans izběgti atakų bližnjų, daljnjų ili
+magičnų. jednako, něktore tipy ataky nemožno izběgti, take kako čarovańja (ktorym
+trěba odpirati sę silojų volje) i eksplozije.
 %%%%
 Stealth
 
-By training Stealth, you can make it less likely that monsters will notice you
-if they are asleep or otherwise unalert, and increase your chances of monsters
-losing track of you after you leave their vision. Note that more powerful
-monsters tend to be more suspicious and observant.
+Trenujųći Skrytost́, ty možeš umėnšiti pravdopodobnost́ togo, že monstri bųdųt
+uględěti tebe, jestli oni spęt ili ne trėvožni, i povysiti tvoje šansy na to,
+že monstri bųdųt utratiti tebe iz vida, kȯgda ty bųdeš izȯjdti iz jih polja zrěńja.
+Zauvaži, že vyše moćni monstri, kako pravilo, sųt vyše podzirlivi i čutlivi.
 
-Stealth skill, along with the weapon skill for your equipped weapon, also
-governs the likelihood of doing a great amount of damage when attacking a
-distracted or helpless creature, as well as the amount of extra damage dealt.
+Uměńje Skrytosti, zajedno s uměńjem orųžja, takože vlivaje na pravdopodobnost́
+pričinjeńja značnoj škody pri atakovańju odvlěčenogo ili bezpomoćnogo stvora,
+a takože na kolikost́ dodatnoj pričinjajemoj škody.
 %%%%
 Shields
 
-A high Shields skill helps you block melee attacks or non-penetrating
-projectiles (both magical and non-magical) with your equipped shield, and
-reduces their penalty to your evasion, attack speed and spellcasting success.
+Vysoky rang uměńja Ščity pomagaje blokovati bližnje ataky ili neprobivajųće
+projektily (magične i nemagične) tvojim orųdujemym ščitom i umėnšaje jih kaznj
+k izběgańju, bystrosti ataky i uspěhu čarovańja zaklinańja.
 %%%%
 Unarmed Combat
 
-Being skilled in Unarmed Combat increases your accuracy, damage and attack
-speed in melee combat when barehanded.
+Uměńje Bezorųžnogo Boja povyšaje tvojų akuratnost́, škodų i bystrost́ ataky
+v bližnjem boju s golymi rųkami.
 %%%%
 Spellcasting
 
