@@ -6685,23 +6685,35 @@ int player::evasion_scaled(int scale, bool ignore_temporary, const actor* act) c
 }
 
 /**
- * What would our natural AC/EV/SH and fail rate for all known spells be if we
- * wore a given piece of equipment instead of whatever might be in that slot
- * currently (if anything)?
+ * The player's current permanent AC/EV/SH, attack delay, and spell failure
+ * rates (without temporary boosts).
+ *
+ * @param scale  A scale to multiply AC/EV/SH/delay by, to avoid precision loss.
+ */
+player_stats player::calc_stats(int scale) const
+{
+    player_stats stats;
+    stats.ac = base_ac(scale);
+    stats.ev = evasion_scaled(scale, true);
+    stats.sh = player_displayed_shield_class(scale, true);
+    stats.delay = static_cast<int>(attack_delay(nullptr, true).expected() * scale);
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+        stats.fail[i] = raw_spell_fail(spells[i]);
+    return stats;
+}
+
+/**
+ * What would our natural AC/EV/SH, attack delay, and fail rate for all known
+ * spells be if we wore a given piece of equipment instead of whatever might be
+ * in that slot currently (if anything)?
  *
  * Note: non-artefact rings of evasion/protection and amulets of reflection
  * are excepted from using this function.
  *
  * @param new_item  The equipment item in question.
- * @param ac        The player's AC if this item were equipped.
- * @param ev        The player's EV if this item were equipped.
- * @param sh        The player's SH if this item were equipped.
- * @param fail      The player's raw spell fail for all spells if this item
- *                  were equipped.
+ * @return          The player's stats if this item were equipped.
  */
-void player::preview_stats_with_specific_item(int scale, const item_def& new_item,
-                                              int *ac, int *ev, int *sh,
-                                              FixedVector<int, MAX_KNOWN_SPELLS> *fail)
+player_stats player::preview_stats_with_specific_item(int scale, const item_def& new_item)
 {
     // Since there are a lot of things which can affect the calculation of
     // EV/SH/fail, including artifact properties on either the item we're
@@ -6771,23 +6783,18 @@ void player::preview_stats_with_specific_item(int scale, const item_def& new_ite
     you.equipment.meld_equipment(get_form()->blocked_slots, true);
     you.equipment.update();
 
-    // Now, simply calculate AC/EV/SH without temporary boosts.
-    *ac = base_ac(scale);
-    *ev = evasion_scaled(scale, true);
-    *sh = player_displayed_shield_class(scale, true);
-
-    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
-        (*fail)[i] = raw_spell_fail(spells[i]);
+    // Now, simply calculate the resulting stats without temporary boosts.
+    const player_stats stats = calc_stats(scale);
 
     // Clear out our preview item. (Other equipment state will be unwound
     // automatically.)
     you.inv[ENDOFPACK].clear();
+
+    return stats;
 }
 
-void player::preview_stats_without_specific_item(int scale,
-                                                 const item_def& item_to_remove,
-                                                 int *ac, int *ev, int *sh,
-                                                 FixedVector<int, MAX_KNOWN_SPELLS> *fail)
+player_stats player::preview_stats_without_specific_item(int scale,
+                                                         const item_def& item_to_remove)
 {
     // Verify that the item is currently equipped
     // (or this function will give bogus info)
@@ -6801,27 +6808,17 @@ void player::preview_stats_without_specific_item(int scale,
     you.equipment.remove(item_to_remove);
     you.equipment.update();
 
-    *ac = base_ac(scale);
-    *ev = evasion_scaled(scale, true);
-    *sh = player_displayed_shield_class(scale, true);
-    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
-        (*fail)[i] = raw_spell_fail(spells[i]);
+    return calc_stats(scale);
 }
 
 /**
- * What would our natural AC/EV/SH and fail rate for all known spells be if we
- * were in a specific form right now?
+ * What would our natural AC/EV/SH, attack delay, and fail rate for all known
+ * spells be if we were in a specific form right now?
  *
  * @param talisman  The talisman used to enter the form.
- * @param ac        The player's AC if this item were equipped.
- * @param ev        The player's EV if this item were equipped.
- * @param sh        The player's SH if this item were equipped.
- * @param fail      The player's raw spell fail for all spells if this item
- *                  were equipped.
+ * @return          The player's stats if this form were entered.
  */
-void player::preview_stats_in_specific_form(int scale, const item_def& talisman,
-    int *ac, int *ev, int *sh,
-    FixedVector<int, MAX_KNOWN_SPELLS> *fail)
+player_stats player::preview_stats_in_specific_form(int scale, const item_def& talisman)
 {
     ASSERT(talisman.base_type == OBJ_TALISMANS);
 
@@ -6858,17 +6855,14 @@ void player::preview_stats_in_specific_form(int scale, const item_def& talisman,
 
     you.equipment.update();
 
-    // Now, calculate AC/EV/SH without temporary boosts.
-    *ac = base_ac(scale);
-    *ev = evasion_scaled(scale, true);
-    *sh = player_displayed_shield_class(scale, true);
-
-    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
-        (*fail)[i] = raw_spell_fail(spells[i]);
+    // Now, calculate the resulting stats without temporary boosts.
+    const player_stats stats = calc_stats(scale);
 
     // Clear out our preview item. (Other equipment state will be unwound
     // automatically.)
     you.inv[ENDOFPACK].clear();
+
+    return stats;
 }
 
 bool player::heal(int amount)

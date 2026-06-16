@@ -98,7 +98,8 @@ public:
         return weapon(0);
     }
     virtual item_def *offhand_weapon() const { return nullptr; }
-    virtual random_var attack_delay(const item_def *projectile = nullptr) const = 0;
+    virtual random_var attack_delay(const item_def *projectile = nullptr,
+                                    bool ignore_temp = false) const = 0;
     virtual random_var melee_attack_delay() const = 0;
     virtual int has_claws(bool allow_tran = true) const = 0;
     virtual item_def *shield() const = 0;

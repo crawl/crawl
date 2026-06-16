@@ -437,7 +437,8 @@ vorpal_damage_type monster::damage_type(int which_attack) const
  * @return            The time taken by an attack with the monster's weapon
  *                    and the given projectile, in aut.
  */
-random_var monster::attack_delay(const item_def *projectile) const
+random_var monster::attack_delay(const item_def *projectile,
+                                 bool /*ignore_temp*/) const
 {
     const item_def* weap = weapon();
     if (!weap || (projectile && is_throwable(this, *projectile)))

@@ -1758,15 +1758,21 @@ static string _describe_point_change(float points)
 }
 
 static string _describe_point_diff(int original,
-                                   int changed, int scale = 100)
+                                   int changed,
+                                   bool round_nearest = false,
+                                   int scale = 100)
 {
     string description;
 
     if (original == changed)
         return "remain unchanged";
 
-    // Truncate to 1 decimal place, rather than round (so that it matches what
-    // will be displayed as the player's AC/EV if they actually put this on.)
+    if (round_nearest)
+    {
+        original = original + scale / 20;
+        changed = changed + scale / 20;
+    }
+    // Truncate to 1 decimal place.
     original = original / (scale / 10) * 10;
     changed = changed / (scale / 10) * 10;
 
@@ -1806,8 +1812,8 @@ static string _equipment_switchto_string(const item_def &item)
 
 /**
  * Describe how (un)equipping a piece of equipment might change the player's
- * AC/EV/SH and spell failure. We don't include temporary buffs in this
- * calculation.
+ * AC/EV/SH, spell failure, and attack delay. We don't include temporary buffs
+ * in this calculation.
  *
  * @param item    The item whose description we are writing.
  * @param remove  Whether the item is already equipped, and thus whether to
@@ -1817,21 +1823,14 @@ static string _equipment_switchto_string(const item_def &item)
 static string _equipment_property_change_description(const item_def &item,
                                                      bool remove = false)
 {
-    // First, test if there is any AC/EV/SH change at all.
-    const int cur_ac = you.base_ac(100);
-    const int cur_ev = you.evasion_scaled(100, true);
-    const int cur_sh = player_displayed_shield_class(100, true);
-    int new_ac, new_ev, new_sh;
-    FixedVector<int, MAX_KNOWN_SPELLS> cur_fail, new_fail;
-    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
-        cur_fail[i] = raw_spell_fail(you.spells[i]);
-
+    const player_stats cur = you.calc_stats(100);
+    player_stats next;
     if (remove)
-        you.preview_stats_without_specific_item(100, item, &new_ac, &new_ev, &new_sh, &new_fail);
+        next = you.preview_stats_without_specific_item(100, item);
     else if (item.base_type == OBJ_TALISMANS)
-        you.preview_stats_in_specific_form(100, item, &new_ac, &new_ev, &new_sh, &new_fail);
+        next = you.preview_stats_in_specific_form(100, item);
     else
-        you.preview_stats_with_specific_item(100, item, &new_ac, &new_ev, &new_sh, &new_fail);
+        next = you.preview_stats_with_specific_item(100, item);
 
     // Check if any spell failures changed, and save the greatest magnitude that
     // any of them changed.
@@ -1839,11 +1838,11 @@ static string _equipment_property_change_description(const item_def &item,
     int visible_fail_change = 0;
     for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
     {
-        if (cur_fail[i] != new_fail[i])
+        if (cur.fail[i] != next.fail[i])
         {
-            int new_fail_change = new_fail[i] - cur_fail[i];
-            int new_visible_fail_change = failure_rate_to_int(new_fail[i])
-                                            - failure_rate_to_int(cur_fail[i]);
+            int new_fail_change = next.fail[i] - cur.fail[i];
+            int new_visible_fail_change = failure_rate_to_int(next.fail[i])
+                                            - failure_rate_to_int(cur.fail[i]);
             if (abs(new_fail_change) > abs(fail_change))
                 fail_change = new_fail_change;
             if (abs(new_visible_fail_change) > abs(visible_fail_change))
@@ -1851,11 +1850,12 @@ static string _equipment_property_change_description(const item_def &item,
         }
     }
 
-    // If we're previewing non-armour and there is no AC/EV/SH change, print no
+    // If we're previewing non-armour and there is no relevant change, print no
     // extra description at all (since almost all items of these types will
     // change nothing)
-    if (cur_ac == new_ac && cur_ev == new_ev && cur_sh == new_sh
+    if (cur.ac == next.ac && cur.ev == next.ev && cur.sh == next.sh
         && fail_change == 0
+        && (cur.delay == next.delay || item.base_type == OBJ_WEAPONS)
         && (item.base_type != OBJ_ARMOUR || item.sub_type == ARM_ORB))
     {
         return "";
@@ -1882,28 +1882,32 @@ static string _equipment_property_change_description(const item_def &item,
                          + " this " + _equip_type_name(item) + ":";
     }
 
-    // Always display AC line on proper armour, even if there is no change
+    // Always display AC line on proper armour, even if there is no change.
+    //
+    // For AC, EV and SH we round down rather than to the nearest 0.1, so that
+    // displayed values match the one that will be shown if this is actually
+    // equipped.
     if (item.base_type == OBJ_ARMOUR && get_armour_slot(item) != SLOT_OFFHAND
-        || cur_ac != new_ac)
+        || cur.ac != next.ac)
     {
         description += "\nYour AC would "
-                       + _describe_point_diff(cur_ac, new_ac) + ".";
+                       + _describe_point_diff(cur.ac, next.ac) + ".";
     }
 
     // Always display EV line on non-orb armour, even if there is no change
     // XXX perhaps this shouldn't display on basic aux armour?
     if (item.base_type == OBJ_ARMOUR && item.sub_type != ARM_ORB
-        || cur_ev != new_ev)
+        || cur.ev != next.ev)
     {
         description += "\nYour EV would "
-                       + _describe_point_diff(cur_ev, new_ev) + ".";
+                       + _describe_point_diff(cur.ev, next.ev) + ".";
     }
 
     // Always display SH line on shields, even if there is no change
-    if (is_shield(item) || cur_sh != new_sh)
+    if (is_shield(item) || cur.sh != next.sh)
     {
         description += "\nYour SH would "
-                       + _describe_point_diff(cur_sh, new_sh) + ".";
+                       + _describe_point_diff(cur.sh, next.sh) + ".";
     }
 
     if (fail_change != 0)
@@ -1919,23 +1923,39 @@ static string _equipment_property_change_description(const item_def &item,
         }
     }
 
+    // Describe even an unchanged attack delay for shields, and for body armour
+    // with a ranged weapon.
+    //
+    // Never describe it for weapons.
+    const bool always_describe_delay = item.base_type == OBJ_ARMOUR
+        && (is_shield(item)
+            || (get_armour_slot(item) == SLOT_BODY_ARMOUR
+                && is_slowed_by_armour(you.weapon())));
+    if ((always_describe_delay || cur.delay != next.delay)
+        && item.base_type != OBJ_WEAPONS)
+    {
+        // We round attack delay to the nearest aut to match what is displayed
+        // elsewhere.
+        description += "\nYour attack delay would "
+            + _describe_point_diff(cur.delay / 10, next.delay / 10, true) + ".";
+    }
+
     return description;
 }
 
 static string _spell_fail_change_description(const item_def &item,
                                              bool remove = false)
 {
-    int dummy1, dummy2, dummy3;
     FixedVector<int, MAX_KNOWN_SPELLS> cur_fail, new_fail;
     for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
         cur_fail[i] = raw_spell_fail(you.spells[i]);
 
     if (remove)
-        you.preview_stats_without_specific_item(100, item, &dummy1, &dummy2, &dummy3, &new_fail);
+        new_fail = you.preview_stats_without_specific_item(100, item).fail;
     else if (item.base_type == OBJ_TALISMANS)
-        you.preview_stats_in_specific_form(100, item, &dummy1, &dummy2, &dummy3, &new_fail);
+        new_fail = you.preview_stats_in_specific_form(100, item).fail;
     else
-        you.preview_stats_with_specific_item(100, item, &dummy1, &dummy2, &dummy3, &new_fail);
+        new_fail = you.preview_stats_with_specific_item(100, item).fail;
 
     // Check if any spell failures changed.
     int fail_change = 0;
@@ -2334,26 +2354,6 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
         && item.is_identified())
     {
         description += _equipment_property_change(item);
-    }
-
-    const int DELAY_SCALE = 100;
-    const int aevp = you.adjusted_body_armour_penalty(DELAY_SCALE, true);
-    if (crawl_state.need_save
-        && verbose
-        && aevp
-        && !is_shield(item)
-        && item_is_equipped(item)
-        && is_slowed_by_armour(you.weapon()))
-    {
-        // TODO: why doesn't this show shield effect? Reconcile with
-        // _display_attack_delay
-        description += "\n\nYour current strength and Armour skill "
-                       "slows attacks with missile weapons (like "
-                        + you.weapon()->name(DESC_YOUR) + ") ";
-        if (aevp >= DELAY_SCALE)
-            description += make_stringf("by %.1f.", aevp / (10.0f * DELAY_SCALE));
-        else
-            description += "only slightly.";
     }
 
     return description;

@@ -145,6 +145,16 @@ enum player_trigger_type
 extern player you;
 
 typedef FixedVector<int, NUM_DURATIONS> durations_t;
+
+struct player_stats
+{
+    int ac = 0;
+    int ev = 0;
+    int sh = 0;
+    int delay = 0;
+    FixedVector<int, MAX_KNOWN_SPELLS> fail;
+};
+
 class player : public actor
 {
 public:
@@ -710,9 +720,11 @@ public:
                           bool base = false) const override;
     brand_type  damage_brand(const item_def* weapon) const;
     vorpal_damage_type damage_type(const item_def* weapon) const;
-    random_var  attack_delay(const item_def *projectile = nullptr) const override;
+    random_var  attack_delay(const item_def *projectile = nullptr,
+                             bool ignore_temp = false) const override;
     random_var  melee_attack_delay() const override;
-    random_var  attack_delay_with(const item_def *weapon, bool melee_only = false) const;
+    random_var  attack_delay_with(const item_def *weapon, bool melee_only = false,
+                                  bool ignore_temp = false) const;
     int         constriction_damage(constrict_type typ) const override;
 
     int       has_claws(bool allow_tran = true) const override;
@@ -976,17 +988,16 @@ public:
     int temp_ev_mod() const;
     int temp_sh_mod() const;
 
+    // The player's current permanent AC/EV/SH, attack delay, and spell fail
+    // rates (without temporary boosts).
+    player_stats calc_stats(int scale) const;
+
     // Calculates total permanent AC/EV/SH if the player was/wasn't wearing a
-    // given item, along with the fail rate on all their known spells.
-    void preview_stats_with_specific_item(int scale, const item_def& new_item,
-                                          int *ac, int *ev, int *sh,
-                                          FixedVector<int, MAX_KNOWN_SPELLS> *fail);
-    void preview_stats_without_specific_item(int scale, const item_def& item_to_remove,
-                                             int *ac, int *ev, int *sh,
-                                             FixedVector<int, MAX_KNOWN_SPELLS> *fail);
-    void preview_stats_in_specific_form(int scale, const item_def& talisman,
-                                        int *ac, int *ev, int *sh,
-                                        FixedVector<int, MAX_KNOWN_SPELLS> *fail);
+    // given item, along with their attack delay and fail rate on all their
+    // known spells.
+    player_stats preview_stats_with_specific_item(int scale, const item_def& new_item);
+    player_stats preview_stats_without_specific_item(int scale, const item_def& item_to_remove);
+    player_stats preview_stats_in_specific_form(int scale, const item_def& talisman);
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale = 1, bool real = false,
