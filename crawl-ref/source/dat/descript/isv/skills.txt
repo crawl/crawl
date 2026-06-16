@@ -1,27 +1,27 @@
 %%%%
 Fighting
 
-Fighting skill increases your accuracy and damage in physical combat, and
-also increases your maximum health.
+Uměńje Bitvy povyšaje tvojų akuratnost́, škodų v fizičnom boju i takože tvoje
+maksimaĺno zdråvje.
 %%%%
 Short Blades
 
-Short Blades are more effective than any other weapon type at stabbing helpless
-foes.
+Kråtke Ostŕja sųt najefektivnějše srěd drugyh orųžij dlja pričinjeńja skrytyh
+udarov bezpomoćnym neprijateljam.
 
-Being skilled with Short Blades will allow you to attack more quickly with all
-weapons of this type, as well as increasing your accuracy and damage with them.
+Uměńje vlåděti Kråtkymi Ostŕjami bųde dopušćati tobě atakovati bystrěje ljubym
+orųžjem tutogo tipa, a takože bųde povysiti akuratnost́ i škodų, pričinjajemų jimi.
 
-Being skilled with Short Blades increases your effectiveness with Long Blades,
-and vice versa.
+Uměńje vlåděti Kråtkymi Ostŕjami povyšaje tvojų efektivnost́ vȯ vlåděńju Dȯlgymi
+Ostŕjami i obråtno.
 %%%%
 Long Blades
 
-Being skilled with Long Blades will allow you to attack more quickly with all
-weapons of this type, as well as increasing your accuracy and damage with them.
+Uměńje vlåděti Dȯlgymi Ostŕjami bųde dopušćati tobě atakovati bystrěje ljubym
+orųžjem tutogo tipa, a takože bųde povysiti akuratnost́ i škodų, pričinjajemų jimi.
 
-Being skilled with Long Blades increases your effectiveness with Short Blades,
-and vice versa.
+Uměńje vlåděti Dȯlgymi Ostŕjami povyšaje tvojų efektivnost́ vȯ vlåděńju Kråtkymi
+Ostŕjami i obråtno.
 %%%%
 Axes
 
