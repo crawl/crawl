@@ -314,6 +314,7 @@ struct monster_info_base
     string constrictor_name;
     vector<string> constricting_name;
     monster_spells spells;
+    map<spell_type, int> spellpower;
     mon_attack_def attack[MAX_NUM_ATTACKS];
     bool can_go_frenzy;
     bool can_feel_fear;

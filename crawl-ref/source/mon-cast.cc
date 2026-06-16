@@ -8661,7 +8661,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         mgen.set_summoned(mons, SPELL_SPORULATE, random_range(40, 70), false, false);
         // Add 1HD to the spore for each additional HD the spawner has.
         mgen.hd = mons_class_hit_dice(MONS_BALLISTOMYCETE_SPORE) +
-            max(0, mons->spell_hd() - mons_class_hit_dice(mons->type));
+            max(0, mons->spell_hd(spell_cast) - mons_class_hit_dice(mons->type));
 
         create_monster(mgen);
 

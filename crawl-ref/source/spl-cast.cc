@@ -608,64 +608,7 @@ int calc_spell_power(spell_type spell)
 
 static int _spell_enhancement(spell_type spell)
 {
-    const spschools_type typeflags = get_spell_disciplines(spell);
-    int enhanced = 0;
-
-    if (typeflags & spschool::conjuration)
-        enhanced += player_spec_conj();
-
-    if (typeflags & spschool::hexes)
-        enhanced += player_spec_hex();
-
-    if (typeflags & spschool::summoning)
-        enhanced += player_spec_summ();
-
-    if (typeflags & spschool::forgecraft)
-        enhanced += player_spec_forgecraft();
-
-    if (typeflags & spschool::alchemy)
-        enhanced += player_spec_alchemy();
-
-    if (typeflags & spschool::necromancy)
-        enhanced += player_spec_death();
-
-    if (typeflags & spschool::translocation)
-        enhanced += player_spec_tloc();
-
-    if (typeflags & spschool::fire)
-        enhanced += player_spec_fire();
-
-    if (typeflags & spschool::ice)
-        enhanced += player_spec_cold();
-
-    if (typeflags & spschool::earth)
-        enhanced += player_spec_earth();
-
-    if (typeflags & spschool::air)
-        enhanced += player_spec_air();
-
-    if (you.form == transformation::jelly)
-        enhanced -= 2;
-
-    if (you.unrand_equipped(UNRAND_BATTLE))
-    {
-        if (vehumet_supports_spell(spell))
-            enhanced++;
-        else
-            enhanced--;
-    }
-
-    enhanced += you.archmagi();
-    enhanced += you.duration[DUR_BRILLIANCE] > 0
-                || you.unrand_equipped(UNRAND_FOLLY);
-
-    // These are used in an exponential way, so we'll limit them a bit. -- bwr
-    if (enhanced > 3)
-        enhanced = 3;
-    else if (enhanced < -3)
-        enhanced = -3;
-
-    return enhanced;
+    return you.spell_enhancement(spell);
 }
 
 /**
