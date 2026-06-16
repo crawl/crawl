@@ -9,7 +9,7 @@ Short Blades
 Kråtke Ostŕja sųt najefektivnějše srěd drugyh orųžij dlja pričinjeńja skrytyh
 udarov bezpomoćnym neprijateljam.
 
-Uměńje vlåděti Kråtkymi Ostŕjami bųde dopušćati tobě atakovati bystrěje ljubym
+Uměńje vlåděti Kråtkymi Ostŕjami bųde dopustiti tobě atakovati bystrěje ljubym
 orųžjem tutogo tipa, a takože bųde povysiti akuratnost́ i škodų, pričinjajemų jimi.
 
 Uměńje vlåděti Kråtkymi Ostŕjami povyšaje tvojų efektivnost́ vȯ vlåděńju Dȯlgymi
@@ -17,7 +17,7 @@ Ostŕjami i obråtno.
 %%%%
 Long Blades
 
-Uměńje vlåděti Dȯlgymi Ostŕjami bųde dopušćati tobě atakovati bystrěje ljubym
+Uměńje vlåděti Dȯlgymi Ostŕjami bųde dopustiti tobě atakovati bystrěje ljubym
 orųžjem tutogo tipa, a takože bųde povysiti akuratnost́ i škodų, pričinjajemų jimi.
 
 Uměńje vlåděti Dȯlgymi Ostŕjami povyšaje tvojų efektivnost́ vȯ vlåděńju Kråtkymi
@@ -25,50 +25,50 @@ Ostŕjami i obråtno.
 %%%%
 Axes
 
-Axes cleave through multiple enemies with a single swing, hitting foes in an
-arc around the wielder.
+Sěkyry råzrųbajųt několikyh neprijateljev jednym råzmahom, poražajųći jih po
+dųge okolo vlådětelja.
 
-Being skilled with Axes will allow you to attack more quickly with all weapons
-of this type, as well as increasing your accuracy and damage with them.
+Uměńje vlåděti Sěkyrami bųde dopustiti tobě atakovati bystrěje ljubym orųžjem
+tutogo tipa, a takože bųde povysiti akuratnost́ i škodų, pričinjajemų jimi.
 
-Being skilled with Axes increases your effectiveness with Maces & Flails and
-Polearms, and vice versa.
+Uměńje vlåděti Sěkyrami povyšaje tvojų efektivnost́ vȯ vlåděńju Žezlov i Cěpov
+i Prųtovyh Orųžij i obråtno.
 %%%%
 Maces & Flails
 
-Being skilled with Maces & Flails will allow you to attack more quickly with
-all weapons of this type, as well as increasing your accuracy and damage with
-them.
+Uměńje vlåděti Žezlami i Cěpami bųde dopustiti tobě atakovati bystrěje ljubym
+orųžjem tutogo tipa, a takože bųde povysiti akuratnost́ i škodų, pričinjajemų jimi.
 
-Being skilled with Maces & Flails increases your effectiveness with Axes and
-Staves, and vice versa.
+Uměńje vlåděti Žezlami i Cěpami povyšaje tvojų efektivnost́ vȯ vlåděńju Sěkyrami i
+Palami i obråtno.
 %%%%
 Polearms
 
-Polearms can be evoked with ‘v’ to attack enemies from two spaces away.
+Prųtove Orųžja možno aktivovati klavišejų ‘v’, da by atakovati neprijateljev
+na dalju dvoh klětȯk.
 
-Being skilled with Polearms will allow you to attack more quickly with all
-weapons of this type, as well as increasing your accuracy and damage with them.
+Uměńje vlåděti Prųtovymi Orųžjami bųde dopustiti tobě atakovati bystrěje ljubym
+orųžjem tutogo tipa, a takože bųde povysiti akuratnost́ i škodų, pričinjajemų jimi.
 
-Being skilled with Polearms increases your effectiveness with Axes and Staves,
-and vice versa.
+Uměńje vlåděti Prųtovymi Orųžjami povyšaje tvojų efektivnost́ vȯ vlåděńju Sěkyrami i
+Palami i obråtno.
 %%%%
 Staves
 
-Staves require a relatively low amount of skill to be used most effectively,
-although they lack the high damage potential of some other weapon classes.
+Paly dlja efektivnogo koristańja potrěbujųt poměrno nizky rang, ale jim
+nedostavaje vysokoj škody, obyčajnoj dlja drugyh klasov orųžja.
 
-Being skilled with Staves will allow you to attack more quickly with all
-weapons of this type, as well as increasing your accuracy and damage with them.
+Uměńje vlåděti Palami bųde dopustiti tobě atakovati bystrěje ljubym orųžjem
+tutogo tipa, a takože bųde povysiti akuratnost́ i škodų, pričinjajemų jimi.
 
-Being skilled with Staves increases your effectiveness with Maces & Flails and
-Polearms, and vice versa.
+Uměńje vlåděti Palami povyšaje tvojų efektivnost́ vȯ vlåděńju Žezlami i Cěpami i
+Prųtovymi Orųžjami i obråtno.
 %%%%
 Ranged Weapons
 
-Being skilled with Ranged Weapons will let you attack more quickly with all
-bows, crossbows and slings, as well as increasing your accuracy and damage with
-them.
+Uměńje vlåděti Orųžjami Daljnjego Boja bųde dopustiti tobě atakovati bystrěje
+ljubymi lųkami, samostrělami i pračkami, a takože bųde povysiti tvojų akuratnost́
+i škodų, pričinjajemų jimi.
 %%%%
 Throwing
 
