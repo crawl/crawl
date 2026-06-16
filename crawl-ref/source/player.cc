@@ -3542,7 +3542,7 @@ static bool _at_min_delay(const item_def *weapon)
 static void _display_attack_delay(const item_def *offhand)
 {
     const item_def* weapon = you.weapon();
-    const int delay = you.attack_delay().expected();
+    const float delay = you.attack_delay().expected();
     const bool at_min_delay = _at_min_delay(weapon)
                               && (!offhand || _at_min_delay(offhand));
 
@@ -3564,7 +3564,7 @@ static void _display_attack_delay(const item_def *offhand)
     }
 
     mprf("Your attack delay is about %.1f%s%s.",
-         (float)delay / 10,
+         delay / 10,
          at_min_delay ?
             " (and cannot be improved with additional weapon skill)" : "",
          penalty_msg.c_str());
