@@ -115,40 +115,37 @@ Spellcasting
 
 {{
     if you.race() == "Djinni" then
-        return "Being skilled in Spellcasting increases the success rate and spell "..
-               "power of all spells."
+        return "Uměńje Čarovańja Zaklinanij povyšaje pravdopodobnost́"..
+               "uspěha i moć vsih zaklinanij."
     else
-        return "Being skilled in Spellcasting slightly increases the success " ..
-                "rate and spell power of all spells, along with increasing your " ..
-                "magical reserves. Training Spellcasting also gives you more spell " ..
-                "slots to spend on new spells."
+        return "Uměńje Čarovańja Zaklinanij povyšaje pravdopodobnost́" ..
+                "uspěha i moć vsih zaklinanij, zajedno s povyšeńjem" ..
+                "rezervov magije. Trenovańje tutogo uměńja takože" ..
+                "dodavaje vyše města dlja zaklinanij."
     end
 }}
 %%%%
 Conjurations
 
-Conjurations are battle oriented spells, which often work by conjuring up a
-chunk of short-lived matter and propelling it towards the victim to deal direct
-damage. Being skilled in Conjurations usually increases the damage and accuracy
-of such spells, and sometimes affects their range or the size of the area
-affected.
+Zaklęt́ja sųt bojove zaklinańja, ktore čęsto dějųt posrědstvom stvorjeńja kųska
+kråtkoživųćej materije i jego navedeńja k žrtvě dlja pričinjeńja pręmoj škody.
+Uměńje Zaklętij obyčajno povyšaje škodų i akuratnost́ takyh zaklinanij, a poněkȯgda
+vlivajųt na jih dalj ili råzměr oblåsti poražeńja.
 
-Being skilled in Conjurations increases the success rate and spell power of
-spells in this school. Many spells belong to a combination of several schools,
-in which case spellcasting success and power will depend on the average skill
-in these schools.
+Uměńje Zaklętij povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
 %%%%
 Hexes
 
-Hexes try to bestow various enchantments on nearby things. While none do direct
-damage, being ensorcelled can effectively take an opponent out of combat,
-although they often require overcoming an opponent's willpower to have an effect.
-Skill in Hexes can help overcome this.
+Proklęt́ja probujųt nadati različne čarovańja na bližnjih stvorov. One ne nanosęt
+pręmoj škody, jednako jih čarovańje može efektivno izjęti protivnika iz bitvy,
+ale dlja togo trěba prěodolěti jego silų volje. Uměńje v Proklęt́jah mogųt pomogti
+sdělati to.
 
-Being skilled in Hexes increases the success rate and spell power of spells in
-this school. Many spells belong to a combination of several schools, in which
-case spellcasting success and power will depend on the average skill in these
-schools.
+Uměńje Proklętij povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
 %%%%
 Summonings
 
