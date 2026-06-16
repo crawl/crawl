@@ -701,6 +701,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
     const char *player_msg = nullptr, *global_msg = nullptr,
                *mons_vis_msg = nullptr, *mons_invis_msg = nullptr,
                *prompt_verb = nullptr;
+    tileidx_t tile = TILE_BOLT_DEFAULT_WHITE;
     bool (*vulnerable)(const actor *, const actor *) = nullptr;
 
     switch (spell)
@@ -728,6 +729,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             mons_vis_msg = " draws from the surrounding life force!";
             mons_invis_msg = "The surrounding life force dissipates!";
             prompt_verb = "drain life";
+            tile = TILE_BOLT_DRAIN_LIFE;
             vulnerable = &_drain_lifeable;
             break;
 
@@ -736,6 +738,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             global_msg = "Something sends a blast of sound all around you.";
             mons_vis_msg = " sends a blast of sound all around you!";
             mons_invis_msg = "Sound blasts the surrounding area!";
+            tile = TILE_BOLT_SINGING;
             // prompt_verb = "sing" The singing sword prompts in melee-attack
             vulnerable = [](const actor *caster, const actor *act) {
                 return act != caster && could_harm(caster, act);
@@ -766,7 +769,13 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             }
 
             mpr(player_msg);
-            flash_view_delay(UA_PLAYER, beam.colour, 300, &hitfunc);
+            if (spell == SPELL_OZOCUBUS_REFRIGERATION)
+                flash_view_delay(UA_PLAYER, beam.colour, 300, &hitfunc);
+            else if (spell == SPELL_DRAIN_LIFE)
+            {
+                draw_ring_animation(you.pos(), 2, DARKGRAY, DARKGRAY, false, 40,
+                                    TILE_BOLT_DRAINING_LIFE);
+            }
         }
         else
         {
@@ -778,7 +787,15 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
                 mpr(mons_invis_msg);
 
             if (!agent || you.see_cell(agent->pos()))
-                flash_view_delay(UA_MONSTER, beam.colour, 300);
+            {
+                if (spell == SPELL_OZOCUBUS_REFRIGERATION)
+                    flash_view_delay(UA_MONSTER, beam.colour, 300);
+                else if (spell == SPELL_DRAIN_LIFE)
+                {
+                    draw_ring_animation(agent->pos(), 2, DARKGRAY, DARKGRAY, false, 60,
+                                        TILE_BOLT_DRAINING_LIFE);
+                }
+            }
         }
     }
 
@@ -814,6 +831,8 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
 
         if (spell == SPELL_OZOCUBUS_REFRIGERATION)
             beam.damage.size = _ozo_adj_dam(base_dam_size, ozo_adj_count[a], actual, a->is_player());
+        else
+            flash_tile(a->pos(), beam.colour, 0, tile);
 
         int this_damage = _los_spell_damage_actor(agent, *a, beam, actual,
                                                     spell == SPELL_DRAIN_LIFE);
@@ -843,7 +862,11 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
         *damage_done = total_damage;
 
     if (actual)
+    {
+        if (spell != SPELL_OZOCUBUS_REFRIGERATION)
+            animation_delay(player_caster ? 125 : 200, true);
         return spret::success;
+    }
 
     if (player_caster)
         return tracer.foe_info.count ? spret::success : spret::abort;
@@ -4779,9 +4802,10 @@ spret cast_noxious_bog(int pow, bool fail)
     {
         temp_change_terrain(pos, DNGN_TOXIC_BOG, turns * BASELINE_DELAY,
                 TERRAIN_CHANGE_BOG, MID_PLAYER);
+        flash_tile(pos, LIGHTGREEN, 0, TILE_BOLT_BOG_FLASH);
     }
 
-    flash_view_delay(UA_PLAYER, LIGHTGREEN, 100);
+    animation_delay(125, true);
     mpr("You spew toxic sludge!");
 
     return spret::success;

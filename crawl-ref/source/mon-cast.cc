@@ -424,7 +424,17 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
                 mprf("%s liquefies the ground around %s!",
                      caster.name(DESC_THE).c_str(),
                      caster.pronoun(PRONOUN_REFLEXIVE).c_str());
-                flash_view_delay(UA_MONSTER, BROWN, 80);
+
+                for (radius_iterator ri(caster.pos(), 5, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+                {
+                    if (you.see_cell(*ri) && (*ri == caster.pos()
+                        || feat_has_solid_floor(env.grid(*ri))
+                        && !feat_is_shallow_water((env.grid(*ri)))))
+                    {
+                        flash_tile(*ri, BROWN, 0, TILE_BOLT_LIQUEFY_BROWN);
+                    }
+                }
+                animation_delay(140, true);
             }
 
             caster.add_ench(ENCH_LIQUEFYING);

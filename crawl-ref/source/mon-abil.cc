@@ -58,6 +58,7 @@
 #include "target.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "rltiles/tiledef-main.h"
 #include "transform.h"
 #include "view.h"
 #include "viewchar.h"
@@ -392,8 +393,9 @@ static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
             mprf("Something merges into %s, and it vanishes!",
                  old_name.c_str());
         }
-
-        flash_view_delay(UA_MONSTER, LIGHTGREEN, 150);
+        draw_ring_animation(merge_to->pos(), 2, LIGHTGREEN, LIGHTGREEN,
+                            false, 50, TILE_BOLT_SLIME_WAVE);
+        flash_tile(merge_to->pos(), LIGHTGREEN, 50, TILE_BOLT_SLIME_MERGE);
     }
     else if (you.can_see(*initial_slime))
     {
@@ -1080,7 +1082,7 @@ static bool _slymdra_try_merge(monster* mons)
     {
         if (you.see_cell(mons->pos()))
         {
-            flash_tile(mons->pos(), LIGHTGREEN);
+            flash_tile(mons->pos(), LIGHTGREEN, 50, TILE_BOLT_SLIME_MERGE);
             const int gained_heads = new_heads - old_heads;
             const string head_msg = gained_heads == 1 ? "sprouts a new head"
                                                       : make_stringf("sprouts %d new heads", gained_heads);
