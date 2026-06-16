@@ -602,6 +602,13 @@ const vector<GameOption*> game_options::build_options_list()
             false
 #endif
             ),
+        new BoolGameOption(SIMPLE_NAME(alt_shatter_animation),
+#ifdef USE_TILE_WEB
+            tiles.is_controlled_from_web()
+#else
+            false
+#endif
+            ),
 
         new ListGameOption<text_pattern>(SIMPLE_NAME(unusual_monster_items), {}, true,
                                          {[this]() { process_unusual_items(); }}),

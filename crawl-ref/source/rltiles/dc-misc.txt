@@ -123,6 +123,13 @@ crystal_spear5
 crystal_spear6
 crystal_spear7
 
+shatter_wave_yellow0 BOLT_SHATTER_WAVE_YELLOW
+shatter_wave_yellow1
+shatter_wave_white0 BOLT_SHATTER_WAVE_WHITE
+shatter_wave_white1
+shatter_wall0 BOLT_SHATTER_WALL
+shatter_wall1
+
 # Pure conjurations bolts
 
 magic_dart0 BOLT_MAGIC_DART

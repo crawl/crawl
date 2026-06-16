@@ -552,6 +552,7 @@ public:
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
     vector<string> use_animations_option;
     use_animations_type use_animations; // which animations to show
+    bool        alt_shatter_animation; // whether to use shockwave or screenshake
     bool        darken_beyond_range; // whether to darken squares out of range
     bool        show_blood; // whether to show blood or not
     int         food_snacking_frequency; // how often walking on food makes one eat

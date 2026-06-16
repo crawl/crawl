@@ -3922,6 +3922,9 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
     case TILE_BOLT_BOMBLET_LAUNCH:
     case TILE_BOLT_BOMBLET_BLAST:
     case TILE_BOLT_MANIFOLD_ASSAULT:
+    case TILE_BOLT_SHATTER_WAVE_YELLOW:
+    case TILE_BOLT_SHATTER_WAVE_WHITE:
+    case TILE_BOLT_SHATTER_WALL:
     case TILE_BOLT_PARAGON_TEMPEST:
     case TILE_BOLT_ANTIMAGIC:
     case TILE_BOLT_FLESH:

@@ -1721,6 +1721,7 @@ static int _shatter_walls(coord_def where, actor *agent)
     }
 
     noisy(spell_effect_noise(SPELL_SHATTER), where);
+    flash_tile(where, BROWN, 0, TILE_BOLT_SHATTER_WALL);
     destroy_wall(where);
     return 1;
 }
@@ -1759,8 +1760,26 @@ spret cast_shatter(int pow, bool fail)
         noisy(spell_effect_noise(SPELL_SHATTER), you.pos());
         mprf(MSGCH_SOUND, "The dungeon rumbles!");
     }
-
-    run_animation(ANIMATION_SHAKE_VIEWPORT, UA_PLAYER);
+    if (!Options.alt_shatter_animation)
+        run_animation(ANIMATION_SHAKE_VIEWPORT, UA_PLAYER);
+    else
+    {
+        // Initial ring, then big explosion.
+        draw_ring_animation(you.pos(), you.current_vision, YELLOW, BROWN,
+                            true, 15, TILE_BOLT_SHATTER_WAVE_YELLOW);
+        bolt visual;
+        visual.flavour       = BEAM_VISUAL;
+        visual.source        = you.pos();
+        visual.target        = you.pos();
+        visual.colour        = WHITE;
+        visual.tile_explode  = TILE_BOLT_SHATTER_WAVE_WHITE;
+        visual.glyph         = dchar_glyph(DCHAR_EXPLOSION);
+        visual.range         = you.current_vision;
+        visual.ex_size       = you.current_vision;
+        visual.is_explosion  = true;
+        visual.explode_delay = 15;
+        visual.explode(true, true);
+    }
 
     int dest = 0;
     for (distance_iterator di(you.pos(), true, true, LOS_RADIUS); di; ++di)
@@ -1772,6 +1791,8 @@ spret cast_shatter(int pow, bool fail)
         _shatter_monsters(*di, pow, &you);
         dest += _shatter_walls(*di, &you);
     }
+
+    animation_delay(Options.alt_shatter_animation ? 100 : 65, true);
 
     if (dest && !silence)
         mprf(MSGCH_SOUND, "Ka-crash!");
@@ -1824,6 +1845,30 @@ bool mons_shatter(monster* caster, bool actual)
 
     int pow = 5 + div_rand_round(caster->get_hit_dice() * 9, 2);
 
+    if (actual)
+    {
+        if (!Options.alt_shatter_animation)
+            run_animation(ANIMATION_SHAKE_VIEWPORT, UA_MONSTER);
+        else
+        {
+            // Initial shockwave pulse, then faint big explosion.
+            draw_ring_animation(caster->pos(), you.current_vision, YELLOW, BROWN,
+                                true, 20, TILE_BOLT_SHATTER_WAVE_YELLOW);
+            bolt visual;
+            visual.flavour       = BEAM_VISUAL;
+            visual.source        = caster->pos();
+            visual.target        = caster->pos();
+            visual.colour        = WHITE;
+            visual.tile_explode  = TILE_BOLT_SHATTER_WAVE_WHITE;
+            visual.glyph         = dchar_glyph(DCHAR_EXPLOSION);
+            visual.range         = you.current_vision;
+            visual.ex_size       = you.current_vision;
+            visual.is_explosion  = true;
+            visual.explode_delay = 25;
+            visual.explode(true, true);
+        }
+    }
+
     int dest = 0;
     for (distance_iterator di(caster->pos(), true, true, LOS_RADIUS); di; ++di)
     {
@@ -1854,14 +1899,13 @@ bool mons_shatter(monster* caster, bool actual)
     if (dest && !silence)
         mprf(MSGCH_SOUND, "Ka-crash!");
 
-    if (actual)
-        run_animation(ANIMATION_SHAKE_VIEWPORT, UA_MONSTER);
-
     if (!caster->wont_attack())
         foes *= -1;
 
     if (!actual)
         dprf("Shatter foe HD: %d", foes);
+    else
+        animation_delay(Options.alt_shatter_animation ? 100 : 65, true);
 
     return foes > 0; // doesn't matter if actual
 }
@@ -1873,6 +1917,7 @@ void shillelagh(actor *wielder, coord_def where, int pow)
     beam.flavour = BEAM_VISUAL;
     beam.set_agent(wielder);
     beam.colour = BROWN;
+    beam.tile_beam = TILE_BOLT_SHATTER_WAVE_YELLOW;
     beam.glyph = dchar_glyph(DCHAR_EXPLOSION);
     beam.range = 1;
     beam.ex_size = 1;

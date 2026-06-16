@@ -1848,6 +1848,11 @@ use_animations += branch_entry
           branch_entry     - Animations that run when you enter a new branch.
                              Currently only the Abyss and Zot have animations.
 
+alt_shatter_animation = false
+        If set to true, replaces the traditional screenshaking effect when
+        casting Shatter with multiple waves of vfx instead, to reduce headaches
+        and nausea. Defaults to `true` for webtiles games and `false` otherwise.
+
 unusual_monster_items += <regex>, <regex>, ...
         (List option)
         Monsters whose inventory items match a regex in this comma-separated
