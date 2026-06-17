@@ -2270,6 +2270,16 @@ static int _sh_from_shield(const item_def &item)
     return shield;
 }
 
+
+static int _gravity_shield_value()
+{
+    int base = 8;
+    const item_def *body_armour = you.body_armour();
+    if (!body_armour)
+        return base;
+
+    return base - property(*body_armour, PARM_EVASION) / 5;
+}
 /**
  * Calculate the SH value used internally.
  *
@@ -2316,6 +2326,16 @@ int player_shield_class(int scale, bool random, bool ignore_temporary)
 
     if (!ignore_temporary && you.duration[DUR_PARRYING])
         shield += player_parrying() * 200;
+
+    if (!ignore_temporary && you.duration[DUR_GRAVITIC_SHIELDING])
+    {
+        int base = _gravity_shield_value() * 100;
+        // one-fourth as effective for the part that "overlaps" another shield
+        if (shield > base)
+            shield += base / 4;
+        else
+            shield += (base - shield) + shield / 4;
+    }
 
     if (you.has_mutation(MUT_RECKLESS))
         shield /= 2;
@@ -6087,6 +6107,7 @@ bool player::shielded() const
            || duration[DUR_DIVINE_SHIELD]
            || duration[DUR_EPHEMERAL_SHIELD]
            || duration[DUR_PARRYING]
+           || duration[DUR_GRAVITIC_SHIELDING]
            || get_mutation_level(MUT_LARGE_BONE_PLATES) > 0
            || qazlal_sh_boost() > 0
            || you.wearing_jewellery(AMU_REFLECTION)

@@ -936,6 +936,19 @@ You can stockpile enough malice to cast this spell at most three times, and this
 can only be replenished by causing the death of a sufficient number of living
 beings.
 %%%%
+Gravitic Shielding spell
+
+Warps space around the caster's body into a shield capable of deflecting
+attacks. The shielding is both dense and difficult to maintain; the shield's
+effectiveness is increased if the caster wears weightier armour to bear its
+density and is greatly reduced if they must split their attention between it and
+other sources of shielding.
+
+Warping space in this way is a bit destructive to the fabric of reality, and
+nearby creatures may be malmutated when the spell is cast. Additionally, the
+more times the spell is cast on the same floor, the more magical contamination
+a subsequent cast on that floor will cause.
+%%%%
 Infernal Servant spell
 
 Summons a major demon.

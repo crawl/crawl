@@ -792,6 +792,8 @@ void floor_transition(dungeon_feature_type how,
         jiyva_end_oozemancy();
     if (you.duration[DUR_NOXIOUS_BOG])
         you.duration[DUR_NOXIOUS_BOG] = 0;
+    if (you.duration[DUR_GRAVITIC_SHIELDING])
+        you.duration[DUR_GRAVITIC_SHIELDING] = 0;
     if (you.duration[DUR_DIMENSIONAL_BULLSEYE])
     {
         monster* targ = monster_by_mid(you.props[BULLSEYE_TARGET_KEY].get_int());

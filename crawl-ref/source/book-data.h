@@ -374,6 +374,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Book of Earth
     SPELL_LEDAS_LIQUEFACTION,
+    SPELL_GRAVITIC_SHIELDING,
     SPELL_LRD,
     SPELL_PERMAFROST_ERUPTION,
 },

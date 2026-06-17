@@ -13,6 +13,7 @@
 #include "areas.h"
 #include "art-enum.h"
 #include "coordit.h" // radius_iterator
+#include "dungeon.h" // GRAVITY_WARPED_KEY
 #include "env.h"
 #include "god-passive.h"
 #include "hints.h"
@@ -314,6 +315,43 @@ spret cast_detonation_catalyst(bool fail)
 
     // base duration is very low to minimize precasting
     you.set_duration(DUR_DETONATION_CATALYST, random_range(3,5));
+
+    return spret::success;
+}
+
+static int _gravity_shield_contam_max()
+{
+    if (env.properties.exists(GRAVITY_WARPED_KEY))
+        return env.properties[GRAVITY_WARPED_KEY].get_int() * 250;
+
+    return 0;
+}
+
+spret cast_gravitic_shielding(int pow, bool fail)
+{
+    int contam = _gravity_shield_contam_max();
+
+    if (warn_about_contam_cost(contam))
+        return spret::abort;
+
+    fail_check();
+
+    mpr("You warp space around yourself.");
+
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        monster* mon = monster_at(*ai);
+
+        if (mon && could_harm(&you, mon))
+            mon->malmutate(&you);
+    }
+
+    you.set_duration(DUR_GRAVITIC_SHIELDING,
+        random_range(18 + div_rand_round(pow, 6), 26 + div_rand_round(pow, 4)));
+
+    contaminate_player(random_range(contam * 2 / 3, contam), true);
+    env.properties[GRAVITY_WARPED_KEY] = env.properties[GRAVITY_WARPED_KEY].get_int() + 1;
+    you.redraw_armour_class = true;
 
     return spret::success;
 }

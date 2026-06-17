@@ -4594,6 +4594,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_GRAVITIC_SHIELDING, "Gravitic Shielding",
+    spschool::translocation | spschool::earth,
+    spflag::selfench | spflag::chaotic,
+    4,
+    100,
+    -1, -1,
+    0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,
