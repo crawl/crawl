@@ -149,82 +149,74 @@ i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
 %%%%
 Summonings
 
-Summonings deals with summoning creatures from another plane of reality to
-temporarily aid you. Increasing Summonings skill may grant a number of effects
-depending on the spell, such as longer duration or more powerful allies. Note
-that summoned beings do not leave corpses and give no experience when killed,
-and their equipment is as ephemeral as they are.
+Prizyvy dozvaljajųt prizyvati stvorov iz drugoj reaĺnosti dlja dočasnoj pomoći.
+Povyšeńje uměńja Prizyvov može dati ręd efektov v zavisnosti od každogo zaklinańja,
+takyh kako povyšeńje trvańja prizyva ili usiljeńje sȯjųznikov. Zauvaži, že prizvani
+stvori ne ostavjajųt trupov i ne davajųt prěživańja poslě svojej smŕti, a jih
+orųdovańje takože kråtkotrajno kako i oni sami.
 
-Being skilled in Summonings increases the success rate and spell power of
-spells in this school. Many spells belong to a combination of several schools,
-in which case spellcasting success and power will depend on the average skill
-in these schools.
+Uměńje Prizyvov povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
 %%%%
 Forgecraft
 
-Forgecraft is the art of shaping tangible objects out of magic. Forgecraft
-spells can construct a wide array of mechanical creatures that will fight
-alongside the caster, as well as create traps and barricades and even turn the
-physical resilience of one's armour into a weapon.
+Kovačno Dělo jest umětnost́ stvorjeńja materiaĺnyh objektov s pomoćjų magije.
+Zaklinańja Kovačnogo Děla dozvaljajųt konstruovati samyh råznyh mehaničnyh stvorov,
+ktore bųdųt vojevati na stråně čarovnika, a takože stvarjati pasti i barikady i
+obraćati nosimų brȯnjų v orųžje.
 
-Being skilled in Forgecraft increases the success rate and spell power of
-spells in this school. Many spells belong to a combination of several schools,
-in which case spellcasting success and power will depend on the average skill
-in these schools.
+Uměńje Kovačnogo Děla povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
 %%%%
 Necromancy
 
-Necromancy is the art of draining and gaining life, although most often
-associated with zombies and other undead. As such, Necromancy spells have a
-wide range of effects, ranging from spells to create or disrupt the undead to
-spells granting unholy healing in various forms.
+Nekromantija jest umětnost́ vpivańja i iziskańja žit́ja, ale čęstěje vsego jego
+svęzyvajųt s zombi i drugymi mŕtvecami. Zatom, zaklinańja Nekromantije imajųt
+veliko množstvo efektov, od stvorjeńja i råzrvańja mŕtvecov do nabyvańja
+nečėstivogo izlěčeńja v råznyh formah.
 
-Being skilled in Necromancy increases the success rate and spell power of
-spells in this school. Many spells belong to a combination of several schools,
-in which case spellcasting success and power will depend on the average skill
-in these schools.
+Uměńje Nekromantije povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
 %%%%
 Translocations
 
-Translocations focus on the spatial movement of beings or objects, including
-useful spells to translocate yourself over short distances quickly or to
-transport your enemies away from you.
+Zaklinańja Prěměšćeńja sųsrědotočene na prostrånnom prěměšćeńju stvorov ili objektov,
+vključajųći koristne zaklinańja dlja bystrogo prěměšćeńja sebe na kråtke dalje ili
+svojih neprijateljev - na dȯlge dalje.
 
-Being skilled in Translocations increases the success rate and spell power of
-spells in this school. Many spells belong to a combination of several schools,
-in which case spellcasting success and power will depend on the average skill
-in these schools.
+Uměńje Prěměšćenij povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
 %%%%
 Alchemy
 
-Alchemy is the art of toxins and transmutation. Spells in this school can twist
-objects and creatures into different shapes, unleash powerful poisons, or even
-unweave the fabric of magic itself.
+Alhimija jest umětnost́ otrav i transmutacij. Zaklinańja tutoj školy mogųt měnjati
+izględ objektov i stvorov, izpušćati moćne otravy ili až råzpletati samų tkaninų magije.
 
-Being skilled in Alchemy increases the success rate and spell power of
-spells in this school. Many spells belong to a combination of several schools,
-in which case spellcasting success and power will depend on the average skill
-in these schools.
+Uměńje Alhimije povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
 %%%%
 Fire Magic
 
-Fire Magic focuses mainly on dealing fire damage over long distances, with many
-effective Conjurations.
+Magija Ognja jest sųsrědotočena na pričinjeńju ognjenoj škody na dȯlge dalje,
+s koristańjem množstva efektivnyh Zaklętij.
 
-Being skilled in Fire Magic increases the success rate and spell power of
-spells in this school. Many spells belong to a combination of several schools,
-in which case spellcasting success and power will depend on the average skill
-in these schools.
+Uměńje Magije Ognja povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
 %%%%
 Ice Magic
 
-Ice Magic contains a range of direct damage spells, as well as some defensive
-effects - for example, crafting temporary ice armour.
+Magija Leda vkljuaje v sebę ręd zaklinanij pręmoj škody, i takože něktore zaščitne
+efekty - napriklad, stvorjeńje dočasnoj ledovoj brȯnje.
 
-Being skilled in Ice Magic increases the success rate and spell power of spells
-in this school. Many spells belong to a combination of several schools, in
-which case spellcasting success and power will depend on the average skill in
-these schools.
+Uměńje Magije Leda povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
 %%%%
 Air Magic
 
@@ -233,10 +225,9 @@ noisy but powerful lightning Conjurations. It also provides some utility
 spells, such as a call to the wind to assist your movement or a Hex to prevent
 most use of magic in the area surrounding you.
 
-Being skilled in Air Magic increases the success rate and spell power of spells
-in this school. Many spells belong to a combination of several schools, in
-which case spellcasting success and power will depend on the average skill in
-these schools.
+Uměńje Magije Vȯzduha povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
 %%%%
 Earth Magic
 
@@ -245,10 +236,9 @@ damage, which cannot be resisted like fire, cold and lightning damage can. It
 is also linked with Alchemy, with spells to liquefy the earth around you, or to
 turn your enemies to stone.
 
-Being skilled in Earth Magic increases the success rate and spell power of
-spells in this school. Many spells belong to a combination of several schools,
-in which case spellcasting success and power will depend on the average skill
-in these schools.
+Uměńje Magije Zemje povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
 %%%%
 Invocations
 
