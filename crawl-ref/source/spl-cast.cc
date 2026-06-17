@@ -3118,7 +3118,7 @@ static dice_def _spell_damage(spell_type spell, int power)
         case SPELL_BOULDER:
             return boulder_damage(power, false);
         case SPELL_THUNDERBOLT:
-            return thunderbolt_damage(power, 1);
+            return thunderbolt_damage(power, true, false);
         case SPELL_HELLFIRE_MORTAR:
             return hellfire_mortar_damage(power);
         case SPELL_FORGE_LIGHTNING_SPIRE:
