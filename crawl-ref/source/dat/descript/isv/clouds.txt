@@ -1,36 +1,35 @@
 %%%%
 flame cloud
 
-A cloud of raging fire. Any creature not entirely immune to fire will be hurt
-by time spent in the flames.
+Oblåk běsęćego sę ognja. Vśaky stvor bez pȯlnogo odpora ognju bųde poraženy od
+časa, provedenogo v plåmenju.
 
-Ranged cold attacks passing through the cloud are substantially reduced in
-range, dissipating the cloud in the process.
+Daljnost́ hlådnyh atak smėnšaje sę pri prěhođeńju črěz oblåk, v procesu
+råzsějivajųći oblåk.
 
-If placed near or over water, the heat will generate steam nearby.
+Jestli oblåk nahodi sę okolo ili nad vodojų, jego žar bųde porađati par poblizu.
 %%%%
 noxious fumes cloud
 
-A cloud of vile, choking fumes. Any creature spending time in it will be at
-risk of becoming confused by the gases, unless resistant to poison. Tougher,
-more experienced creatures are less likely to be affected.
+Oblåk mŕzkyh, dušęćih par. Vśaky stvor bez odpora otravě bųde riskovati zaměšati
+sebe iz-za gazov. Tųgějše, izkušenějše stvory bųdųt utŕpěti mėnje.
 %%%%
 freezing vapour cloud
 
-A cloud of freezing air. Any creature not entirely immune to cold will be hurt
-by time spent inside.
+Oblåk mråžęćego vȯzduha. Vśaky stvor bez odpora hlådu bųde poranjeno od časa,
+provedenogo vnųtri oblåka.
 
-Ranged fire attacks passing through the cloud are substantially reduced in
-range, dissipating the cloud in the process.
+Daljnost́ ognjenyh atak smėnšaje sę pri prěhođeńju črěz oblåk, v procesu
+råzsějivajųći oblåk.
 %%%%
 poison gas cloud
 
-A cloud of deadly poison. Any creature without resistance to poison will be
-both poisoned and directly harmed by time spent in it.
+Oblåk smŕteljnoj otravy. Vśaky stvor bez odpora otravě bųde otravjeny i poranjeny
+od časa, provedenogo vnųtri oblåka.
 %%%%
 _smoke_cloud_
 
-A cloud of coloured smoke. Harmless, except to the asthmatic.
+Oblåk kolorovanogo dyma. Neškodlivo, kromě kako dlja astmatnikov.
 %%%%
 black smoke cloud
 
@@ -50,23 +49,23 @@ purple smoke cloud
 %%%%
 translocational energy cloud
 
-The remnant of some creature that was recently here but is no longer, banished
-nearby, across the level, or out of reality itself, all the way into the Abyss.
-Some wizards say these are a kind of "allergic reaction" the universe
-produces, in response to magic that warps space in impossible ways; a cosmic
-sneeze. Perhaps metaphysically gross, but otherwise harmless.
+Ostatky někogo stvora, ktory nedavno tut byl, ale jego uže nemaje, izgnany poblizu
+črěz vėś uråvėnj ili iz samoj reaĺnosti, pręmo v Bezdnų. Něktori čarovniki govoręt,
+že tute ostatky kakoby sųt "alergična reakcija" Vsesvěta v odzyv na magijų, ktora
+krivi prostråństvo nemožnymi sposobami; kosmično kyhańje. Može to jest metafizično
+mŕzko, ale v ostalom jest neškodlivo.
 %%%%
 spreading flames cloud
 
-A raging forest fire. Any creature not entirely immune to fire will be hurt by
-time spent in the flames. The flames will intermittently flare up and fill
-their surroundings with lesser fires. Any trees unfortunate enough to be nearby
-will often find themselves transformed into more kindling for the fire.
+Běsęći sę lěsny požar. Vśaky stvor bez pȯlnogo odpora ognju bųde poraženy od
+časa, provedenogo v plåmenju. Plåmenj bųde periodično råzgarjati sę i prěnositi
+mėnjši ogȯnj na okolične drěvesa. Te drěvesa, ktorym ne poščęstlivilo sę okazati sę
+poblizu, bųdųt obraćene v drva dlja råzpaljeńja ognja.
 
-Ranged cold attacks passing through the cloud are substantially reduced in
-range, dissipating the cloud in the process.
+Daljnost́ hlådnyh atak smėnšaje sę pri prěhođeńju črěz oblåk, v procesu
+råzsějivajųći oblåk.
 
-If placed near or over water, the heat will generate steam nearby.
+Jestli oblåk nahodi sę okolo ili nad vodojų, jego žar bųde porađati par poblizu.
 %%%%
 steam cloud
 
