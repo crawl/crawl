@@ -1,3 +1,209 @@
+Stone Soup 0.35 (through 0.35-a0-535-e467b9c7cb )
+--------------------------------------------------
+
+Highlights
+----------
+* A new species: Gale Centaurs, customizable descendents of the Four Winds.
+* A new portal: Gulch.
+
+Artefacts
+---------
+* New unrand: "Fimbulwinter", a +9 athame which inflicts Doom on monsters hurt
+  by the wielder's cold damage.
+* New unrand: the swamp witch's dragon scales, a +5 set of swamp dragon
+  scales that inflicts poison upon enemies the wearer afflicts with debuffs.
+* New unrands: the fire dragon occultist's scales and ice dragon arcanist
+  scales, +5 and +6 sets of fire / ice dragon scales that help with casting
+  Fire / Ice Magic and apply the Exposed debuff to enemies you injure with
+  fire / cold damage.
+* The Amulet of the Four Winds has been rename the Amulet of Tranquility.
+* The Glaive of Prune is now the Partisan of Prune, and is otherwise unchanged
+  aside from the new base weapon type.
+* Zephyr has been reworked completely: it is now a +12 longbow of {Dex+5 Fly}
+  with the new Salvo property, which makes firing it also fire additional
+  shots at up to four other unobstructed foes in range.
+
+Branches, Environment
+---------------------
+* A new timed portal: the Gulch, appearing in the Vaults.
+  - Entering the Gulch inflicts three transient bad mutations.
+  - It contains seven new enemies, many of them chaotic mutant beasts and
+    abandoned experiments, focusing on debuffs, poison, and antimagic.
+  - Its layout features heavily randomized tunnels and intersections with mould
+    patches, stacks of scrap, and only occasional strips of water.
+  - Item rewards weight poison, Alchemy, Hexes, Forgecraft, and potions more
+    heavily.
+  - Gulches always contain a purified mutation catalyst, a new level feature
+    which can be interacted with to gain a single random good mutation
+    (which doesn't restrict equipment slots).
+* New terrain type: patches of mould, which automatically sprout fungus on top
+  of themselves and slowly regrow it whenever it dies.
+* Troves now contain better weapons, a small additional chances for manuals,
+  and more reliably offer bardings to the species which can wear them.
+* Ziggurats now provide fewer potions of experience and more potions of mutation
+  after fully completing each Ziggurat.
+* Ziggurats now reward approximately three times as much exploration piety.
+
+Character
+---------
+* New species: Gale Centaurs, half-human half-horse descendants of the Four
+  Winds, who are empowered by rampaging towards foes and can trample whole
+  groups of them backwards.
+  - They have +10% base hp, large size, Hooves 3 and Deformed Body innate
+    mutations, as well as innate Rampaging
+  - At XL 1, rampaging towards monsters grants the Stampede status, allowing you
+    to trample groups of enemies backwards, as long as you keep moving.
+  - At XL 5, you begin embodying one of the Four Winds based on your highest
+    skill, granting additional benefits when rampaging:
+    - North Wind: You rapidly regenerate 70% of all damage taken whil
+      rampaging. (Granted by Unarmed Combat and all melee weapon skills besides
+      Short Blades.)
+    - South Wind: You have +50% stealth while rampaging and successful stabs
+      grant you the Tailwind status, making your next rampage movement instant.
+      (Granted by Short Blades and Stealth.)
+    - West Wind: Rampaging while wielding a ranged weapon fires a powerful
+      penetrating shot that pushes enemies backwards and also grants you a
+      charge of Salvo, making your non-rampage attacks fire additional shots at
+      up to four other targets. (Granted by Ranged Weapons.)
+    - East Wind: Rampaging restores a small amount of MP and makes all enemies
+      within 2 tiles of you Exposed, increasing the damage and accuracy of
+      spells and abilities against them for a short while. (Granted by any
+      spell school skill.)
+  - New autofight_stampede option: allows autofight to trample forward while you
+    have the Stampede status.
+* Revenant's spellclaw attacks while Enkindled now properly heal from enhancer
+  staff damage.
+* Revenants now have -2 Staves and Evocations aptitude (down from -1).
+* New mutation: spark swarm, which makes fire and electric damage you deal
+  have a high chance to outline foes in light.
+* Removed species: Armataurs.
+
+Gods
+----
+* All piety decay and piety costs for receiving most god gifts has been
+  removed. Piety gain has been adjusted such that most gods should see
+  little change from this, though Sif Muna's and Trog's piety gain should
+  increase.
+* Worshippers are completely forbidden from using or equipping items and spells
+  directly hated by their god, rather than enforcing penance.
+* Hepliaklqana's knight ancestor has received multiple changes.
+  * At XL 15, they can bind enemies they hit with their melee attack in place.
+  * At XL 19, they learn Bolster (giving them Might + Resistance) instead of
+    Haste.
+  * At XL 24, they get an additional +25% HP.
+* Hepliaklqana's battlemage ancestor has been replaced with an elementalist
+  ancestor, which casts destructive magic more frequently and prefers to avoid
+  approaching enemies on its own, but is much frailer in melee.
+  * At XL 1, they cast Shock, Stone Arrow, and Deflect Missiles.
+  * At XL 15, they replace Shock with Iceblast and Bolt of Magma.
+  * At XL 19, they replace Stone Arrow with Lee's Rapid Deconstruction and gain
+    increased damage on all spells.
+  * At XL 24, they replace Iceblast and Bolt of Magma with Permafrost Eruption
+    and Plasma Beam.
+* Nemelex's Elements card now summons lindwurms and mountainshells instead of
+  molten gargoyles and war gargoyles.
+* Okawaru no longer gifts orbs.
+* Sif Muna has received multiple major changes:
+  * They now reward piety for exploration instead of kills.
+  * The rate of gifting books is no longer affected by piety above 5* (in
+    general, this means receiving books slightly earlier, and ability usage
+    no longer reducing the number of gifts received).
+  * They no longer use the Invocations skill. The success rate and power of
+    Channel Magic and Divine Exegesis now depend on Spellcasting skill instead.
+  * Divine Exegesis now briefly grants the Repeat Exegesis ability, allowing
+    you to repeatedly cast the same spell at a greatly reduced piety cost.
+* Trog's Brothers in Arms now scales with XL instead of piety, and can now
+  also summon elephants, death yaks, skysharks, dire elephants, and ettins.
+* Trog now fully forbids all but gnolls training magic skills, and permits
+  worshippers to read scrolls of amnesia.
+* Xom has been altered yet further:
+  - Xom gets bored somewhat faster on mostly-cleared floors, will no longer
+    provide certain beneficial strategic effects on mostly-cleared floors, and
+    inflicts more draining and Doom when bored on mostly-cleared floors.
+  - New Xom effects: mass blinkitis and blinding, mass chaos lace and vexing.
+  - Xom's hyper-buffing an ally effect is even stronger than previously.
+
+Interface and Options
+---------------------
+* Targeting for ranged weapons, throwing, and many spells (both when done
+  manually and via autofight) is now better at avoiding plants and
+  statues, and ranged combat will prefer shots that include additional
+  enemies in their path, where possible.
+* It is now possible to deliberately aim non-penetrating attacks past
+  plants and other firewood.
+* Examining jellies and other acidic slimes now displays the acid splash
+  damage for hitting them in melee.
+* Examining weapons now also mentions when shields would slow down their
+  attack delay.
+* The mon_glyph option now supports elemental colours.
+* Stash search (ctrl-f) now sorts by categories (putting items before features)
+  and then distance, rather than solely by distance.
+* New option: alt_shatter_animation, which provides a different visual effect
+  for Shatter without any screenshake, set by default as true on Webtiles and
+  false otherwise.
+* New option: longwalk_range, which allows customizing the maximum distance
+  pressing shift+[direction] can move the player.
+
+Items
+-----
+* New weapon: athames, uncommon one-handed short blades that deal additional
+  damage to foes suffering from debuffs (and can have the highest base damage
+  of any short blade against sufficiently afflicted foes.)
+* Archery-ego armour now has 66% less encumbrance reduction for the purposes of
+  ranged weapons (up from 50% less).
+
+Monsters
+--------
+* The Gulch comes with many new monsters:
+  - Fungal shamblers, which raise up to 3 burstshrooms behind those they hit
+    in melee.
+  - Mongrel wurms, crossbreeds drakes with Harpoon Shot, Scorch, and strong
+    poison bites.
+  - Roaming sludgefish, which hurl sludge and launch bolts of antimagic.
+  - Rusted inspectors, magic-weakening constructs with corrosive melee.
+  - Scrapshell chimeras, durable summoners capable of unleashing swarms of
+    mutagenic ghosts.
+  - Sewage sovereigns, monstrous pigs who stampede rapidly over their foes.
+  - Telencephalons, floating brain experiments with psychokinetic retaliation
+    effects.
+* Josephina can now cast Dominate Undead.
+* Quicksilver elementals are now amorphous, making them immune to
+  constriction-themed effects and resistant to Shatter.
+* Screaming refractions are now nonliving, rather than undead.
+* Thorn hunters have completely new briar patch behaviour, now entrapping
+  their foes inside small rings of briars as well as surrounding themselves
+  defensively whenever their foe gets close or injures them.
+* Ynoxinuls now summon berserk ufetubi.
+* Monsters are no longer prevented from flanking and swooping while berserk.
+* Player ghosts now can cast Construct Spike Launcher and Splinterfrost Shell.
+* Many monster glyphs have been reorganised and now use Unicode characters
+  by default.
+
+Spells
+------
+* The Imbue Servitor and Attune Weapon abilities for Spellspark Servitor and
+  Platinum Paragon are now usable by any Sif Muna worshipper with access
+  to Divine Exegesis, as long as those spells are in your library.
+* Malign Gateway's portals can now spawn over shallow water and most decorative
+  features, and more than one can exist on a level at the same time (so long
+  as each was opened by a different caster).
+
+Tiles
+-----
+* New tiles for existing game elements:
+  - Monsters: bear simulacra.
+  - Features: altars to Elyvilon, Okawaru, and Kikubaaqudgha.
+  - Items: the partisan of Prune.
+  - Player paper dolls: nearly all melee randart weapons.
+  - VFX: Leda's Liquefaction, Eringya's Noxious Bog, Permafrost Eruption, the
+         Singing Sword singing, the shillelagh "Devastator"'s blasts, slime
+         creatures merging, Drain Life, Mlioglotl's Corruption, nearly all
+         electric spell effects.
+* New floor tiles for vaults: necromantic floor tiling, rainbow etchings, Lom
+  Lobon's realm.
+* Spectral monster tiles have been changed and updated, now covering even more
+  monsters than any previous derived undead type.
+
 Stone Soup 0.34.1 (20260314)
 ----------------------------
 
