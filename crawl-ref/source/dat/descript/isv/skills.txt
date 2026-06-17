@@ -242,26 +242,24 @@ i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
 %%%%
 Invocations
 
-Your Invocations skill affects the likelihood that an attempt to use divine
-abilities with certain gods will be successful, and often the power of such
-abilities.
+Uměńje Invokacije vlivaje na pravdopodobnost́ uspěha proby koristati božske sposobnosti
+něktoryh bogov i takože na moć tutyh sposobnostij.
 
 {{
     if you.race() ~= "Djinni" then
-        return "The Invocations skill also affects your magical reserves, " ..
-               "but to a lesser degree than the Spellcasting skill. Only the " ..
-               "higher contribution is used."
+        return "Uměńje Invokacije takože povyšaje magične zapasy, " ..
+               "ale značno mėnje, než Čarovańje Zaklinanij. Jedino " ..
+               "vysše uměńje koristaje sę."
     end
 }}
 %%%%
 Evocations
 
-Evocations skill affects your ability to use magical items like wands and other
-uncommon objects, increasing the power or success rate of such items.
+Uměńje Evokacije vlivaje na sposobnost́ koristati magične prědměty, kako napriklad
+magične palky i druge neobyčajne objekty, povyšajųći moć ili uspěh takyh prědmětov.
 %%%%
 Shapeshifting
 
-Shapeshifting enables the use of magical talismans to change oneself into other
-forms. Sufficient skill allows one to use more powerful forms without gravely
-damaging one's health. Being skilled in Shapeshifting also makes most forms
-somewhat stronger, in ways which vary between forms.
+Obraćańje dozvaljaje koristati magične talismany dlja izměnjeńja oblika. Dostatȯčno
+majstrstvo dozvaljaje koristati vyše moćne formy bez smėnšeńja zdråvja. Tuto uměńje
+takože dělaje množiństvo form siĺněje, s samobytnymi dlja každoj formy efektami.
