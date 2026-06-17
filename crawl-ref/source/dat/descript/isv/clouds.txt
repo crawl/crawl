@@ -85,7 +85,7 @@ blessed fire cloud
 
 Oblåk božskogo ognja, napȯlnjeny svętojų silojų. Poslědovatelji dobryh bogov
 ne bųdųt poraženi jim. Vse druge stvory bųdųt poranjene tutym oblåkom, osoblivo
-bolěsno bųde mŕtvecam i demoničnym stvoram.
+bolěsno bųde nemŕtvym i demoničnym stvoram.
 %%%%
 foul pestilence cloud
 
@@ -105,60 +105,59 @@ paralizy.
 %%%%
 rain cloud
 
-An extremely localised rainstorm. It may produce short-lived pools of shallow
-water. Beings made of fire are averse to spending much time in the rain.
+Krajno lokalizovana dȯžd́jeva burja. Ona može iztvarjati dočasne kaluže neglųbokoj
+vody. Ognjene stvory ne ljubęt provoditi čas pod dȯžd́em.
 %%%%
 mutagenic fog cloud
 
-A cloud of pure, unstructured magic, condensed into a scintillating mist;
-essentially toxic magical waste. Creatures venturing within will find
-themselves increasingly contaminated with magical radiation, sufficient amounts
-of which will inflict negative mutations when dissipating.
+Oblåk čistoj, nestrukturovanoj magije, ktora jest skondensovana v blěskajųćų
+mglų; on jest otravne magične smeti. Stvory, rěšivše zajdti do vnųtra, bųdųt
+postųpno zaražati sę magičnojų radiacijejų, dostatȯčna kolikost́ ktoroj pri
+råzsějivańju bųde nakladati negativne mutacije.
 %%%%
 magical condensation cloud
 
-The wake of some highly concentrated magical energy, itself entirely harmless.
+Slěd od něktoroj vysokokoncentrovanoj magičnoj energije, jest vpȯlně neškodlivy.
 %%%%
 whirling frost cloud
 
-The winds of a polar vortex. It will deal severe damage to anyone within it,
-only partially mitigated by resistance to cold.
+Větry polarnogo vihra. One bųdųt pričinjati surovų škodų vśakomu stvoru vnųtri
+njego, i tuta škoda jedino čęstično smėnšaje sę odporom k hlådu.
 %%%%
 sparse dust cloud
 
-A cloud of sparse dust. Atmospheric, but harmless.
+Oblåk malogo praha. Atmosferno, ale jest neškodlivo.
 %%%%
 spectral mist cloud
 
-A cloud of spectral mist. It causes minor damage to all creatures other than
-the undead. Dangerous but short-lived spectral undead creatures will coalesce
-from the mist over time.
+Oblåk prizračnoj mgly. On pričinjaje jedino malų škodų vsim stvoram, kromě
+nemŕtvyh. Potom iz mgly izhodęt nebezpečne, ale maloživųći prizračni nemŕtvi.
 %%%%
 acidic fog cloud
 
-A cloud of flesh-searing acid, which will deal damage and apply corrosion to
-those within it. Resistance to corrosion will provide immunity to its effects.
+Oblåk opaljajųćej kysliny, ktory bųde pričinjati škodų i nakladati korozijų na tyh,
+kto nahodi sę vnųtri. Odpor korozije bųde zabezpečati imunitet k jų efektam.
 %%%%
 thunder cloud
 
-A dark storm cloud. It will intermittently strike those within with lightning,
-dealing severe damage to those without resistance to electricity.
+Tėmny burjevy oblåk. On bųde periodično poražati blěskavicejų tyh, kto nahodi sę
+vnųtri, pričinjajųći surovų škodų stvoram bez odpora k električnosti.
 %%%%
 excruciating misery cloud
 
-A cloud of lingering despair and necromantic energy. Living creatures trapped
-within will repeatedly lose small fractions of their maximum health, though
-protection from negative energy will mitigate the effects.
+Oblåk prěbyvajųćego odčajańja i nekromantičnoj energije. Žive stvory, zaključene
+v njego, bųdųt bezprěryvno utraćati male ulomky maksimaĺnogo zdråvja, ale
+odpor k negativnoj energije bųde smėnšati efekty.
 %%%%
 white fluffiness cloud
 
-A white, fluffy cloud. Not actually solid enough to use as a pillow, and yet
-still oddly peaceful.
+Běly, puhovy oblåk. Nedostatȯčno gųsty, da by koristati jego kako poduškų, ale
+ješče čudno mirny.
 %%%%
 salt cloud
 
-A cloud of rapidly whirling dust and salt. It stings the eyes and skin of any
-creatures caught within, although it is ultimately harmless.
+Oblåk bystro krųžęćego praha i solji. On kolje očesa i kožų vśakyh stvorov,
+vtęgnųtyh v njego, ale on v koncu jest neškodlivy.
 %%%%
 golden dust cloud
 
@@ -172,41 +171,41 @@ standing over it, but if left alone will ignite into a blazing cloud of flame.
 %%%%
 wisps of flame cloud
 
-A trail of sparks and wisps of flame. Atmospheric, but harmless.
+Slěd od iskr i ostatkov ognja. Atmosferno, ale jest neškodlivo.
 %%%%
 alcoholic mist cloud
 
-A haze of aerosolised moonshine so thick that creatures can become drunk just
-walking through it.
+Mgla iz råzpråšenogo samogona jest taka gųsta, že stvory mogųt napiti sę, prosto
+prošėvši skroz njų.
 %%%%
 blastmotes cloud
 
-A cloud of volatile blastmotes. These explode on contact with flame or creatures.
-The explosion is concussive, knocking adjacent creatures away.
+Oblåk eksplozivnyh tlějųćih vųgljev. One eksplodujųt pri kontaktu s plåmenjem ili
+stvorami. Eksplozija imaje stręsejųćų silų, odkydajųći bližnjih stvorov.
 %%%%
 sparks cloud
 
-A trail of electric sparks. Atmospheric, but harmless.
+Slěd od električnyh iskr. Atmosferno, ale jest neškodlivo.
 %%%%
 faint pestilence cloud
 
-The faintest hint of foul pestilence, seeping out from somewhere. While not
-dense enough to be harmful yet, it is thickening rapidly.
+Slaby zapah mŕzkoj čumy, pronikajųći odněkųd. Tutčas on ješče ne jest gųsty, da by
+poškoditi, ale on bystro nabyvaje gųstost́.
 %%%%
 magnetised fragments cloud
 
-A cloud of countless tiny fragments of magnetised metal, still vibrating
-slightly from a recent electrical discharge. They will function as an attractor
-for the Magnavolt spell until they dissipate.
+Oblåk mnogočisĺnyh malenjkyh fragmentov metala, ješče nemnogo vibrujųćih poslě
+nedavnogo električnogo izpušćeńja. One bųdųt služiti kako pritęgajųći faktor
+dlja zaklinańja Magnavoĺt, dopoka one bųdųt råzsějati sę.
 %%%%
 bats cloud
 
-A swarm of tiny vampire bats, so dense that it is impossible to count them all.
-They will relentlessly assail anything but the undead who stands in their midst,
-gradually lulling them to sleep with their soporific bites - and continuing to
-feed off their helpless body, once they fall.
+Roj malenjkyh vampirskyh netopyŕev, taky gųsty, že nemožno sčisliti jih vsih.
+Oni neumolimo napadajųt na vsih, kromě nemŕtvyh, kto stoji posrěd njih, postųpno
+uspavajųći neprijateljev svojimi hypnotičnymi ukusami i prodȯlžajųt krmiti sę jih
+bezpomoćnymi tělami poslě togo, kȯgda one padajųt.
 %%%%
 rust cloud
 
-A cloud of oxidising vapour that continuously corrodes and weakens the attacks
-of whatever stands inside it (but does only minimal damage).
+Oblåk okysljajųćej pary, ktory bezprěryvno råzjedaje i oslabjaje ataky vsih,
+kto nahodi sę vnųtri njego (ale pričinjaje jedino malų škodų).
