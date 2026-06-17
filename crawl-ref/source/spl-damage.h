@@ -96,7 +96,7 @@ void polar_vortex_damage(actor *caster, int dur);
 dice_def polar_vortex_dice(int pow, bool random);
 void cancel_polar_vortex();
 coord_def get_thunderbolt_last_aim(actor *caster);
-dice_def thunderbolt_damage(int power, bool main_beam, bool sample = true);
+dice_def thunderbolt_damage(int power, int arc);
 spret cast_thunderbolt(actor *caster, int pow, coord_def aim,
                             bool fail);
 bool mons_should_fire_permafrost(int pow, const actor &agent);

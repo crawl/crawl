@@ -1303,6 +1303,8 @@ bool targeter_thunderbolt::set_aim(coord_def a)
     if (a == origin)
         return false;
 
+    arc_length.init(0);
+
     ray_def ray;
     coord_def p; // ray.pos() does lots of processing, cache it
 
@@ -1312,7 +1314,10 @@ bool targeter_thunderbolt::set_aim(coord_def a)
            && map_bounds(p) && opc_solid_see(p) < OPC_OPAQUE)
     {
         if (p != origin && zapped[p] <= 0)
+        {
             zapped[p] = AFF_YES;
+            arc_length[origin.distance_from(p)]++;
+        }
         ray.advance();
     }
 
@@ -1324,7 +1329,10 @@ bool targeter_thunderbolt::set_aim(coord_def a)
            && map_bounds(p) && opc_solid_see(p) < OPC_OPAQUE)
     {
         if (p != origin && zapped[p] <= 0)
-            zapped[p] = AFF_MAYBE;
+        {
+            zapped[p] = AFF_MAYBE; // fully affected, we just want to highlight cur
+            arc_length[origin.distance_from(p)]++;
+        }
         ray.advance();
     }
 
@@ -1342,6 +1350,8 @@ bool targeter_thunderbolt::set_aim(coord_def a)
             if (left_of(a1, r) && left_of(r, a2))
             {
                 (p = r) += origin;
+                if (!zapped.count(p))
+                    arc_length[r.rdist()]++;
                 if (zapped[p] <= 0 && cell_see_cell(origin, p, LOS_NO_TRANS))
                     zapped[p] = AFF_MAYBE;
             }
