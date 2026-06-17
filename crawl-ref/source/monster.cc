@@ -2945,7 +2945,7 @@ bool monster::unswappable() const
         || mons_is_projectile(*this);
 }
 
-bool monster::backlit(bool self_halo, bool /*temp*/) const
+bool monster::backlit(bool self_halo, bool /*include_temp*/) const
 {
     if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME)
         || has_ench(ENCH_SILVER_CORONA) || has_ench(ENCH_CONTAM))
@@ -3390,7 +3390,7 @@ void monster::suicide(int hp_target)
     hit_points = hp_target;
 }
 
-mon_holy_type monster::holiness(bool /*temp*/, bool /*incl_form*/) const
+mon_holy_type monster::holiness(bool /*include_temp*/, bool /*incl_form*/) const
 {
     // zombie kraken tentacles
     if (testbits(flags, MF_FAKE_UNDEAD))
@@ -3399,7 +3399,7 @@ mon_holy_type monster::holiness(bool /*temp*/, bool /*incl_form*/) const
     return mons_class_holiness(type);
 }
 
-bool monster::undead_or_demonic(bool /*temp*/) const
+bool monster::undead_or_demonic(bool /*include_temp*/) const
 {
     const mon_holy_type holi = holiness();
 
@@ -3436,7 +3436,7 @@ bool monster::is_holy() const
     return bool(holiness() & MH_HOLY) || is_priest() && is_good_god(god);
 }
 
-bool monster::is_nonliving(bool /*temp*/, bool /*incl_form*/) const
+bool monster::is_nonliving(bool /*include_temp*/, bool /*incl_form*/) const
 {
     return bool(holiness() & MH_NONLIVING);
 }
@@ -3748,7 +3748,7 @@ bool monster::res_water_drowning() const
                && type != MONS_ORC_APOSTLE);
 }
 
-int monster::res_poison(bool temp) const
+int monster::res_poison(bool include_temp) const
 {
     int u = get_mons_resist(*this, MR_RES_POISON);
 
@@ -3758,7 +3758,7 @@ int monster::res_poison(bool temp) const
             return 3;
     }
 
-    if (temp && has_ench(ENCH_POISON_VULN))
+    if (include_temp && has_ench(ENCH_POISON_VULN))
         u--;
 
     if (u > 0)
@@ -3801,7 +3801,7 @@ bool monster::res_sticky_flame() const
     return is_insubstantial();
 }
 
-bool monster::res_miasma(bool /*temp*/) const
+bool monster::res_miasma(bool /*include_temp*/) const
 {
     if ((holiness() & (MH_HOLY | MH_DEMONIC | MH_UNDEAD | MH_NONLIVING))
         || get_mons_resist(*this, MR_RES_MIASMA))
@@ -3896,7 +3896,7 @@ bool monster::res_polar_vortex() const
     return has_ench(ENCH_POLAR_VORTEX);
 }
 
-bool monster::res_petrify(bool /*temp*/) const
+bool monster::res_petrify(bool /*include_temp*/) const
 {
     return is_insubstantial() || get_mons_resist(*this, MR_RES_PETRIFY) > 0;
 }
@@ -4007,7 +4007,7 @@ int monster::slaying(bool /*throwing*/, bool /*random*/) const
             + wearing_ego(OBJ_WEAPONS, SPWPN_DEVIOUS) * 6;
 }
 
-bool monster::no_tele(bool /*blinking*/, bool /*temp*/) const
+bool monster::no_tele(bool /*blinking*/, bool /*include_temp*/) const
 {
     // Plants can't survive without roots, so it's either this or auto-kill.
     // Statues have pedestals so moving them is weird.
@@ -4076,7 +4076,7 @@ bool monster::poison(actor *agent, int amount, bool force)
     return poison_monster(this, agent, amount, force);
 }
 
-int monster::skill(skill_type sk, int scale, bool /*real*/, bool /*temp*/) const
+int monster::skill(skill_type sk, int scale, bool /*real*/, bool /*include_temp*/) const
 {
     // Let spectral weapons have necromancy skill for pain brand.
     if (mons_intel(*this) < I_HUMAN && !mons_is_avatar(type))
@@ -5103,7 +5103,7 @@ bool monster::can_mutate() const
     return !(holi & (MH_UNDEAD | MH_NONLIVING));
 }
 
-bool monster::can_safely_mutate(bool /*temp*/) const
+bool monster::can_safely_mutate(bool /*include_temp*/) const
 {
     return can_mutate();
 }
@@ -5135,7 +5135,7 @@ bool monster::can_polymorph() const
     return can_mutate();
 }
 
-bool monster::has_blood(bool /*temp*/) const
+bool monster::has_blood(bool /*include_temp*/) const
 {
     if (petrified())
         return false;
@@ -5143,7 +5143,7 @@ bool monster::has_blood(bool /*temp*/) const
     return mons_has_blood(type);
 }
 
-bool monster::has_bones(bool /*temp*/) const
+bool monster::has_bones(bool /*include_temp*/) const
 {
     return mons_has_skeleton(type);
 }

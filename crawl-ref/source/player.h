@@ -621,7 +621,7 @@ public:
     bool innate_sinv() const;
     bool visible_to(const actor *looker) const override;
     bool can_see(const actor& a) const override;
-    undead_state_type undead_state(bool temp = true) const;
+    undead_state_type undead_state(bool include_temp = true) const;
     bool nightvision() const override;
     bool may_pruneify() const;
     int reach_range(bool include_weapon = true) const override;
@@ -743,7 +743,7 @@ public:
     int       has_usable_tentacles(bool allow_tran = true) const;
 
     // Information about player mutations. Implemented in mutation.cc
-    int       get_base_mutation_level(mutation_type mut, bool innate=true, bool temp=true, bool normal=true) const;
+    int       get_base_mutation_level(mutation_type mut, bool innate=true, bool include_temp=true, bool normal=true) const;
     int       get_mutation_level(mutation_type mut, bool active_only=true) const;
     int       get_innate_mutation_level(mutation_type mut) const;
     int       get_temp_mutation_level(mutation_type mut) const;
@@ -760,7 +760,7 @@ public:
 
     bool      has_any_mutations() const;
     int       how_mutated(bool normal = true, bool silver = false, bool all_innate = false,
-                          bool temp = false, bool levels = true) const;
+                          bool include_temp = false, bool levels = true) const;
 
     int wearing(object_class_type obj_type, int sub_type,
                 bool count_plus = 0, bool check_attuned = false) const override;
@@ -784,13 +784,13 @@ public:
     hands_reqd_type hands_reqd(const item_def &item,
                                bool base = false) const override;
 
-    bool can_wear_barding(bool temp = false) const;
+    bool can_wear_barding(bool include_temp = false) const;
 
     string name(description_level_type type, bool force_visible = false,
                 bool force_article = false) const override;
     string pronoun(pronoun_type pro, bool force_visible = false) const override;
     string conj_verb(const string &verb) const override;
-    string base_hand_name(bool plural, bool temp, bool *can_plural=nullptr) const;
+    string base_hand_name(bool plural, bool include_temp, bool *can_plural=nullptr) const;
     string hand_name(bool plural, bool *can_plural = nullptr) const override;
     string hands_verb(const string &plural_verb) const;
     string hands_act(const string &plural_verb, const string &object) const;
@@ -805,16 +805,16 @@ public:
     bool can_go_berserk() const override;
     bool can_go_berserk(bool intentional, bool potion = false,
                         bool quiet = false, string *reason = nullptr,
-                        bool temp = true) const;
+                        bool include_temp = true) const;
     bool go_berserk(bool intentional, bool potion = false) override;
     bool berserk() const override;
     bool can_mutate() const override;
-    bool can_safely_mutate(bool temp = true) const override;
-    bool is_lifeless_undead(bool temp = true) const;
+    bool can_safely_mutate(bool include_temp = true) const override;
+    bool is_lifeless_undead(bool include_temp = true) const;
     bool can_polymorph() const override;
-    bool has_blood(bool temp = true) const override;
-    bool has_bones(bool temp = true) const override;
-    bool can_drink(bool temp = true) const;
+    bool has_blood(bool include_temp = true) const override;
+    bool has_bones(bool include_temp = true) const override;
+    bool can_drink(bool include_temp = true) const;
     bool is_stationary() const override;
     bool malmutate(const actor* source, const string &reason = "") override;
     bool polymorph(int dur) override;
@@ -870,11 +870,11 @@ public:
 
     monster_type mons_species(bool zombie_base = false) const override;
 
-    mon_holy_type holiness(bool temp = true, bool incl_form = true) const override;
-    bool undead_or_demonic(bool temp = true) const override;
+    mon_holy_type holiness(bool include_temp = true, bool incl_form = true) const override;
+    bool undead_or_demonic(bool include_temp = true) const override;
     bool evil() const override;
     bool is_holy() const override;
-    bool is_nonliving(bool temp = true, bool incl_form = true) const override;
+    bool is_nonliving(bool include_temp = true, bool incl_form = true) const override;
     int how_chaotic(bool check_spells_god) const override;
     bool is_unbreathing() const override;
     bool is_insubstantial() const override;
@@ -885,8 +885,8 @@ public:
     int res_steam() const override;
     int res_cold() const override;
     int res_elec() const override;
-    int res_poison(bool temp = true) const override;
-    bool res_miasma(bool temp = true) const override;
+    int res_poison(bool include_temp = true) const override;
+    bool res_miasma(bool include_temp = true) const override;
     bool res_water_drowning() const override;
     bool res_sticky_flame() const override;
     int res_holy_energy() const override;
@@ -894,12 +894,12 @@ public:
     int res_negative_energy(bool intrinsic_only = false) const override;
     bool res_torment() const override;
     bool res_polar_vortex() const override;
-    bool res_petrify(bool temp = true) const override;
+    bool res_petrify(bool include_temp = true) const override;
     bool res_constrict() const override;
     int res_blind() const override;
     int willpower() const override;
-    bool no_tele(bool blink = false, bool temp = true) const override;
-    string no_tele_reason(bool blink = false, bool temp = true) const;
+    bool no_tele(bool blink = false, bool include_temp = true) const override;
+    string no_tele_reason(bool blink = false, bool include_temp = true) const;
     int slaying(bool throwing = false, bool random = true) const override;
     bool antimagic_susceptible() const override;
 
@@ -930,7 +930,7 @@ public:
     bool trap_in_net(bool real, bool quiet = false) override;
     void stop_being_caught(bool drop_net = false) override;
 
-    bool backlit(bool self_halo = true, bool temp = true) const override;
+    bool backlit(bool self_halo = true, bool include_temp = true) const override;
     bool umbra() const override;
     int halo_radius() const override;
     int silence_radius() const override;
@@ -958,7 +958,7 @@ public:
     bool can_smell() const;
     bool can_sleep(bool holi_only = false) const override;
 
-    int racial_ac(bool temp) const;
+    int racial_ac(bool include_temp) const;
     int base_ac(int scale) const;
     int armour_class() const override;
     int gdr_perc(bool random = true) const override;
@@ -1001,7 +1001,7 @@ public:
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale = 1, bool real = false,
-               bool temp = true) const override;
+               bool include_temp = true) const override;
 
     bool do_shaft() override;
     bool shaftable() const;
@@ -1009,7 +1009,7 @@ public:
     bool can_do_shaft_ability(bool quiet = false) const;
     bool do_shaft_ability();
 
-    bool can_potion_heal(bool temp=true);
+    bool can_potion_heal(bool include_temp=true);
     int scale_potion_healing(int healing_amount);
     int scale_potion_mp_healing(int healing_amount);
 
@@ -1147,7 +1147,7 @@ int stone_body_armour_bonus();
 int player_wizardry();
 int player_channelling_chance(bool max = false);
 
-int player_prot_life(bool allow_random = true, bool temp = true,
+int player_prot_life(bool allow_random = true, bool include_temp = true,
                      bool items = true);
 
 bool regeneration_is_inhibited(const monster *m=nullptr);
@@ -1159,20 +1159,20 @@ bool player_kiku_res_torment();
 
 bool player_likes_water(bool permanently = false);
 
-int player_res_cold(bool allow_random = true, bool temp = true,
+int player_res_cold(bool allow_random = true, bool include_temp = true,
                     bool items = true);
-int player_res_electricity(bool allow_random = true, bool temp = true,
+int player_res_electricity(bool allow_random = true, bool include_temp = true,
                            bool items = true);
-int player_res_fire(bool allow_random = true, bool temp = true,
+int player_res_fire(bool allow_random = true, bool include_temp = true,
                     bool items = true);
 int player_res_sticky_flame();
-int player_res_steam(bool allow_random = true, bool temp = true,
+int player_res_steam(bool allow_random = true, bool include_temp = true,
                      bool items = true);
-int player_res_poison(bool allow_random = true, bool temp = true,
+int player_res_poison(bool allow_random = true, bool include_temp = true,
                       bool items = true, bool forms = true);
-int player_res_corrosion(bool allow_random = true, bool temp = true,
+int player_res_corrosion(bool allow_random = true, bool include_temp = true,
                          bool items = true);
-int player_willpower(bool temp = true);
+int player_willpower(bool include_temp = true);
 
 int player_shield_class(int scale = 1, bool random = true,
                         bool ignore_temporary = false);
@@ -1194,11 +1194,11 @@ int player_spec_tloc();
 // Delay for a normally-10-aut action
 int player_speed(int scale = 1);
 // Delay for a movement action (ignoring player_speed)
-int player_movement_speed(bool check_terrain = true, bool temp = true,
+int player_movement_speed(bool check_terrain = true, bool include_temp = true,
                           int scale = 1);
 // Final delay for a movement action, including speed and movement speed
 int player_overall_move_delay(int scale = 1, bool check_terrain = true,
-                              bool temp = true, bool sampled = true);
+                              bool include_temp = true, bool sampled = true);
 
 int player_spell_levels(bool floored = true);
 int player_total_spell_levels();
@@ -1232,9 +1232,9 @@ void update_vision_range();
 maybe_bool you_can_wear(equipment_slot slot, bool include_form = false);
 bool player_can_use_armour();
 
-bool player_has_hair(bool temp = true, bool include_mutations = true);
-bool player_has_feet(bool temp = true, bool include_mutations = true);
-bool player_has_ears(bool temp = true);
+bool player_has_hair(bool include_temp = true, bool include_mutations = true);
+bool player_has_feet(bool include_temp = true, bool include_mutations = true);
+bool player_has_ears(bool include_temp = true);
 
 bool enough_hp(int minimum, bool suppress_msg, bool abort_macros = true);
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);
@@ -1327,7 +1327,7 @@ int trickster_bonus();
 int enkindle_max_charges();
 void maybe_harvest_memory(const monster& victim);
 bool invis_allowed(bool quiet = false, string *fail_reason = nullptr,
-                                                        bool temp = true);
+                                                        bool include_temp = true);
 bool flight_allowed(bool quiet = false, string *fail_reason = nullptr);
 void fly_player(int pow, bool already_flying = false);
 void float_player();

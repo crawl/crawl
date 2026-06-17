@@ -67,9 +67,9 @@ void handle_god_time(int /*time_delta*/);
 int god_colour(god_type god);
 colour_t god_message_altar_colour(god_type god);
 int gozag_service_fee();
-string cannot_join_god_reason(god_type which_god, bool temp = true,
+string cannot_join_god_reason(god_type which_god, bool include_temp = true,
                               bool check_gear = true);
-bool player_can_join_god(god_type which_god, bool temp = true);
+bool player_can_join_god(god_type which_god, bool include_temp = true);
 bool god_forbids_form(god_type which_god, transformation which_trans);
 bool transformed_player_can_join_god(god_type which_god);
 void join_trog_skills(void);
