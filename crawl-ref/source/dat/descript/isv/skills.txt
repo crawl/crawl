@@ -211,7 +211,7 @@ i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
 %%%%
 Ice Magic
 
-Magija Leda vkljuaje v sebę ręd zaklinanij pręmoj škody, i takože něktore zaščitne
+Magija Leda vključaje v sebę ręd zaklinanij pręmoj škody, i takože něktore zaščitne
 efekty - napriklad, stvorjeńje dočasnoj ledovoj brȯnje.
 
 Uměńje Magije Leda povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
@@ -220,10 +220,10 @@ i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
 %%%%
 Air Magic
 
-Air Magic provides spells to deal damage directly with the wind, as well as
-noisy but powerful lightning Conjurations. It also provides some utility
-spells, such as a call to the wind to assist your movement or a Hex to prevent
-most use of magic in the area surrounding you.
+Magija Vȯzduha zabezpečaje zaklinańja, pričinjajųće škodų s pomoćjų větra, a takože
+šumne, ale moćne Zaklęt́ja blěskavice. Ona takože zabezpečaje něktore utilitarne
+zaklinańja, take kako prizyv větra dlja oblėgčeńja prěměšćeńja ili Proklęt́je,
+ogråđajųće koristańje množiństva magije v prostråństvu okolo tebe.
 
 Uměńje Magije Vȯzduha povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
 naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
@@ -231,10 +231,10 @@ i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
 %%%%
 Earth Magic
 
-Earth Magic contains spells able to deal large amounts of direct physical
-damage, which cannot be resisted like fire, cold and lightning damage can. It
-is also linked with Alchemy, with spells to liquefy the earth around you, or to
-turn your enemies to stone.
+Magija Zemje vključaje v sebę zaklinańja, sposobne pričinjati velikų fizičnų škodų,
+ktoroj nemožno odpirati sę, v odråzlikě od ognjenoj, hlådnoj i blěskavičnoj škody.
+Ona takože jest svęzana s Alhimijejų, s zaklinańjami råztopjeńja zemje okolo tebe ili
+okamenjeńja tvojih neprijateljev.
 
 Uměńje Magije Zemje povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
 naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
