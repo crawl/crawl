@@ -1188,6 +1188,8 @@ int main(int argc, char* argv[])
                 case AF_DOOM:
                     monsterattacks += colour(RED, "(doom)");
                     break;
+                case AF_BURSTSHROOM:
+                    monsterattacks += colour(MAGENTA, "(burstshroom)");
                 case AF_CRUSH:
                 case AF_PLAIN:
                 case AF_REACH:
