@@ -69,40 +69,39 @@ Jestli oblåk nahodi sę okolo ili nad vodojų, jego žar bųde porađati par po
 %%%%
 steam cloud
 
-A cloud of scalding steam. Creatures caught within will be mildly injured,
-and fire resistance will further reduce the damage.
+Oblåk oparjajųćeej pary. Stvory, uvęznųvše v njem, bųdųt srědnje poranjene,
+ale odpor ognju bųde umėnšiti škodų.
 %%%%
 ink cloud
 
-A cloud of ink, completely filling the water.
+Oblåk črnila, kompletno napȯlnjeny vodojų.
 %%%%
 calcifying dust cloud
 
-A petrifying cloud. Creatures caught in the cloud for any length of time will
-find themselves turning to stone, though more experienced creatures may be able
-to resist the effects.
+Okamenjajųći oblåk. Stvory, uvęznųvše v njem na vśakų dȯlžinų časa, bųdųt obraćene
+v kamenj, ale vyše izkušene stvory mogųt odpirati sę protiv jego efektov.
 %%%%
 blessed fire cloud
 
-A cloud of divine fire, imbued with holy power. Those in the service of one of
-the good gods will be unaffected by it. All other creatures will be hurt by it,
-with undead and demonic creatures being greatly harmed.
+Oblåk božskogo ognja, napȯlnjeny svętojų silojų. Poslědovatelji dobryh bogov
+ne bųdųt poraženi jim. Vse druge stvory bųdųt poranjene tutym oblåkom, osoblivo
+bolěsno bųde mŕtvecam i demoničnym stvoram.
 %%%%
 foul pestilence cloud
 
 # XXX: clarify gargoyles
-A cloud of foul pestilence. Any living being caught within it will find
-themselves poisoned, and may also find their movements slowed.
+Oblåk mŕzkoj čumy. Vśaky živy stvor, uvęznųvši v njem, bųde otravjeny i
+zapomaljeny.
 %%%%
 thin mist cloud
 
-A cloud of thin mist. Atmospheric, but harmless.
+Oblåk tėmkoj mgly. Atmosferno, ale neškodlivo.
 %%%%
 seething chaos cloud
 
-A cloud of seething chaos. A wide variety of unpredictable effects apply to
-those within the clouds, ranging from invisibility to berserk rage to complete
-paralysis.
+Oblåk klokotajųćego haosa. Na tyh, kto nahodi sę vnųtri oblåka, nakladajųt sę
+množstvo neprědvidlivyh efektov, od nevidimosti i běsnosti berserka do pȯlnoj
+paralizy.
 %%%%
 rain cloud
 
