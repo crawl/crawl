@@ -151,9 +151,9 @@ Summonings
 
 Prizyvy dozvaljajųt prizyvati stvorov iz drugoj reaĺnosti dlja dočasnoj pomoći.
 Povyšeńje uměńja Prizyvov može dati ręd efektov v zavisnosti od každogo zaklinańja,
-takyh kako povyšeńje trvańja prizyva ili usiljeńje sȯjųznikov. Zauvaži, že prizvani
-stvori ne ostavjajųt trupov i ne davajųt prěživańja poslě svojej smŕti, a jih
-orųdovańje takože kråtkotrajno kako i oni sami.
+takyh kako povyšeńje trvańja prizyva ili usiljeńje sȯjųznikov. Zauvaži, že prizvane
+stvory ne ostavjajųt trupov i ne davajųt prěživańja poslě svojej smŕti, a jih
+orųdovańje takože kråtkotrajno kako i one same.
 
 Uměńje Prizyvov povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
 naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
@@ -163,7 +163,7 @@ Forgecraft
 
 Kovačno Dělo jest umětnost́ stvorjeńja materiaĺnyh objektov s pomoćjų magije.
 Zaklinańja Kovačnogo Děla dozvaljajųt konstruovati samyh råznyh mehaničnyh stvorov,
-ktore bųdųt vojevati na stråně čarovnika, a takože stvarjati pasti i barikady i
+ktore bųdųt vojevati na stråně čarovnika; a takože stvarjati pasti i barikady i
 obraćati nosimų brȯnjų v orųžje.
 
 Uměńje Kovačnogo Děla povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
