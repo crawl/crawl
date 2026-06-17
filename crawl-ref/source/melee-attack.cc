@@ -1897,7 +1897,7 @@ bool melee_attack::attack()
 
     // Calculate various ev values and begin to check them to determine the
     // correct handle_phase_ handler.
-    const int ev = defender->evasion(false, attacker);
+    const int ev = defender->evasion(true, attacker);
     ev_margin = test_hit(to_hit, ev, !attacker->is_player());
     bool shield_blocked = attack_shield_blocked();
 
@@ -2511,7 +2511,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
 bool melee_attack::player_aux_test_hit()
 {
-    const int evasion = defender->evasion(false, attacker);
+    const int evasion = defender->evasion(true, attacker);
 
     bool auto_hit = one_chance_in(30);
 

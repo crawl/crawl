@@ -721,10 +721,10 @@ public:
     brand_type  damage_brand(const item_def* weapon) const;
     vorpal_damage_type damage_type(const item_def* weapon) const;
     random_var  attack_delay(const item_def *projectile = nullptr,
-                             bool ignore_temp = false) const override;
+                             bool include_temp = true) const override;
     random_var  melee_attack_delay() const override;
     random_var  attack_delay_with(const item_def *weapon, bool melee_only = false,
-                                  bool ignore_temp = false) const;
+                                  bool include_temp = true) const;
     int         constriction_damage(constrict_type typ) const override;
 
     int       has_claws(bool allow_tran = true) const override;
@@ -962,9 +962,9 @@ public:
     int base_ac(int scale) const;
     int armour_class() const override;
     int gdr_perc(bool random = true) const override;
-    int evasion(bool ignore_temporary = false,
+    int evasion(bool include_temp = true,
                 const actor *attacker = nullptr) const override;
-    int evasion_scaled(int scale, bool ignore_temporary = false,
+    int evasion_scaled(int scale, bool include_temp = true,
                 const actor *attacker = nullptr) const;
 
     int stat_hp() const override     { return hp; }
@@ -1175,8 +1175,8 @@ int player_res_corrosion(bool allow_random = true, bool include_temp = true,
 int player_willpower(bool include_temp = true);
 
 int player_shield_class(int scale = 1, bool random = true,
-                        bool ignore_temporary = false);
-int player_displayed_shield_class(int scale = 1, bool ignore_temporary = false);
+                        bool include_temp = true);
+int player_displayed_shield_class(int scale = 1, bool include_temp = true);
 bool player_omnireflects();
 
 int player_spec_air();

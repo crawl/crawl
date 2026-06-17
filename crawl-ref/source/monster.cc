@@ -438,7 +438,7 @@ vorpal_damage_type monster::damage_type(int which_attack) const
  *                    and the given projectile, in aut.
  */
 random_var monster::attack_delay(const item_def *projectile,
-                                 bool /*ignore_temp*/) const
+                                 bool /*include_temp*/) const
 {
     const item_def* weap = weapon();
     if (!weap || (projectile && is_throwable(this, *projectile)))
@@ -3296,10 +3296,10 @@ int monster::base_evasion() const
 /**
  * What's the current evasion of this monster?
  *
- * @param ignore_temporary Whether to ignore temporary bonuses/penalties.
+ * @param include_temp Whether to include temporary bonuses/penalties.
  * @return The evasion of this monster, after applying items & statuses.
  **/
-int monster::evasion(bool ignore_temporary, const actor* /*act*/) const
+int monster::evasion(bool include_temp, const actor* /*act*/) const
 {
     int ev = base_evasion();
 
@@ -3325,7 +3325,7 @@ int monster::evasion(bool ignore_temporary, const actor* /*act*/) const
     ev += scan_artefacts(ARTP_EVASION);
 
     // Only temporary modifiers after this
-    if (ignore_temporary)
+    if (!include_temp)
         return max(ev, 0);
 
     if (paralysed() || petrified() || petrifying() || asleep()

@@ -99,7 +99,7 @@ public:
     }
     virtual item_def *offhand_weapon() const { return nullptr; }
     virtual random_var attack_delay(const item_def *projectile = nullptr,
-                                    bool ignore_temp = false) const = 0;
+                                    bool include_temp = true) const = 0;
     virtual random_var melee_attack_delay() const = 0;
     virtual int has_claws(bool allow_tran = true) const = 0;
     virtual item_def *shield() const = 0;
@@ -232,7 +232,7 @@ public:
     int apply_ac(int damage, int max_damage = 0,
                  ac_type ac_rule = ac_type::normal,
                  bool for_real = true) const;
-    virtual int evasion(bool ignore_temporary = false,
+    virtual int evasion(bool include_temp = true,
                         const actor *attacker = nullptr) const = 0;
     virtual bool shielded() const = 0;
     virtual int shield_block_limit() const;

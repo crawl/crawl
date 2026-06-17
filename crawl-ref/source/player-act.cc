@@ -213,18 +213,18 @@ brand_type player::damage_brand(const item_def* wpn) const
     return get_form()->get_uc_brand();
 }
 
-static random_var _player_attack_delay(bool melee_only, bool ignore_temp = false)
+static random_var _player_attack_delay(bool melee_only, bool include_temp = true)
 {
     const item_def *primary = you.weapon();
     const random_var primary_delay = you.attack_delay_with(
-        primary, melee_only, ignore_temp);
+        primary, melee_only, include_temp);
 
     const item_def *offhand = you.offhand_weapon();
     if (!offhand || is_melee_weapon(*offhand) != is_melee_weapon(*primary))
         return primary_delay;
 
     const random_var offhand_delay = you.attack_delay_with(
-        offhand, melee_only, ignore_temp);
+        offhand, melee_only, include_temp);
     return div_rand_round(primary_delay + offhand_delay, 2);
 }
 
@@ -237,12 +237,12 @@ static random_var _player_attack_delay(bool melee_only, bool ignore_temp = false
  *                   its value is determined by the appropriate rolls.
  */
 random_var player::attack_delay(const item_def *projectile,
-                                bool ignore_temp) const
+                                bool include_temp) const
 {
     if (projectile && projectile->base_type == OBJ_MISSILES)
-        return attack_delay_with(projectile, false, ignore_temp);
+        return attack_delay_with(projectile, false, include_temp);
 
-    return _player_attack_delay(false, ignore_temp);
+    return _player_attack_delay(false, include_temp);
 }
 
 // Return the delay caused by using the player's equipped weapon in melee, even
@@ -253,7 +253,7 @@ random_var player::melee_attack_delay() const
 }
 
 random_var player::attack_delay_with(const item_def *weap, bool melee_only,
-                                     bool ignore_temp) const
+                                     bool include_temp) const
 {
     random_var attk_delay(15);
     // a semi-arbitrary multiplier, to minimize loss of precision from integer
@@ -318,7 +318,7 @@ random_var player::attack_delay_with(const item_def *weap, bool melee_only,
         attk_delay += div_rand_round(random_var(aevp), DELAY_SCALE);
     }
 
-    if (you.duration[DUR_FINESSE] && !ignore_temp)
+    if (you.duration[DUR_FINESSE] && include_temp)
     {
         ASSERT(!you.duration[DUR_BERSERK]);
         // Finesse shouldn't stack with Haste, so we make this attack take

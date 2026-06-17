@@ -1130,7 +1130,7 @@ static void _print_stats_ev(int x, int y)
     CGOTOXY(x+4, y, GOTO_STAT);
 
     // Color EV based on whether temporary effects are raising or lowering it
-    const int bonus = you.evasion_scaled(100) - you.evasion_scaled(100, true);
+    const int bonus = you.evasion_scaled(100) - you.evasion_scaled(100, false);
     textcolour(bonus < 0 ? RED
                          : bonus > 0 ? LIGHTBLUE
                                      : HUD_VALUE_COLOUR);

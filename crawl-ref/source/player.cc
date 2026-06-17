@@ -1954,7 +1954,7 @@ int player_movement_speed(bool check_terrain, bool include_temp, int scale)
  *
  * @param scale          The scale to apply.
  * @param check_terrain  Whether to take into account terrain.
- * @param include_temp           Whether to take into account temporarty effects.
+ * @param include_temp   Whether to take into account temporary effects.
  * @param sampled        Whether to sample by randomly rounding. If false, will
  *                       round to the nearest value (after scaling).
  * @return               The time in auts for a movement step.
@@ -2197,7 +2197,7 @@ static int _player_armour_adjusted_dodge_bonus(int scale)
 }
 
 // Total EV for player
-static int _player_evasion(int final_scale, bool ignore_temporary)
+static int _player_evasion(int final_scale, bool include_temp)
 {
     const int size_factor = _player_evasion_size_factor();
     const int scale = 100;
@@ -2217,7 +2217,7 @@ static int _player_evasion(int final_scale, bool ignore_temporary)
         natural_evasion = natural_evasion * 4 / 5;
 
     // Everything below this are transient modifiers
-    if (ignore_temporary)
+    if (!include_temp)
         return (natural_evasion * final_scale) / scale;
 
     // Apply temporary bonuses, penalties, and multipliers
@@ -2311,11 +2311,11 @@ static int _sh_from_shield(const item_def &item)
  * @param       Whether to include temporary effects like TSO's divine shield.
  * @return      The player's current SH value.
  */
-int player_shield_class(int scale, bool random, bool ignore_temporary)
+int player_shield_class(int scale, bool random, bool include_temp)
 {
     int shield = 0;
 
-    if (!ignore_temporary && you.incapacitated())
+    if (include_temp && you.incapacitated())
         return 0;
 
     const item_def *shield_item = you.shield();
@@ -2331,13 +2331,13 @@ int player_shield_class(int scale, bool random, bool ignore_temporary)
     // Icemail and Ephemeral Shield aren't active all of the time, so consider
     // them temporary; this behaviour is consistent with how icemail's AC
     // is dealt with.
-    if (!ignore_temporary
+    if (include_temp
         && you.get_mutation_level(MUT_CONDENSATION_SHIELD) > 0
         && !you.duration[DUR_ICEMAIL_DEPLETED])
     {
         shield += ICEMAIL_MAX * 100;
     }
-    if (!ignore_temporary
+    if (include_temp
         && you.get_mutation_level(MUT_EPHEMERAL_SHIELD)
         && you.duration[DUR_EPHEMERAL_SHIELD])
     {
@@ -2348,7 +2348,7 @@ int player_shield_class(int scale, bool random, bool ignore_temporary)
     shield += you.wearing_jewellery(AMU_REFLECTION) * AMU_REFLECT_SH * 100;
     shield += you.scan_artefacts(ARTP_SHIELDING) * 200;
 
-    if (!ignore_temporary && you.duration[DUR_PARRYING])
+    if (include_temp && you.duration[DUR_PARRYING])
         shield += player_parrying() * 200;
 
     if (you.has_mutation(MUT_RECKLESS))
@@ -2363,13 +2363,13 @@ int player_shield_class(int scale, bool random, bool ignore_temporary)
  * Exactly half the internal value, for legacy reasons.
  * @param scale           How much to scale the value by (higher scale increases
                           precision, as SH is a number with 2 decimal places)
- * @param bool_temporary  Whether to include temporary effects like
+ * @param include_temp    Whether to include temporary effects like
                           TSO's divine shield.
  * @return                The SH value to be displayed.
  */
-int player_displayed_shield_class(int scale, bool ignore_temporary)
+int player_displayed_shield_class(int scale, bool include_temp)
 {
-    return player_shield_class(scale, false, ignore_temporary) / 2;
+    return player_shield_class(scale, false, include_temp) / 2;
 }
 
 /**
@@ -2390,12 +2390,12 @@ int player::temp_ac_mod() const
 
 int player::temp_ev_mod() const
 {
-    return evasion_scaled(100) - evasion_scaled(100, true);
+    return evasion_scaled(100) - evasion_scaled(100, false);
 }
 
 int player::temp_sh_mod() const
 {
-    return player_shield_class(1, false, false) - player_shield_class(1, false, true);
+    return player_shield_class(1, false, true) - player_shield_class(1, false, false);
 }
 
 void forget_map(bool rot)
@@ -6657,29 +6657,29 @@ int player::gdr_perc(bool random) const
  * What is the player's actual, current EV, possibly relative to an attacker,
  * including various temporary penalties?
  *
- * @param ignore_temporary Whether to ignore temporary modifiers.
+ * @param include_temp     Whether to include temporary modifiers.
  * @param act              The creature that the player is attempting to evade,
                            if any. May be null.
  * @return                 The player's relevant EV.
  */
-int player::evasion(bool ignore_temporary, const actor* act) const
+int player::evasion(bool include_temp, const actor* act) const
 {
-    int base_evasion = div_rand_round(_player_evasion(100, ignore_temporary), 100);
+    int base_evasion = div_rand_round(_player_evasion(100, include_temp), 100);
 
     const bool attacker_invis = act && !act->visible_to(this);
     const int invis_penalty
-        = attacker_invis && !ignore_temporary ? 10 : 0;
+        = attacker_invis && include_temp ? 10 : 0;
 
     return base_evasion - invis_penalty;
 }
 
-int player::evasion_scaled(int scale, bool ignore_temporary, const actor* act) const
+int player::evasion_scaled(int scale, bool include_temp, const actor* act) const
 {
-    int base_evasion = _player_evasion(scale, ignore_temporary);
+    int base_evasion = _player_evasion(scale, include_temp);
 
     const bool attacker_invis = act && !act->visible_to(this);
     const int invis_penalty
-        = attacker_invis && !ignore_temporary ? 10 : 0;
+        = attacker_invis && include_temp ? 10 : 0;
 
     return base_evasion - invis_penalty * scale;
 }
@@ -6694,9 +6694,9 @@ player_stats player::calc_stats(int scale) const
 {
     player_stats stats;
     stats.ac = base_ac(scale);
-    stats.ev = evasion_scaled(scale, true);
-    stats.sh = player_displayed_shield_class(scale, true);
-    stats.delay = static_cast<int>(attack_delay(nullptr, true).expected() * scale);
+    stats.ev = evasion_scaled(scale, false);
+    stats.sh = player_displayed_shield_class(scale, false);
+    stats.delay = static_cast<int>(attack_delay(nullptr, false).expected() * scale);
     for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
         stats.fail[i] = raw_spell_fail(spells[i]);
     return stats;

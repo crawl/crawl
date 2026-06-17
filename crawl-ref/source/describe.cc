@@ -4290,15 +4290,15 @@ static string _get_skill_defense_change(skill_type skill)
     unwind_var<int> unwind_costlevel(you.skill_cost_level);
 
     const int cur_ac = you.armour_class_scaled(100);
-    const int cur_ev = you.evasion_scaled(100, true);
-    const int cur_sh = player_displayed_shield_class(100, true);
+    const int cur_ev = you.evasion_scaled(100, false);
+    const int cur_sh = player_displayed_shield_class(100, false);
 
     const double cur_skill = you.skill(skill, 10, true) * 0.1;
     set_skill_level(skill, cur_skill + 1, true);
 
     const int new_ac = you.armour_class_scaled(100);
-    const int new_ev = you.evasion_scaled(100, true);
-    const int new_sh = player_displayed_shield_class(100, true);
+    const int new_ev = you.evasion_scaled(100, false);
+    const int new_sh = player_displayed_shield_class(100, false);
 
     const float ac_diff = (float)(new_ac - cur_ac) / 100.0;
     const float ev_diff = (float)(new_ev - cur_ev) / 100.0;

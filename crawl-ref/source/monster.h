@@ -283,7 +283,7 @@ public:
     brand_type  damage_brand(int which_attack) const;
     vorpal_damage_type damage_type(int which_attack = -1) const;
     random_var  attack_delay(const item_def *projectile = nullptr,
-                            bool ignore_temp = false) const override;
+                            bool include_temp = true) const override;
     random_var  melee_attack_delay() const override;
     int         has_claws(bool allow_tran = true) const override;
 
@@ -481,7 +481,7 @@ public:
     int armour_class() const override;
     int gdr_perc(bool) const override { return 0; }
     int base_evasion() const;
-    int evasion(bool ignore_temporary = false,
+    int evasion(bool include_temp = true,
                 const actor* /*attacker*/ = nullptr) const override;
 
     bool poison(actor *agent, int amount = 1, bool force = false) override;
