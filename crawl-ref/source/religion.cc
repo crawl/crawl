@@ -3311,15 +3311,17 @@ static bool _god_rejects_loveless(god_type god)
 /**
  * Why can the player not worship which_god?
  *
- * @param which_god  god to query
- * @param temp       If true (default), test if you can worship which_god now.
- *                   If false, test if you may ever be able to worship the god.
- * @param check_gear If true (default), test items and forms.
- * @return           A complete, ready-to-print message (including the god's
- *                   name) explaining why worship is refused, or the empty
- *                   string if the player can worship which_god.
+ * @param which_god    god to query
+ * @param include_temp If true (default), test if you can worship which_god
+ *                     now.
+ *                     If false, test if you may ever be able to worship the
+ *                     god.
+ * @param check_gear   If true (default), test items and forms.
+ * @return             A complete, ready-to-print message (including the god's
+ *                     name) explaining why worship is refused, or the empty
+ *                     string if the player can worship which_god.
  */
-string cannot_join_god_reason(god_type which_god, bool temp, bool check_gear)
+string cannot_join_god_reason(god_type which_god, bool include_temp, bool check_gear)
 {
     const string god = god_speaker(which_god);
 
@@ -3335,7 +3337,7 @@ string cannot_join_god_reason(god_type which_god, bool temp, bool check_gear)
         return god + " does not accept worship from those such as you!";
     }
 
-    if (which_god == GOD_GOZAG && temp && you.gold < gozag_service_fee())
+    if (which_god == GOD_GOZAG && include_temp && you.gold < gozag_service_fee())
     {
         const int fee = gozag_service_fee();
         string reason = god + " does not accept service from beggars like you! ";
@@ -3352,13 +3354,13 @@ string cannot_join_god_reason(god_type which_god, bool temp, bool check_gear)
         return reason;
     }
 
-    if (you.get_base_mutation_level(MUT_NO_LOVE, true, temp, temp)
+    if (you.get_base_mutation_level(MUT_NO_LOVE, true, include_temp, include_temp)
         && _god_rejects_loveless(which_god))
     {
         return god + " does not accept worship from the loveless!";
     }
 
-    if (temp && !transformed_player_can_join_god(which_god) && check_gear)
+    if (include_temp && !transformed_player_can_join_god(which_god) && check_gear)
     {
         if (which_god == GOD_OKAWARU)
         {
@@ -3369,7 +3371,7 @@ string cannot_join_god_reason(god_type which_god, bool temp, bool check_gear)
     }
 
     // You can't join a god while wearing gear they hate.
-    if (temp && check_gear)
+    if (include_temp && check_gear)
     {
         vector<string> hated;
         for (item_def* item : you.equipment.get_slot_items(SLOT_ALL_EQUIPMENT, true))
@@ -3389,14 +3391,16 @@ string cannot_join_god_reason(god_type which_god, bool temp, bool check_gear)
 /**
  * Return true if the player can worship which_god.
  *
- * @param which_god  god to query
- * @param temp       If true (default), test if you can worship which_god now.
- *                   If false, test if you may ever be able to worship the god.
- * @return           Whether you can worship which_god.
+ * @param which_god    god to query
+ * @param include_temp If true (default), test if you can worship which_god
+ *                     now.
+ *                     If false, test if you may ever be able to worship the
+ *                     god.
+ * @return             Whether you can worship which_god.
  */
-bool player_can_join_god(god_type which_god, bool temp)
+bool player_can_join_god(god_type which_god, bool include_temp)
 {
-    return cannot_join_god_reason(which_god, temp).empty();
+    return cannot_join_god_reason(which_god, include_temp).empty();
 }
 
 // Handle messaging and identification for items/equipment on conversion.

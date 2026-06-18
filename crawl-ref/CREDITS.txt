@@ -449,6 +449,7 @@
     Yelve Yakut
     Edward Z. Yang
     Yermak
+    Christopher 'GoodKnight' Yim
     YLam
     Andrew G. York
     Rob Young

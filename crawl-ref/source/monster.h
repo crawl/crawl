@@ -282,7 +282,8 @@ public:
                           bool base = false) const override;
     brand_type  damage_brand(int which_attack) const;
     vorpal_damage_type damage_type(int which_attack = -1) const;
-    random_var  attack_delay(const item_def *projectile = nullptr) const override;
+    random_var  attack_delay(const item_def *projectile = nullptr,
+                            bool include_temp = true) const override;
     random_var  melee_attack_delay() const override;
     int         has_claws(bool allow_tran = true) const override;
 
@@ -345,7 +346,7 @@ public:
     bool fumbles_attack() override;
 
     int  skill(skill_type skill, int scale = 1, bool real = false,
-               bool temp = true) const override;
+               bool include_temp = true) const override;
 
     void attacking(actor *other) override;
     bool can_go_frenzy() const;
@@ -355,10 +356,10 @@ public:
     bool berserk() const override;
     bool berserk_or_frenzied() const;
     bool can_mutate() const override;
-    bool can_safely_mutate(bool temp = true) const override;
+    bool can_safely_mutate(bool include_temp = true) const override;
     bool can_polymorph() const override;
-    bool has_blood(bool temp = true) const override;
-    bool has_bones(bool temp = true) const override;
+    bool has_blood(bool include_temp = true) const override;
+    bool has_bones(bool include_temp = true) const override;
     bool is_stationary() const override;
     bool malmutate(const actor* source, const string& reason = "") override;
     bool polymorph(int dur) override;
@@ -372,11 +373,11 @@ public:
 
     monster_type mons_species(bool zombie_base = false) const override;
 
-    mon_holy_type holiness(bool /*temp*/ = true, bool /*incl_form*/ = true) const override;
-    bool undead_or_demonic(bool /*temp*/ = true) const override;
+    mon_holy_type holiness(bool /*include_temp*/ = true, bool /*incl_form*/ = true) const override;
+    bool undead_or_demonic(bool /*include_temp*/ = true) const override;
     bool evil() const override;
     bool is_holy() const override;
-    bool is_nonliving(bool /*temp*/ = true, bool /*incl_form*/ = true) const override;
+    bool is_nonliving(bool /*include_temp*/ = true, bool /*incl_form*/ = true) const override;
     int how_unclean(bool check_god = true) const;
     int known_chaos(bool check_spells_god = false) const;
     int how_chaotic(bool check_spells_god = false) const override;
@@ -388,8 +389,8 @@ public:
     int res_steam() const override;
     int res_cold() const override;
     int res_elec() const override;
-    int res_poison(bool temp = true) const override;
-    bool res_miasma(bool /*temp*/ = true) const override;
+    int res_poison(bool include_temp = true) const override;
+    bool res_miasma(bool /*include_temp*/ = true) const override;
     bool res_water_drowning() const override;
     bool res_sticky_flame() const override;
     int res_holy_energy() const override;
@@ -398,12 +399,12 @@ public:
     bool res_torment() const override;
     int res_corr() const override;
     bool res_polar_vortex() const override;
-    bool res_petrify(bool /*temp*/ = true) const override;
+    bool res_petrify(bool /*include_temp*/ = true) const override;
     bool res_constrict() const override;
     int res_blind()  const override;
     resists_t all_resists() const;
     int willpower() const override;
-    bool no_tele(bool blink = false, bool /*temp*/ = true) const override;
+    bool no_tele(bool blink = false, bool /*include_temp*/ = true) const override;
     int slaying(bool throwing = false, bool random = true) const override;
     bool antimagic_susceptible() const override;
 
@@ -437,7 +438,7 @@ public:
     bool asleep() const override;
     bool sleepwalking() const;
     bool unswappable() const;
-    bool backlit(bool self_halo = true, bool /*temp*/ = true) const override;
+    bool backlit(bool self_halo = true, bool /*include_temp*/ = true) const override;
     bool umbra() const override;
     int halo_radius() const override;
     int silence_radius() const override;
@@ -480,7 +481,7 @@ public:
     int armour_class() const override;
     int gdr_perc(bool) const override { return 0; }
     int base_evasion() const;
-    int evasion(bool ignore_temporary = false,
+    int evasion(bool include_temp = true,
                 const actor* /*attacker*/ = nullptr) const override;
 
     bool poison(actor *agent, int amount = 1, bool force = false) override;

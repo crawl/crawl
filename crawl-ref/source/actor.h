@@ -98,7 +98,8 @@ public:
         return weapon(0);
     }
     virtual item_def *offhand_weapon() const { return nullptr; }
-    virtual random_var attack_delay(const item_def *projectile = nullptr) const = 0;
+    virtual random_var attack_delay(const item_def *projectile = nullptr,
+                                    bool include_temp = true) const = 0;
     virtual random_var melee_attack_delay() const = 0;
     virtual int has_claws(bool allow_tran = true) const = 0;
     virtual item_def *shield() const = 0;
@@ -154,10 +155,10 @@ public:
     virtual bool is_fiery() const = 0;
     virtual bool is_skeletal() const = 0;
     virtual bool can_mutate() const = 0;
-    virtual bool can_safely_mutate(bool temp = true) const = 0;
+    virtual bool can_safely_mutate(bool include_temp = true) const = 0;
     virtual bool can_polymorph() const = 0;
-    virtual bool has_blood(bool temp = true) const = 0;
-    virtual bool has_bones(bool temp = true) const = 0;
+    virtual bool has_blood(bool include_temp = true) const = 0;
+    virtual bool has_bones(bool include_temp = true) const = 0;
     virtual bool is_stationary() const = 0;
     virtual bool malmutate(const actor* source, const string &reason = "") = 0;
     virtual bool polymorph(int dur) = 0;
@@ -214,7 +215,7 @@ public:
     virtual bool can_feel_fear(bool include_unknown) const = 0;
 
     virtual int  skill(skill_type sk, int scale = 1, bool real = false,
-                       bool temp = true) const = 0;
+                       bool include_temp = true) const = 0;
     int  skill_rdiv(skill_type sk, int mult = 1, int div = 1) const;
 
     virtual int heads() const = 0;
@@ -231,7 +232,7 @@ public:
     int apply_ac(int damage, int max_damage = 0,
                  ac_type ac_rule = ac_type::normal,
                  bool for_real = true) const;
-    virtual int evasion(bool ignore_temporary = false,
+    virtual int evasion(bool include_temp = true,
                         const actor *attacker = nullptr) const = 0;
     virtual bool shielded() const = 0;
     virtual int shield_block_limit() const;
@@ -243,11 +244,11 @@ public:
 
     virtual monster_type mons_species(bool zombie_base = false) const = 0;
 
-    virtual mon_holy_type holiness(bool temp = true, bool incl_form = true) const = 0;
-    virtual bool undead_or_demonic(bool temp = true) const = 0;
+    virtual mon_holy_type holiness(bool include_temp = true, bool incl_form = true) const = 0;
+    virtual bool undead_or_demonic(bool include_temp = true) const = 0;
     virtual bool holy_wrath_susceptible() const;
     virtual bool is_holy() const = 0;
-    virtual bool is_nonliving(bool temp = true, bool incl_form = true) const = 0;
+    virtual bool is_nonliving(bool include_temp = true, bool incl_form = true) const = 0;
     virtual bool evil() const;
     virtual int  how_chaotic(bool check_spells_god = false) const = 0;
     virtual bool is_unbreathing() const = 0;
@@ -259,8 +260,8 @@ public:
     virtual int res_steam() const = 0;
     virtual int res_cold() const = 0;
     virtual int res_elec() const = 0;
-    virtual int res_poison(bool temp = true) const = 0;
-    virtual bool res_miasma(bool temp = true) const = 0;
+    virtual int res_poison(bool include_temp = true) const = 0;
+    virtual bool res_miasma(bool include_temp = true) const = 0;
     virtual bool res_water_drowning() const = 0;
     virtual bool res_sticky_flame() const = 0;
     virtual int res_holy_energy() const = 0;
@@ -268,13 +269,13 @@ public:
     virtual int res_negative_energy(bool intrinsic_only = false) const = 0;
     virtual bool res_torment() const = 0;
     virtual bool res_polar_vortex() const = 0;
-    virtual bool res_petrify(bool temp = true) const = 0;
+    virtual bool res_petrify(bool include_temp = true) const = 0;
     virtual bool res_constrict() const = 0;
     virtual int res_blind() const = 0;
     int get_res(int res) const;
     virtual int willpower() const = 0;
     virtual int check_willpower(const actor* source, int power) const;
-    virtual bool no_tele(bool blink = false, bool temp = true) const = 0;
+    virtual bool no_tele(bool blink = false, bool include_temp = true) const = 0;
     virtual int inaccuracy() const;
     int inaccuracy_penalty() const;
     virtual int slaying(bool throwing = false, bool random = true) const = 0;
@@ -327,7 +328,7 @@ public:
     //            and has a halo, returns false; so if you have a
     //            halo you're not affected by others' halos for this
     //            purpose)
-    virtual bool backlit(bool self_halo = true, bool temp = true) const = 0;
+    virtual bool backlit(bool self_halo = true, bool include_temp = true) const = 0;
     virtual bool umbra() const = 0;
     // Within any actor's halo?
     virtual bool haloed() const;

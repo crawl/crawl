@@ -1945,7 +1945,7 @@ int slouch_damage_for_speed(int mon_speed, int mon_action_energy, int jerk_num,
     const int player_number = BASELINE_DELAY * BASELINE_DELAY * BASELINE_DELAY;
     return 4 * (mon_speed * BASELINE_DELAY * jerk_num
                            / mon_action_energy / jerk_denom
-                - player_number / player_movement_speed() / player_speed());
+                - player_number / player_overall_move_delay(BASELINE_DELAY));
 }
 
 int slouch_damage(monster *victim)
@@ -6437,9 +6437,7 @@ bool wu_jian_do_wall_jump(coord_def targ)
     int wall_jump_modifier = (you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2
                                                                       : 1;
 
-    you.time_taken = player_speed() * wall_jump_modifier
-                     * player_movement_speed();
-    you.time_taken = div_rand_round(you.time_taken, 10);
+    you.time_taken = player_overall_move_delay(wall_jump_modifier);
 
     // need to set this here in case serpent's lash isn't active
     you.turn_is_over = true;

@@ -47,7 +47,8 @@ bool god_hates_spellcasting(god_type god);
 bool god_forbids_training_magic(god_type god);
 
 forbidden_act_type god_forbids_item_handling(const item_def& item);
-forbidden_act_type god_forbids_item_handling(const item_def& item, god_type god);
+forbidden_act_type god_forbids_item_handling(const item_def& item,
+                                             god_type god, bool include_temp = true);
 void god_forgive_inadvertent_act(forbidden_act_type act);
 
 string get_god_likes(god_type which_god);

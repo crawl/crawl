@@ -777,7 +777,7 @@ private:
                 continue;
             }
 
-            const bool spell_hidden = you.hidden_spells.get(spell.spell);
+            const bool spell_hidden = you.current_hidden_spells()->get(spell.spell);
 
             if (spell_hidden)
                 hidden_count++;
@@ -926,7 +926,8 @@ public:
                     return examine_by_key(item.hotkeys[0]);
             case action::hide:
             case action::unhide:
-                you.hidden_spells.set(spell, !you.hidden_spells.get(spell));
+                auto *hidden = you.current_hidden_spells();
+                hidden->set(spell, !hidden->get(spell));
                 update_entries();
                 update_menu(true);
                 update_more();

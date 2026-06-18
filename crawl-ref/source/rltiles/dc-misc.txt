@@ -102,6 +102,9 @@ stone_arrow5
 stone_arrow6
 stone_arrow7
 
+liquefy_brown BOLT_LIQUEFY_BROWN
+liquefy_green BOLT_LIQUEFY_GREEN
+
 iron_shot0 BOLT_IRON_SHOT
 iron_shot1
 iron_shot2
@@ -120,6 +123,15 @@ crystal_spear5
 crystal_spear6
 crystal_spear7
 
+shatter_wave_yellow0 BOLT_SHATTER_WAVE_YELLOW
+shatter_wave_yellow1
+shatter_wave_white0 BOLT_SHATTER_WAVE_WHITE
+shatter_wave_white1
+shatter_wall0 BOLT_SHATTER_WALL
+shatter_wall1
+
+# Pure conjurations bolts
+
 magic_dart0 BOLT_MAGIC_DART
 magic_dart1
 magic_dart2
@@ -128,8 +140,8 @@ magic_dart4
 magic_dart5
 
 damnation BOLT_DAMNATION
+singing BOLT_SINGING
 
-# Pure conjurations bolts
 searing_ray4 BOLT_SEARING_RAY
 searing_ray5
 
@@ -172,6 +184,11 @@ alembic_potion1
 alembic_potion2
 alembic_potion3
 alembic_potion4
+
+bog_flash0 BOLT_BOG_FLASH
+bog_flash1
+bog_flash2
+bog_flash3
 
 irradiate0 BOLT_IRRADIATE
 irradiate1
@@ -282,6 +299,11 @@ gloom1
 doom_bolt0 BOLT_DOOM
 doom_bolt1
 
+draining_life0 BOLT_DRAINING_LIFE
+draining_life1
+drain_life0 BOLT_DRAIN_LIFE
+drain_life1
+
 ghostfire0 BOLT_GHOSTLY_FIREBALL
 ghostfire1
 
@@ -372,6 +394,10 @@ wind_hush0 BOLT_WIND_HUSH
 wind_hush1
 wind_hush2
 wind_hush3
+
+slime_wave0 BOLT_SLIME_WAVE
+slime_wave1
+slime_merge BOLT_SLIME_MERGE
 
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR

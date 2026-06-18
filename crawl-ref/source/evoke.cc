@@ -1010,9 +1010,8 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident,
         return "";
     }
 
-    // Your god won't let you evoke items they forbid. (Religion counts as
-    // permanent uselessness, so this isn't gated on temp.)
-    if (god_forbids_item(*item))
+    // Your god won't let you evoke items they forbid.
+    if (god_forbids_item(*item, temp))
     {
         if (god_forbids)
             *god_forbids = true;

@@ -437,7 +437,8 @@ vorpal_damage_type monster::damage_type(int which_attack) const
  * @return            The time taken by an attack with the monster's weapon
  *                    and the given projectile, in aut.
  */
-random_var monster::attack_delay(const item_def *projectile) const
+random_var monster::attack_delay(const item_def *projectile,
+                                 bool /*include_temp*/) const
 {
     const item_def* weap = weapon();
     if (!weap || (projectile && is_throwable(this, *projectile)))
@@ -1490,16 +1491,6 @@ bool monster::wants_weapon(const item_def &weap) const
     // They could, they just don't want to.
     if ((undead_or_demonic() || god == GOD_YREDELEMNUL)
         && is_holy_item(weap))
-    {
-        return false;
-    }
-
-    // Holy monsters that aren't gifts/worshippers of chaotic gods
-    // and monsters that are gifts/worshippers of good gods won't
-    // use potentially evil weapons.
-    if (((is_holy() && !is_chaotic_god(god))
-            || is_good_god(god))
-        && is_potentially_evil_item(weap))
     {
         return false;
     }
@@ -2954,7 +2945,7 @@ bool monster::unswappable() const
         || mons_is_projectile(*this);
 }
 
-bool monster::backlit(bool self_halo, bool /*temp*/) const
+bool monster::backlit(bool self_halo, bool /*include_temp*/) const
 {
     if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME)
         || has_ench(ENCH_SILVER_CORONA) || has_ench(ENCH_CONTAM))
@@ -3305,10 +3296,10 @@ int monster::base_evasion() const
 /**
  * What's the current evasion of this monster?
  *
- * @param ignore_temporary Whether to ignore temporary bonuses/penalties.
+ * @param include_temp Whether to include temporary bonuses/penalties.
  * @return The evasion of this monster, after applying items & statuses.
  **/
-int monster::evasion(bool ignore_temporary, const actor* /*act*/) const
+int monster::evasion(bool include_temp, const actor* /*act*/) const
 {
     int ev = base_evasion();
 
@@ -3334,7 +3325,7 @@ int monster::evasion(bool ignore_temporary, const actor* /*act*/) const
     ev += scan_artefacts(ARTP_EVASION);
 
     // Only temporary modifiers after this
-    if (ignore_temporary)
+    if (!include_temp)
         return max(ev, 0);
 
     if (paralysed() || petrified() || petrifying() || asleep()
@@ -3399,7 +3390,7 @@ void monster::suicide(int hp_target)
     hit_points = hp_target;
 }
 
-mon_holy_type monster::holiness(bool /*temp*/, bool /*incl_form*/) const
+mon_holy_type monster::holiness(bool /*include_temp*/, bool /*incl_form*/) const
 {
     // zombie kraken tentacles
     if (testbits(flags, MF_FAKE_UNDEAD))
@@ -3408,7 +3399,7 @@ mon_holy_type monster::holiness(bool /*temp*/, bool /*incl_form*/) const
     return mons_class_holiness(type);
 }
 
-bool monster::undead_or_demonic(bool /*temp*/) const
+bool monster::undead_or_demonic(bool /*include_temp*/) const
 {
     const mon_holy_type holi = holiness();
 
@@ -3445,7 +3436,7 @@ bool monster::is_holy() const
     return bool(holiness() & MH_HOLY) || is_priest() && is_good_god(god);
 }
 
-bool monster::is_nonliving(bool /*temp*/, bool /*incl_form*/) const
+bool monster::is_nonliving(bool /*include_temp*/, bool /*incl_form*/) const
 {
     return bool(holiness() & MH_NONLIVING);
 }
@@ -3757,7 +3748,7 @@ bool monster::res_water_drowning() const
                && type != MONS_ORC_APOSTLE);
 }
 
-int monster::res_poison(bool temp) const
+int monster::res_poison(bool include_temp) const
 {
     int u = get_mons_resist(*this, MR_RES_POISON);
 
@@ -3767,7 +3758,7 @@ int monster::res_poison(bool temp) const
             return 3;
     }
 
-    if (temp && has_ench(ENCH_POISON_VULN))
+    if (include_temp && has_ench(ENCH_POISON_VULN))
         u--;
 
     if (u > 0)
@@ -3810,7 +3801,7 @@ bool monster::res_sticky_flame() const
     return is_insubstantial();
 }
 
-bool monster::res_miasma(bool /*temp*/) const
+bool monster::res_miasma(bool /*include_temp*/) const
 {
     if ((holiness() & (MH_HOLY | MH_DEMONIC | MH_UNDEAD | MH_NONLIVING))
         || get_mons_resist(*this, MR_RES_MIASMA))
@@ -3905,7 +3896,7 @@ bool monster::res_polar_vortex() const
     return has_ench(ENCH_POLAR_VORTEX);
 }
 
-bool monster::res_petrify(bool /*temp*/) const
+bool monster::res_petrify(bool /*include_temp*/) const
 {
     return is_insubstantial() || get_mons_resist(*this, MR_RES_PETRIFY) > 0;
 }
@@ -4016,7 +4007,7 @@ int monster::slaying(bool /*throwing*/, bool /*random*/) const
             + wearing_ego(OBJ_WEAPONS, SPWPN_DEVIOUS) * 6;
 }
 
-bool monster::no_tele(bool /*blinking*/, bool /*temp*/) const
+bool monster::no_tele(bool /*blinking*/, bool /*include_temp*/) const
 {
     // Plants can't survive without roots, so it's either this or auto-kill.
     // Statues have pedestals so moving them is weird.
@@ -4085,7 +4076,7 @@ bool monster::poison(actor *agent, int amount, bool force)
     return poison_monster(this, agent, amount, force);
 }
 
-int monster::skill(skill_type sk, int scale, bool /*real*/, bool /*temp*/) const
+int monster::skill(skill_type sk, int scale, bool /*real*/, bool /*include_temp*/) const
 {
     // Let spectral weapons have necromancy skill for pain brand.
     if (mons_intel(*this) < I_HUMAN && !mons_is_avatar(type))
@@ -5112,7 +5103,7 @@ bool monster::can_mutate() const
     return !(holi & (MH_UNDEAD | MH_NONLIVING));
 }
 
-bool monster::can_safely_mutate(bool /*temp*/) const
+bool monster::can_safely_mutate(bool /*include_temp*/) const
 {
     return can_mutate();
 }
@@ -5144,7 +5135,7 @@ bool monster::can_polymorph() const
     return can_mutate();
 }
 
-bool monster::has_blood(bool /*temp*/) const
+bool monster::has_blood(bool /*include_temp*/) const
 {
     if (petrified())
         return false;
@@ -5152,7 +5143,7 @@ bool monster::has_blood(bool /*temp*/) const
     return mons_has_blood(type);
 }
 
-bool monster::has_bones(bool /*temp*/) const
+bool monster::has_bones(bool /*include_temp*/) const
 {
     return mons_has_skeleton(type);
 }
@@ -5925,7 +5916,7 @@ bool monster::matches_player_speed() const
 
 int monster::player_speed_energy() const
 {
-    const int pmove = player_movement_speed() * player_speed();
+    const int pmove = player_overall_move_delay(BASELINE_DELAY);
     return div_rand_round(speed * pmove, 100);
 }
 

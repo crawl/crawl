@@ -1039,7 +1039,7 @@ bool do_west_wind_shot()
 
     // Downscale damage from slow weapons versus the player's movement speed.
     const int attack_delay = you.attack_delay().roll() * BASELINE_DELAY;
-    const int move_delay = player_movement_speed() * player_speed();
+    const int move_delay = player_overall_move_delay(BASELINE_DELAY);
     if (attack_delay > move_delay)
         prototype.dmg_mult += (move_delay * 100 / attack_delay) - 100;
 

@@ -208,6 +208,8 @@ public:
     bool check_stop_running();
 
 private:
+    coord_def starting_pos; // For long-walking
+    int max_longwalk_distance;
     void set_run_check(int index, int compass_dir);
     bool run_should_stop() const;
     bool diag_run_passes_door() const;

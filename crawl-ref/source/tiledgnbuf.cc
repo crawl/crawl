@@ -106,6 +106,7 @@ void DungeonCellBuffer::add_monster(const monster_info &mon, int x, int y)
 {
     tile_with_flags_t t = tileidx_monster(mon);
     tileidx_t t0   = t.tile();
+    tile_flag_t flag = t.flags();
 
     // Copied from _tile_place_monster()
     if (!mons_class_is_stationary(mon.type) || mon.type == MONS_TRAINING_DUMMY)
@@ -133,6 +134,13 @@ void DungeonCellBuffer::add_monster(const monster_info &mon, int x, int y)
             m_buf_main.add(base_idx, x, y);
         m_buf_main.add(t0, x, y);
     }
+
+    // pack_foreground() is needed to draw status icons and foreground flags
+    // on the monster tile in the title of the describe view in Local Tiles
+    packed_cell fake_cell;
+    fake_cell.fg = flag;
+    fake_cell.icons = status_icons_for(mon);
+    pack_foreground(x, y, fake_cell);
 }
 
 void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y,

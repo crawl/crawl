@@ -24,6 +24,7 @@
 #include "syscalls.h"
 #include "tag-version.h"
 #include "version.h"
+#include "viewchar.h"
 
 const coord_def MONSTER_PLACE(20, 20);
 
@@ -572,7 +573,7 @@ static string monster_symbol(const monster& mon)
     if (me)
     {
         monster_info mi(&mon, MILEV_NAME);
-        symbol += me->basechar;
+        symbol += stringize_glyph((me->basechar));
         symbol = colour(mi.colour(), symbol);
     }
     return symbol;
@@ -1187,6 +1188,8 @@ int main(int argc, char* argv[])
                 case AF_DOOM:
                     monsterattacks += colour(RED, "(doom)");
                     break;
+                case AF_BURSTSHROOM:
+                    monsterattacks += colour(MAGENTA, "(burstshroom)");
                 case AF_CRUSH:
                 case AF_PLAIN:
                 case AF_REACH:

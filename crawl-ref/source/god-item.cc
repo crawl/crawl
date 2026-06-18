@@ -55,7 +55,19 @@ static bool _is_book_type(const item_def& item,
     return true;
 }
 
-bool is_holy_item(const item_def& item, bool calc_unid)
+static bool _weapon_with_brand(const item_def &item, bool (*brand_fn)(brand_type),
+                                bool calc_unid, bool include_temp)
+{
+    if (item.base_type != OBJ_WEAPONS)
+        return false;
+    if (!calc_unid && !item.is_identified())
+        return false;
+    if (!include_temp && is_brandable_weapon(item, true))
+        return false;
+    return brand_fn(get_weapon_brand(item));
+}
+
+bool is_holy_item(const item_def& item, bool calc_unid, bool include_temp)
 {
     if (is_unrandom_artefact(item))
     {
@@ -65,46 +77,14 @@ bool is_holy_item(const item_def& item, bool calc_unid)
             return true;
     }
 
-    if (item.base_type == OBJ_WEAPONS)
-    {
-        if (is_blessed(item))
-            return true;
-        if (calc_unid || item.is_identified())
-            return get_weapon_brand(item) == SPWPN_HOLY_WRATH;
-    }
-
-    return false;
-}
-
-bool is_potentially_evil_item(const item_def& item, bool calc_unid)
-{
-    if (item.base_type == OBJ_WEAPONS
-        && item.is_identified()
-        && get_weapon_brand(item) == SPWPN_CHAOS)
-    {
+    if (item.base_type == OBJ_WEAPONS && is_blessed(item))
         return true;
-    }
 
-    if (!calc_unid && !item.is_identified())
-        return false;
-
-    switch (item.base_type)
-    {
-    case OBJ_MISSILES:
-        {
-        const int item_brand = get_ammo_brand(item);
-        if (item_brand == SPMSL_CHAOS)
-            return true;
-        }
-        break;
-    default:
-        break;
-    }
-
-    return false;
+    return _weapon_with_brand(item, [](brand_type b) { return b == SPWPN_HOLY_WRATH; },
+                         calc_unid, include_temp);
 }
 
-bool is_evil_brand(int brand)
+bool is_evil_brand(brand_type brand)
 {
     switch (brand)
     {
@@ -121,12 +101,12 @@ bool is_evil_brand(int brand)
     }
 }
 
-bool is_chaotic_brand(int brand)
+bool is_chaotic_brand(brand_type brand)
 {
     return brand == SPWPN_CHAOS || brand == SPWPN_DISTORTION;
 }
 
-bool is_hasty_brand(int brand)
+bool is_hasty_brand(brand_type brand)
 {
     return brand == SPWPN_CHAOS || brand == SPWPN_SPEED;
 }
@@ -138,7 +118,7 @@ bool is_hasty_brand(int brand)
  * @param calc_unid Whether to take into account facts the player does not know.
  * @return          Whether the Good Gods will always frown on this item's use.
  */
-bool is_evil_item(const item_def& item, bool calc_unid)
+bool is_evil_item(const item_def& item, bool calc_unid, bool include_temp)
 {
     if (is_unrandom_artefact(item))
     {
@@ -150,10 +130,14 @@ bool is_evil_item(const item_def& item, bool calc_unid)
 
     if (item.base_type == OBJ_WEAPONS)
     {
-        if (is_demonic(item) || testbits(item.flags, ISFLAG_CHAOTIC))
+        if (testbits(item.flags, ISFLAG_CHAOTIC))
             return true;
-        if (calc_unid || item.is_identified())
-            return is_evil_brand(get_weapon_brand(item));
+        bool tso_redeems = you_worship(GOD_SHINING_ONE)
+                           && is_blessed_convertible(item);
+        if (is_demonic(item) && (include_temp || !tso_redeems))
+            return true;
+        if (_weapon_with_brand(item, is_evil_brand, calc_unid, include_temp))
+            return true;
     }
 
     if (item.base_type == OBJ_TALISMANS)
@@ -169,6 +153,8 @@ bool is_evil_item(const item_def& item, bool calc_unid)
 
     switch (item.base_type)
     {
+    case OBJ_MISSILES:
+        return get_ammo_brand(item) == SPMSL_CHAOS;
     case OBJ_SCROLLS:
         return item.sub_type == SCR_TORMENT;
     case OBJ_STAVES:
@@ -180,7 +166,7 @@ bool is_evil_item(const item_def& item, bool calc_unid)
     }
 }
 
-bool is_chaotic_item(const item_def& item, bool calc_unid)
+bool is_chaotic_item(const item_def& item, bool calc_unid, bool include_temp)
 {
     if (is_unrandom_artefact(item))
     {
@@ -193,11 +179,8 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
         }
     }
 
-    if (item.base_type == OBJ_WEAPONS
-        && (calc_unid || item.is_identified()))
-    {
-        return is_chaotic_brand(get_weapon_brand(item));
-    }
+    if (_weapon_with_brand(item, is_chaotic_brand, calc_unid, include_temp))
+        return true;
 
     if (!calc_unid && !item.is_identified())
         return false;
@@ -216,11 +199,11 @@ bool is_chaotic_item(const item_def& item, bool calc_unid)
     }
 }
 
-static bool _is_potentially_hasty_item(const item_def& item)
+static bool _is_potentially_hasty_item(const item_def& item, bool include_temp)
 {
-    if (item.base_type == OBJ_WEAPONS
-        && (item.is_identified() && get_weapon_brand(item) == SPWPN_CHAOS)
-        || (testbits(item.flags, ISFLAG_CHAOTIC)))
+    if (_weapon_with_brand(item, [](brand_type b) { return b == SPWPN_CHAOS; },
+                      false, include_temp)
+        || testbits(item.flags, ISFLAG_CHAOTIC))
     {
         return true;
     }
@@ -244,7 +227,7 @@ static bool _is_potentially_hasty_item(const item_def& item)
     return false;
 }
 
-bool is_hasty_item(const item_def& item, bool calc_unid)
+bool is_hasty_item(const item_def& item, bool calc_unid, bool include_temp)
 {
 
     if (is_artefact(item) && item.base_type != OBJ_BOOKS)
@@ -257,10 +240,10 @@ bool is_hasty_item(const item_def& item, bool calc_unid)
         }
     }
 
-    if (item.base_type == OBJ_WEAPONS)
+    if (_weapon_with_brand(item, [](brand_type b) { return b == SPWPN_SPEED; },
+                      calc_unid, include_temp))
     {
-        if (calc_unid || item.is_identified())
-            return get_weapon_brand(item) == SPWPN_SPEED;
+        return true;
     }
 
     if (!calc_unid && !item.is_identified())
@@ -304,7 +287,7 @@ bool is_wizardly_item(const item_def& item, bool calc_unid)
     return item.base_type == OBJ_STAVES;
 }
 
-bool is_transforming_item(const item_def &item, bool calc_unid)
+bool is_transforming_item(const item_def &item, bool calc_unid, bool include_temp)
 {
     if (item.base_type == OBJ_BAUBLES || item.base_type == OBJ_TALISMANS)
         return true;
@@ -317,8 +300,12 @@ bool is_transforming_item(const item_def &item, bool calc_unid)
     case OBJ_WANDS:
         return item.sub_type == WAND_POLYMORPH;
     case OBJ_POTIONS:
+        // A god that eventually cleanses bad mutations from potions of
+        // mutation (Zin) only forbids them temporarily, until the player
+        // grows into that passive.
         return (item.sub_type == POT_MUTATION
-                        && !have_passive(passive_t::cleanse_mut_potions))
+                        && !(include_temp ? have_passive(passive_t::cleanse_mut_potions)
+                                  : will_have_passive(passive_t::cleanse_mut_potions)))
                 || item.sub_type == POT_LIGNIFY;
     case OBJ_JEWELLERY:
         return item.sub_type == AMU_WILDSHAPE;
@@ -364,17 +351,17 @@ bool is_hasty_spell(spell_type spell)
  * @param item  The item in question.
  * @return      List of forbidden acts that can be committed with this; empty if none.
  */
-vector<forbidden_act_type> forbidden_acts(const item_def &item)
+vector<forbidden_act_type> forbidden_acts(const item_def &item, bool include_temp)
 {
     vector<forbidden_act_type> acts;
 
-    if (is_evil_item(item, false))
+    if (is_evil_item(item, false, include_temp))
         acts.push_back(FORBID_EVIL);
 
-    if (is_chaotic_item(item, false))
+    if (is_chaotic_item(item, false, include_temp))
         acts.push_back(FORBID_CHAOS);
 
-    if (is_holy_item(item, false))
+    if (is_holy_item(item, false, include_temp))
         acts.push_back(FORBID_HOLY);
 
     if (item_is_spellbook(item))
@@ -383,13 +370,13 @@ vector<forbidden_act_type> forbidden_acts(const item_def &item)
     if (is_wizardly_item(item, false))
         acts.push_back(FORBID_WIZARDLY_ITEM);
 
-    if (_is_potentially_hasty_item(item) || is_hasty_item(item, false))
+    if (_is_potentially_hasty_item(item, include_temp)
+        || is_hasty_item(item, false, include_temp))
+    {
         acts.push_back(FORBID_HASTY);
+    }
 
-    if (is_potentially_evil_item(item, false))
-        acts.push_back(FORBID_EVIL);
-
-    if (is_transforming_item(item, false))
+    if (is_transforming_item(item, false, include_temp))
         acts.push_back(FORBID_TRANSFORMATION);
 
     return acts;
@@ -398,15 +385,20 @@ vector<forbidden_act_type> forbidden_acts(const item_def &item)
 /**
  * Does the god outright forbid the use of this item, such that the player
  * cannot equip, wield, read, drink, evoke or otherwise use it at all?
+ *
+ * @param include_temp If false, ignore prohibitions that aren't permanent
+ *                     (e.g. an evil weapon that could be rebranded, or a
+ *                     potion of mutation that Zin will eventually cleanse), so
+ *                     the item isn't treated as permanently useless.
  */
-bool god_forbids_item(const item_def &item, god_type which_god)
+bool god_forbids_item(const item_def &item, god_type which_god, bool include_temp)
 {
-    return god_forbids_item_handling(item, which_god) != FORBID_NONE;
+    return god_forbids_item_handling(item, which_god, include_temp) != FORBID_NONE;
 }
 
-bool god_forbids_item(const item_def &item)
+bool god_forbids_item(const item_def &item, bool include_temp)
 {
-    return god_forbids_item(item, you.religion);
+    return god_forbids_item(item, you.religion, include_temp);
 }
 
 /**

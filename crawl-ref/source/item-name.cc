@@ -3149,7 +3149,7 @@ string cannot_read_item_reason(const item_def *item, bool temp, bool ident,
         return "";
 
     // Your god won't let you read scrolls they forbid.
-    if (god_forbids_item(*item))
+    if (god_forbids_item(*item, temp))
     {
         if (god_forbids)
             *god_forbids = true;
@@ -3232,9 +3232,8 @@ string cannot_drink_item_reason(const item_def *item, bool temp,
         if (!r.empty())
             return r;
 
-        // Your god won't let you drink potions they forbid. Religion counts as
-        // permanent uselessness.
-        if (god_forbids_item(*item))
+        // Your god won't let you drink potions they forbid.
+        if (god_forbids_item(*item, temp))
         {
             if (god_forbids)
                 *god_forbids = true;
@@ -3325,7 +3324,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
-        return !can_equip_item(item);
+        return !can_equip_item(item, temp);
 
     case OBJ_MISSILES:
         // All missiles are useless for felids.
@@ -3333,7 +3332,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return true;
 
         // Your god won't let you throw ammo they hate (e.g. chaos, frenzy).
-        if (god_forbids_item(item))
+        if (god_forbids_item(item, temp))
             return true;
 
         return !is_throwable(&you, item);

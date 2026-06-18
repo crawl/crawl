@@ -240,13 +240,32 @@ int liquefaction_max_range(int pow)
 spret cast_liquefaction(int pow, bool fail)
 {
     fail_check();
-    flash_view_delay(UA_PLAYER, BROWN, 80);
-    flash_view_delay(UA_PLAYER, YELLOW, 80);
-    flash_view_delay(UA_PLAYER, BROWN, 140);
+    int power = 15 + random2avg(pow, 2);
+    int l_radius = isqrt(max(0, min(3 * (power - 5) / 4, 25)));
+
+    // Collect appearance spaces, then flash multiple colours over them.
+    vector<coord_def> flash;
+    for (radius_iterator ri(you.pos(), l_radius, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    {
+        if (*ri == you.pos() || feat_has_solid_floor(env.grid(*ri)) &&
+                                !feat_is_shallow_water((env.grid(*ri))))
+        {
+            flash.push_back(*ri);
+        }
+    }
+
+    for (int i = 0; i < 3; i++)
+    {
+        tileidx_t tile = i == 1 ? TILE_BOLT_LIQUEFY_GREEN : TILE_BOLT_LIQUEFY_BROWN;
+        colour_t col = i == 1 ? YELLOW : BROWN;
+        for (coord_def animate : flash)
+            flash_tile(animate, col, 0, tile);
+        animation_delay(i < 2 ? 75 : 140, true);
+    }
 
     mpr("The ground around you becomes liquefied!");
 
-    you.increase_duration(DUR_LIQUEFYING, 15 + random2avg(pow, 2), 100);
+    you.increase_duration(DUR_LIQUEFYING, power, 100);
     invalidate_agrid(true);
     return spret::success;
 }

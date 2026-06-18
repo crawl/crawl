@@ -111,7 +111,7 @@ bool ranged_attack::attack()
         return true;
     }
 
-    int ev = defender->evasion(false, attacker);
+    int ev = defender->evasion(true, attacker);
 
     // Works even if the defender is incapacitated
     ev += defender->missile_repulsion();

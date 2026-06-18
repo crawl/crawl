@@ -824,19 +824,6 @@ bool mons_has_body(const monster& mon)
     return true;
 }
 
-// Difference in speed between monster and the player for Cheibriados'
-// purposes. This is the speed difference disregarding the player's
-// slow status.
-int cheibriados_monster_player_speed_delta(const monster& mon)
-{
-    // Ignore the Slow effect.
-    unwind_var<int> ignore_slow(you.duration[DUR_SLOW], 0);
-    const int pspeed = 1000 / (player_movement_speed() * player_speed());
-    dprf("Your delay: %d, your speed: %d, mon speed: %d",
-        player_movement_speed(), pspeed, mon.speed);
-    return mon.speed - pspeed;
-}
-
 bool cheibriados_thinks_mons_is_fast(const monster& mon)
 {
     return mons_base_speed(mon) >= 10;

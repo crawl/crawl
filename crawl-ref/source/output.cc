@@ -1130,7 +1130,7 @@ static void _print_stats_ev(int x, int y)
     CGOTOXY(x+4, y, GOTO_STAT);
 
     // Color EV based on whether temporary effects are raising or lowering it
-    const int bonus = you.evasion_scaled(100) - you.evasion_scaled(100, true);
+    const int bonus = you.evasion_scaled(100) - you.evasion_scaled(100, false);
     textcolour(bonus < 0 ? RED
                          : bonus > 0 ? LIGHTBLUE
                                      : HUD_VALUE_COLOUR);
@@ -2871,7 +2871,7 @@ static string _status_mut_rune_list(int sw)
             status.emplace_back(inf.short_text);
     }
 
-    int move_cost = (player_speed() * player_movement_speed()) / 10;
+    int move_cost = player_overall_move_delay(1, true, true, false);
     if (move_cost != 10)
     {
         const char *help = (move_cost <   8) ? "very quick" :

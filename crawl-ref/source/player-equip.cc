@@ -455,8 +455,10 @@ bool slot_is_melded(equipment_slot slot)
  * can should go through here.
  *
  * @param item              The item being checked.
- * @param include_form      Whether to veto items that would go into a slot that
- *                          is melded by our current form.
+ * @param temp              If true, include temporary restrictions like those
+ *                          from the player's form and aspects of the item that
+ *                          could one day change (e.g. the brand). Religion
+ *                          is treated as permanent.
  * @param veto_reason[out]  If the player cannot use this item, and this is
  *                          non-null, it is set to the reason why they can't.
  * @param god_forbids[out]  If the player cannot use this item, set to whether
@@ -464,7 +466,7 @@ bool slot_is_melded(equipment_slot slot)
  *
  * @return True if the player is capable of theoretically wearing this item.
  */
-bool can_equip_item(const item_def& item, bool include_form, string* veto_reason,
+bool can_equip_item(const item_def& item, bool temp, string* veto_reason,
                     bool *god_forbids)
 {
 #define NO_EQUIP(x) {if (veto_reason) { *veto_reason = x; }; return 0;}
@@ -475,7 +477,7 @@ bool can_equip_item(const item_def& item, bool include_form, string* veto_reason
         NO_EQUIP("That isn't an equippable item.")
 
     // Your god won't let you make use of gear they abhor.
-    if (god_forbids_item(item))
+    if (god_forbids_item(item, temp))
     {
         if (god_forbids)
             *god_forbids = true;
@@ -496,7 +498,7 @@ bool can_equip_item(const item_def& item, bool include_form, string* veto_reason
             // If we don't have this slot, veto_reason will be set here.
             if (get_player_equip_slot_count(alt_slot, veto_reason))
             {
-                if (include_form && slot_is_melded(alt_slot))
+                if (temp && slot_is_melded(alt_slot))
                 {
                     // Note that this slot is blocked due to transformation, in
                     // the likely case that no other compatible slot exists.
@@ -520,7 +522,7 @@ bool can_equip_item(const item_def& item, bool include_form, string* veto_reason
     // type, is there some *other* reason they cannot wear this item?
     if (item.base_type == OBJ_ARMOUR)
     {
-        const size_type player_size = you.body_size(PSIZE_TORSO, !include_form);
+        const size_type player_size = you.body_size(PSIZE_TORSO, !temp);
         const equipment_slot slot = get_armour_slot(static_cast<armour_type>(item.sub_type));
         if (slot == SLOT_BODY_ARMOUR || slot == SLOT_OFFHAND)
         {
@@ -547,17 +549,17 @@ bool can_equip_item(const item_def& item, bool include_form, string* veto_reason
                 NO_EQUIP("You can't wear that with your reptilian head.")
             else if (you.species == SP_OCTOPODE)
                 NO_EQUIP("Your can't wear that!")
-            else if (you.has_mutation(MUT_HORNS, include_form))
+            else if (you.has_mutation(MUT_HORNS, temp))
                 NO_EQUIP("You can't fit that over your horns.")
-            else if (you.has_mutation(MUT_ANTENNAE, include_form))
+            else if (you.has_mutation(MUT_ANTENNAE, temp))
                 NO_EQUIP("You can't fit that over your antennae.")
-            else if (you.has_mutation(MUT_BEAK, include_form))
+            else if (you.has_mutation(MUT_BEAK, temp))
                 NO_EQUIP("You can't fit that over your beak.")
         }
     }
     else if (item.base_type == OBJ_WEAPONS)
     {
-        const size_type bsize = you.body_size(PSIZE_TORSO, !include_form);
+        const size_type bsize = you.body_size(PSIZE_TORSO, !temp);
         if (is_weapon_too_large(item, bsize)
             && !you.has_mutation(MUT_QUADRUMANOUS))
         {
@@ -1025,11 +1027,9 @@ void player_equip_set::remove(const item_def& item)
 {
     for (int i = (int)items.size() - 1; i >= 0; --i)
     {
+        // Preserve order to avoid swapping Coglin weapons display order.
         if (items[i].item == item.link)
-        {
-            items[i] = items[items.size() - 1];
-            items.pop_back();
-        }
+            items.erase(items.begin() + i);
     }
 
     if (is_unrandom_artefact(item))

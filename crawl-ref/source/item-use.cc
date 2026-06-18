@@ -2047,7 +2047,7 @@ bool drink(item_def* potion)
 
 // XXX: there's probably a nicer way of doing this.
 // Conducts, maybe?
-bool god_hates_brand(const int brand)
+bool god_hates_brand(const brand_type brand)
 {
     if (is_good_god(you.religion) && is_evil_brand(brand))
         return true;

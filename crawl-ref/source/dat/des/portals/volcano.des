@@ -120,14 +120,16 @@ function place_large_volcano(e)
     e.kfeat("V = l")
     e.lua_marker('V', fog_machine { cloud_type = "flame", walk_dist=15, pow_max=6,
                                    delay = 300, size = 10000, spread_rate = 30,
-                                   listener = large_warning, excl_rad = -1 })
+                                   listener = large_warning, excl_rad = -1,
+                                   countdown_limit = 1 })
 end
 
 function place_chained_volcano(e)
     e.kfeat("V = l")
     e.lua_marker('V', chained_fog_machine { cloud_type = "flame", walk_dist=15, pow_max=6,
-                                            delay = 300, size = 100, spread_rate = 30,
-                                            listener = large_warning, excl_rad = -1 } )
+                                           delay = 300, size = 100, spread_rate = 30,
+                                           listener = large_warning, excl_rad = -1,
+                                           countdown_limit = 1 })
 end
 
 
@@ -135,7 +137,8 @@ function place_small_volcano(e)
     e.kfeat("V = l")
     e.lua_marker('V', fog_machine { cloud_type = "flame", walk_dist=15, pow_max=6,
                                    delay = 300, size = 800, spread_rate = 30,
-                                   listener = small_warning, excl_rad = -1 })
+                                   listener = small_warning, excl_rad = -1,
+                                   countdown_limit = 1 })
 end
 
 function place_lake_volcanoes (e, glyphs)
@@ -149,14 +152,16 @@ function place_lake_volcano (e, glyph)
     e.lua_marker(glyph, chained_fog_machine { cloud_type = "flame", walk_dist=0,
                             pow_max=6, delay_min = 300, delay_max = 800,
                             size = 125, spread_rate = 5,
-                            listener = small_warning, excl_rad = -1 })
+                            listener = small_warning, excl_rad = -1,
+                            countdown_limit = 1 })
 end
 
 function place_tiny_volcano(e)
     e.kfeat("V = l")
     e.lua_marker('V', fog_machine { cloud_type = "flame", walk_dist=10, pow_max=6,
                                    delay = 800, size = 40, spread_rate = 10,
-                                   listener = large_warning, excl_rad = -1 })
+                                   listener = large_warning, excl_rad = -1,
+                                   countdown_limit = 1 })
 end
 -- #
 -- ###

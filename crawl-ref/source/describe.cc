@@ -1308,13 +1308,14 @@ static string _skill_target_desc(skill_type skill, int scaled_target,
  * current training rate.
  */
 static void _append_skill_target_desc(string &description, skill_type skill,
-                                        int scaled_target)
+                                        int scaled_target, int indent)
 {
+    const string prefix = "\n" + string(indent, ' ');
     if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
-        description += "\n    " + _skill_target_desc(skill, scaled_target, 100);
+        description += prefix + _skill_target_desc(skill, scaled_target, 100);
     if (you.training[skill] > 0 && you.training[skill] < 100)
     {
-        description += "\n    " + _skill_target_desc(skill, scaled_target,
+        description += prefix + _skill_target_desc(skill, scaled_target,
                                                     you.training[skill]);
     }
 }
@@ -1330,9 +1331,9 @@ static string _desc_attack_delay(const item_def &item)
             artefact_set_property(dummy, ARTP_BRAND, SPWPN_NORMAL);
     }
 
-    const int cur_delay = you.attack_delay_with(&dummy).expected();
+    const float cur_delay = you.attack_delay_with(&dummy).expected();
 
-    return make_stringf("\n    Current attack delay: %.1f.", (float)cur_delay / 10);
+    return make_stringf("\n    Current attack delay: %.1f.", cur_delay / 10);
 }
 
 static string _describe_missile_dmg_brand(const item_def &item)
@@ -1470,7 +1471,26 @@ static void _append_skill_needed(string &description, const item_def &item,
     }
 
     if (below_target)
-        _append_skill_target_desc(description, skill, target_skill);
+        _append_skill_target_desc(description, skill, target_skill, 4);
+}
+
+static void _append_penalty(string &description, const item_def *source,
+                            const int penalty, const int penalty_scale)
+{
+    if (!source)
+        return;
+    description += "\n";
+    description += uppercase_first(source->name(DESC_YOUR));
+
+    if (penalty >= penalty_scale)
+    {
+        description += make_stringf(" slows your attacks with this weapon by %.1f",
+                       penalty / (10.0f * penalty_scale));
+    }
+    else
+        description += " slightly slows your attacks with this weapon";
+
+    description += ".";
 }
 
 static void _append_weapon_stats(string &description, const item_def &item)
@@ -1514,34 +1534,41 @@ static void _append_weapon_stats(string &description, const item_def &item)
 
     _append_skill_needed(description, item);
 
-    if (is_slowed_by_armour(&item))
+    // Add penalties for armour and shield.
+    const int penalty_scale = 20;
+    vector<string> would_slow;
+    if (is_slowed_by_armour(&item) && you_can_wear(SLOT_BODY_ARMOUR) != false)
     {
-        const int penalty_scale = 100;
-        const int armour_penalty = you.adjusted_body_armour_penalty(penalty_scale, true);
-        description += "\n";
-        if (armour_penalty)
+        const int body_armour_penalty =
+            you.adjusted_body_armour_penalty(penalty_scale, true);
+        if (body_armour_penalty)
         {
-            const item_def *body_armour = you.body_armour();
-            description += (body_armour ? uppercase_first(
-                                              body_armour->name(DESC_YOUR))
-                                        : "Your heavy armour");
-
-            const bool significant = armour_penalty >= penalty_scale;
-            if (significant)
-            {
-                description +=
-                    make_stringf(" slows your attacks with this weapon by %.1f",
-                                 armour_penalty / (10.0f * penalty_scale));
-            }
-            else
-                description += " slightly slows your attacks with this weapon";
+            _append_penalty(description, you.body_armour(),
+                            body_armour_penalty, penalty_scale);
         }
         else
+            would_slow.push_back("heavy armour");
+    }
+
+    const item_def *shield = you.shield();
+    if (you.skill(SK_SHIELDS) < MAX_SKILL_LEVEL
+        && you_can_wear(SLOT_OFFHAND) != false)
+    {
+        if (shield)
         {
-            description += "Wearing heavy armour would reduce your attack "
-                           "speed with this weapon";
+            _append_penalty(description, shield,
+                            you.adjusted_shield_penalty(penalty_scale), penalty_scale);
         }
-        description += ".";
+        else
+            would_slow.push_back("a shield");
+    }
+
+    if (!would_slow.empty())
+    {
+        description += "\nWearing "
+                       + comma_separated_line(would_slow.begin(),
+                                              would_slow.end(), " or ")
+                       + " would reduce your attack speed with this weapon.";
     }
 
     const bool want_player_stats = !is_useless_item(item) && crawl_state.need_save;
@@ -1731,15 +1758,21 @@ static string _describe_point_change(float points)
 }
 
 static string _describe_point_diff(int original,
-                                   int changed, int scale = 100)
+                                   int changed,
+                                   bool round_nearest = false,
+                                   int scale = 100)
 {
     string description;
 
     if (original == changed)
         return "remain unchanged";
 
-    // Truncate to 1 decimal place, rather than round (so that it matches what
-    // will be displayed as the player's AC/EV if they actually put this on.)
+    if (round_nearest)
+    {
+        original = original + scale / 20;
+        changed = changed + scale / 20;
+    }
+    // Truncate to 1 decimal place.
     original = original / (scale / 10) * 10;
     changed = changed / (scale / 10) * 10;
 
@@ -1779,8 +1812,8 @@ static string _equipment_switchto_string(const item_def &item)
 
 /**
  * Describe how (un)equipping a piece of equipment might change the player's
- * AC/EV/SH and spell failure. We don't include temporary buffs in this
- * calculation.
+ * AC/EV/SH, spell failure, and attack delay. We don't include temporary buffs
+ * in this calculation.
  *
  * @param item    The item whose description we are writing.
  * @param remove  Whether the item is already equipped, and thus whether to
@@ -1790,21 +1823,14 @@ static string _equipment_switchto_string(const item_def &item)
 static string _equipment_property_change_description(const item_def &item,
                                                      bool remove = false)
 {
-    // First, test if there is any AC/EV/SH change at all.
-    const int cur_ac = you.base_ac(100);
-    const int cur_ev = you.evasion_scaled(100, true);
-    const int cur_sh = player_displayed_shield_class(100, true);
-    int new_ac, new_ev, new_sh;
-    FixedVector<int, MAX_KNOWN_SPELLS> cur_fail, new_fail;
-    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
-        cur_fail[i] = raw_spell_fail(you.spells[i]);
-
+    const player_stats cur = you.calc_stats(100);
+    player_stats next;
     if (remove)
-        you.preview_stats_without_specific_item(100, item, &new_ac, &new_ev, &new_sh, &new_fail);
+        next = you.preview_stats_without_specific_item(100, item);
     else if (item.base_type == OBJ_TALISMANS)
-        you.preview_stats_in_specific_form(100, item, &new_ac, &new_ev, &new_sh, &new_fail);
+        next = you.preview_stats_in_specific_form(100, item);
     else
-        you.preview_stats_with_specific_item(100, item, &new_ac, &new_ev, &new_sh, &new_fail);
+        next = you.preview_stats_with_specific_item(100, item);
 
     // Check if any spell failures changed, and save the greatest magnitude that
     // any of them changed.
@@ -1812,11 +1838,11 @@ static string _equipment_property_change_description(const item_def &item,
     int visible_fail_change = 0;
     for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
     {
-        if (cur_fail[i] != new_fail[i])
+        if (cur.fail[i] != next.fail[i])
         {
-            int new_fail_change = new_fail[i] - cur_fail[i];
-            int new_visible_fail_change = failure_rate_to_int(new_fail[i])
-                                            - failure_rate_to_int(cur_fail[i]);
+            int new_fail_change = next.fail[i] - cur.fail[i];
+            int new_visible_fail_change = failure_rate_to_int(next.fail[i])
+                                            - failure_rate_to_int(cur.fail[i]);
             if (abs(new_fail_change) > abs(fail_change))
                 fail_change = new_fail_change;
             if (abs(new_visible_fail_change) > abs(visible_fail_change))
@@ -1824,11 +1850,12 @@ static string _equipment_property_change_description(const item_def &item,
         }
     }
 
-    // If we're previewing non-armour and there is no AC/EV/SH change, print no
+    // If we're previewing non-armour and there is no relevant change, print no
     // extra description at all (since almost all items of these types will
     // change nothing)
-    if (cur_ac == new_ac && cur_ev == new_ev && cur_sh == new_sh
+    if (cur.ac == next.ac && cur.ev == next.ev && cur.sh == next.sh
         && fail_change == 0
+        && (cur.delay == next.delay || item.base_type == OBJ_WEAPONS)
         && (item.base_type != OBJ_ARMOUR || item.sub_type == ARM_ORB))
     {
         return "";
@@ -1855,28 +1882,32 @@ static string _equipment_property_change_description(const item_def &item,
                          + " this " + _equip_type_name(item) + ":";
     }
 
-    // Always display AC line on proper armour, even if there is no change
+    // Always display AC line on proper armour, even if there is no change.
+    //
+    // For AC, EV and SH we round down rather than to the nearest 0.1, so that
+    // displayed values match the one that will be shown if this is actually
+    // equipped.
     if (item.base_type == OBJ_ARMOUR && get_armour_slot(item) != SLOT_OFFHAND
-        || cur_ac != new_ac)
+        || cur.ac != next.ac)
     {
         description += "\nYour AC would "
-                       + _describe_point_diff(cur_ac, new_ac) + ".";
+                       + _describe_point_diff(cur.ac, next.ac) + ".";
     }
 
     // Always display EV line on non-orb armour, even if there is no change
     // XXX perhaps this shouldn't display on basic aux armour?
     if (item.base_type == OBJ_ARMOUR && item.sub_type != ARM_ORB
-        || cur_ev != new_ev)
+        || cur.ev != next.ev)
     {
         description += "\nYour EV would "
-                       + _describe_point_diff(cur_ev, new_ev) + ".";
+                       + _describe_point_diff(cur.ev, next.ev) + ".";
     }
 
     // Always display SH line on shields, even if there is no change
-    if (is_shield(item) || cur_sh != new_sh)
+    if (is_shield(item) || cur.sh != next.sh)
     {
         description += "\nYour SH would "
-                       + _describe_point_diff(cur_sh, new_sh) + ".";
+                       + _describe_point_diff(cur.sh, next.sh) + ".";
     }
 
     if (fail_change != 0)
@@ -1892,23 +1923,39 @@ static string _equipment_property_change_description(const item_def &item,
         }
     }
 
+    // Describe even an unchanged attack delay for shields, and for body armour
+    // with a ranged weapon.
+    //
+    // Never describe it for weapons.
+    const bool always_describe_delay = item.base_type == OBJ_ARMOUR
+        && (is_shield(item)
+            || (get_armour_slot(item) == SLOT_BODY_ARMOUR
+                && is_slowed_by_armour(you.weapon())));
+    if ((always_describe_delay || cur.delay != next.delay)
+        && item.base_type != OBJ_WEAPONS)
+    {
+        // We round attack delay to the nearest aut to match what is displayed
+        // elsewhere.
+        description += "\nYour attack delay would "
+            + _describe_point_diff(cur.delay / 10, next.delay / 10, true) + ".";
+    }
+
     return description;
 }
 
 static string _spell_fail_change_description(const item_def &item,
                                              bool remove = false)
 {
-    int dummy1, dummy2, dummy3;
     FixedVector<int, MAX_KNOWN_SPELLS> cur_fail, new_fail;
     for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
         cur_fail[i] = raw_spell_fail(you.spells[i]);
 
     if (remove)
-        you.preview_stats_without_specific_item(100, item, &dummy1, &dummy2, &dummy3, &new_fail);
+        new_fail = you.preview_stats_without_specific_item(100, item).fail;
     else if (item.base_type == OBJ_TALISMANS)
-        you.preview_stats_in_specific_form(100, item, &dummy1, &dummy2, &dummy3, &new_fail);
+        new_fail = you.preview_stats_in_specific_form(100, item).fail;
     else
-        you.preview_stats_with_specific_item(100, item, &dummy1, &dummy2, &dummy3, &new_fail);
+        new_fail = you.preview_stats_with_specific_item(100, item).fail;
 
     // Check if any spell failures changed.
     int fail_change = 0;
@@ -2309,26 +2356,6 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
         description += _equipment_property_change(item);
     }
 
-    const int DELAY_SCALE = 100;
-    const int aevp = you.adjusted_body_armour_penalty(DELAY_SCALE, true);
-    if (crawl_state.need_save
-        && verbose
-        && aevp
-        && !is_shield(item)
-        && item_is_equipped(item)
-        && is_slowed_by_armour(you.weapon()))
-    {
-        // TODO: why doesn't this show shield effect? Reconcile with
-        // _display_attack_delay
-        description += "\n\nYour current strength and Armour skill "
-                       "slows attacks with missile weapons (like "
-                        + you.weapon()->name(DESC_YOUR) + ") ";
-        if (aevp >= DELAY_SCALE)
-            description += make_stringf("by %.1f.", aevp / (10.0f * DELAY_SCALE));
-        else
-            description += "only slightly.";
-    }
-
     return description;
 }
 
@@ -2542,7 +2569,7 @@ static string _cannot_use_reason(const item_def &item, bool temp=true)
     default:
         // Non-equippable types (e.g. ammo) have no can_equip_item reason, but
         // can still be outright forbidden by your god.
-        if (god_forbids_item(item))
+        if (god_forbids_item(item, temp))
         {
             return make_stringf("%s forbids the use of this item.",
                                 uppercase_first(god_name(you.religion)).c_str());
@@ -4263,15 +4290,15 @@ static string _get_skill_defense_change(skill_type skill)
     unwind_var<int> unwind_costlevel(you.skill_cost_level);
 
     const int cur_ac = you.armour_class_scaled(100);
-    const int cur_ev = you.evasion_scaled(100, true);
-    const int cur_sh = player_displayed_shield_class(100, true);
+    const int cur_ev = you.evasion_scaled(100, false);
+    const int cur_sh = player_displayed_shield_class(100, false);
 
     const double cur_skill = you.skill(skill, 10, true) * 0.1;
     set_skill_level(skill, cur_skill + 1, true);
 
     const int new_ac = you.armour_class_scaled(100);
-    const int new_ev = you.evasion_scaled(100, true);
-    const int new_sh = player_displayed_shield_class(100, true);
+    const int new_ev = you.evasion_scaled(100, false);
+    const int new_sh = player_displayed_shield_class(100, false);
 
     const float ac_diff = (float)(new_ac - cur_ac) / 100.0;
     const float ev_diff = (float)(new_ev - cur_ev) / 100.0;
@@ -4314,6 +4341,17 @@ string get_skill_description(skill_type skill, bool need_title)
     }
 
     result += getLongDescription(lookup);
+
+    const int target = you.get_training_target(skill);
+    if (target > 0 && target <= 270 && target > you.skill(skill, 10))
+    {
+        result +=  make_stringf("\nYour current training target is %.1f.",
+                                target / 10.0);
+
+        _append_skill_target_desc(result, skill, target, 0);
+
+        result += "\n";
+    }
 
     if ((skill == SK_ARMOUR || skill == SK_DODGING || skill == SK_SHIELDS)
         && you.skills[skill] < MAX_SKILL_LEVEL && !is_useless_skill(skill))
@@ -6609,7 +6647,9 @@ static string _desc_shooting_star_dam(const monster_info &mi)
 static string _desc_splinterfrost_dam(const monster_info &mi)
 {
     bolt beam;
-    const int pow = mi.props[SPLINTERFROST_POWER_KEY].get_int();
+    int pow = mi.hd;
+    if (mi.props.exists(SPLINTERFROST_POWER_KEY))
+        pow = mi.props[SPLINTERFROST_POWER_KEY].get_int();
     zappy(ZAP_SPLINTERFROST_FRAGMENT, pow, mi.summoner_id != MID_PLAYER, beam);
     return make_stringf("%dd%d", beam.damage.num, beam.damage.size);
 }
