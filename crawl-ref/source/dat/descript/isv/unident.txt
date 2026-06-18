@@ -1,0 +1,33 @@
+%%%%
+amulet
+
+Amulet, prěznačeny dlja nošeńja kako bižuterija na šiji, napolnjeny tajėństvėnymi silami
+neznajemogo proizhođeńja.
+%%%%
+book
+
+Tajėństvėny učebnik, sȯdŕživajųći v sobě magične zaklinańja neznajemogo proizhođeńja.
+%%%%
+potion
+
+Maněrka bez nazvy, sȯdŕživajųća jednų dozų neznajemoj tekųtiny.
+%%%%
+ring
+
+Pŕstenj, napȯlnjeny tajėństvėnymi silami neznajemogo proizhođeńja, prěznačeny
+dlja nošeńja kako bižuterija na pŕstu.
+%%%%
+scroll
+
+Jednokråtna tajėństvėna formula, sųt napisana na pergamentu profesionaĺnym
+pisateljem ili čarovnikom. Vśaky može prizvati silų tajėństvėnoj formuly, glåsno
+pročitavši jų, ale priroda tutoj sily ne jest samoråzumna.
+%%%%
+staff
+
+Pala, ulěpšena tajėństvėnymi silami neznajemoj prirody.
+%%%%
+wand
+
+Neobyčna magična palka.
+%%%%
