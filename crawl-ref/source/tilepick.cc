@@ -879,7 +879,10 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     if (tile == TILE_FLOOR_NORMAL)
         tile = flv.floor;
     else if (tile == TILE_WALL_NORMAL)
+    {
         tile = flv.wall;
+        needs_tile_picking = is_torch_tile(tile);
+    }
     else if (is_door_tile(tile))
     {
         tileidx_t override = flv.feat;

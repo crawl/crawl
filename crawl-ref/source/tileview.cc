@@ -1131,6 +1131,9 @@ static bool _tile_has_random_misc_animation(tileidx_t tile)
 // Unfortunately, these are all hard-coded for now.
 void tile_apply_animations(tileidx_t bg_idx, tile_flavour *flv)
 {
+    if (bg_idx == TILE_WALL_NORMAL)
+        bg_idx = flv->wall;
+
 #ifndef USE_TILE_WEB
     if (_tile_has_cycling_misc_animation(bg_idx))
         flv->special = (flv->special + 1) % tile_dngn_count(bg_idx);
