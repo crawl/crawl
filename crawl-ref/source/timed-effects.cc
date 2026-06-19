@@ -993,9 +993,7 @@ void timeout_terrain_changes(int duration, bool force)
         {
             update_terrain_knowledge(m_pos.pos);
             update_grid_colour_knowledge(m_pos.pos);
-#ifdef USE_TILE
-            tile_env.bk_bg(m_pos.pos) = tileidx_feature_base(env.grid(m_pos.pos));
-#endif
+            redraw_view_at(m_pos.pos);
         }
     }
 
