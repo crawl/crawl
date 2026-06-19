@@ -3061,7 +3061,7 @@ void _walk_on_decor(dungeon_feature_type new_grid)
     string messageLookup = "";
     string decorLine = "";
     int frequency = 0;
-    bool peaceful = !there_are_monsters_nearby(true, false);
+    bool peaceful = !there_are_monsters_nearby(true);
 
     if (feat_is_food(new_grid))
     {
