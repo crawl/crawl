@@ -873,7 +873,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             if (you.can_see(caster))
             {
                 targeter_radius hitfunc(&caster, LOS_SOLID, 2);
-                flash_view_delay(UA_MONSTER, DARKGREY, 200, &hitfunc);
+                flash_view_delay(UA_MONSTER, DARKGREY, 200, 0, &hitfunc);
                 mprf("%s draws nearby shadows into %s.",
                     caster.name(DESC_THE).c_str(),
                     caster.pronoun(PRONOUN_REFLEXIVE).c_str());
@@ -1820,7 +1820,7 @@ static void _cast_siphon_essence(monster &caster, mon_spell_slot, bolt&)
     if (you.see_cell(caster.pos()))
     {
         targeter_radius hitfunc(&caster, LOS_SOLID, 2);
-        flash_view_delay(UA_MONSTER, DARKGREY, 200, &hitfunc);
+        flash_view_delay(UA_MONSTER, DARKGREY, 200, 0, &hitfunc);
         seen = true;
     }
 
@@ -4350,7 +4350,7 @@ static void _corrupting_pulse(monster *mons)
     if (you.see_cell(mons->pos()))
     {
         targeter_radius hitfunc(mons, LOS_NO_TRANS);
-        flash_view_delay(UA_MONSTER, MAGENTA, 300, &hitfunc);
+        flash_view_delay(UA_MONSTER, MAGENTA, 300, 0, &hitfunc);
 
         if (could_harm_enemy(mons, &you, true)
             && cell_see_cell(you.pos(), mons->pos(), LOS_NO_TRANS))

@@ -222,23 +222,24 @@ void animation_delay(unsigned int ms, bool do_refresh)
     scaled_delay(ms);
 }
 
-static void _flash_view(colour_t colour, targeter* where)
+static void _flash_view(colour_t colour, int alpha, targeter* where)
 {
 #ifndef USE_TILE_LOCAL
     save_cursor_pos save;
 #endif
 
     you.flash_colour = colour;
+    you.flash_alpha = alpha;
     you.flash_where = where;
     viewwindow(false);
     update_screen();
 }
 
-void flash_view(use_animation_type a, colour_t colour, targeter *where)
+void flash_view(use_animation_type a, colour_t colour, int alpha, targeter *where)
 {
     if (crawl_state.need_save && Options.use_animations & a)
     {
-        _flash_view(colour, where);
+        _flash_view(colour, alpha, where);
 #ifdef USE_TILE
         tiles.redraw();
 #endif
@@ -246,13 +247,13 @@ void flash_view(use_animation_type a, colour_t colour, targeter *where)
 }
 
 void flash_view_delay(use_animation_type a, colour_t colour, int flash_delay,
-                      targeter *where)
+                      int alpha, targeter *where)
 {
     if (crawl_state.need_save && Options.use_animations & a)
     {
-        _flash_view(colour, where);
+        _flash_view(colour, alpha, where);
         scaled_delay(flash_delay);
-        _flash_view(BLACK, nullptr);
+        _flash_view(BLACK, 0, nullptr);
     }
 }
 
@@ -710,7 +711,8 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a, view_renderer 
             // Leaving it this way because short flashes can occur in long ones,
             // and this simply works without requiring a stack.
             you.flash_colour = BLACK;
-            you.flash_where = 0;
+            you.flash_alpha = 0;
+            you.flash_where = nullptr;
         }
 
         // Reset env.show if we munged it.
@@ -894,9 +896,9 @@ crawl_view_buffer view_dungeon(animation *a, bool anim_updates, view_renderer *r
             : view2grid(*ri);
 
         if (you.flash_where && you.flash_where->is_affected(gc) <= 0)
-            draw_cell(cell, gc, anim_updates, 0);
+            draw_cell(cell, gc, anim_updates, 0, 0);
         else
-            draw_cell(cell, gc, anim_updates, flash_colour);
+            draw_cell(cell, gc, anim_updates, flash_colour, you.flash_alpha);
 
         cell++;
     }
@@ -908,7 +910,7 @@ crawl_view_buffer view_dungeon(animation *a, bool anim_updates, view_renderer *r
 }
 
 void draw_cell(screen_cell_t *cell, const coord_def &gc,
-               bool anim_updates, int flash_colour)
+               bool anim_updates, int flash_colour, int flash_alpha)
 {
 #ifdef USE_TILE
     cell->tile.clear();
@@ -933,7 +935,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 #ifdef USE_TILE
     cell->tile.map_knowledge = map_bounds(gc) ? env.map_knowledge(gc) : map_cell();
     cell->flash_colour = BLACK;
-    cell->flash_alpha = 0;
+    cell->flash_alpha = flash_alpha;
 #endif
 
     // Don't hide important information by recolouring monsters.
@@ -972,7 +974,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 #ifdef USE_TILE
         if (you.see_cell(gc)) {
             cell->flash_colour = real_colour(flash_colour, gc);
-            cell->flash_alpha = 0;
+            cell->flash_alpha = flash_alpha;
         }
 #endif
     }

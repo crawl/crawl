@@ -770,7 +770,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
 
             mpr(player_msg);
             if (spell == SPELL_OZOCUBUS_REFRIGERATION)
-                flash_view_delay(UA_PLAYER, beam.colour, 300, &hitfunc);
+                flash_view_delay(UA_PLAYER, beam.colour, 300, 0, &hitfunc);
             else if (spell == SPELL_DRAIN_LIFE)
             {
                 draw_ring_animation(you.pos(), 2, DARKGRAY, DARKGRAY, false, 40,
@@ -3623,7 +3623,7 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool tracer)
         you.props[TOXIC_RADIANCE_POWER_KEY].get_int() = pow;
         toxic_radiance_effect(&you, 10, true);
 
-        flash_view_delay(UA_PLAYER, GREEN, 300, &hitfunc);
+        flash_view_delay(UA_PLAYER, GREEN, 300, 0, &hitfunc);
 
         return spret::success;
     }
@@ -3638,7 +3638,7 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool tracer)
         toxic_radiance_effect(agent, 10);
 
         targeter_radius hitfunc(mon_agent, LOS_NO_TRANS);
-        flash_view_delay(UA_MONSTER, GREEN, 300, &hitfunc);
+        flash_view_delay(UA_MONSTER, GREEN, 300, 0, &hitfunc);
 
         return spret::success;
     }
@@ -4749,7 +4749,7 @@ static void _discharge_maxwells_coupling()
     }
 
     targeter_radius hitfunc(&you, LOS_NO_TRANS);
-    flash_view_delay(UA_PLAYER, LIGHTCYAN, 100, &hitfunc);
+    flash_view_delay(UA_PLAYER, LIGHTCYAN, 100, 0, &hitfunc);
 
     god_conduct_trigger conducts[3];
     set_attack_conducts(conducts, *mon, you.can_see(*mon));

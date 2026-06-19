@@ -5656,6 +5656,7 @@ player::player()
     redraw_title         = false;
 
     flash_colour        = BLACK;
+    flash_alpha         = 0;
     flash_where         = nullptr;
 
     time_taken          = 0;

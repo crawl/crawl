@@ -519,6 +519,7 @@ public:
     bool redraw_status_lights;
 
     colour_t flash_colour;
+    int flash_alpha;
     targeter *flash_where;
 
     int time_taken;
