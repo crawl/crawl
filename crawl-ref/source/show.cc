@@ -159,13 +159,6 @@ static void _update_feat_at(const coord_def &gp)
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
     }
 
-    if ((feat_is_stone_stair(feat)
-         || feat_is_escape_hatch(feat))
-        && is_exclude_root(gp))
-    {
-        env.map_knowledge(gp).flags |= MAP_EXCLUDED_STAIRS;
-    }
-
     if (is_bloodcovered(gp))
     {
         env.map_knowledge(gp).flags |= MAP_BLOODY;

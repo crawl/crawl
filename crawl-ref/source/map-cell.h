@@ -26,7 +26,6 @@
 #define MAP_ICY               0x8000
 
 /* these flags require more space to serialize: put infrequently used ones there */
-#define MAP_EXCLUDED_STAIRS  0x10000
 #define MAP_BLOOD_WEST       0x20000
 #define MAP_BLOOD_NORTH      0x40000
 #define MAP_SANCTUARY_1      0x80000
