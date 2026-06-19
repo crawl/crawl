@@ -3567,9 +3567,7 @@ static bool _seal_doors_and_stairs(const monster* warden,
                     if (env.map_knowledge(dc).seen())
                     {
                         update_terrain_knowledge(dc);
-#ifdef USE_TILE
-                        tile_env.bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
-#endif
+                        redraw_view_at(dc);
                     }
                 }
 
