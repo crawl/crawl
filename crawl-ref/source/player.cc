@@ -8983,9 +8983,7 @@ void player_open_door(coord_def doorpos)
         if (env.map_knowledge(dc).seen())
         {
             update_terrain_knowledge(dc);
-#ifdef USE_TILE
-            tile_env.bk_bg(dc) = tileidx_feature_base(env.grid(dc));
-#endif
+            redraw_view_at(dc);
         }
 
         if (is_excluded(dc))
@@ -9154,9 +9152,7 @@ void player_close_door(coord_def doorpos)
         if (env.map_knowledge(dc).seen())
         {
             update_terrain_knowledge(dc);
-#ifdef USE_TILE
-            tile_env.bk_bg(dc) = tileidx_feature_base(env.grid(dc));
-#endif
+            redraw_view_at(dc);
         }
 
         if (is_excluded(dc))
