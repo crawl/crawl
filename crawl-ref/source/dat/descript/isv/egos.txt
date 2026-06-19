@@ -1,22 +1,22 @@
 %%%%
 acid (acid) weapon ego
 
-It splashes victims with acid (2d4 damage, Corrosion).
+Ono bryzgaje v žrtv kyslinojų (2d4 škody, Korozija).
 %%%%
 antimagic (antimagic) weapon ego
 
-It reduces your magical energy, and disrupts the spells and magical abilities of
-those it strikes. Natural abilities and divine invocations are not affected.
+Ono smėnšaje tvojų magičnų energijų i råzryvaje zaklinańja i magične sposobnosti tyh,
+kogo poražaje. Prirodne sposobnosti i božske invokacije ostavajųt sę neizměnjenymi.
 %%%%
 chaos (chaos) weapon ego
 
-Each hit from it has a different, random effect.
+Každy udar orųžjem s tutym začarovańjem imaje råzny, slučajny efekt.
 %%%%
 concussion (concuss) weapon ego
 
-It pushes those it hits backwards, briefly stunning them in the process. If it
-pushes them into a solid feature, they will instead take an additional one-third
-of any damage that pierces their armour.
+Ono phaje tyh, kogo razi, nazadno, kråtko oglušajųći v procesu. Jestli ono phaje
+jih k tvŕdomu objektu, oni nabyvajųt dodatnų tretinu škody vśakoj škody, ktora
+probivaje jih brȯnjų.
 %%%%
 distortion (distort) weapon ego
 
