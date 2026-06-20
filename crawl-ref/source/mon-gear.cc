@@ -2441,6 +2441,20 @@ static void _give_book(monster* mon)
 
         give_specific_item(mon, book);
     }
+    if (mon->type == MONS_JESSICA && coinflip())
+    {
+        const int book = items(false, OBJ_BOOKS, BOOK_CONSTRUCTION, 1);
+        if (book == NON_ITEM)
+            return;
+
+        const int num_spells = random_range(2, 3);
+        vector<spell_type> forced_spell = {SPELL_BLINK};
+        build_themed_book(env.item[book],
+            forced_spell_filter(forced_spell, capped_spell_filter(11)),
+            forced_book_theme(spschool::necromancy), num_spells, "Jessica");
+
+        give_specific_item(mon, book);
+    }
 }
 
 void give_item(monster *mons, int level_number, bool mons_summoned)
