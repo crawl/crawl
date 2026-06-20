@@ -2450,7 +2450,7 @@ static void _give_book(monster* mon)
         const int num_spells = 2;
         vector<spell_type> forced_spell = {SPELL_BLINK};
         build_themed_book(env.item[book],
-            forced_spell_filter(forced_spell, capped_spell_filter(11)),
+            forced_spell_filter(forced_spell, capped_spell_filter(3)),
             forced_book_theme(spschool::necromancy), num_spells, "Jessica");
 
         give_specific_item(mon, book);
