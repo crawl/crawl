@@ -2447,7 +2447,7 @@ static void _give_book(monster* mon)
         if (book == NON_ITEM)
             return;
 
-        const int num_spells = random_range(2, 3);
+        const int num_spells = 2;
         vector<spell_type> forced_spell = {SPELL_BLINK};
         build_themed_book(env.item[book],
             forced_spell_filter(forced_spell, capped_spell_filter(11)),
