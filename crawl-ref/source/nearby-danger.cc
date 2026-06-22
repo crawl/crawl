@@ -227,14 +227,12 @@ vector<monster* > get_nearby_monsters(bool want_move,
 }
 
 #define UNSAFE_MSG(msg) {                           \
-    if (announce || reason)                         \
-    {                                               \
-        if (announce)                               \
-            mprf(MSGCH_WARN, "%s!", msg);           \
-        if (reason)                                 \
-            *reason = msg;                          \
-        return false;                               \
-    }}
+    if (announce)                                   \
+        mprf(MSGCH_WARN, "%s!", msg);               \
+    if (reason)                                     \
+        *reason = msg;                              \
+    return false;                                   \
+    }
 
 bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
                  bool check_dist, int range, string* reason)
