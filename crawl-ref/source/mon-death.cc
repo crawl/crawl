@@ -3654,17 +3654,6 @@ item_def* monster_die(monster& mons, killer_type killer,
         beogh_follower_banished(mons);
     }
 
-    // If we kill an invisible monster reactivate autopickup.
-    // We need to check for actual invisibility rather than whether we
-    // can see the monster. There are several edge cases where a monster
-    // is visible to the player but we still need to turn autopickup
-    // back on, such as TSO's halo or sticky flame. (jpeg)
-    if (you.see_cell(mons.pos()) && mons.has_ench(ENCH_INVIS)
-        && !mons.friendly())
-    {
-        autotoggle_autopickup(false);
-    }
-
     crawl_state.dec_mon_acting(&mons);
     monster_cleanup(&mons);
 
@@ -3762,6 +3751,9 @@ void monster_cleanup(monster* mons)
 
     if (mons_is_tentacle_head(mons_base_type(*mons)))
         destroy_tentacles(mons);
+
+    // Erase any indicators of this monster's previous positions.
+    env.invis_knowledge.update(*mons);
 
     const mid_t mid = mons->mid;
     env.mid_cache.erase(mid);

@@ -1182,6 +1182,12 @@ static bool _scan_rending_blade_paths(coord_def start,
                 if (act->type == MONS_RENDING_BLADE)
                     continue;
 
+                // Don't factor in hitting invisible monsters (there are
+                // especially weird results with how the 'ideal score' target
+                // is calculated earlier using only visible monsters).
+                if (!you.can_see(*act))
+                    continue;
+
                 // Don't hurt allies.
                 if (mons_atts_aligned(ATT_FRIENDLY, act->temp_attitude()))
                 {

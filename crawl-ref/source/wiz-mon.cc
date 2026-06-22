@@ -493,9 +493,6 @@ void wizard_dismiss_all_monsters(bool force_all)
 
     int count = dismiss_monsters(buf);
     mprf("Dismissed %i monster%s.", count, count == 1 ? "" : "s");
-    // If it was turned off turn autopickup back on if all monsters went away.
-    if (!*buf)
-        autotoggle_autopickup(false);
 }
 
 void debug_make_monster_shout(monster* mon)
@@ -646,9 +643,12 @@ static void _move_monster(const coord_def& where, int idx1)
     {
         mon2->move_to(where, MV_INTERNAL | MV_NO_MGRID_UPDATE);
         mon1->check_redraw(where);
+        env.invis_knowledge.update(*mon2);
     }
     if (!you.see_cell(moves.target))
         mon1->flags &= ~(MF_WAS_IN_VIEW | MF_SEEN | MF_SENSED);
+
+    env.invis_knowledge.update(*mon1);
 }
 
 void wizard_move_player_or_monster(const coord_def& where)

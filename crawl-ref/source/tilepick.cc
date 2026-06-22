@@ -1303,7 +1303,7 @@ void tileidx_out_of_los(tile_with_flags_t *fg,
     // Override foreground for monsters/items
     if (env.map_knowledge(gc).detected_monster())
     {
-        ASSERT(cell.monster() == MONS_SENSED);
+        ASSERT(cell.mon_type() == MONS_SENSED);
         *fg = tileidx_monster_base(cell.monsterinfo()->base_type, 0);
     }
     else if (env.map_knowledge(gc).detected_item())
@@ -2710,6 +2710,9 @@ tile_with_flags_t tileidx_monster(const monster_info& mons)
     }
 #endif
 
+    if (mons.is(MB_KNOWN_INVIS))
+        ch |= TILE_FLAG_INVIS;
+
     return ch;
 }
 #endif
@@ -2799,6 +2802,7 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_MUTE, TILEI_MUTE },
     { MB_EXPOSED, TILEI_EXPOSED },
     { MB_STAMPEDE, TILEI_STAMPEDE },
+    { MB_KNOWN_INVIS, TILEI_UNSEEN_INVIS_KNOWN },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)

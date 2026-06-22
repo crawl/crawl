@@ -307,6 +307,10 @@ static int _etc_orb_glow(int, const coord_def& loc)
 
 int dam_colour(const monster_info& mi)
 {
+    // Hide wound state for invisible creatures.
+    if (mi.is(MB_REMEMBERED_INVIS) || mi.is(MB_KNOWN_INVIS))
+        return BLACK;
+
     switch (mi.dam)
     {
         case MDAM_OKAY:                 return Options.enemy_hp_colour[0];

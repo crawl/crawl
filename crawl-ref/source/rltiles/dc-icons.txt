@@ -124,6 +124,8 @@ sundering SUNDERING
 mute MUTE
 exposed EXPOSED
 stampede STAMPEDE
+invis_known UNSEEN_INVIS_KNOWN
+invis_remembered UNSEEN_INVIS_REMEMBERED
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

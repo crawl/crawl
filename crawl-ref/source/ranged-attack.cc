@@ -123,7 +123,7 @@ bool ranged_attack::attack()
     if (attacker->is_player() && attacker != defender)
     {
         set_attack_conducts(conducts, *defender->as_monster(),
-                            you.can_see(*defender));
+                            you.aware_of(*defender));
     }
 
     if (shield_blocked)

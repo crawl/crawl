@@ -147,6 +147,11 @@ public:
     // Can the actor actually see the target?
     virtual bool can_see(const actor &target) const;
 
+    // Can the actor either see the target or (if the actor is the player) have
+    // enough information to confidently determine their location despite them
+    // being invisible?
+    virtual bool aware_of(const actor &target) const;
+
     // Visibility as required by messaging. In usual play:
     //   Does the player know what's happening to the actor?
     bool observable() const;

@@ -113,6 +113,11 @@ static double _to_hit_hit_chance(const monster_info& mi, attack &atk, bool melee
         // Apply post-roll manipulations:
         int adjusted_mhit = rolled_mhit + atk.post_roll_to_hit_modifiers(rolled_mhit, false);
 
+        // XXX: Duplicating the invis check in post_roll_to_hit_modifiers()
+        //      (which is otherwise skipped since the passed attack has no defender.)
+        if (mi.invisible_to_player())
+            adjusted_mhit -=6;
+
         // But the above will bail out because there's no defender in the attack object,
         // so we reproduce any possibly relevant effects here:
         adjusted_mhit += mi.lighting_modifiers();
@@ -469,6 +474,7 @@ bool player_fight(monster* defender, bool is_rampage,
                 return false;
             }
 
+            defender->sense_if_invisible();
             if (do_west_wind_shot())
                 return true;
             else if (do_player_ranged_attack(defender->pos()))

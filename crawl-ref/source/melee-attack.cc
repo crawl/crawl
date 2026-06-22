@@ -153,7 +153,7 @@ bool melee_attack::player_unrand_bad_attempt(bool check_only)
     // Unrands with secondary effects that can harm nearby friendlies.
     // Don't prompt for confirmation (and leak information about the
     // monster's position) if the player can't see the monster.
-    if (!you.can_see(*defender))
+    if (!you.aware_of(*defender))
         return false;
 
     item_def* primary = primary_weapon();
@@ -1440,6 +1440,10 @@ void melee_attack::handle_phase_end()
         monster_die(*attacker->as_monster(), KILL_NON_ACTOR, NON_MONSTER);
     }
 
+    // Swinging at an invisible monster temporarily detects it.
+    if (attacker->is_player() && defender && defender->alive())
+        defender->as_monster()->sense_if_invisible();
+
     attack::handle_phase_end();
 }
 
@@ -1861,7 +1865,7 @@ bool melee_attack::attack()
     // in advance that this attack was hopeless.
     if (!could_harm(attacker, defender, attacker->is_player(), attacker->is_player()))
     {
-        cancel_attack = attacker->is_player() && !(you.confused() || !you.can_see(*defender));
+        cancel_attack = attacker->is_player() && !(you.confused() || !you.aware_of(*defender));
         return false;
     }
 
@@ -1907,7 +1911,7 @@ bool melee_attack::attack()
     if (attacker->is_player() && attacker != defender)
     {
         set_attack_conducts(conducts, *defender->as_monster(),
-                            you.can_see(*defender) && !is_involuntary);
+                            you.aware_of(*defender) && !is_involuntary);
 
         // Check for stab (and set stab_attempt and stab_bonus)
         player_stab_check();
@@ -5158,7 +5162,7 @@ int melee_attack::apply_mon_damage_modifiers(int damage)
     // If the defender is asleep, the attacker gets a stab.
     if (defender && (defender->asleep()
                      || (attk_flavour == AF_SHADOWSTAB
-                         &&!defender->can_see(*attacker))))
+                         && !defender->can_see(*attacker))))
     {
         if (mons_is_player_shadow(*attacker->as_monster())
             && player_good_stab())

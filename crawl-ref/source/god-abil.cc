@@ -5513,7 +5513,7 @@ bool ru_power_leap()
         }
 
         monster* mons = monster_at(beam.target);
-        if (mons && you.can_see(*mons))
+        if (mons && you.aware_of(*mons))
         {
             clear_messages();
             mpr("You can't leap on top of the monster!");
@@ -5928,7 +5928,7 @@ spret uskayaw_grand_finale(bool fail)
         if (!mons || !you.can_see(*mons))
         {
             clear_messages();
-            mpr("You can't perceive a target there!");
+            mpr("You can't see a target there!");
             continue;
         }
 

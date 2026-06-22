@@ -1653,6 +1653,33 @@ int spell_highlight_by_utility(spell_type spell, int default_colour,
     return default_colour;
 }
 
+static bool _any_valid_targets(const unique_ptr<targeter>& tgt, int range,
+                               bool also_check_monster = false)
+{
+    for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS);
+            ri; ++ri)
+    {
+        if (tgt->valid_aim(*ri))
+        {
+            if (also_check_monster)
+            {
+                monster_info* mon = env.map_knowledge(*ri).monsterinfo();
+                if (!mon || !tgt->affects_monster(*mon))
+                    continue;
+                if (mons_att_wont_attack(mon->attitude)
+                    || !mons_class_is_threatening(mon->type))
+                {
+                    continue;
+                }
+            }
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
 bool spell_no_hostile_in_range(spell_type spell)
 {
     // sanity check: various things below will be prone to crash in these cases.
@@ -1662,6 +1689,15 @@ bool spell_no_hostile_in_range(spell_type spell)
     const int minRange = get_dist_to_nearest_monster();
     const int pow = calc_spell_power(spell);
     const int range = calc_spell_range(spell, pow, true);
+
+    // If there are known invisible monsters around, assume that they *might*
+    // be in range.
+    //
+    // XXX: This is inexact since it doesn't account for resistances of said
+    //      invisible monster, but doing that comprehensively is quite hard
+    //      and probably not worth the trouble.
+    if (env.invis_knowledge.any_unknown_nearby())
+        return false;
 
     switch (spell)
     {
@@ -1687,24 +1723,6 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_FULSOME_FUSILLADE:
     case SPELL_HELLFIRE_MORTAR:
         return minRange > you.current_vision;
-
-    case SPELL_POISONOUS_VAPOURS:
-    {
-        for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS);
-             ri; ++ri)
-        {
-            const monster* mons = monster_at(*ri);
-            if (mons
-                && you.can_see(*mons)
-                && !mons->wont_attack()
-                && mons_is_threatening(*mons)
-                && mons->res_poison() <= 0)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
 
     // Special handling for cloud spells.
     case SPELL_FREEZING_CLOUD:
@@ -1780,6 +1798,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_SCORCH:
         return find_near_hostiles(range, false, you).empty();
 
+    case SPELL_FLAME_WAVE:
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
         return find_near_hostiles(range, false, you).empty();
 
@@ -1787,7 +1806,7 @@ bool spell_no_hostile_in_range(spell_type spell)
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
             const monster &mon = **mi;
-            if (you.can_see(mon)
+            if (you.aware_of(mon)
                 && mons_intel(mon) > I_BRAINLESS
                 && mon.willpower() != WILL_INVULN
                 && !mons_atts_aligned(you.temp_attitude(), mon.attitude)
@@ -1804,6 +1823,15 @@ bool spell_no_hostile_in_range(spell_type spell)
 
     case SPELL_PLASMA_BEAM:
         return cast_plasma_beam(-1, you, false, true) == spret::abort;
+
+    case SPELL_PUTREFACTION:
+    case SPELL_DIMENSIONAL_BULLSEYE:
+    case SPELL_SURPRISING_CROCODILE:
+    case SPELL_SIMULACRUM:
+        return !_any_valid_targets(find_spell_targeter(spell, pow, range), range);
+
+    case SPELL_POISONOUS_VAPOURS:
+        return !_any_valid_targets(find_spell_targeter(spell, pow, range), range, true);
 
     default:
         break;

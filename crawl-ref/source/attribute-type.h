@@ -37,9 +37,9 @@ enum attribute_type
     ATTR_INVIS_UNCANCELLABLE,  // Spell/potion of invis is in effect.
 #endif
     ATTR_PERM_FLIGHT,          // Cache for flight from equipment
+#if TAG_MAJOR_VERSION == 34
     ATTR_SEEN_INVIS_TURN,      // Last turn you saw something invisible.
     ATTR_SEEN_INVIS_SEED,      // Random seed for invis monster positions.
-#if TAG_MAJOR_VERSION == 34
     ATTR_UNUSED3,            // old Beastly Appendage
 #endif
     ATTR_TITHE_BASE,           // Remainder of untithed gold.

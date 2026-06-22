@@ -982,27 +982,6 @@ static void _tile_place_item_marker(const coord_def &gc, const item_def &item)
         tile_env.bk_bg(gc) |= TILE_FLAG_CURSOR3;
 }
 
-/**
- * Place the tile for an unseen monster's disturbance.
- *
- * @param gc    The disturbance's map position.
-**/
-static void _tile_place_invisible_monster(const coord_def &gc)
-{
-    const map_cell& cell = env.map_knowledge(gc);
-
-    // Shallow water has its own modified tile for disturbances
-    // see tileidx_feature
-    // That tile is hidden by clouds though
-    if (cell.feat() != DNGN_SHALLOW_WATER || cell.cloud() != CLOUD_NONE)
-        tile_env.bk_fg(gc) = TILE_UNSEEN_MONSTER;
-    else
-        tile_env.bk_fg(gc) = 0;
-
-    if (env.map_knowledge(gc).item())
-        _tile_place_item_marker(gc, *env.map_knowledge(gc).item());
-}
-
 static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
 {
     tile_with_flags_t t = tileidx_monster(mon);
@@ -1028,6 +1007,14 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
     }
 
     tile_env.bk_fg(gc) = t;
+
+    if (env.map_knowledge(gc).old_invisible_monster())
+    {
+        tile_env.bk_bg(gc) |= TILE_FLAG_REMEMBERED_INVIS;
+        tile_with_flags_t fg = tile_env.bk_fg(gc);
+        tile_env.bk_fg(gc) = fg | TILE_FLAG_REMEMBERED_INVIS;
+    }
+
     if (!you.see_cell(gc))
         return;
     set<tileidx_t> status_icons = status_icons_for(mon);
@@ -1089,9 +1076,7 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
     const map_cell& cell = env.map_knowledge(gc);
 
     tile_env.bk_fg(gc) = 0;
-    if (cell.invisible_monster())
-        _tile_place_invisible_monster(gc);
-    else if (cell.monsterinfo())
+    if (cell.monsterinfo())
         _tile_place_monster(gc, *cell.monsterinfo());
     else if (cell.item())
     {

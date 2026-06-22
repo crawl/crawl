@@ -2576,7 +2576,7 @@ private:
 
 static vector<string> _desc_slouch_damage(const monster_info& mi)
 {
-    if (!monster_at(mi.pos) || !you.can_see(*monster_at(mi.pos)))
+    if (!monster_at(mi.pos) || !you.aware_of(*monster_at(mi.pos)))
         return vector<string>{};
     else if (!is_slouchable(mi.pos))
         return vector<string>{make_stringf("not susceptible")};
@@ -3041,14 +3041,14 @@ static bool _evoke_staff_of_olgreb(dist *target)
     return true;
 }
 
-static vector<monster*> _get_siphon_victims(bool known)
+static vector<monster*> _get_siphon_victims(bool only_known)
 {
     vector<monster*> victims;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (grid_distance(you.pos(), mi->pos()) <= siphon_essence_range()
             && siphon_essence_affects(**mi)
-            && (you.can_see(**mi) || !known))
+            && (you.aware_of(**mi) || !only_known))
         {
             victims.push_back(*mi);
         }
@@ -3576,7 +3576,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     {
         monster* mons = monster_at(beam.target);
 
-        if (mons && you.can_see(*mons) && mons->is_illusion())
+        if (mons->is_illusion())
         {
             fail_check();
             mprf("You attempt to bind %s soul, but %s is merely a clone!",

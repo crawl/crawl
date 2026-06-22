@@ -8,6 +8,7 @@
 #include "coord.h"
 #include "fprop.h"
 #include "map-cell.h"
+#include "map-knowledge.h"
 #include "mapmark.h"
 #include "monster.h"
 #include "shopping.h"
@@ -68,6 +69,10 @@ struct crawl_environment
     // Forgotten map knowledge (X^F)
     unique_ptr<MapKnowledge>                 map_forgotten;
     set<coord_def> visible;
+
+    // Tracking of invisible monsters that the player was recently aware of,
+    // but cannot currently see.
+    invis_monster_knowledge                  invis_knowledge;
 
     vector<coord_def>                        travel_trail;
 

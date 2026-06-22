@@ -1294,8 +1294,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_AIRSTRIKE:
         return make_unique<targeter_airstrike>();
     case SPELL_MOMENTUM_STRIKE:
-    case SPELL_DIMENSIONAL_BULLSEYE:
         return make_unique<targeter_smite>(&you, range);
+    case SPELL_DIMENSIONAL_BULLSEYE:
+        return make_unique<targeter_single_monster>();
     case SPELL_FULMINANT_PRISM:
         return make_unique<targeter_smite>(&you, range, 0, 2);
     case SPELL_GRAVITAS:
@@ -1541,6 +1542,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                                                     ? AFF_MAYBE
                                                                     : AFF_YES);
     }
+
+    case SPELL_CLOCKWORK_BEE:
+        return make_unique<targeter_single_monster>();
 
     default:
         break;

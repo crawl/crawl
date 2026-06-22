@@ -775,3 +775,15 @@ public:
     targeter_paragon_deploy(int range);
     bool valid_aim(coord_def a) override;
 };
+
+class targeter_single_monster : public targeter_smite
+{
+public:
+    targeter_single_monster(bool hostile_only = true,
+                            string no_hostile_message = "You can only target hostiles.");
+    bool valid_aim(coord_def a) override;
+
+private:
+    bool hostile_only;
+    string no_hostile_msg;
+};

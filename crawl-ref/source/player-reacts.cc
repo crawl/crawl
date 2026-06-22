@@ -302,7 +302,7 @@ int current_horror_level()
 {
     int horror_level = 0;
 
-    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS, true); mi; ++mi)
     {
         if (mons_aligned(*mi, &you)
             || !mons_is_threatening(**mi)

@@ -1132,7 +1132,6 @@ void floor_transition(dungeon_feature_type how,
     // Apply location effects.
     you.trigger_movement_effects(MV_NO_TRAVEL_STOP);
 
-    autotoggle_autopickup(false);
     request_autopickup();
 }
 

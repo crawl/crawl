@@ -210,7 +210,9 @@ enum monster_flag_type : uint64_t
     /// is following player through stairs
     MF_TAKING_STAIRS      = BIT(2),
 
-    //                      BIT(3),
+    /// Player has conclusively learned this monster's present location, despite
+    /// it being invisible to them.
+    MF_KNOWN_INVISIBLE    = BIT(3),
 
     /// Player has already seen monster
     MF_SEEN               = BIT(4),

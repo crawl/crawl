@@ -565,7 +565,7 @@ static bool _issue_order(int keyn, int &mons_targd)
             }
 
             const monster* m = monster_at(targ.target);
-            if (!m || !you.can_see(*m))
+            if (!m || !you.aware_of(*m))
             {
                 canned_msg(MSG_NOTHING_THERE);
                 return false;

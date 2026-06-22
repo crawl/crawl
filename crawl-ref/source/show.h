@@ -43,7 +43,6 @@ enum show_class
     SH_FEATURE,
     SH_ITEM,
     SH_CLOUD,
-    SH_INVIS_EXPOSED,
     SH_MONSTER,
     NUM_SHOW_CLASSES
 };

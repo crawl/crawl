@@ -200,7 +200,7 @@ spret scroll_of_poison(bool scroll_unknown)
     {
         if (const actor* act = actor_at(*ri))
         {
-            unknown_unseen = unknown_unseen || !you.can_see(*act);
+            unknown_unseen = unknown_unseen || !you.aware_of(*act);
             continue;
         }
 

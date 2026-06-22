@@ -458,7 +458,7 @@ void attack::alert_defender()
     }
 
     // If an enemy attacked a friend, set the pet target if it isn't set already.
-    if (perceived_attack && attacker->alive()
+    if (attacker->alive()
         && defender->friendly()
         && !attacker->is_player()
         && !crawl_state.game_is_arena()
@@ -468,6 +468,7 @@ void attack::alert_defender()
         {
             interrupt_activity(activity_interrupt::monster_attacks,
                                attacker->as_monster());
+            attacker->as_monster()->sense_if_invisible(false);
         }
         if (you.pet_target == MHITNOT)
             you.pet_target = attacker->mindex();
@@ -796,7 +797,7 @@ void attack::stab_message()
  */
 string attack::atk_name(description_level_type desc)
 {
-    return actor_name(attacker, desc, attacker_visible);
+    return actor_name(attacker, desc, attacker_visible || you.aware_of(*attacker));
 }
 
 /* Returns the defender's name
@@ -805,7 +806,7 @@ string attack::atk_name(description_level_type desc)
  */
 string attack::def_name(description_level_type desc)
 {
-    return actor_name(defender, desc, defender_visible);
+    return actor_name(defender, desc, defender_visible || you.aware_of(*defender));
 }
 
 /* TODO: Remove this!

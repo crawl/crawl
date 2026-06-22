@@ -272,6 +272,8 @@ enum monster_info_flags
     MB_SEE_INVIS,
     MB_EXPOSED,
     MB_STAMPEDE,
+    MB_KNOWN_INVIS, // Fully invisible, but the player has inferred their location
+    MB_REMEMBERED_INVIS,
     NUM_MB_FLAGS
 };
 
@@ -509,13 +511,18 @@ struct monster_info : public monster_info_base
     bool is_stationary() const;
     int perception() const;
 
+    bool invisible_to_player() const;
+
 protected:
     string _core_name() const;
     string _base_name() const;
     string _apply_adjusted_description(description_level_type desc, const string& s) const;
+
+    void _populate_as_generic();
 };
 
-void get_monster_info(vector<monster_info>& mons);
+void get_nearby_monster_info(vector<monster_info>& mons,
+                             vector<monster_info>* invis_mons = nullptr);
 
 void mons_to_string_pane(string& desc, int& desc_colour, bool fullname,
                            const vector<monster_info>& mi, int start,

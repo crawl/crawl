@@ -4848,7 +4848,7 @@ int get_dist_to_nearest_monster()
         if (mon == nullptr)
             continue;
 
-        if (!mon->visible_to(&you))
+        if (!you.aware_of(*mon))
             continue;
 
         // Plants/fungi don't count.

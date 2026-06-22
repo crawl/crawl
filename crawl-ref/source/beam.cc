@@ -1206,6 +1206,10 @@ void bolt::do_fire()
         return;
     }
 
+    // Visible beams reveal the presence of invisible monsters.
+    if (visible() && agent() && agent()->is_monster() && !is_tracer())
+        agent()->as_monster()->sense_if_invisible();
+
     cursor_control coff(false);
 
     msg_generated = false;
@@ -4202,15 +4206,6 @@ void bolt::affect_player()
         return;
     }
 
-    // Visible beams reveal invisible monsters; otherwise animations confer
-    // an information advantage for sighted players
-    if (visible() && agent() && agent()->is_monster())
-    {
-        monster* mons = agent()->as_monster();
-        mons->revealed_this_turn = true;
-        mons->revealed_at_pos = mons->pos();
-    }
-
     if (misses_player())
         return;
 
@@ -4815,7 +4810,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
 void bolt::tracer_affect_monster(monster* mon)
 {
     // Ignore unseen monsters.
-    if ((agent() && !agent()->can_see(*mon))
+    if ((agent() && !agent()->aware_of(*mon))
         || !cell_see_cell(source, mon->pos(), LOS_DEFAULT))
     {
         return;
@@ -4847,7 +4842,7 @@ void bolt::enchantment_affect_monster(monster* mon)
     {
         if (BLAME_KILL(thrower))
         {
-            set_attack_conducts(conducts, *mon, you.can_see(*mon));
+            set_attack_conducts(conducts, *mon, you.aware_of(*mon));
 
             if (have_passive(passive_t::convert_orcs)
                 && mons_genus(mon->type) == MONS_ORC
@@ -4911,6 +4906,8 @@ void bolt::enchantment_affect_monster(monster* mon)
     handle_enchant_chaining(mon->pos());
 
     extra_range_used += range_used_on_hit();
+    if (range_used() > range)
+        mon->sense_if_invisible();
 
     // Nasty enchantments will annoy the monster, and are considered
     // naughty (even if a monster resisted).
@@ -4941,7 +4938,7 @@ static void _add_chain_candidates(const bolt& beam, coord_def pos,
             || mons_aligned(beam.agent(), act)
             || act->is_peripheral()
             || shoot_through_actor(beam.agent(), act)
-            || (beam.is_tracer() && !act->visible_to(beam.agent())))
+            || (beam.is_tracer() && !beam.agent()->aware_of(*act)))
         {
             continue;
         }
@@ -5379,6 +5376,8 @@ bool bolt::attempt_block(monster* mon)
     if (sh_hit >= shield_block || mon->shield_exhausted())
         return false;
 
+    mon->sense_if_invisible();
+
     item_def *shield = mon->mslot_item(MSLOT_SHIELD);
     if (is_reflectable(*mon))
     {
@@ -5520,6 +5519,7 @@ void bolt::affect_monster(monster* mon)
         // It hit a monster, so the beam should terminate.
         // Don't actually affect the monster; the explosion
         // will take care of that.
+        mon->sense_if_invisible();
         finish_beam();
         return;
     }
@@ -5546,7 +5546,7 @@ void bolt::affect_monster(monster* mon)
     if (nasty_to(mon))
     {
         if (agent() && agent()->is_player()  && final > 0)
-            set_attack_conducts(conducts, *mon, you.can_see(*mon));
+            set_attack_conducts(conducts, *mon, you.aware_of(*mon));
     }
 
     if (engulfs && flavour == BEAM_SPORE // XXX: engulfs is redundant?
@@ -5649,6 +5649,9 @@ void bolt::affect_monster(monster* mon)
                 postac ? "" : " but does no damage",
                 attack_strength_punctuation(final).c_str());
         }
+
+        if (!pierce)
+            mon->sense_if_invisible();
     }
     else if (heard && !hit_noise_msg.empty())
         mprf(MSGCH_SOUND, "%s", hit_noise_msg.c_str());
@@ -6017,9 +6020,6 @@ bool enchant_monster_invisible(monster* mon, const string &how)
              how.c_str(),
              is_visible ? " for a moment."
                         : "!");
-
-        if (!is_visible && !mons_is_safe(mon))
-            autotoggle_autopickup(true);
     }
 
     return true;
@@ -7739,7 +7739,7 @@ void player_beam_tracer::player_hit(bool /*was_friendly*/) noexcept
 
 void player_beam_tracer::monster_hit(const bolt& beam, const monster& mon)
 {
-    if (!you.can_see(mon))
+    if (!you.aware_of(mon))
         return;
 
     if (beam.is_harmless(&mon))
@@ -7956,6 +7956,12 @@ void bolt::do_ranged_attack(actor& targ)
     if (attk.reflected)
         reflect();
     extra_range_used += attk.range_used;
+    if (ag->is_player() && targ.is_monster() && !attk.is_piercing()
+        && range_used() > range && !attk.attack_verb.empty() && !attk.is_piercing())
+    {
+        targ.as_monster()->sense_if_invisible();
+    }
+
     if (attk.did_net())
         drop_item = false;
 }

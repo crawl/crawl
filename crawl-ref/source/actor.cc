@@ -760,7 +760,12 @@ void actor::constriction_damage_defender(actor &defender)
     else
         exclamations = attack_strength_punctuation(damage);
 
-    if (is_player() || you.can_see(*this))
+    // Describe the source of constriction if you reasonably see the physical
+    // object doing the constriction (which isn't actually the 'constricter'
+    // itself in the case of ranged constriction).
+    if (is_player()
+        || (typ == CONSTRICT_MELEE && you.can_see(*this))
+        || (typ != CONSTRICT_MELEE && you.aware_of(defender)))
     {
         string attacker_desc;
         bool force_plural = true;
@@ -795,7 +800,7 @@ void actor::constriction_damage_defender(actor &defender)
 #endif
              exclamations.c_str());
     }
-    else if (you.can_see(defender) || defender.is_player())
+    else if (typ == CONSTRICT_MELEE && you.can_see(defender))
     {
         mprf("%s %s constricted%s%s",
              defender.name(DESC_THE).c_str(),
@@ -1118,7 +1123,7 @@ coord_def actor::stumble_pos(coord_def targ) const
         return coord_def();
 
     const actor* other = actor_at(newpos);
-    if (other && can_see(*other))
+    if (other && aware_of(*other))
         return coord_def();
 
     return newpos;

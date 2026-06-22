@@ -331,21 +331,6 @@ static void _check_monster_pos(const monster* mons)
     }
 }
 
-static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
-{
-    if (die <= 1)
-        return 0;
-
-    uint32_t data[] =
-    {
-        mons->mid,
-        id,
-        (uint32_t)you.attribute[ATTR_SEEN_INVIS_SEED]
-    };
-
-    return hash_uint32(data) % die;
-}
-
 /**
  * Update map knowledge for monsters
  *
@@ -353,8 +338,10 @@ static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
  * If the monster is not currently visible to the player, the map knowledge will
  * be updated with a disturbance if necessary.
  * @param mons  The monster at the relevant location.
+ *
+ * @return Whether the view was updated with some indicator for this monster.
 **/
-static void _update_monster(monster* mons)
+static bool _update_monster(monster* mons)
 {
     _check_monster_pos(mons);
     const coord_def gp = mons->pos();
@@ -364,63 +351,19 @@ static void _update_monster(monster* mons)
         mons->ensure_has_client_id();
         monster_info mi(mons);
         env.map_knowledge(gp).set_monster(mi);
-        return;
+        return true;
     }
 
     // From here on we're handling an invisible monster, possibly leaving an
     // invisible monster indicator.
 
-    // We cannot use regular randomness here, otherwise redrawing the screen
-    // would give out the real position. We need to save the seed too -- but it
-    // needs to be regenerated every turn.
-    if (you.attribute[ATTR_SEEN_INVIS_TURN] != you.num_turns)
+    if (you.aware_of(*mons))
     {
-        you.attribute[ATTR_SEEN_INVIS_TURN] = you.num_turns;
-        you.attribute[ATTR_SEEN_INVIS_SEED] = rng::get_uint32();
+        env.map_knowledge(gp).set_invisible_monster(mons);
+        return true;
     }
 
-    // Show an invis indicator for a revealed monster until it moves from where
-    // at was revealed, but make sure to show it for at least one turn.
-    if (!you.turn_is_over)
-        mons->revealed_this_turn = false;
-    else if (!mons->revealed_this_turn && mons->revealed_at_pos != gp)
-        mons->revealed_at_pos.reset();
-
-    if (!mons->revealed_at_pos.origin())
-    {
-        env.map_knowledge(gp).set_invisible_monster();
-        mons->revealed_at_pos = gp;
-        return;
-    }
-
-    // Ripple effect?
-    // Should match directn.cc's _mon_exposed
-    if (env.grid(gp) == DNGN_SHALLOW_WATER
-            && !mons->airborne()
-            && !cloud_at(gp)
-        || cloud_at(gp) && is_opaque_cloud(cloud_at(gp)->type)
-            && !mons->is_insubstantial())
-    {
-        env.map_knowledge(gp).set_invisible_monster();
-        mons->revealed_at_pos = gp;
-        return;
-    }
-
-    int range = player_monster_detect_radius();
-    if (mons->constricted_by == MID_PLAYER
-        || (range > 0 && (you.pos() - mons->pos()).rdist() <= range))
-    {
-        env.map_knowledge(gp).set_invisible_monster();
-        mons->revealed_at_pos = gp;
-        return;
-    }
-
-    // 1/7 chance to leave an invis indicator at the real position.
-    if (!_hashed_rand(mons, 0, 7))
-    {
-        env.map_knowledge(gp).set_invisible_monster();
-        mons->revealed_at_pos = gp;
-    }
+    return false;
 }
 
 /**
@@ -451,8 +394,17 @@ void force_show_update_at(const coord_def &gp, layers_type layers)
     if (layers & Layer::MONSTERS)
     {
         monster* mons = monster_at(gp);
+        bool did_monster = false;
         if (mons && mons->alive())
-            _update_monster(mons);
+            did_monster = _update_monster(mons);
+
+        // If there wasn't an actual monster here (that the player knows of),
+        // instead draw any remembered monster which used to be here.
+        if (!did_monster)
+        {
+            if (monster* old_mon = env.invis_knowledge.memory_at(gp))
+                env.map_knowledge(gp).set_old_invisible_monster(old_mon);
+        }
     }
 
     if (layers & Layer::CLOUDS)

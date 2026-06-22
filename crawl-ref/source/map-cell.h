@@ -4,6 +4,7 @@
 
 #include "enum.h"
 #include "mon-info.h"
+#include "monster.h"
 #include "tag-version.h"
 
 #define MAP_MAGIC_MAPPED_FLAG   0x01
@@ -13,9 +14,10 @@
 #define MAP_INVISIBLE_MONSTER   0x10
 #define MAP_DETECTED_ITEM       0x20
 #define MAP_VISIBLE_FLAG        0x40
+#define MAP_OLD_INVIS_MONSTER   0x80
 #define MAP_GRID_KNOWN (MAP_MAGIC_MAPPED_FLAG | MAP_SEEN_FLAG \
                         | MAP_DETECTED_MONSTER | MAP_INVISIBLE_MONSTER \
-                        | MAP_DETECTED_ITEM | MAP_VISIBLE_FLAG)
+                        | MAP_DETECTED_ITEM | MAP_VISIBLE_FLAG | MAP_OLD_INVIS_MONSTER)
 
 #define MAP_EMPHASIZE          0x100
 #define MAP_MORE_ITEMS         0x200
@@ -215,7 +217,7 @@ struct map_cell
         flags &= ~(MAP_DETECTED_ITEM | MAP_MORE_ITEMS);
     }
 
-    monster_type monster() const
+    monster_type mon_type() const
     {
         return _mons ? _mons->type : MONS_NO_MONSTER;
     }
@@ -236,9 +238,16 @@ struct map_cell
         return !!(flags & MAP_DETECTED_MONSTER);
     }
 
+    // An invisible monster which the player is unambiguously aware is currently here.
     bool invisible_monster() const
     {
         return !!(flags & MAP_INVISIBLE_MONSTER);
+    }
+
+    // The last-known location of an invisible monster that is no longer here.
+    bool old_invisible_monster() const
+    {
+        return !!(flags & MAP_OLD_INVIS_MONSTER);
     }
 
     void set_detected_monster(monster_type mons)
@@ -249,17 +258,28 @@ struct map_cell
         flags |= MAP_DETECTED_MONSTER;
     }
 
-    void set_invisible_monster()
+    void set_invisible_monster(const monster* mon)
     {
         clear_monster();
+        _mons = make_unique<monster_info>(mon);
+        _mons->mb.set(MB_INVISIBLE, false); // Avoid redundant invisibility descriptions.
         flags |= MAP_INVISIBLE_MONSTER;
+        _mons->mb.set(MB_KNOWN_INVIS);
+    }
+
+    void set_old_invisible_monster(const monster* mon)
+    {
+        _mons = make_unique<monster_info>(mon->type, mon->base_monster);
+        _mons->mb.set(MB_INVISIBLE, false); // Avoid redundant invisibility descriptions.
+        flags |= MAP_OLD_INVIS_MONSTER;
+        _mons->mb.set(MB_REMEMBERED_INVIS);
     }
 
     void clear_monster()
     {
         // TODO: internal callers are doing a bit of duplicate work here
         _mons.reset();
-        flags &= ~(MAP_DETECTED_MONSTER | MAP_INVISIBLE_MONSTER);
+        flags &= ~(MAP_DETECTED_MONSTER | MAP_INVISIBLE_MONSTER | MAP_OLD_INVIS_MONSTER);
     }
 
     cloud_type cloud() const

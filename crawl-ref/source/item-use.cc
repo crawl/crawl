@@ -2679,7 +2679,7 @@ aff_type targeter_poison_scroll::is_affected(coord_def loc)
     if (cell_is_solid(loc) || cloud_type_at(loc) != CLOUD_NONE)
         return AFF_NO;
     const actor* act = actor_at(loc);
-    if (act != nullptr && you.can_see(*act))
+    if (act != nullptr && you.aware_of(*act))
         return AFF_NO;
     return AFF_YES;
 }
