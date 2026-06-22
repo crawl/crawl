@@ -26,8 +26,8 @@ do neprijateljev ili izgnati sę v Bezdnų.
 %%%%
 devious (devious) weapon ego
 
-It has an increased chance to perform stab attacks against vulnerable targets,
-and temporarily increases the wielder's EV and slaying each time they do so.
+U njego jest povyšeny šans pričinjeńja koljųćih udarov protiv bezzaščitnyh cěljev
+i ono takože dočasno povyšaje izběgańje i smŕtonosnost́ koristnika pri každom udaru.
 %%%%
 draining (drain) weapon ego
 
