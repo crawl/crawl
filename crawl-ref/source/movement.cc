@@ -265,60 +265,36 @@ bool apply_cloud_trail(const coord_def old_pos)
     return false;
 }
 
-bool cancel_confused_move(bool stationary)
+static bool _check_confused_attack(bool stationary)
 {
-    dungeon_feature_type dangerous = DNGN_FLOOR;
     monster *bad_mons = 0;
     string bad_suff, bad_adj;
     bool penance = false;
-    bool flight = false;
     for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
     {
-        if (!stationary
-            && is_feat_dangerous(env.grid(*ai), true)
-            && need_expiration_warning(env.grid(*ai))
-            && (dangerous == DNGN_FLOOR || env.grid(*ai) == DNGN_LAVA))
+        string suffix, adj;
+        monster *mons = monster_at(*ai);
+        if (mons && bad_attack(mons, adj, suffix, penance))
         {
-            dangerous = env.grid(*ai);
-            if (need_expiration_warning(DUR_FLIGHT, env.grid(*ai)))
-                flight = true;
-            break;
-        }
-        else
-        {
-            string suffix, adj;
-            monster *mons = monster_at(*ai);
-            if (mons && bad_attack(mons, adj, suffix, penance))
-            {
-                bad_mons = mons;
-                bad_suff = suffix;
-                bad_adj = adj;
-                if (penance)
-                    break;
-            }
+            bad_mons = mons;
+            bad_suff = suffix;
+            bad_adj = adj;
+            if (penance)
+                break;
         }
     }
 
-    if (dangerous != DNGN_FLOOR || bad_mons)
+    if (bad_mons)
     {
         string prompt = "";
         prompt += "Are you sure you want to ";
         prompt += !stationary ? "stumble around" : "swing wildly";
         prompt += " while confused and next to ";
 
-        if (dangerous != DNGN_FLOOR)
-        {
-            prompt += (dangerous == DNGN_LAVA ? "lava" : "deep water");
-            prompt += flight ? " while you are losing your buoyancy"
-                             : " while your transformation is expiring";
-        }
-        else
-        {
-            string name = remove_prepended_the(bad_mons->name(DESC_PLAIN));
-            if (!starts_with(bad_adj, "your"))
-               bad_adj = "the " + bad_adj;
-            prompt += bad_adj + name + bad_suff;
-        }
+        string name = remove_prepended_the(bad_mons->name(DESC_PLAIN));
+        if (!starts_with(bad_adj, "your"))
+            bad_adj = "the " + bad_adj;
+        prompt += bad_adj + name + bad_suff;
         prompt += "?";
 
         if (penance)
@@ -328,11 +304,39 @@ bool cancel_confused_move(bool stationary)
             && !yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
-            return true;
+            return false;
         }
     }
 
-    return false;
+    return true;
+}
+
+/**
+ * Confirm that the player really wants to stumble around near danger
+ * May give many prompts, or no prompts if there is nothing bad to stumble into
+ *
+ * @param stationary  Whether the player is moving rather than attacking
+ * @return            If true, continue with the move, otherwise cancel it
+ */
+bool check_confused_move(bool stationary)
+{
+    if (!_check_confused_attack(stationary))
+        return false;
+
+    if (stationary)
+        return true;
+
+    // While confused we might stumble into any adjacent square, so run them all
+    // through the destination checks and prompt if any look dangerous.
+    vector<coord_def> areas;
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        areas.push_back(*ai);
+
+    const string verb = "stumble";
+    return check_terrain_warnings(areas, verb)
+        && check_moveto_cloud(areas, verb)
+        && check_moveto_trap(areas, verb)
+        && check_moveto_exclusions(areas, verb);
 }
 
 // Opens doors.
@@ -680,12 +684,15 @@ static bool _adjust_confused_movement(coord_def& move)
         return false;
     }
 
-    if (cancel_confused_move(false))
-        return false;
-
+    // First check general things that make movement unwise (e.g barbs).
     if (cancel_harmful_move())
         return false;
 
+    // Now check the squares we might reach for warnings.
+    if (!check_confused_move(false))
+        return false;
+
+    // Randomise the move destination.
     if (!one_chance_in(3))
     {
         move.x = random2(3) - 1;
@@ -1152,7 +1159,8 @@ void move_player_action(coord_def move)
     // additional normal steps.
     for (int i = 0; i < max(num_steps, stampede_steps); ++i)
     {
-        if (you.cannot_move())
+        // Do not warn for the final (randomised) movement when confused.
+        if (you.cannot_move() || you.confused())
             break;
 
         targ += move;
