@@ -20,9 +20,9 @@ probivaje jih brȯnjų.
 %%%%
 distortion (distort) weapon ego
 
-It warps and distorts space around it, and may blink, banish, or inflict extra
-damage upon those it strikes. Unwielding it can teleport you to foes or banish
-you to the Abyss.
+Ono krivi i izopačaje prostor okolo sebe i može mignųti, izgnati ili pričiniti
+dodatnų škodų tym, kogo poražaje. Odpustivši jego iz rųk, ty možeš teleportovati sę
+do neprijateljev ili izgnati sę v Bezdnų.
 %%%%
 devious (devious) weapon ego
 
