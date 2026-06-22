@@ -1151,7 +1151,7 @@ static bool _monster_avoided_death(monster* mons, killer_type killer,
         return true;
 
     // Beogh special.
-    if (mons->type == MONS_ORC_APOSTLE && you_worship(GOD_BEOGH))
+    if (mons->type == MONS_ORC_APOSTLE && you_worship(GOD_BEOGH) && !RESET_KILL(killer))
     {
         if (mons->has_ench(ENCH_TOUCH_OF_BEOGH))
         {

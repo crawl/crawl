@@ -594,7 +594,7 @@ void flee_apostle_challenge()
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->flags & MF_APOSTLE_BAND)
-            monster_die(**mi, nullptr, true);
+            monster_die(**mi, KILL_RESET, NON_MONSTER);
     }
 
     you.duration[DUR_BEOGH_DIVINE_CHALLENGE] = 0;
