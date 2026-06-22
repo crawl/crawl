@@ -307,7 +307,7 @@ int attack::calc_to_hit(bool random)
         mhit = maybe_random2(mhit + 1, random);
 
     dprf(DIAG_COMBAT, "%s: to-hit: %d",
-         attacker->name(DESC_PLAIN).c_str(), mhit);
+         attacker->name(DESC_PLAIN, true).c_str(), mhit);
 
     return mhit;
 }
@@ -1116,7 +1116,7 @@ bool attack::attack_shield_blocked()
         pro_block /= 3;
 
     dprf(DIAG_COMBAT, "Defender: %s, Pro-block: %d, Con-block: %d",
-         def_name(DESC_PLAIN).c_str(), pro_block, con_block);
+         actor_name(defender, DESC_PLAIN, true).c_str(), pro_block, con_block);
 
     if (pro_block >= con_block && !defender->shield_exhausted()
         || defender->is_player() && you.duration[DUR_DIVINE_SHIELD])
