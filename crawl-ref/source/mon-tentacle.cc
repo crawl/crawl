@@ -17,6 +17,7 @@
 #include "libutil.h" // map_find
 #include "losglobal.h"
 #include "mgen-data.h"
+#include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "nearby-danger.h"
@@ -717,13 +718,8 @@ void move_solo_tentacle(monster* tentacle)
         _collect_foe_positions(tentacle, foe_positions,
                 [tentacle, base_position](const actor *test) -> bool
                 {
-                    if (tentacle->friendly()
-                        && !you.see_cell_no_trans(test->pos()))
-                    {
-                        // Friendly tentacles should only attack in our LoS.
-                        return false;
-                    }
                     return test->visible_to(tentacle)
+                        && monster_los_is_valid(tentacle, test)
                         && cell_see_cell(base_position, test->pos(),
                                          LOS_SOLID_SEE);
                 });
