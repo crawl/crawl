@@ -4298,10 +4298,7 @@ void seen_monsters_react()
                 monster_consider_shouting(**mi);
         }
 
-        if (!mi->visible_to(&you))
-            continue;
-
-        if (!mi->has_ench(ENCH_FRENZIED) && mi->can_see(you))
+        if (!mi->has_ench(ENCH_FRENZIED))
         {
             // Trigger Duvessa & Dowan upgrades
             if (mi->props.exists(ELVEN_ENERGIZE_KEY))
@@ -4309,8 +4306,8 @@ void seen_monsters_react()
                 mi->props.erase(ELVEN_ENERGIZE_KEY);
                 elven_twin_energize(*mi);
             }
-            else if (mi->type == MONS_BORIS && player_has_orb()
-                     && !mi->props.exists(BORIS_ORB_KEY))
+            else if (mi->can_see(you) && mi->type == MONS_BORIS
+                     && player_has_orb() && !mi->props.exists(BORIS_ORB_KEY))
             {
                 mi->props[BORIS_ORB_KEY] = true;
                 boris_covet_orb(*mi);
