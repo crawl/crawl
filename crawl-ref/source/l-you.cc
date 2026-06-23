@@ -419,7 +419,8 @@ LUARET1(you_confused, boolean, you.confused())
  * @treturn int Swift level
  * @function swift
  */
-LUARET1(you_swift, integer, you.duration[DUR_SWIFTNESS] ? ((you.attribute[ATTR_SWIFTNESS] >= 0) ? 1 : -1) : 0)
+LUARET1(you_swift, integer, you.duration[DUR_SWIFTNESS]
+                            ? 1 : (you.duration[DUR_ANTISWIFT] ? -1 : 0))
 
 /*** What was the loudest noise you heard in the last turn?
  * Returns a number from [0, 1000], representing the current noise bar.

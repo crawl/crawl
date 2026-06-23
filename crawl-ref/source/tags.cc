@@ -3589,6 +3589,16 @@ static void _tag_read_you(reader &th)
             you.duration[DUR_DIVINE_SHIELD] = 0;
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_SWIFTNESS_REFACTOR
+        && you.attribute[ATTR_SWIFTNESS] < 0)
+    {
+        // Swiftness's backlash used to be tracked as DUR_SWIFTNESS with a
+        // negative ATTR_SWIFTNESS; it now has its own duration.
+        you.duration[DUR_ANTISWIFT] = you.duration[DUR_SWIFTNESS];
+        you.duration[DUR_SWIFTNESS] = 0;
+        you.attribute[ATTR_SWIFTNESS] = 0;
+    }
+
     if (th.getMinorVersion() < TAG_MINOR_SIMPLIFY_STAT_ZERO)
     {
         // Remove old stat-zero statuses.

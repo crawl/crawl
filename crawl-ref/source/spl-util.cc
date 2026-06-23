@@ -1353,7 +1353,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
         if (temp)
         {
-            if (you.duration[DUR_SWIFTNESS])
+            if (you.duration[DUR_SWIFTNESS] || you.duration[DUR_ANTISWIFT])
                 return "this spell is already in effect.";
             if (player_movement_speed(false) <= FASTEST_PLAYER_MOVE_SPEED)
                 return "you're already travelling as fast as you can.";

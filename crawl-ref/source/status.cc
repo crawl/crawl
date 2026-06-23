@@ -344,16 +344,6 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
-    case DUR_SWIFTNESS:
-        if (you.attribute[ATTR_SWIFTNESS] < 0)
-        {
-            inf.light_text   = "-Swift";
-            inf.light_colour = RED;
-            inf.short_text   = "unswift";
-            inf.long_text    = "You are covering ground slowly.";
-        }
-        break;
-
     case STATUS_ZOT:
         _describe_zot(inf);
         break;
