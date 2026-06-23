@@ -1654,8 +1654,9 @@ static bool _mc_too_slow_for_normal_undead(monster_type mon)
 
 static bool _mc_bad_wretch(monster_type mon)
 {
-    // goofy on-death effect - probably other things could go here too
-    return mon == MONS_SPRIGGAN_DRUID;
+    // goofy on-death / near-death effects
+    return mon == MONS_SPRIGGAN_DRUID ||
+           mon == MONS_STAR_JELLY;
 }
 
 /**
