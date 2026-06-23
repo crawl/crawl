@@ -355,6 +355,7 @@ enum tag_minor_version
     TAG_MINOR_TREE_POSITIONS,      // Save tree positions for forest vines
     TAG_MINOR_DANGLING_CONSTRICTION, // Fix recalled companions leaving dangling constriction state
     TAG_MINOR_EXEGESIS_HIDDEN,     // Divine exegesis gets a separate list of hidden spells
+    TAG_MINOR_FIX_DOOR_INFO_LEAK,  // Don't leak whether an out of view door has been covered in temporary terrain
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

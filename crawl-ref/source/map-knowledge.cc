@@ -608,6 +608,8 @@ void update_terrain_knowledge(coord_def pos,
     env.map_knowledge(pos).set_feature(feat);
     tile_env.remembered_flavour.set_feat_flavour(pos, feat_tile,
                                                  feat_tile_idx);
+    unsigned short door_connect = tile_door_connect(pos);
+    env.map_knowledge(pos).set_door_connect(door_connect);
 }
 
 void update_grid_colour_knowledge(coord_def pos,

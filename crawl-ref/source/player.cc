@@ -9125,6 +9125,12 @@ void player_open_door(coord_def doorpos)
         set_terrain_changed(dc);
         dungeon_events.fire_position_event(DET_DOOR_OPENED, dc);
 
+        if (is_excluded(dc))
+            excludes.push_back(dc);
+    }
+
+    for (coord_def dc : all_door)
+    {
         // Even if some of the door is out of LOS, we want the entire
         // door to be updated. Hitting this case requires a really big
         // door!
@@ -9133,9 +9139,6 @@ void player_open_door(coord_def doorpos)
             update_terrain_knowledge(dc);
             redraw_view_at(dc);
         }
-
-        if (is_excluded(dc))
-            excludes.push_back(dc);
     }
 
     update_exclusion_los(excludes);
@@ -9294,6 +9297,12 @@ void player_close_door(coord_def doorpos)
         set_terrain_changed(dc);
         dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
 
+        if (is_excluded(dc))
+            excludes.push_back(dc);
+    }
+
+    for (coord_def dc : all_door)
+    {
         // Even if some of the door is out of LOS once it's closed
         // (or even if some of it is out of LOS when it's open), we
         // want the entire door to be updated.
@@ -9302,9 +9311,6 @@ void player_close_door(coord_def doorpos)
             update_terrain_knowledge(dc);
             redraw_view_at(dc);
         }
-
-        if (is_excluded(dc))
-            excludes.push_back(dc);
     }
 
     update_exclusion_los(excludes);
