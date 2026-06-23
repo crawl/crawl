@@ -161,6 +161,7 @@
     cut1less
     Matthew Daley
     David Damerell
+    Victor 'Vji' Davidescu
     Paul Dejean
     Denzi
     DevJac
