@@ -472,6 +472,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_ARCANIST:
     case TILEP_MONS_OCCULTIST:
     case TILEP_MONS_DRAUGR_MEDIUM:
+    case TILEP_MONS_HERALD_OF_THE_ABYSS:
         *ofs_x = -2;
         *ofs_y = -2;
         break;
@@ -640,10 +641,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_SATYR:
         *ofs_x = 1;
         *ofs_y = -4;
-        break;
-    case TILEP_MONS_MAD_ACOLYTE_OF_LUGONU:
-        *ofs_x = -3;
-        *ofs_y = -2;
         break;
     case TILEP_MONS_HUMAN:
     case TILEP_MONS_HUMAN_1:

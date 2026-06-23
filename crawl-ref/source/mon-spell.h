@@ -552,6 +552,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_HERALD_OF_THE_ABYSS,
+      {
+       { SPELL_MALIGN_GATEWAY, 29, MON_SPELL_PRIEST },
+       { SPELL_WARP_SPACE, 29, MON_SPELL_PRIEST }
+      }
+    },
+
     { MST_IMPERIAL_MYRMIDON,
       {
        { SPELL_SLOW, 13, MON_SPELL_WIZARD },

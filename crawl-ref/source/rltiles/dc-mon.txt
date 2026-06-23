@@ -778,6 +778,7 @@ ironbound_beastmaster MONS_IRONBOUND_BEASTMASTER
 ironbound_convoker MONS_IRONBOUND_CONVOKER
 ironbound_preserver MONS_IRONBOUND_PRESERVER
 ironbound_frostheart MONS_IRONBOUND_FROSTHEART
+mon/abyss/herald_of_the_abyss MONS_HERALD_OF_THE_ABYSS
 servant_of_whispers MONS_SERVANT_OF_WHISPERS
 ragged_hierophant MONS_RAGGED_HIEROPHANT
 imperial_myrmidon MONS_IMPERIAL_MYRMIDON
@@ -787,10 +788,6 @@ killer_klown_purple
 killer_klown_red
 killer_klown_yellow
 %sdir mon/vault
-## From an Abyss rune vault
-%rim 0
-mad_acolyte_of_lugonu MONS_MAD_ACOLYTE_OF_LUGONU
-%rim 1
 ## From the Cigotuvi wizlab
 deformed_human MONS_DEFORMED_HUMAN
 ## From the Cloud Mage wizlab

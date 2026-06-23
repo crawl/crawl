@@ -1777,6 +1777,12 @@ A hideous skeletal demon. It swoops through the air on powerful wings of
 ancient withered skin, taking sadistic joy from harrying those who would try to
 flee its grasp.
 %%%%
+herald of the abyss
+
+A mutated devotee of Lugonu, warped by years of living in the Abyss. It has
+ascended into an exalted representative of Lugonu's spite against the rest of
+all existence and solemnly tears apart reality in their name.
+%%%%
 hexer
 
 A humanoid construct of insubstantial memory, floating through the air. Though
@@ -3810,10 +3816,6 @@ An undead creature in the shape of a bat, made of ice.
 flame-cult kobold
 
 A kobold that has been enchanted to explode in a blaze of fire.
-%%%%
-mad acolyte of Lugonu
-
-A devoted follower of Lugonu, driven mad by years of living in the Abyss.
 %%%%
 malarious merfolk avatar
 

@@ -1249,6 +1249,29 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             level = ISPEC_GOOD_ITEM;
         break;
 
+    case MONS_HERALD_OF_THE_ABYSS:
+    {
+        force_item = true;
+        item.base_type = OBJ_WEAPONS;
+        item.plus += 1 + random2(4);
+        item.sub_type = random_choose_weighted(8, WPN_ATHAME,
+                                               6, WPN_DEMON_WHIP,
+                                               5, WPN_QUARTERSTAFF,
+                                               3, WPN_DEMON_BLADE);
+        // Distortion brands in the Abyss to pull players deeper in,
+        // other brands for Zigs and e.g. Pan, Zot guest vaults.
+        const auto special = get_special_brand_for(static_cast<weapon_type>(item.sub_type));
+        const auto ego = random_choose_weighted(6, SPWPN_DRAINING,
+                                                3, SPWPN_CHAOS,
+                                                1, special);
+
+        if (player_in_branch(BRANCH_ABYSS) && x_chance_in_y(9, 10))
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_DISTORTION);
+        else
+            set_item_ego_type(item, OBJ_WEAPONS, ego);
+    }
+        break;
+
     case MONS_MERFOLK:
         if (active_monster_band == BAND_MERFOLK_IMPALER)
         {
@@ -2253,6 +2276,7 @@ int make_mons_armour(monster_type type, int level)
         item.plus = random_range(2, 4);
         break;
 
+    case MONS_HERALD_OF_THE_ABYSS:
     case MONS_JOSEPHINA:
     case MONS_VAMPIRE_BLOODPRINCE:
         level = ISPEC_GOOD_ITEM;

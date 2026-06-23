@@ -1687,15 +1687,9 @@ X ccccx4.1.2xx X
         X X x''@A
 ENDMAP
 
-NAME:  evilmike_abyss_rune_siren_acolytes
-TAGS:  abyss_rune unrand patrolling no_pool_fixup
-# They really should have something instead of blink / other.
-MONS:   occultist god:Lugonu hd:16 name:mad_acolyte_of_Lugonu n_rpl n_des n_noc \
-        col:lightgreen tile:mons_mad_acolyte_of_lugonu \
-        spells:smiting.20.priest;malign_gateway.20.priest;\
-               blink.10.priest;blink_other.10.priest;\
-               invisibility.10.priest ; \
-        robe good_item . quarterstaff ego:distortion | dagger ego:distortion
+NAME:   evilmike_abyss_rune_siren_acolytes
+TAGS:   abyss_rune unrand patrolling no_pool_fixup
+MONS:   herald of the abyss
 MONS:   generate_awake merfolk avatar, blink frog / raiju w:4
 MONS:   tentacled monstrosity / tentacled starspawn w:6
 KMONS:  O = starcursed mass
@@ -1712,11 +1706,11 @@ MAP
  XbbbXXXXXXXXXX@
 XXb1bbbbbcccccc+
 XXbblblblccwc..c"
-XXbb+^1....3...c
+XXbb+^^....3...c
 Xbb4n.N...llb3cc"
-XbOnn^._.3l2l^wcA
+XbOnn1._.3l2l^wcA
 Xbb4n.N...llb3cc"
-XXbb+^1....3...c
+XXbb+^^....3...c
 XXbblblblccwc..c"
 XXb1bbbbbcccccc+
  XbbbXXXXXXXXXX@

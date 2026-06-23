@@ -845,6 +845,18 @@ Fireball hell hog cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
+Warp Space herald of the abyss cast
+
+@The_monster@ solemnly invokes the wrath of @possessive_God@ @at@ @target@!
+
+@The_monster@ gurgles dread orisons to @possessive_God@ against @target@!
+%%%%
+Malign Gateway herald of the abyss cast
+
+@The_monster@ beckons forth otherworldly terror in the name of @possessive_God@.
+
+@The_monster@ dispassionately intertwines distant dimensions.
+%%%%
 Beckoning Gale hippogriff cast
 
 @The_monster@ flaps @possessive@ wings @at@ @target@.
