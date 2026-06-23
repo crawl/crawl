@@ -312,5 +312,6 @@ enum duration_type
     DUR_SALVO,
     DUR_TAILWIND,
     DUR_EXEGESIS,
+    DUR_GRAVITIC_SHIELDING,
     NUM_DURATIONS
 };
