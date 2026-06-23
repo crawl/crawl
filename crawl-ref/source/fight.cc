@@ -463,6 +463,12 @@ bool player_fight(monster* defender, bool is_rampage,
         // If wielding a ranged weapon, perform a ranged attack instead.
         if (_can_shoot_with(you.weapon()) && !you.duration[DUR_CONFUSING_TOUCH])
         {
+            if (you.can_see(*defender)
+                && !check_warning_inscriptions(*you.weapon(), OPER_FIRE))
+            {
+                return false;
+            }
+
             if (do_west_wind_shot())
                 return true;
             else if (do_player_ranged_attack(defender->pos()))
