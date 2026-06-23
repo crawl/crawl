@@ -26,6 +26,7 @@
 #define MAP_ICY               0x8000
 
 /* these flags require more space to serialize: put infrequently used ones there */
+#define MAP_DOOR_CONNECT_1   0x10000
 #define MAP_BLOOD_WEST       0x20000
 #define MAP_BLOOD_NORTH      0x40000
 #define MAP_SANCTUARY_1      0x80000
@@ -39,6 +40,8 @@
 #define MAP_DISJUNCT       0X8000000
 #define MAP_BLASPHEMY     0X10000000
 #define MAP_BFB_CORPSE    0X20000000
+#define MAP_DOOR_CONNECT_2 0x40000000
+#define MAP_DOOR_CONNECT_3 0x80000000
 
 struct cloud_info
 {
@@ -328,6 +331,32 @@ struct map_cell
         return result;
     }
 #endif
+
+    void set_door_connect(unsigned short door_connect)
+    {
+        uint32_t door_connect_flags = MAP_DOOR_CONNECT_1 | MAP_DOOR_CONNECT_2
+                                      | MAP_DOOR_CONNECT_3;
+        flags &= ~door_connect_flags;
+        ASSERT(door_connect < 7);
+        if (door_connect & 1)
+            flags |= MAP_DOOR_CONNECT_1;
+        if ((door_connect >> 1) & 1)
+            flags |= MAP_DOOR_CONNECT_2;
+        if ((door_connect >> 2) & 1)
+            flags |= MAP_DOOR_CONNECT_3;
+    }
+
+    unsigned short door_connect() const
+    {
+        unsigned short result = 0;
+        if (flags & MAP_DOOR_CONNECT_1)
+            result += 1;
+        if (flags & MAP_DOOR_CONNECT_2)
+            result += 2;
+        if (flags & MAP_DOOR_CONNECT_3)
+            result += 4;
+        return result;
+    }
 
 public:
     uint32_t flags = 0;   // Flags describing the mappedness of this square.

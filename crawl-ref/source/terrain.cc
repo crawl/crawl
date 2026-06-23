@@ -1361,9 +1361,6 @@ static void _current_terrain_changed(coord_def pos,
         _dgn_check_terrain_player(pos);
 
     set_terrain_changed(pos);
-
-    // Deal with doors being created by changing features.
-    tile_init_flavour(pos);
 }
 
 static void _permanent_terrain_changed(coord_def pos,

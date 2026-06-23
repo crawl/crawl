@@ -54,3 +54,5 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv);
 void tile_apply_properties(const coord_def &gc, packed_cell &cell);
 
 void tile_forget_map(const coord_def &gc);
+
+unsigned short tile_door_connect(coord_def gc);
