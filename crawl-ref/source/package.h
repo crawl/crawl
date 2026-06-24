@@ -80,6 +80,7 @@ public:
     chunk_reader* reader(const string &name);
     void commit();
     void delete_chunk(const string &name);
+    void rename_chunk(const string &name, const string &newname);
     bool has_chunk(const string &name);
     vector<string> list_chunks();
     void abort();

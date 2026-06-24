@@ -15,6 +15,7 @@
 #include "chardump.h"
 #include "colour.h"
 #include "coordit.h"
+#include "dactions.h"
 #include "database.h"
 #include "delay.h"
 #include "dgn-overview.h"
@@ -876,6 +877,9 @@ void floor_transition(dungeon_feature_type how,
     if (how == DNGN_ENTER_ZIGGURAT)
         dungeon_terrain_changed(you.pos(), DNGN_STONE_ARCH);
 
+    if (how == DNGN_ENTER_PANDEMONIUM)
+        add_daction(DACT_REMOVE_PAN_GATES);
+
     if (how == DNGN_ENTER_PANDEMONIUM
         || how == DNGN_ENTER_ABYSS
         || feat_is_portal_entrance(how))
@@ -1259,15 +1263,13 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
+    case DNGN_TRANSIT_PANDEMONIUM:
     {
         ASSERT(!at_branch_bottom());
         level_id lev = level_id::current();
         lev.depth++;
         return lev;
     }
-
-    case DNGN_TRANSIT_PANDEMONIUM:
-        return level_id(BRANCH_PANDEMONIUM);
 
     case DNGN_EXIT_THROUGH_ABYSS:
         return level_id(BRANCH_ABYSS);

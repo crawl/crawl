@@ -1254,16 +1254,81 @@ static void _fixup_hell_stairs()
     }
 }
 
+// Tags marking the four unique rune lord vaults.
+static const char *pandemon_level_names[] =
+    { "mnoleg", "lom_lobon", "cerebov", "gloorx_vloq", };
+
+// Whether this level was built around one of the unique rune lords.
+static bool _has_unique_pan_lord_vault()
+{
+    for (auto &vp : env.level_vaults)
+        for (const char *lord : pandemon_level_names)
+            if (vp->map.has_tag(lord))
+                return true;
+    return false;
+}
+
+static const vault_placement *_primary_vault()
+{
+    return env.level_vaults.empty() ? nullptr : env.level_vaults[0].get();
+}
+
+static bool _is_pan_portal_candidate(dungeon_feature_type feat)
+{
+    return feat_is_stone_stair_up(feat)
+        || feat == DNGN_ESCAPE_HATCH_UP
+        || feat == DNGN_TRANSIT_PANDEMONIUM
+        || feat == DNGN_EXIT_PANDEMONIUM;
+}
+
 static void _fixup_pandemonium_stairs()
 {
+    // On floors of pan belonging to the unique rune lords, we turn upstairs
+    // into transit portals.
+    //
+    // On other floors, we place a single portal in the pan lord vault, which
+    // must contain a stair or we will veto the map.
+    const dungeon_feature_type portal =
+        you.depth >= brdepth[BRANCH_PANDEMONIUM] ? DNGN_EXIT_PANDEMONIUM
+                                                 : DNGN_TRANSIT_PANDEMONIUM;
+
+    vector<coord_def> candidates;
     for (rectangle_iterator ri(1); ri; ++ri)
     {
-        if (feat_is_stone_stair_up(env.grid(*ri))
-            || env.grid(*ri) == DNGN_ESCAPE_HATCH_UP)
-        {
-            _set_grd(*ri, DNGN_TRANSIT_PANDEMONIUM);
-        }
+        const dungeon_feature_type feat = env.grid(*ri);
+        if (_is_pan_portal_candidate(feat))
+            candidates.push_back(*ri);
+        else if (feat_is_stone_stair_down(feat) || feat == DNGN_ESCAPE_HATCH_DOWN)
+            _set_grd(*ri, DNGN_FLOOR);
     }
+
+    // Unique pan lord levels turn everything into a portal.
+    if (_has_unique_pan_lord_vault())
+    {
+        for (const coord_def &c : candidates)
+            _set_grd(c, portal);
+        return;
+    }
+
+    // Find the stair in the Pan lord's lair to keep. The lair is always the
+    // primary vault.
+    const vault_placement *lair = _primary_vault();
+    if (!lair)
+        throw dgn_veto_exception("Did not find a pan lord lair.");
+
+    bool placed = false;
+    for (const coord_def &c : candidates)
+    {
+        if (!placed && dgn_vault_at(c) == lair)
+        {
+            placed = true;
+            _set_grd(c, portal);
+        }
+        else
+            _set_grd(c, DNGN_FLOOR);
+    }
+    if (!placed)
+        throw dgn_veto_exception("No portal location in lair " + lair->map.name);
 }
 
 static void _fixup_descent_hatches()
@@ -2951,13 +3016,29 @@ static const map_def *_pick_layout(const map_def *vault)
     return layout;
 }
 
+// Assign each unique rune lord to a distinct Pandemonium floor, so they are
+// met (and somewhat spread out) while fighting down the branch.
+static void _schedule_pan_lord_floors()
+{
+    if (you.props.exists(PAN_LORD_FLOORS_KEY))
+        return;
+
+    const int band_min[] = { 2, 5, 7, 9 };
+    const int band_max[] = { 4, 6, 8, 10 };
+    int band_order[] = { 0, 1, 2, 3 };
+    shuffle_array(band_order, 4);
+
+    CrawlVector &floors = you.props[PAN_LORD_FLOORS_KEY].new_vector(SV_INT);
+    for (int i = 0; i < 4; i++)
+    {
+        const int band = band_order[i];
+        floors.push_back(random_range(band_min[band], band_max[band]));
+    }
+}
+
 static bool _pan_level()
 {
-    const char *pandemon_level_names[] =
-        { "mnoleg", "lom_lobon", "cerebov", "gloorx_vloq", };
     int which_demon = -1;
-    const PlaceInfo &place_info = you.get_place_info();
-    bool all_demons_generated = true;
 
     if (you.props.exists(FORCE_MAP_KEY))
     {
@@ -2969,27 +3050,19 @@ static bool _pan_level()
         return vault->orient != MAP_ENCOMPASS;
     }
 
+    _schedule_pan_lord_floors();
+
+    // Place this floor's scheduled rune lord, if any (and if not already met).
+    const CrawlVector &floors = you.props[PAN_LORD_FLOORS_KEY].get_vector();
     for (int i = 0; i < 4; i++)
     {
-        if (!get_uniq_map_tags().count(string("uniq_") + pandemon_level_names[i]))
+        if (floors[i].get_int() == you.depth
+            && !get_uniq_map_tags().count(string("uniq_")
+                                          + pandemon_level_names[i]))
         {
-            all_demons_generated = false;
+            which_demon = i;
             break;
         }
-    }
-
-    // Unique pan lords become more common as you travel through pandemonium.
-    // On average it takes about 14 levels to see all four, and on average
-    // about 5 levels to see your first.
-    if (x_chance_in_y(1 + place_info.levels_seen, 20 + place_info.levels_seen)
-        && !all_demons_generated)
-    {
-        do
-        {
-            which_demon = random2(4);
-        }
-        while (get_uniq_map_tags().count(string("uniq_")
-                                       + pandemon_level_names[which_demon]));
     }
 
     const map_def *vault = nullptr;

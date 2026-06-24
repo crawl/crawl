@@ -79,6 +79,7 @@ static const char *daction_names[] =
     "remove Ignis altars",
     "cleanup Beogh vengeance markers",
     "cleanup Bane of Mortality summons",
+    "remove Pandemonium gates",
 };
 #endif
 
@@ -369,6 +370,11 @@ static void _apply_daction(daction_type act)
         for (rectangle_iterator ri(1); ri; ++ri)
             if (env.grid(*ri) == DNGN_ALTAR_IGNIS)
                 env.grid(*ri) = DNGN_FLOOR;
+        break;
+    case DACT_REMOVE_PAN_GATES:
+        for (rectangle_iterator ri(1); ri; ++ri)
+            if (env.grid(*ri) == DNGN_ENTER_PANDEMONIUM)
+                env.grid(*ri) = DNGN_STONE_ARCH;
         break;
     case DACT_ROT_CORPSES:
         for (auto &item : env.item)

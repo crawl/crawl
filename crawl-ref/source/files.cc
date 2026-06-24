@@ -1848,7 +1848,6 @@ static const vector<branch_type> branch_generation_order =
     BRANCH_COCYTUS,
     BRANCH_DIS,
     BRANCH_GEHENNA,
-    BRANCH_PANDEMONIUM,
     BRANCH_ZIGGURAT,
     NUM_BRANCHES,
 };
@@ -3279,6 +3278,28 @@ static bool _restore_game(const string& filename)
     _convert_obsolete_species();
 
     const int minorVersion = crawl_state.minor_version;
+
+#if TAG_MAJOR_VERSION == 34
+    // Pandemonium became a multi-level branch. Its single saved level was
+    // stored under the chunk name "Pan"; it is now looked up as "Pan:1".
+    // Rename the chunk and its visited-state key.
+    if (minorVersion < TAG_MINOR_PANDEMONIUM_DEPTH)
+    {
+        const string old_name = branches[BRANCH_PANDEMONIUM].abbrevname;
+        const string new_name = level_id(BRANCH_PANDEMONIUM, 1).describe();
+        if (you.save->has_chunk(old_name))
+        {
+            you.save->rename_chunk(old_name, new_name);
+
+            auto &visited = you.props[VISITED_LEVELS_KEY].get_table();
+            if (visited.exists(old_name))
+            {
+                visited[new_name] = true;
+                visited.erase(old_name);
+            }
+        }
+    }
+#endif
 
     if (you.save->has_chunk(CHUNK("st", "stashes")))
     {
