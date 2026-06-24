@@ -3073,7 +3073,7 @@ static bool _pan_level()
                                    false, false);
     }
     else
-        vault = random_map_in_depth(level_id::current(), false, false);
+        vault = random_map_for_tag("pan_lair", false, false);
 
     // Every Pan level should have a primary vault.
     ASSERT(vault);
