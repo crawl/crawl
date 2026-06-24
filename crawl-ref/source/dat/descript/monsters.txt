@@ -3543,6 +3543,10 @@ wolf spider
 A hairy fast-moving hunting spider with vicious mandibles, the size of a wolf.
 It roams the dungeon in search of prey, which it kills with its deadly venom.
 %%%%
+wooden wasp
+
+A naturally grown practice mount for aspiring spriggan riders.
+%%%%
 worldbinder
 
 A cloud of thick fog, with faint, feeble claws constantly reaching out and then

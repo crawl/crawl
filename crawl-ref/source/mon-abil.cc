@@ -944,9 +944,10 @@ static bool _adj_to_tree(coord_def p)
     return false;
 }
 
-static coord_def _find_nearer_tree(coord_def cur_loc, coord_def target)
+static coord_def _find_nearer_tree(monster* mons, coord_def target)
 {
     coord_def p = {0, 0};
+    coord_def cur_loc = mons->pos();
     int seen = 0;
     // don't bother teleporting to something that's at the same distance
     // from the target as you already are
@@ -959,7 +960,7 @@ static coord_def _find_nearer_tree(coord_def cur_loc, coord_def target)
 
         if (!cell_see_cell(target, *di, LOS_NO_TRANS) // there might be a better iterator
             || !_adj_to_tree(*di)
-            || !monster_habitable_grid(MONS_ELEIONOMA, *di))
+            || !monster_habitable_grid(mons->type, *di))
         {
             continue;
         }
@@ -1259,6 +1260,7 @@ bool mon_special_ability(monster* mons)
     break;
 
     case MONS_ELEIONOMA:
+    case MONS_WOODEN_WASP:
     {
         if (!one_chance_in(3))
             break;
@@ -1271,7 +1273,7 @@ bool mon_special_ability(monster* mons)
         if (dist < 3)
             break;
 
-        const coord_def target = _find_nearer_tree(mons->pos(), foe->pos());
+        const coord_def target = _find_nearer_tree(mons, foe->pos());
         if (target.origin() || !mons->move_to(target, MV_DELIBERATE | MV_TRANSLOCATION, true))
             break;
 
