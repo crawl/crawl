@@ -37,21 +37,21 @@ damage, and also weakens them slightly.
 %%%%
 electrocution (elec) weapon ego
 
-It sometimes electrocutes victims (1/4 chance, 8-20 damage).
+Ono poněkȯgda poražaje žrtv električnym tokom (1/4 šans, 8-20 škody).
 %%%%
 entangling (entangle) weapon ego
 
-It sometimes constricts those it attacks with vines. (1/2 chance, 2-4 damage).
+Ono poněkȯgda duši lozami tyh, kogo atakuje (1/2 šans, 2-4 škody).
 %%%%
 flaming (flame) weapon ego
 
-It burns victims, dealing an additional one-quarter of any damage that pierces
-defenders' armour.
+Ono pali žrtv, pričinjajųći dodatny četvŕtinų vśakogo tipa škody, ktora probivaje
+brȯnjų. 
 %%%%
 flaming (flame) weapon ego blade
 
-It burns victims, dealing an additional one-quarter of any damage that pierces
-defenders' armour. Big, fiery blades are also staple armaments of hydra-hunters.
+Ono pali žrtv, pričinjajųći dodatny četvŕtinų vśakogo tipa škody, ktora probivaje
+brȯnjų. Velike, ognjene ostŕja takože sųt glåvne orųžja dlja lovcev na hidr.
 %%%%
 freezing (freeze) weapon ego
 
@@ -255,24 +255,24 @@ speed are improved by your Evocations skill.
 %%%%
 parrying (Parrying) armour ego
 
-It shields you if your last action was a melee attack. The shielding is half as
-effective if your offhand is occupied by an item other than a weapon.
+Ono zaščićaje tebe, jestli tvojim poslědnjim dějańjem byla bližnja ataka. Zaščita
+smėnšaje sę v polovinų, jestli tvoja druga rųka jest zajęta čim-libo kromě orųžja.
 %%%%
 poison resistance (rPois) armour ego
 
-It protects you from poison.
+Ono zaščićaje tebe od otravy.
 %%%%
 ponderousness (Ponderous) armour ego
 
-It is very cumbersome, slowing your movement.
+Ono jest neudobno i zapomaljaje tvoj ruh.
 %%%%
 positive energy (rN+) armour ego
 
-It protects you from the effects of negative energy.
+Ono zaščićaje tebe od efektov negativnoj energije.
 %%%%
 protection (AC+3) armour ego
 
-It protects you from most sources of damage (AC +3).
+Ono zaščićaje tebe od vęćiństva izvorov škody (AC +3).
 %%%%
 pyromania (Pyromania) armour ego
 
@@ -283,20 +283,20 @@ once each turn.
 %%%%
 rampaging (Rampage) armour ego
 
-It causes one to take an extra step when moving towards enemies, briefly
-stunning them if this results in an attack.
+Ono dozvaljaje sdělati dodatny krok v nastųpjenjų na neprijateljev, ne na dȯlgo
+oglušajųći jih v rezuĺtatu ataky.
 %%%%
 reflection (Reflect) armour ego
 
-It reflects blocked missile attacks.
+Ono odbivaje blokovane raketne ataky.
 %%%%
 repulsion (Repulsion) armour ego
 
-It helps you evade both magical and non-magical projectiles (EV +15).
+Ono pomagaje tobě izběgti magične i nemagične projektily (EV +15).
 %%%%
 resistance (rC+ rF+) armour ego
 
-It protects you from the effects of both fire and cold.
+Ono zaščićaje tebe od oboh efektov ognja i hlåda.
 %%%%
 resonance (Resonance) armour ego
 
@@ -305,11 +305,11 @@ attacks proportionally to your Forgecraft skill.
 %%%%
 see invisible (SInv) armour ego
 
-It allows you to see invisible things.
+Ono dozvaljaje tobě viděti nevidime prědmety.
 %%%%
 shadows (Shadows) armour ego
 
-It reduces the distance you can be seen at and can see.
+Ono smėnšaje daljnost́, na ktoroj ty možeš viděti u byti uviděnym.
 %%%%
 sniping (Snipe) armour ego
 
@@ -319,8 +319,7 @@ paralysed, petrified, confused or caught in a net.
 %%%%
 spirit shield (Spirit) armour ego
 
-It causes incoming damage to be divided between your reserves of health and
-magic.
+Ono råzděljaje nabytų škodų među tvojimi rezervami zdråvja i magije.
 %%%%
 stardust (Stardust) armour ego
 
@@ -331,23 +330,23 @@ the stars and MP spent further increases damage.
 %%%%
 stealth (Stlth+) armour ego
 
-It enhances your stealth.
+Ono usiljaje tvojų skrytnost́.
 %%%%
 strength (Str+3) armour ego
 
-It increases your strength (Str +3).
+Ono povyšaje tvojų silų (Str +3).
 %%%%
 the Archmagi (Archmagi) armour ego
 
-It increases the power of your magical spells.
+Ono povyšaje moć tvojih magičnyh zaklinanij.
 %%%%
 willpower (Will+) armour ego
 
-It increases your willpower, protecting against certain magical effects.
+Ono povyšaje tvojų silų volje, zaščićajųći tebe od něktoryh magičnyh efektov.
 %%%%
 wrath (*Rage) armour ego
 
-It berserks you when you make melee attacks (20% chance).
+Ty vpadaješ v běsnost́, kȯgda dělaješ bližnje ataky (šans 20%).
 %%%%
 atropa-tipped (atropa) missile ego
 
@@ -358,7 +357,7 @@ Stealth skill.
 %%%%
 chaos (chaos) missile ego
 
-When thrown, it has a random effect.
+Kȯgda jest metnųto, ono pričinjaje slučajny efekt.
 %%%%
 curare-tipped (curare) missile ego
 
@@ -382,16 +381,15 @@ away from you for several turns and taking minor damage each time it does so.
 %%%%
 dispersal (disperse) missile ego
 
-It causes any target it hits to blink, with a tendency towards blinking further
-away from you.
+Ono prinuđaje poraženyh žrtv migati od tebe v dalj.
 %%%%
 poisoned (poison) missile ego
 
-It is coated with poison.
+Ono pokryto otravojų.
 %%%%
 silver (silver) missile ego
 
-It deals increased damage compared to normal missiles and substantially
-increased damage to chaotic and magically transformed beings. It also inflicts
-extra damage against mutated beings, depending on how mutated they are.
+Ono nanosi povyšenų škodų po sråvnjeńjų s obyčnymi raketami i značno povyšenų
+škodų protiv haotičnyh i magično obråćenyh stvorov. Ono takože pričinjaje dodatnų
+škodų protiv mutovanyh stvorov v zavisnosti od měry jih mutacije.
 %%%%
