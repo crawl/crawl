@@ -2294,6 +2294,10 @@ A more intelligent cousin of the mighty kraken, capable of using tools and
 spells. It is fully amphibious, but most of its species choose to stay beneath
 the waves and serve their King.
 %%%%
+octopode monk
+
+An octopode apprentice of the martial arts. Beware its tentacles of fury!
+%%%%
 ogre
 
 A large, ugly, and fat creature, distantly related to goblins. It is
