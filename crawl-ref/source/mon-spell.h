@@ -1833,6 +1833,13 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('9') Animate statuary, golems, gargoyles.
+    {  MST_COMBAT_FRAME,
+      {
+       { SPELL_SPIKE_LAUNCHER, 40, MON_SPELL_MAGICAL },
+       { SPELL_RESONANCE_STRIKE, 20, MON_SPELL_MAGICAL },
+      }
+    },
+
     {  MST_GARGOYLE,
       {
        { SPELL_STONE_ARROW, 56, MON_SPELL_NATURAL },
