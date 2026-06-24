@@ -109,19 +109,15 @@ static string _equipped_weapon_name(bool show_prefix)
 
     if (iweap)
     {
-        if (show_prefix)
-            return "Wielding: " + iweap->name(DESC_PLAIN);
-        else
-            return iweap->name(DESC_PLAIN);
+        return show_prefix ? "Wielding: " : "" +
+               iweap->name(DESC_PLAIN, false, false, true, false, true);
     }
 
     if (missile != -1 && you.inv[missile].defined()
                 && you.inv[missile].base_type == OBJ_MISSILES)
     {
-        if (show_prefix)
-            return "Quivering: " + you.inv[missile].name(DESC_PLAIN);
-        else
-            return you.inv[missile].name(DESC_PLAIN);
+        return show_prefix ? "Quivering: " : "" +
+               you.inv[missile].name(DESC_PLAIN);
     }
 
     return "Unarmed";
