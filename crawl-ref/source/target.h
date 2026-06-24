@@ -427,7 +427,7 @@ protected:
 class targeter_scorch : public targeter_multiposition
 {
 public:
-    targeter_scorch(const actor &a, int _range, bool affect_invis);
+    targeter_scorch(const actor &a, int _range);
     bool valid_aim(coord_def c) override;
 
 protected:

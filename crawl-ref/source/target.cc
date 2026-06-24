@@ -723,7 +723,7 @@ bool targeter_phantom_mirror::valid_aim(coord_def a)
 targeter_permafrost::targeter_permafrost(const actor &act) :
     targeter_smite(&act)
 {
-    possible_centres = permafrost_targets(act, false);
+    possible_centres = permafrost_targets(act);
     for (coord_def t : possible_centres)
     {
         targets.insert(t);
@@ -1696,9 +1696,9 @@ aff_type targeter_multiposition::is_affected(coord_def loc)
     return affected_positions.count(loc) > 0 ? positive : AFF_NO;
 }
 
-targeter_scorch::targeter_scorch(const actor &a, int _range, bool affect_invis)
+targeter_scorch::targeter_scorch(const actor &a, int _range)
     : targeter_multiposition(&a,
-                        find_near_hostiles(_range, affect_invis, a), AFF_MAYBE),
+                        find_near_hostiles(a, _range), AFF_MAYBE),
       range(_range)
 { }
 

@@ -1796,11 +1796,11 @@ bool spell_no_hostile_in_range(spell_type spell)
         return true;
 
     case SPELL_SCORCH:
-        return find_near_hostiles(range, false, you).empty();
+        return find_near_hostiles(you, range).empty();
 
     case SPELL_FLAME_WAVE:
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
-        return find_near_hostiles(range, false, you).empty();
+        return find_near_hostiles(you, range, true).empty();
 
     case SPELL_ANGUISH:
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
@@ -1819,7 +1819,7 @@ bool spell_no_hostile_in_range(spell_type spell)
         return true; // TODO
 
     case SPELL_PERMAFROST_ERUPTION:
-        return permafrost_targets(you, false).empty();
+        return permafrost_targets(you).empty();
 
     case SPELL_PLASMA_BEAM:
         return cast_plasma_beam(-1, you, false, true) == spret::abort;

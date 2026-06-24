@@ -3834,7 +3834,7 @@ static ai_action::goodness _arcjolt_goodness(const monster &caster)
 
 static ai_action::goodness _scorch_goodness(const monster& caster)
 {
-    auto targeter = make_unique<targeter_scorch>(caster, 3, true);
+    auto targeter = make_unique<targeter_scorch>(caster, 3);
     for (auto ti = targeter->affected_iterator(AFF_MAYBE); ti; ++ti)
     {
         if (actor_at(*ti)->res_fire() < 3)

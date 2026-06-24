@@ -1332,7 +1332,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                                    arcjolt_targets(you, false));
     case SPELL_PLASMA_BEAM:
     {
-        auto plasma_targets = plasma_beam_targets(you, pow, false);
+        auto plasma_targets = plasma_beam_targets(you, pow);
         auto plasma_paths = plasma_beam_paths(you.pos(), plasma_targets);
         const aff_type a = plasma_targets.size() == 1 ? AFF_YES : AFF_MAYBE;
         return make_unique<targeter_multiposition>(&you, plasma_paths, a);
@@ -1477,7 +1477,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_multiposition>(&you,
                                                    _simple_find_all_hostiles());
     case SPELL_SCORCH:
-        return make_unique<targeter_scorch>(you, range, false);
+        return make_unique<targeter_scorch>(you, range);
     case SPELL_DRAGON_CALL: // this is just convenience: you can start the spell
                             // with no enemies in sight
         return make_unique<targeter_dragon_call>(&you,
