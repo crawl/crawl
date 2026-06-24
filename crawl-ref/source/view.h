@@ -30,10 +30,10 @@ static inline void scaled_delay(unsigned int ms)
 
 void animation_delay(unsigned int ms, bool do_refresh);
 
-void flash_view(use_animation_type a, colour_t colour,
+void flash_view(use_animation_type a, colour_t colour, int alpha = 0,
                 targeter *where = nullptr);
 void flash_view_delay(use_animation_type a, colour_t colour, int delay,
-                      targeter *where = nullptr);
+                      int alpha = 0, targeter *where = nullptr);
 
 enum animation_type
 {
@@ -91,7 +91,7 @@ void run_animation(animation_type anim, use_animation_type type,
 void viewwindow(bool show_updates = true, bool tiles_only = false,
                 animation *a = nullptr, view_renderer *renderer = nullptr);
 void draw_cell(screen_cell_t *cell, const coord_def &gc,
-               bool anim_updates, int flash_colour);
+               bool anim_updates, int flash_colour, int flash_alpha);
 
 void toggle_show_terrain();
 void reset_show_terrain();

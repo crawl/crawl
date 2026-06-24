@@ -859,7 +859,7 @@ bool lost_soul_revive(monster& mons, killer_type killer)
         }
 
         targeter_radius hitfunc(*mi, LOS_SOLID);
-        flash_view_delay(UA_MONSTER, GREEN, 200, &hitfunc);
+        flash_view_delay(UA_MONSTER, GREEN, 200, 75, &hitfunc);
 
         mons.heal(mons.max_hit_points);
         mons.timeout_enchantments();

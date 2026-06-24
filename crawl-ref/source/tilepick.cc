@@ -885,6 +885,8 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     }
     else if (is_door_tile(tile))
     {
+        unsigned short door_connect = env.map_knowledge(gc).door_connect();
+        ASSERT(door_connect < 7);
         tileidx_t override = flv.feat;
         // For vaults overriding door tiles, like Cigotuvi's Fleshworks.
         if (is_door_tile(override))
@@ -893,11 +895,11 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
             bool runed = (tile == TILE_DNGN_RUNED_DOOR);
             bool broken = (tile == TILE_DNGN_BROKEN_DOOR);
             int offset = _get_door_offset(override, opened, runed, broken,
-                flv.special);
+                                          door_connect);
             tile = override + offset;
         }
         else
-            tile = tile + min((int)flv.special, 6);
+            tile = tile + door_connect;
     }
     else if (tile == TILE_DNGN_TRAP_WEB)
     {

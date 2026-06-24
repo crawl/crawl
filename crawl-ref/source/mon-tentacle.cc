@@ -17,6 +17,7 @@
 #include "libutil.h" // map_find
 #include "losglobal.h"
 #include "mgen-data.h"
+#include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "nearby-danger.h"
@@ -629,6 +630,9 @@ static void _collect_foe_positions(monster *mons,
 {
     coord_def foe_pos(-1, -1);
     actor * foe = mons->get_foe();
+    // We put the foe in the vector first, though note that the
+    // pathfinding algorithm that uses this don't actually care about
+    // the order, so in fact tentacles ignore their foe.
     if (foe && sight_check(foe))
     {
         foe_positions.push_back(mons->get_foe()->pos());
@@ -715,6 +719,7 @@ void move_solo_tentacle(monster* tentacle)
                 [tentacle, base_position](const actor *test) -> bool
                 {
                     return test->visible_to(tentacle)
+                        && monster_los_is_valid(tentacle, test)
                         && cell_see_cell(base_position, test->pos(),
                                          LOS_SOLID_SEE);
                 });

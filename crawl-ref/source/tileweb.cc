@@ -1963,9 +1963,9 @@ void TilesFramework::_send_map(bool spectator_only)
                 screen_cell_t *cell = &m_next_view(gc);
 
                 if (you.flash_where && you.flash_where->is_affected(gc) <= 0)
-                    draw_cell(cell, gc, false, 0);
+                    draw_cell(cell, gc, false, 0, 0);
                 else
-                    draw_cell(cell, gc, false, flash_colour);
+                    draw_cell(cell, gc, false, flash_colour, you.flash_alpha);
 
                 pack_cell_overlays(gc, m_next_view);
             }

@@ -278,12 +278,6 @@ bool wizard_create_feature(const coord_def& pos, dungeon_feature_type feat, bool
     return wizard_create_feature(t, feat, mimic);
 }
 
-static void _connect_door(coord_def pos)
-{
-    if (map_bounds(pos) && feat_is_door(env.grid(pos)))
-        tile_init_flavour(pos);
-}
-
 bool wizard_create_feature(dist &target, dungeon_feature_type feat, bool mimic)
 {
     if (feat == DNGN_UNSEEN)
@@ -338,14 +332,6 @@ bool wizard_create_feature(dist &target, dungeon_feature_type feat, bool mimic)
             env.grid_colours(pos) = 0;
             const dungeon_feature_type old_feat = env.grid(pos);
             dungeon_terrain_changed(pos, feat, false, false, true);
-            // Update gate tiles, if existing.
-            if (feat_is_door(old_feat) || feat_is_door(feat))
-            {
-                _connect_door(pos - coord_def(1, 0));
-                _connect_door(pos + coord_def(1, 0));
-                _connect_door(pos - coord_def(0, 1));
-                _connect_door(pos + coord_def(0, 1));
-            }
             if (pos == you.pos() && cell_is_solid(pos))
                 you.wizmode_teleported_into_rock = true;
         }

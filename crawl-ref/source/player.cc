@@ -147,18 +147,24 @@ static void _moveto_maybe_repel_stairs()
     }
 }
 
-bool check_moveto_cloud(const coord_def& p, const string &move_verb,
+bool check_moveto_cloud(const vector<coord_def> &areas, const string &move_verb,
                         bool *prompted)
 {
-    if (you.confused())
+    if (crawl_state.disables[DIS_CONFIRMATIONS])
         return true;
 
-    const cloud_type ctype = env.map_knowledge(p).cloud();
-    // Don't prompt if already in a cloud of the same type.
-    if (is_damaging_cloud(ctype, true, cloud_is_yours_at(p))
-        && ctype != cloud_type_at(you.pos())
-        && !crawl_state.disables[DIS_CONFIRMATIONS])
+    int count = 0;
+    cloud_type found_ctype = CLOUD_NONE;
+    bool multiple_types = false;
+    for (auto p : areas)
     {
+        const cloud_type ctype = env.map_knowledge(p).cloud();
+        // Don't prompt if already in a cloud of the same type.
+        if (!is_damaging_cloud(ctype, true, cloud_is_yours_at(p))
+            || ctype == cloud_type_at(you.pos()))
+        {
+            continue;
+        }
         // Don't prompt for steam unless we're at uncomfortably low hp.
         if (ctype == CLOUD_STEAM)
         {
@@ -168,24 +174,122 @@ bool check_moveto_cloud(const coord_def& p, const string &move_verb,
             threshold = threshold * you.time_taken / BASELINE_DELAY;
             // Do prompt if we'd lose icemail, though.
             if (you.hp > threshold && !you.has_mutation(MUT_CONDENSATION_SHIELD))
-                return true;
+                continue;
         }
         // Don't prompt for meph if we have clarity
         if (ctype == CLOUD_MEPHITIC && you.clarity(false))
-            return true;
+            continue;
 
-        if (prompted)
-            *prompted = true;
-        string prompt = make_stringf("Really %s into that cloud of %s?",
-                                     move_verb.c_str(),
-                                     cloud_type_name(ctype).c_str());
-        learned_something_new(HINT_CLOUD_WARNING);
+        if (found_ctype == CLOUD_NONE)
+            found_ctype = ctype;
+        else if (ctype != found_ctype)
+            multiple_types = true;
+        count++;
+    }
+    if (count == 0)
+        return true;
 
-        if (!yesno(prompt.c_str(), false, 'n'))
+    if (prompted)
+        *prompted = true;
+    learned_something_new(HINT_CLOUD_WARNING);
+
+    const bool certain = count == (int) areas.size();
+    // If several different damaging clouds are in range, we can't name one.
+    const string what = multiple_types
+        ? "dangerous cloud"
+        : make_stringf("cloud of %s",
+                       cloud_type_name(found_ctype).c_str());
+    string prompt = make_stringf(certain
+            ? "Really %s into that %s?"
+            : "You might %s into a %s, are you sure?",
+        move_verb.c_str(), what.c_str());
+
+    if (!yesno(prompt.c_str(), false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+    return true;
+}
+
+bool check_moveto_cloud(const coord_def& p, const string &move_verb,
+                        bool *prompted)
+{
+    return check_moveto_cloud(vector<coord_def>{p}, move_verb, prompted);
+}
+
+bool check_moveto_trap(const vector<coord_def> &areas, const string &move_verb,
+                       bool *prompted)
+{
+    if (crawl_state.disables[DIS_CONFIRMATIONS])
+        return true;
+
+    int count = 0;
+    int zot_count = 0;
+    coord_def trap_pos;
+    dungeon_feature_type trap_feat = DNGN_FLOOR;
+    bool multiple_types = false;
+    for (auto p : areas)
+    {
+        dungeon_feature_type feat = env.map_knowledge(p).feat();
+        if (!feat_is_trap(feat) || trap_is_safe(feat))
+            continue;
+        if (feat == DNGN_TRAP_ZOT)
+            zot_count++;
+        else
+        {
+            if (trap_feat == DNGN_FLOOR)
+                trap_feat = feat;
+            else if (feat != trap_feat)
+                multiple_types = true;
+            trap_pos = p;
+        }
+        count++;
+    }
+    if (count == 0)
+        return true;
+
+    if (prompted)
+        *prompted = true;
+
+    if (zot_count > 0)
+    {
+        string prompt = make_stringf(zot_count == (int) areas.size()
+                ? "Do you really want to %s into the Zot trap?"
+                : "You might %s into a Zot trap, are you sure?",
+            move_verb.c_str());
+        if (!confirm_prompt("yes", "%s", prompt.c_str()))
         {
             canned_msg(MSG_OK);
             return false;
         }
+        return true;
+    }
+
+    const bool certain = count == (int) areas.size();
+    string prompt;
+    if (multiple_types)
+    {
+        // Several different dangerous traps in range; we can't name one.
+        prompt = make_stringf(certain
+                ? "Really %s into a trap?"
+                : "You might %s into a trap, are you sure?",
+            move_verb.c_str());
+    }
+    else
+    {
+        prompt = make_stringf(certain
+                ? "Really %s %s that %s?"
+                : "You might %s %s that %s, are you sure?",
+            move_verb.c_str(),
+            (trap_feat == DNGN_TRAP_ALARM || trap_feat == DNGN_TRAP_PLATE)
+                ? "onto" : "into",
+            feature_description_at(trap_pos, false, DESC_BASENAME).c_str());
+    }
+    if (!yesno(prompt.c_str(), true, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
     }
     return true;
 }
@@ -193,41 +297,7 @@ bool check_moveto_cloud(const coord_def& p, const string &move_verb,
 bool check_moveto_trap(const coord_def& p, const string &move_verb,
                        bool *prompted)
 {
-    // If there's no trap, let's go.
-    if (!feat_is_trap(env.grid(p)))
-        return true;
-
-    if (env.grid(p) == DNGN_TRAP_ZOT && !trap_is_safe(DNGN_TRAP_ZOT) && !crawl_state.disables[DIS_CONFIRMATIONS])
-    {
-        string msg = "Do you really want to %s into the Zot trap?";
-        string prompt = make_stringf(msg.c_str(), move_verb.c_str());
-
-        if (prompted)
-            *prompted = true;
-        if (!confirm_prompt("yes", "%s", prompt.c_str()))
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
-    }
-    else if (!trap_is_safe(env.grid(p)) && !crawl_state.disables[DIS_CONFIRMATIONS])
-    {
-        string prompt;
-
-        if (prompted)
-            *prompted = true;
-        prompt = make_stringf("Really %s %s that %s?", move_verb.c_str(),
-                              (env.grid(p) == DNGN_TRAP_ALARM
-                               || env.grid(p) == DNGN_TRAP_PLATE) ? "onto"
-                              : "into",
-                              feature_description_at(p, false, DESC_BASENAME).c_str());
-        if (!yesno(prompt.c_str(), true, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
-    }
-    return true;
+    return check_moveto_trap(vector<coord_def>{p}, move_verb, prompted);
 }
 
 static bool _check_moveto_dangerous(const coord_def& p, const string& msg)
@@ -250,28 +320,156 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg)
     return false;
 }
 
-static bool _check_moveto_binding_sigil(coord_def p, const string &move_verb,
-                                        const string &msg, bool *prompted)
+static bool check_moveto_binding_sigil(const vector<coord_def> &areas,
+                                       const string &move_verb,
+                                       const string &msg, bool *prompted)
 {
-    if (env.grid(p) == DNGN_BINDING_SIGIL && !you.is_binding_sigil_immune())
+    if (you.is_binding_sigil_immune())
+        return true;
+
+    int count = 0;
+    for (auto p : areas)
+        if (env.map_knowledge(p).feat() == DNGN_BINDING_SIGIL)
+            count++;
+    if (count == 0)
+        return true;
+
+    if (prompted)
+        *prompted = true;
+
+    string prompt;
+    if (!msg.empty())
+        prompt = msg + " ";
+
+    prompt += make_stringf(count == (int) areas.size()
+            ? "Are you sure you want to %s onto a binding sigil?"
+            : "You might %s onto a binding sigil, are you sure?",
+        move_verb.c_str());
+
+    if (!yesno(prompt.c_str(), false, 'n'))
     {
-        string prompt;
-        if (prompted)
-            *prompted = true;
-
-        if (!msg.empty())
-            prompt = msg + " ";
-
-        prompt += "Are you sure you want to " + move_verb
-                + " onto a binding sigil?";
-
-        if (!yesno(prompt.c_str(), false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
+        canned_msg(MSG_OK);
+        return false;
     }
     return true;
+}
+
+static bool check_moveto_binding_sigil(const coord_def& p,
+                                       const string &move_verb,
+                                       const string &msg, bool *prompted)
+{
+    return check_moveto_binding_sigil(vector<coord_def>{p}, move_verb, msg,
+                                       prompted);
+}
+
+static bool check_moveto_expiring_flight(const vector<coord_def> &areas,
+                                         const string &move_verb,
+                                         const string &msg,
+                                         bool *prompted)
+{
+    if (need_expiration_warning() || crawl_state.disables[DIS_CONFIRMATIONS])
+        return true;
+
+    int count = 0;
+    string danger_feature;
+    string condition;
+    for (auto p : areas)
+    {
+        if (need_expiration_warning(p))
+        {
+            danger_feature = env.map_knowledge(p).feat() == DNGN_DEEP_WATER
+                             ? "deep water" : "lava";
+            condition = need_expiration_warning(DUR_FLIGHT, p)
+                ? "while you are losing your buoyancy"
+                : "while your transformation is expiring";
+            count++;
+        }
+    }
+    if (count == 0)
+        return true;
+
+    if (prompted)
+        *prompted = true;
+
+    string prompt;
+    if (!msg.empty())
+        prompt = msg + " ";
+
+    prompt += make_stringf(count == (int) areas.size()
+            ? "Are you sure you want to %s %s %s %s?"
+            : "You might %s %s %s %s, are you sure?",
+        move_verb.c_str(),
+        you.airborne() ? "over" : "into",
+        danger_feature.c_str(),
+        condition.c_str());
+
+    if (!yesno(prompt.c_str(), false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+    return true;
+}
+
+static bool check_moveto_toxic_bog(const vector<coord_def> &areas,
+                                   const string &move_verb,
+                                   const string &msg, bool *prompted)
+{
+    if (you.airborne() || you.duration[DUR_NOXIOUS_BOG]
+        || env.grid(you.pos()) == DNGN_TOXIC_BOG
+        || crawl_state.disables[DIS_CONFIRMATIONS])
+    {
+        return true;
+    }
+
+    int count = 0;
+    for (auto p : areas)
+        if (env.map_knowledge(p).feat() == DNGN_TOXIC_BOG)
+            count++;
+    if (count == 0)
+        return true;
+
+    if (prompted)
+        *prompted = true;
+
+    string prompt;
+    if (!msg.empty())
+        prompt = msg + " ";
+
+    prompt += make_stringf(count == (int) areas.size()
+            ? "Are you sure you want to %s into a toxic bog?"
+            : "You might %s into a toxic bog, are you sure?",
+        move_verb.c_str());
+
+    if (!yesno(prompt.c_str(), false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+    return true;
+}
+
+bool check_terrain_warnings(const vector<coord_def> &areas,
+                            const string &move_verb,
+                            const string &msg, bool *prompted)
+{
+    if (!check_moveto_binding_sigil(areas, move_verb, msg, prompted))
+        return false;
+
+    if (!check_moveto_toxic_bog(areas, move_verb, msg, prompted))
+        return false;
+
+    if (!check_moveto_expiring_flight(areas, move_verb, msg, prompted))
+        return false;
+
+    return true;
+}
+
+static bool check_terrain_warnings(const coord_def& p, const string &move_verb,
+                                   const string &msg, bool *prompted)
+{
+    return check_terrain_warnings(vector<coord_def>{p}, move_verb, msg,
+                                  prompted);
 }
 
 bool check_moveto_terrain(const coord_def& p, const string &move_verb,
@@ -284,60 +482,9 @@ bool check_moveto_terrain(const coord_def& p, const string &move_verb,
     if (!_check_moveto_dangerous(p, msg))
         return false;
 
-    if (!_check_moveto_binding_sigil(p, move_verb, msg, prompted))
+    if (!check_terrain_warnings(p, move_verb, msg, prompted))
         return false;
 
-    if (!you.airborne() && !you.duration[DUR_NOXIOUS_BOG]
-        && env.grid(you.pos()) != DNGN_TOXIC_BOG
-        && env.grid(p) == DNGN_TOXIC_BOG)
-    {
-        string prompt;
-
-        if (prompted)
-            *prompted = true;
-
-        if (!msg.empty())
-            prompt = msg + " ";
-
-        prompt += "Are you sure you want to " + move_verb
-                + " into a toxic bog?";
-
-        if (!yesno(prompt.c_str(), false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
-    }
-    if (!need_expiration_warning() && need_expiration_warning(p)
-        && !crawl_state.disables[DIS_CONFIRMATIONS])
-    {
-        string prompt;
-
-        if (prompted)
-            *prompted = true;
-
-        if (!msg.empty())
-            prompt = msg + " ";
-
-        prompt += "Are you sure you want to " + move_verb;
-
-        if (!you.airborne())
-            prompt += " into ";
-        else
-            prompt += " over ";
-
-        prompt += env.grid(p) == DNGN_DEEP_WATER ? "deep water" : "lava";
-
-        prompt += need_expiration_warning(DUR_FLIGHT, p)
-            ? " while you are losing your buoyancy?"
-            : " while your transformation is expiring?";
-
-        if (!yesno(prompt.c_str(), false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
-    }
     return true;
 }
 
@@ -410,7 +557,7 @@ static bool _check_move_over_terrain(coord_def p, const string& move_verb)
     if (crawl_state.disables[DIS_CONFIRMATIONS])
         return true;
 
-    return _check_moveto_binding_sigil(p, move_verb, "", nullptr);
+    return check_moveto_binding_sigil(p, move_verb, "", nullptr);
 }
 
 bool check_move_over(coord_def p, const string& move_verb)
@@ -1928,10 +2075,10 @@ int player_movement_speed(bool check_terrain, bool include_temp, int scale)
         mv = div_rand_round(mv * 3, 2);
 
     if (include_temp && you.duration[DUR_SWIFTNESS] > 0)
+        mv = div_rand_round(3*mv, 4);
+    else if (include_temp && you.duration[DUR_ANTISWIFT] > 0)
     {
-        if (you.attribute[ATTR_SWIFTNESS] > 0)
-          mv = div_rand_round(3*mv, 4);
-        else if (mv >= 8 * scale)
+        if (mv >= 8 * scale)
           mv = div_rand_round(3*mv, 2);
         else if (mv >= 7 * scale)
           mv = div_rand_round(mv * 6, 5); // balance for the cap at 6
@@ -3489,10 +3636,8 @@ static void _display_movement_speed()
     const bool swim   = you.swimming();
 
     const bool fly    = you.airborne();
-    const bool swift  = (you.duration[DUR_SWIFTNESS] > 0
-                         && you.attribute[ATTR_SWIFTNESS] >= 0);
-    const bool antiswift = (you.duration[DUR_SWIFTNESS] > 0
-                            && you.attribute[ATTR_SWIFTNESS] < 0);
+    const bool swift  = you.duration[DUR_SWIFTNESS] > 0;
+    const bool antiswift = you.duration[DUR_ANTISWIFT] > 0;
 
     _display_char_status(move_cost, "Your %s speed is %s%s%s",
           // order is important for these:
@@ -5656,6 +5801,7 @@ player::player()
     redraw_title         = false;
 
     flash_colour        = BLACK;
+    flash_alpha         = 0;
     flash_where         = nullptr;
 
     time_taken          = 0;
@@ -8977,19 +9123,20 @@ void player_open_door(coord_def doorpos)
         set_terrain_changed(dc);
         dungeon_events.fire_position_event(DET_DOOR_OPENED, dc);
 
+        if (is_excluded(dc))
+            excludes.push_back(dc);
+    }
+
+    for (coord_def dc : all_door)
+    {
         // Even if some of the door is out of LOS, we want the entire
         // door to be updated. Hitting this case requires a really big
         // door!
         if (env.map_knowledge(dc).seen())
         {
             update_terrain_knowledge(dc);
-#ifdef USE_TILE
-            tile_env.bk_bg(dc) = tileidx_feature_base(env.grid(dc));
-#endif
+            redraw_view_at(dc);
         }
-
-        if (is_excluded(dc))
-            excludes.push_back(dc);
     }
 
     update_exclusion_los(excludes);
@@ -9148,19 +9295,20 @@ void player_close_door(coord_def doorpos)
         set_terrain_changed(dc);
         dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
 
+        if (is_excluded(dc))
+            excludes.push_back(dc);
+    }
+
+    for (coord_def dc : all_door)
+    {
         // Even if some of the door is out of LOS once it's closed
         // (or even if some of it is out of LOS when it's open), we
         // want the entire door to be updated.
         if (env.map_knowledge(dc).seen())
         {
             update_terrain_knowledge(dc);
-#ifdef USE_TILE
-            tile_env.bk_bg(dc) = tileidx_feature_base(env.grid(dc));
-#endif
+            redraw_view_at(dc);
         }
-
-        if (is_excluded(dc))
-            excludes.push_back(dc);
     }
 
     update_exclusion_los(excludes);

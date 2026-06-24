@@ -1589,7 +1589,7 @@ void equip_item(equipment_slot slot, int item_slot, bool msg, bool skip_effects)
     check_item_hint(item, old_talents);
 }
 
-// Unequip and equipped item (possibly melded).
+// Unequip an equipped item (possibly melded).
 bool unequip_item(item_def& item, bool msg, bool skip_effects)
 {
 #ifdef USE_TILE_LOCAL
@@ -1603,7 +1603,7 @@ bool unequip_item(item_def& item, bool msg, bool skip_effects)
                                     : DEQUIP_ARMOUR_SOUND);
 #endif
 
-    if (is_weapon(item) && you.has_mutation(MUT_SLOW_WIELD))
+    if (is_weapon(item) && you.has_mutation(MUT_SLOW_WIELD) && !skip_effects)
         say_farewell_to_weapon(item);
 
     const int item_slot = item.link;

@@ -12,7 +12,7 @@ void remove_ice_movement();
 bool cancel_harmful_move(bool physically = true);
 void apply_noxious_bog(const coord_def old_pos);
 bool apply_cloud_trail(const coord_def old_pos);
-bool cancel_confused_move(bool stationary);
+bool check_confused_move(bool stationary);
 void open_door_action(coord_def move = {0,0});
 void close_door_action(coord_def move);
 bool prompt_dangerous_portal(dungeon_feature_type ftype);

@@ -161,6 +161,7 @@
     cut1less
     Matthew Daley
     David Damerell
+    Victor 'Vji' Davidescu
     Paul Dejean
     Denzi
     DevJac
@@ -383,6 +384,7 @@
     Risto Saarelma
     Sebastian Salman
     Petri Salminen
+    Lyla Sanders
     Sandman25
     Brett Scarborough
     Roderick Schertler

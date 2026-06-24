@@ -478,6 +478,41 @@ static bool _same_door_at(dungeon_feature_type feat, const coord_def &gc)
            && (feat_is_sealed(feat) || feat_is_sealed(door));
 }
 
+unsigned short tile_door_connect(coord_def gc)
+{
+    dungeon_feature_type feat = env.grid(gc);
+    if (!feat_is_door(feat))
+        return 0;
+
+    // Check for gates.
+    bool door_left  = _same_door_at(feat, coord_def(gc.x - 1, gc.y));
+    bool door_right = _same_door_at(feat, coord_def(gc.x + 1, gc.y));
+    bool door_up    = _same_door_at(feat, coord_def(gc.x, gc.y - 1));
+    bool door_down  = _same_door_at(feat, coord_def(gc.x, gc.y + 1));
+
+    if (!door_left && !door_right && !door_up && !door_down)
+        return 0;
+
+    tileidx_t target;
+    if (door_left && door_right)
+        target = TILE_DNGN_GATE_CLOSED_MIDDLE;
+    else if (door_up && door_down)
+        target = TILE_DNGN_VGATE_CLOSED_MIDDLE;
+    else if (door_left)
+        target = TILE_DNGN_GATE_CLOSED_RIGHT;
+    else if (door_right)
+        target = TILE_DNGN_GATE_CLOSED_LEFT;
+    else if (door_up)
+        target = TILE_DNGN_VGATE_CLOSED_DOWN;
+    else
+        target = TILE_DNGN_VGATE_CLOSED_UP;
+
+    // NOTE: This requires that closed gates and open gates
+    // are positioned in the tile set relative to their
+    // door counterpart.
+    return (unsigned short)(target - TILE_DNGN_CLOSED_DOOR);
+}
+
 static void _init_feat_flavour(tileidx_t& flavour, dungeon_feature_type feat)
 {
     if (feat_is_stone_stair(feat))
@@ -572,39 +607,7 @@ void tile_init_flavour(const coord_def &gc, const int domino)
 
     _init_feat_flavour(tile_env.flv(gc).feat, env.grid(gc));
 
-    if (feat_is_door(env.grid(gc)))
-    {
-        // Check for gates.
-        bool door_left  = _same_door_at(env.grid(gc), coord_def(gc.x - 1, gc.y));
-        bool door_right = _same_door_at(env.grid(gc), coord_def(gc.x + 1, gc.y));
-        bool door_up    = _same_door_at(env.grid(gc), coord_def(gc.x, gc.y - 1));
-        bool door_down  = _same_door_at(env.grid(gc), coord_def(gc.x, gc.y + 1));
-
-        if (door_left || door_right || door_up || door_down)
-        {
-            tileidx_t target;
-            if (door_left && door_right)
-                target = TILE_DNGN_GATE_CLOSED_MIDDLE;
-            else if (door_up && door_down)
-                target = TILE_DNGN_VGATE_CLOSED_MIDDLE;
-            else if (door_left)
-                target = TILE_DNGN_GATE_CLOSED_RIGHT;
-            else if (door_right)
-                target = TILE_DNGN_GATE_CLOSED_LEFT;
-            else if (door_up)
-                target = TILE_DNGN_VGATE_CLOSED_DOWN;
-            else
-                target = TILE_DNGN_VGATE_CLOSED_UP;
-
-            // NOTE: This requires that closed gates and open gates
-            // are positioned in the tile set relative to their
-            // door counterpart.
-            tile_env.flv(gc).special = target - TILE_DNGN_CLOSED_DOOR;
-        }
-        else
-            tile_env.flv(gc).special = 0;
-    }
-    else if (!tile_env.flv(gc).special)
+    if (!tile_env.flv(gc).special)
         tile_env.flv(gc).special = hash_with_seed(256, seed, 10);
 }
 

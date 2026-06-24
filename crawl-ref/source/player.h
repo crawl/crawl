@@ -519,6 +519,7 @@ public:
     bool redraw_status_lights;
 
     colour_t flash_colour;
+    int flash_alpha;
     targeter *flash_where;
 
     int time_taken;
@@ -1095,8 +1096,14 @@ public:
 
 bool check_moveto(const coord_def& p, const string &move_verb = "step",
                   bool check_harmful = true, bool physically = true);
+bool check_terrain_warnings(const vector<coord_def> &areas,
+                            const string &move_verb,
+                            const string &msg = "", bool *prompted = nullptr);
 bool check_moveto_terrain(const coord_def& p, const string &move_verb,
                           const string &msg = "", bool *prompted = nullptr);
+bool check_moveto_cloud(const vector<coord_def> &areas,
+                        const string &move_verb = "step",
+                        bool *prompted = nullptr);
 bool check_moveto_cloud(const coord_def& p, const string &move_verb = "step",
                         bool *prompted = nullptr);
 bool check_moveto_exclusions(const vector<coord_def> &areas,
@@ -1105,6 +1112,9 @@ bool check_moveto_exclusions(const vector<coord_def> &areas,
 bool check_moveto_exclusion(const coord_def& p,
                             const string &move_verb = "step",
                             bool *prompted = nullptr);
+bool check_moveto_trap(const vector<coord_def> &areas,
+                       const string &move_verb = "step",
+                       bool *prompted = nullptr);
 bool check_moveto_trap(const coord_def& p, const string &move_verb = "step",
         bool *prompted = nullptr);
 

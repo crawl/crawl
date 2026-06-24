@@ -434,7 +434,7 @@ bool explode_monster(monster* mons, killer_type killer, bool pet_kill)
     if (type == MONS_LURKING_HORROR)
     {
         targeter_radius hitfunc(mons, LOS_SOLID);
-        flash_view_delay(UA_MONSTER, DARKGRAY, 300, &hitfunc);
+        flash_view_delay(UA_MONSTER, DARKGRAY, 300, 0, &hitfunc);
     }
     else
     {

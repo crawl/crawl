@@ -1267,9 +1267,8 @@ static bool _accept_mutation(mutation_type mutat, bool temp, bool catalyst)
     // Catalyst mutations avoid the boring pure stat mutation trio, and also
     // try to avoid providing any auxes that could disable equipment.
     if (catalyst
-        && (mutat == MUT_HORNS || mutat == MUT_ANTENNAE
-            || mutat == MUT_CLAWS || mutat == MUT_HOOVES || mutat == MUT_TALONS
-            || mutat == MUT_STRONG || mutat == MUT_CLEVER || mutat == MUT_AGILE))
+        && (is_body_facet(mutat) || mutat == MUT_STRONG
+            || mutat == MUT_CLEVER || mutat == MUT_AGILE))
     {
         return false;
     }

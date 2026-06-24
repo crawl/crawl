@@ -983,9 +983,10 @@ void timeout_terrain_changes(int duration, bool force)
     });
 
     for (const auto &m_pos : revert)
-    {
         revert_terrain_change(m_pos.pos, m_pos.type);
 
+    for (const auto& m_pos : revert)
+    {
         // When multiple tiles are reverting at once, walls reappearing may
         // obscure otherwise-unambiguous information about terrain behind them,
         // so forcibly redraw anything the player could see at the start of them.
@@ -993,9 +994,7 @@ void timeout_terrain_changes(int duration, bool force)
         {
             update_terrain_knowledge(m_pos.pos);
             update_grid_colour_knowledge(m_pos.pos);
-#ifdef USE_TILE
-            tile_env.bk_bg(m_pos.pos) = tileidx_feature_base(env.grid(m_pos.pos));
-#endif
+            redraw_view_at(m_pos.pos);
         }
     }
 

@@ -3490,7 +3490,10 @@ void Menu::webtiles_write_item(const MenuEntry* me) const
 
 int menu_colour(const string &text, const string &prefix, const string &tag, bool strict)
 {
-    const string tmp_text = prefix + text;
+    bool extra_space = !text.empty() && text.front() != ' '
+                       && !prefix.empty() && prefix.back() != ' ';
+
+    const string tmp_text = prefix + (extra_space ? " " : "") + text;
 
     for (const colour_mapping &cm : Options.menu_colour_mappings)
     {

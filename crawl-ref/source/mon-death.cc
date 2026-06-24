@@ -1151,7 +1151,7 @@ static bool _monster_avoided_death(monster* mons, killer_type killer,
         return true;
 
     // Beogh special.
-    if (mons->type == MONS_ORC_APOSTLE && you_worship(GOD_BEOGH))
+    if (mons->type == MONS_ORC_APOSTLE && you_worship(GOD_BEOGH) && !RESET_KILL(killer))
     {
         if (mons->has_ench(ENCH_TOUCH_OF_BEOGH))
         {
@@ -3901,7 +3901,7 @@ int dismiss_monsters(string pattern)
     const bool los     = pattern == "los";
 
     // Dismiss by regex.
-    text_pattern tpat(pattern);
+    text_pattern tpat(pattern, true);
     int ndismissed = 0;
     for (monster_iterator mi; mi; ++mi)
     {
@@ -4236,28 +4236,8 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
             mpr(death_message);
     }
 
-    // Upgrade the spellbook here, as elven_twin_energize
-    // may not be called due to lack of visibility.
-    if (mons_is_mons_class(mons, MONS_DOWAN)
-                                        && !(mons->flags & MF_POLYMORPHED))
-    {
-        // Don't mess with Dowan's spells if he's been polymorphed: most
-        // possible forms have no spells, and the few that do (e.g. boggart)
-        // have way more fun spells than this. If this ever changes, the
-        // following code would need to be rewritten, as it'll crash.
-        // TODO: this is a fairly brittle way of upgrading Dowan...
-        ASSERT(mons->spells.size() >= 5);
-        mons->spells[0].spell = SPELL_STONE_ARROW;
-        mons->spells[1].spell = SPELL_THROW_ICICLE;
-        mons->spells[3].spell = SPELL_BLINK;
-        // Nothing with 6.
-
-        // Indicate that he has an updated spellbook.
-        mons->props[CUSTOM_SPELLS_KEY] = true;
-    }
-
     // Finally give them new energy
-    if (mons->can_see(you) && !mons->has_ench(ENCH_FRENZIED))
+    if (!mons->has_ench(ENCH_FRENZIED))
         elven_twin_energize(mons);
     else
         mons->props[ELVEN_ENERGIZE_KEY] = true;
@@ -4283,6 +4263,23 @@ void elven_twin_energize(monster* mons)
         ASSERT(mons_is_mons_class(mons, MONS_DOWAN));
         if (mons->observable())
             simple_monster_message(*mons, " seems to find hidden reserves of power!");
+
+        // Upgrade the spellbook.
+        if (!(mons->flags & MF_POLYMORPHED))
+        {
+            // Don't mess with Dowan's spells if he's been polymorphed, as
+            // giving his new form spells very likely makes no sense.
+            //
+            // TODO: this is a fairly brittle way of upgrading Dowan, as it is
+            // coupled to the order of his spellbook.
+            ASSERT(mons->spells.size() >= 5);
+            mons->spells[0].spell = SPELL_STONE_ARROW;
+            mons->spells[1].spell = SPELL_THROW_ICICLE;
+            mons->spells[3].spell = SPELL_BLINK;
+
+            // Indicate that he has an updated spellbook.
+            mons->props[CUSTOM_SPELLS_KEY] = true;
+        }
 
         mons->add_ench(mon_enchant(ENCH_HASTE, mons, INFINITE_DURATION));
         mons->props[ELVEN_IS_ENERGIZED_KEY] = true;
