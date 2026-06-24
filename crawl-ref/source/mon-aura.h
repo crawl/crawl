@@ -11,6 +11,7 @@
 #define PHALANX_BARRIER_KEY "phalanx_barrier"
 #define TORPOR_SLOWED_KEY "torpor_slowed"
 #define OPHAN_MARK_KEY "ophan_mark"
+#define RADIANT_BLIND_KEY "radiant_blind"
 
 class mon_enchant;
 

@@ -2602,6 +2602,11 @@ quokka
 
 A pesky little marsupial that is a bit like a rat, but not quite.
 %%%%
+radiant snail
+
+A surprisingly fast and overwhelmingly bright snail that blinds foes who gaze
+upon it.
+%%%%
 radroach
 
 A giant cockroach that has been exposed to high amounts of mutagenic energy. It
