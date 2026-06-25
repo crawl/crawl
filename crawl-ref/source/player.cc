@@ -2075,10 +2075,10 @@ int player_movement_speed(bool check_terrain, bool include_temp, int scale)
         mv = div_rand_round(mv * 3, 2);
 
     if (include_temp && you.duration[DUR_SWIFTNESS] > 0)
+        mv = div_rand_round(3*mv, 4);
+    else if (include_temp && you.duration[DUR_ANTISWIFT] > 0)
     {
-        if (you.attribute[ATTR_SWIFTNESS] > 0)
-          mv = div_rand_round(3*mv, 4);
-        else if (mv >= 8 * scale)
+        if (mv >= 8 * scale)
           mv = div_rand_round(3*mv, 2);
         else if (mv >= 7 * scale)
           mv = div_rand_round(mv * 6, 5); // balance for the cap at 6
@@ -3636,10 +3636,8 @@ static void _display_movement_speed()
     const bool swim   = you.swimming();
 
     const bool fly    = you.airborne();
-    const bool swift  = (you.duration[DUR_SWIFTNESS] > 0
-                         && you.attribute[ATTR_SWIFTNESS] >= 0);
-    const bool antiswift = (you.duration[DUR_SWIFTNESS] > 0
-                            && you.attribute[ATTR_SWIFTNESS] < 0);
+    const bool swift  = you.duration[DUR_SWIFTNESS] > 0;
+    const bool antiswift = you.duration[DUR_ANTISWIFT] > 0;
 
     _display_char_status(move_cost, "Your %s speed is %s%s%s",
           // order is important for these:

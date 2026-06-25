@@ -10,6 +10,7 @@ enum PietyGainEvent
     PG_EVENT_GIFT_PENALTY,
     PG_EVENT_STEPDOWN,
     PG_EVENT_TRUE_GAIN,
+    PG_EVENT_MAX_PIETY
 };
 
 // Tracks piety info for a "visit" to a piety rank.
@@ -24,6 +25,7 @@ struct RankPietyInfo
     unsigned int piety_on_penance;
     unsigned int piety_on_gifts;
     unsigned int piety_on_stepdowns;
+    unsigned int piety_at_max;
 
     RankPietyInfo();
 };

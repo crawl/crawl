@@ -3100,8 +3100,11 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
     find_connected_identical(pos, all_door);
     get_door_description(all_door.size(), &adj, &noun);
 
+    const bool player_adj_to_door = any_of(begin(all_door), end(all_door),
+        [](const coord_def &p) { return adjacent(you.pos(), p); });
+
     const bool broken = mons.foe == MHITYOU
-                            && ((adjacent(you.pos(), pos) && one_chance_in(3))
+                            && ((player_adj_to_door && one_chance_in(3))
                                 || mons.berserk());
     for (const auto &dc : all_door)
     {
@@ -4298,10 +4301,7 @@ void seen_monsters_react()
                 monster_consider_shouting(**mi);
         }
 
-        if (!mi->visible_to(&you))
-            continue;
-
-        if (!mi->has_ench(ENCH_FRENZIED) && mi->can_see(you))
+        if (!mi->has_ench(ENCH_FRENZIED))
         {
             // Trigger Duvessa & Dowan upgrades
             if (mi->props.exists(ELVEN_ENERGIZE_KEY))
@@ -4309,8 +4309,8 @@ void seen_monsters_react()
                 mi->props.erase(ELVEN_ENERGIZE_KEY);
                 elven_twin_energize(*mi);
             }
-            else if (mi->type == MONS_BORIS && player_has_orb()
-                     && !mi->props.exists(BORIS_ORB_KEY))
+            else if (mi->can_see(you) && mi->type == MONS_BORIS
+                     && player_has_orb() && !mi->props.exists(BORIS_ORB_KEY))
             {
                 mi->props[BORIS_ORB_KEY] = true;
                 boris_covet_orb(*mi);

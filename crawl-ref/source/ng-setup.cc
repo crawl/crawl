@@ -19,6 +19,7 @@
 #include "ng-init.h"
 #include "ng-wanderer.h"
 #include "options.h"
+#include "piety-info.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
@@ -626,6 +627,8 @@ static void _setup_generic(const newgame_def& ng,
     init_train();
     if (you.religion == GOD_TROG)
         join_trog_skills();
+    if (you.religion != GOD_NO_GOD)
+        you.piety_info.register_join();
     init_training();
     if (you.has_mutation(MUT_INNATE_CASTER))
         cleanup_innate_magic_skills();

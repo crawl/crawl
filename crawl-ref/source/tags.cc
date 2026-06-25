@@ -2114,6 +2114,7 @@ static void marshallRankPietyInfo(writer &th, RankPietyInfo r)
     marshallInt(th, r.piety_on_penance);
     marshallInt(th, r.piety_on_gifts);
     marshallInt(th, r.piety_on_stepdowns);
+    marshallInt(th, r.piety_at_max);
 }
 
 static void marshallConductInfo(writer &th, const ConductPietyInfo &cp_info)
@@ -2153,6 +2154,11 @@ static RankPietyInfo unmarshallRankPietyInfo(reader &th)
     r.piety_on_penance = unmarshallInt(th);
     r.piety_on_gifts = unmarshallInt(th);
     r.piety_on_stepdowns = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_MAX_PIETY_LOGGING)
+#endif
+        r.piety_at_max = unmarshallInt(th);
+
     return r;
 }
 
@@ -3587,6 +3593,16 @@ static void _tag_read_you(reader &th)
         // Fix bugged negative charges.
         if (you.duration[DUR_DIVINE_SHIELD] < 0)
             you.duration[DUR_DIVINE_SHIELD] = 0;
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_SWIFTNESS_REFACTOR
+        && you.attribute[ATTR_SWIFTNESS] < 0)
+    {
+        // Swiftness's backlash used to be tracked as DUR_SWIFTNESS with a
+        // negative ATTR_SWIFTNESS; it now has its own duration.
+        you.duration[DUR_ANTISWIFT] = you.duration[DUR_SWIFTNESS];
+        you.duration[DUR_SWIFTNESS] = 0;
+        you.attribute[ATTR_SWIFTNESS] = 0;
     }
 
     if (th.getMinorVersion() < TAG_MINOR_SIMPLIFY_STAT_ZERO)

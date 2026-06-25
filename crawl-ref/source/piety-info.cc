@@ -25,7 +25,7 @@ static bool god_is_tracked(god_type god)
 RankPietyInfo::RankPietyInfo()
     : god(you.religion), initial_piety(you.raw_piety), start_time(you.elapsed_time),
       piety_lost(0), piety_gained(0), piety_decayed(0), piety_on_penance(0),
-      piety_on_gifts(0), piety_on_stepdowns(0)
+      piety_on_gifts(0), piety_on_stepdowns(0), piety_at_max(0)
 {
 }
 
@@ -84,6 +84,9 @@ void PietyInfo::register_piety_gain(PietyGainEvent event)
             break;
         case PG_EVENT_STEPDOWN:
             rank_info.back().piety_on_stepdowns += 1;
+            break;
+        case PG_EVENT_MAX_PIETY:
+            rank_info.back().piety_at_max += 1;
             break;
         case PG_EVENT_TRUE_GAIN:
             rank_info.back().piety_gained += 1;
