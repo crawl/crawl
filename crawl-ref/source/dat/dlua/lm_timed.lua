@@ -49,6 +49,7 @@ function TimedMarker:activate(marker, verbose)
   self.super.activate(self, marker, verbose)
   self.msg:init(self, marker, verbose)
   dgn.register_listener(dgn.dgn_event_type('entered_level'), marker)
+  dgn.register_listener(dgn.dgn_event_type('leave_level'), marker)
   dgn.register_listener(dgn.dgn_event_type('player_los'), marker, marker:pos())
   dgn.register_listener(dgn.dgn_event_type('turn'), marker)
 end
@@ -108,6 +109,8 @@ function TimedMarker:event(marker, ev)
 
   if ev:type() == dgn.dgn_event_type('entered_level') then
     self:start()
+    self.msg:event(self, marker, ev)
+  elseif ev:type() == dgn.dgn_event_type('leave_level') then
     self.msg:event(self, marker, ev)
   elseif ev:type() == dgn.dgn_event_type('player_los') then
     self:start_short(marker)
