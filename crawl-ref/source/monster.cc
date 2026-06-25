@@ -6648,7 +6648,7 @@ bool monster::attempt_escape()
 
     if (x_chance_in_y(escape_pow, hold_pow))
     {
-        stop_being_constricted(true);
+        stop_being_constricted();
         return true;
     }
     else

@@ -519,7 +519,7 @@ void player_reacts_to_monsters()
         if (you.constricted_type == CONSTRICT_ROOTS)
             mprf("The roots around you sink back into the ground.");
         else if (you.constricted_type == CONSTRICT_BVC)
-            mprf("The zombie hands holding you return to the earth.");
+            mprf("The zombie hands constricting you return to the earth.");
 
         you.stop_being_constricted(true);
     }

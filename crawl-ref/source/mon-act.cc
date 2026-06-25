@@ -3815,9 +3815,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
 
     if (mons.is_constricted() && !mons.cannot_move())
     {
-        if (mons.attempt_escape())
-            simple_monster_message(mons, " escapes!");
-        else
+        if (!mons.attempt_escape())
         {
             simple_monster_message(mons, " struggles to escape constriction.");
             _swim_or_move_energy(mons);

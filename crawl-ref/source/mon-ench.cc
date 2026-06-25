@@ -878,12 +878,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             {
                 if (constricted_type == CONSTRICT_BVC)
                 {
-                    mprf("The zombie hands holding %s return to the earth.",
+                    mprf("The zombie hands constricting %s return to the earth.",
                          name(DESC_THE).c_str());
                 }
                 else if (constricted_type == CONSTRICT_ROOTS)
                 {
-                    mprf("The roots around %s sink back into the ground.",
+                    mprf("The roots constricting %s sink back into the ground.",
                          name(DESC_THE).c_str());
                 }
             }

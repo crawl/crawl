@@ -455,13 +455,12 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet,
         && (you.see_cell(pos()) || you.see_cell(constrictee->pos())))
     {
         string attacker_desc;
-        const string verb = intentional ? "release" : "lose";
         bool force_plural = true;
 
         if (ctype == CONSTRICT_BVC)
             attacker_desc = "The zombie hands";
         else if (ctype == CONSTRICT_ROOTS)
-            attacker_desc = "The roots";
+            attacker_desc = "The grasping roots";
         else if (ctype == CONSTRICT_ENTANGLE)
             attacker_desc = "The vines";
         else
@@ -472,18 +471,18 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet,
 
         // Print a different message when breaking free of constriction via
         // blinking or similar
-        if (!escape_verb.empty())
+        if (!intentional)
         {
             mprf("%s %s free of %s!",
-                 constrictee->name(DESC_THE).c_str(), escape_verb.c_str(),
+                 constrictee->name(DESC_THE).c_str(),
+                 constrictee->conj_verb(escape_verb).c_str(),
                  lowercase(attacker_desc).c_str());
         }
         else
         {
             mprf("%s %s %s grip on %s.",
                 attacker_desc.c_str(),
-                force_plural ? verb.c_str()
-                            : conj_verb(verb).c_str(),
+                force_plural ? "release" : "releases",
                 force_plural ? "their" : pronoun(PRONOUN_POSSESSIVE).c_str(),
                 constrictee->name(DESC_THE).c_str());
         }
