@@ -105,7 +105,7 @@ void xom_is_stimulated(int maxinterestingness, const string& message,
                        bool force_message = false);
 bool xom_is_nice(int tension = -1);
 const string describe_xom_favour();
-int xom_favour_rank();
+int xom_tension_pips();
 
 xom_event_type xom_acts(int sever, maybe_bool niceness = maybe_bool::maybe,
                         int tension = -1, bool debug = false);
