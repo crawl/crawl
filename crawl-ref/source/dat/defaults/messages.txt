@@ -202,7 +202,6 @@ force_more_message += Beogh speaks to you:
 
 # Xom doing things you really shouldn't miss
 force_more_message += is forced to slowly start .* word of recall
-force_more_message += too known and too boring
 
 # Crucible exit notification
 force_more_message += Makhleb acknowledges your contrition

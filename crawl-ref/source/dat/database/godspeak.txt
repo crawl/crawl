@@ -1461,14 +1461,6 @@ Wu Jian welcome
 
 The Council says: Follow the path of wisdom and battle!
 %%%%
-Xom bored
-
-Xom yawns.
-
-"I wonder what else is on..."
-
-@Xom welcome@
-%%%%
 Xom newgame
 
 Xom says: A new plaything!
