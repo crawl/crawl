@@ -30,7 +30,8 @@ string movement_impossible_reason();
 
 coord_def get_electric_charge_landing_spot(const actor& agent,
                                            coord_def target,
-                                           string* fail_reason = nullptr);
+                                           string* fail_reason = nullptr,
+                                           bool* target_invalid = nullptr);
 
 bool valid_electric_charge_target(const actor& agent, coord_def target,
                                   string* fail_reason = nullptr);

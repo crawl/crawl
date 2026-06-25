@@ -495,17 +495,27 @@ spret frog_hop(bool fail, dist *target)
 string electric_charge_impossible_reason(bool allow_safe_monsters)
 {
     // General movement checks are handled elsewhere.
-    int nearby_mons = 0;
+    int num_reasons = 0;
     string example_reason = "";
     string fail_reason;
-    for (monster_near_iterator mi(&you); mi; ++mi)
+    for (monster_near_iterator mi(&you, LOS_DEFAULT, true); mi; ++mi)
     {
-        ++nearby_mons;
-        if (get_electric_charge_landing_spot(you, mi->pos(), &fail_reason).origin())
+        // To increase clarity about the reason why the player cannot cast Vhi's,
+        // try to exclude things which are 'obviously' invalid targets (by being
+        // out of range or friendly). Otherwise, a single adjacent monster can
+        // prevent giving useful information about why any other monster is invalid.
+        bool invalid_target = false;
+        if (get_electric_charge_landing_spot(you, mi->pos(), &fail_reason, &invalid_target).origin())
         {
-            example_reason = make_stringf("you can't charge at %s because %s",
-                                          mi->name(DESC_THE).c_str(),
-                                          fail_reason.c_str());
+            const bool low_priorty = invalid_target && !ends_with(fail_reason, "properly.");
+            if (!low_priorty || example_reason.empty())
+            {
+                example_reason = make_stringf("you can't charge at %s because %s",
+                                            mi->name(DESC_THE).c_str(),
+                                            fail_reason.c_str());
+                if (!low_priorty)
+                    num_reasons++;
+            }
         }
         else if (allow_safe_monsters
                  || !mons_is_safe(*mi, false)
@@ -514,11 +524,9 @@ string electric_charge_impossible_reason(bool allow_safe_monsters)
             return "";
         }
     }
-    if (!nearby_mons)
-        return "you can't see anything to charge at.";
-    if (nearby_mons == 1)
+    if (!example_reason.empty() && num_reasons <= 1)
         return lowercase_string(example_reason);
-    return "there's one issue or another keeping you from charging at any nearby foe.";
+    return "there are no targets in range which are valid to charge at.";
 }
 
 string movement_impossible_reason()
@@ -535,6 +543,32 @@ bool valid_electric_charge_target(const actor& agent, coord_def target, string* 
     string msg;
 
     const actor* act = actor_at(target);
+
+    // No charging at things the caster cannot see.
+    if (!act || !agent.can_see(*act)
+        || agent.is_player() && act->is_monster()
+           && fedhas_passthrough(act->as_monster()))
+    {
+        if (act && agent.aware_of(*act) && fail_reason)
+        {
+            *fail_reason = make_stringf("%s %s visible enough to target properly.",
+                                            act->pronoun(PRONOUN_SUBJECTIVE).c_str(),
+                                            act->conj_verb("aren't").c_str());
+        }
+        else if (fail_reason)
+            *fail_reason = "You can't see anything there to charge at.";
+
+        return false;
+    }
+
+    // No charging at friends or firewood.
+    if (mons_aligned(act, &agent) || act->is_firewood())
+    {
+        if (fail_reason)
+            *fail_reason = "Why would you want to do that?";
+
+        return false;
+    }
 
     // Target must be in range and non-adjacent
     if (agent.pos() == target)
@@ -560,26 +594,6 @@ bool valid_electric_charge_target(const actor& agent, coord_def target, string* 
         return false;
     }
 
-    // No charging at things the caster cannot see.
-    if (!act || !agent.can_see(*act)
-        || agent.is_player() && act->is_monster()
-           && fedhas_passthrough(act->as_monster()))
-    {
-        if (fail_reason)
-            *fail_reason = "You can't see anything there to charge at.";
-
-        return false;
-    }
-
-    // No charging at friends or firewood.
-    if (mons_aligned(act, &agent) || act->is_firewood())
-    {
-        if (fail_reason)
-            *fail_reason = "Why would you want to do that?";
-
-        return false;
-    }
-
     return true;
 }
 
@@ -587,11 +601,15 @@ bool valid_electric_charge_target(const actor& agent, coord_def target, string* 
 // Returns (0, 0) if this charge is invalid for any reason.
 // (fail_reason will get set to an appropriate error message)
 coord_def get_electric_charge_landing_spot(const actor& agent, coord_def target,
-                                           string* fail_reason)
+                                           string* fail_reason, bool* target_invalid)
 {
     // Double-check that this is a valid thing to try to charge at at all
     if (!valid_electric_charge_target(agent, target, fail_reason))
+    {
+        if (target_invalid)
+            *target_invalid = true;
         return coord_def(0, 0);
+    }
 
     ray_def ray;
     if (!find_ray(agent.pos(), target, ray, opc_solid))
