@@ -1155,7 +1155,7 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.under_penance, (bool) player_under_penance(), "penance");
     int prank = 0;
     if (you_worship(GOD_XOM))
-        prank = xom_favour_rank() - 1;
+        prank = xom_tension_pips();
     else if (!you_worship(GOD_NO_GOD))
         prank = max(0, piety_rank());
     else if (you.char_class == JOB_MONK && !you.has_mutation(MUT_FORLORN)

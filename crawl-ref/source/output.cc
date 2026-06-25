@@ -2263,14 +2263,8 @@ static string _god_asterisks(bool leading_space)
     string str;
     if (you_worship(GOD_XOM))
     {
-        const int p_rank = xom_favour_rank() - 1;
-        if (p_rank >= 0)
-        {
-            str = string(p_rank, '.') + "*"
-                  + string(NUM_PIETY_STARS - 1 - p_rank, '.');
-        }
-        else
-            str = string(NUM_PIETY_STARS, '.'); // very special plaything
+        const int pips = xom_tension_pips();
+        str = string(pips, '*') + string(NUM_PIETY_STARS - pips, '.');
     }
     else
     {

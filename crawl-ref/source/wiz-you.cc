@@ -1063,8 +1063,7 @@ void wizard_xom_acts()
     msgwin_get_line("What action should Xom take? (Blank = any) " ,
                     specs, sizeof(specs));
 
-    const int severity = you_worship(GOD_XOM) ? abs(you.raw_piety - HALF_MAX_PIETY)
-                                              : random_range(0, HALF_MAX_PIETY);
+    const int severity = random_range(0, HALF_MAX_PIETY);
 
     if (specs[0] == '\0')
     {

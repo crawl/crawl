@@ -225,51 +225,34 @@ static const char *_xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =
     }
 };
 
-/**
- * How much does Xom like you right now?
- *
- * Doesn't account for boredom, or whether or not you actually worship Xom.
- *
- * @return An index mapping to an entry in xom_moods.
- */
-int xom_favour_rank()
+static int random_severity()
 {
-    static const int breakpoints[] = { 20, 50, 80, 120, 150, 180};
-    for (unsigned int i = 0; i < ARRAYSZ(breakpoints); ++i)
-        if (you.raw_piety <= breakpoints[i])
-            return i;
-    return ARRAYSZ(breakpoints);
+    return random_range(0, HALF_MAX_PIETY);
 }
 
-static const char* xom_moods[] = {
-    "a very special plaything of Xom.",
-    "a special plaything of Xom.",
-    "a plaything of Xom.",
-    "a toy of Xom.",
-    "a favourite toy of Xom.",
-    "a beloved toy of Xom.",
-    "Xom's teddy bear."
-};
-
-static const char *describe_xom_mood()
+static int _xom_tension_breakpoints(int tension)
 {
-    const int mood = xom_favour_rank();
-    ASSERT(mood >= 0);
-    ASSERT((size_t) mood < ARRAYSZ(xom_moods));
-    return xom_moods[mood];
+    return tension ==  0 ? 0 :
+           tension <=  5 ? 1 :
+           tension <= 10 ? 2 :
+           tension <= 20 ? 3 :
+           tension <= 35 ? 4 :
+           tension <= 50 ? 5
+                         : 6;
+}
+
+int xom_tension_pips()
+{
+    return _xom_tension_breakpoints(get_tension(GOD_XOM));
 }
 
 const string describe_xom_favour()
 {
-    string favour;
     if (!you_worship(GOD_XOM))
-        favour = "a very buggy toy of Xom.";
-    else if (you.gift_timeout < 1)
-        favour = "a BORING thing.";
-    else
-        favour = describe_xom_mood();
-
-    return favour;
+        return "a very buggy toy of Xom.";
+    if (you.gift_timeout < 1)
+        return "a BORING thing.";
+    return "a plaything of Xom.";
 }
 
 #define XOM_SPEECH(x) x
@@ -285,7 +268,6 @@ static string _get_xom_speech(const string &key)
 
     return result;
 }
-
 
 static bool _xom_feels_nasty()
 {
@@ -305,26 +287,20 @@ bool xom_is_nice(int tension)
         if (!you.gift_timeout)
             return false;
 
-        // At high tension Xom is more likely to be nice, at zero
-        // tension the opposite.
+        // At high tension Xom is more likely to be nice and at zero tension
+        // it's a coin flip.
         const int tension_bonus
-            = (tension == -1 ? 0 // :
-// Xom needs to be less negative
-//              : tension ==  0 ? -min(abs(HALF_MAX_PIETY - you.piety) / 2,
-//                                     you.piety / 10)
-                             : min((MAX_PIETY - you.raw_piety) / 2,
-                                   random2(tension)));
+            = (tension == -1 ? 0 : min(random_severity(), random2(tension)));
 
-        const int effective_piety = you.raw_piety + tension_bonus;
+        const int effective_piety = HALF_MAX_PIETY + tension_bonus;
         ASSERT_RANGE(effective_piety, 0, MAX_PIETY + 1);
 
 #ifdef DEBUG_XOM
         mprf(MSGCH_DIAGNOSTICS,
-             "Xom: tension: %d, piety: %d -> tension bonus = %d, eff. piety: %d",
-             tension, you.raw_piety, tension_bonus, effective_piety);
+             "Xom: tension: %d -> tension bonus = %d, eff. disposition: %d",
+             tension, tension_bonus, effective_piety);
 #endif
 
-        // Whether Xom is nice depends largely on Their mood (== piety).
         return x_chance_in_y(effective_piety, MAX_PIETY);
     }
     else // CARD_XOM (XXX: There is no Xom card anymore. Is this needed?)
@@ -399,41 +375,7 @@ void xom_tick()
     // Xom now ticks every action, not every 20 turns.
     if (one_chance_in(20))
     {
-        // Xom semi-randomly drifts your piety.
-        const string old_xom_favour = describe_xom_favour();
-        const bool good = (you.raw_piety == HALF_MAX_PIETY ? coinflip()
-                                                       : you.raw_piety > HALF_MAX_PIETY);
-        int size = abs(you.raw_piety - HALF_MAX_PIETY);
-
-        // Piety slowly drifts towards the extremes.
-        const int delta = piety_scale(x_chance_in_y(511, 1000) ? 1 : -1);
-        size += delta;
-        if (size > HALF_MAX_PIETY)
-            size = HALF_MAX_PIETY;
-
-        you.raw_piety = HALF_MAX_PIETY + (good ? size : -size);
-        string new_xom_favour = describe_xom_favour();
-        you.redraw_title = true; // redraw piety/boredom display
-        if (old_xom_favour != new_xom_favour)
-        {
-            // If we entered another favour state, take a big step into
-            // the new territory, to avoid oscillating favour announcements
-            // every few turns.
-            size += delta * 8;
-            if (size > HALF_MAX_PIETY)
-                size = HALF_MAX_PIETY;
-
-            // If size was 0 to begin with, it may become negative, but that
-            // doesn't really matter.
-            you.raw_piety = HALF_MAX_PIETY + (good ? size : -size);
-        }
-#ifdef DEBUG_XOM
-        const string note = make_stringf("xom_tick(), delta: %d, piety: %d",
-                                         delta, you.raw_piety);
-        take_note(Note(NOTE_MESSAGE, 0, 0, note), true);
-#endif
-
-        // ...but They get bored...
+        // Xom gets bored as you explore familiar ground.
         _calculate_exploration_estimate(true);
         if (you.gift_timeout > 0 && you.explore_estimate > 5 && coinflip() &&
             !player_on_orb_run())
@@ -458,28 +400,19 @@ void xom_tick()
                     simple_god_message(" is getting VERY BORED.");
             }
         }
-
-        new_xom_favour = describe_xom_favour();
-        if (old_xom_favour != new_xom_favour)
-        {
-            const string msg = "You are now " + new_xom_favour;
-            god_speaks(you.religion, msg.c_str());
-        }
     }
 
+    // Redraw tension meter.
+    you.redraw_title = true;
     if (x_chance_in_y(2 + you.faith(), 6))
     {
         const int tension = get_tension(GOD_XOM);
-        const int chance = (tension ==  0 ? 1 :
-                            tension <=  5 ? 2 :
-                            tension <= 10 ? 3 :
-                            tension <= 20 ? 4
-                                          : 5);
+        const int chance = min(_xom_tension_breakpoints(tension) + 1, 5);
 
         // If Xom is bored, the chances for Xom acting are sort of reversed.
         if (!you.gift_timeout && x_chance_in_y(25 - chance*chance, 100))
         {
-            xom_acts(abs(you.raw_piety - HALF_MAX_PIETY), maybe_bool::maybe, tension);
+            xom_acts(random_severity(), maybe_bool::maybe, tension);
             return;
         }
         else if (you.gift_timeout <= 1 && chance > 0
@@ -506,7 +439,7 @@ void xom_tick()
         }
 
         if (x_chance_in_y(chance*chance, 100))
-            xom_acts(abs(you.raw_piety - HALF_MAX_PIETY), maybe_bool::maybe, tension);
+            xom_acts(random_severity(), maybe_bool::maybe, tension);
     }
 }
 
@@ -1818,7 +1751,7 @@ static int _xom_count_and_move_group(int min_range, int max_range,
 }
 
 // Have Xom make a huge, slightly distant ring of clear, disconnected doors,
-// and move enemies in or out according to Xom's mood.
+// and move enemies in or out according to whether the effect is good or bad.
 static void _xom_door_ring(bool good)
 {
     bool created = false;
@@ -4374,7 +4307,7 @@ static void _revert_banishment(bool xom_banished = true)
 // Only used for Xom rarely reverting others' banishment, now.
 void xom_maybe_reverts_banishment()
 {
-    if (!_xom_feels_nasty() && x_chance_in_y(you.raw_piety, 1000))
+    if (!_xom_feels_nasty() && x_chance_in_y(HALF_MAX_PIETY, 1000))
         _revert_banishment(false);
 }
 
@@ -4835,10 +4768,9 @@ static const vector<xom_event_data> _list_xom_good_actions = {
     },
 
     // Strategic effects that don't care about greater than 0 tension.
-    // TODO: replace Xom mood with a visible tension bar, then use gift timeout
-    // in the background to choose providing strategic benefits when going
-    // to new floors, to make this more controllable, less scummable, to confuse
-    // people less about amusing Xom having nothing to do with mood, etc, etc.
+    // TODO: use gift timeout in the background to choose providing strategic
+    // benefits when going to new floors, to make this more controllable and
+    // less scummable.
     {
         XOM_GOOD_DIVINATION, 420, 500, [](int /*sv*/, int tn)
         {return tn <= 24 && (you.explore_estimate < 80
@@ -5106,7 +5038,7 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
     {
         XOM_BAD_BANISHMENT, 1, 1, [](int /*sv*/, int /*tn*/)
         {return _allow_xom_banishment()
-                && !x_chance_in_y(you.raw_piety * 2, 1000)
+                && !x_chance_in_y(HALF_MAX_PIETY * 2, 1000)
                 && !player_in_branch(BRANCH_ABYSS)
                 && !(is_level_on_stack(level_id(BRANCH_ABYSS)));}
     },
@@ -5157,11 +5089,10 @@ xom_event_type xom_choose_action(bool niceness, int sever, int tension)
         return XOM_PLAYER_DEAD;
     }
 
-    // Choosing any type of good act is less likely at zero tension, especially
-    // if Xom is in a bad mood. Choosing any type of bad action at non-zero
-    // tension is less likely, especially if Xom is in a good mood.
+    // Choosing any type of good act is less likely at zero tension. Choosing
+    // any type of bad action at non-zero tension is likewise less likely.
     if (niceness && tension == 0 && you_worship(GOD_XOM)
-        && !x_chance_in_y(you.raw_piety, MAX_PIETY))
+        && !x_chance_in_y(1, 2))
     {
 #ifdef NOTE_DEBUG_XOM
         take_note(Note(NOTE_MESSAGE, 0, 0, "suppress good act because of "
@@ -5170,7 +5101,7 @@ xom_event_type xom_choose_action(bool niceness, int sever, int tension)
         return XOM_DID_NOTHING;
     }
     else if (!niceness && !_xom_feels_nasty() && tension > random2(10)
-             && you_worship(GOD_XOM) && x_chance_in_y(you.raw_piety, MAX_PIETY))
+             && you_worship(GOD_XOM) && x_chance_in_y(1, 2))
     {
 #ifdef NOTE_DEBUG_XOM
         const string note = string("suppress bad act because of ") +
@@ -5280,31 +5211,6 @@ void xom_take_action(xom_event_type action, int sever)
     }
 
     _handle_accidental_death(orig_hp, orig_mutation, orig_form);
-
-    if (you_worship(GOD_XOM) && one_chance_in(5))
-    {
-        const string old_xom_favour = describe_xom_favour();
-        you.raw_piety = random2(MAX_PIETY + 1);
-        you.redraw_title = true; // redraw piety/boredom display
-        const string new_xom_favour = describe_xom_favour();
-        if (was_bored || old_xom_favour != new_xom_favour)
-        {
-            const string msg = "You are now " + new_xom_favour;
-            god_speaks(you.religion, msg.c_str());
-        }
-#ifdef NOTE_DEBUG_XOM
-        const string note = string("reroll piety: ") + you.raw_piety;
-        take_note(Note(NOTE_MESSAGE, 0, 0, note), true);
-#endif
-    }
-    else if (was_bored)
-    {
-        // If we didn't reroll at least mention the new favour
-        // now that it's not "BORING thing" anymore.
-        const string new_xom_favour = describe_xom_favour();
-        const string msg = "You are now " + new_xom_favour;
-        god_speaks(you.religion, msg.c_str());
-    }
 }
 
 /**
@@ -5330,12 +5236,12 @@ xom_event_type xom_acts(int sever, maybe_bool nice, int tension, bool debug)
         // anyway. (jpeg)
 
         // these numbers (sever, tension) may be modified later...
-        mprf(MSGCH_DIAGNOSTICS, "xom_acts(%u, %d, %d); piety: %u, interest: %u",
-             niceness, sever, tension, you.raw_piety, you.gift_timeout);
+        mprf(MSGCH_DIAGNOSTICS, "xom_acts(%u, %d, %d); interest: %u",
+             niceness, sever, tension, you.gift_timeout);
 
         static char xom_buf[100];
-        snprintf(xom_buf, sizeof(xom_buf), "xom_acts(%s, %d, %d), mood: %d",
-                 (niceness ? "true" : "false"), sever, tension, you.raw_piety);
+        snprintf(xom_buf, sizeof(xom_buf), "xom_acts(%s, %d, %d)",
+                 (niceness ? "true" : "false"), sever, tension);
         take_note(Note(NOTE_MESSAGE, 0, 0, xom_buf), true);
     }
 #endif
@@ -5481,7 +5387,7 @@ bool xom_saves_your_life(const kill_method_type death_type)
     if (!_death_is_worth_saving(death_type))
         return false;
 
-    // In addition, the chance depends on the current tension and Xom's mood.
+    // In addition, the chance depends on the current tension.
     const int death_tension = get_tension(GOD_XOM);
     if (death_tension < random2(5) || !xom_is_nice(death_tension))
         return false;
@@ -5786,14 +5692,70 @@ static string _list_exploration_estimate()
                         mapped, explored);
 }
 
-// Loops over the entire piety spectrum and calls xom_acts() multiple
-// times for each value, then prints the results into a file.
+// Print a sorted breakdown of how often each effect came up in a sample.
+static void _write_xom_effect_breakdown(FILE *ostat,
+                                        const vector<xom_event_type> &effects)
+{
+    const int total = effects.size();
+    if (total == 0)
+        return;
+
+    vector<xom_event_type> sorted = effects;
+    sort(sorted.begin(), sorted.end());
+
+    vector<xom_effect_count> xom_ec_pairs;
+    xom_event_type old_effect = XOM_DID_NOTHING;
+    int count = 0;
+    for (int k = 0; k < total; ++k)
+    {
+        if (sorted[k] != old_effect)
+        {
+            if (count > 0)
+                xom_ec_pairs.emplace_back(xom_effect_to_name(old_effect), count);
+            old_effect = sorted[k];
+            count = 1;
+        }
+        else
+            count++;
+    }
+    if (count > 0)
+        xom_ec_pairs.emplace_back(xom_effect_to_name(old_effect), count);
+
+    sort(xom_ec_pairs.begin(), xom_ec_pairs.end(), _sort_xom_effects);
+    for (const xom_effect_count &xec : xom_ec_pairs)
+    {
+        fprintf(ostat, "%7.2f%%    %s\n", (100.0 * xec.count / total),
+                xec.effect.c_str());
+    }
+}
+
+// Print a titled section for one sample of effects: the good/bad split followed
+// by the sorted breakdown of which effects came up.
+static void _write_xom_effect_section(FILE *ostat, const string &title,
+                                      const vector<xom_event_type> &effects)
+{
+    const int total = effects.size();
+    if (total == 0)
+        return;
+
+    int good = 0;
+    for (xom_event_type effect : effects)
+        if (effect <= XOM_LAST_GOOD_ACT)
+            good++;
+
+    fprintf(ostat, "\n%s\n", title.c_str());
+    fprintf(ostat, "GOOD%7.2f%%\n", (100.0 * good / total));
+    fprintf(ostat, "BAD %7.2f%%\n", (100.0 * (total - good) / total));
+    _write_xom_effect_breakdown(ostat, effects);
+}
+
+// Sweeps the whole severity range, calling xom_acts() many times at each
+// severity, and prints the distribution of effects into a file.
 // TODO: Allow specification of niceness, tension, and boredness.
 void debug_xom_effects()
 {
-    // Repeat N times.
-    const int N = prompt_for_int("How many iterations over the "
-                                 "entire piety range? ", true);
+    // Repeat N times per severity.
+    const int N = prompt_for_int("How many iterations per severity? ", true);
 
     if (N <= 0)
     {
@@ -5808,7 +5770,6 @@ void debug_xom_effects()
         return;
     }
 
-    const int real_piety    = you.raw_piety;
     const god_type real_god = you.religion;
     you.religion            = GOD_XOM;
     const int tension       = get_tension(GOD_XOM);
@@ -5824,114 +5785,44 @@ void debug_xom_effects()
         fprintf(ostat, "You are under Xom's penance!\n");
     else if (_xom_is_bored())
         fprintf(ostat, "Xom is BORED.\n");
-    fprintf(ostat, "\nRunning %d times through entire mood cycle.\n", N);
+    fprintf(ostat, "\nRunning %d effects at each severity from 0 to %d.\n",
+            N, HALF_MAX_PIETY);
     fprintf(ostat, "---- OUTPUT EFFECT PERCENTAGES ----\n");
 
-    vector<xom_event_type>          mood_effects;
-    vector<vector<xom_event_type>>  all_effects;
-    vector<string>                  moods;
-    vector<int>                     mood_good_acts;
+    // Bucket severity into chunks of 25, the last bucket absorbing the top of
+    // the range, and report each bucket separately as well as in total.
+    const int bucket_size = 25;
+    const int num_buckets = HALF_MAX_PIETY / bucket_size;
 
-    string old_mood = "";
-    string     mood = "";
-
-    // Add an empty list to later add all effects to.
-    all_effects.push_back(mood_effects);
-    moods.emplace_back("total");
-    mood_good_acts.push_back(0); // count total good acts
-
-    int mood_good = 0;
-    for (int p = 0; p <= MAX_PIETY; ++p)
+    vector<xom_event_type> all_effects;
+    vector<vector<xom_event_type>> bucket_effects(num_buckets);
+    for (int sever = 0; sever <= HALF_MAX_PIETY; ++sever)
     {
-        you.raw_piety = p;
-        int sever     = abs(p - HALF_MAX_PIETY);
-        mood          = describe_xom_mood();
-        if (old_mood != mood)
-        {
-            if (!old_mood.empty())
-            {
-                all_effects.push_back(mood_effects);
-                mood_effects.clear();
-                mood_good_acts.push_back(mood_good);
-                mood_good_acts[0] += mood_good;
-                mood_good = 0;
-            }
-            moods.push_back(mood);
-            old_mood = mood;
-        }
-
-        // Repeat N times.
+        const int bucket = min(sever / bucket_size, num_buckets - 1);
         for (int i = 0; i < N; ++i)
         {
-            const xom_event_type result = xom_acts(sever, maybe_bool::maybe, tension,
-                                                   true);
-
-            mood_effects.push_back(result);
-            all_effects[0].push_back(result);
-
-            if (result <= XOM_LAST_GOOD_ACT)
-                mood_good++;
+            const xom_event_type result = xom_acts(sever, maybe_bool::maybe,
+                                                   tension, true);
+            all_effects.push_back(result);
+            bucket_effects[bucket].push_back(result);
         }
     }
-    all_effects.push_back(mood_effects);
-    mood_effects.clear();
-    mood_good_acts.push_back(mood_good);
-    mood_good_acts[0] += mood_good;
 
-    const int num_moods = moods.size();
-    vector<xom_effect_count> xom_ec_pairs;
-    for (int i = 0; i < num_moods; ++i)
+    _write_xom_effect_section(ostat, "Total effects (all severities)",
+                              all_effects);
+    for (int b = 0; b < num_buckets; ++b)
     {
-        mood_effects    = all_effects[i];
-        const int total = mood_effects.size();
-
-        if (i == 0)
-            fprintf(ostat, "\nTotal effects (all piety ranges)\n");
-        else
-            fprintf(ostat, "\nMood: You are %s\n", moods[i].c_str());
-
-        fprintf(ostat, "GOOD%7.2f%%\n",
-                (100.0 * (float) mood_good_acts[i] / (float) total));
-        fprintf(ostat, "BAD %7.2f%%\n",
-                (100.0 * (float) (total - mood_good_acts[i]) / (float) total));
-
-        sort(mood_effects.begin(), mood_effects.end());
-
-        xom_ec_pairs.clear();
-        xom_event_type old_effect = XOM_DID_NOTHING;
-        int count      = 0;
-        for (int k = 0; k < total; ++k)
-        {
-            if (mood_effects[k] != old_effect)
-            {
-                if (count > 0)
-                {
-                    xom_ec_pairs.emplace_back(xom_effect_to_name(old_effect),
-                                              count);
-                }
-                old_effect = mood_effects[k];
-                count = 1;
-            }
-            else
-                count++;
-        }
-
-        if (count > 0)
-            xom_ec_pairs.emplace_back(xom_effect_to_name(old_effect), count);
-
-        sort(xom_ec_pairs.begin(), xom_ec_pairs.end(), _sort_xom_effects);
-        for (const xom_effect_count &xec : xom_ec_pairs)
-        {
-            fprintf(ostat, "%7.2f%%    %s\n",
-                    (100.0 * xec.count / total),
-                    xec.effect.c_str());
-        }
+        const int lo = b * bucket_size;
+        const int hi = b == num_buckets - 1 ? HALF_MAX_PIETY
+                                            : (b + 1) * bucket_size - 1;
+        _write_xom_effect_section(ostat, make_stringf("Severity %d-%d", lo, hi),
+                                  bucket_effects[b]);
     }
+
     fprintf(ostat, "---- FINISHED XOM DEBUG TESTING ----\n");
     fclose(ostat);
     mpr("Results written into 'xom_debug.stat'.");
 
-    you.raw_piety= real_piety;
     you.religion = real_god;
 }
 #endif // WIZARD
