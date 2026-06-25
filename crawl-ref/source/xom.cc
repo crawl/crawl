@@ -91,17 +91,6 @@
 #endif
 
 static void _do_xom_event(xom_event_type event_type, int sever);
-static int _xom_event_badness(xom_event_type event_type);
-
-static bool _action_is_bad(xom_event_type action)
-{
-    return action > XOM_LAST_GOOD_ACT && action <= XOM_LAST_BAD_ACT;
-}
-
-static bool _xom_is_bored()
-{
-    return you_worship(GOD_XOM) && !you.gift_timeout;
-}
 
 // Picks 100 random grids from the level and checks whether they've been
 // marked as seen (explored) or known (mapped). If seen_only is true,
@@ -152,21 +141,6 @@ static void _calculate_exploration_estimate(bool seen_only = false)
         seen *= 100 / total;
 
     you.explore_estimate = seen;
-}
-
-// A reusable function for trivially cracking down on Xomscumming without
-// worsening select portals (with br_flag::fully_map levels being somewhat
-// inconsistent). Returns true if Xom's bored and the floor's mostly explored.
-static bool _bored_explore_estimate(int minimum)
-{
-    // Just checking the non-ability non-Temple ones.
-    if (player_in_branch(BRANCH_NECROPOLIS) || player_in_branch(BRANCH_GAUNTLET))
-        return false;
-
-    if (player_in_branch(BRANCH_BAZAAR))
-        return true;
-
-    return _xom_is_bored() && you.explore_estimate >= minimum;
 }
 
 // Spells to be cast at tension > 0, i.e. usually in battle situations.
@@ -250,8 +224,6 @@ const string describe_xom_favour()
 {
     if (!you_worship(GOD_XOM))
         return "a very buggy toy of Xom.";
-    if (you.gift_timeout < 1)
-        return "a BORING thing.";
     return "a plaything of Xom.";
 }
 
@@ -269,13 +241,6 @@ static string _get_xom_speech(const string &key)
     return result;
 }
 
-static bool _xom_feels_nasty()
-{
-    // Xom will only directly kill you with a bad effect if you're under
-    // penance from Them, or if They're bored.
-    return you.penance[GOD_XOM] || _xom_is_bored();
-}
-
 bool xom_is_nice(int tension)
 {
     if (player_under_penance(GOD_XOM))
@@ -283,10 +248,6 @@ bool xom_is_nice(int tension)
 
     if (you_worship(GOD_XOM))
     {
-        // If you.gift_timeout is 0, then Xom is BORED. They HATE that.
-        if (!you.gift_timeout)
-            return false;
-
         // At high tension Xom is more likely to be nice and at zero tension
         // it's a coin flip.
         const int tension_bonus
@@ -324,29 +285,23 @@ static void _xom_is_stimulated(int maxinterestingness,
 
 #if defined(DEBUG_RELIGION) || defined(DEBUG_GIFTS) || defined(DEBUG_XOM)
     mprf(MSGCH_DIAGNOSTICS,
-         "Xom: gift_timeout: %d, maxinterestingness = %d, interestingness = %d",
-         you.gift_timeout, maxinterestingness, interestingness);
+         "Xom: maxinterestingness = %d, interestingness = %d",
+         maxinterestingness, interestingness);
 #endif
 
-    bool was_stimulated = false;
-    if (interestingness > you.gift_timeout && interestingness >= 10)
+    if (!force_message
+        && (interestingness < 10 || !x_chance_in_y(interestingness, 200)))
     {
-        you.gift_timeout = interestingness;
-        was_stimulated = true;
+        return;
     }
 
-    if (was_stimulated || force_message)
-    {
-        god_speaks(GOD_XOM,
-                   ((interestingness > 160) ? message_array[5] :
-                    (interestingness >  80) ? message_array[4] :
-                    (interestingness >  60) ? message_array[3] :
-                    (interestingness >  40) ? message_array[2] :
-                    (interestingness >  20) ? message_array[1]
-                                            : message_array[0]));
-        //updating piety status line
-        you.redraw_title = true;
-    }
+    god_speaks(GOD_XOM,
+               ((interestingness > 160) ? message_array[5] :
+                (interestingness >  80) ? message_array[4] :
+                (interestingness >  60) ? message_array[3] :
+                (interestingness >  40) ? message_array[2] :
+                (interestingness >  20) ? message_array[1]
+                                        : message_array[0]));
 }
 
 void xom_is_stimulated(int maxinterestingness, xom_message_type message_type,
@@ -372,71 +327,12 @@ void xom_is_stimulated(int maxinterestingness, const string& message,
 
 void xom_tick()
 {
-    // Xom now ticks every action, not every 20 turns.
-    if (one_chance_in(20))
-    {
-        // Xom gets bored as you explore familiar ground.
-        _calculate_exploration_estimate(true);
-        if (you.gift_timeout > 0 && you.explore_estimate > 5 && coinflip() &&
-            !player_on_orb_run())
-        {
-            you.gift_timeout--;
-            // Especially if the floor's mostly done.
-            if (you.explore_estimate >= 85)
-                you.gift_timeout = max(you.gift_timeout - 2, 0);
-
-            // Xom gives between 6 and 2 warnings of reaching bottom boredom,
-            // fuzzed to make each deincrement make the warning more likely
-            // until it's guaranteed at the last two: much more useful as a
-            // less spammy warning than the previous detached state.
-            int min_bored = you.explore_estimate >= 85 ? you.gift_timeout / 3
-                                                       : you.gift_timeout;
-
-            if (min_bored <= 6 && x_chance_in_y(4, min_bored + 2))
-            {
-                if (min_bored > 2)
-                    simple_god_message(" is getting Bored.");
-                else if (you.gift_timeout > 0)
-                    simple_god_message(" is getting VERY BORED.");
-            }
-        }
-    }
-
     // Redraw tension meter.
     you.redraw_title = true;
     if (x_chance_in_y(2 + you.faith(), 6))
     {
         const int tension = get_tension(GOD_XOM);
         const int chance = min(_xom_tension_breakpoints(tension) + 1, 5);
-
-        // If Xom is bored, the chances for Xom acting are sort of reversed.
-        if (!you.gift_timeout && x_chance_in_y(25 - chance*chance, 100))
-        {
-            xom_acts(random_severity(), maybe_bool::maybe, tension);
-            return;
-        }
-        else if (you.gift_timeout <= 1 && chance > 0
-                 && x_chance_in_y(chance - 1, 80))
-        {
-            // During tension, Xom may briefly forget about being bored.
-            const int interest = random2(chance * 15);
-            if (interest > 0)
-            {
-                if (interest < 25)
-                    simple_god_message(" is interested.");
-                else
-                    simple_god_message(" is intrigued.");
-
-                you.gift_timeout += interest;
-                //updating piety status line
-                you.redraw_title = true;
-#if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
-                mprf(MSGCH_DIAGNOSTICS,
-                     "tension %d (chance: %d) -> increase interest to %d",
-                     tension, chance, you.gift_timeout);
-#endif
-            }
-        }
 
         if (x_chance_in_y(chance*chance, 100))
             xom_acts(random_severity(), maybe_bool::maybe, tension);
@@ -941,7 +837,7 @@ static int _xom_pal_counting(int roll, bool isFriendly)
     if (you.runes.count() > ZOT_ENTRY_RUNES + 1)
         count += div_rand_round(you.runes.count(), ZOT_ENTRY_RUNES + 2);
 
-    if (!isFriendly && _xom_feels_nasty())
+    if (!isFriendly && you.penance[GOD_XOM])
         count *= 1.5;
 
     return count;
@@ -975,8 +871,6 @@ static monster_type _xom_random_pal(int roll, bool isFriendly)
     // Make it a little flashier if it's allied or if Xom's quite dissatisfied.
     if (isFriendly)
         variance += random_range(1, 4);
-    else if (_xom_is_bored())
-        variance += random_range(2, 4);
     else if (you.penance[GOD_XOM])
         variance += random_range(4, 6);
 
@@ -1220,7 +1114,7 @@ static void _xom_polymorph_monster(monster &mons, bool helpful)
         && !mons_is_ghost_demon(mons.type)
         && !mons.is_shapeshifter()
         && mons.holiness() & MH_NATURAL
-        && (you.experience_level > 4 || _xom_feels_nasty()))
+        && (you.experience_level > 4 || you.penance[GOD_XOM]))
     {
         mons.add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
                                        : ENCH_SHAPESHIFTER);
@@ -1771,7 +1665,7 @@ static void _xom_door_ring(bool good)
         // capped by XL and how many are already adjacent.
         // Once more, prioritize monsters in the closer ring's range first.
         int soft_cap = max(1, div_rand_round(you.experience_level, 6));
-        int inner_cap = _xom_feels_nasty() ? 8 : 2 + random_range(1, soft_cap);
+        int inner_cap = you.penance[GOD_XOM] ? 8 : 2 + random_range(1, soft_cap);
 
         int moved = _xom_count_and_move_group(min_radius, max_radius,
                                               true, inner_cap);
@@ -2474,7 +2368,7 @@ static void _xom_destruction(int sever, bool real)
         // Skip adjacent monsters, and skip non-hostile monsters if not feeling nasty.
         if (real
             && (adjacent(you.pos(), mi->pos())
-                || mi->wont_attack() && !_xom_feels_nasty()))
+                || mi->wont_attack() && !you.penance[GOD_XOM]))
         {
             continue;
         }
@@ -2541,7 +2435,7 @@ static void _xom_harmless_knockback(coord_def p)
 // whatever doesn't clear them away the next turn.
 static void _xom_force_lances(int /* sever */)
 {
-    int xl = _xom_feels_nasty() ? you.experience_level / 3
+    int xl = you.penance[GOD_XOM] ? you.experience_level / 3
                                 : you.experience_level + you.runes.count() / 4;
     int count = 2 + (xl / 2) + random_range(0, div_rand_round(xl, 5));
     int strength = max(1, xl / 2);
@@ -2741,7 +2635,7 @@ static void _xom_hyper_enchant_monster(int sever)
     {
         shuffle_array(targetable);
 
-        if (_xom_feels_nasty())
+        if (you.penance[GOD_XOM])
         {
             sort(targetable.begin(), targetable.end(),
             [](const monster* a, const monster* b)
@@ -3863,12 +3757,12 @@ static void _xom_cloud_trail(int /*sever*/)
 
 static void _xom_draining(int /*sever*/)
 {
-    int power =  _bored_explore_estimate(90) ? 200 : 100;
+    int power = 100;
     const string speech = _get_xom_speech("suffering");
     god_speaks(GOD_XOM, speech.c_str());
 
-    if ((you.experience_level < 4 && !_bored_explore_estimate(90))
-        || (you.hp_max_adj_temp < 0 && !_xom_feels_nasty()))
+    if (you.experience_level < 4
+        || (you.hp_max_adj_temp < 0 && !you.penance[GOD_XOM]))
     {
         power /= 2;
     }
@@ -3880,13 +3774,12 @@ static void _xom_draining(int /*sever*/)
 
 static void _xom_doom(int /*sever*/)
 {
-    int power = _bored_explore_estimate(90) ? random_range(50, 60)
-                                            : random_range(20, 25);
+    int power = random_range(20, 25);
     const string speech = _get_xom_speech("suffering");
     god_speaks(GOD_XOM, speech.c_str());
 
-    if ((you.experience_level < 9 && !_bored_explore_estimate(90))
-        || ((you.attribute[ATTR_DOOM] > 50 && !_xom_feels_nasty())))
+    if (you.experience_level < 9
+        || (you.attribute[ATTR_DOOM] > 50 && !you.penance[GOD_XOM]))
     {
         power = power * 2 / 3;
     }
@@ -3901,7 +3794,7 @@ static void _xom_doom(int /*sever*/)
 
 static void _xom_torment(int /*sever*/)
 {
-    if (_xom_feels_nasty())
+    if (you.penance[GOD_XOM])
     {
         god_speaks(GOD_XOM, _get_xom_speech("draining or torment").c_str());
         torment_player(0, TORMENT_XOM);
@@ -3913,7 +3806,7 @@ static void _xom_torment(int /*sever*/)
     }
 
     const string note = make_stringf("torment%s(%d/%d hp)",
-                                      _xom_feels_nasty() ? " all (player " : " (",
+                                      you.penance[GOD_XOM] ? " all (player " : " (",
                                       you.hp, you.hp_max);
     take_note(Note(NOTE_XOM_EFFECT, -1, -1, note), true);
 }
@@ -3969,9 +3862,7 @@ static void _xom_summon_hostiles(int sever)
         int multiplier = 1;
         int range_cap = div_rand_round(you.experience_level, 8);
 
-        if (_xom_is_bored())
-            multiplier = 2;
-        else if (you.penance[GOD_XOM])
+        if (you.penance[GOD_XOM])
         {
             multiplier = 3;
             range_cap = 4;
@@ -4103,7 +3994,7 @@ static bool _xom_maybe_neutral_summon(int sever, bool threat,
 
 // Drain you for 3/4ths of your mp, then create several brain worms, mana
 // vipers, and / or quicksilver elementals from your mp based on your xl. If
-// Xom's not bored or wrathful, severity gives a chance of some being neutral.
+// Xom isn't wrathful, severity gives a chance of some being neutral.
 static void _xom_brain_drain(int sever)
 {
     bool created = false;
@@ -4271,7 +4162,6 @@ static void _xom_grants_word_of_recall(int /*sever*/)
 }
 
 // Disallow early banishment and make it rarer at lower XL in general.
-// While Xom is bored, the chance is increased.
 static bool _allow_xom_banishment()
 {
     // Always allowed if under penance.
@@ -4281,7 +4171,7 @@ static bool _allow_xom_banishment()
     if (you.experience_level < 9)
         return false;
 
-    const int lv = min(you.experience_level - 9, 11) + (_xom_is_bored() ? 10 : 0);
+    const int lv = min(you.experience_level - 9, 11);
     if (!x_chance_in_y(lv, lv + 5))
         return false;
 
@@ -4302,7 +4192,7 @@ static void _revert_banishment(bool xom_banished = true)
 // Only used for Xom rarely reverting others' banishment, now.
 void xom_maybe_reverts_banishment()
 {
-    if (!_xom_feels_nasty() && x_chance_in_y(HALF_MAX_PIETY, 1000))
+    if (!you.penance[GOD_XOM] && x_chance_in_y(HALF_MAX_PIETY, 1000))
         _revert_banishment(false);
 }
 
@@ -4343,7 +4233,7 @@ static void _xom_blink_monsters(int /*sever*/)
     int blinks = 0;
     // Sometimes blink towards the player, sometimes randomly. It might
     // end up being helpful instead of dangerous, but Xom doesn't mind.
-    const bool blink_to_player = _xom_feels_nasty() || coinflip();
+    const bool blink_to_player = you.penance[GOD_XOM] || coinflip();
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (blinks >= 5)
@@ -4400,8 +4290,7 @@ static void _handle_accidental_death(const int orig_hp,
     const transformation orig_form)
 {
     // Did ouch() return early because the player died from the Xom
-    // effect, even though neither is the player under penance nor is
-    // Xom bored?
+    // effect, even though the player isn't under penance?
     if ((!you.did_escape_death()
          && you.escaped_death_aux.empty()
          && !_player_is_dead())
@@ -4573,7 +4462,7 @@ static const vector<xom_event_data> _list_xom_good_actions = {
                 if (!mons_is_projectile(**mi)
                     && !mons_is_tentacle_or_tentacle_segment(mi->type)
                     && !adjacent(you.pos(), mi->pos())
-                    && (!mi->wont_attack() || _xom_feels_nasty()))
+                    && (!mi->wont_attack() || you.penance[GOD_XOM]))
                 {
                     return tn > 0;
                 }
@@ -4834,14 +4723,13 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
     {
         XOM_BAD_NOISE, 975, 415, [](int /*sv*/, int tn)
         {
-            return tn > 0 || (!you.penance[GOD_XOM] &&
-                             !_bored_explore_estimate(85));
+            return tn > 0 || !you.penance[GOD_XOM];
         }
     },
     {
         XOM_BAD_MISCAST_PSEUDO, 825, 715, [](int /*sv*/, int /*tn*/)
         {
-            return !you.penance[GOD_XOM] && !_bored_explore_estimate(85);
+            return !you.penance[GOD_XOM];
         }
     },
     {
@@ -4870,7 +4758,7 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
             const int explored = you.explore_estimate;
 
             return ((!player_in_branch(BRANCH_ABYSS) && _teleportation_check()))
-                 && !((_xom_feels_nasty() && (explored >= 40 || tn > 10))
+                 && !((you.penance[GOD_XOM] && (explored >= 40 || tn > 10))
                      || (explored >= 60 + random2(40)));
         }
     },
@@ -5012,21 +4900,20 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
     {
         XOM_BAD_DOOM, 5, 160, [](int /*sv*/, int tn)
         {return tn <= 8 && (you.attribute[ATTR_DOOM] < 80 ||
-                            _xom_feels_nasty());}
+                            you.penance[GOD_XOM]);}
     },
     {
         // Since this is an enum-based vector list and we can't adjust weights
         // on conditions otherwise, this duplicates the Doom entry to apply
         // slightly extra Doom on the rN∞ rMut∞ undead. Since direct Banes
-        // require boredom or wrath, it should mostly just scare players and
-        // block Xomscumming more than anything pressing on Xom balance.
+        // require wrath, it shouldn't press on Xom balance.
         XOM_BAD_DOOM, 50, 100, [](int /*sv*/, int tn)
         {return tn <= 8 && you.is_lifeless_undead() &&
-                (you.attribute[ATTR_DOOM] < 80 || _xom_feels_nasty());}
+                (you.attribute[ATTR_DOOM] < 80 || you.penance[GOD_XOM]);}
     },
     {
         XOM_BAD_PSEUDO_BANISHMENT, 2, 1, [](int /*sv*/, int /*tn*/)
-        {return !_xom_feels_nasty()
+        {return !you.penance[GOD_XOM]
                 && !player_in_branch(BRANCH_ABYSS)
                 && !(is_level_on_stack(level_id(BRANCH_ABYSS)));}
     },
@@ -5047,7 +4934,7 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
     {
         XOM_BAD_FIDDLE_WITH_DOORS, 95, 5, [](int /*sv*/, int tn)
         {return ((tn > 4 || (you.explore_estimate < 5)
-                 && !_xom_feels_nasty())) && !_xom_door_candidates().empty();}
+                 && !you.penance[GOD_XOM])) && !_xom_door_candidates().empty();}
     },
     {
         XOM_BAD_CLIMB_STAIRS, 55, 0, [](int /*sv*/, int tn)
@@ -5095,7 +4982,7 @@ xom_event_type xom_choose_action(bool niceness, int sever, int tension)
 #endif
         return XOM_DID_NOTHING;
     }
-    else if (!niceness && !_xom_feels_nasty() && tension > random2(10)
+    else if (!niceness && !you.penance[GOD_XOM] && tension > random2(10)
              && you_worship(GOD_XOM) && x_chance_in_y(1, 2))
     {
 #ifdef NOTE_DEBUG_XOM
@@ -5171,38 +5058,11 @@ void xom_take_action(xom_event_type action, int sever)
     const int  orig_hp       = you.hp;
     const transformation orig_form = you.form;
     const FixedVector<uint8_t, NUM_MUTATIONS> orig_mutation = you.mutation;
-    const bool was_bored = _xom_is_bored();
-
-    const bool bad_effect = _action_is_bad(action);
-
-    if (was_bored && bad_effect && Options.note_xom_effects)
-        take_note(Note(NOTE_MESSAGE, 0, 0, "XOM is BORED!"), true);
 
     // actually take the action!
     {
         god_acting gdact(GOD_XOM);
         _do_xom_event(action, sever);
-    }
-
-    // If we got here because Xom was bored, reset gift timeout according
-    // to the badness of the effect.
-    if (bad_effect && _xom_is_bored())
-    {
-        bool mostly_explored = _bored_explore_estimate(85);
-        const int badness = _xom_event_badness(action);
-        const int interest = mostly_explored ? random2avg(badness * 45, 2)
-                                             : random2avg(badness * 60, 2);
-
-        if (mostly_explored)
-            mprf(MSGCH_WARN, "Xom feels this floor is too known and too boring!");
-
-        you.gift_timeout   = min(interest, 255);
-        //updating piety status line
-        you.redraw_title = true;
-#if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
-        mprf(MSGCH_DIAGNOSTICS, "badness: %d, new interest: %d",
-             badness, you.gift_timeout);
-#endif
     }
 
     _handle_accidental_death(orig_hp, orig_mutation, orig_form);
@@ -5231,8 +5091,8 @@ xom_event_type xom_acts(int sever, maybe_bool nice, int tension, bool debug)
         // anyway. (jpeg)
 
         // these numbers (sever, tension) may be modified later...
-        mprf(MSGCH_DIAGNOSTICS, "xom_acts(%u, %d, %d); interest: %u",
-             niceness, sever, tension, you.gift_timeout);
+        mprf(MSGCH_DIAGNOSTICS, "xom_acts(%u, %d, %d)",
+             niceness, sever, tension);
 
         static char xom_buf[100];
         snprintf(xom_buf, sizeof(xom_buf), "xom_acts(%s, %d, %d)",
@@ -5368,7 +5228,7 @@ static string _get_death_type_keyword(const kill_method_type killed_by)
  */
 bool xom_saves_your_life(const kill_method_type death_type)
 {
-    if (!you_worship(GOD_XOM) || _xom_feels_nasty())
+    if (!you_worship(GOD_XOM) || you.penance[GOD_XOM])
         return false;
 
     // If this happens, don't bother.
@@ -5405,10 +5265,6 @@ bool xom_saves_your_life(const kill_method_type death_type)
     // Ideally, this should contain the death cause but that is too much
     // trouble for now.
     take_note(Note(NOTE_XOM_REVIVAL));
-
-    // Make sure Xom doesn't get bored within the next couple of turns.
-    if (you.gift_timeout < 10)
-        you.gift_timeout = 10;
 
     return true;
 }
@@ -5521,11 +5377,6 @@ struct xom_event
     const char* name;
     /// The event action.
     function<void(int sever)> action;
-    /**
-     * Rough estimate of how hard a Xom effect hits the player,
-     * scaled between 10 (harmless) and 50 (disastrous). Reduces boredom.
-     */
-    int badness_10x;
 };
 
 static const map<xom_event_type, xom_event> xom_events = {
@@ -5567,38 +5418,37 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_CLOUD_TRAIL, { "cloud trail", _xom_cloud_trail }},
     { XOM_GOOD_CLEAVING, { "cleaving", _xom_cleaving }},
 
-    { XOM_BAD_MISCAST_PSEUDO, { "pseudo-miscast", _xom_pseudo_miscast, 20}},
-    { XOM_BAD_NOISE, { "noise", _xom_noise, 10 }},
+    { XOM_BAD_MISCAST_PSEUDO, { "pseudo-miscast", _xom_pseudo_miscast }},
+    { XOM_BAD_NOISE, { "noise", _xom_noise }},
     { XOM_BAD_ENCHANT_MONSTER, { "bad enchant monster",
-                                 _xom_bad_enchant_monster, 10}},
-    { XOM_BAD_TIME_CONTROL, {"time control", _xom_time_control, 15}},
-    { XOM_BAD_BLINK_MONSTERS, { "blink monsters", _xom_blink_monsters, 10}},
-    { XOM_BAD_CONFUSION, { "confuse player", _xom_player_confusion_effect, 13}},
-    { XOM_BAD_SWAP_MONSTERS, { "swap monsters", _xom_rearrange_pieces, 20 }},
-    { XOM_BAD_CHAOS_UPGRADE, { "chaos upgrade", _xom_chaos_upgrade, 20}},
-    { XOM_BAD_TELEPORT, { "bad teleportation", _xom_bad_teleport, -1}},
-    { XOM_BAD_POLYMORPH, { "bad polymorph", _xom_bad_polymorph, 30}},
-    { XOM_BAD_MOVING_STAIRS, { "moving stairs", _xom_moving_stairs, 20}},
-    { XOM_BAD_CLIMB_STAIRS, { "unclimbable stairs", _xom_unclimbable_stairs,
-                              30}},
-    { XOM_BAD_FIDDLE_WITH_DOORS, { "open and close doors", _xom_open_and_close_doors,
-                                    15}},
-    { XOM_BAD_DOOR_RING, {"bad door ring enclosure", _xom_bad_door_ring, 25}},
-    { XOM_BAD_FAKE_SHATTER, {"fake shatter", _xom_fake_shatter, 25}},
-    { XOM_BAD_MUTATION, { "random mutations", _xom_give_bad_mutations, 30}},
-    { XOM_BAD_SUMMON_HOSTILES, { "summon hostiles", _xom_summon_hostiles, 35}},
+                                 _xom_bad_enchant_monster }},
+    { XOM_BAD_TIME_CONTROL, {"time control", _xom_time_control }},
+    { XOM_BAD_BLINK_MONSTERS, { "blink monsters", _xom_blink_monsters }},
+    { XOM_BAD_CONFUSION, { "confuse player", _xom_player_confusion_effect }},
+    { XOM_BAD_SWAP_MONSTERS, { "swap monsters", _xom_rearrange_pieces }},
+    { XOM_BAD_CHAOS_UPGRADE, { "chaos upgrade", _xom_chaos_upgrade }},
+    { XOM_BAD_TELEPORT, { "bad teleportation", _xom_bad_teleport }},
+    { XOM_BAD_POLYMORPH, { "bad polymorph", _xom_bad_polymorph }},
+    { XOM_BAD_MOVING_STAIRS, { "moving stairs", _xom_moving_stairs }},
+    { XOM_BAD_CLIMB_STAIRS, { "unclimbable stairs", _xom_unclimbable_stairs }},
+    { XOM_BAD_FIDDLE_WITH_DOORS, { "open and close doors",
+                                   _xom_open_and_close_doors }},
+    { XOM_BAD_DOOR_RING, {"bad door ring enclosure", _xom_bad_door_ring }},
+    { XOM_BAD_FAKE_SHATTER, {"fake shatter", _xom_fake_shatter }},
+    { XOM_BAD_MUTATION, { "random mutations", _xom_give_bad_mutations }},
+    { XOM_BAD_SUMMON_HOSTILES, { "summon hostiles", _xom_summon_hostiles }},
     { XOM_BAD_SEND_IN_THE_CLONES, {"friendly and hostile illusions",
-                                   _xom_send_in_clones, 40}},
+                                   _xom_send_in_clones }},
     { XOM_BAD_GRANT_WORD_OF_RECALL, {"speaker of recall",
-                                    _xom_grants_word_of_recall, 40}},
-    { XOM_BAD_BRAIN_DRAIN, {"mp brain drain", _xom_brain_drain, 30}},
-    { XOM_BAD_DRAINING, { "draining", _xom_draining, 23}},
-    { XOM_BAD_DOOM, { "doom", _xom_doom, 23}},
-    { XOM_BAD_TORMENT, { "torment", _xom_torment, 23}},
-    { XOM_BAD_CHAOS_CLOUD, { "chaos cloud", _xom_chaos_cloud, 20}},
-    { XOM_BAD_BANISHMENT, { "banishment", _xom_banishment, 50}},
-    { XOM_BAD_PSEUDO_BANISHMENT, {"pseudo-banishment", _xom_pseudo_banishment,
-                                  10}},
+                                    _xom_grants_word_of_recall }},
+    { XOM_BAD_BRAIN_DRAIN, {"mp brain drain", _xom_brain_drain }},
+    { XOM_BAD_DRAINING, { "draining", _xom_draining }},
+    { XOM_BAD_DOOM, { "doom", _xom_doom }},
+    { XOM_BAD_TORMENT, { "torment", _xom_torment }},
+    { XOM_BAD_CHAOS_CLOUD, { "chaos cloud", _xom_chaos_cloud }},
+    { XOM_BAD_BANISHMENT, { "banishment", _xom_banishment }},
+    { XOM_BAD_PSEUDO_BANISHMENT, {"pseudo-banishment",
+                                  _xom_pseudo_banishment }},
 };
 
 static void _do_xom_event(xom_event_type event_type, int sever)
@@ -5606,17 +5456,6 @@ static void _do_xom_event(xom_event_type event_type, int sever)
     const xom_event *event = map_find(xom_events, event_type);
     if (event && event->action)
         event->action(sever);
-}
-
-static int _xom_event_badness(xom_event_type event_type)
-{
-    if (event_type == XOM_BAD_TELEPORT)
-        return player_in_a_dangerous_place() ? 3 : 1;
-
-    const xom_event *event = map_find(xom_events, event_type);
-    if (event)
-        return div_rand_round(event->badness_10x, 10);
-    return 0;
 }
 
 string xom_effect_to_name(xom_event_type effect)
@@ -5644,21 +5483,6 @@ void validate_xom_events()
         if (action_names.count(event->name))
             fails += make_stringf("Duplicate name '%s'!\n", event->name);
         action_names.insert(event->name);
-
-        if (_action_is_bad(event_type))
-        {
-            if ((event->badness_10x < 10 || event->badness_10x > 50)
-                && event->badness_10x != -1) // implies it's special-cased
-            {
-                fails += make_stringf("'%s' badness %d outside 10-50 range.\n",
-                                      event->name, event->badness_10x);
-            }
-        }
-        else if (event->badness_10x)
-        {
-            fails += make_stringf("'%s' is not bad, but has badness!\n",
-                                  event->name);
-        }
 
         if (event_type != XOM_DID_NOTHING && !event->action)
             fails += make_stringf("No action for '%s'!\n", event->name);
@@ -5778,8 +5602,6 @@ void debug_xom_effects()
 
     if (player_under_penance(GOD_XOM))
         fprintf(ostat, "You are under Xom's penance!\n");
-    else if (_xom_is_bored())
-        fprintf(ostat, "Xom is BORED.\n");
     fprintf(ostat, "\nRunning %d effects at each severity from 0 to %d.\n",
             N, HALF_MAX_PIETY);
     fprintf(ostat, "---- OUTPUT EFFECT PERCENTAGES ----\n");

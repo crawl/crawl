@@ -1499,13 +1499,9 @@ void player_die(kill_method_type death_type, mid_t source, int dam,
         you.escaped_death_cause = death_type;
         you.escaped_death_aux   = aux == nullptr ? "" : aux;
 
-        // Xom should only kill his worshippers if they're under penance
-        // or Xom is bored.
-        if (you_worship(GOD_XOM) && !you.penance[GOD_XOM]
-            && you.gift_timeout > 0)
-        {
+        // Xom should only kill his worshippers if they're under penance.
+        if (you_worship(GOD_XOM) && !you.penance[GOD_XOM])
             return;
-        }
 
         // Also don't kill wizards testing Xom acts.
         if ((crawl_state.repeat_cmd == CMD_WIZARD
