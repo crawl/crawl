@@ -209,11 +209,6 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         if (mons_class_is_fragile(mons.type))
             return MB_WITHERING;
         return MB_SLOWLY_DYING;
-    case ENCH_CONSTRICTED:
-        if (mons.constricted_type == CONSTRICT_BVC)
-            return MB_VILE_CLUTCH;
-        else if (mons.constricted_type == CONSTRICT_ROOTS)
-            return MB_GRASPING_ROOTS;
     default:
         return NUM_MB_FLAGS;
     }
@@ -436,6 +431,24 @@ static description_level_type _article_for(const actor* a)
     return m && m->friendly() ? DESC_YOUR : DESC_A;
 }
 
+void monster_info::_add_constriction_info(const monster* m)
+{
+    // Name of what this monster is directly constricted by, if any
+    constrictor_name = "";
+    if (m->constricted_type == CONSTRICT_MELEE || m->constricted_type == CONSTRICT_ENTANGLE)
+    {
+        const actor * const constrictor = actor_by_mid(m->constricted_by);
+        ASSERT(constrictor);
+        constrictor_name = "constricted by "
+                           + constrictor->name(_article_for(constrictor),
+                                               true);
+    }
+    else if (m->constricted_type == CONSTRICT_BVC)
+        mb.set(MB_VILE_CLUTCH);
+    else if (m->constricted_type == CONSTRICT_ROOTS)
+        mb.set(MB_GRASPING_ROOTS);
+}
+
 monster_info::monster_info(const monster* m, int milev)
 {
     ASSERT(m); // TODO: change to const monster &mon
@@ -455,6 +468,9 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->flags & MF_KNOWN_INVISIBLE && !you.can_see(*m))
     {
         _populate_as_generic();
+        // The constriction status of even invisible monsters is considered known
+        // (they're usually being constricted by something visible!)
+        _add_constriction_info(m);
         mb.set(MB_KNOWN_INVIS);
         return;
     }
@@ -826,18 +842,8 @@ monster_info::monster_info(const monster* m, int milev)
     }
 
     // init names of constrictor and constrictees
-    constrictor_name = "";
+    _add_constriction_info(m);
     constricting_name.clear();
-
-    // Name of what this monster is directly constricted by, if any
-    if (m->constricted_type == CONSTRICT_MELEE || m->constricted_type == CONSTRICT_ENTANGLE)
-    {
-        const actor * const constrictor = actor_by_mid(m->constricted_by);
-        ASSERT(constrictor);
-        constrictor_name = "constricted by "
-                           + constrictor->name(_article_for(constrictor),
-                                               true);
-    }
 
     // Names of what this monster is directly constricting, if any
     if (m->constricting)

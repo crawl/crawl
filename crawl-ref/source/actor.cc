@@ -659,6 +659,11 @@ void actor::start_constricting(actor &whom, constrict_type ctype, int duration)
 
     if (whom.is_player())
         you.redraw_evasion = true;
+    else if (you.see_cell(whom.pos())
+             && (ctype != CONSTRICT_MELEE || visible_to(&you)))
+    {
+        whom.as_monster()->sense_if_invisible();
+    }
 
     if (duration > 0)
     {

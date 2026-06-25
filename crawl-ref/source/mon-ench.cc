@@ -874,7 +874,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     {
         if (is_constricted())
         {
-            if (!quiet && you.can_see(*this))
+            if (!quiet && you.aware_of(*this))
             {
                 if (constricted_type == CONSTRICT_BVC)
                 {

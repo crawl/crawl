@@ -519,6 +519,7 @@ protected:
     string _apply_adjusted_description(description_level_type desc, const string& s) const;
 
     void _populate_as_generic();
+    void _add_constriction_info(const monster* mon);
 };
 
 void get_nearby_monster_info(vector<monster_info>& mons,
