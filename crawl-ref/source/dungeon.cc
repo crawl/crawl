@@ -934,6 +934,17 @@ static bool _dgn_square_is_passable(const coord_def &c)
         || !(env.level_map_mask(c) & MMT_OPAQUE) && dgn_square_travel_ok(c);
 }
 
+// Like _dgn_square_is_passable, but allows traps.
+static bool _dgn_square_is_passable_with_traps(const coord_def &c)
+{
+    if (_dgn_square_is_passable(c))
+        return true;
+
+    const dungeon_feature_type feat = env.grid(c);
+    return !(env.level_map_mask(c) & MMT_OPAQUE)
+           && feat_is_trap(feat);
+}
+
 static bool _dgn_square_is_boring(const coord_def &c)
 {
     // ignore vault squares by the same algorithm as _dgn_square_is_passable,
@@ -2323,6 +2334,18 @@ static void _dgn_verify_connectivity(unsigned nvaults)
         && dgn_count_disconnected_zones(true) > 0)
     {
         throw dgn_veto_exception("Isolated areas with no stairs.");
+    }
+
+    // The check above treats traps as impassable, so it misses a pocket that
+    // that is made *entirely* of traps. Fix this by finding areas with no
+    // stairs, counting traps as passable.
+    if (player_in_connected_branch()
+        && !(branches[you.where_are_you].branch_flags & brflag::islanded)
+        && _process_disconnected_zones(0, 0, GXM - 1, GYM - 1, true,
+                                       DNGN_UNSEEN,
+                                       _dgn_square_is_passable_with_traps) > 0)
+    {
+        throw dgn_veto_exception("Isolated trap areas with no stairs.");
     }
 
     if (_branch_needs_stairs() && !_fixup_stone_stairs(true))

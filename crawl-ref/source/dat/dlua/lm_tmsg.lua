@@ -68,7 +68,13 @@ function TimedMessaging:init(tmarker, cm, verbose)
     end
   end
 
-  self._have_entered_level = false
+  -- This variable gates the messages, to make sure we don't fire one too
+  -- early, which can use the player coordinates from the previous level. We
+  -- initialise it to false, and then toggle it on entering/leaving the level.
+  if self._have_entered_level == nil then
+    self._have_entered_level = false
+  end
+
   if verbose and self.initmsg then
     self:emit_message(cm, self.initmsg)
   end
@@ -167,6 +173,9 @@ end
 function TimedMessaging:event(luamark, cmarker, event)
   if event:type() == dgn.dgn_event_type('entered_level') then
     self._have_entered_level = true
+  elseif event:type() == dgn.dgn_event_type('leave_level') then
+    self._have_entered_level = false
+    return
   elseif not self._have_entered_level then
     return
   end

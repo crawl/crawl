@@ -1764,7 +1764,8 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     case BEAM_BOLAS:
         if (doFlavouredEffects)
         {
-            if (mons->is_insubstantial() || mons->is_amorphous())
+            bool seen = you.see_cell(mons->pos());
+            if ((mons->is_insubstantial() || mons->is_amorphous()) && seen)
             {
                 mprf("The bolas passes through %s!",
                       mons->name(DESC_THE).c_str());
@@ -1773,9 +1774,12 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             {
                 mons->add_ench(mon_enchant(ENCH_BOUND, pbolt.agent(),
                                            random_range(4, 8)));
-                mprf("The bolas warps around %s and binds %s in place!",
-                     mons->name(DESC_THE).c_str(),
-                     mons->pronoun(PRONOUN_OBJECTIVE).c_str());
+                if (seen)
+                {
+                    mprf("The bolas warps around %s and binds %s in place!",
+                            mons->name(DESC_THE).c_str(),
+                            mons->pronoun(PRONOUN_OBJECTIVE).c_str());
+                }
             }
         }
         break;

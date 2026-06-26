@@ -5136,9 +5136,23 @@ static void _calc_fusillade_explosion(coord_def center, beam_type flavour,
                                       vector<coord_def>& exp_map,
                                       bool quick_anim = false)
 {
+    // Use the standard explosion propagation, which in particular knows how to
+    // handle explosions targeted at wall monsters.
+    bolt beam;
+    beam.source_id         = MID_PLAYER;
+    beam.target            = center;
+    beam.use_target_as_pos = true;
+    beam.flavour           = flavour;
+    beam.origin_spell      = SPELL_FULSOME_FUSILLADE;
+
+    explosion_map affected;
+    affected.init(INT_MAX);
+    beam.determine_affected_cells(affected, coord_def(), 0, 1, true, true);
+
+    const coord_def map_centre(9, 9);
     for (adjacent_iterator ai(center, false); ai; ++ai)
     {
-        if (feat_is_solid(env.grid(*ai)) && !monster_at(*ai))
+        if (affected(*ai - center + map_centre) == INT_MAX)
             continue;
 
         exp_map.push_back(*ai);

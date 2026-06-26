@@ -104,7 +104,12 @@ end
 -- "Volcano" functions. While the sizes may appear extreme, they are carefully
 -- weighted and balanced and have been tested extensively.
 function callback.volcano_in_radius_12(x, y)
-  return dgn.point_in_radius(dgn.point(x, y), dgn.point(you.pos()), 12)
+  local px, py = you.pos()
+  -- May run during off-level catchup when the player is not placed.
+  if not dgn.in_bounds(px, py) then
+    return false
+  end
+  return dgn.point_in_radius(dgn.point(x, y), dgn.point(px, py), 12)
 end
 
 local large_warning = tw_machine(3, "The air gets thick with the scent of sulphur.",
