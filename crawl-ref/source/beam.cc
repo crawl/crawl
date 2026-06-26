@@ -7160,6 +7160,59 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
     }
 }
 
+explosion_iterator::explosion_iterator(coord_def origin, int radius,
+                                       beam_type flavour, spell_type spell,
+                                       mid_t source, bool stop_at_statues,
+                                       bool stop_at_walls)
+{
+    bolt beam;
+    beam.source_id         = source;
+    beam.target            = origin;
+    beam.use_target_as_pos = true;
+    beam.flavour           = flavour;
+    beam.origin_spell      = spell;
+
+    explosion_map affected;
+    affected.init(INT_MAX);
+    beam.determine_affected_cells(affected, coord_def(), 0, radius,
+                                  stop_at_statues, stop_at_walls);
+
+    const coord_def centre(9, 9);
+    const int r = min(radius, centre.x);
+    for (int dx = -r; dx <= r; ++dx)
+        for (int dy = -r; dy <= r; ++dy)
+        {
+            const coord_def delta(dx, dy);
+            if (affected(delta + centre) < INT_MAX)
+                cells.push_back(origin + delta);
+        }
+}
+
+explosion_iterator::operator bool() const
+{
+    return index < cells.size();
+}
+
+coord_def explosion_iterator::operator*() const
+{
+    return cells[index];
+}
+
+const coord_def* explosion_iterator::operator->() const
+{
+    return &cells[index];
+}
+
+void explosion_iterator::operator++()
+{
+    ++index;
+}
+
+void explosion_iterator::operator++(int)
+{
+    ++index;
+}
+
 // Returns true if the beam is harmful ((mostly) ignoring monster
 // resists) -- mon is given for 'special' cases where,
 // for example, "Heal" might actually hurt undead, or
