@@ -336,17 +336,14 @@ static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
     if (die <= 1)
         return 0;
 
-    struct
+    uint32_t data[] =
     {
-        uint32_t mid;
-        uint32_t id;
-        uint32_t seed;
-    } data;
-    data.mid = mons->mid;
-    data.id  = id;
-    data.seed = you.attribute[ATTR_SEEN_INVIS_SEED];
+        mons->mid,
+        id,
+        (uint32_t)you.attribute[ATTR_SEEN_INVIS_SEED]
+    };
 
-    return hash32(&data, sizeof(data)) % die;
+    return hash_uint32(data) % die;
 }
 
 /**
