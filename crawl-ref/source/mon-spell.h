@@ -552,6 +552,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_ABYSSAL_ACOLYTE,
+      {
+       { SPELL_TOUCH_OF_PARADOX, 25, MON_SPELL_PRIEST },
+       { SPELL_PHASE_SHIFT, 25, MON_SPELL_PRIEST }
+      }
+    },
+
+
     {  MST_HERALD_OF_THE_ABYSS,
       {
        { SPELL_MALIGN_GATEWAY, 29, MON_SPELL_PRIEST },

@@ -641,6 +641,12 @@ outline of a vast, sinuous dragon is just barely perceptible behind. Its malice
 is palpable.
 %%%%
 # Non-unique monsters
+abyssal acolyte
+
+A missionary in the service of Lugonu, with remnants of its headless body
+spilling from a roaming spatial rift. It seeks to teach others the joy and
+strength of slowly decoupling from this particular plane of reality.
+%%%%
 acid blob
 
 A lump of sickly pustulent flesh, dripping with lethal acid.

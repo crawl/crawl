@@ -3528,6 +3528,7 @@ int monster::known_chaos(bool check_spells_god) const
         || type == MONS_CRAWLING_FLESH_CAGE
         || type == MONS_ABOMINATION_SMALL
         || type == MONS_ABOMINATION_LARGE
+        || type == MONS_ABYSSAL_ACOLYTE
         || type == MONS_HERALD_OF_THE_ABYSS
         || type == MONS_MUTANT_BEAST
         || type == MONS_TELENCEPHALON       // Experimental mutant.

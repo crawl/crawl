@@ -2336,6 +2336,13 @@ Thunderbolt spell
 
 Creates a penetrating arc of electricity.
 %%%%
+Touch of Paradox spell
+
+Unmoors a random nearby ally from space, granting it Manifold Assault as a
+natural ability (which permits it to strike many distant foes with a single
+melee attack that can't miss), and also giving it a chance to blink when it uses
+such.
+%%%%
 Trog's Hand spell
 
 <Trog's Hand ability>

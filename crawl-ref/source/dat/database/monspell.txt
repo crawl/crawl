@@ -661,6 +661,22 @@ Paralyse Xtahua cast
 # Individual monsters
 ########################################################################
 %%%%
+Touch of Paradox abyssal acolyte cast
+
+@The_monster@ calls down @possessive_God@'s blessing.
+
+@The_monster@ invokes a beneficient rending in the name of @possessive_God@.
+%%%%
+unseen Touch of Paradox abyssal acolyte cast
+
+You hear some strange prayers to @possessive_God@.
+%%%%
+Phase Shift abyssal acolyte cast
+
+@The_monster@ fiercely shimmers while chanting indecipherable hymns.
+
+@The_monster@ mumbles a few prayers and slips further between dimensions.
+%%%%
 basilisk cast targeted
 
 @floating eye cast targeted@

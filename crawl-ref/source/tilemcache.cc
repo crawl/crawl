@@ -748,6 +748,11 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -5;
         *ofs_y = 1;
         break;
+    case TILEP_MONS_ABYSSAL_ACOLYTE:
+    case TILEP_MONS_ABYSSAL_ACOLYTE_PHASED:
+        *ofs_x = -5;
+        *ofs_y = 2;
+        break;
     case TILEP_TRAN_FORTRESS_CRAB:
     case TILEP_TRAN_FORTRESS_CRAB_GARGOYLE:
         *ofs_x = -1;

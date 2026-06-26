@@ -799,6 +799,7 @@ enum monster_type                      // env.mons[].type
     MONS_WORLDBINDER,
     MONS_SCREAMING_REFRACTION,
     MONS_ENTROPY_WEAVER, // not sure where else to put it
+    MONS_ABYSSAL_ACOLYTE,
     MONS_HERALD_OF_THE_ABYSS,
     MONS_BUNYIP,
     MONS_CREEPING_INFERNO,
@@ -1439,6 +1440,7 @@ enum monster_type                      // env.mons[].type
     MONS_GOJI,
     MONS_GOJI_UNMOUNTED,    // 'Fake' monster to handle mount death properly
     MONS_HERALD_OF_THE_ABYSS,
+    MONS_ABYSSAL_ACOLYTE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

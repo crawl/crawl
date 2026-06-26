@@ -916,6 +916,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_NECROMANCER,             { OCCULT_WEAPONS } },
         { MONS_OCCULTIST,               { OCCULT_WEAPONS } },
         { MONS_KOBOLD_DEMONOLOGIST,     { OCCULT_WEAPONS } },
+        { MONS_ABYSSAL_ACOLYTE,         { OCCULT_WEAPONS } },
         { MONS_JOSEPHINE,               { RITUAL_WEAPONS } },
         { MONS_NERGALLE,                { RITUAL_WEAPONS } },
         { MONS_ORC_SORCERER,
