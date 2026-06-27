@@ -2674,13 +2674,13 @@ mutation_type mutation_from_name(string name, bool allow_category, vector<mutati
  * @return      The mutation's description, helpfully trimmed.
  *              e.g. "you are frail (-10% HP)".
  */
-string mut_upgrade_summary(mutation_type mut)
+string innate_mut_upgrade_summary(mutation_type mut)
 {
     if (!_is_valid_mutation(mut))
         return "";
 
     string mut_desc =
-        lowercase_first(mutation_desc(mut, you.mutation[mut] + 1));
+        lowercase_first(mutation_desc(mut, you.innate_mutation[mut] + 1));
     strip_suffix(mut_desc, ".");
     return mut_desc;
 }

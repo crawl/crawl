@@ -1403,7 +1403,7 @@ static string _curse_desc()
 
 static string _desc_sac_mut(const CrawlStoreValue &mut_store)
 {
-    return mut_upgrade_summary(static_cast<mutation_type>(mut_store.get_int()));
+    return innate_mut_upgrade_summary(static_cast<mutation_type>(mut_store.get_int()));
 }
 
 static string _sacrifice_desc(const ability_type ability)
