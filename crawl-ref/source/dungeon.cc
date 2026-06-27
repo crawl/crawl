@@ -838,6 +838,7 @@ static void _set_grd(const coord_def &c, dungeon_feature_type feat)
 {
     // It might be good to clear some pgrid flags as well.
     tile_env.flv(c).feat    = 0;
+    tile_env.flv(c).feat_idx = 0;
     tile_env.flv(c).special = 0;
     env.grid_colours(c) = 0;
     env.grid(c) = feat;
@@ -2617,8 +2618,6 @@ static void _ruin_level(Iterator iter,
                 // isolated transparent or rtele_into square.
                 env.level_map_mask(p) |= cfeat.mask;
                 env.pgrid(p) |= cfeat.prop;
-                tile_env.flv(p).feat = 0;
-                tile_env.flv(p).feat_idx = 0;
                 _set_grd(p, replacement);
             }
 
