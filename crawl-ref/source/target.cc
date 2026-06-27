@@ -2334,20 +2334,10 @@ targeter_magnavolt::targeter_magnavolt(const actor* act, int _range) :
 {
 }
 
-bool targeter_magnavolt::valid_aim(coord_def a)
-{
-    if (!targeter_smite::valid_aim(a))
-        return false;
-
-    if (!monster_at(a) || !you.can_see(*monster_at(a)))
-        return notify_fail("You don't see a valid target there.");
-
-    return true;
-}
-
 bool targeter_magnavolt::preferred_aim(coord_def a)
 {
-    return !monster_at(a)->has_ench(ENCH_MAGNETISED);
+    monster* mon = monster_at(a);
+    return mon && you.aware_of(*mon) && !mon->has_ench(ENCH_MAGNETISED);
 }
 
 bool targeter_magnavolt::set_aim(coord_def a)
@@ -2359,7 +2349,9 @@ bool targeter_magnavolt::set_aim(coord_def a)
         return false;
 
     beam_targets = get_magnavolt_targets();
-    beam_targets.push_back(a);
+
+    if (monster_at(a) && you.aware_of(*monster_at(a)))
+        beam_targets.push_back(a);
     beam_paths = get_magnavolt_beam_paths(beam_targets);
 
     return true;

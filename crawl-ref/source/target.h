@@ -643,7 +643,6 @@ class targeter_magnavolt : public targeter_smite
 {
 public:
     targeter_magnavolt(const actor *act, int range);
-    bool valid_aim(coord_def a) override;
     bool preferred_aim(coord_def a) override;
     bool set_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;

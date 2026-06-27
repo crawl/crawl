@@ -4946,10 +4946,27 @@ spret cast_magnavolt(coord_def target, int pow, bool fail)
         return spret::abort;
     }
 
-    fail_check();
-
     // First apply the debuff to the targeted enemy.
     monster* mon = monster_at(target);
+
+    if ((!mon || !you.aware_of(*mon))
+        && !yesno("You can't see a target there. Cast anyway?", false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return spret::abort;
+    }
+
+    fail_check();
+
+    if (!mon)
+    {
+        mprf("Your magnetic shrapnel fails to attach to any target and your spell fizzles.");
+
+        // Don't zap other things at the same time or fishing for unseen targets this way
+        // risks being strictly optimal.
+        return spret::success;
+
+    }
 
     if (!mon->has_ench(ENCH_MAGNETISED))
         mprf("Magnetic shrapnel attaches itself to %s.", mon->name(DESC_THE).c_str());
