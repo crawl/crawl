@@ -721,7 +721,7 @@ bool player::can_go_berserk() const
 }
 
 bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
-                            string *reason, bool temp) const
+    string *reason, bool temp) const
 {
     const bool verbose = (intentional || potion) && !quiet;
     string msg;
@@ -738,7 +738,12 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
     else if (!intentional && !potion && clarity() && temp)
         msg = "You're too calm and focused to rage.";
     else if (is_lifeless_undead(temp))
-        msg = "You cannot raise a blood rage in your lifeless body.";
+    {
+        if (you.undead_state() == US_GHOST)
+            msg = "You cannot raise a blood rage in your spectral form.";
+        else
+            msg = "You cannot raise a blood rage in your lifeless body.";
+    }
     else if (stasis())
         msg = "Your stasis prevents you from going berserk.";
     else

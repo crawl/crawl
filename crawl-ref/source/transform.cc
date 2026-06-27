@@ -1824,6 +1824,9 @@ bool lifeless_prevents_form(transformation which_trans)
     if (which_trans == transformation::slaughter)
         return false; // Godly power can transcend such things as unlife
 
+    if (you.undead_state(false) == US_GHOST)
+        return false;
+
     return true;
 }
 
@@ -1835,6 +1838,9 @@ string cant_transform_reason(transformation which_trans,
 {
     if (!involuntary && you.has_mutation(MUT_NO_FORMS))
         return "You have sacrificed the ability to change form!";
+
+    if (you.undead_state(false) == US_GHOST && which_trans == transformation::statue)
+        return "Your spectral form is incapable of becoming that solid.";
 
     // the undead cannot enter most forms.
     if (lifeless_prevents_form(which_trans))

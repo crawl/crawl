@@ -469,6 +469,8 @@ namespace species
             return adj ? "feathered" : "feathers";
         else if (species == SP_FELID)
             return adj ? "furry" : "fur";
+        else if (species == SP_SILENT_SPECTRE)
+            return adj ? "spectral" : "phantasm";
         else if (species == SP_MUMMY)
             return adj ? "bandage-wrapped" : "bandages";
         else if (species == SP_GARGOYLE)

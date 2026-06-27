@@ -6,6 +6,9 @@ adjective: "Spectral"
 genus: "Spectre"
 difficulty: Advanced
 difficulty_priority: 30
+species_flags:
+  - no_blood
+  - no_bones
 aptitudes:
   xp: -1
   hp: -2
@@ -36,7 +39,7 @@ aptitudes:
   earth_magic: -1
   invocations: -2
   evocations: 1
-undead_type: US_GHOST
+undead_type: ghost
 str: 4
 int: 10
 dex: 12
