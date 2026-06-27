@@ -1147,15 +1147,13 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             // Don't attempt to 'anger' monsters that are already hostile; this can
             // have weird and unexpected effects, such as prematurely ending hostile
             // effects.
-            else if (mon->temp_attitude()  != ATT_HOSTILE)
+            else if (mon->temp_attitude() != ATT_HOSTILE)
             {
                 // Pass aggro events along to the head, so that attitude changes
                 // can be propogated in a way that makes sense.
-                if (mon->is_child_monster())
-                {
-                    monster* head = &get_tentacle_head(get_tentacle_head(*mon));
+                monster* head = &get_tentacle_head(*mon);
+                if (head != mon)
                     behaviour_event(head, event, src, src_pos, allow_shout);
-                }
 
                 const bool was_friend = mons_att_wont_attack(mon->attitude);
                 mon->attitude = ATT_HOSTILE;
