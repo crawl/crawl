@@ -1,0 +1,71 @@
+enum: SP_SILENT_SPECTRE
+monster: MONS_SILENT_SPECTRE
+name: "Silent Spectre"
+short_name: "SS"
+adjective: "Spectral"
+genus: "Spectre"
+difficulty: Advanced
+difficulty_priority: 30
+aptitudes:
+  xp: -1
+  hp: -2
+  mp_mod: 3
+  wl: 5
+  fighting: -2
+  short_blades: -1
+  long_blades: -1
+  axes: -1
+  polearms: -1
+  maces_and_flails: -1
+  staves: -1
+  throwing: -1
+  ranged weapons: -2
+  armour: -1
+  dodging: 2
+  stealth: 3
+  shields: -1
+  conjurations: -1
+  hexes: 1
+  summoning: -1
+  necromancy: 1
+  translocations: 3
+  alchemy: -2
+  forgecraft: -1
+  shapeshifting: 3
+  air_magic: 2
+  earth_magic: -1
+  invocations: -2
+  evocations: 1
+undead_type: US_GHOST
+str: 4
+int: 10
+dex: 12
+levelup_stat_frequency: 5
+levelup_stats:
+- int
+- dex
+mutations:
+  1:
+    MUT_PETRIFICATION_RESISTANCE: 1
+    MUT_NEGATIVE_ENERGY_RESISTANCE: 3
+    MUT_TORMENT_RESISTANCE: 1
+    MUT_UNBREATHING: 1
+    MUT_SILENT_CAST: 1
+    MUT_INSUBSTANTIAL: 1
+    MUT_SILENCE_AURA: 2
+recommended_jobs:
+  - gladiator
+  - shapeshifter
+  - enchanter
+  - warper
+  - fire elementalist
+  - air elementalist
+recommended_weapons:
+  - long blades
+  - short blades
+  - polearms
+  - staves
+  
+# start TAG_MAJOR_VERSION == 34
+create_enum: false
+# end TAG_MAJOR_VERSION
