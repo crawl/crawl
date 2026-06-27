@@ -476,8 +476,9 @@ ENDMAP
 
 NAME:   hangedman_abyss_mock_shop
 TAGS:   no_monster_gen patrolling
-KMONS:  1 = water elemental / nothing w:5
+KMONS:  1 = water elemental w:5 / nothing w:5
 KMONS:  2 = screaming refraction
+KMONS:  0 = abyssal acolyte
 KFEAT:  0 = abandoned_shop
 KFEAT:  1 = dry_fountain
 SUBST:  x = xcv, . = ...W
@@ -599,7 +600,7 @@ ENDMAP
 NAME:    hangedman_abyss_lost_library
 TAGS:    patrolling no_monster_gen no_item_gen
 MONS:    kobold fleshcrafter / cognitogaunt, great orb of eyes
-MONS:    glowing orange brain, boggart, rakshasa
+MONS:    glowing orange brain, boggart, rakshasa / abyssal acolyte
 MONS:    cacodemon / zykzyl, shadow demon
 KMONS:   0 = occultist
 KMONS:   8 = orc sorcerer
@@ -850,7 +851,7 @@ WEIGHT:  5
 MONS:    rakshasa ; whip good_item | trident good_item | long sword good_item . \
                     ring mail good_item | kite shield good_item . \
                     mundane javelin | boomerang | throwing net
-MONS:    guardian serpent / great orb of eyes
+MONS:    guardian serpent / great orb of eyes / abyssal acolyte band
 ITEM:    potion of curing pre_id / potion of moonshine pre_id
 SUBST:   x = ccccvbb
 MAP
@@ -1079,12 +1080,13 @@ NAME:    hangedman_abyss_town
 TAGS:    no_monster_gen patrolling allow_dup
 WEIGHT:  5
 MONS:    rakshasa / efreet / smoke demon / occultist / base draconian w:5 / \
-         vampire w:3 / necromancer w:3 / death knight w:3
+         vampire w:3 / necromancer w:3 / death knight w:3 / abyssal acolyte
 MONS:    thrashing horror / blink frog / weeping skull band / \
          large abomination / unseen horror / screaming refraction / \
          wretched star w:5 / air elemental / raiju / worldbinder
 MONS:    draconian shifter w:5 / shadow demon w:5 / lich / cognitogaunt / \
-         profane servitor w:5 / deep elf demonologist / deep elf sorcerer
+         profane servitor w:5 / deep elf demonologist / deep elf sorcerer / \
+         herald of the abyss
 MONS:    bone dragon / tentacled starspawn / starcursed mass / \
          apocalypse crab / dancing weapon / tentacled monstrosity / \
          glowing shapeshifter
@@ -1512,7 +1514,8 @@ MONS:    wretched star / starcursed mass / apocalypse crab / lurking horror / \
 MONS:    balrug w:12 / hellion / tormentor / zykzyl / cacodemon w:12 / \
          reaper w:12 / blizzard demon w:12 / cognitogaunt / angel / daeva
 KMONS:   R = hellephant / ancient lich / dread lich / \
-             hell sentinel / profane servitor / executioner / wyrmhole w:2
+             hell sentinel / profane servitor / executioner / \
+             herald of the abyss w:2 / wyrmhole w:2
 KITEM:   O = abyssal rune of Zot
 KFEAT:   ! = runelight
 MARKER:  P = lua:transp_loc("reverse_zot_entry")
@@ -1638,7 +1641,7 @@ KMONS:  1 = generate_awake lightning spire
 KMONS:  2 = raiju
 KMONS:  3 = smoke demon
 KMONS:  4 = blizzard demon
-KMONS:  O = merfolk impaler
+KMONS:  O = abyssal acolyte
 KITEM:  O = abyssal rune of Zot
 KFEAT:  O = shallow_water
 KFEAT:  A = stone_arch
@@ -1654,13 +1657,14 @@ ENDMAP
 
 NAME:   due_evilmike_abyss_rune_seething_liches
 TAGS:   abyss_rune unrand no_monster_gen
-MONS:   fire bat, chaos spawn, cognitogaunt, ogre mage
-KMONS:  OL = lich w:9 / ancient lich w:1 / dread lich w:1
+MONS:   fire bat, chaos spawn, cognitogaunt, ogre mage / abyssal acolyte w:4
+KMONS:  KL = lich w:9
+KMONS:  OP = ancient lich / dread lich
 KITEM:  O = abyssal rune of Zot
 KFEAT:  A = stone_arch
 KFEAT:  ^ = trap_harlequin / trap_devourer w:4
 KFEAT:  ' = runelight
-NSUBST: L = 1:O / *:L
+NSUBST: L = 1:KKO / 1:LLP / *:L
 MARKER: ! = lua:fog_machine { cloud_type = "seething chaos", \
             pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
             size = 1, walk_dist = 1, spread_rate = 16 }
@@ -1687,11 +1691,12 @@ X ccccx4.1.2xx X
         X X x''@A
 ENDMAP
 
+# Even with mad acolytes of Lugonu gone, there's still one acolyte left.
 NAME:   evilmike_abyss_rune_siren_acolytes
 TAGS:   abyss_rune unrand patrolling no_pool_fixup
-MONS:   herald of the abyss
+MONS:   herald of the abyss, abyssal acolyte
 MONS:   generate_awake merfolk avatar, blink frog / raiju w:4
-MONS:   tentacled monstrosity / tentacled starspawn w:6
+MONS:   tentacled starspawn
 KMONS:  O = starcursed mass
 KITEM:  O = abyssal rune of Zot
 KFEAT:  _ = altar_lugonu
@@ -1706,11 +1711,11 @@ MAP
  XbbbXXXXXXXXXX@
 XXb1bbbbbcccccc+
 XXbblblblccwc..c"
-XXbb+^^....3...c
-Xbb4n.N...llb3cc"
-XbOnn1._.3l2l^wcA
-Xbb4n.N...llb3cc"
-XXbb+^^....3...c
+XXbb+^^....4.^.c
+Xbb5n.N...llb4cc"
+XbOnn1._.4l3l2wcA
+Xbb5n.N...llb4cc"
+XXbb+^^....4.^.c
 XXbblblblccwc..c"
 XXb1bbbbbcccccc+
  XbbbXXXXXXXXXX@
@@ -1722,7 +1727,7 @@ KMONS:   1 = elephant
 KMONS:   23 = dire elephant
 KMONS:   45 = hellephant
 KMONS:   67 = generate_awake spatial vortex
-KMONS:   89 = draconian shifter
+KMONS:   89 = draconian shifter / herald of the abyss w:4
 KMONS:   _ = patrolling spatial maelstrom
 ITEM:    potion of enlightenment q:1 pre_id
 KITEM:   _ = abyssal rune of Zot
@@ -2153,7 +2158,8 @@ ENDMAP
 # I want most characters to be able to actually use this exit
 NAME:  evilmike_abyss_exit_13
 TAGS:  abyss_exit unrand allow_dup
-KMONS: O = w:1 orange crystal statue / w:2 obsidian statue / w: 20 ice statue / w: 15 oklob plant
+KMONS: O = orange crystal statue w:1 / obsidian statue w:2 / \
+           ice statue w:20 / oklob plant w:15
 : init_abyss_exit(_G, "O")
 MAP
 O
