@@ -31,9 +31,9 @@ i ono takože dočasno povyšaje izběgańje i smŕtonosnost́ koristnika pri ka
 %%%%
 draining (drain) weapon ego
 
-It sometimes drains living victims (1/2 chance). This deals an additional
-one-quarter of any damage that pierces defenders' armour as well as a flat 2-4
-damage, and also weakens them slightly.
+Ono poněkȯgda osušaje živyh stvorov (1/2 šans). Ono pričinjaje dodatnų četvŕtinų
+vśakogo tipa škody, ktora probivaje brȯnjų, a takože dodatne 2-4 škody, i nemnogo
+oslabjaje jih.
 %%%%
 electrocution (elec) weapon ego
 
@@ -45,7 +45,7 @@ Ono poněkȯgda duši lozami tyh, kogo atakuje (1/2 šans, 2-4 škody).
 %%%%
 flaming (flame) weapon ego
 
-Ono pali žrtv, pričinjajųći dodatny četvŕtinų vśakogo tipa škody, ktora probivaje
+Ono pali žrtv, pričinjajųći dodatnų četvŕtinų vśakogo tipa škody, ktora probivaje
 brȯnjų. 
 %%%%
 flaming (flame) weapon ego blade
