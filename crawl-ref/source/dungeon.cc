@@ -1879,23 +1879,24 @@ static list<coord_def> _find_stone_stairs(bool up_stairs)
 }
 
 /**
- * Try to turn excess stairs into hatches.
+ * Try to replace excess stairs with another dungeon feature.
  *
  * @param stairs[in,out]    The list of stairs to be trimmed; any stairs that
- *                          are turned into hatches will be removed.
+ *                          are replaced will be removed.
  * @param needed_stairs     The desired number of stairs.
- * @param preserve_vault_stairs    Don't trapdoorify stairs that are in vaults.
- * @param hatch_type        What sort of hatch to turn excess stairs into.
+ * @param preserve_vault_stairs    Don't replace stairs that are in vaults.
+ * @param replacement       The dungeon feature that we should replace excess
+ *                          stairs with.
  */
 static void _cull_redundant_stairs(list<coord_def> &stairs,
                                    unsigned int needed_stairs,
                                    bool preserve_vault_stairs,
-                                   dungeon_feature_type hatch_type)
+                                   dungeon_feature_type replacement)
 {
     // we're going to iterate over the list, looking for redundant stairs.
     // (redundant = can walk from one to the other.) For each of
     // those iterations, we'll iterate over the remaining list checking for
-    // stairs redundant with the outer iteration, and hatchify + remove from
+    // stairs redundant with the outer iteration, and replace + remove from
     // the stair list any redundant stairs we find.
 
     for (auto iter1 = stairs.begin();
@@ -1928,7 +1929,7 @@ static void _cull_redundant_stairs(list<coord_def> &stairs,
 
             dprf(DIAG_DNGN,
                  "Too many stairs -- removing one of a connected pair.");
-            _set_grd(s2_loc, hatch_type);
+            _set_grd(s2_loc, replacement);
             stairs.erase(being_examined);
         }
 
