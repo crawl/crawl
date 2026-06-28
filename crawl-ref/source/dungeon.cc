@@ -1285,10 +1285,11 @@ int dgn_count_tele_zones(bool choose_stairless)
 static int _count_tele_closets(vector<coord_def> *closets, bool flying,
                                bool mask)
 {
-    bool (*passable)(const coord_def &) =
-        flying ? [](const coord_def &c)
+    using passable_fn = bool (*)(const coord_def &);
+    passable_fn passable =
+        flying ? (passable_fn) [](const coord_def &c)
                  { return _dgn_square_is_closet_passable(c, true); }
-               : [](const coord_def &c)
+               : (passable_fn) [](const coord_def &c)
                  { return _dgn_square_is_closet_passable(c, false); };
 
     // Floodfill back from the exits to mark everywhere that isn't a closet.
