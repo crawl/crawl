@@ -50,13 +50,13 @@ brȯnjų.
 %%%%
 flaming (flame) weapon ego blade
 
-Ono pali žrtv, pričinjajųći dodatny četvŕtinų vśakogo tipa škody, ktora probivaje
+Ono pali žrtv, pričinjajųći dodatnų četvŕtinų vśakogo tipa škody, ktora probivaje
 brȯnjų. Velike, ognjene ostŕja takože sųt glåvne orųžja dlja lovcev na hidr.
 %%%%
 freezing (freeze) weapon ego
 
-It freezes victims, dealing an additional one-quarter of any damage that pierces
-defenders' armour. It may also slow down cold-blooded creatures.
+Ono mråzi žrtv, pričinjajųći dodatnų četvŕtinų vśakogo tipa škody, ktora probivaje
+brȯnjų. Ono takože može spomaliti hlådnokrȯvnyh stvorov.
 %%%%
 foul flame (foul flame) weapon ego
 
@@ -67,12 +67,12 @@ and good god worshippers cannot use this.
 %%%%
 heavy (heavy) weapon ego
 
-It deals dramatically more damage, but attacks with it are much slower.
+Ono pričinjaje dramatično vyše škody, ale ataky s njim sųt pomalěje.
 %%%%
 heavy (heavy) weapon ego ranged
 
-Any ammunition fired from it deals dramatically more damage, but attacks with
-it are much slower.
+Vśaka amunicija, izstrěljena iz njego, pričinjaje dramatično vyše škody, ale
+ataky s njim sųt pomalěje.
 %%%%
 holy wrath (holy) weapon ego
 
