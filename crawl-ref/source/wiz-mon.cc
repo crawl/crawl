@@ -163,7 +163,7 @@ void debug_list_monsters()
 
     sort(mon_nums, mon_nums + MAX_MONSTERS, _sort_monster_list);
 
-    int total_exp = 0, total_adj_exp = 0, total_nonuniq_exp = 0;
+    int total_exp = 0, total_nonuniq_exp = 0;
 
     string prev_name = "";
     int    count     = 0;
@@ -198,18 +198,16 @@ void debug_list_monsters()
         count++;
         prev_name = name;
 
-        int exp = exp_value(*mi);
-        total_exp += exp;
-        if (!mons_is_unique(mi->type))
-            total_nonuniq_exp += exp;
-
         if ((mi->flags & (MF_WAS_NEUTRAL | MF_NO_REWARD))
             || mi->is_summoned())
         {
             continue;
         }
 
-        total_adj_exp += exp;
+        int exp = exp_value(*mi);
+        total_exp += exp;
+        if (!mons_is_unique(mi->type))
+            total_nonuniq_exp += exp;
     }
 
     char buf[80];
@@ -224,16 +222,8 @@ void debug_list_monsters()
 
     mpr_comma_separated_list("Monsters: ", mons);
 
-    if (total_adj_exp == total_exp)
-    {
-        mprf("%d monsters, %d total exp value (%d non-uniq)",
-             nfound, total_exp, total_nonuniq_exp);
-    }
-    else
-    {
-        mprf("%d monsters, %d total exp value (%d non-uniq, %d adjusted)",
-             nfound, total_exp, total_nonuniq_exp, total_adj_exp);
-    }
+    mprf("%d monsters, %d total exp value (%d non-uniq)",
+            nfound, total_exp, total_nonuniq_exp);
 }
 
 static string _habitat_debug_name(habitat_type ht)
