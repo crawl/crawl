@@ -40,6 +40,7 @@ game_state::game_state()
       smallterm(false),
 #endif
       seen_hups(0), map_stat_gen(false), map_stat_dump_disconnect(false),
+      map_stat_veto_closets(false),
       obj_stat_gen(false), type(GAME_TYPE_NORMAL),
       last_type(GAME_TYPE_UNSPECIFIED), last_game_exit(game_exit::unknown),
       marked_as_won(false), arena_suspended(false),
