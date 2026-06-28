@@ -1928,7 +1928,7 @@ static void _cull_redundant_stairs(list<coord_def> &stairs,
 
             dprf(DIAG_DNGN,
                  "Too many stairs -- removing one of a connected pair.");
-            env.grid(s2_loc) = hatch_type;
+            _set_grd(s2_loc, hatch_type);
             stairs.erase(being_examined);
         }
 
