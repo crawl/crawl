@@ -1899,7 +1899,7 @@ static void _cull_redundant_stairs(list<coord_def> &stairs,
     // the stair list any redundant stairs we find.
 
     for (auto iter1 = stairs.begin();
-         iter1 != stairs.end() && stairs.size() <= needed_stairs;
+         iter1 != stairs.end() && stairs.size() > needed_stairs;
          ++iter1)
     {
         const coord_def s1_loc = *iter1;
