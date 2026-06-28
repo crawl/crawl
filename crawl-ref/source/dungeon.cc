@@ -1327,11 +1327,20 @@ static int _count_tele_closets(vector<coord_def> *closets, bool flying,
             continue;
 
         ++nclosets;
+        const coord_def &landing = landings[0];
         if (closets)
-            closets->push_back(landings[0]);
+            closets->push_back(landing);
         if (mask)
             for (const coord_def &c : landings)
                 env.pgrid(c) |= FPROP_NO_TELE_INTO;
+
+        dprf(DIAG_DNGN, "%s teleport closet at (%d, %d)%s%s",
+             flying ? "Flying" : "Walking", landing.x, landing.y,
+             dgn_vault_at(landing)
+                 ? (" in vault "
+                    + dgn_vault_at(landing)->map_name_at(landing)).c_str()
+                 : "",
+             mask ? " (masked)" : "");
     }
     return nclosets;
 }
