@@ -1938,18 +1938,18 @@ static void _cull_redundant_stairs(list<coord_def> &stairs,
 }
 
 /**
- * Trapdoorify stairs at random, until we reach the specified number.
+ * Replace stairs at random, until we reach the specified number.
  * @param stairs[in,out]    The list of stairs to be trimmed; any stairs that
- *                          are turned into hatches will be removed. Order not
- *                          preserved.
+ *                          are replaced will be removed. Order not preserved.
  * @param needed_stairs     The desired number of stairs.
  * @param preserve_vault_stairs    Don't remove stairs that are in vaults.
- * @param hatch_type        What sort of hatch to turn excess stairs into.
+ * @param replacement       The dungeon feature that we should replace excess
+ *                          stairs with.
  */
 static void _cull_random_stairs(list<coord_def> &stairs,
                                 unsigned int needed_stairs,
                                 bool preserve_vault_stairs,
-                                dungeon_feature_type hatch_type)
+                                dungeon_feature_type replacement)
 {
     while (stairs.size() > needed_stairs)
     {
@@ -1984,7 +1984,7 @@ static void _cull_random_stairs(list<coord_def> &stairs,
         }
 
         dprf(DIAG_DNGN, "Too many stairs -- removing one blindly.");
-        _set_grd(stairs.front(), hatch_type);
+        _set_grd(stairs.front(), replacement);
         stairs.pop_front();
     }
 }
