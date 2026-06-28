@@ -1993,8 +1993,7 @@ static void _cull_random_stairs(list<coord_def> &stairs,
  * Ensure that there is only the correct number of each type of 'stone'
  * (permanent, intra-branch, non-trapdoor) stair on the current level.
  *
- * @param preserve_vault_stairs     Don't delete or trapdoorify stairs that are
- *                                  in vaults.
+ * @param preserve_vault_stairs     Don't delete stairs that are in vaults.
  * @param checking_up_stairs        Whether we're looking at stairs that lead
  *                                  up. If false, we're looking at down-stairs.
  * @return                          Whether we successfully set the right # of
