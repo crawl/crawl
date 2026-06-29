@@ -60,10 +60,10 @@ brȯnjų. Ono takože može spomaliti hlådnokrȯvnyh stvorov.
 %%%%
 foul flame (foul flame) weapon ego
 
-It has been infused with foul flame, dealing an additional three-quarters damage
-to holy beings, an additional one-quarter damage to undead and demons, and an
-additional half damage to all others, so long as it pierces armour. Holy beings
-and good god worshippers cannot use this.
+Ono jest napȯlnjeno mŕzkym ognjem, pričinjajųćim dodatne tri četvŕtiny škody svętym
+stvoram, dodatnų četvŕtinų škody nemŕtvym i demonam, i dodatnų polovinų škody vsim
+ostalym, jestli probivaje brȯnjų. Svęte stvory i poslědovatelji dobryh bogov ne mogųt
+koristati tuto orųžje.
 %%%%
 heavy (heavy) weapon ego
 
@@ -76,20 +76,21 @@ ataky s njim sųt pomalěje.
 %%%%
 holy wrath (holy) weapon ego
 
-It has been blessed by the Shining One, dealing an additional three-quarters of
-any damage that pierces undead and demons' armour. Undead and demons cannot use
-this.
+Ono bylo blågoslovjeno Světęćim i pričinjaje dodatne tri četvŕtiny škody ktora
+probivaje brȯnjų nemŕtvyh i demonov. Nemŕtvi i demoni ne mogųt koristati tuto
+orųžje.
 %%%%
 pain (pain) weapon ego
 
-It inflicts extra damage on living creatures proportional to your Necromancy
-skill.{{
+Ono pričinjaje dodtanų škodų protiv živyh stvorov proporcionaĺno tvojemų
+uměńju Nekromantije.{{
     if you.god() == "Trog" then
-        return " Trog prevents you from unleashing this effect.";
+        return " Trog odvraćaje izpusćeńje tutogo efekta.";
     end
 }}{{
     if you.is_useless_skill("necromancy") then
-        return " Your inability to study Necromancy prevents you from drawing on the full power of this weapon.";
+        return " Tvoja nesposobnost́ v izučeńju Nekromantije ne dozvaljaje
+                 v pȯlnoj měrě izkoristati moć tutogo orųžja.";
     end
 }}
 %%%%
@@ -385,7 +386,7 @@ Ono prinuđaje poraženyh žrtv migati od tebe v dalj.
 %%%%
 poisoned (poison) missile ego
 
-Ono pokryto otravojų.
+Ono jest pokryto otravojų.
 %%%%
 silver (silver) missile ego
 
