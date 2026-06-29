@@ -1841,7 +1841,7 @@ string cant_transform_reason(transformation which_trans,
 
     if (you.has_mutation(MUT_INSUBSTANTIAL))
     {
-        if (you.mutation(MUT_INSUBSTANTIAL) > 1)
+        if (you.get_mutation_level(MUT_INSUBSTANTIAL) > 1)
             return "You aren't solid enough to form into anything.";
         if (which_trans == transformation::statue)
             return "Your spectral form is incapable of becoming that solid.";

@@ -749,6 +749,7 @@ shadow_spriggan MONS_PLAYER_SHADOW_SPRIGGAN
 shadow_tengu MONS_PLAYER_SHADOW_TENGU
 shadow_troll MONS_PLAYER_SHADOW_TROLL
 shadow_vine_stalker MONS_PLAYER_SHADOW_VINE_STALKER
+shadow_silent_spectre MONS_PLAYER_SHADOW_SILENT_SPECTRE
 
 %sdir mon/amorphous
 %rim 0
