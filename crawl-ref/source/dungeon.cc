@@ -917,6 +917,25 @@ static bool _dgn_square_is_tele_connected(const coord_def &c)
         && dgn_square_travel_ok(c);
 }
 
+// Is this square passable for the purposes of getting out of teleport closets?
+static bool _dgn_square_is_closet_passable(const coord_def &c, bool flying)
+{
+    dungeon_feature_type feat = feat_at_no_mimic(c);
+    return dgn_square_travel_ok(c) || feat_is_trap(feat)
+           || (flying && (feat_is_deep_water(feat) || feat_is_lava(feat)));
+}
+
+// Can the player teleport here?
+static bool _dgn_square_is_tele_target(const coord_def &c, bool flying)
+{
+    dungeon_feature_type feat = feat_at_no_mimic(c);
+    if (env.pgrid(c) & FPROP_NO_TELE_INTO)
+        return false;
+    if (feat_is_solid(feat))
+        return false;
+    return flying || !(feat_is_deep_water(feat) || feat_is_lava(feat));
+}
+
 static bool _dgn_square_is_passable(const coord_def &c)
 {
     // [enne] Why does this function check these flags?
@@ -972,11 +991,13 @@ static bool _dgn_square_is_ever_passable(const coord_def &c)
 static inline void _dgn_point_record_stub(const coord_def &) { }
 
 template <class point_record>
+// Calculate which points "start" is reachable from.
 static bool _dgn_fill_zone(
     const coord_def &start, int zone,
     point_record &record_point,
     bool (*passable)(const coord_def &) = _dgn_square_is_passable,
-    bool (*iswanted)(const coord_def &) = nullptr)
+    bool (*iswanted)(const coord_def &) = nullptr,
+    bool follow_transporters = false)
 {
     bool ret = false;
     list<coord_def> points[2];
@@ -985,8 +1006,34 @@ static bool _dgn_fill_zone(
     int found_points = 0;
 #endif
 
+    // Build a map from transporter destinations to sources.
+    map<coord_def, vector<coord_def>> transporter_sources;
+    if (follow_transporters)
+    {
+        for (rectangle_iterator ri(0); ri; ++ri)
+        {
+            if (env.grid(*ri) != DNGN_TRANSPORTER)
+                continue;
+            if (map_position_marker *mark =
+                    get_position_marker_at(*ri, DNGN_TRANSPORTER))
+            {
+                if (map_bounds(mark->dest))
+                    transporter_sources[mark->dest].push_back(*ri);
+            }
+        }
+    }
+
     // No bounds checks, assuming the level has at least one layer of
     // rock border.
+
+    auto enqueue = [&](const coord_def &cp)
+    {
+        if (!map_bounds(cp) || travel_point_distance[cp.x][cp.y] || !passable(cp))
+            return;
+        travel_point_distance[cp.x][cp.y] = zone;
+        record_point(cp);
+        points[!cur].push_back(cp);
+    };
 
     for (points[cur].push_back(start); !points[cur].empty();)
     {
@@ -1001,17 +1048,14 @@ static bool _dgn_fill_zone(
                 ret = true;
 
             for (adjacent_iterator ai(c); ai; ++ai)
-            {
-                const coord_def& cp = *ai;
-                if (!map_bounds(cp)
-                    || travel_point_distance[cp.x][cp.y] || !passable(cp))
-                {
-                    continue;
-                }
+                enqueue(*ai);
 
-                travel_point_distance[cp.x][cp.y] = zone;
-                record_point(cp);
-                points[!cur].push_back(cp);
+            if (follow_transporters)
+            {
+                auto it = transporter_sources.find(c);
+                if (it != transporter_sources.end())
+                    for (const coord_def &src : it->second)
+                        enqueue(src);
             }
         }
 
@@ -1233,6 +1277,77 @@ int dgn_count_tele_zones(bool choose_stairless)
                                     DNGN_UNSEEN, _dgn_square_is_tele_connected);
 }
 
+// Count "teleport closets": regions a random teleport could strand the player
+// in, with no way back to an exit stair.
+//
+// Connectivity is less stringent than for most checks - if you can get out of
+// it by walking over traps, through transporters, or onto a permanent teleport
+// trap, it is not a closet.
+static int _count_tele_closets(vector<coord_def> *closets, bool flying,
+                               bool mask)
+{
+    using passable_fn = bool (*)(const coord_def &);
+    passable_fn passable =
+        flying ? (passable_fn) [](const coord_def &c)
+                 { return _dgn_square_is_closet_passable(c, true); }
+               : (passable_fn) [](const coord_def &c)
+                 { return _dgn_square_is_closet_passable(c, false); };
+
+    // Floodfill back from the exits to mark everywhere that isn't a closet.
+    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+    for (rectangle_iterator ri(0); ri; ++ri)
+        if ((_is_exit_stair(*ri) || env.grid(*ri) == DNGN_TRAP_TELEPORT_PERMANENT)
+            && !travel_point_distance[ri->x][ri->y])
+        {
+            _dgn_fill_zone(*ri, 1, _dgn_point_record_stub, passable, nullptr, true);
+        }
+
+    // Now search for closets we didn't reach.
+    int nclosets = 0;
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        const coord_def seed = *ri;
+        if (travel_point_distance[seed.x][seed.y] || !passable(seed))
+            continue;
+
+        // Collect every landing spot in this stranded region.
+        vector<coord_def> landings;
+        auto note_target = [&landings, flying](const coord_def &c)
+        {
+            if (_dgn_square_is_tele_target(c, flying)
+                && !(env.level_map_mask(c) & MMT_NO_TELE_CLOSET))
+            {
+                landings.push_back(c);
+            }
+        };
+        // _dgn_fill_zone records every square but the seed, so check it here.
+        note_target(seed);
+        // Mark the region visited (any nonzero zone id) so it is counted once.
+        _dgn_fill_zone(seed, 2, note_target, passable);
+
+        // A region a teleport can't land in isn't a closet.
+        if (landings.empty())
+            continue;
+
+        ++nclosets;
+        const coord_def &landing = landings[0];
+        if (closets)
+            closets->push_back(landing);
+        if (mask)
+            for (const coord_def &c : landings)
+                env.pgrid(c) |= FPROP_NO_TELE_INTO;
+
+        dprf(DIAG_DNGN, "%s teleport closet at (%d, %d)%s%s",
+             flying ? "Flying" : "Walking", landing.x, landing.y,
+             dgn_vault_at(landing)
+                 ? (" in vault "
+                    + dgn_vault_at(landing)->map_name_at(landing)).c_str()
+                 : "",
+             mask ? " (masked)" : "");
+    }
+    return nclosets;
+}
+
 // Count number of mutually isolated zones. If choose_stairless, only count
 // zones with no stairs in them. If fill is set to anything other than
 // DNGN_UNSEEN, chosen zones will be filled with the provided feature.
@@ -1370,6 +1485,10 @@ dgn_register_place(const vault_placement &place, bool register_vault)
                         && count(place.exits.begin(), place.exits.end(), c);
                 });
         }
+
+        // Opt out of teleport closet detection.
+        if (place.map.has_tag("allow_tele_closets"))
+            _mask_vault(place, MMT_NO_TELE_CLOSET);
     }
 
     // Find tags matching properties.
@@ -2360,6 +2479,26 @@ static void _dgn_verify_connectivity(unsigned nvaults)
     if (!_add_connecting_escape_hatches())
         throw dgn_veto_exception("Failed to add connecting escape hatches.");
 
+    // Check for zones you can teleport into and not walk/fly out of.
+    if (player_in_connected_branch()
+        && !(branches[you.where_are_you].branch_flags & brflag::islanded))
+    {
+        const bool mask = !crawl_state.map_stat_veto_closets;
+        vector<coord_def> closets;
+        const int nclosets = _count_tele_closets(&closets, false, mask)
+                           + _count_tele_closets(&closets, true, mask);
+        if (!mask && nclosets > 0)
+        {
+            // If the closet sits inside a vault, name it so the offending map
+            // is easy to find in mapstat output.
+            const vault_placement *vp = dgn_vault_at(closets[0]);
+            const string in_vault =
+                vp ? " in vault " + vp->map_name_at(closets[0]) : "";
+            throw dgn_veto_exception(make_stringf(
+                "Teleport closet with no stairs%s.", in_vault.c_str()));
+        }
+    }
+
     // XXX: Interlevel connectivity fixup relies on being the last
     //      point at which a level may be vetoed.
     if (!_fixup_interlevel_connectivity())
@@ -2717,6 +2856,15 @@ static void _post_vault_build()
             depth -= 3;
         } while (depth > 0);
     }
+
+    if (!player_in_branch(BRANCH_COCYTUS)
+        && !player_in_branch(BRANCH_SWAMP)
+        && !player_in_branch(BRANCH_SHOALS))
+    {
+        _prepare_water();
+        if (player_in_branch(BRANCH_LAIR) || !one_chance_in(4))
+            _prepare_water();
+    }
 }
 
 static void _build_dungeon_level()
@@ -2811,15 +2959,6 @@ static void _build_dungeon_level()
 
     fixup_misplaced_items();
     link_items();
-
-    if (!player_in_branch(BRANCH_COCYTUS)
-        && !player_in_branch(BRANCH_SWAMP)
-        && !player_in_branch(BRANCH_SHOALS))
-    {
-        _prepare_water();
-        if (player_in_branch(BRANCH_LAIR) || !one_chance_in(4))
-            _prepare_water();
-    }
 
     if (player_in_hell())
         _fixup_hell_stairs();

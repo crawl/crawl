@@ -21,6 +21,7 @@
 #include "viewgeom.h"
 #ifdef USE_TILE_LOCAL
 #include "tilefont.h"
+#include "windowmanager.h"
 #endif
 #include "ui.h"
 
@@ -920,6 +921,15 @@ void line_reader::insert_char_at_cursor(int ch)
     }
 }
 
+#ifdef USE_TILE_LOCAL
+void line_reader::clipboard_paste()
+{
+    if (wm && wm->has_clipboard())
+        for (char ch : wm->get_clipboard())
+            process_key(ch);
+}
+#endif
+
 int line_reader::process_key(int ch)
 {
 
@@ -1045,6 +1055,11 @@ int line_reader::process_key(int ch)
         calc_pos();
         cursorto(pos);
         break;
+#ifdef USE_TILE_LOCAL
+    case CONTROL('V'):
+        clipboard_paste();
+        break;
+#endif
     case CK_MOUSE_CLICK:
         // FIXME: ought to move cursor to click location, if it's within the input
         return -1;

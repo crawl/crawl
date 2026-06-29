@@ -241,6 +241,7 @@ Good places to use `no_tele_into`:
 
 * Vaults which need the player to enter in a controlled manner to understand/enjoy. For example `gammafunk_steamed_eel`.
 * Teleport closets: areas the player cannot escape without a scroll of teleportation (or similar). For example `lemuel_altar_in_water`.
+  * The map builder will attempt to detect these closets and add `no_tele_into` to them. This is useful for highly procedural vaults where some square may become isolated. For vaults where a square is always a teleport closet, you should use `no_tele_into` explicitly.
 * Egregiously dangerous/unfair situations. For example `chequers_guarded_unrand_ignorance` (four orange crystal statues). Most (but not all) transporter vaults will also fall into this category due to their innate danger.
 
 Bad places to use `no_tele_into`:

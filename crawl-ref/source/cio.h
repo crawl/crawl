@@ -382,6 +382,9 @@ public:
 
     void insert_char_at_cursor(int ch);
     void overwrite_char_at_cursor(int ch);
+#ifdef USE_TILE_LOCAL
+    void clipboard_paste();
+#endif
 #ifdef USE_TILE_WEB
     void set_tag(const string &tag);
 #endif

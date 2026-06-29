@@ -8098,7 +8098,8 @@ ENDMAP
 
 NAME: nicolae_overflow_hidden_temple
 TAGS: temple_overflow_generic_5 temple_overflow_generic_4 temple_overflow_generic_3 \
-      temple_overflow_generic_2 temple_overflow_generic_1 no_monster_gen no_descent
+      temple_overflow_generic_2 temple_overflow_generic_1 no_monster_gen no_descent \
+      transparent
 {{
   local altarcount = 1
   if is_validating() then

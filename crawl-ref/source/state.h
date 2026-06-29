@@ -70,6 +70,8 @@ struct game_state
     bool map_stat_gen;      // Set if we're generating stats on maps.
     bool map_stat_dump_disconnect; // Set if we dump disconnected maps and exit
                                    // under mapstat.
+    bool map_stat_veto_closets; // Set if mapstat should veto levels with
+                                // teleport closets rather than masking them.
     bool obj_stat_gen;      // Set if we're generating object stats.
 
     string force_map;       // Set if we're forcing a specific map to generate.
