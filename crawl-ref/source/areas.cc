@@ -504,7 +504,12 @@ int shrinking_aoe_range(int dur)
 
 int player::silence_radius() const
 {
-    return shrinking_aoe_range(duration[DUR_SILENCE]);
+    int SR = -1;
+
+    if (you.get_mutation_level(MUT_SILENCE_AURA))
+        SR = 2 * you.get_mutation_level(MUT_SILENCE_AURA);
+
+    return max(SR, shrinking_aoe_range(duration[DUR_SILENCE]));
 }
 
 int player::demon_silence_radius() const

@@ -1705,11 +1705,28 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_SILENCE_HALO, 0, 1, mutflag::good,
-  "aura of silence",
+  "halo of silence",
 
-  {"You are surrounded by an aura of silence.", "", ""},
+  {"You are surrounded by a halo of silence.", "", ""},
   {"An unnatural silence shrouds you.", "", ""},
   {"", "", ""},
+  TILEG_MUT_SILENCE_AURA,
+},
+
+{ MUT_SILENCE_AURA, 30, 3, mutflag::good,
+  "silence aura",
+
+  { "You are surrounded by a small aura of unnatural quiet.",
+    "You are surrounded by an aura of unnatural quiet.",
+    "You are surrounded by a massive aura of unnatural quiet."},
+
+  { "You develop an aura of silence.",
+    "Your aura of unnatural quiet expands.",
+    "Your aura of unnatural quiet expands." },
+
+  { "The world fills with sound again. Your silence aura fades.",
+    "Your aura of unnatural quiet shrinks.",
+    "Your aura of unnatural quiet shrinks."},
   TILEG_MUT_SILENCE_AURA,
 },
 

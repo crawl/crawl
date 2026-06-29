@@ -247,6 +247,7 @@ static const mutation_conflict mut_conflicts[] =
     { MUT_HP_CASTING,          MUT_HIGH_MAGIC,             false},
     { MUT_HP_CASTING,          MUT_LOW_MAGIC,              false},
     { MUT_HP_CASTING,          MUT_EFFICIENT_MAGIC,        false},
+    { MUT_SILENCE_AURA,        MUT_SHOUTITUS,              false},
 
 #if TAG_MAJOR_VERSION == 34
     { MUT_NO_REGENERATION,     MUT_INHIBITED_REGENERATION, false},
@@ -1691,6 +1692,10 @@ bool mut_is_compatible(mutation_type mut, bool base_only)
         // Only species that have innate tough skin can mutate more.
         if (mut == MUT_TOUGH_SKIN && !you.has_innate_mutation(MUT_TOUGH_SKIN))
             return false;
+
+        // Only SS can randomly get more/less aura.
+        if (mutat == MUT_SILENCE_AURA && !you.has_innate_mutation(MUT_SILENCE_AURA))
+            return true;
 
         // Only species that have innate fur can mutate more.
         if (mut == MUT_SHAGGY_FUR && !you.has_innate_mutation(MUT_SHAGGY_FUR))
