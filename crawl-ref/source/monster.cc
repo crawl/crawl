@@ -263,7 +263,21 @@ mon_attitude_type monster::temp_attitude() const
         return ATT_HOSTILE; // ???
     }
     if (has_ench(ENCH_CHARM) || has_ench(ENCH_FRIENDLY_BRIBED))
+    {
+        // If charm was applied by another monster, inherit that monster's
+        // attitude (similar to ENCH_HEXED). This ensures monsters charmed
+        // by a non-player caster join the caster's team rather than always
+        // becoming player-friendly.
+        if (has_ench(ENCH_CHARM))
+        {
+            mon_enchant e = get_ench(ENCH_CHARM);
+            actor *agent = actor_by_mid(e.source, true);
+            if (agent && agent->is_monster())
+                return agent->as_monster()->attitude;
+        }
+
         return ATT_FRIENDLY;
+    }
     else if (has_ench(ENCH_NEUTRAL_BRIBED))
         return ATT_GOOD_NEUTRAL; // ???
     else

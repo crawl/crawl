@@ -8,6 +8,7 @@
 #include "monster.h"
 
 #include <sstream>
+#include <cstdio>
 #include <unordered_map>
 
 #include "act-iter.h"

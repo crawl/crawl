@@ -1308,6 +1308,23 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_VENOM);
         break;
 
+    case MONS_REGAL:
+        if (one_chance_in(9) && !get_unique_item_status(UNRAND_OCTOPUS_KING))
+        {
+            force_item = true;
+            item.base_type = OBJ_WEAPONS;
+            item.sub_type = WPN_TRIDENT;
+            item.flags |= ISFLAG_IDENTIFIED;
+            make_item_unrandart(item, UNRAND_OCTOPUS_KING);
+        }
+        else
+        {
+            item.base_type = OBJ_WEAPONS;
+            item.sub_type = WPN_SPEAR;
+            item.flags |= ISFLAG_IDENTIFIED;
+        }
+        break;
+
     case MONS_ARACHNE:
         force_item = true;
         item.base_type = OBJ_STAVES;
@@ -1529,6 +1546,19 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
         hat->props[ITEM_TILE_NAME_KEY] = "THELM_HAT_WIGLAF";
         hat->props[WORN_TILE_NAME_KEY] = "hat_wiglaf";
         bind_item_tile(*hat);
+    }
+
+    if (mon->type == MONS_REGAL)
+    {
+        if (i.sub_type == WPN_TRIDENT)
+            return;
+
+        item_def item;
+        item.base_type = OBJ_JEWELLERY;
+        item.quantity = 1;
+        make_item_unrandart(item, UNRAND_OCTOPUS_KING_RING);
+        give_specific_item(mon, item);
+        return;
     }
 
     if (mon->type == MONS_JOSEPHINA)
