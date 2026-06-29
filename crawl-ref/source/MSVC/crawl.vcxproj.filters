@@ -958,6 +958,9 @@
     <ClCompile Include="..\mon-aura.cc">
       <Filter>cc</Filter>
     </ClCompile>
+    <ClCompile Include="..\mon-lurk.cc">
+      <Filter>cc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ability.h">
@@ -2303,6 +2306,9 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\mon-aura.h">
+      <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mon-lurk.h">
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\tile-env.h">

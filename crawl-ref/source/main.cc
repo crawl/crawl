@@ -2658,6 +2658,8 @@ void world_reacts()
 
     manage_clouds();
 
+    handle_lurkers();
+
     // This needs to happen after `manage_clouds` is called as fog clouds
     // decaying will affect whether a monster is still in view
     print_mons_left_view_messages();

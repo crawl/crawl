@@ -1077,6 +1077,8 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
             ++affected_actor_count;
         }
     }
+
+    alert_lurker_at(pos, true);
 }
 
 // Given an actor at affected_pos and a given noise, calculates where

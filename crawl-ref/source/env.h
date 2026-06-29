@@ -11,6 +11,7 @@
 #include "map-knowledge.h"
 #include "mapmark.h"
 #include "monster.h"
+#include "mon-lurk.h"
 #include "shopping.h"
 
 using std::vector;
@@ -107,6 +108,8 @@ struct crawl_environment
     bool forest_is_hostile;
     int density;
     int absdepth0;
+
+    vector<lurker_data> lurkers;
 
     // Remaining fields not marshalled:
 

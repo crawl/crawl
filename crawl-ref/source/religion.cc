@@ -717,7 +717,7 @@ void dec_penance(god_type god, int val)
                 mprf(MSGCH_GOD, "Your aura of darkness returns!");
                 invalidate_agrid(true);
             }
-            if (have_passive(passive_t::sinv))
+            if (have_passive(passive_t::see_unseen))
             {
                 mprf(MSGCH_GOD, "Your vision regains its divine sight.");
                 env.invis_knowledge.clear();
@@ -2426,7 +2426,7 @@ static void _handle_piety_gain(int old_piety)
                 simple_god_message(" begins accelerating your health and magic "
                                 "regeneration.");
             }
-            if (rank == rank_for_passive(passive_t::sinv))
+            if (rank == rank_for_passive(passive_t::see_unseen))
                 env.invis_knowledge.clear();
             if (rank == rank_for_passive(passive_t::clarity))
             {

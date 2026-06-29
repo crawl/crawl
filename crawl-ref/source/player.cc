@@ -7992,7 +7992,7 @@ bool player::innate_sinv() const
         return true;
     }
 
-    if (have_passive(passive_t::sinv))
+    if (have_passive(passive_t::see_unseen))
         return true;
 
     return false;

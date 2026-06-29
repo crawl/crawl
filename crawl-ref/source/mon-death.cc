@@ -3910,6 +3910,20 @@ int dismiss_monsters(string pattern)
         }
     }
 
+    bool removed_lurker = false;
+    for (int i = env.lurkers.size() - 1; i >= 0; --i)
+    {
+        if (tpat.empty() || tpat.matches(env.lurkers[i].mon.mons.name(DESC_PLAIN, true)))
+        {
+            ++ndismissed;
+            env.lurkers.erase(env.lurkers.begin() + i);
+            removed_lurker = true;
+        }
+    }
+    if (removed_lurker)
+        init_lurker_map();
+
+
     return ndismissed;
 }
 

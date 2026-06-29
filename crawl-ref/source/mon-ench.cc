@@ -1088,6 +1088,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_STAMPEDE:
         if (!quiet)
             simple_monster_message(*this, " stops stampeding.");
+        break;
+
+    case ENCH_PREPARING_TO_LURK:
+        if (!you.can_see(*this) && behaviour == BEH_WANDER)
+            start_lurking(*this);
+        break;
 
     default:
         break;
@@ -1410,6 +1416,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_EXPOSED:
     case ENCH_BRAMBLE_COOLDOWN:
     case ENCH_STAMPEDE:
+    case ENCH_PREPARING_TO_LURK:
         decay_enchantment(en);
         break;
 
@@ -2170,6 +2177,7 @@ static const char *enchant_names[] =
     "phalanx_barrier", "figment", "paradox-touched", "warding",
     "diminished_spells", "orb_cooldown", "sunder_charge",
     "exposed", "briar_cooldown", "stampeding",
+    "preparing_to_lurk",
     "buggy", // NUM_ENCHANTMENTS
 };
 
@@ -2423,6 +2431,8 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_EMPOWERED_SPELLS:
         cturn = 35 * 10 / _mod_speed(10, mons->speed);
         break;
+    case ENCH_PREPARING_TO_LURK:
+        return random_range(100, 500);
     case ENCH_RING_OF_THUNDER:
     case ENCH_RING_OF_FLAMES:
     case ENCH_RING_OF_CHAOS:

@@ -429,6 +429,7 @@ python.exe util/gen-all.py</Command>
     <ClCompile Include="..\mon-death.cc" />
     <ClCompile Include="..\mon-ench.cc" />
     <ClCompile Include="..\mon-explode.cc" />
+    <ClCompile Include="..\mon-lurk.cc" />
     <ClCompile Include="..\movement.cc" />
     <ClCompile Include="..\ng-init-branches.cc" />
     <ClCompile Include="..\ng-setup.cc" />
@@ -850,6 +851,7 @@ python.exe util/gen-all.py</Command>
     <ClInclude Include="..\mon-holy-type.h" />
     <ClInclude Include="..\mon-info.h" />
     <ClInclude Include="..\mon-inv-type.h" />
+    <ClInclude Include="..\mon-lurk.h" />
     <ClInclude Include="..\mon-movetarget.h" />
     <ClInclude Include="..\mon-mst.h" />
     <ClInclude Include="..\mon-pathfind.h" />

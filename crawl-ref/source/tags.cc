@@ -65,6 +65,7 @@
 #include "misc.h"
 #include "mon-death.h"
 #include "mon-ench.h"
+#include "mon-lurk.h"
 #if TAG_MAJOR_VERSION == 34
  #include "mon-place.h"
  #include "mon-poly.h"
@@ -2498,6 +2499,17 @@ void invis_monster_knowledge::marshall(writer &th) const
 void invis_monster_knowledge::unmarshall(reader &th)
 {
     _unmarshall_vector(th, data, unmarshall_invis_mon_data);
+}
+
+static lurker_data _unmarshall_lurker_data(reader &th)
+{
+    lurker_data data;
+    data.mon = unmarshall_follower(th);
+    data.pos = unmarshallCoord(th);
+    data.alerted = unmarshallBoolean(th);
+    data.timer = unmarshallInt(th);
+    data.ignore_threat = unmarshallBoolean(th);
+    return data;
 }
 
 static void marshall_vault_placement(writer &th, const vault_placement &vp)
@@ -5767,6 +5779,16 @@ static void _tag_construct_level(writer &th)
     marshallInt(th, env.density);
 
     env.invis_knowledge.marshall(th);
+
+    marshallInt(th, env.lurkers.size());
+    for (const lurker_data& data : env.lurkers)
+    {
+        marshall_follower(th, data.mon);
+        marshallCoord(th, data.pos);
+        marshallBoolean(th, data.alerted);
+        marshallInt(th, data.timer);
+        marshallBoolean(th, data.ignore_threat);
+    }
 }
 
 void marshallItem(writer &th, const item_def &item, bool iinfo)
@@ -7598,6 +7620,14 @@ static void _tag_read_level(reader &th)
 #endif
     env.invis_knowledge.clear();
     env.invis_knowledge.unmarshall(th);
+#if TAG_MAJOR_VERSION == 34
+    }
+    if (th.getMinorVersion() >= TAG_MINOR_INVIS_REFORM)
+    {
+#endif
+    env.lurkers.clear();
+    _unmarshall_vector(th, env.lurkers, _unmarshall_lurker_data);
+    init_lurker_map();
 #if TAG_MAJOR_VERSION == 34
     }
 #endif

@@ -917,6 +917,17 @@ void handle_behaviour(monster* mon)
             mon->foe_memory = 0;
 
         mon->foe = new_foe;
+
+        // Wandering lurkers can eventually go back to lurking (but not if you
+        // would just detect them again anyway).
+        if (mon->behaviour == BEH_WANDER
+            && mon->attitude == ATT_HOSTILE
+            && mons_class_flag(mon->type, M_LURKER)
+            && !have_passive(passive_t::see_unseen)
+            && !mon->has_ench(ENCH_PREPARING_TO_LURK))
+        {
+            mon->add_ench(ENCH_PREPARING_TO_LURK);
+        }
     }
 }
 

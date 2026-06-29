@@ -443,6 +443,8 @@ static void _handle_encounter_messages(const vector<monster*> monsters,
             out << "s";
         out << " in pursuit of the Orb! ";
     }
+    else if (sc == SC_LURKER_AMBUSH)
+        out << _describe_monsters_from_species(species) << " ambushes you!";
     else
         out << "You encounter " << _describe_monsters_from_species(species) << ".";
 

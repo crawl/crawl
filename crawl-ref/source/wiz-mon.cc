@@ -36,6 +36,7 @@
 #include "mon-poly.h"
 #include "mon-speak.h"
 #include "output.h"
+#include "player-notices.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
@@ -220,7 +221,23 @@ void debug_list_monsters()
         snprintf(buf, sizeof(buf), "%s", prev_name.c_str());
     mons.emplace_back(buf);
 
-    mpr_comma_separated_list("Monsters: ", mons);
+    if (!mons.empty())
+        mpr_comma_separated_list("Monsters: ", mons);
+
+    if (!env.lurkers.empty())
+    {
+        vector<monster*> lurkers;
+        for (lurker_data &lurker : env.lurkers)
+        {
+            lurkers.push_back(&lurker.mon.mons);
+            const int exp = exp_value(lurker.mon.mons);
+            total_exp += exp;
+            if (!mons_is_unique(lurker.mon.mons.type))
+                total_nonuniq_exp += exp;
+            nfound++;
+        }
+        mprf("Lurkers: %s", multimonster_name_string(lurkers, true).c_str());
+    }
 
     mprf("%d monsters, %d total exp value (%d non-uniq)",
             nfound, total_exp, total_nonuniq_exp);

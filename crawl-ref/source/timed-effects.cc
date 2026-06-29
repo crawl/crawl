@@ -600,6 +600,10 @@ void monster::timeout_enchantments(int time, bool no_drowning)
                 _timeout_enchantment(*this, entry.second, time);
             break;
 
+        case ENCH_PREPARING_TO_LURK:
+            del_ench(ENCH_PREPARING_TO_LURK, true, false);
+            break;
+
         default:
             break;
         }

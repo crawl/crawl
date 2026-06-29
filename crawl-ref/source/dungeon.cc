@@ -1692,6 +1692,9 @@ void dgn_reset_level(bool enable_random_maps)
     tile_env.remembered_flavour.reset();
     env.map_seen.reset();
 
+    env.lurkers.clear();
+    init_lurker_map();
+
     // Initialise all items.
     for (int i = 0; i < MAX_ITEMS; i++)
         init_item(i);
@@ -5670,7 +5673,12 @@ static bool _dgn_place_monster(const vault_placement &place, mons_spec &mspec,
         = mspec.patrolling || place.map.has_tag("patrolling");
 
     mspec.props[MAP_KEY].get_string() = place.map_name_at(where);
-    return dgn_place_monster(mspec, where, false, generate_awake, patrolling);
+    monster* mon = dgn_place_monster(mspec, where, false, generate_awake, patrolling);
+
+    if (mon && mons_class_flag(mon->type, M_LURKER))
+        start_lurking_at(*mon, mon->pos());
+
+    return mon;
 }
 
 static bool _dgn_place_one_monster(const vault_placement &place,
