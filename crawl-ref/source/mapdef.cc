@@ -6290,7 +6290,7 @@ string keyed_mapspec::set_mask(const string &s, bool /*garbage*/)
         // Be sure to change the order of map_mask_type to match!
         static string flag_list[] =
             {"vault", "no_item_gen", "no_monster_gen", "no_pool_fixup",
-             "UNUSED",
+             "allow_tele_closets",
              "no_wall_fixup", "opaque", "no_trap_gen", ""};
         map_mask |= map_flags::parse(flag_list, s);
     }

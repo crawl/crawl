@@ -1986,6 +1986,7 @@ ITEM:    scroll of teleportation pre_id q:2 w:20 / \
 SHUFFLE: %!'"
 NSUBST:  % = 1:d / * = %$, ! = 1:d / * = %$, ' = 1:d / * = %$, " = 1:e / * = %$
 KMASK:   %$de = opaque
+KMASK:   %$de = allow_tele_closets
 TILE:    m = dngn_transparent_wall_green
 : vaults_hard_standard(_G)
 FTILE:   R = floor_metal_gold

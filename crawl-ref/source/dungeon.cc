@@ -1314,8 +1314,11 @@ static int _count_tele_closets(vector<coord_def> *closets, bool flying,
         vector<coord_def> landings;
         auto note_target = [&landings, flying](const coord_def &c)
         {
-            if (_dgn_square_is_tele_target(c, flying))
+            if (_dgn_square_is_tele_target(c, flying)
+                && !(env.level_map_mask(c) & MMT_NO_TELE_CLOSET))
+            {
                 landings.push_back(c);
+            }
         };
         // _dgn_fill_zone records every square but the seed, so check it here.
         note_target(seed);
@@ -1482,6 +1485,10 @@ dgn_register_place(const vault_placement &place, bool register_vault)
                         && count(place.exits.begin(), place.exits.end(), c);
                 });
         }
+
+        // Opt out of teleport closet detection.
+        if (place.map.has_tag("allow_tele_closets"))
+            _mask_vault(place, MMT_NO_TELE_CLOSET);
     }
 
     // Find tags matching properties.
