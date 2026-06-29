@@ -3078,29 +3078,9 @@ string mons_simulacrum_immune_reason(const monster *mons)
 
 spret cast_simulacrum(coord_def target, int pow, bool fail)
 {
-    if (cell_is_invalid_target(target))
-    {
-        canned_msg(MSG_UNTHINKING_ACT);
-        return spret::abort;
-    }
+    fail_check();
 
     monster* mons = monster_at(target);
-    if (!mons || !you.can_see(*mons))
-    {
-        fail_check();
-        canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
-        // If there's no monster there, you still pay the costs in
-        // order to prevent locating invisible monsters.
-        return spret::success;
-    }
-
-    if (!mons_can_be_spectralised(*mons))
-    {
-        mpr("You can't make simulacra of that!");
-        return spret::abort;
-    }
-
-    fail_check();
 
     mprf("You sublimate a sliver of %s essence and reconstitute it in ice.",
          apostrophise(mons->name(DESC_THE)).c_str());
