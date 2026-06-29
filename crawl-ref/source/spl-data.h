@@ -39,8 +39,8 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_CHARMING_AURA, "Charming Aura",
-    spschool::none,
-    spflag::area | spflag::WL_check | spflag::monster,
+    spschool::hexes,
+    spflag::WL_check | spflag::monster,
     6,
     200,
     LOS_RADIUS, LOS_RADIUS,

@@ -1314,14 +1314,14 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             force_item = true;
             item.base_type = OBJ_WEAPONS;
             item.sub_type = WPN_TRIDENT;
-            item.flags |= ISFLAG_KNOW_TYPE;
+            item.flags |= ISFLAG_IDENTIFIED;
             make_item_unrandart(item, UNRAND_OCTOPUS_KING);
         }
         else
         {
             item.base_type = OBJ_WEAPONS;
             item.sub_type = WPN_SPEAR;
-            item.flags |= ISFLAG_KNOW_TYPE;
+            item.flags |= ISFLAG_IDENTIFIED;
         }
         break;
 

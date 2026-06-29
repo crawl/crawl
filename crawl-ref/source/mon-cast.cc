@@ -6298,7 +6298,7 @@ static int _mons_charming_aura(monster* mons, bool actual)
 
     int retval = -1;
 
-    const int pow = _ench_power(SPELL_CHARMING_AURA, *mons);
+    const int pow = mons_spellpower(*mons, SPELL_CHARMING_AURA);
 
     if (mons->see_cell_no_trans(you.pos())
         && mons->can_see(you)
@@ -6306,12 +6306,12 @@ static int _mons_charming_aura(monster* mons, bool actual)
     {
         retval = 0;
 
-        //duplicates the player effects of _mons_mass_confuse
+        // Check if player can be charmed
         if (actual)
         {
-            const int willpower = you.check_willpower(mons, pow);
-            if (willpower > 0)
-                mprf("You%s", you.resist_margin_phrase(willpower).c_str());
+            const int res_margin = you.check_willpower(mons, pow);
+            if (res_margin > 0)
+                mprf("You%s", you.resist_margin_phrase(res_margin).c_str());
             else
             {
                 you.confuse(mons, 5 + random2(3));
@@ -6322,62 +6322,53 @@ static int _mons_charming_aura(monster* mons, bool actual)
 
     for (monster_near_iterator mi(mons->pos(), LOS_NO_TRANS); mi; ++mi)
     {
-      bolt tracer;
-      tracer.source    = mons->pos();
-      tracer.ench_power = pow;
-      tracer.animate   = false;
-      tracer.target    = mi->pos();
-      tracer.range     = grid_distance(mi->pos(), mons->pos());;
-      tracer.is_tracer = false;
-      tracer.flavour   = BEAM_CHARM;
-      tracer.pierce    = false;
-      fire_tracer(mons, tracer);
+        if (*mi == mons)
+            continue;
 
-      if (!mons_should_fire(tracer)
-          || tracer.path_taken.back() != tracer.target)
-      {
-        continue;
-      }
-      tracer.fire();
+        // Check visibility via LOS
+        bolt tracer;
+        targeting_tracer target_tracer;
+        tracer.source = mons->pos();
+        tracer.target = mi->pos();
+        tracer.range = grid_distance(mi->pos(), mons->pos());
+        tracer.flavour = BEAM_CHARM;
+        tracer.pierce = false;
+        fire_tracer(mons, target_tracer, tracer);
 
+        if (!mons_should_fire(tracer, target_tracer)
+            || tracer.path_taken.empty()
+            || tracer.path_taken.back() != tracer.target)
+        {
+            continue;
+        }
 
-      enchant_type good = (mons->wont_attack()) ? ENCH_CHARM
-                                                : ENCH_HEXED;
-      enchant_type bad  = (mons->wont_attack()) ? ENCH_HEXED
-                                                : ENCH_CHARM;
-      if (mons_invuln_will(**mi)
-          || !(mi->holiness() & MH_NATURAL)
-          || mons_is_firewood(**mi)
-          || mons_atts_aligned(mi->attitude, mons->attitude)
-          || testbits(mi->flags, MF_DEMONIC_GUARDIAN))
-      {
-          continue;
-      }
+        // Immune monsters
+        if (mons_invuln_will(**mi)
+            || !(mi->holiness() & MH_NATURAL)
+            || mi->is_firewood()
+            || !could_harm_enemy(mons, *mi, actual))
+        {
+            continue;
+        }
 
-      if (mi->has_ench(bad))
-      {
-          mi->del_ench(bad);
-          continue;
-      }
-      retval = max(retval, 0);
+        retval = max(retval, 0);
 
-      if (!actual)
-          continue;
+        if (!actual)
+            continue;
 
-      int res_margin = mi->check_willpower(mons, pow);
-      if (res_margin > 0)
-      {
-          simple_monster_message(**mi,
-              mi->resist_margin_phrase(res_margin).c_str());
-          continue;
-      }
+        int res_margin = mi->check_willpower(mons, pow);
+        if (res_margin > 0)
+        {
+            simple_monster_message(**mi,
+                mi->resist_margin_phrase(res_margin).c_str());
+            continue;
+        }
 
-      if (mi->add_ench(mon_enchant(good, 0, mons)))
-      {
-          retval = 1;
-          mi->attitude = ATT_HOSTILE;
+        if (mi->add_ench(mon_enchant(ENCH_CHARM, mons)))
+        {
+            retval = 1;
 
-          if (you.can_see(**mi))
+            if (you.can_see(**mi))
               simple_monster_message(**mi, " is charmed!");
 
       }
