@@ -2970,6 +2970,7 @@ tileidx_t tileidx_player_shadow()
         case SP_OCTOPODE:       return TILEP_MONS_PLAYER_SHADOW_OCTOPODE;
         case SP_ONI:            return TILEP_MONS_PLAYER_SHADOW_ONI;
         case SP_POLTERGEIST:    return TILEP_MONS_PLAYER_SHADOW_POLTERGEIST;
+        case SP_SILENT_SPECTRE: return TILEP_MONS_PLAYER_SHADOW_SILENT_SPECTRE;
         case SP_REVENANT:       return TILEP_MONS_PLAYER_SHADOW_REVENANT;
         case SP_SPRIGGAN:       return TILEP_MONS_PLAYER_SHADOW_SPRIGGAN;
         case SP_TENGU:          return TILEP_MONS_PLAYER_SHADOW_TENGU;
@@ -4857,6 +4858,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_COGLIN;
         case SP_POLTERGEIST:
             return TILEG_SP_POLTERGEIST;
+        case SP_SILENT_SPECTRE:
+            return TILEG_SP_SILENT_SPECTRE;
         case SP_REVENANT:
             return TILEG_SP_REVENANT;
         case SP_GALE_CENTAUR:

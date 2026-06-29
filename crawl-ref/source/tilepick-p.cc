@@ -567,6 +567,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_COGLIN;
     case SP_POLTERGEIST:
         return TILEP_BASE_POLTERGEIST;
+    case SP_SILENT_SPECTRE:
+        return TILEP_BASE_SILENT_SPECTRE;
     case SP_REVENANT:
         return TILEP_BASE_REVENANT;
 #if TAG_MAJOR_VERSION == 34
