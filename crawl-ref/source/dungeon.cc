@@ -2840,6 +2840,15 @@ static void _post_vault_build()
             depth -= 3;
         } while (depth > 0);
     }
+
+    if (!player_in_branch(BRANCH_COCYTUS)
+        && !player_in_branch(BRANCH_SWAMP)
+        && !player_in_branch(BRANCH_SHOALS))
+    {
+        _prepare_water();
+        if (player_in_branch(BRANCH_LAIR) || !one_chance_in(4))
+            _prepare_water();
+    }
 }
 
 static void _build_dungeon_level()
@@ -2934,15 +2943,6 @@ static void _build_dungeon_level()
 
     fixup_misplaced_items();
     link_items();
-
-    if (!player_in_branch(BRANCH_COCYTUS)
-        && !player_in_branch(BRANCH_SWAMP)
-        && !player_in_branch(BRANCH_SHOALS))
-    {
-        _prepare_water();
-        if (player_in_branch(BRANCH_LAIR) || !one_chance_in(4))
-            _prepare_water();
-    }
 
     if (player_in_hell())
         _fixup_hell_stairs();
