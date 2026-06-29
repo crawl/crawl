@@ -1727,7 +1727,6 @@ static const mutation_def mut_data[] =
   { "The world fills with sound again. Your silence aura fades.",
     "Your aura of unnatural quiet shrinks.",
     "Your aura of unnatural quiet shrinks."},
-  TILEG_MUT_SILENCE_AURA,
 },
 
 { MUT_HEX_ENHANCER, 0, 1, mutflag::good,

@@ -38,7 +38,9 @@ static bool _banned_combination(job_type job, species_type species)
         return true;
     }
 
-    if (job == JOB_SHAPESHIFTER && species::undead_type(species) == US_UNDEAD)
+    // BCADNOTE: Annoying case of Two insubstantials here.
+    if (job == JOB_SHAPESHIFTER && species::undead_type(species) == US_UNDEAD
+        && (species != SP_SILENT_SPECTRE))
         return true;
 
     return false;
