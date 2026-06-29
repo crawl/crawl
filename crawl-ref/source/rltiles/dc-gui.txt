@@ -340,7 +340,6 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %compose hair/short_brown
 %finish SP_RECOMMENDED_COGLIN
 %start
-%compose bottom/silent_spectre_f
 %compose base/silent_spectre_f
 %compose body/animal_skin
 %finish SP_RECOMMENDED_SILENT_SPECTRE

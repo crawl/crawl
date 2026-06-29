@@ -103,7 +103,7 @@ octopode5
 %rim 0
 poltergeist POLTERGEIST
 silent_spectre_m SILENT_SPECTRE
-silent_specte_f
+silent_spectre_f
 revenant REVENANT
 revenant2
 djinni_red_f DJINNI
