@@ -4306,9 +4306,6 @@ spret cast_monarch_bomb(const actor& agent, int pow, bool fail)
             mprf("%s construct%s an explosive harbinger and set it loose.",
                  agent.name(DESC_THE).c_str(), agent.is_player() ? "" : "s");
         }
-
-        mon->number = 5 + div_rand_round(pow, 50);
-        //mon->number = random_range(1, 3);
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
