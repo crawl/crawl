@@ -60,7 +60,7 @@ mutations:
     MUT_FORMLESS: 1
     MUT_TRICKSTER: 1
     MUT_ACCURSED: 1
-	MUT_INSUBSTANTIAL: 2
+    MUT_INSUBSTANTIAL: 2
   13:
     MUT_FORMLESS: 1
 recommended_jobs:
