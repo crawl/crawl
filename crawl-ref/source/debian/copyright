@@ -62,7 +62,7 @@ Files: debian/*
 Copyright: 2001-2015 Guus Sliepen <guus@debian.org>
            2009      Trent W. Buck <trentbuck@gmail.com>
            2010-2022 Adam Borowski <kilobyte@angband.pl>
-           2025      Vincent Cheng <vcheng@debian.org>
+           2025-2026 Vincent Cheng <vcheng@debian.org>
 License: GPL-2.0+
 
 License: Apache-2.0
