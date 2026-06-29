@@ -2450,6 +2450,16 @@ static const mutation_def mut_data[] =
   TILEG_MUT_ACCURSED,
 },
 
+{ MUT_INSUBSTANTIAL, 0, 2, mutflag::good,
+  "insubstantial",
+      
+  {"You are insubstantial and cannot be petrified, ensnared, or set on fire.", 
+   "You are incorporeal and cannot be petrified, ensnared, or set on fire.", ""},
+  {"You feel insubstantial.", "You feel completely noncorporeal", ""},
+  {"You feel more solid.", "You feel mre substantial", ""},
+  // BCADDO: Tile,
+},
+
 { MUT_SPITEFUL_BLOOD, 2, 2, mutflag::bad | mutflag::need_blood,
   "spiteful blood",
 

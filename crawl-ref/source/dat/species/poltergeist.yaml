@@ -60,11 +60,9 @@ mutations:
     MUT_FORMLESS: 1
     MUT_TRICKSTER: 1
     MUT_ACCURSED: 1
+	MUT_INSUBSTANTIAL: 2
   13:
     MUT_FORMLESS: 1
-fake_mutations:
-  - long: You are insubstantial and cannot be petrified, ensnared, or set on fire.
-    short: insubstantial
 recommended_jobs:
   - chaos knight
   - enchanter
