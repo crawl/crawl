@@ -1281,7 +1281,8 @@ int dgn_count_tele_zones(bool choose_stairless)
 // in, with no way back to an exit stair.
 //
 // Connectivity is less stringent than for most checks - if you can get out of
-// it by walking over traps or through transporters, it is not a closet.
+// it by walking over traps, through transporters, or onto a permanent teleport
+// trap, it is not a closet.
 static int _count_tele_closets(vector<coord_def> *closets, bool flying,
                                bool mask)
 {
@@ -1295,8 +1296,11 @@ static int _count_tele_closets(vector<coord_def> *closets, bool flying,
     // Floodfill back from the exits to mark everywhere that isn't a closet.
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     for (rectangle_iterator ri(0); ri; ++ri)
-        if (_is_exit_stair(*ri) && !travel_point_distance[ri->x][ri->y])
+        if ((_is_exit_stair(*ri) || env.grid(*ri) == DNGN_TRAP_TELEPORT_PERMANENT)
+            && !travel_point_distance[ri->x][ri->y])
+        {
             _dgn_fill_zone(*ri, 1, _dgn_point_record_stub, passable, nullptr, true);
+        }
 
     // Now search for closets we didn't reach.
     int nclosets = 0;
