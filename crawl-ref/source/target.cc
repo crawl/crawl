@@ -1738,10 +1738,41 @@ targeter_maxwells_coupling::targeter_maxwells_coupling()
         positive = AFF_YES;
 }
 
-targeter_multifireball::targeter_multifireball(const actor *a, vector<coord_def> seeds)
+targeter_ignition::targeter_ignition(const actor *a, vector<coord_def> seeds)
     : targeter_multiposition(a, seeds)
 {
-    vector <coord_def> bursts;
+    const mid_t source = agent ? agent->mid : MID_PLAYER;
+
+    // Each seed sets off a radius-1 fire explosion.
+    vector<coord_def> bursts;
+    for (const coord_def &c : seeds)
+        for (explosion_iterator ei(c, 1, BEAM_FIRE, SPELL_IGNITION, source);
+             ei; ++ei)
+        {
+            bursts.push_back(*ei);
+        }
+
+    for (const coord_def &c : bursts)
+    {
+        actor *act = actor_at(c);
+        if (act && mons_aligned(agent, act))
+            continue;
+        affected_positions.insert(c);
+    }
+}
+
+aff_type targeter_ignition::is_affected(coord_def loc)
+{
+    // Don't apply a LoS filter like the base class does, as the explosions can
+    // affect things behind walls (when hitting wall monsters).
+    return affected_positions.count(loc) > 0 ? positive : AFF_NO;
+}
+
+targeter_dragon_call::targeter_dragon_call(const actor *a,
+                                           vector<coord_def> seeds)
+    : targeter_multiposition(a, seeds)
+{
+    vector<coord_def> bursts;
     for (auto &c : seeds)
     {
         if (affected_positions.count(c)) // did the parent constructor like this pos?
@@ -1751,7 +1782,7 @@ targeter_multifireball::targeter_multifireball(const actor *a, vector<coord_def>
 
     for (auto &c : bursts)
     {
-        actor * act = actor_at(c);
+        actor *act = actor_at(c);
         if (act && mons_aligned(agent, act))
             continue;
         affected_positions.insert(c);

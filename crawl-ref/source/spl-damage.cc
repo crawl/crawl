@@ -2662,16 +2662,16 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
     // Fake "shaped" radius 1 explosions (skipping squares with friends).
     for (coord_def pos : blast_sources)
     {
-        for (adjacent_iterator ai(pos); ai; ++ai)
+        for (explosion_iterator ei(pos, 1, beam_actual.flavour,
+                                   beam_actual.origin_spell,
+                                   beam_actual.source_id); ei; ++ei)
         {
-            if (cell_is_invalid_target(*ai)
-                && (!beam_actual.can_affect_wall(*ai)
-                    || you_worship(GOD_FEDHAS)))
-            {
-                continue;
-            }
+            const coord_def c = *ei;
 
-            actor *act = actor_at(*ai);
+            if (c == pos)
+                continue;
+
+            actor *act = actor_at(c);
 
             // Friendly creature, don't blast this square.
             if (act && (act == agent
@@ -2681,9 +2681,9 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
                 continue;
             }
 
-            blast_adjacents.push_back(*ai);
+            blast_adjacents.push_back(c);
             if (Options.use_animations & UA_BEAM)
-                beam_visual.explosion_draw_cell(*ai);
+                beam_visual.explosion_draw_cell(c);
         }
 
         if (Options.use_animations & UA_BEAM)
@@ -5138,31 +5138,18 @@ static void _calc_fusillade_explosion(coord_def center, beam_type flavour,
 {
     // Use the standard explosion propagation, which in particular knows how to
     // handle explosions targeted at wall monsters.
-    bolt beam;
-    beam.source_id         = MID_PLAYER;
-    beam.target            = center;
-    beam.use_target_as_pos = true;
-    beam.flavour           = flavour;
-    beam.origin_spell      = SPELL_FULSOME_FUSILLADE;
-
-    explosion_map affected;
-    affected.init(INT_MAX);
-    beam.determine_affected_cells(affected, coord_def(), 0, 1, true, true);
-
-    const coord_def map_centre(9, 9);
-    for (adjacent_iterator ai(center, false); ai; ++ai)
+    for (explosion_iterator ei(center, 1, flavour, SPELL_FULSOME_FUSILLADE);
+         ei; ++ei)
     {
-        if (affected(*ai - center + map_centre) == INT_MAX)
-            continue;
-
-        exp_map.push_back(*ai);
+        const coord_def pos = *ei;
+        exp_map.push_back(pos);
 
         // Apply the explosion flavour at all affected tiles, but an unstable
         // reaction at any tile which has already been hit this turn.
-        if (hit_map.count(*ai))
-            hit_map[*ai] = BEAM_MMISSILE;
+        if (hit_map.count(pos))
+            hit_map[pos] = BEAM_MMISSILE;
         else
-            hit_map[*ai] = flavour;
+            hit_map[pos] = flavour;
     }
 
     noisy(15, center, MID_PLAYER);

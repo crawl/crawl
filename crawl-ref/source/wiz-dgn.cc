@@ -332,6 +332,7 @@ bool wizard_create_feature(dist &target, dungeon_feature_type feat, bool mimic)
             env.grid_colours(pos) = 0;
             const dungeon_feature_type old_feat = env.grid(pos);
             dungeon_terrain_changed(pos, feat, false, false, true);
+            tile_init_flavour(pos);
             if (pos == you.pos() && cell_is_solid(pos))
                 you.wizmode_teleported_into_rock = true;
         }
