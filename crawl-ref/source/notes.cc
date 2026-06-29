@@ -367,8 +367,8 @@ string Note::describe(bool when, bool where, bool what) const
         case NOTE_XOM_EFFECT:
             result << "XOM: " << name;
 #if defined(DEBUG_XOM) || defined(NOTE_DEBUG_XOM)
-            // If debugging, also take note of piety and tension.
-            result << " (piety: " << first;
+            // If debugging, also take note of severity and tension.
+            result << " (severity: " << first;
             if (second >= 0)
                 result << ", tension: " << second;
             result << ")";

@@ -3634,12 +3634,6 @@ static void _set_initial_god_piety()
 
     switch (you.religion)
     {
-    case GOD_XOM:
-        // Xom uses piety and gift_timeout differently.
-        you.raw_piety = HALF_MAX_PIETY;
-        you.gift_timeout = random2(40) + random2(40);
-        break;
-
     case GOD_ASHENZARI:
         you.raw_piety = ASHENZARI_BASE_PIETY;
         you.gift_timeout = 0;
