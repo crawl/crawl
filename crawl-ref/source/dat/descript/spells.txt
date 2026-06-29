@@ -1162,6 +1162,10 @@ minor damage to a single target within range and deploying the bomblet near it.
 Cannot target enemies adjacent to the caster or those with no nearby room for
 the bomblet to land.
 %%%%
+Charming Aura spell
+
+Causes all otherwise hostile creature in direct Line of Fire to fight on the caster's side for a while.
+%%%%
 Launch Clockwork Bee spell
 
 Constructs a mechanical bee and winds its clockwork mechanisms over several

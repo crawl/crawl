@@ -38,6 +38,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CHARMING_AURA, "Charming Aura",
+    spschool::none,
+    spflag::area | spflag::WL_check | spflag::monster,
+    6,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_CHARMING,
+},
+
+{
     SPELL_MAGIC_DART, "Magic Dart",
     spschool::conjuration,
     spflag::dir_or_target | spflag::needs_tracer,
