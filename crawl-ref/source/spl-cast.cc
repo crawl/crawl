@@ -1409,7 +1409,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_DISCORD:
         return make_unique<targeter_discord>();
     case SPELL_IGNITION:
-        return make_unique<targeter_multifireball>(&you,
+        return make_unique<targeter_ignition>(&you,
                    get_ignition_blast_sources(&you, true));
 
     // Summons. Most summons have a simple range 2 radius, see
@@ -1481,8 +1481,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_scorch>(you, range, false);
     case SPELL_DRAGON_CALL: // this is just convenience: you can start the spell
                             // with no enemies in sight
-        return make_unique<targeter_multifireball>(&you,
-                                                   _simple_find_all_hostiles());
+        return make_unique<targeter_dragon_call>(&you,
+                                                 _simple_find_all_hostiles());
     case SPELL_NOXIOUS_BOG:
         return make_unique<targeter_bog>(&you);
     case SPELL_FLAME_WAVE:

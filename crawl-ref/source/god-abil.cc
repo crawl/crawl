@@ -5181,7 +5181,7 @@ bool ru_do_sacrifice(ability_type sac)
                 }
             }
             else
-                sac_text = mut_upgrade_summary(mut);
+                sac_text = innate_mut_upgrade_summary(mut);
         }
         offer_text = make_stringf("%s: %s", sac_def.sacrifice_text,
             sac_text.c_str());
