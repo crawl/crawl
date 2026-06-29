@@ -43,7 +43,7 @@ aptitudes:
   alchemy: 1
   invocations: -1
   evocations: -1
-undead_type: ghost
+undead_type: undead
 str: 4
 int: 10
 dex: 9

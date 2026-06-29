@@ -739,7 +739,7 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
         msg = "You're too calm and focused to rage.";
     else if (is_lifeless_undead(temp))
     {
-        if (you.undead_state() == US_GHOST)
+        if (has_mutation(MUT_INSUBSTANTIAL))
             msg = "You cannot raise a blood rage in your spectral form.";
         else
             msg = "You cannot raise a blood rage in your lifeless body.";
