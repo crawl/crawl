@@ -1704,7 +1704,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_BLACK_MARK,
 },
 
-{ MUT_SILENCE_AURA, 0, 1, mutflag::good,
+{ MUT_SILENCE_HALO, 0, 1, mutflag::good,
   "aura of silence",
 
   {"You are surrounded by an aura of silence.", "", ""},

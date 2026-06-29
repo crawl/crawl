@@ -2071,7 +2071,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 #endif
             break;
 
-        case MUT_SILENCE_AURA:
+        case MUT_SILENCE_HALO:
         case MUT_FOUL_SHADOW:
             invalidate_agrid(true);
             break;
@@ -2230,7 +2230,7 @@ bool _delete_single_mutation_level(mutation_type mutat,
         ash_check_bondage();
         break;
 
-    case MUT_SILENCE_AURA:
+    case MUT_SILENCE_HALO:
     case MUT_FOUL_SHADOW:
         invalidate_agrid(true);
         break;
@@ -2899,7 +2899,7 @@ static const facet_def _demon_facets[] =
       { 50, 50, 50 } },
     { 3, { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
       { 50, 50, 50 } },
-    { 3, { MUT_HEX_ENHANCER, MUT_BLACK_MARK, MUT_SILENCE_AURA },
+    { 3, { MUT_HEX_ENHANCER, MUT_BLACK_MARK, MUT_SILENCE_HALO },
       { 50, 50, 50 } },
     { 3, { MUT_AUGMENTATION, MUT_AUGMENTATION, MUT_AUGMENTATION },
       { 50, 50, 50 } },

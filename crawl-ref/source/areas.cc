@@ -509,7 +509,7 @@ int player::silence_radius() const
 
 int player::demon_silence_radius() const
 {
-    if (you.get_mutation_level(MUT_SILENCE_AURA))
+    if (you.get_mutation_level(MUT_SILENCE_HALO))
         return 1;
     return -1;
 }
