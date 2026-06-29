@@ -353,6 +353,12 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              have a vault that can be used more than once, use allow_dup to tell
              the dungeon builder that the vault can be reused. This is tracked
              separately for the abyss and the rest of the dungeon.
+          * "allow_tele_closets": Exempts the vault from teleport-closet
+             masking. The builder normally finds regions a random teleport
+             could strand the player in (with no way to walk or fly back to a
+             stair) and marks them no_tele_into. Cells inside a vault with this
+             tag are not marked in this way. Also available as a KMASK to
+             exempt only particular symbols.
           * "chance_FOO": Maps can be tagged chance_ with any unique suffix
              to indicate that if the map's CHANCE roll is made, one of the maps
              tagged chance_FOO should be picked.
@@ -1490,6 +1496,9 @@ KMASK:    Z = no_monster_gen
              symbol. The symbol is considered impassable for level-building
              purposes. A "transparent" vault with a deliberately disconnected
              region must use this mask on the disconnected part.
+          * "allow_tele_closets": Exempts the symbol from teleport closet
+             detection, like the tag of the same name but for particular
+             symbols rather than the whole vault.
 
           For example
 
