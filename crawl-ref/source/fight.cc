@@ -1604,6 +1604,7 @@ bool warn_about_bad_targets(const char* source_name, vector<coord_def> targets,
                             const char* msg)
 {
     vector<const monster*> bad_targets;
+    bool any_penance = false;
     for (coord_def p : targets)
     {
         const monster* mon = monster_at(p);
@@ -1621,7 +1622,10 @@ bool warn_about_bad_targets(const char* source_name, vector<coord_def> targets,
         string adj, suffix;
         bool penance;
         if (bad_attack(mon, adj, suffix, penance, you.pos()))
+        {
             bad_targets.push_back(mon);
+            any_penance = any_penance || penance;
+        }
     }
 
     if (bad_targets.empty())
@@ -1634,10 +1638,13 @@ bool warn_about_bad_targets(const char* source_name, vector<coord_def> targets,
     const string and_more = bad_targets.size() > 1 ?
             make_stringf(" (and %zu other bad targets)",
                          bad_targets.size() - 1) : "";
-    const string prompt = make_stringf("%s might hit %s%s. %s",
+    const string prompt = make_stringf("%s might hit %s%s.%s %s",
                                        source_name,
                                        ex_mon->name(DESC_THE).c_str(),
                                        and_more.c_str(),
+                                       any_penance
+                                       ? " This would place you under penance!"
+                                       : "",
                                        msg);
     if (!yesno(prompt.c_str(), false, 'n'))
     {
