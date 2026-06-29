@@ -47,5 +47,6 @@ enum conduct_type
 #if TAG_MAJOR_VERSION == 34
     DID_WIZARDLY_ITEM,                    // now forbidden
 #endif
+    DID_TITHE,                            // Zin
     NUM_CONDUCTS
 };

@@ -185,24 +185,17 @@ bool mons_tentacle_adjacent(const monster* parent, const monster* child)
 monster& get_tentacle_head(const monster& mon)
 {
     const monster* m = &mon;
-    // For tentacle segments, find the associated tentacle.
-    if (m->is_child_tentacle_segment())
+
+    // Climb tentacle_connect until we reach the monster the part ultimately
+    // belongs to.
+    while (m->is_child_monster()
+           || mons_is_tentacle_segment(mons_base_type(*m)))
     {
-        monster* tentacle = monster_by_mid(m->tentacle_connect);
-        if (!tentacle)
-            return const_cast<monster&>(*m);
+        monster* parent = monster_by_mid(m->tentacle_connect);
+        if (!parent || parent == m)
+            break;
 
-        m = tentacle;
-    }
-
-    // For tentacles, find the associated head.
-    if (m->is_child_tentacle())
-    {
-        monster* head = monster_by_mid(m->tentacle_connect);
-        if (!head)
-            return const_cast<monster&>(*m);
-
-        m = head;
+        m = parent;
     }
 
     return const_cast<monster&>(*m);

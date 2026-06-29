@@ -838,6 +838,7 @@ static void _set_grd(const coord_def &c, dungeon_feature_type feat)
 {
     // It might be good to clear some pgrid flags as well.
     tile_env.flv(c).feat    = 0;
+    tile_env.flv(c).feat_idx = 0;
     tile_env.flv(c).special = 0;
     env.grid_colours(c) = 0;
     env.grid(c) = feat;
@@ -932,6 +933,17 @@ static bool _dgn_square_is_passable(const coord_def &c)
     // up validly and room entrances connected up to the doors.
     return env.level_map_mask(c) & MMT_PASSABLE
         || !(env.level_map_mask(c) & MMT_OPAQUE) && dgn_square_travel_ok(c);
+}
+
+// Like _dgn_square_is_passable, but allows traps.
+static bool _dgn_square_is_passable_with_traps(const coord_def &c)
+{
+    if (_dgn_square_is_passable(c))
+        return true;
+
+    const dungeon_feature_type feat = env.grid(c);
+    return !(env.level_map_mask(c) & MMT_OPAQUE)
+           && feat_is_trap(feat);
 }
 
 static bool _dgn_square_is_boring(const coord_def &c)
@@ -1867,33 +1879,34 @@ static list<coord_def> _find_stone_stairs(bool up_stairs)
 }
 
 /**
- * Try to turn excess stairs into hatches.
+ * Try to replace excess stairs with another dungeon feature.
  *
  * @param stairs[in,out]    The list of stairs to be trimmed; any stairs that
- *                          are turned into hatches will be removed.
+ *                          are replaced will be removed.
  * @param needed_stairs     The desired number of stairs.
- * @param preserve_vault_stairs    Don't trapdoorify stairs that are in vaults.
- * @param hatch_type        What sort of hatch to turn excess stairs into.
+ * @param preserve_vault_stairs    Don't replace stairs that are in vaults.
+ * @param replacement       The dungeon feature that we should replace excess
+ *                          stairs with.
  */
 static void _cull_redundant_stairs(list<coord_def> &stairs,
                                    unsigned int needed_stairs,
                                    bool preserve_vault_stairs,
-                                   dungeon_feature_type hatch_type)
+                                   dungeon_feature_type replacement)
 {
     // we're going to iterate over the list, looking for redundant stairs.
     // (redundant = can walk from one to the other.) For each of
     // those iterations, we'll iterate over the remaining list checking for
-    // stairs redundant with the outer iteration, and hatchify + remove from
+    // stairs redundant with the outer iteration, and replace + remove from
     // the stair list any redundant stairs we find.
 
     for (auto iter1 = stairs.begin();
-         iter1 != stairs.end() && stairs.size() <= needed_stairs;
+         iter1 != stairs.end() && stairs.size() > needed_stairs;
          ++iter1)
     {
         const coord_def s1_loc = *iter1;
-        // Ensure we don't search for the feature at s1. XXX: unwind_var?
-        const dungeon_feature_type saved_feat = env.grid(s1_loc);
-        env.grid(s1_loc) = DNGN_FLOOR;
+        // Ensure we don't search for the feature at s1.
+        unwind_var<dungeon_feature_type> saved_feat(env.grid(s1_loc),
+                                                    DNGN_FLOOR);
 
         auto iter2 = iter1;
         ++iter2;
@@ -1916,27 +1929,25 @@ static void _cull_redundant_stairs(list<coord_def> &stairs,
 
             dprf(DIAG_DNGN,
                  "Too many stairs -- removing one of a connected pair.");
-            env.grid(s2_loc) = hatch_type;
+            _set_grd(s2_loc, replacement);
             stairs.erase(being_examined);
         }
-
-        env.grid(s1_loc) = saved_feat;
     }
 }
 
 /**
- * Trapdoorify stairs at random, until we reach the specified number.
+ * Replace stairs at random, until we reach the specified number.
  * @param stairs[in,out]    The list of stairs to be trimmed; any stairs that
- *                          are turned into hatches will be removed. Order not
- *                          preserved.
+ *                          are replaced will be removed. Order not preserved.
  * @param needed_stairs     The desired number of stairs.
  * @param preserve_vault_stairs    Don't remove stairs that are in vaults.
- * @param hatch_type        What sort of hatch to turn excess stairs into.
+ * @param replacement       The dungeon feature that we should replace excess
+ *                          stairs with.
  */
 static void _cull_random_stairs(list<coord_def> &stairs,
                                 unsigned int needed_stairs,
                                 bool preserve_vault_stairs,
-                                dungeon_feature_type hatch_type)
+                                dungeon_feature_type replacement)
 {
     while (stairs.size() > needed_stairs)
     {
@@ -1971,7 +1982,7 @@ static void _cull_random_stairs(list<coord_def> &stairs,
         }
 
         dprf(DIAG_DNGN, "Too many stairs -- removing one blindly.");
-        _set_grd(stairs.front(), hatch_type);
+        _set_grd(stairs.front(), replacement);
         stairs.pop_front();
     }
 }
@@ -1980,8 +1991,7 @@ static void _cull_random_stairs(list<coord_def> &stairs,
  * Ensure that there is only the correct number of each type of 'stone'
  * (permanent, intra-branch, non-trapdoor) stair on the current level.
  *
- * @param preserve_vault_stairs     Don't delete or trapdoorify stairs that are
- *                                  in vaults.
+ * @param preserve_vault_stairs     Don't delete stairs that are in vaults.
  * @param checking_up_stairs        Whether we're looking at stairs that lead
  *                                  up. If false, we're looking at down-stairs.
  * @return                          Whether we successfully set the right # of
@@ -2325,6 +2335,18 @@ static void _dgn_verify_connectivity(unsigned nvaults)
         throw dgn_veto_exception("Isolated areas with no stairs.");
     }
 
+    // The check above treats traps as impassable, so it misses a pocket that
+    // that is made *entirely* of traps. Fix this by finding areas with no
+    // stairs, counting traps as passable.
+    if (player_in_connected_branch()
+        && !(branches[you.where_are_you].branch_flags & brflag::islanded)
+        && _process_disconnected_zones(0, 0, GXM - 1, GYM - 1, true,
+                                       DNGN_UNSEEN,
+                                       _dgn_square_is_passable_with_traps) > 0)
+    {
+        throw dgn_veto_exception("Isolated trap areas with no stairs.");
+    }
+
     if (_branch_needs_stairs() && !_fixup_stone_stairs(true))
     {
         dprf(DIAG_DNGN, "Warning: failed to preserve vault stairs.");
@@ -2594,7 +2616,6 @@ static void _ruin_level(Iterator iter,
                 // isolated transparent or rtele_into square.
                 env.level_map_mask(p) |= cfeat.mask;
                 env.pgrid(p) |= cfeat.prop;
-                tile_clear_flavour(p);
                 _set_grd(p, replacement);
             }
 

@@ -85,6 +85,7 @@ static const char *conducts[] =
 #if TAG_MAJOR_VERSION == 34
     "Use Wizardly Item",
 #endif
+    "Tithed"
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 

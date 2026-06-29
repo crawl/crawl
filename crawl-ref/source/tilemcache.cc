@@ -1524,9 +1524,20 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
 {
     ASSERT(mcache_ghost::valid(mon));
 
+    uint32_t data[] =
+    {
+        (uint32_t)mon.i_ghost.species,
+        (uint32_t)mon.i_ghost.job,
+        (uint32_t)mon.i_ghost.religion,
+        (uint32_t)mon.i_ghost.best_skill,
+        (uint32_t)mon.i_ghost.best_skill_rank,
+        (uint32_t)mon.i_ghost.xl_rank,
+        (uint32_t)mon.i_ghost.damage,
+        (uint32_t)mon.i_ghost.ac,
+    };
+
     const uint32_t seed = hash32(&mon.mname[0], mon.mname.size())
-                        ^ hash32(&mon.i_ghost, sizeof(mon.i_ghost)
-                                             - sizeof(mon.i_ghost.title));
+                          ^ hash_uint32(data);
 
     m_doll.parts[TILEP_PART_BASE] = TILEP_SHOW_EQUIP;
     tilep_race_default(mon.i_ghost.species, 0, &m_doll);

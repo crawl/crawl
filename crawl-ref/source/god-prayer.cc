@@ -278,7 +278,7 @@ int zin_tithe(const item_def& item, int quant, bool converting)
         // Note that the stepdown is not applied to other gains: it would
         // be simpler, yet when a monster combines a number of gold piles
         // you shouldn't be penalized.
-        int denom = 2;
+        int denom = 4;
         if (item.props.exists(ACQUIRE_KEY)) // including "acquire any" in vaults
         {
             tithe = stepdown_value(tithe, 10, 10, 50, 50);
@@ -296,7 +296,9 @@ int zin_tithe(const item_def& item, int quant, bool converting)
             tithe *= 47;
             denom *= 20 + env.absdepth0;
         }
-        gain_piety(tithe * 5, denom * 2);
+        int gain = tithe * 5;
+        gain_piety(gain, denom);
+        you.piety_info.record_conduct_like(DID_TITHE, gain, denom);
     }
     you.attribute[ATTR_TITHE_BASE] = due;
     return taken;

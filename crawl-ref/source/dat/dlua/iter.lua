@@ -479,7 +479,7 @@ end
 -- Iterates over tables of @{items.Item} objects, possibly filtering them.
 -- @usage `for item in iter.invent_iterator()
 --   if item.is_useless then
---     item:drop()
+--     item.drop()
 --   end
 -- end`
 -- @type iter.invent_iterator

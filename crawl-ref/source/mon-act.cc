@@ -3100,8 +3100,11 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
     find_connected_identical(pos, all_door);
     get_door_description(all_door.size(), &adj, &noun);
 
+    const bool player_adj_to_door = any_of(begin(all_door), end(all_door),
+        [](const coord_def &p) { return adjacent(you.pos(), p); });
+
     const bool broken = mons.foe == MHITYOU
-                            && ((adjacent(you.pos(), pos) && one_chance_in(3))
+                            && ((player_adj_to_door && one_chance_in(3))
                                 || mons.berserk());
     for (const auto &dc : all_door)
     {

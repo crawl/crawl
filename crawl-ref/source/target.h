@@ -453,13 +453,22 @@ public:
     targeter_maxwells_coupling();
 };
 
-class targeter_multifireball : public targeter_multiposition
+// Ignition: each seed detonates a radius-1 explosion.
+class targeter_ignition : public targeter_multiposition
 {
 public:
-    targeter_multifireball(const actor *a, vector<coord_def> seeds);
+    targeter_ignition(const actor *a, vector<coord_def> seeds);
+    aff_type is_affected(coord_def loc) override;
 };
 
-// this is implemented a bit like multifireball, but with some tweaks
+// Dragon's Call: a radius of 1 around each seed, checking the player's LoS
+class targeter_dragon_call : public targeter_multiposition
+{
+public:
+    targeter_dragon_call(const actor *a, vector<coord_def> seeds);
+};
+
+// this is implemented a bit like dragon's call, but with some tweaks
 class targeter_walls : public targeter_multiposition
 {
 public:
