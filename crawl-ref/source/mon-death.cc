@@ -1678,7 +1678,7 @@ static void _druid_final_boon(const monster* mons)
 static void _orb_of_mayhem(actor& maniac, const monster& victim)
 {
     vector<monster *> witnesses;
-    for (monster_near_iterator mi(&victim, LOS_NO_TRANS); mi; ++mi)
+    for (monster_near_iterator mi(victim.pos(), LOS_NO_TRANS); mi; ++mi)
         if (*mi != &victim && mi->can_see(maniac) && mi->can_go_frenzy() && could_harm(&maniac, *mi))
             witnesses.push_back(*mi);
 
