@@ -14,6 +14,7 @@
 #include "evoke.h"
 #include "fight.h"
 #include "god-abil.h"
+#include "god-companions.h"
 #include "god-passive.h"
 #include "items.h"
 #include "libutil.h"
@@ -663,8 +664,8 @@ aff_type targeter_dig::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targeter_transference::targeter_transference(const actor* act, int aoe) :
-    targeter_smite(act, LOS_RADIUS, aoe, aoe, true)
+targeter_transference::targeter_transference(int aoe) :
+    targeter_smite(&you, LOS_RADIUS, aoe, aoe, true)
 {
 }
 
@@ -674,19 +675,35 @@ bool targeter_transference::valid_aim(coord_def a)
         return false;
 
     const actor *victim = actor_at(a);
-    if (victim && you.can_see(*victim))
+    if (!victim || !you.aware_of(*victim))
+        return notify_fail("");
+
+    if (mons_is_hepliaklqana_ancestor(victim->type))
     {
-        if (mons_is_hepliaklqana_ancestor(victim->type))
-        {
-            return notify_fail("You can't transfer your ancestor with "
-                               + victim->pronoun(PRONOUN_REFLEXIVE) + ".");
-        }
-        if (mons_is_tentacle_or_tentacle_segment(victim->type)
-            || victim->is_stationary())
-        {
-            return notify_fail("You can't transfer that.");
-        }
+        return notify_fail("You can't transfer your ancestor with "
+                            + victim->pronoun(PRONOUN_REFLEXIVE) + ".");
     }
+    else if (mons_is_tentacle_or_tentacle_segment(victim->type)
+             || victim->is_stationary()
+             || mons_is_projectile(victim->type))
+    {
+        return notify_fail("You can't transfer that.");
+    }
+    else if (!you.can_see(*victim))
+        return notify_fail("You can't see that clearly enough to target.");
+
+    monster *ancestor = hepliaklqana_ancestor_mon();
+    if (!victim->is_habitable(ancestor->pos()))
+    {
+        return notify_fail(make_stringf("%s can't be transferred to your ancestor's location.",
+                                            victim->name(DESC_THE).c_str()));
+    }
+    else if (!ancestor->is_habitable(victim->pos()))
+    {
+        return notify_fail(make_stringf("%s can't be transferred there.",
+                                            ancestor->name(DESC_THE).c_str()));
+    }
+
     return true;
 }
 
