@@ -247,7 +247,7 @@ static const mutation_conflict mut_conflicts[] =
     { MUT_HP_CASTING,          MUT_HIGH_MAGIC,             false},
     { MUT_HP_CASTING,          MUT_LOW_MAGIC,              false},
     { MUT_HP_CASTING,          MUT_EFFICIENT_MAGIC,        false},
-    { MUT_SILENCE_AURA,        MUT_SHOUTITUS,              false},
+    { MUT_SILENCE_AURA,        MUT_SCREAM,                 false},
 
 #if TAG_MAJOR_VERSION == 34
     { MUT_NO_REGENERATION,     MUT_INHIBITED_REGENERATION, false},
@@ -1694,7 +1694,7 @@ bool mut_is_compatible(mutation_type mut, bool base_only)
             return false;
 
         // Only SS can randomly get more/less aura.
-        if (mutat == MUT_SILENCE_AURA && !you.has_innate_mutation(MUT_SILENCE_AURA))
+        if (mut == MUT_SILENCE_AURA && !you.has_innate_mutation(MUT_SILENCE_AURA))
             return true;
 
         // Only species that have innate fur can mutate more.

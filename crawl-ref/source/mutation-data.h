@@ -2477,6 +2477,14 @@ static const mutation_def mut_data[] =
   // BCADDO: Tile,
 },
 
+{ MUT_SILENT_CAST, 0, 1, mutflag::good,
+  "silent casting",
+
+  { "You can communicate with gods and cast spells while silenced.", "", "" },
+  { "You gain the power to cast without speech.", "", "" },
+  { "Silence once again prevents your spellcasting.", "", "" },
+},
+
 { MUT_SPITEFUL_BLOOD, 2, 2, mutflag::bad | mutflag::need_blood,
   "spiteful blood",
 

@@ -6223,9 +6223,10 @@ bool player::confused() const
     return duration[DUR_CONF];
 }
 
-bool player::is_silenced() const
+// If silent cast is true; overrides normal silence.
+bool player::is_silenced(bool silent_cast) const
 {
-    return silenced(you.pos())
+    return (silenced(you.pos()) && !silent_cast)
             || you.duration[DUR_FLOODED];
 }
 
@@ -7111,6 +7112,11 @@ bool player::is_insubstantial() const
     return form == transformation::wisp
         || form == transformation::storm
         || has_mutation(MUT_INSUBSTANTIAL);
+}
+
+bool player::can_silent_cast() const
+{
+    return get_mutation_level(MUT_SILENT_CAST);
 }
 
 bool player::is_amorphous() const

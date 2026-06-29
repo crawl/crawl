@@ -475,7 +475,7 @@ public:
     bool can_throw_large_rocks() const override;
 
     bool can_speak();
-    bool is_silenced() const override;
+    bool is_silenced( bool silent_cast = false) const override;
 
     int base_armour_class() const;
     int armour_class() const override;

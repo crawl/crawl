@@ -1847,7 +1847,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     }
 
     // Silence and engulf
-    if (you.is_silenced())
+    if (you.is_silenced(true))
     {
         talent tal = get_talent(abil.ability);
         if (tal.is_invocation && abil.ability != ABIL_RENOUNCE_RELIGION)
@@ -4407,7 +4407,7 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.get_mutation_level(MUT_HURL_DAMNATION);
     case ABIL_WORD_OF_CHAOS:
         return you.get_mutation_level(MUT_WORD_OF_CHAOS)
-               && (!you.is_silenced() || include_unusable);
+               && (!you.is_silenced(true) || include_unusable);
     case ABIL_END_TRANSFORMATION:
         return you.form != you.default_form && !you.transform_uncancellable;
     // TODO: other god abilities
@@ -4776,7 +4776,7 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
         }
     }
 
-    if (!ignore_silence && you.is_silenced())
+    if (!ignore_silence && you.is_silenced(true))
     {
         if (have_passive(passive_t::wu_jian_wall_jump))
             abilities.push_back(ABIL_WU_JIAN_WALLJUMP);

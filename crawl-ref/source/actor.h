@@ -315,7 +315,7 @@ public:
     virtual bool helpless() const = 0;
     virtual bool confused() const = 0;
     virtual bool asleep() const { return false; }
-    virtual bool is_silenced() const = 0;
+    virtual bool is_silenced(bool silent_cast = false) const = 0;
 
     virtual bool caught() const = 0;
     caught_type  caught_by() const;

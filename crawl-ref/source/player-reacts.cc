@@ -599,7 +599,7 @@ void player_reacts_to_monsters()
 
 static bool _check_recite()
 {
-    if (you.is_silenced()
+    if (you.is_silenced(true)
         || you.paralysed()
         || you.confused()
         || you.asleep()

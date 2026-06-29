@@ -4589,7 +4589,7 @@ int get_tension(god_type god)
         { player_on_orb_run(),                           {2, 1} },
         { you.caught(),                                  {2, 1} },
         { you.duration[DUR_VAINGLORY] > 0,               {5, 3} },
-        { you.is_silenced(),                             {5, 3} },
+        { you.is_silenced(true),                         {5, 3} },
         { you.form == transformation::fungus
             || you.form == transformation::pig
             || you.form == transformation::tree

@@ -1249,7 +1249,9 @@ static void _handle_werewolf_kill_bonus(const monster& victim, bool takedown)
     {
         if (you.is_silenced())
         {
-            mpr("You raise your head to howl, but no sound comes out.");
+            // You're always silent, you won't try.
+            if (!you.has_mutation(MUT_SILENCE_AURA))
+                mpr("You raise your head to howl, but no sound comes out.");
             return;
         }
 

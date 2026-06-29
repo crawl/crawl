@@ -637,7 +637,7 @@ bool monster::can_speak()
     return mon_shape_is_humanoid(get_mon_shape(*this));
 }
 
-bool monster::is_silenced() const
+bool monster::is_silenced(bool /*silent_cast*/) const
 {
     return silenced(pos())
             || has_ench(ENCH_MUTE)
