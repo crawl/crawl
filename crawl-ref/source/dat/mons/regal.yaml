@@ -1,0 +1,21 @@
+ name: "Regal"
+  glyph: {char: "x", colour: lightmagenta}
+  flags: [speaks, no_skeleton, unique, male]
+  exp: 4630
+  species: octopode
+  will: 160
+  attacks:
+   - {type: tentacle_slap, damage: 30}
+   - {type: constrict, flavour: crush, damage: 8}
+  hd: 20
+  hp_10x: 1800
+  ac: 1
+  ev: 18
+  spells: regal
+  has_corpse: true
+  shout: shout
+  intelligence: human
+  habitat: amphibious
+  uses: weapons_armour
+  size: medium
+  shape: misc
