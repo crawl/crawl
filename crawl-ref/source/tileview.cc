@@ -609,7 +609,7 @@ void tile_init_flavour(const coord_def &gc, const int domino)
         if (!is_torch_tile(wall))
             tile_env.flv(gc).wall = pick_dngn_tile(wall, rand2);
     }
-        
+
 
     _init_feat_flavour(tile_env.flv(gc).feat, env.grid(gc));
 
