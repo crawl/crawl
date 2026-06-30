@@ -9,6 +9,8 @@
 
 #include <algorithm>
 #include <cmath>
+#include <map>
+#include <set>
 #include <vector>
 
 #include "abyss.h"
@@ -2397,99 +2399,93 @@ spret cast_gavotte(int pow, const coord_def dir, bool fail)
 // Note: this is only used for the targeting display and prompts about
 // potentially harming allies. As such, it relies on player-known info and may
 // not reflect the exact results of the spell.
-static bool _gavotte_will_wall_slam(const monster* mon, coord_def dir)
-{
-    // Scan in our push direction. We want to find at least one tile of open
-    // space before the nearest solid feature or stationary monster. Non-stationary
-    // monsters are 'free'
-    int steps = GAVOTTE_DISTANCE;
-    coord_def pos = mon->pos();
-    while (steps)
-    {
-        pos += dir;
-
-        // It is possible to move out of bounds if we're near the level boundary
-        // and the player has not seen some of the terrain between this monster
-        // and the level edge (meaning it assumes that terrain is non-collidable)
-        if (!in_bounds(pos))
-            return steps < GAVOTTE_DISTANCE;
-
-        // Can never collide with the player (for the player's sake)
-        if (pos == you.pos())
-            return false;
-
-        // If we are moving out of the player's line of sight, use map knowledge
-        // to estimate collisions with walls the player has already seen, but do
-        // not leak info about unseen terrain.
-        const bool seen = you.see_cell(pos);
-        dungeon_feature_type feat = seen ? env.grid(pos)
-                                         : env.map_knowledge(pos).feat();
-
-        // Assume that monsters can pass through unknown terrain
-        if (feat == DNGN_UNSEEN)
-            feat = DNGN_FLOOR;
-
-        // If there is an obstructing feature here - or the player THINKS there
-        // is, at least - consider this monster affected if it moved at least
-        // one space before hitting it.
-        if (!mon->can_pass_through_feat(feat))
-            return steps < GAVOTTE_DISTANCE;
-
-        bool mons_in_way = false;
-        bool mons_in_way_is_stationary = false;
-
-        // Find any visible monster that may be in the way (or our memory of such)
-        if (seen)
-        {
-            monster* mon_at_pos = monster_at(pos);
-            if (mon_at_pos && you.can_see(*mon_at_pos))
-            {
-                mons_in_way = true;
-                mons_in_way_is_stationary = mon_at_pos->is_stationary();
-            }
-        }
-        else
-        {
-            monster_info* mon_at_pos = env.map_knowledge(pos).monsterinfo();
-            if (mon_at_pos)
-            {
-                mons_in_way = true;
-                mons_in_way_is_stationary = mons_class_is_stationary(mon_at_pos->type);
-            }
-        }
-
-        // If we're about to hit a blocker, check whether we will have moved at
-        // least one space before doing so. Skip over mobile monsters as 'free'
-        // spaces (since we can all pile up against a wall)
-        if (mons_in_way)
-        {
-            if (mons_in_way_is_stationary)
-                return steps < GAVOTTE_DISTANCE;
-            else
-                steps++;
-        }
-
-        steps--;
-    }
-
-    return false;
-}
-
 vector<monster*> gavotte_affected_monsters(const coord_def dir)
 {
-    vector<monster*> affected;
-
+    // The positions during the simulation.
+    map<coord_def, actor*> occupied;
+    // The actors who will be moved.
+    vector<actor*> movers;
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
-    {
-        if (!mi->is_stationary() && you.see_cell_no_trans(mi->pos())
-            && you.can_see(**mi))
+        if (you.can_see(**mi))
         {
-            if (_gavotte_will_wall_slam(*mi, dir))
-                affected.push_back(*mi);
+            occupied[mi->pos()] = *mi;
+            if (!mi->is_stationary() && you.see_cell_no_trans(mi->pos()))
+                movers.push_back(*mi);
         }
+
+    occupied[you.pos()] = &you;
+    if (!you.is_stationary() && !you.stasis())
+        movers.push_back(&you);
+
+    // Push the actors nearest the pull direction first, exactly as cast_gavotte.
+    sort(movers.begin(), movers.end(), [dir](actor* a, actor* b)
+    {
+        return (a->pos().x * dir.x) + (a->pos().y * dir.y)
+               > (b->pos().x * dir.x) + (b->pos().y * dir.y);
+    });
+
+    set<monster*> harmed;
+    for (actor* mover : movers)
+    {
+        const coord_def start = mover->pos();
+        coord_def cur = start;
+        occupied.erase(start);
+
+        for (int i = 1; i <= GAVOTTE_DISTANCE; ++i)
+        {
+            const coord_def pos = start + (dir * i);
+            if (!in_bounds(pos))
+            {
+                if (i > 1 && !mover->is_player())
+                    harmed.insert(mover->as_monster());
+                break;
+            }
+
+            auto it = occupied.find(pos);
+            actor *occupant = it == occupied.end() ? nullptr : it->second;
+
+            // Hitting an actor. Stop and do damage unless it's the player.
+            if (occupant)
+            {
+                if (!occupant->is_player() && !mover->is_player() && i > 1)
+                {
+                    harmed.insert(mover->as_monster());
+                    harmed.insert(occupant->as_monster());
+                }
+                break;
+            }
+            else if (!you.see_cell(pos) && env.map_knowledge(pos).monsterinfo())
+            {
+                if (!mover->is_player() && i > 1)
+                    harmed.insert(mover->as_monster());
+                break;
+            }
+
+            dungeon_feature_type feat = env.map_knowledge(pos).feat();
+            // Assume monsters can pass through unseen terrain.
+            if (feat == DNGN_UNSEEN)
+                feat = DNGN_FLOOR;
+
+            // Hitting solid terrain from range; do damage.
+            if (!mover->can_pass_through_feat(feat) && i > 1
+                && !mover->is_player())
+            {
+                harmed.insert(mover->as_monster());
+                break;
+            }
+
+            // Stop without damage because of short distance or soft terrain.
+            if (!mover->is_habitable_feat(feat))
+                break;
+
+            // The tile is clear; slide onto it and keep going.
+            cur = pos;
+        }
+
+        occupied[cur] = mover;
     }
 
-    return affected;
+    return vector<monster*>(harmed.begin(), harmed.end());
 }
 
 spret cast_teleport_other(const coord_def& target, int power, bool fail)
