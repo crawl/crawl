@@ -55,6 +55,7 @@ resistance: 8
 ghostly: 8
 malmutated: 8
 magnetised: 8
+phase_shift: 8
 
 recall: 9
 teleporting: 9

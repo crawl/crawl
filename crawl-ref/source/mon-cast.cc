@@ -267,6 +267,23 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         },
         nullptr,
     } },
+    { SPELL_PHASE_SHIFT, {
+        [](const monster &caster)
+        {
+            return ai_action::good_or_bad(!caster.has_ench(ENCH_PHASE_SHIFT));
+        },
+        [](monster &caster, mon_spell_slot, bolt&)
+        {
+            if (!you.can_see_invisible())
+                simple_monster_message(caster, " form blurs.", true);
+            else
+                simple_monster_message(caster, " form wavers for a moment.", true);
+            flash_tile(caster.pos(), LIGHTBLUE);
+            const int dur = random_range(220, 300);
+            caster.add_ench(mon_enchant(ENCH_PHASE_SHIFT, &caster, dur));
+        },
+        nullptr,
+    } },
     { SPELL_MINOR_HEALING, {
         [](const monster &caster) {
             return ai_action::good_or_bad(caster.hit_points <= caster.max_hit_points / 2);

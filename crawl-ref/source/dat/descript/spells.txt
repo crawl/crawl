@@ -1561,6 +1561,13 @@ Phantom Mirror spell
 Creates a phantom copy of a creature. The copy will be somewhat fragile, but
 otherwise almost indistinguishable from the original.
 %%%%
+Phase Shift spell
+
+Shifts the caster's body slighty out of phase with normal space, causing their
+exact position to become blurry and indistinct. Any attackers without
+supernaturally acute vision will have a much harder time hitting them and also
+be unable to assess the degree of their injuries.
+%%%%
 Planar Overlay spell
 
 Overlays part of an adjacent reality onto this one, causing random local

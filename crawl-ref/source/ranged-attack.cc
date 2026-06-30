@@ -115,6 +115,11 @@ bool ranged_attack::attack()
 
     // Works even if the defender is incapacitated
     ev += defender->missile_repulsion();
+    if (defender->is_monster() && defender->as_monster()->has_ench(ENCH_PHASE_SHIFT)
+        && !attacker->can_see_invisible())
+    {
+        ev += PHASE_SHIFT_EV_BONUS;
+    }
 
     ev_margin = test_hit(to_hit, ev, !attacker->is_player());
     bool shield_blocked = attack_shield_blocked();

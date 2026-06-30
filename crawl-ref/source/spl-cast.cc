@@ -1626,7 +1626,8 @@ static int _to_hit_pct(const monster_info& mi, int acc)
     if (acc <= 1)
         return mi.ev <= 2 ? 100 : 0;
 
-    const int base_ev = mi.ev + (mi.is(MB_DEFLECT_MSL) ? DEFLECT_MISSILES_EV_BONUS : 0);
+    const int base_ev = mi.ev + (mi.is(MB_DEFLECT_MSL) ? DEFLECT_MISSILES_EV_BONUS : 0)
+                        + (mi.is(MB_PHASE_SHIFT) && !you.can_see_invisible() ? PHASE_SHIFT_EV_BONUS : 0);
 
     // This exhaustively tests every combination of hit and evasion rolls to determine
     // the real chance of a hit.

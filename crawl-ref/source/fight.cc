@@ -103,6 +103,8 @@ static double _to_hit_hit_chance(const monster_info& mi, attack &atk, bool melee
     const double AUTO_HIT_CHANCE = is_aux ? 3.3333 : MIN_HIT_MISS_PERCENTAGE / 2.0;
 
     int ev = mi.ev + (!melee && mi.is(MB_DEFLECT_MSL) ? DEFLECT_MISSILES_EV_BONUS : 0);
+    if (mi.is(MB_PHASE_SHIFT) && !you.can_see_invisible())
+        ev += PHASE_SHIFT_EV_BONUS;
 
     if (ev <= 0)
         return 1 - AUTO_MISS_CHANCE / 100.0;

@@ -1417,6 +1417,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_BRAMBLE_COOLDOWN:
     case ENCH_STAMPEDE:
     case ENCH_PREPARING_TO_LURK:
+    case ENCH_PHASE_SHIFT:
         decay_enchantment(en);
         break;
 
@@ -2177,7 +2178,7 @@ static const char *enchant_names[] =
     "phalanx_barrier", "figment", "paradox-touched", "warding",
     "diminished_spells", "orb_cooldown", "sunder_charge",
     "exposed", "briar_cooldown", "stampeding",
-    "preparing_to_lurk",
+    "preparing_to_lurk", "phase_shift",
     "buggy", // NUM_ENCHANTMENTS
 };
 

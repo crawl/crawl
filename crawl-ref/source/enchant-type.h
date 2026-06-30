@@ -256,6 +256,7 @@ enum enchant_type
     ENCH_BRAMBLE_COOLDOWN,
     ENCH_STAMPEDE,
     ENCH_PREPARING_TO_LURK,
+    ENCH_PHASE_SHIFT,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

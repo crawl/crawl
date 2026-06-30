@@ -274,6 +274,7 @@ enum monster_info_flags
     MB_STAMPEDE,
     MB_KNOWN_INVIS, // Fully invisible, but the player has inferred their location
     MB_REMEMBERED_INVIS,
+    MB_PHASE_SHIFT,
     NUM_MB_FLAGS
 };
 

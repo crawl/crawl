@@ -153,6 +153,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_DIMINISHED_SPELLS, MB_DIMINISHED_SPELLS },
     { ENCH_EXPOSED,         MB_EXPOSED },
     { ENCH_STAMPEDE,        MB_STAMPEDE },
+    { ENCH_PHASE_SHIFT,     MB_PHASE_SHIFT },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -667,8 +668,6 @@ monster_info::monster_info(const monster* m, int milev)
     else if (stab_bonus == 4)
         mb.set(MB_MAYBE_STABBABLE);
 
-    dam = mons_get_damage_level(*m);
-
     // BEH_SLEEP is meaningless on firewood, don't show it. But it *is*
     // meaningful on non-firewood non-threatening monsters (i.e. butterflies).
     if (!m->is_firewood() && m->asleep())
@@ -706,6 +705,11 @@ monster_info::monster_info(const monster* m, int milev)
         if (flag != NUM_MB_FLAGS)
             mb.set(flag);
     }
+
+    if (!is(MB_PHASE_SHIFT) || you.can_see_invisible())
+        dam = mons_get_damage_level(*m);
+    else
+        dam = MDAM_OKAY;
 
     // Similarly, don't set invisibility stab UI for firewood.
     if (!you.visible_to(m) && !m->is_firewood() && !m->has_ench(ENCH_BLIND))

@@ -1080,6 +1080,7 @@ guardian_serpent MONS_GUARDIAN_SERPENT
 %sdir mon/unique
 %rim 0
 erolcha MONS_EROLCHA
+erolcha_phased MONS_EROLCHA_PHASED
 lodul MONS_LODUL
 %sdir mon/humanoids
 oni MONS_ONI
@@ -1090,6 +1091,7 @@ two_headed_ogre MONS_TWO_HEADED_OGRE
 %rim 0
 swamp_ogre MONS_SWAMP_OGRE
 ogre_mage MONS_OGRE_MAGE
+ogre_mage_phased MONS_OGRE_MAGE_PHASED
 ironbound_thunderhulk MONS_IRONBOUND_THUNDERHULK
 
 ## Plants ('P')
@@ -1226,6 +1228,7 @@ head_instructor MONS_HEADMASTER
 %sdir mon/humanoids/elves
 elf MONS_ELF
 deep_elf_knight MONS_DEEP_ELF_KNIGHT
+deep_elf_knight_phased MONS_DEEP_ELF_KNIGHT_PHASED
 deep_elf_archer MONS_DEEP_ELF_ARCHER
 deep_elf_zephyrmancer MONS_DEEP_ELF_AIR_MAGE
 deep_elf_pyromancer MONS_DEEP_ELF_FIRE_MAGE
@@ -1452,6 +1455,7 @@ draco-job-knight MONS_DRACONIAN_KNIGHT
 draco-job-monk MONS_DRACONIAN_MONK
 draco-job-scorcher MONS_DRACONIAN_SCORCHER
 draco-job-shifter MONS_DRACONIAN_SHIFTER
+draconian_knight_phased MONS_DRACONIAN_KNIGHT_PHASED
 ## From the Wucad Mu wizard laboratory
 mon/vault/draconian_monk_ghost MONS_FAINT_GREY_DRACONIAN_MONK
 

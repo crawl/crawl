@@ -5573,7 +5573,9 @@ void bolt::affect_monster(monster* mon)
 
     defer_rand r;
     const int repel = mon->missile_repulsion();
-    int rand_ev = random2(mon->evasion() + repel);
+    const int phasing = !can_see_invis && mon->has_ench(ENCH_PHASE_SHIFT) ? PHASE_SHIFT_EV_BONUS
+                                                                          : 0;
+    int rand_ev = random2(mon->evasion() + repel + phasing);
 
     int hit_margin = _test_beam_hit(beam_hit, rand_ev, r);
 

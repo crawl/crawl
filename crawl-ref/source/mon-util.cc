@@ -5411,8 +5411,11 @@ string get_damage_level_string(mon_holy_type holi, mon_dam_level_type mdam)
 
 void print_wounds(const monster& mons)
 {
-    if (!mons.alive() || mons.hit_points == mons.max_hit_points)
+    if (!mons.alive() || mons.hit_points == mons.max_hit_points
+        || mons.has_ench(ENCH_PHASE_SHIFT) && !you.can_see_invisible())
+    {
         return;
+    }
 
     mon_dam_level_type dam_level = mons_get_damage_level(mons);
     string desc = get_damage_level_string(mons.holiness(), dam_level);

@@ -2562,6 +2562,16 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
 tile_with_flags_t tileidx_monster(const monster_info& mons)
 {
     tileidx_t tile = _tileidx_monster_no_props(mons);
+
+    // Most natural casters of this spell get special tiles, but use a default
+    // icon in other cases.
+    if (mons.is(MB_PHASE_SHIFT) && !you.can_see_invisible())
+    {
+        tileidx_t phase_tile = tileidx_monster_phase_shift(mons.type);
+        if (phase_tile)
+            tile = phase_tile;
+    }
+
     tile_with_flags_t ch = tile;
 
     if ((mons.airborne() && !_tentacle_tile_not_flying(tile))
@@ -2822,6 +2832,8 @@ set<tileidx_t> status_icons_for(const monster_info &mons)
     for (auto status : monster_status_icons)
         if (mons.is(status.first))
             icons.insert(status.second);
+    if (mons.is(MB_PHASE_SHIFT) && !tileidx_monster_phase_shift(mons.type))
+        icons.insert(TILEI_PHASE_SHIFT);
     return icons;
 }
 
@@ -2891,7 +2903,15 @@ tileidx_t tileidx_draco_base(const monster_info& mon)
 tileidx_t tileidx_draco_job(const monster_info& mon)
 {
     if (mons_is_draconian_job(mon.type))
+    {
+        // XXX: I kinda hate this.
+        if (mon.is(MB_PHASE_SHIFT) && mon.type == MONS_DRACONIAN_KNIGHT
+            && !you.can_see_invisible())
+        {
+            return TILEP_MONS_DRACONIAN_KNIGHT_PHASED;
+        }
         return get_mon_base_tile(mon.type);
+    }
     return 0;
 }
 
@@ -5288,4 +5308,16 @@ tileidx_t tileidx_parchment_overlay(int spell, int index)
 colour_t parchment_colour(spell_type spell)
 {
     return _parchment_colours[spell];
+}
+
+tileidx_t tileidx_monster_phase_shift(monster_type type)
+{
+    switch (type)
+    {
+        case MONS_DRACONIAN_KNIGHT:     return TILEP_MONS_DRACONIAN_KNIGHT_PHASED;
+        case MONS_OGRE_MAGE:            return TILEP_MONS_OGRE_MAGE_PHASED;
+        case MONS_EROLCHA:              return TILEP_MONS_EROLCHA_PHASED;
+        case MONS_DEEP_ELF_KNIGHT:      return TILEP_MONS_DEEP_ELF_KNIGHT_PHASED;
+        default:                        return 0;
+    }
 }
