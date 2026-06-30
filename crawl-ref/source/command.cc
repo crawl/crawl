@@ -113,7 +113,7 @@ static string _get_version_features()
         result += "\n\n";
     }
 
-    result += "Report bugs to: <w>" CRAWL_BUG_REPORT "</w>\n\n";
+    result += "Report bugs to: " CRAWL_BUG_REPORT "\n\n";
 
     result += "<w>Features</w>\n"
                  "--------\n";
