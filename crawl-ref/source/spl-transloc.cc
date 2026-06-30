@@ -2266,19 +2266,11 @@ dice_def gavotte_impact_damage(int pow, int dist, bool random)
         return dice_def(2, div_rand_round((pow * 3 / 4 + 35) * (dist + 5), 20) + 1);
 }
 
-static void _maybe_penance_for_collision(god_conduct_trigger conducts[3], actor& victim)
-{
-    if (victim.is_monster() && victim.alive())
-    {
-        //potentially penance
-        set_attack_conducts(conducts, *victim.as_monster(),
-            you.can_see(*victim.as_monster()));
-    }
-}
-
-static void _push_actor(actor& victim, coord_def dir, int dist, int pow)
+static void _push_actor(actor& victim, coord_def dir, int dist, int pow,
+                        const set<mid_t>& seen_at_start)
 {
     const bool immune = !could_harm(&you, &victim);
+    const bool known = seen_at_start.count(victim.mid);
 
     god_conduct_trigger conducts[3];
 
@@ -2293,22 +2285,23 @@ static void _push_actor(actor& victim, coord_def dir, int dist, int pow)
     {
         const coord_def next_pos = starting_pos + (dir * i);
 
-        if (!victim.can_pass_through_feat(env.grid(next_pos)) && i > 1
-            && !victim.is_player())
-        {
-            victim.collide(next_pos, &you, gavotte_impact_damage(pow, i, true).roll());
-            _maybe_penance_for_collision(conducts, victim);
-            break;
-        }
-        else if (actor* act_at_space = actor_at(next_pos))
+        if (actor* act_at_space = actor_at(next_pos))
         {
             if (i > 1 && &victim != act_at_space && !victim.is_player()
                 && !act_at_space->is_player())
             {
+                set_attack_conducts(conducts, *victim.as_monster(), known);
+                set_attack_conducts(conducts, *act_at_space->as_monster(),
+                                    bool(seen_at_start.count(act_at_space->mid)));
                 victim.collide(next_pos, &you, gavotte_impact_damage(pow, i, true).roll());
-                _maybe_penance_for_collision(conducts, victim);
-                _maybe_penance_for_collision(conducts, *act_at_space);
             }
+            break;
+        }
+        else if (!victim.can_pass_through_feat(env.grid(next_pos)) && i > 1
+                 && !victim.is_player())
+        {
+            set_attack_conducts(conducts, *victim.as_monster(), known);
+            victim.collide(next_pos, &you, gavotte_impact_damage(pow, i, true).roll());
             break;
         }
         else if (!victim.is_habitable(next_pos))
@@ -2367,6 +2360,13 @@ spret cast_gavotte(int pow, const coord_def dir, bool fail)
     if (!you.is_stationary() && !you.stasis())
         targs.push_back(&you);
 
+    // The player is responsible for the wellbeing of any ally they could see
+    // at the start of the cast.
+    set<mid_t> seen_at_start;
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+        if (you.can_see(**mi))
+            seen_at_start.insert(mi->mid);
+
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if (!mi->is_stationary() && you.see_cell_no_trans(mi->pos()))
@@ -2386,7 +2386,7 @@ spret cast_gavotte(int pow, const coord_def dir, bool fail)
         // Some circumstances, such as lost souls sacrificing themselves, can
         // result in monsters dying before it even comes time to push them.
         if (targs[i]->alive())
-            _push_actor(*targs[i], dir, GAVOTTE_DISTANCE, pow);
+            _push_actor(*targs[i], dir, GAVOTTE_DISTANCE, pow, seen_at_start);
     }
 
     you.increase_duration(DUR_GAVOTTE_COOLDOWN, random_range(5, 9) - div_rand_round(pow, 50));
