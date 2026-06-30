@@ -126,6 +126,7 @@ exposed EXPOSED
 stampede STAMPEDE
 invis_known UNSEEN_INVIS_KNOWN
 invis_remembered UNSEEN_INVIS_REMEMBERED
+seen_invis SEEN_INVIS
 phase_shifted PHASE_SHIFT
 
 something_under SOMETHING_UNDER
