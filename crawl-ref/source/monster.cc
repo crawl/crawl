@@ -1211,6 +1211,11 @@ bool monster::pickup_launcher(item_def &launch, bool msg, bool force)
         if (!old_weapon)
             return pickup(launch, slot, msg);
 
+        // If dual-wielding, don't mix types. If not, don't pick up two ranged
+        // weapons.
+        if (!is_range_weapon(*old_weapon))
+            continue;
+
         // If the old weapon is better than the new one, or just as
         // good and with as good a brand, don't bother swapping.
         const int old_rating = mons_weapon_damage_rating(*old_weapon);
