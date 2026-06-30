@@ -1006,7 +1006,7 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
         && is_weapon(*you.offhand_weapon()))
     {
         wpn2_index = _clone_player_weapon(you.offhand_weapon());
-        if (wpn_index == NON_ITEM)
+        if (wpn2_index == NON_ITEM)
             return nullptr;
     }
 
@@ -1498,12 +1498,12 @@ void dithmenos_shadow_shoot(const coord_def& targ, missile_type thrown_projectil
     mons_throw(mon, atk);
 
     // Give Coglins a shot with their other weapon, if they have one
+    item_def *secondary = mon->mslot_item(MSLOT_ALT_WEAPON);
     if (you.has_mutation(MUT_WIELD_OFFHAND)
-        && mon->mslot_item(MSLOT_ALT_WEAPON)
-        && is_range_weapon(*mon->mslot_item(MSLOT_ALT_WEAPON)))
+        && secondary && secondary != launcher
+        && is_range_weapon(*secondary))
     {
-        mon->swap_weapons(false);
-        ranged_attack_beam atk2(*mon, *launcher, atk.beam);
+        ranged_attack_beam atk2(*mon, *secondary, atk.beam);
         mons_throw(mon, atk2);
     }
 

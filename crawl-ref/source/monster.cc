@@ -1192,6 +1192,17 @@ bool monster::pickup_launcher(item_def &launch, bool msg, bool force)
     if (!force && !_needs_ranged_attack(this))
         return false;
 
+    const bool dual_wielding = mons_wields_two_weapons(*this);
+    if (dual_wielding)
+    {
+        // If we have either weapon slot free, pick up the weapon.
+        if (inv[MSLOT_WEAPON] == NON_ITEM)
+            return pickup(launch, MSLOT_WEAPON, msg);
+
+        if (inv[MSLOT_ALT_WEAPON] == NON_ITEM)
+            return pickup(launch, MSLOT_ALT_WEAPON, msg);
+    }
+
     const int mdam_rating = mons_weapon_damage_rating(launch);
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
     {
