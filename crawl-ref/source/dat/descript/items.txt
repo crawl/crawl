@@ -1141,6 +1141,22 @@ instantly.
 potion of invisibility
 
 A potion which confers invisibility on one who consumes it.
+
+[[player invis desc]]
+%%%%
+player invis desc
+
+While invisible, most monsters have greatly reduced accuracy against you,
+cannot make attacks of opportunity, and the spells they cast may sometimes be
+aimed at the wrong location. They may also stumble around and eventually lose
+track of you, especially if their intelligence is low.
+
+In addition, melee attacks you make against such creatures have a chance
+(proportional to your stealth and weapon skill) of catching them off-guard and
+dealing increased damage, especially if performed with a short blade.
+
+Certain creatures can see through this invisibility and it will always be
+completely ineffective while standing in water.
 %%%%
 potion of lignification
 
