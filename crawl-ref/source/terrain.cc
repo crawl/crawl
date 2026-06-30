@@ -470,6 +470,17 @@ bool feat_is_open_door(dungeon_feature_type feat)
         || feat == DNGN_BROKEN_CLEAR_DOOR;
 }
 
+/** Is this feature a door that you can see through?
+*/
+bool feat_is_clear_door(dungeon_feature_type feat)
+{
+    return feat == DNGN_CLOSED_CLEAR_DOOR
+           || feat == DNGN_BROKEN_CLEAR_DOOR
+           || feat == DNGN_OPEN_CLEAR_DOOR
+           || feat == DNGN_RUNED_CLEAR_DOOR
+           || feat == DNGN_SEALED_CLEAR_DOOR;
+}
+
 /** Has this feature been sealed by a vault warden?
  */
 bool feat_is_sealed(dungeon_feature_type feat)
@@ -2516,8 +2527,7 @@ void dgn_close_door(const coord_def &dest)
         return;
 
     // Yes, this fixes broken doors.
-    const auto feat = env.grid(dest);
-    if (feat == DNGN_OPEN_CLEAR_DOOR || feat == DNGN_BROKEN_CLEAR_DOOR)
+    if (feat_is_clear_door(env.grid(dest)))
         env.grid(dest) = DNGN_CLOSED_CLEAR_DOOR;
     else
         env.grid(dest) = DNGN_CLOSED_DOOR;
@@ -2533,11 +2543,8 @@ void dgn_open_door(const coord_def &dest)
     if (!feat_is_closed_door(env.grid(dest)))
         return;
 
-    if (env.grid(dest) == DNGN_CLOSED_CLEAR_DOOR
-        || env.grid(dest) == DNGN_RUNED_CLEAR_DOOR)
-    {
+    if (feat_is_clear_door(env.grid(dest)))
         env.grid(dest) = DNGN_OPEN_CLEAR_DOOR;
-    }
     else
         env.grid(dest) = DNGN_OPEN_DOOR;
 }
@@ -2552,11 +2559,8 @@ void dgn_break_door(const coord_def &dest)
     if (!feat_is_closed_door(env.grid(dest)))
         return;
 
-    if (env.grid(dest) == DNGN_CLOSED_CLEAR_DOOR
-        || env.grid(dest) == DNGN_RUNED_CLEAR_DOOR)
-    {
+    if (feat_is_clear_door(env.grid(dest)))
         env.grid(dest) = DNGN_BROKEN_CLEAR_DOOR;
-    }
     else
         env.grid(dest) = DNGN_BROKEN_DOOR;
 }
