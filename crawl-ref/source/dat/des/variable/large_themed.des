@@ -108,7 +108,7 @@ ENDMAP
 # hidden cave vault with statue
 #
 NAME:    statuecave_lemuel
-TAGS:    no_descent
+TAGS:    no_descent allow_tele_closets
 ORIENT:  northeast
 DEPTH:   D:7-, Lair, Crypt:1-4
 : if you.in_branch("Crypt") then
@@ -192,6 +192,7 @@ ENDMAP
 # Dragon's cave
 #
 NAME:    dragon1_lemuel
+TAGS:    allow_tele_closets
 ORIENT:  northeast
 DEPTH:   D:9-, Lair
 MONS:    patrolling fire dragon, patrolling ice dragon

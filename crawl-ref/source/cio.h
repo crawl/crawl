@@ -13,8 +13,12 @@
 #include "KeymapContext.h"
 
 #ifdef USE_TILE_LOCAL
+ #include <functional>
+
  #include "tilebuf.h"
  #include <SDL_keycode.h>
+
+void paste_clipboard(function<void (char32_t)> process_key);
 #endif
 
 enum keyfun_action
@@ -382,6 +386,9 @@ public:
 
     void insert_char_at_cursor(int ch);
     void overwrite_char_at_cursor(int ch);
+#ifdef USE_TILE_LOCAL
+    void clipboard_paste();
+#endif
 #ifdef USE_TILE_WEB
     void set_tag(const string &tag);
 #endif

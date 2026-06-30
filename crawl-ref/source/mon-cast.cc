@@ -3261,25 +3261,15 @@ static void _corrupt_locale(monster &mons)
     lugonu_corrupt_level_monster(mons);
 }
 
-static void _set_door(const vector<coord_def>& door, dungeon_feature_type feat)
-{
-    for (const auto &dc : door)
-    {
-        env.grid(dc) = feat;
-        set_terrain_changed(dc);
-    }
-}
-
 static int _tension_door_closed(const vector<coord_def>& door)
 {
     ASSERT(!door.empty());
     const dungeon_feature_type old_feat = env.grid(door[0]);
-    // this unwind is a bit heavy, but because out-of-los clouds dissipate
-    // instantly, they can be wiped out by these door tests.
-    unwind_var<map<coord_def, cloud_struct>> cloud_state(env.cloud);
-    _set_door(door, DNGN_CLOSED_DOOR);
+    for (coord_def dc : door)
+        env.grid(dc) = DNGN_CLOSED_DOOR;
     const int new_tension = get_tension(GOD_NO_GOD);
-    _set_door(door, old_feat);
+    for (coord_def dc : door)
+        env.grid(dc) = old_feat;
     return new_tension;
 }
 

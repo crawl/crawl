@@ -47,6 +47,7 @@ bool feat_has_dry_floor(dungeon_feature_type feat);
 bool feat_is_door(dungeon_feature_type feat);
 bool feat_is_closed_door(dungeon_feature_type feat);
 bool feat_is_open_door(dungeon_feature_type feat);
+bool feat_is_clear_door(dungeon_feature_type feat);
 bool feat_is_sealed(dungeon_feature_type feat);
 bool feat_is_runed(dungeon_feature_type feat);
 bool feat_is_statuelike(dungeon_feature_type feat);
@@ -127,7 +128,8 @@ void dungeon_terrain_changed(const coord_def &pos,
                              dungeon_feature_type feat = DNGN_UNSEEN,
                              bool preserve_features = false,
                              bool preserve_items = false,
-                             bool wizmode = false);
+                             bool wizmode = false,
+                             bool preserve_mimics = false);
 void dungeon_change_base_terrain(coord_def pos, dungeon_feature_type nfeat);
 
 // Moves everything on the level at src to dst.

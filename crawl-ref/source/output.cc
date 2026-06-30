@@ -1907,21 +1907,21 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
             printed += 2;
         }
 
-        if (printed < crawl_view.mlistsz.x)
+        int available = crawl_view.mlistsz.x - printed;
+        if (available > 0)
         {
             int desc_colour;
             string desc;
             mons_to_string_pane(desc, desc_colour, zombified,
                                 mons, start, count);
             textcolour(desc_colour);
-            if (static_cast<int>(desc.length()) > crawl_view.mlistsz.x - printed)
+            if (strwidth(desc) > available && available > 1)
             {
-                ASSERT(crawl_view.mlistsz.x - 2 - printed >= 0);
-                desc.resize(crawl_view.mlistsz.x - 2 - printed, ' ');
+                desc = chop_string(desc, available - 2);
                 desc += "…)";
             }
             else
-                desc.resize(crawl_view.mlistsz.x - printed, ' ');
+                desc = chop_string(desc, available);
             CPRINTF("%s", desc.c_str());
         }
     }

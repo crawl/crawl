@@ -705,6 +705,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    minmay_isolated_rectangles_in_corner
+TAGS:    transparent
 ORIENT:  southeast
 DEPTH:   D:12-, !D:$, Depths, !Depths:$
 SHUFFLE: ([{)]}, *$
