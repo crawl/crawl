@@ -1364,12 +1364,14 @@ static void _current_terrain_changed(coord_def pos,
 }
 
 static void _permanent_terrain_changed(coord_def pos,
-                                       dungeon_feature_type nfeat)
+                                       dungeon_feature_type nfeat,
+                                       bool preserve_mimics)
 {
     // XXX: do we ever call this with nfeat == DNGN_UNSEEN?
     if (nfeat != DNGN_UNSEEN)
         unnotice_feature(level_pos(level_id::current(), pos));
-    env.level_map_mask(pos) &= ~MMT_MIMIC;
+    if (!preserve_mimics)
+        env.level_map_mask(pos) &= ~MMT_MIMIC;
 }
 
 /**
@@ -1389,12 +1391,13 @@ void dungeon_terrain_changed(const coord_def &pos,
                              dungeon_feature_type nfeat,
                              bool preserve_features,
                              bool preserve_items,
-                             bool wizmode)
+                             bool wizmode,
+                             bool preserve_mimics)
 {
     // XXX: If there is a temporary terrain change, reverting it will also
-    // revert this change. This isn't always what we want and doesn't work well
-    // with us calling _permanent_terrain_changed.
-    _permanent_terrain_changed(pos, nfeat);
+    // revert this change. This isn't always what we want.
+    if (!is_temp_terrain(pos))
+        _permanent_terrain_changed(pos, nfeat, preserve_mimics);
     _current_terrain_changed(pos, nfeat, preserve_features, preserve_items,
                              wizmode, 0, 0);
 }
@@ -1411,7 +1414,7 @@ void dungeon_change_base_terrain(coord_def pos, dungeon_feature_type nfeat)
         tmarker->flv_old_feature_idx = 0;
         temp_terrain = true;
     }
-    _permanent_terrain_changed(pos, nfeat);
+    _permanent_terrain_changed(pos, nfeat, false);
     if (temp_terrain)
         return;
     _current_terrain_changed(pos, nfeat, false, true, false, 0, 0);
