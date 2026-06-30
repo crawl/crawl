@@ -2321,6 +2321,11 @@ static void _xom_summon_butterflies()
     }
 }
 
+static void _change_scenery_square(coord_def pos, dungeon_feature_type type)
+{
+    dungeon_terrain_changed(pos, type, false, true, false, true);
+}
+
 // Mess with nearby terrain features, mostly harmlessly.
 static void _xom_change_scenery(int /*sever*/)
 {
@@ -2354,8 +2359,7 @@ static void _xom_change_scenery(int /*sever*/)
             if (x_chance_in_y(fountains_blood, 3))
                 continue;
 
-            env.grid(pos) = DNGN_FOUNTAIN_BLOOD;
-            set_terrain_changed(pos);
+            _change_scenery_square(pos, DNGN_FOUNTAIN_BLOOD);
             if (you.see_cell(pos))
                 fountains_blood++;
             break;
@@ -2366,12 +2370,11 @@ static void _xom_change_scenery(int /*sever*/)
                 continue;
 
             if (env.grid(pos) == DNGN_CACHE_OF_FRUIT)
-                env.grid(pos) = DNGN_CACHE_OF_MEAT;
+                _change_scenery_square(pos, DNGN_CACHE_OF_MEAT);
             else if (env.grid(pos) == DNGN_CACHE_OF_MEAT)
-                env.grid(pos) = DNGN_CACHE_OF_BAKED_GOODS;
+                _change_scenery_square(pos, DNGN_CACHE_OF_BAKED_GOODS);
             else
-                env.grid(pos) = DNGN_CACHE_OF_FRUIT;
-            set_terrain_changed(pos);
+                _change_scenery_square(pos, DNGN_CACHE_OF_FRUIT);
             if (you.see_cell(pos))
                 food_swapped++;
             break;
@@ -2380,8 +2383,7 @@ static void _xom_change_scenery(int /*sever*/)
             if (x_chance_in_y(trees_polymorphed, 3))
                 continue;
 
-            env.grid(pos) = wtree;
-            set_terrain_changed(pos);
+            _change_scenery_square(pos, wtree);
             if (you.see_cell(pos))
                 trees_polymorphed++;
             break;
@@ -2390,8 +2392,7 @@ static void _xom_change_scenery(int /*sever*/)
             if (x_chance_in_y(trees_polymorphed, 3))
                 continue;
 
-            env.grid(pos) = btree;
-            set_terrain_changed(pos);
+            _change_scenery_square(pos, btree);
             if (you.see_cell(pos))
                 trees_polymorphed++;
             break;
