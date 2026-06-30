@@ -1241,7 +1241,7 @@ static void _ensure_exit(branch_type br)
     die("no downstairs on %s???", level_id::current().describe().c_str());
 }
 
-static void _add_missing_branches()
+static void _add_missing_branches(const reader &th)
 {
     if (crawl_state.game_is_descent())
         return;
@@ -1257,8 +1257,14 @@ static void _add_missing_branches()
     // crosscheck with check_map_validity when changing
     if (lc == level_id(BRANCH_DEPTHS, 1) || lc == level_id(BRANCH_DUNGEON, 21))
         _ensure_entry(BRANCH_VESTIBULE);
-    if (lc == level_id(BRANCH_DEPTHS, 2) || lc == level_id(BRANCH_DUNGEON, 24))
-        _ensure_entry(BRANCH_PANDEMONIUM);
+#
+    // Only place missing Pan entrances if we are in a version where they don't
+    // disappear.
+    if (th.getMinorVersion() < TAG_MINOR_PANDEMONIUM_DEPTH)
+    {
+        if (lc == level_id(BRANCH_DEPTHS, 2) || lc == level_id(BRANCH_DUNGEON, 24))
+            _ensure_entry(BRANCH_PANDEMONIUM);
+    }
     if (lc == level_id(BRANCH_DEPTHS, 3) || lc == level_id(BRANCH_DUNGEON, 25))
         _ensure_entry(BRANCH_ABYSS);
     if (player_in_branch(BRANCH_VESTIBULE))
@@ -1565,7 +1571,7 @@ void tag_read(reader &inf, tag_type tag_id)
         _tag_read_level_monsters(th);
         EAT_CANARY;
 #if TAG_MAJOR_VERSION == 34
-        _add_missing_branches();
+        _add_missing_branches(th);
 
         // If an eleionoma destroyed the Swamp exit due to the bug fixed in
         // 0d5cf04, put the branch exit on the closest floor or shallow water
@@ -5445,6 +5451,10 @@ static void _tag_read_you_dungeon(reader &th)
     // generated as the place shifts.
     if (crawl_state.game_is_normal() && th.getMinorVersion() <= TAG_MINOR_ABYSS_SEVEN)
         brdepth[BRANCH_ABYSS] = 7;
+
+    // Pandemonium became a finite branch. Place the player in Pan:1.
+    if (th.getMinorVersion() < TAG_MINOR_PANDEMONIUM_DEPTH)
+        brdepth[BRANCH_PANDEMONIUM] = branches[BRANCH_PANDEMONIUM].numlevels;
 #endif
 
     ASSERT(you.depth <= brdepth[you.where_are_you]);

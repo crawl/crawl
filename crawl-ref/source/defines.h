@@ -357,6 +357,8 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 
 #define FORCE_MINIVAULT_KEY "force_minivault"
 #define FORCE_MAP_KEY "force_map"
+
+#define PAN_LORD_FLOORS_KEY "pan_lord_floors"
 #define DEBUG_BUILDER_LOGS_KEY "debug_builder_logs"
 
 #define NEEDS_AUTOPICKUP_KEY "needs_autopickup"

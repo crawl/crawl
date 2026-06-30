@@ -197,6 +197,7 @@ colour.add_colour("disco", function(rand, x, y)
 end)
 
 function pan_demonic_rune(e, glyph, place_lord)
+    e.tags('pan_lair')
     e.subst(glyph .. ' = ' .. (place_lord and glyph or '.') .. ':6 O:1 N:2')
     e.kitem('O = demonic rune of Zot')
     e.kfeat('N = exit_pandemonium')
@@ -547,35 +548,9 @@ xx..2..2..xx
 ENDMAP
 
 ##############################################################################
-# Random unguarded exits
+# Pan vaults
 ##############################################################################
 default-depth: Pan
-
-NAME:   pan_exit
-TAGS:   extra allow_dup transparent no_dump
-CHANCE: 100%
-{{
-local exit_chance = 5 + 3*count_pan_runes()
-local floor_chance = 100 - exit_chance
-kfeat("O = exit_pandemonium w:" .. exit_chance .. " / floor w:" .. floor_chance)
-}}
-MAP
-O
-ENDMAP
-
-NAME:   pan_to_abyss
-TAGS:   extra allow_dup transparent no_dump
-CHANCE: 100%
-{{
-local exit_chance = 25 + 10*count_pan_runes()
-local floor_chance = 100 - exit_chance
-kfeat("O = exit_through_abyss w:" .. exit_chance ..
-      " / floor w:" .. floor_chance)
-}}
-MAP
-O
-ENDMAP
-
 
 ##############################################################################
 # Pan Demon Lairs
@@ -1636,11 +1611,12 @@ ENDMAP
 # Tagging these levels also ensures they won't be generated in the main
 # dungeon.
 #
-# The first block consists of repeating vaults featuring a rune and Pan lord.
+# The first block consists of repeating vaults featuring a possible rune and
+# Pan lord.
 # TAG: allow_dup
-# : pan_demonic(_G, 'P', true)     -- place the rune with a pandemonium lord
-# : pan_demonic(_G, 'P')           -- place the rune without lord; have to
-#                                  -- put down the Pan lord manually
+# : pan_demonic_rune(_G, 'P', true) -- place the rune with a pandemonium lord
+# : pan_demonic_rune(_G, 'P')       -- place the rune without lord; have to
+#                                   -- put down the Pan lord manually
 #
 # Of these maps, rand_demon_1 to rand_demon_9 are ancient heritage.
 
@@ -2593,7 +2569,7 @@ ENDMAP
 # If you already have the demonic rune, it's got a selection of randarts for
 # you instead.
 NAME:    nicolae_pan_bazaar_rune
-TAGS:    patrolling transparent no_item_gen
+TAGS:    patrolling transparent no_item_gen pan_lair
 WEIGHT:  5
 ORIENT:  float
 {{
@@ -2716,7 +2692,7 @@ epilogue{{
 
 # Concept inherited from lemuel_draining_boxes.
 NAME:   regret_index_pan_draining_boxed
-TAGS:   pan_fixed_rune_boxes pan_fixed_lure_boxes transparent
+TAGS:   pan_fixed_rune_boxes pan_fixed_lure_boxes transparent pan_lair
 ORIENT: float
 MONS:   pandemonium lord, ghost moth
 MONS:   demonspawn soul scholar, sin beast, any demon, wyrmhole
@@ -2812,7 +2788,7 @@ ENDMAP
 ###################################
 
 NAME:    lemuel_hellion_island
-TAGS:    pan_fixed_rune_hellions pan_fixed_lure_hellions
+TAGS:    pan_fixed_rune_hellions pan_fixed_lure_hellions pan_lair
 ORIENT:  float
 MONS:    fire bat, hellion, hellephant
 KMONS:   O = pandemonium lord
@@ -2890,7 +2866,7 @@ ENDMAP
 ########################################
 
 NAME:    lemuel_hall_of_pain
-TAGS:    pan_fixed_rune_pain pan_fixed_lure_pain
+TAGS:    pan_fixed_rune_pain pan_fixed_lure_pain pan_lair
 ORIENT:  float
 MONS:    pandemonium lord, brimstone fiend
 MONS:    tormentor, smoke demon, any demon
@@ -2958,7 +2934,7 @@ ENDMAP
 ########################################
 
 NAME:   grunt_pan_frozen_over
-TAGS:   pan_fixed_rune_frozen pan_fixed_lure_frozen
+TAGS:   pan_fixed_rune_frozen pan_fixed_lure_frozen pan_lair
 TAGS:   no_pool_fixup no_monster_gen transparent
 ORIENT: float
 MONS:   blizzard demon, demonspawn soul scholar
@@ -3050,7 +3026,7 @@ ENDMAP
 ########################################
 
 NAME:    pan_disco_hall
-TAGS:    pan_fixed_rune_disco pan_fixed_lure_disco no_rotate
+TAGS:    pan_fixed_rune_disco pan_fixed_lure_disco no_rotate pan_lair
 ORIENT:  southeast
 MONS:    rakshasa, demonspawn corrupter, demonspawn blood saint
 MONS:    dancing weapon ; demon trident good_item ego:distortion
@@ -3865,33 +3841,6 @@ MAP
 ...............
 ENDMAP
 
-NAME:    nicolae_pan_sick_transit
-TAGS:    transparent extra decor allow_dup pandec
-DEPTH:   Pan
-SHUFFLE: Aai/Bbj/Cck/Ddl/Eem/Ffn/Ggo/Hhp, Ffn/Qqr/Qqr, Ggo/Sst/Sst
-SHUFFLE: Hhp/Uuv/Uuv
-SUBST:   ABCDFGHijklnop = x, abcdfgh = -, EQSU = @, emqrstuv = .
-SUBST:   I : x., J : x., K : x., L: x., M: x., N : x.
-KFEAT:   - = transit_pandemonium w:36 / trap_teleport_permanent w:1 / \
-             exit_pandemonium w:1 / exit_through_abyss w:1
-MAP
-    xxxAxxx
-   xxxxaxxxx
-  Hpx.....xjB
- xph..I.I..bjx
-xxx..KJ.JK..xxx
-xx..KLM.MLK..xx
-xx.IJMN.NMJI.xx
-Gg...........cC
-xx.IJMN.NMJI.xx
-xx..KLM.MLK..xx
-xxx..KJ.JK..xxx
- xnf..I.I..dlx
-  Fnx.....xlD
-   xxxxexxxx
-    xxxExxx
-ENDMAP
-
 NAME: nicolae_pan_strange_glyphs
 TAGS: allow_dup luniq transparent decor extra pandec
 DEPTH: Pan
@@ -4263,7 +4212,7 @@ ENDMAP
 # portal vault (for pan, even).
 #
 NAME:   evilmike_holy_pan
-TAGS:   no_pool_fixup
+TAGS:   no_pool_fixup pan_lair
 ORIENT: encompass
 MONS:   angel
 MONS:   cherub

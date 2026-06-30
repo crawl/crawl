@@ -388,6 +388,24 @@ void package::delete_chunk(const string &name)
     directory.erase(name);
 }
 
+void package::rename_chunk(const string &name, const string &newname)
+{
+    if (name == newname || !has_chunk(name))
+        return;
+
+    vector<char> buf;
+    {
+        chunk_reader in(this, name);
+        in.read_all(buf);
+    }
+    {
+        chunk_writer out(this, newname);
+        if (!buf.empty())
+            out.write(&buf[0], buf.size());
+    }
+    delete_chunk(name);
+}
+
 plen_t package::write_directory()
 {
     delete_chunk("");

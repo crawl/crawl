@@ -381,11 +381,7 @@ DEPTH:    D:3-, Depths, Crypt, Zot, Pan, Geh, Coc, Dis, Tar
 WEIGHT:   2
 KMONS:    q = lurking_horror
 KFEAT:    p = altar_lugonu
-: if you.in_branch("Pandemonium") then
-KFEAT:    r = exit_through_abyss
-: else
 KFEAT:    r = enter_abyss
-: end
 : if crawl.coinflip() then
 SUBST:    ' = xxx'.
 : else

@@ -899,8 +899,7 @@ SHUFFLE: pqy / uuu
 SUBST:   pq = x
 SUBST:   y = +
 SUBST:   ruz = .
-SUBST:   A : .:35 I:5 Y:10
-KFEAT:   I = exit_pandemonium
+SUBST:   A : .:40 Y:10
 MAP
    ..   ..
   .........

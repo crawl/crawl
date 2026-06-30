@@ -241,8 +241,8 @@ const Branch branches[NUM_BRANCHES] =
       'J', { RUNE_ABYSSAL }, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
       {} },
 
-    { BRANCH_PANDEMONIUM, NUM_BRANCHES, -1, -1, 1, 24,
-      brflag::no_x_level_travel,
+    { BRANCH_PANDEMONIUM, NUM_BRANCHES, -1, -1, 11, 24,
+      brflag::no_x_level_travel | brflag::no_shafts,
       DNGN_ENTER_PANDEMONIUM, DNGN_EXIT_PANDEMONIUM, DNGN_TRANSIT_PANDEMONIUM,
       "Pandemonium", "Pandemonium", "Pan",
       "You enter the halls of Pandemonium!\n"

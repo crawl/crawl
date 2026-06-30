@@ -54,6 +54,7 @@ enum daction_type
     DACT_REMOVE_IGNIS_ALTARS,
     DACT_BEOGH_VENGEANCE_CLEANUP,
     DACT_BANE_MORTALITY_CLEANUP,
+    DACT_REMOVE_PAN_GATES,
     NUM_DACTIONS,
     // If you want to add a new daction, you need to
     // add a corresponding entry to *daction_names[]

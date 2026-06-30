@@ -408,14 +408,6 @@ TAGS:   uniq_open_layout
         end
     end
 
-    -- Do we still want this special case here?
-    if you.where() == "Pan" and crawl.coinflip() then
-        mapgrd[40][36] = 'O'
-        mapgrd[41][36] = 'O'
-        nsubst('O = 1:O / *:.')
-        kfeat('O = exit_through_abyss')
-    end
-
     theme.level_material(_G)
 }}
 # Enforce minimum floor size - otherwise we get very tiny floors sometimes
