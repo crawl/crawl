@@ -447,17 +447,11 @@ static tileidx_t _pick_dngn_tile_multi(
         total += candidate.second;
 
     int rand1 = rand % total;
-    int rand2 = rand / total;
 
     for (const pair<tileidx_t, int>& candidate : candidates)
     {
         if (rand1 < candidate.second)
-        {
-            // XXX: this should be for any animated tile
-            if (is_torch_tile(candidate.first))
-                return candidate.first;
-            return pick_dngn_tile(candidate.first, rand2);
-        }
+            return candidate.first;
         rand1 -= candidate.second;
     }
 
@@ -591,7 +585,13 @@ void tile_init_flavour(const coord_def &gc, const int domino)
                 _get_depths_wall_tiles_by_depth(you.depth, tile_candidates);
             else
                 _get_dungeon_wall_tiles_by_depth(you.depth, tile_candidates);
-            tile_env.flv(gc).wall = _pick_dngn_tile_multi(tile_candidates, rand2);
+            int rand3 = hash_with_seed(INT_MAX, seed, 2);
+            tileidx_t wall = _pick_dngn_tile_multi(tile_candidates, rand3);
+            // XXX: this should be for any animated tile not just torches
+            if (is_torch_tile(wall))
+                tile_env.flv(gc).wall = wall;
+            else
+                tile_env.flv(gc).wall = pick_dngn_tile(wall, rand2);
         }
         else
         {
@@ -603,7 +603,13 @@ void tile_init_flavour(const coord_def &gc, const int domino)
         }
     }
     else
-        tile_env.flv(gc).wall = pick_dngn_tile(tile_env.flv(gc).wall, rand2);
+    {
+        // XXX: this should be for any animated tile not just torches
+        tileidx_t wall = tile_env.flv(gc).wall;
+        if (!is_torch_tile(wall))
+            tile_env.flv(gc).wall = pick_dngn_tile(wall, rand2);
+    }
+        
 
     _init_feat_flavour(tile_env.flv(gc).feat, env.grid(gc));
 
