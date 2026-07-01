@@ -1042,6 +1042,7 @@ PLACE:  D:2
 WEIGHT: 1000000
 KMONS:  op = plant
 KMONS:  P = bush
+KMONS:  Y = Jessica
 KMONS:  1 = goblin / hobgoblin / kobold
 KMONS:  2 = adder / gnoll / hound
 KMONS:  3 = goblin / hobgoblin / kobold
@@ -1049,6 +1050,10 @@ KMONS:  4 = orc / hound / kobold / goblin / hobgoblin / gnoll
 KMONS:  5 = goblin / hobgoblin / kobold
 KMONS:  6 = adder / gnoll / hound
 KFEAT:  B = cache_of_baked_goods
+KFEAT:  S = granite_statue
+KFEAT:  _ = altar_ecumenical
+KFEAT:  T = altar_ecumenical
+KFEAT:  Z = altar_ecumenical
 KITEM:  o5 = gold / nothing w:1000
 SUBST:  M = tww.!, p = pP!!!!!
 NSUBST: 1 = 1:1 / *:., H = 20:H / 5:% / 160:. / * = .:25 %:1 4
@@ -1082,29 +1087,29 @@ xtttp!!!wcHHHHccccccccccccHHHHcw!!!!!!.!!!!!!!!wwwwwwww.FFFFFFFFFFFFFFFFFFF!!xxx
 xtttp!!!wcccHHHHHHHHHHHHHHHHcccw!!!!!...!!!!!!!!!wwwwwww!!!!!!!!!!!!!!!!!!!!!xxx
 xttpp!!!wRRcHcccccc++ccccccHcRRww!!!..G..!!!!!!!!wwwwwwwFFFFFFFFFFFFFFFFFFF!!!!x
 xttp!!!!wRRcHc|**c2HHHHHH2cHcRRww!!cc...cc!!!!!!wwwwwwww!!!!!!!!!!!!!!!!!!!!!!!x
-xttp!!!!wRRcHc***+HHHHHH3HcHcRRw!!.cc...cc.!!!!!wwwwwwwwFFFFFFFFFFFFFFFFFFF!!!!x
+xttp!!!!wRRcHc***+HHHHHHYHcHcRRw!!.cc.S.cc.!!!!!wwwwwwwwFFFFFFFFFFFFFFFFFFF!!!!x
 xttp!!!wRRRcHc|**c2HHHHHH2cHcRRw!...........!!!!wwwwwwww!!!!!!!!!!!!!!!!!!!!!!!x
-xttpp!!wwRRcHccccccccccccccHcRR!..G...C...G..!!wwwwwwwwwwFFFFFFFFFFFFFFFFFF!!!!x
+xttpp!!wwRRcHccccccccccccccHcRR!..G.S.Z.S.G..!!wwwwwwwwwwFFFFFFFFFFFFFFFFFF!!!!x
 xtttpp!!wcccHHHHHH2HH2HHHHHHcccw!...........!!!wwwwwwwww!!!!!!!!!!!!!!!!!!!!!!!x
-xttttp!!wcHHHHccccHHHHccccHHHHcw!!.cc...cc.!!!!wwwwwwwwwFFFFFFFFFFFFFFFFFFF!!!!x
+xttttp!!wcHHHHccccHHHHccccHHHHcw!!.cc.S.cc.!!!!wwwwwwwwwFFFFFFFFFFFFFFFFFFF!!!!x
 xttttp!!wmHHHHcRRcHHHHcRRcHHHHmw!!!cc...cc!!!!wwwwwwwwww!!!!!!!!!!!!!!!!!!!!!!!x
 xttttp!!wmH3HHcRRcc++ccRRcHH3Hmw!!!!..G..!!!!wwwwwwwwwwwFFFFFFFFFFFFccccccc!!!!x
 xtttpp!!wcHHHHcRRRR..RRRRcHHHBcww!!!!...!!!!wwwwwwwwwwww!!!!!!!!!!!!cHHH}Hc!!!!x
 xtttppp!wccmmccRRRw..RwRRccmmccw!!!!!...!!!wwwwwwwwwwwwwFFFFFFFFFFFFcHHHHHc!!!!x
-xtttttppwwwwwwwwwww..wwwwwwwwwww!!!!!...!!wwwwwwww!!wwww.!!!!!!!!!!!c++cccc!!!!x
+xtttttppwwwwwwwwwww..wwwwwwwwwww!!!!!.S.!!wwwwwwww!!wwww.!!!!!!!!!!!c++cccc!!!!x
 xttttttpp!!!www!ww!..!!!!!!!!!!!!!!!!...!wwwwccc!!!!!wwwwFFFFFFFFFFFF..!!!!!!!!x
 xtttttttppppp!!!!!!..!cccc!!!!!!!!!!!...wwwwccHcc!!!!wwww!!!!!!!!!!!!..!!!!!!!tx
-xttttttttttttp!!!!!..!cH}c!!!!!!!!!!!...wwwccHHHcc!!wwwww!F!F!F!F!F!F..cccc!!!tx
+xttttttttttttp!!!!!..!cH}c!!!!!!!!!!!.S.wwwccHHHcc!!wwwww!F!F!F!F!F!F..cccc!!!tx
 xttttttttttpp!!!!!!..!cHHc!!!!!!!!!!!...wwwcHH}HHc!!wwwwwwF!F!F!F!F!F..+HHc!tttx
 xttttttttppp!!!!!!!..!c+cc!!!!!!cccc!...wwwccHHHcc!!wwwwwwF!F!F!F!F!F..cH}c!tttx
-xtttttttp!!!!!!!!!!.....!!!!!!!!c}Hc!...wwwwccHc+.!!wwwww!F!F!F!F!F!F..cccc!tttx
+xtttttttp!!!!!!!!!!S....!!!!!!!!c}Hc!.S.wwwwccHc+.!!wwwww!F!F!F!F!F!F..cccc!tttx
 xttttttp!!!cccccc.......!!!!!!!!cHHc!...wwww!ccc..!!wwwww!F!F!F!F!F!F..!!!!!tttx
 xttttttp!!!cHHHH+....!!!!!cccc!!cc+c!...wwww!!!!..!!wwwww!F!F!F!F!F!F..!!!tttttx
-xttttttp!!!cH}HHc!!..!!!!!cH}c!!!..!!...wwww!!!!..!!wwwww!F!F!F!F!F!F..!!ttttttx
+xttttttp!!!cH}HHc!!..!!!!!cH}c!!!..!!.S.wwww!!!!..!!wwwww!F!F!F!F!F!F..!!ttttttx
 cccctt...!!cHHHHc!!..!!!!!cHHc!!!..!!...wwww!!!!..!!wwwww!F!F!F!F!F!F..t!ttttttx
 cHHct.....!cHHHHc!!.3!!!!!c+cc!!!..!!...wwww!!!!..!wwwww!!F!F!F!F!F!F..t!!tttttx
-c}H+..ttp..cccccc!!.T..................................................tt!!ttttx
-cccctttpp!.............................................................tt!!!tttx
+c}H+..ttp..cccccc!!.Z.................S................................tt!!ttttx
+cccctttpp!..................................................S..........tt!!!tttx
  xtttttp!!!..........!!!!!!..!!!!..!!!!!wwww!!!!!!wwwwww!!!...!!!!!!!tttt!t!!ttx
  xtttttp!!!!cc+c!!!..!!!!!cc+c!!c+cc!!!!wwwww!!!!!wwwww!!!!...!!!!!!!ttt!ttt!ttx
  xttttpp!!!!cHHc!!!..!!!!!cHHc!!cHHc!!!wwwwww!!!!wwwwww!!!c+++c!!!!!!ttt!ttt!ttx
