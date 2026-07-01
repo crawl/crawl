@@ -3092,6 +3092,10 @@ string cannot_read_item_reason(const item_def *item, bool temp, bool ident,
 {
     if (god_forbids)
         *god_forbids = false;
+
+    if (you.has_mutation(MUT_SILENCE_AURA))
+        return "Your natural silence prevents reading scrolls.";
+
     // convoluted ordering is because the general checks below need to go before
     // the item id check, but non-temp messages go before general checks
     if (item && item->base_type == OBJ_SCROLLS
