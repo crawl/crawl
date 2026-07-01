@@ -1,8 +1,9 @@
 [![Build Status](https://github.com/crawl/crawl/workflows/Build/badge.svg)](https://github.com/crawl/crawl/actions/)
 
-# Dungeon Crawl Stone Soup
+# Dungeon Crawl Chili
 
-Dungeon Crawl Stone Soup is a game of dungeon exploration, combat and magic, involving characters of diverse skills, worshipping deities of great power and caprice. To win, you'll need to be a master of tactics and strategy, and prevail against overwhelming odds.
+Dungeon Crawl Chili is a Dungeon Crawl fork based on DCSS v0.34.
+It's a game of dungeon exploration, combat and magic, involving characters of diverse skills, worshipping deities of great power and caprice. To win, you'll need to be a master of tactics and strategy, and prevail against overwhelming odds.
 
 ## Contents
 
@@ -13,7 +14,7 @@ Dungeon Crawl Stone Soup is a game of dungeon exploration, combat and magic, inv
 
 ## How to Play
 
-For information on how to install the game, please visit [the installation documentation](crawl-ref/INSTALL.md).
+For information on how to install the game locally, please visit [the installation documentation](crawl-ref/INSTALL.md).
 
 If you'd like to dive in immediately, we suggest one of:
 
@@ -26,7 +27,7 @@ There is also an ingame list of frequently asked questions which you can access 
 
 #### Internet Play
 
-You can play Crawl online, competing with other players or watching them. Click "Play Online Now!" on [the Crawl homepage](https://crawl.develz.org/) to find your closest server. You can play in your browser or over SSH.
+You can play Dungeon Crawl forkes online, competing with other players or watching them. Click "Play Online Now!" on [the Crawl homepage](https://crawl.develz.org/) to find your closest server. You can play in your browser or over SSH.
 
 #### Offline Play
 

@@ -8,14 +8,14 @@
 // change these defs for forks (please)
 // (there are various places in the build system that will also need manual
 // attention, as well as the main menu, etc)
-#define CRAWL "Dungeon Crawl Stone Soup"
-#define CRAWL_SHORT "Crawl"
+#define CRAWL "Dungeon Crawl Chili"
+#define CRAWL_SHORT "Chili"
 // shown in crashes:
-#define CRAWL_BUG_REPORT "https://github.com/crawl/crawl/issues"
+#define CRAWL_BUG_REPORT "https://github.com/DungeonCrawl-org/DungeonCrawlChili/issues"
 // reminder, modifications of the following should obey the licensing, you
 // can't just replace this with your name. Also, this should fit (maybe with
 // multiple lines) in 80 chars.
-#define CRAWL_COPYRIGHT "(c) Copyright 1997-2002 Linley Henzell, 2002-2025 Crawl DevTeam"
+#define CRAWL_COPYRIGHT "(c) Copyright 1997-2002 Linley Henzell, 2002-2025 Crawl DevTeam, 2026- Dungeon Crawl Chili DevTeam"
 
 #ifdef USE_TILE_WEB
 #  define CRAWL_BUILD_NAME "Console/Webtiles"
