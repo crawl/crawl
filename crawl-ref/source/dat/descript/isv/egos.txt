@@ -14,9 +14,9 @@ Každy udar orųžjem s tutym začarovańjem imaje råzny, slučajny efekt.
 %%%%
 concussion (concuss) weapon ego
 
-Ono phaje tyh, kogo razi, nazadno, kråtko oglušajųći v procesu. Jestli ono phaje
-jih k tvŕdomu objektu, oni nabyvajųt dodatnų tretinu škody vśakoj škody, ktora
-probivaje jih brȯnjų.
+Ono odphaje tyh, kogo razi, nazadno, kråtko oglušajųći v procesu. Jestli ono
+odphaje jih k tvŕdomu objektu, oni nabyvajųt dodatnų tretinu škody vśakoj škody,
+ktora probivaje jih brȯnjų.
 %%%%
 distortion (distort) weapon ego
 
@@ -202,14 +202,13 @@ Ono davaje tobě možnost́ lětati.
 %%%%
 glass (Glass) armour ego
 
-It may vitrify enemies when you injure them, making them more vulnerable to
-further damage. Your Evocations skill increases the likelihood and duration of
-vitrification.
+Pri naneseńju škody neprijateljam oni stavajųt sę krěhkymi kako stěklo. Tvoje
+uměńje Evokacij povyšaje věrojętnost́ i trvańje stėklěnjeńja.
 %%%%
 guile (Guile) armour ego
 
-It weakens both your willpower and the willpower of everyone you hex, the latter
-of which is increased by your Evocations skill.
+Ono oslabjaje tvojų i neprijateljskų silų volje, kȯgda ty koristaješ protiv njih
+proklęt́ja, a takože usiljaje jih efekt pri povyšeńju uměńja Evokacij.
 %%%%
 harm (Harm) armour ego
 
@@ -234,24 +233,24 @@ Ono povyšaje tvoj råzum (Int +3).
 %%%%
 invisibility (+Inv) armour ego
 
-When activated, it grants you temporary invisibility, but also drains your
-maximum health.
+Kȯgda jest aktivovano, ono davaje tobě dočasnų nevidimost́, ale takože osušaje
+tvojų maksimaĺnų rezervų zdråvja.
 %%%%
 light (Light) armour ego
 
-It surrounds you with a glowing halo, revealing invisible creatures, increasing
-accuracy against all within it other than you, and reducing your stealth.
+Ono okrųžaje tebe blěstějųćejų aurelojų, izjavjaje nevidimyh stvorov, povyšaje
+tvojų akuratnost́ protiv vsih i smėnšaje tvojų skrytost́.
 %%%%
 mayhem (Mayhem) armour ego
 
-It causes witnesses of your kills to go into a frenzy, attacking everything
-nearby with great strength and speed.
+Svědki vaših ubijstv obezuměvajųt, atakujųći vsečto jest poblizu s velikojų
+silojų i bystrost́jų.
 %%%%
 mesmerism (Mesmerism) armour ego
 
-When you are struck in melee, it briefly dazes all nearby enemies, then must
-recharge by standing still for a while. Its duration, radius, and recharge
-speed are improved by your Evocations skill.
+Pri poražeńju bližnjejų atakojų, ono dočasno otųpěvaje vsih bližnjih neprijateljev,
+poslě izkoristańja potrěbno ponovno zapȯlnjeńje. Jego trvańje, radius i bystrost́
+zapȯlnjeńja povyšajųt sę tvojim uměńjem Evokacij.
 %%%%
 parrying (Parrying) armour ego
 
@@ -276,10 +275,10 @@ Ono zaščićaje tebe od vęćiństva izvorov škody (AC +3).
 %%%%
 pyromania (Pyromania) armour ego
 
-It enhances your Fire magic and may unleash a blast of flames around you
-whenever you kill an enemy by any means other than an attack. The explosion
-chance and damage both scale with Evocations and it may trigger no more than
-once each turn.
+Ono usiljaje tvojų Ognjenų magijų i može izsvoboditi potok plåmenjev okolo
+tebe, kȯgda ty ubivaješ neprijatelja ne atakojų. Věrojętnost́ eksplozije i
+jų škoda sųt zavisne od Evokacij i ono ne može aktivovati sę vyše než
+jednokråtno za každy ręd.
 %%%%
 rampaging (Rampage) armour ego
 
@@ -300,8 +299,8 @@ Ono zaščićaje tebe od oboh efektov ognja i hlåda.
 %%%%
 resonance (Resonance) armour ego
 
-It improves the success rate of your Forgecraft spells and enhances your melee
-attacks proportionally to your Forgecraft skill.
+Ono ulěpšaje šans uspěha tvojih zaklinanij Kovačnogo Děla i usiljaje tvoje bližnje
+ataky proporcionaĺno tvojemų uměńju Kovačnogo Děla.
 %%%%
 see invisible (SInv) armour ego
 
@@ -313,9 +312,9 @@ Ono smėnšaje daljnost́, na ktoroj ty možeš viděti u byti uviděnym.
 %%%%
 sniping (Snipe) armour ego
 
-It increases your damage by an additional 50% with ranged and thrown weapons
-against incapacitated targets. Incapacitated targets are those that are asleep,
-paralysed, petrified, confused or caught in a net.
+Ono povyšaje tvojų škodų na dodatne 50% za daljnje i metajeme orųžja protiv
+obezdviganyh cěljev. Obezdvigane cělji sųt te, kto zasnųl, paralizovany,
+okamenjeny, zaměšany ili shvaćeny v sětkų.
 %%%%
 spirit shield (Spirit) armour ego
 
@@ -323,10 +322,10 @@ Ono råzděljaje nabytų škodų među tvojimi rezervami zdråvja i magije.
 %%%%
 stardust (Stardust) armour ego
 
-It conjures a barrage of shooting stars the first time you spend MP to use a
-spell or ability each battle, recharging only when your MP is restored and no
-more enemies remain. Your Evocations skill increases the number and damage of
-the stars and MP spent further increases damage.
+Ono čaruje grad padajųćih zvězd, kȯgda ty v pŕvy raz v boju tratiš MP na
+koristańje zaklinańja ili sposobnosti, i povtorno možno to sdělati jedino
+kȯgda ty izlěčiš MP i ne uvidiš neprijateljev. Tvoje uměńje Evokacij povyšaje
+kolikost́ zvězd, a iztraćene MP povyšajųt škodų zvězd.
 %%%%
 stealth (Stlth+) armour ego
 
@@ -350,10 +349,9 @@ Ty vpadaješ v běsnost́, kȯgda dělaješ bližnje ataky (šans 20%).
 %%%%
 atropa-tipped (atropa) missile ego
 
-It is tipped with a substance that causes blindness and brief confusion.
+Jego konėc jest orošeny substancijejų, ktora pričinjaje slěpost́ i dočasno zaměšańje.
 
-The chance of successfully applying its effect increases with your Throwing and
-Stealth skill.
+Šans uspěšnogo naložeńja efektov povyšaje sę tvojimi uměńjami Metańja i Skrytosti.
 %%%%
 chaos (chaos) missile ego
 
@@ -361,23 +359,22 @@ Kȯgda jest metnųto, ono pričinjaje slučajny efekt.
 %%%%
 curare-tipped (curare) missile ego
 
-It is tipped with a substance that causes asphyxiation, dealing direct damage as
-well as poisoning and slowing those it strikes.
+Jego konėc jest orošeny substancijejų, ktora pričinjaje udušeńje i pręmų škodų,
+a takože otravjaje i spomaljaje tyh, kogo poražaje.
 
-It is twice as likely to be destroyed on impact as other darts.
+Šans jego izguby pri poražeńju dvukråtno vyše než u drugyh tŕnov.
 %%%%
 datura-tipped (datura) missile ego
 
-It is tipped with a substance that sends those it hits into a mindless frenzy,
-attacking friend and foe alike.
+Jego konėc jest orošeny substancijejų, ktora vgone tyh, kogo poražaje, v bezumnų
+běsnost́, prinuđajųći jih atakovati i prijateljev, i neprijateljev.
 
-The chance of successfully applying its effect increases with your Throwing and
-Stealth skill.
+Šans uspěšnogo naložeńja efektov povyšaje sę tvojimi uměńjami Metańja i Skrytosti.
 %%%%
 disjunction (disjunct) missile ego
 
-It causes any target it hits to become temporarily untethered in space, blinking
-away from you for several turns and taking minor damage each time it does so.
+Ono prinuđaje vśakogo poraženogo cělja izčeznųti v prostoru, migajųći od
+tebe na několiko rędov i nabyvajųći malų škodų, kȯgda dělaje to.
 %%%%
 dispersal (disperse) missile ego
 
