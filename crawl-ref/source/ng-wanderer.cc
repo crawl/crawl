@@ -517,10 +517,13 @@ static void _decent_potion_or_scroll()
     // xxx: could we use is_useless_item here? (not without dummy items...?)
     const vector<pair<pair<object_class_type, int>, int>> options = {
         { { OBJ_SCROLLS, SCR_TELEPORTATION },
-            you.stasis() ? 0 : 6 },
-        { { OBJ_SCROLLS, SCR_FOG }, 6 },
-        { { OBJ_SCROLLS, SCR_VULNERABILITY }, 2 },
-        { { OBJ_SCROLLS, SCR_SILENCE }, 2 },
+            (you.stasis() || you.has_mutation(MUT_SILENCE_AURA)) ? 0 : 6 },
+        { { OBJ_SCROLLS, SCR_FOG }, 
+            you.has_mutation(MUT_SILENCE_AURA) ? 0 : 6 },
+        { { OBJ_SCROLLS, SCR_VULNERABILITY }, 
+            you.has_mutation(MUT_SILENCE_AURA) ? 0 : 2 },
+        { { OBJ_SCROLLS, SCR_SILENCE }, 
+            you.has_mutation(MUT_SILENCE_AURA) ? 0 : 2 },
         { { OBJ_POTIONS, POT_CURING },
             you.has_mutation(MUT_NO_DRINK) ? 0 : 5 },
         { { OBJ_POTIONS, POT_LIGNIFY },
