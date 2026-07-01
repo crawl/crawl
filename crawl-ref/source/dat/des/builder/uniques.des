@@ -284,6 +284,10 @@ NAME:   uniq_urug
 DEPTH:  D:10-13, Orc, Lair
 : place_unique(_G, "Urug")
 
+NAME:   uniq_goji
+DEPTH:  D:12-14, Lair:2-, Orc
+: place_unique(_G, "Goji")
+
 NAME:   uniq_agnes
 DEPTH:  D:14-, Elf, !Elf:$, Snake, Spider
 : place_unique(_G, "Agnes")

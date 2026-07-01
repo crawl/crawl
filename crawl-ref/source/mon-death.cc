@@ -3546,6 +3546,11 @@ item_def* monster_die(monster& mons, killer_type killer,
             daddy_corpse = mounted_kill(&mons, MONS_HORNET, killer, killer_index);
             mons.type = MONS_SPRIGGAN;
         }
+        else if (mons.type == MONS_GOJI)
+        {
+            daddy_corpse = mounted_kill(&mons, MONS_GHOST_MOTH, killer, killer_index);
+            mons.type = MONS_GOJI_UNMOUNTED;
+        }
         corpse = place_monster_corpse(mons);
         if (!corpse)
             corpse = daddy_corpse;

@@ -1,0 +1,22 @@
+name: "Goji"
+glyph: {char: "g", colour: lightblue}
+flags: [flies, fighter, speaks, unique, male, warm_blood]
+exp: 900
+species: goblin
+will: 80
+attacks:
+ - {type: hit, damage: 20}
+ - {type: sting, damage: 16}
+hd: 9
+hp_10x: 920
+ac: 6
+ev: 10
+has_corpse: true
+shout: shout
+intelligence: human
+speed: 12
+energy: {attack: 12}
+uses: starting_equipment
+size: large
+shape: humanoid
+spells: goji

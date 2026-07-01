@@ -2285,6 +2285,15 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 return TILEP_MONS_GOBLIN_RIDER_SPEARLESS;
         }
 
+        case MONS_GOJI:
+        {
+            const item_def * const weapon = mon.inv[MSLOT_WEAPON].get();
+            if (weapon && weapon->is_type(OBJ_WEAPONS, WPN_SPEAR))
+                return you.can_see_invisible() ? TILEP_MONS_GOJI_SEEN : TILEP_MONS_GOJI;
+            else
+                return you.can_see_invisible() ? TILEP_MONS_GOJI_SEEN_SPEARLESS : TILEP_MONS_GOJI_SPEARLESS;
+        }
+
         case MONS_REAPER:
         {
             const item_def * const weapon = mon.inv[MSLOT_WEAPON].get();

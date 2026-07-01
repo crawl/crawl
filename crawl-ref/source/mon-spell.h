@@ -2017,6 +2017,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_GOJI,
+      {
+       { SPELL_ANTIMAGIC_GAZE, 40, MON_SPELL_MAGICAL | MON_SPELL_INSTANT },
+      }
+    },
+
     {  MST_JORGRUN,
       {
        { SPELL_LRD, 16, MON_SPELL_WIZARD },

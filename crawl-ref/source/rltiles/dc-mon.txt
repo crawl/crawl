@@ -1274,6 +1274,10 @@ ijyb MONS_IJYB
 %rim 0
 robin MONS_ROBIN
 sprozz MONS_SPROZZ
+goji MONS_GOJI
+goji_spearless MONS_GOJI_SPEARLESS
+goji_seen MONS_GOJI_SEEN
+goji_seen_spearless MONS_GOJI_SEEN_SPEARLESS
 %rim 1
 crazy_yiuf MONS_CRAZY_YIUF
 grum MONS_GRUM

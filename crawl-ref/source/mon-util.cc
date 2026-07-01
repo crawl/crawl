@@ -156,6 +156,7 @@ void init_mon_name_cache()
         // insert, depending on which should take precedence. Some
         // uniques of multiple forms can get away with this, though.
         if (mon == MONS_BAI_SUZHEN_DRAGON
+            || mon == MONS_GOJI_UNMOUNTED
             || mon != MONS_SERPENT_OF_HELL
                && mons_species(mon) == MONS_SERPENT_OF_HELL)
         {

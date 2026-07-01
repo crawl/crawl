@@ -1670,6 +1670,10 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
             slot = SLOT_BODY_ARMOUR;
         }
         break;
+    case ARM_SCARF:
+        if (base_type == MONS_GOJI)
+            slot = SLOT_BODY_ARMOUR;
+        break;
     case ARM_GLOVES:
         if (base_type == MONS_NIKOLA)
             slot = SLOT_OFFHAND;
@@ -6153,14 +6157,15 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     {
         place_cloud(CLOUD_FIRE, pos(), 20 + random2(15), oppressor, 5);
     }
-    else if (type == MONS_SPRIGGAN_RIDER || type == MONS_GOBLIN_RIDER)
+    else if (type == MONS_SPRIGGAN_RIDER || type == MONS_GOBLIN_RIDER
+             || type == MONS_GOJI)
     {
         if (hit_points + damage > max_hit_points / 2)
             damage = max_hit_points / 2 - hit_points;
         if (damage > 0 && x_chance_in_y(damage, damage + hit_points)
             && flavour != BEAM_TORMENT_DAMAGE)
         {
-            bool fly_died = coinflip();
+            bool fly_died = type != MONS_GOJI && coinflip();
             monster_type dead_mon     = MONS_PROGRAM_BUG;
             int old_hp                = hit_points;
             auto old_flags            = flags;
@@ -6182,6 +6187,11 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 type = fly_died ? MONS_GOBLIN : MONS_WYVERN;
                 dead_mon = fly_died ? MONS_WYVERN : MONS_GOBLIN;
             }
+            else if (type == MONS_GOJI)
+            {
+                type = MONS_GHOST_MOTH;
+                dead_mon = MONS_GOJI_UNMOUNTED;
+            }
 
             define_monster(*this);
             hit_points = min(old_hp, hit_points);
@@ -6189,6 +6199,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             enchantments   = old_ench;
             ench_cache     = old_ench_cache;
             ench_countdown = old_ench_countdown;
+            if (type == MONS_GHOST_MOTH)
+                add_ench(mon_enchant(ENCH_INVIS, this, INFINITE_DURATION));
             // Keep the rider's name, if it had one (Mercenary card).
             if (!old_name.empty())
                 mname = old_name;
