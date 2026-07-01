@@ -23,57 +23,107 @@ function init_abyss_exit(e, glyph)
   end
 end
 
-function abyss_entry(e, glyph)
-  e.tags("extra luniq_enter_abyss chance_enter_abyss")
-  e.depth_chance("Depths:1-2", 3333)
-  e.depth_chance("Depths:3",   10000)
-  e.depth_chance("Depths:4-",  3333)
--- start TAG_MAJOR_VERSION == 34
-  e.depth_chance("D:21-24", 3333)
-  e.depth_chance("D:25",    10000)
-  e.depth_chance("D:26-",   3333)
--- end TAG_MAJOR_VERSION
+function abyss_entry(e, glyph, category, transparent)
+  e.tags("nolayout_encompass")
+  e.tags("unrand")
+  e.tags("extra")
+  e.tags("patrolling")
+  e.tags("abyss_entry_" .. category)
+  if transparent then
+    e.tags("transparent")
+  end
   e.kfeat(glyph .. ' = enter_abyss')
+  e.tile("c : dngn_stone_wall_blue / dngn_stone_wall_magenta")
+  e.tile("t : dngn_demonic_tree_1 / dngn_demonic_tree_7 / \
+              dngn_demonic_tree_9 / dngn_demonic_tree_11")
+  e.tile("b : dngn_crystal_cyan / dngn_crystal_magenta")
+end
+
+-- A function for standardizing randomization with the newer entry vault set.
+function index_abyss_entry_randomization(e, clear)
+  e.kfeat("t = demonic_tree")
+  e.kfeat("z = x")
+  e.shuffle("zc' / zc' / yc- / yc- / yb'")
+  e.subst("C : cxx")
+  e.subst("y = x")
+  e.subst("? : ccbTUVtG")
+  e.subst("! : cbttGGU")
+  e.subst("X : x``")
+  e.subst("Y : x``")
+  e.subst("Z : x``")
+  if clear then
+    e.clear("`")
+  end
+  e.tile("G = dngn_statue_maw / dngn_statue_tentacles / dngn_statue_demonic_bust")
+  e.ftile("OA-t : floor_nerves_lightblue / floor_nerves_magenta")
+  e.tile("z : wall_abyss_lightblue / wall_abyss_magenta")
 end
 }}
 
 ###############################################################################
 # Abyss entries.
-# 1/3 chance to appear on Depths floors and guaranteed on Depths:4.
+# To remix the old experience of seeing multiple Abyss entry vaults across
+# D:21-26 or Depths, this now uses a serial vault to place multiple entrances
+# across a single D floor, across three categories of monster presence.
 ###############################################################################
 
-default-depth: Depths, D:21-
+NAME:   serial_abyss_entrance
+TAGS:   extra no_dump chance_enter_abyss uniq_abyss_entrance nolayout_encompass
+DEPTH:  D:13-15
+CHANCE: 33% (D:13), 50% (D:14), 100% (D:15)
+# start TAG_MAJOR_VERSION == 34
+CHANCE: 33% (D:21-24, D:26), 100% (D:25)
+# end TAG_MAJOR_VERSION
+{{
+  local n, m, o = 1
+  if crawl.coinflip() then
+    n = 2
+    m = 0
+  end
+  hook("post_place", function()
+    dgn.place_maps{tag="abyss_entry_empty", count=n}
+    dgn.place_maps{tag="abyss_entry_sparse", count=m}
+    dgn.place_maps{tag="abyss_entry_threat", count=o}
+  end)
+}}
 
-# This one is the backup and the one used in encompass vaults.
-NAME: abyss_entry
-TAGS: allow_dup overwrite_floor_cell no_exits replace_portal transparent
-TAGS: fallback_enter_abyss
-WEIGHT: 50
-: abyss_entry(_G, 'O')
+# start TAG_MAJOR_VERSION == 34
+# This one is the backup that was used in encompass vaults. The D encompass
+# vaults now manually place Abyss entrances if need-be, and this now just 100%
+# covers save compat for games that cleared D without spawning the serial vault.
+NAME:  abyss_entry
+TAGS:  allow_dup overwrite_floor_cell no_exits replace_portal transparent
+TAGS:  fallback_enter_abyss uniq_abyss_entrance
+PLACE:  Depths:3
+KFEAT:  O = enter_abyss
 MAP
 O
 ENDMAP
+# end TAG_MAJOR_VERSION
+
+default-depth: D:13-
 
 NAME:    minmay_room_of_horrors
-TAGS:    nolayout_encompass luniq_hellpanabyss_threat_entry
-MONS:    small abomination, large abomination, unseen horror / chaos spawn
-KMONS:   _ = wyrmhole w:2 / nothing w:20
-SHUFFLE: 123
-: abyss_entry(_G, '_')
+KMONS:   1 = zombie
+KMONS:   2 = small abomination
+KMONS:   3 = brain worm
+KMONS:   _ = chaos spawn / shapeshifter
+SHUFFLE: 23
+: dgn.delayed_decay(_G, '123', 'place:Abyss:1 corpse')
+: abyss_entry(_G, '_', 'threat', true)
 MAP
-xxxxxx
+xxxxxc
 x3113x
 +1221x
 x1221x
 x311_x
-xxxxxx
+cxxxxx
 ENDMAP
 
 NAME:    abyss_entry_small_statue_room
-TAGS:    nolayout_encompass
 SUBST:   c : cx
+: abyss_entry(_G, 'O', 'empty', false)
 : tile("c = " .. crackle_def(_G))
-: abyss_entry(_G, 'O')
 MAP
 cxxxc
 xGOGx
@@ -81,15 +131,11 @@ cx+xc
 ENDMAP
 
 NAME:    abyss_entry_crystal
-TAGS:    nolayout_encompass
 KFEAT:   t = demonic_tree
 SHUFFLE: AB
 SUBST:   A : .:50 G:50 T U V Y t
 SUBST:   B : .:100 G
-TILE:    t : dngn_demonic_tree_1 / dngn_demonic_tree_7 / \
-             dngn_demonic_tree_9 / dngn_demonic_tree_11
-TILE:    b : dngn_crystal_blue / dngn_crystal_cyan
-: abyss_entry(_G, 'O')
+: abyss_entry(_G, 'O', 'empty', true)
 MAP
   xxxxx
  xxbbbxx
@@ -100,16 +146,13 @@ xb.....bx
 ENDMAP
 
 NAME:    abyss_entry_glasseish
-TAGS:    nolayout_encompass
 WEIGHT:  5
-: abyss_entry(_G, 'O')
-SUBST:   T : T12^S
-MONS:    tentacled starspawn / starcursed mass / wretched star
-MONS:    demonic plant
-KFEAT:   S = stone_arch
+MONS:    tentacled starspawn / starcursed mass / wretched star, demonic plant
 KFEAT:   ^ = trap_devourer
-KPROP:   Tl12^S = no_tele_into
-KMASK:   .O = !opaque
+SUBST:   T : Tl12^A
+KPROP:   Tl12^A = no_tele_into
+KMASK:   !l12^A = opaque
+: abyss_entry(_G, 'O', 'empty', true)
 MAP
 nnn nnn
 nTn.nTn
@@ -121,12 +164,12 @@ nnn nnn
 ENDMAP
 
 NAME:    abyss_entry_flame_altar
-TAGS:    nolayout_encompass
-: abyss_entry(_G, 'O')
+KMONS:   O = efreet / fire elemental w:25
+KFEAT:   _ = altar_lugonu
 SUBST:   A : deG
 : single_cloud(_G, "d", "flame", false)
 : single_cloud(_G, "e", "seething chaos", true)
-KFEAT:   _ = altar_lugonu
+: abyss_entry(_G, 'O', 'sparse', false)
 MAP
  bbb
 bbObb
@@ -135,13 +178,10 @@ bA_Ab
 ENDMAP
 
 NAME:    hangedman_abyss_entry_splay
-TAGS:    nolayout_encompass transparent
 KFEAT:   t = demonic_tree
 SHUFFLE: ABCDE
 SUBST:   A : tcxx.., B : tcxx.., CDE = x, F : ccxxb
-: abyss_entry(_G, 'O')
-TILE:   t : dngn_demonic_tree_1 / dngn_demonic_tree_7 / \
-            dngn_demonic_tree_9 / dngn_demonic_tree_11
+: abyss_entry(_G, 'O', 'empty', false)
 MAP
         xx..
         x.A.
@@ -159,42 +199,188 @@ x.x.x.F.xxx
 ENDMAP
 
 NAME:   nicolae_abyss_entry_one_way_or_another
-TAGS:   nolayout_encompass patrolling transparent
-# All of these have banishment in their spell sets.
-# One in ten chance they get a distortion weapon too.
-: local elfgear = "long sword ego:distortion w:25 | dagger ego:distortion | " ..
-:  "rapier ego:distortion | athame ego:distortion"
-MONS:   occultist, occultist ; robe . dagger ego:distortion / orc wizard
-MONS:   deep elf demonologist / deep elf sorcerer w:5
-: mons("deep elf demonologist ; robe . " .. elfgear .. " / " ..
-:      "deep elf sorcerer w:5 ; robe . " .. elfgear)
-NSUBST: 1 = 1:1 / 1 = 1:90 2 / 1 = 3:90 4 / *:'
-: abyss_entry(_G, 'O')
+WEIGHT: 5
+# One banisher and two mage types who can show up in the Abyss.
+MONS:   vampire, vampire ; leather armour . long sword ego:distortion
+MONS:   occultist, occultist ; robe . dagger ego:distortion
+MONS:   efreet, efreet ; scimitar ego:distortion
+NSUBST: 1 = 1:1 / 1:3 / 1 = 1:45 2:5 3:45 4:5 / 1 = 5:90 6 / *:'
+: abyss_entry(_G, 'O', 'threat', true)
 FTILE:  " = floor_pebble_blue
-FTILE:  '1234O : floor_mystic_chasm / floor_pebble_blue
+FTILE:  '123456O : floor_mystic_chasm / floor_pebble_blue
 MAP
    ......
   ..bbbb..
  ..b''''b..
 ..b''''''b..
-.b''bb1''b...
+.b''bb3''b...
 .""b'1O1'b"".
-...b''1bb''b.
+...b''3bb''b.
  ..b''''''b..
   ..b''''b..
    ..bbbb..
     ......
 ENDMAP
 
+####
+
+NAME:    regret_index_abyss_entry_inbetween
+: index_abyss_entry_randomization(_G, true)
+: abyss_entry(_G, 'O', 'empty', true)
+MAP
+        c
+        x
+        xx
+        x.x@
+       Zx..x
+       .zA..x
+      Y'xzxxxxc
+    X.'O'.X
+cxxxxzx'Y
+  x..Az.
+   x..xZ
+   @x.x
+     xx
+      x
+      c
+ENDMAP
+
+NAME:    regret_index_abyss_entry_starvergence
+: index_abyss_entry_randomization(_G, true)
+: abyss_entry(_G, 'O', 'empty', true)
+MAP
+      c
+      x
+cx.   x   .xc
+ .x.  z  .x.
+   xz.'.zx
+     'O'
+     .'.
+    z   z
+    x   x
+   x.   .x
+  x.     .x
+  c       c
+ENDMAP
+
+NAME:    regret_index_abyss_entry_transport_node
+: index_abyss_entry_randomization(_G, false)
+: abyss_entry(_G, 'O', 'empty', true)
+MAP
+     C
+   xx@xx
+  xx.c.xx
+ xx?x...xx
+ x.x.....xx
+C@c..!..z'x
+ x.....z'xx
+ xx...zOxx
+  xx.z'xx
+   xx'xx
+    xxx
+ENDMAP
+
+# An iterative play on abyss_entry_small_statue_room.
+NAME:    regret_index_abyss_entry_closets
+: index_abyss_entry_randomization(_G, false)
+: abyss_entry(_G, 'O', 'empty', true)
+MAP
+     xcx
+    xx?x
+    xA'+
+    xx?x.
+ xxx czx..
+xxAxc...xx+xx
+C?'?z...z!'!C
+xx+xx...cxOxx
+   ..xzc xxx
+    .x?xx
+     +'Ax
+     x?xx
+     xcx
+ENDMAP
+
+NAME:    regret_index_abyss_entry_x_intersection
+NSUBST:  O = 1:O / * = OA
+: index_abyss_entry_randomization(_G, false)
+: abyss_entry(_G, 'O', 'empty', true)
+MAP
+     cx   xc
+    ..xx xx..
+  xc...xxx...cx
+ xx.z...C...z.xx
+xx...z.....z...xx
+x'.!..c.?.c..!.'x
+xxO..xx...xx..Oxx
+ xx'xx..C..xx'xx
+  xxx...x...xxx
+     ..xxx..
+ENDMAP
+
+NAME:    regret_index_abyss_entry_x_curling
+: index_abyss_entry_randomization(_G, false)
+: abyss_entry(_G, 'O', 'empty', true)
+MAP
+xxxxxxxx
+x.?...'x
+x.....cx.
+x...x....cxxxxx
+x.O.xz..X.x'Y'x
+x'Y'x.X..zx.O.x
+xxxxxc....x...x
+      .xc.....x
+       x'...?.x
+       xxxxxxxx
+ENDMAP
+
+NAME:    regret_index_abyss_entry_sea_shelf
+: index_abyss_entry_randomization(_G, true)
+: abyss_entry(_G, 'O', 'empty', true)
+MAP
+   xX
+  x..x
+C...x  Y
+xx.   x
+ xx. z. Z
+  xx..'x  Y
+   xc'O'.x
+    xc'.z  x
+     xc.  x.X
+      xx. ..x
+       xx..x
+        xx.
+         xC
+ENDMAP
+
+NAME:    regret_index_abyss_entry_ys
+: index_abyss_entry_randomization(_G, true)
+: abyss_entry(_G, 'O', 'empty', true)
+MAP
+  X.
+  .x.
+  .x.
+   .c.
+  .x.x.
+  .x.x.
+..x. .x'
+xx.   .zOz.   .xx
+         'x. .x..
+          .x.x.
+          .x.x.
+           .c.
+            .x.
+            .x.
+             .X
+ENDMAP
+
 NAME:    regret_index_abyss_entry_already_here
-TAGS:    nolayout_encompass transparent no_monster_gen patrolling
+TAGS:    no_monster_gen
 WEIGHT:  5
-MONS:    tentacled monstrosity / lich / wyrmhole w:2
-MONS:    glowing shapeshifter, glass eye
+MONS:    ugly thing, shapeshifter, basilisk
 NSUBST:  1 = 1:1 / 1:2 / 1:3 / *:., b = 1:O / *:b
 TILE:    b = bedevilled_crystal_abyss
-:   set_feature_name("crystal_wall", "bedevilled crystal wall")
-: abyss_entry(_G, 'O')
+: set_feature_name("crystal_wall", "bedevilled crystal wall")
+: abyss_entry(_G, 'O', 'sparse', true)
 MAP
  ..xxx..
 x.x...x..
@@ -213,13 +399,115 @@ x.x...x...xxx..
         ..xxx...
 ENDMAP
 
+NAME:    regret_index_abyss_entry_degrid
+MONS:    kobold brigand, ynoxinul
+: index_abyss_entry_randomization(_G, true)
+: abyss_entry(_G, 'O', 'sparse', true)
+MAP
+   XxX  YxY
+    x    x
+   .x    x.
+X ..x.  .x.. Z
+xxxx-xxcx.xxxx
+X  .x....z.  Z
+    x.?'1x
+    c.'2'c
+Y  .x.1'Ox
+xxxx.zxcxc
+Y ..x.
+   .x
+    x
+   ZxZ
+ENDMAP
+
+NAME:    regret_index_abyss_entry_contrepoint
+MONS:    raiju, boulder beetle
+: index_abyss_entry_randomization(_G, true)
+: abyss_entry(_G, 'O', 'sparse', true)
+MAP
+          axxxx
+   xxx   .x..1xx
+  xx.xA  z'.?.c@C
+ xx...x'O'x..1xx
+C@c2?.'z  Ax.xx
+ xx...x.   xxx
+  xxxxa
+ENDMAP
+
+NAME:    regret_index_abyss_entry_negative
+MONS:    basilisk, ugly thing, efreet
+MONS:    arcanist, shapeshifter, small abomination
+NSUBST:  O = 1:O / * = OA
+SHUFFLE: 12 / 34 / 24 / 56 / 56
+: index_abyss_entry_randomization(_G, false)
+: abyss_entry(_G, 'O', 'sparse', true)
+MAP
+Cxxx
+.Z.x
+...x
+xxxx..xxxx
+x......Y.x
+xA...?...x
+xxxx..cxxx..xxxx
+.Z.x..x'1......x
+...x..xO'.?..X.x
+xxxx..zxxz..xxxx
+x.X..?.'Ox..x...
+x......1'x..x.Z.
+xxxx..xxxc..xxxx
+      x...?...Ax
+      x.Y......x
+      xxxx..xxxx
+            x...
+            x.Z.
+            xxxC
+ENDMAP
+
+
+NAME:    regret_index_abyss_entry_x_dapple
+MONS:    shapeshifter
+: index_abyss_entry_randomization(_G, true)
+: abyss_entry(_G, 'O', 'sparse', true)
+MAP
+C         c
+.x  x x  x.
+X.x ... x.Y
+  .x.?.x.
+   .'1'.
+  x.zOz.x
+   .'1'.
+  .x.?.x.
+Y.x ... x.X
+.x  x x  x.
+c         C
+ENDMAP
+
+NAME:    regret_index_abyss_entry_columnal
+MONS:    kobold demonologist band
+: index_abyss_entry_randomization(_G, false)
+: abyss_entry(_G, 'O', 'sparse', true)
+MAP
+  .X
+ .x.X  .x.Z
+.xxx. .xxx.Z
+xCc.x.xxcxx.
+.xxx. 'x1x.
+Y.x.   'z.
+ Y.     O     .Y
+       .z'   .x.Y
+      .x0x' .xxx.
+     .xxcxx.x.cCx
+     Z.xxx. .xxx.
+      Z.x.  X.x.
+             X.
+ENDMAP
+
 NAME:    regret_index_abyss_entry_earlier_magic
-TAGS:    nolayout_encompass transparent
-MONS:    occultist, rakshasa, glowing orange brain
+MONS:    occultist / ogre mage, rakshasa, boggart
 SUBST:   - : xc++., 0 = 123, D : x.., E : x..
 SHUFFLE: AO
 : vault_metal_statue_setup(_G, "G", "dimensional conduit")
-: abyss_entry(_G, 'O')
+: abyss_entry(_G, 'O', 'threat', true)
 FTILE:   .123AO+G : floor_mystic_chasm / floor_grey_dirt_b
 MAP
     x'''@''xx''
@@ -244,11 +532,8 @@ xx..D..+-+..E...xxx
 ENDMAP
 
 NAME:    regret_index_abyss_entry_lash
-TAGS:    transparent nolayout_encompass
-MONS:    rakshasa / occultist / very ugly thing / \
-         kobold fleshcrafter w:4 / glass eye w:2
-MONS:    tentacled monstrosity / lich / \
-         chonchon w:4 / storm dragon simulacrum w:2
+KMONS:   1 : orc warrior / two-headed ogre / deep elf pyromancer
+KMONS:   2 = abyssal acolyte
 KFEAT:   y = c
 KFEAT:   z = x
 SHUFFLE: AB / CD, IJKLM, 0G / 0G / G0
@@ -259,7 +544,7 @@ FTILE:   " : floor_nerves_blue / floor_nerves_magenta
 TILE:    b : dngn_crystal_blue / dngn_crystal_magenta
 : tile("y = " .. crackle_def(_G))
 TILE:    z = wall_abyss_blue
-: abyss_entry(_G, 'O')
+: abyss_entry(_G, 'O', 'threat', true)
 CLEAR:   `
 MAP
      J.   I   .J
@@ -277,6 +562,125 @@ LL.xxxx0'DOD'0xxxx.LL
     M  xx'x'xx  M
  .MM    xx'xx    MM.
  M       .x.       M
+ENDMAP
+
+NAME:    regret_index_abyss_entry_entwine
+MONS:    raiju, orc sorcerer
+: index_abyss_entry_randomization(_G, true, "")
+: abyss_entry(_G, 'O', 'threat', true)
+MAP
+x.X          Y.x
+x..   Cxxx   ..x
+ xx.xx1''.xx.xx
+  .c...O?2..c.
+ xx.xx1''.xx.xx
+x..   xxxC   ..x
+x.Y          X.x
+ENDMAP
+
+NAME:    regret_index_abyss_entry_flowthrough
+KMONS:   1 : orc warrior / two-headed ogre / deep elf pyromancer
+KMONS:   2 = abyssal acolyte
+: index_abyss_entry_randomization(_G, false)
+: abyss_entry(_G, 'O', 'threat', true)
+MAP
+cxxxxxc
+.......
+...X...
+ c...xxxxxxx
+ x..xC'....xx
+ xY.x'......xx
+ x..x'?1zx.Z.x
+ x..xx1O2xx..x
+ x.Z.xz1?'x..x
+ xx......'x.Yx
+  xx....'Cx..x
+   xxxxxxx...c
+         ..X...
+         ......
+         cxxxxc
+ENDMAP
+
+NAME:    regret_index_abyss_entry_passing_by
+MONS:    draugr, laughing skull
+: index_abyss_entry_randomization(_G, false)
+: abyss_entry(_G, 'O', 'threat', true)
+MAP
+   x..x
+   xX.x
+   x..x
+xxxx..cxxxx
+.Y......Z'xx
+.....xx...!xx
+Cxxc.xzxx+.'x
+   x..x11x.Zx
+   xZ.xO2x..x
+   x'.xxxzx.cxxC
+   xx?...xx.....
+    xx'Z......Y.
+     xxxxc..xxxx
+         x..x
+         x.Xx
+         x..x
+ENDMAP
+
+NAME:    regret_index_abyss_entry_edifice
+KMONS:   1 : shapeshifter / necromancer
+KMONS:   2 : small abomination / zombie w:15
+KMONS:   O = abyssal acolyte
+SHUFFLE: 1234, lw / lw / wl
+: index_abyss_entry_randomization(_G, true)
+: abyss_entry(_G, 'O', 'threat', true)
+MAP
+cxxxCxCxCxxxc
+....2cOc2....
+ .'xz1c1zx'.
+.xx'.z.z.'xx.
+c..?x. .x?..c
+   'x. .x'
+  .x'X X'x.
+ .c.X   X.c.
+ENDMAP
+
+NAME:    regret_index_abyss_entry_elemental
+TAGS:    no_pool_fixup
+MONS:    fire elemental, water elemental, cyclops, harpy
+KMONS:   O = abyssal acolyte
+SHUFFLE: 1234, lw / lw / wl
+: index_abyss_entry_randomization(_G, true)
+: abyss_entry(_G, 'O', 'threat', true)
+MAP
+   c     c
+  x.x X x.x
+ x...x.x...x
+c..?..C..2..c
+ x..1zxx...x
+  x.zxl'x.x
+ Y.xx'O'xx.Y
+  x.x'lxz.x
+ x...xxz4..x
+c..3..C..?..c
+ x...x.x...x
+  x.x X x.x
+   c     c
+ENDMAP
+
+NAME:    regret_index_abyss_entry_x_interlace
+MONS:    ugly thing, rakshasa / ynoxinul
+: index_abyss_entry_randomization(_G, true)
+: abyss_entry(_G, 'O', 'threat', true)
+MAP
+       x   x
+ X   Z .x x. Z   Y
+x.   .x..x..x.   .x
+ x. .x.'x.x'.x. .x
+  x.x..z'1'c..x.x
+   C....1O1....C
+  x.x..c'2'z..x.x
+ x. .x.'x.x'.x. .x
+x.   .x..x..x.   .x
+ Y   Z .x x. Z   X
+       x   x
 ENDMAP
 
 ###############################################################################
