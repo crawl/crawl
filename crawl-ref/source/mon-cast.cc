@@ -243,7 +243,13 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     } },
     { SPELL_INVISIBILITY, {
         _should_selfench(ENCH_INVIS),
-        _fire_simple_beam,
+        [](monster &caster, mon_spell_slot, bolt& beam)
+        {
+            beam.fire();
+            coord_def spot;
+            if (find_habitable_spot_near(caster.pos(), caster.type, 2, spot))
+                caster.move_to(spot, MV_TRANSLOCATION);
+        },
         _selfench_beam_setup(BEAM_INVISIBILITY),
     } },
     { SPELL_HASTE, {
