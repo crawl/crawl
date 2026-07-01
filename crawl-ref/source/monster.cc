@@ -1192,6 +1192,17 @@ bool monster::pickup_launcher(item_def &launch, bool msg, bool force)
     if (!force && !_needs_ranged_attack(this))
         return false;
 
+    const bool dual_wielding = mons_wields_two_weapons(*this);
+    if (dual_wielding)
+    {
+        // If we have either weapon slot free, pick up the weapon.
+        if (inv[MSLOT_WEAPON] == NON_ITEM)
+            return pickup(launch, MSLOT_WEAPON, msg);
+
+        if (inv[MSLOT_ALT_WEAPON] == NON_ITEM)
+            return pickup(launch, MSLOT_ALT_WEAPON, msg);
+    }
+
     const int mdam_rating = mons_weapon_damage_rating(launch);
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
     {
@@ -1199,6 +1210,11 @@ bool monster::pickup_launcher(item_def &launch, bool msg, bool force)
         const item_def *old_weapon = mslot_item(slot);
         if (!old_weapon)
             return pickup(launch, slot, msg);
+
+        // If dual-wielding, don't mix types. If not, don't pick up two ranged
+        // weapons.
+        if (!is_range_weapon(*old_weapon))
+            continue;
 
         // If the old weapon is better than the new one, or just as
         // good and with as good a brand, don't bother swapping.
