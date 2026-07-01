@@ -96,110 +96,109 @@ uměńju Nekromantije.{{
 %%%%
 penetration (penet) weapon ego
 
-Any ammunition fired by it continues flying after striking targets, potentially
-hitting everything in its path until it leaves sight.
+Vśaka izstrěljena amunicija prodȯlžaje letěti poslě poražeńja cělja, potenciaĺno
+poražajųći vse na svojem pųt́u, dopoka ne bųde izčeznųti iz vida.
 %%%%
 protection (protect) weapon ego
 
-It grants you temporary protection after it strikes (+7 AC).
+Ono zabezpečaje dočasnų zaščitų poslě udara (AC +7).
 %%%%
 reaping (reap) weapon ego
 
-Any living, holy, or demonic foe damaged by it may be temporarily reanimated
-upon death as a friendly spectral, with an increasing chance as more damage is
-dealt.
+Vśaky svęty ili demoničny neprijatelj, poškođeny jim, može byti poslě smŕti dočasno
+oživjeny kako sȯjųzny spektraĺny duh, a věrojętnost́ togo povyšaje sę po měrě povyšeńja
+pričinjenoj škody.
 %%%%
 rebuke (rebuke) weapon ego
 
-It shields the wearer if their last action was a melee attack (+10 SH) and
-redirects blocked melee attacks to other nearby enemies.
+Ono ščiti nositelja, jestli jego poslědnjim dějańjem byla bližnja ataka (SH +10)
+i prěsměrjaje blokovane bližnje ataky na drugyh bližnjih neprijateljev.
 %%%%
 spectralising (spect) weapon ego
 
-When you attack with it, this weapon's spirit leaps out and launches a second,
-slightly weaker strike. The spirit shares part of any damage it takes with you.
+Pri atakě tutym orųžjem javjaje sę duh i nanosi vtory, nemnogo slabějši udar.
+Duh děli sę s tobojų čęst́jų nabytoj škody.
 %%%%
 speed (speed) weapon ego
 
-Attacks with it are significantly faster.
+Ataky s njim sųt značno bystrějše.
 %%%%
 sundering (sunder) weapon ego
 
-After you perform multiple consecutive attacks, its next attack will deal
-greatly increased damage and also cleave into targets an extra space away.
+Poslě provedeńja několikyh vslědnyh atak, nastųpna ataka bųde nanesti značno
+povyšenų škodų i takože poražati cělji na daljšem prostoru.
 %%%%
 valour (valour) weapon ego
 
-It fires a beam of energy whenever it strikes an enemy while its wielder has
-no less than 80% of their maximum hit points remaining. Unwielding it will
-briefly Weaken its wielder.
+Ono strěljaje lučem energije pri atakě na neprijatelja, kȯgda u vlådětelja
+sųt ne mėnje 80% od maksimaĺnogo zdråvja. Izjęt́je tutogo orųžja bųde dočasno
+oslabiti vlådětelja.
 %%%%
 vampirism (vamp) weapon ego
 
-It occasionally heals you for a portion of the damage dealt when it wounds a
-living creature.
+Ono poněkȯgda lěči tebe na kolikost́ pričinjenoj škody živomu stvoru.
 %%%%
 venom (venom) weapon ego
 
-It poisons victims.
+Ono otravjaje žrtv.
 %%%%
 air (Air) armour ego
 
-It enhances your Air magic.
+Ono usiljaje tvojų Vȯzdušnų magijų.
 %%%%
 archery (Archery) armour ego
 
-It has one-third the normal encumbrance for the purpose of ranged combat.
+Ono smėnšaje tęžkost́ brȯnje do jednoj trětiny v cěljah daljnjego boja.
 %%%%
 attunement (Attunement) armour ego
 
-When worn alongside a magical staff, it doubles the effectiveness of that
-staff's primary enhancer and causes melee attacks made with it to restore a
-small amount of MP.
+Pri nošeńju zajedno s magičnojų palojų, ono podvajaje efektivnost́ osnovnogo
+usilitelja tutoj paly i prinuđaje bližnje ataky, provedene s jų pomoćjų,
+lěčiti malų kolikost́ MP.
 %%%%
 cold resistance (rC+) armour ego
 
-It protects you from cold.
+Ono zaščićaje tebe od hlåda.
 %%%%
 command (Command) armour ego
 
-It improves the power and success of your Summoning spells in proportion to your
-Armour skill.
+Ono povyšaje moć i uspěh tvojih zaklinanij Prizyva proporcionaĺno tvojemų uměńju
+Brȯnje.
 %%%%
 corrosion resistance (rCorr) armour ego
 
-It protects you from the effects of acid and corrosion.
+Ono zaščićaje tebe od efektov kysliny i korozije.
 %%%%
 death (Death) armour ego
 
-It empowers your Necromancy spells and improves their success rate, but imposes
-a health cost for other magic.
+Ono usiljaje tvoji zaklinańja Nekromantije i povyšaje jih šans uspěha, ale dodatno
+nalagaje utratų zdråvja za koristańje drugoj magije.
 %%%%
 dexterity (Dex+3) armour ego
 
-It increases your dexterity (Dex +3).
+Ono povyšaje tvojų srųčnost́ (Dex +3).
 %%%%
 earth (Earth) armour ego
 
-It enhances your Earth magic.
+Ono usiljaje tvojų Zemnų magijų.
 %%%%
 energy (Energy) armour ego
 
-It may return the magic spent to cast spells, but lowers their success rate. It
-always returns the magic spent on miscasts. The spell refund chance is increased
-by your Evocations skill.
+Ono može vȯzvråtiti magijų, iztraćenų na čarovańje zaklinanij, ale smėnšaje jih šans
+uspěha. Ono vsėgda vȯzvraćaje magijų, iztraćenų na neuspěšne zaklinańja. Věrojętnost́
+vȯzvråćeńja magije povyšaje sę s rangom tvojego uměńja Evokacij.
 %%%%
 fire (Fire) armour ego
 
-It enhances your Fire magic.
+Ono usiljaje tvojų Ognjenų magijų.
 %%%%
 fire resistance (rF+) armour ego
 
-It protects you from fire.
+Ono zaščićaje tebe od ognja.
 %%%%
 flying (Fly) armour ego
 
-It grants you flight.
+Ono davaje tobě možnost́ lětati.
 %%%%
 glass (Glass) armour ego
 
@@ -214,24 +213,24 @@ of which is increased by your Evocations skill.
 %%%%
 harm (Harm) armour ego
 
-It increases damage dealt and taken.
+Ono povyšaje škodų nanosimų i nabyvajemų.
 %%%%
 hurling (Hurl) armour ego
 
-It improves your accuracy and damage with thrown weapons, such as rocks and
-javelins (Slay +4).
+Ono povyšaje tvojų akuratnost́ i škodų za metajeme orųžja, kako kamenje i
+kopja (Slay +4).
 %%%%
 ice (Ice) armour ego
 
-It enhances your Ice magic.
+Ono usiljaje tvojų Leděnų magijų.
 %%%%
 infusion (Infuse) armour ego
 
-It empowers each of your melee hits with a small part of your magic.
+Ono obdarjaje každų tvojų bližnjų atakų malojų čęst́jų tvojej magije.
 %%%%
 intelligence (Int+3) armour ego
 
-It increases your intelligence (Int +3).
+Ono povyšaje tvoj råzum (Int +3).
 %%%%
 invisibility (+Inv) armour ego
 
@@ -256,7 +255,7 @@ speed are improved by your Evocations skill.
 %%%%
 parrying (Parrying) armour ego
 
-Ono zaščićaje tebe, jestli tvojim poslědnjim dějańjem byla bližnja ataka. Zaščita
+Ono ščiti tebe, jestli tvojim poslědnjim dějańjem byla bližnja ataka. Zaščita
 smėnšaje sę v polovinų, jestli tvoja druga rųka jest zajęta čim-libo kromě orųžja.
 %%%%
 poison resistance (rPois) armour ego
@@ -284,7 +283,7 @@ once each turn.
 %%%%
 rampaging (Rampage) armour ego
 
-Ono dozvaljaje sdělati dodatny krok v nastųpjenjų na neprijateljev, ne na dȯlgo
+Ono dozvaljaje sdělati dodatny krok v nastųpjeńju na neprijateljev, ne na dȯlgo
 oglušajųći jih v rezuĺtatu ataky.
 %%%%
 reflection (Reflect) armour ego
