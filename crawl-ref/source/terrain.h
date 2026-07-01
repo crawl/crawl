@@ -47,6 +47,7 @@ bool feat_has_dry_floor(dungeon_feature_type feat);
 bool feat_is_door(dungeon_feature_type feat);
 bool feat_is_closed_door(dungeon_feature_type feat);
 bool feat_is_open_door(dungeon_feature_type feat);
+bool feat_is_clear_door(dungeon_feature_type feat);
 bool feat_is_sealed(dungeon_feature_type feat);
 bool feat_is_runed(dungeon_feature_type feat);
 bool feat_is_statuelike(dungeon_feature_type feat);

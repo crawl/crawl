@@ -922,11 +922,24 @@ void line_reader::insert_char_at_cursor(int ch)
 }
 
 #ifdef USE_TILE_LOCAL
-void line_reader::clipboard_paste()
+void paste_clipboard(function<void (char32_t)> process_key)
 {
     if (wm && wm->has_clipboard())
-        for (char ch : wm->get_clipboard())
-            process_key(ch);
+    {
+        const string clip = wm->get_clipboard();
+        const char *s = clip.c_str();
+        char32_t c;
+        while (int len = utf8towc(&c, s))
+        {
+            process_key(c);
+            s += len;
+        }
+    }
+}
+
+void line_reader::clipboard_paste()
+{
+    paste_clipboard([this](char32_t c) { process_key(c); });
 }
 #endif
 

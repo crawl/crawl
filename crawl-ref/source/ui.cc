@@ -2267,9 +2267,7 @@ void TextEntry::LineReader::insert_char_at_cursor(int ch)
 #ifdef USE_TILE_LOCAL
 void TextEntry::LineReader::clipboard_paste()
 {
-    if (wm && wm->has_clipboard())
-        for (char ch : wm->get_clipboard())
-            process_key(ch);
+    paste_clipboard([this](char32_t c) { process_key(c); });
 }
 #endif
 
