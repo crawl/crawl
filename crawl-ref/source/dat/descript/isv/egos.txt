@@ -1,0 +1,392 @@
+%%%%
+acid (acid) weapon ego
+
+Ono bryzgaje v žrtv kyslinojų (2d4 škody, Korozija).
+%%%%
+antimagic (antimagic) weapon ego
+
+Ono smėnšaje tvojų magičnų energijų i råzryvaje zaklinańja i magične sposobnosti tyh,
+kogo poražaje. Prirodne sposobnosti i božske invokacije ostavajųt sę neizměnjenymi.
+%%%%
+chaos (chaos) weapon ego
+
+Každy udar orųžjem s tutym začarovańjem imaje råzny, slučajny efekt.
+%%%%
+concussion (concuss) weapon ego
+
+Ono odphaje tyh, kogo razi, nazadno, kråtko oglušajųći v procesu. Jestli ono
+odphaje jih k tvŕdomu objektu, oni nabyvajųt dodatnų tretinu škody vśakoj škody,
+ktora probivaje jih brȯnjų.
+%%%%
+distortion (distort) weapon ego
+
+Ono krivi i izopačaje prostor okolo sebe i može mignųti, izgnati ili pričiniti
+dodatnų škodų tym, kogo poražaje. Odpustivši jego iz rųk, ty možeš teleportovati sę
+do neprijateljev ili izgnati sę v Bezdnų.
+%%%%
+devious (devious) weapon ego
+
+U njego jest povyšeny šans pričinjeńja koljųćih udarov protiv bezzaščitnyh cěljev
+i ono takože dočasno povyšaje izběgańje i smŕtonosnost́ koristnika pri každom udaru.
+%%%%
+draining (drain) weapon ego
+
+Ono poněkȯgda osušaje živyh stvorov (1/2 šans). Ono pričinjaje dodatnų četvŕtinų
+vśakogo tipa škody, ktora probivaje brȯnjų, a takože dodatne 2-4 škody, i nemnogo
+oslabjaje jih.
+%%%%
+electrocution (elec) weapon ego
+
+Ono poněkȯgda poražaje žrtv električnym tokom (1/4 šans, 8-20 škody).
+%%%%
+entangling (entangle) weapon ego
+
+Ono poněkȯgda duši lozami tyh, kogo atakuje (1/2 šans, 2-4 škody).
+%%%%
+flaming (flame) weapon ego
+
+Ono pali žrtv, pričinjajųći dodatnų četvŕtinų vśakogo tipa škody, ktora probivaje
+brȯnjų. 
+%%%%
+flaming (flame) weapon ego blade
+
+Ono pali žrtv, pričinjajųći dodatnų četvŕtinų vśakogo tipa škody, ktora probivaje
+brȯnjų. Velike, ognjene ostŕja takože sųt glåvne orųžja dlja lovcev na hidr.
+%%%%
+freezing (freeze) weapon ego
+
+Ono mråzi žrtv, pričinjajųći dodatnų četvŕtinų vśakogo tipa škody, ktora probivaje
+brȯnjų. Ono takože može spomaliti hlådnokrȯvnyh stvorov.
+%%%%
+foul flame (foul flame) weapon ego
+
+Ono jest napȯlnjeno mŕzkym ognjem, pričinjajųćim dodatne tri četvŕtiny škody svętym
+stvoram, dodatnų četvŕtinų škody nemŕtvym i demonam, i dodatnų polovinų škody vsim
+ostalym, jestli probivaje brȯnjų. Svęte stvory i poslědovatelji dobryh bogov ne mogųt
+koristati tuto orųžje.
+%%%%
+heavy (heavy) weapon ego
+
+Ono pričinjaje dramatično vyše škody, ale ataky s njim sųt pomalěje.
+%%%%
+heavy (heavy) weapon ego ranged
+
+Vśaka amunicija, izstrěljena iz njego, pričinjaje dramatično vyše škody, ale
+ataky s njim sųt pomalěje.
+%%%%
+holy wrath (holy) weapon ego
+
+Ono bylo blågoslovjeno Světęćim i pričinjaje dodatne tri četvŕtiny škody ktora
+probivaje brȯnjų nemŕtvyh i demonov. Nemŕtvi i demoni ne mogųt koristati tuto
+orųžje.
+%%%%
+pain (pain) weapon ego
+
+Ono pričinjaje dodtanų škodų protiv živyh stvorov proporcionaĺno tvojemų
+uměńju Nekromantije.{{
+    if you.god() == "Trog" then
+        return " Trog odvraćaje izpusćeńje tutogo efekta.";
+    end
+}}{{
+    if you.is_useless_skill("necromancy") then
+        return " Tvoja nesposobnost́ v izučeńju Nekromantije ne dozvaljaje
+                 v pȯlnoj měrě izkoristati moć tutogo orųžja.";
+    end
+}}
+%%%%
+penetration (penet) weapon ego
+
+Vśaka izstrěljena amunicija prodȯlžaje letěti poslě poražeńja cělja, potenciaĺno
+poražajųći vse na svojem pųt́u, dopoka ne bųde izčeznųti iz vida.
+%%%%
+protection (protect) weapon ego
+
+Ono zabezpečaje dočasnų zaščitų poslě udara (AC +7).
+%%%%
+reaping (reap) weapon ego
+
+Vśaky svęty ili demoničny neprijatelj, poškođeny jim, može byti poslě smŕti dočasno
+oživjeny kako sȯjųzny spektraĺny duh, a věrojętnost́ togo povyšaje sę po měrě povyšeńja
+pričinjenoj škody.
+%%%%
+rebuke (rebuke) weapon ego
+
+Ono ščiti nositelja, jestli jego poslědnjim dějańjem byla bližnja ataka (SH +10)
+i prěsměrjaje blokovane bližnje ataky na drugyh bližnjih neprijateljev.
+%%%%
+spectralising (spect) weapon ego
+
+Pri atakě tutym orųžjem javjaje sę duh i nanosi vtory, nemnogo slabějši udar.
+Duh děli sę s tobojų čęst́jų nabytoj škody.
+%%%%
+speed (speed) weapon ego
+
+Ataky s njim sųt značno bystrějše.
+%%%%
+sundering (sunder) weapon ego
+
+Poslě provedeńja několikyh vslědnyh atak, nastųpna ataka bųde nanesti značno
+povyšenų škodų i takože poražati cělji na daljšem prostoru.
+%%%%
+valour (valour) weapon ego
+
+Ono strěljaje lučem energije pri atakě na neprijatelja, kȯgda u vlådětelja
+sųt ne mėnje 80% od maksimaĺnogo zdråvja. Izjęt́je tutogo orųžja bųde dočasno
+oslabiti vlådětelja.
+%%%%
+vampirism (vamp) weapon ego
+
+Ono poněkȯgda lěči tebe na kolikost́ pričinjenoj škody živomu stvoru.
+%%%%
+venom (venom) weapon ego
+
+Ono otravjaje žrtv.
+%%%%
+air (Air) armour ego
+
+Ono usiljaje tvojų Vȯzdušnų magijų.
+%%%%
+archery (Archery) armour ego
+
+Ono smėnšaje tęžkost́ brȯnje do jednoj trětiny v cěljah daljnjego boja.
+%%%%
+attunement (Attunement) armour ego
+
+Pri nošeńju zajedno s magičnojų palojų, ono podvajaje efektivnost́ osnovnogo
+usilitelja tutoj paly i prinuđaje bližnje ataky, provedene s jų pomoćjų,
+lěčiti malų kolikost́ MP.
+%%%%
+cold resistance (rC+) armour ego
+
+Ono zaščićaje tebe od hlåda.
+%%%%
+command (Command) armour ego
+
+Ono povyšaje moć i uspěh tvojih zaklinanij Prizyva proporcionaĺno tvojemų uměńju
+Brȯnje.
+%%%%
+corrosion resistance (rCorr) armour ego
+
+Ono zaščićaje tebe od efektov kysliny i korozije.
+%%%%
+death (Death) armour ego
+
+Ono usiljaje tvoji zaklinańja Nekromantije i povyšaje jih šans uspěha, ale dodatno
+nalagaje utratų zdråvja za koristańje drugoj magije.
+%%%%
+dexterity (Dex+3) armour ego
+
+Ono povyšaje tvojų srųčnost́ (Dex +3).
+%%%%
+earth (Earth) armour ego
+
+Ono usiljaje tvojų Zemnų magijų.
+%%%%
+energy (Energy) armour ego
+
+Ono može vȯzvråtiti magijų, iztraćenų na čarovańje zaklinanij, ale smėnšaje jih šans
+uspěha. Ono vsėgda vȯzvraćaje magijų, iztraćenų na neuspěšne zaklinańja. Věrojętnost́
+vȯzvråćeńja magije povyšaje sę s rangom tvojego uměńja Evokacij.
+%%%%
+fire (Fire) armour ego
+
+Ono usiljaje tvojų Ognjenų magijų.
+%%%%
+fire resistance (rF+) armour ego
+
+Ono zaščićaje tebe od ognja.
+%%%%
+flying (Fly) armour ego
+
+Ono davaje tobě možnost́ lětati.
+%%%%
+glass (Glass) armour ego
+
+Pri naneseńju škody neprijateljam oni stavajųt sę krěhkymi kako stěklo. Tvoje
+uměńje Evokacij povyšaje věrojętnost́ i trvańje stėklěnjeńja.
+%%%%
+guile (Guile) armour ego
+
+Ono oslabjaje tvojų i neprijateljskų silų volje, kȯgda ty koristaješ protiv njih
+proklęt́ja, a takože usiljaje jih efekt pri povyšeńju uměńja Evokacij.
+%%%%
+harm (Harm) armour ego
+
+Ono povyšaje škodų nanosimų i nabyvajemų.
+%%%%
+hurling (Hurl) armour ego
+
+Ono povyšaje tvojų akuratnost́ i škodų za metajeme orųžja, kako kamenje i
+kopja (Slay +4).
+%%%%
+ice (Ice) armour ego
+
+Ono usiljaje tvojų Leděnų magijų.
+%%%%
+infusion (Infuse) armour ego
+
+Ono obdarjaje každų tvojų bližnjų atakų malojų čęst́jų tvojej magije.
+%%%%
+intelligence (Int+3) armour ego
+
+Ono povyšaje tvoj råzum (Int +3).
+%%%%
+invisibility (+Inv) armour ego
+
+Kȯgda jest aktivovano, ono davaje tobě dočasnų nevidimost́, ale takože osušaje
+tvojų maksimaĺnų rezervų zdråvja.
+%%%%
+light (Light) armour ego
+
+Ono okrųžaje tebe blěstějųćejų aurelojų, izjavjaje nevidimyh stvorov, povyšaje
+tvojų akuratnost́ protiv vsih i smėnšaje tvojų skrytost́.
+%%%%
+mayhem (Mayhem) armour ego
+
+Svědki vaših ubijstv obezuměvajųt, atakujųći vsečto jest poblizu s velikojų
+silojų i bystrost́jų.
+%%%%
+mesmerism (Mesmerism) armour ego
+
+Pri poražeńju bližnjejų atakojų, ono dočasno otųpěvaje vsih bližnjih neprijateljev,
+poslě izkoristańja potrěbno ponovno zapȯlnjeńje. Jego trvańje, radius i bystrost́
+zapȯlnjeńja povyšajųt sę tvojim uměńjem Evokacij.
+%%%%
+parrying (Parrying) armour ego
+
+Ono ščiti tebe, jestli tvojim poslědnjim dějańjem byla bližnja ataka. Zaščita
+smėnšaje sę v polovinų, jestli tvoja druga rųka jest zajęta čim-libo kromě orųžja.
+%%%%
+poison resistance (rPois) armour ego
+
+Ono zaščićaje tebe od otravy.
+%%%%
+ponderousness (Ponderous) armour ego
+
+Ono jest neudobno i zapomaljaje tvoj ruh.
+%%%%
+positive energy (rN+) armour ego
+
+Ono zaščićaje tebe od efektov negativnoj energije.
+%%%%
+protection (AC+3) armour ego
+
+Ono zaščićaje tebe od vęćiństva izvorov škody (AC +3).
+%%%%
+pyromania (Pyromania) armour ego
+
+Ono usiljaje tvojų Ognjenų magijų i može izsvoboditi potok plåmenjev okolo
+tebe, kȯgda ty ubivaješ neprijatelja ne atakojų. Věrojętnost́ eksplozije i
+jų škoda sųt zavisne od Evokacij i ono ne može aktivovati sę vyše než
+jednokråtno za každy ręd.
+%%%%
+rampaging (Rampage) armour ego
+
+Ono dozvaljaje sdělati dodatny krok v nastųpjeńju na neprijateljev, ne na dȯlgo
+oglušajųći jih v rezuĺtatu ataky.
+%%%%
+reflection (Reflect) armour ego
+
+Ono odbivaje blokovane raketne ataky.
+%%%%
+repulsion (Repulsion) armour ego
+
+Ono pomagaje tobě izběgti magične i nemagične projektily (EV +15).
+%%%%
+resistance (rC+ rF+) armour ego
+
+Ono zaščićaje tebe od oboh efektov ognja i hlåda.
+%%%%
+resonance (Resonance) armour ego
+
+Ono ulěpšaje šans uspěha tvojih zaklinanij Kovačnogo Děla i usiljaje tvoje bližnje
+ataky proporcionaĺno tvojemų uměńju Kovačnogo Děla.
+%%%%
+see invisible (SInv) armour ego
+
+Ono dozvaljaje tobě viděti nevidime prědmety.
+%%%%
+shadows (Shadows) armour ego
+
+Ono smėnšaje daljnost́, na ktoroj ty možeš viděti u byti uviděnym.
+%%%%
+sniping (Snipe) armour ego
+
+Ono povyšaje tvojų škodų na dodatne 50% za daljnje i metajeme orųžja protiv
+obezdviganyh cěljev. Obezdvigane cělji sųt te, kto zasnųl, paralizovany,
+okamenjeny, zaměšany ili shvaćeny v sětkų.
+%%%%
+spirit shield (Spirit) armour ego
+
+Ono råzděljaje nabytų škodų među tvojimi rezervami zdråvja i magije.
+%%%%
+stardust (Stardust) armour ego
+
+Ono čaruje grad padajųćih zvězd, kȯgda ty v pŕvy raz v boju tratiš MP na
+koristańje zaklinańja ili sposobnosti, i povtorno možno to sdělati jedino
+kȯgda ty izlěčiš MP i ne uvidiš neprijateljev. Tvoje uměńje Evokacij povyšaje
+kolikost́ zvězd, a iztraćene MP povyšajųt škodų zvězd.
+%%%%
+stealth (Stlth+) armour ego
+
+Ono usiljaje tvojų skrytnost́.
+%%%%
+strength (Str+3) armour ego
+
+Ono povyšaje tvojų silų (Str +3).
+%%%%
+the Archmagi (Archmagi) armour ego
+
+Ono povyšaje moć tvojih magičnyh zaklinanij.
+%%%%
+willpower (Will+) armour ego
+
+Ono povyšaje tvojų silų volje, zaščićajųći tebe od něktoryh magičnyh efektov.
+%%%%
+wrath (*Rage) armour ego
+
+Ty vpadaješ v běsnost́, kȯgda dělaješ bližnje ataky (šans 20%).
+%%%%
+atropa-tipped (atropa) missile ego
+
+Jego konėc jest orošeny substancijejų, ktora pričinjaje slěpost́ i dočasno zaměšańje.
+
+Šans uspěšnogo naložeńja efektov povyšaje sę tvojimi uměńjami Metańja i Skrytosti.
+%%%%
+chaos (chaos) missile ego
+
+Kȯgda jest metnųto, ono pričinjaje slučajny efekt.
+%%%%
+curare-tipped (curare) missile ego
+
+Jego konėc jest orošeny substancijejų, ktora pričinjaje udušeńje i pręmų škodų,
+a takože otravjaje i spomaljaje tyh, kogo poražaje.
+
+Šans jego izguby pri poražeńju dvukråtno vyše než u drugyh tŕnov.
+%%%%
+datura-tipped (datura) missile ego
+
+Jego konėc jest orošeny substancijejų, ktora vgone tyh, kogo poražaje, v bezumnų
+běsnost́, prinuđajųći jih atakovati i prijateljev, i neprijateljev.
+
+Šans uspěšnogo naložeńja efektov povyšaje sę tvojimi uměńjami Metańja i Skrytosti.
+%%%%
+disjunction (disjunct) missile ego
+
+Ono prinuđaje vśakogo poraženogo cělja izčeznųti v prostoru, migajųći od
+tebe na několiko rędov i nabyvajųći malų škodų, kȯgda dělaje to.
+%%%%
+dispersal (disperse) missile ego
+
+Ono prinuđaje poraženyh žrtv migati od tebe v dalj.
+%%%%
+poisoned (poison) missile ego
+
+Ono jest pokryto otravojų.
+%%%%
+silver (silver) missile ego
+
+Ono nanosi povyšenų škodų po sråvnjeńjų s obyčnymi raketami i značno povyšenų
+škodų protiv haotičnyh i magično obråćenyh stvorov. Ono takože pričinjaje dodatnų
+škodų protiv mutovanyh stvorov v zavisnosti od měry jih mutacije.
+%%%%

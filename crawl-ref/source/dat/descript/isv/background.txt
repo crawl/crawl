@@ -1,0 +1,135 @@
+%%%%
+Air Elementalist
+
+Elementalisti Vȯzduha izučili zaklinańje "Šok". Jih električna magija može
+poškoditi grupy neprijateljev, a zaklinańja vȯzduha pomagajųt v boju ili
+izběgańju.
+%%%%
+Artificer
+
+Umětniki startujųt s několikymi magičnymi palkami i prųtom. Jim potrěbno najdti
+lěpše orųžje i brȯnjų prěđe, čim oni bųdųt skončiti sę.
+%%%%
+Berserker
+
+Berserkeri věręt v Troga, boga běsnosti, ktory nenavidi magijų. Na ranjih etapah
+malo čto može ostanoviti råzjarjenogo berserkera, kromě nadųtosti.
+%%%%
+Brigand
+
+Råzbojniki nesųt otravjene tŕny i nemnogo gnusnyh tŕnov kurare.
+%%%%
+Chaos Knight
+
+Rycari Haosa sųt igrački neprědvidlivogo Ksoma, i oni sųt podležęt vlivu
+neprěstanno izměnjajųćemu sę nastrojeńju boga.
+%%%%
+Cinder Acolyte
+
+Pepelavi Akoliti služęt Ignisu, črpųći sily iz plåmenja umirajųćego boga,
+dopoka ničego ne ostane. U njih sųt sposobnosti i bližnjego boja, i ognjenoj
+magije.
+%%%%
+Conjurer
+
+Zaklinatelji startujųt s zaklinańjem "Magičny tŕn" i mogųt izučiti druge
+neelementarne zaklinańja, da by věrodostojno poražati svojih neprijateljev.
+%%%%
+Delver
+
+Råzvědyvatelji počinajųt svoj pųt́ na pęt́ uråvnjev niže než povŕšina. Sbirka
+moćnyh magičnyh prědmětov pomagaje jim prěžiti nebezpečno pųtovańje vgorų.
+%%%%
+Earth Elementalist
+
+Elementalisti Zemje vědųt zaklinańje "Pěsȯčna struja" i potom mogųt izučiti
+druge zaklinańja zemje, godęće sę dlja skrytyh koljųćih udarov ili izbuhov
+okrutnoj sily.
+%%%%
+Enchanter
+
+Čarovatelji vědųt množstvo Proklętij, ktore sųt sposobne oslabiti jih
+neprijateljev, i takože sųt orųdovani začarovanym nožom i napojami nevidimosti.
+%%%%
+Fighter
+
+Bojci sųt orųdovani bronjejų i ščitom, a takože orųžjem po jih izboru i
+napojami moći.
+%%%%
+Fire Elementalist
+
+Elementalisti Ognja sųt izučili zaklinańje "Liśji Ogȯnj". Jih druge počętkove
+zaklinańja sųt takože sųsrědotočene na ognjenom i eksplozivnom izniščeńju.
+%%%%
+Gladiator
+
+Gladiatori sųt gotovi izȯjdti na arenų v lėgkoj bronji, s orųžjem po svojemu
+izboru i s nekolikymi metajemymi orųžjami i sětkami.
+%%%%
+Hedge Wizard
+
+Samoučni Čarovniki sųt universali v magiji, umějųći koristati široko množstvo
+instrumentov, da by råzočarovati neprijateljev i dobyti prědnost́ na polju boja.
+%%%%
+Hunter
+
+Lovci nesųt kråtky lųk, lėgkų bronjų i svitȯk motyljev.
+# TODO: fix this for coglins
+%%%%
+Hexslinger
+
+Pračniki Proklętij nesųt pračkų i koristajųt magijų proklętij, da by sdělati
+svojih neprijateljev vyše bezzaščitnymi dlja atak izdaleka.
+%%%%
+Ice Elementalist
+
+Elementalisti Leda startujųt s zaklinańjem "Leděněńje". Jih pozdnějše zaklinańja
+zabezpečajųt siĺnų atakų i zaščitų, ale mogųt ograničati jih ruh.
+%%%%
+Monk
+
+Mnihi startujųt s prostym orųžjem po jih izboru, kuljejų světla i napojem božskoj
+ambrozije, a takože dobyvajųt dodatnų pobožnost́ k pŕvogmu bogu, ktoromu oni
+bųdųt služiti.
+%%%%
+Necromancer
+
+Nekromanti startujųt s zaklinańjem "Odlomȯk Duše". V koncu oni bųdųt smogti
+obraćati mŕtvyh v sȯjųznikov i koristati žitove sily živyh dlja rekreacije
+svojih sil.
+%%%%
+Reaver
+
+Grabitelji startujųt s orųžjem po jih izboru i smŕteljnojų magijejų kako
+dopȯlnjeńje, kȯgda to je potrěbno. Oni startujųt s zaklinańjem "Pocěluj Smŕti".
+%%%%
+Summoner
+
+Prizyvatelji iz počętka mogųt čarovati "Prizyv Malogo Sȯsavca" i
+startujųt sȯ svojejų bibliotekojų zaklinanij dlja prizyva vyše egzotičnyh
+sȯjųznikov.
+%%%%
+Forgewright
+
+Kovači sųt čarovniki, ktori specializujųt sę v stvorjeńju vežic i mehaničnyh
+sųpųtnikov dlja bitvy.
+%%%%
+Shapeshifter
+
+Měnjatelji koristajųt talismany dlja izměnjeńja svojej formy, čto dělaje
+jih siĺnymi bojcami bližnjego boja (osoblivo bez orųžja) cěnojų izguby brȯnje.
+%%%%
+Alchemist
+
+Alhimiki startujųt s zaklinańjem "Otravne pary" i jih magija jest veĺmi
+efektivna protiv neprijateljev, poddavajemyh otravě.
+%%%%
+Wanderer
+
+Pųtniki startujųt s slučajnym orųdovańjem i uměńjami.
+%%%%
+Warper
+
+Prěměščatelji startujųt s orųžjem po jih izboru, svitkom migańja, tŕnami
+dizjunkcije i něktorymi zaklinańjami Prěměščeńja v jih bibliotekě.
+%%%%
