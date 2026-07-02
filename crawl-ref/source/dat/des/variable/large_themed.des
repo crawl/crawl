@@ -61,6 +61,7 @@ NAME:    minmay_goblin_kobold_castle
 TAGS:    no_rotate
 ORIENT:  north
 DEPTH:   D:3-6
+PLACE:   D:3
 MONS:    goblin ; sling / hobgoblin w:2 ; sling
 MONS:    goblin ; club / hobgoblin ; club / gnoll w:3 ; club | spear
 MONS:    kobold ; stone
@@ -1554,6 +1555,7 @@ NAME:   kennysheep_goblin_castle
 TAGS:   no_monster_gen no_pool_fixup
 ORIENT: northwest
 DEPTH:  D:3-4
+PLACE:  D:3
 ## this gives a chance for Ijyb and Robin to appear as the boss if they
 ## haven't been placed, selecting from who is available.
 {{
