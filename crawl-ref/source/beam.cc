@@ -3074,6 +3074,9 @@ void bolt::affect_place_explosion_clouds()
     if (origin_spell == SPELL_FORGE_BLAZEHEART_GOLEM)
         place_cloud(CLOUD_FIRE, p, 2 + random2avg(5,2), agent());
 
+    if (origin_spell == SPELL_INNER_FLAME)
+        place_cloud(CLOUD_FIRE, p, 10 + random2(10), agent());
+
     if (origin_spell == SPELL_FIRE_STORM)
     {
         place_cloud(CLOUD_FIRE, p, 2 + random2avg(5,2), agent());

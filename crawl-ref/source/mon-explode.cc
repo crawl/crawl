@@ -348,7 +348,6 @@ bool explode_monster(monster* mons, killer_type killer, bool pet_kill)
     string sanct_msg = "";
     string boom_msg = make_stringf("%s explodes!", mons->full_name(DESC_THE).c_str());
     actor* agent = nullptr;
-    bool inner_flame = false;
 
     string poof_msg = "";
     if (mons->is_abjurable())
@@ -389,7 +388,6 @@ bool explode_monster(monster* mons, killer_type killer, bool pet_kill)
         mons->flags    |= MF_EXPLODE_KILL;
         sanct_msg       = "By Zin's power, the fiery explosion is contained.";
         beam.aux_source = "ignited by their inner flame";
-        inner_flame = true;
     }
     else if (mons->props.exists(MAKHLEB_HAEMOCLASM_KEY))
     {
@@ -438,10 +436,8 @@ bool explode_monster(monster* mons, killer_type killer, bool pet_kill)
     }
     else
     {
-        const auto typ = inner_flame ? EXPLOSION_FINEFF_INNER_FLAME
-                                     : EXPLOSION_FINEFF_GENERIC;
-        schedule_explosion_fineff(beam, boom_msg, sanct_msg, typ, agent,
-                                  poof_msg);
+        schedule_explosion_fineff(beam, boom_msg, sanct_msg,
+                                  EXPLOSION_FINEFF_GENERIC, agent, poof_msg);
     }
 
     // Monster died in explosion, so don't print a death message for it.

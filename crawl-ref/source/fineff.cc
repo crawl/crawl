@@ -1389,11 +1389,6 @@ void explosion_fineff::fire()
             mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s", boom_message.c_str());
     }
 
-    if (typ == EXPLOSION_FINEFF_INNER_FLAME)
-        for (adjacent_iterator ai(beam.target, false); ai; ++ai)
-            if (!one_chance_in(5))
-                place_cloud(CLOUD_FIRE, *ai, 10 + random2(10), flame_agent);
-
     beam.explode(true, typ == EXPLOSION_FINEFF_PYROMANIA);
 
     if (typ == EXPLOSION_FINEFF_CONCUSSION)
