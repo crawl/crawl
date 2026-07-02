@@ -41,6 +41,7 @@
 #include "level-state-type.h"
 #include "libutil.h"
 #include "losglobal.h"
+#include "los.h"
 #include "makeitem.h"
 #include "map-knowledge.h"
 #include "mapmark.h"
@@ -3294,11 +3295,20 @@ static int _tension_door_closed(const vector<coord_def>& door)
 {
     ASSERT(!door.empty());
     const dungeon_feature_type old_feat = env.grid(door[0]);
+    // Simulate the tension with closed doors. We don't want to do a full
+    // terrain change, as this would have side effects like removing clouds,
+    // but we do need to invalidate the LoS cache.
     for (coord_def dc : door)
+    {
         env.grid(dc) = DNGN_CLOSED_DOOR;
+        los_terrain_changed(dc);
+    }
     const int new_tension = get_tension(GOD_NO_GOD);
     for (coord_def dc : door)
+    {
         env.grid(dc) = old_feat;
+        los_terrain_changed(dc);
+    }
     return new_tension;
 }
 
