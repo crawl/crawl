@@ -1287,11 +1287,11 @@ static int _count_tele_closets(vector<coord_def> *closets, bool flying,
                                bool mask)
 {
     using passable_fn = bool (*)(const coord_def &);
-    passable_fn passable =
-        flying ? (passable_fn) [](const coord_def &c)
-                 { return _dgn_square_is_closet_passable(c, true); }
-               : (passable_fn) [](const coord_def &c)
-                 { return _dgn_square_is_closet_passable(c, false); };
+    passable_fn fly_passable =
+        [](const coord_def &c) { return _dgn_square_is_closet_passable(c, true); };
+    passable_fn walk_passable =
+        [](const coord_def &c) { return _dgn_square_is_closet_passable(c, false); };
+    passable_fn passable = flying ? fly_passable : walk_passable;
 
     // Floodfill back from the exits to mark everywhere that isn't a closet.
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
