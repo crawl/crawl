@@ -1,5 +1,5 @@
-###############################################################################
-# Grated Community (by Mu, cleaned up by regret-index.)
+############################################################################################
+# Grated Community (by Mu, cleaned up by regret-index.) modified by rogga for D:3 placement.
 #
 # A few creatures have built their own little community deep underground,
 # complete with quaint little homes and a handful of local shops.
@@ -33,8 +33,18 @@ NAME:   index_mu_grated_community
 TAGS:   no_rotate no_monster_gen no_item_gen no_descent
 TAGS:   vaults_hard vaults_orient_s no_wall_fixup
 ORIENT: float
-WEIGHT: 30 (Vaults), 10
-: if you.in_branch("D") then
+DEPTH:  D:3
+WEIGHT: 10
+: if you.in_branch("D") and you.depth() == 3 then
+MONS:   patrolling goblin, patrolling hobgoblin, patrolling kobold
+MONS:   patrolling gnoll / patrolling orc / patrolling adder
+MONS:   patrolling hound / patrolling ribbon worm / patrolling iguana w:2
+MONS:   gnoll / orc priest / kobold brigand / sleepcap w:2
+KMONS:  8 = gnoll bouda / orc priest / kobold brigand w:2
+KMONS:  90 = goblin / hobgoblin / kobold / gnoll / orc / adder / \
+             hound / ribbon worm / iguana
+SUBST:  9 = 9.., 0 = 0"", z = c
+: elseif you.in_branch("D") then
 MONS:   patrolling human, patrolling acid dragon, patrolling centaur
 MONS:   patrolling tengu warrior, patrolling two-headed ogre
 MONS:   patrolling deep elf pyromancer / patrolling deep elf archer w:6
@@ -57,7 +67,11 @@ KMONS:  90 = harpy / deep troll / yaktaur / entropy weaver / arcanist / \
 SUBST:  9 = 9., 0 = 0", x = b
 CLEAR:  z
 : end
+: if you.in_branch("D") and you.depth() == 3 then
+KMONS:  ! = goblin / hobgoblin / kobold / nothing
+: else
 KMONS:  ! = generate_awake lemure
+: end
 ITEM:   human skeleton / elf skeleton / kobold skeleton
 : kitem("$ = q:" .. crawl.random_range(75, 450) .. " gold")
 KFEAT:  g = iron_grate
@@ -73,6 +87,11 @@ KFEAT:  C = distillery shop type:Miraculous suffix:Elixirs count:10 \
 # Moved back into the main vault. Nicolae's Legendary Smithy sells randarts, but
 # with a guaranteed downside. It's still possible to find something usable, if
 # you don't care about the downside or can make up for it with other things.
+: if you.in_branch("D") and you.depth() == 3 then
+KFEAT:  D = armour shop type:Used suffix:Armoury count:5 greed:35 ; \
+            robe | leather armour | ring mail | buckler | helmet | \
+            pair of gloves | cloak
+: else
 {{
 local badprops = {"EV:-5", "Str:-6", "Int:-6", "Dex:-6", "Slay:-4", "rF:-1",
   "rC:-1", "Will:-1", "*Silence", "-Tele", "*Corrode", "*Slow", "MP:-9"}
@@ -90,6 +109,7 @@ kfeat("D = armour shop name:The_Legendary_" .. smithy ..
       " type:Legendary suffix:Smithy count:7 greed:35 use_all ; " ..
       inventorytext)
 }}
+: end
 SHUFFLE:  KLMNOPQR
 SUBVAULT: K : grated_community_mu_home_escape
 SUBVAULT: L : grated_community_mu_home
@@ -153,12 +173,21 @@ ENDMAP
 # death knight, bound demons, bloody lounge, bricked up window, draugr
 NAME:  grated_community_mu_yred_home
 TAGS:  patrolling
+: if you.in_branch("D") and you.depth() == 3 then
+KMONS: 1 : generate_awake hobgoblin zombie / generate_awake adder zombie
+KMONS: 2 : generate_awake orc zombie / generate_awake hound zombie
+KMONS: 3 = wight / phantom / shadow imp w:2
+KMONS: 4 = wight / phantom
+KMONS: ? = bat skeleton / goblin skeleton / nothing
+KITEM: 34 = any / nothing
+: else
 KMONS: 1 : generate_awake warg draugr / generate_awake komodo dragon draugr
 KMONS: 2 : generate_awake lindwurm draugr / generate_awake ice dragon draugr
 KMONS: 3 = vampire / skeletal warrior w:2 / phantasmal warrior w:2
 KMONS: 4 = death knight
 KMONS: ? = generate_awake lemure
 KITEM: 34 = any good_item
+: end
 KFEAT: g = iron_grate
 KFEAT: _ = altar_yredelemnul / fountain_blood
 KPROP: . = bloody / w:4 nothing
@@ -184,12 +213,18 @@ ENDMAP
 # giant, hides, hearth, deep washroom, closet, lounge feature
 NAME:    grated_community_mu_giant_home
 TAGS:    no_pool_fixup patrolling
+: if you.in_branch("D") and you.depth() == 3 then
+MONS:    ogre / gnoll / gnoll bouda, orc / orc warrior
+ITEM:    club / animal skin / nothing
+KITEM:   f = hobgoblin skeleton / kobold skeleton / orc skeleton / animal skin
+: else
 MONS:    ettin / cyclops / stone giant, fire giant / titan, frost giant
 ITEM:    giant spiked club / giant club / nothing, animal skin
-KFEAT:   M = cache_of_meat
 KITEM:   f = human skeleton / yak skeleton / elf skeleton / kobold skeleton /\
              elephant skeleton / dream sheep skeleton / manticore skeleton,\
              animal skin
+: end
+KFEAT:   M = cache_of_meat
 KFEAT:   ? = granite_statue / orcish_idol / altar_beogh w:5 / altar_makhleb w:1
 SHUFFLE: 1# / 1# / 1# / 1# / 1# / 3!
 ####  The frost giant has an ice fireplace ok that's just how he cooks
@@ -213,6 +248,14 @@ ENDMAP
 
 # spellcaster, living room, workshop, closet
 NAME:   grated_community_mu_spellcaster_home
+: if you.in_branch("D") and you.depth() == 3 then
+MONS:   orc wizard, orc priest / kobold brigand, gnoll bouda / iguana w:5
+MONS:   Jessica / Terence / Natasha w:4, sleepcap / shadow imp
+MONS:   adder / hound w:5
+ITEM:   book of minor magic / book of party tricks / nothing
+ITEM:   scroll of vulnerability / scroll of immolation / nothing
+ITEM:   potion of brilliance / potion of magic / nothing
+: else
 MONS:   necromancer, arcanist / ogre mage, occultist / tengu conjurer w:5
 MONS:   lich / ancient lich w:4, deep elf sorcerer / guardian sphinx
 MONS:   deep elf annihilator / tengu reaver w:5
@@ -221,6 +264,7 @@ ITEM:   book of power / book of party tricks / book of transmutation / \
         book of the senses / book of chaos
 ITEM:   book of fire / book of ice / book of lightning / book of the earth / \
         book of storms / the unrestrained analects
+: end
 NSUBST: P = 1:P / *:G
 : local q = crawl.random_range(1, 3)
 : local s = "any scroll / nothing"
@@ -269,10 +313,17 @@ ENDMAP
 
 # orc, possible family, messy living room w/features, hearth, closet
 NAME:   grated_community_mu_orcish_home
+: if you.in_branch("D") and you.depth() == 3 then
+MONS:   orc, orc priest, orc wizard, orc warrior
+MONS:   gnoll / goblin, hobgoblin / kobold, adder
+KITEM:  % = w:12 animal skin / club / hand axe
+KITEM:  | = hand axe / leather armour / gold / nothing
+: else
 MONS:   orc knight, orc warrior, orc priest, warg
 MONS:   orc warlord, orc high priest, peacekeeper
 KITEM:  % = w:12 animal skin / club / hand axe
 KITEM:  | = battleaxe / nothing, plate armour / nothing, gold, any, any
+: end
 KFEAT:  F = cache_of_fruit / cache_of_meat
 KFEAT:  ? = altar_beogh / orcish_idol
 NSUBST: | = 1:| / *:W, F = 1:F. / *:?, . = 5:% / *:.
@@ -296,7 +347,11 @@ ENDMAP
 
 # troll, cookfire, remains
 NAME:   grated_community_mu_troll_home
+: if you.in_branch("D") and you.depth() == 3 then
+MONS:   patrolling ogre / patrolling black bear / patrolling ribbon worm
+: else
 MONS:   patrolling deep troll
+: end
 ITEM:   animal skin
 KITEM:  % = any skeleton, any / nothing
 NSUBST: . = 2:d / 7:% / *:.
@@ -317,9 +372,14 @@ ENDMAP
 
 # taur, entrace w/feature, shooting range, closets
 NAME:    grated_community_mu_taur_home
+: if you.in_branch("D") and you.depth() == 3 then
+MONS:    patrolling centaur / patrolling kobold brigand, training dummy
+ITEM:    any potion / nothing, stone q:1 no_pickup
+: else
 MONS:    patrolling centaur warrior, patrolling yaktaur captain, training dummy
-KMONS:   P = plant
 ITEM:    any potion, any good_item, stone q:1 no_pickup
+: end
+KMONS:   P = plant
 KFEAT:   G = granite_statue / cache_of_fruit w:5
 SUBST:   G = GP
 NSUBST:  d = 1:dW / *:e
@@ -359,10 +419,16 @@ ENDMAP
 # the escape items from those who teleported in, but that's not really needed.
 NAME:  grated_community_mu_sprite_home
 TAGS:  grated_community_mu_home_escape
+: if you.in_branch("D") and you.depth() == 3 then
+MONS:  kobold / goblin / hobgoblin, kobold brigand / gnoll bouda w:4
+ITEM:  wand of digging pre_id, scroll of teleportation pre_id
+ITEM:  animal skin / robe / leather armour, any / nothing
+: else
 MONS:  kobold brigand, boggart band
-KMONS: P = plant
 ITEM:  wand of digging pre_id, scroll of teleportation pre_id
 ITEM:  animal skin, any good_item
+: end
+KMONS: P = plant
 : if you.in_branch("Vaults") then
 SUBST: 1 = 2
 : end
