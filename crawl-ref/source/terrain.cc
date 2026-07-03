@@ -2019,23 +2019,6 @@ void set_terrain_changed(const coord_def p)
 
     if (env.grid(p) == DNGN_SLIMY_WALL)
         env.level_state |= LSTATE_SLIMY_WALL;
-    else if (env.grid(p) == DNGN_OPEN_DOOR)
-    {
-        // Restore colour from door-change markers
-        for (map_marker *marker : env.markers.get_markers_at(p, MAT_TERRAIN_CHANGE))
-        {
-            map_terrain_change_marker* tmarker =
-                dynamic_cast<map_terrain_change_marker*>(marker);
-
-            if (tmarker->change_type == TERRAIN_CHANGE_DOOR_SEAL
-                && tmarker->colour != BLACK)
-            {
-                // Restore the unsealed colour.
-                dgn_set_grid_colour_at(p, tmarker->colour);
-                break;
-            }
-        }
-    }
     else if (env.grid(p) == DNGN_MOULD_PATCH)
         update_mould_tracking(p);
 
@@ -2542,6 +2525,8 @@ void dgn_open_door(const coord_def &dest)
 {
     if (!feat_is_closed_door(env.grid(dest)))
         return;
+
+    revert_terrain_change(dest, TERRAIN_CHANGE_DOOR_SEAL);
 
     if (feat_is_clear_door(env.grid(dest)))
         env.grid(dest) = DNGN_OPEN_CLEAR_DOOR;
