@@ -14,6 +14,7 @@
 #include "evoke.h"
 #include "fight.h"
 #include "god-abil.h"
+#include "god-companions.h"
 #include "god-passive.h"
 #include "items.h"
 #include "libutil.h"
@@ -435,7 +436,7 @@ bool targeter_smite::valid_aim(coord_def a)
         return notify_fail("Out of range.");
     if (!can_affect_walls() && cell_is_solid(a) && !anyone_there(a))
         return notify_fail(_wallmsg(a));
-    if (!can_target_monsters && monster_at(a) && you.can_see(*monster_at(a))
+    if (!can_target_monsters && monster_at(a) && you.aware_of(*monster_at(a))
         // XXX: To let Paragon Tempest be cast without moving the Paragon.
         && monster_at(a) != agent)
     {
@@ -663,8 +664,8 @@ aff_type targeter_dig::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targeter_transference::targeter_transference(const actor* act, int aoe) :
-    targeter_smite(act, LOS_RADIUS, aoe, aoe, true)
+targeter_transference::targeter_transference(int aoe) :
+    targeter_smite(&you, LOS_RADIUS, aoe, aoe, true)
 {
 }
 
@@ -674,19 +675,35 @@ bool targeter_transference::valid_aim(coord_def a)
         return false;
 
     const actor *victim = actor_at(a);
-    if (victim && you.can_see(*victim))
+    if (!victim || !you.aware_of(*victim))
+        return notify_fail("");
+
+    if (mons_is_hepliaklqana_ancestor(victim->type))
     {
-        if (mons_is_hepliaklqana_ancestor(victim->type))
-        {
-            return notify_fail("You can't transfer your ancestor with "
-                               + victim->pronoun(PRONOUN_REFLEXIVE) + ".");
-        }
-        if (mons_is_tentacle_or_tentacle_segment(victim->type)
-            || victim->is_stationary())
-        {
-            return notify_fail("You can't transfer that.");
-        }
+        return notify_fail("You can't transfer your ancestor with "
+                            + victim->pronoun(PRONOUN_REFLEXIVE) + ".");
     }
+    else if (mons_is_tentacle_or_tentacle_segment(victim->type)
+             || victim->is_stationary()
+             || mons_is_projectile(victim->type))
+    {
+        return notify_fail("You can't transfer that.");
+    }
+    else if (!you.can_see(*victim))
+        return notify_fail("You can't see that clearly enough to target.");
+
+    monster *ancestor = hepliaklqana_ancestor_mon();
+    if (!victim->is_habitable(ancestor->pos()))
+    {
+        return notify_fail(make_stringf("%s can't be transferred to your ancestor's location.",
+                                            victim->name(DESC_THE).c_str()));
+    }
+    else if (!ancestor->is_habitable(victim->pos()))
+    {
+        return notify_fail(make_stringf("%s can't be transferred there.",
+                                            ancestor->name(DESC_THE).c_str()));
+    }
+
     return true;
 }
 
@@ -707,16 +724,23 @@ bool targeter_phantom_mirror::valid_aim(coord_def a)
     if (!targeter_smite::valid_aim(a))
         return false;
 
+    if (a == you.pos())
+        return notify_fail("You can't use the mirror on yourself.");
+
     monster *victim = monster_at(a);
-    if (victim && you.can_see(*victim) && !mirror_can_effect(victim))
+    if (!victim || !you.aware_of(*victim))
+        return notify_fail("");
+    else if (!mirror_can_effect(victim))
         return notify_fail("The mirror can't reflect that.");
+    else if (!you.can_see(*victim))
+        return notify_fail("You can't see that clearly enough.");
     return true;
 }
 
 targeter_permafrost::targeter_permafrost(const actor &act) :
     targeter_smite(&act)
 {
-    possible_centres = permafrost_targets(act, false);
+    possible_centres = permafrost_targets(act);
     for (coord_def t : possible_centres)
     {
         targets.insert(t);
@@ -1034,7 +1058,7 @@ bool targeter_cleave::set_aim(coord_def target)
     while (!act_targets.empty())
     {
         actor *potential_target = act_targets.front();
-        if (agent->can_see(*potential_target))
+        if (agent->aware_of(*potential_target))
             targets.insert(potential_target->pos());
         act_targets.pop_front();
     }
@@ -1147,6 +1171,14 @@ aff_type targeter_cloud::is_affected(coord_def loc)
     return AFF_NO;
 }
 
+bool targeter_cloud::affects_monster(const monster_info& mon)
+{
+    monster *victim = monster_at(mon.pos);;
+    if (!victim || !you.aware_of(*victim))
+        return false;
+    return !actor_cloud_immune(*victim, ctype);
+}
+
 bool targeter_cloud::harmful_to_player()
 {
     return !actor_cloud_immune(you, ctype);
@@ -1221,7 +1253,7 @@ aff_type targeter_siphon_essence::is_affected(coord_def loc)
     if (base_aff == AFF_NO)
         return AFF_NO;
     monster* mons = monster_at(loc);
-    if (!mons || !you.can_see(*mons))
+    if (!mons || !you.aware_of(*mons))
         return AFF_MAYBE;
     if (!siphon_essence_affects(*mons))
         return AFF_NO;
@@ -1237,7 +1269,7 @@ aff_type targeter_shatter::is_affected(coord_def loc)
         return AFF_NO; // No shattering through glass... without work.
 
     monster* mons = monster_at(loc);
-    if (!mons || !you.can_see(*mons))
+    if (!mons || !you.aware_of(*mons))
     {
         const int terrain_chance = terrain_shatter_chance(loc, you);
         if (terrain_chance == 100)
@@ -1378,7 +1410,7 @@ aff_type targeter_refrig::is_affected(coord_def loc)
     if (!targeter_radius::is_affected(loc))
         return AFF_NO;
     const actor* act = actor_at(loc);
-    if (!act || act == agent || !agent->can_see(*act))
+    if (!act || act == agent || !agent->aware_of(*act))
         return AFF_NO;
     if (!could_harm(agent, act))
         return AFF_NO;
@@ -1589,7 +1621,7 @@ bool targeter_overgrow::overgrow_affects_pos(const coord_def &p)
     if (feat_is_open_door(feat))
     {
         const monster* const mons = monster_at(p);
-        if (mons && agent && agent->can_see(*mons))
+        if (mons && agent && agent->aware_of(*mons))
             return false;
 
         return true;
@@ -1689,9 +1721,9 @@ aff_type targeter_multiposition::is_affected(coord_def loc)
     return affected_positions.count(loc) > 0 ? positive : AFF_NO;
 }
 
-targeter_scorch::targeter_scorch(const actor &a, int _range, bool affect_invis)
+targeter_scorch::targeter_scorch(const actor &a, int _range)
     : targeter_multiposition(&a,
-                        find_near_hostiles(_range, affect_invis, a), AFF_MAYBE),
+                        find_near_hostiles(a, _range), AFF_MAYBE),
       range(_range)
 { }
 
@@ -2056,7 +2088,7 @@ bool targeter_boulder::valid_aim(coord_def a)
 
     const coord_def start = ray.pos();
     actor* act = actor_at(start);
-    if (feat_is_solid(env.grid(start)) || (act && you.can_see(*act)))
+    if (feat_is_solid(env.grid(start)) || (act && you.aware_of(*act)))
         return notify_fail("You cannot conjure a boulder in an occupied space.");
     if (env.grid(start) == DNGN_LAVA)
         return notify_fail("You cannot conjure a boulder there.");
@@ -2094,7 +2126,7 @@ bool targeter_chain::set_aim(coord_def a)
 
     const coord_def pos = path_taken[path_taken.size() - 1];
     monster* targ = monster_at(pos);
-    if (!targ || !agent->can_see(*targ))
+    if (!targ || !agent->aware_of(*targ))
         return true;
 
     vector<coord_def> chain_targs;
@@ -2237,7 +2269,7 @@ bool targeter_galvanic::set_aim(coord_def a)
 
     const coord_def pos = path_taken[path_taken.size() - 1];
     monster* targ = monster_at(pos);
-    if (!targ || !agent->can_see(*targ))
+    if (!targ || !agent->aware_of(*targ))
         return true;
 
     jolt_targets = galvanic_targets(*agent, pos, false);
@@ -2327,20 +2359,10 @@ targeter_magnavolt::targeter_magnavolt(const actor* act, int _range) :
 {
 }
 
-bool targeter_magnavolt::valid_aim(coord_def a)
-{
-    if (!targeter_smite::valid_aim(a))
-        return false;
-
-    if (!monster_at(a) || !you.can_see(*monster_at(a)))
-        return notify_fail("You don't see a valid target there.");
-
-    return true;
-}
-
 bool targeter_magnavolt::preferred_aim(coord_def a)
 {
-    return !monster_at(a)->has_ench(ENCH_MAGNETISED);
+    monster* mon = monster_at(a);
+    return mon && you.aware_of(*mon) && !mon->has_ench(ENCH_MAGNETISED);
 }
 
 bool targeter_magnavolt::set_aim(coord_def a)
@@ -2352,7 +2374,9 @@ bool targeter_magnavolt::set_aim(coord_def a)
         return false;
 
     beam_targets = get_magnavolt_targets();
-    beam_targets.push_back(a);
+
+    if (monster_at(a) && you.aware_of(*monster_at(a)))
+        beam_targets.push_back(a);
     beam_paths = get_magnavolt_beam_paths(beam_targets);
 
     return true;
@@ -2419,7 +2443,7 @@ aff_type targeter_mortar::is_affected(coord_def loc)
         if (in_bounds(pc) && env.map_knowledge(pc).feat() != DNGN_UNSEEN)
         {
             if (cell_is_solid(pc) && !beam.can_affect_wall(pc, true)
-                || (monster_at(pc) && you.can_see(*monster_at(pc))
+                || (monster_at(pc) && you.aware_of(*monster_at(pc))
                     && !beam.ignores_monster(monster_at(pc))))
             {
                 current = AFF_NO;
@@ -2828,8 +2852,31 @@ bool targeter_paragon_deploy::valid_aim(coord_def a)
     if (a == you.pos())
         return false;
 
+    if (monster_at(a) && you.aware_of(*monster_at(a)))
+        return notify_fail("There's something in the way.");
+
     if (!monster_habitable_grid(MONS_PLATINUM_PARAGON, a))
         return notify_fail("Your paragon could not survive being deployed there.");
+
+    return true;
+}
+
+targeter_single_monster::targeter_single_monster(bool _hostile_only, string no_hostile_message)
+    : targeter_smite(&you, LOS_RADIUS), hostile_only(_hostile_only), no_hostile_msg(no_hostile_message)
+{
+}
+
+bool targeter_single_monster::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    const monster* mon = monster_at(a);
+    if (!(mon && you.can_see(*mon)))
+        return notify_fail("");
+
+    if (hostile_only && mons_aligned(&you, mon))
+        return notify_fail(no_hostile_msg);
 
     return true;
 }

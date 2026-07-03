@@ -173,7 +173,7 @@ void recall_orders(monster *mons)
 
     // Don't pursue distant enemies
     const actor *foe = mons->get_foe();
-    if (foe && !you.can_see(*foe))
+    if (foe && !you.aware_of(*foe))
         mons->foe = MHITYOU;
 }
 
@@ -444,7 +444,7 @@ static int _intoxicate_monsters(coord_def where, int pow, bool tracer)
     if (!mons || !_intoxicate_can_affect(mons))
         return 0;
 
-    if (tracer && (!you.can_see(*mons) || mons_aligned(mons, &you)))
+    if (tracer && (!you.aware_of(*mons) || mons_aligned(mons, &you)))
         return 0;
 
     if (!tracer && monster_resists_this_poison(*mons))
@@ -499,7 +499,7 @@ vector<coord_def> find_sigil_locations(bool tracer)
     {
         if (you.see_cell(*ri) && env.grid(*ri) == DNGN_FLOOR
             && (!actor_at(*ri) || (actor_at(*ri) && tracer
-                                   && !you.can_see(*actor_at(*ri)))))
+                                   && !you.aware_of(*actor_at(*ri)))))
         {
             positions.push_back(*ri);
         }

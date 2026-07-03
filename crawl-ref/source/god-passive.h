@@ -41,8 +41,8 @@ enum class passive_t
     /// You avoid explore-based traps.
     avoid_traps,
 
-    /// You have innate see invisible.
-    sinv,
+    /// You have innate see invisible and lurkers are revealed.
+    see_unseen,
 
     /// You have innate clarity.
     clarity,

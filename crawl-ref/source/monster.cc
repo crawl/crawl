@@ -44,6 +44,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
+#include "map-knowledge.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-abil.h"
@@ -1683,6 +1684,10 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
             slot = SLOT_BODY_ARMOUR;
         }
         break;
+    case ARM_SCARF:
+        if (base_type == MONS_GOJI)
+            slot = SLOT_BODY_ARMOUR;
+        break;
     case ARM_GLOVES:
         if (base_type == MONS_NIKOLA)
             slot = SLOT_OFFHAND;
@@ -2150,7 +2155,7 @@ static string _mon_special_name(const monster& mon, description_level_type desc,
         return _invalid_monster_str(mon.type);
 
     // Handle non-visible case first.
-    if (!force_seen && !mon.observable())
+    if (!force_seen && !mon.observable() && !you.aware_of(mon))
     {
         switch (desc)
         {
@@ -2216,7 +2221,7 @@ string monster::full_name(description_level_type desc) const
 
 string monster::pronoun(pronoun_type pro, bool force_visible) const
 {
-    const bool seen = force_visible || you.can_see(*this);
+    const bool seen = force_visible || you.aware_of(*this);
     if (seen && props.exists(MON_GENDER_KEY))
     {
         return decline_pronoun((gender_type)props[MON_GENDER_KEY].get_int(),
@@ -2227,7 +2232,7 @@ string monster::pronoun(pronoun_type pro, bool force_visible) const
 
 bool monster::pronoun_plurality(bool force_visible) const
 {
-    const bool seen = force_visible || you.can_see(*this);
+    const bool seen = force_visible || you.aware_of(*this);
     if (seen && props.exists(MON_GENDER_KEY))
         return props[MON_GENDER_KEY].get_int() == GENDER_NEUTRAL;
 
@@ -5540,6 +5545,24 @@ void monster::finalise_movement(const actor* to_blame)
         dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
         if (has_ench(ENCH_SUNDER_CHARGE))
             del_ench(ENCH_SUNDER_CHARGE);
+
+        // If a known invisible monster moves, its position stops being known
+        // to the player, but you should still remember where it last was.
+        if (flags & MF_KNOWN_INVISIBLE)
+        {
+            flags &= ~MF_KNOWN_INVISIBLE;
+            env.invis_knowledge.update(*this, false, last_move_pos);
+        }
+    }
+
+    if (invisible())
+    {
+        if (!airborne() && feat_is_water(env.grid(pos())))
+            sense_if_invisible();
+
+        if (cloud_struct *cloud = cloud_at(pos()))
+            if (is_opaque_cloud(cloud->type) && !is_insubstantial())
+                sense_if_invisible();
     }
 
     if (!(mons_habitat(*this) & HT_DRY_LAND)
@@ -6148,14 +6171,15 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     {
         place_cloud(CLOUD_FIRE, pos(), 20 + random2(15), oppressor, 5);
     }
-    else if (type == MONS_SPRIGGAN_RIDER || type == MONS_GOBLIN_RIDER)
+    else if (type == MONS_SPRIGGAN_RIDER || type == MONS_GOBLIN_RIDER
+             || type == MONS_GOJI)
     {
         if (hit_points + damage > max_hit_points / 2)
             damage = max_hit_points / 2 - hit_points;
         if (damage > 0 && x_chance_in_y(damage, damage + hit_points)
             && flavour != BEAM_TORMENT_DAMAGE)
         {
-            bool fly_died = coinflip();
+            bool fly_died = type != MONS_GOJI && coinflip();
             monster_type dead_mon     = MONS_PROGRAM_BUG;
             int old_hp                = hit_points;
             auto old_flags            = flags;
@@ -6177,6 +6201,11 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 type = fly_died ? MONS_GOBLIN : MONS_WYVERN;
                 dead_mon = fly_died ? MONS_WYVERN : MONS_GOBLIN;
             }
+            else if (type == MONS_GOJI)
+            {
+                type = MONS_GHOST_MOTH;
+                dead_mon = MONS_GOJI_UNMOUNTED;
+            }
 
             define_monster(*this);
             hit_points = min(old_hp, hit_points);
@@ -6184,6 +6213,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             enchantments   = old_ench;
             ench_cache     = old_ench_cache;
             ench_countdown = old_ench_countdown;
+            if (type == MONS_GHOST_MOTH)
+                add_ench(mon_enchant(ENCH_INVIS, this, INFINITE_DURATION));
             // Keep the rider's name, if it had one (Mercenary card).
             if (!old_name.empty())
                 mname = old_name;
@@ -6643,7 +6674,7 @@ bool monster::attempt_escape()
 
     if (x_chance_in_y(escape_pow, hold_pow))
     {
-        stop_being_constricted(true);
+        stop_being_constricted();
         return true;
     }
     else
@@ -6927,4 +6958,26 @@ int monster::threat_range(bool include_lof_requiring, bool include_lof_ignoring)
     }
 
     return range;
+}
+
+/**
+ * Possibly inform the player about this monster's location and presence,
+ * if it is invisible but otherwise in LoS (eg: after shooting something at
+ * them or being attacked by them.)
+ *
+ * @param reveal_position   If true (the default), unambiguously reveals the
+ *                          monster's current position. If false (for instance,
+ *                          if a monster does something that only suggests it is
+ *                          'somewhere in LoS'), add only a general hint to
+ *                          invis knowledge.
+ */
+void monster::sense_if_invisible(bool reveal_position)
+{
+    if (!has_ench(ENCH_INVIS) || visible_to(&you) || !you.see_cell(pos()))
+        return;
+
+    if (reveal_position)
+        flags |= MF_KNOWN_INVISIBLE;
+
+    env.invis_knowledge.update(*this, reveal_position);
 }

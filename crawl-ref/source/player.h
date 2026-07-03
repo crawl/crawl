@@ -470,6 +470,8 @@ public:
     int prevailing_wind;
     bool gave_wind_change_warning;
 
+    bool gave_invis_clear_prompt;
+
     // ---------------------------
     // Volatile (same-turn) state:
     // ---------------------------
@@ -622,6 +624,7 @@ public:
     bool innate_sinv() const;
     bool visible_to(const actor *looker) const override;
     bool can_see(const actor& a) const override;
+    bool aware_of(const actor& a) const override;
     undead_state_type undead_state(bool include_temp = true) const;
     bool nightvision() const override;
     bool may_pruneify() const;
@@ -1162,6 +1165,7 @@ int player_channelling_chance(bool max = false);
 int player_prot_life(bool allow_random = true, bool include_temp = true,
                      bool items = true);
 
+bool regeneration_is_ever_inhibited();
 bool regeneration_is_inhibited(const monster *m=nullptr);
 int player_regen();
 int player_indomitable_regen_rate();

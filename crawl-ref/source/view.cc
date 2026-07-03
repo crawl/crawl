@@ -132,7 +132,7 @@ static void _redraw_console_at(coord_def pos)
     int flash_colour = you.flash_colour == BLACK
         ? viewmap_flash_colour()
         : you.flash_colour;
-    monster_type mons = env.map_knowledge(pos).monster();
+    monster_type mons = env.map_knowledge(pos).mon_type();
     int cell_colour =
         flash_colour &&
         (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons))
@@ -940,7 +940,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 
     // Don't hide important information by recolouring monsters.
     bool allow_mon_recolour = query_map_knowledge(true, gc, [](const map_cell& m) {
-        return m.monster() == MONS_NO_MONSTER || mons_class_is_firewood(m.monster());
+        return m.mon_type() == MONS_NO_MONSTER || mons_class_is_firewood(m.mon_type());
     });
 
     // Is this cell excluded from movement by mesmerise-related statuses?
@@ -996,14 +996,16 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         bool found = gc == you.pos();
 
         if (!found)
-            for (auto mon : *crawl_state.flash_monsters)
+        {
+            for (auto pos : *crawl_state.flash_monsters)
             {
-                if (gc == mon->pos())
+                if (gc == pos)
                 {
                     found = true;
                     break;
                 }
             }
+        }
 
         if (!found)
             cell->colour = DARKGREY;
@@ -1030,7 +1032,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         && map_bounds(gc)
         && (_layers == Layer::None
             || gc != you.pos()
-               && (env.map_knowledge(gc).monster() == MONS_NO_MONSTER
+               && (env.map_knowledge(gc).mon_type() == MONS_NO_MONSTER
                    || !you.see_cell(gc)))
         && travel_colour_override(gc))
     {

@@ -1037,6 +1037,8 @@ enum monster_type                      // env.mons[].type
     MONS_NAMELESS_REVENANT,  // 'Nobody' (except with a less misleading enum name)
     MONS_SPROZZ,
     MONS_CASSANDRA,
+    MONS_GOJI,
+    MONS_GOJI_UNMOUNTED,    // 'Fake' monster to handle mount death properly
 #endif
     // Sprint uniques:
     MONS_CHUCK,
@@ -1434,6 +1436,8 @@ enum monster_type                      // env.mons[].type
     MONS_SEWAGE_SOVEREIGN,
     MONS_SCRAPSHELL_CHIMERA,
     MONS_GLOWMURK_GHAST,
+    MONS_GOJI,
+    MONS_GOJI_UNMOUNTED,    // 'Fake' monster to handle mount death properly
 #endif
 
     NUM_MONSTERS,               // used for polymorph

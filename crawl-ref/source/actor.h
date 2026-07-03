@@ -147,6 +147,11 @@ public:
     // Can the actor actually see the target?
     virtual bool can_see(const actor &target) const;
 
+    // Can the actor either see the target or (if the actor is the player) have
+    // enough information to confidently determine their location despite them
+    // being invisible?
+    virtual bool aware_of(const actor &target) const;
+
     // Visibility as required by messaging. In usual play:
     //   Does the player know what's happening to the actor?
     bool observable() const;
@@ -397,10 +402,10 @@ public:
     void start_constricting(actor &whom, constrict_type type, int duration = 0);
 
     void stop_constricting(mid_t whom, bool intentional = false,
-                           bool quiet = false, const string& escape_verb = "");
+                           bool quiet = false, const string& escape_verb = "break");
     void stop_constricting_all(bool intentional = false, bool quiet = false);
     void stop_directly_constricting_all(bool entangling_only = false);
-    void stop_being_constricted(bool quiet = false, const string& escape_verb = "");
+    void stop_being_constricted(bool quiet = false, const string& escape_verb = "break");
 
     virtual bool attempt_escape() = 0;
 
@@ -434,7 +439,7 @@ public:
 private:
     void constriction_damage_defender(actor &defender);
     void end_constriction(mid_t whom, bool intentional, bool quiet,
-                          const string& escape_verb = "");
+                          const string& escape_verb = "break");
 };
 
 bool actor_slime_wall_immune(const actor *actor);

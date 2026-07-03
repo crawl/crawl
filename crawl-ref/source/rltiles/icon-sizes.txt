@@ -17,6 +17,8 @@ nobody_memory_2: 0
 nobody_memory_3: 0
 pyrrhic: 0
 frenzied: 0
+unseen_invis_known: 0
+unseen_invis_remembered: 0
 
 drain: 6
 might: 6
@@ -53,6 +55,8 @@ resistance: 8
 ghostly: 8
 malmutated: 8
 magnetised: 8
+seen_invis: 8
+phase_shift: 8
 
 recall: 9
 teleporting: 9

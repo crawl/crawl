@@ -718,7 +718,7 @@ static vector<ability_def> &_get_ability_list()
             2, 0, 0, -1, {fail_basis::invo}, abflag::none },
         { ABIL_HEPLIAKLQANA_TRANSFERENCE, "Transference",
             2, 0, 3, LOS_MAX_RANGE, {fail_basis::invo, 40, 5, 20},
-            abflag::none },
+            abflag::target },
         { ABIL_HEPLIAKLQANA_IDEALISE, "Idealise",
             4, 0, 4, -1, {fail_basis::invo, 60, 4, 25}, abflag::none },
 
@@ -2338,10 +2338,11 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
-        // only available while your ancestor is alive.
+    // only available while your ancestor is alive.
     case ABIL_HEPLIAKLQANA_IDEALISE:
     case ABIL_HEPLIAKLQANA_RECALL:
     case ABIL_HEPLIAKLQANA_TRANSFERENCE:
+    {
         if (hepliaklqana_ancestor() == MID_NOBODY)
         {
             if (!quiet)
@@ -2351,7 +2352,20 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             }
             return false;
         }
+
+        if (abil.ability != ABIL_HEPLIAKLQANA_RECALL)
+        {
+            monster* ancestor = hepliaklqana_ancestor_mon();
+            if (!ancestor || !you.can_see(*ancestor))
+            {
+                if (!quiet)
+                    mprf("%s is not nearby!", hepliaklqana_ally_name().c_str());
+                return false;
+            }
+        }
+
         return true;
+    }
 
     case ABIL_WU_JIAN_SERPENTS_LASH:
         if (you.attribute[ATTR_SERPENTS_LASH])
@@ -2576,7 +2590,7 @@ private:
 
 static vector<string> _desc_slouch_damage(const monster_info& mi)
 {
-    if (!monster_at(mi.pos) || !you.can_see(*monster_at(mi.pos)))
+    if (!monster_at(mi.pos) || !you.aware_of(*monster_at(mi.pos)))
         return vector<string>{};
     else if (!is_slouchable(mi.pos))
         return vector<string>{make_stringf("not susceptible")};
@@ -2760,6 +2774,9 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
 
     case ABIL_KIKU_SIGN_OF_RUIN:
         return make_unique<targeter_smite>(&you, LOS_RADIUS, 2, 2);
+
+    case ABIL_HEPLIAKLQANA_TRANSFERENCE:
+        return make_unique<targeter_transference>(have_passive(passive_t::transfer_drain) ? 1 : 0);
 
     default:
         break;
@@ -3041,14 +3058,14 @@ static bool _evoke_staff_of_olgreb(dist *target)
     return true;
 }
 
-static vector<monster*> _get_siphon_victims(bool known)
+static vector<monster*> _get_siphon_victims(bool only_known)
 {
     vector<monster*> victims;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (grid_distance(you.pos(), mi->pos()) <= siphon_essence_range()
             && siphon_essence_affects(**mi)
-            && (you.can_see(**mi) || !known))
+            && (you.aware_of(**mi) || !only_known))
         {
             victims.push_back(*mi);
         }
@@ -3576,7 +3593,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     {
         monster* mons = monster_at(beam.target);
 
-        if (mons && you.can_see(*mons) && mons->is_illusion())
+        if (mons->is_illusion())
         {
             fail_check();
             mprf("You attempt to bind %s soul, but %s is merely a clone!",
@@ -4026,7 +4043,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_HEPLIAKLQANA_TRANSFERENCE:
-        return hepliaklqana_transference(fail); // TODO: dist arg
+        return hepliaklqana_transference(beam.target, fail);
 
     case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
     case ABIL_HEPLIAKLQANA_TYPE_ELEMENTALIST:

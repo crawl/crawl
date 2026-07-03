@@ -411,6 +411,12 @@ This creature has been briefly distracted by something else.
 
 [[low-tier stab monstatus]]
 %%%%
+out of phase monstatus
+
+This creature is slightly out of phase and has greatly increased evasion against
+those who lacks the ability to see invisible creatures. Their degree of injury
+is also hidden.
+%%%%
 paralysed monstatus
 
 This creature is unable to move, act, block, or dodge attacks.

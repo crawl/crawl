@@ -73,6 +73,7 @@ const enchant_type dispellable_enchantments[] =
     ENCH_DIMINISHED_SPELLS,
     ENCH_VEXED,
     ENCH_EXPOSED,
+    ENCH_PHASE_SHIFT,
 };
 
 bool player_is_debuffable();

@@ -1479,18 +1479,6 @@ spret cast_haunt(int pow, const coord_def& where, bool fail)
 
     monster* m = monster_at(where);
 
-    if (m == nullptr)
-    {
-        fail_check();
-        mpr("An evil force gathers, but it quickly dissipates.");
-        return spret::success; // still losing a turn
-    }
-    else if (m->wont_attack())
-    {
-        mpr("You cannot haunt those who bear you no hostility.");
-        return spret::abort;
-    }
-
     int mi = m->mindex();
     ASSERT(!invalid_monster_index(mi));
 
@@ -2086,10 +2074,10 @@ spret cast_fulminating_prism(actor* caster, int pow, const coord_def& where,
         return spret::abort;
     }
 
-    actor* victim = monster_at(where);
+    monster* victim = monster_at(where);
     if (victim)
     {
-        if (caster->can_see(*victim))
+        if (caster->aware_of(*victim))
         {
             if (caster->is_player())
                 mpr("You can't place the prism on a creature.");
@@ -2097,19 +2085,7 @@ spret cast_fulminating_prism(actor* caster, int pow, const coord_def& where,
         }
 
         fail_check();
-
-        // FIXME: maybe should do _paranoid_option_disable() here?
-        if (caster->is_player()
-            || (you.can_see(*caster) && you.see_cell(where)))
-        {
-            if (you.can_see(*victim))
-            {
-                mprf("%s %s.", victim->name(DESC_THE).c_str(),
-                               victim->conj_verb("twitch").c_str());
-            }
-            else
-                canned_msg(MSG_GHOSTLY_OUTLINE);
-        }
+        canned_msg(MSG_GHOSTLY_OUTLINE);
         return spret::success;      // Don't give free detection!
     }
 
@@ -2576,7 +2552,7 @@ vector<coord_def> find_briar_spaces(bool just_check)
     {
         if (monster_habitable_grid(MONS_BRIAR_PATCH, *adj_it)
             && (!actor_at(*adj_it)
-                || just_check && !you.can_see(*actor_at(*adj_it))))
+                || just_check && !you.aware_of(*actor_at(*adj_it))))
         {
             result.push_back(*adj_it);
         }
@@ -2682,7 +2658,7 @@ spret fedhas_grow_ballistomycete(const coord_def& target, bool fail)
     monster* mons = monster_at(target);
     if (mons)
     {
-        if (you.can_see(*mons))
+        if (you.aware_of(*mons))
         {
             mpr("That space is already occupied.");
             return spret::abort;
@@ -2729,7 +2705,7 @@ spret fedhas_grow_oklob(const coord_def& target, bool fail)
     monster* mons = monster_at(target);
     if (mons)
     {
-        if (you.can_see(*mons))
+        if (you.aware_of(*mons))
         {
             mpr("That space is already occupied.");
             return spret::abort;
@@ -2857,7 +2833,7 @@ spret cast_foxfire(actor &agent, int pow, bool fail, bool marshlight)
     {
         if (cell_is_solid(*ai))
             continue;
-        if (actor_at(*ai) && agent.can_see(*actor_at(*ai)))
+        if (actor_at(*ai) && agent.aware_of(*actor_at(*ai)))
             continue;
         see_space = true;
         break;
@@ -3102,29 +3078,9 @@ string mons_simulacrum_immune_reason(const monster *mons)
 
 spret cast_simulacrum(coord_def target, int pow, bool fail)
 {
-    if (cell_is_invalid_target(target))
-    {
-        canned_msg(MSG_UNTHINKING_ACT);
-        return spret::abort;
-    }
+    fail_check();
 
     monster* mons = monster_at(target);
-    if (!mons || !you.can_see(*mons))
-    {
-        fail_check();
-        canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
-        // If there's no monster there, you still pay the costs in
-        // order to prevent locating invisible monsters.
-        return spret::success;
-    }
-
-    if (!mons_can_be_spectralised(*mons))
-    {
-        mpr("You can't make simulacra of that!");
-        return spret::abort;
-    }
-
-    fail_check();
 
     mprf("You sublimate a sliver of %s essence and reconstitute it in ice.",
          apostrophise(mons->name(DESC_THE)).c_str());
@@ -3282,7 +3238,7 @@ spret cast_hellfire_mortar(const actor& agent, bolt& beam, int pow, bool fail)
     if (agent.is_player())
     {
         monster* mon = monster_at(beam.path_taken[0]);
-        if (mon && you.can_see(*mon))
+        if (mon && you.aware_of(*mon))
         {
             mprf("%s is in the way!", mon->name(DESC_THE).c_str());
             return spret::abort;
@@ -3571,17 +3527,6 @@ spret cast_clockwork_bee(coord_def target, bool fail)
 
     monster* targ = monster_at(target);
 
-    if (!targ || !you.can_see(*targ))
-    {
-        mpr("You see nothing there to target.");
-        return spret::abort;
-    }
-    else if (targ->wont_attack())
-    {
-        mpr("Your bee can only target hostiles.");
-        return spret::abort;
-    }
-
     you.props[CLOCKWORK_BEE_TARGET].get_int() = targ->mid;
 
     mprf("You lock target on %s and prepare to deploy your bee.", targ->name(DESC_THE).c_str());
@@ -3737,7 +3682,7 @@ vector<coord_def> diamond_sawblade_spots(bool actual)
         {
             if (!(act->type == MONS_DIAMOND_SAWBLADE
                   && act->was_created_by(SPELL_DIAMOND_SAWBLADES))
-                && (actual || you.can_see(*act)))
+                && (actual || you.aware_of(*act)))
             {
                 continue;
             }
@@ -3800,10 +3745,13 @@ string surprising_crocodile_unusable_reason(const actor& agent, const coord_def&
     if (!targ || !agent.can_see(*targ) || mons_aligned(&agent, targ))
         return "You can't see a valid target there.";
 
+    if (targ->invisible())
+        return "Your crocodile wouldn't be able to see that.";
+
     const coord_def drag_shift = -(target - agent.pos()).sgn();
     const coord_def move_pos = agent.pos() + drag_shift;
     if (cell_is_solid(move_pos)
-        || actor_at(move_pos) && (actual || agent.can_see(*actor_at(move_pos))))
+        || actor_at(move_pos) && (actual || agent.aware_of(*actor_at(move_pos))))
     {
         return "There's not enough room behind you.";
     }
@@ -3850,7 +3798,7 @@ bool surprising_crocodile_can_drag(const actor& agent, const coord_def& target,
     }
 
     // Can't move the agent into an occupied space
-    if (actor_at(agent_move_pos) && (actual || agent.can_see(*actor_at(agent_move_pos))))
+    if (actor_at(agent_move_pos) && (actual || agent.aware_of(*actor_at(agent_move_pos))))
         return false;
 
     return true;
@@ -4066,7 +4014,7 @@ spret cast_platinum_paragon(const coord_def& target, int pow, bool fail)
         if (random_near_space(blocker, blocker->pos(), spot, true)
             && env.grid(spot) != DNGN_TRAP_DISPERSAL)
         {
-            blocker->blink_to(spot, true);
+            blocker->move_to(spot, MV_TRANSLOCATION);
         }
         else
             monster_teleport(blocker, true);
@@ -4358,9 +4306,6 @@ spret cast_monarch_bomb(const actor& agent, int pow, bool fail)
             mprf("%s construct%s an explosive harbinger and set it loose.",
                  agent.name(DESC_THE).c_str(), agent.is_player() ? "" : "s");
         }
-
-        mon->number = 5 + div_rand_round(pow, 50);
-        //mon->number = random_range(1, 3);
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);

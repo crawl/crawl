@@ -144,7 +144,7 @@ public:
 class targeter_transference : public targeter_smite
 {
 public:
-    targeter_transference(const actor *act, int aoe);
+    targeter_transference(int aoe);
     bool valid_aim(coord_def a) override;
     bool affects_monster(const monster_info& mon) override;
 };
@@ -227,6 +227,7 @@ public:
     bool set_aim(coord_def a) override;
     bool valid_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
+    bool affects_monster(const monster_info& mon) override;
     bool harmful_to_player() override;
     cloud_type ctype;
     int range;
@@ -427,7 +428,7 @@ protected:
 class targeter_scorch : public targeter_multiposition
 {
 public:
-    targeter_scorch(const actor &a, int _range, bool affect_invis);
+    targeter_scorch(const actor &a, int _range);
     bool valid_aim(coord_def c) override;
 
 protected:
@@ -643,7 +644,6 @@ class targeter_magnavolt : public targeter_smite
 {
 public:
     targeter_magnavolt(const actor *act, int range);
-    bool valid_aim(coord_def a) override;
     bool preferred_aim(coord_def a) override;
     bool set_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
@@ -774,4 +774,16 @@ class targeter_paragon_deploy : public targeter_smite
 public:
     targeter_paragon_deploy(int range);
     bool valid_aim(coord_def a) override;
+};
+
+class targeter_single_monster : public targeter_smite
+{
+public:
+    targeter_single_monster(bool hostile_only = true,
+                            string no_hostile_message = "You can only target hostiles.");
+    bool valid_aim(coord_def a) override;
+
+private:
+    bool hostile_only;
+    string no_hostile_msg;
 };

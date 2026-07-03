@@ -92,7 +92,7 @@ static actor* _find_closest_target(const actor &caster, int radius, bool tracer)
         actor *act = actor_at(*di);
         if (act && _act_worth_targeting(caster, *act)
             && cell_see_cell(caster.pos(), *di, LOS_SOLID)
-            && (!tracer || caster.can_see(*act)))
+            && (!tracer || caster.aware_of(*act)))
         {
             return act;
         }
@@ -269,9 +269,8 @@ vector<coord_def> chain_lightning_targets()
         {
             actor *new_victim = actor_at(*di);
             if (new_victim
-                && you.can_see(*new_victim)
+                && you.aware_of(*new_victim)
                 && seen.find(new_victim) == seen.end()
-                && cell_see_cell(*di, you.pos(), LOS_SOLID)
                 && _act_worth_targeting(you, *new_victim))
             {
                 to_check.push_back(new_victim->pos());
@@ -516,7 +515,7 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
 
     god_conduct_trigger conducts[3];
     if (god_conducts)
-        set_attack_conducts(conducts, mon, you.can_see(mon));
+        set_attack_conducts(conducts, mon, you.aware_of(mon));
 
     if (damage)
     {
@@ -560,7 +559,7 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
     monster *mon_targ = target.as_monster();
     god_conduct_trigger conducts[3];
     if (actual && YOU_KILL(beam.thrower) && mon_targ)
-        set_attack_conducts(conducts, *mon_targ, you.can_see(target));
+        set_attack_conducts(conducts, *mon_targ, you.aware_of(target));
 
     int hurted;
     if (actual)
@@ -805,7 +804,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
     for (actor_near_iterator ai((agent ? agent : &you)->pos(), LOS_NO_TRANS);
          ai; ++ai)
     {
-        if (!actual && !agent->can_see(**ai))
+        if (!actual && !agent->aware_of(**ai))
             continue;
         if (!(*vulnerable)(agent, *ai))
             continue;
@@ -1147,7 +1146,7 @@ static ai_action::goodness _fire_permafrost_at(const actor &agent, int pow,
 
 bool mons_should_fire_permafrost(int pow, const actor &agent)
 {
-    set<coord_def> targets = permafrost_targets(agent, false);
+    set<coord_def> targets = permafrost_targets(agent);
     bool ever_good = false;
     for (auto target : targets)
     {
@@ -1160,12 +1159,12 @@ bool mons_should_fire_permafrost(int pow, const actor &agent)
     return ever_good;
 }
 
-set<coord_def> permafrost_targets(const actor &caster, bool actual)
+set<coord_def> permafrost_targets(const actor &caster)
 {
     set<coord_def> targets;
 
     const int range = spell_range(SPELL_PERMAFROST_ERUPTION, &caster);
-    vector<coord_def> all_hostiles = find_near_hostiles(range, actual, caster);
+    vector<coord_def> all_hostiles = find_near_hostiles(caster, range);
     if (all_hostiles.empty())
         return targets;
 
@@ -1197,7 +1196,7 @@ set<coord_def> permafrost_targets(const actor &caster, bool actual)
 
 spret cast_permafrost_eruption(actor &caster, int pow, bool fail)
 {
-    set<coord_def> maybe_targets = permafrost_targets(caster, true);
+    set<coord_def> maybe_targets = permafrost_targets(caster);
     if (caster.is_player())
     {
         set<coord_def> maybe_victims(maybe_targets.begin(), maybe_targets.end());
@@ -1978,7 +1977,7 @@ spret cast_scorch(const actor& agent, int pow, bool fail)
     fail_check();
 
     const int range = spell_range(SPELL_SCORCH, &agent);
-    auto targeter = make_unique<targeter_scorch>(agent, range, true);
+    auto targeter = make_unique<targeter_scorch>(agent, range);
     actor *targ = nullptr;
     int seen = 0;
     for (auto ti = targeter->affected_iterator(AFF_MAYBE); ti; ++ti)
@@ -2050,7 +2049,7 @@ spret cast_scorch(const actor& agent, int pow, bool fail)
 }
 
 /// Scorch's target selection (see targeter_scorch)
-vector<coord_def> find_near_hostiles(int range, bool affect_invis, const actor& agent)
+vector<coord_def> find_near_hostiles(const actor& agent, int range, bool include_sensed)
 {
     vector<coord_def> hostiles;
     for (radius_iterator ri(agent.pos(), range, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
@@ -2059,7 +2058,8 @@ vector<coord_def> find_near_hostiles(int range, bool affect_invis, const actor& 
         if (act
             && !mons_aligned(&agent, act)
             && _act_worth_targeting(agent, *act)
-            && (affect_invis || agent.can_see(*act)))
+            && (include_sensed ? agent.aware_of(*act)
+                               : agent.can_see(*act)))
         {
             hostiles.push_back(*ri);
         }
@@ -2613,7 +2613,7 @@ vector<coord_def> get_ignition_blast_sources(const actor *agent, bool tracer)
             && !ai->is_firewood()
             && !mons_is_tentacle_segment(ai->type)
             && !mons_is_projectile(*ai->as_monster())
-            && (!tracer || agent->can_see(**ai)))
+            && (!tracer || agent->aware_of(**ai)))
         {
             blast_sources.push_back(ai->position);
         }
@@ -2760,7 +2760,7 @@ static int _discharge_monsters(const coord_def &where, int pow,
             // We need to initialize these before the monster has died.
             god_conduct_trigger conducts[3];
             if (agent.is_player())
-                set_attack_conducts(conducts, *mons, you.can_see(*mons));
+                set_attack_conducts(conducts, *mons, you.aware_of(*mons));
 
             dprf("%s: static discharge damage: %d",
                 mons->name(DESC_PLAIN, true).c_str(), damage);
@@ -2925,7 +2925,7 @@ static vector<coord_def> _get_chain_targets(const actor &agent,
         for (coord_def p : seed_points)
         {
             actor* act = actor_at(p);
-            const bool seen_act = act && (actual || agent.can_see(*act));
+            const bool seen_act = act && (actual || agent.aware_of(*act));
             if (!seen_act
                 || act == &agent
                 || act->res_elec() >= 3)
@@ -3095,15 +3095,9 @@ void do_eel_arcjolt()
     _do_chain_jolt(you, to_check, dmg);
 }
 
-static bool _plasma_targetable(const actor &agent, monster &m, bool actual)
+static bool _plasma_targetable(const actor &agent, const actor &target)
 {
-    if (!_act_worth_targeting(agent, m))
-        return false;
-
-    if (mons_aligned(&agent, &m))
-        return false;
-
-    return actual || agent.can_see(m);
+    return _act_worth_targeting(agent, target) && !mons_aligned(&agent, &target) && agent.can_see(target);
 }
 
 vector<coord_def> plasma_beam_paths(coord_def source, const vector<coord_def> &targets)
@@ -3132,57 +3126,41 @@ vector<coord_def> plasma_beam_paths(coord_def source, const vector<coord_def> &t
     return paths;
 }
 
-vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual)
+vector<coord_def> plasma_beam_targets(const actor &agent, int pow)
 {
     const int range = spell_range(SPELL_PLASMA_BEAM, &agent, pow);
     int maxdist = 0;
-    vector<actor*> target_actors;
-    vector <coord_def> targets;
+    vector<coord_def> targets;
     coord_def source = agent.pos();
 
     // find the "actual" range of the spell
-    for (monster_near_iterator mi(source, LOS_SOLID_SEE); mi; ++mi)
+    for (actor_near_iterator ai(source, LOS_SOLID_SEE); ai; ++ai)
     {
-        if (!_plasma_targetable(agent, **mi, actual))
+        if (!_plasma_targetable(agent, **ai))
             continue;
 
-        int dist = grid_distance(source, mi->pos());
+        int dist = grid_distance(source, ai->pos());
         if (dist > maxdist && dist <= range)
             maxdist = dist;
-    }
-
-    if (agent.is_monster()
-        && !agent.as_monster()->wont_attack()
-        && cell_see_cell(source, you.pos(), LOS_SOLID_SEE)
-        && (actual || agent.can_see(you)))
-    {
-        int dist = grid_distance(source, you.pos());
-        if (dist > maxdist && dist <= range)
-        {
-            maxdist = dist;
-            target_actors.push_back(&you);
-        }
     }
 
     // nothing in range
     if (maxdist == 0)
         return targets;
 
-    for (monster_near_iterator mi(source, LOS_SOLID_SEE); mi; ++mi)
+    for (actor_near_iterator ai(source, LOS_SOLID_SEE); ai; ++ai)
     {
         // look only at the maximum found range
-        int dist = grid_distance(source, mi->pos());
+        int dist = grid_distance(source, ai->pos());
         if (dist != maxdist)
             continue;
 
-        if (!_plasma_targetable(agent, **mi, actual))
+        if (!_plasma_targetable(agent, **ai))
             continue;
 
-        target_actors.push_back(*mi);
+        targets.push_back(ai->pos());
     }
 
-    for (actor *a : target_actors)
-        targets.push_back(a->pos());
     return targets;
 }
 
@@ -3224,7 +3202,7 @@ static targeting_tracer _fire_plasma_beam_at(const actor &agent, int pow,
 
 bool mons_should_fire_plasma(int pow, const actor &agent)
 {
-    vector<coord_def> targets = plasma_beam_targets(agent, pow, false);
+    vector<coord_def> targets = plasma_beam_targets(agent, pow);
     bool ever_good = false;
     for (auto target : targets)
     {
@@ -3241,10 +3219,11 @@ bool mons_should_fire_plasma(int pow, const actor &agent)
 
 spret cast_plasma_beam(int pow, const actor &agent, bool fail, bool is_tracer)
 {
+    vector<coord_def> targets = plasma_beam_targets(agent, pow);
+
     if (is_tracer)
     {
-        vector<coord_def> known_targs = plasma_beam_targets(agent, pow, false);
-        for (coord_def target : known_targs)
+        for (coord_def target : targets)
         {
             const targeting_tracer tracer = _fire_plasma_beam_at(agent, pow, target, true);
             if (tracer.foe_info.count > 0)
@@ -3257,9 +3236,8 @@ spret cast_plasma_beam(int pow, const actor &agent, bool fail, bool is_tracer)
 
     if (agent.is_player())
     {
-        vector<coord_def> known_targs = plasma_beam_targets(agent, pow, false);
         if (warn_about_bad_targets(SPELL_PLASMA_BEAM,
-                                    plasma_beam_paths(you.pos(), known_targs),
+                                    plasma_beam_paths(you.pos(), targets),
             [](const monster& m) { return m.res_fire() == 3 && m.res_elec() == 3 ;}))
         {
             return spret::abort;
@@ -3267,8 +3245,6 @@ spret cast_plasma_beam(int pow, const actor &agent, bool fail, bool is_tracer)
     }
 
     fail_check();
-
-    vector<coord_def> targets = plasma_beam_targets(agent, pow, true);
 
     if (targets.empty())
     {
@@ -3747,7 +3723,7 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
     }
 
     const actor* victim = actor_at(target);
-    if ((!victim || !you.can_see(*victim))
+    if ((!victim || !you.aware_of(*victim))
         && !yesno("You can't see anything there. Cast anyway?", false, 'n'))
     {
         canned_msg(MSG_OK);
@@ -3857,7 +3833,7 @@ dice_def poisonous_vapours_damage(int pow, bool random)
 spret cast_poisonous_vapours(const actor& agent, int pow, const coord_def target, bool fail)
 {
     actor* act = actor_at(target);
-    if (agent.is_player() && act && you.can_see(*act) && act->res_poison() <= 0
+    if (agent.is_player() && act && you.aware_of(*act) && act->res_poison() <= 0
         && stop_attack_prompt(act->as_monster(), false, target))
     {
         return spret::abort;
@@ -4304,6 +4280,8 @@ void attempt_jinxbite_hit(actor& victim)
         mprf("A giggling sprite leaps out and %s",
                 _get_jinxsprite_message(*mons).c_str());
     }
+    else
+        mprf("A giggling sprite leaps out and plays with %s.", victim.name(DESC_THE).c_str());
 
     _player_hurt_monster(*mons, dmg, BEAM_MAGIC);
 
@@ -4407,7 +4385,7 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
 
             const monster* mon = monster_at(*ri);
 
-            if (!mon || !you.can_see(*mon))
+            if (!mon || !you.aware_of(*mon))
                 continue;
 
             if (!mon->friendly() && (*vulnerable)(mon))
@@ -4676,18 +4654,15 @@ static bool _maxwells_target_check(const monster &m)
             && !m.wont_attack();
 }
 
-// returns the closest target to the player, choosing randomly if there are more
-// than one (see `fair` argument to distance_iterator).
-static monster* _find_maxwells_target(bool tracer)
+// returns the closest visible target to the player, choosing randomly if there
+// are more than one (see `fair` argument to distance_iterator).
+static monster* _find_maxwells_target()
 {
-    for (distance_iterator di(you.pos(), !tracer, true, LOS_RADIUS); di; ++di)
+    for (distance_iterator di(you.pos(), true, true, LOS_RADIUS); di; ++di)
     {
         monster *mon = monster_at(*di);
-        if (mon && _maxwells_target_check(*mon)
-            && (!tracer || you.can_see(*mon)))
-        {
+        if (mon && _maxwells_target_check(*mon) && you.can_see(*mon))
             return mon;
-        }
     }
 
     return nullptr;
@@ -4697,7 +4672,7 @@ static monster* _find_maxwells_target(bool tracer)
 vector<monster *> find_maxwells_possibles()
 {
     vector<monster *> result;
-    monster *seed = _find_maxwells_target(true);
+    monster *seed = _find_maxwells_target();
     if (!seed)
         return result;
 
@@ -4713,7 +4688,7 @@ vector<monster *> find_maxwells_possibles()
 
 spret cast_maxwells_coupling(int pow, bool fail, bool tracer)
 {
-    monster* const mon = _find_maxwells_target(true);
+    monster* const mon = _find_maxwells_target();
 
     if (!mon || !you.can_see(*mon))
     {
@@ -4740,7 +4715,7 @@ spret cast_maxwells_coupling(int pow, bool fail, bool tracer)
 
 static void _discharge_maxwells_coupling()
 {
-    monster* const mon = _find_maxwells_target(false);
+    monster* const mon = _find_maxwells_target();
 
     if (!mon)
     {
@@ -4752,7 +4727,7 @@ static void _discharge_maxwells_coupling()
     flash_view_delay(UA_PLAYER, LIGHTCYAN, 100, 0, &hitfunc);
 
     god_conduct_trigger conducts[3];
-    set_attack_conducts(conducts, *mon, you.can_see(*mon));
+    set_attack_conducts(conducts, *mon);
 
     string attack_punctuation = attack_strength_punctuation(mon->hit_points);
 
@@ -4971,10 +4946,27 @@ spret cast_magnavolt(coord_def target, int pow, bool fail)
         return spret::abort;
     }
 
-    fail_check();
-
     // First apply the debuff to the targeted enemy.
     monster* mon = monster_at(target);
+
+    if ((!mon || !you.aware_of(*mon))
+        && !yesno("You can't see a target there. Cast anyway?", false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return spret::abort;
+    }
+
+    fail_check();
+
+    if (!mon)
+    {
+        mprf("Your magnetic shrapnel fails to attach to any target and your spell fizzles.");
+
+        // Don't zap other things at the same time or fishing for unseen targets this way
+        // risks being strictly optimal.
+        return spret::success;
+
+    }
 
     if (!mon->has_ench(ENCH_MAGNETISED))
         mprf("Magnetic shrapnel attaches itself to %s.", mon->name(DESC_THE).c_str());

@@ -31,6 +31,18 @@ encounter new items or features. Unlike CMD_EXPLORE, will treat
 explore_auto_rest as if it were false and explore_auto_rest_status as if it were
 empty.
 %%%%
+CMD_IGNORE_INVISIBLE
+
+Temporarily suppresses warnings about resting when invisible creatures may be
+nearby.
+
+CMD_IGNORE_INVISIBLE verbose
+
+Deletes any recent memories about unseen invisible creatures being nearby,
+allowing rest and autoexplore to function in rare cases where the player can
+determine they are safe, but the UI cannot (eg: after closing a door on a
+monster who cannot open them).
+%%%%
 CMD_INTERLEVEL_TRAVEL
 
 Travel to distant levels

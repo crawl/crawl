@@ -584,6 +584,8 @@ public:
 
     bool is_vengeance_target() const;
 
+    void sense_if_invisible(bool reveal_position = true);
+
 private:
     int hit_dice;
 

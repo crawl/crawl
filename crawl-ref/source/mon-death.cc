@@ -1678,7 +1678,7 @@ static void _druid_final_boon(const monster* mons)
 static void _orb_of_mayhem(actor& maniac, const monster& victim)
 {
     vector<monster *> witnesses;
-    for (monster_near_iterator mi(&victim, LOS_NO_TRANS); mi; ++mi)
+    for (monster_near_iterator mi(victim.pos(), LOS_NO_TRANS); mi; ++mi)
         if (*mi != &victim && mi->can_see(maniac) && mi->can_go_frenzy() && could_harm(&maniac, *mi))
             witnesses.push_back(*mi);
 
@@ -3546,6 +3546,11 @@ item_def* monster_die(monster& mons, killer_type killer,
             daddy_corpse = mounted_kill(&mons, MONS_HORNET, killer, killer_index);
             mons.type = MONS_SPRIGGAN;
         }
+        else if (mons.type == MONS_GOJI)
+        {
+            daddy_corpse = mounted_kill(&mons, MONS_GHOST_MOTH, killer, killer_index);
+            mons.type = MONS_GOJI_UNMOUNTED;
+        }
         corpse = place_monster_corpse(mons);
         if (!corpse)
             corpse = daddy_corpse;
@@ -3654,17 +3659,6 @@ item_def* monster_die(monster& mons, killer_type killer,
         beogh_follower_banished(mons);
     }
 
-    // If we kill an invisible monster reactivate autopickup.
-    // We need to check for actual invisibility rather than whether we
-    // can see the monster. There are several edge cases where a monster
-    // is visible to the player but we still need to turn autopickup
-    // back on, such as TSO's halo or sticky flame. (jpeg)
-    if (you.see_cell(mons.pos()) && mons.has_ench(ENCH_INVIS)
-        && !mons.friendly())
-    {
-        autotoggle_autopickup(false);
-    }
-
     crawl_state.dec_mon_acting(&mons);
     monster_cleanup(&mons);
 
@@ -3762,6 +3756,9 @@ void monster_cleanup(monster* mons)
 
     if (mons_is_tentacle_head(mons_base_type(*mons)))
         destroy_tentacles(mons);
+
+    // Erase any indicators of this monster's previous positions.
+    env.invis_knowledge.update(*mons);
 
     const mid_t mid = mons->mid;
     env.mid_cache.erase(mid);
@@ -3917,6 +3914,20 @@ int dismiss_monsters(string pattern)
             ++ndismissed;
         }
     }
+
+    bool removed_lurker = false;
+    for (int i = env.lurkers.size() - 1; i >= 0; --i)
+    {
+        if (tpat.empty() || tpat.matches(env.lurkers[i].mon.mons.name(DESC_PLAIN, true)))
+        {
+            ++ndismissed;
+            env.lurkers.erase(env.lurkers.begin() + i);
+            removed_lurker = true;
+        }
+    }
+    if (removed_lurker)
+        init_lurker_map();
+
 
     return ndismissed;
 }

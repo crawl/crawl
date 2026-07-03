@@ -24,6 +24,7 @@
 #include "tiles-build-specific.h"
 #include "tileview.h"
 #include "viewgeom.h"
+#include "ui.h"
 
 MonsterRegion::MonsterRegion(const TileRegionInit &init) : GridRegion(init)
 {
@@ -40,7 +41,7 @@ void MonsterRegion::update()
     if (max_mons == 0)
         return;
 
-    get_monster_info(m_mon_info);
+    get_nearby_monster_info(m_mon_info);
     sort(m_mon_info.begin(), m_mon_info.end(),
               monster_info::less_than_wrapper);
 
@@ -75,7 +76,8 @@ int MonsterRegion::handle_mouse(wm_mouse_event &event)
         return 0;
 
     const coord_def &gc = mon->pos;
-    tiles.place_cursor(CURSOR_MOUSE, gc);
+    if (in_bounds(gc))
+        tiles.place_cursor(CURSOR_MOUSE, gc);
 
     if (event.event != wm_mouse_event::PRESS)
         return 0;
@@ -172,7 +174,7 @@ void MonsterRegion::pack_buffers()
             {
                 const coord_def gc = mon->pos;
 
-                if (crawl_view.in_los_bounds_g(gc))
+                if (you.see_cell(gc))
                 {
                     packed_cell cell;
                     cell.fg = tile_env.bk_fg(gc);
@@ -186,12 +188,18 @@ void MonsterRegion::pack_buffers()
 
                     if (cursor)
                         m_buf.add_icons_tile(TILEI_CURSOR, x, y);
-                    continue;
+                }
+                // Remembered invisible monsters that are suspected to be nearby.
+                else
+                {
+                    // Add a generic floor tile under them
+                    int tileidx = tile_env.default_flavour.floor + i % num_floor;
+                    m_buf.add_dngn_tile(tileidx, x, y);
+                    m_buf.add_monster(*mon, x, y);
                 }
             }
-
             // Fill the rest of the space with out of sight floor tiles.
-            if (!tiles.is_using_small_layout())
+            else if (!tiles.is_using_small_layout())
             {
                 int tileidx = tile_env.default_flavour.floor + i % num_floor;
                 m_buf.add_dngn_tile(tileidx, x, y);

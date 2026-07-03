@@ -153,6 +153,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_DIMINISHED_SPELLS, MB_DIMINISHED_SPELLS },
     { ENCH_EXPOSED,         MB_EXPOSED },
     { ENCH_STAMPEDE,        MB_STAMPEDE },
+    { ENCH_PHASE_SHIFT,     MB_PHASE_SHIFT },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -209,11 +210,6 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         if (mons_class_is_fragile(mons.type))
             return MB_WITHERING;
         return MB_SLOWLY_DYING;
-    case ENCH_CONSTRICTED:
-        if (mons.constricted_type == CONSTRICT_BVC)
-            return MB_VILE_CLUTCH;
-        else if (mons.constricted_type == CONSTRICT_ROOTS)
-            return MB_GRASPING_ROOTS;
     default:
         return NUM_MB_FLAGS;
     }
@@ -313,6 +309,13 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
                 : classy_drac ? MONS_DRACONIAN
                 : type;
 
+    _populate_as_generic();
+}
+
+// Fill out this monster_info as if the monster were any arbitrary example of
+// its monster type, rather than a specific monster.
+void monster_info::_populate_as_generic()
+{
     if (has_hydra_multi_attack())
         num_heads = 1;
     else
@@ -334,10 +337,15 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     if (mons_class_sees_invis(type, base_type))
         mb.set(MB_SEE_INVIS);
 
+    can_feel_fear = !!(holi & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
+
     if (mons_resists_drowning(type, base_type))
         mb.set(MB_RES_DROWN);
     if (mons_res_blind(type) > 1)
         mb.set(MB_UNBLINDABLE);
+
+    backlit = false;
+    umbraed = false;
 
     mitemuse = mons_class_itemuse(type);
 
@@ -424,6 +432,24 @@ static description_level_type _article_for(const actor* a)
     return m && m->friendly() ? DESC_YOUR : DESC_A;
 }
 
+void monster_info::_add_constriction_info(const monster* m)
+{
+    // Name of what this monster is directly constricted by, if any
+    constrictor_name = "";
+    if (m->constricted_type == CONSTRICT_MELEE || m->constricted_type == CONSTRICT_ENTANGLE)
+    {
+        const actor * const constrictor = actor_by_mid(m->constricted_by);
+        ASSERT(constrictor);
+        constrictor_name = "constricted by "
+                           + constrictor->name(_article_for(constrictor),
+                                               true);
+    }
+    else if (m->constricted_type == CONSTRICT_BVC)
+        mb.set(MB_VILE_CLUTCH);
+    else if (m->constricted_type == CONSTRICT_ROOTS)
+        mb.set(MB_GRASPING_ROOTS);
+}
+
 monster_info::monster_info(const monster* m, int milev)
 {
     ASSERT(m); // TODO: change to const monster &mon
@@ -434,6 +460,22 @@ monster_info::monster_info(const monster* m, int milev)
     attitude = mons_attitude(*m);
 
     type = m->type;
+    base_type = m->base_monster;
+    if (base_type == MONS_NO_MONSTER)
+        base_type = type;
+
+    // If this monster is currently hidden to the player, treat it as an
+    // arbitrary healthy example of its type.
+    if (m->flags & MF_KNOWN_INVISIBLE && !you.can_see(*m))
+    {
+        _populate_as_generic();
+        // The constriction status of even invisible monsters is considered known
+        // (they're usually being constricted by something visible!)
+        _add_constriction_info(m);
+        mb.set(MB_KNOWN_INVIS);
+        return;
+    }
+
     threat = milev <= MILEV_NAME ? MTHRT_TRIVIAL : mons_threat_level(*m);
 
     props.clear();
@@ -451,10 +493,6 @@ monster_info::monster_info(const monster* m, int milev)
         _translate_tentacle_ref(*this, m, INWARDS_KEY);
         _translate_tentacle_ref(*this, m, OUTWARDS_KEY);
     }
-
-    base_type = m->base_monster;
-    if (base_type == MONS_NO_MONSTER)
-        base_type = type;
 
     if (type == MONS_SLIME_CREATURE)
         slime_size = m->blob_size;
@@ -630,8 +668,6 @@ monster_info::monster_info(const monster* m, int milev)
     else if (stab_bonus == 4)
         mb.set(MB_MAYBE_STABBABLE);
 
-    dam = mons_get_damage_level(*m);
-
     // BEH_SLEEP is meaningless on firewood, don't show it. But it *is*
     // meaningful on non-firewood non-threatening monsters (i.e. butterflies).
     if (!m->is_firewood() && m->asleep())
@@ -669,6 +705,11 @@ monster_info::monster_info(const monster* m, int milev)
         if (flag != NUM_MB_FLAGS)
             mb.set(flag);
     }
+
+    if (!is(MB_PHASE_SHIFT) || you.can_see_invisible())
+        dam = mons_get_damage_level(*m);
+    else
+        dam = MDAM_OKAY;
 
     // Similarly, don't set invisibility stab UI for firewood.
     if (!you.visible_to(m) && !m->is_firewood() && !m->has_ench(ENCH_BLIND))
@@ -805,18 +846,8 @@ monster_info::monster_info(const monster* m, int milev)
     }
 
     // init names of constrictor and constrictees
-    constrictor_name = "";
+    _add_constriction_info(m);
     constricting_name.clear();
-
-    // Name of what this monster is directly constricted by, if any
-    if (m->constricted_type == CONSTRICT_MELEE || m->constricted_type == CONSTRICT_ENTANGLE)
-    {
-        const actor * const constrictor = actor_by_mid(m->constricted_by);
-        ASSERT(constrictor);
-        constrictor_name = "constricted by "
-                           + constrictor->name(_article_for(constrictor),
-                                               true);
-    }
 
     // Names of what this monster is directly constricting, if any
     if (m->constricting)
@@ -1152,6 +1183,9 @@ string monster_info::common_name(description_level_type desc) const
     if (props.exists(HELPLESS_KEY))
         ss << "helpless ";
 
+    if (is(MB_KNOWN_INVIS) || is(MB_REMEMBERED_INVIS))
+        ss << "invisible ";
+
     if (type == MONS_SPECTRAL_THING && !is(MB_NAME_ZOMBIE) && !nocore)
         ss << "spectral ";
 
@@ -1300,7 +1334,7 @@ bool monster_info::less_than_wrapper(const monster_info& m1,
     return monster_info::less_than(m1, m2, true);
 }
 
-// Sort monsters by (in that order):    attitude, difficulty, type, brand
+// Sort monsters by (in that order): attitude, difficulty, type, visibility status
 bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
                              bool zombified, bool fullname)
 {
@@ -1383,6 +1417,12 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
                 return false;
         }
     }
+
+    if (m1.is(MB_KNOWN_INVIS) != m2.is(MB_KNOWN_INVIS))
+        return m2.is(MB_KNOWN_INVIS);
+
+    if (m1.is(MB_REMEMBERED_INVIS) != m2.is(MB_REMEMBERED_INVIS))
+        return m2.is(MB_REMEMBERED_INVIS);
 
     if (fullname || mons_is_pghost(m1.type))
         return m1.mname < m2.mname;
@@ -1470,6 +1510,11 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
         break;
     case ATT_HOSTILE:
         if (has_unusual_items())
+        {
+            colour_type = MLC_UNUSUAL;
+            break;
+        }
+        if (is(MB_KNOWN_INVIS) || is(MB_REMEMBERED_INVIS))
         {
             colour_type = MLC_UNUSUAL;
             break;
@@ -1949,7 +1994,12 @@ bool monster_info::unravellable() const
                   { return this->has_trivial_ench(ench); });
 }
 
-void get_monster_info(vector<monster_info>& mons)
+// Gets the monster_info of all monsters in LoS which the player can either see
+// or is aware of while they're invisible.
+//
+// If invis_mons is non-null, puts all invisible monsters into invis_mons instead of mons.
+void get_nearby_monster_info(vector<monster_info>& mons,
+                             vector<monster_info>* invis_mons)
 {
     vector<monster* > visible;
     if (crawl_state.game_is_arena())
@@ -1960,15 +2010,31 @@ void get_monster_info(vector<monster_info>& mons)
     else
         visible = get_nearby_monsters();
 
+    // Include invisible monsters the player knew *used* to be in LoS, even if
+    // they aren't sure where they are right now.
+    vector<monster_info> unknown = env.invis_knowledge.get_unknown_in_los();
+    for (auto entry : unknown)
+    {
+        if (invis_mons)
+            invis_mons->push_back(entry);
+        else
+            mons.push_back(entry);
+    }
+
     for (monster *mon : visible)
     {
         if (mons_is_threatening(*mon)
             || mon->is_child_tentacle())
         {
-            mons.emplace_back(mon);
+            if (invis_mons && !mon->visible_to(&you))
+                invis_mons->emplace_back(mon);
+            else
+                mons.emplace_back(mon);
         }
     }
     sort(mons.begin(), mons.end(), monster_info::less_than_wrapper);
+    if (invis_mons)
+        sort(invis_mons->begin(), invis_mons->end(), monster_info::less_than_wrapper);
 }
 
 void mons_to_string_pane(string& desc, int& desc_colour, bool fullname,
@@ -2212,7 +2278,7 @@ monster* monster_info::get_known_summoner() const
     monster* summoner = monster_by_mid(summoner_id);
 
     // Don't leak information about invisible summoners.
-    if (!summoner || !you.can_see(*summoner))
+    if (!summoner || !you.aware_of(*summoner))
         return nullptr;
 
     // Don't leak the real Mara, if this happened to be made by them.
@@ -2235,4 +2301,9 @@ int monster_info::perception() const
         return 5;
 
     return monster_perception(hd, mintel, is(MB_SLEEPING) || is(MB_DORMANT));
+}
+
+bool monster_info::invisible_to_player() const
+{
+    return is(MB_KNOWN_INVIS) || is(MB_REMEMBERED_INVIS);
 }

@@ -163,4 +163,6 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_TESSERACT_SPAWN, "", "called by a tesseract", ""},
     { MB_SUNDERING_READY, "", "ready to sunder", ""},
     { MB_EXPOSED, "exposed", "exposed", "exposed"},
+    { MB_REMEMBERED_INVIS, "remembered", "remembered", "remembered"},
+    { MB_PHASE_SHIFT, "phased", "out of phase", "phased"},
 };

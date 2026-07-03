@@ -275,10 +275,13 @@ static void _monster_headsup(const vector<monster*> &monsters,
  *                      described. Each element contains a monster, the number
  *                      of monsters to be included, and whether to refer to the
  *                      monster using the genus rather than the monster details.
+ * @param force_visible Whether to give a monster's proper name even when the
+ *                      player cannot see them.
  */
 static void _count_monster_types(const vector<monster*> &monsters,
                                     unordered_set<const monster*> &single,
-                                 vector<details> &species)
+                                 vector<details> &species,
+                                 bool force_visible = false)
 {
     const unsigned int max_types = 4;
 
@@ -286,7 +289,7 @@ static void _count_monster_types(const vector<monster*> &monsters,
     map<const string, details> species_s; // select which species to show
     for (const monster *mon : monsters)
     {
-        const string name = mon->name(DESC_PLAIN);
+        const string name = mon->name(DESC_PLAIN, force_visible);
         auto &det = species_s[name];
         det = {mon, name, det.count+1, false};
         genera[_mons_merge_genus(mon->type)]++;
@@ -311,10 +314,11 @@ static void _count_monster_types(const vector<monster*> &monsters,
 }
 
 
-static string _describe_monsters_from_species(const vector<details> &species)
+static string _describe_monsters_from_species(const vector<details> &species,
+                                              bool force_visible = false)
 {
     return comma_separated_fn(species.begin(), species.end(),
-        [] (const details &det)
+        [force_visible] (const details &det)
         {
             string name = det.name;
             const monster_type base_type =
@@ -324,7 +328,7 @@ static string _describe_monsters_from_species(const vector<details> &species)
             // uniques keep their names.
             if ((det.mon->is_named() || mons_is_unique(base_type)) && det.count == 1)
             {
-                string title = getMiscString(det.mon->name(DESC_DBNAME) + " title");
+                string title = getMiscString(det.mon->name(DESC_DBNAME, force_visible) + " title");
                 if (!title.empty())
                     return title;
 
@@ -439,6 +443,8 @@ static void _handle_encounter_messages(const vector<monster*> monsters,
             out << "s";
         out << " in pursuit of the Orb! ";
     }
+    else if (sc == SC_LURKER_AMBUSH)
+        out << _describe_monsters_from_species(species) << " ambushes you!";
     else
         out << "You encounter " << _describe_monsters_from_species(species) << ".";
 
@@ -519,11 +525,11 @@ void notice_queued_monsters()
 }
 
 // Returns a string describing the names of multiple monsters, nicely organized.
-string multimonster_name_string(vector<monster*> monsters)
+string multimonster_name_string(vector<monster*> monsters, bool force_visible)
 {
     unordered_set<const monster*> single;
     vector<details> species;
-    _count_monster_types(monsters, single, species);
+    _count_monster_types(monsters, single, species, force_visible);
     return _describe_monsters_from_species(species);
 }
 

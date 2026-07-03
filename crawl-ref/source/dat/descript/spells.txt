@@ -1091,7 +1091,11 @@ is dependent on the size of the target.
 %%%%
 Invisibility spell
 
-Turns the caster invisible.
+Turns the caster invisible and randomly displaces them a short distance away.
+
+While an enemy is invisible to you, your accuracy against them is reduced and
+you suffer a major penalty to your evasion and ability to block any attacks they
+make against you.
 %%%%
 Invisibility Other spell
 
@@ -1325,10 +1329,10 @@ Maxwell's Capacitive Coupling spell
 
 Gradually builds up electric charge in the caster, so long as they maintain
 focus (by waiting in place and not taking any other actions). When a threshold
-is reached, the charge couples with the nearest foe, vaporising them instantly.
-Higher spell power will allow the caster to accumulate charge more rapidly. The
-spell requires a visible target to begin accumulating charge, though a different
-foe may be targeted when the charge is released.
+is reached, the charge couples with the nearest visible foe, vaporising them
+instantly. Higher spell power will allow the caster to accumulate charge more
+rapidly. The spell requires a visible target to begin accumulating charge,
+though a different foe may be affected when the charge is released.
 %%%%
 Maxwell's Portable Piledriver spell
 
@@ -1561,6 +1565,13 @@ Phantom Mirror spell
 Creates a phantom copy of a creature. The copy will be somewhat fragile, but
 otherwise almost indistinguishable from the original.
 %%%%
+Phase Shift spell
+
+Shifts the caster's body slighty out of phase with normal space, causing their
+exact position to become blurry and indistinct. Any attackers without
+supernaturally acute vision will have a much harder time hitting them and also
+be unable to assess the degree of their injuries.
+%%%%
 Planar Overlay spell
 
 Overlays part of an adjacent reality onto this one, causing random local
@@ -1579,9 +1590,9 @@ specific branch varies with each cast of the spell.
 %%%%
 Plasma Beam spell
 
-Fires a penetrating beam of plasma at one of the caster's most distant foes.
-The ionised beam bypasses half of defenders' armour, and a second beam of fire
-follows in its wake.
+Fires a penetrating beam of plasma at one of the caster's most distant visible
+foes. The ionised beam bypasses half of defenders' armour, and a second beam of
+fire follows in its wake.
 %%%%
 Platinum Paragon spell
 
@@ -1752,8 +1763,8 @@ briefly preventing them from casting any further spells.
 %%%%
 Scorch spell
 
-Scorches a random foe. Those injured by this have their resistance to fire
-burned away for a short time.
+Scorches a random visible foe. Those injured by this have their resistance to
+fire burned away for a short time.
 %%%%
 Sculpt Simulacrum spell
 
@@ -2231,8 +2242,9 @@ Calls forth a swarm of venomous scorpions.
 Summon Seismosaurus Egg spell
 
 Summons the egg of a brutish lizard, just on the verge of hatching. So long as
-there are foes nearby and the caster remains adjacent to the egg, it will hatch
-several turns after being summoned to wreak havoc upon its summoner's foes.
+there are visible foes nearby and the caster remains adjacent to the egg, it
+will hatch several turns after being summoned to wreak havoc upon its summoner's
+foes.
 
 Even as a juvenile, a seismosaurus is a force to be reckoned with. It is nearly
 as hardy as a mountain, and its footfalls are capable of creating violent

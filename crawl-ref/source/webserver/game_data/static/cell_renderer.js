@@ -856,6 +856,9 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                     else if (bg.TRAV_EXCL)
                         this.draw_dngn(dngn.TRAVEL_EXCLUSION_BG, x, y);
                 }
+
+                if (bg.REMEMBERED_INVIS)
+                    this.draw_dngn(dngn.REMEMBERED_INVIS, x, y);
             }
         },
 
@@ -965,6 +968,9 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.GOOD_NEUTRAL, x, y, undefined, undefined, img_scale);
             else if (fg.NEUTRAL)
                 this.draw_icon(icons.NEUTRAL, x, y, undefined, undefined, img_scale);
+
+            if (bg.REMEMBERED_INVIS)
+                this.draw_icon(icons.UNSEEN_INVIS_REMEMBERED, x, y, undefined, undefined, img_scale);
 
             var status_shift = 0;
             if (fg.PARALYSED)

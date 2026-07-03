@@ -234,7 +234,7 @@ bool start_ranged_constriction(actor& caster, actor& target, int duration,
     if (!caster.can_constrict(target, type))
         return false;
 
-    if (you.can_see(target))
+    if (you.see_cell(target.pos()))
     {
         string msg;
         if (type == CONSTRICT_ROOTS)
@@ -609,7 +609,7 @@ spret cast_gloom(const actor *caster, int pow, bool fail, bool tracer)
 
             const actor* victim = actor_at(*ri);
 
-            if (!victim || !caster->can_see(*victim) || !vulnerable(victim))
+            if (!victim || !caster->aware_of(*victim) || !vulnerable(victim))
                 continue;
 
             if (!mons_aligned(caster, victim))

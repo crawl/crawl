@@ -639,20 +639,6 @@ static spret _phantom_mirror(dist *target)
     if (!spell_direction(*target, beam, &args))
         return spret::abort;
     victim = monster_at(beam.target);
-    if (!victim || !you.can_see(*victim))
-    {
-        if (beam.target == you.pos())
-            mpr("You can't use the mirror on yourself.");
-        else
-            mpr("You can't see anything there to clone.");
-        return spret::abort;
-    }
-
-    if (!mirror_can_effect(victim))
-    {
-        mpr("The mirror can't reflect that.");
-        return spret::abort;
-    }
 
     monster_info mi(victim);
     habitat_type habitat = mons_habitat(*victim);

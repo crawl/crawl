@@ -233,7 +233,7 @@ spret uskayaw_grand_finale(bool fail);
 
 bool hepliaklqana_choose_ancestor_type(int ancestor_type);
 spret hepliaklqana_idealise(bool fail);
-spret hepliaklqana_transference(bool fail);
+spret hepliaklqana_transference(const coord_def& target, bool fail);
 void hepliaklqana_choose_identity();
 
 bool wu_jian_can_wall_jump_in_principle(const coord_def& target);

@@ -358,6 +358,8 @@ enum tag_minor_version
     TAG_MINOR_FIX_DOOR_INFO_LEAK,  // Don't leak whether an out of view door has been covered in temporary terrain
     TAG_MINOR_SWIFTNESS_REFACTOR,  // Split swiftness's backlash into DUR_ANTISWIFT
     TAG_MINOR_MAX_PIETY_LOGGING,   // Separately log stepdown events and max piety wastage
+    TAG_MINOR_INVIS_REFORM,        // Improve player tracking of invisible monsters
+    TAG_MINOR_LURKER_MONSTERS,     // Add support for lurker monsters
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

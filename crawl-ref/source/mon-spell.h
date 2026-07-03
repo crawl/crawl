@@ -131,7 +131,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_THROW_ICICLE, 24, MON_SPELL_WIZARD },
        { SPELL_FORCE_LANCE, 12, MON_SPELL_WIZARD },
        { SPELL_HASTE, 12, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
+       { SPELL_PHASE_SHIFT, 16, MON_SPELL_WIZARD },
       }
     },
 
@@ -402,7 +402,7 @@ static const mon_spellbook mspell_list[] =
         { SPELL_PRIMAL_WAVE, 16, MON_SPELL_WIZARD },
         { SPELL_STEAM_BALL, 16, MON_SPELL_WIZARD },
         { SPELL_THROW_ICICLE, 16, MON_SPELL_WIZARD },
-        { SPELL_BLINK, 16, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
+        { SPELL_BLINK, 16, MON_SPELL_WIZARD },
       }
     },
 
@@ -509,7 +509,6 @@ static const mon_spellbook mspell_list[] =
     {  MST_HELL_KNIGHT,
       {
        { SPELL_BOLT_OF_FIRE, 17, MON_SPELL_PRIEST },
-       { SPELL_BLINK, 10, MON_SPELL_PRIEST | MON_SPELL_EMERGENCY },
        { SPELL_HASTE, 26, MON_SPELL_PRIEST },
       }
     },
@@ -608,7 +607,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_THROW_ICICLE, 13, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_COLD, 13, MON_SPELL_WIZARD },
        { SPELL_HASTE, 13, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 13, MON_SPELL_WIZARD },
+       { SPELL_PHASE_SHIFT, 13, MON_SPELL_WIZARD },
       }
     },
 
@@ -1255,7 +1254,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SPECTRAL_CLOUD, 17, MON_SPELL_WIZARD },
        { SPELL_GHOSTLY_FIREBALL, 17, MON_SPELL_WIZARD },
        { SPELL_DISPEL_UNDEAD_RANGE, 17, MON_SPELL_WIZARD },
-       { SPELL_BLINK_AWAY, 17, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
+       { SPELL_BLINK_AWAY, 17, MON_SPELL_WIZARD | MON_SPELL_SHORT_RANGE },
       }
     },
 
@@ -1393,7 +1392,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BOLT_OF_MAGMA, 15, MON_SPELL_WIZARD },
        { SPELL_HASTE_OTHER, 15, MON_SPELL_WIZARD },
        { SPELL_PARALYSE, 10, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 10, MON_SPELL_WIZARD },
+       { SPELL_PHASE_SHIFT, 15, MON_SPELL_WIZARD },
       }
     },
 
@@ -2022,6 +2021,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_GOJI,
+      {
+       { SPELL_ANTIMAGIC_GAZE, 40, MON_SPELL_MAGICAL | MON_SPELL_INSTANT },
+      }
+    },
+
     {  MST_JORGRUN,
       {
        { SPELL_LRD, 16, MON_SPELL_WIZARD },
@@ -2303,7 +2308,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_EROLCHA,
       {
        { SPELL_FIREBALL, 12, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 14, MON_SPELL_WIZARD },
+       { SPELL_PHASE_SHIFT, 16, MON_SPELL_WIZARD },
        { SPELL_BANISHMENT, 10, MON_SPELL_WIZARD },
        { SPELL_BLINK, 12, MON_SPELL_WIZARD },
       }
@@ -2501,7 +2506,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_PORKALATOR, 22, MON_SPELL_WIZARD },
        { SPELL_SLOW, 11, MON_SPELL_WIZARD },
        { SPELL_MONSTROUS_MENAGERIE, 11, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 11, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 

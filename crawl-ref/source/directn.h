@@ -28,7 +28,7 @@ public:
 class monster_view_annotator
 {
 public:
-    monster_view_annotator(vector<monster *> *monsters);
+    monster_view_annotator(vector<coord_def> *pos);
     virtual ~monster_view_annotator();
 };
 
@@ -345,6 +345,7 @@ public:
 // Monster equipment description level.
 enum mons_equip_desc_level_type
 {
+    DESC_NO_EQUIPMENT,
     DESC_WEAPON,
     DESC_NOTEWORTHY,
     DESC_NOTEWORTHY_AND_WEAPON,

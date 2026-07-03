@@ -5513,7 +5513,7 @@ bool ru_power_leap()
         }
 
         monster* mons = monster_at(beam.target);
-        if (mons && you.can_see(*mons))
+        if (mons && you.aware_of(*mons))
         {
             clear_messages();
             mpr("You can't leap on top of the monster!");
@@ -5928,7 +5928,7 @@ spret uskayaw_grand_finale(bool fail)
         if (!mons || !you.can_see(*mons))
         {
             clear_messages();
-            mpr("You can't perceive a target there!");
+            mpr("You can't see a target there!");
             continue;
         }
 
@@ -6059,21 +6059,10 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_choice)
  */
 spret hepliaklqana_idealise(bool fail)
 {
-    const mid_t ancestor_mid = hepliaklqana_ancestor();
-    if (ancestor_mid == MID_NOBODY)
-    {
-        mpr("You have no ancestor to preserve!");
-        return spret::abort;
-    }
-
-    monster *ancestor = monster_by_mid(ancestor_mid);
-    if (!ancestor || !you.can_see(*ancestor))
-    {
-        mprf("%s is not nearby!", hepliaklqana_ally_name().c_str());
-        return spret::abort;
-    }
-
     fail_check();
+
+    monster *ancestor = hepliaklqana_ancestor_mon();
+    ASSERT(ancestor);
 
     simple_god_message(make_stringf(" grants %s healing and protection!",
                                     ancestor->name(DESC_YOUR).c_str()).c_str());
@@ -6094,34 +6083,6 @@ spret hepliaklqana_idealise(bool fail)
                     + random2avg(you.skill(SK_INVOCATIONS, 20), 2);
     ancestor->add_ench({ ENCH_IDEALISED, &you, dur});
     return spret::success;
-}
-
-/**
- * Prompt to allow the player to choose a target for the Transference ability.
- *
- * @return  The chosen target, or the origin if none was chosen.
- */
-static coord_def _get_transference_target()
-{
-    dist spd;
-
-    const int aoe_radius = have_passive(passive_t::transfer_drain) ? 1 : 0;
-    targeter_transference tgt(&you, aoe_radius);
-    direction_chooser_args args;
-    args.hitfunc = &tgt;
-    args.restricts = DIR_TARGET;
-    args.mode = TARG_MOBILE_MONSTER;
-    args.range = LOS_RADIUS;
-    args.needs_path = false;
-    args.self = confirm_prompt_type::none;
-    args.show_floor_desc = true;
-    args.top_prompt = "Select a target.";
-
-    direction(spd, args);
-
-    if (!spd.isValid)
-        return coord_def();
-    return spd.target;
 }
 
 /// Drain any monsters near the destination of Tranference.
@@ -6148,77 +6109,24 @@ static void _transfer_drain_nearby(coord_def destination)
  * ancestor with a targeted creature & potentially slowing monsters adjacent
  * to the target.
  *
+ * @param target    The location being targeted.
  * @param fail      Whether the effect should fail after checking validity.
  * @return          Whether the ability succeeded, failed, or was aborted.
  */
-spret hepliaklqana_transference(bool fail)
+spret hepliaklqana_transference(const coord_def& target, bool fail)
 {
     monster *ancestor = hepliaklqana_ancestor_mon();
-    if (!ancestor || !you.can_see(*ancestor))
-    {
-        mprf("%s is not nearby!", hepliaklqana_ally_name().c_str());
-        return spret::abort;
-    }
-
-    coord_def target = _get_transference_target();
-    if (target.origin())
-    {
-        canned_msg(MSG_OK);
-        return spret::abort;
-    }
-
     actor* victim = actor_at(target);
-    const bool victim_visible = victim && you.can_see(*victim);
-    if ((!victim || !victim_visible)
-        && !yesno("You can't see anything there. Try transferring anyway?",
-                  true, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return spret::abort;
-    }
-
-    if (victim == ancestor)
-    {
-        mprf("You can't transfer your ancestor with %s.",
-             ancestor->pronoun(PRONOUN_REFLEXIVE).c_str());
-        return spret::abort;
-    }
-
-    const bool victim_immovable
-        = victim && (mons_is_tentacle_or_tentacle_segment(victim->type)
-                     || victim->is_stationary()
-                     || mons_is_projectile(victim->type));
-    if (victim_visible && victim_immovable)
-    {
-        mpr("You can't transfer that.");
-        return spret::abort;
-    }
+    ASSERT(victim);
 
     const coord_def destination = ancestor->pos();
     if (victim == &you && !check_moveto(destination, "transfer", false, false))
         return spret::abort;
 
-    const bool uninhabitable = victim && !victim->is_habitable(destination);
-    if (uninhabitable && victim_visible)
-    {
-        mprf("%s can't be transferred there.", victim->name(DESC_THE).c_str());
-        return spret::abort;
-    }
-
-    // we assume the ancestor flies & so can survive anywhere anything can.
-
     fail_check();
-
-    if (!victim || uninhabitable || victim_immovable)
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return spret::success;
-    }
 
     if (victim->is_player())
     {
-        if (cancel_harmful_move(false))
-            return spret::abort;
         ancestor->move_to(target, MV_ALLOW_OVERLAP | MV_TRANSLOCATION, true);
         victim->move_to(destination, MV_ALLOW_OVERLAP | MV_TRANSLOCATION, true);
     }

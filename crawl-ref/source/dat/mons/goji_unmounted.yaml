@@ -1,0 +1,23 @@
+name: "Goji"
+enum: goji_unmounted
+glyph: {char: "g", colour: lightblue}
+flags: [flies, fighter, speaks, unique, male, warm_blood]
+exp: 200
+species: goblin
+will: 80
+attacks:
+ - {type: hit, damage: 24}
+hd: 9
+hp_10x: 600
+ac: 8
+ev: 15
+has_corpse: true
+shout: shout
+intelligence: human
+speed: 15
+energy: {attack: 15}
+uses: starting_equipment
+size: large
+shape: humanoid
+spells: ghost_moth
+tile: goblin

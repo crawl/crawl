@@ -3247,10 +3247,7 @@ bool item_needs_autopickup(const item_def &item, bool ignore_force)
 
 bool can_autopickup()
 {
-    // [ds] Checking for autopickups == 0 is a bad idea because
-    // autopickup is still possible with inscriptions and
-    // pickup_thrown.
-    if (Options.autopickup_on <= 0)
+    if (!Options.autopickup_on)
         return false;
 
     if (!i_feel_safe())

@@ -283,7 +283,7 @@ static bool _find_cblink_target(dist &target, bool safe_cancel,
         }
 
         monster* target_mons = monster_at(target.target);
-        if (target_mons && you.can_see(*target_mons))
+        if (target_mons && you.aware_of(*target_mons))
         {
             mprf("You can't %s onto %s!", verb.c_str(),
                  target_mons->name(DESC_THE).c_str());
@@ -388,7 +388,7 @@ public:
             return AFF_NO; // XX is this handled by the valid blink check?
 
         const actor* p_act = actor_at(p);
-        if (p_act && (incl_unseen || agent->can_see(*p_act)))
+        if (p_act && (incl_unseen || agent->aware_of(*p_act)))
             return AFF_NO;
 
         // terrain details are cached in exp_map_max by set_aim
@@ -495,17 +495,27 @@ spret frog_hop(bool fail, dist *target)
 string electric_charge_impossible_reason(bool allow_safe_monsters)
 {
     // General movement checks are handled elsewhere.
-    int nearby_mons = 0;
+    int num_reasons = 0;
     string example_reason = "";
     string fail_reason;
-    for (monster_near_iterator mi(&you); mi; ++mi)
+    for (monster_near_iterator mi(&you, LOS_DEFAULT, true); mi; ++mi)
     {
-        ++nearby_mons;
-        if (get_electric_charge_landing_spot(you, mi->pos(), &fail_reason).origin())
+        // To increase clarity about the reason why the player cannot cast Vhi's,
+        // try to exclude things which are 'obviously' invalid targets (by being
+        // out of range or friendly). Otherwise, a single adjacent monster can
+        // prevent giving useful information about why any other monster is invalid.
+        bool invalid_target = false;
+        if (get_electric_charge_landing_spot(you, mi->pos(), &fail_reason, &invalid_target).origin())
         {
-            example_reason = make_stringf("you can't charge at %s because %s",
-                                          mi->name(DESC_THE).c_str(),
-                                          fail_reason.c_str());
+            const bool low_priorty = invalid_target && !ends_with(fail_reason, "properly.");
+            if (!low_priorty || example_reason.empty())
+            {
+                example_reason = make_stringf("you can't charge at %s because %s",
+                                            mi->name(DESC_THE).c_str(),
+                                            fail_reason.c_str());
+                if (!low_priorty)
+                    num_reasons++;
+            }
         }
         else if (allow_safe_monsters
                  || !mons_is_safe(*mi, false)
@@ -514,11 +524,9 @@ string electric_charge_impossible_reason(bool allow_safe_monsters)
             return "";
         }
     }
-    if (!nearby_mons)
-        return "you can't see anything to charge at.";
-    if (nearby_mons == 1)
+    if (!example_reason.empty() && num_reasons <= 1)
         return lowercase_string(example_reason);
-    return "there's one issue or another keeping you from charging at any nearby foe.";
+    return "there are no targets in range which are valid to charge at.";
 }
 
 string movement_impossible_reason()
@@ -535,6 +543,32 @@ bool valid_electric_charge_target(const actor& agent, coord_def target, string* 
     string msg;
 
     const actor* act = actor_at(target);
+
+    // No charging at things the caster cannot see.
+    if (!act || !agent.can_see(*act)
+        || agent.is_player() && act->is_monster()
+           && fedhas_passthrough(act->as_monster()))
+    {
+        if (act && agent.aware_of(*act) && fail_reason)
+        {
+            *fail_reason = make_stringf("%s %s visible enough to target properly.",
+                                            act->pronoun(PRONOUN_SUBJECTIVE).c_str(),
+                                            act->conj_verb("aren't").c_str());
+        }
+        else if (fail_reason)
+            *fail_reason = "You can't see anything there to charge at.";
+
+        return false;
+    }
+
+    // No charging at friends or firewood.
+    if (mons_aligned(act, &agent) || act->is_firewood())
+    {
+        if (fail_reason)
+            *fail_reason = "Why would you want to do that?";
+
+        return false;
+    }
 
     // Target must be in range and non-adjacent
     if (agent.pos() == target)
@@ -560,26 +594,6 @@ bool valid_electric_charge_target(const actor& agent, coord_def target, string* 
         return false;
     }
 
-    // No charging at things the caster cannot see.
-    if (!act || !agent.can_see(*act)
-        || agent.is_player() && act->is_monster()
-           && fedhas_passthrough(act->as_monster()))
-    {
-        if (fail_reason)
-            *fail_reason = "You can't see anything there to charge at.";
-
-        return false;
-    }
-
-    // No charging at friends or firewood.
-    if (mons_aligned(act, &agent) || act->is_firewood())
-    {
-        if (fail_reason)
-            *fail_reason = "Why would you want to do that?";
-
-        return false;
-    }
-
     return true;
 }
 
@@ -587,11 +601,15 @@ bool valid_electric_charge_target(const actor& agent, coord_def target, string* 
 // Returns (0, 0) if this charge is invalid for any reason.
 // (fail_reason will get set to an appropriate error message)
 coord_def get_electric_charge_landing_spot(const actor& agent, coord_def target,
-                                           string* fail_reason)
+                                           string* fail_reason, bool* target_invalid)
 {
     // Double-check that this is a valid thing to try to charge at at all
     if (!valid_electric_charge_target(agent, target, fail_reason))
+    {
+        if (target_invalid)
+            *target_invalid = true;
         return coord_def(0, 0);
+    }
 
     ray_def ray;
     if (!find_ray(agent.pos(), target, ray, opc_solid))
@@ -623,7 +641,7 @@ coord_def get_electric_charge_landing_spot(const actor& agent, coord_def target,
             }
 
             const monster* mon = monster_at(ray.pos());
-            if (mon && agent.can_see(*mon) && mons_class_is_stationary(mon->type))
+            if (mon && agent.aware_of(*mon) && mons_class_is_stationary(mon->type))
             {
                 if (fail_reason)
                 {
@@ -1352,16 +1370,6 @@ void you_teleport_now(bool wizard_tele, string reason)
 
 spret cast_dimensional_bullseye(int pow, monster *target, bool fail)
 {
-    if (target == nullptr || !you.can_see(*target))
-    {
-        canned_msg(MSG_NOTHING_THERE);
-        // You cannot place a bullseye on invisible enemies, so just abort
-        return spret::abort;
-    }
-
-    if (stop_attack_prompt(target, false, you.pos()))
-        return spret::abort;
-
     fail_check();
 
     // We can only have a bullseye on one target a time, so remove the old one
@@ -1638,7 +1646,7 @@ bool golubria_valid_cell(coord_def p, bool just_check)
 {
     return in_bounds(p)
            && feat_is_floor(env.grid(p))
-           && (!monster_at(p) || just_check && !you.can_see(*monster_at(p)))
+           && (!monster_at(p) || just_check && !you.aware_of(*monster_at(p)))
            && cell_see_cell(you.pos(), p, LOS_NO_TRANS);
 }
 
@@ -1940,6 +1948,7 @@ void attract_monster(monster &mon, int max_move)
 
     _place_tloc_cloud(old_pos);
     _place_tloc_cloud(ray.pos());
+    mon.check_redraw(old_pos);
     mon.finalise_movement();
 }
 
@@ -1970,7 +1979,7 @@ vector<monster *> find_chaos_targets(bool just_check)
             && !mi->is_peripheral()
             && !mi->wont_attack())
         {
-            if (!just_check || you.can_see(**mi))
+            if (!just_check || you.aware_of(**mi))
                 targets.push_back(*mi);
         }
     }
@@ -2094,7 +2103,7 @@ static vector<monster*> _get_monster_line(coord_def start, bool actual)
     {
         // If the player can't see the monster here, don't leak its position to
         // the targeter.
-        if (!mon || !actual && !you.can_see(*mon))
+        if (!mon || !actual && !you.aware_of(*mon))
             break;
 
         // Can't move anything with a stationary monster (or friend) in its cluster.
@@ -2162,6 +2171,9 @@ int piledriver_path_distance(const coord_def& target, bool actual)
         }
 
         // Found something to hit; this is where we stop.
+        // XXX: Note that this one checks true visibility and not just awareness.
+        //      Invis monster knowledge should not affect whether the spell is
+        //      castable or not.
         if (cell_is_solid(pos)
             || monster_at(pos) && (actual || you.can_see(*monster_at(pos))))
         {
@@ -2366,7 +2378,7 @@ spret cast_gavotte(int pow, const coord_def dir, bool fail)
     // at the start of the cast.
     set<mid_t> seen_at_start;
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
-        if (you.can_see(**mi))
+        if (you.aware_of(**mi))
             seen_at_start.insert(mi->mid);
 
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
@@ -2406,7 +2418,7 @@ vector<monster*> gavotte_affected_monsters(const coord_def dir)
     // The actors who will be moved.
     vector<actor*> movers;
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
-        if (you.can_see(**mi))
+        if (you.aware_of(**mi))
         {
             occupied[mi->pos()] = *mi;
             if (!mi->is_stationary() && you.see_cell_no_trans(mi->pos()))
@@ -2507,7 +2519,7 @@ vector<coord_def> get_bestial_landing_spots(coord_def target)
     {
         if (in_bounds(*ai) && you.see_cell_no_trans(*ai)
             && !cell_is_solid(*ai) && !is_feat_dangerous(env.grid(*ai))
-            && (!actor_at(*ai) || !you.can_see(*actor_at(*ai))))
+            && (!actor_at(*ai) || !you.aware_of(*actor_at(*ai))))
         {
             spots.push_back(*ai);
         }

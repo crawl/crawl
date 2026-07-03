@@ -273,7 +273,7 @@ spret cast_liquefaction(int pow, bool fail)
 // Is there at least one valid hostile thing in sight?
 bool jinxbite_targets_available()
 {
-    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS, true); mi; ++mi)
     {
         if (mons_is_threatening(**mi) && !mi->wont_attack()
             && mi->willpower() != WILL_INVULN)

@@ -153,7 +153,7 @@ bool melee_attack::player_unrand_bad_attempt(bool check_only)
     // Unrands with secondary effects that can harm nearby friendlies.
     // Don't prompt for confirmation (and leak information about the
     // monster's position) if the player can't see the monster.
-    if (!you.can_see(*defender))
+    if (!you.aware_of(*defender))
         return false;
 
     item_def* primary = primary_weapon();
@@ -1442,6 +1442,10 @@ void melee_attack::handle_phase_end()
         monster_die(*attacker->as_monster(), KILL_NON_ACTOR, NON_MONSTER);
     }
 
+    // Swinging at an invisible monster temporarily detects it.
+    if (attacker->is_player() && defender && defender->alive())
+        defender->as_monster()->sense_if_invisible();
+
     attack::handle_phase_end();
 }
 
@@ -1863,7 +1867,7 @@ bool melee_attack::attack()
     // in advance that this attack was hopeless.
     if (!could_harm(attacker, defender, attacker->is_player(), attacker->is_player()))
     {
-        cancel_attack = attacker->is_player() && !(you.confused() || !you.can_see(*defender));
+        cancel_attack = attacker->is_player() && !(you.confused() || !you.aware_of(*defender));
         return false;
     }
 
@@ -1899,7 +1903,12 @@ bool melee_attack::attack()
 
     // Calculate various ev values and begin to check them to determine the
     // correct handle_phase_ handler.
-    const int ev = defender->evasion(true, attacker);
+    int ev = defender->evasion(true, attacker);
+    if (defender->is_monster() && defender->as_monster()->has_ench(ENCH_PHASE_SHIFT)
+        && !attacker->can_see_invisible())
+    {
+        ev += PHASE_SHIFT_EV_BONUS;
+    }
     ev_margin = test_hit(to_hit, ev, !attacker->is_player());
     bool shield_blocked = attack_shield_blocked();
 
@@ -1909,7 +1918,7 @@ bool melee_attack::attack()
     if (attacker->is_player() && attacker != defender)
     {
         set_attack_conducts(conducts, *defender->as_monster(),
-                            you.can_see(*defender) && !is_involuntary);
+                            you.aware_of(*defender) && !is_involuntary);
 
         // Check for stab (and set stab_attempt and stab_bonus)
         player_stab_check();
@@ -2513,7 +2522,9 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
 bool melee_attack::player_aux_test_hit()
 {
-    const int evasion = defender->evasion(true, attacker);
+    int evasion = defender->evasion(true, attacker);
+    if (defender->as_monster()->has_ench(ENCH_PHASE_SHIFT) && !you.can_see_invisible())
+        evasion += PHASE_SHIFT_EV_BONUS;
 
     bool auto_hit = one_chance_in(30);
 
@@ -5160,7 +5171,7 @@ int melee_attack::apply_mon_damage_modifiers(int damage)
     // If the defender is asleep, the attacker gets a stab.
     if (defender && (defender->asleep()
                      || (attk_flavour == AF_SHADOWSTAB
-                         &&!defender->can_see(*attacker))))
+                         && !defender->can_see(*attacker))))
     {
         if (mons_is_player_shadow(*attacker->as_monster())
             && player_good_stab())

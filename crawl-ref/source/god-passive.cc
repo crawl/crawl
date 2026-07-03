@@ -211,7 +211,7 @@ static const vector<god_passive> god_passives[] =
         {  0, passive_t::detect_items },
         {  0, passive_t::bondage_skill_boost },
         {  1, passive_t::identify_items },
-        {  2, passive_t::sinv},
+        {  2, passive_t::see_unseen},
         {  3, passive_t::clarity },
         {  4, passive_t::avoid_traps },
         {  4, passive_t::scrying },

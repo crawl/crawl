@@ -41,6 +41,7 @@
 #include "level-state-type.h"
 #include "libutil.h"
 #include "losglobal.h"
+#include "los.h"
 #include "makeitem.h"
 #include "map-knowledge.h"
 #include "mapmark.h"
@@ -244,7 +245,13 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     } },
     { SPELL_INVISIBILITY, {
         _should_selfench(ENCH_INVIS),
-        _fire_simple_beam,
+        [](monster &caster, mon_spell_slot, bolt& beam)
+        {
+            beam.fire();
+            coord_def spot;
+            if (find_habitable_spot_near(caster.pos(), caster.type, 2, spot))
+                caster.move_to(spot, MV_TRANSLOCATION);
+        },
         _selfench_beam_setup(BEAM_INVISIBILITY),
     } },
     { SPELL_HASTE, {
@@ -265,6 +272,23 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             const int dur = random_range(220, 300);
             caster.add_ench(mon_enchant(ENCH_MIGHT, &caster, dur));
             caster.add_ench(mon_enchant(ENCH_RESISTANCE, &caster, dur));
+        },
+        nullptr,
+    } },
+    { SPELL_PHASE_SHIFT, {
+        [](const monster &caster)
+        {
+            return ai_action::good_or_bad(!caster.has_ench(ENCH_PHASE_SHIFT));
+        },
+        [](monster &caster, mon_spell_slot, bolt&)
+        {
+            if (!you.can_see_invisible())
+                simple_monster_message(caster, " form blurs.", true);
+            else
+                simple_monster_message(caster, " form wavers for a moment.", true);
+            flash_tile(caster.pos(), LIGHTBLUE);
+            const int dur = random_range(220, 300);
+            caster.add_ench(mon_enchant(ENCH_PHASE_SHIFT, &caster, dur));
         },
         nullptr,
     } },
@@ -529,7 +553,13 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _caster_sees_foe,
         [](monster &caster, mon_spell_slot slot, bolt&) {
             flash_tile(caster.get_foe()->pos(), MAGENTA, 120, TILE_BOLT_ANTIMAGIC_GAZE);
+            actor* foe = caster.get_foe();
             caster.get_foe()->drain_magic(&caster, mons_spellpower(caster, slot.spell));
+
+            // It isn't worth being exhaustive about this sort of thing, but this
+            // is by far one of the most common scenarios, and worth the UI hint.
+            if (foe->is_player())
+                caster.sense_if_invisible(false);
         },
     } },
     { SPELL_WEAKENING_GAZE, {
@@ -3267,11 +3297,20 @@ static int _tension_door_closed(const vector<coord_def>& door)
 {
     ASSERT(!door.empty());
     const dungeon_feature_type old_feat = env.grid(door[0]);
+    // Simulate the tension with closed doors. We don't want to do a full
+    // terrain change, as this would have side effects like removing clouds,
+    // but we do need to invalidate the LoS cache.
     for (coord_def dc : door)
+    {
         env.grid(dc) = DNGN_CLOSED_DOOR;
+        los_terrain_changed(dc);
+    }
     const int new_tension = get_tension(GOD_NO_GOD);
     for (coord_def dc : door)
+    {
         env.grid(dc) = old_feat;
+        los_terrain_changed(dc);
+    }
     return new_tension;
 }
 
@@ -3830,7 +3869,7 @@ static ai_action::goodness _arcjolt_goodness(const monster &caster)
 
 static ai_action::goodness _scorch_goodness(const monster& caster)
 {
-    auto targeter = make_unique<targeter_scorch>(caster, 3, true);
+    auto targeter = make_unique<targeter_scorch>(caster, 3);
     for (auto ti = targeter->affected_iterator(AFF_MAYBE); ti; ++ti)
     {
         if (actor_at(*ti)->res_fire() < 3)
@@ -7894,7 +7933,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             return;
         if (foe->is_player())
             mpr("The long-dead rise up around you.");
-        else if (you.can_see(*foe))
+        else if (you.see_cell(foe->pos()))
             mprf("The long-dead rise up around %s.", foe->name(DESC_THE).c_str());
         _cast_vanquished_vanguard(mons);
         return;
