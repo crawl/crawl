@@ -13,13 +13,9 @@
 #
 # A twisty turny forest maze.
 #
-# TODO: This layout needs some shrinking and a home. Lair? Crypt?
-#
 NAME:   layout_twisted_forest
-DEPTH:  D:1, Forest
-# TAG_MAJOR_VERSION == 34
-# Remove Forest weighting on version bump
-WEIGHT: 1000000 (D), 100 (Forest)
+DEPTH:  D:1
+WEIGHT: 10000
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_forest
 {{
