@@ -143,25 +143,19 @@ bool mons_is_safe(const monster* mon, const bool want_move,
     return is_safe;
 }
 
-static string _seen_monsters_announcement(const vector<monster*> &visible,
-                                          bool sensed_monster)
+static void _announce_monsters(string announcement, vector<coord_def> &visible,
+                               bool none_visible)
 {
-    // Announce the presence of monsters (Eidolos).
-    if (visible.size() == 1)
-    {
-        const monster& m = *visible[0];
-        return make_stringf("%s is nearby", m.name(DESC_A).c_str());
-    }
-    if (visible.size() > 1)
-        return "there are monsters nearby";
-    if (sensed_monster)
-        return "there is a strange disturbance nearby";
-    return "";
-}
-
-static void _announce_monsters(string announcement, vector<monster*> &visible)
-{
-    mprf(MSGCH_WARN, "%s!", announcement.c_str());
+    mprf(MSGCH_WARN, "%s!%s", announcement.c_str(),
+         none_visible && !you.gave_invis_clear_prompt
+#ifdef USE_TILE_WEB
+            ? " (Press *t to temporarily disregard this.)"
+#else
+            ? " (Press Ctrl+T to temporarily disregard this.)"
+#endif
+            : "");
+    if (none_visible)
+        you.gave_invis_clear_prompt = true;
 
     if (Options.use_animations & UA_MONSTER_IN_SIGHT)
     {
@@ -185,14 +179,14 @@ static void _announce_monsters(string announcement, vector<monster*> &visible)
 // want_move       (??) Somehow affects what monsters are considered dangerous
 // just_check      Return zero or one monsters only
 // dangerous_only  Return only "dangerous" monsters
-// require_visible Require that monsters be visible to the player
+// require_aware   Require that the player be aware of the monster
 // range           search radius (defaults: LOS)
 //
 vector<monster* > get_nearby_monsters(bool want_move,
                                       bool just_check,
                                       bool dangerous_only,
                                       bool consider_user_options,
-                                      bool require_visible,
+                                      bool require_known,
                                       bool check_dist,
                                       int range)
 {
@@ -212,7 +206,7 @@ vector<monster* > get_nearby_monsters(bool want_move,
         if (monster* mon = monster_at(*ri))
         {
             if (mon->alive()
-                && (!require_visible || mon->visible_to(&you))
+                && (!require_known || you.aware_of(*mon))
                 && (!dangerous_only || !mons_is_safe(mon, want_move,
                                                      consider_user_options,
                                                      check_dist)))
@@ -272,24 +266,36 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
 
     // Monster check.
     vector<monster* > monsters =
-        get_nearby_monsters(want_move, !announce, true, true, false,
-                            check_dist, range);
+        get_nearby_monsters(want_move, !announce, true, true, true, check_dist, range);
+    vector<monster_info> unknown_invis = env.invis_knowledge.get_unknown_in_los();
 
-    vector<monster* > visible;
-    copy_if(monsters.begin(), monsters.end(), back_inserter(visible),
-            [](const monster *mon){ return mon->visible_to(&you); });
-    const bool sensed = any_of(monsters.begin(), monsters.end(),
-                   [](const monster *mon){
-                       return env.map_knowledge(mon->pos()).flags
-                              & MAP_INVISIBLE_MONSTER;
-                   });
-
-    const string announcement = _seen_monsters_announcement(visible, sensed);
-    if (announcement.empty())
+    string announcement;
+    bool invis_only = false;
+    if (monsters.empty() && !unknown_invis.empty())
+    {
+        if (unknown_invis.size() > 1)
+            announcement = "There are probably monsters nearby";
+        else
+            announcement = unknown_invis[0].full_name(DESC_A) + " is probably nearby";
+        invis_only = true;
+    }
+    else if (monsters.size() + unknown_invis.size() > 1)
+        announcement = "There are monsters nearby";
+    else if (!monsters.empty())
+        announcement = monsters[0]->name(DESC_A) + " is nearby";
+    else
         return true;
 
     if (announce)
-        _announce_monsters(announcement, visible);
+    {
+        vector<coord_def> pos;
+        for (const auto* mon : monsters)
+            pos.push_back(mon->pos());
+        for (const auto& mon : unknown_invis)
+            pos.push_back(mon.pos);
+
+        _announce_monsters(announcement, pos, invis_only);
+    }
     if (reason)
         *reason = announcement;
 
@@ -297,37 +303,44 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
 }
 #undef UNSAFE_MSG
 
+// Purely checks whether it is possible for the player to regenerate HP while
+// standing in this spot. General danger checks (including the danger of unseen
+// monsters) is handled by i_feel_safe())
 bool can_rest_here(bool announce)
 {
-    // XXX: consider doing a check for whether your regen is *ever* inhibited
-    // before iterating over each monster.
-    vector<monster*> visible;
-    bool sensed = false;
+    vector<coord_def> pos;
+    string msg;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!regeneration_is_inhibited(*mi))
-            continue;
-        if (mi->visible_to(&you))
-            visible.push_back(*mi);
-        else if (env.map_knowledge(mi->pos()).flags & MAP_INVISIBLE_MONSTER)
-            sensed = true;
+        if (regeneration_is_inhibited(*mi))
+        {
+            if (pos.empty())
+               msg = mi->name(DESC_A);
+            pos.push_back(mi->pos());
+        }
     }
 
-    const string announcement = _seen_monsters_announcement(visible, sensed);
-    if (announcement.empty())
+    if (pos.empty())
         return true;
 
     if (announce)
-        _announce_monsters(announcement, visible);
+    {
+        if (pos.size() == 1)
+            msg = "You cannot rest while " + msg + " is nearby.";
+        else
+            msg = "You cannot rest while monsters are nearby.";
+        _announce_monsters(msg, pos, false);
+    }
+
     return false;
 }
 
-bool there_are_monsters_nearby(bool dangerous_only, bool require_visible,
+bool there_are_monsters_nearby(bool dangerous_only, bool require_known,
                                bool consider_user_options)
 {
     return !get_nearby_monsters(false, true, dangerous_only,
                                 consider_user_options,
-                                require_visible).empty();
+                                require_known).empty();
 }
 
 // General threat = sum_of_logexpervalues_of_nearby_unfriendly_monsters.

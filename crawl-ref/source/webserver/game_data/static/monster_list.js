@@ -1,6 +1,6 @@
 define(["jquery", "./map_knowledge", "./cell_renderer", "./dungeon_renderer",
-        "./options", "./util"],
-function ($, map_knowledge, cr, dungeon_renderer, options, util) {
+        "./options", "./util", "./player", "./tileinfo-main"],
+function ($, map_knowledge, cr, dungeon_renderer, options, util, player, main) {
     "use strict";
 
     var monsters, $list, monster_groups, max_rows;
@@ -122,18 +122,30 @@ function ($, map_knowledge, cr, dungeon_renderer, options, util) {
         "trivial",
         "easy",
         "tough",
-        "nasty"
+        "nasty",
+        "invisible"
     ];
 
-    function update()
+    function update(show_inv)
     {
         var grouped_monsters = group_monsters();
 
         var rows = Math.min(grouped_monsters.length, max_rows);
+        if (show_inv)
+            rows++;
+
         var i = 0;
         for (; i < rows; ++i)
         {
-            var monsters = grouped_monsters[i];
+            var monsters;
+
+            // If there are unknown invisible monsters nearby, insert the text
+            // description of them as the first entry in the monster list
+            // (meaning every other row is slightly desynced from grouped_monsters)
+            if (show_inv && i > 0)
+                monsters = grouped_monsters[i-1];
+            else
+                monsters = grouped_monsters[i];
             var group, canvas, renderer;
 
             if (i >= monster_groups.length)
@@ -164,6 +176,18 @@ function ($, map_knowledge, cr, dungeon_renderer, options, util) {
                 canvas = group.canvas;
                 renderer = group.renderer;
                 group.monsters = monsters;
+            }
+
+            // Print unknown invisible monsters as the first entry of the list.
+            if (show_inv && i == 0)
+            {
+                util.init_canvas(canvas, renderer.cell_width, dungeon_renderer.cell_height);
+                renderer.init(canvas);
+                renderer.draw_main(main.UNSEEN_INVISIBLE, 0, 0, 1);
+                var invis_desc = util.formatted_string_to_html("<magenta>" + show_inv + "</magenta>");
+                group.name_span.html(invis_desc);
+                group.health_span.hide();
+                continue;
             }
 
             renderer.set_cell_size(dungeon_renderer.cell_width,

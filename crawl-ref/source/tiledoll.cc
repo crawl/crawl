@@ -935,7 +935,7 @@ void reveal_bardings(const tileidx_t *parts, int (&flags)[TILEP_PART_MAX])
 
 #ifdef USE_TILE_LOCAL
 void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
-                   int x, int y, bool submerged, bool ghost)
+                   int x, int y, bool submerged, bool ghost, bool invis)
 {
     int p_order[TILEP_PART_MAX];
     int flags[TILEP_PART_MAX];
@@ -999,7 +999,7 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
         }
 
         const int ymax = flags[p] == TILEP_FLAG_CUT_BOTTOM ? 18 : TILE_Y;
-        buf.add(doll.parts[p], x, y, i, submerged, ghost, ofs_x, ofs_y, ymax);
+        buf.add(doll.parts[p], x, y, i, submerged, ghost, ofs_x, ofs_y, ymax, invis);
     }
 }
 #endif

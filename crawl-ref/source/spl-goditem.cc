@@ -969,7 +969,7 @@ spret cast_smiting(int pow, monster* mons, bool fail)
     fail_check();
 
     god_conduct_trigger conducts[3];
-    set_attack_conducts(conducts, *mons, you.can_see(*mons));
+    set_attack_conducts(conducts, *mons, you.aware_of(*mons));
 
     // damage at 0 Invo ranges from 9-12 (avg 10), to 9-72 (avg 40) at 27.
     int damage = 6 + beogh_smiting_dice(pow).roll();
@@ -1241,7 +1241,7 @@ int torment_actor(actor* victim, actor *attacker, torment_source_type taux)
             }
 
             if (set_conducts)
-                set_attack_conducts(conducts, *mons, you.can_see(*mons));
+                set_attack_conducts(conducts, *mons, you.aware_of(*mons));
         }
     }
 

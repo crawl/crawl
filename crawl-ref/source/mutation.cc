@@ -2057,8 +2057,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             break;
 
         case MUT_ACUTE_VISION:
-            // We might have to turn autopickup back on again.
-            autotoggle_autopickup(false);
+            env.invis_knowledge.clear();
             break;
 
         case MUT_NIGHTSTALKER:
@@ -3325,7 +3324,7 @@ void check_monster_detect()
         // forth, since every time it leaves LOS of the mimic, the
         // mimic is forgotten (replaced by MONS_SENSED).
         // XXX: since mimics were changed, is this safe to remove now?
-        const monster_type remembered_monster = cell.monster();
+        const monster_type remembered_monster = cell.mon_type();
         if (remembered_monster == mon->type)
             continue;
 

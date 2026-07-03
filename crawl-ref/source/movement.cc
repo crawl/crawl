@@ -601,7 +601,7 @@ monster* get_rampage_target(coord_def move)
         monster* mon = monster_at(p);
         if (!mon
             || fedhas_passthrough(mon)
-            || !you.can_see(*mon))
+            || !you.aware_of(*mon))
         {
             // Don't rampage if our tracer path is broken by something we can't
             // safely pass through before it reaches a monster.
@@ -806,7 +806,7 @@ vector<actor*> get_stampede_line(const coord_def& start, const coord_def& delta,
     while (actor* mon = actor_at(pos))
     {
         // Don't count things outside the player's LoS if checking known monsters.
-        if (only_known_to_player && !you.can_see(*mon))
+        if (only_known_to_player && !you.aware_of(*mon))
             break;
 
         // Can't move anything with a stationary monster in its cluster.

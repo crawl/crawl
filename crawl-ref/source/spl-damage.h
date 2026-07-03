@@ -82,7 +82,7 @@ void do_eel_melee_jolt(coord_def pos);
 void do_eel_arcjolt();
 bool mons_should_fire_plasma(int pow, const actor &agent);
 spret cast_plasma_beam(int pow, const actor &agent, bool fail, bool is_tracer=false);
-vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual);
+vector<coord_def> plasma_beam_targets(const actor &agent, int pow);
 vector<coord_def> plasma_beam_paths(coord_def source, const vector<coord_def> &targets);
 dice_def base_fragmentation_damage(int pow, bool random);
 bool monster_type_is_fraggable(monster_type mc);
@@ -101,7 +101,7 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim,
                             bool fail);
 bool mons_should_fire_permafrost(int pow, const actor &agent);
 spret cast_permafrost_eruption(actor &caster, int pow, bool fail);
-set<coord_def> permafrost_targets(const actor &caster, bool actual = true);
+set<coord_def> permafrost_targets(const actor &caster);
 
 actor* forest_near_enemy(const actor *mon);
 void forest_message(const coord_def pos, const string &msg,
@@ -153,8 +153,8 @@ void end_maxwells_coupling(bool quiet = false);
 spret cast_noxious_bog(int pow, bool fail);
 vector<coord_def> find_bog_locations(const coord_def &center);
 
-vector<coord_def> find_near_hostiles(int range, bool affect_invis,
-                                     const actor& agent);
+vector<coord_def> find_near_hostiles(const actor& agent, int range,
+                                     bool include_sensed = false);
 
 int siphon_essence_range();
 bool siphon_essence_affects(const monster &m);

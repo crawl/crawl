@@ -12,7 +12,7 @@
 
 static FixedVector<feature_def, NUM_SHOW_ITEMS> item_defs;
 static int feat_index[NUM_FEATURES];
-static feature_def invis_fd, cloud_fd;
+static feature_def cloud_fd;
 
 /** What symbol should be used for this feature?
  *
@@ -164,10 +164,6 @@ void init_show_table()
         _create_colours(item_defs[si]);
     }
 
-    invis_fd.dchar = DCHAR_INVIS_EXPOSED;
-    invis_fd.minimap = MF_MONS_HOSTILE;
-    _create_colours(invis_fd);
-
     cloud_fd.dchar = DCHAR_CLOUD;
     cloud_fd.minimap = MF_SKIP;
     _create_colours(cloud_fd);
@@ -183,8 +179,6 @@ const feature_def &get_feature_def(show_type object)
 {
     switch (object.cls)
     {
-    case SH_INVIS_EXPOSED:
-        return invis_fd;
     case SH_CLOUD:
         return cloud_fd;
     case SH_ITEM:

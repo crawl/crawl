@@ -7,4 +7,5 @@ enum seen_context_type
     SC_ALREADY_IN_VIEW,  // Was already in sight when a see_monster interrupt was fired
     SC_ABYSS,            // Normal Abyss monster creation
     SC_ORBRUN,           // Orbrun spawns
+    SC_LURKER_AMBUSH,    // A lurker has just appeared near the player
 };

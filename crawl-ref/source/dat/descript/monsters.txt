@@ -224,6 +224,15 @@ Gloorx Vloq
 
 A shadowy figure clothed in profound darkness.
 %%%%
+Goji
+
+An intrepid goblin who has somehow managed to tame a ghost moth as his mount.
+While the elaborate snarl of ropes he is using to remain upright on it surely
+undermines the moth's own mobility, even a hobbled ghost moth can be a deadly
+adversary.
+
+And Goji? Well. They're also there.
+%%%%
 Grinder
 
 An inefficient shadow imp previously employed as a torturer in one of the lower

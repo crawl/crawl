@@ -563,7 +563,8 @@ void monster::timeout_enchantments(int time, bool no_drowning)
         case ENCH_INNER_FLAME:
         case ENCH_ROLLING: case ENCH_MERFOLK_AVATAR_SONG: case ENCH_INFESTATION:
         case ENCH_HELD: case ENCH_BULLSEYE_TARGET: case ENCH_FATIGUE:
-        case ENCH_TIDE: case ENCH_SLOWLY_DYING:
+        case ENCH_TIDE: case ENCH_SLOWLY_DYING: case ENCH_BRAMBLE_COOLDOWN:
+        case ENCH_EXPOSED:
             _timeout_enchantment(*this, entry.second, time);
             break;
 
@@ -598,6 +599,10 @@ void monster::timeout_enchantments(int time, bool no_drowning)
         case ENCH_CONFUSION:
             if (!mons_class_flag(type, M_CONFUSED))
                 _timeout_enchantment(*this, entry.second, time);
+            break;
+
+        case ENCH_PREPARING_TO_LURK:
+            del_ench(ENCH_PREPARING_TO_LURK, true, false);
             break;
 
         default:

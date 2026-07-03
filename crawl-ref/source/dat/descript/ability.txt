@@ -112,6 +112,8 @@ Evoke Berserk Rage ability
 Evoke Invisibility ability
 
 Turns the user invisible for a short period of time.
+
+[[player invis desc]]
 %%%%
 End Transformation ability
 

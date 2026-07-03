@@ -12,6 +12,7 @@
 #include "database.h"
 #include "delay.h"
 #include "english.h" // conjugate_verb
+#include "env.h"
 #include "god-abil.h"
 #include "god-conduct.h"
 #include "god-item.h"
@@ -1731,7 +1732,7 @@ void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
         you.redraw_evasion = true;
 
     if (proprt[ARTP_SEE_INVISIBLE])
-        autotoggle_autopickup(false);
+        env.invis_knowledge.clear();
 
     // Modify ability scores.
     notify_stat_change(STAT_STR, proprt[ARTP_STRENGTH],
@@ -2273,7 +2274,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
 
         case SPARM_SEE_INVISIBLE:
             mpr("You feel perceptive.");
-            autotoggle_autopickup(false);
+            env.invis_knowledge.clear();
             break;
 
         case SPARM_INVISIBILITY:
@@ -2623,7 +2624,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
     switch (item.sub_type)
     {
     case RING_SEE_INVISIBLE:
-        autotoggle_autopickup(false);
+        env.invis_knowledge.clear();
         break;
 
     case RING_FLIGHT:
@@ -2808,16 +2809,9 @@ static void _unequip_jewellery_effect(item_def &item, bool meld, bool was_melded
 
 static void _mark_unseen_monsters()
 {
-
     for (monster_iterator mi; mi; ++mi)
-    {
         if (testbits((*mi)->flags, MF_WAS_IN_VIEW) && !you.can_see(**mi))
-        {
-            (*mi)->revealed_this_turn = true;
-            (*mi)->revealed_at_pos = (*mi)->pos();
-        }
-
-    }
+            mi->sense_if_invisible();
 }
 
 // This brand is supposed to be dangerous because it does large

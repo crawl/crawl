@@ -923,8 +923,9 @@ vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
 NAME:    regret_index_gulch_crossways_interlock
-SHUFFLE: PQRS
-SUBST:   P = +, QRS = c
+# 25% chance for dual outer doors, 37.5% each for either inner door.
+SHUFFLE: PQR / PQR / QPR / QPR / QPR / QRP / QRP / QRP
+SUBST:   P = +, QR = c
 : gulch_crossways_sections(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -934,10 +935,10 @@ vvvvvcc3.PP..+.    +.~?.c..$cvx    xc$$||cvvvvvvvv
 vvvvcc4..c...+.    +.?~.c.2.cvx    xcc++ccccccvvvv
 vvvcc5..cccccxx    x'...+..3cvx    xc$...'42|cvvvv
 vvcc0..QQQ...+.    xccc++.~.cvx    xc....3c$5cvvvv
-vcc3..Rc.cc..+.    xvc......cvx    xx'..2ccc4cvvvv
+vcc3..RP.cc..+.    xvc......cvx    xx'..2ccc4cvvvv
 vc'..cR...cc1x.    xvc.~....ccx    .x...ccc3'cccvv
-vc.SccRc...ccxx    xvc2..++cccx    .+..ccc2..c|cvv
-vccS.c.cc...ccx    xvc.0.+....x    .+..?c....+|cvv
+vc.PccRc...ccxx    xvc2..++cccx    .+..ccc2..c|cvv
+vccP.c.cc...ccx    xvc.0.+....x    .+..?c....+|cvv
 vcc..c..cc.?$cx    xvc$..c.~?.+    .+.c......+$cvv
 vc2..c..1cc$|cx    xvccccc.?~.+    .x.....'..c$cvv
 vxx++x++xxccccx    xvvvvvc....+    xxx+++xxccccccv
@@ -950,10 +951,10 @@ vxxxxxxx.....xx    xxxxxxxxxxxx    xxxxxx...x...xv
 vccccccxx+++xxx    +....cvvvvvx    xccccxx++x++xxv
 vvc$c..'.....x.    +.~?.cccccvx    xc|$cc1..c..2cv
 vvc$+......c.+.    +.?~.c..$cvx    xc$?.cc..c..ccv
-vvc|+....c?..+.    x....+.0.cvx    xcc...cc.c.Sccv
-vvc|c..6ccc..+.    xccc++..2cvx    xxcc...cRccS.cv
+vvc|+....c?..+.    x....+.0.cvx    xcc...cc.c.Pccv
+vvc|c..6ccc..+.    xccc++..2cvx    xxcc...cRccP.cv
 vvccc'0ccc...x.    xcc....~.cvx    .x1cc...Rc..'cv
-vvvvc0ccc6..'xx    xvc......cvx    .+..cc.cR..3ccv
+vvvvc0ccc6..'xx    xvc......cvx    .+..cc.PR..3ccv
 vvvvc0}c0....cx    xvc.~.++cccx    .+...QQQ..0ccvv
 vvvvc|00'...$cx    xvc3..+...'x    xxccccc..5ccvvv
 vvvvcccccc++ccx    xvc.2.c.~?.+    .+...c..4ccvvvv

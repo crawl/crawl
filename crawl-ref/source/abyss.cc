@@ -1024,6 +1024,7 @@ static void _abyss_generate_monsters(int nmonsters)
 
     mgen_data mg;
     mg.proximity = PROX_ANYWHERE;
+    mg.flags |= MG_AUTOLURK;
 
     for (int mcount = 0; mcount < nmonsters; mcount++)
     {

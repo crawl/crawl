@@ -744,6 +744,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_MERFOLK_AQUAMANCER, { { { WPN_RAPIER, 1 } }, {}, {}, 2 } },
         { MONS_MERFOLK_JAVELINEER, { { { WPN_SPEAR, 1 } } } },
         { MONS_GOBLIN_RIDER, { { { WPN_SPEAR, 1 } } } },
+        { MONS_GOJI, { { { WPN_SPEAR, 1 } } } },
         { MONS_SPRIGGAN_RIDER, { { { WPN_SPEAR, 1 } } } },
         { MONS_MERFOLK, { { { WPN_TRIDENT, 1 } } } },
         { MONS_MERFOLK_SIREN,
@@ -1186,6 +1187,10 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     case MONS_GOBLIN_RIDER:
         if (coinflip())
             level = ISPEC_GOOD_ITEM;
+        break;
+
+    case MONS_GOJI:
+        level = ISPEC_GOOD_ITEM;
         break;
 
     case MONS_FUNGAL_SHAMBLER:
@@ -2213,6 +2218,13 @@ int make_mons_armour(monster_type type, int level)
     case MONS_CRAZY_YIUF:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_CLOAK;
+        break;
+
+    case MONS_GOJI:
+        force_item = true;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type = ARM_SCARF;
+        set_item_ego_type(item, OBJ_ARMOUR, SPARM_HARM);
         break;
 
     case MONS_FANNAR:

@@ -291,6 +291,7 @@ void leaving_level_now(dungeon_feature_type stair_used)
 
     end_terrain_changes(TERRAIN_CHANGE_GOLUBRIA);
     _remove_unstable_monsters();
+    cancel_pending_lurkers();
 
     // Allow players to be interrupted by sensed monsters on their return to this level.
     for (monster_iterator mi; mi; ++mi)
@@ -1132,7 +1133,6 @@ void floor_transition(dungeon_feature_type how,
     // Apply location effects.
     you.trigger_movement_effects(MV_NO_TRAVEL_STOP);
 
-    autotoggle_autopickup(false);
     request_autopickup();
 }
 

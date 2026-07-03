@@ -324,6 +324,8 @@ void spawn_random_monsters()
         }
     }
 
+    mg.flags |= MG_AUTOLURK;
+
     mons_place(mg);
     viewwindow();
     update_screen();
@@ -2949,6 +2951,9 @@ monster* mons_place(mgen_data mg)
     monster* creation = place_monster(mg);
     if (!creation)
         return 0;
+
+    if ((mg.flags & MG_AUTOLURK) && mons_class_flag(creation->type, M_LURKER))
+        start_lurking_at(*creation, creation->pos());
 
     dprf(DIAG_MONPLACE, "Created %s.", creation->base_name(DESC_A, true).c_str());
 

@@ -103,6 +103,8 @@ static double _to_hit_hit_chance(const monster_info& mi, attack &atk, bool melee
     const double AUTO_HIT_CHANCE = is_aux ? 3.3333 : MIN_HIT_MISS_PERCENTAGE / 2.0;
 
     int ev = mi.ev + (!melee && mi.is(MB_DEFLECT_MSL) ? DEFLECT_MISSILES_EV_BONUS : 0);
+    if (mi.is(MB_PHASE_SHIFT) && !you.can_see_invisible())
+        ev += PHASE_SHIFT_EV_BONUS;
 
     if (ev <= 0)
         return 1 - AUTO_MISS_CHANCE / 100.0;
@@ -112,6 +114,11 @@ static double _to_hit_hit_chance(const monster_info& mi, attack &atk, bool melee
     {
         // Apply post-roll manipulations:
         int adjusted_mhit = rolled_mhit + atk.post_roll_to_hit_modifiers(rolled_mhit, false);
+
+        // XXX: Duplicating the invis check in post_roll_to_hit_modifiers()
+        //      (which is otherwise skipped since the passed attack has no defender.)
+        if (mi.invisible_to_player())
+            adjusted_mhit -=6;
 
         // But the above will bail out because there's no defender in the attack object,
         // so we reproduce any possibly relevant effects here:
@@ -469,6 +476,7 @@ bool player_fight(monster* defender, bool is_rampage,
                 return false;
             }
 
+            defender->sense_if_invisible();
             if (do_west_wind_shot())
                 return true;
             else if (do_player_ranged_attack(defender->pos()))

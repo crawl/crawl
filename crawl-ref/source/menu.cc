@@ -2598,6 +2598,11 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
         tileset.emplace_back(TILEI_UNAWARE);
     }
 
+    if (m->is(MB_KNOWN_INVIS))
+        tileset.emplace_back(TILEI_UNSEEN_INVIS_KNOWN);
+    else if (m->is(MB_REMEMBERED_INVIS))
+        tileset.emplace_back(TILEI_UNSEEN_INVIS_REMEMBERED);
+
     return true;
 }
 

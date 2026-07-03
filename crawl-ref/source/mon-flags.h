@@ -120,8 +120,8 @@ enum monclass_flag_type : uint64_t
     /// An ancestor granted by Hepliaklqana
     M_ANCESTOR          = BIT(35),
 
-    // Was M_ALWAYS_NAMED and before that M_ALWAYS_CORPSE
-                       // BIT(36),
+    /// Has special ambush behaviour
+    M_LURKER            = BIT(36),
 
     /// prefer ranged attacks over melee
     M_PREFER_RANGED     = BIT(37),
@@ -210,7 +210,9 @@ enum monster_flag_type : uint64_t
     /// is following player through stairs
     MF_TAKING_STAIRS      = BIT(2),
 
-    //                      BIT(3),
+    /// Player has conclusively learned this monster's present location, despite
+    /// it being invisible to them.
+    MF_KNOWN_INVISIBLE    = BIT(3),
 
     /// Player has already seen monster
     MF_SEEN               = BIT(4),

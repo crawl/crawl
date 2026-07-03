@@ -168,7 +168,7 @@ opacity_type opacity_map_default::operator()(const coord_def& p) const
         return OPC_HALF;
 
     if (cell.monsterinfo())
-        return mons_opacity(cell.monster(), LOS_DEFAULT);
+        return mons_opacity(cell.mon_type(), LOS_DEFAULT);
 
     return OPC_CLEAR;
 }
@@ -187,7 +187,7 @@ opacity_type opacity_map_no_trans::operator()(const coord_def& p) const
         return OPC_HALF;
 
     if (cell.monsterinfo())
-        return mons_opacity(cell.monster(), LOS_NO_TRANS);
+        return mons_opacity(cell.mon_type(), LOS_NO_TRANS);
 
     return OPC_CLEAR;
 }
@@ -219,7 +219,7 @@ opacity_type opacity_map_solid_see::operator()(const coord_def& p) const
         return OPC_HALF;
 
     if (cell.monsterinfo())
-        return mons_opacity(cell.monster(), LOS_SOLID_SEE);
+        return mons_opacity(cell.mon_type(), LOS_SOLID_SEE);
 
     return OPC_CLEAR;
 }

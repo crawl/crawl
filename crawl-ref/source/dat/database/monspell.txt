@@ -563,6 +563,16 @@ unseen Geryon cast
 
 You hear a weird and mournful sound.
 %%%%
+Antimagic Gaze Goji cast
+
+{{
+if you.see_invisible() then
+    return "@The_monster@'s mount stares at you."
+else
+    return "@The_monster@ spurs @possessive@ mount on."
+end
+}}
+%%%%
 Smiting Jeremiah cast
 
 @The_monster@ lets out a twisted cry.

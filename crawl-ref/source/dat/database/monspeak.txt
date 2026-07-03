@@ -4765,6 +4765,65 @@ Gastronok triumphant
 
 @The_monster@ gurgles, "Let's see if you taste as good as that wizard did."
 %%%%
+############ GOJI ### A goblin rider whose strategy is less brilliant than he thinks
+Goji
+
+@The_monster@ says, "All other rider will be jealous when they see me now. Except they can't!"
+
+@The_monster@ shouts, "Stealth is key to winning *all* battles."
+
+@The_monster@ says, "Me always have element of surprise."
+
+w:20
+VISUAL:{{
+  if you.see_invisible() then
+    return "@The_monster@ nearly slides off @possessive@ mount."
+  else
+    return "@The_monster@ tilts precariously sideways for a moment."
+  end
+}}
+
+w:20
+VISUAL:{{
+  if you.see_invisible() then
+    return "@The_monster@ is repeatedly hit by @possessive@ mount's wing. @Subjective@ doesn't seem to notice."
+  else
+    return "@The_monster@'s face is buffeted by something unseen."
+  end
+}}
+
+w:20
+VISUAL:{{
+  if you.see_invisible() then
+    return "@The_monster@'s mount tries and fails to shake @objective@ off."
+  else
+    return "@The_monster@ wobbles up and down alarmingly."
+  end
+}}
+
+VISUAL:@The_monster@ struggles to disentangle @possessive@ weapon from @possessive@ harness.
+
+@The_monster@ says, "Even shrike cannot dodge what it cannot see!"
+
+@The_monster@ says, "I make captain now for sure."
+
+w:2
+@The_monster@ says, "Float like a butterfly, sting like... a butterfly with a spear!"
+%%%%
+Goji killed
+
+@The_monster@ rasps, "But I... could not... be seen...."
+%%%%
+Goji triumphant
+
+{{
+  if you.invisible() then
+    return '@The_monster@ laughs triumpantly. "Goji even *more* invisible!"'
+  else
+    return '@The_monster@ laughs. "Silly ' .. you.species():lower() .. "! You couldn't even see me."
+  end
+}}
+%%%%
 ############ GRINDER ### An inefficient ex-torturer
 Grinder
 

@@ -1287,11 +1287,11 @@ static int _count_tele_closets(vector<coord_def> *closets, bool flying,
                                bool mask)
 {
     using passable_fn = bool (*)(const coord_def &);
-    passable_fn passable =
-        flying ? (passable_fn) [](const coord_def &c)
-                 { return _dgn_square_is_closet_passable(c, true); }
-               : (passable_fn) [](const coord_def &c)
-                 { return _dgn_square_is_closet_passable(c, false); };
+    passable_fn fly_passable =
+        [](const coord_def &c) { return _dgn_square_is_closet_passable(c, true); };
+    passable_fn walk_passable =
+        [](const coord_def &c) { return _dgn_square_is_closet_passable(c, false); };
+    passable_fn passable = flying ? fly_passable : walk_passable;
 
     // Floodfill back from the exits to mark everywhere that isn't a closet.
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
@@ -1691,6 +1691,9 @@ void dgn_reset_level(bool enable_random_maps)
     env.map_forgotten.reset();
     tile_env.remembered_flavour.reset();
     env.map_seen.reset();
+
+    env.lurkers.clear();
+    init_lurker_map();
 
     // Initialise all items.
     for (int i = 0; i < MAX_ITEMS; i++)
@@ -5670,7 +5673,12 @@ static bool _dgn_place_monster(const vault_placement &place, mons_spec &mspec,
         = mspec.patrolling || place.map.has_tag("patrolling");
 
     mspec.props[MAP_KEY].get_string() = place.map_name_at(where);
-    return dgn_place_monster(mspec, where, false, generate_awake, patrolling);
+    monster* mon = dgn_place_monster(mspec, where, false, generate_awake, patrolling);
+
+    if (mon && mons_class_flag(mon->type, M_LURKER))
+        start_lurking_at(*mon, mon->pos());
+
+    return mon;
 }
 
 static bool _dgn_place_one_monster(const vault_placement &place,

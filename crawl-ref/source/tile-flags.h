@@ -63,8 +63,10 @@ enum tile_flags : unsigned long long
 
     //// Background flags
 
-    TILE_FLAG_MM_UNSEEN    = 0x00020000ULL,
-    TILE_FLAG_UNSEEN       = 0x00040000ULL,
+    TILE_FLAG_MM_UNSEEN        = 0x00020000ULL,
+    TILE_FLAG_UNSEEN           = 0x00040000ULL,
+    TILE_FLAG_INVIS            = 0x04000000000ULL,
+    TILE_FLAG_REMEMBERED_INVIS = 0x08000000000ULL,
 
     // 3 mutually exclusive flags for cursors.
     TILE_FLAG_CURSOR1      = 0x00180000ULL,

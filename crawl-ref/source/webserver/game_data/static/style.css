@@ -342,6 +342,10 @@ canvas {
     color: var(--color-6); /* brown */
 }
 
+#monster_list .invisible {
+    color: var(--color-5); /* magenta */
+}
+
 #monster_list .health {
     display: inline-block;
     vertical-align: middle;

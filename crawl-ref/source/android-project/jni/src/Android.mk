@@ -176,6 +176,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/mon-explode.cc \
     $(CRAWL_PATH)/mon-gear.cc \
     $(CRAWL_PATH)/mon-info.cc \
+    $(CRAWL_PATH)/mon-lurk.cc \
     $(CRAWL_PATH)/mon-movetarget.cc \
     $(CRAWL_PATH)/mon-pathfind.cc \
     $(CRAWL_PATH)/mon-pick.cc \

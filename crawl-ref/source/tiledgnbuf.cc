@@ -52,6 +52,8 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
 
     const tileidx_t fg_idx = cell.fg.tile();
     const bool in_water = is_in_water(cell);
+    const bool invis = cell.bg.has_flag(TILE_FLAG_REMEMBERED_INVIS)
+                        || cell.fg.has_flag(TILE_FLAG_INVIS);
 
     tileidx_t cloud_idx = cell.cloud;
 
@@ -63,14 +65,14 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
     {
         mcache_entry *entry = mcache.get(fg_idx);
         if (entry)
-            pack_mcache(entry, x, y, in_water);
+            pack_mcache(entry, x, y, in_water, invis);
         else
-            m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y, 0, in_water, false);
+            m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y, 0, in_water, false, 0, 0, -1, invis);
     }
     else if (fg_idx == TILEP_PLAYER)
         pack_player(x, y, in_water);
     else if (get_tile_texture(fg_idx) == TEX_PLAYER)
-        m_buf_doll.add(fg_idx, x, y, TILEP_PART_MAX, in_water, false);
+        m_buf_doll.add(fg_idx, x, y, TILEP_PART_MAX, in_water, false, 0, 0, -1, invis);
 
     pack_foreground(x, y, cell);
 
@@ -102,11 +104,20 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
     }
 }
 
+// Note: Used only for some UI elements that render monster tiles (eg: xv).
+//       Monster tiles on the main playfield go through ::add() instead.
 void DungeonCellBuffer::add_monster(const monster_info &mon, int x, int y)
 {
     tile_with_flags_t t = tileidx_monster(mon);
     tileidx_t t0   = t.tile();
     tile_flag_t flag = t.flags();
+
+    // Normally handled by pack_background()
+    if (mon.is(MB_REMEMBERED_INVIS))
+    {
+        m_buf_feat.add(TILE_REMEMBERED_INVIS, x, y);
+        m_buf_icons.add(TILEI_UNSEEN_INVIS_REMEMBERED, x, y, 0, 0);
+    }
 
     // Copied from _tile_place_monster()
     if (!mons_class_is_stationary(mon.type) || mon.type == MONS_TRAINING_DUMMY)
@@ -126,7 +137,7 @@ void DungeonCellBuffer::add_monster(const monster_info &mon, int x, int y)
             m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y, 0, false, false);
     }
     else if (get_tile_texture(t0) == TEX_PLAYER)
-        m_buf_doll.add(t0, x, y, TILEP_PART_MAX, false, false);
+        m_buf_doll.add(t0, x, y, TILEP_PART_MAX, false, false, 0, 0, -1, mon.invisible_to_player());
     else if (get_tile_texture(t0) == TEX_DEFAULT)
     {
         const tileidx_t base_idx = tileidx_known_base_item(t0);
@@ -458,6 +469,8 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 m_buf_feat.add(TILE_TRAVEL_EXCLUSION_BG, x, y);
         }
 
+        if (bg.has_flag(TILE_FLAG_REMEMBERED_INVIS))
+            m_buf_feat.add(TILE_REMEMBERED_INVIS, x, y);
     }
 }
 
@@ -583,6 +596,9 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         }
     }
 
+    if (fg.has_flag(TILE_FLAG_REMEMBERED_INVIS))
+        m_buf_icons.add(TILEI_UNSEEN_INVIS_REMEMBERED, x, y, 0, 0);
+
     // We might want to enforce some explicit ordering on these.
     // Currently, they default to iteration order.
     for (auto icon : cell.icons)
@@ -701,17 +717,17 @@ void DungeonCellBuffer::pack_player(int x, int y, bool submerged)
 {
     dolls_data result = player_doll;
     fill_doll_equipment(result);
-    pack_doll(result, x, y, submerged, false);
+    pack_doll(result, x, y, submerged, false, false);
 }
 
 void DungeonCellBuffer::pack_doll(const dolls_data &doll, int x, int y,
-                                  bool submerged, bool ghost)
+                                  bool submerged, bool ghost, bool invis)
 {
-    pack_doll_buf(m_buf_doll, doll, x, y, submerged, ghost);
+    pack_doll_buf(m_buf_doll, doll, x, y, submerged, ghost, invis);
 }
 
 void DungeonCellBuffer::pack_mcache(mcache_entry *entry, int x, int y,
-                                    bool submerged)
+                                    bool submerged, bool invis)
 {
     ASSERT(entry);
 
@@ -719,14 +735,14 @@ void DungeonCellBuffer::pack_mcache(mcache_entry *entry, int x, int y,
 
     const dolls_data *doll = entry->doll();
     if (doll)
-        pack_doll(*doll, x, y, submerged, trans);
+        pack_doll(*doll, x, y, submerged, trans, invis);
 
     tile_draw_info dinfo[mcache_entry::MAX_INFO_COUNT];
     int draw_info_count = entry->info(&dinfo[0]);
     for (int i = 0; i < draw_info_count; i++)
     {
         m_buf_doll.add(dinfo[i].idx, x, y, TILEP_PART_MAX, submerged, trans,
-                       dinfo[i].ofs_x, dinfo[i].ofs_y);
+                       dinfo[i].ofs_x, dinfo[i].ofs_y, -1, invis);
     }
 }
 

@@ -93,6 +93,8 @@ tileidx_t tileidx_monster_base(int type, int mon_id, bool in_water = false,
                             bool vary = true);
 tileidx_t tileidx_mon_clamp(tileidx_t tile, int offset);
 
+tileidx_t tileidx_monster_phase_shift(monster_type type);
+
 void init_parchment_overlays();
 tileidx_t tileidx_parchment_overlay(int spell, int index);
 colour_t parchment_colour(spell_type spell);

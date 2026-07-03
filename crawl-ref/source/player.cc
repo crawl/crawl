@@ -1369,7 +1369,14 @@ static bool _mons_inhibits_regen(const monster &m)
     return mons_is_threatening(m)
                 && !m.wont_attack()
                 && !m.neutral()
-                && you.can_see(m);
+                && you.aware_of(m);
+}
+
+bool regeneration_is_ever_inhibited()
+{
+    return you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1
+            || you.form == transformation::vampire
+            || you.form == transformation::bat_swarm;
 }
 
 /// Is the player's hp regeneration inhibited by nearby monsters?
@@ -1378,9 +1385,7 @@ static bool _mons_inhibits_regen(const monster &m)
 bool regeneration_is_inhibited(const monster *m)
 {
     // used mainly for resting: don't add anything here that can be waited off
-    if (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1
-        || you.form == transformation::vampire
-        || you.form == transformation::bat_swarm)
+    if (regeneration_is_ever_inhibited())
     {
         if (m)
             return _mons_inhibits_regen(*m);
@@ -5832,6 +5837,8 @@ player::player()
     prevailing_wind = -1;
     gave_wind_change_warning = false;
 
+    gave_invis_clear_prompt = false;
+
     reset_escaped_death();
     on_current_level    = true;
     seen_portals        = 0;
@@ -7985,7 +7992,7 @@ bool player::innate_sinv() const
         return true;
     }
 
-    if (have_passive(passive_t::sinv))
+    if (have_passive(passive_t::see_unseen))
         return true;
 
     return false;
@@ -8545,7 +8552,7 @@ bool player::attempt_escape()
         = constricted_type == CONSTRICT_ROOTS      ? "the roots'"
           : constricted_type == CONSTRICT_BVC      ? "the zombie hands'"
           : constricted_type == CONSTRICT_ENTANGLE ? "the vines'"
-          : you.can_see(*themonst) ? themonst->name(DESC_ITS, true) : "something's";
+          : you.aware_of(*themonst) ? themonst->name(DESC_ITS, true) : "something's";
 
     if (x_chance_in_y(_constriction_escape_chance(escape_attempts), 100))
     {
@@ -8599,7 +8606,7 @@ bool player::is_nervous()
 {
     if (form != transformation::fungus)
         return false;
-    for (monster_near_iterator mi(&you); mi; ++mi)
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS, true); mi; ++mi)
     {
         if (made_nervous_by(*mi))
             return true;

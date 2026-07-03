@@ -12,7 +12,9 @@
 
 #include "abyss.h"
 #include "acquire.h"
+#include "act-iter.h"
 #include "dbg-util.h"
+#include "env.h"
 #include "god-abil.h"
 #include "god-wrath.h"
 #include "item-use.h"
@@ -132,6 +134,15 @@ void wizard_change_species()
     }
 
     change_species_to(sp);
+
+    if (you.can_see_invisible())
+        env.invis_knowledge.clear();
+    else
+    {
+        for (monster_iterator mi; mi; ++mi)
+            if (testbits((*mi)->flags, MF_WAS_IN_VIEW) && !you.can_see(**mi))
+                mi->sense_if_invisible();
+    }
 }
 
 // Casts a specific spell by number or name.

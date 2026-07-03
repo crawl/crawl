@@ -717,10 +717,10 @@ void dec_penance(god_type god, int val)
                 mprf(MSGCH_GOD, "Your aura of darkness returns!");
                 invalidate_agrid(true);
             }
-            if (have_passive(passive_t::sinv))
+            if (have_passive(passive_t::see_unseen))
             {
                 mprf(MSGCH_GOD, "Your vision regains its divine sight.");
-                autotoggle_autopickup(false);
+                env.invis_knowledge.clear();
             }
             if (have_passive(passive_t::stat_boost))
             {
@@ -2426,8 +2426,8 @@ static void _handle_piety_gain(int old_piety)
                 simple_god_message(" begins accelerating your health and magic "
                                 "regeneration.");
             }
-            if (rank == rank_for_passive(passive_t::sinv))
-                autotoggle_autopickup(false);
+            if (rank == rank_for_passive(passive_t::see_unseen))
+                env.invis_knowledge.clear();
             if (rank == rank_for_passive(passive_t::clarity))
             {
                 // Inconsistent with donning amulets, but matches the

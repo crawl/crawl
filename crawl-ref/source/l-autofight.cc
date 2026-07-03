@@ -29,7 +29,7 @@ static bool _is_candidate_for_autofight_attack(coord_def c, bool no_move, bool c
 
     map_cell& cell = env.map_knowledge(c);
     monster_info *mi = cell.monsterinfo();
-    if (!mi)
+    if (!mi || mi->is(MB_REMEMBERED_INVIS))
         return false;
 
     if (mi->type == MONS_ORB_OF_DESTRUCTION || mi->type == MONS_BUTTERFLY)

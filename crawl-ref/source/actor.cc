@@ -455,13 +455,12 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet,
         && (you.see_cell(pos()) || you.see_cell(constrictee->pos())))
     {
         string attacker_desc;
-        const string verb = intentional ? "release" : "lose";
         bool force_plural = true;
 
         if (ctype == CONSTRICT_BVC)
             attacker_desc = "The zombie hands";
         else if (ctype == CONSTRICT_ROOTS)
-            attacker_desc = "The roots";
+            attacker_desc = "The grasping roots";
         else if (ctype == CONSTRICT_ENTANGLE)
             attacker_desc = "The vines";
         else
@@ -472,18 +471,18 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet,
 
         // Print a different message when breaking free of constriction via
         // blinking or similar
-        if (!escape_verb.empty())
+        if (!intentional)
         {
             mprf("%s %s free of %s!",
-                 constrictee->name(DESC_THE).c_str(), escape_verb.c_str(),
+                 constrictee->name(DESC_THE).c_str(),
+                 constrictee->conj_verb(escape_verb).c_str(),
                  lowercase(attacker_desc).c_str());
         }
         else
         {
             mprf("%s %s %s grip on %s.",
                 attacker_desc.c_str(),
-                force_plural ? verb.c_str()
-                            : conj_verb(verb).c_str(),
+                force_plural ? "release" : "releases",
                 force_plural ? "their" : pronoun(PRONOUN_POSSESSIVE).c_str(),
                 constrictee->name(DESC_THE).c_str());
         }
@@ -660,6 +659,11 @@ void actor::start_constricting(actor &whom, constrict_type ctype, int duration)
 
     if (whom.is_player())
         you.redraw_evasion = true;
+    else if (you.see_cell(whom.pos())
+             && (ctype != CONSTRICT_MELEE || visible_to(&you)))
+    {
+        whom.as_monster()->sense_if_invisible();
+    }
 
     if (duration > 0)
     {
@@ -760,7 +764,12 @@ void actor::constriction_damage_defender(actor &defender)
     else
         exclamations = attack_strength_punctuation(damage);
 
-    if (is_player() || you.can_see(*this))
+    // Describe the source of constriction if you reasonably see the physical
+    // object doing the constriction (which isn't actually the 'constricter'
+    // itself in the case of ranged constriction).
+    if (is_player()
+        || (typ == CONSTRICT_MELEE && you.can_see(*this))
+        || (typ != CONSTRICT_MELEE && you.aware_of(defender)))
     {
         string attacker_desc;
         bool force_plural = true;
@@ -795,7 +804,7 @@ void actor::constriction_damage_defender(actor &defender)
 #endif
              exclamations.c_str());
     }
-    else if (you.can_see(defender) || defender.is_player())
+    else if (typ == CONSTRICT_MELEE && you.can_see(defender))
     {
         mprf("%s %s constricted%s%s",
              defender.name(DESC_THE).c_str(),
@@ -1118,7 +1127,7 @@ coord_def actor::stumble_pos(coord_def targ) const
         return coord_def();
 
     const actor* other = actor_at(newpos);
-    if (other && can_see(*other))
+    if (other && aware_of(*other))
         return coord_def();
 
     return newpos;

@@ -1032,6 +1032,7 @@ ghost_threat_easy THREAT_GHOST_EASY
 ghost_threat_tough THREAT_GHOST_TOUGH
 ghost_threat_nasty THREAT_GHOST_NASTY
 monster_threat_unusual THREAT_UNUSUAL
+remembered_invis REMEMBERED_INVIS
 
 travel_exclusion TRAVEL_EXCLUSION_BG
 travel_exclusion_centre TRAVEL_EXCLUSION_CENTRE_BG

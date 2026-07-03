@@ -11,7 +11,8 @@ class actor_near_iterator
 {
 public:
     actor_near_iterator(coord_def c, los_type los = LOS_DEFAULT);
-    actor_near_iterator(const actor* a, los_type los = LOS_DEFAULT);
+    actor_near_iterator(const actor* a, los_type los = LOS_DEFAULT,
+                        bool include_known_invis = false);
 
     operator bool() const;
     actor* operator*() const;
@@ -23,6 +24,7 @@ protected:
     const coord_def center;
     los_type _los;
     const actor* viewer;
+    bool include_known_invis;
     int i;
     const int max;
 
@@ -34,7 +36,8 @@ class monster_near_iterator
 {
 public:
     monster_near_iterator(coord_def c, los_type los = LOS_DEFAULT);
-    monster_near_iterator(const actor* a, los_type los = LOS_DEFAULT);
+    monster_near_iterator(const actor* a, los_type los = LOS_DEFAULT,
+                          bool include_known_invis = false);
 
     operator bool() const;
     monster* operator*() const;
@@ -50,6 +53,7 @@ protected:
     const coord_def center;
     los_type _los;
     const actor* viewer;
+    bool include_known_invis;
     int i;
     const int max;
     int begin_point;
