@@ -1739,10 +1739,15 @@ bool spell_no_hostile_in_range(spell_type spell)
                 if (entry.second == AFF_NO || entry.second == AFF_TRACER)
                     continue;
 
-                // Checks here are from get_dist_to_nearest_monster().
+                // General checks here mirror get_dist_to_nearest_monster().
                 const monster* mons = monster_at(entry.first);
-                if (mons && !mons->wont_attack() && mons_is_threatening(*mons))
+                if (mons && you.aware_of(*mons)
+                    && !mons->wont_attack()
+                    && mons_is_threatening(*mons)
+                    && tgt.affects_monster(monster_info(mons)))
+                {
                     return false;
+                }
             }
         }
 

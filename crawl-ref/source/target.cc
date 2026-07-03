@@ -1171,6 +1171,14 @@ aff_type targeter_cloud::is_affected(coord_def loc)
     return AFF_NO;
 }
 
+bool targeter_cloud::affects_monster(const monster_info& mon)
+{
+    monster *victim = monster_at(mon.pos);;
+    if (!victim || !you.aware_of(*victim))
+        return false;
+    return !actor_cloud_immune(*victim, ctype);
+}
+
 bool targeter_cloud::harmful_to_player()
 {
     return !actor_cloud_immune(you, ctype);
