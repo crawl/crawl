@@ -1,0 +1,16 @@
+name: "emperor unseen horror"
+glyph: {char: "x", colour: lightmagenta}
+flags: [invis, see_invis, batty]
+exp: 768
+will: 20
+attacks:
+ - {type: hit, flavour: antimagic, damage: 18}
+ - {type: hit, flavour: teleport_with, damage: 12}
+hd: 8
+hp_10x: 575
+ac: 5
+ev: 10
+intelligence: animal
+speed: 30
+size: large
+shape: misc

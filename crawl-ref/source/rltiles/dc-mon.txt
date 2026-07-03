@@ -548,6 +548,7 @@ very_ugly_thing5
 
 ## Small abominations ('x')
 unseen_horror MONS_UNSEEN_HORROR
+emperor_unseen_horror MONS_EMPEROR_UNSEEN_HORROR
 crawling_flesh_cage0 MONS_CRAWLING_FLESH_CAGE
 crawling_flesh_cage1
 crawling_flesh_cage2

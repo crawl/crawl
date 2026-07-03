@@ -1432,6 +1432,12 @@ emperor scorpion
 A giant scorpion with a massive barb on its tail dripping deadly venom. It is
 one of the largest arachnids known.
 %%%%
+emperor unseen horror
+
+A larger and deadlier unseen horror from the furthest reaches of the Abyss.
+Those who encounter one are likely to see something they'll wish they hadn't,
+though for most ordinary adventurers this won't be the horror itself.
+%%%%
 endoplasm
 
 A glob of grey sludge that has somehow developed a rudimentary awareness and
