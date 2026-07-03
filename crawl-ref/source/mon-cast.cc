@@ -3613,7 +3613,6 @@ static bool _seal_doors_and_stairs(const monster* warden,
             for (coord_def dc : door_spots)
             {
                 dgn_close_door(dc);
-                set_terrain_changed(dc);
                 dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
 
                 if (is_excluded(dc))

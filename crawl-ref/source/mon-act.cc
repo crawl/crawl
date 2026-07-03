@@ -3114,7 +3114,6 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
             dgn_break_door(dc);
         else
             dgn_open_door(dc);
-        set_terrain_changed(dc);
     }
 
     if (was_seen)

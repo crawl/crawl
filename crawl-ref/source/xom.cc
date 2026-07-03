@@ -2469,14 +2469,12 @@ static void _xom_open_and_close_doors(int /* sever */)
         case DNGN_RUNED_DOOR:
         case DNGN_RUNED_CLEAR_DOOR:
             dgn_open_door(pos);
-            set_terrain_changed(pos);
             if (you.see_cell(pos))
                 doors_open++;
             break;
         case DNGN_OPEN_DOOR:
         case DNGN_OPEN_CLEAR_DOOR:
             dgn_close_door(pos);
-            set_terrain_changed(pos);
             if (you.see_cell(pos))
                 doors_close++;
             break;
