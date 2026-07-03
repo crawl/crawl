@@ -1948,6 +1948,7 @@ void attract_monster(monster &mon, int max_move)
 
     _place_tloc_cloud(old_pos);
     _place_tloc_cloud(ray.pos());
+    mon.check_redraw(old_pos);
     mon.finalise_movement();
 }
 
