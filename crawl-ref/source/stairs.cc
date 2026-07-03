@@ -280,6 +280,7 @@ void leaving_level_now(dungeon_feature_type stair_used)
         vault_list.push_back("[exit]");
 #endif
         clear_abyssal_rune_knowledge();
+        you.props.erase(ABYSS_AREAS_SEEN_KEY);
     }
 
     // XXX: Don't consider things like banishment or Duel, which use 'stairs'

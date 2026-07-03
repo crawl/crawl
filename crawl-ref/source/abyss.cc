@@ -172,11 +172,15 @@ static void _write_abyssal_features()
 // Returns the roll to use to check if we want to create an abyssal rune.
 static int _abyssal_rune_roll()
 {
-    if (you.runes[RUNE_ABYSSAL] || you.depth < ABYSSAL_RUNE_MIN_LEVEL)
+    const int chance_mult = have_passive(passive_t::attract_abyssal_rune) ? 2 : 1;
+    if (you.runes[RUNE_ABYSSAL] || you.depth < ABYSSAL_RUNE_MIN_LEVEL
+        || (you.props[ABYSS_AREAS_SEEN_KEY].get_int() * chance_mult < ABYSS_RUNE_AREAS_MIN))
+    {
         return -1;
+    }
 
-    static const int chance[] = {0, 0, 10, 15, 22, 100, 100};
-    return chance[you.depth] * (have_passive(passive_t::attract_abyssal_rune) ? 2 : 1);
+    static const int chance[] = {0, 0, 15, 25, 40, 100, 100};
+    return chance[you.depth - 1] * chance_mult;
 }
 
 static void _abyss_fixup_vault(const vault_placement *vp)
@@ -1454,6 +1458,8 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask, coord_def map
 {
     // Any rune on the floor prevents the abyssal rune from being generated.
     const bool placed_abyssal_rune = find_floor_item(OBJ_RUNES);
+
+    you.props[ABYSS_AREAS_SEEN_KEY].get_int()++;
 
     dprf(DIAG_ABYSS, "_generate_area(). turns_on_level: %d, rune_on_floor: %s",
          env.turns_on_level, placed_abyssal_rune? "yes" : "no");

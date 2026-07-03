@@ -362,7 +362,7 @@ static const duration_def duration_data[] =
       "about to teleport", "teleport",
       "You are about to teleport.", D_DISPELLABLE /*but special-cased*/,
       {{ "", []() {
-          you_teleport_now();
+          you_teleport_now("", true);
           untag_followers();
       }}}},
     { DUR_DEATHS_DOOR,

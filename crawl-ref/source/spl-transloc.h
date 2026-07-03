@@ -39,7 +39,7 @@ bool valid_electric_charge_target(const actor& agent, coord_def target,
 bool hostile_teleport_is_possible();
 bool hostile_teleport_player(monster* mon_source = nullptr);
 void you_teleport(bool is_hostile = false, mid_t teleportitis_source = MID_NOBODY);
-void you_teleport_now(bool wizard_tele = false, string reason = "");
+void you_teleport_now(string reason = "", bool manual_tele = false, bool wizard_tele = false);
 bool you_teleport_to(const coord_def where,
                      bool move_monsters = false);
 bool cell_vetoes_teleport(coord_def cell, bool check_monsters = true,

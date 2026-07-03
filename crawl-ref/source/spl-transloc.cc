@@ -1344,9 +1344,19 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
     return true;
 }
 
-void you_teleport_now(bool wizard_tele, string reason)
+void you_teleport_now(string reason, bool manual_tele, bool wizard_tele)
 {
     bool randtele;
+
+    // While in the Abyss, teleport scrolls will always take the player slightly
+    // further away from the rune. (But other effects moving you at random
+    // should not.)
+    if (manual_tele && player_in_branch(BRANCH_ABYSS)
+        && !you.props.exists(TELEPORTITIS_SOURCE))
+    {
+        int&areas = you.props[ABYSS_AREAS_SEEN_KEY].get_int();
+        areas = max(0, areas - 2);
+    }
 
     if (!wizard_tele && you.props.exists(TELEPORTITIS_SOURCE))
     {
