@@ -2544,6 +2544,8 @@ void dgn_break_door(const coord_def &dest)
     if (!feat_is_closed_door(env.grid(dest)))
         return;
 
+    revert_terrain_change(dest, TERRAIN_CHANGE_DOOR_SEAL);
+
     if (feat_is_clear_door(env.grid(dest)))
         env.grid(dest) = DNGN_BROKEN_CLEAR_DOOR;
     else
