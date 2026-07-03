@@ -467,6 +467,19 @@ static void _set_allies_withdraw(const coord_def &target)
     }
 }
 
+static bool _have_orderable_allies()
+{
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+        if (_follows_orders(*mi))
+            return true;
+    return false;
+}
+
+static bool _can_order()
+{
+    return !you.berserk() && !you.confused() && _have_orderable_allies();
+}
+
 /// Prompt the player to issue orders. Returns the key pressed.
 static int _issue_orders_prompt()
 {
@@ -478,7 +491,7 @@ static int _issue_orders_prompt()
         mprf(" t - %s!", cap_shout.c_str());
     }
 
-    if (!you.berserk() && !you.confused())
+    if (_can_order())
     {
         mpr("Orders for allies: a - Attack new target.");
         mpr("                   r - Retreat!             s - Stop attacking.");
@@ -515,7 +528,7 @@ static bool _allies_can_see(const monster &mon)
  */
 static bool _issue_order(int keyn, int &mons_targd)
 {
-    if (you.berserk() || you.confused())
+    if (!_can_order())
     {
         canned_msg(MSG_OK);
         return false;
