@@ -30,6 +30,7 @@
 #include "mon-behv.h"
 #include "mon-place.h"
 #include "mon-poly.h"
+#include "mon-tentacle.h"
 #include "prompt.h"
 #include "religion.h"
 #include "state.h"
@@ -408,6 +409,10 @@ static bool _follows_orders(monster* mon)
     return mon->friendly()
            && !mon->berserk_or_frenzied()
            && !mon->is_peripheral()
+           // Tentacles don't follow orders. Removing this won't make orders
+           // work without further effort, because the tentacle code ignores
+           // the monster's foe and other such behavioural state.
+           && !mons_is_tentacle_or_tentacle_segment(mon->type)
            && !mon->has_ench(ENCH_HAUNTING)
            && !mon->has_ench(ENCH_VEXED);
 }
