@@ -1396,38 +1396,42 @@ static void _maybe_remove_equipment(mutation_type mut)
 {
     vector<item_def*> to_remove = you.equipment.get_forced_removal_list();
 
-    for (item_def* item : to_remove)
+    while (!to_remove.empty())
     {
-        if (mut == MUT_MISSING_HAND)
+        for (item_def* item : to_remove)
         {
-            mprf("You can no longer %s %s!",
-                    item->base_type == OBJ_JEWELLERY ? "wear" : "hold",
-                    item->name(DESC_YOUR).c_str());
-        }
-        else
-        {
-            if (item_is_melded(*item))
+            if (mut == MUT_MISSING_HAND)
             {
-                mprf("%s is forced from your body%s!",
-                        item->name(DESC_YOUR).c_str(),
-                        item->cursed() ? ", shattering the curse!" : "");
+                mprf("You can no longer %s %s!",
+                        item->base_type == OBJ_JEWELLERY ? "wear" : "hold",
+                        item->name(DESC_YOUR).c_str());
             }
             else
             {
-                mprf("%s falls away%s!", item->name(DESC_YOUR).c_str(),
-                        item->cursed() ? ", shattering the curse!" : "");
+                if (item_is_melded(*item))
+                {
+                    mprf("%s is forced from your body%s!",
+                            item->name(DESC_YOUR).c_str(),
+                            item->cursed() ? ", shattering the curse!" : "");
+                }
+                else
+                {
+                    mprf("%s falls away%s!", item->name(DESC_YOUR).c_str(),
+                            item->cursed() ? ", shattering the curse!" : "");
+                }
+
+                // A mutation made us not only lose an equipment slot
+                // but actually removed a worn item: Funny!
+                xom_is_stimulated(is_artefact(*item) ? 200 : 100);
             }
 
-            // A mutation made us not only lose an equipment slot
-            // but actually removed a worn item: Funny!
-            xom_is_stimulated(is_artefact(*item) ? 200 : 100);
+            unequip_item(*item, false);
         }
 
-        unequip_item(*item, false);
+        // Update slot counts, even if no item was changed.
+        you.equipment.update();
+        to_remove = you.equipment.get_forced_removal_list(true);
     }
-
-    // Update slot counts, even if no item was changed.
-    you.equipment.update();
 }
 
 // Tries to give you the mutation by deleting a conflicting
