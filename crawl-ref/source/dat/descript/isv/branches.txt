@@ -100,25 +100,24 @@ Portaly do Vestibulja Pekla nahodęt sę v Glųbinah.
 %%%%
 Dis
 
-The Iron City of Dis is home to many of the most resilient guardians of hell.
-Those who do not belong in the halls of Dis will find the very earth itself
-opposing them.
+Želězny Gråd Dis jest dom dlja mnogyh samyh odpornyh stråžev pekla. Ti, komu nemaje
+města v salah Disa, bųdųt strěsti protivdějańje samoj zemje.
 
-The malice of this metal realm corrodes equipment.
+Zloba tutogo metaličnogo caŕstva råzjedaje orųdovańje.
 %%%%
 Gehenna
 
-Gehenna is a realm of lava, flames and damnation. Those who linger will have
-fire and brimstone rained down upon them.
+Gehena jest caŕstvo lavy, plåmenja i proklęt́ja. Na tyh, kto dȯlgo tam prěbyvaje,
+bųde zavaliti sę ogȯnj i sěra
 
-The acrid smoke renders scrolls unreadable.
+Råzjedajųći dym dělaje svitky nečitajemymi.
 %%%%
 Cocytus
 
-Cocytus is a grim and frost-bitten wasteland. Intruders will find the biting
-winds and icy inhabitants of the wastes impeding their progress.
+Kocit jest mråčno, kųsajųće mråzom pustišče. Nezvane gosti bųdųt poznati, že kųsajųće
+větry i ledene obyvatelji pustišča otęgčajųt jih progres.
 
-The frigid cold congeals potions.
+Studeny hlåd zamražajųt napoje.
 %%%%
 Tartarus
 
