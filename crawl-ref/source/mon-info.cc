@@ -450,6 +450,60 @@ void monster_info::_add_constriction_info(const monster* m)
         mb.set(MB_GRASPING_ROOTS);
 }
 
+void monster_info::_add_name_info(const monster* m, int milev)
+{
+    mname = m->mname;
+
+    const auto name_flags = m->flags & MF_NAME_MASK;
+
+    if (name_flags == MF_NAME_SUFFIX)
+        mb.set(MB_NAME_SUFFIX);
+    else if (name_flags == MF_NAME_ADJECTIVE)
+        mb.set(MB_NAME_ADJECTIVE);
+    else if (name_flags == MF_NAME_REPLACE)
+        mb.set(MB_NAME_REPLACE);
+
+    const bool need_name_desc =
+        name_flags == MF_NAME_SUFFIX
+            || name_flags == MF_NAME_ADJECTIVE
+            || (m->flags & MF_NAME_DEFINITE);
+
+    if (!mname.empty()
+        && !(m->flags & MF_NAME_DESCRIPTOR)
+        && !need_name_desc)
+    {
+        mb.set(MB_NAME_UNQUALIFIED);
+        mb.set(MB_NAME_THE);
+    }
+    else if (m->flags & MF_NAME_DEFINITE)
+        mb.set(MB_NAME_THE);
+    if (m->flags & MF_NAME_ZOMBIE)
+        mb.set(MB_NAME_ZOMBIE);
+    if (m->flags & MF_NAME_SPECIES)
+        mb.set(MB_NO_NAME_TAG);
+
+    if (milev <= MILEV_NAME)
+    {
+        if (mons_class_is_animated_weapon(type))
+        {
+            if (m->get_defining_object())
+                inv[MSLOT_WEAPON].reset(new item_def(*m->get_defining_object()));
+            // animated launchers may have a missile too
+            if (m->inv[MSLOT_MISSILE] != NON_ITEM)
+            {
+                inv[MSLOT_MISSILE].reset(new item_def(
+                    env.item[m->inv[MSLOT_MISSILE]]));
+            }
+        }
+        else if ((type == MONS_ARMOUR_ECHO || type == MONS_HAUNTED_ARMOUR)
+                 && m->get_defining_object())
+        {
+            inv[MSLOT_ARMOUR].reset(new item_def(*m->get_defining_object()));
+        }
+        return;
+    }
+}
+
 monster_info::monster_info(const monster* m, int milev)
 {
     ASSERT(m); // TODO: change to const monster &mon
@@ -472,6 +526,7 @@ monster_info::monster_info(const monster* m, int milev)
         // The constriction status of even invisible monsters is considered known
         // (they're usually being constricted by something visible!)
         _add_constriction_info(m);
+        _add_name_info(m, milev);
         mb.set(MB_KNOWN_INVIS);
         return;
     }
@@ -555,62 +610,13 @@ monster_info::monster_info(const monster* m, int milev)
         }
     }
 
-    mname = m->mname;
-
-    const auto name_flags = m->flags & MF_NAME_MASK;
-
-    if (name_flags == MF_NAME_SUFFIX)
-        mb.set(MB_NAME_SUFFIX);
-    else if (name_flags == MF_NAME_ADJECTIVE)
-        mb.set(MB_NAME_ADJECTIVE);
-    else if (name_flags == MF_NAME_REPLACE)
-        mb.set(MB_NAME_REPLACE);
-
-    const bool need_name_desc =
-        name_flags == MF_NAME_SUFFIX
-            || name_flags == MF_NAME_ADJECTIVE
-            || (m->flags & MF_NAME_DEFINITE);
-
-    if (!mname.empty()
-        && !(m->flags & MF_NAME_DESCRIPTOR)
-        && !need_name_desc)
-    {
-        mb.set(MB_NAME_UNQUALIFIED);
-        mb.set(MB_NAME_THE);
-    }
-    else if (m->flags & MF_NAME_DEFINITE)
-        mb.set(MB_NAME_THE);
-    if (m->flags & MF_NAME_ZOMBIE)
-        mb.set(MB_NAME_ZOMBIE);
-    if (m->flags & MF_NAME_SPECIES)
-        mb.set(MB_NO_NAME_TAG);
-
     // Ghostliness needed for name
     if (testbits(m->flags, MF_SPECTRALISED))
         mb.set(MB_SPECTRALISED);
     if (m->has_ench(ENCH_VAMPIRE_THRALL))
         mb.set(MB_VAMPIRE_THRALL);
 
-    if (milev <= MILEV_NAME)
-    {
-        if (mons_class_is_animated_weapon(type))
-        {
-            if (m->get_defining_object())
-                inv[MSLOT_WEAPON].reset(new item_def(*m->get_defining_object()));
-            // animated launchers may have a missile too
-            if (m->inv[MSLOT_MISSILE] != NON_ITEM)
-            {
-                inv[MSLOT_MISSILE].reset(new item_def(
-                    env.item[m->inv[MSLOT_MISSILE]]));
-            }
-        }
-        else if ((type == MONS_ARMOUR_ECHO || type == MONS_HAUNTED_ARMOUR)
-                 && m->get_defining_object())
-        {
-            inv[MSLOT_ARMOUR].reset(new item_def(*m->get_defining_object()));
-        }
-        return;
-    }
+    _add_name_info(m, milev);
 
     holi = m->holiness();
 
