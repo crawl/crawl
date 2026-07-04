@@ -121,10 +121,10 @@ Studeny hlåd zamražajųt napoje.
 %%%%
 Tartarus
 
-Tartarus is a decaying netherworld. Over time, the undead, demons and devils of
-this place drain the life from any who dare to enter.
+Tartar jest råzpadajųći sę nižnji svět. Poslěčasno, nemŕtvi, demoni i djavli tutyh
+měst osušajųt žit́ja iz vsih, kto směje vȯjdti.
 
-The all-pervading rot saps visitors' willpower.
+Vseproniklivo gnit́je vpivaje silų volje posětiteljev.
 %%%%
 Zot
 
