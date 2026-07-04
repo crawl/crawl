@@ -13,59 +13,59 @@ Temple
 
 Ekumeničny Hram jest město pokoja i uběžišče od bezumja podzemja. Obyčajno v njem
 nahodęt sę oltaŕe vęćiństvu znajemyh bogov. Bogi, ktori cěnęt izslědovańja, ne darujųt
-blågočėst́je za izslědovańje Hrama.
+pobožnost́ za izslědovańje Hrama.
 %%%%
 Orcish Mines
 
-Orkove Rudniky sųt dom dlja orkov, oselivših sę v Podzemju, jih sȯjųznyh humanoidov
+Orkove Rudniky sųt domom dlja orkov, oselivših sę v Podzemju, jih sȯjųznyh humanoidov
 i gromady svěžeizkopanogo zlåta. Prědprijėmlivi trgovci, prodavajųći tovary vsim
 prihodęćim, sųt nastavili trgove posty srěd orkov i jih bratji, da by nabyti izgodų
 v koristańju tutogo zlåta.
 %%%%
 Elven Halls
 
-Elfove Saly sųt dom dlja glųbinnyh elfov - rasy, davno jest odrěčenoj od sȯlnca.
+Elfove Saly sųt domom dlja glųbinnyh elfov - rasy, davno jest odrěčenoj od sȯlnca.
 Jih saly sųt napȯlnjene bogatstvami, ale vśakogo potenciaĺnogo vlamyvatelja bųde
 čekati smŕteljno privitańje. V svojej dȯlgoj samotě glųbinni elfi sųt udoskonalili
 tėmnų magijų, o moći ktoroj orki mogųt jedino mėčtati!
 %%%%
 Lair
 
-Most adventurers find the Lair of Beasts to be an exciting change of climate.
-And indeed, there is something to be said about getting gored, mauled and eaten
-rather than sliced, burnt or stabbed.
+Vęćiństvo pųtnikov nahodęt Legovišče Zvěŕev vȯzbuđajųćejų prěměnojų položeńja.
+Zaisto, tut jest něčto osoblivo v tom, da by byti bodanym, gnetenym i sjedenym,
+než narězanym, izgorěvšim ili zaklåtym.
 
-The Lair contains the entrances to one of the Swamp or the Shoals, one of the
-Snake Pit or the Spider Nest, and to the Pits of Slime.
+V Legovišču sųt vhody v Močar ili Měliny, v Zmijine Jamy ili Pavųčje Gnězdo, i
+v Sliźne Jamy.
 %%%%
 Swamp
 
-A swampy wasteland, the Swamp is filled with ooze, muck, flies and large
-slavering carnivorous monsters.
+Močarno pustišče, Močar, jest napȯlnjeny sliźjų, blåtom, muhami i velikymi
+žędnymi męsojednymi monstrami.
 
-A dungeon features only one of the Swamp and Shoals branches.
+V každom iz Podzemij jest jedino jedna větva - Močar abo Měliny.
 %%%%
 Shoals
 
-The exotic underground beaches of the Shoals make up a few small islands in a
-seemingly endless sea. The merfolk have made it their home, alongside many
-dreaded sea creatures.
+Egzotične podzemne plaži Mělin sųt několiko malyh ostrovov v, prividno, bezkonėčnom
+morju. Merfolki sųt sdělali jih svojim domom zajedno s mnogimi groznymi moŕskymi
+stvorami.
 
-A dungeon features only one of the Shoals and Swamp branches.
+V každom iz Podzemij jest jedino jedna větva - Měliny abo Močar.
 %%%%
 Snake Pit
 
-The corridors of the Snake Pit are home to all varieties of serpent, and are
-inhabited by a society of powerful nagas and salamanders.
+Koridory Zmijinoj Jamy sųt domom dlja råzličnyh vidov zmij i takože obyvajeme
+spolȯčeństvom moćnyh nag i salamandr.
 
-A dungeon features only one of the Snake Pit and Spider Nest branches.
+V každom iz Podzemij jest jedino jedna větva - Zmijina Jama abo Pavųčje Gnězdo.
 %%%%
 Spider Nest
 
-The crumbling, web-choked caverns of the Spider Nest are packed with poisonous
-arthropods and assorted creepy-crawlies.
+Krȯšęće sę, obmotane pavųčinojų jamy Pavųčjego Gnězda sųt okupovane otravnymi
+členistonogymi i råzličnymi pȯlzųćimi insektami.
 
-A dungeon features only one of the Spider Nest and Snake Pit branches.
+V každom iz Podzemij jest jedino jedna větva - Pavųčje Gnězdo abo Zmijina Jama.
 %%%%
 Slime Pits
 
