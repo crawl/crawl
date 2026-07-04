@@ -227,6 +227,7 @@ public:
     bool set_aim(coord_def a) override;
     bool valid_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
+    bool affects_monster(const monster_info& mon) override;
     bool harmful_to_player() override;
     cloud_type ctype;
     int range;

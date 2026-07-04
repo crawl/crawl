@@ -30,6 +30,7 @@
 #include "mon-behv.h"
 #include "mon-place.h"
 #include "mon-poly.h"
+#include "mon-tentacle.h"
 #include "prompt.h"
 #include "religion.h"
 #include "state.h"
@@ -408,6 +409,10 @@ static bool _follows_orders(monster* mon)
     return mon->friendly()
            && !mon->berserk_or_frenzied()
            && !mon->is_peripheral()
+           // Tentacles don't follow orders. Removing this won't make orders
+           // work without further effort, because the tentacle code ignores
+           // the monster's foe and other such behavioural state.
+           && !mons_is_tentacle_or_tentacle_segment(mon->type)
            && !mon->has_ench(ENCH_HAUNTING)
            && !mon->has_ench(ENCH_VEXED);
 }
@@ -467,6 +472,19 @@ static void _set_allies_withdraw(const coord_def &target)
     }
 }
 
+static bool _have_orderable_allies()
+{
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+        if (_follows_orders(*mi))
+            return true;
+    return false;
+}
+
+static bool _can_order()
+{
+    return !you.berserk() && !you.confused() && _have_orderable_allies();
+}
+
 /// Prompt the player to issue orders. Returns the key pressed.
 static int _issue_orders_prompt()
 {
@@ -478,7 +496,7 @@ static int _issue_orders_prompt()
         mprf(" t - %s!", cap_shout.c_str());
     }
 
-    if (!you.berserk() && !you.confused())
+    if (_can_order())
     {
         mpr("Orders for allies: a - Attack new target.");
         mpr("                   r - Retreat!             s - Stop attacking.");
@@ -515,7 +533,7 @@ static bool _allies_can_see(const monster &mon)
  */
 static bool _issue_order(int keyn, int &mons_targd)
 {
-    if (you.berserk() || you.confused())
+    if (!_can_order())
     {
         canned_msg(MSG_OK);
         return false;
