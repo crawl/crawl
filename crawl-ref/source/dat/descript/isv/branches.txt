@@ -75,10 +75,11 @@ o velikyh bogatstvah, skrytyh glųboko v tajnyh komorah bez vhoda.
 %%%%
 Vaults
 
-The Vaults are said to be home to great treasures and sealed evils alike, its
-origin known only to its guardians: the Ironbound Order. Intruders face an
-organised defence of trained maneuvers, arms and arcana, animated constructs,
-coerced allies, and tamed beasts, all in common cause.
+Govoręt, že v Skladiščah skryvajųt kako i velike bogatstva, tako i zapečatane stvory
+zla, a jih pohođeńje jest znajemo jedino jih gvardiji: Zelěznomu Ordenu. Vinovniki
+bųdųt strěsti sę s organizovanojų obrånojų, trenovanymi manevrami, orųžjem i magijejų,
+oživjenymi konstrukcijami, prinuđenymi sȯjųznikami i ukroćenymi zvěŕami, objedinjenymi
+obćim cěljem.
 %%%%
 Crypt
 
