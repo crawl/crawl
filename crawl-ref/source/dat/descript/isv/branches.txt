@@ -69,10 +69,9 @@ V každom iz Podzemij jest jedino jedna větva - Pavųčje Gnězdo abo Zmijina J
 %%%%
 Slime Pits
 
-The Slime Pits are the amorphous realm of acids, jellies and slimes. Even the
-walls drip with painful acid. Any trace of intelligent beings has long been
-dissolved. Still, there are rumours of great treasures deep down, hidden safely
-away in secret chambers without any entrance.
+Sliźne Jamy sųt amorfno caŕstvo kysliny, žele i slizi. Až stěny kapjųt bolěsnojų
+kyslinojų. Vśake slědy råzumnyh stvorov davno sųt izčeznųli. Jednako, hodęt pověŕja
+o velikyh bogatstvah, skrytyh glųboko v tajnyh komorah bez vhoda.
 %%%%
 Vaults
 
