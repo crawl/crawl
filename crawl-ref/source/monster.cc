@@ -6207,7 +6207,10 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             ench_cache     = old_ench_cache;
             ench_countdown = old_ench_countdown;
             if (type == MONS_GHOST_MOTH)
+            {
                 add_ench(mon_enchant(ENCH_INVIS, this, INFINITE_DURATION));
+                mons_add_blame(this, "once ridden by Goji");
+            }
             // Keep the rider's name, if it had one (Mercenary card).
             if (!old_name.empty())
                 mname = old_name;
