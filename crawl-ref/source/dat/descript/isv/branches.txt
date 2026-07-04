@@ -83,22 +83,20 @@ obćim cěljem.
 %%%%
 Crypt
 
-The Crypt is a huge repository for the ancient dead. The air is chill and
-fetid, the walls cold and damp. Bones are strewn liberally everywhere, and
-every noise echoes worryingly, violating the overbearing silence of the grave.
+Kripta jest ogromno skladišče starodavnyh mŕtvecov. Vȯzduh tut jest hlådny i smrådny,
+stěny sųt hlådne i mokre. Kosti sųt råzmetane vsekde, i každy zvųk bezpokojno
+oddavaje sę ehom, narušajųći vlådějųćų tišinų mogyl.
 %%%%
 Tomb
 
-The Tomb of the Ancients is a place of damnation, of horrors animated by the
-vilest necromancy. The list of those who have returned from this place of pure
-death is exceedingly short.
+Grobnica Starodavnyh jest město proklętij i užasov, oživjenyh najmŕzšejų nekromantijejų.
+Spis tyh, kto vråtil sę iz togo města čistoj smŕti jest krajno kråtky.
 %%%%
 Hell
 
-The Vestibule of Hell is guarded by Geryon, along with various denizens of
-each of the hells themselves.
+Vestibulj Pekla ohrånjaje sę Gerionom i råzlične obyvatelji každogo iz pekȯl.
 
-Portals to the Vestibule of Hell are found abundantly in the Depths.
+Portaly do Vestibulja Pekla nahodęt sę v Glųbinah.
 %%%%
 Dis
 
