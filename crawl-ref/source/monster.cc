@@ -2174,6 +2174,8 @@ string monster::name(description_level_type desc, bool force_vis,
     // i.e. to produce "the Maras" instead of just "Maras"
     if (force_article)
         mi.mb.set(MB_NAME_UNQUALIFIED, false);
+    if (force_vis)
+        mi.mb.set(MB_KNOWN_INVIS, false);
     return mi.proper_name(desc)
 #ifdef DEBUG_MONINDEX
     // This is incredibly spammy, too bad for regular debug builds, but
@@ -2192,6 +2194,8 @@ string monster::base_name(description_level_type desc, bool force_vis) const
         return s;
 
     monster_info mi(this, MILEV_NAME);
+    if (force_vis)
+        mi.mb.set(MB_KNOWN_INVIS, false);
     return mi.common_name(desc);
 }
 
@@ -2202,6 +2206,7 @@ string monster::full_name(description_level_type desc) const
         return s;
 
     monster_info mi(this, MILEV_NAME);
+    mi.mb.set(MB_KNOWN_INVIS, false);
     return mi.full_name(desc);
 }
 
