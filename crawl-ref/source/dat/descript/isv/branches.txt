@@ -1,32 +1,33 @@
 %%%%
 Dungeon
 
-It is still a mystery how this bizarre place was created. Some claim that it is
-the playground of bored gods, whereas others maintain that it was shaped by all
-kinds of species who fled the overworld and shunned the light. No matter what
-its origin, this deep cavern is filled with riches unheard of as well as with
-ample dangers to any intruder. Few have escaped alive, and even fewer have kept
-some sliver of sanity sufficient to tell the tale.
+Dodnėś ostavaje zagadkojų, kako bylo stvorjeno tuto čudno město. Něktori tvŕdęt,
+že to jest igrišče dosađenyh bogov, drugi ljudi tvŕdęt, že ono bylo sformovano
+vsimi vidami stvorov, izběgšimi od nadzemja i sȯlnėčnogo světla. Nezavisno od jego
+pohođeńja, tuta glųboka jama jest pȯlna neslyhanymi bogatstvami, råvno kako i
+množstvom nebezpečnostij protiv vśakogo vinovnika. Nemnogi sųt smogli izběgtimi
+živymi, i ješče mėnje tyh, kto shrånil nemnogo zdråvogo råzuma, dostatȯčnogo dlja
+togo, da by pověděti historkų.
 %%%%
 Temple
 
-The Ecumenical Temple is a place of peace and refuge from the insanity of the
-dungeon. It usually contains altars to most of the known gods. Gods that value
-exploration grant no piety for exploring the Temple.
+Ekumeničny Hram jest město pokoja i uběžišče od bezumja podzemja. Obyčajno v njem
+nahodęt sę oltaŕe vęćiństvu znajemyh bogov. Bogi, ktori cěnęt izslědovańja, ne darujųt
+blågočėst́je za izslědovańje Hrama.
 %%%%
 Orcish Mines
 
-The Orcish Mines are home to the orcs that have settled in the Dungeon, their
-humanoid allies, and piles of freshly mined gold. Enterprising merchants who
-sell to all comers have set up trading posts among the orcs and their brethren
-to make good use of that gold.
+Orkove Rudniky sųt dom dlja orkov, oselivših sę v Podzemju, jih sȯjųznyh humanoidov
+i gromady svěžeizkopanogo zlåta. Prědprijėmlivi trgovci, prodavajųći tovary vsim
+prihodęćim, sųt nastavili trgove posty srěd orkov i jih bratji, da by nabyti izgodų
+v koristańju tutogo zlåta.
 %%%%
 Elven Halls
 
-The Elven Halls are home to the deep elves, a race that turned their backs on
-the sun long ago. Their halls are filled with riches, but a deadly welcome
-awaits any would-be robbers. In their long seclusion, the deep elves have
-perfected dark sorceries of a power the orcs can only dream of!
+Elfove Saly sųt dom dlja glųbinnyh elfov - rasy, davno jest odrěčenoj od sȯlnca.
+Jih saly sųt napȯlnjene bogatstvami, ale vśakogo potenciaĺnogo vlamyvatelja bųde
+čekati smŕteljno privitańje. V svojej dȯlgoj samotě glųbinni elfi sųt udoskonalili
+tėmnų magijų, o moći ktoroj orki mogųt jedino mėčtati!
 %%%%
 Lair
 
