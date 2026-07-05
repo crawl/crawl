@@ -30,6 +30,7 @@
 #include "god-passive.h"
 #include "hints.h"
 #include "item-prop.h"
+#include "item-use.h"
 #include "items.h"
 #include "libutil.h"
 #include "mapdef.h"
@@ -1394,11 +1395,17 @@ int mut_check_conflict(mutation_type mut, bool innate_only)
 
 static void _maybe_remove_equipment(mutation_type mut)
 {
+    // Items directly displaced by the lost slot(s), plus anything that then
+    // loses the slot it was relying on.
     vector<item_def*> to_remove = you.equipment.get_forced_removal_list();
+    const size_t num_direct = to_remove.size();
+    handle_chain_removal(to_remove, false);
 
-    for (item_def* item : to_remove)
+    for (size_t i = 0; i < to_remove.size(); ++i)
     {
-        if (mut == MUT_MISSING_HAND)
+        item_def* item = to_remove[i];
+
+        if (mut == MUT_MISSING_HAND && i < num_direct)
         {
             mprf("You can no longer %s %s!",
                     item->base_type == OBJ_JEWELLERY ? "wear" : "hold",
