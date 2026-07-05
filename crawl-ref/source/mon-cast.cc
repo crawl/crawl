@@ -247,9 +247,18 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         [](monster &caster, mon_spell_slot, bolt& beam)
         {
             beam.fire();
+
             coord_def spot;
-            if (find_habitable_spot_near(caster.pos(), caster.type, 2, spot))
-                caster.move_to(spot, MV_TRANSLOCATION);
+            int count = 0;
+            monster_pathfind path;
+            path.fill_traversability(&caster, 2, true);
+            for (radius_iterator ri(caster.pos(), 2, C_SQUARE); ri; ++ri)
+            {
+                if (path.is_reachable(*ri) && one_chance_in(++count))
+                    spot = *ri;
+            }
+            if (!spot.origin())
+                caster.move_to(spot);
         },
         _selfench_beam_setup(BEAM_INVISIBILITY),
     } },
