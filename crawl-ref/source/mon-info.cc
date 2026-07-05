@@ -310,6 +310,17 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
                 : type;
 
     _populate_as_generic();
+
+    if (mons_is_unique(type) || mons_is_unique(base_type))
+    {
+        if (mons_is_the(type) || mons_is_the(base_type))
+            mb.set(MB_NAME_THE);
+        else
+        {
+            mb.set(MB_NAME_UNQUALIFIED);
+            mb.set(MB_NAME_THE);
+        }
+    }
 }
 
 // Fill out this monster_info as if the monster were any arbitrary example of
@@ -393,17 +404,6 @@ void monster_info::_populate_as_generic()
         ev += get_mons_class_ev(base_type);
     }
 
-    if (mons_is_unique(type) || mons_is_unique(base_type))
-    {
-        if (mons_is_the(type) || mons_is_the(base_type))
-            mb.set(MB_NAME_THE);
-        else
-        {
-            mb.set(MB_NAME_UNQUALIFIED);
-            mb.set(MB_NAME_THE);
-        }
-    }
-
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
         attack[i] = get_monster_data(type)->attack[i];
 
@@ -452,6 +452,17 @@ void monster_info::_add_constriction_info(const monster* m)
 
 void monster_info::_add_name_info(const monster* m, int milev)
 {
+    if (mons_is_unique(type) || mons_is_unique(base_type))
+    {
+        if (mons_is_the(type) || mons_is_the(base_type))
+            mb.set(MB_NAME_THE);
+        else
+        {
+            mb.set(MB_NAME_UNQUALIFIED);
+            mb.set(MB_NAME_THE);
+        }
+    }
+
     mname = m->mname;
 
     const auto name_flags = m->flags & MF_NAME_MASK;
@@ -521,12 +532,16 @@ monster_info::monster_info(const monster* m, int milev)
     // arbitrary healthy example of its type.
     if (m->flags & MF_KNOWN_INVISIBLE && !you.can_see(*m))
     {
+        mb.set(MB_KNOWN_INVIS);
+        _add_name_info(m, milev);
+
+        if (milev <= MILEV_NAME)
+            return;
+
         _populate_as_generic();
         // The constriction status of even invisible monsters is considered known
         // (they're usually being constricted by something visible!)
         _add_constriction_info(m);
-        _add_name_info(m, milev);
-        mb.set(MB_KNOWN_INVIS);
         return;
     }
 
@@ -596,17 +611,6 @@ monster_info::monster_info(const monster* m, int milev)
         // friendly monsters, as it's *always* the case with them.
         if (m->real_attitude() != ATT_FRIENDLY)
             mb.set(MB_UNREWARDING);
-    }
-
-    if (mons_is_unique(type) || mons_is_unique(base_type))
-    {
-        if (mons_is_the(type) || mons_is_the(base_type))
-            mb.set(MB_NAME_THE);
-        else
-        {
-            mb.set(MB_NAME_UNQUALIFIED);
-            mb.set(MB_NAME_THE);
-        }
     }
 
     // Ghostliness needed for name
