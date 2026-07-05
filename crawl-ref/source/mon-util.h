@@ -431,6 +431,10 @@ bool mons_is_sensed(monster_type mc);
 bool mons_offers_beogh_conversion(const monster& mon);
 bool mons_offers_beogh_conversion_now(const monster& mon);
 
+bool mons_is_rider(monster_type mc);
+monster_type mons_mount_type(monster_type mc);
+monster_type mons_rider_type(monster_type mc);
+
 bool invalid_monster(const monster* mon);
 bool invalid_monster_type(monster_type mt);
 bool invalid_monster_index(int i);

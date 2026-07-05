@@ -6164,8 +6164,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     {
         place_cloud(CLOUD_FIRE, pos(), 20 + random2(15), oppressor, 5);
     }
-    else if (type == MONS_SPRIGGAN_RIDER || type == MONS_GOBLIN_RIDER
-             || type == MONS_GOJI)
+    else if (mons_is_rider(type))
     {
         if (hit_points + damage > max_hit_points / 2)
             damage = max_hit_points / 2 - hit_points;
@@ -6174,7 +6173,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 || type == MONS_GOJI && hit_points * 5 <= max_hit_points * 2)
             && flavour != BEAM_TORMENT_DAMAGE)
         {
-            bool fly_died = type != MONS_GOJI && coinflip();
+            bool mount_died = type != MONS_GOJI && coinflip();
             monster_type dead_mon     = MONS_PROGRAM_BUG;
             int old_hp                = hit_points;
             auto old_flags            = flags;
@@ -6183,23 +6182,18 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             int8_t old_ench_countdown = ench_countdown;
             string old_name = mname;
 
-            if (!fly_died)
+            if (!mount_died)
                 monster_drop_things(this, mons_aligned(oppressor, &you));
 
-            if (type == MONS_SPRIGGAN_RIDER)
+            if (mount_died)
             {
-                type = fly_died ? MONS_SPRIGGAN : MONS_HORNET;
-                dead_mon = fly_died ? MONS_HORNET : MONS_SPRIGGAN;
+                dead_mon = mons_mount_type(type);
+                type = mons_rider_type(type);
             }
-            else if (type == MONS_GOBLIN_RIDER)
+            else
             {
-                type = fly_died ? MONS_GOBLIN : MONS_WYVERN;
-                dead_mon = fly_died ? MONS_WYVERN : MONS_GOBLIN;
-            }
-            else if (type == MONS_GOJI)
-            {
-                type = MONS_GHOST_MOTH;
-                dead_mon = MONS_GOJI_UNMOUNTED;
+                dead_mon = mons_rider_type(type);
+                type = mons_mount_type(type);
             }
 
             define_monster(*this);
@@ -6225,10 +6219,10 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                   ? oppressor->mindex() : NON_MONSTER);
 
             // Now clear the name, if the rider just died.
-            if (!fly_died)
+            if (!mount_died)
                 mname.clear();
 
-            if (fly_died && !is_habitable(pos()))
+            if (mount_died && !is_habitable(pos()))
             {
                 hit_points = 0;
                 if (observable())
@@ -6241,7 +6235,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                              "deep water and drowns");
                 }
             }
-            else if (fly_died && observable())
+            else if (mount_died && observable())
             {
                 mprf("%s falls from %s now dead mount.",
                      name(DESC_THE).c_str(),
