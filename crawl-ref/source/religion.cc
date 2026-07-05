@@ -2256,21 +2256,16 @@ void god_speaks(god_type god, const char *mesg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    int orig_mon = env.mgrid(you.pos());
-
     monster fake_mon;
     fake_mon.type       = MONS_PROGRAM_BUG;
     fake_mon.mid        = MID_NOBODY;
     fake_mon.hit_points = 1;
     fake_mon.god        = god;
-    fake_mon.set_position(you.pos());
+    fake_mon.set_position({-1, -1});
     fake_mon.foe        = MHITYOU;
     fake_mon.mname      = "FAKE GOD MONSTER";
 
     mprf(MSGCH_GOD, god, "%s", do_mon_str_replacements(mesg, fake_mon).c_str());
-
-    fake_mon.reset();
-    env.mgrid(you.pos()) = orig_mon;
 }
 
 void religion_turn_start()
