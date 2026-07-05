@@ -2647,7 +2647,7 @@ tile_display_mode = (tiles | glyphs | hybrid)
 
         This option is only available on local tiles and webtiles.
 
-tile_level_map_hide_messages = true
+tile_level_map_hide_messages = false
 tile_level_map_hide_sidebar = false
         Controls what screen elements are hidden when using the level map.
         These options are only available on WebTiles.

@@ -1914,7 +1914,16 @@ string cell_items_description(const coord_def& pos)
     if (!in_bounds(pos))
         return "";
 
-    auto items = const_item_list_on_square(you.visible_igrd(pos));
+    vector<item_def> remembered;
+    vector<const item_def *> items;
+    if (env.map_knowledge(pos).visible())
+        items = const_item_list_on_square(you.visible_igrd(pos));
+    else
+    {
+        remembered = item_list_in_stash(pos);
+        for (const item_def &item : remembered)
+            items.push_back(&item);
+    }
 
     if (items.empty())
         return "";

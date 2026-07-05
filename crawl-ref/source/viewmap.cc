@@ -40,9 +40,6 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 
-#ifdef USE_TILE
-#endif
-
 #ifndef USE_TILE_LOCAL
 /**
  * Get a console colour for representing the travel possibility at the given
@@ -440,6 +437,37 @@ public:
     }
 };
 
+#ifdef USE_TILE
+static void _describe_cell(const map_control_state &m_state)
+{
+    const coord_def &cpos = m_state.lpos.pos;
+    const map_cell &cell = env.map_knowledge(cpos);
+    msgwin_clear_temporary();
+    mprf(MSGCH_PROMPT, "Press: ? - help, v - describe, . - travel");
+
+    const string mon = cell_monster_description(cpos);
+    if (!mon.empty())
+        mprf(MSGCH_EXAMINE, "<cyan>Here:</cyan> %s", uppercase_first(mon).c_str());
+
+    const string items = cell_items_description(cpos);
+    if (!items.empty())
+        mprf(MSGCH_EXAMINE, "%s", items.c_str());
+
+    string desc = feature_description(cell.feat()).c_str();
+    if (!desc.empty())
+        mprf(MSGCH_EXAMINE_FILTER, "%s.", desc.c_str());
+
+    const cloud_type cloud = cell.cloud();
+    if (cloud != CLOUD_NONE)
+    {
+        mprf(MSGCH_EXAMINE, "There is a cloud of %s here.",
+             cloud_type_name(cloud).c_str());
+    }
+
+    flush_prev_message();
+}
+#endif
+
 #ifndef USE_TILE_LOCAL
 // Describe the symbol displayed for a cell, unless it's boring terrain.
 // Return a description, and also (…) if there is something underneath it.
@@ -485,7 +513,6 @@ static pair<string, string> _describe_top_thing_in_cell(const coord_def &cpos)
     else
         return {item, etc};
 }
-
 
 static void _draw_title(const map_control_state &m_state, const int columns)
 {
@@ -745,6 +772,11 @@ public:
     {
 #ifdef USE_TILE
         tiles.load_dungeon(m_state.lpos.pos);
+        if (m_state.lpos != m_described_pos)
+        {
+            _describe_cell(m_state);
+            m_described_pos = m_state.lpos;
+        }
 #endif
 
 #ifdef USE_TILE_LOCAL
@@ -964,6 +996,11 @@ private:
     feature_list m_feats;
     bool m_reentry;
 
+#ifdef USE_TILE
+    // The cursor position last described on the message line.
+    level_pos m_described_pos;
+#endif
+
 #ifndef USE_TILE_LOCAL
     coord_def view_ul;
 #endif
@@ -1000,6 +1037,9 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
 #endif
 
 #ifdef USE_TILE
+        msgwin_temporary_mode temp_msgs;
+        unwind_bool no_more(crawl_state.show_more_prompt, false);
+
         ui::cutoff_point ui_cutoff_point;
 #endif
 #ifdef USE_TILE_WEB
@@ -1022,6 +1062,10 @@ bool show_map(level_pos &lpos, bool travel_mode, bool allow_offlevel)
         while (map_view->is_alive() && !crawl_state.seen_hups)
             ui::pump_events();
         ui::pop_layout();
+
+#ifdef USE_TILE
+        msgwin_clear_temporary();
+#endif
 
 #ifdef USE_TILE_LOCAL
         tiles.set_map_display(false);
