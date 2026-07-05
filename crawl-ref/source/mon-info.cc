@@ -500,7 +500,6 @@ void monster_info::_add_name_info(const monster* m, int milev)
         {
             inv[MSLOT_ARMOUR].reset(new item_def(*m->get_defining_object()));
         }
-        return;
     }
 }
 
@@ -617,6 +616,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_VAMPIRE_THRALL);
 
     _add_name_info(m, milev);
+    if (milev <= MILEV_NAME)
+        return;
 
     holi = m->holiness();
 
