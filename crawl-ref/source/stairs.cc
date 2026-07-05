@@ -1123,6 +1123,9 @@ void floor_transition(dungeon_feature_type how,
     if (you.unrand_equipped(UNRAND_VAINGLORY))
         _vainglory_arrival();
 
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_MESMERISM))
+        you.duration[DUR_MESMERISM_COOLDOWN] += random_range(50, 80);
+
     trackers_init_new_level();
 
     if (update_travel_cache && !shaft)
