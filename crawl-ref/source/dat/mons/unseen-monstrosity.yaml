@@ -1,4 +1,4 @@
-name: "emperor unseen horror"
+name: "unseen monstrosity"
 glyph: {char: "x", colour: lightmagenta}
 flags: [invis, see_invis, batty]
 exp: 768
