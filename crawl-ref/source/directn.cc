@@ -2813,13 +2813,16 @@ bool full_describe_square(const coord_def &c, bool cleanup)
     // actions can work.
     if (you.on_current_level && c == you.pos())
         list_items = item_list_on_square(you.visible_igrd(c));
-    else if (env.map_knowledge(c).item())
+    else if (auto it = env.map_knowledge(c).item())
     {
         // otherwise, use stash info. These are item copies, not the real
         // things.
         stash_items = item_list_in_stash(c);
         for (item_def &i: stash_items)
             list_items.push_back(&i);
+        // Not part of a stash - e.g. a detected item.
+        if (list_items.empty())
+            list_items.push_back(it);
     }
     quantity += list_items.size();
 
