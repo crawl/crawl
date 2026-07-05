@@ -6853,6 +6853,25 @@ w:5
 @The_monster@ says @to_foe@, "Don't just stand there! You can move, can't you?"
 ## END Roxanne ##
 %%%%
+############ REGAL ### A noble warrior seeking the orb
+Regal
+
+@The_monster@ declares, "My strength is worthy of the throne!"
+
+@The_monster@ snarls, "This is not where you should die. Join me!"
+
+@The_monster@ proclaims, "Only I can restore honor to the realm."
+
+@The_monster@ demands, "What right have you to seek the orb?"
+
+@The_monster@ says, "My people need me to succeed."
+
+@The_monster@ warns, "The orb is mine, flee this dungeon and keep your life!"
+
+## DEATH
+@The_monster@ cries out, "No...this can't...you must secure it in my place..."
+## END Regal ##
+%%%%
 ############ RUPERT ### The strongest of the strong, and inexplicably Slavic
 Rupert
 
