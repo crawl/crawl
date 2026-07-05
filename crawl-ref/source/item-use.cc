@@ -1484,18 +1484,18 @@ bool handle_chain_removal(vector<item_def*>& to_remove, bool interactive)
 
     for (size_t n = 0; n < to_remove.size(); ++n)
     {
-        item_def& item = *to_remove[n];
-        if (!item_gives_equip_slots(item))
-            continue;
-
-        vector<item_def*> chain_remove;
-        int chain_remove_num = you.equipment.needs_chain_removal(item, chain_remove, !interactive);
-        if (chain_remove_num > 0)
+        for (equipment_slot slot : item_granted_slots(*to_remove[n]))
         {
+            vector<item_def*> chain_remove;
+            int chain_remove_num = you.equipment.needs_chain_removal(
+                slot, chain_remove, !interactive, to_remove);
+            if (chain_remove_num <= 0)
+                continue;
+
             if ((int)chain_remove.size() < chain_remove_num)
             {
                 mprf(MSGCH_PROMPT, "A cursed item is preventing you from removing %s.",
-                        item.name(DESC_INVENTORY).c_str());
+                        to_remove[n]->name(DESC_INVENTORY).c_str());
                 return false;
             }
             // We must remove all of the items found.
@@ -1537,8 +1537,6 @@ bool handle_chain_removal(vector<item_def*>& to_remove, bool interactive)
                     to_remove.push_back(chain_remove[chain_remove.size() - i - 1]);
             }
         }
-        else
-            break;
     }
 
     return true;
