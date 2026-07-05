@@ -801,6 +801,7 @@ enum monster_type                      // env.mons[].type
     MONS_ENTROPY_WEAVER, // not sure where else to put it
     MONS_BUNYIP,
     MONS_CREEPING_INFERNO,
+    MONS_EMPEROR_UNSEEN_HORROR,
 #endif
     MONS_ELDRITCH_TENTACLE,
     MONS_ELDRITCH_TENTACLE_SEGMENT,
@@ -1437,6 +1438,7 @@ enum monster_type                      // env.mons[].type
     MONS_GLOWMURK_GHAST,
     MONS_GOJI,
     MONS_GOJI_UNMOUNTED,    // 'Fake' monster to handle mount death properly
+    MONS_EMPEROR_UNSEEN_HORROR,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

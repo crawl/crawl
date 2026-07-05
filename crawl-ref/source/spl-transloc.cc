@@ -1262,14 +1262,18 @@ bool hostile_teleport_player(monster* source)
     if (source && source->alive())
     {
         coord_def source_newpos;
+        bool visible = source->visible_to(&you);
         if (find_habitable_spot_near(you.pos(), source->type, you.current_vision,
                                      source_newpos, 0, &you))
         {
             _place_tloc_cloud(source->pos());
             source->move_to(source_newpos, MV_DELIBERATE | MV_TRANSLOCATION, true);
             source->target = you.pos();
-            mprf(MSGCH_WARN, "%s tunnels through space-time and arrives with you!",
-                 source->name(DESC_THE).c_str());
+            if (visible)
+            {
+                mprf(MSGCH_WARN, "%s tunnels through space-time and arrives with you!",
+                    source->name(DESC_THE).c_str());
+            }
             source->finalise_movement();
         }
     }

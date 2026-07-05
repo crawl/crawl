@@ -5116,6 +5116,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_SLIMIFY,           "slowly slimify the target" },
         { AF_DIM,               "diminish the target's spells" },
         { AF_BURSTSHROOM,       "grow burstshrooms behind the defender" },
+        { AF_TELEPORT_WITH,     "teleport the defender toward enemies" },
         { AF_PLAIN,             "" },
     };
 

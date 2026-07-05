@@ -164,6 +164,7 @@ enum attack_flavour
     AF_DIM,
     AF_BURSTSHROOM,
     AF_CONTAM_WATER,
+    AF_TELEPORT_WITH,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or

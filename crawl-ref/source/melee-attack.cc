@@ -48,11 +48,13 @@
 #include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-summoning.h" //AF_SPIDER
+#include "spl-transloc.h"
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
 #include "tag-version.h"
 #include "target.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -4545,6 +4547,18 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
 
     case AF_BURSTSHROOM:
         grow_burstshrooms(attacker->get_hit_dice() * 2 / 3);
+        break;
+
+    case AF_TELEPORT_WITH:
+        if (!one_chance_in(3))
+            break;
+        if (defender->is_player())
+        {
+            if (!you.duration[DUR_TELEPORT])
+                you_teleport(true, attacker->mid);
+        }
+        else
+            monster_teleport(defender->as_monster(), false, false, false, attacker);
         break;
 
     }
