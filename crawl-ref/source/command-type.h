@@ -234,6 +234,9 @@ enum command_type
     CMD_MAP_ZOOM_IN,
     CMD_MAP_ZOOM_OUT,
 #endif
+#ifndef USE_TILE_LOCAL
+    CMD_MAP_TOGGLE_TITLE,
+#endif
 
     CMD_MAP_EXIT_MAP,
 

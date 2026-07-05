@@ -816,10 +816,29 @@ static void _get_nearby_items(vector<item_def *> &list_items,
     }
 }
 
+bool is_terrain_interesting(dungeon_feature_type feat)
+{
+    vector <text_pattern> &filters = Options.monster_item_view_features;
+    if (filters.empty())
+        return true;
+    const string &terrain = feature_description(feat);
+    for (const text_pattern &pattern : filters)
+    {
+        if (pattern.matches(feature_description(feat))
+            || feat_stair_direction(feat) != CMD_NO_CMD
+               && pattern.matches("stair")
+            || feat_is_trap(feat)
+               && pattern.matches("trap"))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 static void _get_nearby_features(vector<coord_def> &list_features,
                           bool need_path, int range, targeter *hitfunc)
 {
-    vector <text_pattern> &filters = Options.monster_item_view_features;
     for (vision_iterator ri(you); ri; ++ri)
     {
         if (!_is_target_in_range(*ri, range, hitfunc))
@@ -835,24 +854,8 @@ static void _get_nearby_features(vector<coord_def> &list_features,
         if (hitfunc && !monster_at(*ri))
             list_features.push_back(*ri);
         // Not using a targeter, list features according to user preferences.
-        else if (!hitfunc)
-        {
-            if (!filters.empty())
-            {
-                for (const text_pattern &pattern : filters)
-                {
-                    if (pattern.matches(feature_description(env.grid(*ri)))
-                        || feat_stair_direction(env.grid(*ri)) != CMD_NO_CMD
-                           && pattern.matches("stair")
-                        || feat_is_trap(env.grid(*ri))
-                           && pattern.matches("trap"))
-                    {
-                        list_features.push_back(*ri);
-                        break;
-                    }
-                }
-            }
-        }
+        else if (!hitfunc && is_terrain_interesting(env.grid(*ri)))
+            list_features.push_back(*ri);
     }
 }
 
