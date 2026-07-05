@@ -1609,6 +1609,13 @@ A decayed cadaver, reanimated and accursed with a terrible hunger. It desires
 nothing but to feed on the flesh of the living, and will fell its victims with
 its vicious claws.
 %%%%
+giraffe
+
+Far more aggressive than those found outside the dungeon, these giraffes defend 
+their territory by trampling their foes under their long legs and whipping their 
+own heads to inflict a headbutt from a distance. Their large size and stout frame
+make them fast and intimidating foes.
+%%%%
 glass eye
 
 A floating eyeball formed from living glass. Only the divine Jiyva could form

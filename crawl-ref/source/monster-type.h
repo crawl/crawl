@@ -1439,6 +1439,7 @@ enum monster_type                      // env.mons[].type
     MONS_GOJI,
     MONS_GOJI_UNMOUNTED,    // 'Fake' monster to handle mount death properly
 #endif
+    MONS_GIRAFFE,
 
     NUM_MONSTERS,               // used for polymorph
 

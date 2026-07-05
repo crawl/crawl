@@ -1,0 +1,18 @@
+name: "giraffe"
+glyph: {char: "Y", colour: yellow}
+flags: [warm_blood, herd, tall_tile]
+exp: 222
+will: 30
+attacks:
+ - {type: gore, flavour: reach, damage: 10}
+ - {type: kick, flavour: trample, damage: 12}
+hd: 9
+hp_10x: 305
+ac: 7
+ev: 4
+has_corpse: true
+shout: silent
+intelligence: animal
+speed: 12
+size: large
+shape: quadruped

@@ -276,6 +276,7 @@ static const vector<pop_entry> population[] =
   {  0,  4, 1000, FLAT, MONS_BULLFROG },
   {  0,  5,  990, FLAT, MONS_WATER_MOCCASIN },
   {  0,  5,  565, FLAT, MONS_YAK },
+  {  1,  6,  565, RISE, MONS_GIRAFFE },
   {  0,  6,  340, PEAK, MONS_WYVERN },
   {  0,  7,  380, SEMI, MONS_BLINK_FROG },
   {  0,  5,  900, FLAT, MONS_CANE_TOAD },

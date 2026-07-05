@@ -154,6 +154,7 @@ elephant_dire CORPSE_DIRE_ELEPHANT
 elephant_demonic CORPSE_HELLEPHANT
 catoblepas CORPSE_CATOBLEPAS
 sky_beast CORPSE_SKY_BEAST
+giraffe CORPSE_GIRAFFE
 %sdir mon/holy
 apis CORPSE_APIS
 

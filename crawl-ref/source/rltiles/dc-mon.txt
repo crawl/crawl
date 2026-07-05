@@ -310,6 +310,7 @@ elephant_demonic MONS_HELLEPHANT
 ice_beast MONS_ICE_BEAST
 %rim 0
 sky_beast MONS_SKY_BEAST
+giraffe MONS_GIRAFFE
 
 %sdir mon/unique
 nellie MONS_NELLIE

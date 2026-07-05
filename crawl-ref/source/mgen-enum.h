@@ -150,6 +150,7 @@ enum band_type
     BAND_DRAINING_EYE_CORPS,
     BAND_MORPHOGENIC_OOZE,
     BAND_SEWAGE_SOVEREIGNS,
+    BAND_GIRAFFES,
     NUM_BANDS                   // always last
 };
 
