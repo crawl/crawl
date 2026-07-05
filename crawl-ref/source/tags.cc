@@ -5905,10 +5905,6 @@ void unmarshallItem(reader &th, item_def &item)
     if (item.base_type == OBJ_GOLD)
         item.special = 0;
 
-    // Let "detected items" be defined.
-    if (item.base_type == OBJ_DETECTED)
-        item.quantity = 1;
-
     if (th.getMinorVersion() < TAG_MINOR_REMOVE_ITEM_COLOUR)
         /* item.colour = */ unmarshallUByte(th);
 #endif

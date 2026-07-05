@@ -176,7 +176,6 @@ void map_cell::set_detected_item()
     flags |= MAP_DETECTED_ITEM;
     _item = make_unique<item_def>();
     _item->base_type = OBJ_DETECTED;
-    _item->quantity  = 1;
     _item->rnd       = 1;
 }
 
