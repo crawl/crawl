@@ -413,6 +413,8 @@ static bool _follows_orders(monster* mon)
            // work without further effort, because the tentacle code ignores
            // the monster's foe and other such behavioural state.
            && !mons_is_tentacle_or_tentacle_segment(mon->type)
+           // Inactive clockwork bees can't do anything.
+           && mon->type != MONS_CLOCKWORK_BEE_INACTIVE
            && !mon->has_ench(ENCH_HAUNTING)
            && !mon->has_ench(ENCH_VEXED);
 }
