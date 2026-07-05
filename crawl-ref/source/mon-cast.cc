@@ -6561,8 +6561,8 @@ static branch_summon_pair _invitation_summons[] =
     }},
   { BRANCH_ELF,
     { // Elf enemies
-      {  1,   1,   50, FLAT, MONS_DEEP_ELF_AIR_MAGE },
-      {  1,   1,   50, FLAT, MONS_DEEP_ELF_FIRE_MAGE },
+      {  1,   1,   50, FLAT, MONS_DEEP_ELF_ZEPHYRMANCER },
+      {  1,   1,   50, FLAT, MONS_DEEP_ELF_PYROMANCER },
       {  1,   1,   40, FLAT, MONS_DEEP_ELF_KNIGHT },
     }},
   { BRANCH_VAULTS,

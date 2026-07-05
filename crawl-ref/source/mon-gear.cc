@@ -613,8 +613,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
                 { WPN_DAGGER,           1 },
         } } },
         { MONS_DEEP_ELF_MASTER_ARCHER, { { { WPN_LONGBOW, 1 } } } },
-        { MONS_DEEP_ELF_AIR_MAGE,       { DE_MAGE_WEAPONS } },
-        { MONS_DEEP_ELF_FIRE_MAGE,      { DE_MAGE_WEAPONS } },
+        { MONS_DEEP_ELF_ZEPHYRMANCER,   { DE_MAGE_WEAPONS } },
+        { MONS_DEEP_ELF_PYROMANCER,     { DE_MAGE_WEAPONS } },
         { MONS_DEEP_ELF_ANNIHILATOR,    { DE_MAGE_WEAPONS } },
         { MONS_DEEP_ELF_DEATH_MAGE,     DE_VILE_MAGE_WEAPONS },
         { MONS_DEEP_ELF_DEMONOLOGIST,   DE_VILE_MAGE_WEAPONS },
@@ -1989,8 +1989,8 @@ int make_mons_armour(monster_type type, int level)
         break;
 
     case MONS_ORC_HIGH_PRIEST:
-    case MONS_DEEP_ELF_FIRE_MAGE:
-    case MONS_DEEP_ELF_AIR_MAGE:
+    case MONS_DEEP_ELF_PYROMANCER:
+    case MONS_DEEP_ELF_ZEPHYRMANCER:
     case MONS_DEEP_ELF_KNIGHT:
     case MONS_DEEP_ELF_ANNIHILATOR:
     case MONS_DEEP_ELF_DEATH_MAGE:

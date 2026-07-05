@@ -110,7 +110,7 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('e') Elves.
-    {  MST_DEEP_ELF_FIRE_MAGE,
+    {  MST_DEEP_ELF_PYROMANCER,
       {
        { SPELL_PYRE_ARROW, 15, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_FIRE, 15, MON_SPELL_WIZARD },
@@ -119,7 +119,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_DEEP_ELF_AIR_MAGE,
+    {  MST_DEEP_ELF_ZEPHYRMANCER,
       {
        { SPELL_LIGHTNING_BOLT, 40, MON_SPELL_WIZARD },
        { SPELL_BLINK, 20, MON_SPELL_WIZARD },

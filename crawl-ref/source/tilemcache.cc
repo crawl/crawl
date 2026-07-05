@@ -600,8 +600,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -1;
         *ofs_y = -1;
         break;
-    case TILEP_MONS_DEEP_ELF_AIR_MAGE:
-    case TILEP_MONS_DEEP_ELF_FIRE_MAGE:
+    case TILEP_MONS_DEEP_ELF_ZEPHYRMANCER:
+    case TILEP_MONS_DEEP_ELF_PYROMANCER:
         *ofs_x = -1;
         *ofs_y = -4;
         break;
@@ -1220,8 +1220,8 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         break;
 
     case TILEP_MONS_DEEP_ELF_DEMONOLOGIST:
-    case TILEP_MONS_DEEP_ELF_AIR_MAGE:
-    case TILEP_MONS_DEEP_ELF_FIRE_MAGE:
+    case TILEP_MONS_DEEP_ELF_ZEPHYRMANCER:
+    case TILEP_MONS_DEEP_ELF_PYROMANCER:
         *ofs_x = 2;
         *ofs_y = 0;
         break;
