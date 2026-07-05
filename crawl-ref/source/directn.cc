@@ -2820,6 +2820,9 @@ bool full_describe_square(const coord_def &c, bool cleanup)
         stash_items = item_list_in_stash(c);
         for (item_def &i: stash_items)
             list_items.push_back(&i);
+        auto it = env.map_knowledge(c).item();
+        if (list_items.empty() && it->defined()) // Not part of a stash.
+            list_items.push_back(it);
     }
     quantity += list_items.size();
 
