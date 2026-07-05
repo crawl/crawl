@@ -110,7 +110,7 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('e') Elves.
-    {  MST_DEEP_ELF_FIRE_MAGE,
+    {  MST_DEEP_ELF_PYROMANCER,
       {
        { SPELL_PYRE_ARROW, 15, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_FIRE, 15, MON_SPELL_WIZARD },
@@ -119,7 +119,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_DEEP_ELF_AIR_MAGE,
+    {  MST_DEEP_ELF_ZEPHYRMANCER,
       {
        { SPELL_LIGHTNING_BOLT, 40, MON_SPELL_WIZARD },
        { SPELL_BLINK, 20, MON_SPELL_WIZARD },
@@ -549,6 +549,21 @@ static const mon_spellbook mspell_list[] =
     {  MST_IRONBOUND_FROSTHEART,
       {
        { SPELL_CREEPING_FROST, 50, MON_SPELL_WIZARD },
+      }
+    },
+
+    {  MST_ABYSSAL_ACOLYTE,
+      {
+       { SPELL_TOUCH_OF_PARADOX, 25, MON_SPELL_PRIEST },
+       { SPELL_PHASE_SHIFT, 25, MON_SPELL_PRIEST }
+      }
+    },
+
+
+    {  MST_HERALD_OF_THE_ABYSS,
+      {
+       { SPELL_MALIGN_GATEWAY, 29, MON_SPELL_PRIEST },
+       { SPELL_WARP_SPACE, 29, MON_SPELL_PRIEST }
       }
     },
 

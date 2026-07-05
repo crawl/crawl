@@ -520,6 +520,7 @@ protected:
     string _apply_adjusted_description(description_level_type desc, const string& s) const;
 
     void _populate_as_generic();
+    void _add_name_info(const monster* m, int milev);
     void _add_constriction_info(const monster* mon);
 };
 

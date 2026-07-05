@@ -349,6 +349,7 @@ throw_barbs THROW_BARBS
 throw_bolas THROW_BOLAS
 throw_klown_pie THROW_KLOWN_PIE
 thorn_volley THORN_VOLLEY
+touch_of_paradox TOUCH_OF_PARADOX
 ufetubi_swarm UFETUBI_SWARM
 vex VEX
 virulence VIRULENCE

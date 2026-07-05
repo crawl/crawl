@@ -2832,7 +2832,7 @@ void unwield_distortion(bool brand)
     if (coinflip())
     {
         you.props[TELEPORTITIS_SOURCE].get_int() = MID_PLAYER;
-        you_teleport_now(false, "Space warps around you!");
+        you_teleport_now("Space warps around you!");
     }
     else if (coinflip())
     {

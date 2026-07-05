@@ -1044,7 +1044,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_PARADOX_TOUCHED:
         if (!quiet)
-            simple_monster_message(*this, "is no longer touched by paradox.");
+            simple_monster_message(*this, " is no longer touched by paradox.");
         for (size_t i = 0; i < spells.size(); ++i)
         {
             if (spells[i].spell == SPELL_MANIFOLD_ASSAULT && spells[i].flags | MON_SPELL_NATURAL)

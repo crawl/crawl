@@ -475,9 +475,9 @@ enum monster_type                      // env.mons[].type
     MONS_DEEP_ELF_KNIGHT,
 #if TAG_MAJOR_VERSION > 34
     MONS_DEEP_ELF_ARCHER,
-    MONS_DEEP_ELF_AIR_MAGE,
+    MONS_DEEP_ELF_ZEPHYRMANCER,
 #endif
-    MONS_DEEP_ELF_FIRE_MAGE,
+    MONS_DEEP_ELF_PYROMANCER,
 #if TAG_MAJOR_VERSION == 34
     MONS_DEEP_ELF_SUMMONER,
     MONS_DEEP_ELF_CONJURER,
@@ -799,6 +799,8 @@ enum monster_type                      // env.mons[].type
     MONS_WORLDBINDER,
     MONS_SCREAMING_REFRACTION,
     MONS_ENTROPY_WEAVER, // not sure where else to put it
+    MONS_ABYSSAL_ACOLYTE,
+    MONS_HERALD_OF_THE_ABYSS,
     MONS_BUNYIP,
     MONS_CREEPING_INFERNO,
 #endif
@@ -1286,7 +1288,7 @@ enum monster_type                      // env.mons[].type
     MONS_WILL_O_THE_WISP,
     MONS_TEST_BLOB,
     MONS_DREAD_LICH,
-    MONS_DEEP_ELF_AIR_MAGE,
+    MONS_DEEP_ELF_ZEPHYRMANCER,
     MONS_ARMOUR_ECHO,
     MONS_ROCKSLIME,
     MONS_VOID_OOZE,
@@ -1437,6 +1439,8 @@ enum monster_type                      // env.mons[].type
     MONS_GLOWMURK_GHAST,
     MONS_GOJI,
     MONS_GOJI_UNMOUNTED,    // 'Fake' monster to handle mount death properly
+    MONS_HERALD_OF_THE_ABYSS,
+    MONS_ABYSSAL_ACOLYTE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

@@ -310,6 +310,17 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
                 : type;
 
     _populate_as_generic();
+
+    if (mons_is_unique(type) || mons_is_unique(base_type))
+    {
+        if (mons_is_the(type) || mons_is_the(base_type))
+            mb.set(MB_NAME_THE);
+        else
+        {
+            mb.set(MB_NAME_UNQUALIFIED);
+            mb.set(MB_NAME_THE);
+        }
+    }
 }
 
 // Fill out this monster_info as if the monster were any arbitrary example of
@@ -393,17 +404,6 @@ void monster_info::_populate_as_generic()
         ev += get_mons_class_ev(base_type);
     }
 
-    if (mons_is_unique(type) || mons_is_unique(base_type))
-    {
-        if (mons_is_the(type) || mons_is_the(base_type))
-            mb.set(MB_NAME_THE);
-        else
-        {
-            mb.set(MB_NAME_UNQUALIFIED);
-            mb.set(MB_NAME_THE);
-        }
-    }
-
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
         attack[i] = get_monster_data(type)->attack[i];
 
@@ -450,6 +450,70 @@ void monster_info::_add_constriction_info(const monster* m)
         mb.set(MB_GRASPING_ROOTS);
 }
 
+void monster_info::_add_name_info(const monster* m, int milev)
+{
+    if (mons_is_unique(type) || mons_is_unique(base_type))
+    {
+        if (mons_is_the(type) || mons_is_the(base_type))
+            mb.set(MB_NAME_THE);
+        else
+        {
+            mb.set(MB_NAME_UNQUALIFIED);
+            mb.set(MB_NAME_THE);
+        }
+    }
+
+    mname = m->mname;
+
+    const auto name_flags = m->flags & MF_NAME_MASK;
+
+    if (name_flags == MF_NAME_SUFFIX)
+        mb.set(MB_NAME_SUFFIX);
+    else if (name_flags == MF_NAME_ADJECTIVE)
+        mb.set(MB_NAME_ADJECTIVE);
+    else if (name_flags == MF_NAME_REPLACE)
+        mb.set(MB_NAME_REPLACE);
+
+    const bool need_name_desc =
+        name_flags == MF_NAME_SUFFIX
+            || name_flags == MF_NAME_ADJECTIVE
+            || (m->flags & MF_NAME_DEFINITE);
+
+    if (!mname.empty()
+        && !(m->flags & MF_NAME_DESCRIPTOR)
+        && !need_name_desc)
+    {
+        mb.set(MB_NAME_UNQUALIFIED);
+        mb.set(MB_NAME_THE);
+    }
+    else if (m->flags & MF_NAME_DEFINITE)
+        mb.set(MB_NAME_THE);
+    if (m->flags & MF_NAME_ZOMBIE)
+        mb.set(MB_NAME_ZOMBIE);
+    if (m->flags & MF_NAME_SPECIES)
+        mb.set(MB_NO_NAME_TAG);
+
+    if (milev <= MILEV_NAME)
+    {
+        if (mons_class_is_animated_weapon(type))
+        {
+            if (m->get_defining_object())
+                inv[MSLOT_WEAPON].reset(new item_def(*m->get_defining_object()));
+            // animated launchers may have a missile too
+            if (m->inv[MSLOT_MISSILE] != NON_ITEM)
+            {
+                inv[MSLOT_MISSILE].reset(new item_def(
+                    env.item[m->inv[MSLOT_MISSILE]]));
+            }
+        }
+        else if ((type == MONS_ARMOUR_ECHO || type == MONS_HAUNTED_ARMOUR)
+                 && m->get_defining_object())
+        {
+            inv[MSLOT_ARMOUR].reset(new item_def(*m->get_defining_object()));
+        }
+    }
+}
+
 monster_info::monster_info(const monster* m, int milev)
 {
     ASSERT(m); // TODO: change to const monster &mon
@@ -468,11 +532,16 @@ monster_info::monster_info(const monster* m, int milev)
     // arbitrary healthy example of its type.
     if (m->flags & MF_KNOWN_INVISIBLE && !you.can_see(*m))
     {
+        mb.set(MB_KNOWN_INVIS);
+        _add_name_info(m, milev);
+
+        if (milev <= MILEV_NAME)
+            return;
+
         _populate_as_generic();
         // The constriction status of even invisible monsters is considered known
         // (they're usually being constricted by something visible!)
         _add_constriction_info(m);
-        mb.set(MB_KNOWN_INVIS);
         return;
     }
 
@@ -544,73 +613,15 @@ monster_info::monster_info(const monster* m, int milev)
             mb.set(MB_UNREWARDING);
     }
 
-    if (mons_is_unique(type) || mons_is_unique(base_type))
-    {
-        if (mons_is_the(type) || mons_is_the(base_type))
-            mb.set(MB_NAME_THE);
-        else
-        {
-            mb.set(MB_NAME_UNQUALIFIED);
-            mb.set(MB_NAME_THE);
-        }
-    }
-
-    mname = m->mname;
-
-    const auto name_flags = m->flags & MF_NAME_MASK;
-
-    if (name_flags == MF_NAME_SUFFIX)
-        mb.set(MB_NAME_SUFFIX);
-    else if (name_flags == MF_NAME_ADJECTIVE)
-        mb.set(MB_NAME_ADJECTIVE);
-    else if (name_flags == MF_NAME_REPLACE)
-        mb.set(MB_NAME_REPLACE);
-
-    const bool need_name_desc =
-        name_flags == MF_NAME_SUFFIX
-            || name_flags == MF_NAME_ADJECTIVE
-            || (m->flags & MF_NAME_DEFINITE);
-
-    if (!mname.empty()
-        && !(m->flags & MF_NAME_DESCRIPTOR)
-        && !need_name_desc)
-    {
-        mb.set(MB_NAME_UNQUALIFIED);
-        mb.set(MB_NAME_THE);
-    }
-    else if (m->flags & MF_NAME_DEFINITE)
-        mb.set(MB_NAME_THE);
-    if (m->flags & MF_NAME_ZOMBIE)
-        mb.set(MB_NAME_ZOMBIE);
-    if (m->flags & MF_NAME_SPECIES)
-        mb.set(MB_NO_NAME_TAG);
-
     // Ghostliness needed for name
     if (testbits(m->flags, MF_SPECTRALISED))
         mb.set(MB_SPECTRALISED);
     if (m->has_ench(ENCH_VAMPIRE_THRALL))
         mb.set(MB_VAMPIRE_THRALL);
 
+    _add_name_info(m, milev);
     if (milev <= MILEV_NAME)
-    {
-        if (mons_class_is_animated_weapon(type))
-        {
-            if (m->get_defining_object())
-                inv[MSLOT_WEAPON].reset(new item_def(*m->get_defining_object()));
-            // animated launchers may have a missile too
-            if (m->inv[MSLOT_MISSILE] != NON_ITEM)
-            {
-                inv[MSLOT_MISSILE].reset(new item_def(
-                    env.item[m->inv[MSLOT_MISSILE]]));
-            }
-        }
-        else if ((type == MONS_ARMOUR_ECHO || type == MONS_HAUNTED_ARMOUR)
-                 && m->get_defining_object())
-        {
-            inv[MSLOT_ARMOUR].reset(new item_def(*m->get_defining_object()));
-        }
         return;
-    }
 
     holi = m->holiness();
 

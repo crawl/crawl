@@ -5927,3 +5927,32 @@ int mons_leash_range(monster_type mc)
         default:                    return 0; // No leashing
     }
 }
+
+bool mons_is_rider(monster_type mc)
+{
+    return mc == MONS_SPRIGGAN_RIDER
+            || mc == MONS_GOBLIN_RIDER
+            || mc == MONS_GOJI;
+}
+
+monster_type mons_mount_type(monster_type mc)
+{
+    switch (mc)
+    {
+        case MONS_SPRIGGAN_RIDER:   return MONS_HORNET;
+        case MONS_GOBLIN_RIDER:     return MONS_WYVERN;
+        case MONS_GOJI:             return MONS_GHOST_MOTH;
+        default:                    return MONS_PROGRAM_BUG;
+    }
+}
+
+monster_type mons_rider_type(monster_type mc)
+{
+    switch (mc)
+    {
+        case MONS_SPRIGGAN_RIDER:   return MONS_SPRIGGAN;
+        case MONS_GOBLIN_RIDER:     return MONS_GOBLIN;
+        case MONS_GOJI:             return MONS_GOJI_UNMOUNTED;
+        default:                    return MONS_PROGRAM_BUG;
+    }
+}
