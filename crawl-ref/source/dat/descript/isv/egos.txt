@@ -251,6 +251,8 @@ mesmerism (Mesmerism) armour ego
 Pri poražeńju bližnjejų atakojų, ono dočasno otųpěvaje vsih bližnjih neprijateljev,
 poslě izkoristańja potrěbno ponovno zapȯlnjeńje. Jego trvańje, radius i bystrost́
 zapȯlnjeńja povyšajųt sę tvojim uměńjem Evokacij.
+
+Pri prěhodu na drugy etaž, ono dočasno prěhodi v spęći režim.
 %%%%
 parrying (Parrying) armour ego
 
