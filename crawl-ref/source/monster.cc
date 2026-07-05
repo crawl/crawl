@@ -5372,6 +5372,7 @@ static bool _mons_is_skeletal(int mc)
            || mc == MONS_BONE_DRAGON
            || mc == MONS_SKELETAL_WARRIOR
            || mc == MONS_ANCIENT_CHAMPION
+           || mc == MONS_ANTIQUE_CHAMPION
            || mc == MONS_REVENANT_SOULMONGER
            || mc == MONS_WEEPING_SKULL
            || mc == MONS_LAUGHING_SKULL
