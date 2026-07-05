@@ -907,12 +907,16 @@ static bool _forced_removal_goodness(player_equip_entry* entry1, player_equip_en
  *                           purposes (ie: to scan and remove 'impossible'
  *                           items) and thus should allow for items to remain in
  *                           slots granted by melded items.
+ * @param num_direct[out]    If non-null, set to the number of items removed
+ *                           directly (ie: the leading entries of the returned
+ *                           vector); the rest are due to lost slots.
  *
  * @return A vector of references to all items that must be removed for the
  *         player's current state to become valid again.
  */
 vector<item_def*> player_equip_set::get_forced_removal_list(bool force_full_check,
-                                                            bool is_save_cleanup)
+                                                            bool is_save_cleanup,
+                                                            size_t* num_direct)
 {
     vector<item_def*> to_remove;
 
@@ -967,6 +971,12 @@ vector<item_def*> player_equip_set::get_forced_removal_list(bool force_full_chec
                 to_remove.push_back(&entry.get_item());
         }
     }
+
+    if (num_direct)
+        *num_direct = to_remove.size();
+
+    // Handle removals of items that occupy slots we are now missing.
+    handle_chain_removal(to_remove, false);
 
     return to_remove;
 }

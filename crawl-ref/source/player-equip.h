@@ -116,7 +116,8 @@ struct player_equip_set
                             const vector<item_def*>& already_removing = {});
 
     vector<item_def*> get_forced_removal_list(bool force_full_check = false,
-                                              bool is_save_cleanup = false);
+                                              bool is_save_cleanup = false,
+                                              size_t* num_direct = nullptr);
 
     void shift_twohander_to_slot(equipment_slot new_slot);
 
