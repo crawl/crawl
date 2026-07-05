@@ -297,6 +297,20 @@ static cglyph_t _get_item_override(const item_def &item)
     return g;
 }
 
+bool show_terrain_before_item(dungeon_feature_type feat)
+{
+    return feat && feat_is_solid(feat)
+           || feat_has_dry_floor(feat)
+              && feat != DNGN_FLOOR
+              && feat != DNGN_ORB_DAIS
+              && !feat_is_open_door(feat)
+              && feat != DNGN_ABANDONED_SHOP
+              && feat != DNGN_STONE_ARCH
+              && feat != DNGN_EXPIRED_PORTAL
+              && !feat_is_fountain(feat)
+              && feat != DNGN_DECORATIVE_FLOOR;
+}
+
 show_class get_cell_show_class(const map_cell& cell,
                                bool only_stationary_monsters)
 {
@@ -310,20 +324,8 @@ show_class get_cell_show_class(const map_cell& cell,
     if (cell.cloud() != CLOUD_NONE)
         return SH_CLOUD;
 
-    const dungeon_feature_type feat = cell.feat();
-    if (feat && feat_is_solid(feat)
-        || feat_has_dry_floor(feat)
-           && feat != DNGN_FLOOR
-           && feat != DNGN_ORB_DAIS
-           && !feat_is_open_door(feat)
-           && feat != DNGN_ABANDONED_SHOP
-           && feat != DNGN_STONE_ARCH
-           && feat != DNGN_EXPIRED_PORTAL
-           && !feat_is_fountain(feat)
-           && feat != DNGN_DECORATIVE_FLOOR)
-    {
+    if (show_terrain_before_item(cell.feat()))
         return SH_FEATURE;
-    }
 
     if (cell.item())
         return SH_ITEM;

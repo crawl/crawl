@@ -1721,10 +1721,11 @@ monster_item_view_coordinates = false
 
 monster_item_view_features += <regex>, <regex>
         (List option)
-        Display features matching the <regex> in the ^x view description. Each
-        <regex> is a regular expression describing a dungeon feature. This
-        regex should match the description when using the 'x' command. In case
-        the regex matches several descriptions, all such features are listed.
+        Display features matching the <regex> in the ^x view description. It
+        also affects the X level map in console. Each <regex> is a regular
+        expression describing a dungeon feature. This regex should match the
+        description when using the 'x' command. In case the regex matches
+        several descriptions, all such features are listed.
 
         Two special keywords are active here, if any pattern matches the string
         "stair" all features that can be interacted with using the stair

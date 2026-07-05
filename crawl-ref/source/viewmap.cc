@@ -441,8 +441,55 @@ public:
 };
 
 #ifndef USE_TILE_LOCAL
-static void _draw_title(const coord_def& cpos, const feature_list& feats, const int columns)
+// Describe the symbol displayed for a cell, unless it's boring terrain.
+// Return a description, and also (…) if there is something underneath it.
+static pair<string, string> _describe_top_thing_in_cell(const coord_def &cpos)
 {
+    const map_cell &cell = env.map_knowledge(cpos);
+    string out, feat, item;
+    const string etc = " (…)";
+
+    if (auto mi = cell.monsterinfo())
+        out = get_monster_equipment_desc(*mi);
+
+    if (cell.cloud() != CLOUD_NONE)
+    {
+        if (!out.empty())
+            return {out, etc};
+        out = cloud_type_name(cell.cloud());
+    }
+    if (is_terrain_interesting(cell.feat()))
+    {
+        if (!out.empty())
+            return {out, etc};
+        feat = feature_description(cell.feat());
+    }
+    if (cell.item())
+    {
+        if (!out.empty())
+            return {out, etc};
+        item = cell.item()->name(DESC_A, false);
+    }
+
+    if (feat.empty() && item.empty())
+        return {out, ""};
+    else if (item.empty())
+        return {feat, ""};
+    else if (feat.empty())
+    {
+        bool is_single_item = NON_ITEM == cell.item()->link;
+        return {item, is_single_item ? "" : etc};
+    }
+    else if (show_terrain_before_item(cell.feat()))
+        return {feat, etc};
+    else
+        return {item, etc};
+}
+
+
+static void _draw_title(const map_control_state &m_state, const int columns)
+{
+    const coord_def &cpos = m_state.lpos.pos;
     const formatted_string help =
         formatted_string::parse_string("(Press <w>?</w> for help)");
     const int helplen = help.width();
@@ -450,30 +497,39 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats, const 
     if (columns < helplen)
         return;
 
-    const formatted_string title = feats.format();
+    const formatted_string title = m_state.feats->format();
     const int titlelen = title.width();
     if (columns < titlelen)
         return;
 
-    string pstr = "";
+    string pstr, descr, extra;
+    if (!m_state.always_show_stairs)
+        tie(descr, extra) = _describe_top_thing_in_cell(cpos);
+    if (descr.empty())
+        extra = level_id::current().describe(true, true);
+    else
+        extra += " (" + level_id::current().describe(false, true) + ")";
 #ifdef WIZARD
     if (you.wizard)
-    {
-        char buf[10];
-        snprintf(buf, sizeof(buf), " (%d, %d)", cpos.x, cpos.y);
-        pstr = string(buf);
-    }
+        extra += make_stringf(" (%d, %d)", cpos.x, cpos.y);
 #endif // WIZARD
+    int xwidth = strwidth(extra);
+    int allowed = columns - helplen - 1;
+    if (xwidth < allowed)
+        pstr = chop_string(descr, allowed - xwidth, false) + extra;
+    else
+        pstr = chop_string(extra, allowed);
 
     cgotoxy(1, 1);
     textcolour(WHITE);
 
-    cprintf("%s", chop_string(
-                    uppercase_first(level_id::current().describe(true, true))
-                      + pstr, columns - helplen).c_str());
+    cprintf("%s", uppercase_first(pstr).c_str());
 
-    cgotoxy(max(1, (columns - titlelen) / 2), 1);
-    title.display();
+    if (descr.empty())
+    {
+        cgotoxy(max(1, (columns - titlelen) / 2), 1);
+        title.display();
+    }
 
     textcolour(LIGHTGREY);
     cgotoxy(max(1, columns - helplen + 1), 1);
@@ -677,6 +733,9 @@ public:
         m_state.search_anchor = coord_def(-1, -1);
         m_state.chose = false;
         m_state.on_level = true;
+#ifndef USE_TILE_LOCAL
+        m_state.always_show_stairs = false;
+#endif
 
         goto_level();
     }
@@ -697,7 +756,7 @@ public:
 #ifndef USE_TILE_LOCAL
         const auto view = _get_view_state(view_ul, m_state);
         view_ul = view.start;
-        _draw_title(m_state.lpos.pos, *m_state.feats, m_region.width);
+        _draw_title(m_state, m_region.width);
         const ui::Region map_region = {0, 1, m_region.width, m_region.height - 1};
         _draw_level_map(view_ul.x, view_ul.y, m_state.travel_mode,
                         m_state.on_level, map_region);
@@ -1397,6 +1456,11 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
     case CMD_MAP_DESCRIBE:
         describe_location(state.lpos.pos, state);
         break;
+#ifndef USE_TILE_LOCAL
+    case CMD_MAP_TOGGLE_TITLE:
+        state.always_show_stairs = !prev_state.always_show_stairs;
+    break;
+#endif
 
     default:
         if (!state.travel_mode)
