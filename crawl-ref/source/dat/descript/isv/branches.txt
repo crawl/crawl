@@ -129,13 +129,10 @@ Vseproniklivo gnit́je vpivaje silų volje posětiteljev.
 Zot
 
 Caŕstvo Zot jest oblast́ podzemja, natoliko prěstrašajųća, pȯlna bezumja, běsnosti
-i jarosti, že ona bezpečno zamknųta dlja slučajnyh vinovnikov.
-
-The Realm of Zot is a region of the dungeon that is so terrifying, so full of
-madness, frenzy and lunacy, that it has been locked securely against random
-trespassers. Only the most demented adventurers would dare gather the required
-keys, break the seal and penetrate deeper — all in the vain hope for a fabled
-artefact no one has ever laid eyes on before.
+i jarosti, že ona bezpečno zamknųta dlja slučajnyh vinovnikov. Jedino sami bezumni
+pųtniki bųdųt osměliti sę sȯbrati potrěbne ključe, slamati pečati i probiti sę
+glųbše - vse iz-za napråzdnoj naděje najdti legendarny artefakt, ktorogo prěđe
+nikto nikȯgda ne viděl.
 %%%%
 Abyss
 
@@ -146,7 +143,7 @@ in sending would-be champions like you to these proving grounds of madness.
 Reportedly, there is some structure to the chaos, as Lugonu seems to concoct
 schemes around this place and its denizens.
 
-Portals to the Abyss are found abundantly in the Depths.
+Many portals to the Abyss can be found corrupting one floor late in the Dungeon.
 
 The Abyss consists of seven infinite levels. The abyssal rune of Zot can be
 found from the third level onwards, and is more common at greater depths.
