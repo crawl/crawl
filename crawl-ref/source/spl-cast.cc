@@ -1546,6 +1546,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     }
 
     case SPELL_CLOCKWORK_BEE:
+    case SPELL_HAUNT:
         return make_unique<targeter_single_monster>();
 
     default:
