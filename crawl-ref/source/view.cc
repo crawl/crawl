@@ -914,6 +914,8 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 {
 #ifdef USE_TILE
     cell->tile.clear();
+#else
+    UNUSED(flash_alpha);
 #endif
 
     if (!map_bounds(gc))

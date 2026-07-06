@@ -31,9 +31,9 @@ SUBST:   7? = ., 36! = 0, Y : 09, 5 = 09, 4 = 9
 SUBST:   " : WW', _  = C, @ = G
 NSUBST:  ' = 7:S / 2:# / 6 = S:3 .:2 / *:.
 : if you.absdepth() > 20 then
-: kmons('9 = place:Depths:' .. you.depth() - 1 .. ' 9')
-SUBST:   & : a:45 c:8 vb x:2, a : c:15 vb
 MARKER:  ^ = lua:props_marker { portal=1 }
+:   kmons('9 = place:Depths:' .. you.depth() - 1 .. ' 9')
+SUBST:   & : a:45 c:8 vb x:2, a : c:15 vb
 :    if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 KMONS:   =- = draconian annihilator band / draconian knight band / \
               draconian monk band
@@ -43,6 +43,9 @@ KFEAT:   > = zot_statue
 SUBST:   ) = =, ]} = .
 :    end
 : else
+:    if not dgn.uniq_tag_used("uniq_abyss_entrance") then
+KFEAT:   ^ = enter_abyss
+:    end
 SUBST:   & : a:80 x:15 c:3 v:1 b:1, a : c:38 v:2 b:2
 :    if you.where() == dgn.level_name(dgn.br_entrance("Depths")) then
 KITEM:   - = smoky gem
@@ -200,6 +203,9 @@ SHUFFLE: aA&@
 :     end
 : else -- Dungeon
 SUBST:   A&@ = a, _ = -, l = W
+:     if not dgn.uniq_tag_used("uniq_abyss_entrance") then
+SUBST:   ( = @
+:     end
 : end
 # Some item, stair, and altar placement, juggling around the stair glyphs
 SUBST:   {} = **|||, ) = C, [ = !, ] = ?
@@ -363,6 +369,10 @@ KITEM:    R = smoky gem
 KFEAT:    O = enter_depths
 NSUBST:   { = 1:{ / 1:[ / 1:( / 2:< / *:T, 1 = 4:. / *:1
 NSUBST:   | = 1:R / 1:O
+:    if not dgn.uniq_tag_used("uniq_abyss_entrance") then
+KFEAT:    T = enter_abyss
+NSUBST:   T = 3:T / 1:TU / *:U
+:    end
 : _G.set_random_mon_list("place:" .. you.where() .. " w:170 / " ..
 :   "arcanist / shapeshifter / ugly thing band")
 : else
@@ -590,8 +600,8 @@ default-depth:
 
 NAME:     grunt_runaround
 TAGS:     no_monster_gen uniq_d_encompass
-PLACE:    Depths:$
-DEPTH:    D:$, Depths:2-
+DEPTH:    Depths:2-
+PLACE:    D:$, Depths:$
 WEIGHT:   1 (D:$), 2 (Depths:$), 10
 ORIENT:   encompass
 KMONS:    0 = 0 band
@@ -604,7 +614,11 @@ SUBST:    9 = 90
 KFEAT:    Z = metal_wall
 SUBST:    9 = 0
 SUBVAULT: F : grunt_runaround_depths
-NSUBST: < = 1:{ / 1:[ / 1:( / 2:< / *=A
+NSUBST:   < = 1:{ / 1:[ / 1:( / 2:< / *:A
+:    if not dgn.uniq_tag_used("uniq_abyss_entrance") then
+KFEAT:    @ = enter_abyss
+SUBST:    A = @
+:    end
 : else
 LFLOORTILE: floor_depthstone
 :   if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
@@ -612,11 +626,11 @@ KFEAT:    Z = stone_wall
 TILE:     Z = wall_zot_magenta
 COLOUR:   Z = lightmagenta
 SUBVAULT: F : grunt_runaround_zot
-NSUBST: < = 1:{ / 1:[ / 1:( / 2:< / *=A
+NSUBST:   < = 1:{ / 1:[ / 1:( / 2:< / *=A
 :   else
 KFEAT:    Z = metal_wall
 SUBVAULT: F : grunt_runaround_loot
-NSUBST: < = 1:{ / 1:[ / 1:( / 1:] / 1:) / *=A
+NSUBST:   < = 1:{ / 1:[ / 1:( / 1:] / 1:) / *=A
 :   end
 : end
 SUBVAULT: B : grunt_runaround_doors_1

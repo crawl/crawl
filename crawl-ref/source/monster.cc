@@ -2188,6 +2188,8 @@ string monster::name(description_level_type desc, bool force_vis,
     // i.e. to produce "the Maras" instead of just "Maras"
     if (force_article)
         mi.mb.set(MB_NAME_UNQUALIFIED, false);
+    if (force_vis)
+        mi.mb.set(MB_KNOWN_INVIS, false);
     return mi.proper_name(desc)
 #ifdef DEBUG_MONINDEX
     // This is incredibly spammy, too bad for regular debug builds, but
@@ -2206,6 +2208,8 @@ string monster::base_name(description_level_type desc, bool force_vis) const
         return s;
 
     monster_info mi(this, MILEV_NAME);
+    if (force_vis)
+        mi.mb.set(MB_KNOWN_INVIS, false);
     return mi.common_name(desc);
 }
 
@@ -2216,6 +2220,7 @@ string monster::full_name(description_level_type desc) const
         return s;
 
     monster_info mi(this, MILEV_NAME);
+    mi.mb.set(MB_KNOWN_INVIS, false);
     return mi.full_name(desc);
 }
 
@@ -3542,6 +3547,8 @@ int monster::known_chaos(bool check_spells_god) const
         || type == MONS_CRAWLING_FLESH_CAGE
         || type == MONS_ABOMINATION_SMALL
         || type == MONS_ABOMINATION_LARGE
+        || type == MONS_ABYSSAL_ACOLYTE
+        || type == MONS_HERALD_OF_THE_ABYSS
         || type == MONS_MUTANT_BEAST
         || type == MONS_TELENCEPHALON       // Experimental mutant.
         || type == MONS_MONGREL_WURM       // Hybrid breed mutants.
@@ -5379,6 +5386,7 @@ static bool _mons_is_skeletal(int mc)
            || mc == MONS_BONE_DRAGON
            || mc == MONS_SKELETAL_WARRIOR
            || mc == MONS_ANCIENT_CHAMPION
+           || mc == MONS_ANTIQUE_CHAMPION
            || mc == MONS_REVENANT_SOULMONGER
            || mc == MONS_WEEPING_SKULL
            || mc == MONS_LAUGHING_SKULL
@@ -6171,15 +6179,16 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     {
         place_cloud(CLOUD_FIRE, pos(), 20 + random2(15), oppressor, 5);
     }
-    else if (type == MONS_SPRIGGAN_RIDER || type == MONS_GOBLIN_RIDER
-             || type == MONS_GOJI)
+    else if (mons_is_rider(type))
     {
         if (hit_points + damage > max_hit_points / 2)
             damage = max_hit_points / 2 - hit_points;
-        if (damage > 0 && x_chance_in_y(damage, damage + hit_points)
+        if (damage > 0
+            && (x_chance_in_y(damage, damage + hit_points)
+                || type == MONS_GOJI && hit_points * 5 <= max_hit_points * 2)
             && flavour != BEAM_TORMENT_DAMAGE)
         {
-            bool fly_died = type != MONS_GOJI && coinflip();
+            bool mount_died = type != MONS_GOJI && coinflip();
             monster_type dead_mon     = MONS_PROGRAM_BUG;
             int old_hp                = hit_points;
             auto old_flags            = flags;
@@ -6188,23 +6197,18 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             int8_t old_ench_countdown = ench_countdown;
             string old_name = mname;
 
-            if (!fly_died)
+            if (!mount_died)
                 monster_drop_things(this, mons_aligned(oppressor, &you));
 
-            if (type == MONS_SPRIGGAN_RIDER)
+            if (mount_died)
             {
-                type = fly_died ? MONS_SPRIGGAN : MONS_HORNET;
-                dead_mon = fly_died ? MONS_HORNET : MONS_SPRIGGAN;
+                dead_mon = mons_mount_type(type);
+                type = mons_rider_type(type);
             }
-            else if (type == MONS_GOBLIN_RIDER)
+            else
             {
-                type = fly_died ? MONS_GOBLIN : MONS_WYVERN;
-                dead_mon = fly_died ? MONS_WYVERN : MONS_GOBLIN;
-            }
-            else if (type == MONS_GOJI)
-            {
-                type = MONS_GHOST_MOTH;
-                dead_mon = MONS_GOJI_UNMOUNTED;
+                dead_mon = mons_rider_type(type);
+                type = mons_mount_type(type);
             }
 
             define_monster(*this);
@@ -6214,7 +6218,10 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             ench_cache     = old_ench_cache;
             ench_countdown = old_ench_countdown;
             if (type == MONS_GHOST_MOTH)
+            {
                 add_ench(mon_enchant(ENCH_INVIS, this, INFINITE_DURATION));
+                mons_add_blame(this, "once ridden by Goji");
+            }
             // Keep the rider's name, if it had one (Mercenary card).
             if (!old_name.empty())
                 mname = old_name;
@@ -6227,10 +6234,10 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                   ? oppressor->mindex() : NON_MONSTER);
 
             // Now clear the name, if the rider just died.
-            if (!fly_died)
+            if (!mount_died)
                 mname.clear();
 
-            if (fly_died && !is_habitable(pos()))
+            if (mount_died && !is_habitable(pos()))
             {
                 hit_points = 0;
                 if (observable())
@@ -6243,7 +6250,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                              "deep water and drowns");
                 }
             }
-            else if (fly_died && observable())
+            else if (mount_died && observable())
             {
                 mprf("%s falls from %s now dead mount.",
                      name(DESC_THE).c_str(),

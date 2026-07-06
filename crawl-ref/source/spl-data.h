@@ -1704,6 +1704,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_TOUCH_OF_PARADOX, "Touch of Paradox",
+    spschool::translocation | spschool::hexes,
+    spflag::helpful | spflag::monster,
+    7,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_TOUCH_OF_PARADOX,
+},
+
+{
     SPELL_EARTH_ELEMENTALS, "Summon Earth Elementals",
     spschool::summoning,
     spflag::monster | spflag::mons_abjure,

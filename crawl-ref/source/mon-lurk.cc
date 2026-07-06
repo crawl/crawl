@@ -60,6 +60,11 @@ void start_lurking(monster& mon)
     if (spot.origin())
         return;
 
+    // Heal the monster up before lurking, so that it will be fresh once it
+    // unlurks again.
+    mon.heal(10000);
+    mon.timeout_enchantments(true);
+
     start_lurking_at(mon, spot);
 
 }

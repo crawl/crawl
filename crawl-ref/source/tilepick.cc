@@ -5331,6 +5331,7 @@ tileidx_t tileidx_monster_phase_shift(monster_type type)
         case MONS_OGRE_MAGE:            return TILEP_MONS_OGRE_MAGE_PHASED;
         case MONS_EROLCHA:              return TILEP_MONS_EROLCHA_PHASED;
         case MONS_DEEP_ELF_KNIGHT:      return TILEP_MONS_DEEP_ELF_KNIGHT_PHASED;
+        case MONS_ABYSSAL_ACOLYTE:      return TILEP_MONS_ABYSSAL_ACOLYTE_PHASED;
         default:                        return 0;
     }
 }

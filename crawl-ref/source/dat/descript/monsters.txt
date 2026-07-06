@@ -649,6 +649,12 @@ outline of a vast, sinuous dragon is just barely perceptible behind. Its malice
 is palpable.
 %%%%
 # Non-unique monsters
+abyssal acolyte
+
+A missionary in the service of Lugonu, with remnants of its headless body
+spilling from a roaming spatial rift. It seeks to teach others the joy and
+strength of slowly decoupling from this particular plane of reality.
+%%%%
 acid blob
 
 A lump of sickly pustulent flesh, dripping with lethal acid.
@@ -1791,6 +1797,12 @@ hellwing
 A hideous skeletal demon. It swoops through the air on powerful wings of
 ancient withered skin, taking sadistic joy from harrying those who would try to
 flee its grasp.
+%%%%
+herald of the abyss
+
+A mutated devotee of Lugonu, warped by years of living in the Abyss. It has
+ascended into an exalted representative of Lugonu's spite against the rest of
+all existence and solemnly tears apart reality in their name.
 %%%%
 hexer
 
@@ -3825,10 +3837,6 @@ An undead creature in the shape of a bat, made of ice.
 flame-cult kobold
 
 A kobold that has been enchanted to explode in a blaze of fire.
-%%%%
-mad acolyte of Lugonu
-
-A devoted follower of Lugonu, driven mad by years of living in the Abyss.
 %%%%
 malarious merfolk avatar
 

@@ -19,6 +19,14 @@ extern const coord_def ABYSS_CENTRE;
 const int EXIT_XP_COST = 10; // ref _reduce_abyss_xp_timer() for details
 // but it's equivalent to roughly half the recharge xp for an elemental evoker
 
+/// Number of times the Abyss generated new areas on the current trip into the
+/// Abyss (used to prevent placing the rune until a minimal ammount of
+/// exploration has happened.)
+#define ABYSS_AREAS_SEEN_KEY "abyss_areas_seen"
+
+/// Minimum number of areas that must be generated before the rune can place.
+const int ABYSS_RUNE_AREAS_MIN = 4;
+
 #define ABYSSAL_RUNE_LOC_KEY "abyssal_rune_loc"
 
 // How much time the player has spent on Abyss:5 at XL 27

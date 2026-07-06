@@ -651,7 +651,7 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
     mslot = fake_mon;
 
 #ifndef USE_TILE_LOCAL
-    int colour = mons_class_colour(m_type);
+    int colour = fake_mon.colour();
     if (colour == BLACK)
         colour = LIGHTGREY;
 

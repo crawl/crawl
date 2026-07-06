@@ -1563,6 +1563,11 @@ static void _make_derived_undead(monster* mons, bool quiet,
     if (requires_corpse && !mons_can_be_zombified(*mons))
         return;
 
+    // If zombifying a rider+mount, treat it as zombifying the rider. The mount
+    // will get its chance later, via mounted_kill().
+    const monster_type mtype = mons_is_rider(mons->type) ? mons_rider_type(mons->type)
+                                                         : mons->type;
+
     // Use the original monster type as the zombified type here, to
     // get the proper stats from it.
     mgen_data mg(which_z,
@@ -1575,7 +1580,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
     // Don't link monster-created derived undead to the summoner, they
     // shouldn't poof
     mg.set_summoned(beh == BEH_FRIENDLY ? &you : nullptr, spell, 0, false);
-    mg.set_base(mons->type);
+    mg.set_base(mtype);
     // Prefer to be created wherever the dead monster was, but allow placing up
     // to 2 spaces away, if need be.
     mg.set_range(0, 2);
@@ -3532,28 +3537,13 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     item_def* corpse = nullptr;
     if (leaves_corpse && !was_banished && !spectralised && !corpse_consumed)
-    {
-        // Have to add case for disintegration effect here? {dlb}
-        item_def* daddy_corpse = nullptr;
-
-        if (mons.type == MONS_GOBLIN_RIDER)
-        {
-            daddy_corpse = mounted_kill(&mons, MONS_WYVERN, killer, killer_index);
-            mons.type = MONS_GOBLIN;
-        }
-        else if (mons.type == MONS_SPRIGGAN_RIDER)
-        {
-            daddy_corpse = mounted_kill(&mons, MONS_HORNET, killer, killer_index);
-            mons.type = MONS_SPRIGGAN;
-        }
-        else if (mons.type == MONS_GOJI)
-        {
-            daddy_corpse = mounted_kill(&mons, MONS_GHOST_MOTH, killer, killer_index);
-            mons.type = MONS_GOJI_UNMOUNTED;
-        }
         corpse = place_monster_corpse(mons);
+
+    if (mons_is_rider(mons.type) && !was_banished)
+    {
+        item_def* mount_corpse = mounted_kill(&mons, mons_mount_type(mons.type), killer, killer_index);
         if (!corpse)
-            corpse = daddy_corpse;
+            corpse = mount_corpse;
     }
 
     const unsigned int player_xp = gives_player_xp
@@ -3778,30 +3768,32 @@ void monster_cleanup(monster* mons)
     mons->reset();
 }
 
-item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
+// Simulates the death of one 'half' of a given rider monster, while leaving the
+// passed monster itself alive (or dead, if it's already dead).
+item_def* mounted_kill(monster* real_mon, monster_type mc, killer_type killer,
                        int killer_index)
 {
     monster mon;
     mon.type = mc;
-    mon.set_position(daddy->pos());
+    mon.set_position(real_mon->pos());
     define_monster(mon); // assumes mc is not a zombie
-    mon.flags = daddy->flags;
+    mon.flags = real_mon->flags;
 
     // Need to copy ENCH_SUMMON_TIMER etc. or we could get real XP/meat from a summon.
-    mon.enchantments = daddy->enchantments;
-    mon.ench_cache = daddy->ench_cache;
+    mon.enchantments = real_mon->enchantments;
+    mon.ench_cache = real_mon->ench_cache;
 
-    mon.attitude = daddy->attitude;
-    mon.damage_friendly = daddy->damage_friendly;
-    mon.damage_total = daddy->damage_total;
+    mon.attitude = real_mon->attitude;
+    mon.damage_friendly = real_mon->damage_friendly;
+    mon.damage_total = real_mon->damage_total;
     // Keep the rider's name, if it had one (Mercenary card).
-    if (!daddy->mname.empty() && mon.type == MONS_SPRIGGAN)
-        mon.mname = daddy->mname;
-    if (daddy->props.exists(REAPING_DAMAGE_KEY))
+    if (!real_mon->mname.empty() && mon.type == MONS_SPRIGGAN)
+        mon.mname = real_mon->mname;
+    if (real_mon->props.exists(REAPING_DAMAGE_KEY))
     {
         dprf("Mounted kill: marking the other monster as reaped as well.");
-        mon.props[REAPING_DAMAGE_KEY].get_int() = daddy->props[REAPING_DAMAGE_KEY].get_int();
-        mon.props[REAPER_KEY].get_int() = daddy->props[REAPER_KEY].get_int();
+        mon.props[REAPING_DAMAGE_KEY].get_int() = real_mon->props[REAPING_DAMAGE_KEY].get_int();
+        mon.props[REAPER_KEY].get_int() = real_mon->props[REAPER_KEY].get_int();
     }
 
     return monster_die(mon, killer, killer_index, false, true);

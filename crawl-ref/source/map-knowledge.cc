@@ -821,9 +821,10 @@ string invis_monster_knowledge::get_unknown_monster_description()
 {
     vector<monster*> mons;
     for (const auto &entry : data)
-        if (!you.see_cell(entry.last_known_pos))
+        if (!in_bounds(entry.last_known_pos))
             if (monster* mon = monster_by_mid(entry.mid))
-                mons.push_back(mon);
+                if (cell_see_cell(you.pos(), entry.last_player_pos, LOS_SOLID))
+                    mons.push_back(mon);
 
     if (mons.empty())
         return "";

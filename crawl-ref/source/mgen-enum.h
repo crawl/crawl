@@ -151,6 +151,8 @@ enum band_type
     BAND_MORPHOGENIC_OOZE,
     BAND_SEWAGE_SOVEREIGNS,
     BAND_GIRAFFES,
+    BAND_ABYSSAL_ACOLYTES,
+    BAND_HERALD_FOLLOWERS,
     NUM_BANDS                   // always last
 };
 

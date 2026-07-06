@@ -226,6 +226,8 @@ killer_klown_purple
 killer_klown_red
 killer_klown_yellow
 mon/demihumanoids/entropy_weaver CORPSE_ENTROPY_WEAVER
+mon/abyss/abyssal_acolyte CORPSE_ABYSSAL_ACOLYTE
+mon/abyss/herald_of_the_abyss CORPSE_HERALD_OF_THE_ABYSS
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 %sdir mon/amorphous
 shapeshifter CORPSE_SHAPESHIFTER
