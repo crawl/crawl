@@ -2850,6 +2850,27 @@ bool drop_item(int item_dropped, int quant_drop)
             return false;
         }
 
+        // If this is an orb, ask specifically about quick removal (risk of
+        // shattering) only when dropping from equipped state.
+        if (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_ORB)
+        {
+            string prompt = "Removing this " + item.name(DESC_PLAIN)
+                            + " safely will take multiple turns. Dropping it quickly instead and risk shattering it?";
+            bool fast_remove = false;
+            if (yesno(prompt.c_str(), false, 'n'))
+                fast_remove = true;
+
+            if (try_unequip_item(item, fast_remove))
+            {
+                // The delay handles the case where the item disappeared.
+                // start_delay<DropItemDelay>(fast_remove ? 0 : 0, item);
+                start_delay<DropItemDelay>(0, item);
+                return true;
+            }
+            else
+                return false;
+        }
+
         if (try_unequip_item(item))
         {
             // The delay handles the case where the item disappeared.

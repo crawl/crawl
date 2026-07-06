@@ -54,13 +54,15 @@ string item_unequip_verb(const item_def& item);
 
 bool handle_chain_removal(vector<item_def*>& to_remove, bool interactive);
 bool try_equip_item(item_def& item);
-bool try_unequip_item(item_def& item);
+bool try_unequip_item(item_def& item, bool allow_fast_orb_removal = false);
 bool can_unequip_item(item_def& item, bool silent = false);
 bool warn_about_changing_gear(const vector<item_def*>& to_remove,
-                              item_def* to_equip = nullptr);
+                              item_def* to_equip = nullptr,
+                              bool *fast_orb_removal = nullptr);
 
 void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
-                         vector<item_def*> to_remove);
+                         vector<item_def*> to_remove,
+                         bool orb_fast_removal = false);
 
 string cannot_put_on_talisman_reason(const item_def& talisman, bool temp = true,
                                      bool* god_forbids = nullptr);
