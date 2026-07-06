@@ -1048,12 +1048,12 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################
-NAME:   rogga_village
+NAME:   rogga_village (formely known as: kennysheep_town)
 TAGS:   uniq_d_encompass allow_dup unrand no_rotate no_pool_fixup
 ORIENT: encompass
 DEPTH:  D:2
 PLACE:  D:2
-WEIGHT: 10000
+WEIGHT: 5000
 KMONS:  op = plant
 KMONS:  P = bush
 KMONS:  Y = Jessica
