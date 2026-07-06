@@ -445,6 +445,13 @@ static void _describe_cell(const map_control_state &m_state)
     msgwin_clear_temporary();
     mprf(MSGCH_PROMPT, "Press: ? - help, v - describe, . - travel");
 
+    // If viewing the level we are on, player-centered coordinates.
+    if (Options.monster_item_view_coordinates && m_state.on_level)
+    {
+        const coord_def relpos = cpos - you.pos();
+        mprf(MSGCH_PLAIN, "Location (%d, %d)", relpos.x, -relpos.y);
+    }
+
     const string mon = cell_monster_description(cpos);
     if (!mon.empty())
         mprf(MSGCH_EXAMINE, "<cyan>Here:</cyan> %s", uppercase_first(mon).c_str());
@@ -536,6 +543,12 @@ static void _draw_title(const map_control_state &m_state, const int columns)
         extra = level_id::current().describe(true, true);
     else
         extra += " (" + level_id::current().describe(false, true) + ")";
+    // If viewing the level we are on, player-centered coordinates.
+    if (Options.monster_item_view_coordinates && m_state.on_level)
+    {
+        const coord_def relpos = cpos - you.pos();
+        extra += make_stringf(" (%d, %d)", relpos.x, -relpos.y);
+    }
 #ifdef WIZARD
     if (you.wizard)
         extra += make_stringf(" (%d, %d)", cpos.x, cpos.y);

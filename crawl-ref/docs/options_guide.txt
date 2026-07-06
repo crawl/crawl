@@ -1717,7 +1717,8 @@ mlist_allow_alternative_layout = false
         This option is not supported in the tiles build.
 
 monster_item_view_coordinates = false
-        Display player-centred coordinates in the ^x view description.
+        Display player-centred coordinates in the ^x view description,
+        targeters and level map.
 
 monster_item_view_features += <regex>, <regex>
         (List option)
@@ -3452,7 +3453,7 @@ option for terminal configuration specifics):
 Allow auto-travel/move to advance one step even when monsters are present:
     travel_one_unsafe_move = true
 
-List player-relative coordinates in the ^x display:
+List player-relative coordinates in the ^x display, targeters and level map:
     monster_item_view_coordinates = true
 
 The ^x display can list a customizable set of features controlled with regular
