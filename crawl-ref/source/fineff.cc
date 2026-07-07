@@ -1927,6 +1927,9 @@ void fire_final_effects()
 
     // Clear all cached monster copies
     env.final_effect_monster_cache.clear();
+
+    // Free the slots of monsters that died or left the level during this turn.
+    flush_monster_reset();
 }
 
 void clear_final_effects()

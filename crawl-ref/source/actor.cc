@@ -827,7 +827,7 @@ void actor::constriction_damage_defender(actor &defender)
          basedam, acdam, timescale_dam, infdam);
 
     if (defender.is_monster()
-        && defender.type != MONS_NO_MONSTER // already dead and reset
+        && !invalid_monster(defender.as_monster()) // already dead
         && defender.as_monster()->hit_points < 1)
     {
         monster_die(*defender.as_monster(), this);

@@ -963,7 +963,8 @@ bool actor_is_susceptible_to_vampirism(const actor& act, bool only_known)
 
 bool invalid_monster(const monster* mon)
 {
-    return !mon || invalid_monster_type(mon->type);
+    return !mon || invalid_monster_type(mon->type)
+        || testbits(mon->flags, MF_PENDING_RESET);
 }
 
 bool invalid_monster_type(monster_type mt)

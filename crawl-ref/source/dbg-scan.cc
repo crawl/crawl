@@ -461,7 +461,7 @@ void debug_mons_scan()
             } // if (holder != m)
         } // for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
 
-        monster* m1 = monster_by_mid(m->mid);
+        monster* m1 = monster_by_mid(m->mid, false, true);
         if (m1 != m)
         {
             if (!m1)
