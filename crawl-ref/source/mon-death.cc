@@ -2861,6 +2861,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
 
     if (leaves_corpse && mons.has_ench(ENCH_RIMEBLIGHT)
+        && !mons_will_goldify(mons)
         && !silent && !was_banished && !mons_reset
         && mons.props.exists(RIMEBLIGHT_DEATH_KEY))
     {
