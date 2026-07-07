@@ -323,6 +323,10 @@ enum monster_flag_type : uint64_t
     /// Was created by a Boundless Tesseract
     MF_TESSERACT_SPAWN    = BIT(45),
 
+    /// Dead/departed the level and cleaned up, but its slot has not been
+    /// reset yet.
+    MF_PENDING_RESET    = BIT(46),
+
 };
 DEF_BITFIELD(monster_flags_t, monster_flag_type);
 

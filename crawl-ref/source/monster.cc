@@ -4483,7 +4483,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
     }
 
     if (cleanup_dead && (hit_points <= 0 || get_hit_dice() <= 0)
-        && type != MONS_NO_MONSTER)
+        && !invalid_monster(this))
     {
         if (agent == nullptr)
             monster_die(*this, KILL_NON_ACTOR, NON_MONSTER);
