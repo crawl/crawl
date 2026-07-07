@@ -506,6 +506,15 @@ effect/slug5 MI_SLUG5
 effect/slug6 MI_SLUG6
 effect/slug7 MI_SLUG7
 
+%rim 0
+throwing_knife MI_THROWING_KNIFE
+throwing_knife_p MI_THROWING_KNIFE_P
+# flying knife
+effect/throwing_knife0 MI_THROWING_KNIFE0
+effect/throwing_knife1 MI_THROWING_KNIFE1
+effect/throwing_knife2 MI_THROWING_KNIFE2
+effect/throwing_knife3 MI_THROWING_KNIFE3
+
 ######OBJ_ARMOUR
 %sdir item/armour
 robe1 ARM_ROBE

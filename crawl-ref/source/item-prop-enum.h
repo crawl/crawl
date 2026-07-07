@@ -381,6 +381,7 @@ enum missile_type
 #if TAG_MAJOR_VERSION == 34
     MI_SLUG,
 #endif
+    MI_THROWING_KNIFE,
 
     NUM_MISSILES,
 };

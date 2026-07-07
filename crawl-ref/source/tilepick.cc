@@ -3147,6 +3147,13 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         case SPMSL_SILVER:   return TILE_MI_JAVELIN_SILVER;
         }
 
+    case MI_THROWING_KNIFE:
+        switch (brand)
+        {
+        default:             return TILE_MI_THROWING_KNIFE;
+        case SPMSL_POISONED: return TILE_MI_THROWING_KNIFE_P;
+        }
+
     default:
         return TILE_ERROR;
     }
@@ -3741,6 +3748,7 @@ tileidx_t tileidx_item_projectile(const item_def &item)
             case MI_STONE:          return TILE_MI_STONE0;
             case MI_LARGE_ROCK:     return TILE_MI_LARGE_ROCK0;
             case MI_BOOMERANG:      return TILE_MI_BOOMERANG0;
+            case MI_THROWING_KNIFE: return TILE_MI_THROWING_KNIFE0;
         }
     }
     else if (is_range_weapon(item))
@@ -3978,6 +3986,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
         return tile + ui_random(tile_main_count(tile));
 
     case TILE_MI_BOOMERANG0:
+    case TILE_MI_THROWING_KNIFE0:
         return tile + ui_random(4);
 
     default:

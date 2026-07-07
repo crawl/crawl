@@ -3811,6 +3811,8 @@ colour_t item_def::missile_colour() const
             return MAGENTA;
         case MI_BOOMERANG:
             return GREEN;
+        case MI_THROWING_KNIFE:
+            return CYAN;
         case NUM_SPECIAL_MISSILES:
         default:
             die("invalid missile type");

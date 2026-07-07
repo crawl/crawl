@@ -129,6 +129,7 @@ bool ranged_attack::attack()
     {
         set_attack_conducts(conducts, *defender->as_monster(),
                             you.aware_of(*defender));
+        player_stab_check();
     }
 
     if (shield_blocked)
@@ -371,7 +372,11 @@ int ranged_attack::weapon_damage() const
     int dam = property(*weapon, PWPN_DAMAGE);
 
     if (attacker->is_player() && throwing())
+    {
         dam += throwing_base_damage_bonus(*weapon, true);
+        if (weapon->is_type(OBJ_MISSILES, MI_THROWING_KNIFE) && stab_attempt)
+            dam *= 2;
+    }
 
     return dam;
 }
@@ -796,7 +801,16 @@ bool ranged_attack::mons_attack_effects()
 
 void ranged_attack::player_stab_check()
 {
-    stab_attempt = false;
+    if (throwing())
+    {
+        const stab_type orig_st = find_player_stab_type(*defender->as_monster());
+        stab_type st = orig_st;
+        stab_attempt = st != STAB_NO_STAB;
+    }
+    else
+        stab_attempt = false;
+
+    // overriden later if needed
     stab_bonus = 0;
 }
 

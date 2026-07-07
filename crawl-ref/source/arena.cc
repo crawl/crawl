@@ -1405,6 +1405,7 @@ int arena_cull_items()
             if (item.base_type != OBJ_MISSILES
                || item.sub_type == MI_JAVELIN
                || item.sub_type == MI_BOOMERANG
+               || item.sub_type == MI_THROWING_KNIFE
                || item.sub_type == MI_THROWING_NET)
             {
                 ammo.push_back(idx);

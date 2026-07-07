@@ -579,6 +579,10 @@ static special_missile_type _determine_missile_brand(const item_def& item,
         rc = random_choose_weighted(90, SPMSL_SILVER,
                                     nw, SPMSL_NORMAL);
         break;
+
+    case MI_THROWING_KNIFE:
+        rc = random_choose_weighted(90, SPMSL_POISONED,
+                                    nw, SPMSL_NORMAL);
     }
 
     ASSERT(is_missile_brand_ok(item.sub_type, rc, true));
@@ -605,7 +609,7 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     switch (brand)
     {
     case SPMSL_POISONED:
-        if (type == MI_DART)
+        if (type == MI_DART || type == MI_THROWING_KNIFE)
             return true;
         break;
 
