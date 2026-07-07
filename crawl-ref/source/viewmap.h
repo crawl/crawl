@@ -56,6 +56,9 @@ public:
     bool redraw_map;
     bool map_alive;
     bool chose;
+#ifndef USE_TILE_LOCAL
+    bool always_show_stairs;
+#endif
 
     level_pos lpos;
     coord_def search_anchor;

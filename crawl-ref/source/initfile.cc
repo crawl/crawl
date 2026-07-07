@@ -949,7 +949,7 @@ const vector<GameOption*> game_options::build_options_list()
         // it'd be a pain to maintain without further macros
 #ifdef USE_TILE_WEB
         new BoolGameOption(SIMPLE_NAME(tile_realtime_anim), false),
-        new BoolGameOption(SIMPLE_NAME(tile_level_map_hide_messages), true),
+        new BoolGameOption(SIMPLE_NAME(tile_level_map_hide_messages), false),
         new BoolGameOption(SIMPLE_NAME(tile_level_map_hide_sidebar), false),
         new BoolGameOption(SIMPLE_NAME(tile_web_mouse_control), true),
         new MultipleChoiceGameOption<string>(

@@ -816,10 +816,28 @@ static void _get_nearby_items(vector<item_def *> &list_items,
     }
 }
 
+bool is_terrain_interesting(dungeon_feature_type feat)
+{
+    vector <text_pattern> &filters = Options.monster_item_view_features;
+    if (filters.empty())
+        return true;
+    for (const text_pattern &pattern : filters)
+    {
+        if (pattern.matches(feature_description(feat))
+            || feat_stair_direction(feat) != CMD_NO_CMD
+               && pattern.matches("stair")
+            || feat_is_trap(feat)
+               && pattern.matches("trap"))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 static void _get_nearby_features(vector<coord_def> &list_features,
                           bool need_path, int range, targeter *hitfunc)
 {
-    vector <text_pattern> &filters = Options.monster_item_view_features;
     for (vision_iterator ri(you); ri; ++ri)
     {
         if (!_is_target_in_range(*ri, range, hitfunc))
@@ -835,24 +853,8 @@ static void _get_nearby_features(vector<coord_def> &list_features,
         if (hitfunc && !monster_at(*ri))
             list_features.push_back(*ri);
         // Not using a targeter, list features according to user preferences.
-        else if (!hitfunc)
-        {
-            if (!filters.empty())
-            {
-                for (const text_pattern &pattern : filters)
-                {
-                    if (pattern.matches(feature_description(env.grid(*ri)))
-                        || feat_stair_direction(env.grid(*ri)) != CMD_NO_CMD
-                           && pattern.matches("stair")
-                        || feat_is_trap(env.grid(*ri))
-                           && pattern.matches("trap"))
-                    {
-                        list_features.push_back(*ri);
-                        break;
-                    }
-                }
-            }
-        }
+        else if (!hitfunc && is_terrain_interesting(env.grid(*ri)))
+            list_features.push_back(*ri);
     }
 }
 
@@ -1912,7 +1914,16 @@ string cell_items_description(const coord_def& pos)
     if (!in_bounds(pos))
         return "";
 
-    auto items = const_item_list_on_square(you.visible_igrd(pos));
+    vector<item_def> remembered;
+    vector<const item_def *> items;
+    if (env.map_knowledge(pos).visible())
+        items = const_item_list_on_square(you.visible_igrd(pos));
+    else
+    {
+        remembered = item_list_in_stash(pos);
+        for (const item_def &item : remembered)
+            items.push_back(&item);
+    }
 
     if (items.empty())
         return "";
