@@ -515,6 +515,8 @@ effect/throwing_knife1 MI_THROWING_KNIFE1
 effect/throwing_knife2 MI_THROWING_KNIFE2
 effect/throwing_knife3 MI_THROWING_KNIFE3
 
+harpoon MI_HARPOON
+
 ######OBJ_ARMOUR
 %sdir item/armour
 robe1 ARM_ROBE

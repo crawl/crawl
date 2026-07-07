@@ -557,6 +557,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     case MI_THROWING_NET:
     case MI_STONE:
     case MI_LARGE_ROCK:
+    case MI_HARPOON:
         rc = SPMSL_NORMAL;
         break;
     case MI_BOOMERANG:
@@ -593,7 +594,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
 bool is_missile_brand_ok(int type, int brand, bool strict)
 {
     // Rocks can't normally be branded.
-    if ((type == MI_STONE || type == MI_LARGE_ROCK)
+    if ((type == MI_STONE || type == MI_LARGE_ROCK || type == MI_HARPOON)
         && brand != SPMSL_NORMAL
         && strict)
     {
@@ -682,7 +683,7 @@ static void _generate_missile_item(item_def& item, int force_type,
     }
 
     // No fancy rocks -- break out before we get to special stuff.
-    if (item.sub_type == MI_LARGE_ROCK)
+    if (item.sub_type == MI_LARGE_ROCK || item.sub_type == MI_HARPOON)
     {
         item.quantity = 2 + random2avg(5,2);
         return;

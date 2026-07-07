@@ -382,6 +382,7 @@ enum missile_type
     MI_SLUG,
 #endif
     MI_THROWING_KNIFE,
+    MI_HARPOON,
 
     NUM_MISSILES,
 };

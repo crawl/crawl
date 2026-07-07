@@ -3795,6 +3795,7 @@ colour_t item_def::missile_colour() const
         case MI_STONE:
             return BROWN;
         case MI_LARGE_ROCK:
+        case MI_HARPOON:
             return LIGHTGREY;
 #if TAG_MAJOR_VERSION == 34
         case MI_NEEDLE:

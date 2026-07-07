@@ -252,6 +252,17 @@ random_var player::melee_attack_delay() const
     return _player_attack_delay(true);
 }
 
+static int _unfit_throw_penalty(const item_def *projectile)
+{
+    if (projectile && projectile->base_type == OBJ_MISSILES
+        && projectile->sub_type == MI_HARPOON)
+    {
+        return you.can_throw_large_rocks() ? 1 : 2;
+    }
+
+    return 1;
+}
+
 random_var player::attack_delay_with(const item_def *weap, bool melee_only,
                                      bool include_temp) const
 {
@@ -267,7 +278,9 @@ random_var player::attack_delay_with(const item_def *weap, bool melee_only,
     {
         // Thrown weapons use 10 + projectile damage to determine base delay.
         const skill_type wpn_skill = SK_THROWING;
-        const int projectile_delay = 10 + property(*weap, PWPN_DAMAGE) / 2;
+        const int penalty = _unfit_throw_penalty(weap);
+        const int projectile_delay = (10 + property(*weap, PWPN_DAMAGE) / 2)
+                                     * penalty;
         attk_delay = random_var(projectile_delay);
         attk_delay -= div_rand_round(random_var(you.skill(wpn_skill, 10)),
                                      DELAY_SCALE);

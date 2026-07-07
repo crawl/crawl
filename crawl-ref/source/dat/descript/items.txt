@@ -832,6 +832,20 @@ handbook of applied construction
 A practical introduction to Forgecraft, covering basic principles and their
 common applications.
 %%%%
+harpoon
+
+A massive, barbed projectile with a rope attached. Anything hit by it will be
+pulled in as close as possible to the thrower.
+{{
+    if you.race() == "Kobold" or you.race() == "Spriggan" then
+        return "Unfortunately, it is too large and heavy for you to use."
+    elseif you.race() == "Ogre" or you.race() == "Troll" then
+       return ""
+    else
+       return "It is very cumbersome to throw for a being of your size."
+    end
+}}
+%%%%
 hat
 
 A cloth hat.

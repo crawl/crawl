@@ -7640,6 +7640,9 @@ bool bolt::can_pull(const actor &act, int dam) const
     if (act.is_stationary() || adjacent(source, act.pos()))
         return false;
 
+    if (name == "harpoon")
+        return true;
+
     return origin_spell == SPELL_HARPOON_SHOT && dam;
 }
 
@@ -7971,6 +7974,8 @@ void bolt::do_ranged_attack(actor& targ)
 
     if (attk.did_net())
         drop_item = false;
+    if (targ.alive())
+        pull_actor(&targ, 0);
 }
 
 // Returns the effective willpower an actor with a given willpower would have

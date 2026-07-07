@@ -899,6 +899,7 @@ static const missile_def Missile_prop[] =
     { MI_THROWING_NET,  "throwing net",     0, 0,  30 },
     { MI_BOOMERANG,     "boomerang",        6, 20, 20 },
     { MI_THROWING_KNIFE,"throwing knife",   4, 12, 20 },
+    { MI_HARPOON,       "harpoon",          16, 18, 30 },
 
 #if TAG_MAJOR_VERSION == 34
     { MI_NEEDLE,        "needle",        0, 12, 2  },
@@ -2226,9 +2227,11 @@ bool is_throwable(const actor *actor, const item_def &wpn)
     if (!actor)
         return true;
 
+    if (wpn.sub_type == MI_HARPOON || wpn.sub_type == MI_JAVELIN)
+        return actor->body_size() >= SIZE_MEDIUM;
     if (wpn.sub_type == MI_LARGE_ROCK)
         return actor->can_throw_large_rocks();
-    return wpn.sub_type != MI_JAVELIN || actor->body_size() >= SIZE_MEDIUM;
+    return true;
 }
 
 /**
