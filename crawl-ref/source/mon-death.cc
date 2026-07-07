@@ -3785,9 +3785,6 @@ void monster_cleanup(monster* mons, bool reset)
     // Erase any indicators of this monster's previous positions.
     env.invis_knowledge.update(*mons);
 
-    const mid_t mid = mons->mid;
-    env.mid_cache.erase(mid);
-
     mons->remove_summons();
 
     unsigned int monster_killed = mons->mindex();

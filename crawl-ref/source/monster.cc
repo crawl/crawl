@@ -137,6 +137,9 @@ void monster::reset()
     inv.init(NON_ITEM);
     spells.clear();
 
+    if (mid)
+        env.mid_cache.erase(mid);
+
     mid             = 0;
     flags           = MF_NO_FLAGS;
     type            = MONS_NO_MONSTER;

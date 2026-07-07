@@ -4875,14 +4875,14 @@ bool monster_nearby()
     return false;
 }
 
-actor *actor_by_mid(mid_t m, bool require_valid)
+actor *actor_by_mid(mid_t m, bool require_valid, bool allow_dead)
 {
     if (m == MID_PLAYER)
         return &you;
-    return monster_by_mid(m, require_valid);
+    return monster_by_mid(m, require_valid, allow_dead);
 }
 
-monster *monster_by_mid(mid_t m, bool require_valid)
+monster *monster_by_mid(mid_t m, bool require_valid, bool allow_dead)
 {
     if (!require_valid)
     {
@@ -4893,20 +4893,15 @@ monster *monster_by_mid(mid_t m, bool require_valid)
     }
 
     if (unsigned short *mc = map_find(env.mid_cache, m))
-        return &env.mons[*mc];
+    {
+        monster* mon = &env.mons[*mc];
+        if (!allow_dead && invalid_monster(mon))
+            return nullptr;
+        return mon;
+    }
     return 0;
 }
 
-monster *cached_monster_copy_by_mid(mid_t m)
-{
-    for (size_t i = 0; i < env.final_effect_monster_cache.size(); ++i)
-    {
-        if (env.final_effect_monster_cache[i].mid == m)
-            return &env.final_effect_monster_cache[i];
-    }
-
-    return nullptr;
-}
 
 void init_anon()
 {
