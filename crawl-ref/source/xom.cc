@@ -2946,7 +2946,7 @@ static void _xom_wave_of_despair(int sever)
             dummy.type = MONS_HUMAN; // maybe random floor monsters? player genus?
             dummy.position = *di;
 
-            item_def* corpse = place_monster_corpse(dummy, true);
+            item_def* corpse = place_corpse_or_gold(dummy, true);
             if (corpse)
             {
                 turn_corpse_into_skeleton(*corpse);

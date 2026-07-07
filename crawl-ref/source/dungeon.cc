@@ -4975,7 +4975,7 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
         if (!mon)
             continue;
         mon->position = where;
-        corpse = place_monster_corpse(*mon, true);
+        corpse = place_corpse_or_gold(*mon, true);
         // Dismiss the monster we used to place the corpse.
         monster_die(*mon, KILL_RESET, NON_MONSTER, true);
     }

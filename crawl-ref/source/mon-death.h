@@ -65,7 +65,8 @@ bool mons_will_goldify(const monster &mons);
 
 void handle_monster_dies_lua(monster& mons, killer_type killer);
 
-item_def* place_monster_corpse(const monster& mons, bool force = false);
+item_def* place_corpse_or_gold(const monster& mons, bool force = false,
+                               bool no_corpse = false);
 void maybe_drop_monster_organ(monster_type mon, monster_type orig,
                               coord_def pos, bool silent = false);
 
