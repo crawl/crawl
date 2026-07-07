@@ -2232,7 +2232,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     // Shouldn't happen, but this is too unimportant to assert.
     clear_final_effects();
-    env.final_effect_monster_cache.clear();
 
     los_changed();
 

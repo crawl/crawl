@@ -1346,10 +1346,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
     death_type   = dtype;
     damage       = dam;
 
-    // Try searching for both a living monster and a dead-but-cached monster
-    const monster *source_monster = monster_by_mid(death_source)
-                                     ? monster_by_mid(death_source)
-                                     : cached_monster_copy_by_mid(death_source);
+    const monster *source_monster = monster_by_mid(death_source, false, /*allow_dead=*/true);
     if (source_monster)
         killer_map = source_monster->originating_map();
 
