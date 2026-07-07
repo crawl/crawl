@@ -1680,6 +1680,32 @@ static bool _any_valid_targets(const unique_ptr<targeter>& tgt, int range,
     return false;
 }
 
+// Mirror targetting logic to check whether LRD can find a target.
+static bool _lrd_no_hostile_in_range(int pow, int range)
+{
+    unique_ptr<targeter> hitfunc = find_spell_targeter(SPELL_LRD, pow, range);
+
+    for (monster_near_iterator mi(you.pos(), LOS_DEFAULT); mi; ++mi)
+    {
+        const monster& mon = **mi;
+        if (!you.aware_of(mon) || !mons_is_threatening(mon))
+            continue;
+        if (mons_attitude(mon) != ATT_HOSTILE && !mon.has_ench(ENCH_FRENZIED))
+            continue;
+
+        for (radius_iterator ri(mon.pos(), 2, C_SQUARE, LOS_DEFAULT); ri; ++ri)
+        {
+            if (!hitfunc->valid_aim(*ri))
+                continue;
+            hitfunc->set_aim(*ri);
+            if (hitfunc->is_affected(mon.pos()) >= AFF_MAYBE)
+                return false;
+        }
+    }
+
+    return true;
+}
+
 bool spell_no_hostile_in_range(spell_type spell)
 {
     // sanity check: various things below will be prone to crash in these cases.
@@ -1705,7 +1731,6 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_APPORTATION:
     case SPELL_PASSWALL:
     case SPELL_GOLUBRIAS_PASSAGE:
-    case SPELL_LRD:
     case SPELL_FULMINANT_PRISM:
     case SPELL_FORGE_LIGHTNING_SPIRE:
     case SPELL_NOXIOUS_BOG:
@@ -1826,6 +1851,9 @@ bool spell_no_hostile_in_range(spell_type spell)
 
     case SPELL_PERMAFROST_ERUPTION:
         return permafrost_targets(you).empty();
+
+    case SPELL_LRD:
+        return _lrd_no_hostile_in_range(pow, range);
 
     case SPELL_PLASMA_BEAM:
         return cast_plasma_beam(-1, you, false, true) == spret::abort;
