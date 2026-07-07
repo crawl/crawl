@@ -50,8 +50,8 @@ The contents of this text are:
                 tc_dangerous, tc_disconnected, tc_excluded, tc_exclude_circle,
                 tc_forbidden, runrest_ignore_message, runrest_stop_message,
                 interrupt_<delay>, delay_safe_poison, runrest_ignore_monster,
-                rest_wait_both, rest_wait_ancestor, rest_wait_percent,
-                explore_auto_rest, explore_auto_rest_status,
+                rest_wait_both, rest_wait_ignore_mp, rest_wait_ancestor,
+                rest_wait_percent, explore_auto_rest, explore_auto_rest_status,
                 auto_exclude, travel_open_doors, longwalk_range
 3-g     Command Enhancements.
                 auto_switch, easy_unequip, equip_unequip, jewellery_prompt,
