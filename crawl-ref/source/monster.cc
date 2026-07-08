@@ -137,8 +137,15 @@ void monster::reset()
     inv.init(NON_ITEM);
     spells.clear();
 
+    // Drop the mid_cache entry, but only if it still points at this monster.
+    // This is not necessarily true, because a transiting copy may take the
+    // spot in the cache.
     if (mid)
-        env.mid_cache.erase(mid);
+    {
+        auto it = env.mid_cache.find(mid);
+        if (it != env.mid_cache.end() && it->second == mindex())
+            env.mid_cache.erase(it);
+    }
 
     mid             = 0;
     flags           = MF_NO_FLAGS;
