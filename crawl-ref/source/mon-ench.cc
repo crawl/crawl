@@ -1997,7 +1997,11 @@ void monster::apply_enchantments()
     // like berserk time out before their parts.
     for (int i = 0; i < NUM_ENCHANTMENTS; ++i)
         if (ec[i] && has_ench(static_cast<enchant_type>(i)))
+        {
             apply_enchantment(enchantments.find(static_cast<enchant_type>(i))->second);
+            if (!alive())
+                return;
+        }
 }
 
 bool monster::is_vengeance_target() const
