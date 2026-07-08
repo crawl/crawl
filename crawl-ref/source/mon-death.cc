@@ -3946,7 +3946,10 @@ int dismiss_monsters(string pattern)
         {
             if (!keep_item)
                 _vanish_orig_eq(*mi);
-            monster_die(**mi, KILL_RESET_KEEP_ITEMS, NON_MONSTER, true);
+            // Reset the monsters immediately, because in tests we will
+            // otherwise use up all the slots.
+            monster_die(**mi, KILL_RESET_KEEP_ITEMS, NON_MONSTER, true, false,
+                        /*reset=*/true);
             ++ndismissed;
         }
     }
