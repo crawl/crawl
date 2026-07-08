@@ -3728,7 +3728,7 @@ void flush_monster_reset()
 
 // Drop pending resets without running them, for when the level (and its whole
 // env.mons) is being discarded anyway -- resetting slots we're about to throw
-// away would be wasted work, but the dangling pointers must not survive.
+// away would be wasted work, but we mustn't apply the resets on the new level.
 void drop_pending_monster_resets()
 {
     _pending_reset.clear();
