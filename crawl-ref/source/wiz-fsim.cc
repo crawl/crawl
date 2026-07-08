@@ -354,7 +354,7 @@ static monster* _init_fsim()
 
 static void _uninit_fsim(monster *mon)
 {
-    monster_die(*mon, KILL_RESET, NON_MONSTER);
+    monster_die(*mon, KILL_RESET, NON_MONSTER, true, false, /*reset=*/true);
     reset_training();
 }
 
