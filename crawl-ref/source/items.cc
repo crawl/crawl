@@ -2863,8 +2863,7 @@ bool drop_item(int item_dropped, int quant_drop)
             if (try_unequip_item(item, fast_remove))
             {
                 // The delay handles the case where the item disappeared.
-                // start_delay<DropItemDelay>(fast_remove ? 0 : 0, item);
-                start_delay<DropItemDelay>(0, item);
+                start_delay<DropItemDelay>(fast_remove ? 1 : 0, item);
                 return true;
             }
             else
@@ -2905,9 +2904,15 @@ bool drop_item(int item_dropped, int quant_drop)
     if (!you.swimming())
         feat_splash_noise(env.grid(you.pos()));
 
+    if (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_ORB)
+    {
+        you.turn_is_over = false;
+    }
+    else
+    {
+        you.turn_is_over = true;
+    }
     dec_inv_item_quantity(item_dropped, quant_drop);
-
-    you.turn_is_over = true;
 
     you.last_pickup.erase(item_dropped);
     if (you.last_unequip == item.link)
