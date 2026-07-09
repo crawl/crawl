@@ -4172,9 +4172,12 @@ static bool _monster_move(monster* mons, coord_def& delta)
                 dprf("BUG: %s was marked as follower when not following!",
                      mons->name(DESC_PLAIN).c_str());
             }
-            else
+            // If the monster is not adjacent, it can spend its energy
+            // approaching the player. It'll later be untagged for following if
+            // it fails to catch up.
+            else if (adjacent(mons->pos(), you.pos()))
             {
-                ret    = true;
+                ret = false;
                 delta.reset();
 
                 dprf("%s is skipping movement in order to follow.",
@@ -4182,8 +4185,10 @@ static bool _monster_move(monster* mons, coord_def& delta)
             }
         }
 
-        // Check for attacking another monster.
-        if (monster* targ = monster_at(mons->pos() + delta))
+        // Check for attacking *another* monster
+        // Confused self-hit handled below
+        monster* targ = monster_at(mons->pos() + delta);
+        if (targ && !delta.origin())
         {
             if ((mons_aligned(mons, targ) || mons_is_seeker(*targ))
                 && !(mons->has_ench(ENCH_FRENZIED)
@@ -4193,13 +4198,10 @@ static bool _monster_move(monster* mons, coord_def& delta)
                 delta.reset();  // Swapping can fail, but even if it does, we
                                 // shouldn't try hitting our ally later on.
             }
-            else if (!delta.origin()) // confused self-hit handled below
+            else if (mons_fight(mons, targ))
             {
-                if (mons_fight(mons, targ))
-                {
-                    ret = true;
-                    delta.reset();
-                }
+                ret = true;
+                delta.reset();
             }
         }
 
