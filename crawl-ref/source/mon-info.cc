@@ -2130,6 +2130,12 @@ static string _condition_string(int num, int count,
         return make_stringf("%d %s", num, word.c_str());
 }
 
+static bool _is_your_battlesphere_with_target(const monster_info &mi)
+{
+    return MONS_BATTLESPHERE == mi.type && MID_PLAYER == mi.summoner_id
+           && trigger_battlesphere(&you, true);
+}
+
 void mons_conditions_string(string& desc, const vector<monster_info>& mi,
                             int start, int count, bool equipment)
 {
@@ -2238,6 +2244,13 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
             conditions.push_back(_condition_string(num, count, name));
     }
 
+    monster_info_flag_name aiming({NUM_MB_FLAGS, "aiming", "aiming", "aiming"});
+    int num = 0;
+    for (int j = start; j < start+count; j++)
+        if (_is_your_battlesphere_with_target(mi[j]))
+            num++;
+    if (num > 0)
+        conditions.push_back(_condition_string(num, count, aiming));
 
     if (conditions.empty())
         return;
