@@ -2850,6 +2850,26 @@ bool drop_item(int item_dropped, int quant_drop)
             return false;
         }
 
+        // If this is an orb, ask specifically about quick removal (risk of
+        // shattering) only when dropping from equipped state.
+        if (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_ORB)
+        {
+            string prompt = "Removing this " + item.name(DESC_PLAIN)
+                            + " safely will take multiple turns. Dropping it quickly instead and risk shattering it?";
+            bool fast_remove = false;
+            if (yesno(prompt.c_str(), false, 'n'))
+                fast_remove = true;
+
+            if (try_unequip_item(item, fast_remove))
+            {
+                // The delay handles the case where the item disappeared.
+                start_delay<DropItemDelay>(fast_remove ? 1 : 0, item);
+                return true;
+            }
+            else
+                return false;
+        }
+
         if (try_unequip_item(item))
         {
             // The delay handles the case where the item disappeared.
@@ -2884,9 +2904,15 @@ bool drop_item(int item_dropped, int quant_drop)
     if (!you.swimming())
         feat_splash_noise(env.grid(you.pos()));
 
+    if (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_ORB)
+    {
+        you.turn_is_over = false;
+    }
+    else
+    {
+        you.turn_is_over = true;
+    }
     dec_inv_item_quantity(item_dropped, quant_drop);
-
-    you.turn_is_over = true;
 
     you.last_pickup.erase(item_dropped);
     if (you.last_unequip == item.link)

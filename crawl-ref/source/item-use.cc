@@ -1229,12 +1229,12 @@ static item_def* _item_swap_prompt(const vector<item_def*>& candidates)
         return nullptr;
 }
 
-static bool _is_slow_equip(const item_def& item)
+static bool _is_slow_equip(const item_def& item, bool removing = false)
 {
     if (item.base_type == OBJ_JEWELLERY)
         return jewellery_is_amulet(item.sub_type);
     else if (item.base_type == OBJ_ARMOUR)
-        return true;
+        return removing; 
     else if (is_weapon(item))
         return you.has_mutation(MUT_SLOW_WIELD);
 
@@ -1256,8 +1256,14 @@ static bool _is_slow_equip(const item_def& item)
  *         no warnings, or the player chose to accept them). False, if we should
  *         abort the process.
  */
-bool warn_about_changing_gear(const vector<item_def*>& to_remove, item_def* to_equip)
+bool warn_about_changing_gear(const vector<item_def*>& to_remove,
+                                item_def* to_equip,
+                                bool *fast_orb_removal)
 {
+    bool local_fast_orb_removal = false;
+    if (!fast_orb_removal)
+        fast_orb_removal = &local_fast_orb_removal;
+
     // Switching to a launcher while berserk is likely a mistake.
     if (to_equip && you.berserk() && is_range_weapon(*to_equip))
     {
@@ -1277,7 +1283,7 @@ bool warn_about_changing_gear(const vector<item_def*>& to_remove, item_def* to_e
         return false;
     }
 
-    bool needs_delay = to_equip && _is_slow_equip(*to_equip);
+    bool needs_delay = to_equip && _is_slow_equip(*to_equip, false);
     for (const item_def* item : to_remove)
     {
         if (!maybe_warn_about_removing(*item))
@@ -1285,8 +1291,13 @@ bool warn_about_changing_gear(const vector<item_def*>& to_remove, item_def* to_e
             canned_msg(MSG_OK);
             return false;
         }
-        if (_is_slow_equip(*item))
+        if (_is_slow_equip(*item, true)
+            && !(fast_orb_removal && *fast_orb_removal
+                 && item->base_type == OBJ_ARMOUR
+                 && item->sub_type == ARM_ORB))
+        {
             needs_delay = true;
+        }
     }
 
     string reason;
@@ -1447,14 +1458,15 @@ bool try_equip_item(item_def& item)
     // Note: What we pass to this method may be a link to a temporary item copy
     //       in our inventory, if the item we are testing is currently on the
     //       foor.
-    if (!warn_about_changing_gear(to_remove, &item))
+    bool orb_fast_removal = false;
+    if (!warn_about_changing_gear(to_remove, &item, &orb_fast_removal))
         return false;
 
     // Now do the actual removal and equipping.
 
     // Pick up item, if we need to.
     item_def& real_item = you.inv[_get_item_slot_maybe_with_move(item)];
-    do_equipment_change(&real_item, slot, to_remove);
+    do_equipment_change(&real_item, slot, to_remove, orb_fast_removal);
 
     return true;
 }
@@ -1555,14 +1567,19 @@ bool handle_chain_removal(vector<item_def*>& to_remove, bool interactive)
  *                     removing anything).
  */
 void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
-                         vector<item_def*> to_remove)
+                         vector<item_def*> to_remove,
+                         bool orb_fast_removal)
 {
     bool needs_delay = false;
-    if (to_equip && _is_slow_equip(*to_equip))
+    if (to_equip && _is_slow_equip(*to_equip, false))
         needs_delay = true;
     for (const item_def* item : to_remove)
-        if (_is_slow_equip(*item))
+        if (_is_slow_equip(*item, true)
+            && !(orb_fast_removal && item->base_type == OBJ_ARMOUR
+                 && item->sub_type == ARM_ORB))
+        {
             needs_delay = true;
+        }
 
     const bool is_multi = (to_equip != nullptr && !to_remove.empty())
                             || to_remove.size() > 1;
@@ -1576,8 +1593,29 @@ void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
         for (int i = to_remove.size() - 1; i >= 0; --i)
         {
             item_def* item = to_remove[i];
-            if (_is_slow_equip(*item))
+            if (orb_fast_removal && item->base_type == OBJ_ARMOUR
+                && item->sub_type == ARM_ORB)
+            {
+                if (one_chance_in(2))
+                {
+                    unequip_item(*item);
+                    mprf(MSGCH_PLAIN, "The %s shatters as you remove it!",
+                         item->name(DESC_THE).c_str());
+                    dec_inv_item_quantity(item->link, 1);
+                }
+                else
+                {
+                    unequip_item(*item);
+                }
+                continue;
+            }
+
+            if (_is_slow_equip(*item, true)
+                && !(orb_fast_removal && item->base_type == OBJ_ARMOUR
+                     && item->sub_type == ARM_ORB))
+            {
                 start_delay<EquipOffDelay>(ARMOUR_EQUIP_DELAY, *item);
+            }
             // If this removal is queued after another removal, it needs to use
             // a delay. (This means it takes 10 aut instead of 5, but this should
             // matter so rarely that I'm not sure it's worth fixing?)
@@ -1594,7 +1632,7 @@ void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
 
     if (to_equip)
     {
-        if (_is_slow_equip(*to_equip))
+        if (_is_slow_equip(*to_equip, false))
             start_delay<EquipOnDelay>(ARMOUR_EQUIP_DELAY, *to_equip, equip_slot);
         else if (needs_delay)
             start_delay<EquipOnDelay>(1, *to_equip, equip_slot);
@@ -1658,7 +1696,7 @@ bool can_unequip_item(item_def& item, bool silent)
     return true;
 }
 
-bool try_unequip_item(item_def& item)
+bool try_unequip_item(item_def& item, bool orb_fast_removal)
 {
     if (item.base_type == OBJ_TALISMANS && you.active_talisman() == &item)
         return use_talisman(item);
@@ -1673,10 +1711,10 @@ bool try_unequip_item(item_def& item)
     if (!handle_chain_removal(to_remove, true))
         return false;
 
-    if (!warn_about_changing_gear(to_remove))
+    if (!warn_about_changing_gear(to_remove, nullptr, nullptr))
         return false;
 
-    do_equipment_change(nullptr, SLOT_UNUSED, to_remove);
+    do_equipment_change(nullptr, SLOT_UNUSED, to_remove, orb_fast_removal);
 
     return true;
 }
