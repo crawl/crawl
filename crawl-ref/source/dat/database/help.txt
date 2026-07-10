@@ -185,6 +185,10 @@ level-map
 <w>Ctrl-C</w>     : Clear monster memory.
 <w>Ctrl-F</w>     : Forget level map.
 <w>Ctrl-U</w>     : Restore forgotten level map.{{
+if not crawl.is_tiles() then
+    return "\n"
+           .. "<w>=</w>          : Toggle always showing stair list."
+end }}{{
 if you.wizard() then
     return "\n\n"
           .. "<h>Wizard commands</h>\n"

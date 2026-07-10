@@ -1126,7 +1126,7 @@ static void _place_player_corpse(bool explode)
     if (you.form != transformation::none)
         mpr("Your shape twists and changes as you die.");
 
-    place_monster_corpse(dummy, false);
+    place_corpse_or_gold(dummy, false);
 }
 
 #if defined(WIZARD) || defined(DEBUG)

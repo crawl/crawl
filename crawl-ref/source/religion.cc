@@ -46,6 +46,7 @@
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
+#include "item-use.h"
 #include "items.h"
 #include "level-state-type.h"
 #include "libutil.h"
@@ -2811,19 +2812,33 @@ int initial_wrath_penance_for(god_type god)
 
 static void _ash_uncurse()
 {
-    bool uncursed = false;
-    // iterate backwards so we shatter a ring on the macabre finger
-    // necklace before the amulet
+    // Gather the cursed items up front as unequip_item() erases from
+    // you.equipment.items.
+    vector<item_def*> cursed;
     for (player_equip_entry& entry : you.equipment.items)
     {
-        if (!entry.get_item().cursed())
-            continue;
-        if (!uncursed)
+        item_def& item = entry.get_item();
+        // Deduplicate as some items appear multiple times in the list.
+        if (item.cursed()
+            && find(cursed.begin(), cursed.end(), &item) == cursed.end())
         {
-            mprf(MSGCH_GOD, GOD_ASHENZARI, "Your curses shatter.");
-            uncursed = true;
+            cursed.push_back(&item);
         }
-        unequip_item(entry.get_item());
+    }
+
+    // Shattering a slot-granting item (eg the macabre finger necklace) can
+    // leave other worn items without a slot; pull those in too.
+    const size_t num_cursed = cursed.size();
+    handle_chain_removal(cursed, false);
+
+    if (num_cursed > 0)
+        mprf(MSGCH_GOD, GOD_ASHENZARI, "Your curses shatter.");
+    for (size_t i = 0; i < cursed.size(); ++i)
+    {
+        // The appended items lost their slot rather than their curse.
+        if (i >= num_cursed)
+            mprf("%s falls away from you.", cursed[i]->name(DESC_YOUR).c_str());
+        unequip_item(*cursed[i]);
     }
 }
 

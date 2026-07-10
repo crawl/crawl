@@ -50,8 +50,8 @@ The contents of this text are:
                 tc_dangerous, tc_disconnected, tc_excluded, tc_exclude_circle,
                 tc_forbidden, runrest_ignore_message, runrest_stop_message,
                 interrupt_<delay>, delay_safe_poison, runrest_ignore_monster,
-                rest_wait_both, rest_wait_ancestor, rest_wait_percent,
-                explore_auto_rest, explore_auto_rest_status,
+                rest_wait_both, rest_wait_ignore_mp, rest_wait_ancestor,
+                rest_wait_percent, explore_auto_rest, explore_auto_rest_status,
                 auto_exclude, travel_open_doors, longwalk_range
 3-g     Command Enhancements.
                 auto_switch, easy_unequip, equip_unequip, jewellery_prompt,
@@ -1717,14 +1717,16 @@ mlist_allow_alternative_layout = false
         This option is not supported in the tiles build.
 
 monster_item_view_coordinates = false
-        Display player-centred coordinates in the ^x view description.
+        Display player-centred coordinates in the ^x view description,
+        targeters and level map.
 
 monster_item_view_features += <regex>, <regex>
         (List option)
-        Display features matching the <regex> in the ^x view description. Each
-        <regex> is a regular expression describing a dungeon feature. This
-        regex should match the description when using the 'x' command. In case
-        the regex matches several descriptions, all such features are listed.
+        Display features matching the <regex> in the ^x view description. It
+        also affects the X level map in console. Each <regex> is a regular
+        expression describing a dungeon feature. This regex should match the
+        description when using the 'x' command. In case the regex matches
+        several descriptions, all such features are listed.
 
         Two special keywords are active here, if any pattern matches the string
         "stair" all features that can be interacted with using the stair
@@ -2646,7 +2648,7 @@ tile_display_mode = (tiles | glyphs | hybrid)
 
         This option is only available on local tiles and webtiles.
 
-tile_level_map_hide_messages = true
+tile_level_map_hide_messages = false
 tile_level_map_hide_sidebar = false
         Controls what screen elements are hidden when using the level map.
         These options are only available on WebTiles.
@@ -3451,7 +3453,7 @@ option for terminal configuration specifics):
 Allow auto-travel/move to advance one step even when monsters are present:
     travel_one_unsafe_move = true
 
-List player-relative coordinates in the ^x display:
+List player-relative coordinates in the ^x display, targeters and level map:
     monster_item_view_coordinates = true
 
 The ^x display can list a customizable set of features controlled with regular

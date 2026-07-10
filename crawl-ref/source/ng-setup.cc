@@ -32,6 +32,7 @@
 #include "tag-version.h"
 #include "throw.h"
 #include "transform.h"
+#include "unwind.h"
 
 #define MIN_START_STAT       3
 
@@ -455,6 +456,9 @@ static void _setup_innate_spells()
     for (spell_type sp : you.spells)
         if (sp != SPELL_NO_SPELL)
             spellset.insert(sp);
+
+    // Ignore divine prohibitions on spells for zealot classes.
+    unwind_var<god_type> no_god(you.religion, GOD_NO_GOD);
 
     // Get spells at XL 3 and every odd level thereafter.
     vector<spell_type> chosen_spells;

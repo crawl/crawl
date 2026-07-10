@@ -288,6 +288,7 @@ inline constexpr bool item_type_is_equipment(object_class_type base_type)
                || base_type == OBJ_GIZMOS;
 }
 
+vector<equipment_slot> item_granted_slots(const item_def& item);
 bool item_gives_equip_slots(const item_def& item);
 
 bool item_grants_flight(const item_def& item);

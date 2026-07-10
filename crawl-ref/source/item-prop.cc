@@ -3737,23 +3737,31 @@ bool is_usable_talisman(const item_def& item)
     return cannot_put_on_talisman_reason(item, false).empty();
 }
 
-bool item_gives_equip_slots(const item_def& item)
+// The equipment slot type(s) an item grants extra slots of (empty if none).
+vector<equipment_slot> item_granted_slots(const item_def& item)
 {
     if (!is_unrandom_artefact(item))
-        return false;
+        return {};
 
     switch (item.unrand_idx)
     {
         case UNRAND_FINGER_AMULET:
-        case UNRAND_JUSTICARS_REGALIA:
-        case UNRAND_FISTICLOAK:
-        case UNRAND_SKULL_OF_ZONGULDROK:
         case UNRAND_VAINGLORY:
-            return true;
-
+            return {SLOT_RING};
+        case UNRAND_JUSTICARS_REGALIA:
+            return {SLOT_AMULET};
+        case UNRAND_SKULL_OF_ZONGULDROK:
+            return {SLOT_HELMET};
+        case UNRAND_FISTICLOAK:
+            return {SLOT_GLOVES};
         default:
-            return false;
+            return {};
     }
+}
+
+bool item_gives_equip_slots(const item_def& item)
+{
+    return !item_granted_slots(item).empty();
 }
 
 bool item_grants_flight(const item_def& item)

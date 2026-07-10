@@ -1942,6 +1942,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     case OBJ_BAUBLES:
         buff << "flux bauble";
     break;
+    case OBJ_DETECTED:
+        buff << "detected item";
+    break;
 
     default:
         buff << "!";

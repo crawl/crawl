@@ -111,11 +111,13 @@ struct player_equip_set
                                        bool ignore_curses = false,
                                        bool quiet = true) const;
 
-    int needs_chain_removal(const item_def& item, vector<item_def*>& to_replace,
-                            bool cursed_okay = false);
+    int needs_chain_removal(equipment_slot slot, vector<item_def*>& to_replace,
+                            bool cursed_okay = false,
+                            const vector<item_def*>& already_removing = {});
 
     vector<item_def*> get_forced_removal_list(bool force_full_check = false,
-                                              bool is_save_cleanup = false);
+                                              bool is_save_cleanup = false,
+                                              size_t* num_direct = nullptr);
 
     void shift_twohander_to_slot(equipment_slot new_slot);
 
