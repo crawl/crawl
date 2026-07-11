@@ -6561,10 +6561,22 @@ w:5
 _Octavia_common_
 
 @The_monster@ says, "Hell isn't that bad."
+
+@The_monster@ says, "All gifts and nothing left to buy make Octavia a very happy girl."
+
+@The_monster@ grumbles "Where's that faith amulet?"
+
 %%%%
 _Octavia_rare_
 
 @The_monster@ says, "Your death will avenge me!"
+
+@The_monster@ screams, "Need to rest! Haste down! Out of mana!"
+
+%%%%
+Octavia killed
+
+@The_monster@ says, "Fell for that @foe_god@ stocks bump, again. Curses!"
 
 %%%%
 ############ Pikel ######## A big kobold trading souls of the damned
