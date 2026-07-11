@@ -1002,6 +1002,7 @@ enum monster_type                      // env.mons[].type
     MONS_PIKEL,
     MONS_CRAZY_YIUF,
     MONS_MENNAS,
+    MONS_OCTAVIA,
     MONS_REGAL,
     MONS_MARA,
 #if TAG_MAJOR_VERSION == 34

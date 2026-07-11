@@ -263,6 +263,10 @@ Norris title
 
 Norris the Philosopher
 %%%%
+Octavia title
+
+Octavia the Heretic
+%%%%
 Parghit title
 
 Parghit the Mighty

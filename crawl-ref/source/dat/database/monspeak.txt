@@ -6550,6 +6550,23 @@ Norris triumphant
 
 @The_monster@ says, "I'll see you on the other side, friend."
 %%%%
+############ Octavia ######## An eight tentacled heretic of Goazag
+Octavia
+
+@_Octavia_common_@
+
+w:5
+@_Octavia_rare_@
+%%%%
+_Octavia_common_
+
+@The_monster@ says, "Hell isn't that bad."
+%%%%
+_Octavia_rare_
+
+@The_monster@ says, "Your death will avenge me!"
+
+%%%%
 ############ Pikel ######## A big kobold trading souls of the damned
 Pikel
 

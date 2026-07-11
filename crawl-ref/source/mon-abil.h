@@ -28,6 +28,7 @@ bool mon_special_ability(monster* mons);
 
 void draconian_change_colour(monster* drac);
 
+void octavia_suffers_wrath(monster* octavia);
 void boris_covet_orb(monster* boris);
 
 bool ugly_thing_mutate(monster& ugly, bool force = true);

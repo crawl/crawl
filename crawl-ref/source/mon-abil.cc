@@ -90,6 +90,20 @@ void draconian_change_colour(monster* drac)
     drac->spells.push_back(drac_breath(draconian_subspecies(*drac)));
 }
 
+void octavia_suffers_wrath(monster* octavia)
+{
+    if (octavia->type != MONS_OCTAVIA)
+        return;
+
+    if (octavia->observable())
+        mprf("You are empowered by the wrath of Gozag!");
+
+    haste_player(10, 0);
+    you.increase_duration(DUR_MIGHT, 10, false);
+    you.increase_duration(DUR_BRILLIANCE, 10, false);
+    // octavia->add_ench(mon_enchant(ENCH_HASTE, octavia, INFINITE_DURATION));
+    // octavia->add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, octavia, INFINITE_DURATION));
+}
 void boris_covet_orb(monster* boris)
 {
     if (boris->type != MONS_BORIS || !player_has_orb())

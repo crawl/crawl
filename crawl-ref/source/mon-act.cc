@@ -4319,6 +4319,10 @@ void seen_monsters_react()
                 mi->props[BORIS_ORB_KEY] = true;
                 boris_covet_orb(*mi);
             }
+            else if (mi->can_see(you) && mi->type == MONS_OCTAVIA)
+            {
+                octavia_suffers_wrath(*mi);
+            }
 #if TAG_MAJOR_VERSION == 34
             else if (mi->props.exists(OLD_DUVESSA_ENERGIZE_KEY))
             {
