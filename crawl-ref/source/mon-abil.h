@@ -14,6 +14,8 @@
 #define NOBODY_MAX_MEMORIES 3
 #define NOBODY_RECOVERY_KEY "nobody_recovery"
 
+#define OCTAVIA_WRATH_KEY "octavia_wrath"
+
 #define TESSERACT_SPAWN_COUNTER_KEY "tesseract_spawn_count"
 #define TESSERACT_SPAWN_TIMER_KEY "tesseract_spawn_timer"
 
