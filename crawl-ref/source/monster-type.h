@@ -946,6 +946,7 @@ enum monster_type                      // env.mons[].type
     // Random uniques:
     MONS_IJYB,
     MONS_JESSICA,
+    MONS_MEDUSA,
     MONS_SIGMUND,
     MONS_TERENCE,
     MONS_BLORKULA_THE_ORCULA,
