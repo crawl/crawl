@@ -2467,7 +2467,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_MEDUSA,
       {
-       { SPELL_PETRIFY, 20, MON_SPELL_WIZARD },
+       { SPELL_PETRIFY, 80, MON_SPELL_WIZARD },
       }
     },
 
