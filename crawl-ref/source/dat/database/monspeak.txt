@@ -5969,6 +5969,22 @@ __NONE
 w:5
 @The_monster@ sings off-key, "You got some money for me?"
 %%%%
+############ MEDUSA ### A snake headed gorgon
+Medusa
+@_Medusa_common_@
+
+w:2
+@_Medusa_rare_@
+%%%%
+_Medusa_common_
+
+VISUAL:@The_monster_possessive@ hair slithers.
+%%%%
+_Medusa_rare_
+
+@The_monster@ says, "Time to get stoned."
+
+%%%%
 ############ MENKAURE ### A mummy whose rest you've disturbed
 Menkaure
 

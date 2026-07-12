@@ -1057,6 +1057,7 @@ WEIGHT: 5000
 KMONS:  op = plant
 KMONS:  P = bush
 KMONS:  Y = Jessica
+KMONS:  7 = Medusa
 KMONS:  1 = goblin / hobgoblin / kobold
 KMONS:  2 = adder / gnoll / hound
 KMONS:  3 = goblin / hobgoblin / kobold
@@ -1104,7 +1105,7 @@ xttp!!!!wRRcHc|**c2HHHHHH2cHcRRww!!cc...cc!!!!!!wwwwwwww!!!!!!!!!!!!!!!!!!!!!!!x
 xttp!!!!wRRcHc***+HHHHHHYHcHcRRw!!.cc.S.cc.!!!!!wwwwwwwwFFFFFFFFFFFFFFFFFFF!!!!x
 xttp!!!wRRRcHc|**c2HHHHHH2cHcRRw!...........!!!!wwwwwwww!!!!!!!!!!!!!!!!!!!!!!!x
 xttpp!!wwRRcHccccccccccccccHcRR!..G.S.Z.S.G..!!wwwwwwwwwwFFFFFFFFFFFFFFFFFF!!!!x
-xtttpp!!wcccHHHHHH2HH2HHHHHHcccw!...........!!!wwwwwwwww!!!!!!!!!!!!!!!!!!!!!!!x
+xtttpp!!wcccHHHHHH2HH2HHHHHHcccw!.....7.....!!!wwwwwwwww!!!!!!!!!!!!!!!!!!!!!!!x
 xttttp!!wcHHHHccccHHHHccccHHHHcw!!.cc.S.cc.!!!!wwwwwwwwwFFFFFFFFFFFFFFFFFFF!!!!x
 xttttp!!wmHHHHcRRcHHHHcRRcHHHHmw!!!cc...cc!!!!wwwwwwwwww!!!!!!!!!!!!!!!!!!!!!!!x
 xttttp!!wmH3HHcRRcc++ccRRcHH3Hmw!!!!..G..!!!!wwwwwwwwwwwFFFFFFFFFFFFccccccc!!!!x

@@ -2465,6 +2465,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_MEDUSA,
+      {
+       { SPELL_PETRIFY, 80, MON_SPELL_WIZARD },
+      }
+    },
+
     {  MST_HAROLD,
       {
        { SPELL_HARPOON_SHOT, 20, MON_SPELL_WIZARD },

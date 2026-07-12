@@ -702,6 +702,7 @@ frederick MONS_FREDERICK
 %rim 1
 harold MONS_HAROLD
 jessica MONS_JESSICA
+medusa MONS_MEDUSA
 joseph MONS_JOSEPH
 %rim 0
 josephina MONS_JOSEPHINA
