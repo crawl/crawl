@@ -208,6 +208,7 @@ static item_def* make_item_for_monster(
     object_class_type base,
     int subtype,
     int level,
+
     int allow_uniques = 0,
     iflags_t flags = 0);
 
@@ -971,6 +972,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { { SPWPN_ANTIMAGIC, 1 },
               { NUM_SPECIAL_WEAPONS, 3 } },
         } },
+        { MONS_OCTAVIA, { SP_DEFENDER_WEAPONS, {}, {}, 1 } },
         { MONS_SPRIGGAN_DEFENDER, { SP_DEFENDER_WEAPONS, {}, {}, 1 } },
         { MONS_ENCHANTRESS, { SP_DEFENDER_WEAPONS, {}, {}, 1 } },
         { MONS_HELLBINDER, { { { WPN_DEMON_BLADE, 1 } } } },
@@ -1575,6 +1577,13 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
         hat->props[ITEM_TILE_NAME_KEY] = "THELM_HAT_WIGLAF";
         hat->props[WORN_TILE_NAME_KEY] = "hat_wiglaf";
         bind_item_tile(*hat);
+    }
+
+    if (mon->type == MONS_OCTAVIA)
+    {
+
+        make_item_for_monster(mon, OBJ_JEWELLERY, NUM_RINGS, 0, 1);
+        give_specific_item(mon, items(false, OBJ_GOLD, 0, ISPEC_GIFT));
     }
 
     if (mon->type == MONS_REGAL)

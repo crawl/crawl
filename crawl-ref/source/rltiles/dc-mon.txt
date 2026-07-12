@@ -566,6 +566,7 @@ chonchon2
 octopode MONS_OCTOPODE
 %sdir mon/unique
 erica MONS_ERICA
+octavia MONS_OCTAVIA
 regal MONS_REGAL
 erica_swordless MONS_ERICA_SWORDLESS
 %sdir mon/animals

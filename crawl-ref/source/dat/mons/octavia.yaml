@@ -1,0 +1,23 @@
+name: "octopode"
+glyph: {char: "x", colour: lightcyan}
+flags: [speaks, no_skeleton, no_poly_to, no_gen_derived, unique, female]
+resists: {elec: 1, fire: 1, cold: 1, petrify: 1}
+exp: 3146
+will: 140
+attacks:
+ - {type: tentacle_slap, damage: 24}
+ - {type: tentacle_slap, damage: 24}
+ - {type: tentacle_slap, damage: 24}
+ - {type: constrict, flavour: crush, damage: 5}
+hd: 25
+hp_10x: 1800
+ac: 1
+ev: 24
+has_corpse: true
+shout: shout
+intelligence: human
+habitat: amphibious
+uses: weapons_armour
+size: medium
+shape: misc
+

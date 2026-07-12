@@ -14,6 +14,8 @@
 #define NOBODY_MAX_MEMORIES 3
 #define NOBODY_RECOVERY_KEY "nobody_recovery"
 
+#define OCTAVIA_WRATH_KEY "octavia_wrath"
+
 #define TESSERACT_SPAWN_COUNTER_KEY "tesseract_spawn_count"
 #define TESSERACT_SPAWN_TIMER_KEY "tesseract_spawn_timer"
 
@@ -28,6 +30,7 @@ bool mon_special_ability(monster* mons);
 
 void draconian_change_colour(monster* drac);
 
+void octavia_suffers_wrath(monster* octavia);
 void boris_covet_orb(monster* boris);
 
 bool ugly_thing_mutate(monster& ugly, bool force = true);
