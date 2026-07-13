@@ -1,24 +1,16 @@
 #pragma once
 
-#include "tag-version.h"
-
 enum uncancellable_type
 {
-#if TAG_MAJOR_VERSION == 34
-    UNC_ACQUIREMENT,           // arg is AQ_SCROLL
-#endif
-    UNC_DRAW_THREE,            // arg is ignored
-    UNC_STACK_FIVE,            // arg is number of cards to stack
-#if TAG_MAJOR_VERSION == 34
-    UNC_MERCENARY,             // arg is mid of the monster
-#endif
-    UNC_POTION_PETITION,       // arg is ignored
-    UNC_CALL_MERCHANT,         // arg is ignored
+    UNC_DRAW_THREE,
+    UNC_STACK_FIVE,
+    UNC_POTION_PETITION,
+    UNC_CALL_MERCHANT,
 
-    UNC_ENCHANT_WEAPON,        // arg is ignored
-    UNC_ENCHANT_ARMOUR,        // arg is ignored
-    UNC_BRAND_WEAPON,          // arg is ignored
-    UNC_AMNESIA,               // arg is ignored
-    UNC_BLINKING,                 // arg is ignored
-    UNC_IDENTIFY,              // arg is ignored
+    UNC_ENCHANT_WEAPON,
+    UNC_ENCHANT_ARMOUR,
+    UNC_BRAND_WEAPON,
+    UNC_AMNESIA,
+    UNC_BLINKING,
+    UNC_IDENTIFY,
 };
