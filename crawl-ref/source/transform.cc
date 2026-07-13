@@ -69,10 +69,6 @@ static constexpr int EQF_HELD = SLOTF(SLOT_WEAPON) | SLOTF(SLOT_OFFHAND)
 static constexpr int EQF_AUXES = SLOTF(SLOT_GLOVES) | SLOTF(SLOT_BOOTS)
                                  | SLOTF(SLOT_BARDING)
                                  | SLOTF(SLOT_CLOAK) | SLOTF(SLOT_HELMET);
-// core body slots (statue form)
-static constexpr int EQF_STATUE = SLOTF(SLOT_GLOVES) | SLOTF(SLOT_BOOTS)
-                                  | SLOTF(SLOT_BARDING)
-                                  | SLOTF(SLOT_BODY_ARMOUR);
 // everything you can (W)ear
 static constexpr int EQF_WEAR = EQF_AUXES | SLOTF(SLOT_BODY_ARMOUR)
                             | SLOTF(SLOT_OFFHAND) | SLOTF(SLOT_WEAPON_OR_OFFHAND);
