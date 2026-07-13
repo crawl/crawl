@@ -3726,6 +3726,11 @@ void flush_monster_reset()
     _pending_reset.clear();
 }
 
+void cancel_pending_monster_reset(monster* mons)
+{
+    erase_val(_pending_reset, mons);
+}
+
 // Drop pending resets without running them, for when the level (and its whole
 // env.mons) is being discarded anyway -- resetting slots we're about to throw
 // away would be wasted work, but we mustn't apply the resets on the new level.

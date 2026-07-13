@@ -298,7 +298,11 @@ void apply_daction_to_transit(daction_type act)
             // Removing this monster invalidates the iterator that
             // points to it, so decrement the iterator first.
             if (!mon->alive())
+            {
+                // Remove this monster from the deferred reset queue.
+                cancel_pending_monster_reset(mon);
                 m->erase(j--);
+            }
         }
     }
 }
