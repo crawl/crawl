@@ -283,13 +283,12 @@ such filthy chambers.
 %%%%
 Wizlab
 
-In ages past, the most powerful mages would frequently find or construct small
-realms sealed off from the rest of the world, where they could isolate
-themselves in the pursuit of ever-greater magical knowledge and power. The
-mages are long gone, but many of their arcane laboratories still exist, filled
-with the results of their experiments. Those willing to explore these
-laboratories may find powerful magical treasures, but be warned: any wizard
-capable of constructing such a realm deserved their reputation.
+V starodavnų dobų najmogųćějši čarovniki čęsto nahodili ili stvarjali nevelike caŕstva,
+izolovane od ostalogo světa, kde oni sųt mogli osamotiti sę v gonitvě za vse velikymi
+magičnymi znańjami i silojų. Čarovnikov davno už nemaje, ale mnoge iz jih tajnyh
+laboratorij ješče egzistujųt, sųt napȯlnjene rezultatami jih eksperimentov. Ti, kto jest
+gotovy izslědovati tute laboratorije, mogųt najdti moćne magične bogatstva, ale bųd́te
+ostråžni: vśaky čarovnik, jest sposobny stvoriti tako caŕstvo, zaslužil svojų reputacijų.
 %%%%
 Depths
 
