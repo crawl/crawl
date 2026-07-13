@@ -71,12 +71,12 @@ void reset_cards();
 string deck_summary();
 
 bool deck_draw(deck_type deck);
-spret deck_triple_draw(bool fail);
+spret deck_triple_draw(bool fail, int piety_cost, int mp_cost, int hp_cost);
 spret deck_deal(bool fail);
-spret deck_stack(bool fail);
+spret deck_stack(bool fail, int piety_cost, int mp_cost, int hp_cost);
 
 bool draw_three();
-bool stack_five(int slot);
+bool stack_five();
 
 void card_effect(card_type which_card, bool dealt = false,
         bool punishment = false,

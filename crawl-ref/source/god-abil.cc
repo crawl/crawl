@@ -3578,8 +3578,8 @@ static string _describe_gozag_shop(int index)
 /**
  * Let the player choose from the currently available merchants to call.
  *
- * @param   The index of the chosen shop; -1 if none was chosen (due to e.g.
- *          a seen_hup).
+ * @param   The index of the chosen shop; -1 if we had to return early
+ *          due to seen_hup being set.
  */
 static int _gozag_choose_shop()
 {

@@ -75,6 +75,14 @@ bool check_ability_possible(const ability_type ability, bool quiet = false);
 bool ability_has_targeter(ability_type abil);
 unique_ptr<targeter> find_ability_targeter(ability_type ability);
 bool activate_talent(const talent& tal, dist *target = nullptr);
+bool handle_post_ability_effects(ability_type ability,
+                                 spret ability_result,
+                                 int piety_cost,
+                                 int mp_cost,
+                                 int hp_cost,
+                                 bool is_invocation);
+spret run_ability_uncancel(uncancellable_type kind, int piety_cost,
+                           int mp_cost, int hp_cost);
 bool is_religious_ability(ability_type abil);
 bool is_card_ability(ability_type abil);
 bool player_has_ability(ability_type abil, bool include_unusable = false);
