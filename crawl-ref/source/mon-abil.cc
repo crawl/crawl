@@ -1122,12 +1122,6 @@ static bool _slymdra_split_or_merge(monster* mons)
     return false;
 }
 
-static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
-                                   spell_type spell_cast)
-{
-    mons_cast(mons, pbolt, spell_cast, MON_SPELL_NATURAL);
-}
-
 bool mon_special_ability(monster* mons)
 {
     bool used = false;

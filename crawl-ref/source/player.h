@@ -36,7 +36,7 @@
 #include "stat-type.h"
 #include "timed-effect-type.h"
 #include "transformation.h"
-#include "uncancellable-type.h"
+#include "uncancel.h"
 #include "unique-creature-list-type.h"
 #include "unique-item-status-type.h"
 
@@ -420,7 +420,7 @@ public:
 
     // Prompts or actions the player must answer before continuing.
     // A stack -- back() is the first to go.
-    vector<pair<uncancellable_type, int> > uncancel;
+    vector<uncancellable> uncancel;
 
     // Hash seed for deterministic stuff.
     uint64_t game_seed;

@@ -769,9 +769,7 @@ void melee_attack::maybe_do_mesmerism()
 
 void melee_attack::grow_burstshrooms(int hd)
 {
-    // Can't extract position from a reset monster (which may have happened due
-    // to disto banishment).
-    if (!defender || defender->type == MONS_NO_MONSTER || defender->is_firewood()
+    if (!defender || defender->is_firewood()
         || mons_aligned(attacker, defender))
     {
         return;
@@ -1285,7 +1283,7 @@ void melee_attack::handle_phase_killed()
     if (attacker->is_player()
         && you.form == transformation::maw
         && defender->is_monster() // better safe than sorry
-        && defender->type != MONS_NO_MONSTER // already reset
+        && !invalid_monster(defender->as_monster()) // already cleaned up
         && adjacent(defender->pos(), attack_position))
     {
         _consider_devouring(*defender->as_monster());
@@ -1431,10 +1429,10 @@ void melee_attack::handle_phase_end()
     if (did_hit && attacker->is_player() && you.props.exists(RENDING_BLADE_MP_KEY))
         trigger_rending_blade();
 
-    // Dead but not yet reset, most likely due to an attack flavour that
+    // Dead but not yet cleaned up, most likely due to an attack flavour that
     // destroys the attacker on-hit.
     if (attacker->is_monster()
-        && attacker->as_monster()->type != MONS_NO_MONSTER
+        && !invalid_monster(attacker->as_monster())
         && attacker->as_monster()->hit_points < 1)
     {
         monster_die(*attacker->as_monster(), KILL_NON_ACTOR, NON_MONSTER);
@@ -3132,10 +3130,10 @@ void melee_attack::sear_defender()
  */
 bool melee_attack::player_monattk_hit_effects()
 {
-    // Don't even check effects if the monster has already been reset (for
+    // Don't even check effects if the monster has already been cleaned up (for
     // example, a spectral weapon who noticed in player_stab_check that it
     // shouldn't exist anymore).
-    if (defender->type == MONS_NO_MONSTER)
+    if (invalid_monster(defender->as_monster()))
         return false;
 
     if (!defender->alive())

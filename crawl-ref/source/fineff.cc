@@ -357,7 +357,6 @@ public:
     bennu_revive_fineff(const monster* bennu)
         : final_effect(bennu, 0, bennu->pos())
     {
-        env.final_effect_monster_cache.push_back(*bennu);
     }
 protected:
     // Each trigger is from the death of a different bennu---no merging.
@@ -428,8 +427,6 @@ public:
         : final_effect(fixup_attacker(attack), 0, coord_def()),
         killer(_killer), pow(_pow)
     {
-        // Cache the dying mummy so morgues can look up the monster source if it kills us.
-        env.final_effect_monster_cache.push_back(*source);
         dead_mummy = source->mid;
     }
 protected:
@@ -563,10 +560,6 @@ public:
         : final_effect(agent, nullptr, you.pos()), power(_power), max_stars(_max),
                                                    is_star_jelly(_is_star_jelly)
     {
-        // If this is a star jelly, cache it (even if it's not dead yet; since
-        // it may die to further damage events within the same attack action.)
-        if (is_star_jelly)
-            env.final_effect_monster_cache.push_back(*agent->as_monster());
     }
 protected:
     bool mergeable(const final_effect&) const override { return false; }
@@ -624,7 +617,6 @@ public:
         : final_effect(agent, nullptr, you.pos())
     {
         ASSERT(agent->is_monster());
-        env.final_effect_monster_cache.push_back(*agent->as_monster());
     }
 protected:
     bool mergeable(const final_effect&) const override { return false; }
@@ -1464,7 +1456,7 @@ void bennu_revive_fineff::fire()
 {
     bool res_visible = you.see_cell(posn);
 
-    const monster* orig = cached_monster_copy_by_mid(att);
+    const monster* orig = monster_by_mid(att, false, /*allow_dead=*/true);
 
     monster *newmons = create_monster(mgen_data(MONS_BENNU, BEH_HOSTILE, posn, orig->foe,
                                                 res_visible ? MG_DONT_COME
@@ -1597,9 +1589,9 @@ void mummy_death_curse_fineff::fire()
         mprf(MSGCH_MONSTER_SPELL, "A malignant aura surrounds %s.",
              victim->name(DESC_THE).c_str());
     }
-    // The real mummy is dead, but we pass along a cached copy save at the time
-    // they died (for morgue purposes)
-    death_curse(*victim, cached_monster_copy_by_mid(dead_mummy), "", pow);
+    // The real mummy is dead, but it stays findable by mid until its deferred
+    // reset, so morgue code can still name the source.
+    death_curse(*victim, monster_by_mid(dead_mummy, false, /*allow_dead=*/true), "", pow);
 }
 
 void summon_dismissal_fineff::fire()
@@ -1718,11 +1710,7 @@ void detonation_fineff::fire()
 
 void stardust_fineff::fire()
 {
-    actor* agent = actor_by_mid(att);
-
-    // In case the agent is dead, check for a cached copy.
-    if (!agent)
-        agent = cached_monster_copy_by_mid(att);
+    actor* agent = actor_by_mid(att, false, /*allow_dead=*/true);
     if (!agent)
         return;
 
@@ -1877,11 +1865,8 @@ void eeljolt_fineff::fire()
 
 void psychokinetic_burst_fineff::fire()
 {
-    monster* agent = monster_by_mid(att);
-
-    // In case the agent is dead, check for a cached copy.
-    if (!agent)
-        agent = cached_monster_copy_by_mid(att);
+    // The agent may be dead, but stays findable by mid until its deferred reset.
+    monster* agent = monster_by_mid(att, false, /*allow_dead=*/true);
     if (!agent)
         return;
 
@@ -1925,8 +1910,8 @@ void fire_final_effects()
         eff->fire();
     }
 
-    // Clear all cached monster copies
-    env.final_effect_monster_cache.clear();
+    // Free the slots of monsters that died or left the level during this turn.
+    flush_monster_reset();
 }
 
 void clear_final_effects()

@@ -492,8 +492,6 @@ NORETURN static void _launch_game()
     tiles.redraw();
 #endif
 
-    run_uncancels();
-
     cursor_control ccon(!Options.use_fake_player_cursor);
     while (true)
         _input();
@@ -1130,6 +1128,18 @@ static void _input()
     update_monsters_in_view();
 
     hints_new_turn();
+
+    if (has_uncancel())
+    {
+        resume_uncancel();
+        if (you.turn_is_over)
+        {
+            if (you.berserk())
+                _do_berserk_no_combat_penalty();
+            world_reacts();
+            return;
+        }
+    }
 
     if (you.cannot_act())
     {

@@ -56,7 +56,8 @@ item_def* monster_die(monster& mons, const actor *killer, bool silent = false,
                       bool mount_death = false);
 
 item_def* monster_die(monster& mons, killer_type killer,
-                      int killer_index, bool silent = false, bool mount_death = false);
+                      int killer_index, bool silent = false,
+                      bool mount_death = false, bool reset = false);
 
 item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
                        int killer_index);
@@ -70,7 +71,10 @@ item_def* place_corpse_or_gold(const monster& mons, bool force = false,
 void maybe_drop_monster_organ(monster_type mon, monster_type orig,
                               coord_def pos, bool silent = false);
 
-void monster_cleanup(monster* mons);
+void monster_cleanup(monster* mons, bool reset = false);
+void flush_monster_reset();
+void drop_pending_monster_resets();
+bool any_pending_monster_reset();
 void record_monster_defeat(const monster* mons, killer_type killer);
 int mummy_curse_power(monster_type type);
 void fire_monster_death_event(monster* mons, killer_type killer, bool polymorph);

@@ -2515,10 +2515,13 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
  * @param killer_index The mindex of the killer (TODO: always use an actor*)
  * @param silent whether to print any messages about the death
  * @param mount_death The death of the mount of a mounted monster (riders).
+ * @param reset  Whether to reset the monster immediately. If false (default),
+ *               the monster will be reset at the end of the turn.
  * @returns a pointer to the created corpse, possibly null
  */
 item_def* monster_die(monster& mons, killer_type killer,
-                      int killer_index, bool silent, bool mount_death)
+                      int killer_index, bool silent, bool mount_death,
+                      bool reset)
 {
     ASSERT(!invalid_monster(&mons));
 
@@ -3628,7 +3631,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
 
-    ASSERT(mons.type != MONS_NO_MONSTER);
+    ASSERT(!invalid_monster(&mons));
 
     if (mons.is_divine_companion() && real_death)
     {
@@ -3657,7 +3660,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     }
 
     crawl_state.dec_mon_acting(&mons);
-    monster_cleanup(&mons);
+    monster_cleanup(&mons, reset);
 
     // Force redraw for monsters that die.
     if (in_bounds(mwhere) && you.see_cell(mwhere))
@@ -3712,13 +3715,38 @@ void end_flayed_effect(monster* ghost)
     }
 }
 
+// Monsters who need to be reset at the end of the turn.
+static vector<monster*> _pending_reset;
+
+// Reset the slots of every monster detached by monster_cleanup().
+void flush_monster_reset()
+{
+    for (monster* mons : _pending_reset)
+        mons->reset();
+    _pending_reset.clear();
+}
+
+// Drop pending resets without running them, for when the level (and its whole
+// env.mons) is being discarded anyway -- resetting slots we're about to throw
+// away would be wasted work, but we mustn't apply the resets on the new level.
+void drop_pending_monster_resets()
+{
+    _pending_reset.clear();
+}
+
+// Whether any monster is detached but still awaiting its deferred reset.
+bool any_pending_monster_reset()
+{
+    return !_pending_reset.empty();
+}
+
 // Clean up a monster that's stopped existing on the current floor (whether
 // because they died or because they're transiting to a new floor).
-void monster_cleanup(monster* mons)
+void monster_cleanup(monster* mons, bool reset)
 {
-    crawl_state.mon_gone(mons);
+    ASSERT(!invalid_monster(mons));
 
-    ASSERT(mons->type != MONS_NO_MONSTER);
+    crawl_state.mon_gone(mons);
 
     if (mons->has_ench(ENCH_AWAKEN_FOREST))
     {
@@ -3757,9 +3785,6 @@ void monster_cleanup(monster* mons)
     // Erase any indicators of this monster's previous positions.
     env.invis_knowledge.update(*mons);
 
-    const mid_t mid = mons->mid;
-    env.mid_cache.erase(mid);
-
     mons->remove_summons();
 
     unsigned int monster_killed = mons->mindex();
@@ -3772,7 +3797,19 @@ void monster_cleanup(monster* mons)
     if (you.pet_target == monster_killed)
         you.pet_target = MHITNOT;
 
-    mons->reset();
+    if (reset)
+    {
+        mons->reset();
+        return;
+    }
+
+    // Mark dead by setting hitpoints to 0, and remove from the grid.
+    mons->hit_points = 0;
+    mons_remove_from_grid(*mons);
+
+    // Mark the monster for reset next cycle.
+    mons->flags |= MF_PENDING_RESET;
+    _pending_reset.push_back(mons);
 }
 
 // Simulates the death of one 'half' of a given rider monster, while leaving the
@@ -3909,7 +3946,10 @@ int dismiss_monsters(string pattern)
         {
             if (!keep_item)
                 _vanish_orig_eq(*mi);
-            monster_die(**mi, KILL_RESET_KEEP_ITEMS, NON_MONSTER, true);
+            // Reset the monsters immediately, because in tests we will
+            // otherwise use up all the slots.
+            monster_die(**mi, KILL_RESET_KEEP_ITEMS, NON_MONSTER, true, false,
+                        /*reset=*/true);
             ++ndismissed;
         }
     }

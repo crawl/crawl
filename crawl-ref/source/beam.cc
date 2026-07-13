@@ -954,7 +954,7 @@ void bolt::sporangium_wall_effect()
 
     // Trace the ownership of this sporangium explosion back to the original
     // creeping plasmodium, and exit if we can't find it.
-    const monster* ag = cached_monster_copy_by_mid(source_id);
+    const monster* ag = monster_by_mid(source_id, false, /*allow_dead=*/true);
     if (!ag)
         return;
     monster* orig_plasmodium = monster_by_mid(ag->summoner);
@@ -7418,17 +7418,14 @@ actor* bolt::agent(bool ignore_reflection) const
         return &you;
     else
     {
-        actor* act = actor_by_mid(nominal_source);
-        if (act)
+        actor* act = actor_by_mid(nominal_source, false, /*allow_dead=*/true);
+        if (act && act->alive())
             return act;
         // If this is an explosion caused by a dead friendly monster, set its
         // agent to MID_ANON_FRIEND, so that the player gets XP attribution for
         // the damage.
-        else if (monster* mon = cached_monster_copy_by_mid(nominal_source))
-        {
-            if (mon->friendly())
-                return monster_by_mid(MID_ANON_FRIEND);
-        }
+        if (act && act->is_monster() && act->as_monster()->friendly())
+            return monster_by_mid(MID_ANON_FRIEND);
 
         return nullptr;
     }

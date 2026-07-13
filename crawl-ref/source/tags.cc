@@ -1261,8 +1261,6 @@ static void _add_missing_branches()
         _ensure_entry(BRANCH_VESTIBULE);
     if (lc == level_id(BRANCH_DEPTHS, 2) || lc == level_id(BRANCH_DUNGEON, 24))
         _ensure_entry(BRANCH_PANDEMONIUM);
-    if (lc == level_id(BRANCH_DEPTHS, 3) || lc == level_id(BRANCH_DUNGEON, 25))
-        _ensure_entry(BRANCH_ABYSS);
     if (player_in_branch(BRANCH_VESTIBULE))
     {
         for (rectangle_iterator ri(0); ri; ++ri)
@@ -1974,10 +1972,12 @@ static void _tag_construct_you(writer &th)
     marshallUByte(th, you.octopus_king_rings);
 
     marshallUnsigned(th, you.uncancel.size());
-    for (const pair<uncancellable_type, int>& unc : you.uncancel)
+    for (const uncancellable& unc : you.uncancel)
     {
-        marshallUByte(th, unc.first);
-        marshallInt(th, unc.second);
+        marshallUByte(th, unc.kind);
+        marshallInt(th, unc.piety_cost_or_in_inventory);
+        marshallInt(th, unc.mp_cost_or_item_index);
+        marshallInt(th, unc.hp_cost);
     }
 
     marshallUByte(th, 1); // number of seeds, for historical reasons: always 1
@@ -3050,6 +3050,61 @@ static void _read_old_player_equipment(reader &th)
     {
         for (int i = 0; i < count; ++i)
             old_attuned.push_back(false);
+    }
+}
+
+static void _read_old_uncancels(reader& th)
+{
+    if (th.getMinorVersion() < TAG_MINOR_UNCANCELLABLES
+        || th.getMinorVersion() == TAG_MINOR_0_11)
+    {
+        return;
+    }
+
+    vector<pair<uint8_t, int>> uncancel;
+    int count = unmarshallUnsigned(th);
+    ASSERT_RANGE(count, 0, 16); // sanity check
+    uncancel.resize(count);
+    for (int i = 0; i < count; i++)
+    {
+        uncancel[i].first = unmarshallUByte(th);
+        uncancel[i].second = unmarshallInt(th);
+    }
+
+    uint8_t old_unc_acquirement = 0;
+    uint8_t old_unc_mercenary = 3;
+    erase_if(uncancel,
+             [=](const pair<uint8_t, int> uc)
+             {
+                 return uc.first == old_unc_acquirement
+                        || uc.first == old_unc_mercenary;
+             });
+    for (pair<uint8_t, int>& uc : uncancel)
+    {
+        uint8_t to_reduce = 0;
+        if (uc.first > old_unc_acquirement)
+            ++to_reduce;
+        if (uc.first > old_unc_mercenary)
+            ++to_reduce;
+
+        uc.first -= to_reduce;
+    }
+
+    // Cancel any item-based deck manipulations
+    if (th.getMinorVersion() < TAG_MINOR_REMOVE_DECKS)
+    {
+        erase_if(uncancel,
+                 [](const pair<uint8_t, int> uc) {
+                    return uc.first == UNC_DRAW_THREE
+                           || uc.first == UNC_STACK_FIVE;
+                });
+    }
+
+    you.uncancel.reserve(uncancel.size());
+    for (pair<uint8_t, int> uc : uncancel)
+    {
+        uncancellable unc{(uncancellable_type)uc.first, -1, -1, -1};
+        you.uncancel.push_back(unc);
     }
 }
 #endif
@@ -4612,31 +4667,29 @@ static void _tag_read_you(reader &th)
     }
 #endif
 
+    you.uncancel.clear();
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() >= TAG_MINOR_UNCANCELLABLES
-        && th.getMinorVersion() != TAG_MINOR_0_11)
+    if (th.getMinorVersion() < TAG_MINOR_FIX_UNCANCELS)
+        _read_old_uncancels(th);
+    else
     {
 #endif
-    count = unmarshallUnsigned(th);
-    ASSERT_RANGE(count, 0, 16); // sanity check
-    you.uncancel.resize(count);
-    for (int i = 0; i < count; i++)
-    {
-        you.uncancel[i].first = (uncancellable_type)unmarshallUByte(th);
-        you.uncancel[i].second = unmarshallInt(th);
-    }
+        count = unmarshallUnsigned(th);
+        ASSERT_RANGE(count, 0, 16); // sanity check
+        you.uncancel.resize(count);
+        for (int i = 0; i < count; ++i)
+        {
+            uncancellable& unc = you.uncancel[i];
+            unc.kind = (uncancellable_type)unmarshallUByte(th);
+            unc.piety_cost_or_in_inventory = unmarshallInt(th);
+            unc.mp_cost_or_item_index = unmarshallInt(th);
+            unc.hp_cost = unmarshallInt(th);
+        }
 #if TAG_MAJOR_VERSION == 34
-    // Cancel any item-based deck manipulations
-    if (th.getMinorVersion() < TAG_MINOR_REMOVE_DECKS)
-    {
-        erase_if(you.uncancel,
-                 [](const pair<uncancellable_type, int> uc) {
-                    return uc.first == UNC_DRAW_THREE
-                           || uc.first == UNC_STACK_FIVE;
-                });
     }
-    }
+#endif
 
+#if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_INCREMENTAL_RECALL
         && th.getMinorVersion() < TAG_MINOR_NO_INCREMENTAL_RECALL)
     {

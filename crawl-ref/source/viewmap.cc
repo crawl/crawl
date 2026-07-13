@@ -660,6 +660,9 @@ static coord_def _recentre_map_target(const level_id level,
         return you.pos();
 
     const auto bounds = known_map_bounds();
+    // This can happen if the map is entirely unknown.
+    if (!map_bounds(bounds.first))
+        return coord_def(GXM / 2, GYM / 2);
     return (bounds.first + bounds.second + 1) / 2;
 }
 
@@ -862,8 +865,8 @@ public:
                 }
                 else
                 {
-                    m_state.lpos.pos
-                        = tiles.get_cursor().clamped(known_map_bounds());
+                    m_state.lpos.pos = tiles.get_cursor();
+                    clamp_lpos();
                 }
             }
             else if (k == CK_MOUSE_CMD
@@ -878,6 +881,16 @@ public:
 #endif
 
         return false;
+    }
+
+    void clamp_lpos()
+    {
+        m_state.lpos.pos = m_state.lpos.pos.clamped(known_map_bounds());
+        if (!map_bounds(m_state.lpos.pos))
+        {
+            m_state.lpos.pos =
+                _recentre_map_target(m_state.lpos.id, m_state.original);
+        }
     }
 
     void process_command(command_type cmd)
@@ -896,7 +909,7 @@ public:
         if (m_state.lpos.id != level_id::current())
             goto_level();
 
-        m_state.lpos.pos = m_state.lpos.pos.clamped(known_map_bounds());
+        clamp_lpos();
     }
 
     void set_lpos(level_pos dest)
@@ -918,7 +931,7 @@ public:
         if (m_state.lpos.id != level_id::current())
             goto_level();
 
-        m_state.lpos.pos = m_state.lpos.pos.clamped(known_map_bounds());
+        clamp_lpos();
         m_reentry = true;
     }
 
@@ -996,7 +1009,8 @@ public:
     // This function should not be called while a map command is processing
     void update_far_viewing(coord_def viewed_location)
     {
-        m_state.lpos.pos = viewed_location.clamped(known_map_bounds());
+        m_state.lpos.pos = viewed_location;
+        clamp_lpos();
     }
 #endif
 

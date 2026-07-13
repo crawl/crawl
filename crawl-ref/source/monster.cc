@@ -137,6 +137,16 @@ void monster::reset()
     inv.init(NON_ITEM);
     spells.clear();
 
+    // Drop the mid_cache entry, but only if it still points at this monster.
+    // This is not necessarily true, because a transiting copy may take the
+    // spot in the cache.
+    if (mid)
+    {
+        auto it = env.mid_cache.find(mid);
+        if (it != env.mid_cache.end() && it->second == mindex())
+            env.mid_cache.erase(it);
+    }
+
     mid             = 0;
     flags           = MF_NO_FLAGS;
     type            = MONS_NO_MONSTER;
@@ -4483,7 +4493,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
     }
 
     if (cleanup_dead && (hit_points <= 0 || get_hit_dice() <= 0)
-        && type != MONS_NO_MONSTER)
+        && !invalid_monster(this))
     {
         if (agent == nullptr)
             monster_die(*this, KILL_NON_ACTOR, NON_MONSTER);

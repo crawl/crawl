@@ -360,6 +360,7 @@ enum tag_minor_version
     TAG_MINOR_MAX_PIETY_LOGGING,   // Separately log stepdown events and max piety wastage
     TAG_MINOR_INVIS_REFORM,        // Improve player tracking of invisible monsters
     TAG_MINOR_LURKER_MONSTERS,     // Add support for lurker monsters
+    TAG_MINOR_FIX_UNCANCELS,       // Fix monsters sometimes getting their turn before the effect of the players action
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

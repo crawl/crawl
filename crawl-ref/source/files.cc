@@ -2155,6 +2155,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         update_companions();
     }
 
+    // At this point there should be no monsters in the reset queue.
+    ASSERT(!any_pending_monster_reset());
+
 #ifdef USE_TILE
     if (load_mode != LOAD_VISITOR)
     {
@@ -2229,7 +2232,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     // Shouldn't happen, but this is too unimportant to assert.
     clear_final_effects();
-    env.final_effect_monster_cache.clear();
 
     los_changed();
 
@@ -2540,6 +2542,9 @@ void save_level(const level_id& lid)
 {
     if (you.level_visited(lid))
         travel_cache.get_level_info(lid).update();
+
+    // Reset any monsters that died/left this action.
+    flush_monster_reset();
 
     // Nail all items to the ground.
     fix_item_coordinates();
@@ -3390,6 +3395,9 @@ bool is_existing_level(const level_id &level)
 
 void delete_level(const level_id &level)
 {
+    // This level's env.mons is being discarded, so clear any pending resets.
+    drop_pending_monster_resets();
+
     travel_cache.erase_level_info(level);
     StashTrack.remove_level(level);
     shopping_list.del_things_from(level);

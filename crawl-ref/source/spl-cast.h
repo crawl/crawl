@@ -72,6 +72,7 @@ enum class spret
     abort = 0,            // should be left as 0
     fail,
     success,
+    seen_hups,
     none,                 // spell was not handled
 };
 
