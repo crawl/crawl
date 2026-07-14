@@ -397,3 +397,33 @@ It deals increased damage compared to normal missiles and substantially
 increased damage to chaotic and magically transformed beings. It also inflicts
 extra damage against mutated beings, depending on how mutated they are.
 %%%%
+sacred (sacred) missile ego
+
+It deals increased damage compared to normal missiles and applies the brand
+most associated with the thrower's god, if any. You would currently apply: {{
+    if you.god() == "Ignis" then
+        return "Flaming";
+    elseif you.god() == "Jiyva" then
+        return "Acid";
+    elseif you.god() == "Kikubaaqudgha" then
+        return "Pain";
+    elseif you.god() == "Lugonu" then
+        return "Distortion";
+    elseif you.god() == "Makhleb" then
+        return "Vampirism";
+    elseif you.god() == "Trog" then
+        return "Antimagic";
+    elseif you.god() == "Xom" then
+        return "Chaos";
+    elseif you.god() == "Yredelemnul" then
+        return "Reaping";
+    elseif you.god() == "Zin" then
+        return "Silver";
+    elseif you.god() == "The Shining One" then
+        return "Holy Wrath";
+    else
+        return "No Additional Effect";
+    end
+}}
+
+%%%%

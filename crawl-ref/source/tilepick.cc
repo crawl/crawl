@@ -3117,7 +3117,6 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
     case MI_LARGE_ROCK:   return TILE_MI_LARGE_ROCK;
     case MI_THROWING_NET: return TILE_MI_THROWING_NET;
     case MI_HARPOON:      return TILE_MI_HARPOON;
-    case MI_CHAKRAM:      return TILE_MI_CHAKRAM;
     case MI_BOOMERANG:
         switch (brand)
         {
@@ -3154,6 +3153,13 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         {
         default:             return TILE_MI_THROWING_KNIFE;
         case SPMSL_POISONED: return TILE_MI_THROWING_KNIFE_P;
+        }
+
+    case MI_CHAKRAM:
+        switch (brand)
+        {
+        default:             return TILE_MI_CHAKRAM;
+        case SPMSL_SACRED:   return TILE_MI_CHAKRAM_SACRED;
         }
 
     default:

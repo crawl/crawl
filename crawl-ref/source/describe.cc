@@ -1344,6 +1344,7 @@ static string _describe_missile_dmg_brand(const item_def &item)
     case SPMSL_CURARE:
     case SPMSL_SILVER:
     case SPMSL_CHAOS:
+    case SPMSL_SACRED:
         break;
     default: // Other brands don't deal extra damage.
         return "";

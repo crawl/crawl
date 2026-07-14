@@ -620,6 +620,35 @@ int ranged_attack::dart_duration_roll(special_missile_type type)
     return 5 + random2(base_power);
 }
 
+static special_missile_type _sacred_brand_for_god(god_type god)
+{
+    switch (god)
+    {
+        case GOD_IGNIS:
+            return SPMSL_FLAME;
+        case GOD_JIYVA:
+            return SPMSL_ACID;
+        case GOD_LUGONU:
+            return SPMSL_DISTORTION;
+        case GOD_KIKUBAAQUDGHA:
+            return SPMSL_PAIN;
+        case GOD_MAKHLEB:
+            return SPMSL_VAMPIRISM;
+        case GOD_TROG:
+            return SPMSL_ANTIMAGIC;
+        case GOD_XOM:
+            return SPMSL_CHAOS;
+        case GOD_YREDELEMNUL:
+            return SPMSL_REAPING;
+        case GOD_ZIN:
+            return SPMSL_SILVER;
+        case GOD_SHINING_ONE:
+            return SPMSL_HOLY_WRATH;
+        default:
+            return SPMSL_NORMAL;
+    }
+}
+
 bool ranged_attack::apply_missile_brand()
 {
     if (weapon->base_type != OBJ_MISSILES)
@@ -627,6 +656,15 @@ bool ranged_attack::apply_missile_brand()
 
     special_damage = 0;
     special_missile_type brand = get_ammo_brand(*weapon);
+
+    bool was_sacred = false;
+    // must come before the chaos roll
+    if (brand == SPMSL_SACRED)
+    {
+        brand = _sacred_brand_for_god(attacker->deity());
+        was_sacred = true;
+    }
+
     if (brand == SPMSL_CHAOS)
         brand = random_chaos_missile_brand();
 
@@ -774,7 +812,86 @@ bool ranged_attack::apply_missile_brand()
         else
             defender->go_berserk(false);
         break;
+
+    // every brand below is sacred brand only
+    case SPMSL_ACID:
+        defender->splash_with_acid(attacker);
+        break;
+
+    case SPMSL_ANTIMAGIC:
+        antimagic_affects_defender(damage_done * 8);
+        break;
+
+    case SPMSL_DISTORTION:
+        distortion_affects_defender();
+        break;
+
+    case SPMSL_PAIN:
+        pain_affects_defender();
+        break;
+
+    case SPMSL_HOLY_WRATH:
+        if (attacker->undead_or_demonic())
+            break;
+        if (defender->holy_wrath_susceptible())
+            special_damage = 1 + (random2(damage_done * 15) / 10);
+        if (special_damage && defender_visible)
+        {
+            special_damage_message =
+                make_stringf(
+                    "%s %s%s",
+                    defender_name(false).c_str(),
+                    defender->conj_verb("convulse").c_str(),
+                    attack_strength_punctuation(special_damage).c_str());
+        }
+        break;
+
+    case SPMSL_REAPING:
+        defender->props[REAPING_DAMAGE_KEY].get_int() += damage_done;
+        defender->props[REAPER_KEY].get_int() = attacker->mid;
+        break;
+
+    // may be worth merging this with the spwpn_vampirism version
+    case SPMSL_VAMPIRISM:
+        if (damage_done < 1 || !actor_is_susceptible_to_vampirism(*defender)
+            || attacker->stat_hp() == attacker->stat_maxhp()
+            || attacker->is_player() && you.duration[DUR_DEATHS_DOOR]
+            || x_chance_in_y(2, 5))
+        {
+            break;
+        }
+        int hp_boost = 1 + random2(damage_done);
+        hp_boost = resist_adjust_damage(defender, BEAM_NEG, hp_boost);
+
+        if (hp_boost)
+        {
+            obvious_effect = true;
+
+            if (attacker->is_player())
+                canned_msg(MSG_GAIN_HEALTH);
+            else if (attacker_visible)
+            {
+                if (defender->is_player())
+                {
+                    mprf("%s draws strength from your wounds!",
+                         attacker->name(DESC_THE).c_str());
+                }
+                else
+                {
+                    mprf("%s is healed.",
+                         attacker->name(DESC_THE).c_str());
+                }
+            }
+
+            dprf(DIAG_COMBAT, "Vampiric Healing: damage %d, healed %d",
+                 damage_done, hp_boost);
+            attacker->heal(hp_boost);
+        }
+        break;
     }
+
+    if (was_sacred)
+        special_damage += random2(damage_done) / 5;
 
     if (needs_message && !special_damage_message.empty())
     {

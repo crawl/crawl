@@ -518,6 +518,7 @@ effect/throwing_knife3 MI_THROWING_KNIFE3
 harpoon MI_HARPOON
 
 chakram MI_CHAKRAM
+chakram_sacred MI_CHAKRAM_SACRED
 # flying chakram
 effect/chakram0 MI_CHAKRAM0
 

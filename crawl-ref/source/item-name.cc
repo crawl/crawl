@@ -323,6 +323,7 @@ static bool _missile_brand_is_prefix(special_missile_type brand)
     case SPMSL_STEEL:
 #endif
     case SPMSL_SILVER:
+    case SPMSL_SACRED:
         return true;
     default:
         return false;
@@ -384,6 +385,8 @@ const char* missile_brand_name(const item_def &item, mbn_type t)
         return t == MBN_TERSE ? "disjunct" : "disjunction";
     case SPMSL_BLINDING:
         return t == MBN_NAME ? "atropa-tipped" : "atropa";
+    case SPMSL_SACRED:
+        return "sacred";
     case SPMSL_NORMAL:
         return "";
     default:

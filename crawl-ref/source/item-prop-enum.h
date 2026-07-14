@@ -583,6 +583,14 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_FRENZY,                      // Datura
     SPMSL_BLINDING,                    // Atropa
     SPMSL_DISJUNCTION,
+    SPMSL_SACRED,
+    SPMSL_ACID,                        // Sacred brand: Jiyva
+    SPMSL_PAIN,                        // Sacred brand: Kiku
+    SPMSL_DISTORTION,                  // Sacred brand: Lugonu
+    SPMSL_VAMPIRISM,                   // Sacred brand: Makhleb
+    SPMSL_ANTIMAGIC,                   // Sacred brand: Trog
+    SPMSL_REAPING,                     // Sacred brand: Yred
+    SPMSL_HOLY_WRATH,                  // Sacred brand: TSO
     NUM_REAL_SPECIAL_MISSILES,
     NUM_SPECIAL_MISSILES = NUM_REAL_SPECIAL_MISSILES,
 };

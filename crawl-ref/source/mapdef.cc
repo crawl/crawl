@@ -5104,6 +5104,14 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "datura",
         "atropa",
         "disjunction",
+        "sacred",
+        "acid",
+        "pain",
+        "distortion",
+        "vampirism",
+        "antimagic",
+        "reaping",
+        "holy_wrath",
         nullptr
     };
     COMPILE_CHECK(ARRAYSZ(missile_brands) == NUM_REAL_SPECIAL_MISSILES);
