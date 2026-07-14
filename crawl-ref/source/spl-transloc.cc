@@ -221,10 +221,13 @@ spret spider_jump()
  * @param verb          What kind of movement is this, exactly?
  *                      (E.g. 'blink', 'hop'.)
  * @param hitfunc       A hitfunc passed to the direction_chooser.
- * @return              True if a target was found; false if the player aborted.
+ * @return              spret::success if a target was found; spret::abort if
+ *                      the player aborted; spret::seen_hups if finding a
+ *                      target had to be stopped early due to hups.
  */
-static bool _find_cblink_target(dist &target, bool safe_cancel,
-                                string verb, targeter *hitfunc = nullptr, bool physical = false)
+static spret _find_cblink_target(dist &target, bool safe_cancel,
+                                string verb, targeter *hitfunc = nullptr,
+                                bool physical = false)
 {
     while (true)
     {
@@ -240,7 +243,7 @@ static bool _find_cblink_target(dist &target, bool safe_cancel,
         if (crawl_state.seen_hups)
         {
             mprf("Cancelling %s due to HUP.", verb.c_str());
-            return false;
+            return spret::seen_hups;
         }
 
         if (!target.isValid || target.target == you.pos())
@@ -254,7 +257,7 @@ static bool _find_cblink_target(dist &target, bool safe_cancel,
             }
 
             canned_msg(MSG_OK);
-            return false;
+            return spret::abort;
         }
 
         const monster* beholder = you.get_beholder(target.target);
@@ -312,7 +315,7 @@ static bool _find_cblink_target(dist &target, bool safe_cancel,
             continue;
         }
 
-        return true;
+        return spret::success;
     }
 }
 
@@ -458,7 +461,8 @@ spret frog_hop(bool fail, dist *target)
 
     while (true)
     {
-        if (!_find_cblink_target(*target, true, "hop", &tgt, true))
+        spret result = _find_cblink_target(*target, true, "hop", &tgt, true);
+        if (result != spret::success)
             return spret::abort;
 
         if (grid_distance(you.pos(), target->target) > hop_range)
@@ -870,7 +874,8 @@ spret electric_charge(actor& agent, int powc, bool fail, const coord_def &target
  * @param safe_cancel   Whether it's OK to let the player cancel the control
  *                      of the blink (or whether there should be a prompt -
  *                      for e.g. read-identified ?blink)
- * @return              Whether the blink succeeded, aborted, or was miscast.
+ * @return              Whether the blink succeeded, aborted, or had to be
+ *                      cancelled due to hups.
  */
 spret controlled_blink(bool safe_cancel, dist *target)
 {
@@ -888,8 +893,10 @@ spret controlled_blink(bool safe_cancel, dist *target)
     if (orb_limits_translocation())
     {
         targeter_hop tgt(max(1, you.current_vision - 2), false);
-        if (!_find_cblink_target(*target, safe_cancel, "blink", &tgt))
-            return spret::abort;
+        spret result = _find_cblink_target(*target, safe_cancel, "blink",
+                                           &tgt);
+        if (result != spret::success)
+            return result;
         target->target = _fuzz_blink_destination(target->target);
         mprf(MSGCH_ORB, "You feel the Orb interfering with your translocation!");
     }
@@ -897,8 +904,10 @@ spret controlled_blink(bool safe_cancel, dist *target)
     {
         targeter_smite tgt(&you, LOS_RADIUS);
         tgt.obeys_mesmerise = true;
-        if (!_find_cblink_target(*target, safe_cancel, "blink", &tgt))
-            return spret::abort;
+        spret result = _find_cblink_target(*target, safe_cancel, "blink",
+                                           &tgt);
+        if (result != spret::success)
+            return result;
     }
 
     // invisible monster that the targeter didn't know to avoid

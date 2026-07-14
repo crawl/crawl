@@ -2588,8 +2588,8 @@ bool uncancel_amnesia()
 
 bool uncancel_blinking()
 {
-    dist target;
-    return controlled_blink(false, &target) != spret::abort;
+    spret result = controlled_blink(false);
+    return result != spret::seen_hups;
 }
 
 static bool _is_cancellable_scroll(scroll_type scroll)
@@ -2998,7 +2998,7 @@ bool read(item_def* scroll, dist *target)
         {
             result = controlled_blink(alreadyknown, target);
 
-            if (result != spret::abort)
+            if (result == spret::success)
                 mpr(pre_succ_msg); // ordering is iffy but w/e
         }
     }
