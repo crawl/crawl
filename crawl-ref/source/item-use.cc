@@ -1802,7 +1802,7 @@ spret use_an_item_menu(item_def *&target, operation_types oper, int item_type,
 
     ASSERT(!choice_made || target || menu.show_unarmed());
 
-    return choice_made ? spret::success : spret::fail;
+    return choice_made ? spret::success : spret::abort;
 }
 
 bool auto_wield()
