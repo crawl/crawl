@@ -2822,6 +2822,9 @@ bool targeter_bestial_takedown::valid_aim(coord_def a)
 
 bool targeter_bestial_takedown::set_aim(coord_def a)
 {
+    if (!targeter_smite::set_aim(a))
+        return false;
+
     landing_spots = get_bestial_landing_spots(a);
 
     return true;

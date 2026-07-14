@@ -73,6 +73,7 @@ void maybe_drop_monster_organ(monster_type mon, monster_type orig,
 
 void monster_cleanup(monster* mons, bool reset = false);
 void flush_monster_reset();
+void cancel_pending_monster_reset(monster* mons);
 void drop_pending_monster_resets();
 bool any_pending_monster_reset();
 void record_monster_defeat(const monster* mons, killer_type killer);
