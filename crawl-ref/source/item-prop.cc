@@ -900,6 +900,7 @@ static const missile_def Missile_prop[] =
     { MI_BOOMERANG,     "boomerang",        6, 20, 20 },
     { MI_THROWING_KNIFE,"throwing knife",   4, 12, 20 },
     { MI_HARPOON,       "harpoon",          16, 18, 30 },
+    { MI_CHAKRAM,       "chakram",          10, 20, 30 },
 
 #if TAG_MAJOR_VERSION == 34
     { MI_NEEDLE,        "needle",        0, 12, 2  },
@@ -2219,6 +2220,19 @@ string launched_projectile_name(const item_def &item)
     }
 }
 
+static bool _medium_size_throwable(const item_def &wpn)
+{
+    switch (wpn.sub_type)
+    {
+        case MI_JAVELIN:
+        case MI_CHAKRAM:
+        case MI_HARPOON:
+            return true;
+        default:
+            return false;
+    }
+}
+
 // Returns true if item can be reasonably thrown without a launcher.
 bool is_throwable(const actor *actor, const item_def &wpn)
 {
@@ -2227,7 +2241,7 @@ bool is_throwable(const actor *actor, const item_def &wpn)
     if (!actor)
         return true;
 
-    if (wpn.sub_type == MI_HARPOON || wpn.sub_type == MI_JAVELIN)
+    if (_medium_size_throwable(wpn))
         return actor->body_size() >= SIZE_MEDIUM;
     if (wpn.sub_type == MI_LARGE_ROCK)
         return actor->can_throw_large_rocks();

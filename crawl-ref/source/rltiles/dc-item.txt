@@ -517,6 +517,10 @@ effect/throwing_knife3 MI_THROWING_KNIFE3
 
 harpoon MI_HARPOON
 
+chakram MI_CHAKRAM
+# flying chakram
+effect/chakram0 MI_CHAKRAM0
+
 ######OBJ_ARMOUR
 %sdir item/armour
 robe1 ARM_ROBE

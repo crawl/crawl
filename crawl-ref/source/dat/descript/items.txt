@@ -523,6 +523,13 @@ chain mail
 
 A suit of armour made entirely out of tiny metal rings.
 %%%%
+chakram
+
+A sharp steel disc designed for throwing. In a past age, these were the favored
+weapons of divine warriors, and some residual connection to the gods remains;
+damage dealt increases with the wielder's religious skill (if any), though
+this is one-third as effective as throwing skill.
+%%%%
 cloak
 
 A cloth cloak.
