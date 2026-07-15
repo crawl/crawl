@@ -4125,9 +4125,6 @@ bool god_hates_your_god(god_type god, god_type your_god)
 
 bool god_hates_killing(god_type god, const monster& mon)
 {
-    if (invalid_monster(&mon))
-        return false;
-
     // kill as many illusions as you want.
     if (mon.is_illusion())
         return false;

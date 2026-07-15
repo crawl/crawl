@@ -422,7 +422,7 @@ void lucy_check_meddling()
     for (monster *mon : potential_banishees)
     {
         // We might have banished a summoner and poofed its summons, etc.
-        if (invalid_monster(mon) || !mon->alive())
+        if (!mon->alive())
             continue;
         // 80% chance of banishing god wrath summons, 30% chance of banishing
         // other creatures nearby.

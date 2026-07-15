@@ -1283,7 +1283,7 @@ void melee_attack::handle_phase_killed()
     if (attacker->is_player()
         && you.form == transformation::maw
         && defender->is_monster() // better safe than sorry
-        && !invalid_monster(defender->as_monster()) // already cleaned up
+        && !invalid_monster(defender->as_monster()) // gone - e.g. banished
         && adjacent(defender->pos(), attack_position))
     {
         _consider_devouring(*defender->as_monster());
@@ -3130,12 +3130,6 @@ void melee_attack::sear_defender()
  */
 bool melee_attack::player_monattk_hit_effects()
 {
-    // Don't even check effects if the monster has already been cleaned up (for
-    // example, a spectral weapon who noticed in player_stab_check that it
-    // shouldn't exist anymore).
-    if (invalid_monster(defender->as_monster()))
-        return false;
-
     if (!defender->alive())
         return false;
 
@@ -3721,12 +3715,6 @@ static void _print_resist_messages(actor* defender, int base_damage,
 
 bool melee_attack::mons_attack_effects()
 {
-    // may have died earlier, due to e.g. pain bond
-    // we could continue with the rest of their attack, but it's a minefield
-    // of potential crashes. so, let's not.
-    if (attacker->is_monster() && invalid_monster(attacker->as_monster()))
-        return false;
-
     // Monsters attacking themselves don't get attack flavour.
     // The message sequences look too weird. Also, stealing
     // attacks aren't handled until after the damage msg.
