@@ -370,7 +370,8 @@ monster* follower::place(bool near_player)
         dprf("Placed follower: %s", m->name(DESC_PLAIN, true).c_str());
         m->target.reset();
 
-        m->flags &= ~MF_TAKING_STAIRS & ~MF_BANISHED;
+        // Set MF_WAS_IN_VIEW to false to retrigger seen_monster.
+        m->flags &= ~MF_TAKING_STAIRS & ~MF_BANISHED & ~MF_WAS_IN_VIEW;
         m->flags |= MF_JUST_SUMMONED;
         env.mid_cache[m->mid] = m->mindex();
         return m;
