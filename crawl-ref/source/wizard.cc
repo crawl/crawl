@@ -134,7 +134,7 @@ static void _do_wizard_command(int wiz_command)
     case 'P': debug_place_map(true); break;
     case CONTROL('P'): wizard_list_props(); break;
 
-    // case 'q': break;
+    case 'q': wizard_set_gift_timeout(); break;
     // case 'Q': break;
     case CONTROL('Q'): wizard_toggle_dprf(); break;
 
@@ -439,6 +439,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>}</w>      toggle a bane\n"
                        "<w>_</w>      gain religion\n"
                        "<w>^</w>      set piety to a value\n"
+                       "<w>q</w>      set god gift timeout\n"
                        "<w>@</w>      set Str Int Dex\n"
                        "<w>#</w>      load character from a dump file\n"
                        "<w>&</w>      list all divine followers\n"
