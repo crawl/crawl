@@ -197,8 +197,6 @@ static spret _try_to_pacify(monster &mon, int healed, int pow,
         return spret::abort;
     }
 
-    fail_check();
-
     const int mon_hp = _pacification_hp(mon.type);
 
     if (_pacification_sides(mon.type, pow) < mon_hp)
@@ -208,6 +206,8 @@ static spret _try_to_pacify(monster &mon, int healed, int pow,
              mon.name(DESC_THE).c_str());
         return spret::abort;
     }
+
+    fail_check();
 
     // Take the min of two rolls of 1d(_pacification_sides)
     const int pacified_roll = biased_random2(_pacification_sides(mon.type, pow) - 1,2);
