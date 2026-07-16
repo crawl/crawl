@@ -2687,6 +2687,7 @@ void world_reacts()
     update_screen();
 
     check_trapped();
+    trigger_exploration_conducts();
 
     if (you.cannot_act()
         && any_messages()

@@ -5729,6 +5729,7 @@ player::player()
 
     trapped            = false;
     triggered_spectral = false;
+    newly_revealed_cells = 0;
     took_instant_action = false;
 
     last_view_update = 0;

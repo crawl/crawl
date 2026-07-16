@@ -503,6 +503,9 @@ public:
     // If true, player has triggered a trap effect by exploring.
     bool trapped;
 
+    // Number of cells newly revealed by exploring.
+    int newly_revealed_cells;
+
     // If true, the player took a zero-time action.
     bool took_instant_action;
 

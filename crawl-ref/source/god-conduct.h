@@ -41,6 +41,7 @@ void did_hurt_monster(const monster &victim, int damage_done,
                       beam_type flavour, kill_method_type kill_type);
 
 void god_conduct_turn_start();
+void trigger_exploration_conducts();
 
 bool god_forbids_spell(spell_type spell, god_type god);
 bool god_hates_spellcasting(god_type god);

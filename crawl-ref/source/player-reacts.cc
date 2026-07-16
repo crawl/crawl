@@ -625,6 +625,7 @@ void player_reacts_to_instant_action()
     you.update_beholders();
     you.update_fearmongers();
     check_trapped();
+    trigger_exploration_conducts();
 }
 
 static bool _check_recite()
