@@ -130,8 +130,9 @@ bool attack::handle_phase_damaged()
     }
 
     // It's okay if a monster took lethal damage, but we should stop
-    // the combat if it was already reset (e.g. a spectral weapon that
-    // took damage and then noticed that its caster is gone).
+    // the combat if it is already cleaned up (e.g. a spectral weapon that
+    // took damage and then noticed that its caster is gone), to prevent
+    // messages referencing the monster after its disappearance.
     return defender->is_player() || !invalid_monster(defender->as_monster());
 }
 
