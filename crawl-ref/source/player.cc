@@ -4969,7 +4969,7 @@ bool miasma_player(actor *who, string source_aux)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (you.res_miasma() || you.duration[DUR_DEATHS_DOOR])
+    if (you.res_miasma())
         return false;
 
     if (you.duration[DUR_DIVINE_STAMINA] > 0)

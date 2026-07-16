@@ -731,8 +731,6 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
         msg = "You're already berserk!";
     else if (duration[DUR_BERSERK_COOLDOWN] && temp)
         msg = "You're still recovering from your berserk rage.";
-    else if (duration[DUR_DEATHS_DOOR] && temp)
-        msg = "You can't enter a blood rage from death's door.";
     else if (beheld() && !you.unrand_equipped(UNRAND_DEMON_AXE) && temp)
         msg = "You are too mesmerised to rage.";
     else if (!intentional && !potion && clarity() && temp)
