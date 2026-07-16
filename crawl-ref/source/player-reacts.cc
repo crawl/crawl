@@ -68,6 +68,7 @@
 #include "mutation.h"
 #include "nearby-danger.h"
 #include "ouch.h"
+#include "output.h"
 #include "player.h"
 #include "player-stats.h"
 #include "random.h"
@@ -595,6 +596,35 @@ void player_reacts_to_monsters()
     // so check these again now.
     you.update_beholders();
     you.update_fearmongers();
+}
+
+void check_trapped()
+{
+    if (you.trapped)
+    {
+        do_trap_effects();
+        you.trapped = false;
+    }
+}
+
+// Register taking an action which takes no time.
+void player_takes_instant_action()
+{
+    you.turn_is_over = false;
+    you.elapsed_time_at_last_input = you.elapsed_time;
+    update_turn_count();
+    you.took_instant_action = true;
+}
+
+// Those reactions which should happen even when no time has passed, as long
+// as the player has done something.
+void player_reacts_to_instant_action()
+{
+    you.took_instant_action = false;
+    mons_reset_just_seen();
+    you.update_beholders();
+    you.update_fearmongers();
+    check_trapped();
 }
 
 static bool _check_recite()

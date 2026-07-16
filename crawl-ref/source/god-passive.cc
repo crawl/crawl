@@ -40,8 +40,8 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
-#include "output.h"
 #include "player.h"
+#include "player-reacts.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
@@ -1853,13 +1853,10 @@ void wu_jian_trigger_serpents_lash(bool wall_jump)
     }
     else
     {
-        you.turn_is_over = false;
-        you.elapsed_time_at_last_input = you.elapsed_time;
         you.attribute[ATTR_SERPENTS_LASH] -= wall_jump ? 2 : 1;
         you.redraw_status_lights = true;
-        update_turn_count();
+        player_takes_instant_action();
         fire_final_effects();
-        mons_reset_just_seen();
     }
 
     if (you.attribute[ATTR_SERPENTS_LASH] == 0)

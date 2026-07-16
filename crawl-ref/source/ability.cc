@@ -65,6 +65,7 @@
 #include "notes.h"
 #include "options.h"
 #include "output.h"
+#include "player-reacts.h"
 #include "player-stats.h"
 #include "potion.h"
 #include "prompt.h"
@@ -4196,10 +4197,8 @@ static void _finalize_ability_costs(const ability_def& abil, int piety_cost,
     // serpent's lash is activated.
     if (abil.flags & abflag::instant)
     {
-        you.turn_is_over = false;
-        you.elapsed_time_at_last_input = you.elapsed_time;
+        player_takes_instant_action();
         fire_final_effects();
-        update_turn_count();
     }
     else if (abil.ability != ABIL_WU_JIAN_WALLJUMP)
         you.turn_is_over = true;
