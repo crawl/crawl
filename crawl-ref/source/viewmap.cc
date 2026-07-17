@@ -1189,10 +1189,10 @@ map_control_state process_map_command(command_type cmd, const map_control_state&
                 break;
             if (env.map_forgotten)
                 _unforget_map();
-            MapKnowledge *old = new MapKnowledge(env.map_knowledge);
-            // completely wipe out map
+            // completely wipe out map, including the forgotten map - this
+            // makes us reannounce interesting features.
             _forget_map(true);
-            env.map_forgotten.reset(old);
+            env.map_forgotten.reset();
             mpr("Level map wiped.");
             break;
         }
