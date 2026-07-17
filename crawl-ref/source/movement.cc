@@ -1173,7 +1173,7 @@ void move_player_action(coord_def move)
         {
             coord_def dummy;
             if (!stampede_steps
-                && you.can_see(*mon_at)
+                && you.aware_of(*mon_at)
                 && (!mon_at->wont_attack()
                     || !(fedhas_passthrough(mon_at)
                          || swap_check(mon_at, dummy, true))))
