@@ -20,7 +20,6 @@ void print_stats_level();
 void draw_border();
 
 int wielded_weapon_colour(const item_def &weapon);
-int unarmed_attack_colour();
 
 #ifndef USE_TILE_LOCAL
 void smallterm_warning();

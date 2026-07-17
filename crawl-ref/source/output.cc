@@ -1146,9 +1146,6 @@ static void _print_stats_ev(int x, int y)
  */
 int wielded_weapon_colour(const item_def &wpn)
 {
-    if (you.corrosion_amount())
-        return RED;
-
     const string prefix = item_prefix(wpn);
     const int prefcol = menu_colour(wpn.name(DESC_INVENTORY),
                                     prefix, "stats", false);
@@ -1157,27 +1154,12 @@ int wielded_weapon_colour(const item_def &wpn)
     return LIGHTGREY;
 }
 
-static string _wpn_name_corroded(const item_def &weapon)
-{
-    if (!you.corrosion_amount() || weapon.base_type != OBJ_WEAPONS)
-        return weapon.name(DESC_PLAIN, true);
-
-    item_def wpn_copy = weapon;
-    wpn_copy.plus -= you.corrosion_amount();
-    return wpn_copy.name(DESC_PLAIN, true);
-}
-
-int unarmed_attack_colour()
-{
-    return you.corrosion_amount() ? RED : get_form()->uc_colour;
-}
-
 static void _print_unarmed_name()
 {
     textcolour(HUD_CAPTION_COLOUR);
     const string slot_name = "-) ";
     CPRINTF("%s", slot_name.c_str());
-    textcolour(unarmed_attack_colour());
+    textcolour(get_form()->uc_colour);
     const int max_name_width = crawl_view.hudsz.x - slot_name.size();
     CPRINTF("%s", chop_string(you.unarmed_attack_name(),
                               max_name_width).c_str());
@@ -1192,7 +1174,7 @@ static void _print_weapon_name(const item_def &weapon, int width)
     CPRINTF("%s", slot_name.c_str());
     textcolour(wielded_weapon_colour(weapon));
     const int max_name_width = width - slot_name.size();
-    const string name = _wpn_name_corroded(weapon);
+    const string name = weapon.name(DESC_PLAIN, true);
     CPRINTF("%s", chop_string(name, max_name_width).c_str());
     textcolour(LIGHTGREY);
 }

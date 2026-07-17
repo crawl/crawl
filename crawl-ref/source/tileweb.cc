@@ -1113,7 +1113,7 @@ player_info::player_info()
 static uint8_t _stats_weapon_colour(const item_def* weapon)
 {
     if (!weapon)
-        return (uint8_t) unarmed_attack_colour();
+        return (uint8_t) get_form()->uc_colour;
     return (uint8_t) wielded_weapon_colour(*weapon);
 }
 
@@ -1307,13 +1307,7 @@ void TilesFramework::_send_player(bool force_full)
     for (unsigned int i = 0; i < ENDOFPACK; ++i)
     {
         json_open_object(to_string(i));
-        item_def item = you.inv[i];
-        if (you.corrosion_amount() && is_weapon(item)
-            && you.equipment.find_equipped_slot(item) != SLOT_UNUSED)
-        {
-            item.plus -= 1 * you.corrosion_amount();
-        }
-        _send_item(c.inv[i], item, c.inv_uselessness[i], force_full);
+        _send_item(c.inv[i], you.inv[i], c.inv_uselessness[i], force_full);
         json_close_object(true);
     }
     json_close_object(true);
