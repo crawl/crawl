@@ -988,8 +988,17 @@ bool player_in_connected_branch()
 
 bool player_likes_water(bool permanently)
 {
-    return cur_form(!permanently)->player_can_swim()
-           || !permanently && you.can_water_walk();
+    if (permanently)
+    {
+        // When checking whether the player can 'always' swim, we need to both
+        // check whether they usually can *and* currently can (since temporary
+        // forms might have fewer capabilities than their default form, eg: a
+        // dragon polymorphed into a pig.)
+        return cur_form(true)->player_can_swim()
+                && cur_form(false)->player_can_swim();
+    }
+
+    return cur_form(true)->player_can_swim() || you.can_water_walk();
 }
 
 /**
