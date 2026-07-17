@@ -191,6 +191,7 @@ private:
     const LevelStashes *current_level;
     vector< named_thing<item_def> > items;
     vector< named_thing<int> > stairs;
+    vector< named_thing<int> > hatches;
     vector< named_thing<int> > portals;
     vector< named_thing<int> > shops;
     vector< named_thing<int> > altars;
@@ -208,7 +209,7 @@ private:
 
     string cleaned_feature_description(const coord_def &) const;
     void add_item(const item_def &item);
-    void add_stair(const named_thing<int> &stair);
+    void add_stair(const named_thing<int> &stair, dungeon_feature_type feat);
     vector<string> apply_quantities(const vector< named_thing<int> > &v) const;
     bool merge_feature(vector< named_thing<int> > &v,
                        const named_thing<int> &feat) const;

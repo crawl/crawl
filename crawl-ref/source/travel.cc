@@ -4879,8 +4879,8 @@ void runrest::clear()
 explore_discoveries::explore_discoveries()
     : can_autopickup(::can_autopickup()),
       es_flags(0),
-      current_level(nullptr), items(), stairs(), portals(), shops(), altars(),
-      runed_doors()
+      current_level(nullptr), items(), stairs(), hatches(), portals(), shops(),
+      altars(), runed_doors()
 {
 }
 
@@ -4932,19 +4932,19 @@ void explore_discoveries::found_feature(const coord_def &pos,
     else if (feat_is_stair(feat) && ES_stair)
     {
         const named_thing<int> stair(cleaned_feature_description(pos), 1);
-        add_stair(stair);
+        add_stair(stair, feat);
         es_flags |= ES_STAIR;
     }
     else if (_feat_is_branchlike(feat) && ES_branch)
     {
         const named_thing<int> stair(cleaned_feature_description(pos), 1);
-        add_stair(stair);
+        add_stair(stair, feat);
         es_flags |= ES_BRANCH;
     }
     else if (feat_is_portal(feat) && ES_portal)
     {
         const named_thing<int> portal(cleaned_feature_description(pos), 1);
-        add_stair(portal);
+        add_stair(portal, feat);
         es_flags |= ES_PORTAL;
     }
     else if (feat_is_runed(feat))
@@ -5037,14 +5037,20 @@ void explore_discoveries::found_feature(const coord_def &pos,
 }
 
 void explore_discoveries::add_stair(
-    const explore_discoveries::named_thing<int> &stair)
+    const explore_discoveries::named_thing<int> &stair,
+    dungeon_feature_type feat)
 {
-    if (merge_feature(stairs, stair) || merge_feature(portals, stair))
+    if (merge_feature(stairs, stair)
+        || merge_feature(portals, stair)
+        || merge_feature(hatches, stair))
+    {
         return;
+    }
 
-    // Hackadelic
-    if (stair.name.find("stair") != string::npos)
+    if (feat_is_staircase(feat))
         stairs.push_back(stair);
+    else if (feat_is_escape_hatch(feat))
+        hatches.push_back(stair);
     else
         portals.push_back(stair);
 }
@@ -5206,6 +5212,7 @@ bool explore_discoveries::stop_explore() const
     say_any(apply_quantities(altars), "altar");
     say_any(apply_quantities(portals), "portal");
     say_any(apply_quantities(stairs), "stair");
+    say_any(apply_quantities(hatches), "hatch");
     say_any(apply_quantities(transporters), "transporter");
     say_any(apply_quantities(runed_doors), "runed door");
     say_any(apply_quantities(runelights), "runelights");
