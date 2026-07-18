@@ -1043,11 +1043,22 @@ static monster* _retrieve_saved_blorkula(monster& bat)
 
 static void _blorkula_bat_death(monster& bat, killer_type killer, int killer_index)
 {
-    // Check if any other bats are still alive. If they are not, formally kill Blorkula.
-    for (monster_iterator mi; mi; ++mi)
+    // Check if any other bats are still around. If they are not, formally kill
+    // Blorkula.
+    //
+    // In cases like pain bond, we need to be careful to check monsters on zero
+    // HP, so that we don't call this multiple times. We do this by checking
+    // for not-yet-cleaned-up (but possibly dead) bats, so that the last bat we
+    // call monster_die on will trigger Blorkula's death.
+    for (int i = 0; i < MAX_MONSTERS; ++i)
     {
-        if (mi->type == MONS_VAMPIRE_BAT && *mi != &bat && mi->props.exists(BLORKULA_REVIVAL_TIMER_KEY))
+        monster& other = env.mons[i];
+        if (!invalid_monster(&other)
+            && other.type == MONS_VAMPIRE_BAT && &other != &bat
+            && other.props.exists(BLORKULA_REVIVAL_TIMER_KEY))
+        {
             return;
+        }
     }
 
     // No other bats left, so pass this death onto Blorkula as 'real'
