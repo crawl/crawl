@@ -3928,12 +3928,13 @@ void join_religion(god_type which_god)
                                                               : "").c_str());
     update_whereis();
 
+    take_note(Note(NOTE_GET_GOD, you.religion));
+
     _set_initial_god_piety();
 
     // Only mark the milestone now that piety has been set due to invo titles.
     mark_milestone("god.worship", "became a worshipper of "
                    + god_name(you.religion) + ".");
-    take_note(Note(NOTE_GET_GOD, you.religion));
     you.piety_info.register_join();
 
     const function<void ()> *join_effect = map_find(on_join, you.religion);
