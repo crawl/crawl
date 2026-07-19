@@ -130,22 +130,22 @@ void add_auto_excludes()
     learned_something_new(HINT_AUTO_EXCLUSION);
 }
 
+// The opacity for an exclusion rooted at p.
+static const opacity_func &_exclusion_opacity(const coord_def &p)
+{
+    const monster_info *mi = env.map_knowledge(p).monsterinfo();
+    // Don't exclude past glass for stationary monsters.
+    if (mi && mi->is_stationary())
+        return opc_fully_no_trans;
+    return opc_excl;
+}
+
 travel_exclude::travel_exclude(const coord_def &p, int r,
                                bool autoexcl, string dsc, bool vaultexcl)
     : pos(p), radius(r),
+      los(p, _exclusion_opacity(p), circle_def(r, C_SQUARE)),
       uptodate(false), autoex(autoexcl), desc(dsc), vault(vaultexcl)
 {
-    const monster_info *mi = env.map_knowledge(p).monsterinfo();
-    if (mi)
-    {
-        // Don't exclude past glass for stationary monsters.
-        if (mi->is_stationary())
-            los = los_def(p, opc_fully_no_trans, circle_def(r, C_SQUARE));
-        else
-            los = los_def(p, opc_excl, circle_def(r, C_SQUARE));
-    }
-    else
-        los = los_def(p, opc_excl, circle_def(r, C_SQUARE));
     set_los();
 }
 
@@ -164,6 +164,7 @@ void travel_exclude::set_los()
     uptodate = true;
     if (radius > 1)
     {
+        los.set_opacity(_exclusion_opacity(pos));
         // Radius might have been changed, and this is cheap.
         los.set_bounds(circle_def(radius, C_SQUARE));
         los.update();
