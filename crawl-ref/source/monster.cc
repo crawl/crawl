@@ -4382,14 +4382,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         }
 
         // Handle pain bond behaviour here. Is technically passive damage.
-        // radiate_pain_bond may do additional damage by recursively looping
-        // back to the original trigger.
         if (has_ench(ENCH_PAIN_BOND) && flavour != BEAM_SHARED_PAIN)
-        {
-            int hp_before_pain_bond = hit_points;
-            radiate_pain_bond(*this, amount, this);
-            amount += max(hp_before_pain_bond - hit_points, 0);
-        }
+            radiate_pain_bond(*this, amount);
 
         // Allow the victim to exhibit passive damage behaviour (e.g.
         // the Royal Jelly or Uskayaw's Pain Bond).

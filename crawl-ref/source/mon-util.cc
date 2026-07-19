@@ -5548,42 +5548,53 @@ int max_mons_charge(monster_type m)
     }
 }
 
-// Deal out damage to nearby pain-bonded monsters based on the distance between them.
-void radiate_pain_bond(const monster& mon, int damage, const monster* original_target)
+void radiate_pain_bond(const monster& mon, int damage)
 {
-    for (actor_near_iterator ai(mon.pos(), LOS_NO_TRANS); ai; ++ai)
+    set<mid_t> affected;
+    affected.insert(mon.mid);
+
+    vector<pair<const monster*, int>> wave;
+    wave.emplace_back(&mon, damage);
+
+    // Spread the damage outward in breadth-first waves.
+    while (!wave.empty())
     {
-        if (!ai->is_monster())
-            continue;
-
-        monster* target = ai->as_monster();
-
-        if (&mon == target) // no self-sharing
-            continue;
-
-        // Only other pain-bonded monsters are affected.
-        if (!target->has_ench(ENCH_PAIN_BOND))
-            continue;
-
-        int distance = target->pos().distance_from(mon.pos());
-        if (distance > 3)
-            continue;
-
-        damage = max(0, div_rand_round(damage * (4 - distance), 5));
-
-        if (damage > 0)
+        map<monster*, int> incoming;
+        for (const auto &source : wave)
         {
+            for (actor_near_iterator ai(source.first->pos(), LOS_NO_TRANS); ai; ++ai)
+            {
+                if (!ai->is_monster())
+                    continue;
+
+                monster* target = ai->as_monster();
+                if (!target->has_ench(ENCH_PAIN_BOND) || affected.count(target->mid))
+                    continue;
+
+                int distance = target->pos().distance_from(source.first->pos());
+                if (distance > 3)
+                    continue;
+
+                int share = max(0, div_rand_round(source.second * (5 - distance), 5));
+                if (share <= 0)
+                    continue;
+
+                int &best = incoming[target];
+                if (share > best)
+                    best = share;
+            }
+        }
+
+        // Hurt everyone in the new wave and radiate onwards.
+        wave.clear();
+        for (const auto &entry : incoming)
+        {
+            monster* target = entry.first;
+            affected.insert(target->mid);
             behaviour_event(target, ME_ANNOY, &you, you.pos());
-
-            // save any potential cleanup of the original target for later
-            // (in `monster::hurt`).
-            if (target == original_target)
-                damage = target->hurt(&you, damage, BEAM_SHARED_PAIN, KILLED_BY_MONSTER, "", "", false);
-            else
-                damage = target->hurt(&you, damage, BEAM_SHARED_PAIN);
-
-            if (damage > 0)
-                radiate_pain_bond(*target, damage, original_target);
+            int dealt = target->hurt(&you, entry.second, BEAM_SHARED_PAIN);
+            if (dealt > 0)
+                wave.emplace_back(target, dealt);
         }
     }
 }
