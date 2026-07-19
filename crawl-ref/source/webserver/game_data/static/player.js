@@ -314,9 +314,11 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
             colour = "fg14";
 
         elem.addClass(colour);
+        var tooltip = $("#stats_status_lights_tooltip");
+        // Hide the tooltip so that it goes away if expired.
+        tooltip.hide();
         $("#stats_doom").html(elem);
 
-        var tooltip = $("#stats_status_lights_tooltip");
         elem.on("mouseenter mousemove", ev => {
                 tooltip.css({top: ev.pageY + "px"});
                 tooltip.html(util.formatted_string_to_html(player["doom_desc"]));
@@ -494,6 +496,8 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         $("#stats_place").text(place_desc);
 
         var tooltip = $("#stats_status_lights_tooltip");
+        // Hide the tooltip so that it goes away if expired.
+        tooltip.hide();
         $("#stats_status_lights").html("");
         for (var i = 0; i < player.status.length; ++i)
         {
