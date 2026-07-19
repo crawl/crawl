@@ -222,6 +222,10 @@ const char* EquipOffDelay::get_verb()
 
 bool EquipOffDelay::try_interrupt(bool force)
 {
+    // finish() can trigger interrupts, avoid a double message
+    if (interrupt_block::blocked())
+        return false;
+
     bool interrupt = false;
 
     if (force)
@@ -744,6 +748,9 @@ bool EquipOffDelay::invalidated()
 
 void EquipOffDelay::finish()
 {
+    // Don't interrupt this delay if a distortion unwield puts us in danger.
+    const interrupt_block block_relocation_interrupt;
+
     mprf("You finish %s %s.", get_verb(), equip.name(DESC_YOUR).c_str());
     unequip_item(equip);
 
