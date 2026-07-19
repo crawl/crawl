@@ -722,7 +722,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_OZOCUBUS_ARMOUR, "Ozocubu's Armour",
     spschool::ice,
-    spflag::no_ghost,
+    spflag::no_ghost | spflag::selfench,
     3,
     100,
     -1, -1,
