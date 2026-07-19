@@ -1427,7 +1427,15 @@ void SkillMenu::init_switches()
 void SkillMenu::refresh_display()
 {
     if (is_set(SKMF_EXPERIENCE))
+    {
+        // train_skills mutates you.training (when 27 is reached), so save and
+        // restore it. We cannot use m_skill_backup.restore_training here,
+        // because that respects our skills, and when displaying the menu we
+        // need to have updated skill values and the old training values.
+        const FixedVector<unsigned int, NUM_SKILLS> saved_training = you.training;
         train_skills(true);
+        you.training = saved_training;
+    }
 
     for (int ln = 0; ln < SK_ARR_LN; ++ln)
         for (int col = 0; col < SK_ARR_COL; ++col)
