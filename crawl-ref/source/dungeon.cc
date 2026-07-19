@@ -192,8 +192,6 @@ static void _mark_solid_squares();
 
 // A mask of vaults and vault-specific flags.
 vector<vault_placement> Temp_Vaults;
-static unique_creature_list temp_unique_creatures;
-static FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
 
 const map_bitmask *Vault_Placement_Mask = nullptr;
 
@@ -289,6 +287,11 @@ bool builder(bool enable_random_maps)
 
     const set<string> uniq_tags = get_uniq_map_tags();
     const set<string> uniq_names = get_uniq_map_names();
+    // Save a copy of unique creatures for vetoes.
+    unique_creature_list old_unique_creatures = you.unique_creatures;
+    // And unrands
+    FixedVector<unique_item_status_type, MAX_UNRANDARTS> old_unique_items =
+                                                              you.unique_items;
 
     // For normal cases, this should already be taken care of by enter_level.
     // However, we want to be really sure that the builder isn't ever run with
@@ -298,12 +301,6 @@ bool builder(bool enable_random_maps)
     // but it's a bit hard to track down.)
     unwind_var<coord_def> saved_position(you.position);
     you.position.reset();
-
-    // TODO: why are these globals?
-    // Save a copy of unique creatures for vetoes.
-    temp_unique_creatures = you.unique_creatures;
-    // And unrands
-    temp_unique_items = you.unique_items;
 
     unwind_bool levelgen(crawl_state.generating_level, true);
     rng::generator levelgen_rng(you.where_are_you);
@@ -343,8 +340,8 @@ bool builder(bool enable_random_maps)
                 // quickly deviate from the seed
                 get_uniq_map_tags() = uniq_tags;
                 get_uniq_map_names() = uniq_names;
-                you.unique_creatures = temp_unique_creatures;
-                you.unique_items = temp_unique_items;
+                you.unique_creatures = old_unique_creatures;
+                you.unique_items = old_unique_items;
 
                 // Because vault generation can be interrupted, this potentially
                 // leaves unlinked items kicking around, which triggers a lot
@@ -394,6 +391,8 @@ bool builder(bool enable_random_maps)
 
         get_uniq_map_tags() = uniq_tags;
         get_uniq_map_names() = uniq_names;
+        you.unique_creatures = old_unique_creatures;
+        you.unique_items = old_unique_items;
         if (crawl_state.last_builder_error_fatal &&
             (you.props.exists(FORCE_MAP_KEY) || you.props.exists(FORCE_MINIVAULT_KEY)))
         {
@@ -1656,9 +1655,6 @@ void dgn_reset_level(bool enable_random_maps)
     env.level_uniq_maps.clear();
     env.level_uniq_map_tags.clear();
     clear_subvault_stack();
-
-    you.unique_creatures = temp_unique_creatures;
-    you.unique_items = temp_unique_items;
 
 #ifdef DEBUG_STATISTICS
     _you_all_vault_list.clear();
