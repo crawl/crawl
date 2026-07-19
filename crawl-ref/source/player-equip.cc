@@ -1508,6 +1508,33 @@ void player_equip_set::shift_twohander_to_slot(equipment_slot new_slot)
     }
 }
 
+// Silently swap the weapon from the coglin-offhand slot to the weapon slot,
+// with no equip/unequip effects. This will move a main weapon to offhand if
+// there is one present, and do nothing if there is no offhand weapon.
+void player_equip_set::swap_offhand_weapon_to_main()
+{
+    player_equip_entry* weapon = nullptr;
+    player_equip_entry* offhand = nullptr;
+    for (player_equip_entry& entry : items)
+    {
+        if (entry.is_overflow || !is_weapon(entry.get_item()))
+            continue;
+
+        if (entry.slot == SLOT_WEAPON_OR_OFFHAND)
+            offhand = &entry;
+
+        if (entry.slot == SLOT_WEAPON)
+            weapon = &entry;
+    }
+
+    if (offhand)
+    {
+        offhand->slot = SLOT_WEAPON;
+        if (weapon)
+            weapon->slot = SLOT_WEAPON_OR_OFFHAND;
+    }
+}
+
 /**
  * Recalculate the player's max hp and set the current hp based on the %change
  * of max hp. This has resulted from our having equipped an artefact that

@@ -1227,6 +1227,32 @@ static item_def* _item_swap_prompt(const vector<item_def*>& candidates)
         return nullptr;
 }
 
+// Choose which of a set of removable items to unequip to make room for another.
+static item_def* _choose_item_to_remove(vector<item_def*> candidates)
+{
+    int num_inscribed = 0;
+    for (int j = candidates.size() - 1; j >= 0; --j)
+    {
+        if (strstr(candidates[j]->inscription.c_str(), "=R"))
+            ++num_inscribed;
+    }
+    if (num_inscribed > 0 && num_inscribed < (int)candidates.size())
+    {
+        for (int j = candidates.size() - 1; j >= 0; --j)
+        {
+            if (strstr(candidates[j]->inscription.c_str(), "=R"))
+            {
+                candidates[j] = candidates.back();
+                candidates.pop_back();
+            }
+        }
+    }
+
+    if (candidates.size() == 1)
+        return candidates[0];
+    return _item_swap_prompt(candidates);
+}
+
 static bool _is_slow_equip(const item_def& item)
 {
     if (item.base_type == OBJ_JEWELLERY)
@@ -1352,9 +1378,41 @@ bool try_equip_item(item_def& item)
             return false;
     }
 
+    // For Coglins, work out whether we need a weapon swap.
+    // We do the actual swap later, so that we don't swap weapons on a
+    // cancelled equip.
+    bool need_weapon_swap = false;
+    if (is_offhand(item) && you.has_mutation(MUT_WIELD_OFFHAND))
+    {
+        vector<item_def*> weapons = you.equipment.get_slot_items(SLOT_WEAPON);
+        if (weapons.size() == 2)
+        {
+            // Choose between the items we can actually remove.
+            vector<item_def*> removable;
+            you.equipment.find_removable_items_for_slot(SLOT_WEAPON, removable,
+                                                        false, false);
+            item_def* drop = removable.empty()
+                                 ? nullptr : _choose_item_to_remove(removable);
+            if (!drop)
+                return false;
+            need_weapon_swap =
+                you.equipment.find_equipped_slot(*drop) == SLOT_WEAPON;
+        }
+        else if (weapons.size() == 1)
+        {
+            need_weapon_swap = you.equipment.find_equipped_slot(*weapons[0])
+                                   == SLOT_WEAPON_OR_OFFHAND;
+        }
+    }
+
     vector<item_def*> to_remove;                   // Queue of items chosen to remove
+
+    // Plan against a copy of our equipment.
+    player_equip_set equipment = you.equipment;
+    if (need_weapon_swap)
+        equipment.swap_offhand_weapon_to_main();
     bool requires_replace;
-    equipment_slot slot = you.equipment.find_slot_to_equip_item(item, requires_replace);
+    equipment_slot slot = equipment.find_slot_to_equip_item(item, requires_replace);
 
     // If there is nowhere to put it and nothing the player can do to change
     // this, abort immediately. (If a cursed item was the cause, a message was
@@ -1365,7 +1423,6 @@ bool try_equip_item(item_def& item)
     // Otherwise, maybe look into removing items to make room.
     if (requires_replace)
     {
-        player_equip_set equipment = you.equipment;
         vector<equipment_slot> slots = get_all_item_slots(item);
         vector<item_def*> candidates;
         for (equipment_slot wanted_slot : slots)
@@ -1380,37 +1437,11 @@ bool try_equip_item(item_def& item)
 
             equipment.find_removable_items_for_slot(wanted_slot, candidates);
 
-            // Check if some number of items are inscribed with {=R} (but less
-            // than all of them), and remove them from the candidates.
-            int num_inscribed = 0;
-            for (int j = candidates.size() - 1; j >= 0; --j)
-            {
-                if (strstr(candidates[j]->inscription.c_str(), "=R"))
-                    ++num_inscribed;
-            }
-            if (num_inscribed > 0 && num_inscribed < (int)candidates.size())
-            {
-                for (int j = candidates.size() - 1; j >= 0; --j)
-                {
-                    if (strstr(candidates[j]->inscription.c_str(), "=R"))
-                    {
-                        candidates[j] = candidates.back();
-                        candidates.pop_back();
-                    }
-                }
-            }
-
-            if (candidates.size() == 1)
-                to_remove.push_back(candidates[0]);
+            // Save which item was selected to remove. (User cancelled if null.)
+            if (item_def* ret = _choose_item_to_remove(candidates))
+                to_remove.push_back(ret);
             else
-            {
-                // Save which item was selected to remove.
-                if (item_def* ret = _item_swap_prompt(candidates))
-                    to_remove.push_back(ret);
-                // User cancelled:
-                else
-                    return false;
-            }
+                return false;
 
             equipment_slot used_slot = equipment.find_compatible_occupied_slot(
                                                              *to_remove.back(),
@@ -1452,6 +1483,8 @@ bool try_equip_item(item_def& item)
 
     // Pick up item, if we need to.
     item_def& real_item = you.inv[_get_item_slot_maybe_with_move(item)];
+    if (need_weapon_swap)
+        you.equipment.swap_offhand_weapon_to_main();
     do_equipment_change(&real_item, slot, to_remove);
 
     return true;
