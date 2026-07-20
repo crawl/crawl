@@ -1056,6 +1056,16 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
     return false;
 }
 
+// Don't reselect the same weapon for a possibly-different character.
+void forget_weapon_if_random(newgame_def& ng_choice)
+{
+    if (_is_random_job(ng_choice.job) || _is_random_species(ng_choice.species))
+    {
+        ng_choice.weapon = WPN_UNKNOWN;
+        ng_choice.allowed_weapons.clear();
+    }
+}
+
 // Set ng_choice to defaults without overwriting name and game type.
 static void _set_default_choice(newgame_def& ng, newgame_def& ng_choice,
                                 const newgame_def& defaults)
@@ -1068,6 +1078,8 @@ static void _set_default_choice(newgame_def& ng, newgame_def& ng_choice,
     ng_choice = defaults;
     ng_choice.name = name;
     ng_choice.type = type;
+
+    forget_weapon_if_random(ng_choice);
 }
 
 static void _mark_fully_random(newgame_def& ng, newgame_def& ng_choice,
