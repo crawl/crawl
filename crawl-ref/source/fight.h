@@ -59,10 +59,9 @@ bool weapon_cleaves(const item_def &item);
 int weapon_hits_per_swing(const item_def &item);
 bool weapon_multihits(const item_def *item);
 void get_cleave_targets(const actor &attacker, const coord_def& def,
-                        list<actor*> &targets, int which_attack = -1,
-                        bool force_cleaving = false,
-                        const item_def *weapon = nullptr,
-                        int reach_bonus = 0);
+                        vector<actor*> &targets, int range = 1);
+vector<actor*> get_player_attack_targets();
+vector<actor*> get_player_cleave_targets(const coord_def& aim);
 
 class attack;
 int to_hit_pct(const monster_info& mi, attack &atk,

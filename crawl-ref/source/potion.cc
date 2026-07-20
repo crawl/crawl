@@ -15,6 +15,7 @@
 #include "art-enum.h"
 #include "cloud.h"
 #include "english.h"
+#include "fight.h"
 #include "god-conduct.h"
 #include "god-passive.h"
 #include "god-wrath.h" // reduce_xp_penance
@@ -110,7 +111,7 @@ public:
         if (!you.can_potion_heal(true) || temp && you.hp == you.hp_max)
         {
             // It's not useless to drink at full health if you could hit things.
-            if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && has_drunken_brawl_targets())
+            if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && !get_player_attack_targets().empty())
                 return true;
 
             if (reason)
@@ -190,7 +191,7 @@ public:
         if (temp && you.hp == you.hp_max)
         {
             // It's not useless to drink at full health if you could hit things.
-            if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && has_drunken_brawl_targets())
+            if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && !get_player_attack_targets().empty())
                 return true;
 
             if (reason)
@@ -608,7 +609,7 @@ public:
         else if (temp && you.magic_points == you.max_magic_points)
         {
             // It's not useless to drink at full health if you could hit things.
-            if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && has_drunken_brawl_targets())
+            if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && !get_player_attack_targets().empty())
                 return true;
 
             if (reason)

@@ -124,12 +124,9 @@ bool melee_attack::bad_attempt()
     if (!is_projected && player_unrand_bad_attempt())
         return true;
 
-    if (!cleave_targets.empty())
-    {
-        const int range = you.reach_range();
-        targeter_cleave hitfunc(attacker, defender->pos(), range);
+    targeter_cleave hitfunc(defender->pos());
+    if (hitfunc.affects_anything())
         return stop_attack_prompt(hitfunc, "attack");
-    }
 
     return stop_attack_prompt(defender->as_monster(), false, attack_position);
 }
@@ -1363,7 +1360,7 @@ bool melee_attack::handle_phase_multihit()
     if (!is_followup && weapon_multihits(weapon) && defender && defender->alive())
     {
         const int hits_per_targ = weapon_hits_per_swing(*weapon);
-        list<actor*> extra_hits;
+        vector<actor*> extra_hits;
         for (int i = 1; i < hits_per_targ; i++)
             extra_hits.push_back(defender);
         // effective_attack_number will be wrong for a monster that
@@ -1467,14 +1464,12 @@ void melee_attack::copy_params_to(melee_attack &other) const
 
 // Perform followup attacks (from cleaving or quick blades).
 // Returns true if at least one of these attacks succeeded.
-bool melee_attack::do_followup_attacks(list<actor*>& targets, bool is_cleaving)
+bool melee_attack::do_followup_attacks(vector<actor*>& targets, bool is_cleaving)
 {
     int new_effective_attack_number = effective_attack_number + 1;
     bool success = false;
-    while (attacker->alive() && !targets.empty())
+    for (actor* def : targets)
     {
-        actor* def = targets.front();
-
         if (def && def->alive() && should_cleave_into(*attacker, *def))
         {
             melee_attack followup(attacker, def, attack_number,
@@ -1488,7 +1483,9 @@ bool melee_attack::do_followup_attacks(list<actor*>& targets, bool is_cleaving)
             success |= followup.attack();
             total_damage_done += followup.total_damage_done;
         }
-        targets.pop_front();
+
+        if (!attacker->alive())
+            break;
     }
 
     return success;
@@ -1516,23 +1513,19 @@ void melee_attack::set_weapon(item_def *wpn)
 // Perform a player attack with a specific weapon.
 bool melee_attack::swing_with(item_def &wpn)
 {
-    const bool reaching = weapon_reach(wpn) > 1
-                            || you.form == transformation::aqua;
-    if (!is_projected
-        && !reaching
-        && defender     // Attacks without a defender are empty cleaves. The
-                        // initial attack will do nothing, but may set up
-                        // followup attacks to be handled normally.
-        && !adjacent(attacker->pos(), defender->pos()))
-    {
-        return false;
-    }
-
     melee_attack swing(attacker, defender,
                        attack_number,
                        effective_attack_number);
     copy_params_to(swing);
     swing.set_weapon(&wpn);
+
+    // Coglins attacking with a reaching weapon and a cleaving weapon should
+    // still get the cleave part of their shorter-range weapon, but the attack
+    // will abort if it can't reach its primary target at all. With a null
+    // defender, it will handling cleaving only.
+    if (defender && !swing.can_reach(grid_distance(attack_position, defender->pos())))
+        swing.defender = nullptr;
+
     bool success = swing.attack();
     is_sunder |= swing.is_sunder;
     cancel_attack = swing.cancel_attack;
@@ -5000,6 +4993,9 @@ bool melee_attack::do_drag()
 
 /**
  * Find the list of targets to cleave after hitting the main target and save it.
+ *
+ * (This must be calculated before the main attack, since if the primary target
+ * dies, its position will be lost.)
  */
 void melee_attack::cleave_setup()
 {
@@ -5032,15 +5028,15 @@ void melee_attack::cleave_setup()
             attacker->as_monster()->del_ench(ENCH_SUNDER_CHARGE);
     }
 
-    // We need to get the list of the remaining potential targets now because
-    // if the main target dies, its position will be lost.
-    get_cleave_targets(*attacker, defender ? defender->pos() : coord_def(),
-                       cleave_targets, attack_number, false, weapon,
-                       is_sunder ? 1 : 0);
+    if (attack_cleaves(*attacker, weapon))
+    {
+        int range = weapon ? weapon_reach(*weapon) : 1;
+        if (is_sunder)
+            range += 1;
 
-    // We're already attacking this guy.
-    if (defender)
-        cleave_targets.pop_front();
+        get_cleave_targets(*attacker, defender ? defender->pos() : coord_def(),
+                            cleave_targets, range);
+    }
 }
 
 // cleave damage modifier for additional attacks: 70% of base damage
@@ -5294,11 +5290,7 @@ bool coglin_spellmotor_attack()
         return false;
 
     // Gather all possible targets in attack range.
-    // (We have to manually add aqua form's reaching bonus, since it normally
-    // doesn't apply to cleaving attacks.)
-    list<actor*> targets;
-    get_cleave_targets(you, coord_def(), targets, -1, true, nullptr,
-                       you.form == transformation::aqua ? 2 : 0);
+    vector<actor*> targets = get_player_attack_targets();
 
     // Test that we have at least one valid non-prompting attack
     vector<actor*> targs;
@@ -5339,8 +5331,7 @@ bool spellclaws_attack(int spell_level)
     }
 
     // Gather all possible targets in attack range
-    list<actor*> targets;
-    get_cleave_targets(you, coord_def(), targets, -1, true);
+    vector<actor*> targets = get_player_attack_targets();
 
     // Then choose the one with the *most* current health (that wouldn't cause
     // a warning prompt for some reason).

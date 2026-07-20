@@ -1886,20 +1886,12 @@ void prompt_inscribe_item()
     inscribe_item(you.inv[item_slot]);
 }
 
-bool has_drunken_brawl_targets()
-{
-    list<actor*> targets;
-    get_cleave_targets(you, coord_def(), targets, -1, true);
-    return !targets.empty();
-}
-
 // Perform a melee attack against every adjacent hostile target, and print a
 // special message if there are any.
 bool oni_drunken_swing()
 {
     // Use the same logic for target-picking that cleaving does
-    list<actor*> targets;
-    get_cleave_targets(you, coord_def(), targets, -1, true);
+    vector<actor*> targets = get_player_attack_targets();
 
     // Test that we have at least one valid non-prompting attack
     bool valid_swing = false;
