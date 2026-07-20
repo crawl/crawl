@@ -101,13 +101,14 @@ function ($, exports, comm, client, key_conversion, dungeon_renderer, display,
         set_ui_state(enums.ui.NORMAL);
 
         // Determine width of stats area
-        var old_html = $("#stats").html();
+
+        var old_stats = $("#stats").contents().detach();
         var s = "";
         for (var i = 0; i < enums.stat_width; i++)
             s = s + "&nbsp;";
         $("#stats").html(s);
         var stat_width_px = $("#stats").outerWidth();
-        $("#stats").html(old_html);
+        $("#stats").empty().append(old_stats);
 
         // Determine height of messages area
 
