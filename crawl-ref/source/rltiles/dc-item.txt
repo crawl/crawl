@@ -527,6 +527,11 @@ discus MI_DISCUS
 # flying discus
 effect/discus0 MI_DISCUS0
 
+%rim 0
+throwing_club MI_THROWING_CLUB
+# flying clubs
+effect/throwing_club0 MI_THROWING_CLUB0
+
 ######OBJ_ARMOUR
 %sdir item/armour
 robe1 ARM_ROBE

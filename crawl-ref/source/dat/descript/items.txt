@@ -1745,6 +1745,22 @@ the traveller returning to the place they started. The love infused into its
 pages by countless generations has granted it power, allowing a skilled mage to
 transport others by reciting specific passages.
 %%%%
+throwing club
+
+A weighted club designed for throwing rather than bashing. Those hit by it may
+be dazed from the impact.
+{{
+    if you.race() == "Kobold" or you.race() == "Spriggan" then
+        return "Unfortunately, it is too large and heavy for you to use."
+    elseif you.race() == "Ogre" or you.race() == "Troll" then
+       return ""
+    elseif you.race() == "Formicid" then
+       return "A being of your size needs all four hands to throw it."
+    else
+       return "A being of your size needs both hands to throw it."
+    end
+}}
+%%%%
 throwing knife
 
 A sharp blade unsuited for use as a melee weapon, but perfectly weighted to be

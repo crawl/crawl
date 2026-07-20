@@ -291,6 +291,13 @@ static void _fire_discus_shockwave(actor* attacker, actor* defender, int damage)
     schedule_discus_fineff(beam, attacker);
 }
 
+static void _maybe_throwing_club_daze(actor* defender, int damage)
+{
+    if (3 + defender->get_hit_dice() > random2avg(damage, 2))
+        return;
+    defender->daze(random_range(3,5));
+}
+
 bool ranged_attack::handle_phase_hit()
 {
     perceived_attack = true;
@@ -324,6 +331,8 @@ bool ranged_attack::handle_phase_hit()
         {
             if (weapon->is_type(OBJ_MISSILES, MI_DISCUS) && has_discus_space(*attacker))
                 _fire_discus_shockwave(attacker, defender, damage_done);
+            else if (weapon->is_type(OBJ_MISSILES, MI_THROWING_CLUB))
+                _maybe_throwing_club_daze(defender, damage_done);
             if (!handle_phase_damaged())
                 return false;
             // Jiyva mutation - piercing projectiles won't keep going if they

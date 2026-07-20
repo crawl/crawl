@@ -3796,6 +3796,7 @@ colour_t item_def::missile_colour() const
             return BROWN;
         case MI_LARGE_ROCK:
         case MI_HARPOON:
+        case MI_THROWING_CLUB:
             return LIGHTGREY;
 #if TAG_MAJOR_VERSION == 34
         case MI_NEEDLE:

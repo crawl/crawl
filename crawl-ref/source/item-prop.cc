@@ -902,6 +902,7 @@ static const missile_def Missile_prop[] =
     { MI_HARPOON,       "harpoon",          16, 18, 30 },
     { MI_CHAKRAM,       "chakram",          10, 20, 30 },
     { MI_DISCUS,        "discus",           10, 20, 30 },
+    { MI_THROWING_CLUB, "throwing club",    20, 25, 15 },
 
 #if TAG_MAJOR_VERSION == 34
     { MI_NEEDLE,        "needle",        0, 12, 2  },
@@ -2228,6 +2229,7 @@ static bool _medium_size_throwable(const item_def &wpn)
         case MI_JAVELIN:
         case MI_CHAKRAM:
         case MI_HARPOON:
+        case MI_THROWING_CLUB:
             return true;
         default:
             return false;
@@ -2243,7 +2245,18 @@ bool is_throwable(const actor *actor, const item_def &wpn)
         return true;
 
     if (_medium_size_throwable(wpn))
+    {
+        if (wpn.sub_type == MI_THROWING_CLUB && actor->is_player())
+        {
+            item_def* item = you.equipment.get_first_slot_item(SLOT_OFFHAND);
+            if (item && item->base_type != OBJ_WEAPONS
+                || you.get_mutation_level(MUT_MISSING_HAND))
+            {
+                return false;
+            }
+        }
         return actor->body_size() >= SIZE_MEDIUM;
+    }
     if (wpn.sub_type == MI_LARGE_ROCK)
         return actor->can_throw_large_rocks();
     return true;
