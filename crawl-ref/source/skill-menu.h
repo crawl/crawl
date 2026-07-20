@@ -146,7 +146,8 @@ public:
 
     void add_item(TextItem* item, const int size, coord_def &coord);
     void cancel_help();
-    bool exit(bool just_reset = false);
+    bool exit();
+    void reset();
 #ifdef USE_TILE_LOCAL
     int get_line_height();
 #endif
