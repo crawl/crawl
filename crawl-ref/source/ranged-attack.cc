@@ -13,6 +13,7 @@
 #include "english.h"
 #include "env.h"
 #include "fight.h"
+#include "fineff.h"
 #include "fprop.h"
 #include "god-conduct.h"
 #include "item-prop.h"
@@ -23,9 +24,11 @@
 #include "player.h"
 #include "stringutil.h"
 #include "teleport.h"
+#include "terrain.h"
 #include "throw.h"
 #include "traps.h"
 #include "unwind.h"
+#include "viewchar.h"
 #include "xom.h"
 
 ranged_attack::ranged_attack(actor *attk, actor *defn,
@@ -269,6 +272,25 @@ static bool _jelly_eat_missile(const string& proj_name, int damage_done)
     return false;
 }
 
+static void _fire_discus_shockwave(actor* attacker, actor* defender, int damage)
+{
+    // this does check AC, but is undodgeable and deals the full damage dealt
+    // by the original discus attack.
+    bolt beam;
+    beam.is_explosion = true;
+    beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.source       = defender->pos();
+    beam.name         = "discus shockwave";
+    beam.target       = defender->pos();
+    beam.flavour      = BEAM_MISSILE;
+    beam.damage       = dice_def(damage, 1);
+    beam.ex_size      = 1;
+    beam.thrower      = (attacker && attacker->is_player()) ? KILL_YOU_MISSILE
+                                                            : KILL_MON_MISSILE;
+
+    schedule_discus_fineff(beam, attacker);
+}
+
 bool ranged_attack::handle_phase_hit()
 {
     perceived_attack = true;
@@ -300,6 +322,8 @@ bool ranged_attack::handle_phase_hit()
         damage_done = calc_damage();
         if (damage_done > 0)
         {
+            if (weapon->is_type(OBJ_MISSILES, MI_DISCUS) && has_discus_space(*attacker))
+                _fire_discus_shockwave(attacker, defender, damage_done);
             if (!handle_phase_damaged())
                 return false;
             // Jiyva mutation - piercing projectiles won't keep going if they

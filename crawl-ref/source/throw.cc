@@ -454,6 +454,11 @@ void ranged_attack_beam::fire()
     beam.fire_as_ranged_attack(atk);
 }
 
+static bool _ranged_beam_explodes(actor &agent, item_def &item)
+{
+    return item.is_type(OBJ_MISSILES, MI_DISCUS) && has_discus_space(agent);
+}
+
 void ranged_attack_beam::initialise_beam(actor &agent, item_def &item)
 {
     const auto cglyph = get_item_glyph(item);
@@ -483,6 +488,11 @@ void ranged_attack_beam::initialise_beam(actor &agent, item_def &item)
     beam.source       = agent.pos();
     beam.flavour      = BEAM_MISSILE;
     beam.pierce       = is_penetrating_attack(item);
+    if (_ranged_beam_explodes(agent, item))
+    {
+        beam.is_explosion = true;
+        beam.ex_size      = 1;
+    }
     beam.aux_source.clear();
 
     beam.name = launched_projectile_name(item);

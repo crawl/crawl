@@ -384,6 +384,7 @@ enum missile_type
     MI_THROWING_KNIFE,
     MI_HARPOON,
     MI_CHAKRAM,
+    MI_DISCUS,
 
     NUM_MISSILES,
 };

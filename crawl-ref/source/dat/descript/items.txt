@@ -619,6 +619,17 @@ dire flail
 
 A flail with long spikes and a heavy head.
 %%%%
+discus
+
+A weighted disc for throwing. If the thrower has sufficient space, they can
+impart additional momentum and cause the discus to deal damage in an area around
+the primary target it hits.
+{{
+    if you.race() == "Kobold" or you.race() == "Spriggan" then
+        return "Unfortunately, it is too heavy and awkward for you to use."
+    end
+}}
+%%%%
 double sword
 
 A fearsome weapon with a forked, razor-sharp blade.

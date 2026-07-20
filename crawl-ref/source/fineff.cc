@@ -287,6 +287,21 @@ protected:
     string poof_message;
 };
 
+class discus_fineff : public final_effect
+{
+public:
+    void fire() override;
+
+    discus_fineff(const bolt& beem, const actor* agent)
+        : final_effect(0, 0, coord_def()), beam(beem), disc_agent(agent)
+    {
+    }
+protected:
+    bool mergeable(const final_effect&) const override { return false; }
+    bolt beam;
+    const actor* disc_agent;
+};
+
 class splinterfrost_fragment_fineff : public final_effect
 {
 public:
@@ -722,6 +737,11 @@ void schedule_explosion_fineff(bolt& beam, string boom, string sanct,
 {
     _schedule_final_effect(new explosion_fineff(beam, boom, sanct,
                                                 typ, flame_agent, poof));
+}
+
+void schedule_discus_fineff(bolt& beam, const actor* disc_agent)
+{
+    _schedule_final_effect(new discus_fineff(beam, disc_agent));
 }
 
 void schedule_splinterfrost_fragment_fineff(bolt& beam, string msg)
@@ -1701,6 +1721,11 @@ void dismiss_divine_allies_fineff::fire()
 void death_spawn_fineff::fire()
 {
     create_monster(mg);
+}
+
+void discus_fineff::fire()
+{
+    beam.explode(true,true);
 }
 
 void splinterfrost_fragment_fineff::fire()

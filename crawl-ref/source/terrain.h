@@ -193,4 +193,6 @@ void frigid_walls_damage(int delay);
 void descent_crumble_stairs();
 void descent_reveal_stairs();
 
+bool has_discus_space(actor &attacker);
+
 dungeon_feature_type feat_at_no_mimic(coord_def pos);

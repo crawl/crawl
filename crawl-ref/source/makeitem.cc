@@ -586,6 +586,12 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     nw, SPMSL_NORMAL);
         break;
 
+    // silver is a placeholder and will be changed in future commit
+    case MI_DISCUS:
+        rc = random_choose_weighted(90, SPMSL_SILVER,
+                                    nw, SPMSL_NORMAL);
+        break;
+
     case MI_THROWING_KNIFE:
         rc = random_choose_weighted(90, SPMSL_POISONED,
                                     nw, SPMSL_NORMAL);
@@ -657,7 +663,7 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     case SPMSL_CHAOS:
         return type == MI_BOOMERANG || type == MI_JAVELIN;
     case SPMSL_SILVER:
-        return type == MI_JAVELIN;
+        return type == MI_JAVELIN || type == MI_DISCUS;
     case SPMSL_SACRED:
         return type == MI_CHAKRAM;
     default: break;

@@ -2711,3 +2711,12 @@ dungeon_feature_type feat_at_no_mimic(coord_def pos)
         return DNGN_FLOOR;
     return env.grid(pos);
 }
+
+// does a discus thrower have space for their windup
+bool has_discus_space(actor &attacker)
+{
+    for (adjacent_iterator ai(attacker.pos(), true); ai; ++ai)
+        if (cell_is_solid(*ai) || actor_at(*ai))
+            return false;
+    return true;
+}

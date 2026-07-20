@@ -3117,6 +3117,7 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
     case MI_LARGE_ROCK:   return TILE_MI_LARGE_ROCK;
     case MI_THROWING_NET: return TILE_MI_THROWING_NET;
     case MI_HARPOON:      return TILE_MI_HARPOON;
+    case MI_DISCUS:       return TILE_MI_DISCUS;
     case MI_BOOMERANG:
         switch (brand)
         {
@@ -3759,6 +3760,7 @@ tileidx_t tileidx_item_projectile(const item_def &item)
             case MI_THROWING_KNIFE: return TILE_MI_THROWING_KNIFE0;
             case MI_HARPOON:        return TILE_BOLT_HARPOON_SHOT; //placeholder
             case MI_CHAKRAM:        return TILE_MI_CHAKRAM0;
+            case MI_DISCUS:         return TILE_MI_DISCUS0;
         }
     }
     else if (is_range_weapon(item))
