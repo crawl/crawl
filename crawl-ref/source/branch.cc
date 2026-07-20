@@ -289,7 +289,7 @@ int ambient_noise(branch_type branch)
 
 branch_type get_branch_at(const coord_def& pos)
 {
-    return level_id::current().get_next_level_id(pos).branch;
+    return level_id::current().next_level_id(pos).branch;
 }
 
 bool branch_is_unfinished(branch_type branch)

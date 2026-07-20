@@ -77,7 +77,8 @@ bool is_unknown_stair(const coord_def &p);
 bool is_unknown_transporter(const coord_def &p);
 
 void fill_travel_point_distance(const coord_def& youpos,
-                     vector<coord_def>* coords = nullptr);
+                     vector<coord_def>* coords = nullptr,
+                     const level_id& level = level_id::current());
 
 bool is_stair_exclusion(const coord_def &p);
 
@@ -339,9 +340,8 @@ struct LevelInfo
     FixedVector<int, NUM_DACTION_COUNTERS> daction_counters;
 
 private:
-    // Gets a list of coordinates of all player-known stairs on the current
-    // level.
-    static void get_stairs(vector<coord_def> &stairs);
+    // Gets a list of coordinates of all player-known stairs on this level.
+    void get_stairs(vector<coord_def> &stairs);
     static void get_transporters(vector<coord_def> &transporters);
 
     void correct_stair_list(const vector<coord_def> &s);
@@ -487,6 +487,13 @@ public:
         ignore_danger = true;
     }
 
+    // Which level this pathfinding is being done on. The caller must ensure
+    // that this matches the loaded env.
+    inline void set_level(const level_id &lev)
+    {
+        level = lev;
+    }
+
     // Determine if the level is fully explored, when called after pathfind().
     int explore_status();
 
@@ -525,6 +532,10 @@ protected:
     // Set to true for Tiles mode clicking, so you can move one step
     // at a time through excluded areas and around stationary monsters.
     bool ignore_danger;
+
+    // The level we are pathfinding on, used to look up transporter locations.
+    // Defaults to the player's current level.
+    level_id level;
 
     // If true, use magic numbers in point distance array which can be
     // used to colour the level-map.

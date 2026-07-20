@@ -588,12 +588,11 @@ void travel_init_new_level()
     explore_stopped_pos.reset();
 }
 
-static bool _is_branch_stair(const coord_def& pos)
+static bool _is_branch_stair(const coord_def& pos, const level_id &from)
 {
-    const level_id curr = level_id::current();
-    const level_id next = level_id::get_next_level_id(pos);
+    const level_id next = from.next_level_id(pos);
 
-    return next.branch != curr.branch;
+    return next.branch != from.branch;
 }
 
 #define ES_item   (Options.explore_stop & ES_ITEM)
@@ -1334,8 +1333,8 @@ FixedVector<coord_def, GXM * GYM> travel_pathfind::circumference[2];
 travel_pathfind::travel_pathfind()
     : runmode(RMODE_NOT_RUNNING), start(), dest(), next_travel_move(),
       floodout(false), double_flood(false), ignore_hostile(false),
-      ignore_danger(false), annotate_map(false), ls(nullptr),
-      need_for_greed(false), autopickup(false),
+      ignore_danger(false), level(level_id::current()), annotate_map(false),
+      ls(nullptr), need_for_greed(false), autopickup(false),
       unexplored_place(), greedy_place(), unexplored_dist(0), greedy_dist(0),
       refdist(nullptr), reseed_points(), features(nullptr), unreachables(),
       point_distance(travel_point_distance), next_iter_points(0),
@@ -1966,7 +1965,7 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
         // But for travel checks, rely only on the player's knowledge instead.
         else
         {
-            LevelInfo &li = travel_cache.get_level_info(level_id::current());
+            LevelInfo &li = travel_cache.get_level_info(level);
             transporter_info *ti = li.get_transporter(c);
             if (ti && ti->destination != INVALID_COORD)
                 tdest = ti->destination;
@@ -1977,7 +1976,7 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
     }
     else if (!floodout && env.grid(c) == DNGN_TRANSPORTER_LANDING)
     {
-        LevelInfo &li = travel_cache.get_level_info(level_id::current());
+        LevelInfo &li = travel_cache.get_level_info(level);
         vector<transporter_info> transporters = li.get_transporters();
         for (auto ti : transporters)
         {
@@ -2012,15 +2011,19 @@ int travel_pathfind::explore_status()
  * Run the travel_pathfind algorithm, from the given position in floodout mode
  * to populate travel_point_distance relative to that starting point.
  *
- * @param      youpos The starting position.
+ * @param      youpos   The starting position.
  * @param[in]  features A vector of features to give to travel_pathfind.
+ * @param[in]  level    The level we are pathfinding on. Defaults to the
+ *                      player's current level.
  */
 void fill_travel_point_distance(const coord_def& youpos,
-                                vector<coord_def>* features)
+                                vector<coord_def>* features,
+                                const level_id& level)
 {
     travel_pathfind tp;
     tp.set_floodseed(youpos);
     tp.set_feature_vector(features);
+    tp.set_level(level);
 
     // Calling pathfind() twice like this changes the order of *features, but
     // has no effect on travel_point_distance.
@@ -3530,16 +3533,25 @@ int level_id::absdepth() const
     return absdungeon_depth(branch, depth);
 }
 
-level_id level_id::get_next_level_id(const coord_def &pos)
+level_id level_id::next_level_id(const coord_def &pos) const
 {
     int gridc = env.grid(pos);
-    level_id id = current();
+    level_id id = *this;
 
     if (gridc == branches[id.branch].exit_stairs)
-        return stair_destination(pos);
+    {
+        const level_id dest =
+            branch_exit_destination((dungeon_feature_type) gridc, *this);
+
+        if (dest.is_valid())
+            return dest;
+        // We can't get stair destinations that depend on the player's position
+        // unless we are on this level.
+        return *this == current() ? stair_destination(pos) : level_id();
+    }
 #if TAG_MAJOR_VERSION == 34
     if (gridc == DNGN_ENTER_PORTAL_VAULT)
-        return stair_destination(pos);
+        return *this == current() ? stair_destination(pos) : level_id();
 #endif
     if (gridc == DNGN_EXIT_THROUGH_ABYSS)
         return level_id(BRANCH_ABYSS, 1);
@@ -3763,8 +3775,9 @@ void LevelInfo::update_stair_distances()
         set_distance_between_stairs(s, s, 0);
 
         // For each stair, we need to ask travel to populate the distance
-        // array.
-        fill_travel_point_distance(stairs[s].position);
+        // array. Specify the level because this gets called with the player
+        // off-level.
+        fill_travel_point_distance(stairs[s].position, nullptr, id);
 
         // Assume movement distance between stairs is commutative,
         // i.e. going from a->b is the same distance as b->a.
@@ -3987,7 +4000,7 @@ void LevelInfo::correct_stair_list(const vector<coord_def> &s)
             stair_info si;
             si.position = pos;
             si.grid     = env.grid(si.position);
-            si.destination.id = level_id::get_next_level_id(pos);
+            si.destination.id = id.next_level_id(pos);
             if (si.destination.id.branch == BRANCH_VESTIBULE
                 && id.branch == BRANCH_DEPTHS
                 && travel_hell_entry.is_valid())
@@ -4098,7 +4111,7 @@ void LevelInfo::get_stairs(vector<coord_def> &st)
 
         if ((*ri == you.pos() || env.map_knowledge(*ri).known())
             && feat_is_travelable_stair(feat)
-            && (env.map_knowledge(*ri).seen() || !_is_branch_stair(*ri)))
+            && (env.map_knowledge(*ri).seen() || !_is_branch_stair(*ri, id)))
         {
             st.push_back(*ri);
         }
@@ -4237,7 +4250,7 @@ void TravelCache::update_stone_stair(const coord_def &c)
     const dungeon_feature_type feat2 = (dungeon_feature_type)
           (feat1 + (feat_is_stone_stair_up(feat1) ? 1 : -1)
                    * (DNGN_STONE_STAIRS_DOWN_I - DNGN_STONE_STAIRS_UP_I));
-    LevelInfo *li2 = find_level_info(level_id::get_next_level_id(c));
+    LevelInfo *li2 = find_level_info(level_id::current().next_level_id(c));
     if (!li2)
         return;
     for (int i = static_cast<int>(li2->stairs.size()) - 1; i >= 0; --i)
