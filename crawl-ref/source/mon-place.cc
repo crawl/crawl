@@ -899,6 +899,13 @@ static void _place_monster_maybe_override_god(monster *mon, monster_type cls,
     }
 }
 
+static void _abort_monster_creation(monster *mon)
+{
+    mon->destroy_inventory();
+    env.mid_cache.erase(mon->mid);
+    mon->reset();
+}
+
 static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                    level_id place,
                                    bool force_pos, bool dont_place)
@@ -1228,9 +1235,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             }
             else
             {
-                mon->destroy_inventory();
-                env.mid_cache.erase(mon->mid);
-                mon->reset();
+                _abort_monster_creation(mon);
                 env.mgrid(fpos) = NON_MONSTER;
                 return 0;
             }
@@ -1309,8 +1314,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // as a Fedhas-worshipping player.)
     if (!dont_place && !mon->move_to(fpos, MV_INTERNAL))
     {
-        env.mid_cache.erase(mon->mid);
-        mon->reset();
+        _abort_monster_creation(mon);
         return 0;
     }
 
