@@ -3816,6 +3816,7 @@ colour_t item_def::missile_colour() const
         case MI_BOOMERANG:
             return GREEN;
         case MI_THROWING_KNIFE:
+        case MI_SHURIKEN:
             return CYAN;
         case NUM_SPECIAL_MISSILES:
         default:

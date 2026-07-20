@@ -532,6 +532,11 @@ throwing_club MI_THROWING_CLUB
 # flying clubs
 effect/throwing_club0 MI_THROWING_CLUB0
 
+%rim 0
+shuriken MI_SHURIKEN
+# flying shuriken
+effect/shuriken0 MI_SHURIKEN0
+
 ######OBJ_ARMOUR
 %sdir item/armour
 robe1 ARM_ROBE

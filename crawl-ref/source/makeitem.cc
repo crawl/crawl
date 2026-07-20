@@ -559,6 +559,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     case MI_LARGE_ROCK:
     case MI_HARPOON:
     case MI_THROWING_CLUB:
+    case MI_SHURIKEN:
         rc = SPMSL_NORMAL;
         break;
     case MI_BOOMERANG:

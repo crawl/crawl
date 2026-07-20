@@ -1608,6 +1608,11 @@ short sword
 
 A personal stabbing weapon with a short grip.
 %%%%
+shuriken
+
+A sharp throwing star. They can be thrown up to three at a time at different
+targets, provided the secondary targets are sufficiently nearby.
+%%%%
 smoky gem
 
 [[gem]]

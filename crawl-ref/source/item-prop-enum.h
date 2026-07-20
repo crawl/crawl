@@ -386,6 +386,7 @@ enum missile_type
     MI_CHAKRAM,
     MI_DISCUS,
     MI_THROWING_CLUB,
+    MI_SHURIKEN,
 
     NUM_MISSILES,
 };

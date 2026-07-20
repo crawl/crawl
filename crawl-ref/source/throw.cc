@@ -776,7 +776,7 @@ static bool _salvo_shot_tracer(coord_def source, coord_def target, bool pierce,
 
 // Get a list of up to num_target additional targets that have some unblocked
 // shot path from the player's current position.
-static vector<coord_def> _get_salvo_targets(const coord_def& orig_target, int num_targets)
+static vector<coord_def> _get_salvo_targets(const coord_def& orig_target, int num_targets, int radius)
 {
     mid_t primary;
     vector<coord_def> targs;
@@ -794,6 +794,9 @@ static vector<coord_def> _get_salvo_targets(const coord_def& orig_target, int nu
         {
             continue;
         }
+
+        if (grid_distance(you.pos(), mi->pos()) > radius)
+            continue;
 
         if (exists_ray(you.pos(), mi->pos(), opc_unblocked_shot, you.current_vision))
             to_check.push_back(*mi);
@@ -819,9 +822,9 @@ static vector<coord_def> _get_salvo_targets(const coord_def& orig_target, int nu
     return targs;
 }
 
-static void _fire_salvo(const ranged_attack_beam &pbolt)
+static int _fire_salvo(const ranged_attack_beam &pbolt, int max, int radius)
 {
-    vector<coord_def> targs = _get_salvo_targets(pbolt.beam.target, 4);
+    vector<coord_def> targs = _get_salvo_targets(pbolt.beam.target, max, radius);
 
     for (coord_def aim : targs)
     {
@@ -832,6 +835,8 @@ static void _fire_salvo(const ranged_attack_beam &pbolt)
         salvo.beam.target = aim;
         salvo.fire();
     }
+
+    return targs.size();
 }
 
 // Once the player has committed to a target, shoot/throw/toss at it.
@@ -903,9 +908,15 @@ static void _player_shoot(ranged_attack_beam &pbolt, bool allow_salvo)
     {
         pbolt.fire();
 
+        if (item.is_type(OBJ_MISSILES, MI_SHURIKEN) && item.quantity > 1)
+        {
+            dec_inv_item_quantity(item.link,
+                _fire_salvo(pbolt, min(2, item.quantity - 1), 3));
+        }
+
         if (do_salvo)
         {
-            _fire_salvo(pbolt);
+            _fire_salvo(pbolt, 4, LOS_RADIUS);
             if (!is_unrandom_artefact(item, UNRAND_ZEPHYR))
             {
                 if (--you.props[SALVO_KEY] == 0)
