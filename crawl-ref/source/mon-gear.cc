@@ -1756,7 +1756,8 @@ static item_def* make_item_for_monster(
     if (bp == NON_ITEM)
         return 0;
 
-    const int thing_created = items(allow_uniques, base, subtype, level);
+    const int thing_created = items(allow_uniques, base, subtype, level, 0,
+                                    NO_AGENT, false, "", nullptr, true);
     if (thing_created == NON_ITEM)
         return 0;
 

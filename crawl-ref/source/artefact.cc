@@ -1776,13 +1776,14 @@ static int _unrand_weight(int unrand_index, int item_level)
 static bool _unrand_is_compatible(const unrandart_entry& unrand,
                                   object_class_type aclass,
                                   uint8_t atype,
-                                  bool acquirement)
+                                  bool acquirement,
+                                  bool strict_type)
 {
     if (unrand.base_type != aclass)
         return false;
     if (atype == OBJ_RANDOM)
         return true;
-    if (aclass != OBJ_WEAPONS)
+    if (aclass != OBJ_WEAPONS || strict_type)
         return unrand.sub_type == atype;
 
     item_def required_item;
@@ -1805,7 +1806,7 @@ static bool _unrand_is_compatible(const unrandart_entry& unrand,
 }
 
 int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level,
-                        bool in_abyss, bool acquirement)
+                        bool in_abyss, bool acquirement, bool strict_type)
 {
     int chosen_unrand_idx = -1;
 
@@ -1856,7 +1857,7 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level,
         }
 
         if (!_unrand_is_compatible(*entry, (object_class_type)aclass, atype,
-                                   acquirement))
+                                   acquirement, strict_type))
         {
             continue;
         }

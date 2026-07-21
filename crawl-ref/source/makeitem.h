@@ -20,7 +20,8 @@ int items(bool allow_uniques, object_class_type force_class, int force_type,
           int item_level, int force_ego = 0, int agent = NO_AGENT,
           bool acquirement = false,
           string custom_name = "",
-          CrawlHashTable const *fixed_props = nullptr);
+          CrawlHashTable const *fixed_props = nullptr,
+          bool strict_unrand_type = false);
 
 void item_colour(item_def &item);
 
