@@ -471,7 +471,8 @@ bool debug_make_shop(const coord_def& pos)
     if (!menu.run(true))
         return false;
 
-    place_spec_shop(pos, static_cast<shop_type>(menu.result()));
+    make_spec_shop(pos, static_cast<shop_type>(menu.result()));
+    dungeon_terrain_changed(you.pos(), DNGN_ENTER_SHOP);
     mpr("Done.");
     return true;
 }
