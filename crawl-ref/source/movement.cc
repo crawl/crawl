@@ -957,7 +957,7 @@ static bool _handle_player_step(const coord_def& targ, int& delay, const int del
                 delay += stampede_delay;
 
                 // Check that the target we were trampling still there.
-                if (!mon || (mon->pos() - you.pos()) != (targ - initial_pos))
+                if (invalid_monster(mon) || (mon->pos() - you.pos()) != (targ - initial_pos))
                     return false;
             }
             if (!player_fight(mon, rampaging && !first_step))
