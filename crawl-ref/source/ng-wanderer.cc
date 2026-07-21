@@ -692,9 +692,9 @@ static vector<spell_type> _wanderer_good_equipment(skill_type skill)
         else
         {
             newgame_make_item(OBJ_WEAPONS, WPN_DAGGER, 1, 0);
-            newgame_make_item(OBJ_MISSILES, MI_DART, 1 + coinflip(), 0,
+            newgame_make_item(OBJ_MISSILES, MI_KUNAI, 1 + coinflip(), 0,
                               SPMSL_BLINDING);
-            newgame_make_item(OBJ_MISSILES, MI_DART, 1 + coinflip(), 0,
+            newgame_make_item(OBJ_MISSILES, MI_KUNAI, 1 + coinflip(), 0,
                               SPMSL_FRENZY);
         }
         break;

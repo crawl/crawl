@@ -937,6 +937,11 @@ kite shield
 
 A piece of wood and metal, to be strapped on one arm for defence.
 %%%%
+kunai
+
+A throwing blade, often coated in toxins. When thrown it can deliver its toxins
+into the bloodstream of a living or demonic being.
+%%%%
 lajatang
 
 A very rare and extremely effective weapon, featuring a pole with half-moon

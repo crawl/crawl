@@ -904,6 +904,7 @@ static const missile_def Missile_prop[] =
     { MI_DISCUS,        "discus",           10, 20, 30 },
     { MI_THROWING_CLUB, "throwing club",    20, 25, 15 },
     { MI_SHURIKEN,      "shuriken",         6, 20, 20 },
+    { MI_KUNAI,         "kunai",            2, 12, 3  },
 
 #if TAG_MAJOR_VERSION == 34
     { MI_NEEDLE,        "needle",        0, 12, 2  },

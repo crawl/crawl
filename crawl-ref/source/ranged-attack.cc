@@ -816,21 +816,25 @@ bool ranged_attack::apply_missile_brand()
                                                    special_damage_message));
         break;
     case SPMSL_BLINDING:
+    {
         if (!dart_check(brand))
             break;
+        int dur = attacker->is_player() ? 5 + attacker->skill_rdiv(SK_THROWING)
+                                        : 5 + random2(5);
         if (!defender->res_blind())
         {
             if (defender->is_player())
-                blind_player(damage_done, LIGHTGREEN);
+                blind_player(dur, LIGHTGREEN);
             else
             {
                 monster* mon = defender->as_monster();
                 mon->add_ench(mon_enchant(ENCH_BLIND, attacker,
-                                          damage_done * BASELINE_DELAY));
+                                          dur * BASELINE_DELAY));
             }
         }
-        defender->confuse(attacker, damage_done / 3);
+        defender->confuse(attacker, dur / 3);
         break;
+    }
     case SPMSL_FRENZY:
         if (!dart_check(brand))
             break;

@@ -387,6 +387,7 @@ enum missile_type
     MI_DISCUS,
     MI_THROWING_CLUB,
     MI_SHURIKEN,
+    MI_KUNAI,
 
     NUM_MISSILES,
 };

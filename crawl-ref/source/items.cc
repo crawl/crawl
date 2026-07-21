@@ -3818,6 +3818,8 @@ colour_t item_def::missile_colour() const
         case MI_THROWING_KNIFE:
         case MI_SHURIKEN:
             return CYAN;
+        case MI_KUNAI:
+            return LIGHTMAGENTA;
         case NUM_SPECIAL_MISSILES:
         default:
             die("invalid missile type");

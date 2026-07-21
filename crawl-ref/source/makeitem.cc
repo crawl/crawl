@@ -573,9 +573,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
             break;
         }
 
-        rc = random_choose_weighted(60, SPMSL_BLINDING,
-                                    20, SPMSL_FRENZY,
-                                    20, SPMSL_DISJUNCTION,
+        rc = random_choose_weighted(20, SPMSL_DISJUNCTION,
                                     pw, SPMSL_POISONED);
         break;
     case MI_JAVELIN:
@@ -593,6 +591,10 @@ static special_missile_type _determine_missile_brand(const item_def& item,
         rc = random_choose_weighted(90, SPMSL_SILVER,
                                     nw, SPMSL_NORMAL);
         break;
+
+    case MI_KUNAI:
+        rc = random_choose_weighted(60, SPMSL_BLINDING,
+                                    20, SPMSL_FRENZY);
 
     case MI_THROWING_KNIFE:
         rc = random_choose_weighted(90, SPMSL_POISONED,
@@ -631,14 +633,16 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
 #if TAG_MAJOR_VERSION == 34
     case SPMSL_PARALYSIS:
 #endif
-    case SPMSL_FRENZY:
     case SPMSL_DISPERSAL:
     case SPMSL_DISJUNCTION:
         return type == MI_DART;
 
+    case SPMSL_FRENZY:
+        return type == MI_KUNAI;
+
     case SPMSL_BLINDING:
         // possible on ex-pies
-        return type == MI_DART || (type == MI_BOOMERANG && !strict);
+        return type == MI_KUNAI || (type == MI_BOOMERANG && !strict);
 
     default:
         if (type == MI_DART)

@@ -537,6 +537,16 @@ shuriken MI_SHURIKEN
 # flying shuriken
 effect/shuriken0 MI_SHURIKEN0
 
+%rim 0
+kunai MI_KUNAI
+kunai_frenzy MI_KUNAI_FRENZY
+kunai_blinding MI_KUNAI_BLINDING
+# flying kunai
+effect/kunai0 MI_KUNAI0
+effect/kunai1 MI_KUNAI1
+effect/kunai2 MI_KUNAI2
+effect/kunai3 MI_KUNAI3
+
 ######OBJ_ARMOUR
 %sdir item/armour
 robe1 ARM_ROBE

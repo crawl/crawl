@@ -3135,9 +3135,16 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         case 0:                 return TILE_MI_DART;
         case SPMSL_POISONED:    return TILE_MI_DART_POISONED;
         case SPMSL_CURARE:      return TILE_MI_DART_CURARE;
-        case SPMSL_BLINDING:    return TILE_MI_DART_BLINDING;
-        case SPMSL_FRENZY:      return TILE_MI_DART_FRENZY;
         case SPMSL_DISJUNCTION: return TILE_MI_DART_DISJUNCTION;
+        }
+
+    case MI_KUNAI:
+        switch (brand)
+        {
+        default:                return TILE_MI_DART_MAGIC;
+        case 0:                 return TILE_MI_KUNAI;
+        case SPMSL_FRENZY:      return TILE_MI_KUNAI_FRENZY;
+        case SPMSL_BLINDING:    return TILE_MI_KUNAI_BLINDING;
         }
 
     case MI_JAVELIN:
@@ -3952,6 +3959,8 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
 
     case TILE_BOLT_ZAP:
     case TILE_BOLT_SHADOW_BEAM:
+    case TILE_MI_THROWING_KNIFE0:
+    case TILE_MI_KUNAI0:
         return tile + dir % tile_main_count(tile);
 
     case TILE_BOLT_FROST:
@@ -4002,7 +4011,6 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
         return tile + ui_random(tile_main_count(tile));
 
     case TILE_MI_BOOMERANG0:
-    case TILE_MI_THROWING_KNIFE0:
         return tile + ui_random(4);
 
     default:

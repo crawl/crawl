@@ -214,9 +214,9 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
             descs.emplace_back("can blink free");
     }
 
-    // Display the chance for a dart of para/confuse/sleep/frenzy
+    // Display the chance for a kunai of sleep/frenzy
     // to affect monster
-    if (item->is_type(OBJ_MISSILES, MI_DART))
+    if (item->is_type(OBJ_MISSILES, MI_KUNAI))
     {
         special_missile_type brand = get_ammo_brand(*item);
         if (brand == SPMSL_FRENZY || brand == SPMSL_BLINDING)
