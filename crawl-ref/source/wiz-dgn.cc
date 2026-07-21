@@ -341,8 +341,9 @@ bool wizard_create_feature(dist &target, dungeon_feature_type feat, bool mimic)
 
         if (you.see_cell(pos))
         {
-            view_update_at(pos);
+            show_update_at(pos);
             StashTrack.update_stash(pos);
+            redraw_view_at(pos);
         }
         if (done)
             return success;
