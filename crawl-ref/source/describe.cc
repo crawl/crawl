@@ -5351,9 +5351,15 @@ static void _add_attack_flavour_desc(string& desc, attack_flavour flavour,
     desc += uppercase_first(_flavour_base_desc(flavour));
     if (flav_dam && attack.flavour != AF_PURE_FIRE)
     {
-        desc += make_stringf(" (max %d%s)",
-                                flav_dam,
-                                attk_mult > 1 ? " each" : "");
+        const string dmg_desc = make_stringf(" (max %d%s)",
+                                             flav_dam,
+                                             attk_mult > 1 ? " each" : "");
+
+        // XXX: If we need to do much more of this, use a more general solution.
+        if (attack.flavour == AF_MINIPARA || attack.flavour == AF_POISON_PARALYSE)
+            desc.insert(desc.find("poison") + 7, dmg_desc);
+        else
+            desc += dmg_desc;
     }
     else if (flavour == AF_DRAIN)
         desc += make_stringf(" (max %d damage)", real_dam / 2);

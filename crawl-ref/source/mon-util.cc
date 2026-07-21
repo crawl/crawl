@@ -2231,11 +2231,20 @@ int flavour_damage(attack_flavour flavour, int HD, bool random)
             if (random)
                 return roll_dice(4, 3);
             return 12;
-        // Just show max damage: this number's only used for display.
+
+        // Just show max damage: these numbers are only used for attack descriptions.
         case AF_AIRSTRIKE:
             return pow(HD + 1, 1.2) * 12 / 6;
         case AF_UGLY_THING:
             return HD * 3;
+        case AF_POISON:
+            return HD * 4;
+        case AF_MINIPARA:
+            return HD * 2;
+        case AF_POISON_STRONG:
+            return HD * 13 / 2;
+        case AF_POISON_PARALYSE:
+            return HD * 5 / 2;
         default:
             return 0;
     }
