@@ -5,7 +5,7 @@ exp: 838
 genus: snake
 will: 40
 attacks:
- - {type: constrict, flavour: crush, damage: 6}
+ - {type: constrict, flavour: constrict, damage: 6}
  - {type: bite, damage: 20}
 hd: 11
 hp_10x: 605

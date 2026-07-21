@@ -207,7 +207,7 @@ bool melee_attack::handle_phase_attempted()
 {
     // Skip invalid and dummy attacks.
     if (defender && !can_reach(grid_distance(attack_position, defender->pos()))
-        || attk_flavour == AF_CRUSH
+        || attk_flavour == AF_CONSTRICT
            && !attacker->can_constrict(*defender, CONSTRICT_MELEE))
     {
         return false;
@@ -3605,7 +3605,7 @@ string melee_attack::charge_desc()
 
 void melee_attack::announce_hit()
 {
-    if (!needs_message || attk_flavour == AF_CRUSH)
+    if (!needs_message || attk_flavour == AF_CONSTRICT)
         return;
 
     if (attacker->is_monster())
@@ -4160,7 +4160,7 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
             defender->trap_in_web();
         break;
 
-    case AF_CRUSH:
+    case AF_CONSTRICT:
         // Works on 2/3 of hits
         if (one_chance_in(3))
             break;
@@ -5169,7 +5169,7 @@ int melee_attack::apply_mon_damage_modifiers(int damage)
 int melee_attack::calc_damage()
 {
     // Constriction deals damage over time, not when grabbing.
-    if (attk_flavour == AF_CRUSH)
+    if (attk_flavour == AF_CONSTRICT)
         return 0;
 
     return attack::calc_damage();

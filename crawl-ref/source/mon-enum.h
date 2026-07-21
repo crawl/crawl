@@ -110,7 +110,7 @@ enum attack_flavour
 #if TAG_MAJOR_VERSION == 34
     AF_STEAL_FOOD,
 #endif
-    AF_CRUSH,
+    AF_CONSTRICT,
 #if TAG_MAJOR_VERSION == 34
     AF_REACH,
 #endif

@@ -1188,7 +1188,7 @@ int main(int argc, char* argv[])
                     break;
                 case AF_BURSTSHROOM:
                     monsterattacks += colour(MAGENTA, "(burstshroom)");
-                case AF_CRUSH:
+                case AF_CONSTRICT:
                 case AF_PLAIN:
                     break;
 #if TAG_MAJOR_VERSION == 34

@@ -2157,7 +2157,7 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
                 missile_count++;
             if (mi[j].reach_range(false) > 1)
                 reach_count++;
-            if (_has_attack_flavour(mi[j], AF_CRUSH))
+            if (_has_attack_flavour(mi[j], AF_CONSTRICT))
                 constrict_count++;
             if (_has_attack_flavour(mi[j], AF_TRAMPLE))
                 trample_count++;

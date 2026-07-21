@@ -5081,7 +5081,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_RAGE,              "drive defenders berserk" },
         { AF_CHAOTIC,           "chaos" },
         { AF_STEAL,             "steal items" },
-        { AF_CRUSH,             "begin ongoing constriction" },
+        { AF_CONSTRICT,         "begin ongoing constriction" },
         { AF_HOLY,              "extra damage to undead/demons" },
         { AF_PAIN,              "extra pain damage to the living" },
         { AF_ENSNARE,           "ensnare with webbing" },
@@ -5357,7 +5357,7 @@ static void _add_attack_flavour_desc(string& desc, attack_flavour flavour,
     }
     else if (flavour == AF_DRAIN)
         desc += make_stringf(" (max %d damage)", real_dam / 2);
-    else if (flavour == AF_CRUSH)
+    else if (flavour == AF_CONSTRICT)
     {
         desc += make_stringf(" (%d-%d dam)", attack.damage,
                                 attack.damage*2);
@@ -5416,7 +5416,7 @@ static void _attacks_table_row(const monster_info &mi, mon_attack_desc_info &di,
 
     if (attack.flavour == AF_PURE_FIRE)
         dam = flav_dam;
-    else if (attack.flavour == AF_CRUSH)
+    else if (attack.flavour == AF_CONSTRICT)
         dam = 0;
     else if (attack.flavour == AF_PAIN)
         flav_dam = (mi.props.exists(NECROMANCER_KEY)) ? mi.hd * 2 : mi.hd / 2;

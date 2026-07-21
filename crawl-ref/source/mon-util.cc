@@ -1775,7 +1775,7 @@ static int _downscale_zombie_damage(int damage)
 // Do not include AF_PLAIN, we want that to be overwritten for spectrals
 // and simulacra
 static const set<attack_flavour> allowed_zombie_af = {
-    AF_CRUSH,
+    AF_CONSTRICT,
     AF_TRAMPLE,
     AF_DRAG,
     AF_DOOM,
@@ -1827,7 +1827,7 @@ static mon_attack_def _mutant_beast_facet_attack(int facet, int tier)
         case BF_OX:
             return { AT_TRAMPLE, AF_TRAMPLE, dam };
         case BF_WEIRD:
-            return { AT_CONSTRICT, AF_CRUSH, dam * 2 / 5};
+            return { AT_CONSTRICT, AF_CONSTRICT, dam * 2 / 5};
         default:
             return { };
     }
@@ -2174,7 +2174,7 @@ string mon_attack_name(attack_type attack, bool with_object)
  */
 bool flavour_triggers_damageless(attack_flavour flavour)
 {
-    return flavour == AF_CRUSH
+    return flavour == AF_CONSTRICT
         || flavour == AF_FLOOD
         || flavour == AF_PAIN
         || flavour == AF_PURE_FIRE
