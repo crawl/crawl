@@ -111,7 +111,9 @@ enum attack_flavour
     AF_STEAL_FOOD,
 #endif
     AF_CRUSH,
+#if TAG_MAJOR_VERSION == 34
     AF_REACH,
+#endif
     AF_HOLY,
     AF_ANTIMAGIC,
     AF_PAIN,
@@ -122,8 +124,8 @@ enum attack_flavour
     AF_VULN,
 #if TAG_MAJOR_VERSION == 34
     AF_PLAGUE,
-#endif
     AF_REACH_STING,
+#endif
     AF_SHADOWSTAB,
     AF_DROWN,
 #if TAG_MAJOR_VERSION == 34
@@ -139,13 +141,15 @@ enum attack_flavour
     AF_WEAKNESS,
 #if TAG_MAJOR_VERSION == 34
     AF_MIASMATA,
-#endif
     AF_REACH_TONGUE,
+#endif
     AF_BLINK_WITH,
     AF_SEAR,
     AF_BARBS,
     AF_SPIDER,
+#if TAG_MAJOR_VERSION == 34
     AF_RIFT,
+#endif
     AF_BLOODZERK,
     AF_SLEEP,
     AF_MINIPARA,
@@ -158,7 +162,7 @@ enum attack_flavour
     AF_BOMBLET,
     AF_AIRSTRIKE,
     AF_TRICKSTER,
-    AF_REACH_CLEAVE_UGLY,
+    AF_UGLY_THING,
     AF_DOOM,
     AF_SLIMIFY,
     AF_DIM,

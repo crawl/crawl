@@ -4,7 +4,7 @@ exp: 421
 holiness: [demonic]
 will: 60
 attacks:
- - {type: sting, flavour: reach_sting, damage: 15}
+ - {type: sting, flavour: poison, damage: 15, reach: 2}
  - {type: hit, flavour: weakness, damage: 8}
 hd: 8
 hp_10x: 520

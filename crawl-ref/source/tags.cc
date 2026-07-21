@@ -6833,6 +6833,8 @@ static void _marshall_mi_attack(writer &th, const mon_attack_def &attk)
     marshallInt(th, attk.type);
     marshallInt(th, attk.flavour);
     marshallInt(th, attk.damage);
+    marshallByte(th, attk.reach);
+    marshallBoolean(th, attk.cleaves);
 }
 
 static mon_attack_def _unmarshall_mi_attack(reader &th)
@@ -6841,6 +6843,17 @@ static mon_attack_def _unmarshall_mi_attack(reader &th)
     attk.type = static_cast<attack_type>(unmarshallInt(th));
     attk.flavour = static_cast<attack_flavour>(unmarshallInt(th));
     attk.damage = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_MON_ATTACK_DEF_RANGE)
+    {
+#endif
+    attk.reach = unmarshallByte(th);
+    attk.cleaves = unmarshallBoolean(th);
+#if TAG_MAJOR_VERSION == 34
+    }
+    // This is only for xv of monsters not currently in sight, so showing
+    // incorrect information on save upgrade is harmless.
+#endif
 
     return attk;
 }

@@ -9,9 +9,9 @@ genus: dragon
 holiness: [demonic]
 will: 180
 attacks:
- - {type: bite, flavour: reach, damage: 40}
- - {type: bite, flavour: reach, damage: 40}
- - {type: bite, flavour: reach, damage: 40}
+ - {type: bite, damage: 40, reach: 2}
+ - {type: bite, damage: 40, reach: 2}
+ - {type: bite, damage: 40, reach: 2}
  - {type: trample, flavour: trample, damage: 35}
 hd: 17
 hp_10x: 3230

@@ -635,6 +635,7 @@ public:
     bool nightvision() const override;
     bool may_pruneify() const;
     int reach_range(bool include_weapon = true) const override;
+    int reach_range_bonus() const override;
     bool see_cell(const coord_def& p) const override;
 
     // Is c in view but behind a transparent wall?

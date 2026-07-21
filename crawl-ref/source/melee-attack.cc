@@ -95,15 +95,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
 bool melee_attack::can_reach(int dist)
 {
-    const int wpn_reach = weapon ? weapon_reach(*weapon) : 1;
-    const int range_bonus =
-            you.form == transformation::aqua
-                && (attacker->is_player() || attacker->type == MONS_PLAYER_SHADOW)
-                    ? 2 : 0;
-
     return dist <= 1
-           || attk_type == AT_HIT && wpn_reach + range_bonus >= dist
-           || flavour_has_reach(attk_flavour)
+           || attk_reach + attacker->reach_range_bonus() >= dist
            || is_projected
            || is_sunder;
 }
@@ -880,15 +873,6 @@ bool melee_attack::handle_phase_hit()
         return false;
     }
 
-    // Randomizing here instead of in mons_attack_spec so that the reaching
-    // works properly.
-    if (attk_flavour == AF_REACH_CLEAVE_UGLY)
-    {
-        attack_flavour flavours[] =
-            {AF_FIRE, AF_COLD, AF_ELEC, AF_POISON, AF_ACID, AF_ANTIMAGIC};
-        attk_flavour = RANDOM_ELEMENT(flavours);
-    }
-
     if (damage_done > 0 || flavour_triggers_damageless(attk_flavour))
     {
         if (!handle_phase_damaged())
@@ -1508,6 +1492,11 @@ void melee_attack::set_weapon(item_def *wpn)
     init_attack(attack_number);
     if (weapon && !using_weapon())
         wpn_skill = SK_FIGHTING;
+
+    // attk_cleaves may have already been set to true in init_attack() for a
+    // monster with innate cleaving on this attack.
+    attk_cleaves |= attack_cleaves(*attacker, weapon);
+    attk_reach += (weapon ? weapon_reach(*weapon) : 1) - 1;
 }
 
 // Perform a player attack with a specific weapon.
@@ -3838,7 +3827,6 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
 
     case AF_POISON:
     case AF_POISON_STRONG:
-    case AF_REACH_STING:
         if (attacker->as_monster()->has_ench(ENCH_CONCENTRATE_VENOM)
             ? coinflip()
             : one_chance_in(3))
@@ -4053,7 +4041,6 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
         break;
     }
 
-    case AF_REACH_TONGUE:
     case AF_ACID:
         defender->splash_with_acid(attacker);
         break;
@@ -4062,7 +4049,6 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
         defender->corrode(attacker, atk_name(DESC_THE).c_str());
         break;
 
-    case AF_RIFT:
     case AF_DISTORT:
         distortion_affects_defender();
         break;
@@ -5019,6 +5005,7 @@ void melee_attack::cleave_setup()
     if (is_sundering_weapon() && attacker->sunder_is_ready())
     {
         is_sunder = true;
+        attk_cleaves = true;
         to_hit_bonus = 12;
         dmg_mult = attacker->is_monster() ? 150 : 200;
 
@@ -5028,12 +5015,9 @@ void melee_attack::cleave_setup()
             attacker->as_monster()->del_ench(ENCH_SUNDER_CHARGE);
     }
 
-    if (attack_cleaves(*attacker, weapon))
+    if (attk_cleaves)
     {
-        int range = weapon ? weapon_reach(*weapon) : 1;
-        if (is_sunder)
-            range += 1;
-
+        const int range = attk_reach + (is_sunder ? 1 : 0);
         get_cleave_targets(*attacker, defender ? defender->pos() : coord_def(),
                             cleave_targets, range);
     }

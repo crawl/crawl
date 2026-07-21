@@ -1161,17 +1161,6 @@ bool should_cleave_into(const actor &attacker, const actor &defender)
     return false;
 }
 
-bool _monster_has_reachcleave(const actor &attacker)
-{
-    if (attacker.is_monster()
-        && attacker.as_monster()->has_attack_flavour(AF_REACH_CLEAVE_UGLY))
-    {
-        return true;
-    }
-
-    return false;
-}
-
 /**
  * Force cleave attacks. Used for melee actions that don't have targets, e.g.
  * attacking empty space (otherwise, cleaving is handled in melee_attack).
@@ -1199,18 +1188,24 @@ bool force_player_cleave(coord_def target)
     return false;
 }
 
-bool attack_cleaves(const actor &attacker, const item_def *weap)
+bool attack_cleaves(const actor &attacker, const item_def *weap, int attack_num)
 {
     if (attacker.is_player()
         && (you.form == transformation::storm || you.duration[DUR_CLEAVE]))
     {
         return true;
     }
-    else if (attacker.is_monster()
-             && (attacker.as_monster()->has_ench(ENCH_INSTANT_CLEAVE)
-             || _monster_has_reachcleave(attacker)))
+    else if (const monster* mon = attacker.as_monster())
     {
-        return true;
+        if (mon->has_ench(ENCH_INSTANT_CLEAVE))
+            return true;
+
+        if (attack_num >= 0)
+        {
+            mon_attack_def mon_attk = mons_attack_spec(*mon, attack_num, true);
+            if (mon_attk.cleaves)
+                return true;
+        }
     }
 
     return weap && weapon_cleaves(*weap);

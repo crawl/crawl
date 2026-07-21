@@ -7,8 +7,8 @@ genus: plant
 holiness: [plant]
 will: 100
 attacks:
- - {type: tentacle_slap, flavour: rift, damage: 22}
- - {type: tentacle_slap, flavour: reach, damage: 17}
+ - {type: tentacle_slap, flavour: distort, damage: 22, reach: 3}
+ - {type: tentacle_slap, damage: 17, reach: 2}
  - {type: tentacle_slap, flavour: distort, damage: 13}
 hd: 16
 hp_10x: 900

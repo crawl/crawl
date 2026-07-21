@@ -135,7 +135,12 @@ public:
     virtual bool can_see_invisible() const = 0;
     virtual bool invisible() const = 0;
     virtual bool nightvision() const = 0;
+
+    // The maximum range of any attack this actor could make.
     virtual int reach_range(bool include_weapon = true) const = 0;
+
+    // Any (potentially temporary) bonus to the range of any attack this actor makes
+    virtual int reach_range_bonus() const = 0;
 
     // Would looker be able to see the actor when in LOS?
     virtual bool visible_to(const actor *looker) const = 0;

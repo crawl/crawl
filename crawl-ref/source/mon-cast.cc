@@ -2019,8 +2019,7 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
         return !monster.has_ench(ENCH_CONCENTRATE_VENOM)
                && (monster.has_spell(SPELL_SPIT_POISON)
                    || monster.has_attack_flavour(AF_POISON)
-                   || monster.has_attack_flavour(AF_POISON_STRONG)
-                   || monster.has_attack_flavour(AF_REACH_STING));
+                   || monster.has_attack_flavour(AF_POISON_STRONG));
 
     default:
         return false;

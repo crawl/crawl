@@ -6326,13 +6326,7 @@ int monster::reach_range(bool include_weapon) const
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         const mon_attack_def attk(mons_attack_spec(*this, i));
-        if (flavour_has_reach(attk.flavour) && attk.damage)
-        {
-            if (attk.flavour == AF_RIFT)
-                range = 3;
-            else
-                range = max(2, range);
-        }
+        range = max(range, attk.reach);
     }
 
     if (include_weapon)
@@ -6342,10 +6336,18 @@ int monster::reach_range(bool include_weapon) const
             range = max(range, weapon_reach(*wpn));
     }
 
-    if (type == MONS_PLAYER_SHADOW && you.form == transformation::aqua)
-        range += 2;
+    range += reach_range_bonus();
 
     return range;
+}
+
+int monster::reach_range_bonus() const
+{
+    int bonus = 0;
+    if (type == MONS_PLAYER_SHADOW && you.form == transformation::aqua)
+        bonus += 2;
+
+    return bonus;
 }
 
 void monster::steal_item_from_player()

@@ -404,6 +404,8 @@ void attack::init_attack(int attack_number)
 
         attk_type       = mon_attk.type;
         attk_flavour    = mon_attk.flavour;
+        attk_reach      = mon_attk.reach;
+        attk_cleaves    = mon_attk.cleaves;
 
         // Don't scale damage for YOU_FAULTLESS etc.
         if (attacker->get_experience_level() == 0)
@@ -428,6 +430,8 @@ void attack::init_attack(int attack_number)
     {
         attk_type    = AT_HIT;
         attk_flavour = AF_PLAIN;
+        attk_reach   = 1;
+        attk_cleaves = false;
     }
 }
 

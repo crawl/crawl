@@ -7487,6 +7487,11 @@ int player::reach_range(bool include_weapon) const
     return max(wpn_reach, off_reach) + bonus;
 }
 
+int player::reach_range_bonus() const
+{
+    return you.form == transformation::aqua ? 2 : 0;
+}
+
 monster_type player::mons_species(bool /*zombie_base*/) const
 {
     return species::to_mons_species(species);

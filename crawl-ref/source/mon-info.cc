@@ -1778,19 +1778,18 @@ int monster_info::reach_range(bool items) const
     int range = 1;
 
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
-    {
-        const attack_flavour fl = e->attack[i].flavour;
-        if (fl == AF_RIFT)
-            range = 3;
-        else if (flavour_has_reach(fl))
-            range = max(2, range);
-    }
+        range = max(range, attack[i].reach);
 
     if (items)
     {
         const item_def *weapon = inv[MSLOT_WEAPON].get();
         if (weapon)
-            range = max(range, weapon_reach(*weapon));
+        {
+            const int wpn_reach = weapon_reach(*weapon);
+            for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
+                if (attack[i].type == AT_HIT || attack[i].type == AT_WEAP_ONLY)
+                    range = max(range, attack[i].reach + wpn_reach);
+        }
     }
 
     return range;

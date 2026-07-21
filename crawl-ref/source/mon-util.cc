@@ -1775,7 +1775,6 @@ static int _downscale_zombie_damage(int damage)
 // Do not include AF_PLAIN, we want that to be overwritten for spectrals
 // and simulacra
 static const set<attack_flavour> allowed_zombie_af = {
-    AF_REACH,
     AF_CRUSH,
     AF_TRAMPLE,
     AF_DRAG,
@@ -1815,8 +1814,7 @@ static mon_attack_def _downscale_zombie_attack(const monster& mons,
  *
  * @param facet     The facet in question; e.g. BF_STING.
  * @param tier      The tier of the mutant beast; e.g.
- * @return          The attack corresponding to the given facet; e.g. BT_LARVAL
- *                  { AT_STING, AF_REACH_STING, 10 }. Scales with HD.
+ * @return          The attack corresponding to the given facet. Scales with HD.
  *                  For facets that don't provide an attack, is { }.
  */
 static mon_attack_def _mutant_beast_facet_attack(int facet, int tier)
@@ -1825,7 +1823,7 @@ static mon_attack_def _mutant_beast_facet_attack(int facet, int tier)
     switch (facet)
     {
         case BF_STING:
-            return { AT_STING, AF_REACH_STING, dam };
+            return { AT_STING, AF_POISON, dam, 2};
         case BF_OX:
             return { AT_TRAMPLE, AF_TRAMPLE, dam };
         case BF_WEIRD:
@@ -1892,7 +1890,7 @@ static mon_attack_def _hepliaklqana_ancestor_attack(const monster &mon,
     return { AT_HIT, AF_PLAIN, dam };
 }
 
-/** Get the attack type, attack flavour and damage for a monster attack.
+/** Get the attack type, attack flavour, range, and damage for a monster attack.
  *
  * @param mon The monster to look at.
  * @param attk_number Which attack number to get.
@@ -2065,6 +2063,12 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
 
         if (attk.type == AT_CHERUB)
             attk.type = random_choose(AT_HEADBUTT, AT_BITE, AT_PECK, AT_GORE);
+
+        if (attk.flavour == AF_UGLY_THING)
+        {
+            attk.flavour = random_choose(AF_FIRE, AF_COLD, AF_ELEC, AF_POISON,
+                                         AF_ACID, AF_ANTIMAGIC);
+        }
     }
 
     // Slime creature attacks are multiplied by the number merged.
@@ -2224,38 +2228,16 @@ int flavour_damage(attack_flavour flavour, int HD, bool random)
         //       and is a lie against non-player targets.
         //       Actual attacks call actor->splash_with_acid() directly.
         case AF_ACID:
-        case AF_REACH_TONGUE:
             if (random)
                 return roll_dice(4, 3);
             return 12;
         // Just show max damage: this number's only used for display.
         case AF_AIRSTRIKE:
             return pow(HD + 1, 1.2) * 12 / 6;
-        case AF_REACH_CLEAVE_UGLY:
+        case AF_UGLY_THING:
             return HD * 3;
         default:
             return 0;
-    }
-}
-
-/**
- * Does a monster attacking with this flavour reach as if using a polearm?
- *
- * @param flavour   The attack flavour in question; e.g. AF_COLD.
- * @return          Whether the flavour grants inherent reach.
- */
-bool flavour_has_reach(attack_flavour flavour)
-{
-    switch (flavour)
-    {
-        case AF_REACH:
-        case AF_REACH_STING:
-        case AF_REACH_TONGUE:
-        case AF_RIFT:
-        case AF_REACH_CLEAVE_UGLY:
-            return true;
-        default:
-            return false;
     }
 }
 
