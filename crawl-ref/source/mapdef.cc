@@ -618,7 +618,7 @@ void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
 
             const int colour = (*overlay)(x, y).colour;
             if (colour)
-                dgn_set_grid_colour_at(gc, colour);
+                env.grid_colours(gc) = colour;
 
             const terrain_property_t property = (*overlay)(x, y).property;
             if (property.flags >= FPROP_BLOODY)
