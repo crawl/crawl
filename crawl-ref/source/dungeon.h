@@ -267,9 +267,7 @@ void dgn_reset_level(bool enable_random_maps = true);
 const vault_placement *dgn_register_place(const vault_placement &place,
                                           bool register_vault);
 
-int dgn_count_disconnected_zones(
-    bool choose_stairless,
-    dungeon_feature_type fill = DNGN_UNSEEN);
+int dgn_count_disconnected_zones(bool choose_stairless);
 
 int dgn_count_tele_zones(bool choose_stairless);
 
