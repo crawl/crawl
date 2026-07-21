@@ -1067,7 +1067,7 @@ coord_def direction_chooser::find_acceptable_aim(const monster* focus)
     aff_type best_player_aff = harmful_to_player ? AFF_NO : AFF_YES;
     aff_type best_target_aff = AFF_NO;
     aff_type best_friend_aff = valid_friends.empty() ? AFF_NO : AFF_YES;
-    for (radius_iterator ri(focus->pos(), LOS_DEFAULT); ri; ++ri)
+    for (radius_iterator ri(focus->pos(), LOS_NONE); ri; ++ri)
     {
         if (!you.see_cell_no_trans(*ri)
             && grid_distance(you.pos(), *ri) > range)
