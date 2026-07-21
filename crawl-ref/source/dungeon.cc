@@ -2446,6 +2446,13 @@ static void _dgn_verify_connectivity(unsigned nvaults)
         }
     }
 
+    if (_branch_needs_stairs() && !_fixup_stone_stairs(true))
+    {
+        dprf(DIAG_DNGN, "Warning: failed to preserve vault stairs.");
+        if (!_fixup_stone_stairs(false))
+            throw dgn_veto_exception("Failed to fix stone stairs.");
+    }
+
     // Also check for isolated regions that have no stairs.
     if (player_in_connected_branch()
         && !(branches[you.where_are_you].branch_flags & brflag::islanded)
@@ -2464,13 +2471,6 @@ static void _dgn_verify_connectivity(unsigned nvaults)
                                        _dgn_square_is_passable_with_traps) > 0)
     {
         throw dgn_veto_exception("Isolated trap areas with no stairs.");
-    }
-
-    if (_branch_needs_stairs() && !_fixup_stone_stairs(true))
-    {
-        dprf(DIAG_DNGN, "Warning: failed to preserve vault stairs.");
-        if (!_fixup_stone_stairs(false))
-            throw dgn_veto_exception("Failed to fix stone stairs.");
     }
 
     if (!_branch_entrances_are_connected())
