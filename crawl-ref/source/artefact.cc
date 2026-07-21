@@ -1777,13 +1777,13 @@ static bool _unrand_is_compatible(const unrandart_entry& unrand,
                                   object_class_type aclass,
                                   uint8_t atype,
                                   bool acquirement,
-                                  bool strict_type)
+                                  monster *mons)
 {
     if (unrand.base_type != aclass)
         return false;
     if (atype == OBJ_RANDOM)
         return true;
-    if (aclass != OBJ_WEAPONS || strict_type)
+    if (aclass != OBJ_WEAPONS)
         return unrand.sub_type == atype;
 
     item_def required_item;
@@ -1793,6 +1793,9 @@ static bool _unrand_is_compatible(const unrandart_entry& unrand,
     item_def unrand_item;
     unrand_item.base_type = unrand.base_type;
     unrand_item.sub_type = unrand.sub_type;
+
+    if (mons && !mons->could_wield(unrand_item))
+        return false;
 
     if (item_attack_skill(required_item) != item_attack_skill(unrand_item))
         return false;
@@ -1806,7 +1809,7 @@ static bool _unrand_is_compatible(const unrandart_entry& unrand,
 }
 
 int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level,
-                        bool in_abyss, bool acquirement, bool strict_type)
+                        bool in_abyss, bool acquirement, monster *mons)
 {
     int chosen_unrand_idx = -1;
 
@@ -1857,7 +1860,7 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level,
         }
 
         if (!_unrand_is_compatible(*entry, (object_class_type)aclass, atype,
-                                   acquirement, strict_type))
+                                   acquirement, mons))
         {
             continue;
         }

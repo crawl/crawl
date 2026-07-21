@@ -21,7 +21,7 @@ int items(bool allow_uniques, object_class_type force_class, int force_type,
           bool acquirement = false,
           string custom_name = "",
           CrawlHashTable const *fixed_props = nullptr,
-          bool strict_unrand_type = false);
+          monster *mons = nullptr);
 
 void item_colour(item_def &item);
 

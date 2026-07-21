@@ -164,7 +164,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
 
 static bool _try_make_item_unrand(item_def& item, int &force_type,
                                   int item_level, int agent, bool acquirement,
-                                  bool strict_type = false)
+                                  monster *mons = nullptr)
 {
     if (player_in_branch(BRANCH_PANDEMONIUM) && agent == NO_AGENT)
         return false;
@@ -173,8 +173,7 @@ static bool _try_make_item_unrand(item_def& item, int &force_type,
     const bool include_abyssed = player_in_branch(BRANCH_ABYSS)
                                  && agent == NO_AGENT;
     const int idx = find_okay_unrandart(item.base_type, force_type, item_level,
-                                        include_abyssed, acquirement,
-                                        strict_type);
+                                        include_abyssed, acquirement, mons);
     if (idx == -1)
         return false;
 
@@ -200,7 +199,7 @@ static bool _weapon_disallows_randart(int sub_type)
 static bool _try_make_weapon_artefact(item_def& item, int force_type,
                                       int item_level, bool force_randart,
                                       int agent, bool acquirement,
-                                      bool strict_type = false)
+                                      monster *mons = nullptr)
 {
     const int old_ego = item.brand;
     if (item_level > 0 && x_chance_in_y(101 + item_level * 3, 4000)
@@ -213,7 +212,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
             && !force_randart)
         {
             if (_try_make_item_unrand(item, force_type, item_level, agent,
-                                      acquirement, strict_type))
+                                      acquirement, mons))
             {
                 return true;
             }
@@ -431,7 +430,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
                                   int force_type, int item_level,
                                   int agent = NO_AGENT,
                                   bool acquirement = false,
-                                  bool strict_type = false)
+                                  monster *mons = nullptr)
 {
     // Determine weapon type.
     if (force_type != OBJ_RANDOM)
@@ -449,7 +448,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         int ego = item.brand;
         for (int i = 0; i < 100; ++i)
             if (_try_make_weapon_artefact(item, force_type, 0, true, agent,
-                                          acquirement, strict_type))
+                                          acquirement, mons))
             {
                 if (ego > SPWPN_NORMAL)
                     set_artefact_brand(item, ego);
@@ -472,7 +471,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     // If we make the unique roll, no further generation necessary.
     if (allow_uniques
         && _try_make_weapon_artefact(item, force_type, item_level, false,
-                                     agent, acquirement, strict_type))
+                                     agent, acquirement, mons))
     {
         return;
     }
@@ -2017,8 +2016,7 @@ static void _setup_fallback_randart(const int unrand_id,
  * @param acquirement Whether the item should be tailored to fit the player
  * @param custom_name A custom name for the item
  * @param props Any special item props
- * @param If this generates an unrand weapon, whether to stick precisely to the
- *        type provided.
+ * @param mons The monster who must be able to wield this (if any)
  *
  * @return The generated item's item slot or NON_ITEM if it fails.
  */
@@ -2031,7 +2029,7 @@ int items(bool allow_uniques,
           bool acquirement,
           string custom_name,
           CrawlHashTable const *fixed_props,
-          bool strict_unrand_type)
+          monster *mons)
 {
     rng::subgenerator item_rng;
 
@@ -2131,7 +2129,7 @@ int items(bool allow_uniques,
     {
     case OBJ_WEAPONS:
         _generate_weapon_item(item, allow_uniques, force_type, item_level,
-                              agent, acquirement, strict_unrand_type);
+                              agent, acquirement, mons);
         break;
 
     case OBJ_MISSILES:
