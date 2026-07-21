@@ -13,6 +13,7 @@
 using std::vector;
 
 struct shop_struct;
+struct item_def;
 
 int artefact_value(const item_def &item);
 
@@ -26,6 +27,8 @@ int item_price(const item_def& item, const shop_struct& shop);
 // curse scrolls are worthless for everyone, most potions aren't worthless
 // for mummies, etcetera.
 bool is_worthless_consumable(const item_def &item);
+// Return how many matching potions or scrolls are currently in the inventory.
+int shop_owned_consumable_count(const item_def &item);
 
 void shop();
 void shop(shop_struct& shop, const level_pos& pos);
