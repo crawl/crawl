@@ -162,11 +162,17 @@ static void _monster_regenerate(monster* mons)
 
     if (mons->has_ench(ENCH_REGENERATION))
         mons->heal(3 + div_rand_round(mons->max_hit_points, 20));
+}
 
-    if (mons_is_hepliaklqana_ancestor(mons->type))
+// Check whether a Hep ancestor is at full HP and should interrupt any delay.
+// We may not be able to see it when it reaches full health, so check every
+// turn not on regen.
+static void _hepliaklqana_ancestor_check_full_hp(monster* mons)
+{
+    if (mons_is_hepliaklqana_ancestor(mons->type)
+        && mons->hit_points == mons->max_hit_points && you.can_see(*mons))
     {
-        if (mons->hit_points == mons->max_hit_points && you.can_see(*mons))
-            interrupt_activity(activity_interrupt::ancestor_hp);
+        interrupt_activity(activity_interrupt::ancestor_hp);
     }
 }
 
@@ -2170,6 +2176,7 @@ void handle_monster_move(monster* mons)
         return;
 
     _monster_regenerate(mons);
+    _hepliaklqana_ancestor_check_full_hp(mons);
 
     if (skip_turn)
         return;
