@@ -7378,6 +7378,18 @@ static void _fixup_door_connect_knowledge(MapKnowledge& map_knowledge)
         map_knowledge(*ri).set_door_connect(door_connect);
     }
 }
+
+static void _fixup_mimics()
+{
+    constexpr unsigned int old_mimic_map_mask = 0x100;
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        if (!(env.level_map_mask(*ri) & old_mimic_map_mask))
+            continue;
+        env.level_map_mask(*ri) &= ~old_mimic_map_mask;
+        env.pgrid(*ri) |= FPROP_MIMIC;
+    }
+}
 #endif
 
 static void _tag_read_level(reader &th)
@@ -7683,6 +7695,11 @@ static void _tag_read_level(reader &th)
     init_lurker_map();
 #if TAG_MAJOR_VERSION == 34
     }
+#endif
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_MIMIC_PROP)
+        _fixup_mimics();
 #endif
 }
 

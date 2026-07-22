@@ -337,7 +337,7 @@ bool wizard_create_feature(dist &target, dungeon_feature_type feat, bool mimic)
         }
 
         if (mimic)
-            env.level_map_mask(pos) |= MMT_MIMIC;
+            env.pgrid(pos) |= FPROP_MIMIC;
 
         if (you.see_cell(pos))
         {

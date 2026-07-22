@@ -1023,7 +1023,7 @@ static void _destroy_mimic_feature(const coord_def &pos)
 
     unnotice_feature(level_pos(level_id::current(), pos));
     env.grid(pos) = DNGN_FLOOR;
-    env.level_map_mask(pos) &= ~MMT_MIMIC;
+    env.pgrid(pos) &= ~FPROP_MIMIC;
     set_terrain_changed(pos);
     remove_markers_and_listeners_at(pos);
 
@@ -1046,7 +1046,7 @@ void discover_mimic(const coord_def& pos)
     // If the feature has been destroyed, don't create a floor mimic.
     if (feature_mimic && !feat_is_mimicable(feat, false))
     {
-        env.level_map_mask(pos) &= ~MMT_MIMIC;
+        env.pgrid(pos) &= ~FPROP_MIMIC;
         return;
     }
 

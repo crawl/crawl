@@ -2664,8 +2664,6 @@ struct coord_feat
     void set_from(const coord_def &c)
     {
         feat = env.grid(c);
-        // Don't copy mimic-ness.
-        mask = env.level_map_mask(c) & ~(MMT_MIMIC);
         // Only copy "static" properties.
         prop = env.pgrid(c) & (FPROP_NO_CLOUD_GEN | FPROP_NO_TELE_INTO
                                | FPROP_NO_TIDE | FPROP_NO_AUTOMAP);
@@ -2829,7 +2827,7 @@ static void _place_feature_mimics()
         {
             dprf(DIAG_DNGN, "Placed %s mimic at (%d,%d).",
                  feat_type_name(feat), ri->x, ri->y);
-            env.level_map_mask(*ri) |= MMT_MIMIC;
+            env.pgrid(*ri) |= FPROP_MIMIC;
 
             // If we're mimicing a unique portal vault, give a chance for
             // another one to spawn.
@@ -5784,7 +5782,7 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
     if (f.mimic > 0 && one_chance_in(f.mimic))
     {
         ASSERT(feat_is_mimicable(env.grid(where), false));
-        env.level_map_mask(where) |= MMT_MIMIC;
+        env.pgrid(where) |= FPROP_MIMIC;
     }
     else if (f.no_mimic)
         env.level_map_mask(where) |= MMT_NO_MIMIC;
@@ -7548,7 +7546,8 @@ void vault_placement::apply_grid()
                 link_items();
                 const dungeon_feature_type newgrid = env.grid(*ri);
                 env.grid(*ri) = oldgrid;
-                dungeon_terrain_changed(*ri, newgrid, true);
+                dungeon_terrain_changed(*ri, newgrid, true, false, false,
+                                        true);
                 remove_markers_and_listeners_at(*ri);
             }
         }

@@ -51,7 +51,7 @@
 
 bool base_feature_is_mimic_at(coord_def c)
 {
-    return map_masked(c, MMT_MIMIC);
+    return testbits(env.pgrid(c), FPROP_MIMIC);
 }
 
 bool current_feature_is_mimic_at(coord_def c)

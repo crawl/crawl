@@ -1382,7 +1382,7 @@ static void _permanent_terrain_changed(coord_def pos,
     if (nfeat != DNGN_UNSEEN)
         unnotice_feature(level_pos(level_id::current(), pos));
     if (!preserve_mimics)
-        env.level_map_mask(pos) &= ~MMT_MIMIC;
+        env.pgrid(pos) &= ~FPROP_MIMIC;
 }
 
 /**
