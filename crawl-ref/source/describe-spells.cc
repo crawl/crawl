@@ -37,9 +37,6 @@
  #include "tilepick.h"
 #endif
 
-static string _effect_string(spell_type spell, const monster_info *mon_owner,
-                             bool is_wand = false);
-
 /**
  * Returns a spellset containing the player-known spells for the given item.
  *
@@ -499,14 +496,16 @@ static string _describe_living_spells(const monster_info &mon_owner)
 {
     const spell_type spell = living_spell_type_for(mon_owner.type);
     const int n = living_spell_count(spell, false);
-    const string base_desc = _effect_string(spell, &mon_owner);
+    const string base_desc = spell_effect_string(spell, &mon_owner);
+    if (base_desc.empty())
+        return "";
     const string desc = base_desc[0] == '(' ? base_desc : make_stringf("(%s)",
             base_desc.c_str());
     return make_stringf("%dx%s", n, desc.c_str());
 }
 
 
-static string _effect_string(spell_type spell, const monster_info *mon_owner,
+string spell_effect_string(spell_type spell, const monster_info *mon_owner,
                              bool is_wand)
 {
     if (!mon_owner)
@@ -521,21 +520,25 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner,
 
     if (testbits(get_spell_flags(spell), spflag::WL_check))
     {
+        const dice_def dam = _spell_damage(spell, hd, pow);
+
         // WL chances only make sense vs a player
-        if (!crawl_state.need_save
+        bool skip_chances = !crawl_state.need_save;
 #ifndef DEBUG_DIAGNOSTICS
-            || mon_owner->attitude == ATT_FRIENDLY
+        skip_chances |= mon_owner->attitude == ATT_FRIENDLY;
 #endif
-            )
+        if (skip_chances)
         {
-            return "";
+            if (!dam.size || !dam.num)
+                return "";
+            return make_stringf("(%dd%d)", dam.num, dam.size);
         }
+
         if (you.immune_to_hex(spell))
             return "(immune)";
 
         const string hex_str = make_stringf("%d%%", hex_chance(spell, mon_owner, is_wand));
 
-        const dice_def dam = _spell_damage(spell, hd, pow);
         if (!dam.size || !dam.num)
             return make_stringf("(%s)", hex_str.c_str());
         return make_stringf("(%s,%dd%d)", hex_str.c_str(), dam.num, dam.size);
@@ -658,7 +661,7 @@ static void _describe_book(const spellbook_contents &book,
                                             ? entry->second : ' ';
 
         const string range_str = _range_string(spell, mon_owner, hd);
-        string effect_str = _effect_string(spell, mon_owner, book.is_wand);
+        string effect_str = spell_effect_string(spell, mon_owner, book.is_wand);
 
         const string dith_marker = mon_owner
                                    && crawl_state.need_save
@@ -782,7 +785,7 @@ static void _write_book(const spellbook_contents &book,
         const char spell_letter = entry != spell_map.end() ? entry->second : ' ';
         tiles.json_write_string("letter", string(1, spell_letter));
 
-        string effect_str = _effect_string(spell, mon_owner, book.is_wand);
+        string effect_str = spell_effect_string(spell, mon_owner, book.is_wand);
         if (!testbits(get_spell_flags(spell), spflag::WL_check))
             effect_str = colourize_str(effect_str, _spell_colour(spell));
         tiles.json_write_string("effect", effect_str);
