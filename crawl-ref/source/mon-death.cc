@@ -4,6 +4,7 @@
 **/
 
 #include <functional>
+#include <unordered_map>
 
 #include "AppHdr.h"
 
@@ -3726,20 +3727,28 @@ void end_flayed_effect(monster* ghost)
     }
 }
 
-// Monsters who need to be reset at the end of the turn.
-static vector<monster*> _pending_reset;
+// Monsters who need to be reset at the end of the turn, with their mid.
+// We only reset those whose mid still matches at flush time, so it is
+// safe to reset these early.
+static unordered_map<monster*, mid_t> _pending_reset;
 
 // Reset the slots of every monster detached by monster_cleanup().
 void flush_monster_reset()
 {
-    for (monster* mons : _pending_reset)
-        mons->reset();
+    for (const auto &p : _pending_reset)
+    {
+        monster *mons = p.first;
+        // Check the monster we were planning to reset is still in the slot -
+        // if someone else has taken care of the reset, do nothing.
+        if (mons->mid == p.second)
+            mons->reset();
+    }
     _pending_reset.clear();
 }
 
 void cancel_pending_monster_reset(monster* mons)
 {
-    erase_val(_pending_reset, mons);
+    _pending_reset.erase(mons);
 }
 
 // Drop pending resets without running them, for when the level (and its whole
@@ -3825,7 +3834,7 @@ void monster_cleanup(monster* mons, bool reset)
 
     // Mark the monster for reset next cycle.
     mons->flags |= MF_PENDING_RESET;
-    _pending_reset.push_back(mons);
+    _pending_reset[mons] = mons->mid;
 }
 
 // Simulates the death of one 'half' of a given rider monster, while leaving the
