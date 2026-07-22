@@ -35,6 +35,7 @@
 #include "files.h"
 #include "format.h"
 #include "god-abil.h"
+#include "god-companions.h"
 #include "god-passive.h"
 #include "hints.h"
 #include "item-name.h"
@@ -4676,6 +4677,8 @@ void runrest::initialise(int dir, int mode)
     notified_hp_full = false;
     notified_mp_full = false;
     notified_ancestor_hp_full = false;
+    // This is true only for a visible injured ancestor.
+    ancestor_was_injured = !ancestor_full_hp();
     turns_passed = 0;
     skip_autorest = false;
     starting_pos = you.pos();
@@ -4921,6 +4924,7 @@ void runrest::clear()
     notified_hp_full = false;
     notified_mp_full = false;
     notified_ancestor_hp_full = false;
+    ancestor_was_injured = false;
     skip_autorest = false;
 }
 
