@@ -13,8 +13,11 @@
 #include "dbg-objstat.h"
 #include "dungeon.h"
 #include "env.h"
+#include "files.h"
 #include "initfile.h"
+#include "item-prop.h"
 #include "libutil.h"
+#include "los.h"
 #include "maps.h"
 #include "map-knowledge.h"
 #include "message.h"
@@ -49,6 +52,8 @@ static int levels_tried = 0, levels_failed = 0;
 static int build_attempts = 0, level_vetoes = 0;
 // Map from message to counts.
 static map<string, int> veto_messages;
+// Map from message to one (seed, level) example of it happening.
+static map<string, pair<uint64_t, level_id>> veto_examples;
 
 void mapstat_report_map_build_start()
 {
@@ -60,6 +65,8 @@ void mapstat_report_map_veto(const string &message)
 {
     level_vetoes++;
     ++veto_messages[message];
+    veto_examples.emplace(message,
+                           make_pair(crawl_state.seed, level_id::current()));
     map_builds[level_id::current()].second++;
 }
 
@@ -94,6 +101,9 @@ static bool _do_build_level()
         mprf(MSGCH_WARN, "User requested cancel");
         return false;
     }
+
+    // Invalidate the LoS cache for the new level.
+    los_changed();
 
     ++levels_tried;
     if (!builder())
@@ -181,24 +191,26 @@ static bool _do_build_level()
     return true;
 }
 
-static void _dungeon_places()
+static void _populate_generated_levels()
 {
     generated_levels.clear();
     branch_count = 0;
-    for (branch_iterator it; it; ++it)
+    set<branch_type> handled;
+
+    auto add_branch = [&](branch_type br)
     {
-        if (brdepth[it->id] == -1)
-            continue;
+        if (br == NUM_BRANCHES || brdepth[br] == -1 || !handled.insert(br).second)
+            return;
 #if TAG_MAJOR_VERSION == 34
         // Don't want to include branches that no longer generate.
-        if (branch_is_unfinished(it->id))
-            continue;
+        if (branch_is_unfinished(br))
+            return;
 #endif
 
         bool new_branch = true;
-        for (int depth = 1; depth <= brdepth[it->id]; ++depth)
+        for (int depth = 1; depth <= brdepth[br]; ++depth)
         {
-            level_id l(it->id, depth);
+            level_id l(br, depth);
             if (SysEnv.map_gen_range && !SysEnv.map_gen_range->is_usable_in(l))
                 continue;
             generated_levels.push_back(l);
@@ -206,17 +218,62 @@ static void _dungeon_places()
                 ++branch_count;
             new_branch = false;
         }
+    };
+
+    // First go through the real game's generation order.
+    for (branch_type br : dgn_branch_generation_order())
+        if (dgn_branch_will_generate(br))
+            add_branch(br);
+    // Now add everything else. Note that in the case of portals, we may build
+    // them before we reach them in the order, in which case they'll be
+    // skipped.
+    for (branch_iterator it; it; ++it)
+        add_branch(it->id);
+}
+
+static bool _build_portals_entered_from(const level_id &parent,
+                                        set<branch_type> &built_portals)
+{
+    update_portal_entrances();
+    for (branch_type b : dgn_portal_generation_order())
+    {
+        if (brentry[b] != parent || brdepth[b] == -1)
+            continue;
+        built_portals.insert(b);
+        for (int depth = 1; depth <= brdepth[b]; ++depth)
+        {
+            you.where_are_you = b;
+            you.depth = depth;
+            if (!_do_build_level())
+                return false;
+        }
     }
+    return true;
 }
 
 static bool _build_dungeon()
 {
+    set<branch_type> built_portals;
     for (const level_id &lid: generated_levels)
     {
+        // Skip if this is a portal already built.
+        if (built_portals.count(lid.branch))
+            continue;
+
         you.where_are_you = lid.branch;
         you.depth = lid.depth;
         if (!_do_build_level())
             return false;
+
+        // If building the whole dungeon, build portals off the side. This
+        // allows us to perfectly match a game's pregeneration.
+        // Since we don't pregenerate multiple use portals, we do still end
+        // up building each portal exactly once.
+        if (!SysEnv.map_gen_range
+            && !_build_portals_entered_from(lid, built_portals))
+        {
+            return false;
+        }
     }
     return true;
 }
@@ -236,8 +293,6 @@ static bool _build_dungeon()
 */
 bool mapstat_build_levels()
 {
-    if (!generated_levels.size())
-        _dungeon_places();
     printf("Iteration: ");
     fflush(stdout);
     for (int i = 0; i < SysEnv.map_gen_iters; ++i)
@@ -272,7 +327,11 @@ bool mapstat_build_levels()
         rng::reset();
         you.game_seed = crawl_state.seed;
 
+        initialise_item_sets(true);
+
         initial_dungeon_setup();
+
+        _populate_generated_levels();
 
         if (!_build_dungeon())
             return false;
@@ -422,7 +481,12 @@ static void _write_map_stats()
             sortedreasons.insert(make_pair(entry.second, entry.first));
 
         for (auto i = sortedreasons.rbegin(); i != sortedreasons.rend(); ++i)
-            fprintf(outf, "%3d) %s\n", i->first, i->second.c_str());
+        {
+            const auto &example = veto_examples[i->second];
+            fprintf(outf, "%3d) %s (e.g. seed %" PRIu64 " on %s)\n", i->first,
+                    i->second.c_str(), example.first,
+                    example.second.describe().c_str());
+        }
     }
 
     if (!unused_maps.empty() && !SysEnv.map_gen_range)
@@ -529,13 +593,14 @@ void mapstat_generate_stats()
         return;
 
     initialise_item_descriptions();
-    initialise_branch_depths();
 
     // We have to run map preludes ourselves.
     run_map_global_preludes();
     run_map_local_preludes();
 
-    _dungeon_places();
+    // Populate level generation order to get the count.
+    initial_dungeon_setup();
+    _populate_generated_levels();
 
     clear_messages();
     mpr("Generating dungeon map stats");

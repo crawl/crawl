@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 
+#include "branch-type.h"
 #include "maybe-bool.h"
 
 struct player_save_info;
@@ -90,6 +91,9 @@ void update_portal_entrances();
 void reset_portal_entrances();
 bool generate_level(const level_id &l);
 bool pregen_dungeon(const level_id &stopping_point);
+const vector<branch_type> &dgn_branch_generation_order();
+const vector<branch_type> &dgn_portal_generation_order();
+bool dgn_branch_will_generate(branch_type br);
 bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level);
 void delete_level(const level_id &level);
