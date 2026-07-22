@@ -168,6 +168,10 @@ struct game_state
     string last_builder_error;
     bool last_builder_error_fatal;
 
+    // Item slots that have been logged as unlinked. Used to suppress further
+    // repetitive messages.
+    FixedBitVector<MAX_ITEMS> known_unlinked_items;
+
 protected:
     void reset_cmd_repeat();
     void reset_cmd_again();
