@@ -210,10 +210,10 @@ int attack::calc_pre_roll_to_hit(bool random)
             if (weapon->base_type == OBJ_WEAPONS)
             {
                 mhit += weapon->plus;
-                mhit += property(*weapon, PWPN_HIT);
+                mhit += property(*weapon, PWPN_HIT) * 4;
             }
             else if (weapon->base_type == OBJ_STAVES)
-                mhit += property(*weapon, PWPN_HIT);
+                mhit += property(*weapon, PWPN_HIT) * 4;
         }
 
         // slaying bonus
@@ -231,7 +231,7 @@ int attack::calc_pre_roll_to_hit(bool random)
     {
         mhit = calc_mon_to_hit_base();
         if (using_weapon())
-            mhit += weapon->plus + property(*weapon, PWPN_HIT);
+            mhit += weapon->plus + property(*weapon, PWPN_HIT) * 4;
 
         mhit += attacker->slaying();
     }
