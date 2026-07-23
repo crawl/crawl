@@ -130,7 +130,7 @@ void seeker_attack(monster& seeker, actor& target,
 spret cast_hailstorm(int pow, bool fail, bool tracer=false);
 
 spret cast_flame_wave(int pow, bool fail);
-void handle_flame_wave(int lvl);
+bool handle_flame_wave(int lvl);
 
 spret cast_imb(int pow, bool fail);
 
