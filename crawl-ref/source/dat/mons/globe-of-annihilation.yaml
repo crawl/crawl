@@ -11,7 +11,7 @@ hp_10x: 50000
 ac: 0
 ev: 10
 intelligence: brainless
-speed: 15
+speed: 20
 size: little
 shape: orb
 tile: globe_of_annihilation_geh
