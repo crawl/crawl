@@ -1,0 +1,318 @@
+%%%%
+Dungeon
+
+Dodnėś ostavaje zagadkojų, kako bylo stvorjeno tuto čudno město. Něktori tvŕdęt,
+že to jest igrišče dosađenyh bogov, drugi ljudi tvŕdęt, že ono bylo sformovano
+vsimi vidami stvorov, izběgšimi od nadzemja i sȯlnėčnogo světla. Nezavisno od jego
+pohođeńja, tuta glųboka jama jest pȯlna neslyhanymi bogatstvami, råvno kako i
+množstvom nebezpečnostij protiv vśakogo vinovnika. Nemnogi sųt smogli izběgti
+živymi, i ješče mėnje tyh, kto shrånil nemnogo zdråvogo råzuma, dostatȯčnogo dlja
+togo, da by pověděti historkų.
+%%%%
+Temple
+
+Ekumeničny Hram jest město pokoja i uběžišče od bezumja podzemja. Obyčajno v njem
+nahodęt sę oltaŕe vęćiństvu znajemyh bogov. Bogi, ktori cěnęt izslědovańja, ne darujųt
+pobožnost́ za izslědovańje Hrama.
+%%%%
+Orcish Mines
+
+Orkove Rudniky sųt domom dlja orkov, oselivših sę v Podzemju, jih sȯjųznyh humanoidov
+i gromady svěžeizkopanogo zlåta. Prědprijėmlivi trgovci, prodavajųći tovary vsim
+prihodęćim, sųt nastavili trgove posty srěd orkov i jih bratji, da by nabyti izgodų
+v koristańju tutogo zlåta.
+%%%%
+Elven Halls
+
+Elfove Saly sųt domom dlja glųbinnyh elfov - rasy, davno jest odrěčenoj od sȯlnca.
+Jih saly sųt napȯlnjene bogatstvami, ale vśakogo potenciaĺnogo vlamyvatelja bųde
+čekati smŕteljno privitańje. V svojej dȯlgoj samotě glųbinni elfi sųt udoskonalili
+tėmnų magijų, o moći ktoroj orki mogųt jedino mėčtati!
+%%%%
+Lair
+
+Vęćiństvo pųtnikov nahodęt Legovišče Zvěŕev vȯzbuđajųćejų prěměnojų položeńja.
+Zaisto, tut jest něčto osoblivo v tom, da by byti bodanym, gnetenym i sjedenym,
+než narězanym, izgorěvšim ili zaklåtym.
+
+V Legovišču sųt vhody v Močar ili Měliny, v Zmijine Jamy ili Pavųčje Gnězdo, i
+v Sliźne Jamy.
+%%%%
+Swamp
+
+Močarno pustišče, Močar, jest napȯlnjeny sliźjų, blåtom, muhami i velikymi
+žędnymi męsojednymi monstrami.
+
+V každom iz Podzemij jest jedino jedna větva - Močar abo Měliny.
+%%%%
+Shoals
+
+Egzotične podzemne plaži Mělin sųt několiko malyh ostrovov v, prividno, bezkonėčnom
+morju. Merfolki sųt sdělali jih svojim domom zajedno s mnogimi groznymi moŕskymi
+stvorami.
+
+V každom iz Podzemij jest jedino jedna větva - Měliny abo Močar.
+%%%%
+Snake Pit
+
+Koridory Zmijinoj Jamy sųt domom dlja råzličnyh vidov zmij i takože obyvajeme
+spolȯčeństvom moćnyh nag i salamandr.
+
+V každom iz Podzemij jest jedino jedna větva - Zmijina Jama abo Pavųčje Gnězdo.
+%%%%
+Spider Nest
+
+Krȯšęće sę, obmotane pavųčinojų jamy Pavųčjego Gnězda sųt okupovane otravnymi
+členistonogymi i råzličnymi pȯlzųćimi insektami.
+
+V každom iz Podzemij jest jedino jedna větva - Pavųčje Gnězdo abo Zmijina Jama.
+%%%%
+Slime Pits
+
+Sliźne Jamy sųt amorfno caŕstvo kysliny, žele i slizi. Až stěny kapjųt bolěsnojų
+kyslinojų. Vśake slědy råzumnyh stvorov davno sųt izčeznųli. Jednako, hodęt pověŕja
+o velikyh bogatstvah, skrytyh glųboko v tajnyh komorah bez vhoda.
+%%%%
+Vaults
+
+Govoręt, že v Skladiščah skryvajųt kako i velike bogatstva, tako i zapečatane stvory
+zla, a jih pohođeńje jest znajemo jedino jih gvardiji: Zelěznomu Ordenu. Vinovniki
+bųdųt strěsti sę s organizovanojų obrånojų, trenovanymi manevrami, orųžjem i magijejų,
+oživjenymi konstrukcijami, prinuđenymi sȯjųznikami i ukroćenymi zvěŕami, objedinjenymi
+obćim cěljem.
+%%%%
+Crypt
+
+Kripta jest ogromno skladišče starodavnyh mŕtvecov. Vȯzduh tut jest hlådny i smrådny,
+stěny sųt hlådne i mokre. Kosti sųt råzmetane vsekde, i každy zvųk bezpokojno
+oddavaje sę ehom, narušajųći vlådějųćų tišinų mogyl.
+%%%%
+Tomb
+
+Grobnica Starodavnyh jest město proklętij i užasov, oživjenyh najmŕzšejų nekromantijejų.
+Spis tyh, kto vråtil sę iz togo města čistoj smŕti jest krajno kråtky.
+%%%%
+Hell
+
+Vestibulj Pekla ohrånjaje sę Gerionom i råzlične obyvatelji každogo iz pekȯl.
+
+Portaly do Vestibulja Pekla nahodęt sę v Glųbinah.
+%%%%
+Dis
+
+Želězny Gråd Dis jest dom dlja mnogyh samyh odpornyh stråžev pekla. Ti, komu nemaje
+města v salah Disa, bųdųt strěsti protivdějańje samoj zemje.
+
+Zloba tutogo metaličnogo caŕstva råzjedaje orųdovańje.
+%%%%
+Gehenna
+
+Gehena jest caŕstvo lavy, plåmenja i proklęt́ja. Na tyh, kto dȯlgo tam prěbyvaje,
+bųde zavaliti sę ogȯnj i sěra
+
+Råzjedajųći dym dělaje svitky nečitajemymi.
+%%%%
+Cocytus
+
+Kocit jest mråčno, kųsajųće mråzom pustišče. Nezvane gosti bųdųt poznati, že kųsajųće
+větry i ledene obyvatelji pustišča otęgčajųt jih progres.
+
+Studeny hlåd zamražajųt napoje.
+%%%%
+Tartarus
+
+Tartar jest råzpadajųći sę nižnji svět. Poslěčasno, nemŕtvi, demoni i djavli tutyh
+měst osušajųt žit́ja iz vsih, kto směje vȯjdti.
+
+Vseproniklivo gnit́je vpivaje silų volje posětiteljev.
+%%%%
+Zot
+
+Caŕstvo Zot jest oblast́ podzemja, natoliko prěstrašajųća, pȯlna bezumja, běsnosti
+i jarosti, že ona bezpečno zamknųta dlja slučajnyh vinovnikov. Jedino sami bezumni
+pųtniki bųdųt osměliti sę sȯbrati potrěbne ključe, slamati pečati i probiti sę
+glųbše - vse iz-za napråzdnoj naděje najdti legendarny artefakt, ktorogo prěđe
+nikto nikȯgda ne viděl.
+%%%%
+Abyss
+
+The Abyss is a truly bizarre place, ever-changing and twisted. It is filled
+with all sorts of monsters, mostly of demonic nature, whose common aim is to
+feast on intruders. It is also the garbage dump for many sorcerers, who delight
+in sending would-be champions like you to these proving grounds of madness.
+Reportedly, there is some structure to the chaos, as Lugonu seems to concoct
+schemes around this place and its denizens.
+
+Many portals to the Abyss can be found corrupting one floor late in the Dungeon.
+
+The Abyss consists of seven infinite levels. The abyssal rune of Zot can be
+found from the third level onwards, and is more common at greater depths.
+Portals back to the dungeon are scattered throughout the Abyss, and are found
+more commonly at greater depths or while carrying the abyssal rune.
+
+Killing monsters will warp the substance of the Abyss, eventually generating a
+gateway out. Further persistence will wear holes in the Abyss, allowing descent
+into deeper layers.
+
+The fabric of the Abyss takes greater notice of the powerful; no matter how
+they arrive, more experienced adventurers will find themselves drawn deeper
+within the maddening expanse of that realm.
+%%%%
+Pandemonium
+
+Pandemonium is an infinite realm of pain and suffering. While there are many
+treasures to be found within, they are guarded by cruel demons and even
+crueller demon lords.
+
+Portals to Pandemonium are found abundantly in the Depths.
+
+Pandemonium is endless. Each area of Pandemonium has a small chance of
+containing a portal back to the dungeon, either directly or via the Abyss.
+
+No fewer than five runes of Zot can be found in Pandemonium:
+ • the fiery rune resides in the blazing realm of Cerebov
+ • the glowing rune can be found in the contaminated domain of Mnoleg
+ • the magical rune is guarded by the arcane powers of Lom Lobon
+ • the dark rune is hidden in the shadowy abode of Gloorx Vloq
+ • the demonic rune exists in multiple places, owned by less famous lords
+%%%%
+Ziggurat
+
+A ziggurat is a strange tower constructed of incrementally larger combat
+arenas, each containing greater wealth and even greater danger than the last.
+Beware, for a ziggurat is not a place for the faint of heart: even the bravest
+and most skilled adventurers have met their ends in one. While a portal to
+safety will be present on every level, once left, a ziggurat cannot be
+re-entered.
+
+One ziggurat is guaranteed in the Depths. Tales tell of a magical item found
+at the bottom of each ziggurat, granting access to a new ziggurat in turn. Such
+an item is also said to be found at the bottom of the Tomb of the Ancients. Each
+time a ziggurat is conquered by exiting it from the final floor, subsequent
+ziggurats will become increasingly dangerous and lucrative.
+%%%%
+Gauntlet
+
+An elaborate complex designed to lure foolhardy adventurers seeking riches and
+glory. Those who enter must choose a path through several combat arenas, each
+of which contains treasure guarded by dangerous and sometimes exotic creatures.
+At the end awaits a fearsome minotaur, guarding a large hoard of loot taken from
+the bodies of foolish adventurers.
+
+Long-range teleports are impossible in Gauntlets.
+%%%%
+Bazaar
+
+While some merchants set up shop in the dungeon, others travel in caravans from
+place to place. The bazaars of these itinerant traders feature a number of
+different shops and often have better stock than the sedentary ones, sometimes
+even at a bargain.
+%%%%
+Trove
+
+Once upon a time, an enterprising thief and wizard created a system of portals
+leading into the secret treasure troves and chambers of the rich. Too scared to
+loot them himself, he instead charged an extortionate fee for entry to anyone
+who wanted to rifle through them.
+
+The items inside such troves are likely to be useful, but beware: the wizard is
+long dead, and even while alive he never offered a money-back guarantee.
+%%%%
+Necropolis
+
+While many locales across the Dungeon are dedicated to the long-interred
+restless dead, those whose remains are fresh or lost are collected in the
+floating ceremonial chambers of the Necropolis. Each soul is enshrined and
+tended to by the maintenance staff recreating both their lives and their moments
+of death, helping visitors bid farewell to the departed. With the advent of
+adventurers seeking the Orb of Zot, these realms have been repurposed: such
+ghosts are blinded by rage and impossible to control, so both they and their
+stolen possessions are sealed away in these realms of reconciliation.
+%%%%
+Sewer
+
+Every inhabited place needs to dispose of its waste products. The Dungeon too
+has its stinking sewers and drains, full of filthy water and ignored by most
+but used as hideaways by the disgusting and the desperate. Old tales speak of
+dangerous creatures stalking through the foul-smelling green water, preying on
+each other without mercy. The tales also allude to valuable items accidentally
+washed into the drainage tunnels, forgotten and left to grow mouldy in the damp
+caverns.
+%%%%
+Ossuary
+
+The ossuary is a small tomb containing the remains and grave goods of some
+distant relatives of the pharaohs, along with the corpses of their retainers
+and household animals. It is undoubtedly riddled with many traps, and its
+undead denizens are unlikely to take kindly to looting.
+%%%%
+Bailey
+
+The bailey is the occupied and well-guarded fortress of a ruthless warlord.
+The treasures within are protected by both physical barriers and large numbers
+of well-armed humanoid warriors.
+%%%%
+Ice Cave
+
+{{ if you.branch() == "Elf" or you.branch() == "Swamp" or
+you.branch() == "Snake" or you.branch() == "Shoals" or you.branch() == "Spider"
+then return "Lednikova Råzselina"; else return "Leděna Jama"; end }} jest pusta
+jama, sformovana iz krěpkogo leda i napȯlnjena ehom zvěŕskym vyt́jem. Izmysljene
+rězane izobražeńja i statuje, ktore někȯgda běhų ukrašali jej stěny, sųt byli
+deformovane i skryte věkami pomalogo tajańja i ponovnogo råzmråžeńja.
+%%%%
+Volcano
+
+Sųt sbudovane iz ogromnyh blokov obsidiana, izžarjene komory Vulkana, možlivo,
+sųt někȯgda služili hramom někakomu božstvu ili, možlivo, žiliščem dlja mogųćego
+ognjenogo velikana. Vȯzduh jest napȯlnjeny gnetųćim žarom, i zaglušeny rev sŕdca
+Vulkana nikȯgda ne zamiraje.
+%%%%
+Gulch
+
+As the upper Dungeon has its sewer drainage system, so too do the Vaults. These
+gutter gulches serve as a containment space for accumulated garbage, various
+abandoned experiments, disorderly encroaching pests, and the particularly-broken
+corpses of intruders all alike. A great deal of mutagenic energy emanates from
+the mystic slag and mouldy waters running through it, such that even crossing
+its threshold will temporarily mutate new guests. Still, the widely-renowned
+defences of the Vaults would never dismiss any potential security front: mild
+maintenance via punished guards manage just barely enough direction to send such
+gulch monstrosities at anybody who would dare try to extract hidden riches from
+such filthy chambers.
+%%%%
+Wizlab
+
+V starodavnų dobų najmogųćějši čarovniki čęsto nahodili ili stvarjali nevelike caŕstva,
+izolovane od ostalogo světa, kde oni sųt mogli osamotiti sę v gonitvě za vse velikymi
+magičnymi znańjami i silojų. Čarovnikov davno už nemaje, ale mnoge iz jih tajnyh
+laboratorij ješče egzistujųt, sųt napȯlnjene rezultatami jih eksperimentov. Ti, kto jest
+gotovy izslědovati tute laboratorije, mogųt najdti moćne magične bogatstva, ale bųd́te
+ostråžni: vśaky čarovnik, jest sposobny stvoriti tako caŕstvo, zaslužil svojų reputacijų.
+%%%%
+Depths
+
+Glųbiny sųt najglųboka čęst́ podzemja, ktora jest podvŕgnųta råzpadajųćemu vlivu
+Caŕstva Zot, ale ktora ne jest jego čęst́jų.
+%%%%
+Desolation
+
+Pustišče někȯgda bylo pod vladojų božstv Šezy i Sargola. Poslě svŕgnųt́ja groznyh
+bliznecev, dobri bogi sųt obråtili jih rannje caŕstvo v soljnų pustynjų, da by
+podobny strašny kult nikȯgda vęće ne vȯzrodil sę. Srěd råzvalin ostali sę jedino
+poslědnje kultisti mŕtvyh bogov, jih krivověrne stvory i hrånitelji legendarnyh
+bogatstv kulta.
+
+# važny zapis: Blizneci sųt byli religejų '2', a TSO jest '1', a ne 'S'.
+%%%%
+Arena
+
+Najvyše ljubimym poslědovateljam Okawaru zabezpečaje sę dostųp na Arenų dlja
+duelov protiv svojih neprijateljev.
+%%%%
+Crucible
+
+Tigeĺ Plȯti jest pekĺna jama, kde sami oddani i nenavistni Mahlebu sųt prinuđeni
+osvęćati sebę krȯvjų. Ni jedin råzumny smŕtny ne zahotěl by objaviti sę tut, jednako
+až žrtvam Izniščitelja može byti darovany izhod odśųd, jestli oni sųt podvŕgnųti
+takym že mųkam, kako i demonični mųčitelji tutogo caŕstva.

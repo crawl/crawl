@@ -1,0 +1,211 @@
+%%%%
+flame cloud
+
+Oblåk běsęćego sę ognja. Vśaky stvor bez pȯlnogo odpora ognju bųde poraženy od
+časa, provedenogo v plåmenju.
+
+Daljnost́ hlådnyh atak smėnšaje sę pri prěhođeńju črěz oblåk, v procesu
+råzsějivajųći oblåk.
+
+Jestli oblåk nahodi sę okolo ili nad vodojų, jego žar bųde porađati par poblizu.
+%%%%
+noxious fumes cloud
+
+Oblåk mŕzkyh, dušęćih par. Vśaky stvor bez odpora otravě bųde riskovati zaměšati
+sebe iz-za gazov. Tųgějše, izkušenějše stvory bųdųt utŕpěti mėnje.
+%%%%
+freezing vapour cloud
+
+Oblåk mråžęćego vȯzduha. Vśaky stvor bez odpora hlådu bųde poranjeno od časa,
+provedenogo vnųtri oblåka.
+
+Daljnost́ ognjenyh atak smėnšaje sę pri prěhođeńju črěz oblåk, v procesu
+råzsějivajųći oblåk.
+%%%%
+poison gas cloud
+
+Oblåk smŕteljnoj otravy. Vśaky stvor bez odpora otravě bųde otravjeny i poranjeny
+od časa, provedenogo vnųtri oblåka.
+%%%%
+_smoke_cloud_
+
+Oblåk kolorovanogo dyma. Neškodlivo, kromě kako dlja astmatnikov.
+%%%%
+black smoke cloud
+
+<_smoke_cloud_>
+%%%%
+grey smoke cloud
+
+<_smoke_cloud_>
+%%%%
+blue smoke cloud
+
+<_smoke_cloud_>
+%%%%
+purple smoke cloud
+
+<_smoke_cloud_>
+%%%%
+translocational energy cloud
+
+Ostatky někogo stvora, ktory nedavno tut byl, ale jego uže nemaje, izgnany poblizu
+črěz vėś uråvėnj ili iz samoj reaĺnosti, pręmo v Bezdnų. Něktori čarovniki govoręt,
+že tute ostatky kakoby sųt "alergična reakcija" Vsesvěta v odzyv na magijų, ktora
+krivi prostråństvo nemožnymi sposobami; kosmično kyhańje. Može to jest metafizično
+mŕzko, ale v ostalom jest neškodlivo.
+%%%%
+spreading flames cloud
+
+Běsęći sę lěsny požar. Vśaky stvor bez pȯlnogo odpora ognju bųde poraženy od
+časa, provedenogo v plåmenju. Plåmenj bųde periodično råzgarjati sę i prěnositi
+mėnjši ogȯnj na okolične drěvesa. Te drěvesa, ktorym ne poščęstlivilo sę okazati sę
+poblizu, bųdųt obraćene v drva dlja råzpaljeńja ognja.
+
+Daljnost́ hlådnyh atak smėnšaje sę pri prěhođeńju črěz oblåk, v procesu
+råzsějivajųći oblåk.
+
+Jestli oblåk nahodi sę okolo ili nad vodojų, jego žar bųde porađati par poblizu.
+%%%%
+steam cloud
+
+Oblåk oparjajųćeej pary. Stvory, uvęznųvše v njem, bųdųt srědnje poranjene,
+ale odpor ognju bųde umėnšiti škodų.
+%%%%
+ink cloud
+
+Oblåk črnila, kompletno napȯlnjeny vodojų.
+%%%%
+calcifying dust cloud
+
+Okamenjajųći oblåk. Stvory, uvęznųvše v njem na vśakų dȯlžinų časa, bųdųt obraćene
+v kamenj, ale vyše izkušene stvory mogųt odpirati sę protiv jego efektov.
+%%%%
+blessed fire cloud
+
+Oblåk božskogo ognja, napȯlnjeny svętojų silojų. Poslědovatelji dobryh bogov
+ne bųdųt poraženi jim. Vse druge stvory bųdųt poranjene tutym oblåkom, osoblivo
+bolěsno bųde nemŕtvym i demoničnym stvoram.
+%%%%
+foul pestilence cloud
+
+# XXX: clarify gargoyles
+Oblåk mŕzkoj čumy. Vśaky živy stvor, uvęznųvši v njem, bųde otravjeny i
+zapomaljeny.
+%%%%
+thin mist cloud
+
+Oblåk tėmkoj mgly. Atmosferno, ale neškodlivo.
+%%%%
+seething chaos cloud
+
+Oblåk klokotajųćego haosa. Na tyh, kto nahodi sę vnųtri oblåka, nakladajųt sę
+množstvo neprědvidlivyh efektov, od nevidimosti i běsnosti berserka do pȯlnoj
+paralizy.
+%%%%
+rain cloud
+
+Krajno lokalizovana dȯžd́jeva burja. Ona može iztvarjati dočasne kaluže neglųbokoj
+vody. Ognjene stvory ne ljubęt provoditi čas pod dȯžd́em.
+%%%%
+mutagenic fog cloud
+
+Oblåk čistoj, nestrukturovanoj magije, ktora jest skondensovana v blěskajųćų
+mglų; on jest otravne magične smeti. Stvory, rěšivše zajdti do vnųtra, bųdųt
+postųpno zaražati sę magičnojų radiacijejų, dostatȯčna kolikost́ ktoroj pri
+råzsějivańju bųde nakladati negativne mutacije.
+%%%%
+magical condensation cloud
+
+Slěd od něktoroj vysokokoncentrovanoj magičnoj energije, jest vpȯlně neškodlivy.
+%%%%
+whirling frost cloud
+
+Větry polarnogo vihra. One bųdųt pričinjati surovų škodų vśakomu stvoru vnųtri
+njego, i tuta škoda jedino čęstično smėnšaje sę odporom k hlådu.
+%%%%
+sparse dust cloud
+
+Oblåk malogo praha. Atmosferno, ale jest neškodlivo.
+%%%%
+spectral mist cloud
+
+Oblåk prizračnoj mgly. On pričinjaje jedino malų škodų vsim stvoram, kromě
+nemŕtvyh. Potom iz mgly izhodęt nebezpečne, ale maloživųći prizračni nemŕtvi.
+%%%%
+acidic fog cloud
+
+Oblåk opaljajųćej kysliny, ktory bųde pričinjati škodų i nakladati korozijų na tyh,
+kto nahodi sę vnųtri. Odpor korozije bųde zabezpečati imunitet k jų efektam.
+%%%%
+thunder cloud
+
+Tėmny burjevy oblåk. On bųde periodično poražati blěskavicejų tyh, kto nahodi sę
+vnųtri, pričinjajųći surovų škodų stvoram bez odpora k električnosti.
+%%%%
+excruciating misery cloud
+
+Oblåk prěbyvajųćego odčajańja i nekromantičnoj energije. Žive stvory, zaključene
+v njego, bųdųt bezprěryvno utraćati male ulomky maksimaĺnogo zdråvja, ale
+odpor k negativnoj energije bųde smėnšati efekty.
+%%%%
+white fluffiness cloud
+
+Běly, puhovy oblåk. Nedostatȯčno gųsty, da by koristati jego kako poduškų, ale
+ješče čudno mirny.
+%%%%
+salt cloud
+
+Oblåk bystro krųžęćego praha i solji. On kolje očesa i kožų vśakyh stvorov,
+vtęgnųtyh v njego, ale on v koncu jest neškodlivy.
+%%%%
+golden dust cloud
+
+A cloud of shimmering golden dust. While within it, followers of the Council
+gain tremendous strength in combat.
+%%%%
+smouldering embers cloud
+
+A cloud of smouldering embers. It can easily be smothered by any creature
+standing over it, but if left alone will ignite into a blazing cloud of flame.
+%%%%
+wisps of flame cloud
+
+Slěd od iskr i ostatkov ognja. Atmosferno, ale jest neškodlivo.
+%%%%
+alcoholic mist cloud
+
+Mgla iz råzpråšenogo samogona jest taka gųsta, že stvory mogųt napiti sę, prosto
+prošėvši skroz njų.
+%%%%
+blastmotes cloud
+
+Oblåk eksplozivnyh tlějųćih vųgljev. One eksplodujųt pri kontaktu s plåmenjem ili
+stvorami. Eksplozija imaje stręsejųćų silų, odkydajųći bližnjih stvorov.
+%%%%
+sparks cloud
+
+Slěd od električnyh iskr. Atmosferno, ale jest neškodlivo.
+%%%%
+faint pestilence cloud
+
+Slaby zapah mŕzkoj čumy, pronikajųći odněkųd. Tutčas on ješče ne jest gųsty, da by
+poškoditi, ale on bystro nabyvaje gųstost́.
+%%%%
+magnetised fragments cloud
+
+Oblåk mnogočisĺnyh malenjkyh fragmentov metala, ješče nemnogo vibrujųćih poslě
+nedavnogo električnogo izpušćeńja. One bųdųt služiti kako pritęgajųći faktor
+dlja zaklinańja Magnavoĺt, dopoka one bųdųt råzsějati sę.
+%%%%
+bats cloud
+
+Roj malenjkyh vampirskyh netopyŕev, taky gųsty, že nemožno sčisliti jih vsih.
+Oni neumolimo napadajųt na vsih, kromě nemŕtvyh, kto stoji posrěd njih, postųpno
+uspavajųći neprijateljev svojimi hypnotičnymi ukusami i prodȯlžajųt krmiti sę jih
+bezpomoćnymi tělami poslě togo, kȯgda one padajųt.
+%%%%
+rust cloud
+
+Oblåk okysljajųćej pary, ktory bezprěryvno råzjedaje i oslabjaje ataky vsih,
+kto nahodi sę vnųtri njego (ale pričinjaje jedino malų škodų).
