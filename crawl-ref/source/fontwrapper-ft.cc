@@ -69,7 +69,7 @@ FTFontWrapper::FTFontWrapper() :
     m_max_height(0),
     ttf(nullptr),
     face(nullptr),
-    pixels(nullptr),
+    pixels(),
     fsize(0)
 {
     m_buf = GLShapeBuffer::create(true, true);
@@ -78,7 +78,6 @@ FTFontWrapper::FTFontWrapper() :
 FTFontWrapper::~FTFontWrapper()
 {
     delete[] m_atlas;
-    delete[] pixels;
     delete m_buf;
     if (face)
         FT_Done_Face(face);
@@ -131,10 +130,12 @@ bool FTFontWrapper::configure_font()
     m_ft_width  = GLYPHS_PER_ROWCOL * charsz.x;
     m_ft_height = GLYPHS_PER_ROWCOL * charsz.y;
 
-    delete[] pixels; // for repeated calls
+    // Instead of allocating a new buffer each time this is called
+    // which used to just delete and reallocate
+    // just clear the buffer...
+    pixels.resize(sizeof(unsigned char) * 4 * charsz.x * charsz.y);
+    memset(pixels.data(), 0, sizeof(unsigned char) * pixels.size());
 
-    pixels = new unsigned char[4 * charsz.x * charsz.y];
-    memset(pixels, 0, sizeof(unsigned char) * 4 * charsz.x * charsz.y);
 
     dprintf("new font tex %d x %d x 4 = %dpx %d bytes\n",
             m_ft_width, m_ft_height, m_ft_width * m_ft_height,
@@ -142,7 +143,10 @@ bool FTFontWrapper::configure_font()
 
     // initialise empty texture of correct size
     unwind_bool noscaling(Options.tile_filter_scaling, false);
-    m_tex.load_texture(nullptr, m_ft_width, m_ft_height, MIPMAP_NONE);
+    LoadTextureArgs empty_texture_args = LoadTextureArgs::CreateEmptyTextureForFont(
+        m_ft_width, m_ft_height
+    );
+    m_tex.load_texture(empty_texture_args);
 
     m_glyphs.clear();
 
@@ -152,19 +156,13 @@ bool FTFontWrapper::configure_font()
     // atlas[0] always contains a full-white block (never evicted)
     // this is currently used by colour_bar
     {
-        for (int x = 0; x < m_max_advance.x; x++)
-            for (int y = 0; y < m_max_advance.y; y++)
-            {
-                unsigned int idx = x + y * m_max_advance.x;
-                idx *= 4;
-                pixels[idx]     = 255;
-                pixels[idx + 1] = 255;
-                pixels[idx + 2] = 255;
-                pixels[idx + 3] = 255;
-            }
-
-        bool success = m_tex.load_texture(pixels, charsz.x, charsz.y,
-                                          MIPMAP_NONE, 0, 0);
+        memset(pixels.data(), 255, sizeof(unsigned char) * pixels.size());
+        LoadTextureArgs texture_args = LoadTextureArgs::CreateSubtextureForFont(
+            pixels.data(),
+            charsz.x, charsz.y,
+            0, 0
+        );
+        bool success = m_tex.load_texture(texture_args);
         ASSERT(success);
     }
 
@@ -287,15 +285,15 @@ void FTFontWrapper::load_glyph(unsigned int c, char32_t uchar)
         // Horizontal offset stored in m_atlas and handled when drawing
         const unsigned int offset_x = 0;
         const unsigned int offset_y = 0;
-        memset(pixels, 0, sizeof(unsigned char) * 4 * charsz.x * charsz.y);
+        memset(pixels.data(), 0, sizeof(unsigned char) * pixels.size());
 
         // Some fonts have wrong size info
         const ftint charw = bmp->width;
         bmp->width = min(bmp->width, ftint(charsz.x));
         bmp->rows = min(bmp->rows, ftint(charsz.y));
 
-        for (ftint x = 0; x < bmp->width; x++)
-            for (ftint y = 0; y < bmp->rows; y++)
+        for (ftint y = 0; y < bmp->rows; y++)
+            for (ftint x = 0; x < bmp->width; x++)
             {
                 unsigned int idx = offset_x + x + (offset_y + y) * charsz.x;
                 idx *= 4;
@@ -310,10 +308,13 @@ void FTFontWrapper::load_glyph(unsigned int c, char32_t uchar)
             }
 
         unwind_bool noscaling(Options.tile_filter_scaling, false);
-        bool success = m_tex.load_texture(pixels, charsz.x, charsz.y,
-                            MIPMAP_NONE,
-                            (c % GLYPHS_PER_ROWCOL) * charsz.x,
-                            (c / GLYPHS_PER_ROWCOL) * charsz.y);
+        LoadTextureArgs texture_args = LoadTextureArgs::CreateSubtextureForFont(
+            pixels.data(),
+            charsz.x, charsz.y,
+            (c % GLYPHS_PER_ROWCOL) * charsz.x,
+            (c / GLYPHS_PER_ROWCOL) * charsz.y
+        );
+        bool success = m_tex.load_texture(texture_args);
         ASSERT(success);
     }
 }
