@@ -1689,11 +1689,13 @@ bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
     if (mon.type == MONS_ORB_GUARDIAN && !player_on_orb_run())
         return false;
 
-    // If this is the entrance to a portal vault (or another region of Pandemonium)
-    // only friendly monsters can traverse this.
+    // If this is the entrance to a portal vault, a region of Pandemonium, or
+    // the Abyss, only friendly monsters can traverse this.
     if (!mon.friendly()
         && (feat_is_portal_entrance(stair) || stair == DNGN_TRANSIT_PANDEMONIUM
-                                           || stair == DNGN_ENTER_PANDEMONIUM))
+                                           || stair == DNGN_ENTER_PANDEMONIUM
+                                           || stair == DNGN_ABYSSAL_STAIR
+                                           || stair == DNGN_ENTER_ABYSS))
     {
         return false;
     }
