@@ -1297,9 +1297,11 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
  */
 int weapon_min_delay_skill(const item_def &weapon)
 {
+    const bool lightweight = get_weapon_brand(weapon) == SPWPN_LIGHTWEIGHT;
     const int speed = property(weapon, PWPN_SPEED);
     const int mindelay = weapon_min_delay(weapon, false);
-    return (speed - mindelay) * 2;
+    int speed_adj = lightweight ? speed - 4 : speed;
+    return (speed_adj - mindelay) * 2;
 }
 
 /**

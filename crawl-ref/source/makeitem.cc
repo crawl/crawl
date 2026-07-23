@@ -358,6 +358,10 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
             return false;
         break;
 
+    // Big weapons only.
+    case SPWPN_LIGHTWEIGHT:
+        return property(item, PWPN_SPEED) >= 17;
+
 #if TAG_MAJOR_VERSION == 34
     // Removed brands.
     case SPWPN_RETURNING:
