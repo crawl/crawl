@@ -503,6 +503,7 @@ public:
     bool        autopickup_on;
     bool        autopickup_starting_ammo;
     bool        default_manual_training;
+    bool        default_skill_cost;
     bool        default_show_all_skills;
 
     bool        show_newturn_mark;// Show underscore prefix in messages for new turn
