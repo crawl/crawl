@@ -224,24 +224,22 @@ static void _populate_generated_levels()
     for (branch_type br : dgn_branch_generation_order())
         if (dgn_branch_will_generate(br))
             add_branch(br);
-    // These portals will be added from the branches as we go.
-    const auto &portals = dgn_portal_generation_order();
-    // Now generate everything that we didn't generate before.
+    // Now add everything else. Note that in the case of portals, we may build
+    // them before we reach them in the order, in which case they'll be
+    // skipped.
     for (branch_iterator it; it; ++it)
-    {
-        if (find(portals.begin(), portals.end(), it->id) != portals.end())
-            continue;
         add_branch(it->id);
-    }
 }
 
-static bool _build_portals_entered_from(const level_id &parent)
+static bool _build_portals_entered_from(const level_id &parent,
+                                        set<branch_type> &built_portals)
 {
     update_portal_entrances();
     for (branch_type b : dgn_portal_generation_order())
     {
         if (brentry[b] != parent || brdepth[b] == -1)
             continue;
+        built_portals.insert(b);
         for (int depth = 1; depth <= brdepth[b]; ++depth)
         {
             you.where_are_you = b;
@@ -255,15 +253,27 @@ static bool _build_portals_entered_from(const level_id &parent)
 
 static bool _build_dungeon()
 {
+    set<branch_type> built_portals;
     for (const level_id &lid: generated_levels)
     {
+        // Skip if this is a portal already built.
+        if (built_portals.count(lid.branch))
+            continue;
+
         you.where_are_you = lid.branch;
         you.depth = lid.depth;
         if (!_do_build_level())
             return false;
 
-        if (!_build_portals_entered_from(lid))
+        // If building the whole dungeon, build portals off the side. This
+        // allows us to perfectly match a game's pregeneration.
+        // Since we don't pregenerate multiple use portals, we do still end
+        // up building each portal exactly once.
+        if (!SysEnv.map_gen_range
+            && !_build_portals_entered_from(lid, built_portals))
+        {
             return false;
+        }
     }
     return true;
 }
@@ -590,6 +600,10 @@ void mapstat_generate_stats()
 
     clear_messages();
     mpr("Generating dungeon map stats");
+
+    // Populate level generation order to get the count.
+    initial_dungeon_setup();
+    _populate_generated_levels();
     printf("Generating map stats for %d iteration(s) of %d level(s) over "
            "%d branch(es).\n", SysEnv.map_gen_iters,
            (int) generated_levels.size(), branch_count);
