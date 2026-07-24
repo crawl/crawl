@@ -1111,7 +1111,7 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     }
 }
 
-static bool _is_exit_stair(const coord_def &c)
+static bool _is_exit_stair(const coord_def &c, bool allow_hatch)
 {
     const dungeon_feature_type feat = feat_at_no_mimic(c);
 
@@ -1122,7 +1122,7 @@ static bool _is_exit_stair(const coord_def &c)
     // stairs here, as they do not provide an exit (in a transitive sense) from
     // the current level.
     if (feat_is_stone_stair(feat)
-        || feat_is_escape_hatch(feat)
+        || (allow_hatch && feat_is_escape_hatch(feat))
         || feat_is_branch_exit(feat))
     {
         return true;
@@ -1139,61 +1139,148 @@ static bool _is_exit_stair(const coord_def &c)
     }
 }
 
-// Counts the number of mutually unreachable areas in the map,
-// excluding isolated zones within vaults (we assume the vault author
-// knows what she's doing). This is an easy way to check whether a map
-// has isolated parts of the level that were not formerly isolated.
-//
-// All squares within vaults are treated as non-reachable, to simplify
-// life, because vaults may change the level layout and isolate
-// different areas without changing the number of isolated areas.
-// Here's a before and after example of such a vault that would cause
-// problems if we considered floor in the vault as non-isolating (the
-// vault is represented as V for walls and o for floor squares in the
-// vault).
-//
-// Before:
-//
-//   xxxxx    xxxxx
-//   x<..x    x.2.x
-//   x.1.x    xxxxx  3 isolated zones
-//   x>..x    x.3.x
-//   xxxxx    xxxxx
-//
-// After:
-//
-//   xxxxx    xxxxx
-//   x<1.x    x.2.x
-//   VVVVVVVVVVoooV  3 isolated zones, but the isolated zones are different.
-//   x>3.x    x...x
-//   xxxxx    xxxxx
-//
-// If count_stairless is true, returns the number of regions that have no
-// stairs in them.
-//
-// If fill is non-zero, it fills any disconnected regions with fill.
-//
-// TODO: refactor this to something more usable
-static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
+static bool _is_exit_stair_or_hatch(const coord_def &c)
+{
+    return _is_exit_stair(c, true);
+}
+
+static bool _is_exit_stair_no_hatch(const coord_def &c)
+{
+    return _is_exit_stair(c, false);
+}
+
+// How _process_disconnected_zones should overwrite a disconnected zone it
+// finds, if at all.
+struct fill_config
+{
+    fill_config(dungeon_feature_type fill_ = DNGN_UNSEEN,
+                bool (*fill_check_)(const coord_def &) = nullptr,
+                int fill_small_zones_ = 0)
+        : fill(fill_), fill_check(fill_check_),
+          fill_small_zones(fill_small_zones_)
+    {
+    }
+
+    // The feature to overwrite the zone with. DNGN_UNSEEN means don't fill.
+    dungeon_feature_type fill;
+    // If set, only squares passing this check are overwritten.
+    bool (*fill_check)(const coord_def &);
+    // If positive, only zones up to this size are filled.
+    int fill_small_zones;
+};
+
+// Fill in a zone, if it has no vaults.
+static void _fill_zone(int zone_num, const fill_config &cfg)
+{
+    vector<coord_def> coords;
+    dprf("Filling zone %d", zone_num);
+    for (int fy = 0; fy < GYM; ++fy)
+    {
+        for (int fx = 0; fx < GXM; ++fx)
+        {
+            if (travel_point_distance[fx][fy] != zone_num)
+                continue;
+            if (map_masked(coord_def(fx, fy), MMT_VAULT))
+                return;
+            if (!cfg.fill_check || cfg.fill_check(coord_def(fx, fy)))
+                coords.emplace_back(fx, fy);
+        }
+    }
+
+    for (auto c : coords)
+    {
+        // For normal builder scenarios items shouldn't be
+        // placed yet, but it could (if not careful) happen
+        // in weirder cases, such as the abyss.
+        if (env.igrid(c) != NON_ITEM
+            && (!feat_is_traversable(cfg.fill)
+                || feat_destroys_items(cfg.fill)))
+        {
+            // Alternatively, could place floor instead?
+            dprf("Nuke item stack at (%d, %d)", c.x, c.y);
+            lose_item_stack(c);
+        }
+        _set_grd(c, cfg.fill);
+        if (env.mgrid(c) != NON_MONSTER
+            && !env.mons[env.mgrid(c)].is_habitable_feat(cfg.fill))
+        {
+            monster_die(env.mons[env.mgrid(c)],
+                        KILL_RESET, NON_MONSTER, true, false,
+                        true);
+        }
+    }
+}
+
+/**
+ * Counts the number of mutually unreachable areas in the map,
+ * excluding isolated zones within vaults (we assume the vault author
+ * knows what she's doing). This is an easy way to check whether a map
+ * has isolated parts of the level that were not formerly isolated.
+ *
+ * All squares within vaults are treated as non-reachable, to simplify
+ * life, because vaults may change the level layout and isolate
+ * different areas without changing the number of isolated areas.
+ * Here's a before and after example of such a vault that would cause
+ * problems if we considered floor in the vault as non-isolating (the
+ * vault is represented as V for walls and o for floor squares in the
+ * vault).
+ *
+ * Before:
+ *
+ *   xxxxx    xxxxx
+ *   x<..x    x.2.x
+ *   x.1.x    xxxxx  3 isolated zones
+ *   x>..x    x.3.x
+ *   xxxxx    xxxxx
+ *
+ * After:
+ *
+ *   xxxxx    xxxxx
+ *   x<1.x    x.2.x
+ *   VVVVVVVVVVoooV  3 isolated zones, but the isolated zones are different.
+ *   x>3.x    x...x
+ *   xxxxx    xxxxx
+ *
+ * @param choose_stairless  If true, only count zones with no exit stair.
+ * @param fill_cfg          Whether and how to fill disconnected zones.
+ * @param passable          Whether a square can be walked through for
+ *                          connectivity.
+ * @param is_seed           Whether a square can start a new zone flood-fill;
+ *                          defaults to passable. This means that zones that
+ *                          are entirely passable but with no is_seed points
+ *                          will be ignored/
+ * @param count_hatches     For choose_stairless, whether hatches count as
+ *                          stairs.
+ * @param isolated_point    If choose_stairless, reports an arbirtary point in
+ *                          an arbitrary stairless zone.
+ * @return The number of zones.
+ */
+static int _process_disconnected_zones(
                 bool choose_stairless,
-                dungeon_feature_type fill,
+                const fill_config &fill_cfg,
                 bool (*passable)(const coord_def &) = _dgn_square_is_passable,
-                bool (*fill_check)(const coord_def &) = nullptr,
-                int fill_small_zones = 0)
+                bool (*is_seed)(const coord_def &) = nullptr,
+                bool count_hatches = true,
+                coord_def *isolated_point = nullptr)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     int nzones = 0;
     int ngood = 0;
-    for (int y = y1; y <= y2 ; ++y)
+    if (!is_seed)
+        is_seed = passable;
+
+    bool (*stair_func)(const coord_def &) =
+                    !choose_stairless  ? nullptr :
+                    at_branch_bottom() ? _is_upwards_exit_stair :
+                    count_hatches      ? _is_exit_stair_or_hatch
+                                       : _is_exit_stair_no_hatch;
+
+    for (int y = 0; y < GYM; ++y)
     {
-        for (int x = x1; x <= x2; ++x)
+        for (int x = 0; x < GXM; ++x)
         {
-            if (!map_bounds(x, y)
-                || travel_point_distance[x][y]
-                || !passable(coord_def(x, y)))
-            {
+            if (travel_point_distance[x][y] || !is_seed(coord_def(x, y)))
                 continue;
-            }
 
             int zone_size = 0;
             auto inc_zone_size = [&zone_size](const coord_def &) { zone_size++; };
@@ -1202,66 +1289,22 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
                 _dgn_fill_zone(coord_def(x, y), ++nzones,
                                inc_zone_size,
                                passable,
-                               choose_stairless ? (at_branch_bottom() ?
-                                                   _is_upwards_exit_stair :
-                                                   _is_exit_stair) : nullptr);
+                               stair_func);
 
             // If we want only stairless zones, screen out zones that did
             // have stairs.
             if (choose_stairless && found_exit_stair)
                 ++ngood;
-            else if (fill
-                && (fill_small_zones <= 0 || zone_size <= fill_small_zones))
+            else
             {
-                // Don't fill in areas connected to vaults.
-                // We want vaults to be accessible; if the area is disconnected
-                // from the rest of the level, this will cause the level to be
-                // vetoed later on.
-                bool veto = false;
-                vector<coord_def> coords;
-                dprf("Filling zone %d", nzones);
-                for (int fy = y1; fy <= y2 ; ++fy)
+                if (choose_stairless && isolated_point)
+                    *isolated_point = coord_def(x, y);
+
+                if (fill_cfg.fill
+                    && (fill_cfg.fill_small_zones <= 0
+                        || zone_size <= fill_cfg.fill_small_zones))
                 {
-                    for (int fx = x1; fx <= x2; ++fx)
-                    {
-                        if (travel_point_distance[fx][fy] == nzones)
-                        {
-                            if (map_masked(coord_def(fx, fy), MMT_VAULT))
-                            {
-                                veto = true;
-                                break;
-                            }
-                            else if (!fill_check || fill_check(coord_def(fx, fy)))
-                                coords.emplace_back(fx, fy);
-                        }
-                    }
-                    if (veto)
-                        break;
-                }
-                if (!veto)
-                {
-                    for (auto c : coords)
-                    {
-                        // For normal builder scenarios items shouldn't be
-                        // placed yet, but it could (if not careful) happen
-                        // in weirder cases, such as the abyss.
-                        if (env.igrid(c) != NON_ITEM
-                            && (!feat_is_traversable(fill)
-                                || feat_destroys_items(fill)))
-                        {
-                            // Alternatively, could place floor instead?
-                            dprf("Nuke item stack at (%d, %d)", c.x, c.y);
-                            lose_item_stack(c);
-                        }
-                        _set_grd(c, fill);
-                        if (env.mgrid(c) != NON_MONSTER
-                            && !env.mons[env.mgrid(c)].is_habitable_feat(fill))
-                        {
-                            monster_die(env.mons[env.mgrid(c)],
-                                        KILL_RESET, NON_MONSTER, true, false,
-                                        true);
-                        }
-                    }
+                    _fill_zone(nzones, fill_cfg);
                 }
             }
         }
@@ -1273,8 +1316,8 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
 int dgn_count_tele_zones(bool choose_stairless)
 {
     dprf("Counting teleport zones");
-    return _process_disconnected_zones(0, 0, GXM-1, GYM-1, choose_stairless,
-                                    DNGN_UNSEEN, _dgn_square_is_tele_connected);
+    return _process_disconnected_zones(choose_stairless,
+                                    {}, _dgn_square_is_tele_connected);
 }
 
 // Count "teleport closets": regions a random teleport could strand the player
@@ -1296,7 +1339,7 @@ static int _count_tele_closets(vector<coord_def> *closets, bool flying,
     // Floodfill back from the exits to mark everywhere that isn't a closet.
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     for (rectangle_iterator ri(0); ri; ++ri)
-        if ((_is_exit_stair(*ri) || env.grid(*ri) == DNGN_TRAP_TELEPORT_PERMANENT)
+        if ((_is_exit_stair_or_hatch(*ri) || env.grid(*ri) == DNGN_TRAP_TELEPORT_PERMANENT)
             && !travel_point_distance[ri->x][ri->y])
         {
             _dgn_fill_zone(*ri, 1, _dgn_point_record_stub, passable, nullptr, true);
@@ -1349,13 +1392,10 @@ static int _count_tele_closets(vector<coord_def> *closets, bool flying,
 }
 
 // Count number of mutually isolated zones. If choose_stairless, only count
-// zones with no stairs in them. If fill is set to anything other than
-// DNGN_UNSEEN, chosen zones will be filled with the provided feature.
-int dgn_count_disconnected_zones(bool choose_stairless,
-                                 dungeon_feature_type fill)
+// zones with no stairs in them.
+int dgn_count_disconnected_zones(bool choose_stairless)
 {
-    return _process_disconnected_zones(0, 0, GXM-1, GYM-1, choose_stairless,
-                                       fill);
+    return _process_disconnected_zones(choose_stairless, {});
 }
 
 static void _fill_small_disconnected_zones()
@@ -1363,10 +1403,9 @@ static void _fill_small_disconnected_zones()
     // debugging tip: change the feature to something like lava that will be
     // very noticeable.
     // TODO: make even more aggressive, up to ~25?
-    _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_ROCK_WALL,
-                                       _dgn_square_is_passable,
-                                       _dgn_square_is_boring,
-                                       10);
+    _process_disconnected_zones(true,
+                                {DNGN_ROCK_WALL, _dgn_square_is_boring, 10},
+                                _dgn_square_is_passable);
 }
 
 static void _fixup_hell_stairs()
@@ -2446,6 +2485,13 @@ static void _dgn_verify_connectivity(unsigned nvaults)
         }
     }
 
+    if (_branch_needs_stairs() && !_fixup_stone_stairs(true))
+    {
+        dprf(DIAG_DNGN, "Warning: failed to preserve vault stairs.");
+        if (!_fixup_stone_stairs(false))
+            throw dgn_veto_exception("Failed to fix stone stairs.");
+    }
+
     // Also check for isolated regions that have no stairs.
     if (player_in_connected_branch()
         && !(branches[you.where_are_you].branch_flags & brflag::islanded)
@@ -2459,18 +2505,10 @@ static void _dgn_verify_connectivity(unsigned nvaults)
     // stairs, counting traps as passable.
     if (player_in_connected_branch()
         && !(branches[you.where_are_you].branch_flags & brflag::islanded)
-        && _process_disconnected_zones(0, 0, GXM - 1, GYM - 1, true,
-                                       DNGN_UNSEEN,
-                                       _dgn_square_is_passable_with_traps) > 0)
+        && _process_disconnected_zones(true,
+                                       {}, _dgn_square_is_passable_with_traps) > 0)
     {
         throw dgn_veto_exception("Isolated trap areas with no stairs.");
-    }
-
-    if (_branch_needs_stairs() && !_fixup_stone_stairs(true))
-    {
-        dprf(DIAG_DNGN, "Warning: failed to preserve vault stairs.");
-        if (!_fixup_stone_stairs(false))
-            throw dgn_veto_exception("Failed to fix stone stairs.");
     }
 
     if (!_branch_entrances_are_connected())
@@ -2478,6 +2516,28 @@ static void _dgn_verify_connectivity(unsigned nvaults)
 
     if (!_add_connecting_escape_hatches())
         throw dgn_veto_exception("Failed to add connecting escape hatches.");
+
+    // Finally check that we don't have regions with solid floor that can't be
+    // reached, even by flying over lava/deep water, without non-hatch stairs.
+    // This aims to remove areas that the player will never see.
+    if (player_in_connected_branch()
+        && !(branches[you.where_are_you].branch_flags & brflag::islanded))
+    {
+        coord_def isolated_point;
+        if (_process_disconnected_zones(true,
+                                        {}, _dgn_square_is_ever_passable,
+                                        _dgn_square_is_passable,
+                                        false,
+                                        &isolated_point) > 0)
+        {
+
+            const vault_placement *vp = dgn_vault_at(isolated_point);
+            const string in_vault =
+                vp ? " in vault " + vp->map_name_at(isolated_point) : "";
+            throw dgn_veto_exception(make_stringf(
+                "Isolated areas%s without non-hatch stairs.", in_vault.c_str()));
+        }
+    }
 
     // Check for zones you can teleport into and not walk/fly out of.
     if (player_in_connected_branch()
@@ -4895,13 +4955,13 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
     if (!build_only && (placed_vault_orientation != MAP_ENCOMPASS || is_layout)
         && player_in_branch(BRANCH_SWAMP))
     {
-        _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_MANGROVE);
+        _process_disconnected_zones(true, {DNGN_MANGROVE});
         // do a second pass to remove tele closets consisting of deep water
         // created by the first pass -- which will not fill in deep water
         // because it is treated as impassable.
         // TODO: get zonify to prevent these?
         // TODO: does this come up anywhere outside of swamp?
-        _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_MANGROVE,
+        _process_disconnected_zones(true, {DNGN_MANGROVE},
                 _dgn_square_is_ever_passable);
     }
 
