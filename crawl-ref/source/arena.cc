@@ -1408,6 +1408,8 @@ int arena_cull_items()
                || item.sub_type == MI_THROWING_KNIFE
                || item.sub_type == MI_CHAKRAM
                || item.sub_type == MI_DISCUS
+               || item.sub_type == MI_SHURIKEN
+               || item.sub_type == MI_KUNAI
                || item.sub_type == MI_THROWING_NET)
             {
                 ammo.push_back(idx);

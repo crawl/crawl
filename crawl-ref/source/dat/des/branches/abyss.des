@@ -976,7 +976,7 @@ KMONS:   8 : place:Crypt:1 / place:Crypt:$
 KMONS:   9 : place:Hell / place:Slime
 KMONS:   A = plant
 KMONS:   B = bush
-ITEM:    swamp dragon scales / barding / mundane javelin q:2 / \
+ITEM:    swamp dragon scales / barding / any medium throwable mundane q:2 / \
          potion of ambrosia pre_id / book of weapons / \
          randbook disc:necromancy / demon blade / acid dragon scales
 SHUFFLE: Gwm, xcvbwm, wwl, mmttB, 1234567, 1689
@@ -1254,7 +1254,7 @@ TAGS:    patrolling
 WEIGHT:  5
 MONS:    rakshasa ; whip good_item | trident good_item | long sword good_item . \
                     ring mail good_item | kite shield good_item . \
-                    mundane javelin | boomerang | throwing net
+                    any medium throwable mundane | any small throwable | throwing net
 MONS:    guardian serpent / great orb of eyes / abyssal acolyte band
 ITEM:    potion of curing pre_id / potion of moonshine pre_id
 SUBST:   x = ccccvbb
@@ -1426,7 +1426,7 @@ NAME:    hangedman_abyss_or_decor_stagger
 TAGS:    transparent no_pool_fixup decor
 DEPTH:   D:4-, Depths, Abyss
 ITEM:    great mace ego:distortion randart / wand of mindburst pre_id / \
-         dart ego:atropa q:4 w:4 / potion of moonshine pre_id w:4 / \
+         kunai ego:atropa q:4 w:4 / potion of moonshine pre_id w:4 / \
          parchment of alistair's intoxication
 KFEAT:   ^ = trap_harlequin w:7 / trap_devourer w:13
 : if you.in_branch("Abyss") then
@@ -1495,8 +1495,8 @@ MONS:    bone dragon / tentacled starspawn / starcursed mass / \
          apocalypse crab / dancing weapon / tentacled monstrosity / \
          glowing shapeshifter
 ITEM:    orb
-ITEM:    boomerang good_item q:10 / javelin good_item q:5, any magical staff
-ITEM:    scroll of revelation q:4 / scroll of noise q:4
+ITEM:    any small throwable good_item q:10 / any medium throwable good_item q:5
+ITEM:    any magical staff, scroll of revelation q:4 / scroll of noise q:4
 ITEM:    ring mail randart / scale mail randart / chain mail randart w:20
 ITEM:    demon blade ego:chaos good_item pre_id / \
          demon trident ego:chaos good_item pre_id / \
@@ -2206,7 +2206,7 @@ KMONS:   6 = lurking horror
 # Note: if anything in these two item sets becomes useful for more then a tiny
 # fraction of characters finding the abyssal rune, remove or replace them.
 KITEM:   4d = scroll of noise w:15 q:1 / \
-         club w:6 / stone q:1 / dart q:1 ego:atropa / \
+         club w:6 / stone q:1 / kunai q:1 ego:atropa / \
          mundane animal skin / mundane ring mail / gold q:1
 KITEM:   5 = wand of flame / whip w:2 / hat mundane w:5
 KITEM:   6e = abyssal rune of zot mimic

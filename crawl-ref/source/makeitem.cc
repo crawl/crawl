@@ -688,17 +688,23 @@ static void _generate_missile_item(item_def& item, int force_type,
 
     item.plus = 0;
 
+    const auto small_type = (missile_type)item_for_set(ITEM_SET_SMALL_THROWABLE);
+    const auto med_type = (missile_type)item_for_set(ITEM_SET_MEDIUM_THROWABLE);
+    const auto large_type = (missile_type)item_for_set(ITEM_SET_LARGE_THROWABLE);
+
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
     else
     {
         // Total weight: 100
         item.sub_type =
-            random_choose_weighted(60, MI_DART,
-                                   17, MI_BOOMERANG,
-                                   11,  MI_JAVELIN,
+            random_choose_weighted(52, MI_DART,
+                                   17, small_type,
+                                   11, med_type,
+                                   8,  MI_KUNAI,
                                    6,  MI_THROWING_NET,
-                                   6,  MI_LARGE_ROCK);
+                                   4,  MI_LARGE_ROCK,
+                                   2,  large_type);
     }
 
     // No fancy rocks -- break out before we get to special stuff.

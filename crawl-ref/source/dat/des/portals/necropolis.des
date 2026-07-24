@@ -2297,7 +2297,7 @@ ITEM:    athame good_item w:5 / rapier good_item w:5 / \
          partisan good_item w:5 / glaive good_item / bardiche good_item w:5 / \
          lajatang good_item w:5
 ITEM:    any armour good_item / any armour randart
-KITEM:   r = boomerang q:1 no_pickup
+KITEM:   r = any small throwable q:1 no_pickup
 : if dgn.persist.necropolis_difficulty == "post_lair_d" then
 MONS:    orc warrior / centaur warrior / tengu warrior
 MONS:    orc knight / naga warrior / merfolk impaler
@@ -4501,7 +4501,7 @@ NSUBST:  % = 1:e / 1:d / *:%, * = 1:f / *:*
 : end
 KMONS:   O = player ghost
 ITEM:    potion of lignification pre_id w:30 / \
-         dart ego:atropa no_pickup / dart ego:datura no_pickup
+         kunai ego:atropa no_pickup / kunai ego:datura no_pickup
 ITEM:    any magical staff / quarterstaff randart ego:spectral w:5 pre_id / \
          dagger randart plus:9 pre_id w:5 / rapier good_item / \
          randbook disc:hexes disc2:summoning spells:summon_forest numspells:3 / \

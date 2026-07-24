@@ -5837,6 +5837,27 @@ void item_list::parse_random_by_class(string c, item_spec &spec)
         return;
     }
 
+    if (c == "small throwable")
+    {
+        spec.base_type = OBJ_MISSILES;
+        spec.sub_type = item_for_set(ITEM_SET_SMALL_THROWABLE);
+        return;
+    }
+
+    if (c == "medium throwable")
+    {
+        spec.base_type = OBJ_MISSILES;
+        spec.sub_type = item_for_set(ITEM_SET_MEDIUM_THROWABLE);
+        return;
+    }
+
+    if (c == "large throwable")
+    {
+        spec.base_type = OBJ_MISSILES;
+        spec.sub_type = item_for_set(ITEM_SET_LARGE_THROWABLE);
+        return;
+    }
+
     if (c == "body armour")
     {
         spec.base_type = OBJ_ARMOUR;

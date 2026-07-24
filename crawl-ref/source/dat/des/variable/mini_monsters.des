@@ -1066,7 +1066,7 @@ ITEM:   young poisoner's handbook / fen folio / \
         spells:summon_small_mammal&call_canine_familiar&hailstorm&summon_forest / \
         randbook numspells:3 title:Nature \
         spells:mercury_arrow&stone_arrow&hailstorm&summon_forest
-KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
+KITEM:  f = dart ego:poisoned / dart ego:curare / kunai ego:atropa
 KITEM:  g = quill talisman randart, any potion q:2
 MONS:   plant, oklob sapling, ball python
 MONS:   adder, oklob plant, water moccasin
@@ -1116,7 +1116,7 @@ ITEM:   young poisoner's handbook / fen folio / \
         spells:summon_small_mammal&call_canine_familiar&hailstorm&summon_forest / \
         randbook numspells:4 title:Nature \
         spells:mercury_arrow&stone_arrow&hailstorm&summon_forest
-KITEM:  f = dart ego:poisoned / dart ego:curare / dart ego:atropa
+KITEM:  f = dart ego:poisoned / dart ego:curare / kunai ego:atropa
 KITEM:  g = quill talisman randart, any potion q:2 / any potion q:3
 MONS:   plant, oklob sapling, ball python
 MONS:   adder, oklob plant, water moccasin
@@ -1921,8 +1921,8 @@ ENDMAP
 NAME:   minmay_unpleasant_kobolds
 TAGS:   transparent
 DEPTH:  D:6-
-MONS:   kobold ; boomerang q:1 / w:3 kobold brigand ; boomerang q:2
-MONS:   kobold ; dart ego:datura q:2 / kobold brigand ; dart ego:datura q:3
+MONS:   kobold ; any small throwable q:1 / w:3 kobold brigand ; any small throwable q:2
+MONS:   kobold ; kunai ego:datura q:2 / kobold brigand ; kunai ego:datura q:3
 MONS:   kobold ; dart ego:disjunction q:1 / \
         kobold brigand w:3 ; dart ego:disjunction q:2
 MONS:   kobold ; dart ego:curare q:1 / \
@@ -3364,7 +3364,7 @@ MONS:    two-headed ogre, ettin, vampire, vampire knight
 KMONS:   8 = gargoyle
 KMONS:   9 = war gargoyle
 KFEAT:   C = altar_okawaru
-ITEM:    any armour / animal skin w:5, any weapon / boomerang q:1 w:5
+ITEM:    any armour / animal skin w:5, any weapon / any small throwable q:1 w:5
 ITEM:    manual of fighting / manual of armour / \
          manual of dodging / manual of shields / manual of stealth
 ITEM:    ring mail randart / scale mail randart / chain mail randart / \
@@ -3455,7 +3455,7 @@ MONS:   titan, merfolk javelineer
 NSUBST: 1 = 12:1 / 4 = 12. / *:.
 TILE:   G = dngn_statue_depths_zot_tentacles
 : end
-ITEM:   throwing net q:1, javelin
+ITEM:   throwing net q:1, any medium throwable
 KFEAT:  B = cache_of_baked_goods
 MARKER: G = lua:fog_machine { cloud_type='translocational energy',  \
                               pow_min = 7, pow_max = 10, delay = 50, \
@@ -3926,7 +3926,7 @@ TAGS:    patrolling transparent
 DEPTH:   D:8-12, Orc
 MONS:    red devil ; spear | trident . ring mail | scale mail
 MONS:    red devil ; spear | trident . buckler
-MONS:    red devil ; spear | trident . boomerang
+MONS:    red devil ; spear | trident . any small throwable
 MONS:    orc warrior ; trident good_item . ring mail
 KITEM:   $ = $ no_pickup
 SHUFFLE: 1234

@@ -459,7 +459,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "neqoxec", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 stone giant",
                 "orb spider", "golden eye w:30 / shining eye", "tormentor",
-                "skeletal warrior / w:5 skeletal warrior ; dart ego:atropa"
+                "skeletal warrior / w:5 skeletal warrior ; kunai ego:atropa"
             }
         elseif round <= 26 then
             mon_set = {
@@ -530,7 +530,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "moth of wrath / w:20 ettin", "orb spider", "undertaker",
                 "chonchon", "fungal shambler", "star jelly / starcursed mass",
                 "glowmurk ghast / shining eye", "tormentor", "tentacled monstrosity",
-                "skeletal warrior / skeletal warrior ; dart ego:atropa",
+                "skeletal warrior / skeletal warrior ; kunai ego:atropa",
                 "unseen horror / shadow wraith w:15 / ghost moth",
                 "curse toe / w:20 deathcap / w:4 murray",
                 "reaper / sin beast / geryon w:1",

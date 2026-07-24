@@ -465,14 +465,23 @@ static int _acquirement_missile_subtype(int & /*quantity*/,
     // Choose from among all usable missile types.
     vector<pair<missile_type, int> > missile_weights;
 
-    missile_weights.emplace_back(MI_BOOMERANG, 50);
+    const auto small_type = (missile_type)item_for_set(ITEM_SET_SMALL_THROWABLE);
+    const auto med_type = (missile_type)item_for_set(ITEM_SET_MEDIUM_THROWABLE);
+    const auto large_type = (missile_type)item_for_set(ITEM_SET_LARGE_THROWABLE);
+
+    missile_weights.emplace_back(small_type, 50);
     missile_weights.emplace_back(MI_DART, 75);
 
     if (you.body_size() >= SIZE_MEDIUM)
-        missile_weights.emplace_back(MI_JAVELIN, 100);
+        missile_weights.emplace_back(med_type, 100);
 
     if (you.can_throw_large_rocks())
-        missile_weights.emplace_back(MI_LARGE_ROCK, 100);
+    {
+        missile_weights.emplace_back(MI_LARGE_ROCK, 80);
+        // these are technically throwable by medium species, but have enough of
+        // a drawback that they probably shouldn't be acquirable
+        missile_weights.emplace_back(large_type, 20);
+    }
 
     return *random_choose_weighted(missile_weights);
 }

@@ -1014,7 +1014,7 @@ kitem("D = dwarf skeleton, flail randart / morningstar good_item / " ..
  -- Minotaur hunter.
 kitem("E = minotaur skeleton, shortbow good_item / orcbow good_item / " ..
           "arbalest good_item / longbow w:5 / triple crossbow w:5 / " ..
-          "javelin good_item, leather armour good_item w:50 / " ..
+          "any medium throwable good_item, leather armour good_item w:50 / " ..
           "ring mail good_item w:50 / " .. heavy_armour .. " / " ..
           medium_scales .. " / " .. heavy_scales .. ", " ..
           dgn.good_aux_armour .. " / nothing w:40, any wand w:20 / " ..
@@ -1032,7 +1032,7 @@ kitem("F = spriggan skeleton, dagger good_item / short sword good_item / " ..
 kitem("H = merfolk skeleton, partisan good_item / demon trident / " ..
           "glaive good_item / bardiche, leather armour good_item w:100 / " ..
           "ring mail good_item w:100 / " .. light_scales .. " / " ..
-          medium_scales .. ", javelin / throwing net q:1 w:1, " ..
+          medium_scales .. ", any medium throwable / throwing net q:1 w:1, " ..
           "buckler good_item / kite shield good_item / " ..
           "tower shield good_item / " .. dgn.good_aux_armour .. " / " ..
           "any wand w:20 / any misc / gold / any scroll / any potion / " ..

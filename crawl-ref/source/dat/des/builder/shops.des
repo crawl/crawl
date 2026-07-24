@@ -1198,7 +1198,6 @@ WEIGHT: 2
 NSUBST: s = 1:s / *:_
 KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
    potion of heal wounds | potion of curing | \
-   javelin ego:silver w:2 | \
    any weapon ego:holy_wrath | any armour ego:positive_energy w:5 |\
    amulet of faith w:2 | ring of positive energy w:5
 : if not you.in_branch("D") or you.depth() > 11 then
@@ -1619,12 +1618,12 @@ TAGS:   transparent no_monster_gen no_item_gen no_tide extra
 DEPTH:  D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
 KMONS:  DE = generate_awake training dummy
 KITEM:  D = stone q:1 / nothing, stone q:1 / nothing, stone q:1 / nothing
-KITEM:  H = stone q:1 w:30 / boomerang q:1 / javelin q:1 / dart q:1
+KITEM:  H = stone q:1 w:30 / any small throwable q:1 / any medium throwable q:1 / dart q:1
 KITEM:  E = throwing net q:1
 # Launchers are weighted so they have the same total weight as the projectiles.
 # The slightly-higher weights go to the better weapons, because I'm nice.
 KFEAT:  S = weapon shop type:Firing suffix:Range ; dart w:14 | \
-        throwing net w:14 | boomerang w:14 | javelin w:14 | large rock w:14 | \
+        throwing net w:14 | any small throwable w:14 | any medium throwable w:14 | large rock w:14 | \
         sling | shortbow | orcbow | longbow | hand cannon | arbalest | \
         triple crossbow | scale mail ego:archery w:4 | \
         chain mail ego:archery w:4 | plate armour ego:archery w:4 | \

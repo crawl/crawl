@@ -1002,6 +1002,11 @@ static const item_set_def item_sets[] =
                                               MISC_SACK_OF_SPIDERS } },
     { "control misc",       OBJ_MISCELLANY, { MISC_PHIAL_OF_FLOODS,
                                               MISC_GRAVITAMBOURINE } },
+    { "small throwable",    OBJ_MISSILES,   { MI_BOOMERANG, MI_THROWING_KNIFE,
+                                              MI_SHURIKEN } },
+    { "medium throwable",   OBJ_MISSILES,   { MI_JAVELIN, MI_CHAKRAM,
+                                              MI_DISCUS } },
+    { "large throwable",    OBJ_MISSILES,   { MI_HARPOON, MI_THROWING_CLUB } },
 };
 COMPILE_CHECK(ARRAYSZ(item_sets) == NUM_ITEM_SET_TYPES);
 

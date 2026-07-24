@@ -1484,9 +1484,9 @@ MONS:    kobold w:50 / kobold zombie / endoplasm / dart slug / \
          bat / bat zombie w:3
 # Bosses and features for the temple, either Makhleb or Kiku
 : if crawl.random2(2) == 0 then
-KMONS:   3 = kobold brigand / crimson imp ; club . dart ego:atropa q:2
+KMONS:   3 = kobold brigand / crimson imp ; club . kunai ego:atropa q:2
 KMONS:   4 = kobold brigand
-KMONS:   5 = crimson imp ; club . dart ego:atropa q:2
+KMONS:   5 = crimson imp ; club . kunai ego:atropa q:2
 KFEAT:   B = altar_makhleb
 :   single_cloud(_G, "F", "flame", false)
 : else

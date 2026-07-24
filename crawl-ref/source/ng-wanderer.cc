@@ -19,23 +19,25 @@ static void _give_wanderer_weapon(skill_type wpn_skill, bool good_item)
 {
     if (wpn_skill == SK_THROWING)
     {
-        // good_item always assigns 7 ammo: 1-4 curare, the rest javelins
+        // good_item always assigns 7 ammo: 1-4 curare, the rest medium throwable
         if (good_item)
         {
             const int num_curare = 1 + random2(4);
             newgame_make_item(OBJ_MISSILES, MI_DART, num_curare,
                               0, SPMSL_CURARE);
 
-            // Gives large rocks for large species, 2x boomerangs for small
-            const int num_javelins = 7 - num_curare;
-            give_throwing_ammo(num_javelins);
+            // Gives large rocks for large species, 2x small throwable for small
+            const int num_medium = 7 - num_curare;
+            give_throwing_ammo(num_medium);
         }
-        // Otherwise, we get 7-15 poisoned darts or 6-10 boomerangs.
+        // Otherwise, we get 7-15 poisoned darts or 6-10 small throwable.
         else
         {
+            const auto small_type = (missile_type)item_for_set(ITEM_SET_SMALL_THROWABLE);
+
             if (one_chance_in(3))
             {
-                newgame_make_item(OBJ_MISSILES, MI_BOOMERANG,
+                newgame_make_item(OBJ_MISSILES, small_type,
                               4 + roll_dice(2, 3), 0, SPMSL_NORMAL);
             }
             else

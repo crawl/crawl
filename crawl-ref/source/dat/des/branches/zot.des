@@ -1733,7 +1733,7 @@ NAME:    regret_index_zotdec_barnacled_simple
 TAGS:    extra transparent zotdec no_pool_fixup
 TAGS:    luniq_zotdec_rune luniq_zotdec_negative_space
 DEPTH:   Zot, !Zot:$
-ITEM:    mundane javelin q:1 no_pickup, throwing net q:1 no_pickup
+ITEM:    any medium throwable mundane q:1 no_pickup, throwing net q:1 no_pickup
 SUBST:   m = mw..
 NSUBST:  A = 1:+ / *:xxx+, B = 1:+ / *:xxx+, C = 1:+ / *:xxx+, D = 1:+ / *:xxx+
 NSUBST:  { = 1:{([T<<<<dwcc / 1:})]T>>>>ewcc / * = xxcww
@@ -1770,7 +1770,7 @@ TAGS:    luniq_zotdec_rune luniq_zotdec_liquid
 DEPTH:   Zot, !Zot:$
 WEIGHT:  5
 MONS:    bush
-ITEM:    mundane javelin q:1 no_pickup, throwing net q:1 no_pickup
+ITEM:    any medium throwable mundane q:1 no_pickup, throwing net q:1 no_pickup
 SHUFFLE: AB / AB / BA, CD / CD / DC, -~
 SUBST:   AC : cbvxx, B = w, D = ., - = w, ~ : ww...
 SUBST:   { = {([<11%dG, } = })]>11$eG

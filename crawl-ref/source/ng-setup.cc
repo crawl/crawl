@@ -190,12 +190,14 @@ item_def* newgame_make_item(object_class_type base,
 
 void give_throwing_ammo(int n)
 {
+    const auto small_type = (missile_type)item_for_set(ITEM_SET_SMALL_THROWABLE);
+    const auto med_type = (missile_type)item_for_set(ITEM_SET_MEDIUM_THROWABLE);
     if (species::can_throw_large_rocks(you.species))
         newgame_make_item(OBJ_MISSILES, MI_LARGE_ROCK, n);
     else if (you.body_size(PSIZE_TORSO) <= SIZE_SMALL)
-        newgame_make_item(OBJ_MISSILES, MI_BOOMERANG, 2*n);
+        newgame_make_item(OBJ_MISSILES, small_type, 2*n);
     else
-        newgame_make_item(OBJ_MISSILES, MI_JAVELIN, n);
+        newgame_make_item(OBJ_MISSILES, med_type, n);
 }
 
 static void _give_job_spells(job_type job)

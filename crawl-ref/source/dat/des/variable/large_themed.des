@@ -1070,7 +1070,7 @@ DEPTH:   D:11-, Depths
 ORIENT:  southeast
 ITEM:    any armour, any armour good_item
 ITEM:    any weapon, any weapon good_item
-ITEM:    boomerang, javelin w:3, throwing net w:3
+ITEM:    any small throwable, any medium throwable w:3, throwing net w:3
 ITEM:    morningstar ego:concussion / broad axe ego:sundering / \
          partisan ego:entangling / lajatang ego:rebuke / \
          rapier ego:devious / scimitar ego:valour
