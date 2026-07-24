@@ -136,7 +136,7 @@ static const opacity_func &_exclusion_opacity(const coord_def &p)
     const monster_info *mi = env.map_knowledge(p).monsterinfo();
     // Don't exclude past glass for stationary monsters.
     if (mi && mi->is_stationary())
-        return opc_fully_no_trans;
+        return opc_excl_no_trans;
     return opc_excl;
 }
 
