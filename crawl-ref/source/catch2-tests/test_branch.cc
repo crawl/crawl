@@ -36,3 +36,17 @@ TEST_CASE( "branch exits stay within the parent branch", "[single-file]" )
 
     REQUIRE(destination == level_id(BRANCH_DUNGEON, 14));
 }
+
+TEST_CASE( "branch entry ranges stay within their parent branch", "[single-file]" )
+{
+    for (branch_iterator it; it; ++it)
+    {
+        const Branch &branch = **it;
+        if (branch.parent_branch >= NUM_BRANCHES || branch.mindepth < 1)
+            continue;
+
+        CAPTURE(branch.id, branch.parent_branch);
+        REQUIRE(branch.mindepth <= branch.maxdepth);
+        REQUIRE(branch.maxdepth <= branches[branch.parent_branch].numlevels);
+    }
+}

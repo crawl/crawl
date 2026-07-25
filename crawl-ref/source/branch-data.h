@@ -211,7 +211,7 @@ const Branch branches[NUM_BRANCHES] =
       'Y', { RUNE_TARTARUS }, branch_noise::normal, HELL_MON_DIE_SIZE,
       {BRANCH_VESTIBULE} },
 
-    { BRANCH_ZOT, BRANCH_DEPTHS, 4, 4, 4, 27,
+    { BRANCH_ZOT, BRANCH_DEPTHS, 3, 3, 4, 27,
       brflag::dangerous_end,
       DNGN_ENTER_ZOT, DNGN_EXIT_ZOT, NUM_FEATURES,
       "Zot", "the Realm of Zot", "Zot",
