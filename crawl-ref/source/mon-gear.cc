@@ -139,6 +139,10 @@ static talisman_type _talisman_for(monster_type mtyp)
         if (coinflip())
             return TALISMAN_STATUE;
         break;
+    case MONS_MEDUSA:
+        if (coinflip())
+            return TALISMAN_MEDUSA;
+        break;
     default:
         break;
     }
