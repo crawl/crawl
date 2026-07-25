@@ -1628,6 +1628,11 @@ static const vector<branch_type> portal_generation_order =
     BRANCH_DESOLATION,
 };
 
+const vector<branch_type> &dgn_portal_generation_order()
+{
+    return portal_generation_order;
+}
+
 void update_portal_entrances()
 {
     unordered_set<branch_type, std::hash<int>> seen_portals;
@@ -1853,6 +1858,19 @@ static const vector<branch_type> branch_generation_order =
     NUM_BRANCHES,
 };
 
+const vector<branch_type> &dgn_branch_generation_order()
+{
+    return branch_generation_order;
+}
+
+bool dgn_branch_will_generate(branch_type br)
+{
+    return br < NUM_BRANCHES &&
+        (brentry[br].is_valid()
+         || br == BRANCH_DUNGEON || br == BRANCH_VESTIBULE
+         || !is_connected_branch(br));
+}
+
 static bool _branch_pregenerates(branch_type b)
 {
     if (!you.deterministic_levelgen)
@@ -1911,10 +1929,7 @@ bool pregen_dungeon(const level_id &stopping_point)
         // `initialise_branch_depths` for some reason. The vestibule is invalid
         // because its depth isn't set until the player actually enters a
         // portal, similarly for other portal branches.
-        if (br < NUM_BRANCHES &&
-            (brentry[br].is_valid()
-             || br == BRANCH_DUNGEON || br == BRANCH_VESTIBULE
-             || !is_connected_branch(br)))
+        if (dgn_branch_will_generate(br))
         {
             for (int i = 1; i <= brdepth[br]; i++)
             {
