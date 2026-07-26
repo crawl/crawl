@@ -389,7 +389,7 @@ DEPTH:  Depths
 
 NAME:   uniq_oskar
 WEIGHT: 5000
-DEPTH:  D:4
+DEPTH:  D:3
 : place_unique(_G, "Oskar")
 
 NAME:   uniq_parghit
