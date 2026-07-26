@@ -136,10 +136,10 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
         beam.origin_spell = SPELL_CONJURE_BALL_LIGHTNING;
 }
 
-dice_def prism_damage(int hd, bool fully_powered)
+dice_def prism_damage(int hd, bool fully_powered, bool random)
 {
     const int dice = fully_powered ? 3 : 2;
-    return dice_def(dice, 5 + div_rand_round(hd * 7, 4));
+    return dice_def(dice, 5 + (random ? div_rand_round(hd * 7, 4) : hd * 7 / 4));
 }
 
 static void _setup_prism_explosion(bolt& beam, const monster& origin)
