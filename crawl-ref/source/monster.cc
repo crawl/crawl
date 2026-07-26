@@ -937,15 +937,8 @@ bool monster::do_unequip_effects(item_def &item, bool msg, bool force)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        // In specific circumstances, it is possible for a launcher-wielding
-        // paragon to put their launcher away to punch something instead (which
-        // causes problems with its abilities). So try to prevent them from
-        // doing this.
-        if (!force && mons_class_is_animated_object(type)
-            && type != MONS_PLATINUM_PARAGON)
-        {
+        if (!force && mons_class_is_animated_object(type))
             return false;
-        }
         unequip_weapon(item, msg);
         break;
 
