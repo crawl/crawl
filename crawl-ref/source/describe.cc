@@ -3079,7 +3079,7 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def &pos)
             tile_def(TILE_FLOOR_ICY)
         });
     }
-    else if (!feat_is_solid(feat))
+    else if (!feat_is_solid(feat) && you.see_cell(pos))
     {
         if (haloed(pos) && !umbraed(pos))
         {
