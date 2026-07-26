@@ -2975,7 +2975,7 @@ xxc...cxxxxxxxx
 xxc@@@cxxxxxxxx
 ENDMAP
 
-# This still uses the iron statue description intended for Dis:7. It still
+# This still uses the iron statue description intended for the bottom of Dis. It
 # kind of works, though.
 NAME:  nicolae_okawaru_hey_there's_oka_statue_tiles
 TAGS:  transparent decor

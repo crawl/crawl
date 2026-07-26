@@ -47,7 +47,7 @@ function disto_weapon(class, quality)
 end
 
 -- Determine the number of gold piles placed for ebering_ghost_gozag.
--- Mean ranges from 5 to 17 from D:3-D:15 with
+-- Mean ranges from 5 to 17 from D:3-D:14 with
 -- 14 in Orc and 17 elsewhere, and the actual number placed varies by +4/-2.
 function setup_gozag_gold(e)
     if dgn.persist.necropolis_difficulty == "orc" then

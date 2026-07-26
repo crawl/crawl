@@ -1567,10 +1567,10 @@ MAP
 S
 ENDMAP
 
-# top tier equipment for a single gold... if you're on zot:5
+# top tier equipment for a single gold... if you're on the bottom of Zot
 NAME:   hellmonk_bargain_basement
 TAGS:   extra
-DEPTH:  Zot:5
+DEPTH:  Zot:$
 WEIGHT: 3
 KFEAT:  S = general shop type:Last-Chance suffix:Deals greed:0 count:7 ; \
  any ring randart w:15 | any amulet randart w:15 | quick blade randart | \

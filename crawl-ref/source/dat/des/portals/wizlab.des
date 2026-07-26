@@ -620,7 +620,7 @@ NAME:   mu_enter_wizlab_7
 # dead end.
 WEIGHT: 0 (Vaults)
 KFEAT:  apqr = x
-# Mimic the rock/floor colors of Zot:1-4
+# Mimic the rock/floor colours of non-final Zot
 COLOUR: a = white
 COLOUR: - = lightgray
 COLOUR: p = blue

@@ -916,7 +916,7 @@ COLOUR:   # = lightmagenta
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
-:           door_description_suffix=" to Zot:5",
+:           door_description_suffix=" to Zot:4",
 :           })
 : lua_marker('<', props_marker {
 :           door_description_suffix=" to the ~*~Extended Endgame~*~",

@@ -696,7 +696,7 @@ ENDMAP
 
 NAME:   spiders_nest_the_unseen
 TAGS:   no_item_gen no_monster_gen
-DEPTH:  Spider:3-
+DEPTH:  Spider:2-
 MONS:   patrolling ghost moth
 SUBST:  | = %%d, * = ..%%d
 ITEM:   potion of ambrosia pre_id
@@ -722,7 +722,7 @@ ENDMAP
 
 NAME:   spiders_nest_ghost_moth_duel
 TAGS:   no_item_gen no_monster_gen
-DEPTH:  Spider:3-
+DEPTH:  Spider:2-
 MONS:   ghost moth, tarantella
 ITEM:   potion of ambrosia pre_id q:1 / \
         potion of ambrosia pre_id q:2 w:5

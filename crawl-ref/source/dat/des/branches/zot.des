@@ -1,12 +1,12 @@
 ##############################################################################
 # zot.des: The ultimate goal. The Orb must be placed (Z). These maps can and
-#          should be serious challenges! Players dying on Zot:5 are okay :)
+#          should be serious challenges! Players dying on Zot:$ are okay :)
 #
 # Content:
 # <<1>> Zot entries (Depths:$)
 # <<2>> Zot decorative vaults
 # <<3>> Zot monster vaults
-# <<4>> Zot end hall (Zot:5)
+# <<4>> Zot end hall (Zot:$)
 # <<5>> Zot floor-by-floor wall & floor colour changes
 #
 ##############################################################################
@@ -589,7 +589,7 @@ MAP
 *
 ENDMAP
 
-# Directly place a decorative vault 33% of the time on Zot:1-4.
+# Directly place a decorative vault 33% of the time outside Zot's final floor.
 NAME:    zot_decor
 TAGS:    no_dump extra allow_dup nolayout_encompass luniq
 DEPTH:   Zot, !Zot:$
@@ -4704,7 +4704,7 @@ XXXXXXXXXXXccddddddddddddddccXXXcp.............ocXXXcchhhhhhhhhhhhhhccXXXXXXXXXX
 XXXXXXXXXXXXccccccccccccccccXXXXcccccccc@ccccccccXXXXccccccccccccccccXXXXXXXXXXX
 ENDMAP
 
-# There's few vaults on Zot:5, tone down their chances.
+# There are few vaults on Zot's final floor, so tone down their chances.
 NAME: dummy_balancer_zot
 TAGS: dummy
 DEPTH: Zot:$

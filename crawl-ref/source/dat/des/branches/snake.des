@@ -240,7 +240,7 @@ default-depth: Snake
 # Directly place a decorative vault 33% of the time on the latter half.
 NAME:    snake_decor
 TAGS:    no_dump extra allow_dup nolayout_encompass luniq
-DEPTH:   Snake:3-4
+DEPTH:   Snake:2-3
 CHANCE:  33%
 {{
   local c = 1

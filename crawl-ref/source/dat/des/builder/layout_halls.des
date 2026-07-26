@@ -357,7 +357,7 @@ validate {{
 # TODO: A better way of dealing with small maps
 #
 NAME:   layout_onion_interference
-DEPTH:  Snake, Zot:1-4
+DEPTH:  Snake, Zot, !Zot:$
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand central layout_type_narrow_caves
@@ -479,7 +479,7 @@ TAGS:   overwritable layout allow_dup unrand central layout_type_open_caves
     wscale = util.random_range_real(.06, .1)
     polarise = crawl.one_chance_in(4)
   else
-    -- Zot:5
+    -- Bottom of Zot
     if you.at_branch_bottom() then
       reps = crawl.random2(4)+0.5
       xoff = 0
@@ -504,7 +504,7 @@ TAGS:   overwritable layout allow_dup unrand central layout_type_open_caves
     end
   end
 
-  -- Zot:5 always gets a polar layout.
+  -- The bottom of Zot always gets a polar layout.
   if you.in_branch("zot") and you.at_branch_bottom() then
     polarise = true
   end

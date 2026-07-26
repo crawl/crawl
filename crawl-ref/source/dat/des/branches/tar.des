@@ -175,7 +175,7 @@ ENDMAP
 ##############################################################################
 NAME:    hangedman_snap_crack_crunch
 TAGS:    transparent no_monster_gen
-DEPTH:   Tar, !Tar:$, Zot:1-4
+DEPTH:   Tar, !Tar:$, Zot, !Zot:$
 ORIENT:  centre
 : if you.in_branch("Tar") then
 KMONS:   12 = patrolling undertaker

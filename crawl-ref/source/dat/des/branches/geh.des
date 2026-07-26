@@ -105,7 +105,7 @@ ENDMAP
 
 NAME:    hangedman_hellfire_club
 TAGS:    transparent no_monster_gen
-DEPTH:   Geh, !Geh:$, Zot:1-4
+DEPTH:   Geh, !Geh:$, Zot, !Zot:$
 MONS:    red draconian scorcher, red draconian stormcaller
 MONS:    hellion, oni incarcerator
 KMONS:   L = patrolling creeping inferno / nothing w:15

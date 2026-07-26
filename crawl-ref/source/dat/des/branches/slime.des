@@ -298,7 +298,7 @@ ENDMAP
 default-depth: Slime, !Slime:$
 
 # With the slimy staircase changes, it's now much harder for potential converts
-# to reach Jiyva on Slime:5. For the sake of divers and emergency exits alike,
+# to reach Jiyva on Slime:4. For the sake of divers and emergency exits alike,
 # this vault guarantees some altars on earlier floors.
 NAME:    regret_index_scattered_jiyva_altar
 TAGS:    transparent allow_dup extra luniq no_dump

@@ -493,7 +493,7 @@ default-depth: Lair
 # Directly place a decorative vault 25% of the time on the last few floors.
 NAME:    lair_decor
 TAGS:    no_dump extra allow_dup nolayout_encompass luniq
-DEPTH:   Lair:4-5
+DEPTH:   Lair:3-4
 CHANCE:  25%
 {{
   local c = 1
@@ -3735,7 +3735,7 @@ ENDMAP
 
 NAME:   nicolae_lair_time_for_slime
 TAGS:   transparent patrolling
-DEPTH:  Lair:4-
+DEPTH:  Lair:3-
 KMONS:  1 = slime creature
 KMONS:  2 = azure jelly / void ooze
 KMONS:  3 = jelly

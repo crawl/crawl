@@ -3174,7 +3174,7 @@ ENDMAP
 default-depth:
 
 ###############################################################################
-# Swamp:4 standard
+# Swamp end standard
 #
 NAME:    swamp
 TAGS:    transparent no_monster_gen
@@ -3217,7 +3217,7 @@ MAP
 ENDMAP
 
 ###############################################################################
-# Swamp:4 alternative (dp)
+# Swamp end alternative (dp)
 #
 NAME:    swamp_alternative
 TAGS:    transparent no_monster_gen no_pool_fixup no_rotate
