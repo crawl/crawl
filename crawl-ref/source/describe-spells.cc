@@ -400,7 +400,7 @@ static dice_def _spell_damage(spell_type spell, int hd, int pow)
         case SPELL_IRRADIATE:
             return irradiate_damage(pow, false);
         case SPELL_GLACIATE:
-            return glaciate_damage(pow, 3);
+            return glaciate_damage(pow, 3, false);
         case SPELL_CONJURE_BALL_LIGHTNING:
             return ball_lightning_damage(mons_ball_lightning_hd(pow, false));
         case SPELL_ERUPTION:
