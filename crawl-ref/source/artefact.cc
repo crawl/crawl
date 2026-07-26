@@ -1774,6 +1774,7 @@ static int _unrand_weight(int unrand_index, int item_level)
 }
 
 static bool _unrand_is_compatible(const unrandart_entry& unrand,
+                                  int unrand_index,
                                   object_class_type aclass,
                                   uint8_t atype,
                                   bool acquirement,
@@ -1793,6 +1794,9 @@ static bool _unrand_is_compatible(const unrandart_entry& unrand,
     item_def unrand_item;
     unrand_item.base_type = unrand.base_type;
     unrand_item.sub_type = unrand.sub_type;
+    unrand_item.quantity = 1;
+    unrand_item.flags |= ISFLAG_UNRANDART;
+    unrand_item.unrand_idx = unrand_index;
 
     if (mons && !mons->could_wield(unrand_item))
         return false;
@@ -1859,8 +1863,8 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level,
             continue;
         }
 
-        if (!_unrand_is_compatible(*entry, (object_class_type)aclass, atype,
-                                   acquirement, mons))
+        if (!_unrand_is_compatible(*entry, index, (object_class_type)aclass,
+                                   atype, acquirement, mons))
         {
             continue;
         }
