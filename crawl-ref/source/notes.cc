@@ -292,8 +292,7 @@ string Note::describe(bool when, bool where, bool what) const
                    << (first == 1 ? "" : "s") << " to Zin";
             break;
         case NOTE_GAIN_SKILL:
-            result << "Reached skill level " << second
-                   << " in " << skill_name(static_cast<skill_type>(first));
+            result << "Reached skill level " << second << " in " << name;
             break;
         case NOTE_LOSE_SKILL:
             result << "Reduced skill "
@@ -457,8 +456,10 @@ bool Note::hidden() const
     // Hide skill gains that are not enabled by options.
     if (type == NOTE_GAIN_SKILL || type == NOTE_LOSE_SKILL)
     {
+        for (int i = first + 1; i <= second; ++i)
+            if (Options.note_skill_levels[i])
+                return false;
         return !(Options.note_all_skill_levels
-                 || second <= 27 && Options.note_skill_levels[second]
                  || Options.note_skill_max && _is_highest_skill(first));
     }
     // Hide gems being shattered by default.
