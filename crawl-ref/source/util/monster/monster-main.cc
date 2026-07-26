@@ -306,6 +306,11 @@ static std::string _post_process_spell_effect_str(std::string spell_effect_str)
   {
     return buf;
   }
+  // If spell effect string has format x%,ydz, e.g. pain:
+  if (sscanf(spell_effect_str.c_str(), "%*d%%,%15s%n", buf, &end_pos) == 1 && end_pos == len)
+  {
+    return buf;
+  }
   return spell_effect_str;
 }
 
