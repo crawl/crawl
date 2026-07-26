@@ -379,7 +379,7 @@ struct map_cell
     }
 
 public:
-    uint32_t flags = 0;   // Flags describing the mappedness of this square.
+    uint64_t flags = 0;   // Flags describing the mappedness of this square.
 private:
     // TODO: shrink enums, shrink/re-order cloud_info and inline it
     dungeon_feature_type _feat:8;
