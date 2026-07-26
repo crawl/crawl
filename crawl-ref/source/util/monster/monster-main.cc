@@ -256,8 +256,8 @@ static string dice_def_string(dice_def dice)
 static string mi_calc_major_healing(monster* mons)
 {
     const int min = 50;
-    const int max = min + mons->spell_hd(SPELL_MAJOR_HEALING) * 10;
-    return make_stringf("%d-%d", min, max);
+    const int dice = mons->spell_hd(SPELL_MAJOR_HEALING) * 5;
+    return make_stringf("%d + 2d%d", min);
 }
 
 // Fallback used for spells not having damage displayed in game
@@ -268,17 +268,16 @@ static string mons_human_readable_spell_damage_string_fallback(monster* monster,
     bolt spell_beam = mons_spell_beam(monster, sp, pow, true);
     switch (sp)
     {
-        case SPELL_PORTAL_PROJECTILE:
-        case SPELL_LRD:
-          return "";
+        case SPELL_UPHEAVAL:
+          break;
         case SPELL_MAJOR_HEALING:
-            return mi_calc_major_healing(monster);
+          return mi_calc_major_healing(monster);
         case SPELL_MINOR_HEALING:
         case SPELL_HEAL_OTHER:
-            return dice_def_string(spell_beam.damage) + "+3";
+          return dice_def_string(dice_def(2, monster->spell_hd(SPELL_MINOR_HEALING) / 2));
 
         default:
-            break;
+            return "";
     }
 
     if (spell_beam.damage.size && spell_beam.damage.num)
