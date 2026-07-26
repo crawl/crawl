@@ -1864,3 +1864,30 @@ static void _ICE_DRAGON_ARCANIST_SCALES_unequip(item_def */*item*/, bool *show_m
     if (!show_msgs || *show_msgs)
         mprf(MSGCH_TALK, "%s", getSpeakString("ice dragon arcanist scales farewell").c_str());
 }
+
+/////////////////////////////////////////////////////
+static void _ISKENDERUNS_PLASMA_BLADE_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
+{
+    _equip_mpr(show_msgs, "The plasma blade comes to life!");
+}
+
+static void _ISKENDERUNS_PLASMA_BLADE_unequip(item_def */*item*/, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, "The plasma blade fades away.");
+}
+
+static void _ISKENDERUNS_PLASMA_BLADE_melee_effects(item_def* /*weapon*/, actor* /*attacker*/,
+                                     actor* defender, int /*dam*/, melee_attack* atk)
+{
+    if (coinflip())
+    {
+        mpr("The plasma blade releases a burst of energy!");
+        atk->inflict_damage(random_range(1, 8), BEAM_HOLY);
+
+        if (x_chance_in_y(1, 20))
+        {
+            mpr("The plasma blade releases a blinding burst of energy!");
+            defender->as_monster()->add_ench(mon_enchant(ENCH_BLIND));
+        }
+    }
+}
