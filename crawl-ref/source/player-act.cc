@@ -103,11 +103,7 @@ void player::set_position(const coord_def &c)
             invalidate_agrid(true);
 
         if (player_has_orb() || you.unrand_equipped(UNRAND_CHARLATANS_ORB))
-        {
-            if (player_has_orb())
-                env.orb_pos = c;
             invalidate_agrid(true);
-        }
 
         dungeon_events.fire_position_event(DET_PLAYER_MOVED, c);
     }

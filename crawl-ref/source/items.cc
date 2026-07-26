@@ -2020,7 +2020,6 @@ static void _get_orb()
     if (bezotted())
         mpr("Zot can harm you no longer.");
 
-    env.orb_pos = you.pos(); // can be wrong in wizmode
     orb_pickup_noise(you.pos(), 30);
 
     start_orb_run(CHAPTER_ESCAPING, "Now all you have to do is get back out "
@@ -2635,9 +2634,6 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
         item.link = env.igrid(p);
         env.igrid(p) = ob;
     }
-
-    if (item_is_orb(item))
-        env.orb_pos = p;
 
     if (item.base_type != OBJ_GOLD)
         gozag_move_gold_to_top(p);

@@ -296,7 +296,7 @@ static int _etc_vortex(int rand, const coord_def& loc)
 
 bool get_orb_phase(const coord_def& loc)
 {
-    int dist = (loc - env.orb_pos).abs();
+    int dist = (loc - you.pos()).abs();
     return (you.frame_no - dist*2/3)&4;
 }
 
