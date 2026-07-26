@@ -321,7 +321,7 @@ TAGS:     no_monster_gen no_pool_fixup no_exits sewer_edge no_trap_gen
 ORIENT:   northeast
 : sewer_setup(_G)
 MONS:     sewer rat band / kobold band / robin band
-KMONS:    q = crocodile / slime creature
+KMONS:    q = crocodile
 KFEAT:    q = deep_water
 COLOUR:   q = green
 TILE:     q = dngn_deep_water_murky
@@ -344,7 +344,7 @@ KFEAT:    y = shallow_water
 TILE:     y = dngn_shallow_water
 COLOUR:   y = blue
 KFEAT:    F = altar_zin / altar_elyvilon w:30
-MONS:     jackal band, kobold brigand band, slime creature
+MONS:     jackal band, kobold brigand band, jelly
 ITEM:     potion of curing / potion of heal wounds
 ITEM:     any scroll
 KMONS:    Z = sacred lotus
@@ -460,7 +460,7 @@ TAGS:    no_pool_fixup sewer_special
 ORIENT:  southeast
 SHUFFLE: de
 MONS:    endoplasm w:2 / sewer rat
-MONS:    slime creature w:1 / jelly w:3 / adder w:5 / endoplasm w:1
+MONS:    jelly w:4 / adder w:5 / endoplasm w:1
 MONS:    prince ribbit , crocodile / bullfrog
 : item(dgn.loot_potions)
 : item(dgn.loot_scrolls)
@@ -549,7 +549,7 @@ NSUBST: 1 = 2:1 / *-
 SUBST:  - = wWWW.
 KMONS:  1 = cinder newt 
 KMONS:  2 = sewer rat band / kobold brigand band
-KMONS:  3 = crocodile / slime creature
+KMONS:  3 = crocodile
 KMONS:  4 = Pargi, crocodile
 KMONS:  W = withered plant / nothing w:100 
 # slimehead att:passive w:2
