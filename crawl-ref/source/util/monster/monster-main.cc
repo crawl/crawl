@@ -274,7 +274,7 @@ static string mons_human_readable_spell_damage_string_fallback(monster* monster,
           return mi_calc_major_healing(monster);
         case SPELL_MINOR_HEALING:
         case SPELL_HEAL_OTHER:
-          return dice_def_string(dice_def(2, monster->spell_hd(SPELL_MINOR_HEALING) / 2));
+          return dice_def_string(spell_beam.damage) + "+3";
 
         default:
             return "";
