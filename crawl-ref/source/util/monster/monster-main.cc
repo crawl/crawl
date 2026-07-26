@@ -668,6 +668,7 @@ int main(int argc, char* argv[])
 {
     alarm(5);
     crawl_state.test = true;
+    crawl_state.need_save = true;
     if (argc < 2)
     {
         printf("Usage: @? <monster name>\n");
