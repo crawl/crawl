@@ -268,7 +268,10 @@ static string mons_human_readable_spell_damage_string_fallback(monster* monster,
     bolt spell_beam = mons_spell_beam(monster, sp, pow, true);
     switch (sp)
     {
+        // spells with random effect:
         case SPELL_UPHEAVAL:
+        case SPELL_MAJOR_DESTRUCTION:
+        case SPELL_LEGENDARY_DESTRUCTION:
           break;
         case SPELL_MAJOR_HEALING:
           return mi_calc_major_healing(monster);
@@ -293,10 +296,16 @@ static std::string _post_process_spell_effect_str(std::string spell_effect_str)
     spell_effect_str.pop_back();
   }
 
-  int percent, end_pos;
+  int end_pos;
   const auto len = static_cast<int>(spell_effect_str.length());
   if (sscanf(spell_effect_str.c_str(), "%*d%%%n", &end_pos) == 0 && end_pos == len)
   {
+    // If it's just percent, e.g. something like petrify
+    return "";
+  }
+  if (sscanf(spell_effect_str.c_str(), "%*dx(%*d%%)%n", &end_pos) == 0 && end_pos == len)
+  {
+    // Special case for conjure living spells petrify
     return "";
   }
 
