@@ -39,7 +39,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
 # A grid of stone chambers with twisted caverns in between.
 #
 NAME: layout_sewer
-DEPTH: D:4
+DEPTH: D:3
 WEIGHT: 100
 ORIENT: encompass
 TAGS: overwritable layout unrand no_exits water_ok

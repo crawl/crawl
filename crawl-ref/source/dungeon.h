@@ -42,7 +42,7 @@ COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t));
 
 const unsigned short INVALID_MAP_INDEX = 10000;
 
-const level_id sewer_location = level_id(BRANCH_DUNGEON, 4);
+const level_id sewer_location = level_id(BRANCH_DUNGEON, 3);
 
 // Should be the larger of GXM/GYM
 #define MAP_SIDE ((GXM) > (GYM) ? (GXM) : (GYM))
