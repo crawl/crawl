@@ -2724,8 +2724,7 @@ NAME:    nicolae_vaults_elemental_giants
 KMONS:   1 = stone giant
 KMONS:   2 = fire giant / frost giant
 KMONS:   3 = titan
-KITEM:   d = giant club ego:flaming / giant spiked club ego:flaming / \
-           giant club ego:freezing / giant spiked club ego:freezing / \
+KITEM:   d = giant club ego:freezing / giant spiked club ego:freezing / \
            giant club ego:electrocution / giant spiked club ego:electrocution /\
            giant club ego:heavy / giant spiked club ego:heavy / \
            large rock / animal skin

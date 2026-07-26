@@ -3198,12 +3198,8 @@ MONS:    ettin ; great mace good_item w:20 | great mace randart w:20 \
             .  great mace good_item w:20 | great mace randart w:20 \
             | giant club good_item w:3 | giant club randart w:3 \
             | giant spiked club good_item w:2 | giant spiked club randart w:2
-KMONS:   E = fire giant ; great mace ego:flaming w:20 \
-            | giant club ego:flaming w:3 \
-            | giant spiked club ego:flaming w:2
-KMONS:   F = fire giant ; great mace ego:flaming randart w:20 \
-            | giant club ego:flaming randart w:3 \
-            | giant spiked club ego:flaming randart w:2
+KMONS:   E = fire giant ; great mace ego:flaming
+KMONS:   F = fire giant ; great mace ego:flaming randart
 KMONS:   H = frost giant ; great mace ego:freezing w:20 \
             | giant club ego:freezing w:3 \
             | giant spiked club ego:freezing w:2
