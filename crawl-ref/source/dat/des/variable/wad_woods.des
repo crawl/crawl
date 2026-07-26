@@ -489,7 +489,7 @@ MONS:   killer bee, queen bee
 KMONS:  8 = meliai
 KITEM:  8 = %
 KFEAT:  a = x
-: if you.in_branch("Lair") and you.depth() < 4
+: if you.in_branch("Lair") and you.depth() < 3
 :  or you.in_branch("D") and you.depth() < 12 then
 SUBST:  8 = 6
 : end

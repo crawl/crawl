@@ -226,7 +226,7 @@ SUBST:  D = 1W
 NSUBST: 1 = 2=1 / 3=1W / 23 / 2=23WW / 45 / 2=|* / 2=|*WW / W
 :     end
 : elseif you.in_branch("Lair") then
-:     if you.depth() < 4 then
+:     if you.depth() < 3 then
 SUBST:  D = 1WW
 NSUBST: 1 = 1 / 3=1W / 23WW / |* / 2=|*WW / W
 :     else
@@ -781,7 +781,7 @@ MONS:  vampire mosquito / swamp drake w:2 / swamp dragon w:3 / hydra w:3 / \
 :   end
 # Lair
 : else
-:   if you.depth() < 4 then
+:   if you.depth() < 3 then
 MONS:  bullfrog / water moccasin / sewer rat / blink frog / cane toad / \
        komodo dragon
 MONS:  vampire mosquito / swamp drake w:3 / swamp dragon w:1 / hydra w:1
@@ -9890,7 +9890,7 @@ NSUBST: 1 = 4 / 2, ' = 2=2 / '
 :     end
 # Lair
 : else
-:     if you.depth() < 4 then
+:     if you.depth() < 3 then
 NSUBST: 1 = 3 / 2, ' = 2 / '
 :     else
 NSUBST: 1 = 3 / 23, ' = 2=2 / '
@@ -10080,7 +10080,7 @@ NSUBST: 2 = 3 / 2
 :     end
 # Lair
 : else
-:     if you.depth() < 4 then
+:     if you.depth() < 3 then
 NSUBST: 2 = 2 / 1
 SUBST:  1 = 1..
 :     else

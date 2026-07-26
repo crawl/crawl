@@ -6261,7 +6261,7 @@ SUBST:  d = de, f = fg, % = %*, D = 1t, F = ^
 : elseif you.in_branch('Lair') then
 KFEAT:  ^ = trap_net
 SUBST:  F = E
-:   if you.depth() < 4 then
+:   if you.depth() < 3 then
 SUBST:  d = dddde, f = ffffg, % = %%%%*, F = E, D = 1tttt
 :   else
 SUBST:  d = ddde, f = fffg, % = %%%*, F = E, D = 1ttt
@@ -6388,7 +6388,7 @@ FTILE:   = = floor_sandstone
 : elseif you.in_branch("Lair") then
 KMONS:   3 = lindwurm
 KFEAT:   3^ = trap_net / trap_dispersal
-:     if you.depth() < 4 then
+:     if you.depth() < 3 then
 KMONS:   1 = redback / jumping spider / tarantella w:5 / wolf spider w:5
 NSUBST:  D = 2=^- / -, - = 2=1 / 4=1. / .
 NSUBST:  J = 2 / 2=2. / .
@@ -6492,7 +6492,7 @@ SUBST:  d = ef, D = 2
 NSUBST: 1 = 2=1 / 1., * = * / *. / .
 :     end
 : elseif you.in_branch("Lair") then
-:     if you.depth() < 4 then
+:     if you.depth() < 3 then
 SUBST:  d = de, D = G
 NSUBST: 1 = 1 / 1. / ., * = *. / .
 :     else

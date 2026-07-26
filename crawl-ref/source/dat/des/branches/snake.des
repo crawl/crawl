@@ -2060,9 +2060,6 @@ DEPTH:   Snake, !Snake:$
 : if you.depth() < 2 then
 KMONS:   1 = salamander mystic / salamander tyrant w:5
 KMONS:   2 = salamander / salamander mystic w:1 / nothing w:80
-: elseif you.depth() < 3 then
-KMONS:   1 = salamander mystic / salamander tyrant
-KMONS:   2 = salamander / salamander mystic w:2 / nothing w:50
 : else
 KMONS:   1 = salamander tyrant
 KMONS:   2 = salamander / salamander mystic w:5 / nothing w:45

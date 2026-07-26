@@ -26,7 +26,7 @@ end
 
 function beast_lair_populate_mons_large(e)
     local set = crawl.random2(3)
-    if you.depth() > 3 then
+    if you.depth() > 2 then
       set = set + 3
     end
     e.tags("no_monster_gen")
@@ -64,7 +64,7 @@ function beast_lair_populate_mons_small(e)
         beast_lair_populate_mons_large(e)
     else
         local monster_list = {}
-        if you.depth() < 4 then
+        if you.depth() < 3 then
             monster_list = { "black bear", "water moccasin", "bullfrog",
                              "wolf", "yak", "komodo dragon", "cane toad" }
         else
@@ -3101,7 +3101,7 @@ ENDMAP
 
 # Two stream minivaults, combined.
 NAME:   guppyfry_lair_drakes
-: if you.depth() > 3 and crawl.coinflip() then
+: if you.depth() > 2 and crawl.coinflip() then
 MONS:   rime drake / swamp drake / acid dragon
 MONS:   steam dragon
 MONS:   plant

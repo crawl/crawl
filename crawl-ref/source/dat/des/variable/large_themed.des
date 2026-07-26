@@ -1117,7 +1117,7 @@ ITEM:    morningstar ego:concussion / broad axe ego:sundering / \
 MONS:    orc warrior / deep elf knight w:1 / deep elf archer w:1
 MONS:    orc warrior w:20 / centaur warrior
 MONS:    orc warrior, patrolling orc knight w:8 / patrolling orc warlord w:2
-: elseif you.in_branch("Depths") and you.depth() < 4 then
+: elseif you.in_branch("Depths") and you.depth() < 3 then
 MONS:    orc knight w:8 / deep elf knight w:1 / deep elf archer w:5 / \
          / yaktaur captain w:2
 MONS:    orc knight w:8 / deep elf knight w:1 / deep elf archer w:1 / \
@@ -1396,7 +1396,7 @@ MONS:    killer bee, meliai, queen bee, oklob plant
 KITEM:   | = |
 SUBST:   A = X:3 .:2, z = x..
 NSUBST:  ' = 1:0 / 1:1 / 1:d / 1:% / 12 = .:260 01d% / * = .
-: if you.in_branch("Lair") and you.depth() < 4
+: if you.in_branch("Lair") and you.depth() < 3
 :  or you.in_branch("D") and you.depth() < 12 then
 KFEAT:   | = >
 SUBST:   9 = 990, 8 = 9
@@ -1891,7 +1891,7 @@ NSUBST:  g = . / *:aa., h = . / *:aa., i = . / *:aa.
 NSUBST:  j = . / *:aa., k = . / *:aa., l = . / *:aa.
 NSUBST:  m = . / *:aa., n = . / *:aa., o = . / *:aa.
 NSUBST:  p = . / *:aa., q = . / *:aa.
-: if you.in_branch("Lair") and you.depth() < 4
+: if you.in_branch("Lair") and you.depth() < 3
 :  or you.in_branch("D") and you.depth() < 12 then
 SUBST:   9 = 990, 8 = 9
 : else
@@ -1952,7 +1952,7 @@ NSUBST:  y = 5:x / 1:. / * = x., z = 5:x / 1:. / *:x.
 NSUBST:  Y = 3:x / 1:. / * = x., Z = 3:x / 1:. / *:x.
 SUBST:   D : aaP.., E : aaP.., F : aaP.., G : aaP..
 SUBST:   H : aaP.., I : aP., X = xxP.
-: if you.in_branch("Lair") and you.depth() < 4
+: if you.in_branch("Lair") and you.depth() < 3
 :    or you.in_branch("D") and you.depth() < 12 then
 SUBST:   9 = 990, 8 = 9, ~ = .
 : else
@@ -2013,7 +2013,7 @@ SUBST:   E : x.., F : xx., G : xx., H : xx.
 SUBST:   I : aa., J : aa., K : aa., L : aa.
 SUBST:   y = xx., z = xx!
 CLEAR:   !
-: if you.in_branch("Lair") and you.depth() < 4
+: if you.in_branch("Lair") and you.depth() < 3
 :    or you.in_branch("D") and you.depth() < 12 then
 SUBST:   9 = 990, 8 = 9, ~ = .
 : else
@@ -2071,7 +2071,7 @@ SHUFFLE: ABCD
 SUBST:   A = a, B : aa., C : a.., D = .
 SUBST:   y = xxx., Y = xxw, z = xx!
 CLEAR:   !
-: if you.in_branch("Lair") and you.depth() < 4
+: if you.in_branch("Lair") and you.depth() < 3
 :    or you.in_branch("D") and you.depth() < 12 then
 SUBST:   9 = 990, 8 = 9, ~ = .
 : else
