@@ -1111,6 +1111,11 @@ static void _adjust_brand(item_def &item, int agent)
         // 75% chance of a brand
         item.brand = random_choose(SPWPN_NORMAL, SPWPN_HEAVY,
                                    SPWPN_FLAMING, SPWPN_ANTIMAGIC);
+        if (weapon_has_flag(item.sub_type, WPNF_WOODEN)
+            && item.brand == SPWPN_FLAMING)
+        {
+            item.brand = SPWPN_ANTIMAGIC;
+        }
         return;
     }
 

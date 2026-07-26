@@ -111,8 +111,8 @@ void item_colour(item_def &item)
         item.subtype_rnd = you.item_description[*idesc][item.sub_type];
 }
 
-static weapon_type _determine_weapon_subtype(int item_level)
-{
+static weapon_type _determine_weapon_subtype(int item_level, branch_type place)
+{    
     if (one_chance_in(30) && x_chance_in_y(item_level + 3, 100))
     {
         return random_choose(WPN_LAJATANG,
@@ -134,12 +134,15 @@ static weapon_type _determine_weapon_subtype(int item_level)
         {
             const int wpntype = random2(NUM_WEAPONS);
 
-            if (x_chance_in_y(weapon_rarity(wpntype), 10))
+            if (x_chance_in_y(weapon_rarity(wpntype, place), 10))
                 return static_cast<weapon_type>(wpntype);
         }
     }
     else if (x_chance_in_y(item_level + 1, item_level + 11))
     {
+        if (place == BRANCH_SHOALS && one_chance_in(4))
+            return WPN_LEIOMANO;
+
         return random_choose(WPN_QUARTERSTAFF,
                              WPN_FALCHION,
                              WPN_LONG_SWORD,
@@ -311,7 +314,10 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     if (brand <= SPWPN_NORMAL)
         return true;
 
-    if (type == WPN_QUICK_BLADE && brand == SPWPN_SPEED)
+    if (weapon_has_flag(type, WPNF_LIGHTWEIGHT) && brand == SPWPN_SPEED)
+        return false;
+
+    if (weapon_has_flag(type, WPNF_WOODEN) && brand == SPWPN_FLAMING)
         return false;
 
     if (is_demonic_weapon_type(type) && brand == SPWPN_HOLY_WRATH)
@@ -388,11 +394,11 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
 // Choose a random weapon type compatible with any supplied brand and fixed
 // artprops. If no weapon type is compatible with both of these, use the last
 // chosen type, set no brand, and ignore the fixed artprops.
-static void _roll_weapon_type(item_def& item, int item_level)
+static void _roll_weapon_type(item_def& item, int item_level, branch_type place)
 {
     for (int i = 0; i < 1000; ++i)
     {
-        item.sub_type = _determine_weapon_subtype(item_level);
+        item.sub_type = _determine_weapon_subtype(item_level, place);
         if (is_weapon_brand_ok(item.sub_type, item.brand, true)
             && are_fixed_props_ok(item))
         {
@@ -432,11 +438,14 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
                                   bool acquirement = false,
                                   monster *mons = nullptr)
 {
+    const branch_type place = (agent == NO_AGENT ? level_id::current().branch 
+                                                : BRANCH_DUNGEON);
+
     // Determine weapon type.
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
     else
-        _roll_weapon_type(item, item_level);
+        _roll_weapon_type(item, item_level, place);
 
     // Fall back to an ordinary item if randarts not allowed for this type.
     if (item_level == ISPEC_RANDART && _weapon_disallows_randart(item.sub_type))
@@ -488,7 +497,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
 
     // If it's forced to be a good item, reroll clubs.
     while (force_good && force_type == OBJ_RANDOM && item.sub_type == WPN_CLUB)
-        _roll_weapon_type(item, item_level);
+        _roll_weapon_type(item, item_level, place);
 
     item.plus = 0;
 

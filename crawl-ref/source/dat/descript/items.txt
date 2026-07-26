@@ -927,6 +927,16 @@ leather armour
 A suit made from layers of tanned animal hide. It provides basic protection
 with almost no hindrance to spellcasting or stealthy movement.
 %%%%
+leiomano
+
+A piece of hardwood carved into a thin, lightweight loop with shark's teeth 
+sewn around the outside to make a cutting edge. The cuts are fairly weak and
+shallow; however, its lightweight construction allows a skilled warrior to 
+attack at almost unnatural speeds.
+
+A traditional weapon handcrafted by the merfolk of the Shoals, who prefer it
+over most knives, as salt water causes metal edges to rust slowly over time.
+%%%%
 lightning rod
 
 A rod that allows its wielder to fire unavoidable blasts of lightning.

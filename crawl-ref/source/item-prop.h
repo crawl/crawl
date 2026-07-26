@@ -144,7 +144,7 @@ bool is_mana_regen_item(const item_def& item);
 
 // Only works for armour/weapons/missiles
 // weapon functions:
-int weapon_rarity(int w_type) IMMUTABLE;
+int weapon_rarity(int w_type, branch_type place = BRANCH_DUNGEON) IMMUTABLE;
 
 bool is_weapon_too_large(const item_def &item, size_type size) PURE;
 
@@ -165,6 +165,8 @@ bool convert2bad(item_def &item);
 vorpal_damage_type get_vorpal_type(const item_def &item) PURE;
 int get_damage_type(const item_def &item) PURE;
 int single_damage_type(const item_def &item) PURE;
+
+bool weapon_has_flag(const int wpn, const wpn_flags flag);
 
 bool is_brandable_weapon(const item_def &wpn, bool allow_ranged, bool divine = false);
 

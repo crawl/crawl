@@ -3083,6 +3083,7 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_QUARTERSTAFF:          return TILE_WPN_QUARTERSTAFF;
     case WPN_CLUB:                  return TILE_WPN_CLUB;
     case WPN_MACE:                  return TILE_WPN_MACE;
+    case WPN_LEIOMANO:              return TILE_WPN_LEIOMANO;
     case WPN_FLAIL:                 return TILE_WPN_FLAIL;
     case WPN_GREAT_MACE:            return TILE_WPN_GREAT_MACE;
     case WPN_DIRE_FLAIL:            return TILE_WPN_DIRE_FLAIL;

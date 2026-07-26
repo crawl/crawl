@@ -804,6 +804,7 @@ club CLUB
 club_slant CLUB_SLANT
 club_two CLUB2
 club_three CLUB3
+leiomano LEIOMANO
 stick STICK
 giant_club GIANT_CLUB
 giant_club_slant GIANT_CLUB_SLANT

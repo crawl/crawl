@@ -751,15 +751,15 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { { { WPN_TRIDENT,          20 },
                 { WPN_DEMON_TRIDENT,    3 },
         } } },
-        { MONS_MERFOLK_AQUAMANCER, { { { WPN_RAPIER, 1 } }, {}, {}, 2 } },
+        { MONS_MERFOLK_AQUAMANCER, { { { WPN_LEIOMANO, 1 } }, {}, {}, 2 } },
         { MONS_MERFOLK_JAVELINEER, { { { WPN_SPEAR, 1 } } } },
         { MONS_GOBLIN_RIDER, { { { WPN_SPEAR, 1 } } } },
         { MONS_GOJI, { { { WPN_SPEAR, 1 } } } },
         { MONS_SPRIGGAN_RIDER, { { { WPN_SPEAR, 1 } } } },
-        { MONS_MERFOLK, { { { WPN_TRIDENT, 1 } } } },
+        { MONS_MERFOLK, { { { WPN_TRIDENT, 1 }, { WPN_LEIOMANO, 1 } } } },
         { MONS_MERFOLK_SIREN,
             { { { WPN_TRIDENT,          1 },
-                { WPN_SPEAR,            2 },
+                { WPN_LEIOMANO,         2 },
         } } },
         { MONS_KOBOLD_BLASTMINER,
             { { { WPN_ORCBOW,           8 },
@@ -1288,7 +1288,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         if (active_monster_band == BAND_MERFOLK_IMPALER)
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type  = random_choose_weighted(10, WPN_SPEAR,
+            item.sub_type  = random_choose_weighted(10, WPN_LEIOMANO,
                                                     10, WPN_TRIDENT,
                                                     5, WPN_HALBERD,
                                                     5, WPN_GLAIVE);

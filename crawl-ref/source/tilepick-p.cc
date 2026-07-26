@@ -65,6 +65,9 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_MACE:
         tile = TILEP_HAND1_MACE;
         break;
+    case WPN_LEIOMANO:
+        tile = TILEP_HAND1_LEIOMANO;
+        break;
     case WPN_GREAT_MACE:
         tile = TILEP_HAND1_GREAT_MACE;
         break;

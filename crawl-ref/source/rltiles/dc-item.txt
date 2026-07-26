@@ -38,6 +38,11 @@ urand_wyrmbane4 UNRAND_WYRMBANE4
 club WPN_CLUB
 %enchant_variation WPN_CLUB shiny runed glowing randart
 club2 WPN_CLUB_MAGIC
+leiomano1 WPN_LEIOMANO
+%enchant_variation WPN_LEIOMANO shiny runed glowing
+leiomano2 WPN_LEIOMANO_MAGIC
+%enchant_variation WPN_LEIOMANO randart
+leiomano3 WPN_LEIOMANO_RANDART
 mace1 WPN_MACE
 %enchant_variation WPN_MACE shiny runed glowing
 mace2 WPN_MACE_MAGIC
