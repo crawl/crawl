@@ -4392,7 +4392,7 @@ NAME:    hangedman_elemental_death_ray
 TAGS:    transparent patrolling no_descent
 DEPTH:   D:12-, !D:$, Depths, !Depths:$
 ORIENT:  float
-MONS:    arcanist ; staff of fire | quarterstaff ego:flaming . \
+MONS:    arcanist ; staff of fire | quarterstaff ego:heavy . \
                     robe ego:resistance
 MONS:    occultist ; staff of cold | quarterstaff ego:freezing . \
                      robe ego:resistance

@@ -1799,7 +1799,7 @@ NSUBST:  123 = 1=.
 # For D:13- and Depths, generate all three ancestor monsters.
 :     else
 MONS:    ogre mage; lajatang ego:freezing / \
-         molten gargoyle ; lajatang ego:flaming
+         molten gargoyle ; lajatang ego:heavy
 MONS:    spriggan ; dagger ego:draining good_item . robe good_item . \
                     buckler . wand of paralysis / \
          vampire ; dagger ego:draining good_item . robe good_item . \

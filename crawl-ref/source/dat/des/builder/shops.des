@@ -1420,7 +1420,7 @@ KFEAT:  P = shallow_water
 KFEAT:  S = weapon shop type:Hydra suffix:Hut count:7 ; falchion ego:flaming | \
     long sword ego:flaming | scimitar ego:flaming | great sword ego:flaming | \
     hand axe ego:flaming | broad axe ego:flaming | war axe ego:flaming | \
-    battleaxe ego:flaming | lajatang ego:flaming | halberd ego:flaming | \
+    battleaxe ego:flaming | lajatang ego:heavy | halberd ego:flaming | \
     glaive ego:flaming | hand cannon ego:freezing | orcbow ego:freezing | \
     arbalest ego:freezing | shortbow ego:freezing | longbow ego:freezing
 FTILE:  -1wP = floor_grass_dark

@@ -31,10 +31,10 @@ function wrathful_weapon(class, quality)
     -- the more desirable antimagic brand for randarts, which are trying to be
     -- better quality.
     if quality == "good_item" then
-        egos = {["antimagic"] = 10, ["heavy"] = 10, ["flaming"] = 10}
+        egos = {["antimagic"] = 10, ["heavy"] = 10, ["freezing"] = 10}
     elseif quality == "randart" then
         -- Increased chance for antimagic.
-        egos = {["antimagic"] = 25, ["heavy"] = 10, ["flaming"] = 10}
+        egos = {["antimagic"] = 25, ["heavy"] = 10, ["freezing"] = 10}
     else
         error("Unknown weapon quality: " .. quality)
     end
