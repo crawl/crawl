@@ -1277,7 +1277,7 @@ DOC_TEMPLATES   := $(DOC_BASE)/template
 GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/aptitudes-wide.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/crawl_manual.txt $(DOC_BASE)/quickstart.txt
 # Headers that need to exist before attempting to compile cc files
 GENERATED_HEADERS := art-enum.h config.h mon-mst.h species-type.h job-type.h \
-                     form-data.h $(RLTILES)status-icon-sizes.h
+                     form-data.h $(RLTILES)/status-icon-sizes.h
 # All other generated files will be created later
 GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mi-enum.h \
                    $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua \
@@ -1913,10 +1913,10 @@ job-groups.h: job-data.h
 job-type.h: job-groups.h
 	$(QUIET_GEN)
 	
-$(RLTILES)status-icon-sizes.h : util/status-icon-sizes-gen.py $(RLTILES)/icon-sizes.txt
+$(RLTILES)/status-icon-sizes.h : util/status-icon-sizes-gen.py $(RLTILES)/icon-sizes.txt
 	$(QUIET_PYTHON)$(PYTHON) util/status-icon-sizes-gen.py $(RLTILES)/icon-sizes.txt
 	
-$(RLTILES)status-icon-sizes.js : $(RLTILES)status-icon-sizes.h
+$(RLTILES)/status-icon-sizes.js : $(RLTILES)/status-icon-sizes.h
 	$(QUIET_GEN)
 
 $(RLTILES)/dc-unrand.txt: art-data.h
