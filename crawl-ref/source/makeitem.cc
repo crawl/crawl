@@ -294,7 +294,11 @@ brand_type determine_weapon_brand(const item_def& item, int item_level)
     brand_type rc         = SPWPN_NORMAL;
 
     for (int count = 0; count < tries && rc == SPWPN_NORMAL; ++count)
-        rc = choose_weapon_brand(wpn_type);
+    {
+        const brand_type candidate = choose_weapon_brand(wpn_type);
+        if (is_weapon_brand_ok(item.sub_type, candidate, true))
+            rc = candidate;
+    }
 
     ASSERT(is_weapon_brand_ok(item.sub_type, rc, true));
     return rc;
