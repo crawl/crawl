@@ -268,6 +268,9 @@ static string mons_human_readable_spell_damage_string_fallback(monster* monster,
     bolt spell_beam = mons_spell_beam(monster, sp, pow, true);
     switch (sp)
     {
+        case SPELL_PORTAL_PROJECTILE:
+        case SPELL_LRD:
+          return "";
         case SPELL_MAJOR_HEALING:
             return mi_calc_major_healing(monster);
         case SPELL_MINOR_HEALING:
