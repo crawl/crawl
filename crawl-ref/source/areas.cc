@@ -583,8 +583,12 @@ int player::halo_radius() const
         size = max(size, 3);
     else if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         size = max(size, 2);
+
     if (you.unrand_equipped(UNRAND_VAINGLORY))
         size = max(size, 0);
+    else if (you.unrand_equipped(UNRAND_ISKENDERUNS_PLASMA_BLADE))
+        size = max(size, 0);
+
 
     return size;
 }
