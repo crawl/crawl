@@ -208,8 +208,8 @@ function setup_loot (e)
                                  "broad axe w:3", "battleaxe w:16",
                                  "executioner's axe w:1", "demon trident w:2",
                                  "partisan w:2", "glaive w:16", "bardiche w:2",
-                                 "longbow w:8", "arbalest w:8", "hand cannon w:8",
-                                 "quarterstaff", "lajatang w:5"}))
+                                 "longbow w:8", "arbalest w:8",
+                                 "hand cannon w:8"}))
     e.item("any / star_item w:4")
 end
 
@@ -234,7 +234,7 @@ function fiery_guardians (e, intelligent, village)
     -- Shorthand abbreviations.
     local flame = "ego:flaming"
     local res = "ego:fire_resistance"
-    local magestuff = "spear " .. flame .. " | whip " .. flame
+    local magestuff = "spear " .. flame .. " | mace " .. flame
                       .. " . robe " .. res
     local goodgear = "scimitar " .. flame
                      .. " | halberd " .. flame
@@ -243,7 +243,7 @@ function fiery_guardians (e, intelligent, village)
 
     -- Weighings back and forth with humanoids or not.
     if crawl.x_chance_in_y(9, 20) or village or intelligent then
-        local ogrestuff = "great mace " .. flame .. " | giant club w:14 " .. flame
+        local ogrestuff = "great mace " .. flame .. " | giant club w:14 ego:heavy"
         local centaurstuff = "shortbow " .. flame
         if village then
             e.mons("two-headed ogre ; " .. ogrestuff .. " . " .. ogrestuff ..
