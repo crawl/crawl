@@ -659,6 +659,7 @@ sword_of_power SWORD_OF_POWER
 knife_of_accuracy KNIFE_OF_ACCURACY
 vampires_tooth VAMPIRES_TOOTH
 spriggans_knife SPRIGGANS_KNIFE
+iskenderuns_plasma_blade ISKENDERUNS_PLASMA_BLADE
 fimbulwinter FIMBULWINTER
 %rim 0
 capt_cutlass CAPT_CUTLASS
