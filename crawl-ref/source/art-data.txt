@@ -2003,8 +2003,6 @@ PLUS:    +6
 COLOUR:  ETC_SHIMMER_BLUE
 TILE:    spwpn_plasma_blade
 TILE_EQ: ISKENDERUNS_PLASMA_BLADE
-DESCRIP: A blade somehow crafted from pure energy. It is rumored to be
- the famous mage Iskenderun's favourite letter opener.
 DBRAND:  Plasma: Deals unresistable damage (double to demons and undead).
  There is a chance that the target will become blind.
 

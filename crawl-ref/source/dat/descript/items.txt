@@ -570,6 +570,11 @@ dagger
 
 A double-edged fighting knife with a sharp point.
 %%%%
+iskenderun's plasma blade
+
+A blade somehow crafted from pure energy. It is rumored to be
+ the famous mage Iskenderun's favourite letter opener.
+%%%%
 dart
 
 A thin piece of metal, typically coated in some harmful substance. When thrown
