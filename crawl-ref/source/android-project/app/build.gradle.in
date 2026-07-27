@@ -6,9 +6,9 @@ android {
 
     defaultConfig {
         applicationId = "org.develz.crawl"
-        compileSdk = 35
+        compileSdk = 36
         minSdkVersion 21
-        targetSdkVersion 35
+        targetSdkVersion 36
         versionCode = @ANDROID_VERSION@
         versionName = "@CRAWL_VERSION@"
 
