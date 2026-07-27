@@ -1414,9 +1414,6 @@ static void _update_level_state()
         }
 #endif
     }
-
-    if (player_has_orb() || you.unrand_equipped(UNRAND_CHARLATANS_ORB))
-        invalidate_agrid(true);
 }
 
 void new_level(bool restore)

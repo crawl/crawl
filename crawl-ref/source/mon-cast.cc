@@ -471,7 +471,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             }
 
             caster.add_ench(ENCH_LIQUEFYING);
-            invalidate_agrid(true);
+            invalidate_agrid();
         },
         nullptr,
         MSPELL_NO_AUTO_NOISE,
@@ -7945,7 +7945,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_SILENCE:
         mons->add_ench(ENCH_SILENCE);
-        invalidate_agrid(true);
+        invalidate_agrid();
         simple_monster_message(*mons, " surroundings become eerily quiet.", true);
         return;
 

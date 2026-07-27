@@ -5122,7 +5122,7 @@ void silence_player(int turns)
 
     you.increase_duration(DUR_SILENCE, turns, 30);
 
-    invalidate_agrid(true);
+    invalidate_agrid();
 
     if (you.beheld())
         you.update_beholders();

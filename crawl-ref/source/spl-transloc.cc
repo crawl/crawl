@@ -90,7 +90,7 @@ spret cast_disjunction(int pow, bool fail)
 void disjunction_spell()
 {
     int steps = you.time_taken;
-    invalidate_agrid(true);
+    invalidate_agrid();
     for (int step = 0; step < steps; ++step)
     {
         vector<monster*> mvec;

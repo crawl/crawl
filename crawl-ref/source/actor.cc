@@ -145,7 +145,7 @@ void actor::set_position(const coord_def &c)
     const coord_def oldpos = position;
     position = c;
     los_actor_moved(this, oldpos);
-    areas_actor_moved(this, oldpos);
+    areas_actor_moved(this);
 }
 
 bool actor::can_hibernate(bool holi_only, bool intrinsic_only) const

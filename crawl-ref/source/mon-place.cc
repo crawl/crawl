@@ -1067,15 +1067,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         _place_monster_maybe_override_god(mon, mg.cls, mg.place);
     }
 
-    // Monsters that need halos/silence auras/umbras.
-    if ((mon->holiness() & MH_HOLY)
-         || mg.cls == MONS_SILENT_SPECTRE
-         || mg.cls == MONS_PROFANE_SERVITOR
-         || mg.cls == MONS_DEATH_KNIGHT
-         || mons_is_ghost_demon(mg.cls))
-    {
-        invalidate_agrid(true);
-    }
+    if (mon->affects_agrid())
+        invalidate_agrid();
 
     // If the caller requested a specific colour for this monster, apply
     // it now.

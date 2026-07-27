@@ -932,6 +932,8 @@ void monster::do_unequip_effects(item_def &item)
             end_spectral_weapon(spectral_weapon, false);
     }
 
+    if (item_affects_agrid(item))
+        invalidate_agrid();
 }
 
 bool monster::unequip(mon_inv_type slot, bool msg)
@@ -942,21 +944,9 @@ bool monster::unequip(mon_inv_type slot, bool msg)
 
     if (msg)
         unequip_message(*item);
-    // Get monster halo/umbra before we unequip this item.
-    int old_halo = halo_radius();
-    int old_umbra = umbra_radius();
 
     inv[slot] = NON_ITEM;
     do_unequip_effects(*item);
-
-    // Get monster halo/umbra after we unequip this item.
-    int new_halo = halo_radius();
-    int new_umbra = umbra_radius();
-
-    // If monster halo/umbra has changed after unequipping this item, update
-    // the halo/umbra.
-    if (old_halo != new_halo || old_umbra != new_umbra)
-        invalidate_agrid(true);
 
     return true;
 }
@@ -1069,10 +1059,6 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
     if (item.flags & ISFLAG_MIMIC)
         return false;
 
-    // Get monster halo/umbra before we equip this item.
-    int old_halo = halo_radius();
-    int old_umbra = umbra_radius();
-
     dungeon_events.fire_position_event(
         dgn_event(DET_ITEM_PICKUP, pos(), 0, item.index(),
                   mindex()),
@@ -1096,14 +1082,8 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
     }
     lose_pickup_energy();
 
-    // Get monster halo/umbra after we equip this item.
-    int new_halo = halo_radius();
-    int new_umbra = umbra_radius();
-
-    // If monster halo/umbra has changed after equipping this item, update the
-    // halo/umbra.
-    if (old_halo != new_halo || old_umbra != new_umbra)
-        invalidate_agrid(true);
+    if (item_affects_agrid(item))
+        invalidate_agrid();
 
     return true;
 }
@@ -1116,8 +1096,6 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
 
     item_def& pitem = env.item[item_index];
 
-    int old_halo = halo_radius();
-    int old_umbra = umbra_radius();
     // Unequip equipped items before dropping them.
     const bool was_equipped = eslot == MSLOT_WEAPON
                                 || eslot == MSLOT_ARMOUR
@@ -1155,14 +1133,10 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
         }
 
         inv[eslot] = NON_ITEM;
-    }
 
         if (was_equipped)
             do_unequip_effects(pitem);
-    int new_halo = halo_radius();
-    int new_umbra = umbra_radius();
-    if (old_halo != new_halo || old_umbra != new_umbra)
-        invalidate_agrid(true);
+    }
 
     return true;
 }
@@ -1959,8 +1933,6 @@ void monster::swap_weapons(maybe_bool maybe_msg)
     item_def *alt  = mslot_item(MSLOT_ALT_WEAPON);
 
     swap(inv[MSLOT_WEAPON], inv[MSLOT_ALT_WEAPON]);
-    int old_halo = halo_radius();
-    int old_umbra = umbra_radius();
 
     if (weap)
     {
@@ -1972,10 +1944,8 @@ void monster::swap_weapons(maybe_bool maybe_msg)
     if (alt && msg)
         equip_message(*alt);
 
-    int new_halo = halo_radius();
-    int new_umbra = umbra_radius();
-    if (old_halo != new_halo || old_umbra != new_umbra)
-        invalidate_agrid(true);
+    if (alt && item_affects_agrid(*alt))
+        invalidate_agrid();
 
     // Monsters can swap weapons really fast. :-)
     if ((weap || alt) && speed_increment >= 2)

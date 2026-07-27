@@ -83,9 +83,6 @@ void monster_drop_things(monster* mons,
         if (item == NON_ITEM || !suitable(env.item[item]))
             continue;
 
-        int old_halo = mons->halo_radius();
-        int old_umbra = mons->umbra_radius();
-
         if (testbits(env.item[item].flags, ISFLAG_SUMMONED))
         {
             item_was_destroyed(env.item[item]);
@@ -123,11 +120,6 @@ void monster_drop_things(monster* mons,
             mons->inv[i] = NON_ITEM;
             mons->do_unequip_effects(env.item[item]);
         }
-
-        int new_halo = mons->halo_radius();
-        int new_umbra = mons->umbra_radius();
-        if (old_halo != new_halo || old_umbra != new_umbra)
-            invalidate_agrid(true);
     }
 
     // If the monster died in a wall, try to push the items out of it.
@@ -338,6 +330,9 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     mon_enchant tempered  = mons->get_ench(ENCH_TEMPERED);
     mon_enchant thrall    = mons->get_ench(ENCH_VAMPIRE_THRALL);
 
+    if (mons->affects_agrid())
+        invalidate_agrid();
+
     mons->number       = 0;
 
     // Note: define_monster(*) will clear out all enchantments! - bwr
@@ -419,6 +414,9 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     // generate a new polymorph set
     mons->props.erase(POLY_SET_KEY);
     init_poly_set(mons);
+
+    if (mons->affects_agrid())
+        invalidate_agrid();
 
     // Try to keep the monster caught in any existing nets, but if the new form
     // is net immune, remember to drop the net on the ground.

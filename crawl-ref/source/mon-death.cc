@@ -3780,13 +3780,8 @@ void monster_cleanup(monster* mons, bool reset)
     }
 
     // Monsters' haloes should be removed when they die.
-    if (mons->halo_radius() >= 0
-        || mons->umbra_radius() >= 0
-        || mons->silence_radius() >= 0
-        || mons->liquefying_radius() >= 0)
-    {
+    if (mons->affects_agrid())
         invalidate_agrid();
-    }
 
     if (mons->type == MONS_PLATINUM_PARAGON && mons->was_created_by(you, SPELL_PLATINUM_PARAGON))
         you.duration[DUR_PARAGON_ACTIVE] = 0;

@@ -200,12 +200,11 @@ static int _etc_elemental(int rand, const coord_def& loc)
 int get_disjunct_phase(const coord_def& loc)
 {
     static int turns = you.num_turns;
-    static coord_def centre = find_centre_for(loc,
-                                              area_centre_type::disjunction);
+    static coord_def centre = find_centre_for(loc, area_type::disjunction);
 
     if (turns != you.num_turns || (centre-loc).abs() > 15)
     {
-        centre = find_centre_for(loc, area_centre_type::disjunction);
+        centre = find_centre_for(loc, area_type::disjunction);
         turns = you.num_turns;
     }
 
@@ -238,11 +237,11 @@ static int _etc_disjunction(int, const coord_def& loc)
 static int _etc_liquefied(int, const coord_def& loc)
 {
     static int turns = you.num_turns;
-    static coord_def centre = find_centre_for(loc, area_centre_type::liquid);
+    static coord_def centre = find_centre_for(loc, area_type::liquified);
 
     if (turns != you.num_turns || (centre-loc).abs() > 15)
     {
-        centre = find_centre_for(loc, area_centre_type::liquid);
+        centre = find_centre_for(loc, area_type::liquified);
         turns = you.num_turns;
     }
 

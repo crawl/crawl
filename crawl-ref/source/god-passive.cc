@@ -1905,7 +1905,7 @@ void wu_jian_end_heavenly_storm()
     you.props.erase(WU_JIAN_HEAVENLY_STORM_KEY);
     you.duration[DUR_HEAVENLY_STORM] = 0;
     you.redraw_evasion = true;
-    invalidate_agrid(true);
+    invalidate_agrid();
     mprf(MSGCH_GOD, "The heavenly storm settles.");
 }
 

@@ -1178,7 +1178,7 @@ bool evoke_item(item_def& item, dist *preselect)
             you.duration[DUR_QUAD_DAMAGE] = 30 * BASELINE_DELAY;
             ASSERT(in_inventory(item));
             dec_inv_item_quantity(item.link, 1);
-            invalidate_agrid(true);
+            invalidate_agrid();
             break;
 
         case MISC_PHANTOM_MIRROR:

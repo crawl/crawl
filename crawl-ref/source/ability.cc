@@ -3613,7 +3613,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         // XXX: Some invo formula
         you.duration[DUR_FATHOMLESS_SHACKLES] = random_range(15, 25) * BASELINE_DELAY;
         yred_make_blasphemy();
-        invalidate_agrid(true);
+        invalidate_agrid();
         break;
 
     case ABIL_YRED_BIND_SOUL:

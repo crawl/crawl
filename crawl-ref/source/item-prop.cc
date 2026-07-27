@@ -3807,3 +3807,27 @@ int jewellery_usefulness_limit(jewellery_type type)
             return INT_MAX;
     }
 }
+
+// Whether equipping a given item affects the agrid (ie: causes a halo or umbra)
+bool item_affects_agrid(const item_def& item)
+{
+    if (item.base_type == OBJ_ARMOUR && get_armour_ego_type(item) == SPARM_LIGHT)
+        return true;
+
+    if (is_unrandom_artefact(item))
+    {
+        switch (item.unrand_idx)
+        {
+            case UNRAND_EOS:
+            case UNRAND_BRILLIANCE:
+            case UNRAND_VAINGLORY:
+            case UNRAND_SHADOWS:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    return false;
+}

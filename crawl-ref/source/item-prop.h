@@ -299,3 +299,5 @@ bool is_usable_talisman(const item_def& item);
 void remove_whitespace(string &str);
 
 int jewellery_usefulness_limit(jewellery_type type);
+
+bool item_affects_agrid(const item_def& item);
