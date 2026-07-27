@@ -1288,6 +1288,8 @@ coord_def direction_chooser::find_default_monster_target()
             // try a different target.
         }
     }
+    else if (!you.prev_grd_targ.origin())
+        return you.prev_grd_targ;
 
     // Otherwise, try aiming at the nearest target position found for this action.
     coord_def pos;
