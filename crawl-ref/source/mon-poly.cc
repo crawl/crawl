@@ -83,14 +83,13 @@ void monster_drop_things(monster* mons,
         if (item == NON_ITEM || !suitable(env.item[item]))
             continue;
 
-        mons->do_unequip_effects(env.item[item], false, true);
-
         int old_halo = mons->halo_radius();
         int old_umbra = mons->umbra_radius();
 
         if (testbits(env.item[item].flags, ISFLAG_SUMMONED))
         {
             item_was_destroyed(env.item[item]);
+            mons->do_unequip_effects(env.item[item]);
             destroy_item(item);
         }
         else
@@ -122,6 +121,7 @@ void monster_drop_things(monster* mons,
                 blind_player(10 + random2(8), ETC_GOLD);
             }
             mons->inv[i] = NON_ITEM;
+            mons->do_unequip_effects(env.item[item]);
         }
 
         int new_halo = mons->halo_radius();

@@ -729,7 +729,7 @@ bool monster::likes_wand(const item_def &item) const
     return wand_charge_value(item.sub_type) + get_hit_dice() * 6 <= 72;
 }
 
-void monster::equip_weapon_message(item_def &item)
+void monster::equip_weapon_message(item_def &item) const
 {
     const string str = " wields " +
                        item.name(DESC_A, false, false, true, false) + ".";
@@ -812,14 +812,14 @@ int monster::armour_bonus(const item_def &item) const
     return armour_ac + armour_plus;
 }
 
-void monster::equip_armour_message(item_def &item)
+void monster::equip_armour_message(item_def &item) const
 {
     const string str = " wears " +
                        item.name(DESC_A) + ".";
     simple_monster_message(*this, str.c_str());
 }
 
-void monster::equip_jewellery_message(item_def &item)
+void monster::equip_jewellery_message(item_def &item) const
 {
     ASSERT(item.base_type == OBJ_JEWELLERY);
 
@@ -828,7 +828,7 @@ void monster::equip_jewellery_message(item_def &item)
     simple_monster_message(*this, str.c_str());
 }
 
-void monster::equip_message(item_def &item)
+void monster::equip_message(item_def &item) const
 {
     switch (item.base_type)
     {
@@ -850,17 +850,14 @@ void monster::equip_message(item_def &item)
     }
 }
 
-void monster::unequip_weapon(item_def &item, bool msg)
+void monster::unequip_weapon_message(item_def &item) const
 {
-    if (msg)
-    {
-        const string str = " unwields " +
-                           item.name(DESC_A, false, false, true, false) + ".";
-        msg = simple_monster_message(*this, str.c_str());
-    }
+    const string str = " unwields " +
+                        item.name(DESC_A, false, false, true, false) + ".";
+    const bool need_msg = simple_monster_message(*this, str.c_str());
 
     const int brand = get_weapon_brand(item);
-    if (msg && brand != SPWPN_NORMAL)
+    if (need_msg && brand != SPWPN_NORMAL)
     {
         switch (brand)
         {
@@ -889,90 +886,68 @@ void monster::unequip_weapon(item_def &item, bool msg)
             break;
         }
     }
-
-    monster *spectral_weapon = find_spectral_weapon(item);
-    if (spectral_weapon)
-        end_spectral_weapon(spectral_weapon, false);
 }
 
-void monster::unequip_armour(item_def &item, bool msg)
+void monster::unequip_armour_message(item_def &item) const
 {
-    if (msg)
-    {
-        const string str = " takes off " +
-                           item.name(DESC_A) + ".";
-        simple_monster_message(*this, str.c_str());
-    }
+    const string str = " takes off " +
+                        item.name(DESC_A) + ".";
+    simple_monster_message(*this, str.c_str());
 }
 
-void monster::unequip_jewellery(item_def &item, bool msg)
+void monster::unequip_message(item_def& item) const
 {
-    ASSERT(item.base_type == OBJ_JEWELLERY);
-
-    if (msg)
+    switch (item.base_type)
     {
-        const string str = " takes off " +
-                           item.name(DESC_A) + ".";
-        simple_monster_message(*this, str.c_str());
+    case OBJ_WEAPONS:
+        unequip_weapon_message(item);
+        break;
+
+    case OBJ_ARMOUR:
+    case OBJ_JEWELLERY:
+        unequip_armour_message(item);
+        break;
+
+    default:
+        break;
     }
 }
 
 /**
  * Applies appropriate effects when unequipping an item.
  *
- * Note: this method does NOT modify this->inv to point to NON_ITEM!
- * This also means that it doesn't update the area grids either as this must
- * be done after removing the item from the monsters inventory.
+ * Note: It is assumed that this->inv has already been set to NON_ITEM before
+ *       this method is called.
  *
  * @param item  the item to be removed.
  * @param msg   whether to give a message
- * @param force whether to remove the item even if cursed.
- * @return whether the item was unequipped successfully.
  */
-bool monster::do_unequip_effects(item_def &item, bool msg, bool force)
+void monster::do_unequip_effects(item_def &item)
 {
-    if (!force && item.cursed())
-        return false;
-
-    switch (item.base_type)
+    if (item.base_type == OBJ_WEAPONS
+        && get_weapon_brand(item) == SPWPN_SPECTRAL)
     {
-    case OBJ_WEAPONS:
-        if (!force && mons_class_is_animated_object(type))
-            return false;
-        unequip_weapon(item, msg);
-        break;
-
-    case OBJ_ARMOUR:
-        if (!force && mons_class_is_animated_object(type))
-            return false;
-        unequip_armour(item, msg);
-        break;
-
-    case OBJ_JEWELLERY:
-        unequip_jewellery(item, msg);
-        break;
-
-    default:
-        break;
+        monster *spectral_weapon = find_spectral_weapon(item);
+        if (spectral_weapon)
+            end_spectral_weapon(spectral_weapon, false);
     }
 
-    return true;
 }
 
-bool monster::unequip(mon_inv_type slot, bool msg, bool force)
+bool monster::unequip(mon_inv_type slot, bool msg)
 {
     item_def* item = mslot_item(slot);
     if (!item)
         return false;
-    bool unequipped = do_unequip_effects(*item, msg, force);
-    if (!unequipped)
-        return false;
 
+    if (msg)
+        unequip_message(*item);
     // Get monster halo/umbra before we unequip this item.
     int old_halo = halo_radius();
     int old_umbra = umbra_radius();
 
     inv[slot] = NON_ITEM;
+    do_unequip_effects(*item);
 
     // Get monster halo/umbra after we unequip this item.
     int new_halo = halo_radius();
@@ -1113,7 +1088,11 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
     if (msg)
     {
         pickup_message(item);
-        equip_message(item);
+
+        // The monster may not wield this immediately if it's going into their
+        // alt slot, so don't print a message claiming they have.
+        if (!(slot == MSLOT_ALT_WEAPON && !mons_wields_two_weapons(*this)))
+            equip_message(item);
     }
     lose_pickup_energy();
 
@@ -1137,21 +1116,16 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
 
     item_def& pitem = env.item[item_index];
 
-    // Unequip equipped items before dropping them; unequip() prevents
-    // cursed items from being removed.
-    bool was_unequipped = false;
-    if (eslot == MSLOT_WEAPON
-        || eslot == MSLOT_ARMOUR
-        || eslot == MSLOT_JEWELLERY
-        || eslot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(*this))
-    {
-        if (!do_unequip_effects(pitem, msg))
-            return false;
-        was_unequipped = true;
-    }
-
     int old_halo = halo_radius();
     int old_umbra = umbra_radius();
+    // Unequip equipped items before dropping them.
+    const bool was_equipped = eslot == MSLOT_WEAPON
+                                || eslot == MSLOT_ARMOUR
+                                || eslot == MSLOT_JEWELLERY
+                                || eslot == MSLOT_ALT_WEAPON
+                                   && mons_wields_two_weapons(*this);
+    if (msg && was_equipped)
+        unequip_message(pitem);
 
     if (pitem.flags & ISFLAG_SUMMONED)
     {
@@ -1174,7 +1148,7 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
         if (!move_item_to_grid(&item_index, pos(), swimming()))
         {
             // Re-equip item if we somehow failed to drop it.
-            if (was_unequipped && msg)
+            if (msg)
                 equip_message(pitem);
 
             return false;
@@ -1183,6 +1157,8 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
         inv[eslot] = NON_ITEM;
     }
 
+        if (was_equipped)
+            do_unequip_effects(pitem);
     int new_halo = halo_radius();
     int new_umbra = umbra_radius();
     if (old_halo != new_halo || old_umbra != new_umbra)
@@ -1437,7 +1413,7 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
                     new_wpn_better = true;
             }
 
-            if (new_wpn_better && !weap->cursed())
+            if (new_wpn_better)
             {
                 if (!dual_wielding
                     || slot == MSLOT_WEAPON
@@ -1973,21 +1949,25 @@ bool monster::pickup_item(item_def &item, bool msg, bool force)
 
 void monster::swap_weapons(maybe_bool maybe_msg)
 {
+    // Don't let dancing weapons try to swap themselves into non-existence.
+    if (mons_class_is_animated_object(type))
+        return;
+
     const bool msg = maybe_msg.to_bool(observable());
 
     item_def *weap = mslot_item(MSLOT_WEAPON);
     item_def *alt  = mslot_item(MSLOT_ALT_WEAPON);
 
+    swap(inv[MSLOT_WEAPON], inv[MSLOT_ALT_WEAPON]);
     int old_halo = halo_radius();
     int old_umbra = umbra_radius();
 
-    if (weap && !do_unequip_effects(*weap, msg))
+    if (weap)
     {
-        // Item was cursed.
-        return;
+        if (msg)
+            unequip_message(*weap);
+        do_unequip_effects(*weap);
     }
-
-    swap(inv[MSLOT_WEAPON], inv[MSLOT_ALT_WEAPON]);
 
     if (alt && msg)
         equip_message(*alt);
@@ -2008,7 +1988,7 @@ void monster::swap_weapons(maybe_bool maybe_msg)
 void monster::wield_melee_weapon(maybe_bool msg)
 {
     const item_def *weap = mslot_item(MSLOT_WEAPON);
-    if (!weap || (!weap->cursed() && is_range_weapon(*weap)))
+    if (!weap || is_range_weapon(*weap))
     {
         const item_def *alt = mslot_item(MSLOT_ALT_WEAPON);
 
@@ -6588,7 +6568,6 @@ item_def* monster::disarm()
                                  || !feat_eliminates_items(env.grid(pos())));
 
     if (!mons_wpn
-        || mons_wpn->cursed()
         || mons_class_is_animated_object(type)
         || !adjacent(you.pos(), pos())
         || !you.can_see(*this)

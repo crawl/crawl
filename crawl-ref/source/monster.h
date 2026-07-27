@@ -314,8 +314,8 @@ public:
     void      swap_weapons(maybe_bool msg = maybe_bool::maybe);
     bool      pickup_item(item_def &item, bool msg, bool force);
     bool      drop_item(mon_inv_type eslot, bool msg);
-    bool      do_unequip_effects(item_def &item, bool msg, bool force = false);
-    bool      unequip(mon_inv_type slot, bool msg, bool force = false);
+    void      do_unequip_effects(item_def &item);
+    bool      unequip(mon_inv_type slot, bool msg);
     void      steal_item_from_player();
     item_def* take_item(int steal_what, mon_inv_type mslot,
                         bool is_stolen = false);
@@ -605,13 +605,13 @@ private:
     bool pickup_misc(item_def &item, bool msg, bool force);
     bool pickup_missile(item_def &item, bool msg, bool force);
 
-    void equip_message(item_def &item);
-    void equip_weapon_message(item_def &item);
-    void equip_armour_message(item_def &item);
-    void equip_jewellery_message(item_def &item);
-    void unequip_weapon(item_def &item, bool msg);
-    void unequip_armour(item_def &item, bool msg);
-    void unequip_jewellery(item_def &item, bool msg);
+    void equip_message(item_def &item) const;
+    void unequip_message(item_def& item) const;
+    void equip_weapon_message(item_def &item) const;
+    void equip_armour_message(item_def &item) const;
+    void equip_jewellery_message(item_def &item) const;
+    void unequip_weapon_message(item_def &item) const;
+    void unequip_armour_message(item_def &item) const;
 
     void init_with(const monster& mons);
 
