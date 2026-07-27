@@ -425,7 +425,6 @@ static const vector<brand_weight_tuple> WHIP_BRANDS = {
     { SPWPN_ELECTROCUTION, 16 },
     { SPWPN_DRAINING,       7 },
     { SPWPN_FREEZING,       6 },
-    { SPWPN_FLAMING,        6 },
     { SPWPN_VAMPIRISM,      5 },
     { SPWPN_PAIN,           4 },
     { SPWPN_HOLY_WRATH,     3 },
