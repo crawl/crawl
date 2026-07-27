@@ -1704,12 +1704,18 @@ static const mutation_def mut_data[] =
   TILEG_MUT_BLACK_MARK,
 },
 
-{ MUT_SILENCE_HALO, 0, 1, mutflag::good,
+{ MUT_SILENCE_HALO, 30, 3, mutflag::good,
   "halo of silence",
 
-  {"You are surrounded by a halo of silence.", "", ""},
-  {"An unnatural silence shrouds you.", "", ""},
-  {"", "", ""},
+  {"You are surrounded by a small halo of silence.", 
+   "You are surrounded by a halo of silence.", 
+   "You are surrounded by a massive halo of silence."},
+  {"An unnatural silence shrouds you.", 
+   "Your silent shroud expands.", 
+   "Your silent shroud expands."},
+  { "The world fills with sound again. Your silence halo fades.",
+    "Your halo of unnatural quiet shrinks.",
+    "Your halo of unnatural quiet shrinks."},
   TILEG_MUT_SILENCE_AURA,
 },
 
