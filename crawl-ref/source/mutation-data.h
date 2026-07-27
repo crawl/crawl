@@ -1713,7 +1713,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_SILENCE_AURA,
 },
 
-{ MUT_SILENCE_AURA, 30, 3, mutflag::good,
+{ MUT_SILENCE_AURA, 0, 3, mutflag::good,
   "silence aura",
 
   { "You are surrounded by a small aura of unnatural quiet.",
