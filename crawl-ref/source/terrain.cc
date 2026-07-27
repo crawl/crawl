@@ -1606,6 +1606,10 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     env.grid_colours(pos1) = col2;
     env.grid_colours(pos2) = col1;
 
+    // Swap feature flavours.
+    swap(tile_env.flv(pos1).feat, tile_env.flv(pos2).feat);
+    swap(tile_env.flv(pos1).feat_idx, tile_env.flv(pos2).feat_idx);
+
     // Swap shops.
     if (shop1 && !shop2)
     {
