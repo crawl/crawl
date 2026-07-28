@@ -147,8 +147,8 @@ enum brand_type // item_def.special
     SPWPN_SPEED,
     SPWPN_HEAVY,
 #if TAG_MAJOR_VERSION == 34
-    SPWPN_FLAME,   // ranged, only
-    SPWPN_FROST,   // ranged, only
+    SPWPN_FLAME_OLD,   // ranged, only
+    SPWPN_FROST_OLD,   // ranged, only
 #endif
     SPWPN_VAMPIRISM,
     SPWPN_PAIN,
