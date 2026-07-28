@@ -1,0 +1,89 @@
+###############################################################################
+# Small vaults made specifically for D:1.
+#
+# Keep threats here limited to ordinary D:1 monsters. These maps intentionally
+# do not extend into D:2, so the two floors retain separate vault pools.
+###############################################################################
+
+NAME:    dcchili_d1_kobold_camp
+DEPTH:   D:1
+TAGS:    no_monster_gen no_item_gen transparent
+MONS:    kobold
+ITEM:    stone / nothing w:2
+KMONS:   t = plant / bush
+MAP
+  ttt
+ tt.tt
+ t.1.t
+ t.*.t
+ tt.tt
+  .@.
+ENDMAP
+
+NAME:    dcchili_d1_rat_nook
+DEPTH:   D:1
+TAGS:    no_monster_gen no_item_gen transparent
+MONS:    rat / quokka
+KFEAT:   C = cache_of_baked_goods
+MAP
+xxxxxxx
+x.....x
+x.1C.xx
+x.....@.
+xxxxxxx
+ENDMAP
+
+NAME:    dcchili_d1_goblin_lean_to
+DEPTH:   D:1
+TAGS:    no_monster_gen no_item_gen transparent
+MONS:    goblin / hobgoblin
+KMONS:   S = stack of scrap
+MAP
+  xxx
+ xxSxx
+ x.1.x
+ x...x
+ xx+xx
+  .@.
+ENDMAP
+
+NAME:    dcchili_d1_fallen_tree
+DEPTH:   D:1
+TAGS:    no_monster_gen no_item_gen transparent extra
+MONS:    ball python / rat
+KMONS:   t = plant / bush
+MAP
+ttttttttt
+t..t..1.t
+t..t....t
+....@....
+ENDMAP
+
+NAME:    dcchili_d1_stone_circle
+DEPTH:   D:1
+TAGS:    no_monster_gen no_item_gen transparent extra
+KFEAT:   G = granite_statue
+MAP
+  G.G
+ G...G
+G.....G
+...@...
+ G...G
+  G.G
+ENDMAP
+
+NAME:    dcchili_d1_split_hall
+DEPTH:   D:1
+TAGS:    transparent
+SUBST:   x = x:8 c:2
+MAP
+xxxx@xxxx
+x.......x
+x.xxx.x.x
+x...x...x
+xxx...xxx
+x...x...x
+x.x.xxx.x
+x.......x
+xxxx@xxxx
+ENDMAP
