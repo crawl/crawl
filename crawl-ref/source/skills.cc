@@ -2317,7 +2317,10 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         {
             god_type betrayed_god = static_cast<god_type>(
                 you.attribute[ATTR_TRAITOR]);
-            result = god_title(betrayed_god, species, 0);
+
+            // good gods shouldn't traitor title you unless wrath is active
+            if (!is_good_god(betrayed_god) || active_penance(betrayed_god))
+                result = god_title(betrayed_god, species, 0);
         }
 
         if (conducts)
