@@ -501,18 +501,6 @@ void melee_attack::apply_black_mark_effects()
                 defender->drain(attacker, false, damage_done);
                 break;
         }
-        // If black mark level 2 roll for confusion
-        if (you.get_mutation_level(MUT_BLACK_MARK) > 1 && one_chance_in(10))
-        {
-            if (defender->is_monster())
-            {
-                defender->as_monster()->add_ench(mon_enchant(ENCH_CONFUSION, attacker,
-                                                random_range(5, 8) * BASELINE_DELAY));
-                simple_monster_message(*defender->as_monster(), " is struck confused.");
-            }
-            else
-                confuse_player(random_range(5, 8));
-        }
     }
 }
 

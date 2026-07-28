@@ -2907,7 +2907,7 @@ static const facet_def _demon_facets[] =
       { 50, 50, 50 } },
     { 3, { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
       { 50, 50, 50 } },
-    { 3, { MUT_HEX_ENHANCER, MUT_BLACK_MARK, MUT_BLACK_MARK },
+    { 3, { MUT_HEX_ENHANCER, MUT_BLACK_MARK, MUT_SILENT_CAST },
       { 50, 50, 50 } },
     { 3, { MUT_AUGMENTATION, MUT_AUGMENTATION, MUT_AUGMENTATION },
       { 50, 50, 50 } },

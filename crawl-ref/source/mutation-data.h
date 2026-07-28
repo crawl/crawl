@@ -1695,13 +1695,11 @@ static const mutation_def mut_data[] =
   TILEG_MUT_PETRIFICATION_RES,
 },
 
-{ MUT_BLACK_MARK, 0, 2, mutflag::good,
+{ MUT_BLACK_MARK, 0, 1, mutflag::good,
   "black mark",
 
-  {"Your melee attacks may debilitate your foes.", 
-   "Your melee attacks may debilitate and confuse your foes.", ""},
-  {"An ominous black mark forms on your body.", 
-   "The black mark grows darker.", ""},
+  {"Your melee attacks may debilitate your foes.", "", ""},
+  {"An ominous black mark forms on your body.", "", ""},
   {"", "", ""},
   TILEG_MUT_BLACK_MARK,
 },
