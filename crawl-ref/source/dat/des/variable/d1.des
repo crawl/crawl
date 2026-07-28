@@ -7,6 +7,7 @@
 
 NAME:    dcchili_d1_kobold_camp
 DEPTH:   D:1
+WEIGHT:  20
 TAGS:    no_monster_gen no_item_gen transparent
 MONS:    kobold
 ITEM:    stone / nothing w:2
@@ -22,6 +23,7 @@ ENDMAP
 
 NAME:    dcchili_d1_lizard_garden
 DEPTH:   D:1
+WEIGHT:  20
 TAGS:    no_monster_gen no_item_gen transparent
 MONS:    frilled lizard
 KMONS:   t = plant / bush
@@ -36,6 +38,7 @@ ENDMAP
 
 NAME:    dcchili_d1_bat_roost
 DEPTH:   D:1
+WEIGHT:  20
 TAGS:    no_monster_gen no_item_gen transparent
 MONS:    bat
 MAP
@@ -50,6 +53,7 @@ ENDMAP
 
 NAME:    dcchili_d1_jelly_puddle
 DEPTH:   D:1
+WEIGHT:  20
 TAGS:    no_monster_gen no_item_gen transparent extra
 MONS:    endoplasm
 KFEAT:   w = shallow_water
@@ -64,6 +68,7 @@ ENDMAP
 
 NAME:    dcchili_d1_jackal_yard
 DEPTH:   D:1
+WEIGHT:  20
 TAGS:    no_monster_gen no_item_gen transparent
 MONS:    jackal
 KMONS:   t = plant / bush
@@ -78,6 +83,7 @@ ENDMAP
 
 NAME:    dcchili_d1_ruined_gate
 DEPTH:   D:1
+WEIGHT:  20
 TAGS:    no_monster_gen no_item_gen transparent extra
 KMONS:   t = plant / bush
 SUBST:   x = x:6 c:3 t:1
@@ -92,6 +98,7 @@ ENDMAP
 
 NAME:    dcchili_d1_crooked_rooms
 DEPTH:   D:1
+WEIGHT:  20
 TAGS:    transparent
 SUBST:   x = x:8 c:2
 MAP
@@ -108,6 +115,7 @@ ENDMAP
 
 NAME:    dcchili_d1_creek_crossing
 DEPTH:   D:1
+WEIGHT:  20
 TAGS:    no_monster_gen no_item_gen transparent extra
 MONS:    ball python / dart slug
 KFEAT:   w = shallow_water
@@ -124,6 +132,7 @@ ENDMAP
 
 NAME:    dcchili_d1_old_cairn
 DEPTH:   D:1
+WEIGHT:  20
 TAGS:    no_monster_gen no_item_gen transparent extra
 KFEAT:   G = granite_statue
 MAP
@@ -138,6 +147,7 @@ ENDMAP
 
 NAME:    dcchili_d1_rat_nook
 DEPTH:   D:1
+WEIGHT:  20
 TAGS:    no_monster_gen no_item_gen transparent
 MONS:    rat / quokka
 KFEAT:   C = cache_of_baked_goods
@@ -151,6 +161,7 @@ ENDMAP
 
 NAME:    dcchili_d1_goblin_lean_to
 DEPTH:   D:1
+WEIGHT:  20
 TAGS:    no_monster_gen no_item_gen transparent
 MONS:    goblin / hobgoblin
 KMONS:   S = stack of scrap
@@ -165,6 +176,7 @@ ENDMAP
 
 NAME:    dcchili_d1_fallen_tree
 DEPTH:   D:1
+WEIGHT:  20
 TAGS:    no_monster_gen no_item_gen transparent extra
 MONS:    ball python / rat
 KMONS:   t = plant / bush
@@ -177,6 +189,7 @@ ENDMAP
 
 NAME:    dcchili_d1_stone_circle
 DEPTH:   D:1
+WEIGHT:  20
 TAGS:    no_monster_gen no_item_gen transparent extra
 KFEAT:   G = granite_statue
 MAP
@@ -190,6 +203,7 @@ ENDMAP
 
 NAME:    dcchili_d1_split_hall
 DEPTH:   D:1
+WEIGHT:  20
 TAGS:    transparent
 SUBST:   x = x:8 c:2
 MAP
@@ -210,6 +224,7 @@ ENDMAP
 
 NAME:    dcchili_d1_overgrown_courtyard
 DEPTH:   D:1
+WEIGHT:  20
 TAGS:    no_monster_gen no_item_gen transparent
 MONS:    frilled lizard / ball python, rat / quokka
 KMONS:   t = plant / bush
@@ -230,6 +245,7 @@ ENDMAP
 
 NAME:    dcchili_d1_abandoned_barracks
 DEPTH:   D:1
+WEIGHT:  20
 TAGS:    no_monster_gen no_item_gen transparent
 MONS:    goblin / hobgoblin, kobold
 KMONS:   S = stack of scrap
@@ -252,6 +268,7 @@ ENDMAP
 
 NAME:    dcchili_d1_winding_burrow
 DEPTH:   D:1
+WEIGHT:  20
 TAGS:    no_monster_gen no_item_gen transparent
 MONS:    rat / quokka, rat / bat, frilled lizard / rat
 SUBST:   x = x:8 c:2
@@ -271,6 +288,7 @@ ENDMAP
 
 NAME:    dcchili_d1_flooded_cloister
 DEPTH:   D:1
+WEIGHT:  20
 TAGS:    no_monster_gen no_item_gen transparent
 MONS:    endoplasm / ball python, dart slug / frilled lizard
 KFEAT:   w = shallow_water
