@@ -20,6 +20,122 @@ MAP
   .@.
 ENDMAP
 
+NAME:    dcchili_d1_lizard_garden
+DEPTH:   D:1
+TAGS:    no_monster_gen no_item_gen transparent
+MONS:    frilled lizard
+KMONS:   t = plant / bush
+KFEAT:   C = cache_of_fruit
+MAP
+ ttttt
+t.....t
+t.1.Ct
+t....t
+ tt.@.
+ENDMAP
+
+NAME:    dcchili_d1_bat_roost
+DEPTH:   D:1
+TAGS:    no_monster_gen no_item_gen transparent
+MONS:    bat
+MAP
+  xxx
+ xx.xx
+xx.1.xx
+x.....x
+x.xxx.x
+x.....@
+xxxxxxx
+ENDMAP
+
+NAME:    dcchili_d1_jelly_puddle
+DEPTH:   D:1
+TAGS:    no_monster_gen no_item_gen transparent extra
+MONS:    endoplasm
+KFEAT:   w = shallow_water
+MAP
+ www
+ww.ww
+w.1.w
+ww.ww
+ www
+  @
+ENDMAP
+
+NAME:    dcchili_d1_jackal_yard
+DEPTH:   D:1
+TAGS:    no_monster_gen no_item_gen transparent
+MONS:    jackal
+KMONS:   t = plant / bush
+MAP
+ttttttt
+t.....t
+t.1...+
+t.....t
+ttt.ttt
+  .@.
+ENDMAP
+
+NAME:    dcchili_d1_ruined_gate
+DEPTH:   D:1
+TAGS:    no_monster_gen no_item_gen transparent extra
+KMONS:   t = plant / bush
+SUBST:   x = x:6 c:3 t:1
+MAP
+xx xx xx
+x..xx..x
+...++...
+x..xx..x
+xx.xx.xx
+  .@.
+ENDMAP
+
+NAME:    dcchili_d1_crooked_rooms
+DEPTH:   D:1
+TAGS:    transparent
+SUBST:   x = x:8 c:2
+MAP
+xxxxxxx
+x.....@
+x.xxx.x
+x.x...x
+x.x.xxx
+x.....x
+xxx.xxx
+x.....x
+xxx@xxx
+ENDMAP
+
+NAME:    dcchili_d1_creek_crossing
+DEPTH:   D:1
+TAGS:    no_monster_gen no_item_gen transparent extra
+MONS:    ball python / dart slug
+KFEAT:   w = shallow_water
+KMONS:   t = plant / bush
+MAP
+ttwwtt
+t.ww.t
+..ww1.
+..ww..
+t.ww.t
+ttwwtt
+  @@
+ENDMAP
+
+NAME:    dcchili_d1_old_cairn
+DEPTH:   D:1
+TAGS:    no_monster_gen no_item_gen transparent extra
+KFEAT:   G = granite_statue
+MAP
+  G
+ G.G
+G...G
+..@..
+G...G
+ G.G
+  G
+ENDMAP
+
 NAME:    dcchili_d1_rat_nook
 DEPTH:   D:1
 TAGS:    no_monster_gen no_item_gen transparent
