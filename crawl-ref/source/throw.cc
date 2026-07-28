@@ -1022,6 +1022,38 @@ bool mons_throw(monster* mons, ranged_attack_beam& ratk, bool teleport, bool was
     return true;
 }
 
+// determine if a thrown item with variable mulch rate should mulch
+static bool _check_ammo_mulch(const item_def &item)
+{
+    missile_type typ = static_cast<missile_type>(item.sub_type);
+    special_missile_type brand = get_ammo_brand(item);
+    pair<missile_type, special_missile_type> key = {typ, brand};
+    auto i = you.ammo_durability.find(key);
+
+    int destroy_rate = ammo_destroy_chance(item);
+    destroy_rate = random_range(destroy_rate / 2, destroy_rate * 3 / 2);
+
+    // hasn't yet been set, so set it and don't mulch
+    if (i == you.ammo_durability.end())
+    {
+        mpr("setting ammo durability for the first time");
+        you.ammo_durability[key] = destroy_rate;
+        return false;
+    }
+
+    // mulch and reset durability
+    if (i->second <= 1)
+    {
+        mpr("mulching ammo");
+        you.ammo_durability[key] = destroy_rate;
+        return true;
+    }
+
+    mprf("setting durability to %d", i->second - 1);
+    you.ammo_durability[key] = i->second - 1;
+    return false;
+}
+
 static bool _thrown_object_destroyed(const item_def &item)
 {
     if (item.base_type != OBJ_MISSILES)
@@ -1033,7 +1065,7 @@ static bool _thrown_object_destroyed(const item_def &item)
     if (ammo_never_destroyed(item))
         return false;
 
-    return one_chance_in(ammo_destroy_chance(item));
+    return _check_ammo_mulch(item);
 }
 
 bool do_west_wind_shot()

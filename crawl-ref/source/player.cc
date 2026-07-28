@@ -5852,6 +5852,8 @@ player::player()
 
     clear_deferred_move();
 
+    ammo_durability.clear();
+
     // Protected fields:
     clear_place_info();
 }

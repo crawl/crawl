@@ -1700,6 +1700,22 @@ static bool _calc_score_exists()
     return !lua_isnil(dlua, -1);
 }
 
+static void _marshall_ammo_type(writer &th, pair<missile_type, special_missile_type> p)
+{
+    _marshall_as_int(th, p.first);
+    _marshall_as_int(th, p.second);
+}
+
+static void marshallAmmo(writer &th, map<pair<missile_type, special_missile_type>, int> ammo_info)
+{
+    marshallInt(th, ammo_info.size());
+    for (const auto &entry : ammo_info)
+    {
+        _marshall_ammo_type(th, entry.first);
+        marshallInt(th, entry.second);
+    }
+}
+
 static void _tag_construct_you(writer &th)
 {
     marshallInt(th, you.last_mid);
@@ -1896,6 +1912,9 @@ static void _tag_construct_you(writer &th)
         marshallInt(th, you.exp_docked[*it]);
     for (god_iterator it; it; ++it)
         marshallInt(th, you.exp_docked_total[*it]);
+
+    // ammunition durability
+    marshallAmmo(th, you.ammo_durability);
 
     // elapsed time
     marshallInt(th, you.elapsed_time);
@@ -3053,6 +3072,23 @@ static void _read_old_player_equipment(reader &th)
     }
 }
 #endif
+
+static map<pair<missile_type, special_missile_type>, int> unmarshallAmmo(reader &th)
+{
+    map<pair<missile_type, special_missile_type>, int> ammo_durability;
+
+    const int len = unmarshallInt(th);
+    for (int i = 0; i < len; ++i)
+    {
+        int mtyp = unmarshallInt(th);
+        int mbrand = unmarshallInt(th);
+        int qty = unmarshallInt(th);
+        ammo_durability.insert(make_pair(make_pair(static_cast<missile_type>(mtyp),
+            static_cast<special_missile_type>(mbrand)), qty));
+    }
+
+    return ammo_durability;
+}
 
 static void _tag_read_you(reader &th)
 {
@@ -4349,7 +4385,16 @@ static void _tag_read_you(reader &th)
         you.exp_docked[GOD_ELYVILON] = excom_xp_docked();
         you.exp_docked_total[GOD_ELYVILON] = you.exp_docked[GOD_ELYVILON];
     }
+#endif
 
+    // ammunition durability
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_AMMO_DURABILITY)
+    {
+#endif
+        you.ammo_durability = unmarshallAmmo(th);
+#if TAG_MAJOR_VERSION == 34
+    }
 #endif
 
     // elapsed time

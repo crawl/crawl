@@ -63,8 +63,6 @@ private:
     void set_attack_verb(int damage) override;
     void announce_hit() override;
 
-    bool mulch_bonus() const;
-
 private:
     string proj_name;
     bool teleport;

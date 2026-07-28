@@ -344,6 +344,8 @@ public:
 
     set<coord_def> rampage_hints; // TODO: move this somewhere else
 
+    map<pair<missile_type, special_missile_type>, int> ammo_durability;
+
     int real_time() { return real_time_ms.count() / 1000; }
     chrono::milliseconds real_time_ms;       // real time played
     chrono::milliseconds real_time_delta;    // real time since last command

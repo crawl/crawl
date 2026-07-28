@@ -302,12 +302,9 @@ bool ranged_attack::handle_phase_hit()
 {
     perceived_attack = true;
 
-    if (mulch_bonus()
-        // XXX: this kind of hijacks the shield block check
-        || !is_piercing())
-    {
+    // XXX: this kind of hijacks the shield block check
+    if (!is_piercing())
         range_used = BEAM_STOP;
-    }
 
     if (weapon->is_type(OBJ_MISSILES, MI_DART))
     {
@@ -349,11 +346,10 @@ bool ranged_attack::handle_phase_hit()
         {
             if (needs_message)
             {
-                mprf("The %s %s %s%s but does no damage.",
+                mprf("The %s %s %s but does no damage.",
                     proj_name.c_str(),
                     attack_verb.c_str(),
-                    defender->name(DESC_THE).c_str(),
-                    mulch_bonus() ? " and shatters," : "");
+                    defender->name(DESC_THE).c_str());
             }
         }
 
@@ -455,14 +451,6 @@ int ranged_attack::player_apply_final_multipliers(int damage, bool /*aux*/)
     return attack::player_apply_final_multipliers(damage);
 }
 
-bool ranged_attack::mulch_bonus() const
-{
-    return will_mulch
-        && throwing()
-        && ammo_type_damage(weapon->sub_type)
-        && weapon->sub_type != MI_STONE;
-}
-
 bool ranged_attack::did_net() const
 {
     return _did_net;
@@ -470,8 +458,6 @@ bool ranged_attack::did_net() const
 
 int ranged_attack::player_apply_postac_multipliers(int damage)
 {
-    if (mulch_bonus())
-        return div_rand_round(damage * 4, 3);
     return damage;
 }
 
@@ -975,7 +961,7 @@ bool ranged_attack::player_good_stab()
 
 void ranged_attack::set_attack_verb(int/* damage*/)
 {
-    attack_verb = !mulch_bonus() && is_piercing() ? "pierces through" : "hits";
+    attack_verb = is_piercing() ? "pierces through" : "hits";
 }
 
 void ranged_attack::announce_hit()
@@ -983,11 +969,10 @@ void ranged_attack::announce_hit()
     if (!needs_message)
         return;
 
-    mprf("The %s %s %s%s%s%s",
+    mprf("The %s %s %s%s%s",
          proj_name.c_str(),
          attack_verb.c_str(),
          defender_name(false).c_str(),
-         mulch_bonus() ? " and shatters for extra damage" : "",
          debug_damage_number().c_str(),
          attack_strength_punctuation(damage_done).c_str());
 }
