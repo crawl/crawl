@@ -203,3 +203,89 @@ x.x.xxx.x
 x.......x
 xxxx@xxxx
 ENDMAP
+
+###############################################################################
+# Medium-sized D:1 vaults.
+###############################################################################
+
+NAME:    dcchili_d1_overgrown_courtyard
+DEPTH:   D:1
+TAGS:    no_monster_gen no_item_gen transparent
+MONS:    frilled lizard / ball python, rat / quokka
+KMONS:   t = plant / bush
+SUBST:   x = x:8 c:2
+MAP
+xxxxxxx...xxxxxxx
+x.....ttt.......x
+x.1.tt...tt.....x
+x...t.....t..2..x
+....t..x..t......
+@...t.xGx.t.....@
+....t..x..t......
+x...t.....t.....x
+x....tt.tt......x
+x......t........x
+xxxxxxx...xxxxxxx
+ENDMAP
+
+NAME:    dcchili_d1_abandoned_barracks
+DEPTH:   D:1
+TAGS:    no_monster_gen no_item_gen transparent
+MONS:    goblin / hobgoblin, kobold
+KMONS:   S = stack of scrap
+SUBST:   x = x:9 c:1
+MAP
+xxxxxxx@xxxxxxx
+x.............x
+x.xxx.xxx.xxx.x
+x.xSx.x.x.xSx.x
+x.x.x.x.x.x.x.x
+x.+.+...+.+.+.x
+x.....1.2.....x
+x.+.+...+.+.+.x
+x.x.x.x.x.x.x.x
+x.xSx.x.x.xSx.x
+x.xxx.xxx.xxx.x
+x.............x
+xxxxxxx@xxxxxxx
+ENDMAP
+
+NAME:    dcchili_d1_winding_burrow
+DEPTH:   D:1
+TAGS:    no_monster_gen no_item_gen transparent
+MONS:    rat / quokka, rat / bat, frilled lizard / rat
+SUBST:   x = x:8 c:2
+MAP
+ xxxxxxx@xxxx
+ x.....x....x
+ x.xxx.x.xx.x
+ x.x1x...x..x
+ x.x.xxxxx.xx
+ x...x2.....x
+xxx.x.xxxxxxx
+x...x.....3.x
+x.xxxxx.xxx.x
+x.......x...x
+xxxx@xxxx.xxx
+ENDMAP
+
+NAME:    dcchili_d1_flooded_cloister
+DEPTH:   D:1
+TAGS:    no_monster_gen no_item_gen transparent
+MONS:    endoplasm / ball python, dart slug / frilled lizard
+KFEAT:   w = shallow_water
+KMONS:   t = plant / bush
+SUBST:   x = x:8 c:2
+MAP
+ xxxxxx...xxxxxx
+ x....wwwww....x
+ x.xx.w...w.xx.x
+ x.xt.w.1.w.tx.x
+...x.www.w.x....
+@..x.....w.x...@
+...x.w.www.x....
+ x.xt.w.2.w.tx.x
+ x.xx.w...w.xx.x
+ x....wwwww....x
+ xxxxxx...xxxxxx
+ENDMAP
