@@ -2638,9 +2638,13 @@ bool get_armour_see_invisible(const item_def &arm, bool check_artp)
     return false;
 }
 
-int get_armour_res_corr(const item_def &arm)
+int get_armour_res_corr(const item_def &arm, bool check_artp)
 {
     ASSERT(arm.base_type == OBJ_ARMOUR);
+
+    if (check_artp && is_artefact(arm))
+        if (artefact_property(arm, ARTP_RCORR))
+            return 1;
 
     // intrinsic armour abilities
     return get_armour_ego_type(arm) == SPARM_CORROSION_RESISTANCE
@@ -2719,6 +2723,21 @@ int get_jewellery_res_poison(const item_def &ring, bool check_artp)
 
     if (check_artp && is_artefact(ring))
         res += artefact_property(ring, ARTP_POISON);
+
+    return res;
+}
+
+int get_jewellery_res_corr(const item_def &ring, bool check_artp)
+{
+    ASSERT(ring.base_type == OBJ_JEWELLERY);
+
+    int res = 0;
+
+    if (ring.sub_type == RING_RESIST_CORROSION)
+        res += 1;
+
+    if (check_artp && is_artefact(ring))
+        res += artefact_property(ring, ARTP_RCORR);
 
     return res;
 }

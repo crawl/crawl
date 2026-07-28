@@ -30,6 +30,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "equipment-slot.h"
 #include "fight.h"
 #include "fineff.h"
 #include "fprop.h"
@@ -1009,7 +1010,6 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
 
     // If a monster chooses a two-handed weapon as main weapon, it will
     // first have to drop any shield it might wear.
-    // (Monsters will always favour damage over protection.)
     if ((slot == MSLOT_WEAPON || slot == MSLOT_ALT_WEAPON)
         && inv[MSLOT_SHIELD] != NON_ITEM
         && hands_reqd(item) == HANDS_TWO)
@@ -1276,9 +1276,6 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
         // What kind of assassin would forget her dagger somewhere else?
         if (mons->type == MONS_SONJA)
             return item_attack_skill(weapon) == SK_SHORT_BLADES;
-
-        if (mons->type == MONS_IMPERIAL_MYRMIDON)
-            return item_attack_skill(weapon) == SK_LONG_BLADES;
     }
 
     if (mons->is_holy())
@@ -1299,23 +1296,96 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
     return false;
 }
 
-static int _ego_damage_bonus(item_def &item)
+static int _monster_weapon_value(const monster& mon, const item_def& item)
 {
+    const int dmg = mons_weapon_damage_rating(item);
+    const int base_dmg = mons_attack_spec(mon, 0).damage;
+
+    int val = dmg;
+
+    // Very approximately increase value by the brand
     switch (get_weapon_brand(item))
     {
-    case SPWPN_NORMAL:      return 0;
-    case SPWPN_PROTECTION:  return 1;
-    default:                return 2;
+        case SPWPN_FLAMING:
+        case SPWPN_FREEZING:
+        case SPWPN_CONCUSSION:
+        // Much stronger than this against undead, but the player is usually not undead.
+        case SPWPN_HOLY_WRATH:
+        case SPWPN_DRAINING:
+            val += (dmg + base_dmg) / 5;
+            break;
+
+        case SPWPN_SPECTRAL:
+        case SPWPN_SUNDERING:
+            val += (dmg + base_dmg) * 7 / 10;
+            break;
+
+        // Heavy is actually worse than unbranded weapons in the hands of
+        // enemies with high base damage.
+        case SPWPN_HEAVY:
+            val += (((dmg * 18 / 10) + base_dmg) * 2 / 3) - base_dmg - dmg;
+        break;
+
+        case SPWPN_SPEED:
+            val += ((dmg + base_dmg) / 2);
+            break;
+
+        case SPWPN_PROTECTION:
+            val += 5;
+            break;
+
+        case SPWPN_VENOM:
+        case SPWPN_REBUKE:
+        case SPWPN_VALOUR:
+        case SPWPN_ENTANGLING:
+        case SPWPN_VAMPIRISM:
+        case SPWPN_PAIN:
+            val += 8;
+            break;
+
+        case SPWPN_ELECTROCUTION:
+        case SPWPN_CHAOS:
+        case SPWPN_DEVIOUS:
+            val += 12;
+            break;
+
+        case SPWPN_DISTORTION:
+            val += 20;
+            break;
+
+        default:
+            break;
     }
+
+    // Cleaving and reaching weapons are worth a little more
+    if (weapon_cleaves(item))
+        val += 3;
+    if (weapon_reach(item) > 1)
+        val += 3;
+    if (weapon_multihits(&item))
+        val = val * 2 + base_dmg;
+
+    // Unrands often have something about them that makes them especially good.
+    // And even if they don't, they're *noteworthy* to players and worth
+    // monsters preferring over other options.
+    if (is_unrandom_artefact(item))
+        val *= 2;
+    // Randarts usually have something that makes them better than a plain
+    // weapon, and even in cases where they don't, may be more interesting.
+    // (It's probably not worth the effort to do a fine-grained analysis.)
+    else if (is_random_artefact(item))
+        val = val * 4 / 3;
+
+    // Monsters prefer to hold onto an existing shield unless the weapon is
+    // much better than their current one.
+    if (mon.inv[MSLOT_SHIELD] != NON_ITEM && mon.hands_reqd(item) == HANDS_TWO)
+        val = val * 2 / 3;
+
+    return val;
 }
 
 bool monster::pickup_melee_weapon(item_def &item, bool msg)
 {
-    // Draconian monks are masters of unarmed combat.
-    // Dispater only wants his orb.
-    if (type == MONS_DRACONIAN_MONK || type == MONS_DISPATER)
-        return false;
-
     const bool dual_wielding = mons_wields_two_weapons(*this);
     if (dual_wielding)
     {
@@ -1327,8 +1397,7 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
             return pickup(item, MSLOT_ALT_WEAPON, msg);
     }
 
-    const int new_wpn_dam = mons_weapon_damage_rating(item)
-                            + _ego_damage_bonus(item);
+    const int new_wpn_val = _monster_weapon_value(*this, item);
     mon_inv_type eslot = NUM_MONSTER_SLOTS;
     item_def *weap;
 
@@ -1367,33 +1436,16 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
             }
 
             // If we get here, the weapon is a melee weapon.
-            // If the new weapon is better than the current one and not cursed,
-            // replace it. Otherwise, give up.
-            const int old_wpn_dam = mons_weapon_damage_rating(*weap)
-                                    + _ego_damage_bonus(*weap);
+            // If the new weapon is better than the current one, replace it.
+            // Otherwise, give up.
+            const int old_wpn_val = _monster_weapon_value(*this, *weap);
 
-            bool new_wpn_better = new_wpn_dam > old_wpn_dam;
-            if (new_wpn_dam == old_wpn_dam)
-            {
-                // Use shopping value as a crude estimate of resistances etc.
-                // XXX: This is not really logical as many properties don't
-                //      apply to monsters (e.g. flight, blink, berserk).
-                // For simplicity, don't apply this check to secondary weapons
-                // for dual wielding monsters.
-                int oldval = item_value(*weap, true);
-                int newval = item_value(item, true);
-
-                if (newval > oldval)
-                    new_wpn_better = true;
-            }
-
-            if (new_wpn_better)
+            if (old_wpn_val < new_wpn_val)
             {
                 if (!dual_wielding
                     || slot == MSLOT_WEAPON
-                    || old_wpn_dam
-                       < mons_weapon_damage_rating(*mslot_item(MSLOT_WEAPON))
-                         + _ego_damage_bonus(*mslot_item(MSLOT_WEAPON)))
+                    || old_wpn_val
+                       < _monster_weapon_value(*this, *mslot_item(MSLOT_WEAPON)))
                 {
                     eslot = slot;
                     if (!dual_wielding)
@@ -1425,16 +1477,20 @@ bool monster::wants_weapon(const item_def &weap) const
     if (has_ench(ENCH_ARMED))
         return false;
 
-    if (!could_wield(weap))
-        return false;
-
     // Blademasters and master archers like their starting weapon and
     // don't want another, thank you.
+    // Draconian monks are masters of unarmed combat.
+    // Dispater only wants his orb.
     if (type == MONS_DEEP_ELF_BLADEMASTER
-        || type == MONS_DEEP_ELF_MASTER_ARCHER)
+        || type == MONS_DEEP_ELF_MASTER_ARCHER
+        || type == MONS_DRACONIAN_MONK
+        || type == MONS_DISPATER)
     {
         return false;
     }
+
+    if (!could_wield(weap))
+        return false;
 
     // Monsters capable of dual-wielding will always prefer two weapons
     // to a single two-handed one, however strong.
@@ -1495,19 +1551,42 @@ bool monster::wants_armour(const item_def &item) const
         return false;
     }
 
-    // Spellcasters won't pick up restricting armour, although they can
-    // start with one. Applies to arcane spells only, of course.
-    if (!pos().origin() && is_actual_spellcaster()
-        && (property(item, PARM_EVASION) / 10 < -5
-            || is_artefact(item)
-               && artefact_property(item, ARTP_PREVENT_SPELLCASTING)))
+    // Mage types won't pick up heavy armour unless they're already wearing
+    // similarly heavy armour or are being given starting gear.
+    // (Obviously monsters don't actually get penalties for wearing it; this is
+    // primarily a flavour thing.)
+    if (!pos().origin() && is_actual_spellcaster())
     {
-        return false;
+        if (get_armour_slot(item) == SLOT_BODY_ARMOUR && !(flags & MF_FIGHTER))
+        {
+            const item_def* body_armour = mslot_item(MSLOT_ARMOUR);
+            const int max_penalty = min(body_armour ? property(*body_armour, PARM_EVASION) : 0, -50);
+            if (property(item, PARM_EVASION) < max_penalty)
+                return false;
+        }
+
+        if (is_artefact(item) && artefact_property(item, ARTP_PREVENT_SPELLCASTING))
+            return false;
     }
 
     // Dispater only wants his orb.
     if (type == MONS_DISPATER && !is_unrandom_artefact(item, UNRAND_DISPATER))
         return false;
+
+    // Maggie's dragon scales are equivalent to a 'signature weapon'.
+    if ((type == MONS_MAGGIE || type == MONS_MARGERY)
+        && item.sub_type != ARM_ACID_DRAGON_ARMOUR
+        && item.sub_type != ARM_STEAM_DRAGON_ARMOUR
+        && item.sub_type != ARM_SWAMP_DRAGON_ARMOUR
+        && item.sub_type != ARM_FIRE_DRAGON_ARMOUR
+        && item.sub_type != ARM_ICE_DRAGON_ARMOUR
+        && item.sub_type != ARM_STORM_DRAGON_ARMOUR
+        && item.sub_type != ARM_SHADOW_DRAGON_ARMOUR
+        && item.sub_type != ARM_GOLDEN_DRAGON_ARMOUR
+        && item.sub_type != ARM_PEARL_DRAGON_ARMOUR)
+    {
+        return false;
+    }
 
     // Returns whether this armour is the monster's size.
     return check_armour_size(item, body_size());
@@ -1540,26 +1619,21 @@ bool monster::wants_jewellery(const item_def &item) const
 static int _get_monster_armour_value(const monster *mon,
                                      const item_def &item)
 {
-    // Each resistance/property counts as much as 1 point of AC.
-    // Steam has been excluded because of its general uselessness.
-    int value = item.armour_rating()
-              + get_armour_res_fire(item, true)
-              + get_armour_res_cold(item, true)
-              + get_armour_res_elec(item, true)
-              + get_armour_res_corr(item);
+    int value = item.armour_rating();
+
+    // Each resistance counts as worth multiple points of AC (up to a limit of
+    // how much a monster could benefit from it, so that an rF+ robe isn't
+    // worth extra to an efreet).
+    value += min(3 - get_mons_resist(*mon, MR_RES_FIRE), get_armour_res_fire(item, true)) * 4;
+    value += min(3 - get_mons_resist(*mon, MR_RES_COLD), get_armour_res_cold(item, true)) * 4;
+    value += min(3 - get_mons_resist(*mon, MR_RES_ELEC), get_armour_res_elec(item, true)) * 3;
+    value += min(3 - get_mons_resist(*mon, MR_RES_POISON), get_armour_res_poison(item, true)) * 3;
+    value += min(3 - get_mons_resist(*mon, MR_RES_CORR), get_armour_res_corr(item, true)) * 2;
+    value += min(3 - get_mons_resist(*mon, MR_RES_NEG), get_armour_life_protection(item, true));
 
     // Give a simple bonus, no matter the size of the WL bonus.
     if (get_armour_willpower(item, true) > 0)
-        value++;
-
-    // Poison becomes much less valuable if the monster is
-    // intrinsically resistant.
-    if (get_mons_resist(*mon, MR_RES_POISON) <= 0)
-        value += get_armour_res_poison(item, true);
-
-    // Same for life protection.
-    if (mon->holiness() & MH_NATURAL)
-        value += get_armour_life_protection(item, true);
+        value += 4;
 
     // See invisible also is only useful if not already intrinsic.
     if (!mons_class_flag(mon->type, M_SEE_INVIS))
@@ -1567,11 +1641,7 @@ static int _get_monster_armour_value(const monster *mon,
 
     // Give a sizable bonus for shields of reflection.
     if (get_armour_ego_type(item) == SPARM_REFLECTION)
-        value += 3;
-
-    // Another sizable bonus for rampaging.
-    if (get_armour_rampaging(item, true))
-        value += 5;
+        value += 4;
 
     return value;
 }
@@ -1677,22 +1747,8 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
     if (const item_def *existing_armour = mslot_item(mslot))
     {
         if (!force)
-        {
-            int value_old = _get_monster_armour_value(this,
-                                                      *existing_armour);
-            if (value_old > value_new)
+            if (_get_monster_armour_value(this, *existing_armour) >= value_new)
                 return false;
-
-            if (value_old == value_new)
-            {
-                // If items are of the same value, use shopping
-                // value as a further crude estimate.
-                value_old = item_value(*existing_armour, true);
-                value_new = item_value(item, true);
-            }
-            if (value_old >= value_new)
-                return false;
-        }
 
         if (!drop_item(mslot, msg))
             return false;
@@ -1716,30 +1772,20 @@ static int _get_monster_jewellery_value(const monster *mon,
         value += item.plus;
     }
 
-    value += get_jewellery_res_fire(item, true);
-    value += get_jewellery_res_cold(item, true);
-    value += get_jewellery_res_elec(item, true);
+    value += min(3 - get_mons_resist(*mon, MR_RES_FIRE), get_jewellery_res_fire(item, true)) * 4;
+    value += min(3 - get_mons_resist(*mon, MR_RES_COLD), get_jewellery_res_cold(item, true)) * 4;
+    value += min(3 - get_mons_resist(*mon, MR_RES_ELEC), get_jewellery_res_elec(item, true)) * 3;
+    value += min(3 - get_mons_resist(*mon, MR_RES_POISON), get_jewellery_res_poison(item, true)) * 3;
+    value += min(3 - get_mons_resist(*mon, MR_RES_CORR), get_jewellery_res_corr(item, true)) * 2;
+    value += min(3 - get_mons_resist(*mon, MR_RES_NEG), get_jewellery_life_protection(item, true));
 
     // Give a simple bonus, no matter the size of the WL bonus.
     if (get_jewellery_willpower(item, true) > 0)
-        value++;
-
-    // Poison becomes much less valuable if the monster is
-    // intrinsically resistant.
-    if (get_mons_resist(*mon, MR_RES_POISON) <= 0)
-        value += get_jewellery_res_poison(item, true);
-
-    // Same for life protection.
-    if (mon->holiness() & MH_NATURAL)
-        value += get_jewellery_life_protection(item, true);
+        value += 4;
 
     // See invisible also is only useful if not already intrinsic.
     if (!mons_class_flag(mon->type, M_SEE_INVIS))
         value += get_jewellery_see_invisible(item, true);
-
-    // If we're not naturally corrosion-resistant.
-    if (item.sub_type == RING_RESIST_CORROSION && get_mons_resist(*mon, MR_RES_CORR) <= 0)
-        value++;
 
     return value;
 }
@@ -1767,22 +1813,8 @@ bool monster::pickup_jewellery(item_def &item, bool msg, bool force)
     if (const item_def *existing_jewellery = mslot_item(mslot))
     {
         if (!force)
-        {
-            int value_old = _get_monster_jewellery_value(this,
-                                                         *existing_jewellery);
-            if (value_old > value_new)
+            if (_get_monster_jewellery_value(this, *existing_jewellery) >= value_new)
                 return false;
-
-            if (value_old == value_new)
-            {
-                // If items are of the same value, use shopping
-                // value as a further crude estimate.
-                value_old = item_value(*existing_jewellery, true);
-                value_new = item_value(item, true);
-                if (value_old >= value_new)
-                    return false;
-            }
-        }
 
         if (!drop_item(mslot, msg))
             return false;
