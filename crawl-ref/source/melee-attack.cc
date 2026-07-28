@@ -467,7 +467,7 @@ void melee_attack::apply_black_mark_effects()
 
     if (attacker->is_player()
         && you.has_mutation(MUT_BLACK_MARK)
-        && coinflip())
+        && one_chance_in(5))
     {
         if (!defender->alive())
             return;
@@ -500,6 +500,21 @@ void melee_attack::apply_black_mark_effects()
             case DRAINING:
                 defender->drain(attacker, false, damage_done);
                 break;
+        }
+        // If black mark level 2 roll for tzitz effects
+        if (you.get_mutation_level(MUT_BLACK_MARK) > 1 && coinflip())
+        {
+            if (defender->is_monster())
+            {
+                int tzitz_effect_length = random_range(2,3);
+                defender->as_monster()->add_ench(mon_enchant(ENCH_FLOODED, attacker,
+                                                tzitz_effect_length * BASELINE_DELAY));
+                defender->as_monster()->add_ench(mon_enchant(ENCH_SLOW, attacker,
+                                                tzitz_effect_length * BASELINE_DELAY));
+                simple_monster_message(*defender->as_monster(), " is engulfed in shadow.");
+            }
+            else
+                you.duration[DUR_FLOODED] = (random_range(2, 3));
         }
     }
 }

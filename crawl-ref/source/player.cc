@@ -7125,7 +7125,8 @@ bool player::is_insubstantial() const
 
 bool player::can_silent_cast() const
 {
-    return get_mutation_level(MUT_SILENT_CAST);
+    return get_mutation_level(MUT_SILENT_CAST)
+        || get_mutation_level(MUT_BLACK_MARK) > 1;
 }
 
 bool player::is_amorphous() const
