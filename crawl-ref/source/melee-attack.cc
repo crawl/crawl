@@ -502,7 +502,7 @@ void melee_attack::apply_black_mark_effects()
                 break;
         }
         // If black mark level 2 roll for confusion
-        if (you.get_mutation_level(MUT_BLACK_MARK) > 1 && one_chance_in(5))
+        if (you.get_mutation_level(MUT_BLACK_MARK) > 1 && one_chance_in(10))
         {
             if (defender->is_monster())
             {
