@@ -109,7 +109,7 @@ MARKER: Z = lua:monster_on_death { \
 ITEM:    stone q:1 no_pickup
 KITEM:   D = gold
 KMONS:   D = hobgoblin / kobold / gnoll
-KFEAT:   M = cache_of_meat
+KFEAT:   m = cache_of_meat
 SHUFFLE: ABCD
 SUBST:   ABC = 2, ? = 2 1:2 .:22
 : if you.depth() > 5 then
@@ -118,7 +118,7 @@ NSUBST:  2 = 1:5 / *:2
 SHUFFLE: 125S / 346~
 SUBST:   1 = 1:12 ., 2 = 2:23 ., 3 = 3., 4 = 4:22 .
 SUBST:   y : y:48 w:1 W:1, Y : Y:48 W:1 .:1, y = wWW, Y = WW., S = S., ~ = .
-NSUBST:  ' = 3 = MMMdd / *:d
+NSUBST:  ' = 3 = mmmdd / *:d
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxx
