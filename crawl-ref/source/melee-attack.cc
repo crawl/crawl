@@ -467,7 +467,7 @@ void melee_attack::apply_black_mark_effects()
 
     if (attacker->is_player()
         && you.has_mutation(MUT_BLACK_MARK)
-        && one_chance_in(5))
+        && coinflip())
     {
         if (!defender->alive())
             return;
