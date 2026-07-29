@@ -1192,9 +1192,14 @@ bool monster::pickup_launcher(item_def &launch, bool msg, bool force)
 
 static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
 {
-    // Don't pick up items that would interfere with our special ability
-    if (mons->type == MONS_RED_DEVIL)
+    // Riders only have tiles for wielding spears, so prefer not to pick up other weapons.
+    if (mons->type == MONS_RED_DEVIL
+        || mons->type == MONS_GOBLIN_RIDER
+        || mons->type == MONS_SPRIGGAN_RIDER
+        || mons->type == MONS_GOJI)
+    {
         return item_attack_skill(weapon) == SK_POLEARMS;
+    }
 
     // Some other uniques have a signature weapon, usually because they
     // always spawn with it, or because it is referenced in their speech
