@@ -1692,7 +1692,7 @@ static void _sdump_skill_gains(dump_params &par)
             xl = note.first;
         else if (note.type == NOTE_GAIN_SKILL || note.type == NOTE_LOSE_SKILL)
         {
-            skill_type skill = static_cast<skill_type>(note.first);
+            skill_type skill = str_to_skill(note.name);
             int skill_level = note.second;
             if (skill_gains.find(skill) == skill_gains.end())
                 skill_order.push_back(skill);
