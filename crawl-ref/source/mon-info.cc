@@ -1797,20 +1797,7 @@ int monster_info::reach_range(bool items) const
 
 size_type monster_info::body_size() const
 {
-    const size_type class_size = mons_class_body_size(base_type);
-
-    // Slime creature size is increased by the number merged.
-    if (type == MONS_SLIME_CREATURE)
-    {
-        if (slime_size == 2)
-            return SIZE_MEDIUM;
-        else if (slime_size == 3)
-            return SIZE_LARGE;
-        else if (slime_size >= 4) // sizes 4 & 5
-            return SIZE_GIANT;
-    }
-
-    return class_size;
+    return mons_class_body_size(base_type, PSIZE_BODY, slime_size);
 }
 
 bool monster_info::net_immune() const

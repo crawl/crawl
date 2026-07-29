@@ -374,10 +374,11 @@ bool monster::can_drown() const
     return !is_unbreathing();
 }
 
-size_type monster::body_size(size_part_type /* psize */, bool /* base */) const
+size_type monster::body_size(size_part_type psize, bool /* base */) const
 {
-    monster_info mi(this, MILEV_NAME);
-    return mi.body_size();
+    const monster_type base_type = mons_is_zombified(*this) ? base_monster
+                                                            : type;
+    return mons_class_body_size(base_type, psize, blob_size);
 }
 
 /**
@@ -611,7 +612,8 @@ bool monster::could_wield(const item_def &item) const
         return false;
 
     // Wimpy monsters (e.g. kobolds, goblins) can't use halberds, etc.
-    if (is_weapon(item) && is_weapon_too_large(item, body_size()))
+    // And while riders may be large overall, the thing holding the weapon is not.
+    if (is_weapon(item) && is_weapon_too_large(item, body_size(PSIZE_TORSO)))
         return false;
 
     return true;
@@ -1589,7 +1591,7 @@ bool monster::wants_armour(const item_def &item) const
     }
 
     // Returns whether this armour is the monster's size.
-    return check_armour_size(item, body_size());
+    return check_armour_size(item, body_size(PSIZE_TORSO));
 }
 
 bool monster::wants_jewellery(const item_def &item) const

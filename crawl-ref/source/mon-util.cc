@@ -1135,6 +1135,43 @@ size_type mons_class_body_size(monster_type mc)
     return e ? e->size : SIZE_MEDIUM;
 }
 
+size_type mons_class_body_size(monster_type mc, size_part_type type, int slime_size)
+{
+    if (mons_is_rider(mc))
+        return mons_class_body_size(mons_rider_type(mc), type);
+    else if (mc == MONS_SLIME_CREATURE)
+    {
+        // Slime creature size is increased by the number merged.
+        if (mc == MONS_SLIME_CREATURE)
+        {
+            if (slime_size == 2)
+                return SIZE_MEDIUM;
+            else if (slime_size == 3)
+                return SIZE_LARGE;
+            else if (slime_size >= 4) // sizes 4 & 5
+                return SIZE_GIANT;
+        }
+    }
+
+    const size_type size = mons_class_body_size(mc);
+    if (type == PSIZE_TORSO)
+    {
+        switch (mc)
+        {
+            case MONS_NAGA:
+            case MONS_CENTAUR:
+            case MONS_YAKTAUR:
+            case MONS_ARACHNE:
+                return SIZE_MEDIUM;
+
+            default:
+                return size;
+        }
+    }
+    else
+        return size;
+}
+
 int max_corpse_chunks(monster_type mc)
 {
     switch (mons_class_body_size(mc))
