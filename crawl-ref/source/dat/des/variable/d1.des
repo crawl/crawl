@@ -8,6 +8,8 @@
 NAME:    dcchili_d1_kobold_camp
 DEPTH:   D:1
 WEIGHT:  20
+CHANCE:  100%
+TAGS:    chance_dcchili_d1
 TAGS:    no_monster_gen no_item_gen transparent
 MONS:    kobold
 ITEM:    stone / nothing w:2
@@ -24,6 +26,7 @@ ENDMAP
 NAME:    dcchili_d1_lizard_garden
 DEPTH:   D:1
 WEIGHT:  20
+TAGS:    chance_dcchili_d1
 TAGS:    no_monster_gen no_item_gen transparent
 MONS:    frilled lizard
 KMONS:   t = plant / bush
@@ -39,6 +42,7 @@ ENDMAP
 NAME:    dcchili_d1_bat_roost
 DEPTH:   D:1
 WEIGHT:  20
+TAGS:    chance_dcchili_d1
 TAGS:    no_monster_gen no_item_gen transparent
 MONS:    bat
 MAP
@@ -54,6 +58,7 @@ ENDMAP
 NAME:    dcchili_d1_jelly_puddle
 DEPTH:   D:1
 WEIGHT:  20
+TAGS:    chance_dcchili_d1
 TAGS:    no_monster_gen no_item_gen transparent extra
 MONS:    endoplasm
 KFEAT:   w = shallow_water
@@ -69,6 +74,7 @@ ENDMAP
 NAME:    dcchili_d1_jackal_yard
 DEPTH:   D:1
 WEIGHT:  20
+TAGS:    chance_dcchili_d1
 TAGS:    no_monster_gen no_item_gen transparent
 MONS:    jackal
 KMONS:   t = plant / bush
@@ -84,6 +90,7 @@ ENDMAP
 NAME:    dcchili_d1_ruined_gate
 DEPTH:   D:1
 WEIGHT:  20
+TAGS:    chance_dcchili_d1
 TAGS:    no_monster_gen no_item_gen transparent extra
 KMONS:   t = plant / bush
 SUBST:   x = x:6 c:3 t:1
@@ -99,6 +106,7 @@ ENDMAP
 NAME:    dcchili_d1_crooked_rooms
 DEPTH:   D:1
 WEIGHT:  20
+TAGS:    chance_dcchili_d1
 TAGS:    transparent
 SUBST:   x = x:8 c:2
 MAP
@@ -116,6 +124,7 @@ ENDMAP
 NAME:    dcchili_d1_creek_crossing
 DEPTH:   D:1
 WEIGHT:  20
+TAGS:    chance_dcchili_d1
 TAGS:    no_monster_gen no_item_gen transparent extra
 MONS:    ball python / dart slug
 KFEAT:   w = shallow_water
@@ -133,6 +142,7 @@ ENDMAP
 NAME:    dcchili_d1_old_cairn
 DEPTH:   D:1
 WEIGHT:  20
+TAGS:    chance_dcchili_d1
 TAGS:    no_monster_gen no_item_gen transparent extra
 KFEAT:   G = granite_statue
 MAP
@@ -148,6 +158,7 @@ ENDMAP
 NAME:    dcchili_d1_rat_nook
 DEPTH:   D:1
 WEIGHT:  20
+TAGS:    chance_dcchili_d1
 TAGS:    no_monster_gen no_item_gen transparent
 MONS:    rat / quokka
 KFEAT:   C = cache_of_baked_goods
@@ -162,6 +173,7 @@ ENDMAP
 NAME:    dcchili_d1_goblin_lean_to
 DEPTH:   D:1
 WEIGHT:  20
+TAGS:    chance_dcchili_d1
 TAGS:    no_monster_gen no_item_gen transparent
 MONS:    goblin / hobgoblin
 KMONS:   S = stack of scrap
@@ -177,6 +189,7 @@ ENDMAP
 NAME:    dcchili_d1_fallen_tree
 DEPTH:   D:1
 WEIGHT:  20
+TAGS:    chance_dcchili_d1
 TAGS:    no_monster_gen no_item_gen transparent extra
 MONS:    ball python / rat
 KMONS:   t = plant / bush
@@ -190,6 +203,7 @@ ENDMAP
 NAME:    dcchili_d1_stone_circle
 DEPTH:   D:1
 WEIGHT:  20
+TAGS:    chance_dcchili_d1
 TAGS:    no_monster_gen no_item_gen transparent extra
 KFEAT:   G = granite_statue
 MAP
@@ -204,6 +218,7 @@ ENDMAP
 NAME:    dcchili_d1_split_hall
 DEPTH:   D:1
 WEIGHT:  20
+TAGS:    chance_dcchili_d1
 TAGS:    transparent
 SUBST:   x = x:8 c:2
 MAP
@@ -225,6 +240,7 @@ ENDMAP
 NAME:    dcchili_d1_overgrown_courtyard
 DEPTH:   D:1
 WEIGHT:  20
+TAGS:    chance_dcchili_d1
 TAGS:    no_monster_gen no_item_gen transparent
 MONS:    frilled lizard / ball python, rat / quokka
 KMONS:   t = plant / bush
@@ -246,6 +262,7 @@ ENDMAP
 NAME:    dcchili_d1_abandoned_barracks
 DEPTH:   D:1
 WEIGHT:  20
+TAGS:    chance_dcchili_d1
 TAGS:    no_monster_gen no_item_gen transparent
 MONS:    goblin / hobgoblin, kobold
 KMONS:   S = stack of scrap
@@ -269,6 +286,7 @@ ENDMAP
 NAME:    dcchili_d1_winding_burrow
 DEPTH:   D:1
 WEIGHT:  20
+TAGS:    chance_dcchili_d1
 TAGS:    no_monster_gen no_item_gen transparent
 MONS:    rat / quokka, rat / bat, frilled lizard / rat
 SUBST:   x = x:8 c:2
@@ -289,6 +307,7 @@ ENDMAP
 NAME:    dcchili_d1_flooded_cloister
 DEPTH:   D:1
 WEIGHT:  20
+TAGS:    chance_dcchili_d1
 TAGS:    no_monster_gen no_item_gen transparent
 MONS:    endoplasm / ball python, dart slug / frilled lizard
 KFEAT:   w = shallow_water
@@ -306,4 +325,138 @@ MAP
  x.xx.w...w.xx.x
  x....wwwww....x
  xxxxxx...xxxxxx
+ENDMAP
+
+NAME:    dcchili_d1_twin_huts
+DEPTH:   D:1
+WEIGHT:  20
+TAGS:    chance_dcchili_d1
+TAGS:    no_monster_gen no_item_gen transparent
+MONS:    goblin / kobold, rat / quokka
+KMONS:   t = plant / bush
+SUBST:   x = x:8 c:2
+MAP
+  xxxxx   xxxxx
+  x...x   x...x
+  x.1.x...x.2.x
+..x...x...x...x..
+@.xx+xx.t.xx+xx.@
+........t........
+ENDMAP
+
+NAME:    dcchili_d1_dry_cistern
+DEPTH:   D:1
+WEIGHT:  20
+TAGS:    chance_dcchili_d1
+TAGS:    no_monster_gen no_item_gen transparent
+MONS:    dart slug / endoplasm
+KFEAT:   G = granite_statue
+SUBST:   x = x:8 c:2
+MAP
+    xxx@xxx
+  xxx.....xxx
+ xx.........xx
+xx...G...G...xx
+x.....xxx.....x
+@....x.1.x....@
+x.....xxx.....x
+xx...G...G...xx
+ xx.........xx
+  xxx.....xxx
+    xxx@xxx
+ENDMAP
+
+NAME:    dcchili_d1_hedge_turns
+DEPTH:   D:1
+WEIGHT:  20
+TAGS:    chance_dcchili_d1
+TAGS:    no_monster_gen no_item_gen transparent
+MONS:    frilled lizard / ball python, rat / bat
+KMONS:   t = plant / bush
+MAP
+ttttttt@ttttttt
+t.....t.t.....t
+t.ttt.t.t.ttt.t
+t.t.1...t...t.t
+t.t.ttttttt.t.t
+@...t.....t...@
+ttt.t.ttt.t.ttt
+t...t..2..t...t
+t.ttttt.ttttt.t
+t.............t
+ttttttt@ttttttt
+ENDMAP
+
+NAME:    dcchili_d1_kobold_tollhouse
+DEPTH:   D:1
+WEIGHT:  20
+TAGS:    chance_dcchili_d1
+TAGS:    no_monster_gen no_item_gen transparent
+MONS:    kobold, kobold / goblin
+ITEM:    stone / nothing w:3
+KMONS:   S = stack of scrap
+SUBST:   x = x:9 c:1
+MAP
+xxxxxx...xxxxxx
+x....x...x....x
+x.1..+...+..2.x
+x....x...x....x
+xxx+xx.S.xx+xxx
+...............
+@.............@
+...............
+xxx+xx...xx+xxx
+x....x...x....x
+x....+...+....x
+x....x...x....x
+xxxxxx...xxxxxx
+ENDMAP
+
+NAME:    dcchili_d1_three_courts
+DEPTH:   D:1
+WEIGHT:  20
+TAGS:    chance_dcchili_d1
+TAGS:    no_monster_gen no_item_gen transparent
+MONS:    rat / quokka, frilled lizard / dart slug
+KMONS:   t = plant / bush
+KFEAT:   G = granite_statue
+SUBST:   x = x:8 c:2
+MAP
+xxxx@xxxx@xxxx
+ x...t...t...x
+ x.1.t.G.t.2.x
+ x...t...t...x
+ xx+xxx+xxx+xx
+ x...........x
+ @.....G.....@
+ x...........x
+ xx+xxx+xxx+xx
+ x...t...t...x
+ x...t.G.t...x
+ x...t...t...x
+xxxx@xxxx@xxxx
+ENDMAP
+
+NAME:    dcchili_d1_broken_spiral
+DEPTH:   D:1
+WEIGHT:  20
+TAGS:    chance_dcchili_d1
+TAGS:    transparent
+SUBST:   x = x:8 c:2
+MAP
+xxxxxxxxxxxx@xx
+x.............x
+x.xxxxxxxxxxx.x
+x.x.........x.x
+x.x.xxxxxxx.x.x
+x.x.x.....x.x.x
+x.x.x.xxx.x.x.x
+@...x.x.x.x...@
+xxx.x.x.x.x.xxx
+x...x...x.x...x
+x.xxxxxxx.x.x.x
+x.........x.x.x
+xxxxxxxxxxx.x.x
+x.............x
+xx@xxxxxxxxxxxx
 ENDMAP
