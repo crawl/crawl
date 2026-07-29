@@ -1,6 +1,6 @@
 name: "Oskar"
 glyph: {char: "J", colour: red}
-flags: [eat_doors, speaks, see_invis, unblindable, splits, amorphous, acid_splash, no_skeleton, unique, male]
+flags: [eat_doors, speaks, see_invis, unblindable, amorphous, acid_splash, no_skeleton, unique, male]
 resists: {poison: 1, corr: 3}
 exp: 165
 species: jelly
