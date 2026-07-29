@@ -2384,8 +2384,6 @@ int make_mons_armour(monster_type type, int level)
         item.sub_type  = ARM_ROBE;
         break;
 
-    case MONS_SPHINX_MARAUDER:
-    case MONS_GUARDIAN_SPHINX:
     case MONS_DRACONIAN_SHIFTER:
     case MONS_DRACONIAN_SCORCHER:
     case MONS_DRACONIAN_ANNIHILATOR:
@@ -2408,6 +2406,8 @@ int make_mons_armour(monster_type type, int level)
         make_item_unrandart(item, UNRAND_DRAGONSKIN);
         break;
 
+    case MONS_SPHINX_MARAUDER:
+    case MONS_GUARDIAN_SPHINX:
     case MONS_NESSOS:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_BARDING;
