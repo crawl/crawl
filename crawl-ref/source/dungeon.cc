@@ -1450,7 +1450,7 @@ static void _place_sewer_stair_vault()
                 else
                 {
                     _set_grd(*ri, DNGN_FLOOR);
-                    if (!dgn_place_map(random_map_for_tag("sewer_entrance"), false, false, *ri))
+                    if (!dgn_place_map(random_map_for_tag("sewer_entrance"), true, false, *ri))
                         _set_grd(*ri, DNGN_STONE_STAIRS_DOWN_I);
                 }
             }
