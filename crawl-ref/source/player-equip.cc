@@ -1181,24 +1181,22 @@ void player_equip_set::find_removable_items_for_slot(equipment_slot base_slot,
  *         valid candidates to remove, despite needing to do so (almost
  *         certainly because every occupant of the slot is cursed.)
  */
-int player_equip_set::needs_chain_removal(equipment_slot slot,
-                                          vector<item_def*>& to_replace,
-                                          bool cursed_okay,
-                                          const vector<item_def*>& already_removing,
-                                          bool melded)
+int needs_chain_removal(equipment_slot slot, vector<item_def*>& to_replace,
+                        bool cursed_okay,
+                        const vector<item_def*>& already_removing, bool melded)
 {
     unwind_var<player_equip_set> unwind_eq(you.equipment);
     for (item_def* removing : already_removing)
-        remove(*removing);
+        you.equipment.remove(*removing);
 
-    const int usable = unmelded_slot_count(slot);
+    const int usable = you.equipment.unmelded_slot_count(slot);
     const int new_num_slots = melded
                               ? get_player_equip_slot_count(slot, nullptr, true)
                                 - usable
                               : usable;
 
     int count = 0;
-    for (const player_equip_entry& entry : items)
+    for (const player_equip_entry& entry : you.equipment.items)
     {
         if (entry.slot != slot || entry.melded != melded)
             continue;

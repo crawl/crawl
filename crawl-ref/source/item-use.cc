@@ -1529,8 +1529,9 @@ bool handle_chain_removal(vector<item_def*>& to_remove, bool interactive)
             const equipment_slot slot = granted.slot;
 
             vector<item_def*> chain_remove;
-            int chain_remove_num = you.equipment.needs_chain_removal(
-                slot, chain_remove, !interactive, to_remove, melded);
+            int chain_remove_num = needs_chain_removal(slot, chain_remove,
+                                                       !interactive, to_remove,
+                                                       melded);
             if (chain_remove_num <= 0)
                 continue;
 

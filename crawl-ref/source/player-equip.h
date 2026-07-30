@@ -118,11 +118,6 @@ struct player_equip_set
     int item_granted_slot_count(equipment_slot slot, bool count_melded) const;
     int unmelded_slot_count(equipment_slot slot) const;
 
-    int needs_chain_removal(equipment_slot slot, vector<item_def*>& to_replace,
-                            bool cursed_okay = false,
-                            const vector<item_def*>& already_removing = {},
-                            bool melded = false);
-
     vector<item_def*> get_forced_removal_list(bool force_full_check = false,
                                               size_t* num_direct = nullptr);
 
@@ -138,6 +133,10 @@ int get_player_equip_slot_count(equipment_slot slot, string* zero_reason = nullp
                                 bool count_melded_unrands = false,
                                 bool count_items = true,
                                 bool count_default_form = true);
+int needs_chain_removal(equipment_slot slot, vector<item_def*>& to_replace,
+                        bool cursed_okay = false,
+                        const vector<item_def*>& already_removing = {},
+                        bool melded = false);
 const vector<equipment_slot>& get_alternate_slots(equipment_slot slot);
 
 bool can_equip_item(const item_def& item, bool temp = false,
