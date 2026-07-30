@@ -1905,6 +1905,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_YAKTAUR_CAPTAIN, { {2}, {{ BAND_YAKTAURS, {2, 5}, true }}}},
     { MONS_YAKTAUR,         { {2}, {{ BAND_YAKTAURS, {2, 5} }}}},
     { MONS_DEATH_YAK,       { {}, {{ BAND_DEATH_YAKS, {2, 6} }}}},
+    { MONS_RUSK,            { {}, {{ BAND_RUSK, {2, 4}, true }}}},
     { MONS_OGRE_MAGE,       { {}, {{ BAND_OGRE_MAGE, {4, 8} }}}},
     { MONS_LODUL,           { {}, {{ BAND_OGRES, {6, 10}, true }}}},
     { MONS_BALRUG,          { {0, 0, []() { return !player_in_hell(); }},
@@ -2361,6 +2362,7 @@ typedef vector<pair<monster_type, int>> member_possibilities;
 static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_HOGS,                {{{MONS_HOG, 1}}}},
     { BAND_YAKS,                {{{MONS_YAK, 1}}}},
+    { BAND_RUSK,                {{{MONS_YAK, 1}}}},
     { BAND_CAGES,               {{{MONS_CRAWLING_FLESH_CAGE, 1}}}},
     { BAND_FAUNS,               {{{MONS_FAUN, 1}}}},
     { BAND_OGRES,               {{{MONS_OGRE, 1}}}},

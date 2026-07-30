@@ -2621,6 +2621,13 @@ static const mon_spellbook mspell_list[] =
        { SPELL_FLEETFOOT, 24, MON_SPELL_WIZARD },
       }
     },
+
+    {  MST_RUSK,
+      {
+       { SPELL_STAMPEDE, 60, MON_SPELL_NATURAL },
+       { SPELL_BATTLECRY, 40, MON_SPELL_VOCAL },
+      }
+    },
     // ('&', mostly) Demon lords.
     {  MST_GERYON,
       {
