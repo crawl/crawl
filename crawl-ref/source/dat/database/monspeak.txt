@@ -2237,6 +2237,26 @@ friendly Cassandra
 @The_monster@ says, "Even I cannot save you if you persist in this."
 %%%%%
 
+############ RUSK ############ The bellwether of the Lair
+Rusk
+
+@The_monster@'s bells begin a thunderous rhythm.
+
+@The_monster@ paws at the earth, and the herd lowers its heads.
+
+@The_monster@ bellows, and the Lair answers!
+
+@The_monster@ shakes his scarred head; cracked bells toll in reply.
+%%%%
+Rusk shout
+
+@The_monster@'s bronze bells clang!
+%%%%
+Rusk triumphant
+
+@The_monster@'s bells sound a slow, victorious peal.
+%%%%%
+
 ############ CHUCK ### An avid rock collector.
 Chuck
 

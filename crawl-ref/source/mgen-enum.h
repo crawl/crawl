@@ -154,6 +154,7 @@ enum band_type
     BAND_ABYSSAL_ACOLYTES,
     BAND_HERALD_FOLLOWERS,
     BAND_BLOWFLIES,
+    BAND_RUSK,
     NUM_BANDS                   // always last
 };
 
