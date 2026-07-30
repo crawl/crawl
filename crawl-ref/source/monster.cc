@@ -1197,7 +1197,8 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
     if (mons->type == MONS_RED_DEVIL
         || mons->type == MONS_GOBLIN_RIDER
         || mons->type == MONS_SPRIGGAN_RIDER
-        || mons->type == MONS_GOJI)
+        || mons->type == MONS_GOJI
+        || mons->type == MONS_FRAVASHI)
     {
         return item_attack_skill(weapon) == SK_POLEARMS;
     }
