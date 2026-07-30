@@ -3737,26 +3737,42 @@ bool is_usable_talisman(const item_def& item)
     return cannot_put_on_talisman_reason(item, false).empty();
 }
 
-// The equipment slot type(s) an item grants extra slots of (empty if none).
-vector<equipment_slot> item_granted_slots(const item_def& item)
+// The equipment slot type(s) an unrand grants extra slots of (empty if none).
+// If you wish to add boots which grant another slot, or an item that grants
+// boots, think very hard about whether merfolk fishtail works with this.
+const vector<granted_slot>& unrand_granted_slots(int unrand_idx)
 {
-    if (!is_unrandom_artefact(item))
-        return {};
+    static const vector<granted_slot> none       = {};
+    static const vector<granted_slot> one_ring   = {{SLOT_RING, 1}};
+    static const vector<granted_slot> two_rings  = {{SLOT_RING, 2}};
+    static const vector<granted_slot> one_amulet = {{SLOT_AMULET, 1}};
+    static const vector<granted_slot> one_helmet = {{SLOT_HELMET, 1}};
+    static const vector<granted_slot> one_gloves = {{SLOT_GLOVES, 1}};
 
-    switch (item.unrand_idx)
+    switch (unrand_idx)
     {
         case UNRAND_FINGER_AMULET:
+            return one_ring;
         case UNRAND_VAINGLORY:
-            return {SLOT_RING};
+            return two_rings;
         case UNRAND_JUSTICARS_REGALIA:
-            return {SLOT_AMULET};
+            return one_amulet;
         case UNRAND_SKULL_OF_ZONGULDROK:
-            return {SLOT_HELMET};
+            return one_helmet;
         case UNRAND_FISTICLOAK:
-            return {SLOT_GLOVES};
+            return one_gloves;
         default:
-            return {};
+            return none;
     }
+}
+
+// The equipment slot type(s) an item grants extra slots of (empty if none).
+const vector<granted_slot>& item_granted_slots(const item_def& item)
+{
+    if (!is_unrandom_artefact(item))
+        return unrand_granted_slots(UNRAND_DUMMY1);
+
+    return unrand_granted_slots(item.unrand_idx);
 }
 
 bool item_gives_equip_slots(const item_def& item)

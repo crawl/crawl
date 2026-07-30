@@ -1514,21 +1514,19 @@ bool try_equip_item(item_def& item)
  * @return True if removal may proceed. False if removal is impossible (or the
  *         player chose to cancel).
  */
-bool handle_chain_removal(vector<item_def*>& to_remove, bool interactive,
-                          bool for_melding)
+bool handle_chain_removal(vector<item_def*>& to_remove, bool interactive)
 {
     if (to_remove.empty())
         return true;
 
     for (size_t n = 0; n < to_remove.size(); ++n)
     {
-        for (equipment_slot slot : item_granted_slots(*to_remove[n]))
+        // We need to remove melded gear iff we are removing a melded item.
+        const bool melded = you.equipment.is_melded(*to_remove[n]);
+
+        for (const granted_slot& granted : item_granted_slots(*to_remove[n]))
         {
-            // We need to remove melded gear if this a) we are removing a
-            // melded item or b) the whole slot is melded.
-            const bool melded = !for_melding
-                                && (you.equipment.is_melded(*to_remove[n])
-                                    || slot_is_melded(slot));
+            const equipment_slot slot = granted.slot;
 
             vector<item_def*> chain_remove;
             int chain_remove_num = you.equipment.needs_chain_removal(
