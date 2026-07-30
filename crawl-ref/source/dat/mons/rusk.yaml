@@ -7,6 +7,7 @@ genus: yak
 will: 100
 attacks:
  - {type: gore, flavour: trample, damage: 28}
+hd: 15
 hp_10x: 950
 ac: 10
 ev: 6
