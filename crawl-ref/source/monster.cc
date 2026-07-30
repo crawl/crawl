@@ -1101,6 +1101,7 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
     // Unequip equipped items before dropping them.
     const bool was_equipped = eslot == MSLOT_WEAPON
                                 || eslot == MSLOT_ARMOUR
+                                || eslot == MSLOT_AUX_ARMOUR
                                 || eslot == MSLOT_JEWELLERY
                                 || eslot == MSLOT_ALT_WEAPON
                                    && mons_wields_two_weapons(*this);
@@ -1613,11 +1614,6 @@ bool monster::wants_jewellery(const item_def &item) const
         return false;
     }
 
-    // XXX: Because Wiglaf's hat is stored in the jewelry slot (there wasn't
-    //      room elsewhere!), don't pick up anything that would push it out.
-    if (type == MONS_WIGLAF)
-        return false;
-
     // TODO: figure out what monsters actually want rings or amulets
     return true;
 }
@@ -1654,6 +1650,68 @@ static int _get_monster_armour_value(const monster *mon,
 }
 
 /**
+ * Is this monster unable to equip armour into a given type of slot?
+ *
+ * This is not completely exhaustive for all monsters, and generally limits
+ * itself to those types of monsters that can actually pick up gear.
+ */
+static bool _armour_slot_is_restricted(monster_type genus, equipment_slot slot)
+{
+    // Bardings are easier to do by exclusion.
+    if (slot == SLOT_BARDING)
+    {
+        switch (genus)
+        {
+            case MONS_NAGA:
+            case MONS_SALAMANDER:
+            case MONS_CENTAUR:
+            case MONS_YAKTAUR:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    // In general, this bans all headgear for monsters that can't wear hard
+    // helmets, since trying to be more specific than this generally isn't
+    // worth the trouble.
+    switch (genus)
+    {
+        case MONS_DRACONIAN:
+            return slot == SLOT_BODY_ARMOUR || slot == SLOT_HELMET;
+
+        case MONS_MINOTAUR:
+            return slot == SLOT_HELMET;
+
+        case MONS_NAGA:
+        case MONS_SALAMANDER:
+        case MONS_CENTAUR:
+        case MONS_YAKTAUR:
+        case MONS_FENSTRIDER_WITCH:
+        case MONS_MERFOLK:  // Please don't try to implement boot melding for monsters....
+        case MONS_SPIDER:   // Arachne and Jorougumo
+        case MONS_MELIAI:
+        case MONS_EFREET:
+        case MONS_FRAVASHI:
+            return slot == SLOT_BOOTS;
+
+        case MONS_TENGU:
+        case MONS_RED_DEVIL:
+        case MONS_BALRUG:
+            return slot == SLOT_BOOTS || slot == SLOT_HELMET;
+
+        case MONS_OCTOPODE:
+            return slot != SLOT_HELMET;
+
+        default:
+            break;
+    }
+
+    return false;
+}
+
+/**
  * Attempt to have a monster pick up and wear the given armour item.
  * @param item  The item in question.
  * @param msg   Whether to print a message
@@ -1670,75 +1728,19 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
     const monster_type genus = mons_genus(mons_species(true));
     const monster_type base_type = mons_is_zombified(*this) ? base_monster
                                                             : type;
-    equipment_slot slot = SLOT_UNUSED;
+    equipment_slot slot = get_armour_slot(item);
 
-    // HACK to allow nagas to wear bardings. (jpeg)
-    switch (item.sub_type)
-    {
-    case ARM_BARDING:
-        if (genus == MONS_NAGA || genus == MONS_SALAMANDER
-            || genus == MONS_CENTAUR || genus == MONS_YAKTAUR)
-        {
-            slot = SLOT_BODY_ARMOUR;
-        }
-        break;
-    // And another hack or two...
-    case ARM_HAT:
-        if (base_type == MONS_GASTRONOK || genus == MONS_OCTOPODE)
-            slot = SLOT_BODY_ARMOUR;
-        // The worst one
-        else if (base_type == MONS_WIGLAF)
-            slot = SLOT_RING;
-        break;
-    case ARM_CLOAK:
-        if (base_type == MONS_MAURICE
-            || base_type == MONS_NIKOLA
-            || base_type == MONS_CRAZY_YIUF
-            || genus == MONS_SPHINX
-            || genus == MONS_DRACONIAN)
-        {
-            slot = SLOT_BODY_ARMOUR;
-        }
-        break;
-    case ARM_SCARF:
-        if (base_type == MONS_GOJI)
-            slot = SLOT_BODY_ARMOUR;
-        break;
-    case ARM_GLOVES:
-        if (base_type == MONS_NIKOLA)
-            slot = SLOT_OFFHAND;
-        break;
-    case ARM_HELMET:
-        if (base_type == MONS_ROBIN)
-            slot = SLOT_OFFHAND;
-        break;
-    default:
-        slot = get_armour_slot(item);
-
-        if (slot == SLOT_BODY_ARMOUR && genus == MONS_DRACONIAN)
-            return false;
-
-        if (slot != SLOT_HELMET && base_type == MONS_GASTRONOK)
-            return false;
-
-        if (slot != SLOT_HELMET && slot != SLOT_OFFHAND
-            && genus == MONS_OCTOPODE)
-        {
-            return false;
-        }
-    }
+    // Don't let centaurs try to put on boots, etc.
+    if (!force && _armour_slot_is_restricted(genus, slot))
+        return false;
 
     // Haunted armour can equip any aux in their main armour slot.
     if (type == MONS_HAUNTED_ARMOUR)
         slot = SLOT_BODY_ARMOUR;
 
-    // Bardings are only wearable by the appropriate monster.
-    if (slot == SLOT_UNUSED)
-        return false;
-
-    // XXX: Monsters can only equip body armour and shields (as of 0.4).
-    if (!force && slot != SLOT_BODY_ARMOUR && slot != SLOT_OFFHAND)
-        return false;
+    // Hack to let Nikola use two pieces of aux armour at once.
+    if (base_type == MONS_NIKOLA && slot == SLOT_GLOVES)
+        slot = SLOT_OFFHAND;
 
     const mon_inv_type mslot = equip_slot_to_mslot(slot);
     if (mslot == NUM_MONSTER_SLOTS)
@@ -3219,6 +3221,10 @@ int monster::armour_class() const
     if (armour)
         ac += armour_bonus(*armour);
 
+    const item_def *aux = mslot_item(MSLOT_AUX_ARMOUR);
+    if (aux)
+        ac += armour_bonus(*aux);
+
     // armour from jewellery
     const item_def *ring = mslot_item(MSLOT_JEWELLERY);
     if (ring && ring->sub_type == RING_PROTECTION)
@@ -3324,7 +3330,7 @@ int monster::evasion(bool include_temp, const actor* /*act*/) const
     int ev = base_evasion();
 
     // account for armour
-    for (int slot = MSLOT_ARMOUR; slot <= MSLOT_SHIELD; slot++)
+    for (int slot = MSLOT_AUX_ARMOUR; slot <= MSLOT_SHIELD; slot++)
     {
         const item_def* armour = mslot_item(static_cast<mon_inv_type>(slot));
         if (armour)
@@ -3639,11 +3645,15 @@ int monster::res_fire() const
         u += scan_artefacts(ARTP_FIRE);
 
         const int armour    = inv[MSLOT_ARMOUR];
+        const int aux       = inv[MSLOT_AUX_ARMOUR];
         const int shld      = inv[MSLOT_SHIELD];
         const int jewellery = inv[MSLOT_JEWELLERY];
 
         if (armour != NON_ITEM && env.item[armour].base_type == OBJ_ARMOUR)
             u += get_armour_res_fire(env.item[armour], false);
+
+        if (aux != NON_ITEM && env.item[aux].base_type == OBJ_ARMOUR)
+            u += get_armour_res_fire(env.item[aux], false);
 
         if (shld != NON_ITEM && env.item[shld].base_type == OBJ_ARMOUR)
             u += get_armour_res_fire(env.item[shld], false);
@@ -3696,11 +3706,15 @@ int monster::res_cold() const
         u += scan_artefacts(ARTP_COLD);
 
         const int armour    = inv[MSLOT_ARMOUR];
+        const int aux       = inv[MSLOT_AUX_ARMOUR];
         const int shld      = inv[MSLOT_SHIELD];
         const int jewellery = inv[MSLOT_JEWELLERY];
 
         if (armour != NON_ITEM && env.item[armour].base_type == OBJ_ARMOUR)
             u += get_armour_res_cold(env.item[armour], false);
+
+        if (aux != NON_ITEM && env.item[aux].base_type == OBJ_ARMOUR)
+            u += get_armour_res_cold(env.item[aux], false);
 
         if (shld != NON_ITEM && env.item[shld].base_type == OBJ_ARMOUR)
             u += get_armour_res_cold(env.item[shld], false);
@@ -3791,11 +3805,15 @@ int monster::res_poison(bool include_temp) const
         u += scan_artefacts(ARTP_POISON);
 
         const int armour    = inv[MSLOT_ARMOUR];
+        const int aux       = inv[MSLOT_AUX_ARMOUR];
         const int shld      = inv[MSLOT_SHIELD];
         const int jewellery = inv[MSLOT_JEWELLERY];
 
         if (armour != NON_ITEM && env.item[armour].base_type == OBJ_ARMOUR)
             u += get_armour_res_poison(env.item[armour], false);
+
+        if (aux != NON_ITEM && env.item[aux].base_type == OBJ_ARMOUR)
+            u += get_armour_res_poison(env.item[aux], false);
 
         if (shld != NON_ITEM && env.item[shld].base_type == OBJ_ARMOUR)
             u += get_armour_res_poison(env.item[shld], false);
@@ -3885,11 +3903,15 @@ int monster::res_negative_energy(bool intrinsic_only) const
         u += scan_artefacts(ARTP_NEGATIVE_ENERGY);
 
         const int armour    = inv[MSLOT_ARMOUR];
+        const int aux       = inv[MSLOT_AUX_ARMOUR];
         const int shld      = inv[MSLOT_SHIELD];
         const int jewellery = inv[MSLOT_JEWELLERY];
 
         if (armour != NON_ITEM && env.item[armour].base_type == OBJ_ARMOUR)
             u += get_armour_life_protection(env.item[armour], false);
+
+        if (aux != NON_ITEM && env.item[aux].base_type == OBJ_ARMOUR)
+            u += get_armour_life_protection(env.item[aux], false);
 
         if (shld != NON_ITEM && env.item[shld].base_type == OBJ_ARMOUR)
             u += get_armour_life_protection(env.item[shld], false);
@@ -3996,11 +4018,15 @@ int monster::willpower() const
 
     // Ego equipment resistance.
     const int armour    = inv[MSLOT_ARMOUR];
+    const int aux       = inv[MSLOT_AUX_ARMOUR];
     const int shld      = inv[MSLOT_SHIELD];
     const int jewellery = inv[MSLOT_JEWELLERY];
 
     if (armour != NON_ITEM && env.item[armour].base_type == OBJ_ARMOUR)
         u += get_armour_willpower(env.item[armour], false);
+
+    if (aux != NON_ITEM && env.item[aux].base_type == OBJ_ARMOUR)
+        u += get_armour_willpower(env.item[aux], false);
 
     if (shld != NON_ITEM && env.item[shld].base_type == OBJ_ARMOUR)
         u += get_armour_willpower(env.item[shld], false);
@@ -4067,11 +4093,8 @@ bool monster::airborne() const
     // ghost_demon is created, so check for a nullptr ghost. -cao
     return monster_inherently_flies(*this)
            || scan_artefacts(ARTP_FLY) > 0
-           || mslot_item(MSLOT_ARMOUR)
-              && mslot_item(MSLOT_ARMOUR)->base_type == OBJ_ARMOUR
-              && mslot_item(MSLOT_ARMOUR)->brand == SPARM_FLYING
-           || mslot_item(MSLOT_JEWELLERY)
-              && mslot_item(MSLOT_JEWELLERY)->is_type(OBJ_JEWELLERY, RING_FLIGHT)
+           || wearing_ego(OBJ_ARMOUR, SPARM_FLYING)
+           || wearing(OBJ_JEWELLERY, RING_FLIGHT)
            || has_ench(ENCH_FLIGHT);
 }
 
@@ -6269,6 +6292,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             case MSLOT_ALT_WEAPON:
             case MSLOT_MISSILE:
             case MSLOT_ARMOUR:
+            case MSLOT_AUX_ARMOUR:
             case MSLOT_SHIELD:
                 return true;
             default:

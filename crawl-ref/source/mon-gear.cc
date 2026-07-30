@@ -1551,36 +1551,6 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
     {
         _give_weapon(mon, level, true);
     }
-
-    if (mon->type == MONS_ERICA && i.is_type(OBJ_WEAPONS, WPN_SCIMITAR))
-        make_item_for_monster(mon, OBJ_JEWELLERY, NUM_RINGS, 0, 1);
-
-    if (mon->type == MONS_FANNAR && i.is_type(OBJ_WEAPONS, WPN_QUARTERSTAFF))
-        make_item_for_monster(mon, OBJ_JEWELLERY, RING_PROTECTION_FROM_COLD, 0, 1);
-
-    if (mon->type == MONS_WIGLAF)
-    {
-        // Always good, and sometimes especially good
-        item_def* hat = make_item_for_monster(mon, OBJ_ARMOUR, ARM_HAT, ISPEC_RANDART);
-        hat->plus = random_range(2, 4);
-
-        hat->props[ITEM_TILE_NAME_KEY] = "THELM_HAT_WIGLAF";
-        hat->props[WORN_TILE_NAME_KEY] = "hat_wiglaf";
-        bind_item_tile(*hat);
-    }
-
-    if (mon->type == MONS_JOSEPHINA)
-        make_item_for_monster(mon, OBJ_JEWELLERY, RING_PROTECTION_FROM_COLD, ISPEC_RANDART, true);
-
-    if (mon->type == MONS_CASSANDRA && coinflip())
-    {
-        item_def* amu = make_item_for_monster(mon, OBJ_JEWELLERY, get_random_amulet_type(), 0, 1);
-        if (amu && one_chance_in(4))
-        {
-            amu->props[FIXED_PROPS_KEY].get_table()["Bane"] = 1;
-            make_item_randart(*amu);
-        }
-    }
 }
 
 // Hands out ammunition fitting the monster's launcher (if any), or else any
@@ -1933,12 +1903,6 @@ static void _give_shield(monster* mon, int level)
                                        level * 2 + 1, 1);
         break;
 
-    case MONS_ROBIN:
-        // The Nikola Hack
-        make_item_for_monster(mon, OBJ_ARMOUR, ARM_HELMET,
-                              level * 2 + 1, 1);
-        break;
-
     case MONS_DEMONSPAWN_CORRUPTER:
     case MONS_DEMONSPAWN_SOUL_SCHOLAR:
         if (one_chance_in(3))
@@ -2178,46 +2142,18 @@ int make_mons_armour(monster_type type, int level)
                                     : ARM_FIRE_DRAGON_ARMOUR;
         break;
 
-    // Centaurs sometimes wear barding.
-    case MONS_CENTAUR:
-    case MONS_CENTAUR_WARRIOR:
-    case MONS_YAKTAUR:
-    case MONS_YAKTAUR_CAPTAIN:
-        if (one_chance_in(type == MONS_CENTAUR              ? 1000 :
-                          type == MONS_CENTAUR_WARRIOR      ?  500 :
-                          type == MONS_YAKTAUR              ?  300
-                       /* type == MONS_YAKTAUR_CAPTAIN ? */ :  200))
-        {
-            item.base_type = OBJ_ARMOUR;
-            item.sub_type  = ARM_BARDING;
-        }
-        else
-            return NON_ITEM; // ???
-        break;
-
     case MONS_NAGA:
     case MONS_NAGA_MAGE:
-    case MONS_NAGA_RITUALIST:
     case MONS_NAGA_SHARPSHOOTER:
     case MONS_NAGA_WARRIOR:
+        if (!one_chance_in(3))
+            break;
+
+    // Deliberate fall-through
+    case MONS_NAGA_RITUALIST:
     case MONS_NAGARAJA:
-        if (one_chance_in(type == MONS_NAGA         ?  800 :
-                          type == MONS_NAGA_WARRIOR ?  300 :
-                          type == MONS_NAGARAJA     ?  100
-                                                    :  200))
-        {
-            item.base_type = OBJ_ARMOUR;
-            item.sub_type  = ARM_BARDING;
-        }
-        else if (type == MONS_NAGARAJA
-                 || type == MONS_NAGA_RITUALIST
-                 || one_chance_in(3))
-        {
-            item.base_type = OBJ_ARMOUR;
-            item.sub_type  = ARM_ROBE;
-        }
-        else
-            return NON_ITEM; // ???
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_ROBE;
         break;
 
     case MONS_VASHNIA:
@@ -2434,6 +2370,79 @@ int make_mons_armour(monster_type type, int level)
     return thing_created;
 }
 
+static void _give_extra_equipment(monster* mon, int level)
+{
+    switch (mon->type)
+    {
+    case MONS_CENTAUR:
+    case MONS_CENTAUR_WARRIOR:
+    case MONS_YAKTAUR:
+    case MONS_YAKTAUR_CAPTAIN:
+    case MONS_NAGA:
+    case MONS_NAGA_MAGE:
+    case MONS_NAGA_RITUALIST:
+    case MONS_NAGA_SHARPSHOOTER:
+    case MONS_NAGA_WARRIOR:
+    case MONS_NAGARAJA:
+        if (one_chance_in(mon->type == MONS_CENTAUR              ? 1000 :
+                          mon->type == MONS_CENTAUR_WARRIOR      ?  500 :
+                          mon->type == MONS_YAKTAUR              ?  300 :
+                          mon->type == MONS_YAKTAUR_CAPTAIN      ?  200 :
+                          mon->type == MONS_NAGA                 ?  800 :
+                          mon->type == MONS_NAGA_WARRIOR         ?  300 :
+                          mon->type == MONS_NAGARAJA             ?  100
+                                                                 :  200))
+        {
+            make_item_for_monster(mon, OBJ_ARMOUR, ARM_BARDING, level);
+        }
+        break;
+
+    case MONS_ERICA:
+        make_item_for_monster(mon, OBJ_JEWELLERY, NUM_RINGS, 0, 1);
+        break;
+
+    case MONS_FANNAR:
+        make_item_for_monster(mon, OBJ_JEWELLERY, RING_PROTECTION_FROM_COLD, 0, 1);
+        break;
+
+    case MONS_WIGLAF:
+    {
+        // Always good, and sometimes especially good
+        item_def* hat = make_item_for_monster(mon, OBJ_ARMOUR, ARM_HAT, ISPEC_RANDART);
+        hat->plus = random_range(2, 4);
+
+        hat->props[ITEM_TILE_NAME_KEY] = "THELM_HAT_WIGLAF";
+        hat->props[WORN_TILE_NAME_KEY] = "hat_wiglaf";
+        bind_item_tile(*hat);
+    }
+    break;
+
+    case MONS_JOSEPHINA:
+        make_item_for_monster(mon, OBJ_JEWELLERY, RING_PROTECTION_FROM_COLD, ISPEC_RANDART, true);
+        break;
+
+    case MONS_CASSANDRA:
+    {
+        if (coinflip())
+        {
+            item_def* amu = make_item_for_monster(mon, OBJ_JEWELLERY, get_random_amulet_type(), 0, 1);
+            if (amu && one_chance_in(4))
+            {
+                amu->props[FIXED_PROPS_KEY].get_table()["Bane"] = 1;
+                make_item_randart(*amu);
+            }
+        }
+    }
+
+    case MONS_ROBIN:
+        make_item_for_monster(mon, OBJ_ARMOUR, ARM_HELMET, level * 2 + 1, 1);
+        break;
+
+    default:
+        break;
+    }
+}
+
 static void _give_armour(monster* mon, int level)
 {
     ASSERT(mon); // TODO: make monster &mon
@@ -2458,11 +2467,6 @@ static void _give_gold(monster* mon, int level)
 void give_weapon(monster *mons, int level_number)
 {
     _give_weapon(mons, level_number);
-}
-
-void give_armour(monster *mons, int level_number)
-{
-    _give_armour(mons, 1 + level_number/2);
 }
 
 void give_shield(monster *mons)
@@ -2501,6 +2505,7 @@ void give_item(monster *mons, int level_number, bool mons_summoned)
     _give_ammo(mons, level_number, mons_summoned);
     _give_armour(mons, 1 + level_number / 2);
     _give_shield(mons, 1 + level_number / 2);
+    _give_extra_equipment(mons, 1 + level_number / 2);
     _give_book(mons);
 
     if (mons->type == MONS_ORC_APOSTLE)

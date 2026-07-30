@@ -464,6 +464,11 @@ int monster::wearing(object_class_type obj_type, int sub_type,
         item = mslot_item(MSLOT_ARMOUR);
         if (item && item->is_type(OBJ_ARMOUR, sub_type))
             ret++;
+
+        item = mslot_item(MSLOT_AUX_ARMOUR);
+        if (item && item->is_type(OBJ_ARMOUR, sub_type))
+            ret++;
+
         break;
 
     case OBJ_JEWELLERY:
@@ -523,6 +528,13 @@ int monster::wearing_ego(object_class_type obj_type, int special) const
         {
             ret++;
         }
+
+        item = mslot_item(MSLOT_AUX_ARMOUR);
+        if (item && item->base_type == OBJ_ARMOUR
+            && get_armour_ego_type(*item) == special)
+        {
+            ret++;
+        }
         break;
 
     case OBJ_JEWELLERY:
@@ -551,6 +563,7 @@ int monster::scan_artefacts(artefact_prop_type ra_prop,
         const int weap      = inv[MSLOT_WEAPON];
         const int second    = inv[MSLOT_ALT_WEAPON]; // Two-headed ogres, etc.
         const int armour    = inv[MSLOT_ARMOUR];
+        const int aux       = inv[MSLOT_AUX_ARMOUR];
         const int shld      = inv[MSLOT_SHIELD];
         const int jewellery = inv[MSLOT_JEWELLERY];
 
@@ -566,6 +579,12 @@ int monster::scan_artefacts(artefact_prop_type ra_prop,
             ret += artefact_property(env.item[second], ra_prop);
         }
 
+        if (aux != NON_ITEM && env.item[aux].base_type == OBJ_ARMOUR
+            && is_artefact(env.item[aux]))
+        {
+            ret += artefact_property(env.item[aux], ra_prop);
+        }
+
         if (armour != NON_ITEM && env.item[armour].base_type == OBJ_ARMOUR
             && is_artefact(env.item[armour]))
         {
@@ -578,12 +597,11 @@ int monster::scan_artefacts(artefact_prop_type ra_prop,
             ret += artefact_property(env.item[shld], ra_prop);
         }
 
-        // XXX: Because monster armour slots are awkward, Wiglaf wears his hat
-        //      in the jewelry slot. Since it is always an artefact, this should
-        //      mostly work out fine, but I'd be happy for a better solution in
-        //      future.
-        if (jewellery != NON_ITEM && is_artefact(env.item[jewellery]))
+        if (jewellery != NON_ITEM && env.item[jewellery].base_type == OBJ_JEWELLERY
+            && is_artefact(env.item[jewellery]))
+        {
             ret += artefact_property(env.item[jewellery], ra_prop);
+        }
     }
 
     return ret;
@@ -4001,6 +4019,11 @@ mon_inv_type equip_slot_to_mslot(equipment_slot eq)
     case SLOT_OFFHAND:      return MSLOT_SHIELD;
     case SLOT_RING:
     case SLOT_AMULET:       return MSLOT_JEWELLERY;
+    case SLOT_CLOAK:
+    case SLOT_BOOTS:
+    case SLOT_BARDING:
+    case SLOT_GLOVES:
+    case SLOT_HELMET:       return MSLOT_AUX_ARMOUR;
     default: return NUM_MONSTER_SLOTS;
     }
 }
