@@ -362,6 +362,7 @@ enum tag_minor_version
     TAG_MINOR_LURKER_MONSTERS,     // Add support for lurker monsters
     TAG_MINOR_FIX_UNCANCELS,       // Fix monsters sometimes getting their turn before the effect of the players action
     TAG_MINOR_MIMIC_PROP,          // Move flag for mimics from env.level_map_mask to env.pgrid
+    TAG_MINOR_SKILL_CHANGE_RANGE,  // Skill change notes list an X-Y range.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

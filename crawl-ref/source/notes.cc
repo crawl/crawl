@@ -531,6 +531,20 @@ void Note::load(reader& inf)
 #if TAG_MAJOR_VERSION == 34
     if (inf.getMinorVersion() >= TAG_MINOR_MORGUE_SCREENSHOTS)
         screen = unmarshallString(inf);
+    if (inf.getMinorVersion() < TAG_MINOR_SKILL_CHANGE_RANGE
+        && (NOTE_GAIN_SKILL == type || NOTE_LOSE_SKILL == type))
+    {
+        name = skill_name(static_cast<skill_type>(first));
+        first = 0;
+        for (auto np = note_list.rbegin(); np < note_list.rend(); ++np)
+        {
+            if (type == np->type && name == np->name)
+            {
+                first = np->second;
+                break;
+            }
+        }
+    }
 #else
     screen = unmarshallString(inf);
 #endif
