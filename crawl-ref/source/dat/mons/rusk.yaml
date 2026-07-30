@@ -17,5 +17,4 @@ shout: bellow
 intelligence: animal
 size: large
 shape: quadruped
-tile: death_yak
 corpse_tile: death_yak
