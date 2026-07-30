@@ -3228,6 +3228,8 @@ int monster::armour_class() const
         ac += jewellery_plus;
     }
 
+    ac += wearing_ego(OBJ_ARMOUR, SPARM_PROTECTION) * 3;
+
     // armour from artefacts
     ac += scan_artefacts(ARTP_AC);
 
