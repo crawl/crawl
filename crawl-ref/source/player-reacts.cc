@@ -624,7 +624,6 @@ void player_reacts_to_instant_action()
     mons_reset_just_seen();
     you.update_beholders();
     you.update_fearmongers();
-    check_trapped();
     trigger_exploration_conducts();
 }
 
