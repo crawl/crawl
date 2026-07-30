@@ -1170,7 +1170,7 @@ bool item_is_cursable(const item_def &item)
 /**
  * Is the item stationary (unmovable)?
  *
- * Currently only carrion and nets with a trapped victim are stationary.
+ * Currently only carrion is stationary.
  * @param item The item.
  * @return  True iff the item is stationary.
 */
