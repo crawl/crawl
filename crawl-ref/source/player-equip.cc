@@ -444,6 +444,14 @@ bool slot_is_melded(equipment_slot slot)
                 || you.fishtail && slot == SLOT_BOOTS;
 }
 
+int player_equip_set::unmelded_slot_count(equipment_slot slot) const
+{
+    if (slot_is_melded(slot))
+        return 0;
+
+    return get_player_equip_slot_count(slot, nullptr, false);
+}
+
 /**
  * Returns whether the player is capable of wearing a given item.
  *
@@ -646,7 +654,10 @@ void player_equip_set::update()
     }
 
     for (int i = SLOT_UNUSED; i < NUM_EQUIP_SLOTS; ++i)
-        num_slots[i] = get_player_equip_slot_count(static_cast<equipment_slot>(i));
+    {
+        num_slots[i] = get_player_equip_slot_count(static_cast<equipment_slot>(i),
+                                                   nullptr, true);
+    }
 }
 
 /**
@@ -697,13 +708,20 @@ equipment_slot player_equip_set::find_slot_to_equip_item(const item_def& item,
     vector<item_def*> to_replace;
     player_equip_set equipment = *this;
     equipment_slot ret = SLOT_UNUSED;
+
+    // Slots this item has already been given, which are no longer free for the
+    // rest of it.
+    FixedVector<int, NUM_EQUIP_SLOTS> claimed;
+    claimed.init(0);
+
     for (size_t i = 0; i < slots.size(); ++i)
     {
-        equipment_slot slot = find_free_compatible_slot(slots[i]);
+        equipment_slot slot = equipment.find_free_compatible_slot(slots[i],
+                                                                  &claimed);
         if (slot == SLOT_UNUSED)
         {
-            find_removable_items_for_slot(slots[i], to_replace, ignore_curses,
-                                          false);
+            equipment.find_removable_items_for_slot(slots[i], to_replace,
+                                                    ignore_curses, false);
         }
 
         // If a slot is unavailable and there is nothing the player could
@@ -721,7 +739,8 @@ equipment_slot player_equip_set::find_slot_to_equip_item(const item_def& item,
         // Track that this slot was used (to handle the case of multi-slot
         // items competing for the same flex slot, such as poltergeists wearing
         // the Fungal Fisticloak).
-        equipment.num_slots[slot] -= 1;
+        if (slot != SLOT_UNUSED)
+            ++claimed[slot];
 
         // If we had to remove an item to free this slot, remove it from the
         // equipment now so that we don't remove the same item again if we need
@@ -738,26 +757,36 @@ equipment_slot player_equip_set::find_slot_to_equip_item(const item_def& item,
     return ret;
 }
 
-equipment_slot player_equip_set::find_free_compatible_slot(equipment_slot base_slot) const
+equipment_slot player_equip_set::find_free_compatible_slot(equipment_slot base_slot,
+                       const FixedVector<int, NUM_EQUIP_SLOTS>* claimed) const
 {
     const vector<equipment_slot>& slots = get_alternate_slots(base_slot);
     for (equipment_slot slot : slots)
     {
-        // Skip slots the player doesn't have at all.
-        if (num_slots[slot] == 0)
+        const int usable = unmelded_slot_count(slot);
+        if (usable == 0)
             continue;
 
         // Otherwise, iterate all slots of this type and see if one is free.
-        int count = 0;
+        int in_use = claimed ? (*claimed)[slot] : 0;
+        int occupied = in_use;
         for (const player_equip_entry& entry : items)
         {
-            if (entry.slot == slot)
-                ++count;
+            if (entry.slot != slot)
+                continue;
+
+            ++occupied;
+            if (!entry.melded)
+                ++in_use;
         }
 
-        // The player has more slots than they're currently using, so this one
-        // should be fine.
-        if (count < num_slots[slot])
+        // To have a free slot, we need both:
+        // - Not all unmelded slots are full of unmelded items
+        // - Not all slots are full of items
+        // The latter covers the case where a melded item has an overflow slot
+        // which blocks an unmelded slot.
+        const int total = get_player_equip_slot_count(slot, nullptr, true);
+        if (in_use < usable && occupied < total)
             return slot;
     }
     return SLOT_UNUSED;
@@ -769,6 +798,7 @@ void player_equip_set::find_removable_items_for_slot(equipment_slot base_slot,
                                                  bool quiet) const
 {
     item_def* cursed_item = nullptr;
+    item_def* melded_item = nullptr;
     bool found_item = false;
     const vector<equipment_slot>& slots = get_alternate_slots(base_slot);
     for (equipment_slot slot : slots)
@@ -779,9 +809,11 @@ void player_equip_set::find_removable_items_for_slot(equipment_slot base_slot,
             {
                 item_def& item = entry.get_item();
 
-                // Note any cursed item we find, in case *all* the items we find
-                // are cursed and we want to report this.
-                if (!ignore_curses && item.cursed())
+                // Note any cursed/melded item we find, in case *all* the items
+                // we find are cursed/melded and we want to report this.
+                if (entry.melded)
+                    melded_item = &item;
+                else if (!ignore_curses && item.cursed())
                     cursed_item = &item;
                 // Otherwise, add this as a candidate to replace.
                 else
@@ -810,8 +842,19 @@ void player_equip_set::find_removable_items_for_slot(equipment_slot base_slot,
         }
     }
 
-    if (!quiet && !found_item && cursed_item)
-        mprf(MSGCH_PROMPT, "%s is stuck to your body!", cursed_item->name(DESC_YOUR).c_str());
+    if (!quiet && !found_item)
+    {
+        if (cursed_item)
+        {
+            mprf(MSGCH_PROMPT, "%s is stuck to your body!",
+                 cursed_item->name(DESC_YOUR).c_str());
+        }
+        else if (melded_item)
+        {
+            mprf(MSGCH_PROMPT, "%s is melded into your body!",
+                 melded_item->name(DESC_YOUR).c_str());
+        }
+    }
 }
 
 /**
@@ -826,6 +869,11 @@ void player_equip_set::find_removable_items_for_slot(equipment_slot base_slot,
  *                          (generally because this is called by someone looking
  *                          to meld rather than remove them).
  * @param already_removing  The set of items being removed.
+ * @param melded            Whether we are accounting for melded slots and the
+ *                          melded gear in them, rather than for the slots we
+ *                          can actually use. Losing a slot granted by a melded
+ *                          item (or one our form melds) costs us a melded slot,
+ *                          and only melded gear can vacate one of those.
  *
  * @return How many occupants of the slot must still be removed. If this is
  *         non-zero and to_replace is still empty, that means there are *no*
@@ -835,17 +883,23 @@ void player_equip_set::find_removable_items_for_slot(equipment_slot base_slot,
 int player_equip_set::needs_chain_removal(equipment_slot slot,
                                           vector<item_def*>& to_replace,
                                           bool cursed_okay,
-                                          const vector<item_def*>& already_removing)
+                                          const vector<item_def*>& already_removing,
+                                          bool melded)
 {
     unwind_var<player_equip_set> unwind_eq(you.equipment);
     for (item_def* removing : already_removing)
         remove(*removing);
 
-    const int new_num_slots = get_player_equip_slot_count(slot);
+    const int usable = unmelded_slot_count(slot);
+    const int new_num_slots = melded
+                              ? get_player_equip_slot_count(slot, nullptr, true)
+                                - usable
+                              : usable;
+
     int count = 0;
     for (const player_equip_entry& entry : items)
     {
-        if (entry.slot != slot)
+        if (entry.slot != slot || entry.melded != melded)
             continue;
 
         ++count;
@@ -889,6 +943,22 @@ static bool _forced_removal_goodness(player_equip_entry* entry1, player_equip_en
     return false;
 }
 
+static void _add_forced_removals(vector<player_equip_entry*>& candidates,
+                                 int num_to_remove,
+                                 vector<item_def*>& to_remove)
+{
+    if (num_to_remove <= 0)
+        return;
+
+    // We have more items than we need to remove, so try to pick the
+    // 'least bad' in a very coarse way.
+    if (num_to_remove < (int)candidates.size())
+        sort(candidates.begin(), candidates.end(), _forced_removal_goodness);
+
+    for (int i = 0; i < num_to_remove; ++i)
+        to_remove.push_back(&candidates[i]->get_item());
+}
+
 /**
  * Returns a list of all items that might need to be forced off the player due
  * to a decrease their number of equipment slots (or hat/helmet eligability) for
@@ -903,10 +973,6 @@ static bool _forced_removal_goodness(player_equip_entry* entry1, player_equip_en
  *                           be able to fit, rather than only looking at slots
  *                           whose capacity has changed since the last call to
  *                           ::update()
- * @param is_save_cleanup    Whether this is being done for save cleanup
- *                           purposes (ie: to scan and remove 'impossible'
- *                           items) and thus should allow for items to remain in
- *                           slots granted by melded items.
  * @param num_direct[out]    If non-null, set to the number of items removed
  *                           directly (ie: the leading entries of the returned
  *                           vector); the rest are due to lost slots.
@@ -915,7 +981,6 @@ static bool _forced_removal_goodness(player_equip_entry* entry1, player_equip_en
  *         player's current state to become valid again.
  */
 vector<item_def*> player_equip_set::get_forced_removal_list(bool force_full_check,
-                                                            bool is_save_cleanup,
                                                             size_t* num_direct)
 {
     vector<item_def*> to_remove;
@@ -925,38 +990,35 @@ vector<item_def*> player_equip_set::get_forced_removal_list(bool force_full_chec
     FixedVector<int, NUM_EQUIP_SLOTS> new_num_slots;
     for (int i = SLOT_UNUSED; i < NUM_EQUIP_SLOTS; ++i)
     {
-        new_num_slots[i] = get_player_equip_slot_count(static_cast<equipment_slot>(i),
-                                                       nullptr, is_save_cleanup);
+        new_num_slots[i] =
+            get_player_equip_slot_count(static_cast<equipment_slot>(i), nullptr,
+                                        true);
     }
 
     for (int i = SLOT_UNUSED; i < NUM_EQUIP_SLOTS; ++i)
     {
-        if (force_full_check || new_num_slots[i] < num_slots[i])
-        {
-            vector<player_equip_entry*> maybe_remove;
-            for (player_equip_entry& entry : items)
-            {
-                if (entry.slot == i)
-                    maybe_remove.push_back(&entry);
-            }
+        if (!force_full_check && new_num_slots[i] >= num_slots[i])
+            continue;
 
-            // Simple case: we don't have to remove anything.
-            if ((int)maybe_remove.size() <= new_num_slots[i])
-                continue;
-            // Another simple case: we have to remove everything.
-            if (new_num_slots[i] == 0)
-                for (player_equip_entry* entry : maybe_remove)
-                    to_remove.push_back(&entry->get_item());
-            // We have more items than we need to remove, so try to pick the
-            // 'least bad' in a very coarse way.
-            else
-            {
-                const int num_to_remove = maybe_remove.size() - new_num_slots[i];
-                sort(maybe_remove.begin(), maybe_remove.end(), _forced_removal_goodness);
-                for (int j = 0; j < num_to_remove; ++j)
-                    to_remove.push_back(&maybe_remove[j]->get_item());
-            }
+        const equipment_slot slot = static_cast<equipment_slot>(i);
+
+        vector<player_equip_entry*> unmelded;
+        vector<player_equip_entry*> melded;
+        for (player_equip_entry& entry : items)
+        {
+            if (entry.slot == slot)
+                (entry.melded ? melded : unmelded).push_back(&entry);
         }
+
+        // We must drop unmelded items that don't fit in unmelded slots, and
+        // any further melded items to make everything fit in all the slots.
+        const int drop_unmelded = max(0, (int)unmelded.size()
+                                         - unmelded_slot_count(slot));
+        const int drop_melded = max(0, (int)unmelded.size() - drop_unmelded
+                                       + (int)melded.size() - new_num_slots[i]);
+
+        _add_forced_removals(unmelded, drop_unmelded, to_remove);
+        _add_forced_removals(melded, drop_melded, to_remove);
     }
 
     // Next, see if any items have become unwearable for non-slot reasons
@@ -1175,7 +1237,7 @@ void player_equip_set::handle_melding(vector<item_def*>& to_meld, bool skip_effe
     // those too (to keep from constantly popping them off during certain
     // transformations).
     int num_melded = to_meld.size();
-    handle_chain_removal(to_meld, false);
+    handle_chain_removal(to_meld, false, true);
     if ((int)to_meld.size() > num_melded)
     {
         for (size_t i = num_melded; i < to_meld.size(); ++i)
@@ -1475,7 +1537,13 @@ bool player_equip_set::innate_slot_is_covered(equipment_slot slot) const
     if (innate_slots == 0 || slot_is_melded(slot))
         return false;
 
-    return (int)get_slot_entries(slot).size() == num_slots[slot];
+    // Check whether we have an unmelded slot free.
+    int filled = 0;
+    for (const player_equip_entry& entry : items)
+        if (entry.slot == slot && !entry.melded)
+            ++filled;
+
+    return filled >= unmelded_slot_count(slot);
 }
 
 /**

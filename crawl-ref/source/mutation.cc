@@ -1396,7 +1396,7 @@ static void _maybe_remove_equipment(mutation_type mut)
 {
     size_t num_direct;
     vector<item_def*> to_remove =
-        you.equipment.get_forced_removal_list(false, false, &num_direct);
+        you.equipment.get_forced_removal_list(false, &num_direct);
 
     for (size_t i = 0; i < to_remove.size(); ++i)
     {

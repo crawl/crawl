@@ -1425,13 +1425,19 @@ bool try_equip_item(item_def& item)
     {
         vector<equipment_slot> slots = get_all_item_slots(item);
         vector<item_def*> candidates;
+
+        // Track slots which we have claimed and can't move things to.
+        FixedVector<int, NUM_EQUIP_SLOTS> claimed;
+        claimed.init(0);
+
         for (equipment_slot wanted_slot : slots)
         {
             // Has freeing an earlier slot also freed this slot?
-            equipment_slot free_slot = equipment.find_free_compatible_slot(wanted_slot);
+            equipment_slot free_slot =
+                equipment.find_free_compatible_slot(wanted_slot, &claimed);
             if (free_slot != SLOT_UNUSED)
             {
-                equipment.num_slots[free_slot] -= 1;
+                ++claimed[free_slot];
                 continue;
             }
 
@@ -1453,7 +1459,7 @@ bool try_equip_item(item_def& item)
 
             equipment.remove(*to_remove.back());
 
-            equipment.num_slots[used_slot] -= 1;
+            ++claimed[used_slot];
             candidates.clear();
 
             // If find_slot_to_equip_item didn't give us a more specific slot,
@@ -1508,7 +1514,8 @@ bool try_equip_item(item_def& item)
  * @return True if removal may proceed. False if removal is impossible (or the
  *         player chose to cancel).
  */
-bool handle_chain_removal(vector<item_def*>& to_remove, bool interactive)
+bool handle_chain_removal(vector<item_def*>& to_remove, bool interactive,
+                          bool for_melding)
 {
     if (to_remove.empty())
         return true;
@@ -1517,9 +1524,15 @@ bool handle_chain_removal(vector<item_def*>& to_remove, bool interactive)
     {
         for (equipment_slot slot : item_granted_slots(*to_remove[n]))
         {
+            // We need to remove melded gear if this a) we are removing a
+            // melded item or b) the whole slot is melded.
+            const bool melded = !for_melding
+                                && (you.equipment.is_melded(*to_remove[n])
+                                    || slot_is_melded(slot));
+
             vector<item_def*> chain_remove;
             int chain_remove_num = you.equipment.needs_chain_removal(
-                slot, chain_remove, !interactive, to_remove);
+                slot, chain_remove, !interactive, to_remove, melded);
             if (chain_remove_num <= 0)
                 continue;
 

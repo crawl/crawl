@@ -105,18 +105,21 @@ struct player_equip_set
     equipment_slot find_slot_to_equip_item(const item_def& item,
                                            bool& requires_replace,
                                            bool ignore_curses = false) const;
-    equipment_slot find_free_compatible_slot(equipment_slot base_slot) const;
+    equipment_slot find_free_compatible_slot(equipment_slot base_slot,
+                       const FixedVector<int, NUM_EQUIP_SLOTS>* claimed
+                           = nullptr) const;
     void find_removable_items_for_slot(equipment_slot base_slot,
                                        vector<item_def*>& to_replace,
                                        bool ignore_curses = false,
                                        bool quiet = true) const;
+    int unmelded_slot_count(equipment_slot slot) const;
 
     int needs_chain_removal(equipment_slot slot, vector<item_def*>& to_replace,
                             bool cursed_okay = false,
-                            const vector<item_def*>& already_removing = {});
+                            const vector<item_def*>& already_removing = {},
+                            bool melded = false);
 
     vector<item_def*> get_forced_removal_list(bool force_full_check = false,
-                                              bool is_save_cleanup = false,
                                               size_t* num_direct = nullptr);
 
     void shift_twohander_to_slot(equipment_slot new_slot);

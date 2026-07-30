@@ -283,13 +283,19 @@ static void _list_equipment(equipment_slot first_slot, equipment_slot last_slot)
         if (num_slots == 0)
             continue;
 
-        if (slot_is_melded(i))
+        const int usable = you.equipment.unmelded_slot_count(i);
+        if (usable == 0)
         {
             entries.emplace_back(make_stringf("<darkgrey>[%s melded]</darkgrey>", equip_slot_name(i, true)));
             continue;
         }
 
         vector<player_equip_entry> items = you.equipment.get_slot_entries(i);
+
+        int free_usable = usable;
+        for (const player_equip_entry& entry : items)
+            if (!entry.melded)
+                --free_usable;
 
         for (int num = 0; num < num_slots; ++num)
         {
@@ -305,7 +311,13 @@ static void _list_equipment(equipment_slot first_slot, equipment_slot last_slot)
 
             if (num >= (int)items.size())
             {
-                estr << "<lightgrey>(nothing)</lightgrey>";
+                if (free_usable <= 0)
+                    estr << "<darkgrey>(unavailable)</darkgrey>";
+                else
+                {
+                    estr << "<lightgrey>(nothing)</lightgrey>";
+                    --free_usable;
+                }
                 entries.emplace_back(estr.str());
                 continue;
             }

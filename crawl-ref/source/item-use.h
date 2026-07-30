@@ -57,7 +57,8 @@ bool has_drunken_brawl_targets();
 string item_equip_verb(const item_def& item);
 string item_unequip_verb(const item_def& item);
 
-bool handle_chain_removal(vector<item_def*>& to_remove, bool interactive);
+bool handle_chain_removal(vector<item_def*>& to_remove, bool interactive,
+                          bool for_melding = false);
 bool try_equip_item(item_def& item);
 bool try_unequip_item(item_def& item);
 bool can_unequip_item(item_def& item, bool silent = false);
