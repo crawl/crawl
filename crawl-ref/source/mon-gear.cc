@@ -2384,13 +2384,17 @@ static void _give_extra_equipment(monster* mon, int level)
     case MONS_NAGA_SHARPSHOOTER:
     case MONS_NAGA_WARRIOR:
     case MONS_NAGARAJA:
+    case MONS_SPHINX_MARAUDER:
+    case MONS_GUARDIAN_SPHINX:
         if (one_chance_in(mon->type == MONS_CENTAUR              ? 1000 :
-                          mon->type == MONS_CENTAUR_WARRIOR      ?  500 :
-                          mon->type == MONS_YAKTAUR              ?  300 :
-                          mon->type == MONS_YAKTAUR_CAPTAIN      ?  200 :
+                          mon->type == MONS_CENTAUR_WARRIOR      ?  450 :
+                          mon->type == MONS_YAKTAUR              ?  250 :
+                          mon->type == MONS_YAKTAUR_CAPTAIN      ?  100 :
                           mon->type == MONS_NAGA                 ?  800 :
-                          mon->type == MONS_NAGA_WARRIOR         ?  300 :
-                          mon->type == MONS_NAGARAJA             ?  100
+                          mon->type == MONS_NAGA_WARRIOR         ?  200 :
+                          mon->type == MONS_NAGARAJA             ?  100 :
+                          mon->type == MONS_SPHINX_MARAUDER      ?   80 :
+                          mon->type == MONS_GUARDIAN_SPHINX      ?   50
                                                                  :  200))
         {
             make_item_for_monster(mon, OBJ_ARMOUR, ARM_BARDING, level);

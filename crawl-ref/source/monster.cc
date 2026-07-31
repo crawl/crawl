@@ -1739,9 +1739,11 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
     if (type == MONS_HAUNTED_ARMOUR)
         slot = SLOT_BODY_ARMOUR;
 
-    // Hack to let Nikola use two pieces of aux armour at once.
+    // Hack to let Nikola and sphinxes use two pieces of aux armour at once.
     if (base_type == MONS_NIKOLA && slot == SLOT_GLOVES)
         slot = SLOT_OFFHAND;
+    else if (genus == MONS_SPHINX && slot == SLOT_CLOAK)
+        slot = SLOT_BODY_ARMOUR;
 
     const mon_inv_type mslot = equip_slot_to_mslot(slot);
     if (mslot == NUM_MONSTER_SLOTS)
