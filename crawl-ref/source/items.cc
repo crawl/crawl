@@ -1020,14 +1020,7 @@ static bool _id_floor_item(item_def &item)
     {
         if (item.is_identified())
             return false;
-
-        // autopickup hack for previously-unknown items
-        if (item_needs_autopickup(item))
-            item.props[NEEDS_AUTOPICKUP_KEY] = true;
         identify_item(item);
-        // but skip ones that we discover to be useless
-        if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
-            item.props.erase(NEEDS_AUTOPICKUP_KEY);
         return true;
     }
 
@@ -1722,9 +1715,6 @@ static void _got_item(item_def& item)
     seen_item(item);
     shopping_list.cull_identical_items(item);
     item.flags |= ISFLAG_HANDLED;
-
-    if (item.props.exists(NEEDS_AUTOPICKUP_KEY))
-        item.props.erase(NEEDS_AUTOPICKUP_KEY);
 }
 
 void get_gold(const item_def& item, int quant, bool quiet)
@@ -3230,9 +3220,6 @@ bool item_needs_autopickup(const item_def &item, bool ignore_force)
 
     if (item.flags & ISFLAG_DROPPED)
         return false;
-
-    if (item.props.exists(NEEDS_AUTOPICKUP_KEY))
-        return true;
 
     return _is_option_autopickup(item, ignore_force);
 }
@@ -4955,17 +4942,7 @@ static int _get_item_base(const item_def &item)
  */
 static void _identify_last_item(item_def &item)
 {
-    if (!in_inventory(item) && item_needs_autopickup(item)
-        && (item.base_type == OBJ_STAVES
-            || item.base_type == OBJ_JEWELLERY))
-    {
-        item.props[NEEDS_AUTOPICKUP_KEY] = true;
-    }
-
     identify_item(item);
-
-    if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
-        item.props.erase(NEEDS_AUTOPICKUP_KEY);
 
     const string class_name = item.base_type == OBJ_JEWELLERY ?
                                     item_base_name(item) :

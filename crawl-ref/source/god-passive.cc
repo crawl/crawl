@@ -490,16 +490,7 @@ void ash_id_item(item_def& item, bool silent)
     if (item.is_identified())
         return;
 
-    if ((item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_STAVES)
-        && item_needs_autopickup(item))
-    {
-        item.props[NEEDS_AUTOPICKUP_KEY] = true;
-    }
-
     identify_item(item);
-
-    if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
-        item.props.erase(NEEDS_AUTOPICKUP_KEY);
 
     if (!silent)
         mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
