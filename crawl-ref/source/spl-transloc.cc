@@ -1579,33 +1579,7 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
         return spret::abort;
     }
 
-    fail_check();
-
-    // We need to modify the item *before* we move it, because
-    // move_top_item() might change the location, or merge
-    // with something at our position.
-    if (item_is_orb(item))
-    {
-        fake_noisy(30, where);
-
-        // There's also a 1-in-3 flat chance of apport failing.
-        if (one_chance_in(3))
-        {
-            orb_pickup_noise(where, 30,
-                "The Orb shrieks and becomes a dead weight against your magic!",
-                "The Orb lets out a furious burst of light and becomes "
-                    "a dead weight against your magic!");
-            return spret::success;
-        }
-        else // Otherwise it's just a noisy little shiny thing
-        {
-            orb_pickup_noise(where, 30,
-                "The Orb shrieks as your magic touches it!",
-                "The Orb lets out a furious burst of light as your magic touches it!");
-            start_orb_run(CHAPTER_ANGERED_PANDEMONIUM, "Now pick up the Orb and get out of here!");
-        }
-    }
-
+    // Determine spot to pull items onto.
     beam.set_is_tracer(true);
     beam.aimed_at_spot = true;
     beam.affects_nothing = true;
@@ -1643,20 +1617,51 @@ spret cast_apportation(int pow, bolt& beam, bool fail)
         {
             // we've checked every position in beam.path_taken within max_dist
             mpr("Not with that terrain in the way!");
-            return spret::success; // of a sort
+            return spret::abort;
         }
         new_spot = beam.path_taken[location_on_path];
     }
+
+    fail_check();
+
+    for (stack_iterator si(where); si; ++si)
+    {
+        if (item_is_orb(*si))
+        {
+            fake_noisy(30, where);
+
+            // There's also a 1-in-3 flat chance of apport failing.
+            if (one_chance_in(3))
+            {
+                orb_pickup_noise(where, 30,
+                    "The Orb shrieks and becomes a dead weight against your magic!",
+                    "The Orb lets out a furious burst of light and becomes "
+                        "a dead weight against your magic!");
+                return spret::success;
+            }
+            else // Otherwise it's just a noisy little shiny thing
+            {
+                orb_pickup_noise(where, 30,
+                    "The Orb shrieks as your magic touches it!",
+                    "The Orb lets out a furious burst of light as your magic touches it!");
+                start_orb_run(CHAPTER_ANGERED_PANDEMONIUM, "Now pick up the Orb and get out of here!");
+            }
+        }
+    }
+
     dprf("Apport: new spot is %d/%d", new_spot.x, new_spot.y);
 
-    // Actually move the item.
-    mprf("Yoink! You pull the item%s towards yourself.",
-         (item.quantity > 1) ? "s" : "");
+    // Actually move the items.
+    int num_moved = 0;
+    while (you.visible_igrd(where) != NON_ITEM)
+    {
+        if (move_top_item(where, new_spot))
+            ++num_moved;
+    }
 
-    move_top_item(where, new_spot);
-
-    // Mark the item as found now.
-    origin_set(new_spot);
+    mprf("Yoink! You pull the item%s %stowards yourself.",
+         num_moved > 1 ? "s" : "",
+         new_spot != you.pos() ? "partway " : "");
 
     return spret::success;
 }
