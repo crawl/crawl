@@ -2596,7 +2596,6 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
                 inc_mitm_item_quantity(si->index(), item.quantity);
                 destroy_item(ob);
                 ob = si->index();
-                gozag_move_gold_to_top(p);
                 if (you.see_cell(p))
                 {
                     // XXX: Is it actually necessary to identify when the
@@ -2634,9 +2633,6 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
         item.link = env.igrid(p);
         env.igrid(p) = ob;
     }
-
-    if (item.base_type != OBJ_GOLD)
-        gozag_move_gold_to_top(p);
 
     if (you.see_cell(p))
     {

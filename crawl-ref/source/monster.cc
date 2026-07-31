@@ -6616,7 +6616,7 @@ item_def* monster::disarm()
 
     drop_item(MSLOT_WEAPON, false);
 
-    // XXX: assumes nothing's re-ordering items - e.g. gozag gold
+    // XXX: assumes nothing's re-ordering items
     if (your_tile_ok)
         move_top_item(pos(), you.pos());
 

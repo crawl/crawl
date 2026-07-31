@@ -283,8 +283,6 @@ int ash_skill_boost(skill_type sk, int scale);
 bool ash_has_skill_boost(skill_type sk);
 void ash_scrying();
 
-void gozag_move_level_gold_to_top();
-void gozag_move_gold_to_top(const coord_def p);
 void gozag_count_level_gold();
 
 int qazlal_sh_boost(int piety = you.piety());

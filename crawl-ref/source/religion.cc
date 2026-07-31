@@ -3738,9 +3738,6 @@ static void _join_gozag()
         ;
 #endif
     }
-
-    // Move gold to top of piles.
-    add_daction(DACT_GOLD_ON_TOP);
 }
 
 static void _join_okawaru()
