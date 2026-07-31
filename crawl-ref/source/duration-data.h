@@ -97,6 +97,13 @@ static void _end_exegesis()
     you.props.erase(EXEGESIS_SPELL);
 }
 
+static void _end_liquefaction()
+{
+    const char *prep = liquefied(you.pos(), true) ? "beneath" : "around";
+    mprf(MSGCH_DURATION, "The ground is no longer liquid %s you.", prep);
+    invalidate_agrid(false);
+}
+
 // properties of the duration.
 enum duration_flags : uint32_t
 {
@@ -427,9 +434,7 @@ static const duration_def duration_data[] =
       LIGHTBLUE, "Liquid",
       "liquefying", "",
       "You are liquefying the ground beneath you.", D_DISPELLABLE,
-      {{ "The ground is no longer liquid beneath you.", []() {
-          invalidate_agrid(false);
-      }}}},
+      {{"", _end_liquefaction}}},
     { DUR_HEROISM,
       LIGHTBLUE, "Hero",
       "heroic", "heroism",
