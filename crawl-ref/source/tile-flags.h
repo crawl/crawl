@@ -28,6 +28,10 @@ enum tile_flags : unsigned long long
 
     TILE_FLAG_NET          = 0x00800000ULL,
     TILE_FLAG_WEB          = 0x01000000ULL,
+
+    TILE_FLAG_S_UNDER_GOOD     = 0x100000000000000ULL,
+    TILE_FLAG_S_UNDER_ARTEFACT = 0x200000000000000ULL,
+
     // Other icons were previously stored here. Lots of space now.
     // Different levels of poison are mutually exclusive, so we can encode them in 2 bits.
     TILE_FLAG_POISON_MASK  = 0x1800000000000000ULL,

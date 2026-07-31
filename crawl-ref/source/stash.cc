@@ -140,6 +140,36 @@ vector<item_def> Stash::get_items() const
     return items;
 }
 
+void Stash::populate_map_cell_with_item(map_cell& cell)
+{
+    if (items.empty())
+        return;
+
+    cell.set_item(items[0]);
+
+    // Staircases hide drawing items on their tile, so we need to use stack
+    // indicators that consider the top item to also be buried.
+    const bool top_hidden = feat_is_stair(cell.feat());
+    if (top_hidden)
+    {
+        if (has_artefact)
+            cell.flags |= MAP_MORE_ITEMS_ARTEFACT;
+        else if (has_special)
+            cell.flags |= MAP_MORE_ITEMS_GOOD;
+        else
+            cell.flags |= MAP_MORE_ITEMS;
+    }
+    else if (items.size() > 1)
+    {
+        if (artefact_in_stack)
+            cell.flags |= MAP_MORE_ITEMS_ARTEFACT;
+        else if (special_in_stack)
+            cell.flags |= MAP_MORE_ITEMS_GOOD;
+        else
+            cell.flags |= MAP_MORE_ITEMS;
+    }
+}
+
 vector<item_def> item_list_in_stash(const coord_def& pos)
 {
     vector<item_def> ret;
@@ -153,6 +183,17 @@ vector<item_def> item_list_in_stash(const coord_def& pos)
     }
 
     return ret;
+}
+
+void populate_map_cell_with_item(const coord_def& c, map_cell& cell)
+{
+    LevelStashes *ls = StashTrack.find_current_level();
+    if (ls)
+    {
+        Stash *s = ls->find_stash(c);
+        if (s)
+            s->populate_map_cell_with_item(cell);
+    }
 }
 
 static void _fully_identify_item(item_def *item)
@@ -251,6 +292,36 @@ static bool _grid_is_interesting(const coord_def& pos)
         || feat == DNGN_TRAP_SHAFT;
 }
 
+static bool _item_is_interesting(const item_def& item)
+{
+    return item.flags & ISFLAG_COSMETIC_MASK
+            || item.base_type == OBJ_TALISMANS
+            || item.base_type == OBJ_STAVES;
+}
+
+static int _item_sort_score(const item_def& item)
+{
+    int score = 10;
+    if (is_useless_item(item))
+        return 0;
+    if (item_needs_autopickup(item))
+        score += 1000;
+    // Prefer to show the runes/orb on top.
+    if (item.is_critical())
+        score += 2000;
+    if (item.base_type == OBJ_GEMS)
+        score += 200;
+    if (is_artefact(item))
+        score += 100;
+    if (_item_is_interesting(item))
+        score += 10;
+    // Gold is usually on autopickup, but less interesting than anything else that is.
+    if (item.base_type == OBJ_GOLD)
+        score -= 10;
+
+    return score;
+}
+
 void Stash::update()
 {
     feat = DNGN_FLOOR;
@@ -265,6 +336,10 @@ void Stash::update()
 
     // Zap existing items
     items.clear();
+    has_special = false;
+    has_artefact = false;
+    special_in_stack = false;
+    artefact_in_stack = false;
 
     if (!_grid_has_perceived_item(pos))
     {
@@ -279,9 +354,8 @@ void Stash::update()
     item_def *pitem = &env.item[you.visible_igrd(pos)];
     hints_first_item(*pitem);
 
-    bool glowing_item_on_square = false;
-    bool artefact_item_on_square = false;
     // Now, grab all items on that square and fill our vector
+    vector<item_def*> item_refs;
     for (stack_iterator si(pos, true); si; ++si)
     {
         ash_id_item(*si);
@@ -289,25 +363,59 @@ void Stash::update()
         if (!(si->flags & ISFLAG_UNOBTAINABLE))
         {
             lucky_upgrade_item(*si);
-            add_item(*si);
+            item_refs.push_back(&*si);
         }
+    }
 
-        if ((si->base_type == OBJ_STAVES || si->flags & ISFLAG_COSMETIC_MASK)
-            && !is_useless_item(*si))
+    // Find the item with the highest score to bring to the front of the stash.
+    int highest_score = INT_MIN;
+    item_def* best_item = nullptr;
+    for (item_def* item : item_refs)
+    {
+        const int score = _item_sort_score(*item);
+        if (score > highest_score)
         {
-            glowing_item_on_square = true;
+            highest_score = score;
+            best_item = item;
         }
+    }
 
-        if (si->flags & ISFLAG_ARTEFACT_MASK && !is_useless_item(*si))
-            artefact_item_on_square = true;
+    // Then add them all to the stash
+    add_item(*best_item);
+    for (item_def* item : item_refs)
+    {
+        if (item != best_item)
+            add_item(*item);
     }
 
     int current_size = items.size();
+    for (size_t i = 0; i < items.size(); ++i)
+    {
+        const item_def& item = items[i];
+
+        if (!special_in_stack
+            && _item_is_interesting(item)
+            && !is_useless_item(item))
+        {
+            has_special = true;
+            if (i > 0)
+                special_in_stack = true;
+        }
+
+        if (!artefact_in_stack
+            && item.flags & ISFLAG_ARTEFACT_MASK && !is_useless_item(item))
+        {
+            has_artefact = true;
+            if (i > 0)
+                artefact_in_stack = true;
+        }
+    }
+
     const bool stack_greed      =  current_size > 1
                                 && (Options.explore_greedy_visit & EG_STACK);
-    const bool glowing_greed    =  glowing_item_on_square
+    const bool glowing_greed    =  has_special
                                 && (Options.explore_greedy_visit & EG_GLOWING);
-    const bool artefact_greed   = artefact_item_on_square
+    const bool artefact_greed   = has_artefact
                                 && (Options.explore_greedy_visit & EG_ARTEFACT);
 
     visited = pos == you.pos()
@@ -525,7 +633,10 @@ void Stash::save(writer& outf) const
 
     marshallString(outf, feat_desc);
 
-    marshallByte(outf, visited? 1 : 0);
+    uint8_t flags = visited << 1
+                    + special_in_stack << 2 + artefact_in_stack << 3
+                    + has_special << 4 + has_artefact << 5;
+    marshallByte(outf, flags);
 
     // And dump the items individually. We don't bother saving fields we're
     // not interested in (and don't anticipate being interested in).
@@ -551,6 +662,10 @@ void Stash::load(reader& inf)
 
     uint8_t flags = unmarshallUByte(inf);
     visited = (flags & 1) != 0;
+    special_in_stack = (flags & 2) != 0;
+    artefact_in_stack = (flags & 3) != 0;
+    has_special = (flags & 4) != 0;
+    has_artefact = (flags & 5) != 0;
 
     // Zap out item vector, in case it's in use (however unlikely)
     items.clear();

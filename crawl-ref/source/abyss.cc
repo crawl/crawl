@@ -261,7 +261,7 @@ static bool _sync_rune_knowledge(coord_def p)
             // found! make sure map memory is up-to-date
             if (!rune_memory)
             {
-                env.map_knowledge(p).set_item(*si, item != nullptr);
+                env.map_knowledge(p).set_item(*si);
                 if (!you.see_cell(p))
                     env.map_knowledge(p).flags |= MAP_DETECTED_ITEM;
                 redraw_view_at(p);

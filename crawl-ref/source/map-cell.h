@@ -45,6 +45,10 @@
 #define MAP_DOOR_CONNECT_2 0x40000000
 #define MAP_DOOR_CONNECT_3 0x80000000
 
+#define MAP_MORE_ITEMS_GOOD     0x100000000
+#define MAP_MORE_ITEMS_ARTEFACT 0x200000000
+#define MAP_CELL_MORE_ITEMS_TYPE (MAP_MORE_ITEMS | MAP_MORE_ITEMS_GOOD | MAP_MORE_ITEMS_ARTEFACT)
+
 struct cloud_info
 {
     cloud_info() : type(CLOUD_NONE), colour(0), variety(3), tile(0), pos(0, 0),
@@ -200,12 +204,10 @@ struct map_cell
         return ret;
     }
 
-    void set_item(const item_def& ii, bool more_items)
+    void set_item(const item_def& ii)
     {
         clear_item();
         _item = make_unique<item_def>(ii);
-        if (more_items)
-            flags |= MAP_MORE_ITEMS;
     }
 
     void set_detected_item();
@@ -214,7 +216,8 @@ struct map_cell
     {
         // TODO: internal callers are doing a bit of duplicate work here
         _item.reset();
-        flags &= ~(MAP_DETECTED_ITEM | MAP_MORE_ITEMS);
+        flags &= ~(MAP_DETECTED_ITEM | MAP_MORE_ITEMS
+                   | MAP_MORE_ITEMS_GOOD | MAP_MORE_ITEMS_ARTEFACT);
     }
 
     monster_type mon_type() const
