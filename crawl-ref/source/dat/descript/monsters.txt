@@ -442,7 +442,7 @@ who lost their life in their great exodus into the Dungeon, and even if this is
 a lie, she nonetheless seems to be on a first-name basis with many of them.
 
 More than any other orc still breathing, she knows the blood and sacrifice it
-took to make this place a refuge for her kind. She will not brook it being
+took to make this place a refuge for her kind. She will not brook its being
 intruded upon by anyone - least of all you.
 %%%%
 Nessos
@@ -2746,7 +2746,7 @@ rusted inspector
 
 A slithering metal construct, once built to monitor for mutated entities
 encroaching upon the Vaults and long-since abandoned. While it can still dampen
-most unwanted magic, a lack of proper maintenance has led to it becoming coated
+most unwanted magic, a lack of proper maintenance has led to its becoming coated
 with a highly corrosive mystic rust.
 %%%%
 sacred lotus
