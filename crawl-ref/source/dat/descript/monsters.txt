@@ -2746,7 +2746,7 @@ rusted inspector
 
 A slithering metal construct, once built to monitor for mutated entities
 encroaching upon the Vaults and long-since abandoned. While it can still dampen
-most unwanted magic, a lack of proper maintenance has lead to it becoming coated
+most unwanted magic, a lack of proper maintenance has led to it becoming coated
 with a highly corrosive mystic rust.
 %%%%
 sacred lotus
