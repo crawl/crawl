@@ -620,6 +620,7 @@ private:
     bool decay_enchantment(enchant_type en, bool decay_degree = false);
 
     bool wants_weapon(const item_def &item) const;
+    int weapon_score(const item_def& item) const;
     bool wants_armour(const item_def &item) const;
     bool wants_jewellery(const item_def &item) const;
     void lose_pickup_energy();

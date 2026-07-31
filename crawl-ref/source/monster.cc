@@ -1305,10 +1305,10 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
     return false;
 }
 
-static int _monster_weapon_value(const monster& mon, const item_def& item)
+int monster::weapon_score(const item_def& item) const
 {
     const int dmg = mons_weapon_damage_rating(item);
-    const int base_dmg = mons_attack_spec(mon, 0).damage;
+    const int base_dmg = mons_attack_spec(*this, 0).damage;
 
     int val = dmg;
 
@@ -1387,7 +1387,7 @@ static int _monster_weapon_value(const monster& mon, const item_def& item)
 
     // Monsters prefer to hold onto an existing shield unless the weapon is
     // much better than their current one.
-    if (mon.inv[MSLOT_SHIELD] != NON_ITEM && mon.hands_reqd(item) == HANDS_TWO)
+    if (inv[MSLOT_SHIELD] != NON_ITEM && hands_reqd(item) == HANDS_TWO)
         val = val * 2 / 3;
 
     return val;
@@ -1406,7 +1406,7 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
             return pickup(item, MSLOT_ALT_WEAPON, msg);
     }
 
-    const int new_wpn_val = _monster_weapon_value(*this, item);
+    const int new_wpn_val = weapon_score(item);
     mon_inv_type eslot = NUM_MONSTER_SLOTS;
     item_def *weap;
 
@@ -1447,14 +1447,14 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
             // If we get here, the weapon is a melee weapon.
             // If the new weapon is better than the current one, replace it.
             // Otherwise, give up.
-            const int old_wpn_val = _monster_weapon_value(*this, *weap);
+            const int old_wpn_val = weapon_score(*weap);
 
             if (old_wpn_val < new_wpn_val)
             {
                 if (!dual_wielding
                     || slot == MSLOT_WEAPON
                     || old_wpn_val
-                       < _monster_weapon_value(*this, *mslot_item(MSLOT_WEAPON)))
+                       < weapon_score(*mslot_item(MSLOT_WEAPON)))
                 {
                     eslot = slot;
                     if (!dual_wielding)
@@ -6507,6 +6507,17 @@ void monster::steal_item_from_player()
     if (!tmp)
         return;
     item_def& new_item = *tmp;
+
+    // If Maurice steals a melee weapon, let him wield it (assuming he thinks
+    // it's better than we he already has.)
+    if (mslot == MSLOT_ALT_WEAPON && !is_range_weapon(new_item)
+        && !is_range_weapon(*mslot_item(MSLOT_WEAPON))
+        && wants_weapon(new_item)
+        && weapon_score(new_item) > weapon_score(*mslot_item(MSLOT_WEAPON)))
+    {
+        swap_weapons();
+        drop_item(MSLOT_ALT_WEAPON, "");
+    }
 
     // You'll want to autopickup it after killing Maurice.
     new_item.flags |= ISFLAG_THROWN;
