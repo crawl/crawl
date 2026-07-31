@@ -2923,7 +2923,7 @@ static void _describe_oos_square(const coord_def& where)
         if (!in_bounds(where))
             dprf("(out of bounds)");
         else
-            dprf("(map: %x)", env.map_knowledge(where).flags);
+            dprf("(map: %lx)", env.map_knowledge(where).flags);
 #endif
         return;
     }
@@ -3706,7 +3706,7 @@ static void _debug_describe_feature_at(const coord_def &where)
     char32_t ch = get_cell_glyph(where).ch;
     // TODO: expand out some of this in the cell description for console in a
     // more readable fashion
-    dprf("(%d,%d): %s - %s. (%d/%s)%s%s%s%s map: %x%s",
+    dprf("(%d,%d): %s - %s. (%d/%s)%s%s%s%s map: %lx%s",
          where.x, where.y,
          ch == '<' ? "<<" : stringize_glyph(ch).c_str(),
          feature_desc.c_str(),
