@@ -2176,6 +2176,9 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     case ABIL_HOP:
         return _can_hop(quiet);
 
+    case ABIL_BESTIAL_TAKEDOWN:
+        return _can_movement_ability(quiet);
+
     case ABIL_INVENT_GIZMO:
     {
         if (you.experience_level < COGLIN_GIZMO_XL)
