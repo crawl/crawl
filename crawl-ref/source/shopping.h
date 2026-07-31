@@ -27,7 +27,7 @@ int item_price(const item_def& item, const shop_struct& shop);
 // curse scrolls are worthless for everyone, most potions aren't worthless
 // for mummies, etcetera.
 bool is_worthless_consumable(const item_def &item);
-// Return how many matching potions or scrolls are currently in the inventory.
+// Return how many matching items are currently in the inventory.
 int shop_owned_consumable_count(const item_def &item);
 
 void shop();
