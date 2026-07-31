@@ -1351,7 +1351,16 @@ static int _player_bonus_regen()
         if (item->is_type(OBJ_JEWELLERY, AMU_REGENERATION))
             rr += REGEN_PIP;
         if (is_artefact(*item))
-            rr += REGEN_PIP * artefact_property(*item, ARTP_REGENERATION);
+        {
+            const int pips = artefact_property(*item, ARTP_REGENERATION);
+            rr += REGEN_PIP * pips;
+            if (you.form == transformation::fortress_crab
+                && item->base_type == OBJ_ARMOUR
+                && get_armour_slot(static_cast<armour_type>(item->sub_type)) == SLOT_BODY_ARMOUR)
+            {
+                rr += REGEN_PIP * pips;
+            }
+        }
     }
 
     // Fast heal mutation.
