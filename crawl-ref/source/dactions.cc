@@ -65,8 +65,8 @@ static const char *daction_names[] =
     "hogs to humans",
 #if TAG_MAJOR_VERSION == 34
     "end spirit howl",
-#endif
     "gold to top of piles",
+#endif
     "bribe timeout",
     "remove Gozag shops",
     "apply Gozag bribes",
