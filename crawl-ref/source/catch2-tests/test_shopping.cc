@@ -37,11 +37,10 @@ TEST_CASE_METHOD(MockPlayerYouTestsFixture,
 }
 
 TEST_CASE_METHOD(MockPlayerYouTestsFixture,
-                 "Shop owned count is limited to potions and scrolls", "[shopping]")
+                 "Shop owned count ignores nonstackable items", "[shopping]")
 {
     item_def dagger;
     get_item_by_exact_name(dagger, "dagger");
-    dagger.quantity = 2;
     you.inv[0] = dagger;
 
     REQUIRE(shop_owned_consumable_count(dagger) == 0);
