@@ -32,15 +32,11 @@
 vector<Note> note_list;
 int last_screen_turn = -1;
 
-static bool _is_highest_skill(int skill)
+static bool _is_highest_skill(int level)
 {
-    for (int i = 0; i < NUM_SKILLS; ++i)
-    {
-        if (i == skill)
-            continue;
-        if (you.skills[i] >= you.skills[skill])
-            return false;
-    }
+    if (level <= Note::max_skill)
+        return false;
+    Note::max_skill = level;
     return true;
 }
 
@@ -292,8 +288,7 @@ string Note::describe(bool when, bool where, bool what) const
                    << (first == 1 ? "" : "s") << " to Zin";
             break;
         case NOTE_GAIN_SKILL:
-            result << "Reached skill level " << second
-                   << " in " << skill_name(static_cast<skill_type>(first));
+            result << "Reached skill level " << second << " in " << name;
             break;
         case NOTE_LOSE_SKILL:
             result << "Reduced skill "
@@ -457,9 +452,11 @@ bool Note::hidden() const
     // Hide skill gains that are not enabled by options.
     if (type == NOTE_GAIN_SKILL || type == NOTE_LOSE_SKILL)
     {
+        for (int i = first + 1; i <= second; ++i)
+            if (Options.note_skill_levels[i])
+                return false;
         return !(Options.note_all_skill_levels
-                 || second <= 27 && Options.note_skill_levels[second]
-                 || Options.note_skill_max && _is_highest_skill(first));
+                 || Options.note_skill_max && _is_highest_skill(second));
     }
     // Hide gems being shattered by default.
     if (type == NOTE_GEM_LOST)
@@ -534,12 +531,27 @@ void Note::load(reader& inf)
 #if TAG_MAJOR_VERSION == 34
     if (inf.getMinorVersion() >= TAG_MINOR_MORGUE_SCREENSHOTS)
         screen = unmarshallString(inf);
+    if (inf.getMinorVersion() < TAG_MINOR_SKILL_CHANGE_RANGE
+        && (NOTE_GAIN_SKILL == type || NOTE_LOSE_SKILL == type))
+    {
+        name = skill_name(static_cast<skill_type>(first));
+        first = 0;
+        for (auto np = note_list.rbegin(); np < note_list.rend(); ++np)
+        {
+            if (type == np->type && name == np->name)
+            {
+                first = np->second;
+                break;
+            }
+        }
+    }
 #else
     screen = unmarshallString(inf);
 #endif
 
 }
 
+int Note::max_skill = 0;
 static bool notes_active = false;
 
 bool notes_are_active()

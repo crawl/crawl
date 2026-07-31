@@ -795,6 +795,7 @@ static void _sdump_screenshots(dump_params &par)
 
     text += "Illustrated notes\n\n";
 
+    Note::reset();
     for (const Note &note : note_list)
     {
         if (note.hidden() || note.type != NOTE_USER_NOTE || note.screen.length() == 0)
@@ -818,6 +819,7 @@ static void _sdump_notes(dump_params &par)
     text += "Notes\n";
     text += "Turn   | Place    | Note\n";
     text += "-------+----------+-------------------------------------------\n";
+    Note::reset();
     for (const Note &note : note_list)
     {
         if (note.hidden())
@@ -1692,7 +1694,7 @@ static void _sdump_skill_gains(dump_params &par)
             xl = note.first;
         else if (note.type == NOTE_GAIN_SKILL || note.type == NOTE_LOSE_SKILL)
         {
-            skill_type skill = static_cast<skill_type>(note.first);
+            skill_type skill = str_to_skill(note.name);
             int skill_level = note.second;
             if (skill_gains.find(skill) == skill_gains.end())
                 skill_order.push_back(skill);
@@ -1953,6 +1955,7 @@ void display_notes()
     const string tag = "notes";
     scr.set_tag(tag);
     _add_text(scr, tag, "Turn   | Place    | Note\n");
+    Note::reset();
     for (const Note &note : note_list)
     {
         if (note.hidden())

@@ -97,6 +97,9 @@ struct Note
     string name;
     string desc;
     string screen;
+
+    static int max_skill;
+    static void reset() { max_skill = 0; }
 };
 
 extern vector<Note> note_list;
