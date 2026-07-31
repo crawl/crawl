@@ -1318,3 +1318,8 @@ Exegesis status
 
 You have recently used Divine Exegesis and may repeat the same spell you can
 this way at a greatly reduced piety cost.
+%%%%
+-Jolt status
+
+You have recently discharged a full-power jolt of electricity and cannot do this
+again until you fully heal.
