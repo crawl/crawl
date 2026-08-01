@@ -609,6 +609,7 @@ static bool _is_branch_stair(const coord_def& pos, const level_id &from)
 #define ES_branch (Options.explore_stop & ES_BRANCH)
 #define ES_rdoor  (Options.explore_stop & ES_RUNED_DOOR)
 #define ES_stack  (Options.explore_stop & ES_GREEDY_VISITED_ITEM_STACK)
+#define ES_trap   (Options.explore_stop & ES_TRAP)
 
 // Adds interesting stuff on the point p to explore_discoveries.
 static inline void _check_interesting_square(const coord_def pos,
@@ -5089,6 +5090,8 @@ void explore_discoveries::found_feature(const coord_def &pos,
         mutation_catalysts.emplace_back(cleaned_feature_description(pos), 1);
         es_flags |= ES_MUTATION_CATALYST;
     }
+    else if (ES_trap && feat_is_trap(feat) && !trap_is_safe(feat))
+        es_flags |= ES_TRAP;
 }
 
 void explore_discoveries::add_stair(
