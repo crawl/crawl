@@ -506,7 +506,7 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
             g.col = eitem->get_colour();
 
         // monster(mimic)-owned items have link = NON_ITEM+1+midx
-        if (cell.flags & (MAP_MORE_ITEMS || MAP_MORE_ITEMS_GOOD || MAP_MORE_ITEMS_ARTEFACT))
+        if (cell.flags & (MAP_MORE_ITEMS | MAP_MORE_ITEMS_GOOD | MAP_MORE_ITEMS_ARTEFACT))
             g.col |= COLFLAG_ITEM_HEAP;
         break;
     }
