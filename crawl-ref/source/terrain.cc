@@ -2272,6 +2272,7 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype, bool expire
     {
         update_terrain_knowledge(pos);
         update_grid_colour_knowledge(pos);
+        redraw_view_at(pos);
     }
 
     return true;
