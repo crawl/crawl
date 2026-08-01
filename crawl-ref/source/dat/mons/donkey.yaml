@@ -14,5 +14,5 @@ shout: bellow
 intelligence: animal
 size: large
 shape: quadruped
-tile: yak
+tile: donkey
 corpse_tile: yak

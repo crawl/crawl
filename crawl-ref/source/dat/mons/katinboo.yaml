@@ -1,4 +1,4 @@
-name: "Katinhat"
+name: "Katinboo"
 glyph: {char: "a", colour: lightmagenta}
 flags: [speaks, warm_blood, unique, female]
 exp: 1050
@@ -13,12 +13,12 @@ hd: 12
 hp_10x: 850
 ac: 7
 ev: 12
-spells: katinhat
+spells: katinboo
 has_corpse: true
 shout: growl
 intelligence: human
 uses: starting_equipment
 size: medium
 shape: quadruped_tailless
-tile: katinhat
+tile: katinboo
 corpse_tile: felid

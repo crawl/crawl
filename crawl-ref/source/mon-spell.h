@@ -2629,7 +2629,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_KATINHAT,
+    {  MST_KATINBOO,
       {
        { SPELL_CALL_OGRE_AND_DONKEY, 50, MON_SPELL_NATURAL },
       }

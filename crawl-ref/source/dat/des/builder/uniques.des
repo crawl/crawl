@@ -244,9 +244,9 @@ DEPTH:  Lair:2-4
 WEIGHT: 15
 : place_unique(_G, "Rusk band")
 
-NAME:   uniq_katinhat
+NAME:   uniq_katinboo
 DEPTH:  Lair:1-4
-: place_unique(_G, "Katinhat")
+: place_unique(_G, "Katinboo")
 
 NAME:   uniq_prince_ribbit2
 TAGS:   uniq_ribbit

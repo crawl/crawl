@@ -131,7 +131,7 @@ cat4 MONS_FELID
 %rim 0
 %sdir mon/unique
 natasha MONS_NATASHA
-katinhat MONS_KATINHAT
+katinboo MONS_KATINBOO
 %rim 1
 %sdir mon/animals
 
@@ -303,6 +303,7 @@ black_bear MONS_BLACK_BEAR
 polar_bear MONS_POLAR_BEAR
 
 ## Yaks, sheep and elephants ('Y')
+donkey MONS_DONKEY
 dream_sheep MONS_DREAM_SHEEP
 yak MONS_YAK
 death_yak MONS_DEATH_YAK

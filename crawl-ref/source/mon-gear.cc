@@ -2296,7 +2296,7 @@ int make_mons_armour(monster_type type, int level)
         }
         break;
 
-    case MONS_KATINHAT:
+    case MONS_KATINBOO:
         item.base_type = OBJ_ARMOUR;
         item.sub_type = coinflip() ? ARM_HAT : ARM_BOOTS;
         break;
