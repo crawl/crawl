@@ -118,7 +118,8 @@ void monster_drop_things(monster* mons,
                 blind_player(10 + random2(8), ETC_GOLD);
             }
             mons->inv[i] = NON_ITEM;
-            mons->do_unequip_effects(env.item[item]);
+            if (item != NON_ITEM)
+                mons->do_unequip_effects(env.item[item]);
         }
     }
 
