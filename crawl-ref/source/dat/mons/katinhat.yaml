@@ -20,5 +20,5 @@ intelligence: human
 uses: starting_equipment
 size: medium
 shape: quadruped_tailless
-tile: felid
+tile: katinhat
 corpse_tile: felid
