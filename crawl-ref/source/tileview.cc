@@ -961,7 +961,7 @@ void tile_forget_map(const coord_def &gc)
 }
 
 static void _tile_place_item(const coord_def &gc, const item_def &item,
-                             uint64_t tile_flags)
+                             map_flag_t tile_flags)
 {
     tile_with_flags_t t = tileidx_item(item);
     if (tile_flags & MAP_MORE_ITEMS_ARTEFACT)
@@ -978,7 +978,7 @@ static void _tile_place_item(const coord_def &gc, const item_def &item,
 }
 
 static void _tile_place_item_marker(const coord_def &gc, const item_def &item,
-                                    uint64_t tile_flags)
+                                    map_flag_t tile_flags)
 {
     tile_with_flags_t fg = tile_env.bk_fg(gc);
     if (tile_flags & MAP_MORE_ITEMS_ARTEFACT)
