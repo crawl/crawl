@@ -6581,7 +6581,11 @@ item_def* monster::take_item(int steal_what, mon_inv_type mslot,
     new_item.set_holding_monster(*this);
 
     if (mslot != MSLOT_ALT_WEAPON || mons_wields_two_weapons(*this))
+    {
         equip_message(new_item);
+        if (item_affects_agrid(new_item))
+            invalidate_agrid();
+    }
 
     // Item is gone from player's inventory.
     dec_inv_item_quantity(steal_what, new_item.quantity);
