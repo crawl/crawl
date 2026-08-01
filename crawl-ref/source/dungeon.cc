@@ -4533,15 +4533,17 @@ static int _place_uniques()
     int num_placed = 0;
 
     // Magic numbers for dpeg's unique system.
-    int A = 2;
+    const int unique_chance_numerator = 3;
+    int unique_chance_denominator = 5;
     const int B = 5;
-    while (one_chance_in(A))
+    while (x_chance_in_y(unique_chance_numerator,
+                         unique_chance_denominator))
     {
-        // In dpeg's unique placement system, chances is always 1 in A of even
-        // starting to place a unique; reduced if there are less uniques to be
-        // placed or available. Then there is a chance of uniques_available /
-        // B; this only triggers on levels that have less than B uniques to be
-        // placed.
+        // In dpeg's unique placement system, there is an initial chance of
+        // even starting to place a unique; this is reduced if there are fewer
+        // uniques to be placed or available. Then there is a chance of
+        // uniques_available / B; this only triggers on levels that have less
+        // than B uniques to be placed.
         const mapref_vector uniques_available =
             find_maps_for_tag("place_unique", true, true);
 
@@ -4565,7 +4567,7 @@ static int _place_uniques()
             // some have been placed, to reduce chance of
             // many uniques per level.
             if (num_placed >= 3)
-                A++;
+                unique_chance_denominator++;
 #ifdef DEBUG_UNIQUE_PLACEMENT
             fprintf(ostat, "Placed valid unique map: %s.\n",
                     uniq_map->name.c_str());

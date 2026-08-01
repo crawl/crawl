@@ -317,6 +317,7 @@ giraffe MONS_GIRAFFE
 
 %sdir mon/unique
 nellie MONS_NELLIE
+rusk MONS_RUSK
 %sdir mon/holy
 apis MONS_APIS
 %sdir mon/vault
