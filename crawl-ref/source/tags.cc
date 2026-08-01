@@ -6626,7 +6626,7 @@ void marshallMapCell(writer &th, const map_cell &cell)
 void unmarshallMapCell(reader &th, map_cell& cell)
 {
     unsigned flags = unmarshallUnsigned(th);
-    unsigned cell_flags = 0;
+    uint64_t cell_flags = 0;
 
     cell.clear();
 
