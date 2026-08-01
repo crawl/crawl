@@ -5614,6 +5614,10 @@ static void _attacks_table_row_throwing(const monster_info &mi,
     di.bonus_descriptions.emplace_back(bonus_desc);
     di.damage_width = max(di.damage_width, dam_desc.size());
     di.bonus_width = max(di.bonus_width, bonus_desc.size());
+
+    di.range_descriptions.emplace_back(to_string(LOS_RADIUS));
+    di.needs_range_desc = true;
+    di.range_width = 5;
 }
 
 // Build the table of attacks, for real
