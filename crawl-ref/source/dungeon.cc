@@ -5406,7 +5406,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
     for (mon_inv_iterator ii(*mon); ii; ++ii)
     {
         item_def &item = *ii;
-        mon->unequip(ii.slot(), false);
+        mon->unequip(ii.slot());
         destroy_item(item, true);
     }
 

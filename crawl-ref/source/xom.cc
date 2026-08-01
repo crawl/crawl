@@ -1642,7 +1642,7 @@ static void _xom_animate_monster_weapon(int sever)
         return;
 
     // Make the monster unwield its weapon.
-    mon->unequip(MSLOT_WEAPON, false);
+    mon->unequip(MSLOT_WEAPON);
 
     mprf("%s %s dances into the air!",
          apostrophise(mon->name(DESC_THE)).c_str(),

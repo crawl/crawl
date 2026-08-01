@@ -939,6 +939,8 @@ void monster::do_unequip_effects(item_def &item)
         invalidate_agrid();
 }
 
+// Note: This unlinks the monster's item, so something must be done with it
+//       after this (whether that's destroying the item or moving it to the floor).
 bool monster::unequip(mon_inv_type slot, bool msg)
 {
     item_def* item = mslot_item(slot);
@@ -948,7 +950,7 @@ bool monster::unequip(mon_inv_type slot, bool msg)
     if (msg)
         unequip_message(*item);
 
-    inv[slot] = NON_ITEM;
+    unlink_item(inv[slot]);
     do_unequip_effects(*item);
 
     return true;
@@ -1105,8 +1107,6 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
                                 || eslot == MSLOT_JEWELLERY
                                 || eslot == MSLOT_ALT_WEAPON
                                    && mons_wields_two_weapons(*this);
-    if (msg && was_equipped)
-        unequip_message(pitem);
 
     if (pitem.flags & ISFLAG_SUMMONED)
     {
@@ -1126,19 +1126,9 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
                 pitem.name(DESC_A).c_str());
         }
 
-        if (!move_item_to_grid(&item_index, pos(), swimming()))
-        {
-            // Re-equip item if we somehow failed to drop it.
-            if (msg)
-                equip_message(pitem);
+        unequip(eslot, msg && was_equipped);
 
-            return false;
-        }
-
-        inv[eslot] = NON_ITEM;
-
-        if (was_equipped)
-            do_unequip_effects(pitem);
+        move_item_to_grid(&item_index, pos(), swimming());
     }
 
     return true;

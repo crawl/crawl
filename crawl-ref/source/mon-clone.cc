@@ -369,7 +369,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
         const int new_index = get_mitm_slot(0);
         if (new_index == NON_ITEM)
         {
-            mons->unequip(ii.slot(), false);
+            mons->inv[ii.slot()] = NON_ITEM;
             continue;
         }
 

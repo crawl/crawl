@@ -79,6 +79,7 @@ void monster_drop_things(monster* mons,
     // Drop weapons and missiles last (i.e., on top), so others pick up.
     for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; --i)
     {
+        const mon_inv_type slot = static_cast<mon_inv_type>(i);
         int item = mons->inv[i];
         if (item == NON_ITEM || !suitable(env.item[item]))
             continue;
@@ -86,7 +87,7 @@ void monster_drop_things(monster* mons,
         if (testbits(env.item[item].flags, ISFLAG_SUMMONED))
         {
             item_was_destroyed(env.item[item]);
-            mons->do_unequip_effects(env.item[item]);
+            mons->unequip(slot);
             destroy_item(item);
         }
         else
@@ -103,9 +104,12 @@ void monster_drop_things(monster* mons,
                 env.item[item].props.erase("autoinscribe");
             }
 
+            mons->unequip(slot);
+
             // If a monster is swimming, the items are ALREADY underwater.
-            if (move_item_to_grid(&item, mons->pos(), mons->swimming())
-                && player_under_penance(GOD_GOZAG)
+            move_item_to_grid(&item, mons->pos(), mons->swimming());
+
+            if (player_under_penance(GOD_GOZAG)
                 // Dropping items into water/lava may have destroyed them
                 && item != NON_ITEM
                 && env.item[item].base_type == OBJ_GOLD
@@ -117,9 +121,6 @@ void monster_drop_things(monster* mons,
                 mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
                 blind_player(10 + random2(8), ETC_GOLD);
             }
-            mons->inv[i] = NON_ITEM;
-            if (item != NON_ITEM)
-                mons->do_unequip_effects(env.item[item]);
         }
     }
 

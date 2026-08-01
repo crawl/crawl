@@ -315,7 +315,7 @@ public:
     bool      pickup_item(item_def &item, bool msg, bool force);
     bool      drop_item(mon_inv_type eslot, bool msg);
     void      do_unequip_effects(item_def &item);
-    bool      unequip(mon_inv_type slot, bool msg);
+    bool      unequip(mon_inv_type slot, bool msg = false);
     void      steal_item_from_player();
     item_def* take_item(int steal_what, mon_inv_type mslot,
                         bool is_stolen = false);

@@ -890,7 +890,7 @@ static void _animate_weapon(int pow, actor* target)
     ASSERT(montarget->inv[wp_slot] != NON_ITEM);
     ASSERT(&env.item[montarget->inv[wp_slot]] == wpn);
 
-    montarget->unequip(wp_slot, false);
+    montarget->unequip(wp_slot);
 
     wpn->clear();
 }
