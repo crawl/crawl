@@ -712,7 +712,7 @@ int attack::inflict_damage(int dam, beam_type flavour)
         defender->props[REAPER_KEY].get_int() = attacker->mid;
     }
     const int final = defender->hurt(responsible, dam, flavour, kill_type,
-                                     "", aux_source.c_str(), false);
+                                     "", aux_source.c_str(), false, true, true);
 
     if (defender->is_monster() && !defender->alive())
         defender->props[ATTACK_KILL_KEY] = true;
