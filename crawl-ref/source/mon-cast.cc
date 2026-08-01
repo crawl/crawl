@@ -2810,6 +2810,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CAGE_OF_BRAMBLES:
     case SPELL_WIND_BLAST:
     case SPELL_SUMMON_VERMIN:
+    case SPELL_CALL_OGRE_AND_DONKEY:
     case SPELL_POLAR_VORTEX:
     case SPELL_DISCHARGE:
     case SPELL_IGNITE_POISON:
@@ -8605,6 +8606,11 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_SUMMON_VERMIN:
         _do_high_level_summon(mons, spell_cast, _pick_vermin,
                               one_chance_in(4) ? 3 : 2 , god);
+        return;
+
+    case SPELL_CALL_OGRE_AND_DONKEY:
+        _summon(*mons, MONS_OGRE, summ_dur(3), slot);
+        _summon(*mons, MONS_DONKEY, summ_dur(3), slot);
         return;
 
     case SPELL_DISCHARGE:

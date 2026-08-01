@@ -1,0 +1,23 @@
+name: "Katinhat"
+glyph: {char: "a", colour: lightmagenta}
+flags: [speaks, warm_blood, unique, female]
+exp: 1050
+species: black_bear
+genus: bear
+will: 80
+attacks:
+ - {type: claw, flavour: curare, damage: 18}
+ - {type: claw, flavour: curare, damage: 18}
+ - {type: bite, damage: 14}
+hd: 12
+hp_10x: 850
+ac: 7
+ev: 12
+spells: katinhat
+has_corpse: true
+shout: growl
+intelligence: human
+size: medium
+shape: quadruped_tailless
+tile: black_bear
+corpse_tile: black_bear

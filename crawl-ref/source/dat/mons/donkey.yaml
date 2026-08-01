@@ -1,0 +1,18 @@
+name: "donkey"
+glyph: {char: "Y", colour: lightgrey}
+flags: [warm_blood]
+exp: 110
+will: 20
+attacks:
+ - {type: kick, damage: 14}
+hd: 5
+hp_10x: 350
+ac: 3
+ev: 9
+has_corpse: true
+shout: bellow
+intelligence: animal
+size: large
+shape: quadruped
+tile: yak
+corpse_tile: yak

@@ -2628,6 +2628,12 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BATTLECRY, 40, MON_SPELL_VOCAL },
       }
     },
+
+    {  MST_KATINHAT,
+      {
+       { SPELL_CALL_OGRE_AND_DONKEY, 50, MON_SPELL_NATURAL },
+      }
+    },
     // ('&', mostly) Demon lords.
     {  MST_GERYON,
       {
