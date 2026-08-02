@@ -583,18 +583,18 @@ static vector<ability_def> &_get_ability_list()
 
         // Beogh
         { ABIL_BEOGH_DISMISS_APOSTLE_1, "Dismiss Apostle #1",
-            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
+            0, 0, 0, -1, {fail_basis::invo}, abflag::silence_ok },
         { ABIL_BEOGH_DISMISS_APOSTLE_2, "Dismiss Apostle #2",
-            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
+            0, 0, 0, -1, {fail_basis::invo}, abflag::silence_ok },
         { ABIL_BEOGH_DISMISS_APOSTLE_3, "Dismiss Apostle #3",
-            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
+            0, 0, 0, -1, {fail_basis::invo}, abflag::silence_ok },
         { ABIL_BEOGH_SMITING, "Smiting",
             3, 0, 2, LOS_MAX_RANGE,
             {fail_basis::invo, 40, 5, 20}, abflag::none },
         { ABIL_BEOGH_RECALL_APOSTLES, "Recall Apostles",
             2, 0, 0, -1, {fail_basis::invo, 30, 6, 20}, abflag::none },
         { ABIL_BEOGH_RECRUIT_APOSTLE, "Recruit Apostle",
-            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
+            0, 0, 0, -1, {fail_basis::invo}, abflag::silence_ok },
         { ABIL_BEOGH_BLOOD_FOR_BLOOD, "Blood for Blood",
             8, 0, 20, -1, {fail_basis::invo, 70, 4, 25}, abflag::none },
 
@@ -734,7 +734,7 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
 
         { ABIL_HEPLIAKLQANA_IDENTITY, "Ancestor Identity",
-            0, 0, 0, -1, {fail_basis::invo}, abflag::instant },
+            0, 0, 0, -1, {fail_basis::invo}, abflag::instant | abflag::silence_ok },
 
         // Wu Jian
         { ABIL_WU_JIAN_SERPENTS_LASH, "Serpent's Lash",
@@ -755,7 +755,7 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
 
         { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
-            0, 0, 0, -1, {fail_basis::invo}, abflag::none },
+            0, 0, 0, -1, {fail_basis::invo}, abflag::silence_ok },
         { ABIL_CONVERT_TO_BEOGH, "Convert to Beogh",
             0, 0, 0, -1, {fail_basis::invo}, abflag::conf_ok },
 #ifdef WIZARD
@@ -1874,7 +1874,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     if (you.is_silenced())
     {
         talent tal = get_talent(abil.ability);
-        if (tal.is_invocation && abil.ability != ABIL_RENOUNCE_RELIGION)
+        if (tal.is_invocation && !(abil.flags & abflag::silence_ok))
         {
             if (!quiet)
             {
