@@ -4725,6 +4725,17 @@ static const struct spell_desc spelldata[] =
     TILEG_PHASE_SHIFT,
 },
 
+{
+    SPELL_CALL_OGRE_AND_MULE, "Call Ogre and Mule",
+    spschool::summoning,
+    spflag::monster | spflag::mons_abjure,
+    5,
+    0,
+    -1, -1,
+    0,
+    TILEG_SUMMON_VERMIN,
+},
+
 #if TAG_MAJOR_VERSION == 34
 #define AXED_SPELL(tag, name) \
     { tag, name, spschool::none, spflag::none, 7, 0, -1, -1, 0, TILEG_ERROR },

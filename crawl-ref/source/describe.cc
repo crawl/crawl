@@ -5078,6 +5078,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_POISON_PARALYSE,   "poison and paralysis/slowing" },
         { AF_POISON,            "poison" },
         { AF_POISON_STRONG,     "strong poison" },
+        { AF_CURARE,            "curare" },
         { AF_DISTORT,           "distortion" },
         { AF_RAGE,              "drive defenders berserk" },
         { AF_CHAOTIC,           "chaos" },

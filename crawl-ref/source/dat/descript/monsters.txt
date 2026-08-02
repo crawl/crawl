@@ -103,6 +103,11 @@ harness. Cracked bronze bells hang from his horns, sounding commands that the
 beasts of the Lair obey with unsettling precision. He can drive his herd into a
 battle-frenzy before stampeding in a straight line towards his prey.
 %%%%
+Katinboo
+
+A cunning, broad-shouldered felid whose claws drip with curare. Katinboo never
+hunts alone for long, calling an ogre and a stubborn mule to join the fight.
+%%%%
 Cerebov
 
 A violent and wrathful demon, Cerebov appears as a giant humanoid covered in

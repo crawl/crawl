@@ -663,5 +663,6 @@ enum spell_type : int
     SPELL_BOLSTER,
     SPELL_PHASE_SHIFT,
     SPELL_TOUCH_OF_PARADOX,
+    SPELL_CALL_OGRE_AND_MULE,
     NUM_SPELLS
 };

@@ -1590,6 +1590,13 @@ spore_form_felid TRAN_SPORE_FELID
 
 %rim 1
 
+# Chili additions are appended to the monster-tile range so existing monster
+# and player-doll indices remain stable.
+%sdir mon/unique
+katinboo MONS_KATINBOO
+%sdir mon/animals
+mule MONS_MULE
+
 %sdir misc
 unseen_monster MONS_UNKNOWN
 unseen_monster MCACHE_START

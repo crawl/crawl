@@ -4533,8 +4533,9 @@ static int _place_uniques()
     int num_placed = 0;
 
     // Magic numbers for dpeg's unique system.
-    const int unique_chance_numerator = 3;
-    int unique_chance_denominator = 5;
+    const bool in_lair = player_in_branch(BRANCH_LAIR);
+    const int unique_chance_numerator = in_lair ? 2 : 3;
+    int unique_chance_denominator = in_lair ? 3 : 5;
     const int B = 5;
     while (x_chance_in_y(unique_chance_numerator,
                          unique_chance_denominator))

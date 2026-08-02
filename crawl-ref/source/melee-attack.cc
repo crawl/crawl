@@ -3852,6 +3852,11 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
         }
         break;
 
+    case AF_CURARE:
+        curare_actor(attacker, defender, "curare",
+                     attacker->name(DESC_PLAIN));
+        break;
+
     case AF_FIRE:
         special_damage =
             resist_adjust_damage(defender,
