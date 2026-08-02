@@ -238,6 +238,15 @@ static mons_spell_logic _hex_logic(spell_type spell,
 
 /// How do monsters go about casting spells?
 static const map<spell_type, mons_spell_logic> spell_to_logic = {
+    { SPELL_CALL_OGRE_AND_MULE, {
+        [](const monster &caster)
+        {
+            return ai_action::good_or_impossible(
+                count_summons(&caster, SPELL_CALL_OGRE_AND_MULE) == 0);
+        },
+        nullptr,
+        nullptr,
+    } },
     { SPELL_MIGHT, {
         _should_selfench(ENCH_MIGHT),
         _fire_simple_beam,
