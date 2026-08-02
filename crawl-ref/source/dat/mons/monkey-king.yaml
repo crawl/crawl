@@ -1,0 +1,22 @@
+name: "Monkey King"
+glyph: {char: "A", colour: lightgreen}
+flags: [warm_blood, unique, male]
+exp: 540
+will: 60
+attacks:
+ - {type: hit, damage: 18}
+ - {type: hit, damage: 18}
+hd: 13
+hp_10x: 785
+ac: 6
+ev: 18
+spells: monkey_king
+tile: monkey_king
+corpse_tile: howler_monkey
+has_corpse: true
+shout: howl
+intelligence: animal
+speed: 12
+uses: open_doors
+size: small
+shape: humanoid_tailed

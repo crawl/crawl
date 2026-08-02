@@ -2054,6 +2054,7 @@ static const map<monster_type, band_set> bands_by_leader = {
         return you.where_are_you == BRANCH_DEPTHS;
     }},                           {{ BAND_SPARK_WASPS, {1, 4} }}}},
     { MONS_HOWLER_MONKEY,   { {2, 6}, {{ BAND_HOWLER_MONKEY, {1, 3} }}}},
+    { MONS_MONKEY_KING,   { {}, {{ BAND_HOWLER_MONKEY, {5, 9} }}}},
     { MONS_GLASS_EYE,   { {0, 0, []() {
         return branch_has_monsters(you.where_are_you)
             || !vault_mon_types.empty();
@@ -2405,6 +2406,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_SHARD_SHRIKE,        {{{MONS_SHARD_SHRIKE, 1}}}},
     { BAND_SOJOBO,              {{{MONS_TENGU_REAVER, 1}}}},
     { BAND_HOWLER_MONKEY,       {{{MONS_HOWLER_MONKEY, 1}}}},
+    { BAND_MONKEY_KING,         {{{MONS_HOWLER_MONKEY, 1}}}}, 
     { BAND_WEEPING_SKULLS,      {{{MONS_WEEPING_SKULL, 1}}}},
     { BAND_DIRE_ELEPHANTS,      {{{MONS_DIRE_ELEPHANT, 1}}}},
     { BAND_CAUSTIC_SHRIKE,      {{{MONS_CAUSTIC_SHRIKE, 1}}}},

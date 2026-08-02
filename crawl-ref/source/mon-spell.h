@@ -262,6 +262,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_MONKEY_KING,
+      {
+       { SPELL_WARNING_CRY, 50, MON_SPELL_VOCAL | MON_SPELL_BREATH },
+       { SPELL_SENTINEL_MARK, 58, MON_SPELL_WIZARD },
+      }
+    },
+
     {  MST_HELL_HOUND,
       {
        { SPELL_FIRE_BREATH, 20, MON_SPELL_NATURAL | MON_SPELL_BREATH },
