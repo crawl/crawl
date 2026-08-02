@@ -1679,7 +1679,7 @@ vector<object_class_type> shuffled_acquirement_classes(bool scroll)
 {
     vector<object_class_type> rand_classes;
 
-    if (!you.has_mutation(MUT_NO_ARMOUR))
+    if (!you.has_mutation(MUT_NO_ARMOUR) || you.species == SP_FELID)
         rand_classes.emplace_back(OBJ_ARMOUR);
 
     if (!you.has_mutation(MUT_NO_GRASPING))

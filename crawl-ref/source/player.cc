@@ -1196,7 +1196,7 @@ maybe_bool you_can_wear(equipment_slot slot, bool include_form)
 // False for species that can't ever armour, and in extreme Octopode cases.
 bool player_can_use_armour()
 {
-    if (you.has_mutation(MUT_NO_ARMOUR))
+    if (you.has_mutation(MUT_NO_ARMOUR) && you.species != SP_FELID)
         return false;
 
     for (int i = SLOT_MIN_ARMOUR; i <= SLOT_MAX_ARMOUR; i++)

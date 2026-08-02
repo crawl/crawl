@@ -136,15 +136,22 @@ int count = 0;
 
         if (you.has_mutation(MUT_FORMLESS))
             NO_SLOT("You don't have a head.")
-        else if (you.has_mutation(MUT_NO_ARMOUR))
+        else if (you.has_mutation(MUT_NO_ARMOUR) && you.species != SP_FELID)
             NO_SLOT("That is much too large for your head.")
         else if (you.form == transformation::serpent)
             return 2;
         else if (you.get_mutation_level(MUT_HORNS, false) >= 3)
             NO_SLOT("You can't wear any headgear with your large horns!")
-        else if (you.get_mutation_level(MUT_ANTENNAE, false) >= 3)
+        else if (you.get_mutation_level(MUT_ANTENNAE, false) >= 3
+                 && you.species != SP_FORMICID)
             NO_SLOT("You can't wear any headgear with your large antennae!")
         else
+            ++count;
+
+        // Formicids can fit a hat around their antennae, while tengu and
+        // octopodes have an additional hat slot. Species anatomy restrictions
+        // still prevent hard helmets in can_equip_item().
+        if (you.species == SP_TENGU || you.species == SP_OCTOPODE)
             ++count;
 
         return count;
@@ -176,6 +183,8 @@ int count = 0;
     case SLOT_BOOTS:
         if (species::wears_barding(you.species) || you.has_mutation(MUT_FORMLESS))
             NO_SLOT("You don't have any feet!")
+        else if (you.species == SP_FELID)
+            return 1;
         else if (player_size <= SIZE_LITTLE)
             NO_SLOT(make_stringf("Those are too big for your %s.", you.foot_name(true).c_str()))
         else if (player_size >= SIZE_LARGE)
@@ -208,8 +217,10 @@ int count = 0;
 
         if (you.has_mutation(MUT_FORMLESS))
             NO_SLOT("You don't have any shoulders.")
-        else if (you.species == SP_OCTOPODE || you.has_mutation(MUT_NO_ARMOUR))
+        else if (you.has_mutation(MUT_NO_ARMOUR))
             NO_SLOT("You can't wear that.")
+        else if (you.species == SP_OCTOPODE)
+            return 1;
         else if (you.get_mutation_level(MUT_WEAKNESS_STINGER, false) >= 3)
             NO_SLOT("You can't wear that with your sharp stinger!")
 
@@ -533,6 +544,13 @@ bool can_equip_item(const item_def& item, bool temp, string* veto_reason,
                 NO_EQUIP(make_stringf("That is too %s for you to equip!",
                                             (bad_size > 0) ? "large" : "small"))
             }
+        }
+
+        if (slot == SLOT_CLOAK && you.species == SP_OCTOPODE
+            && you.form != transformation::sphinx
+            && item.sub_type != ARM_SCARF)
+        {
+            NO_EQUIP("You can only wear scarves around your mantle.")
         }
 
         if (is_hard_helmet(item))
