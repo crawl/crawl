@@ -2079,6 +2079,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 #endif
             break;
 
+        case MUT_SILENCE_AURA:
         case MUT_SILENCE_HALO:
         case MUT_FOUL_SHADOW:
             invalidate_agrid();
@@ -2238,6 +2239,7 @@ bool _delete_single_mutation_level(mutation_type mutat,
         ash_check_bondage();
         break;
 
+    case MUT_SILENCE_AURA:
     case MUT_SILENCE_HALO:
     case MUT_FOUL_SHADOW:
         invalidate_agrid();

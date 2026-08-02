@@ -346,6 +346,8 @@ public:
     virtual bool umbraed() const;
     // Halo radius.
     virtual int halo_radius() const = 0;
+    // Demonspawn Silence Radius
+    virtual int demon_silence_radius() const = 0;
     // Silence radius.
     virtual int silence_radius() const = 0;
     // Liquefying radius.

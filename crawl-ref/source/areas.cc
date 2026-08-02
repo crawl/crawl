@@ -113,6 +113,7 @@ static void _apply_area(const coord_def& center, int radius, area_type type,
 static void _actor_areas(actor *a)
 {
     _apply_area(a->pos(), a->silence_radius(), area_type::silence, LOS_NONE);
+    _apply_area(a->pos(), a->demon_silence_radius(), area_type::silence, LOS_DEFAULT, true);
     _apply_area(a->pos(), a->halo_radius(), area_type::halo);
     _apply_area(a->pos(), a->umbra_radius(), area_type::umbra);
     _apply_area(a->pos(), a->liquefying_radius(), area_type::liquified, LOS_SOLID, false, true);
@@ -146,9 +147,6 @@ static void _update_agrid()
 
     if ((player_has_orb() || you.unrand_equipped(UNRAND_CHARLATANS_ORB)))
         _apply_area(you.pos(), 2, area_type::orb);
-
-    if (you.has_mutation(MUT_SILENCE_AURA))
-        _apply_area(you.pos(), 1, area_type::silence, LOS_DEFAULT, true);
 
     if (you.duration[DUR_QUAD_DAMAGE])
         _apply_area(you.pos(), 2, area_type::quad);
@@ -702,6 +700,7 @@ bool monster::affects_agrid() const
 bool player::affects_agrid() const
 {
     return halo_radius() > -1
+           || demon_silence_radius() > -1
            || silence_radius() > -1
            || liquefying_radius() > -1
            || umbra_radius() > -1

@@ -944,6 +944,7 @@ public:
     bool backlit(bool self_halo = true, bool include_temp = true) const override;
     bool umbra() const override;
     int halo_radius() const override;
+    int demon_silence_radius() const;
     int silence_radius() const override;
     int liquefying_radius() const override;
     int umbra_radius() const override;
