@@ -613,6 +613,7 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_text = "Fire+";
         else
             inf.light_text = "Fire";
+        break;
     }
 
     case STATUS_BEOGH:
@@ -1027,7 +1028,7 @@ bool fill_status_info(int status, status_info& inf)
     case DUR_SALVO:
         inf.light_text = make_stringf("Salvo (%d)", you.props[SALVO_KEY].get_int());
         inf.short_text = make_stringf("salvo (%d)", you.props[SALVO_KEY].get_int());
-    break;
+        break;
 
     default:
         if (!found)
