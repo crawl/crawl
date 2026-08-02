@@ -14,7 +14,7 @@
 class input_history;
 class reader;
 class writer;
-class map_cell;
+struct map_cell;
 
 enum stash_sort_mode
 {
