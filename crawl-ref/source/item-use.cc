@@ -905,7 +905,7 @@ static bool _can_generically_use_armour(bool wear=true)
         return false;
     }
 
-    if (you.has_mutation(MUT_NO_ARMOUR))
+    if (you.has_mutation(MUT_NO_ARMOUR) && you.species != SP_FELID)
     {
         if (wear)
             mprf(MSGCH_PROMPT, "You can't wear anything.");
