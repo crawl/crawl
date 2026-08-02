@@ -1362,6 +1362,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             item.sub_type = WPN_TRIDENT;
             item.flags |= ISFLAG_IDENTIFIED;
             make_item_unrandart(item, UNRAND_OCTOPUS_KING);
+            you.props[REGAL_TRIDENT] = true;
         }
         else
         {
@@ -1578,56 +1579,6 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
                || is_range_weapon(i))
     {
         _give_weapon(mon, level, true);
-    }
-
-    if (mon->type == MONS_ERICA && i.is_type(OBJ_WEAPONS, WPN_SCIMITAR))
-        make_item_for_monster(mon, OBJ_JEWELLERY, NUM_RINGS, 0, 1);
-
-    if (mon->type == MONS_FANNAR && i.is_type(OBJ_WEAPONS, WPN_QUARTERSTAFF))
-        make_item_for_monster(mon, OBJ_JEWELLERY, RING_PROTECTION_FROM_COLD, 0, 1);
-
-    if (mon->type == MONS_WIGLAF)
-    {
-        // Always good, and sometimes especially good
-        item_def* hat = make_item_for_monster(mon, OBJ_ARMOUR, ARM_HAT, ISPEC_RANDART);
-        hat->plus = random_range(2, 4);
-
-        hat->props[ITEM_TILE_NAME_KEY] = "THELM_HAT_WIGLAF";
-        hat->props[WORN_TILE_NAME_KEY] = "hat_wiglaf";
-        bind_item_tile(*hat);
-    }
-
-    if (mon->type == MONS_OCTAVIA)
-    {
-
-        make_item_for_monster(mon, OBJ_JEWELLERY, NUM_RINGS, 0, 1);
-        give_specific_item(mon, items(false, OBJ_GOLD, 0, ISPEC_GIFT));
-    }
-
-    if (mon->type == MONS_REGAL)
-    {
-        if (i.sub_type == WPN_TRIDENT)
-            return;
-
-        item_def item;
-        item.base_type = OBJ_JEWELLERY;
-        item.quantity = 1;
-        make_item_unrandart(item, UNRAND_OCTOPUS_KING_RING);
-        give_specific_item(mon, item);
-        return;
-    }
-
-    if (mon->type == MONS_JOSEPHINA)
-        make_item_for_monster(mon, OBJ_JEWELLERY, RING_PROTECTION_FROM_COLD, ISPEC_RANDART, true);
-
-    if (mon->type == MONS_CASSANDRA && coinflip())
-    {
-        item_def* amu = make_item_for_monster(mon, OBJ_JEWELLERY, get_random_amulet_type(), 0, 1);
-        if (amu && one_chance_in(4))
-        {
-            amu->props[FIXED_PROPS_KEY].get_table()["Bane"] = 1;
-            make_item_randart(*amu);
-        }
     }
 }
 
@@ -2499,6 +2450,13 @@ static void _give_extra_equipment(monster* mon, int level)
     }
     break;
 
+    case MONS_OCTAVIA:
+    {
+        make_item_for_monster(mon, OBJ_JEWELLERY, NUM_RINGS, 0, 1);
+        give_specific_item(mon, items(false, OBJ_GOLD, 0, ISPEC_GIFT));
+    }
+    break;
+
     case MONS_JOSEPHINA:
         make_item_for_monster(mon, OBJ_JEWELLERY, RING_PROTECTION_FROM_COLD, ISPEC_RANDART, true);
         break;
@@ -2514,6 +2472,17 @@ static void _give_extra_equipment(monster* mon, int level)
                 make_item_randart(*amu);
             }
         }
+    }
+
+    case MONS_REGAL:
+    {
+        if (you.props.exists(REGAL_TRIDENT))
+            break;
+
+        item_def* item = make_item_for_monster(mon, OBJ_JEWELLERY, get_random_ring_type(), 0);
+        if (item)
+            make_item_unrandart(*item, UNRAND_OCTOPUS_KING_RING);
+        break;
     }
 
     case MONS_ROBIN:
