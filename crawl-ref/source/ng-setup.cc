@@ -301,6 +301,8 @@ void give_items_skills(const newgame_def& ng)
         newgame_make_item(OBJ_WEAPONS, ng.weapon);
 
     give_job_equipment(you.char_class);
+    if (you.char_class == JOB_GLADIATOR && you.species == SP_FELID)
+        newgame_make_item(OBJ_ARMOUR, ARM_HAT);
     give_job_skills(you.char_class);
     _give_job_spells(you.char_class);
     if (you.char_class == JOB_GLADIATOR)
