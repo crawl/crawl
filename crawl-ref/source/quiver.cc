@@ -1259,9 +1259,7 @@ namespace quiver
     static bool _pseudoability(ability_type a)
     {
         if (   static_cast<int>(a) >= ABIL_FIRST_SACRIFICE
-                    && static_cast<int>(a) <= ABIL_FINAL_SACRIFICE
-            || static_cast<int>(a) >= ABIL_HEPLIAKLQANA_FIRST_TYPE
-                    && static_cast<int>(a) <= ABIL_HEPLIAKLQANA_LAST_TYPE)
+                    && static_cast<int>(a) <= ABIL_FINAL_SACRIFICE)
         {
             return true;
         }
@@ -1277,6 +1275,9 @@ namespace quiver
         case ABIL_ASHENZARI_CURSE:
         case ABIL_RU_REJECT_SACRIFICES:
         case ABIL_HEPLIAKLQANA_IDENTITY:
+        case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
+        case ABIL_HEPLIAKLQANA_TYPE_ELEMENTALIST:
+        case ABIL_HEPLIAKLQANA_TYPE_HEXER:
         case ABIL_RENOUNCE_RELIGION:
         case ABIL_CONVERT_TO_BEOGH:
         case ABIL_OKAWARU_GIFT_WEAPON:

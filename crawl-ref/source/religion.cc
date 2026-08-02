@@ -237,6 +237,10 @@ const vector<vector<god_power>> & get_all_god_powers()
             { 4, ABIL_NEMELEX_DEAL_FOUR, "deal four cards at a time" },
             { 5, ABIL_NEMELEX_STACK_FIVE, "stack five cards from your decks",
                                         "stack cards" },
+            { 0, ABIL_NEMELEX_DRAW_STACK, ""},
+            { 0, ABIL_NEMELEX_DRAW_ESCAPE, ""},
+            { 0, ABIL_NEMELEX_DRAW_DESTRUCTION, ""},
+            { 0, ABIL_NEMELEX_DRAW_SUMMONING, ""},
         },
 
         // Elyvilon
@@ -406,6 +410,9 @@ const vector<vector<god_power>> & get_all_god_powers()
         {   { 1, "", "", "Your ancestor manifests to aid you." },
             { 1, ABIL_HEPLIAKLQANA_RECALL, "recall your ancestor" },
             { 1, ABIL_HEPLIAKLQANA_IDENTITY, "remember your ancestor's identity" },
+            { 2, ABIL_HEPLIAKLQANA_TYPE_KNIGHT, ""},
+            { 2, ABIL_HEPLIAKLQANA_TYPE_ELEMENTALIST, ""},
+            { 2, ABIL_HEPLIAKLQANA_TYPE_HEXER, ""},
             { 3, ABIL_HEPLIAKLQANA_TRANSFERENCE, "swap creatures with your ancestor" },
             { 4, ABIL_HEPLIAKLQANA_IDEALISE, "heal and protect your ancestor" },
             { 5, "You now drain nearby creatures when transferring your ancestor.",

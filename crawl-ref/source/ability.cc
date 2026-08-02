@@ -1270,6 +1270,18 @@ ability_type fixup_ability(ability_type ability)
             return ability;
         return ABIL_NON_ABILITY;
 
+    case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
+    case ABIL_HEPLIAKLQANA_TYPE_ELEMENTALIST:
+    case ABIL_HEPLIAKLQANA_TYPE_HEXER:
+        if (you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY))
+            return ABIL_NON_ABILITY;
+        return ability;
+
+    case ABIL_NEMELEX_DRAW_STACK:
+        if (you.props[NEMELEX_STACK_KEY].get_vector().empty())
+            return ABIL_NON_ABILITY;
+        return ability;
+
     default:
         return ability;
     }
@@ -4407,8 +4419,7 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     if (is_religious_ability(abil))
     {
         // TODO: something less dumb than this?
-        auto god_abils = get_god_abilities(include_unusable, false,
-                                               include_unusable);
+        auto god_abils = get_god_abilities(false, include_unusable);
         return count(god_abils.begin(), god_abils.end(), abil);
     }
 
@@ -4567,11 +4578,8 @@ vector<talent> your_talents(bool include_unusable, bool ignore_piety)
 
 
     // player_has_ability will just brute force these anyways (TODO)
-    for (ability_type abil : get_god_abilities(include_unusable, ignore_piety,
-                                               include_unusable))
-    {
+    for (ability_type abil : get_god_abilities(ignore_piety, include_unusable))
         _add_talent(talents, abil);
-    }
 
     // Side effect alert!
     // Find hotkeys for the non-hotkeyed talents. (XX: how does this relate
@@ -4808,8 +4816,7 @@ int find_ability_slot(const ability_type abil, char firstletter)
 }
 
 
-vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
-                                       bool ignore_penance)
+vector<ability_type> get_god_abilities(bool ignore_piety, bool ignore_penance)
 {
     vector<ability_type> abilities;
     if (you_worship(GOD_RU) && you.props.exists(AVAILABLE_SAC_KEY))
@@ -4829,37 +4836,6 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
             abilities.push_back(ABIL_ASHENZARI_CURSE);
         if (ignore_piety || you.raw_piety > ASHENZARI_BASE_PIETY )
             abilities.push_back(ABIL_ASHENZARI_UNCURSE);
-    }
-    // XXX: should we check ignore_piety?
-    if (you_worship(GOD_HEPLIAKLQANA)
-        && piety_rank() >= 2 && !you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY))
-    {
-        for (int anc_type = ABIL_HEPLIAKLQANA_FIRST_TYPE;
-             anc_type <= ABIL_HEPLIAKLQANA_LAST_TYPE;
-             ++anc_type)
-        {
-            abilities.push_back(static_cast<ability_type>(anc_type));
-        }
-    }
-
-    if (!ignore_silence && you.is_silenced())
-    {
-        if (have_passive(passive_t::wu_jian_wall_jump))
-            abilities.push_back(ABIL_WU_JIAN_WALLJUMP);
-        return abilities;
-    }
-
-    // Remaining abilities are unusable if silenced.
-    if (you_worship(GOD_NEMELEX_XOBEH))
-    {
-        for (int deck = ABIL_NEMELEX_FIRST_DECK;
-             deck <= ABIL_NEMELEX_LAST_DECK;
-             ++deck)
-        {
-            abilities.push_back(static_cast<ability_type>(deck));
-        }
-        if (!you.props[NEMELEX_STACK_KEY].get_vector().empty())
-            abilities.push_back(ABIL_NEMELEX_DRAW_STACK);
     }
 
     for (const auto& power : get_god_powers(you.religion))
