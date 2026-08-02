@@ -465,6 +465,11 @@ DEPTH:  Lair
 WEIGHT: 50
 : place_unique(_G, "Verity")
 
+NAME:   uniq_monkey_king
+DEPTH:  Lair
+WEIGHT: 50
+: place_unique(_G, "Monkey King band")
+
 NAME:   uniq_polyphemus
 DEPTH:  Shoals:2-
 WEIGHT: 50

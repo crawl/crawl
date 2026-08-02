@@ -947,6 +947,7 @@ enum monster_type                      // env.mons[].type
     MONS_IJYB,
     MONS_JESSICA,
     MONS_MEDUSA,
+    MONS_MONKEY_KING,
     MONS_OSKAR,
     MONS_VERITY,
     MONS_SIGMUND,
