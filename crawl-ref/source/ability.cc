@@ -771,6 +771,22 @@ static vector<ability_def> &_get_ability_list()
     return Ability_List;
 }
 
+static const ability_def& get_ability_def(ability_type abil)
+{
+    static map<ability_type, ability_def> abil_map;
+
+    // Initialize map on first lookup.
+    if (abil_map.empty())
+        for (const ability_def &ab_def : _get_ability_list())
+            abil_map.emplace(ab_def.ability, ab_def);
+
+    const ability_def* def = map_find(abil_map, abil);
+    if (def)
+        return *def;
+    else
+        return _get_ability_list()[0];
+}
+
 static map<ability_type, spell_type> breath_to_spell =
 {
     { ABIL_GOLDEN_BREATH, SPELL_GOLDEN_BREATH },
@@ -787,15 +803,6 @@ static map<ability_type, spell_type> breath_to_spell =
 spell_type draconian_breath_to_spell(ability_type abil)
 {
     return breath_to_spell[abil];
-}
-
-static const ability_def& get_ability_def(ability_type abil)
-{
-    for (const ability_def &ab_def : _get_ability_list())
-        if (ab_def.ability == abil)
-            return ab_def;
-
-    return _get_ability_list()[0];
 }
 
 vector<ability_type> get_defined_abilities()
