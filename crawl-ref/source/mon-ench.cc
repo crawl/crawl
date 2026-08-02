@@ -336,7 +336,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_LIQUEFYING:
     case ENCH_SILENCE:
-        invalidate_agrid(true);
+        invalidate_agrid();
         break;
 
     case ENCH_INVIS:

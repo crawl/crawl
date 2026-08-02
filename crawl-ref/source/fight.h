@@ -52,17 +52,16 @@ stab_type find_player_stab_type(const monster &victim);
 int stab_bonus_denom(stab_type stab);
 
 bool should_cleave_into(const actor &attacker, const actor &defender);
-bool _monster_has_reachcleave(const actor &attacker);
 bool force_player_cleave(coord_def target);
-bool attack_cleaves(const actor &attacker, const item_def *weapon = nullptr);
+bool attack_cleaves(const actor &attacker, const item_def *weapon = nullptr,
+                    int attack_num = -1);
 bool weapon_cleaves(const item_def &item);
 int weapon_hits_per_swing(const item_def &item);
 bool weapon_multihits(const item_def *item);
 void get_cleave_targets(const actor &attacker, const coord_def& def,
-                        list<actor*> &targets, int which_attack = -1,
-                        bool force_cleaving = false,
-                        const item_def *weapon = nullptr,
-                        int reach_bonus = 0);
+                        vector<actor*> &targets, int range = 1);
+vector<actor*> get_player_attack_targets();
+vector<actor*> get_player_cleave_targets(const coord_def& aim);
 
 class attack;
 int to_hit_pct(const monster_info& mi, attack &atk,

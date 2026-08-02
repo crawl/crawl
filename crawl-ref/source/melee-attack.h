@@ -42,7 +42,7 @@ public:
     int       attack_number;
     int       effective_attack_number;
 
-    list<actor*> cleave_targets;
+    vector<actor*> cleave_targets;
 
     // Important: any parameters that may be set from outside before attack()
     //            is called *must* be included in melee_attack::copy_params_to()
@@ -219,7 +219,7 @@ private:
     // XXX: set up a copy constructor instead?
     void copy_params_to(melee_attack &other) const;
 
-    bool do_followup_attacks(list<actor*>& targets, bool is_cleaving);
+    bool do_followup_attacks(vector<actor*>& targets, bool is_cleaving);
 
     bool is_attacking_hostiles;
 

@@ -58,9 +58,9 @@ antimagic weapon, with no direct line of fire required.
 %%%%
 Apportation spell
 
-Pulls the top item or group of similar items from a distant pile to the floor
-near the caster. With low power, items might not be moved all the way to the
-caster's position.
+Pulls all items at a given location on the floor towards the caster.
+
+With low power, items might not be moved all the way to the caster's position.
 
 Extremely powerful magical items, such as the Orb of Zot, may actively resist
 the pull of this spell.

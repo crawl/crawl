@@ -668,13 +668,15 @@ void viewwindow(bool show_updates, bool tiles_only, animation *a, view_renderer 
 
             if (you.on_current_level)
             {
+                // Update these first, since it can affect which item is drawn
+                // on top of a pile of items.
+                if (show_updates)
+                    maybe_update_stashes();
+
                 // TODO: why on earth is this called from here? It seems like it
                 // should be called directly on changing location, or something
                 // like that...
                 show_init(_layers);
-
-                if (show_updates)
-                    maybe_update_stashes();
             }
 
 #ifdef USE_TILE

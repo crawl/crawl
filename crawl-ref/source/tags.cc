@@ -6125,14 +6125,14 @@ void unmarshallItem(reader &th, item_def &item)
 
     // Not putting these in a minor tag since it's possible for an old
     // random monster spawn list to place flame/frost weapons.
-    if (item.base_type == OBJ_WEAPONS && get_weapon_brand(item) == SPWPN_FROST)
+    if (item.base_type == OBJ_WEAPONS && get_weapon_brand(item) == SPWPN_FROST_OLD)
     {
         if (is_artefact(item))
             artefact_set_property(item, ARTP_BRAND, SPWPN_FREEZING);
         else
             item.brand = SPWPN_FREEZING;
     }
-    if (item.base_type == OBJ_WEAPONS && get_weapon_brand(item) == SPWPN_FLAME)
+    if (item.base_type == OBJ_WEAPONS && get_weapon_brand(item) == SPWPN_FLAME_OLD)
     {
         if (is_artefact(item))
             artefact_set_property(item, ARTP_BRAND, SPWPN_FLAMING);
@@ -6538,10 +6538,11 @@ void unmarshallItem(reader &th, item_def &item)
     bind_item_tile(item);
 }
 
-#define MAP_SERIALIZE_FLAGS_MASK 3
+#define MAP_SERIALIZE_FLAGS_MASK (3 | 0x100)
 #define MAP_SERIALIZE_FLAGS_8 1
 #define MAP_SERIALIZE_FLAGS_16 2
 #define MAP_SERIALIZE_FLAGS_32 3
+#define MAP_SERIALIZE_FLAGS_64 0x100
 
 #define MAP_SERIALIZE_FEATURE 4
 #define MAP_SERIALIZE_FEATURE_COLOUR 8
@@ -6553,7 +6554,9 @@ void marshallMapCell(writer &th, const map_cell &cell)
 {
     unsigned flags = 0;
 
-    if (cell.flags > 0xffff)
+    if (cell.flags > 0xffffffff)
+        flags |= MAP_SERIALIZE_FLAGS_64;
+    else if (cell.flags > 0xffff)
         flags |= MAP_SERIALIZE_FLAGS_32;
     else if (cell.flags > 0xff)
         flags |= MAP_SERIALIZE_FLAGS_16;
@@ -6588,6 +6591,9 @@ void marshallMapCell(writer &th, const map_cell &cell)
     case MAP_SERIALIZE_FLAGS_32:
         marshallInt(th, static_cast<int32_t>(cell.flags));
         break;
+    case MAP_SERIALIZE_FLAGS_64:
+        marshallUnsigned(th, cell.flags);
+        break;
     }
 
     if (flags & MAP_SERIALIZE_FEATURE)
@@ -6620,7 +6626,7 @@ void marshallMapCell(writer &th, const map_cell &cell)
 void unmarshallMapCell(reader &th, map_cell& cell)
 {
     unsigned flags = unmarshallUnsigned(th);
-    unsigned cell_flags = 0;
+    map_flag_t cell_flags = 0;
 
     cell.clear();
 
@@ -6634,6 +6640,9 @@ void unmarshallMapCell(reader &th, map_cell& cell)
         break;
     case MAP_SERIALIZE_FLAGS_32:
         cell_flags = static_cast<uint32_t>(unmarshallInt(th));
+        break;
+    case MAP_SERIALIZE_FLAGS_64:
+        cell_flags = unmarshallUnsigned(th);
         break;
     }
 
@@ -6679,7 +6688,7 @@ void unmarshallMapCell(reader &th, map_cell& cell)
     {
         item_def item;
         unmarshallItem(th, item);
-        cell.set_item(item, false);
+        cell.set_item(item);
     }
 
     if (flags & MAP_SERIALIZE_MONSTER)
@@ -6833,6 +6842,8 @@ static void _marshall_mi_attack(writer &th, const mon_attack_def &attk)
     marshallInt(th, attk.type);
     marshallInt(th, attk.flavour);
     marshallInt(th, attk.damage);
+    marshallByte(th, attk.reach);
+    marshallBoolean(th, attk.cleaves);
 }
 
 static mon_attack_def _unmarshall_mi_attack(reader &th)
@@ -6841,6 +6852,17 @@ static mon_attack_def _unmarshall_mi_attack(reader &th)
     attk.type = static_cast<attack_type>(unmarshallInt(th));
     attk.flavour = static_cast<attack_flavour>(unmarshallInt(th));
     attk.damage = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_MON_ATTACK_DEF_RANGE)
+    {
+#endif
+    attk.reach = unmarshallByte(th);
+    attk.cleaves = unmarshallBoolean(th);
+#if TAG_MAJOR_VERSION == 34
+    }
+    // This is only for xv of monsters not currently in sight, so showing
+    // incorrect information on save upgrade is harmless.
+#endif
 
     return attk;
 }

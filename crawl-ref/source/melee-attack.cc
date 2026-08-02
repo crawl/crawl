@@ -95,15 +95,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
 bool melee_attack::can_reach(int dist)
 {
-    const int wpn_reach = weapon ? weapon_reach(*weapon) : 1;
-    const int range_bonus =
-            you.form == transformation::aqua
-                && (attacker->is_player() || attacker->type == MONS_PLAYER_SHADOW)
-                    ? 2 : 0;
-
     return dist <= 1
-           || attk_type == AT_HIT && wpn_reach + range_bonus >= dist
-           || flavour_has_reach(attk_flavour)
+           || attk_reach + attacker->reach_range_bonus() >= dist
            || is_projected
            || is_sunder;
 }
@@ -124,12 +117,9 @@ bool melee_attack::bad_attempt()
     if (!is_projected && player_unrand_bad_attempt())
         return true;
 
-    if (!cleave_targets.empty())
-    {
-        const int range = you.reach_range();
-        targeter_cleave hitfunc(attacker, defender->pos(), range);
+    targeter_cleave hitfunc(defender->pos());
+    if (hitfunc.affects_anything())
         return stop_attack_prompt(hitfunc, "attack");
-    }
 
     return stop_attack_prompt(defender->as_monster(), false, attack_position);
 }
@@ -217,7 +207,7 @@ bool melee_attack::handle_phase_attempted()
 {
     // Skip invalid and dummy attacks.
     if (defender && !can_reach(grid_distance(attack_position, defender->pos()))
-        || attk_flavour == AF_CRUSH
+        || attk_flavour == AF_CONSTRICT
            && !attacker->can_constrict(*defender, CONSTRICT_MELEE))
     {
         return false;
@@ -898,15 +888,6 @@ bool melee_attack::handle_phase_hit()
         return false;
     }
 
-    // Randomizing here instead of in mons_attack_spec so that the reaching
-    // works properly.
-    if (attk_flavour == AF_REACH_CLEAVE_UGLY)
-    {
-        attack_flavour flavours[] =
-            {AF_FIRE, AF_COLD, AF_ELEC, AF_POISON, AF_ACID, AF_ANTIMAGIC};
-        attk_flavour = RANDOM_ELEMENT(flavours);
-    }
-
     if (damage_done > 0 || flavour_triggers_damageless(attk_flavour))
     {
         if (!handle_phase_damaged())
@@ -1380,7 +1361,7 @@ bool melee_attack::handle_phase_multihit()
     if (!is_followup && weapon_multihits(weapon) && defender && defender->alive())
     {
         const int hits_per_targ = weapon_hits_per_swing(*weapon);
-        list<actor*> extra_hits;
+        vector<actor*> extra_hits;
         for (int i = 1; i < hits_per_targ; i++)
             extra_hits.push_back(defender);
         // effective_attack_number will be wrong for a monster that
@@ -1484,14 +1465,12 @@ void melee_attack::copy_params_to(melee_attack &other) const
 
 // Perform followup attacks (from cleaving or quick blades).
 // Returns true if at least one of these attacks succeeded.
-bool melee_attack::do_followup_attacks(list<actor*>& targets, bool is_cleaving)
+bool melee_attack::do_followup_attacks(vector<actor*>& targets, bool is_cleaving)
 {
     int new_effective_attack_number = effective_attack_number + 1;
     bool success = false;
-    while (attacker->alive() && !targets.empty())
+    for (actor* def : targets)
     {
-        actor* def = targets.front();
-
         if (def && def->alive() && should_cleave_into(*attacker, *def))
         {
             melee_attack followup(attacker, def, attack_number,
@@ -1505,7 +1484,9 @@ bool melee_attack::do_followup_attacks(list<actor*>& targets, bool is_cleaving)
             success |= followup.attack();
             total_damage_done += followup.total_damage_done;
         }
-        targets.pop_front();
+
+        if (!attacker->alive())
+            break;
     }
 
     return success;
@@ -1528,28 +1509,29 @@ void melee_attack::set_weapon(item_def *wpn)
     init_attack(attack_number);
     if (weapon && !using_weapon())
         wpn_skill = SK_FIGHTING;
+
+    // attk_cleaves may have already been set to true in init_attack() for a
+    // monster with innate cleaving on this attack.
+    attk_cleaves |= attack_cleaves(*attacker, weapon);
+    attk_reach += (weapon ? weapon_reach(*weapon) : 1) - 1;
 }
 
 // Perform a player attack with a specific weapon.
 bool melee_attack::swing_with(item_def &wpn)
 {
-    const bool reaching = weapon_reach(wpn) > 1
-                            || you.form == transformation::aqua;
-    if (!is_projected
-        && !reaching
-        && defender     // Attacks without a defender are empty cleaves. The
-                        // initial attack will do nothing, but may set up
-                        // followup attacks to be handled normally.
-        && !adjacent(attacker->pos(), defender->pos()))
-    {
-        return false;
-    }
-
     melee_attack swing(attacker, defender,
                        attack_number,
                        effective_attack_number);
     copy_params_to(swing);
     swing.set_weapon(&wpn);
+
+    // Coglins attacking with a reaching weapon and a cleaving weapon should
+    // still get the cleave part of their shorter-range weapon, but the attack
+    // will abort if it can't reach its primary target at all. With a null
+    // defender, it will handling cleaving only.
+    if (defender && !swing.can_reach(grid_distance(attack_position, defender->pos())))
+        swing.defender = nullptr;
+
     bool success = swing.attack();
     is_sunder |= swing.is_sunder;
     cancel_attack = swing.cancel_attack;
@@ -3640,7 +3622,7 @@ string melee_attack::charge_desc()
 
 void melee_attack::announce_hit()
 {
-    if (!needs_message || attk_flavour == AF_CRUSH)
+    if (!needs_message || attk_flavour == AF_CONSTRICT)
         return;
 
     if (attacker->is_monster())
@@ -3862,7 +3844,6 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
 
     case AF_POISON:
     case AF_POISON_STRONG:
-    case AF_REACH_STING:
         if (attacker->as_monster()->has_ench(ENCH_CONCENTRATE_VENOM)
             ? coinflip()
             : one_chance_in(3))
@@ -4077,7 +4058,6 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
         break;
     }
 
-    case AF_REACH_TONGUE:
     case AF_ACID:
         defender->splash_with_acid(attacker);
         break;
@@ -4086,7 +4066,6 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
         defender->corrode(attacker, atk_name(DESC_THE).c_str());
         break;
 
-    case AF_RIFT:
     case AF_DISTORT:
         distortion_affects_defender();
         break;
@@ -4198,7 +4177,7 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
             defender->trap_in_web();
         break;
 
-    case AF_CRUSH:
+    case AF_CONSTRICT:
         // Works on 2/3 of hits
         if (one_chance_in(3))
             break;
@@ -5017,6 +4996,9 @@ bool melee_attack::do_drag()
 
 /**
  * Find the list of targets to cleave after hitting the main target and save it.
+ *
+ * (This must be calculated before the main attack, since if the primary target
+ * dies, its position will be lost.)
  */
 void melee_attack::cleave_setup()
 {
@@ -5040,6 +5022,7 @@ void melee_attack::cleave_setup()
     if (is_sundering_weapon() && attacker->sunder_is_ready())
     {
         is_sunder = true;
+        attk_cleaves = true;
         to_hit_bonus = 12;
         dmg_mult = attacker->is_monster() ? 150 : 200;
 
@@ -5049,15 +5032,12 @@ void melee_attack::cleave_setup()
             attacker->as_monster()->del_ench(ENCH_SUNDER_CHARGE);
     }
 
-    // We need to get the list of the remaining potential targets now because
-    // if the main target dies, its position will be lost.
-    get_cleave_targets(*attacker, defender ? defender->pos() : coord_def(),
-                       cleave_targets, attack_number, false, weapon,
-                       is_sunder ? 1 : 0);
-
-    // We're already attacking this guy.
-    if (defender)
-        cleave_targets.pop_front();
+    if (attk_cleaves)
+    {
+        const int range = attk_reach + (is_sunder ? 1 : 0);
+        get_cleave_targets(*attacker, defender ? defender->pos() : coord_def(),
+                            cleave_targets, range);
+    }
 }
 
 // cleave damage modifier for additional attacks: 70% of base damage
@@ -5206,7 +5186,7 @@ int melee_attack::apply_mon_damage_modifiers(int damage)
 int melee_attack::calc_damage()
 {
     // Constriction deals damage over time, not when grabbing.
-    if (attk_flavour == AF_CRUSH)
+    if (attk_flavour == AF_CONSTRICT)
         return 0;
 
     return attack::calc_damage();
@@ -5311,11 +5291,7 @@ bool coglin_spellmotor_attack()
         return false;
 
     // Gather all possible targets in attack range.
-    // (We have to manually add aqua form's reaching bonus, since it normally
-    // doesn't apply to cleaving attacks.)
-    list<actor*> targets;
-    get_cleave_targets(you, coord_def(), targets, -1, true, nullptr,
-                       you.form == transformation::aqua ? 2 : 0);
+    vector<actor*> targets = get_player_attack_targets();
 
     // Test that we have at least one valid non-prompting attack
     vector<actor*> targs;
@@ -5356,8 +5332,7 @@ bool spellclaws_attack(int spell_level)
     }
 
     // Gather all possible targets in attack range
-    list<actor*> targets;
-    get_cleave_targets(you, coord_def(), targets, -1, true);
+    vector<actor*> targets = get_player_attack_targets();
 
     // Then choose the one with the *most* current health (that wouldn't cause
     // a warning prompt for some reason).

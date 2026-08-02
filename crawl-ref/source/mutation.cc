@@ -2081,7 +2081,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
         case MUT_SILENCE_HALO:
         case MUT_FOUL_SHADOW:
-            invalidate_agrid(true);
+            invalidate_agrid();
             break;
 
         case MUT_EVOLUTION:
@@ -2240,7 +2240,7 @@ bool _delete_single_mutation_level(mutation_type mutat,
 
     case MUT_SILENCE_HALO:
     case MUT_FOUL_SHADOW:
-        invalidate_agrid(true);
+        invalidate_agrid();
         break;
 
     case MUT_EVOLUTION:

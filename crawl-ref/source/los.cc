@@ -836,7 +836,7 @@ opacity_type mons_opacity(monster_type mc, los_type how)
 // has changed somewhere.
 static void _handle_los_change()
 {
-    invalidate_agrid();
+    invalidate_agrid(false);
 }
 
 static bool _mons_block_sight(const monster* mons)

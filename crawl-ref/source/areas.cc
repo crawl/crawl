@@ -29,31 +29,14 @@
 #include "traps.h"
 #include "travel.h"
 
-/// Bitmasks for area properties that center on actors
-enum class areaprop
-{
-    // 0 and 1 were sanctuary, now unused
-    silence       = (1 << 2),
-    halo          = (1 << 3),
-    liquified     = (1 << 4),
-    // (1 << 5) was actual_liquid, now unused
-    orb           = (1 << 6), ///< The glow of the Orb of Zot
-    umbra         = (1 << 7),
-    quad          = (1 << 8),
-    disjunction   = (1 << 9),
-    // 10 was lost soul aura, now unused
-};
-/// Bit field for the area properties
-DEF_BITFIELD(areaprops, areaprop);
-
 /// Center of an area effect
 struct area_centre
 {
-    area_centre_type type;
+    area_type type;
     coord_def centre;
     int radius;
 
-    explicit area_centre (area_centre_type t, coord_def c, int r) : type(t), centre(c), radius(r) { }
+    explicit area_centre (area_type t, coord_def c, int r) : type(t), centre(c), radius(r) { }
 };
 
 typedef FixedArray<areaprops, GXM, GYM> propgrid_t;
@@ -69,12 +52,12 @@ static bool _agrid_valid = false;
 /// \brief If true, the level has no area effect
 static bool no_areas = false;
 
-static void _set_agrid_flag(const coord_def& p, areaprop f)
+static void _set_agrid_flag(const coord_def& p, area_type f)
 {
     _agrid(p) |= f;
 }
 
-static bool _check_agrid_flag(const coord_def& p, areaprop f)
+static bool _check_agrid_flag(const coord_def& p, area_type f)
 {
     return bool(_agrid(p) & f);
 }
@@ -82,87 +65,57 @@ static bool _check_agrid_flag(const coord_def& p, areaprop f)
 /// \brief Invalidates the area effect cache
 /// \details Invalidates the area effect cache, causing the next request for
 /// area effects to re-calculate which locations are covered by halos, etc.
-/// If \p recheck_new is false, the cache will only be invalidated if the level
+/// If \p force is false, the cache will only be invalidated if the level
 /// had existing area effects.
-void invalidate_agrid(bool recheck_new)
+void invalidate_agrid(bool force)
 {
     _agrid_valid = false;
-    if (recheck_new)
+    if (force)
         no_areas = false;
 }
 
-void areas_actor_moved(const actor* act, const coord_def& oldpos)
+void areas_actor_moved(const actor* act)
 {
-    UNUSED(oldpos);
-    if (act->alive() &&
-        (you.entering_level
-         || act->halo_radius() > -1 || act->silence_radius() > -1
-         || act->liquefying_radius() > -1 || act->umbra_radius() > -1
-         || act->demon_silence_radius() > -1))
+    if (act->alive() && act->affects_agrid())
     {
         // Not necessarily new, but certainly potentially interesting.
-        invalidate_agrid(true);
+        invalidate_agrid();
     }
+}
+
+static void _apply_area(const coord_def& center, int radius, area_type type,
+                        los_type los = LOS_DEFAULT,
+                        bool exclude_center = false,
+                        bool ground_only = false)
+{
+    if (radius <= 0)
+        return;
+
+    for (radius_iterator ri(center, radius, C_SQUARE, los, exclude_center); ri; ++ri)
+    {
+        // Leda's only applies on
+        if (ground_only && !feat_has_dry_floor(env.grid(*ri)))
+            continue;
+
+        _set_agrid_flag(*ri, type);
+    }
+
+    _agrid_centres.emplace_back(type, center, radius);
+
+    no_areas = false;
 }
 
 /// \brief Add some of the actor's area effects to the grid and center caches
 /// \param actor The actor
-/// \details Adds some but not all of an actor's area effects (e.g. silence)
-/// to the area grid (\ref _agrid) and center (\ref _agrid_centres) caches.
+/// \details Adds all non-player-specific actor area effects (e.g. silence) to
+/// the area grid (\ref _agrid) and center (\ref _agrid_centres) caches.
 /// Sets \ref no_areas to false if the actor generates those area effects.
 static void _actor_areas(actor *a)
 {
-    int r;
-
-    if ((r = a->silence_radius()) >= 0)
-    {
-        _agrid_centres.emplace_back(area_centre_type::silence, a->pos(), r);
-
-        for (radius_iterator ri(a->pos(), r, C_SQUARE); ri; ++ri)
-            _set_agrid_flag(*ri, areaprop::silence);
-        no_areas = false;
-    }
-
-    if ((r = a->demon_silence_radius()) >= 0)
-    {
-        _agrid_centres.emplace_back(area_centre_type::silence, a->pos(), r);
-
-        for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_DEFAULT, true); ri; ++ri)
-            _set_agrid_flag(*ri, areaprop::silence);
-        no_areas = false;
-    }
-
-    if ((r = a->halo_radius()) >= 0)
-    {
-        _agrid_centres.emplace_back(area_centre_type::halo, a->pos(), r);
-
-        for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_DEFAULT); ri; ++ri)
-            _set_agrid_flag(*ri, areaprop::halo);
-        no_areas = false;
-    }
-
-    if ((r = a->liquefying_radius()) >= 0)
-    {
-        _agrid_centres.emplace_back(area_centre_type::liquid, a->pos(), r);
-
-        for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_SOLID); ri; ++ri)
-        {
-            dungeon_feature_type f = env.grid(*ri);
-
-            if (feat_has_solid_floor(f) && !feat_is_water(f))
-                _set_agrid_flag(*ri, areaprop::liquified);
-        }
-        no_areas = false;
-    }
-
-    if ((r = a->umbra_radius()) >= 0)
-    {
-        _agrid_centres.emplace_back(area_centre_type::umbra, a->pos(), r);
-
-        for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_DEFAULT); ri; ++ri)
-            _set_agrid_flag(*ri, areaprop::umbra);
-        no_areas = false;
-    }
+    _apply_area(a->pos(), a->silence_radius(), area_type::silence, LOS_NONE);
+    _apply_area(a->pos(), a->halo_radius(), area_type::halo);
+    _apply_area(a->pos(), a->umbra_radius(), area_type::umbra);
+    _apply_area(a->pos(), a->liquefying_radius(), area_type::liquified, LOS_SOLID, false, true);
 }
 
 /**
@@ -191,64 +144,22 @@ static void _update_agrid()
     for (monster_iterator mi; mi; ++mi)
         _actor_areas(*mi);
 
-    if ((player_has_orb() || you.unrand_equipped(UNRAND_CHARLATANS_ORB))
-         && !you.pos().origin())
-    {
-        const int r = 2;
-        _agrid_centres.emplace_back(area_centre_type::orb, you.pos(), r);
-        for (radius_iterator ri(you.pos(), r, C_SQUARE, LOS_DEFAULT); ri; ++ri)
-            _set_agrid_flag(*ri, areaprop::orb);
-        no_areas = false;
-    }
+    if ((player_has_orb() || you.unrand_equipped(UNRAND_CHARLATANS_ORB)))
+        _apply_area(you.pos(), 2, area_type::orb);
+
+    if (you.has_mutation(MUT_SILENCE_AURA))
+        _apply_area(you.pos(), 1, area_type::silence, LOS_DEFAULT, true);
 
     if (you.duration[DUR_QUAD_DAMAGE])
-    {
-        const int r = 2;
-        _agrid_centres.emplace_back(area_centre_type::quad, you.pos(), r);
-        for (radius_iterator ri(you.pos(), r, C_SQUARE);
-             ri; ++ri)
-        {
-            if (cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
-                _set_agrid_flag(*ri, areaprop::quad);
-        }
-        no_areas = false;
-    }
+        _apply_area(you.pos(), 2, area_type::quad);
 
     if (you.duration[DUR_DISJUNCTION])
-    {
-        const int r = 4;
-        _agrid_centres.emplace_back(area_centre_type::disjunction,
-                                    you.pos(), r);
-        for (radius_iterator ri(you.pos(), r, C_SQUARE);
-             ri; ++ri)
-        {
-            if (cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
-                _set_agrid_flag(*ri, areaprop::disjunction);
-        }
-        no_areas = false;
-    }
-
-    // TODO: update sanctuary here.
+        _apply_area(you.pos(), 4, area_type::disjunction);
 
     _agrid_valid = true;
 }
 
-static area_centre_type _get_first_area(const coord_def& f)
-{
-    areaprops a = _agrid(f);
-    if (a & areaprop::silence)
-        return area_centre_type::silence;
-    if (a & areaprop::halo)
-        return area_centre_type::halo;
-    if (a & areaprop::umbra)
-        return area_centre_type::umbra;
-    if (a & areaprop::liquified)
-        return area_centre_type::liquid;
-
-    return area_centre_type::none;
-}
-
-coord_def find_centre_for(const coord_def& f, area_centre_type at)
+coord_def find_centre_for(const coord_def& f, area_type at)
 {
     if (!map_bounds(f))
         return coord_def(-1, -1);
@@ -264,14 +175,6 @@ coord_def find_centre_for(const coord_def& f, area_centre_type at)
 
     coord_def possible = coord_def(-1, -1);
     int dist = 0;
-
-    // Unspecified area type; settle for the first valid one.
-    // We checked for no aprop a bit ago.
-    if (at == area_centre_type::none)
-        at = _get_first_area(f);
-
-    // on the off chance that there is an error, assert here
-    ASSERT(at != area_centre_type::none);
 
     for (const area_centre &a : _agrid_centres)
     {
@@ -290,6 +193,15 @@ coord_def find_centre_for(const coord_def& f, area_centre_type at)
     }
 
     return possible;
+}
+
+static bool _update_and_check_agrid(const coord_def& p, area_type type)
+{
+    if (!map_bounds(p))
+        return false;
+    if (!_agrid_valid)
+        _update_agrid();
+    return _check_agrid_flag(p, type);
 }
 
 ///////////////
@@ -534,19 +446,10 @@ int monster::silence_radius() const
     return shrinking_aoe_range(moddur);
 }
 
-int monster::demon_silence_radius() const
-{
-    return -1;
-}
-
 /// Check if a coordinate is silenced
 bool silenced(const coord_def& p)
 {
-    if (!map_bounds(p))
-        return false;
-    if (!_agrid_valid)
-        _update_agrid();
-    return _check_agrid_flag(p, areaprop::silence);
+    return _update_and_check_agrid(p, area_type::silence);
 }
 
 /////////////
@@ -554,11 +457,7 @@ bool silenced(const coord_def& p)
 
 bool haloed(const coord_def& p)
 {
-    if (!map_bounds(p))
-        return false;
-    if (!_agrid_valid)
-        _update_agrid();
-    return _check_agrid_flag(p, areaprop::halo);
+    return _update_and_check_agrid(p, area_type::halo);
 }
 
 bool actor::haloed() const
@@ -679,7 +578,7 @@ bool liquefied(const coord_def& p, bool ledas_only)
     if (feat_is_water(env.grid(p)) || feat_is_lava(env.grid(p)))
         return false;
 
-    return _check_agrid_flag(p, areaprop::liquified);
+    return _check_agrid_flag(p, area_type::liquified);
 }
 
 /////////////
@@ -688,12 +587,7 @@ bool liquefied(const coord_def& p, bool ledas_only)
 
 bool orb_haloed(const coord_def& p)
 {
-    if (!map_bounds(p))
-        return false;
-    if (!_agrid_valid)
-        _update_agrid();
-
-    return _check_agrid_flag(p, areaprop::orb);
+    return _update_and_check_agrid(p, area_type::orb);
 }
 
 /////////////
@@ -702,12 +596,7 @@ bool orb_haloed(const coord_def& p)
 
 bool quad_haloed(const coord_def& p)
 {
-    if (!map_bounds(p))
-        return false;
-    if (!_agrid_valid)
-        _update_agrid();
-
-    return _check_agrid_flag(p, areaprop::quad);
+    return _update_and_check_agrid(p, area_type::quad);
 }
 
 /////////////
@@ -716,12 +605,7 @@ bool quad_haloed(const coord_def& p)
 
 bool disjunction_haloed(const coord_def& p)
 {
-    if (!map_bounds(p))
-        return false;
-    if (!_agrid_valid)
-        _update_agrid();
-
-    return _check_agrid_flag(p, areaprop::disjunction);
+    return _update_and_check_agrid(p, area_type::disjunction);
 }
 
 /////////////
@@ -730,12 +614,7 @@ bool disjunction_haloed(const coord_def& p)
 
 bool umbraed(const coord_def& p)
 {
-    if (!map_bounds(p))
-        return false;
-    if (!_agrid_valid)
-        _update_agrid();
-
-    return _check_agrid_flag(p, areaprop::umbra);
+    return _update_and_check_agrid(p, area_type::umbra);
 }
 
 // Whether actor is in an umbra.
@@ -810,4 +689,25 @@ int monster::umbra_radius() const
     default:
         return -1;
     }
+}
+
+bool monster::affects_agrid() const
+{
+    return halo_radius() > -1
+           || silence_radius() > -1
+           || liquefying_radius() > -1
+           || umbra_radius() > -1;
+}
+
+bool player::affects_agrid() const
+{
+    return halo_radius() > -1
+           || silence_radius() > -1
+           || liquefying_radius() > -1
+           || umbra_radius() > -1
+           || has_mutation(MUT_SILENCE_AURA)
+           || duration[DUR_DISJUNCTION]
+           || duration[DUR_QUAD_DAMAGE]
+           || player_has_orb()
+           || unrand_equipped(UNRAND_CHARLATANS_ORB);
 }

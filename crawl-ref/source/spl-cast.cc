@@ -2398,6 +2398,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     }
 
     case spret::abort:
+    default:
         return spret::abort;
 
     case spret::none:

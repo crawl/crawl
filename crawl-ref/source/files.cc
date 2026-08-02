@@ -2506,7 +2506,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         decr_zot_clock();
 
     // Initialize halos, etc.
-    invalidate_agrid(true);
+    invalidate_agrid();
 
     // Maybe make a note if we reached a new level.
     // Don't do so if we are just moving around inside Pan, though.

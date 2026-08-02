@@ -1691,6 +1691,9 @@ void equip_effect(int item_slot, bool unmeld, bool msg)
     else if (item.base_type == OBJ_JEWELLERY)
         _equip_jewellery_effect(item, unmeld);
 
+    if (item_affects_agrid(item))
+        invalidate_agrid();
+
     if (!unmeld)
         _handle_regen_item_equip(item);
 
@@ -1723,6 +1726,9 @@ void unequip_effect(int item_slot, bool meld, bool msg, bool was_melded)
         _unequip_armour_effect(item, meld, was_melded);
     else if (item.base_type == OBJ_JEWELLERY)
         _unequip_jewellery_effect(item, meld, was_melded);
+
+    if (item_affects_agrid(item))
+        invalidate_agrid();
 
     if (!meld)
         _unequip_maybe_destroy_item(item);
@@ -2393,10 +2399,6 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             }
             break;
 
-        case SPARM_LIGHT:
-            invalidate_agrid(true);
-            break;
-
         }
 
     }
@@ -2525,10 +2527,6 @@ static void _unequip_armour_effect(item_def& item, bool meld, bool was_melded)
     case SPARM_INFUSION:
         if (you.max_magic_points || you.has_mutation(MUT_HP_CASTING))
             mprf("You feel magic leave your %s.", you.hand_name(true).c_str());
-        break;
-
-    case SPARM_LIGHT:
-        invalidate_agrid(true);
         break;
 
     default:

@@ -5,7 +5,7 @@ exp: 834
 genus: snapping_turtle
 will: 60
 attacks:
- - {type: bite, flavour: reach, damage: 50}
+ - {type: bite, damage: 50, reach: 2}
 hd: 16
 hp_10x: 1440
 ac: 19

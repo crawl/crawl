@@ -314,8 +314,8 @@ public:
     void      swap_weapons(maybe_bool msg = maybe_bool::maybe);
     bool      pickup_item(item_def &item, bool msg, bool force);
     bool      drop_item(mon_inv_type eslot, bool msg);
-    bool      do_unequip_effects(item_def &item, bool msg, bool force = false);
-    bool      unequip(mon_inv_type slot, bool msg, bool force = false);
+    void      do_unequip_effects(item_def &item);
+    bool      unequip(mon_inv_type slot, bool msg = false);
     void      steal_item_from_player();
     item_def* take_item(int steal_what, mon_inv_type mslot,
                         bool is_stolen = false);
@@ -423,6 +423,7 @@ public:
     bool visible_to(const actor *looker) const override;
     bool near_foe() const;
     int reach_range(bool include_weapon = true) const override;
+    int reach_range_bonus() const override;
     bool nightvision() const override;
 
     bool is_icy() const override;
@@ -442,9 +443,9 @@ public:
     bool umbra() const override;
     int halo_radius() const override;
     int silence_radius() const override;
-    int demon_silence_radius() const override;
     int liquefying_radius() const override;
     int umbra_radius() const override;
+    bool affects_agrid() const override;
     bool petrified() const override;
     bool petrifying() const override;
     bool liquefied_ground() const override;
@@ -604,13 +605,13 @@ private:
     bool pickup_misc(item_def &item, bool msg, bool force);
     bool pickup_missile(item_def &item, bool msg, bool force);
 
-    void equip_message(item_def &item);
-    void equip_weapon_message(item_def &item);
-    void equip_armour_message(item_def &item);
-    void equip_jewellery_message(item_def &item);
-    void unequip_weapon(item_def &item, bool msg);
-    void unequip_armour(item_def &item, bool msg);
-    void unequip_jewellery(item_def &item, bool msg);
+    void equip_message(item_def &item) const;
+    void unequip_message(item_def& item) const;
+    void equip_weapon_message(item_def &item) const;
+    void equip_armour_message(item_def &item) const;
+    void equip_jewellery_message(item_def &item) const;
+    void unequip_weapon_message(item_def &item) const;
+    void unequip_armour_message(item_def &item) const;
 
     void init_with(const monster& mons);
 
@@ -619,6 +620,7 @@ private:
     bool decay_enchantment(enchant_type en, bool decay_degree = false);
 
     bool wants_weapon(const item_def &item) const;
+    int weapon_score(const item_def& item) const;
     bool wants_armour(const item_def &item) const;
     bool wants_jewellery(const item_def &item) const;
     void lose_pickup_energy();

@@ -490,16 +490,7 @@ void ash_id_item(item_def& item, bool silent)
     if (item.is_identified())
         return;
 
-    if ((item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_STAVES)
-        && item_needs_autopickup(item))
-    {
-        item.props[NEEDS_AUTOPICKUP_KEY] = true;
-    }
-
     identify_item(item);
-
-    if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
-        item.props.erase(NEEDS_AUTOPICKUP_KEY);
 
     if (!silent)
         mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
@@ -637,29 +628,6 @@ void ash_scrying()
     }
 }
 
-void gozag_move_level_gold_to_top()
-{
-    if (you_worship(GOD_GOZAG))
-    {
-        for (rectangle_iterator ri(0); ri; ++ri)
-            gozag_move_gold_to_top(*ri);
-    }
-}
-
-void gozag_move_gold_to_top(const coord_def p)
-{
-    for (int gold = env.igrid(p); gold != NON_ITEM;
-         gold = env.item[gold].link)
-    {
-        if (env.item[gold].base_type == OBJ_GOLD)
-        {
-            unlink_item(gold);
-            move_item_to_grid(&gold, p, true);
-            break;
-        }
-    }
-}
-
 void gozag_count_level_gold()
 {
     ASSERT(you.on_current_level);
@@ -679,10 +647,6 @@ void gozag_count_level_gold()
 
     if (!player_in_branch(BRANCH_ABYSS))
         you.attribute[ATTR_GOLD_GENERATED] += gold;
-
-    if (you_worship(GOD_GOZAG))
-        for (auto pos : gold_places)
-            gozag_move_gold_to_top(pos);
 }
 
 int qazlal_sh_boost(int piety)
@@ -1908,7 +1872,7 @@ void wu_jian_end_heavenly_storm()
     you.props.erase(WU_JIAN_HEAVENLY_STORM_KEY);
     you.duration[DUR_HEAVENLY_STORM] = 0;
     you.redraw_evasion = true;
-    invalidate_agrid(true);
+    invalidate_agrid();
     mprf(MSGCH_GOD, "The heavenly storm settles.");
 }
 

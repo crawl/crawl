@@ -786,10 +786,7 @@ static void _decrement_durations()
     }
 
     // Possible reduction of silence radius.
-    if (you.duration[DUR_SILENCE])
-        invalidate_agrid();
-    // and liquefying radius.
-    if (you.duration[DUR_LIQUEFYING])
+    if (you.duration[DUR_SILENCE] || you.duration[DUR_LIQUEFYING])
         invalidate_agrid();
 
     _decrement_transform_duration(delay);

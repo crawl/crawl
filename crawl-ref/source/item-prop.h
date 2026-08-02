@@ -231,7 +231,7 @@ int get_armour_res_poison(const item_def &arm, bool check_artp) PURE;
 int get_armour_res_elec(const item_def &arm, bool check_artp) PURE;
 int get_armour_life_protection(const item_def &arm, bool check_artp) PURE;
 int get_armour_willpower(const item_def &arm, bool check_artp) PURE;
-int get_armour_res_corr(const item_def &arm) PURE;
+int get_armour_res_corr(const item_def &arm, bool check_artp) PURE;
 bool get_armour_see_invisible(const item_def &arm, bool check_artp) PURE;
 bool get_armour_rampaging(const item_def &arm, bool check_artp) PURE;
 
@@ -241,6 +241,7 @@ int get_jewellery_res_poison(const item_def &ring, bool check_artp) PURE;
 int get_jewellery_res_elec(const item_def &ring, bool check_artp) PURE;
 int get_jewellery_life_protection(const item_def &ring, bool check_artp) PURE;
 int get_jewellery_willpower(const item_def &ring, bool check_artp) PURE;
+int get_jewellery_res_corr(const item_def &ring, bool check_artp) PURE;
 bool get_jewellery_see_invisible(const item_def &ring, bool check_artp) PURE;
 
 int property(const item_def &item, int prop_type) PURE;
@@ -301,3 +302,5 @@ bool is_usable_talisman(const item_def& item);
 void remove_whitespace(string &str);
 
 int jewellery_usefulness_limit(jewellery_type type);
+
+bool item_affects_agrid(const item_def& item);

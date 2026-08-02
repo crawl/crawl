@@ -151,6 +151,8 @@ define(function () {
 
     fg_flags.flags.S_UNDER = 0x00040000;
     fg_flags.flags.FLYING  = 0x00080000;
+    fg_flags.flags.S_UNDER_GOOD     = [0, 0x1000000],
+    fg_flags.flags.S_UNDER_ARTEFACT = [0, 0x2000000],
 
     // 4 mutually exclusive flags for behaviour.
     fg_flags.exclusive_flags.push({

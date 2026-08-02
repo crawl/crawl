@@ -6,7 +6,7 @@ genus: hell_lord
 holiness: [demonic]
 will: 120
 attacks:
- - {type: tail_slap, flavour: reach, damage: 35}
+ - {type: tail_slap, damage: 35, reach: 2}
 hd: 15
 hp_10x: 3000
 ac: 15

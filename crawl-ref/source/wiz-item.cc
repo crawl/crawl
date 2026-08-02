@@ -1410,7 +1410,7 @@ void wizard_unobtain_runes_and_orb()
     you.runes.reset();
 
     you.chapter = CHAPTER_ORB_HUNTING;
-    invalidate_agrid(true);
+    invalidate_agrid(false);
 
     mpr("Unobtained all runes and the Orb of Zot.");
 }

@@ -1549,7 +1549,7 @@ static bool _wu_jian_retribution()
         case 2:
             wu_jian_sifu_message(" whispers: These will loosen your tongue!");
             you.increase_duration(DUR_SILENCE, 5 + random2(11), 50);
-            invalidate_agrid(true);
+            invalidate_agrid();
             break;
         case 3:
             wu_jian_sifu_message(" says: Suffer, mortal!");

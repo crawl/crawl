@@ -1826,13 +1826,8 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     mon->stop_being_constricted();
 
     // Monsters' haloes should be removed when their souls are bound.
-    if (mon->halo_radius() >= 0
-        || mon->umbra_radius() >= 0
-        || mon->silence_radius() >= 0
-        || mon->liquefying_radius() >= 0)
-    {
+    if (mon->affects_agrid())
         invalidate_agrid();
-    }
 
     // schedule our actual revival for the end of this combat round
     schedule_avoided_death_fineff(mon);
@@ -6466,7 +6461,7 @@ void wu_jian_heavenly_storm()
 
     you.set_duration(DUR_HEAVENLY_STORM, random_range(2, 3));
     you.props[WU_JIAN_HEAVENLY_STORM_KEY] = WU_JIAN_HEAVENLY_STORM_INITIAL;
-    invalidate_agrid(true);
+    invalidate_agrid();
 }
 
 bool okawaru_duel_active()

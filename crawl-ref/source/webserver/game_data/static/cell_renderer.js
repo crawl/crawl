@@ -959,7 +959,11 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.TRAP_WEB, x, y, undefined, undefined, img_scale);
 
             if (fg.S_UNDER)
-                this.draw_icon(icons.SOMETHING_UNDER, x, y, undefined, undefined, img_scale);
+                this.draw_icon(icons.ITEM_STACK_1, x, y, undefined, undefined, img_scale);
+            else if (fg.S_UNDER_GOOD)
+                this.draw_icon(icons.ITEM_STACK_2, x, y, undefined, undefined, img_scale);
+            else if (fg.S_UNDER_ARTEFACT)
+                this.draw_icon(icons.ITEM_STACK_3, x, y, undefined, undefined, img_scale);
 
             // Pet mark
             if (fg.PET)

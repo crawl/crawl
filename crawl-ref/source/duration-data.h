@@ -383,13 +383,13 @@ static const duration_def duration_data[] =
       BLUE, "Quad",
       "quad damage", "",
       "", D_EXPIRES,
-      {{ "", []() { invalidate_agrid(true); }},
+      {{ "", []() { invalidate_agrid(); }},
         { "Quad Damage is wearing off."}}, 3 }, // per client.qc
     { DUR_SILENCE,
       0, "",
       "silenced", "silence",
       "You radiate silence.", D_DISPELLABLE | D_EXPIRES,
-      {{ "Your hearing returns.", []() { invalidate_agrid(true); }}}, 5 },
+      {{ "Your hearing returns.", []() { invalidate_agrid(); }}}, 5 },
     { DUR_STEALTH,
       BLUE, "Stealth",
       "especially stealthy", "stealth",
@@ -428,7 +428,7 @@ static const duration_def duration_data[] =
       "liquefying", "",
       "You are liquefying the ground beneath you.", D_DISPELLABLE,
       {{ "The ground is no longer liquid beneath you.", []() {
-          invalidate_agrid(false);
+          invalidate_agrid();
       }}}},
     { DUR_HEROISM,
       LIGHTBLUE, "Hero",
@@ -452,7 +452,7 @@ static const duration_def duration_data[] =
       "disjoining", "disjunction",
       "You are disjoining your surroundings.", D_DISPELLABLE | D_EXPIRES,
       {{ "The translocation energy dissipates.", []() {
-            invalidate_agrid(true);
+            invalidate_agrid();
       }}}},
     { DUR_SENTINEL_MARK,
       LIGHTRED, "Mark",

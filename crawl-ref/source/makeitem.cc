@@ -373,8 +373,8 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     case SPWPN_RETURNING:
     case SPWPN_REACHING:
     case SPWPN_ORC_SLAYING:
-    case SPWPN_FLAME:
-    case SPWPN_FROST:
+    case SPWPN_FLAME_OLD:
+    case SPWPN_FROST_OLD:
     case SPWPN_DRAGON_SLAYING:
     case SPWPN_EVASION:
         return false;

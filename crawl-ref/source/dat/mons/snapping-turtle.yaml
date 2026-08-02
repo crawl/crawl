@@ -4,7 +4,7 @@ flags: [cold_blood]
 exp: 251
 will: 40
 attacks:
- - {type: bite, flavour: reach, damage: 35}
+ - {type: bite, damage: 35, reach: 2}
 hd: 10
 hp_10x: 600
 ac: 16

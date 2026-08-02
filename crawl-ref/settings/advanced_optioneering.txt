@@ -18,26 +18,6 @@ end
 }
 
 ######################################################################
-# Add the following to your options file to automatically pick up
-# armour for non-body armour slots (gloves, boots, etc.), if you don't
-# already have an item equipped there.
-{
-add_autopickup_func(function(it, name)
-  if it.is_useless then
-    return
-  end
-  if it.class(true) == "armour" then
-    local good_slots = {cloak="cloak", helmet="helmet", gloves="gloves",
-                        boots="boots", barding="barding"}
-    st, _ = it.subtype()
-    if good_slots[st] ~= nil and items.slot_is_available(good_slots[st]) == true then
-      return true
-    end
-  end
-end)
-}
-
-######################################################################
 # To automatically open the skill menu when starting a new game, add
 # the following to your options file.
 

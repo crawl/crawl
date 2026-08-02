@@ -535,8 +535,12 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     if (fg.has_flag(TILE_FLAG_WEB))
         m_buf_icons.add(TILEI_TRAP_WEB, x, y);
 
-    if (fg.has_flag(TILE_FLAG_S_UNDER))
-        m_buf_icons.add(TILEI_SOMETHING_UNDER, x, y);
+    if (fg.has_flag(TILE_FLAG_S_UNDER_ARTEFACT))
+        m_buf_icons.add(TILEI_ITEM_STACK_3, x, y);
+    else if (fg.has_flag(TILE_FLAG_S_UNDER_GOOD))
+        m_buf_icons.add(TILEI_ITEM_STACK_2, x, y);
+    else if (fg.has_flag(TILE_FLAG_S_UNDER))
+        m_buf_icons.add(TILEI_ITEM_STACK_1, x, y);
 
     // Pet mark
     if (fg.has_flag(TILE_FLAG_ATT_MASK))

@@ -5,7 +5,7 @@ exp: 749
 genus: frog
 will: 60
 attacks:
- - {type: hit, flavour: reach_tongue, damage: 27}
+ - {type: hit, flavour: acid, damage: 27, reach: 2}
 hd: 12
 hp_10x: 420
 ac: 3

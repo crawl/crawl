@@ -14,7 +14,7 @@ ev: 13
 spells: fravashi
 shout: shout
 intelligence: human
-uses: starting_equipment
+uses: weapons_armour
 size: medium
 shape: humanoid_winged
 god: Shining One

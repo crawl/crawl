@@ -129,7 +129,9 @@ invis_remembered UNSEEN_INVIS_REMEMBERED
 seen_invis SEEN_INVIS
 phase_shifted PHASE_SHIFT
 
-something_under SOMETHING_UNDER
+item_stack1 ITEM_STACK_1
+item_stack2 ITEM_STACK_2
+item_stack3 ITEM_STACK_3
 new_stair NEW_STAIR
 new_transporter NEW_TRANSPORTER
 
