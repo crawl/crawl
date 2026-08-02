@@ -131,7 +131,6 @@ cat4 MONS_FELID
 %rim 0
 %sdir mon/unique
 natasha MONS_NATASHA
-katinboo MONS_KATINBOO
 %rim 1
 %sdir mon/animals
 
@@ -303,7 +302,6 @@ black_bear MONS_BLACK_BEAR
 polar_bear MONS_POLAR_BEAR
 
 ## Yaks, sheep and elephants ('Y')
-donkey MONS_DONKEY
 dream_sheep MONS_DREAM_SHEEP
 yak MONS_YAK
 death_yak MONS_DEATH_YAK
@@ -1614,3 +1612,9 @@ prune MONS_PRUNE
 jack_o_lantern MONS_JACK_O_LANTERN
 gastronaut MONS_GASTRONAUT
 crawling_zombie_skyshark MONS_SKYSHARK_CRAWLING
+
+# Chili additions are appended to preserve existing tile indices.
+%sdir mon/unique
+katinboo MONS_KATINBOO
+%sdir mon/animals
+mule MONS_MULE

@@ -2631,7 +2631,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_KATINBOO,
       {
-       { SPELL_CALL_OGRE_AND_DONKEY, 50, MON_SPELL_NATURAL },
+       { SPELL_CALL_OGRE_AND_MULE, 50, MON_SPELL_NATURAL },
       }
     },
     // ('&', mostly) Demon lords.

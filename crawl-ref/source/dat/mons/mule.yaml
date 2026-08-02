@@ -1,4 +1,4 @@
-name: "donkey"
+name: "mule"
 glyph: {char: "Y", colour: lightgrey}
 flags: [warm_blood]
 exp: 110
@@ -14,5 +14,5 @@ shout: bellow
 intelligence: animal
 size: large
 shape: quadruped
-tile: donkey
+tile: mule
 corpse_tile: yak

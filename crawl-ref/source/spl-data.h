@@ -4726,7 +4726,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_CALL_OGRE_AND_DONKEY, "Call Ogre and Donkey",
+    SPELL_CALL_OGRE_AND_MULE, "Call Ogre and Mule",
     spschool::summoning,
     spflag::monster | spflag::mons_abjure,
     5,
