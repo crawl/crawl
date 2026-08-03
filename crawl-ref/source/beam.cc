@@ -1206,6 +1206,26 @@ void bolt::fire_as_ranged_attack(ranged_attack& atk)
     fire();
 }
 
+// Processes the next step of the beam, returning true if the beam is finished.
+bool bolt::fire_incremental()
+{
+    // This bypasses some state unwinding, so it probably isn't safe for tracers.
+    ASSERT(!is_tracer());
+
+    if (!did_initialisation)
+    {
+        initialise_fire();
+        did_initialisation = true;
+    }
+
+    const bool done = !do_fire_step();
+
+    if (done)
+        affect_endpoint();
+
+    return done;
+}
+
 void bolt::do_fire()
 {
     initialise_fire();
@@ -7979,6 +7999,151 @@ void bolt::do_ranged_attack(actor& targ)
 
     if (attk.did_net())
         drop_item = false;
+}
+
+multi_beam::multi_beam(bolt& definition, multi_beam_shape shape, int width)
+{
+    const coord_def aim = (definition.target - definition.source).sgn();
+
+    if (shape == MULTI_BEAM_WIDE)
+    {
+        const int num_left = (width - 1) / 2;
+        const int num_right = width - num_left - 1;
+
+        // Determine the direction to extend the beam to the left and right of
+        // its centre point. (These needs to be done slightly differently for
+        // diagonals instead of orthogonals to ensure the beam itself doesn't
+        // have gaps.)
+        const coord_def to_left = aim.x == aim.y  ? coord_def(0, -aim.x) :
+                                  aim.x == -aim.y ? coord_def(aim.y, 0)
+                                                  : coord_def(aim.y, -aim.x);
+        const coord_def to_right = aim.x == aim.y  ? coord_def(-aim.y, 0) :
+                                   aim.x == -aim.y ? coord_def(0, -aim.y)
+                                                   : coord_def(-aim.y, aim.x);
+
+        // Add center beam.
+        internal_beams.push_back(definition);
+        internal_beams[0].target = definition.source + aim;
+
+        // Add left beams.
+        for (int i = 0; i < num_left; ++i)
+        {
+            const coord_def left_aim = definition.source + aim + (to_left * (i + 1));
+            if (cell_is_solid(left_aim) || !cell_see_cell(definition.source, left_aim, LOS_SOLID_SEE))
+                continue;
+
+            internal_beams.push_back(definition);
+            internal_beams.back().target = left_aim;
+            // Fired beams don't affect their own source, so we have to back up one tile.
+            internal_beams.back().source = internal_beams.back().target - aim;
+        }
+
+        // Add right beams.
+        for (int i = 0; i < num_right; ++i)
+        {
+            const coord_def right_aim = definition.source + aim + (to_right * (i + 1));
+            if (cell_is_solid(right_aim) || !cell_see_cell(definition.source, right_aim, LOS_SOLID_SEE))
+                continue;
+
+            internal_beams.push_back(definition);
+            internal_beams.back().target = right_aim;
+            // Fired beams don't affect their own source, so we have to back up one tile.
+            internal_beams.back().source = internal_beams.back().target - aim;
+        }
+    }
+    else if (shape == MULTI_BEAM_FAN)
+    {
+        vector<coord_def> spots =
+            get_ring_spots(definition.source, definition.source + aim, width);
+
+        for (size_t i = 0; i < spots.size(); ++i)
+        {
+            internal_beams.push_back(definition);
+            internal_beams[i].source = definition.source;
+            internal_beams[i].target = spots[i];
+        }
+    }
+}
+
+void multi_beam::fire()
+{
+    vector<bool> beam_finished(internal_beams.size());
+    size_t num_finished = 0;
+    int delay = internal_beams[0].draw_delay;
+
+    for (bolt& beam : internal_beams)
+    {
+        // Hide default animation and suppress some odd messaging that can
+        // happen from some of these beams having a non-actor origin point.
+        beam.redraw_per_cell = false;
+        beam.draw_delay = 0;
+        beam.seen = true;
+    }
+
+    // Process each beam in lockstep with each other, advancing a single cell
+    // at a time.
+    delay = delay * 7 / 10;
+    while (num_finished < internal_beams.size())
+    {
+        for (size_t i = 0; i < internal_beams.size(); ++i)
+        {
+            if (beam_finished[i])
+                continue;
+
+            if (internal_beams[i].fire_incremental())
+            {
+                beam_finished[i] = true;
+                ++num_finished;
+            }
+        }
+
+        // Pause after each full step, with slightly longer delay as we reach
+        // the end of the beam path.
+
+        if (!Options.reduce_animations)
+            animation_delay(delay, true);
+        delay += 5;
+    }
+
+    // SALMON
+    animation_delay(delay * 2 / 3, true);
+}
+
+targeting_tracer multi_beam::trace()
+{
+    targeting_tracer tracer;
+    for (bolt& beam : internal_beams)
+    {
+        bolt tracer_beam = beam;
+        tracer_beam.fire(tracer);
+    }
+
+    return tracer;
+}
+
+void multi_beam::trace(player_beam_tracer& tracer)
+{
+    for (bolt& beam : internal_beams)
+    {
+        bolt tracer_beam = beam;
+        tracer_beam.fire(tracer);
+    }
+}
+
+vector<coord_def> multi_beam::get_all_affected_cells()
+{
+    vector<coord_def> cells;
+    for (bolt& beam : internal_beams)
+    {
+        bolt tracer = beam;
+        tracer.set_is_tracer(true);
+        tracer.fire();
+
+        for (const coord_def& p : tracer.path_taken)
+            cells.push_back(p);
+    }
+
+    return cells;
 }
 
 // Returns the effective willpower an actor with a given willpower would have

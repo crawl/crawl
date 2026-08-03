@@ -30,6 +30,7 @@
 #include "spl-summoning.h"
 #include "spl-other.h"
 #include "spl-transloc.h"
+#include "spl-zap.h"
 #include "stringutil.h"
 #include "terrain.h"
 
@@ -1858,40 +1859,53 @@ aff_type targeter_walls::is_affected(coord_def loc)
     return cell_is_solid(loc) ? AFF_YES : AFF_MAYBE;
 }
 
-// note: starburst is not in spell_to_zap
-targeter_starburst_beam::targeter_starburst_beam(const actor *a, int _range,
-                                                 int pow,
-                                                 const coord_def &offset)
-    : targeter_beam(a, _range, ZAP_BOLT_OF_FIRE, SPELL_STARBURST, pow, 0, 0)
-{
-    set_aim(a->pos() + offset);
-}
-
-targeter_starburst::targeter_starburst(const actor *a, int range, int pow)
-    : targeter()
+// XXX: Some of the arguments passed to targeter_beam are garbage, since we
+//      will mostly ignore its internal beam construction (but really want its
+//      is_affected() logic)
+targeter_multibeam::targeter_multibeam(const actor *a, spell_type spell, int _range,
+                                       multi_beam_shape _shape, int _width, int pow,
+                                       bool _can_aim)
+    : targeter_beam(a, _range, spell_to_zap(spell), spell, pow, 0, 0),
+      shape(_shape), width(_width), can_aim(_can_aim)
 {
     agent = a ? a : &you;
-    // XX code duplication with cast_starburst
-    const vector<coord_def> offsets = { coord_def(range, 0),
-                                        coord_def(range, range),
-                                        coord_def(0, range),
-                                        coord_def(-range, range),
-                                        coord_def(-range, 0),
-                                        coord_def(-range, -range),
-                                        coord_def(0, -range),
-                                        coord_def(range, -range) };
 
-    // extremely brute force...
-    for (auto &o : offsets)
-        beams.push_back(targeter_starburst_beam(agent, range, pow, o));
+    zappy(spell_to_zap(spell), pow, false, prototype);
+    prototype.range = range;
+    prototype.source = a->pos();
+    path_taken.clear();
+
+    // Set a default aim for unidirectional spells.
+    if (!can_aim)
+        set_aim(a->pos() - coord_def(0, 1));
 }
 
-aff_type targeter_starburst::is_affected(coord_def loc)
+bool targeter_multibeam::set_aim(coord_def a)
 {
-    for (auto &t : beams)
-        if (auto r = t.is_affected(loc))
-            return r;
-    return AFF_NO;
+    if (!targeter::set_aim(a))
+        return false;
+
+    prototype.target = a;
+
+    multi_beam multi(prototype, shape, width);
+    path_taken = multi.get_all_affected_cells();
+
+    return true;
+}
+
+bool targeter_multibeam::valid_aim(coord_def a)
+{
+    // A little counterintuitively, unidirectional spells should consider all
+    // spaces valid aims so that they don't darken parts of their beam paths.
+    // UI code elsewhere still won't let you actually change its aim.
+    if (!can_aim)
+        return targeter_beam::valid_aim(a);
+    else
+    {
+        return targeter_beam::valid_aim(a)
+            && a != agent->pos()
+            && adjacent(agent->pos(), a);
+    }
 }
 
 targeter_bog::targeter_bog(const actor *a)

@@ -4135,58 +4135,35 @@ spret cast_starburst(int pow, bool fail, bool is_tracer)
 {
     int range = spell_range(SPELL_STARBURST, &you);
 
-    vector<coord_def> offsets = { coord_def(range, 0),
-                                coord_def(range, range),
-                                coord_def(0, range),
-                                coord_def(-range, range),
-                                coord_def(-range, 0),
-                                coord_def(-range, -range),
-                                coord_def(0, -range),
-                                coord_def(range, -range) };
-
     bolt beam;
     beam.range        = range;
     beam.source       = you.pos();
+    beam.target       = you.pos() + coord_def(1, 0);
     beam.source_id    = MID_PLAYER;
-    beam.attitude = ATT_FRIENDLY;
+    beam.attitude     = ATT_FRIENDLY;
     beam.thrower      = KILL_YOU_MISSILE;
     beam.origin_spell = SPELL_STARBURST;
-    beam.draw_delay   = 5;
+    beam.draw_delay   = 40;
     zappy(ZAP_BOLT_OF_FIRE, pow, false, beam);
+
+    multi_beam multi(beam, MULTI_BEAM_FAN, 8);
 
     if (is_tracer)
     {
-        targeting_tracer tracer;
-        for (const coord_def & offset : offsets)
-        {
-            beam.target = you.pos() + offset;
-            beam.fire(tracer);
-            // something to hit
-            if (tracer.foe_info.count > 0)
-                return spret::success;
-        }
+        targeting_tracer tracer = multi.trace();
+        if (tracer.foe_info.count > 0)
+            return spret::success;
         return spret::abort;
     }
 
     player_beam_tracer tracer;
-    for (const coord_def & offset : offsets)
-    {
-        beam.target = you.pos() + offset;
-        fire_partial_player_tracer(ZAP_BOLT_OF_FIRE, pow, tracer, beam);
-    }
-
+    multi.trace(tracer);
     if (cancel_beam_prompt(beam, tracer))
         return spret::abort;
 
     fail_check();
 
-    // Randomize for nice animations
-    shuffle_array(offsets);
-    for (auto & offset : offsets)
-    {
-        beam.target = you.pos() + offset;
-        beam.fire();
-    }
+    multi.fire();
 
     return spret::success;
 }

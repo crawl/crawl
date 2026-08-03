@@ -1346,7 +1346,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, range, 0, 1);
     case SPELL_STARBURST:
-        return make_unique<targeter_starburst>(&you, range, pow);
+        return make_unique<targeter_multibeam>(&you, SPELL_STARBURST, range,
+                                               MULTI_BEAM_FAN, 8, pow, false);
     case SPELL_IRRADIATE:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
     case SPELL_DISCHARGE: // not entirely accurate...maybe should highlight
@@ -2052,15 +2053,6 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
             return bind(_desc_vampiric_draining_valid, placeholders::_1, hitfunc);
         case SPELL_RIMEBLIGHT:
             return bind(_desc_rimeblight_valid, placeholders::_1);
-        case SPELL_STARBURST:
-        {
-            targeter_starburst* burst_hitf =
-                dynamic_cast<targeter_starburst*>(hitfunc);
-            if (!burst_hitf)
-                break;
-            targeter_starburst_beam* beam_hitf = &burst_hitf->beams[0];
-            return bind(desc_beam_hit_chance, placeholders::_1, beam_hitf);
-        }
         case SPELL_DISPERSAL:
             return bind(_desc_dispersal_chance, placeholders::_1, powc);
         case SPELL_AIRSTRIKE:

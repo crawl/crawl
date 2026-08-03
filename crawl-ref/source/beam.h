@@ -266,6 +266,7 @@ private:
 
     bool can_trigger_bullseye = false;
 
+    bool did_initialisation = false;
 public:
     bool is_enchantment() const; // no block/dodge, use willpower
     ac_type effective_ac_rule() const;
@@ -286,6 +287,7 @@ public:
     void fire();
     void fire(beam_tracer& tracer);
     void fire_as_ranged_attack(ranged_attack& atk);
+    bool fire_incremental();
 
     // Returns member short_name if set, otherwise some reasonable string
     // for a short name, most likely the name of the beam's flavour.
@@ -452,6 +454,26 @@ public:
 private:
     vector<coord_def> cells;
     size_t index = 0;
+};
+
+enum multi_beam_shape
+{
+    MULTI_BEAM_FAN,     // Each beam fans out in compass directions from the source
+    MULTI_BEAM_WIDE,    // Each beam fires in the same direction
+};
+struct multi_beam
+{
+    multi_beam(bolt& definition, multi_beam_shape shape, int width);
+
+    targeting_tracer trace();
+    void trace(player_beam_tracer& tracer);
+
+    void fire();
+
+    vector<coord_def> get_all_affected_cells();
+
+private:
+    vector<bolt> internal_beams;
 };
 
 int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
