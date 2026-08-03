@@ -1,0 +1,74 @@
+###############################################################################
+# Dungeon Crawl Chili: D:5 Thermal Rift
+#
+# A safe adaptation of Volcano and Ice Cave ideas without portal timers,
+# portal exits, or destination-grade loot. A normal Dungeon layout grows
+# around this floating primary vault.
+###############################################################################
+
+NAME:    dcchili_d5_thermal_rift
+PLACE:   D:5
+DEPTH:   D:5
+WEIGHT:  5000
+TAGS:    dcchili_d5_hot_cold no_monster_gen no_item_gen no_pool_fixup no_rotate
+ORIENT:  float
+
+# The generated portions of D:5 inherit a mixed temperature population.
+MONS:    cinder newt w:10 / bombardier beetle w:7 / fire bat w:4 / \
+         white imp w:10 / ice beast w:7 / steam dragon w:3 / \
+         marrowcuda w:4
+
+KMONS:   h = fire bat
+KMONS:   s = steam dragon
+KMONS:   H = hell hound
+KMONS:   i = ice beast
+KMONS:   p = polar bear
+KMONS:   I = rime drake
+
+KFEAT:   x = rock_wall
+KFEAT:   c = rock_wall
+KFEAT:   m = stone_wall
+KFEAT:   G = runed_clear_door
+KFEAT:   l = lava
+KFEAT:   w = shallow_water
+KPROP:   hsHipI = no_tele_into
+KMASK:   hsHipI = opaque
+TILE:    x = wall_volcanic
+TILE:    c = wall_ice_block
+TILE:    m = wall_brick_darkgray
+FTILE:   .hsHl = floor_rough_red
+FTILE:   iwIp = floor_ice
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxx@cccccccccccccccccccccc
+x.....................m.....................c
+x....lll...lll........m........www...www....c
+x....l.......l........m........w.......w....c
+x....l.h.s.h.l........m........w.i.p.i.w....c
+x....l.......l........G........w.......w....c
+x....lll...lll........m........www...www....c
+x.....................m.....................c
+x..xxxxxxx............m............ccccccc..c
+x..x.....x............m............c.....c..c
+x..x..H..G............m............G..I..c..c
+x..x.....x............m............c.....c..c
+x..xxxxxxx............m............ccccccc..c
+x.....................G.....................c
+x...lll.......lll.....m.....www.......www...c
+x...l.h.......s.l.....m.....w.i.......p.w...c
+@...l...........l.....G.....w...........w...@
+x...l.s.......h.l.....m.....w.p.......i.w...c
+x...lll.......lll.....m.....www.......www...c
+x.....................G.....................c
+x............xxxxxxx..m..ccccccc............c
+x............x.....x..m..c.....c............c
+x............x..H..G..m..G..I..c............c
+x............x.....x..m..c.....c............c
+x............xxxxxxx..m..ccccccc............c
+x.....................m.....................c
+x....lll...lll........m........www...www....c
+x....l.s.h...l........G........w.p.i...w....c
+x....lll...lll........m........www...www....c
+x.....................m.....................c
+xxxxxxxxxxxxxxxxxxxxxx@cccccccccccccccccccccc
+ENDMAP

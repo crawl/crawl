@@ -3223,10 +3223,44 @@ static void _build_dungeon_level()
     // Layout maps and secondary vaults may install their own level defaults.
     // Apply Chili's themed floor materials last and discard per-cell
     // wall/floor flavours before the level's tile flavour is built.
+    const bool d5_thermal_rift = player_in_branch(BRANCH_DUNGEON)
+                                 && you.depth == 5;
     const bool themed_dungeon = player_in_branch(BRANCH_DUNGEON)
                                 && you.depth == 4;
     const bool themed_lair = player_in_branch(BRANCH_LAIR) && you.depth == 1;
-    if (themed_dungeon || themed_lair)
+    if (d5_thermal_rift)
+    {
+        tileidx_t hot_wall;
+        tileidx_t cold_wall;
+        tileidx_t hot_floor;
+        tileidx_t cold_floor;
+        const string hot_wall_name = "wall_volcanic";
+        const string cold_wall_name = "wall_ice_block";
+        const string hot_floor_name = "floor_rough_red";
+        const string cold_floor_name = "floor_ice";
+
+        if (tile_dngn_index(hot_wall_name.c_str(), &hot_wall)
+            && tile_dngn_index(cold_wall_name.c_str(), &cold_wall)
+            && tile_dngn_index(hot_floor_name.c_str(), &hot_floor)
+            && tile_dngn_index(cold_floor_name.c_str(), &cold_floor))
+        {
+            tile_env.default_flavour.wall_idx =
+                store_tilename_get_index(hot_wall_name);
+            tile_env.default_flavour.floor_idx =
+                store_tilename_get_index(hot_floor_name);
+            tile_env.default_flavour.wall = hot_wall;
+            tile_env.default_flavour.floor = hot_floor;
+            tile_clear_flavour();
+
+            for (rectangle_iterator ri(0); ri; ++ri)
+            {
+                const bool cold_side = ri->x >= GXM / 2;
+                tile_env.flv(*ri).wall = cold_side ? cold_wall : hot_wall;
+                tile_env.flv(*ri).floor = cold_side ? cold_floor : hot_floor;
+            }
+        }
+    }
+    else if (themed_dungeon || themed_lair)
     {
         tileidx_t wall;
         tileidx_t floor;
@@ -4036,6 +4070,11 @@ static bool _builder_normal()
         vault = random_map_for_tag("dcchili_d4_ossuary",
                                    true, false, false);
     }
+    else if (player_in_branch(BRANCH_DUNGEON) && you.depth == 5)
+    {
+        vault = random_map_for_tag("dcchili_d5_hot_cold",
+                                   true, false, false);
+    }
     else if (player_in_branch(BRANCH_LAIR) && you.depth == 1)
     {
         vault = random_map_for_tag("dcchili_lair1_zoo",
@@ -4056,7 +4095,8 @@ static bool _builder_normal()
         _ensure_vault_placed_ex(_build_primary_vault(vault), vault);
         // Both themed floors use floating primary vaults and can accept the
         // usual secondary vaults in their generated surroundings.
-        return (player_in_branch(BRANCH_DUNGEON) && you.depth == 4)
+        return (player_in_branch(BRANCH_DUNGEON)
+                && (you.depth == 4 || you.depth == 5))
                || (player_in_branch(BRANCH_LAIR) && you.depth == 1)
                || vault->orient != MAP_ENCOMPASS;
     }
