@@ -44,8 +44,10 @@ function ossuary_portal(e)
         feat_tile = "dngn_portal_ossuary_gone",
         msg = messager })
   e.tags("uniq_ossuary no_monster_gen chance_ossuary")
-  e.depth_chance("D:4-5", 500)
-  e.depth_chance("D:6-7", 550)
+  -- Dungeon Crawl Chili reuses the Ossuary theme and vault content on D:4,
+  -- so the separate timed portal branch is intentionally disabled.
+  e.depth_chance("D:4-5", 0)
+  e.depth_chance("D:6-7", 0)
   e.kfeat("O = enter_ossuary")
   e.colour("123' = yellow")
   e.colour("c = white")
@@ -60,7 +62,21 @@ function ossuary_setup_features(e)
   e.tags("no_monster_gen")
   e.tags("no_item_gen")
   e.tile("c = stone_wall_ossuary")
-  e.kfeat("< = exit_ossuary")
+  -- The separate Ossuary branch is disabled in Dungeon Crawl Chili. These
+  -- maps are D:4 floors now, so their former portal exits are always ordinary
+  -- upstairs and must never retain the exit_ossuary feature.
+  e.kfeat("< = stone_stairs_up_i")
+  if you.in_branch("D") then
+    -- Dungeon Crawl Chili uses every Ossuary destination map as a possible
+    -- D:4 encompass floor. Give the whole level Ossuary materials, convert
+    -- its portal exits to ordinary upstairs, and overwhelmingly prefer this
+    -- pool over generic D:4 encompass vaults.
+    e.tags("uniq_d_encompass no_pool_fixup")
+    e.tile("cx = stone_wall_ossuary")
+    e.lrocktile("stone_wall_ossuary")
+    e.lfloortile("floor_sandstone")
+    e.kfeat("A = stone_stairs_down_i")
+  end
 end
 
 -- With its limited usefulness for the length of a game, and to help
@@ -372,15 +388,17 @@ ENDMAP
 
 # Reset default depth to prevent random generation of portal vaults.
 # Sort destination maps by WEIGHT.
-default-depth: Ossuary
+default-depth: Ossuary, D:4
 
 ###########################################################
 # Common: Based off the original Tomb. Weight 40, one 20.
 ###########################################################
 
 NAME:    ossuary_tomb_1
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
 TAGS:    no_rotate
-WEIGHT:  40
+WEIGHT: 5000 (D:4), 40 (Ossuary)
 ORIENT:  encompass
 MONS:    mummy
 MONS:    human zombie / elf zombie / centaur zombie
@@ -420,9 +438,11 @@ xxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    ossuary_tomb_2
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
 TAGS:    no_rotate
 ORIENT:  encompass
-WEIGHT:  40
+WEIGHT: 5000 (D:4), 40 (Ossuary)
 MONS:    adder zombie / jackal zombie / orc zombie / gnoll zombie
 MONS:    water moccasin zombie / gnoll zombie
 MONS:    bullfrog simulacrum / spectral scorpion / crocodile zombie w:30
@@ -469,8 +489,10 @@ ENDMAP
 
 # Another ossuary (loosely) based on Tomb:2
 NAME:    ossuary_minmay_tomb_2a
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
 TAGS:    no_rotate
-WEIGHT:  20
+WEIGHT: 5000 (D:4), 20 (Ossuary)
 ORIENT:  encompass
 MONS:    rat zombie / jackal zombie / goblin zombie / hobgoblin zombie / \
          adder zombie / gnoll zombie / orc zombie / kobold zombie / \
@@ -510,8 +532,10 @@ ccccccccccccccccccccccccccccccc
 ENDMAP
 
 NAME:    ossuary_tomb_3
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
 TAGS:    no_rotate no_vmirror
-WEIGHT:  40
+WEIGHT: 5000 (D:4), 40 (Ossuary)
 ORIENT:  encompass
 # zombies should be awake, so they march downwards in a line
 MONS:    generate_awake orc zombie / generate_awake kobold zombie / \
@@ -549,7 +573,9 @@ ENDMAP
 ###########################################################
 
 NAME:    minmay_ossuary_two_tombs
-WEIGHT:  20
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
+WEIGHT: 5000 (D:4), 20 (Ossuary)
 ORIENT:  encompass
 MONS:    mummy
 MONS:    generate_awake ball python zombie / generate_awake jackal zombie / \
@@ -595,8 +621,10 @@ xxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    ossuary_crypta
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
 TAGS:    no_rotate no_vmirror
-WEIGHT:  20
+WEIGHT: 5000 (D:4), 20 (Ossuary)
 ORIENT:  encompass
 MONS:    mummy, weeping skull / burial acolyte
 MONS:    kobold zombie / gnoll zombie / orc zombie
@@ -646,7 +674,9 @@ ENDMAP
 # Scorpions, and lots of them. Hope you weren't expecting to breeze through
 # the ossuary just because you found a mace of holy wrath!
 NAME:   ossuary_minmay_scorpions
-WEIGHT: 20
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
+WEIGHT: 5000 (D:4), 20 (Ossuary)
 ORIENT: encompass
 MONS:   scorpion, mummy
 MONS:   gnoll zombie / jackal zombie / orc zombie / \
@@ -685,7 +715,9 @@ ccccccccccccccccccccccccc
 ENDMAP
 
 NAME:    ossuary_zaba_flooded
-WEIGHT:  20
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
+WEIGHT: 5000 (D:4), 20 (Ossuary)
 ORIENT:  encompass
 {{
 local flood_x, flood_y, n = -1, -1, 0
@@ -781,7 +813,9 @@ ENDMAP
 # Heavily reworked, because zombies and mummies not shouting made it a tedious
 # stutterstep lure-fest and the end corridor wasn't obvious without mapping.
 NAME:   minmay_ossuary_gauntlet
-WEIGHT: 10
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
+WEIGHT: 5000 (D:4), 10 (Ossuary)
 ORIENT: encompass
 NSUBST: 1 = 1:1 / 1:3 / 2:. / *:4
 NSUBST: 0 = 1:1 / 1:2 / 1:334 / 3:. / *:4
@@ -810,7 +844,9 @@ cc.....ccc=====c===c=====cc cc$$$cc
 ENDMAP
 
 NAME:    ossuary_the_hunt_dpeg
-WEIGHT:  10
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
+WEIGHT: 5000 (D:4), 10 (Ossuary)
 ORIENT:  encompass
 MONS:    mummy, crocodile zombie
 MONS:    kobold zombie / centaur zombie w:5 / gnoll zombie
@@ -838,8 +874,10 @@ cc2.........~c~~~~~~~~~~~~~c+^.....cc
 ENDMAP
 
 NAME:    ossuary_due_mausoleum
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
 TAGS:    no_rotate no_vmirror
-WEIGHT:  10
+WEIGHT: 5000 (D:4), 10 (Ossuary)
 ORIENT:  encompass
 MONS:    kobold zombie w:4 / orc zombie / gnoll zombie / \
          rat draugr w:6 ; dagger / kobold draugr w:6 ; dagger plus:-4
@@ -895,7 +933,9 @@ ENDMAP
 
 # INDY: Oh, rats! ... He hates rats. He's scared to death of 'em.
 NAME:    ossuary_due_small_catacomb
-WEIGHT:  10
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
+WEIGHT: 5000 (D:4), 10 (Ossuary)
 ORIENT:  encompass
 MONS:    kobold draugr ; dagger plus:-4 / gnoll zombie / \
          orc zombie w:12 / centaur zombie w:2
@@ -939,8 +979,10 @@ ENDMAP
 
 # Menkaure's pyramid
 NAME:    ossuary_due_pyramid
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
 TAGS:    no_rotate no_vmirror
-WEIGHT:  10
+WEIGHT: 5000 (D:4), 10 (Ossuary)
 ORIENT:  encompass
 MONS:    kobold zombie / gnoll zombie / orc zombie / rat zombie / \
          goblin zombie / hobgoblin zombie
@@ -989,11 +1031,13 @@ MAP
 ENDMAP
 
 NAME:   ossuary_zaba_two_paths
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
 TAGS:   no_rotate
 # There is no way up in the end. This is to give the zombies in the beginning
 # more time to go for a walk and another chance to meet the player.
 ORIENT: encompass
-WEIGHT: 10
+WEIGHT: 5000 (D:4), 10 (Ossuary)
 MONS:   kobold zombie / orc zombie / gnoll zombie
 MONS:   human zombie / elf zombie w:8 / centaur zombie w:2, crocodile zombie
 KMONS:  4ip = mummy
@@ -1045,7 +1089,9 @@ ENDMAP
 # Petrified trees in this strange cavern are the only appropriate walls thin
 # enough to help the skulls serve as intelligent trap_alarms.
 NAME:    ossuary_due_cavern
-WEIGHT:  10
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
+WEIGHT: 5000 (D:4), 10 (Ossuary)
 ORIENT:  encompass
 MONS:    centaur zombie w:1 / orc zombie w:15 / hobgoblin zombie /\
          kobold zombie / kobold draugr w:5 ; dagger / adder zombie / \
@@ -1103,7 +1149,9 @@ ENDMAP
 # Stealthy players can close the doors without the mummy noticing. This is
 # probably okay, but may turn out to be too easy.... -- dpeg
 NAME:   ossuary_minmay_four_chambers
-WEIGHT: 10
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
+WEIGHT: 5000 (D:4), 10 (Ossuary)
 ORIENT: encompass
 MONS:   gnoll zombie w:5 / human zombie / elf zombie / centaur zombie w:5
 MONS:   bullfrog simulacrum / spectral scorpion / \
@@ -1147,7 +1195,9 @@ ENDMAP
 # The intent was that the mummies chase the player through the whole ossuary.
 # Now it's just some netted-corner corridors with additional scorpion friends.
 NAME:   ossuary_minmay_chase
-WEIGHT: 10
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
+WEIGHT: 5000 (D:4), 10 (Ossuary)
 ORIENT: encompass
 MONS:   jackal zombie / adder zombie / kobold zombie / gnoll zombie
 MONS:   scorpion zombie, human zombie / elf zombie
@@ -1187,7 +1237,9 @@ cccc      ccc ccc ccc
 ENDMAP
 
 NAME:   ossuary_boxes_badplayer
-WEIGHT: 10
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
+WEIGHT: 5000 (D:4), 10 (Ossuary)
 ORIENT: encompass
 MONS:   rat zombie / quokka zombie / adder zombie /\
         goblin zombie / hobgoblin zombie / kobold zombie / gnoll zombie w:2 /\
@@ -1199,7 +1251,7 @@ KMONS:  O = Menkaure w:5 / mummy, mummy
 KITEM:  N = $
 KITEM:  $ = any scroll w:49 / any potion w:49 / any wand w:1 / any ring w:1
 : inkwell_talisman_chance(_G, "?", true, "$")
-KFEAT:  O = exit_ossuary
+KFEAT:  O = stone_stairs_up_i
 KFEAT:  ab = stone_wall
 NSUBST: ` = 2:2 / *:.
 NSUBST: 1 = 25:1 / *:. , 3 = 5:3 / *:.
@@ -1251,7 +1303,9 @@ ccccccccccccccccccccccccccccccc
 ENDMAP
 
 NAME:    ossuary_kennysheep_city_of_the_dead
-WEIGHT:  10
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
+WEIGHT: 5000 (D:4), 10 (Ossuary)
 ORIENT:  encompass
 KMONS:   1s = weeping skull
 KMONS:   2 = burial acolyte
@@ -1316,7 +1370,9 @@ ccccccccccccc+++ccccccccccccc
 ENDMAP
 
 NAME:   ossuary_hellmonk_silent_tomb
-WEIGHT: 10
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
+WEIGHT: 5000 (D:4), 10 (Ossuary)
 ORIENT: encompass
 MONS:   silent spectre, wight / marrowcuda / weeping skull w:5
 MONS:   centaur zombie w:20 / water moccasin zombie / scorpion zombie /\
@@ -1367,7 +1423,9 @@ ENDMAP
 
 # an ossuary with no clear pathway and monsters and loot scattered about
 NAME:    ossuary_hellmonk_twisting_tombs
-WEIGHT:  10
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
+WEIGHT: 5000 (D:4), 10 (Ossuary)
 ORIENT:  encompass
 MONS:    weeping skull / burial acolyte
 MONS:    mummy / wight w:2
@@ -1414,7 +1472,9 @@ ccccccccccccccccccccccccccccccc
 ENDMAP
 
 NAME:   ossuary_hellmonk_split_paths
-WEIGHT: 10
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
+WEIGHT: 5000 (D:4), 10 (Ossuary)
 ORIENT: encompass
 MONS:   burial acolyte / weeping skull
 MONS:   mummy / scorpion w:4
@@ -1461,7 +1521,9 @@ cccccccccccccccccccccccc
 ENDMAP
 
 NAME:   ossuary_hellmonk_orc_graveyard
-WEIGHT: 10
+PLACE:   D:4
+TAGS:    dcchili_d4_ossuary
+WEIGHT: 5000 (D:4), 10 (Ossuary)
 ORIENT: encompass
 MONS:   orc warrior zombie w:20 / weeping skull / troll zombie w:1
 MONS:   ogre zombie / mummy w:1

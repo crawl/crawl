@@ -4073,7 +4073,7 @@ KMONS:  H = guardian sphinx
 : if you.in_branch("Crypt") then
 KMONS: M = Khufu, royal mummy
 : elseif you.absdepth() <= 17 then
-KMONS: M = Menkaure, mummy priest
+KMONS: M = mummy priest
 : else
 SUBST: M = 6
 : end

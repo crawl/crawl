@@ -2764,6 +2764,13 @@ static void _dgn_verify_connectivity(unsigned nvaults)
 //   in the order their altars are placed.
 static void _build_overflow_temples()
 {
+    // Dungeon Crawl Chili repurposes sealed Ossuary destination maps as the
+    // complete D:4 floor. Overflow temples are secondary vaults whose exits
+    // cannot be connected reliably inside those encompass maps, so do not
+    // schedule them on this themed floor.
+    if (player_in_branch(BRANCH_DUNGEON) && you.depth == 4)
+        return;
+
     // Levels built while in testing mode.
     if (!you.props.exists(OVERFLOW_TEMPLES_KEY))
         return;
@@ -3997,7 +4004,17 @@ static void _place_minivaults()
 
 static bool _builder_normal()
 {
-    const map_def *vault = _dgn_random_map_for_place(false);
+    // D:4 is always one of the destination maps repurposed from Ossuary.
+    // Select this pool explicitly: normal seeded game setup can bypass the
+    // generic PLACE/depth weighting path used by map-generation tests.
+    const map_def *vault = nullptr;
+    if (player_in_branch(BRANCH_DUNGEON) && you.depth == 4)
+    {
+        vault = random_map_for_tag("dcchili_d4_ossuary",
+                                   true, false, false);
+    }
+    else
+        vault = _dgn_random_map_for_place(false);
 
     if (vault)
     {
