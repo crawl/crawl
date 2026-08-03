@@ -257,7 +257,7 @@ static string mi_calc_major_healing(monster* mons)
 {
     const int min = 50;
     const int dice = mons->spell_hd(SPELL_MAJOR_HEALING) * 5;
-    return make_stringf("%d + 2d%d", min);
+    return make_stringf("%d + 2d%d", min, dice);
 }
 
 // Fallback used for spells not having damage displayed in game
@@ -295,7 +295,10 @@ static std::string _post_process_spell_effect_str(std::string spell_effect_str)
     spell_effect_str.erase(spell_effect_str.begin());
     spell_effect_str.pop_back();
   }
-
+  if (spell_effect_str == "immune")
+  {
+    return "";
+  }
   int end_pos;
   const auto len = static_cast<int>(spell_effect_str.length());
   if (sscanf(spell_effect_str.c_str(), "%*d%%%n", &end_pos) == 0 && end_pos == len)
