@@ -818,7 +818,7 @@ int main(int argc, char* argv[])
         mev += mp->evasion();
         set_min_max(mp->speed, speed_min, speed_max);
         set_min_max(mp->hit_points, hp_min, hp_max);
-        monster_info mi(mp, MILEV_ALL);
+        monster_info mi(mp, MILEV_SKIP_SAFE);
 
         record_spell_set(&mi, mp, spell_lists, damages);
 
