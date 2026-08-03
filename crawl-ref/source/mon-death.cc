@@ -3022,9 +3022,6 @@ item_def* monster_die(monster& mons, killer_type killer,
                     "With a roar, the tentacle is hauled back through the portal!");
             }
             silent = true;
-            for (map_marker* mark : env.markers.get_markers_at(mons.pos(), MAT_MALIGN_GATEWAY))
-                if (dynamic_cast<map_malign_gateway_marker*>(mark)->tentacle == mons.mid)
-                    env.markers.remove(mark);
         }
     }
     else if (mons.type == MONS_DROWNED_SOUL)

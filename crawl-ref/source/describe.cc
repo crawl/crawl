@@ -5119,7 +5119,11 @@ static string _flavour_base_desc(attack_flavour flavour)
     };
 
     const string* desc = map_find(base_descs, flavour);
-    ASSERT(desc);
+
+    // Don't crash on missing descriptions.
+    if (!desc)
+        return "undefined";
+
     return *desc;
 }
 

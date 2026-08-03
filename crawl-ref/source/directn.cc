@@ -1601,10 +1601,7 @@ void direction_chooser::update_previous_target() const
     // the player's primary target. Remember the initial target instead, unless
     // the player adjusted direction manually.
     if (is_ranged_attack && !player_changed_target && old_m && you.aware_of(*old_m))
-    {
         you.prev_targ = old_m->mid;
-        you.prev_grd_targ = old_m->pos();
-    }
     // Otherwise, if directly targeting a monster, remember that monster
     else
     {

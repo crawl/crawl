@@ -4838,7 +4838,7 @@ Goji triumphant
 
 {{
   if you.invisible() then
-    return '@The_monster@ laughs triumpantly. "Goji even *more* invisible!"'
+    return '@The_monster@ laughs triumphantly. "Goji even *more* invisible!"'
   else
     return '@The_monster@ laughs. "Silly ' .. you.species():lower() .. "! You couldn't even see me."
   end
@@ -8981,7 +8981,7 @@ VISUAL:@The_monster@ pulls a severed tentacle out of their boot and sighs heavil
 
 @The_monster@ grins, "Not even the Unformed can stop the chosen ones of Beogh!"
 
-@The_monster@ shouts triumpantly, "Who's laughing NOW?"
+@The_monster@ shouts triumphantly, "Who's laughing NOW?"
 
 @The_monster@ shudders. "I think my head was attached to my elbow for a minute there..."
 
