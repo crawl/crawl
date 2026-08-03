@@ -276,11 +276,9 @@ random_var player::attack_delay_with(const item_def *weap, bool melee_only,
 
     if (weap && is_throwable(this, *weap))
     {
-        // Thrown weapons use 10 + projectile damage to determine base delay.
         const skill_type wpn_skill = SK_THROWING;
         const int penalty = _unfit_throw_penalty(weap);
-        const int projectile_delay = (10 + property(*weap, PWPN_DAMAGE) / 2)
-                                     * penalty;
+        const int projectile_delay = property(*weap, PWPN_SPEED) * penalty;
         attk_delay = random_var(projectile_delay);
         attk_delay -= div_rand_round(random_var(you.skill(wpn_skill, 10)),
                                      DELAY_SCALE);

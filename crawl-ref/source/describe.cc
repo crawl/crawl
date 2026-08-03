@@ -1158,11 +1158,11 @@ static string _describe_mutant_beast(const monster_info &mi)
  */
 static int _item_training_target(const item_def &item)
 {
-    const int throw_dam = property(item, PWPN_DAMAGE);
-    if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
+    if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES
+        || (item.base_type == OBJ_MISSILES && is_throwable(&you, item)))
+    {
         return weapon_min_delay_skill(item) * 10;
-    if (item.base_type == OBJ_MISSILES && is_throwable(&you, item))
-        return (((10 + throw_dam / 2) - FASTEST_PLAYER_THROWING_SPEED) * 2) * 10;
+    }
     if (item.base_type == OBJ_TALISMANS)
     {
         // Train to minimum level if below it, else maximum level.
@@ -2133,7 +2133,7 @@ static string _describe_ammo(const item_def &item)
     const bool player_throwable = is_throwable(&you, item);
     if (player_throwable)
     {
-        const int throw_delay = (10 + dam / 2);
+        const int throw_delay = property(item, PWPN_SPEED);
         const int target_skill = _item_training_target(item);
 
         description += make_stringf(

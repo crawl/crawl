@@ -1790,18 +1790,17 @@ int apply_fighting_skill(int damage, bool aux, bool random)
 
 int throwing_base_damage_bonus(const item_def &proj, bool random)
 {
-    // Stones get half bonus; everything else gets full bonus.
-    int damage_mult = min(4, property(proj, PWPN_DAMAGE));
+    // Stones get reduced bonus; everything else gets full bonus.
+    int damage_mult = min(3, property(proj, PWPN_DAMAGE));
     if (proj.sub_type == MI_CHAKRAM && invo_skill(you.religion) != SK_NONE)
     {
         skill_type bonussk = invo_skill(you.religion);
         if (random)
         {
-        return div_rand_round((you.skill_rdiv(SK_THROWING) * 3
-               + you.skill_rdiv(bonussk) * damage_mult), 14);
+        return div_rand_round((you.skill_rdiv(SK_THROWING) * damage_mult
+               + you.skill_rdiv(bonussk)), 4);
         }
-        return (you.skill(SK_THROWING) * damage_mult * 3
-            + you.skill_rdiv(bonussk) * damage_mult) / 14;
+        return (you.skill(SK_THROWING) * damage_mult + you.skill(bonussk)) / 4;
     }
 
     if (random)

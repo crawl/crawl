@@ -887,31 +887,32 @@ struct missile_def
     int         dam;
     int         mulch_rate;
     int         price;
+    int         speed;
 };
 
 static int Missile_index[NUM_MISSILES];
 static const missile_def Missile_prop[] =
 {
-    { MI_DART,          "dart",             0, 12, 3  },
-    { MI_STONE,         "stone",            2, 8,  1  },
-    { MI_LARGE_ROCK,    "large rock",       20, 25, 15 },
-    { MI_JAVELIN,       "javelin",          10, 20, 30 },
-    { MI_THROWING_NET,  "throwing net",     0, 0,  30 },
-    { MI_BOOMERANG,     "boomerang",        6, 20, 20 },
-    { MI_THROWING_KNIFE,"throwing knife",   4, 12, 20 },
-    { MI_HARPOON,       "harpoon",          16, 18, 30 },
-    { MI_CHAKRAM,       "chakram",          10, 20, 30 },
-    { MI_DISCUS,        "discus",           10, 20, 30 },
-    { MI_THROWING_CLUB, "throwing club",    20, 25, 15 },
-    { MI_SHURIKEN,      "shuriken",         6, 20, 20 },
-    { MI_KUNAI,         "kunai",            2, 12, 3  },
+    { MI_DART,          "dart",             0, 12, 3, 10 },
+    { MI_STONE,         "stone",            2, 8,  1, 11 },
+    { MI_LARGE_ROCK,    "large rock",       23, 25, 15, 20 },
+    { MI_JAVELIN,       "javelin",          12, 20, 30, 16 },
+    { MI_THROWING_NET,  "throwing net",     0, 0,  30, 10 },
+    { MI_BOOMERANG,     "boomerang",        8, 20, 20, 14 },
+    { MI_THROWING_KNIFE,"throwing knife",   5, 12, 20, 14 },
+    { MI_HARPOON,       "harpoon",          19, 18, 30, 20 },
+    { MI_CHAKRAM,       "chakram",          14, 20, 30, 17 },
+    { MI_DISCUS,        "discus",           12, 20, 30, 16 },
+    { MI_THROWING_CLUB, "throwing club",    19, 25, 15, 20 },
+    { MI_SHURIKEN,      "shuriken",         6, 20, 20, 14 },
+    { MI_KUNAI,         "kunai",            2, 12, 3, 12 },
 
 #if TAG_MAJOR_VERSION == 34
-    { MI_NEEDLE,        "needle",        0, 12, 2  },
-    { MI_ARROW,         "arrow",         0, 1,  2  },
-    { MI_BOLT,          "bolt",          0, 1,  2  },
-    { MI_SLUG,          "slug",          0, 1,  2  },
-    { MI_SLING_BULLET,  "sling bullet",  0, 1,  5  },
+    { MI_NEEDLE,        "needle",        0, 12, 2, 10 },
+    { MI_ARROW,         "arrow",         0, 1,  2, 10 },
+    { MI_BOLT,          "bolt",          0, 1,  2, 10 },
+    { MI_SLUG,          "slug",          0, 1,  2, 10 },
+    { MI_SLING_BULLET,  "sling bullet",  0, 1,  5, 10 },
 #endif
 };
 
@@ -2861,6 +2862,8 @@ int property(const item_def &item, int prop_type)
     case OBJ_MISSILES:
         if (prop_type == PWPN_DAMAGE)
             return Missile_prop[ Missile_index[item.sub_type] ].dam;
+        if (prop_type == PWPN_SPEED)
+            return Missile_prop[ Missile_index[item.sub_type] ].speed;
         break;
 
     case OBJ_STAVES:
