@@ -2478,6 +2478,7 @@ static void _give_extra_equipment(monster* mon, int level)
             }
         }
     }
+    break;
 
     case MONS_REGAL:
     {

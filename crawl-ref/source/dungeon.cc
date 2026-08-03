@@ -3221,14 +3221,19 @@ static void _build_dungeon_level()
     }
 
     // Layout maps and secondary vaults may install their own level defaults.
-    // D:4 is the Catacombs floor, so apply its materials last and discard
-    // per-cell wall/floor flavours before the level's tile flavour is built.
-    if (player_in_branch(BRANCH_DUNGEON) && you.depth == 4)
+    // Apply Chili's themed floor materials last and discard per-cell
+    // wall/floor flavours before the level's tile flavour is built.
+    const bool themed_dungeon = player_in_branch(BRANCH_DUNGEON)
+                                && you.depth == 4;
+    const bool themed_lair = player_in_branch(BRANCH_LAIR) && you.depth == 1;
+    if (themed_dungeon || themed_lair)
     {
         tileidx_t wall;
         tileidx_t floor;
-        const string wall_name = "stone_wall_ossuary";
-        const string floor_name = "floor_sandstone";
+        const string wall_name = themed_lair ? "wall_vines"
+                                             : "stone_wall_ossuary";
+        const string floor_name = themed_lair ? "floor_grass_dark"
+                                              : "floor_sandstone";
 
         if (tile_dngn_index(wall_name.c_str(), &wall))
         {
@@ -4022,15 +4027,18 @@ static void _place_minivaults()
 
 static bool _builder_normal()
 {
-    // D:4 always starts with one of the destination maps repurposed from
-    // Ossuary. Its D-branch prelude changes it from encompass to float, so
-    // _build_primary_vault() builds a normal dungeon layout around it.
-    // Select this pool explicitly: normal seeded game setup can bypass the
+    // Chili's themed early floors start with their designated primary vault.
+    // Select these pools explicitly: normal seeded game setup can bypass the
     // generic PLACE/depth weighting path used by map-generation tests.
     const map_def *vault = nullptr;
     if (player_in_branch(BRANCH_DUNGEON) && you.depth == 4)
     {
         vault = random_map_for_tag("dcchili_d4_ossuary",
+                                   true, false, false);
+    }
+    else if (player_in_branch(BRANCH_LAIR) && you.depth == 1)
+    {
+        vault = random_map_for_tag("dcchili_lair1_zoo",
                                    true, false, false);
     }
     else
@@ -4046,9 +4054,10 @@ static bool _builder_normal()
             : "");
         env.level_build_method += " random_map_for_place";
         _ensure_vault_placed_ex(_build_primary_vault(vault), vault);
-        // The source definitions are encompass maps, but their D:4 preludes
-        // make them floating primary vaults at placement time.
-        return player_in_branch(BRANCH_DUNGEON) && you.depth == 4
+        // Both themed floors use floating primary vaults and can accept the
+        // usual secondary vaults in their generated surroundings.
+        return (player_in_branch(BRANCH_DUNGEON) && you.depth == 4)
+               || (player_in_branch(BRANCH_LAIR) && you.depth == 1)
                || vault->orient != MAP_ENCOMPASS;
     }
 
