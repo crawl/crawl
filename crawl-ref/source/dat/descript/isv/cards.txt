@@ -1,0 +1,181 @@
+%%%%
+# Escape
+Velocity card
+
+Na kartě jest izobražena pusta, vetha dvojka obuvij. Jih podȯšvy sųt pokryte
+pěskom, pepelom i drnom.
+
+Iztęgańje tutoj karty može darovati velikų bystrost́ sȯjųznikam ili odstrašajųćų
+pomalost́ neprijateljam.
+%%%%
+the Tomb card
+
+Na kartě jest izobražena kråljevska kripta, vhod ktoroj jest zapečatany tęžkojų
+kamennojų dȯskojų.
+
+Iztęgańje tutoj karty pogrebaje jų koristnika v zaščitne, dočasne stěny iz tvŕdoj
+skaly. Na nizkyh rangah moći ili iz-za sųsědnyh stvorov kripta može byti
+nesȯvŕšenojų.
+
+Kripta poddŕživaje sę blågodarę prisųtstvu jej tvorca v njej, vśako dvigańje
+iz centra kripty bųde privesti k råzdrobjeńju jej stěn.
+%%%%
+Exile card
+
+Na kartě sųt izobražene mnogočisĺne rųky, izhodęće iz zějajųćego portala i
+odolěvajųće panikujųćų figurų.
+
+Iztęgańje tutoj karty može izgnati bližnjih stvorov v Bezdnų, i čim vyše rang moći,
+tym vyše stvorov dostupno dlja izgnańja. Tuta karta nikȯgda ne bųde izgnati jej
+koristnika.
+%%%%
+the Shaft card
+
+Na kartě jest izobraženy pųtnik, padajųći v propast́, ktora otvorila sę pod jego
+nogami.
+
+Iztęgańje tutoj karty bųde stvoriti propast́ pod koristnikom i, možlivo, pod
+jego neprijateljami.
+%%%%
+the Elixir card
+
+Na kartě jest izobraženy samodovoljny usměh, stvorjeny iz devęti čaš.
+
+Iztęgańje tutoj karty bystro lěči zdråvje i magijų koristnika.
+%%%%
+the Cloud card
+
+Na kartě sųt izobražene želězne vråta, objęte mglojų.
+
+Iztęgańje tutoj karty obimaje neprijateljev krųgami škodlivyh oblåkov. Efekty
+takyh oblåkov bųdųt měnjati sę v zavisnosti od moći kart.
+%%%%
+# Destruction
+Vitriol card
+
+Na kartě jest izobražena råstlina oklob, kapajųće svoj samobytny råzjedajųći sok.
+
+Iztęgańje tutoj karty bųde aktivovati zaklinańje råzjedajųćej ataky.
+%%%%
+the Storm card
+
+Na kartě jest izobraženy tonųći v morju korab v čas gromovoj burje.
+
+Iztęgańje tutoj karty bųde aktivovati burjų větra i električne iskry. Ulěpšeńje
+moći karty bųde privesti k usiljeńju sily větra i k siĺnějšim, mnogočislnějšim
+iskram.
+%%%%
+Pain card
+
+Na kartě jest izobraženo želězno kolo, grozęće bodcami i zarđavěvše od krvi.
+
+Iztęgańje tutoj karty bųde aktivovati nekromantično zaklinańje ataky.
+%%%%
+the Orb card
+
+Na kartě jest izobražena figura, ktora okrųžena světęćimi sę, plavajųćimi
+v vȯzduhu kuljami energije.
+
+Iztęgańje tutoj karty bųde izpustiti jednų ili, možlivo, vyše niščivyh kulej
+čistoj magije.
+%%%%
+Degeneration card
+
+Na kartě jest izobraženy drakon, od ktorogo spadaje luska, izjavjajųći ovcų
+pod njejų.
+
+Iztęgańje tutoj karty bųde dozvoliti polimorfovati i malmutovati bližnjih
+neprijateljev v slabe formy i bųde ne na dȯlgo otųpiti tyh, kogo ne možno
+polimorfovati.
+%%%%
+Wild Magic card
+
+Na kartě jest izobražena ostrokonėčna šapka čarovnika, ktora obžžena i
+odpočivaje na kupě pepela.
+
+Iztęgańje tutoj karty porađaje vliv dikoj magije (kako by od neuspěšnogo
+čarovańja zaklinańja) na neprijateljev koristnika. Vśaky stvor bųde izlěčiti
+čęst́ magije koristnika.
+%%%%
+# Summoning
+the Elements card
+
+Na kartě sųt izobražene figury velikyh zvěŕev, skryvajųćih sę v pěsȯčnoj burji.
+
+Iztęgańje tutoj karty bųde prizvati trěh zvěŕev od četyrěh elementov.
+%%%%
+the Pentagram card
+
+Na kartě sųt izobraženi kultniki, rysujųći na podlogě rituaĺnų pentagramų.
+
+Iztęgańje tutoj karty bųde prizvati dvojkų demonov dlja pomoći koristniku.
+Jest maly šans že jedin iz demonov bųde neprijateljskym.
+%%%%
+the Dance card
+
+Na kartě jest izobražena ekstravagantno oblěčena figura v maskě, tancujųća
+sama v bezměrnoj komnatě.
+
+Iztęgańje tutoj karty bųde prizvati tancujųće orųžje. Jego kvalitet, brend
+i privětlivost́ zavisęt od moći kart.
+%%%%
+the Swarm card
+
+Na kartě jest izobraženy medvěd́, okrųženy rojem pčel. Oni zlověšće brenčaje.
+
+Iztęgańje tutoj karty bųde prizvati pčel.
+%%%%
+the Rangers card
+
+Na kartě jest izobražena strěla v centru cělja, ktora byla råzděljena drugojų strělojų.
+
+Iztęgańje tutoj karty bųde prizvati několikyh lųčnikov.
+%%%%
+the Illusion card
+
+Na kartě jest izobraženy někto stojęći v salě zŕcal, okrųženy svojimi vlastnymi
+odrazami.
+
+Iztęgańje tutoj karty bųde prizvati iluzijų koristnika. Jej moć bųde zavisěti
+od jej vlastnyh sil.
+%%%%
+# Punishment
+Wrath card
+
+Na kartě jest izobražena božska rųka, dosęgajųća iz nebes do zemje, da by metnųti
+zlobne blěskavice.
+
+Iztęgańje tutoj karty bųde izzvati gněv boga protiv koristnika.
+%%%%
+the Wraith card
+
+Na kartě ne jest izobraženo ničego.
+
+Iztęgańje tutoj karty bųde osušiti koristnika.
+%%%%
+the Swine card
+
+Na kartě sųt izobraženi několiko dikyh vepŕev, valjajųćih sę v blåtnoj jamě.
+
+Iztęgańje tutoj karty bųde sdělati jej koristnika rozovym ryteljem trufelev.
+%%%%
+Torment card
+
+Na kartě jest izobražena kričęća figura, ktorų mųčęt na věšalkě.
+
+Iztęgańje tutoj karty bųde pričiniti mųčiteljno poranjeńje.
+%%%%
+# buggy cards
+a buggy card
+
+Na kartě jest izobraženy igrač v Crawlm ktory piše bug report v Mantis.
+
+Iztęgańje tutoj karty jest bug, jestli on kȯgdakoli tobě bųde strěsti sę.
+%%%%
+a very buggy card
+
+Na kartě sųt izobraženi několiko igračev v Crawl, ktori pišųt několiko
+bug reportov v Mantis.
+
+Iztęgańje tutoj karty jest bug, jestli on kȯgdakoli tobě bųde strěsti sę.
+%%%%

@@ -1,0 +1,138 @@
+%%%%
+Barachi
+
+Barači sųt pomali zemnovodni humanoidi, ktori mogųt skakati na velike dalje.
+Iz-za jih råzširjenogo viděńja jih takože možno lėgko uględěti s velikogo dalja.
+%%%%
+Coglin
+
+Koglini nosęt začarovane ekzoskelety, ktore sposobne vlåděti orųžjem v oboh
+rųkah, ovivajųći pomalo prěměšćajųći sę metal okolo svojih krěhkyh goblinoidnyh
+těles.
+%%%%
+Deep Elf
+
+Glųbinni Elfi imajųt vysokų naklonnost́ kȯ vsim školam magije, ale oni sųt veĺmi
+krěhki. Oni bystro regenerujųt magičnų silų.
+%%%%
+Demigod
+
+Polubogi odkazyvajųt sę služiti vśakomu bogu, ale kompensujųt to božskymi atributami
+i vysokymi rezervami zdråvja i magije.
+%%%%
+Demonspawn
+
+Demonični Potomki sųt polu-ljudi, polu-demoni. S jih råstom oni nabyvajųt siĺne
+demonične mutacije.
+%%%%
+Djinni
+
+Džini sųt věčno goręći duhi. S jih råstom oni avtomatično učęt sę novym zaklinańjam
+i čarujųt jih, črpajųći silų iz svojego plåmenja.
+%%%%
+Draconian
+
+Drakonianci sųt universaĺni hibridi. Oni dosęgajųt zrělosti na 7 rangu i nabyvajųt
+svoj kolor.
+%%%%
+Formicid
+
+Formicidi sųt podobni člověku mråvji, ktori izkusno kopajųt zemjų. Jih rųky i nogy
+sųt izključiteljno siĺne, i oni živųt v stańju stalogo stazisa.
+%%%%
+Felid
+
+Felidi sųt råzumni koti s několikymi žit́jami. Oni ne mogųt koristati brȯnjų ili
+orųžje.
+%%%%
+Gale Centaur
+
+Mogųći hibridi konjev, čiji prědki proizhodęt od samyh četyrěh větrov, Kentavri Větra
+sųt najsiĺni, kȯgda bystro galopujųt do svojih neprijateljev.
+%%%%
+Gargoyle
+
+Stvorjeni iz živogo kamenja, Gargojli imajųt nadprirodnų sposobnost́ k magiji zemje. U njih
+jest nizko zdråvje, ale jih kamenne tělesa sųt nevěrojętno tųge.
+%%%%
+Gnoll
+
+Gnoli sųt humanoidi, podobni psam. Oni ne mogųt specializovati sę v kakom-libo
+jednom uměńjų, zatože oni učęt sę vsim uměńjam jednočasno.
+%%%%
+Human
+
+Ljudi od prirody sųt izslědovatelji. Odkryt́je novyh měst osvěžaje i nadyhaje jih.
+V ostalom oni sųt vpȯlně srědnji.
+%%%%
+Tengu
+
+Tengu sųt ljudi-ptici, ktori ljubęt vojevati orųžjem i zaklinańjami. Oni sųt
+krěhki, ale srųčni i v koncu učęt sę lětati.
+%%%%
+Kobold
+
+Koboĺdi naležęt těnjam i mogųt uględěti ili byti uględěnymi jedino s blizkogo
+dalja. Oni sųt mali i nemnogo krěhki, a takože izkusni v vęćiństvu svojih uměnij.
+%%%%
+Merfolk
+
+Polu-ljudi, polu-rybi, Merfolki sųt žitelji vody i zemje. Oni sųt siĺni bojci
+i izkusno koristajųt magijų v boju.
+%%%%
+Minotaur
+
+Minotavri sųt veliki muskuĺni ljudi s byčjimi glåvami. Oni pŕvorędno vlådějųt vsimi
+tipami bližnjego i daljnjego boja.
+%%%%
+Mountain Dwarf
+
+Goŕski Dvarfi sųt siĺni bojci bližnjego boja i sposobni čarovniki v tęžkoj brȯnji.
+Oni mogųt koristati svitki dlja začarovańja až něktoryh artefaktov.
+%%%%
+Mummy
+
+Mumiji, prinuđeni hoditi pod antičnym proklęt́jem, imajųt vrođenų věrų i dobro
+vlådějųt Nekromantijejų, ale učęt sę drugym uměńjam veĺmi pomalo. Oni ne mogųt
+piti napoje.
+%%%%
+Naga
+
+Nagi sųt hibridi: od talije i vyše oni sųt ljudi, ale zaměsto nog u njih jest
+zmijiny hvost. Oni hodęt veĺmi pomalo, ale imajųt prirodnų elastičnost́.
+%%%%
+Octopode
+
+Ośmonogi sųt vid zemnovodnyh glåvonožcev. Oni mogųt nositi osm pŕstėnjev, ale
+bliz nikaka brȯnja jim ne podhodi.
+%%%%
+Oni
+
+Veliki, krěpki i krajni ljubitelji napojev, Oni sųt izkusni bojci i čarovniki,
+ktori dobyvajųt dodatnų korist́ od lěčęćih napojev.
+%%%%
+Poltergeist
+
+Bezformeni duhi, ktori zloradujųt sę od čarovańja proklętij na svojih neprijateljev.
+Oni mogųt jednočasno nositi mnogo råznyh šapȯk, obuvij ili plaščev, ale ne mogųt
+nositi tělesnų brȯnjų.
+%%%%
+Revenant
+
+Revenanti sųt skeletni mŕtveci, siĺni v bližnjem boju i sposobni usiljati
+škodęće zaklinańja posrědstvom vpivańja vȯzpomněnij, ktore oni žnųt u svojih žrtv.
+%%%%
+Spriggan
+
+Veĺmi mali, veĺmi krěhki i veĺmi bystri, Sprigani sųt izkusni majstri skrytyh udarov
+i čarovanij zaklinanij.
+%%%%
+Troll
+
+Troli sųt monstruozni stvory s moćnymi nogt́ami. Oni bystro regenerujųt zdråvje.
+%%%%
+Vine Stalker
+
+Krěhki simbioniki, Lozovi Stalkeri ne mogųt lěčiti zdråvje posrědstvom napojev. Jih
+magične rezervy vpivajųt škodų i oni vlådějųt ukųšeńjem, lěčęćim magijų.
+%%%%
