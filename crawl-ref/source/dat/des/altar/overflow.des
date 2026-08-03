@@ -6556,13 +6556,13 @@ WEIGHT: 2
 : if you.depth() <= 4 then
 MONS: zombie / hobgoblin draugr w:2 / orc draugr w:2
 MONS: mummy / shadow imp / wight / mummy / phantom
-KMONS: 3 = menkaure, wight
+KMONS: 3 = wight
 SUBST: 2 = 2---
 : elseif you.depth() <= 7 then
 MONS: zombie / gnoll draugr w:2 / adder draugr w:2 / mummy / \
       shadow imp / wight / mummy / phantom / bes kemwar
 MONS: burial acolyte / wraith / vampire
-KMONS: 3 = menkaure, burial acolyte / wraith / vampire
+KMONS: 3 = burial acolyte / wraith / vampire
 SUBST: 2 = 12--
 : else
 MONS: mummy / wight / zombie / steam dragon draugr w:2 / \

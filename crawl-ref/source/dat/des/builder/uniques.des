@@ -214,7 +214,9 @@ DEPTH:  D:7-12, Orc
 # : place_unique(_G, "Medusa")
 
 NAME:   uniq_menkaure
-DEPTH:  D:4-7
+DEPTH:  D:4
+PLACE:  D:4
+WEIGHT: 5000
 : place_unique(_G, "Menkaure")
 
 NAME:   uniq_natasha
