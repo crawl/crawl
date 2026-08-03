@@ -141,7 +141,7 @@ struct bolt
     // INPUT parameters set by caller
     spell_type  origin_spell = SPELL_NO_SPELL; // may remain SPELL_NO_SPELL for
                                                // non-spell beams.
-    int         range = -2;
+    int         range = LOS_RADIUS;
     char32_t    glyph = '*';           // missile gfx
     colour_t    colour = BLACK;
     beam_type   flavour = BEAM_MAGIC;

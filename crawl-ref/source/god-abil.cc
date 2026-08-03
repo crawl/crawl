@@ -4008,7 +4008,6 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     beam.source_id   = MID_PLAYER;
     beam.source_name = "you";
     beam.thrower     = KILL_YOU;
-    beam.range       = LOS_RADIUS;
     beam.damage      = qazlal_upheaval_damage();
     beam.hit         = AUTOMATIC_HIT;
     beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
@@ -5618,7 +5617,6 @@ bool ru_power_leap()
     wave.flavour = BEAM_VISUAL;
     wave.colour = BROWN;
     wave.glyph = dchar_glyph(DCHAR_EXPLOSION);
-    wave.range = 1;
     wave.ex_size = 1;
     wave.is_explosion = true;
     wave.source = you.pos();
@@ -6820,7 +6818,6 @@ static void _makhleb_atrocity_trigger(int power)
     mpr("Your destruction surges wildly!");
 
     bolt beam;
-    beam.range = you.current_vision;
     beam.source = you.pos();
     beam.thrower = KILL_YOU;
 

@@ -2973,7 +2973,6 @@ item_def* monster_die(monster& mons, killer_type killer,
                     visual.source = mons.pos();
                     visual.target = armoury->pos();
                     visual.flavour = BEAM_VISUAL;
-                    visual.range = LOS_RADIUS;
                     visual.aimed_at_spot = true;
                     visual.fire();
                 }

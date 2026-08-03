@@ -2117,8 +2117,6 @@ static void _xom_spray_lightning(coord_def position)
 {
     bolt beam;
 
-    // range has no tracer, so randomness is ok
-    beam.range        = 7;
     beam.source       = you.pos();
     beam.target       = position;
     beam.target.x     += random_range(-1, 1);
@@ -3796,7 +3794,6 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
 
     bolt beam;
 
-    beam.range   = INFINITE_DISTANCE;
     beam.flavour = BEAM_VISUAL;
     beam.glyph   = feat_def.symbol();
     beam.colour  = feat_def.colour();

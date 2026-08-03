@@ -814,7 +814,6 @@ static bool _handle_swoop_or_flank(monster& mons)
     tracer.target = target;
     tracer.set_is_tracer(true);
     tracer.pierce = true;
-    tracer.range = LOS_RADIUS;
     tracer.fire();
 
     for (unsigned int j = 0; j < tracer.path_taken.size() - 1; ++j)

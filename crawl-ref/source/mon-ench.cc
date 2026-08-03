@@ -1213,7 +1213,6 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
     tracer.affects_nothing = true;
     tracer.target          = mons->pos();
     tracer.source          = you.pos();
-    tracer.range           = LOS_RADIUS;
     tracer.set_is_tracer(true);
     tracer.aimed_at_spot   = true;
     tracer.fire();

@@ -1391,7 +1391,6 @@ static int _harvest_corpses()
                 beam.tile_beam = tileidx_item(item);
                 beam.glyph = get_item_glyph(item).ch;
                 beam.colour = item.get_colour();
-                beam.range = LOS_RADIUS;
                 beam.aimed_at_spot = true;
                 beam.flavour = BEAM_VISUAL;
                 beam.draw_delay = 3;

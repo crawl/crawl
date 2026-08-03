@@ -480,7 +480,6 @@ void wind_blast(actor* agent, int pow, coord_def target)
     wind_beam.pierce          = true;
     wind_beam.affects_nothing = true;
     wind_beam.source          = agent->pos();
-    wind_beam.range           = LOS_RADIUS;
     wind_beam.set_is_tracer(true);
 
     if (agent->is_player())
@@ -833,7 +832,6 @@ static spret _tremorstone()
     beam.source_id  = MID_PLAYER;
     beam.thrower    = KILL_YOU;
     zappy(ZAP_TREMORSTONE, power, false, beam);
-    beam.range = 3;
     beam.ex_size = 2;
     beam.target = center;
 

@@ -1245,7 +1245,6 @@ static bool _simple_shot_tracer(coord_def source, coord_def target,
 {
     bolt tracer;
     tracer.attitude = ATT_FRIENDLY;
-    tracer.range = LOS_RADIUS;
     tracer.source = source;
     tracer.target = target;
     tracer.source_id = source_mid;
@@ -1487,7 +1486,6 @@ static int _shadow_zap_tracer(zap_type ztype, coord_def source, coord_def target
     zappy(ztype, 100, true, tracer);
 
     tracer.attitude = ATT_FRIENDLY;
-    tracer.range = LOS_RADIUS;
     tracer.source = source;
     tracer.target = target;
     tracer.source_id = MID_PLAYER_SHADOW_DUMMY;

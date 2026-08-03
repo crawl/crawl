@@ -1979,7 +1979,6 @@ bool trigger_battlesphere(actor* agent)
     bolt beam;
     beam.source_name = battlesphere->name(DESC_YOUR).c_str();
     beam.name        = "barrage of energy";
-    beam.range       = LOS_RADIUS;
     beam.hit         = AUTOMATIC_HIT;
     beam.damage      = _battlesphere_damage(battlesphere->get_hit_dice());
     beam.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -3947,7 +3946,6 @@ static void _paragon_tempest(const coord_def& target)
         visual.colour = WHITE;
         visual.source = old_pos;
         visual.target = target;
-        visual.range = LOS_RADIUS;
         visual.aimed_at_spot = true;
         visual.fire();
 
@@ -4504,7 +4502,6 @@ bool splinterfrost_block_fragment(monster& block, const coord_def& aim)
     beam.attitude = block.attitude;
     beam.set_agent(agent);
     beam.target = aim;
-    beam.range = LOS_RADIUS;
     beam.seen = true;
     beam.stop_at_allies = true;
 

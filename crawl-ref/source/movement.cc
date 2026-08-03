@@ -580,7 +580,6 @@ monster* get_rampage_target(coord_def move)
     const coord_def tracer_target = you.pos() + (move * tracer_range);
 
     bolt beam;
-    beam.range           = LOS_RADIUS;
     beam.aimed_at_spot   = true;
     beam.target          = tracer_target;
     beam.source_name     = "you";

@@ -478,7 +478,6 @@ void ranged_attack_beam::initialise_beam(actor &agent, item_def &item)
 
     // Arbitrary damage for the tracer (will be unused when fired for real)
     beam.damage       = dice_def(10, 10);
-    beam.range        = you.current_vision;
     beam.source_id    = agent.mid;
     beam.source       = agent.pos();
     beam.flavour      = BEAM_MISSILE;
@@ -736,7 +735,6 @@ static bool _salvo_shot_tracer(coord_def source, coord_def target, bool pierce,
 {
     bolt tracer;
     tracer.attitude = ATT_FRIENDLY;
-    tracer.range = LOS_RADIUS;
     tracer.source = source;
     tracer.target = target;
     tracer.source_id = MID_PLAYER;
@@ -1049,7 +1047,6 @@ bool do_west_wind_shot()
         wind.source = you.pos();
         wind.target = targ;
         wind.pierce = true;
-        wind.range  = you.current_vision;
         wind.set_is_tracer(true);
         wind.fire();
 

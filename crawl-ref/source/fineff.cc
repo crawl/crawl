@@ -1813,7 +1813,6 @@ void celebrant_bloodrite_fineff::fire()
     int repeats = 0;
 
     bolt beam;
-    beam.range        = you.current_vision;
     beam.source       = you.pos();
     beam.source_id    = MID_PLAYER;
     beam.attitude     = ATT_FRIENDLY;

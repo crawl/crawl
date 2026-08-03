@@ -1671,7 +1671,6 @@ void attack::maybe_trigger_autodazzler()
 
         proj.target = attacker->pos();
         proj.source = you.pos();
-        proj.range = LOS_RADIUS;
         proj.source_id = MID_PLAYER;
         proj.draw_delay = 5;
         proj.attitude = ATT_FRIENDLY;

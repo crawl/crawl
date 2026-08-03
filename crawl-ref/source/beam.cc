@@ -624,6 +624,11 @@ void bolt::initialise_fire()
     if (flavour == BEAM_VISUAL)
         affects_nothing = true;
 
+    // Player vision sets an absolute cap on the range of all beams and projectiles.
+    // (Yes, being a kobold does very bad things to the draw strength of every
+    // centaur in the dungeon, but that's just life.)
+    range = min(range, (int)you.current_vision);
+
     ASSERT_IN_BOUNDS(source);
     ASSERT_RANGE(flavour, BEAM_NONE + 1, BEAM_FIRST_PSEUDO);
     ASSERT(!drop_item || ranged_atk);

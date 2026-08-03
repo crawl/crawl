@@ -1661,7 +1661,6 @@ static void _regen_monster(monster* mon, monster* source, int dur)
     beam.source = mon->pos();
     beam.target = mon->pos();
     beam.colour = ETC_HOLY;
-    beam.range = LOS_RADIUS;
     beam.aimed_at_spot = true;
     beam.flavour = BEAM_VISUAL;
     beam.draw_delay = 3;
@@ -1923,7 +1922,6 @@ static void _setup_fake_beam(bolt& beam, const monster&, int)
     // we'll ignore that. We need some damage on the tracer so the monster
     // doesn't think the spell is useless against other monsters.
     beam.damage   = CONVENIENT_NONZERO_DAMAGE;
-    beam.range    = LOS_RADIUS;
 }
 
 /**
@@ -7042,7 +7040,6 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
     beam.source_id   = mons.mid;
     beam.source_name = mons.name(DESC_THE).c_str();
     beam.thrower     = KILL_MON_MISSILE;
-    beam.range       = LOS_RADIUS;
     beam.damage      = dice_def(3, 24);
     beam.foe_ratio   = random_range(20, 30);
     beam.hit         = AUTOMATIC_HIT;
@@ -7435,7 +7432,6 @@ static bool _mons_cast_hellfire_mortar(monster& caster, actor& foe, int pow, boo
     {
         bolt tracer;
         zappy(ZAP_HELLFIRE_MORTAR_DIG, pow, true, tracer);
-        tracer.range = LOS_RADIUS;
         tracer.source = caster.pos();
         tracer.target = possible_targets[i];
         tracer.source_id = caster.mid;
@@ -9446,7 +9442,6 @@ static void _throw_ally_to(const monster &thrower, monster &throwee,
              destination.c_str());
 
         bolt beam;
-        beam.range   = INFINITE_DISTANCE;
         beam.hit     = AUTOMATIC_HIT;
         beam.name    = throwee.name(DESC_THE, true);
         beam.flavour = BEAM_VISUAL;
@@ -9733,7 +9728,6 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         {
             bolt tracer;
             tracer.target = foe->pos();
-            tracer.range  = LOS_RADIUS;
             tracer.hit    = AUTOMATIC_HIT;
             targeting_tracer target_tracer;
             fire_tracer(mon, target_tracer, tracer);

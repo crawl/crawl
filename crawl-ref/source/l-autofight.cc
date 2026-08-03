@@ -73,7 +73,6 @@ static int _shot_score(coord_def target, coord_def aim, bool pierce, bool primar
     beam.set_agent(&you);
     beam.source = you.pos();
     beam.set_is_tracer(true);
-    beam.range = you.current_vision;
     beam.target = aim;
     beam.aimed_at_spot = true;
     beam.pierce = true;

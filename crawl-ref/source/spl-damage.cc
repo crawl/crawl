@@ -335,7 +335,6 @@ spret cast_chain_spell(spell_type spell_cast, int pow,
     beam.flavour        = BEAM_CHAOS;
     beam.source_id      = caster->mid;
     beam.thrower        = caster->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
-    beam.range          = 8;
     beam.hit            = AUTOMATIC_HIT;
     beam.obvious_effect = true;
     beam.pierce         = false;       // since we want to stop at our target
@@ -1767,7 +1766,6 @@ spret cast_shatter(int pow, bool fail)
         visual.colour        = WHITE;
         visual.tile_explode  = TILE_BOLT_SHATTER_WAVE_WHITE;
         visual.glyph         = dchar_glyph(DCHAR_EXPLOSION);
-        visual.range         = you.current_vision;
         visual.ex_size       = you.current_vision;
         visual.is_explosion  = true;
         visual.explode_delay = 15;
@@ -4423,7 +4421,6 @@ static void _imb_actor(actor * act, int pow, coord_def source)
     beam.source          = source;
     beam.thrower         = KILL_YOU;
     beam.source_id       = MID_PLAYER;
-    beam.range           = LOS_RADIUS;
     beam.ench_power      = pow;
     beam.aimed_at_spot   = true;
 
@@ -4981,7 +4978,6 @@ spret cast_magnavolt(coord_def target, int pow, bool fail)
         volt.source = you.pos();
         volt.target = targets[i];
         volt.aimed_at_spot = true;
-        volt.range = LOS_RADIUS;
         volt.thrower = KILL_YOU_MISSILE;
         volt.fire();
     }
