@@ -5091,7 +5091,11 @@ void explore_discoveries::found_feature(const coord_def &pos,
         es_flags |= ES_MUTATION_CATALYST;
     }
     else if (ES_trap && feat_is_trap(feat) && !trap_is_safe(feat))
+    {
+        string desc = cleaned_feature_description(pos);
+        marked_feats.push_back(desc + ".");
         es_flags |= ES_TRAP;
+    }
 }
 
 void explore_discoveries::add_stair(

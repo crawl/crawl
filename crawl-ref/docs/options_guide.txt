@@ -916,7 +916,7 @@ explore_item_greed = 10
         further away, if negative) when deciding whether to visit a square with
         an item or explore a new square.
 
-explore_stop  = items,stairs,shops,altars,portals,branches,runed_doors,traps
+explore_stop  = items,stairs,shops,altars,portals,branches,runed_doors
 explore_stop += greedy_pickup_smart,greedy_visited_item_stack
         (List option)
         Explore will stop for one of these conditions. Whatever you
