@@ -360,11 +360,8 @@ void Stash::update()
     {
         ash_id_item(*si);
         maybe_identify_base_type(*si);
-        if (!(si->flags & ISFLAG_UNOBTAINABLE))
-        {
-            lucky_upgrade_item(*si);
-            item_refs.push_back(&*si);
-        }
+        lucky_upgrade_item(*si);
+        item_refs.push_back(&*si);
     }
 
     // Find the item with the highest score to bring to the front of the stash.
@@ -481,6 +478,9 @@ vector<stash_search_result> Stash::matches_search(
 
     for (const item_def &item : items)
     {
+        if (item.flags & ISFLAG_UNOBTAINABLE)
+            continue;
+
         const string s   = stash_item_name(item);
         const string ann = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
         string haystack = prefix + " " + ann + " " + s;
