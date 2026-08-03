@@ -67,11 +67,14 @@ function ossuary_setup_features(e)
   -- upstairs and must never retain the exit_ossuary feature.
   e.kfeat("< = stone_stairs_up_i")
   if you.in_branch("D") then
-    -- Dungeon Crawl Chili uses every Ossuary destination map as a possible
-    -- D:4 encompass floor. Give the whole level Ossuary materials, convert
-    -- its portal exits to ordinary upstairs, and overwhelmingly prefer this
-    -- pool over generic D:4 encompass vaults.
-    e.tags("uniq_d_encompass no_pool_fixup")
+    -- Use an Ossuary as D:4's floating primary vault. The normal dungeon
+    -- builder surrounds it with a regular layout and automatically chooses
+    -- several passable cells on the vault edge as corridor connections.
+    e.orient("float")
+    -- The source maps have sealed encompass borders, so the static map
+    -- validator cannot see an exit. Dungeon generation carves four guarded
+    -- exits after placement; no_exits only acknowledges the source shape.
+    e.tags("no_pool_fixup no_exits")
     e.tile("cx = stone_wall_ossuary")
     e.lrocktile("stone_wall_ossuary")
     e.lfloortile("floor_sandstone")
@@ -989,7 +992,7 @@ MONS:    kobold zombie / gnoll zombie / orc zombie / rat zombie / \
 MONS:    bat draugr ; dagger / rat draugr ; short sword / \
          goblin draugr ; club / gnoll draugr w:3 ; spear
 MONS:    mummy
-KMONS:   4 = Menkaure, weeping skull / burial acolyte
+KMONS:   4 = guardian mummy, weeping skull / burial acolyte
 # Loot:  2-15 items
 ITEM:    any scroll / any potion
 NSUBST:  d = 1:d / 1:e / * = dddd$
@@ -1247,7 +1250,7 @@ MONS:   rat zombie / quokka zombie / adder zombie /\
 MONS:   mummy
 MONS:   ogre zombie w:45 / centaur zombie w:50 / troll zombie w:5
 KMONS:  N = mummy
-KMONS:  O = Menkaure w:5 / mummy, mummy
+KMONS:  O = mummy
 KITEM:  N = $
 KITEM:  $ = any scroll w:49 / any potion w:49 / any wand w:1 / any ring w:1
 : inkwell_talisman_chance(_G, "?", true, "$")

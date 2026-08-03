@@ -2764,13 +2764,6 @@ static void _dgn_verify_connectivity(unsigned nvaults)
 //   in the order their altars are placed.
 static void _build_overflow_temples()
 {
-    // Dungeon Crawl Chili repurposes sealed Ossuary destination maps as the
-    // complete D:4 floor. Overflow temples are secondary vaults whose exits
-    // cannot be connected reliably inside those encompass maps, so do not
-    // schedule them on this themed floor.
-    if (player_in_branch(BRANCH_DUNGEON) && you.depth == 4)
-        return;
-
     // Levels built while in testing mode.
     if (!you.props.exists(OVERFLOW_TEMPLES_KEY))
         return;
@@ -3225,6 +3218,31 @@ static void _build_dungeon_level()
     {
         _fixup_descent_hatches();
         _place_dungeon_exit();
+    }
+
+    // Layout maps and secondary vaults may install their own level defaults.
+    // D:4 is the Catacombs floor, so apply its materials last and discard
+    // per-cell wall/floor flavours before the level's tile flavour is built.
+    if (player_in_branch(BRANCH_DUNGEON) && you.depth == 4)
+    {
+        tileidx_t wall;
+        tileidx_t floor;
+        const string wall_name = "stone_wall_ossuary";
+        const string floor_name = "floor_sandstone";
+
+        if (tile_dngn_index(wall_name.c_str(), &wall))
+        {
+            tile_env.default_flavour.wall_idx =
+                store_tilename_get_index(wall_name);
+            tile_env.default_flavour.wall = wall;
+        }
+        if (tile_dngn_index(floor_name.c_str(), &floor))
+        {
+            tile_env.default_flavour.floor_idx =
+                store_tilename_get_index(floor_name);
+            tile_env.default_flavour.floor = floor;
+        }
+        tile_clear_flavour();
     }
 }
 
@@ -4004,7 +4022,9 @@ static void _place_minivaults()
 
 static bool _builder_normal()
 {
-    // D:4 is always one of the destination maps repurposed from Ossuary.
+    // D:4 always starts with one of the destination maps repurposed from
+    // Ossuary. Its D-branch prelude changes it from encompass to float, so
+    // _build_primary_vault() builds a normal dungeon layout around it.
     // Select this pool explicitly: normal seeded game setup can bypass the
     // generic PLACE/depth weighting path used by map-generation tests.
     const map_def *vault = nullptr;
@@ -4026,9 +4046,10 @@ static bool _builder_normal()
             : "");
         env.level_build_method += " random_map_for_place";
         _ensure_vault_placed_ex(_build_primary_vault(vault), vault);
-        // Only place subsequent random vaults on non-encompass maps
-        // and not at the branch end
-        return vault->orient != MAP_ENCOMPASS;
+        // The source definitions are encompass maps, but their D:4 preludes
+        // make them floating primary vaults at placement time.
+        return player_in_branch(BRANCH_DUNGEON) && you.depth == 4
+               || vault->orient != MAP_ENCOMPASS;
     }
 
     if (use_random_maps)
@@ -4913,6 +4934,69 @@ static bool _map_feat_is_on_edge(const vault_placement &place,
 static void _pick_float_exits(vault_placement &place, vector<coord_def> &targets)
 {
     vector<coord_def> possible_exits;
+
+    // Ossuary destination maps were authored as sealed encompass maps. On
+    // D:4 they are floating primary vaults, so open one route toward each
+    // side. Put a door at the first wall of the tomb and continue the route
+    // through its old border, giving the normal layout four edge targets to
+    // connect to.
+    if (player_in_branch(BRANCH_DUNGEON) && you.depth == 4
+        && place.map.has_tag("dcchili_d4_ossuary"))
+    {
+        const coord_def directions[] = {
+            coord_def(-1, 0), coord_def(1, 0),
+            coord_def(0, -1), coord_def(0, 1)
+        };
+
+        for (const coord_def &direction : directions)
+        {
+            coord_def start;
+            int best_distance = INT_MAX;
+            int ties = 0;
+
+            for (rectangle_iterator ri(place.pos,
+                                        place.pos + place.size - 1); ri; ++ri)
+            {
+                if (!_grid_needs_exit(*ri))
+                    continue;
+
+                const int distance = direction.x < 0 ? ri->x - place.pos.x
+                    : direction.x > 0
+                      ? place.pos.x + place.size.x - 1 - ri->x
+                    : direction.y < 0 ? ri->y - place.pos.y
+                      : place.pos.y + place.size.y - 1 - ri->y;
+
+                if (distance < best_distance)
+                {
+                    start = *ri;
+                    best_distance = distance;
+                    ties = 1;
+                }
+                else if (distance == best_distance && one_chance_in(++ties))
+                    start = *ri;
+            }
+
+            if (best_distance == INT_MAX)
+                continue;
+
+            bool placed_door = false;
+            coord_def exit = start;
+            for (coord_def p = start + direction;
+                 place.map.in_map(p - place.pos); p += direction)
+            {
+                exit = p;
+                if (!placed_door && cell_is_solid(p))
+                {
+                    _set_grd(p, DNGN_CLOSED_DOOR);
+                    placed_door = true;
+                }
+                else
+                    _set_grd(p, DNGN_FLOOR);
+            }
+            targets.push_back(exit);
+        }
+        return;
+    }
 
     for (rectangle_iterator ri(place.pos, place.pos + place.size - 1); ri; ++ri)
         if (_grid_needs_exit(*ri) && _map_feat_is_on_edge(place, *ri))
