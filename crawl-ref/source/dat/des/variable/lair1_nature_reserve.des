@@ -1,0 +1,91 @@
+###############################################################################
+# Lair:1 Nature Reserve
+#
+# The same reserve plan, rebased around Lair families. Every habitat contains
+# one deliberately OOD specimen, protected by a player-openable runed gate.
+###############################################################################
+
+NAME:    dcchili_lair1_nature_reserve
+PLACE:   Lair:1
+DEPTH:   Lair:1
+WEIGHT:  5000
+TAGS:    dcchili_lair1_zoo no_monster_gen no_item_gen no_pool_fixup no_rotate
+ORIENT:  float
+
+# Loose animals in the normally generated portions of Lair:1.
+MONS:    bullfrog w:10 / cane toad w:8 / water moccasin w:10 / wolf w:8 / \
+         yak w:8 / giraffe w:6 / komodo dragon w:6 / black bear w:5 / \
+         basilisk w:4 / hell rat w:4 / scorpion w:3 / blink frog w:2
+
+# Amphibians; the goliath frog is the OOD specimen.
+KMONS:   1 = bullfrog
+KMONS:   2 = cane toad
+KMONS:   3 = blink frog
+KMONS:   A = goliath frog
+
+# Caniforms; the hell hound is the OOD specimen.
+KMONS:   4 = wolf
+KMONS:   5 = black bear
+KMONS:   6 = polar bear
+KMONS:   B = hell hound
+
+# Snakes; the anaconda is the OOD specimen.
+KMONS:   7 = water moccasin
+KMONS:   8 = black mamba
+KMONS:   9 = water moccasin
+KMONS:   C = anaconda
+
+# Arthropods; the emperor scorpion is the OOD specimen.
+KMONS:   a = scorpion
+KMONS:   b = hornet
+KMONS:   d = wolf spider
+KMONS:   D = emperor scorpion
+
+# Herd animals; the dire elephant is the OOD specimen.
+KMONS:   X = yak / giraffe / elephant
+KMONS:   E = dire elephant
+
+KFEAT:   c = rock_wall
+KFEAT:   G = runed_clear_door
+KFEAT:   t = tree
+KFEAT:   w = shallow_water
+KPROP:   123456789abdABCDEFX = no_tele_into
+KMASK:   123456789abdABCDEFX = opaque
+TILE:    c = wall_vines
+FTILE:   .123456789abdABCDEFXwt = floor_grass_dark
+LROCKTILE: wall_vines
+LFLOORTILE: floor_grass_dark
+
+MAP
+cccccccccccccccccccccc@cccccccccccccccccccccc
+c...........................................c
+c..ttttttttt.................ttttttttttt....c
+c..t.......t.................t.........t....c
+c..t.1.2.3.t.................t.4.4.5.B.t....c
+c..t.2.1.A.t.................t.4.6.4.4.t....c
+c..t.......G.................G.........t....c
+c..ttttttttt.................ttttttttttt....c
+c...........................................c
+c.............ccccccccGcccccccc.............c
+c.............c...............c.............c
+c.............c.7.7.8.8.9.7...c.............c
+c.............c.wwww...wwww...c.............c
+c.............c.7.8.C.ww.7....c.............c
+@.............G...............G.............@
+c.............c.7.7.8.8.7.....c.............c
+c.............c...wwww...wwww.c.............c
+c.............c.8.7.7.7.8.....c.............c
+c.............c...............c.............c
+c.............ccccccccGcccccccc.............c
+c...........................................c
+c..ttttttttt.................ttttttttttt....c
+c..t.......t.................t.........t....c
+c..t.a.a.b.t.................t.X.X.X...t....c
+c..t.a.D.d.t.................t.X.E.X...t....c
+c..t.......G.................G.........t....c
+c..ttttttttt.................ttttttttttt....c
+c...........................................c
+c....t...t...t.....t...t...t.....t...t......c
+c...........................................c
+cccccccccccccccccccccc@cccccccccccccccccccccc
+ENDMAP
