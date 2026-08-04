@@ -1525,10 +1525,14 @@ static void _append_weapon_stats(string &description, const item_def &item)
             base_dam);
     }
 
+    const bool lightweight = get_weapon_brand(item) == SPWPN_LIGHTWEIGHT;
+    const int  base_delay = property(item, PWPN_SPEED);
+    int adj_base_delay = lightweight ? base_delay - 4 : base_delay;
+
     description += make_stringf(
         "Base attack delay: %.1f\n"
         "This weapon's minimum attack delay (%.1f) is reached at skill level %d.",
-            (float) property(item, PWPN_SPEED) / 10,
+            (float) adj_base_delay / 10,
             (float) weapon_min_delay(item, item.is_identified()) / 10,
             mindelay_skill / 10);
 
