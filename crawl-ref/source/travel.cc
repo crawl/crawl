@@ -662,7 +662,8 @@ static bool _faded_altar_needs_visit(const coord_def& where)
 {
     return Options.explore_greedy_visit & EG_FADED_ALTAR
            && env.map_knowledge(where).feat() == DNGN_ALTAR_ECUMENICAL
-           && !faded_altar_is_visited(where);
+           && !faded_altar_is_visited(where)
+           && !you.has_mutation(MUT_FORLORN);
 }
 
 static bool _is_valid_explore_target(const coord_def& where)
