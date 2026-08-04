@@ -6,7 +6,6 @@
 #include "item-prop-enum.h"
 
 // Used in spl-damage.cc for lightning rod damage calculations
-const int LIGHTNING_CHARGE_MULT = 100;
 const int LIGHTNING_MAX_CHARGE = 4;
 
 struct recharge_messages

@@ -3357,7 +3357,7 @@ static void _set_thunderbolt_last_aim(actor *caster, coord_def aim)
     last_aim = aim;
 }
 
-dice_def thunderbolt_damage(int power, int arc)
+dice_def thunderbolt_damage(int power, bool main_beam, bool sample)
 {
     const int &charges = you.props[THUNDERBOLT_CHARGES_KEY].get_int();
     ASSERT(charges <= LIGHTNING_MAX_CHARGE);
@@ -3366,11 +3366,16 @@ dice_def thunderbolt_damage(int power, int arc)
     if (in_bounds(get_thunderbolt_last_aim(&you)))
         charge_boost = charges;
 
-    const int dice = div_rand_round(
-        (spell_mana(SPELL_THUNDERBOLT, false) + charge_boost)
-            * LIGHTNING_CHARGE_MULT,
-        LIGHTNING_CHARGE_MULT);
-    return dice_def(dice, div_rand_round(45 + power / 4, arc + 2));
+    const int dice = 2 + charge_boost;
+    int scale = 100;
+    int dice_damage = 13 * scale + power * scale / 14;
+    if (!main_beam)
+        dice_damage = dice_damage / 2;
+    dice_damage = sample
+                    ? div_rand_round(dice_damage, scale)
+                    : div_round_near(dice_damage, scale);
+
+    return dice_def(dice, dice_damage);
 }
 
 spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
@@ -3433,14 +3438,10 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
         if (!actor_at(entry.first))
             continue;
 
-        int arc = hitfunc.arc_length[entry.first.distance_from(hitfunc.origin)];
-        ASSERT(arc > 0);
-        dprf("at distance %d, arc length is %d",
-             entry.first.distance_from(hitfunc.origin), arc);
         beam.source = beam.target = entry.first;
         beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
         beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
-        beam.damage = thunderbolt_damage(pow, arc);
+        beam.damage = thunderbolt_damage(pow, entry.second == AFF_YES);
         beam.fire();
     }
 
