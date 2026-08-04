@@ -1288,8 +1288,6 @@ coord_def direction_chooser::find_default_monster_target()
             // try a different target.
         }
     }
-    else if (!you.prev_grd_targ.origin())
-        return you.prev_grd_targ;
 
     // Otherwise, try aiming at the nearest target position found for this action.
     coord_def pos;
@@ -1591,7 +1589,6 @@ void direction_chooser::update_previous_target() const
 
     // Reset memory.
     you.prev_targ = MID_NOBODY;
-    you.prev_grd_targ.reset();
 
     // You can't target outside the map
     if (!map_bounds(target()))
@@ -1642,14 +1639,7 @@ void direction_chooser::update_previous_target() const
                     }
                 }
             }
-
-            // Didn't find any valid monsters in affected area, so remember the spot
-            // itself instead.
-            you.prev_grd_targ = target();
         }
-        // Simple targeting just remembers whatever space you aimed at.
-        else
-            you.prev_grd_targ = target();
     }
 }
 

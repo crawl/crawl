@@ -432,7 +432,6 @@ public:
     // Non-saved UI state:
     // -------------------
     mid_t          prev_targ;
-    coord_def      prev_grd_targ;
     // Examining spell library spells for Sif Muna's ability
     bool           divine_exegesis;
 
