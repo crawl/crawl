@@ -2801,4 +2801,19 @@ _mon_hex_zap(ZAP_ILL_OMEN, BEAM_ILL_OMEN),
     false,
 },
 
+{
+    ZAP_DISCUS_SHOCKWAVE,
+    "discus shockwave",
+    new calcdice_calculator<1, 1, 1, 1>,
+    new tohit_calculator<40>,
+    new dicedef_calculator<1, 1, 1, 1>, // power is not calculated from hd
+    new tohit_calculator<40>,
+    WHITE,
+    false,
+    BEAM_MISSILE,
+    DCHAR_FIRED_MISSILE,
+    false,
+    true,
+},
+
 };

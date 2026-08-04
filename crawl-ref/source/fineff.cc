@@ -41,6 +41,7 @@
 #include "movement.h"
 #include "ouch.h"
 #include "religion.h"
+#include "shout.h"
 #include "spl-damage.h"
 #include "spl-monench.h"
 #include "spl-summoning.h"
@@ -50,6 +51,7 @@
 #include "rltiles/tiledef-main.h"
 #include "transform.h"
 #include "view.h"
+#include "viewchar.h"
 
 class final_effect
 {
@@ -292,14 +294,14 @@ class discus_fineff : public final_effect
 public:
     void fire() override;
 
-    discus_fineff(const bolt& beem, const actor* agent)
-        : final_effect(0, 0, coord_def()), beam(beem), disc_agent(agent)
+    discus_fineff(const coord_def& pos, const actor* agent, int pow)
+        : final_effect(0, 0, pos), disc_agent(agent), power(pow)
     {
     }
 protected:
     bool mergeable(const final_effect&) const override { return false; }
-    bolt beam;
     const actor* disc_agent;
+    int power;
 };
 
 class splinterfrost_fragment_fineff : public final_effect
@@ -316,6 +318,21 @@ protected:
 
     bolt beam;
     string msg;
+};
+
+class storms_brand_fineff : public final_effect
+{
+public:
+    void fire() override;
+
+    storms_brand_fineff(const coord_def& position, const actor* agent, int pow)
+        : final_effect(0, 0, position), storm_agent(agent), power(pow)
+    {
+    }
+protected:
+    bool mergeable(const final_effect&) const override { return false; }
+    const actor* storm_agent;
+    int power;
 };
 
 // A fineff that triggers a daction; otherwise the daction
@@ -730,6 +747,11 @@ void schedule_shock_discharge_fineff(const actor* discharger, actor& oppressor,
                                                       shock_source));
 }
 
+void schedule_storms_brand_fineff(const coord_def& pos, const actor* storm_agent, int power)
+{
+    _schedule_final_effect(new storms_brand_fineff(pos, storm_agent, power));
+}
+
 void schedule_explosion_fineff(bolt& beam, string boom, string sanct,
                                explosion_fineff_type typ,
                                const actor* flame_agent,
@@ -739,9 +761,9 @@ void schedule_explosion_fineff(bolt& beam, string boom, string sanct,
                                                 typ, flame_agent, poof));
 }
 
-void schedule_discus_fineff(bolt& beam, const actor* disc_agent)
+void schedule_discus_fineff(const coord_def& pos, const actor* disc_agent,  int power)
 {
-    _schedule_final_effect(new discus_fineff(beam, disc_agent));
+    _schedule_final_effect(new discus_fineff(pos, disc_agent, power));
 }
 
 void schedule_splinterfrost_fragment_fineff(bolt& beam, string msg)
@@ -1725,7 +1747,56 @@ void death_spawn_fineff::fire()
 
 void discus_fineff::fire()
 {
-    beam.explode(true,true);
+    bolt beam;
+    beam.name = "discus shockwave";
+    beam.flavour = BEAM_VISUAL;
+    beam.set_agent(disc_agent);
+    beam.colour = BROWN;
+    beam.tile_beam = TILE_BOLT_SHATTER_WAVE_WHITE;
+    beam.glyph = dchar_glyph(DCHAR_EXPLOSION);
+    beam.range = 1;
+    beam.source = posn;
+    beam.target = posn;
+    beam.is_explosion = true;
+    beam.ex_size = 1;
+    beam.hit = AUTOMATIC_HIT;
+    beam.explode();
+
+    if (in_bounds(posn))
+        noisy(10, posn);
+
+    if (you.see_cell(posn))
+        mpr("The shockwave ripples outward!");
+    else
+        mpr("You hear a shockwave!");
+
+    for (fair_adjacent_iterator ai(posn); ai; ++ai)
+    {
+        if (!in_bounds(*ai))
+            continue;
+
+        actor *act = actor_at(*ai);
+        if (!act || !act->alive())
+            continue;
+
+        // power is the damage dealt by the initial hit
+        int dam = dice_def(2, power).roll() - random2(1 + act->armour_class());
+        act->hurt(disc_agent, dam);
+    }
+}
+
+void storms_brand_fineff::fire()
+{
+    const zap_type which_zap = random_choose(ZAP_SHOCK,
+                                             ZAP_LIGHTNING_BOLT,
+                                             ZAP_ORB_OF_ELECTRICITY);
+    bolt beam;
+    beam.range = 7;
+    beam.source = posn;
+    beam.source_id = storm_agent->mid;
+    beam.thrower = storm_agent->is_player() ? KILL_YOU : KILL_MON;
+    beam.target = posn + coord_def(random2(13) - 6, random2(13) - 6);
+    zapping(which_zap, power, beam);
 }
 
 void splinterfrost_fragment_fineff::fire()

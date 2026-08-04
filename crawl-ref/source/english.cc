@@ -58,8 +58,11 @@ string pluralise(const string &name, const char * const qualifiers[],
 
     if (ends_with(lowname, "us"))
     {
-        if (ends_with(lowname, "lotus") || ends_with(lowname, "status"))
+        if (ends_with(lowname, "lotus") || ends_with(lowname, "status")
+            || ends_with(lowname, "discus"))
+        {
             return name + "es";
+        }
         // Fungus, ufetubus, for instance.
         return name.substr(0, name.length() - 2) + "i";
     }

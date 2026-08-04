@@ -578,7 +578,7 @@ enum special_missile_type // to separate from weapons in general {dlb}
 #endif
     SPMSL_SILVER,
 #if TAG_MAJOR_VERSION == 34
-    SPMSL_PARALYSIS,                   // dart only from here on
+    SPMSL_PARALYSIS,
     SPMSL_SLOW,
     SPMSL_SLEEP,
     SPMSL_CONFUSION,
@@ -595,6 +595,7 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_ANTIMAGIC,                   // Sacred brand: Trog
     SPMSL_REAPING,                     // Sacred brand: Yred
     SPMSL_HOLY_WRATH,                  // Sacred brand: TSO
+    SPMSL_STORMS,                      // Discus special ego
     NUM_REAL_SPECIAL_MISSILES,
     NUM_SPECIAL_MISSILES = NUM_REAL_SPECIAL_MISSILES,
 };

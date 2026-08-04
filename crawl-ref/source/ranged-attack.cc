@@ -272,23 +272,9 @@ static bool _jelly_eat_missile(const string& proj_name, int damage_done)
     return false;
 }
 
-static void _fire_discus_shockwave(actor* attacker, actor* defender, int damage)
+static void _fire_discus_shockwave(const actor* attacker, const coord_def loc, int damage)
 {
-    // this does check AC, but is undodgeable and deals the full damage dealt
-    // by the original discus attack.
-    bolt beam;
-    beam.is_explosion = true;
-    beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.source       = defender->pos();
-    beam.name         = "discus shockwave";
-    beam.target       = defender->pos();
-    beam.flavour      = BEAM_MISSILE;
-    beam.damage       = dice_def(damage, 1);
-    beam.ex_size      = 1;
-    beam.thrower      = (attacker && attacker->is_player()) ? KILL_YOU_MISSILE
-                                                            : KILL_MON_MISSILE;
-
-    schedule_discus_fineff(beam, attacker);
+    schedule_discus_fineff(loc, attacker, damage);
 }
 
 static void _maybe_throwing_club_daze(actor* defender, int damage)
@@ -327,7 +313,7 @@ bool ranged_attack::handle_phase_hit()
         if (damage_done > 0)
         {
             if (weapon->is_type(OBJ_MISSILES, MI_DISCUS) && has_discus_space(*attacker))
-                _fire_discus_shockwave(attacker, defender, damage_done);
+                _fire_discus_shockwave(attacker, defender->pos(), damage_done);
             else if (weapon->is_type(OBJ_MISSILES, MI_THROWING_CLUB))
                 _maybe_throwing_club_daze(defender, damage_done);
             if (!handle_phase_damaged())
@@ -663,6 +649,8 @@ static special_missile_type _sacred_brand_for_god(god_type god)
             return SPMSL_SILVER;
         case GOD_SHINING_ONE:
             return SPMSL_HOLY_WRATH;
+        case GOD_QAZLAL:
+            return SPMSL_STORMS;
         default:
             return SPMSL_NORMAL;
     }
@@ -834,6 +822,12 @@ bool ranged_attack::apply_missile_brand()
         }
         else
             defender->go_berserk(false);
+        break;
+
+    case SPMSL_STORMS:
+        if (one_chance_in(3) || !defender->alive())
+            break;
+        schedule_storms_brand_fineff(defender->pos(), attacker, 4 * damage_done);
         break;
 
     // every brand below is sacred brand only

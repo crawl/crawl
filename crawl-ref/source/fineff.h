@@ -53,7 +53,9 @@ void schedule_explosion_fineff(bolt& beam, string boom, string sanct,
                                explosion_fineff_type typ,
                                const actor* flame_agent,
                                string poof);
-void schedule_discus_fineff(bolt& beam, const actor* disc_agent);
+void schedule_discus_fineff(const coord_def& pos, const actor* disc_agent,  int power);
+void schedule_storms_brand_fineff(const coord_def& pos,
+                                  const actor* storms_brand_agent, int power);
 void schedule_splinterfrost_fragment_fineff(bolt& beam, string msg);
 void schedule_delayed_action_fineff(daction_type action,
                                     const string& final_msg);
