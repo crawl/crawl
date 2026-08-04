@@ -113,9 +113,11 @@ bool trap_is_safe(dungeon_feature_type type, const actor* act)
 
 bool trap_is_safe_from_afar(dungeon_feature_type type, const actor* act)
 {
-    return (type == DNGN_TRAP_SHAFT
-            || type == DNGN_TRAP_WEB
-            || trap_is_safe(type, act));
+    return type == DNGN_TRAP_SHAFT
+           || type == DNGN_TRAP_WEB
+           || type == DNGN_TRAP_TELEPORT
+           || type == DNGN_TRAP_TELEPORT_PERMANENT
+           || trap_is_safe(type, act);
 }
 
 // When giving AF_CHAOTIC to monsters, skip holy monsters due to potential vamp
