@@ -658,6 +658,13 @@ void stop_running(bool clear_delays)
     you.running.stop(clear_delays);
 }
 
+static bool _faded_altar_needs_visit(const coord_def& where)
+{
+    return Options.explore_greedy_visit & EG_FADED_ALTAR
+           && env.map_knowledge(where).feat() == DNGN_ALTAR_ECUMENICAL
+           && !faded_altar_is_visited(where);
+}
+
 static bool _is_valid_explore_target(const coord_def& where)
 {
     // If a square in LOS is unmapped, it's valid.
@@ -668,7 +675,9 @@ static bool _is_valid_explore_target(const coord_def& where)
     if (you.running == RMODE_EXPLORE_GREEDY)
     {
         LevelStashes *lev = StashTrack.find_current_level();
-        return lev && lev->needs_visit(where, can_autopickup());
+        return (lev && lev->needs_visit(where, can_autopickup(),
+                       Options.explore_greedy_visit & EG_SHOP))
+               || _faded_altar_needs_visit(where);
     }
 
     return false;
@@ -1165,11 +1174,19 @@ command_type travel()
         }
 
         // Exploring.
-        if (env.grid(you.pos()) == DNGN_ENTER_SHOP
-            && you.running == RMODE_EXPLORE_GREEDY)
+        if (you.running == RMODE_EXPLORE_GREEDY)
         {
-            LevelStashes *lev = StashTrack.find_current_level();
-            if (lev && lev->shop_needs_visit(you.pos()))
+            bool auto_visit = false;
+            if (env.grid(you.pos()) == DNGN_ENTER_SHOP)
+            {
+                LevelStashes *lev = StashTrack.find_current_level();
+                auto_visit = Options.explore_greedy_visit & EG_SHOP
+                             && lev && lev->shop_needs_visit(you.pos());
+            }
+            else if (_faded_altar_needs_visit(you.pos()))
+                auto_visit = true;
+
+            if (auto_visit)
             {
                 you.running = 0;
                 return CMD_GO_UPSTAIRS;
@@ -1350,7 +1367,9 @@ travel_pathfind::~travel_pathfind()
 static bool _is_greed_inducing_square(const LevelStashes *ls,
                                       const coord_def &c, bool autopickup)
 {
-    return ls && ls->needs_visit(c, autopickup);
+    return (ls && ls->needs_visit(c, autopickup,
+                   Options.explore_greedy_visit & EG_SHOP))
+           || _faded_altar_needs_visit(c);
 }
 
 bool travel_pathfind::is_greed_inducing_square(const coord_def &c) const
