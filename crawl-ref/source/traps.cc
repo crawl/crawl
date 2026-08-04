@@ -111,6 +111,13 @@ bool trap_is_safe(dungeon_feature_type type, const actor* act)
     return false;
 }
 
+bool trap_is_safe_from_afar(dungeon_feature_type type, const actor* act)
+{
+    return (type == DNGN_TRAP_SHAFT
+            || type == DNGN_TRAP_WEB
+            || trap_is_safe(type, act));
+}
+
 // When giving AF_CHAOTIC to monsters, skip holy monsters due to potential vamp
 // or draining attacks. They also need attacks that aren't already chaos brand.
 bool chaos_lace_criteria (monster* mon) {

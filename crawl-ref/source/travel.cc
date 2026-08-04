@@ -5090,7 +5090,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
         mutation_catalysts.emplace_back(cleaned_feature_description(pos), 1);
         es_flags |= ES_MUTATION_CATALYST;
     }
-    else if (ES_trap && feat_is_trap(feat) && !trap_is_safe(feat))
+    else if (ES_trap && feat_is_trap(feat) && !trap_is_safe_from_afar(feat))
     {
         string desc = cleaned_feature_description(pos);
         marked_feats.push_back(desc + ".");
