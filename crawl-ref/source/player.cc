@@ -6250,10 +6250,10 @@ bool player::confused() const
     return duration[DUR_CONF];
 }
 
-// If silent cast is true; overrides normal silence.
+// If silent cast is true; override normal silence.
 bool player::is_silenced(bool silent_cast) const
 {
-    return (silenced(you.pos()) && !silent_cast)
+    return (silenced(you.pos()) && (!silent_cast || !you.can_silent_cast()))
             || you.duration[DUR_FLOODED];
 }
 
