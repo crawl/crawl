@@ -45,6 +45,10 @@ KMONS:   D = emperor scorpion
 KMONS:   X = yak / giraffe / elephant
 KMONS:   E = dire elephant
 
+# A small reward in each habitat, tucked beside its OOD specimen.
+KITEM:   i = any potion w:4 / any scroll w:4 / gold w:3 / \
+             any wand w:2 / any jewellery w:1
+
 KFEAT:   c = rock_wall
 KFEAT:   G = runed_clear_door
 KFEAT:   t = tree
@@ -52,7 +56,7 @@ KFEAT:   w = shallow_water
 KPROP:   123456789abdABCDEFX = no_tele_into
 KMASK:   123456789abdABCDEFX = opaque
 TILE:    c = wall_vines
-FTILE:   .123456789abdABCDEFXwt = floor_grass_dark
+FTILE:   .123456789abdiABCDEFXwt = floor_grass_dark
 LROCKTILE: wall_vines
 LFLOORTILE: floor_grass_dark
 
@@ -62,7 +66,7 @@ c...........................................c
 c..ttttttttt.................ttttttttttt....c
 c..t.......t.................t.........t....c
 c..t.1.2.3.t.................t.4.4.5.B.t....c
-c..t.2.1.A.t.................t.4.6.4.4.t....c
+c..t.2.1.Ait.................t.4.6.4.Bit....c
 c..t.......G.................G.........t....c
 c..ttttttttt.................ttttttttttt....c
 c...........................................c
@@ -70,7 +74,7 @@ c.............ccccccccGcccccccc.............c
 c.............c...............c.............c
 c.............c.7.7.8.8.9.7...c.............c
 c.............c.wwww...wwww...c.............c
-c.............c.7.8.C.ww.7....c.............c
+c.............c.7.8.Ciww.7....c.............c
 @.............G...............G.............@
 c.............c.7.7.8.8.7.....c.............c
 c.............c...wwww...wwww.c.............c
@@ -81,7 +85,7 @@ c...........................................c
 c..ttttttttt.................ttttttttttt....c
 c..t.......t.................t.........t....c
 c..t.a.a.b.t.................t.X.X.X...t....c
-c..t.a.D.d.t.................t.X.E.X...t....c
+c..t.a.Did.t.................t.X.EiX...t....c
 c..t.......G.................G.........t....c
 c..ttttttttt.................ttttttttttt....c
 c...........................................c

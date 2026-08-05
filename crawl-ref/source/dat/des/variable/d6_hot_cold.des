@@ -25,6 +25,12 @@ KMONS:   i = ice beast
 KMONS:   p = polar bear
 KMONS:   I = rime drake
 
+# The runed specimen rooms each contain a small, themed reward.
+KITEM:   f = wand of flame w:4 / scroll of immolation pre_id w:3 / \
+             potion of resistance pre_id w:1 / gold w:4
+KITEM:   q = wand of iceblast w:2 / potion of resistance pre_id w:2 / \
+             any potion w:4 / gold w:4
+
 KFEAT:   x = rock_wall
 KFEAT:   c = rock_wall
 KFEAT:   m = stone_wall
@@ -38,8 +44,8 @@ KMASK:   hsHipI = opaque
 TILE:    x = wall_volcanic
 TILE:    c = wall_ice_block
 TILE:    m = wall_brick_darkgray
-FTILE:   .hsHl = floor_rough_red
-FTILE:   iwIp = floor_ice
+FTILE:   .fhsHl = floor_rough_red
+FTILE:   iqwIp = floor_ice
 FTILE:   UDG = floor_limestone
 
 MAP
@@ -53,7 +59,7 @@ x....lll...lll........m........www...www....c
 x.....................m.....................c
 x..xxxxxxx............m............ccccccc..c
 x..x.....x............m............c.....c..c
-x..x..H..G............m............G..I..c..c
+x..x..Hf.G............m............G.qI..c..c
 x..x.....x............m............c.....c..c
 x..xxxxxxx............m............ccccccc..c
 x.................mmmmmmmmm.................c
@@ -65,7 +71,7 @@ x...lll...lll.....m.......m.....www...www...c
 x.................mmmmmmmmm.................c
 x............xxxxxxx..m..ccccccc............c
 x............x.....x..m..c.....c............c
-x............x..H..G..m..G..I..c............c
+x............x..Hf.G..m..G.qI..c............c
 x............x.....x..m..c.....c............c
 x............xxxxxxx..m..ccccccc............c
 x.....................m.....................c
