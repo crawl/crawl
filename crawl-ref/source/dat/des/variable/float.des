@@ -1363,11 +1363,28 @@ MAP
 ENDMAP
 
 NAME:   hellmonk_crumbling_castle
-TAGS:   transparent ruin
-DEPTH:  D:6-, Depths:1
-WEIGHT: 5
+TAGS:   transparent ruin no_monster_gen
+DEPTH:  D:2
+PLACE:  D:2
+WEIGHT: 2000
 ORIENT: float
 MONS:   pile of debris
+KMONS:  N = Medusa
+KFEAT:  A = granite_statue
+KFEAT:  Z = fountain_sparkling
+MARKER: N = lua:MonPropsMarker:new { medusa_marker="medusa_marker" }
+MARKER: A = lua:monster_on_death { \
+            target="medusa_marker", \
+            new_monster="generate_awake adder", \
+            message_seen="The adders awaken!", \
+            message_unseen="You hear a commotion.", \
+            master_name="adder", veto_destroy="veto" }
+MARKER: Z = lua:monster_on_death { \
+            target="medusa_marker", \
+            new_monster="generate_awake water moccasin", \
+            message_seen="A water moccasin emerges from the fountain!", \
+            message_unseen="You hear an angry hiss.", \
+            master_name="water moccasin", veto_destroy="veto" }
 SUBST:  + : 1++++
 TILE:   c = wall_stone_smooth
 TILE:   G = dngn_crumbled_column
@@ -1386,8 +1403,8 @@ MAP
     .ccccccccccccccc.....ccccccccccccccc.
     .ccccccccccccccG.....Gcccccccccccccc.
     .ccG........Gc.........cG........Gcc.
-    .cc..........+.........+..........cc.
-    .cc..........c.........c..........cc.
+    .cc....A.....+....N....+.....A....cc.
+    .cc....A.....c....Z....c.....A....cc.
     .cccc+ccccccccc.......ccccccccc+cccc.
     .cccc...cccc.GccG...GccG.cccc...cc..
      ..cc....cc....cc...cc....cc....cc.
