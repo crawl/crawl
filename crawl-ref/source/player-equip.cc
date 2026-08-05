@@ -148,12 +148,6 @@ int count = 0;
         else
             ++count;
 
-        // Formicids can fit a hat around their antennae, while tengu and
-        // octopodes have an additional hat slot. Species anatomy restrictions
-        // still prevent hard helmets in can_equip_item().
-        if (you.species == SP_TENGU || you.species == SP_OCTOPODE)
-            ++count;
-
         return count;
 
     case SLOT_GLOVES:
@@ -566,8 +560,6 @@ bool can_equip_item(const item_def& item, bool temp, string* veto_reason,
                 NO_EQUIP("This helmet is too large for your head.")
             else if (species::is_draconian(you.species))
                 NO_EQUIP("You can't wear that with your reptilian head.")
-            else if (you.species == SP_OCTOPODE)
-                NO_EQUIP("Your can't wear that!")
             else if (you.has_mutation(MUT_HORNS, temp))
                 NO_EQUIP("You can't fit that over your horns.")
             else if (you.has_mutation(MUT_ANTENNAE, temp))
