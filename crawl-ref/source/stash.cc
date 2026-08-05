@@ -210,12 +210,10 @@ static void _fully_identify_item(item_def *item)
 
 Stash::Stash(coord_def pos_) : items()
 {
-    // First, fix what square we're interested in
-    if (pos_.origin())
-        pos_ = you.pos();
     pos = pos_;
 
-    update();
+    if (in_bounds(pos))
+        update();
 }
 
 bool Stash::are_items_same(const item_def &a, const item_def &b, bool exact)
