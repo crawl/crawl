@@ -6169,6 +6169,7 @@ NAME:    gammafunk_gnarly_gnolls
 TAGS:    no_pool_fixup no_monster_gen
 DEPTH:   D:2
 PLACE:   D:2
+WEIGHT:  2000
 ORIENT:  float
 ITEM:    any potion / any scroll / gold
 ITEM:    any potion / any scroll / any jewellery w:1 / gold w:4
