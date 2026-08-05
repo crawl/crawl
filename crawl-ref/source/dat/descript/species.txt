@@ -100,8 +100,9 @@ legs. They move very slowly but are naturally resilient.
 %%%%
 Octopode
 
-Octopodes are a species of amphibious cephalopods. They can wear eight rings,
-but almost no armour fits them.
+Octopodes are a species of amphibious cephalopods. They can wear eight rings
+and one piece of headgear, including either a hat or a helmet, but almost no
+other armour fits them.
 %%%%
 Oni
 
