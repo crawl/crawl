@@ -261,8 +261,8 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             coord_def spot;
             int count = 0;
             monster_pathfind path;
-            path.fill_traversability(&caster, 2, true);
-            for (radius_iterator ri(caster.pos(), 2, C_SQUARE); ri; ++ri)
+            path.fill_traversability(&caster, 0, true);
+            for (radius_iterator ri(caster.pos(), 0, C_SQUARE); ri; ++ri)
             {
                 if (path.is_reachable(*ri) && one_chance_in(++count))
                     spot = *ri;
