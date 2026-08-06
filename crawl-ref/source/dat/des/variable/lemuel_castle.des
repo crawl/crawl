@@ -18,7 +18,17 @@
 -- parent vault.
 function castle_lemuel_setup(e)
     if you.in_branch("D") then
-        if you.depth() < 6 then
+        if you.depth() < 3 then
+           e.mons("goblin / hobgoblin / kobold")
+           e.mons("goblin / hobgoblin / kobold / gnoll w:2"
+                  .. " / orc wizard w:1")
+           e.mons("gnoll / orc wizard w:2 / gnoll bouda w:1")
+           e.mons("jackal / quokka / hound w:2")
+           e.mons("goblin / hobgoblin / kobold")
+           e.mons("jackal / rat / quokka")
+           e.subst("* = $$%%")
+           e.subst("| = $%%%")
+        elseif you.depth() < 6 then
            e.mons("gnoll / orc")
            e.mons("gnoll / orc / orc wizard w:2 / gnoll bouda w:2"
                   .. " / orc priest w:1")
@@ -111,6 +121,20 @@ function castle_lemuel_setup(e)
                   .. " / guardian sphinx")
        end
    end
+   e.kmons("N = Medusa")
+   e.kfeat("s = granite_statue")
+   e.kfeat("Z = fountain_sparkling")
+   e.marker('N = lua:MonPropsMarker:new { medusa_marker="medusa_marker" }')
+   e.marker('s = lua:monster_on_death { target="medusa_marker", '
+            .. 'new_monster="generate_awake adder", '
+            .. 'message_seen="The adders awaken!", '
+            .. 'message_unseen="You hear a commotion.", '
+            .. 'master_name="adder", veto_destroy="veto" }')
+   e.marker('Z = lua:monster_on_death { target="medusa_marker", '
+            .. 'new_monster="generate_awake water moccasin", '
+            .. 'message_seen="A water moccasin emerges from the fountain!", '
+            .. 'message_unseen="You hear an angry hiss.", '
+            .. 'master_name="water moccasin", veto_destroy="veto" }')
    e.kmons("p = plant / fungus w:1")
    e.kfeat("~ = trap_alarm w:1 / floor")
    e.kfeat("m = iron_grate")
@@ -143,10 +167,10 @@ TAGS:   lemuel_castle_interior unrand
 MAP
 +c....+~......+..+......~+.***c+
 .c||..ccccccccc++ccccccccc.***c.
-1c||2Mc1....X.1321.X....1cM$$$c1
-.cccccc.......2112.......cccccc.
-.+....+..1.....22.....1..+....+.
-.+....+......1....1......+....+.
+1c||2Mc1....X.1N21.X....1cM$$$c1
+.cccccc.......2112...Z...cccccc.
+.+s...+..1.....22.....1..+...s+.
+.+s...+......1....1......+...s+.
 .cccccccccccccc++cccccccccccDcc.
 1c1.1..ccccccc....ccccccc..m..c1
 .c.2...+.....+....+.....+..+.8c.
@@ -159,16 +183,16 @@ NAME:   lemuel_castle_interior_carwin_1
 TAGS:   lemuel_castle_interior unrand
 : castle_lemuel_setup(_G)
 MAP
-+c....+........cc........+...*c+
++cs...+........cc........+..s*c+
 .c.11.ccc+cccccccccccc+ccc..2.c.
 .c|.2.D*m.1..........1.m|c....c.
 .ccm+mc|m.....1111.....m|cm+mcc.
 ......c|m..1...22......m*c..1...
-......cM+...X1132.2X...+MD..1...
+......cM+...X11N2.2X...+MD..1...
 .cccccccccccccccccccccccccccccc.
-.c........1..m....m..1........c.
+.c........1..m..Z.m..1........c.
 .+.12........+....+..........2+.
-+c........1..m....m..1........c+
++c.s......1..m....m..1......s.c+
   cccccccccccc++++cccccccccccc
 ENDMAP
 
@@ -179,16 +203,16 @@ TAGS:   lemuel_castle_interior unrand
 SUBST:  $ = $:5 .
 ITEM:   nothing w:20 / potion of ambrosia pre_id
 MAP
-+c....+.......1.............*|c+
++cs...+.......1............s*|c+
 ...1..cccccccccccccccccccccccDc.
 cc....cM.....cG..Gc.1X..X..Mc|c1
 *cc++cc..cG..+....+...12....m|c.
-|....~12.cG..+....+...23....+.c.
+|....~12.cG..+..Z.+...2N....+.c.
 $....~.2.....c....c...12....m*c.
 *cc++ccccccccc....ccccccc++ccDc+
 cc~~~~c.m444dc....c2..$c.~~.....
 ...12.c.cm4mmc....c$cc.c12......
-+c....+...2..c....c...........c+
++c.s..+...2..c....c.........s.c+
   cccccccccccc++++cccccccccccc
 ENDMAP
 
@@ -198,24 +222,25 @@ TAGS:   lemuel_castle_interior unrand
 : castle_lemuel_setup(_G)
 SUBST:  $ = $:5 .
 MAP
-+c....+...*c*||cc||*cccccc$...c+
-.c.1..ccccccmc1321cmcccccc....c.
++cs...+...*c*||cc||*cccccc$..sc+
+.c.1..ccccccmc1N21cmcccccc....c.
 .c..2.....X..c.12.c.X.........c.
 .cc++c.........ww.....2..1c++cc.
-.....c.2.......ww.........c.....
+.....c.2.......ww....Z....c.....
 .2...c...1..Mc..$.cM..1...c..1..
 .ccccc+cccccccccDcccccccc+ccccc.
 .c.1.c.~..1..+....+2....~.c2..c.
 .~.c$c.~2....c....c.....~.c$c1~.
-+c..2c.~..1..c....c..1..~.c...c+
++cs.2c.~..1..c....c..1..~.c..sc+
   cccccccccccc++++cccccccccccc
 ENDMAP
 
 # Main vault.
 NAME:     lemuel_castle_with_subvaults
 TAGS:     layout_city transparent no_monster_gen no_rotate
-DEPTH:    D:3-, Depths
-PLACE:    Depths:$
+DEPTH:    D:2
+PLACE:    D:2
+WEIGHT:   2000
 ORIENT:   northwest
 : castle_lemuel_setup(_G)
 SUBVAULT: E : lemuel_castle_interior
