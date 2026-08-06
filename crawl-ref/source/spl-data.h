@@ -4736,6 +4736,18 @@ static const struct spell_desc spelldata[] =
     TILEG_SUMMON_VERMIN,
 },
 
+{
+    SPELL_CORROSIVE_BLOB, "Corrosive Blob",
+    spschool::conjuration | spschool::alchemy,
+    spflag::chaotic | spflag::dir_or_target
+        | spflag::needs_tracer,
+    7,
+    200,
+    6, 6,
+    0,
+    TILEG_ACID_BALL,
+},
+
 #if TAG_MAJOR_VERSION == 34
 #define AXED_SPELL(tag, name) \
     { tag, name, spschool::none, spflag::none, 7, 0, -1, -1, 0, TILEG_ERROR },

@@ -2655,6 +2655,10 @@ void bolt::affect_endpoint()
             place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
         break;
 
+    case SPELL_CORROSIVE_BLOB:
+        place_cloud(CLOUD_ACID, pos(), 5 + random2(5), agent());
+        break;
+
     case SPELL_MUD_BREATH:
     {
         mpr("The mud splashes down.");

@@ -126,6 +126,7 @@ mephitic_cloud MEPHITIC_CLOUD
 mercury_vapours MERCURY_VAPOURS
 noxious_bog NOXIOUS_BOG
 olgrebs_toxic_radiance OLGREBS_TOXIC_RADIANCE
+corrosive_blob CORROSIVE_BLOB
 poison_arrow POISON_ARROW
 poisonous_cloud POISONOUS_CLOUD
 sting STING

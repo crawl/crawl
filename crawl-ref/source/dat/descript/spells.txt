@@ -441,6 +441,11 @@ Corrosive Bolt spell
 
 Fires a penetrating bolt of highly-corrosive acid.
 %%%%
+Corrosive Blob spell
+
+Fires a penetrating bolt of highly-corrosive acid and leaves an acidic cloud at
+the endpoint
+%%%%
 Corrupt spell
 
 Unleashes Abyssal energies in the immediate vicinity. This changes the
