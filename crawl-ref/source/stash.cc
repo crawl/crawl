@@ -829,7 +829,8 @@ bool LevelStashes::shop_needs_visit(const coord_def& c) const
     return shop && !shop->is_visited();
 }
 
-bool LevelStashes::needs_visit(const coord_def& c, bool autopickup) const
+bool LevelStashes::needs_visit(const coord_def& c, bool autopickup,
+                              bool visit_shops) const
 {
     const Stash *s = find_stash(c);
     if (s && (s->unvisited()
@@ -837,7 +838,7 @@ bool LevelStashes::needs_visit(const coord_def& c, bool autopickup) const
     {
         return true;
     }
-    return shop_needs_visit(c);
+    return visit_shops && shop_needs_visit(c);
 }
 
 bool LevelStashes::needs_stop(const coord_def &c) const
