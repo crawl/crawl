@@ -5092,8 +5092,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
     }
     else if (ES_trap && feat_is_trap(feat) && !trap_is_safe_from_afar(feat))
     {
-        string desc = cleaned_feature_description(pos);
-        marked_feats.push_back(desc + ".");
+        traps.emplace_back(cleaned_feature_description(pos), 1);
         es_flags |= ES_TRAP;
     }
 }
@@ -5279,6 +5278,7 @@ bool explore_discoveries::stop_explore() const
     say_any(apply_quantities(runed_doors), "runed door");
     say_any(apply_quantities(runelights), "runelights");
     say_any(apply_quantities(mutation_catalysts), "mutation catalysts");
+    say_any(apply_quantities(traps), "traps");
 
     return true;
 }
