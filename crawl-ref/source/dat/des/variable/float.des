@@ -6194,20 +6194,14 @@ MARKER:  Z = lua:monster_on_death { \
              message_seen="A water moccasin emerges from the fountain!", \
              message_unseen="You hear an angry hiss.", \
              master_name="water moccasin", veto_destroy="veto" }
-# Sometimes add an additional pairs of doors near the landing area. Also
-# randomize exit transporters and tower inner walls.
+# Sometimes add an additional pair of doors near the landing area. Also
+# randomize the tower inner walls.
 SHUFFLE: qK / rL
-NSUBST:  R = R / '
 SUBST:   q = c, r = ~, K = T, L = -, s : ccG-
 # D:2 monster density and loot.
 SUBST:   h = %$, ij= `, 2 = 2'
 NSUBST:  - = 2=1 / 2=1. / D / D. / ., ' = E / E. / .
-NSUBST:  R = R / E / E.
 KFEAT:   ~ = closed_clear_door
-MARKER:  P = lua:transp_loc("ghostless_gnarly_gnolls_entry")
-MARKER:  Q = lua:transp_dest_loc("ghostless_gnarly_gnolls_entry")
-MARKER:  R = lua:transp_loc("ghostless_gnarly_gnolls_exit")
-MARKER:  S = lua:transp_dest_loc("ghostless_gnarly_gnolls_exit")
 TILE:    c = wall_stone_smooth
 COLOUR:  `defghij|*%$O = cyan
 FTILE:   `defghij|*%$O = floor_cobble_blood
@@ -6218,17 +6212,17 @@ MAP
 .wwwwwwwwwwwwWwwwwwwwwwwww.
 .wwwwwwwwwwwwWwwwwwwwwwwww.
 .wwncccn...........ncccnww.
-.wwc's-c.cnc.S.cnc.c-s'cww.
-.wwc---cncRccnccRcnc---cww.
+.wwc's-c.cnc...cnc.c-s'cww.
+.wwc---cnc.cc+cc.cnc---cww.
 .wwncc---------------ccnww.
 .ww.Ac-cnqncc~ccncnc-cA.ww.
 .ww.cc-cpKpcp-.ceZ$c-cc.ww.
-.WW.n'-~-----QTcdN$~-2n.WW.
+.WW.+'-~------TcdN$~-2+.WW.
 .ww.cc-cpKpcp-.chi$c-cc.ww.
 .ww.Ac-cnqncc~ccncnc-cA.ww.
 .wwncc---------------ccnww.
-.wwc---cncRccnccRcnc---cww.
-.wwc's-c.cnc.P.cnc.c-s'cww.
+.wwc---cnc.cc+cc.cnc---cww.
+.wwc's-c.cnc...cnc.c-s'cww.
 .wwncccn...........ncccnww.
 .wwwwwwwwwww"""wwwwwwwwwww.
 .wwwwwwwwwww"""wwwwwwwwwww.
