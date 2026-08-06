@@ -122,6 +122,7 @@ public:
 
     bool revealed_this_turn;
     coord_def revealed_at_pos;
+    coord_def remembered_pos;
     level_id origin_level;
 
 public:

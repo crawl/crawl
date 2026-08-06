@@ -1614,7 +1614,7 @@ void activate_tesseracts()
         }
 
         behaviour_event(*mi, ME_ALERT);
-        env.map_knowledge(mi->pos()).set_monster(monster_info(*mi));
+        record_monster_seen_at(mi->pos(), **mi);
         set_terrain_seen(mi->pos());
         view_update_at(mi->pos());
 #ifdef USE_TILE

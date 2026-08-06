@@ -106,6 +106,7 @@ monster::monster()
     clear_constricted();
     revealed_this_turn = false;
     revealed_at_pos = coord_def(0, 0);
+    remembered_pos = coord_def(0, 0);
     origin_level = level_id();
 
     clear_deferred_move();
@@ -169,6 +170,7 @@ void monster::reset()
     god             = GOD_NO_GOD;
     revealed_this_turn = false;
     revealed_at_pos = coord_def(0, 0);
+    remembered_pos  = coord_def(0, 0);
     origin_level    = level_id();
 
     mons_remove_from_grid(*this);
@@ -4562,6 +4564,7 @@ void monster::set_ghost(const ghost_demon &g)
 void monster::set_new_monster_id()
 {
     mid = ++you.last_mid;
+    remembered_pos.reset();
     // Sorry, if you made 4294901759 monsters over the course of your
     // game you deserve a crash, particularly when the game doesn't
     // even last that many turns.
@@ -4838,9 +4841,13 @@ bool monster::needs_abyss_transit() const
 
 void monster::set_transit(const level_id &dest)
 {
-    add_monster_to_transit(dest, *this);
     if (you.can_see(*this))
+    {
+        forget_monster_memory(*this);
         remove_unique_annotation(this);
+    }
+    remembered_pos.reset();
+    add_monster_to_transit(dest, *this);
 }
 
 void monster::load_ghost_spells()

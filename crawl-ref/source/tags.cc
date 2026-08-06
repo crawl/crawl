@@ -6822,6 +6822,7 @@ void marshallMonster(writer &th, const monster& m)
     marshallShort(th, m.damage_total);
     marshallByte(th, m.revealed_this_turn);
     marshallCoord(th, m.revealed_at_pos);
+    marshallCoord(th, m.remembered_pos);
     marshall_level_id(th, m.origin_level);
 
     if (parts & MP_GHOST_DEMON)
@@ -6920,6 +6921,8 @@ void _marshallMonsterInfo(writer &th, const monster_info& mi)
         marshallShort(th, mi.i_ghost.ac);
         marshallString(th, mi.i_ghost.title);
     }
+
+    marshallInt(th, mi.mid);
 
     mi.props.write(th);
 }
@@ -7218,6 +7221,13 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
         unmarshallBoolean(th); // was can_sinv
     }
 #endif
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_FORGET_MONSTERS)
+        mi.mid = MID_NOBODY;
+    else
+#endif
+        mi.mid = unmarshallInt(th);
 
     mi.props.clear();
     mi.props.read(th);
@@ -8084,6 +8094,14 @@ void unmarshallMonster(reader &th, monster& m)
         m.revealed_at_pos = unmarshallCoord(th);
 #if TAG_MAJOR_VERSION == 34
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_FORGET_MONSTERS)
+        m.remembered_pos = coord_def(0, 0);
+    else
+#endif
+        m.remembered_pos = unmarshallCoord(th);
+
+#if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_TRACK_ORIGIN_LEVEL)
         m.origin_level = level_id::current();
     else
@@ -8468,6 +8486,7 @@ static void _tag_read_level_monsters(reader &th)
             continue;
 
         const mid_t mid = mi->mid;
+        forget_monster_memory(**mi, false);
         dprf("Killed elsewhere companion %s(%d) on %s",
                 mi->name(DESC_PLAIN, true).c_str(), mid,
                 level_id::current().describe(false, true).c_str());
