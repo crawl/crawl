@@ -202,6 +202,7 @@ static vector<string> _you_all_vault_list;
 #endif
 
 static FixedArray<dungeon_feature_type, GXM, GYM> _vault_placed_features;
+static unique_ptr<FixedArray<int, GXM, GYM>> _vault_feature_heights;
 
 static string branch_epilogues[NUM_BRANCHES];
 FixedVector<string_set, NUM_BRANCHES> branch_uniq_map_tags;
@@ -1641,6 +1642,7 @@ void dgn_reset_level(bool enable_random_maps)
     env.level_layout_types.clear();
     level_clear_vault_memory();
     _vault_placed_features.init(DNGN_UNSEEN);
+    _vault_feature_heights.reset();
 
     use_random_maps = enable_random_maps;
     dgn_check_connectivity = false;
@@ -4629,7 +4631,10 @@ const vault_placement *dgn_place_map(const map_def *mdef,
         dungeon_events.clear();
     }
     else
+    {
         _vault_placed_features.init(DNGN_UNSEEN);
+        _vault_feature_heights.reset();
+    }
 
     // XXX: if this calls into dgn_place_map again via lua and
     // crawl_state.generating_level is not set, _vault_placed_features will be
@@ -7866,4 +7871,23 @@ int starting_absdepth()
         return 4;
     }
     return 0; // (absdepth is 0-indexed)
+}
+
+void dgn_set_vault_height(coord_def pos, int height)
+{
+    if (!_vault_feature_heights)
+    {
+        _vault_feature_heights.reset(new FixedArray<int, GXM, GYM>());
+        _vault_feature_heights->init(INVALID_HEIGHT);
+    }
+    (*_vault_feature_heights)(pos) = height;
+}
+
+int dgn_get_vault_height(coord_def pos)
+{
+    if (!_vault_feature_heights)
+        return INVALID_HEIGHT;
+    if (env.grid(pos) != _vault_placed_features(pos))
+        return INVALID_HEIGHT;
+    return (*_vault_feature_heights)(pos);
 }

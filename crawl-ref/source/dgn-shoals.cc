@@ -738,6 +738,13 @@ static void _shoals_postprocess_vaults()
         if (!(env.level_map_mask(c) & MMT_VAULT))
             continue;
 
+        int vault_height = dgn_get_vault_height(c);
+        if (vault_height != INVALID_HEIGHT)
+        {
+            dgn_height_at(c) = vault_height;
+            continue;
+        }
+
         const dungeon_feature_type feat(env.grid(c));
 
         if (feat == DNGN_SHALLOW_WATER)

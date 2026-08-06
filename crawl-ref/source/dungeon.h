@@ -307,3 +307,6 @@ int starting_absdepth();
 bool in_descent_parent(branch_type branch);
 
 int concretize_item_level(int spec_level, int dgn_level = INVALID_ABSDEPTH);
+
+void dgn_set_vault_height(coord_def pos, int height);
+int dgn_get_vault_height(coord_def pos);
