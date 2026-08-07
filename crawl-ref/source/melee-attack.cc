@@ -217,6 +217,8 @@ bool melee_attack::handle_phase_attempted()
     if (attk_type == AT_NONE)
         return false;
 
+    to_hit = calc_to_hit(true);
+
     if (attacker != defender && !is_riposte)
     {
         // Allow setting of your allies' target, etc.
@@ -5357,10 +5359,7 @@ bool spellclaws_attack(int spell_level)
         mult = 1000 / delay;
 
     if (you.duration[DUR_ENKINDLED])
-    {
-        attk.to_hit = AUTOMATIC_HIT;
         mult += mult * spellclaws_level_mult[spell_level - 1] / 100;
-    }
 
     attk.dmg_mult = mult - 100;
 

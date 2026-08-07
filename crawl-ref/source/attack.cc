@@ -377,8 +377,6 @@ void attack::init_attack(int attack_number)
     if (attacker->is_player() && you.form_uses_xl())
         wpn_skill = SK_FIGHTING; // for stabbing, mostly
 
-    to_hit          = calc_to_hit(true);
-
     defender_shield = defender ? defender->shield() : defender_shield;
 
     unrand_entry = nullptr;
