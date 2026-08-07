@@ -17,6 +17,6 @@ has_corpse: true
 shout: howl
 intelligence: animal
 speed: 12
-uses: open_doors
+uses: starting_equipment
 size: small
 shape: humanoid_tailed
