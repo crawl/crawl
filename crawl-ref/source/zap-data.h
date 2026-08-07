@@ -2817,4 +2817,19 @@ _mon_hex_zap(ZAP_ILL_OMEN, BEAM_ILL_OMEN),
     false,
 },
 
+{
+    ZAP_CORROSIVE_BLOB,
+    "glob of acid",
+    new dicedef_calculator<3, 6, 1, 4>,
+    new tohit_calculator<7, 1, 6>,
+    nullptr,
+    nullptr,
+    YELLOW,
+    false,
+    BEAM_ACID,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
+
 };

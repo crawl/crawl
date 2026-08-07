@@ -127,6 +127,7 @@ static const vector<spell_type> spellbook_templates[] =
 #if TAG_MAJOR_VERSION == 34
 {   // Book of Transfigurations
     SPELL_IRRADIATE,
+    SPELL_CORROSIVE_BLOB,
 },
 #endif
 
@@ -140,6 +141,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_MERCURY_ARROW,
     SPELL_CLOCKWORK_BEE,
     SPELL_SURPRISING_CROCODILE,
+    SPELL_CORROSIVE_BLOB,
 },
 
 {   // Book of Necromancy
@@ -278,6 +280,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Transmutation
     SPELL_PETRIFY,
     SPELL_IRRADIATE,
+    SPELL_CORROSIVE_BLOB,
     SPELL_FULSOME_FUSILLADE,
 },
 
@@ -562,6 +565,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SPIKE_LAUNCHER,
     SPELL_SIGIL_OF_BINDING,
     SPELL_DIAMOND_SAWBLADES,
+    SPELL_CORROSIVE_BLOB,
 },
 
 { // Book of Cryoformation
