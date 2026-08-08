@@ -2828,7 +2828,7 @@ _mon_hex_zap(ZAP_ILL_OMEN, BEAM_ILL_OMEN),
     false,
     BEAM_ACID,
     DCHAR_FIRED_ZAP,
-    false,
+    true,
     false,
 },
 
