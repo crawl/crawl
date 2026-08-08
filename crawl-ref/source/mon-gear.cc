@@ -2431,8 +2431,8 @@ static void _give_extra_equipment(monster* mon, int level)
                           mon->type == MONS_NAGA                 ?  800 :
                           mon->type == MONS_NAGA_WARRIOR         ?  200 :
                           mon->type == MONS_NAGARAJA             ?  100 :
-                          mon->type == MONS_SPHINX_MARAUDER      ?   80 :
-                          mon->type == MONS_GUARDIAN_SPHINX      ?   50
+                          mon->type == MONS_SPHINX_MARAUDER      ?    8 :
+                          mon->type == MONS_GUARDIAN_SPHINX      ?    5
                                                                  :  200))
         {
             make_item_for_monster(mon, OBJ_ARMOUR, ARM_BARDING, level);
