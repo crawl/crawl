@@ -2310,6 +2310,8 @@ int make_mons_armour(monster_type type, int level)
         item.sub_type  = ARM_ROBE;
         break;
 
+    case MONS_SPHINX_MARAUDER:
+    case MONS_GUARDIAN_SPHINX:
     case MONS_DRACONIAN_SHIFTER:
     case MONS_DRACONIAN_SCORCHER:
     case MONS_DRACONIAN_ANNIHILATOR:
@@ -2332,8 +2334,6 @@ int make_mons_armour(monster_type type, int level)
         make_item_unrandart(item, UNRAND_DRAGONSKIN);
         break;
 
-    case MONS_SPHINX_MARAUDER:
-    case MONS_GUARDIAN_SPHINX:
     case MONS_NESSOS:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_BARDING;
@@ -2431,8 +2431,8 @@ static void _give_extra_equipment(monster* mon, int level)
                           mon->type == MONS_NAGA                 ?  800 :
                           mon->type == MONS_NAGA_WARRIOR         ?  200 :
                           mon->type == MONS_NAGARAJA             ?  100 :
-                          mon->type == MONS_SPHINX_MARAUDER      ?   80 :
-                          mon->type == MONS_GUARDIAN_SPHINX      ?   50
+                          mon->type == MONS_SPHINX_MARAUDER      ?    8 :
+                          mon->type == MONS_GUARDIAN_SPHINX      ?    5
                                                                  :  200))
         {
             make_item_for_monster(mon, OBJ_ARMOUR, ARM_BARDING, level);
