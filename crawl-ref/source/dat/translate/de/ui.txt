@@ -1,0 +1,110 @@
+###############################################################################
+#
+# Translations for user interfaces
+#
+###############################################################################
+
+###############################################################
+# Player Stats (aka HUD)
+#
+# --------------------------------------------
+# Bob the Chopper                            |
+# Minotaur of Trog  *.....                   |
+# Health: 120/200   ======================== |
+# Magic:  20/20                              |
+# AC: 27            Str: 31                  |
+# EV: 12            Int: 4                   |
+# SH: 14            Dex: 10                  |
+# XL: 11 Next: 83%  Place: Dungeon:15        |
+# Noise: ---------  Time: 72030.9 (0.0)      |
+# a) +0 hand axe                             |
+# -) Nothing quivered                        |
+# Berserk                                    |
+# --------------------------------------------
+#
+###############################################################
+
+%%%%
+Health:
+Gesund:
+%%%%
+# Health changes to HP when more space is needed (e.g. need to show HP drain)
+# Hit points = Trefferpunkte
+HP:
+TP:
+%%%%
+Magic:
+Magie:
+%%%%
+# Magic changes to MP when more more space is needed
+# Magic points = Magiepunkte
+MP:
+MP:
+%%%%
+# Armour Class = Rüstungsklasse
+AC:
+RK:
+%%%%
+# Evasion = Ausweichen
+EV:
+AW:
+%%%%
+# Shields = Schilde
+SH:
+Sch:
+%%%%
+# eXperience Level = Erfahrungsstufe
+XL:
+St:
+%%%%
+# percentage progress to next XL
+# Next = Nächste, but that's too long, so I used Komm for Kommende
+Next:
+Komm:
+%%%%
+Noise:
+Lärm:
+%%%%
+# If silenced, this shows instead of noise bar
+Silenced
+Stille
+%%%%
+# There is an option to show equipment instead of noise
+# equipment = Ausrüstung
+Equip:
+Ausr:
+%%%%
+# Equipment abbreviated for octopodes
+Eq:
+Ar:
+%%%%
+# Strength = Stärke
+Str:
+Stä:
+%%%%
+# Intelligence = Intelligenz
+%%%%
+Int:
+Int:
+%%%%
+# Dexterity = Geschicklichkeit
+Dex:
+Ges:
+%%%%
+Place:
+Ort:
+%%%%
+Time:
+Zeit:
+%%%%
+Turn:
+Runde:
+%%%%
+# this shows if god is Gozag
+Gold:
+Gold:
+%%%%
+# short from of Gold
+Gd
+Gd
+%%%%
