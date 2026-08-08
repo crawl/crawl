@@ -33,6 +33,7 @@
 #include "json-wrapper.h"
 #include "lang-fake.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "map-knowledge.h"
 #include "menu.h"
@@ -991,6 +992,40 @@ static void _send_ui_state(WebtilesUIState state)
     tiles.json_open_object();
     tiles.json_write_string("msg", "ui_state");
     tiles.json_write_int("state", state);
+    tiles.json_close_object();
+    tiles.finish_message();
+}
+
+static void _send_hud_captions()
+{
+    if (!localisation_active())
+    {
+        // No need to send the captions
+        // web server will use the default hardcoded English ones
+        return;
+    }
+
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "stats_captions");
+    tiles.json_write_string("health", localise("Health:"));
+    tiles.json_write_string("hp", localise("HP:"));
+    tiles.json_write_string("magic", localise("Magic:"));
+    tiles.json_write_string("mp", localise("MP:"));
+    tiles.json_write_string("ac", localise("AC:"));
+    tiles.json_write_string("ev", localise("EV:"));
+    tiles.json_write_string("sh", localise("SH:"));
+    tiles.json_write_string("xl", localise("XL:"));
+    tiles.json_write_string("progress", localise("Next:"));
+    tiles.json_write_string("noise", localise("Noise:"));
+    tiles.json_write_string("silenced", localise("Silenced"));
+    tiles.json_write_string("equip", localise("Equip:"));
+    tiles.json_write_string("eq", localise("Eq:"));
+    tiles.json_write_string("str", localise("Str:"));
+    tiles.json_write_string("int", localise("Int:"));
+    tiles.json_write_string("dex", localise("Dex:"));
+    tiles.json_write_string("place", localise("Place:"));
+    tiles.json_write_string("time", localise("Time:"));
+    tiles.json_write_string("gold", localise("Gold:"));
     tiles.json_close_object();
     tiles.finish_message();
 }
@@ -2213,7 +2248,10 @@ void TilesFramework::_send_everything()
     _send_cursor(CURSOR_MOUSE);
     _send_cursor(CURSOR_TUTORIAL);
 
-     // Player
+    // i18n: Translated HUD captions
+    _send_hud_captions();
+
+    // Player
     _send_player(true);
 
     // Map is sent after player, otherwise HP/MP bar can be left behind in the
@@ -2328,6 +2366,7 @@ void TilesFramework::redraw()
 
     m_text_menu.send();
 
+    _send_hud_captions();
     _send_player();
     _send_messages();
 
