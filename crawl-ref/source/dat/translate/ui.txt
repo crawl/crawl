@@ -1,0 +1,95 @@
+###############################################################################
+#
+# Translations for user interfaces
+#
+###############################################################################
+
+###############################################################
+# Player Stats (aka HUD)
+#
+# --------------------------------------------
+# Bob the Chopper                            |
+# Minotaur of Trog  *.....                   |
+# Health: 120/200   ======================== |
+# Magic:  20/20                              |
+# AC: 27            Str: 31                  |
+# EV: 12            Int: 4                   |
+# SH: 14            Dex: 10                  |
+# XL: 11 Next: 83%  Place: Dungeon:15        |
+# Noise: ---------  Time: 72030.9 (0.0)      |
+# a) +0 hand axe                             |
+# -) Nothing quivered                        |
+# Berserk                                    |
+# --------------------------------------------
+#
+###############################################################
+
+%%%%
+Health:
+
+%%%%
+# Health changes to HP when more space is needed (e.g. need to show HP drain)
+HP:
+
+%%%%
+Magic:
+
+%%%%
+# Magic changes to MP when more more space is needed
+MP:
+
+%%%%
+AC:
+
+%%%%
+EV:
+
+%%%%
+SH:
+
+%%%%
+XL:
+
+%%%%
+# percentage progress to next XL
+Next:
+
+%%%%
+Noise:
+
+%%%%
+# If silenced, this shows instead of noise bar
+Silenced
+
+%%%%
+# There is an option to show equipment instead of noise
+Equip:
+
+%%%%
+# Equipment abbreviated for octopodes
+Eq:
+
+%%%%
+Str:
+
+%%%%
+Int:
+
+%%%%
+Dex:
+
+%%%%
+Place:
+
+%%%%
+Time:
+
+%%%%
+# this shows if god is Gozag
+Gold:
+
+%%%%
+# short from of Gold
+Gd
+
+%%%%
