@@ -85,6 +85,9 @@ Place:
 Time:
 
 %%%%
+Turn:
+
+%%%%
 # this shows if god is Gozag
 Gold:
 
