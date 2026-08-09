@@ -1,5 +1,6 @@
 name: "cinder newt"
 glyph: {char: "l", colour: red}
+resists: {fire: 1}
 flags: [cold_blood]
 exp: 10
 genus: giant_lizard
