@@ -81,3 +81,231 @@ x....lll...lll........m........www...www....c
 x.....................m.....................c
 xxxxxxxxxxxxxxxxxxxxxx@cccccccccccccccccccccc
 ENDMAP
+
+###############################################################################
+# Lava tubes have broken through a glacier, leaving ice-block chambers and
+# narrow frozen paths between broad channels of molten rock.
+###############################################################################
+
+NAME:    dcchili_d6_glacial_lava_tubes
+PLACE:   D:6
+DEPTH:   D:6
+WEIGHT:  5000
+TAGS:    dcchili_d6_hot_cold dcchili_d6_lava_ice_cave no_monster_gen no_item_gen no_pool_fixup no_rotate
+ORIENT:  float
+
+MONS:    cinder newt w:10 / bombardier beetle w:7 / fire bat w:4 / \
+         white imp w:10 / ice beast w:7 / steam dragon w:3 / \
+         marrowcuda w:4
+
+KMONS:   h = fire bat
+KMONS:   s = steam dragon
+KMONS:   H = hell hound
+KMONS:   i = ice beast
+KMONS:   p = polar bear
+KMONS:   I = rime drake
+
+KITEM:   f = wand of flame w:4 / scroll of immolation pre_id w:3 / \
+             potion of resistance pre_id w:1 / gold w:4
+KITEM:   q = wand of iceblast w:2 / potion of resistance pre_id w:2 / \
+             any potion w:4 / gold w:4
+
+KFEAT:   c = rock_wall
+KFEAT:   G = runed_clear_door
+KFEAT:   U = stone_stairs_up_i
+KFEAT:   D = stone_stairs_down_i
+KFEAT:   l = lava
+KFEAT:   w = shallow_water
+KPROP:   hsHipI = no_tele_into
+KMASK:   hsHipI = opaque
+TILE:    c = wall_ice_block
+FTILE:   .fhsHl = floor_rough_red
+FTILE:   iqwIpUDG = floor_ice
+
+MAP
+cccccccccccccccccccccc@cccccccccccccccccccccc
+c....lllll.....lllll......lllll.....lllll...c
+c....l...l.....l...l......l...l.....l...l...c
+c....l.h.l.....l.s.l......l.i.l.....l.p.l...c
+c....l...l.....l...l......l...l.....l...l...c
+c....lll.llllllllllllllllllllllll.lllll.....c
+c...........................................c
+c..ccccccc....lllllll...lllllll....ccccccc..c
+c..c.....c....l.....l...l.....l....c.....c..c
+c..c..Hf.G....l.h...lllll...i.l....G.qI..c..c
+c..c.....c....l.....l...l.....l....c.....c..c
+c..ccccccc....lllllll...lllllll....ccccccc..c
+c.................ccccccccc.................c
+c..llllllllllll...c.......c...llllllllllll..c
+c..l..........l...c..U....c...l..........l..c
+@..l..h....s..l...G.......G...l..i....p..l..@
+c..l..........l...c.......c...l..........l..c
+c..llllllllllll...c....D..c...llllllllllll..c
+c.................ccccccccc.................c
+c..ccccccc....lllllll...lllllll....ccccccc..c
+c..c.....c....l.....l...l.....l....c.....c..c
+c..c..Hf.G....l.s...lllll...i.l....G.qI..c..c
+c..c.....c....l.....l...l.....l....c.....c..c
+c..ccccccc....lllllll...lllllll....ccccccc..c
+c...........................................c
+c....lll.llllllllllllllllllllllll.lllll.....c
+c....l...l.....l...l......l...l.....l...l...c
+c....l.h.l.....l.s.l......l.i.l.....l.p.l...c
+c....l...l.....l...l......l...l.....l...l...c
+c....lllll.....lllll......lllll.....lllll...c
+cccccccccccccccccccccc@cccccccccccccccccccccc
+ENDMAP
+
+###############################################################################
+# A volcanic caldera surrounded by the frozen tunnels of an ice cave.
+###############################################################################
+
+NAME:    dcchili_d6_frozen_caldera
+PLACE:   D:6
+DEPTH:   D:6
+WEIGHT:  5000
+TAGS:    dcchili_d6_hot_cold dcchili_d6_volcano_core no_monster_gen no_item_gen no_pool_fixup no_rotate
+ORIENT:  float
+
+MONS:    cinder newt w:10 / bombardier beetle w:7 / fire bat w:4 / \
+         white imp w:10 / ice beast w:7 / steam dragon w:3 / \
+         marrowcuda w:4
+
+KMONS:   h = fire bat
+KMONS:   s = steam dragon
+KMONS:   H = hell hound
+KMONS:   i = ice beast
+KMONS:   p = polar bear
+KMONS:   I = rime drake
+
+KITEM:   f = wand of flame w:4 / scroll of immolation pre_id w:3 / \
+             potion of resistance pre_id w:1 / gold w:4
+KITEM:   q = wand of iceblast w:2 / potion of resistance pre_id w:2 / \
+             any potion w:4 / gold w:4
+
+KFEAT:   x = rock_wall
+KFEAT:   c = rock_wall
+KFEAT:   G = runed_clear_door
+KFEAT:   U = stone_stairs_up_i
+KFEAT:   D = stone_stairs_down_i
+KFEAT:   l = lava
+KFEAT:   w = shallow_water
+KPROP:   hsHipI = no_tele_into
+KMASK:   hsHipI = opaque
+TILE:    x = wall_volcanic
+TILE:    c = wall_ice_block
+FTILE:   .fhsHl = floor_rough_red
+FTILE:   iqwIpUDG = floor_ice
+
+MAP
+cccccccccccccccccccccc@cccccccccccccccccccccc
+c...........................................c
+c...wwwww...........................wwwww...c
+c...w...w....ccccccc.....ccccccc....w...w...c
+c...w.i.w....c.....c.....c.....c....w.p.w...c
+c...w...w....G.qi..c.....c..i..G....w...w...c
+c...wwwww....c.....c.....c.....c....wwwww...c
+c............ccccccc.....ccccccc............c
+c................xxxxxxxxx..................c
+c.............xxxx.......xxxx...............c
+c...........xxx.....lll.....xxx.............c
+c..........xx....lll.lll....xx..............c
+c.........xx...ll.......ll...xx.............c
+@.........x....l..h.s.h..l....x.............@
+c.........x...ll.........ll...x.............c
+c.........x...l....U......l...x.............c
+c.........x...l...........l...x.............c
+c.........x...l......D....l...x.............c
+c.........x...ll.........ll...x.............c
+@.........x....l..h.sHf..l....x.............@
+c.........xx...ll.......ll...xx.............c
+c..........xx....lll.lll....xx..............c
+c...........xxx.....lll.....xxx.............c
+c............xxxx..G.G..xxxx................c
+c...............x.Hf.qI.x...................c
+c...wwwww.......xxxx.xxxx........wwwww......c
+c...w.i.w....ccccccc.....ccccccc.w...w......c
+c...w...w....c.....c.....c.....c.w.p.w......c
+c...wwwww....G..i..c.....c..I..G.wwwww......c
+c............ccccccc.....ccccccc............c
+cccccccccccccccccccccc@cccccccccccccccccccccc
+ENDMAP
+
+###############################################################################
+# A second thermal-rift arrangement: opposing foundries and frozen galleries
+# meet at a neutral stone observatory.
+###############################################################################
+
+NAME:    dcchili_d6_thermal_crossroads
+PLACE:   D:6
+DEPTH:   D:6
+WEIGHT:  5000
+TAGS:    dcchili_d6_hot_cold no_monster_gen no_item_gen no_pool_fixup no_rotate
+ORIENT:  float
+
+MONS:    cinder newt w:10 / bombardier beetle w:7 / fire bat w:4 / \
+         white imp w:10 / ice beast w:7 / steam dragon w:3 / \
+         marrowcuda w:4
+
+KMONS:   h = fire bat
+KMONS:   s = steam dragon
+KMONS:   H = hell hound
+KMONS:   i = ice beast
+KMONS:   p = polar bear
+KMONS:   I = rime drake
+
+KITEM:   f = wand of flame w:4 / scroll of immolation pre_id w:3 / \
+             potion of resistance pre_id w:1 / gold w:4
+KITEM:   q = wand of iceblast w:2 / potion of resistance pre_id w:2 / \
+             any potion w:4 / gold w:4
+
+KFEAT:   x = rock_wall
+KFEAT:   c = rock_wall
+KFEAT:   m = stone_wall
+KFEAT:   G = runed_clear_door
+KFEAT:   U = stone_stairs_up_i
+KFEAT:   D = stone_stairs_down_i
+KFEAT:   l = lava
+KFEAT:   w = shallow_water
+KPROP:   hsHipI = no_tele_into
+KMASK:   hsHipI = opaque
+TILE:    x = wall_volcanic
+TILE:    c = wall_ice_block
+TILE:    m = wall_brick_darkgray
+FTILE:   .fhsHl = floor_rough_red
+FTILE:   iqwIp = floor_ice
+FTILE:   UDG = floor_limestone
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxx@cccccccccccccccccccccc
+x.....................m.....................c
+x..lllll..............m..............wwwww..c
+x..l...l...xxxxxxx....m....ccccccc...w...w..c
+x..l.s.l...x.....x....m....c.....c...w.i.w..c
+x..l.h.l...x..s..G....m....G..i..c...w.p.w..c
+x..l...l...x.....x....m....c.....c...w...w..c
+x..lllll...xxxxxxx....m....ccccccc...wwwww..c
+x.....................m.....................c
+x....lll..............G..............www....c
+x....l.l..............m..............w.w....c
+x....lhl..............m..............wiw....c
+x....lll..........mmmmmmmmm..........www....c
+x.................m.......m.................c
+x...xxxxxxx.......m..U....m.......ccccccc...c
+x...x.....x.......G.......G.......c.....c...c
+@...G..Hf.x.......m.......m.......c.qI..G...@
+x...x.....x.......G.......G.......c.....c...c
+x...xxxxxxx.......m....D..m.......ccccccc...c
+x.................m.......m.................c
+x....lll..........mmmmmmmmm..........www....c
+x....lhl..............m..............wiw....c
+x....l.l..............m..............w.w....c
+x....lll..............G..............www....c
+x.....................m.....................c
+x..lllll...xxxxxxx....m....ccccccc...wwwww..c
+x..l.s.l...x.....x....m....c.....c...w.i.w..c
+x..l.h.l...x..Hf.G....m....G.qI..c...w.p.w..c
+x..lllll...xxxxxxx....m....ccccccc...wwwww..c
+x.....................m.....................c
+xxxxxxxxxxxxxxxxxxxxxx@cccccccccccccccccccccc
+ENDMAP

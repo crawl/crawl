@@ -93,3 +93,173 @@ c....t...t...t.....t...t...t.....t...t......c
 c...........................................c
 cccccccccccccccccccccc@cccccccccccccccccccccc
 ENDMAP
+
+###############################################################################
+# A formal zoological garden: grated houses flank a central promenade, while
+# deep moats and reinforced runed gates keep the larger exhibits separate.
+###############################################################################
+
+NAME:    dcchili_lair1_grand_zoo
+PLACE:   Lair:1
+DEPTH:   Lair:1
+WEIGHT:  5000
+TAGS:    dcchili_lair1_zoo no_monster_gen no_item_gen no_pool_fixup no_rotate
+ORIENT:  float
+
+MONS:    bullfrog w:10 / cane toad w:8 / water moccasin w:10 / wolf w:8 / \
+         yak w:8 / giraffe w:6 / komodo dragon w:6 / black bear w:5 / \
+         basilisk w:4 / hell rat w:4 / scorpion w:3 / blink frog w:2
+
+KMONS:   1 = bullfrog
+KMONS:   2 = cane toad
+KMONS:   3 = blink frog
+KMONS:   A = goliath frog
+KMONS:   4 = wolf
+KMONS:   5 = black bear
+KMONS:   6 = polar bear
+KMONS:   B = hell hound
+KMONS:   7 = water moccasin
+KMONS:   8 = black mamba
+KMONS:   9 = water moccasin
+KMONS:   C = anaconda
+KMONS:   a = scorpion
+KMONS:   b = hornet
+KMONS:   d = wolf spider
+KMONS:   D = emperor scorpion
+KMONS:   X = yak / giraffe / elephant
+KMONS:   E = dire elephant
+
+KITEM:   i = any potion w:4 / any scroll w:4 / gold w:3 / \
+             any wand w:2 / any jewellery w:1
+
+KFEAT:   c = rock_wall
+KFEAT:   G = runed_clear_door
+KFEAT:   g = iron_grate
+KFEAT:   t = tree
+KFEAT:   w = shallow_water
+KFEAT:   W = deep_water
+KPROP:   123456789abdABCDEFX = no_tele_into
+KMASK:   123456789abdABCDEFX = opaque
+TILE:    c = wall_vines
+FTILE:   .123456789abdiABCDEFXwtgG = floor_grass_dark
+LROCKTILE: wall_vines
+LFLOORTILE: floor_grass_dark
+
+MAP
+cccccccccccccccccccccc@cccccccccccccccccccccc
+c...........................................c
+c..ggggggggggg.................ggggggggggg..c
+c..g.........g.................g.........g..c
+c..g.1.2.3...g.................g.4.4.5...g..c
+c..g.2.1.Ai..G.................G.4.6.Bi..g..c
+c..g.........g.................g.........g..c
+c..ggggggggggg.................ggggggggggg..c
+c...........................................c
+c.............WWWWWWgGgWWWWWW...............c
+c............WW.............WW..............c
+c...........WW.7.7.8.8.9.7...WW.............c
+c..........WW..wwww...wwww.....WW...........c
+c.........WW...7.8.Ciww.7.......WW..........c
+@.........gGg.................gGg...........@
+c.........WW...7.7.8.8.7........WW..........c
+c..........WW....wwww...wwww...WW...........c
+c...........WW..8.7.7.7.8.....WW............c
+c............WW.............WW..............c
+c.............WWWWWWgGgWWWWWW...............c
+c...........................................c
+c..ggggggggggg..................WWWWgGgWWWW.c
+c..g.........g................WW.........WW.c
+c..g.a.a.b...g...............WW.X.X.X.X...W.c
+c..g.a.Did...G...............W..X.EiX.X...W.@
+c..g.........g...............WW.X.X.X.X...W.c
+c..ggggggggggg................WW.........WW.c
+c..............................WWWWWWWWWWW..c
+c....t...t...t...............t...t...t......c
+c...........................................c
+cccccccccccccccccccccc@cccccccccccccccccccccc
+ENDMAP
+
+###############################################################################
+# A less formal reserve whose habitats follow streams, tree lines, and rocky
+# contours. Runed gates provide the only dry passage through each boundary.
+###############################################################################
+
+NAME:    dcchili_lair1_wildlife_preserve
+PLACE:   Lair:1
+DEPTH:   Lair:1
+WEIGHT:  5000
+TAGS:    dcchili_lair1_zoo no_monster_gen no_item_gen no_pool_fixup no_rotate
+ORIENT:  float
+
+MONS:    bullfrog w:10 / cane toad w:8 / water moccasin w:10 / wolf w:8 / \
+         yak w:8 / giraffe w:6 / komodo dragon w:6 / black bear w:5 / \
+         basilisk w:4 / hell rat w:4 / scorpion w:3 / blink frog w:2
+
+KMONS:   1 = bullfrog
+KMONS:   2 = cane toad
+KMONS:   3 = blink frog
+KMONS:   A = goliath frog
+KMONS:   4 = wolf
+KMONS:   5 = black bear
+KMONS:   6 = polar bear
+KMONS:   B = hell hound
+KMONS:   7 = water moccasin
+KMONS:   8 = black mamba
+KMONS:   9 = water moccasin
+KMONS:   C = anaconda
+KMONS:   a = scorpion
+KMONS:   b = hornet
+KMONS:   d = wolf spider
+KMONS:   D = emperor scorpion
+KMONS:   X = yak / giraffe / elephant
+KMONS:   E = dire elephant
+
+KITEM:   i = any potion w:4 / any scroll w:4 / gold w:3 / \
+             any wand w:2 / any jewellery w:1
+
+KFEAT:   c = rock_wall
+KFEAT:   G = runed_clear_door
+KFEAT:   g = iron_grate
+KFEAT:   t = tree
+KFEAT:   w = shallow_water
+KFEAT:   W = deep_water
+KPROP:   123456789abdABCDEFX = no_tele_into
+KMASK:   123456789abdABCDEFX = opaque
+TILE:    c = wall_vines
+FTILE:   .123456789abdiABCDEFXwtgG = floor_grass_dark
+LROCKTILE: wall_vines
+LFLOORTILE: floor_grass_dark
+
+MAP
+cccccccccccccccccccccc@cccccccccccccccccccccc
+c...........................................c
+c...ttttt...........................tttt....c
+c..tt...tWWWWWW................WWWWWt..tt...c
+c..t.1.2.W....WW.............WW....W.4..t...c
+c..t.2.3.W.Ai..W.............W.Bi..W.5.4t...c
+c..tt...tW.....W.............W.....W.6.tt...c
+c...tttttWWGWWWW..............WWGWWWtttt....c
+c...........G...................G...........c
+c.....t...t.G.t.....t...t.......G.t...t.....c
+c...........G...................G...........c
+c....WWWWWWWWWWW............ggggGgggg.......c
+c...WW.........WW.........gg........gg......c
+c..WW.7.7.8......W........g..a.a.b...g......c
+@..W..7.8.Ci.....G........G..a.Did...g......@
+c..WW.7.9.8......W........g..........g......c
+c...WW.........WW.........gg........gg......c
+c....WWWWGWWWWWW............gggGggggg.......c
+c........G.....................G............c
+c....t...G..t.....t.....t......G...t........c
+c........G.....................G............c
+c....WWWWGWWWWW............ttttGttttt.......c
+c...WW........WW.........tt.........tt......c
+c..WW.X.X.X.....W........t..X.X.X.....t.....c
+@..W..X.X.X.....G........G..X.EiX.....t.....@
+c..WW...........W........t..X.X.X.....t.....c
+c...WW.........WW........tt.........tt......c
+c....WWWWWWWWWWW...........ttttttttttt......c
+c...........................................c
+c......t....t......t....t......t....t.......c
+cccccccccccccccccccccc@cccccccccccccccccccccc
+ENDMAP
