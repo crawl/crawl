@@ -1020,14 +1020,7 @@ static bool _id_floor_item(item_def &item)
     {
         if (item.is_identified())
             return false;
-
-        // autopickup hack for previously-unknown items
-        if (item_needs_autopickup(item))
-            item.props[NEEDS_AUTOPICKUP_KEY] = true;
         identify_item(item);
-        // but skip ones that we discover to be useless
-        if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
-            item.props.erase(NEEDS_AUTOPICKUP_KEY);
         return true;
     }
 
@@ -1722,9 +1715,6 @@ static void _got_item(item_def& item)
     seen_item(item);
     shopping_list.cull_identical_items(item);
     item.flags |= ISFLAG_HANDLED;
-
-    if (item.props.exists(NEEDS_AUTOPICKUP_KEY))
-        item.props.erase(NEEDS_AUTOPICKUP_KEY);
 }
 
 void get_gold(const item_def& item, int quant, bool quiet)
@@ -2020,7 +2010,6 @@ static void _get_orb()
     if (bezotted())
         mpr("Zot can harm you no longer.");
 
-    env.orb_pos = you.pos(); // can be wrong in wizmode
     orb_pickup_noise(you.pos(), 30);
 
     start_orb_run(CHAPTER_ESCAPING, "Now all you have to do is get back out "
@@ -2597,7 +2586,6 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
                 inc_mitm_item_quantity(si->index(), item.quantity);
                 destroy_item(ob);
                 ob = si->index();
-                gozag_move_gold_to_top(p);
                 if (you.see_cell(p))
                 {
                     // XXX: Is it actually necessary to identify when the
@@ -2635,12 +2623,6 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
         item.link = env.igrid(p);
         env.igrid(p) = ob;
     }
-
-    if (item_is_orb(item))
-        env.orb_pos = p;
-
-    if (item.base_type != OBJ_GOLD)
-        gozag_move_gold_to_top(p);
 
     if (you.see_cell(p))
     {
@@ -3238,9 +3220,6 @@ bool item_needs_autopickup(const item_def &item, bool ignore_force)
 
     if (item.flags & ISFLAG_DROPPED)
         return false;
-
-    if (item.props.exists(NEEDS_AUTOPICKUP_KEY))
-        return true;
 
     return _is_option_autopickup(item, ignore_force);
 }
@@ -4963,17 +4942,7 @@ static int _get_item_base(const item_def &item)
  */
 static void _identify_last_item(item_def &item)
 {
-    if (!in_inventory(item) && item_needs_autopickup(item)
-        && (item.base_type == OBJ_STAVES
-            || item.base_type == OBJ_JEWELLERY))
-    {
-        item.props[NEEDS_AUTOPICKUP_KEY] = true;
-    }
-
     identify_item(item);
-
-    if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
-        item.props.erase(NEEDS_AUTOPICKUP_KEY);
 
     const string class_name = item.base_type == OBJ_JEWELLERY ?
                                     item_base_name(item) :

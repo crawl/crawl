@@ -96,12 +96,6 @@ canvas {
 .boosted_defense {
     color: var(--color-9); /* lightblue */
 }
-#game #stats_weapon .corroded_weapon {
-    color: var(--color-4); /* red */
-}
-#game #stats_offhand_weapon .corroded_weapon {
-    color: var(--color-4); /* red */
-}
 
 .bar span {
     display: inline-block;

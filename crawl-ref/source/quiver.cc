@@ -440,6 +440,12 @@ namespace quiver
         }
     };
 
+    static bool _either_weapon_cleaves()
+    {
+        return attack_cleaves(you, you.weapon())
+                || attack_cleaves(you, you.offhand_weapon());
+    }
+
     // class isn't intended for quivering per se. Rather, it's a wrapper on
     // targeted attacks involving melee weapons or unarmed fighting. This
     // covers regular 1-space melee attacks, as well as reaching attacks of
@@ -488,9 +494,9 @@ namespace quiver
                 return "punch";
             }
 
-            if (weapon_reach(*weapon) > 1)
+            if (you.reach_range() > 1)
                 return "reach";
-            else if (attack_cleaves(you))
+            else if (_either_weapon_cleaves())
                 return "cleave";
             else
                 return "hit"; // could use more subtype flavor Vs?
@@ -604,11 +610,8 @@ namespace quiver
             args.self = confirm_prompt_type::cancel;
 
             unique_ptr<targeter> hitfunc;
-            if (attack_cleaves(you))
-            {
-                const int range = reach_range;
-                hitfunc = make_unique<targeter_cleave>(&you, you.pos(), range);
-            }
+            if (_either_weapon_cleaves())
+                hitfunc = make_unique<targeter_cleave>(you.pos());
             else
                 hitfunc = make_unique<targeter_reach>(&you, reach_range);
             args.hitfunc = hitfunc.get();
@@ -669,7 +672,7 @@ namespace quiver
             // Cleaving reaches also will never fail to miss, since the player can
             // just attack another target in most cases to hit both.
             if (reach_range < 3
-                && !attack_cleaves(you)
+                && !_either_weapon_cleaves()
                 && (x_distance > 1 || y_distance > 1))
             {
                 const int x_first_middle = you.pos().x + (delta.x) / 2;

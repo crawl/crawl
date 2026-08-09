@@ -961,10 +961,14 @@ void tile_forget_map(const coord_def &gc)
 }
 
 static void _tile_place_item(const coord_def &gc, const item_def &item,
-                             bool more_items)
+                             map_flag_t tile_flags)
 {
     tile_with_flags_t t = tileidx_item(item);
-    if (more_items)
+    if (tile_flags & MAP_MORE_ITEMS_ARTEFACT)
+        t |= TILE_FLAG_S_UNDER_ARTEFACT;
+    else if (tile_flags & MAP_MORE_ITEMS_GOOD)
+        t |= TILE_FLAG_S_UNDER_GOOD;
+    else if (tile_flags & MAP_MORE_ITEMS)
         t |= TILE_FLAG_S_UNDER;
 
     tile_env.bk_fg(gc) = t;
@@ -973,10 +977,16 @@ static void _tile_place_item(const coord_def &gc, const item_def &item,
         tile_env.bk_bg(gc) |= TILE_FLAG_CURSOR3;
 }
 
-static void _tile_place_item_marker(const coord_def &gc, const item_def &item)
+static void _tile_place_item_marker(const coord_def &gc, const item_def &item,
+                                    map_flag_t tile_flags)
 {
     tile_with_flags_t fg = tile_env.bk_fg(gc);
-    tile_env.bk_fg(gc) = fg | TILE_FLAG_S_UNDER;
+    if (tile_flags & MAP_MORE_ITEMS_ARTEFACT)
+        tile_env.bk_fg(gc) = fg | TILE_FLAG_S_UNDER_ARTEFACT;
+    else if (tile_flags & MAP_MORE_ITEMS_GOOD)
+        tile_env.bk_fg(gc) = fg | TILE_FLAG_S_UNDER_GOOD;
+    else if (tile_flags & MAP_MORE_ITEMS)
+        tile_env.bk_fg(gc) = fg | TILE_FLAG_S_UNDER;
 
     if (item_needs_autopickup(item))
         tile_env.bk_bg(gc) |= TILE_FLAG_CURSOR3;
@@ -1081,9 +1091,9 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
     else if (cell.item())
     {
         if (feat_is_stair(cell.feat()))
-            _tile_place_item_marker(gc, *cell.item());
+            _tile_place_item_marker(gc, *cell.item(), cell.flags);
         else
-            _tile_place_item(gc, *cell.item(), (cell.flags & MAP_MORE_ITEMS) != 0);
+            _tile_place_item(gc, *cell.item(), cell.flags);
     }
 
     // Always place clouds now they have their own layer

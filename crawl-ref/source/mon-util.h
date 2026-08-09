@@ -26,6 +26,17 @@ struct mon_attack_def
     attack_type     type;
     attack_flavour  flavour;
     int             damage;
+    int             reach;
+    bool            cleaves;
+
+    mon_attack_def(attack_type _type = AT_NONE,
+                   attack_flavour _flavour = AF_PLAIN,
+                   int _damage = 0,
+                   int _reach = 1,
+                   bool _cleaves = false)
+        : type(_type), flavour(_flavour), damage(_damage), reach(_reach),
+          cleaves(_cleaves)
+    {}
 };
 
 // Amount of mons->speed_increment used by different actions; defaults
@@ -214,6 +225,7 @@ string mons_type_name(monster_type type, description_level_type desc);
 bool give_monster_proper_name(monster& mon);
 
 size_type mons_class_body_size(monster_type mc);
+size_type mons_class_body_size(monster_type mc, size_part_type type, int slime_size = 0);
 
 mon_itemuse_type mons_class_itemuse(monster_type mc);
 mon_itemuse_type mons_itemuse(const monster& mon);
@@ -253,7 +265,6 @@ string mon_attack_name(attack_type attack, bool with_object = true);
 string mon_attack_name_short(attack_type attack);
 bool flavour_triggers_damageless(attack_flavour flavour);
 int flavour_damage(attack_flavour flavour, int HD, bool random = true);
-bool flavour_has_reach(attack_flavour flavour);
 bool flavour_has_mobility(attack_flavour flavour);
 
 bool mons_class_flag(monster_type mc, monclass_flags_t bits);

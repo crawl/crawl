@@ -711,12 +711,12 @@ void dec_penance(god_type god, int val)
             if (!had_halo && have_passive(passive_t::halo))
             {
                 mprf(MSGCH_GOD, "Your divine halo returns!");
-                invalidate_agrid(true);
+                invalidate_agrid();
             }
             if (!had_umbra && have_passive(passive_t::umbra))
             {
                 mprf(MSGCH_GOD, "Your aura of darkness returns!");
-                invalidate_agrid(true);
+                invalidate_agrid();
             }
             if (have_passive(passive_t::see_unseen))
             {
@@ -2510,7 +2510,7 @@ static void _handle_piety_gain(int old_piety)
     if (have_passive(passive_t::halo) || have_passive(passive_t::umbra))
     {
         // Piety change affects halo / umbra radius.
-        invalidate_agrid(true);
+        invalidate_agrid();
     }
 }
 
@@ -2694,7 +2694,7 @@ static void _handle_piety_loss(int old_piety)
         || will_have_passive(passive_t::umbra))
     {
         // Piety change affects halo / umbra radius.
-        invalidate_agrid(true);
+        invalidate_agrid();
     }
 }
 
@@ -2947,12 +2947,12 @@ void excommunication(bool voluntary, god_type new_god)
     if (had_halo)
     {
         mprf(MSGCH_GOD, old_god, "Your divine halo fades away.");
-        invalidate_agrid(true);
+        invalidate_agrid();
     }
     if (had_umbra)
     {
         mprf(MSGCH_GOD, old_god, "Your aura of darkness fades away.");
-        invalidate_agrid(true);
+        invalidate_agrid();
     }
     // You might have lost water walking at a bad time...
     if (had_water_walk && _need_water_walking())
@@ -3738,9 +3738,6 @@ static void _join_gozag()
         ;
 #endif
     }
-
-    // Move gold to top of piles.
-    add_daction(DACT_GOLD_ON_TOP);
 }
 
 static void _join_okawaru()
@@ -3928,12 +3925,13 @@ void join_religion(god_type which_god)
                                                               : "").c_str());
     update_whereis();
 
+    take_note(Note(NOTE_GET_GOD, you.religion));
+
     _set_initial_god_piety();
 
     // Only mark the milestone now that piety has been set due to invo titles.
     mark_milestone("god.worship", "became a worshipper of "
                    + god_name(you.religion) + ".");
-    take_note(Note(NOTE_GET_GOD, you.religion));
     you.piety_info.register_join();
 
     const function<void ()> *join_effect = map_find(on_join, you.religion);

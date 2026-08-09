@@ -40,8 +40,8 @@ enum daction_type
     DACT_KIRKE_HOGS,
 #if TAG_MAJOR_VERSION == 34
     DACT_END_SPIRIT_HOWL,
-#endif
     DACT_GOLD_ON_TOP,
+#endif
     DACT_BRIBE_TIMEOUT,
     DACT_REMOVE_GOZAG_SHOPS,
     DACT_SET_BRIBES,

@@ -120,6 +120,7 @@ struct player_equip_set
                                               size_t* num_direct = nullptr);
 
     void shift_twohander_to_slot(equipment_slot new_slot);
+    void swap_offhand_weapon_to_main();
 
 private:
     void handle_melding(vector<item_def*>& to_meld, bool skip_effects);

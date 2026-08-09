@@ -471,7 +471,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             }
 
             caster.add_ench(ENCH_LIQUEFYING);
-            invalidate_agrid(true);
+            invalidate_agrid();
         },
         nullptr,
         MSPELL_NO_AUTO_NOISE,
@@ -2019,8 +2019,7 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
         return !monster.has_ench(ENCH_CONCENTRATE_VENOM)
                && (monster.has_spell(SPELL_SPIT_POISON)
                    || monster.has_attack_flavour(AF_POISON)
-                   || monster.has_attack_flavour(AF_POISON_STRONG)
-                   || monster.has_attack_flavour(AF_REACH_STING));
+                   || monster.has_attack_flavour(AF_POISON_STRONG));
 
     default:
         return false;
@@ -7580,8 +7579,12 @@ static bool _mons_can_be_tempered(const monster& targ)
 
     // We considerable LRD-able non-living monsters to be 'constructs',
     // excepting gargoyles (too 'alive') and including dancing weapons.
-    if (targ.type == MONS_DANCING_WEAPON || targ.type == MONS_HOARFROST_CANNON
-        || mons_genus(targ.type) != MONS_GARGOYLE && monster_type_is_fraggable(targ.type))
+    if (targ.type == MONS_DANCING_WEAPON
+        || targ.type == MONS_HOARFROST_CANNON
+        || targ.type == MONS_SPLINTERFROST_BARRICADE
+        || (monster_type_is_fraggable(targ.type)
+            && mons_intel(targ) == I_BRAINLESS
+            && !targ.is_firewood()))
     {
         return true;
     }
@@ -7942,7 +7945,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_SILENCE:
         mons->add_ench(ENCH_SILENCE);
-        invalidate_agrid(true);
+        invalidate_agrid();
         simple_monster_message(*mons, " surroundings become eerily quiet.", true);
         return;
 

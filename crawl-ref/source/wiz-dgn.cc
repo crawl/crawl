@@ -337,12 +337,13 @@ bool wizard_create_feature(dist &target, dungeon_feature_type feat, bool mimic)
         }
 
         if (mimic)
-            env.level_map_mask(pos) |= MMT_MIMIC;
+            env.pgrid(pos) |= FPROP_MIMIC;
 
         if (you.see_cell(pos))
         {
-            view_update_at(pos);
+            show_update_at(pos);
             StashTrack.update_stash(pos);
+            redraw_view_at(pos);
         }
         if (done)
             return success;
@@ -470,7 +471,8 @@ bool debug_make_shop(const coord_def& pos)
     if (!menu.run(true))
         return false;
 
-    place_spec_shop(pos, static_cast<shop_type>(menu.result()));
+    make_spec_shop(pos, static_cast<shop_type>(menu.result()));
+    dungeon_terrain_changed(you.pos(), DNGN_ENTER_SHOP);
     mpr("Done.");
     return true;
 }

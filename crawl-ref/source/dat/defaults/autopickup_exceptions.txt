@@ -40,3 +40,17 @@ ae += <good_item
 :  end
 :  return nil
 :end)
+
+# Pick up any aux armour for which the player still has empty slots
+:add_autopickup_func(function(it, name)
+:  if it.class(true) == "armour" then
+:    local good_slots = {cloak="cloak", helmet="helmet", gloves="gloves",
+:                        boots="boots", barding="barding"}
+:    st, _ = it.subtype()
+:    if good_slots[st] ~= nil and items.slot_is_available(good_slots[st]) == true then
+:       if not it.is_useless then
+:           return true
+:       end
+:    end
+:  end
+:end)

@@ -432,7 +432,6 @@ public:
     // Non-saved UI state:
     // -------------------
     mid_t          prev_targ;
-    coord_def      prev_grd_targ;
     // Examining spell library spells for Sif Muna's ability
     bool           divine_exegesis;
 
@@ -502,6 +501,12 @@ public:
 
     // If true, player has triggered a trap effect by exploring.
     bool trapped;
+
+    // Number of cells newly revealed by exploring.
+    int newly_revealed_cells;
+
+    // If true, the player took a zero-time action.
+    bool took_instant_action;
 
     // TODO burn this API with fire
     bool wield_change;          // redraw weapon
@@ -629,6 +634,7 @@ public:
     bool nightvision() const override;
     bool may_pruneify() const;
     int reach_range(bool include_weapon = true) const override;
+    int reach_range_bonus() const override;
     bool see_cell(const coord_def& p) const override;
 
     // Is c in view but behind a transparent wall?
@@ -938,9 +944,9 @@ public:
     bool umbra() const override;
     int halo_radius() const override;
     int silence_radius() const override;
-    int demon_silence_radius() const override;
     int liquefying_radius() const override;
     int umbra_radius() const override;
+    bool affects_agrid() const override;
     bool petrifying() const override;
     bool petrified() const override;
     bool liquefied_ground() const override;

@@ -488,6 +488,9 @@ Divine Exegesis ability
 Casts any spell from your spell library with guaranteed success. You receive a
 bonus to spell power based on your Spellcasting skill that is worth the same as
 equivalent levels of training in the relevant skills of the spell itself.
+
+For a short time afterward, you may recast the same spell (using the Recast
+ability), at a greatly reduced piety cost.
 %%%%
 # Trog
 Berserk ability

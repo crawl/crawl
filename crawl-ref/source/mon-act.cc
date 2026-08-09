@@ -162,11 +162,24 @@ static void _monster_regenerate(monster* mons)
 
     if (mons->has_ench(ENCH_REGENERATION))
         mons->heal(3 + div_rand_round(mons->max_hit_points, 20));
+}
 
-    if (mons_is_hepliaklqana_ancestor(mons->type))
+// Fire an interrupt when the last seen state of our ancestor goes from injured
+// to healed during a delay.
+static void _hepliaklqana_ancestor_check_interrupt(monster* mons)
+{
+    if (!mons_is_hepliaklqana_ancestor(mons->type)
+        || !you.can_see(*mons) || !you_are_delayed())
     {
-        if (mons->hit_points == mons->max_hit_points && you.can_see(*mons))
-            interrupt_activity(activity_interrupt::ancestor_hp);
+        return;
+    }
+
+    if (mons->hit_points < mons->max_hit_points)
+        you.running.ancestor_was_injured = true;
+    else if (you.running.ancestor_was_injured)
+    {
+        you.running.ancestor_was_injured = false;
+        interrupt_activity(activity_interrupt::ancestor_hp);
     }
 }
 
@@ -2170,6 +2183,7 @@ void handle_monster_move(monster* mons)
         return;
 
     _monster_regenerate(mons);
+    _hepliaklqana_ancestor_check_interrupt(mons);
 
     if (skip_turn)
         return;

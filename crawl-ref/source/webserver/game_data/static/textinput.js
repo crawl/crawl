@@ -310,23 +310,6 @@ function ($, comm, client, enums, util, options, ui) {
         "update_input": update_input
     });
 
-
-    function handle_size_change()
-    {
-        if (!input_data)
-            return;
-
-        client.center_element($("#input_dialog"));
-    }
-
-    $(document).off("game_init.textinput")
-               .on("game_init.textinput", function ()
-    {
-        $(window).off("resize.textinput")
-                 .on("resize.textinput", handle_size_change);
-    });
-
-
     return {
         input_active: input_active,
         find_input: find_input,

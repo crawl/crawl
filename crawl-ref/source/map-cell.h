@@ -7,43 +7,46 @@
 #include "monster.h"
 #include "tag-version.h"
 
-#define MAP_MAGIC_MAPPED_FLAG   0x01
-#define MAP_SEEN_FLAG           0x02
-#define MAP_CHANGED_FLAG        0x04 // FIXME: this doesn't belong here
-#define MAP_DETECTED_MONSTER    0x08
-#define MAP_INVISIBLE_MONSTER   0x10
-#define MAP_DETECTED_ITEM       0x20
-#define MAP_VISIBLE_FLAG        0x40
-#define MAP_OLD_INVIS_MONSTER   0x80
-#define MAP_GRID_KNOWN (MAP_MAGIC_MAPPED_FLAG | MAP_SEEN_FLAG \
-                        | MAP_DETECTED_MONSTER | MAP_INVISIBLE_MONSTER \
-                        | MAP_DETECTED_ITEM | MAP_VISIBLE_FLAG | MAP_OLD_INVIS_MONSTER)
+typedef uint64_t map_flag_t;
 
-#define MAP_EMPHASIZE          0x100
-#define MAP_MORE_ITEMS         0x200
-#define MAP_HALOED             0x400
-#define MAP_SILENCED           0x800
-#define MAP_BLOODY            0x1000
-#define MAP_CORRODING         0x2000
-#define MAP_ICY               0x8000
+constexpr map_flag_t MAP_MAGIC_MAPPED_FLAG          = 0x01;
+constexpr map_flag_t MAP_SEEN_FLAG                  = 0x02;
+// FIXME: MAP_CHANGED_FLAG doesn't belong here
+constexpr map_flag_t MAP_CHANGED_FLAG               = 0x04;
+constexpr map_flag_t MAP_DETECTED_MONSTER           = 0x08;
+constexpr map_flag_t MAP_INVISIBLE_MONSTER          = 0x10;
+constexpr map_flag_t MAP_DETECTED_ITEM              = 0x20;
+constexpr map_flag_t MAP_VISIBLE_FLAG               = 0x40;
+constexpr map_flag_t MAP_OLD_INVIS_MONSTER          = 0x80;
+
+constexpr map_flag_t MAP_EMPHASIZE                 = 0x100;
+constexpr map_flag_t MAP_MORE_ITEMS                = 0x200;
+constexpr map_flag_t MAP_HALOED                    = 0x400;
+constexpr map_flag_t MAP_SILENCED                  = 0x800;
+constexpr map_flag_t MAP_BLOODY                   = 0x1000;
+constexpr map_flag_t MAP_CORRODING                = 0x2000;
+constexpr map_flag_t MAP_ICY                      = 0x8000;
 
 /* these flags require more space to serialize: put infrequently used ones there */
-#define MAP_DOOR_CONNECT_1   0x10000
-#define MAP_BLOOD_WEST       0x20000
-#define MAP_BLOOD_NORTH      0x40000
-#define MAP_SANCTUARY_1      0x80000
-#define MAP_SANCTUARY_2     0x100000
-#define MAP_WITHHELD        0x200000
-#define MAP_LIQUEFIED       0x400000
-#define MAP_ORB_HALOED      0x800000
-#define MAP_UMBRAED        0x1000000
-#define MAP_OLD_BLOOD      0x2000000
-#define MAP_QUAD_HALOED    0X4000000
-#define MAP_DISJUNCT       0X8000000
-#define MAP_BLASPHEMY     0X10000000
-#define MAP_BFB_CORPSE    0X20000000
-#define MAP_DOOR_CONNECT_2 0x40000000
-#define MAP_DOOR_CONNECT_3 0x80000000
+constexpr map_flag_t MAP_DOOR_CONNECT_1          = 0x10000;
+constexpr map_flag_t MAP_BLOOD_WEST              = 0x20000;
+constexpr map_flag_t MAP_BLOOD_NORTH             = 0x40000;
+constexpr map_flag_t MAP_SANCTUARY_1             = 0x80000;
+constexpr map_flag_t MAP_SANCTUARY_2            = 0x100000;
+constexpr map_flag_t MAP_WITHHELD               = 0x200000;
+constexpr map_flag_t MAP_LIQUEFIED              = 0x400000;
+constexpr map_flag_t MAP_ORB_HALOED             = 0x800000;
+constexpr map_flag_t MAP_UMBRAED               = 0x1000000;
+constexpr map_flag_t MAP_OLD_BLOOD             = 0x2000000;
+constexpr map_flag_t MAP_QUAD_HALOED           = 0x4000000;
+constexpr map_flag_t MAP_DISJUNCT              = 0x8000000;
+constexpr map_flag_t MAP_BLASPHEMY            = 0x10000000;
+constexpr map_flag_t MAP_BFB_CORPSE           = 0x20000000;
+constexpr map_flag_t MAP_DOOR_CONNECT_2       = 0x40000000;
+constexpr map_flag_t MAP_DOOR_CONNECT_3       = 0x80000000;
+
+constexpr map_flag_t MAP_MORE_ITEMS_GOOD     = 0x100000000;
+constexpr map_flag_t MAP_MORE_ITEMS_ARTEFACT = 0x200000000;
 
 struct cloud_info
 {
@@ -154,8 +157,9 @@ struct map_cell
     // Clear prior to show update. Need to retain at least "seen" flag.
     void clear_data()
     {
-        const uint32_t f = flags & (MAP_SEEN_FLAG | MAP_CHANGED_FLAG
-                                    | MAP_VISIBLE_FLAG);
+        constexpr map_flag_t kept_flags = MAP_SEEN_FLAG | MAP_CHANGED_FLAG
+                                          | MAP_VISIBLE_FLAG;
+        const map_flag_t f = flags & kept_flags;
         clear();
         flags = f;
     }
@@ -200,12 +204,10 @@ struct map_cell
         return ret;
     }
 
-    void set_item(const item_def& ii, bool more_items)
+    void set_item(const item_def& ii)
     {
         clear_item();
         _item = make_unique<item_def>(ii);
-        if (more_items)
-            flags |= MAP_MORE_ITEMS;
     }
 
     void set_detected_item();
@@ -214,7 +216,8 @@ struct map_cell
     {
         // TODO: internal callers are doing a bit of duplicate work here
         _item.reset();
-        flags &= ~(MAP_DETECTED_ITEM | MAP_MORE_ITEMS);
+        flags &= ~(MAP_DETECTED_ITEM | MAP_MORE_ITEMS
+                   | MAP_MORE_ITEMS_GOOD | MAP_MORE_ITEMS_ARTEFACT);
     }
 
     monster_type mon_type() const
@@ -312,7 +315,14 @@ struct map_cell
 
     bool known() const
     {
-        return !!(flags & MAP_GRID_KNOWN);
+        constexpr map_flag_t known_flags = MAP_MAGIC_MAPPED_FLAG
+                                           | MAP_SEEN_FLAG
+                                           | MAP_DETECTED_MONSTER
+                                           | MAP_INVISIBLE_MONSTER
+                                           | MAP_DETECTED_ITEM
+                                           | MAP_VISIBLE_FLAG
+                                           | MAP_OLD_INVIS_MONSTER;
+        return !!(flags & known_flags);
     }
 
     bool seen() const
@@ -354,8 +364,9 @@ struct map_cell
 
     void set_door_connect(unsigned short door_connect)
     {
-        uint32_t door_connect_flags = MAP_DOOR_CONNECT_1 | MAP_DOOR_CONNECT_2
-                                      | MAP_DOOR_CONNECT_3;
+        constexpr map_flag_t door_connect_flags = MAP_DOOR_CONNECT_1
+                                                  | MAP_DOOR_CONNECT_2
+                                                  | MAP_DOOR_CONNECT_3;
         flags &= ~door_connect_flags;
         ASSERT(door_connect < 7);
         if (door_connect & 1)
@@ -379,7 +390,7 @@ struct map_cell
     }
 
 public:
-    uint32_t flags = 0;   // Flags describing the mappedness of this square.
+    map_flag_t flags = 0;   // Flags describing the mappedness of this square.
 private:
     // TODO: shrink enums, shrink/re-order cloud_info and inline it
     dungeon_feature_type _feat:8;

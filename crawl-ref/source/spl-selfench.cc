@@ -226,7 +226,7 @@ spret cast_silence(int pow, bool fail)
 
     you.increase_duration(DUR_SILENCE, 20 + div_rand_round(pow,5)
                             + random2avg(div_rand_round(pow,2), 2), 100);
-    invalidate_agrid(true);
+    invalidate_agrid();
 
     learned_something_new(HINT_YOU_SILENCE);
     return spret::success;
@@ -266,7 +266,7 @@ spret cast_liquefaction(int pow, bool fail)
     mpr("The ground around you becomes liquefied!");
 
     you.increase_duration(DUR_LIQUEFYING, power, 100);
-    invalidate_agrid(true);
+    invalidate_agrid();
     return spret::success;
 }
 

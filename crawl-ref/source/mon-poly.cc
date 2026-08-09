@@ -51,7 +51,7 @@
 
 bool base_feature_is_mimic_at(coord_def c)
 {
-    return map_masked(c, MMT_MIMIC);
+    return testbits(env.pgrid(c), FPROP_MIMIC);
 }
 
 bool current_feature_is_mimic_at(coord_def c)
@@ -79,18 +79,15 @@ void monster_drop_things(monster* mons,
     // Drop weapons and missiles last (i.e., on top), so others pick up.
     for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; --i)
     {
+        const mon_inv_type slot = static_cast<mon_inv_type>(i);
         int item = mons->inv[i];
         if (item == NON_ITEM || !suitable(env.item[item]))
             continue;
 
-        mons->do_unequip_effects(env.item[item], false, true);
-
-        int old_halo = mons->halo_radius();
-        int old_umbra = mons->umbra_radius();
-
         if (testbits(env.item[item].flags, ISFLAG_SUMMONED))
         {
             item_was_destroyed(env.item[item]);
+            mons->unequip(slot);
             destroy_item(item);
         }
         else
@@ -107,9 +104,12 @@ void monster_drop_things(monster* mons,
                 env.item[item].props.erase("autoinscribe");
             }
 
+            mons->unequip(slot);
+
             // If a monster is swimming, the items are ALREADY underwater.
-            if (move_item_to_grid(&item, mons->pos(), mons->swimming())
-                && player_under_penance(GOD_GOZAG)
+            move_item_to_grid(&item, mons->pos(), mons->swimming());
+
+            if (player_under_penance(GOD_GOZAG)
                 // Dropping items into water/lava may have destroyed them
                 && item != NON_ITEM
                 && env.item[item].base_type == OBJ_GOLD
@@ -121,13 +121,7 @@ void monster_drop_things(monster* mons,
                 mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
                 blind_player(10 + random2(8), ETC_GOLD);
             }
-            mons->inv[i] = NON_ITEM;
         }
-
-        int new_halo = mons->halo_radius();
-        int new_umbra = mons->umbra_radius();
-        if (old_halo != new_halo || old_umbra != new_umbra)
-            invalidate_agrid(true);
     }
 
     // If the monster died in a wall, try to push the items out of it.
@@ -338,6 +332,9 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     mon_enchant tempered  = mons->get_ench(ENCH_TEMPERED);
     mon_enchant thrall    = mons->get_ench(ENCH_VAMPIRE_THRALL);
 
+    if (mons->affects_agrid())
+        invalidate_agrid();
+
     mons->number       = 0;
 
     // Note: define_monster(*) will clear out all enchantments! - bwr
@@ -419,6 +416,9 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     // generate a new polymorph set
     mons->props.erase(POLY_SET_KEY);
     init_poly_set(mons);
+
+    if (mons->affects_agrid())
+        invalidate_agrid();
 
     // Try to keep the monster caught in any existing nets, but if the new form
     // is net immune, remember to drop the net on the ground.

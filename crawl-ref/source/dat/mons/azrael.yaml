@@ -15,5 +15,5 @@ ev: 5
 spells: azrael
 intelligence: human
 uses: weapons_armour
-size: large
+size: medium
 shape: humanoid

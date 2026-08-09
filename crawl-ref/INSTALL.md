@@ -431,11 +431,7 @@ MSVC solution files are finicky. Opening the "All Configurations" or
 Troubleshooting tips:
 
 - Make sure Windows Universal C Runtime is installed in MSVC.
-- Make sure the Windows 8.1 SDK is installed in Visual Studio. This
-  doesn't appear to be available in the latest version of Visual Studio.
-  You can download it separately [from microsoft](
-  https://developer.microsoft.com/en-us/windows/downloads/sdk-archive/index-legacy#earlier-releases).
-- Use "Rebuild Solution" to make sure all files are rewritten
+- Make sure a Windows 10 or 11 SDK is installed in Visual Studio.
 - Make sure all projects use `/MD` (or `/MDd` for the debug version)
 - Make sure the appropriate (`/MD` or `/MDd`) CRT libraries are included for
   SDL, crawl, and

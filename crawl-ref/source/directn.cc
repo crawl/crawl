@@ -1067,7 +1067,7 @@ coord_def direction_chooser::find_acceptable_aim(const monster* focus)
     aff_type best_player_aff = harmful_to_player ? AFF_NO : AFF_YES;
     aff_type best_target_aff = AFF_NO;
     aff_type best_friend_aff = valid_friends.empty() ? AFF_NO : AFF_YES;
-    for (radius_iterator ri(focus->pos(), LOS_DEFAULT); ri; ++ri)
+    for (radius_iterator ri(focus->pos(), LOS_NONE); ri; ++ri)
     {
         if (!you.see_cell_no_trans(*ri)
             && grid_distance(you.pos(), *ri) > range)
@@ -1589,7 +1589,6 @@ void direction_chooser::update_previous_target() const
 
     // Reset memory.
     you.prev_targ = MID_NOBODY;
-    you.prev_grd_targ.reset();
 
     // You can't target outside the map
     if (!map_bounds(target()))
@@ -1599,10 +1598,7 @@ void direction_chooser::update_previous_target() const
     // the player's primary target. Remember the initial target instead, unless
     // the player adjusted direction manually.
     if (is_ranged_attack && !player_changed_target && old_m && you.aware_of(*old_m))
-    {
         you.prev_targ = old_m->mid;
-        you.prev_grd_targ = old_m->pos();
-    }
     // Otherwise, if directly targeting a monster, remember that monster
     else
     {
@@ -1643,14 +1639,7 @@ void direction_chooser::update_previous_target() const
                     }
                 }
             }
-
-            // Didn't find any valid monsters in affected area, so remember the spot
-            // itself instead.
-            you.prev_grd_targ = target();
         }
-        // Simple targeting just remembers whatever space you aimed at.
-        else
-            you.prev_grd_targ = target();
     }
 }
 
@@ -2921,7 +2910,7 @@ static void _describe_oos_square(const coord_def& where)
         if (!in_bounds(where))
             dprf("(out of bounds)");
         else
-            dprf("(map: %x)", env.map_knowledge(where).flags);
+            dprf("(map: %lx)", env.map_knowledge(where).flags);
 #endif
         return;
     }
@@ -3529,6 +3518,7 @@ string get_monster_equipment_desc(const monster_info& mi,
 
     item_def* mon_wpn = mi.inv[MSLOT_WEAPON].get();
     item_def* mon_arm = mi.inv[MSLOT_ARMOUR].get();
+    item_def* mon_aux = mi.inv[MSLOT_AUX_ARMOUR].get();
     item_def* mon_shd = mi.inv[MSLOT_SHIELD].get();
     item_def* mon_qvr = mi.inv[MSLOT_MISSILE].get();
     item_def* mon_alt = mi.inv[MSLOT_ALT_WEAPON].get();
@@ -3551,6 +3541,7 @@ string get_monster_equipment_desc(const monster_info& mi,
 #undef uninteresting
 
     vector<string> item_descriptions;
+    vector<string> wearing_descriptions;
 
     // Dancing weapons have all their weapon information in their full_name, so
     // we don't need to add another weapon description here (see Mantis 11887).
@@ -3571,24 +3562,23 @@ string get_monster_equipment_desc(const monster_info& mi,
 
     // as with dancing weapons, don't claim armour echoes 'wear' their armour
     if (mon_arm && mi.type != MONS_ARMOUR_ECHO && mi.type != MONS_HAUNTED_ARMOUR)
-    {
-        const string armour_desc = make_stringf("wearing %s",
-                                                mon_arm->name(DESC_A).c_str());
-        item_descriptions.push_back(armour_desc);
-    }
+        wearing_descriptions.push_back(mon_arm->name(DESC_A).c_str());
 
     if (mon_shd)
-    {
-        const string shield_desc = make_stringf("wearing %s",
-                                                mon_shd->name(DESC_A).c_str());
-        item_descriptions.push_back(shield_desc);
-    }
+        wearing_descriptions.push_back(mon_shd->name(DESC_A).c_str());
+
+    if (mon_aux)
+        wearing_descriptions.push_back(mon_aux->name(DESC_A).c_str());
 
     if (mon_rng)
+        wearing_descriptions.push_back(mon_rng->name(DESC_A).c_str());
+
+    // Merge all of these together to avoid "It is wearing X and wearing Y and wearing Y"
+    if (!wearing_descriptions.empty())
     {
-        const string rng_desc = make_stringf("wearing %s",
-                                             mon_rng->name(DESC_A).c_str());
-        item_descriptions.push_back(rng_desc);
+        item_descriptions.push_back(make_stringf("wearing %s",
+                comma_separated_line(wearing_descriptions.begin(),
+                                     wearing_descriptions.end()).c_str()));
     }
 
     if (mon_qvr)
@@ -3703,7 +3693,7 @@ static void _debug_describe_feature_at(const coord_def &where)
     char32_t ch = get_cell_glyph(where).ch;
     // TODO: expand out some of this in the cell description for console in a
     // more readable fashion
-    dprf("(%d,%d): %s - %s. (%d/%s)%s%s%s%s map: %x%s",
+    dprf("(%d,%d): %s - %s. (%d/%s)%s%s%s%s map: %lx%s",
          where.x, where.y,
          ch == '<' ? "<<" : stringize_glyph(ch).c_str(),
          feature_desc.c_str(),

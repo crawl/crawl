@@ -899,6 +899,13 @@ static void _place_monster_maybe_override_god(monster *mon, monster_type cls,
     }
 }
 
+static void _abort_monster_creation(monster *mon)
+{
+    mon->destroy_inventory();
+    env.mid_cache.erase(mon->mid);
+    mon->reset();
+}
+
 static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                    level_id place,
                                    bool force_pos, bool dont_place)
@@ -1060,15 +1067,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         _place_monster_maybe_override_god(mon, mg.cls, mg.place);
     }
 
-    // Monsters that need halos/silence auras/umbras.
-    if ((mon->holiness() & MH_HOLY)
-         || mg.cls == MONS_SILENT_SPECTRE
-         || mg.cls == MONS_PROFANE_SERVITOR
-         || mg.cls == MONS_DEATH_KNIGHT
-         || mons_is_ghost_demon(mg.cls))
-    {
-        invalidate_agrid(true);
-    }
+    if (mon->affects_agrid())
+        invalidate_agrid();
 
     // If the caller requested a specific colour for this monster, apply
     // it now.
@@ -1228,9 +1228,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             }
             else
             {
-                mon->destroy_inventory();
-                env.mid_cache.erase(mon->mid);
-                mon->reset();
+                _abort_monster_creation(mon);
                 env.mgrid(fpos) = NON_MONSTER;
                 return 0;
             }
@@ -1309,8 +1307,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // as a Fedhas-worshipping player.)
     if (!dont_place && !mon->move_to(fpos, MV_INTERNAL))
     {
-        env.mid_cache.erase(mon->mid);
-        mon->reset();
+        _abort_monster_creation(mon);
         return 0;
     }
 

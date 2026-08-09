@@ -1021,12 +1021,11 @@ aff_type targeter_reach::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targeter_cleave::targeter_cleave(const actor* act, coord_def target, int rng)
+targeter_cleave::targeter_cleave(coord_def target)
 {
-    ASSERT(act);
-    agent = act;
-    origin = act->pos();
-    range = rng;
+    agent = &you;
+    origin = you.pos();
+    range = you.reach_range() - (you.form == transformation::aqua ? 2 : 0);
     set_aim(target);
 }
 
@@ -1034,7 +1033,7 @@ bool targeter_cleave::valid_aim(coord_def a)
 {
     const coord_def delta = a - origin;
     if (delta.rdist() > range)
-        return notify_fail("Your weapon can't reach that far!");
+        return notify_fail("You can't reach that far!");
     if (range == 2)
     {
         const coord_def first_middle(origin + delta / 2);
@@ -1053,16 +1052,22 @@ bool targeter_cleave::set_aim(coord_def target)
 {
     aim = target;
     targets.clear();
-    list<actor*> act_targets;
-    get_cleave_targets(*agent, target, act_targets);
-    while (!act_targets.empty())
-    {
-        actor *potential_target = act_targets.front();
-        if (agent->aware_of(*potential_target))
-            targets.insert(potential_target->pos());
-        act_targets.pop_front();
-    }
+    vector<actor*> cleave_targets = get_player_cleave_targets(target);
+
+    if (monster* mon = monster_at(target))
+        if (you.aware_of(*mon))
+            targets.insert(target);
+
+    for (const actor* targ : cleave_targets)
+        if (you.aware_of(*targ))
+            targets.insert(targ->pos());
+
     return true;
+}
+
+bool targeter_cleave::affects_anything()
+{
+    return !targets.empty();
 }
 
 aff_type targeter_cleave::is_affected(coord_def loc)

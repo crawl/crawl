@@ -404,6 +404,8 @@ void attack::init_attack(int attack_number)
 
         attk_type       = mon_attk.type;
         attk_flavour    = mon_attk.flavour;
+        attk_reach      = mon_attk.reach;
+        attk_cleaves    = mon_attk.cleaves;
 
         // Don't scale damage for YOU_FAULTLESS etc.
         if (attacker->get_experience_level() == 0)
@@ -428,6 +430,8 @@ void attack::init_attack(int attack_number)
     {
         attk_type    = AT_HIT;
         attk_flavour = AF_PLAIN;
+        attk_reach   = 1;
+        attk_cleaves = false;
     }
 }
 
@@ -708,7 +712,7 @@ int attack::inflict_damage(int dam, beam_type flavour)
         defender->props[REAPER_KEY].get_int() = attacker->mid;
     }
     const int final = defender->hurt(responsible, dam, flavour, kill_type,
-                                     "", aux_source.c_str(), false);
+                                     "", aux_source.c_str(), false, true, true);
 
     if (defender->is_monster() && !defender->alive())
         defender->props[ATTACK_KILL_KEY] = true;

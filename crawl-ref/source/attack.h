@@ -68,6 +68,8 @@ public:
     attack_type     attk_type;
     attack_flavour  attk_flavour;
     int             attk_damage;
+    int             attk_reach;
+    bool            attk_cleaves;
 
     const item_def  *weapon;
     brand_type      damage_brand;

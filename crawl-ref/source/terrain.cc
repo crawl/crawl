@@ -1382,7 +1382,7 @@ static void _permanent_terrain_changed(coord_def pos,
     if (nfeat != DNGN_UNSEEN)
         unnotice_feature(level_pos(level_id::current(), pos));
     if (!preserve_mimics)
-        env.level_map_mask(pos) &= ~MMT_MIMIC;
+        env.pgrid(pos) &= ~FPROP_MIMIC;
 }
 
 /**
@@ -1603,6 +1603,10 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
 
     env.grid_colours(pos1) = col2;
     env.grid_colours(pos2) = col1;
+
+    // Swap feature flavours.
+    swap(tile_env.flv(pos1).feat, tile_env.flv(pos2).feat);
+    swap(tile_env.flv(pos1).feat_idx, tile_env.flv(pos2).feat_idx);
 
     // Swap shops.
     if (shop1 && !shop2)
@@ -2268,6 +2272,7 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype, bool expire
     {
         update_terrain_knowledge(pos);
         update_grid_colour_knowledge(pos);
+        redraw_view_at(pos);
     }
 
     return true;

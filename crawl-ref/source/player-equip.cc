@@ -1508,6 +1508,33 @@ void player_equip_set::shift_twohander_to_slot(equipment_slot new_slot)
     }
 }
 
+// Silently swap the weapon from the coglin-offhand slot to the weapon slot,
+// with no equip/unequip effects. This will move a main weapon to offhand if
+// there is one present, and do nothing if there is no offhand weapon.
+void player_equip_set::swap_offhand_weapon_to_main()
+{
+    player_equip_entry* weapon = nullptr;
+    player_equip_entry* offhand = nullptr;
+    for (player_equip_entry& entry : items)
+    {
+        if (entry.is_overflow || !is_weapon(entry.get_item()))
+            continue;
+
+        if (entry.slot == SLOT_WEAPON_OR_OFFHAND)
+            offhand = &entry;
+
+        if (entry.slot == SLOT_WEAPON)
+            weapon = &entry;
+    }
+
+    if (offhand)
+    {
+        offhand->slot = SLOT_WEAPON;
+        if (weapon)
+            weapon->slot = SLOT_WEAPON_OR_OFFHAND;
+    }
+}
+
 /**
  * Recalculate the player's max hp and set the current hp based on the %change
  * of max hp. This has resulted from our having equipped an artefact that
@@ -1664,6 +1691,9 @@ void equip_effect(int item_slot, bool unmeld, bool msg)
     else if (item.base_type == OBJ_JEWELLERY)
         _equip_jewellery_effect(item, unmeld);
 
+    if (item_affects_agrid(item))
+        invalidate_agrid();
+
     if (!unmeld)
         _handle_regen_item_equip(item);
 
@@ -1696,6 +1726,9 @@ void unequip_effect(int item_slot, bool meld, bool msg, bool was_melded)
         _unequip_armour_effect(item, meld, was_melded);
     else if (item.base_type == OBJ_JEWELLERY)
         _unequip_jewellery_effect(item, meld, was_melded);
+
+    if (item_affects_agrid(item))
+        invalidate_agrid();
 
     if (!meld)
         _unequip_maybe_destroy_item(item);
@@ -2366,10 +2399,6 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             }
             break;
 
-        case SPARM_LIGHT:
-            invalidate_agrid(true);
-            break;
-
         }
 
     }
@@ -2498,10 +2527,6 @@ static void _unequip_armour_effect(item_def& item, bool meld, bool was_melded)
     case SPARM_INFUSION:
         if (you.max_magic_points || you.has_mutation(MUT_HP_CASTING))
             mprf("You feel magic leave your %s.", you.hand_name(true).c_str());
-        break;
-
-    case SPARM_LIGHT:
-        invalidate_agrid(true);
         break;
 
     default:

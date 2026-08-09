@@ -14,5 +14,5 @@ ev: 5
 spells: efreet
 intelligence: human
 uses: weapons_armour
-size: large
+size: medium
 shape: humanoid

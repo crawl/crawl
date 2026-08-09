@@ -170,6 +170,7 @@ public:
     bool notified_mp_full;
     bool notified_hp_full;
     bool notified_ancestor_hp_full;
+    bool ancestor_was_injured;
     coord_def pos;
     int direction;
     int turns_passed;

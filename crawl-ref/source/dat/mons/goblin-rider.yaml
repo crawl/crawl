@@ -15,6 +15,6 @@ shout: shout
 intelligence: human
 speed: 15
 energy: {attack: 15}
-uses: starting_equipment
+uses: weapons_armour
 size: large
 shape: humanoid

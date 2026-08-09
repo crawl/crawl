@@ -1774,9 +1774,11 @@ static int _unrand_weight(int unrand_index, int item_level)
 }
 
 static bool _unrand_is_compatible(const unrandart_entry& unrand,
+                                  int unrand_index,
                                   object_class_type aclass,
                                   uint8_t atype,
-                                  bool acquirement)
+                                  bool acquirement,
+                                  monster *mons)
 {
     if (unrand.base_type != aclass)
         return false;
@@ -1789,23 +1791,44 @@ static bool _unrand_is_compatible(const unrandart_entry& unrand,
     required_item.base_type = aclass;
     required_item.sub_type = atype;
 
+    // We do item skill and hands required checks against a stub item with only
+    // the correct type and no unrand properties. This is because:
+    // - Item skills for the Lochaber axe depend on player skills, affecting
+    //   seed stability.
+    // - Handedness using the real item would stop Gyre and Gimble spawning.
     item_def unrand_item;
     unrand_item.base_type = unrand.base_type;
     unrand_item.sub_type = unrand.sub_type;
+    unrand_item.quantity = 1;
 
     if (item_attack_skill(required_item) != item_attack_skill(unrand_item))
         return false;
+
     if (acquirement)
     {
-        return you.hands_reqd(required_item, true)
-               == you.hands_reqd(unrand_item, true);
+        if (you.hands_reqd(required_item, true)
+            != you.hands_reqd(unrand_item, true))
+        {
+            return false;
+        }
     }
-    return basic_hands_reqd(required_item, SIZE_MEDIUM)
-           == basic_hands_reqd(unrand_item, SIZE_MEDIUM);
+    else if (basic_hands_reqd(required_item, SIZE_MEDIUM)
+             != basic_hands_reqd(unrand_item, SIZE_MEDIUM))
+    {
+        return false;
+    }
+
+    // could_wield wants the real unrand to filter non-monster weapons
+    unrand_item.flags |= ISFLAG_UNRANDART;
+    unrand_item.unrand_idx = unrand_index;
+    if (mons && !mons->could_wield(unrand_item))
+        return false;
+
+    return true;
 }
 
 int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level,
-                        bool in_abyss, bool acquirement)
+                        bool in_abyss, bool acquirement, monster *mons)
 {
     int chosen_unrand_idx = -1;
 
@@ -1855,8 +1878,8 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level,
             continue;
         }
 
-        if (!_unrand_is_compatible(*entry, (object_class_type)aclass, atype,
-                                   acquirement))
+        if (!_unrand_is_compatible(*entry, index, (object_class_type)aclass,
+                                   atype, acquirement, mons))
         {
             continue;
         }

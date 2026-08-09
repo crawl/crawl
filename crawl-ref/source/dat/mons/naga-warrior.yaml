@@ -7,7 +7,7 @@ species: naga
 will: 80
 attacks:
  - {type: hit, damage: 24}
- - {type: constrict, flavour: crush, damage: 5}
+ - {type: constrict, flavour: constrict, damage: 5}
 hd: 10
 hp_10x: 750
 ac: 6

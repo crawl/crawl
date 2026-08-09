@@ -231,13 +231,15 @@ def parse_will(s):
     return parse_num(s, 0, 200)
 
 class Attack:
-    def __init__(self, type, damage, flavour):
+    def __init__(self, type, damage, flavour, reach, cleaves):
         self.type = type
         self.damage = damage
         self.flavour = flavour
+        self.reach = reach
+        self.cleaves = cleaves
 
     def format(self):
-        return "{%s, %s, %d}" % (self.type, self.flavour, self.damage)
+        return "{%s, %s, %d, %d, %s}" % (self.type, self.flavour, self.damage, self.reach, self.cleaves)
 
 def parse_attacks(s):
     atks = []
@@ -250,12 +252,14 @@ def parse_attacks(s):
         if 'damage' not in a:
             raise ValueError("missing damage for attack '%s'", a)
         for field in a:
-            if field not in {'type', 'damage', 'flavour'}:
+            if field not in {'type', 'damage', 'flavour', 'reach', 'cleaves'}:
                 raise ValueError("unknown attack field '%s'", field)
         atks.append(Attack(
             type = "AT_" + a['type'].upper(),
             damage = parse_num(a['damage'], 0, 100),
             flavour = "AF_" + a['flavour'].upper() if 'flavour' in a else 'AF_PLAIN',
+            reach = parse_num(a['reach'], 1, 8) if 'reach' in a else 1,
+            cleaves = parse_bool(a['cleaves']) if 'cleaves' in a else 'false',
         ))
     return atks
 

@@ -42,6 +42,7 @@
 #include "mon-info-flag-name.h"
 #include "notes.h"
 #include "options.h"
+#include "output.h"
 #include "player.h"
 #include "player-equip.h"
 #include "religion.h"
@@ -1108,6 +1109,14 @@ player_info::player_info()
     position = coord_def(-1, -1);
 }
 
+// The colour for the stats-panel weapon slot.
+static uint8_t _stats_weapon_colour(const item_def* weapon)
+{
+    if (!weapon)
+        return (uint8_t) get_form()->uc_colour;
+    return (uint8_t) wielded_weapon_colour(*weapon);
+}
+
 /**
  * Send the player properties to the webserver. Any player properties that
  * must be available to the WebTiles client must be sent here through an
@@ -1298,13 +1307,7 @@ void TilesFramework::_send_player(bool force_full)
     for (unsigned int i = 0; i < ENDOFPACK; ++i)
     {
         json_open_object(to_string(i));
-        item_def item = you.inv[i];
-        if (you.corrosion_amount() && is_weapon(item)
-            && you.equipment.find_equipped_slot(item) != SLOT_UNUSED)
-        {
-            item.plus -= 1 * you.corrosion_amount();
-        }
-        _send_item(c.inv[i], item, c.inv_uselessness[i], force_full);
+        _send_item(c.inv[i], you.inv[i], c.inv_uselessness[i], force_full);
         json_close_object(true);
     }
     json_close_object(true);
@@ -1324,8 +1327,10 @@ void TilesFramework::_send_player(bool force_full)
 
     _update_string(force_full, c.unarmed_attack,
                    you.unarmed_attack_name(), "unarmed_attack");
-    _update_int(force_full, c.unarmed_attack_colour,
-                (uint8_t) get_form()->uc_colour, "unarmed_attack_colour");
+    _update_int(force_full, c.weapon_colour, _stats_weapon_colour(weapon),
+                "weapon_colour");
+    _update_int(force_full, c.offhand_weapon_colour,
+                _stats_weapon_colour(offhand), "offhand_weapon_colour");
     _update_int(force_full, c.quiver_available,
                     you.quiver_action.get()->is_valid()
                                 && you.quiver_action.get()->is_enabled(),

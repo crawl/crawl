@@ -247,35 +247,18 @@ void update_item_at(const coord_def &gp, bool wizard)
         return;
 
     item_def eitem;
-    bool more_items = false;
 
     if (you.see_cell(gp) || wizard)
     {
         const int item_grid = wizard ? env.igrid(gp) : you.visible_igrd(gp);
         if (item_grid == NON_ITEM)
             return;
-        eitem = env.item[item_grid];
-
-        // monster(mimic)-owned items have link = NON_ITEM+1+midx
-        if (eitem.link > NON_ITEM)
-            more_items = true;
-        else if (eitem.link < NON_ITEM && !crawl_state.game_is_arena())
-            more_items = true;
 
         if (wizard)
             StashTrack.add_stash(gp);
     }
-    else
-    {
-        const vector<item_def> stash = item_list_in_stash(gp);
-        if (stash.empty())
-            return;
 
-        eitem = stash[0];
-        if (stash.size() > 1)
-            more_items = true;
-    }
-    env.map_knowledge(gp).set_item(eitem, more_items);
+    populate_map_cell_with_item(gp, env.map_knowledge(gp));
 }
 
 static int _get_cloud_variety(cloud_struct& cloud)

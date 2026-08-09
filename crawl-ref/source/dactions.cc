@@ -65,8 +65,8 @@ static const char *daction_names[] =
     "hogs to humans",
 #if TAG_MAJOR_VERSION == 34
     "end spirit howl",
-#endif
     "gold to top of piles",
+#endif
     "bribe timeout",
     "remove Gozag shops",
     "apply Gozag bribes",
@@ -375,9 +375,6 @@ static void _apply_daction(daction_type act)
             if (item.is_type(OBJ_CORPSES, CORPSE_BODY))
                 item.freshness = 1; // thoroughly rotten
         break;
-    case DACT_GOLD_ON_TOP:
-        gozag_move_level_gold_to_top();
-        break;
     case DACT_REMOVE_GOZAG_SHOPS:
     {
         gozag_abandon_shops_on_level();
@@ -400,6 +397,7 @@ static void _apply_daction(daction_type act)
     case DACT_ALLY_UNCLEAN_CHAOTIC:
     case DACT_ALLY_SPELLCASTER:
     case DACT_ALLY_YRED_RELEASE_SOULS:
+    case DACT_GOLD_ON_TOP:
 #endif
     case NUM_DACTION_COUNTERS:
     case NUM_DACTIONS:

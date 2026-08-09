@@ -6,7 +6,7 @@ exp: 161
 will: 40
 attacks:
  - {type: hit, damage: 22}
- - {type: constrict, flavour: crush, damage: 4}
+ - {type: constrict, flavour: constrict, damage: 4}
 hd: 5
 hp_10x: 275
 ac: 6

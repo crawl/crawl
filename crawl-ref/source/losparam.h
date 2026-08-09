@@ -63,17 +63,6 @@ public:
 };
 extern const opacity_no_trans opc_no_trans;
 
-// Like opacity_no_trans, but only fully opaque (e.g. non-cloud) features
-// block.
-class opacity_fully_no_trans : public opacity_func
-{
-public:
-    CLONE(opacity_fully_no_trans)
-
-    opacity_type operator()(const coord_def& p) const override;
-};
-extern const opacity_fully_no_trans opc_fully_no_trans;
-
 // Make immobile monsters block in addition to no_trans.
 // This is used for spellspark servitor AI.
 // XXX: could use opacity_mons_immob? should?
@@ -170,6 +159,16 @@ public:
     opacity_type operator()(const coord_def& p) const override;
 };
 extern const opacity_excl opc_excl;
+
+// Blocks known fully opaque (i.e. non-cloud) cells based on player knowledge.
+class opacity_excl_no_trans : public opacity_func
+{
+public:
+    CLONE(opacity_excl_no_trans)
+
+    opacity_type operator()(const coord_def& p) const override;
+};
+extern const opacity_excl_no_trans opc_excl_no_trans;
 
 class opacity_map_default : public opacity_func
 {

@@ -464,6 +464,11 @@ int monster::wearing(object_class_type obj_type, int sub_type,
         item = mslot_item(MSLOT_ARMOUR);
         if (item && item->is_type(OBJ_ARMOUR, sub_type))
             ret++;
+
+        item = mslot_item(MSLOT_AUX_ARMOUR);
+        if (item && item->is_type(OBJ_ARMOUR, sub_type))
+            ret++;
+
         break;
 
     case OBJ_JEWELLERY:
@@ -523,6 +528,13 @@ int monster::wearing_ego(object_class_type obj_type, int special) const
         {
             ret++;
         }
+
+        item = mslot_item(MSLOT_AUX_ARMOUR);
+        if (item && item->base_type == OBJ_ARMOUR
+            && get_armour_ego_type(*item) == special)
+        {
+            ret++;
+        }
         break;
 
     case OBJ_JEWELLERY:
@@ -551,6 +563,7 @@ int monster::scan_artefacts(artefact_prop_type ra_prop,
         const int weap      = inv[MSLOT_WEAPON];
         const int second    = inv[MSLOT_ALT_WEAPON]; // Two-headed ogres, etc.
         const int armour    = inv[MSLOT_ARMOUR];
+        const int aux       = inv[MSLOT_AUX_ARMOUR];
         const int shld      = inv[MSLOT_SHIELD];
         const int jewellery = inv[MSLOT_JEWELLERY];
 
@@ -566,6 +579,12 @@ int monster::scan_artefacts(artefact_prop_type ra_prop,
             ret += artefact_property(env.item[second], ra_prop);
         }
 
+        if (aux != NON_ITEM && env.item[aux].base_type == OBJ_ARMOUR
+            && is_artefact(env.item[aux]))
+        {
+            ret += artefact_property(env.item[aux], ra_prop);
+        }
+
         if (armour != NON_ITEM && env.item[armour].base_type == OBJ_ARMOUR
             && is_artefact(env.item[armour]))
         {
@@ -578,12 +597,11 @@ int monster::scan_artefacts(artefact_prop_type ra_prop,
             ret += artefact_property(env.item[shld], ra_prop);
         }
 
-        // XXX: Because monster armour slots are awkward, Wiglaf wears his hat
-        //      in the jewelry slot. Since it is always an artefact, this should
-        //      mostly work out fine, but I'd be happy for a better solution in
-        //      future.
-        if (jewellery != NON_ITEM && is_artefact(env.item[jewellery]))
+        if (jewellery != NON_ITEM && env.item[jewellery].base_type == OBJ_JEWELLERY
+            && is_artefact(env.item[jewellery]))
+        {
             ret += artefact_property(env.item[jewellery], ra_prop);
+        }
     }
 
     return ret;
@@ -1023,7 +1041,7 @@ static void _destroy_mimic_feature(const coord_def &pos)
 
     unnotice_feature(level_pos(level_id::current(), pos));
     env.grid(pos) = DNGN_FLOOR;
-    env.level_map_mask(pos) &= ~MMT_MIMIC;
+    env.pgrid(pos) &= ~FPROP_MIMIC;
     set_terrain_changed(pos);
     remove_markers_and_listeners_at(pos);
 
@@ -1046,7 +1064,7 @@ void discover_mimic(const coord_def& pos)
     // If the feature has been destroyed, don't create a floor mimic.
     if (feature_mimic && !feat_is_mimicable(feat, false))
     {
-        env.level_map_mask(pos) &= ~MMT_MIMIC;
+        env.pgrid(pos) &= ~FPROP_MIMIC;
         return;
     }
 
@@ -1133,6 +1151,43 @@ size_type mons_class_body_size(monster_type mc)
     // For normal monsters, base_type is set to type in the constructor.
     const monsterentry *e = get_monster_data(mc);
     return e ? e->size : SIZE_MEDIUM;
+}
+
+size_type mons_class_body_size(monster_type mc, size_part_type type, int slime_size)
+{
+    if (mons_is_rider(mc))
+        return mons_class_body_size(mons_rider_type(mc), type);
+    else if (mc == MONS_SLIME_CREATURE)
+    {
+        // Slime creature size is increased by the number merged.
+        if (mc == MONS_SLIME_CREATURE)
+        {
+            if (slime_size == 2)
+                return SIZE_MEDIUM;
+            else if (slime_size == 3)
+                return SIZE_LARGE;
+            else if (slime_size >= 4) // sizes 4 & 5
+                return SIZE_GIANT;
+        }
+    }
+
+    const size_type size = mons_class_body_size(mc);
+    if (type == PSIZE_TORSO)
+    {
+        switch (mc)
+        {
+            case MONS_NAGA:
+            case MONS_CENTAUR:
+            case MONS_YAKTAUR:
+            case MONS_ARACHNE:
+                return SIZE_MEDIUM;
+
+            default:
+                return size;
+        }
+    }
+    else
+        return size;
 }
 
 int max_corpse_chunks(monster_type mc)
@@ -1689,11 +1744,13 @@ bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
     if (mon.type == MONS_ORB_GUARDIAN && !player_on_orb_run())
         return false;
 
-    // If this is the entrance to a portal vault (or another region of Pandemonium)
-    // only friendly monsters can traverse this.
+    // If this is the entrance to a portal vault, a region of Pandemonium, or
+    // the Abyss, only friendly monsters can traverse this.
     if (!mon.friendly()
         && (feat_is_portal_entrance(stair) || stair == DNGN_TRANSIT_PANDEMONIUM
-                                           || stair == DNGN_ENTER_PANDEMONIUM))
+                                           || stair == DNGN_ENTER_PANDEMONIUM
+                                           || stair == DNGN_ABYSSAL_STAIR
+                                           || stair == DNGN_ENTER_ABYSS))
     {
         return false;
     }
@@ -1773,8 +1830,7 @@ static int _downscale_zombie_damage(int damage)
 // Do not include AF_PLAIN, we want that to be overwritten for spectrals
 // and simulacra
 static const set<attack_flavour> allowed_zombie_af = {
-    AF_REACH,
-    AF_CRUSH,
+    AF_CONSTRICT,
     AF_TRAMPLE,
     AF_DRAG,
     AF_DOOM,
@@ -1813,8 +1869,7 @@ static mon_attack_def _downscale_zombie_attack(const monster& mons,
  *
  * @param facet     The facet in question; e.g. BF_STING.
  * @param tier      The tier of the mutant beast; e.g.
- * @return          The attack corresponding to the given facet; e.g. BT_LARVAL
- *                  { AT_STING, AF_REACH_STING, 10 }. Scales with HD.
+ * @return          The attack corresponding to the given facet. Scales with HD.
  *                  For facets that don't provide an attack, is { }.
  */
 static mon_attack_def _mutant_beast_facet_attack(int facet, int tier)
@@ -1823,11 +1878,11 @@ static mon_attack_def _mutant_beast_facet_attack(int facet, int tier)
     switch (facet)
     {
         case BF_STING:
-            return { AT_STING, AF_REACH_STING, dam };
+            return { AT_STING, AF_POISON, dam, 2};
         case BF_OX:
             return { AT_TRAMPLE, AF_TRAMPLE, dam };
         case BF_WEIRD:
-            return { AT_CONSTRICT, AF_CRUSH, dam * 2 / 5};
+            return { AT_CONSTRICT, AF_CONSTRICT, dam * 2 / 5};
         default:
             return { };
     }
@@ -1890,7 +1945,7 @@ static mon_attack_def _hepliaklqana_ancestor_attack(const monster &mon,
     return { AT_HIT, AF_PLAIN, dam };
 }
 
-/** Get the attack type, attack flavour and damage for a monster attack.
+/** Get the attack type, attack flavour, range, and damage for a monster attack.
  *
  * @param mon The monster to look at.
  * @param attk_number Which attack number to get.
@@ -2063,6 +2118,12 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
 
         if (attk.type == AT_CHERUB)
             attk.type = random_choose(AT_HEADBUTT, AT_BITE, AT_PECK, AT_GORE);
+
+        if (attk.flavour == AF_UGLY_THING)
+        {
+            attk.flavour = random_choose(AF_FIRE, AF_COLD, AF_ELEC, AF_POISON,
+                                         AF_ACID, AF_ANTIMAGIC);
+        }
     }
 
     // Slime creature attacks are multiplied by the number merged.
@@ -2168,7 +2229,7 @@ string mon_attack_name(attack_type attack, bool with_object)
  */
 bool flavour_triggers_damageless(attack_flavour flavour)
 {
-    return flavour == AF_CRUSH
+    return flavour == AF_CONSTRICT
         || flavour == AF_FLOOD
         || flavour == AF_PAIN
         || flavour == AF_PURE_FIRE
@@ -2222,38 +2283,25 @@ int flavour_damage(attack_flavour flavour, int HD, bool random)
         //       and is a lie against non-player targets.
         //       Actual attacks call actor->splash_with_acid() directly.
         case AF_ACID:
-        case AF_REACH_TONGUE:
             if (random)
                 return roll_dice(4, 3);
             return 12;
-        // Just show max damage: this number's only used for display.
+
+        // Just show max damage: these numbers are only used for attack descriptions.
         case AF_AIRSTRIKE:
             return pow(HD + 1, 1.2) * 12 / 6;
-        case AF_REACH_CLEAVE_UGLY:
+        case AF_UGLY_THING:
             return HD * 3;
+        case AF_POISON:
+            return HD * 4;
+        case AF_MINIPARA:
+            return HD * 2;
+        case AF_POISON_STRONG:
+            return HD * 13 / 2;
+        case AF_POISON_PARALYSE:
+            return HD * 5 / 2;
         default:
             return 0;
-    }
-}
-
-/**
- * Does a monster attacking with this flavour reach as if using a polearm?
- *
- * @param flavour   The attack flavour in question; e.g. AF_COLD.
- * @return          Whether the flavour grants inherent reach.
- */
-bool flavour_has_reach(attack_flavour flavour)
-{
-    switch (flavour)
-    {
-        case AF_REACH:
-        case AF_REACH_STING:
-        case AF_REACH_TONGUE:
-        case AF_RIFT:
-        case AF_REACH_CLEAVE_UGLY:
-            return true;
-        default:
-            return false;
     }
 }
 
@@ -3971,6 +4019,11 @@ mon_inv_type equip_slot_to_mslot(equipment_slot eq)
     case SLOT_OFFHAND:      return MSLOT_SHIELD;
     case SLOT_RING:
     case SLOT_AMULET:       return MSLOT_JEWELLERY;
+    case SLOT_CLOAK:
+    case SLOT_BOOTS:
+    case SLOT_BARDING:
+    case SLOT_GLOVES:
+    case SLOT_HELMET:       return MSLOT_AUX_ARMOUR;
     default: return NUM_MONSTER_SLOTS;
     }
 }

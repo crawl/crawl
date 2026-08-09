@@ -4,6 +4,7 @@
 **/
 
 #include <functional>
+#include <unordered_map>
 
 #include "AppHdr.h"
 
@@ -1043,11 +1044,22 @@ static monster* _retrieve_saved_blorkula(monster& bat)
 
 static void _blorkula_bat_death(monster& bat, killer_type killer, int killer_index)
 {
-    // Check if any other bats are still alive. If they are not, formally kill Blorkula.
-    for (monster_iterator mi; mi; ++mi)
+    // Check if any other bats are still around. If they are not, formally kill
+    // Blorkula.
+    //
+    // In cases like pain bond, we need to be careful to check monsters on zero
+    // HP, so that we don't call this multiple times. We do this by checking
+    // for not-yet-cleaned-up (but possibly dead) bats, so that the last bat we
+    // call monster_die on will trigger Blorkula's death.
+    for (int i = 0; i < MAX_MONSTERS; ++i)
     {
-        if (mi->type == MONS_VAMPIRE_BAT && *mi != &bat && mi->props.exists(BLORKULA_REVIVAL_TIMER_KEY))
+        monster& other = env.mons[i];
+        if (!invalid_monster(&other)
+            && other.type == MONS_VAMPIRE_BAT && &other != &bat
+            && other.props.exists(BLORKULA_REVIVAL_TIMER_KEY))
+        {
             return;
+        }
     }
 
     // No other bats left, so pass this death onto Blorkula as 'real'
@@ -2529,6 +2541,28 @@ item_def* monster_die(monster& mons, killer_type killer,
     if (testbits(mons.flags, MF_PENDING_REVIVAL))
         return nullptr;
 
+    // If this is a tentacle segment, kill the parent instead.
+    if (mons_is_tentacle_segment(mons.type) && killer != KILL_TENTACLE_CLEANUP)
+    {
+        monster* parent = monster_by_mid(mons.tentacle_connect);
+        if (parent && parent->alive())
+        {
+            // Plumb through some information about the death that gets stamped
+            // on the monster.
+            if (testbits(mons.flags, MF_EXPLODE_KILL))
+                parent->flags |= MF_EXPLODE_KILL;
+            if (mons.props.exists(ATTACK_KILL_KEY))
+                parent->props[ATTACK_KILL_KEY] = true;
+
+            // Set this monster's HP to 1 so that the parent cleans it up.
+            mons.hit_points = 1;
+
+            monster_die(*parent, killer, killer_index, silent, mount_death, reset);
+
+            return nullptr;
+        }
+    }
+
     const bool was_visible = you.can_see(mons);
 
     // If a monster was banished to the Abyss and then killed there,
@@ -3009,10 +3043,15 @@ item_def* monster_die(monster& mons, killer_type killer,
                     "The tentacle is hauled back through the portal!" :
                     "With a roar, the tentacle is hauled back through the portal!");
             }
-            silent = true;
-            for (map_marker* mark : env.markers.get_markers_at(mons.pos(), MAT_MALIGN_GATEWAY))
+            for (map_marker* mark : env.markers.get_all(MAT_MALIGN_GATEWAY))
+            {
                 if (dynamic_cast<map_malign_gateway_marker*>(mark)->tentacle == mons.mid)
+                {
+                    revert_terrain_change(mark->pos, TERRAIN_CHANGE_MALIGN_GATEWAY);
                     env.markers.remove(mark);
+                }
+            }
+            silent = true;
         }
     }
     else if (mons.type == MONS_DROWNED_SOUL)
@@ -3431,22 +3470,9 @@ item_def* monster_die(monster& mons, killer_type killer,
                 mpr("The starspawn's tentacles wither and die.");
         }
     }
-    else if (mons_is_tentacle_or_tentacle_segment(mons.type)
-             && killer != KILL_TENTACLE_CLEANUP
-                 || mons.type == MONS_ELDRITCH_TENTACLE
-                 || mons.type == MONS_SNAPLASHER_VINE)
-    {
-        // XXX: Make sure this segment looks dead, or destroy_tentacle may
-        //      reset it before this function completes
-        mons.hit_points = -1;
+    // Clean up the tentacle's segments.
+    else if (mons_is_tentacle(mons.type) && killer != KILL_TENTACLE_CLEANUP)
         destroy_tentacle(&mons);
-    }
-    else if (mons.type == MONS_ELDRITCH_TENTACLE_SEGMENT
-             && killer != KILL_TENTACLE_CLEANUP)
-    {
-       monster_die(*monster_by_mid(mons.tentacle_connect), killer,
-                   killer_index, silent, mount_death);
-    }
     // Give the treant a last chance to release its hornets if it is killed in a
     // single blow from above half health
     else if (mons.type == MONS_SHAMBLING_MANGROVE && real_death)
@@ -3715,20 +3741,28 @@ void end_flayed_effect(monster* ghost)
     }
 }
 
-// Monsters who need to be reset at the end of the turn.
-static vector<monster*> _pending_reset;
+// Monsters who need to be reset at the end of the turn, with their mid.
+// We only reset those whose mid still matches at flush time, so it is
+// safe to reset these early.
+static unordered_map<monster*, mid_t> _pending_reset;
 
 // Reset the slots of every monster detached by monster_cleanup().
 void flush_monster_reset()
 {
-    for (monster* mons : _pending_reset)
-        mons->reset();
+    for (const auto &p : _pending_reset)
+    {
+        monster *mons = p.first;
+        // Check the monster we were planning to reset is still in the slot -
+        // if someone else has taken care of the reset, do nothing.
+        if (mons->mid == p.second)
+            mons->reset();
+    }
     _pending_reset.clear();
 }
 
 void cancel_pending_monster_reset(monster* mons)
 {
-    erase_val(_pending_reset, mons);
+    _pending_reset.erase(mons);
 }
 
 // Drop pending resets without running them, for when the level (and its whole
@@ -3760,13 +3794,8 @@ void monster_cleanup(monster* mons, bool reset)
     }
 
     // Monsters' haloes should be removed when they die.
-    if (mons->halo_radius() >= 0
-        || mons->umbra_radius() >= 0
-        || mons->silence_radius() >= 0
-        || mons->liquefying_radius() >= 0)
-    {
+    if (mons->affects_agrid())
         invalidate_agrid();
-    }
 
     if (mons->type == MONS_PLATINUM_PARAGON && mons->was_created_by(you, SPELL_PLATINUM_PARAGON))
         you.duration[DUR_PARAGON_ACTIVE] = 0;
@@ -3814,7 +3843,7 @@ void monster_cleanup(monster* mons, bool reset)
 
     // Mark the monster for reset next cycle.
     mons->flags |= MF_PENDING_RESET;
-    _pending_reset.push_back(mons);
+    _pending_reset[mons] = mons->mid;
 }
 
 // Simulates the death of one 'half' of a given rider monster, while leaving the

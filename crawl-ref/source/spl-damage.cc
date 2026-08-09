@@ -1197,6 +1197,14 @@ set<coord_def> permafrost_targets(const actor &caster)
 spret cast_permafrost_eruption(actor &caster, int pow, bool fail)
 {
     set<coord_def> maybe_targets = permafrost_targets(caster);
+
+    if (maybe_targets.empty())
+    {
+        if (caster.is_player())
+            mpr("You can't see anything to fire at!");
+        return spret::abort;
+    }
+
     if (caster.is_player())
     {
         set<coord_def> maybe_victims(maybe_targets.begin(), maybe_targets.end());
@@ -1214,13 +1222,6 @@ spret cast_permafrost_eruption(actor &caster, int pow, bool fail)
     }
 
     fail_check();
-
-    if (maybe_targets.empty())
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return spret::success;
-    }
-
 
     const coord_def targ = *random_iterator(maybe_targets);
     mpr("Bitter cold erupts, blasting rock from the ceiling!");
@@ -1974,8 +1975,6 @@ dice_def scorch_damage(int pow, bool random)
 
 spret cast_scorch(const actor& agent, int pow, bool fail)
 {
-    fail_check();
-
     const int range = spell_range(SPELL_SCORCH, &agent);
     auto targeter = make_unique<targeter_scorch>(agent, range);
     actor *targ = nullptr;
@@ -1986,9 +1985,12 @@ spret cast_scorch(const actor& agent, int pow, bool fail)
 
     if (!targ)
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return spret::success;
+        if (agent.is_player())
+            mpr("You can't see anything to scorch!");
+        return spret::abort;
     }
+
+    fail_check();
 
     const int base_dam = scorch_damage(pow, true).roll();
     const int post_ac_dam = max(0, targ->apply_ac(base_dam));
@@ -3221,6 +3223,13 @@ spret cast_plasma_beam(int pow, const actor &agent, bool fail, bool is_tracer)
 {
     vector<coord_def> targets = plasma_beam_targets(agent, pow);
 
+    if (targets.empty())
+    {
+        if (!is_tracer && agent.is_player())
+            mpr("You can't see anything to fire at!");
+        return spret::abort;
+    }
+
     if (is_tracer)
     {
         for (coord_def target : targets)
@@ -3246,12 +3255,6 @@ spret cast_plasma_beam(int pow, const actor &agent, bool fail, bool is_tracer)
 
     fail_check();
 
-    if (targets.empty())
-    {
-        if (you.can_see(agent))
-            canned_msg(MSG_NOTHING_HAPPENS);
-        return spret::success;
-    }
     auto target = *random_iterator(targets);
     _fire_plasma_beam_at(agent, pow, target, false);
     return spret::success;

@@ -70,6 +70,7 @@ game_state::game_state()
       minor_version(-1), save_rcs_version(),
       nonempty_buffer_flush_errors(false),
       last_builder_error_fatal(false),
+      known_unlinked_items(),
       mon_act(nullptr)
 {
     reset_cmd_repeat();

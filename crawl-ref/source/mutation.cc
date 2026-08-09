@@ -2076,7 +2076,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
         case MUT_SILENCE_AURA:
         case MUT_FOUL_SHADOW:
-            invalidate_agrid(true);
+            invalidate_agrid();
             break;
 
         case MUT_EVOLUTION:
@@ -2235,7 +2235,7 @@ bool _delete_single_mutation_level(mutation_type mutat,
 
     case MUT_SILENCE_AURA:
     case MUT_FOUL_SHADOW:
-        invalidate_agrid(true);
+        invalidate_agrid();
         break;
 
     case MUT_EVOLUTION:
@@ -2809,6 +2809,13 @@ string mutation_desc(mutation_type mut, int level, bool colour,
 static string _future_mutation_description(mutation_type mut_type, int levels)
 {
     levels += you.innate_mutation[mut_type];
+
+    // XXX: In wizmode, if you raise and then lower your level, gained innate
+    //      mutations are not cleaned up, which can result in trying to query
+    //      a level 4+ mutation here, which will crash. Fixing the former problem
+    //      would be nicest, but is much harder, so let's at least not crash.
+    levels = min(levels, 3);
+
     string mut_desc = mutation_desc(mut_type, levels);
 
     // If we have a custom message defined for this future mutation, use it.

@@ -6,7 +6,7 @@ will: invuln
 attacks:
  - {type: hit, flavour: swoop, damage: 1}
  - {type: hit, flavour: flank, damage: 1}
- - {type: hit, flavour: crush, damage: 1}
+ - {type: hit, flavour: constrict, damage: 1}
 hd: 10
 hp_10x: 350
 ac: 5

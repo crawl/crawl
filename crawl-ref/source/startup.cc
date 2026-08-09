@@ -837,6 +837,7 @@ void UIStartupMenu::on_show()
         else if (keyn == '\t' && _game_defined(defaults))
         {
             ng_choice = defaults;
+            forget_weapon_if_random(ng_choice);
             return done = true;
         }
         else if (keyn == '?')
