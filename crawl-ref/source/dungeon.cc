@@ -3274,6 +3274,23 @@ static void _build_dungeon_level()
                 for (vault_place_iterator vi(*vp); vi; ++vi)
                 {
                     const coord_def local = *vi - vp->pos;
+                    if (vp->map.has_tag("dcchili_d6_lava_ice_cave"))
+                        continue;
+
+                    if (vp->map.has_tag("dcchili_d6_volcano_core"))
+                    {
+                        const int dx = abs(local.x - vp->size.x / 2);
+                        const int dy = abs(local.y - vp->size.y / 2);
+                        const bool in_hot_core = dx <= 10 && dy <= 9
+                                                 && dx + dy <= 16;
+                        if (in_hot_core)
+                        {
+                            tile_env.flv(*vi).wall = hot_wall;
+                            tile_env.flv(*vi).floor = hot_floor;
+                        }
+                        continue;
+                    }
+
                     const bool in_buffer = local.x >= 18 && local.x <= 26
                                            && local.y >= 16 && local.y <= 22;
                     if (in_buffer)
