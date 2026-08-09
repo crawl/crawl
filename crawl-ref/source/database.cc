@@ -62,7 +62,7 @@ public:
 
 // Convenience functions for (read-only) access to generic
 // berkeley DB databases.
-static void _store_text_db(const string &in, DBM *db, bool is_direct_translation);
+static void _store_text_db(const string &in, DBM *db, bool value_translates_key);
 
 static string _query_database(TextDB &db, string key, bool canonicalise_key,
                               bool run_lua, bool untranslated = false);
@@ -218,7 +218,7 @@ void TextDB::init()
 {
     if (Options.language == lang_t::EN && string(_db_name) == "translate")
     {
-        // don't initialise the translate db if language is English
+        // No need for the translate db if language is English
         return;
     }
 
@@ -325,7 +325,7 @@ void TextDB::_regenerate_db()
 
     // in the "translate" db, the key is an English string rather than an
     // internal id, and the value is a translation of the key
-    bool is_direct_translation = string(_db_name) == "translate";
+    bool value_translates_key = string(_db_name) == "translate";
     string ts;
     if (!(_db = dbm_open(db_path.c_str(), O_RDWR | O_CREAT, 0660)))
         end(1, true, "Unable to open DB: %s", db_path.c_str());
@@ -340,7 +340,7 @@ void TextDB::_regenerate_db()
         {
             snprintf(buf, sizeof(buf), ":%" PRId64, (int64_t)mtime);
             ts += buf;
-            _store_text_db(full_input_path, _db, is_direct_translation);
+            _store_text_db(full_input_path, _db, value_translates_key);
         }
     }
     _add_entry(_db, "TIMESTAMP", ts);
@@ -524,7 +524,7 @@ static void _add_entry(DBM *db, const string &k, string &v)
         end(1, true, "Error storing %s", k.c_str());
 }
 
-static void _parse_text_db(LineInput &inf, DBM *db, bool is_direct_translation)
+static void _parse_text_db(LineInput &inf, DBM *db, bool value_translates_key)
 {
     string key;
     string value;
@@ -555,14 +555,14 @@ static void _parse_text_db(LineInput &inf, DBM *db, bool is_direct_translation)
             key = line;
             trim_string(key);
             // If the key is the English string to translate, don't mess with it
-            if (!is_direct_translation)
+            if (!value_translates_key)
                 lowercase(key);
         }
         else
         {
             trim_string_right(line);
             value += line;
-            if (!is_direct_translation)
+            if (!value_translates_key)
                 value += "\n";
         }
     }
@@ -571,13 +571,13 @@ static void _parse_text_db(LineInput &inf, DBM *db, bool is_direct_translation)
         _add_entry(db, key, value);
 }
 
-static void _store_text_db(const string &in, DBM *db, bool is_direct_translation)
+static void _store_text_db(const string &in, DBM *db, bool value_translates_key)
 {
     UTF8FileLineInput inf(in.c_str());
     if (inf.error())
         end(1, true, "Unable to open input file: %s", in.c_str());
 
-    _parse_text_db(inf, db, is_direct_translation);
+    _parse_text_db(inf, db, value_translates_key);
 }
 
 static string _chooseStrByWeight(const string &entry, int fixed_weight = -1)
