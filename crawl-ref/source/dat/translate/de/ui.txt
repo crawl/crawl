@@ -83,7 +83,6 @@ Str:
 Stä:
 %%%%
 # Intelligence = Intelligenz
-%%%%
 Int:
 Int:
 %%%%
