@@ -216,6 +216,12 @@ bool TextDB::open_db()
 
 void TextDB::init()
 {
+    if (Options.language == lang_t::EN && string(_db_name) == "translate")
+    {
+        // don't initialise the translate db if language is English
+        return;
+    }
+
     if (Options.lang_name && !_parent)
     {
         translation = new TextDB(this);
