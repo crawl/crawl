@@ -1372,19 +1372,18 @@ MONS:   pile of debris
 KMONS:  N = Medusa
 KFEAT:  A = granite_statue
 KFEAT:  Z = fountain_sparkling
-MARKER: N = lua:MonPropsMarker:new { medusa_marker="medusa_marker" }
 MARKER: A = lua:monster_on_death { \
-            target="medusa_marker", \
+            death_monster="Medusa", \
             new_monster="generate_awake adder", \
             message_seen="The adders awaken!", \
             message_unseen="You hear a commotion.", \
-            master_name="adder", veto_destroy="veto" }
+            master_name="medusa", veto_destroy="veto" }
 MARKER: Z = lua:monster_on_death { \
-            target="medusa_marker", \
+            death_monster="Medusa", \
             new_monster="generate_awake water moccasin", \
             message_seen="A water moccasin emerges from the fountain!", \
             message_unseen="You hear an angry hiss.", \
-            master_name="water moccasin", veto_destroy="veto" }
+            master_name="medusa", veto_destroy="veto" }
 SUBST:  + : 1++++
 TILE:   c = wall_stone_smooth
 TILE:   G = dngn_crumbled_column
