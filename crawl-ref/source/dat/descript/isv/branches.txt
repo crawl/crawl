@@ -231,26 +231,25 @@ stolen possessions are sealed away in these realms of reconciliation.
 %%%%
 Sewer
 
-Every inhabited place needs to dispose of its waste products. The Dungeon too
-has its stinking sewers and drains, full of filthy water and ignored by most
-but used as hideaways by the disgusting and the desperate. Old tales speak of
-dangerous creatures stalking through the foul-smelling green water, preying on
-each other without mercy. The tales also allude to valuable items accidentally
-washed into the drainage tunnels, forgotten and left to grow mouldy in the damp
-caverns.
+Vśako obyvajemo město potrěbuje utilizacijų odpadov. V Podzemju tož sųt smrådne
+kanalizacije i spusty, pȯlne nečistymi vodami, ktore vęćiństvo ignorujųt, ale
+koristajųt mŕzki i beznadějne. Stare bajki rěkųt o nebezpečnyh stvorah, blųdęćih
+po smrådnoj zelenoj vodě, bezpoščędno lovęćih jedin drugogo. Bajky takože
+spominajųt o cěnnyh prědmetah, slučajno izkydnųte v spustne tunely, zabezpamęćene
+i ostavjene plěsnjevěti v vȯlgkyh jamah.
 %%%%
 Ossuary
 
-The ossuary is a small tomb containing the remains and grave goods of some
-distant relatives of the pharaohs, along with the corpses of their retainers
-and household animals. It is undoubtedly riddled with many traps, and its
-undead denizens are unlikely to take kindly to looting.
+Kostnica jest mala kripta, ktora sȯdŕživaje ostanky i pogrebaljne prědmety
+něktoryh daljnyh srodnikov faraonov, a takože mŕtve tělesa jih slugov i
+domašnjih zvěrij. Nesųmněno, ona jest napȯlnjena množstvom pastij i jej
+nemŕtvi obyvatelji, věrojętno, ne bųdųt blågosklonni k graběžu.
 %%%%
 Bailey
 
-The bailey is the occupied and well-guarded fortress of a ruthless warlord.
-The treasures within are protected by both physical barriers and large numbers
-of well-armed humanoid warriors.
+Dvor Zamka jest okupovana i dobro ohranjajema tvŕđa okrutnogo bojenačelnika.
+Bogatstva vnutri sųt zaščičene kako fizičnymi ogråđeńjami, tako i velikojų kolikost́jų
+dobro vȯorųženymi humanoidnymi bojevnikami.
 %%%%
 Ice Cave
 
