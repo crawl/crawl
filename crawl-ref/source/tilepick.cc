@@ -3117,8 +3117,8 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
     case MI_LARGE_ROCK:     return TILE_MI_LARGE_ROCK;
     case MI_THROWING_NET:   return TILE_MI_THROWING_NET;
     case MI_HARPOON:        return TILE_MI_HARPOON;
-    case MI_DISCUS:         return TILE_MI_DISCUS;
     case MI_THROWING_CLUB:  return TILE_MI_THROWING_CLUB;
+    case MI_THROWING_KNIFE: return TILE_MI_THROWING_KNIFE;
     case MI_SHURIKEN:       return TILE_MI_SHURIKEN;
     case MI_BOOMERANG:
         switch (brand)
@@ -3141,7 +3141,7 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
     case MI_KUNAI:
         switch (brand)
         {
-        default:                return TILE_MI_DART_MAGIC;
+        default:                return TILE_MI_KUNAI;
         case 0:                 return TILE_MI_KUNAI;
         case SPMSL_FRENZY:      return TILE_MI_KUNAI_FRENZY;
         case SPMSL_BLINDING:    return TILE_MI_KUNAI_BLINDING;
@@ -3158,18 +3158,18 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         case SPMSL_SILVER:   return TILE_MI_JAVELIN_SILVER;
         }
 
-    case MI_THROWING_KNIFE:
-        switch (brand)
-        {
-        default:             return TILE_MI_THROWING_KNIFE;
-        case SPMSL_POISONED: return TILE_MI_THROWING_KNIFE_P;
-        }
-
     case MI_CHAKRAM:
         switch (brand)
         {
         default:             return TILE_MI_CHAKRAM;
         case SPMSL_SACRED:   return TILE_MI_CHAKRAM_SACRED;
+        }
+
+    case MI_DISCUS:
+        switch (brand)
+        {
+        default:             return TILE_MI_DISCUS;
+        case SPMSL_STORMS:   return TILE_MI_DISCUS_STORMS;
         }
 
     default:

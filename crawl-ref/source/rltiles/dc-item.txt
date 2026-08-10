@@ -524,6 +524,7 @@ effect/chakram0 MI_CHAKRAM0
 
 %rim 0
 discus MI_DISCUS
+discus_storms MI_DISCUS_STORMS
 # flying discus
 effect/discus0 MI_DISCUS0
 

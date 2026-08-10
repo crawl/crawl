@@ -899,7 +899,7 @@ static const missile_def Missile_prop[] =
     { MI_JAVELIN,       "javelin",          12, 20, 30, 16 },
     { MI_THROWING_NET,  "throwing net",     0, 0,  30, 10 },
     { MI_BOOMERANG,     "boomerang",        8, 20, 20, 14 },
-    { MI_THROWING_KNIFE,"throwing knife",   5, 12, 20, 14 },
+    { MI_THROWING_KNIFE,"throwing knife",   6, 16, 20, 14 },
     { MI_HARPOON,       "harpoon",          19, 18, 30, 20 },
     { MI_CHAKRAM,       "chakram",          14, 20, 30, 17 },
     { MI_DISCUS,        "discus",           12, 20, 30, 16 },

@@ -608,26 +608,22 @@ static special_missile_type _determine_missile_brand(const item_def& item,
 
 bool is_missile_brand_ok(int type, int brand, bool strict)
 {
-    // Rocks can't normally be branded.
-    if ((type == MI_STONE || type == MI_LARGE_ROCK || type == MI_HARPOON)
-        && brand != SPMSL_NORMAL
-        && strict)
-    {
-        return false;
-    }
-
-    // Never generates, only used for chaos-branded missiles.
-    if (brand == SPMSL_FLAME || brand == SPMSL_FROST)
-        return false;
-
-    // In contrast, darts should always be branded.
-    // And all of these brands save poison are unique to darts.
     switch (brand)
     {
+    case SPMSL_FLAME:
+    case SPMSL_FROST:
+    case SPMSL_ACID:
+    case SPMSL_PAIN:
+    case SPMSL_DISTORTION:
+    case SPMSL_VAMPIRISM:
+    case SPMSL_ANTIMAGIC:
+    case SPMSL_REAPING:
+    case SPMSL_HOLY_WRATH:
+        //used internally for chaos or sacred branded missiles - do not allow
+        return false;
+
     case SPMSL_POISONED:
-        if (type == MI_DART || type == MI_THROWING_KNIFE)
-            return true;
-        break;
+        return type == MI_DART || !strict;
 
     case SPMSL_CURARE:
 #if TAG_MAJOR_VERSION == 34
@@ -644,39 +640,22 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
         // possible on ex-pies
         return type == MI_KUNAI || (type == MI_BOOMERANG && !strict);
 
-    default:
-        if (type == MI_DART)
-            return false;
-    }
-
-    // Everything else doesn't matter.
-    if (brand == SPMSL_NORMAL)
-        return true;
-
-    // In non-strict mode, everything other than darts is mostly ok.
-    if (!strict)
-        return true;
-
-    // Not a missile?
-    if (type == 0)
-        return true;
-
-    // Specifics
-    switch (brand)
-    {
-    case SPMSL_POISONED:
-        return false;
-    case SPMSL_CHAOS:
-        return type == MI_BOOMERANG || type == MI_JAVELIN;
-    case SPMSL_SILVER:
-        return type == MI_JAVELIN || type == MI_DISCUS;
     case SPMSL_SACRED:
-        return type == MI_CHAKRAM;
-    default: break;
-    }
+        return type == MI_CHAKRAM || !strict;
 
-    // Assume no, if we've gotten this far.
-    return false;
+    case SPMSL_SILVER:
+        return type == MI_JAVELIN || !strict;
+
+    case SPMSL_STORMS:
+        return type == MI_DISCUS || !strict;
+
+    case SPMSL_CHAOS:
+        return type == MI_BOOMERANG || type == MI_JAVELIN || !strict;
+
+    case SPMSL_NORMAL:
+    default:
+        return type != MI_DART;
+    }
 }
 
 static void _generate_missile_item(item_def& item, int force_type,
