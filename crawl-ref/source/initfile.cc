@@ -3491,7 +3491,7 @@ sound_mapping::sound_mapping(const string &s)
         mprf(MSGCH_ERROR, "Options error: invalid sound mapping '%s'", s.c_str());
         return;
     }
-#if !defined(USE_SOUND) || !defined(WINMM_PLAY_SOUNDS) || !defined(SOUND_PLAY_COMMAND) || !defined(USE_SDL)
+#if !(defined(USE_SOUND) && (defined(WINMM_PLAY_SOUNDS) || defined(SOUND_PLAY_COMMAND) || defined(USE_SDL)))
     static bool _sound_warning_issued = false;
     if (!_sound_warning_issued)
     {
