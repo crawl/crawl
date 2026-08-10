@@ -1020,27 +1020,20 @@ static bool _check_ammo_mulch(const item_def &item)
     pair<missile_type, special_missile_type> key = {typ, brand};
     auto i = you.ammo_durability.find(key);
 
-    int destroy_rate = ammo_destroy_chance(item);
-    destroy_rate = random_range(destroy_rate / 2, destroy_rate * 3 / 2);
+    int destroy_rate = ammo_destroy_chance(item) * 2;
 
     // hasn't yet been set, so set it and don't mulch
     if (i == you.ammo_durability.end())
-    {
-        mpr("setting ammo durability for the first time");
-        you.ammo_durability[key] = destroy_rate;
-        return false;
-    }
-
+        you.ammo_durability[key] = 1 + random2(3);
+    else
+        you.ammo_durability[key] = i->second + 1 + random2(3);
     // mulch and reset durability
-    if (i->second <= 1)
+    if (i->second >= destroy_rate)
     {
-        mpr("mulching ammo");
-        you.ammo_durability[key] = destroy_rate;
+        you.ammo_durability[key] = i->second - destroy_rate;
         return true;
     }
 
-    mprf("setting durability to %d", i->second - 1);
-    you.ammo_durability[key] = i->second - 1;
     return false;
 }
 

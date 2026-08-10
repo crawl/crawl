@@ -685,6 +685,7 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(dump_message_count), 40),
         new IntGameOption(SIMPLE_NAME(food_snacking_frequency), 40, 0, 100),
         new IntGameOption(SIMPLE_NAME(fountain_line_frequency), 40, 0, 100),
+        new IntGameOption(SIMPLE_NAME(show_throw_durability), 3, 0, 10000),
         new MultipleChoiceGameOption<kill_dump_options>(
             SIMPLE_NAME(dump_kill_places),
             KDO_ONE_PLACE,

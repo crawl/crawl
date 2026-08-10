@@ -2153,6 +2153,12 @@ static string _describe_ammo(const item_def &item)
 
             if (property(item, PWPN_DAMAGE))
                 description += "\nDamage rating: " + damage_rating(&item);
+
+            if (!ammo_always_destroyed(item) && !ammo_never_destroyed(item)
+                && item.quantity <= Options.show_throw_durability)
+            {
+                description += "\nIt is " + describe_throwable_durability(item);
+            }
         }
     }
 
@@ -2161,7 +2167,7 @@ static string _describe_ammo(const item_def &item)
     else if (!ammo_never_destroyed(item))
     {
         description += make_stringf(
-            "\n\nIt has a 1/%d chance to be destroyed on impact.",
+            "\n\nIt is destroyed after about %d throws.",
             ammo_destroy_chance(item)
         );
     }
@@ -7796,4 +7802,29 @@ string player_species_name()
     if (you_worship(GOD_BEOGH))
         return species::orc_name(you.species);
     return species::name(you.species);
+}
+
+string describe_throwable_durability(const item_def& item)
+{
+    if (!is_throwable(&you, item))
+        return "";
+
+    missile_type typ = static_cast<missile_type>(item.sub_type);
+    special_missile_type brand = get_ammo_brand(item);
+    pair<missile_type, special_missile_type> key = {typ, brand};
+    auto i = you.ammo_durability.find(key);
+
+    if (i == you.ammo_durability.end())
+        return "undamaged";
+
+    int wornness_perc = i->second * 50 / ammo_destroy_chance(item);
+    if (wornness_perc > 75)
+        return "falling apart";
+    else if (wornness_perc > 50)
+        return "heavily damaged";
+    else if (wornness_perc > 25)
+        return "slightly damaged";
+    else
+        return "undamaged";
+
 }
