@@ -877,8 +877,9 @@ static const staff_def Staff_prop[] =
         50, ac_type::normal, BEAM_MMISSILE },
 #if TAG_MAJOR_VERSION == 34
     { STAFF_ENCHANTMENT, "enchantment" },
-    { STAFF_SUMMONING,   "summoning" },
 #endif
+    { STAFF_SUMMONING,   "summoning", SK_SUMMONINGS,
+        50, ac_type::normal, BEAM_NONE },
     { STAFF_AIR,         "air",         SK_AIR_MAGIC,
         50, ac_type::half,   BEAM_ELECTRICITY },
     { STAFF_EARTH,       "earth",       SK_EARTH_MAGIC,
@@ -1063,7 +1064,6 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_STAVES,    STAFF_CHANNELLING },
     { OBJ_STAVES,    STAFF_POWER },
     { OBJ_STAVES,    STAFF_ENERGY },
-    { OBJ_STAVES,    STAFF_SUMMONING },
     { OBJ_STAVES,    STAFF_WIZARDRY },
     { OBJ_POTIONS,   POT_GAIN_STRENGTH },
     { OBJ_POTIONS,   POT_GAIN_DEXTERITY },

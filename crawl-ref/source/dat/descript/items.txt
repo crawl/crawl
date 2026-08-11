@@ -1666,6 +1666,12 @@ A staff that increases the power of fire spells cast by its wielder, and
 protects them from the effects of fire. If the wielder is skilled in Evocations
 and Fire Magic, they can burn those struck by it.
 %%%%
+staff of summoning
+
+A staff that increases the power of summoning spells cast by its wielder, and
+heals allies touched by it based on the wielders Evocations and Summoning skill.
+Unfortunately, this staff can not be used for harm.
+%%%%
 starry gem
 
 [[gem]]

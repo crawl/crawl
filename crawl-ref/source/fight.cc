@@ -114,7 +114,6 @@ static double _to_hit_hit_chance(const monster_info& mi, attack &atk, bool melee
     {
         // Apply post-roll manipulations:
         int adjusted_mhit = rolled_mhit + atk.post_roll_to_hit_modifiers(rolled_mhit, false);
-
         // XXX: Duplicating the invis check in post_roll_to_hit_modifiers()
         //      (which is otherwise skipped since the passed attack has no defender.)
         if (mi.invisible_to_player())
@@ -1521,6 +1520,9 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
     if (crawl_state.which_god_acting() == GOD_XOM)
         return false;
 
+    if (you.weapon() 
+        && you.weapon()->is_type(OBJ_STAVES, STAFF_SUMMONING))
+        return false;
     // The player is ordinarily given a different prompt before this if confused,
     // but if we're merely testing if this attack *could* be bad, we should do
     // the full check anyway.
