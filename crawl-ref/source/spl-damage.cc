@@ -534,11 +534,8 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
 
 static bool _drain_lifeable(const actor* agent, const actor* act)
 {
-    if (!actor_is_susceptible_to_vampirism(*act)
-        || act->res_negative_energy() >= 3)
-    {
+    if (act->res_negative_energy() >= 3 || act->is_firewood())
         return false;
-    }
 
     if (!agent)
         return true;
@@ -615,10 +612,6 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
             target.expose_to_element(beam.flavour, 5, agent);
         }
     }
-
-    // So that summons don't restore HP.
-    if (beam.origin_spell == SPELL_DRAIN_LIFE && target.is_summoned())
-        return 0;
 
     return hurted;
 }

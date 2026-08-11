@@ -586,7 +586,7 @@ static const vector<chaos_attack_type> chaos_types = {
       [](const actor &d) { return d.res_negative_energy() < 3; } },
     { AF_VAMPIRIC,  SPWPN_VAMPIRISM,     5,
       [](const actor &d) {
-          return actor_is_susceptible_to_vampirism(d); } },
+          return d.res_negative_energy() < 3; } },
     { AF_HOLY,      SPWPN_HOLY_WRATH,    5,
       [](const actor &d) { return d.holy_wrath_susceptible(); } },
     { AF_ANTIMAGIC, SPWPN_ANTIMAGIC,     5,
@@ -601,12 +601,16 @@ brand_type attack::random_chaos_brand()
     for (const chaos_attack_type &choice : chaos_types)
         if (!choice.valid || choice.valid(*defender))
         {
-            // Don't use vampiric brand if the attacker is at full health.
-            if (choice.brand != SPWPN_VAMPIRISM
-                || attacker->stat_hp() != attacker->stat_maxhp())
+            // Don't pick vampiric brand if the attacker is unable to heal from
+            // the attack.
+            if (choice.brand == SPWPN_VAMPIRISM
+                && !(actor_can_drain_life_from(*attacker, *defender)
+                     && attacker->stat_hp() != attacker->stat_maxhp()))
             {
-                weights.push_back({choice.brand, choice.chance});
+                continue;
             }
+
+            weights.push_back({choice.brand, choice.chance});
         }
 
     ASSERT(!weights.empty());
@@ -1293,7 +1297,7 @@ bool attack::apply_damage_brand(const char *what)
     {
         if (!weapon
             || damage_done < 1
-            || !actor_is_susceptible_to_vampirism(*defender)
+            || !actor_can_drain_life_from(*attacker, *defender)
             || attacker->stat_hp() == attacker->stat_maxhp()
             || attacker->is_player() && you.duration[DUR_DEATHS_DOOR]
             || x_chance_in_y(2, 5)
@@ -1317,7 +1321,7 @@ bool attack::apply_damage_brand(const char *what)
             {
                 if (defender->is_player())
                 {
-                    mprf("%s draws strength from your wounds!",
+                    mprf("%s draws vitality from your wounds!",
                          attacker->name(DESC_THE).c_str());
                 }
                 else

@@ -210,7 +210,9 @@ enum monster_info_flags
     MB_WITHERING,
     MB_CRUMBLING,
     MB_ALLY_TARGET,
+#if TAG_MAJOR_VERSION == 34
     MB_CANT_DRAIN,
+#endif
     MB_CONCENTRATE_VENOM,
     MB_FIRE_CHAMPION,
     MB_SILENCE_IMMUNE,

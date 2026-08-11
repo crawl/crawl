@@ -404,7 +404,7 @@ bool mons_class_is_plant(monster_type mc);
 bool mons_class_is_draconic(monster_type mc);
 bool mons_is_plant(const monster& mon);
 bool mons_eats_items(const monster& mon);
-bool actor_is_susceptible_to_vampirism(const actor& act, bool known = false);
+bool actor_can_drain_life_from(const actor& agent, const actor& victim);
 monster_type mons_genus(monster_type mc);
 monster_type mons_species(monster_type mc);
 monster_type draconian_subspecies(const monster& mon);

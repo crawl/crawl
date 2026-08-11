@@ -600,7 +600,7 @@ void melee_attack::do_vampire_lifesteal()
         if (!stab_attempt && !x_chance_in_y(2, 3))
             return;
 
-        const bool can_heal = actor_is_susceptible_to_vampirism(*mon);
+        const bool can_heal = actor_can_drain_life_from(you, *mon);
         const bool can_enthrall = stab_attempt && !mon->is_summoned()
                                   && !mon->alive()
                                   && mon->holiness() & (MH_NATURAL | MH_PLANT | MH_DEMONIC);
@@ -3905,7 +3905,7 @@ void melee_attack::mons_apply_attack_flavour(attack_flavour flavour)
 
         // deliberate fall-through
     case AF_VAMPIRIC:
-        if (!actor_is_susceptible_to_vampirism(*defender))
+        if (!actor_can_drain_life_from(*attacker, *defender))
             break;
 
         if (defender->stat_hp() < defender->stat_maxhp())

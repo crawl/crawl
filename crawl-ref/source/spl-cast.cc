@@ -1831,10 +1831,12 @@ static vector<string> _desc_insubstantial(const monster_info& mi, string desc)
     return vector<string>{};
 }
 
-static vector<string> _desc_vampiric_draining_valid(const monster_info& mi)
+static vector<string> _desc_vampiric_draining_valid(const monster_info& mi, targeter* hitfunc)
 {
-    if (mi.mb.get(MB_CANT_DRAIN))
+    if (hitfunc && !hitfunc->affects_monster(mi))
         return vector<string>{"not susceptible"};
+    if (mi.is(MB_SUMMONED) || mi.is(MB_FIREWOOD))
+        return vector<string>{"cannot heal from"};
 
     return vector<string>{};
 }
@@ -2025,7 +2027,7 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
         case SPELL_NOXIOUS_BREATH:
             return bind(_desc_meph_chance, placeholders::_1);
         case SPELL_VAMPIRIC_DRAINING:
-            return bind(_desc_vampiric_draining_valid, placeholders::_1);
+            return bind(_desc_vampiric_draining_valid, placeholders::_1, hitfunc);
         case SPELL_RIMEBLIGHT:
             return bind(_desc_rimeblight_valid, placeholders::_1);
         case SPELL_STARBURST:

@@ -332,7 +332,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             if (!adjacent(caster.pos(), foe->pos()))
                 return ai_action::impossible();
 
-            if (!actor_is_susceptible_to_vampirism(*foe))
+            if (!actor_can_drain_life_from(caster, *foe))
                 return ai_action::impossible();
 
             return min(_negative_energy_spell_goodness(foe),

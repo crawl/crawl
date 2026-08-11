@@ -667,8 +667,6 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_UMBRAED);
     if (m->liquefied_ground())
         mb.set(MB_SLOW_MOVEMENT);
-    if (!actor_is_susceptible_to_vampirism(*m, true))
-        mb.set(MB_CANT_DRAIN);
     if (m->res_water_drowning())
         mb.set(MB_RES_DROWN);
     if (m->clarity())

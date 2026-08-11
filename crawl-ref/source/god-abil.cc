@@ -1710,7 +1710,7 @@ void yred_fathomless_shackles_effect(int delay)
         }
 
         // Cache this first, since damage might kill them
-        bool can_drain = actor_is_susceptible_to_vampirism(**mi, false);
+        bool can_drain = actor_can_drain_life_from(you, **mi);
 
         int dam = resist_adjust_damage(*mi, BEAM_NEG, random2avg(pow, 2));
         if (_is_isolated_soul(*mi))

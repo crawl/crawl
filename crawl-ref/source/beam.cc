@@ -2268,8 +2268,7 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
 
 static void _vampiric_draining_effect(actor& victim, actor& agent, int damage)
 {
-    if (damage < 1 || !actor_is_susceptible_to_vampirism(victim))
-        return;
+    const bool can_drain = actor_can_drain_life_from(agent, victim);
 
     if (you.can_see(victim) || you.can_see(agent))
     {
@@ -2278,6 +2277,9 @@ static void _vampiric_draining_effect(actor& victim, actor& agent, int damage)
              agent.conj_verb("draw").c_str(),
              victim.name(DESC_THE).c_str(),
              attack_strength_punctuation(damage).c_str());
+
+        if (agent.is_player() && !can_drain)
+            mpr("...but it dissipates before reaching you.");
     }
 
     if (agent.is_player())
@@ -3896,7 +3898,7 @@ void bolt::affect_player_enchantment(bool resistible)
     case BEAM_VAMPIRIC_DRAINING:
     {
         const int dam = resist_adjust_damage(&you, flavour, damage.roll());
-        if (dam && actor_is_susceptible_to_vampirism(you))
+        if (dam > 0)
         {
             _vampiric_draining_effect(you, *agent(), dam);
             obvious_effect = true;
@@ -5939,8 +5941,7 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
         break;
 
     case BEAM_VAMPIRIC_DRAINING:
-        rc = actor_is_susceptible_to_vampirism(*mon)
-                && (mon->res_negative_energy(intrinsic_only) < 3);
+        rc = mon->res_negative_energy(intrinsic_only) < 3;
         break;
 
     case BEAM_VIRULENCE:
@@ -6147,7 +6148,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_VAMPIRIC_DRAINING:
     {
         const int dam = resist_adjust_damage(mon, flavour, damage.roll());
-        if (dam && actor_is_susceptible_to_vampirism(*mon))
+        if (dam > 0)
         {
             _vampiric_draining_effect(*mon, *agent(), dam);
             obvious_effect = true;

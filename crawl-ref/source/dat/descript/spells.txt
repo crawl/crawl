@@ -617,7 +617,7 @@ duration of the call and the species of dragons called depend on spell power.
 %%%%
 Drain Life spell
 
-Drains the life force of any nearby enemies, healing the user depending on
+Drains the life force from all nearby enemies, healing the user proportional to
 the damage dealt.
 %%%%
 Drain Magic spell
@@ -2369,7 +2369,7 @@ or rubble.
 %%%%
 Vampiric Draining spell
 
-Steals the life of an adjacent living creature and grants it to the caster.
+Steals the life force from an adjacent creature and grants it to the caster.
 %%%%
 Vanquished Vanguard spell
 

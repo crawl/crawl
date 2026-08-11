@@ -950,33 +950,27 @@ bool mons_eats_items(const monster& mon)
     return mons_is_slime(mon) && have_passive(passive_t::jelly_eating);
 }
 
-/* Is the actor susceptible to vampirism?
+/* Can a given agent drain life from a given target?
  *
- * Undead actors and summoned, temporary, or ghostified monsters are all not
- * susceptible.
- * @param act The actor.
- * @param only_known Only include information known to the player.
- * @returns True if the actor is susceptible to vampirism, false otherwise.
+ * This does not include rN (which will usually reduce the amount drained and
+ * rN+++ naturally prevents)
+ *
+ * @param agent      The actor doing the draining
+ * @param victim     The actor being drained
+ * @returns True if the agent can drain health from the victim. False otherwise.
  */
-bool actor_is_susceptible_to_vampirism(const actor& act, bool only_known)
+bool actor_can_drain_life_from(const actor& agent, const actor& victim)
 {
-    if (!(act.holiness() & (MH_NATURAL | MH_PLANT)))
+    if (victim.is_firewood())
         return false;
 
-    if (act.is_player())
-        return true;
-
-    const monster *mon = act.as_monster();
-    // Don't leak phantom mirror info.
-    if (act.is_summoned() && (!only_known
-                              || !mon->has_ench(ENCH_PHANTOM_MIRROR)
-                              || mon->friendly()))
-    {
+    // Only the player is prevented from draining health from summons (for
+    // reasons of tedium). Monsters are allowed to feed off your summoned allies
+    // as much as they like!
+    if (victim.is_summoned() && agent.is_player())
         return false;
-    }
 
-    // Don't allow HP draining from firewood.
-    return !mon->is_firewood();
+    return true;
 }
 
 bool invalid_monster(const monster* mon)
