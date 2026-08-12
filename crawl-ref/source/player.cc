@@ -7105,6 +7105,11 @@ bool player::is_nonliving(bool include_temp, bool incl_form) const
     return bool(holiness(include_temp, incl_form) & MH_NONLIVING);
 }
 
+bool player::has_soul() const
+{
+    return undead_state() != US_UNDEAD;
+}
+
 // This is a stub. Check is used only for silver damage. Worship of chaotic
 // gods should probably be checked in the non-existing player::is_unclean,
 // which could be used for something Zin-related (such as a priestly monster).

@@ -885,6 +885,7 @@ public:
     bool evil() const override;
     bool is_holy() const override;
     bool is_nonliving(bool include_temp = true, bool incl_form = true) const override;
+    bool has_soul() const override;
     int how_chaotic(bool check_spells_god) const override;
     bool is_unbreathing() const override;
     bool is_insubstantial() const override;
