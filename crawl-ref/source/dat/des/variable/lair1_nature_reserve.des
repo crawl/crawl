@@ -118,16 +118,16 @@ KMONS:   4 = wolf
 KMONS:   5 = black bear
 KMONS:   6 = polar bear
 KMONS:   B = hell hound
-KMONS:   7 = water moccasin
-KMONS:   8 = black mamba
-KMONS:   9 = water moccasin
-KMONS:   C = anaconda
+KMONS:   7 = basilisk
+KMONS:   8 = komodo dragon
+KMONS:   9 = adder
+KMONS:   C = black mamba
 KMONS:   a = scorpion
 KMONS:   b = hornet
 KMONS:   d = wolf spider
 KMONS:   D = emperor scorpion
-KMONS:   X = yak / giraffe / elephant
-KMONS:   E = dire elephant
+KMONS:   X = yak / dream sheep
+KMONS:   E = death yak
 
 KITEM:   i = any potion w:4 / any scroll w:4 / gold w:3 / \
              any wand w:2 / any jewellery w:1
@@ -201,18 +201,20 @@ KMONS:   3 = blink frog
 KMONS:   A = goliath frog
 KMONS:   4 = wolf
 KMONS:   5 = black bear
-KMONS:   6 = polar bear
+KMONS:   6 = black bear / wolf
 KMONS:   B = hell hound
-KMONS:   7 = water moccasin
-KMONS:   8 = black mamba
-KMONS:   9 = water moccasin
-KMONS:   C = anaconda
+KMONS:   7 = adder
+KMONS:   8 = komodo dragon
+KMONS:   9 = basilisk
+KMONS:   C = black mamba
 KMONS:   a = scorpion
 KMONS:   b = hornet
 KMONS:   d = wolf spider
 KMONS:   D = emperor scorpion
-KMONS:   X = yak / giraffe / elephant
-KMONS:   E = dire elephant
+KMONS:   X = yak / dream sheep
+KMONS:   E = death yak
+KMONS:   Y = elephant
+KMONS:   y = dire elephant
 
 KITEM:   i = any potion w:4 / any scroll w:4 / gold w:3 / \
              any wand w:2 / any jewellery w:1
@@ -234,11 +236,11 @@ MAP
 cccccccccccccccccccccc@cccccccccccccccccccccc
 c...........................................c
 c...ttttt...........................tttt....c
-c..tt...tWWWWWW................WWWWWt..tt...c
-c..t.1.2.W....WW.............WW....W.4..t...c
-c..t.2.3.W.Ai..W.............W.Bi..W.5.4t...c
-c..tt...tW.....W.............W.....W.6.tt...c
-c...tttttWgGgWWW..............WWGWWWtttt....c
+c..tt...tgggggg................WWWWWt..tt...c
+c..t.1.2.W....gg.............WW....W.4..t...c
+c..t.2.3.W.Ai..g.............W.Bi..W.5.4t...c
+c..tt...tW.....g.............W.....W.6.tt...c
+c...tttttggGgggg..............WWGWWWtttt....c
 c...........................................c
 c.....t...t...t.....t...t.........t...t.....c
 c...........................................c
@@ -254,9 +256,9 @@ c....t......t.....t.....t..........t........c
 c...........................................c
 c....WWWWWWWWWW...........tttttGttttt.......c
 c...WW........WWW........tt.........ttt.....c
-c..WW.X.X.X.....g........t..X.X.X.....t.....c
-@..W..X.X.X.....G........G..X.EiX.....t.....@
-c..WW...........g........t..X.X.X.....t.....c
+c..WW.X.X.X.....g........t..Y.Y.Y.....t.....c
+@..W..X.X.X.....G........G..Y.yiY.....t.....@
+c..WW...........g........t..Y.Y.Y.....t.....c
 c...WW.........WW........tt.........ttt.....c
 c....WWWWWWWWWWW..........tttttttttttt......c
 c...........................................c
