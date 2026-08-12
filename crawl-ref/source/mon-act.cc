@@ -2351,7 +2351,7 @@ void handle_monster_move(monster* mons)
         // Struggling against the net takes time.
         _swim_or_move_energy(*mons);
     }
-    else if (!mons->petrified())
+    else
     {
         // Calculates mmov based on monster target.
         mmov = _find_best_step(mons);
