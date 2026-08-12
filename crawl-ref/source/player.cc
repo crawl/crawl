@@ -1970,10 +1970,6 @@ int player_prot_life(bool allow_random, bool include_temp, bool items)
 
     pl += cur_form(include_temp)->res_neg();
 
-    // completely stoned, unlike statue which has some life force
-    if (include_temp && you.petrified())
-        pl += 3;
-
     if (items)
     {
         // rings
@@ -7082,10 +7078,6 @@ mon_holy_type player::holiness(bool include_temp, bool incl_form) const
             holi = get_form(f)->holiness;
     }
 
-    // Petrification takes precedence over base holiness and lich form
-    if (include_temp && petrified())
-        holi = MH_NONLIVING;
-
     return holi;
 }
 
@@ -7238,7 +7230,6 @@ bool player::res_torment() const
         return true;
 
     return get_form()->res_neg() == 3
-           || you.petrified()
            || bool(you.holiness() & MH_PLANT)
 #if TAG_MAJOR_VERSION == 34
            || you.unrand_equipped(UNRAND_ETERNAL_TORMENT)
