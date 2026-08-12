@@ -296,6 +296,11 @@ int attack::calc_to_hit(bool random)
     if (mhit == AUTOMATIC_HIT)
         return AUTOMATIC_HIT;
 
+    if (mons_aligned(attacker, defender) && using_weapon()
+        && weapon->is_type(OBJ_STAVES, STAFF_SUMMONING))
+    {
+        return AUTOMATIC_HIT;
+    }
     // hit roll
     const actor &src = stat_source();
     if (src.is_player())
@@ -765,6 +770,11 @@ void attack::stab_message()
 {
     defender->props[HELPLESS_KEY] = true;
 
+    if (weapon && weapon->is_type(OBJ_STAVES, STAFF_SUMMONING))
+    {
+        return;
+    }
+
     switch (stab_bonus)
     {
     case 4:     // confused/fleeing/distracted
@@ -1111,6 +1121,12 @@ bool attack::attack_shield_blocked()
     // Divine Shield blocks are guaranteed, no matter what.
     if (defender->incapacitated()
         && !(defender->is_player() && you.duration[DUR_DIVINE_SHIELD]))
+    {
+        return false;
+    }
+
+    if (mons_aligned(attacker, defender) && using_weapon()
+        && weapon->is_type(OBJ_STAVES, STAFF_SUMMONING))
     {
         return false;
     }
