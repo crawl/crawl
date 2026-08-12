@@ -1237,7 +1237,7 @@ TILE:     urand_katana
 TILE_EQ:  KATANA_SLANT
 COLOUR:   LIGHTRED
 PLUS:     +8
-BASE_ACC: +2
+BASE_ACC: +1
 BASE_DAM: +4
 BASE_DELAY: -2
 DBRAND:   Manifold Assault: It sometimes launches melee attacks against multiple
@@ -1340,7 +1340,7 @@ COLOUR:   LIGHTRED
 TILE:     urand_dark_maul
 TILE_EQ:  DARK_MAUL
 PLUS:     +10
-BASE_ACC: +2
+BASE_ACC: +1
 BASE_DAM: +20
 BASE_DELAY: +7
 BRAND:    SPWPN_HEAVY
@@ -1432,7 +1432,7 @@ TYPE:     bo
 FALLBACK: OBJ_WEAPONS/WPN_LAJATANG
 INSCRIP:  spellvamp,
 PLUS:     +6
-BASE_ACC: -4
+BASE_ACC: -1
 BASE_DAM: +6
 COLOUR:   ETC_UNHOLY
 TILE:     spwpn_majin
