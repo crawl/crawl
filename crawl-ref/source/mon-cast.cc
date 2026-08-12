@@ -1357,7 +1357,7 @@ static ai_action::goodness _foe_soul_splinter_goodness(const monster &caster)
 {
     const actor* foe = caster.get_foe();
     ASSERT(foe);
-    return ai_action::good_or_impossible(!!(foe->holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)));
+    return ai_action::good_or_impossible(foe->has_soul());
 }
 
 static ai_action::goodness _foe_siphon_essence_goodness(const monster &caster)

@@ -1648,6 +1648,12 @@ bool mons_class_can_leave_corpse(monster_type mc)
     return smc->leaves_corpse;
 }
 
+bool mons_class_has_soul(monster_type mc)
+{
+    ASSERT_smc();
+    return (bool)(mons_class_holiness(mc) & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
+}
+
 bool mons_class_can_be_zombified(monster_type mzc)
 {
     monster_type mc = mons_species(mzc);
@@ -1673,7 +1679,7 @@ bool mons_class_can_be_spectralised(monster_type mzc, bool divine)
 {
     monster_type mc = mons_species(mzc);
     ASSERT_smc();
-    return mons_class_holiness(mzc) & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
+    return mons_class_has_soul(mzc)
         && mc != MONS_PANDEMONIUM_LORD
         && mzc != MONS_ORC_APOSTLE
         && (divine || smc->attack[0].type != AT_NONE); // i.e. has_attack

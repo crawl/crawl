@@ -1161,6 +1161,11 @@ bool actor::evil() const
     return bool(holiness() & (MH_UNDEAD | MH_DEMONIC));
 }
 
+bool actor::has_soul() const
+{
+    return bool(holiness() & (MH_NATURAL | MH_HOLY | MH_DEMONIC));
+}
+
 // Triggers post-movement effects for this actor as if they had just moved into
 // their current location by some means.
 //

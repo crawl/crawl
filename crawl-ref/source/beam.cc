@@ -1737,8 +1737,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_UMBRAL_TORCHLIGHT:
-        if (mons->god == GOD_YREDELEMNUL
-            || mons->holiness() & ~(MH_NATURAL | MH_DEMONIC | MH_HOLY))
+        if (mons->god == GOD_YREDELEMNUL || !mons->has_soul())
         {
             if (doFlavouredEffects && !mons_aligned(mons, pbolt.agent(true)))
                 simple_monster_message(*mons, " completely resists.");
@@ -3226,8 +3225,7 @@ bool bolt::is_harmless(const monster* mon) const
         return mon->res_poison() > 0 || mon->clarity();
 
     case BEAM_UMBRAL_TORCHLIGHT:
-        return mon->god == GOD_YREDELEMNUL
-               || (bool)!(mon->holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
+        return mon->god == GOD_YREDELEMNUL || !mon->has_soul();
 
     default:
         return false;
@@ -3307,8 +3305,7 @@ bool bolt::harmless_to_player() const
         return mons_att_wont_attack(attitude) || !agent()->can_constrict(you, CONSTRICT_BVC);
 
     case BEAM_UMBRAL_TORCHLIGHT:
-        return you_worship(GOD_YREDELEMNUL)
-               || (bool)!(you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
+        return you_worship(GOD_YREDELEMNUL) || !you.has_soul();
 
     case BEAM_QAZLAL:
         return true;
@@ -3964,7 +3961,7 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_SOUL_SPLINTER:
         obvious_effect = true;
-        if (you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
+        if (you.has_soul())
             make_soul_wisp(*agent(), you);
         else
             canned_msg(MSG_YOU_UNAFFECTED);
