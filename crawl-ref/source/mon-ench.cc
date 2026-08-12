@@ -1761,8 +1761,8 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_MERFOLK_AVATAR_SONG:
         // If we've gotten silenced or somehow incapacitated since we started,
         // cancel the song
-        if (is_silenced() || paralysed() || petrified()
-            || confused() || asleep() || has_ench(ENCH_FEAR))
+        if (is_silenced() || cannot_act() || confused() || asleep()
+            || has_ench(ENCH_FEAR))
         {
             del_ench(ENCH_MERFOLK_AVATAR_SONG, true, false);
             if (you.can_see(*this))
