@@ -1042,7 +1042,8 @@ bool melee_attack::handle_phase_hit()
     }
     do_ooze_flood();
 
-    if (attacker->is_player() && !weapon->is_type(OBJ_STAVES, STAFF_SUMMONING))
+    if (attacker->is_player() && weapon
+        && !weapon->is_type(OBJ_STAVES, STAFF_SUMMONING))
     {
         // Always upset monster regardless of damage.
         // However, successful stabs inhibit shouting.
