@@ -1166,11 +1166,9 @@ i-haste POT_HASTE
 i-might POT_MIGHT
 i-brilliance POT_BRILLIANCE
 i-attraction POT_ATTRACTION
-# start TAG_MAJOR_VERSION == 34
 i-gain-strength POT_GAIN_STRENGTH
 i-gain-dexterity POT_GAIN_DEXTERITY
 i-gain-intelligence POT_GAIN_INTELLIGENCE
-# end TAG_MAJOR_VERSION
 i-flight POT_ENLIGHTENMENT
 # start TAG_MAJOR_VERSION == 34
 i-poison POT_POISON
@@ -1204,7 +1202,7 @@ i-blood POT_BLOOD
 i-coagulated-blood POT_BLOOD_COAGULATED
 # start TAG_MAJOR_VERSION == 34
 i-lignify POT_LIGNIFY
-i-good-mutation POT_REMOVEME9
+i-good-mutation POT_BENEFICIAL_MUTATION
 # (corresponds to POT_DUMMY_AGILITY)
 i-attraction POT_REMOVEME10 POT_ID_LAST
 # end TAG_MAJOR_VERSION
