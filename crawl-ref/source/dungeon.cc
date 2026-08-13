@@ -2139,28 +2139,29 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs,
     dprf(DIAG_DNGN, "Before culling: %d/%d %s stairs",
          (int)stairs.size(), needed_stairs, checking_up_stairs ? "up" : "down");
 
-    // Find pairwise stairs that are connected and turn one of them
-    // into an escape hatch of the appropriate type.
+    // Find pairwise stairs that are connected and remove one of them.
     if (stairs.size() > needed_stairs)
     {
         _cull_redundant_stairs(stairs, needed_stairs,
                                preserve_vault_stairs, replace);
     }
 
-    // If that doesn't work, remove random stairs.
-    if (stairs.size() > needed_stairs)
+    // If that doesn't work, remove random stairs. We only remove vault stairs
+    // in this way if we don't need any stairs at all; this prevents us
+    // removing stairs from vaults that rely on them for connectivity.
+    if (stairs.size() > needed_stairs
+        && (needed_stairs == 0 || preserve_vault_stairs))
     {
         _cull_random_stairs(stairs, needed_stairs,
                             preserve_vault_stairs, replace);
     }
 
-    // FIXME: stairs that generate inside random vaults are still
-    // protected, resulting in superfluous ones.
     dprf(DIAG_DNGN, "After culling: %d/%d %s stairs",
          (int)stairs.size(), needed_stairs, checking_up_stairs ? "up" : "down");
 
-    // XXX: this logic is exceptionally shady & should be reviewed
-    if (stairs.size() > needed_stairs && preserve_vault_stairs
+    // Bail if we have too many stairs (except on D:1, where we are allowed to
+    // have multiple dungeon exits).
+    if (stairs.size() > needed_stairs
         && (!checking_up_stairs || you.depth != 1
             || !player_in_branch(root_branch)))
     {
@@ -2229,9 +2230,9 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
 {
     // This function ensures that there is exactly one each up and down
     // stone stairs I, II, and III. More than three stairs will result in
-    // turning additional stairs into escape hatches (with an attempt to keep
-    // level connectivity). Fewer than three stone stairs will result in
-    // random placement of new stairs.
+    // removing additional stairs (with an attempt to keep level connectivity).
+    // Fewer than three stone stairs will result in random placement of new
+    // stairs.
     const bool upstairs_fixed = _fixup_stone_stairs(preserve_vault_stairs,
                                                     true);
     const bool downstairs_fixed = _fixup_stone_stairs(preserve_vault_stairs,
