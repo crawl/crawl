@@ -1065,6 +1065,24 @@ Your stealth is increased by 50% while Rampaging and whenever you successfully
 stab an enemy, your next Rampage movement becomes instant.
 %%%%
 # ------ Fakemut descriptions ------
+fleshless physiology mutation
+
+Your body lacks a metabolism that can be affected by poison or disease. You do
+not need to breathe, protecting you from mushroom spores and drowning attacks.
+You also cannot be put to sleep.
+%%%%
+undead mutation
+
+You are fully undead, granting you immunity to poison, miasma, fear, sleep,
+negative energy, torment, drowning, and the effects of spore attacks.
+
+Your form cannot be further changed by magical means, protecting you from
+polymorph, but also preventing you from wearing talismans. If an effect would
+mutate you, your health will be temporarily drained instead.
+
+You are vulnerable to weapons of holy wrath and certain magics, and cannot go
+berserk.
+%%%%
 vampire fangs mutation
 
 When you perform a stab attack against a living monster with blood, you heal for

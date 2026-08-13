@@ -878,8 +878,20 @@ static vector<pair<string, string>> _get_fakemuts()
     if (!armour_mut.first.empty() && !you.has_mutation(MUT_NO_ARMOUR))
         result.push_back(armour_mut);
 
-    if (player_res_poison(false, false, false, false) == 3)
-        result.push_back({"", _innatemut("You are immune to poison.")});
+    if (you.holiness() & MH_NONLIVING)
+    {
+        const string desc = "Your fleshless body is immune to poison, disease, and asphyxiation.";
+        result.push_back({"fleshless physiology",
+                            (you.holiness(true, false) & MH_NONLIVING) ? _innatemut(desc)
+                                                                       : _formmut(desc)});
+    }
+    else if (you.holiness() == MH_UNDEAD)
+    {
+        const string desc = "You are undead, granting you many immunities and vulnerabilities.";
+        result.push_back({"undead",
+            (you.holiness(true, false) & MH_UNDEAD) ? _innatemut(desc)
+                                                    : _formmut(desc)});
+    }
 
     return result;
 }
