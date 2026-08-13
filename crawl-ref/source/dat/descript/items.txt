@@ -1160,11 +1160,12 @@ completely ineffective while standing in water.
 %%%%
 potion of lignification
 
-A potion which transforms the imbiber into an animated tree with sap for blood and
-branches capable of holding weapons. Such a tree has minimal evasion but increased
-health and natural armour, and is resistant to poison, and immune to torment and
-drowning. However, it is rooted in place while the transformation lasts, and
-cannot teleport.
+A potion which transforms the imbiber into an animated banyan tree, with sap for
+blood and branches capable of holding weapons. Such a tree has minimal evasion
+but increased health and natural armour, and is resistant to poison, and immune
+to negative energy, torment, sleep, blinding, and does not need to breathe.
+
+However, it is rooted in place while the transformation lasts, and cannot teleport.
 %%%%
 potion of magic
 

@@ -598,9 +598,10 @@ App status
 %%%%
 Tree status
 
-You have been transformed into a tree and are rooted to the ground, unable to
-move or teleport. You have minimal evasion but increased health and natural
-armour, and are resistant to poison, and immune to torment and drowning.
+You have been transformed into a banyan tree and are rooted to the ground,
+unable to move or teleport. You have minimal evasion but increased health and
+natural armour, and are resistant to poison, and immune to torment, negative
+energy, sleep, blinding, and do not need to breathe.
 
 Any equipped cloak, helmet, gloves, boots and body armour are melded.
 %%%%
