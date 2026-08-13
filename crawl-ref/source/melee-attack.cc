@@ -1054,7 +1054,7 @@ static void _inflict_deathly_blight(monster &m)
         worked = m.add_ench(mon_enchant(ENCH_SLOW, &you, dur)) || worked;
     if (mons_has_attacks(m))
         worked = m.add_ench(mon_enchant(ENCH_WEAK, &you, dur)) || worked;
-    if (m.holiness() & (MH_NATURAL | MH_PLANT))
+    if (m.res_negative_energy() < 3)
         worked = m.add_ench(mon_enchant(ENCH_DRAINED, &you, dur, 2)) || worked;
     if (worked && you.can_see(m))
         simple_monster_message(m, " decays.");
@@ -2654,11 +2654,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             if (damage_brand == SPWPN_ACID && !one_chance_in(3))
                 defender->corrode(&you);
 
-            if (damage_brand == SPWPN_WEAKNESS
-                && !(defender->holiness() & (MH_UNDEAD | MH_NONLIVING)))
-            {
+            if (damage_brand == SPWPN_WEAKNESS && defender->res_poison() < 3)
                 defender->weaken(&you, 6);
-            }
 
             if (damage_brand == SPWPN_VULNERABILITY)
             {
