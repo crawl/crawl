@@ -1167,9 +1167,9 @@ i-might POT_MIGHT
 i-brilliance POT_BRILLIANCE
 i-attraction POT_ATTRACTION
 # start TAG_MAJOR_VERSION == 34
-i-gain-strength POT_REMOVEME2
-i-gain-dexterity POT_REMOVEME3
-i-gain-intelligence POT_REMOVEME4
+i-gain-strength POT_GAIN_STRENGTH
+i-gain-dexterity POT_GAIN_DEXTERITY
+i-gain-intelligence POT_GAIN_INTELLIGENCE
 # end TAG_MAJOR_VERSION
 i-flight POT_ENLIGHTENMENT
 # start TAG_MAJOR_VERSION == 34

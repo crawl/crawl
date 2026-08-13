@@ -892,6 +892,90 @@ public:
     }
 };
 
+class PotionGainStrength : public PotionEffect
+{
+private:
+    PotionGainStrength() : PotionEffect(POT_GAIN_STRENGTH) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionGainStrength);
+public:
+    static const PotionGainStrength &instance()
+    {
+        static PotionGainStrength inst; return inst;
+    }
+
+    bool effect(bool=true, int=40, bool is_potion = true) const override
+    {
+        return mutate(MUT_STRONG, "potion of gain strength",
+                      true, !is_potion, !is_potion, true);
+    }
+
+    bool quaff(bool was_known) const override
+    {
+        if (was_known && !check_known_quaff())
+            return false;
+
+        if (effect())
+            learned_something_new(HINT_YOU_MUTATED);
+        return true;
+    }
+};
+
+class PotionGainDexterity : public PotionEffect
+{
+private:
+    PotionGainDexterity() : PotionEffect(POT_GAIN_DEXTERITY) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionGainDexterity);
+public:
+    static const PotionGainDexterity &instance()
+    {
+        static PotionGainDexterity inst; return inst;
+    }
+
+    bool effect(bool=true, int=40, bool is_potion = true) const override
+    {
+        return mutate(MUT_AGILE, "potion of gain dexterity",
+                      true, !is_potion, !is_potion, true);
+    }
+
+    bool quaff(bool was_known) const override
+    {
+        if (was_known && !check_known_quaff())
+            return false;
+
+        if (effect())
+            learned_something_new(HINT_YOU_MUTATED);
+        return true;
+    }
+};
+
+class PotionGainIntelligence : public PotionEffect
+{
+private:
+    PotionGainIntelligence() : PotionEffect(POT_GAIN_INTELLIGENCE) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionGainIntelligence);
+public:
+    static const PotionGainIntelligence &instance()
+    {
+        static PotionGainIntelligence inst; return inst;
+    }
+
+    bool effect(bool=true, int=40, bool is_potion = true) const override
+    {
+        return mutate(MUT_CLEVER, "potion of gain intelligence",
+                      true, !is_potion, !is_potion, true);
+    }
+
+    bool quaff(bool was_known) const override
+    {
+        if (was_known && !check_known_quaff())
+            return false;
+
+        if (effect())
+            learned_something_new(HINT_YOU_MUTATED);
+        return true;
+    }
+};
+
 static const unordered_map<potion_type, const PotionEffect*, std::hash<int>> potion_effects = {
     { POT_CURING, &PotionCuring::instance(), },
     { POT_HEAL_WOUNDS, &PotionHealWounds::instance(), },
@@ -910,6 +994,9 @@ static const unordered_map<potion_type, const PotionEffect*, std::hash<int>> pot
     { POT_MUTATION, &PotionMutation::instance(), },
     { POT_RESISTANCE, &PotionResistance::instance(), },
     { POT_LIGNIFY, &PotionLignify::instance(), },
+    { POT_GAIN_STRENGTH, &PotionGainStrength::instance(), },
+    { POT_GAIN_DEXTERITY, &PotionGainDexterity::instance(), },
+    { POT_GAIN_INTELLIGENCE, &PotionGainIntelligence::instance(), },
 };
 
 const PotionEffect* get_potion_effect(potion_type pot)
@@ -934,6 +1021,9 @@ static const map<potion_type, string> _spore_msg =
     { POT_MAGIC, "magical" },
     { POT_BERSERK_RAGE, "infuriating" },
     { POT_RESISTANCE, "bolstering" },
+    { POT_GAIN_STRENGTH, "strengthening" },
+    { POT_GAIN_DEXTERITY, "agilizing" },
+    { POT_GAIN_INTELLIGENCE, "enlightening" },
 };
 
 static void _handle_potion_fungus(potion_type potion)
