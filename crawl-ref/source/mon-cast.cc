@@ -2959,7 +2959,7 @@ static ai_action::goodness _negative_energy_spell_goodness(const actor* foe)
         }
     }
 
-    return ai_action::good_or_bad(!!(foe->holiness() & MH_NATURAL));
+    return ai_action::good_or_bad(!!(foe->holiness() & (MH_NATURAL | MH_PLANT)));
 }
 
 static bool _valid_blink_ally(const monster* caster, const monster* target)
