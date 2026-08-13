@@ -6307,8 +6307,8 @@ static int _mons_cause_fear(monster* mons, bool actual)
         // never affected, even though they aren't immune.
         // Will not further scare a monster that is already afraid.
         if (mons_invuln_will(**mi)
-            || !(mi->holiness() & MH_NATURAL)
             || mi->is_firewood()
+            || !mi->can_feel_fear(true)
             || !could_harm_enemy(mons, *mi, actual)
             || mi->has_ench(ENCH_FEAR))
         {
