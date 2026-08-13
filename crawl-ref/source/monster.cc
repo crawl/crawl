@@ -3035,7 +3035,7 @@ bool monster::pacified() const
 
 bool monster::can_feel_fear(bool /*include_unknown*/) const
 {
-    return (holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
+    return (holiness() & (MH_NATURAL | MH_PLANT | MH_DEMONIC | MH_HOLY))
            && !berserk_or_frenzied()
            && !clarity();
 }
@@ -5017,7 +5017,7 @@ bool monster::can_go_frenzy() const
 
 bool monster::can_go_berserk() const
 {
-    return bool(holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
+    return bool(holiness() & (MH_NATURAL | MH_PLANT | MH_DEMONIC | MH_HOLY))
            && mons_has_attacks(*this)
            && can_go_frenzy();
 }

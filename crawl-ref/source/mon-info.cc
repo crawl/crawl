@@ -349,7 +349,7 @@ void monster_info::_populate_as_generic()
     if (mons_class_sees_invis(type, base_type))
         mb.set(MB_SEE_INVIS);
 
-    can_feel_fear = !!(holi & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
+    can_feel_fear = !(holi & (MH_UNDEAD | MH_NONLIVING));
 
     if (mons_resists_drowning(type, base_type))
         mb.set(MB_RES_DROWN);
