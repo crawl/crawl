@@ -724,6 +724,9 @@ const char* potion_type_name(int potiontype)
     case POT_MUTATION:          return "mutation";
     case POT_RESISTANCE:        return "resistance";
     case POT_LIGNIFY:           return "lignification";
+    case POT_GAIN_DEXTERITY:     return "gain dexterity";
+    case POT_GAIN_STRENGTH:      return "gain strength";
+    case POT_GAIN_INTELLIGENCE:  return "gain intelligence";
 
     // FIXME: Remove this once known-items no longer uses this as a sentinel.
     default:

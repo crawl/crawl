@@ -6041,9 +6041,6 @@ void unmarshallItem(reader &th, item_def &item)
     {
         switch (item.sub_type)
         {
-            case POT_GAIN_STRENGTH:
-            case POT_GAIN_DEXTERITY:
-            case POT_GAIN_INTELLIGENCE:
             case POT_POISON:
             case POT_SLOWING:
             case POT_PORRIDGE:
