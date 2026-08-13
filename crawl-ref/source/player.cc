@@ -8273,8 +8273,8 @@ bool player::asleep() const
 
 bool player::can_feel_fear(bool include_unknown) const
 {
-    return (you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
-           && (!include_unknown || (!you.clarity() && !you.berserk()));
+    return undead_state() != US_UNDEAD
+           && (!include_unknown || (!clarity() && !berserk()));
 }
 
 bool player::can_throw_large_rocks() const
