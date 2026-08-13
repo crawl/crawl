@@ -82,6 +82,9 @@ zombie_bear MONS_ZOMBIE_BEAR
 zombie_jelly MONS_ZOMBIE_JELLY
 zombie_orb MONS_ZOMBIE_ORB
 zombie_x MONS_ZOMBIE_X
+zombie_plant MONS_ZOMBIE_PLANT
+zombie_fungus MONS_ZOMBIE_FUNGUS
+zombie_tree MONS_ZOMBIE_TREE
 
 %sdir mon/undead/draugr
 ## Draugr
@@ -142,6 +145,8 @@ simulacrum_hydra2
 simulacrum_hydra3
 simulacrum_hydra4
 simulacrum_hydra5
+simulacrum_fungus MONS_SIMULACRUM_FUNGUS
+simulacrum_tree MONS_SIMULACRUM_TREE
 
 ## Spectral things (and yred souls)
 %sdir mon/undead/bound_souls
@@ -197,6 +202,8 @@ spectral_common_demon_flying MONS_SPECTRAL_COMMON_DEMON_FLYING
 spectral_greater_demon MONS_SPECTRAL_GREATER_DEMON
 spectral_greater_demon_flying MONS_SPECTRAL_GREATER_DEMON_FLYING
 spectral_angel MONS_SPECTRAL_ANGEL
+spectral_fungus MONS_SPECTRAL_FUNGUS
+spectral_tree MONS_SPECTRAL_TREE
 %rim 1
 
 fallen_orc_warrior MONS_FALLEN_ORC_WARRIOR

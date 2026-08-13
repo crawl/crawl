@@ -1651,7 +1651,7 @@ bool mons_class_can_leave_corpse(monster_type mc)
 bool mons_class_has_soul(monster_type mc)
 {
     ASSERT_smc();
-    return (bool)(mons_class_holiness(mc) & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
+    return (bool)(mons_class_holiness(mc) & (MH_NATURAL | MH_PLANT | MH_DEMONIC | MH_HOLY));
 }
 
 bool mons_class_can_be_zombified(monster_type mzc)
@@ -1662,7 +1662,7 @@ bool mons_class_can_be_zombified(monster_type mzc)
             && !mons_class_flag(mzc, M_NO_ZOMBIE)
             && !mons_class_flag(mzc, M_INSUBSTANTIAL)
             && !mons_is_tentacle_or_tentacle_segment(mzc)
-            && (mons_class_holiness(mzc) & MH_NATURAL
+            && (mons_class_holiness(mzc) & (MH_NATURAL | MH_PLANT)
                 || mons_class_can_leave_corpse(mc))
             && smc->attack[0].damage; // i.e. has_attack
 }

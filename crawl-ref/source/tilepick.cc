@@ -1454,6 +1454,11 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile, const monster_
         return TILEP_MONS_SPECTRAL_ORB;
     case TILEP_MONS_ZOMBIE_X:
         return TILEP_MONS_SPECTRAL_X;
+    case TILEP_MONS_ZOMBIE_PLANT:
+    case TILEP_MONS_ZOMBIE_TREE:
+        return TILEP_MONS_SPECTRAL_TREE;
+    case TILEP_MONS_ZOMBIE_FUNGUS:
+        return TILEP_MONS_SPECTRAL_FUNGUS;
     default:
         if (tile_player_basetile(z_tile) == TILEP_MONS_ZOMBIE_HYDRA)
         {
@@ -1536,6 +1541,9 @@ static tileidx_t _zombie_tile_to_bound_soul(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_SCORPION:
     case TILEP_MONS_ZOMBIE_SPIDER_LARGE:
     case TILEP_MONS_ZOMBIE_SPIDER_SMALL:
+    case TILEP_MONS_ZOMBIE_TREE:
+    case TILEP_MONS_ZOMBIE_PLANT:
+    case TILEP_MONS_ZOMBIE_FUNGUS:
         return TILEP_MONS_BOUND_STRANGE;
     default:
         if (tile_player_basetile(z_tile) == TILEP_MONS_ZOMBIE_HYDRA)
@@ -1640,6 +1648,11 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
         return TILEP_MONS_SIMULACRUM_EYE;
     case TILEP_MONS_ZOMBIE_X:
         return TILEP_MONS_SIMULACRUM_X;
+    case TILEP_MONS_ZOMBIE_PLANT:
+    case TILEP_MONS_ZOMBIE_TREE:
+        return TILEP_MONS_SIMULACRUM_TREE;
+    case TILEP_MONS_ZOMBIE_FUNGUS:
+        return TILEP_MONS_SIMULACRUM_FUNGUS;
     default:
         if (tile_player_basetile(z_tile) == TILEP_MONS_ZOMBIE_HYDRA)
         {
@@ -1776,6 +1789,8 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
     }
     if (mons_genus(subtype) == MONS_HYDRA)
         return TILEP_MONS_ZOMBIE_HYDRA + min(mon.num_heads, 5) - 1;
+    if (subtype == MONS_THORN_HUNTER)
+        return TILEP_MONS_ZOMBIE_PLANT;
 
     // specific per-species zombies - use to override genuses
     static const map<monster_type, tileidx_t> species_tiles = {
@@ -1845,6 +1860,8 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
         { MONS_YAK,                     TILEP_MONS_ZOMBIE_YAK },
         { MONS_BEAR,                    TILEP_MONS_ZOMBIE_BEAR },
         { MONS_ELEPHANT_SLUG,           TILEP_MONS_ZOMBIE_SNAIL },
+        { MONS_FUNGUS,                  TILEP_MONS_ZOMBIE_FUNGUS },
+        { MONS_PLANT,                   TILEP_MONS_ZOMBIE_TREE },
     };
 
     struct shape_size_tiles

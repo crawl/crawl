@@ -1163,7 +1163,8 @@ bool actor::evil() const
 
 bool actor::has_soul() const
 {
-    return bool(holiness() & (MH_NATURAL | MH_HOLY | MH_DEMONIC));
+    return bool(holiness() & (MH_NATURAL | MH_PLANT | MH_HOLY | MH_DEMONIC))
+           && !is_firewood();
 }
 
 // Triggers post-movement effects for this actor as if they had just moved into
