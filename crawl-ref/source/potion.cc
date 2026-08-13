@@ -976,6 +976,73 @@ public:
     }
 };
 
+class PotionBeneficialMutation : public PotionEffect
+{
+private:
+    PotionBeneficialMutation() : PotionEffect(POT_BENEFICIAL_MUTATION) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionBeneficialMutation);
+public:
+    static const PotionBeneficialMutation &instance()
+    {
+        static PotionBeneficialMutation inst; return inst;
+    }
+
+    bool can_quaff(string *reason = nullptr, bool temp = true) const override
+    {
+        return _can_mutate(reason, temp);
+    }
+
+    bool effect(bool = true, int = 40, bool = true) const override
+    {
+        if (have_passive(passive_t::cleanse_mut_potions))
+            simple_god_message(" cleanses your potion of beneficial mutation!");
+        else
+            mpr("You feel extremely strange.");
+        bool mutated = false;
+        int remove_mutations = random_range(MIN_REMOVED, MAX_REMOVED);
+        int add_mutations = random_range(MIN_ADDED, MAX_ADDED);
+
+        // Remove mutations.
+        for (int i = 0; i < remove_mutations; i++)
+            mutated |= delete_mutation(RANDOM_BAD_MUTATION, "potion of beneficial mutation", false);
+        if (have_passive(passive_t::cleanse_mut_potions))
+            return mutated;
+        // Add mutations.
+        for (int i = 0; i < add_mutations; i++)
+            mutated |= mutate(RANDOM_GOOD_MUTATION, "potion of beneficial mutation", false);
+        // Sometimes one good mutation.
+        if (coinflip())
+        {
+            mutated |= mutate(RANDOM_GOOD_MUTATION, "potion of beneficial mutation",
+                              false);
+        }
+
+        learned_something_new(HINT_YOU_MUTATED);
+        return mutated;
+    }
+
+
+    bool quaff(bool was_known) const override
+    {
+        if (was_known && !check_known_quaff())
+            return false;
+
+        if (was_known && you.rmut_from_item()
+            && !yesno("Really drink that potion of beneficial mutation while resistant to mutation?", false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+
+        if (effect() && !was_known
+            && !have_passive(passive_t::cleanse_mut_potions))
+        {
+            god_forgive_inadvertent_act(FORBID_TRANSFORMATION);
+        }
+        return true;
+    }
+};
+
 static const unordered_map<potion_type, const PotionEffect*, std::hash<int>> potion_effects = {
     { POT_CURING, &PotionCuring::instance(), },
     { POT_HEAL_WOUNDS, &PotionHealWounds::instance(), },
@@ -997,6 +1064,7 @@ static const unordered_map<potion_type, const PotionEffect*, std::hash<int>> pot
     { POT_GAIN_STRENGTH, &PotionGainStrength::instance(), },
     { POT_GAIN_DEXTERITY, &PotionGainDexterity::instance(), },
     { POT_GAIN_INTELLIGENCE, &PotionGainIntelligence::instance(), },
+    { POT_BENEFICIAL_MUTATION, &PotionBeneficialMutation::instance(), },
 };
 
 const PotionEffect* get_potion_effect(potion_type pot)

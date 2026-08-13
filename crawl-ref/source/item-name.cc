@@ -727,6 +727,7 @@ const char* potion_type_name(int potiontype)
     case POT_GAIN_DEXTERITY:     return "gain dexterity";
     case POT_GAIN_STRENGTH:      return "gain strength";
     case POT_GAIN_INTELLIGENCE:  return "gain intelligence";
+    case POT_BENEFICIAL_MUTATION:  return "beneficial mutation";
 
     // FIXME: Remove this once known-items no longer uses this as a sentinel.
     default:
