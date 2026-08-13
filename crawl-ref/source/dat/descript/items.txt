@@ -621,7 +621,7 @@ dragon-coil talisman
 An intricate carving, inlaid with dragon tooth and scale. {{
     local desc = "Transforms the wearer into a mighty"
 
-    if you.race():find("Draconian") then
+    if you.race():find(" Draconian") then
         desc = desc .. " dragon. The wearer retains their innate colour, " ..
                        "becomes resistant to poison, and their breath weapon's " ..
                        "power and recharge rate are greatly increased."
