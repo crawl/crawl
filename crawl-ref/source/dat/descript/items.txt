@@ -1100,6 +1100,11 @@ plate armour
 A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate
 and greaves. It provides excellent protection.
 %%%%
+potion of agility
+
+A potion which greatly increases the dexterity and evasiveness of one who
+drinks it.
+%%%%
 potion of ambrosia
 
 A strange substance, produced by ghost moths. Consuming it causes regeneration
