@@ -2003,9 +2003,6 @@ static void _cull_redundant_stairs(list<coord_def> &stairs,
          ++iter1)
     {
         const coord_def s1_loc = *iter1;
-        // Ensure we don't search for the feature at s1.
-        unwind_var<dungeon_feature_type> saved_feat(env.grid(s1_loc),
-                                                    DNGN_FLOOR);
 
         auto iter2 = iter1;
         ++iter2;
@@ -2020,11 +2017,9 @@ static void _cull_redundant_stairs(list<coord_def> &stairs,
 
             flood_find<feature_grid, coord_predicate> ff(env.grid,
                                                          in_bounds);
-            ff.add_feat(env.grid(s2_loc));
-            const coord_def where =
-                ff.find_first_from(s1_loc, env.level_map_mask);
-            if (!where.x) // these stairs aren't in the same zone
-                continue;
+            ff.add_point(s2_loc);
+            if (!ff.points_connected_from(s1_loc))
+                continue; // these stairs aren't in the same zone
 
             dprf(DIAG_DNGN,
                  "Too many stairs -- removing one of a connected pair.");
