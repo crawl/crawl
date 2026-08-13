@@ -220,6 +220,7 @@
     hanchyan
     Tomas Krag Hansen
     Lexi Hattaway
+    Eivin Hatvik
     Taylor Hedberg
     Anders Heggestøyl
     Alex Henry

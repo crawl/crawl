@@ -1271,9 +1271,6 @@ void move_player_action(coord_def move)
     if (you.running == RMODE_START)
         you.running = RMODE_CONTINUE;
 
-    if (player_in_branch(BRANCH_ABYSS))
-        maybe_shift_abyss_around_player();
-
     if (did_move)
     {
         player_did_deliberate_movement();

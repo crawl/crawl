@@ -2626,6 +2626,9 @@ void world_reacts()
     if (!crawl_state.game_is_arena())
         player_reacts();
 
+    if (player_in_branch(BRANCH_ABYSS))
+        maybe_shift_abyss_around_player();
+
     abyss_morph();
     apply_noises();
     handle_monsters(true);

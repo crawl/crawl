@@ -9,6 +9,11 @@
 // plus a little extra so that the player won't be disoriented by taking a
 // step backward after an abyss shift.
 const int ABYSS_AREA_SHIFT_RADIUS = LOS_RADIUS + 2;
+
+// How far the player may stray from the centre before the area shifts
+const int ABYSS_SHIFT_DISTANCE = min(GXM, GYM) / 2 - 1
+                                 - MAPGEN_BORDER - ABYSS_AREA_SHIFT_RADIUS;
+
 const int ABYSSAL_RUNE_MIN_LEVEL = 3;
 extern const coord_def ABYSS_CENTRE;
 

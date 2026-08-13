@@ -1042,11 +1042,8 @@ static void _abyss_generate_monsters(int nmonsters)
 void maybe_shift_abyss_around_player()
 {
     ASSERT(player_in_branch(BRANCH_ABYSS));
-    if (map_bounds_with_margin(you.pos(),
-                               MAPGEN_BORDER + ABYSS_AREA_SHIFT_RADIUS + 1))
-    {
+    if ((you.pos() - ABYSS_CENTRE).rdist() <= ABYSS_SHIFT_DISTANCE)
         return;
-    }
 
     dprf(DIAG_ABYSS, "Shifting abyss at (%d,%d)", you.pos().x, you.pos().y);
 

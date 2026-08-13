@@ -243,7 +243,7 @@ static inline void _shoals_deepen_water_at(coord_def p, int distance)
     dgn_height_at(p) -= distance * 7;
 }
 
-static void _shoals_deepen_water()
+static void _shoals_deepen_deep_water()
 {
     vector<coord_def> pages[2];
     int current_page = 0;
@@ -287,6 +287,13 @@ static void _shoals_furniture()
     dgn_place_stone_stairs();
 }
 
+static void _shoals_deepen_deep_water_at(coord_def pos, int deepen_by)
+{
+    if (env.grid(pos) != DNGN_DEEP_WATER)
+        return;
+    dgn_height_at(pos) -= deepen_by;
+}
+
 static void _shoals_deepen_edges()
 {
     const int edge = 1;
@@ -296,16 +303,16 @@ static void _shoals_deepen_edges()
     {
         for (int x = 1; x <= edge; ++x)
         {
-            dgn_height_at(coord_def(x, y)) -= deepen_by;
-            dgn_height_at(coord_def(GXM - 1 - x, y)) -= deepen_by;
+            _shoals_deepen_deep_water_at(coord_def(x, y), deepen_by);
+            _shoals_deepen_deep_water_at(coord_def(GXM - 1 - x, y), deepen_by);
         }
     }
     for (int x = 1; x < GXM - 2; ++x)
     {
         for (int y = 1; y <= edge; ++y)
         {
-            dgn_height_at(coord_def(x, y)) -= deepen_by;
-            dgn_height_at(coord_def(x, GYM - 1 - y)) -= deepen_by;
+            _shoals_deepen_deep_water_at(coord_def(x, y), deepen_by);
+            _shoals_deepen_deep_water_at(coord_def(x, GYM - 1 - y), deepen_by);
         }
     }
 }
@@ -664,10 +671,125 @@ void dgn_build_shoals_level()
     _shoals_cliffs();
     dgn_smooth_heights();
     _shoals_apply_level();
-    _shoals_deepen_water();
-    _shoals_deepen_edges();
-    _shoals_smooth_water();
     _shoals_furniture();
+}
+
+static FixedArray<int, GXM, GYM> _trace_height_paths(int start_height,
+                                                     bool ascending)
+{
+    FixedArray<int, GXM, GYM> distances(-1);
+    vector<coord_def> pages[2];
+    int current_page = 0;
+
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        const dungeon_feature_type feat = env.grid(*ri);
+        int height = _shoals_feature_height(feat);
+        if (ascending && height <= start_height
+            || !ascending && height >= start_height)
+        {
+            pages[current_page].push_back(*ri);
+            distances(*ri) = 0;
+        }
+    }
+
+    int distance = 1;
+    while (!pages[current_page].empty())
+    {
+        const int next_page = !current_page;
+        vector<coord_def>& cpage(pages[current_page]);
+        vector<coord_def>& npage(pages[next_page]);
+        for (const coord_def& c : cpage)
+        {
+            int current_height = _shoals_feature_height(env.grid(c));
+            for (adjacent_iterator ai(c); ai; ++ai)
+            {
+                const coord_def adj(*ai);
+                int adjacent_height = _shoals_feature_height(env.grid(adj));
+                if (distances(adj) >= 0)
+                    continue;
+                if (ascending && adjacent_height >= current_height
+                    || !ascending && adjacent_height <= current_height)
+                {
+                    npage.push_back(adj);
+                    distances(adj) = distance;
+                }
+            }
+        }
+        cpage.clear();
+        current_page = next_page;
+        distance++;
+    }
+    return distances;
+}
+
+static void _shoals_postprocess_vaults()
+{
+    FixedArray<int, GXM, GYM> deep_water_up_hill_distances =
+                              _trace_height_paths(SHT_SHALLOW_WATER - 1, true);
+    FixedArray<int, GXM, GYM> land_down_hill_distances =
+                                         _trace_height_paths(SHT_FLOOR, false);
+    FixedArray<int, GXM, GYM> shallow_water_up_hill_distances =
+                                  _trace_height_paths(SHT_FLOOR - 1, true);
+
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        const coord_def c(*ri);
+        if (!(env.level_map_mask(c) & MMT_VAULT))
+            continue;
+
+        int vault_height = dgn_get_vault_height(c);
+        if (vault_height != INVALID_HEIGHT)
+        {
+            dgn_height_at(c) = vault_height;
+            continue;
+        }
+
+        const dungeon_feature_type feat(env.grid(c));
+
+        if (feat == DNGN_SHALLOW_WATER)
+        {
+            int deep_water_distance = deep_water_up_hill_distances(c);
+            int land_distance = land_down_hill_distances(c);
+            if (deep_water_distance > 0 && land_distance > 0)
+            {
+                int min_height = SHT_SHALLOW_WATER;
+                int max_height_gain = SHT_FLOOR - SHT_SHALLOW_WATER;
+                int total_distance = (deep_water_distance + land_distance) * 2 - 1;
+                int height_gain = max_height_gain * (2 * deep_water_distance - 1)
+                                  / total_distance;
+                dgn_height_at(c) = min_height + height_gain;
+            }
+            else if (deep_water_distance > 0)
+            {
+                int height = SHT_SHALLOW_WATER + 7 * (deep_water_distance - 1);
+                height = min(height, SHT_FLOOR - 1);
+                dgn_height_at(c) = height;
+            }
+            else if (land_distance > 0)
+            {
+                int height = SHT_FLOOR - 7 * land_distance;
+                height = max(height, (int)SHT_SHALLOW_WATER);
+                dgn_height_at(c) = height;
+            }
+            else
+                dgn_height_at(c) = SHT_SHALLOW_WATER;
+        }
+        else if (feat == DNGN_FLOOR)
+        {
+            int shallow_water_distance = shallow_water_up_hill_distances(c);
+            if (shallow_water_distance > 0)
+            {
+                int height = SHT_FLOOR + 7 * (shallow_water_distance - 1);
+                height = min(height, SHT_ROCK - 1);
+                dgn_height_at(c) = height;
+            }
+            else
+                dgn_height_at(c) = SHT_ROCK - 1;
+        }
+        else
+            dgn_height_at(c) = _shoals_feature_height(feat);
+    }
 }
 
 // Search the map for vaults and set the terrain heights for features
@@ -677,26 +799,10 @@ void shoals_postprocess_level()
     if (!player_in_branch(BRANCH_SHOALS) || !env.heightmap)
         return;
 
-    for (rectangle_iterator ri(1); ri; ++ri)
-    {
-        const coord_def c(*ri);
-        if (!(env.level_map_mask(c) & MMT_VAULT))
-            continue;
-
-        // Don't mess with tide immune squares at all.
-        if (is_tide_immune(c))
-            continue;
-
-        const dungeon_feature_type feat(env.grid(c));
-        if (!_shoals_tide_susceptible_feat(feat) && !feat_is_solid(feat))
-            continue;
-
-        const dungeon_feature_type expected_feat(_shoals_feature_at(c));
-        // It would be nice to do actual height contours within
-        // vaults, but for now, keep it simple.
-        if (feat != expected_feat)
-            dgn_height_at(c) = _shoals_feature_height(feat);
-    }
+    _shoals_postprocess_vaults();
+    _shoals_deepen_deep_water();
+    _shoals_deepen_edges();
+    _shoals_smooth_water();
 
     // Apply tide now, since the tide is likely to be nonzero unless
     // this is Shoals:1

@@ -3639,7 +3639,8 @@ static void _gozag_place_shop(int index)
     feature_spec feat = kmspec.get_feat();
     if (!feat.shop)
         die("Invalid shop spec?");
-    place_spec_shop(you.pos(), *feat.shop, you.experience_level);
+    make_spec_shop(you.pos(), *feat.shop, you.experience_level);
+    dungeon_terrain_changed(you.pos(), DNGN_ENTER_SHOP);
 
     link_items();
     env.markers.add(new map_feature_marker(you.pos(), DNGN_ABANDONED_SHOP));

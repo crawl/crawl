@@ -97,10 +97,7 @@ void player::set_position(const coord_def &c)
     actor::set_position(c);
 
     if (real_move)
-    {
-        prev_grd_targ.reset();
         dungeon_events.fire_position_event(DET_PLAYER_MOVED, c);
-    }
 
 #ifdef USE_TILE
     // Remove the old player marker from the minimap

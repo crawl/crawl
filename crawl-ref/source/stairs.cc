@@ -150,8 +150,6 @@ static void _player_change_level_reset()
     you.prev_targ  = MID_NOBODY;
     if (you.pet_target != MHITYOU)
         you.pet_target = MHITNOT;
-
-    you.prev_grd_targ.reset();
 }
 
 static void _player_change_level(level_id lev)

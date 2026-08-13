@@ -2541,6 +2541,28 @@ item_def* monster_die(monster& mons, killer_type killer,
     if (testbits(mons.flags, MF_PENDING_REVIVAL))
         return nullptr;
 
+    // If this is a tentacle segment, kill the parent instead.
+    if (mons_is_tentacle_segment(mons.type) && killer != KILL_TENTACLE_CLEANUP)
+    {
+        monster* parent = monster_by_mid(mons.tentacle_connect);
+        if (parent && parent->alive())
+        {
+            // Plumb through some information about the death that gets stamped
+            // on the monster.
+            if (testbits(mons.flags, MF_EXPLODE_KILL))
+                parent->flags |= MF_EXPLODE_KILL;
+            if (mons.props.exists(ATTACK_KILL_KEY))
+                parent->props[ATTACK_KILL_KEY] = true;
+
+            // Set this monster's HP to 1 so that the parent cleans it up.
+            mons.hit_points = 1;
+
+            monster_die(*parent, killer, killer_index, silent, mount_death, reset);
+
+            return nullptr;
+        }
+    }
+
     const bool was_visible = you.can_see(mons);
 
     // If a monster was banished to the Abyss and then killed there,
@@ -3021,6 +3043,14 @@ item_def* monster_die(monster& mons, killer_type killer,
                     "The tentacle is hauled back through the portal!" :
                     "With a roar, the tentacle is hauled back through the portal!");
             }
+            for (map_marker* mark : env.markers.get_all(MAT_MALIGN_GATEWAY))
+            {
+                if (dynamic_cast<map_malign_gateway_marker*>(mark)->tentacle == mons.mid)
+                {
+                    revert_terrain_change(mark->pos, TERRAIN_CHANGE_MALIGN_GATEWAY);
+                    env.markers.remove(mark);
+                }
+            }
             silent = true;
         }
     }
@@ -3440,22 +3470,9 @@ item_def* monster_die(monster& mons, killer_type killer,
                 mpr("The starspawn's tentacles wither and die.");
         }
     }
-    else if (mons_is_tentacle_or_tentacle_segment(mons.type)
-             && killer != KILL_TENTACLE_CLEANUP
-                 || mons.type == MONS_ELDRITCH_TENTACLE
-                 || mons.type == MONS_SNAPLASHER_VINE)
-    {
-        // XXX: Make sure this segment looks dead, or destroy_tentacle may
-        //      reset it before this function completes
-        mons.hit_points = -1;
+    // Clean up the tentacle's segments.
+    else if (mons_is_tentacle(mons.type) && killer != KILL_TENTACLE_CLEANUP)
         destroy_tentacle(&mons);
-    }
-    else if (mons.type == MONS_ELDRITCH_TENTACLE_SEGMENT
-             && killer != KILL_TENTACLE_CLEANUP)
-    {
-       monster_die(*monster_by_mid(mons.tentacle_connect), killer,
-                   killer_index, silent, mount_death);
-    }
     // Give the treant a last chance to release its hornets if it is killed in a
     // single blow from above half health
     else if (mons.type == MONS_SHAMBLING_MANGROVE && real_death)

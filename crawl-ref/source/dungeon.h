@@ -225,8 +225,6 @@ coord_def dgn_find_feature_marker(dungeon_feature_type feat);
 // Generate 3 stone stairs in both directions.
 void dgn_place_stone_stairs(bool maybe_place_hatches = false);
 
-void dgn_set_grid_colour_at(const coord_def &c, int colour);
-
 const vault_placement *dgn_place_map(const map_def *map,
                                      bool check_collision,
                                      bool make_no_exits,
@@ -243,8 +241,8 @@ void level_clear_vault_memory();
 void run_map_epilogues();
 
 struct shop_spec;
-void place_spec_shop(const coord_def& where, shop_type force_type);
-void place_spec_shop(const coord_def& where, shop_spec &spec, int shop_level = 0);
+void make_spec_shop(const coord_def& where, shop_type force_type);
+void make_spec_shop(const coord_def& where, shop_spec &spec, int shop_level = 0);
 int greed_for_shop_type(shop_type shop, int level_number);
 object_class_type item_in_shop(shop_type shop_type);
 bool seen_destroy_feat(dungeon_feature_type old_feat);
@@ -314,3 +312,6 @@ int starting_absdepth();
 bool in_descent_parent(branch_type branch);
 
 int concretize_item_level(int spec_level, int dgn_level = INVALID_ABSDEPTH);
+
+void dgn_set_vault_height(coord_def pos, int height);
+int dgn_get_vault_height(coord_def pos);
