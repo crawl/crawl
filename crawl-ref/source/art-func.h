@@ -157,7 +157,7 @@ static void _CURSES_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
 static void _CURSES_melee_effects(item_def* /*weapon*/, actor* attacker,
                                   actor* defender, int dam, melee_attack*)
 {
-    if (defender->alive() && defender->holiness() & (MH_NATURAL | MH_PLANT))
+    if (defender->alive())
         death_curse(*defender, attacker, "the scythe of Curses", min(dam, 27));
 }
 

@@ -311,7 +311,7 @@ TILE_EQ: SCYTHE_OF_CURSES
 BRAND:   SPWPN_DRAINING
 VALUE:   800
 BOOL:    drain
-DBRAND:  Curses:    It inflicts powerful necromantic curses on any living foe it
+DBRAND:  Curses:    It inflicts powerful necromantic curses on any foe it
  strikes.
 
 NAME:    sceptre of Torment
