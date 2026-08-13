@@ -666,7 +666,7 @@ void attack::drain_defender()
     if (defender->is_monster() && coinflip())
         return;
 
-    if (!(defender->holiness() & (MH_NATURAL | MH_PLANT)))
+    if (defender->res_negative_energy() >= 3)
         return;
 
     special_damage = resist_adjust_damage(defender, BEAM_NEG,
