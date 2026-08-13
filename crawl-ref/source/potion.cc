@@ -1043,6 +1043,32 @@ public:
     }
 };
 
+class PotionAgility : public PotionEffect
+{
+private:
+    PotionAgility() : PotionEffect(POT_AGILITY) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionAgility);
+public:
+    static const PotionAgility &instance()
+    {
+        static PotionAgility inst; return inst;
+    }
+
+    bool effect(bool=true, int pow = 40, bool=true) const override
+    {
+        const bool were_agile = you.duration[DUR_AGILITY] > 0;
+
+        mprf(MSGCH_DURATION, "You feel %sagile all of a sudden.",
+             were_agile ? "more " : "");
+
+        you.increase_duration(DUR_AGILITY, 35 + random2(pow), 80);
+
+        if (!were_agile)
+            notify_stat_change(STAT_DEX, 5, true);
+        return true;
+    }
+};
+
 static const unordered_map<potion_type, const PotionEffect*, std::hash<int>> potion_effects = {
     { POT_CURING, &PotionCuring::instance(), },
     { POT_HEAL_WOUNDS, &PotionHealWounds::instance(), },
@@ -1065,6 +1091,7 @@ static const unordered_map<potion_type, const PotionEffect*, std::hash<int>> pot
     { POT_GAIN_DEXTERITY, &PotionGainDexterity::instance(), },
     { POT_GAIN_INTELLIGENCE, &PotionGainIntelligence::instance(), },
     { POT_BENEFICIAL_MUTATION, &PotionBeneficialMutation::instance(), },
+    { POT_AGILITY, &PotionAgility::instance(), },
 };
 
 const PotionEffect* get_potion_effect(potion_type pot)

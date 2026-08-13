@@ -6055,9 +6055,6 @@ void unmarshallItem(reader &th, item_def &item)
             case POT_CURE_MUTATION:
                 item.sub_type = POT_BENEFICIAL_MUTATION;
                 break;
-            case POT_DUMMY_AGILITY:
-                item.sub_type = POT_ATTRACTION;
-                break;
             default:
                 break;
         }

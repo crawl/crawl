@@ -51,6 +51,7 @@ enum potion_type
 #endif
     POT_LIGNIFY,
     POT_BENEFICIAL_MUTATION,
+    POT_AGILITY,
 #if TAG_MAJOR_VERSION == 34
     POT_DUMMY_AGILITY,
 #endif
@@ -81,6 +82,7 @@ const vector<potion_type> potion_types =
     POT_GAIN_DEXTERITY,
     POT_GAIN_INTELLIGENCE,
     POT_BENEFICIAL_MUTATION,
+    POT_AGILITY,
 };
 
 #if TAG_MAJOR_VERSION == 34
@@ -95,7 +97,6 @@ case POT_STRONG_POISON: \
 case POT_CURE_MUTATION: \
 case POT_BLOOD: \
 case POT_BLOOD_COAGULATED: \
-case POT_DUMMY_AGILITY: \
 { \
     die("Removed potion type %d!", static_cast<int>(pot)); \
 }

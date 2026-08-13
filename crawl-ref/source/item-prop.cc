@@ -1075,7 +1075,6 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_POTIONS,   POT_POISON },
     { OBJ_POTIONS,   POT_RESTORE_ABILITIES },
     { OBJ_POTIONS,   POT_CURE_MUTATION },
-    { OBJ_POTIONS,   POT_DUMMY_AGILITY },
     { OBJ_BOOKS,     BOOK_WIZARDRY },
     { OBJ_BOOKS,     BOOK_CONTROL },
     { OBJ_BOOKS,     BOOK_BUGGY_DESTRUCTION },
@@ -2462,6 +2461,7 @@ static map<potion_type, item_rarity_type> _potion_rarity = {
     { POT_MOONSHINE,    RARITY_UNCOMMON },
     { POT_MIGHT,        RARITY_UNCOMMON },
     { POT_BRILLIANCE,   RARITY_UNCOMMON },
+    { POT_AGILITY,       RARITY_UNCOMMON },
     { POT_MUTATION,     RARITY_UNCOMMON },
     { POT_INVISIBILITY, RARITY_RARE },
     { POT_RESISTANCE,   RARITY_RARE },
@@ -2469,6 +2469,10 @@ static map<potion_type, item_rarity_type> _potion_rarity = {
     { POT_BERSERK_RAGE, RARITY_RARE },
     { POT_CANCELLATION, RARITY_RARE },
     { POT_AMBROSIA,     RARITY_RARE },
+    { POT_GAIN_DEXTERITY,       RARITY_RARE },
+    { POT_GAIN_STRENGTH,        RARITY_RARE },
+    { POT_GAIN_INTELLIGENCE,    RARITY_RARE },
+    { POT_BENEFICIAL_MUTATION,  RARITY_RARE },
     { POT_EXPERIENCE,   RARITY_VERY_RARE },
 };
 
