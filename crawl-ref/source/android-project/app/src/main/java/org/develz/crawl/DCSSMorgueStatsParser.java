@@ -111,6 +111,15 @@ public final class DCSSMorgueStatsParser {
                     xl = Integer.parseInt(xlMatcher.group(1));
                     continue;
                 }
+                if (trimmed.startsWith("Quit the game")) {
+                    outcome = DCSSMorgueGame.Outcome.QUIT;
+                    endText = trimmed;
+                    Matcher level = LEVEL.matcher(trimmed);
+                    if (level.matches()) {
+                        place = "D:" + level.group(1);
+                    }
+                    continue;
+                }
                 Matcher level = LEVEL.matcher(trimmed);
                 if (level.matches()) {
                     place = "D:" + level.group(1);
@@ -127,11 +136,6 @@ public final class DCSSMorgueStatsParser {
                 if (trimmed.startsWith("Escaped with the Orb")) {
                     outcome = DCSSMorgueGame.Outcome.WIN;
                     endText = "Escaped with the Orb";
-                    continue;
-                }
-                if (trimmed.startsWith("Quit the game")) {
-                    outcome = DCSSMorgueGame.Outcome.QUIT;
-                    endText = trimmed;
                     continue;
                 }
                 if (isDeathSummary(trimmed)) {

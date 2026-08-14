@@ -96,6 +96,20 @@ public class MorgueStatsParserTest {
     }
 
     @Test
+    public void parsesQuitMorgueAsCompletedNonWin() throws Exception {
+        String morgue = DEATH_MORGUE.replace("Slain by a two-headed ogre\n"
+                + "             ... on level 12 of the Dungeon.",
+                "Quit the game on level 12 of the Dungeon.");
+
+        Optional<DCSSMorgueGame> parsed = DCSSMorgueStatsParser.parse(
+                morgueFile("morgue-Eivin-20260813-185355.txt", morgue));
+
+        assertTrue(parsed.isPresent());
+        assertEquals(DCSSMorgueGame.Outcome.QUIT, parsed.get().getOutcome());
+        assertEquals("D:12", parsed.get().getPlace());
+    }
+
+    @Test
     public void parsesMultiwordSpecies() throws Exception {
         String morgue = DEATH_MORGUE.replace("Minotaur Fighter", "Vine Stalker Earth Elementalist");
 
