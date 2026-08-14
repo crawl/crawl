@@ -1309,7 +1309,13 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
     {
         // TODO: could fail if texture is too large / if there are opengl errs
         opengl::check_texture_size(filename, new_width, new_height);
-        success |= tex->load_texture(pixels, new_width, new_height, mip_opt);
+        LoadTextureArgs args = LoadTextureArgs::CreateForTexture(
+                pixels,
+                new_width,
+                new_height,
+                mip_opt
+           );
+        success |= tex->load_texture(args);
         opengl::flush_opengl_errors();
     }
 
