@@ -1,0 +1,375 @@
+###############################################################################
+#
+# Player - definite, nominative
+#
+###############################################################################
+
+##############################################
+# Player species
+##############################################
+%%%%
+the Barachi
+
+%%%%
+the Deep Dwarf
+
+%%%%
+the Deep Elf
+
+%%%%
+the Demigod
+
+%%%%
+the Demonspawn
+
+%%%%
+the Djinni
+
+%%%%
+the Draconian
+
+%%%%
+the Felid
+
+%%%%
+the Formicid
+
+%%%%
+the Gargoyle
+
+%%%%
+the Ghoul
+
+%%%%
+the Gnoll
+
+%%%%
+the Hill Orc
+
+%%%%
+the Human
+
+%%%%
+the Kobold
+
+%%%%
+the Merfolk
+
+%%%%
+the Minotaur
+
+%%%%
+the Mummy
+
+%%%%
+the Naga
+
+%%%%
+the Octopode
+
+%%%%
+the Ogre
+
+%%%%
+the Palentonga
+
+%%%%
+the Spriggan
+
+%%%%
+the Tengu
+
+%%%%
+the Troll
+
+%%%%
+the Vampire
+
+%%%%
+the Vine Stalker
+
+%%%%
+
+# obsolete (can still appear in highscores list, and maybe as ghosts)
+%%%%
+the Halfling
+
+%%%%
+the Centaur
+
+%%%%
+the Sludge Elf
+
+%%%%
+the High Elf
+
+%%%%
+the Lava Orc
+
+%%%%
+
+##############################################
+# Draconian subspecies
+##############################################
+%%%%
+the Mottled Draconian
+
+%%%%
+the Black Draconian
+
+%%%%
+the Green Draconian
+
+%%%%
+the Grey Draconian
+
+%%%%
+the Pale Draconian
+
+%%%%
+the Purple Draconian
+
+%%%%
+the Red Draconian
+
+%%%%
+the White Draconian
+
+%%%%
+the Yellow Draconian
+
+%%%%
+
+##############################################
+# Player genus
+# NOTE: If not listed then species is used
+##############################################
+%%%%
+# Barachi
+the Frog
+
+%%%%
+# Deep Dwarf
+the Dwarf
+
+%%%%
+# Deep Elf
+the Elf
+
+%%%%
+# Demigod
+the God
+
+%%%%
+# Felid
+the Cat
+
+%%%%
+# Formicid
+the Ant
+
+%%%%
+# Octopode
+the Octopus
+
+%%%%
+# Lava Orc
+the Orc
+
+%%%%
+
+##############################################
+# Player genus uncapitalised
+##############################################
+%%%%
+# Barachi
+the frog
+
+%%%%
+# Deep Dwarf
+# duplicate of monster
+#the dwarf
+#
+%%%%
+# Deep Elf
+# duplicate of monster
+#the elf
+#
+%%%%
+# Demigod
+the god
+
+%%%%
+# Felid
+the cat
+
+%%%%
+# Formicid
+the ant
+
+%%%%
+# Octopode
+the octopus
+
+%%%%
+# Lava Orc
+# duplicate of monster
+#the orc
+#
+%%%%
+
+##############################################
+# Player background (aka job)
+##############################################
+%%%%
+the Fighter
+
+%%%%
+the Gladiator
+
+%%%%
+the Monk
+
+%%%%
+the Hunter
+
+%%%%
+the Berserker
+
+%%%%
+the Brigand
+
+%%%%
+the Abyssal Knight
+
+%%%%
+the Chaos Knight
+
+%%%%
+the Enchanter
+
+%%%%
+the Transmuter
+
+%%%%
+the Arcane Marksman
+
+%%%%
+the Warper
+
+%%%%
+the Hedge Wizard
+
+%%%%
+the Conjurer
+
+%%%%
+the Summoner
+
+%%%%
+the Necromancer
+
+%%%%
+the Fire Elementalist
+
+%%%%
+the Ice Elementalist
+
+%%%%
+the Air Elementalist
+
+%%%%
+the Earth Elementalist
+
+%%%%
+the Venom Mage
+
+%%%%
+the Artificer
+
+%%%%
+the Delver
+
+%%%%
+the Wanderer
+
+%%%%
+
+##############################################
+# player character combo
+# "the <species> <background>"
+# (as in "Welcome, Bob the Minotaur Berserker")
+##############################################
+%%%%
+the @species@ Fighter
+
+%%%%
+the @species@ Gladiator
+
+%%%%
+the @species@ Monk
+
+%%%%
+the @species@ Hunter
+
+%%%%
+the @species@ Berserker
+
+%%%%
+the @species@ Brigand
+
+%%%%
+the @species@ Abyssal Knight
+
+%%%%
+the @species@ Chaos Knight
+
+%%%%
+the @species@ Enchanter
+
+%%%%
+the @species@ Transmuter
+
+%%%%
+the @species@ Arcane Marksman
+
+%%%%
+the @species@ Warper
+
+%%%%
+the @species@ Hedge Wizard
+
+%%%%
+the @species@ Conjurer
+
+%%%%
+the @species@ Summoner
+
+%%%%
+the @species@ Necromancer
+
+%%%%
+the @species@ Fire Elementalist
+
+%%%%
+the @species@ Ice Elementalist
+
+%%%%
+the @species@ Air Elementalist
+
+%%%%
+the @species@ Earth Elementalist
+
+%%%%
+the @species@ Venom Mage
+
+%%%%
+the @species@ Artificer
+
+%%%%
+the @species@ Delver
+
+%%%%
+the @species@ Wanderer
+
+%%%%

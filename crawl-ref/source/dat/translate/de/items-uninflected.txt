@@ -1,0 +1,291 @@
+###############################################################################
+#
+# Translations for item names (uninflected)
+#
+# There's no need to provide inflected
+# forms (e.g. accusative, dative, genitive) for these strings as they are only
+# used in very specific contexts
+#
+###############################################################################
+
+#################################
+# Item Types (terse)
+# Used in item search, plus one specific message
+# (and also some unlocalised contexts)
+#################################
+%%%%
+weapon
+Waffe
+%%%%
+melee weapon
+Nahkampfwaffe
+%%%%
+ranged weapon
+Fernkampfwaffe
+%%%%
+throwable
+Werfbares
+%%%%
+missile
+Geschoss
+%%%%
+wand
+Zauberstab
+%%%%
+scroll
+Schriftrolle
+%%%%
+jewellery
+Schmuck
+%%%%
+potion
+Trank
+%%%%
+book
+Buch
+%%%%
+manual
+Anleitung
+%%%%
+staff
+Stab
+%%%%
+magical staff
+magischer Stab
+%%%%
+orb
+Kugel
+%%%%
+miscellaneous
+Verschiedenes
+%%%%
+misc
+Verschiedenes
+%%%%
+corpse
+Leiche
+%%%%
+gold
+Gold
+%%%%
+rune
+Rune
+%%%%
+artefact
+Artefakt
+%%%%
+
+%%%%
+armour
+Rüstung
+%%%%
+body armour
+Körperrüstung
+%%%%
+auxiliary armour
+Zusatzrüstung
+%%%%
+
+# Crawl also adds search prefixes with American spelling, allowing us to give alternative translations
+%%%%
+artifact
+Artefakt
+%%%%
+armor
+Panzerung
+%%%%
+body armor
+Körperpanzerung
+%%%%
+auxiliary armor
+Zusatzpanzerung
+%%%%
+
+#################################
+# Terse weapon types
+#################################
+# These are used when showing base type for artefacts.
+# Not sure where though.
+%%%%
+# executioner's axe
+exec axe
+Henkersaxt
+%%%%
+# giant spiked club
+g.spiked club
+ries. Stachelkeule
+%%%%
+# triple crossbow
+triple xbow
+3fach-Armbrust
+%%%%
+
+#################################
+# Runes(terse form for char overview screen)
+#################################
+
+%%%%
+decaying
+verwesende
+%%%%
+barnacled
+seepockenbefallene
+%%%%
+gossamer
+Spinnfaden
+%%%%
+serpentine
+Schlangen
+%%%%
+slimy
+schleimige
+%%%%
+abyssal
+Abgrund
+%%%%
+# duplicate of missile brand
+#silver
+#
+%%%%
+golden
+goldene
+%%%%
+
+# hell runes
+%%%%
+obsidian
+Obsidian
+%%%%
+icy
+eisige
+%%%%
+bone
+Knochen
+%%%%
+iron
+eiserne
+%%%%
+
+# pan runes
+%%%%
+demonic
+dämonische
+%%%%
+glowing
+leuchtende
+%%%%
+magical
+magische
+%%%%
+fiery
+feurige
+%%%%
+dark
+dunkle
+%%%%
+
+#################################
+# Uncounted plural forms that are only used in known items menu
+# (Some others are used elsewhere and do need to be inflected)
+#################################
+
+%%%%
+unknown magical staves
+unerkannte magische Stäbe
+%%%%
+unknown jewellery
+unerkannter Schmuck
+%%%%
+unknown wands
+unerkannte Zauberstäbe
+%%%%
+unknown scrolls
+unerkannte Schriftrollenn
+%%%%
+unknown potions
+unerkannte Zaubertränke
+%%%%
+
+%%%%
+spellbooks
+Zauberbücher
+%%%%
+manuals
+Anleitungen
+%%%%
+runes
+Runen
+%%%%
+
+#################################
+# Monster pane annotations (console)
+#################################
+
+# Monsters in the monster pane are annotated if they they have certain items
+# If not all have the item then a count is shown
+# For example:
+#   orc (launcher)
+#   3 orcs (1 launcher)
+#   3 orcs (2 launchers)
+#   3 orcs (launchers)
+
+# TODO: this should probably be moved somewhere else because a bunch of other stuff is annotated similarly
+# (see mons_conditions_string in mon-info.cc)
+
+%%%%
+# duplicate of item type
+#wand
+#
+%%%%
+polearm
+Stangenwaffe
+%%%%
+launcher
+Werfer
+%%%%
+# duplicate of item type
+#missile
+#
+%%%%
+
+%%%%
+1 wand
+1 Zauberstab
+%%%%
+1 polearm
+1 Stangenwaffe
+%%%%
+1 launcher
+1 Werfer
+%%%%
+1 missile
+1 Geschoss
+%%%%
+
+%%%%
+with wands
+mit Zauberstäben
+%%%%
+polearms
+Stangenwaffen
+%%%%
+launchers
+Werfer
+%%%%
+missiles
+Geschosse
+%%%%
+
+%%%%
+%d with wands
+%d mit Zauberstäben
+%%%%
+%d polearms
+{pl}%d Stangenwaffen
+%%%%
+%d launchers
+{pl}%d Werfer
+%%%%
+%d missiles
+{pl}%d Geschosse
+%%%%

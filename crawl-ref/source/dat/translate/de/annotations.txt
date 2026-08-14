@@ -1,0 +1,492 @@
+###############################################################################
+#
+# Item annotations
+#
+###############################################################################
+
+%%%%
+" (gone by now)"
+" (inzwischen weg)"
+%%%%
+" (skeletalised by now)"
+" (inzwischen skelettiert)"
+%%%%
+" (curse)"
+" (verflucht)"
+%%%%
+" (unknown)"
+" (unbekannt)"
+%%%%
+" (inert)"
+" (inert)"
+%%%%
+" (damnation)"
+" (Verdammnis)"
+%%%%
+" (the Realm of Zot)"
+" (im Reich von Zot)"
+%%%%
+god gift
+Gottesgeschenk
+%%%%
+Fragile
+Fragil
+%%%%
+branded
+geprägt
+%%%%
+# for some reason, brands on armour are called egos
+ego
+Ego
+%%%%
+two-handed
+zweihändig
+%%%%
+one-handed
+einhändig
+%%%%
+willpower
+Willenskraft
+%%%%
+
+# attribute +/-
+%%%%
+# strength
+Str
+Stä
+%%%%
+# dexterity
+Dex
+Ges
+%%%%
+# intelligence
+Int
+Int
+%%%%
+HP
+TP
+%%%%
+MP
+MP
+%%%%
+# armour class
+AC
+RK
+%%%%
+# evasion
+EV
+AW
+%%%%
+# shields
+SH
+SCH
+%%%%
+# stealth
+Stlth
+Heiml
+%%%%
+
+# resistances +/-
+%%%%
+# fire
+rF
+rF
+%%%%
+# cold
+rC
+rK
+%%%%
+# negative energy
+rN
+rN
+%%%%
+# poison
+rPois
+rGift
+%%%%
+# corrosion
+rCorr
+rKorr
+%%%%
+# clarity (immunity to confusion, etc.)
+Clar
+Klar
+%%%%
+# torment
+rTorment
+rPeinigung
+%%%%
+# mutation
+rMut
+rMut
+%%%%
+rMiasma
+rMiasma
+%%%%
+rSteam
+rDampf
+%%%%
+# will (magic resistance)
+Will
+Wille
+%%%%
+dropped
+fallengelassen
+%%%%
+
+
+# long-form resistances (some are covered under mutations)
+
+%%%%
+corrosion resistance
+Korrosionsresistenz
+%%%%
+# magic resistance is an old name for will
+magic resistance
+Magieresistenz
+%%%%
+MR
+MR
+%%%%
+resist magic
+Magie widerstehen
+%%%%
+resist cold
+Kälte widerstehen
+%%%%
+resist corrosion
+Korrosion widerstehen
+%%%%
+resist electricity
+Elektrizität widerstehen
+%%%%
+resist fire
+Feuer widerstehen
+%%%%
+resist mutation
+Mutationen widerstehen
+%%%%
+resist negative energy
+negativer Energie widerstehen
+%%%%
+resist poison
+Gift widerstehen
+%%%%
+
+
+# benefits
+%%%%
+# wizardry (reduces spell failure rate)
+Wiz
+Zaub
+%%%%
+# blink ability
++Blink
++Blinzeln
+%%%%
+# invisibility ability
++Inv
++Uns
+%%%%
+# see invisible
+SInv
+UnsS
+%%%%
+# alternative abbreviation for see invisible
+sInv
+UnsS
+%%%%
+# HP regeneration
+Regen
+Regen
+%%%%
+# MP regeneration
+RegenMP
+RegenMP
+%%%%
+# Extra move when moving towards enemy
+Rampage
+Randale
+%%%%
+Acrobat
+Akrobat
+%%%%
+# random rat summoning
+*Rats
+*Ratten
+%%%%
+# berserk ability
++Rage
++Wut
+%%%%
+
+# disadvantages
+%%%%
+# random involuntary berserking
+*Rage
+*Wut
+%%%%
+# no casting spells
+-Cast
+-Zauber
+%%%%
+# random noise
+*Noise
+*Lärm
+%%%%
+# random corrosion
+*Corrode
+*Korrod
+%%%%
+# random slowing
+*Slow
+*Träg
+%%%%
+# random teleport
+*Tele
+*Tele
+%%%%
+
+# weapon brands
+%%%%
+flame
+Flammen
+%%%%
+freeze
+gefrieren
+%%%%
+holy
+heilig
+%%%%
+elec
+elek
+%%%%
+venom
+Gift
+%%%%
+protect
+Schutz
+%%%%
+drain
+auszehren
+%%%%
+speed
+Geschw
+%%%%
+vorpal
+Gebifft
+%%%%
+vamp
+vamp
+%%%%
+pain
+Schmerz
+%%%%
+antimagic
+Antimagie
+%%%%
+distort
+Verzerr
+%%%%
+chaos
+Chaos
+%%%%
+penet
+penet
+%%%%
+reap
+ernten
+%%%%
+# spectral
+spect
+spekt
+%%%%
+acid
+Säure
+%%%%
+# accuracy
+Acc
+Treffs
+%%%%
+
+# missile brands
+%%%%
+poison
+Gift
+%%%%
+curare
+Curare
+%%%%
+datura
+Datura
+%%%%
+atropa
+Atropa
+%%%%
+silver
+Silber
+%%%%
+disperse
+streuen
+%%%%
+# dragon/draconian slaying (Wyrmbane)
+slay drac
+Drak töten
+%%%%
+
+# armour egos
+%%%%
+ponderous
+schwerfällig
+%%%%
+Fly
+fliegen
+%%%%
+Archmagi
+Erzmagier
+%%%%
+reflect
+Reflekt
+%%%%
+Spirit
+Geist
+%%%%
+archery
+Schieß
+%%%%
+repulsion
+Abstoßung
+%%%%
+harm
+Schaden
+%%%%
+shadows
+Schatten
+%%%%
+
+#################################
+# Item slots
+#################################
+%%%%
+" (melded)"
+" (verschmolzen)"
+%%%%
+" (weapon)"
+" (Waffe)"
+%%%%
+" (worn)"
+" (angelegt)"
+%%%%
+# yes, this is supposed to have leading AND trailing space
+" (carried) "
+" (im Gepäck) "
+%%%%
+" (quivered)"
+" (im Köcher)"
+%%%%
+" (quivered ammo)"
+" (Munition im Köcher)"
+%%%%
+Item in an invalid slot
+Gegenstand in falscher Position
+%%%%
+
+# holding something that isn't a weapon
+%%%%
+" (in hand)"
+" (in der Hand)"
+%%%%
+" (in claw)"
+" (in der Klaue)"
+%%%%
+" (in tentacle)"
+" (im Tentakel)"
+%%%%
+# ...and can't grasp things
+# (I don't think it's actually possible to hold something in this situation, but the eventuality is handled in the code)
+" (in mouth)"
+" (im Mund)"
+%%%%
+
+# amulet slots
+%%%%
+" (around neck)"
+" (um den Hals)"
+%%%%
+# octopodes have a mantle rather than a neck
+" (around mantle)"
+" (um den Mantel)"
+%%%%
+
+# ring slots
+%%%%
+" (left hand)"
+" (linke Hand)"
+%%%%
+" (right hand)"
+" (rechte Hand)"
+%%%%
+" (left paw)"
+" (linke Pfote)"
+%%%%
+" (right paw)"
+" (rechte Pfote)"
+%%%%
+" (left claw)"
+" (linke Klaue)"
+%%%%
+" (right claw)"
+" (rechte Klaue)"
+%%%%
+" (left tentacle)"
+" (linkes Tentakel)"
+%%%%
+" (right tentacle)"
+" (rechtes Tentakel)"
+%%%%
+# octopode rings after the first two
+" (on tentacle)"
+" (am Tentakel)"
+%%%%
+# the macabre finger amulet can wear a ring
+" (on amulet)"
+" (am Amulett)"
+%%%%
+# tree form
+" (left branch)"
+" (linker Zweig)"
+%%%%
+" (right branch)"
+" (rechter Zweig)"
+%%%%
+# spider form
+" (left front leg)"
+" (linkes Vorderbein)"
+%%%%
+" (right front leg)"
+" (rechtes Vorderbein)"
+%%%%
+# blade hands
+" (left blade hand)"
+" (linke Klingenhand)"
+%%%%
+" (right blade hand)"
+" (rechte Klingenhand)"
+%%%%
+
+#################################
+# Other Locations
+#################################
+%%%%
+" (under bush)"
+" (unter Busch)"
+%%%%
+" (under plant)"
+" (unter Pflanze)"
+%%%%
+in_shop
+im_Laden
+%%%%
+inventory
+Inventar
+%%%%

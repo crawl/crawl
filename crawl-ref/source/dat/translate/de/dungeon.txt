@@ -1,0 +1,762 @@
+###############################################################################
+#
+# Translations for dungeon-related stuff
+#
+###############################################################################
+
+##############################################
+# Short branch names
+##############################################
+%%%%
+Dungeon
+Kerker
+%%%%
+Temple
+Tempel
+%%%%
+Orcish Mines
+Orkische Minen
+%%%%
+Elven Halls
+Elfenhallen
+%%%%
+Lair
+Höhle
+%%%%
+Swamp
+Sumpf
+%%%%
+Shoals
+Untiefen
+%%%%
+Snake Pit
+Schlangengrube
+%%%%
+Spider Nest
+Spinnennest
+%%%%
+Slime Pits
+Schleimgruben
+%%%%
+Vaults
+Gewölbe
+%%%%
+Crypt
+Krypta
+%%%%
+Tomb
+Grab
+%%%%
+Depths
+Tiefen
+%%%%
+Hells
+Höllen
+%%%%
+Hell
+Hölle
+%%%%
+Dis
+Dis
+%%%%
+Gehenna
+Gehenna
+%%%%
+Cocytus
+Kokytus
+%%%%
+Tartarus
+Tartarus
+%%%%
+Pandemonium
+Pandämonium
+%%%%
+Zot
+Zot
+%%%%
+Abyss
+Abgrund
+%%%%
+Ziggurat
+Zikkurat
+%%%%
+Bazaar
+Basar
+%%%%
+Trove
+Schatzkammer
+%%%%
+Sewer
+Kanal
+%%%%
+Ossuary
+Beinhaus
+%%%%
+Bailey
+Burghof
+%%%%
+Gauntlet
+Spießrutenlauf
+%%%%
+Ice Cave
+Eishöhle
+%%%%
+Volcano
+Vulkan
+%%%%
+Wizlab
+Labor
+%%%%
+Desolation
+Trostlosigkeit
+%%%%
+
+# obsolete branches
+%%%%
+Dwarven Hall
+Halle der Zwerge
+%%%%
+Hall of Blades
+Halle der Klingen
+%%%%
+Forest
+Wald
+%%%%
+Labyrinth
+Labyrinth
+%%%%
+
+##############################################
+# Short branch names with indefinite article
+##############################################
+# HUD shows some branches as short name with indefinite article
+%%%%
+an Abyss
+{m}ein Abgrund
+%%%%
+a Ziggurat
+{f}eine Zikkurat
+%%%%
+a Bazaar
+{m}ein Basar
+%%%%
+a Trove
+{f}eine Schatzkammer
+%%%%
+a Sewer
+{m}ein Kanal
+%%%%
+an Ossuary
+{n}ein Beinhaus
+%%%%
+a Bailey
+{m}ein Burghof
+%%%%
+an Ice Cave
+{f}eine Eishöhle
+%%%%
+a Volcano
+{m}ein Vulkan
+%%%%
+a Wizlab
+{n}ein Labor
+%%%%
+# same as long name
+#a Gauntlet
+#ein Spießrutenlauf
+%%%%
+
+##############################################
+# Long branch names
+# (where different to short name)
+##############################################
+%%%%
+the Dungeon
+{m}der Kerker
+%%%%
+the Ecumenical Temple
+{m}der Ökumenische Tempel
+%%%%
+the Orcish Mines
+{pl}die orkischen Minen
+%%%%
+the Elven Halls
+{pl}die Elfenhallen
+%%%%
+the Lair of Beasts
+{f}die Höhle der Bestien
+%%%%
+the Swamp
+{m}der Sumpf
+%%%%
+the Shoals
+{pl}die Untiefen
+%%%%
+the Snake Pit
+{f}die Schlangengrube
+%%%%
+the Spider Nest
+{n}das Spinnennest
+%%%%
+the Pits of Slime
+{pl}die Schleimgruben
+%%%%
+the Vaults
+{pl}die Gewölbe
+%%%%
+the Crypt
+{f}die Krypta
+%%%%
+the Tomb of the Ancients
+{n}das Grab der Uralten
+%%%%
+the Depths
+{pl}die Tiefen
+%%%%
+the Hells
+{pl}die Höllen
+%%%%
+the Vestibule of Hell
+{n}das Vestibül der Hölle
+%%%%
+the Iron City of Dis
+{f}die Eiserne Stadt von Dis
+%%%%
+the Realm of Zot
+{n}das Reich von Zot
+%%%%
+the Abyss
+{m}der Abgrund
+%%%%
+a ziggurat
+{f}eine Zikkurat
+%%%%
+a bazaar
+{m}ein Basar
+%%%%
+a treasure trove
+{f}eine Schatzkammer
+%%%%
+a sewer
+{m}ein Kanal
+%%%%
+an ossuary
+{n}ein Beinhaus
+%%%%
+a bailey
+{m}ein Burghof
+%%%%
+a Gauntlet
+{m}ein Spießrutenlauf
+%%%%
+an ice cave
+{f}eine Eishöhle
+%%%%
+a volcano
+{m}ein Vulkan
+%%%%
+a wizard's laboratory
+{n}das Labor eines Zauberers
+%%%%
+the Desolation of Salt
+{f}die Trostlosigkeit des Salzes
+%%%%
+
+##############################################
+# Long branch names (genitive)
+##############################################
+%%%%
+{gen}the Dungeon
+{m}des Kerkers
+%%%%
+{gen}the Ecumenical Temple
+{m}des Ökumenischen Tempels
+%%%%
+{gen}the Orcish Mines
+{pl}der orkischen Minen
+%%%%
+{gen}the Elven Halls
+{pl}der Elfenhallen
+%%%%
+{gen}the Lair of Beasts
+{f}der Höhle der Bestien
+%%%%
+{gen}the Swamp
+{m}des Sumpfes
+%%%%
+{gen}the Shoals
+{pl}der Untiefen
+%%%%
+{gen}the Snake Pit
+{f}der Schlangengrube
+%%%%
+{gen}the Spider Nest
+{n}des Spinnennests
+%%%%
+{gen}the Pits of Slime
+{pl}der Schleimgruben
+%%%%
+{gen}the Vaults
+{pl}der Gewölbe
+%%%%
+{gen}the Crypt
+{f}der Krypta
+%%%%
+{gen}the Tomb of the Ancients
+{n}des Grabes der Uralten
+%%%%
+{gen}the Depths
+{pl}der Tiefen
+%%%%
+{gen}the Hells
+{pl}der Höllen
+%%%%
+{gen}the Vestibule of Hell
+{n}des Vestibüls der Hölle
+%%%%
+{gen}the Iron City of Dis
+{f}der Eisernen Stadt von Dis
+%%%%
+{gen}Gehenna
+von Gehenna
+%%%%
+{gen}Cocytus
+von Kokytus
+%%%%
+{gen}Tartarus
+von Tartarus
+%%%%
+{gen}the Realm of Zot
+{n}des Reiches von Zot
+%%%%
+{gen}the Abyss
+{m}des Abgrunds
+%%%%
+{gen}Pandemonium
+von Pandämonium
+%%%%
+{gen}a ziggurat
+{f}einer Zikkurat
+%%%%
+{gen}a bazaar
+{m}eines Basars
+%%%%
+{gen}a treasure trove
+{f}einer Schatzkammer
+%%%%
+{gen}a sewer
+{m}eines Kanals
+%%%%
+{gen}an ossuary
+{n}eines Beinhauses
+%%%%
+{gen}a bailey
+{m}eines Burghofs
+%%%%
+{gen}a Gauntlet
+{m}eines Spießrutenlaufs
+%%%%
+{gen}an ice cave
+{f}einer Eishöhle
+%%%%
+{gen}a volcano
+{m}eines Vulkans
+%%%%
+{gen}a wizard's laboratory
+{n}des Labors eines Zauberers
+%%%%
+{gen}the Desolation of Salt
+{f}der Trostlosigkeit des Salzes
+%%%%
+
+##############################################
+# In branch (for welcome message)
+##############################################
+%%%%
+{in}the Dungeon
+{m}im Kerker
+%%%%
+{in}the Ecumenical Temple
+{m}im Ökumenischen Tempel
+%%%%
+{in}the Orcish Mines
+{pl}in den orkischen Minen
+%%%%
+{in}the Elven Halls
+{pl}in den Elfenhallen
+%%%%
+{in}the Lair of Beasts
+{f}in der Höhle der Bestien
+%%%%
+{in}the Swamp
+{m}im Sumpf
+%%%%
+{in}the Shoals
+{pl}in den Untiefen
+%%%%
+{in}the Snake Pit
+{f}in der Schlangengrube
+%%%%
+{in}the Spider Nest
+{n}im Spinnennest
+%%%%
+{in}the Pits of Slime
+{pl}in den Schleimgruben
+%%%%
+{in}the Vaults
+{pl}in den Gewölben
+%%%%
+{in}the Crypt
+{f}in der Krypta
+%%%%
+{in}the Tomb of the Ancients
+{n}im Grab der Uralten
+%%%%
+{in}the Depths
+{pl}in den Tiefen
+%%%%
+{in}the Hells
+{pl}in den Höllen
+%%%%
+{in}the Vestibule of Hell
+{n}im Vestibül der Hölle
+%%%%
+{in}the Iron City of Dis
+{f}in der Eisernen Stadt von Dis
+%%%%
+{in}Gehenna
+in Gehenna
+%%%%
+{in}Cocytus
+in Kokytus
+%%%%
+{in}Tartarus
+in Tartarus
+%%%%
+{in}the Realm of Zot
+{n}im Reich von Zot
+%%%%
+{in}the Abyss
+{m}im Abgrund
+%%%%
+{in}Pandemonium
+in Pandämonium
+%%%%
+{in}a ziggurat
+{f}in einer Zikkurat
+%%%%
+{in}a bazaar
+{m}in einem Basar
+%%%%
+{in}a treasure trove
+{f}in einem Schatzkammer
+%%%%
+{in}a sewer
+{m}in einem Kanal
+%%%%
+{in}an ossuary
+{n}in einem Beinhaus
+%%%%
+{in}a bailey
+{m}in einem Burghof
+%%%%
+{in}a Gauntlet
+{m}in einem Spießrutenlauf
+%%%%
+{in}an ice cave
+{f}in einer Eishöhle
+%%%%
+{in}a volcano
+{m}in einem Vulkan
+%%%%
+{in}a wizard's laboratory
+{n}im Labor eines Zauberers
+%%%%
+{in}the Desolation of Salt
+{f}in der Trostlosigkeit des Salzes
+%%%%
+
+##############################################
+# Branch abbreviations
+# These should be 8 characters or less.
+#
+# Note: Some of the English abbreviations are the same as the short names (or player genus).
+# To force specific translation for abbreviation in that case, use {branch_abbrev} annotation.
+##############################################
+%%%%
+# This is different to the short name, but do not want to define a global translation for the letter D
+{branch_abbrev}D
+K
+%%%%
+# D is the real English abbreviation, but Dungeon is used in overview screen
+{branch_abbrev}Dungeon
+Kerker
+%%%%
+{branch_abbrev}Temple
+Tempel
+%%%%
+# also a player genus
+{branch_abbrev}Orc
+Ork
+%%%%
+# also a player genus
+{branch_abbrev}Elf
+Elf
+%%%%
+{branch_abbrev}Lair
+Höhle
+%%%%
+{branch_abbrev}Swamp
+Sumpf
+%%%%
+{branch_abbrev}Shoals
+Untiefen
+%%%%
+Snake
+Schlange
+%%%%
+Spider
+Spinne
+%%%%
+Slime
+Schleim
+%%%%
+{branch_abbrev}Vaults
+Gewölbe
+%%%%
+{branch_abbrev}Crypt
+Krypta
+%%%%
+{branch_abbrev}Tomb
+Grab
+%%%%
+{branch_abbrev}Depths
+Tiefen
+%%%%
+{branch_abbrev}Hell
+Hölle
+%%%%
+{branch_abbrev}Dis
+Dis
+%%%%
+Geh
+Geh
+%%%%
+Coc
+Coc
+%%%%
+Tar
+Tar
+%%%%
+Pan
+Pan
+%%%%
+Zig
+Zik
+%%%%
+{branch_abbrev}Abyss
+Abgrund
+%%%%
+{branch_abbrev}Bazaar
+Basar
+%%%%
+{branch_abbrev}Trove
+Schatz
+%%%%
+{branch_abbrev}Sewer
+Kanal
+%%%%
+{branch_abbrev}Ossuary
+Beinhaus
+%%%%
+{branch_abbrev}Bailey
+Burghof
+%%%%
+{branch_abbrev}Gauntlet
+Spieß
+%%%%
+IceCv
+Eishöhle
+%%%%
+{branch_abbrev}Volcano
+Vulkan
+%%%%
+# Note: English short name has small L, but abbreviation has capital L.
+WizLab
+Labor
+%%%%
+{branch_abbrev}Desolation
+Trostlos
+%%%%
+
+##############################################
+# on branch level
+##############################################
+%%%%
+on level %d of the Dungeon
+auf Ebene %d des Kerkers
+%%%%
+on level %d of the Orcish Mines
+auf Ebene %d der orkischen Minen
+%%%%
+on level %d of the Elven Halls
+auf Ebene %d der Elfenhallen
+%%%%
+on level %d of the Lair of Beasts
+auf Ebene %d der Höhle der Bestien
+%%%%
+on level %d of the Swamp
+auf Ebene %d des Sumpfes
+%%%%
+on level %d of the Shoals
+auf Ebene %d der Untiefen
+%%%%
+on level %d of the Snake Pit
+auf Ebene %d der Schlangengrube
+%%%%
+on level %d of the Spider Nest
+auf Ebene %d des Spinnennests
+%%%%
+on level %d of the Pits of Slime
+auf Ebene %d der Schleimgruben
+%%%%
+on level %d of the Vaults
+auf Ebene %d der Gewölbe
+%%%%
+on level %d of the Crypt
+auf Ebene %d der Krypta
+%%%%
+on level %d of the Tomb of the Ancients
+auf Ebene %d des Grabs der Uralten
+%%%%
+on level %d of the Depths
+auf Ebene %d der Tiefen
+%%%%
+on level %d of the Vestibule of Hell
+auf Ebene %d des Vestibüls der Hölle
+%%%%
+on level %d of Tartarus
+auf Ebene %d von Tartarus
+%%%%
+on level %d of Gehenna
+auf Ebene %d von Gehenna
+%%%%
+on level %d of Cocytus
+auf Ebene %d von Kokytus
+%%%%
+on level %d of the Iron City of Dis
+auf Ebene %d der Eisernen Stadt von Dis
+%%%%
+on level %d of Pandemonium
+auf Ebene %d von Pandämonium
+%%%%
+on level %d of the Realm of Zot
+auf Ebene %d des Reiches von Zot
+%%%%
+on level %d of the Abyss
+auf Ebene %d des Abgrunds
+%%%%
+on level %d of a ziggurat
+auf Ebene %d einer Zikkurat
+%%%%
+# should be "in a sewer", but for some reason, we get this in hiscores
+on level %d of a sewer
+auf Ebene %d eines Kanals
+%%%%
+
+##############################################
+# between branch levels
+##############################################
+%%%%
+between levels %d and %d of the Dungeon
+zwischen Ebenen %d und %d des Kerkers
+%%%%
+between levels %d and %d of the Orcish Mines
+zwischen Ebenen %d und %d der orkischen Minen
+%%%%
+between levels %d and %d of the Elven Halls
+zwischen Ebenen %d und %d der Elfenhallen
+%%%%
+between levels %d and %d of the Lair of Beasts
+zwischen Ebenen %d und %d der Höhle der Bestien
+%%%%
+between levels %d and %d of the Swamp
+zwischen Ebenen %d und %d des Sumpfes
+%%%%
+between levels %d and %d of the Shoals
+zwischen Ebenen %d und %d der Untiefen
+%%%%
+between levels %d and %d of the Snake Pit
+zwischen Ebenen %d und %d der Schlangengrube
+%%%%
+between levels %d and %d of the Spider Nest
+zwischen Ebenen %d und %d des Spinnennests
+%%%%
+between levels %d and %d of the Pits of Slime
+zwischen Ebenen %d und %d der Schleimgruben
+%%%%
+between levels %d and %d of the Vaults
+zwischen Ebenen %d und %d der Gewölbe
+%%%%
+between levels %d and %d of the Crypt
+zwischen Ebenen %d und %d der Krypta
+%%%%
+between levels %d and %d of the Tomb of the Ancients
+zwischen Ebenen %d und %d des Grabs der Uralten
+%%%%
+between levels %d and %d of the Depths
+zwischen Ebenen %d und %d der Tiefen
+%%%%
+between levels %d and %d of the Vestibule of Hell
+zwischen Ebenen %d und %d des Vestibüls der Hölle
+%%%%
+between levels %d and %d of the Iron City of Dis
+zwischen Ebenen %d und %d der Eisernen Stadt von Dis
+%%%%
+between levels %d and %d of the Realm of Zot
+zwischen Ebenen %d und %d des Reiches von Zot
+%%%%
+between levels %d and %d of the Abyss
+zwischen Ebenen %d und %d des Abgrunds
+%%%%
+between levels %d and %d of a ziggurat
+zwischen Ebenen %d und %d einer Zikkurat
+%%%%
+
+##############################################
+# in single-level branch
+##############################################
+%%%%
+in the Ecumenical Temple
+im Ökumenischen Tempel
+%%%%
+in a bazaar
+in einem Basar
+%%%%
+in a treasure trove
+in einer Schatzkammer
+%%%%
+in a sewer
+in einem Kanal
+%%%%
+in an ossuary
+in einem Beinhaus
+%%%%
+in a bailey
+in einem Burghof
+%%%%
+in a Gauntlet
+in einem Spießrutenlauf
+%%%%
+in an ice cave
+in einer Eishöhle
+%%%%
+in a volcano
+in einem Vulkan
+%%%%
+in a wizard's laboratory
+im Labor eines Zauberers
+%%%%
+in the Desolation of Salt
+in der Trostlosigkeit des Salzes
+%%%%

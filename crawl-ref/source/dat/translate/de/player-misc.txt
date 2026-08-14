@@ -1,0 +1,480 @@
+###############################################################################
+#
+# Translations for player-related stuff
+#
+###############################################################################
+
+#################################
+# Attributes
+#################################
+%%%%
+strength
+Stärke
+%%%%
+dexterity
+Geschicklichkeit
+%%%%
+intelligence
+Intelligenz
+%%%%
+
+%%%%
+your strength
+deine Stärke
+%%%%
+your dexterity
+deine Geschicklichkeit
+%%%%
+your intelligence
+deine Intelligenz
+%%%%
+
+##############################################
+# Species adjectives
+# (only used in titles)
+##############################################
+%%%%
+Barachian
+Amphibische
+%%%%
+Dwarven
+Zwergische
+%%%%
+Elven
+Elfische
+%%%%
+Divine
+Göttliche
+%%%%
+Demonic
+Dämonische
+%%%%
+Feline
+Katzenartige
+%%%%
+Ghoulish
+Ghulische
+%%%%
+Merfolkian
+Meervölkische
+%%%%
+Octopoid
+Achtfüßige
+%%%%
+Ogreish
+Ogerische
+%%%%
+Trollish
+Trollische
+%%%%
+Vampiric
+Vampirische
+%%%%
+Orcish
+Orkische
+%%%%
+
+# English adjective is same as the noun, so context required
+%%%%
+# this one same as plural noun
+{adj-e}Djinn
+Magische
+%%%%
+{adj-e}Draconian
+Drakonische
+%%%%
+{adj-e}Formicid
+Insektoide
+%%%%
+{adj-e}Gargoyle
+Gargylische
+%%%%
+{adj-e}Gnoll
+Gnollische
+%%%%
+{adj-e}Human
+Menschliche
+%%%%
+{adj-e}Kobold
+Koboldische
+%%%%
+{adj-e}Minotaur
+Minotaurische
+%%%%
+{adj-e}Mummy
+Untote
+%%%%
+{adj-e}Naga
+Schlängelnde
+%%%%
+{adj-e}Palentonga
+Geschuppte
+%%%%
+{adj-e}Spriggan
+Leichtfüßige
+%%%%
+{adj-e}Tengu
+Fliegende
+%%%%
+{adj-e}Vine Stalker
+Pirschende
+%%%%
+
+##############################################
+# Species walking type (used in titles)
+##############################################
+%%%%
+# Default
+Walker
+Wanderer
+%%%%
+# Naga (snake-like)
+Slitherer
+Kriecher
+%%%%
+# Octopode (octopus-like)
+Wriggler
+Schlängler
+%%%%
+# Tengu (bird-like)
+Glider
+Gleiter
+%%%%
+# Vine Stalker
+Stalker
+Pirscher
+%%%%
+
+%%%%
+Walking
+Wandernde
+%%%%
+Slithering
+Kriechende
+%%%%
+Wriggling
+Schlängelnde
+%%%%
+Gliding
+Gleitende
+%%%%
+Stalking
+Pirschende
+%%%%
+
+##############################################
+# Species abbreviations
+##############################################
+
+%%%%
+# Barachi
+Ba
+Ba
+%%%%
+# Deep Dwarf
+DD
+TZ
+%%%%
+# Deep Elf
+DE
+TE
+%%%%
+# Demigod
+Dg
+Hg
+%%%%
+# Demonspawn
+Ds
+Db
+%%%%
+# Djinni
+Dj
+Dj
+%%%%
+# Draconian
+Dr
+Dr
+%%%%
+# Felid
+Fe
+Fe
+%%%%
+# Formicid
+Fo
+Fo
+%%%%
+# Gargoyle
+Gr
+Gr
+%%%%
+# Ghoul
+Gh
+Gh
+%%%%
+# Gnoll
+Gn
+Gn
+%%%%
+# Hill Orc
+HO
+HO
+%%%%
+# Human
+Hu
+Mn
+%%%%
+# Kobold
+Ko
+Ko
+%%%%
+# Merfolk
+Mf
+Mv
+%%%%
+# Minotaur
+Mi
+Mi
+%%%%
+# Mummy
+Mu
+Mu
+%%%%
+# Naga
+Na
+Na
+%%%%
+# Octopode
+Op
+Op
+%%%%
+# Ogre
+Og
+Og
+%%%%
+# Palentonga
+Pa
+Pa
+%%%%
+# Spriggan
+Sp
+Sp
+%%%%
+# Tengu
+Te
+Te
+%%%%
+# Troll
+Tr
+Tr
+%%%%
+# Vampire
+Vp
+Vp
+%%%%
+# Vine Stalker
+VS
+Rp
+%%%%
+
+# obsolete, but could appear in high scores list or as player ghost
+%%%%
+# Halfling
+Ha
+Ha
+%%%%
+
+##############################################
+# Background (aka job) abbreviations
+##############################################
+
+%%%%
+# Abyssal Knight
+AK
+AR
+%%%%
+# Air Elementalist
+AE
+LM
+%%%%
+# Arcane Marksman
+AM
+AS
+%%%%
+# Artificer
+Ar
+Ar
+%%%%
+# Berserker
+Be
+Be
+%%%%
+# Brigand
+Br
+Br
+%%%%
+# Chaos Knight
+CK
+CR
+%%%%
+# Conjurer
+Cj
+Bs
+%%%%
+# Earth Elementalist
+EE
+Er
+%%%%
+# Enchanter
+En
+Vz
+%%%%
+# Fighter
+Fi
+Kä
+%%%%
+# Fire Elementalist
+FE
+FM
+%%%%
+# Gladiator
+Gl
+Gl
+%%%%
+# Ice Elementalist
+IE
+Ei
+%%%%
+# Delver
+De
+Gr
+%%%%
+# Monk
+Mo
+Mö
+%%%%
+# Necromancer
+Ne
+Ne
+%%%%
+# Summoner
+Su
+Hb
+%%%%
+# Transmuter
+Tm
+Vw
+%%%%
+# Venom Mage
+VM
+GM
+%%%%
+# Wanderer
+Wn
+Wn
+%%%%
+# Warper
+Wr
+Wr
+%%%%
+# (Hedge) Wizard
+Wz
+Zb
+%%%%
+
+##############################################
+# Short-form combos with adjective
+##############################################
+
+%%%%
+# Abyssal Knight
+@adj@@species@AK
+{adj-er}@adj@@species@AR
+%%%%
+# Air Elementalist
+@adj@@species@AE
+{adj-er}@adj@@species@LM
+%%%%
+# Arcane Marksman
+@adj@@species@AM
+{adj-er}@adj@@species@AS
+%%%%
+# Artificer
+@adj@@species@Ar
+{adj-er}@adj@@species@Ar
+%%%%
+# Berserker
+@adj@@species@Be
+{adj-er}@adj@@species@Be
+%%%%
+# Brigand
+@adj@@species@Br
+{adj-er}@adj@@species@Br
+%%%%
+# Chaos Knight
+@adj@@species@CK
+{adj-er}@adj@@species@CR
+%%%%
+# Conjurer
+@adj@@species@Cj
+{adj-er}@adj@@species@Bs
+%%%%
+# Earth Elementalist
+@adj@@species@EE
+{adj-er}@adj@@species@Er
+%%%%
+# Enchanter
+@adj@@species@En
+{adj-er}@adj@@species@Vz
+%%%%
+# Fighter
+@adj@@species@Fi
+{adj-er}@adj@@species@Kä
+%%%%
+# Fire Elementalist
+@adj@@species@FE
+{adj-er}@adj@@species@FM
+%%%%
+# Gladiator
+@adj@@species@Gl
+{adj-er}@adj@@species@Gl
+%%%%
+# Ice Elementalist
+@adj@@species@IE
+{adj-er}@adj@@species@Ei
+%%%%
+# Delver
+@adj@@species@De
+{adj-er}@adj@@species@Gr
+%%%%
+# Monk
+@adj@@species@Mo
+{adj-er}@adj@@species@Mö
+%%%%
+# Necromancer
+@adj@@species@Ne
+{adj-er}@adj@@species@Ne
+%%%%
+# Summoner
+@adj@@species@Su
+{adj-er}@adj@@species@Hb
+%%%%
+# Transmuter
+@adj@@species@Tm
+{adj-er}@adj@@species@Vw
+%%%%
+# Venom Mage
+@adj@@species@VM
+{adj-er}@adj@@species@GM
+%%%%
+# Wanderer
+@adj@@species@Wn
+{adj-er}@adj@@species@Wn
+%%%%
+# Warper
+@adj@@species@Wr
+{adj-er}@adj@@species@Wr
+%%%%
+# (Hedge) Wizard
+@adj@@species@Wz
+{adj-er}@adj@@species@Zb
+%%%%

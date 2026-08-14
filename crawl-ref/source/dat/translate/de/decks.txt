@@ -1,0 +1,134 @@
+###############################################################################
+#
+# Translations for Nemelex card decks
+#
+###############################################################################
+
+%%%%
+escape
+Flucht
+%%%%
+destruction
+Zerstörung
+%%%%
+summoning
+Beschwörung
+%%%%
+punishment
+Strafe
+%%%%
+
+%%%%
+the deck of escape
+{n}das Deck der Flucht
+%%%%
+the deck of destruction
+{n}das Deck der Zerstörung
+%%%%
+the deck of summoning
+{n}das Deck der Beschwörung
+%%%%
+the deck of punishment
+{n}das Deck der Strafe
+%%%%
+the stacked deck
+{n}das vorsortierte Deck
+%%%%
+
+%%%%
+decks of escape
+Decks der Flucht
+%%%%
+decks of destruction
+Decks der Zerstörung
+%%%%
+decks of summoning
+Decks der Beschwörung
+%%%%
+decks of punishment
+Decks der Strafe
+%%%%
+stacked decks
+vorsortierte Decks
+%%%%
+
+
+####################
+# Cards
+####################
+
+%%%%
+an escape card
+{f}eine Fluchtkarte
+%%%%
+a destruction card
+{f}eine Zerstörungskarte
+%%%%
+a summoning card
+{f}eine Beschwörungskarte
+%%%%
+a punishment card
+{f}eine Strafkarte
+%%%%
+
+%%%%
+Velocity
+Geschwindigkeit
+%%%%
+Exile
+Exil
+%%%%
+the Elixir
+{n}das Elixier
+%%%%
+the Stairs
+{f}die Treppe
+%%%%
+the Tomb
+{f}die Gruft
+%%%%
+Wild Magic
+Wilde Magie
+%%%%
+the Elements
+{pl}die Elemente
+%%%%
+the Pentagram
+{n}das Pentagramm
+%%%%
+the Dance
+{m}der Tanz
+%%%%
+the Swarm
+{m}der Schwarm
+%%%%
+the Rangers
+{f}die Waldläufer
+%%%%
+Vitriol
+Vitriol
+%%%%
+the Cloud
+{f}die Wolke
+%%%%
+the Storm
+{m}der Sturm
+%%%%
+Wrath
+Zorn
+%%%%
+the Wraith
+{m}der Spuk
+%%%%
+the Swine
+{n}das Schwein
+%%%%
+the Orb
+{f}die Kugel
+%%%%
+the Illusion
+{f}die Illusion
+%%%%
+Degeneration
+Degeneration
+%%%%

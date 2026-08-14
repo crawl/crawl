@@ -1,0 +1,967 @@
+###############################################################################
+#
+# Items - singular, definite article, nominative
+#
+###############################################################################
+
+#################################
+# Melee Weapons
+#################################
+
+%%%%
+# for player ghosts
+the weapon
+{f}die Waffe
+%%%%
+the club
+{m}der Knüppel
+%%%%
+the whip
+{f}die Peitsche
+%%%%
+the mace
+{m}der Streitkolben
+%%%%
+the flail
+{m}der Flegel
+%%%%
+the morningstar
+{m}der Morgenstern
+%%%%
+the demon whip
+{f}die Dämonenpeitsche
+%%%%
+the sacred scourge
+{f}die heilige Geißel
+%%%%
+the dire flail
+{m}der Schreckensflegel
+%%%%
+the eveningstar
+{m}der Abendstern
+%%%%
+the great mace
+{m}der große Streitkolben
+%%%%
+the giant club
+{f}die Riesenkeule
+%%%%
+the giant spiked club
+{f}die riesige Stachelkeule
+%%%%
+the dagger
+{m}der Dolch
+%%%%
+the quick blade
+{f}die Schnellklinge
+%%%%
+the short sword
+{n}das Kurzschwert
+%%%%
+the rapier
+{n}das Rapier
+%%%%
+the falchion
+{n}das Falchion
+%%%%
+the long sword
+{n}das Langschwert
+%%%%
+the scimitar
+{m}der Krummsäbel
+%%%%
+the demon blade
+{f}die Dämonenklinge
+%%%%
+the eudemon blade
+{f}die Eudämonenklinge
+%%%%
+the double sword
+{n}das Doppelschwert
+%%%%
+the great sword
+{n}das Großschwert
+%%%%
+the triple sword
+{n}das Dreifachschwert
+%%%%
+the hand axe
+{n}das Handbeil
+%%%%
+the war axe
+{f}die Kriegsaxt
+%%%%
+the broad axe
+{f}die Breitaxt
+%%%%
+the battleaxe
+{f}die Streitaxt
+%%%%
+the executioner's axe
+{f}die Henkersaxt
+%%%%
+the spear
+{m}der Speer
+%%%%
+the trident
+{m}der Dreizack
+%%%%
+the halberd
+{f}die Hellebarde
+%%%%
+the scythe
+{f}die Sense
+%%%%
+the demon trident
+{m}der Dämonendreizack
+%%%%
+the trishula
+{m}der Trishula
+%%%%
+the glaive
+{f}die Gleve
+%%%%
+the bardiche
+{f}die Bardiche
+%%%%
+the quarterstaff
+{m}der Kampfstab
+%%%%
+the lajatang
+{m}der Lajatang
+%%%%
+
+#################################
+# Launchers
+#################################
+
+%%%%
+the hunting sling
+{f}die Schleuder
+%%%%
+the fustibalus
+{m}der Fustibalus
+%%%%
+the hand crossbow
+{f}die Handarmbrust
+%%%%
+the arbalest
+{f}die Armbrust
+%%%%
+the triple crossbow
+{f}die Dreifacharmbrust
+%%%%
+the shortbow
+{m}der Kurzbogen
+%%%%
+the longbow
+{m}der Langbogen
+%%%%
+
+#################################
+# Missiles
+#################################
+
+%%%%
+the arrow
+{m}der Pfeil
+%%%%
+the bolt
+{m}der Bolzen
+%%%%
+# fired by artefact crossbow "Damnation"
+the damnation bolt
+{m}der Verdammnisbolzen
+%%%%
+the dart
+{m}der Wurfpfeil
+%%%%
+the poisoned dart
+{m}der vergiftete Wurfpfeil
+%%%%
+the atropa-tipped dart
+{m}der Atropa-Wurfpfeil
+%%%%
+the curare-tipped dart
+{m}der Curare-Wurfpfeil
+%%%%
+the datura-tipped dart
+{m}der Datura-Wurfpfeil
+%%%%
+the stone
+{m}der Stein
+%%%%
+the large rock
+{m}der große Felsbrocken
+%%%%
+the sling bullet
+{f}die Schleuderkugel
+%%%%
+the javelin
+{m}der Wurfspeer
+%%%%
+the silver javelin
+{m}der Silberwurfspeer
+%%%%
+the throwing net
+{n}das Wurfnetz
+%%%%
+the boomerang
+{m}der Bumerang
+%%%%
+the silver boomerang
+{m}der Silberbumerang
+%%%%
+
+#################################
+# Armour
+#################################
+
+%%%%
+the animal skin
+{f}die Tierhaut
+%%%%
+the robe
+{f}die Robe
+%%%%
+the leather armour
+{f}die Lederrüstung
+%%%%
+the ring mail
+{m}der Ringpanzer
+%%%%
+the scale mail
+{m}der Schuppenpanzer
+%%%%
+the chain mail
+{m}der Kettenpanzer
+%%%%
+the plate armour
+{f}die Plattenrüstung
+%%%%
+the crystal plate armour
+{f}die Kristallplattenrüstung
+%%%%
+the troll leather armour
+{f}die Trolllederrüstung
+%%%%
+the cloak
+{m}der Umhang
+%%%%
+the scarf
+{m}der Schal
+%%%%
+the pair of gloves
+{n}das Paar Handschuhe
+%%%%
+the helmet
+{m}der Helm
+%%%%
+the hat
+{m}der Hut
+%%%%
+the pair of boots
+{n}das Paar Stiefel
+%%%%
+the barding
+{m}der Harnisch
+%%%%
+the buckler
+{m}der Buckler
+%%%%
+the kite shield
+{m}der Drachenschild
+%%%%
+the tower shield
+{m}der Turmschild
+%%%%
+the steam dragon scales
+{pl}die Dampfdrachenschuppen
+%%%%
+the acid dragon scales
+{pl}die Säuredrachenschuppen
+%%%%
+the quicksilver dragon scales
+{pl}die Quecksilberdrachenschuppen
+%%%%
+the swamp dragon scales
+{pl}die Sumpfdrachenschuppen
+%%%%
+the fire dragon scales
+{pl}die Feuerdrachenschuppen
+%%%%
+the ice dragon scales
+{pl}die Eisdrachenschuppen
+%%%%
+the pearl dragon scales
+{pl}die Perlendrachenschuppen
+%%%%
+the storm dragon scales
+{pl}die Sturmdrachenschuppen
+%%%%
+the shadow dragon scales
+{pl}die Schattendrachenschuppen
+%%%%
+the gold dragon scales
+{pl}die Golddrachenschuppen
+%%%%
+
+# Usually, we handle any adjectives as separate words, but
+# this unidentified armour needs special handling because one of
+# the English adjectives is joined to the noun in German
+%%%%
+the creamy pearl robe
+{f}die cremefarbene Perlenrobe
+%%%%
+
+#################################
+# Rings
+#################################
+
+# generic
+%%%%
+the ring
+{m}der Ring
+%%%%
+
+# identified ring names are constructed with the generic and a suffix from item-suffixes.txt
+
+# unidentified rings have two adjectives
+# the one closest to the noun is a material, which in German is usually combined with the noun
+# this is combined list from item-name.cc and descript/randname.txt
+%%%%
+the agate ring
+{m}der Achatring
+%%%%
+the amber ring
+{m}der Bernsteinring
+%%%%
+the bone ring
+{m}der Knochenring
+%%%%
+the brass ring
+{m}der Messingring
+%%%%
+the bronze ring
+{m}der Bronzering
+%%%%
+the cabochon ring
+{m}der Cabochonring
+%%%%
+the copper ring
+{m}der Kupferring
+%%%%
+the coral ring
+{m}der Korallenring
+%%%%
+the diamond ring
+{m}der Diamantring
+%%%%
+the emerald ring
+{m}der Smaragdring
+%%%%
+the garnet ring
+{m}der Granatring
+%%%%
+the gilded ring
+{m}der vergoldete Ring
+%%%%
+the glass ring
+{m}der Glasring
+%%%%
+the gossamer ring
+{m}der Spinnfadenring
+%%%%
+the golden ring
+{m}der Goldring
+%%%%
+the granite ring
+{m}der Granitring
+%%%%
+the iron ring
+{m}der Eisenring
+%%%%
+the ivory ring
+{m}der Elfenbeinring
+%%%%
+the jade ring
+{m}der Jadering
+%%%%
+the lapis lazuli ring
+{m}der Lapislazuliring
+%%%%
+the lead ring
+{m}der Bleiring
+%%%%
+the marble ring
+{m}der Marmorring
+%%%%
+the moonstone ring
+{m}der Mondsteinring
+%%%%
+the onyx ring
+{m}der Onyxring
+%%%%
+the opal ring
+{m}der Opalring
+%%%%
+the pearl ring
+{m}der Perlenring
+%%%%
+the peridot ring
+{m}der Peridotring
+%%%%
+the pewter ring
+{m}der Hartzinnring
+%%%%
+the platinum ring
+{m}der Platinring
+%%%%
+the ruby ring
+{m}der Rubinring
+%%%%
+the sapphire ring
+{m}der Saphirring
+%%%%
+the silver ring
+{m}der Silberring
+%%%%
+the steel ring
+{m}der Stahlring
+%%%%
+the tin ring
+{m}der Zinnring
+%%%%
+the tourmaline ring
+{m}der Turmalinring
+%%%%
+the turquoise ring
+{m}der Türkisring
+%%%%
+the wooden ring
+{m}der Holzring
+%%%%
+
+#################################
+# Amulets
+#################################
+
+# generic
+%%%%
+the amulet
+{n}das Amulett
+%%%%
+
+# identified amulet names are constructed with the generic and a suffix from item-suffixes.txt
+
+# unidentified amulets have two adjectives
+# the one closest to the noun is (usually) a material, which in German is usually combined with the noun
+
+# from item-name.txt
+%%%%
+the sapphire amulet
+{n}das Saphiramulett
+%%%%
+the zirconium amulet
+{n}das Zirkoniumamulett
+%%%%
+the golden amulet
+{n}das Goldamulett
+%%%%
+the emerald amulet
+{n}das Smaragdamulett
+%%%%
+the garnet amulet
+{n}das Granatamulett
+%%%%
+the bronze amulet
+{n}das Bronzeamulett
+%%%%
+the brass amulet
+{n}das Messingamulett
+%%%%
+the copper amulet
+{n}das Kupferamulett
+%%%%
+the ruby amulet
+{n}das Rubinamulett
+%%%%
+the citrine amulet
+{n}das Citrinamulett
+%%%%
+the bone amulet
+{n}das Knochenamulett
+%%%%
+the platinum amulet
+{n}das Platinamulett
+%%%%
+the jade amulet
+{n}das Jadeamulett
+%%%%
+the fluorescent amulet
+{n}das fluoreszierende Amulett
+%%%%
+the amethyst amulet
+{n}das Amethystamulett
+%%%%
+the cameo amulet
+{n}das Cameoamulett
+%%%%
+the pearl amulet
+{n}das Perlenamulett
+%%%%
+the blue amulet
+{n}das blaue Amulett
+%%%%
+the peridot amulet
+{n}das Peridotamulett
+%%%%
+the jasper amulet
+{n}das Jaspisamulett
+%%%%
+the diamond amulet
+{n}das Diamantamulett
+%%%%
+the malachite amulet
+{n}das Malachitamulett
+%%%%
+the steel amulet
+{n}das Stahlamulett
+%%%%
+the cabochon amulet
+{n}das Cabochonamulett
+%%%%
+the silver amulet
+{n}das Silberamulett
+%%%%
+the soapstone amulet
+{n}das Specksteinamulett
+%%%%
+the lapis lazuli amulet
+{n}das Lapislazuliamulett
+%%%%
+the filigree amulet
+{n}das Filigranamulett
+%%%%
+the beryl amulet
+{n}das Beryllamulett
+%%%%
+
+# extras from database/randname.txt
+%%%%
+the crystal amulet
+{n}das Kristallamulett
+%%%%
+the graven amulet
+{n}das gravierte amulett
+%%%%
+the iron amulet
+{n}das Eisenamulett
+%%%%
+the ivory amulet
+{n}das Elfenbeinamulett
+%%%%
+the lead amulet
+{n}das Bleiamulett
+%%%%
+the pewter amulet
+{n}das Hartzinnamulett
+%%%%
+the tin amulet
+{n}das Zinnamulett
+%%%%
+
+#################################
+# Wands
+#################################
+
+# generic
+%%%%
+the wand
+{m}der Zauberstab
+%%%%
+
+# identified
+%%%%
+the wand of flame
+{m}der Zauberstab der Flammen
+%%%%
+the wand of paralysis
+{m}der Zauberstab der Paralyse
+%%%%
+the wand of digging
+{m}der Zauberstab des Grabens
+%%%%
+the wand of iceblast
+{m}der Zauberstab des Eisblitzes
+%%%%
+the wand of polymorph
+{m}der Zauberstab der Verwandlung
+%%%%
+the wand of charming
+{m}der Zauberstab der Verzauberung
+%%%%
+the wand of acid
+{m}der Zauberstab der Säure
+%%%%
+the wand of mindburst
+{m}der Zauberstab des Kopfzerplatzens
+%%%%
+# obsolete item (can occur if player loads a saved game from an older version)
+the wand of removedness
+{m}der Zauberstab der Obsoleszenz
+%%%%
+
+# unidentified amulets can have two adjectives
+# the one closest to the noun is (usually) a material, which in German is usually combined with the noun
+%%%%
+the iron wand
+{m}der Eisenzauberstab
+%%%%
+the brass wand
+{m}der Messingzauberstab
+%%%%
+the bone wand
+{m}der Knochenzauberstab
+%%%%
+the wooden wand
+{m}der Holzzauberstab
+%%%%
+the copper wand
+{m}der Kupferzauberstab
+%%%%
+the gold wand
+{m}der Goldzauberstab
+%%%%
+the silver wand
+{m}der Silberzauberstab
+%%%%
+the bronze wand
+{m}der Bronzezauberstab
+%%%%
+the ivory wand
+{m}der Elfenbeinzauberstab
+%%%%
+the glass wand
+{m}der Glaszauberstab
+%%%%
+the lead wand
+{m}der Bleizauberstab
+%%%%
+the fluorescent wand
+{m}der fluoreszierende Zauberstab
+%%%%
+
+#################################
+# Scrolls
+#################################
+
+# generic
+%%%%
+the scroll
+{f}die Schriftrolle
+%%%%
+
+# unidentified
+%%%%
+the scroll labelled %s
+{f}die Schriftrolle beschriftet mit %s
+%%%%
+
+# identified
+%%%%
+the scroll of acquirement
+{f}die Schriftrolle der Erwerbung
+%%%%
+the scroll of amnesia
+{f}die Schriftrolle der Amnesie
+%%%%
+the scroll of blinking
+{f}die Schriftrolle des Blinzelns
+%%%%
+the scroll of brand weapon
+{f}die Schriftrolle der Waffenprägung
+%%%%
+the scroll of enchant armour
+{f}die Schriftrolle der Rüstungsverzauberung
+%%%%
+the scroll of enchant weapon
+{f}die Schriftrolle der Waffenverzauberung
+%%%%
+the scroll of fear
+{f}die Schriftrolle der Angst
+%%%%
+the scroll of fog
+{f}die Schriftrolle des Nebels
+%%%%
+the scroll of holy word
+{f}die Schriftrolle des heiligen Wortes
+%%%%
+the scroll of identify
+{f}die Schriftrolle der Identifizierung
+%%%%
+the scroll of immolation
+{f}die Schriftrolle des Entflammens
+%%%%
+the scroll of magic mapping
+{f}die Schriftrolle des magischen Kartierens
+%%%%
+the scroll of noise
+{f}die Schriftrolle des Lärms
+%%%%
+the scroll of remove curse
+{f}die Schriftrolle des Fluchaufhebens
+%%%%
+the scroll of silence
+{f}die Schriftrolle der Stille
+%%%%
+the scroll of summoning
+{f}die Schriftrolle der Beschwörung
+%%%%
+the scroll of teleportation
+{f}die Schriftrolle der Teleportation
+%%%%
+the scroll of torment
+{f}die Schriftrolle der Peinigung
+%%%%
+the scroll of vulnerability
+{f}die Schriftrolle der Vulnerabilität
+%%%%
+# obsolete item (can occur if player loads a saved game from an older version)
+the scroll of removedness
+{f}die Schriftrolle der Obsoleszenz
+%%%%
+
+#################################
+# Potions
+#################################
+
+# generic
+%%%%
+the potion
+{m}der Zaubertrank
+%%%%
+
+# identified
+%%%%
+the potion of ambrosia
+{m}der Trank der Ambrosia
+%%%%
+the potion of attraction
+{m}der Trank der Anziehung
+%%%%
+the potion of berserk rage
+{m}der Trank der Berserkerwut
+%%%%
+the potion of brilliance
+{m}der Trank der Brillanz
+%%%%
+the potion of cancellation
+{m}der Trank der Aufhebung
+%%%%
+the potion of curing
+{m}der Trank des Gegenmittels
+%%%%
+the potion of degeneration
+{m}der Trank der Degeneration
+%%%%
+the potion of experience
+{m}der Trank der Erfahrung
+%%%%
+the potion of flight
+{m}der Trank des Fliegens
+%%%%
+the potion of haste
+{m}der Trank der Eile
+%%%%
+the potion of heal wounds
+{m}der Trank der Wundheilung
+%%%%
+the potion of invisibility
+{m}der Trank der Unsichtbarkeit
+%%%%
+the potion of lignification
+{m}der Trank der Lignifizierung
+%%%%
+the potion of magic
+{m}der Trank der Magie
+%%%%
+the potion of might
+{m}der Trank der Macht
+%%%%
+the potion of mutation
+{m}der Trank der Mutation
+%%%%
+the potion of resistance
+{m}der Trank der Resistenz
+%%%%
+
+# unidentified potions can have 1 or 2 adjectives
+# the adjective closest to the noun is a colour
+
+# Some potion colours are the names of materials, and are used elsewhere
+# in Crawl to mean actually made of/with that thing, rather than merely having
+# its colour. In English, we can get away with using the same word for both
+# meanings, but that's not necessarily the case in other languages.
+%%%%
+the amethyst potion
+{m}der amethystfarbene Zaubertrank
+%%%%
+the black potion
+{m}der schwarze Zaubertrank
+%%%%
+the blue potion
+{m}der blaue Zaubertrank
+%%%%
+the brown potion
+{m}der braune Zaubertrank
+%%%%
+the coppery potion
+{m}der kupferfarbene Zaubertrank
+%%%%
+the cyan potion
+{m}der blaugrüne Zaubertrank
+%%%%
+the dark potion
+{m}der dunkle Zaubertrank
+%%%%
+the emerald potion
+{m}der smaragdgrüne Zaubertrank
+%%%%
+the golden potion
+{m}der goldene Zaubertrank
+%%%%
+the green potion
+{m}der grüne Zaubertrank
+%%%%
+the grey potion
+{m}der graue Zaubertrank
+%%%%
+the inky potion
+{m}der tintenschwarze Zaubertrank
+%%%%
+the orange potion
+{m}der orange Zaubertrank
+%%%%
+the pink potion
+{m}der rosa Zaubertrank
+%%%%
+the puce potion
+{m}der braunrote Zaubertrank
+%%%%
+the purple potion
+{m}der purpurrote Zaubertrank
+%%%%
+the red potion
+{m}der rote Zaubertrank
+%%%%
+the ruby potion
+{m}der rubinrote Zaubertrank
+%%%%
+the sapphire potion
+{m}der saphirblaue Zaubertrank
+%%%%
+the silvery potion
+{m}der silberne Zaubertrank
+%%%%
+the white potion
+{m}der weiße Zaubertrank
+%%%%
+the yellow potion
+{m}der gelbe Zaubertrank
+%%%%
+
+#################################
+# Magical Staves
+#################################
+
+# generic
+%%%%
+the staff
+{m}der Stab
+%%%%
+
+# identified
+%%%%
+the staff of fire
+{m}der Stab des Feuers
+%%%%
+the staff of cold
+{m}der Stab der Kälte
+%%%%
+the staff of poison
+{m}der Stab des Giftes
+%%%%
+the staff of death
+{m}der Stab des Todes
+%%%%
+the staff of conjuration
+{m}der Stab der Konjuration
+%%%%
+the staff of air
+{m}der Stab der Luft
+%%%%
+the staff of earth
+{m}der Stab der Erde
+%%%%
+# obsolete item (can occur if player loads a saved game from an older version)
+the staff of removedness
+{m}der Stab der Obsoleszenz
+%%%%
+
+#################################
+# Corpses
+#################################
+
+%%%%
+the @monster@ corpse
+{f}die Leiche {gen}@a_monster@
+%%%%
+the @monster@ corpse of @name@
+{f}die Leiche {gen}@the_monster@ {nom}@name@
+%%%%
+# can appear in the_hattery minivault
+the skinned spriggan corpse
+{f}die gehäutete Leiche eines Spriggans
+%%%%
+
+#################################
+# Miscellaneous Items
+#################################
+
+%%%%
+the box of beasts
+{f}die Kiste der Bestien
+%%%%
+the lightning rod
+{m}der Blitzfänger
+%%%%
+the phial of floods
+{f}die Phiole der Fluten
+%%%%
+the phantom mirror
+{m}der Phantomspiegel
+%%%%
+the figurine of a ziggurat
+{f}die Figur einer Zikkurat
+%%%%
+the condenser vane
+{f}die Kondensationsfahne
+%%%%
+the piece from Xom's chessboard
+{f}die Figur von Xoms Schachbrett
+%%%%
+the tin of tremorstones
+{f}die Dose Erdbebensteine
+%%%%
+the quad damage
+{m}der Vierfachschaden
+%%%%
+
+#################################
+# Gold
+#################################
+%%%%
+the gold piece
+{f}die Goldmünze
+%%%%

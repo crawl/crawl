@@ -1,0 +1,958 @@
+###############################################################################
+#
+# Translations for spells
+#
+###############################################################################
+
+%%%%
+Teleport Self
+Sich teleportieren
+%%%%
+Cause Fear
+Furcht verursachen
+%%%%
+Magic Dart
+Magisches Geschoss
+%%%%
+Fireball
+Feuerball
+%%%%
+Apportation
+Apportation
+%%%%
+Conjure Flame
+Flamme manifestieren
+%%%%
+# duplicate of ability
+#Dig
+#
+%%%%
+Bolt of Fire
+Feuerstrahl
+%%%%
+Bolt of Cold
+Kältestrahl
+%%%%
+Lightning Bolt
+Blitz
+%%%%
+Blinkbolt
+Blitzsprung
+%%%%
+Bolt of Magma
+Magmastrahl
+%%%%
+Polymorph
+Polymorph
+%%%%
+Slow
+Verlangsamen
+%%%%
+Haste
+Eile
+%%%%
+Petrify
+Versteinern
+%%%%
+Confuse
+Verwirren
+%%%%
+Invisibility
+Unsichtbarkeit
+%%%%
+Throw Flame
+Flamme werfen
+%%%%
+Throw Frost
+Frost werfen
+%%%%
+Disjunction
+Trennung
+%%%%
+Freezing Cloud
+Frostwolke
+%%%%
+Mephitic Cloud
+Mephitische Wolke
+%%%%
+Venom Bolt
+Giftstrahl
+%%%%
+Olgreb's Toxic Radiance
+Olgrebs toxische Strahlung
+%%%%
+Teleport Other
+Andere teleportieren
+%%%%
+Death's Door
+Pforte des Todes
+%%%%
+Mass Confusion
+Massenverwirrung
+%%%%
+# duplicate of ability
+#Smiting
+#
+%%%%
+Summon Small Mammal
+Kleines Säugetier beschwören
+%%%%
+Abjuration
+Abjuration
+%%%%
+Bolt of Draining
+Strahl der Auszehrung
+%%%%
+Lehudib's Crystal Spear
+Lehudibs Kristallspeer
+%%%%
+# short form of the spell name above
+Crystal Spear
+Kristallspeer
+%%%%
+Tornado
+Tornado
+%%%%
+Poisonous Cloud
+Giftwolke
+%%%%
+Fire Storm
+Feuersturm
+%%%%
+Call Down Damnation
+Verdammnis herabrufen
+%%%%
+# duplicate of ability
+#Blink
+#
+%%%%
+Blink Range
+In Reichweite blinzeln
+%%%%
+Blink Away
+Wegblinzeln
+%%%%
+Blink Close
+In die Nähe blinzeln
+%%%%
+Iskenderun's Mystic Blast
+Iskenderuns mystische Druckwelle
+%%%%
+Summon Horrible Things
+Schreckliche Dinge beschwören
+%%%%
+Malign Gateway
+Bösartiges Tor
+%%%%
+Enslavement
+Versklavung
+%%%%
+#Animate Dead
+#Tote beleben
+%%%%
+Pain
+Schmerz
+%%%%
+Animate Skeleton
+Skelett beleben
+%%%%
+Vampiric Draining
+Vampirische Auszehrung
+%%%%
+Haunt
+Heimsuchung
+%%%%
+Borgnjor's Revivification
+Borgnjor's Wiederbelebung
+%%%%
+Freeze
+Einfrieren
+%%%%
+Ozocubu's Refrigeration
+Ozocubu's Abkühlung
+%%%%
+Sticky Flame
+Klebrige Flamme
+%%%%
+Summon Ice Beast
+Eisbestie beschwören
+%%%%
+Ozocubu's Armour
+Ozocubus Rüstung
+%%%%
+Call Imp
+Teufelchen rufen
+%%%%
+Repel Missiles
+Geschosse abwenden
+%%%%
+Berserker Rage
+Berserkerwut
+%%%%
+Dispel Undead
+Untote bannen
+%%%%
+Poison Arrow
+Giftpfeil
+%%%%
+Twisted Resurrection
+Grässliche Wiederauferstehung
+%%%%
+Banishment
+Verbannung
+%%%%
+Sting
+Stachel
+%%%%
+Sublimation of Blood
+Sublimation von Blut
+%%%%
+Tukima's Dance
+Tukimas Tanz
+%%%%
+Summon Demon
+Dämon beschwören
+%%%%
+Summon Greater Demon
+Größeren Dämon beschwören
+%%%%
+Corpse Rot
+Leichenfäule
+%%%%
+Iron Shot
+Eisenschuss
+%%%%
+Stone Arrow
+Steingeschoss
+%%%%
+Shock
+Schock
+%%%%
+Swiftness
+Schnelligkeit
+%%%%
+Debugging Ray
+Entstörungsstrahl
+%%%%
+Agony
+Agonie
+%%%%
+Spider Form
+Spinnengestalt
+%%%%
+Disintegrate
+Desintegrieren
+%%%%
+Blade Hands
+Klingenhände
+%%%%
+Statue Form
+Statuengestalt
+%%%%
+Ice Form
+Eisgestalt
+%%%%
+Dragon Form
+Drachengestalt
+%%%%
+Hydra Form
+Hydragestalt
+%%%%
+Necromutation
+Nekromutation
+%%%%
+Death Channel
+Todeskanal
+%%%%
+Symbol of Torment
+Symbol der Peinigung
+%%%%
+Throw Icicle
+Eiszapfen werfen
+%%%%
+Airstrike
+Luftschlag
+%%%%
+Shadow Creatures
+Schattenkreaturen
+%%%%
+Confusing Touch
+Verwirrende Berührung
+%%%%
+Flame Tongue
+Flammenzunge
+%%%%
+Passwall
+Wand passieren
+%%%%
+Ignite Poison
+Gift entzünden
+%%%%
+Call Canine Familiar
+Hundefamiliar rufen
+%%%%
+Summon Dragon
+Drachen beschwören
+%%%%
+Ensorcelled Hibernation
+Verhexter Winterschlaf
+%%%%
+Metabolic Englaciation
+Metabolische Vereisung
+%%%%
+Silence
+Stille
+%%%%
+Shatter
+Erschüttern
+%%%%
+Dispersal
+Streuung
+%%%%
+Static Discharge
+Statische Entladung
+%%%%
+Corona
+Korona
+%%%%
+Alistair's Intoxication
+Alistairs Rausch
+%%%%
+Lee's Rapid Deconstruction
+Lees schnelle Dekonstruktion
+%%%%
+Sandblast
+Sandstrahl
+%%%%
+Simulacrum
+Simulakrum
+%%%%
+Conjure Ball Lightning
+Kugelblitz
+%%%%
+Chain Lightning
+Kettenblitz
+%%%%
+Excruciating Wounds
+Quälende Wunden
+%%%%
+Portal Projectile
+Geschoss teleportieren
+%%%%
+Monstrous Menagerie
+Monströse Menagerie
+%%%%
+Passage of Golubria
+Passage von Golubria
+%%%%
+Fulminant Prism
+Fulminantes Prisma
+%%%%
+Paralyse
+Lähmen
+%%%%
+Minor Healing
+Geringe Heilung
+%%%%
+Major Healing
+Große Heilung
+%%%%
+Woodweal
+Holzwohl
+%%%%
+# duplicate of ability
+#Hurl Damnation
+#
+%%%%
+Brain Feed
+Gehirn absaugen
+%%%%
+Noxious Cloud
+Schädliche Wolke
+%%%%
+Steam Ball
+Dampfkugel
+%%%%
+Summon Ufetubus
+Ufetubus beschwören
+%%%%
+Summon Hell Beast
+Höllenbestie beschwören
+%%%%
+Energy Bolt
+Energiestrahl
+%%%%
+# duplicate of ability
+#Spit Poison
+#
+%%%%
+Summon Undead
+Untote beschwören
+%%%%
+Cantrip
+Zaubertrick
+%%%%
+Quicksilver Bolt
+Quecksilberstrahl
+%%%%
+Metal Splinters
+Metallsplitter
+%%%%
+Splinterspray
+Splitter versprühen
+%%%%
+Miasma Breath
+Miasma spucken
+%%%%
+Summon Drakes
+Drachlinge beschwören
+%%%%
+Blink Other
+Andere blinzeln
+%%%%
+Blink Other Close
+Andere in die Nähe blinzeln
+%%%%
+Summon Mushrooms
+Pilze beschwören
+%%%%
+Spit Acid
+Säure spucken
+%%%%
+Acid Splash
+Säurespritzer
+%%%%
+Sticky Flame Range
+Weitreichende klebrige Flamme
+%%%%
+Fire Breath
+Feuerodem
+%%%%
+Searing Breath
+Versengender Odem
+%%%%
+Chaos Breath
+Chaos spucken
+%%%%
+Cold Breath
+Kälte speien
+%%%%
+Chilling Breath
+Kühler Odem
+%%%%
+Summon Water Elementals
+Wasserelementare beschwören
+%%%%
+Porkalator
+Schweinifizieren
+%%%%
+Spawn Tentacles
+Tentakel bilden
+%%%%
+Tomb of Doroklohe
+Gruft von Doroklohe
+%%%%
+Summon Eyeballs
+Augäpfel beschwören
+%%%%
+Haste Other
+Anderen Eile gewähren
+%%%%
+Summon Earth Elementals
+Erdelementare beschwören
+%%%%
+Summon Air Elementals
+Luftelementare beschwören
+%%%%
+Summon Fire Elementals
+Feuerelementare beschwören
+%%%%
+Sleep
+Schlaf
+%%%%
+Mara Summon
+Maras Beschwörung
+%%%%
+Summon Illusion
+Illusion beschwören
+%%%%
+Primal Wave
+Urzeitliche Welle
+%%%%
+Call Tide
+Flut rufen
+%%%%
+Orb of Destruction
+Kugel der Zerstörung
+%%%%
+Ink Cloud
+Tintenwolke
+%%%%
+Might
+Macht
+%%%%
+Might Other
+Andere ermächtigen
+%%%%
+Awaken Forest
+Wald erwecken
+%%%%
+Druid's Call
+Ruf des Druiden
+%%%%
+#Brothers in Arms
+#Gebrüder in Waffen
+%%%%
+#Trog's Hand
+#Trogs Hand
+%%%%
+Summon Spectral Orcs
+Spektrale Orks beschwören
+%%%%
+Summon Holies
+Heilige beschwören
+%%%%
+#Heal Other
+#Andere heilen
+%%%%
+Holy Flames
+Heilige Flammen
+%%%%
+Holy Breath
+Heiliger Odem
+%%%%
+#Injury Mirror
+#Verletzungsspiegel
+%%%%
+#Drain Life
+#Leben entziehen
+%%%%
+Leda's Liquefaction
+Ledas Verflüssigung
+%%%%
+Summon Hydra
+Hydra beschwören
+%%%%
+Mesmerise
+Mesmerisieren
+%%%%
+Fire Summon
+Feuerbeschwörung
+%%%%
+Petrifying Cloud
+Versteinernde Wolke
+%%%%
+Inner Flame
+Innere Flamme
+%%%%
+Beastly Appendage
+Bestialische Extremität
+%%%%
+Ensnare
+Umschlingen
+%%%%
+Thunderbolt
+Donnerblitz
+%%%%
+Iskenderun's Battlesphere
+Iskenderuns Gefechtssphäre
+%%%%
+Summon Minor Demon
+Kleinen Dämon beschwören
+%%%%
+Malmutate
+Malmutieren
+%%%%
+Dazzling Flash
+Blendender Blitz
+%%%%
+Force Lance
+Drucklanze
+%%%%
+Sentinel's Mark
+Zeichen des Wächters
+%%%%
+Word of Recall
+Wort des Rückrufs
+%%%%
+Injury Bond
+Verletzungsbindung
+%%%%
+Spectral Cloud
+Spektralwolke
+%%%%
+Ghostly Fireball
+Geisterhafter Feuerball
+%%%%
+Call Lost Soul
+Verlorene Seele rufen
+%%%%
+Dimension Anchor
+Dimensionsanker
+%%%%
+Blink Allies Encircling
+Verbündete einkreisend blinzeln
+%%%%
+Awaken Vines
+Ranken erwecken
+%%%%
+Volley of Thorns
+Dornensalve
+%%%%
+Wall of Brambles
+Dornenbarriere
+%%%%
+Waterstrike
+Wasserschlag
+%%%%
+Wind Blast
+Windstoß
+%%%%
+Strip Willpower
+Willenskraft entziehen
+%%%%
+Wereblood
+Werblut
+%%%%
+Summon Vermin
+Ungeziefer beschwören
+%%%%
+Malign Offering
+Bösartige Opfergabe
+%%%%
+Searing Ray
+Versengender Strahl
+%%%%
+Discord
+Zwietracht
+%%%%
+Invisibility Other
+Andere unsichtbar machen
+%%%%
+Virulence
+Virulenz
+%%%%
+Orb of Electricity
+Kugel der Elektrizität
+%%%%
+Flash Freeze
+Blitzgefrieren
+%%%%
+Legendary Destruction
+Legendäre Zerstörung
+%%%%
+Forceful Invitation
+Gewaltsame Einladung
+%%%%
+Plane Rend
+Ebene zerreißen
+%%%%
+Chain of Chaos
+Kette des Chaos
+%%%%
+Call of Chaos
+Ruf des Chaos
+%%%%
+Black Mark
+Schwarzes Zeichen
+%%%%
+Sap Magic
+Magie entziehen
+%%%%
+#Major Destruction
+#Große Zerstörung
+%%%%
+Blink Allies Away
+Verbündete wegblinzeln
+%%%%
+Summon Forest
+Wald beschwören
+%%%%
+Summon Lightning Spire
+Blitzturm beschwören
+%%%%
+Summon Guardian Golem
+Wächtergolem beschwören
+%%%%
+Shadow Shard
+Schattensplitter
+%%%%
+Shadow Bolt
+Schattenstrahl
+%%%%
+Crystal Bolt
+Kristallstrahl
+%%%%
+Random Bolt
+Zufallsstrahl
+%%%%
+Glaciate
+Vergletschern
+%%%%
+Dragon's Call
+Drachenruf
+%%%%
+Spellforged Servitor
+Zaubergeschmiedeter Diener
+%%%%
+Summon Mana Viper
+Manaviper beschwören
+%%%%
+Phantom Mirror
+Phantomspiegel
+%%%%
+Drain Magic
+Magie verzehren
+%%%%
+Corrosive Bolt
+Korrosiver Strahl
+%%%%
+gehenna serpent of hell breath
+Odem der Höllenschlange von Gehenna
+%%%%
+cocytus serpent of hell breath
+Odem der Höllenschlange von Kokytus
+%%%%
+dis serpent of hell breath
+Odem der Höllenschlange von Dis
+%%%%
+tartarus serpent of hell breath
+Odem der Höllenschlange von Tartarus
+%%%%
+Summon Emperor Scorpions
+Kaiserskorpione beschwören
+%%%%
+Irradiate
+Verstrahlen
+%%%%
+Spit Lava
+Lava spucken
+%%%%
+Electrical Bolt
+Elektrischer Strahl
+%%%%
+Flaming Cloud
+Flammende Wolke
+%%%%
+Throw Barbs
+Widerhaken schleudern
+%%%%
+Battlecry
+Kampfschrei
+%%%%
+Warning Cry
+Warnruf
+%%%%
+Seal Doors
+Türen versiegeln
+%%%%
+Flay
+Schinden
+%%%%
+Berserk Other
+Andere in Berserkerwut versetzen
+%%%%
+Corrupting Pulse
+Korrumpierender Impuls
+%%%%
+Siren Song
+Sirenengesang
+%%%%
+Avatar Song
+Lied des Avatars
+%%%%
+Paralysis Gaze
+Lähmender Blick
+%%%%
+Confusion Gaze
+Verwirrender Blick
+%%%%
+Draining Gaze
+Auszehrender Blick
+%%%%
+Death Rattle
+Todesröcheln
+%%%%
+Summon Scarabs
+Skarabäen beschwören
+%%%%
+Throw Ally
+Verbündeten werfen
+%%%%
+#Cleansing Flame
+#Läuternde Flamme
+%%%%
+Gell's Gravitas
+Gells Gravitas
+%%%%
+Yara's Violent Unravelling
+Yaras gewaltsame Auflösung
+%%%%
+Entropic Weave
+Entropie weben
+%%%%
+Summon Executioners
+Scharfrichter beschwören
+%%%%
+Doom Howl
+Heulen der Verdammnis
+%%%%
+Awaken Earth
+Erde erwecken
+%%%%
+Aura of Brilliance
+Aura des Glanzes
+%%%%
+Iceblast
+Eissprengung
+%%%%
+Slug Dart
+Schneckenpfeil
+%%%%
+Sprint
+Sprint
+%%%%
+#Greater Servant of Makhleb
+#Großer Diener des Makhleb
+%%%%
+Bind Souls
+Seelen binden
+%%%%
+Infestation
+Infestation
+%%%%
+Still Winds
+Wind stillen
+%%%%
+Resonance Strike
+Resonanzschlag
+%%%%
+Ghostly Sacrifice
+Geisterhafte Aufopferung
+%%%%
+Dream Dust
+Traumstaub
+%%%%
+Lesser Beckoning
+Kleineres Herbeiwinken
+%%%%
+#Upheaval
+#Umwälzung
+%%%%
+Random Effects
+Zufällige Effekte
+%%%%
+Poisonous Vapours
+Giftige Ausdünstungen
+%%%%
+Ignition
+Entzündung
+%%%%
+Vortex
+Wirbel
+%%%%
+Borgnjor's Vile Clutch
+Borgnjors böser Griff
+%%%%
+Harpoon Shot
+Harpunenschuss
+%%%%
+Grasping Roots
+Greifende Wurzeln
+%%%%
+Throw Klown Pie
+Klownpastete werfen
+%%%%
+Sporulate
+Sporen erzeugen
+%%%%
+Starburst
+Strahlenkranz
+%%%%
+Foxfire
+Fuchsfeuer
+%%%%
+Marshlight
+Sumpflicht
+%%%%
+Hailstorm
+Hagelsturm
+%%%%
+Eringya's Noxious Bog
+Eringyas verdorbenes Moor
+%%%%
+Agony Range
+Weitreichende Agonie
+%%%%
+Dispel Undead Range
+Weitreichendes Untote bannen
+%%%%
+Frozen Ramparts
+Gefrorenes Bollwerk
+%%%%
+Absolute Zero
+Absoluter Nullpunkt
+%%%%
+Sonic wave
+Schallwelle
+%%%%
+Roll
+Rollen
+%%%%
+Hurl Sludge
+Schlamm schleudern
+%%%%
+Polar Vortex
+Polarsturm
+%%%%
+Call Down Lightning
+Blitz herabrufen
+%%%%
+Charm
+Verzaubern
+%%%%
+Mindburst
+Kopfzerplatzen
+%%%%
+Storm Form
+Sturmgestalt
+%%%%
+Creeping Frost
+Kriechender Frost
+%%%%
+Weakening Gaze
+Schwächender Blick
+%%%%
+Maxwell's Capacitive Coupling
+Maxwells kapazitive Kopplung
+%%%%
+Summon Tzitzimitl
+Tzitzimitl beschwören
+%%%%
+Summon Hell Sentinel
+Höllenwächter beschwören
+%%%%
+Animate Armour
+Rüstung erwecken
+%%%%
+Manifold Assault
+Vielfältigter Angriff
+%%%%
+Goad Beasts
+Bestien anstacheln
+%%%%
+Concentrate Venom
+Gift konzentrieren
+%%%%
+Eruption
+Eruption
+%%%%
+Pyroclastic Surge
+Pyroklastische Woge
+%%%%
+Stunning Burst
+Betäubende Explosion
+%%%%
+nonexistent spell
+nicht vorhandener Zauber
+%%%%

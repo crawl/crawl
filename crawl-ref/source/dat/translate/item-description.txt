@@ -1,0 +1,1181 @@
+###############################################################################
+#
+# Translations for item description
+#
+# The item description window first shows specific text from items.txt,
+# unrand.txt or unident.txt under source/dat/descript.
+#
+# After that, it shows whichever of the strings below that apply.
+#
+###############################################################################
+
+#################################
+# Generic properties
+#################################
+
+%%%%
+It affects your AC (%+d).
+
+%%%%
+It affects your SH (%+d).
+
+%%%%
+It affects your shielding (%+d).
+
+%%%%
+It affects your evasion (%+d).
+
+%%%%
+It affects your strength (%+d).
+
+%%%%
+It affects your intelligence (%+d).
+
+%%%%
+It affects your dexterity (%+d).
+
+%%%%
+It affects your accuracy and damage with ranged weapons and melee (%+d).
+
+%%%%
+It insulates you from electricity.
+
+%%%%
+It affects your health (%+d).
+
+%%%%
+It affects your magic capacity (%+d).
+
+%%%%
+It lets you see invisible.
+
+%%%%
+It lets you turn invisible.
+
+%%%%
+It grants you flight.
+
+%%%%
+It lets you blink.
+
+%%%%
+It lets you go berserk.
+
+%%%%
+It may make noises in combat.
+
+%%%%
+It prevents spellcasting.
+
+%%%%
+It may teleport you next to monsters.
+
+%%%%
+It prevents most forms of teleportation.
+
+%%%%
+It may make you go berserk in combat.
+
+%%%%
+It protects you against confusion.
+
+%%%%
+It causes magical contamination when unequipped.
+
+%%%%
+It protects you from missiles.
+
+%%%%
+It increases your rate of health regeneration.
+
+%%%%
+It protects you from acid and corrosion.
+
+%%%%
+It protects you from mutation.
+
+%%%%
+It may corrode you when you take damage.
+
+%%%%
+It drains your maximum health when unequipped.
+
+%%%%
+It may slow you when you take damage.
+
+%%%%
+It will be destroyed if unequipped.
+
+%%%%
+It increases damage dealt and taken.
+
+%%%%
+It bestows one free step when moving towards enemies.
+
+%%%%
+It makes you extremely vulnerable to %s.
+
+%%%%
+It makes you very vulnerable to %s.
+
+%%%%
+It makes you vulnerable to %s.
+
+%%%%
+It protects you from %s.
+
+%%%%
+It greatly protects you from %s.
+
+%%%%
+It renders you almost immune to %s.
+
+%%%%
+It greatly decreases your willpower.
+
+%%%%
+It greatly increases your willpower.
+
+%%%%
+It decreases your willpower.
+
+%%%%
+It increases your willpower.
+
+%%%%
+It makes you much less stealthy.
+
+%%%%
+It makes you much more stealthy.
+
+%%%%
+It makes you less stealthy.
+
+%%%%
+It makes you more stealthy.
+
+%%%%
+It may have some hidden properties.
+
+%%%%
+It has a curse placed upon it.
+
+%%%%
+It has a curse which improves the following skills:
+
+%%%%
+It is an ancient artefact.
+
+%%%%
+This item has been removed.
+
+%%%%
+[ERROR: no desc for item name '%s']. Perhaps this item has been removed?
+
+%%%%
+# your god disapproves
+%s disapproves of the use of such an item.
+
+%%%%
+"Stash search prefixes: "
+
+%%%%
+"Menu/colouring prefixes: "
+
+%%%%
+
+# magic enhancement
+%%%%
+It improves your spell success rate.
+
+%%%%
+It enhances your fire magic.
+
+%%%%
+It enhances your ice magic.
+
+%%%%
+It enhances your earth magic.
+
+%%%%
+It enhances your air magic.
+
+%%%%
+It enhances your poison magic.
+
+%%%%
+It enhances your conjuration magic.
+
+%%%%
+
+# maximum enchantment - applies to weapons and armour
+%%%%
+It can be maximally enchanted to +%d.
+
+%%%%
+It cannot be enchanted further.
+
+%%%%
+This ancient artefact cannot be changed by magic or mundane means.
+
+%%%%
+
+
+#################################
+# Weapons
+#################################
+
+%%%%
+Base accuracy: %+d  Base damage: %d  Base attack delay: %.1f
+
+%%%%
+Firing bullets:    Base damage: %d
+
+%%%%
+Base damage: %d  Base attack delay: %.1f
+
+%%%%
+It can be evoked to extend its reach.
+
+%%%%
+It hits all enemies adjacent to the wielder, dealing less damage to those not targeted.
+
+%%%%
+It can be used to riposte, swiftly retaliating against a missed attack.
+
+%%%%
+It is extremely good for stabbing helpless or unaware enemies.
+
+%%%%
+It is particularly good for stabbing helpless or unaware enemies.
+
+%%%%
+Any ammunition fired from it burns those it strikes, dealing additional fire damage.
+
+%%%%
+Big, fiery blades are also staple armaments of hydra-hunters.
+
+%%%%
+Any ammunition fired from it freezes those it strikes, dealing additional cold damage.
+
+%%%%
+It freezes those it strikes, dealing additional cold damage.
+
+%%%%
+It can also slow down cold-blooded creatures.
+
+%%%%
+It has been blessed by the Shining One, and any ammunition fired from it cause great damage to the undead and demons.
+
+%%%%
+It has been blessed by the Shining One to cause great damage to the undead and demons.
+
+%%%%
+Any ammunition fired from it occasionally discharges a powerful burst of electricity upon striking a foe.
+
+%%%%
+It occasionally discharges a powerful burst of electricity upon striking a foe.
+
+%%%%
+Any ammunition fired from it poisons the flesh of those it strikes.
+
+%%%%
+It poisons the flesh of those it strikes.
+
+%%%%
+It grants its wielder temporary protection when it strikes (+7 to AC).
+
+%%%%
+A truly terrible weapon, it drains the life of any living foe it strikes.
+
+%%%%
+Attacks with this weapon are significantly faster.
+
+%%%%
+Any ammunition fired from it inflicts extra damage upon your enemies.
+
+%%%%
+It inflicts extra damage upon your enemies.
+
+%%%%
+Each projectile launched from it has a different, random effect.
+
+%%%%
+It occasionally heals its wielder for a portion of the damage dealt when it wounds a living foe.
+
+%%%%
+In the hands of one skilled in necromantic magic, it inflicts extra damage on living creatures.
+
+%%%%
+It warps and distorts space around it, and may blink, banish, or inflict extra damage upon those it strikes. Unwielding it can cause banishment or high damage.
+
+%%%%
+Any living foe damaged by it may be reanimated upon death as a zombie friendly to the wielder, with an increasing chance as more damage is dealt.
+
+%%%%
+It reduces the magical energy of the wielder, and disrupts the spells and magical abilities of those it strikes. Natural abilities and divine invocations are not affected.
+
+%%%%
+When its wielder attacks, the weapon's spirit leaps out and strikes again. The spirit shares a part of any damage it takes with its wielder.
+
+%%%%
+Any ammunition fired from it is coated in acid, damaging and corroding those it strikes.
+
+%%%%
+It is coated in acid, damaging and corroding those it strikes.
+
+%%%%
+It has no special brand (it is not flaming, freezing, etc), but is still enchanted in some way - positive or negative.
+
+%%%%
+It is temporarily rebranded; it is actually an unbranded weapon.
+
+%%%%
+It is temporarily rebranded; it is actually %s.
+
+%%%%
+This is %s.
+
+%%%%
+This weapon falls into the '%s' category.
+
+%%%%
+# magical staves can also be used as weapons
+It falls into the 'Staves' category.
+
+%%%%
+Your inability to study %s prevents you from drawing on the full power of this staff in melee.
+
+%%%%
+It is a one-handed weapon.
+
+%%%%
+It is a two-handed weapon.
+
+%%%%
+It is a weapon for one hand-pair.
+
+%%%%
+It is a weapon for two hand-pairs.
+
+%%%%
+It is too large for you to wield.
+
+%%%%
+
+# projectiles (ammo + thrown weapons)
+%%%%
+It has a random effect on any target it hits.
+
+%%%%
+It is coated with poison.
+
+%%%%
+It is tipped with a substance that causes asphyxiation, dealing direct damage as well as poisoning and slowing those it strikes.
+
+%%%%
+It is twice as likely to be destroyed on impact as other darts.
+
+%%%%
+It is tipped with a substance that sends those it hits into a mindless rage, attacking friend and foe alike.
+
+%%%%
+The chance of successfully applying its effect increases with Throwing and Stealth skill.
+
+%%%%
+It is tipped with a substance that causes blindness and brief confusion.
+
+%%%%
+It causes any target it hits to blink, with a tendency towards blinking further away from the attacker.
+
+%%%%
+# silver
+It deals increased damage compared to normal ammo and substantially increased damage to chaotic and magically transformed beings. It also inflicts extra damage against mutated beings, according to how mutated they are.
+
+%%%%
+It is always destroyed on impact.
+
+%%%%
+It may be destroyed on impact.
+
+%%%%
+
+#################################
+# Armour
+#################################
+
+%%%%
+Base armour rating: %d
+
+%%%%
+Base shield rating: %d
+
+%%%%
+Encumbrance rating: %d
+
+%%%%
+Evasion: %d
+
+%%%%
+If you switch to wearing this armour, your AC would increase by %d (%d -> %d).
+
+%%%%
+If you switch to wearing this armour, your AC would decrease by %d (%d -> %d).
+
+%%%%
+If you switch to wearing this armour, your AC would remain unchanged.
+
+%%%%
+If you remove this armour, your AC would increase by %d (%d -> %d).
+
+%%%%
+If you remove this armour, your AC would decrease by %d (%d -> %d).
+
+%%%%
+If you remove this armour, your AC would remain unchanged.
+
+%%%%
+it protects its wearer from fire.
+
+%%%%
+it protects its wearer from cold.
+
+%%%%
+it protects its wearer from poison.
+
+%%%%
+it allows its wearer to see invisible things.
+
+%%%%
+when activated, it grants its wearer temporary invisibility, but also drains their maximum health.
+
+%%%%
+it increases the strength of its wearer (Str +3).
+
+%%%%
+it increases the dexterity of its wearer (Dex +3).
+
+%%%%
+it increases the intelligence of its wearer (Int +3).
+
+%%%%
+it is very cumbersome, slowing its wearer's movement.
+
+%%%%
+it grants its wearer flight.
+
+%%%%
+it increases its wearer's willpower, protecting against certain magical effects.
+
+%%%%
+it protects its wearer from most sources of damage (AC +3).
+
+%%%%
+it enhances the stealth of its wearer.
+
+%%%%
+it protects its wearer from the effects of both fire and cold.
+
+%%%%
+it protects its wearer from the effects of negative energy.
+
+%%%%
+it increases the power of its wearer's magical spells.
+
+%%%%
+it protects its wearer from the effects of acid and corrosion.
+
+%%%%
+it reflects blocked missile attacks back in the direction they came from.
+
+%%%%
+it causes incoming damage to be divided between the wearer's reserves of health and magic.
+
+%%%%
+it improves its wearer's accuracy and damage with ranged weapons, such as bows and javelins (Slay +4).
+
+%%%%
+it protects its wearer by repelling missiles.
+
+%%%%
+it increases damage dealt and taken.
+
+%%%%
+it reduces the distance the wearer can be seen at and can see.
+
+%%%%
+its wearer takes one free step when moving towards enemies.
+
+%%%%
+# Warlock's Mirror
+With your current SH, it has a %d%% chance to reflect attacks against your willpower and other normally unblockable effects.
+
+%%%%
+
+#################################
+# Weapon/armour skill
+#################################
+
+%%%%
+This weapon's minimum attack delay (%.1f) is reached at skill level %d.
+
+%%%%
+This projectile's minimum attack delay (%.1f) is reached at skill level %d.
+
+%%%%
+# shield penalty
+Skill to remove penalty: %d.%d
+
+%%%%
+; use <white>(s)</white> to set %d.%d as a target for %s.
+
+%%%%
+Your skill: %d.%d
+
+%%%%
+Your (base) skill: %d.%d
+
+%%%%
+At %d%% training you would reach %d.%d in the equivalent of %d.%d XLs.
+
+%%%%
+At %d%% training you would reach %d.%d in about %d.%d XLs.
+
+%%%%
+At current training (%d%%) you reach %d.%d in the equivalent of %d.%d XLs.
+
+%%%%
+At current training (%d%%) you reach %d.%d in about %d.%d XLs.
+
+%%%%
+# xp = experience points, skp = skill points
+(%d xp, %d skp)
+
+%%%%
+
+#################################
+# Jewellery (rings/amulets)
+#################################
+
+%%%%
+It increases your rate of magic regeneration.
+
+%%%%
+It increases your evasion while moving and waiting.
+
+%%%%
+It causes incoming damage to be divided between your reserves of health and magic.
+
+%%%%
+It allows you to gain divine favour quickly.
+
+%%%%
+It reflects blocked missile attacks.
+
+%%%%
+
+#################################
+# Potions
+#################################
+
+%%%%
+# potion of lignification
+If you quaff this potion your AC would be %d.
+
+%%%%
+If you drink this now, you will no longer be %s.
+
+%%%%
+Drinking this now will have no effect.
+
+%%%%
+
+#################################
+# Wands
+#################################
+
+%%%%
+"Damage: "
+
+%%%%
+
+#################################
+# Miscelleneous
+#################################
+
+%%%%
+Once activated, this device is rendered temporarily inert.
+
+%%%%
+" However, it recharges as you gain experience."
+
+%%%%
+Once all charges have been used, this device and all other devices of its kind are rendered temporarily inert.
+
+%%%%
+Once activated, this device and all other devices of its kind are rendered temporarily inert.
+
+%%%%
+" However, they recharge as you gain experience."
+
+%%%%
+" The device is presently inert."
+
+%%%%
+
+# figurine of a ziggurat (glow increases the more zigs you complete)
+%%%%
+It is surrounded by a blinding glow.
+
+%%%%
+It is surrounded by a dazzling glow.
+
+%%%%
+It is surrounded by a bright glow.
+
+%%%%
+It is surrounded by a gentle glow.
+
+%%%%
+
+#################################
+# Artefact weapons
+#################################
+
+# Note: These are shown after any text from dat/descript/unrand.txt, and any
+# generic text related to their properties.
+
+# Arc Blade
+%%%%
+discharge
+
+%%%%
+It occasionally unleashes powerful arcs of lightning upon striking a foe. These may arc to other adjacent creatures (including the wielder, but dealing reduced damage to them) before grounding out.
+
+%%%%
+
+# Blowgun of the Assassin
+%%%%
+stab
+
+%%%%
+
+# Captain's Cutlass
+%%%%
+disarm
+
+%%%%
+It may disarm weapon-wielding foes when striking them, dealing extra damage in the process.
+
+%%%%
+
+# Damnation (arbalest)
+%%%%
+Any ammunition fired from it explodes in a burst of damnation on striking a foe, dealing damage which bypasses armour.
+
+%%%%
+
+# Devastator (shillelagh)
+%%%%
+shatter
+
+%%%%
+It releases a powerful concussive burst when it strikes, dealing extra damage to the target and all other foes adjacent to them.
+
+%%%%
+
+# Eos (morningstar)
+%%%%
+It grants its wielder a halo, increasing accuracy against those within it.
+
+%%%%
+
+# Finisher (scythe)
+%%%%
+eviscerate
+
+%%%%
+It may eviscerate those it strikes, slaying them instantly, with a decreasing chance against stronger foes.
+
+%%%%
+
+# Firestarter (great mace)
+%%%%
+It burns those it strikes, dealing additional fire damage.
+
+%%%%
+It fills those it strikes with an explosive inner flame.
+
+%%%%
+
+# Frostbite (axe)
+%%%%
+freezing cloud
+
+%%%%
+It freezes those it strikes, dealing additional cold damage. It can also slow down cold-blooded creatures.
+
+%%%%
+It occasionally leaves clouds of freezing vapour upon striking a foe.
+
+%%%%
+It grants immunity to clouds of freezing vapour.
+
+%%%%
+
+# Glaive of the Guard
+%%%%
+spectral
+
+%%%%
+When it strikes, its spirit leaps out and fights alongside the wielder.
+
+%%%%
+
+# Lajatang of Order
+%%%%
+It inflicts extra damage upon those it strikes, and deals substantially increased damage to chaotic, mutated and magically transformed beings.
+
+%%%%
+
+# Leech (demon blade)
+%%%%
+It heals its wielder for a portion of the damage dealt every time it strikes a living foe.
+
+%%%%
+
+# Majin-Bo (qurterstaff)
+%%%%
+It occasionally heals its wielder for a portion of the damage dealt when they wound a living foe with it or with a spell.
+
+%%%%
+Its wielder's spells cost health as well as magical power.
+
+%%%%
+
+# Mace of Variability
+%%%%
+chain chaos
+
+%%%%
+Each time it hits an enemy it has a different, random effect.
+
+%%%%
+It occasionally unleashes arcs of chaos on nearby creatures upon striking a foe.
+
+%%%%
+
+# Maxwell's thermic engine
+%%%%
+It becomes more effective when it hits something. This effect fades over time.
+
+%%%%
+
+# Obsidian Axe
+%%%%
+It occasionally summons demons to assist the wielder when it strikes in combat.
+
+%%%%
+Its wielder is mesmerised by any visible foes.
+
+%%%%
+It cannot be unequipped while any foes are visible.
+
+%%%%
+
+# Plutonium sword
+%%%%
+It occasionally inflicts wild transmutation effects on those it strikes, inflicting malmutation or extra damage, or polymorphing them into a new form.
+
+%%%%
+
+# Rift (demon trident)
+%%%%
+reach+
+
+%%%%
+It can reach especially far, and its reaching attacks ignore other creatures in the way.
+
+%%%%
+
+# Sceptre of Torment (eveningstar)
+%%%%
+torment
+
+%%%%
+It occasionally torments all nearby living foes when it strikes in combat.
+
+%%%%
+
+# Scythe of Curses
+%%%%
+It inflicts powerful necromantic curses on any living foe it strikes.
+
+%%%%
+
+# Singing Sword
+%%%%
+# note: Previous sentence starts with "Diese Waffe..." hence pronoun is "sie".
+It radiates damaging sonic waves as it strikes, especially in combat involving dangerous or numerous foes.
+
+%%%%
+
+# Snakebite (whip)
+%%%%
+It occasionally inflicts asphyxiating poison on those it strikes, dealing poison damage and causing slowness.
+
+%%%%
+
+# Sniper (heavy crossbow)
+%%%%
+Acc+∞
+
+%%%%
+Any ammunition fired from it never misses its target.
+
+%%%%
+
+# Spear of the Botono
+%%%%
+Hex
+
+%%%%
+
+# Spellbinder (demon whip)
+%%%%
+It unleashes wild and unpredictable magical effects upon striking a wizard or a creature with magical abilities.
+
+%%%%
+
+# Spriggan's Knife
+%%%%
+It is more effective when stabbing unaware enemies, treating them as though they were completely helpless.
+
+%%%%
+
+# Storm Bow
+%%%%
+Any ammunition fired by it passes through the targets it hits, potentially hitting all targets in its path until it reaches maximum range.
+
+%%%%
+
+# Sword of Cerebov
+%%%%
+It temporarily reduces the fire resistance of those it strikes.
+
+%%%%
+
+# Sword of Power
+%%%%
+It occasionally discharges a powerful but inaccurate bolt of energy upon striking a foe, with increased chance the greater the wielder's current health.
+
+%%%%
+
+# Undeadhunter (great mace)
+%%%%
+disrupt
+
+%%%%
+It inflicts significantly more damage against the undead.
+
+%%%%
+
+# Vampire's Tooth (dagger)
+%%%%
+It occasionally heals its wielder for the full amount of damage dealt when it wounds a living foe.
+
+%%%%
+
+# Wrath of Trog (axe)
+%%%%
+It causes slowness and exhaustion when equipped.
+
+%%%%
+It extends the wielder's berserk rage when killing foes.
+
+%%%%
+
+# Wyrmbane (lance)
+%%%%
+It inflicts extra damage against dragons and draconians.
+
+%%%%
+
+# Zealot's sword
+%%%%
+Whenever the wielder enters a berserk rage, their allies are berserked alongside them.
+
+%%%%
+
+#################################
+# Artefact magic staves
+#################################
+
+# Elemental Staff
+%%%%
+If the wielder is skilled in Evocations, they can discharge powerful blasts of elemental energy when striking with it.
+
+%%%%
+It enhances your fire, ice, earth and air magic.
+
+%%%%
+
+# Sceptre of Asmodeus (staff)
+%%%%
+It can be evoked to summon fiery demons, with success rate depending on Evocations skill. Those summoned this way will remain friendly only for a limited time.
+
+%%%%
+
+# Staff of Battle
+%%%%
+It summons a battlesphere in combat, with strength depending on Conjurations skill.
+
+%%%%
+
+# Staff of Dispater
+%%%%
+It can be evoked to hurl damnation at the cost of health and magic, with strength depending on Evocations skill.
+
+%%%%
+
+# Staff of Olgreb
+%%%%
+rPois∞
+
+%%%%
+It grants immunity to poison.
+
+%%%%
+It can be evoked to radiate toxic energy, with effectiveness depending on Evocations skill.
+
+%%%%
+If the wielder is skilled in Evocations, they can envenom those struck by it, dealing poison damage which bypasses armour.
+
+%%%%
+
+# Staff of Wucad Mu
+%%%%
+*channel
+
+%%%%
+It occasionally powers its wielder's spells, but with a chance of causing confusion or draining the wielder's intelligence.
+
+%%%%
+It becomes more likely to activate and less likely to backfire with increased Evocations skill.
+
+%%%%
+
+#################################
+# Artefact armour
+#################################
+
+# Cloak of the Thief
+%%%%
+*Fog
+
+%%%%
+It may release a thick cloud of smoke when the wearer is hurt.
+
+%%%%
+
+# Hood of the Assassin
+%%%%
+Detection Stab+
+
+%%%%
+It allows the wearer to sense nearby creatures.
+
+%%%%
+It allows the wearer to make particularly effective stabbing attacks against helpless or unaware enemies with any weapon.
+
+%%%%
+
+# Skin of Zhor
+%%%%
+*Englaciate
+
+%%%%
+It radiates cold, occasionally slowing all nearby creatures who are not resistant to cold.
+
+%%%%
+
+# Salamander hide armour
+%%%%
+Flames
+
+%%%%
+It surrounds you with a cloud of flames.
+
+%%%%
+It grants immunity to clouds of flame.
+
+%%%%
+
+# Robe of Folly
+%%%%
+Brilliance Will-∞
+
+%%%%
+It increases the power of your magical spells.
+
+%%%%
+It halves the magic cost of your spells (rounding up).
+
+%%%%
+It reduces your willpower to zero.
+
+%%%%
+
+# Robe of Night
+%%%%
+Dark
+
+%%%%
+It shrouds the wearer in darkness, reducing the range at which they can see and be seen by others.
+
+%%%%
+
+# Fencer's Gloves
+%%%%
+Riposte
+
+%%%%
+It allows the wearer to riposte with any weapon, or to riposte more often with a long blade, swiftly retaliating against a missed attack.
+
+%%%%
+
+# Cloak of Starlight
+%%%%
+*Dazzle
+
+%%%%
+It may blind those who miss an attack against the wearer in melee combat.
+
+%%%%
+
+# Ratskin Cloak
+%%%%
+When the wearer is hurt, rats may emerge from it to assist them.
+
+%%%%
+
+# Shield of the Gong
+%%%%
+It is deafeningly noisy when blocking attacks.
+
+%%%%
+
+# Robe of Clouds
+%%%%
++Thunder rCloud
+
+%%%%
+It can be evoked to surround the wearer with storm clouds, with success rate depending on Evocations skill.
+
+%%%%
+
+# Lightning Scales
+%%%%
+It allows the wearer to cover ground more swiftly.
+
+%%%%
+
+# Dragonskin Cloak
+%%%%
+It grants the wearer a chance to resist fire, cold, poison, electricity, acid, and negative energy.
+
+%%%%
+
+# Hat of the High Council
+%%%%
+Wiz-
+
+%%%%
+
+# Maxwell's etheric cage
+%%%%
+RegenMP+
+
+%%%%
+
+# Crown of Eternal Torment
+%%%%
+rTorment HP--
+
+%%%%
+
+# Robe of Vines
+%%%%
+NoPotionHeal
+
+%%%%
+Its wearer cannot be healed by potions.
+
+%%%%
+
+# Kryia's mail coat
+%%%%
+PotionHeal*2
+
+%%%%
+Potions are twice as effective at healing its wearer.
+
+%%%%
+
+# Warlock's Mirror (buckler)
+%%%%
+It can block and reflect piercing ranged attacks and magical attacks against the wielder's willpower.
+
+%%%%
+
+# Cigotuvi's Embrace
+%%%%
+It gathers nearby corpses to temporarily increase the armour it provides.
+
+%%%%
+It protects you from foul pestilence.
+
+%%%%
+
+# Seven-league Boots
+%%%%
+Rampage+∞
+
+%%%%
+Its wearer moves as far as possible in that direction when moving towards enemies.
+
+%%%%
+
+#################################
+# Artefact jewellery
+#################################
+
+# Ring of Shadows
+%%%%
+Umbra
+
+%%%%
+It surrounds you with an aura of shadow, increasing your stealth and reducing the accuracy of all within it (including the wearer).
+
+%%%%
+
+# Amulet of the Air
+%%%%
+Inacc Air
+
+%%%%
+It reduces the accuracy of all your attacks.
+
+%%%%
+
+# Necklace of Bloodlust
+%%%%
+It extends the wearer's berserk rage when killing foes.
+
+%%%%
+
+# Macabre finger necklace
+%%%%
+It enables you to equip an extra ring.
+
+%%%%

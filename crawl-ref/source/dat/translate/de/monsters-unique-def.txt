@@ -1,0 +1,332 @@
+###############################################################################
+#
+# Monsters - unique, definite article, nominative
+#
+###############################################################################
+
+# Notes:
+#
+# It might seem weird to list named monsters with the definite article, but it's
+# needed for messages like: "You hit the helpless Sigmund." Also, it's easier to
+# generate the "plain" version (without article) from the one with the article
+# than the other way round because it's very hard to identify plain unique names
+# (there are hundreds of other one-word strings that start with a capital
+# letter).
+#
+# Some uniques are gender-neutral in English. This is different to neuter.
+# (neuter -> it, gender neutral -> they). While German has neuter, it can't do
+# gender neutral, so in order to avoid calling people "it", we've used the
+# genders those monsters had in older versions of Crawl.
+
+%%%%
+# probably a reference to one of several Christian saints named Menas
+the Mennas
+{m}der Mennas
+%%%%
+# gender neutral in the English version of Crawl, but was previously male
+# a male centaur in Greek mythology
+the Nessos
+{m}der Nessos
+%%%%
+the Chuck
+{m}der Chuck
+%%%%
+# a cyclops in Greek mythology
+the Polyphemus
+{m}der Polyphem
+%%%%
+# a giant/titan in Greek mythology
+the Antaeus
+{m}der Antaeus
+%%%%
+# a Mesopotamian goddess
+the Tiamat
+{f}die Tiamat
+%%%%
+# a figure from Chinese mythology
+the Bai Suzhen
+{f}die Bai Suzhen
+%%%%
+# gender neutral in the English version of Crawl, but was previously female
+the Xtahua
+{f}die Xtahua
+%%%%
+the Ijyb
+{f}die Ijyb
+%%%%
+# gender neutral in the English version of Crawl, but was previously female
+the Robin
+{f}die Robin
+%%%%
+the Grum
+{m}der Grum
+%%%%
+the Duvessa
+{f}die Duvessa
+%%%%
+the Dowan
+{m}der Dowan
+%%%%
+# gender neutral in the English version of Crawl, but was previously male
+the Fannar
+{m}der Fannar
+%%%%
+the Jorgrun
+{m}der Jorgrun
+%%%%
+the Natasha
+{f}die Natascha
+%%%%
+# in Greek mythology, a woman who was transformed into a spider
+the Arachne
+{f}die Arachne
+%%%%
+# the name of the minotaur in Greek mythology
+the Asterion
+{m}der Asterion
+%%%%
+the Agnes
+{f}die Agnes
+%%%%
+# gender neutral in the English version of Crawl, was previously male, but Dissolution is a feminine noun
+the Dissolution
+{f}die Dissolution
+%%%%
+the Sonja
+{f}die Sonja
+%%%%
+the Pikel
+{m}der Pikel
+%%%%
+the Boris
+{m}der Boris
+%%%%
+# the original Egyptian name of the pharaoh also known by the Greek name Mykerinos
+the Menkaure
+{m}der Menkaure
+%%%%
+# the original Egyptian name of the pharaoh usually known by the Greek name Cheops
+the Khufu
+{m}der Khufu
+%%%%
+the Ilsuiw
+{f}die Ilsuiw
+%%%%
+the Vashnia
+{f}die Vashnia
+%%%%
+the Erolcha
+{f}die Erolcha
+%%%%
+the Urug
+{f}die Urug
+%%%%
+the Nergalle
+{f}die Nergalle
+%%%%
+# gender neutral in the English version of Crawl, but was previously male
+the Saint Roka
+{m}der Sankt Roka
+%%%%
+the Sojobo
+{f}die Sojobo
+%%%%
+# an angel in Islam
+the Azrael
+{m}der Azrael
+%%%%
+# a demon in Buddhism
+the Mara
+{m}der Mara
+%%%%
+the Aizul
+{f}die Aizul
+%%%%
+the Snorg
+{f}die Snorg
+%%%%
+the Purgy
+{m}der Purgy
+%%%%
+the Jory
+{m}der Jory
+%%%%
+the Gastronok
+{m}der Gastronok
+%%%%
+the Nellie
+{f}die Nellie
+%%%%
+the Murray
+{m}der Murray
+%%%%
+the Ignacio
+{m}der Ignacio
+%%%%
+the Grinder
+{f}die Grinder
+%%%%
+the Roxanne
+{f}die Roxanne
+%%%%
+the Terence
+{m}der Terence
+%%%%
+the Jessica
+{f}die Jessica
+%%%%
+# a hero in Norse mythology
+the Sigmund
+{m}der Sigmund
+%%%%
+the Edmund
+{m}der Edmund
+%%%%
+# named after the Greek goddess of the soul
+the Psyche
+{f}die Psyche
+%%%%
+the Donald
+{m}der Donald
+%%%%
+the Joseph
+{m}der Joseph
+%%%%
+the Erica
+{f}die Erica
+%%%%
+the Josephine
+{f}die Josephine
+%%%%
+the Harold
+{m}der Harold
+%%%%
+the Louise
+{f}die Louise
+%%%%
+the Frances
+{f}die Frances
+%%%%
+the Rupert
+{m}der Rupert
+%%%%
+# the original Greek name of the minor goddess usually known as Circe
+the Kirke
+{f}die Kirke
+%%%%
+the Frederick
+{m}der Frederick
+%%%%
+the Margery
+{f}die Margery
+%%%%
+the Maggie
+{f}die Maggie
+%%%%
+the Eustachio
+{m}der Eustachio
+%%%%
+the Maurice
+{m}der Maurice
+%%%%
+# Nikola Tesla
+the Nikola
+{m}der Nikola
+%%%%
+# gender neutral in the English version of Crawl, but was previously male
+the Mnoleg
+{m}der Mnoleg
+%%%%
+# gender neutral in the English version of Crawl, but was previously male
+the Lom Lobon
+{m}der Lom Lobon
+%%%%
+# gender neutral in the English version of Crawl, but was previously male
+the Cerebov
+{m}der Cerebov
+%%%%
+# gender neutral in the English version of Crawl, but was previously male
+the Gloorx Vloq
+{m}der Gloorx Vloq
+%%%%
+# from Greek mythology
+the Geryon
+{m}der Geryon
+%%%%
+# gender neutral in the English version of Crawl, but was previously male
+# Roman god of the underworld
+the Dispater
+{m}der Dispater
+%%%%
+# Greek name of a demon in Judaism/Christainity
+the Asmodeus
+{m}der Asmodäus
+%%%%
+# a Mesopotamian goddess
+the Ereshkigal
+{f}die Ereshkigal
+%%%%
+the Prince Ribbit
+{m}der Prinz Quak
+%%%%
+the Crazy Yiuf
+{m}der Verrückte Yiuf
+%%%%
+the Enchantress
+{f}die Zauberin
+%%%%
+the Blork the orc
+{m}der Blork der Ork
+%%%%
+the Blork
+{m}der Blork
+%%%%
+# a play on words - boss of the jellies in DCSS, and a substance created by bees
+the Royal Jelly
+{n}das Gelée Royale
+%%%%
+the Serpent of Hell
+{f}die Höllenschlange
+%%%%
+# from Greek mythology
+the Lernaean hydra
+{f}die Lernäische Hydra
+%%%%
+the Cigotuvi's Monster
+{n}das Cigotuvis Monster
+%%%%
+the Statue of Wucad Mu
+{f}die Statue von Wucad Mu
+%%%%
+
+# not really uniques, but gramatically similar
+
+%%%%
+the @name@'s ghost
+{m}der Geist von {dat}@name@
+%%%%
+the @name@'s illusion
+{f}die Illusion von {dat}@name@
+%%%%
+
+##################
+# Sprint Monsters
+##################
+
+%%%%
+# note: Must distinguish from fleshlords (in German, flesh and meat are both Fleisch)
+The Meatlord
+Der Schlachtmeister
+%%%%
+The Servant
+Der Diener
+%%%%
+The Captor
+Der Fänger
+%%%%
+The Defiler
+Der Schänder
+%%%%
+The Unspeakable
+Der Unsägliche
+%%%%

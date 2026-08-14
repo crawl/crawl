@@ -1,0 +1,733 @@
+###############################################################################
+#
+# Translations for dungeon features
+#
+###############################################################################
+
+################################
+# Definite article
+################################
+%%%%
+the unknown terrain
+
+%%%%
+the travel trail
+
+%%%%
+the door
+
+%%%%
+the gate
+
+%%%%
+the tree
+
+%%%%
+the awoken tree
+
+%%%%
+the demonic tree
+
+%%%%
+the petrified tree
+
+%%%%
+the mangrove
+
+%%%%
+the metal wall
+
+%%%%
+the crystal wall
+
+%%%%
+the rock wall
+
+%%%%
+the slime covered rock wall
+
+%%%%
+the stone wall
+
+%%%%
+the unnaturally hard rock wall
+
+%%%%
+the translucent rock wall
+
+%%%%
+the translucent stone wall
+
+%%%%
+the translucent unnaturally hard rock wall
+
+%%%%
+the wall of the weird stuff which makes up Pandemonium
+
+%%%%
+the grate
+
+%%%%
+the iron grate
+
+%%%%
+the open sea
+
+%%%%
+the endless lava
+
+%%%%
+the endless expanse of salt
+
+%%%%
+the orcish idol
+
+%%%%
+the granite statue
+
+%%%%
+the portal
+
+%%%%
+the portal to somewhere
+
+%%%%
+the lava
+
+%%%%
+the deep water
+
+%%%%
+the shallow water
+
+%%%%
+the toxic bog
+
+%%%%
+the floor
+
+%%%%
+the collapsed entrance
+
+%%%%
+the trap
+
+%%%%
+the mechanical trap
+
+%%%%
+the arrow trap
+
+%%%%
+the spear trap
+
+%%%%
+the blade trap
+
+%%%%
+the dart trap
+
+%%%%
+the bolt trap
+
+%%%%
+the net trap
+
+%%%%
+the pressure plate
+
+%%%%
+the dispersal trap
+
+%%%%
+the teleport trap
+
+%%%%
+the permanent teleport trap
+
+%%%%
+the shadow trap
+
+%%%%
+the dormant shadow trap
+
+%%%%
+the alarm trap
+
+%%%%
+the Zot trap
+
+%%%%
+the passage of Golubria
+
+%%%%
+the shaft
+
+%%%%
+the web
+
+%%%%
+the shop
+
+%%%%
+the abandoned shop
+
+%%%%
+the empty arch of ancient stone
+
+%%%%
+the detected shop or portal
+
+%%%%
+the staircase
+
+%%%%
+the stone staircase leading down
+
+%%%%
+the stone staircase leading up
+
+%%%%
+the escape hatch
+
+%%%%
+the escape hatch in the floor
+
+%%%%
+the escape hatch in the ceiling
+
+%%%%
+the labyrinth entrance
+
+%%%%
+the gateway to the Iron City of Dis
+
+%%%%
+the gateway to the ashen valley of Gehenna
+
+%%%%
+the gateway to the freezing wastes of Cocytus
+
+%%%%
+the gateway to the decaying netherworld of Tartarus
+
+%%%%
+the gateway to Hell
+
+%%%%
+the gateway back into the Dungeon
+
+%%%%
+the one-way gate to the infinite horrors of the Abyss
+
+%%%%
+the exit through the horrors of the Abyss
+
+%%%%
+the gateway leading out of the Abyss
+
+%%%%
+the one-way gate leading to the halls of Pandemonium
+
+%%%%
+the gate leading to another region of Pandemonium
+
+%%%%
+the gate leading out of Pandemonium
+
+%%%%
+the gate to the Vaults
+
+%%%%
+the gate leading back out of this place
+
+%%%%
+the gate to the Realm of Zot
+
+%%%%
+the gate leading to a distant place
+
+%%%%
+the gateway to a ziggurat
+
+%%%%
+the gateway to a bazaar
+
+%%%%
+the flickering gateway to a bazaar
+
+%%%%
+the portal to a secret trove of treasure
+
+%%%%
+the glowing drain
+
+%%%%
+the sand-covered staircase
+
+%%%%
+the flagged portal
+
+%%%%
+the gate leading to a gauntlet
+
+%%%%
+the frozen archway
+
+%%%%
+the dark tunnel
+
+%%%%
+the magical portal
+
+%%%%
+the ruined gateway
+
+%%%%
+the crumbling gateway
+
+%%%%
+the ice covered gate leading back out of this place
+
+%%%%
+the rocky tunnel leading out of this place
+
+%%%%
+the portal leading out of this place
+
+%%%%
+the staircase leading out of the dungeon
+
+%%%%
+the exit from the tutorial
+
+%%%%
+the staircase to the Slime Pits
+
+%%%%
+the staircase back to the Lair
+
+%%%%
+the staircase to the Orcish Mines
+
+%%%%
+the staircase back to the Dungeon
+
+%%%%
+the staircase to the Dwarven Hall
+
+%%%%
+the staircase to the Enchanted Forest
+
+%%%%
+the staircase to the Hall of Blades
+
+%%%%
+the staircase back to the Vaults
+
+%%%%
+the staircase to the Lair
+
+%%%%
+the staircase to the Crypt
+
+%%%%
+the staircase to the Ecumenical Temple
+
+%%%%
+the staircase to the Snake Pit
+
+%%%%
+the staircase to the Elven Halls
+
+%%%%
+the staircase back to the Mines
+
+%%%%
+the staircase to the Tomb
+
+%%%%
+the staircase back to the Crypt
+
+%%%%
+the staircase to the Swamp
+
+%%%%
+the staircase to the Shoals
+
+%%%%
+the hole to the Spider Nest
+
+%%%%
+the crawl-hole back to the Lair
+
+%%%%
+the staircase to the Depths
+
+%%%%
+the altar
+
+%%%%
+the detected altar
+
+%%%%
+the glowing silver altar of Zin
+
+%%%%
+the glowing golden altar of the Shining One
+
+%%%%
+the ancient bone altar of Kikubaaqudgha
+
+%%%%
+the basalt altar of Yredelemnul
+
+%%%%
+the shimmering altar of Xom
+
+%%%%
+the radiant altar of Vehumet
+
+%%%%
+the iron altar of Okawaru
+
+%%%%
+the burning altar of Makhleb
+
+%%%%
+the shimmering blue altar of Sif Muna
+
+%%%%
+the bloodstained altar of Trog
+
+%%%%
+the sparkling altar of Nemelex Xobeh
+
+%%%%
+the white marble altar of Elyvilon
+
+%%%%
+the corrupted altar of Lugonu
+
+%%%%
+the roughly hewn altar of Beogh
+
+%%%%
+the viscous altar of Jiyva
+
+%%%%
+the blossoming altar of Fedhas
+
+%%%%
+the snail-covered altar of Cheibriados
+
+%%%%
+the broken altar of Ashenzari
+
+%%%%
+the shadowy altar of Dithmenos
+
+%%%%
+the opulent altar of Gozag
+
+%%%%
+the stormy altar of Qazlal
+
+%%%%
+the sacrificial altar of Ru
+
+%%%%
+the faded altar of an unknown god
+
+%%%%
+the oddly glowing altar of Pakellas
+
+%%%%
+the hide-covered altar of Uskayaw
+
+%%%%
+the hazy altar of Hepliaklqana
+
+%%%%
+the ornate altar of the Wu Jian Council
+
+%%%%
+the fountain
+
+%%%%
+the fountain of clear blue water
+
+%%%%
+the fountain of sparkling water
+
+%%%%
+the fountain of blood
+
+%%%%
+the dry fountain
+
+%%%%
+the short-range portal
+
+%%%%
+the teleporter
+
+%%%%
+the transporter
+
+%%%%
+the transporter landing site
+
+%%%%
+the sealed passage leading up
+
+%%%%
+the sealed passage leading down
+
+%%%%
+the gateway leading deeper into the Abyss
+
+%%%%
+
+# from .des files
+%%%%
+The dimension's edge
+
+%%%%
+the damp floor
+
+%%%%
+the pulsating floor
+
+%%%%
+the rough-hewn floor
+
+%%%%
+
+################################
+# Indefinite article
+################################
+
+# note: No need to repeat any that are listed with a definite article because
+# a version with the indefinite article will be generated by grammar.txt
+
+%%%%
+# this one won't be properly generated by grammar.txt due to the 2nd article in some languages
+a detected shop or portal
+
+%%%%
+
+# extras from .des files
+%%%%
+an adventurer's gravestone
+
+%%%%
+an ash-covered pillar
+
+%%%%
+an autumnal tree
+
+%%%%
+a black wall
+
+%%%%
+a broken pillar
+
+%%%%
+a broken wreckage
+
+%%%%
+a carved rock wall
+
+%%%%
+a crumbled stone wall
+
+%%%%
+a damp floor
+
+%%%%
+a dead mangrove
+
+%%%%
+a dead tree
+
+%%%%
+a glass window
+
+%%%%
+a golden statue
+
+%%%%
+a golden wall
+
+%%%%
+a granite statue wielding a fearsome trident
+
+%%%%
+a granite statue wielding a mighty axe
+
+%%%%
+a gravestone
+
+%%%%
+a heavily etched crystal wall
+
+%%%%
+a heavily etched metal wall
+
+%%%%
+a highly decorated stone wall
+
+%%%%
+an ice choked empty arch of ancient stone
+
+%%%%
+an ice covered rock wall
+
+%%%%
+an ice-covered rock wall
+
+%%%%
+an ice-covered stone wall
+
+%%%%
+an iron statue
+
+%%%%
+a large window
+
+%%%%
+a merfolk statue
+
+%%%%
+a one-way staircase leading down
+
+%%%%
+a one-way staircase leading up
+
+%%%%
+an otherworldly statue
+
+%%%%
+a pulsating floor
+
+%%%%
+a rock-blocked tunnel
+
+%%%%
+a rough-hewn floor
+
+%%%%
+a ruined idol
+
+%%%%
+a rune-carved clear stone wall
+
+%%%%
+a rune-carved stone wall
+
+%%%%
+a sarcophagus
+
+%%%%
+a sealed sarcophagus
+
+%%%%
+a silver wall
+
+%%%%
+a sinewy wall
+
+%%%%
+a spawn point
+
+%%%%
+a statue of a hideous four-limbed creature
+
+%%%%
+a strange rock wall
+
+%%%%
+a strange statue
+
+%%%%
+a tempered metal wall
+
+%%%%
+a thin membrane
+
+%%%%
+a wall of crystal
+
+%%%%
+a wall of white crystal
+
+%%%%
+a weirdly glowing ball
+
+%%%%
+a fleshy orifice
+
+%%%%
+
+################################
+# With "some" as determiner
+################################
+
+%%%%
+some lava
+
+%%%%
+some deep water
+
+%%%%
+some shallow water
+
+%%%%
+
+# extras from .des files
+%%%%
+Some ice crusted deep water
+
+%%%%
+Some ice crusted shallow water
+
+%%%%
+
+################################
+# Without article
+################################
+
+# note: No need to repeat any that are listed with a definite or indefinite
+# article because a version with no article will be generated by grammar.txt
+
+%%%%
+unseen
+
+%%%%
+explore horizon
+
+%%%%
+
+# extras from .des files
+%%%%
+Ashen ground
+
+%%%%
+Frost-covered floor
+
+%%%%
+Viscous fluid
+
+%%%%
+
+################################
+# coverings
+################################
+%%%%
+covered with ice
+
+%%%%
+spattered with blood
+
+%%%%

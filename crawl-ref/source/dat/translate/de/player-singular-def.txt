@@ -1,0 +1,375 @@
+###############################################################################
+#
+# Player - definite, nominative
+#
+###############################################################################
+
+##############################################
+# Player species
+##############################################
+%%%%
+the Barachi
+{m}der Barachi
+%%%%
+the Deep Dwarf
+{m}der Tiefenzwerg
+%%%%
+the Deep Elf
+{m}der Tiefenelf
+%%%%
+the Demigod
+{m}der Halbgott
+%%%%
+the Demonspawn
+{f}die Dämonenbrut
+%%%%
+the Djinni
+{m}der Dschinn
+%%%%
+the Draconian
+{m}der Drakonier
+%%%%
+the Felid
+{m}der Felid
+%%%%
+the Formicid
+{m}der Formicid
+%%%%
+the Gargoyle
+{m}der Gargoyle
+%%%%
+the Ghoul
+{m}der Ghul
+%%%%
+the Gnoll
+{m}der Gnoll
+%%%%
+the Hill Orc
+{m}der Hügelork
+%%%%
+the Human
+{m}der Mensch
+%%%%
+the Kobold
+{m}der Kobold
+%%%%
+the Merfolk
+{n}das Meerwesen
+%%%%
+the Minotaur
+{m}der Minotaur
+%%%%
+the Mummy
+{f}die Mumie
+%%%%
+the Naga
+{m}der Naga
+%%%%
+the Octopode
+{m}der Oktopode
+%%%%
+the Ogre
+{m}der Oger
+%%%%
+the Palentonga
+{m}der Palentonga
+%%%%
+the Spriggan
+{m}der Spriggan
+%%%%
+the Tengu
+{m}der Tengu
+%%%%
+the Troll
+{m}der Troll
+%%%%
+the Vampire
+{m}der Vampir
+%%%%
+the Vine Stalker
+{m}der Rebpirscher
+%%%%
+
+# obsolete (can still appear in highscores list, and maybe as ghosts)
+%%%%
+the Halfling
+{m}der Halbling
+%%%%
+the Centaur
+{m}der Zentaur
+%%%%
+the Sludge Elf
+{m}der Schlammelf
+%%%%
+the High Elf
+{m}der Hochelf
+%%%%
+the Lava Orc
+{m}der Lava-Ork
+%%%%
+
+##############################################
+# Draconian subspecies
+##############################################
+%%%%
+the Mottled Draconian
+{m}der Fleckige Drakonier
+%%%%
+the Black Draconian
+{m}der Schwarze Drakonier
+%%%%
+the Green Draconian
+{m}der Grüne Drakonier
+%%%%
+the Grey Draconian
+{m}der Graue Drakonier
+%%%%
+the Pale Draconian
+{m}der Helle Drakonier
+%%%%
+the Purple Draconian
+{m}der Purpurne Drakonier
+%%%%
+the Red Draconian
+{m}der Rote Drakonier
+%%%%
+the White Draconian
+{m}der Weiße Drakonier
+%%%%
+the Yellow Draconian
+{m}der Gelbe Drakonier
+%%%%
+
+##############################################
+# Player genus
+# NOTE: If not listed then species is used
+##############################################
+%%%%
+# Barachi
+the Frog
+{m}der Frosch
+%%%%
+# Deep Dwarf
+the Dwarf
+{m}der Zwerg
+%%%%
+# Deep Elf
+the Elf
+{m}der Elf
+%%%%
+# Demigod
+the God
+{m}der Gott
+%%%%
+# Felid
+the Cat
+{f}die Katze
+%%%%
+# Formicid
+the Ant
+{f}die Ameise
+%%%%
+# Octopode
+the Octopus
+{m}der Oktopus
+%%%%
+# Lava Orc
+the Orc
+{m}der Ork
+%%%%
+
+##############################################
+# Player genus uncapitalised
+##############################################
+%%%%
+# Barachi
+the frog
+{m}der Frosch
+%%%%
+# Deep Dwarf
+# duplicate of monster
+#the dwarf
+#
+%%%%
+# Deep Elf
+# duplicate of monster
+#the elf
+#
+%%%%
+# Demigod
+the god
+{m}der Gott
+%%%%
+# Felid
+the cat
+{f}die Katze
+%%%%
+# Formicid
+the ant
+{f}die Ameise
+%%%%
+# Octopode
+the octopus
+{m}der Oktopus
+%%%%
+# Lava Orc
+# duplicate of monster
+#the orc
+#
+%%%%
+
+##############################################
+# Player background (aka job)
+##############################################
+%%%%
+the Fighter
+{m}der Kämpfer
+%%%%
+the Gladiator
+{m}der Gladiator
+%%%%
+the Monk
+{m}der Mönch
+%%%%
+the Hunter
+{m}der Jäger
+%%%%
+the Berserker
+{m}der Berserker
+%%%%
+the Brigand
+{m}der Brigant
+%%%%
+the Abyssal Knight
+{m}der Abgrundritter
+%%%%
+the Chaos Knight
+{m}der Chaosritter
+%%%%
+the Enchanter
+{m}der Verzauberer
+%%%%
+the Transmuter
+{m}der Verwandler
+%%%%
+the Arcane Marksman
+{m}der Arkane Schütze
+%%%%
+the Warper
+{m}der Warper
+%%%%
+the Hedge Wizard
+{m}der Heckenzauberer
+%%%%
+the Conjurer
+{m}der Konjurant
+%%%%
+the Summoner
+{m}der Beschwörer
+%%%%
+the Necromancer
+{m}der Nekromant
+%%%%
+the Fire Elementalist
+{m}der Feuermagier
+%%%%
+the Ice Elementalist
+{m}der Eismagier
+%%%%
+the Air Elementalist
+{m}der Luftmagier
+%%%%
+the Earth Elementalist
+{m}der Erdmagier
+%%%%
+the Venom Mage
+{m}der Giftmagier
+%%%%
+the Artificer
+{m}der Artifizient
+%%%%
+the Delver
+{m}der Forscher
+%%%%
+the Wanderer
+{m}der Wanderer
+%%%%
+
+##############################################
+# player character combo
+# "the <species> <background>"
+# (as in "Welcome, Bob the Minotaur Berserker")
+##############################################
+%%%%
+the @species@ Fighter
+{m}der @species@ Kämpfer
+%%%%
+the @species@ Gladiator
+{m}der @species@ Gladiator
+%%%%
+the @species@ Monk
+{m}der @species@ Mönch
+%%%%
+the @species@ Hunter
+{m}der @species@ Jäger
+%%%%
+the @species@ Berserker
+{m}der @species@ Berserker
+%%%%
+the @species@ Brigand
+{m}der @species@ Brigant
+%%%%
+the @species@ Abyssal Knight
+{m}der @species@ Abgrundritter
+%%%%
+the @species@ Chaos Knight
+{m}der @species@ Chaosritter
+%%%%
+the @species@ Enchanter
+{m}der @species@ Verzauberer
+%%%%
+the @species@ Transmuter
+{m}der @species@ Verwandler
+%%%%
+the @species@ Arcane Marksman
+{m}der @species@ Arkane Schütze
+%%%%
+the @species@ Warper
+{m}der @species@ Warper
+%%%%
+the @species@ Hedge Wizard
+{m}der @species@ Heckenzauberer
+%%%%
+the @species@ Conjurer
+{m}der @species@ Konjurant
+%%%%
+the @species@ Summoner
+{m}der @species@ Beschwörer
+%%%%
+the @species@ Necromancer
+{m}der @species@ Nekromant
+%%%%
+the @species@ Fire Elementalist
+{m}der @species@ Feuermagier
+%%%%
+the @species@ Ice Elementalist
+{m}der @species@ Eismagier
+%%%%
+the @species@ Air Elementalist
+{m}der @species@ Luftmagier
+%%%%
+the @species@ Earth Elementalist
+{m}der @species@ Erdmagier
+%%%%
+the @species@ Venom Mage
+{m}der @species@ Giftmagier
+%%%%
+the @species@ Artificer
+{m}der @species@ Artifizient
+%%%%
+the @species@ Delver
+{m}der @species@ Forscher
+%%%%
+the @species@ Wanderer
+{m}der @species@ Wanderer
+%%%%

@@ -1,0 +1,663 @@
+###############################################################################
+#
+# Translations - gods
+#
+###############################################################################
+
+########################
+# God names - nominative
+########################
+%%%%
+Ashenzari
+Aschenzari
+%%%%
+Beogh
+Beogh
+%%%%
+Cheibriados
+Cheibriados
+%%%%
+Dithmenos
+Dithmenos
+%%%%
+Elyvilon
+Elyvilon
+%%%%
+Fedhas
+Fedhas
+%%%%
+Fedhas Madash
+Fedhas Madash
+%%%%
+Gozag
+Gozag
+%%%%
+Hepliaklqana
+Hepliaklqana
+%%%%
+Jiyva
+Jiyva
+%%%%
+# Jiyva has a randomly-generated second name
+Jiyva %s
+Jiyva %s
+%%%%
+Kikubaaqudgha
+Kikubaaqudgha
+%%%%
+Lugonu
+Lugonu
+%%%%
+Makhleb
+Makhleb
+%%%%
+Nemelex
+Nemelex
+%%%%
+Nemelex Xobeh
+Nemelex Xobeh
+%%%%
+Okawaru
+Okawaru
+%%%%
+Qazlal
+Qazlal
+%%%%
+Ru
+Ru
+%%%%
+Sif Muna
+Sif Muna
+%%%%
+Trog
+Trog
+%%%%
+Uskayaw
+Uskayaw
+%%%%
+Vehumet
+Vehumet
+%%%%
+Xom
+Xom
+%%%%
+Yredelemnul
+Yredelemnul
+%%%%
+Zin
+Zin
+%%%%
+the Shining One
+{m}der Strahlende
+%%%%
+# The Shining One short form (for "travel to altar" menu, must be 14 chars or less)
+#             |<-
+TSO
+{m}der Strahlende
+%%%%
+the Wu Jian Council
+{m}der Wu-Jian-Rat
+%%%%
+# Wu Jian Council - short form
+Wu Jian
+Wu Jian
+%%%%
+# Wu Jian Council - another short form
+the Council
+{m}der Rat
+%%%%
+an unknown god
+{m}ein unbekannter Gott
+%%%%
+a god
+{m}ein Gott
+%%%%
+my god
+mein Gott
+%%%%
+your god
+dein Gott
+%%%%
+
+# These are used in messages like "@The_monster@ calls down the wrath of @possessive_God@ upon @target@.",
+# where @possessive_God@ is replaced with "its god", etc.
+# "His" is only used for male uniques, which will be masculine in German.
+# "Her" is used for female uniques plus harpies and nymphs, which are all feminine in German.
+# "Its" is used for most non-unique monsters, but they can be masculine, feminine or neuter in German.
+# "Their" is used for gender-neutral uniques - this doesn't work in German.
+# Therefore, we use "a god" instead of "its/their god".
+%%%%
+his god
+sein Gott
+%%%%
+her god
+ihr Gott
+%%%%
+its god
+{m}ein Gott
+%%%%
+# note: singular "their"
+their god
+{m}ein Gott
+%%%%
+
+# Sifus (individual members of the Wu Jian Council)
+%%%%
+Yunchang
+Yunchang
+%%%%
+Lu Zhishen
+Lu Zhishen
+%%%%
+Xiang Ba
+Xiang Ba
+%%%%
+Ma Yunglu
+Ma Yunglu
+%%%%
+Hu Sanniang
+Hu Sanniang
+%%%%
+Gene Jian Bin
+Gene Jian Bin
+%%%%
+Cai Fang
+Cai Fang
+%%%%
+
+# long names
+# the others are currently in dat/database/de/gods.txt
+# These are only used in milestone notes (which are not translated) and as title on god description screen, so currently no need to decline
+%%%%
+Jiyva %s the Shapeless
+Jiyva %s das Formlose
+%%%%
+
+########################
+# God names - genitive
+########################
+%%%%
+{gen}Ashenzari
+von Aschenzari
+%%%%
+{gen}Beogh
+von Beogh
+%%%%
+{gen}Cheibriados
+von Cheibriados
+%%%%
+{gen}Dithmenos
+von Dithmenos
+%%%%
+{gen}Elyvilon
+von Elyvilon
+%%%%
+{gen}Fedhas
+von Fedhas
+%%%%
+{gen}Gozag
+von Gozag
+%%%%
+{gen}Hepliaklqana
+von Hepliaklqana
+%%%%
+{gen}Jiyva
+von Jiyva
+%%%%
+{gen}Kikubaaqudgha
+von Kikubaaqudgha
+%%%%
+{gen}Lugonu
+von Lugonu
+%%%%
+{gen}Makhleb
+von Makhleb
+%%%%
+{gen}Nemelex Xobeh
+von Nemelex Xobeh
+%%%%
+{gen}Okawaru
+von Okawaru
+%%%%
+{gen}Qazlal
+von Qazlal
+%%%%
+{gen}Ru
+von Ru
+%%%%
+{gen}Sif Muna
+von Sif Muna
+%%%%
+{gen}Trog
+von Trog
+%%%%
+{gen}Uskayaw
+von Uskayaw
+%%%%
+{gen}Vehumet
+von Vehumet
+%%%%
+{gen}Xom
+von Xom
+%%%%
+{gen}Yredelemnul
+von Yredelemnul
+%%%%
+{gen}Zin
+von Zin
+%%%%
+{gen}the Shining One
+des Strahlenden
+%%%%
+{gen}the Wu Jian Council
+des Wu-Jian-Rates
+%%%%
+{gen}an unknown god
+eines unbekannten Gottes
+%%%%
+{gen}a god
+eines Gottes
+%%%%
+{gen}my god
+meines Gottes
+%%%%
+{gen}your god
+deines Gottes
+%%%%
+
+# We use "a god" instead of its/their god"
+# see note in nominative section
+%%%%
+{gen}his god
+seines Gottes
+%%%%
+{gen}her god
+ihres Gottes
+%%%%
+{gen}its god
+eines Gottes
+%%%%
+# note: singular "their"
+{gen}their god
+eines Gottes
+%%%%
+
+########################
+# God names - genitive as translation of English posessive
+# This is used on skills menu when God is boosting skills
+########################
+%%%%
+Ashenzari's
+von Aschenzari
+%%%%
+Beogh's
+von Beogh
+%%%%
+Cheibriados's
+von Cheibriados
+%%%%
+Dithmenos's
+von Dithmenos
+%%%%
+Elyvilon's
+von Elyvilon
+%%%%
+Fedhas's
+von Fedhas
+%%%%
+Gozag's
+von Gozag
+%%%%
+Hepliaklqana's
+von Hepliaklqana
+%%%%
+Jiyva's
+von Jiyva
+%%%%
+Kikubaaqudgha's
+von Kikubaaqudgha
+%%%%
+Lugonu's
+von Lugonu
+%%%%
+Makhleb's
+von Makhleb
+%%%%
+Nemelex Xobeh's
+von Nemelex Xobeh
+%%%%
+Okawaru's
+von Okawaru
+%%%%
+Qazlal's
+von Qazlal
+%%%%
+Ru's
+von Ru
+%%%%
+Sif Muna's
+von Sif Muna
+%%%%
+Trog's
+von Trog
+%%%%
+Uskayaw's
+von Uskayaw
+%%%%
+Vehumet's
+von Vehumet
+%%%%
+Xom's
+von Xom
+%%%%
+Yredelemnul's
+von Yredelemnul
+%%%%
+Zin's
+von Zin
+%%%%
+the Shining One's
+des Strahlenden
+%%%%
+the Wu Jian Council's
+des Wu-Jian-Rates
+%%%%
+
+########################
+# God names - accusative
+########################
+%%%%
+{acc}the Shining One
+den Strahlenden
+%%%%
+{acc}the Wu Jian Council
+den Wu-Jian-Rat
+%%%%
+{acc}an unknown god
+einen unbekannten Gott
+%%%%
+{acc}a god
+einen Gott
+%%%%
+{acc}my god
+meinen Gott
+%%%%
+{acc}your god
+deinen Gott
+%%%%
+
+# We use "a god" instead of "its/their god"
+# see note in nominative section
+%%%%
+{acc}his god
+seinen Gott
+%%%%
+{acc}her god
+ihren Gott
+%%%%
+{acc}its god
+einen Gott
+%%%%
+# note: singular "their"
+{acc}their god
+einen Gott
+%%%%
+
+########################
+# God names - dative
+########################
+%%%%
+{dat}the Shining One
+dem Strahlenden
+%%%%
+{dat}the Wu Jian Council
+dem Wu-Jian-Rat
+%%%%
+{dat}an unknown god
+einem unbekannten Gott
+%%%%
+{dat}a god
+einem Gott
+%%%%
+{dat}my god
+meinem Gott
+%%%%
+{dat}your god
+deinem Gott
+%%%%
+
+# We use "a god" instead of "its/their god"
+# see note in nominative section
+%%%%
+{dat}his god
+seinem Gott
+%%%%
+{dat}her god
+ihrem Gott
+%%%%
+{dat}its god
+einem Gott
+%%%%
+# note: singular "their"
+{dat}their god
+einem Gott
+%%%%
+
+########################
+# " of <god>"
+########################
+%%%%
+# generic
+" of %s"
+" von {dat}%s"
+%%%%
+# specific override
+" of the Shining One"
+" des Strahlenden"
+%%%%
+
+##################
+# god blessings
+##################
+%%%%
+Beogh blesses you with reinforcements.
+Beogh segnet dich mit Verstärkung.
+%%%%
+%s blesses %s with %s.
+%s segnet %s mit %s.
+%%%%
+# when recipient is an unnamed follower
+a follower
+einen Anhänger
+%%%%
+# The following are the blessings that come after the word "with"
+%%%%
+uncursed armament
+unverfluchter Bewaffnung
+%%%%
+superior armament
+überlegener Bewaffnung
+%%%%
+ammunition
+Munition
+%%%%
+ranged armament
+Fernbewaffnung
+%%%%
+armament
+Bewaffnung
+%%%%
+a shield
+einem Schild
+%%%%
+improved armour
+verbesserter Rüstung
+%%%%
+divine balms
+göttlicher Salbe
+%%%%
+priesthood
+Priestertum
+%%%%
+friendliness
+Freundlichkeit
+%%%%
+more time in this world
+mehr Zeit in dieser Welt
+%%%%
+
+########################
+# God conducts
+########################
+%%%%
+%s doesn't like anything? This is a bug; please report it.
+%s mag nichts? Das ist ein Fehler. Bitte meldet ihn.
+%%%%
+%s likes it when %s.
+%s mag es, wenn du %s.
+%%%%
+%s especially likes it when %s.
+%s mag es besonders, wenn du %s.
+%%%%
+%s dislikes it when %s.
+%s mag es nicht, wenn du %s.
+%%%%
+%s strongly dislikes it when %s.
+%s mag es überhaupt nicht, wenn du %s.
+%%%%
+
+# These are the conducts the gods like/dislike:
+# (i.e. these go after the word "when")
+%%%%
+you use evil magic or items
+böse Magie oder Gegenstände verwendest
+%%%%
+you attack non-hostile holy beings
+nicht-feindliche heilige Wesen angreifst
+%%%%
+you kill non-hostile holy beings
+nicht-feindliche heilige Wesen tötest
+%%%%
+you attack neutral beings
+neutrale Wesen angreifst
+%%%%
+you attack allies
+Verbündete angreifst
+%%%%
+you attack monsters in a sanctuary
+Monster in einem Heiligtum angreifst
+%%%%
+you use unclean or chaotic magic or items
+unreine oder chaotische Magie oder Gegenstände verwendest
+%%%%
+you polymorph monsters
+Monster polymorphisierst
+%%%%
+you deliberately mutate or transform yourself
+dich absichtlich mutierst oder verwandelst
+%%%%
+you use holy magic or items
+heilige Magie oder Gegenstände verwendest
+%%%%
+you memorise spells
+Zaubersprüche erlernst
+%%%%
+you attempt to cast spells
+versuchst, Zaubersprüche zu wirken
+%%%%
+you train magic skills
+magische Fähigkeiten trainierst
+%%%%
+you use magical staves or pain-branded weapons
+magische Stäbe oder mit Schmerz geprägte Waffen verwendest
+%%%%
+you kill living things while asking for your life to be spared
+Lebewesen tötest, während du darum bittest, dass dein Leben verschont wird
+%%%%
+you desecrate orcish remains
+die Überreste von Orks schändest
+%%%%
+you attack allied orcs
+verbündete Orks angreifst
+%%%%
+you kill slimes
+Schleime tötest
+%%%%
+you attack fellow slimes
+andere Schleime angreifst
+%%%%
+you destroy plants
+Pflanzen zerstörst
+%%%%
+you hasten yourself or others
+dich oder andere beschleunigst
+%%%%
+you channel magical energy
+magische Energie kanalisierst
+%%%%
+use unnaturally quick items
+unnatürlich schnelle Gegenstände verwendest
+%%%%
+you kill living beings
+lebende Wesen tötest
+%%%%
+you destroy the undead
+Untote vernichtest
+%%%%
+you kill demons
+Dämonen tötest
+%%%%
+you kill holy beings
+heilige Wesen tötest
+%%%%
+you destroy nonliving beings
+nicht-lebende Wesen vernichtest
+%%%%
+you explore the world
+die Welt erforschst
+%%%%
+you kill unclean or chaotic beings
+unreine oder chaotische Wesen tötest
+%%%%
+you kill the undead
+die Untoten tötest
+%%%%
+you kill evil beings
+böse Wesen tötest
+%%%%
+you encounter other hostile creatures
+auf andere feindliche Kreaturen triffst
+%%%%
+you kill wizards and other users of magic
+Zauberer und andere Benutzer von Magie tötest
+%%%%
+you banish creatures to the Abyss
+Kreaturen in den Abgrund verbannst
+%%%%
+you kill the priests of other religions
+die Priester anderer Religionen tötest
+%%%%
+you kill fast things, relative to your speed
+Wesen tötest, die schneller als du sind
+%%%%
+you explore the world (preferably while bound by curses)
+die Welt erkundest (vorzugsweise während du durch Flüche gebunden bist)
+%%%%
+you hurt your foes; however, effects that cause damage over time do not interest Uskayaw
+deine Feinde verletzt; Effekte, die Schaden über Zeit verursachen, interessieren Uskayaw jedoch nicht
+%%%%
+you sacrifice items by allowing slimes to consume them
+Gegenstände opferst, indem du Schleimen erlaubst, sie zu verzehren
+%%%%
+you collect gold
+Gold sammelst
+%%%%
+you make personal sacrifices
+persönliche Opfer bringst
+%%%%
+you donate money
+Geld spendest
+%%%%
+you bind yourself with curses
+dich mit Flüchen bindest
+%%%%

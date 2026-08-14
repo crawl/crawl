@@ -1,0 +1,424 @@
+###############################################################################
+#
+# Translations for shop names
+#
+###############################################################################
+
+###################################################################
+# These shop types are invariable, apart from the owner's name
+###################################################################
+
+%%%%
+@owner@'s General Store
+@owner@s Krämerei
+%%%%
+@owner@'s Distillery
+@owner@s Brennerei
+%%%%
+@owner@'s Assorted Antiques
+@owner@s diverse Antiquitäten
+%%%%
+{dat}@owner@'s Assorted Antiques
+@owner@s diversen Antiquitäten
+%%%%
+
+###################################################################
+# These shop types can be called Shop, Shoppe, Boutique or Emporium
+###################################################################
+
+%%%%
+@owner@'s Weapon Shop
+@owner@s Waffenladen
+%%%%
+@owner@'s Antique Weapon Shop
+@owner@s Waffenantiquariat
+%%%%
+@owner@'s Armour Shop
+@owner@'s Rüstungsladen
+%%%%
+@owner@'s Antique Armour Shop
+@owner@s Rüstungsantiquariat
+%%%%
+@owner@'s Jewellery Shop
+@owner@s Schmuckladen
+%%%%
+@owner@'s Magic Scroll Shop
+@owner@s Laden für magische Schriftrollen
+%%%%
+@owner@'s Book Shop
+@owner@s Buchladen
+%%%%
+@owner@'s Gadget Shop
+@owner@s Geräteladen
+%%%%
+
+%%%%
+@owner@'s Weapon Shoppe
+@owner@s Waffenhandlung
+%%%%
+@owner@'s Antique Weapon Shoppe
+@owner@s Waffenantiquariat
+%%%%
+@owner@'s Armour Shoppe
+@owner@s Rüstungshandlung
+%%%%
+@owner@'s Antique Armour Shoppe
+@owner@s Rüstungsantiquariat
+%%%%
+@owner@'s Jewellery Shoppe
+@owner@s Schmuckhandlung
+%%%%
+@owner@'s Magic Scroll Shoppe
+@owner@s Handlung für magische Schriftrollen
+%%%%
+@owner@'s Book Shoppe
+@owner@s Buchhandlung
+%%%%
+@owner@'s Gadget Shoppe
+@owner@s Gerätehandlung
+%%%%
+
+%%%%
+@owner@'s Weapon Boutique
+@owner@s Waffenboutique
+%%%%
+@owner@'s Antique Weapon Boutique
+@owner@s Boutique für antike Waffen
+%%%%
+@owner@'s Armour Boutique
+@owner@s Rüstungsboutique
+%%%%
+@owner@'s Antique Armour Boutique
+@owner@s Boutique für antike Rüstungen
+%%%%
+@owner@'s Jewellery Boutique
+@owner@s Schmuckboutique
+%%%%
+@owner@'s Magic Scroll Boutique
+@owner@s Boutique für magische Schriftrollen
+%%%%
+@owner@'s Book Boutique
+@owner@s Buchboutique
+%%%%
+@owner@'s Gadget Boutique
+@owner@s Geräteboutique
+%%%%
+
+%%%%
+@owner@'s Weapon Emporium
+@owner@s Waffenemporium
+%%%%
+@owner@'s Antique Weapon Emporium
+@owner@s Emporium der antiken Waffen
+%%%%
+@owner@'s Armour Emporium
+@owner@s Rüstungsemporium
+%%%%
+@owner@'s Antique Armour Emporium
+@owner@s Emporium der antiken Rüstungen
+%%%%
+@owner@'s Jewellery Emporium
+@owner@s Schmuckemporium
+%%%%
+@owner@'s Magic Scroll Emporium
+@owner@s Emporium der magischen Schriftrollen
+%%%%
+@owner@'s Book Emporium
+@owner@s Emporium der Bücher
+%%%%
+@owner@'s Gadget Emporium
+@owner@s Emporium der Geräte
+%%%%
+
+################################
+# Specialty shops from .des files
+################################
+%%%%
+# potions of curing
+Zin's Purification Station
+Zins Reinigungsstation
+%%%%
+# artefacts at high prices
+Gozag's Platinum Reserve
+Gozags Platinbank
+%%%%
+# damaged weapons and armour
+The Legendary @owner@'s Legendary Smithy
+Des legendären @owner@s legendäre Schmiede
+%%%%
+# only appears in shoals
+@owner@'s Merfolk Weapons
+@owner@s Meervolkwaffen
+%%%%
+# only appears in shoals
+@owner@'s Merfolk Armours
+@owner@s Meervolkrüstungen
+%%%%
+# only appears in shoals
+@owner@'s Merfolk Magic
+@owner@s Meervolkmagie
+%%%%
+# only appears in shoals, sells !flight and ?teleport
+@owner@'s Visitors' Centre
+@owner@s Besucherzentrum
+%%%%
+# only appears in Elven Halls, sells fire-themed items
+@owner@'s Elven Fire
+@owner@s Elfenfeuer
+%%%%
+# poison-themed items
+@owner@'s Serpentskin Sales
+@owner@s Schlangenhautverkauf
+%%%%
+# earth magic, digging, tremorstones
+@owner@'s Pet Rocks
+@owner@s Steinfreunde
+%%%%
+# vampiric items and necromancy
+@owner@'s Blood Bar
+@owner@s Blutbar
+%%%%
+# necromancy, vampric/draining/demon weapons
+@owner@'s Blasphemy Boutique
+@owner@s Boutique der Blasphemie
+%%%%
+# necromancy, vampric/draining/demon weapons
+@owner@'s Evil Emporium
+@owner@s Emporium des Bösen
+%%%%
+# necromancy, vampric/draining/demon weapons
+@owner@'s Profane Products
+@owner@s profane Produkte
+%%%%
+# necromancy, vampric/draining/demon weapons
+@owner@'s Sacrilege Store
+@owner@s Shopping-Sakrileg
+%%%%
+# necromancy, vampric/draining/demon weapons
+@owner@'s Wicked Wares
+@owner@s boshafte Bedarfsartikel
+%%%%
+# curing, healing, silver
+@owner@'s Hallowed Reliquary
+@owner@s geheiligtes Reliquiar
+%%%%
+# barding
+@owner@'s Specialty Armours
+@owner@s Spezialrüstungen
+%%%%
+# destructive magic
+@owner@'s Demolitions Depot
+@owner@s Abbruchunternehmen
+%%%%
+# elemental magic and elemental evokables
+@owner@'s Elemental Accessories
+@owner@s elementare Accessoires
+%%%%
+# spellbooks
+@owner@'s One-of-a-Kind Books
+@owner@s einzigartige Bücher
+%%%%
+# randarts
+@owner@'s Antique Artefacts
+@owner@s antike Artefakte
+%%%%
+# sounds like a travel agent, is on an island and sells escape items like ?teleport, !haste, etc.
+@owner@'s Island Escapes
+@owner@s Fluchtinsel
+%%%%
+# transmutations and mutations
+@owner@'s Changing Room
+@owner@s Umkleideraum
+%%%%
+# flaming weapons
+@owner@'s Hydra Hut
+@owner@s Hydra-Hütte
+%%%%
+# sells damaged weapons and armour
+@owner@'s Lightly-Used Armoury
+@owner@s leicht gebrauchtes Arsenal
+%%%%
+# items with ponderous ego
+Cheibriados's Comfort Zone
+Cheibriados' Komfortzone
+%%%%
+# weapons and spells that damage multiple targets
+@owner@'s Mayhem Merchandise
+@owner@s wüste Waren
+%%%%
+# heavy items (e.g. giant club, crystal plate)
+@owner@'s Mass Market
+@owner@s Massenmarkt
+%%%%
+# only appears on Zot:5
+@owner@'s Last-Chance Deals
+@owner@s Letzte-Chance-Angebote
+%%%%
+# has a chance to have good items at low prices
+@owner@'s CLEARANCE SALE! EVERYTHING MUST GO!
+@owner@s AUSVERKAUF! ALLES MUSS RAUS!
+%%%%
+# thrown and ranged weapons
+@owner@'s Firing Range
+@owner@s Schießplatz
+%%%%
+# wands and misc. evokables
+@owner@'s Gadget Gallery
+@owner@s Gerätegallerie
+%%%%
+# double-meaning: wands that have more charges plus a higher price
+@owner@'s Overcharged Wands
+@owner@s aufwendige Zauberstäbe
+%%%%
+# manuals
+@owner@'s Self-Improvement Boutique
+@owner@s Boutique der Selbstverbesserung
+%%%%
+# amulets, scarves, cloaks
+@owner@'s Neck Hole
+@owner@s Halsausschnitt
+%%%%
+# actually just a general store
+@owner@'s Specific Store
+@owner@s spezieller Laden
+%%%%
+# potions of mutation
+@owner@'s Miraculous Elixirs
+@owner@s wundersame Elixiere
+%%%%
+
+##################
+# alphashops.des
+##################
+# Shops that sell items whose English names all start with the matching letter.
+# Any initial class description (amulet, book, manual, potion, ring, scroll,
+# staff, wand) or unit of measurement (pair) is ignored.
+# (for example, "staff of air" counts as A, "scroll of blinking" counts as B, etc.)
+%%%%
+@owner@'s Alliterative Accessories
+@owner@s alliterative Accessoires
+%%%%
+@owner@'s Bounteous Boutique
+@owner@s beachtliche Boutique
+%%%%
+@owner@'s Commerce Corner
+@owner@s cleverer Campingbedarf
+%%%%
+@owner@'s Desiderata Depot
+@owner@s Depot der Desiderate
+%%%%
+@owner@'s Eclectic Emporium
+@owner@s eklektisches Emporium
+%%%%
+@owner@'s Fabulous Fripperies
+@owner@s fabelhafter Firlefanz
+%%%%
+@owner@'s Goods Gallery
+@owner@s Gütergallerie
+%%%%
+@owner@'s Humungous Hoard
+@owner@s Hamsterhaufen
+%%%%
+@owner@'s Incredible Inventory
+@owner@s irrwitziges Inventar
+%%%%
+@owner@'s Jolly Junkyard
+@owner@s joviale Juxartikel
+%%%%
+@owner@'s Killer Kiosk
+@owner@s Killerkiosk
+%%%%
+@owner@'s Luxury Loot
+@owner@s Luxusladen
+%%%%
+@owner@'s Merry Market
+@owner@s munterer Markt
+%%%%
+@owner@'s Needful Niceties
+@owner@s nützliche Notwendigkeiten
+%%%%
+@owner@'s Offbeat Offerings
+@owner@s olle Opfergaben
+%%%%
+@owner@'s Practical Paraphernalia
+@owner@s praktische Paraphernalien
+%%%%
+@owner@'s Quotidian Quintessences
+@owner@s quotidiane Quintessenzen
+%%%%
+@owner@'s Retail Resort
+@owner@s Retailresort
+%%%%
+@owner@'s Superlative Supplies
+@owner@s superlative Schnäppchen
+%%%%
+@owner@'s Tempting Trifles
+@owner@s trivialer Tagesbedarf
+%%%%
+@owner@'s Unparalleled Utilities
+@owner@s unglaubliche Utensilien
+%%%%
+@owner@'s Vending Venue
+@owner@s vielseitige Verlockungen
+%%%%
+@owner@'s Whimsical Warehouse
+@owner@s wunderliches Warenhaus
+%%%%
+@owner@'s Xenial Xenodochy
+@owner@s xeniale Xenodochie
+%%%%
+@owner@'s Yearning Yield
+@owner@s yttriumhaltiger Yuppiebedarf
+%%%%
+@owner@'s Zaibatsu Zone
+@owner@s Zaibatsu-Zone
+%%%%
+
+##################
+# Dungeon Sprint
+##################
+%%%%
+# scrolls of identify
+@owner@'s Identification Station
+@owner@s Identifikationsstation
+%%%%
+# spellbooks
+@owner@'s Must-Have Magic
+@owner@s unverzichbare Magie
+%%%%
+# potions of healing and curing
+@owner@'s Do-It-Yourself Clinic
+@owner@s Klinik für Selbstversorger
+%%%%
+# artefact jewellery
+@owner@'s Jewellery
+@owner@s Juwelen
+%%%%
+# artefact armour
+@owner@'s Advanced Armour
+@owner@s revolutionäre Rüstungen
+%%%%
+# mundane armour
+@owner@'s Basic Armour
+@owner@s banale Rüstungen
+%%%%
+# magical staves
+@owner@'s Staff Store
+@owner@s Stöckchenladen
+%%%%
+# mundane weapons
+@owner@'s Weapon Rack
+@owner@s Waffenregal
+%%%%
+# potions of experience
+@owner@'s Bottled Wisdom
+@owner@s Weisheit in Flaschen
+%%%%
+# quad damage, heal wounds, haste
+@owner@'s Premium Goods
+@owner@s Premiumgüter
+%%%%
+# mundane rings and amulets
+@owner@'s Miscellaneous Merchandise
+@owner@'s gut gemischte Güter
+%%%%

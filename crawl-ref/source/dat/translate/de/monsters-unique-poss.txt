@@ -1,0 +1,284 @@
+###############################################################################
+#
+# Monsters - unique - translation for English possessive
+#
+###############################################################################
+
+%%%%
+Mennas's
+von Mennas
+%%%%
+Nessos's
+von Nessos
+%%%%
+Chuck's
+von Chuck
+%%%%
+Polyphemus's
+von Polyphem
+%%%%
+Antaeus's
+von Antaeus
+%%%%
+Tiamat's
+von Tiamat
+%%%%
+Bai Suzhen's
+von Bai Suzhen
+%%%%
+Xtahua's
+von Xtahua
+%%%%
+Ijyb's
+von Ijyb
+%%%%
+Robin's
+von Robin
+%%%%
+Grum's
+von Grum
+%%%%
+Duvessa's
+von Duvessa
+%%%%
+Dowan's
+von Dowan
+%%%%
+Fannar's
+von Fannar
+%%%%
+Jorgrun's
+von Jorgrun
+%%%%
+Natasha's
+von Natascha
+%%%%
+Arachne's
+von Arachne
+%%%%
+Asterion's
+von Asterion
+%%%%
+Agnes's
+von Agnes
+%%%%
+Dissolution's
+von Dissolution
+%%%%
+Sonja's
+von Sonja
+%%%%
+Pikel's
+von Pikel
+%%%%
+Boris's
+von Boris
+%%%%
+Menkaure's
+von Menkaure
+%%%%
+Khufu's
+von Khufu
+%%%%
+Ilsuiw's
+von Ilsuiw
+%%%%
+Vashnia's
+von Vashnia
+%%%%
+Erolcha's
+von Erolcha
+%%%%
+Urug's
+von Urug
+%%%%
+Nergalle's
+von Nergalle
+%%%%
+Saint Roka's
+von Sankt Roka
+%%%%
+Sojobo's
+von Sojobo
+%%%%
+Azrael's
+von Azrael
+%%%%
+Mara's
+von Mara
+%%%%
+Aizul's
+von Aizul
+%%%%
+Snorg's
+von Snorg
+%%%%
+Purgy's
+von Purgy
+%%%%
+Jory's
+von Jory
+%%%%
+Gastronok's
+von Gastronok
+%%%%
+Nellie's
+von Nellie
+%%%%
+Murray's
+von Murray
+%%%%
+Ignacio's
+von Ignacio
+%%%%
+Grinder's
+von Grinder
+%%%%
+Roxanne's
+von Roxanne
+%%%%
+Terence's
+von Terence
+%%%%
+Jessica's
+von Jessica
+%%%%
+Sigmund's
+von Sigmund
+%%%%
+Edmund's
+von Edmund
+%%%%
+Psyche's
+von Psyche
+%%%%
+Donald's
+von Donald
+%%%%
+Joseph's
+von Joseph
+%%%%
+Erica's
+von Erica
+%%%%
+Josephine's
+von Josephine
+%%%%
+Harold's
+von Harold
+%%%%
+Louise's
+von Louise
+%%%%
+Frances's
+von Frances
+%%%%
+Rupert's
+von Rupert
+%%%%
+Kirke's
+von Kirke
+%%%%
+Frederick's
+von Frederick
+%%%%
+Margery's
+von Margery
+%%%%
+Maggie's
+von Maggie
+%%%%
+Eustachio's
+von Eustachio
+%%%%
+Maurice's
+von Maurice
+%%%%
+Nikola's
+von Nikola
+%%%%
+Mnoleg's
+von Mnoleg
+%%%%
+Lom Lobon's
+von Lom Lobon
+%%%%
+Cerebov's
+von Cerebov
+%%%%
+Gloorx Vloq's
+von Gloorx Vloq
+%%%%
+Geryon's
+von Geryon
+%%%%
+Dispater's
+von Dispater
+%%%%
+Asmodeus's
+von Asmodäus
+%%%%
+Ereshkigal's
+von Ereshkigal
+%%%%
+Prince Ribbit's
+von Prinz Quak
+%%%%
+Crazy Yiuf's
+vom Verrückten Yiuf
+%%%%
+the Enchantress's
+{f}der Zauberin
+%%%%
+Blork the orc's
+von Blork dem Ork
+%%%%
+Blork's
+von Blork
+%%%%
+the Royal Jelly's
+des Gelée Royale
+%%%%
+the Serpent of Hell's
+{f}der Höllenschlange
+%%%%
+the Lernaean hydra's
+{f}der Lernäischen Hydra
+%%%%
+Cigotuvi's Monster's
+von Cigotuvis Monster
+%%%%
+the Statue of Wucad Mu's
+{f}der Statue von Wucad Mu
+%%%%
+
+# not really uniques, but gramatically similar
+%%%%
+@name@'s ghost's
+des Geistes von @name@
+%%%%
+@name@'s illusion's
+{f}der Illusion von @name@
+%%%%
+
+##################
+# Sprint Monsters
+##################
+
+%%%%
+# note: Must distinguish from fleshlords (in German, flesh and meat are both Fleisch)
+The Meatlord's
+des Schlachtmeisters
+%%%%
+The Servant's
+des Dieners
+%%%%
+The Captor's
+des Fängers
+%%%%
+The Defiler's
+des Schänders
+%%%%
+The Unspeakable's
+des Unsäglichen
+%%%%

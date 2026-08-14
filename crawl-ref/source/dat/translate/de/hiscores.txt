@@ -1,0 +1,922 @@
+###############################################################################
+#
+# Translations for high score table and player death message
+#
+###############################################################################
+
+# heading
+%%%%
+Dungeon Crawl Stone Soup: High Scores
+Dungeon Crawl Stone Soup: Highscores
+%%%%
+
+# Examples of high score entries (verbose format):
+#
+#  2. 1797852 Fred the Slayer (level 22, 226/229 HPs)
+#             Began as a Minotaur Berserker on Jan 31, 2022.
+#             Was an Elder of Trog.
+#             Escaped with the Orb
+#             ... and 3 runes!
+#
+#             The game lasted 02:00:23 (50312 turns).
+#
+# 16.  292913 Ziggy the Fighter (level 20, -5/159 HPs)
+#             Began as a Demonspawn Fire Elementalist on Apr 7, 2023.
+#             Was an Initiate of Gozag.
+#             Killed from afar by a war gargoyle (42 damage)
+#             ... with a spray of metal splinters
+#             ... led by a peacekeeper
+#             ... on level 4 of the Vaults on Apr 10, 2023.
+#             The game lasted 06:34:14 (66612 turns).
+#
+# 40.      12 Bob the Digger (level 2, -3/20 HPs)
+#             Began as a Meteoran Earth Elementalist on June 16, 2022.
+#             Was a Follower of Nemelex Xobeh.
+#             Slain by Terence
+#             ... wielding a +0 flail
+#              (7 damage)
+#             ... on level 3 of the Dungeon.
+#             The game lasted 00:02:01 (174 turns).
+
+
+%%%%
+Began as %s
+Begann als %s
+%%%%
+(%d damage)
+(%d Schaden)
+%%%%
+The game lasted %s (%d turns).
+Das Spiel dauerte %s (%d Runden).
+%%%%
+
+%%%%
+# wizard mode
+*WIZ*
+*WIZ*
+%%%%
+# explore mode
+*EXPLORE*
+*ERKUNDEN*
+%%%%
+
+%%%%
+# wizard mode (terse)
+W
+W
+%%%%
+# explore mode (terse)
+E
+E
+%%%%
+
+########################
+# Player level and HP
+########################
+
+%%%%
+# if current max HP less than max max HP (i.e. drained)
+(level %d, %d/%d (%d) HPs)
+(Stufe %d, %d/%d (%d) TP)
+%%%%
+# if not drained
+(level %d, %d/%d HPs)
+(Stufe %d, %d/%d TP)
+%%%%
+# without HP
+(level %d)
+(Stufe %d)
+%%%%
+
+########################
+# Date
+########################
+
+# available date fields are:
+# @d@ = day without leading zero (1-31)
+# @dd@ = 2-digit day (01-31)
+# @mm@ = 2-digit month (01-12)
+# @mon@ = month abbreviation (you must provide translations for these if you want to use them)
+# @yy@ = 2-digit year (00-99)
+# @yyyy@ = full year
+
+%%%%
+" on @mon@ @d@, @yyyy@"
+" am @d@. @mon@ @yyyy@"
+%%%%
+
+# month abbreviations used by @mon@
+%%%%
+Jan
+Jan.
+%%%%
+Feb
+Feb.
+%%%%
+Mar
+März
+%%%%
+Apr
+Apr.
+%%%%
+May
+Mai
+%%%%
+June
+Juni
+%%%%
+July
+Juli
+%%%%
+Aug
+Aug.
+%%%%
+Sept
+Sept.
+%%%%
+Oct
+Okt.
+%%%%
+Nov
+Nov.
+%%%%
+Dec
+Dez.
+%%%%
+
+########################
+# Religion line
+########################
+
+%%%%
+Was a Favourite Plaything of Xom.
+War ein Lieblingsspielball Xoms
+%%%%
+Was a Plaything of Xom.
+War ein Spielball Xoms
+%%%%
+# Was <title> of <god>[ (penitent)]
+Was %s of %s%s.
+War %s {gen}%s{nom}%s.
+%%%%
+
+# titles used above, in declining order of piety
+%%%%
+the Champion
+{m}der Auserwählte
+%%%%
+a High Priest
+{m}ein Hohepriester
+%%%%
+an Elder
+{m}ein Ältester
+%%%%
+a Priest
+{m}ein Preister
+%%%%
+a Believer
+{m}ein Gläubiger
+%%%%
+a Follower
+{m}ein Anhänger
+%%%%
+an Initiate
+{m}ein Novize
+%%%%
+
+# optional penitent suffix
+%%%%
+" (penitent)"
+" (reuig)"
+%%%%
+
+########################
+# Won
+########################
+
+%%%%
+Escaped with the Orb
+Entkam mit der Kugel
+%%%%
+... and %d runes
+... und %d Runen
+%%%%
+
+########################
+# Quit or left without Orb
+########################
+
+%%%%
+Quit the game
+Beendete das Spiel
+%%%%
+Got out of the dungeon
+Entkam dem Kerker
+%%%%
+Safely got out of the dungeon
+Entkam dem Kerker unversehrt
+%%%%
+Got out of the dungeon alive
+Entkam dem Kerker lebend
+%%%%
+... with 1 rune
+... mit 1 Rune
+%%%%
+... with %d runes
+... mit %d Runen
+%%%%
+Entered wizard mode
+Wizard-Modus betreten
+%%%%
+
+# terse form
+%%%%
+left
+verließ
+%%%%
+escaped
+entkam
+%%%%
+quit
+gab auf
+%%%%
+wizmode
+wizmode
+%%%%
+
+
+########################
+# Died
+########################
+
+# NOTE: strings starting with a lowercase letter are the terse/oneline form
+
+%%%%
+# <verbed> by <noun>
+%s by %s
+%s von {dat}%s
+%%%%
+%s by themself
+von sich selbst %s
+%%%%
+
+# verbs used above
+%%%%
+Slain
+Getötet
+%%%%
+Mangled
+Zerfetzt
+%%%%
+Demolished
+Demoliert
+%%%%
+Annihilated
+Vernichtet
+%%%%
+
+%%%%
+# killed by missile from a launcher (arrow, bolt, sling bullet)
+shot by themself
+erschossen von sich selbst
+%%%%
+shot by %s
+erschossen von {dat}%s
+%%%%
+# killed by thrown weapon (boomerang, javelin, manticore spikes)
+hit from afar by %s
+aus der Ferne von {dat}%s getroffen
+%%%%
+# wand, etc.
+blasted by themself
+gesprengt von sich selbst
+%%%%
+blasted by %s
+gesprengt von {dat}%s
+%%%%
+slain by %s
+getötet von {dat}%s
+%%%%
+# <monster's> headbutt (terse)
+%s headbutt
+%s Kopfstoß
+%%%%
+Headbutted by %s
+Kopfstoß von {dat}%s
+%%%%
+squashed by %s
+zerquetscht von {dat}%s
+%%%%
+Rolled over by %s
+Überrollt von {dat}%s
+%%%%
+# <monster's> spines (terse)
+%s spines
+%s Stacheln
+%%%%
+Impaled on %s spines
+Aufgespießt von %s Stacheln
+%%%%
+Succumbed to poison
+Einem Gift erlegen
+%%%%
+poisoned by %s
+vergiftet von {dat}%s
+%%%%
+# duplicate definition
+#poison
+#
+%%%%
+Succumbed to %s
+Erlag {dat}%s
+%%%%
+Succumbed to their own poison
+Dem eigenen Gift erlegen
+%%%%
+Succumbed to their own %s
+{dat}%s erlegen (von sich selbst erschaffen)
+%%%%
+# succumbed to <monster's> poison
+Succumbed to %s poison
+Dem Gift %s erlegen
+%%%%
+# succumbed to <monster's> <poison>
+# no genitive context because English is already possessive
+Succumbed to %s %s
+{dat}%2$s {null}%1$s erlegen
+%%%%
+cloud of %s
+Wolke aus {dat}%s
+%%%%
+self
+sich selbst
+%%%%
+Engulfed by a cloud of %s
+Verschlungen von einer Wolke aus {dat}%s
+%%%%
+Engulfed by their own cloud of %s
+Verschlungen von ihrer eigenen Wolke aus {dat}%s
+%%%%
+Engulfed by %s
+Verschlungen von {dat}%s
+%%%%
+# killed by their own <beam>
+Killed by their own %s
+Getötet vom eigenen {dat}%s
+%%%%
+Killed by %s
+Getötet von {dat}%s
+%%%%
+Killed by themself
+Von sich selbst getötet
+%%%%
+Killed from afar by themself
+Aus der Ferne von sich selbst getötet
+%%%%
+Killed from afar by %s
+Aus der Ferne von {dat}%s getötet
+%%%%
+# duplicate definition
+#lava
+#
+%%%%
+Turned to ash by lava
+Von Lava in Asche verwandelt
+%%%%
+Took a swim in molten lava
+In geschmolzener Lava geschwommen
+%%%%
+fell apart
+zerfiel
+%%%%
+Soaked and fell apart
+Wurde durchnässt und zerfiel
+%%%%
+Sank and fell apart
+Versank und zerfiel
+%%%%
+drowned by %s
+ertränkt von {dat}%s
+%%%%
+Drowned by %s
+Ertränkt von {dat}%s
+%%%%
+drowned
+ertrank
+%%%%
+Drowned
+Ertrank
+%%%%
+stupidity
+Dummheit
+%%%%
+Forgot to exist
+Vergaß zu existieren
+%%%%
+Forgot to breathe
+Vergaß zu atmen
+%%%%
+collapsed
+zusammengebrochen
+%%%%
+Collapsed under their own weight
+Zusammengebrochen unter dem eigenen Gewicht
+%%%%
+clumsiness
+Ungeschicktheit
+%%%%
+Slipped on a banana peel
+Auf einer Bananenschale ausgerutscht
+%%%%
+Killed by triggering %s
+Getötet durch das Auslösen von {dat}%s
+%%%%
+# duplicate definition
+#drained
+#
+%%%%
+Drained of all life by %s
+Alles Leben von {dat}%s verzehrt
+%%%%
+Drained of all life
+Alles Leben ausgezehrt
+%%%%
+starvation
+verhungert
+%%%%
+Starved to death
+Zu Tode gehungert
+%%%%
+# duplicate definition
+#frozen
+#
+%%%%
+Frozen to death
+Zu Tode gefroren
+%%%%
+Frozen to death by %s
+Zu Tode gefroren von {acc}%s
+%%%%
+burnt
+verbrannt
+%%%%
+Incinerated by %s
+Eingeäschert von {acc}%s
+%%%%
+Burnt to a crisp
+Knusprig verbrannt
+%%%%
+# duplicate of mutation name
+#wild magic
+#
+%%%%
+Killed by wild magic
+Getötet durch wilde Magie
+%%%%
+xom
+xom
+%%%%
+Killed for Xom's enjoyment
+Getötet zu Xoms Vergnügen
+%%%%
+rotting
+verrottend
+%%%%
+Rotted away
+Verrottet
+%%%%
+shot self
+sich selbst erschossen
+%%%%
+Killed themself with bad targeting
+Tötete sich selbst durch schlechtes Zielen
+%%%%
+Killed themself with a badly aimed %s
+# TODO: fix this. It will be wrong for feminine
+Tötete sich selbst mit einem schlecht gezielten {dat}%s
+%%%%
+reflected bolt
+reflektierter Strahl
+%%%%
+Killed by a reflected bolt
+Getötet durch einen reflektierten Strahl
+%%%%
+Killed by a reflected %s
+Getötet durch einen reflektierten %s
+%%%%
+... reflected by %s
+... reflektiert von %s
+%%%%
+bounced beam
+abgeprallter Strahl
+%%%%
+Killed themself with a bounced beam
+Tötete sich selbst mit einem abgeprallten Strahl
+%%%%
+Killed themself with a bounced %s
+Tötete sich selbst mit einem abgeprallten %s
+%%%%
+suicidal targeting
+Selbstmörderisches Zielen
+%%%%
+Shot themself with a beam
+Hat sich selbst mit einem Strahl abgeschossen
+%%%%
+Shot themself with %s
+Sich selbst mit %s abgeschossen
+%%%%
+spore
+Spore
+%%%%
+Killed by an exploding spore
+Getötet durch eine explodierende Spore
+%%%%
+Killed by an exploding %s
+Getötet durch eine explodierende %s
+%%%%
+smitten by Shining One
+vom Strahlenden zerschmettert
+%%%%
+Smitten by the Shining One
+Vom Strahlenden zerschmettert
+%%%%
+smitten by Beogh
+von Beogh zerschmettert
+%%%%
+Smitten by Beogh
+Von Beogh zerschmettert
+%%%%
+# duplicate definition
+#petrified
+#
+%%%%
+Turned to stone
+Zu Stein verwandelt
+%%%%
+died
+gestorben
+%%%%
+Died
+Gestorben
+%%%%
+fell downstairs
+fiel die Treppe hinunter
+%%%%
+Fell down a flight of stairs
+Fiel eine Treppe hinunter
+%%%%
+fell through a gate
+fiel durch ein Tor
+%%%%
+Fell down through a gate
+Fiel durch ein Tor
+%%%%
+# duplicate definition
+#acid
+#
+%%%%
+Splashed by %s acid
+Bespritzt von %s Säure
+%%%%
+Splashed with acid
+Mit Säure bespritzt
+%%%%
+asphyx
+erstickt
+%%%%
+Asphyxiated
+Erstickt
+%%%%
+divine wrath
+göttlicher Zorn
+%%%%
+Killed by divine wrath
+Getötet durch göttlichen Zorn
+%%%%
+disintegration
+Zersetzung
+%%%%
+Blew themself up
+Hat sich selbst in die Luft gejagt
+%%%%
+Blown up by %s
+Von {dat}%s gesprengt
+%%%%
+mirror damage
+Spiegelschaden
+%%%%
+Killed by mirror damage
+Getötet durch Spiegelschaden
+%%%%
+frailty
+Schwäche
+%%%%
+Became unviable by %s
+Wurde durch %s lebensunfähig
+%%%%
+barbs
+Widerhaken
+%%%%
+Succumbed to barbed spike wounds
+Erlag Wunden durch Stachel mit Widerhaken
+%%%%
+%s throw
+%s Wurf
+%%%%
+Thrown by %s
+Geworfen von %s
+%%%%
+%s collision
+%s Kollision
+%%%%
+Collided with %s
+Kollidiert mit %s
+%%%%
+Tarried too long and was consumed by Zot
+Hat zu lange gezögert und wurde von Zot verschlungen
+%%%%
+constriction
+Umschlingung
+%%%%
+Constricted to death by %s
+Von {dat}%s zu Tode gedrückt
+%%%%
+Nibbled to death by software bugs
+Zu Tode geknabbert durch Software-Bugs
+%%%%
+... caused by %s
+... verursacht durch {acc}%s
+%%%%
+... wielding %s
+... {acc}%s schwingend
+%%%%
+... with damnation
+... mit Verdammnis
+%%%%
+... by creeping frost
+... durch schleichenden Frost
+%%%%
+... with %s
+... mit {dat}%s
+%%%%
+# trees awoken by spriggan druid
+... awakened by %s
+... erweckt von {dat}%s
+%%%%
+... generated by %s
+... erzeugt durch %s
+%%%%
+... invoked by %s
+... angerufen von {dat}%s
+%%%%
+# %s could be a monster or a thing
+... while paralysed by %s
+... während einer Lähmung durch {acc}%s
+%%%%
+... while paralysed
+... während einer Lähmung
+%%%%
+# %s is always a monster
+... while petrified by %s
+... während einer Versteinerung durch {acc}%s
+%%%%
+... while petrified
+... während einer Versteinerung
+%%%%
+
+%%%%
+Hit by %s thrown by %s
+Getroffen von {dat}%s geworfen von {dat}%s
+%%%%
+Shot with %s by %s
+Erschossen mit {dat}%s von {dat}%s
+%%%%
+
+########################
+# Killer origin
+########################
+%%%%
+"... "
+"... "
+%%%%
+led by %s
+geführt von {dat}%s
+%%%%
+# in this context, can be something created (e.g. fireball)
+summoned by %s
+beschworen von {dat}%s
+%%%%
+woven by %s
+gewebt von {dat}%s
+%%%%
+animated by %s
+animiert von {dat}%s
+%%%%
+called by a doom hound
+herbeigerufen von einem Untergangshund
+%%%%
+# for some reason eldritch tentacle is called rather than summoned
+called by %s
+herbeigerufen von {dat}%s
+%%%%
+# spectral cloud
+called from beyond by %s
+aus dem Jenseits gerufen von {dat}%s
+%%%%
+created by %s
+erschaffen von {dat}%s
+%%%%
+# god rage
+created by the rage of %s
+erschaffen durch den Zorn {gen}%s
+%%%%
+hexed by the player character
+verhext vom Spielercharakter
+%%%%
+hexed by %s
+verhext von {dat}%s
+%%%%
+mirrored by the player character
+gespiegelt vom Spielercharakter
+%%%%
+smitten by %s
+zerschmettert von {dat}%s
+%%%%
+# tentacle attached to monster
+attached to %s
+anhängig an {dat}%s
+%%%%
+ignited by their inner flame
+durch seine innere Flamme entzündet
+%%%%
+ignited by themself
+von sich selbst entzündet
+%%%%
+ignited by their pet
+von seinem Haustier entzündet
+%%%%
+set off by themself
+von sich selbst ausgelöst
+%%%%
+set off by their pet
+von seinem Haustier ausgelöst
+%%%%
+
+########################
+# Killers (that aren't defined in other files)
+########################
+%%%%
+the player character
+{m}der Spielercharakter
+%%%%
+themself
+sich selbst
+%%%%
+their own shadow
+{m}der eigene Schatten
+%%%%
+{acc}their own shadow
+den eigenen Schatten
+%%%%
+{dat}their own shadow
+dem eigenen Schatten
+%%%%
+unknown source
+unbekannte Quelle
+%%%%
+an accursed screaming
+{n}ein verfluchtes Gekreische
+%%%%
+static electricity
+statische Elektrizität
+%%%%
+arena miscast
+{m}Fehlzauber in der Arena
+%%%%
+# never actually displayed - "Asphyxiated" is shown instead
+curare-induced apnoea
+{f}durch Curare verursachte Apnoe
+%%%%
+a malign offering
+{f}eine bösartige Opfergabe
+%%%%
+nerve-wracking pain
+{m}quälender Schmerz
+%%%%
+the mindburst bolt
+{n}das Kopfzerplatzen
+%%%%
+the storm
+{m}der Sturm
+%%%%
+a card of wild magic
+{f}eine Karte wilder Magie
+%%%%
+accursed screaming
+{n}verfluchtes Gekreische
+%%%%
+divine providence
+{f}göttliche Fügung
+%%%%
+the blast of fiery breath
+{m}der Strahl feuriger Odem
+%%%%
+the blast of searing breath
+{m}der Strahl sengender Odem
+%%%%
+the blast of chaotic breath
+{m}der Strahl chaotischer Odem
+%%%%
+the blast of icy breath
+{m}der Strahl eisiger Odem
+%%%%
+the blast of chilling breath
+{m}der Strahl kühlender Odem
+%%%%
+the creeping frost
+{m}der schleichende Frost
+%%%%
+a resonance strike
+{m}ein Resonanzschlag
+%%%%
+the raging water
+{n}das wütende Wasser
+%%%%
+the air
+{f}die Luft
+%%%%
+entering a malign gateway
+{n}das Eintreten in ein bösartiges Tor
+%%%%
+gaining the %s mutation
+{n}das Erhalten der %s-Mutation
+%%%%
+losing the %s mutation
+{m}der Verlust der %s-Mutation
+%%%%
+the malice of Kikubaaqudgha
+{f}die Bosheit von Kikubaaqudgha
+%%%%
+the malice of Vehumet
+{f}die Bosheit von Vehumet
+%%%%
+the arc of chain lightning
+{m}der Kettenblitzbogen
+%%%%
+the chain of chaos
+{f}die Kette des Chaos
+%%%%
+burning poison
+{n}brennendes Gift
+%%%%
+angry trees
+{pl}wütende Bäume
+%%%%
+the cleansing flame
+{f}die reinigende Flamme
+%%%%
+the Shining One's cleansing flame
+{f}die reinigende Flamme des Strahlenden
+%%%%
+miscasting %s
+{m}der Fehlschlag des Zaubers %s
+%%%%
+the magical explosion
+{f}die magische Explosion
+%%%%
+gaining the %s transformation
+{n}das Erhalten der %s-Verwandlung
+%%%%
+losing the %s form
+{m}der Verlust der %s-Verwandlung
+%%%%
+# can only happen in wizard mode
+testing miscast
+{m}Test-Fehlzauber
+%%%%
+Xom's lightning strike
+Xoms Blitzeinschlag
+%%%%
+Xom's destruction
+Xoms Zerstörung
+%%%%
+
+# suffixes
+%%%%
+" (shapeshifter)"
+" (Gestaltwandler)"
+%%%%
+" (glowing shapeshifter)"
+" (glühender Gestaltwandler)"
+%%%%
+" (illusionary)"
+" (illusionär)"
+%%%%
+
+########################
+# Sources of paraysis
+########################
+%%%%
+Death's Door abortion
+{m}ein Fehlschlag der Pforte des Todes
+%%%%

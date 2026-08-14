@@ -1,0 +1,401 @@
+###############################################################################
+#
+# German grammar
+#
+# Entries named GENERATE:<context> are used to transform a string from the
+# default (null) context into the version for <context>. These are only applied
+# if there is no hardcoded definition of the string for <context>.
+#
+# The bodies of the entries consist of a sequence of regular expressions (regex).
+# If you are not familiar with regular expressions, consult Google.
+#
+# Expressions come in two forms:
+# /pattern/replacement/
+# /substring-pattern/pattern/replacement/
+#
+# The first type replaces all instances of pattern in the string with replacement.
+# The second type only does the replacement within the first substring matching
+# substring-pattern.
+#
+# Expressions are applied in order. Each expression is applied to the result of
+# the previous expression (not the original string).
+#
+# German-specific notes:
+#  - We want to decline only up to the first noun. If there are subsequent nouns,
+#    they will be in their own case, and should be left alone. For example:
+#    "der {adj-e}%sRing der Schatten" - don't change the part after Ring
+#    "ein {adj-er}%sRing magischer Kraft" - ditto
+#    "ein {adj-es}%sPaar {adj-e}%sHandschuhe" - don't change the part after Paar
+#  - The default form (null context) for nouns is nominative
+#  - The default form (null context) for adjectives is the -e form
+#
+###############################################################################
+
+#################################
+# Pregeneration
+#################################
+
+# Note: These are run in numbered order, and the results of earlier runs are
+# available to later runs (and later runs must take into account the fact that
+# the results of the earlier runs exist).
+
+#############
+# select all nouns with definite article and generate a version with an
+# adjective placeholder after the article
+%%%%
+PREGENERATE:0
+
+SELECT_BY_KEY:/^the (?!%s)/
+
+# English
+KEY:/^the /the %s/
+# "pair of boots/gloves" (but not quick blades) needs a second adjective placeholder
+KEY:/pair of (?!quick blades)/pair of %s/
+
+# German
+# nominative singular
+/^((\{m\})?der|(\{f\})?die|(\{n\})?das) /$1 {adj-e}%s/
+# plural and genitive
+/^(\{pl\}die|\{f\}der|\{n\}des|\{m\}des|des) /$1 {adj-en}%s/
+# "pair of boots/gloves" (but not quick blades) needs a second adjective placeholder
+/Paar (?!Schnellklingen)/Paar {adj-e}%s/
+%%%%
+
+#############
+# generate indefinite nominative from definite nominative
+%%%%
+PREGENERATE:1
+
+SELECT_BY_KEY:/^the .*[^']{2}$/
+
+# transform (English) key
+KEY:/^the (?=one-)/a /
+KEY:/^the (?=[aeiouAEIOU])/an /
+KEY:/^the /a /
+
+# articles
+/^(\{m\})?der /{m}ein /
+/^(\{f\})?die /{f}eine /
+/^(\{n\})?das /{n}ein /
+# plural
+/^(\{pl\})?die /{pl}/
+
+# masc adjectives
+/^\{m\}ein [^A-ZÄÖÜ]+/e\b/er/
+
+# fix some special cases
+/e (?=(Drakonier|Yiuf))/er /
+
+# neuter adjectives
+/^\{n\}ein [^A-ZÄÖÜ]+/e\b/es/
+
+# plural adjectives
+/^\{pl\}[^A-ZÄÖÜ]+/en\b/e/
+%%%%
+
+#############
+# generate indefinite possessive from definite posessive
+%%%%
+PREGENERATE:2
+
+SELECT_BY_KEY:/^the .*('s|')$/
+
+# transform (English) key
+KEY:/^the (?=one-)/a /
+KEY:/^the (?=[aeiouAEIOU])/an /
+KEY:/^the /a /
+
+# articles
+/^(\{f\})?der /einer /
+/^des /eines /
+%%%%
+
+#############
+# generate "your" (nominative and possessive) from indefinite
+# (easier than generating from definite because adjectives will already be in the right form)
+%%%%
+PREGENERATE:3
+
+SELECT_BY_KEY:/^(a|an) /
+
+# transform (English) key
+KEY:/^(a|an) /your /
+
+# singular
+/^(\{[mfn]\})?ein/$1dein/
+
+# plural
+/^\{pl\}[^A-ZÄÖÜ]+/e\b/en/
+/^\{pl\}/{pl}deine /
+%%%%
+
+#############
+# player ghost/illusion can have no determiner in English, but needs definite article in German
+%%%%
+PREGENERATE:4
+
+SELECT_BY_KEY:/^the (%s)?@name@'s/
+
+KEY:/^the //
+%%%%
+
+#############
+# generate no determiner (nominative) from indefinite
+%%%%
+PREGENERATE:5
+
+# exclude possessives
+SELECT_BY_KEY:/^(a|an) .*[^']{2}$/
+
+# remove article from key
+KEY:/^(a|an) //
+
+# remove article from value
+/^(\{m\})?ein /{m}/
+/^(\{f\})?eine /{f}/
+/^\{n\}ein /{n}/
+
+# if there are now two context markers in a row, remove the first one (it's superfluous).
+/^\{.\}\{/{/
+%%%%
+
+#############
+# generate counted plural with adjective placeholder from counted plural without
+PREGENERATE:6
+
+SELECT_BY_KEY:/^%d (?!%s)/
+
+KEY:/^%d /%d %s/
+
+/^(\{pl\})?%d /{pl}%d {adj-e}%s/
+%%%%
+
+#############
+# generate uncounted plural from counted plural without
+PREGENERATE:7
+
+SELECT_BY_KEY:/^%d /
+
+KEY:/^%d //
+
+/^(\{pl\})?%d /{pl}/
+%%%%
+
+#############
+# generate definite plural from counted plural
+PREGENERATE:8
+
+SELECT_BY_KEY:/^%d /
+
+KEY:/^%d/the/
+
+/^(\{pl\})?%d/{pl}die/
+%%%%
+
+#############
+# English possessive translates to German genitive (or von + dative for named monsters).
+# Re-use these entries for the situation when English nominative has to be translated
+# to German genitive.
+%%%%
+PREGENERATE:9
+
+SELECT_BY_KEY:/'s$/
+
+# only the English key needs to change
+KEY:/^(.*)'s$/{gen}$1/
+%%%%
+
+#############
+# if adjective already has a context, we can't generate other forms on the fly, so pre-generate
+%%%%
+PREGENERATE:10
+SELECT_BY_KEY:/^\{adj-e\}/
+KEY:/^\{adj-e\}/{adj-er}/
+/e$/er/
+%%%%
+PREGENERATE:11
+SELECT_BY_KEY:/^\{adj-e\}/
+KEY:/^\{adj-e\}/{adj-es}/
+/e$/es/
+%%%%
+PREGENERATE:12
+SELECT_BY_KEY:/^\{adj-e\}/
+KEY:/^\{adj-e\}/{adj-en}/
+/e$/en/
+%%%%
+PREGENERATE:13
+SELECT_BY_KEY:/^\{adj-e\}/
+KEY:/^\{adj-e\}/{adj-em}/
+/e$/em/
+%%%%
+
+#################################
+# Adjectives
+#################################
+%%%%
+GENERATE:adj-er
+/e(?=( |$))/er/
+%%%%
+GENERATE:adj-es
+/e(?=( |$))/es/
+%%%%
+GENERATE:adj-en
+/e(?=( |$))/en/
+%%%%
+GENERATE:adj-em
+/e(?=( |$))/em/
+%%%%
+
+#################################
+# Accusative case
+#################################
+%%%%
+GENERATE:acc
+
+# Only masculine is declined in accusative.
+# Masculine and neuter can be difficult to distinguish. Since masculine nouns
+# are more numerous, we assume masculine unless we see proof of neuter.
+
+# Mark any unmarked masculine instances of ein/dein
+/^(ein|dein) (?!(\{adj-es\}|[^A-ZÄÖÜ ]+es ))/{m}$1 /
+
+# determiners
+/^(\{m\})?der /den /
+/^\{m\}ein /einen /
+/^\{m\}dein /deinen /
+
+# masc adjectives
+/^den [^A-ZÄÖÜ]+/e /en /
+/^den [^A-ZÄÖÜ]+/\{adj-e\}/{adj-en}/
+/^[^A-ZÄÖÜ ][^A-ZÄÖÜ]+/er /en /
+/^[^A-ZÄÖÜ ][^A-ZÄÖÜ]+/\{adj-er\}/{adj-en}/
+
+# weak nouns
+/Akolyth\b/$1en/
+/[A-ZÄÖÜ][^ ,]+/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet|[Ff]ürst)$/$1en/
+/[A-ZÄÖÜ][^ ,]+/([Ss]chamane|[Ss]chütze|Sklave|[Hh]err|loge|mycete)$/$1n/
+/[A-ZÄÖÜ][^ ,]+/([Rr]iese|[Dd]rache|[Dd]ruide|[Hh]eilige|Ahne)$/$1n/
+# match Affe but not Waffe
+/[A-ZÄÖÜ][^ ,]+/(Affe|[^Ww]affe)$/$1n/
+
+# fix special cases
+/Blork der Ork/Blork den Ork/
+/er? Yiuf/en Yiuf/
+/er Drakonier/en Drakonier/
+# make sure it's not plural
+/^den [^,]+ Drakonier/e Drakonier/en Drakonier/
+
+%%%%
+
+#################################
+# Dative case
+#################################
+%%%%
+GENERATE:dat
+
+# remove masc/neut gender hint, to simplify following regexps
+/^\{(m|n)\}//
+
+# masc/neut determiners
+/^(der|das) /dem /
+/^ein /einem /
+/^dein /deinem /
+
+# masc/neut adjectives
+/^(d|ein|dein)em [^A-ZÄÖÜ]+/e[rs]? /en /
+/^(d|ein|dein)em [^A-ZÄÖÜ]+/\{adj-e[rs]?\}/{adj-en}/
+/^[^A-ZÄÖÜ ][^A-ZÄÖÜ]+/e[rs] /em /
+/^[^A-ZÄÖÜ ][^A-ZÄÖÜ]+/\{adj-e[rs]\}/{adj-em}/
+
+# mark plurals, if not already marked
+/^(die |deine )?(%d|[0-9]+) /^(.)/{pl}$1/
+/^(?!\{pl\}).*schuppen\b/^(.)/{pl}$1/
+
+# plural determiners
+/^\{pl\}die /{pl}den /
+/^\{pl\}deine /{pl}deinen /
+
+# fem determiners
+/^(\{f\})?die /der /
+/^(\{f\})?eine /einer /
+/^(\{f\})?deine /deiner /
+
+# plural adjectives
+/^\{pl\}[^A-ZÄÖÜ]+/e /en /
+/^\{pl\}[^A-ZÄÖÜ]+/\{adj-e\}/{adj-en}/
+
+# fem adjectives
+/^(\{f\})?(der|einer|deiner) [^A-ZÄÖÜ]+/e /en /
+/^(\{f\})?(der|einer|deiner) [^A-ZÄÖÜ]+/\{adj-e\}/{adj-en}/
+/^[^A-ZÄÖÜ ][^A-ZÄÖÜ]+/e /er /
+/^[^A-ZÄÖÜ ][^A-ZÄÖÜ]+/\{adj-e\}/{adj-er}/
+
+# plural nouns
+/^\{pl\}.*[A-ZÄÖÜ][^ ,]+/([^snai])$/$1n/
+
+# weak nouns
+/Akolyth\b/$1en/
+/[A-ZÄÖÜ][^ ,]+/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet|[Ff]ürst|herz)$/$1en/
+/[A-ZÄÖÜ][^ ,]+/([Ss]chamane|[Ss]chütze|Sklave|[Hh]err|loge|mycete)$/$1n/
+/[A-ZÄÖÜ][^ ,]+/([Rr]iese|[Dd]rache|[Dd]ruide|[Hh]eilige|Ahne)$/$1n/
+# match Affe but not Waffe
+/[A-ZÄÖÜ][^ ,]+/(Affe|[^Ww]affe)$/$1n/
+
+# remove fem/plural gender hint
+/^\{(f|pl)\}//
+
+# fix special cases
+/Blork der Ork/Blork dem Ork/
+/er? (Yiuf|Drakonier)/em $1/
+/^(dem|einem|deinem) (.*)em (Yiuf|Drakonier)/$1 $2en $3/
+/^(der|einer|deiner) (.*)Lernäische Hydra/$1 $2Lernäischen Hydra/
+/Lernäische Hydra/Lernäischer Hydra/
+# nominalised adjective
+/Unsichtbares\b/Unsichtbarem/
+
+%%%%
+
+#################################
+# Genitive case
+#################################
+%%%%
+GENERATE:gen
+
+# mark genitive/dative suffix so we can exclude it from later expressions
+/ (der|des|einer|eines|von|vom) /# $1 /
+
+# remove gender hints, to simplify following regexps
+/^\{(m|n|f|pl)\}//
+
+# adjectives ending in -es
+# (must do before adding -es to determiners)
+/^[^A-ZÄÖÜ]+/es\b/en/
+
+# masc/neut determiners
+/^(der|das) /des /
+/^ein /eines /
+/^dein /deines /
+
+# adjectives ending in -er
+# (must do after removing -er from determiners)
+/^[^A-ZÄÖÜ]+/er\b/en/
+
+# masc/neut adjectives ending in -e
+/^des [^A-ZÄÖÜ]+/e\b/en/
+
+# fem/pl determiners
+/^die /der /
+/^eine /einer /
+/^deine /deiner /
+
+# fem/pl adjectives
+/^(der|einer|deiner) [^A-ZÄÖÜ]+/e\b/en/
+/^[^A-ZÄÖÜ]+/e\b/er/
+
+# masc/neuter nouns
+/^(?!(\{adj\-er\}|[a-zäöüß\-]+er ))[^#]*/([a-zäöü])$/$1s/
+
+# remove mark we added
+/#//
+
+%%%%

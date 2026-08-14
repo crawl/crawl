@@ -1,0 +1,330 @@
+###############################################################################
+#
+# Monsters - unique, definite article, nominative
+#
+###############################################################################
+
+# Notes:
+#
+# It might seem weird to list named monsters with the definite article, but it's
+# needed for messages like: "You hit the helpless Sigmund." Also, it's easier to
+# generate the "plain" version (without article) from the one with the article
+# than the other way round because it's very hard to identify plain unique names
+# (there are hundreds of other one-word strings that start with a capital
+# letter).
+#
+# Some uniques are gender-neutral in English. This is different to neuter.
+# (neuter -> it, gender neutral -> they). This can not be done in most
+# languages, so we revert to their previous genders.
+
+%%%%
+# probably a reference to one of several Christian saints named Menas
+the Mennas
+
+%%%%
+# gender neutral in the English version of Crawl, but was previously male
+# a male centaur in Greek mythology
+the Nessos
+
+%%%%
+the Chuck
+
+%%%%
+# a cyclops in Greek mythology
+the Polyphemus
+
+%%%%
+# a giant/titan in Greek mythology
+the Antaeus
+
+%%%%
+# a Mesopotamian goddess
+the Tiamat
+
+%%%%
+# a figure from Chinese mythology
+the Bai Suzhen
+
+%%%%
+# gender neutral in the English version of Crawl, but was previously female
+the Xtahua
+
+%%%%
+the Ijyb
+
+%%%%
+# gender neutral in the English version of Crawl, but was previously female
+the Robin
+
+%%%%
+the Grum
+
+%%%%
+the Duvessa
+
+%%%%
+the Dowan
+
+%%%%
+# gender neutral in the English version of Crawl, but was previously male
+the Fannar
+
+%%%%
+the Jorgrun
+
+%%%%
+the Natasha
+
+%%%%
+# in Greek mythology, a woman who was transformed into a spider
+the Arachne
+
+%%%%
+# the name of the minotaur in Greek mythology
+the Asterion
+
+%%%%
+the Agnes
+
+%%%%
+# gender neutral in the English version of Crawl, was previously male, but Dissolution is a feminine noun
+the Dissolution
+
+%%%%
+the Sonja
+
+%%%%
+the Pikel
+
+%%%%
+the Boris
+
+%%%%
+# the original Egyptian name of the pharaoh also known by the Greek name Mykerinos
+the Menkaure
+
+%%%%
+# the original Egyptian name of the pharaoh usually known by the Greek name Cheops
+the Khufu
+
+%%%%
+the Ilsuiw
+
+%%%%
+the Vashnia
+
+%%%%
+the Erolcha
+
+%%%%
+the Urug
+
+%%%%
+the Nergalle
+
+%%%%
+# gender neutral in the English version of Crawl, but was previously male
+the Saint Roka
+
+%%%%
+the Sojobo
+
+%%%%
+# an angel in Islam
+the Azrael
+
+%%%%
+# a demon in Buddhism
+the Mara
+
+%%%%
+the Aizul
+
+%%%%
+the Snorg
+
+%%%%
+the Purgy
+
+%%%%
+the Jory
+
+%%%%
+the Gastronok
+
+%%%%
+the Nellie
+
+%%%%
+the Murray
+
+%%%%
+the Ignacio
+
+%%%%
+the Grinder
+
+%%%%
+the Roxanne
+
+%%%%
+the Terence
+
+%%%%
+the Jessica
+
+%%%%
+# a hero in Norse mythology
+the Sigmund
+
+%%%%
+the Edmund
+
+%%%%
+# named after the Greek goddess of the soul
+the Psyche
+
+%%%%
+the Donald
+
+%%%%
+the Joseph
+
+%%%%
+the Erica
+
+%%%%
+the Josephine
+
+%%%%
+the Harold
+
+%%%%
+the Louise
+
+%%%%
+the Frances
+
+%%%%
+the Rupert
+
+%%%%
+# the original Greek name of the minor goddess usually known as Circe
+the Kirke
+
+%%%%
+the Frederick
+
+%%%%
+the Margery
+
+%%%%
+the Maggie
+
+%%%%
+the Eustachio
+
+%%%%
+the Maurice
+
+%%%%
+# Nikola Tesla
+the Nikola
+
+%%%%
+# gender neutral in the English version of Crawl, but was previously male
+the Mnoleg
+
+%%%%
+# gender neutral in the English version of Crawl, but was previously male
+the Lom Lobon
+
+%%%%
+# gender neutral in the English version of Crawl, but was previously male
+the Cerebov
+
+%%%%
+# gender neutral in the English version of Crawl, but was previously male
+the Gloorx Vloq
+
+%%%%
+# from Greek mythology
+the Geryon
+
+%%%%
+# gender neutral in the English version of Crawl, but was previously male
+# Roman god of the underworld
+the Dispater
+
+%%%%
+# Greek name of a demon in Judaism/Christainity
+the Asmodeus
+
+%%%%
+# a Mesopotamian goddess
+the Ereshkigal
+
+%%%%
+the Prince Ribbit
+
+%%%%
+the Crazy Yiuf
+
+%%%%
+the Enchantress
+
+%%%%
+the Blork the orc
+
+%%%%
+the Blork
+
+%%%%
+# a play on words - boss of the jellies in DCSS, and a substance created by bees
+the Royal Jelly
+
+%%%%
+the Serpent of Hell
+
+%%%%
+# from Greek mythology
+the Lernaean hydra
+
+%%%%
+the Cigotuvi's Monster
+
+%%%%
+the Statue of Wucad Mu
+
+%%%%
+
+# not really uniques, but gramatically similar
+
+%%%%
+the @name@'s ghost
+
+%%%%
+the @name@'s illusion
+
+%%%%
+
+##################
+# Sprint Monsters
+##################
+
+%%%%
+The Meatlord
+
+%%%%
+The Servant
+
+%%%%
+The Captor
+
+%%%%
+The Defiler
+
+%%%%
+The Unspeakable
+
+%%%%
