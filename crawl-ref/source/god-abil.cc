@@ -1568,7 +1568,10 @@ void yred_end_conquest()
     // Print a message about how happy Yred is about our performance this floor
     string msg = "You offer up the Black Torch's flame,";
 
-    if (ratio > 90)
+    // Presumably an all-undead level, such as an ossuary
+    if (kills == 0 && souls_remaining == 0)
+        msg+= " and feel that Yredelemnul wasn't entirely sure if that was necessary.";
+    else if (ratio > 90)
         msg+= " and Yredelemnul is glorified by your conquest!";
     else if (ratio > 65)
         msg+= " and Yredelemnul is satisfied with your conquest.";
