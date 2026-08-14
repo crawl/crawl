@@ -2342,7 +2342,7 @@ static void _push_actor(actor& victim, coord_def dir, int dist, int pow,
             victim.collide(next_pos, &you, gavotte_impact_damage(pow, i, true).roll());
             break;
         }
-        else if (!victim.is_habitable(next_pos))
+        else if (!in_bounds(next_pos) || !victim.is_habitable(next_pos))
             break;
         else
             victim.move_to(next_pos, MV_TRANSLOCATION, true);
