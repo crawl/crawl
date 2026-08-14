@@ -881,7 +881,7 @@ bool end_terrain_changes(terrain_change_type type, mid_t source_mid)
         map_terrain_change_marker *marker =
             dynamic_cast<map_terrain_change_marker*>(mark);
 
-        if (marker->change_type == type
+        if ((type == NUM_TERRAIN_CHANGE_TYPES || marker->change_type == type)
             && (source_mid == MID_NOBODY || marker->source_mid == source_mid))
         {
             marker->duration = 0;
