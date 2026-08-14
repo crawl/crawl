@@ -5903,6 +5903,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_MAPSTAT_DUMP_DISCONNECT:
 #ifdef DEBUG_STATISTICS
             crawl_state.map_stat_dump_disconnect = true;
+            break;
 #else
             end(1, false, "%s", dbg_stat_err);
 #endif
