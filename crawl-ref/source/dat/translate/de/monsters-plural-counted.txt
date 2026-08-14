@@ -5,1541 +5,1541 @@
 ###############################################################################
 
 %%%%
-%d program bugs
-{pl}%d Programmfehler
+@num@ program bugs
+{pl}@num@ Programmfehler
 %%%%
-%d formicids
-{pl}%d Formicide
+@num@ formicids
+{pl}@num@ Formicide
 %%%%
-%d entropy weavers
-{pl}%d Entropieweber
+@num@ entropy weavers
+{pl}@num@ Entropieweber
 %%%%
-%d bats
-{pl}%d Fledermäuse
+@num@ bats
+{pl}@num@ Fledermäuse
 %%%%
-%d butterflies
-{pl}%d Schmetterlinge
+@num@ butterflies
+{pl}@num@ Schmetterlinge
 %%%%
-%d vampire bats
-{pl}%d Vampirfledermäuse
+@num@ vampire bats
+{pl}@num@ Vampirfledermäuse
 %%%%
-%d fire bats
-{pl}%d Feuerfledermäuse
+@num@ fire bats
+{pl}@num@ Feuerfledermäuse
 %%%%
-%d ice bats
-{pl}%d Eisfledermäuse
+@num@ ice bats
+{pl}@num@ Eisfledermäuse
 %%%%
 # rebadged spectral bat
-%d ghost-faced bats
-{pl}%d Gespenstfledermäuse
+@num@ ghost-faced bats
+{pl}@num@ Gespenstfledermäuse
 %%%%
-%d phase bats
-{pl}%d Phasenfledermäuse
+@num@ phase bats
+{pl}@num@ Phasenfledermäuse
 %%%%
-%d skeletal bats
-{pl}%d Skelettfledermäuse
+@num@ skeletal bats
+{pl}@num@ Skelettfledermäuse
 %%%%
-%d microbats
-{pl}%d Microfledermäuse
+@num@ microbats
+{pl}@num@ Microfledermäuse
 %%%%
-%d megabats
-{pl}%d Megafledermäuse
+@num@ megabats
+{pl}@num@ Megafledermäuse
 %%%%
-%d giga bats
-{pl}%d Gigafledermäuse
+@num@ giga bats
+{pl}@num@ Gigafledermäuse
 %%%%
-%d bennus
-{pl}%d Benus
+@num@ bennus
+{pl}@num@ Benus
 %%%%
-%d caustic shrikes
-{pl}%d ätzende Würger
+@num@ caustic shrikes
+{pl}@num@ ätzende Würger
 %%%%
-%d shard shrikes
-{pl}%d Scherbenwürger
+@num@ shard shrikes
+{pl}@num@ Scherbenwürger
 %%%%
-%d centaurs
-{pl}%d Zentauren
+@num@ centaurs
+{pl}@num@ Zentauren
 %%%%
-%d centaur warriors
-{pl}%d Zentaur-Krieger
+@num@ centaur warriors
+{pl}@num@ Zentaur-Krieger
 %%%%
-%d yaktaurs
-{pl}%d Yaktauren
+@num@ yaktaurs
+{pl}@num@ Yaktauren
 %%%%
-%d yaktaur captains
-{pl}%d Yaktaur-Kapitäne
+@num@ yaktaur captains
+{pl}@num@ Yaktaur-Kapitäne
 %%%%
-%d fauns
-{pl}%d Faune
+@num@ fauns
+{pl}@num@ Faune
 %%%%
-%d satyrs
-{pl}%d Satyrn
+@num@ satyrs
+{pl}@num@ Satyrn
 %%%%
-%d draconians
-{pl}%d Drakonier
+@num@ draconians
+{pl}@num@ Drakonier
 %%%%
-%d black draconians
-{pl}%d schwarze Drakonier
+@num@ black draconians
+{pl}@num@ schwarze Drakonier
 %%%%
-%d yellow draconians
-{pl}%d gelbe Drakonier
+@num@ yellow draconians
+{pl}@num@ gelbe Drakonier
 %%%%
-%d pale draconians
-{pl}%d blasse Drakonier
+@num@ pale draconians
+{pl}@num@ blasse Drakonier
 %%%%
-%d green draconians
-{pl}%d grüne Drakonier
+@num@ green draconians
+{pl}@num@ grüne Drakonier
 %%%%
-%d purple draconians
-{pl}%d purpurne Drakonier
+@num@ purple draconians
+{pl}@num@ purpurne Drakonier
 %%%%
-%d red draconians
-{pl}%d rote Drakonier
+@num@ red draconians
+{pl}@num@ rote Drakonier
 %%%%
-%d white draconians
-{pl}%d weiße Drakonier
+@num@ white draconians
+{pl}@num@ weiße Drakonier
 %%%%
-%d grey draconians
-{pl}%d graue Drakonier
+@num@ grey draconians
+{pl}@num@ graue Drakonier
 %%%%
-%d draconian stormcallers
-{pl}%d Drakonier-Sturmrufer
+@num@ draconian stormcallers
+{pl}@num@ Drakonier-Sturmrufer
 %%%%
-%d draconian monks
-{pl}%d Drakonier-Mönche
+@num@ draconian monks
+{pl}@num@ Drakonier-Mönche
 %%%%
-%d draconian shifters
-{pl}%d Drakonier-Verschieber
+@num@ draconian shifters
+{pl}@num@ Drakonier-Verschieber
 %%%%
-%d draconian annihilators
-{pl}%d Drakonier-Vernichter
+@num@ draconian annihilators
+{pl}@num@ Drakonier-Vernichter
 %%%%
-%d draconian knights
-{pl}%d Drakonier-Ritter
+@num@ draconian knights
+{pl}@num@ Drakonier-Ritter
 %%%%
-%d draconian scorchers
-{pl}%d Drakonier-Verschmorer
+@num@ draconian scorchers
+{pl}@num@ Drakonier-Verschmorer
 %%%%
-%d elves
-{pl}%d Elfen
+@num@ elves
+{pl}@num@ Elfen
 %%%%
-%d deep elf knights
-{pl}%d Tiefenelf-Ritter
+@num@ deep elf knights
+{pl}@num@ Tiefenelf-Ritter
 %%%%
-%d deep elf archers
-{pl}%d Tiefenelf-Bogenschützen
+@num@ deep elf archers
+{pl}@num@ Tiefenelf-Bogenschützen
 %%%%
-%d deep elf blademasters
-{pl}%d Tiefenelf-Klingenmeister
+@num@ deep elf blademasters
+{pl}@num@ Tiefenelf-Klingenmeister
 %%%%
-%d deep elf master archers
-{pl}%d Tiefenelf-Bogenmeister
+@num@ deep elf master archers
+{pl}@num@ Tiefenelf-Bogenmeister
 %%%%
-%d deep elf zephyrmancers
-{pl}%d Tiefenelf-Zephyrmanten
+@num@ deep elf zephyrmancers
+{pl}@num@ Tiefenelf-Zephyrmanten
 %%%%
-%d deep elf pyromancers
-{pl}%d Tiefenelf-Pyromanten
+@num@ deep elf pyromancers
+{pl}@num@ Tiefenelf-Pyromanten
 %%%%
-%d deep elf high priests
-{pl}%d Tiefenelf-Hohepriester
+@num@ deep elf high priests
+{pl}@num@ Tiefenelf-Hohepriester
 %%%%
-%d deep elf demonologists
-{pl}%d Tiefenelf-Dämonologen
+@num@ deep elf demonologists
+{pl}@num@ Tiefenelf-Dämonologen
 %%%%
-%d deep elf annihilators
-{pl}%d Tiefenelf-Vernichter
+@num@ deep elf annihilators
+{pl}@num@ Tiefenelf-Vernichter
 %%%%
-%d deep elf sorcerers
-{pl}%d Tiefenelf-Zauberer
+@num@ deep elf sorcerers
+{pl}@num@ Tiefenelf-Zauberer
 %%%%
-%d deep elf death magi
-{pl}%d Tiefenelf-Todesmagier
+@num@ deep elf death magi
+{pl}@num@ Tiefenelf-Todesmagier
 %%%%
-%d deep elf elementalists
-{pl}%d Tiefenelf-Elementalisten
+@num@ deep elf elementalists
+{pl}@num@ Tiefenelf-Elementalisten
 %%%%
-%d wandering mushrooms
-{pl}%d wandernde Pilze
+@num@ wandering mushrooms
+{pl}@num@ wandernde Pilze
 %%%%
-%d deathcaps
-{pl}%d Todeskappen
+@num@ deathcaps
+{pl}@num@ Todeskappen
 %%%%
-%d thorn hunters
-{pl}%d Dornenjäger
+@num@ thorn hunters
+{pl}@num@ Dornenjäger
 %%%%
-%d shambling mangroves
-{pl}%d watschelnde Mangroven
+@num@ shambling mangroves
+{pl}@num@ watschelnde Mangroven
 %%%%
-%d vine stalkers
-{pl}%d Rebjäger
+@num@ vine stalkers
+{pl}@num@ Rebjäger
 %%%%
-%d goblins
-{pl}%d Goblins
+@num@ goblins
+{pl}@num@ Goblins
 %%%%
-%d hobgoblins
-{pl}%d Hobgoblins
+@num@ hobgoblins
+{pl}@num@ Hobgoblins
 %%%%
-%d gnolls
-{pl}%d Gnolle
+@num@ gnolls
+{pl}@num@ Gnolle
 %%%%
-%d gnoll shamans
-{pl}%d Gnoll-Schamanen
+@num@ gnoll shamans
+{pl}@num@ Gnoll-Schamanen
 %%%%
-%d gnoll sergeants
-{pl}%d Gnoll-Wachtmeister
+@num@ gnoll sergeants
+{pl}@num@ Gnoll-Wachtmeister
 %%%%
-%d boggarts
-{pl}%d Boggarts
+@num@ boggarts
+{pl}@num@ Boggarts
 %%%%
-%d dwarves
-{pl}%d Zwerge
+@num@ dwarves
+{pl}@num@ Zwerge
 %%%%
-%d deep dwarves
-{pl}%d Tiefenzwerge
+@num@ deep dwarves
+{pl}@num@ Tiefenzwerge
 %%%%
-%d jackals
-{pl}%d Schakale
+@num@ jackals
+{pl}@num@ Schakale
 %%%%
-%d hounds
-{pl}%d Hunde
+@num@ hounds
+{pl}@num@ Hunde
 %%%%
-%d howler monkeys
-{pl}%d Brüllaffen
+@num@ howler monkeys
+{pl}@num@ Brüllaffen
 %%%%
-%d wargs
-{pl}%d Warge
+@num@ wargs
+{pl}@num@ Warge
 %%%%
-%d wolves
-{pl}%d Wölfe
+@num@ wolves
+{pl}@num@ Wölfe
 %%%%
-%d hogs
-{pl}%d Schweine
+@num@ hogs
+{pl}@num@ Schweine
 %%%%
-%d hell hounds
-{pl}%d Höllenhunde
+@num@ hell hounds
+{pl}@num@ Höllenhunde
 %%%%
-%d doom hounds
-{pl}%d Untergangshunde
+@num@ doom hounds
+{pl}@num@ Untergangshunde
 %%%%
-%d raiju
-{pl}%d Raijus
+@num@ raiju
+{pl}@num@ Raijus
 %%%%
-%d hell hogs
-{pl}%d höllische Schweine
+@num@ hell hogs
+{pl}@num@ höllische Schweine
 %%%%
-%d holy swine
-{pl}%d heilige Schweine
+@num@ holy swine
+{pl}@num@ heilige Schweine
 %%%%
-%d felids
-{pl}%d Feliden
+@num@ felids
+{pl}@num@ Feliden
 %%%%
-%d bears
-{pl}%d Bären
+@num@ bears
+{pl}@num@ Bären
 %%%%
-%d polar bears
-{pl}%d Eisbären
+@num@ polar bears
+{pl}@num@ Eisbären
 %%%%
-%d black bears
-{pl}%d Schwarzbären
+@num@ black bears
+{pl}@num@ Schwarzbären
 %%%%
-%d spriggans
-{pl}%d Spriggans
+@num@ spriggans
+{pl}@num@ Spriggans
 %%%%
-%d spriggan riders
-{pl}%d Spriggan-Reiter
+@num@ spriggan riders
+{pl}@num@ Spriggan-Reiter
 %%%%
-%d spriggan druids
-{pl}%d Spriggan-Druiden
+@num@ spriggan druids
+{pl}@num@ Spriggan-Druiden
 %%%%
-%d spriggan berserkers
-{pl}%d Spriggan-Berserker
+@num@ spriggan berserkers
+{pl}@num@ Spriggan-Berserker
 %%%%
-%d spriggan air magi
-{pl}%d Spriggan-Luftmagier
+@num@ spriggan air magi
+{pl}@num@ Spriggan-Luftmagier
 %%%%
-%d spriggan defenders
-{pl}%d Spriggan-Verteidiger
+@num@ spriggan defenders
+{pl}@num@ Spriggan-Verteidiger
 %%%%
-%d spriggan bakers
-{pl}%d Spriggan-Bäcker
+@num@ spriggan bakers
+{pl}@num@ Spriggan-Bäcker
 %%%%
-%d spriggan hatters
-{pl}%d Spriggan-Hutmacher
+@num@ spriggan hatters
+{pl}@num@ Spriggan-Hutmacher
 %%%%
-%d drakes
-{pl}%d Drachlinge
+@num@ drakes
+{pl}@num@ Drachlinge
 %%%%
-%d swamp drakes
-{pl}%d Sumpfdrachlinge
+@num@ swamp drakes
+{pl}@num@ Sumpfdrachlinge
 %%%%
-%d rime drakes
-{pl}%d Reifdrachlinge
+@num@ rime drakes
+{pl}@num@ Reifdrachlinge
 %%%%
-%d wind drakes
-{pl}%d Winddrachlinge
+@num@ wind drakes
+{pl}@num@ Winddrachlinge
 %%%%
-%d lindwurms
-{pl}%d Lindwürmer
+@num@ lindwurms
+{pl}@num@ Lindwürmer
 %%%%
-%d death drakes
-{pl}%d Todesdrachlinge
+@num@ death drakes
+{pl}@num@ Todesdrachlinge
 %%%%
-%d giant lizards
-{pl}%d Rieseneidechsen
+@num@ giant lizards
+{pl}@num@ Rieseneidechsen
 %%%%
-%d frilled lizards
-{pl}%d gekräuselte Eidechsen
+@num@ frilled lizards
+{pl}@num@ gekräuselte Eidechsen
 %%%%
-%d iguanas
-{pl}%d Leguane
+@num@ iguanas
+{pl}@num@ Leguane
 %%%%
-%d basilisks
-{pl}%d Basilisken
+@num@ basilisks
+{pl}@num@ Basilisken
 %%%%
-%d wyverns
-{pl}%d Wyvern
+@num@ wyverns
+{pl}@num@ Wyvern
 %%%%
-%d komodo dragons
-{pl}%d Komododrachen
+@num@ komodo dragons
+{pl}@num@ Komododrachen
 %%%%
-%d merfolk
-{pl}%d Meerwesen
+@num@ merfolk
+{pl}@num@ Meerwesen
 %%%%
-%d merfolk impalers
-{pl}%d Meerwesen-Pfähler
+@num@ merfolk impalers
+{pl}@num@ Meerwesen-Pfähler
 %%%%
-%d merfolk javelineers
-{pl}%d Meerwesen-Speerwerfer
+@num@ merfolk javelineers
+{pl}@num@ Meerwesen-Speerwerfer
 %%%%
-%d merfolk aquamancers
-{pl}%d Meerwesen-Wasserbeschwörerinnen
+@num@ merfolk aquamancers
+{pl}@num@ Meerwesen-Wasserbeschwörerinnen
 %%%%
-%d merfolk sirens
-{pl}%d Meerwesen-Sirenen
+@num@ merfolk sirens
+{pl}@num@ Meerwesen-Sirenen
 %%%%
-%d merfolk avatars
-{pl}%d Meerwesen-Avatare
+@num@ merfolk avatars
+{pl}@num@ Meerwesen-Avatare
 %%%%
-%d water nymphs
-{pl}%d Wassernymphen
+@num@ water nymphs
+{pl}@num@ Wassernymphen
 %%%%
-%d bog bodies
-{pl}%d Moorleichen
+@num@ bog bodies
+{pl}@num@ Moorleichen
 %%%%
-%d necrophages
-{pl}%d Nekrophagen
+@num@ necrophages
+{pl}@num@ Nekrophagen
 %%%%
-%d bloated husks
-{pl}%d aufgeblähte Hüllen
+@num@ bloated husks
+{pl}@num@ aufgeblähte Hüllen
 %%%%
-%d ghouls
-{pl}%d Ghule
+@num@ ghouls
+{pl}@num@ Ghule
 %%%%
-%d orcs
-{pl}%d Orks
+@num@ orcs
+{pl}@num@ Orks
 %%%%
-%d orc wizards
-{pl}%d Ork-Zauberer
+@num@ orc wizards
+{pl}@num@ Ork-Zauberer
 %%%%
-%d orc priests
-{pl}%d Ork-Priester
+@num@ orc priests
+{pl}@num@ Ork-Priester
 %%%%
-%d orc warriors
-{pl}%d Ork-Krieger
+@num@ orc warriors
+{pl}@num@ Ork-Krieger
 %%%%
-%d orc knights
-{pl}%d Ork-Ritter
+@num@ orc knights
+{pl}@num@ Ork-Ritter
 %%%%
-%d orc warlords
-{pl}%d Ork-Warlords
+@num@ orc warlords
+{pl}@num@ Ork-Warlords
 %%%%
-%d orc sorcerers
-{pl}%d Ork-Hexenmeister
+@num@ orc sorcerers
+{pl}@num@ Ork-Hexenmeister
 %%%%
-%d orc high priests
-{pl}%d Ork-Hohepriester
+@num@ orc high priests
+{pl}@num@ Ork-Hohepriester
 %%%%
-%d humans
-{pl}%d Menschen
+@num@ humans
+{pl}@num@ Menschen
 %%%%
-%d hell knights
-{pl}%d Höllenritter
+@num@ hell knights
+{pl}@num@ Höllenritter
 %%%%
-%d death knights
-{pl}%d Todesritter
+@num@ death knights
+{pl}@num@ Todesritter
 %%%%
-%d necromancers
-{pl}%d Nekromanten
+@num@ necromancers
+{pl}@num@ Nekromanten
 %%%%
-%d wizards
-{pl}%d Zauberer
+@num@ wizards
+{pl}@num@ Zauberer
 %%%%
-%d vault guards
-{pl}%d Tresorwachen
+@num@ vault guards
+{pl}@num@ Tresorwachen
 %%%%
-%d vault sentinels
-{pl}%d Tresorkundschafter
+@num@ vault sentinels
+{pl}@num@ Tresorkundschafter
 %%%%
-%d vault wardens
-{pl}%d Tresorwärter
+@num@ vault wardens
+{pl}@num@ Tresorwärter
 %%%%
-%d ironbound convokers
-{pl}%d eisenbeschlagene Einberufer
+@num@ ironbound convokers
+{pl}@num@ eisenbeschlagene Einberufer
 %%%%
-%d ironbound frosthearts
-{pl}%d eisengebundene Frostherzen
+@num@ ironbound frosthearts
+{pl}@num@ eisengebundene Frostherzen
 %%%%
-%d ironbound preservers
-{pl}%d eisenbeschlagene Bewahrer
+@num@ ironbound preservers
+{pl}@num@ eisenbeschlagene Bewahrer
 %%%%
-%d ironbound beastmasters
-{pl}%d eisenbeschlagene Bestienmeister
+@num@ ironbound beastmasters
+{pl}@num@ eisenbeschlagene Bestienmeister
 %%%%
-%d ironbound thunderhulks
-{pl}%d eisenbeschlagene Donnerkolosse
+@num@ ironbound thunderhulks
+{pl}@num@ eisenbeschlagene Donnerkolosse
 %%%%
-%d imperial myrmidons
-{pl}%d imperiale Myrmidonen
+@num@ imperial myrmidons
+{pl}@num@ imperiale Myrmidonen
 %%%%
-%d servants of whispers
-{pl}%d Diener des Flüsterns
+@num@ servants of whispers
+{pl}@num@ Diener des Flüsterns
 %%%%
-%d ragged hierophants
-{pl}%d zerlumpte Hierophanten
+@num@ ragged hierophants
+{pl}@num@ zerlumpte Hierophanten
 %%%%
-%d shapeshifters
-{pl}%d Gestaltwandler
+@num@ shapeshifters
+{pl}@num@ Gestaltwandler
 %%%%
-%d glowing shapeshifters
-{pl}%d leuchtende Gestaltwandler
+@num@ glowing shapeshifters
+{pl}@num@ leuchtende Gestaltwandler
 %%%%
 # used in constructions like "ogre shaped shifter"
-%d shifter
-{pl}%d Gestaltwandler
+@num@ shifter
+{pl}@num@ Gestaltwandler
 %%%%
-%d Killer Klowns
-{pl}%d Killer-Klowns
+@num@ Killer Klowns
+{pl}@num@ Killer-Klowns
 %%%%
-%d demigods
-{pl}%d Halbgötter
+@num@ demigods
+{pl}@num@ Halbgötter
 %%%%
-%d halflings
-{pl}%d Halblinge
+@num@ halflings
+{pl}@num@ Halblinge
 %%%%
-%d rats
-{pl}%d Ratten
+@num@ rats
+{pl}@num@ Ratten
 %%%%
-%d quokkas
-{pl}%d Quokkas
+@num@ quokkas
+{pl}@num@ Quokkas
 %%%%
-%d river rats
-{pl}%d Flussratten
+@num@ river rats
+{pl}@num@ Flussratten
 %%%%
-%d hell rats
-{pl}%d Höllenratten
+@num@ hell rats
+{pl}@num@ Höllenratten
 %%%%
-%d giant cockroaches
-{pl}%d Riesenkakerlaken
+@num@ giant cockroaches
+{pl}@num@ Riesenkakerlaken
 %%%%
-%d scorpions
-{pl}%d Skorpione
+@num@ scorpions
+{pl}@num@ Skorpione
 %%%%
-%d emperor scorpions
-{pl}%d Kaiserskorpione
+@num@ emperor scorpions
+{pl}@num@ Kaiserskorpione
 %%%%
-%d death scarabs
-{pl}%d Todesskarabäen
+@num@ death scarabs
+{pl}@num@ Todesskarabäen
 %%%%
-%d spiders
-{pl}%d Spinnen
+@num@ spiders
+{pl}@num@ Spinnen
 %%%%
-%d tarantellas
-{pl}%d Tarantellas
+@num@ tarantellas
+{pl}@num@ Tarantellas
 %%%%
-%d jumping spiders
-{pl}%d Springspinnen
+@num@ jumping spiders
+{pl}@num@ Springspinnen
 %%%%
-%d wolf spiders
-{pl}%d Wolfsspinnen
+@num@ wolf spiders
+{pl}@num@ Wolfsspinnen
 %%%%
-%d redbacks
-{pl}%d Rotrückenspinnen
+@num@ redbacks
+{pl}@num@ Rotrückenspinnen
 %%%%
-%d demonic crawlers
-{pl}%d dämonische Kriecher
+@num@ demonic crawlers
+{pl}@num@ dämonische Kriecher
 %%%%
-%d orb spiders
-{pl}%d Kugelspinnen
+@num@ orb spiders
+{pl}@num@ Kugelspinnen
 %%%%
-%d alligators
-{pl}%d Alligatoren
+@num@ alligators
+{pl}@num@ Alligatoren
 %%%%
-%d snapping turtles
-{pl}%d Schnappschildkröten
+@num@ snapping turtles
+{pl}@num@ Schnappschildkröten
 %%%%
-%d alligator snapping turtles
-{pl}%d Alligatorschnappschildkröten
+@num@ alligator snapping turtles
+{pl}@num@ Alligatorschnappschildkröten
 %%%%
-%d crabs
-{pl}%d Krabben
+@num@ crabs
+{pl}@num@ Krabben
 %%%%
-%d fire crabs
-{pl}%d Feuerkrabben
+@num@ fire crabs
+{pl}@num@ Feuerkrabben
 %%%%
-%d ghost crabs
-{pl}%d Geisterkrabben
+@num@ ghost crabs
+{pl}@num@ Geisterkrabben
 %%%%
-%d apocalypse crabs
-{pl}%d Apokalypsenkrabben
+@num@ apocalypse crabs
+{pl}@num@ Apokalypsenkrabben
 %%%%
-%d ugly things
-{pl}%d hässliche Dinge
+@num@ ugly things
+{pl}@num@ hässliche Dinge
 %%%%
-%d very ugly things
-{pl}%d sehr hässliche Dinge
+@num@ very ugly things
+{pl}@num@ sehr hässliche Dinge
 %%%%
-%d fire vortices
-{pl}%d Feuerwirbel
+@num@ fire vortices
+{pl}@num@ Feuerwirbel
 %%%%
-%d spatial vortices
-{pl}%d räumliche Wirbel
+@num@ spatial vortices
+{pl}@num@ räumliche Wirbel
 %%%%
-%d spatial maelstroms
-{pl}%d räumliche Mahlströme
+@num@ spatial maelstroms
+{pl}@num@ räumliche Mahlströme
 %%%%
-%d insubstantial wisps
-{pl}%d unwirkliche Irrlichter
+@num@ insubstantial wisps
+{pl}@num@ unwirkliche Irrlichter
 %%%%
-%d twisters
-{pl}%d Twister
+@num@ twisters
+{pl}@num@ Twister
 %%%%
-%d worms
-{pl}%d Würmer
+@num@ worms
+{pl}@num@ Würmer
 %%%%
-%d swamp worms
-{pl}%d Sumpfwürmer
+@num@ swamp worms
+{pl}@num@ Sumpfwürmer
 %%%%
-%d tyrant leeches
-{pl}%d Tyrannblutegel
+@num@ tyrant leeches
+{pl}@num@ Tyrannblutegel
 %%%%
-%d dart slugs
-{pl}%d Pfeilschnecken
+@num@ dart slugs
+{pl}@num@ Pfeilschnecken
 %%%%
-%d torpor snails
-{pl}%d Torporschnecken
+@num@ torpor snails
+{pl}@num@ Torporschnecken
 %%%%
-%d elephant slugs
-{pl}%d Elefantenschnecken
+@num@ elephant slugs
+{pl}@num@ Elefantenschnecken
 %%%%
-%d unseen horrors
-{pl}%d unsichtbare Schrecken
+@num@ unseen horrors
+{pl}@num@ unsichtbare Schrecken
 %%%%
-%d small abominations
-{pl}%d kleine Abscheulichkeiten
+@num@ small abominations
+{pl}@num@ kleine Abscheulichkeiten
 %%%%
-%d ancient zymes
-{pl}%d uralte Zyme
+@num@ ancient zymes
+{pl}@num@ uralte Zyme
 %%%%
-%d worldbinders
-{pl}%d Weltenbinder
+@num@ worldbinders
+{pl}@num@ Weltenbinder
 %%%%
-%d killer bees
-{pl}%d Killerbienen
+@num@ killer bees
+{pl}@num@ Killerbienen
 %%%%
-%d queen bees
-{pl}%d Bienenköniginnen
+@num@ queen bees
+{pl}@num@ Bienenköniginnen
 %%%%
-%d vampire mosquitoes
-{pl}%d Vampirmoskitos
+@num@ vampire mosquitoes
+{pl}@num@ Vampirmoskitos
 %%%%
-%d hornets
-{pl}%d Hornissen
+@num@ hornets
+{pl}@num@ Hornissen
 %%%%
-%d meliai
-{pl}%d Meliais
+@num@ meliai
+{pl}@num@ Meliais
 %%%%
-%d spark wasps
-{pl}%d Funkenwespen
+@num@ spark wasps
+{pl}@num@ Funkenwespen
 %%%%
-%d moths
-{pl}%d Motten
+@num@ moths
+{pl}@num@ Motten
 %%%%
-%d ghost moths
-{pl}%d Geistermotten
+@num@ ghost moths
+{pl}@num@ Geistermotten
 %%%%
-%d moths of wrath
-{pl}%d Motten des Zorns
+@num@ moths of wrath
+{pl}@num@ Motten des Zorns
 %%%%
-%d wights
-{pl}%d Wighte
+@num@ wights
+{pl}@num@ Wighte
 %%%%
-%d skeletal warriors
-{pl}%d Skelettkrieger
+@num@ skeletal warriors
+{pl}@num@ Skelettkrieger
 %%%%
-%d ancient champions
-{pl}%d uralte Champions
+@num@ ancient champions
+{pl}@num@ uralte Champions
 %%%%
-%d flying skulls
-{pl}%d fliegende Schädel
+@num@ flying skulls
+{pl}@num@ fliegende Schädel
 %%%%
-%d curse skulls
-{pl}%d verfluchte Schädel
+@num@ curse skulls
+{pl}@num@ verfluchte Schädel
 %%%%
-%d curse toes
-{pl}%d verfluchte Zehen
+@num@ curse toes
+{pl}@num@ verfluchte Zehen
 %%%%
-%d angels
-{pl}%d Engel
+@num@ angels
+{pl}@num@ Engel
 %%%%
-%d cherubim
-{pl}%d Cherubim
+@num@ cherubim
+{pl}@num@ Cherubim
 %%%%
-%d seraphim
-{pl}%d Seraphim
+@num@ seraphim
+{pl}@num@ Seraphim
 %%%%
-%d daevas
-{pl}%d Daevas
+@num@ daevas
+{pl}@num@ Daevas
 %%%%
-%d profane servitors
-{pl}%d profane Diener
+@num@ profane servitors
+{pl}@num@ profane Diener
 %%%%
-%d giants
-{pl}%d Riesen
+@num@ giants
+{pl}@num@ Riesen
 %%%%
-%d cyclopes
-{pl}%d Zyklopen
+@num@ cyclopes
+{pl}@num@ Zyklopen
 %%%%
-%d ettins
-{pl}%d Ettins
+@num@ ettins
+{pl}@num@ Ettins
 %%%%
-%d fire giants
-{pl}%d Feuerriesen
+@num@ fire giants
+{pl}@num@ Feuerriesen
 %%%%
-%d frost giants
-{pl}%d Frostriesen
+@num@ frost giants
+{pl}@num@ Frostriesen
 %%%%
-%d stone giants
-{pl}%d Steinriesen
+@num@ stone giants
+{pl}@num@ Steinriesen
 %%%%
-%d titans
-{pl}%d Titanen
+@num@ titans
+{pl}@num@ Titanen
 %%%%
-%d juggernauts
-{pl}%d Juggernaute
+@num@ juggernauts
+{pl}@num@ Juggernaute
 %%%%
-%d iron giants
-{pl}%d Eisenriesen
+@num@ iron giants
+{pl}@num@ Eisenriesen
 %%%%
-%d dragons
-{pl}%d Drachen
+@num@ dragons
+{pl}@num@ Drachen
 %%%%
-%d fire dragons
-{pl}%d Feuerdrachen
+@num@ fire dragons
+{pl}@num@ Feuerdrachen
 %%%%
-%d hydras
-{pl}%d Hydren
+@num@ hydras
+{pl}@num@ Hydren
 %%%%
-%d ice dragons
-{pl}%d Eisdrachen
+@num@ ice dragons
+{pl}@num@ Eisdrachen
 %%%%
-%d steam dragons
-{pl}%d Dampfdrachen
+@num@ steam dragons
+{pl}@num@ Dampfdrachen
 %%%%
-%d swamp dragons
-{pl}%d Sumpfdrachen
+@num@ swamp dragons
+{pl}@num@ Sumpfdrachen
 %%%%
-%d acid dragons
-{pl}%d Säuredrachen
+@num@ acid dragons
+{pl}@num@ Säuredrachen
 %%%%
-%d quicksilver dragons
-{pl}%d Quecksilberdrachen
+@num@ quicksilver dragons
+{pl}@num@ Quecksilberdrachen
 %%%%
-%d iron dragons
-{pl}%d Eisendrachen
+@num@ iron dragons
+{pl}@num@ Eisendrachen
 %%%%
-%d storm dragons
-{pl}%d Sturmdrachen
+@num@ storm dragons
+{pl}@num@ Sturmdrachen
 %%%%
-%d golden dragons
-{pl}%d Golddrachen
+@num@ golden dragons
+{pl}@num@ Golddrachen
 %%%%
-%d shadow dragons
-{pl}%d Schattendrachen
+@num@ shadow dragons
+{pl}@num@ Schattendrachen
 %%%%
-%d bone dragons
-{pl}%d Knochendrachen
+@num@ bone dragons
+{pl}@num@ Knochendrachen
 %%%%
-%d pearl dragons
-{pl}%d Perlendrachen
+@num@ pearl dragons
+{pl}@num@ Perlendrachen
 %%%%
-%d elementals
-{pl}%d Elementare
+@num@ elementals
+{pl}@num@ Elementare
 %%%%
-%d earth elementals
-{pl}%d Erdelementare
+@num@ earth elementals
+{pl}@num@ Erdelementare
 %%%%
-%d fire elementals
-{pl}%d Feuerelementare
+@num@ fire elementals
+{pl}@num@ Feuerelementare
 %%%%
-%d water elementals
-{pl}%d Wasserelementare
+@num@ water elementals
+{pl}@num@ Wasserelementare
 %%%%
-%d air elementals
-{pl}%d Luftelementare
+@num@ air elementals
+{pl}@num@ Luftelementare
 %%%%
-%d iron elementals
-{pl}%d Eisenelementare
+@num@ iron elementals
+{pl}@num@ Eisenelementare
 %%%%
-%d elemental wellsprings
-{pl}%d elementare Quellen
+@num@ elemental wellsprings
+{pl}@num@ elementare Quellen
 %%%%
-%d giant frogs
-{pl}%d Riesenfrösche
+@num@ giant frogs
+{pl}@num@ Riesenfrösche
 %%%%
-%d bullfrogs
-{pl}%d Ochsenfrösche
+@num@ bullfrogs
+{pl}@num@ Ochsenfrösche
 %%%%
-%d spiny frogs
-{pl}%d Stachelfrösche
+@num@ spiny frogs
+{pl}@num@ Stachelfrösche
 %%%%
-%d blink frogs
-{pl}%d Blinzelfrösche
+@num@ blink frogs
+{pl}@num@ Blinzelfrösche
 %%%%
-%d barachim
-{pl}%d Barachim
+@num@ barachim
+{pl}@num@ Barachim
 %%%%
-%d floating eyes
-{pl}%d schwebende Augen
+@num@ floating eyes
+{pl}@num@ schwebende Augen
 %%%%
-%d glowing orange brains
-{pl}%d orange leuchtende Gehirne
+@num@ glowing orange brains
+{pl}@num@ orange leuchtende Gehirne
 %%%%
-%d great orbs of eyes
-{pl}%d große Kugeln der Augen
+@num@ great orbs of eyes
+{pl}@num@ große Kugeln der Augen
 %%%%
-%d greater orbs of eyes
-{pl}%d größere Kugeln der Augen
+@num@ greater orbs of eyes
+{pl}@num@ größere Kugeln der Augen
 %%%%
-%d shining eyes
-{pl}%d leuchtende Augen
+@num@ shining eyes
+{pl}@num@ leuchtende Augen
 %%%%
-%d eyes of devastation
-{pl}%d Augen der Verwüstung
+@num@ eyes of devastation
+{pl}@num@ Augen der Verwüstung
 %%%%
-%d golden eyes
-{pl}%d goldene Augen
+@num@ golden eyes
+{pl}@num@ goldene Augen
 %%%%
-%d ophanim
-{pl}%d Ophanim
+@num@ ophanim
+{pl}@num@ Ophanim
 %%%%
-%d manticores
-{pl}%d Mantikore
+@num@ manticores
+{pl}@num@ Mantikore
 %%%%
-%d minotaurs
-{pl}%d Minotauren
+@num@ minotaurs
+{pl}@num@ Minotauren
 %%%%
-%d sphinxes
-{pl}%d Sphinxen
+@num@ sphinxes
+{pl}@num@ Sphinxen
 %%%%
-%d harpies
-{pl}%d Harpyien
+@num@ harpies
+{pl}@num@ Harpyien
 %%%%
-%d mutant beasts
-{pl}%d Mutantenbiester
+@num@ mutant beasts
+{pl}@num@ Mutantenbiester
 %%%%
-%d ancestors
-{pl}%d Ahnen
+@num@ ancestors
+{pl}@num@ Ahnen
 %%%%
-%d knights
-{pl}%d Ritter
+@num@ knights
+{pl}@num@ Ritter
 %%%%
-%d battlemagi
-{pl}%d Kampfmagier
+@num@ battlemagi
+{pl}@num@ Kampfmagier
 %%%%
-%d hexers
-{pl}%d Hexer
+@num@ hexers
+{pl}@num@ Hexer
 %%%%
-%d jellies
-{pl}%d Gelees
+@num@ jellies
+{pl}@num@ Gelees
 %%%%
-%d slime creatures
-{pl}%d Schleimkreaturen
+@num@ slime creatures
+{pl}@num@ Schleimkreaturen
 %%%%
-%d merged slime creatures
-{pl}%d verschmolzene Schleimkreaturen
+@num@ merged slime creatures
+{pl}@num@ verschmolzene Schleimkreaturen
 %%%%
-%d azure jellies
-{pl}%d azurblaue Gelees
+@num@ azure jellies
+{pl}@num@ azurblaue Gelees
 %%%%
-%d acid blobs
-{pl}%d Säureklumpen
+@num@ acid blobs
+{pl}@num@ Säureklumpen
 %%%%
-%d kobolds
-{pl}%d Kobolde
+@num@ kobolds
+{pl}@num@ Kobolde
 %%%%
-%d big kobolds
-{pl}%d große Kobolde
+@num@ big kobolds
+{pl}@num@ große Kobolde
 %%%%
-%d kobold demonologists
-{pl}%d Kobold-Dämonologen
+@num@ kobold demonologists
+{pl}@num@ Kobold-Dämonologen
 %%%%
-%d liches
-{pl}%d Lichs
+@num@ liches
+{pl}@num@ Lichs
 %%%%
-%d ancient liches
-{pl}%d alte Lichs
+@num@ ancient liches
+{pl}@num@ alte Lichs
 %%%%
-%d antique liches
-{pl}%d antike Lichs
+@num@ antique liches
+{pl}@num@ antike Lichs
 %%%%
-%d revenants
-{pl}%d Wiedergänger
+@num@ revenants
+{pl}@num@ Wiedergänger
 %%%%
-%d halazid warlocks
-{pl}%d halazidische Hexenmeister
+@num@ halazid warlocks
+{pl}@num@ halazidische Hexenmeister
 %%%%
-%d mummies
-{pl}%d Mumien
+@num@ mummies
+{pl}@num@ Mumien
 %%%%
-%d guardian mummies
-{pl}%d Wächtermumien
+@num@ guardian mummies
+{pl}@num@ Wächtermumien
 %%%%
-%d greater mummies
-{pl}%d größere Mumien
+@num@ greater mummies
+{pl}@num@ größere Mumien
 %%%%
-%d mummy priests
-{pl}%d Mumienpriester
+@num@ mummy priests
+{pl}@num@ Mumienpriester
 %%%%
-%d nagas
-{pl}%d Nagas
+@num@ nagas
+{pl}@num@ Nagas
 %%%%
-%d naga magi
-{pl}%d Naga-Magier
+@num@ naga magi
+{pl}@num@ Naga-Magier
 %%%%
-%d naga sharpshooters
-{pl}%d Naga-Scharfschützen
+@num@ naga sharpshooters
+{pl}@num@ Naga-Scharfschützen
 %%%%
-%d naga ritualists
-{pl}%d Naga-Ritualisten
+@num@ naga ritualists
+{pl}@num@ Naga-Ritualisten
 %%%%
-%d naga warriors
-{pl}%d Naga-Krieger
+@num@ naga warriors
+{pl}@num@ Naga-Krieger
 %%%%
-%d nagarajas
-{pl}%d Nagarajas
+@num@ nagarajas
+{pl}@num@ Nagarajas
 %%%%
-%d ogres
-{pl}%d Oger
+@num@ ogres
+{pl}@num@ Oger
 %%%%
-%d two-headed ogres
-{pl}%d zweiköpfige Oger
+@num@ two-headed ogres
+{pl}@num@ zweiköpfige Oger
 %%%%
-%d ogre magi
-{pl}%d Oger-Magier
+@num@ ogre magi
+{pl}@num@ Oger-Magier
 %%%%
-%d plants
-{pl}%d Pflanzen
+@num@ plants
+{pl}@num@ Pflanzen
 %%%%
-%d demonic plants
-{pl}%d dämonische Pflanzen
+@num@ demonic plants
+{pl}@num@ dämonische Pflanzen
 %%%%
-%d withered plants
-{pl}%d verwelkte Pflanzen
+@num@ withered plants
+{pl}@num@ verwelkte Pflanzen
 %%%%
-%d oklob saplings
-{pl}%d Oklobsetzlinge
+@num@ oklob saplings
+{pl}@num@ Oklobsetzlinge
 %%%%
-%d oklob plants
-{pl}%d Oklobpflanzen
+@num@ oklob plants
+{pl}@num@ Oklobpflanzen
 %%%%
-%d bushes
-{pl}%d Büsche
+@num@ bushes
+{pl}@num@ Büsche
 %%%%
-%d burning bushes
-{pl}%d brennende Büsche
+@num@ burning bushes
+{pl}@num@ brennende Büsche
 %%%%
-%d toadstools
-{pl}%d Giftpilze
+@num@ toadstools
+{pl}@num@ Giftpilze
 %%%%
-%d fungi
-{pl}%d Pilze
+@num@ fungi
+{pl}@num@ Pilze
 %%%%
-%d ballistomycetes
-{pl}%d Ballistomyceten
+@num@ ballistomycetes
+{pl}@num@ Ballistomyceten
 %%%%
-%d hyperactive ballistomycetes
-{pl}%d hyperaktive Ballistomyceten
+@num@ hyperactive ballistomycetes
+{pl}@num@ hyperaktive Ballistomyceten
 %%%%
-%d briar patches
-{pl}%d Dornensträucher
+@num@ briar patches
+{pl}@num@ Dornensträucher
 %%%%
-%d tengu
-{pl}%d Tengus
+@num@ tengu
+{pl}@num@ Tengus
 %%%%
-%d tengu conjurers
-{pl}%d Tengu-Zauberer
+@num@ tengu conjurers
+{pl}@num@ Tengu-Zauberer
 %%%%
-%d tengu warriors
-{pl}%d Tengu-Krieger
+@num@ tengu warriors
+{pl}@num@ Tengu-Krieger
 %%%%
-%d tengu reavers
-{pl}%d Tengu-Plünderer
+@num@ tengu reavers
+{pl}@num@ Tengu-Plünderer
 %%%%
-%d efreet
-{pl}%d Afarit
+@num@ efreet
+{pl}@num@ Afarit
 %%%%
-%d rakshasas
-{pl}%d Rakshasas
+@num@ rakshasas
+{pl}@num@ Rakshasas
 %%%%
-%d dryads
-{pl}%d Dryaden
+@num@ dryads
+{pl}@num@ Dryaden
 %%%%
-%d snaplasher vines
-{pl}%d Peitschenreben
+@num@ snaplasher vines
+{pl}@num@ Peitschenreben
 %%%%
-%d snaplasher vine segments
-{pl}%d Peitschenrebesegmente
+@num@ snaplasher vine segments
+{pl}@num@ Peitschenrebesegmente
 %%%%
-%d snakes
-{pl}%d Schlangen
+@num@ snakes
+{pl}@num@ Schlangen
 %%%%
-%d ball pythons
-{pl}%d Königspythons
+@num@ ball pythons
+{pl}@num@ Königspythons
 %%%%
-%d adders
-{pl}%d Kreuzottern
+@num@ adders
+{pl}@num@ Kreuzottern
 %%%%
-%d water moccasins
-{pl}%d Wassermokassins
+@num@ water moccasins
+{pl}@num@ Wassermokassins
 %%%%
-%d black mambas
-{pl}%d schwarze Mambas
+@num@ black mambas
+{pl}@num@ schwarze Mambas
 %%%%
-%d sea snakes
-{pl}%d Seeschlangen
+@num@ sea snakes
+{pl}@num@ Seeschlangen
 %%%%
-%d anacondas
-{pl}%d Anakondas
+@num@ anacondas
+{pl}@num@ Anakondas
 %%%%
-%d guardian serpents
-{pl}%d Wächterschlangen
+@num@ guardian serpents
+{pl}@num@ Wächterschlangen
 %%%%
-%d shock serpents
-{pl}%d Schockschlangen
+@num@ shock serpents
+{pl}@num@ Schockschlangen
 %%%%
-%d mana vipers
-{pl}%d Manavipern
+@num@ mana vipers
+{pl}@num@ Manavipern
 %%%%
-%d trolls
-{pl}%d Trolle
+@num@ trolls
+{pl}@num@ Trolle
 %%%%
-%d iron trolls
-{pl}%d Eisentrolle
+@num@ iron trolls
+{pl}@num@ Eisentrolle
 %%%%
-%d deep trolls
-{pl}%d Tiefentrolle
+@num@ deep trolls
+{pl}@num@ Tiefentrolle
 %%%%
-%d deep troll earth magi
-{pl}%d Tiefentroll-Erdmagier
+@num@ deep troll earth magi
+{pl}@num@ Tiefentroll-Erdmagier
 %%%%
-%d deep troll shamans
-{pl}%d Tiefentroll-Schamanen
+@num@ deep troll shamans
+{pl}@num@ Tiefentroll-Schamanen
 %%%%
-%d vampires
-{pl}%d Vampire
+@num@ vampires
+{pl}@num@ Vampire
 %%%%
-%d vampire knights
-{pl}%d Vampir-Ritter
+@num@ vampire knights
+{pl}@num@ Vampir-Ritter
 %%%%
-%d vampire magi
-{pl}%d Vampir-Magier
+@num@ vampire magi
+{pl}@num@ Vampir-Magier
 %%%%
-%d jiangshi
-{pl}%d Jiangshi
+@num@ jiangshi
+{pl}@num@ Jiangshi
 %%%%
-%d ghosts
-{pl}%d Gespenster
+@num@ ghosts
+{pl}@num@ Gespenster
 %%%%
-%d phantoms
-{pl}%d Phantome
+@num@ phantoms
+{pl}@num@ Phantome
 %%%%
-%d hungry ghosts
-{pl}%d hungrige Geister
+@num@ hungry ghosts
+{pl}@num@ hungrige Geister
 %%%%
-%d flayed ghosts
-{pl}%d geschundene Geister
+@num@ flayed ghosts
+{pl}@num@ geschundene Geister
 %%%%
-%d player ghosts
-{pl}%d Spielergeister
+@num@ player ghosts
+{pl}@num@ Spielergeister
 %%%%
-%d shadows
-{pl}%d Schatten
+@num@ shadows
+{pl}@num@ Schatten
 %%%%
-%d silent spectres
-{pl}%d stille Gespenster
+@num@ silent spectres
+{pl}@num@ stille Gespenster
 %%%%
-%d drowned souls
-{pl}%d ertrunkene Seelen
+@num@ drowned souls
+{pl}@num@ ertrunkene Seelen
 %%%%
-%d wraiths
-{pl}%d Spuke
+@num@ wraiths
+{pl}@num@ Spuke
 %%%%
-%d shadow wraiths
-{pl}%d Schattenspuke
+@num@ shadow wraiths
+{pl}@num@ Schattenspuke
 %%%%
-%d freezing wraiths
-{pl}%d Frostspuke
+@num@ freezing wraiths
+{pl}@num@ Frostspuke
 %%%%
-%d eidola
-{pl}%d Eidola
+@num@ eidola
+{pl}@num@ Eidola
 %%%%
-%d phantasmal warriors
-{pl}%d phantastische Krieger
+@num@ phantasmal warriors
+{pl}@num@ phantastische Krieger
 %%%%
-%d large abominations
-{pl}%d große Abscheulichkeiten
+@num@ large abominations
+{pl}@num@ große Abscheulichkeiten
 %%%%
-%d thrashing horrors
-{pl}%d prügelnde Grauen
+@num@ thrashing horrors
+{pl}@num@ prügelnde Grauen
 %%%%
-%d tentacled monstrosities
-{pl}%d Tentakelmonstren
+@num@ tentacled monstrosities
+{pl}@num@ Tentakelmonstren
 %%%%
-%d Orb Guardians
-{pl}%d Kugelwächter
+@num@ Orb Guardians
+{pl}@num@ Kugelwächter
 %%%%
-%d tentacled starspawn
-{pl}%d Tentakelsternbruten
+@num@ tentacled starspawn
+{pl}@num@ Tentakelsternbruten
 %%%%
-%d starspawn tentacles
-{pl}%d Sternbruttentakel
+@num@ starspawn tentacles
+{pl}@num@ Sternbruttentakel
 %%%%
-%d starspawn tentacle segments
-{pl}%d Sternbruttentakelsegmente
+@num@ starspawn tentacle segments
+{pl}@num@ Sternbruttentakelsegmente
 %%%%
-%d starcursed masses
-{pl}%d sternenverfluchte Massen
+@num@ starcursed masses
+{pl}@num@ sternenverfluchte Massen
 %%%%
-%d dream sheep
-{pl}%d Traumschafe
+@num@ dream sheep
+{pl}@num@ Traumschafe
 %%%%
-%d yaks
-{pl}%d Yaks
+@num@ yaks
+{pl}@num@ Yaks
 %%%%
-%d death yaks
-{pl}%d Todesyaks
+@num@ death yaks
+{pl}@num@ Todesyaks
 %%%%
-%d catoblepae
-{pl}%d Katoblepas
+@num@ catoblepae
+{pl}@num@ Katoblepas
 %%%%
-%d elephants
-{pl}%d Elefanten
+@num@ elephants
+{pl}@num@ Elefanten
 %%%%
-%d dire elephants
-{pl}%d Schreckenselefanten
+@num@ dire elephants
+{pl}@num@ Schreckenselefanten
 %%%%
-%d hellephants
-{pl}%d Höllefanten
+@num@ hellephants
+{pl}@num@ Höllefanten
 %%%%
-%d apis
-{pl}%d Apis
+@num@ apis
+{pl}@num@ Apis
 %%%%
-%d ice beasts
-{pl}%d Eisbestien
+@num@ ice beasts
+{pl}@num@ Eisbestien
 %%%%
-%d sky beasts
-{pl}%d Himmelsbestien
+@num@ sky beasts
+{pl}@num@ Himmelsbestien
 %%%%
-%d zombies
-{pl}%d Zombies
+@num@ zombies
+{pl}@num@ Zombies
 %%%%
-%d skeletons
-{pl}%d Skelette
+@num@ skeletons
+{pl}@num@ Skelette
 %%%%
-%d simulacra
-{pl}%d Simulacra
+@num@ simulacra
+{pl}@num@ Simulacra
 %%%%
-%d small zombies
-{pl}%d kleine Zombies
+@num@ small zombies
+{pl}@num@ kleine Zombies
 %%%%
-%d small skeletons
-{pl}%d kleine Skelette
+@num@ small skeletons
+{pl}@num@ kleine Skelette
 %%%%
-%d small simulacra
-{pl}%d kleine Simulacra
+@num@ small simulacra
+{pl}@num@ kleine Simulacra
 %%%%
-%d large zombies
-{pl}%d große Zombies
+@num@ large zombies
+{pl}@num@ große Zombies
 %%%%
-%d large skeletons
-{pl}%d große Skelette
+@num@ large skeletons
+{pl}@num@ große Skelette
 %%%%
-%d large simulacra
-{pl}%d große Simulacra
+@num@ large simulacra
+{pl}@num@ große Simulacra
 %%%%
-%d spectral things
-{pl}%d spektrale Dinge
+@num@ spectral things
+{pl}@num@ spektrale Dinge
 %%%%
-%d electric eels
-{pl}%d Zitteraale
+@num@ electric eels
+{pl}@num@ Zitteraale
 %%%%
-%d krakens
-{pl}%d Kraken
+@num@ krakens
+{pl}@num@ Kraken
 %%%%
-%d tentacles
-{pl}%d Tentakel
+@num@ tentacles
+{pl}@num@ Tentakel
 %%%%
-%d tentacle segments
-{pl}%d Tentakelsegmente
+@num@ tentacle segments
+{pl}@num@ Tentakelsegmente
 %%%%
-%d octopodes
-{pl}%d Oktopoden
+@num@ octopodes
+{pl}@num@ Oktopoden
 %%%%
-%d lava snakes
-{pl}%d Lavaschlangen
+@num@ lava snakes
+{pl}@num@ Lavaschlangen
 %%%%
-%d salamanders
-{pl}%d Salamander
+@num@ salamanders
+{pl}@num@ Salamander
 %%%%
-%d salamander mystics
-{pl}%d Salamander-Mystiker
+@num@ salamander mystics
+{pl}@num@ Salamander-Mystiker
 %%%%
-%d Hellbinders
-{pl}%d Höllenbinder
+@num@ Hellbinders
+{pl}@num@ Höllenbinder
 %%%%
-%d Cloud Mages
-{pl}%d Wolkenmagier
+@num@ Cloud Mages
+{pl}@num@ Wolkenmagier
 %%%%
-%d players
-{pl}%d Spieler
+@num@ players
+{pl}@num@ Spieler
 %%%%
-%d player illusions
-{pl}%d Spieler-Illusionen
+@num@ player illusions
+{pl}@num@ Spieler-Illusionen
 %%%%
-%d dancing weapons
-{pl}%d tanzende Waffen
+@num@ dancing weapons
+{pl}@num@ tanzende Waffen
 %%%%
-%d spectral weapons
-{pl}%d Spektralwaffen
+@num@ spectral weapons
+{pl}@num@ Spektralwaffen
 %%%%
-%d eldritch tentacles
-{pl}%d unheimliche Tentakel
+@num@ eldritch tentacles
+{pl}@num@ unheimliche Tentakel
 %%%%
-%d eldritch tentacle segments
-{pl}%d unheimliche Tentakelsegmente
+@num@ eldritch tentacle segments
+{pl}@num@ unheimliche Tentakelsegmente
 %%%%
-%d demonspawn
-{pl}%d Dämonenbruten
+@num@ demonspawn
+{pl}@num@ Dämonenbruten
 %%%%
-%d monstrous demonspawn
-{pl}%d monströse Dämonenbruten
+@num@ monstrous demonspawn
+{pl}@num@ monströse Dämonenbruten
 %%%%
-%d gelid demonspawn
-{pl}%d gelide Dämonenbruten
+@num@ gelid demonspawn
+{pl}@num@ gelide Dämonenbruten
 %%%%
-%d infernal demonspawn
-{pl}%d höllische Dämonenbruten
+@num@ infernal demonspawn
+{pl}@num@ höllische Dämonenbruten
 %%%%
-%d torturous demonspawn
-{pl}%d quälende Dämonenbruten
+@num@ torturous demonspawn
+{pl}@num@ quälende Dämonenbruten
 %%%%
-%d blood saints
-{pl}%d Blutheilige
+@num@ blood saints
+{pl}@num@ Blutheilige
 %%%%
-%d warmongers
-{pl}%d Kriegstreiber
+@num@ warmongers
+{pl}@num@ Kriegstreiber
 %%%%
-%d corrupters
-{pl}%d Korruptoren
+@num@ corrupters
+{pl}@num@ Korruptoren
 %%%%
-%d black suns
-{pl}%d schwarze Sonnen
+@num@ black suns
+{pl}@num@ schwarze Sonnen
 %%%%
-%d crimson imps
-{pl}%d karminrote Teufelchen
+@num@ crimson imps
+{pl}@num@ karminrote Teufelchen
 %%%%
-%d quasits
-{pl}%d Quasite
+@num@ quasits
+{pl}@num@ Quasite
 %%%%
-%d white imps
-{pl}%d weiße Teufelchen
+@num@ white imps
+{pl}@num@ weiße Teufelchen
 %%%%
-%d ufetubi
-{pl}%d Ufetubi
+@num@ ufetubi
+{pl}@num@ Ufetubi
 %%%%
-%d iron imps
-{pl}%d Eisenteufelchen
+@num@ iron imps
+{pl}@num@ Eisenteufelchen
 %%%%
-%d shadow imps
-{pl}%d Schattenteufelchen
+@num@ shadow imps
+{pl}@num@ Schattenteufelchen
 %%%%
-%d rust devils
-{pl}%d Rostteufel
+@num@ rust devils
+{pl}@num@ Rostteufel
 %%%%
-%d orange demons
-{pl}%d orange Dämonen
+@num@ orange demons
+{pl}@num@ orange Dämonen
 %%%%
-%d red devils
-{pl}%d rote Teufel
+@num@ red devils
+{pl}@num@ rote Teufel
 %%%%
-%d hellwings
-{pl}%d Höllenflügel
+@num@ hellwings
+{pl}@num@ Höllenflügel
 %%%%
-%d ice devils
-{pl}%d Eisteufel
+@num@ ice devils
+{pl}@num@ Eisteufel
 %%%%
-%d chaos spawn
-{pl}%d Chaosbruten
+@num@ chaos spawn
+{pl}@num@ Chaosbruten
 %%%%
-%d sun demons
-{pl}%d Sonnendämonen
+@num@ sun demons
+{pl}@num@ Sonnendämonen
 %%%%
-%d soul eaters
-{pl}%d Seelenfresser
+@num@ soul eaters
+{pl}@num@ Seelenfresser
 %%%%
-%d smoke demons
-{pl}%d Rauchdämonen
+@num@ smoke demons
+{pl}@num@ Rauchdämonen
 %%%%
-%d neqoxecs
-{pl}%d Neqoxecs
+@num@ neqoxecs
+{pl}@num@ Neqoxecs
 %%%%
-%d ynoxinuls
-{pl}%d Ynoxinule
+@num@ ynoxinuls
+{pl}@num@ Ynoxinule
 %%%%
-%d sixfirhies
-{pl}%d Sixfirhys
+@num@ sixfirhies
+{pl}@num@ Sixfirhys
 %%%%
-%d shadow demons
-{pl}%d Schattendämonen
+@num@ shadow demons
+{pl}@num@ Schattendämonen
 %%%%
-%d green deaths
-{pl}%d grüne Tode
+@num@ green deaths
+{pl}@num@ grüne Tode
 %%%%
-%d blizzard demons
-{pl}%d Blizzarddämonen
+@num@ blizzard demons
+{pl}@num@ Blizzarddämonen
 %%%%
-%d balrugs
-{pl}%d Balrogs
+@num@ balrugs
+{pl}@num@ Balrogs
 %%%%
-%d cacodemons
-{pl}%d Kakodämonen
+@num@ cacodemons
+{pl}@num@ Kakodämonen
 %%%%
-%d hell beasts
-{pl}%d Höllenbiester
+@num@ hell beasts
+{pl}@num@ Höllenbiester
 %%%%
-%d hellions
-{pl}%d Teufelsbraten
+@num@ hellions
+{pl}@num@ Teufelsbraten
 %%%%
-%d reapers
-{pl}%d Schnitter
+@num@ reapers
+{pl}@num@ Schnitter
 %%%%
-%d lorocyprocas
-{pl}%d Lorocyprocas
+@num@ lorocyprocas
+{pl}@num@ Lorocyprocas
 %%%%
-%d tormentors
-{pl}%d Peiniger
+@num@ tormentors
+{pl}@num@ Peiniger
 %%%%
-%d Brimstone Fiends
-{pl}%d Schwefelunholde
+@num@ Brimstone Fiends
+{pl}@num@ Schwefelunholde
 %%%%
-%d Ice Fiends
-{pl}%d Eisunholde
+@num@ Ice Fiends
+{pl}@num@ Eisunholde
 %%%%
-%d Tzitzimimeh
-{pl}%d Tzitzimitl
+@num@ Tzitzimimeh
+{pl}@num@ Tzitzimitl
 %%%%
-%d Hell Sentinels
-{pl}%d Höllenwächter
+@num@ Hell Sentinels
+{pl}@num@ Höllenwächter
 %%%%
-%d Executioners
-{pl}%d Scharfrichter
+@num@ Executioners
+{pl}@num@ Scharfrichter
 %%%%
-%d animated trees
-{pl}%d animierte Bäume
+@num@ animated trees
+{pl}@num@ animierte Bäume
 %%%%
-%d golems
-{pl}%d Golems
+@num@ golems
+{pl}@num@ Golems
 %%%%
-%d saltlings
-{pl}%d Salzlinge
+@num@ saltlings
+{pl}@num@ Salzlinge
 %%%%
-%d peacekeepers
-{pl}%d Friedenshüter
+@num@ peacekeepers
+{pl}@num@ Friedenshüter
 %%%%
-%d iron golems
-{pl}%d Eisengolems
+@num@ iron golems
+{pl}@num@ Eisengolems
 %%%%
-%d crystal guardians
-{pl}%d Kristallwächter
+@num@ crystal guardians
+{pl}@num@ Kristallwächter
 %%%%
-%d toenail golems
-{pl}%d Zehennagelgolems
+@num@ toenail golems
+{pl}@num@ Zehennagelgolems
 %%%%
-%d electric golems
-{pl}%d Blitzgolems
+@num@ electric golems
+{pl}@num@ Blitzgolems
 %%%%
-%d ushabtiu
-{pl}%d Uschebti
+@num@ ushabtiu
+{pl}@num@ Uschebti
 %%%%
-%d guardian golems
-{pl}%d Wächtergolems
+@num@ guardian golems
+{pl}@num@ Wächtergolems
 %%%%
-%d flesh golems
-{pl}%d Fleischgolems
+@num@ flesh golems
+{pl}@num@ Fleischgolems
 %%%%
-%d spellforged servitors
-{pl}%d zaubergeschmiedete Diener
+@num@ spellforged servitors
+{pl}@num@ zaubergeschmiedete Diener
 %%%%
-%d ice statues
-{pl}%d Eisstatuen
+@num@ ice statues
+{pl}@num@ Eisstatuen
 %%%%
-%d obsidian statues
-{pl}%d Obsidianstatuen
+@num@ obsidian statues
+{pl}@num@ Obsidianstatuen
 %%%%
-%d orange crystal statues
-{pl}%d orange Kristallstatuen
+@num@ orange crystal statues
+{pl}@num@ orange Kristallstatuen
 %%%%
-%d statues
-{pl}%d Statuen
+@num@ statues
+{pl}@num@ Statuen
 %%%%
-%d training dummies
-{pl}%d Trainingspuppen
+@num@ training dummies
+{pl}@num@ Trainingspuppen
 %%%%
-%d pillars of salt
-{pl}%d Salzsäulen
+@num@ pillars of salt
+{pl}@num@ Salzsäulen
 %%%%
-%d blocks of ice
-{pl}%d Eisblöcke
+@num@ blocks of ice
+{pl}@num@ Eisblöcke
 %%%%
-%d diamond obelisks
-{pl}%d Diamantobelisken
+@num@ diamond obelisks
+{pl}@num@ Diamantobelisken
 %%%%
-%d lightning spires
-{pl}%d Blitztürme
+@num@ lightning spires
+{pl}@num@ Blitztürme
 %%%%
-%d gargoyles
-{pl}%d Gargoyles
+@num@ gargoyles
+{pl}@num@ Gargoyles
 %%%%
-%d war gargoyles
-{pl}%d Kriegsgargoyles
+@num@ war gargoyles
+{pl}@num@ Kriegsgargoyles
 %%%%
-%d molten gargoyles
-{pl}%d geschmolzene Gargoyles
+@num@ molten gargoyles
+{pl}@num@ geschmolzene Gargoyles
 %%%%
-%d pandemonium lords
-{pl}%d Pandämoniumsfürsten
+@num@ pandemonium lords
+{pl}@num@ Pandämoniumsfürsten
 %%%%
-%d hell lords
-{pl}%d Höllenfürsten
+@num@ hell lords
+{pl}@num@ Höllenfürsten
 %%%%
-%d ball lightnings
-{pl}%d Kugelblitze
+@num@ ball lightnings
+{pl}@num@ Kugelblitze
 %%%%
-%d ballistomycete spores
-{pl}%d Ballistomycetensporen
+@num@ ballistomycete spores
+{pl}@num@ Ballistomycetensporen
 %%%%
-%d lost souls
-{pl}%d verlorene Seelen
+@num@ lost souls
+{pl}@num@ verlorene Seelen
 %%%%
-%d lurking horrors
-{pl}%d lauernde Grauen
+@num@ lurking horrors
+{pl}@num@ lauernde Grauen
 %%%%
-%d orbs of fire
-{pl}%d Feuerkugeln
+@num@ orbs of fire
+{pl}@num@ Feuerkugeln
 %%%%
-%d orbs of destruction
-{pl}%d Kugeln der Zerstörung
+@num@ orbs of destruction
+{pl}@num@ Kugeln der Zerstörung
 %%%%
-%d fulminant prisms
-{pl}%d fulminante Prismen
+@num@ fulminant prisms
+{pl}@num@ fulminante Prismen
 %%%%
-%d wretched stars
-{pl}%d elende Sterne
+@num@ wretched stars
+{pl}@num@ elende Sterne
 %%%%
-%d battlespheres
-{pl}%d Gefechtssphären
+@num@ battlespheres
+{pl}@num@ Gefechtssphären
 %%%%
-%d death cobs
-{pl}%d Todeskolben
+@num@ death cobs
+{pl}@num@ Todeskolben
 %%%%
-%d moon trolls
-{pl}%d Mondtrolle
+@num@ moon trolls
+{pl}@num@ Mondtrolle
 %%%%
-%d foxfires
-{pl}%d Fuchsfeuer
+@num@ foxfires
+{pl}@num@ Fuchsfeuer
 %%%%
-%d nameless horrors
-{pl}%d namenlose Grauen
+@num@ nameless horrors
+{pl}@num@ namenlose Grauen
 %%%%
-%d will-o-the-wisps
-{pl}%d Irrlichter
+@num@ will-o-the-wisps
+{pl}@num@ Irrlichter
 %%%%
-%d bunyips
-{pl}%d Bunyips
+@num@ bunyips
+{pl}@num@ Bunyips
 %%%%
-%d boulder beetles
-{pl}%d Rollsteinkäfer
+@num@ boulder beetles
+{pl}@num@ Rollsteinkäfer
 %%%%
-%d cane toads
-{pl}%d Aga-Kröten
+@num@ cane toads
+{pl}@num@ Aga-Kröten
 %%%%
-%d goliath frogs
-{pl}%d Goliathfrösche
+@num@ goliath frogs
+{pl}@num@ Goliathfrösche
 %%%%
-%d fenstrider witches
-{pl}%d Fennläuferhexen
+@num@ fenstrider witches
+{pl}@num@ Fennläuferhexen
 %%%%
-%d palentongas
-{pl}%d Palentongas
+@num@ palentongas
+{pl}@num@ Palentongas
 %%%%
-%d royal mummies
-{pl}%d königliche Mumien
+@num@ royal mummies
+{pl}@num@ königliche Mumien
 %%%%
-%d eleionomas
-{pl}%d Eleionomai
+@num@ eleionomas
+{pl}@num@ Eleionomai
 %%%%
-%d lemures
-{pl}%d Lemuren
+@num@ lemures
+{pl}@num@ Lemuren
 %%%%
-%d endoplasms
-{pl}%d Endoplasmen
+@num@ endoplasms
+{pl}@num@ Endoplasmen
 %%%%
-%d rockslimes
-{pl}%d Felsenschleime
+@num@ rockslimes
+{pl}@num@ Felsenschleime
 %%%%
-%d quicksilver oozes
-{pl}%d Quecksilberschleime
+@num@ quicksilver oozes
+{pl}@num@ Quecksilberschleime
 %%%%
-%d kobold brigands
-{pl}%d Kobold-Briganten
+@num@ kobold brigands
+{pl}@num@ Kobold-Briganten
 %%%%
-%d dread liches
-{pl}%d grauenhafte Lichs
+@num@ dread liches
+{pl}@num@ grauenhafte Lichs
 %%%%
-%d djinn
-{pl}%d Dschinns
+@num@ djinn
+{pl}@num@ Dschinns
 %%%%
-%d salamander tyrants
-{pl}%d Salamander-Tyrannen
+@num@ salamander tyrants
+{pl}@num@ Salamander-Tyrannen
 %%%%
-%d animated armours
-{pl}%d animierte Rüstungen
+@num@ animated armours
+{pl}@num@ animierte Rüstungen
 %%%%
-%d test spawners
-{pl}%d Test-Erzeuger
+@num@ test spawners
+{pl}@num@ Test-Erzeuger
 %%%%
-%d test statues
-{pl}%d Test-Statuen
+@num@ test statues
+{pl}@num@ Test-Statuen
 %%%%
-%d test blobs
-{pl}%d Test-Klumpen
+@num@ test blobs
+{pl}@num@ Test-Klumpen
 %%%%
-%d sensed monsters
-{pl}%d gespürte Monster
+@num@ sensed monsters
+{pl}@num@ gespürte Monster
 %%%%
-%d friendly sensed monsters
-{pl}%d freundliche gespürte Monster
+@num@ friendly sensed monsters
+{pl}@num@ freundliche gespürte Monster
 %%%%
-%d trivial sensed monsters
-{pl}%d triviale gespürte Monster
+@num@ trivial sensed monsters
+{pl}@num@ triviale gespürte Monster
 %%%%
-%d easy sensed monsters
-{pl}%d leichte gespürte Monster
+@num@ easy sensed monsters
+{pl}@num@ leichte gespürte Monster
 %%%%
-%d tough sensed monsters
-{pl}%d harte gespürte Monster
+@num@ tough sensed monsters
+{pl}@num@ harte gespürte Monster
 %%%%
-%d nasty sensed monsters
-{pl}%d furchtbare gespürte Monster
+@num@ nasty sensed monsters
+{pl}@num@ furchtbare gespürte Monster
 %%%%
-%d sting beasts
-{pl}%d Stichbiester
+@num@ sting beasts
+{pl}@num@ Stichbiester
 %%%%
-%d bat beasts
-{pl}%d Fledermausbiester
+@num@ bat beasts
+{pl}@num@ Fledermausbiester
 %%%%
-%d fire beasts
-{pl}%d Feuerbiester
+@num@ fire beasts
+{pl}@num@ Feuerbiester
 %%%%
-%d weird beasts
-{pl}%d bizarre Biester
+@num@ weird beasts
+{pl}@num@ bizarre Biester
 %%%%
-%d shock beasts
-{pl}%d Schockbiester
+@num@ shock beasts
+{pl}@num@ Schockbiester
 %%%%
-%d ox beasts
-{pl}%d Ochsenbiester
+@num@ ox beasts
+{pl}@num@ Ochsenbiester
 %%%%
-%d spectres
-{pl}%d Spukgestalten
+@num@ spectres
+{pl}@num@ Spukgestalten
 %%%%
-%d centipedes
-{pl}%d Tausendfüßer
+@num@ centipedes
+{pl}@num@ Tausendfüßer
 %%%%
-%d mad acolytes of Lugonu
-{pl}%d verrückte Akolythen von Lugonu
+@num@ mad acolytes of Lugonu
+{pl}@num@ verrückte Akolythen von Lugonu
 %%%%
-%d bog mummies
-{pl}%d Moormumien
+@num@ bog mummies
+{pl}@num@ Moormumien
 %%%%
-%d lunar statues
-{pl}%d Mondstatuen
+@num@ lunar statues
+{pl}@num@ Mondstatuen
 %%%%
-%d charred statues
-{pl}%d verkohlte Statuen
+@num@ charred statues
+{pl}@num@ verkohlte Statuen
 %%%%
-%d frost-covered statues
-{pl}%d frostbedeckte Statuen
+@num@ frost-covered statues
+{pl}@num@ frostbedeckte Statuen
 %%%%
-%d malarious merfolk avatars
-{pl}%d malariaverseuchte Meerwesen-Avatare
+@num@ malarious merfolk avatars
+{pl}@num@ malariaverseuchte Meerwesen-Avatare
 %%%%
-%d conjurer statues
-{pl}%d Konjuranten-Statuen
+@num@ conjurer statues
+{pl}@num@ Konjuranten-Statuen
 %%%%
-%d drunken dwarves
-{pl}%d betrunkene Zwerge
+@num@ drunken dwarves
+{pl}@num@ betrunkene Zwerge
 %%%%
-%d greater air elementals
-{pl}%d größere Luftelementare
+@num@ greater air elementals
+{pl}@num@ größere Luftelementare
 %%%%
-%d giant anacondas
-{pl}%d gigantische Anakondas
+@num@ giant anacondas
+{pl}@num@ gigantische Anakondas
 %%%%
-%d fire elementalist statues
-{pl}%d Feuermagier-Statuen
+@num@ fire elementalist statues
+{pl}@num@ Feuermagier-Statuen
 %%%%
-%d water elementalist statues
-{pl}%d Wassermagier-Statuen
+@num@ water elementalist statues
+{pl}@num@ Wassermagier-Statuen
 %%%%
-%d earth elementalist statues
-{pl}%d Erdmagier-Statuen
+@num@ earth elementalist statues
+{pl}@num@ Erdmagier-Statuen
 %%%%
-%d air elementalist statues
-{pl}%d Luftmagier-Statuen
+@num@ air elementalist statues
+{pl}@num@ Luftmagier-Statuen
 %%%%
-%d pristine statues
-{pl}%d makellose Statuen
+@num@ pristine statues
+{pl}@num@ makellose Statuen
 %%%%
-%d zot statues
-{pl}%d Zot-Statuen
+@num@ zot statues
+{pl}@num@ Zot-Statuen
 %%%%
-%d archer statues
-{pl}%d Bogenschützen-Statuen
+@num@ archer statues
+{pl}@num@ Bogenschützen-Statuen
 %%%%
 
 # derived monsters containing the name of the original monster
 # "elf zombie", "orc skeleton", etc.
 %%%%
-%d @monster@ zombies
-{pl}%d Zombies {gen}@a_monster@
+@num@ @monster@ zombies
+{pl}@num@ Zombies {gen}@a_monster@
 %%%%
-%d @monster@ skeletons
-{pl}%d Skelette {gen}@a_monster@
+@num@ @monster@ skeletons
+{pl}@num@ Skelette {gen}@a_monster@
 %%%%
-%d @monster@ simulacra
-{pl}%d Simulacra {gen}@a_monster@
+@num@ @monster@ simulacra
+{pl}@num@ Simulacra {gen}@a_monster@
 %%%%
 
 ##################
@@ -1547,105 +1547,105 @@
 ##################
 
 %%%%
-%d kamikaze kobolds
-{pl}%d Kamikaze-Kobolde
+@num@ kamikaze kobolds
+{pl}@num@ Kamikaze-Kobolde
 %%%%
-%d orb golems
-{pl}%d Kugelgolems
+@num@ orb golems
+{pl}@num@ Kugelgolems
 %%%%
-%d orbs of ice
-{pl}%d Kugeln des Eises
+@num@ orbs of ice
+{pl}@num@ Kugeln des Eises
 %%%%
-%d orbs of electricity
-{pl}%d Kugeln der Elektrizität
+@num@ orbs of electricity
+{pl}@num@ Kugeln der Elektrizität
 %%%%
-%d naga warlords
-{pl}%d Naga-Kriegsherren
+@num@ naga warlords
+{pl}@num@ Naga-Kriegsherren
 %%%%
-%d witches
-{pl}%d Hexen
+@num@ witches
+{pl}@num@ Hexen
 %%%%
-%d dire wolf spiders
-{pl}%d Schreckenswolfspinnen
+@num@ dire wolf spiders
+{pl}@num@ Schreckenswolfspinnen
 %%%%
-%d phase spiders
-{pl}%d Phasenspinnen
+@num@ phase spiders
+{pl}@num@ Phasenspinnen
 %%%%
-%d dimmes
-{pl}%d Dimmen
+@num@ dimmes
+{pl}@num@ Dimmen
 %%%%
-%d sulfuric acid blobs
-{pl}%d Schwefelsaure-Klumpen
+@num@ sulfuric acid blobs
+{pl}@num@ Schwefelsaure-Klumpen
 %%%%
-%d vault guard captains
-{pl}%d Haupttresorwächter
+@num@ vault guard captains
+{pl}@num@ Haupttresorwächter
 %%%%
-%d Master Blasters
-{pl}%d Master-Blaster
+@num@ Master Blasters
+{pl}@num@ Master-Blaster
 %%%%
-%d oklob sapling priests
-{pl}%d Oklobsetzlingspriester
+@num@ oklob sapling priests
+{pl}@num@ Oklobsetzlingspriester
 %%%%
-%d oklob sapling wizards
-{pl}%d Oklobsetzlingszauberer
+@num@ oklob sapling wizards
+{pl}@num@ Oklobsetzlingszauberer
 %%%%
-%d oklob plant conjurers
-{pl}%d Oklobpflanzenkonjuranten
+@num@ oklob plant conjurers
+{pl}@num@ Oklobpflanzenkonjuranten
 %%%%
-%d oklob plant summoners
-{pl}%d Oklobpflanzenbeschwörer
+@num@ oklob plant summoners
+{pl}@num@ Oklobpflanzenbeschwörer
 %%%%
-%d oklob plant shifters
-{pl}%d Oklobpflanzenverschieber
+@num@ oklob plant shifters
+{pl}@num@ Oklobpflanzenverschieber
 %%%%
-%d oklob plant meteorologists
-{pl}%d Oklobpflanzenmeteorologen
+@num@ oklob plant meteorologists
+{pl}@num@ Oklobpflanzenmeteorologen
 %%%%
-%d oklob plant demonologists
-{pl}%d Oklobpflanzendämonologen
+@num@ oklob plant demonologists
+{pl}@num@ Oklobpflanzendämonologen
 %%%%
-%d oklob plant annihilators
-{pl}%d Oklobpflanzenvernichter
+@num@ oklob plant annihilators
+{pl}@num@ Oklobpflanzenvernichter
 %%%%
-%d bags of meat
-{pl}%d Fleischklopse
+@num@ bags of meat
+{pl}@num@ Fleischklopse
 %%%%
-%d meat berserkers
-{pl}%d Fleischberserker
+@num@ meat berserkers
+{pl}@num@ Fleischberserker
 %%%%
-%d tyrants
-{pl}%d Tyrannen
+@num@ tyrants
+{pl}@num@ Tyrannen
 %%%%
-%d meat hydras
-{pl}%d Fleisch-Hydren
+@num@ meat hydras
+{pl}@num@ Fleisch-Hydren
 %%%%
-%d dreads
-{pl}%d Schrecken
+@num@ dreads
+{pl}@num@ Schrecken
 %%%%
-%d destroyers
-{pl}%d Zerstörer
+@num@ destroyers
+{pl}@num@ Zerstörer
 %%%%
-%d scourges
-{pl}%d Geißeln
+@num@ scourges
+{pl}@num@ Geißeln
 %%%%
-%d sculptors of flesh
-{pl}%d Bildhauer des Fleisches
+@num@ sculptors of flesh
+{pl}@num@ Bildhauer des Fleisches
 %%%%
-%d observers
-{pl}%d Beobachter
+@num@ observers
+{pl}@num@ Beobachter
 %%%%
-%d accurseds
-{pl}%d Verfluchte
+@num@ accurseds
+{pl}@num@ Verfluchte
 %%%%
-%d viles
-{pl}%d Niederträchtige
+@num@ viles
+{pl}@num@ Niederträchtige
 %%%%
-%d meat beasts
-{pl}%d Fleischbestien
+@num@ meat beasts
+{pl}@num@ Fleischbestien
 %%%%
-%d wretched souls
-{pl}%d unglückliche Seelen
+@num@ wretched souls
+{pl}@num@ unglückliche Seelen
 %%%%
-%d fleshlords
-{pl}%d Fleischlords
+@num@ fleshlords
+{pl}@num@ Fleischlords
 %%%%
