@@ -1,0 +1,1181 @@
+###############################################################################
+#
+# Translations for item description
+#
+# The item description window first shows specific text from items.txt,
+# unrand.txt or unident.txt under source/dat/descript.
+#
+# After that, it shows whichever of the strings below that apply.
+#
+###############################################################################
+
+#################################
+# Generic properties
+#################################
+
+%%%%
+It affects your AC (%+d).
+Dieser Gegenstand beeinflusst deine Rüstungsklasse (%+d).
+%%%%
+It affects your SH (%+d).
+Dieser Gegenstand beeinflusst deinen Schildwert (%+d).
+%%%%
+It affects your shielding (%+d).
+Dieser Gegenstand beeinflusst deinen Schildwert (%+d).
+%%%%
+It affects your evasion (%+d).
+Dieser Gegenstand beeinflusst dein Ausweichen (%+d).
+%%%%
+It affects your strength (%+d).
+Dieser Gegenstand beeinflusst deine Stärke (%+d).
+%%%%
+It affects your intelligence (%+d).
+Dieser Gegenstand beeinflusst deine Intelligenz (%+d).
+%%%%
+It affects your dexterity (%+d).
+Dieser Gegenstand beeinflusst deine Geschicklichkeit (%+d).
+%%%%
+It affects your accuracy and damage with ranged weapons and melee (%+d).
+Dieser Gegenstand beeinflusst deine Treffsicherheit und deinen Schaden mit Distanzwaffen und im Nahkampf (%+d).
+%%%%
+It insulates you from electricity.
+Dieser Gegenstand isoliert dich gegen Elektrizität.
+%%%%
+It affects your health (%+d).
+Dieser Gegenstand beeinflusst deine Gesundheit (%+d).
+%%%%
+It affects your magic capacity (%+d).
+Dieser Gegenstand beeinflusst deine magische Kapazität (%+d).
+%%%%
+It lets you see invisible.
+Dieser Gegenstand ermöglicht dir Unsichtbares zu sehen.
+%%%%
+It lets you turn invisible.
+Dieser Gegenstand erlaubt es dir, dich unsichtbar zu machen.
+%%%%
+It grants you flight.
+Dieser Gegenstand ermöglicht dir zu fliegen.
+%%%%
+It lets you blink.
+Dieser Gegenstand ermöglicht dir zu Blinzeln.
+%%%%
+It lets you go berserk.
+Dieser Gegenstand ermöglicht dir in Berserkerwut zu verfallen.
+%%%%
+It may make noises in combat.
+Dieser Gegenstand kann im Kampf Geräusche verursachen.
+%%%%
+It prevents spellcasting.
+Dieser Gegenstand verhindert das Wirken von Zaubersprüchen.
+%%%%
+It may teleport you next to monsters.
+Dieser Gegenstand kann dich neben Monster teleportieren.
+%%%%
+It prevents most forms of teleportation.
+Dieser Gegenstand verhindert die meisten Arten der Teleportation.
+%%%%
+It may make you go berserk in combat.
+Dieser Gegenstand kann im Kampf Berserkerwut in dir auslösen.
+%%%%
+It protects you against confusion.
+Dieser Gegenstand schützt dich vor Verwirrung.
+%%%%
+It causes magical contamination when unequipped.
+Dieser Gegenstand verursacht magische Kontamination, wenn er abgelegt wird.
+%%%%
+It protects you from missiles.
+Dieser Gegenstand schützt dich vor Geschossen
+%%%%
+It increases your rate of health regeneration.
+Dieser Gegenstand erhöht die Geschwindigkeit deiner Gesundheitsregeneration.
+%%%%
+It protects you from acid and corrosion.
+Dieser Gegenstand schützt dich vor Säure und Korrosion.
+%%%%
+It protects you from mutation.
+Dieser Gegenstand schützt dich vor Mutation.
+%%%%
+It may corrode you when you take damage.
+Dieser Gegenstand kann dich korrodieren wenn du Schaden nimmst.
+%%%%
+It drains your maximum health when unequipped.
+Dieser Gegenstand senkt deine maximale Gesundheit, wenn er abgelegt wird.
+%%%%
+It may slow you when you take damage.
+Dieser Gegenstand kann dich verlangsamen, wenn du Schaden nimmst.
+%%%%
+It will be destroyed if unequipped.
+Dieser Gegenstand wird zerstört, wenn er abgelegt wird.
+%%%%
+It increases damage dealt and taken.
+Dieser Gegenstand erhöht den verursachten und erlittenen Schaden.
+%%%%
+It bestows one free step when moving towards enemies.
+Dieser Gegenstand gewährt dir einen freien Schritt, wenn du dich auf Feinde zubewegst.
+%%%%
+It makes you extremely vulnerable to %s.
+Dieser Gegenstand macht dich extrem anfällig für {acc}%s.
+%%%%
+It makes you very vulnerable to %s.
+Dieser Gegenstand macht dich sehr anfällig für {acc}%s.
+%%%%
+It makes you vulnerable to %s.
+Dieser Gegenstand macht dich anfällig für {acc}%s.
+%%%%
+It protects you from %s.
+Dieser Gegenstand schützt dich vor {dat}%s.
+%%%%
+It greatly protects you from %s.
+Dieser Gegenstand schützt dich hervorragend vor {dat}%s.
+%%%%
+It renders you almost immune to %s.
+Dieser Gegenstand macht dich fast immun gegen {acc}%s.
+%%%%
+It greatly decreases your willpower.
+Dieser Gegenstand reduziert deine Willenskraft erheblich.
+%%%%
+It greatly increases your willpower.
+Dieser Gegenstand erhöht deine Willenskraft erheblich.
+%%%%
+It decreases your willpower.
+Dieser Gegenstand reduziert deine Willenskraft.
+%%%%
+It increases your willpower.
+Dieser Gegenstand erhöht deine Willenskraft.
+%%%%
+It makes you much less stealthy.
+Dieser Gegenstand macht dich viel weniger heimlich.
+%%%%
+It makes you much more stealthy.
+Dieser Gegenstand macht dich viel heimlicher.
+%%%%
+It makes you less stealthy.
+Dieser Gegenstand macht dich weniger heimlich.
+%%%%
+It makes you more stealthy.
+Dieser Gegenstand macht dich heimlicher.
+%%%%
+It may have some hidden properties.
+Dieser Gegenstand kann einige verborgene Eigenschaften haben.
+%%%%
+It has a curse placed upon it.
+Auf diesem Gegenstand liegt ein Fluch.
+%%%%
+It has a curse which improves the following skills:
+Dieser Gegenstand hat einen Fluch, der die folgenden Fähigkeiten verbessert:
+%%%%
+It is an ancient artefact.
+Dieser Gegenstand ist ein uraltes Artefakt.
+%%%%
+This item has been removed.
+Dieser Gegenstand wurde entfernt.
+%%%%
+[ERROR: no desc for item name '%s']. Perhaps this item has been removed?
+[ERROR: keine Bescheibung für '%s']. Vielleicht wurde diese Gegenstand entfernt?
+%%%%
+# your god disapproves
+%s disapproves of the use of such an item.
+%s missbilligt die Verwendung eines solchen Gegenstandes.
+%%%%
+"Stash search prefixes: "
+"Suchpräfixe: "
+%%%%
+"Menu/colouring prefixes: "
+"Menü/Färbung Präfixe: "
+%%%%
+
+# magic enhancement
+%%%%
+It improves your spell success rate.
+Dieser Gegenstand verbessert die Erfolgsquote deiner Zauber.
+%%%%
+It enhances your fire magic.
+Dieser Gegenstand verstärkt deine Feuermagie.
+%%%%
+It enhances your ice magic.
+Dieser Gegenstand verstärkt deine Eismagie
+%%%%
+It enhances your earth magic.
+Dieser Gegenstand verstärkt deine Erdmagie
+%%%%
+It enhances your air magic.
+Dieser Gegenstand verstärkt deine Luftmagie
+%%%%
+It enhances your poison magic.
+Dieser Gegenstand verstärkt deine Giftmagie
+%%%%
+It enhances your conjuration magic.
+Dieser Gegenstand verstärkt deine Konjurationsmagie.
+%%%%
+
+# maximum enchantment - applies to weapons and armour
+%%%%
+It can be maximally enchanted to +%d.
+Dieser Gegenstand kann maximal bis zu +%d verzaubert werden.
+%%%%
+It cannot be enchanted further.
+Dieser Gegenstand kann nicht weiter verzaubert werden.
+%%%%
+This ancient artefact cannot be changed by magic or mundane means.
+Dieses uralte Artefakt kann weder durch magische noch weltliche Mittel verändert werden.
+%%%%
+
+
+#################################
+# Weapons
+#################################
+
+%%%%
+Base accuracy: %+d  Base damage: %d  Base attack delay: %.1f
+Grundgenauigkeit: %+d  Grundschaden: %d  Grundangriffsverzögerung: %.1f
+%%%%
+Firing bullets:    Base damage: %d
+Feuern von Kugeln:    Grundschaden: %d
+%%%%
+Base damage: %d  Base attack delay: %.1f
+Grundschaden: %d  Grundangriffsverzögerung: %.1f
+%%%%
+It can be evoked to extend its reach.
+Diese Waffe kann evoziert werden, um ihre Reichweite zu erhöhen.
+%%%%
+It hits all enemies adjacent to the wielder, dealing less damage to those not targeted.
+Diese Waffe trifft alle Feinde in der Nähe des Anwenders und fügt denen, die nicht anvisiert werden, weniger Schaden zu.
+%%%%
+It can be used to riposte, swiftly retaliating against a missed attack.
+Diese Waffe kann zur Riposte verwendet werden, um einen verfehlten Angriff schnell zu vergelten.
+%%%%
+It is extremely good for stabbing helpless or unaware enemies.
+Diese Waffe eignet sich extrem gut dafür, hilflose oder ahnungslose Feinde zu erstechen.
+%%%%
+It is particularly good for stabbing helpless or unaware enemies.
+Diese Waffe eignet sich besonders gut dafür, hilflose oder ahnungslose Feinde zu erstechen.
+%%%%
+Any ammunition fired from it burns those it strikes, dealing additional fire damage.
+Jede mit dieser Waffe abgefeuerte Munition verbrennt die Getroffenen und verursacht zusätzlichen Feuerschaden.
+%%%%
+Big, fiery blades are also staple armaments of hydra-hunters.
+Große, feurige Klingen gehören außerdem zur Standardbewaffnung von Hydrajägern.
+%%%%
+Any ammunition fired from it freezes those it strikes, dealing additional cold damage.
+Jede mit dieser Waffe abgefeuerte Munition friert die Getroffenen ein und verursacht zusätzlichen Kälteschaden.
+%%%%
+It freezes those it strikes, dealing additional cold damage.
+Diese Waffe friert die Getroffenen ein und verursacht zusätzlichen Kälteschaden.
+%%%%
+It can also slow down cold-blooded creatures.
+Diese Waffe kann außerdem kaltblütige Kreaturen verlangsamen.
+%%%%
+It has been blessed by the Shining One, and any ammunition fired from it cause great damage to the undead and demons.
+Diese Waffe wurde vom Strahlenden gesegnet und jede mit ihr abgefeuerte Munition verursacht bei Untoten und Dämonen großen Schaden.
+%%%%
+It has been blessed by the Shining One to cause great damage to the undead and demons.
+Diese Waffe wurde vom Strahlenden gesegnet, um Untoten und Dämonen großen Schaden zuzufügen.
+%%%%
+Any ammunition fired from it occasionally discharges a powerful burst of electricity upon striking a foe.
+Jede mit dieser Waffe abgefeuerte Munition entlädt gelegentlich einen mächtigen Stromschlag, wenn sie einen Feind trifft.
+%%%%
+It occasionally discharges a powerful burst of electricity upon striking a foe.
+Diese Waffe entlädt gelegentlich einen mächtigen Stromschlag, wenn sie einen Feind trifft.
+%%%%
+Any ammunition fired from it poisons the flesh of those it strikes.
+Jede mit dieser Waffe abgefeuerte Munition vergiftet das Fleisch der Getroffenen.
+%%%%
+It poisons the flesh of those it strikes.
+Diese Waffe vergiftet das Fleisch der Getroffenen.
+%%%%
+It grants its wielder temporary protection when it strikes (+7 to AC).
+Diese Waffe gewährt ihrem Träger vorübergehenden Schutz, wenn sie einen Gegner trifft (+7 RK).
+%%%%
+A truly terrible weapon, it drains the life of any living foe it strikes.
+Eine wahrhaft schreckliche Waffe, die das Leben von jedem getroffenen lebenden Feind auszehrt.
+%%%%
+Attacks with this weapon are significantly faster.
+Angriffe mit dieser Waffe sind deutlich schneller.
+%%%%
+Any ammunition fired from it inflicts extra damage upon your enemies.
+Jede mit dieser Waffe abgefeuerte Munition fügt deinen Feinden zusätzlichen Schaden zu.
+%%%%
+It inflicts extra damage upon your enemies.
+Diese Waffe fügt deinen Feinden zusätzlichen Schaden zu.
+%%%%
+Each projectile launched from it has a different, random effect.
+Jedes mit dieser Waffe abgefeuerte Geschoss hat einen anderen, zufälligen Effekt.
+%%%%
+It occasionally heals its wielder for a portion of the damage dealt when it wounds a living foe.
+Diese Waffe heilt ihren Träger gelegentlich für einen Teil des verursachten Schadens, wenn sie einen lebenden Feind verwundet.
+%%%%
+In the hands of one skilled in necromantic magic, it inflicts extra damage on living creatures.
+In den Händen von jemandem, der in nekromantischer Magie geübt ist, fügt diese Waffe lebenden Kreaturen zusätzlichen Schaden zu.
+%%%%
+It warps and distorts space around it, and may blink, banish, or inflict extra damage upon those it strikes. Unwielding it can cause banishment or high damage.
+Diese Waffe verformt und verzerrt den Raum um sie herum und kann diejenigen, die sie trifft, blinzeln, bannen oder ihnen zusätzlichen Schaden zufügen. Das Ablegen der Waffe kann Verbannung oder hohen Schaden verursachen.
+%%%%
+Any living foe damaged by it may be reanimated upon death as a zombie friendly to the wielder, with an increasing chance as more damage is dealt.
+Jeder lebende Feind, der durch diese Waffe beschädigt wird, kann nach dem Tod als Zombie wiederbelebt werden, der dem Anwender freundlich gesonnen ist, wobei die Chance dafür steigt, je mehr Schaden verursacht wird.
+%%%%
+It reduces the magical energy of the wielder, and disrupts the spells and magical abilities of those it strikes. Natural abilities and divine invocations are not affected.
+Diese Waffe reduziert die magische Energie des Anwenders und unterbricht Zaubersprüche und magischen Fähigkeiten der Getroffenen. Natürliche Fähigkeiten und göttliche Anrufungen sind davon nicht betroffen.
+%%%%
+When its wielder attacks, the weapon's spirit leaps out and strikes again. The spirit shares a part of any damage it takes with its wielder.
+Wenn der Träger der Waffe angreift, springt der Geist der Waffe hervor und schlägt erneut zu. Der Geist teilt einen Teil des Schadens, den er erleidet, mit dem Träger.
+%%%%
+Any ammunition fired from it is coated in acid, damaging and corroding those it strikes.
+Jede mit dieser Waffe abgefeuerte Munition ist mit Säure überzogen, die Getroffene beschädigt und korrodiert.
+%%%%
+It is coated in acid, damaging and corroding those it strikes.
+Diese Waffe ist mit Säure überzogen, die Getroffene beschädigt und korrodiert.
+%%%%
+It has no special brand (it is not flaming, freezing, etc), but is still enchanted in some way - positive or negative.
+Diese Waffe hat keine spezielle Prägung (sie brennt nicht, gefriert nicht, etc.), ist aber dennoch auf irgendeine Weise verzaubert - positiv oder negativ.
+%%%%
+It is temporarily rebranded; it is actually an unbranded weapon.
+Diese Waffe ist vorübergehend mit einer neuen Prägung versehen; sie ist eigentlich eine Waffe ohne Prägung.
+%%%%
+It is temporarily rebranded; it is actually %s.
+Diese Waffe ist vorübergehend mit einer neuen Prägung versehen; sie ist eigentlich %s.
+%%%%
+This is %s.
+Dies ist %s.
+%%%%
+This weapon falls into the '%s' category.
+Diese Waffe gehört zur Kategorie '%s'.
+%%%%
+# magical staves can also be used as weapons
+It falls into the 'Staves' category.
+Diese Waffe gehört zur Kategorie 'Stäbe'.
+%%%%
+Your inability to study %s prevents you from drawing on the full power of this staff in melee.
+Deine Unfähigkeit, %s zu studieren, hindert dich daran, die volle Kraft dieses Stabes im Nahkampf zu nutzen.
+%%%%
+It is a one-handed weapon.
+Dies ist eine Einhandwaffe.
+%%%%
+It is a two-handed weapon.
+Dies ist eine Zweihandwaffe.
+%%%%
+It is a weapon for one hand-pair.
+Dies ist eine Waffe für ein Handpaar.
+%%%%
+It is a weapon for two hand-pairs.
+Dies ist eine Waffe für zwei Handpaare.
+%%%%
+It is too large for you to wield.
+Diese Waffe ist zu groß für dich.
+%%%%
+
+# projectiles (ammo + thrown weapons)
+%%%%
+It has a random effect on any target it hits.
+Dieses Geschoss hat eine zufällige Wirkung auf jedes Ziel, das es trifft.
+%%%%
+It is coated with poison.
+Dieses Geschoss ist mit Gift überzogen.
+%%%%
+It is tipped with a substance that causes asphyxiation, dealing direct damage as well as poisoning and slowing those it strikes.
+Dieses Geschoss ist mit einer Substanz bestrichen, die Getroffene ersticken lässt und direkten Schaden verursacht sowie sie vergiftet und verlangsamt.
+%%%%
+It is twice as likely to be destroyed on impact as other darts.
+Die Wahrscheinlichkeit, dass dieses Geschoss beim Aufprall zerstört wird, ist doppelt so hoch wie bei anderen.
+%%%%
+It is tipped with a substance that sends those it hits into a mindless rage, attacking friend and foe alike.
+Dieses Geschoss ist mit einer Substanz bestrichen, die Getroffene in eine unkontrollierte Wut versetzt, in der sie Freund und Feind gleichermaßen angreifen.
+%%%%
+The chance of successfully applying its effect increases with Throwing and Stealth skill.
+Die Chance, den Effekt erfolgreich anzuwenden, erhöht sich mit den Fertigkeiten "Werfen" und "Heimlichkeit".
+%%%%
+It is tipped with a substance that causes blindness and brief confusion.
+Dieses Geschoss ist mit einer Substanz bestrichen, die Blindheit und kurzzeitige Verwirrung verursacht.
+%%%%
+It causes any target it hits to blink, with a tendency towards blinking further away from the attacker.
+Dieses Geschoss lässt jedes Ziel, das es trifft, blinzeln, wobei es sich tendenziell weiter vom Angreifer entfernt.
+%%%%
+# silver
+It deals increased damage compared to normal ammo and substantially increased damage to chaotic and magically transformed beings. It also inflicts extra damage against mutated beings, according to how mutated they are.
+Dieses Geschoss verursacht im Vergleich zu normaler Munition erhöhten Schaden und deutlich erhöhten Schaden an chaotischen und magisch verwandelten Wesen. Es fügt auch mutierten Wesen zusätzlichen Schaden zu, abhängig davon, wie stark sie mutiert sind.
+%%%%
+It is always destroyed on impact.
+Dieses Geschoss wird beim Aufprall immer zerstört.
+%%%%
+It may be destroyed on impact.
+Dieses Geschoss kann beim Aufprall zerstört werden.
+%%%%
+
+#################################
+# Armour
+#################################
+
+%%%%
+Base armour rating: %d
+Grundpanzerungswert: %d
+%%%%
+Base shield rating: %d
+Grundschildwert: %d
+%%%%
+Encumbrance rating: %d
+Belastungswert: %d
+%%%%
+Evasion: %d
+Ausweichen: %d
+%%%%
+If you switch to wearing this armour, your AC would increase by %d (%d -> %d).
+Wenn du zu dieser Rüstung wechselst, wird deine RK um %d erhöht (%d -> %d).
+%%%%
+If you switch to wearing this armour, your AC would decrease by %d (%d -> %d).
+Wenn du zu dieser Rüstung wechselst, wird deine RK um %d reduziert (%d -> %d).
+%%%%
+If you switch to wearing this armour, your AC would remain unchanged.
+Wenn du zu dieser Rüstung wechselst, bleibt deine RK unverändert.
+%%%%
+If you remove this armour, your AC would increase by %d (%d -> %d).
+Wenn du diese Rüstung ablegst, wird deine RK um %d erhöht (%d -> %d).
+%%%%
+If you remove this armour, your AC would decrease by %d (%d -> %d).
+Wenn du diese Rüstung ablegst, wird deine RK um %d reduziert (%d -> %d).
+%%%%
+If you remove this armour, your AC would remain unchanged.
+Wenn du diese Rüstung ablegst, bleibt deine RK unverändert.
+%%%%
+it protects its wearer from fire.
+diese Rüstung schützt den Träger vor Feuer.
+%%%%
+it protects its wearer from cold.
+diese Rüstung schützt den Träger vor Kälte.
+%%%%
+it protects its wearer from poison.
+diese Rüstung schützt den Träger gegen Gift.
+%%%%
+it allows its wearer to see invisible things.
+diese Rüstung ermöglicht, dass der Träger unsichtbare Dinge sehen kann.
+%%%%
+when activated, it grants its wearer temporary invisibility, but also drains their maximum health.
+wird diese Rüstung aktiviert, gewährt sie dem Träger vorübergehende Unsichtbarkeit, zehrt aber auch seine maximale Gesundheit aus.
+%%%%
+it increases the strength of its wearer (Str +3).
+diese Rüstung erhöht die Stärke des Trägers (Stä +3).
+%%%%
+it increases the dexterity of its wearer (Dex +3).
+diese Rüstung erhöht die Geschicklichkeit des Trägers (Ges +3).
+%%%%
+it increases the intelligence of its wearer (Int +3).
+diese Rüstung erhöht die Intelligenz des Trägers (Int +3).
+%%%%
+it is very cumbersome, slowing its wearer's movement.
+diese Rüstung ist sehr schwerfällig und verlangsamt die Bewegung des Trägers.
+%%%%
+it grants its wearer flight.
+diese Rüstung verleiht dem Träger die Fähigkeit zu fliegen.
+%%%%
+it increases its wearer's willpower, protecting against certain magical effects.
+diese Rüstung erhöht die Willenskraft des Trägers und schützt ihn vor bestimmten magischen Effekten.
+%%%%
+it protects its wearer from most sources of damage (AC +3).
+diese Rüstung schützt den Träger vor den meisten Schadensquellen (RK +3).
+%%%%
+it enhances the stealth of its wearer.
+diese Rüstung erhöht die Heimlichkeit des Trägers.
+%%%%
+it protects its wearer from the effects of both fire and cold.
+diese Rüstung schützt den Träger vor den Auswirkungen von Feuer und Kälte.
+%%%%
+it protects its wearer from the effects of negative energy.
+diese Rüstung schützt den Träger vor den Auswirkungen von negativer Energie.
+%%%%
+it increases the power of its wearer's magical spells.
+diese Rüstung erhöht die Macht der magischen Zaubersprüche des Trägers.
+%%%%
+it protects its wearer from the effects of acid and corrosion.
+diese Rüstung schützt den Träger vor den Auswirkungen von Säure und Korrosion.
+%%%%
+it reflects blocked missile attacks back in the direction they came from.
+diese Rüstung reflektiert geblockte Geschosse zurück in die Richtung, aus der sie kamen.
+%%%%
+it causes incoming damage to be divided between the wearer's reserves of health and magic.
+diese Rüstung bewirkt, dass der erlittene Schaden auf die Gesundheits- und Magiereserven des Trägers aufgeteilt wird.
+%%%%
+it improves its wearer's accuracy and damage with ranged weapons, such as bows and javelins (Slay +4).
+diese Rüstung verbessert die Treffsicherheit und den Schaden des Trägers mit Fernkampfwaffen wie Bögen und Speeren (Töten +4).
+%%%%
+it protects its wearer by repelling missiles.
+diese Rüstung schützt den Träger, indem sie Geschosse abwehrt.
+%%%%
+it increases damage dealt and taken.
+diese Rüstung erhöht den zugefügten und erlittenen Schaden.
+%%%%
+it reduces the distance the wearer can be seen at and can see.
+diese Rüstung reduziert die Entfernung, aus der der Träger gesehen werden kann und in der er sehen kann.
+%%%%
+its wearer takes one free step when moving towards enemies.
+der Träger macht einen freien Schritt, wenn er sich auf Feinde zubewegt.
+%%%%
+# Warlock's Mirror
+With your current SH, it has a %d%% chance to reflect attacks against your willpower and other normally unblockable effects.
+Mit deinem aktuellen Schildwert hat diese Rüstung eine Chance von %d%%, Angriffe gegen deine Willenskraft und andere normalerweise unblockbare Effekte zu reflektieren.
+%%%%
+
+#################################
+# Weapon/armour skill
+#################################
+
+%%%%
+This weapon's minimum attack delay (%.1f) is reached at skill level %d.
+Die minimale Angriffsverzögerung dieser Waffe (%.1f) wird auf der Fertigkeitsstufe %d erreicht.
+%%%%
+This projectile's minimum attack delay (%.1f) is reached at skill level %d.
+Die minimale Angriffsverzögerung dieses Geschosses (%.1f) wird auf der Fertigkeitsstufe %d erreicht.
+%%%%
+# shield penalty
+Skill to remove penalty: %d.%d
+Fertigkeit zum Aufheben der Verzögerung: %d,%d
+%%%%
+; use <white>(s)</white> to set %d.%d as a target for %s.
+; <white>(s)</white> benutzen um %d,%d als Ziel für {acc}%s einzustellen.
+%%%%
+Your skill: %d.%d
+Deine Fertigkeit: %d,%d
+%%%%
+Your (base) skill: %d.%d
+Deine (Grund-)Fertigkeit: %d,%d
+%%%%
+At %d%% training you would reach %d.%d in the equivalent of %d.%d XLs.
+Bei %d%% Training würdest du %d,%d im Äquivalent von %d,%d XL erreichen.
+%%%%
+At %d%% training you would reach %d.%d in about %d.%d XLs.
+Bei %d%% Training würdest du %d,%d in etwa %d,%d XL erreichen.
+%%%%
+At current training (%d%%) you reach %d.%d in the equivalent of %d.%d XLs.
+Beim aktuellen Training (%d%%) erreichst du %d,%d im Äquivalent von %d,%d XL.
+%%%%
+At current training (%d%%) you reach %d.%d in about %d.%d XLs.
+Beim aktuellen Training (%d%%) erreichst du %d,%d in etwa %d,%d XL.
+%%%%
+# xp = experience points, skp = skill points
+(%d xp, %d skp)
+(%d ep, %d fkp)
+%%%%
+
+#################################
+# Jewellery (rings/amulets)
+#################################
+
+%%%%
+It increases your rate of magic regeneration.
+Dieser Gegenstand erhöht die Geschwindigkeit der Regeneration deiner Magie.
+%%%%
+It increases your evasion while moving and waiting.
+Dieser Gegenstand erhöht dein Ausweichvermögen beim Bewegen und Warten.
+%%%%
+It causes incoming damage to be divided between your reserves of health and magic.
+Eingehender Schaden wird zwischen deinen Gesundheits- und Magiereserven aufgeteilt.
+%%%%
+It allows you to gain divine favour quickly.
+Dieser Gegenstand ermöglicht dir, schnell göttliche Gunst zu erlangen.
+%%%%
+It reflects blocked missile attacks.
+Dieser Gegenstand reflektiert geblockte Geschosse.
+%%%%
+
+#################################
+# Potions
+#################################
+
+%%%%
+# potion of lignification
+If you quaff this potion your AC would be %d.
+Wenn du diesen Trank trinkst, ist dein RK %d.
+%%%%
+If you drink this now, you will no longer be %s.
+Wenn du ihn jetzt trinkst, wirst du nicht mehr %s sein.
+%%%%
+Drinking this now will have no effect.
+Ihn jetzt zu trinken, würde keine Auswirkungen haben.
+%%%%
+
+#################################
+# Wands
+#################################
+
+%%%%
+"Damage: "
+"Schaden: "
+%%%%
+
+#################################
+# Miscelleneous
+#################################
+
+%%%%
+Once activated, this device is rendered temporarily inert.
+Nach der Aktivierung ist dieses Gerät vorübergehend inaktiv.
+%%%%
+" However, it recharges as you gain experience."
+" Es lädt sich jedoch mit zunehmender Erfahrung wieder auf."
+%%%%
+Once all charges have been used, this device and all other devices of its kind are rendered temporarily inert.
+Sobald alle Ladungen verbraucht sind, werden dieses Gerät und alle anderen Geräte dieser Art vorübergehend inaktiv.
+%%%%
+Once activated, this device and all other devices of its kind are rendered temporarily inert.
+Nach der Aktivierung werden dieses Gerät und alle anderen Geräte dieser Art vorübergehend inaktiv.
+%%%%
+" However, they recharge as you gain experience."
+" Sie laden sich jedoch wieder auf, wenn du an Erfahrung gewinnst."
+%%%%
+" The device is presently inert."
+" Das Gerät ist derzeit inaktiv."
+%%%%
+
+# figurine of a ziggurat (glow increases the more zigs you complete)
+%%%%
+It is surrounded by a blinding glow.
+Es ist von einem blendenden Leuchten umgeben.
+%%%%
+It is surrounded by a dazzling glow.
+Es ist von einem grellen Leuchten umgeben.
+%%%%
+It is surrounded by a bright glow.
+Es ist von einem hellen Leuchten umgeben.
+%%%%
+It is surrounded by a gentle glow.
+Es ist von einem sanften Leuchten umgeben.
+%%%%
+
+#################################
+# Artefact weapons
+#################################
+
+# Note: These are shown after any text from dat/descript/unrand.txt, and any
+# generic text related to their properties.
+
+# Arc Blade
+%%%%
+discharge
+Entladung
+%%%%
+It occasionally unleashes powerful arcs of lightning upon striking a foe. These may arc to other adjacent creatures (including the wielder, but dealing reduced damage to them) before grounding out.
+Sie entfesselt gelegentlich mächtige Blitzbögen, wenn sie einen Feind trifft. Diese Bögen können auf andere Kreaturen in der Nähe überspringen (einschließlich des Anwenders, der jedoch weniger Schaden nimmt), bevor sie sich auflösen.
+%%%%
+
+# Blowgun of the Assassin
+%%%%
+stab
+stechen
+%%%%
+
+# Captain's Cutlass
+%%%%
+disarm
+entwaffnen
+%%%%
+It may disarm weapon-wielding foes when striking them, dealing extra damage in the process.
+Es kann waffenführende Gegner entwaffnen, wenn es sie trifft und dabei zusätzlichen Schaden verursachen.
+%%%%
+
+# Damnation (arbalest)
+%%%%
+Any ammunition fired from it explodes in a burst of damnation on striking a foe, dealing damage which bypasses armour.
+Jede aus dieser Waffe abgefeuerte Munition erzeugt eine Explosion der Verdammnis wenn sie einen Feind trifft und verursacht Schaden, der Rüstungen umgeht.
+%%%%
+
+# Devastator (shillelagh)
+%%%%
+shatter
+zerschmettern
+%%%%
+It releases a powerful concussive burst when it strikes, dealing extra damage to the target and all other foes adjacent to them.
+Er verursacht bei einem Treffer eine mächtige Erschütterung, die dem Ziel und allen anderen Feinden in seiner Nähe zusätzlichen Schaden zufügt.
+%%%%
+
+# Eos (morningstar)
+%%%%
+It grants its wielder a halo, increasing accuracy against those within it.
+Er verleiht den Träger einen Heiligenschein, der seine Treffersicherheit gegen diejenigen erhöht, die sich innerhalb des Heiligenscheins befinden.
+%%%%
+
+# Finisher (scythe)
+%%%%
+eviscerate
+ausweiden
+%%%%
+It may eviscerate those it strikes, slaying them instantly, with a decreasing chance against stronger foes.
+Sie kann diejenigen, die sie trifft, ausweiden und sofort töten, wobei die Chance dafür bei stärkeren Feinden sinkt.
+%%%%
+
+# Firestarter (great mace)
+%%%%
+It burns those it strikes, dealing additional fire damage.
+Er verbrennt die Getroffenen und verursacht zusätzlichen Feuerschaden.
+%%%%
+It fills those it strikes with an explosive inner flame.
+Er erfüllt die Getroffenen mit einer explosiven inneren Flamme.
+%%%%
+
+# Frostbite (axe)
+%%%%
+freezing cloud
+frierende Wolke
+%%%%
+It freezes those it strikes, dealing additional cold damage. It can also slow down cold-blooded creatures.
+Sie friert diejenigen ein, die sie trifft und fügt ihnen zusätzlichen Kälteschaden zu. Sie kann außerdem kaltblütige Kreaturen verlangsamen.
+%%%%
+It occasionally leaves clouds of freezing vapour upon striking a foe.
+Gelegentlich hinterlässt sie Wolken aus gefrierendem Dunst, wenn sie einen Feind trifft.
+%%%%
+It grants immunity to clouds of freezing vapour.
+Sie gewährt Immunität gegen Wolken aus gefrierendem Dunst.
+%%%%
+
+# Glaive of the Guard
+%%%%
+spectral
+spektral
+%%%%
+When it strikes, its spirit leaps out and fights alongside the wielder.
+Wenn sie zuschlägt, springt ihr Geist hervor und kämpft an der Seite des Anwenders.
+%%%%
+
+# Lajatang of Order
+%%%%
+It inflicts extra damage upon those it strikes, and deals substantially increased damage to chaotic, mutated and magically transformed beings.
+Er fügt den Getroffenen zusätzlichen Schaden zu und fügt chaotischen, mutierten und magisch verwandelten Wesen erheblich mehr Schaden zu.
+%%%%
+
+# Leech (demon blade)
+%%%%
+It heals its wielder for a portion of the damage dealt every time it strikes a living foe.
+Jedes Mal, wenn sie einen lebenden Feind trifft, heilt sie ihren Träger für einen Teil des verursachten Schadens.
+%%%%
+
+# Majin-Bo (qurterstaff)
+%%%%
+It occasionally heals its wielder for a portion of the damage dealt when they wound a living foe with it or with a spell.
+Gelegentlich heilt diese Waffe ihren Träger für einen Teil des verursachten Schadens, wenn er einen lebenden Feind mit ihr oder mit einem Zauber verwundet.
+%%%%
+Its wielder's spells cost health as well as magical power.
+Die Zauber des Trägers kosten sowohl Gesundheit als auch magische Kraft.
+%%%%
+
+# Mace of Variability
+%%%%
+chain chaos
+Kettenchaos
+%%%%
+Each time it hits an enemy it has a different, random effect.
+Jedes Mal, wenn er einen Gegner trifft, hat er eine andere, zufällige Wirkung.
+%%%%
+It occasionally unleashes arcs of chaos on nearby creatures upon striking a foe.
+Wenn er einen Feind trifft, entfesselt er gelegentlich Bögen des Chaos auf Kreaturen in der Nähe.
+%%%%
+
+# Maxwell's thermic engine
+%%%%
+It becomes more effective when it hits something. This effect fades over time.
+Es wird effektiver, wenn es etwas trifft. Dieser Effekt lässt mit der Zeit nach.
+%%%%
+
+# Obsidian Axe
+%%%%
+It occasionally summons demons to assist the wielder when it strikes in combat.
+Gelegentlich beschwört sie Dämonen, die dem Träger im Kampf beistehen.
+%%%%
+Its wielder is mesmerised by any visible foes.
+Ihr Träger wird von allen sichtbaren Gegnern hypnotisiert.
+%%%%
+It cannot be unequipped while any foes are visible.
+Sie kann nicht abgelegt werden, solange Feinde sichtbar sind.
+%%%%
+
+# Plutonium sword
+%%%%
+It occasionally inflicts wild transmutation effects on those it strikes, inflicting malmutation or extra damage, or polymorphing them into a new form.
+Gelegentlich fügt es jenen, die es trifft, wilde Transmutationseffekte zu, die Malmutation oder zusätzlichen Schaden auslösen oder sie in eine neue Form polymorphisiert.
+%%%%
+
+# Rift (demon trident)
+%%%%
+reach+
+reichen+
+%%%%
+It can reach especially far, and its reaching attacks ignore other creatures in the way.
+Er kann besonders weit reichen und seine weitreichenden Angriffe ignorieren andere Kreaturen, die im Weg stehen.
+%%%%
+
+# Sceptre of Torment (eveningstar)
+%%%%
+torment
+Peinigung
+%%%%
+It occasionally torments all nearby living foes when it strikes in combat.
+Es peinigt gelegentlich alle lebenden Feinde in der Nähe, wenn es im Kampf trifft.
+%%%%
+
+# Scythe of Curses
+%%%%
+It inflicts powerful necromantic curses on any living foe it strikes.
+Sie fügt jedem lebenden Feind, den sie trifft, mächtige nekromantische Flüche zu.
+%%%%
+
+# Singing Sword
+%%%%
+# note: Previous sentence starts with "Diese Waffe..." hence pronoun is "sie".
+It radiates damaging sonic waves as it strikes, especially in combat involving dangerous or numerous foes.
+Sie strahlt schädliche Schallwellen aus, wenn sie trifft, vor allem im Kampf mit gefährlichen oder zahlreichen Gegnern.
+%%%%
+
+# Snakebite (whip)
+%%%%
+It occasionally inflicts asphyxiating poison on those it strikes, dealing poison damage and causing slowness.
+Gelegentlich verabreicht sie Gegnern erstickendes Gift, das Giftschaden verursacht und sie verlangsamt.
+%%%%
+
+# Sniper (heavy crossbow)
+%%%%
+Acc+∞
+Gen+∞
+%%%%
+Any ammunition fired from it never misses its target.
+Jede Munition, die damit verschossen wird, verfehlt nie ihr Ziel.
+%%%%
+
+# Spear of the Botono
+%%%%
+Hex
+Verhex
+%%%%
+
+# Spellbinder (demon whip)
+%%%%
+It unleashes wild and unpredictable magical effects upon striking a wizard or a creature with magical abilities.
+Sie entfesselt wilde und unvorhersehbare magische Effekte, wenn sie einen Zauberer oder eine Kreatur mit magischen Fähigkeiten trifft.
+%%%%
+
+# Spriggan's Knife
+%%%%
+It is more effective when stabbing unaware enemies, treating them as though they were completely helpless.
+Es ist effektiver beim Erstechen ahnungsloser Feinde, da es sie so behandelt, als wären sie völlig hilflos.
+%%%%
+
+# Storm Bow
+%%%%
+Any ammunition fired by it passes through the targets it hits, potentially hitting all targets in its path until it reaches maximum range.
+Jede mit ihm abgefeuerte Munition durchschlägt die getroffenen Ziele und trifft potentiell alle Ziele, bis die maximale Reichweite erreicht ist.
+%%%%
+
+# Sword of Cerebov
+%%%%
+It temporarily reduces the fire resistance of those it strikes.
+Es reduziert vorübergehend die Feuerresistenz derjenigen, die es trifft.
+%%%%
+
+# Sword of Power
+%%%%
+It occasionally discharges a powerful but inaccurate bolt of energy upon striking a foe, with increased chance the greater the wielder's current health.
+Es entlädt gelegentlich einen mächtigen aber ungenauen Energieblitz, wenn es einen Feind trifft, wobei die Wahrscheinlichkeit steigt, je höher die aktuelle Gesundheit des Anwenders ist.
+%%%%
+
+# Undeadhunter (great mace)
+%%%%
+disrupt
+Zerrüttung
+%%%%
+It inflicts significantly more damage against the undead.
+Er fügt Untoten deutlich mehr Schaden zu.
+%%%%
+
+# Vampire's Tooth (dagger)
+%%%%
+It occasionally heals its wielder for the full amount of damage dealt when it wounds a living foe.
+Er heilt seinen Träger gelegentlich für den gesamten verursachten Schaden, wenn er einen lebenden Feind verwundet.
+%%%%
+
+# Wrath of Trog (axe)
+%%%%
+It causes slowness and exhaustion when equipped.
+Diese Waffe verursacht Langsamkeit und Erschöpfung, wenn sie gezogen wird.
+%%%%
+It extends the wielder's berserk rage when killing foes.
+Diese Waffe verlängert die Berserkerwut des Anwenders wenn er Gegner tötet.
+%%%%
+
+# Wyrmbane (lance)
+%%%%
+It inflicts extra damage against dragons and draconians.
+Sie fügt Drachen und Drakoniern zusätzlichen Schaden zu.
+%%%%
+
+# Zealot's sword
+%%%%
+Whenever the wielder enters a berserk rage, their allies are berserked alongside them.
+Wenn der Anwender in Berserkerwut gerät, werden auch seine Verbündeten in Berserkerwut versetzt.
+%%%%
+
+#################################
+# Artefact magic staves
+#################################
+
+# Elemental Staff
+%%%%
+If the wielder is skilled in Evocations, they can discharge powerful blasts of elemental energy when striking with it.
+Wenn der Anwender in Evokationen geübt ist, kann er beim Zuschlagen mit dieser Waffe mächtige Stöße elementarer Energie entladen.
+%%%%
+It enhances your fire, ice, earth and air magic.
+Er verstärkt deine Feuer-, Eis-, Erd- und Luftmagie.
+%%%%
+
+# Sceptre of Asmodeus (staff)
+%%%%
+It can be evoked to summon fiery demons, with success rate depending on Evocations skill. Those summoned this way will remain friendly only for a limited time.
+Es kann evoziert werden, um feurige Dämonen zu beschwören, wobei die Erfolgsquote von der Evokationsfertigkeit abhängt. Die Dämonen bleiben nur für eine begrenzte Zeit freundlich.
+%%%%
+
+# Staff of Battle
+%%%%
+It summons a battlesphere in combat, with strength depending on Conjurations skill.
+Er ruft im Kampf eine Kampfkugel hervor, deren Stärke von der Konjurationsfertigkeit abhängt.
+%%%%
+
+# Staff of Dispater
+%%%%
+It can be evoked to hurl damnation at the cost of health and magic, with strength depending on Evocations skill.
+Er kann evoziert werden, um auf Kosten von Gesundheit und Magie Verdammnis zu schleudern, deren Stärke von der Evokationsfertigkeit abhängt.
+%%%%
+
+# Staff of Olgreb
+%%%%
+rPois∞
+rGift∞
+%%%%
+It grants immunity to poison.
+Er verleiht Immunität gegen Gift.
+%%%%
+It can be evoked to radiate toxic energy, with effectiveness depending on Evocations skill.
+Er kann evoziert werden, um giftige Energie auszustrahlen, deren Wirksamkeit von der Evokationsfertigkeit abhängt.
+%%%%
+If the wielder is skilled in Evocations, they can envenom those struck by it, dealing poison damage which bypasses armour.
+Wenn der Träger in Evokationen geübt ist, kann er denjenigen, die er mit dieser Waffe trifft, Giftschaden zufügen, der die Rüstung umgeht.
+%%%%
+
+# Staff of Wucad Mu
+%%%%
+*channel
+*leiten
+%%%%
+It occasionally powers its wielder's spells, but with a chance of causing confusion or draining the wielder's intelligence.
+Gelegentlich verleiht er den Zaubern seines Anwenders Kraft, kann aber auch Verwirrung auslösen oder die Intelligenz des Anwenders schwächen.
+%%%%
+It becomes more likely to activate and less likely to backfire with increased Evocations skill.
+Mit zunehmender Evokationsfertigkeit wird seine Aktivierung wahrscheinlicher und zuverlässiger.
+%%%%
+
+#################################
+# Artefact armour
+#################################
+
+# Cloak of the Thief
+%%%%
+*Fog
+*Nebel
+%%%%
+It may release a thick cloud of smoke when the wearer is hurt.
+Er kann eine dicke Rauchwolke freisetzen, wenn der Träger verletzt wird.
+%%%%
+
+# Hood of the Assassin
+%%%%
+Detection Stab+
+Aufspüren Stich+
+%%%%
+It allows the wearer to sense nearby creatures.
+Sie ermöglicht es dem Träger, Kreaturen in der Nähe zu spüren.
+%%%%
+It allows the wearer to make particularly effective stabbing attacks against helpless or unaware enemies with any weapon.
+Sie erlaubt es dem Träger, hilflose oder ahnungslose Feinde mit jeder beliebigen Waffe besonders effektiv zu erstechen.
+%%%%
+
+# Skin of Zhor
+%%%%
+*Englaciate
+*Vereisung
+%%%%
+It radiates cold, occasionally slowing all nearby creatures who are not resistant to cold.
+Sie strahlt Kälte aus und verlangsamt gelegentlich alle Kreaturen in der Nähe, die nicht gegen Kälte resistent sind.
+%%%%
+
+# Salamander hide armour
+%%%%
+Flames
+Flammen
+%%%%
+It surrounds you with a cloud of flames.
+Sie umgibt dich mit einer Flammenwolke.
+%%%%
+It grants immunity to clouds of flame.
+Sie gewährt Immunität gegen Flammenwolken.
+%%%%
+
+# Robe of Folly
+%%%%
+Brilliance Will-∞
+Brillianz Wille-∞
+%%%%
+It increases the power of your magical spells.
+Sie erhöht die Macht deiner magischen Zaubersprüche.
+%%%%
+It halves the magic cost of your spells (rounding up).
+Sie halbiert die Magiekosten deiner Zauber (aufgerundet).
+%%%%
+It reduces your willpower to zero.
+Sie reduziert deine Willenskraft auf Null.
+%%%%
+
+# Robe of Night
+%%%%
+Dark
+dunkel
+%%%%
+It shrouds the wearer in darkness, reducing the range at which they can see and be seen by others.
+Sie hüllt den Träger in Dunkelheit und reduziert die Reichweite, in der er sehen und von anderen gesehen werden kann.
+%%%%
+
+# Fencer's Gloves
+%%%%
+Riposte
+Riposte
+%%%%
+It allows the wearer to riposte with any weapon, or to riposte more often with a long blade, swiftly retaliating against a missed attack.
+Sie erlauben es dem Träger, mit jeder Waffe zu ripostieren oder mit einer Langklinge noch häufiger zu ripostieren und einen verfehlten Angriff schnell zu vergelten.
+%%%%
+
+# Cloak of Starlight
+%%%%
+*Dazzle
+*blenden
+%%%%
+It may blind those who miss an attack against the wearer in melee combat.
+Er kann diejenigen blenden, die einen Angriff gegen den Träger im Nahkampf verpassen.
+%%%%
+
+# Ratskin Cloak
+%%%%
+When the wearer is hurt, rats may emerge from it to assist them.
+Wenn der Träger verletzt ist, können Ratten aus ihm hervorkommen, um ihm zu helfen.
+%%%%
+
+# Shield of the Gong
+%%%%
+It is deafeningly noisy when blocking attacks.
+Er ist ohrenbetäubend laut, wenn er Angriffe blockt.
+%%%%
+
+# Robe of Clouds
+%%%%
++Thunder rCloud
++Donner rWolke
+%%%%
+It can be evoked to surround the wearer with storm clouds, with success rate depending on Evocations skill.
+Sie kann evoziert werden, um den Träger mit Sturmwolken zu umgeben, wobei die Erfolgsrate von der Evokationsfertigkeit abhängt.
+%%%%
+
+# Lightning Scales
+%%%%
+It allows the wearer to cover ground more swiftly.
+Sie ermöglichen es dem Träger, sich schneller fortzubewegen.
+%%%%
+
+# Dragonskin Cloak
+%%%%
+It grants the wearer a chance to resist fire, cold, poison, electricity, acid, and negative energy.
+Er gewährt dem Träger eine Chance, Feuer, Kälte, Gift, Elektrizität, Säure und negativer Energie zu widerstehen.
+%%%%
+
+# Hat of the High Council
+%%%%
+Wiz-
+Zaub-
+%%%%
+
+# Maxwell's etheric cage
+%%%%
+RegenMP+
+RegenMP+
+%%%%
+
+# Crown of Eternal Torment
+%%%%
+rTorment HP--
+rPeinigung TP--
+%%%%
+
+# Robe of Vines
+%%%%
+NoPotionHeal
+KeinHeiltrank
+%%%%
+Its wearer cannot be healed by potions.
+Der Träger kann nicht durch Tränke geheilt werden.
+%%%%
+
+# Kryia's mail coat
+%%%%
+PotionHeal*2
+Heiltrank*2
+%%%%
+Potions are twice as effective at healing its wearer.
+Tränke sind doppelt so wirksam bei der Heilung des Trägers.
+%%%%
+
+# Warlock's Mirror (buckler)
+%%%%
+It can block and reflect piercing ranged attacks and magical attacks against the wielder's willpower.
+Er kann durchschlagende Fernkampfangriffe und magische Angriffe gegen die Willenskraft des Anwenders blockieren und reflektieren.
+%%%%
+
+# Cigotuvi's Embrace
+%%%%
+It gathers nearby corpses to temporarily increase the armour it provides.
+Sie sammelt Leichen in der Nähe auf, um ihre Panzerung vorübergehend zu verstärken.
+%%%%
+It protects you from foul pestilence.
+Sie schützt dich vor fauliger Pestilenz.
+%%%%
+
+# Seven-league Boots
+%%%%
+Rampage+∞
+Randale+∞
+%%%%
+Its wearer moves as far as possible in that direction when moving towards enemies.
+Wenn der Träger auf Feinde zugeht, bewegt er sich so weit wie möglich in diese Richtung.
+%%%%
+
+#################################
+# Artefact jewellery
+#################################
+
+# Ring of Shadows
+%%%%
+Umbra
+Umbra
+%%%%
+It surrounds you with an aura of shadow, increasing your stealth and reducing the accuracy of all within it (including the wearer).
+Er umgibt dich mit einer Aura des Schattens, die deine Heimlichkeit erhöht und die Treffsicherheit aller in ihr befindlichen Personen reduziert (einschließlich des Trägers).
+%%%%
+
+# Amulet of the Air
+%%%%
+Inacc Air
+Ungenau Luft
+%%%%
+It reduces the accuracy of all your attacks.
+Es reduziert die Treffsicherheit all deiner Angriffe.
+%%%%
+
+# Necklace of Bloodlust
+%%%%
+It extends the wearer's berserk rage when killing foes.
+Sie verlängert die Berserkerwut des Trägers wenn er Feinde tötet.
+%%%%
+
+# Macabre finger necklace
+%%%%
+It enables you to equip an extra ring.
+Sie ermöglicht dir einem zusätzlichen Ring anzustecken.
+%%%%

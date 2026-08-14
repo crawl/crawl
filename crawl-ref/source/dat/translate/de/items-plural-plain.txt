@@ -1,0 +1,168 @@
+###############################################################################
+#
+# Items - plural, plain, nominative
+#
+###############################################################################
+
+#################################
+# Melee Weapons
+#################################
+
+#################################
+# Launchers
+#################################
+
+#################################
+# Missiles
+#################################
+
+# auto-generated from counted plural by grammar.txt
+
+#################################
+# Armour
+#################################
+
+#################################
+# Rings
+#################################
+
+# generic
+%%%%
+rings
+{pl}Ringe
+%%%%
+
+#################################
+# Amulets
+#################################
+
+# generic
+%%%%
+amulets
+{pl}Amulette
+%%%%
+
+#################################
+# Wands
+#################################
+
+# generic
+%%%%
+wands
+{pl}Zauberstäbe
+%%%%
+
+# identified
+%%%%
+wands of flame
+{pl}Zauberstäbe der Flammen
+%%%%
+wands of paralysis
+{pl}Zauberstäbe der Paralyse
+%%%%
+wands of digging
+{pl}Zauberstäbe des Grabens
+%%%%
+wands of iceblast
+{pl}Zauberstäbe des Eisblitzes
+%%%%
+wands of polymorph
+{pl}Zauberstäbe der Verwandlung
+%%%%
+wands of charming
+{pl}Zauberstäbe der Verzauberung
+%%%%
+wands of acid
+{pl}Zauberstäbe der Säure
+%%%%
+wands of mindburst
+{pl}Zauberstäbe des Kopfzerplatzens
+%%%%
+
+#################################
+# Scrolls
+#################################
+
+# auto-generated from counted plural by grammar.txt
+
+#################################
+# Potions
+#################################
+
+# auto-generated from counted plural by grammar.txt
+
+#################################
+# Magical Staves
+#################################
+
+# generic
+%%%%
+staves
+{pl}Stäbe
+%%%%
+
+# identified
+%%%%
+staves of earth
+{pl}Stäbe der Erde
+%%%%
+staves of air
+{pl}Stäbe der Luft
+%%%%
+staves of fire
+{pl}Stäbe des Feuers
+%%%%
+staves of cold
+{pl}Stäbe der Kälte
+%%%%
+staves of conjuration
+{pl}Stäbe der Konjuration
+%%%%
+staves of death
+{pl}Stäbe des Todes
+%%%%
+staves of poison
+{pl}Stäbe des Giftes
+%%%%
+
+#################################
+# Corpses
+#################################
+
+#################################
+# Miscellaneous Items
+#################################
+
+%%%%
+boxes of beasts
+{pl}Kisten der Bestien
+%%%%
+lightning rods
+{pl}Blitzfänger
+%%%%
+phials of floods
+{pl}Phiolen der Fluten
+%%%%
+phantom mirrors
+{pl}Phantomspiegel
+%%%%
+figurines of a ziggurat
+{pl}Figuren einer Zikkurat
+%%%%
+condenser vanes
+{pl}Kondensationsfahnen
+%%%%
+pieces from Xom's chessboard
+{pl}Figuren von Xoms Schachbrett
+%%%%
+tins of tremorstones
+{pl}Dosen Zittersteine
+%%%%
+# due to a bug (#4063), the English plural is "damagi" (coz mage -> magi)
+quad damagi
+{pl}Vierfach-Schäden
+%%%%
+# for when the bug is fixed
+quad damages
+{pl}Vierfach-Schäden
+%%%%

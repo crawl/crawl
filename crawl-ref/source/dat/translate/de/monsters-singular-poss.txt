@@ -1,0 +1,1753 @@
+###############################################################################
+#
+# Monsters - singular, definite article, genitive (translating English possessive)
+#
+###############################################################################
+
+%%%%
+the program bug's
+des Programmfehlers
+%%%%
+the formicid's
+des Formicids
+%%%%
+the entropy weaver's
+des Entropiewebers
+%%%%
+the bat's
+{f}der Fledermaus
+%%%%
+the butterfly's
+des Schmetterlings
+%%%%
+the vampire bat's
+{f}der Vampirfledermaus
+%%%%
+the fire bat's
+{f}der Feuerfledermaus
+%%%%
+the ice bat's
+{f}der Eisfledermaus
+%%%%
+# rebadged spectral bat
+the ghost-faced bat's
+{f}der Gespenstfledermaus
+%%%%
+the phase bat's
+{f}der Phasenfledermaus
+%%%%
+the skeletal bat's
+{f}der Skelettfledermaus
+%%%%
+the microbat's
+{f}der Microfledermaus
+%%%%
+the megabat's
+{f}der Megafledermaus
+%%%%
+the giga bat's
+{f}der Gigafledermaus
+%%%%
+the bennu's
+des Benus
+%%%%
+the caustic shrike's
+des ätzenden Würgers
+%%%%
+the shard shrike's
+des Scherbenwürgers
+%%%%
+the centaur's
+des Zentauren
+%%%%
+the centaur warrior's
+des Zentaur-Kriegers
+%%%%
+the yaktaur's
+des Yaktauren
+%%%%
+the yaktaur captain's
+des Yaktaur-Kapitäns
+%%%%
+the faun's
+des Fauns
+%%%%
+the satyr's
+des Satyrs
+%%%%
+the draconian's
+des Drakoniers
+%%%%
+the black draconian's
+des schwarzen Drakoniers
+%%%%
+the yellow draconian's
+des gelben Drakoniers
+%%%%
+the pale draconian's
+des blassen Drakoniers
+%%%%
+the green draconian's
+des grünen Drakoniers
+%%%%
+the purple draconian's
+des purpurnen Drakoniers
+%%%%
+the red draconian's
+des roten Drakoniers
+%%%%
+the white draconian's
+des weißen Drakoniers
+%%%%
+the grey draconian's
+des grauen Drakoniers
+%%%%
+the draconian stormcaller's
+des drakonischen Sturmrufers
+%%%%
+the draconian monk's
+des drakonischen Mönchs
+%%%%
+the draconian shifter's
+des drakonischen Verschiebers
+%%%%
+the draconian annihilator's
+des drakonischen Vernichters
+%%%%
+the draconian knight's
+des drakonischen Ritters
+%%%%
+the draconian scorcher's
+des drakonischen Verschmorers
+%%%%
+the elf's
+des Elfen
+%%%%
+the deep elf knight's
+des Tiefenelf-Ritters
+%%%%
+the deep elf archer's
+des Tiefenelf-Bogenschützen
+%%%%
+the deep elf blademaster's
+des Tiefenelf-Klingenmeisters
+%%%%
+the deep elf master archer's
+des Tiefenelf-Bogenmeisters
+%%%%
+the deep elf zephyrmancer's
+des Tiefenelf-Zephyrmanten
+%%%%
+the deep elf pyromancer's
+des Tiefenelf-Pyromanten
+%%%%
+the deep elf high priest's
+des Tiefenelf-Hohepriesters
+%%%%
+the deep elf demonologist's
+des Tiefenelf-Dämonologen
+%%%%
+the deep elf annihilator's
+des Tiefenelf-Vernichters
+%%%%
+the deep elf sorcerer's
+des Tiefenelf-Zauberers
+%%%%
+the deep elf death mage's
+des Tiefenelf-Todesmagiers
+%%%%
+the deep elf elementalist's
+des Tiefenelf-Elementalisten
+%%%%
+the wandering mushroom's
+des wandernden Pilzes
+%%%%
+the deathcap's
+{f}der Todeskappe
+%%%%
+the thorn hunter's
+des Dornenjägers
+%%%%
+the shambling mangrove's
+{f}der watschelnden Mangrove
+%%%%
+the vine stalker's
+des Rebjägers
+%%%%
+the goblin's
+des Goblins
+%%%%
+the hobgoblin's
+des Hobgoblins
+%%%%
+the gnoll's
+des Gnolls
+%%%%
+the gnoll shaman's
+des Gnoll-Schamanen
+%%%%
+the gnoll sergeant's
+des Gnoll-Wachtmeisters
+%%%%
+the boggart's
+des Boggarts
+%%%%
+the dwarf's
+des Zwergs
+%%%%
+the deep dwarf's
+des Tiefenzwergs
+%%%%
+the jackal's
+des Schakals
+%%%%
+the hound's
+des Hundes
+%%%%
+the howler monkey's
+des Brüllaffen
+%%%%
+the warg's
+des Wargs
+%%%%
+the wolf's
+des Wolfs
+%%%%
+the hog's
+des Schweins
+%%%%
+the hell hound's
+des Höllenhundes
+%%%%
+the doom hound's
+des Untergangshundes
+%%%%
+the raiju's
+des Raijus
+%%%%
+the hell hog's
+des höllischen Schweins
+%%%%
+the holy swine's
+des heiligen Schweins
+%%%%
+the felid's
+des Felids
+%%%%
+the bear's
+des Bären
+%%%%
+the polar bear's
+des Eisbären
+%%%%
+the black bear's
+des Schwarzbären
+%%%%
+the spriggan's
+des Spriggans
+%%%%
+the spriggan rider's
+des Spriggan-Reiters
+%%%%
+the spriggan druid's
+des Spriggan-Druiden
+%%%%
+the spriggan berserker's
+des Spriggan-Berserkers
+%%%%
+the spriggan air mage's
+des Spriggan-Luftmagiers
+%%%%
+the spriggan defender's
+des Spriggan-Verteidigers
+%%%%
+the spriggan baker's
+des Spriggan-Bäckers
+%%%%
+the spriggan hatter's
+des Spriggan-Hutmachers
+%%%%
+the drake's
+des Drachlings
+%%%%
+the swamp drake's
+des Sumpfdrachlings
+%%%%
+the rime drake's
+des Reifdrachlings
+%%%%
+the wind drake's
+des Winddrachlings
+%%%%
+the lindwurm's
+des Lindwurms
+%%%%
+the death drake's
+des Todesdrachlings
+%%%%
+the giant lizard's
+{f}der Rieseneidechse
+%%%%
+the frilled lizard's
+{f}der gekräuselten Eidechse
+%%%%
+the iguana's
+des Leguans
+%%%%
+the basilisk's
+des Basilisken
+%%%%
+the wyvern's
+des Wyverns
+%%%%
+the komodo dragon's
+des Komododrachen
+%%%%
+the merfolk's
+des Meerwesens
+%%%%
+the merfolk impaler's
+des Meerwesen-Pfählers
+%%%%
+the merfolk javelineer's
+des Meerwesen-Speerwerfers
+%%%%
+the merfolk aquamancer's
+{f}der Meerwesen-Wasserbeschwörerin
+%%%%
+the merfolk siren's
+{f}der Meerwesen-Sirene
+%%%%
+the merfolk avatar's
+des Meerwesen-Avatars
+%%%%
+the water nymph's
+{f}der Wassernymphe
+%%%%
+the bog body's
+{f}der Moorleiche
+%%%%
+the necrophage's
+{f}der Nekrophage
+%%%%
+the bloated husk's
+{f}der aufgeblähten Hülle
+%%%%
+the ghoul's
+des Ghuls
+%%%%
+the orc's
+des Orks
+%%%%
+the orc wizard's
+des Ork-Zauberers
+%%%%
+the orc priest's
+des Ork-Priesters
+%%%%
+the orc warrior's
+des Ork-Kriegers
+%%%%
+the orc knight's
+des Ork-Ritters
+%%%%
+the orc warlord's
+des Ork-Warlords
+%%%%
+the orc sorcerer's
+des Ork-Hexenmeisters
+%%%%
+the orc high priest's
+des Ork-Hohepriesters
+%%%%
+the human's
+des Menschen
+%%%%
+the hell knight's
+des Höllenritters
+%%%%
+the death knight's
+des Todesritters
+%%%%
+the necromancer's
+des Nekromanten
+%%%%
+the wizard's
+des Zauberers
+%%%%
+the vault guard's
+{f}der Tresorwache
+%%%%
+the vault sentinel's
+des Tresorkundschafters
+%%%%
+the vault warden's
+des Tresorwärters
+%%%%
+the ironbound convoker's
+des eisenbeschlagenen Einberufers
+%%%%
+the ironbound frostheart's
+des eisengebundenen Frostherzens
+%%%%
+the ironbound preserver's
+des eisenbeschlagenen Bewahrers
+%%%%
+the ironbound beastmaster's
+des eisenbeschlagenen Bestienmeisters
+%%%%
+the ironbound thunderhulk's
+des eisenbeschlagenen Donnerkolosses
+%%%%
+the imperial myrmidon's
+des kaiserlichen Myrmidonen
+%%%%
+the servant of whispers's
+des Dieners des Flüsterns
+%%%%
+the ragged hierophant's
+des zerlumpten Hierophanten
+%%%%
+the shapeshifter's
+des Gestaltwandlers
+%%%%
+the glowing shapeshifter's
+des leuchtenden Gestaltwandlers
+%%%%
+# used in constructions like "ogre shaped shifter"
+the shifter's
+des Gestaltwandlers
+%%%%
+the Killer Klown's
+des Killer-Klowns
+%%%%
+the demigod's
+des Halbgottes
+%%%%
+the halfling's
+des Halblings
+%%%%
+the rat's
+{f}der Ratte
+%%%%
+the quokka's
+des Quokkas
+%%%%
+the river rat's
+{f}der Flussratte
+%%%%
+the hell rat's
+{f}der Höllenratte
+%%%%
+the giant cockroach's
+{f}der Riesenkakerlake
+%%%%
+the scorpion's
+des Skorpions
+%%%%
+the emperor scorpion's
+des Kaiserskorpions
+%%%%
+the death scarab's
+des Todesskarabäus
+%%%%
+the spider's
+{f}der Spinne
+%%%%
+the tarantella's
+{f}der Tarantella
+%%%%
+the jumping spider's
+{f}der Springspinne
+%%%%
+the wolf spider's
+{f}der Wolfsspinne
+%%%%
+the redback's
+{f}der Rotrückenspinne
+%%%%
+the demonic crawler's
+des dämonischen Kriechers
+%%%%
+the orb spider's
+{f}der Kugelspinne
+%%%%
+the alligator's
+des Alligators
+%%%%
+the snapping turtle's
+{f}der Schnappschildkröte
+%%%%
+the alligator snapping turtle's
+{f}der Alligatorschnappschildkröte
+%%%%
+the crab's
+{f}der Krabbe
+%%%%
+the fire crab's
+{f}der Feuerkrabbe
+%%%%
+the ghost crab's
+{f}der Geisterkrabbe
+%%%%
+the apocalypse crab's
+{f}der Apokalypsenkrabbe
+%%%%
+the ugly thing's
+des hässlichen Dings
+%%%%
+the very ugly thing's
+des sehr hässlichen Dings
+%%%%
+the fire vortex's
+des Feuerwirbels
+%%%%
+the spatial vortex's
+des räumlichen Wirbels
+%%%%
+the spatial maelstrom's
+des räumlichen Mahlstroms
+%%%%
+the insubstantial wisp's
+des unwirklichen Irrlichts
+%%%%
+the twister's
+des Twisters
+%%%%
+the worm's
+des Wurms
+%%%%
+the swamp worm's
+des Sumpfwurms
+%%%%
+the tyrant leech's
+des Tyrannblutegels
+%%%%
+the dart slug's
+{f}der Pfeilschnecke
+%%%%
+the torpor snail's
+{f}der Torporschnecke
+%%%%
+the elephant slug's
+{f}der Elefantenschnecke
+%%%%
+the unseen horror's
+des unsichtbaren Schreckens
+%%%%
+the small abomination's
+{f}der kleinen Abscheulichkeit
+%%%%
+the ancient zyme's
+des uralten Zyms
+%%%%
+the worldbinder's
+des Weltenbinders
+%%%%
+the killer bee's
+{f}der Killerbiene
+%%%%
+the queen bee's
+{f}der Bienenkönigin
+%%%%
+the vampire mosquito's
+des Vampirmoskitos
+%%%%
+the hornet's
+{f}der Hornisse
+%%%%
+the meliai's
+{f}der Meliai
+%%%%
+the spark wasp's
+{f}der Funkenwespe
+%%%%
+the moth's
+{f}der Motte
+%%%%
+the ghost moth's
+{f}der Geistermotte
+%%%%
+the moth of wrath's
+{f}der Motte des Zorns
+%%%%
+the wight's
+des Wights
+%%%%
+the skeletal warrior's
+des Skelettkriegers
+%%%%
+the ancient champion's
+des uralten Champions
+%%%%
+the flying skull's
+des fliegenden Schädels
+%%%%
+the curse skull's
+des verfluchten Schädels
+%%%%
+the curse toe's
+des verfluchten Zehs
+%%%%
+the angel's
+des Engels
+%%%%
+the cherub's
+des Cherubs
+%%%%
+the seraph's
+des Seraphs
+%%%%
+the daeva's
+{f}der Daeva
+%%%%
+the profane servitor's
+des profanen Dieners
+%%%%
+the giant's
+des Riesen
+%%%%
+the cyclops's
+des Zyklopen
+%%%%
+the ettin's
+des Ettins
+%%%%
+the fire giant's
+des Feuerriesen
+%%%%
+the frost giant's
+des Frostriesen
+%%%%
+the stone giant's
+des Steinriesen
+%%%%
+the titan's
+des Titanen
+%%%%
+the juggernaut's
+des Juggernauts
+%%%%
+the iron giant's
+des Eisenriesen
+%%%%
+the dragon's
+des Drachen
+%%%%
+the fire dragon's
+des Feuerdrachen
+%%%%
+the hydra's
+{f}der Hydra
+%%%%
+the ice dragon's
+des Eisdrachen
+%%%%
+the steam dragon's
+des Dampfdrachen
+%%%%
+the swamp dragon's
+des Sumpfdrachen
+%%%%
+the acid dragon's
+des Säuredrachen
+%%%%
+the quicksilver dragon's
+des Quecksilberdrachen
+%%%%
+the iron dragon's
+des Eisendrachen
+%%%%
+the storm dragon's
+des Sturmdrachen
+%%%%
+the golden dragon's
+des Golddrachen
+%%%%
+the shadow dragon's
+des Schattendrachen
+%%%%
+the bone dragon's
+des Knochendrachen
+%%%%
+the pearl dragon's
+des Perlendrachen
+%%%%
+the elemental's
+des Elementars
+%%%%
+the earth elemental's
+des Erdelementars
+%%%%
+the fire elemental's
+des Feuerelementars
+%%%%
+the water elemental's
+des Wasserelementars
+%%%%
+the air elemental's
+des Luftelementars
+%%%%
+the iron elemental's
+des Eisenelementars
+%%%%
+the elemental wellspring's
+{f}der elementaren Quelle
+%%%%
+the giant frog's
+des Riesenfrosches
+%%%%
+the bullfrog's
+des Ochsenfrosches
+%%%%
+the spiny frog's
+des Stachelfrosches
+%%%%
+the blink frog's
+des Blinzelfrosches
+%%%%
+the barachi's
+des Barachi
+%%%%
+the floating eye's
+des schwebenden Auges
+%%%%
+the glowing orange brain's
+des orangen leuchtenden Gehirns
+%%%%
+the great orb of eyes's
+{f}der großen Kugel der Augen
+%%%%
+the greater orb of eyes's
+{f}der größeren Kugel der Augen
+%%%%
+the shining eye's
+des leuchtenden Auges
+%%%%
+the eye of devastation's
+des Auges der Verwüstung
+%%%%
+the golden eye's
+des goldenen Auges
+%%%%
+the ophan's
+des Ophans
+%%%%
+the manticore's
+des Mantikors
+%%%%
+the minotaur's
+des Minotauren
+%%%%
+the sphinx's
+{f}der Sphinx
+%%%%
+the harpy's
+{f}der Harpyie
+%%%%
+the mutant beast's
+des Mutantenbiests
+%%%%
+the ancestor's
+des Ahnen
+%%%%
+the knight's
+des Ritters
+%%%%
+the battlemage's
+des Kampfmagiers
+%%%%
+the hexer's
+des Hexers
+%%%%
+the jelly's
+des Gelees
+%%%%
+the slime creature's
+{f}der Schleimkreatur
+%%%%
+the merged slime creature's
+{f}der verschmolzenen Schleimkreatur
+%%%%
+the azure jelly's
+des azurblauen Gelees
+%%%%
+the acid blob's
+des Säureklumpens
+%%%%
+the kobold's
+des Kobolds
+%%%%
+the big kobold's
+des großen Kobolds
+%%%%
+the kobold demonologist's
+des Kobold-Dämonologen
+%%%%
+the lich's
+des Lichs
+%%%%
+the ancient lich's
+des uralten Lichs
+%%%%
+the antique lich's
+des antiken Lichs
+%%%%
+the revenant's
+des Wiedergängers
+%%%%
+the halazid warlock's
+des halazidischen Hexenmeisters
+%%%%
+the mummy's
+{f}der Mumie
+%%%%
+the guardian mummy's
+{f}der Wächtermumie
+%%%%
+the greater mummy's
+{f}der größeren Mumie
+%%%%
+the mummy priest's
+des Mumienpriesters
+%%%%
+the naga's
+des Nagas
+%%%%
+the naga mage's
+des Naga-Magiers
+%%%%
+the naga sharpshooter's
+des Naga-Scharfschützen
+%%%%
+the naga ritualist's
+des Naga-Ritualisten
+%%%%
+the naga warrior's
+des Naga-Kriegers
+%%%%
+the nagaraja's
+des Nagarajas
+%%%%
+the ogre's
+des Ogers
+%%%%
+the two-headed ogre's
+des zweiköpfigen Ogers
+%%%%
+the ogre mage's
+des Oger-Magiers
+%%%%
+the plant's
+{f}der Pflanze
+%%%%
+the demonic plant's
+{f}der dämonischen Pflanze
+%%%%
+the withered plant's
+{f}der verwelkten Pflanze
+%%%%
+the oklob sapling's
+des Oklobsetzlings
+%%%%
+the oklob plant's
+{f}der Oklobpflanze
+%%%%
+the bush's
+des Busches
+%%%%
+the burning bush's
+des brennenden Busches
+%%%%
+the toadstool's
+des Giftpilzes
+%%%%
+the fungus's
+des Pilzes
+%%%%
+the ballistomycete's
+des Ballistomyceten
+%%%%
+the hyperactive ballistomycete's
+des hyperaktiven Ballistomyceten
+%%%%
+the briar patch's
+des Dornenstrauchs
+%%%%
+the tengu's
+des Tengus
+%%%%
+the tengu conjurer's
+des Tengu-Zauberers
+%%%%
+the tengu warrior's
+des Tengu-Kriegers
+%%%%
+the tengu reaver's
+des Tengu-Plünderers
+%%%%
+the efreet's
+des Ifrits
+%%%%
+the rakshasa's
+des Rakshasas
+%%%%
+the dryad's
+{f}der Dryade
+%%%%
+the snaplasher vine's
+{f}der Peitschenrebe
+%%%%
+the snaplasher vine segment's
+des Peitschenrebensegments
+%%%%
+the snake's
+{f}der Schlange
+%%%%
+the ball python's
+{f}der Königspython
+%%%%
+the adder's
+{f}der Kreuzotter
+%%%%
+the water moccasin's
+{f}der Wassermokassin
+%%%%
+the black mamba's
+{f}der schwarzen Mamba
+%%%%
+the sea snake's
+{f}der Seeschlange
+%%%%
+the anaconda's
+{f}der Anakonda
+%%%%
+the guardian serpent's
+{f}der Wächterschlange
+%%%%
+the shock serpent's
+{f}der Schockschlange
+%%%%
+the mana viper's
+{f}der Manaviper
+%%%%
+the troll's
+des Trolls
+%%%%
+the iron troll's
+des Eisentrolls
+%%%%
+the deep troll's
+des Tiefentrolls
+%%%%
+the deep troll earth mage's
+des Tiefentroll-Erdmagiers
+%%%%
+the deep troll shaman's
+des Tiefentroll-Schamanen
+%%%%
+the vampire's
+des Vampirs
+%%%%
+the vampire knight's
+des Vampir-Ritters
+%%%%
+the vampire mage's
+des Vampir-Magiers
+%%%%
+the jiangshi's
+des Jiangshis
+%%%%
+the ghost's
+des Gespensts
+%%%%
+the phantom's
+des Phantoms
+%%%%
+the hungry ghost's
+des hungrigen Geistes
+%%%%
+the flayed ghost's
+des geschundenen Geistes
+%%%%
+the player ghost's
+des Spielergeistes
+%%%%
+the shadow's
+des Schattens
+%%%%
+the silent spectre's
+des stillen Gespensts
+%%%%
+the drowned soul's
+{f}der ertrunkenen Seele
+%%%%
+the wraith's
+des Spuks
+%%%%
+the shadow wraith's
+des Schattenspuks
+%%%%
+the freezing wraith's
+des Frostspuks
+%%%%
+the eidolon's
+des Eidolons
+%%%%
+the phantasmal warrior's
+des phantastischen Kriegers
+%%%%
+the large abomination's
+{f}der großen Abscheulichkeit
+%%%%
+the thrashing horror's
+des prügelnden Grauens
+%%%%
+the tentacled monstrosity's
+des Tentakelmonstrums
+%%%%
+the Orb Guardian's
+des Kugelwächters
+%%%%
+the tentacled starspawn's
+{f}der Tentakelsternenbrut
+%%%%
+the starspawn tentacle's
+des Sternenbruttentakels
+%%%%
+the starspawn tentacle segment's
+des Sternenbruttentakelsegments
+%%%%
+the starcursed mass's
+{f}der sternenverfluchten Masse
+%%%%
+the dream sheep's
+des Traumschafs
+%%%%
+the yak's
+des Yaks
+%%%%
+the death yak's
+des Todesyaks
+%%%%
+the catoblepas's
+des Katoblepas
+%%%%
+the elephant's
+des Elefanten
+%%%%
+the dire elephant's
+des Schreckenselefanten
+%%%%
+the hellephant's
+des Höllefanten
+%%%%
+the apis's
+des Apis
+%%%%
+the ice beast's
+{f}der Eisbestie
+%%%%
+the sky beast's
+{f}der Himmelsbestie
+%%%%
+the zombie's
+des Zombies
+%%%%
+the skeleton's
+des Skeletts
+%%%%
+the simulacrum's
+des Simulacrums
+%%%%
+the small zombie's
+des kleinen Zombies
+%%%%
+the small skeleton's
+des kleinen Skeletts
+%%%%
+the small simulacrum's
+des kleinen Simulacrums
+%%%%
+the large zombie's
+des großen Zombies
+%%%%
+the large skeleton's
+des großen Skeletts
+%%%%
+the large simulacrum's
+des großen Simulacrums
+%%%%
+the spectral thing's
+des spektralen Dings
+%%%%
+the electric eel's
+des Zitteraals
+%%%%
+the kraken's
+des Kraken
+%%%%
+the tentacle's
+des Tentakels
+%%%%
+the tentacle segment's
+des Tentakelsegments
+%%%%
+the octopode's
+des Oktopoden
+%%%%
+the lava snake's
+{f}der Lavaschlange
+%%%%
+the salamander's
+des Salamanders
+%%%%
+the salamander mystic's
+des Salamander-Mystikers
+%%%%
+the Hellbinder's
+des Höllenbinders
+%%%%
+the Cloud Mage's
+des Wolkenmagiers
+%%%%
+the player's
+des Spielers
+%%%%
+the player illusion's
+{f}der Spieler-Illusion
+%%%%
+the dancing weapon's
+{f}der tanzenden Waffe
+%%%%
+the spectral weapon's
+{f}der Spektralwaffe
+%%%%
+the eldritch tentacle's
+des unheimlichen Tentakels
+%%%%
+the eldritch tentacle segment's
+des unheimlichen Tentakelsegments
+%%%%
+the demonspawn's
+{f}der Dämonenbrut
+%%%%
+the monstrous demonspawn's
+{f}der monströsen Dämonenbrut
+%%%%
+the gelid demonspawn's
+{f}der geliden Dämonenbrut
+%%%%
+the infernal demonspawn's
+{f}der höllischen Dämonenbrut
+%%%%
+the torturous demonspawn's
+{f}der quälenden Dämonenbrut
+%%%%
+the blood saint's
+des Blutheiligen
+%%%%
+the warmonger's
+des Kriegstreibers
+%%%%
+the corrupter's
+des Korruptors
+%%%%
+the black sun's
+{f}der schwarzen Sonne
+%%%%
+the crimson imp's
+des karminroten Teufelchens
+%%%%
+the quasit's
+des Quasits
+%%%%
+the white imp's
+des weißen Teufelchens
+%%%%
+the ufetubus's
+des Ufetubus
+%%%%
+the iron imp's
+des Eisenteufelchens
+%%%%
+the shadow imp's
+des Schattenteufelchens
+%%%%
+the rust devil's
+des Rostteufels
+%%%%
+the orange demon's
+des orangen Dämons
+%%%%
+the red devil's
+des roten Teufels
+%%%%
+the hellwing's
+des Höllenflügels
+%%%%
+the ice devil's
+des Eisteufels
+%%%%
+the chaos spawn's
+{f}der Chaosbrut
+%%%%
+the sun demon's
+des Sonnendämons
+%%%%
+the soul eater's
+des Seelenfressers
+%%%%
+the smoke demon's
+des Rauchdämons
+%%%%
+the neqoxec's
+des Neqoxec
+%%%%
+the ynoxinul's
+des Ynoxinuls
+%%%%
+the sixfirhy's
+des Sixfirhys
+%%%%
+the shadow demon's
+des Schattendämons
+%%%%
+the green death's
+des grünen Todes
+%%%%
+the blizzard demon's
+des Blizzarddämons
+%%%%
+the balrug's
+des Balrogs
+%%%%
+the cacodemon's
+des Kakodämons
+%%%%
+the hell beast's
+des Höllenbiests
+%%%%
+the hellion's
+des Teufelsbratens
+%%%%
+the reaper's
+des Schnitters
+%%%%
+the lorocyproca's
+{f}der Lorocyproca
+%%%%
+the tormentor's
+des Peinigers
+%%%%
+the Brimstone Fiend's
+des Schwefelunholds
+%%%%
+the Ice Fiend's
+des Eisunholds
+%%%%
+the Tzitzimitl's
+des Tzitzimitls
+%%%%
+the Hell Sentinel's
+des Höllenwächters
+%%%%
+the Executioner's
+des Scharfrichters
+%%%%
+the animated tree's
+des animierten Baums
+%%%%
+the golem's
+des Golems
+%%%%
+the saltling's
+des Salzlings
+%%%%
+the peacekeeper's
+des Friedenshüters
+%%%%
+the iron golem's
+des Eisengolems
+%%%%
+the crystal guardian's
+des Kristallwächters
+%%%%
+the toenail golem's
+des Zehennagelgolems
+%%%%
+the electric golem's
+des Blitzgolems
+%%%%
+the ushabti's
+{f}der Uschebti
+%%%%
+the guardian golem's
+des Wächtergolems
+%%%%
+the flesh golem's
+des Fleischgolems
+%%%%
+the spellforged servitor's
+des zaubergeschmeideten Dieners
+%%%%
+the ice statue's
+{f}der Eisstatue
+%%%%
+the obsidian statue's
+{f}der Obsidianstatue
+%%%%
+the orange crystal statue's
+{f}der orangen Kristallstatue
+%%%%
+the statue's
+{f}der Statue
+%%%%
+the training dummy's
+{f}der Trainingspuppe
+%%%%
+the pillar of salt's
+{f}der Salzsäule
+%%%%
+the block of ice's
+des Eisblocks
+%%%%
+the diamond obelisk's
+des Diamantobelisken
+%%%%
+the lightning spire's
+des Blitzturms
+%%%%
+the gargoyle's
+des Gargoyles
+%%%%
+the war gargoyle's
+des Kriegsgargoyles
+%%%%
+the molten gargoyle's
+des geschmolzenen Gargoyles
+%%%%
+the pandemonium lord's
+des Pandämoniumsfürsten
+%%%%
+the hell lord's
+des Höllenfürsten
+%%%%
+the ball lightning's
+des Kugelblitzes
+%%%%
+the ballistomycete spore's
+{f}der Ballistomycetenspore
+%%%%
+the lost soul's
+{f}der verlorenen Seele
+%%%%
+the lurking horror's
+des lauernden Grauens
+%%%%
+the orb of fire's
+{f}der Feuerkugel
+%%%%
+the orb of destruction's
+{f}der Kugel der Zerstörung
+%%%%
+the wavering orb of destruction's
+{f}der schwankenden Kugel der Zerstörung
+%%%%
+the fulminant prism's
+des fulminanten Prismas
+%%%%
+the wretched star's
+des elenden Sterns
+%%%%
+the battlesphere's
+{f}der Gefechtssphäre
+%%%%
+the death cob's
+des Todeskolbens
+%%%%
+the moon troll's
+des Mondtrolls
+%%%%
+the foxfire's
+des Fuchsfeuers
+%%%%
+the nameless horror's
+des namenlosen Grauens
+%%%%
+the will-o-the-wisp's
+des Irrlichts
+%%%%
+the bunyip's
+des Bunyips
+%%%%
+the boulder beetle's
+des Rollsteinkäfers
+%%%%
+the cane toad's
+{f}der Aga-Kröte
+%%%%
+the goliath frog's
+des Goliathfrosches
+%%%%
+the fenstrider witch's
+{f}der Fennläuferhexe
+%%%%
+the palentonga's
+des Palentongas
+%%%%
+the royal mummy's
+{f}der königlichen Mumie
+%%%%
+the eleionoma's
+{f}der Eleionoma
+%%%%
+the lemure's
+des Lemuren
+%%%%
+the endoplasm's
+des Endoplasmas
+%%%%
+the rockslime's
+des Felsenschleims
+%%%%
+the quicksilver ooze's
+des Quecksilberschleims
+%%%%
+the kobold brigand's
+des Kobold-Briganten
+%%%%
+the dread lich's
+des grauenhaften Lichs
+%%%%
+the djinni's
+des Dschinns
+%%%%
+the salamander tyrant's
+des Salamander-Tyrannen
+%%%%
+the animated armour's
+{f}der animierten Rüstung
+%%%%
+# Test monsters can be created in Arena
+%%%%
+the test spawner's
+des Test-Erzeugers
+%%%%
+the test statue's
+{f}der Test-Statue
+%%%%
+the test blob's
+des Test-Klumpens
+%%%%
+the sensed monster's
+des gespürten Monsters
+%%%%
+the friendly sensed monster's
+des freundlichen gespürten Monsters
+%%%%
+the trivial sensed monster's
+des trivialen gespürten Monsters
+%%%%
+the easy sensed monster's
+des leichten gespürten Monsters
+%%%%
+the tough sensed monster's
+des harten gespürten Monsters
+%%%%
+the nasty sensed monster's
+des furchtbaren gespürten Monsters
+%%%%
+the spectre's
+{f}der Spukgestalt
+%%%%
+the centipede's
+des Tausendfüßers
+%%%%
+the mad acolyte of Lugonu's
+des verrückten Akolythen von Lugonu
+%%%%
+the bog mummy's
+{f}der Moormumie
+%%%%
+the lunar statue's
+{f}der Mondstatue
+%%%%
+the charred statue's
+{f}der verkohlten Statue
+%%%%
+the frost-covered statue's
+{f}der frostbedeckten Statue
+%%%%
+the malarious merfolk avatar's
+{m}des malariaverseuchten Meerwesen-Avatars
+%%%%
+the conjurer statue's
+{f}der Konjuranten-Statue
+%%%%
+the drunken dwarf's
+{m}des betrunkenen Zwergs
+%%%%
+the greater air elemental's
+{m}des größeren Luftelementars
+%%%%
+the giant anaconda's
+{f}der gigantischen Anakonda
+%%%%
+the fire elementalist statue's
+{f}der Feuermagier-Statue
+%%%%
+the water elementalist statue's
+{f}der Wassermagier-Statue
+%%%%
+the earth elementalist statue's
+{f}der Erdmagier-Statue
+%%%%
+the air elementalist statue's
+{f}der Luftmagier-Statue
+%%%%
+the pristine statue's
+{f}der makellosen Statue
+%%%%
+the zot statue's
+{f}der Zot-Statue
+%%%%
+the archer statue's
+{f}der Bogenschützen-Statue
+%%%%
+
+# subtypes of mutant beast
+%%%%
+the batfire beast's
+{n}des Fledermausfeuerbiestes
+%%%%
+the batox beast's
+{n}des Fledermausochsenbiestes
+%%%%
+the batshock beast's
+{n}des Fledermausschockbiestes
+%%%%
+the batsting beast's
+{n}des Fledermausstichbiestes
+%%%%
+the batweird beast's
+{n}des Fledermausbizarrbiestes
+%%%%
+the firebat beast's
+{n}des Feuerfledermausbiestes
+%%%%
+the fireox beast's
+{n}des Feuerochsenbiestes
+%%%%
+the fireshock beast's
+{n}des Feuerschockbiestes
+%%%%
+the firesting beast's
+{n}des Feuerstichbiestes
+%%%%
+the fireweird beast's
+{n}des Feuerbizarrbiestes
+%%%%
+the oxbat beast's
+{n}des Ochsenfledermausbiestes
+%%%%
+the oxfire beast's
+{n}des Ochsenfeuerbiestes
+%%%%
+the oxshock beast's
+{n}des Ochsenschockbiestes
+%%%%
+the oxsting beast's
+{n}des Ochsenstichbiestes
+%%%%
+the oxweird beast's
+{n}des Ochsenbizarrbiestes
+%%%%
+the shockbat beast's
+{n}des Schockfledermausbiestes
+%%%%
+the shockfire beast's
+{n}des Schockfeuerbiestes
+%%%%
+the shockox beast's
+{n}des Schockochsenbiestes
+%%%%
+the shocksting beast's
+{n}des Schockstichbiestes
+%%%%
+the shockweird beast's
+{n}des Schockbizarrbiestes
+%%%%
+the stingbat beast's
+{n}des Stichfledermausbiestes
+%%%%
+the stingfire beast's
+{n}des Stichfeuerbiestes
+%%%%
+the stingox beast's
+{n}des Stichochsenbiestes
+%%%%
+the stingshock beast's
+{n}des Stichschockbiestes
+%%%%
+the stingweird beast's
+{n}des Stichbizarrbiestes
+%%%%
+the weirdbat beast's
+{n}des bizarren Fledermausbiestes
+%%%%
+the weirdfire beast's
+{n}des bizarren Feuerbiestes
+%%%%
+the weirdox beast's
+{n}des bizarren Ochsenbiestes
+%%%%
+the weirdshock beast's
+{n}des bizarren Schockbiestes
+%%%%
+the weirdsting beast's
+{n}des bizarren Stichbiestes
+%%%%
+
+# unseen monster
+%%%%
+something's
+von etwas
+%%%%
+
+# derived monsters containing the name of the original monster
+# "elf zombie", "orc skeleton", etc.
+%%%%
+the @monster@ zombie's
+des Zombies {gen}@a_monster@
+%%%%
+the @monster@ skeleton's
+des Skeletts {gen}@a_monster@
+%%%%
+the @monster@ simulacrum's
+des Simulacrums {gen}@a_monster@
+%%%%
+
+# irregular derived monsters
+
+%%%%
+the Lernaean hydra zombie's
+des Zombies der Lernäischen Hydra
+%%%%
+the Lernaean hydra skeleton's
+des Skeletts der Lernäischen Hydra
+%%%%
+the Lernaean hydra simulacrum's
+des Simulacrums der Lernäischen Hydra
+%%%%
+
+##################
+# Sprint Monsters
+##################
+
+%%%%
+the kamikaze kobold's
+des Kamikaze-Kobolds
+%%%%
+the orb golem's
+des Kugelgolems
+%%%%
+the orb of ice's
+{f}der Kugel des Eises
+%%%%
+the orb of electricity's
+{f}der Kugel der Elektrizität
+%%%%
+the naga warlord's
+des Naga-Kriegsherrs
+%%%%
+the witch's
+{f}der Hexe
+%%%%
+the dire wolf spider's
+{f}der Schreckenswolfspinne
+%%%%
+the phase spider's
+{f}der Phasenspinne
+%%%%
+the dimme's
+{f}der Dimme
+%%%%
+the sulfuric acid blob's
+des Schwefelsäureklumpens
+%%%%
+the vault guard captain's
+des Haupttresorwächters
+%%%%
+the Master Blaster's
+des Master-Blasters
+%%%%
+Master Blaster's
+Master-Blasters
+%%%%
+the oklob sapling priest's
+des Oklobsetzlingspriesters
+%%%%
+the oklob sapling wizard's
+des Oklobsetzlingszauberers
+%%%%
+the oklob plant conjurer's
+des Oklobpflanzenkonjuranten
+%%%%
+the oklob plant summoner's
+des Oklobpflanzenbeschwörers
+%%%%
+the oklob plant shifter's
+des Oklobpflanzenverschiebers
+%%%%
+the oklob plant meteorologist's
+des Oklobpflanzenmeteorologen
+%%%%
+the oklob plant demonologist's
+des Oklobpflanzendämonologen
+%%%%
+the oklob plant annihilator's
+des Oklobpflanzenvernichters
+%%%%
+the bag of meat's
+des Fleischklopses
+%%%%
+the meat berserker's
+des Fleischberserkers
+%%%%
+the tyrant's
+des Tyrannen
+%%%%
+the meat hydra's
+{f}der Fleisch-Hydra
+%%%%
+the dread's
+des Schreckens
+%%%%
+the destroyer's
+des Zerstörers
+%%%%
+the scourge's
+{f}der Geißel
+%%%%
+the sculptor of flesh's
+des Bildhauers des Fleisches
+%%%%
+the observer's
+des Beobachters
+%%%%
+the accursed's
+des Verfluchten
+%%%%
+the vile's
+des Niederträchtigen
+%%%%
+the meat beast's
+{f}der Fleischbestie
+%%%%
+the wretched soul's
+{f}der unglückliche Seele
+%%%%
+the fleshlord's
+des Fleischlords
+%%%%

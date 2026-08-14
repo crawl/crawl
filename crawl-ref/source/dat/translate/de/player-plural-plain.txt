@@ -1,0 +1,134 @@
+###############################################################################
+#
+# Player - plural, plain, nominative
+#
+# The parameter @player_genus_plural@ is included in some messages in
+# monspeak.txt and wpnnoise.txt. Species is used for genus in many cases.
+#
+###############################################################################
+
+##############################################
+# Player genus
+# NOTE: If not listed then species is used
+##############################################
+%%%%
+# Barachi
+Frogs
+{pl}Frösche
+%%%%
+# genus for draconians of all colours
+Draconians
+{pl}Drakonier
+%%%%
+# Deep Dwarf
+Dwarves
+{pl}Zwerge
+%%%%
+# Deep Elf
+Elves
+{pl}Elfen
+%%%%
+# Demigod
+Gods
+{pl}Götter
+%%%%
+# Felid
+Cats
+{pl}Katzen
+%%%%
+# Formicid
+Ants
+{pl}Ameisen
+%%%%
+# Octopode
+Octopi
+{pl}Oktopusse
+%%%%
+# Hill Orc
+Orcs
+{pl}Orks
+%%%%
+
+##############################################
+# Player species
+##############################################
+%%%%
+Barachim
+{pl}Barachim
+%%%%
+Deep Dwarves
+{pl}Tiefenzwerge
+%%%%
+Deep Elves
+{pl}Tiefenelfen
+%%%%
+Demigods
+{pl}Halbgötter
+%%%%
+Demonspawns
+{pl}Dämonenbruten
+%%%%
+Djinn
+{pl}Dschinns
+%%%%
+Felids
+{pl}Feliden
+%%%%
+Formicids
+{pl}Formiciden
+%%%%
+Gargoyles
+{pl}Gargoyles
+%%%%
+Ghouls
+{pl}Ghule
+%%%%
+Gnolls
+{pl}Gnolle
+%%%%
+Hill Orcs
+{pl}Hügelorks
+%%%%
+Humans
+{pl}Menschen
+%%%%
+Kobolds
+{pl}Kobolde
+%%%%
+# same as singular
+#Merfolk
+#Meerwesen
+%%%%
+Minotaurs
+{pl}Minotauren
+%%%%
+Mummies
+{pl}Mumien
+%%%%
+Nagas
+{pl}Nagas
+%%%%
+Octopodes
+{pl}Oktopoden
+%%%%
+Ogres
+{pl}Oger
+%%%%
+Palentongas
+{pl}Palentongas
+%%%%
+Spriggans
+{pl}Spriggans
+%%%%
+Tengus
+{pl}Tengus
+%%%%
+Trolls
+{pl}Trolle
+%%%%
+Vampires
+{pl}Vampire
+%%%%
+Vine Stalkers
+{pl}Rebpirscher
+%%%%

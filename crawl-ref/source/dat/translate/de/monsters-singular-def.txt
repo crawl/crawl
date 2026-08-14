@@ -1,0 +1,1759 @@
+###############################################################################
+#
+# Monsters - singular, definite article, nominative
+#
+###############################################################################
+
+%%%%
+the program bug
+{m}der Programmfehler
+%%%%
+the formicid
+{m}der Formicid
+%%%%
+the entropy weaver
+{m}der Entropieweber
+%%%%
+the bat
+{f}die Fledermaus
+%%%%
+the butterfly
+{m}der Schmetterling
+%%%%
+the vampire bat
+{f}die Vampirfledermaus
+%%%%
+the fire bat
+{f}die Feuerfledermaus
+%%%%
+the ice bat
+{f}die Eisfledermaus
+%%%%
+# rebadged spectral bat
+# Real German name is Peters-Kinnblattfledermaus, but that would lose the wordplay
+the ghost-faced bat
+{f}die Gespenstfledermaus
+%%%%
+the phase bat
+{f}die Phasenfledermaus
+%%%%
+the skeletal bat
+{f}die Skelettfledermaus
+%%%%
+the microbat
+{f}die Microfledermaus
+%%%%
+the megabat
+{f}die Megafledermaus
+%%%%
+the giga bat
+{f}die Gigafledermaus
+%%%%
+the bennu
+{m}der Benu
+%%%%
+the caustic shrike
+{m}der ätzende Würger
+%%%%
+the shard shrike
+{m}der Scherbenwürger
+%%%%
+the centaur
+{m}der Zentaur
+%%%%
+the centaur warrior
+{m}der Zentaur-Krieger
+%%%%
+the yaktaur
+{m}der Yaktaur
+%%%%
+the yaktaur captain
+{m}der Yaktaur-Kapitän
+%%%%
+the faun
+{m}der Faun
+%%%%
+the satyr
+{m}der Satyr
+%%%%
+the draconian
+{m}der Drakonier
+%%%%
+the black draconian
+{m}der schwarze Drakonier
+%%%%
+the yellow draconian
+{m}der gelbe Drakonier
+%%%%
+the pale draconian
+{m}der blasse Drakonier
+%%%%
+the green draconian
+{m}der grüne Drakonier
+%%%%
+the purple draconian
+{m}der purpurne Drakonier
+%%%%
+the red draconian
+{m}der rote Drakonier
+%%%%
+the white draconian
+{m}der weiße Drakonier
+%%%%
+the grey draconian
+{m}der graue Drakonier
+%%%%
+the draconian stormcaller
+{m}der drakonische Sturmrufer
+%%%%
+the draconian monk
+{m}der drakonische Mönch
+%%%%
+the draconian shifter
+{m}der drakonische Verschieber
+%%%%
+the draconian annihilator
+{m}der drakonische Vernichter
+%%%%
+the draconian knight
+{m}der drakonische Ritter
+%%%%
+the draconian scorcher
+{m}der drakonische Verschmorer
+%%%%
+the elf
+{m}der Elf
+%%%%
+the deep elf knight
+{m}der Tiefenelf-Ritter
+%%%%
+the deep elf archer
+{m}der Tiefenelf-Bogenschütze
+%%%%
+the deep elf blademaster
+{m}der Tiefenelf-Klingenmeister
+%%%%
+the deep elf master archer
+{m}der Tiefenelf-Bogenmeister
+%%%%
+the deep elf zephyrmancer
+{m}der Tiefenelf-Zephyrmant
+%%%%
+the deep elf pyromancer
+{m}der Tiefenelf-Pyromant
+%%%%
+the deep elf high priest
+{m}der Tiefenelf-Hohepriester
+%%%%
+the deep elf demonologist
+{m}der Tiefenelf-Dämonologe
+%%%%
+the deep elf annihilator
+{m}der Tiefenelf-Vernichter
+%%%%
+the deep elf sorcerer
+{m}der Tiefenelf-Zauberer
+%%%%
+the deep elf death mage
+{m}der Tiefenelf-Todesmagier
+%%%%
+the deep elf elementalist
+{m}der Tiefenelf-Elementalist
+%%%%
+the wandering mushroom
+{m}der wandernde Pilz
+%%%%
+the deathcap
+{f}die Todeskappe
+%%%%
+the thorn hunter
+{m}der Dornenjäger
+%%%%
+the shambling mangrove
+{f}die watschelnde Mangrove
+%%%%
+the vine stalker
+{m}der Rebjäger
+%%%%
+the goblin
+{m}der Goblin
+%%%%
+the hobgoblin
+{m}der Hobgoblin
+%%%%
+the gnoll
+{m}der Gnoll
+%%%%
+the gnoll shaman
+{m}der Gnoll-Schamane
+%%%%
+the gnoll sergeant
+{m}der Gnoll-Wachtmeister
+%%%%
+the boggart
+{m}der Boggart
+%%%%
+the dwarf
+{m}der Zwerg
+%%%%
+the deep dwarf
+{m}der Tiefenzwerg
+%%%%
+the jackal
+{m}der Schakal
+%%%%
+the hound
+{m}der Hund
+%%%%
+the howler monkey
+{m}der Brüllaffe
+%%%%
+the warg
+{m}der Warg
+%%%%
+the wolf
+{m}der Wolf
+%%%%
+the hog
+{n}das Schwein
+%%%%
+the hell hound
+{m}der Höllenhund
+%%%%
+the doom hound
+{m}der Untergangshund
+%%%%
+the raiju
+{m}der Raiju
+%%%%
+the hell hog
+{n}das höllische Schwein
+%%%%
+the holy swine
+{n}das heilige Schwein
+%%%%
+the felid
+{m}der Felid
+%%%%
+the bear
+{m}der Bär
+%%%%
+the polar bear
+{m}der Eisbär
+%%%%
+the black bear
+{m}der Schwarzbär
+%%%%
+the spriggan
+{m}der Spriggan
+%%%%
+the spriggan rider
+{m}der Spriggan-Reiter
+%%%%
+the spriggan druid
+{m}der Spriggan-Druide
+%%%%
+the spriggan berserker
+{m}der Spriggan-Berserker
+%%%%
+the spriggan air mage
+{m}der Spriggan-Luftmagier
+%%%%
+the spriggan defender
+{m}der Spriggan-Verteidiger
+%%%%
+the spriggan baker
+{m}der Spriggan-Bäcker
+%%%%
+the spriggan hatter
+{m}der Spriggan-Hutmacher
+%%%%
+the drake
+{m}der Drachling
+%%%%
+the swamp drake
+{m}der Sumpfdrachling
+%%%%
+the rime drake
+{m}der Reifdrachling
+%%%%
+the wind drake
+{m}der Winddrachling
+%%%%
+the lindwurm
+{m}der Lindwurm
+%%%%
+the death drake
+{m}der Todesdrachling
+%%%%
+the giant lizard
+{f}die Rieseneidechse
+%%%%
+the frilled lizard
+{f}die gekräuselte Eidechse
+%%%%
+the iguana
+{m}der Leguan
+%%%%
+the basilisk
+{m}der Basilisk
+%%%%
+the wyvern
+{m}der Wyvern
+%%%%
+the komodo dragon
+{m}der Komododrache
+%%%%
+the merfolk
+{n}das Meerwesen
+%%%%
+the merfolk impaler
+{m}der Meerwesen-Pfähler
+%%%%
+the merfolk javelineer
+{m}der Meerwesen-Speerwerfer
+%%%%
+the merfolk aquamancer
+{f}die Meerwesen-Wasserbeschwörerin
+%%%%
+the merfolk siren
+{f}die Meerwesen-Sirene
+%%%%
+the merfolk avatar
+{m}der Meerwesen-Avatar
+%%%%
+the water nymph
+{f}die Wassernymphe
+%%%%
+the bog body
+{f}die Moorleiche
+%%%%
+the necrophage
+{f}die Nekrophage
+%%%%
+the bloated husk
+{f}die aufgeblähte Hülle
+%%%%
+the ghoul
+{m}der Ghul
+%%%%
+the orc
+{m}der Ork
+%%%%
+the orc wizard
+{m}der Ork-Zauberer
+%%%%
+the orc priest
+{m}der Ork-Priester
+%%%%
+the orc warrior
+{m}der Ork-Krieger
+%%%%
+the orc knight
+{m}der Ork-Ritter
+%%%%
+the orc warlord
+{m}der Ork-Warlord
+%%%%
+the orc sorcerer
+{m}der Ork-Hexenmeister
+%%%%
+the orc high priest
+{m}der Ork-Hohepriester
+%%%%
+the human
+{m}der Mensch
+%%%%
+the hell knight
+{m}der Höllenritter
+%%%%
+the death knight
+{m}der Todesritter
+%%%%
+the necromancer
+{m}der Nekromant
+%%%%
+the wizard
+{m}der Zauberer
+%%%%
+the vault guard
+{f}die Tresorwache
+%%%%
+the vault sentinel
+{m}der Tresorkundschafter
+%%%%
+the vault warden
+{m}der Tresorwärter
+%%%%
+the ironbound convoker
+{m}der eisenbeschlagene Einberufer
+%%%%
+the ironbound frostheart
+{n}das eisengebundene Frostherz
+%%%%
+the ironbound preserver
+{m}der eisenbeschlagene Bewahrer
+%%%%
+the ironbound beastmaster
+{m}der eisenbeschlagene Bestienmeister
+%%%%
+the ironbound thunderhulk
+{m}der eisenbeschlagene Donnerkoloss
+%%%%
+the imperial myrmidon
+{m}der imperiale Myrmidon
+%%%%
+the servant of whispers
+{m}der Diener des Flüsterns
+%%%%
+the ragged hierophant
+{m}der zerlumpte Hierophant
+%%%%
+the shapeshifter
+{m}der Gestaltwandler
+%%%%
+the glowing shapeshifter
+{m}der leuchtende Gestaltwandler
+%%%%
+# used in constructions like "the ogre shaped shifter"
+the shifter
+{m}der Gestaltwandler
+%%%%
+the Killer Klown
+{m}der Killer-Klown
+%%%%
+the demigod
+{m}der Halbgott
+%%%%
+the halfling
+{m}der Halbling
+%%%%
+the rat
+{f}die Ratte
+%%%%
+the quokka
+{n}das Quokka
+%%%%
+the river rat
+{f}die Flussratte
+%%%%
+the hell rat
+{f}die Höllenratte
+%%%%
+the giant cockroach
+{f}die Riesenkakerlake
+%%%%
+the scorpion
+{m}der Skorpion
+%%%%
+the emperor scorpion
+{m}der Kaiserskorpion
+%%%%
+the death scarab
+{m}der Todesskarabäus
+%%%%
+the spider
+{f}die Spinne
+%%%%
+the tarantella
+{f}die Tarantella
+%%%%
+the jumping spider
+{f}die Springspinne
+%%%%
+the wolf spider
+{f}die Wolfsspinne
+%%%%
+the redback
+{f}die Rotrückenspinne
+%%%%
+the demonic crawler
+{m}der dämonische Kriecher
+%%%%
+the orb spider
+{f}die Kugelspinne
+%%%%
+the alligator
+{m}der Alligator
+%%%%
+the snapping turtle
+{f}die Schnappschildkröte
+%%%%
+the alligator snapping turtle
+{f}die Alligatorschnappschildkröte
+%%%%
+the crab
+{f}die Krabbe
+%%%%
+the fire crab
+{f}die Feuerkrabbe
+%%%%
+the ghost crab
+{f}die Geisterkrabbe
+%%%%
+the apocalypse crab
+{f}die Apokalypsenkrabbe
+%%%%
+the ugly thing
+{n}das hässliche Ding
+%%%%
+the very ugly thing
+{n}das sehr hässliche Ding
+%%%%
+the fire vortex
+{m}der Feuerwirbel
+%%%%
+the spatial vortex
+{m}der räumliche Wirbel
+%%%%
+the spatial maelstrom
+{m}der räumliche Mahlstrom
+%%%%
+the insubstantial wisp
+{n}das unwirkliche Irrlicht
+%%%%
+the twister
+{m}der Twister
+%%%%
+the worm
+{m}der Wurm
+%%%%
+the swamp worm
+{m}der Sumpfwurm
+%%%%
+the tyrant leech
+{m}der Tyrannenblutegel
+%%%%
+the dart slug
+{f}die Pfeilschnecke
+%%%%
+the torpor snail
+{f}die Torporschnecke
+%%%%
+the elephant slug
+{f}die Elefantenschnecke
+%%%%
+the unseen horror
+{m}der unsichtbare Schrecken
+%%%%
+the small abomination
+{f}die kleine Abscheulichkeit
+%%%%
+the ancient zyme
+{n}das uralte Zym
+%%%%
+the worldbinder
+{m}der Weltenbinder
+%%%%
+the killer bee
+{f}die Killerbiene
+%%%%
+the queen bee
+{f}die Bienenkönigin
+%%%%
+the vampire mosquito
+{m}der Vampirmoskito
+%%%%
+the hornet
+{f}die Hornisse
+%%%%
+the meliai
+{f}die Meliai
+%%%%
+the spark wasp
+{f}die Funkenwespe
+%%%%
+the moth
+{f}die Motte
+%%%%
+the ghost moth
+{f}die Geistermotte
+%%%%
+the moth of wrath
+{f}die Motte des Zorns
+%%%%
+the wight
+{m}der Wight
+%%%%
+the skeletal warrior
+{m}der Skelettkrieger
+%%%%
+the ancient champion
+{m}der uralte Champion
+%%%%
+the flying skull
+{m}der fliegende Schädel
+%%%%
+the curse skull
+{m}der verfluchte Schädel
+%%%%
+the curse toe
+{m}der verfluchte Zeh
+%%%%
+the angel
+{m}der Engel
+%%%%
+the cherub
+{m}der Cherub
+%%%%
+the seraph
+{m}der Seraph
+%%%%
+the daeva
+{f}die Daeva
+%%%%
+the profane servitor
+{m}der profane Diener
+%%%%
+the giant
+{m}der Riese
+%%%%
+the cyclops
+{m}der Zyklop
+%%%%
+the ettin
+{m}der Ettin
+%%%%
+the fire giant
+{m}der Feuerriese
+%%%%
+the frost giant
+{m}der Frostriese
+%%%%
+the stone giant
+{m}der Steinriese
+%%%%
+the titan
+{m}der Titan
+%%%%
+the juggernaut
+{m}der Juggernaut
+%%%%
+the iron giant
+{m}der Eisenriese
+%%%%
+the dragon
+{m}der Drache
+%%%%
+the fire dragon
+{m}der Feuerdrache
+%%%%
+the hydra
+{f}die Hydra
+%%%%
+the ice dragon
+{m}der Eisdrache
+%%%%
+the steam dragon
+{m}der Dampfdrache
+%%%%
+the swamp dragon
+{m}der Sumpfdrache
+%%%%
+the acid dragon
+{m}der Säuredrache
+%%%%
+the quicksilver dragon
+{m}der Quecksilberdrache
+%%%%
+the iron dragon
+{m}der Eisendrache
+%%%%
+the storm dragon
+{m}der Sturmdrache
+%%%%
+the golden dragon
+{m}der Golddrache
+%%%%
+the shadow dragon
+{m}der Schattendrache
+%%%%
+the bone dragon
+{m}der Knochendrache
+%%%%
+the pearl dragon
+{m}der Perlendrache
+%%%%
+the elemental
+{m}der Elementar
+%%%%
+the earth elemental
+{m}der Erdelementar
+%%%%
+the fire elemental
+{m}der Feuerelementar
+%%%%
+the water elemental
+{m}der Wasserelementar
+%%%%
+the air elemental
+{m}der Luftelementar
+%%%%
+the iron elemental
+{m}der Eisenelementar
+%%%%
+the elemental wellspring
+{f}die elementare Quelle
+%%%%
+the giant frog
+{m}der Riesenfrosch
+%%%%
+the bullfrog
+{m}der Ochsenfrosch
+%%%%
+the spiny frog
+{m}der Stachelfrosch
+%%%%
+the blink frog
+{m}der Blinzelfrosch
+%%%%
+the barachi
+{m}der Barachi
+%%%%
+the floating eye
+{n}das schwebende Auge
+%%%%
+the glowing orange brain
+{n}das orange leuchtende Gehirn
+%%%%
+the great orb of eyes
+{f}die große Kugel der Augen
+%%%%
+the greater orb of eyes
+{f}die größere Kugel der Augen
+%%%%
+the shining eye
+{n}das leuchtende Auge
+%%%%
+the eye of devastation
+{n}das Auge der Verwüstung
+%%%%
+the golden eye
+{n}das goldene Auge
+%%%%
+the ophan
+{m}der Ophan
+%%%%
+the manticore
+{m}der Mantikor
+%%%%
+the minotaur
+{m}der Minotaur
+%%%%
+the sphinx
+{f}die Sphinx
+%%%%
+the harpy
+{f}die Harpyie
+%%%%
+the mutant beast
+{n}das Mutantenbiest
+%%%%
+the ancestor
+{m}der Ahne
+%%%%
+the knight
+{m}der Ritter
+%%%%
+the battlemage
+{m}der Kampfmagier
+%%%%
+the hexer
+{m}der Hexer
+%%%%
+the jelly
+{n}das Gelee
+%%%%
+the slime creature
+{f}die Schleimkreatur
+%%%%
+the merged slime creature
+{f}die verschmolzene Schleimkreatur
+%%%%
+the azure jelly
+{n}das azurblaue Gelee
+%%%%
+the acid blob
+{m}der Säureklumpen
+%%%%
+the kobold
+{m}der Kobold
+%%%%
+the big kobold
+{m}der große Kobold
+%%%%
+the kobold demonologist
+{m}der Kobold-Dämonologe
+%%%%
+the lich
+{m}der Lich
+%%%%
+the ancient lich
+{m}der uralte Lich
+%%%%
+the antique lich
+{m}der antike Lich
+%%%%
+the revenant
+{m}der Wiedergänger
+%%%%
+the halazid warlock
+{m}der halazidische Hexenmeister
+%%%%
+the mummy
+{f}die Mumie
+%%%%
+the guardian mummy
+{f}die Wächtermumie
+%%%%
+the greater mummy
+{f}die größere Mumie
+%%%%
+the mummy priest
+{m}der Mumienpriester
+%%%%
+the naga
+{m}der Naga
+%%%%
+the naga mage
+{m}der Naga-Magier
+%%%%
+the naga sharpshooter
+{m}der Naga-Scharfschütze
+%%%%
+the naga ritualist
+{m}der Naga-Ritualist
+%%%%
+the naga warrior
+{m}der Naga-Krieger
+%%%%
+the nagaraja
+{m}der Nagaraja
+%%%%
+the ogre
+{m}der Oger
+%%%%
+the two-headed ogre
+{m}der zweiköpfige Oger
+%%%%
+the ogre mage
+{m}der Oger-Magier
+%%%%
+the plant
+{f}die Pflanze
+%%%%
+the demonic plant
+{f}die dämonische Pflanze
+%%%%
+the withered plant
+{f}die verwelkte Pflanze
+%%%%
+the oklob sapling
+{m}der Oklobsetzling
+%%%%
+the oklob plant
+{f}die Oklobpflanze
+%%%%
+the bush
+{m}der Busch
+%%%%
+the burning bush
+{m}der brennende Busch
+%%%%
+the toadstool
+{m}der Giftpilz
+%%%%
+the fungus
+{m}der Pilz
+%%%%
+the ballistomycete
+{m}der Ballistomycete
+%%%%
+the hyperactive ballistomycete
+{m}der hyperaktive Ballistomycete
+%%%%
+the briar patch
+{m}der Dornenstrauch
+%%%%
+the tengu
+{m}der Tengu
+%%%%
+the tengu conjurer
+{m}der Tengu-Zauberer
+%%%%
+the tengu warrior
+{m}der Tengu-Krieger
+%%%%
+the tengu reaver
+{m}der Tengu-Plünderer
+%%%%
+the efreet
+{m}der Ifrit
+%%%%
+the rakshasa
+{m}der Rakshasa
+%%%%
+the dryad
+{f}die Dryade
+%%%%
+the snaplasher vine
+{f}die Peitschenrebe
+%%%%
+the snaplasher vine segment
+{n}das Peitschenrebensegment
+%%%%
+the snake
+{f}die Schlange
+%%%%
+the ball python
+{f}die Königspython
+%%%%
+the adder
+{f}die Kreuzotter
+%%%%
+the water moccasin
+{f}die Wassermokassin
+%%%%
+the black mamba
+{f}die schwarze Mamba
+%%%%
+the sea snake
+{f}die Seeschlange
+%%%%
+the anaconda
+{f}die Anakonda
+%%%%
+the guardian serpent
+{f}die Wächterschlange
+%%%%
+the shock serpent
+{f}die Schockschlange
+%%%%
+the mana viper
+{f}die Manaviper
+%%%%
+the troll
+{m}der Troll
+%%%%
+the iron troll
+{m}der Eisentroll
+%%%%
+the deep troll
+{m}der Tiefentroll
+%%%%
+the deep troll earth mage
+{m}der Tiefentroll-Erdmagier
+%%%%
+the deep troll shaman
+{m}der Tiefentroll-Schamane
+%%%%
+the vampire
+{m}der Vampir
+%%%%
+the vampire knight
+{m}der Vampir-Ritter
+%%%%
+the vampire mage
+{m}der Vampir-Magier
+%%%%
+the jiangshi
+{m}der Jiangshi
+%%%%
+the ghost
+{n}das Gespenst
+%%%%
+the phantom
+{n}das Phantom
+%%%%
+the hungry ghost
+{m}der hungrige Geist
+%%%%
+the flayed ghost
+{m}der geschundene Geist
+%%%%
+the player ghost
+{m}der Spielergeist
+%%%%
+the shadow
+{m}der Schatten
+%%%%
+the silent spectre
+{n}das stille Gespenst
+%%%%
+the drowned soul
+{f}die ertrunkene Seele
+%%%%
+the wraith
+{m}der Spuk
+%%%%
+the shadow wraith
+{m}der Schattenspuk
+%%%%
+the freezing wraith
+{m}der Frostspuk
+%%%%
+the eidolon
+{m}der Eidolon
+%%%%
+the phantasmal warrior
+{m}der phantastische Krieger
+%%%%
+the large abomination
+{f}die große Abscheulichkeit
+%%%%
+the thrashing horror
+{n}das prügelnde Grauen
+%%%%
+the tentacled monstrosity
+{n}das Tentakelmonstrum
+%%%%
+the Orb Guardian
+{m}der Kugelwächter
+%%%%
+the tentacled starspawn
+{f}die Tentakelsternenbrut
+%%%%
+the starspawn tentacle
+{m}der Sternenbruttentakel
+%%%%
+the starspawn tentacle segment
+{n}das Sternenbruttentakelsegment
+%%%%
+the starcursed mass
+{f}die sternenverfluchte Masse
+%%%%
+the dream sheep
+{n}das Traumschaf
+%%%%
+the yak
+{n}das Yak
+%%%%
+the death yak
+{n}das Todesyak
+%%%%
+the catoblepas
+{m}der Katoblepas
+%%%%
+the elephant
+{m}der Elefant
+%%%%
+the dire elephant
+{m}der Schreckenselefant
+%%%%
+the hellephant
+{m}der Höllefant
+%%%%
+the apis
+{n}das Apis
+%%%%
+the ice beast
+{f}die Eisbestie
+%%%%
+the sky beast
+{f}die Himmelsbestie
+%%%%
+the zombie
+{m}der Zombie
+%%%%
+the skeleton
+{n}das Skelett
+%%%%
+the simulacrum
+{n}das Simulacrum
+%%%%
+the small zombie
+{m}der kleine Zombie
+%%%%
+the small skeleton
+{n}das kleine Skelett
+%%%%
+the small simulacrum
+{n}das kleine Simulacrum
+%%%%
+the large zombie
+{m}der große Zombie
+%%%%
+the large skeleton
+{n}das große Skelett
+%%%%
+the large simulacrum
+{n}das große Simulacrum
+%%%%
+the spectral thing
+{n}das spektrale Ding
+%%%%
+the electric eel
+{m}der Zitteraal
+%%%%
+the kraken
+{m}der Krake
+%%%%
+the tentacle
+{n}das Tentakel
+%%%%
+the tentacle segment
+{n}das Tentakelsegment
+%%%%
+the octopode
+{m}der Oktopode
+%%%%
+the lava snake
+{f}die Lavaschlange
+%%%%
+the salamander
+{m}der Salamander
+%%%%
+the salamander mystic
+{m}der Salamander-Mystiker
+%%%%
+the Hellbinder
+{m}der Höllenbinder
+%%%%
+the Cloud Mage
+{m}der Wolkenmagier
+%%%%
+the player
+{m}der Spieler
+%%%%
+the player illusion
+{f}die Spieler-Illusion
+%%%%
+the dancing weapon
+{f}die tanzende Waffe
+%%%%
+the spectral weapon
+{f}die Spektralwaffe
+%%%%
+the eldritch tentacle
+{n}das unheimliche Tentakel
+%%%%
+the eldritch tentacle segment
+{n}das unheimliche Tentakelsegment
+%%%%
+the demonspawn
+{f}die Dämonenbrut
+%%%%
+the monstrous demonspawn
+{f}die monströse Dämonenbrut
+%%%%
+the gelid demonspawn
+{f}die gelide Dämonenbrut
+%%%%
+the infernal demonspawn
+{f}die höllische Dämonenbrut
+%%%%
+the torturous demonspawn
+{f}die quälende Dämonenbrut
+%%%%
+the blood saint
+{m}der Blutheilige
+%%%%
+the warmonger
+{m}der Kriegstreiber
+%%%%
+the corrupter
+{m}der Korruptor
+%%%%
+the black sun
+{f}die schwarze Sonne
+%%%%
+the crimson imp
+{n}das karminrote Teufelchen
+%%%%
+the quasit
+{m}der Quasit
+%%%%
+the white imp
+{n}das weiße Teufelchen
+%%%%
+the ufetubus
+{m}der Ufetubus
+%%%%
+the iron imp
+{n}das Eisenteufelchen
+%%%%
+the shadow imp
+{n}das Schattenteufelchen
+%%%%
+the rust devil
+{m}der Rostteufel
+%%%%
+the orange demon
+{m}der orange Dämon
+%%%%
+the red devil
+{m}der rote Teufel
+%%%%
+the hellwing
+{m}der Höllenflügel
+%%%%
+the ice devil
+{m}der Eisteufel
+%%%%
+the chaos spawn
+{f}die Chaosbrut
+%%%%
+the sun demon
+{m}der Sonnendämon
+%%%%
+the soul eater
+{m}der Seelenfresser
+%%%%
+the smoke demon
+{m}der Rauchdämon
+%%%%
+the neqoxec
+{m}der Neqoxec
+%%%%
+the ynoxinul
+{m}der Ynoxinul
+%%%%
+the sixfirhy
+{m}der Sixfirhy
+%%%%
+the shadow demon
+{m}der Schattendämon
+%%%%
+the green death
+{m}der grüne Tod
+%%%%
+the blizzard demon
+{m}der Blizzarddämon
+%%%%
+the balrug
+{m}der Balrog
+%%%%
+the cacodemon
+{m}der Kakodämon
+%%%%
+the hell beast
+{n}das Höllenbiest
+%%%%
+the hellion
+{m}der Teufelsbraten
+%%%%
+the reaper
+{m}der Schnitter
+%%%%
+the lorocyproca
+{f}die Lorocyproca
+%%%%
+the tormentor
+{m}der Peiniger
+%%%%
+the Brimstone Fiend
+{m}der Schwefelunhold
+%%%%
+the Ice Fiend
+{m}der Eisunhold
+%%%%
+the Tzitzimitl
+{m}der Tzitzimitl
+%%%%
+the Hell Sentinel
+{m}der Höllenwächter
+%%%%
+the Executioner
+{m}der Scharfrichter
+%%%%
+the animated tree
+{m}der animierte Baum
+%%%%
+the golem
+{m}der Golem
+%%%%
+the saltling
+{m}der Salzling
+%%%%
+the peacekeeper
+{m}der Friedenshüter
+%%%%
+the iron golem
+{m}der Eisengolem
+%%%%
+the crystal guardian
+{m}der Kristallwächter
+%%%%
+the toenail golem
+{m}der Zehennagelgolem
+%%%%
+the electric golem
+{m}der Blitzgolem
+%%%%
+the ushabti
+{f}die Uschebti
+%%%%
+the guardian golem
+{m}der Wächtergolem
+%%%%
+the flesh golem
+{m}der Fleischgolem
+%%%%
+the spellforged servitor
+{m}der zaubergeschmiedete Diener
+%%%%
+the ice statue
+{f}die Eisstatue
+%%%%
+the obsidian statue
+{f}die Obsidianstatue
+%%%%
+the orange crystal statue
+{f}die orange Kristallstatue
+%%%%
+the statue
+{f}die Statue
+%%%%
+the training dummy
+{f}die Trainingspuppe
+%%%%
+the pillar of salt
+{f}die Salzsäule
+%%%%
+the block of ice
+{m}der Eisblock
+%%%%
+the diamond obelisk
+{m}der Diamantobelisk
+%%%%
+the lightning spire
+{m}der Blitzturm
+%%%%
+the gargoyle
+{m}der Gargoyle
+%%%%
+the war gargoyle
+{m}der Kriegsgargoyle
+%%%%
+the molten gargoyle
+{m}der geschmolzene Gargoyle
+%%%%
+the pandemonium lord
+{m}der Pandämoniumsfürst
+%%%%
+the hell lord
+{m}der Höllenfürst
+%%%%
+the ball lightning
+{m}der Kugelblitz
+%%%%
+the ballistomycete spore
+{f}die Ballistomycetenspore
+%%%%
+the lost soul
+{f}die verlorene Seele
+%%%%
+the lurking horror
+{n}das lauernde Grauen
+%%%%
+the orb of fire
+{f}die Feuerkugel
+%%%%
+the orb of destruction
+{f}die Kugel der Zerstörung
+%%%%
+the wavering orb of destruction
+{f}die schwankende Kugel der Zerstörung
+%%%%
+the fulminant prism
+{n}das fulminante Prisma
+%%%%
+the wretched star
+{m}der elende Stern
+%%%%
+the battlesphere
+{f}die Gefechtssphäre
+%%%%
+the death cob
+{m}der Todeskolben
+%%%%
+the moon troll
+{m}der Mondtroll
+%%%%
+the foxfire
+{n}das Fuchsfeuer
+%%%%
+the nameless horror
+{n}das namenlose Grauen
+%%%%
+the will-o-the-wisp
+{n}das Irrlicht
+%%%%
+the bunyip
+{m}der Bunyip
+%%%%
+the boulder beetle
+{m}der Rollsteinkäfer
+%%%%
+the cane toad
+{f}die Aga-Kröte
+%%%%
+the goliath frog
+{m}der Goliathfrosch
+%%%%
+the fenstrider witch
+{f}die Fennläuferhexe
+%%%%
+the palentonga
+{m}der Palentonga
+%%%%
+the royal mummy
+{f}die königliche Mumie
+%%%%
+the eleionoma
+{f}die Eleionoma
+%%%%
+the lemure
+{m}der Lemur
+%%%%
+the endoplasm
+{n}das Endoplasma
+%%%%
+the rockslime
+{m}der Felsenschleim
+%%%%
+the quicksilver ooze
+{m}der Quecksilberschleim
+%%%%
+the kobold brigand
+{m}der Kobold-Brigant
+%%%%
+the dread lich
+{m}der grauenhafte Lich
+%%%%
+the djinni
+{m}der Dschinn
+%%%%
+the salamander tyrant
+{m}der Salamander-Tyrann
+%%%%
+the animated armour
+{f}die animierte Rüstung
+%%%%
+# Test monsters can be created in Arena
+%%%%
+the test spawner
+{m}der Test-Erzeuger
+%%%%
+the test statue
+{f}die Test-Statue
+%%%%
+the test blob
+{m}der Test-Klumpen
+%%%%
+the sensed monster
+{n}das gespürte Monster
+%%%%
+the friendly sensed monster
+{n}das freundliche gespürte Monster
+%%%%
+the trivial sensed monster
+{n}das triviale gespürte Monster
+%%%%
+the easy sensed monster
+{n}das leichte gespürte Monster
+%%%%
+the tough sensed monster
+{n}das harte gespürte Monster
+%%%%
+the nasty sensed monster
+{n}das furchtbare gespürte Monster
+%%%%
+the spectre
+{f}die Spukgestalt
+%%%%
+the centipede
+{m}der Tausendfüßer
+%%%%
+the mad acolyte of Lugonu
+{m}der verrückte Akolyth von Lugonu
+%%%%
+the bog mummy
+{f}die Moormumie
+%%%%
+the lunar statue
+{f}die Mondstatue
+%%%%
+the charred statue
+{f}die verkohlte Statue
+%%%%
+the frost-covered statue
+{f}die frostbedeckte Statue
+%%%%
+the malarious merfolk avatar
+{m}der malariaverseuchte Meerwesen-Avatar
+%%%%
+the conjurer statue
+{f}die Konjuranten-Statue
+%%%%
+the drunken dwarf
+{m}der betrunkene Zwerg
+%%%%
+the greater air elemental
+{m}der größere Luftelementar
+%%%%
+the giant anaconda
+{f}die gigantische Anakonda
+%%%%
+the fire elementalist statue
+{f}die Feuermagier-Statue
+%%%%
+the water elementalist statue
+{f}die Wassermagier-Statue
+%%%%
+the earth elementalist statue
+{f}die Erdmagier-Statue
+%%%%
+the air elementalist statue
+{f}die Luftmagier-Statue
+%%%%
+the pristine statue
+{f}die makellose Statue
+%%%%
+the zot statue
+{f}die Zot-Statue
+%%%%
+the archer statue
+{f}die Bogenschützen-Statue
+%%%%
+
+
+# subtypes of mutant beast
+%%%%
+the batfire beast
+{n}das Fledermausfeuerbiest
+%%%%
+the batox beast
+{n}das Fledermausochsenbiest
+%%%%
+the batshock beast
+{n}das Fledermausschockbiest
+%%%%
+the batsting beast
+{n}das Fledermausstichbiest
+%%%%
+the batweird beast
+{n}das Fledermausbizarrbiest
+%%%%
+the firebat beast
+{n}das Feuerfledermausbiest
+%%%%
+the fireox beast
+{n}das Feuerochsenbiest
+%%%%
+the fireshock beast
+{n}das Feuerschockbiest
+%%%%
+the firesting beast
+{n}das Feuerstichbiest
+%%%%
+the fireweird beast
+{n}das Feuerbizarrbiest
+%%%%
+the oxbat beast
+{n}das Ochsenfledermausbiest
+%%%%
+the oxfire beast
+{n}das Ochsenfeuerbiest
+%%%%
+the oxshock beast
+{n}das Ochsenschockbiest
+%%%%
+the oxsting beast
+{n}das Ochsenstichbiest
+%%%%
+the oxweird beast
+{n}das Ochsenbizarrbiest
+%%%%
+the shockbat beast
+{n}das Schockfledermausbiest
+%%%%
+the shockfire beast
+{n}das Schockfeuerbiest
+%%%%
+the shockox beast
+{n}das Schockochsenbiest
+%%%%
+the shocksting beast
+{n}das Schockstichbiest
+%%%%
+the shockweird beast
+{n}das Schockbizarrbiest
+%%%%
+the stingbat beast
+{n}das Stichfledermausbiest
+%%%%
+the stingfire beast
+{n}das Stichfeuerbiest
+%%%%
+the stingox beast
+{n}das Stichochsenbiest
+%%%%
+the stingshock beast
+{n}das Stichschockbiest
+%%%%
+the stingweird beast
+{n}das Stichbizarrbiest
+%%%%
+the weirdbat beast
+{n}das bizarre Fledermausbiest
+%%%%
+the weirdfire beast
+{n}das bizarre Feuerbiest
+%%%%
+the weirdox beast
+{n}das bizarre Ochsenbiest
+%%%%
+the weirdshock beast
+{n}das bizarre Schockbiest
+%%%%
+the weirdsting beast
+{n}das bizarre Stichbiest
+%%%%
+
+# unseen monster
+%%%%
+something
+etwas
+%%%%
+something unseen
+etwas Unsichtbares
+%%%%
+# avoid "etwas, das du nicht sehen kannst" because it would require a following komma in some situations and not others
+something you cannot see
+etwas Unsichtbares
+%%%%
+
+# derived monsters containing the name of the original monster
+# "elf zombie", "orc skeleton", etc.
+%%%%
+the @monster@ zombie
+{m}der Zombie {gen}@a_monster@
+%%%%
+the @monster@ skeleton
+{n}das Skelett {gen}@a_monster@
+%%%%
+the @monster@ simulacrum
+{n}das Simulacrum {gen}@a_monster@
+%%%%
+
+# irregular derived monsters
+
+%%%%
+the Lernaean hydra zombie
+{m}der Zombie der Lernäischen Hydra
+%%%%
+the Lernaean hydra skeleton
+{n}das Skelett der Lernäischen Hydra
+%%%%
+the Lernaean hydra simulacrum
+{n}das Simulacrum der Lernäischen Hydra
+%%%%
+
+##################
+# Sprint Monsters
+##################
+
+%%%%
+the kamikaze kobold
+{m}der Kamikaze-Kobold
+%%%%
+the orb golem
+{m}der Kugelgolem
+%%%%
+the orb of ice
+{f}die Kugel des Eises
+%%%%
+the orb of electricity
+{f}die Kugel der Elektrizität
+%%%%
+the naga warlord
+{m}der Naga-Kriegsherr
+%%%%
+the witch
+{f}die Hexe
+%%%%
+the dire wolf spider
+{f}die Schreckenswolfspinne
+%%%%
+the phase spider
+{f}die Phasenspinne
+%%%%
+the dimme
+{f}die Dimme
+%%%%
+the sulfuric acid blob
+{m}der Schwefelsäureklumpen
+%%%%
+the vault guard captain
+{m}der Haupttresorwächter
+%%%%
+the Master Blaster
+{m}der Master-Blaster
+%%%%
+the oklob sapling priest
+{m}der Oklobsetzlingspriester
+%%%%
+the oklob sapling wizard
+{m}der Oklobsetzlingszauberer
+%%%%
+the oklob plant conjurer
+{m}der Oklobpflanzenkonjurant
+%%%%
+the oklob plant summoner
+{m}der Oklobpflanzenbeschwörer
+%%%%
+the oklob plant shifter
+{m}der Oklobpflanzenverschieber
+%%%%
+the oklob plant meteorologist
+{m}der Oklobpflanzenmeteorologe
+%%%%
+the oklob plant demonologist
+{m}der Oklobpflanzendämonologe
+%%%%
+the oklob plant annihilator
+{m}der Oklobpflanzenvernichter
+%%%%
+the bag of meat
+{m}der Fleischklops
+%%%%
+the meat berserker
+{m}der Fleischberserker
+%%%%
+the tyrant
+{m}der Tyrann
+%%%%
+the meat hydra
+{f}die Fleisch-Hydra
+%%%%
+the dread
+{m}der Schrecken
+%%%%
+the destroyer
+{m}der Zerstörer
+%%%%
+the scourge
+{f}die Geißel
+%%%%
+the sculptor of flesh
+{m}der Bildhauer des Fleisches
+%%%%
+the observer
+{m}der Beobachter
+%%%%
+the accursed
+{m}der Verfluchte
+%%%%
+the vile
+{m}der Niederträchtige
+%%%%
+the meat beast
+{f}die Fleischbestie
+%%%%
+the wretched soul
+{f}die unglückliche Seele
+%%%%
+the fleshlord
+{m}der Fleischlord
+%%%%

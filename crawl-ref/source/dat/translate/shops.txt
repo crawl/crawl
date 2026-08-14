@@ -1,0 +1,421 @@
+###############################################################################
+#
+# Translations for shop names
+#
+###############################################################################
+
+###################################################################
+# These shop types are invariable, apart from the owner's name
+###################################################################
+
+%%%%
+@owner@'s General Store
+
+%%%%
+@owner@'s Distillery
+
+%%%%
+@owner@'s Assorted Antiques
+
+%%%%
+
+###################################################################
+# These shop types can be called Shop, Shoppe, Boutique or Emporium
+###################################################################
+
+%%%%
+@owner@'s Weapon Shop
+
+%%%%
+@owner@'s Antique Weapon Shop
+
+%%%%
+@owner@'s Armour Shop
+
+%%%%
+@owner@'s Antique Armour Shop
+
+%%%%
+@owner@'s Jewellery Shop
+
+%%%%
+@owner@'s Magic Scroll Shop
+
+%%%%
+@owner@'s Book Shop
+
+%%%%
+@owner@'s Gadget Shop
+
+%%%%
+
+%%%%
+@owner@'s Weapon Shoppe
+
+%%%%
+@owner@'s Antique Weapon Shoppe
+
+%%%%
+@owner@'s Armour Shoppe
+
+%%%%
+@owner@'s Antique Armour Shoppe
+
+%%%%
+@owner@'s Jewellery Shoppe
+
+%%%%
+@owner@'s Magic Scroll Shoppe
+
+%%%%
+@owner@'s Book Shoppe
+
+%%%%
+@owner@'s Gadget Shoppe
+
+%%%%
+
+%%%%
+@owner@'s Weapon Boutique
+
+%%%%
+@owner@'s Antique Weapon Boutique
+
+%%%%
+@owner@'s Armour Boutique
+
+%%%%
+@owner@'s Antique Armour Boutique
+
+%%%%
+@owner@'s Jewellery Boutique
+
+%%%%
+@owner@'s Magic Scroll Boutique
+
+%%%%
+@owner@'s Book Boutique
+
+%%%%
+@owner@'s Gadget Boutique
+
+%%%%
+
+%%%%
+@owner@'s Weapon Emporium
+
+%%%%
+@owner@'s Antique Weapon Emporium
+
+%%%%
+@owner@'s Armour Emporium
+
+%%%%
+@owner@'s Antique Armour Emporium
+
+%%%%
+@owner@'s Jewellery Emporium
+
+%%%%
+@owner@'s Magic Scroll Emporium
+
+%%%%
+@owner@'s Book Emporium
+
+%%%%
+@owner@'s Gadget Emporium
+
+%%%%
+
+################################
+# Specialty shops from .des files
+################################
+%%%%
+# potions of curing
+Zin's Purification Station
+
+%%%%
+# artefacts at high prices
+Gozag's Platinum Reserve
+
+%%%%
+# damaged weapons and armour
+The Legendary @owner@'s Legendary Smithy
+
+%%%%
+# only appears in shoals
+@owner@'s Merfolk Weapons
+
+%%%%
+# only appears in shoals
+@owner@'s Merfolk Armours
+
+%%%%
+# only appears in shoals
+@owner@'s Merfolk Magic
+
+%%%%
+# only appears in shoals, sells !flight and ?teleport
+@owner@'s Visitors' Centre
+
+%%%%
+# only appears in Elven Halls, sells fire-themed items
+@owner@'s Elven Fire
+
+%%%%
+# poison-themed items
+@owner@'s Serpentskin Sales
+
+%%%%
+# earth magic, digging, tremorstones
+@owner@'s Pet Rocks
+
+%%%%
+# vampiric items and necromancy
+@owner@'s Blood Bar
+
+%%%%
+# necromancy, vampric/draining/demon weapons
+@owner@'s Blasphemy Boutique
+
+%%%%
+# necromancy, vampric/draining/demon weapons
+@owner@'s Evil Emporium
+
+%%%%
+# necromancy, vampric/draining/demon weapons
+@owner@'s Profane Products
+
+%%%%
+# necromancy, vampric/draining/demon weapons
+@owner@'s Sacrilege Store
+
+%%%%
+# necromancy, vampric/draining/demon weapons
+@owner@'s Wicked Wares
+
+%%%%
+# curing, healing, silver
+@owner@'s Hallowed Reliquary
+
+%%%%
+# barding
+@owner@'s Specialty Armours
+
+%%%%
+# destructive magic
+@owner@'s Demolitions Depot
+
+%%%%
+# elemental magic and elemental evokables
+@owner@'s Elemental Accessories
+
+%%%%
+# spellbooks
+@owner@'s One-of-a-Kind Books
+
+%%%%
+# randarts
+@owner@'s Antique Artefacts
+
+%%%%
+# sounds like a travel agent, is on an island and sells escape items like ?teleport, !haste, etc.
+@owner@'s Island Escapes
+
+%%%%
+# transmutations and mutations
+@owner@'s Changing Room
+
+%%%%
+# flaming weapons
+@owner@'s Hydra Hut
+
+%%%%
+# sells damaged weapons and armour
+@owner@'s Lightly-Used Armoury
+
+%%%%
+# items with ponderous ego
+Cheibriados's Comfort Zone
+
+%%%%
+# weapons and spells that damage multiple targets
+@owner@'s Mayhem Merchandise
+
+%%%%
+# heavy items (e.g. giant club, crystal plate)
+@owner@'s Mass Market
+
+%%%%
+# only appears on Zot:5
+@owner@'s Last-Chance Deals
+
+%%%%
+# has a chance to have good items at low prices
+@owner@'s CLEARANCE SALE! EVERYTHING MUST GO!
+
+%%%%
+# thrown and ranged weapons
+@owner@'s Firing Range
+
+%%%%
+# wands and misc. evokables
+@owner@'s Gadget Gallery
+
+%%%%
+# double-meaning: wands that have more charges plus a higher price
+@owner@'s Overcharged Wands
+
+%%%%
+# manuals
+@owner@'s Self-Improvement Boutique
+
+%%%%
+# amulets, scarves, cloaks
+@owner@'s Neck Hole
+
+%%%%
+# actually just a general store
+@owner@'s Specific Store
+
+%%%%
+# potions of mutation
+@owner@'s Miraculous Elixirs
+
+%%%%
+
+##################
+# alphashops.des
+##################
+# Shops that sell items whose English names all start with the matching letter.
+# Any initial class description (amulet, book, manual, potion, ring, scroll,
+# staff, wand) or unit of measurement (pair) is ignored.
+# (for example, "staff of air" counts as A, "scroll of blinking" counts as B, etc.)
+%%%%
+@owner@'s Alliterative Accessories
+
+%%%%
+@owner@'s Bounteous Boutique
+
+%%%%
+@owner@'s Commerce Corner
+
+%%%%
+@owner@'s Desiderata Depot
+
+%%%%
+@owner@'s Eclectic Emporium
+
+%%%%
+@owner@'s Fabulous Fripperies
+
+%%%%
+@owner@'s Goods Gallery
+
+%%%%
+@owner@'s Humungous Hoard
+
+%%%%
+@owner@'s Incredible Inventory
+
+%%%%
+@owner@'s Jolly Junkyard
+
+%%%%
+@owner@'s Killer Kiosk
+
+%%%%
+@owner@'s Luxury Loot
+
+%%%%
+@owner@'s Merry Market
+
+%%%%
+@owner@'s Needful Niceties
+
+%%%%
+@owner@'s Offbeat Offerings
+
+%%%%
+@owner@'s Practical Paraphernalia
+
+%%%%
+@owner@'s Quotidian Quintessences
+
+%%%%
+@owner@'s Retail Resort
+
+%%%%
+@owner@'s Superlative Supplies
+
+%%%%
+@owner@'s Tempting Trifles
+
+%%%%
+@owner@'s Unparalleled Utilities
+
+%%%%
+@owner@'s Vending Venue
+
+%%%%
+@owner@'s Whimsical Warehouse
+
+%%%%
+@owner@'s Xenial Xenodochy
+
+%%%%
+@owner@'s Yearning Yield
+
+%%%%
+@owner@'s Zaibatsu Zone
+
+%%%%
+
+##################
+# Dungeon Sprint
+##################
+%%%%
+# scrolls of identify
+@owner@'s Identification Station
+
+%%%%
+# spellbooks
+@owner@'s Must-Have Magic
+
+%%%%
+# potions of healing and curing
+@owner@'s Do-It-Yourself Clinic
+
+%%%%
+# artefact jewellery
+@owner@'s Jewellery
+
+%%%%
+# artefact armour
+@owner@'s Advanced Armour
+
+%%%%
+# mundane armour
+@owner@'s Basic Armour
+
+%%%%
+# magical staves
+@owner@'s Staff Store
+
+%%%%
+# mundane weapons
+@owner@'s Weapon Rack
+
+%%%%
+# potions of experience
+@owner@'s Bottled Wisdom
+
+%%%%
+# quad damage, heal wounds, haste
+@owner@'s Premium Goods
+
+%%%%
+# mundane rings and amulets
+@owner@'s Miscellaneous Merchandise
+
+%%%%

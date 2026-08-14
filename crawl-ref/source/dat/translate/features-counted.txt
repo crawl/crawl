@@ -1,0 +1,208 @@
+###############################################################################
+#
+# Translations for dungeon features (counted)
+#
+# Mostly used in discovery message ("Found %s.").
+# A handful are also used in dungeon overview screen.
+#
+###############################################################################
+
+
+################################
+# Count of 1
+################################
+# Used on the dungeon overview screen and/or magic mapping
+
+%%%%
+1 shop/portal
+
+%%%%
+1 altar
+
+%%%%
+1 runed door
+
+%%%%
+1 runed translucent door
+
+%%%%
+1 transporter
+
+%%%%
+
+################################
+# Generic + misc
+################################
+%%%%
+%d shops
+
+%%%%
+%d portals
+
+%%%%
+%d shops/portals
+
+%%%%
+%d altars
+
+%%%%
+%d stairs
+
+%%%%
+%d runed doors
+
+%%%%
+%d runed translucent doors
+
+%%%%
+%d transporters
+
+%%%%
+
+################################
+# Stairs and hatches
+################################
+%%%%
+%d stone staircases leading down
+
+%%%%
+%d stone staircases leading up
+
+%%%%
+# can get multiple in tutorial 3 at least (and maybe some specific entrance vaults)
+%d staircases leading out of the dungeon
+
+%%%%
+%d exits from the tutorial
+
+%%%%
+
+%%%%
+%d escape hatches
+
+%%%%
+%d escape hatches in the floor
+
+%%%%
+%d escape hatches in the ceiling
+
+%%%%
+
+################################
+# Non-unique branch portals
+################################
+%%%%
+%d gateways to Hell
+
+%%%%
+%d gateways back into the Dungeon
+
+%%%%
+%d one-way gates to the infinite horrors of the Abyss
+
+%%%%
+%d exits through the horrors of the Abyss
+
+%%%%
+%d gateways leading deeper into the Abyss
+
+%%%%
+%d gateways leading out of the Abyss
+
+%%%%
+%d one-way gates leading to the halls of Pandemonium
+
+%%%%
+%d gates leading to another region of Pandemonium
+
+%%%%
+%d gates leading out of Pandemonium
+
+%%%%
+
+################################
+# Altars
+################################
+# it's at least theoretically possible to discover multiple of any altar simultaneously
+%%%%
+%d glowing silver altars of Zin
+
+%%%%
+%d glowing golden altars of the Shining One
+
+%%%%
+%d ancient bone altars of Kikubaaqudgha
+
+%%%%
+%d basalt altars of Yredelemnul
+
+%%%%
+%d shimmering altars of Xom
+
+%%%%
+%d radiant altars of Vehumet
+
+%%%%
+%d iron altars of Okawaru
+
+%%%%
+%d burning altars of Makhleb
+
+%%%%
+%d shimmering blue altars of Sif Muna
+
+%%%%
+%d bloodstained altars of Trog
+
+%%%%
+%d sparkling altars of Nemelex Xobeh
+
+%%%%
+%d white marble altars of Elyvilon
+
+%%%%
+%d corrupted altars of Lugonu
+
+%%%%
+%d roughly hewn altars of Beogh
+
+%%%%
+%d viscous altars of Jiyva
+
+%%%%
+%d blossoming altars of Fedhas
+
+%%%%
+%d snail-covered altars of Cheibriados
+
+%%%%
+%d broken altars of Ashenzari
+
+%%%%
+%d shadowy altars of Dithmenos
+
+%%%%
+%d opulent altars of Gozag
+
+%%%%
+%d stormy altars of Qazlal
+
+%%%%
+%d sacrificial altars of Ru
+
+%%%%
+%d faded altars of an unknown god
+
+%%%%
+%d oddly glowing altars of Pakellas
+
+%%%%
+%d hide-covered altars of Uskayaw
+
+%%%%
+%d hazy altars of Hepliaklqana
+
+%%%%
+%d ornate altars of the Wu Jian Council
+
+%%%%
