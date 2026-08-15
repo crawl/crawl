@@ -6,7 +6,9 @@
 #pragma once
 
 #include <string>
+#include <vector>
 using std::string;
+using std::vector;
 
 // check if regex is valid
 bool regexp_valid(const string& pattern);
@@ -25,3 +27,5 @@ string regexp_search(const string& s, const string& pattern, bool ignore_case = 
 
 // replace all instance of pattern with the specified replacement string
 string regexp_replace(const string& s, const string& pattern, const string& subst);
+
+vector<string> regexp_capture(const string &s, const string& pattern);

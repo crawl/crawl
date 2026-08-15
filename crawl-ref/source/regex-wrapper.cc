@@ -358,4 +358,29 @@ string regexp_replace(const string& s, const string& pattern, const string& subs
     }
 }
 
+vector<string> regexp_capture(const string &s, const string& pattern)
+{
+    vector<string> results;
+
+    try
+    {
+        wstring ws = _conv.from_bytes(s);
+
+        wregex& wre = _compile_pattern(pattern, false);
+        wsmatch wmatch;
+        if (regex_search(ws, wmatch, wre))
+        {
+            // index 0 is the full match, capture groups start from 1
+            for (size_t i = 1; i < wmatch.size(); i++)
+                results.push_back(_conv.to_bytes(wmatch[i].str()));
+        }
+    }
+    catch (exception& e)
+    {
+        _warn_bad_regex(pattern);
+    }
+
+    return results;
+}
+
 #endif
