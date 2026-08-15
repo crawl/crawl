@@ -554,74 +554,74 @@ Abyss:@num@
 # on branch level
 ##############################################
 %%%%
-on level %d of the Dungeon
+on level @num@ of the Dungeon
 
 %%%%
-on level %d of the Orcish Mines
+on level @num@ of the Orcish Mines
 
 %%%%
-on level %d of the Elven Halls
+on level @num@ of the Elven Halls
 
 %%%%
-on level %d of the Lair of Beasts
+on level @num@ of the Lair of Beasts
 
 %%%%
-on level %d of the Swamp
+on level @num@ of the Swamp
 
 %%%%
-on level %d of the Shoals
+on level @num@ of the Shoals
 
 %%%%
-on level %d of the Snake Pit
+on level @num@ of the Snake Pit
 
 %%%%
-on level %d of the Spider Nest
+on level @num@ of the Spider Nest
 
 %%%%
-on level %d of the Pits of Slime
+on level @num@ of the Pits of Slime
 
 %%%%
-on level %d of the Vaults
+on level @num@ of the Vaults
 
 %%%%
-on level %d of the Crypt
+on level @num@ of the Crypt
 
 %%%%
-on level %d of the Tomb of the Ancients
+on level @num@ of the Tomb of the Ancients
 
 %%%%
-on level %d of the Depths
+on level @num@ of the Depths
 
 %%%%
-on level %d of the Vestibule of Hell
+on level @num@ of the Vestibule of Hell
 
 %%%%
-on level %d of Tartarus
+on level @num@ of Tartarus
 
 %%%%
-on level %d of Gehenna
+on level @num@ of Gehenna
 
 %%%%
-on level %d of Cocytus
+on level @num@ of Cocytus
 
 %%%%
-on level %d of the Iron City of Dis
+on level @num@ of the Iron City of Dis
 
 %%%%
-on level %d of Pandemonium
+on level @num@ of Pandemonium
 
 %%%%
-on level %d of the Realm of Zot
+on level @num@ of the Realm of Zot
 
 %%%%
-on level %d of the Abyss
+on level @num@ of the Abyss
 
 %%%%
-on level %d of a ziggurat
+on level @num@ of a ziggurat
 
 %%%%
 # should be "in a sewer", but for some reason, we get this in hiscores
-on level %d of a sewer
+on level @num@ of a sewer
 
 %%%%
 

@@ -276,15 +276,15 @@ missiles
 %%%%
 
 %%%%
-%d with wands
+@num@ with wands
 
 %%%%
-%d polearms
+@num@ polearms
 
 %%%%
-%d launchers
+@num@ launchers
 
 %%%%
-%d missiles
+@num@ missiles
 
 %%%%

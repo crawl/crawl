@@ -277,15 +277,15 @@ Geschosse
 %%%%
 
 %%%%
-%d with wands
-%d mit Zauberstäben
+@num@ with wands
+@num@ mit Zauberstäben
 %%%%
-%d polearms
-{pl}%d Stangenwaffen
+@num@ polearms
+{pl}@num@ Stangenwaffen
 %%%%
-%d launchers
-{pl}%d Werfer
+@num@ launchers
+{pl}@num@ Werfer
 %%%%
-%d missiles
-{pl}%d Geschosse
+@num@ missiles
+{pl}@num@ Geschosse
 %%%%

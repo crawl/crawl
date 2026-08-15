@@ -949,8 +949,8 @@ Hydragestalt
 # duplicate: hydra
 %%%%
 # unarmed attack
-Bite (x%d)
-Biss (x%d)
+Bite (x@num@)
+Biss (x@num@)
 %%%%
 
 ################################

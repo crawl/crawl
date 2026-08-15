@@ -210,8 +210,8 @@ Dieser Gegenstand verstärkt deine Konjurationsmagie.
 
 # maximum enchantment - applies to weapons and armour
 %%%%
-It can be maximally enchanted to +%d.
-Dieser Gegenstand kann maximal bis zu +%d verzaubert werden.
+It can be maximally enchanted to +@num@.
+Dieser Gegenstand kann maximal bis zu +@num@ verzaubert werden.
 %%%%
 It cannot be enchanted further.
 Dieser Gegenstand kann nicht weiter verzaubert werden.
@@ -226,14 +226,14 @@ Dieses uralte Artefakt kann weder durch magische noch weltliche Mittel veränder
 #################################
 
 %%%%
-Base accuracy: %+d  Base damage: %d  Base attack delay: %.1f
-Grundgenauigkeit: %+d  Grundschaden: %d  Grundangriffsverzögerung: %.1f
+Base accuracy: %+d  Base damage: @num@  Base attack delay: %.1f
+Grundgenauigkeit: %+d  Grundschaden: @num@  Grundangriffsverzögerung: %.1f
 %%%%
-Firing bullets:    Base damage: %d
-Feuern von Kugeln:    Grundschaden: %d
+Firing bullets:    Base damage: @num@
+Feuern von Kugeln:    Grundschaden: @num@
 %%%%
-Base damage: %d  Base attack delay: %.1f
-Grundschaden: %d  Grundangriffsverzögerung: %.1f
+Base damage: @num@  Base attack delay: %.1f
+Grundschaden: @num@  Grundangriffsverzögerung: %.1f
 %%%%
 It can be evoked to extend its reach.
 Diese Waffe kann evoziert werden, um ihre Reichweite zu erhöhen.
@@ -405,17 +405,17 @@ Dieses Geschoss kann beim Aufprall zerstört werden.
 #################################
 
 %%%%
-Base armour rating: %d
-Grundpanzerungswert: %d
+Base armour rating: @num@
+Grundpanzerungswert: @num@
 %%%%
-Base shield rating: %d
-Grundschildwert: %d
+Base shield rating: @num@
+Grundschildwert: @num@
 %%%%
-Encumbrance rating: %d
-Belastungswert: %d
+Encumbrance rating: @num@
+Belastungswert: @num@
 %%%%
-Evasion: %d
-Ausweichen: %d
+Evasion: @num@
+Ausweichen: @num@
 %%%%
 If you switch to wearing this armour, your AC would increase by @num1@ (@num2@ -> @num3@).
 Wenn du zu dieser Rüstung wechselst, wird deine RK um @num1@ erhöht (@num2@ -> @num3@).
@@ -508,8 +508,8 @@ its wearer takes one free step when moving towards enemies.
 der Träger macht einen freien Schritt, wenn er sich auf Feinde zubewegt.
 %%%%
 # Warlock's Mirror
-With your current SH, it has a %d%% chance to reflect attacks against your willpower and other normally unblockable effects.
-Mit deinem aktuellen Schildwert hat diese Rüstung eine Chance von %d%%, Angriffe gegen deine Willenskraft und andere normalerweise unblockbare Effekte zu reflektieren.
+With your current SH, it has a @num@%% chance to reflect attacks against your willpower and other normally unblockable effects.
+Mit deinem aktuellen Schildwert hat diese Rüstung eine Chance von @num@%%, Angriffe gegen deine Willenskraft und andere normalerweise unblockbare Effekte zu reflektieren.
 %%%%
 
 #################################
@@ -517,11 +517,11 @@ Mit deinem aktuellen Schildwert hat diese Rüstung eine Chance von %d%%, Angriff
 #################################
 
 %%%%
-This weapon's minimum attack delay (%.1f) is reached at skill level %d.
-Die minimale Angriffsverzögerung dieser Waffe (%.1f) wird auf der Fertigkeitsstufe %d erreicht.
+This weapon's minimum attack delay (%.1f) is reached at skill level @num@.
+Die minimale Angriffsverzögerung dieser Waffe (%.1f) wird auf der Fertigkeitsstufe @num@ erreicht.
 %%%%
-This projectile's minimum attack delay (%.1f) is reached at skill level %d.
-Die minimale Angriffsverzögerung dieses Geschosses (%.1f) wird auf der Fertigkeitsstufe %d erreicht.
+This projectile's minimum attack delay (%.1f) is reached at skill level @num@.
+Die minimale Angriffsverzögerung dieses Geschosses (%.1f) wird auf der Fertigkeitsstufe @num@ erreicht.
 %%%%
 # shield penalty
 Skill to remove penalty: @num1@.@num2@
@@ -580,8 +580,8 @@ Dieser Gegenstand reflektiert geblockte Geschosse.
 
 %%%%
 # potion of lignification
-If you quaff this potion your AC would be %d.
-Wenn du diesen Trank trinkst, ist dein RK %d.
+If you quaff this potion your AC would be @num@.
+Wenn du diesen Trank trinkst, ist dein RK @num@.
 %%%%
 If you drink this now, you will no longer be @arg@.
 Wenn du ihn jetzt trinkst, wirst du nicht mehr @arg@ sein.

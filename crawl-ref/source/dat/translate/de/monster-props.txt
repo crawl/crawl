@@ -683,6 +683,6 @@ holding @arg@
 #############################
 
 %%%%
-%d ally target
-%d Ziele Verbündeter
+@num@ ally target
+@num@ Ziele Verbündeter
 %%%%

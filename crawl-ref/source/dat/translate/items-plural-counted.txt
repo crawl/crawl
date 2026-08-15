@@ -5,7 +5,7 @@
 ###############################################################################
 
 %%%%
-%d items
+@num@ items
 
 %%%%
 
@@ -25,53 +25,53 @@
 #################################
 
 %%%%
-%d arrows
+@num@ arrows
 
 %%%%
-%d bolts
+@num@ bolts
 
 %%%%
 # fired by artefact crossbow "Damnation"
-%d damnation bolts
+@num@ damnation bolts
 
 %%%%
-%d darts
+@num@ darts
 
 %%%%
-%d poisoned darts
+@num@ poisoned darts
 
 %%%%
-%d curare-tipped darts
+@num@ curare-tipped darts
 
 %%%%
-%d atropa-tipped darts
+@num@ atropa-tipped darts
 
 %%%%
-%d datura-tipped darts
+@num@ datura-tipped darts
 
 %%%%
-%d stones
+@num@ stones
 
 %%%%
-%d large rocks
+@num@ large rocks
 
 %%%%
-%d sling bullets
+@num@ sling bullets
 
 %%%%
-%d javelins
+@num@ javelins
 
 %%%%
-%d silver javelins
+@num@ silver javelins
 
 %%%%
-%d throwing nets
+@num@ throwing nets
 
 %%%%
-%d boomerangs
+@num@ boomerangs
 
 %%%%
-%d silver boomerangs
+@num@ silver boomerangs
 
 %%%%
 
@@ -97,77 +97,77 @@
 
 # generic
 %%%%
-%d scrolls
+@num@ scrolls
 
 %%%%
 
 # unidentified
 %%%%
-%d scrolls labelled @arg@
+@num@ scrolls labelled @arg@
 
 %%%%
 
 # identified
 %%%%
-%d scrolls of acquirement
+@num@ scrolls of acquirement
 
 %%%%
-%d scrolls of amnesia
+@num@ scrolls of amnesia
 
 %%%%
-%d scrolls of blinking
+@num@ scrolls of blinking
 
 %%%%
-%d scrolls of brand weapon
+@num@ scrolls of brand weapon
 
 %%%%
-%d scrolls of enchant armour
+@num@ scrolls of enchant armour
 
 %%%%
-%d scrolls of enchant weapon
+@num@ scrolls of enchant weapon
 
 %%%%
-%d scrolls of fear
+@num@ scrolls of fear
 
 %%%%
-%d scrolls of fog
+@num@ scrolls of fog
 
 %%%%
-%d scrolls of holy word
+@num@ scrolls of holy word
 
 %%%%
-%d scrolls of identify
+@num@ scrolls of identify
 
 %%%%
-%d scrolls of immolation
+@num@ scrolls of immolation
 
 %%%%
-%d scrolls of magic mapping
+@num@ scrolls of magic mapping
 
 %%%%
-%d scrolls of noise
+@num@ scrolls of noise
 
 %%%%
-%d scrolls of remove curse
+@num@ scrolls of remove curse
 
 %%%%
-%d scrolls of silence
+@num@ scrolls of silence
 
 %%%%
-%d scrolls of summoning
+@num@ scrolls of summoning
 
 %%%%
-%d scrolls of teleportation
+@num@ scrolls of teleportation
 
 %%%%
-%d scrolls of torment
+@num@ scrolls of torment
 
 %%%%
-%d scrolls of vulnerability
+@num@ scrolls of vulnerability
 
 %%%%
 # obsolete items (can occur if player loads a saved game from an older version)
-%d scrolls of removedness
+@num@ scrolls of removedness
 
 %%%%
 
@@ -177,61 +177,61 @@
 
 # generic
 %%%%
-%d potions
+@num@ potions
 
 %%%%
 
 # identified
 %%%%
-%d potions of ambrosia
+@num@ potions of ambrosia
 
 %%%%
-%d potions of attraction
+@num@ potions of attraction
 
 %%%%
-%d potions of berserk rage
+@num@ potions of berserk rage
 
 %%%%
-%d potions of brilliance
+@num@ potions of brilliance
 
 %%%%
-%d potions of cancellation
+@num@ potions of cancellation
 
 %%%%
-%d potions of curing
+@num@ potions of curing
 
 %%%%
-%d potions of degeneration
+@num@ potions of degeneration
 
 %%%%
-%d potions of experience
+@num@ potions of experience
 
 %%%%
-%d potions of flight
+@num@ potions of flight
 
 %%%%
-%d potions of haste
+@num@ potions of haste
 
 %%%%
-%d potions of heal wounds
+@num@ potions of heal wounds
 
 %%%%
-%d potions of invisibility
+@num@ potions of invisibility
 
 %%%%
-%d potions of lignification
+@num@ potions of lignification
 
 %%%%
-%d potions of magic
+@num@ potions of magic
 
 %%%%
-%d potions of might
+@num@ potions of might
 
 %%%%
-%d potions of mutation
+@num@ potions of mutation
 
 %%%%
-%d potions of resistance
+@num@ potions of resistance
 
 %%%%
 
@@ -243,70 +243,70 @@
 # its colour. In English, we can get away with using the same word for both
 # meanings, but that's not necessarily the case in other languages.
 %%%%
-%d amethyst potions
+@num@ amethyst potions
 
 %%%%
-%d black potions
+@num@ black potions
 
 %%%%
-%d blue potions
+@num@ blue potions
 
 %%%%
-%d brown potions
+@num@ brown potions
 
 %%%%
-%d coppery potions
+@num@ coppery potions
 
 %%%%
-%d cyan potions
+@num@ cyan potions
 
 %%%%
-%d dark potions
+@num@ dark potions
 
 %%%%
-%d emerald potions
+@num@ emerald potions
 
 %%%%
-%d golden potions
+@num@ golden potions
 
 %%%%
-%d green potions
+@num@ green potions
 
 %%%%
-%d grey potions
+@num@ grey potions
 
 %%%%
-%d inky potions
+@num@ inky potions
 
 %%%%
-%d orange potions
+@num@ orange potions
 
 %%%%
-%d pink potions
+@num@ pink potions
 
 %%%%
-%d puce potions
+@num@ puce potions
 
 %%%%
-%d purple potions
+@num@ purple potions
 
 %%%%
-%d red potions
+@num@ red potions
 
 %%%%
-%d ruby potions
+@num@ ruby potions
 
 %%%%
-%d sapphire potions
+@num@ sapphire potions
 
 %%%%
-%d silvery potions
+@num@ silvery potions
 
 %%%%
-%d white potions
+@num@ white potions
 
 %%%%
-%d yellow potions
+@num@ yellow potions
 
 %%%%
 
@@ -326,6 +326,6 @@
 # Gold
 #################################
 %%%%
-%d gold pieces
+@num@ gold pieces
 
 %%%%

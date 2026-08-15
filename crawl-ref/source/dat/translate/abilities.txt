@@ -219,7 +219,7 @@ Major Destruction
 Greater Servant of Makhleb
 
 %%%%
-%d%% hostile
+@num@%% hostile
 
 %%%%
 
@@ -315,7 +315,7 @@ Stack Five
 (next: @arg@)
 
 %%%%
-(%d in deck)
+(@num@ in deck)
 
 %%%%
 
@@ -560,19 +560,19 @@ Renounce Religion
 
 # these go in the "COST" column on the ability screen
 %%%%
-%d MP
+@num@ MP
 
 %%%%
-Permanent MP (%d left)
+Permanent MP (@num@ left)
 
 %%%%
-Stat Drain (%d each)
+Stat Drain (@num@ each)
 
 %%%%
 Frailty
 
 %%%%
-%d HP
+@num@ HP
 
 %%%%
 Piety

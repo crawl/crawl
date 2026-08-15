@@ -362,25 +362,25 @@ reduced essence
 Your life essence is reduced to manifest your ancestor. (-10% HP)
 
 %%%%
-AC +%d
+AC +@num@
 
 %%%%
-Your serpentine skin is tough. (AC +%d)
+Your serpentine skin is tough. (AC +@num@)
 
 %%%%
-Your stone body is resilient. (AC +%d)
+Your stone body is resilient. (AC +@num@)
 
 %%%%
-Your @arg@ scales are very hard. (AC +%d)
+Your @arg@ scales are very hard. (AC +@num@)
 
 %%%%
-Your @arg@ scales are hard. (AC +%d)
+Your @arg@ scales are hard. (AC +@num@)
 
 %%%%
-%d rings
+@num@ rings
 
 %%%%
-You can wear up to %d rings at the same time.
+You can wear up to @num@ rings at the same time.
 
 %%%%
 unfitting armour
@@ -410,7 +410,7 @@ Your attributes grow dramatically as you level up.
 You expend health (3 HP) to strengthen your wands.
 
 %%%%
-You have tentacles for arms and can constrict up to %d enemies at once.
+You have tentacles for arms and can constrict up to @num@ enemies at once.
 
 %%%%
 You have sharp claws.
@@ -1451,10 +1451,10 @@ Your attunement to dungeon structure grows further.
 You feel slightly disoriented.
 
 %%%%
-A meltable icy envelope protects you from harm. (AC +%d)
+A meltable icy envelope protects you from harm. (AC +@num@)
 
 %%%%
-A thick, meltable icy envelope protects you from harm. (AC +%d)
+A thick, meltable icy envelope protects you from harm. (AC +@num@)
 
 %%%%
 An icy envelope takes form around you.
@@ -1466,7 +1466,7 @@ Your icy envelope grows thicker.
 condensation shield
 
 %%%%
-A meltable shield of frost defends you. (SH +%d)
+A meltable shield of frost defends you. (SH +@num@)
 
 %%%%
 Frost condenses into a shield before you.
@@ -2093,13 +2093,13 @@ You feel less encumbered by your armour.
 You feel more encumbered by your armour.
 
 %%%%
-When seriously injured, your bleeding wounds create armour. (AC +%d)
+When seriously injured, your bleeding wounds create armour. (AC +@num@)
 
 %%%%
-When seriously injured, your bleeding wounds create thick armour. (AC +%d)
+When seriously injured, your bleeding wounds create thick armour. (AC +@num@)
 
 %%%%
-When seriously injured, your bleeding wounds create very thick armour. (AC +%d)
+When seriously injured, your bleeding wounds create very thick armour. (AC +@num@)
 
 %%%%
 You feel your blood ready itself to protect you.

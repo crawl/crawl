@@ -949,7 +949,7 @@ hydra-form
 # duplicate: hydra
 %%%%
 # unarmed attack
-Bite (x%d)
+Bite (x@num@)
 
 %%%%
 

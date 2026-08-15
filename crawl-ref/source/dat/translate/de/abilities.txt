@@ -219,8 +219,8 @@ Große Zerstörung
 Greater Servant of Makhleb
 Großerer Diener Makhlebs
 %%%%
-%d%% hostile
-%d%% feindlich
+@num@%% hostile
+@num@%% feindlich
 %%%%
 
 # Sif Muna
@@ -315,8 +315,8 @@ Fünf stapeln
 (next: @arg@)
 (Nächste: @arg@)
 %%%%
-(%d in deck)
-(%d im Deck)
+(@num@ in deck)
+(@num@ im Deck)
 %%%%
 
 # Beogh
@@ -560,20 +560,20 @@ Religion abschwören
 
 # these go in the "COST" column on the ability screen
 %%%%
-%d MP
-%d MP
+@num@ MP
+@num@ MP
 %%%%
-Permanent MP (%d left)
-Permanente MP (%d übrig)
+Permanent MP (@num@ left)
+Permanente MP (@num@ übrig)
 %%%%
-Stat Drain (%d each)
-Attrib.-Verzehrung (jedes %d)
+Stat Drain (@num@ each)
+Attrib.-Verzehrung (jedes @num@)
 %%%%
 Frailty
 Gebrechlichkeit
 %%%%
-%d HP
-%d TP
+@num@ HP
+@num@ TP
 %%%%
 Piety
 Pietät

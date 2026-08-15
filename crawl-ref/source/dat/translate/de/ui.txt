@@ -135,8 +135,8 @@ Strg-P
 
 # a level <level> <species> <background>
 %%%%
-, a level %d @arg1@ @arg2@
-, Stufe %d @arg1@ @arg2@
+, a level @num@ @arg1@ @arg2@
+, Stufe @num@ @arg1@ @arg2@
 %%%%
 
 # Game types used in savegame descriptions
@@ -651,8 +651,8 @@ Gd
 #
 ###############################################################
 %%%%
-" Turns: %d, Time: "
-" Runde: %d, Zeit: "
+" Turns: @num@, Time: "
+" Runde: @num@, Zeit: "
 %%%%
 # Health changes to HP if player rotted
 %%%%
@@ -1293,8 +1293,8 @@ Automatisch erkunden
 1 spell slot
 1 Zauberplatz
 %%%%
-%d spell slots
-%d Zauberplätze
+@num@ spell slots
+@num@ Zauberplätze
 %%%%
 Display spells in carried books
 Zaubersprüche in getragene Bücher anzeigen
@@ -1309,8 +1309,8 @@ Browse message history
 Nachrichtenverlauf anzeigen
 %%%%
 # format string for skill training entry
-%-14s Skill %4.1f Aptitude %c%d
-{skill}%-14s Fertigkeit %4.1f Begabung %c%d
+%-14s Skill %4.1f Aptitude %c@num@
+{skill}%-14s Fertigkeit %4.1f Begabung %c@num@
 %%%%
 Manage skills
 Fertigkeiten verwalten

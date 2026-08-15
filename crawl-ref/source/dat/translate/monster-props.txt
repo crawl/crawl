@@ -683,6 +683,6 @@ holding @arg@
 #############################
 
 %%%%
-%d ally target
+@num@ ally target
 
 %%%%

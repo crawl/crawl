@@ -135,7 +135,7 @@ ctrl-p
 
 # a level <level> <species> <background>
 %%%%
-, a level %d @arg1@ @arg2@
+, a level @num@ @arg1@ @arg2@
 
 %%%%
 
@@ -640,7 +640,7 @@ Gd
 #
 ###############################################################
 %%%%
-" Turns: %d, Time: "
+" Turns: @num@, Time: "
 
 %%%%
 # Health changes to HP if player rotted
@@ -1282,7 +1282,7 @@ Autoexplore
 1 spell slot
 
 %%%%
-%d spell slots
+@num@ spell slots
 
 %%%%
 Display spells in carried books
@@ -1298,7 +1298,7 @@ Browse message history
 
 %%%%
 # format string for skill training entry
-%-14s Skill %4.1f Aptitude %c%d
+%-14s Skill %4.1f Aptitude %c@num@
 
 %%%%
 Manage skills

@@ -112,7 +112,7 @@ KEY:/^(a|an) //
 %%%%
 PREGENERATE:6
 
-SELECT_BY_KEY:/^%d (?!@arg@)/
+SELECT_BY_KEY:/^@num@ (?!@arg@)/
 
 KEY:/^@num1@ /@num2@ @arg@/
 
@@ -123,9 +123,9 @@ KEY:/^@num1@ /@num2@ @arg@/
 %%%%
 PREGENERATE:7
 
-SELECT_BY_KEY:/^%d /
+SELECT_BY_KEY:/^@num@ /
 
-KEY:/^%d //
+KEY:/^@num@ //
 
 %%%%
 
