@@ -44,6 +44,8 @@ public:
     operator DBM*() const { return _db; }
 
  private:
+    // is this a db without English values?
+    bool is_translate_only_db() const { return string(_db_name) == "translate"; }
     vector<string> _get_file_list() const;
     bool _needs_update() const;
     void _regenerate_db();
@@ -218,16 +220,16 @@ bool TextDB::open_db()
 
 void TextDB::init()
 {
-    if (Options.language == lang_t::EN && string(_db_name) == "translate")
-    {
-        // No need for the translate db if language is English
-        return;
-    }
-
     if (Options.lang_name && !_parent)
     {
         translation = new TextDB(this);
         translation->init();
+    }
+
+    if (is_translate_only_db() && !_parent)
+    {
+        // Do not load the English version
+        return;
     }
 
     open_db();
@@ -346,9 +348,6 @@ void TextDB::_regenerate_db()
     unlink_u(full_db_path.c_str());
 #endif
 
-    // in the "translate" db, the key is an English string rather than an
-    // internal id, and the value is a translation of the key
-    bool value_translates_key = string(_db_name) == "translate";
     string ts;
     if (!(_db = dbm_open(db_path.c_str(), O_RDWR | O_CREAT, 0660)))
         end(1, true, "Unable to open DB: %s", db_path.c_str());
@@ -363,7 +362,7 @@ void TextDB::_regenerate_db()
         {
             snprintf(buf, sizeof(buf), ":%" PRId64, (int64_t)mtime);
             ts += buf;
-            _store_text_db(full_input_path, _db, value_translates_key);
+            _store_text_db(full_input_path, _db, is_translate_only_db());
         }
     }
     _add_entry(_db, "TIMESTAMP", ts);
@@ -995,4 +994,15 @@ string getTranslatedString(const string &original)
 
     string result = _query_database(TranslateDB, original, false, false);
     return trim_string_right(result);
+}
+
+vector<string> getTranslatedKeysByRegex(const string &regex)
+{
+    if (!TranslateDB.translation || !TranslateDB.translation->get())
+    {
+        vector<string> empty;
+        return empty;
+    }
+
+    return _database_find_keys(TranslateDB.translation->get(), regex, false);
 }

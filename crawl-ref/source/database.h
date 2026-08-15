@@ -57,3 +57,4 @@ string getFAQ_Answer(const string &question);
 
 // get a translation of an English string into the user's current language
 string getTranslatedString(const string &original);
+vector<string> getTranslatedKeysByRegex(const string &regex);
