@@ -705,7 +705,7 @@ Gd
 "Spells: "
 
 %%%%
-%d/%d levels left
+@num1@/@num2@ levels left
 
 %%%%
 # Felids have multiple lives (and deaths)
@@ -815,7 +815,7 @@ quick
 no status effects
 
 %%%%
-"%d/%d runes: "
+"@num1@/@num2@ runes: "
 
 %%%%
 # wizard (cheat) mode flags
@@ -829,7 +829,7 @@ EX-WIZARD
 EXPLORE
 
 %%%%
-Your terminal window is too small; please resize to at least %d,%d
+Your terminal window is too small; please resize to at least @num1@,@num2@
 
 %%%%
 # some items become "melded" when you change form
@@ -1460,7 +1460,7 @@ Quit menu
 Inventory:
 
 %%%%
-%d/%d slots
+@num1@/@num2@ slots
 
 %%%%
 

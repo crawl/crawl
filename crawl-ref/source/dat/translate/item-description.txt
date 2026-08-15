@@ -524,16 +524,16 @@ This projectile's minimum attack delay (%.1f) is reached at skill level %d.
 
 %%%%
 # shield penalty
-Skill to remove penalty: %d.%d
+Skill to remove penalty: @num1@.@num2@
 
 %%%%
-; use <white>(s)</white> to set %d.%d as a target for @arg@.
+; use <white>(s)</white> to set @num1@.@num2@ as a target for @arg@.
 
 %%%%
-Your skill: %d.%d
+Your skill: @num1@.@num2@
 
 %%%%
-Your (base) skill: %d.%d
+Your (base) skill: @num1@.@num2@
 
 %%%%
 At @num1@%% training you would reach @num2@.@num3@ in the equivalent of @num4@.@num5@ XLs.
@@ -549,7 +549,7 @@ At current training (@num1@%%) you reach @num2@.@num3@ in about @num4@.@num5@ XL
 
 %%%%
 # xp = experience points, skp = skill points
-(%d xp, %d skp)
+(@num1@ xp, @num2@ skp)
 
 %%%%
 

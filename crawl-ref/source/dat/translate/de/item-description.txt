@@ -524,17 +524,17 @@ This projectile's minimum attack delay (%.1f) is reached at skill level %d.
 Die minimale Angriffsverzögerung dieses Geschosses (%.1f) wird auf der Fertigkeitsstufe %d erreicht.
 %%%%
 # shield penalty
-Skill to remove penalty: %d.%d
-Fertigkeit zum Aufheben der Verzögerung: %d,%d
+Skill to remove penalty: @num1@.@num2@
+Fertigkeit zum Aufheben der Verzögerung: @num1@,@num2@
 %%%%
-; use <white>(s)</white> to set %d.%d as a target for @arg@.
-; <white>(s)</white> benutzen um %d,%d als Ziel für {acc}@arg@ einzustellen.
+; use <white>(s)</white> to set @num1@.@num2@ as a target for @arg@.
+; <white>(s)</white> benutzen um @num1@,@num2@ als Ziel für {acc}@arg@ einzustellen.
 %%%%
-Your skill: %d.%d
-Deine Fertigkeit: %d,%d
+Your skill: @num1@.@num2@
+Deine Fertigkeit: @num1@,@num2@
 %%%%
-Your (base) skill: %d.%d
-Deine (Grund-)Fertigkeit: %d,%d
+Your (base) skill: @num1@.@num2@
+Deine (Grund-)Fertigkeit: @num1@,@num2@
 %%%%
 At @num1@%% training you would reach @num2@.@num3@ in the equivalent of @num4@.@num5@ XLs.
 Bei @num1@%% Training würdest du @num2@,@num3@ im Äquivalent von @num4@,@num5@ XL erreichen.
@@ -549,8 +549,8 @@ At current training (@num1@%%) you reach @num2@.@num3@ in about @num4@.@num5@ XL
 Beim aktuellen Training (@num1@%%) erreichst du @num2@,@num3@ in etwa @num4@,@num5@ XL.
 %%%%
 # xp = experience points, skp = skill points
-(%d xp, %d skp)
-(%d ep, %d fkp)
+(@num1@ xp, @num2@ skp)
+(@num1@ ep, @num2@ fkp)
 %%%%
 
 #################################
