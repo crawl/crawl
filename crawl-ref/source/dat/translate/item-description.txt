@@ -417,19 +417,19 @@ Encumbrance rating: %d
 Evasion: %d
 
 %%%%
-If you switch to wearing this armour, your AC would increase by %d (%d -> %d).
+If you switch to wearing this armour, your AC would increase by @num1@ (@num2@ -> @num3@).
 
 %%%%
-If you switch to wearing this armour, your AC would decrease by %d (%d -> %d).
+If you switch to wearing this armour, your AC would decrease by @num1@ (@num2@ -> @num3@).
 
 %%%%
 If you switch to wearing this armour, your AC would remain unchanged.
 
 %%%%
-If you remove this armour, your AC would increase by %d (%d -> %d).
+If you remove this armour, your AC would increase by @num1@ (@num2@ -> @num3@).
 
 %%%%
-If you remove this armour, your AC would decrease by %d (%d -> %d).
+If you remove this armour, your AC would decrease by @num1@ (@num2@ -> @num3@).
 
 %%%%
 If you remove this armour, your AC would remain unchanged.

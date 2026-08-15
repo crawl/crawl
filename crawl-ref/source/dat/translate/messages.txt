@@ -683,7 +683,7 @@ Tie
 Winner: @arg@!
 
 %%%%
-Final score: @arg1@ (%d); @arg2@ (%d) [%d ties]
+Final score: @arg1@ (@num1@); @arg2@ (@num2@) [@num3@ ties]
 
 %%%%
 Last arena monster was dismissed.
@@ -11255,7 +11255,7 @@ Increase Attributes
 " Increase:"
 
 %%%%
-Your base attributes are Str %d, Int %d, Dex %d.
+Your base attributes are Str @num1@, Int @num2@, Dex @num3@.
 
 %%%%
 "Increase (S)trength, (I)ntelligence, or (D)exterity? "
@@ -17532,7 +17532,7 @@ Defense
 @arg1@, Skill: @arg2@
 
 %%%%
-@arg@: HD %d   AC %d   EV %d
+@arg@: HD @num1@   AC @num2@   EV @num3@
 
 %%%%
 Cannot wield weapon
@@ -17762,7 +17762,7 @@ No such background, making it a Fighter.
 "Monsters: "
 
 %%%%
-%d monsters, %d total exp value (%d non-uniq)
+@num1@ monsters, @num2@ total exp value (@num3@ non-uniq)
 
 %%%%
 @num1@ monsters, @num2@ total exp value (@num3@ non-uniq, @num4@ adjusted)

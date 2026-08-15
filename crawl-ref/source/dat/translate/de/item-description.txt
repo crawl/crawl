@@ -417,20 +417,20 @@ Belastungswert: %d
 Evasion: %d
 Ausweichen: %d
 %%%%
-If you switch to wearing this armour, your AC would increase by %d (%d -> %d).
-Wenn du zu dieser Rüstung wechselst, wird deine RK um %d erhöht (%d -> %d).
+If you switch to wearing this armour, your AC would increase by @num1@ (@num2@ -> @num3@).
+Wenn du zu dieser Rüstung wechselst, wird deine RK um @num1@ erhöht (@num2@ -> @num3@).
 %%%%
-If you switch to wearing this armour, your AC would decrease by %d (%d -> %d).
-Wenn du zu dieser Rüstung wechselst, wird deine RK um %d reduziert (%d -> %d).
+If you switch to wearing this armour, your AC would decrease by @num1@ (@num2@ -> @num3@).
+Wenn du zu dieser Rüstung wechselst, wird deine RK um @num1@ reduziert (@num2@ -> @num3@).
 %%%%
 If you switch to wearing this armour, your AC would remain unchanged.
 Wenn du zu dieser Rüstung wechselst, bleibt deine RK unverändert.
 %%%%
-If you remove this armour, your AC would increase by %d (%d -> %d).
-Wenn du diese Rüstung ablegst, wird deine RK um %d erhöht (%d -> %d).
+If you remove this armour, your AC would increase by @num1@ (@num2@ -> @num3@).
+Wenn du diese Rüstung ablegst, wird deine RK um @num1@ erhöht (@num2@ -> @num3@).
 %%%%
-If you remove this armour, your AC would decrease by %d (%d -> %d).
-Wenn du diese Rüstung ablegst, wird deine RK um %d reduziert (%d -> %d).
+If you remove this armour, your AC would decrease by @num1@ (@num2@ -> @num3@).
+Wenn du diese Rüstung ablegst, wird deine RK um @num1@ reduziert (@num2@ -> @num3@).
 %%%%
 If you remove this armour, your AC would remain unchanged.
 Wenn du diese Rüstung ablegst, bleibt deine RK unverändert.
