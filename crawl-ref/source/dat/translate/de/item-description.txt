@@ -113,23 +113,23 @@ Dieser Gegenstand erhöht den verursachten und erlittenen Schaden.
 It bestows one free step when moving towards enemies.
 Dieser Gegenstand gewährt dir einen freien Schritt, wenn du dich auf Feinde zubewegst.
 %%%%
-It makes you extremely vulnerable to %s.
-Dieser Gegenstand macht dich extrem anfällig für {acc}%s.
+It makes you extremely vulnerable to @arg@.
+Dieser Gegenstand macht dich extrem anfällig für {acc}@arg@.
 %%%%
-It makes you very vulnerable to %s.
-Dieser Gegenstand macht dich sehr anfällig für {acc}%s.
+It makes you very vulnerable to @arg@.
+Dieser Gegenstand macht dich sehr anfällig für {acc}@arg@.
 %%%%
-It makes you vulnerable to %s.
-Dieser Gegenstand macht dich anfällig für {acc}%s.
+It makes you vulnerable to @arg@.
+Dieser Gegenstand macht dich anfällig für {acc}@arg@.
 %%%%
-It protects you from %s.
-Dieser Gegenstand schützt dich vor {dat}%s.
+It protects you from @arg@.
+Dieser Gegenstand schützt dich vor {dat}@arg@.
 %%%%
-It greatly protects you from %s.
-Dieser Gegenstand schützt dich hervorragend vor {dat}%s.
+It greatly protects you from @arg@.
+Dieser Gegenstand schützt dich hervorragend vor {dat}@arg@.
 %%%%
-It renders you almost immune to %s.
-Dieser Gegenstand macht dich fast immun gegen {acc}%s.
+It renders you almost immune to @arg@.
+Dieser Gegenstand macht dich fast immun gegen {acc}@arg@.
 %%%%
 It greatly decreases your willpower.
 Dieser Gegenstand reduziert deine Willenskraft erheblich.
@@ -170,12 +170,12 @@ Dieser Gegenstand ist ein uraltes Artefakt.
 This item has been removed.
 Dieser Gegenstand wurde entfernt.
 %%%%
-[ERROR: no desc for item name '%s']. Perhaps this item has been removed?
-[ERROR: keine Bescheibung für '%s']. Vielleicht wurde diese Gegenstand entfernt?
+[ERROR: no desc for item name '@arg@']. Perhaps this item has been removed?
+[ERROR: keine Bescheibung für '@arg@']. Vielleicht wurde diese Gegenstand entfernt?
 %%%%
 # your god disapproves
-%s disapproves of the use of such an item.
-%s missbilligt die Verwendung eines solchen Gegenstandes.
+@arg@ disapproves of the use of such an item.
+@arg@ missbilligt die Verwendung eines solchen Gegenstandes.
 %%%%
 "Stash search prefixes: "
 "Suchpräfixe: "
@@ -331,21 +331,21 @@ Diese Waffe hat keine spezielle Prägung (sie brennt nicht, gefriert nicht, etc.
 It is temporarily rebranded; it is actually an unbranded weapon.
 Diese Waffe ist vorübergehend mit einer neuen Prägung versehen; sie ist eigentlich eine Waffe ohne Prägung.
 %%%%
-It is temporarily rebranded; it is actually %s.
-Diese Waffe ist vorübergehend mit einer neuen Prägung versehen; sie ist eigentlich %s.
+It is temporarily rebranded; it is actually @arg@.
+Diese Waffe ist vorübergehend mit einer neuen Prägung versehen; sie ist eigentlich @arg@.
 %%%%
-This is %s.
-Dies ist %s.
+This is @arg@.
+Dies ist @arg@.
 %%%%
-This weapon falls into the '%s' category.
-Diese Waffe gehört zur Kategorie '%s'.
+This weapon falls into the '@arg@' category.
+Diese Waffe gehört zur Kategorie '@arg@'.
 %%%%
 # magical staves can also be used as weapons
 It falls into the 'Staves' category.
 Diese Waffe gehört zur Kategorie 'Stäbe'.
 %%%%
-Your inability to study %s prevents you from drawing on the full power of this staff in melee.
-Deine Unfähigkeit, %s zu studieren, hindert dich daran, die volle Kraft dieses Stabes im Nahkampf zu nutzen.
+Your inability to study @arg@ prevents you from drawing on the full power of this staff in melee.
+Deine Unfähigkeit, @arg@ zu studieren, hindert dich daran, die volle Kraft dieses Stabes im Nahkampf zu nutzen.
 %%%%
 It is a one-handed weapon.
 Dies ist eine Einhandwaffe.
@@ -527,8 +527,8 @@ Die minimale Angriffsverzögerung dieses Geschosses (%.1f) wird auf der Fertigke
 Skill to remove penalty: %d.%d
 Fertigkeit zum Aufheben der Verzögerung: %d,%d
 %%%%
-; use <white>(s)</white> to set %d.%d as a target for %s.
-; <white>(s)</white> benutzen um %d,%d als Ziel für {acc}%s einzustellen.
+; use <white>(s)</white> to set %d.%d as a target for @arg@.
+; <white>(s)</white> benutzen um %d,%d als Ziel für {acc}@arg@ einzustellen.
 %%%%
 Your skill: %d.%d
 Deine Fertigkeit: %d,%d
@@ -583,8 +583,8 @@ Dieser Gegenstand reflektiert geblockte Geschosse.
 If you quaff this potion your AC would be %d.
 Wenn du diesen Trank trinkst, ist dein RK %d.
 %%%%
-If you drink this now, you will no longer be %s.
-Wenn du ihn jetzt trinkst, wirst du nicht mehr %s sein.
+If you drink this now, you will no longer be @arg@.
+Wenn du ihn jetzt trinkst, wirst du nicht mehr @arg@ sein.
 %%%%
 Drinking this now will have no effect.
 Ihn jetzt zu trinken, würde keine Auswirkungen haben.

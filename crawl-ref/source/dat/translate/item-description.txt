@@ -113,22 +113,22 @@ It increases damage dealt and taken.
 It bestows one free step when moving towards enemies.
 
 %%%%
-It makes you extremely vulnerable to %s.
+It makes you extremely vulnerable to @arg@.
 
 %%%%
-It makes you very vulnerable to %s.
+It makes you very vulnerable to @arg@.
 
 %%%%
-It makes you vulnerable to %s.
+It makes you vulnerable to @arg@.
 
 %%%%
-It protects you from %s.
+It protects you from @arg@.
 
 %%%%
-It greatly protects you from %s.
+It greatly protects you from @arg@.
 
 %%%%
-It renders you almost immune to %s.
+It renders you almost immune to @arg@.
 
 %%%%
 It greatly decreases your willpower.
@@ -170,11 +170,11 @@ It is an ancient artefact.
 This item has been removed.
 
 %%%%
-[ERROR: no desc for item name '%s']. Perhaps this item has been removed?
+[ERROR: no desc for item name '@arg@']. Perhaps this item has been removed?
 
 %%%%
 # your god disapproves
-%s disapproves of the use of such an item.
+@arg@ disapproves of the use of such an item.
 
 %%%%
 "Stash search prefixes: "
@@ -331,20 +331,20 @@ It has no special brand (it is not flaming, freezing, etc), but is still enchant
 It is temporarily rebranded; it is actually an unbranded weapon.
 
 %%%%
-It is temporarily rebranded; it is actually %s.
+It is temporarily rebranded; it is actually @arg@.
 
 %%%%
-This is %s.
+This is @arg@.
 
 %%%%
-This weapon falls into the '%s' category.
+This weapon falls into the '@arg@' category.
 
 %%%%
 # magical staves can also be used as weapons
 It falls into the 'Staves' category.
 
 %%%%
-Your inability to study %s prevents you from drawing on the full power of this staff in melee.
+Your inability to study @arg@ prevents you from drawing on the full power of this staff in melee.
 
 %%%%
 It is a one-handed weapon.
@@ -527,7 +527,7 @@ This projectile's minimum attack delay (%.1f) is reached at skill level %d.
 Skill to remove penalty: %d.%d
 
 %%%%
-; use <white>(s)</white> to set %d.%d as a target for %s.
+; use <white>(s)</white> to set %d.%d as a target for @arg@.
 
 %%%%
 Your skill: %d.%d
@@ -583,7 +583,7 @@ It reflects blocked missile attacks.
 If you quaff this potion your AC would be %d.
 
 %%%%
-If you drink this now, you will no longer be %s.
+If you drink this now, you will no longer be @arg@.
 
 %%%%
 Drinking this now will have no effect.

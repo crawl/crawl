@@ -39,7 +39,7 @@ Jiyva
 
 %%%%
 # Jiyva has a randomly-generated second name
-Jiyva %s
+Jiyva @arg@
 
 %%%%
 Kikubaaqudgha
@@ -169,7 +169,7 @@ Cai Fang
 # the others are currently in dat/database/de/gods.txt
 # These are only used in milestone notes (which are not translated) and as title on god description screen, so currently no need to decline
 %%%%
-Jiyva %s the Shapeless
+Jiyva @arg@ the Shapeless
 
 %%%%
 
@@ -366,7 +366,7 @@ the Wu Jian Council's
 ########################
 %%%%
 # generic
-" of %s"
+" of @arg@"
 
 %%%%
 # specific override
@@ -428,7 +428,7 @@ more time in this world
 # God conducts
 ########################
 %%%%
-%s doesn't like anything? This is a bug; please report it.
+@arg@ doesn't like anything? This is a bug; please report it.
 
 %%%%
 @arg1@ likes it when @arg2@.

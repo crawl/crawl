@@ -5,7 +5,7 @@
 # Used in a couple of places:
 #  1. When targeting
 #  2. When examining with xv in brackets after the monster name
-#  3. On mouse hover, in the sentence: "This monster is %s."
+#  3. On mouse hover, in the sentence: "This monster is @arg@."
 #  4. In a message when monster comes into view
 #
 # For #3, a custom sentence is used for some props, instead of sticking the
@@ -656,26 +656,26 @@ nicht verwundet
 constricted by you
 von dir umschlungen
 %%%%
-constricted by %s
-von {dat}%s umschlungen
+constricted by @arg@
+von {dat}@arg@ umschlungen
 %%%%
 held by you
 von dir gefangen
 %%%%
-held by %s
-von {dat}%s gefangen
+held by @arg@
+von {dat}@arg@ gefangen
 %%%%
 constricting you
 dich umschlingend
 %%%%
-constricting %s
-{acc}%s umschlingend
+constricting @arg@
+{acc}@arg@ umschlingend
 %%%%
 holding you
 dich haltend
 %%%%
-holding %s
-{acc}%s haltend
+holding @arg@
+{acc}@arg@ haltend
 %%%%
 
 #############################

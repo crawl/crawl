@@ -371,10 +371,10 @@ Your serpentine skin is tough. (AC +%d)
 Your stone body is resilient. (AC +%d)
 
 %%%%
-Your %s scales are very hard. (AC +%d)
+Your @arg@ scales are very hard. (AC +%d)
 
 %%%%
-Your %s scales are hard. (AC +%d)
+Your @arg@ scales are hard. (AC +%d)
 
 %%%%
 %d rings

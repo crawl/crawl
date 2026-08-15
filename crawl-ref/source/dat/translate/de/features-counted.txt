@@ -2,7 +2,7 @@
 #
 # Translations for dungeon features (counted)
 #
-# Mostly used in discovery message ("Found %s.").
+# Mostly used in discovery message ("Found @arg@.").
 # A handful are also used in dungeon overview screen.
 #
 ###############################################################################

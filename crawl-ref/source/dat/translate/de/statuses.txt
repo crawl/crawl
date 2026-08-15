@@ -161,21 +161,21 @@ Aug
 # Confusing Touch spell active (causes hands/paws/etc. to glow)
 # NOTE: Singular hand/paw/etc. if player has sacrificed a hand to Ru
 %%%%
-%s is glowing red.
-%s leuchtet rot.
+@arg@ is glowing red.
+@arg@ leuchtet rot.
 %%%%
-%s are glowing red.
-%s leuchten rot.
+@arg@ are glowing red.
+@arg@ leuchten rot.
 %%%%
 
 # Jiyva Slimify active (causes hands/paws/etc. to be coated in slime)
 # NOTE: Singular hand/paw/etc. if player has sacrificed a hand to Ru
 %%%%
-%s is covered in slime.
-%s ist mit Schleim bedeckt.
+@arg@ is covered in slime.
+@arg@ ist mit Schleim bedeckt.
 %%%%
-%s are covered in slime.
-%s sind mit Schleim bedeckt.
+@arg@ are covered in slime.
+@arg@ sind mit Schleim bedeckt.
 %%%%
 
 # Powered by Death mutation - causes Regeneration effect when killing
@@ -186,11 +186,11 @@ Regen (%d)
 
 # Skill training enhanced by manual for that skill
 %%%%
-studying %s
-studiert %s
+studying @arg@
+studiert @arg@
 %%%%
-You are studying %s.
-Du studierst %s.
+You are studying @arg@.
+Du studierst @arg@.
 %%%%
 
 # Constricted (by snake/tentacles/roots/etc.)
@@ -349,11 +349,11 @@ Deine Kontrolle über deine Magie ist ausgelaugt.
 Bribe
 Bestech
 %%%%
-bribing [%s]
-bestechend [%s]
+bribing [@arg@]
+bestechend [@arg@]
 %%%%
-You are bribing %s.
-Du bestichst %s.
+You are bribing @arg@.
+Du bestichst @arg@.
 %%%%
 
 # Horrified
@@ -810,11 +810,11 @@ verwirrende Berührung
 confusing touch
 verwirrende Berührung
 %%%%
-%s stops glowing.
-%s hört auf zu leuchten.
+@arg@ stops glowing.
+@arg@ hört auf zu leuchten.
 %%%%
-%s stop glowing.
-%s hört auf zu leuchten.
+@arg@ stop glowing.
+@arg@ hört auf zu leuchten.
 %%%%
 
 # Corona

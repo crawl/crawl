@@ -602,7 +602,7 @@ Beweglichkeit
 sap magic
 Magie entziehen
 %%%%
-# duplicate of monster attack description ("It can %s.")
+# duplicate of monster attack description ("It can @arg@.")
 #drain magic
 #
 %%%%

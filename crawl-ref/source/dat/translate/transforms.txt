@@ -995,58 +995,58 @@ your old self
 
 %%%%
 # default for most species
-You kneel at the altar of %s.
+You kneel at the altar of @arg@.
 
 %%%%
 # default for felid
-You sit before the altar of %s.
+You sit before the altar of @arg@.
 
 %%%%
 # default for octopode
-You curl up in front of the altar of %s.
+You curl up in front of the altar of @arg@.
 
 %%%%
 # default for naga (snakelike)
-You coil in front of the altar of %s.
+You coil in front of the altar of @arg@.
 
 %%%%
 # flying
-You hover solemnly before the altar of %s.
+You hover solemnly before the altar of @arg@.
 
 %%%%
 # porcupine form
-You curl into a sanctuary of spikes before the altar of %s.
+You curl into a sanctuary of spikes before the altar of @arg@.
 
 %%%%
 # spider form
-You crawl onto the altar of %s.
+You crawl onto the altar of @arg@.
 
 %%%%
 # tree form
-You sway towards the altar of %s.
+You sway towards the altar of @arg@.
 
 %%%%
 # bat form
-You perch on the altar of %s.
+You perch on the altar of @arg@.
 
 %%%%
 # ice/pig/dragon form
-You bow your head before the altar of %s.
+You bow your head before the altar of @arg@.
 
 %%%%
 # hydra form
-You bow your heads before the altar of %s.
+You bow your heads before the altar of @arg@.
 
 %%%%
 # statue/storm form
-You place yourself before the altar of %s.
+You place yourself before the altar of @arg@.
 
 %%%%
 # fungus form
-You release spores on the altar of %s.
+You release spores on the altar of @arg@.
 
 %%%%
 # wisp form
-You swirl around the altar of %s.
+You swirl around the altar of @arg@.
 
 %%%%

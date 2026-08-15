@@ -312,8 +312,8 @@ Vier austeilen
 Stack Five
 Fünf stapeln
 %%%%
-(next: %s)
-(Nächste: %s)
+(next: @arg@)
+(Nächste: @arg@)
 %%%%
 (%d in deck)
 (%d im Deck)
@@ -388,8 +388,8 @@ Gegenstand verfluchen
 Shatter the Chains
 Die Ketten sprengen
 %%%%
-(Boost: %s)
-(Erhöhen: %s)
+(Boost: @arg@)
+(Erhöhen: @arg@)
 %%%%
 
 # Dithmenos

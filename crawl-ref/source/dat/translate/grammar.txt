@@ -36,12 +36,12 @@
 %%%%
 PREGENERATE:0
 
-SELECT_BY_KEY:/^the (?!%s)/
+SELECT_BY_KEY:/^the (?!@arg@)/
 
 # English
-KEY:/^the /the %s/
+KEY:/^the /the @arg@/
 # "pair of boots/gloves" (but not quick blades) needs a second adjective placeholder
-KEY:/pair of (?!quick blades)/pair of %s/
+KEY:/pair of (?!quick blades)/pair of @arg@/
 
 # target language
 
@@ -112,9 +112,9 @@ KEY:/^(a|an) //
 %%%%
 PREGENERATE:6
 
-SELECT_BY_KEY:/^%d (?!%s)/
+SELECT_BY_KEY:/^%d (?!@arg@)/
 
-KEY:/^%d /%d %s/
+KEY:/^%d /%d @arg@/
 
 %%%%
 

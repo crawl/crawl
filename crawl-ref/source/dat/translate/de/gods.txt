@@ -39,8 +39,8 @@ Jiyva
 Jiyva
 %%%%
 # Jiyva has a randomly-generated second name
-Jiyva %s
-Jiyva %s
+Jiyva @arg@
+Jiyva @arg@
 %%%%
 Kikubaaqudgha
 Kikubaaqudgha
@@ -169,8 +169,8 @@ Cai Fang
 # the others are currently in dat/database/de/gods.txt
 # These are only used in milestone notes (which are not translated) and as title on god description screen, so currently no need to decline
 %%%%
-Jiyva %s the Shapeless
-Jiyva %s das Formlose
+Jiyva @arg@ the Shapeless
+Jiyva @arg@ das Formlose
 %%%%
 
 ########################
@@ -448,8 +448,8 @@ einem Gott
 ########################
 %%%%
 # generic
-" of %s"
-" von {dat}%s"
+" of @arg@"
+" von {dat}@arg@"
 %%%%
 # specific override
 " of the Shining One"
@@ -510,8 +510,8 @@ mehr Zeit in dieser Welt
 # God conducts
 ########################
 %%%%
-%s doesn't like anything? This is a bug; please report it.
-%s mag nichts? Das ist ein Fehler. Bitte meldet ihn.
+@arg@ doesn't like anything? This is a bug; please report it.
+@arg@ mag nichts? Das ist ein Fehler. Bitte meldet ihn.
 %%%%
 @arg1@ likes it when @arg2@.
 @arg1@ mag es, wenn du @arg2@.

@@ -1163,276 +1163,276 @@ Hermeneutics
 
 # conjuration
 %%%%
-%sConjuration
+@arg@Conjuration
 
 %%%%
-%sConfrontation
+@arg@Confrontation
 
 %%%%
-%sAttacks
+@arg@Attacks
 
 %%%%
-%sBattle Magic
+@arg@Battle Magic
 
 %%%%
-%sCombat Magic
+@arg@Combat Magic
 
 %%%%
-%sArcane Weapons
+@arg@Arcane Weapons
 
 %%%%
 # "Blows and Bruises" are one thing in English, but here we separate because we
 # could have "and" between two schools and the code won't know not to separate these
-%sBlows
+@arg@Blows
 
 %%%%
-%sBruises
+@arg@Bruises
 
 %%%%
-%sDamage Dealing
+@arg@Damage Dealing
 
 %%%%
 
 # Fire
 %%%%
-%sFire
+@arg@Fire
 
 %%%%
-%sFlames
+@arg@Flames
 
 %%%%
-%sHeat
+@arg@Heat
 
 %%%%
-the %sVolcanoes
+the @arg@Volcanoes
 
 %%%%
-the %sBlaze
+the @arg@Blaze
 
 %%%%
-%sIgnition
+@arg@Ignition
 
 %%%%
-the %sArsonist
+the @arg@Arsonist
 
 %%%%
 
 # Hexes
 %%%%
-%sHexes
+@arg@Hexes
 
 %%%%
-%sCurses
+@arg@Curses
 
 %%%%
-%sMalediction
+@arg@Malediction
 
 %%%%
-the %sOath
+the @arg@Oath
 
 %%%%
-%sExecration
+@arg@Execration
 
 %%%%
-%sEnchantment
+@arg@Enchantment
 
 %%%%
-%sBewitchment
+@arg@Bewitchment
 
 %%%%
-%sGlamour
+@arg@Glamour
 
 %%%%
-%sFascination
+@arg@Fascination
 
 %%%%
-%sBeguiling
+@arg@Beguiling
 
 %%%%
 
 # Ice
 %%%%
-%sIce
+@arg@Ice
 
 %%%%
-%sSnow
+@arg@Snow
 
 %%%%
-%sCold
+@arg@Cold
 
 %%%%
-the %sSnowflakes
+the @arg@Snowflakes
 
 %%%%
-the %sGlacier
+the @arg@Glacier
 
 %%%%
-the %sFrostbite
+the @arg@Frostbite
 
 %%%%
 
 # Transmutation
 %%%%
-%sTransmigration
+@arg@Transmigration
 
 %%%%
-%sTransmutation
+@arg@Transmutation
 
 %%%%
-%sTransformation
+@arg@Transformation
 
 %%%%
-%sShape Shifting
+@arg@Shape Shifting
 
 %%%%
-%sChanging
+@arg@Changing
 
 %%%%
-%sMoulding
+@arg@Moulding
 
 %%%%
 
 # Necromancy
 %%%%
-%sNecromancy
+@arg@Necromancy
 
 %%%%
-%sEvil
+@arg@Evil
 
 %%%%
-%sDarkness
+@arg@Darkness
 
 %%%%
-%sStolen Souls
+@arg@Stolen Souls
 
 %%%%
-%sRites
+@arg@Rites
 
 %%%%
-%sArts
+@arg@Arts
 
 %%%%
-%sSecrets
+@arg@Secrets
 
 %%%%
-%sRituals
+@arg@Rituals
 
 %%%%
-%sMagic
+@arg@Magic
 
 %%%%
 
 # Summoning
 %%%%
-%sSummoning
+@arg@Summoning
 
 %%%%
-%sCalling
+@arg@Calling
 
 %%%%
-%sCreation
+@arg@Creation
 
 %%%%
-the %sEntourage
+the @arg@Entourage
 
 %%%%
-%sCompanions
+@arg@Companions
 
 %%%%
-the %sEscort
+the @arg@Escort
 
 %%%%
-%sIllusion
+@arg@Illusion
 
 %%%%
-%sSlavery
+@arg@Slavery
 
 %%%%
 
 # Translocation
 %%%%
-%sTranslocation
+@arg@Translocation
 
 %%%%
-%sDisplacement
+@arg@Displacement
 
 %%%%
-%sDislocation
+@arg@Dislocation
 
 %%%%
-%sOrientation
+@arg@Orientation
 
 %%%%
-the %sTraveller
+the @arg@Traveller
 
 %%%%
-the %sCompass
+the @arg@Compass
 
 %%%%
-the %sVoyage
+the @arg@Voyage
 
 %%%%
 
 # Poison
 %%%%
-%sPoison
+@arg@Poison
 
 %%%%
-%sVenom
+@arg@Venom
 
 %%%%
-%sToxins
+@arg@Toxins
 
 %%%%
-%sPoisoning
+@arg@Poisoning
 
 %%%%
-%sIntoxication
+@arg@Intoxication
 
 %%%%
-%sEnvenoming
+@arg@Envenoming
 
 %%%%
-%sContamination
+@arg@Contamination
 
 %%%%
 
 # Earth
 %%%%
-%sEarth
+@arg@Earth
 
 %%%%
-%sStones
+@arg@Stones
 
 %%%%
-%sClay
+@arg@Clay
 
 %%%%
-the %sMountains
+the @arg@Mountains
 
 %%%%
-the %sRocks
+the @arg@Rocks
 
 %%%%
 
 # Air
 %%%%
-%sAir
+@arg@Air
 
 %%%%
-%sLightness
+@arg@Lightness
 
 %%%%
-%sWeightlessness
+@arg@Weightlessness
 
 %%%%
-%sFlight
+@arg@Flight
 
 %%%%
-the %sBirds
+the @arg@Birds
 
 %%%%
-%sFeathers
+@arg@Feathers
 
 %%%%
 
@@ -1440,274 +1440,274 @@ the %sBirds
 
 # conjuration genitive
 %%%%
-{poss}%sConjuration
+{poss}@arg@Conjuration
 
 %%%%
-{poss}%sConfrontation
+{poss}@arg@Confrontation
 
 %%%%
-{poss}%sAttacks
+{poss}@arg@Attacks
 
 %%%%
-{poss}%sBattle Magic
+{poss}@arg@Battle Magic
 
 %%%%
-{poss}%sCombat Magic
+{poss}@arg@Combat Magic
 
 %%%%
-{poss}%sArcane Weapons
+{poss}@arg@Arcane Weapons
 
 %%%%
-{poss}%sBlows
+{poss}@arg@Blows
 
 %%%%
-{poss}%sBruises
+{poss}@arg@Bruises
 
 %%%%
-{poss}%sDamage Dealing
+{poss}@arg@Damage Dealing
 
 %%%%
 
 # Fire genitive
 %%%%
-{poss}%sFire
+{poss}@arg@Fire
 
 %%%%
-{poss}%sFlames
+{poss}@arg@Flames
 
 %%%%
-{poss}%sHeat
+{poss}@arg@Heat
 
 %%%%
-{poss}the %sVolcanoes
+{poss}the @arg@Volcanoes
 
 %%%%
-{poss}the %sBlaze
+{poss}the @arg@Blaze
 
 %%%%
-{poss}%sIgnition
+{poss}@arg@Ignition
 
 %%%%
-{poss}the %sArsonist
+{poss}the @arg@Arsonist
 
 %%%%
 
 # Hexes genitive
 %%%%
-{poss}%sHexes
+{poss}@arg@Hexes
 
 %%%%
-{poss}%sCurses
+{poss}@arg@Curses
 
 %%%%
-{poss}%sMalediction
+{poss}@arg@Malediction
 
 %%%%
-{poss}the %sOath
+{poss}the @arg@Oath
 
 %%%%
-{poss}%sExecration
+{poss}@arg@Execration
 
 %%%%
-{poss}%sEnchantment
+{poss}@arg@Enchantment
 
 %%%%
-{poss}%sBewitchment
+{poss}@arg@Bewitchment
 
 %%%%
-{poss}%sGlamour
+{poss}@arg@Glamour
 
 %%%%
-{poss}%sFascination
+{poss}@arg@Fascination
 
 %%%%
-{poss}%sBeguiling
+{poss}@arg@Beguiling
 
 %%%%
 
 # Ice genitive
 %%%%
-{poss}%sIce
+{poss}@arg@Ice
 
 %%%%
-{poss}%sSnow
+{poss}@arg@Snow
 
 %%%%
-{poss}%sCold
+{poss}@arg@Cold
 
 %%%%
-{poss}the %sSnowflakes
+{poss}the @arg@Snowflakes
 
 %%%%
-{poss}the %sGlacier
+{poss}the @arg@Glacier
 
 %%%%
-{poss}the %sFrostbite
+{poss}the @arg@Frostbite
 
 %%%%
 
 # Transmutation genitive
 %%%%
-{poss}%sTransmigration
+{poss}@arg@Transmigration
 
 %%%%
-{poss}%sTransmutation
+{poss}@arg@Transmutation
 
 %%%%
-{poss}%sTransformation
+{poss}@arg@Transformation
 
 %%%%
-{poss}%sShape Shifting
+{poss}@arg@Shape Shifting
 
 %%%%
-{poss}%sChanging
+{poss}@arg@Changing
 
 %%%%
-{poss}%sMoulding
+{poss}@arg@Moulding
 
 %%%%
 
 # Necromancy genitive
 %%%%
-{poss}%sNecromancy
+{poss}@arg@Necromancy
 
 %%%%
-{poss}%sEvil
+{poss}@arg@Evil
 
 %%%%
-{poss}%sDarkness
+{poss}@arg@Darkness
 
 %%%%
-{poss}%sStolen Souls
+{poss}@arg@Stolen Souls
 
 %%%%
-{poss}%sRites
+{poss}@arg@Rites
 
 %%%%
-{poss}%sArts
+{poss}@arg@Arts
 
 %%%%
-{poss}%sSecrets
+{poss}@arg@Secrets
 
 %%%%
-{poss}%sRituals
+{poss}@arg@Rituals
 
 %%%%
-{poss}%sMagic
+{poss}@arg@Magic
 
 %%%%
 
 # Summoning genitive
 %%%%
-{poss}%sSummoning
+{poss}@arg@Summoning
 
 %%%%
-{poss}%sCalling
+{poss}@arg@Calling
 
 %%%%
-{poss}%sCreation
+{poss}@arg@Creation
 
 %%%%
-{poss}the %sEntourage
+{poss}the @arg@Entourage
 
 %%%%
-{poss}%sCompanions
+{poss}@arg@Companions
 
 %%%%
-{poss}the %sEscort
+{poss}the @arg@Escort
 
 %%%%
-{poss}%sIllusion
+{poss}@arg@Illusion
 
 %%%%
-{poss}%sSlavery
+{poss}@arg@Slavery
 
 %%%%
 
 # Translocation genitive
 %%%%
-{poss}%sTranslocation
+{poss}@arg@Translocation
 
 %%%%
-{poss}%sDisplacement
+{poss}@arg@Displacement
 
 %%%%
-{poss}%sDislocation
+{poss}@arg@Dislocation
 
 %%%%
-{poss}%sOrientation
+{poss}@arg@Orientation
 
 %%%%
-{poss}the %sTraveller
+{poss}the @arg@Traveller
 
 %%%%
-{poss}the %sCompass
+{poss}the @arg@Compass
 
 %%%%
-{poss}the %sVoyage
+{poss}the @arg@Voyage
 
 %%%%
 
 # Poison genitive
 %%%%
-{poss}%sPoison
+{poss}@arg@Poison
 
 %%%%
-{poss}%sVenom
+{poss}@arg@Venom
 
 %%%%
-{poss}%sToxins
+{poss}@arg@Toxins
 
 %%%%
-{poss}%sPoisoning
+{poss}@arg@Poisoning
 
 %%%%
-{poss}%sIntoxication
+{poss}@arg@Intoxication
 
 %%%%
-{poss}%sEnvenoming
+{poss}@arg@Envenoming
 
 %%%%
-{poss}%sContamination
+{poss}@arg@Contamination
 
 %%%%
 
 # Earth genitive
 %%%%
-{poss}%sEarth
+{poss}@arg@Earth
 
 %%%%
-{poss}%sStones
+{poss}@arg@Stones
 
 %%%%
-{poss}%sClay
+{poss}@arg@Clay
 
 %%%%
-{poss}the %sMountains
+{poss}the @arg@Mountains
 
 %%%%
-{poss}the %sRocks
+{poss}the @arg@Rocks
 
 %%%%
 
 # Air genitive
 %%%%
-{poss}%sAir
+{poss}@arg@Air
 
 %%%%
-{poss}%sLightness
+{poss}@arg@Lightness
 
 %%%%
-{poss}%sWeightlessness
+{poss}@arg@Weightlessness
 
 %%%%
-{poss}%sFlight
+{poss}@arg@Flight
 
 %%%%
-{poss}the %sBirds
+{poss}the @arg@Birds
 
 %%%%
-{poss}%sFeathers
+{poss}@arg@Feathers
 
 %%%%
 

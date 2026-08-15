@@ -161,20 +161,20 @@ Your movement is slowed on this liquid ground.
 # Confusing Touch spell active (causes hands/paws/etc. to glow)
 # NOTE: Singular hand/paw/etc. if player has sacrificed a hand to Ru
 %%%%
-%s is glowing red.
+@arg@ is glowing red.
 
 %%%%
-%s are glowing red.
+@arg@ are glowing red.
 
 %%%%
 
 # Jiyva Slimify active (causes hands/paws/etc. to be coated in slime)
 # NOTE: Singular hand/paw/etc. if player has sacrificed a hand to Ru
 %%%%
-%s is covered in slime.
+@arg@ is covered in slime.
 
 %%%%
-%s are covered in slime.
+@arg@ are covered in slime.
 
 %%%%
 
@@ -186,10 +186,10 @@ Regen (%d)
 
 # Skill training enhanced by manual for that skill
 %%%%
-studying %s
+studying @arg@
 
 %%%%
-You are studying %s.
+You are studying @arg@.
 
 %%%%
 
@@ -349,10 +349,10 @@ Your control over your magic has been sapped.
 Bribe
 
 %%%%
-bribing [%s]
+bribing [@arg@]
 
 %%%%
-You are bribing %s.
+You are bribing @arg@.
 
 %%%%
 
@@ -810,10 +810,10 @@ confusing by touch
 confusing touch
 
 %%%%
-%s stops glowing.
+@arg@ stops glowing.
 
 %%%%
-%s stop glowing.
+@arg@ stop glowing.
 
 %%%%
 
