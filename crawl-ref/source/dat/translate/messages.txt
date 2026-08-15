@@ -4825,7 +4825,7 @@ This save is from an older version.
 " • delete it and start a new game"
 
 %%%%
-This save's version: (%d.%d) (must be >= %d.%d)
+This save's version: (@num1@.@num2@) (must be >= @num3@.@num4@)
 
 %%%%
 This save is from a newer version.
@@ -4837,7 +4837,7 @@ This save is from a newer version.
 " • continue your game with a newer version of @arg@"
 
 %%%%
-This save's version: (%d.%d) (must be <= %d.%d)
+This save's version: (@num1@.@num2@) (must be <= @num3@.@num4@)
 
 %%%%
 ERROR: Could not lock file @arg@
@@ -17317,10 +17317,10 @@ Restoring view layers.
 # viewgeom.cc
 ##################
 %%%%
-Terminal too small (%d,%d); need at least (%d,%d)
+Terminal too small (@num1@,@num2@); need at least (@num3@,@num4@)
 
 %%%%
-Terminal too small (%d,%d); layout needs (%d,%d)
+Terminal too small (@num1@,@num2@); layout needs (@num3@,@num4@)
 
 %%%%
 
@@ -17526,7 +17526,7 @@ No hits
 Defense
 
 %%%%
-@arg1@ @arg2@: XL %d   Str %d   Int %d   Dex %d
+@arg1@ @arg2@: XL @num1@   Str @num2@   Int @num3@   Dex @num4@
 
 %%%%
 @arg1@, Skill: @arg2@
@@ -17765,7 +17765,7 @@ No such background, making it a Fighter.
 %d monsters, %d total exp value (%d non-uniq)
 
 %%%%
-%d monsters, %d total exp value (%d non-uniq, %d adjusted)
+@num1@ monsters, @num2@ total exp value (@num3@ non-uniq, @num4@ adjusted)
 
 %%%%
 "(c)hange spawn rate or (s)pawn monsters? "
@@ -17907,7 +17907,7 @@ Monster turned into something other than the desired type.
 Choose a destination!
 
 %%%%
-Attempting to calculate a path from (%d, %d) to (%d, %d)...
+Attempting to calculate a path from (@num1@, @num2@) to (@num3@, @num4@)...
 
 %%%%
 "Here's the shortest path: "
@@ -18172,7 +18172,7 @@ You can only abyss_teleport() inside the Abyss.
 Running Jiyva off-level sacrifice.
 
 %%%%
-Cost level: %d  Total experience: %d  Next cost level: %d Skill cost: %d
+Cost level: @num1@  Total experience: @num2@  Next cost level: @num3@ Skill cost: @num4@
 
 %%%%
 Failure to give mutation.
