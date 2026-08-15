@@ -43,10 +43,10 @@ Dungeon Crawl Stone Soup: High Scores
 Began as @arg@
 
 %%%%
-(%d damage)
+(@num@ damage)
 
 %%%%
-The game lasted @arg@ (%d turns).
+The game lasted @arg@ (@num@ turns).
 
 %%%%
 
@@ -84,7 +84,7 @@ E
 
 %%%%
 # without HP
-(level %d)
+(level @num@)
 
 %%%%
 
@@ -198,7 +198,7 @@ an Initiate
 Escaped with the Orb
 
 %%%%
-... and %d runes
+... and @num@ runes
 
 %%%%
 
@@ -222,7 +222,7 @@ Got out of the dungeon alive
 ... with 1 rune
 
 %%%%
-... with %d runes
+... with @num@ runes
 
 %%%%
 Entered wizard mode

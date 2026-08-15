@@ -34,28 +34,28 @@
 # Generic + misc
 ################################
 %%%%
-%d shops
+@num@ shops
 
 %%%%
-%d portals
+@num@ portals
 
 %%%%
-%d shops/portals
+@num@ shops/portals
 
 %%%%
-%d altars
+@num@ altars
 
 %%%%
-%d stairs
+@num@ stairs
 
 %%%%
-%d runed doors
+@num@ runed doors
 
 %%%%
-%d runed translucent doors
+@num@ runed translucent doors
 
 %%%%
-%d transporters
+@num@ transporters
 
 %%%%
 
@@ -63,28 +63,28 @@
 # Stairs and hatches
 ################################
 %%%%
-%d stone staircases leading down
+@num@ stone staircases leading down
 
 %%%%
-%d stone staircases leading up
+@num@ stone staircases leading up
 
 %%%%
 # can get multiple in tutorial 3 at least (and maybe some specific entrance vaults)
-%d staircases leading out of the dungeon
+@num@ staircases leading out of the dungeon
 
 %%%%
-%d exits from the tutorial
+@num@ exits from the tutorial
 
 %%%%
 
 %%%%
-%d escape hatches
+@num@ escape hatches
 
 %%%%
-%d escape hatches in the floor
+@num@ escape hatches in the floor
 
 %%%%
-%d escape hatches in the ceiling
+@num@ escape hatches in the ceiling
 
 %%%%
 
@@ -92,31 +92,31 @@
 # Non-unique branch portals
 ################################
 %%%%
-%d gateways to Hell
+@num@ gateways to Hell
 
 %%%%
-%d gateways back into the Dungeon
+@num@ gateways back into the Dungeon
 
 %%%%
-%d one-way gates to the infinite horrors of the Abyss
+@num@ one-way gates to the infinite horrors of the Abyss
 
 %%%%
-%d exits through the horrors of the Abyss
+@num@ exits through the horrors of the Abyss
 
 %%%%
-%d gateways leading deeper into the Abyss
+@num@ gateways leading deeper into the Abyss
 
 %%%%
-%d gateways leading out of the Abyss
+@num@ gateways leading out of the Abyss
 
 %%%%
-%d one-way gates leading to the halls of Pandemonium
+@num@ one-way gates leading to the halls of Pandemonium
 
 %%%%
-%d gates leading to another region of Pandemonium
+@num@ gates leading to another region of Pandemonium
 
 %%%%
-%d gates leading out of Pandemonium
+@num@ gates leading out of Pandemonium
 
 %%%%
 
@@ -125,84 +125,84 @@
 ################################
 # it's at least theoretically possible to discover multiple of any altar simultaneously
 %%%%
-%d glowing silver altars of Zin
+@num@ glowing silver altars of Zin
 
 %%%%
-%d glowing golden altars of the Shining One
+@num@ glowing golden altars of the Shining One
 
 %%%%
-%d ancient bone altars of Kikubaaqudgha
+@num@ ancient bone altars of Kikubaaqudgha
 
 %%%%
-%d basalt altars of Yredelemnul
+@num@ basalt altars of Yredelemnul
 
 %%%%
-%d shimmering altars of Xom
+@num@ shimmering altars of Xom
 
 %%%%
-%d radiant altars of Vehumet
+@num@ radiant altars of Vehumet
 
 %%%%
-%d iron altars of Okawaru
+@num@ iron altars of Okawaru
 
 %%%%
-%d burning altars of Makhleb
+@num@ burning altars of Makhleb
 
 %%%%
-%d shimmering blue altars of Sif Muna
+@num@ shimmering blue altars of Sif Muna
 
 %%%%
-%d bloodstained altars of Trog
+@num@ bloodstained altars of Trog
 
 %%%%
-%d sparkling altars of Nemelex Xobeh
+@num@ sparkling altars of Nemelex Xobeh
 
 %%%%
-%d white marble altars of Elyvilon
+@num@ white marble altars of Elyvilon
 
 %%%%
-%d corrupted altars of Lugonu
+@num@ corrupted altars of Lugonu
 
 %%%%
-%d roughly hewn altars of Beogh
+@num@ roughly hewn altars of Beogh
 
 %%%%
-%d viscous altars of Jiyva
+@num@ viscous altars of Jiyva
 
 %%%%
-%d blossoming altars of Fedhas
+@num@ blossoming altars of Fedhas
 
 %%%%
-%d snail-covered altars of Cheibriados
+@num@ snail-covered altars of Cheibriados
 
 %%%%
-%d broken altars of Ashenzari
+@num@ broken altars of Ashenzari
 
 %%%%
-%d shadowy altars of Dithmenos
+@num@ shadowy altars of Dithmenos
 
 %%%%
-%d opulent altars of Gozag
+@num@ opulent altars of Gozag
 
 %%%%
-%d stormy altars of Qazlal
+@num@ stormy altars of Qazlal
 
 %%%%
-%d sacrificial altars of Ru
+@num@ sacrificial altars of Ru
 
 %%%%
-%d faded altars of an unknown god
+@num@ faded altars of an unknown god
 
 %%%%
-%d oddly glowing altars of Pakellas
+@num@ oddly glowing altars of Pakellas
 
 %%%%
-%d hide-covered altars of Uskayaw
+@num@ hide-covered altars of Uskayaw
 
 %%%%
-%d hazy altars of Hepliaklqana
+@num@ hazy altars of Hepliaklqana
 
 %%%%
-%d ornate altars of the Wu Jian Council
+@num@ ornate altars of the Wu Jian Council
 
 %%%%

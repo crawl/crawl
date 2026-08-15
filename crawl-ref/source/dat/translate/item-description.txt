@@ -210,7 +210,7 @@ It enhances your conjuration magic.
 
 # maximum enchantment - applies to weapons and armour
 %%%%
-It can be maximally enchanted to +%d.
+It can be maximally enchanted to +@num@.
 
 %%%%
 It cannot be enchanted further.
@@ -226,13 +226,13 @@ This ancient artefact cannot be changed by magic or mundane means.
 #################################
 
 %%%%
-Base accuracy: %+d  Base damage: %d  Base attack delay: %.1f
+Base accuracy: %+d  Base damage: @num@  Base attack delay: %.1f
 
 %%%%
-Firing bullets:    Base damage: %d
+Firing bullets:    Base damage: @num@
 
 %%%%
-Base damage: %d  Base attack delay: %.1f
+Base damage: @num@  Base attack delay: %.1f
 
 %%%%
 It can be evoked to extend its reach.
@@ -405,16 +405,16 @@ It may be destroyed on impact.
 #################################
 
 %%%%
-Base armour rating: %d
+Base armour rating: @num@
 
 %%%%
-Base shield rating: %d
+Base shield rating: @num@
 
 %%%%
-Encumbrance rating: %d
+Encumbrance rating: @num@
 
 %%%%
-Evasion: %d
+Evasion: @num@
 
 %%%%
 If you switch to wearing this armour, your AC would increase by @num1@ (@num2@ -> @num3@).
@@ -508,7 +508,7 @@ its wearer takes one free step when moving towards enemies.
 
 %%%%
 # Warlock's Mirror
-With your current SH, it has a %d%% chance to reflect attacks against your willpower and other normally unblockable effects.
+With your current SH, it has a @num@%% chance to reflect attacks against your willpower and other normally unblockable effects.
 
 %%%%
 
@@ -517,10 +517,10 @@ With your current SH, it has a %d%% chance to reflect attacks against your willp
 #################################
 
 %%%%
-This weapon's minimum attack delay (%.1f) is reached at skill level %d.
+This weapon's minimum attack delay (%.1f) is reached at skill level @num@.
 
 %%%%
-This projectile's minimum attack delay (%.1f) is reached at skill level %d.
+This projectile's minimum attack delay (%.1f) is reached at skill level @num@.
 
 %%%%
 # shield penalty
@@ -580,7 +580,7 @@ It reflects blocked missile attacks.
 
 %%%%
 # potion of lignification
-If you quaff this potion your AC would be %d.
+If you quaff this potion your AC would be @num@.
 
 %%%%
 If you drink this now, you will no longer be @arg@.

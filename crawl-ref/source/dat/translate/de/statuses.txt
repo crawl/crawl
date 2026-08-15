@@ -53,14 +53,14 @@ Laden\
 
 # Corroded
 %%%%
-Corr (%d)
-Korr (%d)
+Corr (@num@)
+Korr (@num@)
 %%%%
 
 # Flayed
 %%%%
-Flay (%d)
-Gesch (%d)
+Flay (@num@)
+Gesch (@num@)
 %%%%
 
 # Palentonga defensive curl
@@ -180,8 +180,8 @@ Aug
 
 # Powered by Death mutation - causes Regeneration effect when killing
 %%%%
-Regen (%d)
-Regen (%d)
+Regen (@num@)
+Regen (@num@)
 %%%%
 
 # Skill training enhanced by manual for that skill
@@ -228,8 +228,8 @@ Du bewegst dich mit übernatürlicher Geschwindigkeit.
 
 # Heaqvenly Storm (Wu Jian) active
 %%%%
-Storm (%d)
-Sturm (%d)
+Storm (@num@)
+Sturm (@num@)
 %%%%
 
 # Slaying level from Wereblood spell
@@ -358,8 +358,8 @@ Du bestichst @arg@.
 
 # Horrified
 %%%%
-Horr(%d)
-Entsetzt(%d)
+Horr(@num@)
+Entsetzt(@num@)
 %%%%
 overwhelmed with horror
 überwältigt von Entsetzen
@@ -407,8 +407,8 @@ bezottet
 Zot is approaching!
 Zot kommt näher!
 %%%%
-Zot (%d)
-Zot (%d)
+Zot (@num@)
+Zot (@num@)
 %%%%
 
 # Contaminated

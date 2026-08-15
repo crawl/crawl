@@ -8,8 +8,8 @@
 # item-name.cc
 ##################
 %%%%
-<white>Runes of Zot (</white><@arg1@>%d</@arg2@><white> collected) & Orbs of Power</white>
-<white>Runen von Zot (</white><@arg1@>%d</@arg2@><white> gesammelt) & Kugeln der Macht</white>
+<white>Runes of Zot (</white><@arg1@>@num@</@arg2@><white> collected) & Orbs of Power</white>
+<white>Runen von Zot (</white><@arg1@>@num@</@arg2@><white> gesammelt) & Kugeln der Macht</white>
 %%%%
 
 ##################
@@ -420,8 +420,8 @@ Der Dämon der unendlichen Leere lächelt dir zu.
 @arg@ snickers.
 @arg@ kichert.
 %%%%
-" (you have %d gold)"
-" (du hast %d Gold)"
+" (you have @num@ gold)"
+" (du hast @num@ Gold)"
 %%%%
 Choose an item to acquire.
 Wähle einen Artikel zur Erwerbung.
@@ -2057,8 +2057,8 @@ Ein Kartendeck, das für später beiseite gelegt ist.
 1 @arg@ card
 1 @arg@ Karte
 %%%%
-%d @arg@ cards
-%d @arg@ Karten
+@num@ @arg@ cards
+@num@ @arg@ Karten
 %%%%
 It is found in @arg@, or in Nemelex Xobeh's deck of punishment.
 Man findet sie in {dat}@arg@, oder in Nemelex Xobehs Deck der Strafe.
@@ -2072,8 +2072,8 @@ Sie kommt nur in Nemelex Xobehs Deck der Strafe vor.
 It is normally not part of any deck.
 Sie ist normalerweise nicht Teil eines Decks.
 %%%%
-"It currently has %d cards "
-"Es hat derzeit %d Karten "
+"It currently has @num@ cards "
+"Es hat derzeit @num@ Karten "
 %%%%
 "It currently has 1 card "
 "Es hat derzeit 1 Karte "
@@ -2081,8 +2081,8 @@ Sie ist normalerweise nicht Teil eines Decks.
 "It is currently empty "
 "Es ist derzeit leer "
 %%%%
-and can contain up to %d cards.
-und kann bis zu %d Karten enthalten.
+and can contain up to @num@ cards.
+und kann bis zu @num@ Karten enthalten.
 %%%%
 Deal which deck?
 Aus welchem Deck geben?
@@ -2739,8 +2739,8 @@ Cheibriados verlangsamt deine Bewegung.
 Cheibriados slightly slows your movement.
 Cheibriados verlangsamt deine Bewegung leicht.
 %%%%
-Cheibriados supports your attributes. (+%d)
-Cheibriados unterstützt deine Attribute. (+%d)
+Cheibriados supports your attributes. (+@num@)
+Cheibriados unterstützt deine Attribute. (+@num@)
 %%%%
 You can memorise @arg@.
 Du kannst @arg@ auswendig lernen.
@@ -3353,8 +3353,8 @@ e(v)ozieren
 "Mit was beschriften? "
 %%%%
 # spell properties
-Level: %d
-Stufe: %d
+Level: @num@
+Stufe: @num@
 %%%%
 "School: "
 "Schule: "
@@ -3362,8 +3362,8 @@ Stufe: %d
 "Schools: "
 "Schulen: "
 %%%%
-Fail: %d%%
-Versagen: %d%%
+Fail: @num@%%
+Versagen: @num@%%
 %%%%
 "Power: "
 "Kraft: "
@@ -3419,8 +3419,8 @@ debuffs and slows you
 dich verlangsamt und Verstärkungen entfernt
 %%%%
 # miscast damage, for example: "deals up to 10 fire damage"
-deals up to %d @arg@
-bis zu %d {acc}@arg@ verursacht
+deals up to @num@ @arg@
+bis zu @num@ {acc}@arg@ verursacht
 %%%%
 Miscasting this spell causes magic contamination.
 Ein Fehlzauber verursacht magische Kontamination.
@@ -3438,8 +3438,8 @@ Dein Diener wirkt {acc}@arg@.
 You can sustain at most 1 creature summoned by this spell.
 Du kannst maximal 1 durch diesen Zauber beschworene Kreatur erhalten.
 %%%%
-You can sustain at most %d creatures summoned by this spell.
-Du kannst maximal %d durch diesen Zauber beschworene Kreaturen erhalten.
+You can sustain at most @num@ creatures summoned by this spell.
+Du kannst maximal @num@ durch diesen Zauber beschworene Kreaturen erhalten.
 %%%%
 @arg@ frowns upon the use of this spell.
 @arg@ missbilligt die Verwendung dieses Zaubers.
@@ -3465,14 +3465,14 @@ Dieser Zauberspruch hat keine Beschreibung. Es könnte daher unklug sein, ihn zu
 "Range : "
 "Reichweite : "
 %%%%
-" (pow %d)"
-" (Kraft %d)"
+" (pow @num@)"
+" (Kraft @num@)"
 %%%%
 You cannot be affected by this spell right now. @arg@
 Du kannst im Moment nicht von diesem Zauber beeinflusst werden. @arg@
 %%%%
-Chance to defeat your Will: %d%%@arg@
-Chance, deinen Willen zu besiegen: %d%%@arg@
+Chance to defeat your Will: @num@%%@arg@
+Chance, deinen Willen zu besiegen: @num@%%@arg@
 %%%%
 # Draconian descriptions
 It has @arg@scales.
@@ -3560,8 +3560,8 @@ selbst blinzeln
 blink together with the defender
 zusammen mit dem Verteidiger blinzeln
 %%%%
-deal up to %d extra cold damage
-bis zu %d zusätzlichen Kälteschaden verursachen
+deal up to @num@ extra cold damage
+bis zu @num@ zusätzlichen Kälteschaden verursachen
 %%%%
 cause confusion
 Verwirrung verursachen
@@ -3581,11 +3581,11 @@ Stärke, Intelligenz, oder Geschicklichkeit entziehen
 drain life
 Leben auszehren
 %%%%
-deal up to %d extra electric damage
-bis zu %d zusätzlichen elektrischen Schaden verursachen
+deal up to @num@ extra electric damage
+bis zu @num@ zusätzlichen elektrischen Schaden verursachen
 %%%%
-deal up to %d extra fire damage
-bis zu %d zusätzlichen Feuerschaden verursachen
+deal up to @num@ extra fire damage
+bis zu @num@ zusätzlichen Feuerschaden verursachen
 %%%%
 cause mutations
 Mutationen verursachen
@@ -3660,32 +3660,32 @@ Schwäche verursachen
 " wenn Schaden zugefügt wird"
 %%%%
 # @arg@ here is a verb like "hit"
-@arg@ for up to %d fire damage
-@arg@ für bis zu %d Feuerschaden
+@arg@ for up to @num@ fire damage
+@arg@ für bis zu @num@ Feuerschaden
 %%%%
 @arg@ @num1@ times for up to @num2@ damage each
 %2$d mal %1$s für jeweils bis zu %3$d Schaden
 %%%%
-@arg@ for up to %d damage
-@arg@ für bis zu %d Schaden
+@arg@ for up to @num@ damage
+@arg@ für bis zu @num@ Schaden
 %%%%
 @arg1@ @num1@ times for up to @num2@ damage each plus @arg2@
 %2$d mal %1$s für jeweils bis zu %3$d Schaden plus {acc}%4$s
 %%%%
-@arg1@ for up to %d damage plus @arg2@
-@arg1@ für bis zu %d Schaden plus {acc}@arg2@
+@arg1@ for up to @num@ damage plus @arg2@
+@arg1@ für bis zu @num@ Schaden plus {acc}@arg2@
 %%%%
 @arg@ from a distance @num1@ times for up to @num2@ damage each
 %2$d mal aus der Ferne %1$s für jeweils bis zu %3$d Schaden
 %%%%
-@arg@ from a distance for up to %d damage
-aus der Ferne @arg@ für bis zu %d Schaden
+@arg@ from a distance for up to @num@ damage
+aus der Ferne @arg@ für bis zu @num@ Schaden
 %%%%
 @arg1@ from a distance @num1@ times for up to @num2@ damage each plus @arg2@
 %2$d mal aus der Ferne %1$s für jeweils bis zu %3$d Schaden plus {acc}%$4s
 %%%%
-@arg1@ from a distance for up to %d damage plus @arg2@
-aus der Ferne @arg1@ für bis zu %d Schaden plus {acc}@arg2@
+@arg1@ from a distance for up to @num@ damage plus @arg2@
+aus der Ferne @arg1@ für bis zu @num@ Schaden plus {acc}@arg2@
 %%%%
 # Monster can do whatever from the things above
 It can @arg@
@@ -3727,11 +3727,11 @@ sehr schnell
 quickly
 schnell
 %%%%
-about %d%% to evade @arg@
-etwa %d%% {dat}@arg@ auszuweichen
+about @num@%% to evade @arg@
+etwa @num@%% {dat}@arg@ auszuweichen
 %%%%
-" (about %d%% to hit you)"
-" (etwa %d%% Chance dich zu treffen)"
+" (about @num@%% to hit you)"
+" (etwa @num@%% Chance dich zu treffen)"
 %%%%
 none (normally @arg@)
 keine (normalerweise @arg@)
@@ -4006,8 +4006,8 @@ Die Flut wird vom Anruf {gen}@arg@ befreit.
 Not in Shoals or no heightmap; tide not available.
 Nicht in den Untiefen oder keine Höhenkarte; Gezeiten nicht verfügbar.
 %%%%
-"Tide inertia: %d. New value (smaller = faster tide) or use +/- to change tide: "
-"Gezeitenträgheit: %d. Neuer Wert (kleiner = schnellere Gezeiten) oder +/- benutzen um Gezeiten zu ändern: "
+"Tide inertia: @num@. New value (smaller = faster tide) or use +/- to change tide: "
+"Gezeitenträgheit: @num@. Neuer Wert (kleiner = schnellere Gezeiten) oder +/- benutzen um Gezeiten zu ändern: "
 %%%%
 
 ##################
@@ -4205,8 +4205,8 @@ mit {dat}@arg@ bewaffnet
 This monster is @arg@.
 Dieses Monster ist @arg@.
 %%%%
-chance to confuse on hit: %d%%
-Chance, bei einem Treffer zu verwirren: %d%%
+chance to confuse on hit: @num@%%
+Chance, bei einem Treffer zu verwirren: @num@%%
 %%%%
 fire blocked by @arg@
 Schusslinie durch {acc}@arg@ blockiert
@@ -4414,8 +4414,8 @@ Das kannst du nicht evozieren!
 The now-empty wand crumbles to dust.
 Der jetzt leere Zauberstab zerfällt zu Staub.
 %%%%
-%d skills
-%d Fertigkeiten
+@num@ skills
+@num@ Fertigkeiten
 %%%%
 You open the lid...
 Du machst den Deckel auf ...
@@ -4569,11 +4569,11 @@ Treppe nach unten
 1 more exclusion
 1 weiteres Sperrgebiet
 %%%%
-%d exclusions
-%d Sperrgebiete
+@num@ exclusions
+@num@ Sperrgebiete
 %%%%
-%d more exclusions
-%d weitere Sperrgebiete
+@num@ more exclusions
+@num@ weitere Sperrgebiete
 %%%%
 "exclusions: "
 "Sperrgebiete: "
@@ -4878,14 +4878,14 @@ Dein Schaden wird auf dich zurückreflektiert!
 @arg@ spits out another jelly.
 @arg@ spuckt noch ein Gelee aus.
 %%%%
-@arg@ spits out %d more jellies.
-@arg@ spuckt %d mehr Gelees aus.
+@arg@ spits out @num@ more jellies.
+@arg@ spuckt @num@ mehr Gelees aus.
 %%%%
 One of the Royal Jelly's fragments survives.
 Eines der Fragmente des Gelée Royale ist erhalten geblieben.
 %%%%
-The dying Royal Jelly spits out %d more jellies.
-Das sterbende Gelée Royale spuckt %d mehr Gelees aus.
+The dying Royal Jelly spits out @num@ more jellies.
+Das sterbende Gelée Royale spuckt @num@ mehr Gelees aus.
 %%%%
 # starcursed mass merge
 @arg@ shudders and is absorbed by its neighbour.
@@ -5302,11 +5302,11 @@ Etwas blockiert deinen Schattenschritt.
 You step into @arg@ shadow.
 Du trittst in den Schatten {gen}@arg@.
 %%%%
-You need at least %d gold to purchase potions right now!
-Derzeit brauchst du mindestens %d Gold, um Tränke zu kaufen!
+You need at least @num@ gold to purchase potions right now!
+Derzeit brauchst du mindestens @num@ Gold, um Tränke zu kaufen!
 %%%%
-"  [%c] - %d gold - "
-"  [%c] - %d Gold - "
+"  [%c] - @num@ gold - "
+"  [%c] - @num@ Gold - "
 %%%%
 Purchase which effect?
 Welchen Effekt kaufen?
@@ -5314,8 +5314,8 @@ Welchen Effekt kaufen?
 You don't have enough gold for that!
 Dafür hast du nicht genug Gold!
 %%%%
-You currently need %d gold to open negotiations with a merchant.
-Du benötigst derzeit %d Gold, um Verhandlungen mit einem Händler aufzunehmen.
+You currently need @num@ gold to open negotiations with a merchant.
+Du benötigst derzeit @num@ Gold, um Verhandlungen mit einem Händler aufzunehmen.
 %%%%
 No merchants are willing to come to this location.
 Kein Händler ist bereit, an diesen Ort zu kommen.
@@ -5340,8 +5340,8 @@ Du hast nicht genug Gold, um diesen Händler zu finanzieren!
 Your bribe of @arg@ has been exhausted.
 Deine Bestechung von {dat}@arg@ ist erschöpft.
 %%%%
-You need at least %d gold to offer a bribe.
-Du brauchst mindestens %d Gold, um eine Bestechung anzubieten.
+You need at least @num@ gold to offer a bribe.
+Du brauchst mindestens @num@ Gold, um eine Bestechung anzubieten.
 %%%%
 You can't bribe the denizens of @arg1@ or the denizens of @arg2@.
 Du kannst die Bewohner {gen}@arg1@ oder {gen}@arg2@ nicht bestechen.
@@ -5897,8 +5897,8 @@ Du sprichst ein stilles Gebet zu {dat}@arg@.
 You offer a prayer to @arg@.
 Du sprichst ein Gebet zu {dat}@arg@.
 %%%%
-You pay a tithe of %d gold.
-Du zahlst ein Zehnt von %d Gold.
+You pay a tithe of @num@ gold.
+Du zahlst ein Zehnt von @num@ Gold.
 %%%%
 @arg@ ignores your late donation.
 @arg@ ignoriert deine verspätete Spende.
@@ -6326,11 +6326,11 @@ Du hast keinen solchen Gegenstand bei dir.
 " (1+ turns)"
 " (1+ Runden)"
 %%%%
-" (%d turns)"
-" (%d Runden)"
+" (@num@ turns)"
+" (@num@ Runden)"
 %%%%
-" (%d+ turns)"
-" (%d+ Runden)"
+" (@num@+ turns)"
+" (@num@+ Runden)"
 %%%%
 Drop (and turn off autopickup for) what?
 Was fallen lassen (und das automatische Aufheben dafür ausschalten)?
@@ -6646,8 +6646,8 @@ Du trägst bereits einen verfluchten Ring!
 You're already wearing two cursed rings!
 Du trägst bereits zwei verfluchte Ringe!
 %%%%
-You're already wearing %d cursed rings! Isn't that enough for you?
-Du trägst bereits %d verfluchte Ringe! Reicht das nicht?
+You're already wearing @num@ cursed rings! Isn't that enough for you?
+Du trägst bereits @num@ verfluchte Ringe! Reicht das nicht?
 %%%%
 Put ring where? (<w>Esc</w> to cancel)
 Ring wo anstecken? (<w>Esc</w> zum Abbrechen)
@@ -6982,8 +6982,8 @@ Pick up @arg@? ((y)es/(n)o/(a)ll/(m)enu/*?g,/q)
 You now have 1 gold piece.
 Du hast jetzt 1 Goldmünze.
 %%%%
-You now have %d gold pieces.
-Du hast jetzt %d Goldmünzen.
+You now have @num@ gold pieces.
+Du hast jetzt @num@ Goldmünzen.
 %%%%
 You now have @num1@ gold pieces (gained @num2@).
 Du hast jetzt @num1@ Goldmünzen (@num2@ bekommen).
@@ -7017,11 +7017,11 @@ Du hebst {acc}@arg@ auf und fühlst ihre Kraft.
 You have collected all the runes! Now go and win!
 Du hast alle Runen gesammelt! Jetzt geh und gewinne!
 %%%%
-%d runes! That's enough to enter the realm of Zot.
-%d Runen! Das reicht aus, um das Reich von Zot zu betreten.
+@num@ runes! That's enough to enter the realm of Zot.
+@num@ Runen! Das reicht aus, um das Reich von Zot zu betreten.
 %%%%
-You now have %d runes.
-Du hast jetzt %d Runen.
+You now have @num@ runes.
+Du hast jetzt @num@ Runen.
 %%%%
 Press } to see all the runes you have collected.
 } drücken, um alle Runen zu sehen, die du gesammelt hast.
@@ -7038,14 +7038,14 @@ Zot kann dir nicht mehr schaden.
 Now all you have to do is get back out of the dungeon!
 Jetzt musst du nur noch wieder aus dem Kerker herauskommen!
 %%%%
-@arg@ (gained %d)
-@arg@ (%d bekommen)
+@arg@ (gained @num@)
+@arg@ (@num@ bekommen)
 %%%%
 @arg@ (gained 1 charge)
 @arg@ (1 Ladung bekommen)
 %%%%
-@arg@ (gained %d charges)
-@arg@ (%d Ladungen bekommen)
+@arg@ (gained @num@ charges)
+@arg@ (@num@ Ladungen bekommen)
 %%%%
 # note: ring/amulet
 You will have to take that off first.
@@ -7063,8 +7063,8 @@ Kein Gegenstand zum Fallenlassen.
 Autopickup disabled for @arg@.
 Automatisches Aufheben für {acc}@arg@ deaktiviert.
 %%%%
-Autopickup disabled for %d items.
-Automatisches Aufheben für %d Gegenstände deaktiviert.
+Autopickup disabled for @num@ items.
+Automatisches Aufheben für @num@ Gegenstände deaktiviert.
 %%%%
 Your pack is full.
 Dein Gepäck ist voll.
@@ -7121,11 +7121,11 @@ Dieser Eintrag ist ein exakter Treffer für '@arg@'. Leertaste drücken um nicht
 This branch can only be entered while carrying at least 1 rune of Zot.
 Dieser Bereich kann nur betreten werden, wenn man mindestens eine Rune von Zot bei sich hat.
 %%%%
-This branch can only be entered while carrying at least %d runes of Zot.
-Dieser Bereich kann nur betreten werden, wenn man mindestens %d Runen von Zot bei sich hat.
+This branch can only be entered while carrying at least @num@ runes of Zot.
+Dieser Bereich kann nur betreten werden, wenn man mindestens @num@ Runen von Zot bei sich hat.
 %%%%
-This branch is %d levels deep.
-Dieser Bereich is %d Ebenen tief.
+This branch is @num@ levels deep.
+Dieser Bereich is @num@ Ebenen tief.
 %%%%
 The entrance to this branch can be found @arg@.
 Der Eingang dieses Bereichs kann @arg@ gefunden werden.
@@ -7463,8 +7463,8 @@ Du kannst hier nicht hoch gehen!
 You need a rune to enter this place.
 Du brauchst eine Rune, um diesen Ort zu betreten.
 %%%%
-You need at least %d runes to enter this place.
-Du brauchst mindestens %d Runen, um diesen Ort zu betreten.
+You need at least @num@ runes to enter this place.
+Du brauchst mindestens @num@ Runen, um diesen Ort zu betreten.
 %%%%
 A rune of Zot still resides in this realm, and once you leave you can never return. Are you sure you want to leave?
 Eine Rune von Zot befindet sich noch in diesem Reich und wenn du es einmal verlässt, kannst du nie wieder zurückkehren. Bist du sicher, dass du gehen willst?
@@ -7508,26 +7508,26 @@ Der Transporter wird von einer Kreatur auf der anderen Seite blockiert!
 You enter the transporter and appear at another place.
 Du betrittst den Transporter und tauchst an einem anderen Ort auf.
 %%%%
-You are a level %d @arg1@ @arg2@.
-Du bist ein Stufe %d @arg1@ @arg2@.
+You are a level @num@ @arg1@ @arg2@.
+Du bist ein Stufe @num@ @arg1@ @arg2@.
 %%%%
 You are @num1@%% of the way to level @num2@.
 Du bist @num1@%% auf dem Weg zu Stufe @num2@.
 %%%%
-I'm sorry, level %d is as high as you can go.
-Es tut mir leid, Stufe %d ist die höchste, die du erreichen kannst.
+I'm sorry, level @num@ is as high as you can go.
+Es tut mir leid, Stufe @num@ ist die höchste, die du erreichen kannst.
 %%%%
 With the way you've been playing, I'm surprised you got this far.
 So wie du gespielt hast, bin ich überrascht, dass du so weit gekommen bist.
 %%%%
-You'll get an extra life in %d.%02d levels' worth of XP.
-Du erhältst das nächste Extraleben nach Erfahrung, die %d,%02d Stufen entspricht.
+You'll get an extra life in @num@.%02d levels' worth of XP.
+Du erhältst das nächste Extraleben nach Erfahrung, die @num@,%02d Stufen entspricht.
 %%%%
-If you died right now, you'd get an extra life in %d.%02d levels' worth of XP.
-Würdest du genau jetzt sterben, dann würdest du ein Extraleben nach Erfahrung, die %d,%02d Stufen entspricht, erhalten.
+If you died right now, you'd get an extra life in @num@.%02d levels' worth of XP.
+Würdest du genau jetzt sterben, dann würdest du ein Extraleben nach Erfahrung, die @num@,%02d Stufen entspricht, erhalten.
 %%%%
-Play time: @arg@ (%d turns).
-Spielzeit: @arg@ (%d Runden).
+Play time: @arg@ (@num@ turns).
+Spielzeit: @arg@ (@num@ Runden).
 %%%%
 You are forever immune to Zot's power.
 Du bist für immer gegen die Macht von Zot immun.
@@ -7535,8 +7535,8 @@ Du bist für immer gegen die Macht von Zot immun.
 You have unlimited time to explore this branch.
 Du hast unbegrenzt Zeit, diesen Bereich zu erkunden.
 %%%%
-Zot will find you in %d turns if you stay in this branch and explore no new floors.
-Zot wird dich in %d Runden finden, wenn du in diesem Bereich bleibst und keine neuen Ebenen erkundest.
+Zot will find you in @num@ turns if you stay in this branch and explore no new floors.
+Zot wird dich in @num@ Runden finden, wenn du in diesem Bereich bleibst und keine neuen Ebenen erkundest.
 %%%%
 You can't remove @arg@, sorry.
 Du kannst {acc}@arg@ nicht ausziehen, tut mir leid.
@@ -7574,8 +7574,8 @@ Keine Köcheraktionen zum Durchwechseln verfügbar.
 You have 1 gold piece.
 Du hast 1 Goldmünze.
 %%%%
-You have %d gold pieces.
-Du hast %d Goldmünzen.
+You have @num@ gold pieces.
+Du hast @num@ Goldmünzen.
 %%%%
 You should not fight recklessly!
 Du solltest nicht rücksichtslos kämpfen!
@@ -8414,8 +8414,8 @@ Was auswählen (regex)?
 " (1 item)"
 " (1 Eintrag)"
 %%%%
-" (%d items)"
-" (%d Einträge)"
+" (@num@ items)"
+" (@num@ Einträge)"
 %%%%
 
 ##################
@@ -9726,8 +9726,8 @@ Durch die Kraft von Zin wird die feurige Explosion eingedämmt.
 # mon-info.cc
 ##################
 %%%%
-about %d
-etwa %d
+about @num@
+etwa @num@
 %%%%
 " (fellow slime)"
 " (Schleimfreund)"
@@ -10273,11 +10273,11 @@ Der Spriggan fällt von seinem nun toten Reittier.
 @arg@ steals 1 gold piece!
 @arg@ stiehlt 1 Goldmünze!
 %%%%
-@arg@ steals %d gold pieces!
-@arg@ stiehlt %d Goldmünzen!
+@arg@ steals @num@ gold pieces!
+@arg@ stiehlt @num@ Goldmünzen!
 %%%%
-@arg1@ steals %d of @arg2@!
-@arg1@ stiehlt %d von {dat}@arg2@!
+@arg1@ steals @num@ of @arg2@!
+@arg1@ stiehlt @num@ von {dat}@arg2@!
 %%%%
 @arg1@ steals @arg2@!
 @arg1@ stiehlt {acc}@arg2@!
@@ -10677,8 +10677,8 @@ Du krümmst dich vor Qual!
 The flames go out!
 Die Flammen verlöschen!
 %%%%
-You are now level %d!
-Du bist jetzt auf Stufe %d!
+You are now level @num@!
+Du bist jetzt auf Stufe @num@!
 %%%%
 You feel drained.
 Du fühlst dich ausgezehrt.
@@ -11407,8 +11407,8 @@ Wirklich wüten, während du {acc}@arg@ führst?
 @arg@ has regained 1 charge.
 @arg@ hat 1 Ladung zurückerhalten.
 %%%%
-@arg@ has regained %d charges.
-@arg@ hat %d Ladungen zurückerhalten.
+@arg@ has regained @num@ charges.
+@arg@ hat @num@ Ladungen zurückerhalten.
 %%%%
 Your life force feels restored.
 Deine Lebenskraft fühlt sich wiederhergestellt.
@@ -11422,17 +11422,17 @@ Deine Kapazität für Zaubersprüche ist voll und du verlierst den Zugang zu ein
 The power to cast @arg@ wells up from within.
 Die Macht, @arg@ zu wirken, quillt von innen hervor.
 %%%%
-Welcome back to level %d!
-Willkommen zurück auf Stufe %d!
+Welcome back to level @num@!
+Willkommen zurück auf Stufe @num@!
 %%%%
 You have reached level 27, the final one!
 Du hast Stufe 27 erreicht, die letzte!
 %%%%
-You have reached level %d, the highest you will ever reach!
-Du hast Stufe %d erreicht, die höchste, die du jemals erreichen wirst!
+You have reached level @num@, the highest you will ever reach!
+Du hast Stufe @num@ erreicht, die höchste, die du jemals erreichen wirst!
 %%%%
-You have reached level %d!
-Du hast Stufe %d erreicht!
+You have reached level @num@!
+Du hast Stufe @num@ erreicht!
 %%%%
 Your skin feels tougher.
 Deine Haut fühlt sich zäher an.
@@ -11710,8 +11710,8 @@ Du wirst von deinen Wurzeln an Ort und Stelle gehalten.
 You are wielding @arg@.
 Du führst @arg@.
 %%%%
-You are wearing %d items preventing teleportation.
-Du hast %d Gegenstände an, die eine Teleportation verhindern.
+You are wearing @num@ items preventing teleportation.
+Du hast @num@ Gegenstände an, die eine Teleportation verhindern.
 %%%%
 You are wearing @arg@.
 Du hast {acc}@arg@ an.
@@ -11820,8 +11820,8 @@ Du hast das Gefühl, dass du länger schwach bleiben wirst.
 You have 1 tentacle available for constriction.
 Du hast 1 Tentakel zum Umschlingen zur Verfügung.
 %%%%
-You have %d tentacles available for constriction.
-Du hast %d Tentakel zum Umschlingen zur Verfügung.
+You have @num@ tentacles available for constriction.
+Du hast @num@ Tentakel zum Umschlingen zur Verfügung.
 %%%%
 You are being constricted by @arg@.
 Du wirst von {dat}@arg@ umschlungen.
@@ -12286,8 +12286,8 @@ Du greifst den leeren Raum an.
 1 bullet
 1 Schleuderkugel
 %%%%
-%d bullets
-%d Schleuderkugeln
+@num@ bullets
+@num@ Schleuderkugeln
 %%%%
 "Continue: "
 "Fortsetzen: "
@@ -12298,8 +12298,8 @@ Du greifst den leeren Raum an.
 Capacitive Coupling
 Kapazitive Kopplung
 %%%%
-" (stones: %d)"
-" (Steine: %d)"
+" (stones: @num@)"
+" (Steine: @num@)"
 %%%%
 You can't see any hostile targets that would be affected.
 Du kannst keine feindlichen Ziele sehen, die davon betroffen wären.
@@ -13191,8 +13191,8 @@ Du wirst leiden, weil du dich dem Bösen verschrieben hast!
 @arg1@ says: @arg2@
 @arg1@ sagt: @arg2@
 %%%%
-You pay a service fee of %d gold.
-Du zahlst eine Bearbeitungsgebühr von %d Gold.
+You pay a service fee of @num@ gold.
+Du zahlst eine Bearbeitungsgebühr von @num@ Gold.
 %%%%
 @arg@ waives the service fee.
 @arg@ erlässt dir die Gebühr.
@@ -13218,8 +13218,8 @@ Du verneigst dich vor dem Missionar von Beogh.
 @arg@ does not accept service from beggars like you!
 @arg@ nimmt keine Dienste von Bettlern wie dir an!
 %%%%
-The service fee for joining is currently %d gold; you have none.
-Die Gebühr für den Beitritt beträgt derzeit %d Gold; du hast keins.
+The service fee for joining is currently @num@ gold; you have none.
+Die Gebühr für den Beitritt beträgt derzeit @num@ Gold; du hast keins.
 %%%%
 The service fee for joining is currently @num1@ gold; you only have @num2@.
 Die Gebühr für den Beitritt beträgt derzeit @num1@ Gold; du hast nur @num2@.
@@ -13376,14 +13376,14 @@ Welcome to @arg@! What would you like to do?
 You are short 1 gold piece for the purchase.
 Dir fehlt 1 Goldmünze für den Kauf.
 %%%%
-You are short %d gold pieces for the purchase.
-Dir fehlen %d Goldmünzen für den Kauf.
+You are short @num@ gold pieces for the purchase.
+Dir fehlen @num@ Goldmünzen für den Kauf.
 %%%%
 After the purchase, you will have 1 gold piece.
 Nach dem Kauf wirst du 1 Goldmünze haben.
 %%%%
-After the purchase, you will have %d gold pieces.
-Nach dem Kauf wirst du %d Goldmünzen haben.
+After the purchase, you will have @num@ gold pieces.
+Nach dem Kauf wirst du @num@ Goldmünzen haben.
 %%%%
 [<w>Esc</w>/<w>R-Click</w>] exit
 [<w>Esc</w>/<w>R-Klick</w>] abbrechen
@@ -13409,11 +13409,11 @@ Artikel auf Einkaufsliste setzen
 You don't have enough money.
 Du hast nicht genug Geld.
 %%%%
-Purchase items in shopping list for %d gold? (@arg@/N)
-Die Artikel in der Einkaufsliste für %d Gold kaufen? (@arg@/N)
+Purchase items in shopping list for @num@ gold? (@arg@/N)
+Die Artikel in der Einkaufsliste für @num@ Gold kaufen? (@arg@/N)
 %%%%
-Purchase items for %d gold? (@arg@/N)
-Die Artikel für %d Gold kaufen? (@arg@/N)
+Purchase items for @num@ gold? (@arg@/N)
+Die Artikel für @num@ Gold kaufen? (@arg@/N)
 %%%%
 I'll put it outside for you.
 Ich lege es für dich nach draußen.
@@ -13451,7 +13451,7 @@ Gemischtwaren
 "Available shop types: "
 "Verfügbare Ladentypen: "
 %%%%
-Shopping list: replace %dgp @arg@ with cheaper one? (Y/n)
+Shopping list: replace @num@gp @arg@ with cheaper one? (Y/n)
 Einkaufsliste: {acc}%2$s für %1$d Gold durch billigeren Artikel ersetzen? (J/n)
 %%%%
 Shopping list: remove @arg@? (Y/n)
@@ -13467,8 +13467,8 @@ buy @arg@
 "You now have enough gold to "
 "Du hast jetzt genug Gold, um "
 %%%%
-1 item, total cost %d gp
-1 Artikel, Gesamtkosten %d Gold
+1 item, total cost @num@ gp
+1 Artikel, Gesamtkosten @num@ Gold
 %%%%
 @num1@ items, total cost @num2@ gp
 @num1@ Artikel, Gesamtkosten @num2@ Gold
@@ -13488,14 +13488,14 @@ anreisen|prüfen|<w>löschen</w>
 [<w>?</w>/<w>!</w>] change action
 [<w>?</w>/<w>!</w>] Aktion ändern
 %%%%
-You have %d gp
-Du hast %d Gold
+You have @num@ gp
+Du hast @num@ Gold
 %%%%
 You cannot afford @arg@; travel there anyway? (y/N)
 Du kannst dir {acc}@arg@ nicht leisten; trotzdem dorthin reisen? (j/N)
 %%%%
-@arg@ with an entry fee of %d gold pieces.
-@arg@ mit einer Eintrittsgebühr von %d Goldmünzen.
+@arg@ with an entry fee of @num@ gold pieces.
+@arg@ mit einer Eintrittsgebühr von @num@ Goldmünzen.
 %%%%
 Your shopping list is now empty.
 Deine Einkaufsliste ist jetzt leer.
@@ -13701,17 +13701,17 @@ Du fühlst dich allmächtig.
 You have mastered @arg@!
 Du hast @arg@ gemeistert!
 %%%%
-Your base @arg@ skill increases to level %d!
-Deine grundlegende Fertigkeit @arg@ steigt auf Stufe %d!
+Your base @arg@ skill increases to level @num@!
+Deine grundlegende Fertigkeit @arg@ steigt auf Stufe @num@!
 %%%%
-Your base @arg@ skill decreases to level %d!
-Deine grundlegende Fertigkeit @arg@ sinkt auf Stufe %d!
+Your base @arg@ skill decreases to level @num@!
+Deine grundlegende Fertigkeit @arg@ sinkt auf Stufe @num@!
 %%%%
-Your @arg@ skill increases to level %d!
-Deine Fertigkeit @arg@ steigt auf Stufe %d!
+Your @arg@ skill increases to level @num@!
+Deine Fertigkeit @arg@ steigt auf Stufe @num@!
 %%%%
-Your @arg@ skill decreases to level %d!
-Deine Fertigkeit @arg@ sinkt auf Stufe %d!
+Your @arg@ skill decreases to level @num@!
+Deine Fertigkeit @arg@ sinkt auf Stufe @num@!
 %%%%
 Your base @arg@ skill gained @num1@ levels and is now at level @num2@!
 Deine grundlegende Fertigkeit @arg@ gewinnt @num1@ Stufen und ist jetzt auf Stufe @num2@!
@@ -13795,20 +13795,20 @@ Entspricht:
 1 spell hidden
 1 Zauber ausgeblendet
 %%%%
-%d spells hidden
-%d Zauber ausgeblendet
+@num@ spells hidden
+@num@ Zauber ausgeblendet
 %%%%
 "Search for what? (regex) "
 "Wonach suchen? (regex) "
 %%%%
-Select a spell to cast with Divine Exegesis: %d MP available
-Einen Zauber wählen, um ihn mit Göttlicher Exegese zu wirken : %d Mana verfügbar
+Select a spell to cast with Divine Exegesis: @num@ MP available
+Einen Zauber wählen, um ihn mit Göttlicher Exegese zu wirken : @num@ Mana verfügbar
 %%%%
 1 spell level left
 1 Zauberplatz übrig
 %%%%
-%d spell levels left
-%d Zauberplätze übrig
+@num@ spell levels left
+@num@ Zauberplätze übrig
 %%%%
 Your brain is not functional enough to learn spells.
 Dein Gehirn ist nicht funktionsfähig genug, um Zauber zu lernen.
@@ -13949,26 +13949,26 @@ Es ist unmöglich, diesen Zauber zu wirken (100% Risiko des Scheiterns)!
 The spell is @arg1@ to cast (@arg2@ risk of failure)@arg3@ Continue anyway?
 Das Wirken diesen Zauber ist @arg1@ (@arg2@ Risiko des Scheiterns)@arg3@ Wirklich wirken?
 %%%%
-%d%% to hit
-%d%% Trefferchance
+@num@%% to hit
+@num@%% Trefferchance
 %%%%
-chance to confuse: %d%%
-Chance zu verwirren: %d%%
+chance to confuse: @num@%%
+Chance zu verwirren: @num@%%
 %%%%
-chance to slow: %d%%
-Chance zu verlangsamen: %d%%
+chance to slow: @num@%%
+Chance zu verlangsamen: @num@%%
 %%%%
-chance to dazzle: %d%%
-Chance zu blenden: %d%%
+chance to dazzle: @num@%%
+Chance zu blenden: @num@%%
 %%%%
-chance to affect: %d%%
-Chance auf Wirkung: %d%%
+chance to affect: @num@%%
+Chance auf Wirkung: @num@%%
 %%%%
 will blink
 wird blinzeln
 %%%%
-chance to teleport: %d%%
-Chance zu teleportieren: %d%%
+chance to teleport: @num@%%
+Chance zu teleportieren: @num@%%
 %%%%
 will change colour
 wird die Farbe ändern
@@ -14073,8 +14073,8 @@ Du rufst eine Säule der Verdammnis hervor!
 Chain Lightning might hit @arg@. Cast it anyway?
 Kettenblitz könnte {acc}@arg@ treffen. Trotzdem wirken?
 %%%%
-Chain Lightning might hit @arg@ (and %d other bad targets). Cast it anyway?
-Kettenblitz könnte {acc}@arg@ (und %d andere falsche Ziele) treffen. Trotzdem wirken?
+Chain Lightning might hit @arg@ (and @num@ other bad targets). Cast it anyway?
+Kettenblitz könnte {acc}@arg@ (und @num@ andere falsche Ziele) treffen. Trotzdem wirken?
 %%%%
 # note: ...from <monster's> <hand>
 Lightning arcs from @arg1@ @arg2@!
@@ -14482,8 +14482,8 @@ uninteressiert
 chance to pacify: <<1%%
 Chance zu pazifizieren: <<1%%
 %%%%
-chance to pacify: %d%%
-Chance zu pazifizieren: %d%%
+chance to pacify: @num@%%
+Chance zu pazifizieren: @num@%%
 %%%%
 Heal
 Heilen
@@ -15265,8 +15265,8 @@ Der flüssige Boden schäumt!
 Forget which spell?
 Welchen Zauber vergessen?
 %%%%
-Forget @arg@, freeing 1 spell level for a total of %d?
-@arg@ vergessen und damit 1 Zauberplatz freimachen für insgesamt %d?
+Forget @arg@, freeing 1 spell level for a total of @num@?
+@arg@ vergessen und damit 1 Zauberplatz freimachen für insgesamt @num@?
 %%%%
 Forget @arg@, freeing @num1@ spell levels for a total of @num2@?
 @arg@ vergessen und damit @num1@ Zauberplätze freimachen für insgesamt @num2@?
@@ -16011,8 +16011,8 @@ Diese Treppe ist als ausgeschlossen markiert!
 This staircase leads to a travel-excluded area!
 Diese Treppe führt zu einem ausgeschlossenen Gebiet!
 %%%%
-You have just %d turns in @arg@ to find a new floor before Zot consumes you.
-Du hast nur %d Runden in {dat}@arg@, um eine neue Ebene zu finden, bevor Zot dich verschlingt.
+You have just @num@ turns in @arg@ to find a new floor before Zot consumes you.
+Du hast nur @num@ Runden in {dat}@arg@, um eine neue Ebene zu finden, bevor Zot dich verschlingt.
 %%%%
 Enter next level anyway?
 Nächste Eben trotzdem betreten?
@@ -16107,14 +16107,14 @@ Die Belastung des Raum-Zeit-Kontinuums zerstört den Schacht!
 You are sucked into a shaft and drop 1 floor!
 Du wirst in einen Schacht gesaugt und landest 1 Ebene tiefer!
 %%%%
-You are sucked into a shaft and drop %d floors!
-Du wirst in einen Schacht gesaugt und landest %d Ebenen tiefer!
+You are sucked into a shaft and drop @num@ floors!
+Du wirst in einen Schacht gesaugt und landest @num@ Ebenen tiefer!
 %%%%
 You fall into a shaft and drop 1 floor!
 Du fällst in einen Schacht und landest 1 Ebene tiefer!
 %%%%
-You fall into a shaft and drop %d floors!
-Du fällst in einen Schacht und landest %d Ebenen tiefer!
+You fall into a shaft and drop @num@ floors!
+Du fällst in einen Schacht und landest @num@ Ebenen tiefer!
 %%%%
 The shaft crumbles and collapses.
 Der Schacht bröckelt und bricht in sich zusammen.
@@ -16180,8 +16180,8 @@ Stash:
 Versteck:
 %%%%
 # note: shop item entry - item name + " (unknown)" if applicable + price
-@arg1@@arg2@ (%d gold)
-@arg1@@arg2@ (%d Gold)
+@arg1@@arg2@ (@num@ gold)
+@arg1@@arg2@ (@num@ Gold)
 %%%%
 " {shop}"
 " {Laden}"
@@ -16207,8 +16207,8 @@ Zu viele Übereinstimmungen; verwende eine spezifischere Suche.
 1 match
 1 Treffer
 %%%%
-%d matches
-%d Treffer
+@num@ matches
+@num@ Treffer
 %%%%
 only useless items found; press <w>=</w> to show.
 nur nutzlose Gegenstände gefunden; <w>=</w> zum Zeigen.
@@ -16234,14 +16234,14 @@ Nutzlose und Duplikate <w>ausblenden</w>
 1 further duplicate
 1 weiteres Duplikat
 %%%%
-%d further duplicates
-%d weitere Duplikate
+@num@ further duplicates
+@num@ weitere Duplikate
 %%%%
 " in 1 pile"
 " in 1 Haufen"
 %%%%
-" in %d piles"
-" in %d Haufen"
+" in @num@ piles"
+" in @num@ Haufen"
 %%%%
 
 ##################
@@ -16483,11 +16483,11 @@ Keine Aktion ausgewählt
 immune to nets
 immun gegen Netze
 %%%%
-chance to frenzy on hit: %d%%
-Chance auf Raserei bei Treffer: %d%%
+chance to frenzy on hit: @num@%%
+Chance auf Raserei bei Treffer: @num@%%
 %%%%
-chance to blind on hit: %d%%
-Chance auf Blendung bei Treffer: %d%%
+chance to blind on hit: @num@%%
+Chance auf Blendung bei Treffer: @num@%%
 %%%%
 Fire/throw which item? (* to show all)
 Welchen Gegenstand abfeuern/werfen? (* um alle anzuzeigen)
@@ -17226,8 +17226,8 @@ Entschuldigung, ich weiß nicht, wie dieser Ort zu durchqueren ist.
 Calm down first, please.
 Beruhige dich bitte zuerst.
 %%%%
-Level %d of @arg@
-Ebene %d {gen}@arg@
+Level @num@ of @arg@
+Ebene @num@ {gen}@arg@
 %%%%
 Existing waypoints:
 Bestehende Wegpunkte:
@@ -17247,14 +17247,14 @@ Sorry, du kannst hier keinen Wegpunkt setzen.
 , D - delete waypoint
 , D - Wegpunkt löschen
 %%%%
-Waypoint %d re-assigned to @arg@.
-Wegpunkt %d wurde {dat}@arg@ neu zugewiesen.
+Waypoint @num@ re-assigned to @arg@.
+Wegpunkt @num@ wurde {dat}@arg@ neu zugewiesen.
 %%%%
-Waypoint %d re-assigned from @arg1@ to @arg2@.
-Wegpunkt %d von {dat}@arg1@ auf {dat}@arg2@ neu zugewiesen.
+Waypoint @num@ re-assigned from @arg1@ to @arg2@.
+Wegpunkt @num@ von {dat}@arg1@ auf {dat}@arg2@ neu zugewiesen.
 %%%%
-Waypoint %d assigned to @arg@.
-Wegpunkt %d {dat}@arg@ zugewiesen.
+Waypoint @num@ assigned to @arg@.
+Wegpunkt @num@ {dat}@arg@ zugewiesen.
 %%%%
 Stopped running for exclusion.
 Angehalten wegen Reiseausschluss.
@@ -17447,8 +17447,8 @@ Fehler beim Platzieren von @arg1@; letzter Builder-Fehler: @arg2@
 "Enter map name (prefix it with * for local placement): "
 "Kartennamen eingeben (* voranstellen für lokale Platzierung): "
 %%%%
-Explore took %d turns.
-Erkundung hat %d Runden gebraucht.
+Explore took @num@ turns.
+Erkundung hat @num@ Runden gebraucht.
 %%%%
 Level stack:
 Ebenen-Stack:
@@ -17465,8 +17465,8 @@ Generiere Ebene neu.
 All vaults are now eligible for [re]use.
 Alle Vaults können jetzt [wieder] verwendet werden.
 %%%%
-"Set Abyss speed to what? (now %d, higher value = higher speed) "
-"Tempo der Zeit im Abgrund auf was einstellen? (jetzt %d, höhere Nummer = höherer Tempo) "
+"Set Abyss speed to what? (now @num@, higher value = higher speed) "
+"Tempo der Zeit im Abgrund auf was einstellen? (jetzt @num@, höhere Nummer = höherer Tempo) "
 %%%%
 Setting Abyss speed to %i.
 Tempo der Zeit im Abgrund auf %i eingestellt.
@@ -17520,8 +17520,8 @@ Keine Treffer
 "Quivering: "
 "Köcher: "
 %%%%
-@arg1@: @arg2@ @arg3@ vs. @arg4@ (%d rounds) (@arg5@)
-@arg1@: @arg2@ @arg3@ vs. @arg4@ (%d Runden) (@arg5@)
+@arg1@: @arg2@ @arg3@ vs. @arg4@ (@num@ rounds) (@arg5@)
+@arg1@: @arg2@ @arg3@ vs. @arg4@ (@num@ Runden) (@arg5@)
 %%%%
 Defense
 Verteidigung
@@ -17631,8 +17631,8 @@ Toggling @arg@ to off.
 Toggling @arg@ to on.
 @arg@ wird angeschaltet.
 %%%%
-@arg@ was %d.
-@arg@ war %d.
+@arg@ was @num@.
+@arg@ war @num@.
 %%%%
 "New value? "
 "Neuer Wert? "
@@ -17679,8 +17679,8 @@ Wert welches Gegenstands?
 Real value: @num1@ (known: @num2@)
 Echter Wert: @num1@ (bekannt: @num2@)
 %%%%
-Value: %d
-Wert: %d
+Value: @num@
+Wert: @num@
 %%%%
 Make an artefact out of which item?
 Welchen Gegenstand in ein Artefakt verwandeln?
@@ -17771,8 +17771,8 @@ Kein solcher Hintergrund, verwende daher Kämpfer.
 "(c)hange spawn rate or (s)pawn monsters? "
 "(c)Spawn-Frequenz ändern oder Monster (s)pawnen? "
 %%%%
-"Set monster spawn rate to what? (now %d, lower value = higher rate) "
-"Monster-Spawn-Frequenz auf was setzen? (jetzt %d, niedrigerer Wert = höhere Frequenz)
+"Set monster spawn rate to what? (now @num@, lower value = higher rate) "
+"Monster-Spawn-Frequenz auf was setzen? (jetzt @num@, niedrigerer Wert = höhere Frequenz)
 %%%%
 Setting monster spawn rate to %i.
 Setze Monster-Spawn-Frequenz auf %i.
@@ -17780,8 +17780,8 @@ Setze Monster-Spawn-Frequenz auf %i.
 Level already filled with monsters, get rid of some of them first.
 Ebene ist schon mit Monstern gefüllt. Zuerst müssen einige von denen weg.
 %%%%
-"Spawn how many random monsters (max %d)? "
-"Wie viele zufällige Monster spawnen (max %d)?
+"Spawn how many random monsters (max @num@)? "
+"Wie viele zufällige Monster spawnen (max @num@)?
 %%%%
 Spawning 1 monster.
 1 Monster wird gespawnt.
@@ -17990,14 +17990,14 @@ Super-Heilung.
 Healing.
 Heilung.
 %%%%
-Piety needs to be between 0 and %d.
-Pietät muss zwischen 0 und %d liegen.
+Piety needs to be between 0 and @num@.
+Pietät muss zwischen 0 und @num@ liegen.
 %%%%
-Ru piety can't be greater than %d.
-Ru-Pietät kann nicht größer als %d sein.
+Ru piety can't be greater than @num@.
+Ru-Pietät kann nicht größer als @num@ sein.
 %%%%
-"Enter new interest (current = %d, Enter for 0): "
-"Neues Interesse eingeben (aktuell = %d, Enter für 0): "
+"Enter new interest (current = @num@, Enter for 0): "
+"Neues Interesse eingeben (aktuell = @num@, Enter für 0): "
 %%%%
 Interest must be between 0 and 255.
 Interesse muss zwischen 0 und 255 liegen.
@@ -18011,8 +18011,8 @@ Du bist jetzt @arg@.
 Are you sure you want to be excommunicated?
 Bist du sicher, dass du exkommuniziert werden willst?
 %%%%
-Setting piety to %d.
-Setze Pietät auf %d.
+Setting piety to @num@.
+Setze Pietät auf @num@.
 %%%%
 "Enter new gold value (current = @num1@, Enter for @num2@): "
 "Neuen Goldwert eingeben (aktuell = @num1@, Enter für @num2@): "
@@ -18023,8 +18023,8 @@ Du bist nicht religiös!
 Current progress to next sacrifice: @num1@  Progress needed: @num2@
 Aktueller Fortschritt bis zum nächsten Opfer: @num1@   Erforderlicher Fortschritt: @num2@
 %%%%
-"Enter new piety value (current = %d, Enter for 0): "
-"Neuen Pietätswert eingeben (aktuell = %d, Enter für 0): "
+"Enter new piety value (current = @num@, Enter for 0): "
+"Neuen Pietätswert eingeben (aktuell = @num@, Enter für 0): "
 %%%%
 "Which skill (by name)? "
 "Welche Fertigkeit (Name)? "
@@ -18062,8 +18062,8 @@ Keine passenden Mutationsnamen.
 "No exact match for mutation '@arg@', possible matches are: "
 "Keine exakte Treffer für Mutation '@arg@'. Mögliche Treffer sind: "
 %%%%
-Found #%d: @arg1@ ("@arg2@")
-Fand #%d: @arg1@ ('@arg2@')
+Found #@num@: @arg1@ ("@arg2@")
+Fand #@num@: @arg1@ ('@arg2@')
 %%%%
 "How many levels to increase or decrease? "
 "Wie viele Stufe zu erhöhen oder senken? "
@@ -18107,8 +18107,8 @@ Dauer kann nicht direkt auf 0 gesetzt werden, setze sie stattdessen auf 1.
 "Enter new experience level: "
 "Neue Erfahrungsstufe eingeben: "
 %%%%
-Experience level set to %d.
-Erfahrungsstufe auf %d gesetzt.
+Experience level set to @num@.
+Erfahrungsstufe auf @num@ gesetzt.
 %%%%
 Nothing happens.
 Nichts passiert.
@@ -18158,8 +18158,8 @@ Du verehrst diesen Gott schon!
 "Enter new Zot clock value (current = @num1@, from 0 to @num2@): "
 "Neuen Wert für die Zot-Uhr eingeben (aktuell = @num1@, von 0 bis @num2@): "
 %%%%
-Zot clock should be between 0 and %d
-Zot-Uhr sollte zwischen 0 und %d liegen
+Zot clock should be between 0 and @num@
+Zot-Uhr sollte zwischen 0 und @num@ liegen
 %%%%
 
 ##################

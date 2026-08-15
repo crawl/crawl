@@ -658,75 +658,75 @@ Abgrund:@num@
 ##############################################
 
 %%%%
-on level %d of the Dungeon
-auf Ebene %d des Kerkers
+on level @num@ of the Dungeon
+auf Ebene @num@ des Kerkers
 %%%%
-on level %d of the Orcish Mines
-auf Ebene %d der orkischen Minen
+on level @num@ of the Orcish Mines
+auf Ebene @num@ der orkischen Minen
 %%%%
-on level %d of the Elven Halls
-auf Ebene %d der Elfenhallen
+on level @num@ of the Elven Halls
+auf Ebene @num@ der Elfenhallen
 %%%%
-on level %d of the Lair of Beasts
-auf Ebene %d der Höhle der Bestien
+on level @num@ of the Lair of Beasts
+auf Ebene @num@ der Höhle der Bestien
 %%%%
-on level %d of the Swamp
-auf Ebene %d des Sumpfes
+on level @num@ of the Swamp
+auf Ebene @num@ des Sumpfes
 %%%%
-on level %d of the Shoals
-auf Ebene %d der Untiefen
+on level @num@ of the Shoals
+auf Ebene @num@ der Untiefen
 %%%%
-on level %d of the Snake Pit
-auf Ebene %d der Schlangengrube
+on level @num@ of the Snake Pit
+auf Ebene @num@ der Schlangengrube
 %%%%
-on level %d of the Spider Nest
-auf Ebene %d des Spinnennests
+on level @num@ of the Spider Nest
+auf Ebene @num@ des Spinnennests
 %%%%
-on level %d of the Pits of Slime
-auf Ebene %d der Schleimgruben
+on level @num@ of the Pits of Slime
+auf Ebene @num@ der Schleimgruben
 %%%%
-on level %d of the Vaults
-auf Ebene %d der Gewölbe
+on level @num@ of the Vaults
+auf Ebene @num@ der Gewölbe
 %%%%
-on level %d of the Crypt
-auf Ebene %d der Krypta
+on level @num@ of the Crypt
+auf Ebene @num@ der Krypta
 %%%%
-on level %d of the Tomb of the Ancients
-auf Ebene %d des Grabs der Uralten
+on level @num@ of the Tomb of the Ancients
+auf Ebene @num@ des Grabs der Uralten
 %%%%
-on level %d of the Depths
-auf Ebene %d der Tiefen
+on level @num@ of the Depths
+auf Ebene @num@ der Tiefen
 %%%%
-on level %d of the Vestibule of Hell
-auf Ebene %d des Vestibüls der Hölle
+on level @num@ of the Vestibule of Hell
+auf Ebene @num@ des Vestibüls der Hölle
 %%%%
-on level %d of Tartarus
-auf Ebene %d von Tartarus
+on level @num@ of Tartarus
+auf Ebene @num@ von Tartarus
 %%%%
-on level %d of Gehenna
-auf Ebene %d von Gehenna
+on level @num@ of Gehenna
+auf Ebene @num@ von Gehenna
 %%%%
-on level %d of Cocytus
-auf Ebene %d von Kokytus
+on level @num@ of Cocytus
+auf Ebene @num@ von Kokytus
 %%%%
-on level %d of the Iron City of Dis
-auf Ebene %d der Eisernen Stadt von Dis
+on level @num@ of the Iron City of Dis
+auf Ebene @num@ der Eisernen Stadt von Dis
 %%%%
-on level %d of Pandemonium
-auf Ebene %d von Pandämonium
+on level @num@ of Pandemonium
+auf Ebene @num@ von Pandämonium
 %%%%
-on level %d of the Realm of Zot
-auf Ebene %d des Reiches von Zot
+on level @num@ of the Realm of Zot
+auf Ebene @num@ des Reiches von Zot
 %%%%
-on level %d of the Abyss
-auf Ebene %d des Abgrunds
+on level @num@ of the Abyss
+auf Ebene @num@ des Abgrunds
 %%%%
-on level %d of a ziggurat
-auf Ebene %d einer Zikkurat
+on level @num@ of a ziggurat
+auf Ebene @num@ einer Zikkurat
 %%%%
 # should be "in a sewer", but for some reason, we get this in hiscores
-on level %d of a sewer
-auf Ebene %d eines Kanals
+on level @num@ of a sewer
+auf Ebene @num@ eines Kanals
 %%%%
 
 ##############################################

@@ -362,26 +362,26 @@ reduzierte Essenz
 Your life essence is reduced to manifest your ancestor. (-10% HP)
 Deine Lebensessenz ist reduziert, um deinen Ahnen zu manifestieren. (-10% HP)
 %%%%
-AC +%d
-RK +%d
+AC +@num@
+RK +@num@
 %%%%
-Your serpentine skin is tough. (AC +%d)
-Deine schlangenartige Haut ist zäh. (RK +%d)
+Your serpentine skin is tough. (AC +@num@)
+Deine schlangenartige Haut ist zäh. (RK +@num@)
 %%%%
-Your stone body is resilient. (AC +%d)
-Dein Steinkörper ist widerstandsfähig. (RK +%d)
+Your stone body is resilient. (AC +@num@)
+Dein Steinkörper ist widerstandsfähig. (RK +@num@)
 %%%%
-Your @arg@ scales are very hard. (AC +%d)
-Deine @arg@ Schuppen sind sehr hart. (RK +%d)
+Your @arg@ scales are very hard. (AC +@num@)
+Deine @arg@ Schuppen sind sehr hart. (RK +@num@)
 %%%%
-Your @arg@ scales are hard. (AC +%d)
-Deine @arg@ Schuppen sind hart. (RK +%d)
+Your @arg@ scales are hard. (AC +@num@)
+Deine @arg@ Schuppen sind hart. (RK +@num@)
 %%%%
-%d rings
-%d Ringe
+@num@ rings
+@num@ Ringe
 %%%%
-You can wear up to %d rings at the same time.
-Du kannst bis zu %d Ringe zur gleichen Zeit tragen.
+You can wear up to @num@ rings at the same time.
+Du kannst bis zu @num@ Ringe zur gleichen Zeit tragen.
 %%%%
 unfitting armour
 unpassende Rüstung
@@ -410,8 +410,8 @@ Deine Attribute steigen beim Stufenaufstieg dramatisch an.
 You expend health (3 HP) to strengthen your wands.
 Du verbrauchst Gesundheit (3 HP), um deine Zauberstäbe zu stärken.
 %%%%
-You have tentacles for arms and can constrict up to %d enemies at once.
-Du hast Tentakel als Arme und kannst bis zu %d Feinde auf einmal umschlingen.
+You have tentacles for arms and can constrict up to @num@ enemies at once.
+Du hast Tentakel als Arme und kannst bis zu @num@ Feinde auf einmal umschlingen.
 %%%%
 You have sharp claws.
 Du hast scharfe Klauen.
@@ -1451,11 +1451,11 @@ Dein Gespür für die Struktur des Kerkers wächst weiter.
 You feel slightly disoriented.
 Du fühlst dich leicht desorientiert.
 %%%%
-A meltable icy envelope protects you from harm. (AC +%d)
-Eine schmelzbare Eishülle schützt dich vor Schaden. (RK +%d)
+A meltable icy envelope protects you from harm. (AC +@num@)
+Eine schmelzbare Eishülle schützt dich vor Schaden. (RK +@num@)
 %%%%
-A thick, meltable icy envelope protects you from harm. (AC +%d)
-Eine dicke, schmelzbare Eishülle schützt dich vor Schaden. (RK +%d)
+A thick, meltable icy envelope protects you from harm. (AC +@num@)
+Eine dicke, schmelzbare Eishülle schützt dich vor Schaden. (RK +@num@)
 %%%%
 An icy envelope takes form around you.
 Eine eisige Hülle bildet sich um dich herum.
@@ -1466,8 +1466,8 @@ Deine Eishülle wird dicker.
 condensation shield
 Kondensationsschild
 %%%%
-A meltable shield of frost defends you. (SH +%d)
-Ein schmelzbarer Schild aus Frost verteidigt dich. (SCH +%d)
+A meltable shield of frost defends you. (SH +@num@)
+Ein schmelzbarer Schild aus Frost verteidigt dich. (SCH +@num@)
 %%%%
 Frost condenses into a shield before you.
 Frost verdichtet sich vor dir zu einem Schild.
@@ -2093,14 +2093,14 @@ Du fühlst dich durch deine Rüstung weniger belastet.
 You feel more encumbered by your armour.
 Du fühlst dich durch deine Rüstung mehr belastet.
 %%%%
-When seriously injured, your bleeding wounds create armour. (AC +%d)
-Wenn du schwer verletzt bist, erzeugen deine blutenden Wunden eine Rüstung. (RK +%d)
+When seriously injured, your bleeding wounds create armour. (AC +@num@)
+Wenn du schwer verletzt bist, erzeugen deine blutenden Wunden eine Rüstung. (RK +@num@)
 %%%%
-When seriously injured, your bleeding wounds create thick armour. (AC +%d)
-Wenn du schwer verletzt bist, erzeugen deine blutenden Wunden eine dicke Rüstung. (RK +%d)
+When seriously injured, your bleeding wounds create thick armour. (AC +@num@)
+Wenn du schwer verletzt bist, erzeugen deine blutenden Wunden eine dicke Rüstung. (RK +@num@)
 %%%%
-When seriously injured, your bleeding wounds create very thick armour. (AC +%d)
-Wenn du schwer verletzt bist, erzeugen deine blutenden Wunden eine sehr dicke Rüstung. (RK +%d)
+When seriously injured, your bleeding wounds create very thick armour. (AC +@num@)
+Wenn du schwer verletzt bist, erzeugen deine blutenden Wunden eine sehr dicke Rüstung. (RK +@num@)
 %%%%
 You feel your blood ready itself to protect you.
 Du spürst, wie sich dein Blut bereit macht, dich zu schützen.

@@ -53,13 +53,13 @@ Charge\
 
 # Corroded
 %%%%
-Corr (%d)
+Corr (@num@)
 
 %%%%
 
 # Flayed
 %%%%
-Flay (%d)
+Flay (@num@)
 
 %%%%
 
@@ -180,7 +180,7 @@ Your movement is slowed on this liquid ground.
 
 # Powered by Death mutation - causes Regeneration effect when killing
 %%%%
-Regen (%d)
+Regen (@num@)
 
 %%%%
 
@@ -228,7 +228,7 @@ You are moving at supernatural speed.
 
 # Heaqvenly Storm (Wu Jian) active
 %%%%
-Storm (%d)
+Storm (@num@)
 
 %%%%
 
@@ -358,7 +358,7 @@ You are bribing @arg@.
 
 # Horrified
 %%%%
-Horr(%d)
+Horr(@num@)
 
 %%%%
 overwhelmed with horror
@@ -407,7 +407,7 @@ bezotted
 Zot is approaching!
 
 %%%%
-Zot (%d)
+Zot (@num@)
 
 %%%%
 

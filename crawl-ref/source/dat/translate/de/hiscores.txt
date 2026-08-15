@@ -43,11 +43,11 @@ Dungeon Crawl Stone Soup: Highscores
 Began as @arg@
 Begann als @arg@
 %%%%
-(%d damage)
-(%d Schaden)
+(@num@ damage)
+(@num@ Schaden)
 %%%%
-The game lasted @arg@ (%d turns).
-Das Spiel dauerte @arg@ (%d Runden).
+The game lasted @arg@ (@num@ turns).
+Das Spiel dauerte @arg@ (@num@ Runden).
 %%%%
 
 %%%%
@@ -84,8 +84,8 @@ E
 (Stufe @num1@, @num2@/@num3@ TP)
 %%%%
 # without HP
-(level %d)
-(Stufe %d)
+(level @num@)
+(Stufe @num@)
 %%%%
 
 ########################
@@ -198,8 +198,8 @@ an Initiate
 Escaped with the Orb
 Entkam mit der Kugel
 %%%%
-... and %d runes
-... und %d Runen
+... and @num@ runes
+... und @num@ Runen
 %%%%
 
 ########################
@@ -222,8 +222,8 @@ Entkam dem Kerker lebend
 ... with 1 rune
 ... mit 1 Rune
 %%%%
-... with %d runes
-... mit %d Runen
+... with @num@ runes
+... mit @num@ Runen
 %%%%
 Entered wizard mode
 Wizard-Modus betreten

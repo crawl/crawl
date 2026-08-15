@@ -8,7 +8,7 @@
 # item-name.cc
 ##################
 %%%%
-<white>Runes of Zot (</white><@arg1@>%d</@arg2@><white> collected) & Orbs of Power</white>
+<white>Runes of Zot (</white><@arg1@>@num@</@arg2@><white> collected) & Orbs of Power</white>
 
 %%%%
 
@@ -420,7 +420,7 @@ The demon of the infinite void smiles upon you.
 @arg@ snickers.
 
 %%%%
-" (you have %d gold)"
+" (you have @num@ gold)"
 
 %%%%
 Choose an item to acquire.
@@ -2057,7 +2057,7 @@ A deck of cards, set aside for later.
 1 @arg@ card
 
 %%%%
-%d @arg@ cards
+@num@ @arg@ cards
 
 %%%%
 It is found in @arg@, or in Nemelex Xobeh's deck of punishment.
@@ -2072,7 +2072,7 @@ It is only found in Nemelex Xobeh's deck of punishment.
 It is normally not part of any deck.
 
 %%%%
-"It currently has %d cards "
+"It currently has @num@ cards "
 
 %%%%
 "It currently has 1 card "
@@ -2081,7 +2081,7 @@ It is normally not part of any deck.
 "It is currently empty "
 
 %%%%
-and can contain up to %d cards.
+and can contain up to @num@ cards.
 
 %%%%
 Deal which deck?
@@ -2739,7 +2739,7 @@ Cheibriados slows your movement.
 Cheibriados slightly slows your movement.
 
 %%%%
-Cheibriados supports your attributes. (+%d)
+Cheibriados supports your attributes. (+@num@)
 
 %%%%
 You can memorise @arg@.
@@ -3353,7 +3353,7 @@ e(v)oke
 
 %%%%
 # spell properties
-Level: %d
+Level: @num@
 
 %%%%
 "School: "
@@ -3362,7 +3362,7 @@ Level: %d
 "Schools: "
 
 %%%%
-Fail: %d%%
+Fail: @num@%%
 
 %%%%
 "Power: "
@@ -3419,7 +3419,7 @@ debuffs and slows you
 
 %%%%
 # miscast damage, for example: "deals up to 10 fire damage"
-deals up to %d @arg@
+deals up to @num@ @arg@
 
 %%%%
 Miscasting this spell causes magic contamination.
@@ -3438,7 +3438,7 @@ Your servitor casts @arg@.
 You can sustain at most 1 creature summoned by this spell.
 
 %%%%
-You can sustain at most %d creatures summoned by this spell.
+You can sustain at most @num@ creatures summoned by this spell.
 
 %%%%
 @arg@ frowns upon the use of this spell.
@@ -3465,13 +3465,13 @@ This spell has no description. Casting it may therefore be unwise. Please file a
 "Range : "
 
 %%%%
-" (pow %d)"
+" (pow @num@)"
 
 %%%%
 You cannot be affected by this spell right now. @arg@
 
 %%%%
-Chance to defeat your Will: %d%%@arg@
+Chance to defeat your Will: @num@%%@arg@
 
 %%%%
 # Draconian descriptions
@@ -3560,7 +3560,7 @@ blink self
 blink together with the defender
 
 %%%%
-deal up to %d extra cold damage
+deal up to @num@ extra cold damage
 
 %%%%
 cause confusion
@@ -3581,10 +3581,10 @@ drain strength, intelligence or dexterity
 drain life
 
 %%%%
-deal up to %d extra electric damage
+deal up to @num@ extra electric damage
 
 %%%%
-deal up to %d extra fire damage
+deal up to @num@ extra fire damage
 
 %%%%
 cause mutations
@@ -3660,31 +3660,31 @@ cause weakness
 
 %%%%
 # @arg@ here is a verb like "hit"
-@arg@ for up to %d fire damage
+@arg@ for up to @num@ fire damage
 
 %%%%
 @arg@ @num1@ times for up to @num2@ damage each
 
 %%%%
-@arg@ for up to %d damage
+@arg@ for up to @num@ damage
 
 %%%%
 @arg1@ @num1@ times for up to @num2@ damage each plus @arg2@
 
 %%%%
-@arg1@ for up to %d damage plus @arg2@
+@arg1@ for up to @num@ damage plus @arg2@
 
 %%%%
 @arg@ from a distance @num1@ times for up to @num2@ damage each
 
 %%%%
-@arg@ from a distance for up to %d damage
+@arg@ from a distance for up to @num@ damage
 
 %%%%
 @arg1@ from a distance @num1@ times for up to @num2@ damage each plus @arg2@
 
 %%%%
-@arg1@ from a distance for up to %d damage plus @arg2@
+@arg1@ from a distance for up to @num@ damage plus @arg2@
 
 %%%%
 # Monster can do whatever from the things above
@@ -3727,10 +3727,10 @@ very quickly
 quickly
 
 %%%%
-about %d%% to evade @arg@
+about @num@%% to evade @arg@
 
 %%%%
-" (about %d%% to hit you)"
+" (about @num@%% to hit you)"
 
 %%%%
 none (normally @arg@)
@@ -4006,7 +4006,7 @@ The tide is released from @arg@ call.
 Not in Shoals or no heightmap; tide not available.
 
 %%%%
-"Tide inertia: %d. New value (smaller = faster tide) or use +/- to change tide: "
+"Tide inertia: @num@. New value (smaller = faster tide) or use +/- to change tide: "
 
 %%%%
 
@@ -4205,7 +4205,7 @@ wielding @arg@
 This monster is @arg@.
 
 %%%%
-chance to confuse on hit: %d%%
+chance to confuse on hit: @num@%%
 
 %%%%
 fire blocked by @arg@
@@ -4414,7 +4414,7 @@ You can't zap that!
 The now-empty wand crumbles to dust.
 
 %%%%
-%d skills
+@num@ skills
 
 %%%%
 You open the lid...
@@ -4569,10 +4569,10 @@ downstairs
 1 more exclusion
 
 %%%%
-%d exclusions
+@num@ exclusions
 
 %%%%
-%d more exclusions
+@num@ more exclusions
 
 %%%%
 "exclusions: "
@@ -4878,13 +4878,13 @@ Your damage is reflected back at you!
 @arg@ spits out another jelly.
 
 %%%%
-@arg@ spits out %d more jellies.
+@arg@ spits out @num@ more jellies.
 
 %%%%
 One of the Royal Jelly's fragments survives.
 
 %%%%
-The dying Royal Jelly spits out %d more jellies.
+The dying Royal Jelly spits out @num@ more jellies.
 
 %%%%
 # starcursed mass merge
@@ -5302,10 +5302,10 @@ Something blocks your shadow step.
 You step into @arg@ shadow.
 
 %%%%
-You need at least %d gold to purchase potions right now!
+You need at least @num@ gold to purchase potions right now!
 
 %%%%
-"  [%c] - %d gold - "
+"  [%c] - @num@ gold - "
 
 %%%%
 Purchase which effect?
@@ -5314,7 +5314,7 @@ Purchase which effect?
 You don't have enough gold for that!
 
 %%%%
-You currently need %d gold to open negotiations with a merchant.
+You currently need @num@ gold to open negotiations with a merchant.
 
 %%%%
 No merchants are willing to come to this location.
@@ -5340,7 +5340,7 @@ You don't have enough gold to fund that merchant!
 Your bribe of @arg@ has been exhausted.
 
 %%%%
-You need at least %d gold to offer a bribe.
+You need at least @num@ gold to offer a bribe.
 
 %%%%
 You can't bribe the denizens of @arg1@ or the denizens of @arg2@.
@@ -5897,7 +5897,7 @@ You offer a silent prayer to @arg@.
 You offer a prayer to @arg@.
 
 %%%%
-You pay a tithe of %d gold.
+You pay a tithe of @num@ gold.
 
 %%%%
 @arg@ ignores your late donation.
@@ -6326,10 +6326,10 @@ You aren't carrying any such object.
 " (1+ turns)"
 
 %%%%
-" (%d turns)"
+" (@num@ turns)"
 
 %%%%
-" (%d+ turns)"
+" (@num@+ turns)"
 
 %%%%
 Drop (and turn off autopickup for) what?
@@ -6646,7 +6646,7 @@ You're already wearing one cursed ring!
 You're already wearing two cursed rings!
 
 %%%%
-You're already wearing %d cursed rings! Isn't that enough for you?
+You're already wearing @num@ cursed rings! Isn't that enough for you?
 
 %%%%
 Put ring where? (<w>Esc</w> to cancel)
@@ -6982,7 +6982,7 @@ Pick up @arg@? ((y)es/(n)o/(a)ll/(m)enu/*?g,/q)
 You now have 1 gold piece.
 
 %%%%
-You now have %d gold pieces.
+You now have @num@ gold pieces.
 
 %%%%
 You now have @num1@ gold pieces (gained @num2@).
@@ -7017,10 +7017,10 @@ You pick up @arg@ and feel its power.
 You have collected all the runes! Now go and win!
 
 %%%%
-%d runes! That's enough to enter the realm of Zot.
+@num@ runes! That's enough to enter the realm of Zot.
 
 %%%%
-You now have %d runes.
+You now have @num@ runes.
 
 %%%%
 Press } to see all the runes you have collected.
@@ -7038,13 +7038,13 @@ Zot can harm you no longer.
 Now all you have to do is get back out of the dungeon!
 
 %%%%
-@arg@ (gained %d)
+@arg@ (gained @num@)
 
 %%%%
 @arg@ (gained 1 charge)
 
 %%%%
-@arg@ (gained %d charges)
+@arg@ (gained @num@ charges)
 
 %%%%
 # note: ring/amulet
@@ -7063,7 +7063,7 @@ No item to drop.
 Autopickup disabled for @arg@.
 
 %%%%
-Autopickup disabled for %d items.
+Autopickup disabled for @num@ items.
 
 %%%%
 Your pack is full.
@@ -7121,10 +7121,10 @@ This entry is an exact match for '@arg@'. To see non-exact matches, press space.
 This branch can only be entered while carrying at least 1 rune of Zot.
 
 %%%%
-This branch can only be entered while carrying at least %d runes of Zot.
+This branch can only be entered while carrying at least @num@ runes of Zot.
 
 %%%%
-This branch is %d levels deep.
+This branch is @num@ levels deep.
 
 %%%%
 The entrance to this branch can be found @arg@.
@@ -7463,7 +7463,7 @@ You can't go up here!
 You need a rune to enter this place.
 
 %%%%
-You need at least %d runes to enter this place.
+You need at least @num@ runes to enter this place.
 
 %%%%
 A rune of Zot still resides in this realm, and once you leave you can never return. Are you sure you want to leave?
@@ -7508,25 +7508,25 @@ The transporter is blocked by a creature on the other side!
 You enter the transporter and appear at another place.
 
 %%%%
-You are a level %d @arg1@ @arg2@.
+You are a level @num@ @arg1@ @arg2@.
 
 %%%%
 You are @num1@%% of the way to level @num2@.
 
 %%%%
-I'm sorry, level %d is as high as you can go.
+I'm sorry, level @num@ is as high as you can go.
 
 %%%%
 With the way you've been playing, I'm surprised you got this far.
 
 %%%%
-You'll get an extra life in %d.%02d levels' worth of XP.
+You'll get an extra life in @num@.%02d levels' worth of XP.
 
 %%%%
-If you died right now, you'd get an extra life in %d.%02d levels' worth of XP.
+If you died right now, you'd get an extra life in @num@.%02d levels' worth of XP.
 
 %%%%
-Play time: @arg@ (%d turns).
+Play time: @arg@ (@num@ turns).
 
 %%%%
 You are forever immune to Zot's power.
@@ -7535,7 +7535,7 @@ You are forever immune to Zot's power.
 You have unlimited time to explore this branch.
 
 %%%%
-Zot will find you in %d turns if you stay in this branch and explore no new floors.
+Zot will find you in @num@ turns if you stay in this branch and explore no new floors.
 
 %%%%
 You can't remove @arg@, sorry.
@@ -7574,7 +7574,7 @@ No quiver actions available for cycling.
 You have 1 gold piece.
 
 %%%%
-You have %d gold pieces.
+You have @num@ gold pieces.
 
 %%%%
 You should not fight recklessly!
@@ -8414,7 +8414,7 @@ Select what (regex)?
 " (1 item)"
 
 %%%%
-" (%d items)"
+" (@num@ items)"
 
 %%%%
 
@@ -9726,7 +9726,7 @@ By Zin's power, the fiery explosion is contained.
 # mon-info.cc
 ##################
 %%%%
-about %d
+about @num@
 
 %%%%
 " (fellow slime)"
@@ -10273,10 +10273,10 @@ The spriggan falls from its now dead mount.
 @arg@ steals 1 gold piece!
 
 %%%%
-@arg@ steals %d gold pieces!
+@arg@ steals @num@ gold pieces!
 
 %%%%
-@arg1@ steals %d of @arg2@!
+@arg1@ steals @num@ of @arg2@!
 
 %%%%
 @arg1@ steals @arg2@!
@@ -10677,7 +10677,7 @@ You writhe in agony!
 The flames go out!
 
 %%%%
-You are now level %d!
+You are now level @num@!
 
 %%%%
 You feel drained.
@@ -11407,7 +11407,7 @@ Do you really want to go berserk while wielding @arg@?
 @arg@ has regained 1 charge.
 
 %%%%
-@arg@ has regained %d charges.
+@arg@ has regained @num@ charges.
 
 %%%%
 Your life force feels restored.
@@ -11422,16 +11422,16 @@ Your capacity for spells is full, and you lose access to an earlier spell.
 The power to cast @arg@ wells up from within.
 
 %%%%
-Welcome back to level %d!
+Welcome back to level @num@!
 
 %%%%
 You have reached level 27, the final one!
 
 %%%%
-You have reached level %d, the highest you will ever reach!
+You have reached level @num@, the highest you will ever reach!
 
 %%%%
-You have reached level %d!
+You have reached level @num@!
 
 %%%%
 Your skin feels tougher.
@@ -11710,7 +11710,7 @@ You are held in place by your roots.
 You are wielding @arg@.
 
 %%%%
-You are wearing %d items preventing teleportation.
+You are wearing @num@ items preventing teleportation.
 
 %%%%
 You are wearing @arg@.
@@ -11820,7 +11820,7 @@ You feel as though you will be weak longer.
 You have 1 tentacle available for constriction.
 
 %%%%
-You have %d tentacles available for constriction.
+You have @num@ tentacles available for constriction.
 
 %%%%
 You are being constricted by @arg@.
@@ -12286,7 +12286,7 @@ You attack empty space.
 1 bullet
 
 %%%%
-%d bullets
+@num@ bullets
 
 %%%%
 "Continue: "
@@ -12298,7 +12298,7 @@ You attack empty space.
 Capacitive Coupling
 
 %%%%
-" (stones: %d)"
+" (stones: @num@)"
 
 %%%%
 You can't see any hostile targets that would be affected.
@@ -13191,7 +13191,7 @@ You will suffer for embracing such evil!
 @arg1@ says: @arg2@
 
 %%%%
-You pay a service fee of %d gold.
+You pay a service fee of @num@ gold.
 
 %%%%
 @arg@ waives the service fee.
@@ -13218,7 +13218,7 @@ You bow before the missionary of Beogh.
 @arg@ does not accept service from beggars like you!
 
 %%%%
-The service fee for joining is currently %d gold; you have none.
+The service fee for joining is currently @num@ gold; you have none.
 
 %%%%
 The service fee for joining is currently @num1@ gold; you only have @num2@.
@@ -13376,13 +13376,13 @@ Welcome to @arg@! What would you like to do?
 You are short 1 gold piece for the purchase.
 
 %%%%
-You are short %d gold pieces for the purchase.
+You are short @num@ gold pieces for the purchase.
 
 %%%%
 After the purchase, you will have 1 gold piece.
 
 %%%%
-After the purchase, you will have %d gold pieces.
+After the purchase, you will have @num@ gold pieces.
 
 %%%%
 [<w>Esc</w>/<w>R-Click</w>] exit
@@ -13409,10 +13409,10 @@ put item on shopping list
 You don't have enough money.
 
 %%%%
-Purchase items in shopping list for %d gold? (@arg@/N)
+Purchase items in shopping list for @num@ gold? (@arg@/N)
 
 %%%%
-Purchase items for %d gold? (@arg@/N)
+Purchase items for @num@ gold? (@arg@/N)
 
 %%%%
 I'll put it outside for you.
@@ -13451,7 +13451,7 @@ general
 "Available shop types: "
 
 %%%%
-Shopping list: replace %dgp @arg@ with cheaper one? (Y/n)
+Shopping list: replace @num@gp @arg@ with cheaper one? (Y/n)
 
 %%%%
 Shopping list: remove @arg@? (Y/n)
@@ -13467,7 +13467,7 @@ buy @arg@
 "You now have enough gold to "
 
 %%%%
-1 item, total cost %d gp
+1 item, total cost @num@ gp
 
 %%%%
 @num1@ items, total cost @num2@ gp
@@ -13488,13 +13488,13 @@ travel|examine|<w>delete</w>
 [<w>?</w>/<w>!</w>] change action
 
 %%%%
-You have %d gp
+You have @num@ gp
 
 %%%%
 You cannot afford @arg@; travel there anyway? (y/N)
 
 %%%%
-@arg@ with an entry fee of %d gold pieces.
+@arg@ with an entry fee of @num@ gold pieces.
 
 %%%%
 Your shopping list is now empty.
@@ -13701,16 +13701,16 @@ You feel omnipotent.
 You have mastered @arg@!
 
 %%%%
-Your base @arg@ skill increases to level %d!
+Your base @arg@ skill increases to level @num@!
 
 %%%%
-Your base @arg@ skill decreases to level %d!
+Your base @arg@ skill decreases to level @num@!
 
 %%%%
-Your @arg@ skill increases to level %d!
+Your @arg@ skill increases to level @num@!
 
 %%%%
-Your @arg@ skill decreases to level %d!
+Your @arg@ skill decreases to level @num@!
 
 %%%%
 Your base @arg@ skill gained @num1@ levels and is now at level @num2@!
@@ -13795,19 +13795,19 @@ Matches:
 1 spell hidden
 
 %%%%
-%d spells hidden
+@num@ spells hidden
 
 %%%%
 "Search for what? (regex) "
 
 %%%%
-Select a spell to cast with Divine Exegesis: %d MP available
+Select a spell to cast with Divine Exegesis: @num@ MP available
 
 %%%%
 1 spell level left
 
 %%%%
-%d spell levels left
+@num@ spell levels left
 
 %%%%
 Your brain is not functional enough to learn spells.
@@ -13949,25 +13949,25 @@ It is impossible to cast this spell (100%% risk of failure)!
 The spell is @arg1@ to cast (@arg2@ risk of failure)@arg3@ Continue anyway?
 
 %%%%
-%d%% to hit
+@num@%% to hit
 
 %%%%
-chance to confuse: %d%%
+chance to confuse: @num@%%
 
 %%%%
-chance to slow: %d%%
+chance to slow: @num@%%
 
 %%%%
-chance to dazzle: %d%%
+chance to dazzle: @num@%%
 
 %%%%
-chance to affect: %d%%
+chance to affect: @num@%%
 
 %%%%
 will blink
 
 %%%%
-chance to teleport: %d%%
+chance to teleport: @num@%%
 
 %%%%
 will change colour
@@ -14073,7 +14073,7 @@ You call forth a pillar of damnation!
 Chain Lightning might hit @arg@. Cast it anyway?
 
 %%%%
-Chain Lightning might hit @arg@ (and %d other bad targets). Cast it anyway?
+Chain Lightning might hit @arg@ (and @num@ other bad targets). Cast it anyway?
 
 %%%%
 # note: ...from <monster's> <hand>
@@ -14482,7 +14482,7 @@ uninterested
 chance to pacify: <<1%%
 
 %%%%
-chance to pacify: %d%%
+chance to pacify: @num@%%
 
 %%%%
 Heal
@@ -15265,7 +15265,7 @@ The liquid ground foams!
 Forget which spell?
 
 %%%%
-Forget @arg@, freeing 1 spell level for a total of %d?
+Forget @arg@, freeing 1 spell level for a total of @num@?
 
 %%%%
 Forget @arg@, freeing @num1@ spell levels for a total of @num2@?
@@ -16011,7 +16011,7 @@ This staircase is marked as excluded!
 This staircase leads to a travel-excluded area!
 
 %%%%
-You have just %d turns in @arg@ to find a new floor before Zot consumes you.
+You have just @num@ turns in @arg@ to find a new floor before Zot consumes you.
 
 %%%%
 Enter next level anyway?
@@ -16107,13 +16107,13 @@ The strain on the space-time continuum destroys the shaft!
 You are sucked into a shaft and drop 1 floor!
 
 %%%%
-You are sucked into a shaft and drop %d floors!
+You are sucked into a shaft and drop @num@ floors!
 
 %%%%
 You fall into a shaft and drop 1 floor!
 
 %%%%
-You fall into a shaft and drop %d floors!
+You fall into a shaft and drop @num@ floors!
 
 %%%%
 The shaft crumbles and collapses.
@@ -16180,7 +16180,7 @@ Stash:
 
 %%%%
 # note: shop item entry - item name + " (unknown)" if applicable + price
-@arg1@@arg2@ (%d gold)
+@arg1@@arg2@ (@num@ gold)
 
 %%%%
 " {shop}"
@@ -16207,7 +16207,7 @@ Too many matches; use a more specific search.
 1 match
 
 %%%%
-%d matches
+@num@ matches
 
 %%%%
 only useless items found; press <w>=</w> to show.
@@ -16234,13 +16234,13 @@ by <w>dist</w>
 1 further duplicate
 
 %%%%
-%d further duplicates
+@num@ further duplicates
 
 %%%%
 " in 1 pile"
 
 %%%%
-" in %d piles"
+" in @num@ piles"
 
 %%%%
 
@@ -16483,10 +16483,10 @@ No action selected
 immune to nets
 
 %%%%
-chance to frenzy on hit: %d%%
+chance to frenzy on hit: @num@%%
 
 %%%%
-chance to blind on hit: %d%%
+chance to blind on hit: @num@%%
 
 %%%%
 Fire/throw which item? (* to show all)
@@ -17226,7 +17226,7 @@ Sorry, I don't know how to traverse that place.
 Calm down first, please.
 
 %%%%
-Level %d of @arg@
+Level @num@ of @arg@
 
 %%%%
 Existing waypoints:
@@ -17247,13 +17247,13 @@ Sorry, you can't set a waypoint here.
 , D - delete waypoint
 
 %%%%
-Waypoint %d re-assigned to @arg@.
+Waypoint @num@ re-assigned to @arg@.
 
 %%%%
-Waypoint %d re-assigned from @arg1@ to @arg2@.
+Waypoint @num@ re-assigned from @arg1@ to @arg2@.
 
 %%%%
-Waypoint %d assigned to @arg@.
+Waypoint @num@ assigned to @arg@.
 
 %%%%
 Stopped running for exclusion.
@@ -17447,7 +17447,7 @@ Failed to place @arg1@; last builder error: @arg2@
 "Enter map name (prefix it with * for local placement): "
 
 %%%%
-Explore took %d turns.
+Explore took @num@ turns.
 
 %%%%
 Level stack:
@@ -17465,7 +17465,7 @@ Regenerating level.
 All vaults are now eligible for [re]use.
 
 %%%%
-"Set Abyss speed to what? (now %d, higher value = higher speed) "
+"Set Abyss speed to what? (now @num@, higher value = higher speed) "
 
 %%%%
 Setting Abyss speed to %i.
@@ -17520,7 +17520,7 @@ No hits
 "Quivering: "
 
 %%%%
-@arg1@: @arg2@ @arg3@ vs. @arg4@ (%d rounds) (@arg5@)
+@arg1@: @arg2@ @arg3@ vs. @arg4@ (@num@ rounds) (@arg5@)
 
 %%%%
 Defense
@@ -17631,7 +17631,7 @@ Toggling @arg@ to off.
 Toggling @arg@ to on.
 
 %%%%
-@arg@ was %d.
+@arg@ was @num@.
 
 %%%%
 "New value? "
@@ -17679,7 +17679,7 @@ Value of which item?
 Real value: @num1@ (known: @num2@)
 
 %%%%
-Value: %d
+Value: @num@
 
 %%%%
 Make an artefact out of which item?
@@ -17771,7 +17771,7 @@ No such background, making it a Fighter.
 "(c)hange spawn rate or (s)pawn monsters? "
 
 %%%%
-"Set monster spawn rate to what? (now %d, lower value = higher rate) "
+"Set monster spawn rate to what? (now @num@, lower value = higher rate) "
 
 %%%%
 Setting monster spawn rate to %i.
@@ -17780,7 +17780,7 @@ Setting monster spawn rate to %i.
 Level already filled with monsters, get rid of some of them first.
 
 %%%%
-"Spawn how many random monsters (max %d)? "
+"Spawn how many random monsters (max @num@)? "
 
 %%%%
 Spawning 1 monster.
@@ -17990,13 +17990,13 @@ Super healing.
 Healing.
 
 %%%%
-Piety needs to be between 0 and %d.
+Piety needs to be between 0 and @num@.
 
 %%%%
-Ru piety can't be greater than %d.
+Ru piety can't be greater than @num@.
 
 %%%%
-"Enter new interest (current = %d, Enter for 0): "
+"Enter new interest (current = @num@, Enter for 0): "
 
 %%%%
 Interest must be between 0 and 255.
@@ -18011,7 +18011,7 @@ You are now @arg@.
 Are you sure you want to be excommunicated?
 
 %%%%
-Setting piety to %d.
+Setting piety to @num@.
 
 %%%%
 "Enter new gold value (current = @num1@, Enter for @num2@): "
@@ -18023,7 +18023,7 @@ You are not religious!
 Current progress to next sacrifice: @num1@  Progress needed: @num2@
 
 %%%%
-"Enter new piety value (current = %d, Enter for 0): "
+"Enter new piety value (current = @num@, Enter for 0): "
 
 %%%%
 "Which skill (by name)? "
@@ -18062,7 +18062,7 @@ No matching mutation names.
 "No exact match for mutation '@arg@', possible matches are: "
 
 %%%%
-Found #%d: @arg1@ ("@arg2@")
+Found #@num@: @arg1@ ("@arg2@")
 
 %%%%
 "How many levels to increase or decrease? "
@@ -18107,7 +18107,7 @@ Can't set duration directly to 0, setting it to 1 instead.
 "Enter new experience level: "
 
 %%%%
-Experience level set to %d.
+Experience level set to @num@.
 
 %%%%
 Nothing happens.
@@ -18158,7 +18158,7 @@ You already worship that god!
 "Enter new Zot clock value (current = @num1@, from 0 to @num2@): "
 
 %%%%
-Zot clock should be between 0 and %d
+Zot clock should be between 0 and @num@
 
 %%%%
 

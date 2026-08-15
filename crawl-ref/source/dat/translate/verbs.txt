@@ -152,7 +152,7 @@ run
 # Attack verb infinitives
 #################################
 # Returned by mon_attack_name() in mon-util.cc
-# These are used in monster descriptions: "It can @arg@ for %d damage"
+# These are used in monster descriptions: "It can @arg@ for @num@ damage"
 %%%%
 hit
 

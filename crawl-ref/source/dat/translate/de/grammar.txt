@@ -163,7 +163,7 @@ KEY:/^(a|an) //
 # generate counted plural with adjective placeholder from counted plural without
 PREGENERATE:6
 
-SELECT_BY_KEY:/^%d (?!@arg@)/
+SELECT_BY_KEY:/^@num@ (?!@arg@)/
 
 KEY:/^@num1@ /@num2@ @arg@/
 
@@ -174,22 +174,22 @@ KEY:/^@num1@ /@num2@ @arg@/
 # generate uncounted plural from counted plural without
 PREGENERATE:7
 
-SELECT_BY_KEY:/^%d /
+SELECT_BY_KEY:/^@num@ /
 
-KEY:/^%d //
+KEY:/^@num@ //
 
-/^(\{pl\})?%d /{pl}/
+/^(\{pl\})?@num@ /{pl}/
 %%%%
 
 #############
 # generate definite plural from counted plural
 PREGENERATE:8
 
-SELECT_BY_KEY:/^%d /
+SELECT_BY_KEY:/^@num@ /
 
-KEY:/^%d/the/
+KEY:/^@num@/the/
 
-/^(\{pl\})?%d/{pl}die/
+/^(\{pl\})?@num@/{pl}die/
 %%%%
 
 #############
@@ -308,7 +308,7 @@ GENERATE:dat
 /^[^A-ZÄÖÜ ][^A-ZÄÖÜ]+/\{adj-e[rs]\}/{adj-em}/
 
 # mark plurals, if not already marked
-/^(die |deine )?(%d|[0-9]+) /^(.)/{pl}$1/
+/^(die |deine )?(@num@|[0-9]+) /^(.)/{pl}$1/
 /^(?!\{pl\}).*schuppen\b/^(.)/{pl}$1/
 
 # plural determiners
