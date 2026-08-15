@@ -17468,7 +17468,7 @@ All vaults are now eligible for [re]use.
 "Set Abyss speed to what? (now @num@, higher value = higher speed) "
 
 %%%%
-Setting Abyss speed to %i.
+Setting Abyss speed to @num@.
 
 %%%%
 
@@ -17774,7 +17774,7 @@ No such background, making it a Fighter.
 "Set monster spawn rate to what? (now @num@, lower value = higher rate) "
 
 %%%%
-Setting monster spawn rate to %i.
+Setting monster spawn rate to @num@.
 
 %%%%
 Level already filled with monsters, get rid of some of them first.
@@ -17786,7 +17786,7 @@ Level already filled with monsters, get rid of some of them first.
 Spawning 1 monster.
 
 %%%%
-Spawning %i monsters.
+Spawning @num@ monsters.
 
 %%%%
 land
@@ -17795,7 +17795,7 @@ land
 Which monster?
 
 %%%%
-Detected %i monster@arg@.
+Detected @num@ monster@arg@.
 
 %%%%
 "What monsters to dismiss (ENTER for all, \"harmful\", \"mobile\", \"los\" or a regex, \"keepitem\" to leave items)? "
@@ -17804,7 +17804,7 @@ Detected %i monster@arg@.
 Dismissed 1 monster.
 
 %%%%
-Dismissed %i monsters.
+Dismissed @num@ monsters.
 
 %%%%
 "Make the monster (S)hout or (T)alk? "
@@ -18074,7 +18074,7 @@ Found #@num@: @arg1@ ("@arg2@")
 "Enter values for Str, Int, Dex (space separated): "
 
 %%%%
-Setting attributes (Str, Int, Dex) to: %i, %i, %i
+Setting attributes (Str, Int, Dex) to: @num1@, @num2@, @num3@
 
 %%%%
 "Edit which duration (letter or name)? "
