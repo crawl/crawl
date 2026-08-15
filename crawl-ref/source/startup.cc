@@ -29,6 +29,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "loading-screen.h"
+#include "localise.h"
 #include "macro.h"
 #include "maps.h"
 #include "menu.h"
@@ -138,6 +139,8 @@ static void _initialize()
     // Initialise internal databases.
     _loading_message("Loading databases...");
     databaseSystemInit();
+
+    init_localisation();
 
     _loading_message("Loading spells and features...");
     init_feat_desc_cache();

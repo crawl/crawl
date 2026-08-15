@@ -23,16 +23,15 @@ using namespace std;
 #define debuglog(...) {}
 #endif
 
-static void _init_localisation();
 static string _localise_string(const string& context, const string& s);
 static string _localise_param_string(const string& context, const string& s);
 
 static vector<pair<string, string>> _patterns;
 static bool _initialised = false;
 
-static void _init_localisation()
+void init_localisation()
 {
-    if (_initialised)
+    if (_initialised || Options.language == lang_t::EN)
         return;
     _initialised = true;
 
@@ -136,15 +135,13 @@ static string _localise_string(const string& context, const string& s)
 
 bool localisation_active()
 {
-    return Options.language != lang_t::EN;
+    return _initialised;
 }
 
 string localise(const string &s)
 {
     if (!localisation_active())
         return s;
-
-    _init_localisation();
 
     return _localise_string("", s);
 }

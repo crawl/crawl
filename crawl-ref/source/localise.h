@@ -9,6 +9,8 @@
 
 using std::string;
 
+void init_localisation();
+
 // Is localisation active?
 bool localisation_active();
 
