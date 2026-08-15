@@ -123,8 +123,8 @@ Strg-P
 
 # "<player name> the <species> <background>"
 %%%%
-%s the %s %s
-%s der %s %s
+@arg1@ the @arg2@ @arg3@
+@arg1@ der @arg2@ @arg3@
 %%%%
 
 # "<player name> the <combo>"

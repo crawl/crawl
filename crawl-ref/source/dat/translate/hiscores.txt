@@ -156,7 +156,7 @@ Was a Plaything of Xom.
 
 %%%%
 # Was <title> of <god>[ (penitent)]
-Was %s of %s%s.
+Was @arg1@ of @arg2@@arg3@.
 
 %%%%
 

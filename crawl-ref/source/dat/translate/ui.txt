@@ -123,7 +123,7 @@ ctrl-p
 
 # "<player name> the <species> <background>"
 %%%%
-%s the %s %s
+@arg1@ the @arg2@ @arg3@
 
 %%%%
 

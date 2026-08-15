@@ -441,7 +441,7 @@ select item for acquirement
 examine item
 
 %%%%
-Acquire %s? (%s/%s)
+Acquire @arg1@? (@arg2@/@arg3@)
 
 %%%%
 
@@ -1376,7 +1376,7 @@ The silver sears %s!
 You draw life force from %s%s
 
 %%%%
-%s draws life force from %s%s
+@arg1@ draws life force from @arg2@@arg3@
 
 %%%%
 %s is healed by the life force!
@@ -1565,7 +1565,7 @@ You are yanked forward by %s.
 %s is yanked forward by %s.
 
 %%%%
-%s reflects off %s %s!
+@arg1@ reflects off @arg2@ @arg3@!
 
 %%%%
 %s reflects off an invisible shield around %s!
@@ -4636,10 +4636,10 @@ This attack would place you under penance!
 
 %%%%
 # first %s is verb, 2nd is monster, 3rd is suffix from above
-Really %s %s%s?
+Really @arg1@ @arg2@@arg3@?
 
 %%%%
-Really %s near %s%s?
+Really @arg1@ near @arg2@@arg3@?
 
 %%%%
 a toxic aura
@@ -5333,7 +5333,7 @@ You don't have enough gold to fund that merchant!
 
 %%%%
 # shopkeeper invites player to visit shop
-%s invites you to visit %s %s%s%s.
+@arg1@ invites you to visit @arg2@ @arg3@@arg4@@arg5@.
 
 %%%%
 # Your bribe of <branch>...
@@ -7317,7 +7317,7 @@ Really clear all %s?
 All %s cleared!
 
 %%%%
-Cleared %s '%s' => '%s'.
+Cleared @arg1@ '@arg2@' => '@arg3@'.
 
 %%%%
 Input trigger key to edit or create %s:
@@ -7326,7 +7326,7 @@ Input trigger key to edit or create %s:
 ([<w>~</w>] to enter by keycode)
 
 %%%%
-Current %s for %s: %s
+Current @arg1@ for @arg2@: @arg3@
 
 %%%%
 redefine
@@ -7362,10 +7362,10 @@ Quick reference: 8: [<w>bksp</w>], 9: [<w>tab</w>], 13: [<w>enter</w>], 27: [<w>
 Enter keycode by number:
 
 %%%%
-Redefined %s '%s' => '%s'.
+Redefined @arg1@ '@arg2@' => '@arg3@'.
 
 %%%%
-Created %s '%s' => '%s'.
+Created @arg1@ '@arg2@' => '@arg3@'.
 
 %%%%
 
@@ -9110,7 +9110,7 @@ A wave of cold passes over you.
 thin air
 
 %%%%
-%s throws %s at %s!
+@arg1@ throws @arg2@ at @arg3@!
 
 %%%%
 %s throws %s out of sight!
@@ -9154,7 +9154,7 @@ You hear an eerie melody.
 %s seems to step out of %s!
 
 %%%%
-%s seems to draw %s out of %s!
+@arg1@ seems to draw @arg2@ out of @arg3@!
 
 %%%%
 Suddenly you stand beside yourself.
@@ -9803,7 +9803,7 @@ You hear a loud magical explosion!
 
 %%%%
 # TODO: Fix this
-%s's %s reflects %s!
+@arg1@'s @arg2@ reflects @arg3@!
 
 %%%%
 
@@ -10116,7 +10116,7 @@ It is briefly surrounded by a scintillating aura of random colours.
 
 %%%%
 # <its> <hand(s)> briefly pass(es) through it before <it> manage(s) to get a firm grip on it.
-%s %s briefly %s through it before %s %s to get a firm grip on it.
+@arg1@ @arg2@ briefly @arg3@ through it before @arg4@ @arg5@ to get a firm grip on it.
 
 %%%%
 pass
@@ -12373,7 +12373,7 @@ Something reflects %s!
 
 %%%%
 # note: <projectile> pierces through <monster's> <shield>!
-%s pierces through %s %s!
+@arg1@ pierces through @arg2@ @arg3@!
 
 %%%%
 %s pierces through your shielding!
@@ -13044,7 +13044,7 @@ Vehumet offers you knowledge of %s.
 
 %%%%
 # note: <ancestor> remembers that <the weapon> was <a weapon of brand>
-%s remembers that %s was %s.
+@arg1@ remembers that @arg2@ was @arg3@.
 
 %%%%
 You feel a little guilty.
@@ -13946,7 +13946,7 @@ It is impossible to cast this spell (100%% risk of failure)!
 
 %%%%
 # note: params: 1 = dangerous/very dangerous/etc, 2 = <failure rate>, 3 = !/.
-The spell is %s to cast (%s risk of failure)%s Continue anyway?
+The spell is @arg1@ to cast (@arg2@ risk of failure)@arg3@ Continue anyway?
 
 %%%%
 %d%% to hit
@@ -16397,27 +16397,27 @@ You hear a sizzling splash.
 
 %%%%
 # note: @feature@ suddenly disappears from beside/under/etc. @monster@
-%s suddenly disappears from %s %s!
+@arg1@ suddenly disappears from @arg2@ @arg3@!
 
 %%%%
 %s suddenly appears!
 
 %%%%
 # note: @feature@ suddenly appears beside/under/etc. @monster@
-%s suddenly appears %s %s!
+@arg1@ suddenly appears @arg2@ @arg3@!
 
 %%%%
 %s moves!
 
 %%%%
 # note: @feature@ moves from beside/under/etc. @monster1@ to beside/under/etc. @monster2@
-%s moves from %s %s to %s %s!
+@arg1@ moves from @arg2@ @arg3@ to @arg4@ @arg5@!
 
 %%%%
-%s moves from %s %s!
+@arg1@ moves from @arg2@ @arg3@!
 
 %%%%
-%s moves to %s %s!
+@arg1@ moves to @arg2@ @arg3@!
 
 %%%%
 You fall into the lava!
@@ -17300,10 +17300,10 @@ You sensed %s.
 Select layers to display:
 
 %%%%
-<%s>(m)onsters</%s>|<%s>(p)layer</%s>|<%s>(i)tems</%s>|<%s>(c)louds</%s>
+<@arg1@>(m)onsters</@arg2@>|<@arg3@>(p)layer</@arg4@>|<@arg5@>(i)tems</@arg6@>|<@arg7@>(c)louds</@arg8@>
 
 %%%%
-|<%s>monster (w)eapons</%s>|<%s>monster (h)ealth</%s>
+|<@arg1@>monster (w)eapons</@arg2@>|<@arg3@>monster (h)ealth</@arg4@>
 
 %%%%
 Press 'a' to toggle all layers. Press any other key to exit.
@@ -17520,7 +17520,7 @@ No hits
 "Quivering: "
 
 %%%%
-%s: %s %s vs. %s (%d rounds) (%s)
+@arg1@: @arg2@ @arg3@ vs. @arg4@ (%d rounds) (@arg5@)
 
 %%%%
 Defense

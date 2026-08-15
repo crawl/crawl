@@ -441,8 +441,8 @@ Gegenstand erwerben
 examine item
 Gegenstand prüfen
 %%%%
-Acquire %s? (%s/%s)
-%s erwerben? (%s/%s)
+Acquire @arg1@? (@arg2@/@arg3@)
+@arg1@ erwerben? (@arg2@/@arg3@)
 %%%%
 
 ##################
@@ -1376,8 +1376,8 @@ Die Lebenskraft %s wird als Opfer dargeboten.
 You draw life force from %s%s
 Du ziehst Lebenskraft aus {dat}%s%s
 %%%%
-%s draws life force from %s%s
-%s zieht Lebenskraft aus {dat}%s%s
+@arg1@ draws life force from @arg2@@arg3@
+@arg1@ zieht Lebenskraft aus {dat}@arg2@@arg3@
 %%%%
 %s is healed by the life force!
 %s wird durch die Lebenskraft geheilt!
@@ -1565,8 +1565,8 @@ Du wirst von {dat}%s nach vorne gerissen.
 %s is yanked forward by %s.
 %s wird von {dat}%s nach vorne gerissen.
 %%%%
-%s reflects off %s %s!
-%s wird von %s {dat}%s reflektiert!
+@arg1@ reflects off @arg2@ @arg3@!
+@arg1@ wird von @arg2@ {dat}@arg3@ reflektiert!
 %%%%
 %s reflects off an invisible shield around %s!
 %s wird von einem unsichtbaren Schild um {dat}%s herum reflektiert!
@@ -4636,11 +4636,11 @@ This attack would place you under penance!
 Dieser Angriff würde dich unter Buße stellen!
 %%%%
 # first %s is verb, 2nd is monster, 3rd is suffix from above
-Really %s %s%s?
-Wirklich %s {acc}%s%s?
+Really @arg1@ @arg2@@arg3@?
+Wirklich @arg1@ {acc}@arg2@@arg3@?
 %%%%
-Really %s near %s%s?
-Wirklich %s in der Nähe von {dat}%s%s?
+Really @arg1@ near @arg2@@arg3@?
+Wirklich @arg1@ in der Nähe von {dat}@arg2@@arg3@?
 %%%%
 a toxic aura
 {f}eine toxische Aura
@@ -5333,7 +5333,7 @@ You don't have enough gold to fund that merchant!
 Du hast nicht genug Gold, um diesen Händler zu finanzieren!
 %%%%
 # shopkeeper invites player to visit shop
-%s invites you to visit %s %s%s%s.
+@arg1@ invites you to visit @arg2@ @arg3@@arg4@@arg5@.
 %s lädt dich ein, den Laden zu besuchen.
 %%%%
 # Your bribe of <branch>...
@@ -7317,8 +7317,8 @@ Wirklich alle %s löschen?
 All %s cleared!
 Alle %s gelöscht!
 %%%%
-Cleared %s '%s' => '%s'.
-%s '%s' => '%s' gelöscht.
+Cleared @arg1@ '@arg2@' => '@arg3@'.
+@arg1@ '@arg2@' => '@arg3@' gelöscht.
 %%%%
 Input trigger key to edit or create %s:
 Taste eingeben um {acc}%s zu bearbeiten oder erstellen:
@@ -7326,8 +7326,8 @@ Taste eingeben um {acc}%s zu bearbeiten oder erstellen:
 ([<w>~</w>] to enter by keycode)
 ([<w>~</w>] um durch Keycode einzugeben)
 %%%%
-Current %s for %s: %s
-Aktuelles %s für %s: %s
+Current @arg1@ for @arg2@: @arg3@
+Aktuelles @arg1@ für @arg2@: @arg3@
 %%%%
 redefine
 redefinieren
@@ -7362,11 +7362,11 @@ Schnellreferenz: 8: [<w>Rücktaste</w>], 9: [<w>Tab</w>], 13: [<w>Enter</w>], 27
 Enter keycode by number:
 Tastencode als Nummer eingeben:
 %%%%
-Redefined %s '%s' => '%s'.
-%s redefiniert: '%s' => '%s'.
+Redefined @arg1@ '@arg2@' => '@arg3@'.
+@arg1@ redefiniert: '@arg2@' => '@arg3@'.
 %%%%
-Created %s '%s' => '%s'.
-%s erstellt: '%s' => '%s'.
+Created @arg1@ '@arg2@' => '@arg3@'.
+@arg1@ erstellt: '@arg2@' => '@arg3@'.
 %%%%
 
 ##################
@@ -9110,8 +9110,8 @@ Eine Kältewelle zieht über dich.
 thin air
 {f}leere Luft
 %%%%
-%s throws %s at %s!
-%s wirft {acc}%s auf {acc}%s!
+@arg1@ throws @arg2@ at @arg3@!
+@arg1@ wirft {acc}@arg2@ auf {acc}@arg3@!
 %%%%
 %s throws %s out of sight!
 %s wirft {acc}%s außer Sichtweite!
@@ -9154,7 +9154,7 @@ Du hörst eine unheimliche Melodie.
 %s seems to step out of %s!
 %s scheint aus sich herauszugehen.
 %%%%
-%s seems to draw %s out of %s!
+@arg1@ seems to draw @arg2@ out of @arg3@!
 %s scheint {acc}%s aus sich selbst heraus zu ziehen!
 %%%%
 Suddenly you stand beside yourself.
@@ -9803,8 +9803,8 @@ You hear a loud magical explosion!
 Du hörst eine laute magische Explosion!
 %%%%
 # TODO: Fix this
-%s's %s reflects %s!
-{gen}%s {nom}%s reflektiert {acc}%s!
+@arg1@'s @arg2@ reflects @arg3@!
+{gen}@arg1@ {nom}@arg2@ reflektiert {acc}@arg3@!
 %%%%
 
 ##################
@@ -10116,7 +10116,7 @@ It is briefly surrounded by a scintillating aura of random colours.
 Die Waffe ist kurzzeitig von einer schillernden Aura aus zufälligen Farben umgeben.
 %%%%
 # <its> <hand(s)> briefly pass(es) through it before <it> manage(s) to get a firm grip on it.
-%s %s briefly %s through it before %s %s to get a firm grip on it.
+@arg1@ @arg2@ briefly @arg3@ through it before @arg4@ @arg5@ to get a firm grip on it.
 Die Hand des Monsters greift kurz durch die Waffe hindurch, bevor es sie fest zu fassen bekommt.
 %%%%
 pass
@@ -12373,8 +12373,8 @@ Etwas reflektiert {acc}%s!
 %s durchdringt {acc}%s!
 %%%%
 # note: <projectile> pierces through <monster's> <shield>!
-%s pierces through %s %s!
-%s durchdringt %s {acc}%s!
+@arg1@ pierces through @arg2@ @arg3@!
+@arg1@ durchdringt @arg2@ {acc}@arg3@!
 %%%%
 %s pierces through your shielding!
 %s durchdringt deine Abschirmung!
@@ -13044,8 +13044,8 @@ Vehumet bietet dir Wissen über {acc}%s.
 %s erinnert sich an weitere alte Fertigkeiten.
 %%%%
 # note: <ancestor> remembers that <the weapon> was <a weapon of brand>
-%s remembers that %s was %s.
-%s erinnert sich daran, dass %s %s war.
+@arg1@ remembers that @arg2@ was @arg3@.
+@arg1@ erinnert sich daran, dass @arg2@ @arg3@ war.
 %%%%
 You feel a little guilty.
 Du fühlst dich ein wenig schuldig.
@@ -13946,8 +13946,8 @@ It is impossible to cast this spell (100%% risk of failure)!
 Es ist unmöglich, diesen Zauber zu wirken (100% Risiko des Scheiterns)!
 %%%%
 # note: params: 1 = dangerous/very dangerous/etc, 2 = <failure rate>, 3 = !/.
-The spell is %s to cast (%s risk of failure)%s Continue anyway?
-Das Wirken diesen Zauber ist %s (%s Risiko des Scheiterns)%s Wirklich wirken?
+The spell is @arg1@ to cast (@arg2@ risk of failure)@arg3@ Continue anyway?
+Das Wirken diesen Zauber ist @arg1@ (@arg2@ Risiko des Scheiterns)@arg3@ Wirklich wirken?
 %%%%
 %d%% to hit
 %d%% Trefferchance
@@ -16397,28 +16397,28 @@ Du hörst ein brutzelndes Plätschern.
 %s verschwindet plötzlich!
 %%%%
 # note: @feature@ suddenly disappears from beside/under/etc. @monster@
-%s suddenly disappears from %s %s!
-%s verschwindet plötzlich von %s {dat}%s!
+@arg1@ suddenly disappears from @arg2@ @arg3@!
+@arg1@ verschwindet plötzlich von @arg2@ {dat}@arg3@!
 %%%%
 %s suddenly appears!
 %s erscheint plötzlich!
 %%%%
 # note: @feature@ suddenly appears beside/under/etc. @monster@
-%s suddenly appears %s %s!
-%s erscheint plötzlich %s {dat}%s!
+@arg1@ suddenly appears @arg2@ @arg3@!
+@arg1@ erscheint plötzlich @arg2@ {dat}@arg3@!
 %%%%
 %s moves!
 %s bewegt sich!
 %%%%
 # note: @feature@ moves from beside/under/etc. @monster1@ to beside/under/etc. @monster2@
-%s moves from %s %s to %s %s!
-%s bewegt sich von %s {dat}%s zu %s {dat}%s!
+@arg1@ moves from @arg2@ @arg3@ to @arg4@ @arg5@!
+@arg1@ bewegt sich von @arg2@ {dat}@arg3@ zu @arg4@ {dat}@arg5@!
 %%%%
-%s moves from %s %s!
-%s bewegt sich von %s {dat}%s!
+@arg1@ moves from @arg2@ @arg3@!
+@arg1@ bewegt sich von @arg2@ {dat}@arg3@!
 %%%%
-%s moves to %s %s!
-%s bewegt sich %s {acc}%s!
+@arg1@ moves to @arg2@ @arg3@!
+@arg1@ bewegt sich @arg2@ {acc}@arg3@!
 %%%%
 You fall into the lava!
 Du fällst in die Lava!
@@ -17300,11 +17300,11 @@ Du hast {acc}%s gespürt.
 Select layers to display:
 Anzuzeigende Ansichtsebenen auswählen:
 %%%%
-<%s>(m)onsters</%s>|<%s>(p)layer</%s>|<%s>(i)tems</%s>|<%s>(c)louds</%s>
-<%s>(m)Monster</%s>|<%s>(p)Spieler</%s>|<%s>(i)Gegenstände</%s>|<%s>(c)Wolken</%s>
+<@arg1@>(m)onsters</@arg2@>|<@arg3@>(p)layer</@arg4@>|<@arg5@>(i)tems</@arg6@>|<@arg7@>(c)louds</@arg8@>
+<@arg1@>(m)Monster</@arg2@>|<@arg3@>(p)Spieler</@arg4@>|<@arg5@>(i)Gegenstände</@arg6@>|<@arg7@>(c)Wolken</@arg8@>
 %%%%
-|<%s>monster (w)eapons</%s>|<%s>monster (h)ealth</%s>
-|<%s>(w)Waffen der Monster</%s>|<%s>(h)Gesundheit der Monster</%s>
+|<@arg1@>monster (w)eapons</@arg2@>|<@arg3@>monster (h)ealth</@arg4@>
+|<@arg1@>(w)Waffen der Monster</@arg2@>|<@arg3@>(h)Gesundheit der Monster</@arg4@>
 %%%%
 Press 'a' to toggle all layers. Press any other key to exit.
 'a' drücken, um alle Ansichtsebenen umzuschalten. Zum Beenden eine beliebige andere Taste drücken.
@@ -17520,8 +17520,8 @@ Keine Treffer
 "Quivering: "
 "Köcher: "
 %%%%
-%s: %s %s vs. %s (%d rounds) (%s)
-%s: %s %s vs. %s (%d Runden) (%s)
+@arg1@: @arg2@ @arg3@ vs. @arg4@ (%d rounds) (@arg5@)
+@arg1@: @arg2@ @arg3@ vs. @arg4@ (%d Runden) (@arg5@)
 %%%%
 Defense
 Verteidigung
