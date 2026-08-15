@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 #include "database.h"
 #include "localise.h"
+#include "localise-util.h"
 #include "options.h"
 #include "stringutil.h"
 
@@ -19,6 +20,11 @@ string localise(const string &s)
     if (!localisation_active() || s.empty())
         return s;
 
+    // try simple translation first
+    string result = xlate(s);
+    if (!result.empty())
+        return result;
+
     // check for leading/trailing whitespace
     string trimmed = trimmed_string(s);
     if (trimmed.length() != s.length())
@@ -31,6 +37,8 @@ string localise(const string &s)
         return replace_all(s, trimmed, localise(trimmed));
     }
 
-    string result = getTranslatedString(s);
-    return result == "" ? s : result;
+    // TODO: handle more complicated cases
+
+    // failed - return the original
+    return s;
 }
