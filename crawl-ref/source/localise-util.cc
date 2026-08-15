@@ -76,3 +76,20 @@ string escape_regex_specials(const string& s)
     }
     return result;
 }
+
+size_t length_excl_params(const string &s)
+{
+    size_t len = 0;
+    bool in_param = false;
+    for (const char c: s)
+    {
+        if (c == '@')
+        {
+            in_param = !in_param;
+            continue;
+        }
+        if (!in_param)
+            len++;
+    }
+    return len;
+}
