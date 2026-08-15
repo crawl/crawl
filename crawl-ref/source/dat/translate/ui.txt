@@ -1540,14 +1540,6 @@ Points
 
 %%%%
 
-
-%%%%
-# a string like "auto|manual mode", where "auto|manual" are the states and "mode" is the setting
-# For romance languages the order would probably be reversed
-@states@ @setting@
-
-%%%%
-
 # "auto|manual mode"
 %%%%
 auto
