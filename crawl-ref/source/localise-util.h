@@ -19,6 +19,7 @@ string xlate(const string& s);
 string cxlate(const string& context, const string &s);
 
 string add_context_to_string(const string &context, const string &s);
+string strip_context_from_string(const string &s);
 
 vector<string> extract_params(const string& s);
 

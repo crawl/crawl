@@ -8,11 +8,6 @@
 #include "localise-util.h"
 #include "stringutil.h"
 
-string add_context_to_string(const string &context, const string &s)
-{
-    return "{" + context + "}" + s;
-}
-
 // low-level translate function
 string xlate(const string &s)
 {
@@ -33,6 +28,23 @@ string cxlate(const string &context, const string &s)
 
     // fall back to the default translation
     return getTranslatedString(s);
+}
+
+string add_context_to_string(const string &context, const string &s)
+{
+    return "{" + context + "}" + s;
+}
+
+string strip_context_from_string(const string &s)
+{
+    if (s.empty() || s[0] != '{')
+        return s;
+
+    size_t end = s.find('}');
+    if (end == string::npos)
+        return s;
+
+    return s.substr(end + 1);
 }
 
 // extract @foo@ parameters from string

@@ -143,5 +143,7 @@ string localise(const string &s)
     if (!localisation_active())
         return s;
 
-    return _localise_string("", s);
+    string result = _localise_string("", s);
+
+    return strip_context_from_string(result);
 }
