@@ -25,7 +25,7 @@
 #    they will be in their own case, and should be left alone. For example:
 #    "der {adj-e}%sRing der Schatten" - don't change the part after Ring
 #    "ein {adj-er}%sRing magischer Kraft" - ditto
-#    "ein {adj-es}%sPaar {adj-e}%sHandschuhe" - don't change the part after Paar
+#    "ein {adj-es}@arg1@Paar {adj-e}@arg2@Handschuhe" - don't change the part after Paar
 #  - The default form (null context) for nouns is nominative
 #  - The default form (null context) for adjectives is the -e form
 #

@@ -8,8 +8,8 @@
 # item-name.cc
 ##################
 %%%%
-<white>Runes of Zot (</white><%s>%d</%s><white> collected) & Orbs of Power</white>
-<white>Runen von Zot (</white><%s>%d</%s><white> gesammelt) & Kugeln der Macht</white>
+<white>Runes of Zot (</white><@arg1@>%d</@arg2@><white> collected) & Orbs of Power</white>
+<white>Runen von Zot (</white><@arg1@>%d</@arg2@><white> gesammelt) & Kugeln der Macht</white>
 %%%%
 
 ##################
@@ -464,11 +464,11 @@ Du lässt {acc}%s los.
 %s releases you.
 %s lässt dich los.
 %%%%
-%s release %s.
-%s lassen {acc}%s los.
+@arg1@ release @arg2@.
+@arg1@ lassen {acc}@arg2@ los.
 %%%%
-%s releases %s.
-%s lässt {acc}%s los.
+@arg1@ releases @arg2@.
+@arg1@ lässt {acc}@arg2@ los.
 %%%%
 You lose hold of %s.
 Du kannst {acc}%s nicht länger halten.
@@ -479,17 +479,17 @@ Du kannst {acc}%s nicht länger halten.
 %s loses hold of you.
 %s kann dich nicht länger halten.
 %%%%
-%s lose hold of %s.
-%s können {acc}%s nicht länger halten.
+@arg1@ lose hold of @arg2@.
+@arg1@ können {acc}@arg2@ nicht länger halten.
 %%%%
-%s loses hold of %s.
-%s kann {acc}%s nicht länger halten.
+@arg1@ loses hold of @arg2@.
+@arg1@ kann {acc}@arg2@ nicht länger halten.
 %%%%
 The grasping roots
 Die greifenden Wurzeln
 %%%%
-%s constrict %s but do no damage.
-%s umschlingen {acc}%s, fügen aber keinen Schaden zu.
+@arg1@ constrict @arg2@ but do no damage.
+@arg1@ umschlingen {acc}@arg2@, fügen aber keinen Schaden zu.
 %%%%
 You constrict %s but do no damage.
 Du umschlingst {acc}%s, fügst aber keinen Schaden zu.
@@ -503,11 +503,11 @@ Du umschlingst {acc}%s
 %s constricts you
 %s umschlingt dich
 %%%%
-%s constrict %s
-%s umschlingen {acc}%s
+@arg1@ constrict @arg2@
+@arg1@ umschlingen {acc}@arg2@
 %%%%
-%s constricts %s
-%s umschlingt {acc}%s
+@arg1@ constricts @arg2@
+@arg1@ umschlingt {acc}@arg2@
 %%%%
 You are constricted
 Du wirst umschlungen
@@ -563,14 +563,14 @@ Du kollidierst mit {dat}%s!
 %s collides with you!
 %s kollidiert mit dir!
 %%%%
-%s collides with %s!
-%s kollidiert mit {dat}%s!
+@arg1@ collides with @arg2@!
+@arg1@ kollidiert mit {dat}@arg2@!
 %%%%
 You slam into %s!
 Du knallst gegen {acc}%s!
 %%%%
-%s slams into %s!
-%s knallt gegen {acc}%s!
+@arg1@ slams into @arg2@!
+@arg1@ knallt gegen {acc}@arg2@!
 %%%%
 You violently stop moving!
 Du wirst gewaltsam gestoppt!
@@ -659,14 +659,14 @@ Konnte nicht Arena namens "%s" erschaffen
 Can't set real_summons and respawn at same time.
 Die Optionen real_summons und respawn können nicht gleichzeitig gesetzt werden.
 %%%%
-Bad place '%s': %s
-Falscher Ort '%s': %s
+Bad place '@arg1@': @arg2@
+Falscher Ort '@arg1@': @arg2@
 %%%%
 Expected arena monster spec "xxx v yyy", but got "%s"
 Eingabe wie "xxx v yyy" erwartet, aber "%s" wurde bekommen
 %%%%
-Bad monster spec "%s": %s
-Falsche Monster-Eingabe "%s": %s
+Bad monster spec "@arg1@": @arg2@
+Falsche Monster-Eingabe "@arg1@": @arg2@
 %%%%
 vs
 vs
@@ -683,8 +683,8 @@ Gleichstand
 Winner: %s!
 Gewinner: %s!
 %%%%
-Final score: %s (%d); %s (%d) [%d ties]
-Endstand: %s (%d); %s (%d) [%d Gleichstände]
+Final score: @arg1@ (%d); @arg2@ (%d) [%d ties]
+Endstand: @arg1@ (%d); @arg2@ (%d) [%d Gleichstände]
 %%%%
 Last arena monster was dismissed.
 Das letzte Arena-Monster wurde entlassen.
@@ -748,8 +748,8 @@ Du vergiftest {acc}%s
 %s envenoms you
 %s vergiftet dich
 %%%%
-%s envenoms %s
-%s vergiftet {acc}%s
+@arg1@ envenoms @arg2@
+@arg1@ vergiftet {acc}@arg2@
 %%%%
 %s envenoms itself
 %s vergiftet sich selbst
@@ -898,29 +898,29 @@ Du schlachtest {acc}%s voller Freude
 %s slaughters you joyfully
 %s schlachtet dich voller Freude
 %%%%
-%s cleaves %s in twain
-%s spaltet {acc}%s in zwei Hälften
+@arg1@ cleaves @arg2@ in twain
+@arg1@ spaltet {acc}@arg2@ in zwei Hälften
 %%%%
-%s pulverises %s into a thin bloody mist
-%s pulverisiert {acc}%s zu einem dünnen blutigen Nebel
+@arg1@ pulverises @arg2@ into a thin bloody mist
+@arg1@ pulverisiert {acc}@arg2@ zu einem dünnen blutigen Nebel
 %%%%
-%s hews %s savagely
-%s hackt {acc}%s brutal
+@arg1@ hews @arg2@ savagely
+@arg1@ hackt {acc}@arg2@ brutal
 %%%%
-%s fatally mangles %s
-%s zerfleischt {acc}%s tödlich
+@arg1@ fatally mangles @arg2@
+@arg1@ zerfleischt {acc}@arg2@ tödlich
 %%%%
-%s dissects %s like a pig carcass
-%s seziert {acc}%s wie einen Schweinekadaver
+@arg1@ dissects @arg2@ like a pig carcass
+@arg1@ seziert {acc}@arg2@ wie einen Schweinekadaver
 %%%%
-%s chops %s into pieces
-%s hackt {acc}%s in Stücke
+@arg1@ chops @arg2@ into pieces
+@arg1@ hackt {acc}@arg2@ in Stücke
 %%%%
-%s butchers %s messily
-%s schlachtet {acc}%s auf brutale Weise
+@arg1@ butchers @arg2@ messily
+@arg1@ schlachtet {acc}@arg2@ auf brutale Weise
 %%%%
-%s slaughters %s joyfully
-%s schlachtet {acc}%s voller Freude
+@arg1@ slaughters @arg2@ joyfully
+@arg1@ schlachtet {acc}@arg2@ voller Freude
 %%%%
 # monsters can attack themselves when confused (but the player can't)
 %s cleaves itself in twain
@@ -953,8 +953,8 @@ Du verbrennst {acc}%s
 %s burns you
 %s verbrennt dich
 %%%%
-%s burns %s
-%s verbrennt {acc}%s
+@arg1@ burns @arg2@
+@arg1@ verbrennt {acc}@arg2@
 %%%%
 %s burns itself
 %s verbrennt sich selbst
@@ -965,8 +965,8 @@ Du frierst {acc}%s ein
 %s freezes you
 %s friert dich ein
 %%%%
-%s freezes %s
-%s friert {acc}%s ein
+@arg1@ freezes @arg2@
+@arg1@ friert {acc}@arg2@ ein
 %%%%
 %s freezes itself
 %s friert sich selbst ein
@@ -977,8 +977,8 @@ Du gibst {dat}%s einen Stromschlag
 %s electrocutes you
 %s gibt dir einen Stromschlag
 %%%%
-%s electrocutes %s
-%s gibt {dat}%s einen Stromschlag
+@arg1@ electrocutes @arg2@
+@arg1@ gibt {dat}@arg2@ einen Stromschlag
 %%%%
 %s electrocutes itself
 %s gibt sich selbst einen Stromschlag
@@ -989,8 +989,8 @@ Du zerdrückst {acc}%s
 %s crushes you
 %s zerdrückt dich
 %%%%
-%s crushes %s
-%s zerdrückt {acc}%s
+@arg1@ crushes @arg2@
+@arg1@ zerdrückt {acc}@arg2@
 %%%%
 %s crushes itself
 %s zerdrückt sich selbst
@@ -1034,8 +1034,8 @@ Du fühlst dich königlich.
 The captain's cutlass flashes! You lacerate %s!!
 Das Entermesser des Kapitäns blitzt! Du schlitzt {acc}%s auf!!
 %%%%
-%s %s falls to the floor!
-%s %s fällt zu Boden!
+@arg1@ @arg2@ falls to the floor!
+@arg1@ @arg2@ fällt zu Boden!
 %%%%
 En garde!
 En garde!
@@ -1126,8 +1126,8 @@ Du zehrst {acc}%s aus
 %s drains you
 %s zehrt dich aus
 %%%%
-%s drains %s
-%s zehrt {acc}%s aus
+@arg1@ drains @arg2@
+@arg1@ zehrt {acc}@arg2@ aus
 %%%%
 %s drains itself
 %s zehrt sich selbst aus
@@ -1140,8 +1140,8 @@ Du entziehst die Vitalität %s!
 %s entzieht deine Vitalität!
 %%%%
 # note: second %s will be possessive (e.g. "the orc's", "Sigmund's")
-%s drains %s vigour!
-%s entzieht die Vitalität %s!
+@arg1@ drains @arg2@ vigour!
+@arg1@ entzieht die Vitalität @arg2@!
 %%%%
 You pounce on %s from a blind spot!
 Du stürzt dich aus dem toten Winkel auf {acc}%s!
@@ -1173,8 +1173,8 @@ Du blockst den Angriff {gen}%s.
 %s blocks your attack.
 %s blockiert deinen Angriff.
 %%%%
-%s blocks %s's attack.
-%s blockiert den Angriff {gen}%s.
+@arg1@ blocks @arg2@'s attack.
+@arg1@ blockiert den Angriff {gen}@arg2@.
 %%%%
 You melt %s
 Du schmilzt {acc}%s
@@ -1182,8 +1182,8 @@ Du schmilzt {acc}%s
 %s melts you
 %s schmilzt dich
 %%%%
-%s melts %s
-%s schmilzt {acc}%s
+@arg1@ melts @arg2@
+@arg1@ schmilzt {acc}@arg2@
 %%%%
 %s melts itself
 %s schmilzt sich selbst
@@ -1285,8 +1285,8 @@ Du riechst brennendes Holz.
 Are you sure you want to burn %s?
 Bist du sicher, dass du {acc}%s verbrennen willstet?
 %%%%
-Your line of fire to %s is blocked by %s. Continue anyway?
-Deine Schusslinie zu {dat}%s wird von {dat}%s blockiert. Trotzdem weitermachen?
+Your line of fire to @arg1@ is blocked by @arg2@. Continue anyway?
+Deine Schusslinie zu {dat}@arg1@ wird von {dat}@arg2@ blockiert. Trotzdem weitermachen?
 %%%%
 Your line of fire to the targeted location is blocked by %s. Continue anyway?
 Deine Schusslinie zum Zielort ist von {dat}%s blockiert. Trotzdem weitermachen?
@@ -1373,8 +1373,8 @@ Das Silber versengt {acc}%s!
 %s life force is offered up.
 Die Lebenskraft %s wird als Opfer dargeboten.
 %%%%
-You draw life force from %s%s
-Du ziehst Lebenskraft aus {dat}%s%s
+You draw life force from @arg1@@arg2@
+Du ziehst Lebenskraft aus {dat}@arg1@@arg2@
 %%%%
 @arg1@ draws life force from @arg2@@arg3@
 @arg1@ zieht Lebenskraft aus {dat}@arg2@@arg3@
@@ -1403,8 +1403,8 @@ Du hörst ein zischendes Geräusch!
 That beam is likely to hit you. Continue anyway?
 Dieser Strahl wird dich wahrscheinlich treffen. Trotzdem weitermachen?
 %%%%
-%s reflects %s!
-%s reflektiert {acc}%s!
+@arg1@ reflects @arg2@!
+@arg1@ reflektiert {acc}@arg2@!
 %%%%
 %s reflects off an invisible shield around you!
 %s reflektiert von einem unsichtbaren Schild um dich herum!
@@ -1424,8 +1424,8 @@ Etwas versucht, dich zu beeinflussen, aber du bist nicht betroffen.
 Something tries to affect you, but you resist.
 Etwas versucht, dich zu beeinflussen, aber du widerstehst.
 %%%%
-Your will lashes out at %s%s
-Dein Wille schlägt auf {acc}%s ein%s
+Your will lashes out at @arg1@@arg2@
+Dein Wille schlägt auf {acc}@arg1@ ein@arg2@
 %%%%
 Strange energies course through your body.
 Seltsame Energien fließen durch deinen Körper.
@@ -1505,20 +1505,20 @@ Kirschfarbene Flammen brennen deine Feuerresistenz weg!
 %s pierces through you
 %s durchbohrt dich
 %%%%
-%s pierces through %s
-%s durchbohrt {acc}%s
+@arg1@ pierces through @arg2@
+@arg1@ durchbohrt {acc}@arg2@
 %%%%
 %s hits you
 %s trifft dich
 %%%%
-%s hits %s
-%s trifft {acc}%s
+@arg1@ hits @arg2@
+@arg1@ trifft {acc}@arg2@
 %%%%
 %s engulfs you
 %s erfasst dich
 %%%%
-%s engulfs %s
-%s erfasst {acc}%s
+@arg1@ engulfs @arg2@
+@arg1@ erfasst {acc}@arg2@
 %%%%
 " but does no damage."
 , fügt aber keinen Schaden zu.
@@ -1556,38 +1556,38 @@ Der eiskalte Wind bläst {acc}%s nach hinten.
 You are knocked back by %s.
 Du wirst von {dat}%s zurückgestoßen.
 %%%%
-%s is knocked back by %s.
-%s wird von {dat}%s zurückgestoßen.
+@arg1@ is knocked back by @arg2@.
+@arg1@ wird von {dat}@arg2@ zurückgestoßen.
 %%%%
 You are yanked forward by %s.
 Du wirst von {dat}%s nach vorne gerissen.
 %%%%
-%s is yanked forward by %s.
-%s wird von {dat}%s nach vorne gerissen.
+@arg1@ is yanked forward by @arg2@.
+@arg1@ wird von {dat}@arg2@ nach vorne gerissen.
 %%%%
 @arg1@ reflects off @arg2@ @arg3@!
 @arg1@ wird von @arg2@ {dat}@arg3@ reflektiert!
 %%%%
-%s reflects off an invisible shield around %s!
-%s wird von einem unsichtbaren Schild um {dat}%s herum reflektiert!
+@arg1@ reflects off an invisible shield around @arg2@!
+@arg1@ wird von einem unsichtbaren Schild um {dat}@arg2@ herum reflektiert!
 %%%%
 %s bounces off of thin air!
 %s prallt an leerer Luft ab!
 %%%%
-%s blocks %s.
-%s blockt {acc}%s.
+@arg1@ blocks @arg2@.
+@arg1@ blockt {acc}@arg2@.
 %%%%
 Your demonic guardian avoids your attack.
 Dein dämonischer Wächter vermeidet deinen Angriff.
 %%%%
-%s passes through %s.
-%s geht durch {acc}%s.
+@arg1@ passes through @arg2@.
+@arg1@ geht durch {acc}@arg2@.
 %%%%
-%s repels %s!
-%s stößt {acc}%s ab!
+@arg1@ repels @arg2@!
+@arg1@ stößt {acc}@arg2@ ab!
 %%%%
-%s misses %s!
-%s verfehlt {acc}%s!
+@arg1@ misses @arg2@!
+@arg1@ verfehlt {acc}@arg2@!
 %%%%
 %s hits something.
 %s trifft etwas.
@@ -1884,11 +1884,11 @@ Du schwelgst in {dat}%s.
 You are engulfed in %s.
 Du wirst von {dat}%s erfasst.
 %%%%
-%s basks in %s.
-%s schwelgt in {dat}%s.
+@arg1@ basks in @arg2@.
+@arg1@ schwelgt in {dat}@arg2@.
 %%%%
-%s is engulfed in %s.
-%s wird von {dat}%s erfasst.
+@arg1@ is engulfed in @arg2@.
+@arg1@ wird von {dat}@arg2@ erfasst.
 %%%%
 You are standing in a thunderstorm.
 Du stehst in einem Gewitter.
@@ -2325,8 +2325,8 @@ Du beginnst, dein Amulett abzulegen.
 You start removing your armour.
 Du beginnst, deine Rüstung abzulegen.
 %%%%
-%s grants you knowledge of %s.
-%s gewährt dir das Wissen über {acc}%s.
+@arg1@ grants you knowledge of @arg2@.
+@arg1@ gewährt dir das Wissen über {acc}@arg2@.
 %%%%
 You start memorising the spell.
 Du beginnst, den Zauber auswendig zu lernen.
@@ -2478,8 +2478,8 @@ Du spürst ein Monster in der Nähe.
 %s warns you: It is a foul shapeshifter.
 %s warnt dich: Das ist ein übler Gestaltwandler.
 %%%%
-%s is %s.
-%s ist %s.
+@arg1@ is @arg2@.
+@arg1@ ist @arg2@.
 %%%%
 Gozag incites %s against you.
 Gozag hetzt {acc}%s gegen dich auf.
@@ -2604,8 +2604,8 @@ nicht bestochen
 %s forgives followers for abandonment; however, those who later take up the worship of an evil or chaotic god will be scourged.
 %s verzeiht Anhängern die Abkehr; wer jedoch später einen bösen oder chaotischen Gott anbetet, wird gegeißelt.
 %%%%
-" (%s are evil, and %s are chaotic.)"
-" (%s sind böse, und %s sind chaotisch.)"
+" (@arg1@ are evil, and @arg2@ are chaotic.)"
+" (@arg1@ sind böse, und @arg2@ sind chaotisch.)"
 %%%%
 %s does not appreciate abandonment, and will call down fearful punishments on disloyal followers!
 %s schätzt es nicht, wenn man ihn verlässt und wird abtrünnige Anhänger furchtbar bestrafen!
@@ -2637,8 +2637,8 @@ Martialische Angriffe:
 %s's powers are not affected by the Invocations skill.
 Die Kräfte {gen}%s werden nicht von der Anrufungsfertigkeit beeinflusst.
 %%%%
-%s's powers are based on %s instead of Invocations skill.
-Die Kräfte {gen}%s basieren auf {dat}%s statt auf der Anrufungsfertigkeit.
+@arg1@'s powers are based on @arg2@ instead of Invocations skill.
+Die Kräfte {gen}@arg1@ basieren auf {dat}@arg2@ statt auf der Anrufungsfertigkeit.
 %%%%
 %s is ambivalent towards you.
 %s ist dir gegenüber ambivalent.
@@ -2673,20 +2673,20 @@ Erteilte Kräfte:
 (Kosten)
 %%%%
 # Elyvilon lifesaving - the last %s is replaced by one of the clauses above
-%s carefully guards your life%s.
-%s bewacht sorgfältig dein Leben%s.
+@arg1@ carefully guards your life@arg2@.
+@arg1@ bewacht sorgfältig dein Leben@arg2@.
 %%%%
-%s often guards your life%s.
-%s bewacht oft dein Leben%s.
+@arg1@ often guards your life@arg2@.
+@arg1@ bewacht oft dein Leben@arg2@.
 %%%%
-%s sometimes guards your life%s.
-%s bewacht manchmal dein Leben%s.
+@arg1@ sometimes guards your life@arg2@.
+@arg1@ bewacht manchmal dein Leben@arg2@.
 %%%%
-%s occasionally guards your life%s.
-%s bewacht gelegentlich dein Leben%s.
+@arg1@ occasionally guards your life@arg2@.
+@arg1@ bewacht gelegentlich dein Leben@arg2@.
 %%%%
-%s guards your life%s.
-%s bewacht dein Leben%s.
+@arg1@ guards your life@arg2@.
+@arg1@ bewacht dein Leben@arg2@.
 %%%%
 Zin always shields you from chaos.
 Zin schirmt dich immer von Chaos ab.
@@ -3288,8 +3288,8 @@ You have not yet explored it and cannot tell where it leads.
 Du hast sie noch nicht erforscht und kannst nicht sagen, wohin sie führt.
 %%%%
 # explored staircase/escape hatch
-You can view the location it leads to by examining it with <w>%s</w> and pressing <w>%s</w>.
-Du kannst den Ort sehen, zu dem sie führt, indem du sie mit <w>%s</w> untersuchst und <w>%s</w> drückst.
+You can view the location it leads to by examining it with <w>@arg1@</w> and pressing <w>@arg2@</w>.
+Du kannst den Ort sehen, zu dem sie führt, indem du sie mit <w>@arg1@</w> untersuchst und <w>@arg2@</w> drückst.
 %%%%
 (Pray here with <w>'%s'</w> to learn more.)
 (Hier mit <w>'%s'</w> beten, um mehr zu erfahren.)
@@ -3669,11 +3669,11 @@ Schwäche verursachen
 %s for up to %d damage
 %s für bis zu %d Schaden
 %%%%
-%s %d times for up to %d damage each plus %s
+@arg1@ %d times for up to %d damage each plus @arg2@
 %2$d mal %1$s für jeweils bis zu %3$d Schaden plus {acc}%4$s
 %%%%
-%s for up to %d damage plus %s
-%s für bis zu %d Schaden plus {acc}%s
+@arg1@ for up to %d damage plus @arg2@
+@arg1@ für bis zu %d Schaden plus {acc}@arg2@
 %%%%
 %s from a distance %d times for up to %d damage each
 %2$d mal aus der Ferne %1$s für jeweils bis zu %3$d Schaden
@@ -3681,11 +3681,11 @@ Schwäche verursachen
 %s from a distance for up to %d damage
 aus der Ferne %s für bis zu %d Schaden
 %%%%
-%s from a distance %d times for up to %d damage each plus %s
+@arg1@ from a distance %d times for up to %d damage each plus @arg2@
 %2$d mal aus der Ferne %1$s für jeweils bis zu %3$d Schaden plus {acc}%$4s
 %%%%
-%s from a distance for up to %d damage plus %s
-aus der Ferne %s für bis zu %d Schaden plus {acc}%s
+@arg1@ from a distance for up to %d damage plus @arg2@
+aus der Ferne @arg1@ für bis zu %d Schaden plus {acc}@arg2@
 %%%%
 # Monster can do whatever from the things above
 It can %s
@@ -4280,8 +4280,8 @@ quivering %s
 mit {dat}%s ausgestattet
 %%%%
 # second weapon and wand
-carrying %s and %s
-mit {dat}%s und {dat}%s ausgestattet
+carrying @arg1@ and @arg2@
+mit {dat}@arg1@ und {dat}@arg2@ ausgestattet
 %%%%
 # second weapon or wand
 carrying %s
@@ -4606,8 +4606,8 @@ Du hast keine Angst mehr.
 %s hops backward while attacking.
 %s springt während des Angriffs rückwärts.
 %%%%
-Really %s while wielding %s?
-Wirklich %s, während du {acc}%s führst?
+Really @arg1@ while wielding @arg2@?
+Wirklich @arg1@, während du {acc}@arg2@ führst?
 %%%%
 Really %s while wielding nothing?
 Wirklich %s, während du nichts führst?
@@ -4621,16 +4621,16 @@ Dies könnte dich unter Buße stellen!
 " while asking for your life to be spared"
 " während du darum bittest, dass dein Leben verschont wird"
 %%%%
-# in these messages, first %s is allied monster (e.g. "your orc"), second %s is one of the suffixes immediately above
-Really fire at %s%s?
-Wirklich auf {acc}%s schießen%s?
+# in these messages, first @arg1@ is allied monster (e.g. "your orc"), second @arg2@ is one of the suffixes immediately above
+Really fire at @arg1@@arg2@?
+Wirklich auf {acc}@arg1@ schießen@arg2@?
 %%%%
 # monster name here will be possessive (e.g. "your orc's")
-Really fire in %s direction%s?
-Wirklich in Richtung %s schießen%s?
+Really fire in @arg1@ direction@arg2@?
+Wirklich in Richtung @arg1@ schießen@arg2@?
 %%%%
-Really attack %s%s?
-Wirklich {acc}%s angreifen%s?
+Really attack @arg1@@arg2@?
+Wirklich {acc}@arg1@ angreifen@arg2@?
 %%%%
 This attack would place you under penance!
 Dieser Angriff würde dich unter Buße stellen!
@@ -4651,9 +4651,9 @@ a noxious bog
 a polar vortex
 {m}ein Polarwirbel
 %%%%
-# first %s is a verb, 2nd %s is one of the things immediately above
-Really %s while emitting %s?
-Wirklich %s, während du {acc}%s ausstrahlst?
+# first @arg1@ is a verb, 2nd @arg2@ is one of the things immediately above
+Really @arg1@ while emitting @arg2@?
+Wirklich @arg1@, während du {acc}@arg2@ ausstrahlst?
 %%%%
 
 ##################
@@ -4684,8 +4684,8 @@ Fehlendes Datenverzeichnis; probiert:
 Cannot find data file '%s' anywhere, aborting
 Kann Datendatei '%' nirgendwo finden, abgebrochen.
 %%%%
-%s "%s" does not exist and I can't create it.
-%s "%s" existiert nicht und ich kann es nicht erstellen.
+@arg1@ "@arg2@" does not exist and I can't create it.
+@arg1@ "@arg2@" existiert nicht und ich kann es nicht erstellen.
 %%%%
 Save directory
 Speicherverzeichnis
@@ -4771,8 +4771,8 @@ Bones-Datei kann nicht entlinkt werden: %s
 regular
 normal
 %%%%
-There is an existing game for name '%s' from an incompatible version of Crawl (%s).
-Es gibt schon ein Spiel für den Namen '%s' aus einer inkompatiblen Version von Crawl (%s).
+There is an existing game for name '@arg1@' from an incompatible version of Crawl (@arg2@).
+Es gibt schon ein Spiel für den Namen '@arg1@' aus einer inkompatiblen Version von Crawl (@arg2@).
 %%%%
 Unless you reinstall that version, you can't load it.
 Es ist nur mit jener Version ladbar.
@@ -4783,8 +4783,8 @@ Jenes Spiel LÖSCHEN und ein Neues starten?
 %s is from an incompatible version and can't be loaded.
 '%s' kommt aus einer inkompatiblen Version und kann nicht geladen werden.
 %%%%
-You already have a %s game saved under the name '%s';
-Es gibt schon ein Spiel dieser Art (%s) unter den Namen '%s';
+You already have a @arg1@ game saved under the name '@arg2@';
+Es gibt schon ein Spiel dieser Art (@arg1@) unter den Namen '@arg2@';
 %%%%
 do you want to load that instead?
 diese Datei stattdessen laden?
@@ -4798,7 +4798,7 @@ Dieses Spiel stammt aus einer früheren Version von Crawl (%s).
 If you load it now, you won't be able to go back. Continue?
 Wenn es jetzt geladen wird, gibt es kein Zurück mehr. Weiter?
 %%%%
-Please use version %s to load %s then.
+Please use version @arg1@ to load @arg2@ then.
 Dann bitte Version %s benutzen um das Spiel zu laden.
 %%%%
 There exists a save by that name but it appears to be invalid.
@@ -4816,8 +4816,8 @@ Datei ist beschädigt (Version %d.%d gefunden)
 This save is from an older version.
 Diese Datei stammt aus einer älteren Version.
 %%%%
-%s %s is not compatible with save files this old. You can:
-%s %s ist nicht kompatibel mit so alten Speicherdateien. Möglichkeiten:
+@arg1@ @arg2@ is not compatible with save files this old. You can:
+@arg1@ @arg2@ ist nicht kompatibel mit so alten Speicherdateien. Möglichkeiten:
 %%%%
 " • continue your game with an older version of %s"
 " • das Spiel mit einer älteren Version von %s weitermachen"
@@ -4895,11 +4895,11 @@ Das sterbende Gelée Royale spuckt %d mehr Gelees aus.
 %s shudders and withdraws towards its neighbour.
 %s zittert und zieht sich zu ihrem Nachbarn zurück.
 %%%%
-%s electric aura discharges, shocking %s!
-Die elektrische Aura %s entlädt sich und schockt {acc}%s!
+@arg1@ electric aura discharges, shocking @arg2@!
+Die elektrische Aura @arg1@ entlädt sich und schockt {acc}@arg2@!
 %%%%
-%s electric aura discharges violently, shocking %s!
-Die elektrische Aura %s entlädt sich heftig und schockt {acc}%s!
+@arg1@ electric aura discharges violently, shocking @arg2@!
+Die elektrische Aura @arg1@ entlädt sich heftig und schockt {acc}@arg2@!
 %%%%
 The air sparks with electricity, shocking %s!
 Die Luft funkelt vor Elektrizität und schockt {acc}%s!
@@ -4907,8 +4907,8 @@ Die Luft funkelt vor Elektrizität und schockt {acc}%s!
 The injured rakshasa weaves a defensive illusion!
 Der verletzte Rakshasa webt eine defensive Illusion!
 %%%%
-%s bursts from %s!
-%s platzt aus {dat}%s heraus!
+@arg1@ bursts from @arg2@!
+@arg1@ platzt aus {dat}@arg2@ heraus!
 %%%%
 You feel extremely nervous for a moment...
 Du fühlst dich für einen Moment extrem nervös...
@@ -5343,8 +5343,8 @@ Deine Bestechung von {dat}%s ist erschöpft.
 You need at least %d gold to offer a bribe.
 Du brauchst mindestens %d Gold, um eine Bestechung anzubieten.
 %%%%
-You can't bribe the denizens of %s or the denizens of %s.
-Du kannst die Bewohner {gen}%s oder {gen}%s nicht bestechen.
+You can't bribe the denizens of @arg1@ or the denizens of @arg2@.
+Du kannst die Bewohner {gen}@arg1@ oder {gen}@arg2@ nicht bestechen.
 %%%%
 You can't bribe the denizens of %s.
 Du kannst die Bewohner {gen}%s nicht bestechen.
@@ -5593,8 +5593,8 @@ Du hast keinen Ahnen zu bewahren!
 %s is not nearby!
 %s ist nicht in der Nähe!
 %%%%
-%s grants %s healing and protection!
-%s gewährt %s Heilung und Schutz!
+@arg1@ grants @arg2@ healing and protection!
+@arg1@ gewährt @arg2@ Heilung und Schutz!
 %%%%
 %s is fully restored!
 %s ist vollständig wiederhergestellt!
@@ -5620,8 +5620,8 @@ Das kannst du nicht übertragen.
 You swap with %s!
 Du tauschst mit %s!
 %%%%
-%s swaps with %s!
-%s tauscht mit %s!
+@arg1@ swaps with @arg2@!
+@arg1@ tauscht mit @arg2@!
 %%%%
 "Remember %s name as what? "
 "dich an %s Namen als was erinnern? "
@@ -5639,11 +5639,11 @@ männlich
 female
 weiblich
 %%%%
-Was %s a) male, b) female, or c) neither? (Currently %s.)
-War %s a) männlich, b) weiblich, oder c) anderes (Zurzeit %s.)
+Was @arg1@ a) male, b) female, or c) neither? (Currently @arg2@.)
+War @arg1@ a) männlich, b) weiblich, oder c) anderes (Zurzeit @arg2@.)
 %%%%
-%s was always %s, you're pretty sure.
-%s war immer %s, da bist du ziemlich sicher.
+@arg1@ was always @arg2@, you're pretty sure.
+@arg1@ war immer @arg2@, da bist du ziemlich sicher.
 %%%%
 Please select an adjacent position to wall jump against.
 Bitte wähle eine benachbarte Position, um gegen die Wand zu springen.
@@ -6112,8 +6112,8 @@ Sifu %s sagt: Leide, Sterblicher!
 %s's divine weapons fail to arrive.
 Die göttlichen Waffen {gen}%s kommen nicht an.
 %%%%
-%s drives %s into a dance frenzy!
-%s treibt {acc}%s in einen Tanzrausch!
+@arg1@ drives @arg2@ into a dance frenzy!
+@arg1@ treibt {acc}@arg2@ in einen Tanzrausch!
 %%%%
 %s booms out, "Time for someone else to take a solo"
 %s dröhnt: "Zeit für ein Solo von jemand anderem"
@@ -6619,8 +6619,8 @@ Du trägst alle Ringe, die du tragen kannst. Welchen abnehmen?
 (<w>?</w> for menu, <w>Esc</w> to cancel)
 (<w>?</w> für Menü, <w>Esc</w> zum Abbrechen)
 %%%%
-<w>%s</w> or %s
-<w>%s</w> or {acc}%s
+<w>@arg1@</w> or @arg2@
+<w>@arg1@</w> or {acc}@arg2@
 %%%%
 Unwielding this item will reduce %s to zero or below.
 Das Loslassen dieses Gegenstandes würde {acc}%s auf Null oder weniger reduzieren.
@@ -7208,8 +7208,8 @@ Was beschreiben?
 Okay, then.
 Okay dann.
 %%%%
-No %s with symbol '%s'.
-Nichts in der Kategorie '%s' wird durch '%s' repräsentiert.
+No @arg1@ with symbol '@arg2@'.
+Nichts in der Kategorie '@arg1@' wird durch '@arg2@' repräsentiert.
 %%%%
 No matching %s.
 Kein Treffer in der Kategorie '%s'.
@@ -7341,14 +7341,14 @@ löschen
 abort
 beenden
 %%%%
-"Input (raw) new %s for %s: "
-"Neues %s (roh) für %s eingeben: "
+"Input (raw) new @arg1@ for @arg2@: "
+"Neues @arg1@ (roh) für @arg2@ eingeben: "
 %%%%
 Raw input: [<w>esc</w>] to abort, [<w>enter</w>] to accept.
 Eingabe Roh-Code: [<w>Esc</w>] beenden, [<w>Enter</w>] akzeptieren.
 %%%%
-"Input new %s for %s: "
-"Neues %s für %s eingeben: "
+"Input new @arg1@ for @arg2@: "
+"Neues @arg1@ für @arg2@ eingeben: "
 %%%%
 Input a key sequence. Use <w>\{n}</w> to enter keycode <w>n</w>. [<w>esc</w>] for menu
 Tastenfolge eingeben. <w>\{n}</w> verwenden, um einen Tastencode einzugeben<w>n</w>. [<w>Esc</w>] für Menu
@@ -7376,11 +7376,11 @@ Created @arg1@ '@arg2@' => '@arg3@'.
 Error: truncation inside the save file.
 Fehler: Trunkierung innerhalb der Speicherdatei.
 %%%%
-Welcome, %s %s.
-Wilkommen, %s %s.
+Welcome, @arg1@ @arg2@.
+Wilkommen, @arg1@ @arg2@.
 %%%%
-Welcome back, %s %s.
-Wilkommen zurück, %s %s.
+Welcome back, @arg1@ @arg2@.
+Wilkommen zurück, @arg1@ @arg2@.
 %%%%
 Press <w>?</w> for a list of commands and other information.
 <w>?</w> drücken, um eine Liste der Befehle und anderer Informationen anzuzeigen.
@@ -7508,8 +7508,8 @@ Der Transporter wird von einer Kreatur auf der anderen Seite blockiert!
 You enter the transporter and appear at another place.
 Du betrittst den Transporter und tauchst an einem anderen Ort auf.
 %%%%
-You are a level %d %s %s.
-Du bist ein Stufe %d %s %s.
+You are a level %d @arg1@ @arg2@.
+Du bist ein Stufe %d @arg1@ @arg2@.
 %%%%
 You are %d%% of the way to level %d.
 Du bist %d%% auf dem Weg zu Stufe %d.
@@ -7722,29 +7722,29 @@ Du versuchst {acc}%s anzugreifen, zuckt aber vor Angst zurück!
 %s strikes at you from the darkness!
 %s schlägt aus der Dunkelheit nach dir!
 %%%%
-%s strikes at %s from the darkness!
-%s schlägt aus der Dunkelheit nach {dat}%s!
+@arg1@ strikes at @arg2@ from the darkness!
+@arg1@ schlägt aus der Dunkelheit nach {dat}@arg2@!
 %%%%
 %s completely misses you.
 %s verfehlt dich völlig.
 %%%%
-%s completely misses %s.
-%s verfehlt {acc}%s völlig.
+@arg1@ completely misses @arg2@.
+@arg1@ verfehlt {acc}@arg2@ völlig.
 %%%%
-%s misses %s.
-%s verfehlt {acc}%s.
+@arg1@ misses @arg2@.
+@arg1@ verfehlt {acc}@arg2@.
 %%%%
 %s closely misses you.
 %s verfehlt dich knapp.
 %%%%
-%s closely misses %s.
-%s verfehlt {acc}%s knapp.
+@arg1@ closely misses @arg2@.
+@arg1@ verfehlt {acc}@arg2@ knapp.
 %%%%
 %s barely misses you.
 %s verfehlt dich um Haaresbreite.
 %%%%
-%s barely misses %s.
-%s verfehlt {acc}%s um Haaresbreite.
+@arg1@ barely misses @arg2@.
+@arg1@ verfehlt {acc}@arg2@ um Haaresbreite.
 %%%%
 You engulf %s in ooze!
 Du hüllst {acc}%s in Schleim ein!
@@ -8028,11 +8028,11 @@ Du reißt den letzten Kopf %s ab!
 You chop %s last head off!
 Du schneidest den letzten Kopf %s ab!
 %%%%
-%s rips %s last head off!
-%s reißt den letzten Kopf %s ab!
+@arg1@ rips @arg2@ last head off!
+@arg1@ reißt den letzten Kopf @arg2@ ab!
 %%%%
-%s chops %s last head off!
-%s schneidet den letzten Kopf %s ab!
+@arg1@ chops @arg2@ last head off!
+@arg1@ schneidet den letzten Kopf @arg2@ ab!
 %%%%
 You rip one of %s heads off!
 Du reißt einen der Köpfe %s ab!
@@ -8040,11 +8040,11 @@ Du reißt einen der Köpfe %s ab!
 You chop one of %s heads off!
 Du schneidest einen der Köpfe %s ab!
 %%%%
-%s rips one of %s heads off!
-%s reißt einen der Köpfe %s ab!
+@arg1@ rips one of @arg2@ heads off!
+@arg1@ reißt einen der Köpfe @arg2@ ab!
 %%%%
-%s chops one of %s heads off!
-%s schneidet einen der Köpfe %s ab!
+@arg1@ chops one of @arg2@ heads off!
+@arg1@ schneidet einen der Köpfe @arg2@ ab!
 %%%%
 %s burns!
 %s brennt!
@@ -8064,8 +8064,8 @@ Du zerschmetterst {acc}%s
 %s shatters you
 %s zerschmettert dich
 %%%%
-%s shatters %s
-%s zerschmettert {acc}%s
+@arg1@ shatters @arg2@
+@arg1@ zerschmettert {acc}@arg2@
 %%%%
 %s shatters itself
 %s zerschmettert sich selbst
@@ -8073,8 +8073,8 @@ Du zerschmetterst {acc}%s
 %s blasts you
 %s sprengt dich
 %%%%
-%s blasts %s
-%s sprengt {acc}%s
+@arg1@ blasts @arg2@
+@arg1@ sprengt {acc}@arg2@
 %%%%
 %s blasts itself
 %s sprengt sich selbst
@@ -8082,116 +8082,116 @@ Du zerschmetterst {acc}%s
 %s pokes you
 %s stößt dich an
 %%%%
-%s pokes %s
-%s stößt {acc}%s an
+@arg1@ pokes @arg2@
+@arg1@ stößt {acc}@arg2@ an
 %%%%
 %s prods you
 %s stößt dich an
 %%%%
-%s prods %s
-%s stößt {acc}%s an
+@arg1@ prods @arg2@
+@arg1@ stößt {acc}@arg2@ an
 %%%%
 %s flogs you
 %s peitscht dich
 %%%%
-%s flogs %s
-%s peitscht {acc}%s
+@arg1@ flogs @arg2@
+@arg1@ peitscht {acc}@arg2@
 %%%%
 %s pounds you
 %s schlägt dich
 %%%%
-%s pounds %s
-%s schlägt {acc}%s
+@arg1@ pounds @arg2@
+@arg1@ schlägt {acc}@arg2@
 %%%%
 %s slaps you
 %s ohrfeigt dich
 %%%%
-%s slaps %s
-%s ohrfeigt {acc}%s
+@arg1@ slaps @arg2@
+@arg1@ ohrfeigt {acc}@arg2@
 %%%%
 %s tickles you
 %s kitzelt dich
 %%%%
-%s tickles %s
-%s kitzelt {acc}%s
+@arg1@ tickles @arg2@
+@arg1@ kitzelt {acc}@arg2@
 %%%%
 %s defenestrates you
 %s wirft dich aus dem Fenster
 %%%%
-%s defenestrates %s
-%s wirft {acc}%s aus dem Fenster
+@arg1@ defenestrates @arg2@
+@arg1@ wirft {acc}@arg2@ aus dem Fenster
 %%%%
 %s sucker-punches you
 %s versetzt dir einen Tiefschlag
 %%%%
-%s sucker-punches %s
-%s versetzt {dat}%s einen Tiefschlag
+@arg1@ sucker-punches @arg2@
+@arg1@ versetzt {dat}@arg2@ einen Tiefschlag
 %%%%
 %s elbows you
 %s schlägt dich mit dem Ellbogen
 %%%%
-%s elbows %s
-%s schlägt {acc}%s mit dem Ellbogen
+@arg1@ elbows @arg2@
+@arg1@ schlägt {acc}@arg2@ mit dem Ellbogen
 %%%%
 %s pinches you
 %s kneift dich
 %%%%
-%s pinches %s
-%s kneift {acc}%s
+@arg1@ pinches @arg2@
+@arg1@ kneift {acc}@arg2@
 %%%%
 %s strangle-hugs you
 %s umarmt dich zu fest
 %%%%
-%s strangle-hugs %s
-%s umarmt {acc}%s zu fest
+@arg1@ strangle-hugs @arg2@
+@arg1@ umarmt {acc}@arg2@ zu fest
 %%%%
 %s squeezes you
 %s presst dich aus
 %%%%
-%s squeezes %s
-%s presst {acc}%s aus
+@arg1@ squeezes @arg2@
+@arg1@ presst {acc}@arg2@ aus
 %%%%
 %s teases you
 %s stichelt dich
 %%%%
-%s teases %s
-%s stichelt {acc}%s
+@arg1@ teases @arg2@
+@arg1@ stichelt {acc}@arg2@
 %%%%
 %s eye-gouges you
 %s drückt dir einen Finger ins Auge
 %%%%
-%s eye-gouges %s
-%s drückt {dat}%s einen Finger ins Auge
+@arg1@ eye-gouges @arg2@
+@arg1@ drückt {dat}@arg2@ einen Finger ins Auge
 %%%%
 %s karate-kicks you
 %s verpasst dir einen Karatetritt
 %%%%
-%s karate-kicks %s
-%s verpasst {dat}%s einen Karatetritt
+@arg1@ karate-kicks @arg2@
+@arg1@ verpasst {dat}@arg2@ einen Karatetritt
 %%%%
 %s headlocks you
 %s nimmt dich in den Schwitzkasten
 %%%%
-%s headlocks %s
-%s nimmt {acc}%s in den Schwitzkasten
+@arg1@ headlocks @arg2@
+@arg1@ nimmt {acc}@arg2@ in den Schwitzkasten
 %%%%
 %s wrestles you
 %s ringt dich nieder
 %%%%
-%s wrestles %s
-%s ringt {acc}%s nieder
+@arg1@ wrestles @arg2@
+@arg1@ ringt {acc}@arg2@ nieder
 %%%%
 %s trip-wires you
 %s stellt dir ein Bein
 %%%%
-%s trip-wires %s
-%s stellt {dat}%s ein Bein
+@arg1@ trip-wires @arg2@
+@arg1@ stellt {dat}@arg2@ ein Bein
 %%%%
 %s kneecaps you
 %s zerschmettert deine Kniescheibe
 %%%%
-%s kneecaps %s
-%s zerschmettert {dat}%s die Kniescheibe
+@arg1@ kneecaps @arg2@
+@arg1@ zerschmettert {dat}@arg2@ die Kniescheibe
 %%%%
 " with %s"
 " mit {dat}%s"
@@ -8199,8 +8199,8 @@ Du zerschmetterst {acc}%s
 %s poisons you!
 %s vergiftet dich!
 %%%%
-%s poisons %s!
-%s vergiftet %s!
+@arg1@ poisons @arg2@!
+@arg1@ vergiftet @arg2@!
 %%%%
 You are covered in liquid flames
 Du bist mit flüssigen Flammen bedeckt
@@ -8217,14 +8217,14 @@ Du bist in Flammen gehüllt
 %s shocks you
 %s gibt dir einen elektrischen Schlag
 %%%%
-%s shocks %s
-%s gibt {dat}%s einen elektrischen Schlag
+@arg1@ shocks @arg2@
+@arg1@ gibt {dat}@arg2@ einen elektrischen Schlag
 %%%%
 %s draws strength from your injuries!
 %s zieht Kraft aus deinen Verletzungen!
 %%%%
-%s draws strength from %s injuries!
-%s zieht Kraft aus den Verletzungen {gen}%s!
+@arg1@ draws strength from @arg2@ injuries!
+@arg1@ zieht Kraft aus den Verletzungen {gen}@arg2@!
 %%%%
 You are engulfed in a cloud of spores!
 Du wirst von einer Sporenwolke erfasst!
@@ -8238,14 +8238,14 @@ Deine göttliche Ausdauer schützt dich vor Gift!
 %s infuriates you!
 %s macht dich wütend!
 %%%%
-%s infuriates %s!
-%s macht {acc}%s wütend!
+@arg1@ infuriates @arg2@!
+@arg1@ macht {acc}@arg2@ wütend!
 %%%%
 %s sears you
 %s versengt dich
 %%%%
-%s sears %s
-%s versengt {acc}%s
+@arg1@ sears @arg2@
+@arg1@ versengt {acc}@arg2@
 %%%%
 %s drains your magic.
 %s entzieht deine Magie.
@@ -8253,11 +8253,11 @@ Deine göttliche Ausdauer schützt dich vor Gift!
 %s drains your power.
 %s entzieht deine Energie.
 %%%%
-%s drains %s magic.
-%s entzieht die Magie %s.
+@arg1@ drains @arg2@ magic.
+@arg1@ entzieht die Magie @arg2@.
 %%%%
-%s drains %s power.
-%s entzieht die Energie %s.
+@arg1@ drains @arg2@ power.
+@arg1@ entzieht die Energie @arg2@.
 %%%%
 %s looks very invigorated.
 %s sieht sehr gestärkt aus.
@@ -8268,8 +8268,8 @@ Deine göttliche Ausdauer schützt dich vor Gift!
 %s grabs you.
 %s umschlingt dich.
 %%%%
-%s grabs %s.
-%s umschlingt {acc}%s.
+@arg1@ grabs @arg2@.
+@arg1@ umschlingt {acc}@arg2@.
 %%%%
 the water
 {n}das Wasser
@@ -8280,14 +8280,14 @@ the ooze
 %s engulfs you in water!
 %s überflutet dich!
 %%%%
-%s engulfs %s in water!
-%s überflutet {acc}%s!
+@arg1@ engulfs @arg2@ in water!
+@arg1@ überflutet {acc}@arg2@!
 %%%%
 %s engulfs you!
 %s erfasst dich!
 %%%%
-%s engulfs %s!
-%s erfasst {acc}%s!
+@arg1@ engulfs @arg2@!
+@arg1@ erfasst {acc}@arg2@!
 %%%%
 %s willpower is stripped away!
 Die Willenskraft {gen}%s wird abgebaut!
@@ -8295,8 +8295,8 @@ Die Willenskraft {gen}%s wird abgebaut!
 %s drowns you
 %s ertränkt dich
 %%%%
-%s drowns %s
-%s ertränkt {acc}%s
+@arg1@ drowns @arg2@
+@arg1@ ertränkt {acc}@arg2@
 %%%%
 %s is very cold.
 %s ist völlig durchgefroren.
@@ -8304,7 +8304,7 @@ Die Willenskraft {gen}%s wird abgebaut!
 The eyeballs on your body gaze at %s.
 Die Augäpfel auf deinem Körper blicken auf {acc}%s.
 %%%%
-Your tendrils lash around %s %s and pull it to the ground!
+Your tendrils lash around @arg1@ @arg2@ and pull it to the ground!
 Deine Ranken ziehen {acc}%2$s {gen}%1$s zu Boden!
 %%%%
 %s is struck by your spines.
@@ -8316,11 +8316,11 @@ Du wirst von den Dornen {gen}%s getroffen.
 You are struck by %s spines.
 Du wirst von den Stacheln {gen}%s getroffen.
 %%%%
-%s is struck by %s thorns.
-%s wird von den Dornen {gen}%s getroffen.
+@arg1@ is struck by @arg2@ thorns.
+@arg1@ wird von den Dornen {gen}@arg2@ getroffen.
 %%%%
-%s is struck by %s spines.
-%s wird von den Stacheln {gen}%s getroffen.
+@arg1@ is struck by @arg2@ spines.
+@arg1@ wird von den Stacheln {gen}@arg2@ getroffen.
 %%%%
 You emit a cloud of foul miasma!
 Du stößt eine Wolke stinkenden Miasmas aus!
@@ -8331,14 +8331,14 @@ Du stößt eine Wolke stinkenden Miasmas aus!
 %s headbutts you but does no damage.
 %s versetzt dir einen Kopfstoß, fügt aber keinen Schaden zu.
 %%%%
-%s headbutts %s but does no damage.
-%s versetzt {dat}%s einen Kopfstoß, fügt aber keinen Schaden zu.
+@arg1@ headbutts @arg2@ but does no damage.
+@arg1@ versetzt {dat}@arg2@ einen Kopfstoß, fügt aber keinen Schaden zu.
 %%%%
 %s headbutts you
 %s versetzt dir einen Kopfstoß
 %%%%
-%s headbutts %s
-%s versetzt {dat}%s einen Kopfstoß
+@arg1@ headbutts @arg2@
+@arg1@ versetzt {dat}@arg2@ einen Kopfstoß
 %%%%
 You furiously retaliate!
 Du schlägst wütend zurück!
@@ -8615,17 +8615,17 @@ Ein Chor von Schreien überfällt deinen Verstand!
 The starcursed mass shrieks in your mind.
 Die sternenverfluchte Masse kreischt in deinem Verstand.
 %%%%
-%s writhes in pain as voices assail %s mind.
+@arg1@ writhes in pain as voices assail @arg2@ mind.
 %s krümmt sich vor Schmerz, während Stimmen den Verstand attackieren.
 %%%%
-%s sacrifices itself to reknit %s!
-%s opfert sich, um {acc}%s neu zu stricken!
+@arg1@ sacrifices itself to reknit @arg2@!
+@arg1@ opfert sich, um {acc}@arg2@ neu zu stricken!
 %%%%
-%s assumes the form of %s and becomes anchored to this world!
-%s nimmt die Form {gen}%s an und wird in dieser Welt verankert!
+@arg1@ assumes the form of @arg2@ and becomes anchored to this world!
+@arg1@ nimmt die Form {gen}@arg2@ an und wird in dieser Welt verankert!
 %%%%
-%s assumes the form of %s!
-%s nimmt die Form {gen}%s an!
+@arg1@ assumes the form of @arg2@!
+@arg1@ nimmt die Form {gen}@arg2@ an!
 %%%%
 Angry insects surge out from beneath %s foliage!
 Wütende Insekten schießen aus dem Laub {gen}%s hervor!
@@ -8653,14 +8653,14 @@ Wütende Insekten schießen aus dem Laub {gen}%s hervor!
 %s is no longer engulfed.
 %s ist nicht mehr eingehüllt.
 %%%%
-%s and %s swap places.
-%s und %s tauschen Plätze.
+@arg1@ and @arg2@ swap places.
+@arg1@ und @arg2@ tauschen Plätze.
 %%%%
 By Zin's power the foxfire is contained!
 Durch Zins Kraft wird das Fuchsfeuer eingedämmt!
 %%%%
-%s swoops through the air toward %s!
-%s stürzt durch die Luft in Richtung {gen}%s!
+@arg1@ swoops through the air toward @arg2@!
+@arg1@ stürzt durch die Luft in Richtung {gen}@arg2@!
 %%%%
 %s reads a scroll.
 %s liest eine Schriftrolle.
@@ -8719,8 +8719,8 @@ Du spürst, wie du in der Gegenwart {gen}%s krank wirst.
 Being near %s leaves you feeling lethargic.
 In der Nähe {acc}%s, fühlst du dich träge.
 %%%%
-%s watery aura covers %s.
-%s wässrige Aura bedeckt {acc}%s.
+@arg1@ watery aura covers @arg2@.
+@arg1@ wässrige Aura bedeckt {acc}@arg2@.
 %%%%
 %s moves out of view.
 %s bewegt sich aus dem Blickfeld.
@@ -8737,8 +8737,8 @@ Du hörst ein schlürfendes Geräusch.
 Something unseen opens %s.
 Etwas Ungesehenes öffnet %s.
 %%%%
-%s opens %s.
-%s öffnet %s.
+@arg1@ opens @arg2@.
+@arg1@ öffnet @arg2@.
 %%%%
 %s escapes!
 %s entkommt!
@@ -8781,7 +8781,7 @@ Du hörst ein zischendes Geräusch.
 # mon-behv.cc
 ##################
 %%%%
-The attack snaps %s out of %s fear.
+The attack snaps @arg1@ out of @arg2@ fear.
 Der Angriff reißt {acc}%s aus der Angst.
 %%%%
 @The_monster@ returns to your side!
@@ -8820,11 +8820,11 @@ In die Enge getrieben stellt sich @the_monster@ dem Kampf!
 ##################
 %%%%
 # 2nd param is <god>'s
-%s invokes %s protection!
-%s ruft den Schutz %s an!
+@arg1@ invokes @arg2@ protection!
+@arg1@ ruft den Schutz @arg2@ an!
 %%%%
 # params: 1. monster name 2. reflexive pronoun
-%s liquefies the ground around %s!
+@arg1@ liquefies the ground around @arg2@!
 %s verflüssigt den Boden um sich herum!
 %%%%
 %s casts a cantrip, but nothing happens.
@@ -8845,8 +8845,8 @@ In die Enge getrieben stellt sich @the_monster@ dem Kampf!
 %s looks satisfied for a moment.
 %s sieht einen Moment lang zufrieden aus.
 %%%%
-%s prays to %s, and fills with unholy energy.
-%s betet zu {dat}%s und wird von unheiliger Energie erfüllt.
+@arg1@ prays to @arg2@, and fills with unholy energy.
+@arg1@ betet zu {dat}@arg2@ und wird von unheiliger Energie erfüllt.
 %%%%
 %s is smitten.
 %s wird zerschmettert.
@@ -8860,8 +8860,8 @@ Die greifenden Wurzeln packen dich!
 %s skewers you
 %s spießt dich auf
 %%%%
-%s skewers %s
-%s spießt {acc}%s auf
+@arg1@ skewers @arg2@
+@arg1@ spießt {acc}@arg2@ auf
 %%%%
 %s goes into a battle-frenzy!
 %s gerät in einen Kampfrausch!
@@ -8887,14 +8887,14 @@ Du wirst aus der Tür geschoben!
 %s grips you
 %s greift dich
 %%%%
-%s grips %s
-%s greift {acc}%s
+@arg1@ grips @arg2@
+@arg1@ greift {acc}@arg2@
 %%%%
 The queen bee calls on %s to defend her!
 Die Bienenkönigin ruft {acc}%s auf, sie zu verteidigen!
 %%%%
-%s goads %s on!
-%s stachelt {acc}%s an!
+@arg1@ goads @arg2@ on!
+@arg1@ stachelt {acc}@arg2@ an!
 %%%%
 Sorry, this spell isn't supported for dummies!
 Sorry, dieser Zauber wird für Dummköpfe nicht unterstützt!
@@ -8908,8 +8908,8 @@ Dornensträucher schießen aus dem Boden!
 %s begins absorbing vital energies!
 %s beginnt, vitale Energien zu absorbieren!
 %%%%
-%s is empowered by %s aura!
-%s wird durch %s Aura gestärkt!
+@arg1@ is empowered by @arg2@ aura!
+@arg1@ wird durch @arg2@ Aura gestärkt!
 %%%%
 %s animating energy erupts into ghostly fire!
 %s animierende Energie bricht in gespenstisches Feuer aus!
@@ -8945,7 +8945,7 @@ Du wirst eingefroren
 %s versucht, dich zu verzaubern!
 %%%%
 # params: 1. monster name 2. his/her/its/their
-%s draws you further into %s thrall.
+@arg1@ draws you further into @arg2@ thrall.
 %s zieht dich tiefer in den Bann.
 %%%%
 %s radiates an aura of fear!
@@ -8969,8 +8969,8 @@ Ein Energiestoß aus der Erde trifft {acc}%s!
 A blast of power from the earth and the adjacent constructs strikes %s!
 Ein Energiestoß aus der Erde und den angrenzenden Konstrukten trifft {acc}%s!
 %%%%
-A blast of power from the earth and %s strikes %s!
-Ein Energiestoß aus der Erde und {dat}%s trifft {acc}%s!
+A blast of power from the earth and @arg1@ strikes @arg2@!
+Ein Energiestoß aus der Erde und {dat}@arg1@ trifft {acc}@arg2@!
 %%%%
 You are overwhelmed by glittering dream dust!
 Du wirst von glitzerndem Traumstaub überwältigt!
@@ -9032,8 +9032,8 @@ Die Luft wirbelt herum und schlägt heftig auf dich im Flug ein
 The air twists around and strikes you
 Die Luft wirbelt herum und schlägt heftig auf dich ein
 %%%%
-The air twists around and strikes %s%s
-Die Luft wirbelt herum und schlägt {acc}%s%s
+The air twists around and strikes @arg1@@arg2@
+Die Luft wirbelt herum und schlägt {acc}@arg1@@arg2@
 %%%%
 Something feeds on your intellect!
 Etwas ernährt sich von deinem Intellekt!
@@ -9113,8 +9113,8 @@ thin air
 @arg1@ throws @arg2@ at @arg3@!
 @arg1@ wirft {acc}@arg2@ auf {acc}@arg3@!
 %%%%
-%s throws %s out of sight!
-%s wirft {acc}%s außer Sichtweite!
+@arg1@ throws @arg2@ out of sight!
+@arg1@ wirft {acc}@arg2@ außer Sichtweite!
 %%%%
 %s unleashes a terrible howl, and it begins to echo in your mind!
 %s stößt ein schreckliches Heulen aus, das in deinem Kopf widerhallt!
@@ -9151,11 +9151,11 @@ Du hörst eine unheimliche Melodie.
 # mon-clone.cc
 ##################
 %%%%
-%s seems to step out of %s!
+@arg1@ seems to step out of @arg2@!
 %s scheint aus sich herauszugehen.
 %%%%
 @arg1@ seems to draw @arg2@ out of @arg3@!
-%s scheint {acc}%s aus sich selbst heraus zu ziehen!
+@arg1@ scheint {acc}@arg2@ aus sich selbst heraus zu ziehen!
 %%%%
 Suddenly you stand beside yourself.
 Plötzlich stehst du neben dir.
@@ -9183,11 +9183,11 @@ Du fühlst dich ein bisschen erfahrener.
 %s is intact enough to wear.
 %s ist intakt genug zum Tragen.
 %%%%
-%s protects %s from harm!
-%s schützt {acc}%s vor Schaden!
+@arg1@ protects @arg2@ from harm!
+@arg1@ schützt {acc}@arg2@ vor Schaden!
 %%%%
-%s heals %s
-%s heilt {acc}%s
+@arg1@ heals @arg2@
+@arg1@ heilt {acc}@arg2@
 %%%%
 With an infernal shudder, the power ruling this place vanishes!
 Mit einem infernalischen Beben verschwindet die Macht, die diesen Ort beherrschte!
@@ -9231,8 +9231,8 @@ Die Gestalt {gen}%s verdreht und verändert sich im Tod.
 %s's body returns to its original shape.
 Die Leiche {gen}%s verwandlt sich zurück in ihre ursprüngliche Form.
 %%%%
-Lua death function for monster '%s' didn't load: %s
-Die Lua-Todesfunktion für das Monster '%s' wurde nicht geladen: %s
+Lua death function for monster '@arg1@' didn't load: @arg2@
+Die Lua-Todesfunktion für das Monster '@arg1@' wurde nicht geladen: @arg2@
 %%%%
 You feel the power of %s in you as your rage grows.
 Du spürst die Macht {gen}%s in dir, während deine Wut wächst.
@@ -9760,14 +9760,14 @@ Das Aussehen {gen}%s ändert sich kurzzeitig.
 %s grows a second head!
 {dat}%s wächst ein zweiter Kopf!
 %%%%
-%s changes into %s!
-%s verwandelt sich in {acc}%s!
+@arg1@ changes into @arg2@!
+@arg1@ verwandelt sich in {acc}@arg2@!
 %%%%
-%s quivers uncontrollably and liquefies into %s!
-%s zittert unkontrolliert und verflüssigt sich zu {dat}%s!
+@arg1@ quivers uncontrollably and liquefies into @arg2@!
+@arg1@ zittert unkontrolliert und verflüssigt sich zu {dat}@arg2@!
 %%%%
-%s evaporates and reforms as %s!
-%s verflüchtigt sich und verwandelt sich in {acc}%s!
+@arg1@ evaporates and reforms as @arg2@!
+@arg1@ verflüchtigt sich und verwandelt sich in {acc}@arg2@!
 %%%%
 %s quivers momentarily.
 %s zittert einen Augenblick.
@@ -9786,12 +9786,12 @@ Drachenfluch leuchtet, als sich ein würdiger Feind nähert.
 %s weakly hits you
 %s trifft dich schwach
 %%%%
-%s weakly hits %s
-%s trifft {acc}%s schwach
+@arg1@ weakly hits @arg2@
+@arg1@ trifft {acc}@arg2@ schwach
 %%%%
 # note: this is used for both projectiles and monsters with melee weapons
-%s hits %s.
-%s trifft %s.
+@arg1@ hits @arg2@.
+@arg1@ trifft @arg2@.
 %%%%
 The orb fizzles.
 Die Kugel verpufft.
@@ -9834,11 +9834,11 @@ Tentakel schießen aus dem Körper der Sternbrut!
 # mon-util.cc
 ##################
 %%%%
-The %s mimic %s and vanishes in a puff of smoke!
-Die %s-Mimik %s und verschwindet in einer Rauchwolke!
+The @arg1@ mimic @arg2@ and vanishes in a puff of smoke!
+Die @arg1@-Mimik @arg2@ und verschwindet in einer Rauchwolke!
 %%%%
-The %s mimic %s and vanishes!
-Die %s-Mimik %s und verschwindet!
+The @arg1@ mimic @arg2@ and vanishes!
+Die @arg1@-Mimik @arg2@ und verschwindet!
 %%%%
 The %s mimic vanishes in a puff of smoke!
 Die %s-Mimik verschwindet in einer Rauchwolke!
@@ -9855,98 +9855,98 @@ Die %s-Mimik verschwindet!
 %s hits you from afar
 %s trifft dich von weitem
 %%%%
-%s hits %s from afar
-%s trifft {acc}%s von weitem
+@arg1@ hits @arg2@ from afar
+@arg1@ trifft {acc}@arg2@ von weitem
 %%%%
 %s bites you
 %s beißt dich
 %%%%
-%s bites %s
-%s beißt {acc}%s
+@arg1@ bites @arg2@
+@arg1@ beißt {acc}@arg2@
 %%%%
 %s stings you
 %s sticht dich
 %%%%
-%s stings %s
-%s sticht {acc}%s
+@arg1@ stings @arg2@
+@arg1@ sticht {acc}@arg2@
 %%%%
 %s stings you from afar
 %s sticht dich von weitem
 %%%%
-%s stings %s from afar
-%s sticht %s von weitem
+@arg1@ stings @arg2@ from afar
+@arg1@ sticht @arg2@ von weitem
 %%%%
 %s releases spores at you
 %s setzt Sporen auf dich frei
 %%%%
-%s releases spores at %s
-%s setzt Sporen auf {dat}%s frei
+@arg1@ releases spores at @arg2@
+@arg1@ setzt Sporen auf {dat}@arg2@ frei
 %%%%
 %s touches you
 %s berührt dich
 %%%%
-%s touches %s
-%s berührt {acc}%s
+@arg1@ touches @arg2@
+@arg1@ berührt {acc}@arg2@
 %%%%
 %s claws you
 %s zerkratzt dich
 %%%%
-%s claws %s
-%s zerkratzt {acc}%s
+@arg1@ claws @arg2@
+@arg1@ zerkratzt {acc}@arg2@
 %%%%
 %s pecks you
 %s hackt dich
 %%%%
-%s pecks %s
-%s hackt {acc}%s
+@arg1@ pecks @arg2@
+@arg1@ hackt {acc}@arg2@
 %%%%
 %s punches you
 %s boxt dich
 %%%%
-%s punches %s
-%s boxt {acc}%s
+@arg1@ punches @arg2@
+@arg1@ boxt {acc}@arg2@
 %%%%
 %s kicks you
 %s tritt dich
 %%%%
-%s kicks %s
-%s tritt {acc}%s
+@arg1@ kicks @arg2@
+@arg1@ tritt {acc}@arg2@
 %%%%
 %s tentacle-slaps you
 schlägt dich mit dem Tentakel
 %%%%
-%s tentacle-slaps %s
-%s schlägt {acc}%s mit dem Tentakel
+@arg1@ tentacle-slaps @arg2@
+@arg1@ schlägt {acc}@arg2@ mit dem Tentakel
 %%%%
 %s tail-slaps you
 %s schlägt dich mit dem Schwanz
 %%%%
-%s tail-slaps %s
-%s schlägt {acc}%s mit dem Schwanz
+@arg1@ tail-slaps @arg2@
+@arg1@ schlägt {acc}@arg2@ mit dem Schwanz
 %%%%
 %s gores you
 %s spießt dich auf
 %%%%
-%s gores %s
-%s spießt {acc}%s auf
+@arg1@ gores @arg2@
+@arg1@ spießt {acc}@arg2@ auf
 %%%%
 %s tramples you
 %s trampelt dich nieder
 %%%%
-%s tramples %s
-%s trampelt {acc}%s nieder
+@arg1@ tramples @arg2@
+@arg1@ trampelt {acc}@arg2@ nieder
 %%%%
 %s trunk-slaps you
 %s schlägt dich mit dem Rüssel
 %%%%
-%s trunk-slaps %s
-%s schlägt {acc}%s mit dem Rüssel
+@arg1@ trunk-slaps @arg2@
+@arg1@ schlägt {acc}@arg2@ mit dem Rüssel
 %%%%
 %s pounces on you
 %s stürzt sich auf dich
 %%%%
-%s pounces on %s
-%s stürzt sich auf {acc}%s
+@arg1@ pounces on @arg2@
+@arg1@ stürzt sich auf {acc}@arg2@
 %%%%
 Geryon discards his horn.
 Geryon wirft sein Horn ab.
@@ -10077,19 +10077,19 @@ the ground
 {m}der Boden
 %%%%
 # note: Used when a monster is blown up. Both parameters are monsters (e.g. "the orc", "Sigmund").
-%s is hit by a flying piece of %s!
-%s wird von einem fliegenden Stück {gen}%s getroffen!
+@arg1@ is hit by a flying piece of @arg2@!
+@arg1@ wird von einem fliegenden Stück {gen}@arg2@ getroffen!
 %%%%
-%s regains the memory of %s.
-%s erinnert sich wieder an {acc}%s.
+@arg1@ regains the memory of @arg2@.
+@arg1@ erinnert sich wieder an {acc}@arg2@.
 %%%%
 
 ##################
 # monster.cc
 ##################
 %%%%
-%s wields %s.
-%s zückt {acc}%s.
+@arg1@ wields @arg2@.
+@arg1@ zückt {acc}@arg2@.
 %%%%
 It bursts into flame!
 Die Waffe geht in Flammen auf!
@@ -10132,15 +10132,15 @@ It begins to drip corrosive slime!
 Die Waffe beginnt ätzenden Schleim zu tropfen!
 %%%%
 # note: equip armour
-%s wears %s.
-%s zieht {acc}%s an.
+@arg1@ wears @arg2@.
+@arg1@ zieht {acc}@arg2@ an.
 %%%%
 # note: equip ring/amulet
-%s puts on %s.
-%s zieht {acc}%s an.
+@arg1@ puts on @arg2@.
+@arg1@ zieht {acc}@arg2@ an.
 %%%%
-%s unwields %s.
-%s lässt {acc}%s los.
+@arg1@ unwields @arg2@.
+@arg1@ lässt {acc}@arg2@ los.
 %%%%
 It stops flaming.
 Die Waffe hört auf zu flammen.
@@ -10155,21 +10155,21 @@ It stops dripping with poison.
 Die Waffe hört auf, vor Gift zu tropfen.
 %%%%
 # note: unequip armour
-%s takes off %s.
-%s nimmt {acc}%s ab.
+@arg1@ takes off @arg2@.
+@arg1@ nimmt {acc}@arg2@ ab.
 %%%%
 # note: unequip ring/amulet
-%s removes %s.
-%s nimmt {acc}%s ab.
+@arg1@ removes @arg2@.
+@arg1@ nimmt {acc}@arg2@ ab.
 %%%%
-%s picks up %s.
-%s hebt {acc}%s auf.
+@arg1@ picks up @arg2@.
+@arg1@ hebt {acc}@arg2@ auf.
 %%%%
 some gold
 etwas Gold
 %%%%
-%s drops %s.
-%s lässt {acc}%s fallen.
+@arg1@ drops @arg2@.
+@arg1@ lässt {acc}@arg2@ fallen.
 %%%%
 %s becomes momentarily stuck in the liquid earth.
 %s bleibt kurzzeitig in der flüssigen Erde stecken.
@@ -10201,8 +10201,8 @@ Du hörst ein plätscherndes Geräusch.
 %s is drained!
 %s wird ausgezehrt!
 %%%%
-%s corrodes %s!
-%s korrodiert {acc}%s!
+@arg1@ corrodes @arg2@!
+@arg1@ korrodiert {acc}@arg2@!
 %%%%
 %s seems to be corroded for longer.
 %s scheint länger korrodiert zu sein.
@@ -10228,8 +10228,8 @@ Du hörst ein plätscherndes Geräusch.
 %s twists and deforms.
 %s verdreht und deformiert sich.
 %%%%
-%s dives back into %s!
-%s taucht zurück in {acc}%s!
+@arg1@ dives back into @arg2@!
+@arg1@ taucht zurück in {acc}@arg2@!
 %%%%
 The bloodstain on %s disappears!
 Der Blutfleck auf {dat}%s verschwindet!
@@ -10276,14 +10276,14 @@ Der Spriggan fällt von seinem nun toten Reittier.
 %s steals %d gold pieces!
 %s stiehlt %d Goldmünzen!
 %%%%
-%s steals %d of %s!
-%s stiehlt %d von {dat}%s!
+@arg1@ steals %d of @arg2@!
+@arg1@ stiehlt %d von {dat}@arg2@!
 %%%%
-%s steals %s!
-%s stiehlt {acc}%s!
+@arg1@ steals @arg2@!
+@arg1@ stiehlt {acc}@arg2@!
 %%%%
-%s is pushed out of %s.
-%s wird aus {dat}%s geschoben.
+@arg1@ is pushed out of @arg2@.
+@arg1@ wird aus {dat}@arg2@ geschoben.
 %%%%
 
 ##################
@@ -10333,11 +10333,11 @@ Die gefrorenen Wälle schmelzen, als du dich bewegst.
 You slip free of %s engulfing you.
 Du befreist dich von {dat}%s, das dich umhüllt.
 %%%%
-Are you sure you want to swing wildly while confused and next to %s%s?
-Bist du sicher, dass du wild um dich schlagen willst, während du verwirrt bist und neben %s%s?
+Are you sure you want to swing wildly while confused and next to @arg1@@arg2@?
+Bist du sicher, dass du wild um dich schlagen willst, während du verwirrt bist und neben @arg1@@arg2@?
 %%%%
-Are you sure you want to stumble around while confused and next to %s%s?
-Bist du sicher, dass du herumstolpern willst, während du verwirrt bist und neben %s%s?
+Are you sure you want to stumble around while confused and next to @arg1@@arg2@?
+Bist du sicher, dass du herumstolpern willst, während du verwirrt bist und neben @arg1@@arg2@?
 %%%%
 " while you are losing your buoyancy"
 , während du deinen Auftrieb verlierst
@@ -10388,11 +10388,11 @@ Something unexpectedly blocked you, preventing you from rampaging!
 Etwas hat dich unerwartet blockiert und daran gehindert, zu randalieren!
 %%%%
 # note: through the fungus or through the plants
-You stride quickly through %s towards %s!
-Du schreitest schnell durch {acc}%s auf {acc}%s zu!
+You stride quickly through @arg1@ towards @arg2@!
+Du schreitest schnell durch {acc}@arg1@ auf {acc}@arg2@ zu!
 %%%%
-You rampage quickly through %s towards %s!
-Du randalierst schnell durch {acc}%s auf {acc}%s zu!
+You rampage quickly through @arg1@ towards @arg2@!
+Du randalierst schnell durch {acc}@arg1@ auf {acc}@arg2@ zu!
 %%%%
 the plants
 {pl}die Pflanzen
@@ -11299,16 +11299,16 @@ Du hast {acc}%s verloren.
 %s slides away as you move towards it!
 %s rutscht weg, als du dich darauf zu bewegst!
 %%%%
-Really %s into that cloud of %s?
+Really @arg1@ into that cloud of @arg2@?
 Wirklich in die Wolke aus {dat}%2$s {verb-inf}%1$s?
 %%%%
 Do you really want to %s into the Zot trap?
 Willst du wirklich in die Zot-Falle {verb-inf}%s?
 %%%%
-Really %s onto %s?
+Really @arg1@ onto @arg2@?
 Wirklich auf {acc}%2$s {verb-inf}%1$s?
 %%%%
-Really %s into %s?
+Really @arg1@ into @arg2@?
 Wirklich in {acc}%2$s {verb-inf}%1$s?
 %%%%
 You cannot enter water in your current form.
@@ -11491,8 +11491,8 @@ Deine Bewegungsgeschwindigkeit ist %s.
 average
 durchschnittlich
 %%%%
-Your attack delay is about %.1f%s%s.
-Deine Angriffsverzögerung beträgt etwa %.1f%s%s.
+Your attack delay is about %.1f@arg1@@arg2@.
+Deine Angriffsverzögerung beträgt etwa %.1f@arg1@@arg2@.
 %%%%
 " (and cannot be improved with additional weapon skill)"
 " (und kann nicht durch zusätzliche Waffenfertigkeit verbessert werden)"
@@ -12362,15 +12362,15 @@ Keine regulären Aktionen für den Köcher verfügbar.
 ##################
 %%%%
 # note: You reflect <projectile> off <your shield>!
-You reflect %s off %s!
-Du reflektierst {acc}%s mit {dat}%s!
+You reflect @arg1@ off @arg2@!
+Du reflektierst {acc}@arg1@ mit {dat}@arg2@!
 %%%%
 Something reflects %s!
 Etwas reflektiert {acc}%s!
 %%%%
 # note: <projectile> pierces through <your shield>!
-%s pierces through %s!
-%s durchdringt {acc}%s!
+@arg1@ pierces through @arg2@!
+@arg1@ durchdringt {acc}@arg2@!
 %%%%
 # note: <projectile> pierces through <monster's> <shield>!
 @arg1@ pierces through @arg2@ @arg3@!
@@ -12380,8 +12380,8 @@ Etwas reflektiert {acc}%s!
 %s durchdringt deine Abschirmung!
 %%%%
 # note: <projectile> pierces through <monster's> shielding!
-%s pierces through %s shielding!
-%s durchdringt %s Abschirmung!
+@arg1@ pierces through @arg2@ shielding!
+@arg1@ durchdringt @arg2@ Abschirmung!
 %%%%
 
 ##################
@@ -13164,17 +13164,17 @@ Dein Körper leuchtet etwas heller und verschwindet.
 Your amulet flashes!
 Dein Amulett blinkt!
 %%%%
-%s warns you to remove %s.
-%s warnt dich davor, {acc}%s zu entfernen.
+@arg1@ warns you to remove @arg2@.
+@arg1@ warnt dich davor, {acc}@arg2@ zu entfernen.
 %%%%
-%s says: Farewell. Go and aid the meek with %s.
-%s sagt: Lebe wohl. Geh und hilf den Sanftmütigen mit {dat}%s.
+@arg1@ says: Farewell. Go and aid the meek with @arg2@.
+@arg1@ sagt: Lebe wohl. Geh und hilf den Sanftmütigen mit {dat}@arg2@.
 %%%%
-%s says: Farewell. Go and vanquish evil with %s.
-%s sagt: Lebe wohl. Geh und besiege das Böse mit {dat}%s.
+@arg1@ says: Farewell. Go and vanquish evil with @arg2@.
+@arg1@ sagt: Lebe wohl. Geh und besiege das Böse mit {dat}@arg2@.
 %%%%
-%s says: Farewell. Go and enforce order with %s.
-%s sagt: Lebe wohl. Geh und sorge für Ordnung mit {dat}%s.
+@arg1@ says: Farewell. Go and enforce order with @arg2@.
+@arg1@ sagt: Lebe wohl. Geh und sorge für Ordnung mit {dat}@arg2@.
 %%%%
 Your evil deeds will not go unpunished!
 Deine bösen Taten werden nicht ungestraft bleiben!
@@ -13188,8 +13188,8 @@ Du wirst leiden, weil du dich dem Chaos hingegeben hast!
 You will suffer for embracing such evil!
 Du wirst leiden, weil du dich dem Bösen verschrieben hast!
 %%%%
-%s says: %s
-%s sagt: %s
+@arg1@ says: @arg2@
+@arg1@ sagt: @arg2@
 %%%%
 You pay a service fee of %d gold.
 Du zahlst eine Bearbeitungsgebühr von %d Gold.
@@ -13581,11 +13581,11 @@ Du spürst, wie %s sich aus deiner Kehle reißt, aber du gibst keinen Laut von d
 You are unable to make a sound!
 Du kannst kein Geräusch machen!
 %%%%
-You %s your recitation at %s!
-Du {verb-du}%s deine Rezitation {dat}%s entgegen.
+You @arg1@ your recitation at @arg2@!
+Du {verb-du}@arg1@ deine Rezitation {dat}@arg2@ entgegen.
 %%%%
-You %s at %s!
-Du {verb-du}%s {acc}%s an.
+You @arg1@ at @arg2@!
+Du {verb-du}@arg1@ {acc}@arg2@ an.
 %%%%
 You %s wildly!
 Du {verb-du}%s wie wild!
@@ -13831,9 +13831,9 @@ Du hast noch nicht genügend Zauberplätze!
 This spell is impossible to cast!
 Dieser Zauber ist unmöglich zu wirken!
 %%%%
-# note: first %s = dangerous, very dangerous, etc.; second %s = ! or .
-This spell is %s to cast%s
-Dieser Zauber ist %s zu wirken%s
+# note: first @arg1@ = dangerous, very dangerous, etc.; second @arg2@ = ! or .
+This spell is @arg1@ to cast@arg2@
+Dieser Zauber ist @arg1@ zu wirken@arg2@
 %%%%
 Memorise %s, consuming %d spell level and leaving %d?
 %s auswendig lernen, dabei %d Zauberplatz verbrauchen und %d behalten?
@@ -13912,8 +13912,8 @@ Magische Energie fließt in deinen Geist!
 "Cast which spell? (? or * to list) "
 "Welchen Zauber wirken? (? oder * auflisten) "
 %%%%
-Casting: <w>%s</w> <lightgrey>(%s)</lightgrey>
-Wirken: <w>%s</w> <lightgrey>(%s)</lightgrey>
+Casting: <w>@arg1@</w> <lightgrey>(@arg2@)</lightgrey>
+Wirken: <w>@arg1@</w> <lightgrey>(@arg2@)</lightgrey>
 %%%%
 Confirm with . or Enter, or press ? or * to list all spells.
 Mit . oder Enter bestätigen, oder ? oder * drücken, um alle Zauber aufzulisten.
@@ -14077,8 +14077,8 @@ Chain Lightning might hit %s (and %d other bad targets). Cast it anyway?
 Kettenblitz könnte {acc}%s (und %d andere falsche Ziele) treffen. Trotzdem wirken?
 %%%%
 # note: ...from <monster's> <hand>
-Lightning arcs from %s %s!
-Ein Blitz schießt aus %s {dat}%s.
+Lightning arcs from @arg1@ @arg2@!
+Ein Blitz schießt aus @arg1@ {dat}@arg2@.
 %%%%
 The %s grounds out.
 Der %s wird geerdet.
@@ -14092,11 +14092,11 @@ Der Bogen des Chaos springt außer Sicht.
 The arc of chaos suddenly appears!
 Der Bogen des Chaos erscheint plötzlich.
 %%%%
-%s are %s.
-%s werden %s.
+@arg1@ are @arg2@.
+@arg1@ werden @arg2@.
 %%%%
-The monsters around %s are %s!
-Die Monster um {acc}%s herum werden %s!
+The monsters around @arg1@ are @arg2@!
+Die Monster um {acc}@arg1@ herum werden @arg2@!
 %%%%
 The monsters around you are %s!
 Die Monster um dich herum werden %s!
@@ -14184,8 +14184,8 @@ You shatter%s
 Du zerbrichst%s
 %%%%
 # note: params = the monster, damage-based punctuation
-%s shatters%s
-%s zerbricht%s
+@arg1@ shatters@arg2@
+@arg1@ zerbricht@arg2@
 %%%%
 A door shatters!
 Eine Tür zerbricht!
@@ -14217,8 +14217,8 @@ Der Kerker rumpelt um %s!
 There is a shattering impact!
 Es gibt einen erschütternden Aufprall!
 %%%%
-%s is blasted with magical radiation%s
-%s wird mit magischer Strahlung bestrahlt%s
+@arg1@ is blasted with magical radiation@arg2@
+@arg1@ wird mit magischer Strahlung bestrahlt@arg2@
 %%%%
 You erupt in a fountain of uncontrolled magic!
 Du brichst in eine Fontäne unkontrollierter Magie aus!
@@ -14226,8 +14226,8 @@ Du brichst in eine Fontäne unkontrollierter Magie aus!
 %s erupts in a fountain of uncontrolled magic!
 %s bricht in eine Fontäne unkontrollierter Magie aus!
 %%%%
-%s seems to burn from within%s
-%s scheint von innen zu brennen%s
+@arg1@ seems to burn from within@arg2@
+@arg1@ scheint von innen zu brennen@arg2@
 %%%%
 You feel like your blood is boiling!
 Du hast das Gefühl, dein Blut kocht!
@@ -14260,8 +14260,8 @@ statische Entladung
 You are struck by an arc of lightning%s
 Du wirst von einem Blitzbogen getroffen%s
 %%%%
-%s is struck by an arc of lightning%s
-%s wird von einem Blitzbogen getroffen%s
+@arg1@ is struck by an arc of lightning@arg2@
+@arg1@ wird von einem Blitzbogen getroffen@arg2@
 %%%%
 The lightning grounds out.
 Der Blitz wird geerdet.
@@ -14390,8 +14390,8 @@ Du zauberst einen mächtigen Eisstoß!
 %s pelts you
 %s bewirft dich
 %%%%
-%s pelts %s
-%s bewirft {acc}%s
+@arg1@ pelts @arg2@
+@arg1@ bewirft {acc}@arg2@
 %%%%
 A cannonade of hail descends around you!
 Eine Kanonade von Hagel bricht um dich herunter!
@@ -14402,8 +14402,8 @@ Du erzeugst eine Druckwelle!
 You fester in the toxic bog%s
 Du gärst im toxischen Morast%s
 %%%%
-%s festers in the toxic bog%s
-%s gärt im toxischen Morast%s
+@arg1@ festers in the toxic bog@arg2@
+@arg1@ gärt im toxischen Morast@arg2@
 %%%%
 There are no walls around you to affect.
 Es gibt keine Mauern um dich herum, die beeinflusst werden könnten.
@@ -15300,8 +15300,8 @@ Ein kalter Wind weht um dich herum.
 You summon %s!
 Du beschwörst {acc}%s!
 %%%%
-%s summons %s!
-%s beschwört {acc}%s!
+@arg1@ summons @arg2@!
+@arg1@ beschwört {acc}@arg2@!
 %%%%
 %s appears.
 %s erscheint.
@@ -15338,12 +15338,12 @@ Du kannst dort kein Ziel sehen!
 %s zucken.
 %%%%
 # note: <the monster's> <hands> twitch.
-%s %s twitch.
-{gen}%s {nom}%s zucken.
+@arg1@ @arg2@ twitch.
+{gen}@arg1@ {nom}@arg2@ zucken.
 %%%%
 # note: <the monster's> <hand> twitches.
-%s %s twitches.
-{gen}%s {nom}%s zuckt.
+@arg1@ @arg2@ twitches.
+{gen}@arg1@ {nom}@arg2@ zuckt.
 %%%%
 %s is already dancing.
 %s tanzt schon.
@@ -15518,8 +15518,8 @@ Keine leeren benachbarten Felder.
 Something unseen blocks growth in %s.
 Etwas Unsichtbares blockiert das Wachstum in {dat}%s.
 %%%%
-%s is torn apart as %s grows in its place.
-%s wird auseinandergerissen, als %s an dieser Stelle wächst.
+@arg1@ is torn apart as @arg2@ grows in its place.
+@arg1@ wird auseinandergerissen, als @arg2@ an dieser Stelle wächst.
 %%%%
 %s falls apart, but nothing grows.
 %s fällt auseinander, aber nichts wächst.
@@ -16017,7 +16017,7 @@ Du hast nur %d Runden in {dat}%s, um eine neue Ebene zu finden, bevor Zot dich v
 Enter next level anyway?
 Nächste Eben trotzdem betreten?
 %%%%
-%s moves away as you attempt to %s it!
+@arg1@ moves away as you attempt to @arg2@ it!
 %s bewegt sich weg, als du in die Nähe kommst!
 %%%%
 The world spins around you as you enter the gateway.
@@ -16180,8 +16180,8 @@ Stash:
 Versteck:
 %%%%
 # note: shop item entry - item name + " (unknown)" if applicable + price
-%s%s (%d gold)
-%s%s (%d Gold)
+@arg1@@arg2@ (%d gold)
+@arg1@@arg2@ (%d Gold)
 %%%%
 " {shop}"
 " {Laden}"
@@ -16552,17 +16552,17 @@ Du schießt auf magische Weise {acc}%s.
 You magically throw %s.
 Du wirfst auf magische Weise {acc}%s.
 %%%%
-%s shoots %s.
-%s schießt {acc}%s.
+@arg1@ shoots @arg2@.
+@arg1@ schießt {acc}@arg2@.
 %%%%
-%s throws %s.
-%s wirft {acc}%s.
+@arg1@ throws @arg2@.
+@arg1@ wirft {acc}@arg2@.
 %%%%
-%s magically shoots %s.
-%s schießt auf magische Weise {acc}%s.
+@arg1@ magically shoots @arg2@.
+@arg1@ schießt auf magische Weise {acc}@arg2@.
 %%%%
-%s magically throws %s.
-%s wirft auf magische Weise {acc}%s.
+@arg1@ magically throws @arg2@.
+@arg1@ wirft auf magische Weise {acc}@arg2@.
 %%%%
 
 ##################
@@ -16594,8 +16594,8 @@ Es hat keinen Sinn mehr, diese Fertigkeit umzuschalten.
 # tilesdl.cc
 ##################
 %%%%
-Couldn't find font '%s', falling back on '%s'
-Die Schriftart '%s' konnte nicht gefunden werden, greife zurück auf '%s'.
+Couldn't find font '@arg1@', falling back on '@arg2@'
+Die Schriftart '@arg1@' konnte nicht gefunden werden, greife zurück auf '@arg2@'.
 %%%%
 Failed to find a valid window layout: screen too small or game_scale too large?
 Es konnte kein gültiges Fensterlayout gefunden werden: Bildschirm zu klein oder game_scale zu groß?
@@ -16972,8 +16972,8 @@ Diese Passage führt nirgendwo hin!
 You enter %s!
 Du betrittst {acc}%s!
 %%%%
-%s enters %s!
-%s betritt {acc}%s!
+@arg1@ enters @arg2@!
+@arg1@ betritt {acc}@arg2@!
 %%%%
 %s disappears.
 %s verschwindet.
@@ -17092,8 +17092,8 @@ Du hörst ein leises Klicken.
 You avoid triggering %s.
 Du vermeidest es, {acc}%s auszulösen.
 %%%%
-%s avoids triggering %s.
-%s vermeidet das Auslösen von {dat}%s.
+@arg1@ avoids triggering @arg2@.
+@arg1@ vermeidet das Auslösen von {dat}@arg2@.
 %%%%
 %s shoots out and misses you.
 %s schießt heraus und verfehlt dich.
@@ -17101,8 +17101,8 @@ Du vermeidest es, {acc}%s auszulösen.
 %s shoots out and hits your shield.
 %s schießt heraus und trifft deinen Schild.
 %%%%
-%s shoots out and hits %s shield.
-%s schießt heraus und trifft %s Schild.
+@arg1@ shoots out and hits @arg2@ shield.
+@arg1@ schießt heraus und trifft @arg2@ Schild.
 %%%%
 %s shoots out and hits someone's shield.
 %s schießt heraus und trifft den Schild von jemandem.
@@ -17110,11 +17110,11 @@ Du vermeidest es, {acc}%s auszulösen.
 %s shoots out and hits you!
 %s schießt heraus und trifft dich!
 %%%%
-%s hits %s but does no damage!
-%s trifft %s, verursacht aber keinen Schaden!
+@arg1@ hits @arg2@ but does no damage!
+@arg1@ trifft @arg2@, verursacht aber keinen Schaden!
 %%%%
-%s hits %s!
-%s trifft %s!
+@arg1@ hits @arg2@!
+@arg1@ trifft @arg2@!
 %%%%
 You stumble into a teleport trap!
 Du stolperst in eine Teleportfalle!
@@ -17163,8 +17163,8 @@ Hier konnte ein Gegenstand nicht aufgehoben werden; soll ich ihn ignorieren?
 Could not pick up some items here; shall I ignore them?
 Hier konnten einige Gegenstände nicht aufgehoben werden; soll ich sie ignorieren?
 %%%%
-Could not %s, %s.
-Konnte nicht %s, %s.
+Could not @arg1@, @arg2@.
+Konnte nicht @arg1@, @arg2@.
 %%%%
 Key pressed, stopping %s.
 Taste gedrückt, %s gestoppt.
@@ -17205,8 +17205,8 @@ Trotzdem dorthin reisen?
 "Go to which altar? (? - help) "
 "Zu welchem Altar gehen? (? - Hilfe) "
 %%%%
-"What level of %s? (default %s, ? - help) "
-"Welche Ebene {gen}%s? (defaultmäßig %s, ? - Hilfe) "
+"What level of @arg1@? (default @arg2@, ? - help) "
+"Welche Ebene {gen}@arg1@? (defaultmäßig @arg2@, ? - Hilfe) "
 %%%%
 You're already at the bottom of this branch!
 Du bist schon am Ende dieses Zweigs!
@@ -17250,8 +17250,8 @@ Sorry, du kannst hier keinen Wegpunkt setzen.
 Waypoint %d re-assigned to %s.
 Wegpunkt %d wurde {dat}%s neu zugewiesen.
 %%%%
-Waypoint %d re-assigned from %s to %s.
-Wegpunkt %d von {dat}%s auf {dat}%s neu zugewiesen.
+Waypoint %d re-assigned from @arg1@ to @arg2@.
+Wegpunkt %d von {dat}@arg1@ auf {dat}@arg2@ neu zugewiesen.
 %%%%
 Waypoint %d assigned to %s.
 Wegpunkt %d {dat}%s zugewiesen.
@@ -17282,8 +17282,8 @@ Treppe
 There is %s.
 Da ist %s.
 %%%%
-%s warns you: %s
-%s warnt dich: %s
+@arg1@ warns you: @arg2@
+@arg1@ warnt dich: @arg2@
 %%%%
 %s come into view.
 %s kommen in Sicht.
@@ -17438,8 +17438,8 @@ OK; versuche mit &L zu platzieren oder geh zur relevanten Stelle, um mit &P sich
 Successfully placed %s.
 %s erfolgreich platziert.
 %%%%
-Failed to place %s; last builder error: %s
-Fehler beim Platzieren von %s; letzter Builder-Fehler: %s
+Failed to place @arg1@; last builder error: @arg2@
+Fehler beim Platzieren von @arg1@; letzter Builder-Fehler: @arg2@
 %%%%
 "Enter map name: "
 "Kartennamen eingeben: "
@@ -17526,11 +17526,11 @@ Keine Treffer
 Defense
 Verteidigung
 %%%%
-%s %s: XL %d   Str %d   Int %d   Dex %d
-%s %s: XL %d   Stä %d   Int %d   Ges %d
+@arg1@ @arg2@: XL %d   Str %d   Int %d   Dex %d
+@arg1@ @arg2@: XL %d   Stä %d   Int %d   Ges %d
 %%%%
-%s, Skill: %s
-%s, Fertigkeit: %s
+@arg1@, Skill: @arg2@
+@arg1@, Fertigkeit: @arg2@
 %%%%
 %s: HD %d   AC %d   EV %d
 %s: HD %d   RK %d   AW %d
@@ -17556,8 +17556,8 @@ Das Monster konnte nicht neben den Spieler gestellt werden.
 Cancelling simulation.
 Breche Simulation ab.
 %%%%
-Can't write %s: %s
-%s kann nicht geschrieben werden: %s
+Can't write @arg1@: @arg2@
+@arg1@ kann nicht geschrieben werden: @arg2@
 %%%%
 (A)ttack or (D)efense?
 (A)ngriff oder Vertei(D)igung?
@@ -17640,8 +17640,8 @@ Toggling %s to on.
 Value for %s must be non-negative
 Wert für {acc}%s darf nicht negativ sein
 %%%%
-%s was %s.
-%s war %s.
+@arg1@ was @arg2@.
+@arg1@ war @arg2@.
 %%%%
 "New ego? "
 "Neues Ego? "
@@ -17649,8 +17649,8 @@ Wert für {acc}%s darf nicht negativ sein
 No such ego as: %s
 Kein Ego namens: %s
 %%%%
-Ego '%s' is invalid for %s.
-Ego '%s' ist für {acc}%s ungültig.
+Ego '@arg1@' is invalid for @arg2@.
+Ego '@arg1@' ist für {acc}@arg2@ ungültig.
 %%%%
 "Tweak which item? "
 "Welchen Gegenstand anpassen? "
@@ -17724,8 +17724,8 @@ Gegenstandsstapel (nach Standort und oberstem Gegenstand):
 Floor items (stacks only show top item):
 Gegenstände auf dem Boden (Stapel zeigen nur den obersten Gegenstand):
 %%%%
-%3d at (%2d,%2d): %s%s
-%3d bei (%2d,%2d): %s%s
+%3d at (%2d,%2d): @arg1@@arg2@
+%3d bei (%2d,%2d): @arg1@@arg2@
 %%%%
 "Which card? "
 "Welche Karte? "
@@ -17931,8 +17931,8 @@ Kann bereits totes Ziel nicht zum Fehlzaubern zwingen.
 No matching spell or spell school.
 Kein passender Zauber oder Zauberschule.
 %%%%
-Ambiguous: can be spell '%s' or school '%s'.
-Mehrdeutig: Kann Zauber '%s' oder Schule '%s' sein.
+Ambiguous: can be spell '@arg1@' or school '@arg2@'.
+Mehrdeutig: Kann Zauber '@arg1@' oder Schule '@arg2@' sein.
 %%%%
 Spell '%s' has no disciplines.
 Zauber '%s' hat keine Schulen.
@@ -18062,8 +18062,8 @@ Keine passenden Mutationsnamen.
 "No exact match for mutation '%s', possible matches are: "
 "Keine exakte Treffer für Mutation '%s'. Mögliche Treffer sind: "
 %%%%
-Found #%d: %s ("%s")
-Fand #%d: %s ('%s')
+Found #%d: @arg1@ ("@arg2@")
+Fand #%d: @arg1@ ('@arg2@')
 %%%%
 "How many levels to increase or decrease? "
 "Wie viele Stufe zu erhöhen oder senken? "
@@ -18571,8 +18571,8 @@ Du nimmst Kreaturen wahr!
 \"No, never mind.\"
 \"Nein, schon gut.\"
 %%%%
-%s %s erupts in a glittering mayhem of colour.
-%s %s bricht in ein glitzerndes Farbenchaos aus.
+@arg1@ @arg2@ erupts in a glittering mayhem of colour.
+@arg1@ @arg2@ bricht in ein glitzerndes Farbenchaos aus.
 %%%%
 %s looks rather more confused.
 %s sieht noch etwas verwirrter aus.
@@ -18580,11 +18580,11 @@ Du nimmst Kreaturen wahr!
 Some monsters swap places.
 Einige Monster tauschen die Plätze.
 %%%%
-%s reforms as %s.
-%s wird zu {dat}%s.
+@arg1@ reforms as @arg2@.
+@arg1@ wird zu {dat}@arg2@.
 %%%%
-%s %s dances into the air!
-%s %s tanzt in die Luft!
+@arg1@ @arg2@ dances into the air!
+@arg1@ @arg2@ tanzt in die Luft!
 %%%%
 Your body is suffused with distortional energy.
 Dein Körper wird von verzerrender Energie durchdrungen.

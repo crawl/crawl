@@ -253,7 +253,7 @@ wizmode
 
 %%%%
 # <verbed> by <noun>
-%s by %s
+@arg1@ by @arg2@
 
 %%%%
 %s by themself
@@ -342,7 +342,7 @@ Succumbed to %s poison
 %%%%
 # succumbed to <monster's> <poison>
 # no genitive context because English is already possessive
-Succumbed to %s %s
+Succumbed to @arg1@ @arg2@
 
 %%%%
 cloud of %s
@@ -684,10 +684,10 @@ Nibbled to death by software bugs
 %%%%
 
 %%%%
-Hit by %s thrown by %s
+Hit by @arg1@ thrown by @arg2@
 
 %%%%
-Shot with %s by %s
+Shot with @arg1@ by @arg2@
 
 %%%%
 

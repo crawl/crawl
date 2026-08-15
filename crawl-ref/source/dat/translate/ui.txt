@@ -21,7 +21,7 @@ Loading maps...
 Loading complete, press any key to start.
 
 %%%%
-Hello, welcome to %s %s!
+Hello, welcome to @arg1@ @arg2@!
 
 %%%%
 Dismissing %s
@@ -129,13 +129,13 @@ ctrl-p
 
 # "<player name> the <combo>"
 %%%%
-%s the %s
+@arg1@ the @arg2@
 
 %%%%
 
 # a level <level> <species> <background>
 %%%%
-, a level %d %s %s
+, a level %d @arg1@ @arg2@
 
 %%%%
 
@@ -1073,7 +1073,7 @@ Navigate around map
 # Example "[L-Click] Fire (f)"
 # The annotation {cmd} is used to disambiguate from other meanings of the same word
 # (e.g. fire meaning shoot vs. fire meaning flames)
-%s %s (%%)
+@arg1@ @arg2@ (%%)
 
 %%%%
 # format string for "<command name> (<key>)"
