@@ -418,6 +418,9 @@
     <ClCompile Include="..\scroller.cc">
       <Filter>cc</Filter>
     </ClCompile>
+    <ClCompile Include="..\regex-wrapper.cc">
+      <Filter>cc</Filter>
+    </ClCompile>
     <ClCompile Include="..\religion.cc">
       <Filter>cc</Filter>
     </ClCompile>
@@ -1815,6 +1818,9 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\recite-type.h">
+      <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\regex-wrapper.h">
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\religion.h">
