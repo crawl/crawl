@@ -671,8 +671,8 @@ Falsche Monster-Eingabe "@arg1@": @arg2@
 vs
 vs
 %%%%
-Round %d of %d
-Runde %d von %d
+Round @num1@ of @num2@
+Runde @num1@ von @num2@
 %%%%
 Cancelled contest at user request
 Wettbewerb auf Wunsch des Benutzers abgebrochen
@@ -2824,8 +2824,8 @@ keine Gebühr, wenn du jetzt handelst
 no fee if you join today
 keine Gebühr, wenn du heute beitrittst
 %%%%
-%d gold; you have %d
-%d Gold; du hast %d
+@num1@ gold; you have @num2@
+@num1@ Gold; du hast @num2@
 %%%%
 You are not religious.
 Du bist nicht religiös.
@@ -2883,8 +2883,8 @@ Dieses Monster hat die folgenden natürlichen Fähigkeiten@arg@:
 3x
 %%%%
 # the "d" here stands for "dice" (e.g. 3x2d10)
-(@arg@%dd%d)
-(@arg@%dW%d)
+(@arg@@num1@d@num2@)
+(@arg@@num1@W@num2@)
 %%%%
 Type
 Art
@@ -3663,25 +3663,25 @@ Schwäche verursachen
 @arg@ for up to %d fire damage
 @arg@ für bis zu %d Feuerschaden
 %%%%
-@arg@ %d times for up to %d damage each
+@arg@ @num1@ times for up to @num2@ damage each
 %2$d mal %1$s für jeweils bis zu %3$d Schaden
 %%%%
 @arg@ for up to %d damage
 @arg@ für bis zu %d Schaden
 %%%%
-@arg1@ %d times for up to %d damage each plus @arg2@
+@arg1@ @num1@ times for up to @num2@ damage each plus @arg2@
 %2$d mal %1$s für jeweils bis zu %3$d Schaden plus {acc}%4$s
 %%%%
 @arg1@ for up to %d damage plus @arg2@
 @arg1@ für bis zu %d Schaden plus {acc}@arg2@
 %%%%
-@arg@ from a distance %d times for up to %d damage each
+@arg@ from a distance @num1@ times for up to @num2@ damage each
 %2$d mal aus der Ferne %1$s für jeweils bis zu %3$d Schaden
 %%%%
 @arg@ from a distance for up to %d damage
 aus der Ferne @arg@ für bis zu %d Schaden
 %%%%
-@arg1@ from a distance %d times for up to %d damage each plus @arg2@
+@arg1@ from a distance @num1@ times for up to @num2@ damage each plus @arg2@
 %2$d mal aus der Ferne %1$s für jeweils bis zu %3$d Schaden plus {acc}%$4s
 %%%%
 @arg1@ from a distance for up to %d damage plus @arg2@
@@ -3849,8 +3849,8 @@ Es ist zu stark, um durch die Rezitation der Gesetze Zins beeinflusst zu werden.
 It can can be affected by reciting Zin's laws.
 Es kann durch die Rezitation der Gesetze Zins beeinflusst werden.
 %%%%
-" (Recite power: %d, Hit Dice: %d)"
-" (Rezitationskraft: %d, Trefferwürfel: %d)"
+" (Recite power: @num1@, Hit Dice: @num2@)"
+" (Rezitationskraft: @num1@, Trefferwürfel: @num2@)"
 %%%%
 The apparition of @arg@.
 Die Erscheinung von {dat}@arg@.
@@ -4762,8 +4762,8 @@ Fehler beim Sichern der Bones-Datei auf @arg@
 Ghost file "@arg@" seems to be invalid (short read); deleting it.
 Gespenst-Datei "@arg@" scheint ungültig zu sein (kurzes Lesen); wird gelöscht.
 %%%%
-Mismatch between bones backup filename '@arg@' and version %d.%d!
-Unstimmigkeit zwischen dem Namen der Bones-Datei '@arg@' und der Version %d.%d!
+Mismatch between bones backup filename '@arg@' and version @num1@.@num2@!
+Unstimmigkeit zwischen dem Namen der Bones-Datei '@arg@' und der Version @num1@.@num2@!
 %%%%
 Failed to unlink bones file: @arg@
 Bones-Datei kann nicht entlinkt werden: @arg@
@@ -4810,8 +4810,8 @@ Soll ich es löschen?
 Error: @arg@
 Fehler: @arg@
 %%%%
-File is corrupt (found version %d.%d).
-Datei ist beschädigt (Version %d.%d gefunden)
+File is corrupt (found version @num1@.@num2@).
+Datei ist beschädigt (Version @num1@.@num2@ gefunden)
 %%%%
 This save is from an older version.
 Diese Datei stammt aus einer älteren Version.
@@ -6985,8 +6985,8 @@ Du hast jetzt 1 Goldmünze.
 You now have %d gold pieces.
 Du hast jetzt %d Goldmünzen.
 %%%%
-You now have %d gold pieces (gained %d).
-Du hast jetzt %d Goldmünzen (%d bekommen).
+You now have @num1@ gold pieces (gained @num2@).
+Du hast jetzt @num1@ Goldmünzen (@num2@ bekommen).
 %%%%
 @arg@ burns to shimmering ash in your grasp.
 @arg@ verbrennt in deinem Griff zu schimmernder Asche.
@@ -7511,8 +7511,8 @@ Du betrittst den Transporter und tauchst an einem anderen Ort auf.
 You are a level %d @arg1@ @arg2@.
 Du bist ein Stufe %d @arg1@ @arg2@.
 %%%%
-You are %d%% of the way to level %d.
-Du bist %d%% auf dem Weg zu Stufe %d.
+You are @num1@%% of the way to level @num2@.
+Du bist @num1@%% auf dem Weg zu Stufe @num2@.
 %%%%
 I'm sorry, level %d is as high as you can go.
 Es tut mir leid, Stufe %d ist die höchste, die du erreichen kannst.
@@ -13221,8 +13221,8 @@ Du verneigst dich vor dem Missionar von Beogh.
 The service fee for joining is currently %d gold; you have none.
 Die Gebühr für den Beitritt beträgt derzeit %d Gold; du hast keins.
 %%%%
-The service fee for joining is currently %d gold; you only have %d.
-Die Gebühr für den Beitritt beträgt derzeit %d Gold; du hast nur %d.
+The service fee for joining is currently @num1@ gold; you only have @num2@.
+Die Gebühr für den Beitritt beträgt derzeit @num1@ Gold; du hast nur @num2@.
 %%%%
 @arg@ does not accept worship from the loveless!
 @arg@ nimmt keine Anbetung von Lieblosen an!
@@ -13470,8 +13470,8 @@ buy @arg@
 1 item, total cost %d gp
 1 Artikel, Gesamtkosten %d Gold
 %%%%
-%d items, total cost %d gp
-%d Artikel, Gesamtkosten %d Gold
+@num1@ items, total cost @num2@ gp
+@num1@ Artikel, Gesamtkosten @num2@ Gold
 %%%%
 <w>examine</w>
 <w>prüfen</w>
@@ -13713,17 +13713,17 @@ Deine Fertigkeit @arg@ steigt auf Stufe %d!
 Your @arg@ skill decreases to level %d!
 Deine Fertigkeit @arg@ sinkt auf Stufe %d!
 %%%%
-Your base @arg@ skill gained %d levels and is now at level %d!
-Deine grundlegende Fertigkeit @arg@ gewinnt %d Stufen und ist jetzt auf Stufe %d!
+Your base @arg@ skill gained @num1@ levels and is now at level @num2@!
+Deine grundlegende Fertigkeit @arg@ gewinnt @num1@ Stufen und ist jetzt auf Stufe @num2@!
 %%%%
-Your base @arg@ skill lost %d levels and is now at level %d!
-Deine grundlegende Fertigkeit @arg@ verliert %d Stufen und ist jetzt auf Stufe %d!
+Your base @arg@ skill lost @num1@ levels and is now at level @num2@!
+Deine grundlegende Fertigkeit @arg@ verliert @num1@ Stufen und ist jetzt auf Stufe @num2@!
 %%%%
-Your @arg@ skill gained %d levels and is now at level %d!
-Deine Fertigkeit @arg@ gewinnt %d Stufen und ist jetzt auf Stufe %d!
+Your @arg@ skill gained @num1@ levels and is now at level @num2@!
+Deine Fertigkeit @arg@ gewinnt @num1@ Stufen und ist jetzt auf Stufe @num2@!
 %%%%
-Your @arg@ skill lost %d levels and is now at level %d!
-Deine Fertigkeit @arg@ verliert %d Stufen und ist jetzt auf Stufe %d!
+Your @arg@ skill lost @num1@ levels and is now at level @num2@!
+Deine Fertigkeit @arg@ verliert @num1@ Stufen und ist jetzt auf Stufe @num2@!
 %%%%
 You cannot train any new skills!
 Du kannst keine neuen Fertigkeiten trainieren!
@@ -13746,8 +13746,8 @@ Du kannst keine Trainingsziele setzen!
 Clearing the skill training target for @arg@.
 Das Trainingsziel für {acc}@arg@ wird gelöscht.
 %%%%
-Setting a skill training target for @arg@ at %d.%d.
-Trainingsziel für {acc}@arg@ auf %d,%d festgelegt.
+Setting a skill training target for @arg@ at @num1@.@num2@.
+Trainingsziel für {acc}@arg@ auf @num1@,@num2@ festgelegt.
 %%%%
 
 ##################
@@ -13835,11 +13835,11 @@ Dieser Zauber ist unmöglich zu wirken!
 This spell is @arg1@ to cast@arg2@
 Dieser Zauber ist @arg1@ zu wirken@arg2@
 %%%%
-Memorise @arg@, consuming %d spell level and leaving %d?
-@arg@ auswendig lernen, dabei %d Zauberplatz verbrauchen und %d behalten?
+Memorise @arg@, consuming @num1@ spell level and leaving @num2@?
+@arg@ auswendig lernen, dabei @num1@ Zauberplatz verbrauchen und @num2@ behalten?
 %%%%
-Memorise @arg@, consuming %d spell levels and leaving %d?
-@arg@ auswendig lernen, dabei %d Zauberplätze verbrauchen und %d behalten?
+Memorise @arg@, consuming @num1@ spell levels and leaving @num2@?
+@arg@ auswendig lernen, dabei @num1@ Zauberplätze verbrauchen und @num2@ behalten?
 %%%%
 You don't know of any spells!
 Du kennst keine Zauber!
@@ -15268,8 +15268,8 @@ Welchen Zauber vergessen?
 Forget @arg@, freeing 1 spell level for a total of %d?
 @arg@ vergessen und damit 1 Zauberplatz freimachen für insgesamt %d?
 %%%%
-Forget @arg@, freeing %d spell levels for a total of %d?
-@arg@ vergessen und damit %d Zauberplätze freimachen für insgesamt %d?
+Forget @arg@, freeing @num1@ spell levels for a total of @num2@?
+@arg@ vergessen und damit @num1@ Zauberplätze freimachen für insgesamt @num2@?
 %%%%
 This spell is not in your library!
 Dieser Zauberspruch ist nicht in deiner Bibliothek!
@@ -17366,8 +17366,8 @@ Erschaffe Treppen nach oben.
 "Create which feature? "
 "Welches Merkmal erstellen? "
 %%%%
-Set fprops "@arg@" at (%d,%d)
-Fprops "@arg@" auf (%d,%d) gesetzt
+Set fprops "@arg@" at (@num1@,@num2@)
+Fprops "@arg@" auf (@num1@,@num2@) gesetzt
 %%%%
 "No exact match for feature '@arg@', possible matches are: "
 "Kein Merkmal passt exakt zu '@arg@'. Mögliche Treffer sind: "
@@ -17676,8 +17676,8 @@ Du kannst dieses Flag bei einem Nicht-Artefakt nicht einstellen.
 Value of which item?
 Wert welches Gegenstands?
 %%%%
-Real value: %d (known: %d)
-Echter Wert: %d (bekannt: %d)
+Real value: @num1@ (known: @num2@)
+Echter Wert: @num1@ (bekannt: @num2@)
 %%%%
 Value: %d
 Wert: %d
@@ -18002,8 +18002,8 @@ Ru-Pietät kann nicht größer als %d sein.
 Interest must be between 0 and 255.
 Interesse muss zwischen 0 und 255 liegen.
 %%%%
-Set piety to %d, interest to %d.
-Pietät auf %d, Interesse auf %d eingestellt.
+Set piety to @num1@, interest to @num2@.
+Pietät auf @num1@, Interesse auf @num2@ eingestellt.
 %%%%
 You are now @arg@.
 Du bist jetzt @arg@.
@@ -18014,14 +18014,14 @@ Bist du sicher, dass du exkommuniziert werden willst?
 Setting piety to %d.
 Setze Pietät auf %d.
 %%%%
-"Enter new gold value (current = %d, Enter for %d): "
-"Neuen Goldwert eingeben (aktuell = %d, Enter für %d): "
+"Enter new gold value (current = @num1@, Enter for @num2@): "
+"Neuen Goldwert eingeben (aktuell = @num1@, Enter für @num2@): "
 %%%%
 You are not religious!
 Du bist nicht religiös!
 %%%%
-Current progress to next sacrifice: %d  Progress needed: %d
-Aktueller Fortschritt bis zum nächsten Opfer: %d   Erforderlicher Fortschritt: %d
+Current progress to next sacrifice: @num1@  Progress needed: @num2@
+Aktueller Fortschritt bis zum nächsten Opfer: @num1@   Erforderlicher Fortschritt: @num2@
 %%%%
 "Enter new piety value (current = %d, Enter for 0): "
 "Neuen Pietätswert eingeben (aktuell = %d, Enter für 0): "
@@ -18155,8 +18155,8 @@ Du verehrst diesen Gott schon!
 "What action should Xom take? (Blank = any) "
 "Welche Maßnahme sollte Xom ergreifen? (Leer = beliebig) "
 %%%%
-"Enter new Zot clock value (current = %d, from 0 to %d): "
-"Neuen Wert für die Zot-Uhr eingeben (aktuell = %d, von 0 bis %d): "
+"Enter new Zot clock value (current = @num1@, from 0 to @num2@): "
+"Neuen Wert für die Zot-Uhr eingeben (aktuell = @num1@, von 0 bis @num2@): "
 %%%%
 Zot clock should be between 0 and %d
 Zot-Uhr sollte zwischen 0 und %d liegen

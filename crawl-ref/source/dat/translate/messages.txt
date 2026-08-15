@@ -671,7 +671,7 @@ Bad monster spec "@arg1@": @arg2@
 vs
 
 %%%%
-Round %d of %d
+Round @num1@ of @num2@
 
 %%%%
 Cancelled contest at user request
@@ -2824,7 +2824,7 @@ no fee if you act now
 no fee if you join today
 
 %%%%
-%d gold; you have %d
+@num1@ gold; you have @num2@
 
 %%%%
 You are not religious.
@@ -2883,7 +2883,7 @@ This monster has the following natural abilities@arg@:
 
 %%%%
 # the "d" here stands for "dice" (e.g. 3x2d10)
-(@arg@%dd%d)
+(@arg@@num1@d@num2@)
 
 %%%%
 Type
@@ -3663,25 +3663,25 @@ cause weakness
 @arg@ for up to %d fire damage
 
 %%%%
-@arg@ %d times for up to %d damage each
+@arg@ @num1@ times for up to @num2@ damage each
 
 %%%%
 @arg@ for up to %d damage
 
 %%%%
-@arg1@ %d times for up to %d damage each plus @arg2@
+@arg1@ @num1@ times for up to @num2@ damage each plus @arg2@
 
 %%%%
 @arg1@ for up to %d damage plus @arg2@
 
 %%%%
-@arg@ from a distance %d times for up to %d damage each
+@arg@ from a distance @num1@ times for up to @num2@ damage each
 
 %%%%
 @arg@ from a distance for up to %d damage
 
 %%%%
-@arg1@ from a distance %d times for up to %d damage each plus @arg2@
+@arg1@ from a distance @num1@ times for up to @num2@ damage each plus @arg2@
 
 %%%%
 @arg1@ from a distance for up to %d damage plus @arg2@
@@ -3849,7 +3849,7 @@ It is too strong to be affected by reciting Zin's laws.
 It can can be affected by reciting Zin's laws.
 
 %%%%
-" (Recite power: %d, Hit Dice: %d)"
+" (Recite power: @num1@, Hit Dice: @num2@)"
 
 %%%%
 The apparition of @arg@.
@@ -4762,7 +4762,7 @@ Error backing up bones file to @arg@
 Ghost file "@arg@" seems to be invalid (short read); deleting it.
 
 %%%%
-Mismatch between bones backup filename '@arg@' and version %d.%d!
+Mismatch between bones backup filename '@arg@' and version @num1@.@num2@!
 
 %%%%
 Failed to unlink bones file: @arg@
@@ -4810,7 +4810,7 @@ Do you want to delete it?
 Error: @arg@
 
 %%%%
-File is corrupt (found version %d.%d).
+File is corrupt (found version @num1@.@num2@).
 
 %%%%
 This save is from an older version.
@@ -6985,7 +6985,7 @@ You now have 1 gold piece.
 You now have %d gold pieces.
 
 %%%%
-You now have %d gold pieces (gained %d).
+You now have @num1@ gold pieces (gained @num2@).
 
 %%%%
 @arg@ burns to shimmering ash in your grasp.
@@ -7511,7 +7511,7 @@ You enter the transporter and appear at another place.
 You are a level %d @arg1@ @arg2@.
 
 %%%%
-You are %d%% of the way to level %d.
+You are @num1@%% of the way to level @num2@.
 
 %%%%
 I'm sorry, level %d is as high as you can go.
@@ -13221,7 +13221,7 @@ You bow before the missionary of Beogh.
 The service fee for joining is currently %d gold; you have none.
 
 %%%%
-The service fee for joining is currently %d gold; you only have %d.
+The service fee for joining is currently @num1@ gold; you only have @num2@.
 
 %%%%
 @arg@ does not accept worship from the loveless!
@@ -13470,7 +13470,7 @@ buy @arg@
 1 item, total cost %d gp
 
 %%%%
-%d items, total cost %d gp
+@num1@ items, total cost @num2@ gp
 
 %%%%
 <w>examine</w>
@@ -13713,16 +13713,16 @@ Your @arg@ skill increases to level %d!
 Your @arg@ skill decreases to level %d!
 
 %%%%
-Your base @arg@ skill gained %d levels and is now at level %d!
+Your base @arg@ skill gained @num1@ levels and is now at level @num2@!
 
 %%%%
-Your base @arg@ skill lost %d levels and is now at level %d!
+Your base @arg@ skill lost @num1@ levels and is now at level @num2@!
 
 %%%%
-Your @arg@ skill gained %d levels and is now at level %d!
+Your @arg@ skill gained @num1@ levels and is now at level @num2@!
 
 %%%%
-Your @arg@ skill lost %d levels and is now at level %d!
+Your @arg@ skill lost @num1@ levels and is now at level @num2@!
 
 %%%%
 You cannot train any new skills!
@@ -13746,7 +13746,7 @@ You can't set training targets!
 Clearing the skill training target for @arg@.
 
 %%%%
-Setting a skill training target for @arg@ at %d.%d.
+Setting a skill training target for @arg@ at @num1@.@num2@.
 
 %%%%
 
@@ -13835,10 +13835,10 @@ This spell is impossible to cast!
 This spell is @arg1@ to cast@arg2@
 
 %%%%
-Memorise @arg@, consuming %d spell level and leaving %d?
+Memorise @arg@, consuming @num1@ spell level and leaving @num2@?
 
 %%%%
-Memorise @arg@, consuming %d spell levels and leaving %d?
+Memorise @arg@, consuming @num1@ spell levels and leaving @num2@?
 
 %%%%
 You don't know of any spells!
@@ -15268,7 +15268,7 @@ Forget which spell?
 Forget @arg@, freeing 1 spell level for a total of %d?
 
 %%%%
-Forget @arg@, freeing %d spell levels for a total of %d?
+Forget @arg@, freeing @num1@ spell levels for a total of @num2@?
 
 %%%%
 This spell is not in your library!
@@ -17366,7 +17366,7 @@ Creating upstairs.
 "Create which feature? "
 
 %%%%
-Set fprops "@arg@" at (%d,%d)
+Set fprops "@arg@" at (@num1@,@num2@)
 
 %%%%
 "No exact match for feature '@arg@', possible matches are: "
@@ -17676,7 +17676,7 @@ You can't set this flag on a non-artefact.
 Value of which item?
 
 %%%%
-Real value: %d (known: %d)
+Real value: @num1@ (known: @num2@)
 
 %%%%
 Value: %d
@@ -18002,7 +18002,7 @@ Ru piety can't be greater than %d.
 Interest must be between 0 and 255.
 
 %%%%
-Set piety to %d, interest to %d.
+Set piety to @num1@, interest to @num2@.
 
 %%%%
 You are now @arg@.
@@ -18014,13 +18014,13 @@ Are you sure you want to be excommunicated?
 Setting piety to %d.
 
 %%%%
-"Enter new gold value (current = %d, Enter for %d): "
+"Enter new gold value (current = @num1@, Enter for @num2@): "
 
 %%%%
 You are not religious!
 
 %%%%
-Current progress to next sacrifice: %d  Progress needed: %d
+Current progress to next sacrifice: @num1@  Progress needed: @num2@
 
 %%%%
 "Enter new piety value (current = %d, Enter for 0): "
@@ -18155,7 +18155,7 @@ You already worship that god!
 "What action should Xom take? (Blank = any) "
 
 %%%%
-"Enter new Zot clock value (current = %d, from 0 to %d): "
+"Enter new Zot clock value (current = @num1@, from 0 to @num2@): "
 
 %%%%
 Zot clock should be between 0 and %d

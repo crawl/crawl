@@ -629,58 +629,58 @@ on level %d of a sewer
 # between branch levels
 ##############################################
 %%%%
-between levels %d and %d of the Dungeon
+between levels @num1@ and @num2@ of the Dungeon
 
 %%%%
-between levels %d and %d of the Orcish Mines
+between levels @num1@ and @num2@ of the Orcish Mines
 
 %%%%
-between levels %d and %d of the Elven Halls
+between levels @num1@ and @num2@ of the Elven Halls
 
 %%%%
-between levels %d and %d of the Lair of Beasts
+between levels @num1@ and @num2@ of the Lair of Beasts
 
 %%%%
-between levels %d and %d of the Swamp
+between levels @num1@ and @num2@ of the Swamp
 
 %%%%
-between levels %d and %d of the Shoals
+between levels @num1@ and @num2@ of the Shoals
 
 %%%%
-between levels %d and %d of the Snake Pit
+between levels @num1@ and @num2@ of the Snake Pit
 
 %%%%
-between levels %d and %d of the Spider Nest
+between levels @num1@ and @num2@ of the Spider Nest
 
 %%%%
-between levels %d and %d of the Pits of Slime
+between levels @num1@ and @num2@ of the Pits of Slime
 
 %%%%
-between levels %d and %d of the Vaults
+between levels @num1@ and @num2@ of the Vaults
 
 %%%%
-between levels %d and %d of the Crypt
+between levels @num1@ and @num2@ of the Crypt
 
 %%%%
-between levels %d and %d of the Tomb of the Ancients
+between levels @num1@ and @num2@ of the Tomb of the Ancients
 
 %%%%
-between levels %d and %d of the Depths
+between levels @num1@ and @num2@ of the Depths
 
 %%%%
-between levels %d and %d of the Vestibule of Hell
+between levels @num1@ and @num2@ of the Vestibule of Hell
 
 %%%%
-between levels %d and %d of the Iron City of Dis
+between levels @num1@ and @num2@ of the Iron City of Dis
 
 %%%%
-between levels %d and %d of the Realm of Zot
+between levels @num1@ and @num2@ of the Realm of Zot
 
 %%%%
-between levels %d and %d of the Abyss
+between levels @num1@ and @num2@ of the Abyss
 
 %%%%
-between levels %d and %d of a ziggurat
+between levels @num1@ and @num2@ of a ziggurat
 
 %%%%
 

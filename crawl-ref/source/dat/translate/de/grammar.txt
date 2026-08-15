@@ -165,9 +165,9 @@ PREGENERATE:6
 
 SELECT_BY_KEY:/^%d (?!@arg@)/
 
-KEY:/^%d /%d @arg@/
+KEY:/^@num1@ /@num2@ @arg@/
 
-/^(\{pl\})?%d /{pl}%d {adj-e}@arg@/
+/^(\{pl\})?@num1@ /{pl}@num2@ {adj-e}@arg@/
 %%%%
 
 #############

@@ -716,8 +716,8 @@ Gd
 "Spells: "
 "Zauber: "
 %%%%
-%d/%d levels left
-%d/%d Stufen übrig
+@num1@/@num2@ levels left
+@num1@/@num2@ Stufen übrig
 %%%%
 # Felids have multiple lives (and deaths)
 %%%%
@@ -826,8 +826,8 @@ schnell
 no status effects
 keine Statuseffekte
 %%%%
-"%d/%d runes: "
-"%d/%d Runen: "
+"@num1@/@num2@ runes: "
+"@num1@/@num2@ Runen: "
 %%%%
 # wizard (cheat) mode flags
 %%%%
@@ -840,8 +840,8 @@ EX-WIZARD
 EXPLORE
 ERKUNDEN
 %%%%
-Your terminal window is too small; please resize to at least %d,%d
-Dein Terminalfenster ist zu klein; Bitte ändere die Größe auf mindestens %d,%d
+Your terminal window is too small; please resize to at least @num1@,@num2@
+Dein Terminalfenster ist zu klein; Bitte ändere die Größe auf mindestens @num1@,@num2@
 %%%%
 # some items become "melded" when you change form
 %%%%
@@ -1471,8 +1471,8 @@ Abbrechen
 Inventory:
 Inventar:
 %%%%
-%d/%d slots
-%d/%d Plätze
+@num1@/@num2@ slots
+@num1@/@num2@ Plätze
 %%%%
 
 # subheadings

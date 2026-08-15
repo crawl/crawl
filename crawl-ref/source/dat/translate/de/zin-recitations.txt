@@ -432,9 +432,9 @@ Apostaten
 Anathema
 Anathema
 %%%%
-# Example: "@arg@ %d:%d" -> "Abominations 10:13"
-You finish reciting @arg@ %d:%d.
-Du beendest die Rezitation von @arg@ %d:%d.
+# Example: "@arg@ @num1@:@num2@" -> "Abominations 10:13"
+You finish reciting @arg@ @num1@:@num2@.
+Du beendest die Rezitation von @arg@ @num1@:@num2@.
 %%%%
 
 

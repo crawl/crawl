@@ -733,59 +733,59 @@ auf Ebene %d eines Kanals
 # between branch levels
 ##############################################
 %%%%
-between levels %d and %d of the Dungeon
-zwischen Ebenen %d und %d des Kerkers
+between levels @num1@ and @num2@ of the Dungeon
+zwischen Ebenen @num1@ und @num2@ des Kerkers
 %%%%
-between levels %d and %d of the Orcish Mines
-zwischen Ebenen %d und %d der orkischen Minen
+between levels @num1@ and @num2@ of the Orcish Mines
+zwischen Ebenen @num1@ und @num2@ der orkischen Minen
 %%%%
-between levels %d and %d of the Elven Halls
-zwischen Ebenen %d und %d der Elfenhallen
+between levels @num1@ and @num2@ of the Elven Halls
+zwischen Ebenen @num1@ und @num2@ der Elfenhallen
 %%%%
-between levels %d and %d of the Lair of Beasts
-zwischen Ebenen %d und %d der Höhle der Bestien
+between levels @num1@ and @num2@ of the Lair of Beasts
+zwischen Ebenen @num1@ und @num2@ der Höhle der Bestien
 %%%%
-between levels %d and %d of the Swamp
-zwischen Ebenen %d und %d des Sumpfes
+between levels @num1@ and @num2@ of the Swamp
+zwischen Ebenen @num1@ und @num2@ des Sumpfes
 %%%%
-between levels %d and %d of the Shoals
-zwischen Ebenen %d und %d der Untiefen
+between levels @num1@ and @num2@ of the Shoals
+zwischen Ebenen @num1@ und @num2@ der Untiefen
 %%%%
-between levels %d and %d of the Snake Pit
-zwischen Ebenen %d und %d der Schlangengrube
+between levels @num1@ and @num2@ of the Snake Pit
+zwischen Ebenen @num1@ und @num2@ der Schlangengrube
 %%%%
-between levels %d and %d of the Spider Nest
-zwischen Ebenen %d und %d des Spinnennests
+between levels @num1@ and @num2@ of the Spider Nest
+zwischen Ebenen @num1@ und @num2@ des Spinnennests
 %%%%
-between levels %d and %d of the Pits of Slime
-zwischen Ebenen %d und %d der Schleimgruben
+between levels @num1@ and @num2@ of the Pits of Slime
+zwischen Ebenen @num1@ und @num2@ der Schleimgruben
 %%%%
-between levels %d and %d of the Vaults
-zwischen Ebenen %d und %d der Gewölbe
+between levels @num1@ and @num2@ of the Vaults
+zwischen Ebenen @num1@ und @num2@ der Gewölbe
 %%%%
-between levels %d and %d of the Crypt
-zwischen Ebenen %d und %d der Krypta
+between levels @num1@ and @num2@ of the Crypt
+zwischen Ebenen @num1@ und @num2@ der Krypta
 %%%%
-between levels %d and %d of the Tomb of the Ancients
-zwischen Ebenen %d und %d des Grabs der Uralten
+between levels @num1@ and @num2@ of the Tomb of the Ancients
+zwischen Ebenen @num1@ und @num2@ des Grabs der Uralten
 %%%%
-between levels %d and %d of the Depths
-zwischen Ebenen %d und %d der Tiefen
+between levels @num1@ and @num2@ of the Depths
+zwischen Ebenen @num1@ und @num2@ der Tiefen
 %%%%
-between levels %d and %d of the Vestibule of Hell
-zwischen Ebenen %d und %d des Vestibüls der Hölle
+between levels @num1@ and @num2@ of the Vestibule of Hell
+zwischen Ebenen @num1@ und @num2@ des Vestibüls der Hölle
 %%%%
-between levels %d and %d of the Iron City of Dis
-zwischen Ebenen %d und %d der Eisernen Stadt von Dis
+between levels @num1@ and @num2@ of the Iron City of Dis
+zwischen Ebenen @num1@ und @num2@ der Eisernen Stadt von Dis
 %%%%
-between levels %d and %d of the Realm of Zot
-zwischen Ebenen %d und %d des Reiches von Zot
+between levels @num1@ and @num2@ of the Realm of Zot
+zwischen Ebenen @num1@ und @num2@ des Reiches von Zot
 %%%%
-between levels %d and %d of the Abyss
-zwischen Ebenen %d und %d des Abgrunds
+between levels @num1@ and @num2@ of the Abyss
+zwischen Ebenen @num1@ und @num2@ des Abgrunds
 %%%%
-between levels %d and %d of a ziggurat
-zwischen Ebenen %d und %d einer Zikkurat
+between levels @num1@ and @num2@ of a ziggurat
+zwischen Ebenen @num1@ und @num2@ einer Zikkurat
 %%%%
 
 ##############################################
