@@ -4825,8 +4825,8 @@ Diese Datei stammt aus einer älteren Version.
 " • delete it and start a new game"
 " • das Spiel löschen und ein Neues starten"
 %%%%
-This save's version: (%d.%d) (must be >= %d.%d)
-Version dieses Spiels: (%d.%d) (muss >= %d.%d sein)
+This save's version: (@num1@.@num2@) (must be >= @num3@.@num4@)
+Version dieses Spiels: (@num1@.@num2@) (muss >= @num3@.@num4@ sein)
 %%%%
 This save is from a newer version.
 Dieses Spiel stammt aus einer neueren Version.
@@ -4837,8 +4837,8 @@ Dieses Spiel stammt aus einer neueren Version.
 " • continue your game with a newer version of @arg@"
 " • Spiel mit einer neueren Version von @arg@ weitermachen"
 %%%%
-This save's version: (%d.%d) (must be <= %d.%d)
-Version dieses Spiels: (%d.%d) (muss <= %d.%d sein)
+This save's version: (@num1@.@num2@) (must be <= @num3@.@num4@)
+Version dieses Spiels: (@num1@.@num2@) (muss <= @num3@.@num4@ sein)
 %%%%
 ERROR: Could not lock file @arg@
 FEHLER: Datei "@arg@" konnte nicht gesperrt werden
@@ -17317,11 +17317,11 @@ Stelle Ansichtsebenen wieder her.
 # viewgeom.cc
 ##################
 %%%%
-Terminal too small (%d,%d); need at least (%d,%d)
-Terminal zu klein (%d,%d); mindestens (%d,%d) benötigt
+Terminal too small (@num1@,@num2@); need at least (@num3@,@num4@)
+Terminal zu klein (@num1@,@num2@); mindestens (@num3@,@num4@) benötigt
 %%%%
-Terminal too small (%d,%d); layout needs (%d,%d)
-Terminal zu klein (%d,%d); Layout braucht (%d,%d)
+Terminal too small (@num1@,@num2@); layout needs (@num3@,@num4@)
+Terminal zu klein (@num1@,@num2@); Layout braucht (@num3@,@num4@)
 %%%%
 
 ##################
@@ -17526,8 +17526,8 @@ Keine Treffer
 Defense
 Verteidigung
 %%%%
-@arg1@ @arg2@: XL %d   Str %d   Int %d   Dex %d
-@arg1@ @arg2@: XL %d   Stä %d   Int %d   Ges %d
+@arg1@ @arg2@: XL @num1@   Str @num2@   Int @num3@   Dex @num4@
+@arg1@ @arg2@: XL @num1@   Stä @num2@   Int @num3@   Ges @num4@
 %%%%
 @arg1@, Skill: @arg2@
 @arg1@, Fertigkeit: @arg2@
@@ -17765,8 +17765,8 @@ Kein solcher Hintergrund, verwende daher Kämpfer.
 %d monsters, %d total exp value (%d non-uniq)
 %d Monster, %d XP-Wert in Summe (%d nicht einzigartig)
 %%%%
-%d monsters, %d total exp value (%d non-uniq, %d adjusted)
-%d Monster, %d XP-Wert in Summe (%d nicht einzigartig, %d angepasst)
+@num1@ monsters, @num2@ total exp value (@num3@ non-uniq, @num4@ adjusted)
+@num1@ Monster, @num2@ XP-Wert in Summe (@num3@ nicht einzigartig, @num4@ angepasst)
 %%%%
 "(c)hange spawn rate or (s)pawn monsters? "
 "(c)Spawn-Frequenz ändern oder Monster (s)pawnen? "
@@ -17907,8 +17907,8 @@ Monster hat sich in etwas anderes als den gewünschten Typ verwandelt.
 Choose a destination!
 Wähle ein Ziel!
 %%%%
-Attempting to calculate a path from (%d, %d) to (%d, %d)...
-Versuche einen Pfad von (%d,%d) nach (%d,%d) zu berechnen...
+Attempting to calculate a path from (@num1@, @num2@) to (@num3@, @num4@)...
+Versuche einen Pfad von (@num1@,@num2@) nach (@num3@,@num4@) zu berechnen...
 %%%%
 "Here's the shortest path: "
 "Hier ist der kürzeste Pfad: "
@@ -18172,8 +18172,8 @@ Du kannst abyss_teleport() nur im Abgrund.
 Running Jiyva off-level sacrifice.
 Bringe Jiyva Opfer außerhalb dieser Ebene.
 %%%%
-Cost level: %d  Total experience: %d  Next cost level: %d Skill cost: %d
-Kostenstufe:%d  Erfahrung insgesamt:%d  Nächste Kostenstufe:%d  Fertigkeitskosten: %d
+Cost level: @num1@  Total experience: @num2@  Next cost level: @num3@ Skill cost: @num4@
+Kostenstufe:@num1@  Erfahrung insgesamt:@num2@  Nächste Kostenstufe:@num3@  Fertigkeitskosten: @num4@
 %%%%
 Failure to give mutation.
 Mutation fehlgeschlagen.

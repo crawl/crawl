@@ -76,7 +76,7 @@ E
 
 %%%%
 # if current max HP less than max max HP (i.e. drained)
-(level %d, %d/%d (%d) HPs)
+(level @num1@, @num2@/@num3@ (@num4@) HPs)
 
 %%%%
 # if not drained
