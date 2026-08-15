@@ -44,10 +44,11 @@ void init_localisation()
         string pattern = key;
         // escape characters that mean something to regex
         pattern = escape_regex_specials(pattern);
-        pattern = regexp_replace(pattern, "@num[^@]*@", "([0-9]+)");
+        pattern = regexp_replace(pattern, "@num[^@]*@", "([\\+|\\-]?[0-9]+)");
         pattern = regexp_replace(pattern, "@[^@]+@", "(.*?)");
         pattern = "^" + pattern + "$";
         _patterns.emplace_back(make_pair(pattern, key));
+        debuglog("Stored pattern: \"%s\" -> \"%s\"", pattern.c_str(), key.c_str());
     }
     debuglog("Localisation initialised");
 }
@@ -104,7 +105,7 @@ static string _localise_string(const string& context, const string& s)
         return s;
 
     // don't translate integer
-    if (regexp_match(s, "^(\\+|-)[0-9]+$"))
+    if (regexp_match(s, "^[\\+|\\-]?[0-9]+$"))
         return s;
 
     // try simple translation first
