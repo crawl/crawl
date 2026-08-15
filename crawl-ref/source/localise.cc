@@ -59,8 +59,11 @@ static pair<string, string> _get_matching_pattern(const string& s)
 
     for (const pair<string, string>& elem: _patterns)
     {
-        if (regexp_match(s, elem.first) && elem.first.length() > result.first.length())
+        if (regexp_match(s, elem.first))
+        {
+            if (length_excl_params(elem.second) > length_excl_params(result.second))
             result = elem;
+        }
     }
 
     return result;

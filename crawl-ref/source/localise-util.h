@@ -25,3 +25,6 @@ vector<string> extract_params(const string& s);
 
 // escape any characters that have a special meaning in regex
 string escape_regex_specials(const string& s);
+
+// length of string excluding any @foo@ parameters
+size_t length_excl_params(const string &s);
