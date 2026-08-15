@@ -7,6 +7,7 @@
 #include "database.h"
 #include "localise.h"
 #include "localise-util.h"
+#include "pattern.h"
 #include "options.h"
 #include "regex-wrapper.h"
 #include "stringutil.h"
@@ -34,6 +35,10 @@ void init_localisation()
     if (_initialised || Options.language == lang_t::EN)
         return;
     _initialised = true;
+
+    text_pattern patt("^.$");
+    if (!patt.matches("の"))
+        fprintf(stderr, "WARNING: Regex is not UTF-8 aware\n");
 
     // get all translation keys which contain parameters
     vector<string> keys = getTranslatedKeysByRegex("@[^@]+@");
