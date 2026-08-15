@@ -536,16 +536,16 @@ Your skill: %d.%d
 Your (base) skill: %d.%d
 
 %%%%
-At %d%% training you would reach %d.%d in the equivalent of %d.%d XLs.
+At @num1@%% training you would reach @num2@.@num3@ in the equivalent of @num4@.@num5@ XLs.
 
 %%%%
-At %d%% training you would reach %d.%d in about %d.%d XLs.
+At @num1@%% training you would reach @num2@.@num3@ in about @num4@.@num5@ XLs.
 
 %%%%
-At current training (%d%%) you reach %d.%d in the equivalent of %d.%d XLs.
+At current training (@num1@%%) you reach @num2@.@num3@ in the equivalent of @num4@.@num5@ XLs.
 
 %%%%
-At current training (%d%%) you reach %d.%d in about %d.%d XLs.
+At current training (@num1@%%) you reach @num2@.@num3@ in about @num4@.@num5@ XLs.
 
 %%%%
 # xp = experience points, skp = skill points

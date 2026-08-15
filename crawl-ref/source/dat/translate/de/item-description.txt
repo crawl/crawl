@@ -536,17 +536,17 @@ Deine Fertigkeit: %d,%d
 Your (base) skill: %d.%d
 Deine (Grund-)Fertigkeit: %d,%d
 %%%%
-At %d%% training you would reach %d.%d in the equivalent of %d.%d XLs.
-Bei %d%% Training würdest du %d,%d im Äquivalent von %d,%d XL erreichen.
+At @num1@%% training you would reach @num2@.@num3@ in the equivalent of @num4@.@num5@ XLs.
+Bei @num1@%% Training würdest du @num2@,@num3@ im Äquivalent von @num4@,@num5@ XL erreichen.
 %%%%
-At %d%% training you would reach %d.%d in about %d.%d XLs.
-Bei %d%% Training würdest du %d,%d in etwa %d,%d XL erreichen.
+At @num1@%% training you would reach @num2@.@num3@ in about @num4@.@num5@ XLs.
+Bei @num1@%% Training würdest du @num2@,@num3@ in etwa @num4@,@num5@ XL erreichen.
 %%%%
-At current training (%d%%) you reach %d.%d in the equivalent of %d.%d XLs.
-Beim aktuellen Training (%d%%) erreichst du %d,%d im Äquivalent von %d,%d XL.
+At current training (@num1@%%) you reach @num2@.@num3@ in the equivalent of @num4@.@num5@ XLs.
+Beim aktuellen Training (@num1@%%) erreichst du @num2@,@num3@ im Äquivalent von @num4@,@num5@ XL.
 %%%%
-At current training (%d%%) you reach %d.%d in about %d.%d XLs.
-Beim aktuellen Training (%d%%) erreichst du %d,%d in etwa %d,%d XL.
+At current training (@num1@%%) you reach @num2@.@num3@ in about @num4@.@num5@ XLs.
+Beim aktuellen Training (@num1@%%) erreichst du @num2@,@num3@ in etwa @num4@,@num5@ XL.
 %%%%
 # xp = experience points, skp = skill points
 (%d xp, %d skp)
