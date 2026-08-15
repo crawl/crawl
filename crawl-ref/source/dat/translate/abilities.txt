@@ -312,7 +312,7 @@ Deal Four
 Stack Five
 
 %%%%
-(next: %s)
+(next: @arg@)
 
 %%%%
 (%d in deck)
@@ -388,7 +388,7 @@ Curse Item
 Shatter the Chains
 
 %%%%
-(Boost: %s)
+(Boost: @arg@)
 
 %%%%
 

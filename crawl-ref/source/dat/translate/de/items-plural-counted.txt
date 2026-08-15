@@ -103,8 +103,8 @@
 
 # unidentified
 %%%%
-@num@ scrolls labelled %s
-{pl}@num@ Schriftrollen beschriftet mit %s
+@num@ scrolls labelled @arg@
+{pl}@num@ Schriftrollen beschriftet mit @arg@
 %%%%
 
 # identified

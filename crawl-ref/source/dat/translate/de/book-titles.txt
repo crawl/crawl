@@ -1163,552 +1163,552 @@ in der Hermeneutik
 
 # conjuration
 %%%%
-%sConjuration
-{adj-e}%sKonjuration
+@arg@Conjuration
+{adj-e}@arg@Konjuration
 %%%%
-%sConfrontation
-{adj-e}%sKonfrontation
+@arg@Confrontation
+{adj-e}@arg@Konfrontation
 %%%%
-%sAttacks
-{adj-e}%sAngriffe
+@arg@Attacks
+{adj-e}@arg@Angriffe
 %%%%
-%sBattle Magic
-{adj-e}%sKampfmagie
+@arg@Battle Magic
+{adj-e}@arg@Kampfmagie
 %%%%
-%sCombat Magic
-{adj-e}%sKampfmagie
+@arg@Combat Magic
+{adj-e}@arg@Kampfmagie
 %%%%
-%sArcane Weapons
-{adj-e}%sarkane Waffen
+@arg@Arcane Weapons
+{adj-e}@arg@arkane Waffen
 %%%%
 # "Blows and Bruises" are one thing in English, but here we separate because we
 # could have "and" between two schools and the code won't know not to separate these
-%sBlows
-{adj-e}%sSchläge
+@arg@Blows
+{adj-e}@arg@Schläge
 %%%%
-%sBruises
-{adj-e}%sPrellungen
+@arg@Bruises
+{adj-e}@arg@Prellungen
 %%%%
-%sDamage Dealing
-{adj-er}%sSchaden
+@arg@Damage Dealing
+{adj-er}@arg@Schaden
 %%%%
 
 # Fire
 %%%%
-%sFire
-{adj-es}%sFeuer
+@arg@Fire
+{adj-es}@arg@Feuer
 %%%%
-%sFlames
-{adj-e}%sFlammen
+@arg@Flames
+{adj-e}@arg@Flammen
 %%%%
-%sHeat
-{adj-e}%sHitze
+@arg@Heat
+{adj-e}@arg@Hitze
 %%%%
-the %sVolcanoes
-{adj-e}die %sVulkane
+the @arg@Volcanoes
+{adj-e}die @arg@Vulkane
 %%%%
-the %sBlaze
-{f}die {adj-e}%sFlamme
+the @arg@Blaze
+{f}die {adj-e}@arg@Flamme
 %%%%
-%sIgnition
-{adj-e}%sZündung
+@arg@Ignition
+{adj-e}@arg@Zündung
 %%%%
-the %sArsonist
-{m}der {adj-e}%sBrandstifter
+the @arg@Arsonist
+{m}der {adj-e}@arg@Brandstifter
 %%%%
 
 # Hexes
 %%%%
-%sHexes
-{adj-e}%sVerhexungen
+@arg@Hexes
+{adj-e}@arg@Verhexungen
 %%%%
-%sCurses
-{adj-e}%sFlüche
+@arg@Curses
+{adj-e}@arg@Flüche
 %%%%
-%sMalediction
-{adj-e}%sVerhexung
+@arg@Malediction
+{adj-e}@arg@Verhexung
 %%%%
-the %sOath
-{m}der {adj-e}%sSchwur
+the @arg@Oath
+{m}der {adj-e}@arg@Schwur
 %%%%
-%sExecration
-{adj-e}%sVerwünschung
+@arg@Execration
+{adj-e}@arg@Verwünschung
 %%%%
-%sEnchantment
-{adj-e}%sVerzauberung
+@arg@Enchantment
+{adj-e}@arg@Verzauberung
 %%%%
-%sBewitchment
-{adj-e}%sVerhexung
+@arg@Bewitchment
+{adj-e}@arg@Verhexung
 %%%%
-%sGlamour
-{adj-e}%sVerzauberung
+@arg@Glamour
+{adj-e}@arg@Verzauberung
 %%%%
-%sFascination
-{adj-e}%sFaszination
+@arg@Fascination
+{adj-e}@arg@Faszination
 %%%%
-%sBeguiling
-{adj-e}%sVerführung
+@arg@Beguiling
+{adj-e}@arg@Verführung
 %%%%
 
 # Ice
 %%%%
-%sIce
-{adj-es}%sEis
+@arg@Ice
+{adj-es}@arg@Eis
 %%%%
-%sSnow
-{adj-er}%sSchnee
+@arg@Snow
+{adj-er}@arg@Schnee
 %%%%
-%sCold
-{adj-e}%sKälte
+@arg@Cold
+{adj-e}@arg@Kälte
 %%%%
-the %sSnowflakes
-{pl}die {adj-en}%sSchneeflocken
+the @arg@Snowflakes
+{pl}die {adj-en}@arg@Schneeflocken
 %%%%
-the %sGlacier
-{m}der {adj-e}%sGletscher
+the @arg@Glacier
+{m}der {adj-e}@arg@Gletscher
 %%%%
-the %sFrostbite
-{f}die {adj-e}%sErfrierung
+the @arg@Frostbite
+{f}die {adj-e}@arg@Erfrierung
 %%%%
 
 # Transmutation
 %%%%
-%sTransmigration
-{adj-e}%sSeelenwanderung
+@arg@Transmigration
+{adj-e}@arg@Seelenwanderung
 %%%%
-%sTransmutation
-{adj-e}%sVerwandlung
+@arg@Transmutation
+{adj-e}@arg@Verwandlung
 %%%%
-%sTransformation
-{adj-e}%sUmwandlung
+@arg@Transformation
+{adj-e}@arg@Umwandlung
 %%%%
-%sShape Shifting
-{adj-e}%sFormveränderung
+@arg@Shape Shifting
+{adj-e}@arg@Formveränderung
 %%%%
-%sChanging
-{adj-es}%sÄndern
+@arg@Changing
+{adj-es}@arg@Ändern
 %%%%
-%sMoulding
-{adj-es}%sFormen
+@arg@Moulding
+{adj-es}@arg@Formen
 %%%%
 
 # Necromancy
 %%%%
-%sNecromancy
-{adj-e}%sNekromantie
+@arg@Necromancy
+{adj-e}@arg@Nekromantie
 %%%%
-%sEvil
-{adj-es}%sBöse
+@arg@Evil
+{adj-es}@arg@Böse
 %%%%
-%sDarkness
-{adj-e}%sDunkelheit
+@arg@Darkness
+{adj-e}@arg@Dunkelheit
 %%%%
-%sStolen Souls
-{adj-e}%sgestohlene Seelen
+@arg@Stolen Souls
+{adj-e}@arg@gestohlene Seelen
 %%%%
-%sRites
-{adj-e}%sRiten
+@arg@Rites
+{adj-e}@arg@Riten
 %%%%
-%sArts
-{adj-e}%sKünste
+@arg@Arts
+{adj-e}@arg@Künste
 %%%%
-%sSecrets
-{adj-e}%sGeheimnisse
+@arg@Secrets
+{adj-e}@arg@Geheimnisse
 %%%%
-%sRituals
-{adj-e}%sRituale
+@arg@Rituals
+{adj-e}@arg@Rituale
 %%%%
-%sMagic
-{adj-e}%sMagie
+@arg@Magic
+{adj-e}@arg@Magie
 %%%%
 
 # Summoning
 %%%%
-%sSummoning
-{adj-e}%sBeschwörung
+@arg@Summoning
+{adj-e}@arg@Beschwörung
 %%%%
-%sCalling
-{adj-es}%sRufen
+@arg@Calling
+{adj-es}@arg@Rufen
 %%%%
-%sCreation
-{adj-e}%sSchöpfung
+@arg@Creation
+{adj-e}@arg@Schöpfung
 %%%%
-the %sEntourage
-{f}die {adj-e}%sEntourage
+the @arg@Entourage
+{f}die {adj-e}@arg@Entourage
 %%%%
-%sCompanions
-{adj-e}%sGefährten
+@arg@Companions
+{adj-e}@arg@Gefährten
 %%%%
-the %sEscort
-{f}die {adj-e}%sEskorte
+the @arg@Escort
+{f}die {adj-e}@arg@Eskorte
 %%%%
-%sIllusion
-{adj-e}%sIllusion
+@arg@Illusion
+{adj-e}@arg@Illusion
 %%%%
-%sSlavery
-{adj-e}%sSklaverei
+@arg@Slavery
+{adj-e}@arg@Sklaverei
 %%%%
 
 # Translocation
 %%%%
-%sTranslocation
-{adj-e}%sTranslokation
+@arg@Translocation
+{adj-e}@arg@Translokation
 %%%%
-%sDisplacement
-{adj-e}%sUmschiebung
+@arg@Displacement
+{adj-e}@arg@Umschiebung
 %%%%
-%sDislocation
-{adj-e}%sVersetzung
+@arg@Dislocation
+{adj-e}@arg@Versetzung
 %%%%
-%sOrientation
-{adj-e}%sOrientierung
+@arg@Orientation
+{adj-e}@arg@Orientierung
 %%%%
-the %sTraveller
-{m}der {adj-e}%sReisende
+the @arg@Traveller
+{m}der {adj-e}@arg@Reisende
 %%%%
-the %sCompass
-{m}der {adj-e}%sKompass
+the @arg@Compass
+{m}der {adj-e}@arg@Kompass
 %%%%
-the %sVoyage
-{f}die {adj-e}%sReise
+the @arg@Voyage
+{f}die {adj-e}@arg@Reise
 %%%%
 
 # Poison
 %%%%
-%sPoison
-{adj-es}%sGift
+@arg@Poison
+{adj-es}@arg@Gift
 %%%%
-%sVenom
-{adj-e}%sGift
+@arg@Venom
+{adj-e}@arg@Gift
 %%%%
-%sToxins
-{adj-e}%sToxine
+@arg@Toxins
+{adj-e}@arg@Toxine
 %%%%
-%sPoisoning
-{adj-e}%sVergiftung
+@arg@Poisoning
+{adj-e}@arg@Vergiftung
 %%%%
-%sIntoxication
-{adj-e}%sIntoxikation
+@arg@Intoxication
+{adj-e}@arg@Intoxikation
 %%%%
-%sEnvenoming
-{adj-es}%sVergiften
+@arg@Envenoming
+{adj-es}@arg@Vergiften
 %%%%
-%sContamination
-{adj-e}%sVerseuchung
+@arg@Contamination
+{adj-e}@arg@Verseuchung
 %%%%
 
 # Earth
 %%%%
-%sEarth
-{adj-e}%sErde
+@arg@Earth
+{adj-e}@arg@Erde
 %%%%
-%sStones
-{adj-e}%sSteine
+@arg@Stones
+{adj-e}@arg@Steine
 %%%%
-%sClay
-{adj-er}%sLehm
+@arg@Clay
+{adj-er}@arg@Lehm
 %%%%
-the %sMountains
-{pl}die {adj-en}%sBerge
+the @arg@Mountains
+{pl}die {adj-en}@arg@Berge
 %%%%
-the %sRocks
-{pl}die {adj-en}%sFelsen
+the @arg@Rocks
+{pl}die {adj-en}@arg@Felsen
 %%%%
 
 # Air
 %%%%
-%sAir
-{adj-e}%sLuft
+@arg@Air
+{adj-e}@arg@Luft
 %%%%
-%sLightness
-{adj-e}%sLeichtigkeit
+@arg@Lightness
+{adj-e}@arg@Leichtigkeit
 %%%%
-%sWeightlessness
-{adj-e}%sSchwerelosigkeit
+@arg@Weightlessness
+{adj-e}@arg@Schwerelosigkeit
 %%%%
-%sFlight
-{adj-er}%sFlug
+@arg@Flight
+{adj-er}@arg@Flug
 %%%%
-the %sBirds
-{pl}die {adj-en}%sVögel
+the @arg@Birds
+{pl}die {adj-en}@arg@Vögel
 %%%%
-%sFeathers
-{adj-e}%sFedern
+@arg@Feathers
+{adj-e}@arg@Federn
 %%%%
 
 # genitive
 
 # conjuration genitive
 %%%%
-{gen}%sConjuration
-der {adj-en}%sKonjuration
+{gen}@arg@Conjuration
+der {adj-en}@arg@Konjuration
 %%%%
-{gen}%sConfrontation
-der {adj-en}%sKonfrontation
+{gen}@arg@Confrontation
+der {adj-en}@arg@Konfrontation
 %%%%
-{gen}%sAttacks
-der {adj-en}%sAngriffe
+{gen}@arg@Attacks
+der {adj-en}@arg@Angriffe
 %%%%
-{gen}%sBattle Magic
-der {adj-en}%sKampfmagie
+{gen}@arg@Battle Magic
+der {adj-en}@arg@Kampfmagie
 %%%%
-{gen}%sCombat Magic
-der {adj-en}%sKampfmagie
+{gen}@arg@Combat Magic
+der {adj-en}@arg@Kampfmagie
 %%%%
-{gen}%sArcane Weapons
-der {adj-en}%sarkanen Waffen
+{gen}@arg@Arcane Weapons
+der {adj-en}@arg@arkanen Waffen
 %%%%
-{gen}%sBlows
-der {adj-en}%sSchläge
+{gen}@arg@Blows
+der {adj-en}@arg@Schläge
 %%%%
-{gen}%sBruises
-der {adj-en}%sPrellungen
+{gen}@arg@Bruises
+der {adj-en}@arg@Prellungen
 %%%%
-{gen}%sDamage Dealing
-des {adj-en}%sSchadens
+{gen}@arg@Damage Dealing
+des {adj-en}@arg@Schadens
 %%%%
 
 # Fire genitive
 %%%%
-{gen}%sFire
-des {adj-en}%sFeuers
+{gen}@arg@Fire
+des {adj-en}@arg@Feuers
 %%%%
-{gen}%sFlames
-der {adj-en}%sFlammen
+{gen}@arg@Flames
+der {adj-en}@arg@Flammen
 %%%%
-{gen}%sHeat
-der {adj-en}%sHitze
+{gen}@arg@Heat
+der {adj-en}@arg@Hitze
 %%%%
-{gen}the %sVolcanoes
-der {adj-en}%sVulkane
+{gen}the @arg@Volcanoes
+der {adj-en}@arg@Vulkane
 %%%%
-{gen}the %sBlaze
-der {adj-en}%sFlamme
+{gen}the @arg@Blaze
+der {adj-en}@arg@Flamme
 %%%%
-{gen}%sIgnition
-der {adj-en}%sZündung
+{gen}@arg@Ignition
+der {adj-en}@arg@Zündung
 %%%%
-{gen}the %sArsonist
-des {adj-en}%sBrandstifters
+{gen}the @arg@Arsonist
+des {adj-en}@arg@Brandstifters
 %%%%
 
 # Hexes genitive
 %%%%
-{gen}%sHexes
-der {adj-en}%sVerhexungen
+{gen}@arg@Hexes
+der {adj-en}@arg@Verhexungen
 %%%%
-{gen}%sCurses
-der {adj-en}%sFlüche
+{gen}@arg@Curses
+der {adj-en}@arg@Flüche
 %%%%
-{gen}%sMalediction
-der {adj-en}%sVerhexung
+{gen}@arg@Malediction
+der {adj-en}@arg@Verhexung
 %%%%
-{gen}the %sOath
-des {adj-en}%sSchwurs
+{gen}the @arg@Oath
+des {adj-en}@arg@Schwurs
 %%%%
-{gen}%sExecration
-der {adj-en}%sVerwünschung
+{gen}@arg@Execration
+der {adj-en}@arg@Verwünschung
 %%%%
-{gen}%sEnchantment
-der {adj-en}%sVerzauberung
+{gen}@arg@Enchantment
+der {adj-en}@arg@Verzauberung
 %%%%
-{gen}%sBewitchment
-der {adj-en}%sVerhexung
+{gen}@arg@Bewitchment
+der {adj-en}@arg@Verhexung
 %%%%
-{gen}%sGlamour
-der {adj-en}%sVerzauberung
+{gen}@arg@Glamour
+der {adj-en}@arg@Verzauberung
 %%%%
-{gen}%sFascination
-der {adj-en}%sFaszination
+{gen}@arg@Fascination
+der {adj-en}@arg@Faszination
 %%%%
-{gen}%sBeguiling
-der {adj-en}%sVerführung
+{gen}@arg@Beguiling
+der {adj-en}@arg@Verführung
 %%%%
 
 # Ice genitive
 %%%%
-{gen}%sIce
-des {adj-en}%sEises
+{gen}@arg@Ice
+des {adj-en}@arg@Eises
 %%%%
-{gen}%sSnow
-des {adj-en}%sSchnees
+{gen}@arg@Snow
+des {adj-en}@arg@Schnees
 %%%%
-{gen}%sCold
-der {adj-en}%sKälte
+{gen}@arg@Cold
+der {adj-en}@arg@Kälte
 %%%%
-{gen}the %sSnowflakes
-der {adj-en}%sSchneeflocken
+{gen}the @arg@Snowflakes
+der {adj-en}@arg@Schneeflocken
 %%%%
-{gen}the %sGlacier
-des {adj-en}%sGletschers
+{gen}the @arg@Glacier
+des {adj-en}@arg@Gletschers
 %%%%
-{gen}the %sFrostbite
-der {adj-en}%sErfrierung
+{gen}the @arg@Frostbite
+der {adj-en}@arg@Erfrierung
 %%%%
 
 # Transmutation genitive
 %%%%
-{gen}%sTransmigration
-der {adj-en}%sSeelenwanderung
+{gen}@arg@Transmigration
+der {adj-en}@arg@Seelenwanderung
 %%%%
-{gen}%sTransmutation
-der {adj-en}%sVerwandlung
+{gen}@arg@Transmutation
+der {adj-en}@arg@Verwandlung
 %%%%
-{gen}%sTransformation
-der {adj-en}%sUmwandlung
+{gen}@arg@Transformation
+der {adj-en}@arg@Umwandlung
 %%%%
-{gen}%sShape Shifting
-der {adj-en}%sFormveränderung
+{gen}@arg@Shape Shifting
+der {adj-en}@arg@Formveränderung
 %%%%
-{gen}%sChanging
-des {adj-en}%sÄnderns
+{gen}@arg@Changing
+des {adj-en}@arg@Änderns
 %%%%
-{gen}%sMoulding
-des {adj-en}%sFormens
+{gen}@arg@Moulding
+des {adj-en}@arg@Formens
 %%%%
 
 # Necromancy genitive
 %%%%
-{gen}%sNecromancy
-der {adj-en}%sNekromantie
+{gen}@arg@Necromancy
+der {adj-en}@arg@Nekromantie
 %%%%
-{gen}%sEvil
-des {adj-en}%sBösen
+{gen}@arg@Evil
+des {adj-en}@arg@Bösen
 %%%%
-{gen}%sDarkness
-der {adj-en}%sDunkelheit
+{gen}@arg@Darkness
+der {adj-en}@arg@Dunkelheit
 %%%%
-{gen}%sStolen Souls
-der {adj-en}%sgestohlenen Seelen
+{gen}@arg@Stolen Souls
+der {adj-en}@arg@gestohlenen Seelen
 %%%%
-{gen}%sRites
-der {adj-en}%sRiten
+{gen}@arg@Rites
+der {adj-en}@arg@Riten
 %%%%
-{gen}%sArts
-der {adj-en}%sKünste
+{gen}@arg@Arts
+der {adj-en}@arg@Künste
 %%%%
-{gen}%sSecrets
-der {adj-en}%sGeheimnisse
+{gen}@arg@Secrets
+der {adj-en}@arg@Geheimnisse
 %%%%
-{gen}%sRituals
-der {adj-en}%sRituale
+{gen}@arg@Rituals
+der {adj-en}@arg@Rituale
 %%%%
-{gen}%sMagic
-der {adj-en}%sMagie
+{gen}@arg@Magic
+der {adj-en}@arg@Magie
 %%%%
 
 # Summoning genitive
 %%%%
-{gen}%sSummoning
-der {adj-en}%sBeschwörung
+{gen}@arg@Summoning
+der {adj-en}@arg@Beschwörung
 %%%%
-{gen}%sCalling
-des {adj-en}%sRufens
+{gen}@arg@Calling
+des {adj-en}@arg@Rufens
 %%%%
-{gen}%sCreation
-der {adj-en}%sSchöpfung
+{gen}@arg@Creation
+der {adj-en}@arg@Schöpfung
 %%%%
-{gen}the %sEntourage
-der {adj-en}%sEntourage
+{gen}the @arg@Entourage
+der {adj-en}@arg@Entourage
 %%%%
-{gen}%sCompanions
-der {adj-en}%sGefährten
+{gen}@arg@Companions
+der {adj-en}@arg@Gefährten
 %%%%
-{gen}the %sEscort
-der {adj-en}%sEskorte
+{gen}the @arg@Escort
+der {adj-en}@arg@Eskorte
 %%%%
-{gen}%sIllusion
-der {adj-en}%sIllusion
+{gen}@arg@Illusion
+der {adj-en}@arg@Illusion
 %%%%
-{gen}%sSlavery
-der {adj-en}%sSklaverei
+{gen}@arg@Slavery
+der {adj-en}@arg@Sklaverei
 %%%%
 
 # Translocation genitive
 %%%%
-{gen}%sTranslocation
-der {adj-en}%sTranslokation
+{gen}@arg@Translocation
+der {adj-en}@arg@Translokation
 %%%%
-{gen}%sDisplacement
-der {adj-en}%sUmschiebung
+{gen}@arg@Displacement
+der {adj-en}@arg@Umschiebung
 %%%%
-{gen}%sDislocation
-der {adj-en}%sVersetzung
+{gen}@arg@Dislocation
+der {adj-en}@arg@Versetzung
 %%%%
-{gen}%sOrientation
-der {adj-en}%sOrientierung
+{gen}@arg@Orientation
+der {adj-en}@arg@Orientierung
 %%%%
-{gen}the %sTraveller
-des {adj-en}%sReisenden
+{gen}the @arg@Traveller
+des {adj-en}@arg@Reisenden
 %%%%
-{gen}the %sCompass
-des {adj-en}%sKompasses
+{gen}the @arg@Compass
+des {adj-en}@arg@Kompasses
 %%%%
-{gen}the %sVoyage
-der {adj-en}%sReise
+{gen}the @arg@Voyage
+der {adj-en}@arg@Reise
 %%%%
 
 # Poison genitive
 %%%%
-{gen}%sPoison
-des {adj-en}%sGiftes
+{gen}@arg@Poison
+des {adj-en}@arg@Giftes
 %%%%
-{gen}%sVenom
-des {adj-en}%sGiftes
+{gen}@arg@Venom
+des {adj-en}@arg@Giftes
 %%%%
-{gen}%sToxins
-der {adj-en}%sToxine
+{gen}@arg@Toxins
+der {adj-en}@arg@Toxine
 %%%%
-{gen}%sPoisoning
-der {adj-en}%sVergiftung
+{gen}@arg@Poisoning
+der {adj-en}@arg@Vergiftung
 %%%%
-{gen}%sIntoxication
-der {adj-en}%sIntoxikation
+{gen}@arg@Intoxication
+der {adj-en}@arg@Intoxikation
 %%%%
-{gen}%sEnvenoming
-der {adj-en}%sVergiften
+{gen}@arg@Envenoming
+der {adj-en}@arg@Vergiften
 %%%%
-{gen}%sContamination
-der {adj-en}%sVerseuchung
+{gen}@arg@Contamination
+der {adj-en}@arg@Verseuchung
 %%%%
 
 # Earth genitive
 %%%%
-{gen}%sEarth
-der {adj-en}%sErde
+{gen}@arg@Earth
+der {adj-en}@arg@Erde
 %%%%
-{gen}%sStones
-der {adj-en}%sSteine
+{gen}@arg@Stones
+der {adj-en}@arg@Steine
 %%%%
-{gen}%sClay
-des {adj-en}%sLehms
+{gen}@arg@Clay
+des {adj-en}@arg@Lehms
 %%%%
-{gen}the %sMountains
-der {adj-en}%sBerge
+{gen}the @arg@Mountains
+der {adj-en}@arg@Berge
 %%%%
-{gen}the %sRocks
-der {adj-en}%sFelsen
+{gen}the @arg@Rocks
+der {adj-en}@arg@Felsen
 %%%%
 
 # Air genitive
 %%%%
-{gen}%sAir
-der {adj-en}%sLuft
+{gen}@arg@Air
+der {adj-en}@arg@Luft
 %%%%
-{gen}%sLightness
-der {adj-en}%sLeichtigkeit
+{gen}@arg@Lightness
+der {adj-en}@arg@Leichtigkeit
 %%%%
-{gen}%sWeightlessness
-der {adj-en}%sSchwerelosigkeit
+{gen}@arg@Weightlessness
+der {adj-en}@arg@Schwerelosigkeit
 %%%%
-{gen}%sFlight
-des {adj-en}%sFlugs
+{gen}@arg@Flight
+des {adj-en}@arg@Flugs
 %%%%
-{gen}the %sBirds
-der {adj-en}%sVögel
+{gen}the @arg@Birds
+der {adj-en}@arg@Vögel
 %%%%
-{gen}%sFeathers
-der {adj-en}%sFedern
+{gen}@arg@Feathers
+der {adj-en}@arg@Federn
 %%%%
 
 # genitive without adjective

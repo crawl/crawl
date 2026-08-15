@@ -86,7 +86,7 @@ wall jump
 springen
 %%%%
 
-# These used in "Could not %s" (travel.cc). Some also used as commands in find menu.
+# These used in "Could not @arg@" (travel.cc). Some also used as commands in find menu.
 %%%%
 explore
 erkunden
@@ -154,7 +154,7 @@ randalierst
 # Attack verb infinitives
 #################################
 # Returned by mon_attack_name() in mon-util.cc
-# These are used in monster descriptions: "It can %s for %d damage"
+# These are used in monster descriptions: "It can @arg@ for %d damage"
 %%%%
 hit
 schlagen

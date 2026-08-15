@@ -664,8 +664,8 @@ the scroll
 
 # unidentified
 %%%%
-the scroll labelled %s
-{f}die Schriftrolle beschriftet mit %s
+the scroll labelled @arg@
+{f}die Schriftrolle beschriftet mit @arg@
 %%%%
 
 # identified

@@ -24,7 +24,7 @@ Loading complete, press any key to start.
 Hello, welcome to @arg1@ @arg2@!
 
 %%%%
-Dismissing %s
+Dismissing @arg@
 
 %%%%
 Dungeon Crawl
@@ -162,7 +162,7 @@ Unknown
 "Welcome. "
 
 %%%%
-"Welcome, %s. "
+"Welcome, @arg@. "
 
 %%%%
 You are @a_species@.
@@ -305,7 +305,7 @@ Play a new game with your previous choice.
 %%%%
 # species/background - other messages
 %%%%
-Incompatible species and background (%s) selected.
+Incompatible species and background (@arg@) selected.
 
 %%%%
 Do you want to play this combination? [Y/n/q]
@@ -427,7 +427,7 @@ You have an existing game under this name; really overwrite? [Y/n]
 %%%%
 # seeded games
 %%%%
-Play a game with a custom seed for version %s.
+Play a game with a custom seed for version @arg@.
 
 %%%%
 Choose 0 for a random seed. [Tab]/[Shift-Tab] to cycle input focus.
@@ -516,7 +516,7 @@ Lesson 5: Gods and Divine Abilities
 %%%%
 # other
 %%%%
-Trunk games don't count for the tournament, you want %s. Play trunk anyway? (Y/N)
+Trunk games don't count for the tournament, you want @arg@. Play trunk anyway? (Y/N)
 
 %%%%
 
@@ -861,13 +861,13 @@ Quiver unavailable
 Nothing quivered
 
 %%%%
-%s unavailable
+@arg@ unavailable
 
 %%%%
-%s currently unavailable
+@arg@ currently unavailable
 
 %%%%
-%s restricted
+@arg@ restricted
 
 %%%%
 # duplicate of item category
@@ -1079,7 +1079,7 @@ Navigate around map
 # format string for "<command name> (<key>)"
 # Example "Fire (f)"
 # {cmd} annotation as per above entry
-%s (%%)
+@arg@ (%%)
 
 %%%%
 [L-Click]
@@ -1219,7 +1219,7 @@ Show previous page of items
 %%%%
 %%%%
 # suffix used when net is holding monster
-" (holding %s)"
+" (holding @arg@)"
 
 %%%%
 # used by above entry (in unlikely edge case)

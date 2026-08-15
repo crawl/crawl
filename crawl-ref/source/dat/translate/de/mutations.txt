@@ -371,11 +371,11 @@ Deine schlangenartige Haut ist zäh. (RK +%d)
 Your stone body is resilient. (AC +%d)
 Dein Steinkörper ist widerstandsfähig. (RK +%d)
 %%%%
-Your %s scales are very hard. (AC +%d)
-Deine %s Schuppen sind sehr hart. (RK +%d)
+Your @arg@ scales are very hard. (AC +%d)
+Deine @arg@ Schuppen sind sehr hart. (RK +%d)
 %%%%
-Your %s scales are hard. (AC +%d)
-Deine %s Schuppen sind hart. (RK +%d)
+Your @arg@ scales are hard. (AC +%d)
+Deine @arg@ Schuppen sind hart. (RK +%d)
 %%%%
 %d rings
 %d Ringe

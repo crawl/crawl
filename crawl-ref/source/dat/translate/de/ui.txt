@@ -24,8 +24,8 @@ Ladevorgang abgeschlossen. Zum Starten eine beliebige Taste drücken.
 Hello, welcome to @arg1@ @arg2@!
 Hallo, willkommen bei @arg1@ @arg2@!
 %%%%
-Dismissing %s
-%s wird entlassen
+Dismissing @arg@
+@arg@ wird entlassen
 %%%%
 Dungeon Crawl
 Dungeon Crawl
@@ -162,8 +162,8 @@ Unbekannt
 "Welcome. "
 "Willkommen. "
 %%%%
-"Welcome, %s. "
-"Willkommen, %s. "
+"Welcome, @arg@. "
+"Willkommen, @arg@. "
 %%%%
 You are @a_species@.
 Du bist @a_species@.
@@ -305,8 +305,8 @@ Ein neues Spiel mit deiner letzten Auswahl beginnen.
 %%%%
 # species/background - other messages
 %%%%
-Incompatible species and background (%s) selected.
-Inkompatible Spezies und Hintergrund (%s) ausgewählt.
+Incompatible species and background (@arg@) selected.
+Inkompatible Spezies und Hintergrund (@arg@) ausgewählt.
 %%%%
 Do you want to play this combination? [Y/n/q]
 Möchtest du diese Kombination spielen? [J/n/q]
@@ -427,8 +427,8 @@ Du hast schon ein Spiel mit diesem Namen; Wirklich überschreiben? [J/n]
 %%%%
 # seeded games
 %%%%
-Play a game with a custom seed for version %s.
-Beginne ein Spiel mit einer spezifischen Seed für Version %s.
+Play a game with a custom seed for version @arg@.
+Beginne ein Spiel mit einer spezifischen Seed für Version @arg@.
 %%%%
 Choose 0 for a random seed. [Tab]/[Shift-Tab] to cycle input focus.
 Wähle 0 für eine zufällige Seed. [Tab]/[Umschalt-Tab] um Fokus zu verwechseln.
@@ -516,8 +516,8 @@ Lektion 5: Götter und göttliche Fähigkeiten
 %%%%
 # other
 %%%%
-Trunk games don't count for the tournament, you want %s. Play trunk anyway? (Y/N)
-Trunk-Spiele zählen nicht für das Turnier. Du willst wahrscheinlich %s. Trotzdem Trunk spielen? (J/N)
+Trunk games don't count for the tournament, you want @arg@. Play trunk anyway? (Y/N)
+Trunk-Spiele zählen nicht für das Turnier. Du willst wahrscheinlich @arg@. Trotzdem Trunk spielen? (J/N)
 %%%%
 
 ###############################################################
@@ -872,14 +872,14 @@ Köcher nicht verfügbar
 Nothing quivered
 Nichts im Köcher
 %%%%
-%s unavailable
-%s nicht verfügbar
+@arg@ unavailable
+@arg@ nicht verfügbar
 %%%%
-%s currently unavailable
-%s zurzeit nicht verfügbar
+@arg@ currently unavailable
+@arg@ zurzeit nicht verfügbar
 %%%%
-%s restricted
-%s beschränkt
+@arg@ restricted
+@arg@ beschränkt
 %%%%
 # duplicate of item category
 #weapon
@@ -1090,8 +1090,8 @@ Auf der Karte navigieren
 # format string for "<command name> (<key>)"
 # Example "Fire (f)"
 # {cmd} annotation as per above entry
-%s (%%)
-{cmd}%s (%%)
+@arg@ (%%)
+{cmd}@arg@ (%%)
 %%%%
 [L-Click]
 [L-Klick]
@@ -1230,8 +1230,8 @@ Vorherige Seite der Gegenstände anzeigen
 %%%%
 %%%%
 # suffix used when net is holding monster
-" (holding %s)"
-" (haltet {acc}%s)"
+" (holding @arg@)"
+" (haltet {acc}@arg@)"
 %%%%
 # used by above entry (in unlikely edge case)
 nobody

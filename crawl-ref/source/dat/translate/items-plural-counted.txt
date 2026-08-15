@@ -103,7 +103,7 @@
 
 # unidentified
 %%%%
-%d scrolls labelled %s
+%d scrolls labelled @arg@
 
 %%%%
 
