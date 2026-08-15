@@ -12,7 +12,7 @@ import sys
 msg_transforms = {
     # item-prop.cc
     "You learned that %s %s actually %s.": [
-        "You learned that @item1@ is actually @item2@.", 
+        "You learned that @item1@ is actually @item2@.",
         "You learned that @items1@ are actually @items2@"
     ],
 }
@@ -541,7 +541,7 @@ def post_process_feature_data_h(input):
 
     altars = []
     others = []
-    
+
     for section, strings in input.items():
         new_strings = []
         for string in strings:
@@ -614,7 +614,7 @@ def post_process_mon_data_h(input):
     uniques = []
     singles = []
     plurals = []
-    
+
     for section, strings in input.items():
         new_strings = []
         for string in strings:
@@ -644,7 +644,7 @@ def post_process_mon_data_h(input):
 
 def post_process_spl_data_h(input):
     spells = []
-    
+
     for section, strings in input.items():
         for string in strings:
             if "Debugging" in string or "nonexistent" in string:
@@ -659,7 +659,7 @@ def post_process_spl_data_h(input):
 
 def post_process_zap_data_h(input):
     zaps = []
-    
+
     for section, strings in input.items():
         for string in strings:
             if "debugging" in string:
@@ -773,6 +773,3 @@ for filename, sections in results.items():
 
 for string in output:
     print(string)
-
-
-
