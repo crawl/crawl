@@ -683,8 +683,8 @@ Gleichstand
 Winner: @arg@!
 Gewinner: @arg@!
 %%%%
-Final score: @arg1@ (%d); @arg2@ (%d) [%d ties]
-Endstand: @arg1@ (%d); @arg2@ (%d) [%d Gleichstände]
+Final score: @arg1@ (@num1@); @arg2@ (@num2@) [@num3@ ties]
+Endstand: @arg1@ (@num1@); @arg2@ (@num2@) [@num3@ Gleichstände]
 %%%%
 Last arena monster was dismissed.
 Das letzte Arena-Monster wurde entlassen.
@@ -11255,8 +11255,8 @@ Attribute erhöhen
 " Increase:"
 " Erhöhen:"
 %%%%
-Your base attributes are Str %d, Int %d, Dex %d.
-Deine Basisattribute sind Stä %d, Int %d, Ges %d.
+Your base attributes are Str @num1@, Int @num2@, Dex @num3@.
+Deine Basisattribute sind Stä @num1@, Int @num2@, Ges @num3@.
 %%%%
 "Increase (S)trength, (I)ntelligence, or (D)exterity? "
 "(S)tärke, (I)ntelligenz oder (G)eschicklichkeit erhöhen? "
@@ -17532,8 +17532,8 @@ Verteidigung
 @arg1@, Skill: @arg2@
 @arg1@, Fertigkeit: @arg2@
 %%%%
-@arg@: HD %d   AC %d   EV %d
-@arg@: HD %d   RK %d   AW %d
+@arg@: HD @num1@   AC @num2@   EV @num3@
+@arg@: HD @num1@   RK @num2@   AW @num3@
 %%%%
 Cannot wield weapon
 Du kannst die Waffe nicht führen
@@ -17762,8 +17762,8 @@ Kein solcher Hintergrund, verwende daher Kämpfer.
 "Monsters: "
 "Monster: "
 %%%%
-%d monsters, %d total exp value (%d non-uniq)
-%d Monster, %d XP-Wert in Summe (%d nicht einzigartig)
+@num1@ monsters, @num2@ total exp value (@num3@ non-uniq)
+@num1@ Monster, @num2@ XP-Wert in Summe (@num3@ nicht einzigartig)
 %%%%
 @num1@ monsters, @num2@ total exp value (@num3@ non-uniq, @num4@ adjusted)
 @num1@ Monster, @num2@ XP-Wert in Summe (@num3@ nicht einzigartig, @num4@ angepasst)
