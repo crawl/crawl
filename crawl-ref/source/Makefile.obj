@@ -127,6 +127,7 @@ lev-pand.o \
 libutil.o \
 loading-screen.o \
 localise.o \
+localise-util.o \
 lookup-help.o \
 los.o \
 los-def.o \
