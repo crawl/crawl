@@ -330,9 +330,9 @@ Eleionoma - German plural is Eleionomai - ref: https://de.wikipedia.org/wiki/Ele
 Efreet is der Ifrit in German: https://de.wikipedia.org/wiki/Ifrit (but Efreet is an archaic form)
 
 Spriggan is translated as der Zweigling here: https://elderscrolls.fandom.com/de/wiki/Zweigling. I guess they did this because a sprig is a small branch.
-I'm not sure that the "sprig" in spriggan really has anything to do with branches, but I guess we can go with that translation.  
-http://crawl.chaosforge.org/Spriggan  
-https://en.wikipedia.org/wiki/Spriggan  
+I'm not sure that the "sprig" in spriggan really has anything to do with branches, but I guess we can go with that translation.
+http://crawl.chaosforge.org/Spriggan
+https://en.wikipedia.org/wiki/Spriggan
 
 Deathcap is Knollenblätterpilz in German: https://de.wikipedia.org/wiki/Gr%C3%BCner_Knollenbl%C3%A4tterpilz
 
