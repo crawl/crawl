@@ -463,8 +463,8 @@ einem Gott
 Beogh blesses you with reinforcements.
 Beogh segnet dich mit Verstärkung.
 %%%%
-%s blesses %s with %s.
-%s segnet %s mit %s.
+@arg1@ blesses @arg2@ with @arg3@.
+@arg1@ segnet @arg2@ mit @arg3@.
 %%%%
 # when recipient is an unnamed follower
 a follower

@@ -381,7 +381,7 @@ the Wu Jian Council's
 Beogh blesses you with reinforcements.
 
 %%%%
-%s blesses %s with %s.
+@arg1@ blesses @arg2@ with @arg3@.
 
 %%%%
 # when recipient is an unnamed follower

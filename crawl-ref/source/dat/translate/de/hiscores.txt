@@ -156,8 +156,8 @@ Was a Plaything of Xom.
 War ein Spielball Xoms
 %%%%
 # Was <title> of <god>[ (penitent)]
-Was %s of %s%s.
-War %s {gen}%s{nom}%s.
+Was @arg1@ of @arg2@@arg3@.
+War @arg1@ {gen}@arg2@{nom}@arg3@.
 %%%%
 
 # titles used above, in declining order of piety
