@@ -17468,8 +17468,8 @@ Alle Vaults können jetzt [wieder] verwendet werden.
 "Set Abyss speed to what? (now @num@, higher value = higher speed) "
 "Tempo der Zeit im Abgrund auf was einstellen? (jetzt @num@, höhere Nummer = höherer Tempo) "
 %%%%
-Setting Abyss speed to %i.
-Tempo der Zeit im Abgrund auf %i eingestellt.
+Setting Abyss speed to @num@.
+Tempo der Zeit im Abgrund auf @num@ eingestellt.
 %%%%
 
 ##################
@@ -17774,8 +17774,8 @@ Kein solcher Hintergrund, verwende daher Kämpfer.
 "Set monster spawn rate to what? (now @num@, lower value = higher rate) "
 "Monster-Spawn-Frequenz auf was setzen? (jetzt @num@, niedrigerer Wert = höhere Frequenz)
 %%%%
-Setting monster spawn rate to %i.
-Setze Monster-Spawn-Frequenz auf %i.
+Setting monster spawn rate to @num@.
+Setze Monster-Spawn-Frequenz auf @num@.
 %%%%
 Level already filled with monsters, get rid of some of them first.
 Ebene ist schon mit Monstern gefüllt. Zuerst müssen einige von denen weg.
@@ -17786,8 +17786,8 @@ Ebene ist schon mit Monstern gefüllt. Zuerst müssen einige von denen weg.
 Spawning 1 monster.
 1 Monster wird gespawnt.
 %%%%
-Spawning %i monsters.
-%i Monster werden gespawnt.
+Spawning @num@ monsters.
+@num@ Monster werden gespawnt.
 %%%%
 land
 Land
@@ -17795,8 +17795,8 @@ Land
 Which monster?
 Welches Monster?
 %%%%
-Detected %i monster@arg@.
-%i Monster@arg@ erkannt.
+Detected @num@ monster@arg@.
+@num@ Monster@arg@ erkannt.
 %%%%
 "What monsters to dismiss (ENTER for all, \"harmful\", \"mobile\", \"los\" or a regex, \"keepitem\" to leave items)? "
 "Welche Monster entlassen (ENTER für alle, \"harmful\", \"mobile\", \"los\" oder ein regex, \"keepitem\" um Gegenstände zurückzulassen)? "
@@ -17804,8 +17804,8 @@ Detected %i monster@arg@.
 Dismissed 1 monster.
 1 Monster entlassen.
 %%%%
-Dismissed %i monsters.
-%i Monster entlassen.
+Dismissed @num@ monsters.
+@num@ Monster entlassen.
 %%%%
 "Make the monster (S)hout or (T)alk? "
 "Zwinge das Monster zum (S)chreien oder Reden(T)? "
@@ -18074,8 +18074,8 @@ Fand #@num@: @arg1@ ('@arg2@')
 "Enter values for Str, Int, Dex (space separated): "
 "Werte für Stä, Int, Ges eingeben (durch Leerzeichen getrennt): "
 %%%%
-Setting attributes (Str, Int, Dex) to: %i, %i, %i
-Attribute (Stä, Int, Ges) eingestellt auf: %i, %i, %i
+Setting attributes (Str, Int, Dex) to: @num1@, @num2@, @num3@
+Attribute (Stä, Int, Ges) eingestellt auf: @num1@, @num2@, @num3@
 %%%%
 "Edit which duration (letter or name)? "
 "Welche Dauer bearbeiten (Buchstabe oder Name)? "
