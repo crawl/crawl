@@ -1,4 +1,3 @@
-###############################################################################
 #
 # Translations for dungeon-related stuff
 #
@@ -590,8 +589,74 @@ Trostlos
 %%%%
 
 ##############################################
+# short form branch level
+##############################################
+%%%%
+D:@num@
+K:@num@
+%%%%
+Dungeon:@num@
+Kerker:@num@
+%%%%
+Orc:@num@
+Ork:@num@
+%%%%
+Elf:@num@
+Elf:@num@
+%%%%
+Lair:@num@
+Höhle:@num@
+%%%%
+Swamp:@num@
+Sumpf:@num@
+%%%%
+Shoals:@num@
+Untiefen:@num@
+%%%%
+Snake:@num@
+Schlange:@num@
+%%%%
+Spider:@num@
+Spinne:@num@
+%%%%
+Slime:@num@
+Schleim:@num@
+%%%%
+Vaults:@num@
+Gewölbe:@num@
+%%%%
+Crypt:@num@
+Krypta:@num@
+%%%%
+Tomb:@num@
+Grab:@num@
+%%%%
+Depths:@num@
+Tiefen:@num@
+%%%%
+Dis:@num@
+Dis:@num@
+%%%%
+Geh:@num@
+Geh:@num@
+%%%%
+Coc:@num@
+Coc:@num@
+%%%%
+Tar:@num@
+Tar:@num@
+%%%%
+Zig:@num@
+Zik:@num@
+%%%%
+Abyss:@num@
+Abgrund:@num@
+%%%%
+
+##############################################
 # on branch level
 ##############################################
+
 %%%%
 on level %d of the Dungeon
 auf Ebene %d des Kerkers
