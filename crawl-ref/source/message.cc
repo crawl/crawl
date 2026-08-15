@@ -16,6 +16,7 @@
 #include "hints.h"
 #include "initfile.h"
 #include "libutil.h"
+#include "localise.h"
 #include "luaterp.h"
 #include "macro.h"
 #include "menu.h"
@@ -1511,6 +1512,8 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
                  bool cap)
 {
     static bool _doing_c_message_hook = false;
+
+    text = localise(text);
 
     rng::generator rng(rng::UI);
 
