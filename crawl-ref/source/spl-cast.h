@@ -156,6 +156,6 @@ void do_demonic_magic(int pow, int rank);
 bool channelled_spell_active(spell_type spell);
 void start_channelling_spell(spell_type spell, string reminder_msg = "", bool do_effect = true);
 void stop_channelling_spells(bool quiet = false);
-void handle_channelled_spell();
+bool handle_channelled_spell();
 
 bool warn_about_contam_cost(int max_contam);
