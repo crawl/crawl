@@ -462,6 +462,11 @@ int count_occurrences(const string &text, const string &s)
     return nfound;
 }
 
+bool contains(const string &text, const string &searchfor)
+{
+    return text.find(searchfor) != string::npos;
+}
+
 // also used with macros
 string &trim_string(string &str)
 {
