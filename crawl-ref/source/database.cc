@@ -259,12 +259,12 @@ vector<string> TextDB::_get_file_list() const
     vector<string> input_files;
     for (const string &file : _input_files)
     {
-        if (file.length() > 1 && file[0] == '*')
+        if (file == "*.txt")
         {
             // Expand wildcard
             string dir = _directory.substr(0,_directory.length()-1);
             dir = datafile_path(dir, false, true, dir_exists);
-            vector<string> matched = get_dir_files_ext(dir, file.substr(1));
+            vector<string> matched = get_dir_files_ext(dir, ".txt");
             for (const string& file_name: matched)
                 input_files.push_back(file_name);
         }
