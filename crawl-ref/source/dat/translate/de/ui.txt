@@ -21,8 +21,8 @@ Karten werden geladen...
 Loading complete, press any key to start.
 Ladevorgang abgeschlossen. Zum Starten eine beliebige Taste drücken.
 %%%%
-Hello, welcome to %s %s!
-Hallo, willkommen bei %s %s!
+Hello, welcome to @arg1@ @arg2@!
+Hallo, willkommen bei @arg1@ @arg2@!
 %%%%
 Dismissing %s
 %s wird entlassen
@@ -129,14 +129,14 @@ Strg-P
 
 # "<player name> the <combo>"
 %%%%
-%s the %s
-%s der %s
+@arg1@ the @arg2@
+@arg1@ der @arg2@
 %%%%
 
 # a level <level> <species> <background>
 %%%%
-, a level %d %s %s
-, Stufe %d %s %s
+, a level %d @arg1@ @arg2@
+, Stufe %d @arg1@ @arg2@
 %%%%
 
 # Game types used in savegame descriptions
@@ -1084,8 +1084,8 @@ Auf der Karte navigieren
 # Example "[L-Click] Fire (f)"
 # The annotation {cmd} is used to disambiguate from other meanings of the same word
 # (e.g. fire meaning shoot vs. fire meaning flames)
-%s %s (%%)
-%s {cmd}%s (%%)
+@arg1@ @arg2@ (%%)
+@arg1@ {cmd}@arg2@ (%%)
 %%%%
 # format string for "<command name> (<key>)"
 # Example "Fire (f)"

@@ -44,7 +44,7 @@ DECIMAL_POINT
 # Exclamation marks show amount of damage.
 # The %s is a placeholder for the sentence. It's done this way
 # because some languages don't simply append punctuation to the end.
-# For example, in Spanish, you would translate "%s!" as "¡%s!"
+# For example, in Spanish, you would translate "@arg1@!" as "¡@arg2@!"
 %%%%
 %s!
 

@@ -253,8 +253,8 @@ wizmode
 
 %%%%
 # <verbed> by <noun>
-%s by %s
-%s von {dat}%s
+@arg1@ by @arg2@
+@arg1@ von {dat}@arg2@
 %%%%
 %s by themself
 von sich selbst %s
@@ -342,7 +342,7 @@ Dem Gift %s erlegen
 %%%%
 # succumbed to <monster's> <poison>
 # no genitive context because English is already possessive
-Succumbed to %s %s
+Succumbed to @arg1@ @arg2@
 {dat}%2$s {null}%1$s erlegen
 %%%%
 cloud of %s
@@ -685,11 +685,11 @@ Zu Tode geknabbert durch Software-Bugs
 %%%%
 
 %%%%
-Hit by %s thrown by %s
-Getroffen von {dat}%s geworfen von {dat}%s
+Hit by @arg1@ thrown by @arg2@
+Getroffen von {dat}@arg1@ geworfen von {dat}@arg2@
 %%%%
-Shot with %s by %s
-Erschossen mit {dat}%s von {dat}%s
+Shot with @arg1@ by @arg2@
+Erschossen mit {dat}@arg1@ von {dat}@arg2@
 %%%%
 
 ########################

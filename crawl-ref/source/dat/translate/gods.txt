@@ -431,16 +431,16 @@ more time in this world
 %s doesn't like anything? This is a bug; please report it.
 
 %%%%
-%s likes it when %s.
+@arg1@ likes it when @arg2@.
 
 %%%%
-%s especially likes it when %s.
+@arg1@ especially likes it when @arg2@.
 
 %%%%
-%s dislikes it when %s.
+@arg1@ dislikes it when @arg2@.
 
 %%%%
-%s strongly dislikes it when %s.
+@arg1@ strongly dislikes it when @arg2@.
 
 %%%%
 

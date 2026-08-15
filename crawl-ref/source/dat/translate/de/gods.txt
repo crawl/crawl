@@ -513,17 +513,17 @@ mehr Zeit in dieser Welt
 %s doesn't like anything? This is a bug; please report it.
 %s mag nichts? Das ist ein Fehler. Bitte meldet ihn.
 %%%%
-%s likes it when %s.
-%s mag es, wenn du %s.
+@arg1@ likes it when @arg2@.
+@arg1@ mag es, wenn du @arg2@.
 %%%%
-%s especially likes it when %s.
-%s mag es besonders, wenn du %s.
+@arg1@ especially likes it when @arg2@.
+@arg1@ mag es besonders, wenn du @arg2@.
 %%%%
-%s dislikes it when %s.
-%s mag es nicht, wenn du %s.
+@arg1@ dislikes it when @arg2@.
+@arg1@ mag es nicht, wenn du @arg2@.
 %%%%
-%s strongly dislikes it when %s.
-%s mag es überhaupt nicht, wenn du %s.
+@arg1@ strongly dislikes it when @arg2@.
+@arg1@ mag es überhaupt nicht, wenn du @arg2@.
 %%%%
 
 # These are the conducts the gods like/dislike:
