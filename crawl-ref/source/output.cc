@@ -310,7 +310,6 @@ static void _cprintf_touchui(const char *format, ...)
     vector<string> parts;
     va_start(args, format);
     buf = vmake_stringf(format, args);
-    buf = localise(buf);
 
     switch (TOUCH_UI_STATE)
     {
@@ -390,7 +389,6 @@ static void _nowrap_eol_cprintf_touchui(const char *format, ...)
     string  buf;
     va_start(args, format);
     buf = vmake_stringf(format, args);
-    buf = localise(buf);
 
     // N.B. this should really be factored out and merged with the other switch-case above
     switch (TOUCH_UI_STATE)
