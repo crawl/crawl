@@ -9,7 +9,6 @@
 #include "localise-util.h"
 #include "pattern.h"
 #include "options.h"
-#include "regex-wrapper.h"
 #include "stringutil.h"
 
 #include <string>
@@ -18,7 +17,7 @@
 
 using namespace std;
 
-//#define debuglog(...) fprintf(stderr, "DEBUG: %s: ", __FUNCTION__); fprintf (stderr, __VA_ARGS__); fprintf(stderr, "\n");
+//#define debuglog(...) {fprintf(stderr, "DEBUG: %s: ", __FUNCTION__); fprintf (stderr, __VA_ARGS__); fprintf(stderr, "\n");}
 
 #ifndef debuglog
 #define debuglog(...) {}
@@ -43,17 +42,20 @@ void init_localisation()
     // get all translation keys which contain parameters
     vector<string> keys = getTranslatedKeysByRegex("@[^@]+@");
 
+    debuglog("%ld parameterised translation strings\n", (long)keys.size());
+
     // convert paramaterised string to regex pattern
+    text_pattern num_arg_patt("@num[^@]*@");
+    text_pattern str_arg_patt("@[^@]+@");
     for (const string& key: keys)
     {
         string pattern = key;
         // escape characters that mean something to regex
         pattern = escape_regex_specials(pattern);
-        pattern = regexp_replace(pattern, "@num[^@]*@", "([\\+|\\-]?[0-9]+)");
-        pattern = regexp_replace(pattern, "@[^@]+@", "(.*?)");
+        pattern = num_arg_patt.replace(pattern, "([\\+|\\-]?[0-9]+)");
+        pattern = str_arg_patt.replace(pattern, "(.*?)");
         pattern = "^" + pattern + "$";
         _patterns.emplace_back(make_pair(pattern, key));
-        debuglog("Stored pattern: \"%s\" -> \"%s\"", pattern.c_str(), key.c_str());
     }
     debuglog("Localisation initialised");
 }
@@ -64,7 +66,9 @@ static pair<string, string> _get_matching_pattern(const string& s)
 
     for (const pair<string, string>& elem: _patterns)
     {
-        if (regexp_match(s, elem.first))
+        // TODO: store compiled pattern
+        text_pattern pattern(elem.first);
+        if (pattern.matches(s))
         {
             if (length_excl_params(elem.second) > length_excl_params(result.second))
             result = elem;
@@ -87,11 +91,12 @@ static string _localise_param_string(const string& context, const string& s)
     debuglog("Param string: %s", match.second.c_str());
 
     vector<string> param_keys = extract_params(match.second);
-    vector<string> param_vals = regexp_capture(s, match.first);
+    text_pattern val_pattern(match.first);
+    vector<string> param_vals = val_pattern.capture(s);
 
     if (param_keys.size() != param_vals.size())
     {
-        fprintf(stderr, "ERROR: %ld keys, %ld vals\n", param_keys.size(), param_vals.size());
+        debuglog("ERROR: %ld keys, %ld vals\n", (long)param_keys.size(), (long)param_vals.size());
         return "";
     }
 
@@ -113,8 +118,8 @@ static string _localise_string(const string& context, const string& s)
         return s;
 
     // don't translate integer
-    if (regexp_match(s, "^[\\+|\\-]?[0-9]+$"))
-        return s;
+    //if (regexp_match(s, "^[\\+|\\-]?[0-9]+$"))
+    //    return s;
 
     // try simple translation first
     string result = cxlate(context, s);
