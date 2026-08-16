@@ -60,17 +60,20 @@ void init_localisation()
     debuglog("Localisation initialised");
 }
 
-static pair<text_pattern, string> _get_matching_pattern(const string& s)
+static int _get_matching_pattern_index(const string& s)
 {
-    pair<text_pattern, string> result;
+    int result = -1;
 
-    for (const pair<text_pattern, string>& elem: _patterns)
+    for (size_t i = 0; i < _patterns.size(); i++)
     {
         // TODO: store compiled pattern
-        if (elem.first.matches(s))
+        if (_patterns[i].first.matches(s))
         {
-            if (length_excl_params(elem.second) > length_excl_params(result.second))
-                result = elem;
+            if (result < 0)
+                result = (int)i;
+            else if (length_excl_params(_patterns[i].second) >
+                     length_excl_params(_patterns[result].second))
+                result = (int)i;
         }
     }
 
@@ -81,9 +84,11 @@ static pair<text_pattern, string> _get_matching_pattern(const string& s)
 static string _localise_param_string(const string& context, const string& s)
 {
     // try to find matching pattern
-    pair<text_pattern, string> match = _get_matching_pattern(s);
-    if (!match.first.valid() || match.second == "")
+    int match_idx = _get_matching_pattern_index(s);
+    if (match_idx < 0)
         return "";
+
+    const pair<text_pattern, string>& match = _patterns[match_idx];
 
     debuglog("String: %s", s.c_str());
     debuglog("Pattern: %s", match.first.c_str());
