@@ -6364,7 +6364,9 @@ int player::unadjusted_body_armour_penalty(bool archery) const
     if (!body_armour)
         return 0;
 
-    int rfactor = archery && you.wearing_ego(OBJ_ARMOUR, SPARM_ARCHERY) ? 3 : 1;
+    // Crab form can "double" the ego.
+    int rfactor = archery ? pow(3, you.wearing_ego(OBJ_ARMOUR, SPARM_ARCHERY))
+                : 1;
 
     // PARM_EVASION is always less than or equal to 0
     return max(0, -property(*body_armour, PARM_EVASION) / 10 / rfactor
