@@ -300,25 +300,30 @@ static string _pattern_replace(void *compiled_pattern, const string& text,
     regex_t *re = static_cast<regex_t *>(compiled_pattern);
     int replace_count = 0;
     string result = text;
+    int pos = 0;
 
     while (max_replacements < 0 || replace_count < max_replacements)
     {
-        if (regexec(re, result.c_str(), nmatches, matches, 0) != 0)
+        // start after the last match, in case replacement matches the pattern,
+        // which would cause an infinite loop if matching from the start every time
+        string rest = result.substr(pos);
+        if (regexec(re, rest.c_str(), nmatches, matches, 0) != 0)
             return result;
 
         // note: end is the character after the last character of the match
         int start = matches[0].rm_so;
         int end = matches[0].rm_eo;
 
-        if (start < 0 || start >= (int)result.length())
+        if (start < 0 || start >= (int)rest.length())
             break;
 
-        if (end < 0 || end > (int)result.length())
+        if (end < 0 || end > (int)rest.length())
             break;
 
-        string replacement = _handle_backreferences(result, repl, matches, nmatches);
-        result.replace(start, end - start, replacement);
+        string replacement = _handle_backreferences(rest, repl, matches, nmatches);
+        result.replace(pos + start, end - start, replacement);
 
+        pos += start + (int)replacement.length();
         replace_count++;
     }
     return result;
