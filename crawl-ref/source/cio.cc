@@ -242,7 +242,6 @@ void nowrap_eol_cprintf(const char *s, ...)
     va_list args;
     va_start(args, s);
     string buf = vmake_stringf(s, args);
-    buf = localise(buf);
     va_end(args);
 
     cprintf("%s", chop_string(buf, max(wrapcol + 1 - wherex(), 0), false).c_str());
@@ -328,7 +327,6 @@ void wrapcprintf(int wrapcol, const char *s, ...)
     va_list args;
     va_start(args, s);
     string buf = vmake_stringf(s, args);
-    buf = localise(buf);
     va_end(args);
     wrapcprint_skipping(0, wrapcol, buf);
 }
@@ -348,7 +346,6 @@ void wrapcprintf(const char *s, ...)
     va_list args;
     va_start(args, s);
     string buf = vmake_stringf(s, args);
-    buf = localise(buf);
     va_end(args);
     wrapcprint_skipping(0, cgetsize(get_cursor_region()).x, buf);
 }
