@@ -332,31 +332,38 @@ static string _pattern_replace(void *compiled_pattern, const string& text,
 static vector<string> _pattern_capture(void *compiled_pattern, const string &text)
 {
     vector<string> result;
-    regmatch_t matches[2];
+    const int nmatches = 20;
+    regmatch_t matches[nmatches];
     regex_t *re = static_cast<regex_t *>(compiled_pattern);
     int pos = 0;
 
     while (pos < (int)text.length())
     {
-        if (regexec(re, text.substr(pos).c_str(), 2, matches, 0) != 0)
+        string rest = text.substr(pos);
+        if (regexec(re, rest.c_str(), nmatches, matches, 0) != 0)
             break;
 
-        // 0th element is the overall match, 1st element is the submatch
-        int start = matches[1].rm_so;
-        int end = matches[1].rm_eo;
+        // iterate submatches
+        for (int i = 1; i < nmatches; i++)
+        {
+            // note: end is the character after the last character of the match
+            int start = matches[i].rm_so;
+            int end = matches[i].rm_eo;
 
-        if (start < 0 || end < 0)
+            if (start < 0 || start >= (int)rest.length())
+                break;
+
+            if (end < 0 || end > (int)rest.length())
+                break;
+
+            result.push_back(rest.substr(start, end - start));
+        }
+
+        // 0th element is the overall match
+        int overall_end = matches[0].rm_eo;
+        if (overall_end < 0 || overall_end >= (int)rest.length())
             break;
-
-        start += pos;
-        end += pos;
-
-        if (start > (int)text.length() - 1 || end > (int)text.length())
-            break;
-
-        result.push_back(text.substr(start, end - start));
-
-        pos += end;
+        pos += overall_end;
     }
 
     return result;
