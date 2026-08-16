@@ -193,7 +193,7 @@ static vector<string> _pattern_capture(void *compiled_pattern, const string &tex
             int start = ovector[i * 2];
             int end = ovector[i * 2 + 1];
 
-            if (start < 0 || start > length + 1)
+            if (start < 0 || start > length - 1)
                 continue;
 
             if (end < 0 || end > length)
