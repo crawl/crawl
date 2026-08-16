@@ -67,8 +67,21 @@ void init_localisation()
 
 static int _get_matching_pattern_index(const string& s)
 {
+    if (s.empty())
+        return -1;
+
     for (size_t i = 0; i < _patterns.size(); i++)
     {
+        // do some quick tests first to reduce the amount of regex
+        // (POSIX regex is slow)
+        const string& param_str = _patterns[i].second;
+        if (param_str.empty())
+            continue;
+        if (isaalpha(s[0]) && param_str[0] != s[0])
+            continue;
+        if (length_excl_params(s) < length_excl_params(param_str))
+            continue;
+
         if (_patterns[i].first.matches(s))
             return (int)i;
     }
