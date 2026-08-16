@@ -207,7 +207,6 @@ random.o \
 random-var.o \
 ranged-attack.o \
 ray.o \
-regex-wrapper.o \
 religion.o \
 scroller.o \
 shopping.o \

@@ -227,7 +227,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/random-var.cc \
     $(CRAWL_PATH)/ranged-attack.cc \
     $(CRAWL_PATH)/ray.cc \
-    $(CRAWL_PATH)/regex-wrapper.cc \
     $(CRAWL_PATH)/religion.cc \
     $(CRAWL_PATH)/scroller.cc \
     $(CRAWL_PATH)/shopping.cc \
