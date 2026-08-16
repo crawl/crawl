@@ -1513,7 +1513,8 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
 {
     static bool _doing_c_message_hook = false;
 
-    text = localise(text);
+    if (channel != MSGCH_DIAGNOSTICS)
+        text = localise(text);
 
     rng::generator rng(rng::UI);
 
