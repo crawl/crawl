@@ -62,6 +62,152 @@ static pattern_match _pattern_match_location(void *compiled_pattern,
         return pattern_match::failed(string(text));
 }
 
+static string _handle_backreferences(const string &s, const string& subst, int* ovector, int num_matches)
+{
+    string result;
+    size_t pos = 0, prev = 0;
+
+    while ((pos = subst.find('$', prev)) != string::npos)
+    {
+        // add non-matching prefix
+        if (pos > prev)
+        {
+            result += subst.substr(prev, pos - prev);
+            prev = pos;
+        }
+
+        pos++;
+
+        // $$ is an escape sequence for a literal dollar sign
+        if (pos < subst.length() && subst[pos] == '$')
+        {
+            result += '$';
+            pos++;
+            prev = pos;
+            continue;
+        }
+
+        int id = 0;
+        while (pos < subst.length() && subst[pos] >= '0' && subst[pos] <= '9')
+        {
+            id = (id * 10) + (subst[pos] - '0');
+            pos++;
+        }
+
+        bool success = false;
+        // note: num_matches includes the main match, so number of submatches is one less
+        if (id > 0 && id < num_matches)
+        {
+            int start = ovector[id*2];
+            int end = ovector[id*2 + 1];
+            if (start >= 0 && end >= 0 && start < (int)s.length() && end <= (int)s.length())
+            {
+                result += s.substr(start, end - start);
+                success = true;
+            }
+            else
+                debuglog("Bad indexes for backreference %d: %d, %d", id, start, end);
+        }
+
+        if (!success)
+            debuglog("Bad regex backreference %d in \"%s\"", id, subst.c_str());
+
+        prev = pos;
+    }
+
+    // add non-matching suffix
+    if (prev < subst.length())
+        result += subst.substr(prev);
+
+    return result;
+}
+
+static string _pattern_replace(void *compiled_pattern, const string& text,
+                               const string& repl, int max_replacements)
+{
+    string result = text;
+    int ovector[42];
+    int pos = 0;
+    int replace_count = 0;
+
+    while (max_replacements < 0 || replace_count < max_replacements)
+    {
+        int pcre_rc = pcre_exec(static_cast<pcre *>(compiled_pattern),
+                                nullptr,
+                                result.c_str(), result.length(), pos, 0,
+                                ovector, sizeof(ovector) / sizeof(*ovector));
+
+        if (pcre_rc == 0 || pcre_rc == PCRE_ERROR_NOMATCH)
+        {
+            // no matches
+            return result;
+        }
+        else if (pcre_rc < 0)
+        {
+            // error
+            return result;
+        }
+
+        int start = ovector[0];
+        int end = ovector[1];
+
+        string replacement = _handle_backreferences(result, repl, ovector, pcre_rc);
+        result.replace(start, end - start, replacement);
+        replace_count++;
+
+        pos = start + (int)replacement.length();
+        if (pos >= (int)result.length())
+            break;
+    }
+
+    return result;
+}
+
+static vector<string> _pattern_capture(void *compiled_pattern, const string &text)
+{
+    int length = (int)text.length();
+    int ovector[42];
+    vector<string> result;
+    int pos = 0;
+
+    while (pos < length) {
+        int pcre_rc = pcre_exec(static_cast<pcre *>(compiled_pattern),
+                                nullptr,
+                                text.c_str(), length, pos, 0,
+                                ovector, sizeof(ovector) / sizeof(*ovector));
+
+        if (pcre_rc == 0 || pcre_rc == PCRE_ERROR_NOMATCH)
+        {
+            // no matches
+            return result;
+        }
+        else if (pcre_rc < 0)
+        {
+            // error
+            return result;
+        }
+
+        // 0th match is the overall match, so start from 1
+        for (int i = 1; i < pcre_rc; i++)
+        {
+            int start = ovector[i * 2];
+            int end = ovector[i * 2 + 1];
+
+            if (start < 0 || start > length + 1)
+                continue;
+
+            if (end < 0 || end > length)
+                continue;
+
+            result.push_back(text.substr(start, end - start));
+        }
+
+        pos = ovector[1];
+    }
+
+    return result;
+}
+
 ////////////////////////////////////////////////////////////////////
 #else
 ////////////////////////////////////////////////////////////////////
@@ -113,6 +259,20 @@ static pattern_match _pattern_match_location(void *compiled_pattern,
         return pattern_match::succeeded(string(text), match.rm_so, match.rm_eo);
     else
         return pattern_match::failed(string(text));
+}
+
+static string _pattern_replace(void *compiled_pattern, const string& text,
+                               const string& repl, int max_replacements)
+{
+    // TODO: implement posix version
+    return text;
+}
+
+static vector<string> _pattern_capture(void *compiled_pattern, const string &text)
+{
+    vector<string> result;
+    // TODO: implement posix version
+    return result;
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -191,6 +351,23 @@ pattern_match text_pattern::match_location(const char *s, int length) const
         return _pattern_match_location(compiled_pattern, s, length);
     else
         return pattern_match::failed(string(s));
+}
+
+string text_pattern::replace(const string& s, const string& repl,
+                             int max_replacements) const
+{
+    if (valid())
+        return _pattern_replace(compiled_pattern, s, repl, max_replacements);
+    else
+        return s;
+}
+
+vector<string> text_pattern::capture(const string& s) const
+{
+    if (valid())
+        return _pattern_capture(compiled_pattern, s);
+    else
+        return vector<string>();
 }
 
 const plaintext_pattern &plaintext_pattern::operator= (const string &spattern)

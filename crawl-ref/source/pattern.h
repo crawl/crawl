@@ -111,6 +111,14 @@ public:
         return match_location(s.c_str(), s.length());
     }
 
+    // replace matches with repl
+    // repl may contain backreferences of the form $1, $2, etc.
+    string replace(const string &s, const string& repl,
+                   int max_replacements = -1) const;
+
+    // return regex capture groups
+    vector<string> capture(const string &s) const;
+
     const string &tostring() const override
     {
         return pattern;
