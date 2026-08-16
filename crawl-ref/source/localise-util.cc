@@ -21,7 +21,7 @@ string cxlate(const string &context, const string &s)
 
     // first try with context
     if (!context.empty()) {
-        result = getTranslatedString(add_context_to_string(context, s));
+        result = getTranslatedString(add_context(context, s));
         if (!result.empty())
             return result;
     }
@@ -30,12 +30,12 @@ string cxlate(const string &context, const string &s)
     return getTranslatedString(s);
 }
 
-string add_context_to_string(const string &context, const string &s)
+string add_context(const string &context, const string &s)
 {
     return "{" + context + "}" + s;
 }
 
-string strip_context_from_string(const string &s)
+string strip_context(const string &s)
 {
     if (s.empty() || s[0] != '{')
         return s;

@@ -150,6 +150,26 @@ static string _localise_string(const string& context, const string& s)
         return replace_all(s, trimmed, result);
     }
 
+    if (isaalpha(s[0]) || isadigit(s[0]))
+    {
+        if (s.substr(1, 3) == " - ")
+        {
+            // has a menu letter prefix
+            string prefix = s.substr(0, 4);
+            string rest = s.substr(4);
+            rest = _localise_string(context, rest);
+            return prefix + strip_context(rest);
+        }
+        else if (s.substr(1, 2) == ") ")
+        {
+            // also a menu letter prefix
+            string prefix = s.substr(0, 3);
+            string rest = s.substr(3);
+            rest = _localise_string(context, rest);
+            return prefix + strip_context(rest);
+        }
+    }
+
     result = _localise_param_string(context, s);
     if (!result.empty())
         return result;
@@ -170,5 +190,5 @@ string localise(const string &s)
 
     string result = _localise_string("", s);
 
-    return strip_context_from_string(result);
+    return strip_context(result);
 }
