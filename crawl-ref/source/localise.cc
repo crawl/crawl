@@ -152,7 +152,7 @@ static string _localise_string(const string& context, const string& s)
 
     if (isaalpha(s[0]) || isadigit(s[0]))
     {
-        if (s.substr(1, 3) == " - ")
+        if (s.length() >= 4 && s.substr(1, 3) == " - ")
         {
             // has a menu letter prefix
             string prefix = s.substr(0, 4);
@@ -160,7 +160,7 @@ static string _localise_string(const string& context, const string& s)
             rest = _localise_string(context, rest);
             return prefix + strip_context(rest);
         }
-        else if (s.substr(1, 2) == ") ")
+        else if (s.length() >= 3 && s.substr(1, 2) == ") ")
         {
             // also a menu letter prefix
             string prefix = s.substr(0, 3);
