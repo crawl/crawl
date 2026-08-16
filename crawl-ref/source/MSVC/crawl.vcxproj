@@ -517,7 +517,6 @@ python.exe util/gen-all.py</Command>
     <ClCompile Include="..\random.cc" />
     <ClCompile Include="..\ranged-attack.cc" />
     <ClCompile Include="..\ray.cc" />
-    <ClCompile Include="..\regex-wrapper.cc" />
     <ClCompile Include="..\religion.cc" />
     <ClCompile Include="..\rltiles\tiledef-dngn.cc" />
     <ClCompile Include="..\rltiles\tiledef-feat.cc" />
@@ -929,7 +928,6 @@ python.exe util/gen-all.py</Command>
     <ClInclude Include="..\ray.h" />
     <ClInclude Include="..\recite-eligibility.h" />
     <ClInclude Include="..\recite-type.h" />
-    <ClInclude Include="..\regex-wrapper.h" />
     <ClInclude Include="..\religion-enum.h" />
     <ClInclude Include="..\religion.h" />
     <ClInclude Include="..\rltiles\status-icon-sizes.h" />
