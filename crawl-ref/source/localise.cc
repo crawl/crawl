@@ -11,6 +11,7 @@
 #include "options.h"
 #include "stringutil.h"
 
+#include <algorithm>
 #include <string>
 #include <vector>
 //#include <pair>
@@ -41,8 +42,12 @@ void init_localisation()
 
     // get all translation keys which contain parameters
     vector<string> keys = getTranslatedKeysByRegex("@[^@]+@");
-
     debuglog("%ld parameterised translation strings\n", (long)keys.size());
+
+    // sort with longest strings first because we want to match the longest string possible
+    std::sort(keys.begin(), keys.end(), [](const string& a, const string& b) {
+        return length_excl_params(a) > length_excl_params(b);
+    });
 
     // convert paramaterised string to regex pattern
     text_pattern num_arg_patt("@num[^@]*@");
@@ -62,22 +67,13 @@ void init_localisation()
 
 static int _get_matching_pattern_index(const string& s)
 {
-    int result = -1;
-
     for (size_t i = 0; i < _patterns.size(); i++)
     {
-        // TODO: store compiled pattern
         if (_patterns[i].first.matches(s))
-        {
-            if (result < 0)
-                result = (int)i;
-            else if (length_excl_params(_patterns[i].second) >
-                     length_excl_params(_patterns[result].second))
-                result = (int)i;
-        }
+            return (int)i;
     }
 
-    return result;
+    return -1;
 }
 
 // localise parameterised string
