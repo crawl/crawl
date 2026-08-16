@@ -28,3 +28,10 @@ string escape_regex_specials(const string& s);
 
 // length of string excluding any @foo@ parameters
 size_t length_excl_params(const string &s);
+
+// is this a string representation of an integer?
+// (1 or more digits with an optional sign in front)
+bool is_integer_string(const string &s);
+
+// is this a string representation of a floating point number?
+bool is_float_string(const string &s);

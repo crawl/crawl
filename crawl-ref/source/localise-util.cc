@@ -93,3 +93,54 @@ size_t length_excl_params(const string &s)
     }
     return len;
 }
+
+bool is_integer_string(const string &s)
+{
+    if (s.empty())
+        return false;
+
+    int num_digits = 0;
+    for (size_t i = 0; i < s.length(); i++)
+    {
+        if (isadigit(s[i]))
+            num_digits++;
+        else if (i == 0 && (s[i] == '+' || s[i] == '-'))
+            continue;
+        else
+            return false;
+    }
+
+    return num_digits > 0;
+}
+
+bool is_float_string(const string &s)
+{
+    if (s.empty())
+        return false;
+
+    int num_points = 0;
+    int digits_before = 0;
+    int digits_after = 0;
+    for (size_t i = 0; i < s.length(); i++)
+    {
+        if (isadigit(s[i]))
+        {
+            if (num_points == 0)
+                digits_before++;
+            else
+                digits_after++;
+        }
+        else if (s[i] == '.')
+        {
+            num_points++;
+            if (num_points > 1)
+                return false;
+        }
+        else if (i == 0 && (s[i] == '+' || s[i] == '-'))
+            continue;
+        else
+            return false;
+    }
+
+    return digits_after > 0;
+}
