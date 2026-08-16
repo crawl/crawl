@@ -26,7 +26,7 @@ using namespace std;
 static string _localise_string(const string& context, const string& s);
 static string _localise_param_string(const string& context, const string& s);
 
-static vector<pair<string, string>> _patterns;
+static vector<pair<text_pattern, string>> _patterns;
 static bool _initialised = false;
 
 void init_localisation()
@@ -55,23 +55,22 @@ void init_localisation()
         pattern = num_arg_patt.replace(pattern, "([\\+|\\-]?[0-9]+)");
         pattern = str_arg_patt.replace(pattern, "(.*?)");
         pattern = "^" + pattern + "$";
-        _patterns.emplace_back(make_pair(pattern, key));
+        _patterns.emplace_back(make_pair(text_pattern(pattern), key));
     }
     debuglog("Localisation initialised");
 }
 
-static pair<string, string> _get_matching_pattern(const string& s)
+static pair<text_pattern, string> _get_matching_pattern(const string& s)
 {
-    pair<string, string> result;
+    pair<text_pattern, string> result;
 
-    for (const pair<string, string>& elem: _patterns)
+    for (const pair<text_pattern, string>& elem: _patterns)
     {
         // TODO: store compiled pattern
-        text_pattern pattern(elem.first);
-        if (pattern.matches(s))
+        if (elem.first.matches(s))
         {
             if (length_excl_params(elem.second) > length_excl_params(result.second))
-            result = elem;
+                result = elem;
         }
     }
 
@@ -82,8 +81,8 @@ static pair<string, string> _get_matching_pattern(const string& s)
 static string _localise_param_string(const string& context, const string& s)
 {
     // try to find matching pattern
-    pair<string, string> match = _get_matching_pattern(s);
-    if (match.first == "" || match.second == "")
+    pair<text_pattern, string> match = _get_matching_pattern(s);
+    if (!match.first.valid() || match.second == "")
         return "";
 
     debuglog("String: %s", s.c_str());
@@ -91,8 +90,7 @@ static string _localise_param_string(const string& context, const string& s)
     debuglog("Param string: %s", match.second.c_str());
 
     vector<string> param_keys = extract_params(match.second);
-    text_pattern val_pattern(match.first);
-    vector<string> param_vals = val_pattern.capture(s);
+    vector<string> param_vals = match.first.capture(s);
 
     if (param_keys.size() != param_vals.size())
     {
