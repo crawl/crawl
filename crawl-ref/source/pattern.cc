@@ -261,17 +261,99 @@ static pattern_match _pattern_match_location(void *compiled_pattern,
         return pattern_match::failed(string(text));
 }
 
+static string _handle_backreferences(const string& s, const string& subst,
+                                     const regmatch_t* matches, int num_matches)
+{
+    string result = subst;
+
+    result = replace_all(result, "$$", "LITERAL_DOLLAR_SIGN");
+
+    // iterate submatches
+    for (int i = 1; i < num_matches; i++)
+    {
+        // note: end is the character after the last character of the match
+        int start = matches[i].rm_so;
+        int end = matches[i].rm_eo;
+
+        if (start < 0 || start >= (int)s.length())
+            break;
+
+        if (end < 0 || end > (int)s.length())
+            break;
+
+        string backref_key = "$" + std::to_string(i);
+        string backref_val = s.substr(start, end - start);
+
+        result = replace_all(result, backref_key, backref_val);
+    }
+
+    result = replace_all(result, "LITERAL_DOLLAR_SIGN", "$$");
+
+    return result;
+}
+
 static string _pattern_replace(void *compiled_pattern, const string& text,
                                const string& repl, int max_replacements)
 {
-    // TODO: implement posix version
-    return text;
+    const int nmatches = 20;
+    regmatch_t matches[nmatches];
+    regex_t *re = static_cast<regex_t *>(compiled_pattern);
+    int replace_count = 0;
+    string result = text;
+
+    while (max_replacements < 0 || replace_count < max_replacements)
+    {
+        if (regexec(re, result.c_str(), nmatches, matches, 0) != 0)
+            return result;
+
+        // note: end is the character after the last character of the match
+        int start = matches[0].rm_so;
+        int end = matches[0].rm_eo;
+
+        if (start < 0 || start >= (int)result.length())
+            break;
+
+        if (end < 0 || end > (int)result.length())
+            break;
+
+        string replacement = _handle_backreferences(result, repl, matches, nmatches);
+        result.replace(start, end - start, replacement);
+
+        replace_count++;
+    }
+    return result;
 }
 
 static vector<string> _pattern_capture(void *compiled_pattern, const string &text)
 {
     vector<string> result;
-    // TODO: implement posix version
+    regmatch_t matches[2];
+    regex_t *re = static_cast<regex_t *>(compiled_pattern);
+    int pos = 0;
+
+    while (pos < (int)text.length())
+    {
+        if (regexec(re, text.substr(pos).c_str(), 2, matches, 0) != 0)
+            break;
+
+        // 0th element is the overall match, 1st element is the submatch
+        int start = matches[1].rm_so;
+        int end = matches[1].rm_eo;
+
+        if (start < 0 || end < 0)
+            break;
+
+        start += pos;
+        end += pos;
+
+        if (start > (int)text.length() - 1 || end > (int)text.length())
+            break;
+
+        result.push_back(text.substr(start, end - start));
+
+        pos += end;
+    }
+
     return result;
 }
 
