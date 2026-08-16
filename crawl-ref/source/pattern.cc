@@ -16,6 +16,51 @@
 #include "pattern.h"
 #include "stringutil.h"
 
+// Resolve any backreferences in the replacement string
+static string _resolve_backreferences(const string &s, const string& subst,
+#if defined(REGEX_PCRE)
+                                      const int* const ovector, int nmatches)
+#else
+                                      const regmatch_t* matches, int nmatches)
+#endif
+{
+    // shortcut if there are no backrefs
+    if (subst.find('$') == string::npos)
+        return subst;
+
+    string result = subst;
+
+    result = replace_all(result, "$$", "LITERAL_DOLLAR_SIGN");
+
+    // iterate submatches
+    for (int i = 1; i < nmatches; i++)
+    {
+        // note: end is the character after the last character of the match
+#if defined(REGEX_PCRE)
+        int start = ovector[i * 2];
+        int end = ovector[i * 2 + 1];
+#else
+        int start = matches[i].rm_so;
+        int end = matches[i].rm_eo;
+#endif
+
+        if (start < 0 || start >= (int)s.length())
+            break;
+
+        if (end < 0 || end > (int)s.length())
+            break;
+
+        string backref_key = "$" + std::to_string(i);
+        string backref_val = s.substr(start, end - start);
+
+        result = replace_all(result, backref_key, backref_val);
+    }
+
+    result = replace_all(result, "LITERAL_DOLLAR_SIGN", "$$");
+
+    return result;
+}
+
 #if defined(REGEX_PCRE)
 ////////////////////////////////////////////////////////////////////
 // Perl Compatible Regular Expressions
@@ -62,66 +107,6 @@ static pattern_match _pattern_match_location(void *compiled_pattern,
         return pattern_match::failed(string(text));
 }
 
-static string _handle_backreferences(const string &s, const string& subst, int* ovector, int num_matches)
-{
-    string result;
-    size_t pos = 0, prev = 0;
-
-    while ((pos = subst.find('$', prev)) != string::npos)
-    {
-        // add non-matching prefix
-        if (pos > prev)
-        {
-            result += subst.substr(prev, pos - prev);
-            prev = pos;
-        }
-
-        pos++;
-
-        // $$ is an escape sequence for a literal dollar sign
-        if (pos < subst.length() && subst[pos] == '$')
-        {
-            result += '$';
-            pos++;
-            prev = pos;
-            continue;
-        }
-
-        int id = 0;
-        while (pos < subst.length() && subst[pos] >= '0' && subst[pos] <= '9')
-        {
-            id = (id * 10) + (subst[pos] - '0');
-            pos++;
-        }
-
-        bool success = false;
-        // note: num_matches includes the main match, so number of submatches is one less
-        if (id > 0 && id < num_matches)
-        {
-            int start = ovector[id*2];
-            int end = ovector[id*2 + 1];
-            if (start >= 0 && end >= 0 && start < (int)s.length() && end <= (int)s.length())
-            {
-                result += s.substr(start, end - start);
-                success = true;
-            }
-            else
-                debuglog("Bad indexes for backreference %d: %d, %d", id, start, end);
-        }
-
-        if (!success)
-            debuglog("Bad regex backreference %d in \"%s\"", id, subst.c_str());
-
-        prev = pos;
-    }
-
-    // add non-matching suffix
-    if (prev < subst.length())
-        result += subst.substr(prev);
-
-    return result;
-}
-
 static string _pattern_replace(void *compiled_pattern, const string& text,
                                const string& repl, int max_replacements)
 {
@@ -151,7 +136,7 @@ static string _pattern_replace(void *compiled_pattern, const string& text,
         int start = ovector[0];
         int end = ovector[1];
 
-        string replacement = _handle_backreferences(result, repl, ovector, pcre_rc);
+        string replacement = _resolve_backreferences(result, repl, ovector, pcre_rc);
         result.replace(start, end - start, replacement);
         replace_count++;
 
@@ -193,7 +178,7 @@ static vector<string> _pattern_capture(void *compiled_pattern, const string &tex
             int start = ovector[i * 2];
             int end = ovector[i * 2 + 1];
 
-            if (start < 0 || start > length - 1)
+            if (start < 0 || start >= length)
                 continue;
 
             if (end < 0 || end > length)
@@ -261,37 +246,6 @@ static pattern_match _pattern_match_location(void *compiled_pattern,
         return pattern_match::failed(string(text));
 }
 
-static string _handle_backreferences(const string& s, const string& subst,
-                                     const regmatch_t* matches, int num_matches)
-{
-    string result = subst;
-
-    result = replace_all(result, "$$", "LITERAL_DOLLAR_SIGN");
-
-    // iterate submatches
-    for (int i = 1; i < num_matches; i++)
-    {
-        // note: end is the character after the last character of the match
-        int start = matches[i].rm_so;
-        int end = matches[i].rm_eo;
-
-        if (start < 0 || start >= (int)s.length())
-            break;
-
-        if (end < 0 || end > (int)s.length())
-            break;
-
-        string backref_key = "$" + std::to_string(i);
-        string backref_val = s.substr(start, end - start);
-
-        result = replace_all(result, backref_key, backref_val);
-    }
-
-    result = replace_all(result, "LITERAL_DOLLAR_SIGN", "$$");
-
-    return result;
-}
-
 static string _pattern_replace(void *compiled_pattern, const string& text,
                                const string& repl, int max_replacements)
 {
@@ -320,7 +274,7 @@ static string _pattern_replace(void *compiled_pattern, const string& text,
         if (end < 0 || end > (int)rest.length())
             break;
 
-        string replacement = _handle_backreferences(rest, repl, matches, nmatches);
+        string replacement = _resolve_backreferences(rest, repl, matches, nmatches);
         result.replace(pos + start, end - start, replacement);
 
         pos += start + (int)replacement.length();
