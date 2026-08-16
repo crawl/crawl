@@ -129,9 +129,8 @@ static string _localise_string(const string& context, const string& s)
     if (s.empty())
         return s;
 
-    // don't translate integer
-    //if (regexp_match(s, "^[\\+|\\-]?[0-9]+$"))
-    //    return s;
+    if (is_integer_string(s))
+        return s;
 
     // try simple translation first
     string result = cxlate(context, s);
