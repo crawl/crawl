@@ -24,11 +24,12 @@ using namespace std;
 #define debuglog(...) {}
 #endif
 
-static string _localise_string(const string& context, const string& s);
-static string _localise_param_string(const string& context, const string& s);
+static string _localise_string(const string& s);
+static string _localise_param_string(const string& s);
 
 static vector<pair<text_pattern, string>> _patterns;
 static bool _initialised = false;
+static string _context;
 
 void init_localisation()
 {
@@ -65,6 +66,23 @@ void init_localisation()
     debuglog("Localisation initialised");
 }
 
+// if string starts with a context, remove it and set current context to that
+static string _shift_context(const string& str)
+{
+    string result = str;
+    while (starts_with(result, "{"))
+    {
+        size_t pos = result.find('}');
+        if (pos == string::npos)
+            break;
+
+        _context = result.substr(1, pos - 1);
+        result = result.substr(pos + 1);
+    }
+
+    return result;
+}
+
 static int _get_matching_pattern_index(const string& s)
 {
     if (s.empty())
@@ -90,7 +108,7 @@ static int _get_matching_pattern_index(const string& s)
 }
 
 // localise parameterised string
-static string _localise_param_string(const string& context, const string& s)
+static string _localise_param_string(const string& s)
 {
     // try to find matching pattern
     int match_idx = _get_matching_pattern_index(s);
@@ -109,19 +127,80 @@ static string _localise_param_string(const string& context, const string& s)
         return "";
     }
 
-    // TODO: Handle embedded contexts
-
-    string result = cxlate(context, match.second);
-    for (size_t i = 0; i <param_keys.size(); i++)
+    map<string, string> params;
+    for (size_t i = 0; i < param_keys.size(); i++)
     {
-        string param_val = _localise_string("", param_vals[i]);
-        result = replace_all(result, param_keys[i], param_val);
+        params[param_keys[i]] = param_vals[i];
+    }
+
+    string format = cxlate(_context, match.second);
+    if (format.empty())
+    {
+        debuglog("No translation for: \"%s\"", match.second.c_str());
+        return "";
+    }
+    debuglog("Param string translation: \"%s\"", format.c_str());
+
+    string result;
+
+    size_t curr = 0;
+    size_t next = format.find_first_of("{@");
+
+    while (curr < format.length())
+    {
+        if (next == string::npos)
+        {
+            result += format.substr(curr);
+            break;
+        }
+        else if (next > curr)
+        {
+            result += format.substr(curr, next - curr);
+            curr = next;
+        }
+
+        if (format[next] == '{')
+        {
+            // set new context
+            size_t end = format.find('}', next + 1);
+            if (end == string::npos)
+            {
+                result += format[next];
+                curr = next + 1;
+            }
+            else
+            {
+                _context = format.substr(next + 1, end - next - 1);
+                curr = end + 1;
+            }
+        }
+        else if (format[next] == '@')
+        {
+            size_t end = format.find('@', next + 1);
+            if (end == string::npos)
+            {
+                result += format[next];
+                curr = next + 1;
+            }
+            else
+            {
+                // key including @'s
+                string key = format.substr(next, end - next + 1);
+                string saved_context = _context;
+                string val = _localise_string(params[key]);
+                if (!saved_context.empty())
+                    _context = saved_context;
+                result += val;
+                curr = end + 1;
+            }
+        }
+        next = format.find_first_of("{@", curr);
     }
 
     return result;
 }
 
-static string _localise_string(const string& context, const string& s)
+static string _localise_string(const string& s)
 {
     if (s.empty())
         return s;
@@ -135,13 +214,16 @@ static string _localise_string(const string& context, const string& s)
         return s;
 
     // try simple translation first
-    string result = cxlate(context, s);
+    string result = cxlate(_context, s);
     if (!result.empty())
+    {
+        result = _shift_context(result);
         return result;
+    }
 
     if (trimmed.length() != s.length())
     {
-        result = _localise_string(context, trimmed);
+        result = _localise_string(trimmed);
         return replace_all(s, trimmed, result);
     }
 
@@ -152,22 +234,25 @@ static string _localise_string(const string& context, const string& s)
             // has a menu letter prefix
             string prefix = s.substr(0, 4);
             string rest = s.substr(4);
-            rest = _localise_string(context, rest);
-            return prefix + strip_context(rest);
+            rest = _localise_string(rest);
+            return prefix + rest;
         }
         else if (s.length() >= 3 && s.substr(1, 2) == ") ")
         {
             // also a menu letter prefix
             string prefix = s.substr(0, 3);
             string rest = s.substr(3);
-            rest = _localise_string(context, rest);
-            return prefix + strip_context(rest);
+            rest = _localise_string(rest);
+            return prefix + rest;
         }
     }
 
-    result = _localise_param_string(context, s);
+    result = _localise_param_string(s);
     if (!result.empty())
+    {
+        result = _shift_context(result);
         return result;
+    }
 
     // failed - return the original
     debuglog("No translation found for \"%s\"", s.c_str());
@@ -200,8 +285,8 @@ string localise(const string &s)
         else
         {
             debuglog("IN:  \"%s\"", lines[i].c_str());
-            string line = _localise_string("", lines[i]);
-            line = strip_context(line);
+            _context = "";
+            string line = _localise_string(lines[i]);
             debuglog("OUT: \"%s\"", line.c_str());
             result += line;
         }
