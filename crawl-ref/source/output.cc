@@ -84,6 +84,13 @@ static string _level_description_string_hud()
     return short_name;
 }
 
+static inline string _escape_percents(const string& s)
+{
+    return replace_all(s, "%", "%%");
+}
+
+#define LOCALISE(...) _escape_percents(localise(make_stringf(__VA_ARGS__)))
+
 #ifdef USE_TILE_LOCAL
 
 static bool _low_vertical_space()
@@ -130,7 +137,8 @@ y  HPP MPP
  */
 #include <stdarg.h>
 #define CGOTOXY _cgotoxy_touchui
-#define CPRINTF _cprintf_touchui
+#define CPRINTF(...) _cprintf_touchui(LOCALISE(__VA_ARGS__).c_str())
+#define CPRINTF_NOLOC _cprintf_touchui
 #define NOWRAP_EOL_CPRINTF _nowrap_eol_cprintf_touchui
 
 enum touchui_states
@@ -409,7 +417,8 @@ static void _nowrap_eol_cprintf_touchui(const char *format, ...)
 
 #else
 #define CGOTOXY cgotoxy
-#define CPRINTF wrapcprintf
+#define CPRINTF(...) wrapcprintf(LOCALISE(__VA_ARGS__).c_str())
+#define CPRINTF_NOLOC wrapcprintf
 #define NOWRAP_EOL_CPRINTF nowrap_eol_cprintf
 #endif
 
@@ -1164,8 +1173,8 @@ static void _print_unarmed_name()
     CPRINTF("%s", slot_name.c_str());
     textcolour(get_form()->uc_colour);
     const int max_name_width = crawl_view.hudsz.x - slot_name.size();
-    CPRINTF("%s", chop_string(you.unarmed_attack_name(),
-                              max_name_width).c_str());
+    const string name = localise(you.unarmed_attack_name());
+    CPRINTF_NOLOC("%s", chop_string(name, max_name_width).c_str());
     textcolour(LIGHTGREY);
 }
 
@@ -1177,8 +1186,8 @@ static void _print_weapon_name(const item_def &weapon, int width)
     CPRINTF("%s", slot_name.c_str());
     textcolour(wielded_weapon_colour(weapon));
     const int max_name_width = width - slot_name.size();
-    const string name = weapon.name(DESC_PLAIN, true);
-    CPRINTF("%s", chop_string(name, max_name_width).c_str());
+    const string name = localise(weapon.name(DESC_PLAIN, true));
+    CPRINTF_NOLOC("%s", chop_string(name, max_name_width).c_str());
     textcolour(LIGHTGREY);
 }
 
@@ -1388,11 +1397,11 @@ static void _print_status_lights(int y)
         {
             while (i_light < lights.size() && (int)i_light < crawl_view.hudsz.x - 1)
             {
+                const int width = strwidth(localise(lights[i_light].text));
                 const bool full = i_light == lights.size() - 1
-                    && lights[i_light].text.width() < crawl_view.hudsz.x - wherex();
+                    && width < crawl_view.hudsz.x - wherex();
                 // Must do this before the print, as it uses the cursor position.
-                _record_status_light(lights[i_light],
-                                     full ? lights[i_light].text.width() : 1);
+                _record_status_light(lights[i_light], full ? width : 1);
                 if (full)
                     lights[i_light].text.display();
                 else if ((int)lights.size() > crawl_view.hudsz.x / 2)
@@ -1422,16 +1431,17 @@ static void _print_status_lights(int y)
 
 static void _draw_wizmode_flag(const char *word)
 {
+    const string text = localise(word);
     textcolour(LIGHTMAGENTA);
     // 3+ for the " **"
-    CGOTOXY(1 + crawl_view.hudsz.x - (3 + strlen(word)), 1, GOTO_STAT);
-    CPRINTF(" *%s*", word);
+    CGOTOXY(1 + crawl_view.hudsz.x - (3 + text.length()), 1, GOTO_STAT);
+    CPRINTF_NOLOC(" *%s*", text.c_str());
 }
 
 static void _redraw_title()
 {
     const unsigned int WIDTH = crawl_view.hudsz.x;
-    string title = filtered_lang(player_title());
+    string title = filtered_lang(localise(player_title()));
     title = you.your_name + (title[0] == ',' ? "" : " ") + title;
     const bool small_layout = _is_using_small_layout();
 
@@ -1453,14 +1463,15 @@ static void _redraw_title()
                                            name_len - (in_len - WIDTH) - 1);
             }
 
-            title = trimmed_name + ", " + filtered_lang(player_title(false));
+            title = trimmed_name + ", " +
+                    filtered_lang(localise(player_title(false)));
         }
     }
 
     // Line 1: Foo the Bar    *WIZARD*
     CGOTOXY(1, 1, GOTO_STAT);
     textcolour(small_layout && (you.wizard || you.explore) ? LIGHTMAGENTA : YELLOW);
-    CPRINTF("%s", chop_string(title, WIDTH).c_str());
+    CPRINTF_NOLOC("%s", chop_string(title, WIDTH).c_str());
     if (you.wizard && !small_layout)
         _draw_wizmode_flag("WIZARD");
     else if (you.suppress_wizard && !small_layout)
@@ -1934,6 +1945,7 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
             string desc;
             mons_to_string_pane(desc, desc_colour, zombified,
                                 mons, start, count);
+            desc = localise(desc);
             textcolour(desc_colour);
             if (strwidth(desc) > available && available > 1)
             {
@@ -1942,7 +1954,7 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
             }
             else
                 desc = chop_string(desc, available);
-            CPRINTF("%s", desc.c_str());
+            CPRINTF_NOLOC("%s", desc.c_str());
         }
     }
 
