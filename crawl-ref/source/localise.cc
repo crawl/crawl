@@ -42,7 +42,7 @@ void init_localisation()
 
     // get all translation keys which contain parameters
     vector<string> keys = getTranslatedKeysByRegex("@[^@]+@");
-    debuglog("%ld parameterised translation strings\n", (long)keys.size());
+    debuglog("%ld parameterised translation strings", (long)keys.size());
 
     // sort with longest strings first because we want to match the longest string possible
     std::sort(keys.begin(), keys.end(), [](const string& a, const string& b) {
@@ -98,8 +98,6 @@ static string _localise_param_string(const string& context, const string& s)
         return "";
 
     const pair<text_pattern, string>& match = _patterns[match_idx];
-
-    debuglog("String: %s", s.c_str());
     debuglog("Param string: %s", match.second.c_str());
 
     vector<string> param_keys = extract_params(match.second);
@@ -186,15 +184,28 @@ string localise(const string &s)
     if (!localisation_active())
         return s;
 
-    if (s.empty() || trimmed_string(s).empty())
+    if (s.empty())
         return s;
 
-    debuglog("IN:  \"%s\"", s.c_str());
+    string result;
 
-    string result = _localise_string("", s);
+    // localise lines individually
+    auto lines = split_string("\n", s, false, true);
+    for (size_t i = 0; i < lines.size(); i++)
+    {
+        if (i > 0)
+            result += "\n";
+        if (lines[i].empty() || trimmed_string(lines[i]).empty())
+            result += lines[i];
+        else
+        {
+            debuglog("IN:  \"%s\"", lines[i].c_str());
+            string line = _localise_string("", lines[i]);
+            line = strip_context(line);
+            debuglog("OUT: \"%s\"", line.c_str());
+            result += line;
+        }
+    }
 
-    result = strip_context(result);
-
-    debuglog("OUT: \"%s\"", result.c_str());
     return result;
 }
