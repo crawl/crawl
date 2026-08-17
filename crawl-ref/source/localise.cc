@@ -129,7 +129,12 @@ static string _localise_string(const string& context, const string& s)
     if (s.empty())
         return s;
 
-    if (is_integer_string(s))
+    // check if all whitespace
+    string trimmed = trimmed_string(s);
+    if (trimmed.empty())
+        return s;
+
+    if (is_integer_string(trimmed))
         return s;
 
     // try simple translation first
@@ -137,15 +142,8 @@ static string _localise_string(const string& context, const string& s)
     if (!result.empty())
         return result;
 
-    // check for leading/trailing whitespace
-    string trimmed = trimmed_string(s);
     if (trimmed.length() != s.length())
     {
-        if (trimmed.empty())
-        {
-            // all whitespace
-            return s;
-        }
         result = _localise_string(context, trimmed);
         return replace_all(s, trimmed, result);
     }
