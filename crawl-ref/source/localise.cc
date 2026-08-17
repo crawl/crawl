@@ -24,7 +24,7 @@ using namespace std;
 #define debuglog(...) {}
 #endif
 
-static string _localise_string(const string& s);
+static string _localise_string(const string& s, bool fallback_en = true);
 static string _localise_param_string(const string& s);
 
 static vector<pair<text_pattern, string>> _patterns;
@@ -59,8 +59,10 @@ void init_localisation()
         // escape characters that mean something to regex
         pattern = escape_regex_specials(pattern);
         pattern = num_arg_patt.replace(pattern, "([\\+|\\-]?[0-9]+)");
-        pattern = str_arg_patt.replace(pattern, "(.*?)");
+        pattern = str_arg_patt.replace(pattern, "(.*)");
         pattern = "^" + pattern + "$";
+        if (contains(key, "shivers"))
+            debuglog("\"%s\" -> \"%s\"", key.c_str(), pattern.c_str());
         _patterns.emplace_back(make_pair(text_pattern(pattern), key));
     }
     debuglog("Localisation initialised");
@@ -95,7 +97,7 @@ static int _get_matching_pattern_index(const string& s)
         const string& param_str = _patterns[i].second;
         if (param_str.empty())
             continue;
-        if (isaalpha(s[0]) && param_str[0] != s[0])
+        if (isaalpha(param_str[0]) && param_str[0] != s[0])
             continue;
         if (length_excl_params(s) < length_excl_params(param_str))
             continue;
@@ -105,6 +107,22 @@ static int _get_matching_pattern_index(const string& s)
     }
 
     return -1;
+}
+
+static string _localise_param_value(const string& old_val)
+{
+    string new_val = _localise_string(old_val, false);
+
+    // param val might be capitalised due to being at start of sentence
+    if (old_val.length() > 1 && isaupper(old_val[0]))
+    {
+        string old_val2 = lowercase_first(old_val);
+        string new_val2 = _localise_string(old_val2, false);
+        if (new_val.empty() && !new_val2.empty())
+            return new_val2;
+    }
+
+    return new_val.empty() ? old_val : new_val;
 }
 
 // localise parameterised string
@@ -187,7 +205,9 @@ static string _localise_param_string(const string& s)
                 // key including @'s
                 string key = format.substr(next, end - next + 1);
                 string saved_context = _context;
-                string val = _localise_string(params[key]);
+                string val = _localise_param_value(params[key]);
+                if (isaupper(key[1]))
+                    val = uppercase_first(val);
                 if (!saved_context.empty())
                     _context = saved_context;
                 result += val;
@@ -200,7 +220,7 @@ static string _localise_param_string(const string& s)
     return result;
 }
 
-static string _localise_string(const string& s)
+static string _localise_string(const string& s, bool fallback_en)
 {
     if (s.empty())
         return s;
@@ -254,14 +274,13 @@ static string _localise_string(const string& s)
         return result;
     }
 
-    // failed - return the original
     debuglog("No translation found for \"%s\"", s.c_str());
-    return s;
+    return fallback_en ? s : "";
 }
 
 bool localisation_active()
 {
-    return _initialised;
+    return Options.language != lang_t::EN && _initialised;
 }
 
 string localise(const string &s)
