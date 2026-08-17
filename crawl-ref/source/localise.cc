@@ -100,7 +100,6 @@ static string _localise_param_string(const string& context, const string& s)
     const pair<text_pattern, string>& match = _patterns[match_idx];
 
     debuglog("String: %s", s.c_str());
-    debuglog("Pattern: %s", match.first.c_str());
     debuglog("Param string: %s", match.second.c_str());
 
     vector<string> param_keys = extract_params(match.second);
@@ -173,6 +172,7 @@ static string _localise_string(const string& context, const string& s)
         return result;
 
     // failed - return the original
+    debuglog("No translation found for \"%s\"", s.c_str());
     return s;
 }
 
@@ -186,7 +186,15 @@ string localise(const string &s)
     if (!localisation_active())
         return s;
 
+    if (s.empty() || trimmed_string(s).empty())
+        return s;
+
+    debuglog("IN:  \"%s\"", s.c_str());
+
     string result = _localise_string("", s);
 
-    return strip_context(result);
+    result = strip_context(result);
+
+    debuglog("OUT: \"%s\"", result.c_str());
+    return result;
 }
