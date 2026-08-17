@@ -5,6 +5,7 @@
 
 #include "AppHdr.h"
 #include "database.h"
+#include "english.h"
 #include "localise.h"
 #include "localise-util.h"
 #include "pattern.h"
@@ -109,20 +110,57 @@ static int _get_matching_pattern_index(const string& s)
     return -1;
 }
 
-static string _localise_param_value(const string& old_val)
+static string _localise_param(map<string, string>& params, const string& key)
 {
+    string low_key = lowercase_first(key);
+    string old_key;
+
+    if (params.count(low_key))
+        old_key = low_key;
+    else if (params.count("the_" + low_key))
+        old_key = "the_" + low_key;
+    else if (params.count("a_" + low_key))
+        old_key = "a_" + low_key;
+    else if (starts_with(low_key, "the_") && params.count(low_key.substr(4)))
+        old_key = low_key.substr(4);
+    else if (starts_with(low_key, "a_") && params.count(low_key.substr(2)))
+        old_key = low_key.substr(2);
+
+    if (old_key.empty())
+        return "";
+
+    string old_val = params[old_key];
+    if (starts_with(low_key, "the_") && !starts_with(old_key, "the_"))
+    {
+        text_pattern patt("^(the|a|an) ");
+        old_val = patt.replace(old_val, "");
+        old_val = "the " + old_val;
+    }
+    else if (starts_with(low_key, "a_") && !starts_with(old_key, "a_"))
+    {
+        text_pattern patt("^(the|a|an) ");
+        old_val = patt.replace(old_val, "");
+        old_val = article_a(old_val);
+    }
+    else if (!starts_with(low_key, "the_") && !starts_with(low_key, "a_"))
+    {
+        if (starts_with(old_key, "the_") || starts_with(old_key, "a_"))
+        {
+            text_pattern patt("^(the|a|an) ");
+            old_val = patt.replace(old_val, "");
+        }
+    }
+
     string new_val = _localise_string(old_val, false);
 
     // param val might be capitalised due to being at start of sentence
-    if (old_val.length() > 1 && isaupper(old_val[0]))
-    {
-        string old_val2 = lowercase_first(old_val);
-        string new_val2 = _localise_string(old_val2, false);
-        if (new_val.empty() && !new_val2.empty())
-            return new_val2;
-    }
+    if (new_val.empty() && old_val.length() > 1 && isaupper(old_val[0]))
+        new_val = _localise_string(lowercase_first(old_val), false);
 
-    return new_val.empty() ? old_val : new_val;
+    if (new_val.empty())
+        return old_val;
+
+    return isaupper(key[0]) ? uppercase_first(new_val) : new_val;
 }
 
 // localise parameterised string
@@ -148,7 +186,8 @@ static string _localise_param_string(const string& s)
     map<string, string> params;
     for (size_t i = 0; i < param_keys.size(); i++)
     {
-        params[param_keys[i]] = param_vals[i];
+        // store all params with lowercase keys
+        params[lowercase_first(param_keys[i])] = param_vals[i];
     }
 
     string format = cxlate(_context, match.second);
@@ -204,7 +243,7 @@ static string _localise_param_string(const string& s)
             {
                 string key = format.substr(next + 1, end - next - 1);
                 string saved_context = _context;
-                string val = _localise_param_value(params[key]);
+                string val = _localise_param(params, key);
                 if (isaupper(key[0]))
                     val = uppercase_first(val);
                 if (!saved_context.empty())
