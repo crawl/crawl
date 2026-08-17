@@ -365,6 +365,16 @@ string replace_all_of(string s, const string &tofind, const string &replacement)
     return s;
 }
 
+// Replace first occurrence of <tofind> with <replacement>
+string replace_first(const string &s, const string &tofind, const string &replacement)
+{
+    string result = s;
+    size_t pos = s.find(tofind);
+    if (pos != string::npos)
+        result.replace(pos, tofind.length(), replacement);
+    return result;
+}
+
 // Capitalise phrases encased in @CAPS@ ... @NOCAPS@. If @NOCAPS@ is
 // missing, change the rest of the line to uppercase.
 string maybe_capitalise_substring(string s)

@@ -43,9 +43,10 @@ public:
     operator bool() const { return _db != 0; }
     operator DBM*() const { return _db; }
 
- private:
     // is this a db without English values?
     bool is_translate_only_db() const { return string(_db_name) == "translate"; }
+
+ private:
     vector<string> _get_file_list() const;
     bool _needs_update() const;
     void _regenerate_db();
@@ -583,9 +584,7 @@ static void _parse_text_db(LineInput &inf, DBM *db, bool value_translates_key)
         else
         {
             trim_string_right(line);
-            value += line;
-            if (!value_translates_key)
-                value += "\n";
+            value += line + "\n";
         }
     }
 
@@ -798,6 +797,9 @@ static string _query_database(TextDB &db, string key, bool canonicalise_key,
         return "";
 
     string str((const char *)result.dptr, result.dsize);
+
+    if (db.is_translate_only_db())
+        return str;
 
     // <foo> is an alias to key foo
     if (str[0] == '<' && str[str.size() - 2] == '>'

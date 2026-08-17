@@ -252,23 +252,16 @@ GENERATE:adj-em
 %%%%
 GENERATE:acc
 
-# Only masculine is declined in accusative.
-# Masculine and neuter can be difficult to distinguish. Since masculine nouns
-# are more numerous, we assume masculine unless we see proof of neuter.
-
-# Mark any unmarked masculine instances of ein/dein
-/^(ein|dein) (?!(\{adj-es\}|[^A-ZÄÖÜ ]+es ))/{m}$1 /
-
 # determiners
-/^(\{m\})?der /den /
-/^\{m\}ein /einen /
-/^\{m\}dein /deinen /
+/^\{m\}der /{m}den /
+/^\{m\}ein /{m}einen /
+/^\{m\}dein /{m}deinen /
 
 # masc adjectives
-/^den [^A-ZÄÖÜ]+/e /en /
-/^den [^A-ZÄÖÜ]+/\{adj-e\}/{adj-en}/
-/^[^A-ZÄÖÜ ][^A-ZÄÖÜ]+/er /en /
-/^[^A-ZÄÖÜ ][^A-ZÄÖÜ]+/\{adj-er\}/{adj-en}/
+/^\{m\}den [^A-ZÄÖÜ]+/e /en /
+/^\{m\}den [^A-ZÄÖÜ]+/\{adj-e\}/{adj-en}/
+/^\{m\}[^A-ZÄÖÜ]+/er /en /
+/^\{m\}[^A-ZÄÖÜ]+/\{adj-er\}/{adj-en}/
 
 # weak nouns
 /Akolyth\b/$1en/
@@ -279,11 +272,10 @@ GENERATE:acc
 /[A-ZÄÖÜ][^ ,]+/(Affe|[^Ww]affe)$/$1n/
 
 # fix special cases
-/Blork der Ork/Blork den Ork/
+/ der Ork/ den Ork/
 /er? Yiuf/en Yiuf/
-/er Drakonier/en Drakonier/
 # make sure it's not plural
-/^den [^,]+ Drakonier/e Drakonier/en Drakonier/
+/^\{m\}.*/er Drakonier/en Drakonier/
 
 %%%%
 

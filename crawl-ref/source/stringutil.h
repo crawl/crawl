@@ -51,6 +51,8 @@ string replace_all_func(string s, const string &find, string (*repl_func)());
 
 string replace_all_of(string s, const string &tofind, const string &replacement);
 
+string replace_first(const string &s, const string &tofind, const string &replacement);
+
 string replace_keys(const string &text, const map<string, string>& replacements);
 
 string maybe_capitalise_substring(string s);
