@@ -405,8 +405,9 @@ static void _nowrap_eol_cprintf_touchui(const char *format, ...)
             // don't print these
             break;
         case TOUCH_V_TITL2:
-            cprintf("%s%s", species::get_abbrev(you.species),
-                            get_job_abbrev(you.char_class));
+            buf = VLOCALISE("%s%s", species::get_abbrev(you.species),
+                                    get_job_abbrev(you.char_class));
+            cprintf("%s", buf.c_str());
             TOUCH_UI_STATE = TOUCH_S_NULL; // suppress whatever else it was going to print
             break;
         default:
@@ -1487,9 +1488,9 @@ static void _redraw_title()
     textcolour(YELLOW);
     CGOTOXY(1, 2, GOTO_STAT);
     string species = player_species_name();
-    NOWRAP_EOL_CPRINTF("%s", species.c_str());
     if (you_worship(GOD_NO_GOD))
     {
+        NOWRAP_EOL_CPRINTF("%s", species.c_str());
         if (you.char_class == JOB_MONK
             && !you.has_mutation(MUT_FORLORN) // XX is this necessary?
             && !had_gods())
@@ -1510,17 +1511,16 @@ static void _redraw_title()
     }
     else
     {
-        string god;
+        string god = you_worship(GOD_JIYVA) ? god_name_jiyva(true)
+                                            : god_name(you.religion);
         if (small_layout)
         {
+            NOWRAP_EOL_CPRINTF("%s", species.c_str());
             CGOTOXY(2, 2, GOTO_STAT);
-            god = "";
+            NOWRAP_EOL_CPRINTF("%s", god.c_str());
         }
         else
-            god = " of ";
-        god += you_worship(GOD_JIYVA) ? god_name_jiyva(true)
-                                      : god_name(you.religion);
-        NOWRAP_EOL_CPRINTF("%s", god.c_str());
+            NOWRAP_EOL_CPRINTF("%s of %s", species.c_str(), god.c_str());
         formatted_string piety = formatted_string::parse_string(_god_asterisks(true));
         textcolour(_god_status_colour(YELLOW));
         const unsigned int textwidth = (unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1);
