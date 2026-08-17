@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 #include "database.h"
 #include "localise-util.h"
+#include "pattern.h"
 #include "stringutil.h"
 
 // low-level translate function
@@ -17,17 +18,31 @@ string xlate(const string &s)
 // low-level translate function with context
 string cxlate(const string &context, const string &s)
 {
+    if (context.empty())
+        return getTranslatedString(s);
+
     string result;
 
     // first try with context
-    if (!context.empty()) {
-        result = getTranslatedString(add_context(context, s));
-        if (!result.empty())
-            return result;
+    result = getTranslatedString(add_context(context, s));
+    if (!result.empty())
+        return result;
+
+    // get translation for default context
+    result = getTranslatedString(s);
+
+    if (!result.empty())
+    {
+        // look for rules to convert to required context
+        string rules = getTranslatedString(string("GENERATE:") + context);
+        if (!rules.empty())
+        {
+            // convert default string to context using rules
+            result = apply_regex_rules(rules, result);
+        }
     }
 
-    // fall back to the default translation
-    return getTranslatedString(s);
+    return result;
 }
 
 string add_context(const string &context, const string &s)
@@ -143,4 +158,59 @@ bool is_float_string(const string &s)
     }
 
     return digits_after > 0;
+}
+
+string apply_regex_rule(const string& rule, const string& s)
+{
+    // need to accept empties because replacement could be empty.
+    // However, this means "useless" tokens at start and end.
+    vector<string> tokens = split_string("/", rule, false, true);
+
+    try {
+        string condition, pattern, replacement;
+        if (tokens.size() == 5)
+        {
+            condition = tokens[1];
+            pattern = tokens[2];
+            replacement = tokens[3];
+        }
+        else if (tokens.size() == 4)
+        {
+            pattern = tokens[1];
+            replacement = tokens[2];
+        }
+        else
+        {
+            // bad rule
+            return s;
+        }
+
+        string result;
+        text_pattern patt(pattern);
+        if (condition.empty())
+            result = patt.replace(s, replacement);
+        else
+        {
+            text_pattern cond(condition);
+            pattern_match match = cond.match_location(s);
+            if (!match)
+                return s;
+
+            string replaced = patt.replace(match.matched_text(), replacement);
+            result = replace_first(s, match.matched_text(), replaced);
+        }
+        return result;
+    }
+    catch (exception& e)
+    {
+        return s;
+    }
+}
+
+string apply_regex_rules(const string& rules_str, string s)
+{
+    vector<string> rules = split_string("\n", rules_str, true, false);
+    for (string rule: rules)
+        s = apply_regex_rule(rule, s);
+    return s;
 }
