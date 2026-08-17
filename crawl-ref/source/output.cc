@@ -84,12 +84,12 @@ static string _level_description_string_hud()
     return short_name;
 }
 
-static inline string _escape_percents(const string& s)
+static inline string _escape_pcnts(const string& s)
 {
     return replace_all(s, "%", "%%");
 }
 
-#define LOCALISE(...) _escape_percents(localise(make_stringf(__VA_ARGS__)))
+#define VLOCALISE(...) localise(make_stringf(__VA_ARGS__))
 
 #ifdef USE_TILE_LOCAL
 
@@ -137,7 +137,7 @@ y  HPP MPP
  */
 #include <stdarg.h>
 #define CGOTOXY _cgotoxy_touchui
-#define CPRINTF(...) _cprintf_touchui(LOCALISE(__VA_ARGS__).c_str())
+#define CPRINTF(...) _cprintf_touchui(_escape_pcnts(VLOCALISE(__VA_ARGS__)).c_str())
 #define CPRINTF_NOLOC _cprintf_touchui
 #define NOWRAP_EOL_CPRINTF _nowrap_eol_cprintf_touchui
 
@@ -417,7 +417,7 @@ static void _nowrap_eol_cprintf_touchui(const char *format, ...)
 
 #else
 #define CGOTOXY cgotoxy
-#define CPRINTF(...) wrapcprintf(LOCALISE(__VA_ARGS__).c_str())
+#define CPRINTF(...) wrapcprintf(_escape_pcnts(VLOCALISE(__VA_ARGS__)).c_str())
 #define CPRINTF_NOLOC wrapcprintf
 #define NOWRAP_EOL_CPRINTF nowrap_eol_cprintf
 #endif
