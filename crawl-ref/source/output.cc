@@ -357,20 +357,22 @@ static void _cprintf_touchui(const char *format, ...)
             cprintf("%2s", buf.c_str());
             break;
         case TOUCH_T_XL:
-            cprintf("XL Next");
+            cprintf(localise("XL Next").c_str());
             break;
         case TOUCH_T_PLACE:
-            cprintf("Place");
+            cprintf(localise("Place").c_str());
             break;
         case TOUCH_V_PLACE:
             parts = split_string(":", _level_description_string_hud());
+            for (size_t i = 0; i < parts.size(); i++)
+                parts[i] = localise(parts[i]);
             if (parts.size() == 1)
                 cprintf("%-9s", parts[0].substr(0,9).c_str());
             else
                 cprintf("%s:%s", parts[0].substr(0,8-parts[1].size()).c_str(), parts[1].c_str());
             break;
         case TOUCH_T_NOISE:
-            cprintf("Noise");
+            cprintf(localise("Noise").c_str());
             break;
         case TOUCH_T_TIME:
             buf = buf.substr(0, buf.size()-1);
@@ -735,7 +737,7 @@ static void _print_stats_equip(int x, int y)
     for (int i = SLOT_FIRST_STANDARD; i < NUM_EQUIP_SLOTS; ++i)
         total_slots += you.equipment.num_slots[i];
 
-    cprintf(total_slots > 8 ? "Eq: " : "Equip: ");
+    cprintf(localise(total_slots > 8 ? "Eq: " : "Equip: ").c_str());
     textcolour(LIGHTGREY);
     for (equipment_slot slot : slot_order)
     {
@@ -1669,7 +1671,7 @@ void print_stats_level()
         CGOTOXY(26, ypos, GOTO_STAT);
     textcolour(HUD_VALUE_COLOUR);
 #ifdef DEBUG_DIAGNOSTICS
-    CPRINTF("(%d) ", env.absdepth0 + 1);
+    CPRINTF_NOLOC("(%d) ", env.absdepth0 + 1);
 #endif
     CPRINTF("%s", _level_description_string_hud().c_str());
     clear_to_end_of_line();
