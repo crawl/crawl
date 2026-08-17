@@ -202,11 +202,10 @@ static string _localise_param_string(const string& s)
             }
             else
             {
-                // key including @'s
-                string key = format.substr(next, end - next + 1);
+                string key = format.substr(next + 1, end - next - 1);
                 string saved_context = _context;
                 string val = _localise_param_value(params[key]);
-                if (isaupper(key[1]))
+                if (isaupper(key[0]))
                     val = uppercase_first(val);
                 if (!saved_context.empty())
                     _context = saved_context;

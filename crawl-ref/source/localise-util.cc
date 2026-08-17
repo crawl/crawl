@@ -72,7 +72,7 @@ vector<string> extract_params(const string& s)
         size_t end = s.find('@', start + 1);
         if (end == string::npos)
             break;
-        results.push_back(s.substr(start, end - start + 1));
+        results.push_back(s.substr(start + 1, end - start - 1));
         start = s.find('@', end + 1);
     }
 
