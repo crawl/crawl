@@ -15357,8 +15357,8 @@ Du kannst dort kein Ziel sehen!
 @arg@ twitches for a moment.
 @arg@ zuckt für einen Moment.
 %%%%
-@arg@ dances into the air!
-@arg@ tanzt in die Luft!
+@The_weapon@ dances into the air!
+@The_weapon@ tanzt in die Luft!
 %%%%
 @arg@ booms: How dare you animate that foul thing!
 @arg@ dröhnt: Wie kannst du es wagen, dieses widerliche Ding zu animieren!
@@ -18583,8 +18583,8 @@ Einige Monster tauschen die Plätze.
 @arg1@ reforms as @arg2@.
 @arg1@ wird zu {dat}@arg2@.
 %%%%
-@arg1@ @arg2@ dances into the air!
-@arg1@ @arg2@ tanzt in die Luft!
+@The_monster@'s @weapon@ dances into the air!
+@The_weapon@ {gen}@the_monster@ tanzt in die Luft!
 %%%%
 Your body is suffused with distortional energy.
 Dein Körper wird von verzerrender Energie durchdrungen.

@@ -21,7 +21,7 @@ TEST_CASE( "Localise", "[single-file]" )
     {
         CHECK( localise("You kill the rat!") == "Du tötest die Ratte!" );
         CHECK( localise("You kill the orc!") == "Du tötest den Ork!" );
-        CHECK( localise("The orc shivers with cold") == "Der Ork zittert vor Kälte" );
+        CHECK( localise("The broad axe dances into the air!") == "Die Breitaxt tanzt in die Luft!" );
     }
 
     databaseSystemShutdown();
