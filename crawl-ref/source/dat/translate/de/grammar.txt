@@ -45,7 +45,7 @@
 %%%%
 PREGENERATE:0
 
-SELECT_BY_KEY:/^the (?!@arg@)/
+SELECT_BY_KEY:/^the [^@]/
 
 # English
 KEY:/^the /the @arg@/
