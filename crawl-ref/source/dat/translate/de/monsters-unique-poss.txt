@@ -237,7 +237,7 @@ Blork's
 von Blork
 %%%%
 the Royal Jelly's
-des Gelée Royale
+{n}des Gelée Royale
 %%%%
 the Serpent of Hell's
 {f}der Höllenschlange

@@ -112,7 +112,8 @@ static void _do_pregeneration()
         for (const string& orig_key: keys)
         {
             string key = orig_key;
-            string value = _translate(key);
+            string orig_value = _translate(key);
+            string value = orig_value;
             for (string rule: rules)
             {
                 if (starts_with(rule, "KEY:"))
@@ -125,9 +126,10 @@ static void _do_pregeneration()
             }
 
             // don't overwrite an existing translation
-            if (key != orig_key && _translate(key) == "")
-                _pregenerated[key] = value;
+            if (key == orig_key || _translate(key) != "")
+                continue;
 
+            _pregenerated[key] = value;
         }
     }
     debuglog("%ld pregenerated translation strings", (long)_pregenerated.size());
@@ -165,8 +167,8 @@ void init_localisation()
         pattern = num_arg_patt.replace(pattern, "([\\+|\\-]?[0-9]+)");
         pattern = str_arg_patt.replace(pattern, "(.*)");
         pattern = "^" + pattern + "$";
-        if (contains(key, "shivers"))
-            debuglog("\"%s\" -> \"%s\"", key.c_str(), pattern.c_str());
+        if (contains(key, "Royal"))
+            debuglog("\"%s\" -> \"%s\" -> \"%s\"", pattern.c_str(), key.c_str(), _translate(key).c_str());
         _patterns.emplace_back(make_pair(text_pattern(pattern), key));
     }
     debuglog("Localisation initialised");
