@@ -480,27 +480,12 @@ static string _localise_string(const string& s, bool fallback_en)
         return replace_all(s, trimmed, result);
     }
 
-    if (isaalpha(s[0]) || isadigit(s[0]))
-    {
-        if (s.length() >= 4 && s.substr(1, 3) == " - ")
-        {
-            // has a menu letter prefix
-            string prefix = s.substr(0, 4);
-            string rest = s.substr(4);
-            rest = _localise_string(rest);
-            return prefix + rest;
-        }
-        else if (s.length() >= 3 && s.substr(1, 2) == ") ")
-        {
-            // also a menu letter prefix
-            string prefix = s.substr(0, 3);
-            string rest = s.substr(3);
-            rest = _localise_string(rest);
-            return prefix + rest;
-        }
-    }
+    string prefix, rest;
+    separate_menu_letter_prefix(s, prefix, rest);
+    if (!prefix.empty())
+        return prefix + _localise_string(rest);
 
-    string annotation, rest;
+    string annotation;
     separate_prefix_annotation(s, annotation, rest);
     if (!annotation.empty())
         return _localise_annotation(annotation) + _localise_string(rest);

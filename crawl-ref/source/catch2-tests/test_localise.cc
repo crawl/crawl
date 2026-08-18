@@ -23,6 +23,12 @@ TEST_CASE( "Localise", "[single-file]" )
         CHECK( localise("Natasha (D:3)") == "Natascha (K:3)" );
     }
 
+    SECTION("Items")
+    {
+        CHECK( localise("a short sword") == "ein Kurzschwert" );
+        CHECK( localise("m - 2 potions of might") == "m - 2 Tränke der Macht" );
+    }
+
     SECTION("Parameterised messages")
     {
         CHECK( localise("You kill the rat!") == "Du tötest die Ratte!" );

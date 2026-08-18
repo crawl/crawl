@@ -152,7 +152,30 @@ string maybe_lowercase_first(const string& s)
     return s;
 }
 
-void separate_prefix_annotation(const string&s, string& annotation, string& rest)
+void separate_menu_letter_prefix(const string& s, string& prefix, string& rest)
+{
+    prefix = "";
+    rest = s;
+
+    if (s.length() < 3)
+        return;
+
+    if (isaalpha(s[0]) || isadigit(s[0]))
+    {
+        if (s.length() >= 4 && s.substr(1, 3) == " - ")
+        {
+            prefix = s.substr(0, 4);
+            rest = s.substr(4);
+        }
+        else if (s.length() >= 3 && s.substr(1, 2) == ") ")
+        {
+            prefix = s.substr(0, 3);
+            rest = s.substr(3);
+        }
+    }
+}
+
+void separate_prefix_annotation(const string& s, string& annotation, string& rest)
 {
     annotation = "";
     rest = s;
@@ -172,7 +195,7 @@ void separate_prefix_annotation(const string&s, string& annotation, string& rest
     }
 }
 
-void separate_postfix_annotation(const string&s, string& annotation, string& rest)
+void separate_postfix_annotation(const string& s, string& annotation, string& rest)
 {
     annotation = "";
     rest = s;
