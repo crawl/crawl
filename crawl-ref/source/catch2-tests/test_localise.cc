@@ -25,11 +25,15 @@ TEST_CASE( "Localise", "[single-file]" )
         CHECK( localise("2 bats") == "2 Fledermäuse" );
 
         CHECK( localise("the orc") == "der Ork" );
-        //CHECK( localise("an orc") == "ein Ork" );
+        CHECK( localise("an orc") == "ein Ork" );
         CHECK( localise("orc") == "Ork" );
 
         CHECK( localise("Natasha") == "Natascha" );
         CHECK( localise("Natasha (D:3)") == "Natascha (K:3)" );
+
+        CHECK( localise("the charmed orc") == "der verzauberte Ork" );
+        CHECK( localise("a spectral orc") == "ein spektraler Ork" );
+        CHECK( localise("neutral orc") == "neutraler Ork" );
     }
 
     SECTION("Items")
