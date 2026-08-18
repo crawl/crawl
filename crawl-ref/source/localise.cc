@@ -242,10 +242,10 @@ static int _get_matching_pattern_index(const string& s)
         const string& param_str = _patterns[i].second;
         if (param_str.empty())
             continue;
-        if (isaalpha(param_str[0]) && param_str[0] != s[0])
+        if (param_str[0] != '@' && param_str[0] != s[0])
             continue;
-        size_t idx = param_str.length() - 1;
-        if (isaalpha(param_str[idx]) && param_str[idx] != s[idx])
+        size_t last = param_str.length() - 1;
+        if (param_str[last] != '@' && param_str[last] != s[s.length() - 1])
             continue;
         if (s.length() < length_excl_params(param_str))
             continue;
@@ -303,11 +303,14 @@ static string _localise_param(map<string, string>& params, const string& key)
         }
     }
 
-    string new_val = _localise_string(old_val, false);
+    string new_val;
 
     // old val might be capitalised due to being at start of sentence
-    if (new_val.empty() && starts_with_uppercase(old_val))
+    if (starts_with_uppercase(old_val))
         new_val = _localise_string(lowercase_first(old_val), false);
+
+    if (new_val.empty())
+        new_val = _localise_string(old_val, false);
 
     if (new_val.empty())
         new_val = old_val;
