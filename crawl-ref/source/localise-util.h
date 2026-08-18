@@ -40,6 +40,9 @@ bool starts_with_uppercase(const string& s);
 // make first letter lowercase if string starts with a detrminer
 string maybe_lowercase_first(const string& s);
 
+void separate_prefix_annotation(const string&s, string& annotation, string& rest);
+void separate_postfix_annotation(const string&s, string& annotation, string& rest);
+
 // Apply a regex rule to a string.
 //
 // Rules can have two forms:

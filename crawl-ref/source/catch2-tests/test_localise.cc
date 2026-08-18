@@ -17,7 +17,13 @@ TEST_CASE( "Localise", "[single-file]" )
     databaseSystemInit();
     init_localisation();
 
-    SECTION("Sentence")
+    SECTION("Monsters")
+    {
+        CHECK( localise("Natasha") == "Natascha" );
+        CHECK( localise("Natasha (D:3)") == "Natascha (K:3)" );
+    }
+
+    SECTION("Parameterised messages")
     {
         CHECK( localise("You kill the rat!") == "Du tötest die Ratte!" );
         CHECK( localise("You kill the orc!") == "Du tötest den Ork!" );

@@ -477,6 +477,11 @@ bool contains(const string &text, const string &searchfor)
     return text.find(searchfor) != string::npos;
 }
 
+bool contains(const string &text, char c)
+{
+    return text.find(c) != string::npos;
+}
+
 // also used with macros
 string &trim_string(string &str)
 {

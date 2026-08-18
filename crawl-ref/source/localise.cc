@@ -16,7 +16,6 @@
 #include <map>
 #include <string>
 #include <vector>
-//#include <pair>
 
 using namespace std;
 
@@ -25,6 +24,9 @@ using namespace std;
 #ifndef debuglog
 #define debuglog(...) {}
 #endif
+
+static string _translate(const string &s);
+static string _ctx_translate(const string &context, const string &s);
 
 static string _localise_string(const string& s, bool fallback_en = true);
 static string _localise_parameterised_string(const string& s);
@@ -37,6 +39,26 @@ static vector<pair<text_pattern, string>> _patterns;
 
 static bool _initialised = false;
 static string _context;
+
+static vector<string> get_pregenerated_keys_by_regex(const string& re)
+{
+    vector<string> keys;
+    text_pattern pattern(re);
+    for (const auto& entry: _pregenerated)
+    {
+        if (pattern.matches(entry.first))
+            keys.push_back(entry.first);
+    }
+    return keys;
+}
+
+static vector<string> get_all_keys_by_regex(const string& re)
+{
+    vector<string> keys = getTranslatedKeysByRegex(re);
+    vector<string> keys2 = get_pregenerated_keys_by_regex(re);
+    keys.insert(keys.end(), keys2.begin(), keys2.end());
+    return keys;
+}
 
 // do pre-generation for translated strings
 static void _do_pregeneration()
@@ -83,14 +105,14 @@ static void _do_pregeneration()
 
         vector<string> keys;
         if (!key_select_regex.empty())
-            keys = getTranslatedKeysByRegex(key_select_regex);
+            keys = get_all_keys_by_regex(key_select_regex);
         //else if (!value_select_regex.empty())
         //    keys = getTranslatedBodiesByRegex(value_select_regex);
 
         for (const string& orig_key: keys)
         {
             string key = orig_key;
-            string value = getTranslatedString(key);
+            string value = _translate(key);
             for (string rule: rules)
             {
                 if (starts_with(rule, "KEY:"))
@@ -102,28 +124,13 @@ static void _do_pregeneration()
                     value = apply_regex_rule(rule, value);
             }
 
-            if (key == orig_key)
-                continue;
-
-            // don't overwrite an exiting translation
-            if (getTranslatedString(key) == "" && !_pregenerated.count(key))
+            // don't overwrite an existing translation
+            if (key != orig_key && _translate(key) == "")
                 _pregenerated[key] = value;
 
         }
     }
     debuglog("%ld pregenerated translation strings", (long)_pregenerated.size());
-}
-
-static vector<string> get_pregenerated_keys_by_regex(const string& re)
-{
-    vector<string> keys;
-    text_pattern pattern(re);
-    for (const auto& entry: _pregenerated)
-    {
-        if (pattern.matches(entry.first))
-            keys.push_back(entry.first);
-    }
-    return keys;
 }
 
 void init_localisation()
@@ -139,9 +146,7 @@ void init_localisation()
     _do_pregeneration();
 
     // get all translation keys which contain parameters
-    vector<string> keys = getTranslatedKeysByRegex("@[^@]+@");
-    vector<string> keys2 = get_pregenerated_keys_by_regex("@[^@]+@");
-    keys.insert(keys.end(), keys2.begin(), keys2.end());
+    vector<string> keys = get_all_keys_by_regex("@[^@]+@");
     debuglog("%ld parameterised translation strings", (long)keys.size());
 
     // sort with longest strings first because we want to match the longest string possible
@@ -406,6 +411,48 @@ static string _localise_parameterised_string(const string& s)
     return result;
 }
 
+static string _localise_annotation(const string& s)
+{
+    if (s.empty())
+        return s;
+
+    string trimmed = trimmed_string(s);
+    if (trimmed.length() != s.length())
+    {
+        string result = _localise_annotation(trimmed);
+        return replace_all(s, trimmed, result);
+    }
+
+    size_t last = s.length() - 1;
+    if (contains("([{", s[0]) && contains(")]}", s[last]))
+        return s[0] + _localise_annotation(s.substr(1, s.length() - 2)) + s[last];
+
+    if (contains(s, ','))
+    {
+        string result;
+        vector<string> tokens = split_string(",", s, false, true);
+        for (size_t i = 0; i < tokens.size(); i++)
+        {
+            if (i > 0)
+                result += ",";
+            result += _localise_annotation(tokens[i]);
+        }
+
+        return result;
+    }
+
+    string result;
+    vector<string> tokens = split_string(" ", s, false, true);
+    for (size_t i = 0; i < tokens.size(); i++)
+    {
+        if (i > 0)
+            result += " ";
+        result += _localise_string(tokens[i]);
+    }
+
+    return result;
+}
+
 static string _localise_string(const string& s, bool fallback_en)
 {
     if (s.empty())
@@ -452,6 +499,15 @@ static string _localise_string(const string& s, bool fallback_en)
             return prefix + rest;
         }
     }
+
+    string annotation, rest;
+    separate_prefix_annotation(s, annotation, rest);
+    if (!annotation.empty())
+        return _localise_annotation(annotation) + _localise_string(rest);
+
+    separate_postfix_annotation(s, annotation, rest);
+    if (!annotation.empty())
+        return _localise_string(rest) + _localise_annotation(annotation);
 
     result = _localise_parameterised_string(s);
     if (!result.empty())

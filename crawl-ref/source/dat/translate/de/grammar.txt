@@ -23,9 +23,9 @@
 # German-specific notes:
 #  - We want to decline only up to the first noun. If there are subsequent nouns,
 #    they will be in their own case, and should be left alone. For example:
-#    "der {adj-e}@arg@Ring der Schatten" - don't change the part after Ring
-#    "ein {adj-er}@arg@Ring magischer Kraft" - ditto
-#    "ein {adj-es}@arg1@Paar {adj-e}@arg2@Handschuhe" - don't change the part after Paar
+#    "der {adj-e}@adj@Ring der Schatten" - don't change the part after Ring
+#    "ein {adj-er}@adj@Ring magischer Kraft" - ditto
+#    "ein {adj-es}@adj@Paar {adj-e}@adj@Handschuhe" - don't change the part after Paar
 #  - The default form (null context) for nouns is nominative
 #  - The default form (null context) for adjectives is the -e form
 #
@@ -48,17 +48,17 @@ PREGENERATE:0
 SELECT_BY_KEY:/^the [^@]/
 
 # English
-KEY:/^the /the @arg@/
+KEY:/^the /the @adj@/
 # "pair of boots/gloves" (but not quick blades) needs a second adjective placeholder
-KEY:/pair of (?!quick blades)/pair of @arg@/
+KEY:/pair of (?!quick blades)/pair of @adj2@/
 
 # German
 # nominative singular
-/^((\{m\})?der|(\{f\})?die|(\{n\})?das) /$1 {adj-e}@arg@/
+/^((\{m\})?der|(\{f\})?die|(\{n\})?das) /$1 {adj-e}@adj@/
 # plural and genitive
-/^(\{pl\}die|\{f\}der|\{n\}des|\{m\}des|des) /$1 {adj-en}@arg@/
+/^(\{pl\}die|\{f\}der|\{n\}des|\{m\}des|des) /$1 {adj-en}@adj@/
 # "pair of boots/gloves" (but not quick blades) needs a second adjective placeholder
-/Paar (?!Schnellklingen)/Paar {adj-e}@arg@/
+/Paar (?!Schnellklingen)/Paar {adj-e}@adj2@/
 %%%%
 
 #############
@@ -134,7 +134,7 @@ KEY:/^(a|an) /your /
 %%%%
 PREGENERATE:4
 
-SELECT_BY_KEY:/^the (@arg@)?@name@'s/
+SELECT_BY_KEY:/^the (@adj@)?@name@'s/
 
 KEY:/^the //
 %%%%
@@ -163,11 +163,11 @@ KEY:/^(a|an) //
 # generate counted plural with adjective placeholder from counted plural without
 PREGENERATE:6
 
-SELECT_BY_KEY:/^@num@ (?!@arg@)/
+SELECT_BY_KEY:/^@num@ [^@]/
 
-KEY:/^@num1@ /@num2@ @arg@/
+KEY:/^@num1@ /@num2@ @adj@/
 
-/^(\{pl\})?@num1@ /{pl}@num2@ {adj-e}@arg@/
+/^(\{pl\})?@num1@ /{pl}@num2@ {adj-e}@adj@/
 %%%%
 
 #############
