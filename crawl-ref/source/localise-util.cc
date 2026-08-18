@@ -152,6 +152,49 @@ string maybe_lowercase_first(const string& s)
     return s;
 }
 
+void separate_prefix_annotation(const string&s, string& annotation, string& rest)
+{
+    annotation = "";
+    rest = s;
+    if (s.length() < 3)
+        return;
+
+    size_t pos = string::npos;
+    if (s[0] == '(')
+        pos = s.find(')');
+    else if (s[0] == '[')
+        pos = s.find(']');
+
+    if (pos != string::npos)
+    {
+        annotation = s.substr(0, pos);
+        rest = s.substr(pos);
+    }
+}
+
+void separate_postfix_annotation(const string&s, string& annotation, string& rest)
+{
+    annotation = "";
+    rest = s;
+    if (s.length() < 3)
+        return;
+
+    size_t last = s.length() - 1;
+    size_t pos = string::npos;
+    if (s[last] == ')')
+        pos = s.rfind('(');
+    else if (s[last] == ']')
+        pos = s.rfind('[');
+    else if (s[last] == '}')
+        pos = s.rfind('{');
+
+    if (pos != string::npos)
+    {
+        annotation = s.substr(pos);
+        rest = s.substr(0, pos);
+    }
+}
+
 string apply_regex_rule(const string& rule, const string& s)
 {
     // need to accept empties because replacement could be empty.

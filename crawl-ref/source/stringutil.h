@@ -60,6 +60,7 @@ string maybe_pick_random_substring(string s);
 
 int count_occurrences(const string &text, const string &searchfor);
 bool contains(const string &text, const string &searchfor);
+bool contains(const string &text, char c);
 
 string &trim_string(string &str);
 string &trim_string_right(string &str);
