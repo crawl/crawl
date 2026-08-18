@@ -124,6 +124,34 @@ bool is_float_string(const string &s)
     return digits_after > 0;
 }
 
+static text_pattern _determiner_pattern("^(the|a|an|some|your|his|her|its|their)[ _]", true);
+
+bool has_determiner(const string& s)
+{
+    return _determiner_pattern.matches(s);
+}
+
+string strip_determiner(const string& s)
+{
+    return _determiner_pattern.replace(s, "");
+}
+
+bool starts_with_uppercase(const string& s)
+{
+    return !s.empty() && isaupper(s[0]);
+}
+
+string maybe_lowercase_first(const string& s)
+{
+    if (starts_with_uppercase(s))
+    {
+        if (has_determiner(s) || starts_with(s, "Something"))
+            return lowercase_first(s);
+    }
+
+    return s;
+}
+
 string apply_regex_rule(const string& rule, const string& s)
 {
     // need to accept empties because replacement could be empty.
