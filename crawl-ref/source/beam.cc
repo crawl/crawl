@@ -2556,10 +2556,15 @@ void bolt::affect_endpoint()
     // Not using big_cloud so that the area affected is more predictable to the player.
     if (origin_spell == SPELL_RUST_BREATH)
     {
+        explosion_map exp_map;
+        exp_map.init(INT_MAX);
+        determine_affected_cells(exp_map, coord_def(), 0, 2, true, true);
+        const coord_def centre(9,9);
+
         int to_place = ench_power;
         for (distance_iterator di(pos(), true, false, 2); di && to_place > 0; ++di)
         {
-            if (cell_see_cell(*di, agent()->pos(), LOS_NO_TRANS))
+            if (exp_map(*di - pos() + centre) < INT_MAX)
             {
                 place_cloud(CLOUD_RUST, *di, 5 + ench_power * 2 / 3 + random2(2), agent());
                 to_place--;
