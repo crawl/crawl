@@ -29,6 +29,17 @@ bool is_integer_string(const string &s);
 // is this a string representation of a floating point number?
 bool is_float_string(const string &s);
 
+// Is string prefixed with a determiner (e.g. the, a, your, etc.)?
+bool has_determiner(const string& s);
+
+// Strip determiner from string
+string strip_determiner(const string& s);
+
+bool starts_with_uppercase(const string& s);
+
+// make first letter lowercase if string starts with a detrminer
+string maybe_lowercase_first(const string& s);
+
 // Apply a regex rule to a string.
 //
 // Rules can have two forms:
