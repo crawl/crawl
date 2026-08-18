@@ -503,6 +503,14 @@ string trimmed_string(string s)
     return s;
 }
 
+string trim_quotes(const string& s)
+{
+    if (s.length() > 2 && s[0] == '"' && s[s.length() -1 ] == '"')
+        return s.substr(1, s.length() - 2);
+    else
+        return s;
+}
+
 static void add_segment(vector<string> &segs, string s, bool trim,
                         bool accept_empty)
 {

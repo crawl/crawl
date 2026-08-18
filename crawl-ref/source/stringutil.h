@@ -66,6 +66,8 @@ string &trim_string(string &str);
 string &trim_string_right(string &str);
 string trimmed_string(string s);
 
+string trim_quotes(const string& s);
+
 /**
  * Find the enumerator e between begin and end that satisfies pred(e) and
  * whose name, as given by namefunc(e), has the earliest occurrence of the

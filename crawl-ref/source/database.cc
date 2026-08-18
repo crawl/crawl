@@ -43,8 +43,8 @@ public:
     operator bool() const { return _db != 0; }
     operator DBM*() const { return _db; }
 
-    // is this a db without English values?
-    bool is_translate_only_db() const { return string(_db_name) == "translate"; }
+    // is this a db where the value is a translation of the key?
+    bool value_translates_key() const { return string(_db_name) == "translate"; }
 
  private:
     vector<string> _get_file_list() const;
@@ -227,7 +227,7 @@ void TextDB::init()
         translation->init();
     }
 
-    if (is_translate_only_db() && !_parent)
+    if (value_translates_key() && !_parent)
     {
         // Do not load the English version
         return;
@@ -363,7 +363,7 @@ void TextDB::_regenerate_db()
         {
             snprintf(buf, sizeof(buf), ":%" PRId64, (int64_t)mtime);
             ts += buf;
-            _store_text_db(full_input_path, _db, is_translate_only_db());
+            _store_text_db(full_input_path, _db, value_translates_key());
         }
     }
     _add_entry(_db, "TIMESTAMP", ts);
@@ -577,14 +577,25 @@ static void _parse_text_db(LineInput &inf, DBM *db, bool value_translates_key)
         {
             key = line;
             trim_string(key);
-            // If the key is the English string to translate, don't mess with it
-            if (!value_translates_key)
+            if (value_translates_key)
+                key = trim_quotes(key);
+            else
                 lowercase(key);
         }
         else
         {
-            trim_string_right(line);
-            value += line + "\n";
+            if (value_translates_key)
+            {
+                if (!value.empty())
+                    value += "\n";
+                // quotes can be used to preserve whitespace
+                value += trim_quotes(trimmed_string(line));
+            }
+            else
+            {
+                trim_string_right(line);
+                value += line + "\n";
+            }
         }
     }
 
@@ -798,7 +809,7 @@ static string _query_database(TextDB &db, string key, bool canonicalise_key,
 
     string str((const char *)result.dptr, result.dsize);
 
-    if (db.is_translate_only_db())
+    if (db.value_translates_key())
         return str;
 
     // <foo> is an alias to key foo
@@ -994,8 +1005,7 @@ string getTranslatedString(const string &original)
     if (Options.language == lang_t::EN)
         return original;
 
-    string result = _query_database(TranslateDB, original, false, false);
-    return trim_string_right(result);
+    return _query_database(TranslateDB, original, false, false);
 }
 
 vector<string> getTranslatedKeysByRegex(const string &regex)
