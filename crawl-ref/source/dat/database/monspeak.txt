@@ -2389,6 +2389,10 @@ w:2
 w:2
 # The Lathe of Heaven
 @The_monster@ says, "What sane person could live in this world and not be crazy?"
+
+w:2
+# Harry Chapin, "Corey's Coming"
+@The_monster@ says, "Reality is only just a word."
 %%%%
 _crazy_yiuf_speech_verbs_
 
