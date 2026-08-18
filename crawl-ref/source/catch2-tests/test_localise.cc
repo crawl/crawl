@@ -19,6 +19,15 @@ TEST_CASE( "Localise", "[single-file]" )
 
     SECTION("Monsters")
     {
+        CHECK( localise("the bat") == "die Fledermaus" );
+        CHECK( localise("a bat") == "eine Fledermaus" );
+        CHECK( localise("bat") == "Fledermaus" );
+        CHECK( localise("2 bats") == "2 Fledermäuse" );
+
+        CHECK( localise("the orc") == "der Ork" );
+        //CHECK( localise("an orc") == "ein Ork" );
+        CHECK( localise("orc") == "Ork" );
+
         CHECK( localise("Natasha") == "Natascha" );
         CHECK( localise("Natasha (D:3)") == "Natascha (K:3)" );
     }
