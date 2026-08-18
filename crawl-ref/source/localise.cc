@@ -239,7 +239,10 @@ static int _get_matching_pattern_index(const string& s)
             continue;
         if (isaalpha(param_str[0]) && param_str[0] != s[0])
             continue;
-        if (length_excl_params(s) < length_excl_params(param_str))
+        size_t idx = param_str.length() - 1;
+        if (isaalpha(param_str[idx]) && param_str[idx] != s[idx])
+            continue;
+        if (s.length() < length_excl_params(param_str))
             continue;
 
         if (_patterns[i].first.matches(s))
