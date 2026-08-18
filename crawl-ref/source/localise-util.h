@@ -11,13 +11,6 @@
 using std::string;
 using std::vector;
 
-
-// low-level translate function
-string xlate(const string& s);
-
-// low-level translate function with context
-string cxlate(const string& context, const string &s);
-
 string add_context(const string &context, const string &s);
 string strip_context(const string &s);
 

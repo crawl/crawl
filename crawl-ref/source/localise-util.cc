@@ -9,42 +9,6 @@
 #include "pattern.h"
 #include "stringutil.h"
 
-// low-level translate function
-string xlate(const string &s)
-{
-    return getTranslatedString(s);
-}
-
-// low-level translate function with context
-string cxlate(const string &context, const string &s)
-{
-    if (context.empty())
-        return getTranslatedString(s);
-
-    string result;
-
-    // first try with context
-    result = getTranslatedString(add_context(context, s));
-    if (!result.empty())
-        return result;
-
-    // get translation for default context
-    result = getTranslatedString(s);
-
-    if (!result.empty())
-    {
-        // look for rules to convert to required context
-        string rules = getTranslatedString(string("GENERATE:") + context);
-        if (!rules.empty())
-        {
-            // convert default string to context using rules
-            result = apply_regex_rules(rules, result);
-        }
-    }
-
-    return result;
-}
-
 string add_context(const string &context, const string &s)
 {
     return "{" + context + "}" + s;
