@@ -69,8 +69,8 @@ PREGENERATE:1
 SELECT_BY_KEY:/^the .*[^']{2}$/
 
 # transform (English) key
-KEY:/^the (?=one-)/a /
-KEY:/^the (?=[aeiouAEIOU])/an /
+KEY:/^the (one-)/a $1/
+KEY:/^the ([aeiouAEIOU])/an $1/
 KEY:/^the /a /
 
 # articles
@@ -84,7 +84,7 @@ KEY:/^the /a /
 /^\{m\}ein [^A-ZÄÖÜ]+/e\b/er/
 
 # fix some special cases
-/e (?=(Drakonier|Yiuf))/er /
+/e (Drakonier|Yiuf)/er $1/
 
 # neuter adjectives
 /^\{n\}ein [^A-ZÄÖÜ]+/e\b/es/
@@ -101,8 +101,8 @@ PREGENERATE:2
 SELECT_BY_KEY:/^the .*('s|')$/
 
 # transform (English) key
-KEY:/^the (?=one-)/a /
-KEY:/^the (?=[aeiouAEIOU])/an /
+KEY:/^the (one-)/a $1/
+KEY:/^the ([aeiouAEIOU])/an $1/
 KEY:/^the /a /
 
 # articles
@@ -234,16 +234,16 @@ KEY:/^\{adj-e\}/{adj-em}/
 #################################
 %%%%
 GENERATE:adj-er
-/e(?=( |$))/er/
+/e\b/er/
 %%%%
 GENERATE:adj-es
-/e(?=( |$))/es/
+/e\b/es/
 %%%%
 GENERATE:adj-en
-/e(?=( |$))/en/
+/e\b/en/
 %%%%
 GENERATE:adj-em
-/e(?=( |$))/em/
+/e\b/em/
 %%%%
 
 #################################
