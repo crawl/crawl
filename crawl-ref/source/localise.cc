@@ -180,6 +180,21 @@ static string _translate(const string &s)
     if (result.empty() && _pregenerated.count(s))
         result = _pregenerated[s];
 
+    // the presence of an adjective can change "a" to "an" or vice versa
+    if (result.empty() && (starts_with(s, "a ") || starts_with(s, "an ")))
+    {
+        string alternative;
+        if (starts_with(s, "a "))
+            alternative = "an" + s.substr(1);
+        else
+            alternative = "a" + s.substr(2);
+
+        result = getTranslatedString(alternative);
+
+        if (result.empty() && _pregenerated.count(alternative))
+            result = _pregenerated[alternative];
+    }
+
     return result;
 }
 
