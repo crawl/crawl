@@ -69,6 +69,42 @@ void init_localisation()
     debuglog("Localisation initialised");
 }
 
+// low-level translate function
+static string _translate(const string &s)
+{
+    return getTranslatedString(s);
+}
+
+// low-level translate function with context
+static string _ctx_translate(const string &context, const string &s)
+{
+    if (context.empty())
+        return _translate(s);
+
+    string result;
+
+    // first try with context
+    result = _translate(add_context(context, s));
+    if (!result.empty())
+        return result;
+
+    // get translation for default context
+    result = _translate(s);
+
+    if (!result.empty())
+    {
+        // look for rules to convert to required context
+        string rules = getTranslatedString(string("GENERATE:") + context);
+        if (!rules.empty())
+        {
+            // convert default string to context using rules
+            result = apply_regex_rules(rules, result);
+        }
+    }
+
+    return result;
+}
+
 // if string starts with a context, remove it and set current context to that
 static string _shift_context(const string& str)
 {
@@ -190,7 +226,7 @@ static string _localise_param_string(const string& s)
         params[lowercase_first(param_keys[i])] = param_vals[i];
     }
 
-    string format = cxlate(_context, match.second);
+    string format = _ctx_translate(_context, match.second);
     if (format.empty())
     {
         debuglog("No translation for: \"%s\"", match.second.c_str());
@@ -272,7 +308,7 @@ static string _localise_string(const string& s, bool fallback_en)
         return s;
 
     // try simple translation first
-    string result = cxlate(_context, s);
+    string result = _ctx_translate(_context, s);
     if (!result.empty())
     {
         result = _shift_context(result);
