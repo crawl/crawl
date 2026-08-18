@@ -1272,7 +1272,8 @@ void bolt::do_fire()
             && flavour != BEAM_DIGGING)
         {
             // If wall monster then don't bounce or explode, it's handled later
-            if (mon_at && !wall_monster_hit)
+            // Rush breath only places clouds, and so cannot affect monsters in walls.
+            if (mon_at && !wall_monster_hit && origin_spell != SPELL_RUST_BREATH)
                 wall_monster_hit = true;
             else if (is_bouncy(feat))
             {
@@ -7117,7 +7118,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
             // Also affect *other* wall monsters around the area, as long
             // as caster still has LOS to them (i.e. they're not on the *other*
             // side of the wall) which the later recursion loop will check
-            && !monster_at(loc))
+            && !(monster_at(loc) && origin_spell != SPELL_RUST_BREATH))
         {
             return;
         }
