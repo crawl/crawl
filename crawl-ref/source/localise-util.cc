@@ -9,6 +9,12 @@
 #include "pattern.h"
 #include "stringutil.h"
 
+//#define debuglog(...) {fprintf(stderr, "DEBUG: %s: ", __FUNCTION__); fprintf (stderr, __VA_ARGS__); fprintf(stderr, "\n");}
+
+#ifndef debuglog
+#define debuglog(...) {}
+#endif
+
 string add_context(const string &context, const string &s)
 {
     return "{" + context + "}" + s;
@@ -254,8 +260,12 @@ string apply_regex_rule(const string& rule, const string& s)
             if (!match)
                 return s;
 
-            string replaced = patt.replace(match.matched_text(), replacement);
-            result = replace_first(s, match.matched_text(), replaced);
+            string matched_text = match.matched_text();
+            if (matched_text.empty())
+                return s;
+
+            string replaced = patt.replace(matched_text, replacement);
+            result = replace_first(s, matched_text, replaced);
         }
         return result;
     }

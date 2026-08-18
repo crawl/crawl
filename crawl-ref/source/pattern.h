@@ -20,9 +20,13 @@ public:
 
     string annotate_string(const string &color) const;
 
-    const string &matched_text() const
+    const string matched_text() const
     {
-        return text;
+        // note: [start, end) is a half-open range
+        if (start >= 0 && end <= (int)text.length() && end > start)
+            return text.substr(start, end - start);
+        else
+            return "";
     }
 
 private:

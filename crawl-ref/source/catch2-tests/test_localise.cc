@@ -27,13 +27,19 @@ TEST_CASE( "Localise", "[single-file]" )
         CHECK( localise("the orc") == "der Ork" );
         CHECK( localise("an orc") == "ein Ork" );
         CHECK( localise("orc") == "Ork" );
+        CHECK( localise("10 orcs") == "10 Orks" );
 
         CHECK( localise("Natasha") == "Natascha" );
         CHECK( localise("Natasha (D:3)") == "Natascha (K:3)" );
 
+        // with adjectives
         CHECK( localise("the charmed orc") == "der verzauberte Ork" );
         CHECK( localise("a spectral orc") == "ein spektraler Ork" );
         CHECK( localise("neutral orc") == "neutraler Ork" );
+        CHECK( localise("the helpless Natasha") == "die hilflose Natascha" );
+        CHECK( localise("helpless Natasha") == "hilflose Natascha" );
+        CHECK( localise("the helpless Royal Jelly") == "das hilflose Gelée Royale" );
+        CHECK( localise("helpless Royal Jelly") == "hilfloses Gelée Royale" );
     }
 
     SECTION("Items")
