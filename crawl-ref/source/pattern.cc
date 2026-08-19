@@ -33,6 +33,7 @@ static string _resolve_backreferences(const string &s, const string& subst,
     result = replace_all(result, "$$", "LITERAL_DOLLAR_SIGN");
 
     // iterate submatches
+    vector<string> backrefs;
     for (int i = 1; i < nmatches; i++)
     {
         // note: end is the character after the last character of the match
@@ -50,9 +51,15 @@ static string _resolve_backreferences(const string &s, const string& subst,
         if (end < 0 || end > (int)s.length())
             break;
 
-        string backref_key = "$" + std::to_string(i);
-        string backref_val = s.substr(start, end - start);
+        backrefs.push_back(s.substr(start, end - start));
+    }
 
+    // replace in reverse order in case there are more than 9
+    // ("$1" would match on "$10" if going forwards)
+    for (int i = backrefs.size(); i > 0; i--)
+    {
+        string backref_key = "$" + std::to_string(i);
+        string backref_val = backrefs[i - 1];
         result = replace_all(result, backref_key, backref_val);
     }
 
