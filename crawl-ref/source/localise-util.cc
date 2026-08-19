@@ -260,12 +260,15 @@ string apply_regex_rule(const string& rule, const string& s)
             if (!match)
                 return s;
 
-            string matched_text = match.matched_text();
-            if (matched_text.empty())
+            int start = match.start_pos();
+            int end = match.end_pos();
+            if (start < 0 || end > (int)s.length() || end <= start)
                 return s;
 
+            string matched_text = s.substr(start, end - start);
             string replaced = patt.replace(matched_text, replacement);
-            result = replace_first(s, matched_text, replaced);
+            result = s;
+            result.replace(start, end - start, replaced);
         }
         return result;
     }
