@@ -2063,7 +2063,6 @@ static string _spell_fail_change_description(const item_def &item,
                 { return a.second > b.second;});
 
 
-    // vector<string> entries;
     for (size_t i = 0; i < spell_sort.size(); ++i)
     {
         int index = spell_sort[i].first;
