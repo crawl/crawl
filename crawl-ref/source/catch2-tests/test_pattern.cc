@@ -18,7 +18,10 @@ TEST_CASE( "Pattern matches", "[single-file]" ) {
 TEST_CASE( "Matched text", "[single-file]" ) {
     text_pattern pattern1(":[0-9]+");
     pattern_match match = pattern1.match_location("Lair:5");
-    CHECK( match.matched_text() == ":5");
+    CHECK( match.matched_text() == ":5" );
+    CHECK( match.start_pos() == 4 );
+    // note: half-open range
+    CHECK( match.end_pos() == 6 );
 }
 
 TEST_CASE( "Pattern replace", "[single-file]" ) {
