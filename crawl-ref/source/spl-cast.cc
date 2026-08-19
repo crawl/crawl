@@ -1268,19 +1268,19 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_ICEBLAST:
     case SPELL_FASTROOT:
     case SPELL_WARP_SPACE:
-        return make_unique<targeter_beam>(&you, range, spell_to_zap(spell), pow,
-                                          1, 1);
+        return make_unique<targeter_beam>(&you, range, spell_to_zap(spell),
+                                          spell, pow, 1, 1);
     case SPELL_HURL_DAMNATION:
-        return make_unique<targeter_beam>(&you, range, ZAP_HURL_DAMNATION, pow,
-                                          1, 1);
+        return make_unique<targeter_beam>(&you, range, ZAP_HURL_DAMNATION,
+                                          spell, pow, 1, 1);
     case SPELL_HURL_TORCHLIGHT:
-        return make_unique<targeter_beam>(&you, range, ZAP_HURL_TORCHLIGHT, pow,
-                                          1, 1);
+        return make_unique<targeter_beam>(&you, range, ZAP_HURL_TORCHLIGHT,
+                                          spell, pow, 1, 1);
     case SPELL_MEPHITIC_CLOUD:
-        return make_unique<targeter_beam>(&you, range, ZAP_MEPHITIC, pow,
+        return make_unique<targeter_beam>(&you, range, ZAP_MEPHITIC, spell, pow,
                                           pow >= 100 ? 1 : 0, 1);
     case SPELL_RUST_BREATH:
-        return make_unique<targeter_beam>(&you, 4, ZAP_RUST_BREATH, pow,
+        return make_unique<targeter_beam>(&you, 4, ZAP_RUST_BREATH, spell, pow,
                                           pow >= 25 ? 2 : 1, 2);
     case SPELL_FIRE_STORM:
         return make_unique<targeter_smite>(&you, range, 2, pow > 76 ? 3 : 2);
@@ -1370,8 +1370,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_POISONOUS_VAPOURS:
         return make_unique<targeter_poisonous_vapours>(&you, range);
     case SPELL_MERCURY_ARROW:
-        return make_unique<targeter_explosive_beam>(&you, ZAP_MERCURY_ARROW, pow,
-                                                    range, true, false);
+        return make_unique<targeter_explosive_beam>(&you, ZAP_MERCURY_ARROW,
+                                                    spell, pow, range, true,
+                                                    false);
     case SPELL_GRAVE_CLAW:
         return make_unique<targeter_smite>(&you, range);
 
@@ -1496,20 +1497,22 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_PERMAFROST_ERUPTION:
         return make_unique<targeter_permafrost>(you);
     case SPELL_PETRIFY:
-        return make_unique<targeter_chain>(&you, range, ZAP_PETRIFY);
+        return make_unique<targeter_chain>(&you, range, ZAP_PETRIFY, spell);
     case SPELL_RIMEBLIGHT:
-        return make_unique<targeter_chain>(&you, range, ZAP_RIMEBLIGHT);
+        return make_unique<targeter_chain>(&you, range, ZAP_RIMEBLIGHT, spell);
     case SPELL_COMBUSTION_BREATH:
-        return make_unique<targeter_explosive_beam>(&you, ZAP_COMBUSTION_BREATH, pow, range);
+        return make_unique<targeter_explosive_beam>(&you, ZAP_COMBUSTION_BREATH,
+                                                    spell, pow, range);
     case SPELL_NOXIOUS_BREATH:
         // Note the threshold where it becomes possible to make clouds off the main beam
         return make_unique<targeter_explosive_beam>(&you, ZAP_NOXIOUS_BREATH,
-                                                    pow, range, false, pow > 10);
+                                                    spell, pow, range, false,
+                                                    pow > 10);
     case SPELL_GALVANIC_BREATH:
         return make_unique<targeter_galvanic>(&you, pow, range);
     case SPELL_NULLIFYING_BREATH:
-        return make_unique<targeter_beam>(&you, range, ZAP_NULLIFYING_BREATH, pow,
-                                          2, 2);
+        return make_unique<targeter_beam>(&you, range, ZAP_NULLIFYING_BREATH,
+                                          spell, pow, 2, 2);
     case SPELL_GELLS_GAVOTTE:
         return make_unique<targeter_gavotte>(&you);
 
@@ -1555,7 +1558,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         && spell_to_zap(spell) != NUM_ZAPS)
     {
         return make_unique<targeter_beam>(&you, range, spell_to_zap(spell),
-                                          pow, 0, 0);
+                                          spell, pow, 0, 0);
     }
 
     // selfench is used mainly for monster AI, so it is a bit over-applied in

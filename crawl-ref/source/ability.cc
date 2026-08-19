@@ -2791,6 +2791,7 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     {
         return make_unique<targeter_beam>(&you, ability_range(ability),
                                           ability_to_zap(ability),
+                                          SPELL_NO_SPELL,
                                           _ability_zap_pow(ability), 0, 0);
     }
 

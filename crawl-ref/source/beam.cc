@@ -3182,6 +3182,9 @@ static int _test_beam_hit(int attack, int defence, defer_rand &r)
 
 bool bolt::is_harmless(const monster* mon) const
 {
+    if (protected_from_spell(origin_spell, *mon, agent()))
+        return true;
+
     // For enchantments, this is already handled in nasty_to().
     if (is_enchantment())
         return !nasty_to(mon);
@@ -4763,7 +4766,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
 
     // Check only if actual damage and the monster is worth caring about.
     // Living spells do count as threats, but are fine being collateral damage.
-    if ((final > 0 || side_effect)
+    if (((final > 0 && !is_harmless(mon)) || side_effect)
         && (mons_is_threatening(*mon) || mons_class_is_test(mon->type))
         && mon->type != MONS_LIVING_SPELL)
     {
