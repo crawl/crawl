@@ -9,7 +9,7 @@ TEST_CASE( "Pattern matches", "[single-file]" ) {
     REQUIRE( pattern1.matches("Dungeon:1") );
     REQUIRE( pattern1.matches("You are on Dungeon:1") );
 
-    // match wholes string
+    // match whole string
     text_pattern pattern2("^[A-Za-z]+:[0-9]+$");
     REQUIRE( pattern2.matches("Dungeon:1") );
     REQUIRE( !pattern2.matches("You are on Dungeon:1") );
