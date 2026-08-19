@@ -517,6 +517,25 @@ static string _localise_string(const string& s, bool fallback_en)
     if (!annotation.empty())
         return _localise_string(rest) + _localise_annotation(annotation);
 
+    // test for named ally (e.g. "Boghold the orc")
+    // or shape-shifted unique (e.g. "Sigmund the bat")
+    text_pattern named_mon("^[A-Z][a-z]+ the ");
+    pattern_match match = named_mon.match_location(s);
+    if (match)
+    {
+        int start = match.start_pos();
+        int end = match.end_pos() - 5;
+        if (start >= 0 && end <= (int)s.length() && end > start + 1)
+        {
+            string name = s.substr(start, end - start);
+            rest = s.substr(end);
+            string xlated_name = strip_context(_translate(name));
+            if (xlated_name.empty())
+                xlated_name = name;
+            return xlated_name + _localise_string(rest);
+        }
+    }
+
     result = _localise_parameterised_string(s);
     if (!result.empty())
     {
@@ -541,6 +560,7 @@ string localise(const string &s)
     if (s.empty())
         return s;
 
+    debuglog("IN:  \"%s\"", s.c_str());
     string result;
 
     // localise lines individually
@@ -553,13 +573,12 @@ string localise(const string &s)
             result += lines[i];
         else
         {
-            debuglog("IN:  \"%s\"", lines[i].c_str());
             _context = "";
             string line = _localise_string(lines[i]);
-            debuglog("OUT: \"%s\"", line.c_str());
             result += line;
         }
     }
 
+    debuglog("OUT: \"%s\"", result.c_str());
     return result;
 }

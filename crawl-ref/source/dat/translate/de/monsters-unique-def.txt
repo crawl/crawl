@@ -275,6 +275,10 @@ the Crazy Yiuf
 the Enchantress
 {f}die Zauberin
 %%%%
+the Blorkula the orcula
+{m}der Blorkula der Orkula
+%%%%
+# obsolete but could appear as killer in high scores list
 the Blork the orc
 {m}der Blork der Ork
 %%%%
