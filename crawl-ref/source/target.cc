@@ -258,8 +258,11 @@ void targeter_beam::set_explosion_target(bolt &tempbeam)
             break;
         }
         tempbeam.target = c;
-        if (anyone_there(c) && !tempbeam.ignores_monster(monster_at(c)))
+        if (anyone_there(c) && !penetrates_targets
+            && !tempbeam.ignores_monster(monster_at(c)))
+        {
             break;
+        }
     }
 }
 
@@ -326,7 +329,7 @@ aff_type targeter_beam::is_affected(coord_def loc)
                 current = AFF_MAYBE;
         }
     }
-    if (max_expl_rad > 0)
+    if (max_expl_rad > 0 && visit_count <= 0)
     {
         if ((loc - c).rdist() <= 9)
         {

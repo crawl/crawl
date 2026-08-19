@@ -2003,9 +2003,6 @@ static void _cull_redundant_stairs(list<coord_def> &stairs,
          ++iter1)
     {
         const coord_def s1_loc = *iter1;
-        // Ensure we don't search for the feature at s1.
-        unwind_var<dungeon_feature_type> saved_feat(env.grid(s1_loc),
-                                                    DNGN_FLOOR);
 
         auto iter2 = iter1;
         ++iter2;
@@ -2020,11 +2017,9 @@ static void _cull_redundant_stairs(list<coord_def> &stairs,
 
             flood_find<feature_grid, coord_predicate> ff(env.grid,
                                                          in_bounds);
-            ff.add_feat(env.grid(s2_loc));
-            const coord_def where =
-                ff.find_first_from(s1_loc, env.level_map_mask);
-            if (!where.x) // these stairs aren't in the same zone
-                continue;
+            ff.add_point(s2_loc);
+            if (!ff.points_connected_from(s1_loc))
+                continue; // these stairs aren't in the same zone
 
             dprf(DIAG_DNGN,
                  "Too many stairs -- removing one of a connected pair.");
@@ -2144,28 +2139,29 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs,
     dprf(DIAG_DNGN, "Before culling: %d/%d %s stairs",
          (int)stairs.size(), needed_stairs, checking_up_stairs ? "up" : "down");
 
-    // Find pairwise stairs that are connected and turn one of them
-    // into an escape hatch of the appropriate type.
+    // Find pairwise stairs that are connected and remove one of them.
     if (stairs.size() > needed_stairs)
     {
         _cull_redundant_stairs(stairs, needed_stairs,
                                preserve_vault_stairs, replace);
     }
 
-    // If that doesn't work, remove random stairs.
-    if (stairs.size() > needed_stairs)
+    // If that doesn't work, remove random stairs. We only remove vault stairs
+    // in this way if we don't need any stairs at all; this prevents us
+    // removing stairs from vaults that rely on them for connectivity.
+    if (stairs.size() > needed_stairs
+        && (needed_stairs == 0 || preserve_vault_stairs))
     {
         _cull_random_stairs(stairs, needed_stairs,
                             preserve_vault_stairs, replace);
     }
 
-    // FIXME: stairs that generate inside random vaults are still
-    // protected, resulting in superfluous ones.
     dprf(DIAG_DNGN, "After culling: %d/%d %s stairs",
          (int)stairs.size(), needed_stairs, checking_up_stairs ? "up" : "down");
 
-    // XXX: this logic is exceptionally shady & should be reviewed
-    if (stairs.size() > needed_stairs && preserve_vault_stairs
+    // Bail if we have too many stairs (except on D:1, where we are allowed to
+    // have multiple dungeon exits).
+    if (stairs.size() > needed_stairs
         && (!checking_up_stairs || you.depth != 1
             || !player_in_branch(root_branch)))
     {
@@ -2234,9 +2230,9 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
 {
     // This function ensures that there is exactly one each up and down
     // stone stairs I, II, and III. More than three stairs will result in
-    // turning additional stairs into escape hatches (with an attempt to keep
-    // level connectivity). Fewer than three stone stairs will result in
-    // random placement of new stairs.
+    // removing additional stairs (with an attempt to keep level connectivity).
+    // Fewer than three stone stairs will result in random placement of new
+    // stairs.
     const bool upstairs_fixed = _fixup_stone_stairs(preserve_vault_stairs,
                                                     true);
     const bool downstairs_fixed = _fixup_stone_stairs(preserve_vault_stairs,

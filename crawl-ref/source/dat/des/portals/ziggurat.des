@@ -112,7 +112,7 @@ NAME:   enter_ziggurat_f
 MONS:   angel
 KPROP:  1Om' = no_tele_into
 SUBST:  1 = 1''
-KMASK:  1O; = opaque
+KMASK:  1O' = opaque
 : ziggurat_entry(_G, true)
 MAP
     ...

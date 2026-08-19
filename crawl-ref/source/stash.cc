@@ -631,9 +631,11 @@ void Stash::save(writer& outf) const
 
     marshallString(outf, feat_desc);
 
-    uint8_t flags = visited << 1
-                    + special_in_stack << 2 + artefact_in_stack << 3
-                    + has_special << 4 + has_artefact << 5;
+    uint8_t flags = (visited             << 0)
+                    + (special_in_stack  << 1)
+                    + (artefact_in_stack << 2)
+                    + (has_special       << 3)
+                    + (has_artefact      << 4);
     marshallByte(outf, flags);
 
     // And dump the items individually. We don't bother saving fields we're
@@ -659,11 +661,11 @@ void Stash::load(reader& inf)
     feat_desc = unmarshallString(inf);
 
     uint8_t flags = unmarshallUByte(inf);
-    visited = (flags & 1) != 0;
-    special_in_stack = (flags & 2) != 0;
-    artefact_in_stack = (flags & 3) != 0;
-    has_special = (flags & 4) != 0;
-    has_artefact = (flags & 5) != 0;
+    visited           = (flags & (1 << 0)) != 0;
+    special_in_stack  = (flags & (1 << 1)) != 0;
+    artefact_in_stack = (flags & (1 << 2)) != 0;
+    has_special       = (flags & (1 << 3)) != 0;
+    has_artefact      = (flags & (1 << 4)) != 0;
 
     // Zap out item vector, in case it's in use (however unlikely)
     items.clear();

@@ -1657,10 +1657,10 @@ static bool _armour_slot_is_restricted(monster_type genus, equipment_slot slot)
             case MONS_SALAMANDER:
             case MONS_CENTAUR:
             case MONS_YAKTAUR:
-                return true;
+                return false;
 
             default:
-                return false;
+                return true;
         }
     }
 
