@@ -1260,7 +1260,8 @@ static vector<coord_def> _simple_find_all_hostiles()
 }
 
 // TODO: refactor into target.cc, move custom classes out of target.h
-unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
+static unique_ptr<targeter> _find_spell_targeter(spell_type spell, int pow,
+                                                 int range)
 {
     switch (spell)
     {
@@ -1567,6 +1568,17 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     }
 
     return nullptr;
+}
+
+unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
+{
+    unique_ptr<targeter> hitfunc = _find_spell_targeter(spell, pow, range);
+    // If this is a beam, add spell information to it.
+    targeter_beam *beam_hitf = dynamic_cast<targeter_beam*>(hitfunc.get());
+    if (beam_hitf && beam_hitf->beam.origin_spell == SPELL_NO_SPELL)
+        beam_hitf->beam.origin_spell = spell;
+
+    return hitfunc;
 }
 
 bool spell_has_targeter(spell_type spell)

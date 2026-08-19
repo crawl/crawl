@@ -515,7 +515,7 @@ mon_inv_type item_to_mslot(const item_def &item);
 
 bool mons_is_immotile(const monster& mons);
 
-int get_dist_to_nearest_monster();
+int get_dist_to_nearest_monster(bool skip_damage_immune = false);
 bool monster_nearby();
 actor *actor_by_mid(mid_t m, bool require_valid = false, bool allow_dead = false);
 monster *monster_by_mid(mid_t m, bool require_valid = false, bool allow_dead = false);

@@ -141,6 +141,8 @@ int spell_highlight_by_utility(spell_type spell,
                                 bool transient = false,
                                 bool memcheck = false);
 bool spell_no_hostile_in_range(spell_type spell);
+bool protected_from_spell(spell_type spell, const monster &mon,
+                          const actor *agent);
 
 bool spell_is_soh_breath(spell_type spell);
 const vector<spell_type> *soh_breath_spells(spell_type spell);
