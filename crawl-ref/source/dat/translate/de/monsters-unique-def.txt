@@ -306,11 +306,19 @@ the Statue of Wucad Mu
 # not really uniques, but gramatically similar
 
 %%%%
-the @name@'s ghost
-{m}der Geist von {dat}@name@
+@player_name@'s ghost
+{m}der Geist von @player_name@
 %%%%
-the @name@'s illusion
-{f}die Illusion von {dat}@name@
+@player_name@'s illusion
+{f}die Illusion von @player_name@
+%%%%
+
+%%%%
+the helpless @player_name@'s ghost
+{m}der hilflose Geist von @player_name@
+%%%%
+the helpless @player_name@'s illusion
+{f}die hilflose Illusion von @player_name@
 %%%%
 
 ##################

@@ -258,11 +258,11 @@ the Statue of Wucad Mu's
 
 # not really uniques, but gramatically similar
 %%%%
-@name@'s ghost's
-des Geistes von @name@
+@player_name@'s ghost's
+des Geistes von @player_name@
 %%%%
-@name@'s illusion's
-{f}der Illusion von @name@
+@player_name@'s illusion's
+{f}der Illusion von @player_name@
 %%%%
 
 ##################

@@ -325,15 +325,23 @@ static string _localise_param(map<string, string>& params, const string& key)
 
     string new_val;
 
-    // old val might be capitalised due to being at start of sentence
-    if (starts_with_uppercase(old_val))
-        new_val = _localise_string(lowercase_first(old_val), false);
-
-    if (new_val.empty())
-        new_val = _localise_string(old_val, false);
-
-    if (new_val.empty())
+    if (new_key == "player_name")
+    {
+        // don't mess with it
         new_val = old_val;
+    }
+    else
+    {
+        // old val might be capitalised due to being at start of sentence
+        if (starts_with_uppercase(old_val))
+            new_val = _localise_string(lowercase_first(old_val), false);
+
+        if (new_val.empty())
+            new_val = _localise_string(old_val, false);
+
+        if (new_val.empty())
+            new_val = old_val;
+    }
 
     return isaupper(key[0]) ? uppercase_first(new_val) : new_val;
 }
