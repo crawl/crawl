@@ -77,6 +77,10 @@ TEST_CASE( "Localise German", "[single-file]" )
         CHECK( localise("a 12-headed hydra") == "eine 12-köpfige Hydra" );
         CHECK( localise("the 27-headed Lernaean hydra") == "die 27-köpfige Lernäische Hydra" );
 
+        // player ghost
+        CHECK( localise("MrDizzy's ghost") == "der Geist von MrDizzy" );
+        CHECK( localise("the helpless RepoMan's ghost") == "der hilflose Geist von RepoMan" );
+
         // definite article - possessive
         CHECK( localise("the orc's") == "des Orks" );
         CHECK( localise("the bat's") == "der Fledermaus" );
