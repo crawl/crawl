@@ -159,6 +159,7 @@ void init_localisation()
     // convert paramaterised string to regex pattern
     text_pattern num_arg_patt("@num[^@]*@");
     text_pattern str_arg_patt("@[^@]+@");
+    text_pattern a_an_patt("^an? ");
     for (const string& key: keys)
     {
         string pattern = key;
@@ -166,6 +167,8 @@ void init_localisation()
         pattern = escape_regex_specials(pattern);
         pattern = num_arg_patt.replace(pattern, "([\\+|\\-]?[0-9]+)");
         pattern = str_arg_patt.replace(pattern, "(.*)");
+        // adjectives can change "a" to "an" or vice versa
+        pattern = a_an_patt.replace(pattern, "an? ");
         pattern = "^" + pattern + "$";
         if (contains(key, "Royal"))
             debuglog("\"%s\" -> \"%s\" -> \"%s\"", pattern.c_str(), key.c_str(), _translate(key).c_str());
