@@ -230,6 +230,10 @@ vom Verrückten Yiuf
 the Enchantress's
 {f}der Zauberin
 %%%%
+Blorkula the orcula's
+von Blorkula dem Orkula
+%%%%
+# obsolete but could appear as killer in high scores list
 Blork the orc's
 von Blork dem Ork
 %%%%

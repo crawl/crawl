@@ -54,6 +54,14 @@ TEST_CASE( "Localise German", "[single-file]" )
         CHECK( localise("Natasha") == "Natascha" );
         CHECK( localise("Natasha (D:3)") == "Natascha (K:3)" );
         CHECK( localise("the Lernaean hydra") == "die Lernäische Hydra" );
+        CHECK( localise("Blorkula the orcula") == "Blorkula der Orkula" );
+
+        // named ally
+        CHECK( localise("Boghold the orc") == "Boghold der Ork" );
+
+        // shape-shifted unique
+        CHECK( localise("Sigmund the bat") == "Sigmund die Fledermaus" );
+        CHECK( localise("Natasha the acid blob") == "Natascha der Säureklumpen" );
 
         // with added adjectives
         CHECK( localise("the charmed orc") == "der verzauberte Ork" );
@@ -85,6 +93,14 @@ TEST_CASE( "Localise German", "[single-file]" )
         CHECK( localise("Natasha's") == "von Natascha" );
         CHECK( localise("the Lernaean hydra's") == "der Lernäischen Hydra" );
         CHECK( localise("the 27-headed Lernaean hydra's") == "der 27-köpfigen Lernäischen Hydra" );
+
+        // derived monsters
+        CHECK( localise("the merfolk zombie") == "der Zombie eines Meerwesens" );
+        CHECK( localise("an orc skeleton") == "ein Skelett eines Orks" );
+        CHECK( localise("a red draconian simulacrum") == "ein Simulacrum eines roten Drakoniers" );
+        /*CHECK( localise("a neutral orc skeleton") == "ein neutrales Skelett eines Orks" );
+        CHECK( localise("a non-hostile red draconian simulacrum") ==
+                        "ein nicht feindliches Simulacrum eines roten Drakoniers" );*/
     }
 
     SECTION("Items")
