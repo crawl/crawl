@@ -49,8 +49,8 @@ SELECT_BY_KEY:/^the [^@]/
 
 # English
 KEY:/^the /the @adj@/
-# "pair of boots/gloves" (but not quick blades) needs a second adjective placeholder
-KEY:/pair of (?!quick blades)/pair of @adj2@/
+# "pair of boots/gloves" needs a second adjective placeholder
+KEY:/pair of (.*)/pair of @adj2@$1/
 
 # German
 # nominative singular
@@ -58,7 +58,7 @@ KEY:/pair of (?!quick blades)/pair of @adj2@/
 # plural and genitive
 /^(\{pl\}die|\{f\}der|\{n\}des|\{m\}des|des) /$1 {adj-en}@adj@/
 # "pair of boots/gloves" (but not quick blades) needs a second adjective placeholder
-/Paar (?!Schnellklingen)/Paar {adj-e}@adj2@/
+/Paar (.*)/Paar {adj-e}@adj2@$1/
 %%%%
 
 #############
@@ -78,7 +78,7 @@ KEY:/^the /a /
 /^(\{f\})?die /{f}eine /
 /^(\{n\})?das /{n}ein /
 # plural
-/^(\{pl\})?die /{pl}/
+/^\{pl\}die /{pl}/
 
 # masc adjectives
 /^\{m\}ein [^A-ZÄÖÜ]+/e\b/er/
@@ -264,7 +264,7 @@ GENERATE:acc
 /^\{m\}[^A-ZÄÖÜ]+/\{adj-er\}/{adj-en}/
 
 # weak nouns
-/Akolyth\b/$1en/
+/(Akolyth)\b/$1en/
 /[A-ZÄÖÜ][^ ,]+/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet|[Ff]ürst)$/$1en/
 /[A-ZÄÖÜ][^ ,]+/([Ss]chamane|[Ss]chütze|Sklave|[Hh]err|loge|mycete)$/$1n/
 /[A-ZÄÖÜ][^ ,]+/([Rr]iese|[Dd]rache|[Dd]ruide|[Hh]eilige|Ahne)$/$1n/
@@ -301,7 +301,6 @@ GENERATE:dat
 
 # mark plurals, if not already marked
 /^(die |deine )?(@num@|[0-9]+) /^(.)/{pl}$1/
-/^(?!\{pl\}).*schuppen\b/^(.)/{pl}$1/
 
 # plural determiners
 /^\{pl\}die /{pl}den /
@@ -326,7 +325,7 @@ GENERATE:dat
 /^\{pl\}.*[A-ZÄÖÜ][^ ,]+/([^snai])$/$1n/
 
 # weak nouns
-/Akolyth\b/$1en/
+/(Akolyth)\b/$1en/
 /[A-ZÄÖÜ][^ ,]+/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet|[Ff]ürst|herz)$/$1en/
 /[A-ZÄÖÜ][^ ,]+/([Ss]chamane|[Ss]chütze|Sklave|[Hh]err|loge|mycete)$/$1n/
 /[A-ZÄÖÜ][^ ,]+/([Rr]iese|[Dd]rache|[Dd]ruide|[Hh]eilige|Ahne)$/$1n/
