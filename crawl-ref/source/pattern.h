@@ -29,6 +29,17 @@ public:
             return "";
     }
 
+    int start_pos() const
+    {
+        return start;
+    }
+
+    // note: half-open range
+    int end_pos() const
+    {
+        return end;
+    }
+
 private:
 
     pattern_match(bool _matched, const string &_text, int _start, int _end)
