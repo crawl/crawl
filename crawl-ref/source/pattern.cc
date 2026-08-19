@@ -28,10 +28,6 @@ static string _resolve_backreferences(const string &s, const string& subst,
     if (subst.find('$') == string::npos)
         return subst;
 
-    string result = subst;
-
-    result = replace_all(result, "$$", "LITERAL_DOLLAR_SIGN");
-
     // iterate submatches
     vector<string> backrefs;
     for (int i = 1; i < nmatches; i++)
@@ -53,6 +49,8 @@ static string _resolve_backreferences(const string &s, const string& subst,
 
         backrefs.push_back(s.substr(start, end - start));
     }
+
+    string result = replace_all(subst, "$$", "LITERAL_DOLLAR_SIGN");
 
     // replace in reverse order in case there are more than 9
     // ("$1" would match on "$10" if going forwards)
