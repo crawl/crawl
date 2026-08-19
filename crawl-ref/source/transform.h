@@ -346,9 +346,7 @@ bool transform(int dur, transformation which_trans, bool involuntary = false,
                bool using_talisman = false);
 
 // skip_move: don't make player re-enter current cell
-void untransform(bool skip_move = false, bool scale_hp = true,
-                 bool preserve_equipment = false,
-                 transformation new_form = transformation::none);
+void untransform(bool skip_move = false, bool scale_hp = true);
 
 void unset_default_form();
 void set_default_form(transformation t, const item_def *talisman);

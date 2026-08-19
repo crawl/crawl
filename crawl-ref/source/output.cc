@@ -732,28 +732,36 @@ static void _print_stats_equip(int x, int y)
         if (num_slots == 0)
             continue;
 
-        if (slot_is_melded(slot))
-            for (int i = 0; i < num_slots; ++i)
-                cprintf(" ");
-        else
+        // First draw gear, then empty slots, then melded slots.
+        const int usable = you.equipment.unmelded_slot_count(slot);
+        vector<player_equip_entry> entries = you.equipment.get_slot_entries(slot);
+        int shown = 0;
+        for (const player_equip_entry& entry : entries)
         {
-            vector<player_equip_entry> entries = you.equipment.get_slot_entries(slot);
-            for (int i = 0; i < num_slots; ++i)
+            if (entry.melded)
+                continue;
+
+            if (entry.is_overflow)
+                cprintf(" ");
+            else
             {
-                if (i >= (int)entries.size())
-                    cprintf(".");
-                else if (entries[i].is_overflow)
-                    cprintf(" ");
-                else
-                {
-                    const item_def& item = entries[i].get_item();
-                    cglyph_t g = get_item_glyph(item);
-                    g.col = element_colour(g.col, you.pos(),
-                                           !Options.animate_equip_bar);
-                    formatted_string::parse_string(glyph_to_tagstr(g)).display();
-                }
+                const item_def& item = entry.get_item();
+                cglyph_t g = get_item_glyph(item);
+                g.col = element_colour(g.col, you.pos(),
+                                       !Options.animate_equip_bar);
+                formatted_string::parse_string(glyph_to_tagstr(g)).display();
             }
+            ++shown;
         }
+
+        const int free = max(0, min(usable - shown,
+                                    num_slots - (int)entries.size()));
+        for (int i = 0; i < free; ++i)
+            cprintf(".");
+        shown += free;
+
+        for (; shown < num_slots; ++shown)
+            cprintf(" ");
     }
     you.gear_change = false;
 }
@@ -2144,10 +2152,15 @@ static void _print_overview_screen_equip(column_composer& cols,
             continue;
 
         const string slot_name_lwr = lowercase_string(equip_slot_name(slot));
-        const bool slot_melded = slot_is_melded(slot);
         string str;
 
         vector<player_equip_entry> equipped = you.equipment.get_slot_entries(slot);
+
+        int free_usable = you.equipment.unmelded_slot_count(slot);
+        for (const player_equip_entry& entry : equipped)
+            if (!entry.melded)
+                --free_usable;
+
         for (int i = 0; i < num_slots; ++i)
         {
             if (i >= (int)equipped.size())
@@ -2155,10 +2168,13 @@ static void _print_overview_screen_equip(column_composer& cols,
                 // Some special-cased messages:
                 if (slot == SLOT_WEAPON && i == 0)
                     str = "  - " + you.unarmed_attack_name();
-                else if (slot_melded)
+                else if (free_usable <= 0)
                     str = "<darkgrey>(" + slot_name_lwr + " unavailable)</darkgrey>";
                 else
+                {
                     str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
+                    --free_usable;
+                }
 
                 cols.add_formatted(1, str, false);
                 continue;

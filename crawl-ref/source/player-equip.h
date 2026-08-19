@@ -92,10 +92,6 @@ struct player_equip_set
     void remove(const item_def& item);
 
     // Melding-related functions
-    void meld_equipment(int slots, bool skip_effects = false);
-    void meld_equipment(vector<item_def*> to_meld, bool skip_effects = false);
-    void unmeld_slot(equipment_slot slot, bool skip_effects = false);
-    void unmeld_all_equipment(bool skip_effects = false);
     bool is_melded(const item_def& item);
 
     // Functions related to the equipping/unequipping process
@@ -105,32 +101,42 @@ struct player_equip_set
     equipment_slot find_slot_to_equip_item(const item_def& item,
                                            bool& requires_replace,
                                            bool ignore_curses = false) const;
-    equipment_slot find_free_compatible_slot(equipment_slot base_slot) const;
+    equipment_slot find_free_compatible_slot(equipment_slot base_slot,
+                       const FixedVector<int, NUM_EQUIP_SLOTS>* claimed
+                           = nullptr) const;
     void find_removable_items_for_slot(equipment_slot base_slot,
                                        vector<item_def*>& to_replace,
                                        bool ignore_curses = false,
                                        bool quiet = true) const;
-
-    int needs_chain_removal(equipment_slot slot, vector<item_def*>& to_replace,
-                            bool cursed_okay = false,
-                            const vector<item_def*>& already_removing = {});
+    bool meld_slot(equipment_slot slot);
+    bool unmeld_slot(equipment_slot slot);
+    void reconcile_form_change(transformation target, bool skip_effects = false);
+    int slot_count(equipment_slot slot, string* zero_reason = nullptr,
+                   bool count_melded_unrands = false,
+                   bool count_items = true,
+                   bool count_default_form = true) const;
+    int item_granted_slot_count(equipment_slot slot, bool count_melded) const;
+    int unmelded_slot_count(equipment_slot slot) const;
 
     vector<item_def*> get_forced_removal_list(bool force_full_check = false,
-                                              bool is_save_cleanup = false,
                                               size_t* num_direct = nullptr);
 
     void shift_twohander_to_slot(equipment_slot new_slot);
     void swap_offhand_weapon_to_main();
 
 private:
-    void handle_melding(vector<item_def*>& to_meld, bool skip_effects);
-    void handle_unmelding(vector<item_def*>& to_unmeld, bool skip_effects);
+    void handle_melding(const vector<item_def*>& to_meld);
+    void handle_unmelding(const vector<item_def*>& to_unmeld);
 };
 
 int get_player_equip_slot_count(equipment_slot slot, string* zero_reason = nullptr,
                                 bool count_melded_unrands = false,
-                                bool count_items = true);
-FixedVector<int, NUM_EQUIP_SLOTS> get_total_player_equip_slots();
+                                bool count_items = true,
+                                bool count_default_form = true);
+int needs_chain_removal(equipment_slot slot, vector<item_def*>& to_replace,
+                        bool cursed_okay = false,
+                        const vector<item_def*>& already_removing = {},
+                        bool melded = false);
 const vector<equipment_slot>& get_alternate_slots(equipment_slot slot);
 
 bool can_equip_item(const item_def& item, bool temp = false,
