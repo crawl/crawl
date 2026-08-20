@@ -763,12 +763,6 @@ the hexer's
 the jelly's
 
 %%%%
-the slime creature's
-
-%%%%
-the merged slime creature's
-
-%%%%
 the azure jelly's
 
 %%%%
@@ -1606,6 +1600,24 @@ the weirdshock beast's
 
 %%%%
 the weirdsting beast's
+
+%%%%
+
+# slime creatures can merge into bigger slime creatures
+%%%%
+the slime creature's
+
+%%%%
+the large slime creature's
+
+%%%%
+the very large slime creature's
+
+%%%%
+the enormous slime creature's
+
+%%%%
+the titanic slime creature's
 
 %%%%
 

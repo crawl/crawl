@@ -763,12 +763,6 @@
 @num@ jellies
 {pl}@num@ Gelees
 %%%%
-@num@ slime creatures
-{pl}@num@ Schleimkreaturen
-%%%%
-@num@ merged slime creatures
-{pl}@num@ verschmolzene Schleimkreaturen
-%%%%
 @num@ azure jellies
 {pl}@num@ azurblaue Gelees
 %%%%
@@ -1527,6 +1521,24 @@
 %%%%
 @num@ archer statues
 {pl}@num@ Bogenschützen-Statuen
+%%%%
+
+# slime creatures can merge into bigger slime creatures
+%%%%
+@num@ slime creatures
+{pl}@num@ Schleimkreaturen
+%%%%
+@num@ large slime creatures
+{pl}@num@ große Schleimkreaturen
+%%%%
+@num@ very large slime creatures
+{pl}@num@ sehr große Schleimkreaturen
+%%%%
+@num@ enormous slime creatures
+{pl}@num@ enorme Schleimkreaturen
+%%%%
+@num@ titanic slime creatures
+{pl}@num@ titanische Schleimkreaturen
 %%%%
 
 # derived monsters containing the name of the original monster

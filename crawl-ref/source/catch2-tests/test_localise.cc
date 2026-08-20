@@ -24,30 +24,35 @@ TEST_CASE( "Localise German", "[single-file]" )
         CHECK( localise("the bat") == "die Fledermaus" );
         CHECK( localise("the hell hog") == "das höllische Schwein" );
         CHECK( localise("the red draconian") == "der rote Drakonier" );
+        CHECK( localise("the slime creature") == "die Schleimkreatur" );
 
         // indefinite article
         CHECK( localise("an orc") == "ein Ork" );
         CHECK( localise("a bat") == "eine Fledermaus" );
         CHECK( localise("a hell hog") == "ein höllisches Schwein" );
-        CHECK( localise("a red draconian") == "ein roter Drakonier" );
+        CHECK( localise("a green draconian") == "ein grüner Drakonier" );
+        CHECK( localise("a large slime creature") == "eine große Schleimkreatur" );
 
         // your (allied)
         CHECK( localise("your orc") == "dein Ork" );
         CHECK( localise("your bat") == "deine Fledermaus" );
         CHECK( localise("your hell hog") == "dein höllisches Schwein" );
-        CHECK( localise("your red draconian") == "dein roter Drakonier" );
+        CHECK( localise("your yellow draconian") == "dein gelber Drakonier" );
+        CHECK( localise("your very large slime creature") == "deine sehr große Schleimkreatur" );
 
         // no article
         CHECK( localise("orc") == "Ork" );
         CHECK( localise("bat") == "Fledermaus" );
         CHECK( localise("hell hog") == "höllisches Schwein" );
-        CHECK( localise("red draconian") == "roter Drakonier" );
+        CHECK( localise("black draconian") == "schwarzer Drakonier" );
+        CHECK( localise("enormous slime creature") == "enorme Schleimkreatur" );
 
         // plural
         CHECK( localise("2 orcs") == "2 Orks" );
         CHECK( localise("3 bats") == "3 Fledermäuse" );
         CHECK( localise("4 hell hogs") == "4 höllische Schweine" );
-        CHECK( localise("5 red draconians") == "5 rote Drakonier" );
+        CHECK( localise("5 white draconians") == "5 weiße Drakonier" );
+        CHECK( localise("6 titanic slime creatures") == "6 titanische Schleimkreaturen" );
 
         // unique
         CHECK( localise("Dowan") == "Dowan" );
@@ -76,6 +81,8 @@ TEST_CASE( "Localise German", "[single-file]" )
         CHECK( localise("an 11-headed hydra") == "eine 11-köpfige Hydra" );
         CHECK( localise("a 12-headed hydra") == "eine 12-köpfige Hydra" );
         CHECK( localise("the 27-headed Lernaean hydra") == "die 27-köpfige Lernäische Hydra" );
+        CHECK( localise("a non-hostile very large slime creature") ==
+                        "eine nicht feindliche sehr große Schleimkreatur" );
 
         // player ghost
         CHECK( localise("MrDizzy's ghost") == "der Geist von MrDizzy" );
