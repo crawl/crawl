@@ -763,12 +763,6 @@
 @num@ jellies
 
 %%%%
-@num@ slime creatures
-
-%%%%
-@num@ merged slime creatures
-
-%%%%
 @num@ azure jellies
 
 %%%%
@@ -1526,6 +1520,24 @@
 
 %%%%
 @num@ archer statues
+
+%%%%
+
+# slime creatures can merge into bigger slime creatures
+%%%%
+@num@ slime creatures
+
+%%%%
+@num@ large slime creatures
+
+%%%%
+@num@ very large slime creatures
+
+%%%%
+@num@ enormous slime creatures
+
+%%%%
+@num@ titanic slime creatures
 
 %%%%
 

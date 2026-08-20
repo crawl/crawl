@@ -763,12 +763,6 @@ des Hexers
 the jelly's
 des Gelees
 %%%%
-the slime creature's
-{f}der Schleimkreatur
-%%%%
-the merged slime creature's
-{f}der verschmolzenen Schleimkreatur
-%%%%
 the azure jelly's
 des azurblauen Gelees
 %%%%
@@ -1607,6 +1601,24 @@ the weirdshock beast's
 %%%%
 the weirdsting beast's
 {n}des bizarren Stichbiestes
+%%%%
+
+# slime creatures can merge into bigger slime creatures
+%%%%
+the slime creature's
+{f}der Schleimkreatur
+%%%%
+the large slime creature's
+{f}der große Schleimkreatur
+%%%%
+the very large slime creature's
+{f}der sehr große Schleimkreatur
+%%%%
+the enormous slime creature's
+{f}der enorme Schleimkreatur
+%%%%
+the titanic slime creature's
+{f}der titanische Schleimkreatur
 %%%%
 
 # unseen monster
