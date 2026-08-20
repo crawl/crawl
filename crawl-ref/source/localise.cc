@@ -54,7 +54,7 @@ static vector<string> get_pregenerated_keys_by_regex(const string& re)
 
 static vector<string> get_all_keys_by_regex(const string& re)
 {
-    vector<string> keys = getTranslatedKeysByRegex(re);
+    vector<string> keys = getTranslationKeysByRegex(re);
     vector<string> keys2 = get_pregenerated_keys_by_regex(re);
     keys.insert(keys.end(), keys2.begin(), keys2.end());
     return keys;
