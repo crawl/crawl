@@ -40,6 +40,15 @@ static vector<pair<text_pattern, string>> _patterns;
 static bool _initialised = false;
 static string _context;
 
+static string _get_pregenerated_translation(const string& s)
+{
+    auto iter = _pregenerated.find(s);
+    if (iter == _pregenerated.end())
+        return "";
+    else
+        return iter->second;
+}
+
 static vector<string> get_pregenerated_keys_by_regex(const string& re)
 {
     vector<string> keys;
@@ -182,8 +191,8 @@ static string _translate(const string &s)
 {
     string result = getTranslatedString(s);
 
-    if (result.empty() && _pregenerated.count(s))
-        result = _pregenerated[s];
+    if (result.empty())
+        result = _get_pregenerated_translation(s);
 
     // the presence of an adjective can change "a" to "an" or vice versa
     if (result.empty() && (starts_with(s, "a ") || starts_with(s, "an ")))
@@ -196,8 +205,8 @@ static string _translate(const string &s)
 
         result = getTranslatedString(alternative);
 
-        if (result.empty() && _pregenerated.count(alternative))
-            result = _pregenerated[alternative];
+        if (result.empty())
+            result = _get_pregenerated_translation(alternative);
     }
 
     return result;
