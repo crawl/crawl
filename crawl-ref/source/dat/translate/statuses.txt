@@ -1879,7 +1879,7 @@ Your blood armour dries and flakes away.
 
 %%%%
 
-# Protective auro from spectral weapon (is this still possible?)
+# Protective aura from spectral weapon (is this still possible?)
 %%%%
 under a protective aura
 

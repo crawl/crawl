@@ -97,7 +97,7 @@ Kobolds
 %%%%
 # same as singular
 #Merfolk
-#Meervolk
+
 %%%%
 Minotaurs
 
