@@ -8694,6 +8694,9 @@ bool player::drain_magic(actor */*attacker*/, int pow)
 
 void player::daze(int dur)
 {
+    if (you.duration[DUR_DAZED] || you.duration[DUR_STUN_IMMUNITY])
+        return;
+
     stop_delay(true, true);
     stop_directly_constricting_all();
     stop_channelling_spells();
