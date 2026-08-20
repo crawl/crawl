@@ -160,6 +160,9 @@ hit
 bite
 
 %%%%
+sting
+
+%%%%
 # not actually used (" at" is always stripped)
 release spores at
 

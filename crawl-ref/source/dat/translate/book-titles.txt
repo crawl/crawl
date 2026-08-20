@@ -722,8 +722,8 @@ The Foundations of @book_magic@
 # @_the_book_magic_@, Part @level@
 # Advanced @_book_magic_@
 # Sophisticated @_book_magic_@
-# Further Progress in @the_book_magic_@
-# The Second Course in @the_book_magic_@
+# Further Progress in @_book_magic_@
+# The Second Course in @_book_magic_@
 # Improving Your @_book_magic_@
 
 %%%%

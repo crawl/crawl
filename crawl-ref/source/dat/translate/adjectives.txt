@@ -922,6 +922,19 @@ plain brown
 
 %%%%
 
+# special cases
+%%%%
+"Enchantress shaped "
+
+%%%%
+"Lernaean hydra shaped "
+
+%%%%
+"Royal Jelly shaped "
+
+%%%%
+"Serpent of Hell shaped "
+
 # shaped can also appear without a monster name in front of it
 %%%%
 "shaped "

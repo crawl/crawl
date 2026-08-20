@@ -15357,7 +15357,7 @@ You can't see a target there!
 @arg@ twitches for a moment.
 
 %%%%
-@arg@ dances into the air!
+@The_weapon@ dances into the air!
 
 %%%%
 @arg@ booms: How dare you animate that foul thing!
@@ -18583,7 +18583,7 @@ Some monsters swap places.
 @arg1@ reforms as @arg2@.
 
 %%%%
-@arg1@ @arg2@ dances into the air!
+@The_monster@'s @weapon@ dances into the air!
 
 %%%%
 Your body is suffused with distortional energy.

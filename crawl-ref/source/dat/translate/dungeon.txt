@@ -370,6 +370,113 @@ the Desolation of Salt
 %%%%
 
 ##############################################
+# To branch (for welcome message)
+##############################################
+%%%%
+{to}the Dungeon
+
+%%%%
+{to}the Ecumenical Temple
+
+%%%%
+{to}the Orcish Mines
+
+%%%%
+{to}the Elven Halls
+
+%%%%
+{to}the Lair of Beasts
+
+%%%%
+{to}the Swamp
+
+%%%%
+{to}the Shoals
+
+%%%%
+{to}the Snake Pit
+
+%%%%
+{to}the Spider Nest
+
+%%%%
+{to}the Pits of Slime
+
+%%%%
+{to}the Vaults
+
+%%%%
+{to}the Crypt
+
+%%%%
+{to}the Tomb of the Ancients
+
+%%%%
+{to}the Depths
+
+%%%%
+{to}the Hells
+
+%%%%
+{to}the Vestibule of Hell
+
+%%%%
+{to}the Iron City of Dis
+
+%%%%
+{to}Gehenna
+
+%%%%
+{to}Cocytus
+
+%%%%
+{to}Tartarus
+
+%%%%
+{to}the Realm of Zot
+
+%%%%
+{to}the Abyss
+
+%%%%
+{to}Pandemonium
+
+%%%%
+{to}a ziggurat
+
+%%%%
+{to}a bazaar
+
+%%%%
+{to}a treasure trove
+
+%%%%
+{to}a sewer
+
+%%%%
+{to}an ossuary
+
+%%%%
+{to}a bailey
+
+%%%%
+{to}a Gauntlet
+
+%%%%
+{to}an ice cave
+
+%%%%
+{to}a volcano
+
+%%%%
+{to}a wizard's laboratory
+
+%%%%
+{to}the Desolation of Salt
+
+%%%%
+
+##############################################
 # Branch abbreviations
 # These should be 8 characters or less.
 #
@@ -540,9 +647,6 @@ Coc:@num@
 Tar:@num@
 
 %%%%
-Pan:@num@
-
-%%%%
 Zig:@num@
 
 %%%%
@@ -553,6 +657,7 @@ Abyss:@num@
 ##############################################
 # on branch level
 ##############################################
+
 %%%%
 on level @num@ of the Dungeon
 

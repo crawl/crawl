@@ -690,6 +690,7 @@ extremely large
 moderate
 
 %%%%
+# duplicate
 #small
 #
 %%%%

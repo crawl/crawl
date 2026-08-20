@@ -230,6 +230,10 @@ Crazy Yiuf's
 the Enchantress's
 
 %%%%
+Blorkula the orcula's
+
+%%%%
+# obsolete but could appear as killer in high scores list
 Blork the orc's
 
 %%%%
@@ -254,10 +258,10 @@ the Statue of Wucad Mu's
 
 # not really uniques, but gramatically similar
 %%%%
-@name@'s ghost's
+@player_name@'s ghost's
 
 %%%%
-@name@'s illusion's
+@player_name@'s illusion's
 
 %%%%
 
