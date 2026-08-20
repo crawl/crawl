@@ -286,6 +286,47 @@ static int _get_matching_pattern_index(const string& s)
     return -1;
 }
 
+static string _localise_adjectives(const string& s)
+{
+    string result;
+
+    size_t start = 0;
+    size_t end = s.find(' ');
+
+    while (true)
+    {
+        string adj;
+        if (end == string::npos)
+            adj = s.substr(start);
+        else
+            adj = s.substr(start, end - start + 1);
+
+        if (!is_adverb(adj) || end == string::npos)
+        {
+            string xlated = _ctx_translate(_context, adj);
+            if (xlated.empty() && ends_with(adj, " "))
+            {
+                // try without space
+                string adj2 = adj.substr(0, adj.length() - 1);
+                xlated = _ctx_translate(_context, adj2);
+                if (!xlated.empty())
+                    xlated += " ";
+            }
+            result += xlated.empty() ? adj : xlated;
+
+            if (end == string::npos)
+                break;
+
+            start = end + 1;
+        }
+
+        end = s.find(' ', end + 1);
+    }
+
+    return result;
+}
+
+
 static string _localise_param(map<string, string>& params, const string& key)
 {
     string new_key = lowercase_first(key);
@@ -332,6 +373,9 @@ static string _localise_param(map<string, string>& params, const string& key)
         }
     }
 
+    if (old_key.empty() || old_val.empty())
+        return "";
+
     string new_val;
 
     if (new_key == "player_name")
@@ -347,6 +391,9 @@ static string _localise_param(map<string, string>& params, const string& key)
 
         if (new_val.empty())
             new_val = _localise_string(old_val, false);
+
+        if (new_val.empty() && contains(old_val, ' '))
+            new_val = _localise_adjectives(old_val);
 
         if (new_val.empty())
             new_val = old_val;
@@ -516,23 +563,36 @@ static string _localise_string(const string& s, bool fallback_en)
 
     if (trimmed.length() != s.length())
     {
-        result = _localise_string(trimmed);
-        return replace_all(s, trimmed, result);
+        result = _localise_string(trimmed, fallback_en);
+        if (!result.empty())
+            return replace_first(s, trimmed, result);
     }
 
     string prefix, rest;
     separate_menu_letter_prefix(s, prefix, rest);
     if (!prefix.empty())
-        return prefix + _localise_string(rest);
+    {
+        result = _localise_string(rest, fallback_en);
+        if (!result.empty() || rest.empty())
+            return prefix + result;
+    }
 
     string annotation;
     separate_prefix_annotation(s, annotation, rest);
     if (!annotation.empty())
-        return _localise_annotation(annotation) + _localise_string(rest);
+    {
+        result = _localise_string(rest, fallback_en);
+        if (!result.empty() || rest.empty())
+            return _localise_annotation(annotation) + result;
+    }
 
     separate_postfix_annotation(s, annotation, rest);
     if (!annotation.empty())
-        return _localise_string(rest) + _localise_annotation(annotation);
+    {
+        result = _localise_string(rest, fallback_en);
+        if (!result.empty() || rest.empty())
+            return result + _localise_annotation(annotation);
+    }
 
     // test for named ally (e.g. "Boghold the orc")
     // or shape-shifted unique (e.g. "Sigmund the bat")
@@ -549,7 +609,9 @@ static string _localise_string(const string& s, bool fallback_en)
             string xlated_name = strip_context(_translate(name));
             if (xlated_name.empty())
                 xlated_name = name;
-            return xlated_name + _localise_string(rest);
+            result = _localise_string(rest, fallback_en);
+            if (!result.empty())
+                return xlated_name + result;
         }
     }
 

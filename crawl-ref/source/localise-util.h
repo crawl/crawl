@@ -35,6 +35,8 @@ bool has_determiner(const string& s);
 // Strip determiner from string
 string strip_determiner(const string& s);
 
+bool is_adverb(const string& s);
+
 bool starts_with_uppercase(const string& s);
 
 // make first letter lowercase if string starts with a detrminer
