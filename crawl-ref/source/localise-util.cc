@@ -142,6 +142,12 @@ string strip_determiner(const string& s)
     return _determiner_pattern.replace(s, "");
 }
 
+bool is_adverb(const string& s)
+{
+    string trimmed = trimmed_string(s);
+    return trimmed == "very" || ends_with(trimmed, "ly");
+}
+
 bool starts_with_uppercase(const string& s)
 {
     return !s.empty() && isaupper(s[0]);

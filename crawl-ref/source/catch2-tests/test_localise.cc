@@ -83,6 +83,8 @@ TEST_CASE( "Localise German", "[single-file]" )
         CHECK( localise("the 27-headed Lernaean hydra") == "die 27-köpfige Lernäische Hydra" );
         CHECK( localise("a non-hostile very large slime creature") ==
                         "eine nicht feindliche sehr große Schleimkreatur" );
+        CHECK( localise("a neutral bribed spectral orc") ==
+                        "ein neutraler bestochener spektraler Ork" );
 
         // player ghost
         CHECK( localise("MrDizzy's ghost") == "der Geist von MrDizzy" );
