@@ -128,6 +128,7 @@ invis_known UNSEEN_INVIS_KNOWN
 invis_remembered UNSEEN_INVIS_REMEMBERED
 seen_invis SEEN_INVIS
 phase_shifted PHASE_SHIFT
+ostracised OSTRACISED
 
 item_stack1 ITEM_STACK_1
 item_stack2 ITEM_STACK_2

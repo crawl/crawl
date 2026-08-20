@@ -1095,6 +1095,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             start_lurking(*this);
         break;
 
+    case ENCH_OSTRACISED:
+        if (!quiet)
+            simple_monster_message(*this, " connection to the divine is restored.", true);
+        break;
+
     default:
         break;
     }
@@ -1418,6 +1423,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_STAMPEDE:
     case ENCH_PREPARING_TO_LURK:
     case ENCH_PHASE_SHIFT:
+    case ENCH_OSTRACISED:
         decay_enchantment(en);
         break;
 
@@ -2182,7 +2188,7 @@ static const char *enchant_names[] =
     "phalanx_barrier", "figment", "paradox-touched", "warding",
     "diminished_spells", "orb_cooldown", "sunder_charge",
     "exposed", "briar_cooldown", "stampeding",
-    "preparing_to_lurk", "phase_shift",
+    "preparing_to_lurk", "phase_shift", "ostracised",
     "buggy", // NUM_ENCHANTMENTS
 };
 

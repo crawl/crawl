@@ -235,6 +235,14 @@ static mons_spell_logic _hex_logic(spell_type spell,
                                    = nullptr,
                                    int power_hd_factor = 4);
 
+static bool _can_ostracise(const actor& act)
+{
+    if (act.is_player())
+        return true;
+
+    return act.as_monster()->is_priest();
+}
+
 /// How do monsters go about casting spells?
 static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_MIGHT, {
@@ -1065,12 +1073,14 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         [](const monster &caster) {
             const actor* foe = caster.get_foe();
             ASSERT(foe);
-            return ai_action::good_or_impossible(foe->is_player() && could_harm_enemy(&caster, &you)
-                                                 && grid_distance(caster.pos(), you.pos()) <= 3);
+            return ai_action::good_or_impossible(could_harm_enemy(&caster, foe)
+                                                 && grid_distance(caster.pos(), foe->pos()) <= 3
+                                                 && _can_ostracise(*foe));
         },
-        [](monster, mon_spell_slot, bolt&) {
-            flash_tile(you.pos(), BLUE, 150, TILE_BOLT_OSTRACISE);
-            ostracise_player(random_range(7, 18));
+        [](monster &caster, mon_spell_slot, bolt&) {
+            actor* foe = caster.get_foe();
+            flash_tile(foe->pos(), BLUE, 150, TILE_BOLT_OSTRACISE);
+            foe->ostracise(random_range(7, 18));
         }
     } },
     { SPELL_DOOMSAYING, {
@@ -5396,6 +5406,13 @@ bool handle_mon_spell(monster* mons)
         // This may be a bad idea -- if we decide monsters shouldn't
         // lose a turn like players do not, please make this just return.
         simple_monster_message(*mons, " falters for a moment.");
+        mons->lose_energy(EUT_SPELL);
+        return true;
+    }
+
+    if (mons->has_ench(ENCH_OSTRACISED) && flags & MON_SPELL_PRIEST)
+    {
+        simple_monster_message(*mons, " prayers go unheard.", true);
         mons->lose_energy(EUT_SPELL);
         return true;
     }

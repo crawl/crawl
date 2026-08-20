@@ -564,7 +564,7 @@ void monster::timeout_enchantments(int time, bool no_drowning)
         case ENCH_ROLLING: case ENCH_MERFOLK_AVATAR_SONG: case ENCH_INFESTATION:
         case ENCH_HELD: case ENCH_BULLSEYE_TARGET: case ENCH_FATIGUE:
         case ENCH_TIDE: case ENCH_SLOWLY_DYING: case ENCH_BRAMBLE_COOLDOWN:
-        case ENCH_EXPOSED:
+        case ENCH_EXPOSED: case ENCH_OSTRACISED:
             _timeout_enchantment(*this, entry.second, time);
             break;
 
