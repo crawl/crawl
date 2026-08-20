@@ -1008,7 +1008,7 @@ string getTranslatedString(const string &original)
     return _query_database(TranslateDB, original, false, false);
 }
 
-vector<string> getTranslatedKeysByRegex(const string &regex)
+vector<string> getTranslationKeysByRegex(const string &regex)
 {
     if (!TranslateDB.translation || !TranslateDB.translation->get())
     {
@@ -1017,4 +1017,15 @@ vector<string> getTranslatedKeysByRegex(const string &regex)
     }
 
     return _database_find_keys(TranslateDB.translation->get(), regex, false);
+}
+
+vector<string> getTranslationBodiesByRegex(const string &regex)
+{
+    if (!TranslateDB.translation || !TranslateDB.translation->get())
+    {
+        vector<string> empty;
+        return empty;
+    }
+
+    return _database_find_bodies(TranslateDB.translation->get(), regex, false);
 }
