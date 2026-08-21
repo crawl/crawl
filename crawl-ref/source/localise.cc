@@ -638,6 +638,21 @@ static string _localise_string(const string& s, bool fallback_en)
             return result + _localise_annotation(annotation);
     }
 
+    // test for list
+    auto tokens = tokenise_comma_separated_list(s);
+    if (tokens.size() > 1)
+    {
+        for (string token: tokens)
+        {
+            string saved_context = _context;
+            token = maybe_lowercase_first(token);
+            result += _localise_string(token);
+            if (!saved_context.empty())
+                _context = saved_context;
+        }
+        return result;
+    }
+
     // test for named ally (e.g. "Boghold the orc")
     // or shape-shifted unique (e.g. "Sigmund the bat")
     text_pattern named_mon("^[A-Z][a-z]+ the ");

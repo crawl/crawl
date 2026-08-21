@@ -270,6 +270,57 @@ vector<string> tokenise_parameterised_string(const string& s)
     return result;
 }
 
+// looks like a list, but isn't
+static const string _false_alarm = "Dice, Bag, and Bottle";
+
+vector<string> tokenise_comma_separated_list(const string& s)
+{
+    vector<string> result;
+
+    static const vector<string> seps = {
+        ", ", " and ", " or "
+    };
+
+    result.push_back(replace_all(s, _false_alarm, "FALSE_ALARM"));
+
+    for (auto sep: seps)
+    {
+        vector<string> temp = result;
+        result.clear();
+
+        for (auto token: temp)
+        {
+            auto temp2 = split_string(sep, token, false, true);
+            for (size_t i = 0; i < temp2.size(); i++)
+            {
+                if (i != 0)
+                    result.push_back(sep);
+                result.push_back(temp2[i]);
+            }
+        }
+    }
+
+    for (size_t i = 0; i < result.size(); i++)
+    {
+        if (i == 0 || result[i - 1] != ", ")
+            continue;
+        else if (starts_with(result[i], "and "))
+        {
+            result[i - 1] += "and ";
+            result[i] = result[i].substr(strlen("and "));
+        }
+        else if (starts_with(result[i], "or "))
+        {
+            result[i - 1] += "or ";
+            result[i] = result[i].substr(strlen("or "));
+        }
+    }
+
+    for (size_t i = 0; i < result.size(); i++)
+        result[i] = replace_all(result[i], "FALSE_ALARM", _false_alarm);
+
+    return result;
+}
 
 string apply_regex_rule(const string& rule, const string& s)
 {
