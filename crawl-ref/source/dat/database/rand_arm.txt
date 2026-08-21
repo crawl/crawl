@@ -254,6 +254,8 @@ Minokawa
 
 # Unlikely hybrids
 
+Armchairtaur
+
 Giraffataur
 
 Elephantaur
