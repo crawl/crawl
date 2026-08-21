@@ -1016,12 +1016,14 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         return spret::abort;
     }
 
-    if (check_range && spell_no_hostile_in_range(spell))
+    const bool needs_target = testbits(get_spell_flags(spell),
+                                       spflag::needs_target);
+    if ((check_range || needs_target) && spell_no_hostile_in_range(spell))
     {
         // Abort if there are no hostiles within range, but flash the range
         // markers for a short while.
-        mpr("You can't see any susceptible monsters within range! "
-            "(Use <w>Z</w> to cast anyway.)");
+        mprf("You can't see any susceptible monsters within range!%s",
+             needs_target ? "" : " (Use <w>Z</w> to cast anyway.)");
 
         if ((Options.use_animations & UA_RANGE) && Options.darken_beyond_range)
         {

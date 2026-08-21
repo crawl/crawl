@@ -139,7 +139,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_PLASMA_BEAM, "Plasma Beam",
     spschool::fire | spschool::air,
-    spflag::noisy | spflag::destructive | spflag::direct_damage_only,
+    spflag::noisy | spflag::destructive | spflag::direct_damage_only | spflag::needs_target,
     6,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -150,7 +150,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_PERMAFROST_ERUPTION, "Permafrost Eruption",
     spschool::ice | spschool::earth,
-    spflag::destructive,
+    spflag::destructive | spflag::needs_target,
     6,
     200,
     6, 6, // reduce cases of hitting something outside LOS
@@ -1073,7 +1073,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_IGNITE_POISON, "Ignite Poison",
     spschool::fire | spschool::alchemy,
-    spflag::destructive | spflag::direct_damage_only,
+    spflag::destructive,
     4,
     100,
     -1, -1,
@@ -1456,8 +1456,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_QUICKSILVER_BOLT, "Quicksilver Bolt",
     spschool::conjuration,
-    spflag::dir_or_target | spflag::needs_tracer | spflag::not_self
-        | spflag::direct_damage_only,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::not_self,
     5,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -3493,7 +3492,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_MAXWELLS_COUPLING, "Maxwell's Capacitive Coupling",
     spschool::air,
-    spflag::no_ghost | spflag::destructive,
+    spflag::no_ghost | spflag::destructive | spflag::needs_target,
     8,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -3570,7 +3569,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_MANIFOLD_ASSAULT, "Manifold Assault",
     spschool::translocation,
-    spflag::none,
+    spflag::needs_target,
     7,
     200,
     -1, -1,
@@ -3681,7 +3680,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SCORCH, "Scorch",
     spschool::fire,
-    spflag::destructive,
+    spflag::destructive | spflag::needs_target,
     2,
     50,
     3, 3,

@@ -1328,8 +1328,13 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return c_check;
     }
 
-    if (!prevent && temp && spell_no_hostile_in_range(spell))
+    if (temp
+        && (!prevent
+            || testbits(get_spell_flags(spell), spflag::needs_target))
+        && spell_no_hostile_in_range(spell))
+    {
         return "you can't see any hostile targets that would be affected.";
+    }
 
     switch (spell)
     {
@@ -1727,13 +1732,16 @@ bool spell_no_hostile_in_range(spell_type spell)
     const int range = calc_spell_range(spell, pow, true);
 
     // If there are known invisible monsters around, assume that they *might*
-    // be in range.
+    // be in range for spells that can target invisible things.
     //
     // XXX: This is inexact since it doesn't account for resistances of said
     //      invisible monster, but doing that comprehensively is quite hard
     //      and probably not worth the trouble.
-    if (env.invis_knowledge.any_unknown_nearby())
+    if (env.invis_knowledge.any_unknown_nearby()
+        && !testbits(flags, spflag::needs_target))
+    {
         return false;
+    }
 
     switch (spell)
     {
