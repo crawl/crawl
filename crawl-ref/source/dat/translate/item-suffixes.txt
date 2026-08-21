@@ -11,191 +11,191 @@
 # protection from fire and fire resistance are equivalent
 # the former name is used on rings and the latter on armour
 %%%%
-" of protection from fire"
+@item@ of protection from fire
 
 %%%%
-" of fire resistance"
+@item@ of fire resistance
 
 %%%%
 
 # protection from cold and cold resistance are equivalent
 # the former name is used on rings and the latter on armour
 %%%%
-" of protection from cold"
+@item@ of protection from cold
 
 %%%%
-" of cold resistance"
+@item@ of cold resistance
 
 %%%%
 
 # resist corrosion and preservation are equivalent
 # the former name is used on rings and the latter on armour
 %%%%
-" of resist corrosion"
+@item@ of resist corrosion
 
 %%%%
-" of preservation"
+@item@ of preservation
 
 %%%%
 
 %%%%
 # grants more AC
-" of protection"
+@item@ of protection
 
 %%%%
 # grants both fire and cold resistance
-" of resistance"
+@item@ of resistance
 
 %%%%
-" of poison resistance"
+@item@ of poison resistance
 
 %%%%
 # negative energy resistance
-" of positive energy"
+@item@ of positive energy
 
 %%%%
-" of strength"
+@item@ of strength
 
 %%%%
-" of dexterity"
+@item@ of dexterity
 
 %%%%
-" of intelligence"
+@item@ of intelligence
 
 %%%%
-" of slaying"
+@item@ of slaying
 
 %%%%
-" of see invisible"
+@item@ of see invisible
 
 %%%%
-" of evasion"
+@item@ of evasion
 
 %%%%
-" of wizardry"
+@item@ of wizardry
 
 %%%%
-" of magical power"
+@item@ of magical power
 
 %%%%
-" of flight"
+@item@ of flight
 
 %%%%
-" of willpower"
+@item@ of willpower
 
 %%%%
-" of fire"
+@item@ of fire
 
 %%%%
-" of ice"
+@item@ of ice
 
 %%%%
-" of regeneration"
+@item@ of regeneration
 
 %%%%
-" of magic regeneration"
+@item@ of magic regeneration
 
 %%%%
-" of the acrobat"
+@item@ of the acrobat
 
 %%%%
 # base type of some artefact amulets
-" of nothing"
+@item@ of nothing
 
 %%%%
-" of guardian spirit"
+@item@ of guardian spirit
 
 %%%%
-" of faith"
+@item@ of faith
 
 %%%%
-" of reflection"
+@item@ of reflection
 
 %%%%
-" of acid"
+@item@ of acid
 
 %%%%
-" of chaos"
+@item@ of chaos
 
 %%%%
-" of distortion"
+@item@ of distortion
 
 %%%%
-" of draining"
+@item@ of draining
 
 %%%%
-" of electrocution"
+@item@ of electrocution
 
 %%%%
-" of flaming"
+@item@ of flaming
 
 %%%%
-" of flame"
+@item@ of flame
 
 %%%%
-" of freezing"
+@item@ of freezing
 
 %%%%
-" of holy wrath"
+@item@ of holy wrath
 
 %%%%
-" of pain"
+@item@ of pain
 
 %%%%
-" of penetration"
+@item@ of penetration
 
 %%%%
-" of speed"
+@item@ of speed
 
 %%%%
-" of venom"
+@item@ of venom
 
 %%%%
-" of dispersal"
+@item@ of dispersal
 
 %%%%
-" of speedy slithering"
+@item@ of speedy slithering
 
 %%%%
-" of running"
+@item@ of running
 
 %%%%
-" of invisibility"
+@item@ of invisibility
 
 %%%%
-" of ponderousness"
+@item@ of ponderousness
 
 %%%%
-" of flying"
+@item@ of flying
 
 %%%%
-" of the Archmagi"
+@item@ of the Archmagi
 
 %%%%
-" of spirit shield"
+@item@ of spirit shield
 
 %%%%
-" of archery"
+@item@ of archery
 
 %%%%
-" of repulsion"
+@item@ of repulsion
 
 %%%%
-" of harm"
+@item@ of harm
 
 %%%%
-" of shadows"
+@item@ of shadows
 
 %%%%
-" of rampaging"
+@item@ of rampaging
 
 %%%%
-# only on artefact "Sword of Zonguldrok"
-" of reaping"
+# only on artefact Sword of Zonguldrok
+@item@ of reaping
 
 %%%%
-# only on artefact lance "Wyrmbane"
-" of dragon slaying"
+# only on artefact lance Wyrmbane
+@item@ of dragon slaying
 
 %%%%
 
@@ -204,22 +204,19 @@
 #################################
 # generic
 %%%%
-" of "@arg@""
+@item@ of @arg@
 
 %%%%
-" "@arg@""
-
-%%%%
-" of Zot"
+@item@ of Zot
 
 %%%%
 # specific artefacts don't necessarily need to be translated
 # if there's no specific translation, the English text will put in quotes.
 %%%%
-" of the Moon"
+@item@ of the Moon
 
 %%%%
-" of Dice, Bag, and Bottle"
+@item@ of Dice, Bag, and Bottle
 
 %%%%
 
@@ -228,98 +225,98 @@
 #################################
 # note: these names should match the skill names
 %%%%
-" of fighting"
+@item@ of fighting
 
 %%%%
-" of short blades"
+@item@ of short blades
 
 %%%%
-" of long blades"
+@item@ of long blades
 
 %%%%
-" of axes"
+@item@ of axes
 
 %%%%
-" of maces & flails"
+@item@ of maces & flails
 
 %%%%
-" of polearms"
+@item@ of polearms
 
 %%%%
-" of staves"
+@item@ of staves
 
 %%%%
-" of slings"
+@item@ of slings
 
 %%%%
-" of bows"
+@item@ of bows
 
 %%%%
-" of crossbows"
+@item@ of crossbows
 
 %%%%
-" of throwing"
+@item@ of throwing
 
 %%%%
-" of armour"
+@item@ of armour
 
 %%%%
-" of dodging"
+@item@ of dodging
 
 %%%%
 # also used on items that increase stealth
-" of stealth"
+@item@ of stealth
 
 %%%%
-" of shields"
+@item@ of shields
 
 %%%%
-" of unarmed combat"
+@item@ of unarmed combat
 
 %%%%
-" of evocations"
+@item@ of evocations
 
 %%%%
-" of invocations"
+@item@ of invocations
 
 %%%%
-" of spellcasting"
+@item@ of spellcasting
 
 %%%%
-" of necromancy"
+@item@ of necromancy
 
 %%%%
-" of conjurations"
+@item@ of conjurations
 
 %%%%
-" of hexes"
+@item@ of hexes
 
 %%%%
-" of charms"
+@item@ of charms
 
 %%%%
-" of summonings"
+@item@ of summonings
 
 %%%%
-" of translocations"
+@item@ of translocations
 
 %%%%
-" of transmutations"
+@item@ of transmutations
 
 %%%%
-" of fire magic"
+@item@ of fire magic
 
 %%%%
-" of ice magic"
+@item@ of ice magic
 
 %%%%
-" of air magic"
+@item@ of air magic
 
 %%%%
-" of earth magic"
+@item@ of earth magic
 
 %%%%
-" of poison magic"
+@item@ of poison magic
 
 %%%%
 
@@ -328,9 +325,9 @@
 #################################
 # these can occur if player loads a savegame from an earlier version of the game
 %%%%
-" of obsoleteness"
+@item@ of obsoleteness
 
 %%%%
-" of removedness"
+@item@ of removedness
 
 %%%%
