@@ -138,6 +138,16 @@ TEST_CASE( "Localise German", "[single-file]" )
                         "Der Vampir zieht Lebenskraft aus dir!!!" );
     }
 
+    SECTION("Lists")
+    {
+        CHECK( localise("a goblin, 2 orcs and a kobold") == "ein Goblin, 2 Orks und ein Kobold" );
+        CHECK( localise("a goblin, 2 orcs, and a kobold") == "ein Goblin, 2 Orks und ein Kobold" );
+        CHECK( localise("a goblin, 2 orcs or a kobold") == "ein Goblin, 2 Orks oder ein Kobold" );
+        CHECK( localise("a goblin, 2 orcs, or a kobold") == "ein Goblin, 2 Orks oder ein Kobold" );
+        //CHECK( localise("A goblin, 2 orcs and a kobold come into view.") ==
+        //                "Ein Goblin, 2 Orks und ein Kobold kommen in Sicht." );
+    }
+
     databaseSystemShutdown();
     Options.lang_name = "en";
     Options.language = lang_t::EN;

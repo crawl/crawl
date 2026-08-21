@@ -54,6 +54,11 @@ void separate_postfix_annotation(const string& s, string& annotation, string& re
 // - parameters (e.g. "@the_monster@")
 vector<string> tokenise_parameterised_string(const string& s);
 
+// separate list into tokens. separators are included.
+// Example: "a goblin, 2 orcs and a kobold"
+//  -> ["a goblin", ", ", "2 orcs", " and ", "a kobold"]
+vector<string> tokenise_comma_separated_list(const string& s);
+
 // Apply a regex rule to a string.
 //
 // Rules can have two forms:
