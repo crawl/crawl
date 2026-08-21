@@ -556,6 +556,13 @@ static bool _armour_ego_filter(string key, string /*body*/)
     return !strip_suffix(key, " armour ego");
 }
 
+static bool _missile_ego_filter(string key, string /*body*/)
+{
+    lowercase(key);
+
+    return !strip_suffix(key, " missile ego");
+}
+
 static void _recap_mon_keys(vector<string> &keys)
 {
     for (unsigned int i = 0, size = keys.size(); i < size; i++)
@@ -1426,6 +1433,20 @@ static int _describe_armour_ego(const string &key, const string &suffix,
     return 0;
 }
 
+static int _describe_missile_ego(const string &key, const string &suffix,
+                                 string /*footer*/)
+{
+    const string missile_ego_name = key.substr(0, key.size() - suffix.size());
+    const special_missile_type msl = missile_ego_from_name(missile_ego_name.c_str());
+    if (msl == NUM_SPECIAL_MISSILES)
+    {
+        ui::error(make_stringf("Unable to get '%s' by name", key.c_str()));
+        return 0;
+    }
+    describe_missile_ego(msl);
+    return 0;
+}
+
 /// All types of ?/ queries the player can enter.
 static const vector<LookupType> lookup_types = {
     LookupType('M', "monster", _recap_mon_keys, _monster_filter,
@@ -1476,6 +1497,9 @@ static const vector<LookupType> lookup_types = {
     LookupType('R', "armour ego", nullptr, _armour_ego_filter,
                nullptr, nullptr, _simple_menu_gen,
                _describe_armour_ego, lookup_type::db_suffix),
+    LookupType('E', "missile ego", nullptr, _missile_ego_filter,
+               nullptr, nullptr, _simple_menu_gen,
+               _describe_missile_ego, lookup_type::db_suffix),
 };
 
 /**
