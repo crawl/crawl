@@ -10333,10 +10333,10 @@ The frozen ramparts melt away as you move.
 You slip free of @arg@ engulfing you.
 
 %%%%
-Are you sure you want to swing wildly while confused and next to @arg1@@arg2@?
+Are you sure you want to swing wildly while confused and next to @ally@?@penance@
 
 %%%%
-Are you sure you want to stumble around while confused and next to @arg1@@arg2@?
+Are you sure you want to stumble around while confused and next to @ally@?@penance@
 
 %%%%
 " while you are losing your buoyancy"

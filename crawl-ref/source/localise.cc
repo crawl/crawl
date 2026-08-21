@@ -167,6 +167,9 @@ void init_localisation()
 
     // convert paramaterised string to regex pattern
     text_pattern num_arg_patt("@num[^@]*@");
+    text_pattern int_arg_patt("@integer[^@]*@");
+    text_pattern float_arg_patt("@float[^@]*@");
+    text_pattern punct_arg_patt("@punct[^@]*@");
     text_pattern str_arg_patt("@[^@]+@");
     text_pattern a_an_patt("^an? ");
     for (const string& key: keys)
@@ -174,13 +177,31 @@ void init_localisation()
         string pattern = key;
         // escape characters that mean something to regex
         pattern = escape_regex_specials(pattern);
-        pattern = num_arg_patt.replace(pattern, "([\\+|\\-]?[0-9]+)");
+        pattern = replace_all(pattern, "@two_letter_code@", "[A-Z][A-Za-z]");
+        pattern = num_arg_patt.replace(pattern, "([0-9]+)");
+        pattern = int_arg_patt.replace(pattern, "([\\+\\-]?[0-9]+)");
+        // float is problematic because decimal point may already be changed by user's locale
+        //pattern = float_arg_patt.replace(pattern, "([\\+|\\-]?[0-9]*[\\.,][0-9]+)");
+        pattern = punct_arg_patt.replace(pattern, "([.!?]+)");
         pattern = str_arg_patt.replace(pattern, "(.*)");
         // adjectives can change "a" to "an" or vice versa
         pattern = a_an_patt.replace(pattern, "an? ");
         pattern = "^" + pattern + "$";
-        if (contains(key, "Royal"))
-            debuglog("\"%s\" -> \"%s\" -> \"%s\"", pattern.c_str(), key.c_str(), _translate(key).c_str());
+
+        if (replace_all(pattern, "(.*)", "") == "")
+        {
+            fprintf(stderr, "WARNING: Ignoring \"%s\" because it would match any text\n",
+                    key.c_str());
+            continue;
+        }
+
+        if (contains(pattern, "(.*)(.*)"))
+        {
+            fprintf(stderr, "WARNING: \"%s\" contains adjacent string parameters.\n"
+                    "There is no way to tell where one value ends and the next starts.\n",
+                    key.c_str());
+        }
+
         _patterns.emplace_back(make_pair(text_pattern(pattern), key));
     }
     debuglog("Localisation initialised");
@@ -385,12 +406,11 @@ static string _localise_param(map<string, string>& params, const string& key)
     }
     else
     {
-        // old val might be capitalised due to being at start of sentence
-        if (starts_with_uppercase(old_val))
-            new_val = _localise_string(lowercase_first(old_val), false);
+        new_val = _localise_string(old_val, false);
 
-        if (new_val.empty())
-            new_val = _localise_string(old_val, false);
+        // old val might be capitalised due to being at start of sentence
+        if (new_val.empty() && starts_with_uppercase(old_val))
+            new_val = _localise_string(lowercase_first(old_val), false);
 
         if (new_val.empty() && contains(old_val, ' '))
             new_val = _localise_adjectives(old_val);
@@ -398,6 +418,8 @@ static string _localise_param(map<string, string>& params, const string& key)
         if (new_val.empty())
             new_val = old_val;
     }
+
+    _shift_context(new_val);
 
     return isaupper(key[0]) ? uppercase_first(new_val) : new_val;
 }
@@ -427,7 +449,8 @@ static string _localise_parameterised_string(const string& s)
     {
         // store all params with lowercase keys
         string key = lowercase_first(param_keys[i]);
-        params[key] = param_vals[i];
+        string value = maybe_lowercase_first(param_vals[i]);
+        params[key] = value;
     }
 
     string format = _ctx_translate(_context, match.second);

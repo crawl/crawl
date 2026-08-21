@@ -6,13 +6,18 @@
 TEST_CASE( "Pattern matches", "[single-file]" ) {
     // match substring
     text_pattern pattern1("[A-Za-z]+:[0-9]+");
-    REQUIRE( pattern1.matches("Dungeon:1") );
-    REQUIRE( pattern1.matches("You are on Dungeon:1") );
+    CHECK( pattern1.matches("Dungeon:1") );
+    CHECK( pattern1.matches("You are on Dungeon:1") );
 
     // match whole string
     text_pattern pattern2("^[A-Za-z]+:[0-9]+$");
-    REQUIRE( pattern2.matches("Dungeon:1") );
-    REQUIRE( !pattern2.matches("You are on Dungeon:1") );
+    CHECK( pattern2.matches("Dungeon:1") );
+    CHECK( !pattern2.matches("You are on Dungeon:1") );
+
+    // repeat count
+    text_pattern pattern3("^[A-Za-z]{2}$");
+    CHECK( pattern3.matches("Mi") );
+    CHECK( !pattern3.matches("MiFi") );
 }
 
 TEST_CASE( "Matched text", "[single-file]" ) {

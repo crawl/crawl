@@ -129,6 +129,13 @@ TEST_CASE( "Localise German", "[single-file]" )
         CHECK( localise("The broad axe dances into the air!") == "Die Breitaxt tanzt in die Luft!" );
         CHECK( localise("The gnoll's halberd dances into the air!") == "Die Hellebarde des Gnolls tanzt in die Luft!" );
         CHECK( localise("Sigmund's scythe dances into the air!") == "Die Sense von Sigmund tanzt in die Luft!" );
+
+        CHECK( localise("You draw life force from the goblin.") ==
+                        "Du ziehst Lebenskraft aus dem Goblin." );
+        CHECK( localise("You draw life force from Fannar!!") ==
+                        "Du ziehst Lebenskraft aus Fannar!!" );
+        CHECK( localise("The vampire draws life force from you!!!") ==
+                        "Der Vampir zieht Lebenskraft aus dir!!!" );
     }
 
     databaseSystemShutdown();
