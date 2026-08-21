@@ -25,8 +25,8 @@ using namespace std;
 #define debuglog(...) {}
 #endif
 
-static string _translate(const string &s);
-static string _ctx_translate(const string &context, const string &s);
+static string _translate(const string &s, bool fallback_en = false);
+static string _ctx_translate(const string &context, const string &s, bool fallback_en = false);
 
 static string _localise_string(const string& s, bool fallback_en = true);
 static string _localise_parameterised_string(const string& s);
@@ -208,7 +208,7 @@ void init_localisation()
 }
 
 // low-level translate function
-static string _translate(const string &s)
+static string _translate(const string &s, bool fallback_en)
 {
     string result = getTranslatedString(s);
 
@@ -230,11 +230,14 @@ static string _translate(const string &s)
             result = _get_pregenerated_translation(alternative);
     }
 
+    if (result.empty() && fallback_en)
+        result = s;
+
     return result;
 }
 
 // low-level translate function with context
-static string _ctx_translate(const string &context, const string &s)
+static string _ctx_translate(const string &context, const string &s, bool fallback_en)
 {
     if (context.empty())
         return _translate(s);
@@ -259,6 +262,9 @@ static string _ctx_translate(const string &context, const string &s)
             result = apply_regex_rules(rules, result);
         }
     }
+
+    if (result.empty() && fallback_en)
+        result = s;
 
     return result;
 }
@@ -424,6 +430,35 @@ static string _localise_param(map<string, string>& params, const string& key)
     return isaupper(key[0]) ? uppercase_first(new_val) : new_val;
 }
 
+// In deference to Spanish, which likes to put punctuation at both ends,
+// variable punctuation is handled by passing the sentence as a parameter
+// to the punctuation string, rather than vice versa.
+static string _handle_variable_punctuation(const string& s)
+{
+    size_t pos = s.find_last_not_of(".!?");
+    string punct, rest;
+    if (pos == string::npos)
+        punct = s;
+    else
+    {
+        punct = s.substr(pos + 1);
+        rest = s.substr(0, pos + 1);
+    }
+
+    if (punct.empty())
+        return "";
+
+    string format = _translate("@sentence@" + punct, true);
+    string rest_xlated = _localise_string(rest);
+
+    if (format.empty() || rest.empty())
+        return "";
+
+    string result = replace_first(format, "@sentence@", rest_xlated);
+    result = replace_first(result, "@Sentence@", uppercase_first(rest_xlated));
+    return result;
+}
+
 // localise parameterised string
 static string _localise_parameterised_string(const string& s)
 {
@@ -438,10 +473,25 @@ static string _localise_parameterised_string(const string& s)
     vector<string> param_keys = extract_params(match.second);
     vector<string> param_vals = match.first.capture(s);
 
-    if (param_keys.size() != param_vals.size())
+    if (param_keys.size() == 0)
+    {
+        debuglog("ERROR: No params in parameterised string... weird.");
+        return "";
+
+    }
+    else if (param_keys.size() != param_vals.size())
     {
         debuglog("ERROR: %ld keys, %ld vals\n", (long)param_keys.size(), (long)param_vals.size());
         return "";
+    }
+
+    // check for variable punctuation
+    string last = param_vals[param_vals.size() - 1];
+    if (!last.empty() && contains(".!?", last[last.length()-1]))
+    {
+        string result = _handle_variable_punctuation(s);
+        if (!result.empty())
+            return result;
     }
 
     map<string, string> params;

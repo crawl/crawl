@@ -1373,14 +1373,14 @@ Das Silber versengt {acc}@arg@!
 @arg@ life force is offered up.
 Die Lebenskraft @arg@ wird als Opfer dargeboten.
 %%%%
-You draw life force from @the_monster@@punct@
-Du ziehst Lebenskraft aus {dat}@the_monster@@punct@
+You draw life force from @the_monster@
+Du ziehst Lebenskraft aus {dat}@the_monster@
 %%%%
-@The_monster@ draws life force from you@punct@
-@The_monster@ zieht Lebenskraft aus dir@punct@
+@The_monster@ draws life force from you
+@The_monster@ zieht Lebenskraft aus dir
 %%%%
-@The_monster1@ draws life force from @the_monster2@@punct@
-@The_monster1@ zieht Lebenskraft aus {dat}@the_monster2@@punct@
+@The_monster1@ draws life force from @the_monster2@
+@The_monster1@ zieht Lebenskraft aus {dat}@the_monster2@
 %%%%
 @arg@ is healed by the life force!
 @arg@ wird durch die Lebenskraft geheilt!

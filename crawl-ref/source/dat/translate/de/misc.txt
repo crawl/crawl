@@ -42,39 +42,40 @@ DECIMAL_POINT
 # Attack strength punctuation
 ##############################
 # Exclamation marks show amount of damage.
-# The @arg@ is a placeholder for the sentence. It's done this way
+# The @Sentence@ is a placeholder for the sentence. It's done this way
 # because some languages don't simply append punctuation to the end.
-# For example, in Spanish, you would translate "@arg1@!" as "¡@arg2@!"
+# For example, in Spanish, you would translate "@Sentence@!" as "¡@Sentence@!"
 %%%%
-@arg@!
-@arg@!
+@Sentence@!
+@Sentence@!
 %%%%
-@arg@!!
-@arg@!!
+@Sentence@!!
+@Sentence@!!
 %%%%
-@arg@!!!
-@arg@!!!
+@Sentence@!!!
+@Sentence@!!!
 %%%%
-@arg@!!!!
-@arg@!!!!
+@Sentence@!!!!
+@Sentence@!!!!
 %%%%
-@arg@!!!!!
-@arg@!!!!!
+@Sentence@!!!!!
+@Sentence@!!!!!
 %%%%
-@arg@!!!!!!
-@arg@!!!!!!
+@Sentence@!!!!!!
+@Sentence@!!!!!!
 %%%%
-@arg@!!!!!!!
-@arg@!!!!!!!
+@Sentence@!!!!!!!
+@Sentence@!!!!!!!
 %%%%
-@arg@!!!!!!!!
-@arg@!!!!!!!!
+@Sentence@!!!!!!!!
+@Sentence@!!!!!!!!
 %%%%
-@arg@!!!!!!!!!
-@arg@!!!!!!!!!
+@Sentence@!!!!!!!!!
+@Sentence@!!!!!!!!!
 %%%%
-@arg@!!!!!!!!!!
-@arg@!!!!!!!!!!
+@Sentence@!!!!!!!!!!
+@Sentence@!!!!!!!!!!
+%%%%
 
 ####################
 # General punctuation
