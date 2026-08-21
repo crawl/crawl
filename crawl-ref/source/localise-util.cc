@@ -230,6 +230,47 @@ void separate_postfix_annotation(const string& s, string& annotation, string& re
     }
 }
 
+vector<string> tokenise_parameterised_string(const string& s)
+{
+    vector<string> result;
+
+    size_t curr = 0;
+    size_t next = s.find_first_of("{@");
+
+    while (curr < s.length())
+    {
+        if (next == string::npos)
+        {
+            result.push_back(s.substr(curr));
+            break;
+        }
+        else if (next > curr)
+        {
+            result.push_back(s.substr(curr, next - curr));
+            curr = next;
+        }
+
+        char terminator = s[next] == '@' ? '@' : '}';
+        size_t end = s.find(terminator, next + 1);
+
+        if (end == string::npos)
+        {
+            result.push_back(s.substr(next));
+            break;
+        }
+        else
+        {
+            result.push_back(s.substr(next, end - next + 1));
+            curr = end + 1;
+        }
+
+        next = s.find_first_of("{@", curr);
+    }
+
+    return result;
+}
+
+
 string apply_regex_rule(const string& rule, const string& s)
 {
     // need to accept empties because replacement could be empty.

@@ -48,6 +48,12 @@ void separate_menu_letter_prefix(const string& s, string& annotation, string& re
 void separate_prefix_annotation(const string& s, string& annotation, string& rest);
 void separate_postfix_annotation(const string& s, string& annotation, string& rest);
 
+// separate string into 3 types of tokens
+// - plain text
+// - context specifiers (e.g. "{poss}")
+// - parameters (e.g. "@the_monster@")
+vector<string> tokenise_parameterised_string(const string& s);
+
 // Apply a regex rule to a string.
 //
 // Rules can have two forms:
