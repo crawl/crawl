@@ -2239,6 +2239,55 @@ static string _armour_ego_key(special_armour_type ego)
     return ego_key;
 }
 
+/*
+ * Given some name, return an armour ego type. Tries to match the description as found in
+ * special_armour_type_name(), either terse or not. If `partial_matches` is set, it will fill the vector with
+ * any partial matches it finds. If there is exactly one, will return this armour ego, otherwise, will fail.
+ *
+ * @param partial_matches   an optional pointer to a vector, in case the consumer wants to do something
+ *                          with the partial match results (e.g. show them to the user). If this is `nullptr`,
+ *                          will accept only exact matches.
+ *
+ * @return the armour ego type if successful, otherwise NUM_SPECIAL_ARMOURS if it can't find a single match.
+ */
+special_armour_type armour_ego_from_name(string name,
+                                         vector<special_armour_type> *partial_matches)
+{
+    special_armour_type arm = NUM_SPECIAL_ARMOURS;
+
+    string spec = lowercase_string(name);
+
+    for (int i = 0; i < NUM_SPECIAL_ARMOURS; ++i)
+    {
+        special_armour_type sat = static_cast<special_armour_type>(i);
+        const string sat_name_terse_c = special_armour_type_name(sat, true);
+        const string sat_name_nonterse_c = special_armour_type_name(sat, false);
+        if (sat_name_terse_c.empty() && sat_name_nonterse_c.empty())
+            continue;
+        const string sat_name_terse = lowercase_string(sat_name_terse_c);
+        const string sat_name_nonterse = lowercase_string(sat_name_nonterse_c);
+
+        const string full_sat_name = sat_name_nonterse + " (" + sat_name_terse + ")";
+        if (spec == full_sat_name)
+        {
+            arm = sat;
+            break;
+        }
+
+        if (partial_matches && (strstr(spec.c_str(), sat_name_terse.c_str())
+                                || strstr(spec.c_str(), sat_name_nonterse.c_str())))
+        {
+            partial_matches->push_back(sat);
+        }
+    }
+
+    // If only one matching armour ego, use that.
+    if (partial_matches && arm == NUM_SPECIAL_ARMOURS && partial_matches->size() == 1)
+        return (*partial_matches)[0];
+
+    return arm;
+}
+
 static string _orb_ego_details(special_armour_type ego)
 {
     switch (ego)
@@ -5008,6 +5057,18 @@ void describe_weapon_ego(brand_type wpn)
 {
     describe_info inf;
     string ego_key = _weapon_ego_key(wpn);
+    string ego_desc = getEgoString(ego_key);
+
+    inf.title = uppercase_first(ego_key);
+    inf.body << ego_desc;
+
+    show_description(inf);
+}
+
+void describe_armour_ego(special_armour_type arm)
+{
+    describe_info inf;
+    string ego_key = _armour_ego_key(arm);
     string ego_desc = getEgoString(ego_key);
 
     inf.title = uppercase_first(ego_key);
