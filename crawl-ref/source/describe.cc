@@ -4401,8 +4401,11 @@ static string _player_spell_stats(const spell_type spell)
     const string damage_string = spell_damage_string(spell);
     const string max_dam_string = spell_max_damage_string(spell);
     const int acc = spell_acc(spell);
+    const string defence_string = spell_defence_string(spell);
+    const string resist_string = spell_resist_string(spell);
     // TODO: generalize this pattern? It's very common in descriptions
-    const int padding = (acc != -1) ? 8 : damage_string.size() ? 6 : 5;
+    const int padding = (acc != -1 || !defence_string.empty()) ? 8
+                        : damage_string.size() ? 6 : 5;
     description += make_stringf("\n\n%*s: ", padding, "Power");
     description += spell_power_string(spell);
 
@@ -4427,6 +4430,16 @@ static string _player_spell_stats(const spell_type spell)
     description += spell_range_string(spell);
     description += make_stringf("\n%*s: ", padding, "Noise");
     description += spell_noise_string(spell);
+    if (!defence_string.empty())
+    {
+        description += make_stringf("\n%*s: %s", padding, "Defences",
+                                    defence_string.c_str());
+    }
+    if (!resist_string.empty())
+    {
+        description += make_stringf("\n%*s: %s", padding, "Resists",
+                                    resist_string.c_str());
+    }
     description += "\n";
     return description;
 }
@@ -4822,6 +4835,14 @@ static void _get_spell_description(const spell_type spell,
 
         description += "\nRange : ";
         description += range_string(range, -1, minrange);
+
+        const int mon_pow = mons_power_for_hd(spell, hd);
+        const string defence_string = spell_defence_string(spell, true, mon_pow);
+        const string resist_string = spell_resist_string(spell, true, mon_pow);
+        if (!defence_string.empty())
+            description += "\nDefences : " + defence_string;
+        if (!resist_string.empty())
+            description += "\nResists : " + resist_string;
 
         if (crawl_state.need_save && you_worship(GOD_DITHMENOS))
         {

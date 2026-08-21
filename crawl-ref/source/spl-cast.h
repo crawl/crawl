@@ -144,6 +144,10 @@ string spell_damage_string(spell_type spell, bool evoked = false, int pow = -1,
                            bool terse = false);
 string spell_max_damage_string(spell_type spell);
 int spell_acc(spell_type spell);
+string spell_defence_string(spell_type spell, bool is_monster = false,
+                            int pow = -1);
+string spell_resist_string(spell_type spell, bool is_monster = false,
+                           int pow = -1);
 string spell_range_string(spell_type spell);
 string range_string(int range, int maxrange = -1, int minrange = 0);
 string spell_schools_string(spell_type spell);
