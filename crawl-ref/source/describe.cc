@@ -2151,10 +2151,10 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
     return description;
 }
 
-static string _missile_ego_key(const item_def &item)
+static string _missile_ego_key(special_missile_type ego)
 {
-    string verbose_ego_name = lowercase_first(missile_brand_name(item, MBN_NAME));
-    string terse_ego_name = lowercase_first(missile_brand_name(item, MBN_TERSE));
+    string verbose_ego_name = lowercase_first(special_missile_type_name(ego, MBN_NAME));
+    string terse_ego_name = lowercase_first(special_missile_type_name(ego, MBN_TERSE));
     string ego_key = verbose_ego_name + " (" + terse_ego_name + ") missile ego";
 
     return ego_key;
@@ -2166,11 +2166,13 @@ static string _describe_ammo(const item_def &item)
 
     description.reserve(64);
 
-    if (item.brand && item.is_identified())
+    const special_missile_type ego = get_ammo_brand(item);
+
+    if (ego != SPMSL_NORMAL && item.is_identified())
     {
         description += "\n\n";
 
-        string ego_key = _missile_ego_key(item);
+        string ego_key = _missile_ego_key(ego);
         string ego_desc = getEgoString(ego_key);
 
         description += ego_desc;
