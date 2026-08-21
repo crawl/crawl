@@ -463,6 +463,7 @@ python.exe util/gen-all.py</Command>
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\loading-screen.cc" />
+    <ClCompile Include="..\localise.cc" />
     <ClCompile Include="..\los.cc" />
     <ClCompile Include="..\los-def.cc" />
     <ClCompile Include="..\losparam.cc" />
@@ -807,6 +808,7 @@ python.exe util/gen-all.py</Command>
     <ClInclude Include="..\libutil.h" />
     <ClInclude Include="..\libw32c.h" />
     <ClInclude Include="..\loading-screen.h" />
+    <ClInclude Include="..\localise.h" />
     <ClInclude Include="..\lookup-help.h" />
     <ClInclude Include="..\los-def.h" />
     <ClInclude Include="..\los-type.h" />
