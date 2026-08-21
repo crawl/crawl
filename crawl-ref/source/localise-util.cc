@@ -148,6 +148,15 @@ bool is_adverb(const string& s)
     return trimmed == "very" || ends_with(trimmed, "ly");
 }
 
+bool is_determiner(const string& s)
+{
+    const static vector<string> determiners = {
+        "the", "a", "an", "some", "@num@"
+    };
+    string temp = lowercase_string(trimmed_string(s));
+    return std::find(determiners.begin(), determiners.end(), temp) != determiners.end();
+}
+
 bool starts_with_uppercase(const string& s)
 {
     return !s.empty() && isaupper(s[0]);
@@ -162,6 +171,28 @@ string maybe_lowercase_first(const string& s)
     }
 
     return s;
+}
+
+void separate_end_punctuation(const string& s, string& punct, string& rest)
+{
+    size_t pos = s.find_last_not_of(".!?");
+    if (pos == string::npos)
+    {
+        punct = s;
+        rest = "";
+    }
+    else
+    {
+        punct = s.substr(pos + 1);
+        rest = s.substr(0, pos + 1);
+    }
+}
+
+string get_end_punctuation(const string& s)
+{
+    string punct, rest;
+    separate_end_punctuation(s, punct, rest);
+    return punct;
 }
 
 void separate_menu_letter_prefix(const string& s, string& prefix, string& rest)

@@ -36,11 +36,15 @@ bool has_determiner(const string& s);
 string strip_determiner(const string& s);
 
 bool is_adverb(const string& s);
+bool is_determiner(const string& s);
 
 bool starts_with_uppercase(const string& s);
 
 // make first letter lowercase if string starts with a detrminer
 string maybe_lowercase_first(const string& s);
+
+void separate_end_punctuation(const string& s, string& punct, string& rest);
+string get_end_punctuation(const string& s);
 
 // separate menu letter prefix (e.g. "a - ", "a) ")
 void separate_menu_letter_prefix(const string& s, string& annotation, string& rest);
