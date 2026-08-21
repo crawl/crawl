@@ -459,15 +459,8 @@ static string _localise_param(map<string, string>& params, const string& key)
 // to the punctuation string, rather than vice versa.
 static string _handle_variable_punctuation(const string& s)
 {
-    size_t pos = s.find_last_not_of(".!?");
     string punct, rest;
-    if (pos == string::npos)
-        punct = s;
-    else
-    {
-        punct = s.substr(pos + 1);
-        rest = s.substr(0, pos + 1);
-    }
+    separate_end_punctuation(s, punct, rest);
 
     if (punct.empty())
         return "";
