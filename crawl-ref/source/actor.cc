@@ -1212,3 +1212,11 @@ void actor::clear_deferred_move()
     // none of which points to a const object, the const_cast here is safe.
     return const_cast<actor *>(ensure_valid_actor(static_cast<const actor *>(act)));
 }
+
+void actor::ostracise(int pow)
+{
+    if (is_player())
+        ostracise_player(pow);
+    else
+        this->as_monster()->add_ench(mon_enchant(ENCH_OSTRACISED, nullptr, pow * BASELINE_DELAY));
+}
