@@ -4666,6 +4666,7 @@ const vault_placement *dgn_place_map(const map_def *mdef,
             env.markers.activate_markers_at(p);
             set_terrain_changed(p);
         }
+        env.markers.clear_need_activate();
     }
 
     setup_environment_effects();
