@@ -268,6 +268,9 @@ private:
 
 public:
     bool is_enchantment() const; // no block/dodge, use willpower
+    ac_type effective_ac_rule() const;
+    bool can_be_dodged() const;
+    bool can_be_blocked() const;
     void set_target(const dist &targ);
     void set_agent(const actor *agent);
     void setup_retrace();

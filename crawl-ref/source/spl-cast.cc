@@ -26,6 +26,7 @@
 #include "env.h"
 #include "evoke.h"
 #include "exercise.h"
+#include "fight.h"
 #include "format.h"
 #include "god-abil.h"
 #include "god-conduct.h"
@@ -3293,6 +3294,237 @@ int spell_acc(spell_type spell)
     if (acc == AUTOMATIC_HIT)
         return -1;
     return acc;
+}
+
+/// How a spell's target can defend against it, for description purposes.
+struct spell_defence_info
+{
+    ac_type ac;
+    bool ev;
+    bool sh;
+    bool will;
+    vector<beam_type> resists;
+    const char *resist_override;
+    bool damaging;
+};
+
+struct spell_damage_zap
+{
+    zap_type zap;
+    bool monster_stats;
+};
+
+// Spells which use zaps but not from spell_to_zap.
+static const map<spell_type, spell_damage_zap> _spell_damage_zaps =
+{
+    { SPELL_DIAMOND_SAWBLADES,     { ZAP_SHRED,             true } },
+    { SPELL_FORGE_LIGHTNING_SPIRE, { ZAP_ELECTRICAL_BOLT,   true } },
+    { SPELL_FORTRESS_BLAST,        { ZAP_FORTRESS_BLAST,    false } },
+    { SPELL_HELLFIRE_MORTAR,       { ZAP_MAGMA_BARRAGE,     true } },
+    { SPELL_HOARFROST_CANNONADE,   { ZAP_HOARFROST_BULLET,  true } },
+    { SPELL_RENDING_BLADE,         { ZAP_RENDING_SLASH,     true } },
+};
+
+// Spells which don't use zaps, so we specify defences manually.
+static const map<spell_type, spell_defence_info> _spell_defences =
+{
+    { SPELL_AIRSTRIKE,
+      { ac_type::normal, false, false, false, {} } },
+    { SPELL_ARCJOLT,
+      { ac_type::half, false, false, false, { BEAM_ELECTRICITY } } },
+    { SPELL_BATTLESPHERE,
+      { ac_type::normal, false, false, false, {} } },
+    { SPELL_BOULDER,
+      { ac_type::normal, false, false, false, {} } },
+    { SPELL_CONJURE_BALL_LIGHTNING,
+      { ac_type::half, false, false, false, { BEAM_ELECTRICITY } } },
+    { SPELL_DETONATION_CATALYST,
+      { ac_type::normal, false, false, false, { BEAM_FIRE } } },
+    { SPELL_DISCHARGE,
+      { ac_type::half, false, false, false, { BEAM_ELECTRICITY } } },
+    { SPELL_ERUPTION,
+      { ac_type::normal, false, false, false, { BEAM_LAVA } } },
+    { SPELL_FREEZING_CLOUD,
+      { ac_type::none, false, false, false, { BEAM_COLD } } },
+    { SPELL_FROZEN_RAMPARTS,
+      { ac_type::normal, false, false, false, { BEAM_COLD } } },
+    { SPELL_FULMINANT_PRISM,
+      { ac_type::normal, false, false, false, {} } },
+    { SPELL_GELLS_GAVOTTE,
+      { ac_type::normal, false, false, false, {} } },
+    { SPELL_GLACIATE,
+      { ac_type::normal, false, false, false, { BEAM_ICE } } },
+    { SPELL_IOOD,
+      { ac_type::normal, false, false, false, {} } },
+    { SPELL_IRRADIATE,
+      { ac_type::normal, false, false, false, {} } },
+    { SPELL_JINXBITE,
+      { ac_type::none, false, false, true, {} } },
+    { SPELL_LAUNCH_SPORANGIUM,
+      { ac_type::normal, false, false, false, { BEAM_ACID } } },
+    { SPELL_LRD,
+      { ac_type::triple, false, false, false, {} } },
+    { SPELL_MAXWELLS_COUPLING,
+      { ac_type::none, false, false, false, {} } },
+    { SPELL_NOXIOUS_BOG,
+      { ac_type::none, false, false, false, { BEAM_POISON_ARROW } } },
+    { SPELL_PERMAFROST_ERUPTION,
+      { ac_type::normal, false, false, false, {}, "rC (explosion)" } },
+    { SPELL_PILEDRIVER,
+      { ac_type::normal, false, false, false, {} } },
+    { SPELL_PLASMA_BEAM,
+      { ac_type::normal, true, false, false, {}, "rF, rElec (one beam each)" } },
+    { SPELL_POISONOUS_VAPOURS,
+      { ac_type::none, false, false, false, { BEAM_POISON } } },
+    { SPELL_POLAR_VORTEX,
+      { ac_type::proportional, false, false, false, { BEAM_ICE } } },
+    { SPELL_RESONANCE_STRIKE,
+      { ac_type::normal, false, false, false, {} } },
+    { SPELL_SCORCH,
+      { ac_type::normal, false, false, false, { BEAM_FIRE } } },
+    { SPELL_SHATTER,
+      { ac_type::normal, false, false, false, {} } },
+    { SPELL_SLEETSTRIKE,
+      { ac_type::normal, false, false, false, { BEAM_ICE } } },
+    { SPELL_THUNDERBOLT,
+      { ac_type::half, false, false, false, { BEAM_ELECTRICITY } } },
+    { SPELL_WATERSTRIKE,
+      { ac_type::normal, false, false, false, { BEAM_WATER } } },
+};
+
+// Player facing name of the resist for a given beam flavour.
+static const char *beam_resist_name(beam_type flavour)
+{
+    switch (flavour)
+    {
+        case BEAM_FIRE:        return "rF";
+        case BEAM_COLD:        return "rC";
+        case BEAM_ELECTRICITY: return "rElec";
+        case BEAM_POISON:      return "rPois";
+        case BEAM_NEG:         return "rNeg";
+        case BEAM_ACID:        return "rCorr";
+        case BEAM_STEAM:       return "rSteam";
+        default:               return nullptr;
+    }
+}
+
+/// Work out which defences and resistances apply to a spell's target.
+static spell_defence_info _get_spell_defences(spell_type spell,
+                                              bool is_monster, int pow)
+{
+    spell_defence_info info = { ac_type::none, false, false,
+                                bool(get_spell_flags(spell) & spflag::WL_check),
+                                {}, nullptr, false };
+
+    const auto special = _spell_defences.find(spell);
+    if (special != _spell_defences.end())
+    {
+        const spell_defence_info &sp = special->second;
+        info.ac       = sp.ac;
+        info.ev       = sp.ev;
+        info.sh       = sp.sh;
+        info.will     = info.will || sp.will;
+        info.resists  = sp.resists;
+        info.resist_override = sp.resist_override;
+        info.damaging = true;
+        return info;
+    }
+
+    zap_type zap = NUM_ZAPS;
+    const auto dam_zap = _spell_damage_zaps.find(spell);
+    if (dam_zap != _spell_damage_zaps.end())
+    {
+        zap = dam_zap->second.zap;
+        is_monster = is_monster || dam_zap->second.monster_stats;
+    }
+    else
+        zap = spell_to_zap(spell);
+
+    if (zap == NUM_ZAPS)
+        return info;
+
+    if (pow < 0)
+        pow = is_monster ? 100 : calc_spell_power(spell);
+    pow = max(pow, 0);
+
+    bolt beam;
+    zappy(zap, pow, is_monster, beam);
+
+    const dice_def dam = zap_damage(zap, pow, is_monster, false);
+    if (dam.num <= 0 || dam.size <= 0)
+        return info;
+
+    // We have information from the zap.
+    info.damaging = true;
+
+    if (!beam.is_enchantment())
+    {
+        info.ac = beam.effective_ac_rule();
+        info.ev = beam.can_be_dodged();
+        info.sh = beam.can_be_blocked();
+    }
+
+    info.resists.push_back(beam.flavour);
+
+    return info;
+}
+
+// Description of which defences (AC, EV, SH) a spell checks.
+string spell_defence_string(spell_type spell, bool is_monster, int pow)
+{
+    const spell_defence_info info = _get_spell_defences(spell, is_monster, pow);
+    if (!info.damaging)
+        return "";
+
+    vector<string> checks;
+    switch (info.ac)
+    {
+        case ac_type::none:         break;
+        case ac_type::half:         checks.push_back("AC (50%)"); break;
+        case ac_type::triple:       checks.push_back("AC (x3)"); break;
+        default:                    checks.push_back("AC"); break;
+    }
+    if (info.ev)
+        checks.push_back("EV");
+    if (info.sh)
+        checks.push_back("SH");
+
+    if (checks.empty())
+        return "none";
+
+    return comma_separated_line(checks.begin(), checks.end(), ", ", ", ");
+}
+
+// Description of which resistances a damage spell checks.
+string spell_resist_string(spell_type spell, bool is_monster, int pow)
+{
+    const spell_defence_info info = _get_spell_defences(spell, is_monster, pow);
+    if (!info.damaging)
+        return "";
+
+    vector<string> descs;
+    if (info.will)
+        descs.push_back("Will");
+    if (info.resist_override)
+        descs.push_back(info.resist_override);
+    else for (beam_type flavour : info.resists)
+    {
+        const bool varies = flavour == BEAM_CHAOS || flavour == BEAM_RANDOM;
+        const char *name = varies ? "varies"
+                                  : beam_resist_name(get_beam_resist_type(flavour));
+        if (!name)
+            continue;
+        const int pct = beam_resistible_fraction(flavour);
+        if (pct == 100)
+            descs.push_back(name);
+        else
+            descs.push_back(make_stringf("%s (%d%%)", name, pct));
+    }
+
+    if (descs.empty())
+        return "none";
+
+    return comma_separated_line(descs.begin(), descs.end(), ", ", ", ");
 }
 
 int spell_power_percent(spell_type spell)

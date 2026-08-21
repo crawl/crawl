@@ -4523,18 +4523,34 @@ bool bolt::ignores_player() const
     return false;
 }
 
+ac_type bolt::effective_ac_rule() const
+{
+    if (ac_rule != ac_type::normal)
+        return ac_rule;
+
+    if (flavour == BEAM_DAMNATION)
+        return ac_type::none;
+    if (get_beam_resist_type(flavour) == BEAM_ELECTRICITY)
+        return ac_type::half;
+    if (flavour == BEAM_FRAG)
+        return ac_type::triple;
+
+    return ac_type::normal;
+}
+
+bool bolt::can_be_dodged() const
+{
+    return !is_explosion && !is_big_cloud() && hit != AUTOMATIC_HIT;
+}
+
+bool bolt::can_be_blocked() const
+{
+    return !is_big_cloud() && is_blockable();
+}
+
 int bolt::apply_AC(const actor *victim, int hurted)
 {
-    // Apply automatic AC rules if ac_rule was not manually specified.
-    if (ac_rule == ac_type::normal)
-    {
-        if (flavour == BEAM_DAMNATION)
-            ac_rule = ac_type::none;
-        else if (get_beam_resist_type(flavour) == BEAM_ELECTRICITY)
-            ac_rule = ac_type::half;
-        else if (flavour == BEAM_FRAG)
-            ac_rule = ac_type::triple;
-    }
+    ac_rule = effective_ac_rule();
 
     // beams don't obey GDR -> max_damage is 0
     return victim->apply_ac(hurted, 0, ac_rule, !is_tracer());
@@ -5580,7 +5596,7 @@ void bolt::affect_monster(monster* mon)
         beam_hit = apply_to_hit_modifiers(beam_hit, *mon);
 
     // The monster may block the beam.
-    if (!engulfs && is_blockable() && attempt_block(mon))
+    if (can_be_blocked() && attempt_block(mon))
         return;
 
     defer_rand r;
@@ -5602,7 +5618,7 @@ void bolt::affect_monster(monster* mon)
     // FIXME: We're randomising mon->evasion, which is further
     // randomised inside test_beam_hit. This is so we stay close to the
     // 4.0 to-hit system (which had very little love for monsters).
-    if (!engulfs && hit_margin < 0)
+    if (can_be_dodged() && hit_margin < 0)
     {
         // If the PLAYER cannot see the monster, don't tell them anything!
         if (mon->observable())
