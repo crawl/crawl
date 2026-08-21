@@ -840,6 +840,8 @@ tartan
 triangles
 
 whorls
+
+zigzags
 %%%%
 # Any word other than "glowing" itself will work here, as long as it's
 # not already in @_writing_adj_@ in graffiti.txt.
@@ -850,6 +852,8 @@ bright
 brilliant
 
 dark
+
+deep
 
 dull
 
