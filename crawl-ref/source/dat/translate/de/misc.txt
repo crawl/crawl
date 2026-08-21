@@ -265,7 +265,7 @@ dir
 # when something hits you after you're already dead
 # declension will be handled by grammar.txt
 your lifeless body
-dein lebloser Körper
+{m}dein lebloser Körper
 %%%%
 
 #################################

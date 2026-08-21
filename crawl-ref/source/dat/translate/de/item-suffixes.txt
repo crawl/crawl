@@ -11,192 +11,192 @@
 # protection from fire and fire resistance are equivalent
 # the former name is used on rings and the latter on armour
 %%%%
-" of protection from fire"
-" der Feuerresistenz"
+@item@ of protection from fire
+@item@ der Feuerresistenz
 %%%%
-" of fire resistance"
-" der Feuerresistenz"
+@item@ of fire resistance
+@item@ der Feuerresistenz
 %%%%
 
 # protection from cold and cold resistance are equivalent
 # the former name is used on rings and the latter on armour
 %%%%
-" of protection from cold"
-" der Kälteresistenz"
+@item@ of protection from cold
+@item@ der Kälteresistenz
 %%%%
-" of cold resistance"
-" der Kälteresistenz"
+@item@ of cold resistance
+@item@ der Kälteresistenz
 %%%%
 
 # resist corrosion and preservation are equivalent
 # the former name is used on rings and the latter on armour
 %%%%
-" of resist corrosion"
-" der Korrosionresistenz"
+@item@ of resist corrosion
+@item@ der Korrosionresistenz
 %%%%
-" of preservation"
-" der Erhaltung"
+@item@ of preservation
+@item@ der Erhaltung
 %%%%
 
 %%%%
 # grants more AC
-" of protection"
-" des Schutzes"
+@item@ of protection
+@item@ des Schutzes
 %%%%
 # grants both fire and cold resistance
-" of resistance"
-" der Resistanz"
+@item@ of resistance
+@item@ der Resistanz
 %%%%
-" of poison resistance"
-" der Giftresistenz"
+@item@ of poison resistance
+@item@ der Giftresistenz
 %%%%
 # negative energy resistance
-" of positive energy"
-" positiver Energie"
+@item@ of positive energy
+@item@ positiver Energie
 %%%%
-" of strength"
-" der Stärke"
+@item@ of strength
+@item@ der Stärke
 %%%%
-" of dexterity"
-" der Geschicklichkeit"
+@item@ of dexterity
+@item@ der Geschicklichkeit
 %%%%
-" of intelligence"
-" der Intelligenz"
+@item@ of intelligence
+@item@ der Intelligenz
 %%%%
-" of slaying"
-" des Tötens"
+@item@ of slaying
+@item@ des Tötens
 %%%%
-" of see invisible"
-" des Sehens von Unsichtbarem"
+@item@ of see invisible
+@item@ des Sehens von Unsichtbarem
 %%%%
-" of evasion"
-" des Ausweichens"
+@item@ of evasion
+@item@ des Ausweichens
 %%%%
-" of wizardry"
-" der Zauberei"
+@item@ of wizardry
+@item@ der Zauberei
 %%%%
-" of magical power"
-" magischer Kraft"
+@item@ of magical power
+@item@ magischer Kraft
 %%%%
-" of flight"
-" des Fliegens"
+@item@ of flight
+@item@ des Fliegens
 %%%%
-" of willpower"
-" der Willenskraft"
+@item@ of willpower
+@item@ der Willenskraft
 %%%%
-" of fire"
-" des Feuers"
+@item@ of fire
+@item@ des Feuers
 %%%%
-" of ice"
-" des Eises"
+@item@ of ice
+@item@ des Eises
 %%%%
-" of regeneration"
-" der Regeneration"
+@item@ of regeneration
+@item@ der Regeneration
 %%%%
-" of magic regeneration"
-" der Magieregeneration"
+@item@ of magic regeneration
+@item@ der Magieregeneration
 %%%%
-" of the acrobat"
-" des Akrobaten"
+@item@ of the acrobat
+@item@ des Akrobaten
 %%%%
 # base type of some artefact amulets
-" of nothing"
-" des Nichts"
+@item@ of nothing
+@item@ des Nichts
 %%%%
-" of guardian spirit"
-" des Geistschildes"
+@item@ of guardian spirit
+@item@ des Geistschildes
 %%%%
-" of faith"
-" des Glaubens"
+@item@ of faith
+@item@ des Glaubens
 %%%%
-" of reflection"
-" der Reflexion"
+@item@ of reflection
+@item@ der Reflexion
 %%%%
-" of acid"
-" der Säure"
+@item@ of acid
+@item@ der Säure
 %%%%
-" of chaos"
-" des Chaos"
+@item@ of chaos
+@item@ des Chaos
 %%%%
-" of distortion"
-" der Verzerrung"
+@item@ of distortion
+@item@ der Verzerrung
 %%%%
-" of draining"
-" der Auszehrung"
+@item@ of draining
+@item@ der Auszehrung
 %%%%
-" of electrocution"
-" des Stromschlags"
+@item@ of electrocution
+@item@ des Stromschlags
 %%%%
-" of flaming"
-" des Flammens"
+@item@ of flaming
+@item@ des Flammens
 %%%%
-" of flame"
-" der Flamme"
+@item@ of flame
+@item@ der Flamme
 %%%%
-" of freezing"
-" des Einfrierens"
+@item@ of freezing
+@item@ des Einfrierens
 %%%%
-" of holy wrath"
-" des heiligen Zorns"
+@item@ of holy wrath
+@item@ des heiligen Zorns
 %%%%
-" of pain"
-" des Schmerzes"
+@item@ of pain
+@item@ des Schmerzes
 %%%%
-" of penetration"
-" der Penetration"
+@item@ of penetration
+@item@ der Penetration
 %%%%
-" of speed"
-" der Hast"
+@item@ of speed
+@item@ der Hast
 %%%%
-" of venom"
-" des Giftes"
+@item@ of venom
+@item@ des Giftes
 %%%%
-" of dispersal"
-" der Zerstreuung"
+@item@ of dispersal
+@item@ der Zerstreuung
 %%%%
-" of speedy slithering"
-" des schnellen Rutschens"
+@item@ of speedy slithering
+@item@ des schnellen Rutschens
 %%%%
-" of running"
-" des Laufens"
+@item@ of running
+@item@ des Laufens
 %%%%
-" of invisibility"
-" der Unsichtbarkeit"
+@item@ of invisibility
+@item@ der Unsichtbarkeit
 %%%%
-" of ponderousness"
-" der Trägheit"
+@item@ of ponderousness
+@item@ der Trägheit
 %%%%
-" of flying"
-" des Fliegens"
+@item@ of flying
+@item@ des Fliegens
 %%%%
-" of the Archmagi"
-" der Erzmagier"
+@item@ of the Archmagi
+@item@ der Erzmagier
 %%%%
-" of spirit shield"
-" des Geistschildes"
+@item@ of spirit shield
+@item@ des Geistschildes
 %%%%
-" of archery"
-" der Schießkunst"
+@item@ of archery
+@item@ der Schießkunst
 %%%%
-" of repulsion"
-" der Abstoßung"
+@item@ of repulsion
+@item@ der Abstoßung
 %%%%
-" of harm"
-" des Schadens"
+@item@ of harm
+@item@ des Schadens
 %%%%
-" of shadows"
-" der Schatten"
+@item@ of shadows
+@item@ der Schatten
 %%%%
-" of rampaging"
-" des Randelierens"
+@item@ of rampaging
+@item@ des Randelierens
 %%%%
-# only on artefact "Sword of Zonguldrok"
-" of reaping"
-" des Erntens"
+# only on artefact Sword of Zonguldrok
+@item@ of reaping
+@item@ des Erntens
 %%%%
-# only on artefact lance "Wyrmbane"
-" of dragon slaying"
-" der Drachentötung"
+# only on artefact lance Wyrmbane
+@item@ of dragon slaying
+@item@ der Drachentötung
 %%%%
 
 #################################
@@ -204,23 +204,20 @@
 #################################
 # generic
 %%%%
-" of "@arg@""
-" von "@arg@""
+@item@ of @arg@
+@item@ von @arg@
 %%%%
-" "@arg@""
-" "@arg@""
-%%%%
-" of Zot"
-" von Zot"
+@item@ of Zot
+@item@ von Zot
 %%%%
 # specific artefacts don't necessarily need to be translated
 # if there's no specific translation, the English text will put in quotes.
 %%%%
-" of the Moon"
-" des Mondes"
+@item@ of the Moon
+@item@ des Mondes
 %%%%
-" of Dice, Bag, and Bottle"
-" von Würfel, Beutel und Flasche"
+@item@ of Dice, Bag, and Bottle
+@item@ von Würfel, Beutel und Flasche
 %%%%
 
 #################################
@@ -228,99 +225,99 @@
 #################################
 # note: these names should match the skill names
 %%%%
-" of fighting"
-" des Kämpfens"
+@item@ of fighting
+@item@ des Kämpfens
 %%%%
-" of short blades"
-" der Kurzklingen"
+@item@ of short blades
+@item@ der Kurzklingen
 %%%%
-" of long blades"
-" der Langklingen"
+@item@ of long blades
+@item@ der Langklingen
 %%%%
-" of axes"
-" der Äxte"
+@item@ of axes
+@item@ der Äxte
 %%%%
-" of maces & flails"
-" der Keulen & Flegel"
+@item@ of maces & flails
+@item@ der Keulen & Flegel
 %%%%
-" of polearms"
-" der Stangenwaffen"
+@item@ of polearms
+@item@ der Stangenwaffen
 %%%%
-" of staves"
-" der Stäbe"
+@item@ of staves
+@item@ der Stäbe
 %%%%
-" of slings"
-" der Schleudern"
+@item@ of slings
+@item@ der Schleudern
 %%%%
-" of bows"
-" der Bögen"
+@item@ of bows
+@item@ der Bögen
 %%%%
-" of crossbows"
-" der Armbrüste"
+@item@ of crossbows
+@item@ der Armbrüste
 %%%%
-" of throwing"
-" des Werfens"
+@item@ of throwing
+@item@ des Werfens
 %%%%
-" of armour"
-" der Rüstung"
+@item@ of armour
+@item@ der Rüstung
 %%%%
-" of dodging"
-" des Ausweichens"
+@item@ of dodging
+@item@ des Ausweichens
 %%%%
 # also used on items that increase stealth
-" of stealth"
-" der Heimlichkeit"
+@item@ of stealth
+@item@ der Heimlichkeit
 %%%%
-" of shields"
-" der Schilde"
+@item@ of shields
+@item@ der Schilde
 %%%%
-" of unarmed combat"
-" des unbewaffneten Kampfes"
+@item@ of unarmed combat
+@item@ des unbewaffneten Kampfes
 %%%%
-" of evocations"
-" der Evokation"
+@item@ of evocations
+@item@ der Evokation
 %%%%
-" of invocations"
-" der Anrufung"
+@item@ of invocations
+@item@ der Anrufung
 %%%%
-" of spellcasting"
-" des Zauberns"
+@item@ of spellcasting
+@item@ des Zauberns
 %%%%
-" of necromancy"
-" der Nekromantie"
+@item@ of necromancy
+@item@ der Nekromantie
 %%%%
-" of conjurations"
-" der Konjurationen"
+@item@ of conjurations
+@item@ der Konjurationen
 %%%%
-" of hexes"
-" der Verhexungen"
+@item@ of hexes
+@item@ der Verhexungen
 %%%%
-" of charms"
-" der Bannzauber"
+@item@ of charms
+@item@ der Bannzauber
 %%%%
-" of summonings"
-" der Beschwörungen"
+@item@ of summonings
+@item@ der Beschwörungen
 %%%%
-" of translocations"
-" der Translokationen"
+@item@ of translocations
+@item@ der Translokationen
 %%%%
-" of transmutations"
-" der Verwandlungen"
+@item@ of transmutations
+@item@ der Verwandlungen
 %%%%
-" of fire magic"
-" der Feuermagie"
+@item@ of fire magic
+@item@ der Feuermagie
 %%%%
-" of ice magic"
-" der Eismagie"
+@item@ of ice magic
+@item@ der Eismagie
 %%%%
-" of air magic"
-" der Luftmagie"
+@item@ of air magic
+@item@ der Luftmagie
 %%%%
-" of earth magic"
-" der Erdmagie"
+@item@ of earth magic
+@item@ der Erdmagie
 %%%%
-" of poison magic"
-" der Giftmagie"
+@item@ of poison magic
+@item@ der Giftmagie
 %%%%
 
 #################################
@@ -328,9 +325,9 @@
 #################################
 # these can occur if player loads a savegame from an earlier version of the game
 %%%%
-" of obsoleteness"
-" der Obsoleszenz"
+@item@ of obsoleteness
+@item@ der Obsoleszenz
 %%%%
-" of removedness"
-" der Obsoleszenz"
+@item@ of removedness
+@item@ der Obsoleszenz
 %%%%

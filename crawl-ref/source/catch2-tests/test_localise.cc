@@ -120,6 +120,8 @@ TEST_CASE( "Localise German", "[single-file]" )
     {
         CHECK( localise("a short sword") == "ein Kurzschwert" );
         CHECK( localise("m - 2 potions of might") == "m - 2 Tränke der Macht" );
+        CHECK( localise("a +2 leather armour" ) == "eine +2 Lederrüstung" );
+        CHECK( localise("a +2 leather armour of fire resistance" ) == "eine +2 Lederrüstung der Feuerresistenz" );
     }
 
     SECTION("Parameterised messages")
