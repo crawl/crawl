@@ -7812,7 +7812,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_AIRSTRIKE:
     case SPELL_SLEETSTRIKE:
     {
-        pbolt.flavour = spell_cast == SPELL_SLEETSTRIKE ? BEAM_AIR : BEAM_ICE;
+        pbolt.flavour = spell_cast == SPELL_SLEETSTRIKE ? BEAM_ICE : BEAM_AIR;
 
         int empty_space = 0;
         ASSERT(foe);
