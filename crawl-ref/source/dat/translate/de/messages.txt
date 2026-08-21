@@ -17301,8 +17301,8 @@ Da ist @arg@.
 @arg1@ warns you: @arg2@
 @arg1@ warnt dich: @arg2@
 %%%%
-@arg@ come into view.
-@arg@ kommen in Sicht.
+@Arg@ come into view.
+@Arg@ kommen in Sicht.
 %%%%
 Gozag incites your enemies against you.
 Gozag hetzt deine Feinde gegen dich auf.
