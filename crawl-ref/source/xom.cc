@@ -2995,7 +2995,7 @@ static void _xom_blinding_blinkitis(int /* sever */)
     draw_ring_animation(you.pos(), you.current_vision, BLUE, MAGENTA,
                         true, 25, TILE_BOLT_CORRUPTION);
 
-    // Gather the list seperately from the action for the sake of messaging.
+    // Gather the list separately from the action for the sake of messaging.
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         if (!mi->wont_attack() && !mi->is_peripheral() && !mi->stasis())
             target.push_back(*mi);

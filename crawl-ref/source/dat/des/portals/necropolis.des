@@ -84,8 +84,8 @@ function necropolis_portal_entry(e)
     -- Roughly corresponding to the average (if hardly the median) number of
     -- ghost vaults one got per game previously. Early Necropolis spawns are
     -- quite hard though (player ghosts are too above the curve), so lower
-    -- their odds on the earliest floors. Vaults:1-4 Neccropolis entries are
-    -- placed seperately via vaults_default_options() and pick_room().
+    -- their odds on the earliest floors. Vaults:1-4 Necropolis entries are
+    -- placed separately via vaults_default_options() and pick_room().
     e.chance(350)
     e.depth_chance("D:5-7", 275)
     e.depth_chance("Vaults", 0)
@@ -858,14 +858,14 @@ ENDMAP
 # <<2>> Necropolis layouts
 #
 # Each Necropolis uses the same rough decoration schema of an entry garden
-# leading to three seperate 20x20 ghost subvaults. If they have a surrounding
+# leading to three separate 20x20 ghost subvaults. If they have a surrounding
 # sea of ghosts, that sea is sealed off by indestructible glass.
 #
 # TODO: further decorations for future layouts could include:
 #   * fountains of ectoplasm (needs lots of write-ups)
 #   * altars to Hepliakqana (has to exclude pre-D:11 spawns)
 #   * rock and stone tiles from the original branch (needs V/E and U/C tricks)
-#   * a transporter entrance seperated from the ghost vaults?
+#   * a transporter entrance separated from the ghost vaults?
 #############################################################################
 
 default-depth: Necropolis
