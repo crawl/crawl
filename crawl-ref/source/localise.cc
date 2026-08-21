@@ -512,60 +512,31 @@ static string _localise_parameterised_string(const string& s)
     debuglog("Param string translation: \"%s\"", format.c_str());
 
     string result;
+    vector<string> tokens = tokenise_parameterised_string(format);
 
-    size_t curr = 0;
-    size_t next = format.find_first_of("{@");
-
-    while (curr < format.length())
+    for (const string& token: tokens)
     {
-        if (next == string::npos)
+        size_t last_idx = token.length() - 1;
+        if (token.length() >= 2 && token[0] == '{' && token[last_idx] == '}')
         {
-            result += format.substr(curr);
-            break;
+            // context specifier
+            _context = token.substr(1, token.length() - 2);
         }
-        else if (next > curr)
+        else if (token.length() >= 3 && token[0] == '@' && token[last_idx] == '@')
         {
-            result += format.substr(curr, next - curr);
-            curr = next;
+            // parameter
+            string key = token.substr(1, token.length() - 2);
+            string saved_context = _context;
+            string val = _localise_param(params, key);
+            if (!saved_context.empty())
+                _context = saved_context;
+            result += val;
         }
-
-        if (format[next] == '{')
+        else
         {
-            // set new context
-            size_t end = format.find('}', next + 1);
-            if (end == string::npos)
-            {
-                result += format[next];
-                curr = next + 1;
-            }
-            else
-            {
-                _context = format.substr(next + 1, end - next - 1);
-                curr = end + 1;
-            }
+            // plain string
+            result += token;
         }
-        else if (format[next] == '@')
-        {
-            size_t end = format.find('@', next + 1);
-            if (end == string::npos)
-            {
-                result += format[next];
-                curr = next + 1;
-            }
-            else
-            {
-                string key = format.substr(next + 1, end - next - 1);
-                string saved_context = _context;
-                string val = _localise_param(params, key);
-                if (isaupper(key[0]))
-                    val = uppercase_first(val);
-                if (!saved_context.empty())
-                    _context = saved_context;
-                result += val;
-                curr = end + 1;
-            }
-        }
-        next = format.find_first_of("{@", curr);
     }
 
     return result;
