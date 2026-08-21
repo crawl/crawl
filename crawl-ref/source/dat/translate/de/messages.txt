@@ -1373,11 +1373,14 @@ Das Silber versengt {acc}@arg@!
 @arg@ life force is offered up.
 Die Lebenskraft @arg@ wird als Opfer dargeboten.
 %%%%
-You draw life force from @arg1@@arg2@
-Du ziehst Lebenskraft aus {dat}@arg1@@arg2@
+You draw life force from @the_monster@@punct@
+Du ziehst Lebenskraft aus {dat}@the_monster@@punct@
 %%%%
-@arg1@ draws life force from @arg2@@arg3@
-@arg1@ zieht Lebenskraft aus {dat}@arg2@@arg3@
+@The_monster@ draws life force from you@punct@
+@The_monster@ zieht Lebenskraft aus dir@punct@
+%%%%
+@The_monster1@ draws life force from @the_monster2@@punct@
+@The_monster1@ zieht Lebenskraft aus {dat}@the_monster2@@punct@
 %%%%
 @arg@ is healed by the life force!
 @arg@ wird durch die Lebenskraft geheilt!
@@ -10333,11 +10336,11 @@ Die gefrorenen Wälle schmelzen, als du dich bewegst.
 You slip free of @arg@ engulfing you.
 Du befreist dich von {dat}@arg@, das dich umhüllt.
 %%%%
-Are you sure you want to swing wildly while confused and next to @arg1@@arg2@?
-Bist du sicher, dass du wild um dich schlagen willst, während du verwirrt bist und neben @arg1@@arg2@?
+Are you sure you want to swing wildly while confused and next to @ally@?@penance@
+Bist du sicher, dass du wild um dich schlagen willst, während du verwirrt bist und neben {dat}@ally@?{}@penance@
 %%%%
-Are you sure you want to stumble around while confused and next to @arg1@@arg2@?
-Bist du sicher, dass du herumstolpern willst, während du verwirrt bist und neben @arg1@@arg2@?
+Are you sure you want to stumble around while confused and next to @ally@?@penance@
+Bist du sicher, dass du herumstolpern willst, während du verwirrt bist und neben {dat}@ally@?{}@penance@
 %%%%
 " while you are losing your buoyancy"
 , während du deinen Auftrieb verlierst
@@ -11491,14 +11494,27 @@ Deine Bewegungsgeschwindigkeit ist @arg@.
 average
 durchschnittlich
 %%%%
-Your attack delay is about %.1f@arg1@@arg2@.
-Deine Angriffsverzögerung beträgt etwa %.1f@arg1@@arg2@.
+Your attack delay is about @arg@.
+Deine Angriffsverzögerung beträgt etwa @arg@.
 %%%%
-" (and cannot be improved with additional weapon skill)"
-" (und kann nicht durch zusätzliche Waffenfertigkeit verbessert werden)"
+Your attack delay is about @arg@ (@note@).
+Deine Angriffsverzögerung beträgt etwa @arg@ (@note@).
 %%%%
-" (and is slowed by your insufficient shield skill)"
-" (und wird durch deine unzureichende Schildfertigkeit verlangsamt)"
+Your attack delay is about @arg@ (@note1@) (@note2@).
+Deine Angriffsverzögerung beträgt etwa @arg@ (@note1@) (@note2@).
+%%%%
+# notes can be any of the following four strings
+and cannot be improved with additional weapon skill
+und kann nicht durch zusätzliche Waffenfertigkeit verbessert werden
+%%%%
+and is slowed by your shield
+und wird durch deinen Schild verlangsamt
+%%%%
+and is slowed by your armour
+und wird durch deine Rüstung verlangsamt
+%%%%
+and is slowed by your shield and armour
+und wird durch deinen Schild und deine Rüstung verlangsamt
 %%%%
 You are illuminated by a large divine halo.
 Du wirst von einem großen göttlichen Heiligenschein erleuchtet.

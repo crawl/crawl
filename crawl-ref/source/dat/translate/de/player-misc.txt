@@ -387,94 +387,94 @@ Zb
 
 %%%%
 # Abyssal Knight
-@adj@@species@AK
-{adj-er}@adj@@species@AR
+@adj@@two_letter_code@AK
+{adj-er}@adj@@two_letter_code@AR
 %%%%
 # Air Elementalist
-@adj@@species@AE
-{adj-er}@adj@@species@LM
+@adj@@two_letter_code@AE
+{adj-er}@adj@@two_letter_code@LM
 %%%%
 # Arcane Marksman
-@adj@@species@AM
-{adj-er}@adj@@species@AS
+@adj@@two_letter_code@AM
+{adj-er}@adj@@two_letter_code@AS
 %%%%
 # Artificer
-@adj@@species@Ar
-{adj-er}@adj@@species@Ar
+@adj@@two_letter_code@Ar
+{adj-er}@adj@@two_letter_code@Ar
 %%%%
 # Berserker
-@adj@@species@Be
-{adj-er}@adj@@species@Be
+@adj@@two_letter_code@Be
+{adj-er}@adj@@two_letter_code@Be
 %%%%
 # Brigand
-@adj@@species@Br
-{adj-er}@adj@@species@Br
+@adj@@two_letter_code@Br
+{adj-er}@adj@@two_letter_code@Br
 %%%%
 # Chaos Knight
-@adj@@species@CK
-{adj-er}@adj@@species@CR
+@adj@@two_letter_code@CK
+{adj-er}@adj@@two_letter_code@CR
 %%%%
 # Conjurer
-@adj@@species@Cj
-{adj-er}@adj@@species@Bs
+@adj@@two_letter_code@Cj
+{adj-er}@adj@@two_letter_code@Bs
 %%%%
 # Earth Elementalist
-@adj@@species@EE
-{adj-er}@adj@@species@Er
+@adj@@two_letter_code@EE
+{adj-er}@adj@@two_letter_code@Er
 %%%%
 # Enchanter
-@adj@@species@En
-{adj-er}@adj@@species@Vz
+@adj@@two_letter_code@En
+{adj-er}@adj@@two_letter_code@Vz
 %%%%
 # Fighter
-@adj@@species@Fi
-{adj-er}@adj@@species@Kä
+@adj@@two_letter_code@Fi
+{adj-er}@adj@@two_letter_code@Kä
 %%%%
 # Fire Elementalist
-@adj@@species@FE
-{adj-er}@adj@@species@FM
+@adj@@two_letter_code@FE
+{adj-er}@adj@@two_letter_code@FM
 %%%%
 # Gladiator
-@adj@@species@Gl
-{adj-er}@adj@@species@Gl
+@adj@@two_letter_code@Gl
+{adj-er}@adj@@two_letter_code@Gl
 %%%%
 # Ice Elementalist
-@adj@@species@IE
-{adj-er}@adj@@species@Ei
+@adj@@two_letter_code@IE
+{adj-er}@adj@@two_letter_code@Ei
 %%%%
 # Delver
-@adj@@species@De
-{adj-er}@adj@@species@Gr
+@adj@@two_letter_code@De
+{adj-er}@adj@@two_letter_code@Gr
 %%%%
 # Monk
-@adj@@species@Mo
-{adj-er}@adj@@species@Mö
+@adj@@two_letter_code@Mo
+{adj-er}@adj@@two_letter_code@Mö
 %%%%
 # Necromancer
-@adj@@species@Ne
-{adj-er}@adj@@species@Ne
+@adj@@two_letter_code@Ne
+{adj-er}@adj@@two_letter_code@Ne
 %%%%
 # Summoner
-@adj@@species@Su
-{adj-er}@adj@@species@Hb
+@adj@@two_letter_code@Su
+{adj-er}@adj@@two_letter_code@Hb
 %%%%
 # Transmuter
-@adj@@species@Tm
-{adj-er}@adj@@species@Vw
+@adj@@two_letter_code@Tm
+{adj-er}@adj@@two_letter_code@Vw
 %%%%
 # Venom Mage
-@adj@@species@VM
-{adj-er}@adj@@species@GM
+@adj@@two_letter_code@VM
+{adj-er}@adj@@two_letter_code@GM
 %%%%
 # Wanderer
-@adj@@species@Wn
-{adj-er}@adj@@species@Wn
+@adj@@two_letter_code@Wn
+{adj-er}@adj@@two_letter_code@Wn
 %%%%
 # Warper
-@adj@@species@Wr
-{adj-er}@adj@@species@Wr
+@adj@@two_letter_code@Wr
+{adj-er}@adj@@two_letter_code@Wr
 %%%%
 # (Hedge) Wizard
-@adj@@species@Wz
-{adj-er}@adj@@species@Zb
+@adj@@two_letter_code@Wz
+{adj-er}@adj@@two_letter_code@Zb
 %%%%
