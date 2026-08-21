@@ -1373,10 +1373,13 @@ The silver sears @arg@!
 @arg@ life force is offered up.
 
 %%%%
-You draw life force from @arg1@@arg2@
+You draw life force from @the_monster@
 
 %%%%
-@arg1@ draws life force from @arg2@@arg3@
+@The_monster@ draws life force from you
+
+%%%%
+@The_monster1@ draws life force from @the_monster2@
 
 %%%%
 @arg@ is healed by the life force!
@@ -11491,13 +11494,26 @@ Your movement speed is @arg@.
 average
 
 %%%%
-Your attack delay is about %.1f@arg1@@arg2@.
+Your attack delay is about @arg@.
 
 %%%%
-" (and cannot be improved with additional weapon skill)"
+Your attack delay is about @arg@ (@note@).
 
 %%%%
-" (and is slowed by your insufficient shield skill)"
+Your attack delay is about @arg@ (@note1@) (@note2@).
+
+%%%%
+# notes can be any of the following four strings
+and cannot be improved with additional weapon skill
+
+%%%%
+and is slowed by your shield
+
+%%%%
+and is slowed by your armour
+
+%%%%
+and is slowed by your shield and armour
 
 %%%%
 You are illuminated by a large divine halo.
@@ -17285,7 +17301,7 @@ There is @arg@.
 @arg1@ warns you: @arg2@
 
 %%%%
-@arg@ come into view.
+@Arg@ come into view.
 
 %%%%
 Gozag incites your enemies against you.

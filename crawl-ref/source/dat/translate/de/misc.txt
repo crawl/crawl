@@ -42,7 +42,7 @@ DECIMAL_POINT
 # Attack strength punctuation
 ##############################
 # Exclamation marks show amount of damage.
-# The @Sentence@ is a placeholder for the sentence. It's done this way
+# @Sentence@ is a placeholder for the sentence. It's done this way
 # because some languages don't simply append punctuation to the end.
 # For example, in Spanish, you would translate "@Sentence@!" as "¡@Sentence@!"
 %%%%
