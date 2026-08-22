@@ -150,7 +150,7 @@ void init_localisation()
         return;
     _initialised = true;
 
-    text_pattern patt("^.$");
+    static const text_pattern patt("^.$");
     if (!patt.matches("の"))
         fprintf(stderr, "WARNING: Regex is not UTF-8 aware\n");
 
@@ -166,12 +166,12 @@ void init_localisation()
     });
 
     // convert paramaterised string to regex pattern
-    text_pattern num_arg_patt("@num[^@]*@");
-    text_pattern int_arg_patt("@integer[^@]*@");
-    text_pattern float_arg_patt("@float[^@]*@");
-    text_pattern punct_arg_patt("@punct[^@]*@");
-    text_pattern str_arg_patt("@[^@]+@");
-    text_pattern a_an_patt("^an? ");
+    static const text_pattern num_arg_patt("@num[^@]*@");
+    static const text_pattern int_arg_patt("@integer[^@]*@");
+    static const text_pattern float_arg_patt("@float[^@]*@");
+    static const text_pattern punct_arg_patt("@punct[^@]*@");
+    static const text_pattern str_arg_patt("@[^@]+@");
+    static const text_pattern a_an_patt("^an? ");
     for (const string& key: keys)
     {
         if (starts_with(lowercase_string(key), "@sentence@"))
@@ -330,8 +330,8 @@ static int _get_matching_pattern_index(const string& s, bool full_sentence_only 
                     return (int)i;
 
                 // variable punctuation placeholder
-                text_pattern patt("@punct[^@]*@$");
-                if (patt.matches(format))
+                static const text_pattern punct_patt("@punct[^@]*@$");
+                if (punct_patt.matches(format))
                     return (int)i;
             }
             else
