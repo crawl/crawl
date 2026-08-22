@@ -301,18 +301,18 @@ vector<string> tokenise_parameterised_string(const string& s)
     return result;
 }
 
-// looks like a list, but isn't
-static const string _false_alarm = "Dice, Bag, and Bottle";
-
 vector<string> tokenise_comma_separated_list(const string& s)
 {
+    // looks like a list, but isn't
+    static const string false_alarm = "Dice, Bag, and Bottle";
+
     vector<string> result;
 
     static const vector<string> seps = {
         ", ", "; ", " and ", " or "
     };
 
-    result.push_back(replace_all(s, _false_alarm, "FALSE_ALARM"));
+    result.push_back(replace_all(s, false_alarm, "FALSE_ALARM"));
 
     for (auto sep: seps)
     {
@@ -349,7 +349,7 @@ vector<string> tokenise_comma_separated_list(const string& s)
     }
 
     for (size_t i = 0; i < result.size(); i++)
-        result[i] = replace_all(result[i], "FALSE_ALARM", _false_alarm);
+        result[i] = replace_all(result[i], "FALSE_ALARM", false_alarm);
 
     return result;
 }
