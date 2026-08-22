@@ -46,6 +46,9 @@ DECIMAL_POINT
 # because some languages don't simply append punctuation to the end.
 # For example, in Spanish, you would translate "@Sentence@!" as "¡@Sentence@!"
 %%%%
+@Sentence@.
+
+%%%%
 @Sentence@!
 
 %%%%
@@ -76,22 +79,6 @@ DECIMAL_POINT
 @Sentence@!!!!!!!!!!
 
 %%%%
-
-####################
-# General punctuation
-####################
-
-%%%%
-" "
-
-%%%%
-"."
-
-%%%%
-"@arg@."
-
-%%%%
-
 
 ####################
 # "Times" indicator

@@ -1373,14 +1373,14 @@ Das Silber versengt {acc}@arg@!
 @arg@ life force is offered up.
 Die Lebenskraft @arg@ wird als Opfer dargeboten.
 %%%%
-You draw life force from @the_monster@
-Du ziehst Lebenskraft aus {dat}@the_monster@
+You draw life force from @the_monster@@punct@
+Du ziehst Lebenskraft aus {dat}@the_monster@@punct@
 %%%%
-@The_monster@ draws life force from you
-@The_monster@ zieht Lebenskraft aus dir
+@The_monster@ draws life force from you@punct@
+@The_monster@ zieht Lebenskraft aus dir@punct@
 %%%%
-@The_monster1@ draws life force from @the_monster2@
-@The_monster1@ zieht Lebenskraft aus {dat}@the_monster2@
+@The_monster1@ draws life force from @the_monster2@@punct@
+@The_monster1@ zieht Lebenskraft aus {dat}@the_monster2@@punct@
 %%%%
 @arg@ is healed by the life force!
 @arg@ wird durch die Lebenskraft geheilt!
@@ -7863,8 +7863,8 @@ Du verfehlst {acc}@arg@ knapp.
 You barely miss @arg@.
 Du verfehlst {acc}@arg@ um Haaresbreite.
 %%%%
-You hit @arg@
-Du triffst {acc}@arg@
+You hit @arg@@punct@
+Du triffst {acc}@arg@@punct@
 %%%%
 You clumsily bash @arg@
 Du schlägst {acc}@arg@ ungeschickt
