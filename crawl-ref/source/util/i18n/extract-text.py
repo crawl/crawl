@@ -499,6 +499,10 @@ def split_on_newlines(strings):
         result.extend(string.split("\\n"))
     return result
 
+def dummy_up_keys(line):
+    line = re.sub(r"(get[A-Za-z]+String) *\(([^\)]+)\)", "$1(dummy)", line)
+    return line
+
 def extract_c_strings(line, filter_results):
     strings = re.findall(STRING_PATTERN, line)
     strings = list(map(lambda x: x.strip('"'), strings))
@@ -524,6 +528,7 @@ def process_cplusplus_file(filename):
             continue
         if ignore_c_line(line):
             continue
+        line = dummy_up_keys(line)
         strings = extract_c_strings(line, True)
         if len(strings) == 0:
             continue
