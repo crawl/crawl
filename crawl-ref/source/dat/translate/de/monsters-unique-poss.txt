@@ -233,6 +233,9 @@ the Enchantress's
 Blorkula the orcula's
 von Blorkula dem Orkula
 %%%%
+Blorkula's
+von Blorkula
+%%%%
 # obsolete but could appear as killer in high scores list
 Blork the orc's
 von Blork dem Ork
@@ -254,6 +257,57 @@ von Cigotuvis Monster
 %%%%
 the Statue of Wucad Mu's
 {f}der Statue von Wucad Mu
+%%%%
+Amaemon's
+von Amaemon
+%%%%
+Cassandra's
+von Cassandra
+%%%%
+Goji's
+von Goji
+%%%%
+Grunn's
+von Grunn
+%%%%
+Jeremiah's
+von Jeremiah
+%%%%
+Josephina's
+von Josephina
+%%%%
+Lodul's
+von Lodul
+%%%%
+Mlioglotl's
+von Mlioglotl
+%%%%
+Nobody's
+von Niemand
+%%%%
+Norris's
+von Norris
+%%%%
+Parghit's
+von Parghit
+%%%%
+Pargi's
+von Pargi
+%%%%
+Sprozz's
+von Sprozz
+%%%%
+Vv's
+von Vv
+%%%%
+Wiglaf's
+von Wiglaf
+%%%%
+Xak'krixis's
+von Xak'krixis
+%%%%
+Zenata's
+von Zenata
 %%%%
 
 # not really uniques, but gramatically similar

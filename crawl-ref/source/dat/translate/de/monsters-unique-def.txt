@@ -278,6 +278,9 @@ the Enchantress
 the Blorkula the orcula
 {m}der Blorkula der Orkula
 %%%%
+the Blorkula
+{m}der Blorkula
+%%%%
 # obsolete but could appear as killer in high scores list
 the Blork the orc
 {m}der Blork der Ork
@@ -301,6 +304,57 @@ the Cigotuvi's Monster
 %%%%
 the Statue of Wucad Mu
 {f}die Statue von Wucad Mu
+%%%%
+the Amaemon
+{m}der Amaemon
+%%%%
+the Cassandra
+{f}die Cassandra
+%%%%
+the Goji
+{m}der Goji
+%%%%
+the Grunn
+{m}der Grunn
+%%%%
+the Jeremiah
+{m}der Jeremiah
+%%%%
+the Josephina
+{f}die Josephina
+%%%%
+the Lodul
+{m}der Lodul
+%%%%
+the Mlioglotl
+{m}der Mlioglotl
+%%%%
+the Nobody
+{m}der Niemand
+%%%%
+the Norris
+{m}der Norris
+%%%%
+the Parghit
+{m}der Parghit
+%%%%
+the Pargi
+{m}der Pargi
+%%%%
+the Sprozz
+{m}der Sprozz
+%%%%
+the Vv
+{f}die Vv
+%%%%
+the Wiglaf
+{m}der Wiglaf
+%%%%
+the Xak'krixis
+{m}der Xak'krixis
+%%%%
+the Zenata
+{f}die Zenata
 %%%%
 
 # not really uniques, but gramatically similar
