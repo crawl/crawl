@@ -294,11 +294,16 @@ static string _shift_context(const string& str)
 
 static int _get_matching_pattern_index(const string& s, bool full_sentence_only = false)
 {
-    int result = -1;
-    string punct = get_end_punctuation(s);
-
     if (s.empty())
         return -1;
+
+    string punct;
+    if (full_sentence_only)
+    {
+        punct = get_end_punctuation(s);
+        if (punct.empty())
+            return -1;
+    }
 
     for (size_t i = 0; i < _patterns.size(); i++)
     {
@@ -317,27 +322,24 @@ static int _get_matching_pattern_index(const string& s, bool full_sentence_only 
 
         if (_patterns[i].first.matches(s))
         {
-            // prioritise full sentences
-            string punct2 = get_end_punctuation(_patterns[i].second);
-
             if (full_sentence_only)
             {
-                if (!punct.empty() && punct == punct2)
+                string format = _patterns[i].second;
+                string punct2 = get_end_punctuation(format);
+                if (punct2 == punct)
+                    return (int)i;
+
+                // variable punctuation placeholder
+                text_pattern patt("@punct[^@]*@$");
+                if (patt.matches(format))
                     return (int)i;
             }
             else
-            {
-                if (punct == punct2)
-                    return (int)i;
-
-                // provisional result - could be superseded if we find a full sentence
-                if (result < 0 && !full_sentence_only)
-                    result = (int)i;
-            }
+                return (int)i;
         }
     }
 
-    return result;
+    return -1;
 }
 
 static string _localise_adjectives(const string& s)
@@ -664,10 +666,6 @@ static string _localise_string(const string& s, bool fallback_en)
             result = _shift_context(result);
             return result;
         }
-
-        /*result = _handle_variable_punctuation(s);
-        if (!result.empty())
-            return result;*/
     }
 
     // test for list
