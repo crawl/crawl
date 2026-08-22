@@ -681,6 +681,29 @@ def transform_messages(input):
             else:
                 new_strings.append(string)
         results[section] = new_strings
+
+    for section, strings in input.items():
+        new_strings = []
+        for string in strings:
+
+            count = 0
+            while "%s" in string:
+                count += 1
+                string = string.replace("%s", "@arg" + str(count) + "@", 1)
+            if count == 1:
+                string = string.replace("@arg1@", "@arg@", 1)
+            string = re.sub("^@arg", "@Arg", string)
+
+            count = 0
+            while "%d" in string:
+                count += 1
+                string = string.replace("%d", "@num" + str(count) + "@", 1)
+            if count == 1:
+                string = string.replace("@num1@", "@num@", 1)
+
+            new_strings.append(string)
+        results[section] = new_strings
+
     return results
 
 specific_post_processing_funcs = {
@@ -698,6 +721,7 @@ def post_process(filename, strings):
         strings = func(strings)
 
     strings = transform_messages(strings)
+
     return strings
 
 #################
