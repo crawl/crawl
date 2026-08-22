@@ -1373,13 +1373,13 @@ The silver sears @arg@!
 @arg@ life force is offered up.
 
 %%%%
-You draw life force from @the_monster@
+You draw life force from @the_monster@@punct@
 
 %%%%
-@The_monster@ draws life force from you
+@The_monster@ draws life force from you@punct@
 
 %%%%
-@The_monster1@ draws life force from @the_monster2@
+@The_monster1@ draws life force from @the_monster2@@punct@
 
 %%%%
 @arg@ is healed by the life force!
@@ -7863,7 +7863,7 @@ You closely miss @arg@.
 You barely miss @arg@.
 
 %%%%
-You hit @arg@
+You hit @arg@@punct@
 
 %%%%
 You clumsily bash @arg@

@@ -174,6 +174,12 @@ void init_localisation()
     text_pattern a_an_patt("^an? ");
     for (const string& key: keys)
     {
+        if (starts_with(lowercase_string(key), "@sentence@"))
+        {
+            // don't store patterns for variable punctuation because we do special handling
+            continue;
+        }
+
         string pattern = key;
         // escape characters that mean something to regex
         pattern = escape_regex_specials(pattern);
@@ -183,7 +189,7 @@ void init_localisation()
         // float is problematic because decimal point may already be changed by user's locale
         //pattern = float_arg_patt.replace(pattern, "([\\+|\\-]?[0-9]*[\\.,][0-9]+)");
         pattern = punct_arg_patt.replace(pattern, "([.!?]+)");
-        pattern = str_arg_patt.replace(pattern, "(.*)");
+        pattern = str_arg_patt.replace(pattern, "([^.!?]*)");
         // adjectives can change "a" to "an" or vice versa
         pattern = a_an_patt.replace(pattern, "an? ");
         pattern = "^" + pattern + "$";
@@ -289,6 +295,7 @@ static string _shift_context(const string& str)
 static int _get_matching_pattern_index(const string& s, bool full_sentence_only = false)
 {
     int result = -1;
+    string punct = get_end_punctuation(s);
 
     if (s.empty())
         return -1;
@@ -311,7 +318,6 @@ static int _get_matching_pattern_index(const string& s, bool full_sentence_only 
         if (_patterns[i].first.matches(s))
         {
             // prioritise full sentences
-            string punct = get_end_punctuation(s);
             string punct2 = get_end_punctuation(_patterns[i].second);
 
             if (full_sentence_only)
@@ -457,22 +463,17 @@ static string _localise_param(map<string, string>& params, const string& key)
 // In deference to Spanish, which likes to put punctuation at both ends,
 // variable punctuation is handled by passing the sentence as a parameter
 // to the punctuation string, rather than vice versa.
-static string _handle_variable_punctuation(const string& s)
+static string _handle_variable_punctuation(const string& rest, const string& punct)
 {
-    string punct, rest;
-    separate_end_punctuation(s, punct, rest);
-
     if (punct.empty())
         return "";
 
-    string format = _translate("@sentence@" + punct, true);
-    string rest_xlated = _localise_string(rest);
-
-    if (format.empty() || rest.empty())
+    string format = _translate("@Sentence@" + punct, true);
+    if (format.empty())
         return "";
 
-    string result = replace_first(format, "@sentence@", rest_xlated);
-    result = replace_first(result, "@Sentence@", uppercase_first(rest_xlated));
+    string result = replace_first(format, "@sentence@", rest);
+    result = replace_first(result, "@Sentence@", uppercase_first(rest));
     return result;
 }
 
@@ -500,15 +501,6 @@ static string _localise_parameterised_string(const string& s, bool full_sentence
     {
         debuglog("ERROR: %ld keys, %ld vals\n", (long)param_keys.size(), (long)param_vals.size());
         return "";
-    }
-
-    // check for variable punctuation
-    string last = param_vals[param_vals.size() - 1];
-    if (!last.empty() && contains(".!?", last[last.length()-1]))
-    {
-        string result = _handle_variable_punctuation(s);
-        if (!result.empty())
-            return result;
     }
 
     map<string, string> params;
@@ -543,11 +535,18 @@ static string _localise_parameterised_string(const string& s, bool full_sentence
         {
             // parameter
             string key = token.substr(1, token.length() - 2);
-            string saved_context = _context;
-            string val = _localise_param(params, key);
-            if (!saved_context.empty())
-                _context = saved_context;
-            result += val;
+            if (starts_with(key, "punct"))
+            {
+                result = _handle_variable_punctuation(result, params[key]);
+            }
+            else
+            {
+                string saved_context = _context;
+                string val = _localise_param(params, key);
+                if (!saved_context.empty())
+                    _context = saved_context;
+                result += val;
+            }
         }
         else
         {
@@ -655,11 +654,20 @@ static string _localise_string(const string& s, bool fallback_en)
             return result + _localise_annotation(annotation);
     }
 
-    result = _localise_parameterised_string(s, true);
-    if (!result.empty())
+    string punct = get_end_punctuation(s);
+    if (!punct.empty())
     {
-        result = _shift_context(result);
-        return result;
+        // this is a sentence
+        result = _localise_parameterised_string(s, true);
+        if (!result.empty())
+        {
+            result = _shift_context(result);
+            return result;
+        }
+
+        /*result = _handle_variable_punctuation(s);
+        if (!result.empty())
+            return result;*/
     }
 
     // test for list
