@@ -309,7 +309,7 @@ vector<string> tokenise_comma_separated_list(const string& s)
     vector<string> result;
 
     static const vector<string> seps = {
-        ", ", " and ", " or "
+        ", ", "; ", " and ", " or "
     };
 
     result.push_back(replace_all(s, _false_alarm, "FALSE_ALARM"));
@@ -331,9 +331,10 @@ vector<string> tokenise_comma_separated_list(const string& s)
         }
     }
 
-    for (size_t i = 0; i < result.size(); i++)
+    // combine things like ", and " into one separator
+    for (size_t i = 1; i < result.size(); i++)
     {
-        if (i == 0 || result[i - 1] != ", ")
+        if (result[i - 1] != ", " && result[i - 1] != "; ")
             continue;
         else if (starts_with(result[i], "and "))
         {

@@ -150,6 +150,8 @@ TEST_CASE( "Localise German", "[single-file]" )
                         "Ein Goblin, 2 Orks und ein Kobold kommen in Sicht." );
         CHECK( localise("You see a goblin, 2 orcs and a kobold here.") ==
                         "Du siehst einen Goblin, 2 Orks und einen Kobold hier." );
+        CHECK( localise("You see a goblin; 2 orcs and a kobold here.") ==
+                        "Du siehst einen Goblin; 2 Orks und einen Kobold hier." );
     }
 
     databaseSystemShutdown();
