@@ -557,26 +557,26 @@ Du widerstehst fast ohne Mühe.
 @arg@ resists with almost no effort.
 @arg@ widersteht fast ohne Mühe.
 %%%%
-You collide with @arg@!
-Du kollidierst mit {dat}@arg@!
+You collide with @arg@punct@
+Du kollidierst mit {dat}@arg@@punct@
 %%%%
-@arg@ collides with you!
-@arg@ kollidiert mit dir!
+@arg@ collides with you@punct@
+@arg@ kollidiert mit dir@punct@
 %%%%
-@arg1@ collides with @arg2@!
-@arg1@ kollidiert mit {dat}@arg2@!
+@arg1@ collides with @arg2@@punct@
+@arg1@ kollidiert mit {dat}@arg2@@punct@
 %%%%
-You slam into @arg@!
-Du knallst gegen {acc}@arg@!
+You slam into @arg@@punct@
+Du knallst gegen {acc}@arg@@punct@
 %%%%
-@arg1@ slams into @arg2@!
-@arg1@ knallt gegen {acc}@arg2@!
+@arg1@ slams into @arg2@@punct@
+@arg1@ knallt gegen {acc}@arg2@@punct@
 %%%%
-You violently stop moving!
-Du wirst gewaltsam gestoppt!
+You violently stop moving@punct@
+Du wirst gewaltsam gestoppt@punct@
 %%%%
-@arg@ violently stops moving!
-@arg@ wird gewaltsam gestoppt!
+@arg@ violently stops moving@punct@
+@arg@ wird gewaltsam gestoppt@punct@
 %%%%
 
 ##################
@@ -850,150 +850,150 @@ Das Licht kehrt in deine Umgebung zurück.
 Mutagenic energy flows through the plutonium sword!
 Mutagene Energie fließt durch das Plutoniumschwert!
 %%%%
-You cleave @arg@ in twain
-Du spaltest {acc}@arg@ in zwei Hälften
+You cleave @arg@ in twain@punct@
+Du spaltest {acc}@arg@ in zwei Hälften@punct@
 %%%%
-You pulverise @arg@ into a thin bloody mist
-Du pulverisierst {acc}@arg@ zu einem dünnen blutigen Nebel
+You pulverise @arg@ into a thin bloody mist@punct@
+Du pulverisierst {acc}@arg@ zu einem dünnen blutigen Nebel@punct@
 %%%%
-You hew @arg@ savagely
-Du hackst {acc}@arg@ brutal
+You hew @arg@ savagely@punct@
+Du hackst {acc}@arg@ brutal@punct@
 %%%%
-You fatally mangle @arg@
-Du verstümmelst {acc}@arg@ tödlich
+You fatally mangle @arg@@punct@
+Du verstümmelst {acc}@arg@ tödlich@punct@
 %%%%
-You dissect @arg@ like a pig carcass
-Du sezierst {acc}@arg@ wie einen Schweinekadaver
+You dissect @arg@ like a pig carcass@punct@
+Du sezierst {acc}@arg@ wie einen Schweinekadaver@punct@
 %%%%
-You chop @arg@ into pieces
-Du hackst {acc}@arg@ in Stücke
+You chop @arg@ into pieces@punct@
+Du hackst {acc}@arg@ in Stücke@punct@
 %%%%
-You butcher @arg@ messily
-Du schlachtest {acc}@arg@ auf brutale Weise
+You butcher @arg@ messily@punct@
+Du schlachtest {acc}@arg@ auf brutale Weise@punct@
 %%%%
-You slaughter @arg@ joyfully
-Du schlachtest {acc}@arg@ voller Freude
+You slaughter @arg@ joyfully@punct@
+Du schlachtest {acc}@arg@ voller Freude@punct@
 %%%%
-@arg@ cleaves you in twain
-@arg@ spaltet dich in zwei Hälften
+@arg@ cleaves you in twain@punct@
+@arg@ spaltet dich in zwei Hälften@punct@
 %%%%
-@arg@ pulverises you into a thin bloody mist
-@arg@ pulverisiert dich zu einem dünnen blutigen Nebel
+@arg@ pulverises you into a thin bloody mist@punct@
+@arg@ pulverisiert dich zu einem dünnen blutigen Nebel@punct@
 %%%%
-@arg@ hews you savagely
-@arg@ zerhackt dich brutal
+@arg@ hews you savagely@punct@
+@arg@ zerhackt dich brutal@punct@
 %%%%
-@arg@ fatally mangles you
-@arg@ zerfleischt dich tödlich
+@arg@ fatally mangles you@punct@
+@arg@ zerfleischt dich tödlich@punct@
 %%%%
-@arg@ dissects you like a pig carcass
-@arg@ seziert dich wie einen Schweinekadaver
+@arg@ dissects you like a pig carcass@punct@
+@arg@ seziert dich wie einen Schweinekadaver@punct@
 %%%%
-@arg@ chops you into pieces
-@arg@ hackt dich in Stücke
+@arg@ chops you into pieces@punct@
+@arg@ hackt dich in Stücke@punct@
 %%%%
-@arg@ butchers you messily
-@arg@ schlachtet dich auf brutale Weise
+@arg@ butchers you messily@punct@
+@arg@ schlachtet dich auf brutale Weise@punct@
 %%%%
-@arg@ slaughters you joyfully
-@arg@ schlachtet dich voller Freude
+@arg@ slaughters you joyfully@punct@
+@arg@ schlachtet dich voller Freude@punct@
 %%%%
-@arg1@ cleaves @arg2@ in twain
-@arg1@ spaltet {acc}@arg2@ in zwei Hälften
+@arg1@ cleaves @arg2@ in twain@punct@
+@arg1@ spaltet {acc}@arg2@ in zwei Hälften@punct@
 %%%%
-@arg1@ pulverises @arg2@ into a thin bloody mist
-@arg1@ pulverisiert {acc}@arg2@ zu einem dünnen blutigen Nebel
+@arg1@ pulverises @arg2@ into a thin bloody mist@punct@
+@arg1@ pulverisiert {acc}@arg2@ zu einem dünnen blutigen Nebel@punct@
 %%%%
-@arg1@ hews @arg2@ savagely
-@arg1@ hackt {acc}@arg2@ brutal
+@arg1@ hews @arg2@ savagely@punct@
+@arg1@ hackt {acc}@arg2@ brutal@punct@
 %%%%
-@arg1@ fatally mangles @arg2@
-@arg1@ zerfleischt {acc}@arg2@ tödlich
+@arg1@ fatally mangles @arg2@@punct@
+@arg1@ zerfleischt {acc}@arg2@ tödlich@punct@
 %%%%
-@arg1@ dissects @arg2@ like a pig carcass
-@arg1@ seziert {acc}@arg2@ wie einen Schweinekadaver
+@arg1@ dissects @arg2@ like a pig carcass@punct@
+@arg1@ seziert {acc}@arg2@ wie einen Schweinekadaver@punct@
 %%%%
-@arg1@ chops @arg2@ into pieces
-@arg1@ hackt {acc}@arg2@ in Stücke
+@arg1@ chops @arg2@ into pieces@punct@
+@arg1@ hackt {acc}@arg2@ in Stücke@punct@
 %%%%
-@arg1@ butchers @arg2@ messily
-@arg1@ schlachtet {acc}@arg2@ auf brutale Weise
+@arg1@ butchers @arg2@ messily@punct@
+@arg1@ schlachtet {acc}@arg2@ auf brutale Weise@punct@
 %%%%
-@arg1@ slaughters @arg2@ joyfully
-@arg1@ schlachtet {acc}@arg2@ voller Freude
+@arg1@ slaughters @arg2@ joyfully@punct@
+@arg1@ schlachtet {acc}@arg2@ voller Freude@punct@
 %%%%
 # monsters can attack themselves when confused (but the player can't)
-@arg@ cleaves itself in twain
-@arg@ spaltet sich selbst in zwei Hälften
+@arg@ cleaves itself in twain@punct@
+@arg@ spaltet sich selbst in zwei Hälften@punct@
 %%%%
-@arg@ pulverises itself into a thin bloody mist
-@arg@ pulverisiert sich selbst zu einem dünnen blutigen Nebel
+@arg@ pulverises itself into a thin bloody mist@punct@
+@arg@ pulverisiert sich selbst zu einem dünnen blutigen Nebel@punct@
 %%%%
-@arg@ hews itself savagely
-@arg@ zerhackt sich selbst auf grausame Weise
+@arg@ hews itself savagely@punct@
+@arg@ zerhackt sich selbst auf grausame Weise@punct@
 %%%%
-@arg@ fatally mangles itself
-@arg@ verstümmelt sich tödlich
+@arg@ fatally mangles itself@punct@
+@arg@ verstümmelt sich tödlich@punct@
 %%%%
-@arg@ dissects itself like a pig carcass
-@arg@ seziert sich selbst wie einen Schweinekadaver
+@arg@ dissects itself like a pig carcass@punct@
+@arg@ seziert sich selbst wie einen Schweinekadaver@punct@
 %%%%
-@arg@ chops itself into pieces
-@arg@ hackt sich selbst in Stücke
+@arg@ chops itself into pieces@punct@
+@arg@ hackt sich selbst in Stücke@punct@
 %%%%
-@arg@ butchers itself messily
-@arg@ schlachtet sich selbst auf brutale Weise
+@arg@ butchers itself messily@punct@
+@arg@ schlachtet sich selbst auf brutale Weise@punct@
 %%%%
-@arg@ slaughters itself joyfully
-@arg@ schlachtet sich selbst voller Freude
+@arg@ slaughters itself joyfully@punct@
+@arg@ schlachtet sich selbst voller Freude@punct@
 %%%%
-You burn @arg@
-Du verbrennst {acc}@arg@
+You burn @arg@@punct@
+Du verbrennst {acc}@arg@@punct@
 %%%%
-@arg@ burns you
-@arg@ verbrennt dich
+@arg@ burns you@punct@
+@arg@ verbrennt dich@punct@
 %%%%
-@arg1@ burns @arg2@
-@arg1@ verbrennt {acc}@arg2@
+@arg1@ burns @arg2@@punct@
+@arg1@ verbrennt {acc}@arg2@@punct@
 %%%%
-@arg@ burns itself
-@arg@ verbrennt sich selbst
+@arg@ burns itself@punct@
+@arg@ verbrennt sich selbst@punct@
 %%%%
-You freeze @arg@
-Du frierst {acc}@arg@ ein
+You freeze @arg@@punct@
+Du frierst {acc}@arg@ ein@punct@
 %%%%
-@arg@ freezes you
-@arg@ friert dich ein
+@arg@ freezes you@punct@
+@arg@ friert dich ein@punct@
 %%%%
-@arg1@ freezes @arg2@
-@arg1@ friert {acc}@arg2@ ein
+@arg1@ freezes @arg2@@punct@
+@arg1@ friert {acc}@arg2@ ein@punct@
 %%%%
-@arg@ freezes itself
-@arg@ friert sich selbst ein
+@arg@ freezes itself@punct@
+@arg@ friert sich selbst ein@punct@
 %%%%
-You electrocute @arg@
-Du gibst {dat}@arg@ einen Stromschlag
+You electrocute @arg@@punct@
+Du gibst {dat}@arg@ einen Stromschlag@punct@
 %%%%
-@arg@ electrocutes you
-@arg@ gibt dir einen Stromschlag
+@arg@ electrocutes you@punct@
+@arg@ gibt dir einen Stromschlag@punct@
 %%%%
-@arg1@ electrocutes @arg2@
-@arg1@ gibt {dat}@arg2@ einen Stromschlag
+@arg1@ electrocutes @arg2@@punct@
+@arg1@ gibt {dat}@arg2@ einen Stromschlag@punct@
 %%%%
-@arg@ electrocutes itself
-@arg@ gibt sich selbst einen Stromschlag
+@arg@ electrocutes itself@punct@
+@arg@ gibt sich selbst einen Stromschlag@punct@
 %%%%
-You crush @arg@
-Du zerdrückst {acc}@arg@
+You crush @arg@@punct@
+Du zerdrückst {acc}@arg@@punct@
 %%%%
-@arg@ crushes you
-@arg@ zerdrückt dich
+@arg@ crushes you@punct@
+@arg@ zerdrückt dich@punct@
 %%%%
-@arg1@ crushes @arg2@
-@arg1@ zerdrückt {acc}@arg2@
+@arg1@ crushes @arg2@@punct@
+@arg1@ zerdrückt {acc}@arg2@@punct@
 %%%%
-@arg@ crushes itself
-@arg@ zerdrückt sich selbst
+@arg@ crushes itself@punct@
+@arg@ zerdrückt sich selbst@punct@
 %%%%
 The arc blade crackles to life.
 Die Lichtbogenklinge erwacht knisternd.
@@ -7764,14 +7764,14 @@ Du umschlingst {acc}@arg@
 your kick
 dein Tritt
 %%%%
-You kick @arg@
-Du trittst {acc}@arg@
+You kick @arg@@punct@
+Du trittst {acc}@arg@@punct@
 %%%%
-You claw @arg@
-Du zerkratzt {acc}@arg@
+You claw @arg@@punct@
+Du zerkratzt {acc}@arg@@punct@
 %%%%
-You pierce @arg@
-Du stichst {acc}@arg@
+You pierce @arg@@punct@
+Du stichst {acc}@arg@@punct@
 %%%%
 your tentacle spike
 dein Tentakelstachel
@@ -7779,56 +7779,56 @@ dein Tentakelstachel
 your headbutt
 dein Kopfstoß
 %%%%
-You headbutt @arg@
-Du versetzt {dat}@arg@ einen Kopfstoß
+You headbutt @arg@@punct@
+Du versetzt {dat}@arg@ einen Kopfstoß@punct@
 %%%%
 your peck
 dein Hacken
 %%%%
-You peck @arg@
-Du hackst {acc}@arg@
+You peck @arg@@punct@
+Du hackst {acc}@arg@@punct@
 %%%%
 your tail-slap
 dein Schwanzschlag
 %%%%
-You tail-slap @arg@
-Du schlägst {acc}@arg@ mit dem Schwanz
+You tail-slap @arg@@punct@
+Du schlägst {acc}@arg@ mit dem Schwanz@punct@
 %%%%
 your punch
 dein Faustschlag
 %%%%
-You punch @arg@
-Du boxst {acc}@arg@
+You punch @arg@@punct@
+Du boxst {acc}@arg@@punct@
 %%%%
 your slash
 dein Schnitt
 %%%%
-You slash @arg@
-Du schlitzt {acc}@arg@ auf
+You slash @arg@@punct@
+Du schlitzt {acc}@arg@ auf@punct@
 %%%%
 your tentacle-slap
 dein Tentakelschlag
 %%%%
-You tentacle-slap @arg@
-Du schlägst {acc}@arg@ mit deinem Tentakel
+You tentacle-slap @arg@@punct@
+Du schlägst {acc}@arg@ mit deinem Tentakel@punct@
 %%%%
 your bite
 dein Biss
 %%%%
-You bite @arg@
-Du beißt {acc}@arg@
+You bite @arg@@punct@
+Du beißt {acc}@arg@@punct@
 %%%%
 your bludgeon
 dein Schlag
 %%%%
-You bludgeon @arg@
-Du knüppelst {acc}@arg@
+You bludgeon @arg@@punct@
+Du knüppelst {acc}@arg@@punct@
 %%%%
 your squeeze
 dein Quetschen
 %%%%
-You squeeze @arg@
-Du quetschst {acc}@arg@
+You squeeze @arg@@punct@
+Du quetschst {acc}@arg@@punct@
 %%%%
 You drain @arg@ magic.
 Du entziehst die Magie {gen}@arg@.
@@ -7866,158 +7866,158 @@ Du verfehlst {acc}@arg@ um Haaresbreite.
 You hit @arg@@punct@
 Du triffst {acc}@arg@@punct@
 %%%%
-You clumsily bash @arg@
-Du schlägst {acc}@arg@ ungeschickt
+You clumsily bash @arg@@punct@
+Du schlägst {acc}@arg@ ungeschickt@punct@
 %%%%
-You puncture @arg@
-Du punktierst {acc}@arg@
+You puncture @arg@@punct@
+Du punktierst {acc}@arg@@punct@
 %%%%
-You impale @arg@
-Du spießt {acc}@arg@ auf
+You impale @arg@@punct@
+Du spießt {acc}@arg@ auf@punct@
 %%%%
-You spit @arg@ like the proverbial pig
-Du spießt {acc}@arg@ auf wie ein sprichwörtliches Schwein
+You spit @arg@ like the proverbial pig@punct@
+Du spießt {acc}@arg@ auf wie ein sprichwörtliches Schwein@punct@
 %%%%
-You attack @arg@'s weak point
-Du greifst {acc}@arg@ an der Swachstelle an
+You attack @arg@'s weak point@punct@
+Du greifst {acc}@arg@ an der Swachstelle an@punct@
 %%%%
-You spit @arg@ like a pig
-Du spießt {acc}@arg@ auf wie ein Schwein
+You spit @arg@ like a pig@punct@
+Du spießt {acc}@arg@ auf wie ein Schwein@punct@
 %%%%
-You skewer @arg@ like a kebab
-Du spießt {acc}@arg@ auf wie einen Kebab
+You skewer @arg@ like a kebab@punct@
+Du spießt {acc}@arg@ auf wie einen Kebab@punct@
 %%%%
-You stick @arg@ like a pincushion
-Du stichst {acc}@arg@ wie ein Nadelkissen
+You stick @arg@ like a pincushion@punct@
+Du stichst {acc}@arg@ wie ein Nadelkissen@punct@
 %%%%
-You perforate @arg@ like a sieve
-Du durchlöcherst {acc}@arg@ wie ein Sieb
+You perforate @arg@ like a sieve@punct@
+Du durchlöcherst {acc}@arg@ wie ein Sieb@punct@
 %%%%
-You slice @arg@
-Du schneidest {acc}@arg@
+You slice @arg@@punct@
+Du schneidest {acc}@arg@@punct@
 %%%%
-You dice @arg@ like an onion
-Du würfelst {acc}@arg@ wie eine Zwiebel
+You dice @arg@ like an onion@punct@
+Du würfelst {acc}@arg@ wie eine Zwiebel@punct@
 %%%%
-You fracture @arg@ into splinters
-Du zerbrichst {acc}@arg@ in Splitter
+You fracture @arg@ into splinters@punct@
+Du zerbrichst {acc}@arg@ in Splitter@punct@
 %%%%
-You carve @arg@ like the proverbial ham
-Du tranchierst {acc}@arg@ wie den sprichwörtlichen Schinken
+You carve @arg@ like the proverbial ham@punct@
+Du tranchierst {acc}@arg@ wie den sprichwörtlichen Schinken@punct@
 %%%%
-You carve @arg@ like a turkey
-Du tranchierst {acc}@arg@ wie einen Truthahn
+You carve @arg@ like a turkey@punct@
+Du tranchierst {acc}@arg@ wie einen Truthahn@punct@
 %%%%
-You shave @arg@
-Du rasierst {acc}@arg@
+You shave @arg@@punct@
+Du rasierst {acc}@arg@@punct@
 %%%%
-You open @arg@ like a pillowcase
-Du öffnest {acc}@arg@ wie einen Kissenbezug
+You open @arg@ like a pillowcase@punct@
+Du öffnest {acc}@arg@ wie einen Kissenbezug@punct@
 %%%%
-You slice @arg@ like a ripe choko
-Du schneidest {acc}@arg@ wie eine reife Chayote
+You slice @arg@ like a ripe choko@punct@
+Du schneidest {acc}@arg@ wie eine reife Chayote@punct@
 %%%%
-You cut @arg@ into ribbons
-Du schneidest {acc}@arg@ in Streifen
+You cut @arg@ into ribbons@punct@
+Du schneidest {acc}@arg@ in Streifen@punct@
 %%%%
-You carve @arg@ like a ham
-Du tranchierst {acc}@arg@ wie einen Schinken
+You carve @arg@ like a ham@punct@
+Du tranchierst {acc}@arg@ wie einen Schinken@punct@
 %%%%
-You thump @arg@
-Du prügelst {acc}@arg@
+You thump @arg@@punct@
+Du prügelst {acc}@arg@@punct@
 %%%%
-You sock @arg@
-Du verhaust {acc}@arg@
+You sock @arg@@punct@
+Du verhaust {acc}@arg@@punct@
 %%%%
-You shatter @arg@ into splinters
-Du zerschmetterst {acc}@arg@ in Splitter
+You shatter @arg@ into splinters@punct@
+Du zerschmetterst {acc}@arg@ in Splitter@punct@
 %%%%
-You splatter @arg@ into a gooey mess
-Du zerstampfst {acc}@arg@ zu einem klebrigen Brei
+You splatter @arg@ into a gooey mess@punct@
+Du zerstampfst {acc}@arg@ zu einem klebrigen Brei@punct@
 %%%%
-You crush @arg@ like a grape
-Du zerquetschst {acc}@arg@ wie eine Traube
+You crush @arg@ like a grape@punct@
+Du zerquetschst {acc}@arg@ wie eine Traube@punct@
 %%%%
-You beat @arg@ like a drum
-Du schlägst {acc}@arg@ wie eine Trommel
+You beat @arg@ like a drum@punct@
+Du schlägst {acc}@arg@ wie eine Trommel@punct@
 %%%%
-You hammer @arg@ like a gong
-Du hämmerst {acc}@arg@ wie einen Gong
+You hammer @arg@ like a gong@punct@
+Du hämmerst {acc}@arg@ wie einen Gong@punct@
 %%%%
-You pound @arg@ like an anvil
-Du hämmerst {acc}@arg@ wie einen Amboss
+You pound @arg@ like an anvil@punct@
+Du hämmerst {acc}@arg@ wie einen Amboss@punct@
 %%%%
-You flatten @arg@ like a pancake
-Du machst {acc}@arg@ platt wie einen Pfannkuchen
+You flatten @arg@ like a pancake@punct@
+Du machst {acc}@arg@ platt wie einen Pfannkuchen@punct@
 %%%%
-You whack @arg@
-Du verhaust {acc}@arg@
+You whack @arg@@punct@
+Du verhaust {acc}@arg@@punct@
 %%%%
-You thrash @arg@
-Du verdrischst {acc}@arg@
+You thrash @arg@@punct@
+Du verdrischst {acc}@arg@@punct@
 %%%%
-You punish @arg@, causing immense pain
-Du bestrafst {acc}@arg@ und verursachst immensen Schmerz
+You punish @arg@, causing immense pain@punct@
+Du bestrafst {acc}@arg@ und verursachst immensen Schmerz@punct@
 %%%%
-You devastate @arg@
-Du verwüstest {acc}@arg@
+You devastate @arg@@punct@
+Du verwüstest {acc}@arg@@punct@
 %%%%
-You maul @arg@
-Du zerfleischst {acc}@arg@
+You maul @arg@@punct@
+Du zerfleischst {acc}@arg@@punct@
 %%%%
-You shred @arg@
-Du zerreißt {acc}@arg@
+You shred @arg@@punct@
+Du zerreißt {acc}@arg@@punct@
 %%%%
-You smack @arg@
-Du haust {acc}@arg@
+You smack @arg@@punct@
+Du haust {acc}@arg@@punct@
 %%%%
-You pummel @arg@
-Du verprügelst {acc}@arg@
+You pummel @arg@@punct@
+Du verprügelst {acc}@arg@@punct@
 %%%%
-You touch @arg@
-Du berührst {acc}@arg@
+You touch @arg@@punct@
+Du berührst {acc}@arg@@punct@
 %%%%
-You engulf @arg@
-Du hüllst {acc}@arg@ ein
+You engulf @arg@@punct@
+Du hüllst {acc}@arg@ ein@punct@
 %%%%
-You release spores at @arg@
-Du setzt Sporen auf {dat}@arg@ frei
+You release spores at @arg@@punct@
+Du setzt Sporen auf {dat}@arg@ frei@punct@
 %%%%
-You buffet @arg@
-Du rüttelst {acc}@arg@
+You buffet @arg@@punct@
+Du rüttelst {acc}@arg@@punct@
 %%%%
-You batter @arg@
-Du verprügelst {acc}@arg@
+You batter @arg@@punct@
+Du verprügelst {acc}@arg@@punct@
 %%%%
-You blast @arg@
-Du sprengst {acc}@arg@
+You blast @arg@@punct@
+Du sprengst {acc}@arg@@punct@
 %%%%
-You scratch @arg@
-Du kratzt {acc}@arg@
+You scratch @arg@@punct@
+Du kratzt {acc}@arg@@punct@
 %%%%
-You mangle @arg@
-Du verstümmelst {acc}@arg@
+You mangle @arg@@punct@
+Du verstümmelst {acc}@arg@@punct@
 %%%%
-You eviscerate @arg@
-Du weidest {acc}@arg@ aus
+You eviscerate @arg@@punct@
+Du weidest {acc}@arg@ aus@punct@
 %%%%
-You squash @arg@ like the proverbial ant
-Du zerquetschst {acc}@arg@ wie eine sprichwörtliche Ameise
+You squash @arg@ like the proverbial ant@punct@
+Du zerquetschst {acc}@arg@ wie eine sprichwörtliche Ameise@punct@
 %%%%
-You pound @arg@ into fine dust
-Du zerstampfst {acc}@arg@ zu feinem Staub
+You pound @arg@ into fine dust@punct@
+Du zerstampfst {acc}@arg@ zu feinem Staub@punct@
 %%%%
-You pummel @arg@ like a punching bag
-Du prügelst auf {dat}@arg@ wie auf einen Boxsack ein
+You pummel @arg@ like a punching bag@punct@
+Du prügelst auf {dat}@arg@ wie auf einen Boxsack ein@punct@
 %%%%
-You pulverise @arg@
-Du pulverisierst {acc}@arg@
+You pulverise @arg@@punct@
+Du pulverisierst {acc}@arg@@punct@
 %%%%
-You squash @arg@ like an ant
-Du zerquetschst {acc}@arg@ wie eine Ameise
+You squash @arg@ like an ant@punct@
+Du zerquetschst {acc}@arg@ wie eine Ameise@punct@
 %%%%
-You beat @arg@ into a bloody pulp
-Du schlägst {acc}@arg@ zu blutigem Brei
+You beat @arg@ into a bloody pulp@punct@
+Du schlägst {acc}@arg@ zu blutigem Brei@punct@
 %%%%
 The flame cauterises the wound!
 Die Flamme kauterisiert die Wunde!
