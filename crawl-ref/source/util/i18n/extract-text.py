@@ -525,6 +525,11 @@ def process_cplusplus_file(filename):
         if ignore_c_line(line):
             continue
         strings = extract_c_strings(line, True)
+        if len(strings) == 0:
+            continue
+        if "simple_god_message" in line or "simple_monster_message" in line:
+            if strings[0].startswith(" ") or strings[0].startswith("'"):
+                strings[0] = "@Arg@" + strings[0]
         if strings:
             results[section].extend(strings)
 
