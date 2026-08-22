@@ -4,6 +4,7 @@
  **/
 
 #include "AppHdr.h"
+#include "clua.h"
 #include "database.h"
 #include "english.h"
 #include "localise.h"
@@ -211,6 +212,13 @@ void init_localisation()
         _patterns.emplace_back(make_pair(text_pattern(pattern), key));
     }
     debuglog("Localisation initialised");
+}
+
+void shutdown_localisation()
+{
+    _pregenerated.clear();
+    _patterns.clear();
+    _initialised = false;
 }
 
 // low-level translate function
@@ -479,6 +487,54 @@ static string _handle_variable_punctuation(const string& rest, const string& pun
     return result;
 }
 
+// Get the correct plural form for languages that have different forms for different numbers.
+// For example, Russian has one plural form for 2-4, and a different one for 5-10.
+// Returns the context specificer for the correct plural form
+static string _get_correct_plural_form(const string& s)
+{
+    string plural_rules = getTranslatedString("PLURAL_RULES");
+    trim_string(plural_rules);
+    if (plural_rules.empty())
+        return "";
+
+    // extract the number from the string to be translated
+    static const text_pattern number_pattern("[0-9]+");
+    pattern_match match = number_pattern.match_location(s);
+    if (!match)
+        return "";
+    string num_str = match.matched_text();
+
+    vector<string> rules = split_string("\n", plural_rules, true, false);
+    for (string rule: rules)
+    {
+        trim_string(rule);
+        if (rule.empty())
+            continue;
+
+        vector<string> tokens = split_string(":", rule, true, false);
+        if (tokens.size() != 2)
+            continue;
+
+        // evaluate the condition
+        string expression = tokens[1];
+        string lua_code = make_stringf("n=%s\nreturn %s", num_str.c_str(), expression.c_str());
+
+        if (clua.execstring(lua_code.c_str(), "plural_lua", 1) != 0)
+        {
+            // error
+            continue;
+        }
+
+        bool res;
+        clua.fnreturns(">b", &res);
+        if (res)
+            return tokens[0];
+    }
+
+    return "";
+}
+
+
 // localise parameterised string
 static string _localise_parameterised_string(const string& s, bool full_sentence_only)
 {
@@ -514,7 +570,14 @@ static string _localise_parameterised_string(const string& s, bool full_sentence
         params[key] = value;
     }
 
-    string format = _ctx_translate(_context, match.second);
+    string format = match.second;
+
+    string plural_form = _get_correct_plural_form(s);
+    if (!plural_form.empty())
+        format = _ctx_translate(plural_form, match.second);
+    else
+        format = _ctx_translate(_context, match.second);
+
     if (format.empty())
     {
         debuglog("No translation for: \"%s\"", match.second.c_str());
