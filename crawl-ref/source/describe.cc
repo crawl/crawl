@@ -1452,6 +1452,54 @@ static string _weapon_ego_key(brand_type ego)
     return ego_key;
 }
 
+/*
+ * Given some name, return a weapon ego type. Tries to match the description as found in
+ * special_weapon_type_name(), either terse or not. If `partial_matches` is set, it will fill the vector with
+ * any partial matches it finds. If there is exactly one, will return this weapon ego, otherwise, will fail.
+ *
+ * @param partial_matches   an optional pointer to a vector, in case the consumer wants to do something
+ *                          with the partial match results (e.g. show them to the user). If this is `nullptr`,
+ *                          will accept only exact matches.
+ *
+ * @return the weapon ego type if successful, otherwise NUM_SPECIAL_WEAPONS if it can't find a single match.
+ */
+brand_type weapon_ego_from_name(string name, vector<brand_type> *partial_matches)
+{
+    brand_type wpn = NUM_SPECIAL_WEAPONS;
+
+    string spec = lowercase_string(name);
+
+    for (int i = 0; i < NUM_SPECIAL_WEAPONS; ++i)
+    {
+        brand_type bt = static_cast<brand_type>(i);
+        const string bt_name_terse_c = brand_type_name(bt, true);
+        const string bt_name_nonterse_c = brand_type_name(bt, false);
+        if (bt_name_terse_c.empty() && bt_name_nonterse_c.empty())
+            continue;
+        const string bt_name_terse = lowercase_string(bt_name_terse_c);
+        const string bt_name_nonterse = lowercase_string(bt_name_nonterse_c);
+
+        const string full_bt_name = bt_name_nonterse + " (" + bt_name_terse + ")";
+        if (spec == full_bt_name)
+        {
+            wpn = bt;
+            break;
+        }
+
+        if (partial_matches && (strstr(spec.c_str(), bt_name_terse.c_str())
+                                || strstr(spec.c_str(), bt_name_nonterse.c_str())))
+        {
+            partial_matches->push_back(bt);
+        }
+    }
+
+    // If only one matching weapon ego, use that.
+    if (partial_matches && wpn == NUM_SPECIAL_WEAPONS && partial_matches->size() == 1)
+        return (*partial_matches)[0];
+
+    return wpn;
+}
+
 static void _append_skill_needed(string &description, const item_def &item,
                                  bool indent = true, string skill_padding = "")
 {
@@ -4952,6 +5000,18 @@ void describe_bane(bane_type bane)
     describe_info inf;
     inf.title = uppercase_first(bane_name(bane));
     inf.body << bane_long_description(bane);
+
+    show_description(inf);
+}
+
+void describe_weapon_ego(brand_type wpn)
+{
+    describe_info inf;
+    string ego_key = _weapon_ego_key(wpn);
+    string ego_desc = getEgoString(ego_key);
+
+    inf.title = uppercase_first(ego_key);
+    inf.body << ego_desc;
 
     show_description(inf);
 }

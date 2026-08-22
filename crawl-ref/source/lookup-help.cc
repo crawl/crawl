@@ -542,6 +542,13 @@ static bool _passive_filter(string key, string /*body*/)
     return !strip_suffix(lowercase(key), " passive");
 }
 
+static bool _weapon_ego_filter(string key, string /*body*/)
+{
+    lowercase(key);
+
+    return !strip_suffix(key, " weapon ego");
+}
+
 static void _recap_mon_keys(vector<string> &keys)
 {
     for (unsigned int i = 0, size = keys.size(); i < size; i++)
@@ -1384,6 +1391,20 @@ static int _describe_bane(const string &key, const string &suffix,
     return 0;
 }
 
+static int _describe_weapon_ego(const string &key, const string &suffix,
+                                string /*footer*/)
+{
+    const string weapon_ego_name = key.substr(0, key.size() - suffix.size());
+    const brand_type wpn = weapon_ego_from_name(weapon_ego_name.c_str());
+    if (wpn == NUM_SPECIAL_WEAPONS)
+    {
+        ui::error(make_stringf("Unable to get '%s' by name", key.c_str()));
+        return 0;
+    }
+    describe_weapon_ego(wpn);
+    return 0;
+}
+
 /// All types of ?/ queries the player can enter.
 static const vector<LookupType> lookup_types = {
     LookupType('M', "monster", _recap_mon_keys, _monster_filter,
@@ -1428,6 +1449,9 @@ static const vector<LookupType> lookup_types = {
     LookupType('N', "bane", nullptr, _bane_filter,
                nullptr, nullptr, _simple_menu_gen,
                _describe_bane, lookup_type::db_suffix),
+    LookupType('W', "weapon ego", nullptr, _weapon_ego_filter,
+               nullptr, nullptr, _simple_menu_gen,
+               _describe_weapon_ego, lookup_type::db_suffix),
 };
 
 /**
