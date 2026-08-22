@@ -311,17 +311,26 @@ def get_preprocessed_c_lines(filename, strip_whitespace=True):
 
     lines = result
     result = []
-    concatenate = False
     for line in lines:
-        concantenate_next = False
-        if line.rstrip().endswith("\\"):
-            concantenate_next = True
-            line = re.sub(r"[ \\]+$", "", line)
+        concatenate = False
+        if len(result) != 0:
+            last = result[-1]
+            if last.endswith("\\"):
+                last = last[:-1].rstrip() + " "
+                line = line.lstrip()
+                concatenate = True
+            elif last.endswith(",") and "(" in last and "-data" not in filename:
+                last += " "
+                line = line.lstrip()
+                concatenate = True
+            elif last.endswith('"') and line.lstrip().startswith('"'):
+                last = last[:-1]
+                line = line.lstrip()[1:]
+                concatenate = True
         if concatenate:
-            result[-1] += " " + line.lstrip()
+            result[-1] = last + line
         else:
             result.append(line)
-        concatenate = concantenate_next
 
     return result
 
