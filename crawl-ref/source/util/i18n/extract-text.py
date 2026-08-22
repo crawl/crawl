@@ -530,6 +530,8 @@ def process_cplusplus_file(filename):
         if "simple_god_message" in line or "simple_monster_message" in line:
             if strings[0].startswith(" ") or strings[0].startswith("'"):
                 strings[0] = "@Arg@" + strings[0]
+        if "attack_strength_punctuation" in line:
+            strings[0] = re.sub("%s$", "@punct@", strings[0]);
         if strings:
             results[section].extend(strings)
 
