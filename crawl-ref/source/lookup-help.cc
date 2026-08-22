@@ -1371,7 +1371,7 @@ static int _describe_mutation(const string &key, const string &suffix,
 }
 
 static int _describe_bane(const string &key, const string &suffix,
-                              string /*footer*/)
+                          string /*footer*/)
 {
     const string bane_name = key.substr(0, key.size() - suffix.size());
     const bane_type bane = bane_from_name(bane_name.c_str());
