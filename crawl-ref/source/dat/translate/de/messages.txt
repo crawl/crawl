@@ -1099,23 +1099,17 @@ Du fühlst dich bereit, deinen Feinden entgegen zu schreiten.
 # attack.cc
 ##################
 %%%%
-Space bends around you
-Der Raum biegt sich um dich herum
+Space warps horribly around you@punct@
+Der Raum verzieht sich schrecklich um dich herum@punct@
 %%%%
-Space bends around @arg@
-Der Raum biegt sich um {acc}@arg@ herum
+Space warps horribly around @arg@@punct@
+Der Raum verzieht sich schrecklich um {acc}@arg@ herum@punct@
 %%%%
-Space warps horribly around you
-Der Raum verzieht sich schrecklich um dich herum
+You writhe in agony@punct@
+Du windest dich in Qualen@punct@
 %%%%
-Space warps horribly around @arg@
-Der Raum verzieht sich schrecklich um {acc}@arg@ herum
-%%%%
-You writhe in agony
-Du windest dich in Qualen
-%%%%
-@Arg@ writhes in agony
-@Arg@ windet sich in Qualen
+@Arg@ writhes in agony@punct@
+@Arg@ windet sich in Qualen@punct@
 %%%%
 @Arg@ protects you from inadvertent hurry.
 @Arg@ schützt dich vor versehentlicher Eile.
@@ -4904,8 +4898,8 @@ Die elektrische Aura @arg1@ entlädt sich und schockt {acc}@arg2@!
 @Arg1@ electric aura discharges violently, shocking @arg2@!
 Die elektrische Aura @arg1@ entlädt sich heftig und schockt {acc}@arg2@!
 %%%%
-The air sparks with electricity, shocking @arg@!
-Die Luft funkelt vor Elektrizität und schockt {acc}@arg@!
+The air sparks with electricity, shocking @arg@@punct@
+Die Luft funkelt vor Elektrizität und schockt {acc}@arg@@punct@
 %%%%
 The injured rakshasa weaves a defensive illusion!
 Der verletzte Rakshasa webt eine defensive Illusion!
@@ -11741,8 +11735,8 @@ Du kannst dich nicht teleportieren.
 @Arg@ corrodes you!
 @Arg@ verätzt dich!
 %%%%
-You are splashed with acid
-Du wirst mit Säure bespritzt
+You are splashed with acid@punct@
+Du wirst mit Säure bespritzt@punct@
 %%%%
 You are splashed with acid but take no damage.
 Du wirst mit Säure bespritzt, nimmst aber keinen Schaden.
@@ -14195,13 +14189,11 @@ Das kannst du nicht dekonstruieren!
 @Arg@ shatters!
 @Arg@ zerbricht!
 %%%%
-# note: param = damage-based punctuation
-You shatter@arg@
-Du zerbrichst@arg@
+You shatter@punct@
+Du zerbrichst@punct@
 %%%%
-# note: params = the monster, damage-based punctuation
-@Arg1@ shatters@arg2@
-@Arg1@ zerbricht@arg2@
+@Arg@ shatters@punct@
+@Arg@ zerbricht@punct@
 %%%%
 A door shatters!
 Eine Tür zerbricht!
@@ -14272,12 +14264,11 @@ Die Luft geht in Flammen auf!
 static discharge
 statische Entladung
 %%%%
-# note: param = damage-based punctuation
-You are struck by an arc of lightning@arg@
-Du wirst von einem Blitzbogen getroffen@arg@
+You are struck by an arc of lightning@punct@
+Du wirst von einem Blitzbogen getroffen@punct@
 %%%%
-@Arg1@ is struck by an arc of lightning@arg2@
-@Arg1@ wird von einem Blitzbogen getroffen@arg2@
+@Arg1@ is struck by an arc of lightning@punct@
+@Arg1@ wird von einem Blitzbogen getroffen@punct@
 %%%%
 The lightning grounds out.
 Der Blitz wird geerdet.
@@ -14415,11 +14406,11 @@ Eine Kanonade von Hagel bricht um dich herunter!
 You erupt in a blast of force!
 Du erzeugst eine Druckwelle!
 %%%%
-You fester in the toxic bog@arg@
-Du gärst im toxischen Morast@arg@
+You fester in the toxic bog@punct@
+Du gärst im toxischen Morast@punct@
 %%%%
-@Arg1@ festers in the toxic bog@arg2@
-@Arg1@ gärt im toxischen Morast@arg2@
+@Arg@ festers in the toxic bog@punct@
+@Arg@ gärt im toxischen Morast@punct@
 %%%%
 There are no walls around you to affect.
 Es gibt keine Mauern um dich herum, die beeinflusst werden könnten.
@@ -16479,8 +16470,8 @@ benutzen
 pass through
 passieren
 %%%%
-The wall freezes @arg@
-Die Wand gefriert @arg@
+The wall freezes @arg@@punct@
+Die Wand gefriert @arg@@punct@
 %%%%
 
 ##################
