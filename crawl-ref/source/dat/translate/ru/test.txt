@@ -5,10 +5,10 @@
 ###############################################################################
 
 # Plural rules
-# Russian has a separate plural form for numbers ending in 2,3 or 4 (but not 12, 13 or 14)
+# Russian has a separate plural form for numbers ending in 2, 3 or 4 (but not 12, 13 or 14)
 %%%%
 PLURAL_RULES
-few: n % 10 >= 2 and n % 10 <=4 and not (n % 100 >= 12 and n % 100 <= 14)
+few: n % 10 >= 2 and n % 10 <= 4 and not (n % 100 >= 12 and n % 100 <= 14)
 # otherwise use the default plural
 %%%%
 
@@ -23,5 +23,3 @@ a horse
 @num@ horses
 @num@ лошадей
 %%%%
-
-
