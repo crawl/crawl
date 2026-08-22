@@ -65,7 +65,7 @@ After this sacrifice, you will find that @arg@.
 No description found.
 
 %%%%
-@arg@ frowns upon the use of this ability.
+@Arg@ frowns upon the use of this ability.
 
 %%%%
 You can't untransform!
@@ -254,16 +254,16 @@ You cannot imprison that!
 You cannot imprison a law-abiding creature!
 
 %%%%
-@arg@ will bless one of your weapons.
+@Arg@ will bless one of your weapons.
 
 %%%%
 There are no corpses to sacrifice!
 
 %%%%
-@arg@ torments the living!
+@Arg@ torments the living!
 
 %%%%
-@arg@ will bloody one of your weapons with pain.
+@Arg@ will bloody one of your weapons with pain.
 
 %%%%
 Another wave of unholy energy enters you.
@@ -281,16 +281,16 @@ You feel life flooding into your body.
 Your soul already belongs to Yredelemnul.
 
 %%%%
-@arg@'s clone doesn't have a soul to enslave!
+@Arg@'s clone doesn't have a soul to enslave!
 
 %%%%
 You see nothing there you can enslave the soul of!
 
 %%%%
-@arg@'s soul is too badly injured.
+@Arg@'s soul is too badly injured.
 
 %%%%
-@arg@'s soul is now ripe for the taking.
+@Arg@'s soul is now ripe for the taking.
 
 %%%%
 You feel more confident with your borrowed prowess.
@@ -299,10 +299,10 @@ You feel more confident with your borrowed prowess.
 You gain the combat prowess of a mighty hero.
 
 %%%%
-@arg@ gets new energy.
+@Arg@ gets new energy.
 
 %%%%
-@arg@ get new energy.
+@Arg@ get new energy.
 
 %%%%
 You can now deal lightning-fast blows.
@@ -320,7 +320,7 @@ You are healed.
 You cannot banish yourself!
 
 %%%%
-@arg@ will brand one of your weapons with the corruption of the Abyss.
+@Arg@ will brand one of your weapons with the corruption of the Abyss.
 
 %%%%
 You stop recalling your allies.
@@ -388,7 +388,7 @@ You are banished to a different region of the Abyss.
 Xom snickers loudly.
 
 %%%%
-@arg@ is pulled into the Abyss.
+@Arg@ is pulled into the Abyss.
 
 %%%%
 You are suddenly pulled into a different region of the Abyss!
@@ -400,7 +400,7 @@ Lugonu's corruption
 This place is already infused with evil and corruption.
 
 %%%%
-@arg@'s Hand of Corruption reaches out!
+@Arg@'s Hand of Corruption reaches out!
 
 %%%%
 The substance of the Abyss twists violently, and a gateway leading down appears!
@@ -417,7 +417,7 @@ The substance of the Abyss twists violently, and a gateway leading out appears!
 The demon of the infinite void smiles upon you.
 
 %%%%
-@arg@ snickers.
+@Arg@ snickers.
 
 %%%%
 " (you have @num@ gold)"
@@ -458,37 +458,37 @@ The roots
 You release @arg@.
 
 %%%%
-@arg@ release you.
+@Arg@ release you.
 
 %%%%
-@arg@ releases you.
+@Arg@ releases you.
 
 %%%%
-@arg1@ release @arg2@.
+@Arg1@ release @arg2@.
 
 %%%%
-@arg1@ releases @arg2@.
+@Arg1@ releases @arg2@.
 
 %%%%
 You lose hold of @arg@.
 
 %%%%
-@arg@ lose hold of you.
+@Arg@ lose hold of you.
 
 %%%%
-@arg@ loses hold of you.
+@Arg@ loses hold of you.
 
 %%%%
-@arg1@ lose hold of @arg2@.
+@Arg1@ lose hold of @arg2@.
 
 %%%%
-@arg1@ loses hold of @arg2@.
+@Arg1@ loses hold of @arg2@.
 
 %%%%
 The grasping roots
 
 %%%%
-@arg1@ constrict @arg2@ but do no damage.
+@Arg1@ constrict @arg2@ but do no damage.
 
 %%%%
 You constrict @arg@ but do no damage.
@@ -497,28 +497,28 @@ You constrict @arg@ but do no damage.
 You constrict @arg@
 
 %%%%
-@arg@ constrict you
+@Arg@ constrict you
 
 %%%%
-@arg@ constricts you
+@Arg@ constricts you
 
 %%%%
-@arg1@ constrict @arg2@
+@Arg1@ constrict @arg2@
 
 %%%%
-@arg1@ constricts @arg2@
+@Arg1@ constricts @arg2@
 
 %%%%
 You are constricted
 
 %%%%
-@arg@ is constricted
+@Arg@ is constricted
 
 %%%%
 You are unaffected.
 
 %%%%
-@arg@ is unaffected.
+@Arg@ is unaffected.
 
 %%%%
 You barely resist.
@@ -539,43 +539,43 @@ You easily resist.
 You resist with almost no effort.
 
 %%%%
-@arg@ barely resists.
+@Arg@ barely resists.
 
 %%%%
-@arg@ struggles to resist.
+@Arg@ struggles to resist.
 
 %%%%
-@arg@ resists with significant effort.
+@Arg@ resists with significant effort.
 
 %%%%
-@arg@ resists with some effort.
+@Arg@ resists with some effort.
 
 %%%%
-@arg@ easily resists.
+@Arg@ easily resists.
 
 %%%%
-@arg@ resists with almost no effort.
+@Arg@ resists with almost no effort.
 
 %%%%
 You collide with @arg@punct@
 
 %%%%
-@arg@ collides with you@punct@
+@Arg@ collides with you@punct@
 
 %%%%
-@arg1@ collides with @arg2@@punct@
+@Arg1@ collides with @arg2@@punct@
 
 %%%%
 You slam into @arg@@punct@
 
 %%%%
-@arg1@ slams into @arg2@@punct@
+@Arg1@ slams into @arg2@@punct@
 
 %%%%
 You violently stop moving@punct@
 
 %%%%
-@arg@ violently stops moving@punct@
+@Arg@ violently stops moving@punct@
 
 %%%%
 
@@ -612,7 +612,7 @@ No such ability.
 # areas.cc
 ##################
 %%%%
-@arg@ revokes the gift of sanctuary.
+@Arg@ revokes the gift of sanctuary.
 
 %%%%
 The sanctuary starts shrinking.
@@ -630,7 +630,7 @@ By Zin's power, all foul fumes within the sanctuary are swept away.
 By Zin's power, all blood is cleared from the sanctuary.
 
 %%%%
-@arg@ turns to flee the light!
+@Arg@ turns to flee the light!
 
 %%%%
 The monsters scatter in all directions!
@@ -745,13 +745,13 @@ The staff's sickly green glow vanishes.
 You envenom @arg@
 
 %%%%
-@arg@ envenoms you
+@Arg@ envenoms you
 
 %%%%
-@arg1@ envenoms @arg2@
+@Arg1@ envenoms @arg2@
 
 %%%%
-@arg@ envenoms itself
+@Arg@ envenoms itself
 
 %%%%
 You sense an aura of extreme power.
@@ -817,7 +817,7 @@ You feel an overwhelming desire to slay dragons!
 You convulse
 
 %%%%
-@arg@ convulses
+@Arg@ convulses
 
 %%%%
 The lance glows brightly as it skewers @arg@. You feel that it has reached its full power.
@@ -829,7 +829,7 @@ The lance glows as it skewers @arg@.
 You are blasted by disruptive energy
 
 %%%%
-@arg@ is blasted by disruptive energy
+@Arg@ is blasted by disruptive energy
 
 %%%%
 Time to lay down the shillelagh law.
@@ -874,125 +874,125 @@ You butcher @arg@ messily@punct@
 You slaughter @arg@ joyfully@punct@
 
 %%%%
-@arg@ cleaves you in twain@punct@
+@Arg@ cleaves you in twain@punct@
 
 %%%%
-@arg@ pulverises you into a thin bloody mist@punct@
+@Arg@ pulverises you into a thin bloody mist@punct@
 
 %%%%
-@arg@ hews you savagely@punct@
+@Arg@ hews you savagely@punct@
 
 %%%%
-@arg@ fatally mangles you@punct@
+@Arg@ fatally mangles you@punct@
 
 %%%%
-@arg@ dissects you like a pig carcass@punct@
+@Arg@ dissects you like a pig carcass@punct@
 
 %%%%
-@arg@ chops you into pieces@punct@
+@Arg@ chops you into pieces@punct@
 
 %%%%
-@arg@ butchers you messily@punct@
+@Arg@ butchers you messily@punct@
 
 %%%%
-@arg@ slaughters you joyfully@punct@
+@Arg@ slaughters you joyfully@punct@
 
 %%%%
-@arg1@ cleaves @arg2@ in twain@punct@
+@Arg1@ cleaves @arg2@ in twain@punct@
 
 %%%%
-@arg1@ pulverises @arg2@ into a thin bloody mist@punct@
+@Arg1@ pulverises @arg2@ into a thin bloody mist@punct@
 
 %%%%
-@arg1@ hews @arg2@ savagely@punct@
+@Arg1@ hews @arg2@ savagely@punct@
 
 %%%%
-@arg1@ fatally mangles @arg2@@punct@
+@Arg1@ fatally mangles @arg2@@punct@
 
 %%%%
-@arg1@ dissects @arg2@ like a pig carcass@punct@
+@Arg1@ dissects @arg2@ like a pig carcass@punct@
 
 %%%%
-@arg1@ chops @arg2@ into pieces@punct@
+@Arg1@ chops @arg2@ into pieces@punct@
 
 %%%%
-@arg1@ butchers @arg2@ messily@punct@
+@Arg1@ butchers @arg2@ messily@punct@
 
 %%%%
-@arg1@ slaughters @arg2@ joyfully@punct@
+@Arg1@ slaughters @arg2@ joyfully@punct@
 
 %%%%
 # monsters can attack themselves when confused (but the player can't)
-@arg@ cleaves itself in twain@punct@
+@Arg@ cleaves itself in twain@punct@
 
 %%%%
-@arg@ pulverises itself into a thin bloody mist@punct@
+@Arg@ pulverises itself into a thin bloody mist@punct@
 
 %%%%
-@arg@ hews itself savagely@punct@
+@Arg@ hews itself savagely@punct@
 
 %%%%
-@arg@ fatally mangles itself@punct@
+@Arg@ fatally mangles itself@punct@
 
 %%%%
-@arg@ dissects itself like a pig carcass@punct@
+@Arg@ dissects itself like a pig carcass@punct@
 
 %%%%
-@arg@ chops itself into pieces@punct@
+@Arg@ chops itself into pieces@punct@
 
 %%%%
-@arg@ butchers itself messily@punct@
+@Arg@ butchers itself messily@punct@
 
 %%%%
-@arg@ slaughters itself joyfully@punct@
+@Arg@ slaughters itself joyfully@punct@
 
 %%%%
 You burn @arg@@punct@
 
 %%%%
-@arg@ burns you@punct@
+@Arg@ burns you@punct@
 
 %%%%
-@arg1@ burns @arg2@@punct@
+@Arg1@ burns @arg2@@punct@
 
 %%%%
-@arg@ burns itself@punct@
+@Arg@ burns itself@punct@
 
 %%%%
 You freeze @arg@@punct@
 
 %%%%
-@arg@ freezes you@punct@
+@Arg@ freezes you@punct@
 
 %%%%
-@arg1@ freezes @arg2@@punct@
+@Arg1@ freezes @arg2@@punct@
 
 %%%%
-@arg@ freezes itself@punct@
+@Arg@ freezes itself@punct@
 
 %%%%
 You electrocute @arg@@punct@
 
 %%%%
-@arg@ electrocutes you@punct@
+@Arg@ electrocutes you@punct@
 
 %%%%
-@arg1@ electrocutes @arg2@@punct@
+@Arg1@ electrocutes @arg2@@punct@
 
 %%%%
-@arg@ electrocutes itself@punct@
+@Arg@ electrocutes itself@punct@
 
 %%%%
 You crush @arg@@punct@
 
 %%%%
-@arg@ crushes you@punct@
+@Arg@ crushes you@punct@
 
 %%%%
-@arg1@ crushes @arg2@@punct@
+@Arg1@ crushes @arg2@@punct@
 
 %%%%
-@arg@ crushes itself@punct@
+@Arg@ crushes itself@punct@
 
 %%%%
 The arc blade crackles to life.
@@ -1013,7 +1013,7 @@ You are filled with an inner flame.
 Your inner flame fades away.
 
 %%%%
-@arg@ is filled with an inner flame.
+@Arg@ is filled with an inner flame.
 
 %%%%
 You feel a darkness envelop your magic.
@@ -1034,7 +1034,7 @@ You feel regal.
 The captain's cutlass flashes! You lacerate @arg@!!
 
 %%%%
-@arg1@ @arg2@ falls to the floor!
+@Arg1@ @arg2@ falls to the floor!
 
 %%%%
 En garde!
@@ -1058,7 +1058,7 @@ You feel very empty.
 You feel a powerful hunger.
 
 %%%%
-@arg@ liquefies into a cloud of blood!
+@Arg@ liquefies into a cloud of blood!
 
 %%%%
 The engine hums to life!
@@ -1114,33 +1114,33 @@ Space warps horribly around @arg@
 You writhe in agony
 
 %%%%
-@arg@ writhes in agony
+@Arg@ writhes in agony
 
 %%%%
-@arg@ protects you from inadvertent hurry.
+@Arg@ protects you from inadvertent hurry.
 
 %%%%
 You drain @arg@
 
 %%%%
-@arg@ drains you
+@Arg@ drains you
 
 %%%%
-@arg1@ drains @arg2@
+@Arg1@ drains @arg2@
 
 %%%%
-@arg@ drains itself
+@Arg@ drains itself
 
 %%%%
 # note: @arg@ will be possessive (e.g. "the orc's", "Sigmund's")
 You drain @arg@ vigour!
 
 %%%%
-@arg@ drains your vigour!
+@Arg@ drains your vigour!
 
 %%%%
 # note: second @arg@ will be possessive (e.g. "the orc's", "Sigmund's")
-@arg1@ drains @arg2@ vigour!
+@Arg1@ drains @arg2@ vigour!
 
 %%%%
 You pounce on @arg@ from a blind spot!
@@ -1164,28 +1164,28 @@ You strike @arg@ from behind!
 You pounce on @arg@ unawares!
 
 %%%%
-@arg@ fails to defend against your attack.
+@Arg@ fails to defend against your attack.
 
 %%%%
 You block @arg@'s attack.
 
 %%%%
-@arg@ blocks your attack.
+@Arg@ blocks your attack.
 
 %%%%
-@arg1@ blocks @arg2@'s attack.
+@Arg1@ blocks @arg2@'s attack.
 
 %%%%
 You melt @arg@
 
 %%%%
-@arg@ melts you
+@Arg@ melts you
 
 %%%%
-@arg1@ melts @arg2@
+@Arg1@ melts @arg2@
 
 %%%%
-@arg@ melts itself
+@Arg@ melts itself
 
 %%%%
 You are electrocuted
@@ -1194,10 +1194,10 @@ You are electrocuted
 Lightning courses through @arg@
 
 %%%%
-@arg@ draws strength from your wounds!
+@Arg@ draws strength from your wounds!
 
 %%%%
-@arg@ is healed.
+@Arg@ is healed.
 
 %%%%
 
@@ -1205,16 +1205,16 @@ Lightning courses through @arg@
 # attitude-change.cc
 ##################
 %%%%
-@arg@ reclaims one of your granted undead slaves!
+@Arg@ reclaims one of your granted undead slaves!
 
 %%%%
-@arg@ reclaims your granted undead slaves!
+@Arg@ reclaims your granted undead slaves!
 
 %%%%
-@arg@ reclaims some of your granted undead slaves!
+@Arg@ reclaims some of your granted undead slaves!
 
 %%%%
-@arg@'s voice booms out, "Who do you think you are?"
+@Arg@'s voice booms out, "Who do you think you are?"
 
 %%%%
 One of your followers decides to abandon you.
@@ -1226,10 +1226,10 @@ Your followers decide to abandon you.
 Some of your followers decide to abandon you.
 
 %%%%
-@arg@ stares at you suspiciously for a moment, then relaxes.
+@Arg@ stares at you suspiciously for a moment, then relaxes.
 
 %%%%
-@arg@ trembles before you.
+@Arg@ trembles before you.
 
 %%%%
 
@@ -1243,7 +1243,7 @@ You hear a mighty clap of thunder!
 Animating this weapon would place you under penance. Really cast this spell?
 
 %%%%
-@arg@ appears from out of thin air!
+@Arg@ appears from out of thin air!
 
 %%%%
 You hear a grinding noise.
@@ -1291,76 +1291,76 @@ Your line of fire to @arg1@ is blocked by @arg2@. Continue anyway?
 Your line of fire to the targeted location is blocked by @arg@. Continue anyway?
 
 %%%%
-@arg@ appears from out of your range of vision.
+@Arg@ appears from out of your range of vision.
 
 %%%%
-@arg@ completely resists.
+@Arg@ completely resists.
 
 %%%%
-@arg@ resists.
+@Arg@ resists.
 
 %%%%
-@arg@ melts!
+@Arg@ melts!
 
 %%%%
-@arg@ is on fire!
+@Arg@ is on fire!
 
 %%%%
-@arg@ is burned terribly!
+@Arg@ is burned terribly!
 
 %%%%
-@arg@ is scalded terribly!
+@Arg@ is scalded terribly!
 
 %%%%
-@arg@ is doused terribly!
+@Arg@ is doused terribly!
 
 %%%%
-@arg@ is frozen!
+@Arg@ is frozen!
 
 %%%%
-@arg@ is electrocuted!
+@Arg@ is electrocuted!
 
 %%%%
-@arg@ partially resists.
+@Arg@ partially resists.
 
 %%%%
-@arg@ is drained terribly!
+@Arg@ is drained terribly!
 
 %%%%
-@arg@ writhes in agony!
+@Arg@ writhes in agony!
 
 %%%%
-@arg@ looks frightened!
+@Arg@ looks frightened!
 
 %%%%
-@arg@ submits to your will.
+@Arg@ submits to your will.
 
 %%%%
-@arg@ suddenly stops moving!
+@Arg@ suddenly stops moving!
 
 %%%%
-@arg@ is moving more slowly.
+@Arg@ is moving more slowly.
 
 %%%%
-@arg@ convulses.
+@Arg@ convulses.
 
 %%%%
-@arg@ seems to be slow for longer.
+@Arg@ seems to be slow for longer.
 
 %%%%
-@arg@ seems to slow down.
+@Arg@ seems to slow down.
 
 %%%%
-@arg@ looks as sick as possible!
+@Arg@ looks as sick as possible!
 
 %%%%
-@arg@ looks even sicker.
+@Arg@ looks even sicker.
 
 %%%%
-@arg@ is poisoned.
+@Arg@ is poisoned.
 
 %%%%
-@arg@ is covered in liquid flames!
+@Arg@ is covered in liquid flames!
 
 %%%%
 You have difficulty breathing.
@@ -1370,7 +1370,7 @@ The silver sears @arg@!
 
 %%%%
 # note: @arg@ will be possessive (e.g. "the orc's", "Sigmund's")
-@arg@ life force is offered up.
+@Arg@ life force is offered up.
 
 %%%%
 You draw life force from @the_monster@@punct@
@@ -1382,7 +1382,7 @@ You draw life force from @the_monster@@punct@
 @The_monster1@ draws life force from @the_monster2@@punct@
 
 %%%%
-@arg@ is healed by the life force!
+@Arg@ is healed by the life force!
 
 %%%%
 You feel life coursing into your body@arg@
@@ -1394,31 +1394,31 @@ The wave splashes down.
 You hear a splash.
 
 %%%%
-@arg@ is engulfed in water.
+@Arg@ is engulfed in water.
 
 %%%%
 You hear a sizzling sound!
 
 %%%%
-@arg@ is likely to hit you. Continue anyway?
+@Arg@ is likely to hit you. Continue anyway?
 
 %%%%
 That beam is likely to hit you. Continue anyway?
 
 %%%%
-@arg1@ reflects @arg2@!
+@Arg1@ reflects @arg2@!
 
 %%%%
-@arg@ reflects off an invisible shield around you!
+@Arg@ reflects off an invisible shield around you!
 
 %%%%
 You block @arg@.
 
 %%%%
-@arg@ misses you.
+@Arg@ misses you.
 
 %%%%
-@arg@ is repelled.
+@Arg@ is repelled.
 
 %%%%
 Something tries to affect you, but you are unaffected.
@@ -1487,7 +1487,7 @@ You feel your inability to drink will last longer.
 You feel unable to drink.
 
 %%%%
-@arg@ loses the ability to speak.
+@Arg@ loses the ability to speak.
 
 %%%%
 You feel your silence will last longer.
@@ -1496,7 +1496,7 @@ You feel your silence will last longer.
 An unnatural silence engulfs you.
 
 %%%%
-@arg@ looks more vulnerable to fire.
+@Arg@ looks more vulnerable to fire.
 
 %%%%
 You feel your vulnerability to fire will last longer.
@@ -1505,22 +1505,22 @@ You feel your vulnerability to fire will last longer.
 Cherry-coloured flames burn away your fire resistance!
 
 %%%%
-@arg@ pierces through you
+@Arg@ pierces through you
 
 %%%%
-@arg1@ pierces through @arg2@
+@Arg1@ pierces through @arg2@
 
 %%%%
-@arg@ hits you
+@Arg@ hits you
 
 %%%%
-@arg1@ hits @arg2@
+@Arg1@ hits @arg2@
 
 %%%%
-@arg@ engulfs you
+@Arg@ engulfs you
 
 %%%%
-@arg1@ engulfs @arg2@
+@Arg1@ engulfs @arg2@
 
 %%%%
 " but does no damage."
@@ -1535,140 +1535,140 @@ The barbed spikes become lodged in your body.
 You are encased in ice.
 
 %%%%
-@arg@ shatters and turns to gold!
+@Arg@ shatters and turns to gold!
 
 %%%%
-@arg@ is frozen into a solid block of ice!
+@Arg@ is frozen into a solid block of ice!
 
 %%%%
 The acid splashes onto @arg@!
 
 %%%%
-@arg@ is flash-frozen.
+@Arg@ is flash-frozen.
 
 %%%%
-@arg@ is paralysed.
+@Arg@ is paralysed.
 
 %%%%
 You are blown backwards by the freezing wind.
 
 %%%%
-@arg@ is blown backwards by the freezing wind.
+@Arg@ is blown backwards by the freezing wind.
 
 %%%%
 You are knocked back by @arg@.
 
 %%%%
-@arg1@ is knocked back by @arg2@.
+@Arg1@ is knocked back by @arg2@.
 
 %%%%
 You are yanked forward by @arg@.
 
 %%%%
-@arg1@ is yanked forward by @arg2@.
+@Arg1@ is yanked forward by @arg2@.
 
 %%%%
-@arg1@ reflects off @arg2@ @arg3@!
+@Arg1@ reflects off @arg2@ @arg3@!
 
 %%%%
-@arg1@ reflects off an invisible shield around @arg2@!
+@Arg1@ reflects off an invisible shield around @arg2@!
 
 %%%%
-@arg@ bounces off of thin air!
+@Arg@ bounces off of thin air!
 
 %%%%
-@arg1@ blocks @arg2@.
+@Arg1@ blocks @arg2@.
 
 %%%%
 Your demonic guardian avoids your attack.
 
 %%%%
-@arg1@ passes through @arg2@.
+@Arg1@ passes through @arg2@.
 
 %%%%
-@arg1@ repels @arg2@!
+@Arg1@ repels @arg2@!
 
 %%%%
-@arg1@ misses @arg2@!
+@Arg1@ misses @arg2@!
 
 %%%%
-@arg@ hits something.
+@Arg@ hits something.
 
 %%%%
-@arg@ is dispelled
+@Arg@ is dispelled
 
 %%%%
 # note: @arg@ will be possessive (e.g. "the orc's", "Sigmund's")
-@arg@ mind is blasted
+@Arg@ mind is blasted
 
 %%%%
 # note: this is for monsters with multiple heads, and @arg@ will be possessive (i.e. "the hydra's")
-@arg@ minds are blasted
+@Arg@ minds are blasted
 
 %%%%
-@arg@ looks drowsy...
+@Arg@ looks drowsy...
 
 %%%%
-@arg@ seems to speed up.
+@Arg@ seems to speed up.
 
 %%%%
-@arg@ seems to grow stronger.
+@Arg@ seems to grow stronger.
 
 %%%%
-@arg@'s wounds heal themselves!
+@Arg@'s wounds heal themselves!
 
 %%%%
-@arg@ is healed somewhat.
+@Arg@ is healed somewhat.
 
 %%%%
-@arg@ appears confused.
+@Arg@ appears confused.
 
 %%%%
-@arg@ falls asleep!
+@Arg@ falls asleep!
 
 %%%%
-@arg@ flickers and vanishes!
+@Arg@ flickers and vanishes!
 
 %%%%
-@arg@ flickers and vanishes for a moment.
+@Arg@ flickers and vanishes for a moment.
 
 %%%%
-@arg@ is charmed!
+@Arg@ is charmed!
 
 %%%%
-@arg@ is charmed.
+@Arg@ is charmed.
 
 %%%%
-@arg@ is filled with an intense inner flame!
+@Arg@ is filled with an intense inner flame!
 
 %%%%
-@arg@ is firmly anchored in space.
-
-%%%%
-# note: @arg@ will be possessive (e.g. "the orc's", "Sigmund's")
-@arg@ willpower is stripped away.
-
-%%%%
-@arg@ grows more vulnerable to poison.
-
-%%%%
-@arg@ suddenly seems more agile.
-
-%%%%
-@arg@ seems less confident about using magic.
+@Arg@ is firmly anchored in space.
 
 %%%%
 # note: @arg@ will be possessive (e.g. "the orc's", "Sigmund's")
-@arg@ magic leaks into the air.
+@Arg@ willpower is stripped away.
 
 %%%%
-@arg@ suddenly seems more resistant.
+@Arg@ grows more vulnerable to poison.
 
 %%%%
-@arg@ is infested!
+@Arg@ suddenly seems more agile.
 
 %%%%
-@arg@ seems to grow toxic.
+@Arg@ seems less confident about using magic.
+
+%%%%
+# note: @arg@ will be possessive (e.g. "the orc's", "Sigmund's")
+@Arg@ magic leaks into the air.
+
+%%%%
+@Arg@ suddenly seems more resistant.
+
+%%%%
+@Arg@ is infested!
+
+%%%%
+@Arg@ seems to grow toxic.
 
 %%%%
 The sphere of damnation explodes!
@@ -1716,7 +1716,7 @@ You hear a sharp crackling!
 The mass of ice explodes!
 
 %%%%
-@arg@ explodes!
+@Arg@ explodes!
 
 %%%%
 By Zin's power, @arg@ is contained.
@@ -1727,13 +1727,13 @@ By Zin's power, @arg@ is contained.
 # behold.cc
 ##################
 %%%%
-@arg@'s singing sounds muted, and has no effect on you.
+@Arg@'s singing sounds muted, and has no effect on you.
 
 %%%%
 The melody is strangely muted, and has no effect on you.
 
 %%%%
-@arg@ is no longer quite as mesmerising!
+@Arg@ is no longer quite as mesmerising!
 
 %%%%
 Your mesmeriser suddenly seems less interesting!
@@ -1742,7 +1742,7 @@ Your mesmeriser suddenly seems less interesting!
 You are mesmerised by @arg@!
 
 %%%%
-@arg@'s singing becomes strangely muted.
+@Arg@'s singing becomes strangely muted.
 
 %%%%
 Something's singing becomes strangely muted.
@@ -1754,7 +1754,7 @@ You can no longer hear @arg@'s singing!
 The silence clears your mind.
 
 %%%%
-@arg@ stops singing.
+@Arg@ stops singing.
 
 %%%%
 Something stops singing.
@@ -1850,7 +1850,7 @@ The forest fire spreads!
 You smother the flame.
 
 %%%%
-@arg@ smothers the flame.
+@Arg@ smothers the flame.
 
 %%%%
 The fire ignites!
@@ -1859,10 +1859,10 @@ The fire ignites!
 The rain has left you waist-deep in water!
 
 %%%%
-@arg@ steams in the rain.
+@Arg@ steams in the rain.
 
 %%%%
-@arg@ sizzles in the rain.
+@Arg@ sizzles in the rain.
 
 %%%%
 You choke on the stench!
@@ -1874,7 +1874,7 @@ The mutagenic energy flows into you.
 You are struck by lightning!
 
 %%%%
-@arg@ is struck by lightning.
+@Arg@ is struck by lightning.
 
 %%%%
 Lightning from the thunderstorm strikes something you cannot see.
@@ -1887,10 +1887,10 @@ You bask in @arg@.
 You are engulfed in @arg@.
 
 %%%%
-@arg1@ basks in @arg2@.
+@Arg1@ basks in @arg2@.
 
 %%%%
-@arg1@ is engulfed in @arg2@.
+@Arg1@ is engulfed in @arg2@.
 
 %%%%
 You are standing in a thunderstorm.
@@ -1928,16 +1928,16 @@ No answer found in the FAQ! Please submit a bug report!
 # dactions.cc
 ##################
 %%%%
-@arg@ crumbles into dust!
+@Arg@ crumbles into dust!
 
 %%%%
-@arg@ returns to the mists of memory.
+@Arg@ returns to the mists of memory.
 
 %%%%
-@arg@ is freed.
+@Arg@ is freed.
 
 %%%%
-@arg@ departs this earthly plane.
+@Arg@ departs this earthly plane.
 
 %%%%
 The hog vanishes!
@@ -1979,11 +1979,11 @@ Your bandages flutter.
 
 %%%%
 # Your feathers/scales prickle.
-@arg@ prickle.
+@Arg@ prickle.
 
 %%%%
 # Your skin (or fur) prickles
-@arg@ prickles.
+@Arg@ prickles.
 
 %%%%
 You hear strange and distant voices.
@@ -2025,10 +2025,10 @@ You are engulfed in negative energy!
 Something is engulfed in negative energy!
 
 %%%%
-@arg@ averts the curse.
+@Arg@ averts the curse.
 
 %%%%
-@arg@ partially averts the curse.
+@Arg@ partially averts the curse.
 
 %%%%
 
@@ -2226,7 +2226,7 @@ You feel violent peals of thunder!
 You feel cataclysmic peals of thunder!
 
 %%%%
-@arg@ is dazed by the mutagenic energy.
+@Arg@ is dazed by the mutagenic energy.
 
 %%%%
 You feel a surge of magic.
@@ -2328,7 +2328,7 @@ You start removing your amulet.
 You start removing your armour.
 
 %%%%
-@arg1@ grants you knowledge of @arg2@.
+@Arg1@ grants you knowledge of @arg2@.
 
 %%%%
 You start memorising the spell.
@@ -2377,111 +2377,111 @@ You return to life.
 
 %%%%
 # A bunch of messages for Abyss monsters spawning (flavour text, so translation can be quite loose)
-@arg@ appears in a burst of microwaves!
+@Arg@ appears in a burst of microwaves!
 
 %%%%
-@arg@ pops from nullspace!
+@Arg@ pops from nullspace!
 
 %%%%
-@arg@ appears in a shower of translocational energy.
+@Arg@ appears in a shower of translocational energy.
 
 %%%%
-@arg@ appears in a shower of sparks.
+@Arg@ appears in a shower of sparks.
 
 %%%%
-@arg@ materialises.
+@Arg@ materialises.
 
 %%%%
-@arg@ emerges from chaos.
+@Arg@ emerges from chaos.
 
 %%%%
-@arg@ emerges from the beyond.
+@Arg@ emerges from the beyond.
 
 %%%%
-@arg@ coalesces!
+@Arg@ coalesces!
 
 %%%%
-@arg@ erupts from nowhere.
+@Arg@ erupts from nowhere.
 
 %%%%
-@arg@ bursts from nowhere.
+@Arg@ bursts from nowhere.
 
 %%%%
-@arg@ is cast out of space.
+@Arg@ is cast out of space.
 
 %%%%
-@arg@ is cast out of reality.
+@Arg@ is cast out of reality.
 
 %%%%
-@arg@ coalesces out of pure chaos.
+@Arg@ coalesces out of pure chaos.
 
 %%%%
-@arg@ coalesces out of seething chaos.
+@Arg@ coalesces out of seething chaos.
 
 %%%%
-@arg@ punctures the fabric of time!
+@Arg@ punctures the fabric of time!
 
 %%%%
-@arg@ punctures the fabric of the universe.
+@Arg@ punctures the fabric of the universe.
 
 %%%%
-@arg@ manifests!
+@Arg@ manifests!
 
 %%%%
-@arg@ manifests with a bang!
+@Arg@ manifests with a bang!
 
 %%%%
 # player senses monster that is out of sight
 You sense a monster nearby.
 
 %%%%
-@arg@ is too close now for your liking.
+@Arg@ is too close now for your liking.
 
 %%%%
-@arg@ opens the door.
+@Arg@ opens the door.
 
 %%%%
-@arg@ opens the gate.
+@Arg@ opens the gate.
 
 %%%%
 # monster teleports into view
-@arg@ appears from thin air!
+@Arg@ appears from thin air!
 
 %%%%
-@arg@ leaps into view!
+@Arg@ leaps into view!
 
 %%%%
-@arg@ bursts forth from the lava.
+@Arg@ bursts forth from the lava.
 
 %%%%
-@arg@ bursts forth from the water.
+@Arg@ bursts forth from the water.
 
 %%%%
-@arg@ emerges from the water.
+@Arg@ emerges from the water.
 
 %%%%
-@arg@ comes up the stairs.
+@Arg@ comes up the stairs.
 
 %%%%
-@arg@ comes down the stairs.
+@Arg@ comes down the stairs.
 
 %%%%
-@arg@ comes through the gate.
+@Arg@ comes through the gate.
 
 %%%%
-@arg@ is thrown into view!
+@Arg@ is thrown into view!
 
 %%%%
-@arg@ comes into view.
+@Arg@ comes into view.
 
 %%%%
-@arg@ warns you: It is a foul glowing shapeshifter.
+@Arg@ warns you: It is a foul glowing shapeshifter.
 
 %%%%
-@arg@ warns you: It is a foul shapeshifter.
+@Arg@ warns you: It is a foul shapeshifter.
 
 %%%%
-@arg1@ is @arg2@.
+@Arg1@ is @arg2@.
 
 %%%%
 Gozag incites @arg@ against you.
@@ -2537,13 +2537,13 @@ A rising shadow in the eyes of @arg@.
 A rising star in the eyes of @arg@.
 
 %%%%
-@arg@ is pleased with you.
+@Arg@ is pleased with you.
 
 %%%%
-@arg@ is aware of your devotion.
+@Arg@ is aware of your devotion.
 
 %%%%
-@arg@ is noncommittal.
+@Arg@ is noncommittal.
 
 %%%%
 Bound item
@@ -2598,25 +2598,25 @@ You can bribe the following branches of the dungeon:
 not bribed
 
 %%%%
-@arg@ forgives followers for abandonment; however, those who later take up the worship of an evil god will be punished.
+@Arg@ forgives followers for abandonment; however, those who later take up the worship of an evil god will be punished.
 
 %%%%
 " (@arg@ are evil gods.)"
 
 %%%%
-@arg@ forgives followers for abandonment; however, those who later take up the worship of an evil or chaotic god will be scourged.
+@Arg@ forgives followers for abandonment; however, those who later take up the worship of an evil or chaotic god will be scourged.
 
 %%%%
 " (@arg1@ are evil, and @arg2@ are chaotic.)"
 
 %%%%
-@arg@ does not appreciate abandonment, and will call down fearful punishments on disloyal followers!
+@Arg@ does not appreciate abandonment, and will call down fearful punishments on disloyal followers!
 
 %%%%
-@arg@'s wrath lasts for a relatively long duration.
+@Arg@'s wrath lasts for a relatively long duration.
 
 %%%%
-@arg@'s wrath lasts for a relatively short duration.
+@Arg@'s wrath lasts for a relatively short duration.
 
 %%%%
 Named Followers:
@@ -2637,28 +2637,28 @@ Ashenzari supports the following skill groups because of your curses:
 Martial attacks:
 
 %%%%
-@arg@'s powers are not affected by the Invocations skill.
+@Arg@'s powers are not affected by the Invocations skill.
 
 %%%%
-@arg1@'s powers are based on @arg2@ instead of Invocations skill.
+@Arg1@'s powers are based on @arg2@ instead of Invocations skill.
 
 %%%%
-@arg@ is ambivalent towards you.
+@Arg@ is ambivalent towards you.
 
 %%%%
-@arg@ is almost ready to forgive your sins.
+@Arg@ is almost ready to forgive your sins.
 
 %%%%
-@arg@'s wrath is upon you!
+@Arg@'s wrath is upon you!
 
 %%%%
-@arg@ well remembers your sins.
+@Arg@ well remembers your sins.
 
 %%%%
-@arg@'s wrath is beginning to fade.
+@Arg@'s wrath is beginning to fade.
 
 %%%%
-@arg@ is neutral towards you.
+@Arg@ is neutral towards you.
 
 %%%%
 # Elyvilon lifesaving
@@ -2676,19 +2676,19 @@ Granted powers:
 
 %%%%
 # Elyvilon lifesaving - the last @arg@ is replaced by one of the clauses above
-@arg1@ carefully guards your life@arg2@.
+@Arg1@ carefully guards your life@arg2@.
 
 %%%%
-@arg1@ often guards your life@arg2@.
+@Arg1@ often guards your life@arg2@.
 
 %%%%
-@arg1@ sometimes guards your life@arg2@.
+@Arg1@ sometimes guards your life@arg2@.
 
 %%%%
-@arg1@ occasionally guards your life@arg2@.
+@Arg1@ occasionally guards your life@arg2@.
 
 %%%%
-@arg1@ guards your life@arg2@.
+@Arg1@ guards your life@arg2@.
 
 %%%%
 Zin always shields you from chaos.
@@ -2766,7 +2766,7 @@ You radiate a small aura of darkness, enhancing your stealth and reducing the ac
 You passively detect gold.
 
 %%%%
-@arg@ turns your defeated foes' bodies to gold.
+@Arg@ turns your defeated foes' bodies to gold.
 
 %%%%
 Your enemies may become distracted by gold.
@@ -3444,13 +3444,13 @@ You can sustain at most 1 creature summoned by this spell.
 You can sustain at most @num@ creatures summoned by this spell.
 
 %%%%
-@arg@ frowns upon the use of this spell.
+@Arg@ frowns upon the use of this spell.
 
 %%%%
 You'd be excommunicated if you dared to cast it!
 
 %%%%
-@arg@ supports the use of this spell.
+@Arg@ supports the use of this spell.
 
 %%%%
 You cannot cast this spell because @arg@
@@ -3663,31 +3663,31 @@ cause weakness
 
 %%%%
 # @arg@ here is a verb like "hit"
-@arg@ for up to @num@ fire damage
+@Arg@ for up to @num@ fire damage
 
 %%%%
-@arg@ @num1@ times for up to @num2@ damage each
+@Arg@ @num1@ times for up to @num2@ damage each
 
 %%%%
-@arg@ for up to @num@ damage
+@Arg@ for up to @num@ damage
 
 %%%%
-@arg1@ @num1@ times for up to @num2@ damage each plus @arg2@
+@Arg1@ @num1@ times for up to @num2@ damage each plus @arg2@
 
 %%%%
-@arg1@ for up to @num@ damage plus @arg2@
+@Arg1@ for up to @num@ damage plus @arg2@
 
 %%%%
-@arg@ from a distance @num1@ times for up to @num2@ damage each
+@Arg@ from a distance @num1@ times for up to @num2@ damage each
 
 %%%%
-@arg@ from a distance for up to @num@ damage
+@Arg@ from a distance for up to @num@ damage
 
 %%%%
-@arg1@ from a distance @num1@ times for up to @num2@ damage each plus @arg2@
+@Arg1@ from a distance @num1@ times for up to @num2@ damage each plus @arg2@
 
 %%%%
-@arg1@ from a distance for up to @num@ damage plus @arg2@
+@Arg1@ from a distance for up to @num@ damage plus @arg2@
 
 %%%%
 # Monster can do whatever from the things above
@@ -3746,11 +3746,11 @@ Will:
 
 %%%%
 # @arg@ is monster's pronoun - can be he, she, it or singular they
-@arg@ can travel through water.
+@Arg@ can travel through water.
 
 %%%%
 # @arg@ is monster's pronoun - can be he, she, it or singular they
-@arg@ can travel through lava.
+@Arg@ can travel through lava.
 
 %%%%
 It is currently targeted by @arg@.
@@ -4358,24 +4358,24 @@ This monster is out of range.
 Hit any key to exit, ctrl-p for the full log.
 
 %%%%
-@arg@ appreciates your contribution to the ecosystem.
+@Arg@ appreciates your contribution to the ecosystem.
 
 %%%%
 # death message from Kiku
-@arg@ rasps: "You have failed me! Welcome... oblivion!"
+@Arg@ rasps: "You have failed me! Welcome... oblivion!"
 
 %%%%
 # death message from Kiku
-@arg@ rasps: "You have failed me! Welcome... death!"
+@Arg@ rasps: "You have failed me! Welcome... death!"
 
 %%%%
-@arg@ claims you as an undead slave.
+@Arg@ claims you as an undead slave.
 
 %%%%
 Your body rises from the dead as a mindless zombie.
 
 %%%%
-@arg@ appreciates the killing of a heretic priest.
+@Arg@ appreciates the killing of a heretic priest.
 
 %%%%
 Your body crumbles into a pile of gold.
@@ -4456,10 +4456,10 @@ A fierce wind blows from the fan.
 You are blown backwards!
 
 %%%%
-@arg@ are blown away by the wind.
+@Arg@ are blown away by the wind.
 
 %%%%
-@arg@ is blown away by the wind.
+@Arg@ is blown away by the wind.
 
 %%%%
 The monsters around you are blown away!
@@ -4516,7 +4516,7 @@ You cannot evoke magical items.
 This wand has no charges.
 
 %%%%
-@arg@ is presently inert.
+@Arg@ is presently inert.
 
 %%%%
 Evoke which item? (* to show all)
@@ -4554,7 +4554,7 @@ Marking area around @arg@ as unsafe for travelling.
 
 %%%%
 # terse cloud name
-@arg@ cloud
+@Arg@ cloud
 
 %%%%
 " (detected)"
@@ -4589,7 +4589,7 @@ downstairs
 # fearmonger.cc
 ##################
 %%%%
-@arg@'s aura of fear is muted, and has no effect on you.
+@Arg@'s aura of fear is muted, and has no effect on you.
 
 %%%%
 The fearful aura is strangely muted, and has no effect on you.
@@ -4606,7 +4606,7 @@ You are no longer terrified.
 # fight.cc
 ##################
 %%%%
-@arg@ hops backward while attacking.
+@Arg@ hops backward while attacking.
 
 %%%%
 Really @arg1@ while wielding @arg2@?
@@ -4687,7 +4687,7 @@ Missing DCSS data directory; tried:
 Cannot find data file '@arg@' anywhere, aborting
 
 %%%%
-@arg1@ "@arg2@" does not exist and I can't create it.
+@Arg1@ "@arg2@" does not exist and I can't create it.
 
 %%%%
 Save directory
@@ -4735,7 +4735,7 @@ The hatch slides away right after you use it!
 The portal slides away right after you pass through it!
 
 %%%%
-@arg@ settles down.
+@Arg@ settles down.
 
 %%%%
 See you soon, @arg@!
@@ -4783,7 +4783,7 @@ Unless you reinstall that version, you can't load it.
 Do you want to DELETE that game and start a new one?
 
 %%%%
-@arg@ is from an incompatible version and can't be loaded.
+@Arg@ is from an incompatible version and can't be loaded.
 
 %%%%
 You already have a @arg1@ game saved under the name '@arg2@';
@@ -4819,7 +4819,7 @@ File is corrupt (found version @num1@.@num2@).
 This save is from an older version.
 
 %%%%
-@arg1@ @arg2@ is not compatible with save files this old. You can:
+@Arg1@ @arg2@ is not compatible with save files this old. You can:
 
 %%%%
 " • continue your game with an older version of @arg@"
@@ -4834,7 +4834,7 @@ This save's version: (@num1@.@num2@) (must be >= @num3@.@num4@)
 This save is from a newer version.
 
 %%%%
-@arg@ cannot load saves from newer versions. You can:
+@Arg@ cannot load saves from newer versions. You can:
 
 %%%%
 " • continue your game with a newer version of @arg@"
@@ -4854,34 +4854,34 @@ Unable to open lock file "@arg@"
 # fineff.cc
 ##################
 %%%%
-@arg@ reflects your damage back at you!
+@Arg@ reflects your damage back at you!
 
 %%%%
 Your damage is reflected back at you!
 
 %%%%
-@arg@ mirrors your injury!
+@Arg@ mirrors your injury!
 
 %%%%
-@arg@ suffers a backlash!
+@Arg@ suffers a backlash!
 
 %%%%
-@arg@ shudders alarmingly.
+@Arg@ shudders alarmingly.
 
 %%%%
-@arg@ shudders violently.
+@Arg@ shudders violently.
 
 %%%%
-@arg@ shudders vigorously.
+@Arg@ shudders vigorously.
 
 %%%%
-@arg@ shudders.
+@Arg@ shudders.
 
 %%%%
-@arg@ spits out another jelly.
+@Arg@ spits out another jelly.
 
 %%%%
-@arg@ spits out @num@ more jellies.
+@Arg@ spits out @num@ more jellies.
 
 %%%%
 One of the Royal Jelly's fragments survives.
@@ -4891,17 +4891,17 @@ The dying Royal Jelly spits out @num@ more jellies.
 
 %%%%
 # starcursed mass merge
-@arg@ shudders and is absorbed by its neighbour.
+@Arg@ shudders and is absorbed by its neighbour.
 
 %%%%
 # starcursed mass attempted merge
-@arg@ shudders and withdraws towards its neighbour.
+@Arg@ shudders and withdraws towards its neighbour.
 
 %%%%
-@arg1@ electric aura discharges, shocking @arg2@!
+@Arg1@ electric aura discharges, shocking @arg2@!
 
 %%%%
-@arg1@ electric aura discharges violently, shocking @arg2@!
+@Arg1@ electric aura discharges violently, shocking @arg2@!
 
 %%%%
 The air sparks with electricity, shocking @arg@!
@@ -4910,7 +4910,7 @@ The air sparks with electricity, shocking @arg@!
 The injured rakshasa weaves a defensive illusion!
 
 %%%%
-@arg1@ bursts from @arg2@!
+@Arg1@ bursts from @arg2@!
 
 %%%%
 You feel extremely nervous for a moment...
@@ -4936,10 +4936,10 @@ Do you wish to have @arg@ corrupted with distortion?
 Do you wish to have @arg@ blessed with holy wrath?
 
 %%%%
-@arg@ shines brightly!
+@Arg@ shines brightly!
 
 %%%%
-@arg@ booms: Use this gift wisely!
+@Arg@ booms: Use this gift wisely!
 
 %%%%
 You don't have anything to sacrifice.
@@ -4948,7 +4948,7 @@ You don't have anything to sacrifice.
 Do you wish to donate half of your money?
 
 %%%%
-@arg@ finds your generosity lacking.
+@Arg@ finds your generosity lacking.
 
 %%%%
 You feel that you will soon be absolved of all your sins.
@@ -4984,70 +4984,70 @@ Finish your current sermon first, please.
 You're not ready to recite again yet.
 
 %%%%
-@arg@ guffaws at your puny god.
+@Arg@ guffaws at your puny god.
 
 %%%%
-@arg@ sneers at your recitation.
+@Arg@ sneers at your recitation.
 
 %%%%
-@arg@ is dazed by your recitation.
+@Arg@ is dazed by your recitation.
 
 %%%%
-@arg@ is confused by your recitation.
+@Arg@ is confused by your recitation.
 
 %%%%
-@arg@ stumbles about in disarray.
+@Arg@ stumbles about in disarray.
 
 %%%%
-@arg@ is awed by your recitation.
+@Arg@ is awed by your recitation.
 
 %%%%
-@arg@ is aghast at the heresy of your recitation.
+@Arg@ is aghast at the heresy of your recitation.
 
 %%%%
-@arg@ is smitten by the wrath of Zin.
+@Arg@ is smitten by the wrath of Zin.
 
 %%%%
-@arg@ is blasted by the fury of Zin!
+@Arg@ is blasted by the fury of Zin!
 
 %%%%
-@arg@ is struck blind by the wrath of Zin!
+@Arg@ is struck blind by the wrath of Zin!
 
 %%%%
-@arg@ is limned with silver light.
+@Arg@ is limned with silver light.
 
 %%%%
-@arg@ quails at your recitation.
+@Arg@ quails at your recitation.
 
 %%%%
-@arg@ looks feeble and powerless before your recitation.
+@Arg@ looks feeble and powerless before your recitation.
 
 %%%%
-@arg@ is struck mute by the wrath of Zin!
+@Arg@ is struck mute by the wrath of Zin!
 
 %%%%
-@arg@ is driven mad by the wrath of Zin!
+@Arg@ is driven mad by the wrath of Zin!
 
 %%%%
-@arg@ is left stupefied by the wrath of Zin!
+@Arg@ is left stupefied by the wrath of Zin!
 
 %%%%
-@arg@'s chaotic flesh sizzles and spatters!
+@Arg@'s chaotic flesh sizzles and spatters!
 
 %%%%
-@arg@'s chaotic flesh bubbles and boils.
+@Arg@'s chaotic flesh bubbles and boils.
 
 %%%%
-@arg@'s chaotic flesh runs like molten wax.
+@Arg@'s chaotic flesh runs like molten wax.
 
 %%%%
-@arg@ melts away into a sizzling puddle of chaotic flesh.
+@Arg@ melts away into a sizzling puddle of chaotic flesh.
 
 %%%%
-@arg@ is turned into a pillar of salt by the wrath of Zin!
+@Arg@ is turned into a pillar of salt by the wrath of Zin!
 
 %%%%
-@arg@ grants you divine stamina.
+@Arg@ grants you divine stamina.
 
 %%%%
 Your divine stamina fades away.
@@ -5056,7 +5056,7 @@ Your divine stamina fades away.
 Do you wish to cure all of your mutations?
 
 %%%%
-@arg@ draws all chaos from your body!
+@Arg@ draws all chaos from your body!
 
 %%%%
 You hear a choir sing!
@@ -5104,7 +5104,7 @@ That's not an orcish ally!
 That orc has not proved itself worthy of your gift.
 
 %%%%
-@arg@ has already been given a gift.
+@Arg@ has already been given a gift.
 
 %%%%
 No worthy followers in sight.
@@ -5119,7 +5119,7 @@ Give which item?
 You can't give that to @arg@.
 
 %%%%
-@arg@ can't equip that with a two-handed weapon.
+@Arg@ can't equip that with a two-handed weapon.
 
 %%%%
 Resurrect @arg@?
@@ -5140,10 +5140,10 @@ You have no bad mutations to be cured!
 You feel cleansed.
 
 %%%%
-@arg@'s soul fights you.
+@Arg@'s soul fights you.
 
 %%%%
-@arg@'s soul is now yours.
+@Arg@'s soul is now yours.
 
 %%%%
 # unseen monster
@@ -5153,20 +5153,20 @@ Its soul fights you.
 Its soul is now yours.
 
 %%%%
-@arg@ delivers you corpses!
+@Arg@ delivers you corpses!
 
 %%%%
-@arg@ delivers you a corpse!
+@Arg@ delivers you a corpse!
 
 %%%%
-@arg@ can find no cadavers for you!
+@Arg@ can find no cadavers for you!
 
 %%%%
 # Kiku gift of several spells
 Do you wish to receive knowledge of @arg@?
 
 %%%%
-@arg@ grants you forbidden knowledge!
+@Arg@ grants you forbidden knowledge!
 
 %%%%
 Space bends sharply around you!
@@ -5257,7 +5257,7 @@ Ashenzari invites you to partake of a vision and a curse.
 Ashenzari invites you to partake of a vision and a curse of @arg@.
 
 %%%%
-@arg@ glows black for a moment.
+@Arg@ glows black for a moment.
 
 %%%%
 Curse which item?
@@ -5287,7 +5287,7 @@ Really remove and destroy @arg@?
 You shatter the curse binding @arg@!
 
 %%%%
-@arg@ withdraws the vision and curse.
+@Arg@ withdraws the vision and curse.
 
 %%%%
 The priest welcomes you and lets you live.
@@ -5336,7 +5336,7 @@ You don't have enough gold to fund that merchant!
 
 %%%%
 # shopkeeper invites player to visit shop
-@arg1@ invites you to visit @arg2@ @arg3@@arg4@@arg5@.
+@Arg1@ invites you to visit @arg2@ @arg3@@arg4@@arg5@.
 
 %%%%
 # Your bribe of <branch>...
@@ -5395,7 +5395,7 @@ There are friendlies around; are you sure you want to hurt them?
 Nature churns violently around you!
 
 %%%%
-@arg@ believes you are ready to make a new sacrifice.
+@Arg@ believes you are ready to make a new sacrifice.
 
 %%%%
 This is an incredible sacrifice.
@@ -5441,13 +5441,13 @@ You put @arg@ back on the other side!
 Piety after sacrifice: @arg@
 
 %%%%
-@arg@ indicates that your awakening is complete.
+@Arg@ indicates that your awakening is complete.
 
 %%%%
 Do you really want to reject the sacrifices Ru is offering?
 
 %%%%
-@arg@ will take longer to evaluate your readiness.
+@Arg@ will take longer to evaluate your readiness.
 
 %%%%
 You focus your inner power and drain @arg@'s magic in retribution!
@@ -5508,13 +5508,13 @@ Something unexpectedly blocked you, preventing you from leaping!
 power leap
 
 %%%%
-@arg@ doubts the power of magic when faced with ultimate truth!
+@Arg@ doubts the power of magic when faced with ultimate truth!
 
 %%%%
-@arg@ is paralysed by terrible understanding!
+@Arg@ is paralysed by terrible understanding!
 
 %%%%
-@arg@ slows down under the weight of truth!
+@Arg@ slows down under the weight of truth!
 
 %%%%
 There are no visible enemies. Unleash your apocalypse anyway?
@@ -5571,10 +5571,10 @@ Cancelling grand finale due to HUP.
 You can't perceive a target there!
 
 %%%%
-@arg@ explodes violently into a cloud of jellies!
+@Arg@ explodes violently into a cloud of jellies!
 
 %%%%
-@arg@ explodes violently!
+@Arg@ explodes violently!
 
 %%%%
 You spring back to your original position.
@@ -5593,19 +5593,19 @@ It is so.
 You have no ancestor to preserve!
 
 %%%%
-@arg@ is not nearby!
+@Arg@ is not nearby!
 
 %%%%
-@arg1@ grants @arg2@ healing and protection!
+@Arg1@ grants @arg2@ healing and protection!
 
 %%%%
-@arg@ is fully restored!
+@Arg@ is fully restored!
 
 %%%%
 Select a target.
 
 %%%%
-@arg@ is drained by nostalgia.
+@Arg@ is drained by nostalgia.
 
 %%%%
 You can't see anything there. Try transferring anyway?
@@ -5617,13 +5617,13 @@ You can't transfer your ancestor with @arg@.
 You can't transfer that.
 
 %%%%
-@arg@ can't be transferred there.
+@Arg@ can't be transferred there.
 
 %%%%
 You swap with @arg@!
 
 %%%%
-@arg1@ swaps with @arg2@!
+@Arg1@ swaps with @arg2@!
 
 %%%%
 Remember @arg@ name as what?
@@ -5645,7 +5645,7 @@ female
 Was @arg1@ a) male, b) female, or c) neither? (Currently @arg2@.)
 
 %%%%
-@arg1@ was always @arg2@, you're pretty sure.
+@Arg1@ was always @arg2@, you're pretty sure.
 
 %%%%
 Please select an adjacent position to wall jump against.
@@ -5687,10 +5687,10 @@ Sifu @arg@ says: The storm will not cease as long as you keep fighting, disciple
 You feel like a meek peon again.
 
 %%%%
-@arg@ slows down.
+@Arg@ slows down.
 
 %%%%
-@arg@ slow down.
+@Arg@ slow down.
 
 %%%%
 
@@ -5698,7 +5698,7 @@ You feel like a meek peon again.
 # god-companions.cc
 ##################
 %%%%
-@arg@ is recalled.
+@Arg@ is recalled.
 
 %%%%
 You have no companions.
@@ -5709,68 +5709,68 @@ You have no companions.
 # god-conduct.cc
 ##################
 %%%%
-@arg@ is not enthusiastic about the mutagenic glow surrounding you.
+@Arg@ is not enthusiastic about the mutagenic glow surrounding you.
 
 %%%%
-@arg@ does not appreciate the extra mutagenic glow surrounding you!
+@Arg@ does not appreciate the extra mutagenic glow surrounding you!
 
 %%%%
-@arg@ forgives your inadvertent evil act, just this once.
+@Arg@ forgives your inadvertent evil act, just this once.
 
 %%%%
-@arg@ forgives your inadvertent attack on a neutral, just this once.
+@Arg@ forgives your inadvertent attack on a neutral, just this once.
 
 %%%%
-@arg@ forgives your inadvertent attack on an ally, just this once.
+@Arg@ forgives your inadvertent attack on an ally, just this once.
 
 %%%%
-@arg@ forgives your inadvertent unclean act, just this once.
+@Arg@ forgives your inadvertent unclean act, just this once.
 
 %%%%
-@arg@ forgives your inadvertent chaotic act, just this once.
+@Arg@ forgives your inadvertent chaotic act, just this once.
 
 %%%%
-@arg@ forgives your inadvertent holy act, just this once.
+@Arg@ forgives your inadvertent holy act, just this once.
 
 %%%%
-@arg@ does not appreciate your training of magic skills!
+@Arg@ does not appreciate your training of magic skills!
 
 %%%%
-@arg@ does not appreciate your use of wizardly items!
+@Arg@ does not appreciate your use of wizardly items!
 
 %%%%
-@arg@ does not appreciate your shedding blood when asking for salvation!
+@Arg@ does not appreciate your shedding blood when asking for salvation!
 
 %%%%
-@arg@ forgives your accidental hurry, just this once.
+@Arg@ forgives your accidental hurry, just this once.
 
 %%%%
-@arg@ thinks you should slow down.
+@Arg@ thinks you should slow down.
 
 %%%%
-@arg@ accepts your kill.
+@Arg@ accepts your kill.
 
 %%%%
 <white>@arg@ is honoured by your kill.</white>
 
 %%%%
-@arg@ appreciates your killing of a holy being.
+@Arg@ appreciates your killing of a holy being.
 
 %%%%
-@arg@ appreciates your killing of a magic user.
+@Arg@ appreciates your killing of a magic user.
 
 %%%%
-@arg@ claims a new guest.
+@Arg@ claims a new guest.
 
 %%%%
-@arg@ appreciates your killing of a heretic priest.
+@Arg@ appreciates your killing of a heretic priest.
 
 %%%%
 # Chei likes it when you kill fast enemies. "Change of pace" is a deliberate wordplay.
-@arg@ thoroughly appreciates the change of pace.
+@Arg@ thoroughly appreciates the change of pace.
 
 %%%%
-@arg@ appreciates the change of pace.
+@Arg@ appreciates the change of pace.
 
 %%%%
 
@@ -5817,7 +5817,7 @@ You feel protected from physical damage.
 You feel more protected from physical damage.
 
 %%%%
-@arg@ mimicks your spell!
+@Arg@ mimicks your spell!
 
 %%%%
 Your supernatural speed expires.
@@ -5871,10 +5871,10 @@ You repeatedly attack @arg@ from above.
 You repeatedly attack @arg@ from above, with incredible momentum.
 
 %%%%
-@arg@ prepares the audience for your solo!
+@Arg@ prepares the audience for your solo!
 
 %%%%
-@arg@ links your audience in an emotional bond!
+@Arg@ links your audience in an emotional bond!
 
 %%%%
 
@@ -5888,7 +5888,7 @@ You cannot tell which god this altar belongs to. Convert to them anyway?
 Really abandon @arg@ for an unknown god?
 
 %%%%
-@arg@ accepts your prayer!
+@Arg@ accepts your prayer!
 
 %%%%
 A being of your status worships no god.
@@ -5903,10 +5903,10 @@ You offer a prayer to @arg@.
 You pay a tithe of @num@ gold.
 
 %%%%
-@arg@ ignores your late donation.
+@Arg@ ignores your late donation.
 
 %%%%
-@arg@ appreciates your sacrifice.
+@Arg@ appreciates your sacrifice.
 
 %%%%
 
@@ -5917,31 +5917,31 @@ You pay a tithe of @num@ gold.
 the rancor of the Wu Jian Council
 
 %%%%
-@arg@ sends the divine host to punish you for your evil ways!
+@Arg@ sends the divine host to punish you for your evil ways!
 
 %%%%
-@arg@'s divine host fails to appear.
+@Arg@'s divine host fails to appear.
 
 %%%%
-@arg@ booms out: "Take the path of righteousness! REPENT!"
+@Arg@ booms out: "Take the path of righteousness! REPENT!"
 
 %%%%
 You feel the Shining One's silent rage upon you!
 
 %%%%
-@arg@ draws some chaos from your body!
+@Arg@ draws some chaos from your body!
 
 %%%%
-@arg@ rids your body of chaos!
+@Arg@ rids your body of chaos!
 
 %%%%
-@arg@ recites the Axioms of Law to you!
+@Arg@ recites the Axioms of Law to you!
 
 %%%%
-@arg@ booms out: "Turn to the light! REPENT!"
+@Arg@ booms out: "Turn to the light! REPENT!"
 
 %%%%
-@arg@ strikes the hour.
+@Arg@ strikes the hour.
 
 %%%%
 You lose track of time.
@@ -5953,19 +5953,19 @@ You feel the world leave you behind!
 Time shudders.
 
 %%%%
-@arg@ rains destruction down upon you!
+@Arg@ rains destruction down upon you!
 
 %%%%
-@arg@ has no time to deal with you just now.
+@Arg@ has no time to deal with you just now.
 
 %%%%
-@arg@ sends minions to punish you.
+@Arg@ sends minions to punish you.
 
 %%%%
-@arg@ sends a minion to punish you.
+@Arg@ sends a minion to punish you.
 
 %%%%
-@arg@'s minions fail to arrive.
+@Arg@'s minions fail to arrive.
 
 %%%%
 You hear Kikubaaqudgha cackling.
@@ -5974,28 +5974,28 @@ You hear Kikubaaqudgha cackling.
 Kikubaaqudgha's malice focuses upon you.
 
 %%%%
-@arg@ sends servants to punish you.
+@Arg@ sends servants to punish you.
 
 %%%%
-@arg@ sends a servant to punish you.
+@Arg@ sends a servant to punish you.
 
 %%%%
-@arg@'s servants fail to arrive.
+@Arg@'s servants fail to arrive.
 
 %%%%
-@arg@'s anger turns toward you for a moment.
+@Arg@'s anger turns toward you for a moment.
 
 %%%%
-@arg@ sends monsters to punish you.
+@Arg@ sends monsters to punish you.
 
 %%%%
-@arg@ sends a monster to punish you.
+@Arg@ sends a monster to punish you.
 
 %%%%
-@arg@ has no time to punish you... now.
+@Arg@ has no time to punish you... now.
 
 %%%%
-@arg@'s voice booms out, "Feel my wrath!"
+@Arg@'s voice booms out, "Feel my wrath!"
 
 %%%%
 You suddenly pass out!
@@ -6004,49 +6004,49 @@ You suddenly pass out!
 You suddenly feel lethargic!
 
 %%%%
-@arg@ hurls fiery rage upon you!
+@Arg@ hurls fiery rage upon you!
 
 %%%%
 # Beogh sends electric weapon(s)
-@arg@ throws an implement of electrocution at you.
+@Arg@ throws an implement of electrocution at you.
 
 %%%%
-@arg@ throws implements of electrocution at you.
+@Arg@ throws implements of electrocution at you.
 
 %%%%
-@arg@ sends forth an army of orcs.
+@Arg@ sends forth an army of orcs.
 
 %%%%
-@arg@ is still gathering forces against you.
+@Arg@ is still gathering forces against you.
 
 %%%%
-@arg@ sends forces against you!
+@Arg@ sends forces against you!
 
 %%%%
-@arg@'s forces are busy with other wars.
+@Arg@'s forces are busy with other wars.
 
 %%%%
-@arg@'s wrath finds you.
+@Arg@'s wrath finds you.
 
 %%%%
 # Lugonu teleports player
-@arg@'s wrath scatters you!
+@Arg@'s wrath scatters you!
 
 %%%%
 Space warps around you!
 
 %%%%
 # Lugonu banishes player to the Abyss
-@arg@ draws you home!
+@Arg@ draws you home!
 
 %%%%
-@arg@ makes you draw from the deck of Punishment.
+@Arg@ makes you draw from the deck of Punishment.
 
 %%%%
 You feel Jiyva alter your body.
 
 %%%%
-@arg@'s gift of slime is revoked.
+@Arg@'s gift of slime is revoked.
 
 %%%%
 Mutagenic energy floods into your body!
@@ -6058,46 +6058,46 @@ Some slimes ooze up out of the ground!
 The ground quivers slightly.
 
 %%%%
-@arg@ invokes nature against you.
+@Arg@ invokes nature against you.
 
 %%%%
 Plants grow around you in an ominous manner.
 
 %%%%
-@arg@ produces spores.
+@Arg@ produces spores.
 
 %%%%
-@arg@ calls forth shadows to punish you.
+@Arg@ calls forth shadows to punish you.
 
 %%%%
-@arg@ fails to incite the shadows against you.
+@Arg@ fails to incite the shadows against you.
 
 %%%%
-@arg@ weaves monsters from the shadows.
+@Arg@ weaves monsters from the shadows.
 
 %%%%
-@arg@ fails to weave monsters from the shadows.
+@Arg@ fails to weave monsters from the shadows.
 
 %%%%
 You feel overwhelmed by the shadows around you.
 
 %%%%
-@arg@ tears the shadows away from you.
+@Arg@ tears the shadows away from you.
 
 %%%%
-@arg@ incites the elements against you!
+@Arg@ incites the elements against you!
 
 %%%%
-@arg@ fails to incite the elements against you.
+@Arg@ fails to incite the elements against you.
 
 %%%%
-@arg@ strips away your elemental protection.
+@Arg@ strips away your elemental protection.
 
 %%%%
-@arg@ fails to strip away your elemental protection.
+@Arg@ fails to strip away your elemental protection.
 
 %%%%
-@arg@ causes a mighty clap of thunder!
+@Arg@ causes a mighty clap of thunder!
 
 %%%%
 Sifu @arg@ says: Die by a thousand cuts!
@@ -6112,16 +6112,16 @@ Sifu @arg@ whispers: These will loosen your tongue!
 Sifu @arg@ says: Suffer, mortal!
 
 %%%%
-@arg@'s divine weapons fail to arrive.
+@Arg@'s divine weapons fail to arrive.
 
 %%%%
-@arg1@ drives @arg2@ into a dance frenzy!
+@Arg1@ drives @arg2@ into a dance frenzy!
 
 %%%%
-@arg@ booms out, "Time for someone else to take a solo"
+@Arg@ booms out, "Time for someone else to take a solo"
 
 %%%%
-@arg@ booms out: "Revellers, it's time to dance!"
+@Arg@ booms out: "Revellers, it's time to dance!"
 
 %%%%
 The divine experience confuses you!
@@ -6130,10 +6130,10 @@ The divine experience confuses you!
 The divine experience drains your vigour!
 
 %%%%
-@arg@ blasts you with cleansing flame!
+@Arg@ blasts you with cleansing flame!
 
 %%%%
-@arg@ smites you!
+@Arg@ smites you!
 
 %%%%
 
@@ -6214,7 +6214,7 @@ the character overview screen (<w>%</w>)
 the dungeon overview screen (<w>%</w>)
 
 %%%%
-@arg@ are good things to check.
+@Arg@ are good things to check.
 
 %%%%
 
@@ -6347,7 +6347,7 @@ Drop what?
 (_ for help)
 
 %%%%
-@arg@ (<w>?</w> for menu, <w>Esc</w> to quit)
+@Arg@ (<w>?</w> for menu, <w>Esc</w> to quit)
 
 %%%%
 You don't have any such object.
@@ -6607,13 +6607,13 @@ You're already wearing that object!
 You aren't wearing that!
 
 %%%%
-@arg@ is melded into your body!
+@Arg@ is melded into your body!
 
 %%%%
 You aren't wearing that object!
 
 %%%%
-@arg@ is stuck to your body!
+@Arg@ is stuck to your body!
 
 %%%%
 You're wearing all the rings you can. Remove which one?
@@ -6673,7 +6673,7 @@ You are wielding that object.
 You can only put on jewellery.
 
 %%%%
-@arg@ is stuck to you!
+@Arg@ is stuck to you!
 
 %%%%
 You're already wearing that amulet!
@@ -6736,40 +6736,40 @@ You can't drink that!
 " This action would place you under penance!"
 
 %%%%
-@arg@ petitions for your drink to fail.
+@Arg@ petitions for your drink to fail.
 
 %%%%
-@arg@ emits a brilliant flash of light!
+@Arg@ emits a brilliant flash of light!
 
 %%%%
-@arg@ projects an invisible shield of force!
+@Arg@ projects an invisible shield of force!
 
 %%%%
-@arg@ is engulfed in flames!
+@Arg@ is engulfed in flames!
 
 %%%%
-@arg@ is covered with a thin layer of ice!
+@Arg@ is covered with a thin layer of ice!
 
 %%%%
-@arg@ craves living souls!
+@Arg@ craves living souls!
 
 %%%%
-@arg@ thirsts for the lives of mortals!
+@Arg@ thirsts for the lives of mortals!
 
 %%%%
-@arg@ drips with poison.
+@Arg@ drips with poison.
 
 %%%%
-@arg@ crackles with electricity.
+@Arg@ crackles with electricity.
 
 %%%%
-@arg@ erupts in a glittering mayhem of colour.
+@Arg@ erupts in a glittering mayhem of colour.
 
 %%%%
-@arg@ oozes corrosive slime.
+@Arg@ oozes corrosive slime.
 
 %%%%
-@arg@ acquires a faint afterimage.
+@Arg@ acquires a faint afterimage.
 
 %%%%
 Really abort (and waste the scroll)?
@@ -6778,16 +6778,16 @@ Really abort (and waste the scroll)?
 Enchant which weapon?
 
 %%%%
-@arg@ glows red for a moment.
+@Arg@ glows red for a moment.
 
 %%%%
 Identify which item? (\ to view known items)
 
 %%%%
-@arg@ glow green for a moment.
+@Arg@ glow green for a moment.
 
 %%%%
-@arg@ glows green for a moment.
+@Arg@ glows green for a moment.
 
 %%%%
 Enchant which item?
@@ -6991,7 +6991,7 @@ You now have @num@ gold pieces.
 You now have @num1@ gold pieces (gained @num2@).
 
 %%%%
-@arg@ burns to shimmering ash in your grasp.
+@Arg@ burns to shimmering ash in your grasp.
 
 %%%%
 You pick up @arg@ and begin reading...
@@ -7041,13 +7041,13 @@ Zot can harm you no longer.
 Now all you have to do is get back out of the dungeon!
 
 %%%%
-@arg@ (gained @num@)
+@Arg@ (gained @num@)
 
 %%%%
-@arg@ (gained 1 charge)
+@Arg@ (gained 1 charge)
 
 %%%%
-@arg@ (gained @num@ charges)
+@Arg@ (gained @num@ charges)
 
 %%%%
 # note: ring/amulet
@@ -7722,31 +7722,31 @@ Clearing level map.
 You attempt to attack @arg@, but flinch away in fear!
 
 %%%%
-@arg@ strikes at you from the darkness!
+@Arg@ strikes at you from the darkness!
 
 %%%%
-@arg1@ strikes at @arg2@ from the darkness!
+@Arg1@ strikes at @arg2@ from the darkness!
 
 %%%%
-@arg@ completely misses you.
+@Arg@ completely misses you.
 
 %%%%
-@arg1@ completely misses @arg2@.
+@Arg1@ completely misses @arg2@.
 
 %%%%
-@arg1@ misses @arg2@.
+@Arg1@ misses @arg2@.
 
 %%%%
-@arg@ closely misses you.
+@Arg@ closely misses you.
 
 %%%%
-@arg1@ closely misses @arg2@.
+@Arg1@ closely misses @arg2@.
 
 %%%%
-@arg@ barely misses you.
+@Arg@ barely misses you.
 
 %%%%
-@arg1@ barely misses @arg2@.
+@Arg1@ barely misses @arg2@.
 
 %%%%
 You engulf @arg@ in ooze!
@@ -8022,7 +8022,7 @@ You beat @arg@ into a bloody pulp@punct@
 The flame cauterises the wound!
 
 %%%%
-@arg@ grows two more!
+@Arg@ grows two more!
 
 %%%%
 You rip @arg@ last head off!
@@ -8031,10 +8031,10 @@ You rip @arg@ last head off!
 You chop @arg@ last head off!
 
 %%%%
-@arg1@ rips @arg2@ last head off!
+@Arg1@ rips @arg2@ last head off!
 
 %%%%
-@arg1@ chops @arg2@ last head off!
+@Arg1@ chops @arg2@ last head off!
 
 %%%%
 You rip one of @arg@ heads off!
@@ -8043,235 +8043,235 @@ You rip one of @arg@ heads off!
 You chop one of @arg@ heads off!
 
 %%%%
-@arg1@ rips one of @arg2@ heads off!
+@Arg1@ rips one of @arg2@ heads off!
 
 %%%%
-@arg1@ chops one of @arg2@ heads off!
+@Arg1@ chops one of @arg2@ heads off!
 
 %%%%
-@arg@ burns!
+@Arg@ burns!
 
 %%%%
-@arg@ burn!
+@Arg@ burn!
 
 %%%%
-@arg@ is burned by acid!
+@Arg@ is burned by acid!
 
 %%%%
-@arg@ is electrocuted
+@Arg@ is electrocuted
 
 %%%%
 You shatter @arg@
 
 %%%%
-@arg@ shatters you
+@Arg@ shatters you
 
 %%%%
-@arg1@ shatters @arg2@
+@Arg1@ shatters @arg2@
 
 %%%%
-@arg@ shatters itself
+@Arg@ shatters itself
 
 %%%%
-@arg@ blasts you
+@Arg@ blasts you
 
 %%%%
-@arg1@ blasts @arg2@
+@Arg1@ blasts @arg2@
 
 %%%%
-@arg@ blasts itself
+@Arg@ blasts itself
 
 %%%%
-@arg@ pokes you
+@Arg@ pokes you
 
 %%%%
-@arg1@ pokes @arg2@
+@Arg1@ pokes @arg2@
 
 %%%%
-@arg@ prods you
+@Arg@ prods you
 
 %%%%
-@arg1@ prods @arg2@
+@Arg1@ prods @arg2@
 
 %%%%
-@arg@ flogs you
+@Arg@ flogs you
 
 %%%%
-@arg1@ flogs @arg2@
+@Arg1@ flogs @arg2@
 
 %%%%
-@arg@ pounds you
+@Arg@ pounds you
 
 %%%%
-@arg1@ pounds @arg2@
+@Arg1@ pounds @arg2@
 
 %%%%
-@arg@ slaps you
+@Arg@ slaps you
 
 %%%%
-@arg1@ slaps @arg2@
+@Arg1@ slaps @arg2@
 
 %%%%
-@arg@ tickles you
+@Arg@ tickles you
 
 %%%%
-@arg1@ tickles @arg2@
+@Arg1@ tickles @arg2@
 
 %%%%
-@arg@ defenestrates you
+@Arg@ defenestrates you
 
 %%%%
-@arg1@ defenestrates @arg2@
+@Arg1@ defenestrates @arg2@
 
 %%%%
-@arg@ sucker-punches you
+@Arg@ sucker-punches you
 
 %%%%
-@arg1@ sucker-punches @arg2@
+@Arg1@ sucker-punches @arg2@
 
 %%%%
-@arg@ elbows you
+@Arg@ elbows you
 
 %%%%
-@arg1@ elbows @arg2@
+@Arg1@ elbows @arg2@
 
 %%%%
-@arg@ pinches you
+@Arg@ pinches you
 
 %%%%
-@arg1@ pinches @arg2@
+@Arg1@ pinches @arg2@
 
 %%%%
-@arg@ strangle-hugs you
+@Arg@ strangle-hugs you
 
 %%%%
-@arg1@ strangle-hugs @arg2@
+@Arg1@ strangle-hugs @arg2@
 
 %%%%
-@arg@ squeezes you
+@Arg@ squeezes you
 
 %%%%
-@arg1@ squeezes @arg2@
+@Arg1@ squeezes @arg2@
 
 %%%%
-@arg@ teases you
+@Arg@ teases you
 
 %%%%
-@arg1@ teases @arg2@
+@Arg1@ teases @arg2@
 
 %%%%
-@arg@ eye-gouges you
+@Arg@ eye-gouges you
 
 %%%%
-@arg1@ eye-gouges @arg2@
+@Arg1@ eye-gouges @arg2@
 
 %%%%
-@arg@ karate-kicks you
+@Arg@ karate-kicks you
 
 %%%%
-@arg1@ karate-kicks @arg2@
+@Arg1@ karate-kicks @arg2@
 
 %%%%
-@arg@ headlocks you
+@Arg@ headlocks you
 
 %%%%
-@arg1@ headlocks @arg2@
+@Arg1@ headlocks @arg2@
 
 %%%%
-@arg@ wrestles you
+@Arg@ wrestles you
 
 %%%%
-@arg1@ wrestles @arg2@
+@Arg1@ wrestles @arg2@
 
 %%%%
-@arg@ trip-wires you
+@Arg@ trip-wires you
 
 %%%%
-@arg1@ trip-wires @arg2@
+@Arg1@ trip-wires @arg2@
 
 %%%%
-@arg@ kneecaps you
+@Arg@ kneecaps you
 
 %%%%
-@arg1@ kneecaps @arg2@
+@Arg1@ kneecaps @arg2@
 
 %%%%
 " with @arg@"
 
 %%%%
-@arg@ poisons you!
+@Arg@ poisons you!
 
 %%%%
-@arg1@ poisons @arg2@!
+@Arg1@ poisons @arg2@!
 
 %%%%
 You are covered in liquid flames
 
 %%%%
-@arg@ is covered in liquid flames
+@Arg@ is covered in liquid flames
 
 %%%%
 You are engulfed in flames
 
 %%%%
-@arg@ is engulfed in flames
+@Arg@ is engulfed in flames
 
 %%%%
-@arg@ shocks you
+@Arg@ shocks you
 
 %%%%
-@arg1@ shocks @arg2@
+@Arg1@ shocks @arg2@
 
 %%%%
-@arg@ draws strength from your injuries!
+@Arg@ draws strength from your injuries!
 
 %%%%
-@arg1@ draws strength from @arg2@ injuries!
+@Arg1@ draws strength from @arg2@ injuries!
 
 %%%%
 You are engulfed in a cloud of spores!
 
 %%%%
-@arg@ is engulfed in a cloud of spores!
+@Arg@ is engulfed in a cloud of spores!
 
 %%%%
 Your divine stamina protects you from poison!
 
 %%%%
-@arg@ infuriates you!
+@Arg@ infuriates you!
 
 %%%%
-@arg1@ infuriates @arg2@!
+@Arg1@ infuriates @arg2@!
 
 %%%%
-@arg@ sears you
+@Arg@ sears you
 
 %%%%
-@arg1@ sears @arg2@
+@Arg1@ sears @arg2@
 
 %%%%
-@arg@ drains your magic.
+@Arg@ drains your magic.
 
 %%%%
-@arg@ drains your power.
+@Arg@ drains your power.
 
 %%%%
-@arg1@ drains @arg2@ magic.
+@Arg1@ drains @arg2@ magic.
 
 %%%%
-@arg1@ drains @arg2@ power.
+@Arg1@ drains @arg2@ power.
 
 %%%%
-@arg@ looks very invigorated.
+@Arg@ looks very invigorated.
 
 %%%%
-@arg@ looks invigorated.
+@Arg@ looks invigorated.
 
 %%%%
-@arg@ grabs you.
+@Arg@ grabs you.
 
 %%%%
-@arg1@ grabs @arg2@.
+@Arg1@ grabs @arg2@.
 
 %%%%
 the water
@@ -8280,28 +8280,28 @@ the water
 the ooze
 
 %%%%
-@arg@ engulfs you in water!
+@Arg@ engulfs you in water!
 
 %%%%
-@arg1@ engulfs @arg2@ in water!
+@Arg1@ engulfs @arg2@ in water!
 
 %%%%
-@arg@ engulfs you!
+@Arg@ engulfs you!
 
 %%%%
-@arg1@ engulfs @arg2@!
+@Arg1@ engulfs @arg2@!
 
 %%%%
-@arg@ willpower is stripped away!
+@Arg@ willpower is stripped away!
 
 %%%%
-@arg@ drowns you
+@Arg@ drowns you
 
 %%%%
-@arg1@ drowns @arg2@
+@Arg1@ drowns @arg2@
 
 %%%%
-@arg@ is very cold.
+@Arg@ is very cold.
 
 %%%%
 The eyeballs on your body gaze at @arg@.
@@ -8310,7 +8310,7 @@ The eyeballs on your body gaze at @arg@.
 Your tendrils lash around @arg1@ @arg2@ and pull it to the ground!
 
 %%%%
-@arg@ is struck by your spines.
+@Arg@ is struck by your spines.
 
 %%%%
 You are struck by @arg@ thorns.
@@ -8319,28 +8319,28 @@ You are struck by @arg@ thorns.
 You are struck by @arg@ spines.
 
 %%%%
-@arg1@ is struck by @arg2@ thorns.
+@Arg1@ is struck by @arg2@ thorns.
 
 %%%%
-@arg1@ is struck by @arg2@ spines.
+@Arg1@ is struck by @arg2@ spines.
 
 %%%%
 You emit a cloud of foul miasma!
 
 %%%%
-@arg@ furiously retaliates!
+@Arg@ furiously retaliates!
 
 %%%%
-@arg@ headbutts you but does no damage.
+@Arg@ headbutts you but does no damage.
 
 %%%%
-@arg1@ headbutts @arg2@ but does no damage.
+@Arg1@ headbutts @arg2@ but does no damage.
 
 %%%%
-@arg@ headbutts you
+@Arg@ headbutts you
 
 %%%%
-@arg1@ headbutts @arg2@
+@Arg1@ headbutts @arg2@
 
 %%%%
 You furiously retaliate!
@@ -8364,31 +8364,31 @@ You headbutt @arg@ but do no damage.
 You riposte.
 
 %%%%
-@arg@ ripostes.
+@Arg@ ripostes.
 
 %%%%
 You are held in place!
 
 %%%%
-@arg@ is held in place!
+@Arg@ is held in place!
 
 %%%%
 You hold your ground!
 
 %%%%
-@arg@ stands fast!
+@Arg@ stands fast!
 
 %%%%
 You stumble backwards!
 
 %%%%
-@arg@ stumbles backwards!
+@Arg@ stumbles backwards!
 
 %%%%
 You are shoved backwards!
 
 %%%%
-@arg@ is shoved backwards!
+@Arg@ is shoved backwards!
 
 %%%%
 You bite @arg@, and draw blood!
@@ -8582,19 +8582,19 @@ You get stuck in the web!
 # mon-abil.cc
 ##################
 %%%%
-@arg@ is empowered by the presence of the orb!
+@Arg@ is empowered by the presence of the orb!
 
 %%%%
-@arg@ basks in your mutagenic energy and changes!
+@Arg@ basks in your mutagenic energy and changes!
 
 %%%%
-@arg@ basks in the mutagenic energy from its kin and changes!
+@Arg@ basks in the mutagenic energy from its kin and changes!
 
 %%%%
-@arg@ basks in the mutagenic energy and changes!
+@Arg@ basks in the mutagenic energy and changes!
 
 %%%%
-@arg@ splits.
+@Arg@ splits.
 
 %%%%
 Two slime creatures merge to form @arg@.
@@ -8603,7 +8603,7 @@ Two slime creatures merge to form @arg@.
 Something merges into @arg@, and it vanishes!
 
 %%%%
-@arg@ merges with something you can't see.
+@Arg@ merges with something you can't see.
 
 %%%%
 A cacophony of accursed wailing tears at your sanity!
@@ -8618,34 +8618,34 @@ A chorus of shrieks assaults your mind.
 The starcursed mass shrieks in your mind.
 
 %%%%
-@arg1@ writhes in pain as voices assail @arg2@ mind.
+@Arg1@ writhes in pain as voices assail @arg2@ mind.
 
 %%%%
-@arg1@ sacrifices itself to reknit @arg2@!
+@Arg1@ sacrifices itself to reknit @arg2@!
 
 %%%%
-@arg1@ assumes the form of @arg2@ and becomes anchored to this world!
+@Arg1@ assumes the form of @arg2@ and becomes anchored to this world!
 
 %%%%
-@arg1@ assumes the form of @arg2@!
+@Arg1@ assumes the form of @arg2@!
 
 %%%%
 Angry insects surge out from beneath @arg@ foliage!
 
 %%%%
-@arg@ flickers out of sight!
+@Arg@ flickers out of sight!
 
 %%%%
-@arg@ flickers out of sight for a moment.
+@Arg@ flickers out of sight for a moment.
 
 %%%%
-@arg@ flows with the water.
+@Arg@ flows with the water.
 
 %%%%
-@arg@ flows through the trees.
+@Arg@ flows through the trees.
 
 %%%%
-@arg@ overheats!
+@Arg@ overheats!
 
 %%%%
 
@@ -8653,61 +8653,61 @@ Angry insects surge out from beneath @arg@ foliage!
 # mon-act.cc
 ##################
 %%%%
-@arg@ is no longer engulfed.
+@Arg@ is no longer engulfed.
 
 %%%%
-@arg1@ and @arg2@ swap places.
+@Arg1@ and @arg2@ swap places.
 
 %%%%
 By Zin's power the foxfire is contained!
 
 %%%%
-@arg1@ swoops through the air toward @arg2@!
+@Arg1@ swoops through the air toward @arg2@!
 
 %%%%
-@arg@ reads a scroll.
+@Arg@ reads a scroll.
 
 %%%%
 Wisps of shadow swirl around @arg@.
 
 %%%%
-@arg@ zaps a wand.
+@Arg@ zaps a wand.
 
 %%%%
 You hear a zap.
 
 %%%%
-@arg@ is stunned by your conviction and fails to attack.
+@Arg@ is stunned by your conviction and fails to attack.
 
 %%%%
 You redirect @arg@'s attack!
 
 %%%%
-@arg@ falls limply to the ground.
+@Arg@ falls limply to the ground.
 
 %%%%
-@arg@ crackles loudly.
+@Arg@ crackles loudly.
 
 %%%%
 You hear a loud crackle.
 
 %%%%
-@arg@ is lost in a daze.
+@Arg@ is lost in a daze.
 
 %%%%
-@arg@ is distracted by your dazzling golden aura.
+@Arg@ is distracted by your dazzling golden aura.
 
 %%%%
 Something you can't see is thrashing in a web.
 
 %%%%
-@arg@ struggles to get unstuck from the web.
+@Arg@ struggles to get unstuck from the web.
 
 %%%%
 Something wriggles in the net.
 
 %%%%
-@arg@ struggles against the net.
+@Arg@ struggles against the net.
 
 %%%%
 The net rips apart, and @arg@ comes free!
@@ -8722,13 +8722,13 @@ You feel yourself growing ill in the presence of @arg@.
 Being near @arg@ leaves you feeling lethargic.
 
 %%%%
-@arg1@ watery aura covers @arg2@.
+@Arg1@ watery aura covers @arg2@.
 
 %%%%
-@arg@ moves out of view.
+@Arg@ moves out of view.
 
 %%%%
-@arg@ splits in two!
+@Arg@ splits in two!
 
 %%%%
 You hear a squelching noise.
@@ -8740,37 +8740,37 @@ You hear a slurping noise.
 Something unseen opens @arg@.
 
 %%%%
-@arg1@ opens @arg2@.
+@Arg1@ opens @arg2@.
 
 %%%%
-@arg@ escapes!
+@Arg@ escapes!
 
 %%%%
-@arg@ struggles to escape constriction.
+@Arg@ struggles to escape constriction.
 
 %%%%
 The door bursts into shrapnel!
 
 %%%%
-@arg@ bursts through the door, destroying it!
+@Arg@ bursts through the door, destroying it!
 
 %%%%
 The door mysteriously vanishes.
 
 %%%%
-@arg@ eats the door!
+@Arg@ eats the door!
 
 %%%%
-@arg@ rages.
+@Arg@ rages.
 
 %%%%
-@arg@ flops around on dry land!
+@Arg@ flops around on dry land!
 
 %%%%
-@arg@ falters for a moment.
+@Arg@ falters for a moment.
 
 %%%%
-@arg@ knocks down a tree!
+@Arg@ knocks down a tree!
 
 %%%%
 You hear a crashing sound.
@@ -8796,25 +8796,25 @@ Cornered, @The_monster@ turns to fight!
 (press <w>%c</w> on the <w>@arg@</w>bility menu to convert to Beogh)
 
 %%%%
-@arg@ passes through the gate.
+@Arg@ passes through the gate.
 
 %%%%
-@arg@ goes up the escape hatch.
+@Arg@ goes up the escape hatch.
 
 %%%%
-@arg@ goes down the escape hatch.
+@Arg@ goes down the escape hatch.
 
 %%%%
-@arg@ goes up the stairs.
+@Arg@ goes up the stairs.
 
 %%%%
-@arg@ goes down the stairs.
+@Arg@ goes down the stairs.
 
 %%%%
-@arg@ goes down the shaft.
+@Arg@ goes down the shaft.
 
 %%%%
-@arg@ jumps into the shaft.
+@Arg@ jumps into the shaft.
 
 %%%%
 
@@ -8823,35 +8823,35 @@ Cornered, @The_monster@ turns to fight!
 ##################
 %%%%
 # 2nd param is <god>'s
-@arg1@ invokes @arg2@ protection!
+@Arg1@ invokes @arg2@ protection!
 
 %%%%
 # params: 1. monster name 2. reflexive pronoun
-@arg1@ liquefies the ground around @arg2@!
+@Arg1@ liquefies the ground around @arg2@!
 
 %%%%
-@arg@ casts a cantrip, but nothing happens.
+@Arg@ casts a cantrip, but nothing happens.
 
 %%%%
-@arg@ begins to cast a cantrip, but forgets the words!
+@Arg@ begins to cast a cantrip, but forgets the words!
 
 %%%%
-@arg@ miscasts a cantrip.
+@Arg@ miscasts a cantrip.
 
 %%%%
-@arg@ looks braver for a moment.
+@Arg@ looks braver for a moment.
 
 %%%%
-@arg@ looks encouraged for a moment.
+@Arg@ looks encouraged for a moment.
 
 %%%%
-@arg@ looks satisfied for a moment.
+@Arg@ looks satisfied for a moment.
 
 %%%%
-@arg1@ prays to @arg2@, and fills with unholy energy.
+@Arg1@ prays to @arg2@, and fills with unholy energy.
 
 %%%%
-@arg@ is smitten.
+@Arg@ is smitten.
 
 %%%%
 Roots burst forth from the earth!
@@ -8860,19 +8860,19 @@ Roots burst forth from the earth!
 The grasping roots grab you!
 
 %%%%
-@arg@ skewers you
+@Arg@ skewers you
 
 %%%%
-@arg1@ skewers @arg2@
+@Arg1@ skewers @arg2@
 
 %%%%
-@arg@ goes into a battle-frenzy!
+@Arg@ goes into a battle-frenzy!
 
 %%%%
-@arg@ go into a battle-frenzy!
+@Arg@ go into a battle-frenzy!
 
 %%%%
-@arg@ activates a sealing rune.
+@Arg@ activates a sealing rune.
 
 %%%%
 Someone activates a sealing rune.
@@ -8887,16 +8887,16 @@ A door slams shut!
 You are pushed out of the doorway!
 
 %%%%
-@arg@ grips you
+@Arg@ grips you
 
 %%%%
-@arg1@ grips @arg2@
+@Arg1@ grips @arg2@
 
 %%%%
 The queen bee calls on @arg@ to defend her!
 
 %%%%
-@arg1@ goads @arg2@ on!
+@Arg1@ goads @arg2@ on!
 
 %%%%
 Sorry, this spell isn't supported for dummies!
@@ -8908,28 +8908,28 @@ Vines fly forth from the trees!
 Thorny briars emerge from the ground!
 
 %%%%
-@arg@ begins absorbing vital energies!
+@Arg@ begins absorbing vital energies!
 
 %%%%
-@arg1@ is empowered by @arg2@ aura!
+@Arg1@ is empowered by @arg2@ aura!
 
 %%%%
-@arg@ animating energy erupts into ghostly fire!
+@Arg@ animating energy erupts into ghostly fire!
 
 %%%%
-@arg@ begins to cast a spell, but is stunned by your conviction!
+@Arg@ begins to cast a spell, but is stunned by your conviction!
 
 %%%%
-@arg@ begins to pray, but is stunned by your conviction!
+@Arg@ begins to pray, but is stunned by your conviction!
 
 %%%%
-@arg@ begins to attack, but is stunned by your conviction!
+@Arg@ begins to attack, but is stunned by your conviction!
 
 %%%%
-@arg@ protects your fellow warrior from evil magic!
+@Arg@ protects your fellow warrior from evil magic!
 
 %%%%
-@arg@ shields your ally from puny magic!
+@Arg@ shields your ally from puny magic!
 
 %%%%
 Zin's power protects your fellow warrior from evil magic!
@@ -8941,23 +8941,23 @@ Send 'em back where they came from!
 You are frozen
 
 %%%%
-@arg@ is frozen
+@Arg@ is frozen
 
 %%%%
-@arg@ attempts to bespell you!
+@Arg@ attempts to bespell you!
 
 %%%%
 # params: 1. monster name 2. his/her/its/their
-@arg1@ draws you further into @arg2@ thrall.
+@Arg1@ draws you further into @arg2@ thrall.
 
 %%%%
-@arg@ radiates an aura of fear!
+@Arg@ radiates an aura of fear!
 
 %%%%
 An aura of fear fills the air!
 
 %%%%
-@arg@ blinks into view!
+@Arg@ blinks into view!
 
 %%%%
 Terrible wounds spread across more of @arg@ body!
@@ -9047,7 +9047,7 @@ Something tries to feed on your intellect!
 Orcish apparitions take form around you.
 
 %%%%
-@arg@ is surrounded by Orcish apparitions.
+@Arg@ is surrounded by Orcish apparitions.
 
 %%%%
 You feel haunted.
@@ -9056,28 +9056,28 @@ You feel haunted.
 You sense an evil presence.
 
 %%%%
-@arg@ puts on a burst of speed!
+@Arg@ puts on a burst of speed!
 
 %%%%
-@arg@'s surroundings become eerily quiet.
+@Arg@'s surroundings become eerily quiet.
 
 %%%%
-@arg@ sings a water chant to call the tide!
+@Arg@ sings a water chant to call the tide!
 
 %%%%
-@arg@ squirts a massive cloud of ink into the water!
+@Arg@ squirts a massive cloud of ink into the water!
 
 %%%%
-@arg@ shimmers and seems to become two!
+@Arg@ shimmers and seems to become two!
 
 %%%%
-@arg@ shimmers and seems to become three!
+@Arg@ shimmers and seems to become three!
 
 %%%%
 Walls emerge from the floor!
 
 %%%%
-@arg@ commands the forest to attack, but nothing happens.
+@Arg@ commands the forest to attack, but nothing happens.
 
 %%%%
 The forest starts to sway and rumble!
@@ -9086,43 +9086,43 @@ The forest starts to sway and rumble!
 An electric hum fills the air.
 
 %%%%
-@arg@ begins to accept the injuries of allies.
+@Arg@ begins to accept the injuries of allies.
 
 %%%%
-@arg@ radiates an aura of cold.
+@Arg@ radiates an aura of cold.
 
 %%%%
 A wave of cold passes over you.
 
 %%%%
-@arg@ begins repelling missiles!
+@Arg@ begins repelling missiles!
 
 %%%%
-@arg@ channels a blast of cleansing flame!
+@Arg@ channels a blast of cleansing flame!
 
 %%%%
-@arg@ begins emitting a brilliant aura!
+@Arg@ begins emitting a brilliant aura!
 
 %%%%
-@arg@ binds the souls of nearby monsters.
+@Arg@ binds the souls of nearby monsters.
 
 %%%%
-@arg@ curls into a ball and begins rolling!
+@Arg@ curls into a ball and begins rolling!
 
 %%%%
 thin air
 
 %%%%
-@arg1@ throws @arg2@ at @arg3@!
+@Arg1@ throws @arg2@ at @arg3@!
 
 %%%%
-@arg1@ throws @arg2@ out of sight!
+@Arg1@ throws @arg2@ out of sight!
 
 %%%%
-@arg@ unleashes a terrible howl, and it begins to echo in your mind!
+@Arg@ unleashes a terrible howl, and it begins to echo in your mind!
 
 %%%%
-@arg@ unleashes a silent howl, and it begins to echo in your mind!
+@Arg@ unleashes a silent howl, and it begins to echo in your mind!
 
 %%%%
 Some walls begin to move on their own!
@@ -9134,10 +9134,10 @@ Some walls crumble away!
 You hear rumbling.
 
 %%%%
-@arg@ chants its luring song.
+@Arg@ chants its luring song.
 
 %%%%
-@arg@ chants a haunting song.
+@Arg@ chants a haunting song.
 
 %%%%
 You hear a luring song.
@@ -9154,10 +9154,10 @@ You hear an eerie melody.
 # mon-clone.cc
 ##################
 %%%%
-@arg1@ seems to step out of @arg2@!
+@Arg1@ seems to step out of @arg2@!
 
 %%%%
-@arg1@ seems to draw @arg2@ out of @arg3@!
+@Arg1@ seems to draw @arg2@ out of @arg3@!
 
 %%%%
 Suddenly you stand beside yourself.
@@ -9166,7 +9166,7 @@ Suddenly you stand beside yourself.
 There is a horrible, sudden wrenching feeling in your soul!
 
 %%%%
-@arg@ is duplicated!
+@Arg@ is duplicated!
 
 %%%%
 
@@ -9180,16 +9180,16 @@ Error, exp for monster with no damage: @arg@
 You feel a bit more experienced.
 
 %%%%
-@arg@ are intact enough to wear.
+@Arg@ are intact enough to wear.
 
 %%%%
-@arg@ is intact enough to wear.
+@Arg@ is intact enough to wear.
 
 %%%%
-@arg1@ protects @arg2@ from harm!
+@Arg1@ protects @arg2@ from harm!
 
 %%%%
-@arg1@ heals @arg2@
+@Arg1@ heals @arg2@
 
 %%%%
 With an infernal shudder, the power ruling this place vanishes!
@@ -9198,7 +9198,7 @@ With an infernal shudder, the power ruling this place vanishes!
 With an infernal noise, the power ruling this place vanishes!
 
 %%%%
-@arg@'s corpse
+@Arg@'s corpse
 
 %%%%
 A freezing mist gathers momentarily, then fades.
@@ -9216,22 +9216,22 @@ A glowing mist starts to gather...
 With its final breath, the spriggan druid offers up its power to the beasts of the wild!
 
 %%%%
-@arg@ seems to grow more fierce.
+@Arg@ seems to grow more fierce.
 
 %%%%
-@arg@ turns into a zombie!
+@Arg@ turns into a zombie!
 
 %%%%
-@arg@ turns into a skeleton!
+@Arg@ turns into a skeleton!
 
 %%%%
-@arg@ appears out of thin air!
+@Arg@ appears out of thin air!
 
 %%%%
-@arg@'s shape twists and changes in death.
+@Arg@'s shape twists and changes in death.
 
 %%%%
-@arg@'s body returns to its original shape.
+@Arg@'s body returns to its original shape.
 
 %%%%
 Lua death function for monster '@arg1@' didn't load: @arg2@
@@ -9246,19 +9246,19 @@ The necklace of Bloodlust glows a violent red.
 You feel the ancient rage of your axe.
 
 %%%%
-@arg@ detonates feebly.
+@Arg@ detonates feebly.
 
 %%%%
-@arg@ dissipates!
+@Arg@ dissipates!
 
 %%%%
-@arg@ vaporises!
+@Arg@ vaporises!
 
 %%%%
-@arg@ turns to gold and falls from the air.
+@Arg@ turns to gold and falls from the air.
 
 %%%%
-@arg@ falls from the air.
+@Arg@ falls from the air.
 
 %%%%
 The tentacle is hauled back through the portal!
@@ -9267,19 +9267,19 @@ The tentacle is hauled back through the portal!
 With a roar, the tentacle is hauled back through the portal!
 
 %%%%
-@arg@ crumbles away.
+@Arg@ crumbles away.
 
 %%%%
 You feel a bit better.
 
 %%%%
-@arg@ is blown up!
+@Arg@ is blown up!
 
 %%%%
-@arg@ is destroyed!
+@Arg@ is destroyed!
 
 %%%%
-@arg@ is killed!
+@Arg@ is killed!
 
 %%%%
 You blow up @arg@!
@@ -9294,16 +9294,16 @@ You kill @arg@!
 That felt strangely unrewarding.
 
 %%%%
-@arg@ dies!
+@Arg@ dies!
 
 %%%%
-@arg@ withers and dies!
+@Arg@ withers and dies!
 
 %%%%
-@arg@ returns to the shadows of the Dungeon!
+@Arg@ returns to the shadows of the Dungeon!
 
 %%%%
-@arg@ fades into mist!
+@Arg@ fades into mist!
 
 %%%%
 The dead kraken's tentacles slide back into the water.
@@ -9312,7 +9312,7 @@ The dead kraken's tentacles slide back into the water.
 The starspawn's tentacles wither and die.
 
 %%%%
-@arg@ has departed this plane of existence.
+@Arg@ has departed this plane of existence.
 
 %%%%
 The vine falls limply to the ground.
@@ -9330,67 +9330,67 @@ The terrible wounds on @arg@ body vanish.
 The forest abruptly stops moving.
 
 %%%%
-@arg@ falls into the lava!
+@Arg@ falls into the lava!
 
 %%%%
-@arg@ falls into the water!
+@Arg@ falls into the water!
 
 %%%%
-@arg@ is incinerated.
+@Arg@ is incinerated.
 
 %%%%
-@arg@ drowns.
+@Arg@ drowns.
 
 %%%%
-@arg@ falls apart.
+@Arg@ falls apart.
 
 %%%%
-@arg@ disappear in a puff of smoke!
+@Arg@ disappear in a puff of smoke!
 
 %%%%
-@arg@ disappears in a puff of smoke!
+@Arg@ disappears in a puff of smoke!
 
 %%%%
-@arg@ dissolve into shadows!
+@Arg@ dissolve into shadows!
 
 %%%%
-@arg@ dissolves into shadows!
+@Arg@ dissolves into shadows!
 
 %%%%
-@arg@ degenerate into a cloud of primal chaos!
+@Arg@ degenerate into a cloud of primal chaos!
 
 %%%%
-@arg@ degenerates into a cloud of primal chaos!
+@Arg@ degenerates into a cloud of primal chaos!
 
 %%%%
-@arg@ dissolve into sparkling lights!
+@Arg@ dissolve into sparkling lights!
 
 %%%%
-@arg@ dissolves into sparkling lights!
+@Arg@ dissolves into sparkling lights!
 
 %%%%
-@arg@ fade away!
+@Arg@ fade away!
 
 %%%%
-@arg@ fades away!
+@Arg@ fades away!
 
 %%%%
-@arg@ dissolve into a puddle of slime!
+@Arg@ dissolve into a puddle of slime!
 
 %%%%
-@arg@ dissolves into a puddle of slime!
+@Arg@ dissolves into a puddle of slime!
 
 %%%%
-@arg@ return to the deep!
+@Arg@ return to the deep!
 
 %%%%
-@arg@ returns to the deep!
+@Arg@ returns to the deep!
 
 %%%%
-@arg@ shimmer and vanish!
+@Arg@ shimmer and vanish!
 
 %%%%
-@arg@ shimmers and vanishes!
+@Arg@ shimmers and vanishes!
 
 %%%%
 Pikel's spell is broken, but his former minion can only feel hate for you!
@@ -9417,13 +9417,13 @@ No longer under Kirke's spell, the hog returns to its original form!
 No longer under Kirke's spell, the hogs return to their original form!
 
 %%%%
-@arg@ seems to find hidden reserves of power!
+@Arg@ seems to find hidden reserves of power!
 
 %%%%
-@arg@ likewise turns neutral.
+@Arg@ likewise turns neutral.
 
 %%%%
-@arg@ gets angry again!
+@Arg@ gets angry again!
 
 %%%%
 
@@ -9443,10 +9443,10 @@ Zombie hands grab @arg@.
 Roots grab @arg@.
 
 %%%%
-@arg@ is no longer moving quickly.
+@Arg@ is no longer moving quickly.
 
 %%%%
-@arg@ becomes audible again.
+@Arg@ becomes audible again.
 
 %%%%
 As @arg@ is destroyed, the sound returns.
@@ -9455,154 +9455,154 @@ As @arg@ is destroyed, the sound returns.
 As @arg@ dies, the sound returns.
 
 %%%%
-@arg@ no longer looks unusually strong.
+@Arg@ no longer looks unusually strong.
 
 %%%%
-@arg@ is no longer moving slowly.
+@Arg@ is no longer moving slowly.
 
 %%%%
-@arg@ is no longer paralysed.
+@Arg@ is no longer paralysed.
 
 %%%%
-@arg@ is no longer petrified.
+@Arg@ is no longer petrified.
 
 %%%%
-@arg@ stops retreating.
+@Arg@ stops retreating.
 
 %%%%
-@arg@ seems to regain courage.
+@Arg@ seems to regain courage.
 
 %%%%
-@arg@ seems less confused.
+@Arg@ seems less confused.
 
 %%%%
-@arg@ breaks free of your control!
+@Arg@ breaks free of your control!
 
 %%%%
-@arg@ is no longer charmed.
+@Arg@ is no longer charmed.
 
 %%%%
-@arg@ is no longer hexed.
+@Arg@ is no longer hexed.
 
 %%%%
-@arg@ is no longer bribed.
+@Arg@ is no longer bribed.
 
 %%%%
 You can once again detect @arg@.
 
 %%%%
-@arg@ stops glowing and disappears.
+@Arg@ stops glowing and disappears.
 
 %%%%
-@arg@ stops burning.
+@Arg@ stops burning.
 
 %%%%
-@arg@ looks more healthy.
+@Arg@ looks more healthy.
 
 %%%%
-@arg@ breaks free.
+@Arg@ breaks free.
 
 %%%%
-@arg@ is no longer berserk.
+@Arg@ is no longer berserk.
 
 %%%%
 Something invisible bursts forth from the water.
 
 %%%%
-@arg@'s soul is no longer ripe for the taking.
+@Arg@'s soul is no longer ripe for the taking.
 
 %%%%
 The forest calms down.
 
 %%%%
-@arg@ is no longer liquefying the ground.
+@Arg@ is no longer liquefying the ground.
 
 %%%%
-@arg@ is no longer dazed.
+@Arg@ is no longer dazed.
 
 %%%%
-@arg@'s inner flame fades away.
+@Arg@'s inner flame fades away.
 
 %%%%
-@arg@ is no longer mute.
+@Arg@ is no longer mute.
 
 %%%%
-@arg@ is no longer blind.
+@Arg@ is no longer blind.
 
 %%%%
-@arg@ is no longer stupefied.
+@Arg@ is no longer stupefied.
 
 %%%%
 # note: mad = crazy here
-@arg@ is no longer mad.
+@Arg@ is no longer mad.
 
 %%%%
-@arg@ is no longer regenerating.
+@Arg@ is no longer regenerating.
 
 %%%%
-@arg@ is no longer strong-willed.
+@Arg@ is no longer strong-willed.
 
 %%%%
-@arg@ seems to return to a normal shape.
+@Arg@ seems to return to a normal shape.
 
 %%%%
-@arg@ is no longer weakened.
+@Arg@ is no longer weakened.
 
 %%%%
 # note: @arg@ here is a possessive (e.g. "the naga ritualist's")
-@arg@ toxic aura wanes.
+@Arg@ toxic aura wanes.
 
 %%%%
-@arg@ is no longer more vulnerable to fire.
+@Arg@ is no longer more vulnerable to fire.
 
 %%%%
-@arg@ is no longer more vulnerable to poison.
+@Arg@ is no longer more vulnerable to poison.
 
 %%%%
-@arg@ icy envelope dissipates!
+@Arg@ icy envelope dissipates!
 
 %%%%
-@arg@ is no longer unusually agile.
+@Arg@ is no longer unusually agile.
 
 %%%%
-@arg@ is no longer encased in ice.
+@Arg@ is no longer encased in ice.
 
 %%%%
-@arg@ is no longer absorbing vital energies.
+@Arg@ is no longer absorbing vital energies.
 
 %%%%
-@arg@ is no longer being sapped.
+@Arg@ is no longer being sapped.
 
 %%%%
-@arg@ is no longer covered in acid.
+@Arg@ is no longer covered in acid.
 
 %%%%
-@arg@ is no longer distracted by gold.
+@Arg@ is no longer distracted by gold.
 
 %%%%
-@arg@ seems less drained.
+@Arg@ seems less drained.
 
 %%%%
-@arg@ is no longer repelling missiles.
+@Arg@ is no longer repelling missiles.
 
 %%%%
-@arg@ is no longer unusually resistant.
+@Arg@ is no longer unusually resistant.
 
 %%%%
-@arg@ is no longer giving off an aura.
+@Arg@ is no longer giving off an aura.
 
 %%%%
-@arg@ seems less brilliant.
+@Arg@ seems less brilliant.
 
 %%%%
-@arg@ loses the glow of perfection.
+@Arg@ loses the glow of perfection.
 
 %%%%
 # note: @arg@ will be possessive (e.g. "the orc's", "Sigmund's")
-@arg@ soul is no longer bound.
+@Arg@ soul is no longer bound.
 
 %%%%
-@arg@ is no longer infested.
+@Arg@ is no longer infested.
 
 %%%%
 The zombie hands release their grip on @arg@.
@@ -9611,13 +9611,13 @@ The zombie hands release their grip on @arg@.
 The roots release their grip on @arg@.
 
 %%%%
-@arg@ is no longer waterlogged.
+@Arg@ is no longer waterlogged.
 
 %%%%
-@arg@ stops rolling and uncurls.
+@Arg@ stops rolling and uncurls.
 
 %%%%
-@arg@ no longer looks unusually toxic.
+@Arg@ no longer looks unusually toxic.
 
 %%%%
 # it = merfolk avatar
@@ -9634,57 +9634,57 @@ The shadowy forms in the deep grow still as others approach.
 Shadowy forms rise from the deep at @arg@ song!
 
 %%%%
-@arg@ is no longer in an insane frenzy.
+@Arg@ is no longer in an insane frenzy.
 
 %%%%
-@arg@ looks more energetic.
+@Arg@ looks more energetic.
 
 %%%%
-@arg@'s dark mirror aura disappears.
+@Arg@'s dark mirror aura disappears.
 
 %%%%
 The flames covering @arg@ go out.
 
 %%%%
-@arg@ melts away.
+@Arg@ melts away.
 
 %%%%
-@arg@ withers and dies.
+@Arg@ withers and dies.
 
 %%%%
 The portal closes; @arg@ is severed.
 
 %%%%
-@arg@ suddenly becomes enraged!
+@Arg@ suddenly becomes enraged!
 
 %%%%
 You hear a distant and violent thrashing sound.
 
 %%%%
-@arg@ writhes!
+@Arg@ writhes!
 
 %%%%
 The winds around @arg@ start to calm down.
 
 %%%%
-@arg@ is seared!
+@Arg@ is seared!
 
 %%%%
 # note: @arg@ will be possessive (e.g. "the orc's", "Sigmund's")
-@arg@ chant is interrupted.
+@Arg@ chant is interrupted.
 
 %%%%
-@arg@ is asphyxiated!
+@Arg@ is asphyxiated!
 
 %%%%
 The winds around @arg@ calm down.
 
 %%%%
 # note: @arg@ will be possessive (e.g. "the orc's", "Sigmund's")
-@arg@ song is interrupted.
+@Arg@ song is interrupted.
 
 %%%%
-@arg@ is no longer sharing pain.
+@Arg@ is no longer sharing pain.
 
 %%%%
 
@@ -9707,7 +9707,7 @@ By Zin's power, @arg@ fires are quelled.
 By Zin's power, @arg@ explosion is contained.
 
 %%%%
-@arg@ blazes out!
+@Arg@ blazes out!
 
 %%%%
 By Zin's power, the fiery explosion is contained.
@@ -9718,10 +9718,10 @@ By Zin's power, the fiery explosion is contained.
 # mon-grow.cc
 ##################
 %%%%
-@arg@ looks more experienced.
+@Arg@ looks more experienced.
 
 %%%%
-@arg@ looks stronger.
+@Arg@ looks stronger.
 
 %%%%
 
@@ -9743,7 +9743,7 @@ about @num@
 Warning: monster '@arg@' is not yet fully coded.
 
 %%%%
-@arg@ feels only hate for you!
+@Arg@ feels only hate for you!
 
 %%%%
 
@@ -9751,28 +9751,28 @@ Warning: monster '@arg@' is not yet fully coded.
 # mon-poly.cc
 ##################
 %%%%
-@arg@'s form twists and warps, and jellies spill out!
+@Arg@'s form twists and warps, and jellies spill out!
 
 %%%%
-@arg@'s appearance momentarily alters.
+@Arg@'s appearance momentarily alters.
 
 %%%%
-@arg@ looks momentarily different.
+@Arg@ looks momentarily different.
 
 %%%%
-@arg@ grows a second head!
+@Arg@ grows a second head!
 
 %%%%
-@arg1@ changes into @arg2@!
+@Arg1@ changes into @arg2@!
 
 %%%%
-@arg1@ quivers uncontrollably and liquefies into @arg2@!
+@Arg1@ quivers uncontrollably and liquefies into @arg2@!
 
 %%%%
-@arg1@ evaporates and reforms as @arg2@!
+@Arg1@ evaporates and reforms as @arg2@!
 
 %%%%
-@arg@ quivers momentarily.
+@Arg@ quivers momentarily.
 
 %%%%
 Wyrmbane glows as a worthy foe approaches.
@@ -9783,17 +9783,17 @@ Wyrmbane glows as a worthy foe approaches.
 # mon-project.cc
 ##################
 %%%%
-@arg@ dissipates.
+@Arg@ dissipates.
 
 %%%%
-@arg@ weakly hits you
+@Arg@ weakly hits you
 
 %%%%
-@arg1@ weakly hits @arg2@
+@Arg1@ weakly hits @arg2@
 
 %%%%
 # note: this is used for both projectiles and monsters with melee weapons
-@arg1@ hits @arg2@.
+@Arg1@ hits @arg2@.
 
 %%%%
 The orb fizzles.
@@ -9806,7 +9806,7 @@ You hear a loud magical explosion!
 
 %%%%
 # TODO: Fix this
-@arg1@'s @arg2@ reflects @arg3@!
+@Arg1@'s @arg2@ reflects @arg3@!
 
 %%%%
 
@@ -9849,106 +9849,106 @@ The @arg@ mimic vanishes in a puff of smoke!
 The @arg@ mimic vanishes!
 
 %%%%
-@arg@ are a mimic!
+@Arg@ are a mimic!
 
 %%%%
-@arg@ is a mimic!
+@Arg@ is a mimic!
 
 %%%%
-@arg@ hits you from afar
+@Arg@ hits you from afar
 
 %%%%
-@arg1@ hits @arg2@ from afar
+@Arg1@ hits @arg2@ from afar
 
 %%%%
-@arg@ bites you
+@Arg@ bites you
 
 %%%%
-@arg1@ bites @arg2@
+@Arg1@ bites @arg2@
 
 %%%%
-@arg@ stings you
+@Arg@ stings you
 
 %%%%
-@arg1@ stings @arg2@
+@Arg1@ stings @arg2@
 
 %%%%
-@arg@ stings you from afar
+@Arg@ stings you from afar
 
 %%%%
-@arg1@ stings @arg2@ from afar
+@Arg1@ stings @arg2@ from afar
 
 %%%%
-@arg@ releases spores at you
+@Arg@ releases spores at you
 
 %%%%
-@arg1@ releases spores at @arg2@
+@Arg1@ releases spores at @arg2@
 
 %%%%
-@arg@ touches you
+@Arg@ touches you
 
 %%%%
-@arg1@ touches @arg2@
+@Arg1@ touches @arg2@
 
 %%%%
-@arg@ claws you
+@Arg@ claws you
 
 %%%%
-@arg1@ claws @arg2@
+@Arg1@ claws @arg2@
 
 %%%%
-@arg@ pecks you
+@Arg@ pecks you
 
 %%%%
-@arg1@ pecks @arg2@
+@Arg1@ pecks @arg2@
 
 %%%%
-@arg@ punches you
+@Arg@ punches you
 
 %%%%
-@arg1@ punches @arg2@
+@Arg1@ punches @arg2@
 
 %%%%
-@arg@ kicks you
+@Arg@ kicks you
 
 %%%%
-@arg1@ kicks @arg2@
+@Arg1@ kicks @arg2@
 
 %%%%
-@arg@ tentacle-slaps you
+@Arg@ tentacle-slaps you
 
 %%%%
-@arg1@ tentacle-slaps @arg2@
+@Arg1@ tentacle-slaps @arg2@
 
 %%%%
-@arg@ tail-slaps you
+@Arg@ tail-slaps you
 
 %%%%
-@arg1@ tail-slaps @arg2@
+@Arg1@ tail-slaps @arg2@
 
 %%%%
-@arg@ gores you
+@Arg@ gores you
 
 %%%%
-@arg1@ gores @arg2@
+@Arg1@ gores @arg2@
 
 %%%%
-@arg@ tramples you
+@Arg@ tramples you
 
 %%%%
-@arg1@ tramples @arg2@
+@Arg1@ tramples @arg2@
 
 %%%%
-@arg@ trunk-slaps you
+@Arg@ trunk-slaps you
 
 %%%%
-@arg1@ trunk-slaps @arg2@
+@Arg1@ trunk-slaps @arg2@
 
 %%%%
-@arg@ pounces on you
+@Arg@ pounces on you
 
 %%%%
-@arg1@ pounces on @arg2@
+@Arg1@ pounces on @arg2@
 
 %%%%
 Geryon discards his horn.
@@ -10080,10 +10080,10 @@ the ground
 
 %%%%
 # note: Used when a monster is blown up. Both parameters are monsters (e.g. "the orc", "Sigmund").
-@arg1@ is hit by a flying piece of @arg2@!
+@Arg1@ is hit by a flying piece of @arg2@!
 
 %%%%
-@arg1@ regains the memory of @arg2@.
+@Arg1@ regains the memory of @arg2@.
 
 %%%%
 
@@ -10091,7 +10091,7 @@ the ground
 # monster.cc
 ##################
 %%%%
-@arg1@ wields @arg2@.
+@Arg1@ wields @arg2@.
 
 %%%%
 It bursts into flame!
@@ -10119,7 +10119,7 @@ It is briefly surrounded by a scintillating aura of random colours.
 
 %%%%
 # <its> <hand(s)> briefly pass(es) through it before <it> manage(s) to get a firm grip on it.
-@arg1@ @arg2@ briefly @arg3@ through it before @arg4@ @arg5@ to get a firm grip on it.
+@Arg1@ @arg2@ briefly @arg3@ through it before @arg4@ @arg5@ to get a firm grip on it.
 
 %%%%
 pass
@@ -10135,14 +10135,14 @@ It begins to drip corrosive slime!
 
 %%%%
 # note: equip armour
-@arg1@ wears @arg2@.
+@Arg1@ wears @arg2@.
 
 %%%%
 # note: equip ring/amulet
-@arg1@ puts on @arg2@.
+@Arg1@ puts on @arg2@.
 
 %%%%
-@arg1@ unwields @arg2@.
+@Arg1@ unwields @arg2@.
 
 %%%%
 It stops flaming.
@@ -10158,104 +10158,104 @@ It stops dripping with poison.
 
 %%%%
 # note: unequip armour
-@arg1@ takes off @arg2@.
+@Arg1@ takes off @arg2@.
 
 %%%%
 # note: unequip ring/amulet
-@arg1@ removes @arg2@.
+@Arg1@ removes @arg2@.
 
 %%%%
-@arg1@ picks up @arg2@.
+@Arg1@ picks up @arg2@.
 
 %%%%
 some gold
 
 %%%%
-@arg1@ drops @arg2@.
+@Arg1@ drops @arg2@.
 
 %%%%
-@arg@ becomes momentarily stuck in the liquid earth.
+@Arg@ becomes momentarily stuck in the liquid earth.
 
 %%%%
-@arg@ becomes momentarily stuck in the toxic bog.
+@Arg@ becomes momentarily stuck in the toxic bog.
 
 %%%%
-@arg@ splashes around in the water.
+@Arg@ splashes around in the water.
 
 %%%%
 You hear a splashing noise.
 
 %%%%
-@arg@ seems less lethargic.
+@Arg@ seems less lethargic.
 
 %%%%
-@arg@ flies into a frenzy!
+@Arg@ flies into a frenzy!
 
 %%%%
-@arg@ goes berserk!
+@Arg@ goes berserk!
 
 %%%%
-@arg@ wobbles for a moment.
+@Arg@ wobbles for a moment.
 
 %%%%
-@arg@ is devoured by a tear in reality.
+@Arg@ is devoured by a tear in reality.
 
 %%%%
-@arg@ is drained!
+@Arg@ is drained!
 
 %%%%
-@arg1@ corrodes @arg2@!
+@Arg1@ corrodes @arg2@!
 
 %%%%
-@arg@ seems to be corroded for longer.
+@Arg@ seems to be corroded for longer.
 
 %%%%
-@arg@ is splashed with acid
+@Arg@ is splashed with acid
 
 %%%%
-@arg@ begins to crumble.
+@Arg@ begins to crumble.
 
 %%%%
-@arg@ begins to die.
+@Arg@ begins to die.
 
 %%%%
-@arg@ turns to stone!
+@Arg@ turns to stone!
 
 %%%%
-@arg@ stops moving altogether!
+@Arg@ stops moving altogether!
 
 %%%%
-@arg@ looks sick.
+@Arg@ looks sick.
 
 %%%%
-@arg@ twists and deforms.
+@Arg@ twists and deforms.
 
 %%%%
-@arg1@ dives back into @arg2@!
+@Arg1@ dives back into @arg2@!
 
 %%%%
 The bloodstain on @arg@ disappears!
 
 %%%%
-@arg@ falls through a shaft!
+@Arg@ falls through a shaft!
 
 %%%%
-@arg@ is sucked into a shaft!
+@Arg@ is sucked into a shaft!
 
 %%%%
-@arg@ looks weaker.
+@Arg@ looks weaker.
 
 %%%%
-@arg@ drinks a potion.
+@Arg@ drinks a potion.
 
 %%%%
-@arg@ is healed!
+@Arg@ is healed!
 
 %%%%
 Your spectral weapon shares its damage with you!
 
 %%%%
-@arg@ shares the spectral weapon's damage!
+@Arg@ shares the spectral weapon's damage!
 
 %%%%
 Flame seeps out of @arg@.
@@ -10270,22 +10270,22 @@ As its mount dies, the spriggan plunges down into deep water and drowns!
 The spriggan falls from its now dead mount.
 
 %%%%
-@arg@ roars in fury and transforms into a fierce dragon!
+@Arg@ roars in fury and transforms into a fierce dragon!
 
 %%%%
-@arg@ steals 1 gold piece!
+@Arg@ steals 1 gold piece!
 
 %%%%
-@arg@ steals @num@ gold pieces!
+@Arg@ steals @num@ gold pieces!
 
 %%%%
-@arg1@ steals @num@ of @arg2@!
+@Arg1@ steals @num@ of @arg2@!
 
 %%%%
-@arg1@ steals @arg2@!
+@Arg1@ steals @arg2@!
 
 %%%%
-@arg1@ is pushed out of @arg2@.
+@Arg1@ is pushed out of @arg2@.
 
 %%%%
 
@@ -10302,7 +10302,7 @@ You swap places.
 You are twisted violently and ejected from the portal!
 
 %%%%
-@arg@ is twisted violently and ejected from the portal!
+@Arg@ is twisted violently and ejected from the portal!
 
 %%%%
 The barbs in your skin will harm you if you move.
@@ -10430,7 +10430,7 @@ You @arg@ carefully through the plants.
 You can't dig through that.
 
 %%%%
-@arg@ refuses to make way for you. (Use ctrl+direction or * direction to attack.)
+@Arg@ refuses to make way for you. (Use ctrl+direction or * direction to attack.)
 
 %%%%
 You're too terrified to move while being watched!
@@ -10528,7 +10528,7 @@ Transient mutations.
 You feel odd for a moment.
 
 %%%%
-@arg@ protects your body from mutation!
+@Arg@ protects your body from mutation!
 
 %%%%
 Your body decomposes!
@@ -10572,7 +10572,7 @@ You're standing next to a slime covered wall!
 You are being drained by your emergency flight!
 
 %%%%
-@arg@ is nearby!
+@Arg@ is nearby!
 
 %%%%
 There are monsters nearby!
@@ -10642,7 +10642,7 @@ The Orb lets out a furious burst of light!
 The lords of Pandemonium are not amused. Beware!
 
 %%%%
-@arg@ tells them not to hurry.
+@Arg@ tells them not to hurry.
 
 %%%%
 
@@ -10686,7 +10686,7 @@ You are now level @num@!
 You feel drained.
 
 %%%%
-@arg@ scurries out from under your cloak.
+@Arg@ scurries out from under your cloak.
 
 %%%%
 A shower of butterflies erupts from you!
@@ -10728,7 +10728,7 @@ You feel threatened and lose the ability to read scrolls!
 You feel threatened and lose the ability to drink potions!
 
 %%%%
-@arg@ protects you from harm!
+@Arg@ protects you from harm!
 
 %%%%
 Ouch! That really hurt!
@@ -10786,7 +10786,7 @@ Tentacles
 Your unstable footing causes you to fumble your attack.
 
 %%%%
-@arg@ forces you to slow down.
+@Arg@ forces you to slow down.
 
 %%%%
 A red film seems to cover your vision as you go berserk!
@@ -10848,7 +10848,7 @@ You feel strangely lacking in power.
 You feel powerful.
 
 %%%%
-@arg@ crumbles to dust!
+@Arg@ crumbles to dust!
 
 %%%%
 Mutagenic energies flood into your body!
@@ -10878,31 +10878,31 @@ You really shouldn't be using a hasty item like this.
 You really shouldn't be using a wizardly item like this.
 
 %%%%
-@arg@ bursts into flame!
+@Arg@ bursts into flame!
 
 %%%%
-@arg@ is covered in frost.
+@Arg@ is covered in frost.
 
 %%%%
-@arg@ glows with a cold blue light!
+@Arg@ glows with a cold blue light!
 
 %%%%
-@arg@ softly glows with a divine radiance!
+@Arg@ softly glows with a divine radiance!
 
 %%%%
 You see sparks fly.
 
 %%%%
-@arg@ begins to drip with poison!
+@Arg@ begins to drip with poison!
 
 %%%%
-@arg@ hums with potential!
+@Arg@ hums with potential!
 
 %%%%
-@arg@ tingles!
+@Arg@ tingles!
 
 %%%%
-@arg@ tingle!
+@Arg@ tingle!
 
 %%%%
 You feel a bloodthirsty glee!
@@ -10920,16 +10920,16 @@ Pain shudders through @arg@!
 A searing pain shoots up @arg@!
 
 %%%%
-@arg@ is briefly surrounded by a scintillating aura of random colours.
+@Arg@ is briefly surrounded by a scintillating aura of random colours.
 
 %%%%
-@arg@ briefly pass through it before you manage to get a firm grip on it.
+@Arg@ briefly pass through it before you manage to get a firm grip on it.
 
 %%%%
-@arg@ briefly passes through it before you manage to get a firm grip on it.
+@Arg@ briefly passes through it before you manage to get a firm grip on it.
 
 %%%%
-@arg@ is briefly surrounded by shifting shadows.
+@Arg@ is briefly surrounded by shifting shadows.
 
 %%%%
 You feel a force failing to suppress your magic.
@@ -10941,22 +10941,22 @@ You feel magic leave you.
 Space warps around you for a moment!
 
 %%%%
-@arg@ begins to ooze corrosive slime!
+@Arg@ begins to ooze corrosive slime!
 
 %%%%
 You feel a bond with @arg@.
 
 %%%%
-@arg@ stops flaming.
+@Arg@ stops flaming.
 
 %%%%
-@arg@ stops crackling.
+@Arg@ stops crackling.
 
 %%%%
-@arg@ stops dripping with poison.
+@Arg@ stops dripping with poison.
 
 %%%%
-@arg@ goes still.
+@Arg@ goes still.
 
 %%%%
 You feel your glee subside.
@@ -10971,7 +10971,7 @@ You feel magic returning to you.
 Your spectral weapon disappears as your weapon melds.
 
 %%%%
-@arg@ stops oozing corrosive slime.
+@Arg@ stops oozing corrosive slime.
 
 %%%%
 You feel your power drawn to a protective spirit.
@@ -11061,28 +11061,28 @@ The haze of the repulsion field disappears.
 The dungeon's light returns to normal.
 
 %%%%
-@arg@ seems less interested in you.
+@Arg@ seems less interested in you.
 
 %%%%
 You feel less pious.
 
 %%%%
-@arg@ feel cold and inert.
+@Arg@ feel cold and inert.
 
 %%%%
-@arg@ feels cold and inert.
+@Arg@ feels cold and inert.
 
 %%%%
-@arg@ throb as they attune themselves to your uninjured body.
+@Arg@ throb as they attune themselves to your uninjured body.
 
 %%%%
-@arg@ throb as it attunes itself to your uninjured body.
+@Arg@ throb as it attunes itself to your uninjured body.
 
 %%%%
-@arg@ cannot attune themselves to your injured body.
+@Arg@ cannot attune themselves to your injured body.
 
 %%%%
-@arg@ cannot attune itself to your injured body.
+@Arg@ cannot attune itself to your injured body.
 
 %%%%
 The amulet feels cold and inert.
@@ -11106,13 +11106,13 @@ You repel a surge of foreign magic.
 You feel a surge of self-confidence.
 
 %%%%
-@arg@ says: An ascetic of your devotion has no use for such trinkets.
+@Arg@ says: An ascetic of your devotion has no use for such trinkets.
 
 %%%%
-@arg@ cares nothing for such trivial demonstrations of your faith.
+@Arg@ cares nothing for such trivial demonstrations of your faith.
 
 %%%%
-@arg@ cares for nothing but gold!
+@Arg@ cares for nothing but gold!
 
 %%%%
 You feel a strange surge of divine interest.
@@ -11124,10 +11124,10 @@ You feel a surge of divine interest.
 You feel ready to tumble and roll out of harm's way.
 
 %%%%
-@arg@ absorbs the residual spatial distortion as you rebrand your weapon.
+@Arg@ absorbs the residual spatial distortion as you rebrand your weapon.
 
 %%%%
-@arg@ absorbs the residual spatial distortion as you unwield your weapon.
+@Arg@ absorbs the residual spatial distortion as you unwield your weapon.
 
 %%%%
 Space warps into you!
@@ -11172,7 +11172,7 @@ The grasping roots release their grip on you.
 Your recitation is interrupted.
 
 %%%%
-@arg@ emerges from the mists of memory!
+@Arg@ emerges from the mists of memory!
 
 %%%%
 Your icy armour evaporates.
@@ -11193,7 +11193,7 @@ You no longer feel sluggish.
 You start to feel a little faster.
 
 %%%%
-@arg@ has recovered.
+@Arg@ has recovered.
 
 %%%%
 You feel yourself speed up.
@@ -11217,10 +11217,10 @@ You carefully extract the barbed spikes from your body.
 You float gracefully downwards.
 
 %%%%
-@arg@ attune themselves to your body as you begin to regenerate more quickly.
+@Arg@ attune themselves to your body as you begin to regenerate more quickly.
 
 %%%%
-@arg@ attunes itself to your body as you begin to regenerate more quickly.
+@Arg@ attunes itself to your body as you begin to regenerate more quickly.
 
 %%%%
 Your amulet attunes itself to your body and you begin to regenerate magic more quickly.
@@ -11273,7 +11273,7 @@ Uppercase letters only, please.
 Please choose an option below
 
 %%%%
-@arg@'s power touches on your attributes.
+@Arg@'s power touches on your attributes.
 
 %%%%
 weaker
@@ -11299,7 +11299,7 @@ You have lost @arg@.
 # player.cc
 ##################
 %%%%
-@arg@ slides away as you move towards it!
+@Arg@ slides away as you move towards it!
 
 %%%%
 Really @arg1@ into that cloud of @arg2@?
@@ -11347,22 +11347,22 @@ You might @arg@ into a travel-excluded area, are you sure?
 It's unwise to walk into this.
 
 %%%%
-@arg@ is held in a net!
+@Arg@ is held in a net!
 
 %%%%
-@arg@ is caught in a web!
+@Arg@ is caught in a web!
 
 %%%%
-@arg@ is being constricted!
+@Arg@ is being constricted!
 
 %%%%
-@arg@ cannot move out of your way!
+@Arg@ cannot move out of your way!
 
 %%%%
 Do you really want to swap @arg@ into the Zot trap?
 
 %%%%
-@arg@ cannot make way for you.
+@Arg@ cannot make way for you.
 
 %%%%
 Floosh!
@@ -11404,13 +11404,13 @@ Don't expect to remain undetected while in the water.
 Do you really want to go berserk while wielding @arg@?
 
 %%%%
-@arg@ has recharged.
+@Arg@ has recharged.
 
 %%%%
-@arg@ has regained 1 charge.
+@Arg@ has regained 1 charge.
 
 %%%%
-@arg@ has regained @num@ charges.
+@Arg@ has regained @num@ charges.
 
 %%%%
 Your life force feels restored.
@@ -11693,7 +11693,7 @@ You fly above the lava, but the process is very draining.
 You fly above the deep water, but the process is very draining.
 
 %%%%
-@arg@ engulfing you falls away.
+@Arg@ engulfing you falls away.
 
 %%%%
 You gasp with relief as air once again reaches your lungs.
@@ -11738,7 +11738,7 @@ You cannot blink.
 You cannot teleport.
 
 %%%%
-@arg@ corrodes you!
+@Arg@ corrodes you!
 
 %%%%
 You are splashed with acid
@@ -11818,7 +11818,7 @@ You escape @arg@ grasp.
 
 %%%%
 # note: <The monster's> grasp...
-@arg@ grasp on you weakens, but your attempt to escape fails.
+@Arg@ grasp on you weakens, but your attempt to escape fails.
 
 %%%%
 The mark upon you grows brighter.
@@ -11848,7 +11848,7 @@ You are being held by @arg@.
 You are constricting @arg@.
 
 %%%%
-@arg@ enhances the healing.
+@Arg@ enhances the healing.
 
 %%%%
 The healing is enhanced.
@@ -11866,13 +11866,13 @@ Your system partially rejects the healing.
 Put travel exclusion on door? (Y/n)
 
 %%%%
-@arg@ is marked as excluded! Open it anyway?
+@Arg@ is marked as excluded! Open it anyway?
 
 %%%%
-@arg@ flies open!
+@Arg@ flies open!
 
 %%%%
-@arg@ flies open with a bang!
+@Arg@ flies open with a bang!
 
 %%%%
 As you open @arg@, it creaks loudly!
@@ -12039,7 +12039,7 @@ You fade into invisibility!
 You fade further into invisibility.
 
 %%%%
-@arg@ appreciates the memories.
+@Arg@ appreciates the memories.
 
 %%%%
 You feel more experienced!
@@ -12075,7 +12075,7 @@ Really become a tree while standing in a cloud of @arg@?
 You feel woody for a moment.
 
 %%%%
-@arg@ cleanses your potion of mutation!
+@Arg@ cleanses your potion of mutation!
 
 %%%%
 You feel extremely strange.
@@ -12272,7 +12272,7 @@ You could not reach far enough!
 You reach to attack!
 
 %%%%
-@arg@ is in the way.
+@Arg@ is in the way.
 
 %%%%
 Something you can't see is in the way.
@@ -12385,18 +12385,18 @@ Something reflects @arg@!
 
 %%%%
 # note: <projectile> pierces through <your shield>!
-@arg1@ pierces through @arg2@!
+@Arg1@ pierces through @arg2@!
 
 %%%%
 # note: <projectile> pierces through <monster's> <shield>!
-@arg1@ pierces through @arg2@ @arg3@!
+@Arg1@ pierces through @arg2@ @arg3@!
 
 %%%%
-@arg@ pierces through your shielding!
+@Arg@ pierces through your shielding!
 
 %%%%
 # note: <projectile> pierces through <monster's> shielding!
-@arg1@ pierces through @arg2@ shielding!
+@Arg1@ pierces through @arg2@ shielding!
 
 %%%%
 
@@ -12981,10 +12981,10 @@ summon a storm of heavenly clouds to empower your attacks
 summon a storm of heavenly clouds
 
 %%%%
-@arg@ seems mollified and vanishes.
+@Arg@ seems mollified and vanishes.
 
 %%%%
-@arg@ seems mollified.
+@Arg@ seems mollified.
 
 %%%%
 Your divine halo returns!
@@ -12996,7 +12996,7 @@ Your aura of darkness returns!
 Your vision regains its divine sight.
 
 %%%%
-@arg@ restores the support of your attributes.
+@Arg@ restores the support of your attributes.
 
 %%%%
 A storm instantly forms around you!
@@ -13017,25 +13017,25 @@ Your aura of darkness fades away.
 The storm surrounding you dissipates.
 
 %%%%
-@arg@ deals you some cards!
+@Arg@ deals you some cards!
 
 %%%%
 You now have @arg@.
 
 %%%%
-@arg@ goes to deal, but finds you have enough cards.
+@Arg@ goes to deal, but finds you have enough cards.
 
 %%%%
-@arg@ alters your body.
+@Arg@ alters your body.
 
 %%%%
-@arg@ grants you ammunition!
+@Arg@ grants you ammunition!
 
 %%%%
-@arg@ grants you a weapon!
+@Arg@ grants you a weapon!
 
 %%%%
-@arg@ grants you armour!
+@Arg@ grants you armour!
 
 %%%%
 ...but nothing appears.
@@ -13047,7 +13047,7 @@ Yredelemnul grants you @servant@!
 You feel as though nothing has changed.
 
 %%%%
-@arg@ grants you a gift!
+@Arg@ grants you a gift!
 
 %%%%
 Vehumet offers you knowledge of @arg@.
@@ -13056,11 +13056,11 @@ Vehumet offers you knowledge of @arg@.
 " These spells will remain available as long as you worship Vehumet."
 
 %%%%
-@arg@ remembers more old skills.
+@Arg@ remembers more old skills.
 
 %%%%
 # note: <ancestor> remembers that <the weapon> was <a weapon of brand>
-@arg1@ remembers that @arg2@ was @arg3@.
+@Arg1@ remembers that @arg2@ was @arg3@.
 
 %%%%
 You feel a little guilty.
@@ -13078,7 +13078,7 @@ You feel extremely guilty.
 \"You will pay for your transgression, mortal!\"
 
 %%%%
-@arg@ forms a fragment of your life essence into the memory of your ancestor!
+@Arg@ forms a fragment of your life essence into the memory of your ancestor!
 
 %%%%
 You can now @arg@.
@@ -13090,34 +13090,34 @@ A divine halo surrounds you!
 You are shrouded in an aura of darkness!
 
 %%%%
-@arg@ will now unseal the treasures of the Slime Pits.
+@Arg@ will now unseal the treasures of the Slime Pits.
 
 %%%%
 You may now remember your ancestor's life.
 
 %%%%
-@arg@ raises the support of your attributes as your movement slows.
+@Arg@ raises the support of your attributes as your movement slows.
 
 %%%%
-@arg@ raises the support of your attributes.
+@Arg@ raises the support of your attributes.
 
 %%%%
 You can no longer @arg@.
 
 %%%%
-@arg@ lowers the support of your attributes as your movement quickens.
+@Arg@ lowers the support of your attributes as your movement quickens.
 
 %%%%
-@arg@ lowers the support of your attributes.
+@Arg@ lowers the support of your attributes.
 
 %%%%
-@arg@ protects your plant from harm.
+@Arg@ protects your plant from harm.
 
 %%%%
-@arg@ protects a plant from harm.
+@Arg@ protects a plant from harm.
 
 %%%%
-@arg@ avoids your attack.
+@Arg@ avoids your attack.
 
 %%%%
 Your curses shatter.
@@ -13126,19 +13126,19 @@ Your curses shatter.
 You have lost your religion!
 
 %%%%
-@arg@ does not appreciate desertion for chaos!
+@Arg@ does not appreciate desertion for chaos!
 
 %%%%
-@arg@ does not appreciate desertion for evil!
+@Arg@ does not appreciate desertion for evil!
 
 %%%%
-@arg@ does not appreciate desertion!
+@Arg@ does not appreciate desertion!
 
 %%%%
 You sense decay.
 
 %%%%
-@arg@ reclaims all of your granted undead slaves!
+@Arg@ reclaims all of your granted undead slaves!
 
 %%%%
 All of your followers decide to abandon you.
@@ -13159,7 +13159,7 @@ Your funded stores close, unable to pay their debts without your funds.
 Your storm instantly dissipates.
 
 %%%%
-@arg@ continues to slow your movements.
+@Arg@ continues to slow your movements.
 
 %%%%
 <lightgrey>Your body disappears without a glow.</lightgrey>
@@ -13180,16 +13180,16 @@ Your body glows slightly brighter and disappears.
 Your amulet flashes!
 
 %%%%
-@arg1@ warns you to remove @arg2@.
+@Arg1@ warns you to remove @arg2@.
 
 %%%%
-@arg1@ says: Farewell. Go and aid the meek with @arg2@.
+@Arg1@ says: Farewell. Go and aid the meek with @arg2@.
 
 %%%%
-@arg1@ says: Farewell. Go and vanquish evil with @arg2@.
+@Arg1@ says: Farewell. Go and vanquish evil with @arg2@.
 
 %%%%
-@arg1@ says: Farewell. Go and enforce order with @arg2@.
+@Arg1@ says: Farewell. Go and enforce order with @arg2@.
 
 %%%%
 Your evil deeds will not go unpunished!
@@ -13204,34 +13204,34 @@ You will suffer for embracing such chaos!
 You will suffer for embracing such evil!
 
 %%%%
-@arg1@ says: @arg2@
+@Arg1@ says: @arg2@
 
 %%%%
 You pay a service fee of @num@ gold.
 
 %%%%
-@arg@ waives the service fee.
+@Arg@ waives the service fee.
 
 %%%%
-@arg@ grants you a jelly!
+@Arg@ grants you a jelly!
 
 %%%%
-@arg@ begins to support your attributes as your movement slows.
+@Arg@ begins to support your attributes as your movement slows.
 
 %%%%
 The plants of the dungeon cease their hostilities.
 
 %%%%
-@arg@ welcomes you back!
+@Arg@ welcomes you back!
 
 %%%%
-@arg@ welcomes you!
+@Arg@ welcomes you!
 
 %%%%
 You bow before the missionary of Beogh.
 
 %%%%
-@arg@ does not accept service from beggars like you!
+@Arg@ does not accept service from beggars like you!
 
 %%%%
 The service fee for joining is currently @num@ gold; you have none.
@@ -13240,16 +13240,16 @@ The service fee for joining is currently @num@ gold; you have none.
 The service fee for joining is currently @num1@ gold; you only have @num2@.
 
 %%%%
-@arg@ does not accept worship from the loveless!
+@Arg@ does not accept worship from the loveless!
 
 %%%%
-@arg@ says: How dare you approach in such a loathsome form!
+@Arg@ says: How dare you approach in such a loathsome form!
 
 %%%%
-@arg@ does not accept worship from those such as you!
+@Arg@ does not accept worship from those such as you!
 
 %%%%
-@arg@ refuses to forgive you so easily!
+@Arg@ refuses to forgive you so easily!
 
 %%%%
 Which god (by name)?
@@ -13440,7 +13440,7 @@ I'll put them outside for you.
 I'll put some of them outside for you.
 
 %%%%
-@arg@ appears to be closed.
+@Arg@ appears to be closed.
 
 %%%%
 Thank you for shopping at @arg@!
@@ -13510,7 +13510,7 @@ You have @num@ gp
 You cannot afford @arg@; travel there anyway? (y/N)
 
 %%%%
-@arg@ with an entry fee of @num@ gold pieces.
+@Arg@ with an entry fee of @num@ gold pieces.
 
 %%%%
 Your shopping list is now empty.
@@ -13770,10 +13770,10 @@ Setting a skill training target for @arg@ at @num1@.@num2@.
 # species.cc
 ##################
 %%%%
-@arg@ fall away.
+@Arg@ fall away.
 
 %%%%
-@arg@ falls away.
+@Arg@ falls away.
 
 %%%%
 
@@ -14013,10 +14013,10 @@ Sorry, this spell works on others only.
 You feel a surge of divine spite.
 
 %%%%
-@arg@ does not allow the disloyal to dabble in death!
+@Arg@ does not allow the disloyal to dabble in death!
 
 %%%%
-@arg@ does not allow the disloyal to dabble in destruction!
+@Arg@ does not allow the disloyal to dabble in destruction!
 
 %%%%
 You miscast @arg@.
@@ -14072,7 +14072,7 @@ That kind of cloud doesn't exist!
 Blessed fire suddenly surrounds you!
 
 %%%%
-@arg@ is surrounded by blessed fire!
+@Arg@ is surrounded by blessed fire!
 
 %%%%
 
@@ -14108,7 +14108,7 @@ The arc of chaos arcs out of your line of sight!
 The arc of chaos suddenly appears!
 
 %%%%
-@arg1@ are @arg2@.
+@Arg1@ are @arg2@.
 
 %%%%
 The monsters around @arg1@ are @arg2@!
@@ -14123,7 +14123,7 @@ The heat is drained from your surroundings.
 Something drains the heat from around you.
 
 %%%%
-@arg@ drains the heat from the surrounding environment!
+@Arg@ drains the heat from the surrounding environment!
 
 %%%%
 The ambient heat is drained!
@@ -14139,7 +14139,7 @@ You draw life from your surroundings.
 Something draws the life force from your surroundings.
 
 %%%%
-@arg@ draws from the surrounding life force!
+@Arg@ draws from the surrounding life force!
 
 %%%%
 The surrounding life force dissipates!
@@ -14155,7 +14155,7 @@ You send a blast of sound all around you.
 Something sends a blast of sound all around you.
 
 %%%%
-@arg@ sends a blast of sound all around you!
+@Arg@ sends a blast of sound all around you!
 
 %%%%
 Sound blasts the surrounding area!
@@ -14192,7 +14192,7 @@ the stone arch
 You can't deconstruct that!
 
 %%%%
-@arg@ shatters!
+@Arg@ shatters!
 
 %%%%
 # note: param = damage-based punctuation
@@ -14200,7 +14200,7 @@ You shatter@arg@
 
 %%%%
 # note: params = the monster, damage-based punctuation
-@arg1@ shatters@arg2@
+@Arg1@ shatters@arg2@
 
 %%%%
 A door shatters!
@@ -14227,22 +14227,22 @@ The dungeon shakes around @arg@!
 The dungeon rumbles around @arg@!
 
 %%%%
-@arg@ shudder.
+@Arg@ shudder.
 
 %%%%
 There is a shattering impact!
 
 %%%%
-@arg1@ is blasted with magical radiation@arg2@
+@Arg1@ is blasted with magical radiation@arg2@
 
 %%%%
 You erupt in a fountain of uncontrolled magic!
 
 %%%%
-@arg@ erupts in a fountain of uncontrolled magic!
+@Arg@ erupts in a fountain of uncontrolled magic!
 
 %%%%
-@arg1@ seems to burn from within@arg2@
+@Arg1@ seems to burn from within@arg2@
 
 %%%%
 You feel like your blood is boiling!
@@ -14263,7 +14263,7 @@ You might harm nearby allies! Ignite poison anyway?
 You ignite the poison in your surroundings!
 
 %%%%
-@arg@ ignites the poison in the surroundings!
+@Arg@ ignites the poison in the surroundings!
 
 %%%%
 The air bursts into flame!
@@ -14276,7 +14276,7 @@ static discharge
 You are struck by an arc of lightning@arg@
 
 %%%%
-@arg1@ is struck by an arc of lightning@arg2@
+@Arg1@ is struck by an arc of lightning@arg2@
 
 %%%%
 The lightning grounds out.
@@ -14367,7 +14367,7 @@ A tree reaches out and hits @foe@
 A root smacks @foe@ from below
 
 %%%%
-@arg@ is dazzled.
+@Arg@ is dazzled.
 
 %%%%
 You begin to radiate toxic energy.
@@ -14376,10 +14376,10 @@ You begin to radiate toxic energy.
 Your toxic radiance grows in intensity.
 
 %%%%
-@arg@ begins to radiate toxic energy.
+@Arg@ begins to radiate toxic energy.
 
 %%%%
-@arg@ cannot be affected by poisonous vapours!
+@Arg@ cannot be affected by poisonous vapours!
 
 %%%%
 Poisonous vapours surround @arg@!
@@ -14400,13 +14400,13 @@ You finish channeling your searing ray.
 You conjure a mighty blast of ice!
 
 %%%%
-@arg@ conjures a mighty blast of ice!
+@Arg@ conjures a mighty blast of ice!
 
 %%%%
-@arg@ pelts you
+@Arg@ pelts you
 
 %%%%
-@arg1@ pelts @arg2@
+@Arg1@ pelts @arg2@
 
 %%%%
 A cannonade of hail descends around you!
@@ -14418,7 +14418,7 @@ You erupt in a blast of force!
 You fester in the toxic bog@arg@
 
 %%%%
-@arg1@ festers in the toxic bog@arg2@
+@Arg1@ festers in the toxic bog@arg2@
 
 %%%%
 There are no walls around you to affect.
@@ -14442,10 +14442,10 @@ A cloud of jellies burst out of the Royal Jelly as the current ripples through i
 The electricity discharges through @arg@!
 
 %%%%
-@arg@ vaporises and condenses as gold!
+@Arg@ vaporises and condenses as gold!
 
 %%%%
-@arg@ vaporises in an electric haze!
+@Arg@ vaporises in an electric haze!
 
 %%%%
 You feel charge building up...
@@ -14471,7 +14471,7 @@ You cannot pacify this monster!
 You cannot pacify this monster while it is sleeping!
 
 %%%%
-@arg@ would be completely unfazed by your meagre offer of peace.
+@Arg@ would be completely unfazed by your meagre offer of peace.
 
 %%%%
 The light of Elyvilon fails to reach @arg@.
@@ -14480,13 +14480,13 @@ The light of Elyvilon fails to reach @arg@.
 The light of Elyvilon almost touches upon @arg@.
 
 %%%%
-@arg@ turns neutral.
+@Arg@ turns neutral.
 
 %%%%
 You heal @arg@.
 
 %%%%
-@arg@ is completely healed.
+@Arg@ is completely healed.
 
 %%%%
 mindless
@@ -14520,7 +14520,7 @@ You feel limber!
 Your magical effects are unravelling.
 
 %%%%
-@arg@'s magical effects unravel!
+@Arg@'s magical effects unravel!
 
 %%%%
 You briefly glimpse something next to @arg@.
@@ -14550,22 +14550,22 @@ the Shining One's holy word
 the Torment card
 
 %%%%
-@arg@ is blasted by Zin's holy word!
+@Arg@ is blasted by Zin's holy word!
 
 %%%%
-@arg@ convulses!
+@Arg@ convulses!
 
 %%%%
 You speak a Word of immense power!
 
 %%%%
-@arg@ speaks a Word of immense power!
+@Arg@ speaks a Word of immense power!
 
 %%%%
-@arg@ shields you from torment!
+@Arg@ shields you from torment!
 
 %%%%
-@arg@ partially shields you from torment!
+@Arg@ partially shields you from torment!
 
 %%%%
 You feel a surge of unholy energy.
@@ -15161,7 +15161,7 @@ You feel incredibly sick
 The air has a green tinge for a moment
 
 %%%%
-@arg@ protects you from your miscast necromantic spell!
+@Arg@ protects you from your miscast necromantic spell!
 
 %%%%
 
@@ -15172,13 +15172,13 @@ The air has a green tinge for a moment
 You radiate an aura of cold.
 
 %%%%
-@arg@ is outlined in light.
+@Arg@ is outlined in light.
 
 %%%%
-@arg@ glows brighter for a moment.
+@Arg@ glows brighter for a moment.
 
 %%%%
-@arg@ glows brighter.
+@Arg@ glows brighter.
 
 %%%%
 
@@ -15234,7 +15234,7 @@ You sense a deep body of water on the other side of the rock.
 You sense an intense heat on the other side of the rock.
 
 %%%%
-@arg@ looks rather confused.
+@Arg@ looks rather confused.
 
 %%%%
 You attempt to intoxicate your foes!
@@ -15316,10 +15316,10 @@ A chill wind blows around you.
 You summon @arg@!
 
 %%%%
-@arg1@ summons @arg2@!
+@Arg1@ summons @arg2@!
 
 %%%%
-@arg@ appears.
+@Arg@ appears.
 
 %%%%
 You call out to the draconic realm, and the dragon horde roars back!
@@ -15347,36 +15347,36 @@ You can't see a target there!
 
 %%%%
 # note: Tukima's dance fail messages
-@arg@ twitches.
+@Arg@ twitches.
 
 %%%%
-@arg@ twitch.
+@Arg@ twitch.
 
 %%%%
 # note: <the monster's> <hands> twitch.
-@arg1@ @arg2@ twitch.
+@Arg1@ @arg2@ twitch.
 
 %%%%
 # note: <the monster's> <hand> twitches.
-@arg1@ @arg2@ twitches.
+@Arg1@ @arg2@ twitches.
 
 %%%%
-@arg@ is already dancing.
+@Arg@ is already dancing.
 
 %%%%
-@arg@ vibrates crazily for a second.
+@Arg@ vibrates crazily for a second.
 
 %%%%
-@arg@ vibrate crazily for a second.
+@Arg@ vibrate crazily for a second.
 
 %%%%
-@arg@ twitches for a moment.
+@Arg@ twitches for a moment.
 
 %%%%
 @The_weapon@ dances into the air!
 
 %%%%
-@arg@ booms: How dare you animate that foul thing!
+@Arg@ booms: How dare you animate that foul thing!
 
 %%%%
 You create some ball lightning!
@@ -15464,10 +15464,10 @@ You sense a hostile presence.
 You summon a servant imbued with your destructive magic!
 
 %%%%
-@arg@ summons a servant imbued with destructive magic!
+@Arg@ summons a servant imbued with destructive magic!
 
 %%%%
-@arg@ appears!
+@Arg@ appears!
 
 %%%%
 You recall your battlesphere and imbue it with additional charge.
@@ -15479,7 +15479,7 @@ You imbue your battlesphere with additional charge.
 You conjure a globe of magical energy.
 
 %%%%
-@arg@ conjures a globe of magical energy!
+@Arg@ conjures a globe of magical energy!
 
 %%%%
 Your battlesphere expends the last of its energy and dissipates.
@@ -15491,7 +15491,7 @@ Your battlesphere wavers and loses cohesion.
 You feel your bond with your battlesphere wane.
 
 %%%%
-@arg@ fires!
+@Arg@ fires!
 
 %%%%
 That's too far away.
@@ -15509,13 +15509,13 @@ You twitch.
 You conjure a prism of explosive energy!
 
 %%%%
-@arg@ conjures a prism of explosive energy!
+@Arg@ conjures a prism of explosive energy!
 
 %%%%
 A prism of explosive energy appears from nowhere!
 
 %%%%
-@arg@ fades away.
+@Arg@ fades away.
 
 %%%%
 You feel your bond with your spectral weapon wane.
@@ -15534,10 +15534,10 @@ No empty adjacent squares.
 Something unseen blocks growth in @arg@.
 
 %%%%
-@arg1@ is torn apart as @arg2@ grows in its place.
+@Arg1@ is torn apart as @arg2@ grows in its place.
 
 %%%%
-@arg@ falls apart, but nothing grows.
+@Arg@ falls apart, but nothing grows.
 
 %%%%
 Aiming: <white>Overgrow</white>
@@ -15570,7 +15570,7 @@ There is not enough space to conjure foxfire!
 You conjure some foxfire!
 
 %%%%
-@arg@ conjures some foxfire!
+@Arg@ conjures some foxfire!
 
 %%%%
 
@@ -15701,7 +15701,7 @@ You begin teleporting projectiles to their destination.
 You renew your portal.
 
 %%%%
-@arg@ would react catastrophically with paradoxical space!
+@Arg@ would react catastrophically with paradoxical space!
 
 %%%%
 You can't see anything to attack.
@@ -15764,10 +15764,10 @@ Gravity reorients around @arg@.
 Gravity reorients around empty space.
 
 %%%%
-@arg@ hurls suddenly forward!
+@Arg@ hurls suddenly forward!
 
 %%%%
-@arg@ is pulled toward you!
+@Arg@ is pulled toward you!
 
 %%%%
 You cannot see any enemies that you can affect. Speak a word of chaos anyway?
@@ -15980,10 +15980,10 @@ Careful! You are now flying above @arg@.
 # spl-wpnench.cc
 ##################
 %%%%
-@arg@ seems less pained.
+@Arg@ seems less pained.
 
 %%%%
-@arg@ falls away!
+@Arg@ falls away!
 
 %%%%
 You cannot brand ranged weapons with this spell.
@@ -15995,22 +15995,22 @@ This weapon is already branded with pain.
 Really brand @arg@?
 
 %%%%
-@arg@ writhes in agony.
+@Arg@ writhes in agony.
 
 %%%%
-@arg@ shrieks in agony.
+@Arg@ shrieks in agony.
 
 %%%%
-@arg@ begins to glow brighter.
+@Arg@ begins to glow brighter.
 
 %%%%
-@arg@ begin to glow brighter.
+@Arg@ begin to glow brighter.
 
 %%%%
-@arg@ begins to glow red.
+@Arg@ begins to glow red.
 
 %%%%
-@arg@ begin to glow red.
+@Arg@ begin to glow red.
 
 %%%%
 
@@ -16033,7 +16033,7 @@ You have just @num@ turns in @arg@ to find a new floor before Zot consumes you.
 Enter next level anyway?
 
 %%%%
-@arg1@ moves away as you attempt to @arg2@ it!
+@Arg1@ moves away as you attempt to @arg2@ it!
 
 %%%%
 The world spins around you as you enter the gateway.
@@ -16196,7 +16196,7 @@ Stash:
 
 %%%%
 # note: shop item entry - item name + " (unknown)" if applicable + price
-@arg1@@arg2@ (@num@ gold)
+@Arg1@@arg2@ (@num@ gold)
 
 %%%%
 " {shop}"
@@ -16356,37 +16356,37 @@ You cannot grow anything here.
 # teleport.cc
 ##################
 %%%%
-@arg@ struggles to leap free from constriction.
+@Arg@ struggles to leap free from constriction.
 
 %%%%
-@arg@ struggles to blink free from constriction.
+@Arg@ struggles to blink free from constriction.
 
 %%%%
-@arg@ jumps free!
+@Arg@ jumps free!
 
 %%%%
-@arg@ blinks free!
+@Arg@ blinks free!
 
 %%%%
-@arg@ jumps!
+@Arg@ jumps!
 
 %%%%
-@arg@ blinks!
+@Arg@ blinks!
 
 %%%%
-@arg@ seems more stable.
+@Arg@ seems more stable.
 
 %%%%
-@arg@ looks slightly unstable.
+@Arg@ looks slightly unstable.
 
 %%%%
-@arg@ flickers for a moment.
+@Arg@ flickers for a moment.
 
 %%%%
-@arg@ disappears!
+@Arg@ disappears!
 
 %%%%
-@arg@ reappears nearby!
+@Arg@ reappears nearby!
 
 %%%%
 
@@ -16409,31 +16409,31 @@ The walls burn @arg@!
 You hear a sizzling splash.
 
 %%%%
-@arg@ suddenly disappears!
+@Arg@ suddenly disappears!
 
 %%%%
 # note: @feature@ suddenly disappears from beside/under/etc. @monster@
-@arg1@ suddenly disappears from @arg2@ @arg3@!
+@Arg1@ suddenly disappears from @arg2@ @arg3@!
 
 %%%%
-@arg@ suddenly appears!
+@Arg@ suddenly appears!
 
 %%%%
 # note: @feature@ suddenly appears beside/under/etc. @monster@
-@arg1@ suddenly appears @arg2@ @arg3@!
+@Arg1@ suddenly appears @arg2@ @arg3@!
 
 %%%%
-@arg@ moves!
+@Arg@ moves!
 
 %%%%
 # note: @feature@ moves from beside/under/etc. @monster1@ to beside/under/etc. @monster2@
-@arg1@ moves from @arg2@ @arg3@ to @arg4@ @arg5@!
+@Arg1@ moves from @arg2@ @arg3@ to @arg4@ @arg5@!
 
 %%%%
-@arg1@ moves from @arg2@ @arg3@!
+@Arg1@ moves from @arg2@ @arg3@!
 
 %%%%
-@arg1@ moves to @arg2@ @arg3@!
+@Arg1@ moves to @arg2@ @arg3@!
 
 %%%%
 You fall into the lava!
@@ -16568,16 +16568,16 @@ You magically shoot @arg@.
 You magically throw @arg@.
 
 %%%%
-@arg1@ shoots @arg2@.
+@Arg1@ shoots @arg2@.
 
 %%%%
-@arg1@ throws @arg2@.
+@Arg1@ throws @arg2@.
 
 %%%%
-@arg1@ magically shoots @arg2@.
+@Arg1@ magically shoots @arg2@.
 
 %%%%
-@arg1@ magically throws @arg2@.
+@Arg1@ magically throws @arg2@.
 
 %%%%
 
@@ -16629,7 +16629,7 @@ Failed to find a valid window layout: screen too small or game_scale too large?
 # timed-effects.cc
 ##################
 %%%%
-@arg@'s power protects you from the chaos of Hell!
+@Arg@'s power protects you from the chaos of Hell!
 
 %%%%
 Your body shudders with the violent release of wild energies!
@@ -16638,7 +16638,7 @@ Your body shudders with the violent release of wild energies!
 Your body momentarily shudders from a surge of wild energies until Zin's power calms it.
 
 %%%%
-@arg@ gurgles merrily.
+@Arg@ gurgles merrily.
 
 %%%%
 You hear a series of splatters.
@@ -16648,7 +16648,7 @@ You hear a splatter.
 
 %%%%
 # note: Xom's command to slimes/jellies (they reproduce by dividing)
-@arg@ says: Divide and consume!
+@Arg@ says: Divide and consume!
 
 %%%%
 You feel a genetic drift.
@@ -16833,25 +16833,25 @@ You feel less shadowy.
 You emerge from the shadows.
 
 %%%%
-@arg@ falls away, shattering the curse!
+@Arg@ falls away, shattering the curse!
 
 %%%%
-@arg@ fall away, shattering the curse!
+@Arg@ fall away, shattering the curse!
 
 %%%%
-@arg@ fall away!
+@Arg@ fall away!
 
 %%%%
-@arg@ melds into your body.
+@Arg@ melds into your body.
 
 %%%%
-@arg@ meld into your body.
+@Arg@ meld into your body.
 
 %%%%
-@arg@ is pushed off your body!
+@Arg@ is pushed off your body!
 
 %%%%
-@arg@ unmelds from your body.
+@Arg@ unmelds from your body.
 
 %%%%
 You would drown in your new form.
@@ -16872,7 +16872,7 @@ Turning back will reduce your strength to zero. Continue?
 Turning back will reduce your dexterity to zero. Continue?
 
 %%%%
-@arg@ protects your body from unnatural transformation!
+@Arg@ protects your body from unnatural transformation!
 
 %%%%
 You are stuck in your current form!
@@ -16946,7 +16946,7 @@ caught in a web
 The net bounces off something gigantic!
 
 %%%%
-@arg@ is too large for the net to hold!
+@Arg@ is too large for the net to hold!
 
 %%%%
 The net is caught on @arg@!
@@ -16961,10 +16961,10 @@ The net passes right through @arg@!
 Something gets caught in the net!
 
 %%%%
-@arg@ is caught in the net!
+@Arg@ is caught in the net!
 
 %%%%
-@arg@ drifts right through the net!
+@Arg@ drifts right through the net!
 
 %%%%
 A huge vortex of air appears!
@@ -16976,7 +16976,7 @@ The power of Zot is invoked against you!
 You enter the passage of Golubria.
 
 %%%%
-@arg@ enters the passage of Golubria.
+@Arg@ enters the passage of Golubria.
 
 %%%%
 This passage seems to be blocked by something!
@@ -16988,22 +16988,22 @@ This passage doesn't lead anywhere!
 You enter @arg@!
 
 %%%%
-@arg1@ enters @arg2@!
+@Arg1@ enters @arg2@!
 
 %%%%
-@arg@ disappears.
+@Arg@ disappears.
 
 %%%%
 You set off the alarm!
 
 %%%%
-@arg@ pulls the alarm!
+@Arg@ pulls the alarm!
 
 %%%%
-@arg@ sets off the alarm!
+@Arg@ sets off the alarm!
 
 %%%%
-@arg@ vibrates slightly, failing to make a sound.
+@Arg@ vibrates slightly, failing to make a sound.
 
 %%%%
 The alarm trap emits a blaring wail!
@@ -17018,10 +17018,10 @@ A huge blade swings just past you!
 A huge blade swings out and slices into you!
 
 %%%%
-@arg@ fails to trigger a blade trap.
+@Arg@ fails to trigger a blade trap.
 
 %%%%
-@arg@ avoids a huge, swinging blade.
+@Arg@ avoids a huge, swinging blade.
 
 %%%%
 A huge blade swings out!
@@ -17030,10 +17030,10 @@ A huge blade swings out!
 A huge blade swings out and slices into @arg@!
 
 %%%%
-@arg@ fails to trigger a net trap.
+@Arg@ fails to trigger a net trap.
 
 %%%%
-@arg@ drops a net on you.
+@Arg@ drops a net on you.
 
 %%%%
 Something launches a net on you.
@@ -17045,10 +17045,10 @@ You avoid being caught in a net.
 The net is torn apart by your bulk.
 
 %%%%
-@arg@ passes through a web.
+@Arg@ passes through a web.
 
 %%%%
-@arg@ oozes through a web.
+@Arg@ oozes through a web.
 
 %%%%
 You pick your way through the web.
@@ -17057,7 +17057,7 @@ You pick your way through the web.
 You are caught in the web!
 
 %%%%
-@arg@ evades a web.
+@Arg@ evades a web.
 
 %%%%
 A web moves frantically as something is caught in it!
@@ -17093,10 +17093,10 @@ You tear a large gash into the net.
 You struggle against the net.
 
 %%%%
-@arg@ tears the web.
+@Arg@ tears the web.
 
 %%%%
-@arg@ pulls away from the web.
+@Arg@ pulls away from the web.
 
 %%%%
 The trap is out of ammunition!
@@ -17108,28 +17108,28 @@ You hear a soft click.
 You avoid triggering @arg@.
 
 %%%%
-@arg1@ avoids triggering @arg2@.
+@Arg1@ avoids triggering @arg2@.
 
 %%%%
-@arg@ shoots out and misses you.
+@Arg@ shoots out and misses you.
 
 %%%%
-@arg@ shoots out and hits your shield.
+@Arg@ shoots out and hits your shield.
 
 %%%%
-@arg1@ shoots out and hits @arg2@ shield.
+@Arg1@ shoots out and hits @arg2@ shield.
 
 %%%%
-@arg@ shoots out and hits someone's shield.
+@Arg@ shoots out and hits someone's shield.
 
 %%%%
-@arg@ shoots out and hits you!
+@Arg@ shoots out and hits you!
 
 %%%%
-@arg1@ hits @arg2@ but does no damage!
+@Arg1@ hits @arg2@ but does no damage!
 
 %%%%
-@arg1@ hits @arg2@!
+@Arg1@ hits @arg2@!
 
 %%%%
 You stumble into a teleport trap!
@@ -17289,16 +17289,16 @@ stair
 # view.cc
 ##################
 %%%%
-@arg@ is a foul glowing shapeshifter.
+@Arg@ is a foul glowing shapeshifter.
 
 %%%%
-@arg@ is a foul shapeshifter.
+@Arg@ is a foul shapeshifter.
 
 %%%%
 There is @arg@.
 
 %%%%
-@arg1@ warns you: @arg2@
+@Arg1@ warns you: @arg2@
 
 %%%%
 @Arg@ come into view.
@@ -17442,7 +17442,7 @@ Only match is '@arg@', use that?
 Placing @arg@ on top of you would put part of the map outside of the level, cancelling.
 
 %%%%
-@arg@ decides where it goes, can't place where you are.
+@Arg@ decides where it goes, can't place where you are.
 
 %%%%
 Warning: this is an encompass vault not designed for this location; placing it with &P may result in crashes and save corruption. Continue?
@@ -17536,19 +17536,19 @@ No hits
 "Quivering: "
 
 %%%%
-@arg1@: @arg2@ @arg3@ vs. @arg4@ (@num@ rounds) (@arg5@)
+@Arg1@: @arg2@ @arg3@ vs. @arg4@ (@num@ rounds) (@arg5@)
 
 %%%%
 Defense
 
 %%%%
-@arg1@ @arg2@: XL @num1@   Str @num2@   Int @num3@   Dex @num4@
+@Arg1@ @arg2@: XL @num1@   Str @num2@   Int @num3@   Dex @num4@
 
 %%%%
-@arg1@, Skill: @arg2@
+@Arg1@, Skill: @arg2@
 
 %%%%
-@arg@: HD @num1@   AC @num2@   EV @num3@
+@Arg@: HD @num1@   AC @num2@   EV @num3@
 
 %%%%
 Cannot wield weapon
@@ -17647,7 +17647,7 @@ Toggling @arg@ to off.
 Toggling @arg@ to on.
 
 %%%%
-@arg@ was @num@.
+@Arg@ was @num@.
 
 %%%%
 New value?
@@ -17656,7 +17656,7 @@ New value?
 Value for @arg@ must be non-negative
 
 %%%%
-@arg1@ was @arg2@.
+@Arg1@ was @arg2@.
 
 %%%%
 New ego?
@@ -17844,13 +17844,13 @@ Both you and the monster are silenced, so you likely won't hear anything.
 == Done ==
 
 %%%%
-@arg@ seems unable to mature further.
+@Arg@ seems unable to mature further.
 
 %%%%
 Apply blessing of (B)eogh, The (S)hining One, or (R)andomly?
 
 %%%%
-@arg@ won't bless this monster for you!
+@Arg@ won't bless this monster for you!
 
 %%%%
 That type of monster can't use any items.
@@ -18147,7 +18147,7 @@ That god doesn't seem to exist!
 You suffer the terrible wrath of No God.
 
 %%%%
-@arg@ is not feeling wrathful today.
+@Arg@ is not feeling wrathful today.
 
 %%%%
 You are not under penance.
@@ -18566,13 +18566,13 @@ a BORING thing
 Xom makes something happen.
 
 %%%%
-@arg@ is getting BORED.
+@Arg@ is getting BORED.
 
 %%%%
-@arg@ is interested.
+@Arg@ is interested.
 
 %%%%
-@arg@ is intrigued.
+@Arg@ is intrigued.
 
 %%%%
 You detect items!
@@ -18587,16 +18587,16 @@ You detect creatures!
 \"No, never mind.\"
 
 %%%%
-@arg1@ @arg2@ erupts in a glittering mayhem of colour.
+@Arg1@ @arg2@ erupts in a glittering mayhem of colour.
 
 %%%%
-@arg@ looks rather more confused.
+@Arg@ looks rather more confused.
 
 %%%%
 Some monsters swap places.
 
 %%%%
-@arg1@ reforms as @arg2@.
+@Arg1@ reforms as @arg2@.
 
 %%%%
 @The_monster@'s @weapon@ dances into the air!
@@ -18692,10 +18692,10 @@ Dust puffs up from the dry fountain.
 The stone arch briefly shows a sunny meadow on the other side.
 
 %%%%
-@arg@ seems to fall away from under you!
+@Arg@ seems to fall away from under you!
 
 %%%%
-@arg@ seems to rush up at you!
+@Arg@ seems to rush up at you!
 
 %%%%
 Something invisible splashes into the water beneath you!
@@ -18707,7 +18707,7 @@ The water briefly recedes away from you.
 Something invisible splashes into the water beside you!
 
 %%%%
-@arg@ falls out of your pack, then immediately jumps back in!
+@Arg@ falls out of your pack, then immediately jumps back in!
 
 %%%%
 You briefly get tangled in your bandages.
@@ -18743,16 +18743,16 @@ Your cloak billows in an unfelt wind.
 Your scarf briefly wraps itself around your head!
 
 %%%%
-@arg@ leaps into the air, briefly spins, then lands back on your head!
+@Arg@ leaps into the air, briefly spins, then lands back on your head!
 
 %%%%
 You compulsively click the heels of your boots together three times.
 
 %%%%
-@arg@ spins!
+@Arg@ spins!
 
 %%%%
-@arg@ briefly flashes a lurid colour!
+@Arg@ briefly flashes a lurid colour!
 
 %%%%
 The scales on @arg@ wiggle briefly.
@@ -18761,40 +18761,40 @@ The scales on @arg@ wiggle briefly.
 The fur on @arg@ grows longer at an alarming rate, then retracts back to normal.
 
 %%%%
-@arg@ briefly grows fur, then returns to normal.
+@Arg@ briefly grows fur, then returns to normal.
 
 %%%%
 You briefly become tangled in @arg@.
 
 %%%%
-@arg@ briefly appears rusty.
+@Arg@ briefly appears rusty.
 
 %%%%
-@arg@ briefly glows.
+@Arg@ briefly glows.
 
 %%%%
-@arg@ briefly vibrates.
+@Arg@ briefly vibrates.
 
 %%%%
-@arg@ briefly glow.
+@Arg@ briefly glow.
 
 %%%%
-@arg@ briefly vibrate.
+@Arg@ briefly vibrate.
 
 %%%%
-@arg@ slides away from you!
+@Arg@ slides away from you!
 
 %%%%
-@arg@ slides towards you!
+@Arg@ slides towards you!
 
 %%%%
-@arg@ looks sharp (like it always does).
+@Arg@ looks sharp (like it always does).
 
 %%%%
-@arg@ looks sharp.
+@Arg@ looks sharp.
 
 %%%%
-@arg@ look sharp.
+@Arg@ look sharp.
 
 %%%%
 Xom snickers.
