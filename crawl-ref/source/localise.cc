@@ -150,8 +150,8 @@ void init_localisation()
         return;
     _initialised = true;
 
-    static const text_pattern patt("^.$");
-    if (!patt.matches("の"))
+    static const text_pattern single_char_patt("^.$");
+    if (!single_char_patt.matches("の"))
         fprintf(stderr, "WARNING: Regex is not UTF-8 aware\n");
 
     _do_pregeneration();
