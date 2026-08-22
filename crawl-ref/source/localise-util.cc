@@ -130,7 +130,9 @@ bool is_float_string(const string &s)
     return digits_after > 0;
 }
 
-static text_pattern _determiner_pattern("^(the|a|an|some|your|his|her|its|their)[ _]", true);
+static const text_pattern _determiner_pattern(
+    "^(the|a|an|some|your|his|her|its|their)[ _]", true
+);
 
 bool has_determiner(const string& s)
 {
