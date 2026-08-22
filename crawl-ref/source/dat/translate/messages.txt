@@ -3349,10 +3349,10 @@ e(v)oke
 "Select a spell, or "
 
 %%%%
-"Replace inscription with what? "
+Replace inscription with what?
 
 %%%%
-"Inscribe with what? "
+Inscribe with what?
 
 %%%%
 # spell properties
@@ -3983,7 +3983,7 @@ There is no level above you.
 There is no level below you in this branch.
 
 %%%%
-"What level of @arg@? "
+What level of @arg@?
 
 %%%%
 That's not a valid depth.
@@ -5626,7 +5626,7 @@ You swap with @arg@!
 @arg1@ swaps with @arg2@!
 
 %%%%
-"Remember @arg@ name as what? "
+Remember @arg@ name as what?
 
 %%%%
 Yes, @arg@ is definitely a better name.
@@ -6964,7 +6964,7 @@ Are you sure you want to pick up this pile of gold now?
 
 %%%%
 # note: @arg@ here will be a counted plural (e.g. "27 boomerangs")
-"Pick up how many of the @arg@ (; or enter for all)? "
+Pick up how many of the @arg@ (; or enter for all)?
 
 %%%%
 There are no items here.
@@ -7072,13 +7072,13 @@ Autopickup disabled for @num@ items.
 Your pack is full.
 
 %%%%
-"Which rune (ESC to exit)? "
+Which rune (ESC to exit)?
 
 %%%%
-"What ego type? "
+What ego type?
 
 %%%%
-"A manual for which skill? "
+A manual for which skill?
 
 %%%%
 Sorry, no books on that skill today.
@@ -7217,7 +7217,7 @@ No @arg1@ with symbol '@arg2@'.
 No matching @arg@.
 
 %%%%
-"Describe a @arg@? "
+Describe a @arg@?
 
 %%%%
 Description must contain at least one non-space.
@@ -11261,10 +11261,10 @@ Increase Attributes
 Your base attributes are Str @num1@, Int @num2@, Dex @num3@.
 
 %%%%
-"Increase (S)trength, (I)ntelligence, or (D)exterity? "
+Increase (S)trength, (I)ntelligence, or (D)exterity?
 
 %%%%
-"Increase (s)trength, (i)ntelligence, or (d)exterity? "
+Increase (s)trength, (i)ntelligence, or (d)exterity?
 
 %%%%
 Uppercase letters only, please.
@@ -12351,7 +12351,7 @@ Clearing quiver.
 Select a spell to quiver
 
 %%%%
-"Quiver which action? "
+Quiver which action?
 
 %%%%
 <w>-</w>: none
@@ -16208,7 +16208,7 @@ Enter for "@arg@"
 ? for help
 
 %%%%
-"Search for what@arg@? "
+Search for what@arg@?
 
 %%%%
 Your search expression is invalid.
@@ -17376,10 +17376,10 @@ Creating downstairs.
 Creating upstairs.
 
 %%%%
-"Create what kind of feature mimic? "
+Create what kind of feature mimic?
 
 %%%%
-"Create which feature? "
+Create which feature?
 
 %%%%
 Set fprops "@arg@" at (@num1@,@num2@)
@@ -17388,7 +17388,7 @@ Set fprops "@arg@" at (@num1@,@num2@)
 "No exact match for feature '@arg@', possible matches are: "
 
 %%%%
-"This isn't a valid feature mimic. Create it anyway? "
+This isn't a valid feature mimic. Create it anyway?
 
 %%%%
 Force level to be mappable?
@@ -17400,7 +17400,7 @@ Mapping level.
 You need to be on a floor square to make a trap.
 
 %%%%
-"What kind of trap? "
+What kind of trap?
 
 %%%%
 I know no traps named "@arg@".
@@ -17421,7 +17421,7 @@ NOTE: Shaft traps aren't valid on this level.
 Insufficient floor-space for new Wal-Mart.
 
 %%%%
-"What kind of shop? "
+What kind of shop?
 
 %%%%
 Bad shop type: "@arg@"
@@ -17602,13 +17602,13 @@ X - corpses     $ - gold    0  - the Orb
 ESC - exit
 
 %%%%
-"What class of item? "
+What class of item?
 
 %%%%
 Could not allocate item.
 
 %%%%
-"How much gold? "
+How much gold?
 
 %%%%
 No such monster.
@@ -17620,13 +17620,13 @@ That monster doesn't leave corpses.
 You can't make a draconian corpse by its background.
 
 %%%%
-"How many heads? "
+How many heads?
 
 %%%%
 Failed to create corpse.
 
 %%%%
-"What type of item? "
+What type of item?
 
 %%%%
 "What type of item? (\"all\" for all) "
@@ -17638,7 +17638,7 @@ No such item.
 You can't tweak the randart properties of an equipped item.
 
 %%%%
-"Change which field? "
+Change which field?
 
 %%%%
 Toggling @arg@ to off.
@@ -17650,7 +17650,7 @@ Toggling @arg@ to on.
 @arg@ was @num@.
 
 %%%%
-"New value? "
+New value?
 
 %%%%
 Value for @arg@ must be non-negative
@@ -17659,7 +17659,7 @@ Value for @arg@ must be non-negative
 @arg1@ was @arg2@.
 
 %%%%
-"New ego? "
+New ego?
 
 %%%%
 No such ego as: @arg@
@@ -17668,7 +17668,7 @@ No such ego as: @arg@
 Ego '@arg1@' is invalid for @arg2@.
 
 %%%%
-"Tweak which item? "
+Tweak which item?
 
 %%%%
 a - plus  b - plus2  c - @arg@  d - quantity  e - flags  ESC - exit
@@ -17677,7 +17677,7 @@ a - plus  b - plus2  c - @arg@  d - quantity  e - flags  ESC - exit
 art props
 
 %%%%
-"Which field? "
+Which field?
 
 %%%%
 "Old value: "
@@ -17686,7 +17686,7 @@ art props
 You can't set this flag on a non-artefact.
 
 %%%%
-"Make book fixed [t]heme or fixed [l]evel? "
+Make book fixed [t]heme or fixed [l]evel?
 
 %%%%
 Value of which item?
@@ -17743,7 +17743,7 @@ Floor items (stacks only show top item):
 %3d at (%2d,%2d): @arg1@@arg2@
 
 %%%%
-"Which card? "
+Which card?
 
 %%%%
 Unknown card.
@@ -17769,7 +17769,7 @@ Couldn't find player ghost, probably going to crash.
 No such species, making it Human.
 
 %%%%
-"Give player ghost which background? "
+Give player ghost which background?
 
 %%%%
 No such background, making it a Fighter.
@@ -17784,7 +17784,7 @@ No such background, making it a Fighter.
 @num1@ monsters, @num2@ total exp value (@num3@ non-uniq, @num4@ adjusted)
 
 %%%%
-"(c)hange spawn rate or (s)pawn monsters? "
+(c)hange spawn rate or (s)pawn monsters?
 
 %%%%
 "Set monster spawn rate to what? (now @num@, lower value = higher rate) "
@@ -17796,7 +17796,7 @@ Setting monster spawn rate to @num@.
 Level already filled with monsters, get rid of some of them first.
 
 %%%%
-"Spawn how many random monsters (max @num@)? "
+Spawn how many random monsters (max @num@)?
 
 %%%%
 Spawning 1 monster.
@@ -17814,7 +17814,7 @@ Which monster?
 Detected @num@ monster@arg@.
 
 %%%%
-"What monsters to dismiss (ENTER for all, \"harmful\", \"mobile\", \"los\" or a regex, \"keepitem\" to leave items)? "
+What monsters to dismiss (ENTER for all, \"harmful\", \"mobile\", \"los\" or a regex, \"keepitem\" to leave items)?
 
 %%%%
 Dismissed 1 monster.
@@ -17823,10 +17823,10 @@ Dismissed 1 monster.
 Dismissed @num@ monsters.
 
 %%%%
-"Make the monster (S)hout or (T)alk? "
+Make the monster (S)hout or (T)alk?
 
 %%%%
-"How many times? "
+How many times?
 
 %%%%
 The monster is invisible and likely won't speak.
@@ -17847,7 +17847,7 @@ Both you and the monster are silenced, so you likely won't hear anything.
 @arg@ seems unable to mature further.
 
 %%%%
-"Apply blessing of (B)eogh, The (S)hining One, or (R)andomly? "
+Apply blessing of (B)eogh, The (S)hining One, or (R)andomly?
 
 %%%%
 @arg@ won't bless this monster for you!
@@ -17880,7 +17880,7 @@ You can't move yourself into the arena.
 Monster is already summoned.
 
 %%%%
-"What summon longevity (1 to 6)? "
+What summon longevity (1 to 6)?
 
 %%%%
 # note: summon type
@@ -17890,10 +17890,10 @@ Monster is already summoned.
 [f] wrath [h] aid   [m] misc    [s] spell
 
 %%%%
-"Which summon type? "
+Which summon type?
 
 %%%%
-"Cast which spell by name? "
+Cast which spell by name?
 
 %%%%
 No such spell.
@@ -17941,7 +17941,7 @@ Attempting to calculate a path from (@num1@, @num2@) to (@num3@, @num4@)...
 Can't make already dead target miscast.
 
 %%%%
-"Miscast which school or spell, by name? "
+Miscast which school or spell, by name?
 
 %%%%
 No matching spell or spell school.
@@ -17971,7 +17971,7 @@ Can only enter spell level for schools, not spells.
 Spell level can be at most 9.
 
 %%%%
-"Number of repetitions? "
+Number of repetitions?
 
 %%%%
 Key pressed, interrupting miscast testing.
@@ -17982,19 +17982,19 @@ Key pressed, interrupting miscast testing.
 # wiz-you.cc
 ##################
 %%%%
-"What species would you like to be now? "
+What species would you like to be now?
 
 %%%%
 That species isn't available.
 
 %%%%
-"Cast which spell? "
+Cast which spell?
 
 %%%%
 Cannot find that spell.
 
 %%%%
-"Memorise which spell? "
+Memorise which spell?
 
 %%%%
 Spell is monster-only - unpredictable behaviour may result.
@@ -18042,7 +18042,7 @@ Current progress to next sacrifice: @num1@  Progress needed: @num2@
 "Enter new piety value (current = @num@, Enter for 0): "
 
 %%%%
-"Which skill (by name)? "
+Which skill (by name)?
 
 %%%%
 That skill doesn't seem to exist.
@@ -18051,7 +18051,7 @@ That skill doesn't seem to exist.
 Exercising...
 
 %%%%
-"To what level? "
+To what level?
 
 %%%%
 Increased @arg@ to skill level %.1f.
@@ -18063,13 +18063,13 @@ Decreased @arg@ to skill level %.1f.
 Reset @arg@ to skill level %.1f.
 
 %%%%
-"Set all skills to what level? "
+Set all skills to what level?
 
 %%%%
 Ignoring mut resistance to apply mutation.
 
 %%%%
-"Which mutation (name, 'good', 'bad', 'any', 'xom', 'slime', 'qazlal')? "
+Which mutation (name, 'good', 'bad', 'any', 'xom', 'slime', 'qazlal')?
 
 %%%%
 No matching mutation names.
@@ -18081,7 +18081,7 @@ No matching mutation names.
 Found #@num@: @arg1@ ("@arg2@")
 
 %%%%
-"How many levels to increase or decrease? "
+How many levels to increase or decrease?
 
 %%%%
 "Enter values for X, Y, Z (space separated) or return: "
@@ -18093,10 +18093,10 @@ Found #@num@: @arg1@ ("@arg2@")
 Setting attributes (Str, Int, Dex) to: @num1@, @num2@, @num3@
 
 %%%%
-"Edit which duration (letter or name)? "
+Edit which duration (letter or name)?
 
 %%%%
-"Edit which duration (name)? "
+Edit which duration (name)?
 
 %%%%
 No existing durations to choose from.
@@ -18153,7 +18153,7 @@ You suffer the terrible wrath of No God.
 You are not under penance.
 
 %%%%
-"Which form (ESC to exit)? "
+Which form (ESC to exit)?
 
 %%%%
 Transformation failed.

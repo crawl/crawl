@@ -3349,11 +3349,11 @@ e(v)ozieren
 "Select a spell, or "
 "Einen Zauber auswählen oder "
 %%%%
-"Replace inscription with what? "
-"Die Inschrift durch was ersetzen? "
+Replace inscription with what?
+Die Inschrift durch was ersetzen?
 %%%%
-"Inscribe with what? "
-"Mit was beschriften? "
+Inscribe with what?
+Mit was beschriften?
 %%%%
 # spell properties
 Level: @num@
@@ -3983,8 +3983,8 @@ Es gibt keine Ebene über dir.
 There is no level below you in this branch.
 In diesem Zweig gibt es keine Ebene unter dir.
 %%%%
-"What level of @arg@? "
-"Welche Ebene {gen}@arg@? "
+What level of @arg@?
+Welche Ebene {gen}@arg@?
 %%%%
 That's not a valid depth.
 Das ist keine gültige Tiefe.
@@ -5626,8 +5626,8 @@ Du tauschst mit @arg@!
 @arg1@ swaps with @arg2@!
 @arg1@ tauscht mit @arg2@!
 %%%%
-"Remember @arg@ name as what? "
-"dich an @arg@ Namen als was erinnern? "
+Remember @arg@ name as what?
+dich an @arg@ Namen als was erinnern?
 %%%%
 Yes, @arg@ is definitely a better name.
 Ja, @arg@ ist definitiv ein besserer Name.
@@ -6964,8 +6964,8 @@ Are you sure you want to pick up this pile of gold now?
 Bist du sicher, dass du diesen Haufen Gold jetzt aufheben willst?
 %%%%
 # note: @arg@ here will be a counted plural (e.g. "27 boomerangs")
-"Pick up how many of the @arg@ (; or enter for all)? "
-"Der Stapel hat {acc}@arg@. Wie viele aufheben (; oder Enter für alle)? "
+Pick up how many of the @arg@ (; or enter for all)?
+Der Stapel hat {acc}@arg@. Wie viele aufheben (; oder Enter für alle)?
 %%%%
 There are no items here.
 Hier sind keine Gegenstände.
@@ -7072,14 +7072,14 @@ Automatisches Aufheben für @num@ Gegenstände deaktiviert.
 Your pack is full.
 Dein Gepäck ist voll.
 %%%%
-"Which rune (ESC to exit)? "
-"Welche Rune (ESC zum Abbrechen)? "
+Which rune (ESC to exit)?
+Welche Rune (ESC zum Abbrechen)?
 %%%%
-"What ego type? "
-"Welches Ego? "
+What ego type?
+Welches Ego?
 %%%%
-"A manual for which skill? "
-"Eine Anleitung für welche Fertigkeit? "
+A manual for which skill?
+Eine Anleitung für welche Fertigkeit?
 %%%%
 Sorry, no books on that skill today.
 Sorry, heute keine Bücher über diese Fertigkeit.
@@ -7217,8 +7217,8 @@ Nichts in der Kategorie '@arg1@' wird durch '@arg2@' repräsentiert.
 No matching @arg@.
 Kein Treffer in der Kategorie '@arg@'.
 %%%%
-"Describe a @arg@? "
-"@arg@ beschreiben? "
+Describe a @arg@?
+@arg@ beschreiben?
 %%%%
 Description must contain at least one non-space.
 Die Beschreibung muss mindestens ein Nicht-Leerzeichen enthalten.
@@ -11261,11 +11261,11 @@ Attribute erhöhen
 Your base attributes are Str @num1@, Int @num2@, Dex @num3@.
 Deine Basisattribute sind Stä @num1@, Int @num2@, Ges @num3@.
 %%%%
-"Increase (S)trength, (I)ntelligence, or (D)exterity? "
-"(S)tärke, (I)ntelligenz oder (G)eschicklichkeit erhöhen? "
+Increase (S)trength, (I)ntelligence, or (D)exterity?
+(S)tärke, (I)ntelligenz oder (G)eschicklichkeit erhöhen?
 %%%%
-"Increase (s)trength, (i)ntelligence, or (d)exterity? "
-"(s)tärke, (i)ntelligenz oder (g)eschicklichkeit erhöhen? "
+Increase (s)trength, (i)ntelligence, or (d)exterity?
+(s)tärke, (i)ntelligenz oder (g)eschicklichkeit erhöhen?
 %%%%
 Uppercase letters only, please.
 Nur Großbuchstaben, bitte.
@@ -12351,8 +12351,8 @@ Köcher wird geleert.
 Select a spell to quiver
 Einen Zauberspruch für den Köcher wählen
 %%%%
-"Quiver which action? "
-"Welche Aktion in den Köcher stecken? "
+Quiver which action?
+Welche Aktion in den Köcher stecken?
 %%%%
 <w>-</w>: none
 <w>-</w>: keine
@@ -16208,8 +16208,8 @@ Enter für "@arg@"
 ? for help
 ? für Hilfe
 %%%%
-"Search for what@arg@? "
-"Was suchen@arg@? "
+Search for what@arg@?
+Was suchen@arg@?
 %%%%
 Your search expression is invalid.
 Dein Suchausdruck ist ungültig.
@@ -17376,11 +17376,11 @@ Erschaffe Treppen nach unten.
 Creating upstairs.
 Erschaffe Treppen nach oben.
 %%%%
-"Create what kind of feature mimic? "
-"Welche Art Merkmalmimik erstellen? "
+Create what kind of feature mimic?
+Welche Art Merkmalmimik erstellen?
 %%%%
-"Create which feature? "
-"Welches Merkmal erstellen? "
+Create which feature?
+Welches Merkmal erstellen?
 %%%%
 Set fprops "@arg@" at (@num1@,@num2@)
 Fprops "@arg@" auf (@num1@,@num2@) gesetzt
@@ -17388,8 +17388,8 @@ Fprops "@arg@" auf (@num1@,@num2@) gesetzt
 "No exact match for feature '@arg@', possible matches are: "
 "Kein Merkmal passt exakt zu '@arg@'. Mögliche Treffer sind: "
 %%%%
-"This isn't a valid feature mimic. Create it anyway? "
-"Das ist keine gültige Merkmalmimik. Trotzdem erstellen? "
+This isn't a valid feature mimic. Create it anyway?
+Das ist keine gültige Merkmalmimik. Trotzdem erstellen?
 %%%%
 Force level to be mappable?
 Erzwingen, dass die Ebene kartierbar ist?
@@ -17400,8 +17400,8 @@ Kartiere Ebene.
 You need to be on a floor square to make a trap.
 Du musst auf einem Bodenfeld sein, um eine Falle zu erstellen.
 %%%%
-"What kind of trap? "
-"Was für eine Falle? "
+What kind of trap?
+Was für eine Falle?
 %%%%
 I know no traps named "@arg@".
 Ich kenne keine Fallen mit dem Namen "@arg@".
@@ -17421,8 +17421,8 @@ HINWEIS: Schachtfallen sind auf dieser Ebene nicht gültig.
 Insufficient floor-space for new Wal-Mart.
 Unzureichende Bodenfläche für neuen Wal-Mart.
 %%%%
-"What kind of shop? "
-"Was für einen Laden? "
+What kind of shop?
+Was für einen Laden?
 %%%%
 Bad shop type: "@arg@"
 Falsche Laden-Art: "@arg@"
@@ -17602,14 +17602,14 @@ X - Leichen   $ - Gold        0 - die Kugel
 ESC - exit
 ESC - abbrechen
 %%%%
-"What class of item? "
-"Welche Art Gegenstand? "
+What class of item?
+Welche Art Gegenstand?
 %%%%
 Could not allocate item.
 Artikel konnte nicht zugeordnet werden.
 %%%%
-"How much gold? "
-"Wie viel Gold? "
+How much gold?
+Wie viel Gold?
 %%%%
 No such monster.
 Kein solches Monster.
@@ -17620,14 +17620,14 @@ Das Monster hinterlässt keine Leichen.
 You can't make a draconian corpse by its background.
 Du kannst keine drakonische Leiche auf Basis ihres Hintergrunds erzeugen.
 %%%%
-"How many heads? "
-"Wie viele Köfpe? "
+How many heads?
+Wie viele Köfpe?
 %%%%
 Failed to create corpse.
 Fehler beim Erstellen der Leiche.
 %%%%
-"What type of item? "
-"Was für einen Gegestand? "
+What type of item?
+Was für einen Gegestand?
 %%%%
 "What type of item? (\"all\" for all) "
 "Welche Art Gegestand? (\"all\" for alle) "
@@ -17638,8 +17638,8 @@ Kein solcher Gegenstand.
 You can't tweak the randart properties of an equipped item.
 Du kannst die Randart-Eigenschaften eines angelegten Gegenstands nicht optimieren.
 %%%%
-"Change which field? "
-"Welches Feld ändern? "
+Change which field?
+Welches Feld ändern?
 %%%%
 Toggling @arg@ to off.
 @arg@ wird ausgeschaltet.
@@ -17650,8 +17650,8 @@ Toggling @arg@ to on.
 @arg@ was @num@.
 @arg@ war @num@.
 %%%%
-"New value? "
-"Neuer Wert? "
+New value?
+Neuer Wert?
 %%%%
 Value for @arg@ must be non-negative
 Wert für {acc}@arg@ darf nicht negativ sein
@@ -17659,8 +17659,8 @@ Wert für {acc}@arg@ darf nicht negativ sein
 @arg1@ was @arg2@.
 @arg1@ war @arg2@.
 %%%%
-"New ego? "
-"Neues Ego? "
+New ego?
+Neues Ego?
 %%%%
 No such ego as: @arg@
 Kein Ego namens: @arg@
@@ -17668,8 +17668,8 @@ Kein Ego namens: @arg@
 Ego '@arg1@' is invalid for @arg2@.
 Ego '@arg1@' ist für {acc}@arg2@ ungültig.
 %%%%
-"Tweak which item? "
-"Welchen Gegenstand anpassen? "
+Tweak which item?
+Welchen Gegenstand anpassen?
 %%%%
 a - plus  b - plus2  c - @arg@  d - quantity  e - flags  ESC - exit
 a - Plus  b - Plus2  c - @arg@  d - Menge  e - Flags  ESC - abbrechen
@@ -17677,8 +17677,8 @@ a - Plus  b - Plus2  c - @arg@  d - Menge  e - Flags  ESC - abbrechen
 art props
 Artefakt-Eigenschaften
 %%%%
-"Which field? "
-"Welches Feld? "
+Which field?
+Welches Feld?
 %%%%
 "Old value: "
 "Alter Wert: "
@@ -17686,8 +17686,8 @@ Artefakt-Eigenschaften
 You can't set this flag on a non-artefact.
 Du kannst dieses Flag bei einem Nicht-Artefakt nicht einstellen.
 %%%%
-"Make book fixed [t]heme or fixed [l]evel? "
-"Buch mit festem [t]Thema oder festem [l]Level erzeugen? "
+Make book fixed [t]heme or fixed [l]evel?
+Buch mit festem [t]Thema oder festem [l]Level erzeugen?
 %%%%
 Value of which item?
 Wert welches Gegenstands?
@@ -17743,8 +17743,8 @@ Gegenstände auf dem Boden (Stapel zeigen nur den obersten Gegenstand):
 %3d at (%2d,%2d): @arg1@@arg2@
 %3d bei (%2d,%2d): @arg1@@arg2@
 %%%%
-"Which card? "
-"Welche Karte? "
+Which card?
+Welche Karte?
 %%%%
 Unknown card.
 Unbekannte Karte.
@@ -17769,8 +17769,8 @@ Spielergeist konnte nicht gefunden werden. Programm wird wahrscheinlich abstürz
 No such species, making it Human.
 Keine solche Spezies, verwende daher Mensch.
 %%%%
-"Give player ghost which background? "
-"Welchen Hintergrund für den Spielergeist? "
+Give player ghost which background?
+Welchen Hintergrund für den Spielergeist?
 %%%%
 No such background, making it a Fighter.
 Kein solcher Hintergrund, verwende daher Kämpfer.
@@ -17784,8 +17784,8 @@ Kein solcher Hintergrund, verwende daher Kämpfer.
 @num1@ monsters, @num2@ total exp value (@num3@ non-uniq, @num4@ adjusted)
 @num1@ Monster, @num2@ XP-Wert in Summe (@num3@ nicht einzigartig, @num4@ angepasst)
 %%%%
-"(c)hange spawn rate or (s)pawn monsters? "
-"(c)Spawn-Frequenz ändern oder Monster (s)pawnen? "
+(c)hange spawn rate or (s)pawn monsters?
+(c)Spawn-Frequenz ändern oder Monster (s)pawnen?
 %%%%
 "Set monster spawn rate to what? (now @num@, lower value = higher rate) "
 "Monster-Spawn-Frequenz auf was setzen? (jetzt @num@, niedrigerer Wert = höhere Frequenz)
@@ -17796,7 +17796,7 @@ Setze Monster-Spawn-Frequenz auf @num@.
 Level already filled with monsters, get rid of some of them first.
 Ebene ist schon mit Monstern gefüllt. Zuerst müssen einige von denen weg.
 %%%%
-"Spawn how many random monsters (max @num@)? "
+Spawn how many random monsters (max @num@)?
 "Wie viele zufällige Monster spawnen (max @num@)?
 %%%%
 Spawning 1 monster.
@@ -17814,8 +17814,8 @@ Welches Monster?
 Detected @num@ monster@arg@.
 @num@ Monster@arg@ erkannt.
 %%%%
-"What monsters to dismiss (ENTER for all, \"harmful\", \"mobile\", \"los\" or a regex, \"keepitem\" to leave items)? "
-"Welche Monster entlassen (ENTER für alle, \"harmful\", \"mobile\", \"los\" oder ein regex, \"keepitem\" um Gegenstände zurückzulassen)? "
+What monsters to dismiss (ENTER for all, \"harmful\", \"mobile\", \"los\" or a regex, \"keepitem\" to leave items)?
+Welche Monster entlassen (ENTER für alle, \"harmful\", \"mobile\", \"los\" oder ein regex, \"keepitem\" um Gegenstände zurückzulassen)?
 %%%%
 Dismissed 1 monster.
 1 Monster entlassen.
@@ -17823,11 +17823,11 @@ Dismissed 1 monster.
 Dismissed @num@ monsters.
 @num@ Monster entlassen.
 %%%%
-"Make the monster (S)hout or (T)alk? "
-"Zwinge das Monster zum (S)chreien oder Reden(T)? "
+Make the monster (S)hout or (T)alk?
+Zwinge das Monster zum (S)chreien oder Reden(T)?
 %%%%
-"How many times? "
-"Wie oft? "
+How many times?
+Wie oft?
 %%%%
 The monster is invisible and likely won't speak.
 Das Monster ist unsichtbar und wird wahrscheinlich nicht sprechen.
@@ -17847,7 +17847,7 @@ Du und das Monster befinden sich in Stille. Du wirst also wahrscheinlich nichts 
 @arg@ seems unable to mature further.
 @arg@ scheint unfähig weiter zu wachsen.
 %%%%
-"Apply blessing of (B)eogh, The (S)hining One, or (R)andomly? "
+Apply blessing of (B)eogh, The (S)hining One, or (R)andomly?
 "Segen von (B)eogh, dem (S)trahlenden oder zufällig(R) auswählen?
 %%%%
 @arg@ won't bless this monster for you!
@@ -17880,8 +17880,8 @@ Du kannst dich nicht in die Arena bewegen.
 Monster is already summoned.
 Monster ist bereits beschworen.
 %%%%
-"What summon longevity (1 to 6)? "
-"Welche Beschwörungsdauer (1 to 6)? "
+What summon longevity (1 to 6)?
+Welche Beschwörungsdauer (1 bis 6)?
 %%%%
 # note: summon type
 [a] clone [b] animated [c] chaos [d] miscast [e] zot
@@ -17890,11 +17890,11 @@ Monster ist bereits beschworen.
 [f] wrath [h] aid   [m] misc    [s] spell
 [f] Zorn [h] Hilfe [m] Verschiedenes [s] Zauberspruch
 %%%%
-"Which summon type? "
-"Welcher Beschwörungstyp? "
+Which summon type?
+Welcher Beschwörungstyp?
 %%%%
-"Cast which spell by name? "
-"Welchen Zauber wirken (Name)? "
+Cast which spell by name?
+Welchen Zauber wirken (Name)?
 %%%%
 No such spell.
 Kein solcher Zauber.
@@ -17941,8 +17941,8 @@ Versuche einen Pfad von (@num1@,@num2@) nach (@num3@,@num4@) zu berechnen...
 Can't make already dead target miscast.
 Kann bereits totes Ziel nicht zum Fehlzaubern zwingen.
 %%%%
-"Miscast which school or spell, by name? "
-"Fehlzauber von welcher Schule oder welchem Spruch (Name)? "
+Miscast which school or spell, by name?
+Fehlzauber von welcher Schule oder welchem Spruch (Name)?
 %%%%
 No matching spell or spell school.
 Kein passender Zauber oder Zauberschule.
@@ -17971,8 +17971,8 @@ Kann Zauberstufe nur für Schulen eingeben, nicht für Zauber.
 Spell level can be at most 9.
 Die Zauberstufe kann höchstens 9 sein.
 %%%%
-"Number of repetitions? "
-"Wie viele Wiederholungen? "
+Number of repetitions?
+Wie viele Wiederholungen?
 %%%%
 Key pressed, interrupting miscast testing.
 Taste gedrückt, breche Fehlzauber-Test ab.
@@ -17982,20 +17982,20 @@ Taste gedrückt, breche Fehlzauber-Test ab.
 # wiz-you.cc
 ##################
 %%%%
-"What species would you like to be now? "
-"Welche Spezies möchtest du jetzt sein? "
+What species would you like to be now?
+Welche Spezies möchtest du jetzt sein?
 %%%%
 That species isn't available.
 Diese Spezies ist nicht verfügbar.
 %%%%
-"Cast which spell? "
-"Welchen Zauber wirken? "
+Cast which spell?
+Welchen Zauber wirken?
 %%%%
 Cannot find that spell.
 Kann diesen Zauber nicht finden.
 %%%%
-"Memorise which spell? "
-"Welchen Zauber auswendig lernen? "
+Memorise which spell?
+Welchen Zauber auswendig lernen?
 %%%%
 Spell is monster-only - unpredictable behaviour may result.
 Zauber ist nur für Monster - unvorhersehbares Verhalten kann die Folge sein.
@@ -18042,8 +18042,8 @@ Aktueller Fortschritt bis zum nächsten Opfer: @num1@   Erforderlicher Fortschri
 "Enter new piety value (current = @num@, Enter for 0): "
 "Neuen Pietätswert eingeben (aktuell = @num@, Enter für 0): "
 %%%%
-"Which skill (by name)? "
-"Welche Fertigkeit (Name)? "
+Which skill (by name)?
+Welche Fertigkeit (Name)?
 %%%%
 That skill doesn't seem to exist.
 Diese Fertigkeit scheint nicht zu existieren.
@@ -18051,8 +18051,8 @@ Diese Fertigkeit scheint nicht zu existieren.
 Exercising...
 Trainiere...
 %%%%
-"To what level? "
-"Auf welche Stufe? "
+To what level?
+Auf welche Stufe?
 %%%%
 Increased @arg@ to skill level %.1f.
 Fertigkeit @arg@ auf Stufe %.1f erhöht.
@@ -18063,14 +18063,14 @@ Fertigkeit @arg@ auf Stufe %.1f gesenkt.
 Reset @arg@ to skill level %.1f.
 Fertigkeit @arg@ wieder auf Stufe %.1f gesetzt.
 %%%%
-"Set all skills to what level? "
-"Alle Fertigkeiten auf welche Stufe setzen? "
+Set all skills to what level?
+Alle Fertigkeiten auf welche Stufe setzen?
 %%%%
 Ignoring mut resistance to apply mutation.
 Ignoriere Mutationsresistenz, um Mutation anzuwenden.
 %%%%
-"Which mutation (name, 'good', 'bad', 'any', 'xom', 'slime', 'qazlal')? "
-"Welche Mutation (Name, 'good', 'bad', 'any', 'xom', 'slime', 'qazlal')? "
+Which mutation (name, 'good', 'bad', 'any', 'xom', 'slime', 'qazlal')?
+Welche Mutation (Name, 'good', 'bad', 'any', 'xom', 'slime', 'qazlal')?
 %%%%
 No matching mutation names.
 Keine passenden Mutationsnamen.
@@ -18081,8 +18081,8 @@ Keine passenden Mutationsnamen.
 Found #@num@: @arg1@ ("@arg2@")
 Fand #@num@: @arg1@ ('@arg2@')
 %%%%
-"How many levels to increase or decrease? "
-"Wie viele Stufe zu erhöhen oder senken? "
+How many levels to increase or decrease?
+Wie viele Stufe zu erhöhen oder senken?
 %%%%
 "Enter values for X, Y, Z (space separated) or return: "
 "Werte für X, Y, Z eingeben (durch Leerzeichen getrennt) oder Entertaste:
@@ -18093,11 +18093,11 @@ Fand #@num@: @arg1@ ('@arg2@')
 Setting attributes (Str, Int, Dex) to: @num1@, @num2@, @num3@
 Attribute (Stä, Int, Ges) eingestellt auf: @num1@, @num2@, @num3@
 %%%%
-"Edit which duration (letter or name)? "
-"Welche Dauer bearbeiten (Buchstabe oder Name)? "
+Edit which duration (letter or name)?
+Welche Dauer bearbeiten (Buchstabe oder Name)?
 %%%%
-"Edit which duration (name)? "
-"Welche Dauer bearbeiten (Name)? "
+Edit which duration (name)?
+Welche Dauer bearbeiten (Name)?
 %%%%
 No existing durations to choose from.
 Keine vorhandene Dauer zur Auswahl.
@@ -18153,8 +18153,8 @@ Du erleidest den schrecklichen Zorn von 'Keinem Gott'.
 You are not under penance.
 Du bist nicht unter Buße.
 %%%%
-"Which form (ESC to exit)? "
-"Welche Gestalt (ESC zum Beenden)?
+Which form (ESC to exit)?
+Welche Gestalt (ESC zum Beenden)?
 %%%%
 Transformation failed.
 Verwandlung fehlgeschlagen.
