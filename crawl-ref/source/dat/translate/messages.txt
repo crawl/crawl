@@ -557,25 +557,25 @@ You resist with almost no effort.
 @arg@ resists with almost no effort.
 
 %%%%
-You collide with @arg@!
+You collide with @arg@punct@
 
 %%%%
-@arg@ collides with you!
+@arg@ collides with you@punct@
 
 %%%%
-@arg1@ collides with @arg2@!
+@arg1@ collides with @arg2@@punct@
 
 %%%%
-You slam into @arg@!
+You slam into @arg@@punct@
 
 %%%%
-@arg1@ slams into @arg2@!
+@arg1@ slams into @arg2@@punct@
 
 %%%%
-You violently stop moving!
+You violently stop moving@punct@
 
 %%%%
-@arg@ violently stops moving!
+@arg@ violently stops moving@punct@
 
 %%%%
 
@@ -850,149 +850,149 @@ The light returns to your surroundings.
 Mutagenic energy flows through the plutonium sword!
 
 %%%%
-You cleave @arg@ in twain
+You cleave @arg@ in twain@punct@
 
 %%%%
-You pulverise @arg@ into a thin bloody mist
+You pulverise @arg@ into a thin bloody mist@punct@
 
 %%%%
-You hew @arg@ savagely
+You hew @arg@ savagely@punct@
 
 %%%%
-You fatally mangle @arg@
+You fatally mangle @arg@@punct@
 
 %%%%
-You dissect @arg@ like a pig carcass
+You dissect @arg@ like a pig carcass@punct@
 
 %%%%
-You chop @arg@ into pieces
+You chop @arg@ into pieces@punct@
 
 %%%%
-You butcher @arg@ messily
+You butcher @arg@ messily@punct@
 
 %%%%
-You slaughter @arg@ joyfully
+You slaughter @arg@ joyfully@punct@
 
 %%%%
-@arg@ cleaves you in twain
+@arg@ cleaves you in twain@punct@
 
 %%%%
-@arg@ pulverises you into a thin bloody mist
+@arg@ pulverises you into a thin bloody mist@punct@
 
 %%%%
-@arg@ hews you savagely
+@arg@ hews you savagely@punct@
 
 %%%%
-@arg@ fatally mangles you
+@arg@ fatally mangles you@punct@
 
 %%%%
-@arg@ dissects you like a pig carcass
+@arg@ dissects you like a pig carcass@punct@
 
 %%%%
-@arg@ chops you into pieces
+@arg@ chops you into pieces@punct@
 
 %%%%
-@arg@ butchers you messily
+@arg@ butchers you messily@punct@
 
 %%%%
-@arg@ slaughters you joyfully
+@arg@ slaughters you joyfully@punct@
 
 %%%%
-@arg1@ cleaves @arg2@ in twain
+@arg1@ cleaves @arg2@ in twain@punct@
 
 %%%%
-@arg1@ pulverises @arg2@ into a thin bloody mist
+@arg1@ pulverises @arg2@ into a thin bloody mist@punct@
 
 %%%%
-@arg1@ hews @arg2@ savagely
+@arg1@ hews @arg2@ savagely@punct@
 
 %%%%
-@arg1@ fatally mangles @arg2@
+@arg1@ fatally mangles @arg2@@punct@
 
 %%%%
-@arg1@ dissects @arg2@ like a pig carcass
+@arg1@ dissects @arg2@ like a pig carcass@punct@
 
 %%%%
-@arg1@ chops @arg2@ into pieces
+@arg1@ chops @arg2@ into pieces@punct@
 
 %%%%
-@arg1@ butchers @arg2@ messily
+@arg1@ butchers @arg2@ messily@punct@
 
 %%%%
-@arg1@ slaughters @arg2@ joyfully
+@arg1@ slaughters @arg2@ joyfully@punct@
 
 %%%%
 # monsters can attack themselves when confused (but the player can't)
-@arg@ cleaves itself in twain
+@arg@ cleaves itself in twain@punct@
 
 %%%%
-@arg@ pulverises itself into a thin bloody mist
+@arg@ pulverises itself into a thin bloody mist@punct@
 
 %%%%
-@arg@ hews itself savagely
+@arg@ hews itself savagely@punct@
 
 %%%%
-@arg@ fatally mangles itself
+@arg@ fatally mangles itself@punct@
 
 %%%%
-@arg@ dissects itself like a pig carcass
+@arg@ dissects itself like a pig carcass@punct@
 
 %%%%
-@arg@ chops itself into pieces
+@arg@ chops itself into pieces@punct@
 
 %%%%
-@arg@ butchers itself messily
+@arg@ butchers itself messily@punct@
 
 %%%%
-@arg@ slaughters itself joyfully
+@arg@ slaughters itself joyfully@punct@
 
 %%%%
-You burn @arg@
+You burn @arg@@punct@
 
 %%%%
-@arg@ burns you
+@arg@ burns you@punct@
 
 %%%%
-@arg1@ burns @arg2@
+@arg1@ burns @arg2@@punct@
 
 %%%%
-@arg@ burns itself
+@arg@ burns itself@punct@
 
 %%%%
-You freeze @arg@
+You freeze @arg@@punct@
 
 %%%%
-@arg@ freezes you
+@arg@ freezes you@punct@
 
 %%%%
-@arg1@ freezes @arg2@
+@arg1@ freezes @arg2@@punct@
 
 %%%%
-@arg@ freezes itself
+@arg@ freezes itself@punct@
 
 %%%%
-You electrocute @arg@
+You electrocute @arg@@punct@
 
 %%%%
-@arg@ electrocutes you
+@arg@ electrocutes you@punct@
 
 %%%%
-@arg1@ electrocutes @arg2@
+@arg1@ electrocutes @arg2@@punct@
 
 %%%%
-@arg@ electrocutes itself
+@arg@ electrocutes itself@punct@
 
 %%%%
-You crush @arg@
+You crush @arg@@punct@
 
 %%%%
-@arg@ crushes you
+@arg@ crushes you@punct@
 
 %%%%
-@arg1@ crushes @arg2@
+@arg1@ crushes @arg2@@punct@
 
 %%%%
-@arg@ crushes itself
+@arg@ crushes itself@punct@
 
 %%%%
 The arc blade crackles to life.
@@ -7764,13 +7764,13 @@ You grab @arg@
 your kick
 
 %%%%
-You kick @arg@
+You kick @arg@@punct@
 
 %%%%
-You claw @arg@
+You claw @arg@@punct@
 
 %%%%
-You pierce @arg@
+You pierce @arg@@punct@
 
 %%%%
 your tentacle spike
@@ -7779,55 +7779,55 @@ your tentacle spike
 your headbutt
 
 %%%%
-You headbutt @arg@
+You headbutt @arg@@punct@
 
 %%%%
 your peck
 
 %%%%
-You peck @arg@
+You peck @arg@@punct@
 
 %%%%
 your tail-slap
 
 %%%%
-You tail-slap @arg@
+You tail-slap @arg@@punct@
 
 %%%%
 your punch
 
 %%%%
-You punch @arg@
+You punch @arg@@punct@
 
 %%%%
 your slash
 
 %%%%
-You slash @arg@
+You slash @arg@@punct@
 
 %%%%
 your tentacle-slap
 
 %%%%
-You tentacle-slap @arg@
+You tentacle-slap @arg@@punct@
 
 %%%%
 your bite
 
 %%%%
-You bite @arg@
+You bite @arg@@punct@
 
 %%%%
 your bludgeon
 
 %%%%
-You bludgeon @arg@
+You bludgeon @arg@@punct@
 
 %%%%
 your squeeze
 
 %%%%
-You squeeze @arg@
+You squeeze @arg@@punct@
 
 %%%%
 You drain @arg@ magic.
@@ -7866,157 +7866,157 @@ You barely miss @arg@.
 You hit @arg@@punct@
 
 %%%%
-You clumsily bash @arg@
+You clumsily bash @arg@@punct@
 
 %%%%
-You puncture @arg@
+You puncture @arg@@punct@
 
 %%%%
-You impale @arg@
+You impale @arg@@punct@
 
 %%%%
-You spit @arg@ like the proverbial pig
+You spit @arg@ like the proverbial pig@punct@
 
 %%%%
-You attack @arg@'s weak point
+You attack @arg@'s weak point@punct@
 
 %%%%
-You spit @arg@ like a pig
+You spit @arg@ like a pig@punct@
 
 %%%%
-You skewer @arg@ like a kebab
+You skewer @arg@ like a kebab@punct@
 
 %%%%
-You stick @arg@ like a pincushion
+You stick @arg@ like a pincushion@punct@
 
 %%%%
-You perforate @arg@ like a sieve
+You perforate @arg@ like a sieve@punct@
 
 %%%%
-You slice @arg@
+You slice @arg@@punct@
 
 %%%%
-You dice @arg@ like an onion
+You dice @arg@ like an onion@punct@
 
 %%%%
-You fracture @arg@ into splinters
+You fracture @arg@ into splinters@punct@
 
 %%%%
-You carve @arg@ like the proverbial ham
+You carve @arg@ like the proverbial ham@punct@
 
 %%%%
-You carve @arg@ like a turkey
+You carve @arg@ like a turkey@punct@
 
 %%%%
-You shave @arg@
+You shave @arg@@punct@
 
 %%%%
-You open @arg@ like a pillowcase
+You open @arg@ like a pillowcase@punct@
 
 %%%%
-You slice @arg@ like a ripe choko
+You slice @arg@ like a ripe choko@punct@
 
 %%%%
-You cut @arg@ into ribbons
+You cut @arg@ into ribbons@punct@
 
 %%%%
-You carve @arg@ like a ham
+You carve @arg@ like a ham@punct@
 
 %%%%
-You thump @arg@
+You thump @arg@@punct@
 
 %%%%
-You sock @arg@
+You sock @arg@@punct@
 
 %%%%
-You shatter @arg@ into splinters
+You shatter @arg@ into splinters@punct@
 
 %%%%
-You splatter @arg@ into a gooey mess
+You splatter @arg@ into a gooey mess@punct@
 
 %%%%
-You crush @arg@ like a grape
+You crush @arg@ like a grape@punct@
 
 %%%%
-You beat @arg@ like a drum
+You beat @arg@ like a drum@punct@
 
 %%%%
-You hammer @arg@ like a gong
+You hammer @arg@ like a gong@punct@
 
 %%%%
-You pound @arg@ like an anvil
+You pound @arg@ like an anvil@punct@
 
 %%%%
-You flatten @arg@ like a pancake
+You flatten @arg@ like a pancake@punct@
 
 %%%%
-You whack @arg@
+You whack @arg@@punct@
 
 %%%%
-You thrash @arg@
+You thrash @arg@@punct@
 
 %%%%
-You punish @arg@, causing immense pain
+You punish @arg@, causing immense pain@punct@
 
 %%%%
-You devastate @arg@
+You devastate @arg@@punct@
 
 %%%%
-You maul @arg@
+You maul @arg@@punct@
 
 %%%%
-You shred @arg@
+You shred @arg@@punct@
 
 %%%%
-You smack @arg@
+You smack @arg@@punct@
 
 %%%%
-You pummel @arg@
+You pummel @arg@@punct@
 
 %%%%
-You touch @arg@
+You touch @arg@@punct@
 
 %%%%
-You engulf @arg@
+You engulf @arg@@punct@
 
 %%%%
-You release spores at @arg@
+You release spores at @arg@@punct@
 
 %%%%
-You buffet @arg@
+You buffet @arg@@punct@
 
 %%%%
-You batter @arg@
+You batter @arg@@punct@
 
 %%%%
-You blast @arg@
+You blast @arg@@punct@
 
 %%%%
-You scratch @arg@
+You scratch @arg@@punct@
 
 %%%%
-You mangle @arg@
+You mangle @arg@@punct@
 
 %%%%
-You eviscerate @arg@
+You eviscerate @arg@@punct@
 
 %%%%
-You squash @arg@ like the proverbial ant
+You squash @arg@ like the proverbial ant@punct@
 
 %%%%
-You pound @arg@ into fine dust
+You pound @arg@ into fine dust@punct@
 
 %%%%
-You pummel @arg@ like a punching bag
+You pummel @arg@ like a punching bag@punct@
 
 %%%%
-You pulverise @arg@
+You pulverise @arg@@punct@
 
 %%%%
-You squash @arg@ like an ant
+You squash @arg@ like an ant@punct@
 
 %%%%
-You beat @arg@ into a bloody pulp
+You beat @arg@ into a bloody pulp@punct@
 
 %%%%
 The flame cauterises the wound!
