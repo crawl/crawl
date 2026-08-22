@@ -67,6 +67,7 @@ command_type describe_item_popup(const item_def &item,
                                  bool do_actions = false);
 bool describe_item(item_def &item, function<void (string&)> fixup_desc = nullptr,
     bool do_actions = true);
+brand_type weapon_ego_from_name(string name, vector<brand_type> *partial_matches = nullptr);
 string describe_item_rarity(const item_def &item);
 void get_item_desc(const item_def &item, describe_info &inf);
 void inscribe_item(item_def &item);
@@ -92,6 +93,7 @@ void describe_deck(deck_type deck);
 void describe_mutation(mutation_type mut);
 void describe_bane(bane_type bane);
 string bane_long_description(bane_type bane, bool ignore_player = false);
+void describe_weapon_ego(brand_type wpn);
 
 string short_ghost_description(const monster *mon, bool abbrev = false);
 string get_ghost_description(const monster_info &mi, bool concise = false);
