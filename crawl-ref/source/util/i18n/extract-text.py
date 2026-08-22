@@ -360,7 +360,8 @@ def ignore_c_line(line):
         return True
 
     # diagnotic messages
-    if "MSGCH_DIAGNOSTIC" in line or 'dprf' in line:
+    if "MSGCH_DIAGNOSTIC" in line or "dprf" in line \
+    or re.search(r"\bdie *\(", line):
         return True
 
     return False
