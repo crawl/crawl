@@ -2722,7 +2722,7 @@ int copy_item_to_grid(const item_def &item, const coord_def& p,
 
     if (mark_dropped)
     {
-        new_item.slot   = index_to_letter(item.link);
+        new_item.slot   = item.slot;
         new_item.flags |= ISFLAG_DROPPED;
         new_item.flags &= ~ISFLAG_THROWN;
         origin_set_unknown(new_item);
