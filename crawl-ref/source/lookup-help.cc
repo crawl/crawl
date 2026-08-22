@@ -1491,13 +1491,18 @@ static const vector<LookupType> lookup_types = {
     LookupType('N', "bane", nullptr, _bane_filter,
                nullptr, nullptr, _simple_menu_gen,
                _describe_bane, lookup_type::db_suffix),
-    LookupType('W', "weapon ego", nullptr, _weapon_ego_filter,
+    // XXX: Capitalise "Ego" when it's the second word in the menu
+    // titles that use it, so that it matches when the first word is
+    // capitalised, and so that the default settings in
+    // dat/defaults/menu_colours.txt don't colour the menu titles green
+    // just for containing "ego".
+    LookupType('W', "weapon Ego", nullptr, _weapon_ego_filter,
                nullptr, nullptr, _simple_menu_gen,
                _describe_weapon_ego, lookup_type::db_suffix),
-    LookupType('R', "armour ego", nullptr, _armour_ego_filter,
+    LookupType('R', "armour Ego", nullptr, _armour_ego_filter,
                nullptr, nullptr, _simple_menu_gen,
                _describe_armour_ego, lookup_type::db_suffix),
-    LookupType('E', "missile ego", nullptr, _missile_ego_filter,
+    LookupType('E', "missile Ego", nullptr, _missile_ego_filter,
                nullptr, nullptr, _simple_menu_gen,
                _describe_missile_ego, lookup_type::db_suffix),
 };
