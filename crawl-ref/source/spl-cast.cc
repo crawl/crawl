@@ -3104,48 +3104,48 @@ static dice_def _spell_damage(spell_type spell, int power)
         return dice_def(0,0);
     switch (spell)
     {
-        case SPELL_FULMINANT_PRISM:
-            return prism_damage(prism_hd(power, false), true);
+        case SPELL_ARCJOLT:
+            return arcjolt_damage(power, false);
+        case SPELL_BATTLESPHERE:
+            return battlesphere_damage_from_power(power);
+        case SPELL_BOULDER:
+            return boulder_damage(power, false);
         case SPELL_CONJURE_BALL_LIGHTNING:
             return ball_lightning_damage(ball_lightning_hd(power, false), false);
+        case SPELL_DETONATION_CATALYST:
+            return detonation_catalyst_damage(power, false);
+        case SPELL_DIAMOND_SAWBLADES:
+            return diamond_sawblade_damage(power);
+        case SPELL_FORGE_LIGHTNING_SPIRE:
+            return lightning_spire_damage(power);
+        case SPELL_FORTRESS_BLAST:
+            return fortress_blast_damage(you.armour_class_scaled(1), false);
+        case SPELL_FROZEN_RAMPARTS:
+            return ramparts_damage(power, false);
+        case SPELL_FULMINANT_PRISM:
+            return prism_damage(prism_hd(power, false), true);
+        case SPELL_HELLFIRE_MORTAR:
+            return hellfire_mortar_damage(power);
         case SPELL_IOOD:
             return iood_damage(power, INFINITE_DISTANCE, false);
         case SPELL_IRRADIATE:
             return irradiate_damage(power, false);
-        case SPELL_SHATTER:
-            return shatter_damage(power);
-        case SPELL_SCORCH:
-            return scorch_damage(power, false);
-        case SPELL_BATTLESPHERE:
-            return battlesphere_damage_from_power(power);
-        case SPELL_FROZEN_RAMPARTS:
-            return ramparts_damage(power, false);
-        case SPELL_LRD:
-            return base_fragmentation_damage(power, false);
-        case SPELL_ARCJOLT:
-            return arcjolt_damage(power, false);
-        case SPELL_POLAR_VORTEX:
-            return polar_vortex_dice(power, false);
-        case SPELL_NOXIOUS_BOG:
-            return toxic_bog_damage();
-        case SPELL_BOULDER:
-            return boulder_damage(power, false);
-        case SPELL_THUNDERBOLT:
-            return thunderbolt_damage(power, 1);
-        case SPELL_HELLFIRE_MORTAR:
-            return hellfire_mortar_damage(power);
-        case SPELL_FORGE_LIGHTNING_SPIRE:
-            return lightning_spire_damage(power);
-        case SPELL_DIAMOND_SAWBLADES:
-            return diamond_sawblade_damage(power);
-        case SPELL_FORTRESS_BLAST:
-            return fortress_blast_damage(you.armour_class_scaled(1), false);
-        case SPELL_POISONOUS_VAPOURS:
-            return poisonous_vapours_damage(power, false);
-        case SPELL_DETONATION_CATALYST:
-            return detonation_catalyst_damage(power, false);
         case SPELL_JINXBITE:
             return jinxbite_damage(power,false);
+        case SPELL_LRD:
+            return base_fragmentation_damage(power, false);
+        case SPELL_NOXIOUS_BOG:
+            return toxic_bog_damage();
+        case SPELL_POISONOUS_VAPOURS:
+            return poisonous_vapours_damage(power, false);
+        case SPELL_POLAR_VORTEX:
+            return polar_vortex_dice(power, false);
+        case SPELL_SCORCH:
+            return scorch_damage(power, false);
+        case SPELL_SHATTER:
+            return shatter_damage(power);
+        case SPELL_THUNDERBOLT:
+            return thunderbolt_damage(power, 1);
         default:
             break;
     }
@@ -3188,27 +3188,20 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
         pow = evoked ? wand_power(spell) : calc_spell_power(spell);
     switch (spell)
     {
-        case SPELL_MAXWELLS_COUPLING:
-            return Options.char_set == CSET_ASCII ? "death" : "\u221e"; //"∞"
-        case SPELL_FREEZING_CLOUD:
-            return desc_cloud_damage(CLOUD_COLD, false);
+        case SPELL_AIRSTRIKE:
+            return describe_player_airstrike_dam(base_airstrike_damage(pow));
         case SPELL_DISCHARGE:
         {
             const int max = discharge_max_damage(pow);
             return make_stringf("%d-%d/arc", FLAT_DISCHARGE_ARC_DAMAGE, max);
         }
-        case SPELL_AIRSTRIKE:
-            return describe_player_airstrike_dam(base_airstrike_damage(pow));
-        case SPELL_PILEDRIVER:
-            return make_stringf("(3-9)d%d", piledriver_collision_damage(pow, 1, false).size);
+        case SPELL_FREEZING_CLOUD:
+            return desc_cloud_damage(CLOUD_COLD, false);
+        case SPELL_FULSOME_FUSILLADE:
+            return make_stringf("(3-5)d%d", _spell_damage(spell, pow).size);
         case SPELL_GELLS_GAVOTTE:
             return make_stringf("2d(%d-%d)", gavotte_impact_damage(pow, 1, false).size,
                                              gavotte_impact_damage(pow, 4, false).size);
-
-        case SPELL_FULSOME_FUSILLADE:
-            return make_stringf("(3-5)d%d", _spell_damage(spell, pow).size);
-        case SPELL_RIMEBLIGHT:
-            return describe_rimeblight_damage(pow, terse);
         case SPELL_HOARFROST_CANNONADE:
         {
             dice_def shot_dam = hoarfrost_cannonade_damage(pow, false);
@@ -3217,6 +3210,10 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
             return make_stringf("%dd%d/%dd%d",
                 shot_dam.num, shot_dam.size, finale_dam.num, finale_dam.size);
         }
+        case SPELL_MAXWELLS_COUPLING:
+            return Options.char_set == CSET_ASCII ? "death" : "\u221e"; //"∞"
+        case SPELL_PILEDRIVER:
+            return make_stringf("(3-9)d%d", piledriver_collision_damage(pow, 1, false).size);
         case SPELL_RENDING_BLADE:
         {
             dice_def dmg_mp = rending_blade_damage(pow, true);
@@ -3227,6 +3224,8 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
             else
                 return make_stringf("%dd%d", dmg.num, dmg.size);
         }
+        case SPELL_RIMEBLIGHT:
+            return describe_rimeblight_damage(pow, terse);
         default:
             break;
     }
