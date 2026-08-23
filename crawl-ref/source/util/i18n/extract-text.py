@@ -624,12 +624,6 @@ def process_cplusplus_file(filename):
                 strings[0] = "@Arg@" + strings[0]
         if "attack_strength_punctuation" in line:
             strings[0] = re.sub("%s$", "@punct@", strings[0]);
-        if filename == "item-name.cc":
-            if section == "jewellery_effect_name" and not re.search("[A-Z]", strings[0]):
-                if "RING_" in line:
-                    strings[0] = "the ring of " + strings[0]
-                elif "AMU_" in line:
-                    strings[0] = "the amulet of " + strings[0]
         if strings:
             results[section].extend(strings)
 
@@ -751,7 +745,7 @@ def post_process_item_name_cc(input):
                 else:
                     continue
             elif section == "special_armour_type_name":
-                if not re.search("[A-Z]", string):
+                if not re.search("[A-Z]", string) or string == "the Archmagi":
                     string = "@item@ of " + string
             elif section == "_wand_type_name":
                 string = "the wand of " + string
@@ -765,6 +759,9 @@ def post_process_item_name_cc(input):
                 new_strings.append("the scroll of " + string)
                 new_strings.append("@num@ scrolls of " + string)
                 continue
+            elif section == "jewellery_effect_name":
+                if not re.match("[A-Z]", string):
+                    string = "@item@ of " + string
             elif section == "ring_primary_string":
                 string = "the " + string + " ring"
             elif section == "amulet_primary_string":
@@ -772,7 +769,7 @@ def post_process_item_name_cc(input):
             elif section == "staff_primary_string":
                 string = "the " + string + "staff"
             elif section == "rune_type_name":
-                new_strings.append("the " + string + " rune of Zot")
+                #new_strings.append("the " + string + " rune of Zot")
                 new_strings.append("the " + string + " rune")
             elif section == "misc_type_name":
                 new_strings.append(article_the(string))
