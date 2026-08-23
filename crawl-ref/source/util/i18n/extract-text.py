@@ -19,7 +19,7 @@ msg_transforms = {
 
 # pattern for recognising strings
 # handles escaped double-quotes
-STRING_PATTERN = r'"(?:[^"\\]|\\.)+"'
+STRING_PATTERN = r'"(?:[^"\\]|\\.)*"'
 
 IGNORE_STRINGS = [
     # partial strings
@@ -27,6 +27,7 @@ IGNORE_STRINGS = [
     'your', 'his', 'her', 'its', 'their',
     'of', 'in', 'by', 'and', 'or', 'but',
     '%s', '%d', '%f',
+    # bug
     'eggplant',
 ]
 
@@ -200,7 +201,7 @@ def article_a(string):
         return "a " + string
 
 def article_the(string):
-    return "the " + remove_article(string)
+    return "the " + remove_article(string).lstrip()
 
 def possessive(string):
     return string + "'s"
@@ -282,6 +283,12 @@ def conjugate_verb(verb_phrase):
         return verb + 'es' + suffix
     else:
         return verb + 's' + suffix
+
+def is_text_colour(string):
+    colours = ["black", "brown", "grey", "white", "blue",
+               "green", "cyan", "red", "magenta", "yellow"];
+    string = re.sub("^(light|dark)", "", string.strip())
+    return string in colours;
 
 def dump_lines(orig_filename, lines):
     with open(orig_filename + ".tmp", "w") as file:
@@ -428,7 +435,7 @@ def ignore_string(string):
     if stripped.lower() in IGNORE_STRINGS:
         return True
 
-    if not re.match(r"[A-Za-z0-9]", stripped):
+    if not re.search(r"[A-Za-z0-9]", stripped):
         return True
 
     # ignore identifiers
@@ -462,12 +469,12 @@ def is_section_start(line):
     return True
 
 def extract_section_name(line):
-    m = re.search(r"([^ ]+ *)(?=\()", line)
-    if m and m[0]:
-        return re.sub(r'[^a-zA-Z0-9_]', '', m[0])
-    m = re.search(r"([^ ]+ *)(?=\=)", line)
-    if m and m[0]:
-        return re.sub(r'[^a-zA-Z0-9_]', '', m[0])
+    m = re.search(r"([^ ]+) *\(", line)
+    if m and m[1]:
+        return re.sub(r"[*&]", "", m[1])
+    m = re.search(r"([^ ]+) *\=", line)
+    if m and m[1]:
+        return re.sub(r'[^a-zA-Z0-9_:]', '', m[0])
     return line.strip()
 
 # process art-data.txt
@@ -572,9 +579,22 @@ def process_cplusplus_file(filename):
 
     results = {}
     section = "none"
+    saved_section = None
     results[section] = []
 
     for line in lines:
+        if section == "_fixup_runeorb_entry":
+            pass
+        if filename == "item-name.cc":
+            for special in ["potion_qualifiers", "potion_colours"]:
+                if (special + "[] =") in line:
+                    saved_section = section
+                    section = special
+                elif special in line and saved_section != None:
+                    section = saved_section
+                    saved_section = None
+                if section not in results:
+                    results[section] = []
         if is_section_start(line):
             section = extract_section_name(line)
             if section not in results:
@@ -592,6 +612,12 @@ def process_cplusplus_file(filename):
                 strings[0] = "@Arg@" + strings[0]
         if "attack_strength_punctuation" in line:
             strings[0] = re.sub("%s$", "@punct@", strings[0]);
+        if filename == "item-name.cc":
+            if section == "jewellery_effect_name" and not re.search("[A-Z]", strings[0]):
+                if "RING_" in line:
+                    strings[0] = "the ring of " + strings[0]
+                elif "AMU_" in line:
+                    strings[0] = "the amulet of " + strings[0]
         if strings:
             results[section].extend(strings)
 
@@ -674,6 +700,134 @@ def post_process_item_prop_cc(input):
 
     return results
 
+def post_process_item_name_cc(input):
+    results = {}
+    for section, old_strings in input.items():
+        new_strings = []
+        for string in old_strings:
+            if string in ["Donald", "%s of %s", "x) ", "corpse bug", "Unnamed gizmo"]:
+                continue
+            elif string.endswith(" of "):
+                continue
+            elif string == " gem":
+                string = "the" + string
+            elif string == "enchanted %s":
+                string = string.replace("%s", "")
+            elif section == "missile_brand_name":
+                if string.endswith("ed"):
+                    new_strings.append("the " + string + " dart")
+                    new_strings.append("@num@ " + string + " darts")
+                elif string in ["dispersal", "disjunction"]:
+                    new_strings.append("the dart of " + string)
+                    new_strings.append("@num@ darts of " + string)
+                elif string == "silver":
+                    new_strings.append("the " + string + " javelin")
+                    new_strings.append("@num@ " + string + " javelins")
+                else:
+                    new_strings.append(string)
+                continue
+            elif section == "weapon_brands_verbose":
+                if string in ["vampirism", "antimagic", "heavy", "spectralising", "devious"]:
+                    # only uses the adjective
+                    continue
+                else:
+                    string = "@item@ of " + string
+            elif section == "weapon_brands_adj":
+                if string in ["vampiric", "antimagic", "heavy", "spectral", "devious"]:
+                    # uses the adjective
+                    string += " "
+                else:
+                    continue
+            elif section == "special_armour_type_name":
+                if not re.search("[A-Z]", string):
+                    string = "@item@ of " + string
+            elif section == "_wand_type_name":
+                string = "the wand of " + string
+            elif section == "wand_primary_string":
+                string = "the " + string + " wand"
+            elif section == "potion_type_name":
+                new_strings.append("the potion of " + string)
+                new_strings.append("@num@ potions of " + string)
+                continue
+            elif section == "scroll_type_name":
+                new_strings.append("the scroll of " + string)
+                new_strings.append("@num@ scrolls of " + string)
+                continue
+            elif section == "ring_primary_string":
+                string = "the " + string + " ring"
+            elif section == "amulet_primary_string":
+                string = "the " + string + " amulet"
+            elif section == "staff_primary_string":
+                string = "the " + string + "staff"
+            elif section == "rune_type_name":
+                new_strings.append("the " + string + " rune of Zot")
+                new_strings.append("the " + string + " rune")
+            elif section == "misc_type_name":
+                new_strings.append(article_the(string))
+                if "Geryon" not in string:
+                    new_strings.append(pluralise(string))
+                continue
+            elif section == "_book_type_name":
+                if string == "Fixed Theme":
+                    continue
+                string = "a book of " + string
+            elif section == "sub_type_string":
+                if re.match("^(My|the) ", string) or ("'" in string and "Poisoner's" not in string):
+                    pass
+                elif re.match("^[A-Z]", string):
+                    string = article_a(string)
+                else:
+                    string = article_the(string)
+            elif section == "ghost_brand_name":
+                if string == "weapon of %s":
+                    continue
+                else:
+                    string = string.replace("%s", "the");
+            elif section == "item_def::name_aux":
+                if ":" in string:
+                    # debugging stuff
+                    continue
+                elif string == "labelled ":
+                    new_strings.append("the scroll labelled @label@")
+                    new_strings.append("@num@ scrolls labelled @label@")
+                    continue
+                elif string == "gold piece":
+                    new_strings.append(article_the(string))
+                    new_strings.append("1 " + string)
+                    new_strings.append("@num@ " + pluralise(string))
+                    continue
+                elif string == "flux bauble":
+                    new_strings.append(article_the(string))
+                    new_strings.append("@num@ " + pluralise(string))
+                    continue
+                elif not string.endswith(" "):
+                    string = article_the(string)
+            elif section == "potion_colours":
+                if "potions_singular" not in results:
+                    results["potions_singular"] = []
+                if "potions_plural" not in results:
+                    results["potions_plural"] = []
+                results["potions_singular"].append("the " + string + " potion");
+                results["potions_plural"].append("@num@ " + string + " potions");
+                continue
+            elif section == "_gem_parenthetical":
+                if string == " turns":
+                    string = "@num@ turns until shattered"
+                elif "until shattered" in string:
+                    string = "@num1@/@num2@ until shattered";
+                elif "shattered" in string:
+                    string = "shattered"
+
+            new_strings.append(string)
+        results[section] = new_strings
+
+    if "potions_singular" in results:
+        results["potions_singular"].sort()
+    if "potions_plural" in results:
+        results["potions_plural"].sort()
+
+    return results
+
 def is_unique_monster(string):
     # non-uniques with uppercase letters
     specials = [
@@ -747,6 +901,23 @@ def post_process_zap_data_h(input):
 
     return { "zapdata": zaps }
 
+def post_process_generic(input):
+    results = {}
+    for section, old_strings in input.items():
+        new_strings = []
+        for string in old_strings:
+            if string == "":
+                continue
+            if section not in ["potion_colours", "ugly_colour_names", "drac_colour_names"]:
+                if is_text_colour(string):
+                    continue
+            # trim trailing space from prompts
+            if re.search(r"\? +$", string):
+                string = string.rstrip()
+            new_strings.append(string)
+        results[section] = new_strings
+    return results
+
 def transform_messages(input):
     results = {}
     for section, strings in input.items():
@@ -785,20 +956,23 @@ def transform_messages(input):
 specific_post_processing_funcs = {
     'feature-data.h': post_process_feature_data_h,
     'item-prop.cc': post_process_item_prop_cc,
+    'item-name.cc': post_process_item_name_cc,
     'mon-data.h': post_process_mon_data_h,
     'spl-data.h': post_process_spl_data_h,
     'zap-data.h': post_process_zap_data_h,
 }
 
-def post_process(filename, strings):
+def post_process(filename, results):
+    results = post_process_generic(results)
+
     # the strings in some files need special handling
     if filename in specific_post_processing_funcs:
         func = specific_post_processing_funcs[filename]
-        strings = func(strings)
+        results = func(results)
 
-    strings = transform_messages(strings)
+    results = transform_messages(results)
 
-    return strings
+    return results
 
 #################
 # Main
@@ -858,14 +1032,17 @@ for filename in files:
 
 output = []
 for filename, sections in results.items():
-    output.append("####################")
+    output.append("##################")
     output.append("# " + filename)
-    output.append("####################")
+    output.append("##################")
     for section_name, strings in sections.items():
         if not strings:
             continue
+        #output.append("")
         output.append("# section: " + section_name)
         for string in strings:
+            if string != string.strip():
+                string = '"' + string + '"'
             if string in output:
                 string = "#duplicate: " + string
             output.append(string)
