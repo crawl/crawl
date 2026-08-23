@@ -290,6 +290,18 @@ def is_text_colour(string):
     string = re.sub("^(light|dark)", "", string.strip())
     return string in colours;
 
+def strip_formatting(string):
+    # strip printf format strings
+    result = string.replace("%%", "");
+    result = re.sub(r'%[\-\+ #0]?[\*0-9]*(\.[\*0-9]*)?(hh|h|l|ll|j|z|t|L)?[diuoxXfFeEgGaAcspn]', '', result)
+    # Hexadecimal number indicator
+    result = re.sub('0x', '', result);
+    return result
+
+def is_only_formatting(string):
+    temp = strip_formatting(string)
+    return not re.search("[A-Za-z0-9]", temp)
+
 def dump_lines(orig_filename, lines):
     with open(orig_filename + ".tmp", "w") as file:
         for line in lines:
@@ -435,7 +447,7 @@ def ignore_string(string):
     if stripped.lower() in IGNORE_STRINGS:
         return True
 
-    if not re.search(r"[A-Za-z0-9]", stripped):
+    if is_only_formatting(stripped):
         return True
 
     # ignore identifiers
