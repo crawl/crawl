@@ -411,7 +411,7 @@ def ignore_c_line(line):
     # diagnotic messages
     if re.search(r"(MSGCH_DIAGNOSTIC|dprf|dprintf|debug|DEBUG|ASSERTM|log_print|dump_|fprintf)", line):
         return True
-    if re.search(r"(bad_level_id|arena_error)", line):
+    if re.search(r"(report_error|bad_level_id|arena_error|dgn_veto_exception)", line):
         return True
     if re.search(r"\bdie\s*\(", line):
         return True
