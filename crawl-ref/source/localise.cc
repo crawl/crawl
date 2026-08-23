@@ -603,9 +603,7 @@ static string _localise_parameterised_string(const string& s, bool full_sentence
             // parameter
             string key = token.substr(1, token.length() - 2);
             if (starts_with(key, "punct"))
-            {
                 result = _handle_variable_punctuation(result, params[key]);
-            }
             else
             {
                 string saved_context = _context;
