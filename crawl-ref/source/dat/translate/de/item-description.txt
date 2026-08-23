@@ -14,38 +14,38 @@
 #################################
 
 %%%%
-It affects your AC (%+d).
-Dieser Gegenstand beeinflusst deine Rüstungsklasse (%+d).
+It affects your AC (@integer@).
+Dieser Gegenstand beeinflusst deine Rüstungsklasse (@integer@).
 %%%%
-It affects your SH (%+d).
-Dieser Gegenstand beeinflusst deinen Schildwert (%+d).
+It affects your SH (@integer@).
+Dieser Gegenstand beeinflusst deinen Schildwert (@integer@).
 %%%%
-It affects your shielding (%+d).
-Dieser Gegenstand beeinflusst deinen Schildwert (%+d).
+It affects your shielding (@integer@).
+Dieser Gegenstand beeinflusst deinen Schildwert (@integer@).
 %%%%
-It affects your evasion (%+d).
-Dieser Gegenstand beeinflusst dein Ausweichen (%+d).
+It affects your evasion (@integer@).
+Dieser Gegenstand beeinflusst dein Ausweichen (@integer@).
 %%%%
-It affects your strength (%+d).
-Dieser Gegenstand beeinflusst deine Stärke (%+d).
+It affects your strength (@integer@).
+Dieser Gegenstand beeinflusst deine Stärke (@integer@).
 %%%%
-It affects your intelligence (%+d).
-Dieser Gegenstand beeinflusst deine Intelligenz (%+d).
+It affects your intelligence (@integer@).
+Dieser Gegenstand beeinflusst deine Intelligenz (@integer@).
 %%%%
-It affects your dexterity (%+d).
-Dieser Gegenstand beeinflusst deine Geschicklichkeit (%+d).
+It affects your dexterity (@integer@).
+Dieser Gegenstand beeinflusst deine Geschicklichkeit (@integer@).
 %%%%
-It affects your accuracy and damage with ranged weapons and melee (%+d).
-Dieser Gegenstand beeinflusst deine Treffsicherheit und deinen Schaden mit Distanzwaffen und im Nahkampf (%+d).
+It affects your accuracy and damage with ranged weapons and melee (@integer@).
+Dieser Gegenstand beeinflusst deine Treffsicherheit und deinen Schaden mit Distanzwaffen und im Nahkampf (@integer@).
 %%%%
 It insulates you from electricity.
 Dieser Gegenstand isoliert dich gegen Elektrizität.
 %%%%
-It affects your health (%+d).
-Dieser Gegenstand beeinflusst deine Gesundheit (%+d).
+It affects your health (@integer@).
+Dieser Gegenstand beeinflusst deine Gesundheit (@integer@).
 %%%%
-It affects your magic capacity (%+d).
-Dieser Gegenstand beeinflusst deine magische Kapazität (%+d).
+It affects your magic capacity (@integer@).
+Dieser Gegenstand beeinflusst deine magische Kapazität (@integer@).
 %%%%
 It lets you see invisible.
 Dieser Gegenstand ermöglicht dir Unsichtbares zu sehen.
@@ -226,14 +226,14 @@ Dieses uralte Artefakt kann weder durch magische noch weltliche Mittel veränder
 #################################
 
 %%%%
-Base accuracy: %+d  Base damage: @num@  Base attack delay: %.1f
-Grundgenauigkeit: %+d  Grundschaden: @num@  Grundangriffsverzögerung: %.1f
+Base accuracy: @integer@  Base damage: @num@  Base attack delay: @float@
+Grundgenauigkeit: @integer@  Grundschaden: @num@  Grundangriffsverzögerung: @float@
 %%%%
 Firing bullets:    Base damage: @num@
 Feuern von Kugeln:    Grundschaden: @num@
 %%%%
-Base damage: @num@  Base attack delay: %.1f
-Grundschaden: @num@  Grundangriffsverzögerung: %.1f
+Base damage: @num@  Base attack delay: @float@
+Grundschaden: @num@  Grundangriffsverzögerung: @float@
 %%%%
 It can be evoked to extend its reach.
 Diese Waffe kann evoziert werden, um ihre Reichweite zu erhöhen.
@@ -517,11 +517,11 @@ Mit deinem aktuellen Schildwert hat diese Rüstung eine Chance von @num@%%, Angr
 #################################
 
 %%%%
-This weapon's minimum attack delay (%.1f) is reached at skill level @num@.
-Die minimale Angriffsverzögerung dieser Waffe (%.1f) wird auf der Fertigkeitsstufe @num@ erreicht.
+This weapon's minimum attack delay (@float@) is reached at skill level @num@.
+Die minimale Angriffsverzögerung dieser Waffe (@float@) wird auf der Fertigkeitsstufe @num@ erreicht.
 %%%%
-This projectile's minimum attack delay (%.1f) is reached at skill level @num@.
-Die minimale Angriffsverzögerung dieses Geschosses (%.1f) wird auf der Fertigkeitsstufe @num@ erreicht.
+This projectile's minimum attack delay (@float@) is reached at skill level @num@.
+Die minimale Angriffsverzögerung dieses Geschosses (@float@) wird auf der Fertigkeitsstufe @num@ erreicht.
 %%%%
 # shield penalty
 Skill to remove penalty: @num1@.@num2@

@@ -14,37 +14,37 @@
 #################################
 
 %%%%
-It affects your AC (%+d).
+It affects your AC (@integer@).
 
 %%%%
-It affects your SH (%+d).
+It affects your SH (@integer@).
 
 %%%%
-It affects your shielding (%+d).
+It affects your shielding (@integer@).
 
 %%%%
-It affects your evasion (%+d).
+It affects your evasion (@integer@).
 
 %%%%
-It affects your strength (%+d).
+It affects your strength (@integer@).
 
 %%%%
-It affects your intelligence (%+d).
+It affects your intelligence (@integer@).
 
 %%%%
-It affects your dexterity (%+d).
+It affects your dexterity (@integer@).
 
 %%%%
-It affects your accuracy and damage with ranged weapons and melee (%+d).
+It affects your accuracy and damage with ranged weapons and melee (@integer@).
 
 %%%%
 It insulates you from electricity.
 
 %%%%
-It affects your health (%+d).
+It affects your health (@integer@).
 
 %%%%
-It affects your magic capacity (%+d).
+It affects your magic capacity (@integer@).
 
 %%%%
 It lets you see invisible.
@@ -226,13 +226,13 @@ This ancient artefact cannot be changed by magic or mundane means.
 #################################
 
 %%%%
-Base accuracy: %+d  Base damage: @num@  Base attack delay: %.1f
+Base accuracy: @integer@  Base damage: @num@  Base attack delay: @float@
 
 %%%%
 Firing bullets:    Base damage: @num@
 
 %%%%
-Base damage: @num@  Base attack delay: %.1f
+Base damage: @num@  Base attack delay: @float@
 
 %%%%
 It can be evoked to extend its reach.
@@ -517,10 +517,10 @@ With your current SH, it has a @num@%% chance to reflect attacks against your wi
 #################################
 
 %%%%
-This weapon's minimum attack delay (%.1f) is reached at skill level @num@.
+This weapon's minimum attack delay (@float@) is reached at skill level @num@.
 
 %%%%
-This projectile's minimum attack delay (%.1f) is reached at skill level @num@.
+This projectile's minimum attack delay (@float@) is reached at skill level @num@.
 
 %%%%
 # shield penalty
