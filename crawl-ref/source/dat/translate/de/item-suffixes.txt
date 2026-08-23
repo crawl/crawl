@@ -216,6 +216,9 @@
 @item@ of the Moon
 @item@ des Mondes
 %%%%
+@item@ of plog
+@item@ von Plog
+%%%%
 @item@ of Dice, Bag, and Bottle
 @item@ von Würfel, Beutel und Flasche
 %%%%

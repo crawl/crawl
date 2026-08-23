@@ -139,6 +139,7 @@ IGNORE_SECTIONS = {
         '_random_vowel',                        # random name generation
         '_random_cons',
         '_random_consonant_set',
+        '_unforbid',
     ],
     'item-prop.cc':     ['item_sets'],          # internal ids
     'jobs.cc':          ['debug_jobdata'],      # debug
@@ -180,9 +181,14 @@ IGNORE_SECTIONS = {
     ],
 }
 
+PLAYER_SILENCED_REASONS = ["silenced", "unable to breathe"]
+
 ################################
 # Grammatical utility functions
 ################################
+
+def replace_last(string, old, new):
+    return new.join(string.rsplit(old, 1))
 
 def has_article_the(string):
     return re.match("^the ", string, flags=re.IGNORECASE)
@@ -430,7 +436,7 @@ def ignore_c_line(line):
     # diagnotic messages
     if re.search(r"(MSGCH_DIAGNOSTIC|dprf|dprintf|debug|DEBUG|ASSERTM|log_print|dump_|fprintf)", line):
         return True
-    if re.search(r"(report_error|bad_level_id|arena_error|dgn_veto_exception)", line):
+    if re.search(r"(sysfail|report_error|bad_level_id|arena_error|dgn_veto_exception)", line):
         return True
     if re.search(r"\bdie\s*\(", line):
         return True
@@ -454,7 +460,9 @@ def ignore_string(string):
     if '_' in string and not ' ' in string:
         return True
 
-    if re.search(r'\b(buggy|bugginess|BUG|BUGGY|bugger|Bugger|bugdom)\b', string):
+    if re.search(r'\b(buggy|bugginess|bugger|bugdom|bug-filled|buggily)\b', string, re.IGNORECASE):
+        return True
+    if "BUG" in string:
         return True
 
     return False
@@ -470,6 +478,15 @@ def ignore_section(filename, section):
 
 def keep_string(string):
     return not ignore_string(string)
+
+# We want to keep most error messages in English so they can be reported to teh devs
+# The expception is environmental stuff like file errors
+def ignore_error_message(string):
+    if "Lua error" in string:
+        return False
+    if re.search(r"\b(file|lock|read|write|writing|open)\b", string, re.I):
+        return False
+    return True
 
 def is_section_start(line):
     if line.lstrip() != line:
@@ -573,6 +590,8 @@ def split_on_newlines(strings):
 
 def dummy_up_keys(line):
     line = re.sub(r"(get[A-Za-z]+String) *\(([^\)]+)\)", "$1(dummy)", line)
+    # 3rd arg is tag
+    line = re.sub(r"\b(menu_colour *\([^,]+,[^,]+,)[^,)]+", "$1, dummy", line)
     return line
 
 def extract_c_strings(line, filter_results):
@@ -619,11 +638,19 @@ def process_cplusplus_file(filename):
         strings = extract_c_strings(line, True)
         if len(strings) == 0:
             continue
+        if "MSGCH_ERROR" in line and ignore_error_message(strings[0]):
+            continue
         if "simple_god_message" in line or "simple_monster_message" in line:
             if strings[0].startswith(" ") or strings[0].startswith("'"):
                 strings[0] = "@Arg@" + strings[0]
         if "attack_strength_punctuation" in line:
             strings[0] = re.sub("%s$", "@punct@", strings[0]);
+        if "player_silenced_reason" in line:
+            format = strings.pop(0)
+            for reason in PLAYER_SILENCED_REASONS:
+                strings.append(replace_last(format, "%s", reason))
+        elif section == "player_silenced_reason":
+            strings = list(filter(lambda v: v not in PLAYER_SILENCED_REASONS, strings))
         if strings:
             results[section].extend(strings)
 
@@ -711,14 +738,22 @@ def post_process_item_name_cc(input):
     for section, old_strings in input.items():
         new_strings = []
         for string in old_strings:
-            if string in ["Donald", "%s of %s", "x) ", "corpse bug", "Unnamed gizmo"]:
+            if string in ["Donald", "%s of %s", "x) ", "corpse bug", "Unnamed gizmo", " rune of Zot"]:
                 continue
-            elif string.endswith(" of "):
+            elif string.endswith(" of ") or string.endswith(" of"):
                 continue
             elif string == " gem":
                 string = "the" + string
             elif string == "enchanted %s":
                 string = string.replace("%s", "")
+            elif string == "plog":
+                string = "@item@ of " + string
+            elif "+" in string and not string.startswith("+"):
+                # annotation
+                elements = string.split()
+                for e in elements:
+                    new_strings.append(re.sub(r"[+\-].*", "", e));
+                continue
             elif section == "missile_brand_name":
                 if string.endswith("ed"):
                     new_strings.append("the " + string + " dart")
@@ -760,7 +795,7 @@ def post_process_item_name_cc(input):
                 new_strings.append("@num@ scrolls of " + string)
                 continue
             elif section == "jewellery_effect_name":
-                if not re.match("[A-Z]", string):
+                if not re.search("[A-Z]", string):
                     string = "@item@ of " + string
             elif section == "ring_primary_string":
                 string = "the " + string + " ring"
@@ -826,6 +861,23 @@ def post_process_item_name_cc(input):
                     string = "@num1@/@num2@ until shattered";
                 elif "shattered" in string:
                     string = "shattered"
+            elif section == "RuneMenu::gem_title":
+                middle_bit = ", %d intact"
+                end_bit = ")</white>"
+                if string in [middle_bit, end_bit]:
+                    continue
+                elif "collected" in string:
+                    # middle bit is optional
+                    new_strings.append(string + end_bit)
+                    string += middle_bit + end_bit
+            elif section == "RuneMenu::set_footer":
+                start = "[<w>!</w>/<w>^</w>"
+                middle = "|<w>Right-click</w>"
+                end = "]: %s"
+                if string == start:
+                    string = start + end
+                elif string == middle:
+                    string = start + middle + end
 
             new_strings.append(string)
         results[section] = new_strings

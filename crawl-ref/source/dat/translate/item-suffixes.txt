@@ -216,6 +216,9 @@
 @item@ of the Moon
 
 %%%%
+@item@ of plog
+
+%%%%
 @item@ of Dice, Bag, and Bottle
 
 %%%%
