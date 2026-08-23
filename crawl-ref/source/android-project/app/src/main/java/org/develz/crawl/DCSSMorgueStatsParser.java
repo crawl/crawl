@@ -31,7 +31,7 @@ public final class DCSSMorgueStatsParser {
     private static final Pattern XL = Pattern.compile("^Health:.*\\bXL:\\s*(\\d+).*$");
     private static final Pattern RUNES = Pattern.compile("^\\.\\.\\. and (\\d+) runes?!\\s*$");
     private static final String[] SPECIES = {
-            "Armataur", "Barachi", "Centaur", "Coglin", "Deep Elf", "Demigod",
+            "Armataur", "Barachi", "Gale Centaur", "Centaur", "Coglin", "Deep Elf", "Demigod",
             "Demonspawn", "Djinni", "Draconian", "Felid", "Formicid", "Gargoyle",
             "Ghoul", "Gnoll", "Hill Orc", "Human", "Kobold", "Merfolk", "Minotaur",
             "Mountain Dwarf", "Mummy", "Naga", "Octopode", "Oni", "Spriggan",

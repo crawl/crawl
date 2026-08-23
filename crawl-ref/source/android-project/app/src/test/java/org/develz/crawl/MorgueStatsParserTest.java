@@ -110,6 +110,18 @@ public class MorgueStatsParserTest {
     }
 
     @Test
+    public void parsesGaleCentaurSpecies() throws Exception {
+        String morgue = DEATH_MORGUE.replace("Minotaur Fighter", "Gale Centaur Fighter");
+
+        Optional<DCSSMorgueGame> parsed = DCSSMorgueStatsParser.parse(
+                morgueFile("morgue-Gale-20260813-185356.txt", morgue));
+
+        assertTrue(parsed.isPresent());
+        assertEquals("Gale Centaur", parsed.get().getSpecies());
+        assertEquals("Fighter", parsed.get().getBackground());
+    }
+
+    @Test
     public void parsesMultiwordSpecies() throws Exception {
         String morgue = DEATH_MORGUE.replace("Minotaur Fighter", "Vine Stalker Earth Elementalist");
 
