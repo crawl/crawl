@@ -184,7 +184,8 @@ void init_localisation()
         string pattern = key;
         // escape characters that mean something to regex
         pattern = escape_regex_specials(pattern);
-        pattern = replace_all(pattern, "@two_letter_code@", "[A-Z][A-Za-z]");
+        pattern = replace_all(pattern, "@two_letter_code@", "([A-Z][A-Za-z])");
+        pattern = replace_all(pattern, "@player_name@", "([A-Za-z0-9._ -]+)");
         pattern = num_arg_patt.replace(pattern, "([0-9]+)");
         pattern = int_arg_patt.replace(pattern, "([\\+\\-]?[0-9]+)");
         // float is problematic because decimal point may already be changed by user's locale
