@@ -158,11 +158,6 @@ pieces from Xom's chessboard
 tins of tremorstones
 
 %%%%
-# due to a bug (#4063), the English plural is "damagi" (coz mage -> magi)
-quad damagi
-
-%%%%
-# for when the bug is fixed
 quad damages
 
 %%%%
