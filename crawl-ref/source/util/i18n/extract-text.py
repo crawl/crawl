@@ -13,7 +13,14 @@ msg_transforms = {
     # item-prop.cc
     "You learned that %s %s actually %s.": [
         "You learned that @item1@ is actually @item2@.",
-        "You learned that @items1@ are actually @items2@"
+        "You learned that @items1@ are actually @items2@",
+    ],
+    "%%s has regained %d charge%s." : [
+        "@Item@ has regained 1 charge.",
+        "@Item@ has regained @num@ charges.",
+    ],
+    "<white>Runes of Zot (</white><%s>%d</%s><white> collected) & Orbs of Power</white>" : [
+        "<white>Runes of Zot (@arg@ collected) & Orbs of Power</white>",
     ],
 }
 
@@ -804,6 +811,8 @@ def post_process_item_name_cc(input):
             elif section == "staff_primary_string":
                 string = "the " + string + "staff"
             elif section == "rune_type_name":
+                if string == "elven":
+                    continue
                 #new_strings.append("the " + string + " rune of Zot")
                 new_strings.append("the " + string + " rune")
             elif section == "misc_type_name":
@@ -816,7 +825,7 @@ def post_process_item_name_cc(input):
                     continue
                 string = "a book of " + string
             elif section == "sub_type_string":
-                if re.match("^(My|the) ", string) or ("'" in string and "Poisoner's" not in string):
+                if re.match("^(My|Great|the) ", string) or ("'" in string and "Poisoner's" not in string):
                     pass
                 elif re.match("^[A-Z]", string):
                     string = article_a(string)
@@ -990,7 +999,7 @@ def transform_messages(input):
                 new_strings.append(string)
         results[section] = new_strings
 
-    for section, strings in input.items():
+    for section, strings in results.items():
         new_strings = []
         for string in strings:
 

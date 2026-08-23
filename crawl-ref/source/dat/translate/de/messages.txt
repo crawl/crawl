@@ -8,8 +8,15 @@
 # item-name.cc
 ##################
 %%%%
-<white>Runes of Zot (</white><@arg1@>@num@</@arg2@><white> collected) & Orbs of Power</white>
-<white>Runen von Zot (</white><@arg1@>@num@</@arg2@><white> gesammelt) & Kugeln der Macht</white>
+<magenta>The Orb of Zot</magenta>
+<magenta>Die Kugel von Zot</magenta>
+%%%%
+<darkgrey>The Orb of Zot (the Realm of Zot)</darkgrey>
+<darkgrey>Die Kugel von Zot (das Reich von Zot)</darkgrey>
+%%%%
+# @arg@ contains colour tags as well as the number
+<white>Runes of Zot (@arg@ collected) & Orbs of Power</white>
+<white>Runen von Zot (@arg@ gesammelt) & Kugeln der Macht</white>
 %%%%
 
 ##################
