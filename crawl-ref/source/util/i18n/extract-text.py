@@ -1050,7 +1050,7 @@ for filename, sections in results.items():
     for section_name, strings in sections.items():
         if not strings:
             continue
-        #output.append("")
+        output.append("")
         output.append("# section: " + section_name)
         for string in strings:
             if string != string.strip():

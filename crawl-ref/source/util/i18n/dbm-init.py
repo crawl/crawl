@@ -98,8 +98,11 @@ in_entry = False
 locnote = ""
 source_heading = ""
 for line in keyfile:
-    if re.match(r'^\s*$', line) or re.match(r'^\s*#', line):
-        # blank line or comment
+    if re.match(r'^\s*$', line):
+        # blank line
+        continue
+    elif re.match(r'^\s*#', line):
+        # comment
         if line.startswith('# section:'):
             locnote = ''
             continue
@@ -129,7 +132,7 @@ for line in keyfile:
             locnote = ''
             continue
         if source_heading != "":
-            outfile.write(source_heading)
+            outfile.write("\n" + source_heading)
             source_heading = ""
         outfile.write("%%%%\n");
         if locnote != "":
