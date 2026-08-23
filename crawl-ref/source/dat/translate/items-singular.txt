@@ -136,6 +136,10 @@ the lajatang
 #################################
 
 %%%%
+the sling
+
+%%%%
+# old name
 the hunting sling
 
 %%%%

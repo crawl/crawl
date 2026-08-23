@@ -136,6 +136,10 @@ the lajatang
 #################################
 
 %%%%
+the sling
+{f}die Schleuder
+%%%%
+# old name
 the hunting sling
 {f}die Schleuder
 %%%%
