@@ -30,12 +30,13 @@ public final class DCSSMorgueStatsParser {
             "^The game lasted (\\d+):(\\d{2}):(\\d{2}) \\((\\d+) turns\\)\\.$");
     private static final Pattern XL = Pattern.compile("^Health:.*\\bXL:\\s*(\\d+).*$");
     private static final Pattern RUNES = Pattern.compile("^\\.\\.\\. and (\\d+) runes?!\\s*$");
-    private static final String[] SPECIES = {
-            "Armataur", "Barachi", "Gale Centaur", "Centaur", "Coglin", "Deep Elf", "Demigod",
-            "Demonspawn", "Djinni", "Draconian", "Felid", "Formicid", "Gargoyle",
-            "Ghoul", "Gnoll", "Hill Orc", "Human", "Kobold", "Merfolk", "Minotaur",
-            "Mountain Dwarf", "Mummy", "Naga", "Octopode", "Oni", "Spriggan",
-            "Tengu", "Troll", "Vine Stalker", "Vampire"
+    private static final String[] BACKGROUNDS = {
+            "Earth Elementalist", "Fire Elementalist", "Air Elementalist", "Ice Elementalist",
+            "Abyssal Knight", "Cinder Acolyte", "Chaos Knight", "Death Knight", "Hedge Wizard",
+            "Shapeshifter", "Forgewright", "Necromancer", "Hexslinger", "Alchemist", "Artificer",
+            "Berserker", "Enchanter", "Gladiator", "Conjurer", "Summoner", "Wanderer", "Brigand",
+            "Fighter", "Stalker", "Delver", "Healer", "Hunter", "Jester", "Priest", "Reaver",
+            "Warper", "Skald", "Monk"
     };
     private static final DateTimeFormatter TIMESTAMP =
             DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
@@ -83,13 +84,17 @@ public final class DCSSMorgueStatsParser {
                 Matcher began = BEGAN.matcher(trimmed);
                 if (began.matches()) {
                     String combo = began.group(1);
-                    for (String candidate : SPECIES) {
-                        String prefix = candidate + " ";
-                        if (combo.startsWith(prefix)) {
-                            species = candidate;
-                            background = combo.substring(prefix.length());
+                    for (String candidate : BACKGROUNDS) {
+                        String suffix = " " + candidate;
+                        if (combo.endsWith(suffix)) {
+                            species = combo.substring(0, combo.length() - suffix.length());
+                            background = candidate;
                             break;
                         }
+                    }
+                    if (species == null) {
+                        species = combo;
+                        background = "Unknown background";
                     }
                     continue;
                 }

@@ -110,6 +110,30 @@ public class MorgueStatsParserTest {
     }
 
     @Test
+    public void retainsMorgueWithAnUnknownFutureSpecies() throws Exception {
+        String morgue = DEATH_MORGUE.replace("Minotaur Fighter", "Aerial Yak Fighter");
+
+        Optional<DCSSMorgueGame> parsed = DCSSMorgueStatsParser.parse(
+                morgueFile("morgue-AerialYak-20260813-185357.txt", morgue));
+
+        assertTrue(parsed.isPresent());
+        assertEquals("Aerial Yak", parsed.get().getSpecies());
+        assertEquals("Fighter", parsed.get().getBackground());
+    }
+
+    @Test
+    public void retainsMorgueWithAnUnknownFutureBackground() throws Exception {
+        String morgue = DEATH_MORGUE.replace("Minotaur Fighter", "Aerial Yak Temporal Scholar");
+
+        Optional<DCSSMorgueGame> parsed = DCSSMorgueStatsParser.parse(
+                morgueFile("morgue-AerialYak-20260813-185358.txt", morgue));
+
+        assertTrue(parsed.isPresent());
+        assertEquals("Aerial Yak Temporal Scholar", parsed.get().getSpecies());
+        assertEquals("Unknown background", parsed.get().getBackground());
+    }
+
+    @Test
     public void parsesGaleCentaurSpecies() throws Exception {
         String morgue = DEATH_MORGUE.replace("Minotaur Fighter", "Gale Centaur Fighter");
 
