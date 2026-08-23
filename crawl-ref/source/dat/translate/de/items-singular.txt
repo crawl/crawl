@@ -302,7 +302,7 @@ the storm dragon scales
 the shadow dragon scales
 {pl}die Schattendrachenschuppen
 %%%%
-the gold dragon scales
+the golden dragon scales
 {pl}die Golddrachenschuppen
 %%%%
 

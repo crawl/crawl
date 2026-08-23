@@ -8,7 +8,14 @@
 # item-name.cc
 ##################
 %%%%
-<white>Runes of Zot (</white><@arg1@>@num@</@arg2@><white> collected) & Orbs of Power</white>
+<magenta>The Orb of Zot</magenta>
+
+%%%%
+<darkgrey>The Orb of Zot (the Realm of Zot)</darkgrey>
+
+%%%%
+# @arg@ contains colour tags as well as the number
+<white>Runes of Zot (@arg@ collected) & Orbs of Power</white>
 
 %%%%
 
@@ -1099,22 +1106,16 @@ You feel ready to stride towards your foes.
 # attack.cc
 ##################
 %%%%
-Space bends around you
+Space warps horribly around you@punct@
 
 %%%%
-Space bends around @arg@
+Space warps horribly around @arg@@punct@
 
 %%%%
-Space warps horribly around you
+You writhe in agony@punct@
 
 %%%%
-Space warps horribly around @arg@
-
-%%%%
-You writhe in agony
-
-%%%%
-@Arg@ writhes in agony
+@Arg@ writhes in agony@punct@
 
 %%%%
 @Arg@ protects you from inadvertent hurry.
@@ -4904,7 +4905,7 @@ The dying Royal Jelly spits out @num@ more jellies.
 @Arg1@ electric aura discharges violently, shocking @arg2@!
 
 %%%%
-The air sparks with electricity, shocking @arg@!
+The air sparks with electricity, shocking @arg@@punct@
 
 %%%%
 The injured rakshasa weaves a defensive illusion!
@@ -11741,7 +11742,7 @@ You cannot teleport.
 @Arg@ corrodes you!
 
 %%%%
-You are splashed with acid
+You are splashed with acid@punct@
 
 %%%%
 You are splashed with acid but take no damage.
@@ -14195,12 +14196,10 @@ You can't deconstruct that!
 @Arg@ shatters!
 
 %%%%
-# note: param = damage-based punctuation
-You shatter@arg@
+You shatter@punct@
 
 %%%%
-# note: params = the monster, damage-based punctuation
-@Arg1@ shatters@arg2@
+@Arg@ shatters@punct@
 
 %%%%
 A door shatters!
@@ -14272,11 +14271,10 @@ The air bursts into flame!
 static discharge
 
 %%%%
-# note: param = damage-based punctuation
-You are struck by an arc of lightning@arg@
+You are struck by an arc of lightning@punct@
 
 %%%%
-@Arg1@ is struck by an arc of lightning@arg2@
+@Arg1@ is struck by an arc of lightning@punct@
 
 %%%%
 The lightning grounds out.
@@ -14415,10 +14413,10 @@ A cannonade of hail descends around you!
 You erupt in a blast of force!
 
 %%%%
-You fester in the toxic bog@arg@
+You fester in the toxic bog@punct@
 
 %%%%
-@Arg1@ festers in the toxic bog@arg2@
+@Arg@ festers in the toxic bog@punct@
 
 %%%%
 There are no walls around you to affect.
@@ -16479,7 +16477,7 @@ use
 pass through
 
 %%%%
-The wall freezes @arg@
+The wall freezes @arg@@punct@
 
 %%%%
 
