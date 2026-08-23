@@ -2694,6 +2694,10 @@ feline
 
 bovine
 
+ovine
+
+vulpine
+
 disdain
 
 pontify
@@ -2717,6 +2721,8 @@ fast
 aubergine
 
 sanguine
+
+flibbertigibbet
 
 twenty-three
 
