@@ -66,8 +66,7 @@ IGNORE_FILES = [
     # English grammar
     'english.h', 'english.cc',
     # files related to the translation process itself
-    'xlate.h', 'xlate.cc',
-    'localise.h', 'localise.cc',
+    'localise.h', 'localise.cc', 'localise-util.h', 'localise-util.cc',
     'database.h', 'database.cc', 'sqldbm.cc',
     # stuff related to morgue file is not translated
     # (because if we run this on a server, we want all the morgues in English)
@@ -284,6 +283,12 @@ def conjugate_verb(verb_phrase):
     else:
         return verb + 's' + suffix
 
+def dump_lines(orig_filename, lines):
+    with open(orig_filename + ".tmp", "w") as file:
+        for line in lines:
+            file.write(line)
+            file.write("\n")
+
 ################################
 # String extraction functions
 ################################
@@ -299,7 +304,7 @@ def get_preprocessed_c_lines(filename, strip_whitespace=True):
     for line in lines:
         # remove single-line comments
         if "//" in line:
-            line = re.sub(r" *//.*", "", line)
+            line = re.sub(r"\s*//.*", "", line)
             if line == "":
                 continue
         line = line.rstrip()
@@ -307,26 +312,45 @@ def get_preprocessed_c_lines(filename, strip_whitespace=True):
             line = line.lstrip()
             if line == "":
                 continue
+
+        lines = re.sub(r"^\s*#\s*", "#", line)
+        if line.startswith("#include"):
+            continue
+
         result.append(line)
 
+    # concatenate lines where appropriate
     lines = result
     result = []
     for line in lines:
+        lstripped = line.lstrip()
+        if len(result) == 0 or lstripped.startswith("#"):
+            result.append(line)
+            continue
+
         concatenate = False
-        if len(result) != 0:
-            last = result[-1]
-            if last.endswith("\\"):
-                last = last[:-1].rstrip() + " "
-                line = line.lstrip()
-                concatenate = True
-            elif last.endswith(",") and "(" in last and "-data" not in filename:
-                last += " "
-                line = line.lstrip()
-                concatenate = True
-            elif last.endswith('"') and line.lstrip().startswith('"'):
-                last = last[:-1]
-                line = line.lstrip()[1:]
-                concatenate = True
+        last = result[-1]
+
+        if last == "" and lstripped == "":
+            continue
+        elif last.endswith("\\"):
+            last = last[:-1].rstrip() + " "
+            line = lstripped
+            concatenate = True
+        elif last.endswith(",") and "(" in last and "-data" not in filename:
+            last += " "
+            line = lstripped
+            concatenate = True
+        elif last.endswith('"') and lstripped.startswith('"'):
+            last = last[:-1]
+            line = lstripped[1:]
+            concatenate = True
+        elif last.endswith("?") or lstripped.startswith("?") \
+                or last.endswith(":") or lstripped.startswith(":"):
+            last += " "
+            line = lstripped
+            concatenate = True
+
         if concatenate:
             result[-1] = last + line
         else:
@@ -336,15 +360,40 @@ def get_preprocessed_c_lines(filename, strip_whitespace=True):
 
 
 # remove code surrounded by #if TAG_MAJOR_VERSION
-def remove_obsolete_code(lines):
+def remove_conditionally_compiled_code(lines):
+    anti_ignore = False
     ignore = False
     result = []
     for line in lines:
-        if re.search(r"#\s*if\s+TAG_MAJOR_VERSION\s*==\s*34", line):
-            ignore = True
-        elif re.search(r"#\s*(else|end)", line):
+        if line.startswith("#ifdef"):
+            if "TAG_MAJOR_VERSION" in line or "DEBUG" in line:
+                ignore = True
+        elif line.startswith("#ifndef"):
+            if "TAG_MAJOR_VERSION" in line or "DEBUG" in line:
+                ignore = False
+                anti_ignore = True
+        elif line.startswith("#if") or line.startswith("#elif"):
+            if "defined" in line:
+                if "!defined(DEBUG" in line:
+                    ignore = False
+                    anti_ignore = True
+                elif "defined(DEBUG" in line:
+                    ignore = True
+                    anti_ignore = False
+            elif "TAG_MAJOR_VERSION" in line:
+                ignore = True
+                anti_ignore = False
+        elif line.startswith("#else"):
+            if anti_ignore:
+                ignore = True
+                anti_ignore = False
+            else:
+                ignore = False
+        elif line.startswith("#end"):
             ignore = False
-        elif not ignore:
+            anti_ignore = False
+
+        if not ignore or re.match("^#(if|elif|else|end)", line):
             result.append(line)
     return result
 
@@ -360,8 +409,11 @@ def ignore_c_line(line):
         return True
 
     # diagnotic messages
-    if "MSGCH_DIAGNOSTIC" in line or "dprf" in line \
-    or re.search(r"\bdie *\(", line):
+    if re.search(r"(MSGCH_DIAGNOSTIC|dprf|dprintf|debug|DEBUG|ASSERTM|log_print|dump_|fprintf)", line):
+        return True
+    if re.search(r"(bad_level_id|arena_error)", line):
+        return True
+    if re.search(r"\bdie\s*\(", line):
         return True
 
     return False
@@ -514,7 +566,9 @@ def extract_c_strings(line, filter_results):
 
 def process_cplusplus_file(filename):
     lines = get_preprocessed_c_lines(filename, False)
-    lines = remove_obsolete_code(lines)
+    lines = remove_conditionally_compiled_code(lines)
+    #if filename == "item-name.cc":
+    #    dump_lines(filename, lines)
 
     results = {}
     section = "none"
