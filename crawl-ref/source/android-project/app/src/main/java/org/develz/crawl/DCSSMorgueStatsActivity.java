@@ -88,7 +88,6 @@ public class DCSSMorgueStatsActivity extends AppCompatActivity
         if (!audit.getSkippedFiles().isEmpty()) {
             text.append("Skipped: ").append(join(audit.getSkippedFiles(), 3)).append("\n");
         }
-        text.append("View: ").append(filter).append("\n\n");
         if (stats.getGames() == 0) {
             return text.append("No final morgues match this view.").toString();
         }

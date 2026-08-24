@@ -96,10 +96,11 @@ public class MorgueStatsParserTest {
     }
 
     @Test
-    public void parsesConstrictedToDeathMorgue() throws Exception {
+    public void parsesCoreMetadataWithoutInterpretingDeathProse() throws Exception {
         String morgue = DEATH_MORGUE.replace("Slain by a two-headed ogre",
-                "Constricted to death by a ball python (2 damage)")
-                .replace("Minotaur Fighter", "Vine Stalker Necromancer");
+                "A newly worded terminal message from Crawl")
+                .replace("Minotaur Fighter", "Vine Stalker Necromancer")
+                + "\n# morgue-stats-v1: ktyp=constriction:killer=ball python\n";
 
         Optional<DCSSMorgueGame> parsed = DCSSMorgueStatsParser.parse(
                 morgueFile("morgue-Goofotaacw-20260823-120000.txt", morgue));
@@ -107,7 +108,7 @@ public class MorgueStatsParserTest {
         assertTrue(parsed.isPresent());
         assertEquals("Vine Stalker", parsed.get().getSpecies());
         assertEquals("Necromancer", parsed.get().getBackground());
-        assertEquals("Constricted to death by a ball python (2 damage)", parsed.get().getEndText());
+        assertEquals("constriction", parsed.get().getEndText());
     }
 
     @Test

@@ -184,6 +184,9 @@ static dump_params _get_dump(bool full_id = false,
         dump_section(par);
     }
 
+    if (se)
+        par.text += "\n# morgue-stats-v1: " + se->raw_string();
+
     // Hopefully we get RVO so we don't have to copy the text.
     return par;
 }

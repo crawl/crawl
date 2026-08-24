@@ -19,6 +19,8 @@ public final class DCSSMorgueStatsParser {
             "^morgue-.+-(\\d{8}-\\d{6})\\.txt$");
     private static final Pattern VERSION = Pattern.compile(
             "^Dungeon Crawl Stone Soup version (.+?)(?: \\(.*)? character file\\.$");
+    private static final Pattern MORGUE_STATS = Pattern.compile(
+            "^# morgue-stats-v1: (.*)$");
     private static final Pattern CHARACTER = Pattern.compile(
             "^(\\d+) (.+) \\((.+) (.+)\\)$");
     private static final Pattern BEGAN = Pattern.compile(
@@ -74,11 +76,17 @@ public final class DCSSMorgueStatsParser {
         int runes = 0;
         DCSSMorgueGame.Outcome outcome = null;
         String endText = null;
+        String killMethod = null;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(morgueFile))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String trimmed = line.trim();
+                Matcher metadata = MORGUE_STATS.matcher(trimmed);
+                if (metadata.matches()) {
+                    killMethod = xlogField(metadata.group(1), "ktyp");
+                    continue;
+                }
                 Matcher versionMatcher = VERSION.matcher(trimmed);
                 if (versionMatcher.matches()) {
                     version = versionMatcher.group(1);
@@ -151,18 +159,22 @@ public final class DCSSMorgueStatsParser {
                     endText = "Escaped with the Orb";
                     continue;
                 }
-                if (isDeathSummary(trimmed)) {
-                    outcome = DCSSMorgueGame.Outcome.LOSS;
-                    endText = trimmed;
-                }
             }
         } catch (IOException | NumberFormatException e) {
             return Optional.empty();
         }
 
+        if (killMethod != null) {
+            outcome = outcomeForKillMethod(killMethod);
+            endText = killMethod;
+        }
         if (score < 0 || species == null || background == null || xl < 0 || turns < 0
-                || durationSeconds < 0 || outcome == null || endText == null) {
+                || durationSeconds < 0) {
             return Optional.empty();
+        }
+        if (outcome == null) {
+            outcome = DCSSMorgueGame.Outcome.LOSS;
+            endText = "Unknown death cause";
         }
         if (place == null) {
             place = "Unknown";
@@ -171,14 +183,24 @@ public final class DCSSMorgueStatsParser {
                 background, god, xl, place, turns, durationSeconds, runes, outcome, endText, version));
     }
 
-    private static boolean isDeathSummary(String line) {
-        return line.startsWith("Slain by ") || line.startsWith("Mangled by ")
-                || line.startsWith("Killed by ") || line.startsWith("Annihilated by ")
-                || line.startsWith("Drowned by ") || line.startsWith("Drowned in ")
-                || line.startsWith("Burnt to a crisp") || line.startsWith("Killed from afar")
-                || line.startsWith("Blown up by ") || line.startsWith("Succumbed to ")
-                || line.startsWith("Demolished by ") || line.startsWith("Engulfed by ")
-                || line.startsWith("Constricted to death by ");
+    private static String xlogField(String fields, String name) {
+        for (String field : fields.split(":")) {
+            int equals = field.indexOf('=');
+            if (equals > 0 && field.substring(0, equals).equals(name)) {
+                return field.substring(equals + 1);
+            }
+        }
+        return null;
+    }
+
+    private static DCSSMorgueGame.Outcome outcomeForKillMethod(String killMethod) {
+        if ("winning".equals(killMethod)) {
+            return DCSSMorgueGame.Outcome.WIN;
+        }
+        if ("quitting".equals(killMethod) || "leaving".equals(killMethod)) {
+            return DCSSMorgueGame.Outcome.QUIT;
+        }
+        return DCSSMorgueGame.Outcome.LOSS;
     }
 
     public static List<DCSSMorgueGame> loadFinalMorgues(File morgueDir) {
