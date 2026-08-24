@@ -68,7 +68,7 @@ void wizard_create_spec_monster_name()
     }
 
     mons_list mlist;
-    string err = mlist.add_mons(specs);
+    string err = mlist.add_mons(specs, false, true);
 
     if (!err.empty())
     {
@@ -79,7 +79,8 @@ void wizard_create_spec_monster_name()
         if (strlen(specs) >= 3 && partial != MONS_PROGRAM_BUG)
         {
             mlist.clear();
-            newerr = mlist.add_mons(remove_prepended_the(mons_type_name(partial, DESC_PLAIN)));
+            newerr = mlist.add_mons(remove_prepended_the(mons_type_name(partial, DESC_PLAIN)),
+                                    false, true);
         }
 
         if (!newerr.empty())

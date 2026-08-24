@@ -708,7 +708,8 @@ public:
     mons_spec get_monster(int slot_index, int list_index) const;
 
     // Returns an error string if the monster is unrecognised.
-    string add_mons(const string &s, bool fix_slot = false);
+    string add_mons(const string &s, bool fix_slot = false,
+                    bool ignore_excluded = false);
     string set_mons(int slot, const string &s);
 
     bool empty()               const { return mons.empty(); }
@@ -744,7 +745,8 @@ private:
     mons_spec get_shaped_spec(const string &name, monster_type type) const;
     mons_spec get_zombified_monster(const string &name,
                                     monster_type zomb) const;
-    mons_spec_slot parse_mons_spec(string spec);
+    mons_spec_slot parse_mons_spec(string spec,
+                                   bool ignore_excluded = false);
     void parse_mons_spells(mons_spec &slot, vector<string> &spells);
     mon_enchant parse_ench(string &ench_str, bool perm);
     mons_spec pick_monster(mons_spec_slot &slot);

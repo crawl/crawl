@@ -3858,7 +3858,8 @@ mon_enchant mons_list::parse_ench(string &ench_str, bool perm)
     return mon_enchant(et, nullptr, dur, deg);
 }
 
-mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
+mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec,
+                                                     bool ignore_excluded)
 {
     mons_spec_slot slot;
 
@@ -3913,7 +3914,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
 
             for (const string &seg : segs)
             {
-                error = mspec.items.add_item(seg, false);
+                error = mspec.items.add_item(seg, false, ignore_excluded);
                 if (!error.empty())
                     return slot;
             }
@@ -4310,11 +4311,11 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
     return slot;
 }
 
-string mons_list::add_mons(const string &s, bool fix)
+string mons_list::add_mons(const string &s, bool fix, bool ignore_excluded)
 {
     error.clear();
 
-    mons_spec_slot slotmons = parse_mons_spec(s);
+    mons_spec_slot slotmons = parse_mons_spec(s, ignore_excluded);
     if (!error.empty())
         return error;
 
