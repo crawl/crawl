@@ -100,7 +100,8 @@ public class MorgueStatsParserTest {
         String morgue = DEATH_MORGUE.replace("Slain by a two-headed ogre",
                 "A newly worded terminal message from Crawl")
                 .replace("Minotaur Fighter", "Vine Stalker Necromancer")
-                + "\n# morgue-stats-v1: ktyp=constriction:killer=ball python:ms_species_total=27\n";
+                + "\n# morgue-stats-v1: ktyp=constriction:killer=ball python:ms_species_total=27"
+                + ":ms_background_total=33:ms_god_total=27:ms_combo_total=880\n";
 
         Optional<DCSSMorgueGame> parsed = DCSSMorgueStatsParser.parse(
                 morgueFile("morgue-Goofotaacw-20260823-120000.txt", morgue));
@@ -110,6 +111,9 @@ public class MorgueStatsParserTest {
         assertEquals("Necromancer", parsed.get().getBackground());
         assertEquals("constriction", parsed.get().getEndText());
         assertEquals(27, parsed.get().getPlayableSpeciesCount());
+        assertEquals(33, parsed.get().getPlayableBackgroundCount());
+        assertEquals(27, parsed.get().getAvailableGodCount());
+        assertEquals(880, parsed.get().getPlayableComboCount());
     }
 
     @Test

@@ -78,6 +78,9 @@ public final class DCSSMorgueStatsParser {
         String endText = null;
         String killMethod = null;
         int playableSpeciesCount = 0;
+        int playableBackgroundCount = 0;
+        int availableGodCount = 0;
+        int playableComboCount = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(morgueFile))) {
             String line;
@@ -86,10 +89,10 @@ public final class DCSSMorgueStatsParser {
                 Matcher metadata = MORGUE_STATS.matcher(trimmed);
                 if (metadata.matches()) {
                     killMethod = xlogField(metadata.group(1), "ktyp");
-                    String speciesCount = xlogField(metadata.group(1), "ms_species_total");
-                    if (speciesCount != null) {
-                        playableSpeciesCount = Integer.parseInt(speciesCount);
-                    }
+                    playableSpeciesCount = xlogIntField(metadata.group(1), "ms_species_total");
+                    playableBackgroundCount = xlogIntField(metadata.group(1), "ms_background_total");
+                    availableGodCount = xlogIntField(metadata.group(1), "ms_god_total");
+                    playableComboCount = xlogIntField(metadata.group(1), "ms_combo_total");
                     continue;
                 }
                 Matcher versionMatcher = VERSION.matcher(trimmed);
@@ -186,7 +189,8 @@ public final class DCSSMorgueStatsParser {
         }
         return Optional.of(new DCSSMorgueGame(morgueFile, timestamp, score, species,
                 background, god, xl, place, turns, durationSeconds, runes, outcome, endText,
-                version, playableSpeciesCount));
+                version, playableSpeciesCount, playableBackgroundCount, availableGodCount,
+                playableComboCount));
     }
 
     private static String xlogField(String fields, String name) {
@@ -197,6 +201,11 @@ public final class DCSSMorgueStatsParser {
             }
         }
         return null;
+    }
+
+    private static int xlogIntField(String fields, String name) {
+        String value = xlogField(fields, name);
+        return value == null ? 0 : Integer.parseInt(value);
     }
 
     private static DCSSMorgueGame.Outcome outcomeForKillMethod(String killMethod) {

@@ -25,13 +25,16 @@ public final class DCSSMorgueGame {
     private final String endText;
     private final String version;
     private final int playableSpeciesCount;
+    private final int playableBackgroundCount;
+    private final int availableGodCount;
+    private final int playableComboCount;
 
     public DCSSMorgueGame(File file, LocalDateTime timestamp, long score,
                           String species, String background, String god, int xl,
                           String place, long turns, long durationSeconds, int runes,
                           Outcome outcome, String endText) {
         this(file, timestamp, score, species, background, god, xl, place, turns,
-                durationSeconds, runes, outcome, endText, "Unknown version", 0);
+                durationSeconds, runes, outcome, endText, "Unknown version", 0, 0, 0, 0);
     }
 
     public DCSSMorgueGame(File file, LocalDateTime timestamp, long score,
@@ -39,14 +42,15 @@ public final class DCSSMorgueGame {
                           String place, long turns, long durationSeconds, int runes,
                           Outcome outcome, String endText, String version) {
         this(file, timestamp, score, species, background, god, xl, place, turns,
-                durationSeconds, runes, outcome, endText, version, 0);
+                durationSeconds, runes, outcome, endText, version, 0, 0, 0, 0);
     }
 
     public DCSSMorgueGame(File file, LocalDateTime timestamp, long score,
                           String species, String background, String god, int xl,
                           String place, long turns, long durationSeconds, int runes,
                           Outcome outcome, String endText, String version,
-                          int playableSpeciesCount) {
+                          int playableSpeciesCount, int playableBackgroundCount,
+                          int availableGodCount, int playableComboCount) {
         this.file = file;
         this.timestamp = timestamp;
         this.score = score;
@@ -62,6 +66,9 @@ public final class DCSSMorgueGame {
         this.endText = endText;
         this.version = version;
         this.playableSpeciesCount = playableSpeciesCount;
+        this.playableBackgroundCount = playableBackgroundCount;
+        this.availableGodCount = availableGodCount;
+        this.playableComboCount = playableComboCount;
     }
 
     public File getFile() { return file; }
@@ -79,4 +86,7 @@ public final class DCSSMorgueGame {
     public String getEndText() { return endText; }
     public String getVersion() { return version; }
     public int getPlayableSpeciesCount() { return playableSpeciesCount; }
+    public int getPlayableBackgroundCount() { return playableBackgroundCount; }
+    public int getAvailableGodCount() { return availableGodCount; }
+    public int getPlayableComboCount() { return playableComboCount; }
 }

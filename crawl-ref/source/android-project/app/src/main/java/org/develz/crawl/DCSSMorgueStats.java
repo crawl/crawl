@@ -12,6 +12,9 @@ import java.util.Set;
 public final class DCSSMorgueStats {
     // Current core roster, used only until a new final morgue supplies its core value.
     private static final int FALLBACK_PLAYABLE_SPECIES = 27;
+    private static final int FALLBACK_PLAYABLE_BACKGROUNDS = 33;
+    private static final int FALLBACK_AVAILABLE_GODS = 27;
+    private static final int FALLBACK_PLAYABLE_COMBOS = 880;
     private final List<DCSSMorgueGame> newestFirst;
     private final int games;
     private final int wins;
@@ -37,6 +40,10 @@ public final class DCSSMorgueStats {
     private final List<DCSSMorgueBreakdown> monthBreakdowns;
     private final int distinctSpeciesPlayed;
     private final int playableSpeciesCount;
+    private final int playableBackgroundCount;
+    private final int availableGodCount;
+    private final int playableComboCount;
+    private final int distinctGodsWon;
     private final int distinctSpeciesWon;
     private final int distinctBackgroundsPlayed;
     private final int distinctBackgroundsWon;
@@ -56,6 +63,9 @@ public final class DCSSMorgueStats {
         int winRunes = 0;
         int runesBest = 0;
         int coreSpeciesCount = 0;
+        int coreBackgroundCount = 0;
+        int coreGodCount = 0;
+        int coreComboCount = 0;
         DCSSMorgueGame scoreRecord = null;
         DCSSMorgueGame turnRecord = null;
         DCSSMorgueGame durationRecord = null;
@@ -73,11 +83,15 @@ public final class DCSSMorgueStats {
         Set<String> wonBackgrounds = new HashSet<>();
         Set<String> playedCombos = new HashSet<>();
         Set<String> wonCombos = new HashSet<>();
+        Set<String> wonGods = new HashSet<>();
 
         for (DCSSMorgueGame game : newestFirst) {
             String combo = game.getSpecies() + " " + game.getBackground();
             boolean win = game.getOutcome() == DCSSMorgueGame.Outcome.WIN;
             coreSpeciesCount = Math.max(coreSpeciesCount, game.getPlayableSpeciesCount());
+            coreBackgroundCount = Math.max(coreBackgroundCount, game.getPlayableBackgroundCount());
+            coreGodCount = Math.max(coreGodCount, game.getAvailableGodCount());
+            coreComboCount = Math.max(coreComboCount, game.getPlayableComboCount());
             score += game.getScore();
             turns += game.getTurns();
             duration += game.getDurationSeconds();
@@ -99,6 +113,9 @@ public final class DCSSMorgueStats {
                 wonSpecies.add(game.getSpecies());
                 wonBackgrounds.add(game.getBackground());
                 wonCombos.add(combo);
+                if (!"Atheist".equals(game.getGod())) {
+                    wonGods.add(game.getGod());
+                }
             }
             playedSpecies.add(game.getSpecies());
             playedBackgrounds.add(game.getBackground());
@@ -128,6 +145,10 @@ public final class DCSSMorgueStats {
         fastestWinByDuration = durationRecord;
         distinctSpeciesPlayed = playedSpecies.size();
         playableSpeciesCount = coreSpeciesCount > 0 ? coreSpeciesCount : FALLBACK_PLAYABLE_SPECIES;
+        playableBackgroundCount = coreBackgroundCount > 0 ? coreBackgroundCount : FALLBACK_PLAYABLE_BACKGROUNDS;
+        availableGodCount = coreGodCount > 0 ? coreGodCount : FALLBACK_AVAILABLE_GODS;
+        playableComboCount = coreComboCount > 0 ? coreComboCount : FALLBACK_PLAYABLE_COMBOS;
+        distinctGodsWon = wonGods.size();
         distinctSpeciesWon = wonSpecies.size();
         distinctBackgroundsPlayed = playedBackgrounds.size();
         distinctBackgroundsWon = wonBackgrounds.size();
@@ -184,6 +205,10 @@ public final class DCSSMorgueStats {
     public List<DCSSMorgueBreakdown> getMonthBreakdowns() { return monthBreakdowns; }
     public int getDistinctSpeciesPlayed() { return distinctSpeciesPlayed; }
     public int getPlayableSpeciesCount() { return playableSpeciesCount; }
+    public int getPlayableBackgroundCount() { return playableBackgroundCount; }
+    public int getAvailableGodCount() { return availableGodCount; }
+    public int getPlayableComboCount() { return playableComboCount; }
+    public int getDistinctGodsWon() { return distinctGodsWon; }
     public int getDistinctSpeciesWon() { return distinctSpeciesWon; }
     public int getDistinctBackgroundsPlayed() { return distinctBackgroundsPlayed; }
     public int getDistinctBackgroundsWon() { return distinctBackgroundsWon; }

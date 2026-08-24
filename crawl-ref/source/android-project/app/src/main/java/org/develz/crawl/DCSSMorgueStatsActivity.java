@@ -105,9 +105,11 @@ public class DCSSMorgueStatsActivity extends AppCompatActivity
                 .append("Species won: ").append(stats.getDistinctSpeciesWon()).append(" / ")
                 .append(stats.getPlayableSpeciesCount()).append("\n")
                 .append("Backgrounds won: ").append(stats.getDistinctBackgroundsWon()).append(" / ")
-                .append(stats.getDistinctBackgroundsPlayed()).append(" played\n")
+                .append(stats.getPlayableBackgroundCount()).append("\n")
+                .append("Gods won: ").append(stats.getDistinctGodsWon()).append(" / ")
+                .append(stats.getAvailableGodCount()).append("\n")
                 .append("Combos won: ").append(stats.getDistinctCombosWon()).append(" / ")
-                .append(stats.getDistinctCombosPlayed()).append(" played\n");
+                .append(stats.getPlayableComboCount()).append("\n");
         appendBreakdowns(text, "Deaths by cause", stats.getDeathBreakdowns(), 8);
         appendBreakdowns(text, "Deaths by place", stats.getDeathPlaceBreakdowns(), 8);
         appendBreakdowns(text, "Timeline by month", stats.getMonthBreakdowns(), 12);
