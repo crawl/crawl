@@ -6397,19 +6397,20 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     }
 
     case BEAM_CHARM:
+    {
+        const bool ours         = !agent() || agent()->wont_attack();
+        const enchant_type good = ours ? ENCH_CHARM : ENCH_HEXED;
+        const enchant_type bad  = ours ? ENCH_HEXED : ENCH_CHARM;
+
+        if (mon->has_ench(bad))
+        {
+            obvious_effect = mon->del_ench(bad);
+            return MON_AFFECTED;
+        }
+
         if (agent() && agent()->is_monster())
         {
-            enchant_type good = (agent()->wont_attack()) ? ENCH_CHARM
-                                                         : ENCH_HEXED;
-            enchant_type bad  = (agent()->wont_attack()) ? ENCH_HEXED
-                                                         : ENCH_CHARM;
-
             const bool could_see = you.can_see(*mon);
-            if (mon->has_ench(bad))
-            {
-                obvious_effect = mon->del_ench(bad);
-                return MON_AFFECTED;
-            }
             if (simple_monster_message(*mon, " is charmed!"))
                 obvious_effect = true;
             mon->add_ench(mon_enchant(good, agent()));
@@ -6434,6 +6435,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (you.can_see(*mon))
             obvious_effect = true;
         return MON_AFFECTED;
+    }
 
     case BEAM_PORKALATOR:
     {
