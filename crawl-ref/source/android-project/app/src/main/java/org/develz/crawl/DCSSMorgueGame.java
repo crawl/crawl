@@ -24,19 +24,29 @@ public final class DCSSMorgueGame {
     private final Outcome outcome;
     private final String endText;
     private final String version;
+    private final int playableSpeciesCount;
 
     public DCSSMorgueGame(File file, LocalDateTime timestamp, long score,
                           String species, String background, String god, int xl,
                           String place, long turns, long durationSeconds, int runes,
                           Outcome outcome, String endText) {
         this(file, timestamp, score, species, background, god, xl, place, turns,
-                durationSeconds, runes, outcome, endText, "Unknown version");
+                durationSeconds, runes, outcome, endText, "Unknown version", 0);
     }
 
     public DCSSMorgueGame(File file, LocalDateTime timestamp, long score,
                           String species, String background, String god, int xl,
                           String place, long turns, long durationSeconds, int runes,
                           Outcome outcome, String endText, String version) {
+        this(file, timestamp, score, species, background, god, xl, place, turns,
+                durationSeconds, runes, outcome, endText, version, 0);
+    }
+
+    public DCSSMorgueGame(File file, LocalDateTime timestamp, long score,
+                          String species, String background, String god, int xl,
+                          String place, long turns, long durationSeconds, int runes,
+                          Outcome outcome, String endText, String version,
+                          int playableSpeciesCount) {
         this.file = file;
         this.timestamp = timestamp;
         this.score = score;
@@ -51,6 +61,7 @@ public final class DCSSMorgueGame {
         this.outcome = outcome;
         this.endText = endText;
         this.version = version;
+        this.playableSpeciesCount = playableSpeciesCount;
     }
 
     public File getFile() { return file; }
@@ -67,4 +78,5 @@ public final class DCSSMorgueGame {
     public Outcome getOutcome() { return outcome; }
     public String getEndText() { return endText; }
     public String getVersion() { return version; }
+    public int getPlayableSpeciesCount() { return playableSpeciesCount; }
 }

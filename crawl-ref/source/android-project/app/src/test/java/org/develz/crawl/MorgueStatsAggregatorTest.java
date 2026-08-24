@@ -48,6 +48,7 @@ public class MorgueStatsAggregatorTest {
         assertEquals("0.35-a0", stats.getVersionBreakdowns().get(0).getLabel());
         assertEquals("2026-08", stats.getMonthBreakdowns().get(0).getLabel());
         assertEquals(2, stats.getDistinctSpeciesPlayed());
+        assertEquals(27, stats.getPlayableSpeciesCount());
         assertEquals(1, stats.getDistinctSpeciesWon());
         assertEquals(1, stats.getDistinctBackgroundsWon());
         assertEquals(1, stats.getDistinctCombosWon());

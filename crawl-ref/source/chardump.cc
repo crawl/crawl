@@ -42,6 +42,7 @@
 #include "mutation.h"
 #include "notes.h"
 #include "output.h"
+#include "playable.h"
 #include "place.h"
 #include "prompt.h"
 #include "religion.h"
@@ -185,7 +186,13 @@ static dump_params _get_dump(bool full_id = false,
     }
 
     if (se)
-        par.text += "\n# morgue-stats-v1: " + se->raw_string();
+    {
+        string metadata = se->raw_string();
+        if (!metadata.empty() && metadata.back() == '\n')
+            metadata.pop_back();
+        par.text += make_stringf("\n# morgue-stats-v1: %s:ms_species_total=%d\n",
+                                 metadata.c_str(), (int)playable_species().size());
+    }
 
     // Hopefully we get RVO so we don't have to copy the text.
     return par;

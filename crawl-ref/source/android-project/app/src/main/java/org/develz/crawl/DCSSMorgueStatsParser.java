@@ -77,6 +77,7 @@ public final class DCSSMorgueStatsParser {
         DCSSMorgueGame.Outcome outcome = null;
         String endText = null;
         String killMethod = null;
+        int playableSpeciesCount = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(morgueFile))) {
             String line;
@@ -85,6 +86,10 @@ public final class DCSSMorgueStatsParser {
                 Matcher metadata = MORGUE_STATS.matcher(trimmed);
                 if (metadata.matches()) {
                     killMethod = xlogField(metadata.group(1), "ktyp");
+                    String speciesCount = xlogField(metadata.group(1), "ms_species_total");
+                    if (speciesCount != null) {
+                        playableSpeciesCount = Integer.parseInt(speciesCount);
+                    }
                     continue;
                 }
                 Matcher versionMatcher = VERSION.matcher(trimmed);
@@ -180,7 +185,8 @@ public final class DCSSMorgueStatsParser {
             place = "Unknown";
         }
         return Optional.of(new DCSSMorgueGame(morgueFile, timestamp, score, species,
-                background, god, xl, place, turns, durationSeconds, runes, outcome, endText, version));
+                background, god, xl, place, turns, durationSeconds, runes, outcome, endText,
+                version, playableSpeciesCount));
     }
 
     private static String xlogField(String fields, String name) {

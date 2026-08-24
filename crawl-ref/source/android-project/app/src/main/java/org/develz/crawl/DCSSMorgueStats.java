@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Set;
 
 public final class DCSSMorgueStats {
+    // Current core roster, used only until a new final morgue supplies its core value.
+    private static final int FALLBACK_PLAYABLE_SPECIES = 27;
     private final List<DCSSMorgueGame> newestFirst;
     private final int games;
     private final int wins;
@@ -34,6 +36,7 @@ public final class DCSSMorgueStats {
     private final List<DCSSMorgueBreakdown> versionBreakdowns;
     private final List<DCSSMorgueBreakdown> monthBreakdowns;
     private final int distinctSpeciesPlayed;
+    private final int playableSpeciesCount;
     private final int distinctSpeciesWon;
     private final int distinctBackgroundsPlayed;
     private final int distinctBackgroundsWon;
@@ -52,6 +55,7 @@ public final class DCSSMorgueStats {
         int winCount = 0;
         int winRunes = 0;
         int runesBest = 0;
+        int coreSpeciesCount = 0;
         DCSSMorgueGame scoreRecord = null;
         DCSSMorgueGame turnRecord = null;
         DCSSMorgueGame durationRecord = null;
@@ -73,6 +77,7 @@ public final class DCSSMorgueStats {
         for (DCSSMorgueGame game : newestFirst) {
             String combo = game.getSpecies() + " " + game.getBackground();
             boolean win = game.getOutcome() == DCSSMorgueGame.Outcome.WIN;
+            coreSpeciesCount = Math.max(coreSpeciesCount, game.getPlayableSpeciesCount());
             score += game.getScore();
             turns += game.getTurns();
             duration += game.getDurationSeconds();
@@ -122,6 +127,7 @@ public final class DCSSMorgueStats {
         fastestWinByTurns = turnRecord;
         fastestWinByDuration = durationRecord;
         distinctSpeciesPlayed = playedSpecies.size();
+        playableSpeciesCount = coreSpeciesCount > 0 ? coreSpeciesCount : FALLBACK_PLAYABLE_SPECIES;
         distinctSpeciesWon = wonSpecies.size();
         distinctBackgroundsPlayed = playedBackgrounds.size();
         distinctBackgroundsWon = wonBackgrounds.size();
@@ -177,6 +183,7 @@ public final class DCSSMorgueStats {
     public List<DCSSMorgueBreakdown> getVersionBreakdowns() { return versionBreakdowns; }
     public List<DCSSMorgueBreakdown> getMonthBreakdowns() { return monthBreakdowns; }
     public int getDistinctSpeciesPlayed() { return distinctSpeciesPlayed; }
+    public int getPlayableSpeciesCount() { return playableSpeciesCount; }
     public int getDistinctSpeciesWon() { return distinctSpeciesWon; }
     public int getDistinctBackgroundsPlayed() { return distinctBackgroundsPlayed; }
     public int getDistinctBackgroundsWon() { return distinctBackgroundsWon; }

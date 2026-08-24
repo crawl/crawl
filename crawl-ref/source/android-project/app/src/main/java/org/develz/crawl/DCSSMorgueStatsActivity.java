@@ -103,7 +103,7 @@ public class DCSSMorgueStatsActivity extends AppCompatActivity
                 .append(" / ").append(stats.getBestWinStreak()).append("\n");
         text.append("\nAchievements\n")
                 .append("Species won: ").append(stats.getDistinctSpeciesWon()).append(" / ")
-                .append(stats.getDistinctSpeciesPlayed()).append(" played\n")
+                .append(stats.getPlayableSpeciesCount()).append("\n")
                 .append("Backgrounds won: ").append(stats.getDistinctBackgroundsWon()).append(" / ")
                 .append(stats.getDistinctBackgroundsPlayed()).append(" played\n")
                 .append("Combos won: ").append(stats.getDistinctCombosWon()).append(" / ")
