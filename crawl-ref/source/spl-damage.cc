@@ -4391,6 +4391,9 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
             if (!mon || !you.aware_of(*mon))
                 continue;
 
+            if (protected_from_spell(SPELL_HAILSTORM, *mon, &you))
+                continue;
+
             if (!mon->friendly() && (*vulnerable)(mon))
                 return spret::success;
         }

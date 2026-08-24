@@ -1452,6 +1452,54 @@ static string _weapon_ego_key(brand_type ego)
     return ego_key;
 }
 
+/*
+ * Given some name, return a weapon ego type. Tries to match the description as found in
+ * special_weapon_type_name(), either terse or not. If `partial_matches` is set, it will fill the vector with
+ * any partial matches it finds. If there is exactly one, will return this weapon ego, otherwise, will fail.
+ *
+ * @param partial_matches   an optional pointer to a vector, in case the consumer wants to do something
+ *                          with the partial match results (e.g. show them to the user). If this is `nullptr`,
+ *                          will accept only exact matches.
+ *
+ * @return the weapon ego type if successful, otherwise NUM_SPECIAL_WEAPONS if it can't find a single match.
+ */
+brand_type weapon_ego_from_name(string name, vector<brand_type> *partial_matches)
+{
+    brand_type wpn = NUM_SPECIAL_WEAPONS;
+
+    string spec = lowercase_string(name);
+
+    for (int i = 0; i < NUM_SPECIAL_WEAPONS; ++i)
+    {
+        brand_type bt = static_cast<brand_type>(i);
+        const string bt_name_terse_c = brand_type_name(bt, true);
+        const string bt_name_nonterse_c = brand_type_name(bt, false);
+        if (bt_name_terse_c.empty() && bt_name_nonterse_c.empty())
+            continue;
+        const string bt_name_terse = lowercase_string(bt_name_terse_c);
+        const string bt_name_nonterse = lowercase_string(bt_name_nonterse_c);
+
+        const string full_bt_name = bt_name_nonterse + " (" + bt_name_terse + ")";
+        if (spec == full_bt_name)
+        {
+            wpn = bt;
+            break;
+        }
+
+        if (partial_matches && (strstr(spec.c_str(), bt_name_terse.c_str())
+                                || strstr(spec.c_str(), bt_name_nonterse.c_str())))
+        {
+            partial_matches->push_back(bt);
+        }
+    }
+
+    // If only one matching weapon ego, use that.
+    if (partial_matches && wpn == NUM_SPECIAL_WEAPONS && partial_matches->size() == 1)
+        return (*partial_matches)[0];
+
+    return wpn;
+}
+
 static void _append_skill_needed(string &description, const item_def &item,
                                  bool indent = true, string skill_padding = "")
 {
@@ -2103,13 +2151,62 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
     return description;
 }
 
-static string _missile_ego_key(const item_def &item)
+static string _missile_ego_key(special_missile_type ego)
 {
-    string verbose_ego_name = lowercase_first(missile_brand_name(item, MBN_NAME));
-    string terse_ego_name = lowercase_first(missile_brand_name(item, MBN_TERSE));
+    string verbose_ego_name = lowercase_first(special_missile_type_name(ego, MBN_NAME));
+    string terse_ego_name = lowercase_first(special_missile_type_name(ego, MBN_TERSE));
     string ego_key = verbose_ego_name + " (" + terse_ego_name + ") missile ego";
 
     return ego_key;
+}
+
+/*
+ * Given some name, return a missile ego type. Tries to match the description as found in
+ * special_missile_type_name(), either terse or not. If `partial_matches` is set, it will fill the vector with
+ * any partial matches it finds. If there is exactly one, will return this missile ego, otherwise, will fail.
+ *
+ * @param partial_matches   an optional pointer to a vector, in case the consumer wants to do something
+ *                          with the partial match results (e.g. show them to the user). If this is `nullptr`,
+ *                          will accept only exact matches.
+ *
+ * @return the missile ego type if successful, otherwise NUM_SPECIAL_MISSILES if it can't find a single match.
+ */
+special_missile_type missile_ego_from_name(string name,
+                                           vector<special_missile_type> *partial_matches)
+{
+    special_missile_type msl = NUM_SPECIAL_MISSILES;
+
+    string spec = lowercase_string(name);
+
+    for (int i = 0; i < NUM_SPECIAL_MISSILES; ++i)
+    {
+        special_missile_type smt = static_cast<special_missile_type>(i);
+        const string smt_name_terse_c = special_missile_type_name(smt, MBN_TERSE);
+        const string smt_name_nonterse_c = special_missile_type_name(smt, MBN_NAME);
+        if (smt_name_terse_c.empty() && smt_name_nonterse_c.empty())
+            continue;
+        const string smt_name_terse = lowercase_string(smt_name_terse_c);
+        const string smt_name_nonterse = lowercase_string(smt_name_nonterse_c);
+
+        const string full_smt_name = smt_name_nonterse + " (" + smt_name_terse + ")";
+        if (spec == full_smt_name)
+        {
+            msl = smt;
+            break;
+        }
+
+        if (partial_matches && (strstr(spec.c_str(), smt_name_terse.c_str())
+                                || strstr(spec.c_str(), smt_name_nonterse.c_str())))
+        {
+            partial_matches->push_back(smt);
+        }
+    }
+
+    // If only one matching missile ego, use that.
+    if (partial_matches && msl == NUM_SPECIAL_MISSILES && partial_matches->size() == 1)
+        return (*partial_matches)[0];
+
+    return msl;
 }
 
 static string _describe_ammo(const item_def &item)
@@ -2118,11 +2215,13 @@ static string _describe_ammo(const item_def &item)
 
     description.reserve(64);
 
-    if (item.brand && item.is_identified())
+    const special_missile_type ego = get_ammo_brand(item);
+
+    if (ego != SPMSL_NORMAL && item.is_identified())
     {
         description += "\n\n";
 
-        string ego_key = _missile_ego_key(item);
+        string ego_key = _missile_ego_key(ego);
         string ego_desc = getEgoString(ego_key);
 
         description += ego_desc;
@@ -2189,6 +2288,55 @@ static string _armour_ego_key(special_armour_type ego)
     string ego_key = verbose_ego_name + " (" + terse_ego_name + ") armour ego";
 
     return ego_key;
+}
+
+/*
+ * Given some name, return an armour ego type. Tries to match the description as found in
+ * special_armour_type_name(), either terse or not. If `partial_matches` is set, it will fill the vector with
+ * any partial matches it finds. If there is exactly one, will return this armour ego, otherwise, will fail.
+ *
+ * @param partial_matches   an optional pointer to a vector, in case the consumer wants to do something
+ *                          with the partial match results (e.g. show them to the user). If this is `nullptr`,
+ *                          will accept only exact matches.
+ *
+ * @return the armour ego type if successful, otherwise NUM_SPECIAL_ARMOURS if it can't find a single match.
+ */
+special_armour_type armour_ego_from_name(string name,
+                                         vector<special_armour_type> *partial_matches)
+{
+    special_armour_type arm = NUM_SPECIAL_ARMOURS;
+
+    string spec = lowercase_string(name);
+
+    for (int i = 0; i < NUM_SPECIAL_ARMOURS; ++i)
+    {
+        special_armour_type sat = static_cast<special_armour_type>(i);
+        const string sat_name_terse_c = special_armour_type_name(sat, true);
+        const string sat_name_nonterse_c = special_armour_type_name(sat, false);
+        if (sat_name_terse_c.empty() && sat_name_nonterse_c.empty())
+            continue;
+        const string sat_name_terse = lowercase_string(sat_name_terse_c);
+        const string sat_name_nonterse = lowercase_string(sat_name_nonterse_c);
+
+        const string full_sat_name = sat_name_nonterse + " (" + sat_name_terse + ")";
+        if (spec == full_sat_name)
+        {
+            arm = sat;
+            break;
+        }
+
+        if (partial_matches && (strstr(spec.c_str(), sat_name_terse.c_str())
+                                || strstr(spec.c_str(), sat_name_nonterse.c_str())))
+        {
+            partial_matches->push_back(sat);
+        }
+    }
+
+    // If only one matching armour ego, use that.
+    if (partial_matches && arm == NUM_SPECIAL_ARMOURS && partial_matches->size() == 1)
+        return (*partial_matches)[0];
+
+    return arm;
 }
 
 static string _orb_ego_details(special_armour_type ego)
@@ -4253,8 +4401,11 @@ static string _player_spell_stats(const spell_type spell)
     const string damage_string = spell_damage_string(spell);
     const string max_dam_string = spell_max_damage_string(spell);
     const int acc = spell_acc(spell);
+    const string defence_string = spell_defence_string(spell);
+    const string resist_string = spell_resist_string(spell);
     // TODO: generalize this pattern? It's very common in descriptions
-    const int padding = (acc != -1) ? 8 : damage_string.size() ? 6 : 5;
+    const int padding = (acc != -1 || !defence_string.empty()) ? 8
+                        : damage_string.size() ? 6 : 5;
     description += make_stringf("\n\n%*s: ", padding, "Power");
     description += spell_power_string(spell);
 
@@ -4279,6 +4430,16 @@ static string _player_spell_stats(const spell_type spell)
     description += spell_range_string(spell);
     description += make_stringf("\n%*s: ", padding, "Noise");
     description += spell_noise_string(spell);
+    if (!defence_string.empty())
+    {
+        description += make_stringf("\n%*s: %s", padding, "Defences",
+                                    defence_string.c_str());
+    }
+    if (!resist_string.empty())
+    {
+        description += make_stringf("\n%*s: %s", padding, "Resists",
+                                    resist_string.c_str());
+    }
     description += "\n";
     return description;
 }
@@ -4675,6 +4836,14 @@ static void _get_spell_description(const spell_type spell,
         description += "\nRange : ";
         description += range_string(range, -1, minrange);
 
+        const int mon_pow = mons_power_for_hd(spell, hd);
+        const string defence_string = spell_defence_string(spell, true, mon_pow);
+        const string resist_string = spell_resist_string(spell, true, mon_pow);
+        if (!defence_string.empty())
+            description += "\nDefences : " + defence_string;
+        if (!resist_string.empty())
+            description += "\nResists : " + resist_string;
+
         if (crawl_state.need_save && you_worship(GOD_DITHMENOS))
         {
             if (!valid_marionette_spell(spell))
@@ -4952,6 +5121,42 @@ void describe_bane(bane_type bane)
     describe_info inf;
     inf.title = uppercase_first(bane_name(bane));
     inf.body << bane_long_description(bane);
+
+    show_description(inf);
+}
+
+void describe_weapon_ego(brand_type wpn)
+{
+    describe_info inf;
+    string ego_key = _weapon_ego_key(wpn);
+    string ego_desc = getEgoString(ego_key);
+
+    inf.title = uppercase_first(ego_key);
+    inf.body << ego_desc;
+
+    show_description(inf);
+}
+
+void describe_armour_ego(special_armour_type arm)
+{
+    describe_info inf;
+    string ego_key = _armour_ego_key(arm);
+    string ego_desc = getEgoString(ego_key);
+
+    inf.title = uppercase_first(ego_key);
+    inf.body << ego_desc;
+
+    show_description(inf);
+}
+
+void describe_missile_ego(special_missile_type msl)
+{
+    describe_info inf;
+    string ego_key = _missile_ego_key(msl);
+    string ego_desc = getEgoString(ego_key);
+
+    inf.title = uppercase_first(ego_key);
+    inf.body << ego_desc;
 
     show_description(inf);
 }

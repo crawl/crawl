@@ -1328,8 +1328,13 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return c_check;
     }
 
-    if (!prevent && temp && spell_no_hostile_in_range(spell))
+    if (temp
+        && (!prevent
+            || testbits(get_spell_flags(spell), spflag::needs_target))
+        && spell_no_hostile_in_range(spell))
+    {
         return "you can't see any hostile targets that would be affected.";
+    }
 
     switch (spell)
     {
@@ -1680,6 +1685,13 @@ static bool _any_valid_targets(const unique_ptr<targeter>& tgt, int range,
     return false;
 }
 
+bool protected_from_spell(spell_type spell, const monster &mon,
+                          const actor *agent)
+{
+    return testbits(get_spell_flags(spell), spflag::direct_damage_only)
+           && mon.damage_immune(agent);
+}
+
 // Mirror targetting logic to check whether LRD can find a target.
 static bool _lrd_no_hostile_in_range(int pow, int range)
 {
@@ -1691,6 +1703,8 @@ static bool _lrd_no_hostile_in_range(int pow, int range)
         if (!you.aware_of(mon) || !mons_is_threatening(mon))
             continue;
         if (mons_attitude(mon) != ATT_HOSTILE && !mon.has_ench(ENCH_FRENZIED))
+            continue;
+        if (protected_from_spell(SPELL_LRD, mon, &you))
             continue;
 
         for (radius_iterator ri(mon.pos(), 2, C_SQUARE, LOS_DEFAULT); ri; ++ri)
@@ -1712,18 +1726,22 @@ bool spell_no_hostile_in_range(spell_type spell)
     if (!in_bounds(you.pos()) || !you.on_current_level)
         return true;
 
-    const int minRange = get_dist_to_nearest_monster();
+    const spell_flags flags = get_spell_flags(spell);
+    const int minRange = get_dist_to_nearest_monster(testbits(flags, spflag::direct_damage_only));
     const int pow = calc_spell_power(spell);
     const int range = calc_spell_range(spell, pow, true);
 
     // If there are known invisible monsters around, assume that they *might*
-    // be in range.
+    // be in range for spells that can target invisible things.
     //
     // XXX: This is inexact since it doesn't account for resistances of said
     //      invisible monster, but doing that comprehensively is quite hard
     //      and probably not worth the trouble.
-    if (env.invis_knowledge.any_unknown_nearby())
+    if (env.invis_knowledge.any_unknown_nearby()
+        && !testbits(flags, spflag::needs_target))
+    {
         return false;
+    }
 
     switch (spell)
     {
@@ -1812,8 +1830,11 @@ bool spell_no_hostile_in_range(spell_type spell)
         for (coord_def t : arcjolt_targets(you, false))
         {
             const monster *mon = monster_at(t);
-            if (mon != nullptr && !mon->wont_attack())
+            if (mon != nullptr && !mon->wont_attack()
+                && !protected_from_spell(spell, *mon, &you))
+            {
                 return false;
+            }
         }
         return true;
 
@@ -1821,8 +1842,11 @@ bool spell_no_hostile_in_range(spell_type spell)
         for (coord_def t : chain_lightning_targets())
         {
             const monster *mon = monster_at(t);
-            if (mon != nullptr && !mon->wont_attack())
+            if (mon != nullptr && !mon->wont_attack()
+                && !protected_from_spell(spell, *mon, &you))
+            {
                 return false;
+            }
         }
         return true;
 
@@ -1873,8 +1897,6 @@ bool spell_no_hostile_in_range(spell_type spell)
 
     if (minRange < 0 || range < 0)
         return false;
-
-    const spell_flags flags = get_spell_flags(spell);
 
     // The healing spells.
     if (testbits(flags, spflag::helpful))

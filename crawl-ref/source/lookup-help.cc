@@ -542,6 +542,27 @@ static bool _passive_filter(string key, string /*body*/)
     return !strip_suffix(lowercase(key), " passive");
 }
 
+static bool _weapon_ego_filter(string key, string /*body*/)
+{
+    lowercase(key);
+
+    return !strip_suffix(key, " weapon ego");
+}
+
+static bool _armour_ego_filter(string key, string /*body*/)
+{
+    lowercase(key);
+
+    return !strip_suffix(key, " armour ego");
+}
+
+static bool _missile_ego_filter(string key, string /*body*/)
+{
+    lowercase(key);
+
+    return !strip_suffix(key, " missile ego");
+}
+
 static void _recap_mon_keys(vector<string> &keys)
 {
     for (unsigned int i = 0, size = keys.size(); i < size; i++)
@@ -1371,7 +1392,7 @@ static int _describe_mutation(const string &key, const string &suffix,
 }
 
 static int _describe_bane(const string &key, const string &suffix,
-                              string /*footer*/)
+                          string /*footer*/)
 {
     const string bane_name = key.substr(0, key.size() - suffix.size());
     const bane_type bane = bane_from_name(bane_name.c_str());
@@ -1381,6 +1402,48 @@ static int _describe_bane(const string &key, const string &suffix,
         return 0;
     }
     describe_bane(bane);
+    return 0;
+}
+
+static int _describe_weapon_ego(const string &key, const string &suffix,
+                                string /*footer*/)
+{
+    const string weapon_ego_name = key.substr(0, key.size() - suffix.size());
+    const brand_type wpn = weapon_ego_from_name(weapon_ego_name.c_str());
+    if (wpn == NUM_SPECIAL_WEAPONS)
+    {
+        ui::error(make_stringf("Unable to get '%s' by name", key.c_str()));
+        return 0;
+    }
+    describe_weapon_ego(wpn);
+    return 0;
+}
+
+static int _describe_armour_ego(const string &key, const string &suffix,
+                                string /*footer*/)
+{
+    const string armour_ego_name = key.substr(0, key.size() - suffix.size());
+    const special_armour_type arm = armour_ego_from_name(armour_ego_name.c_str());
+    if (arm == NUM_SPECIAL_ARMOURS)
+    {
+        ui::error(make_stringf("Unable to get '%s' by name", key.c_str()));
+        return 0;
+    }
+    describe_armour_ego(arm);
+    return 0;
+}
+
+static int _describe_missile_ego(const string &key, const string &suffix,
+                                 string /*footer*/)
+{
+    const string missile_ego_name = key.substr(0, key.size() - suffix.size());
+    const special_missile_type msl = missile_ego_from_name(missile_ego_name.c_str());
+    if (msl == NUM_SPECIAL_MISSILES)
+    {
+        ui::error(make_stringf("Unable to get '%s' by name", key.c_str()));
+        return 0;
+    }
+    describe_missile_ego(msl);
     return 0;
 }
 
@@ -1428,6 +1491,20 @@ static const vector<LookupType> lookup_types = {
     LookupType('N', "bane", nullptr, _bane_filter,
                nullptr, nullptr, _simple_menu_gen,
                _describe_bane, lookup_type::db_suffix),
+    // XXX: Capitalise "Ego" when it's the second word in the menu
+    // titles that use it, so that it matches when the first word is
+    // capitalised, and so that the default settings in
+    // dat/defaults/menu_colours.txt don't colour the menu titles green
+    // just for containing "ego".
+    LookupType('W', "weapon Ego", nullptr, _weapon_ego_filter,
+               nullptr, nullptr, _simple_menu_gen,
+               _describe_weapon_ego, lookup_type::db_suffix),
+    LookupType('R', "armour Ego", nullptr, _armour_ego_filter,
+               nullptr, nullptr, _simple_menu_gen,
+               _describe_armour_ego, lookup_type::db_suffix),
+    LookupType('E', "missile Ego", nullptr, _missile_ego_filter,
+               nullptr, nullptr, _simple_menu_gen,
+               _describe_missile_ego, lookup_type::db_suffix),
 };
 
 /**

@@ -45,7 +45,7 @@ enum class spflag
     escape             = 0x00002000,      // useful for running away
     recovery           = 0x00004000,      // healing or recovery spell
                                           // (Can be cast by friendly monsters, even when out of combat)
-                     //  0x00008000,
+    direct_damage_only = 0x00008000,      // does nothing except deal damage
     destructive        = 0x00010000,      // not a conjuration, but still
                                           // supported by Vehumet/Battlesphere
     selfench           = 0x00020000,      // monsters use as selfench
@@ -53,7 +53,7 @@ enum class spflag
     needs_tracer       = 0x00080000,      // monster casting needs tracer
     noisy              = 0x00100000,      // makes noise, even if innate
     testing            = 0x00200000,      // a testing/debugging spell
-                     //  0x00400000,      // was spflag::corpse_violating
+    needs_target       = 0x00400000,      // cannot be cast without a target
                      //  0x00800000,      // was SPFLAG_ALLOW_SELF
                      //  0x01000000,      // was spflag::utility
     no_ghost           = 0x02000000,      // ghosts can't get this spell
@@ -144,6 +144,10 @@ string spell_damage_string(spell_type spell, bool evoked = false, int pow = -1,
                            bool terse = false);
 string spell_max_damage_string(spell_type spell);
 int spell_acc(spell_type spell);
+string spell_defence_string(spell_type spell, bool is_monster = false,
+                            int pow = -1);
+string spell_resist_string(spell_type spell, bool is_monster = false,
+                           int pow = -1);
 string spell_range_string(spell_type spell);
 string range_string(int range, int maxrange = -1, int minrange = 0);
 string spell_schools_string(spell_type spell);

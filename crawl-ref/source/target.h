@@ -70,7 +70,8 @@ protected:
 class targeter_beam : public targeter
 {
 public:
-    targeter_beam(const actor *act, int range, zap_type zap, int pow,
+    targeter_beam(const actor *act, int range, zap_type zap,
+                   spell_type origin_spell, int pow,
                    int min_expl_rad, int max_expl_rad);
     bolt beam;
     virtual bool set_aim(coord_def a) override;
@@ -589,7 +590,8 @@ private:
 class targeter_chain : public targeter_beam
 {
 public:
-    targeter_chain(const actor *act, int r, zap_type ztype);
+    targeter_chain(const actor *act, int r, zap_type ztype,
+                   spell_type origin_spell);
     bool set_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
 
@@ -608,7 +610,7 @@ class targeter_explosive_beam : public targeter_beam
 {
 public:
     targeter_explosive_beam(const actor *act, zap_type ztype,
-                            int pow, int range,
+                            spell_type origin_spell, int pow, int range,
                             bool explode_on_monsters = true,
                             bool always_explode = false);
     bool set_aim(coord_def a) override;

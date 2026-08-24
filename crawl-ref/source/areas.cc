@@ -88,7 +88,7 @@ static void _apply_area(const coord_def& center, int radius, area_type type,
                         bool exclude_center = false,
                         bool ground_only = false)
 {
-    if (radius <= 0)
+    if (radius < 0)
         return;
 
     for (radius_iterator ri(center, radius, C_SQUARE, los, exclude_center); ri; ++ri)

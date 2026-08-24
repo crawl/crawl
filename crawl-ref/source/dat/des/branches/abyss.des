@@ -2062,9 +2062,9 @@ ENDMAP
 NAME:   due_evilmike_abyss_rune_seething_liches
 TAGS:   abyss_rune unrand no_monster_gen
 MONS:   fire bat, chaos spawn, cognitogaunt, ogre mage / abyssal acolyte w:4
-KMONS:  KL = lich w:9
+KMONS:  KL = lich
 KMONS:  OP = ancient lich / dread lich
-KITEM:  O = abyssal rune of Zot
+KITEM:  KO = abyssal rune of Zot
 KFEAT:  A = stone_arch
 KFEAT:  ^ = trap_harlequin / trap_devourer w:4
 KFEAT:  ' = runelight

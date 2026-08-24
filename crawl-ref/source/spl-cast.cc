@@ -26,6 +26,7 @@
 #include "env.h"
 #include "evoke.h"
 #include "exercise.h"
+#include "fight.h"
 #include "format.h"
 #include "god-abil.h"
 #include "god-conduct.h"
@@ -1016,12 +1017,14 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         return spret::abort;
     }
 
-    if (check_range && spell_no_hostile_in_range(spell))
+    const bool needs_target = testbits(get_spell_flags(spell),
+                                       spflag::needs_target);
+    if ((check_range || needs_target) && spell_no_hostile_in_range(spell))
     {
         // Abort if there are no hostiles within range, but flash the range
         // markers for a short while.
-        mpr("You can't see any susceptible monsters within range! "
-            "(Use <w>Z</w> to cast anyway.)");
+        mprf("You can't see any susceptible monsters within range!%s",
+             needs_target ? "" : " (Use <w>Z</w> to cast anyway.)");
 
         if ((Options.use_animations & UA_RANGE) && Options.darken_beyond_range)
         {
@@ -1268,19 +1271,19 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_ICEBLAST:
     case SPELL_FASTROOT:
     case SPELL_WARP_SPACE:
-        return make_unique<targeter_beam>(&you, range, spell_to_zap(spell), pow,
-                                          1, 1);
+        return make_unique<targeter_beam>(&you, range, spell_to_zap(spell),
+                                          spell, pow, 1, 1);
     case SPELL_HURL_DAMNATION:
-        return make_unique<targeter_beam>(&you, range, ZAP_HURL_DAMNATION, pow,
-                                          1, 1);
+        return make_unique<targeter_beam>(&you, range, ZAP_HURL_DAMNATION,
+                                          spell, pow, 1, 1);
     case SPELL_HURL_TORCHLIGHT:
-        return make_unique<targeter_beam>(&you, range, ZAP_HURL_TORCHLIGHT, pow,
-                                          1, 1);
+        return make_unique<targeter_beam>(&you, range, ZAP_HURL_TORCHLIGHT,
+                                          spell, pow, 1, 1);
     case SPELL_MEPHITIC_CLOUD:
-        return make_unique<targeter_beam>(&you, range, ZAP_MEPHITIC, pow,
+        return make_unique<targeter_beam>(&you, range, ZAP_MEPHITIC, spell, pow,
                                           pow >= 100 ? 1 : 0, 1);
     case SPELL_RUST_BREATH:
-        return make_unique<targeter_beam>(&you, 4, ZAP_RUST_BREATH, pow,
+        return make_unique<targeter_beam>(&you, 4, ZAP_RUST_BREATH, spell, pow,
                                           pow >= 25 ? 2 : 1, 2);
     case SPELL_FIRE_STORM:
         return make_unique<targeter_smite>(&you, range, 2, pow > 76 ? 3 : 2);
@@ -1370,8 +1373,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_POISONOUS_VAPOURS:
         return make_unique<targeter_poisonous_vapours>(&you, range);
     case SPELL_MERCURY_ARROW:
-        return make_unique<targeter_explosive_beam>(&you, ZAP_MERCURY_ARROW, pow,
-                                                    range, true, false);
+        return make_unique<targeter_explosive_beam>(&you, ZAP_MERCURY_ARROW,
+                                                    spell, pow, range, true,
+                                                    false);
     case SPELL_GRAVE_CLAW:
         return make_unique<targeter_smite>(&you, range);
 
@@ -1496,20 +1500,22 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_PERMAFROST_ERUPTION:
         return make_unique<targeter_permafrost>(you);
     case SPELL_PETRIFY:
-        return make_unique<targeter_chain>(&you, range, ZAP_PETRIFY);
+        return make_unique<targeter_chain>(&you, range, ZAP_PETRIFY, spell);
     case SPELL_RIMEBLIGHT:
-        return make_unique<targeter_chain>(&you, range, ZAP_RIMEBLIGHT);
+        return make_unique<targeter_chain>(&you, range, ZAP_RIMEBLIGHT, spell);
     case SPELL_COMBUSTION_BREATH:
-        return make_unique<targeter_explosive_beam>(&you, ZAP_COMBUSTION_BREATH, pow, range);
+        return make_unique<targeter_explosive_beam>(&you, ZAP_COMBUSTION_BREATH,
+                                                    spell, pow, range);
     case SPELL_NOXIOUS_BREATH:
         // Note the threshold where it becomes possible to make clouds off the main beam
         return make_unique<targeter_explosive_beam>(&you, ZAP_NOXIOUS_BREATH,
-                                                    pow, range, false, pow > 10);
+                                                    spell, pow, range, false,
+                                                    pow > 10);
     case SPELL_GALVANIC_BREATH:
         return make_unique<targeter_galvanic>(&you, pow, range);
     case SPELL_NULLIFYING_BREATH:
-        return make_unique<targeter_beam>(&you, range, ZAP_NULLIFYING_BREATH, pow,
-                                          2, 2);
+        return make_unique<targeter_beam>(&you, range, ZAP_NULLIFYING_BREATH,
+                                          spell, pow, 2, 2);
     case SPELL_GELLS_GAVOTTE:
         return make_unique<targeter_gavotte>(&you);
 
@@ -1555,7 +1561,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         && spell_to_zap(spell) != NUM_ZAPS)
     {
         return make_unique<targeter_beam>(&you, range, spell_to_zap(spell),
-                                          pow, 0, 0);
+                                          spell, pow, 0, 0);
     }
 
     // selfench is used mainly for monster AI, so it is a bit over-applied in
@@ -3098,48 +3104,48 @@ static dice_def _spell_damage(spell_type spell, int power)
         return dice_def(0,0);
     switch (spell)
     {
-        case SPELL_FULMINANT_PRISM:
-            return prism_damage(prism_hd(power, false), true);
+        case SPELL_ARCJOLT:
+            return arcjolt_damage(power, false);
+        case SPELL_BATTLESPHERE:
+            return battlesphere_damage_from_power(power);
+        case SPELL_BOULDER:
+            return boulder_damage(power, false);
         case SPELL_CONJURE_BALL_LIGHTNING:
             return ball_lightning_damage(ball_lightning_hd(power, false), false);
+        case SPELL_DETONATION_CATALYST:
+            return detonation_catalyst_damage(power, false);
+        case SPELL_DIAMOND_SAWBLADES:
+            return diamond_sawblade_damage(power);
+        case SPELL_FORGE_LIGHTNING_SPIRE:
+            return lightning_spire_damage(power);
+        case SPELL_FORTRESS_BLAST:
+            return fortress_blast_damage(you.armour_class_scaled(1), false);
+        case SPELL_FROZEN_RAMPARTS:
+            return ramparts_damage(power, false);
+        case SPELL_FULMINANT_PRISM:
+            return prism_damage(prism_hd(power, false), true);
+        case SPELL_HELLFIRE_MORTAR:
+            return hellfire_mortar_damage(power);
         case SPELL_IOOD:
             return iood_damage(power, INFINITE_DISTANCE, false);
         case SPELL_IRRADIATE:
             return irradiate_damage(power, false);
-        case SPELL_SHATTER:
-            return shatter_damage(power);
-        case SPELL_SCORCH:
-            return scorch_damage(power, false);
-        case SPELL_BATTLESPHERE:
-            return battlesphere_damage_from_power(power);
-        case SPELL_FROZEN_RAMPARTS:
-            return ramparts_damage(power, false);
-        case SPELL_LRD:
-            return base_fragmentation_damage(power, false);
-        case SPELL_ARCJOLT:
-            return arcjolt_damage(power, false);
-        case SPELL_POLAR_VORTEX:
-            return polar_vortex_dice(power, false);
-        case SPELL_NOXIOUS_BOG:
-            return toxic_bog_damage();
-        case SPELL_BOULDER:
-            return boulder_damage(power, false);
-        case SPELL_THUNDERBOLT:
-            return thunderbolt_damage(power, 1);
-        case SPELL_HELLFIRE_MORTAR:
-            return hellfire_mortar_damage(power);
-        case SPELL_FORGE_LIGHTNING_SPIRE:
-            return lightning_spire_damage(power);
-        case SPELL_DIAMOND_SAWBLADES:
-            return diamond_sawblade_damage(power);
-        case SPELL_FORTRESS_BLAST:
-            return fortress_blast_damage(you.armour_class_scaled(1), false);
-        case SPELL_POISONOUS_VAPOURS:
-            return poisonous_vapours_damage(power, false);
-        case SPELL_DETONATION_CATALYST:
-            return detonation_catalyst_damage(power, false);
         case SPELL_JINXBITE:
             return jinxbite_damage(power,false);
+        case SPELL_LRD:
+            return base_fragmentation_damage(power, false);
+        case SPELL_NOXIOUS_BOG:
+            return toxic_bog_damage();
+        case SPELL_POISONOUS_VAPOURS:
+            return poisonous_vapours_damage(power, false);
+        case SPELL_POLAR_VORTEX:
+            return polar_vortex_dice(power, false);
+        case SPELL_SCORCH:
+            return scorch_damage(power, false);
+        case SPELL_SHATTER:
+            return shatter_damage(power);
+        case SPELL_THUNDERBOLT:
+            return thunderbolt_damage(power, 1);
         default:
             break;
     }
@@ -3182,27 +3188,20 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
         pow = evoked ? wand_power(spell) : calc_spell_power(spell);
     switch (spell)
     {
-        case SPELL_MAXWELLS_COUPLING:
-            return Options.char_set == CSET_ASCII ? "death" : "\u221e"; //"∞"
-        case SPELL_FREEZING_CLOUD:
-            return desc_cloud_damage(CLOUD_COLD, false);
+        case SPELL_AIRSTRIKE:
+            return describe_player_airstrike_dam(base_airstrike_damage(pow));
         case SPELL_DISCHARGE:
         {
             const int max = discharge_max_damage(pow);
             return make_stringf("%d-%d/arc", FLAT_DISCHARGE_ARC_DAMAGE, max);
         }
-        case SPELL_AIRSTRIKE:
-            return describe_player_airstrike_dam(base_airstrike_damage(pow));
-        case SPELL_PILEDRIVER:
-            return make_stringf("(3-9)d%d", piledriver_collision_damage(pow, 1, false).size);
+        case SPELL_FREEZING_CLOUD:
+            return desc_cloud_damage(CLOUD_COLD, false);
+        case SPELL_FULSOME_FUSILLADE:
+            return make_stringf("(3-5)d%d", _spell_damage(spell, pow).size);
         case SPELL_GELLS_GAVOTTE:
             return make_stringf("2d(%d-%d)", gavotte_impact_damage(pow, 1, false).size,
                                              gavotte_impact_damage(pow, 4, false).size);
-
-        case SPELL_FULSOME_FUSILLADE:
-            return make_stringf("(3-5)d%d", _spell_damage(spell, pow).size);
-        case SPELL_RIMEBLIGHT:
-            return describe_rimeblight_damage(pow, terse);
         case SPELL_HOARFROST_CANNONADE:
         {
             dice_def shot_dam = hoarfrost_cannonade_damage(pow, false);
@@ -3211,6 +3210,10 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
             return make_stringf("%dd%d/%dd%d",
                 shot_dam.num, shot_dam.size, finale_dam.num, finale_dam.size);
         }
+        case SPELL_MAXWELLS_COUPLING:
+            return Options.char_set == CSET_ASCII ? "death" : "\u221e"; //"∞"
+        case SPELL_PILEDRIVER:
+            return make_stringf("(3-9)d%d", piledriver_collision_damage(pow, 1, false).size);
         case SPELL_RENDING_BLADE:
         {
             dice_def dmg_mp = rending_blade_damage(pow, true);
@@ -3221,6 +3224,8 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
             else
                 return make_stringf("%dd%d", dmg.num, dmg.size);
         }
+        case SPELL_RIMEBLIGHT:
+            return describe_rimeblight_damage(pow, terse);
         default:
             break;
     }
@@ -3279,6 +3284,237 @@ int spell_acc(spell_type spell)
     if (acc == AUTOMATIC_HIT)
         return -1;
     return acc;
+}
+
+/// How a spell's target can defend against it, for description purposes.
+struct spell_defence_info
+{
+    ac_type ac;
+    bool ev;
+    bool sh;
+    bool will;
+    vector<beam_type> resists;
+    const char *resist_override;
+    const char *defence_override;
+    bool damaging;
+};
+
+struct spell_damage_zap
+{
+    zap_type zap;
+    bool monster_stats;
+};
+
+// Spells which use zaps but not from spell_to_zap.
+static const map<spell_type, spell_damage_zap> _spell_damage_zaps =
+{
+    { SPELL_DIAMOND_SAWBLADES,     { ZAP_SHRED,             true } },
+    { SPELL_FORGE_LIGHTNING_SPIRE, { ZAP_ELECTRICAL_BOLT,   true } },
+    { SPELL_FORTRESS_BLAST,        { ZAP_FORTRESS_BLAST,    false } },
+    { SPELL_HELLFIRE_MORTAR,       { ZAP_MAGMA_BARRAGE,     true } },
+    { SPELL_HOARFROST_CANNONADE,   { ZAP_HOARFROST_BULLET,  true } },
+    { SPELL_RENDING_BLADE,         { ZAP_RENDING_SLASH,     true } },
+};
+
+static const spell_defence_info _ac_only
+    = { ac_type::normal, false, false, false, {} };
+
+// Spells which don't use zaps, so we specify defences manually.
+static const map<spell_type, spell_defence_info> _spell_defences =
+{
+    { SPELL_AIRSTRIKE, _ac_only },
+    { SPELL_ARCJOLT,
+      { ac_type::half, false, false, false, { BEAM_ELECTRICITY } } },
+    { SPELL_BATTLESPHERE, _ac_only },
+    { SPELL_BOULDER, _ac_only },
+    { SPELL_CONJURE_BALL_LIGHTNING,
+      { ac_type::half, false, false, false, { BEAM_ELECTRICITY } } },
+    { SPELL_DETONATION_CATALYST,
+      { ac_type::normal, false, false, false, { BEAM_FIRE } } },
+    { SPELL_DISCHARGE,
+      { ac_type::half, false, false, false, { BEAM_ELECTRICITY } } },
+    { SPELL_ERUPTION,
+      { ac_type::normal, false, false, false, { BEAM_LAVA } } },
+    { SPELL_FREEZING_CLOUD,
+      { ac_type::none, false, false, false, { BEAM_COLD } } },
+    { SPELL_FROZEN_RAMPARTS,
+      { ac_type::normal, false, false, false, { BEAM_COLD } } },
+    { SPELL_FULSOME_FUSILLADE,
+      { ac_type::normal, false, false, false, {}, "Varies", "Varies" } },
+    { SPELL_FULMINANT_PRISM, _ac_only },
+    { SPELL_GELLS_GAVOTTE, _ac_only },
+    { SPELL_GLACIATE,
+      { ac_type::normal, false, false, false, { BEAM_ICE } } },
+    { SPELL_IOOD, _ac_only },
+    { SPELL_IRRADIATE, _ac_only },
+    { SPELL_JINXBITE,
+      { ac_type::none, false, false, true, {} } },
+    { SPELL_LAUNCH_SPORANGIUM,
+      { ac_type::normal, false, false, false, { BEAM_ACID } } },
+    { SPELL_LRD,
+      { ac_type::triple, false, false, false, {}, "None (50% rC for icy explosions)",  "AC (x3) (x1 for icy explosions)" } },
+    { SPELL_MAXWELLS_COUPLING,
+      { ac_type::none, false, false, false, {} } },
+    { SPELL_NOXIOUS_BOG,
+      { ac_type::none, false, false, false, { BEAM_POISON_ARROW } } },
+    { SPELL_PERMAFROST_ERUPTION,
+      { ac_type::normal, false, false, false, {}, "rC (explosion only)", "AC (main blast only)" } },
+    { SPELL_PILEDRIVER, _ac_only },
+    { SPELL_PLASMA_BEAM,
+      { ac_type::normal, true, false, false, {}, "rF, rElec (one beam each)" } },
+    { SPELL_POISONOUS_VAPOURS,
+      { ac_type::none, false, false, false, { BEAM_POISON } } },
+    { SPELL_POLAR_VORTEX,
+      { ac_type::proportional, false, false, false, { BEAM_ICE } } },
+    { SPELL_RESONANCE_STRIKE, _ac_only },
+    { SPELL_SCORCH,
+      { ac_type::normal, false, false, false, { BEAM_FIRE } } },
+    { SPELL_SHATTER,
+      { ac_type::normal, false, false, false, {}, "Flying, gelatinous, insubstantial" } },
+    { SPELL_SLEETSTRIKE,
+      { ac_type::normal, false, false, false, { BEAM_ICE } } },
+    { SPELL_THUNDERBOLT,
+      { ac_type::half, false, false, false, { BEAM_ELECTRICITY } } },
+    { SPELL_WATERSTRIKE,
+      { ac_type::normal, false, false, false, { BEAM_WATER } } },
+};
+
+// Player facing name of the resist for a given beam flavour.
+static const char *beam_resist_name(beam_type flavour)
+{
+    switch (flavour)
+    {
+        case BEAM_FIRE:        return "rF";
+        case BEAM_COLD:        return "rC";
+        case BEAM_ELECTRICITY: return "rElec";
+        case BEAM_POISON:      return "rPois";
+        case BEAM_NEG:         return "rNeg";
+        case BEAM_ACID:        return "rCorr";
+        case BEAM_STEAM:       return "rSteam";
+        default:               return nullptr;
+    }
+}
+
+/// Work out which defences and resistances apply to a spell's target.
+static spell_defence_info _get_spell_defences(spell_type spell,
+                                              bool is_monster, int pow)
+{
+    spell_defence_info info = { ac_type::none, false, false,
+                                bool(get_spell_flags(spell) & spflag::WL_check),
+                                {}, nullptr, nullptr, false };
+
+    const auto special = _spell_defences.find(spell);
+    if (special != _spell_defences.end())
+    {
+        const spell_defence_info &sp = special->second;
+        info.ac       = sp.ac;
+        info.ev       = sp.ev;
+        info.sh       = sp.sh;
+        info.will     = info.will || sp.will;
+        info.resists  = sp.resists;
+        info.resist_override = sp.resist_override;
+        info.defence_override = sp.defence_override;
+        info.damaging = true;
+        return info;
+    }
+
+    zap_type zap = NUM_ZAPS;
+    const auto dam_zap = _spell_damage_zaps.find(spell);
+    if (dam_zap != _spell_damage_zaps.end())
+    {
+        zap = dam_zap->second.zap;
+        is_monster = is_monster || dam_zap->second.monster_stats;
+    }
+    else
+        zap = spell_to_zap(spell);
+
+    if (zap == NUM_ZAPS)
+        return info;
+
+    if (pow < 0)
+        pow = is_monster ? 100 : calc_spell_power(spell);
+    pow = max(pow, 0);
+
+    bolt beam;
+    zappy(zap, pow, is_monster, beam);
+
+    const dice_def dam = zap_damage(zap, pow, is_monster, false);
+    if (dam.num <= 0 || dam.size <= 0)
+        return info;
+
+    // We have information from the zap.
+    info.damaging = true;
+
+    if (!beam.is_enchantment())
+    {
+        info.ac = beam.effective_ac_rule();
+        info.ev = beam.can_be_dodged();
+        info.sh = beam.can_be_blocked();
+    }
+
+    info.resists.push_back(beam.flavour);
+
+    return info;
+}
+
+// Description of which defences (AC, EV, SH) a spell checks.
+string spell_defence_string(spell_type spell, bool is_monster, int pow)
+{
+    const spell_defence_info info = _get_spell_defences(spell, is_monster, pow);
+    if (!info.damaging)
+        return "";
+    if (info.defence_override)
+        return info.defence_override;
+
+    vector<string> checks;
+    switch (info.ac)
+    {
+        case ac_type::none:         break;
+        case ac_type::half:         checks.push_back("AC (50%)"); break;
+        case ac_type::triple:       checks.push_back("AC (x3)"); break;
+        default:                    checks.push_back("AC"); break;
+    }
+    if (info.ev)
+        checks.push_back("EV");
+    if (info.sh)
+        checks.push_back("SH");
+
+    if (checks.empty())
+        return "None";
+
+    return comma_separated_line(checks.begin(), checks.end(), ", ", ", ");
+}
+
+// Description of which resistances a damage spell checks.
+string spell_resist_string(spell_type spell, bool is_monster, int pow)
+{
+    const spell_defence_info info = _get_spell_defences(spell, is_monster, pow);
+    if (!info.damaging)
+        return "";
+
+    vector<string> descs;
+    if (info.will)
+        descs.push_back("Will");
+    if (info.resist_override)
+        descs.push_back(info.resist_override);
+    else for (beam_type flavour : info.resists)
+    {
+        const bool varies = flavour == BEAM_CHAOS || flavour == BEAM_RANDOM;
+        const char *name = varies ? "Varies"
+                                  : beam_resist_name(get_beam_resist_type(flavour));
+        if (!name)
+            continue;
+        const int pct = beam_resistible_fraction(flavour);
+        if (pct == 100)
+            descs.push_back(name);
+        else
+            descs.push_back(make_stringf("%s (%d%%)", name, pct));
+    }
+
+    if (descs.empty())
+        return "None";
+
+    return comma_separated_line(descs.begin(), descs.end(), ", ", ", ");
 }
 
 int spell_power_percent(spell_type spell)

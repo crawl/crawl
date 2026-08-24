@@ -3,7 +3,7 @@ Stone Soup 0.35 (through 0.35-a0-535-e467b9c7cb )
 
 Highlights
 ----------
-* A new species: Gale Centaurs, customizable descendents of the Four Winds.
+* A new species: Gale Centaurs, customizable descendants of the Four Winds.
 * A new portal: Gulch.
 
 Artefacts
@@ -55,7 +55,7 @@ Character
     to trample groups of enemies backwards, as long as you keep moving.
   - At XL 5, you begin embodying one of the Four Winds based on your highest
     skill, granting additional benefits when rampaging:
-    - North Wind: You rapidly regenerate 70% of all damage taken whil
+    - North Wind: You rapidly regenerate 70% of all damage taken while
       rampaging. (Granted by Unarmed Combat and all melee weapon skills besides
       Short Blades.)
     - South Wind: You have +50% stealth while rampaging and successful stabs
@@ -157,7 +157,7 @@ Monsters
 * The Gulch comes with many new monsters:
   - Fungal shamblers, which raise up to 3 burstshrooms behind those they hit
     in melee.
-  - Mongrel wurms, crossbreeds drakes with Harpoon Shot, Scorch, and strong
+  - Mongrel wurms, crossbreed drakes with Harpoon Shot, Scorch, and strong
     poison bites.
   - Roaming sludgefish, which hurl sludge and launch bolts of antimagic.
   - Rusted inspectors, magic-weakening constructs with corrosive melee.

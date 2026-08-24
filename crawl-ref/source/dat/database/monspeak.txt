@@ -2694,6 +2694,10 @@ feline
 
 bovine
 
+ovine
+
+vulpine
+
 disdain
 
 pontify
@@ -2717,6 +2721,8 @@ fast
 aubergine
 
 sanguine
+
+flibbertigibbet
 
 twenty-three
 
@@ -7459,9 +7465,9 @@ _Wiglaf_rare_
 
 @The_monster@ mutters, "Wee kobolds think thay ken whit a cannon is."
 
-@The_monster@ growls, "I'll break a bone for every stich ye rip."
+@The_monster@ growls, "I'll break a bone for every stitch ye rip."
 
-@The_monster@ mumbles, "If ye must ken, mah gran stiched it fur me."
+@The_monster@ mumbles, "If ye must ken, mah gran stitched it fur me."
 
 @The_monster@ sings a few bars of a dwarven mine shanty. Very poorly.
 
