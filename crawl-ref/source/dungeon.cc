@@ -838,8 +838,9 @@ bool dgn_square_travel_ok(const coord_def &c)
 {
     // the mimic check here relies on full placement operating, e.g. not &L
     const dungeon_feature_type feat = feat_at_no_mimic(c);
-    if (feat == DNGN_TRAP_TELEPORT_PERMANENT || feat == DNGN_TRAP_DISPERSAL)
-        return false;
+    if (feat_is_trap(feat))
+        // only these traps block travel for level connectivity purposes
+        return !(feat == DNGN_TRAP_TELEPORT_PERMANENT || feat == DNGN_TRAP_DISPERSAL);
     else
         return feat_is_traversable(feat);
 }
