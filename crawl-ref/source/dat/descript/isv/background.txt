@@ -1,135 +1,135 @@
 %%%%
 Air Elementalist
 
-Elementalisti Vȯzduha izučili zaklinańje "Šok". Jih električna magija može
-poškoditi grupy neprijateljev, a zaklinańja vȯzduha pomagajųt v boju ili
-izběgańju.
+Elementalisti Vozduha izučili zaklinanje "Šok". Jih električna magija može
+poškoditi grupy neprijateljev, a zaklinanja vozduha pomagajut v boju ili
+izběganju.
 %%%%
 Artificer
 
-Umětniki startujųt s několikymi magičnymi palkami i prųtom. Jim potrěbno najdti
-lěpše orųžje i brȯnjų prěđe, čim oni bųdųt skončiti sę.
+Umětniki startujut s několikymi magičnymi palkami i prutom. Jim potrěbno najdti
+lěpše oružje i bronju prědže, čim oni budut skončiti se.
 %%%%
 Berserker
 
-Berserkeri věręt v Troga, boga běsnosti, ktory nenavidi magijų. Na ranjih etapah
-malo čto može ostanoviti råzjarjenogo berserkera, kromě nadųtosti.
+Berserkeri věret v Troga, boga běsnosti, ktory nenavidi magiju. Na ranjih etapah
+malo čto može ostanoviti razjarjenogo berserkera, kromě nadutosti.
 %%%%
 Brigand
 
-Råzbojniki nesųt otravjene tŕny i nemnogo gnusnyh tŕnov kurare.
+Razbojniki nesųt otravjene trny i nemnogo gnusnyh trnov kurare.
 %%%%
 Chaos Knight
 
-Rycari Haosa sųt igrački neprědvidlivogo Ksoma, i oni sųt podležęt vlivu
-neprěstanno izměnjajųćemu sę nastrojeńju boga.
+Rycari Haosa sut igrački neprědvidlivogo Ksoma, i oni sut podležet vlivu
+neprěstanno izměnjajučemu se nastrojenju boga.
 %%%%
 Cinder Acolyte
 
-Pepelavi Akoliti služęt Ignisu, črpųći sily iz plåmenja umirajųćego boga,
-dopoka ničego ne ostane. U njih sųt sposobnosti i bližnjego boja, i ognjenoj
+Pepelavi Akoliti služet Ignisu, črpuči sily iz plamenja umirajučego boga,
+dopoka ničego ne ostane. U njih sut sposobnosti i bližnjego boja, i ognjenoj
 magije.
 %%%%
 Conjurer
 
-Zaklinatelji startujųt s zaklinańjem "Magičny tŕn" i mogųt izučiti druge
-neelementarne zaklinańja, da by věrodostojno poražati svojih neprijateljev.
+Zaklinatelji startujut s zaklinanjem "Magičny trn" i mogut izučiti druge
+neelementarne zaklinanja, da by věrodostojno poražati svojih neprijateljev.
 %%%%
 Delver
 
-Råzvědyvatelji počinajųt svoj pųt́ na pęt́ uråvnjev niže než povŕšina. Sbirka
-moćnyh magičnyh prědmětov pomagaje jim prěžiti nebezpečno pųtovańje vgorų.
+Razvědyvatelji počinajut svoj put na pet uravnjev niže než površina. Sbirka
+močnyh magičnyh prědmětov pomagaje jim prěžiti nebezpečno putovanje vgoru.
 %%%%
 Earth Elementalist
 
-Elementalisti Zemje vědųt zaklinańje "Pěsȯčna struja" i potom mogųt izučiti
-druge zaklinańja zemje, godęće sę dlja skrytyh koljųćih udarov ili izbuhov
+Elementalisti Zemje vědut zaklinanje "Pěsočna struja" i potom mogut izučiti
+druge zaklinanja zemje, godeče se dlja skrytyh koljučih udarov ili izbuhov
 okrutnoj sily.
 %%%%
 Enchanter
 
-Čarovatelji vědųt množstvo Proklętij, ktore sųt sposobne oslabiti jih
-neprijateljev, i takože sųt orųdovani začarovanym nožom i napojami nevidimosti.
+Čarovatelji vědut množstvo Prokletij, ktore sut sposobne oslabiti jih
+neprijateljev, i takože sut orudovani začarovanym nožom i napojami nevidimosti.
 %%%%
 Fighter
 
-Bojci sųt orųdovani bronjejų i ščitom, a takože orųžjem po jih izboru i
-napojami moći.
+Bojci sut orudovani bronjeju i ščitom, a takože oružjem po jih izboru i
+napojami moči.
 %%%%
 Fire Elementalist
 
-Elementalisti Ognja sųt izučili zaklinańje "Liśji Ogȯnj". Jih druge počętkove
-zaklinańja sųt takože sųsrědotočene na ognjenom i eksplozivnom izniščeńju.
+Elementalisti Ognja sųt izučili zaklinanje "Lisji Ogonj". Jih druge početkove
+zaklinanja sut takože susrědotočene na ognjenom i eksplozivnom izniščenju.
 %%%%
 Gladiator
 
-Gladiatori sųt gotovi izȯjdti na arenų v lėgkoj bronji, s orųžjem po svojemu
-izboru i s nekolikymi metajemymi orųžjami i sětkami.
+Gladiatori sut gotovi izojdti na arenu v legkoj bronji, s oružjem po svojemu
+izboru i s nekolikymi metajemymi oružjami i sětkami.
 %%%%
 Hedge Wizard
 
-Samoučni Čarovniki sųt universali v magiji, umějųći koristati široko množstvo
-instrumentov, da by råzočarovati neprijateljev i dobyti prědnost́ na polju boja.
+Samoučni Čarovniki sut universali v magiji, umějuči koristati široko množstvo
+instrumentov, da by razočarovati neprijateljev i dobyti prědnost na polju boja.
 %%%%
 Hunter
 
-Lovci nesųt kråtky lųk, lėgkų bronjų i svitȯk motyljev.
+Lovci nesųt kratky luk, legku bronju i svitok motyljev.
 # TODO: fix this for coglins
 %%%%
 Hexslinger
 
-Pračniki Proklętij nesųt pračkų i koristajųt magijų proklętij, da by sdělati
+Pračniki Prokletij nesut pračku i koristajut magiju prokletij, da by sdělati
 svojih neprijateljev vyše bezzaščitnymi dlja atak izdaleka.
 %%%%
 Ice Elementalist
 
-Elementalisti Leda startujųt s zaklinańjem "Leděněńje". Jih pozdnějše zaklinańja
-zabezpečajųt siĺnų atakų i zaščitų, ale mogųt ograničati jih ruh.
+Elementalisti Leda startujut s zaklinanjem "Leděněnje". Jih pozdnějše zaklinanja
+zabezpečajut silnu ataku i zaščitu, ale mogut ograničati jih ruh.
 %%%%
 Monk
 
-Mnihi startujųt s prostym orųžjem po jih izboru, kuljejų světla i napojem božskoj
-ambrozije, a takože dobyvajųt dodatnų pobožnost́ k pŕvogmu bogu, ktoromu oni
-bųdųt služiti.
+Mnihi startujut s prostym oružjem po jih izboru, kuljeju světla i napojem božskoj
+ambrozije, a takože dobyvajut dodatnu pobožnost k prvogmu bogu, ktoromu oni
+budut služiti.
 %%%%
 Necromancer
 
-Nekromanti startujųt s zaklinańjem "Odlomȯk Duše". V koncu oni bųdųt smogti
-obraćati mŕtvyh v sȯjųznikov i koristati žitove sily živyh dlja rekreacije
+Nekromanti startujut s zaklinanjem "Odlomok Duše". V koncu oni budut smogti
+obračati mrtvyh v sojuznikov i koristati žitove sily živyh dlja rekreacije
 svojih sil.
 %%%%
 Reaver
 
-Grabitelji startujųt s orųžjem po jih izboru i smŕteljnojų magijejų kako
-dopȯlnjeńje, kȯgda to je potrěbno. Oni startujųt s zaklinańjem "Pocěluj Smŕti".
+Grabitelji startujut s oružjem po jih izboru i smrteljnoju magijeju kako
+dopolnjenje, kogda to je potrěbno. Oni startujut s zaklinanjem "Pocěluj Smrti".
 %%%%
 Summoner
 
-Prizyvatelji iz počętka mogųt čarovati "Prizyv Malogo Sȯsavca" i
-startujųt sȯ svojejų bibliotekojų zaklinanij dlja prizyva vyše egzotičnyh
-sȯjųznikov.
+Prizyvatelji iz početka mogut čarovati "Prizyv Malogo Sosavca" i
+startujut so svojeju bibliotekoju zaklinanij dlja prizyva vyše egzotičnyh
+sojuznikov.
 %%%%
 Forgewright
 
-Kovači sųt čarovniki, ktori specializujųt sę v stvorjeńju vežic i mehaničnyh
-sųpųtnikov dlja bitvy.
+Kovači sut čarovniki, ktori specializujut se v stvorjenju vežic i mehaničnyh
+suputnikov dlja bitvy.
 %%%%
 Shapeshifter
 
-Měnjatelji koristajųt talismany dlja izměnjeńja svojej formy, čto dělaje
-jih siĺnymi bojcami bližnjego boja (osoblivo bez orųžja) cěnojų izguby brȯnje.
+Měnjatelji koristajut talismany dlja izměnjenja svojej formy, čto dělaje
+jih silnymi bojcami bližnjego boja (osoblivo bez oružja) cěnoju izguby bronje.
 %%%%
 Alchemist
 
-Alhimiki startujųt s zaklinańjem "Otravne pary" i jih magija jest veĺmi
+Alhimiki startujut s zaklinanjem "Otravne pary" i jih magija jest mnogo
 efektivna protiv neprijateljev, poddavajemyh otravě.
 %%%%
 Wanderer
 
-Pųtniki startujųt s slučajnym orųdovańjem i uměńjami.
+Putniki startujut s slučajnym orudovanjem i uměnjami.
 %%%%
 Warper
 
-Prěměščatelji startujųt s orųžjem po jih izboru, svitkom migańja, tŕnami
-dizjunkcije i něktorymi zaklinańjami Prěměščeńja v jih bibliotekě.
+Prěměščatelji startujut s oružjem po jih izboru, svitkom miganja, trnami
+dizjunkcije i něktorymi zaklinanjami Prěměščenja v jih bibliotekě.
 %%%%
