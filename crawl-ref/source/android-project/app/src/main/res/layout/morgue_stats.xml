@@ -7,6 +7,13 @@
     android:keepScreenOn="true"
     android:orientation="vertical">
 
+    <Spinner
+        android:id="@+id/morgueStatsFilter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="6dp" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"

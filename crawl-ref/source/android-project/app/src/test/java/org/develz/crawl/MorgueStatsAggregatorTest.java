@@ -33,6 +33,34 @@ public class MorgueStatsAggregatorTest {
         assertEquals(3, stats.getBackgroundBreakdowns().get(0).getGames());
     }
 
+    @Test
+    public void reportsRecordsDeathsVersionsTimelineAndAchievements() {
+        DCSSMorgueGame loss = game("2026-08-01T12:00:00", "Vine Stalker", "Fighter",
+                1400, 8, DCSSMorgueGame.Outcome.LOSS, 0, "Slain by a yak", "0.35-a0");
+        DCSSMorgueGame win = game("2026-08-15T12:00:00", "Gale Centaur", "Fighter",
+                2000000, 27, DCSSMorgueGame.Outcome.WIN, 3, "Escaped with the Orb", "0.35-a0");
+
+        DCSSMorgueStats stats = new DCSSMorgueStats(Arrays.asList(loss, win));
+
+        assertEquals(win, stats.getBestScoreGame());
+        assertEquals(win, stats.getFastestWinByTurns());
+        assertEquals("Slain by a yak", stats.getDeathBreakdowns().get(0).getLabel());
+        assertEquals("0.35-a0", stats.getVersionBreakdowns().get(0).getLabel());
+        assertEquals("2026-08", stats.getMonthBreakdowns().get(0).getLabel());
+        assertEquals(2, stats.getDistinctSpeciesPlayed());
+        assertEquals(1, stats.getDistinctSpeciesWon());
+        assertEquals(1, stats.getDistinctBackgroundsWon());
+        assertEquals(1, stats.getDistinctCombosWon());
+    }
+
+    private DCSSMorgueGame game(String timestamp, String species, String background,
+                                long score, int xl, DCSSMorgueGame.Outcome outcome, int runes,
+                                String endText, String version) {
+        return new DCSSMorgueGame(new File("morgue-test.txt"), LocalDateTime.parse(timestamp),
+                score, species, background, "Okawaru", xl, "D:12", 1000, 600,
+                runes, outcome, endText, version);
+    }
+
     private DCSSMorgueGame game(String timestamp, String species, String background,
                                 long score, int xl, DCSSMorgueGame.Outcome outcome, int runes) {
         return new DCSSMorgueGame(new File("morgue-test.txt"), LocalDateTime.parse(timestamp),

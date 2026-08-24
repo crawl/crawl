@@ -17,6 +17,8 @@ import java.util.regex.Pattern;
 public final class DCSSMorgueStatsParser {
     private static final Pattern FINAL_NAME = Pattern.compile(
             "^morgue-.+-(\\d{8}-\\d{6})\\.txt$");
+    private static final Pattern VERSION = Pattern.compile(
+            "^Dungeon Crawl Stone Soup version (.+?)(?: \\(.*)? character file\\.$");
     private static final Pattern CHARACTER = Pattern.compile(
             "^(\\d+) (.+) \\((.+) (.+)\\)$");
     private static final Pattern BEGAN = Pattern.compile(
@@ -60,6 +62,7 @@ public final class DCSSMorgueStatsParser {
             return Optional.empty();
         }
 
+        String version = "Unknown version";
         long score = -1;
         String species = null;
         String background = null;
@@ -76,6 +79,11 @@ public final class DCSSMorgueStatsParser {
             String line;
             while ((line = reader.readLine()) != null) {
                 String trimmed = line.trim();
+                Matcher versionMatcher = VERSION.matcher(trimmed);
+                if (versionMatcher.matches()) {
+                    version = versionMatcher.group(1);
+                    continue;
+                }
                 Matcher character = CHARACTER.matcher(trimmed);
                 if (character.matches()) {
                     score = Long.parseLong(character.group(1));
@@ -160,7 +168,7 @@ public final class DCSSMorgueStatsParser {
             place = "Unknown";
         }
         return Optional.of(new DCSSMorgueGame(morgueFile, timestamp, score, species,
-                background, god, xl, place, turns, durationSeconds, runes, outcome, endText));
+                background, god, xl, place, turns, durationSeconds, runes, outcome, endText, version));
     }
 
     private static boolean isDeathSummary(String line) {
@@ -173,15 +181,30 @@ public final class DCSSMorgueStatsParser {
     }
 
     public static List<DCSSMorgueGame> loadFinalMorgues(File morgueDir) {
+        return loadFinalMorguesWithAudit(morgueDir).getGames();
+    }
+
+    public static DCSSMorgueLoadResult loadFinalMorguesWithAudit(File morgueDir) {
         List<DCSSMorgueGame> games = new ArrayList<>();
+        List<String> skipped = new ArrayList<>();
         File[] files = morgueDir.listFiles();
         if (files == null) {
-            return games;
+            return new DCSSMorgueLoadResult(games, 0, skipped);
         }
+        int finalMorgues = 0;
         for (File file : files) {
-            parse(file).ifPresent(games::add);
+            if (!isFinalMorgueName(file.getName())) {
+                continue;
+            }
+            finalMorgues++;
+            Optional<DCSSMorgueGame> game = parse(file);
+            if (game.isPresent()) {
+                games.add(game.get());
+            } else {
+                skipped.add(file.getName());
+            }
         }
         games.sort(Comparator.comparing(DCSSMorgueGame::getTimestamp).reversed());
-        return games;
+        return new DCSSMorgueLoadResult(games, finalMorgues, skipped);
     }
 }

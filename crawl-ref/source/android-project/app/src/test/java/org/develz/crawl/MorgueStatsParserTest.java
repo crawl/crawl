@@ -165,6 +165,29 @@ public class MorgueStatsParserTest {
         assertFalse(DCSSMorgueStatsParser.parse(morgue).isPresent());
     }
 
+    @Test
+    public void auditReportsSkippedTimestampedFinalMorgues() throws Exception {
+        File dir = new File(System.getProperty("java.io.tmpdir"), "morgue-stats-audit");
+        dir.mkdirs();
+        morgueFileIn(dir, "morgue-Eivin-20260813-185359.txt", DEATH_MORGUE);
+        morgueFileIn(dir, "morgue-Eivin-20260813-185400.txt", "incomplete");
+
+        DCSSMorgueLoadResult result = DCSSMorgueStatsParser.loadFinalMorguesWithAudit(dir);
+
+        assertEquals(2, result.getFinalMorgueFiles());
+        assertEquals(1, result.getGames().size());
+        assertEquals(1, result.getSkippedFiles().size());
+    }
+
+    private File morgueFileIn(File dir, String name, String contents) throws Exception {
+        File file = new File(dir, name);
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(contents);
+        }
+        file.deleteOnExit();
+        return file;
+    }
+
     private File morgueFile(String name, String contents) throws Exception {
         File dir = new File(System.getProperty("java.io.tmpdir"), "morgue-stats-test");
         dir.mkdirs();

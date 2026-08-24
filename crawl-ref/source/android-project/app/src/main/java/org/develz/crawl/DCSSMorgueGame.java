@@ -23,11 +23,20 @@ public final class DCSSMorgueGame {
     private final int runes;
     private final Outcome outcome;
     private final String endText;
+    private final String version;
 
     public DCSSMorgueGame(File file, LocalDateTime timestamp, long score,
                           String species, String background, String god, int xl,
                           String place, long turns, long durationSeconds, int runes,
                           Outcome outcome, String endText) {
+        this(file, timestamp, score, species, background, god, xl, place, turns,
+                durationSeconds, runes, outcome, endText, "Unknown version");
+    }
+
+    public DCSSMorgueGame(File file, LocalDateTime timestamp, long score,
+                          String species, String background, String god, int xl,
+                          String place, long turns, long durationSeconds, int runes,
+                          Outcome outcome, String endText, String version) {
         this.file = file;
         this.timestamp = timestamp;
         this.score = score;
@@ -41,6 +50,7 @@ public final class DCSSMorgueGame {
         this.runes = runes;
         this.outcome = outcome;
         this.endText = endText;
+        this.version = version;
     }
 
     public File getFile() { return file; }
@@ -56,4 +66,5 @@ public final class DCSSMorgueGame {
     public int getRunes() { return runes; }
     public Outcome getOutcome() { return outcome; }
     public String getEndText() { return endText; }
+    public String getVersion() { return version; }
 }
