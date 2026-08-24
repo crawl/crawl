@@ -177,7 +177,8 @@ public final class DCSSMorgueStatsParser {
                 || line.startsWith("Drowned by ") || line.startsWith("Drowned in ")
                 || line.startsWith("Burnt to a crisp") || line.startsWith("Killed from afar")
                 || line.startsWith("Blown up by ") || line.startsWith("Succumbed to ")
-                || line.startsWith("Demolished by ") || line.startsWith("Engulfed by ");
+                || line.startsWith("Demolished by ") || line.startsWith("Engulfed by ")
+                || line.startsWith("Constricted to death by ");
     }
 
     public static List<DCSSMorgueGame> loadFinalMorgues(File morgueDir) {

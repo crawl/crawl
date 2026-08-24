@@ -96,6 +96,21 @@ public class MorgueStatsParserTest {
     }
 
     @Test
+    public void parsesConstrictedToDeathMorgue() throws Exception {
+        String morgue = DEATH_MORGUE.replace("Slain by a two-headed ogre",
+                "Constricted to death by a ball python (2 damage)")
+                .replace("Minotaur Fighter", "Vine Stalker Necromancer");
+
+        Optional<DCSSMorgueGame> parsed = DCSSMorgueStatsParser.parse(
+                morgueFile("morgue-Goofotaacw-20260823-120000.txt", morgue));
+
+        assertTrue(parsed.isPresent());
+        assertEquals("Vine Stalker", parsed.get().getSpecies());
+        assertEquals("Necromancer", parsed.get().getBackground());
+        assertEquals("Constricted to death by a ball python (2 damage)", parsed.get().getEndText());
+    }
+
+    @Test
     public void parsesQuitMorgueAsCompletedNonWin() throws Exception {
         String morgue = DEATH_MORGUE.replace("Slain by a two-headed ogre\n"
                 + "             ... on level 12 of the Dungeon.",
