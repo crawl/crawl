@@ -42,7 +42,6 @@
 #include "mutation.h"
 #include "notes.h"
 #include "output.h"
-#include "playable.h"
 #include "place.h"
 #include "prompt.h"
 #include "religion.h"
@@ -183,19 +182,6 @@ static dump_params _get_dump(bool full_id = false,
     {
         par.section = section;
         dump_section(par);
-    }
-
-    if (se)
-    {
-        string metadata = se->raw_string();
-        if (!metadata.empty() && metadata.back() == '\n')
-            metadata.pop_back();
-        par.text += make_stringf(
-            "\n# morgue-stats-v1: %s:ms_species_total=%d:ms_background_total=%d"
-            ":ms_god_total=%d:ms_combo_total=%d\n",
-            metadata.c_str(), (int)playable_species().size(),
-            (int)playable_jobs().size(), NUM_GODS - 1,
-            (int)playable_combos().size());
     }
 
     // Hopefully we get RVO so we don't have to copy the text.

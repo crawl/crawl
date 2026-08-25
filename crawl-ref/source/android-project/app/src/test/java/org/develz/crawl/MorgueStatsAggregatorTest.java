@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import java.io.File;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 
 public class MorgueStatsAggregatorTest {
@@ -40,7 +39,8 @@ public class MorgueStatsAggregatorTest {
         DCSSMorgueGame win = game("2026-08-15T12:00:00", "Gale Centaur", "Fighter",
                 2000000, 27, DCSSMorgueGame.Outcome.WIN, 3, "Escaped with the Orb", "0.35-a0");
 
-        DCSSMorgueStats stats = new DCSSMorgueStats(Arrays.asList(loss, win));
+        DCSSMorgueRoster roster = new DCSSMorgueRoster(27, 33, 27, 880);
+        DCSSMorgueStats stats = new DCSSMorgueStats(Arrays.asList(loss, win), roster);
 
         assertEquals(win, stats.getBestScoreGame());
         assertEquals(win, stats.getFastestWinByTurns());
@@ -60,14 +60,16 @@ public class MorgueStatsAggregatorTest {
     private DCSSMorgueGame game(String timestamp, String species, String background,
                                 long score, int xl, DCSSMorgueGame.Outcome outcome, int runes,
                                 String endText, String version) {
-        return new DCSSMorgueGame(new File("morgue-test.txt"), LocalDateTime.parse(timestamp),
+        return new DCSSMorgueGame(new File("morgue-test.txt"), timestamp.replace("-", "")
+                .replace("T", "").replace(":", ""),
                 score, species, background, "Okawaru", xl, "D:12", 1000, 600,
                 runes, outcome, endText, version);
     }
 
     private DCSSMorgueGame game(String timestamp, String species, String background,
                                 long score, int xl, DCSSMorgueGame.Outcome outcome, int runes) {
-        return new DCSSMorgueGame(new File("morgue-test.txt"), LocalDateTime.parse(timestamp),
+        return new DCSSMorgueGame(new File("morgue-test.txt"), timestamp.replace("-", "")
+                .replace("T", "").replace(":", ""),
                 score, species, background, "Okawaru", xl, "D:12", 1000, 600,
                 runes, outcome, "test");
     }

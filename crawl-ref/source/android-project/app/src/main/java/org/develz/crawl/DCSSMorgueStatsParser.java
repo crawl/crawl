@@ -4,13 +4,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,8 +17,6 @@ public final class DCSSMorgueStatsParser {
             "^morgue-.+-(\\d{8}-\\d{6})\\.txt$");
     private static final Pattern VERSION = Pattern.compile(
             "^Dungeon Crawl Stone Soup version (.+?)(?: \\(.*)? character file\\.$");
-    private static final Pattern MORGUE_STATS = Pattern.compile(
-            "^# morgue-stats-v1: (.*)$");
     private static final Pattern CHARACTER = Pattern.compile(
             "^(\\d+) (.+) \\((.+) (.+)\\)$");
     private static final Pattern BEGAN = Pattern.compile(
@@ -42,8 +38,6 @@ public final class DCSSMorgueStatsParser {
             "Fighter", "Stalker", "Delver", "Healer", "Hunter", "Jester", "Priest", "Reaver",
             "Warper", "Skald", "Monk"
     };
-    private static final DateTimeFormatter TIMESTAMP =
-            DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
 
     private DCSSMorgueStatsParser() {}
 
@@ -51,18 +45,18 @@ public final class DCSSMorgueStatsParser {
         return FINAL_NAME.matcher(fileName).matches();
     }
 
-    public static Optional<DCSSMorgueGame> parse(File morgueFile) {
+    public static DCSSMorgueGame parse(File morgueFile) {
+        return parse(morgueFile, null);
+    }
+
+    private static DCSSMorgueGame parse(File morgueFile,
+                                                   Map<String, Map<String, String>> xlogRecords) {
         Matcher nameMatcher = FINAL_NAME.matcher(morgueFile.getName());
         if (!morgueFile.isFile() || !nameMatcher.matches()) {
-            return Optional.empty();
+            return null;
         }
 
-        LocalDateTime timestamp;
-        try {
-            timestamp = LocalDateTime.parse(nameMatcher.group(1), TIMESTAMP);
-        } catch (DateTimeParseException e) {
-            return Optional.empty();
-        }
+        String timestamp = nameMatcher.group(1);
 
         String version = "Unknown version";
         long score = -1;
@@ -77,24 +71,11 @@ public final class DCSSMorgueStatsParser {
         DCSSMorgueGame.Outcome outcome = null;
         String endText = null;
         String killMethod = null;
-        int playableSpeciesCount = 0;
-        int playableBackgroundCount = 0;
-        int availableGodCount = 0;
-        int playableComboCount = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(morgueFile))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String trimmed = line.trim();
-                Matcher metadata = MORGUE_STATS.matcher(trimmed);
-                if (metadata.matches()) {
-                    killMethod = xlogField(metadata.group(1), "ktyp");
-                    playableSpeciesCount = xlogIntField(metadata.group(1), "ms_species_total");
-                    playableBackgroundCount = xlogIntField(metadata.group(1), "ms_background_total");
-                    availableGodCount = xlogIntField(metadata.group(1), "ms_god_total");
-                    playableComboCount = xlogIntField(metadata.group(1), "ms_combo_total");
-                    continue;
-                }
                 Matcher versionMatcher = VERSION.matcher(trimmed);
                 if (versionMatcher.matches()) {
                     version = versionMatcher.group(1);
@@ -169,16 +150,22 @@ public final class DCSSMorgueStatsParser {
                 }
             }
         } catch (IOException | NumberFormatException e) {
-            return Optional.empty();
+            return null;
         }
 
+        if (xlogRecords != null) {
+            Map<String, String> record = xlogRecords.get(timestamp.replace("-", ""));
+            if (record != null) {
+                killMethod = record.get("ktyp");
+            }
+        }
         if (killMethod != null) {
             outcome = outcomeForKillMethod(killMethod);
             endText = killMethod;
         }
         if (score < 0 || species == null || background == null || xl < 0 || turns < 0
                 || durationSeconds < 0) {
-            return Optional.empty();
+            return null;
         }
         if (outcome == null) {
             outcome = DCSSMorgueGame.Outcome.LOSS;
@@ -187,25 +174,9 @@ public final class DCSSMorgueStatsParser {
         if (place == null) {
             place = "Unknown";
         }
-        return Optional.of(new DCSSMorgueGame(morgueFile, timestamp, score, species,
+        return new DCSSMorgueGame(morgueFile, timestamp, score, species,
                 background, god, xl, place, turns, durationSeconds, runes, outcome, endText,
-                version, playableSpeciesCount, playableBackgroundCount, availableGodCount,
-                playableComboCount));
-    }
-
-    private static String xlogField(String fields, String name) {
-        for (String field : fields.split(":")) {
-            int equals = field.indexOf('=');
-            if (equals > 0 && field.substring(0, equals).equals(name)) {
-                return field.substring(equals + 1);
-            }
-        }
-        return null;
-    }
-
-    private static int xlogIntField(String fields, String name) {
-        String value = xlogField(fields, name);
-        return value == null ? 0 : Integer.parseInt(value);
+                version);
     }
 
     private static DCSSMorgueGame.Outcome outcomeForKillMethod(String killMethod) {
@@ -223,6 +194,12 @@ public final class DCSSMorgueStatsParser {
     }
 
     public static DCSSMorgueLoadResult loadFinalMorguesWithAudit(File morgueDir) {
+        File baseDir = morgueDir.getParentFile();
+        File logfile = baseDir == null ? null : new File(baseDir, "saves/logfile");
+        return loadFinalMorguesWithAudit(morgueDir, logfile);
+    }
+
+    public static DCSSMorgueLoadResult loadFinalMorguesWithAudit(File morgueDir, File logfile) {
         List<DCSSMorgueGame> games = new ArrayList<>();
         List<String> skipped = new ArrayList<>();
         File[] files = morgueDir.listFiles();
@@ -230,19 +207,26 @@ public final class DCSSMorgueStatsParser {
             return new DCSSMorgueLoadResult(games, 0, skipped);
         }
         int finalMorgues = 0;
+        Map<String, Map<String, String>> xlogRecords =
+                DCSSXlogReader.readByMorgueTimestamp(logfile);
         for (File file : files) {
             if (!isFinalMorgueName(file.getName())) {
                 continue;
             }
             finalMorgues++;
-            Optional<DCSSMorgueGame> game = parse(file);
-            if (game.isPresent()) {
-                games.add(game.get());
+            DCSSMorgueGame game = parse(file, xlogRecords);
+            if (game != null) {
+                games.add(game);
             } else {
                 skipped.add(file.getName());
             }
         }
-        games.sort(Comparator.comparing(DCSSMorgueGame::getTimestamp).reversed());
+        Collections.sort(games, new Comparator<DCSSMorgueGame>() {
+            @Override
+            public int compare(DCSSMorgueGame left, DCSSMorgueGame right) {
+                return right.getTimestamp().compareTo(left.getTimestamp());
+            }
+        });
         return new DCSSMorgueLoadResult(games, finalMorgues, skipped);
     }
 }

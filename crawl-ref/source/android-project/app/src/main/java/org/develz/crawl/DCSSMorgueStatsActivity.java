@@ -21,6 +21,7 @@ public class DCSSMorgueStatsActivity extends AppCompatActivity
         implements AdapterView.OnItemSelectedListener {
     private static final String MORGUE_DIR = "/morgue";
     private DCSSMorgueLoadResult loadResult;
+    private DCSSMorgueRoster roster;
     private TextView text;
 
     @Override
@@ -31,6 +32,7 @@ public class DCSSMorgueStatsActivity extends AppCompatActivity
         text = findViewById(R.id.morgueStatsText);
         File morgueDir = new File(getExternalFilesDir(null) + MORGUE_DIR);
         loadResult = DCSSMorgueStatsParser.loadFinalMorguesWithAudit(morgueDir);
+        roster = DCSSMorgueRoster.current();
 
         Spinner filter = findViewById(R.id.morgueStatsFilter);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
@@ -59,6 +61,7 @@ public class DCSSMorgueStatsActivity extends AppCompatActivity
             filters.add("God: " + game.getGod());
             filters.add("Combo: " + game.getSpecies() + " " + game.getBackground());
         }
+        filters.add("Audit");
         return new ArrayList<>(filters);
     }
 
@@ -69,7 +72,7 @@ public class DCSSMorgueStatsActivity extends AppCompatActivity
                 selected.add(game);
             }
         }
-        text.setText(render(new DCSSMorgueStats(selected), loadResult, filter));
+        text.setText(render(new DCSSMorgueStats(selected, roster), loadResult, filter));
     }
 
     private static boolean matches(String filter, DCSSMorgueGame game) {
@@ -82,11 +85,14 @@ public class DCSSMorgueStatsActivity extends AppCompatActivity
 
     static String render(DCSSMorgueStats stats, DCSSMorgueLoadResult audit, String filter) {
         StringBuilder text = new StringBuilder("Morgue stats\n\n");
-        text.append("Audit: ").append(audit.getFinalMorgueFiles()).append(" timestamped final files · ")
-                .append(audit.getGames().size()).append(" counted · ")
-                .append(audit.getSkippedFiles().size()).append(" skipped\n");
-        if (!audit.getSkippedFiles().isEmpty()) {
-            text.append("Skipped: ").append(join(audit.getSkippedFiles(), 3)).append("\n");
+        if (filter.equals("Audit")) {
+            text.append("Audit: ").append(audit.getFinalMorgueFiles())
+                    .append(" timestamped final files · ").append(audit.getGames().size())
+                    .append(" counted · ").append(audit.getSkippedFiles().size()).append(" skipped\n");
+            if (!audit.getSkippedFiles().isEmpty()) {
+                text.append("Skipped: ").append(join(audit.getSkippedFiles(), 3)).append("\n");
+            }
+            return text.toString();
         }
         if (stats.getGames() == 0) {
             return text.append("No final morgues match this view.").toString();
@@ -101,7 +107,7 @@ public class DCSSMorgueStatsActivity extends AppCompatActivity
                 .append("\nTotal time: ").append(duration(stats.getTotalDurationSeconds()))
                 .append("    Current / best streak: ").append(stats.getCurrentWinStreak())
                 .append(" / ").append(stats.getBestWinStreak()).append("\n");
-        text.append("\nAchievements\n")
+        text.append("\nCurrent roster achievements\n")
                 .append("Species won: ").append(stats.getDistinctSpeciesWon()).append(" / ")
                 .append(stats.getPlayableSpeciesCount()).append("\n")
                 .append("Backgrounds won: ").append(stats.getDistinctBackgroundsWon()).append(" / ")
@@ -126,7 +132,10 @@ public class DCSSMorgueStatsActivity extends AppCompatActivity
         text.append("\nRecent final morgues\n");
         for (int index = 0; index < Math.min(20, games.size()); index++) {
             DCSSMorgueGame game = games.get(index);
-            text.append(game.getTimestamp().toLocalDate()).append(" · ").append(game.getOutcome())
+            String timestamp = game.getTimestamp();
+            text.append(timestamp.substring(0, 4)).append("-").append(timestamp.substring(4, 6))
+                    .append("-").append(timestamp.substring(6, 8)).append(" · ")
+                    .append(game.getOutcome())
                     .append(" · ").append(game.getSpecies()).append(" ").append(game.getBackground())
                     .append(" · XL ").append(game.getXl()).append(" · ").append(game.getPlace())
                     .append(" · ").append(number(game.getScore())).append("\n");

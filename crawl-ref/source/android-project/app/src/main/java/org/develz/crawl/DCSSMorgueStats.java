@@ -10,11 +10,6 @@ import java.util.Map;
 import java.util.Set;
 
 public final class DCSSMorgueStats {
-    // Current core roster, used only until a new final morgue supplies its core value.
-    private static final int FALLBACK_PLAYABLE_SPECIES = 27;
-    private static final int FALLBACK_PLAYABLE_BACKGROUNDS = 33;
-    private static final int FALLBACK_AVAILABLE_GODS = 27;
-    private static final int FALLBACK_PLAYABLE_COMBOS = 880;
     private final List<DCSSMorgueGame> newestFirst;
     private final int games;
     private final int wins;
@@ -51,8 +46,17 @@ public final class DCSSMorgueStats {
     private final int distinctCombosWon;
 
     public DCSSMorgueStats(List<DCSSMorgueGame> games) {
+        this(games, new DCSSMorgueRoster(0, 0, 0, 0));
+    }
+
+    public DCSSMorgueStats(List<DCSSMorgueGame> games, DCSSMorgueRoster roster) {
         newestFirst = new ArrayList<>(games);
-        newestFirst.sort(Comparator.comparing(DCSSMorgueGame::getTimestamp).reversed());
+        Collections.sort(newestFirst, new Comparator<DCSSMorgueGame>() {
+            @Override
+            public int compare(DCSSMorgueGame left, DCSSMorgueGame right) {
+                return right.getTimestamp().compareTo(left.getTimestamp());
+            }
+        });
         this.games = newestFirst.size();
         long score = 0;
         long turns = 0;
@@ -62,10 +66,6 @@ public final class DCSSMorgueStats {
         int winCount = 0;
         int winRunes = 0;
         int runesBest = 0;
-        int coreSpeciesCount = 0;
-        int coreBackgroundCount = 0;
-        int coreGodCount = 0;
-        int coreComboCount = 0;
         DCSSMorgueGame scoreRecord = null;
         DCSSMorgueGame turnRecord = null;
         DCSSMorgueGame durationRecord = null;
@@ -88,10 +88,6 @@ public final class DCSSMorgueStats {
         for (DCSSMorgueGame game : newestFirst) {
             String combo = game.getSpecies() + " " + game.getBackground();
             boolean win = game.getOutcome() == DCSSMorgueGame.Outcome.WIN;
-            coreSpeciesCount = Math.max(coreSpeciesCount, game.getPlayableSpeciesCount());
-            coreBackgroundCount = Math.max(coreBackgroundCount, game.getPlayableBackgroundCount());
-            coreGodCount = Math.max(coreGodCount, game.getAvailableGodCount());
-            coreComboCount = Math.max(coreComboCount, game.getPlayableComboCount());
             score += game.getScore();
             turns += game.getTurns();
             duration += game.getDurationSeconds();
@@ -125,7 +121,8 @@ public final class DCSSMorgueStats {
             add(gods, game.getGod(), game, win);
             add(combos, combo, game, win);
             add(versions, game.getVersion(), game, win);
-            add(months, game.getTimestamp().getYear() + "-" + String.format("%02d", game.getTimestamp().getMonthValue()), game, win);
+            add(months, game.getTimestamp().substring(0, 4) + "-"
+                    + game.getTimestamp().substring(4, 6), game, win);
             if (game.getOutcome() == DCSSMorgueGame.Outcome.LOSS) {
                 add(deaths, game.getEndText(), game, false);
                 add(deathPlaces, game.getPlace(), game, false);
@@ -144,10 +141,10 @@ public final class DCSSMorgueStats {
         fastestWinByTurns = turnRecord;
         fastestWinByDuration = durationRecord;
         distinctSpeciesPlayed = playedSpecies.size();
-        playableSpeciesCount = coreSpeciesCount > 0 ? coreSpeciesCount : FALLBACK_PLAYABLE_SPECIES;
-        playableBackgroundCount = coreBackgroundCount > 0 ? coreBackgroundCount : FALLBACK_PLAYABLE_BACKGROUNDS;
-        availableGodCount = coreGodCount > 0 ? coreGodCount : FALLBACK_AVAILABLE_GODS;
-        playableComboCount = coreComboCount > 0 ? coreComboCount : FALLBACK_PLAYABLE_COMBOS;
+        playableSpeciesCount = roster.getPlayableSpecies();
+        playableBackgroundCount = roster.getPlayableBackgrounds();
+        availableGodCount = roster.getAvailableGods();
+        playableComboCount = roster.getPlayableCombos();
         distinctGodsWon = wonGods.size();
         distinctSpeciesWon = wonSpecies.size();
         distinctBackgroundsPlayed = playedBackgrounds.size();
@@ -236,9 +233,15 @@ public final class DCSSMorgueStats {
             rows.add(new DCSSMorgueBreakdown(counter.label, counter.wins, counter.games,
                     counter.bestScore, counter.bestXl));
         }
-        rows.sort(Comparator.comparingInt(DCSSMorgueBreakdown::getWins).reversed()
-                .thenComparing(Comparator.comparingInt(DCSSMorgueBreakdown::getGames).reversed())
-                .thenComparing(DCSSMorgueBreakdown::getLabel));
+        Collections.sort(rows, new Comparator<DCSSMorgueBreakdown>() {
+            @Override
+            public int compare(DCSSMorgueBreakdown left, DCSSMorgueBreakdown right) {
+                int compare = Integer.compare(right.getWins(), left.getWins());
+                if (compare == 0)
+                    compare = Integer.compare(right.getGames(), left.getGames());
+                return compare == 0 ? left.getLabel().compareTo(right.getLabel()) : compare;
+            }
+        });
         return Collections.unmodifiableList(rows);
     }
 
