@@ -84,6 +84,50 @@ the dark rune
 %%%%
 
 #################################
+# Gems
+#################################
+%%%%
+the smoky gem
+{m}der rauchige Edelstein
+%%%%
+the shimmering gem
+{m}der schimmernde Edelstein
+%%%%
+the earthy gem
+{m}der erdige Edelstein
+%%%%
+the mossy gem
+{m}der moosige Edelstein
+%%%%
+the azure gem
+{m}der azurblaue Edelstein
+%%%%
+the jade gem
+{m}der Jade-Edelstein
+%%%%
+the milky-white gem
+{m}der milchweiße Edelstein
+%%%%
+the starry gem
+{m}der gestirnte Edelstein
+%%%%
+the shining gem
+{m}der leuchtende Edelstein
+%%%%
+the ivory gem
+{m}der Elfenbein-Edelstein
+%%%%
+the sanguine gem
+{m}der blutige Edelstein
+%%%%
+the midnight gem
+{m}der mitternächtliche Edelstein
+%%%%
+the prismatic gem
+{m}der prismatische Edelstein
+%%%%
+
+#################################
 # Unrand Artefacts
 #################################
 %%%%
