@@ -84,6 +84,50 @@ the dark rune
 %%%%
 
 #################################
+# Gems
+#################################
+%%%%
+the smoky gem
+
+%%%%
+the shimmering gem
+
+%%%%
+the earthy gem
+
+%%%%
+the mossy gem
+
+%%%%
+the azure gem
+
+%%%%
+the jade gem
+
+%%%%
+the milky-white gem
+
+%%%%
+the starry gem
+
+%%%%
+the shining gem
+
+%%%%
+the ivory gem
+
+%%%%
+the sanguine gem
+
+%%%%
+the midnight gem
+
+%%%%
+the prismatic gem
+
+%%%%
+
+#################################
 # Unrand Artefacts
 #################################
 %%%%
