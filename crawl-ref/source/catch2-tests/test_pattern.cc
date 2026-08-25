@@ -4,6 +4,9 @@
 #include "pattern.h"
 
 TEST_CASE( "Pattern matches", "[single-file]" ) {
+    // required to make POSIX regex handle UTF-8 properly
+    setlocale(LC_ALL, "");
+
     // match substring
     text_pattern pattern1("[A-Za-z]+:[0-9]+");
     CHECK( pattern1.matches("Dungeon:1") );
