@@ -124,6 +124,84 @@ staves of death
 staves of poison
 
 %%%%
+staves of alchemy
+
+%%%%
+staves of necromancy
+
+%%%%
+
+#################################
+# Talismans
+#################################
+
+%%%%
+quill talismans
+
+%%%%
+inkwell talismans
+
+%%%%
+protean talismans
+
+%%%%
+rimehorn talismans
+
+%%%%
+spider talismans
+
+%%%%
+wellspring talismans
+
+%%%%
+scarab talismans
+
+%%%%
+medusa talismans
+
+%%%%
+spore talismans
+
+%%%%
+maw talismans
+
+%%%%
+serpent talismans
+
+%%%%
+eel talismans
+
+%%%%
+blade talismans
+
+%%%%
+lupine talismans
+
+%%%%
+fortress talismans
+
+%%%%
+granite talismans
+
+%%%%
+hive talismans
+
+%%%%
+dragon-coil talismans
+
+%%%%
+riddle talismans
+
+%%%%
+sanguine talismans
+
+%%%%
+the talisman of death
+
+%%%%
+storm talismans
+
+%%%%
 
 #################################
 # Corpses

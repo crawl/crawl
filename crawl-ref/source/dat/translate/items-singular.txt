@@ -61,6 +61,9 @@ the short sword
 the rapier
 
 %%%%
+the athame
+
+%%%%
 the falchion
 
 %%%%
@@ -118,6 +121,9 @@ the demon trident
 the trishula
 
 %%%%
+the partisan
+
+%%%%
 the glaive
 
 %%%%
@@ -146,6 +152,9 @@ the hunting sling
 the fustibalus
 
 %%%%
+the hand cannon
+
+%%%%
 the hand crossbow
 
 %%%%
@@ -156,6 +165,9 @@ the triple crossbow
 
 %%%%
 the shortbow
+
+%%%%
+the orcbow
 
 %%%%
 the longbow
@@ -175,6 +187,10 @@ the bolt
 %%%%
 # fired by artefact crossbow "Damnation"
 the damnation bolt
+
+%%%%
+# fired by hand cannon
+the slug
 
 %%%%
 the dart
@@ -277,6 +293,9 @@ the kite shield
 
 %%%%
 the tower shield
+
+%%%%
+the orb
 
 %%%%
 the steam dragon scales
@@ -903,8 +922,86 @@ the staff of air
 the staff of earth
 
 %%%%
+the staff of alchemy
+
+%%%%
+the staff of necromancy
+
+%%%%
 # obsolete item (can occur if player loads a saved game from an older version)
 the staff of removedness
+
+%%%%
+
+#################################
+# Talismans
+#################################
+
+%%%%
+the quill talisman
+
+%%%%
+the inkwell talisman
+
+%%%%
+the protean talisman
+
+%%%%
+the rimehorn talisman
+
+%%%%
+the spider talisman
+
+%%%%
+the wellspring talisman
+
+%%%%
+the scarab talisman
+
+%%%%
+the medusa talisman
+
+%%%%
+the spore talisman
+
+%%%%
+the maw talisman
+
+%%%%
+the serpent talisman
+
+%%%%
+the eel talisman
+
+%%%%
+the blade talisman
+
+%%%%
+the lupine talisman
+
+%%%%
+the fortress talisman
+
+%%%%
+the granite talisman
+
+%%%%
+the hive talisman
+
+%%%%
+the dragon-coil talisman
+
+%%%%
+the riddle talisman
+
+%%%%
+the sanguine talisman
+
+%%%%
+the talisman of death
+
+%%%%
+the storm talisman
 
 %%%%
 
