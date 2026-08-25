@@ -61,6 +61,9 @@ the short sword
 the rapier
 {n}das Rapier
 %%%%
+the athame
+{n}das Athame
+%%%%
 the falchion
 {n}das Falchion
 %%%%
@@ -118,6 +121,9 @@ the demon trident
 the trishula
 {m}der Trishula
 %%%%
+the partisan
+{f}die Partisane
+%%%%
 the glaive
 {f}die Gleve
 %%%%
@@ -146,6 +152,9 @@ the hunting sling
 the fustibalus
 {m}der Fustibalus
 %%%%
+the hand cannon
+{f}die Handkanone
+%%%%
 the hand crossbow
 {f}die Handarmbrust
 %%%%
@@ -157,6 +166,9 @@ the triple crossbow
 %%%%
 the shortbow
 {m}der Kurzbogen
+%%%%
+the orcbow
+{m}der Orkbogen
 %%%%
 the longbow
 {m}der Langbogen
@@ -176,6 +188,10 @@ the bolt
 # fired by artefact crossbow "Damnation"
 the damnation bolt
 {m}der Verdammnisbolzen
+%%%%
+# fired by hand cannon
+the slug
+{n}das Geschoss
 %%%%
 the dart
 {m}der Wurfpfeil
@@ -278,6 +294,9 @@ the kite shield
 %%%%
 the tower shield
 {m}der Turmschild
+%%%%
+the orb
+{f}die Kugel
 %%%%
 the steam dragon scales
 {pl}die Dampfdrachenschuppen
@@ -904,9 +923,87 @@ the staff of air
 the staff of earth
 {m}der Stab der Erde
 %%%%
+the staff of alchemy
+{m}der Stab der Alchemie
+%%%%
+the staff of necromancy
+{m}der Stab der Nekromantie
+%%%%
 # obsolete item (can occur if player loads a saved game from an older version)
 the staff of removedness
 {m}der Stab der Obsoleszenz
+%%%%
+
+#################################
+# Talismans
+#################################
+
+%%%%
+the quill talisman
+{m}der Federtalisman
+%%%%
+the inkwell talisman
+{m}der Tintenfasstalisman
+%%%%
+the protean talisman
+{m}der proteische Talisman
+%%%%
+the rimehorn talisman
+{m}der Raureifhorntalisman
+%%%%
+the spider talisman
+{m}der Spinnentalisman
+%%%%
+the wellspring talisman
+{m}der Quellentalisman
+%%%%
+the scarab talisman
+{m}der Skarabäustalisman
+%%%%
+the medusa talisman
+{m}der Medusatalisman
+%%%%
+the spore talisman
+{m}der Sporentalisman
+%%%%
+the maw talisman
+{m}der Schlundtalisman
+%%%%
+the serpent talisman
+{m}der Schlangentalisman
+%%%%
+the eel talisman
+{m}der Aaltalisman
+%%%%
+the blade talisman
+{m}der Klingentalisman
+%%%%
+the lupine talisman
+{m}der Wolfstalisman
+%%%%
+the fortress talisman
+{m}der Festungstalisman
+%%%%
+the granite talisman
+{m}der Granittalisman
+%%%%
+the hive talisman
+{m}der Bienenstocktalisman
+%%%%
+the dragon-coil talisman
+{m}der Drachentalisman
+%%%%
+the riddle talisman
+{m}der Rätseltalisman
+%%%%
+the sanguine talisman
+{m}der Bluttalisman
+%%%%
+the talisman of death
+{m}der Talisman des Todes
+%%%%
+the storm talisman
+{m}der Sturmtalisman
 %%%%
 
 #################################

@@ -124,6 +124,84 @@ staves of death
 staves of poison
 {pl}Stäbe des Giftes
 %%%%
+staves of alchemy
+{pl}Stäbe der Alchemie
+%%%%
+staves of necromancy
+{pl}Stäbe der Nekromantie
+%%%%
+
+#################################
+# Talismans
+#################################
+
+%%%%
+quill talismans
+{pl}Federtalismane
+%%%%
+inkwell talismans
+{pl}Tintenfasstalismane
+%%%%
+protean talismans
+{pl}proteische talismane
+%%%%
+rimehorn talismans
+{pl}Raureifhorntalismane
+%%%%
+spider talismans
+{pl}Spinnentalismane
+%%%%
+wellspring talismans
+{pl}Quellentalismane
+%%%%
+scarab talismans
+{pl}Skarabäustalismane
+%%%%
+medusa talismans
+{pl}Medusatalismane
+%%%%
+spore talismans
+{pl}Sporentalismane
+%%%%
+maw talismans
+{pl}Schlundtalismane
+%%%%
+serpent talismans
+{pl}Schlangentalismane
+%%%%
+eel talismans
+{pl}Aaltalismane
+%%%%
+blade talismans
+{pl}Klingentalismane
+%%%%
+lupine talismans
+{pl}Wolfstalismane
+%%%%
+fortress talismans
+{pl}Festungstalismane
+%%%%
+granite talismans
+{pl}Granittalismane
+%%%%
+hive talismans
+{pl}Bienenstocktalismane
+%%%%
+dragon-coil talismans
+{pl}Drachentalismane
+%%%%
+riddle talismans
+{pl}Rätseltalismane
+%%%%
+sanguine talismans
+{pl}Bluttalismane
+%%%%
+the talisman of death
+{pl}talismane des Todes
+%%%%
+storm talismans
+{pl}Sturmtalismane
+%%%%
 
 #################################
 # Corpses
