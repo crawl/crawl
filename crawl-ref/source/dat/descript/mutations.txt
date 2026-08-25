@@ -161,7 +161,7 @@ form.
 
 You currently gain
 {{
-    num = math.min(you.how_mutated(true, false, false, true, false), 7) - 1
+    num = math.min(you.how_mutated(true, false, false, true, false) - 1, 7)
     return "+" .. num .. " EV and Slay +" .. num .. " from this mutation."
 }}
 %%%%
