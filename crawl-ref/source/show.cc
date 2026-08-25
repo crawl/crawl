@@ -147,6 +147,9 @@ static void _update_feat_at(const coord_def &gp)
     if (is_blasphemy(gp))
         env.map_knowledge(gp).flags |= MAP_BLASPHEMY;
 
+    if (feat_is_tree(feat) && forest_awoken(gp))
+        env.map_knowledge(gp).flags |= MAP_AWOKEN_FOREST;
+
     if (you.get_beholder(gp))
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 

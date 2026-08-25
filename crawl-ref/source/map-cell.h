@@ -47,6 +47,7 @@ constexpr map_flag_t MAP_DOOR_CONNECT_3       = 0x80000000;
 
 constexpr map_flag_t MAP_MORE_ITEMS_GOOD     = 0x100000000;
 constexpr map_flag_t MAP_MORE_ITEMS_ARTEFACT = 0x200000000;
+constexpr map_flag_t MAP_AWOKEN_FOREST       = 0x400000000;
 
 struct cloud_info
 {

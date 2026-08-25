@@ -12,6 +12,7 @@ enum class area_type
     orb           = (1 << 4), ///< The glow of the Orb of Zot
     quad          = (1 << 5),
     disjunction   = (1 << 6),
+    awoken_forest = (1 << 7),
 };
 /// Bit field for the area properties
 DEF_BITFIELD(areaprops, area_type);
@@ -51,6 +52,9 @@ bool disjunction_haloed(const coord_def& p);
 
 // ...or endarkened by an umbra?
 bool umbraed(const coord_def& p);
+
+// Is this square within reach of an awakened forest's caster?
+bool forest_awoken(const coord_def& p);
 
 #if TAG_MAJOR_VERSION == 34
 // ...or is the area hot?

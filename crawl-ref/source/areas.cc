@@ -116,6 +116,7 @@ static void _actor_areas(actor *a)
     _apply_area(a->pos(), a->halo_radius(), area_type::halo);
     _apply_area(a->pos(), a->umbra_radius(), area_type::umbra);
     _apply_area(a->pos(), a->liquefying_radius(), area_type::liquified, LOS_SOLID, false, true);
+    _apply_area(a->pos(), a->awoken_forest_radius(), area_type::awoken_forest, LOS_NO_TRANS);
 }
 
 /**
@@ -675,12 +676,32 @@ int monster::umbra_radius() const
     }
 }
 
+///////////////////
+// Awakened forest
+//
+
+bool forest_awoken(const coord_def& p)
+{
+    return _update_and_check_agrid(p, area_type::awoken_forest);
+}
+
+int player::awoken_forest_radius() const
+{
+    return -1;
+}
+
+int monster::awoken_forest_radius() const
+{
+    return has_ench(ENCH_AWAKEN_FOREST) ? LOS_RADIUS : -1;
+}
+
 bool monster::affects_agrid() const
 {
     return halo_radius() > -1
            || silence_radius() > -1
            || liquefying_radius() > -1
-           || umbra_radius() > -1;
+           || umbra_radius() > -1
+           || awoken_forest_radius() > -1;
 }
 
 bool player::affects_agrid() const
@@ -689,6 +710,7 @@ bool player::affects_agrid() const
            || silence_radius() > -1
            || liquefying_radius() > -1
            || umbra_radius() > -1
+           || awoken_forest_radius() > -1
            || has_mutation(MUT_SILENCE_AURA)
            || duration[DUR_DISJUNCTION]
            || duration[DUR_QUAD_DAMAGE]

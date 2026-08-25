@@ -445,6 +445,7 @@ public:
     int silence_radius() const override;
     int liquefying_radius() const override;
     int umbra_radius() const override;
+    int awoken_forest_radius() const override;
     bool affects_agrid() const override;
     bool petrified() const override;
     bool petrifying() const override;

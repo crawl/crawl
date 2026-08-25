@@ -333,6 +333,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         break;
     }
 
+    case ENCH_AWAKEN_FOREST:
     case ENCH_LIQUEFYING:
     case ENCH_SILENCE:
         invalidate_agrid();
@@ -696,6 +697,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_AWAKEN_FOREST:
         env.forest_awoken_until = 0;
+        invalidate_agrid();
         if (!quiet)
             forest_message(pos(), "The forest calms down.");
         break;

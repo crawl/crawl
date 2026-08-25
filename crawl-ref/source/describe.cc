@@ -3211,7 +3211,8 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def &pos)
     vector<extra_feature_desc> ret;
     const dungeon_feature_type feat = env.map_knowledge(pos).feat();
 
-    if (feat_is_tree(feat) && env.forest_awoken_until)
+    if (you.see_cell(pos)
+        && env.map_knowledge(pos).flags & MAP_AWOKEN_FOREST)
     {
         ret.push_back({
             "Awoken.",

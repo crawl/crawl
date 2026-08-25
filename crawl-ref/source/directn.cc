@@ -3186,7 +3186,7 @@ string feature_description_at(const coord_def& where, bool covering,
 
     if (covering && you.see_cell(where))
     {
-        if (feat_is_tree(grid) && env.forest_awoken_until)
+        if (env.map_knowledge(where).flags & MAP_AWOKEN_FOREST)
         {
             covering_description += ", awoken";
             covering_description += env.forest_is_hostile ? " (hostile)" :

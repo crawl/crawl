@@ -351,6 +351,8 @@ public:
     // Liquefying radius.
     virtual int liquefying_radius() const = 0;
     virtual int umbra_radius() const = 0;
+    // Radius within which trees are awakened.
+    virtual int awoken_forest_radius() const = 0;
 
     virtual bool affects_agrid() const = 0;
 
