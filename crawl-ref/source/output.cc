@@ -2537,7 +2537,7 @@ static string _resist_composer(const char * name, int spacing, int value,
     int res_percent = -1;
 
     const static int _basic_res[] = {150, 100, 50, 33, 20};
-    const static int _neg_res[]   = {-1, 100, 50, 20, 0};
+    const static int _neg_res[]   = {-1, 100, 50, 25, 0};
     const static int _pois_res[]  = {150, 100, 33, 33, 0};
     const static int _corr_res[]  = {-1, 100, 50, -1, -1};
 
