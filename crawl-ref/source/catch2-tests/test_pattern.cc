@@ -19,7 +19,12 @@ TEST_CASE( "Pattern matches", "[single-file]" ) {
     CHECK( pattern3.matches("Mi") );
     CHECK( !pattern3.matches("MiFi") );
 
-    // test UTF-8 handling (crawl-pcre fails this test because UTF-8 support is disabled)
-    //text_pattern single_char_patt("^.$");
-    //CHECK (single_char_patt.matches("の") );
+    // test that multi-byte UTF-8 character is recognised as a single character
+    text_pattern single_char_patt("^.$");
+#ifndef REGEX_PCRE
+    // PCRE v1 will currently fail this test because we're building it with
+    // UTF-8 support disabled
+    CHECK( single_char_patt.matches(u8"\u20AC") ); // euro symbol
+#endif
+    CHECK( !single_char_patt.matches(u8"\u20AC\u20AC") );
 }

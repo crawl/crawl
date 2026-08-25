@@ -105,6 +105,10 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     // uncomment the line below and add -lpcre to your makefile.
     // #define REGEX_PCRE
 
+    // If you have libpcre2, you can use that instead of POSIX regexes -
+    // uncomment the line below and add -lpcre2-8 to your makefile.
+    // #define REGEX_PCRE2
+
     #include "libunix.h"
 
 #elif defined(TARGET_OS_WINDOWS)
