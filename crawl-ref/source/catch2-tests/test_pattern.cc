@@ -4,7 +4,10 @@
 #include "pattern.h"
 
 TEST_CASE( "Pattern matches", "[single-file]" ) {
-    // required to make POSIX regex handle UTF-8 properly
+    // Required to allow POSIX regex to correctly handle UTF-8 strings.
+    // (C programs always start with the default "C" locale, which only
+    //  understands ASCII strings. This call sets the locale to the user's
+    //  configured one, which on Linux, would normally be a UTF-8 one).
     setlocale(LC_ALL, "");
 
     // match substring
