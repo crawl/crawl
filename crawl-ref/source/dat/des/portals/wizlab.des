@@ -86,7 +86,7 @@
 #---------------------------------------------------------------
 #Maxwell's Workshop       |big rooms with forge |metal
 #---------------------------------------------------------------
-#Yara's Duelist Academy   |campus               |stone and trees
+#Yara's Duellist Academy  |campus               |stone and trees
 #---------------------------------------------------------------
 #Borgnjor's Mausoleum     |split path           |tarlike
 #---------------------------------------------------------------
@@ -2257,7 +2257,7 @@ vv...vv....G....vvvvvvvv..v1.v.Sv..v
 ENDMAP
 
 ###############################################################################
-# Yara's Duelist Academy
+# Yara's Duellist Academy
 # Designed by Hellmonk. Features warrior-mages with antimagic weaponry.
 # Said weaponry makes up part of the loot here. The remainder of the loot is
 # books, random good items, and gold.
@@ -2315,7 +2315,7 @@ LROCKTILE: wall_brick
 :               "tengu reaver w:1 / quicksilver dragon w:1")
 :           wizlab_setup(_G)
 epilogue {{
-            wizlab_milestone(_G, "Yara's Duelist Academy")
+            wizlab_milestone(_G, "Yara's Duellist Academy")
 }}
 MAP
           cccccccccccccccccccc
