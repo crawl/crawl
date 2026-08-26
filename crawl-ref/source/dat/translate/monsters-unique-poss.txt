@@ -5,229 +5,37 @@
 ###############################################################################
 
 %%%%
-Mennas's
-
-%%%%
-Nessos's
-
-%%%%
-Chuck's
-
-%%%%
-Polyphemus's
-
-%%%%
-Antaeus's
-
-%%%%
-Tiamat's
-
-%%%%
-Bai Suzhen's
-
-%%%%
-Xtahua's
-
-%%%%
-Ijyb's
-
-%%%%
-Robin's
-
-%%%%
-Grum's
-
-%%%%
-Duvessa's
-
-%%%%
-Dowan's
-
-%%%%
-Fannar's
-
-%%%%
-Jorgrun's
-
-%%%%
-Natasha's
-
-%%%%
-Arachne's
-
-%%%%
-Asterion's
-
-%%%%
 Agnes's
-
-%%%%
-Dissolution's
-
-%%%%
-Sonja's
-
-%%%%
-Pikel's
-
-%%%%
-Boris's
-
-%%%%
-Menkaure's
-
-%%%%
-Khufu's
-
-%%%%
-Ilsuiw's
-
-%%%%
-Vashnia's
-
-%%%%
-Erolcha's
-
-%%%%
-Urug's
-
-%%%%
-Nergalle's
-
-%%%%
-Saint Roka's
-
-%%%%
-Sojobo's
-
-%%%%
-Azrael's
-
-%%%%
-Mara's
 
 %%%%
 Aizul's
 
 %%%%
-Snorg's
+Amaemon's
 
 %%%%
-Purgy's
+Antaeus's
 
 %%%%
-Jory's
-
-%%%%
-Gastronok's
-
-%%%%
-Nellie's
-
-%%%%
-Murray's
-
-%%%%
-Ignacio's
-
-%%%%
-Grinder's
-
-%%%%
-Roxanne's
-
-%%%%
-Terence's
-
-%%%%
-Jessica's
-
-%%%%
-Sigmund's
-
-%%%%
-Edmund's
-
-%%%%
-Psyche's
-
-%%%%
-Donald's
-
-%%%%
-Joseph's
-
-%%%%
-Erica's
-
-%%%%
-Josephine's
-
-%%%%
-Harold's
-
-%%%%
-Louise's
-
-%%%%
-Frances's
-
-%%%%
-Rupert's
-
-%%%%
-Kirke's
-
-%%%%
-Frederick's
-
-%%%%
-Margery's
-
-%%%%
-Maggie's
-
-%%%%
-Eustachio's
-
-%%%%
-Maurice's
-
-%%%%
-Nikola's
-
-%%%%
-Mnoleg's
-
-%%%%
-Lom Lobon's
-
-%%%%
-Cerebov's
-
-%%%%
-Gloorx Vloq's
-
-%%%%
-Geryon's
-
-%%%%
-Dispater's
+Arachne's
 
 %%%%
 Asmodeus's
 
 %%%%
-Ereshkigal's
+Asterion's
 
 %%%%
-Prince Ribbit's
+Azrael's
 
 %%%%
-Crazy Yiuf's
+Bai Suzhen's
 
 %%%%
-the Enchantress's
+Blork the orc's
+
+%%%%
+Blork's
 
 %%%%
 Blorkula the orcula's
@@ -236,53 +44,169 @@ Blorkula the orcula's
 Blorkula's
 
 %%%%
-# obsolete but could appear as killer in high scores list
-Blork the orc's
-
-%%%%
-Blork's
-
-%%%%
-the Royal Jelly's
-
-%%%%
-the Serpent of Hell's
-
-%%%%
-the Lernaean hydra's
-
-%%%%
-Cigotuvi's Monster's
-
-%%%%
-the Statue of Wucad Mu's
-
-%%%%
-Amaemon's
+Boris's
 
 %%%%
 Cassandra's
 
 %%%%
+Cerebov's
+
+%%%%
+Cigotuvi's Monster's
+
+%%%%
+Crazy Yiuf's
+
+%%%%
+Dispater's
+
+%%%%
+Dissolution's
+
+%%%%
+Donald's
+
+%%%%
+Dowan's
+
+%%%%
+Duvessa's
+
+%%%%
+Edmund's
+
+%%%%
+Ereshkigal's
+
+%%%%
+Erica's
+
+%%%%
+Erolcha's
+
+%%%%
+Eustachio's
+
+%%%%
+Fannar's
+
+%%%%
+Frances's
+
+%%%%
+Frederick's
+
+%%%%
+Gastronok's
+
+%%%%
+Geryon's
+
+%%%%
+Gloorx Vloq's
+
+%%%%
 Goji's
+
+%%%%
+Grinder's
+
+%%%%
+Grum's
 
 %%%%
 Grunn's
 
 %%%%
-the Head Instructor's
+Harold's
+
+%%%%
+Ignacio's
+
+%%%%
+Ijyb's
+
+%%%%
+Ilsuiw's
 
 %%%%
 Jeremiah's
 
 %%%%
+Jessica's
+
+%%%%
+Jorgrun's
+
+%%%%
+Jory's
+
+%%%%
+Joseph's
+
+%%%%
 Josephina's
+
+%%%%
+Josephine's
+
+%%%%
+Khufu's
+
+%%%%
+Kirke's
 
 %%%%
 Lodul's
 
 %%%%
+Lom Lobon's
+
+%%%%
+Louise's
+
+%%%%
+Maggie's
+
+%%%%
+Mara's
+
+%%%%
+Margery's
+
+%%%%
+Maurice's
+
+%%%%
+Menkaure's
+
+%%%%
+Mennas's
+
+%%%%
 Mlioglotl's
+
+%%%%
+Mnoleg's
+
+%%%%
+Murray's
+
+%%%%
+Natasha's
+
+%%%%
+Nellie's
+
+%%%%
+Nergalle's
+
+%%%%
+Nessos's
+
+%%%%
+Nikola's
 
 %%%%
 Nobody's
@@ -297,7 +221,58 @@ Parghit's
 Pargi's
 
 %%%%
+Pikel's
+
+%%%%
+Polyphemus's
+
+%%%%
+Prince Ribbit's
+
+%%%%
+Psyche's
+
+%%%%
+Purgy's
+
+%%%%
+Robin's
+
+%%%%
+Roxanne's
+
+%%%%
+Rupert's
+
+%%%%
+Saint Roka's
+
+%%%%
+Sigmund's
+
+%%%%
+Snorg's
+
+%%%%
+Sojobo's
+
+%%%%
+Sonja's
+
+%%%%
 Sprozz's
+
+%%%%
+Terence's
+
+%%%%
+Tiamat's
+
+%%%%
+Urug's
+
+%%%%
+Vashnia's
 
 %%%%
 Vv's
@@ -309,7 +284,30 @@ Wiglaf's
 Xak'krixis's
 
 %%%%
+Xtahua's
+
+%%%%
 Zenata's
+
+%%%%
+
+%%%%
+the Enchantress's
+
+%%%%
+the Head Instructor's
+
+%%%%
+the Lernaean hydra's
+
+%%%%
+the Royal Jelly's
+
+%%%%
+the Serpent of Hell's
+
+%%%%
+the Statue of Wucad Mu's
 
 %%%%
 
@@ -325,6 +323,9 @@ Zenata's
 ##################
 # Sprint Monsters
 ##################
+
+%%%%
+Chuck's
 
 %%%%
 The Meatlord's
