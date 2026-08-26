@@ -317,6 +317,9 @@ the Goji
 the Grunn
 {m}der Grunn
 %%%%
+the Head Instructor
+{m}der Lehrmeister
+%%%%
 the Jeremiah
 {m}der Jeremiah
 %%%%
