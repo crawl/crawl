@@ -3,7 +3,7 @@ Stone Soup 0.35 (through 0.35-a0-535-e467b9c7cb )
 
 Highlights
 ----------
-* A new species: Gale Centaurs, customizable descendants of the Four Winds.
+* A new species: Gale Centaurs, customisable descendants of the Four Winds.
 * A new portal: Gulch.
 
 Artefacts
@@ -29,7 +29,7 @@ Branches, Environment
   - Entering the Gulch inflicts three transient bad mutations.
   - It contains seven new enemies, many of them chaotic mutant beasts and
     abandoned experiments, focusing on debuffs, poison, and antimagic.
-  - Its layout features heavily randomized tunnels and intersections with mould
+  - Its layout features heavily randomised tunnels and intersections with mould
     patches, stacks of scrap, and only occasional strips of water.
   - Item rewards weight poison, Alchemy, Hexes, Forgecraft, and potions more
     heavily.
@@ -141,7 +141,7 @@ Interface and Options
 * New option: alt_shatter_animation, which provides a different visual effect
   for Shatter without any screenshake, set by default as true on Webtiles and
   false otherwise.
-* New option: longwalk_range, which allows customizing the maximum distance
+* New option: longwalk_range, which allows customising the maximum distance
   pressing shift+[direction] can move the player.
 
 Items
@@ -789,7 +789,7 @@ Tiles
   * Monsters: juggernaut simulacra, Maggie, Mara, Polyphemus, sky beast zombies.
     * Sprint specialties: flame-cult kobolds, witches, orb golems.
   * Spells: Confusion Gaze, Mass Regeneration, Vitrifying Gaze, Weakening Gaze.
-  * Icons: light egos, frenzied, magnetized, sentinel's mark.
+  * Icons: light egos, frenzied, magnetised, sentinel's mark.
   * Traps: Archmage's trap, devourer's trap, tyrant's trap.
   * Features: exits out of Sewers + Bailies + the Desolation of Salt +
               the Crucible of Flesh, stairs to and from Zot:5.
