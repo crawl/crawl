@@ -580,7 +580,10 @@ monster_info::monster_info(const monster* m, int milev)
 
     _colour = m->colour;
 
-    summoner_id = MID_NOBODY;
+    // We set the summoner for all monsters, as it is needed for some damage
+    // displays, but the only mark them as summoned if we should display them
+    // as such in the UI.
+    summoner_id = m->summoner;
     if (m->is_summoned()
         && !(m->flags & MF_PERSISTS)
         && !m->is_child_monster() && !mons_is_tentacle_segment(m->type)
@@ -595,8 +598,6 @@ monster_info::monster_info(const monster* m, int milev)
 
         if (m->type == MONS_SPELLSPARK_SERVITOR && m->summoner == MID_PLAYER)
             mb.set(MB_PLAYER_SERVITOR);
-
-        summoner_id = m->summoner;
     }
     else if ((m->is_unrewarding()
                  || testbits(m->flags, MF_NO_REWARD)
@@ -2272,6 +2273,10 @@ string description_for_ench(enchant_type type)
 
 monster* monster_info::get_known_summoner() const
 {
+    // The MB_SUMMONED flag gates whether the monster should show as summoned.
+    if (!is(MB_SUMMONED))
+        return nullptr;
+
     monster* summoner = monster_by_mid(summoner_id);
 
     // Don't leak information about invisible summoners.

@@ -6823,9 +6823,11 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
         const dice_def dam = battlesphere_damage_from_hd(mi.hd);
         result << "Projectile damage: " << dam.num << "d" << dam.size << "\n";
     }
-    else if (mi.type == MONS_BURSTSHROOM && mi.summoner_id != MID_PLAYER)
+    else if (mi.type == MONS_BURSTSHROOM)
     {
-        const dice_def dam = zap_damage(ZAP_BURSTSPORE, mi.hd * 10, true, false);
+        const dice_def dam = mi.summoner_id == MID_PLAYER
+            ? get_form(transformation::spore)->get_special_damage(false)
+            : zap_damage(ZAP_BURSTSPORE, mi.hd * 10, true, false);
         result << "Spore damage: " << dam.num << "d" << dam.size << "\n";
     }
 
