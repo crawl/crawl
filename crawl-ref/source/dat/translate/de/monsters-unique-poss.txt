@@ -5,230 +5,38 @@
 ###############################################################################
 
 %%%%
-Mennas's
-von Mennas
-%%%%
-Nessos's
-von Nessos
-%%%%
-Chuck's
-von Chuck
-%%%%
-Polyphemus's
-von Polyphem
-%%%%
-Antaeus's
-von Antaeus
-%%%%
-Tiamat's
-von Tiamat
-%%%%
-Bai Suzhen's
-von Bai Suzhen
-%%%%
-Xtahua's
-von Xtahua
-%%%%
-Ijyb's
-von Ijyb
-%%%%
-Robin's
-von Robin
-%%%%
-Grum's
-von Grum
-%%%%
-Duvessa's
-von Duvessa
-%%%%
-Dowan's
-von Dowan
-%%%%
-Fannar's
-von Fannar
-%%%%
-Jorgrun's
-von Jorgrun
-%%%%
-Natasha's
-von Natascha
-%%%%
-Arachne's
-von Arachne
-%%%%
-Asterion's
-von Asterion
-%%%%
 Agnes's
 von Agnes
-%%%%
-Dissolution's
-von Dissolution
-%%%%
-Sonja's
-von Sonja
-%%%%
-Pikel's
-von Pikel
-%%%%
-Boris's
-von Boris
-%%%%
-Menkaure's
-von Menkaure
-%%%%
-Khufu's
-von Khufu
-%%%%
-Ilsuiw's
-von Ilsuiw
-%%%%
-Vashnia's
-von Vashnia
-%%%%
-Erolcha's
-von Erolcha
-%%%%
-Urug's
-von Urug
-%%%%
-Nergalle's
-von Nergalle
-%%%%
-Saint Roka's
-von Sankt Roka
-%%%%
-Sojobo's
-von Sojobo
-%%%%
-Azrael's
-von Azrael
-%%%%
-Mara's
-von Mara
 %%%%
 Aizul's
 von Aizul
 %%%%
-Snorg's
-von Snorg
+Amaemon's
+von Amaemon
 %%%%
-Purgy's
-von Purgy
+Antaeus's
+von Antaeus
 %%%%
-Jory's
-von Jory
-%%%%
-Gastronok's
-von Gastronok
-%%%%
-Nellie's
-von Nellie
-%%%%
-Murray's
-von Murray
-%%%%
-Ignacio's
-von Ignacio
-%%%%
-Grinder's
-von Grinder
-%%%%
-Roxanne's
-von Roxanne
-%%%%
-Terence's
-von Terence
-%%%%
-Jessica's
-von Jessica
-%%%%
-Sigmund's
-von Sigmund
-%%%%
-Edmund's
-von Edmund
-%%%%
-Psyche's
-von Psyche
-%%%%
-Donald's
-von Donald
-%%%%
-Joseph's
-von Joseph
-%%%%
-Erica's
-von Erica
-%%%%
-Josephine's
-von Josephine
-%%%%
-Harold's
-von Harold
-%%%%
-Louise's
-von Louise
-%%%%
-Frances's
-von Frances
-%%%%
-Rupert's
-von Rupert
-%%%%
-Kirke's
-von Kirke
-%%%%
-Frederick's
-von Frederick
-%%%%
-Margery's
-von Margery
-%%%%
-Maggie's
-von Maggie
-%%%%
-Eustachio's
-von Eustachio
-%%%%
-Maurice's
-von Maurice
-%%%%
-Nikola's
-von Nikola
-%%%%
-Mnoleg's
-von Mnoleg
-%%%%
-Lom Lobon's
-von Lom Lobon
-%%%%
-Cerebov's
-von Cerebov
-%%%%
-Gloorx Vloq's
-von Gloorx Vloq
-%%%%
-Geryon's
-von Geryon
-%%%%
-Dispater's
-von Dispater
+Arachne's
+von Arachne
 %%%%
 Asmodeus's
 von Asmodäus
 %%%%
-Ereshkigal's
-von Ereshkigal
+Asterion's
+von Asterion
 %%%%
-Prince Ribbit's
-von Prinz Quak
+Azrael's
+von Azrael
 %%%%
-Crazy Yiuf's
-vom Verrückten Yiuf
+Bai Suzhen's
+von Bai Suzhen
 %%%%
-the Enchantress's
-{f}der Zauberin
+Blork the orc's
+von Blork dem Ork
+%%%%
+Blork's
+von Blork
 %%%%
 Blorkula the orcula's
 von Blorkula dem Orkula
@@ -236,54 +44,170 @@ von Blorkula dem Orkula
 Blorkula's
 von Blorkula
 %%%%
-# obsolete but could appear as killer in high scores list
-Blork the orc's
-von Blork dem Ork
-%%%%
-Blork's
-von Blork
-%%%%
-the Royal Jelly's
-{n}des Gelée Royale
-%%%%
-the Serpent of Hell's
-{f}der Höllenschlange
-%%%%
-the Lernaean hydra's
-{f}der Lernäischen Hydra
-%%%%
-Cigotuvi's Monster's
-von Cigotuvis Monster
-%%%%
-the Statue of Wucad Mu's
-{f}der Statue von Wucad Mu
-%%%%
-Amaemon's
-von Amaemon
+Boris's
+von Boris
 %%%%
 Cassandra's
 von Cassandra
 %%%%
+Cerebov's
+von Cerebov
+%%%%
+Cigotuvi's Monster's
+von Cigotuvis Monster
+%%%%
+Crazy Yiuf's
+vom Verrückten Yiuf
+%%%%
+Dispater's
+von Dispater
+%%%%
+Dissolution's
+von Dissolution
+%%%%
+Donald's
+von Donald
+%%%%
+Dowan's
+von Dowan
+%%%%
+Duvessa's
+von Duvessa
+%%%%
+Edmund's
+von Edmund
+%%%%
+Ereshkigal's
+von Ereshkigal
+%%%%
+Erica's
+von Erica
+%%%%
+Erolcha's
+von Erolcha
+%%%%
+Eustachio's
+von Eustachio
+%%%%
+Fannar's
+von Fannar
+%%%%
+Frances's
+von Frances
+%%%%
+Frederick's
+von Frederick
+%%%%
+Gastronok's
+von Gastronok
+%%%%
+Geryon's
+von Geryon
+%%%%
+Gloorx Vloq's
+von Gloorx Vloq
+%%%%
 Goji's
 von Goji
+%%%%
+Grinder's
+von Grinder
+%%%%
+Grum's
+von Grum
 %%%%
 Grunn's
 von Grunn
 %%%%
-the Head Instructor's
-des Lehrmeisters
+Harold's
+von Harold
+%%%%
+Ignacio's
+von Ignacio
+%%%%
+Ijyb's
+von Ijyb
+%%%%
+Ilsuiw's
+von Ilsuiw
 %%%%
 Jeremiah's
 von Jeremiah
 %%%%
+Jessica's
+von Jessica
+%%%%
+Jorgrun's
+von Jorgrun
+%%%%
+Jory's
+von Jory
+%%%%
+Joseph's
+von Joseph
+%%%%
 Josephina's
 von Josephina
+%%%%
+Josephine's
+von Josephine
+%%%%
+Khufu's
+von Khufu
+%%%%
+Kirke's
+von Kirke
 %%%%
 Lodul's
 von Lodul
 %%%%
+Lom Lobon's
+von Lom Lobon
+%%%%
+Louise's
+von Louise
+%%%%
+Maggie's
+von Maggie
+%%%%
+Mara's
+von Mara
+%%%%
+Margery's
+von Margery
+%%%%
+Maurice's
+von Maurice
+%%%%
+Menkaure's
+von Menkaure
+%%%%
+Mennas's
+von Mennas
+%%%%
 Mlioglotl's
 von Mlioglotl
+%%%%
+Mnoleg's
+von Mnoleg
+%%%%
+Murray's
+von Murray
+%%%%
+Natasha's
+von Natascha
+%%%%
+Nellie's
+von Nellie
+%%%%
+Nergalle's
+von Nergalle
+%%%%
+Nessos's
+von Nessos
+%%%%
+Nikola's
+von Nikola
 %%%%
 Nobody's
 von Niemand
@@ -297,8 +221,59 @@ von Parghit
 Pargi's
 von Pargi
 %%%%
+Pikel's
+von Pikel
+%%%%
+Polyphemus's
+von Polyphem
+%%%%
+Prince Ribbit's
+von Prinz Quak
+%%%%
+Psyche's
+von Psyche
+%%%%
+Purgy's
+von Purgy
+%%%%
+Robin's
+von Robin
+%%%%
+Roxanne's
+von Roxanne
+%%%%
+Rupert's
+von Rupert
+%%%%
+Saint Roka's
+von Sankt Roka
+%%%%
+Sigmund's
+von Sigmund
+%%%%
+Snorg's
+von Snorg
+%%%%
+Sojobo's
+von Sojobo
+%%%%
+Sonja's
+von Sonja
+%%%%
 Sprozz's
 von Sprozz
+%%%%
+Terence's
+von Terence
+%%%%
+Tiamat's
+von Tiamat
+%%%%
+Urug's
+von Urug
+%%%%
+Vashnia's
+von Vashnia
 %%%%
 Vv's
 von Vv
@@ -309,14 +284,37 @@ von Wiglaf
 Xak'krixis's
 von Xak'krixis
 %%%%
+Xtahua's
+von Xtahua
+%%%%
 Zenata's
 von Zenata
+%%%%
+
+%%%%
+the Enchantress's
+{f}der Zauberin
+%%%%
+the Head Instructor's
+{m}des Lehrmeisters
+%%%%
+the Lernaean hydra's
+{f}der Lernäischen Hydra
+%%%%
+the Royal Jelly's
+{n}des Gelée Royale
+%%%%
+the Serpent of Hell's
+{f}der Höllenschlange
+%%%%
+the Statue of Wucad Mu's
+{f}der Statue von Wucad Mu
 %%%%
 
 # not really uniques, but gramatically similar
 %%%%
 @player_name@'s ghost's
-des Geistes von @player_name@
+{m}des Geistes von @player_name@
 %%%%
 @player_name@'s illusion's
 {f}der Illusion von @player_name@
@@ -326,6 +324,9 @@ des Geistes von @player_name@
 # Sprint Monsters
 ##################
 
+%%%%
+Chuck's
+von Chuck
 %%%%
 # note: Must distinguish from fleshlords (in German, flesh and meat are both Fleisch)
 The Meatlord's

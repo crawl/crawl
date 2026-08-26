@@ -18,238 +18,66 @@
 # languages, so we revert to their previous genders.
 
 %%%%
-# probably a reference to one of several Christian saints named Menas
-the Mennas
+the Agnes
 
 %%%%
-# gender neutral in the English version of Crawl, but was previously male
-# a male centaur in Greek mythology
-the Nessos
+the Aizul
 
 %%%%
-the Chuck
-
-%%%%
-# a cyclops in Greek mythology
-the Polyphemus
+the Amaemon
 
 %%%%
 # a giant/titan in Greek mythology
 the Antaeus
 
 %%%%
-# a Mesopotamian goddess
-the Tiamat
-
-%%%%
-# a figure from Chinese mythology
-the Bai Suzhen
-
-%%%%
-# gender neutral in the English version of Crawl, but was previously female
-the Xtahua
-
-%%%%
-the Ijyb
-
-%%%%
-# gender neutral in the English version of Crawl, but was previously female
-the Robin
-
-%%%%
-the Grum
-
-%%%%
-the Duvessa
-
-%%%%
-the Dowan
-
-%%%%
-# gender neutral in the English version of Crawl, but was previously male
-the Fannar
-
-%%%%
-the Jorgrun
-
-%%%%
-the Natasha
-
-%%%%
 # in Greek mythology, a woman who was transformed into a spider
 the Arachne
+
+%%%%
+# Greek name of a demon in Judaism/Christainity
+the Asmodeus
 
 %%%%
 # the name of the minotaur in Greek mythology
 the Asterion
 
 %%%%
-the Agnes
+# an angel in Islam
+the Azrael
 
 %%%%
-# gender neutral in the English version of Crawl, was previously male, but Dissolution is a feminine noun
-the Dissolution
+# a figure from Chinese mythology
+the Bai Suzhen
 
 %%%%
-the Sonja
+the Blork
 
 %%%%
-the Pikel
+# obsolete but could appear as killer in high scores list
+the Blork the orc
+
+%%%%
+the Blorkula
+
+%%%%
+the Blorkula the orcula
 
 %%%%
 the Boris
 
 %%%%
-# the original Egyptian name of the pharaoh also known by the Greek name Mykerinos
-the Menkaure
-
-%%%%
-# the original Egyptian name of the pharaoh usually known by the Greek name Cheops
-the Khufu
-
-%%%%
-the Ilsuiw
-
-%%%%
-the Vashnia
-
-%%%%
-the Erolcha
-
-%%%%
-the Urug
-
-%%%%
-the Nergalle
-
-%%%%
-# gender neutral in the English version of Crawl, but was previously male
-the Saint Roka
-
-%%%%
-the Sojobo
-
-%%%%
-# an angel in Islam
-the Azrael
-
-%%%%
-# a demon in Buddhism
-the Mara
-
-%%%%
-the Aizul
-
-%%%%
-the Snorg
-
-%%%%
-the Purgy
-
-%%%%
-the Jory
-
-%%%%
-the Gastronok
-
-%%%%
-the Nellie
-
-%%%%
-the Murray
-
-%%%%
-the Ignacio
-
-%%%%
-the Grinder
-
-%%%%
-the Roxanne
-
-%%%%
-the Terence
-
-%%%%
-the Jessica
-
-%%%%
-# a hero in Norse mythology
-the Sigmund
-
-%%%%
-the Edmund
-
-%%%%
-# named after the Greek goddess of the soul
-the Psyche
-
-%%%%
-the Donald
-
-%%%%
-the Joseph
-
-%%%%
-the Erica
-
-%%%%
-the Josephine
-
-%%%%
-the Harold
-
-%%%%
-the Louise
-
-%%%%
-the Frances
-
-%%%%
-the Rupert
-
-%%%%
-# the original Greek name of the minor goddess usually known as Circe
-the Kirke
-
-%%%%
-the Frederick
-
-%%%%
-the Margery
-
-%%%%
-the Maggie
-
-%%%%
-the Eustachio
-
-%%%%
-the Maurice
-
-%%%%
-# Nikola Tesla
-the Nikola
-
-%%%%
-# gender neutral in the English version of Crawl, but was previously male
-the Mnoleg
-
-%%%%
-# gender neutral in the English version of Crawl, but was previously male
-the Lom Lobon
+the Cassandra
 
 %%%%
 # gender neutral in the English version of Crawl, but was previously male
 the Cerebov
 
 %%%%
-# gender neutral in the English version of Crawl, but was previously male
-the Gloorx Vloq
+the Cigotuvi's Monster
 
 %%%%
-# from Greek mythology
-the Geryon
+the Crazy Yiuf
 
 %%%%
 # gender neutral in the English version of Crawl, but was previously male
@@ -257,78 +85,166 @@ the Geryon
 the Dispater
 
 %%%%
-# Greek name of a demon in Judaism/Christainity
-the Asmodeus
+# gender neutral in the English version of Crawl, was previously male, but Dissolution is a feminine noun
+the Dissolution
+
+%%%%
+the Donald
+
+%%%%
+the Dowan
+
+%%%%
+the Duvessa
+
+%%%%
+the Edmund
 
 %%%%
 # a Mesopotamian goddess
 the Ereshkigal
 
 %%%%
-the Prince Ribbit
+the Erica
 
 %%%%
-the Crazy Yiuf
+the Erolcha
 
 %%%%
-the Enchantress
+the Eustachio
 
 %%%%
-the Blorkula the orcula
+# gender neutral in the English version of Crawl, but was previously male
+the Fannar
 
 %%%%
-the Blorkula
+the Frances
 
 %%%%
-# obsolete but could appear as killer in high scores list
-the Blork the orc
+the Frederick
 
 %%%%
-the Blork
-
-%%%%
-# a play on words - boss of the jellies in DCSS, and a substance created by bees
-the Royal Jelly
-
-%%%%
-the Serpent of Hell
+the Gastronok
 
 %%%%
 # from Greek mythology
-the Lernaean hydra
+the Geryon
 
 %%%%
-the Cigotuvi's Monster
-
-%%%%
-the Statue of Wucad Mu
-
-%%%%
-the Amaemon
-
-%%%%
-the Cassandra
+# gender neutral in the English version of Crawl, but was previously male
+the Gloorx Vloq
 
 %%%%
 the Goji
 
 %%%%
+the Grinder
+
+%%%%
+the Grum
+
+%%%%
 the Grunn
 
 %%%%
-the Head Instructor
+the Harold
+
+%%%%
+the Ignacio
+
+%%%%
+the Ijyb
+
+%%%%
+the Ilsuiw
 
 %%%%
 the Jeremiah
 
 %%%%
+the Jessica
+
+%%%%
+the Jorgrun
+
+%%%%
+the Jory
+
+%%%%
+the Joseph
+
+%%%%
 the Josephina
+
+%%%%
+the Josephine
+
+%%%%
+# the original Egyptian name of the pharaoh usually known by the Greek name Cheops
+the Khufu
+
+%%%%
+# the original Greek name of the minor goddess usually known as Circe
+the Kirke
 
 %%%%
 the Lodul
 
 %%%%
+# gender neutral in the English version of Crawl, but was previously male
+the Lom Lobon
+
+%%%%
+the Louise
+
+%%%%
+the Maggie
+
+%%%%
+# a demon in Buddhism
+the Mara
+
+%%%%
+the Margery
+
+%%%%
+the Maurice
+
+%%%%
+# the original Egyptian name of the pharaoh also known by the Greek name Mykerinos
+the Menkaure
+
+%%%%
+# probably a reference to one of several Christian saints named Menas
+the Mennas
+
+%%%%
 the Mlioglotl
+
+%%%%
+# gender neutral in the English version of Crawl, but was previously male
+the Mnoleg
+
+%%%%
+the Murray
+
+%%%%
+the Natasha
+
+%%%%
+the Nellie
+
+%%%%
+the Nergalle
+
+%%%%
+# gender neutral in the English version of Crawl, but was previously male
+# a male centaur in Greek mythology
+the Nessos
+
+%%%%
+# Nikola Tesla
+the Nikola
 
 %%%%
 the Nobody
@@ -343,7 +259,64 @@ the Parghit
 the Pargi
 
 %%%%
+the Pikel
+
+%%%%
+# a cyclops in Greek mythology
+the Polyphemus
+
+%%%%
+the Prince Ribbit
+
+%%%%
+# named after the Greek goddess of the soul
+the Psyche
+
+%%%%
+the Purgy
+
+%%%%
+# gender neutral in the English version of Crawl, but was previously female
+the Robin
+
+%%%%
+the Roxanne
+
+%%%%
+the Rupert
+
+%%%%
+# gender neutral in the English version of Crawl, but was previously male
+the Saint Roka
+
+%%%%
+# a hero in Norse mythology
+the Sigmund
+
+%%%%
+the Snorg
+
+%%%%
+the Sojobo
+
+%%%%
+the Sonja
+
+%%%%
 the Sprozz
+
+%%%%
+the Terence
+
+%%%%
+# a Mesopotamian goddess
+the Tiamat
+
+%%%%
+the Urug
+
+%%%%
+the Vashnia
 
 %%%%
 the Vv
@@ -355,7 +328,33 @@ the Wiglaf
 the Xak'krixis
 
 %%%%
+# gender neutral in the English version of Crawl, but was previously female
+the Xtahua
+
+%%%%
 the Zenata
+
+%%%%
+
+%%%%
+the Enchantress
+
+%%%%
+the Head Instructor
+
+%%%%
+# from Greek mythology
+the Lernaean hydra
+
+%%%%
+# a play on words - boss of the jellies in DCSS, and a substance created by bees
+the Royal Jelly
+
+%%%%
+the Serpent of Hell
+
+%%%%
+the Statue of Wucad Mu
 
 %%%%
 
@@ -380,6 +379,9 @@ the helpless @player_name@'s illusion
 ##################
 # Sprint Monsters
 ##################
+
+%%%%
+the Chuck
 
 %%%%
 The Meatlord
