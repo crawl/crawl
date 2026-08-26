@@ -14,9 +14,8 @@
 # letter).
 #
 # Some uniques are gender-neutral in English. This is different to neuter.
-# (neuter -> it, gender neutral -> they). While German has neuter, it can't do
-# gender neutral, so in order to avoid calling people "it", we've used the
-# genders those monsters had in older versions of Crawl.
+# (neuter -> it, gender neutral -> they). This can not be done in most
+# languages, so we revert to their previous genders.
 
 %%%%
 # probably a reference to one of several Christian saints named Menas
