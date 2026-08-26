@@ -277,6 +277,9 @@ the Enchantress
 the Blorkula the orcula
 
 %%%%
+the Blorkula
+
+%%%%
 # obsolete but could appear as killer in high scores list
 the Blork the orc
 
@@ -299,6 +302,60 @@ the Cigotuvi's Monster
 
 %%%%
 the Statue of Wucad Mu
+
+%%%%
+the Amaemon
+
+%%%%
+the Cassandra
+
+%%%%
+the Goji
+
+%%%%
+the Grunn
+
+%%%%
+the Head Instructor
+
+%%%%
+the Jeremiah
+
+%%%%
+the Josephina
+
+%%%%
+the Lodul
+
+%%%%
+the Mlioglotl
+
+%%%%
+the Nobody
+
+%%%%
+the Norris
+
+%%%%
+the Parghit
+
+%%%%
+the Pargi
+
+%%%%
+the Sprozz
+
+%%%%
+the Vv
+
+%%%%
+the Wiglaf
+
+%%%%
+the Xak'krixis
+
+%%%%
+the Zenata
 
 %%%%
 
