@@ -811,7 +811,8 @@ def post_process_item_name_cc(input):
             elif section == "staff_primary_string":
                 string = "the " + string + "staff"
             elif section == "rune_type_name":
-                if string == "elven":
+                if string in ["elven", "mossy"]:
+                    # obsolete runes
                     continue
                 #new_strings.append("the " + string + " rune of Zot")
                 new_strings.append("the " + string + " rune")
