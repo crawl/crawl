@@ -1803,7 +1803,7 @@ void celebrant_bloodrite_fineff::fire()
 
     mpr("You consecrate your suffering and invoke the rites of blood!");
 
-    // Set cooldown before firing, in case we recieve damage during the volley
+    // Set cooldown before firing, in case we receive damage during the volley
     // (eg: via reflected projectiles) that would trigger this again.
     you.duration[DUR_CELEBRANT_COOLDOWN] = 1;
 
