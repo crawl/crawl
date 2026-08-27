@@ -923,8 +923,7 @@ def post_process_mon_data_h(input):
             if is_unique_monster(string):
                 if " the " in string:
                     short_form = re.sub(" the .*", "", string)
-                    uniques.append(article_the(short_form))
-                string = article_the(string)
+                    uniques.append(short_form)
                 if string not in uniques:
                     uniques.append(string)
             else:
