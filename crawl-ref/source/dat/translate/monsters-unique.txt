@@ -1,401 +1,408 @@
 ###############################################################################
 #
-# Monsters - unique, definite article
+# Monsters - unique
 #
 ###############################################################################
 
 # Notes:
 #
-# When uniques have an adjective, they also get the definite article ("the")
-# (e.g. "You stab the helpless Sigmund.").
-#
 # Some uniques are gender-neutral in English. This may not be possible in some
 # languages, so we may have to revert to their previous genders.
 
 %%%%
-the @adj@Agnes
+Agnes
 
 %%%%
-the @adj@Aizul
+Aizul
 
 %%%%
-the @adj@Amaemon
+Amaemon
 
 %%%%
 # a giant/titan in Greek mythology
-the @adj@Antaeus
+Antaeus
 
 %%%%
 # in Greek mythology, a woman who was transformed into a spider
-the @adj@Arachne
+Arachne
 
 %%%%
 # Greek name of a demon in Judaism/Christainity
-the @adj@Asmodeus
+Asmodeus
 
 %%%%
 # the name of the minotaur in Greek mythology
-the @adj@Asterion
+Asterion
 
 %%%%
 # an angel in Islam
-the @adj@Azrael
+Azrael
 
 %%%%
 # a figure from Chinese mythology
-the @adj@Bai Suzhen
+Bai Suzhen
 
 %%%%
 # obsolete but could appear as killer in high scores list
-the @adj@Blork
+Blork
 
 %%%%
-the @adj@Blork the orc
+Blork the orc
 
 %%%%
-the @adj@Blorkula
+Blorkula
 
 %%%%
-the @adj@Blorkula the orcula
+Blorkula the orcula
 
 %%%%
-the @adj@Boris
+Boris
 
 %%%%
-the @adj@Cassandra
+Cassandra
 
 %%%%
 # gender neutral in English, but was previously male
-the @adj@Cerebov
+Cerebov
 
 %%%%
-the @adj@Chuck
+Chuck
 
 %%%%
-the @adj@Cigotuvi's Monster
+Cigotuvi's Monster
 
 %%%%
-the @adj@Crazy Yiuf
+Crazy Yiuf
 
 %%%%
 # gender neutral in English, but was previously male
 # Roman god of the underworld
-the @adj@Dispater
+Dispater
 
 %%%%
-# gender neutral in English, was previously male
-# Dissolution is a feminine noun in French and German
-the @adj@Dissolution
+# gender neutral in English, was previously male, but Dissolution is a feminine noun
+Dissolution
 
 %%%%
-the @adj@Donald
+Donald
 
 %%%%
-the @adj@Dowan
+Dowan
 
 %%%%
-the @adj@Duvessa
+Duvessa
 
 %%%%
-the @adj@Edmund
+Edmund
 
 %%%%
 # a Mesopotamian goddess
-the @adj@Ereshkigal
+Ereshkigal
 
 %%%%
-the @adj@Erica
+Erica
 
 %%%%
-the @adj@Erolcha
+Erolcha
 
 %%%%
-the @adj@Eustachio
+Eustachio
 
 %%%%
 # gender neutral in English, but was previously male
-the @adj@Fannar
+Fannar
 
 %%%%
-the @adj@Frances
+Frances
 
 %%%%
-the @adj@Frederick
+Frederick
 
 %%%%
-the @adj@Gastronok
+Gastronok
 
 %%%%
 # from Greek mythology
-the @adj@Geryon
+Geryon
 
 %%%%
 # gender neutral in English, but was previously male
-the @adj@Gloorx Vloq
+Gloorx Vloq
 
 %%%%
-the @adj@Goji
+Goji
 
 %%%%
-the @adj@Grinder
+Grinder
 
 %%%%
-the @adj@Grum
+Grum
 
 %%%%
-the @adj@Grunn
+Grunn
 
 %%%%
-the @adj@Harold
+Harold
 
 %%%%
-the @adj@Ignacio
+Ignacio
 
 %%%%
-the @adj@Ijyb
+Ijyb
 
 %%%%
-the @adj@Ilsuiw
+Ilsuiw
 
 %%%%
-the @adj@Jeremiah
+Jeremiah
 
 %%%%
-the @adj@Jessica
+Jessica
 
 %%%%
-the @adj@Jorgrun
+Jorgrun
 
 %%%%
-the @adj@Jory
+Jory
 
 %%%%
-the @adj@Joseph
+Joseph
 
 %%%%
-the @adj@Josephina
+Josephina
 
 %%%%
-the @adj@Josephine
+Josephine
 
 %%%%
 # the original Egyptian name of the pharaoh usually known by the Greek name Cheops
-the @adj@Khufu
+Khufu
 
 %%%%
 # the original Greek name of the minor goddess usually known as Circe
-the @adj@Kirke
+Kirke
 
 %%%%
-the @adj@Lodul
+Lodul
 
 %%%%
 # gender neutral in English, but was previously male
-the @adj@Lom Lobon
+Lom Lobon
 
 %%%%
-the @adj@Louise
+Louise
 
 %%%%
-the @adj@Maggie
+Maggie
 
 %%%%
 # a demon in Buddhism
-the @adj@Mara
+Mara
 
 %%%%
-the @adj@Margery
+Margery
 
 %%%%
-the @adj@Maurice
+Maurice
 
 %%%%
 # the original Egyptian name of the pharaoh also known by the Greek name Mykerinos
-the @adj@Menkaure
+Menkaure
 
 %%%%
 # probably a reference to one of several Christian saints named Menas
-the @adj@Mennas
+Mennas
 
 %%%%
-the @adj@Mlioglotl
+Mlioglotl
 
 %%%%
 # gender neutral in English, but was previously male
-the @adj@Mnoleg
+Mnoleg
 
 %%%%
-the @adj@Murray
+Murray
 
 %%%%
-the @adj@Natasha
+Natasha
 
 %%%%
-the @adj@Nellie
+Nellie
 
 %%%%
-the @adj@Nergalle
+Nergalle
 
 %%%%
 # gender neutral in English, but was previously male
 # a male centaur in Greek mythology
-the @adj@Nessos
+Nessos
 
 %%%%
 # Nikola Tesla
-the @adj@Nikola
+Nikola
 
 %%%%
-the @adj@Nobody
+Nobody
 
 %%%%
-the @adj@Norris
+Norris
 
 %%%%
-the @adj@Parghit
+Parghit
 
 %%%%
-the @adj@Pargi
+Pargi
 
 %%%%
-the @adj@Pikel
+Pikel
 
 %%%%
 # a cyclops in Greek mythology
-the @adj@Polyphemus
+Polyphemus
 
 %%%%
-the @adj@Prince Ribbit
+Prince Ribbit
 
 %%%%
 # named after the Greek goddess of the soul
-the @adj@Psyche
+Psyche
 
 %%%%
-the @adj@Purgy
+Purgy
 
 %%%%
 # gender neutral in English, but was previously female
-the @adj@Robin
+Robin
 
 %%%%
-the @adj@Roxanne
+Roxanne
 
 %%%%
-the @adj@Rupert
+Rupert
 
 %%%%
 # gender neutral in English, but was previously male
-the @adj@Saint Roka
+Saint Roka
 
 %%%%
 # a hero in Norse mythology
-the @adj@Sigmund
+Sigmund
 
 %%%%
-the @adj@Snorg
+Snorg
 
 %%%%
-the @adj@Sojobo
+Sojobo
 
 %%%%
-the @adj@Sonja
+Sonja
 
 %%%%
-the @adj@Sprozz
+Sprozz
 
 %%%%
-the @adj@Terence
+Terence
 
 %%%%
 # a Mesopotamian goddess
-the @adj@Tiamat
+Tiamat
 
 %%%%
-the @adj@Urug
+Urug
 
 %%%%
-the @adj@Vashnia
+Vashnia
 
 %%%%
-the @adj@Vv
+Vv
 
 %%%%
-the @adj@Wiglaf
+Wiglaf
 
 %%%%
-the @adj@Xak'krixis
+Xak'krixis
 
 %%%%
 # gender neutral in English, but was previously female
-the @adj@Xtahua
+Xtahua
 
 %%%%
-the @adj@Zenata
+Zenata
 
 %%%%
 
-# these ones normally appear with the definite article anyway...
+# these ones normally appear with the definite article...
 
 %%%%
-the @adj@Enchantress
+the Enchantress
 
 %%%%
-the @adj@Head Instructor
+the Head Instructor
 
 %%%%
 # from Greek mythology
-the @adj@Lernaean hydra
+the Lernaean hydra
 
 %%%%
 # a play on words - boss of the jellies in DCSS, and a substance created by bees
-the @adj@Royal Jelly
+the Royal Jelly
 
 %%%%
-the @adj@Serpent of Hell
+the Serpent of Hell
 
 %%%%
-the @adj@Statue of Wucad Mu
+the Statue of Wucad Mu
+
+%%%%
+
+# ...but in some scenarios (e.g. mouse hover), they appear with no article
+
+%%%%
+Enchantress
+
+%%%%
+Head Instructor
+
+%%%%
+Lernaean hydra
+
+%%%%
+Royal Jelly
+
+%%%%
+Serpent of Hell
+
+%%%%
+Statue of Wucad Mu
 
 %%%%
 
 # not really uniques, but gramatically similar
 
-# can't have two consecutive string params ("@adj@@player_name@") because
-# there's no way to tell where one ends and the next begins, so we're forced
-# to list all the possibilities long-hand
+%%%%
+@player_name@'s ghost
 
 %%%%
-the helpless @player_name@'s ghost
-
-%%%%
-the helpless @player_name@'s illusion
+@player_name@'s illusion
 
 %%%%
 
-%%%%
-the bound @player_name@'s ghost
-
-%%%%
-the bound @player_name@'s illusion
-
-%%%%
 
 # these meatsprint monsters appear with capitalised "The"
 
 %%%%
-The @adj@Meatlord
+The Meatlord
 
 %%%%
-The @adj@Servant
+The Servant
 
 %%%%
-The @adj@Captor
+The Captor
 
 %%%%
-The @adj@Defiler
+The Defiler
 
 %%%%
-The @adj@Unspeakable
+The Unspeakable
 
 %%%%

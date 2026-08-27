@@ -1,0 +1,410 @@
+###############################################################################
+#
+# Monsters - unique
+#
+###############################################################################
+
+# Notes:
+#
+# Some uniques are gender-neutral in English. This may not be possible in some
+# languages, so we may have to revert to their previous genders.
+
+%%%%
+Agnes
+{f}Agnes
+%%%%
+Aizul
+{f}Aizul
+%%%%
+Amaemon
+{m}Amaemon
+%%%%
+# a giant/titan in Greek mythology
+Antaeus
+{m}Antaeus
+%%%%
+# in Greek mythology, a woman who was transformed into a spider
+Arachne
+{f}Arachne
+%%%%
+# Greek name of a demon in Judaism/Christainity
+Asmodeus
+{m}Asmodäus
+%%%%
+# the name of the minotaur in Greek mythology
+Asterion
+{m}Asterion
+%%%%
+# an angel in Islam
+Azrael
+{m}Azrael
+%%%%
+# a figure from Chinese mythology
+Bai Suzhen
+{f}Bai Suzhen
+%%%%
+# obsolete but could appear as killer in high scores list
+Blork
+{m}Blork
+%%%%
+Blork the orc
+{m}Blork der Ork
+%%%%
+Blorkula
+{m}Blorkula
+%%%%
+Blorkula the orcula
+{m}Blorkula der Orkula
+%%%%
+Boris
+{m}Boris
+%%%%
+Cassandra
+{f}Cassandra
+%%%%
+# gender neutral in English, but was previously male
+Cerebov
+{m}Cerebov
+%%%%
+Chuck
+{m}Chuck
+%%%%
+Cigotuvi's Monster
+{n}Cigotuvis Monster
+%%%%
+Crazy Yiuf
+{m}Verrückter Yiuf
+%%%%
+# gender neutral in English, but was previously male
+# Roman god of the underworld
+Dispater
+{m}Dispater
+%%%%
+# gender neutral in English, was previously male
+# Dissolution is a feminine noun in French and German
+Dissolution
+{f}Dissolution
+%%%%
+Donald
+{m}Donald
+%%%%
+Dowan
+{m}Dowan
+%%%%
+Duvessa
+{f}Duvessa
+%%%%
+Edmund
+{m}Edmund
+%%%%
+# a Mesopotamian goddess
+Ereshkigal
+{f}Ereshkigal
+%%%%
+Erica
+{f}Erica
+%%%%
+Erolcha
+{f}Erolcha
+%%%%
+Eustachio
+{m}Eustachio
+%%%%
+# gender neutral in English, but was previously male
+Fannar
+{m}Fannar
+%%%%
+Frances
+{f}Frances
+%%%%
+Frederick
+{m}Frederick
+%%%%
+Gastronok
+{m}Gastronok
+%%%%
+# from Greek mythology
+Geryon
+{m}Geryon
+%%%%
+# gender neutral in English, but was previously male
+Gloorx Vloq
+{m}Gloorx Vloq
+%%%%
+Goji
+{m}Goji
+%%%%
+Grinder
+{f}Grinder
+%%%%
+Grum
+{m}Grum
+%%%%
+Grunn
+{m}Grunn
+%%%%
+Harold
+{m}Harold
+%%%%
+Ignacio
+{m}Ignacio
+%%%%
+Ijyb
+{f}Ijyb
+%%%%
+Ilsuiw
+{f}Ilsuiw
+%%%%
+Jeremiah
+{m}Jeremiah
+%%%%
+Jessica
+{f}Jessica
+%%%%
+Jorgrun
+{m}Jorgrun
+%%%%
+Jory
+{m}Jory
+%%%%
+Joseph
+{m}Joseph
+%%%%
+Josephina
+{f}Josephina
+%%%%
+Josephine
+{f}Josephine
+%%%%
+# the original Egyptian name of the pharaoh usually known by the Greek name Cheops
+Khufu
+{m}Khufu
+%%%%
+# the original Greek name of the minor goddess usually known as Circe
+Kirke
+{f}Kirke
+%%%%
+Lodul
+{m}Lodul
+%%%%
+# gender neutral in English, but was previously male
+Lom Lobon
+{m}Lom Lobon
+%%%%
+Louise
+{f}Louise
+%%%%
+Maggie
+{f}Maggie
+%%%%
+# a demon in Buddhism
+Mara
+{m}Mara
+%%%%
+Margery
+{f}Margery
+%%%%
+Maurice
+{m}Maurice
+%%%%
+# the original Egyptian name of the pharaoh also known by the Greek name Mykerinos
+Menkaure
+{m}Menkaure
+%%%%
+# probably a reference to one of several Christian saints named Menas
+Mennas
+{m}Mennas
+%%%%
+Mlioglotl
+{m}Mlioglotl
+%%%%
+# gender neutral in English, but was previously male
+Mnoleg
+{m}Mnoleg
+%%%%
+Murray
+{m}Murray
+%%%%
+Natasha
+{f}Natascha
+%%%%
+Nellie
+{f}Nellie
+%%%%
+Nergalle
+{f}Nergalle
+%%%%
+# gender neutral in English, but was previously male
+# a male centaur in Greek mythology
+Nessos
+{m}Nessos
+%%%%
+# Nikola Tesla
+Nikola
+{m}Nikola
+%%%%
+Nobody
+{m}Niemand
+%%%%
+Norris
+{m}Norris
+%%%%
+Parghit
+{m}Parghit
+%%%%
+Pargi
+{m}Pargi
+%%%%
+Pikel
+{m}Pikel
+%%%%
+# a cyclops in Greek mythology
+Polyphemus
+{m}Polyphem
+%%%%
+Prince Ribbit
+{m}Prinz Quak
+%%%%
+# named after the Greek goddess of the soul
+Psyche
+{f}Psyche
+%%%%
+Purgy
+{m}Purgy
+%%%%
+# gender neutral in English, but was previously female
+Robin
+{f}Robin
+%%%%
+Roxanne
+{f}Roxanne
+%%%%
+Rupert
+{m}Rupert
+%%%%
+# gender neutral in English, but was previously male
+Saint Roka
+{m}Sankt Roka
+%%%%
+# a hero in Norse mythology
+Sigmund
+{m}Sigmund
+%%%%
+Snorg
+{f}Snorg
+%%%%
+Sojobo
+{f}Sojobo
+%%%%
+Sonja
+{f}Sonja
+%%%%
+Sprozz
+{m}Sprozz
+%%%%
+Terence
+{m}Terence
+%%%%
+# a Mesopotamian goddess
+Tiamat
+{f}Tiamat
+%%%%
+Urug
+{f}Urug
+%%%%
+Vashnia
+{f}Vashnia
+%%%%
+Vv
+{f}Vv
+%%%%
+Wiglaf
+{m}Wiglaf
+%%%%
+Xak'krixis
+{m}Xak'krixis
+%%%%
+# gender neutral in English, but was previously female
+Xtahua
+{f}Xtahua
+%%%%
+Zenata
+{f}Zenata
+%%%%
+
+# these ones normally appear with the definite article...
+
+%%%%
+the Enchantress
+{f}die Zauberin
+%%%%
+the Head Instructor
+{m}der Lehrmeister
+%%%%
+# from Greek mythology
+the Lernaean hydra
+{f}die Lernäische Hydra
+%%%%
+# a play on words - boss of the jellies in DCSS, and a substance created by bees
+the Royal Jelly
+{n}das Gelée Royale
+%%%%
+the Serpent of Hell
+{f}die Höllenschlange
+%%%%
+the Statue of Wucad Mu
+{f}die Statue von Wucad Mu
+%%%%
+
+# ...but in some scenarios (e.g. mouse hover), they appear with no article
+
+%%%%
+Enchantress
+{f}Zauberin
+%%%%
+Head Instructor
+{m}Lehrmeister
+%%%%
+Lernaean hydra
+{f}Lernäische Hydra
+%%%%
+Royal Jelly
+{n}Gelée Royale
+%%%%
+Serpent of Hell
+{f}Höllenschlange
+%%%%
+Statue of Wucad Mu
+{f}Statue von Wucad Mu
+%%%%
+
+# not really uniques, but gramatically similar
+
+%%%%
+@player_name@'s ghost
+{m}der Geist von @player_name@
+%%%%
+@player_name@'s illusion
+{f}die Illusion von @player_name@
+%%%%
+
+
+# these meatsprint monsters appear with capitalised "The"
+
+%%%%
+# note: Must distinguish from fleshlords (in German, flesh and meat are both Fleisch)
+The Meatlord
+Der Schlachtmeister
+%%%%
+The Servant
+Der Diener
+%%%%
+The Captor
+Der Fänger
+%%%%
+The Defiler
+Der Schänder
+%%%%
+The Unspeakable
+Der Unsägliche
+%%%%
