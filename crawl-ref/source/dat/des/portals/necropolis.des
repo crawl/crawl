@@ -84,7 +84,7 @@ function necropolis_portal_entry(e)
     -- Roughly corresponding to the average (if hardly the median) number of
     -- ghost vaults one got per game previously. Early Necropolis spawns are
     -- quite hard though (player ghosts are too above the curve), so lower
-    -- their odds on the earliest floors. Vaults:1-4 Neccropolis entries are
+    -- their odds on the earliest floors. Vaults:1-4 Necropolis entries are
     -- placed seperately via vaults_default_options() and pick_room().
     e.chance(350)
     e.depth_chance("D:5-7", 275)
