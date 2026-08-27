@@ -3326,6 +3326,7 @@ static const map<spell_type, spell_defence_info> _spell_defences =
     { SPELL_ARCJOLT,
       { ac_type::half, false, false, false, { BEAM_ELECTRICITY } } },
     { SPELL_BATTLESPHERE, _ac_only },
+    { SPELL_BECKONING_GALE, _ac_only },
     { SPELL_BOULDER, _ac_only },
     { SPELL_CONJURE_BALL_LIGHTNING,
       { ac_type::half, false, false, false, { BEAM_ELECTRICITY } } },
@@ -3429,6 +3430,9 @@ static spell_defence_info _get_spell_defences(spell_type spell,
         zap = spell_to_zap(spell);
 
     if (zap == NUM_ZAPS)
+        return info;
+
+    if (!zap_has_tohit(zap, is_monster))
         return info;
 
     if (pow < 0)

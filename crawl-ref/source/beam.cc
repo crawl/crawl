@@ -375,6 +375,17 @@ bool zap_is_enchantment(zap_type z_type)
     return zinfo && zinfo->is_enchantment;
 }
 
+// Does this zap define a to-hit for the given caster?
+bool zap_has_tohit(zap_type z_type, bool is_monster)
+{
+    const zap_info* zinfo = _seek_zap(z_type);
+    if (!zinfo)
+        return false;
+    if (zinfo->is_enchantment)
+        return true;
+    return (is_monster ? zinfo->monster_tohit : zinfo->player_tohit) != nullptr;
+}
+
 int zap_to_hit(zap_type z_type, int power, bool is_monster)
 {
     const zap_info* zinfo = _seek_zap(z_type);
@@ -443,23 +454,6 @@ static int _zap_loudness(zap_type zap, spell_type spell)
     return 0;
 }
 
-#ifdef WIZARD
-static bool _needs_monster_zap(const zap_info &zinfo)
-{
-    // for enchantments we can't know from this data
-    if (zinfo.is_enchantment)
-        return false;
-    // if player tohit is missing from a non-enchantment, then it has to use
-    // a fake monster cast
-    if (!zinfo.player_tohit)
-        return true;
-
-    // otherwise, it should be possible to use a player zap (damage may or may
-    // not be defined)
-    return false;
-}
-#endif
-
 void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
 {
     const zap_info* zinfo = _seek_zap(z_type);
@@ -474,7 +468,7 @@ void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
 #ifdef WIZARD
     // we are in a wizmode cast scenario: use monster zap data to avoid crashes.
     // N.b. this suppresses some player effects, such as inaccuracy.
-    if (!is_monster && you.wizard && _needs_monster_zap(*zinfo))
+    if (!is_monster && you.wizard && !zap_has_tohit(z_type, false))
         is_monster = true;
 #endif
 
