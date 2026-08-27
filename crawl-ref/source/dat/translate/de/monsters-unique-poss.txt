@@ -32,17 +32,17 @@ von Azrael
 Bai Suzhen's
 von Bai Suzhen
 %%%%
-Blork the orc's
-von Blork dem Ork
-%%%%
 Blork's
 von Blork
 %%%%
-Blorkula the orcula's
-von Blorkula dem Orkula
+Blork the orc's
+von Blork dem Ork
 %%%%
 Blorkula's
 von Blorkula
+%%%%
+Blorkula the orcula's
+von Blorkula dem Orkula
 %%%%
 Boris's
 von Boris
@@ -52,6 +52,9 @@ von Cassandra
 %%%%
 Cerebov's
 von Cerebov
+%%%%
+Chuck's
+von Chuck
 %%%%
 Cigotuvi's Monster's
 von Cigotuvis Monster
@@ -291,6 +294,8 @@ Zenata's
 von Zenata
 %%%%
 
+# these ones normally appear with the definite article...
+
 %%%%
 the Enchantress's
 {f}der Zauberin
@@ -312,6 +317,7 @@ the Statue of Wucad Mu's
 %%%%
 
 # not really uniques, but gramatically similar
+
 %%%%
 @player_name@'s ghost's
 {m}des Geistes von @player_name@
@@ -320,13 +326,8 @@ the Statue of Wucad Mu's
 {f}der Illusion von @player_name@
 %%%%
 
-##################
-# Sprint Monsters
-##################
+# these meatsprint monsters appear with capitalised "The"
 
-%%%%
-Chuck's
-von Chuck
 %%%%
 # note: Must distinguish from fleshlords (in German, flesh and meat are both Fleisch)
 The Meatlord's

@@ -1,0 +1,408 @@
+###############################################################################
+#
+# Monsters - unique
+#
+###############################################################################
+
+# Notes:
+#
+# Some uniques are gender-neutral in English. This may not be possible in some
+# languages, so we may have to revert to their previous genders.
+
+%%%%
+Agnes
+
+%%%%
+Aizul
+
+%%%%
+Amaemon
+
+%%%%
+# a giant/titan in Greek mythology
+Antaeus
+
+%%%%
+# in Greek mythology, a woman who was transformed into a spider
+Arachne
+
+%%%%
+# Greek name of a demon in Judaism/Christainity
+Asmodeus
+
+%%%%
+# the name of the minotaur in Greek mythology
+Asterion
+
+%%%%
+# an angel in Islam
+Azrael
+
+%%%%
+# a figure from Chinese mythology
+Bai Suzhen
+
+%%%%
+# obsolete but could appear as killer in high scores list
+Blork
+
+%%%%
+Blork the orc
+
+%%%%
+Blorkula
+
+%%%%
+Blorkula the orcula
+
+%%%%
+Boris
+
+%%%%
+Cassandra
+
+%%%%
+# gender neutral in English, but was previously male
+Cerebov
+
+%%%%
+Chuck
+
+%%%%
+Cigotuvi's Monster
+
+%%%%
+Crazy Yiuf
+
+%%%%
+# gender neutral in English, but was previously male
+# Roman god of the underworld
+Dispater
+
+%%%%
+# gender neutral in English, was previously male, but Dissolution is a feminine noun
+Dissolution
+
+%%%%
+Donald
+
+%%%%
+Dowan
+
+%%%%
+Duvessa
+
+%%%%
+Edmund
+
+%%%%
+# a Mesopotamian goddess
+Ereshkigal
+
+%%%%
+Erica
+
+%%%%
+Erolcha
+
+%%%%
+Eustachio
+
+%%%%
+# gender neutral in English, but was previously male
+Fannar
+
+%%%%
+Frances
+
+%%%%
+Frederick
+
+%%%%
+Gastronok
+
+%%%%
+# from Greek mythology
+Geryon
+
+%%%%
+# gender neutral in English, but was previously male
+Gloorx Vloq
+
+%%%%
+Goji
+
+%%%%
+Grinder
+
+%%%%
+Grum
+
+%%%%
+Grunn
+
+%%%%
+Harold
+
+%%%%
+Ignacio
+
+%%%%
+Ijyb
+
+%%%%
+Ilsuiw
+
+%%%%
+Jeremiah
+
+%%%%
+Jessica
+
+%%%%
+Jorgrun
+
+%%%%
+Jory
+
+%%%%
+Joseph
+
+%%%%
+Josephina
+
+%%%%
+Josephine
+
+%%%%
+# the original Egyptian name of the pharaoh usually known by the Greek name Cheops
+Khufu
+
+%%%%
+# the original Greek name of the minor goddess usually known as Circe
+Kirke
+
+%%%%
+Lodul
+
+%%%%
+# gender neutral in English, but was previously male
+Lom Lobon
+
+%%%%
+Louise
+
+%%%%
+Maggie
+
+%%%%
+# a demon in Buddhism
+Mara
+
+%%%%
+Margery
+
+%%%%
+Maurice
+
+%%%%
+# the original Egyptian name of the pharaoh also known by the Greek name Mykerinos
+Menkaure
+
+%%%%
+# probably a reference to one of several Christian saints named Menas
+Mennas
+
+%%%%
+Mlioglotl
+
+%%%%
+# gender neutral in English, but was previously male
+Mnoleg
+
+%%%%
+Murray
+
+%%%%
+Natasha
+
+%%%%
+Nellie
+
+%%%%
+Nergalle
+
+%%%%
+# gender neutral in English, but was previously male
+# a male centaur in Greek mythology
+Nessos
+
+%%%%
+# Nikola Tesla
+Nikola
+
+%%%%
+Nobody
+
+%%%%
+Norris
+
+%%%%
+Parghit
+
+%%%%
+Pargi
+
+%%%%
+Pikel
+
+%%%%
+# a cyclops in Greek mythology
+Polyphemus
+
+%%%%
+Prince Ribbit
+
+%%%%
+# named after the Greek goddess of the soul
+Psyche
+
+%%%%
+Purgy
+
+%%%%
+# gender neutral in English, but was previously female
+Robin
+
+%%%%
+Roxanne
+
+%%%%
+Rupert
+
+%%%%
+# gender neutral in English, but was previously male
+Saint Roka
+
+%%%%
+# a hero in Norse mythology
+Sigmund
+
+%%%%
+Snorg
+
+%%%%
+Sojobo
+
+%%%%
+Sonja
+
+%%%%
+Sprozz
+
+%%%%
+Terence
+
+%%%%
+# a Mesopotamian goddess
+Tiamat
+
+%%%%
+Urug
+
+%%%%
+Vashnia
+
+%%%%
+Vv
+
+%%%%
+Wiglaf
+
+%%%%
+Xak'krixis
+
+%%%%
+# gender neutral in English, but was previously female
+Xtahua
+
+%%%%
+Zenata
+
+%%%%
+
+# these ones normally appear with the definite article...
+
+%%%%
+the Enchantress
+
+%%%%
+the Head Instructor
+
+%%%%
+# from Greek mythology
+the Lernaean hydra
+
+%%%%
+# a play on words - boss of the jellies in DCSS, and a substance created by bees
+the Royal Jelly
+
+%%%%
+the Serpent of Hell
+
+%%%%
+the Statue of Wucad Mu
+
+%%%%
+
+# ...but in some scenarios (e.g. mouse hover), they appear with no article
+
+%%%%
+Enchantress
+
+%%%%
+Head Instructor
+
+%%%%
+Lernaean hydra
+
+%%%%
+Royal Jelly
+
+%%%%
+Serpent of Hell
+
+%%%%
+Statue of Wucad Mu
+
+%%%%
+
+# not really uniques, but gramatically similar
+
+%%%%
+@player_name@'s ghost
+
+%%%%
+@player_name@'s illusion
+
+%%%%
+
+
+# these meatsprint monsters appear with capitalised "The"
+
+%%%%
+The Meatlord
+
+%%%%
+The Servant
+
+%%%%
+The Captor
+
+%%%%
+The Defiler
+
+%%%%
+The Unspeakable
+
+%%%%

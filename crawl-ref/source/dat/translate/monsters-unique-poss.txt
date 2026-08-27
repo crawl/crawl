@@ -32,16 +32,16 @@ Azrael's
 Bai Suzhen's
 
 %%%%
-Blork the orc's
-
-%%%%
 Blork's
 
 %%%%
-Blorkula the orcula's
+Blork the orc's
 
 %%%%
 Blorkula's
+
+%%%%
+Blorkula the orcula's
 
 %%%%
 Boris's
@@ -51,6 +51,9 @@ Cassandra's
 
 %%%%
 Cerebov's
+
+%%%%
+Chuck's
 
 %%%%
 Cigotuvi's Monster's
@@ -291,6 +294,8 @@ Zenata's
 
 %%%%
 
+# these ones normally appear with the definite article...
+
 %%%%
 the Enchantress's
 
@@ -312,6 +317,7 @@ the Statue of Wucad Mu's
 %%%%
 
 # not really uniques, but gramatically similar
+
 %%%%
 @player_name@'s ghost's
 
@@ -320,14 +326,10 @@ the Statue of Wucad Mu's
 
 %%%%
 
-##################
-# Sprint Monsters
-##################
+# these meatsprint monsters appear with capitalised "The"
 
 %%%%
-Chuck's
-
-%%%%
+# note: Must distinguish from fleshlords (in German, flesh and meat are both Fleisch)
 The Meatlord's
 
 %%%%
