@@ -19,7 +19,7 @@ Quotes use smart quote unicode characters (U+8220 and U+8221).
 Formatting
 ==========
 
-Use %%%% to seperate each entry, then write the (English) name of
+Use %%%% to separate each entry, then write the (English) name of
 the thing you want to edit. Add a line of spacing, then write the
 (translated) description of the thing.
 
