@@ -85,8 +85,9 @@ offence and defence, but may restrict their movement.
 %%%%
 Monk
 
-Monks start with a simple weapon of their choice, an orb of light, and a potion
-of divine ambrosia, and gain additional piety with the first god they worship.
+Monks start with a simple weapon of their choice, an orb of light, a potion
+of divine ambrosia, a potion of enlightenment, and gain additional piety with
+the first god they worship.
 %%%%
 Necromancer
 
