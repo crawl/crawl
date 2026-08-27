@@ -196,7 +196,7 @@ riddle talismans
 sanguine talismans
 
 %%%%
-the talisman of death
+talismans of death
 
 %%%%
 storm talismans

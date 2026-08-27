@@ -196,7 +196,7 @@ riddle talismans
 sanguine talismans
 {pl}Bluttalismane
 %%%%
-the talisman of death
+talismans of death
 {pl}talismane des Todes
 %%%%
 storm talismans
