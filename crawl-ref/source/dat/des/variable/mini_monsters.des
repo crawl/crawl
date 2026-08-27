@@ -1397,7 +1397,7 @@ MAP
 .....................
 ENDMAP
 
-# TODO: Convert this to a decorative skeleton vault by letting corpses recieve
+# TODO: Convert this to a decorative skeleton vault by letting corpses receive
 #       more monster data like hydra head count, and let it be a vault that
 #       another adventurer went through already. Reduces the issues of
 #       weaker hydras being freer experience and keeps actually-fighting Lerny
