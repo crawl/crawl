@@ -458,11 +458,11 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet,
         bool force_plural = true;
 
         if (ctype == CONSTRICT_BVC)
-            attacker_desc = "The zombie hands";
+            attacker_desc = "the zombie hands";
         else if (ctype == CONSTRICT_ROOTS)
-            attacker_desc = "The grasping roots";
+            attacker_desc = "the grasping roots";
         else if (ctype == CONSTRICT_ENTANGLE)
-            attacker_desc = "The vines";
+            attacker_desc = "the vines";
         else
         {
             force_plural = false;
@@ -476,7 +476,7 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet,
             mprf("%s %s free of %s!",
                  constrictee->name(DESC_THE).c_str(),
                  constrictee->conj_verb(escape_verb).c_str(),
-                 lowercase(attacker_desc).c_str());
+                 attacker_desc.c_str());
         }
         else
         {
