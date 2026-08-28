@@ -35,6 +35,7 @@
 #include "item-use.h"
 #include "level-state-type.h"
 #include "libutil.h"
+#include "localise.h"
 #include "makeitem.h"
 #include "mutation.h"
 #include "notes.h"
@@ -2160,13 +2161,16 @@ static string _gem_parenthetical(gem_type gem)
 static string _gem_text(const item_def *gem_it)
 {
     string text = gem_it->name(DESC_PLAIN);
+    // i18n: must localise before colourize_str because it can split up the text
+    // with colour tags (not just wrap it)
+    text = localise(text);
     const gem_type gem = static_cast<gem_type>(gem_it->sub_type);
     text = colourize_str(text, _gem_colour(gem_it));
     const bool in_branch = player_in_branch(branch_for_gem(gem));
     const colour_t pcol = in_branch ? WHITE
               : you.gems_found[gem] ? LIGHTGREY
                                     : DARKGREY;
-    text += colourize_str(_gem_parenthetical(gem), pcol);
+    text += colourize_str(localise(_gem_parenthetical(gem)), pcol);
     return text;
 }
 
