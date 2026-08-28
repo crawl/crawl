@@ -3661,7 +3661,7 @@ KMONS:   27 = kobold
 :   elseif you.depth() < 12 then
 KMONS:   14 = kobold geomancer
 KMONS:   267 = kobold ; dagger good_item | whip good_item / \
-             kobold brigand
+               kobold brigand
 KMONS:   3 = kobold geomancer / kobold brigand
 :   else
 KMONS:   14 = kobold blastminer
@@ -3695,6 +3695,7 @@ SHUFFLE: M%, ^!
 SUBST:   ^ = ^', ! = '
 CLEAR:   R
 FTILE:   '"$eMX23467%^!- = floor_orc
+KPROP:   '"$eMX23467%^!- = no_tele_into
 TILE:    X- = wall_orc
 : dgn.delayed_decay(_G, 'e', 'kobold corpse')
 : decorative_floor(_G, 'S', "skull pike")
