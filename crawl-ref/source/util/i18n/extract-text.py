@@ -761,7 +761,7 @@ def post_process_item_name_cc(input):
                 for e in elements:
                     new_strings.append(re.sub(r"[+\-].*", "", e));
                 continue
-            elif section == "missile_brand_name":
+            elif section == "special_missile_type_name":
                 if string.endswith("ed"):
                     new_strings.append("the " + string + " dart")
                     new_strings.append("@num@ " + string + " darts")
