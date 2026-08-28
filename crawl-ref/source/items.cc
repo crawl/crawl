@@ -789,7 +789,7 @@ bool item_is_unusual(const item_def& item)
         }
     }
 
-    const auto &patterns = Options.unusual_monster_items;
+    const auto &patterns = Options.unusual_monster_item_patterns;
     const string name = item.name(DESC_A, false, false, true, false);
 
     return any_of(begin(patterns), end(patterns),
