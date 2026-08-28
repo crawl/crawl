@@ -58,6 +58,7 @@
 #include "monster.h"
 #include "newgame.h"
 #include "options.h"
+#include "pattern.h"
 #include "playable.h"
 #include "player.h"
 #include "prompt.h"
@@ -132,6 +133,7 @@ static species_type _str_to_species(const string &str);
 static sound_mapping _interrupt_sound_mapping(const string &s);
 static pair<text_pattern,string> _slot_mapping(const string &s);
 static pair<string, char> _consumable_mapping(const string &s);
+static text_pattern _icase_pattern(const string &s);
 
 #ifdef USE_TILE
 static tag_pref _str_to_tag_pref(const string &opt)
@@ -502,7 +504,7 @@ const vector<GameOption*> game_options::build_options_list()
                            {"mlist_allow_alternative_layout",
                             "mlist_allow_alternate_layout"}, false),
         new BoolGameOption(SIMPLE_NAME(monster_item_view_coordinates), false),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(monster_item_view_features), {}, true),
+        new ListGameOption<text_pattern, OPTFUN(_icase_pattern)>(SIMPLE_NAME(monster_item_view_features), {}, true),
         new BoolGameOption(SIMPLE_NAME(messages_at_top), false),
         new BoolGameOption(SIMPLE_NAME(msg_condense_repeats), true),
         new BoolGameOption(SIMPLE_NAME(msg_condense_short), true),
@@ -606,7 +608,7 @@ const vector<GameOption*> game_options::build_options_list()
 #endif
             ),
 
-        new ListGameOption<text_pattern>(SIMPLE_NAME(unusual_monster_items), {}, true,
+        new ListGameOption<text_pattern, OPTFUN(_icase_pattern)>(SIMPLE_NAME(unusual_monster_items), {}, true,
                                          {[this]() { process_unusual_items(); }}),
         new ListGameOption<string>(ON_SET_NAME(monster_alert),
             {"uniques"}, false, [this]() { update_monster_alerts(); }),
@@ -699,19 +701,19 @@ const vector<GameOption*> game_options::build_options_list()
              "skills", "spells", "overview", "mutations", "messages",
              "screenshot", "monlist", "kills", "notes", "screenshots", "vaults",
              "skill_gains", "action_counts"}),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(confirm_action), {}, true),
+        new ListGameOption<text_pattern, OPTFUN(_icase_pattern)>(SIMPLE_NAME(confirm_action), {}, true),
         new MultipleChoiceGameOption<easy_confirm_type>(
             SIMPLE_NAME(easy_confirm),
             easy_confirm_type::safe,
             {{"none", easy_confirm_type::none},
              {"safe", easy_confirm_type::safe},
              {"all", easy_confirm_type::all}}),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(drop_filter), {}, true),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(note_monsters), {}, true),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(note_messages), {}, true),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(note_items), {}, true),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(auto_exclude), {}, true),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(explore_stop_pickup_ignore), {}, true),
+        new ListGameOption<text_pattern, OPTFUN(_icase_pattern)>(SIMPLE_NAME(drop_filter), {}, true),
+        new ListGameOption<text_pattern, OPTFUN(_icase_pattern)>(SIMPLE_NAME(note_monsters), {}, true),
+        new ListGameOption<text_pattern, OPTFUN(_icase_pattern)>(SIMPLE_NAME(note_messages), {}, true),
+        new ListGameOption<text_pattern, OPTFUN(_icase_pattern)>(SIMPLE_NAME(note_items), {}, true),
+        new ListGameOption<text_pattern, OPTFUN(_icase_pattern)>(SIMPLE_NAME(auto_exclude), {}, true),
+        new ListGameOption<text_pattern, OPTFUN(_icase_pattern)>(SIMPLE_NAME(explore_stop_pickup_ignore), {}, true),
 
         // defaults handled in dat/defaults/messages.txt:
         new ListGameOption<message_filter>(SIMPLE_NAME(force_more_message), {}, true),
@@ -962,7 +964,7 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(glyph_mode_font), "monospace", true),
         new IntGameOption(SIMPLE_NAME(glyph_mode_font_size), 24, 8, 144),
         new BoolGameOption(SIMPLE_NAME(action_panel_show), true),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(action_panel_filter), {}, true),
+        new ListGameOption<text_pattern, OPTFUN(_icase_pattern)>(SIMPLE_NAME(action_panel_filter), {}, true),
         new BoolGameOption(SIMPLE_NAME(action_panel_show_unidentified), false),
         new StringGameOption(SIMPLE_NAME(action_panel_font_family),
                              "monospace", true),
@@ -3190,7 +3192,7 @@ void game_options::process_unusual_items()
     for (int i = (int)unusual_monster_items.size() - 1; i >= 0; --i)
     {
         text_pattern& pattern = unusual_monster_items[i];
-        string str = pattern.tostring();
+        string str = lowercase_string(pattern.tostring());
 
         if (!starts_with(str, "vulnerable:"))
             continue;
@@ -3199,9 +3201,13 @@ void game_options::process_unusual_items()
 
         if (splits.size() >= 2)
         {
-            int brand = str_to_ego(OBJ_WEAPONS, splits[1]);
+            int brand = str_to_ego(OBJ_WEAPONS, replace_all_of(trimmed_string(splits[1]), " ", "_"));
             if (brand <= 0)
+            {
+                report_error("Unknown brand: '%s' in %s", splits[1].c_str(), str.c_str());
                 continue;
+            }
+
 
             int xl = 27;
             if (splits.size() >= 3)
@@ -3530,6 +3536,11 @@ static pair<string, char> _consumable_mapping(const string &s)
         return make_pair("", '-'); // pattern is marked as invalid
     }
     return make_pair(thesplit[0], thesplit[1][0]);
+}
+
+static text_pattern _icase_pattern(const string &s)
+{
+    return text_pattern(s, true);
 }
 
 // Option syntax is:
@@ -4186,7 +4197,7 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
             if (s.empty())
                 continue;
 
-            const pair<text_pattern, bool> f_a(s, false);
+            const pair<text_pattern, bool> f_a(text_pattern(s, true), false);
 
             if (state.minus_equal())
                 remove_matching(force_autopickup, f_a);
@@ -4210,11 +4221,11 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
             pair<text_pattern, bool> f_a;
 
             if (s[0] == '>')
-                f_a = make_pair(s.substr(1), false);
+                f_a = make_pair(text_pattern(s.substr(1), true), false);
             else if (s[0] == '<')
-                f_a = make_pair(s.substr(1), true);
+                f_a = make_pair(text_pattern(s.substr(1), true), true);
             else
-                f_a = make_pair(s, false);
+                f_a = make_pair(text_pattern(s, true), false);
 
             if (state.minus_equal())
                 remove_matching(force_autopickup, f_a);
