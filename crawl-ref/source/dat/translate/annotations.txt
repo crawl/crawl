@@ -330,7 +330,7 @@ atropa
 silver
 
 %%%%
-disperse
+disjunct
 
 %%%%
 
