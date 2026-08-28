@@ -583,7 +583,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_GIANT_CLUB,        "giant club",         20, -6, 16,
         SK_MACES_FLAILS, SIZE_LARGE, NUM_SIZE_LEVELS,
         DAMV_CRUSHING, 1, 25, 21, CLUB_BRANDS },
-    { WPN_GIANT_SPIKED_CLUB, "giant spiked club",  22, -7, 18,
+    { WPN_GIANT_SPIKED_CLUB, "giant spiked club",  24, -7, 18,
         SK_MACES_FLAILS, SIZE_LARGE, NUM_SIZE_LEVELS,
         DAMV_CRUSHING | DAM_PIERCE, 1, 25, 26, CLUB_BRANDS },
 
@@ -673,7 +673,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_GREAT_SWORD,           "great sword",           17, -3, 17,
         SK_LONG_BLADES,  SIZE_MEDIUM, NUM_SIZE_LEVELS,
         DAMV_SLICING, 6, 20, 100, LBL_BRANDS },
-    { WPN_TRIPLE_SWORD,          "triple sword",          19, -4, 18,
+    { WPN_TRIPLE_SWORD,          "triple sword",          21, -4, 18,
         SK_LONG_BLADES,  SIZE_MEDIUM, NUM_SIZE_LEVELS,
         DAMV_SLICING, 0, 24, 150, LBL_BRANDS },
 #if TAG_MAJOR_VERSION == 34
@@ -710,7 +710,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_BATTLEAXE,         "battleaxe",          15, -4, 17,
         SK_AXES,       SIZE_MEDIUM, NUM_SIZE_LEVELS,
         DAMV_CHOPPING, 6, 25, 100, AXE_BRANDS },
-    { WPN_EXECUTIONERS_AXE,  "executioner's axe",  18, -6, 19,
+    { WPN_EXECUTIONERS_AXE,  "executioner's axe",  20, -6, 19,
         SK_AXES,       SIZE_MEDIUM, NUM_SIZE_LEVELS,
         DAMV_CHOPPING, 0, 25, 150, AXE_BRANDS },
 
@@ -752,7 +752,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_GLAIVE,            "glaive",             15, -3, 17,
         SK_POLEARMS,     SIZE_MEDIUM, NUM_SIZE_LEVELS,
         DAMV_CHOPPING, 5, 15, 100, POLEARM_BRANDS },
-    { WPN_BARDICHE,          "bardiche",           18, -6, 19,
+    { WPN_BARDICHE,          "bardiche",           20, -6, 19,
         SK_POLEARMS,     SIZE_MEDIUM, NUM_SIZE_LEVELS,
         DAMV_CHOPPING, 1, 25, 150, POLEARM_BRANDS },
 
