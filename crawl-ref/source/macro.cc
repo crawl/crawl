@@ -43,6 +43,7 @@
 #include "files.h"
 #include "initfile.h"
 #include "libutil.h"
+#include "localise.h"
 #include "menu.h"
 #include "message.h"
 #include "misc.h" // erase_val
@@ -1166,7 +1167,7 @@ public:
     virtual formatted_string calc_title() override
     {
         return formatted_string::parse_string(
-            "Editing <w>" + mode_name() + "s</w>.");
+            localise("Editing <w>" + mode_name() + "s</w>."));
     }
 
     void clear_all()

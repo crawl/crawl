@@ -19,6 +19,7 @@
 #include "hints.h"
 #include "invent.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "message.h"
 #ifdef USE_TILE
@@ -2855,7 +2856,7 @@ void Menu::update_title()
     if (m_filter)
     {
         fs = formatted_string::parse_string(
-            m_filter->get_prompt().c_str())
+            localise(m_filter->get_prompt()).c_str())
             // apply formatting only to the prompt
             + " " + m_filter->get_text();
     }
@@ -2868,6 +2869,7 @@ void Menu::update_title()
         ASSERT(t);
         auto col = item_colour(t);
         string text = t->get_text();
+        text = localise(text);
 
         fs.textcolour(col);
 

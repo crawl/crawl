@@ -22,6 +22,7 @@
 #include "item-prop.h"
 #include "item-use.h"
 #include "items.h"
+#include "localise.h"
 #include "macro.h"
 #include "message.h"
 #include "mon-death.h"
@@ -2820,11 +2821,11 @@ namespace quiver
 
         virtual formatted_string calc_title() override
         {
-            string s = "Quiver which action? ";
+            string s = localise("Quiver which action? ");
             vector<string> extra_cmds;
 
             if (allow_empty)
-                s += "([<w>-</w>] to clear)";
+                s += localise("([<w>-</w>] to clear)");
             return formatted_string::parse_string(s);
         }
 
