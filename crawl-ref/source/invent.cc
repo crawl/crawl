@@ -1015,6 +1015,16 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
             select_all = "select first";
     }
 
+    // determine max subtitle width
+    int max_width = 0;
+    for (int obj = 0; obj < NUM_OBJECT_CLASSES; ++obj)
+    {
+        int i = inv_order[obj];
+        string subtitle = item_class_name(i);
+        int width = strwidth(subtitle);
+        max_width = width > max_width ? width : max_width;
+    }
+
     for (int obj = 0; obj < NUM_OBJECT_CLASSES; ++obj)
     {
         int i = inv_order[obj];
@@ -1030,10 +1040,7 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
             get_class_hotkeys(i, glyphs);
             if (!glyphs.empty())
             {
-                // longest string
-                const string str = "Magical Staves ";
-                subtitle += string(strwidth(str) - strwidth(subtitle),
-                                   ' ');
+                subtitle += string(1 + max_width - strwidth(subtitle), ' ');
                 subtitle += "("+select_all+" with <w>";
                 for (char gly : glyphs)
                     subtitle += gly;
