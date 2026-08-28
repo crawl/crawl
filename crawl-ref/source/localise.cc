@@ -172,6 +172,7 @@ void init_localisation()
     static const text_pattern int_arg_patt("@integer[^@]*@", true);
     static const text_pattern float_arg_patt("@float[^@]*@", true);
     static const text_pattern punct_arg_patt("@punct[^@]*@", true);
+    static const text_pattern adj_arg_patt("@[adj^@]+@");
     static const text_pattern str_arg_patt("@[^@]+@");
     static const text_pattern a_an_patt("^an? ");
     for (const string& key: keys)
@@ -192,6 +193,7 @@ void init_localisation()
         // float is problematic because decimal point may already be changed by user's locale
         //pattern = float_arg_patt.replace(pattern, "([\\+|\\-]?[0-9]*[\\.,][0-9]+)");
         pattern = punct_arg_patt.replace(pattern, "([.!?]+)");
+        pattern = adj_arg_patt.replace(pattern, "([a-zA-Z0-9 +-]*)");
         pattern = str_arg_patt.replace(pattern, "([^.!?]*)");
         // adjectives can change "a" to "an" or vice versa
         pattern = a_an_patt.replace(pattern, "an? ");
@@ -460,7 +462,7 @@ static string _localise_param(map<string, string>& params, const string& key)
         if (new_val.empty() && starts_with_uppercase(old_val))
             new_val = _localise_string(lowercase_first(old_val), false);
 
-        if (new_val.empty() && contains(old_val, ' '))
+        if (new_val.empty() && starts_with(new_key, "adj"))
             new_val = _localise_adjectives(old_val);
 
         if (new_val.empty())
@@ -628,12 +630,18 @@ static string _localise_annotation(const string& s)
     if (s.empty())
         return s;
 
+    string result;
+
     string trimmed = trimmed_string(s);
     if (trimmed.length() != s.length())
     {
-        string result = _localise_annotation(trimmed);
+        result = _localise_annotation(trimmed);
         return replace_all(s, trimmed, result);
     }
+
+    result = _ctx_translate(_context, s);
+    if (!result.empty())
+        return strip_context(result);
 
     size_t last = s.length() - 1;
     if (contains("([{", s[0]) && contains(")]}", s[last]))
@@ -641,7 +649,6 @@ static string _localise_annotation(const string& s)
 
     if (contains(s, ','))
     {
-        string result;
         vector<string> tokens = split_string(",", s, false, true);
         for (size_t i = 0; i < tokens.size(); i++)
         {
@@ -653,7 +660,6 @@ static string _localise_annotation(const string& s)
         return result;
     }
 
-    string result;
     vector<string> tokens = split_string(" ", s, false, true);
     for (size_t i = 0; i < tokens.size(); i++)
     {
@@ -731,21 +737,6 @@ static string _localise_string(const string& s, bool fallback_en)
         }
     }
 
-    // test for list
-    auto tokens = tokenise_comma_separated_list(s);
-    if (tokens.size() > 1)
-    {
-        for (string token: tokens)
-        {
-            string saved_context = _context;
-            token = maybe_lowercase_first(token);
-            result += _localise_string(token);
-            if (!saved_context.empty())
-                _context = saved_context;
-        }
-        return result;
-    }
-
     // test for named ally (e.g. "Boghold the orc")
     // or shape-shifted unique (e.g. "Sigmund the bat")
     text_pattern named_mon("^[A-Z][a-z]+ the ");
@@ -772,6 +763,21 @@ static string _localise_string(const string& s, bool fallback_en)
     if (!result.empty())
     {
         result = _shift_context(result);
+        return result;
+    }
+
+    // test for list
+    auto tokens = tokenise_comma_separated_list(s);
+    if (tokens.size() > 1)
+    {
+        for (string token: tokens)
+        {
+            string saved_context = _context;
+            token = maybe_lowercase_first(token);
+            result += _localise_string(token);
+            if (!saved_context.empty())
+                _context = saved_context;
+        }
         return result;
     }
 
