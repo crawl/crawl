@@ -308,6 +308,10 @@ acid
 Acc
 
 %%%%
+# dragon/draconian slaying (Wyrmbane)
+slay drac
+
+%%%%
 
 # missile brands
 %%%%
@@ -327,10 +331,6 @@ silver
 
 %%%%
 disperse
-
-%%%%
-# dragon/draconian slaying (Wyrmbane)
-slay drac
 
 %%%%
 
