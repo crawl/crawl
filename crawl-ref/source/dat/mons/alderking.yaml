@@ -5,7 +5,7 @@ flags: [speaks]
 exp: 1978
 genus: plant
 holiness: [plant]
-will: 100
+will: 140
 attacks:
  - {type: hit, damage: 50}
  - {type: hit, damage: 40}

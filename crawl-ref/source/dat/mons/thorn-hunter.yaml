@@ -5,7 +5,7 @@ resists: {poison: 1, fire: -1}
 exp: 1431
 genus: plant
 holiness: [plant]
-will: 100
+will: 120
 attacks:
  - {type: hit, damage: 27}
  - {type: hit, damage: 23}
