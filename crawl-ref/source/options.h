@@ -560,8 +560,10 @@ public:
     bool        reduce_animations;   // if true, don't show interim steps for animations
     bool        drop_disables_autopickup;   // if true, automatically remove drops from autopickup
 
-    vector<text_pattern> unusual_monster_items; // which monster items to
-                                                // highlight as unusual
+    vector<string> unusual_monster_items;   // raw values for unusual_monster_item_patterns
+                                            // and vulnerable_brand_warning
+    vector<text_pattern> unusual_monster_item_patterns; // which monster items to
+                                                        // highlight as unusual
     vector<pair<brand_type, int>> vulnerable_brand_warning; // Monster brands to hilight the monster
                                                 // as having, below a given XL, while vulnerable
 

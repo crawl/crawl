@@ -608,7 +608,7 @@ const vector<GameOption*> game_options::build_options_list()
 #endif
             ),
 
-        new ListGameOption<text_pattern, OPTFUN(_icase_pattern)>(SIMPLE_NAME(unusual_monster_items), {}, true,
+        new ListGameOption<string>(SIMPLE_NAME(unusual_monster_items), {}, true,
                                          {[this]() { process_unusual_items(); }}),
         new ListGameOption<string>(ON_SET_NAME(monster_alert),
             {"uniques"}, false, [this]() { update_monster_alerts(); }),
@@ -3189,22 +3189,30 @@ void game_options::update_consumable_shortcuts()
 // Extract 'vulnerable brand' options from unusual_monster_items
 void game_options::process_unusual_items()
 {
+    unusual_monster_item_patterns.clear();
+    vulnerable_brand_warning.clear();
     for (int i = (int)unusual_monster_items.size() - 1; i >= 0; --i)
     {
-        text_pattern& pattern = unusual_monster_items[i];
-        string str = lowercase_string(pattern.tostring());
+        string& pattern = unusual_monster_items[i];
 
-        if (!starts_with(str, "vulnerable:"))
+        // normal pattern match
+        if (!starts_with(pattern, "vulnerable:"))
+        {
+            unusual_monster_item_patterns.push_back(text_pattern(pattern, true));
             continue;
+        }
 
-        vector<string> splits = split_string(":", str, true, true, -1, true);
+        vector<string> splits = split_string(":", lowercase_string(pattern), true, true, -1, true);
 
+        // vulnerable weapon brand
         if (splits.size() >= 2)
         {
-            int brand = str_to_ego(OBJ_WEAPONS, replace_all_of(trimmed_string(splits[1]), " ", "_"));
+            int brand = str_to_ego(OBJ_WEAPONS,
+                    replace_all_of(trimmed_string(splits[1]), " ", "_"));
             if (brand <= 0)
             {
-                report_error("Unknown brand: '%s' in %s", splits[1].c_str(), str.c_str());
+                report_error("Unknown unusual_monster_items weapon brand: '%s' in %s",
+                    splits[1].c_str(), pattern.c_str());
                 continue;
             }
 
@@ -3215,8 +3223,6 @@ void game_options::process_unusual_items()
 
             vulnerable_brand_warning.push_back({static_cast<brand_type>(brand), xl});
         }
-
-        unusual_monster_items.erase(unusual_monster_items.begin() + i);
     }
 }
 
