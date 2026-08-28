@@ -50,6 +50,13 @@
 @num@ datura-tipped darts
 
 %%%%
+@num@ darts of disjunction
+
+%%%%
+# old name for dart of disjunction (can still appear in high scores list)
+@num@ darts of dispersal
+
+%%%%
 @num@ stones
 
 %%%%

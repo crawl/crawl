@@ -208,6 +208,13 @@ the curare-tipped dart
 the datura-tipped dart
 
 %%%%
+the dart of disjunction
+
+%%%%
+# old name for dart of disjunction (can still appear in high scores list)
+the dart of dispersal
+
+%%%%
 the stone
 
 %%%%
@@ -330,7 +337,8 @@ the golden dragon scales
 %%%%
 
 # Usually, we handle any adjectives as separate words, but
-# this unidentified armour needs special handling
+# this unidentified armour needs special handling because one of
+# the English adjectives is joined to the noun in German
 %%%%
 the creamy pearl robe
 
@@ -349,7 +357,7 @@ the ring
 # identified ring names are constructed with the generic and a suffix from item-suffixes.txt
 
 # unidentified rings have two adjectives
-# the one closest to the noun is a material, which in some languages is not treated like an adjective
+# the one closest to the noun is a material, which in German is usually combined with the noun
 # this is combined list from item-name.cc and descript/randname.txt
 %%%%
 the agate ring
@@ -477,7 +485,7 @@ the amulet
 # identified amulet names are constructed with the generic and a suffix from item-suffixes.txt
 
 # unidentified amulets have two adjectives
-# the one closest to the noun is (usually) a material, which is not treated like an adjective in some languages
+# the one closest to the noun is (usually) a material, which in German is usually combined with the noun
 
 # from item-name.txt
 %%%%
@@ -635,7 +643,7 @@ the wand of removedness
 %%%%
 
 # unidentified amulets can have two adjectives
-# the one closest to the noun is (usually) a material, which in some languages is not treated like an adjective
+# the one closest to the noun is (usually) a material, which in German is usually combined with the noun
 %%%%
 the iron wand
 

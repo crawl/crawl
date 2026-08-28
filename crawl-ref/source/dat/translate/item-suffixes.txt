@@ -151,9 +151,6 @@
 @item@ of venom
 
 %%%%
-@item@ of dispersal
-
-%%%%
 @item@ of speedy slithering
 
 %%%%
