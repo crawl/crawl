@@ -233,10 +233,16 @@ void separate_prefix_annotation(const string& s, string& annotation, string& res
     else if (s[0] == '[')
         pos = s.find(']');
 
+    if (pos < s.length() - 1 && s[pos+1] == ':')
+    {
+        // not an annotation
+        return;
+    }
+
     if (pos != string::npos)
     {
-        annotation = s.substr(0, pos);
-        rest = s.substr(pos);
+        annotation = s.substr(0, pos + 1);
+        rest = s.substr(pos + 1);
     }
 }
 
