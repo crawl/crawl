@@ -4542,12 +4542,12 @@ static void _handle_accidental_death(const int orig_hp,
 /**
  * A formatting of Xom actions, their chance to happen, and if it should be done.
  *
- * xom_event_type name         An action for Xom to take.
- * @param int tension_weight   The chance with visible monsters.
- * @param int tension_weight   The chance without visible monsters.
- * @param bool valid           A check to see if this action should be done.
- * @param sever                The intended magnitude of the action.
- * @param tension              How much danger we think the player's in.
+ * xom_event_type name              An action for Xom to take.
+ * @param int tension_weight        The chance with visible monsters.
+ * @param int zero_tension_weight   The chance without visible monsters.
+ * @param bool valid                A check to see if this action should be done.
+ * @param sever                     The intended magnitude of the action.
+ * @param tension                   How much danger we think the player's in.
  */
 struct xom_event_data
 {
