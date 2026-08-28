@@ -37,6 +37,7 @@
 #include "item-prop.h"
 #include "item-use.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "menu.h"
 #include "melee-attack.h"
@@ -275,15 +276,23 @@ int list_spells(bool toggle_with_I, bool transient, bool viewing,
     const string real_action = viewing ? "describe" : action;
 
     SpellMenu spell_menu;
-    const string titlestring = make_stringf("%-25.25s",
-            make_stringf("Your spells (%s)", real_action.c_str()).c_str());
+    string titlestring = make_stringf("Your spells (%s)", real_action.c_str());
+    titlestring = chop_string(localise(titlestring), 36);
 
     {
+        string txt = titlestring;
+        txt += chop_string(localise("Type"), 26);
+        txt += chop_string(localise("Failure"), 9);
+        txt += chop_string(localise("Level"), 7);
+
+        string alt_txt = titlestring;
+        alt_txt += chop_string(localise("Power"), 10);
+        alt_txt += chop_string(localise("Damage"), 10);
+        alt_txt += chop_string(localise("Range"), 8);
+        alt_txt += chop_string(localise("Noise"), 14);
+
         ToggleableMenuEntry* me =
-            new ToggleableMenuEntry(
-                titlestring + "           Type                      Failure  Level  ",
-                titlestring + "           Power     Damage    Range   Noise         ",
-                MEL_TITLE);
+            new ToggleableMenuEntry(txt, alt_txt, MEL_TITLE);
         spell_menu.set_title(me, true, true);
     }
     spell_menu.set_highlighter(nullptr);

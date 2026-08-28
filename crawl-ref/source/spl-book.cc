@@ -545,15 +545,21 @@ public:
 protected:
     virtual formatted_string calc_title() override
     {
-        return formatted_string::parse_string(
-                    make_stringf("<w>Spells %s                   Type                      %sLevel",
-                        current_action == action::cast ? "(Cast)    "
-                        : current_action == action::memorise ? "(Memorise)"
-                        : current_action == action::describe ? "(Describe)"
-                        : current_action == action::hide ? "(Hide)    "
-                        : current_action == action::imbue ? "(Imbue)   "
-                        : "(Show)    ",
-                        you.divine_exegesis ? "         " : "Failure  "));
+        string action_str =
+            current_action == action::cast ? "(Cast)"
+            : current_action == action::memorise ? "(Memorise)"
+            : current_action == action::describe ? "(Describe)"
+            : current_action == action::hide ? "(Hide)"
+            : current_action == action::imbue ? "(Imbue)"
+            : "(Show)";
+
+        string s = "<w>";
+        s += chop_string(localise("Spells " + action_str), 36);
+        s += chop_string(localise("Type"), 26);
+        s += chop_string(localise(you.divine_exegesis ? "" : "Failure"), 9);
+        s += localise("Level");
+
+        return formatted_string::parse_string(s);
     }
 
 private:
