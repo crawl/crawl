@@ -308,6 +308,10 @@ Säure
 Acc
 Treffs
 %%%%
+# dragon/draconian slaying (Wyrmbane)
+slay drac
+Drak töten
+%%%%
 
 # missile brands
 %%%%
@@ -328,10 +332,6 @@ Silber
 %%%%
 disperse
 streuen
-%%%%
-# dragon/draconian slaying (Wyrmbane)
-slay drac
-Drak töten
 %%%%
 
 # armour egos
