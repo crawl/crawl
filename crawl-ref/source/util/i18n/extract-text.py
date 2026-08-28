@@ -440,6 +440,9 @@ def ignore_c_line(line):
     if 'AXED' in line:
         return True
 
+    if "mark_milestone" in line or "take_note" in line:
+        return True
+
     # diagnotic messages
     if re.search(r"(MSGCH_DIAGNOSTIC|dprf|dprintf|debug|DEBUG|ASSERTM|log_print|dump_|fprintf)", line):
         return True
