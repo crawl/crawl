@@ -631,8 +631,6 @@ static void _try_brand_switch(const int item_index)
 
 static void _xom_make_item(object_class_type base, int subtype, int power)
 {
-    god_acting gdact(GOD_XOM);
-
     int thing_created = items(true, base, subtype, power, 0, GOD_XOM);
     item_def &item(env.item[thing_created]);
 
