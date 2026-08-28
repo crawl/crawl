@@ -596,7 +596,7 @@ def split_on_newlines(strings):
     return result
 
 def dummy_up_keys(line):
-    line = re.sub(r"(get[A-Za-z]+String) *\(([^\)]+)\)", "$1(dummy)", line)
+    line = re.sub(r"(get[A-Za-z]+String|_get_xom_speech) *\(([^\)]+)\)", "$1(dummy)", line)
     # 3rd arg is tag
     line = re.sub(r"\b(menu_colour *\([^,]+,[^,]+,)[^,)]+", "$1, dummy", line)
     return line
