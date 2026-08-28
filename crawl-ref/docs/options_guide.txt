@@ -1863,8 +1863,17 @@ unusual_monster_items += <regex>, <regex>, ...
             unusual_monster_items += disto,chaos
             unusual_monster_items += curare,atropa,datura,dispersal
             unusual_monster_items += throwing net
+            unusual_monster_items += reflect
         The item descriptions matched against are the short item names that
         ordinarily display when a monster is examined with 'xv'.
+
+        It's also possible to match only the weapon brand and to set a maximum
+        experience level that this applies too. For example vulnerable:venom:13
+        will highlight monsters with venom weapons only while you are under
+        level 14. You may omit the level so that it has no level requirements.
+        You must use the full name of the brand here; partial matches won't do!
+            unusual_monster_items += vulnerable:holy_wrath
+            unusual_monster_items += vulnerable:entangling
 
         This option determines which monsters will be regarded as "unusual" for
         the options tile_show_threat_levels (tiles only), monster_list_colour,
