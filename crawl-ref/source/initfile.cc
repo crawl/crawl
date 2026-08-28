@@ -3186,7 +3186,8 @@ void game_options::update_consumable_shortcuts()
     }
 }
 
-// Extract 'vulnerable brand' options from unusual_monster_items
+// Process unusual_monster_items strings into unusual_monster_item_patterns and
+// vulnerable_brand_warning
 void game_options::process_unusual_items()
 {
     unusual_monster_item_patterns.clear();
