@@ -640,14 +640,17 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
         god_speaks(GOD_XOM, "\"No, never mind.\"");
         return;
     }
-    else if (base == OBJ_ARMOUR && subtype == ARM_ORB && one_chance_in(4))
+
+    item_def &item(env.item[thing_created]);
+
+    if (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_ORB && one_chance_in(4))
         god_speaks(GOD_XOM, _get_xom_speech("orb gift").c_str());
 
     _try_brand_switch(thing_created);
 
     static char gift_buf[100];
     snprintf(gift_buf, sizeof(gift_buf), "god gift: %s",
-             env.item[thing_created].name(DESC_PLAIN).c_str());
+             item.name(DESC_PLAIN).c_str());
     take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, gift_buf), true);
 
     canned_msg(MSG_SOMETHING_APPEARS);
