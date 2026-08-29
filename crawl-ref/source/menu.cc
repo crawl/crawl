@@ -1488,6 +1488,7 @@ void Menu::set_title(const string &t, bool first, bool indent)
 
 void Menu::add_entry(MenuEntry *entry)
 {
+    entry->text = localise(entry->text);
     entry->tag = tag;
     items.push_back(entry);
 }
