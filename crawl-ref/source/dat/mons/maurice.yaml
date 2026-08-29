@@ -3,6 +3,7 @@ glyph: {char: "f", colour: lightgreen}
 flags: [speaks, warm_blood, unique, fast_regen, male, no_skeleton, always_wand]
 exp: 526
 species: vine_stalker
+holiness: [plant]
 will: 40
 attacks:
  - {type: hit, flavour: steal, damage: 9}

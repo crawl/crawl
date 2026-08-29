@@ -7060,6 +7060,8 @@ mon_holy_type player::holiness(bool include_temp, bool incl_form) const
         holi = MH_UNDEAD;
     else if (species::is_nonliving(you.species))
         holi = MH_NONLIVING;
+    else if (species::is_plant(you.species))
+        holi = MH_PLANT;
     else
         holi = MH_NATURAL;
 
