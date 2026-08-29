@@ -166,6 +166,8 @@ TEST_CASE( "Localise German", "[single-file]" )
                         "(zum ersten gehen mit <w>(</w><blue>)" );
         CHECK( localise("(select first with <w>!</w><blue>)") ==
                         "(ersten wählen mit <w>!</w><blue>)" );
+        CHECK( localise("(select all with <w>\"=</w><blue>)") ==
+                        "(alle wählen mit <w>\"=</w><blue>)" );
 
         // spell memorise menu footer
         string english = "[<w>Tab</w>] <w>Memorise</w>|Describe|Hide|Show   [<w>Ctrl-F</w>] search   [<w>?</w>] help";

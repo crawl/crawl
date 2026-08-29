@@ -256,7 +256,7 @@ void separate_postfix_annotation(const string& s, string& annotation, string& re
     size_t last = s.length() - 1;
     size_t pos = string::npos;
     if (s[last] == ')')
-        pos = s.rfind('(');
+        pos = s.find(')') == last ? s.find('(') : s.rfind('(');
     else if (s[last] == ']')
         pos = s.rfind('[');
     else if (s[last] == '}')
