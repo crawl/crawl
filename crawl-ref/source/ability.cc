@@ -541,10 +541,12 @@ static vector<ability_def> &_get_ability_list()
         // Elyvilon
         { ABIL_ELYVILON_PURIFICATION, "Purification",
             2, 0, 2, -1, {fail_basis::invo, 20, 5, 20}, abflag::conf_ok },
-        { ABIL_ELYVILON_HEAL_OTHER, "Heal Other",
-            2, 0, 2, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
+        { ABIL_ELYVILON_PACIFY, "Pacify",
+            2, 0, 2, LOS_MAX_RANGE, {fail_basis::invo, 40, 5, 20}, abflag::target },
         { ABIL_ELYVILON_HEAL_SELF, "Heal Self",
             2, 0, 3, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
+        { ABIL_ELYVILON_DIVINE_ALMS, "Divine Alms",
+            3, 0, 0, -1, {fail_basis::invo, 40, 5, 20}, abflag::target },
         { ABIL_ELYVILON_DIVINE_VIGOUR, "Divine Vigour",
             0, 0, 6, -1, {fail_basis::invo, 80, 4, 25}, abflag::none },
 
@@ -1206,7 +1208,8 @@ ability_type fixup_ability(ability_type ability)
         else
             return ability;
 
-    case ABIL_ELYVILON_HEAL_OTHER:
+    case ABIL_ELYVILON_PACIFY:
+    case ABIL_ELYVILON_DIVINE_ALMS:
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
     case ABIL_TROG_BROTHERS_IN_ARMS:
     case ABIL_GOZAG_BRIBE_BRANCH:
@@ -2783,6 +2786,12 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_HEPLIAKLQANA_TRANSFERENCE:
         return make_unique<targeter_transference>(have_passive(passive_t::transfer_drain) ? 1 : 0);
 
+    case ABIL_ELYVILON_DIVINE_ALMS:
+        return make_unique<targeter_divine_alms>();
+
+    case ABIL_ELYVILON_PACIFY:
+        return make_unique<targeter_pacify>();
+
     default:
         break;
     }
@@ -2962,7 +2971,8 @@ bool activate_talent(const talent& tal, dist *target)
         args.hitfunc = hitfunc.get();
         args.restricts = testbits(abil.flags, abflag::target) ? DIR_ENFORCE_RANGE
                                                               : DIR_NONE;
-        args.mode = TARG_HOSTILE;
+        args.mode = abil.ability == ABIL_ELYVILON_DIVINE_ALMS ? TARG_FRIEND
+                                                              : TARG_HOSTILE;
         args.range = range;
         args.needs_path = !testbits(abil.flags, abflag::target);
         args.top_prompt = make_stringf("%s: <w>%s</w>",
@@ -2983,6 +2993,8 @@ bool activate_talent(const talent& tal, dist *target)
             // the player interacts with the targeter.
             dithmenos_cache_marionette_viability();
         }
+        else if (abil.ability == ABIL_ELYVILON_PACIFY)
+            args.get_desc_func = bind(desc_pacify_chance, placeholders::_1);
 
         if (abil.failure.base_chance)
         {
@@ -3784,10 +3796,22 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         elyvilon_purification();
         break;
 
-    case ABIL_ELYVILON_HEAL_OTHER:
+    case ABIL_ELYVILON_PACIFY:
     {
+        fail_check();
         int pow = 30 + you.skill(SK_INVOCATIONS, 1);
-        return cast_healing(pow, fail);
+        cast_pacify(beam.target, pow);
+        break;
+    }
+
+    case ABIL_ELYVILON_DIVINE_ALMS:
+    {
+        fail_check();
+
+        monster* targ = monster_at(beam.target);
+        ASSERT(targ);
+        elyvilon_divine_alms(*targ);
+        return spret::success;
     }
 
     case ABIL_ELYVILON_DIVINE_VIGOUR:

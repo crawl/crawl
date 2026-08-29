@@ -1302,7 +1302,9 @@ namespace quiver
         // (What abilities are missing here?)
 
         if (get_dist_to_nearest_monster() > ability_range(abil)
-            && (get_ability_flags(abil) & abflag::targeting_mask))
+            && (get_ability_flags(abil) & abflag::targeting_mask)
+            // Wants friendly targets, not hostile ones.
+            && abil != ABIL_ELYVILON_DIVINE_ALMS)
 
         {
             if (!quiet)
@@ -1400,7 +1402,7 @@ namespace quiver
             case ABIL_GOLDEN_BREATH:
             case ABIL_BREATHE_RUST:
             case ABIL_DAMNATION:
-            case ABIL_ELYVILON_HEAL_OTHER:
+            case ABIL_ELYVILON_PACIFY:
             case ABIL_LUGONU_BANISH:
             case ABIL_BEOGH_SMITING:
             case ABIL_FEDHAS_OVERGROW:

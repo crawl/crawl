@@ -11,8 +11,8 @@
 
 class actor;
 
-spret cast_healing(int pow, bool fail);
-bool heal_monster(monster& patient, int amount);
+vector<string> desc_pacify_chance(const monster_info& mi);
+void cast_pacify(const coord_def& pos, int power);
 
 /// List of monster enchantments which can be dispelled.
 const enchant_type dispellable_enchantments[] =

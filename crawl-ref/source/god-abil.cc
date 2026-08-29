@@ -1357,6 +1357,62 @@ void elyvilon_purification()
     you.redraw_evasion = true;
 }
 
+static const vector<enchant_type> healable_enchantments =
+{
+    ENCH_SICK,
+    ENCH_POISON,
+    ENCH_CONFUSION,
+    ENCH_SLOW,
+    ENCH_PETRIFYING,
+    ENCH_PETRIFIED,
+    ENCH_WEAK,
+    ENCH_DRAINED,
+};
+
+bool elyvilon_divine_alms_eligible(const monster& target)
+{
+    if (!target.friendly() || target.is_peripheral())
+        return false;
+
+    if (target.hit_points < target.max_hit_points)
+        return true;
+
+    for (enchant_type ench : healable_enchantments)
+        if (target.has_ench(ench))
+            return true;
+
+    return false;
+}
+
+void elyvilon_divine_alms(monster& target)
+{
+    const int base = 10 + you.skill(SK_INVOCATIONS, 2);
+    const int healed = random_range(base, base * 3 / 2);
+
+    target.heal(healed);
+
+    for (enchant_type ench : healable_enchantments)
+        if (target.has_ench(ench))
+            target.del_ench(ench, true, ench != ENCH_PETRIFYING);
+
+    // Give healed summons a little more time in this world
+    string msg;
+    if (target.has_ench(ENCH_SUMMON_TIMER))
+    {
+        mon_enchant timer = target.get_ench(ENCH_SUMMON_TIMER);
+        if (timer.duration < 100)
+        {
+            timer.duration += random_range(150, 250);
+            target.update_ench(timer);
+            msg = make_stringf(" and grants %s more time in this world.",
+                               target.pronoun(PRONOUN_OBJECTIVE).c_str());
+        }
+    }
+
+    mprf("The light of Elyvilon comforts %s%s.",
+         target.name(DESC_THE).c_str(), msg.c_str());
+}
+
 void elyvilon_divine_vigour()
 {
     if (you.duration[DUR_DIVINE_VIGOUR])
