@@ -50,6 +50,13 @@
 @num@ datura-tipped darts
 {pl}@num@ Datura-Wurfpfeile
 %%%%
+@num@ darts of disjunction
+{pl}@num@ Wurfpfeile der Disjunktion
+%%%%
+# old name for dart of disjunction (can still appear in high scores list)
+@num@ darts of dispersal
+{pl}@num@ Wurfpfeile der Zerstreuung
+%%%%
 @num@ stones
 {pl}@num@ Steine
 %%%%

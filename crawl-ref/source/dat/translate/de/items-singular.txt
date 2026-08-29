@@ -208,6 +208,13 @@ the curare-tipped dart
 the datura-tipped dart
 {m}der Datura-Wurfpfeil
 %%%%
+the dart of disjunction
+{m}der Wurfpfeil der Disjunktion
+%%%%
+# old name for dart of disjunction (can still appear in high scores list)
+the dart of dispersal
+{m}der Wurfpfeil der Zerstreuung
+%%%%
 the stone
 {m}der Stein
 %%%%
