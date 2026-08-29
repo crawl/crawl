@@ -78,14 +78,13 @@ saves
 morgue
 *.map
 map.dump
-mapstat.log
+*.log
 *.out
 *.stat
 objstat_*.txt
 objstat_*.tsv
 fsim.txt
 fsim.csv
-webtiles.log
 debuglog.txt
 dolls.txt
 macro.txt
