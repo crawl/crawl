@@ -487,20 +487,20 @@ Die greifenden Wurzeln
 You constrict @arg@ but do no damage.
 Du umschlingst {acc}@arg@, fügst aber keinen Schaden zu.
 %%%%
-You constrict @arg@
-Du umschlingst {acc}@arg@
+You constrict @arg@@punct@
+Du umschlingst {acc}@arg@@punct@
 %%%%
-@Arg@ constrict you
-@Arg@ umschlingen dich
+@Arg@ constrict you@punct@
+@Arg@ umschlingen dich@punct@
 %%%%
-@Arg@ constricts you
-@Arg@ umschlingt dich
+@Arg@ constricts you@punct@
+@Arg@ umschlingt dich@punct@
 %%%%
-@Arg1@ constrict @arg2@
-@Arg1@ umschlingen {acc}@arg2@
+@Arg1@ constrict @arg2@@punct@
+@Arg1@ umschlingen {acc}@arg2@@punct@
 %%%%
-@Arg1@ constricts @arg2@
-@Arg1@ umschlingt {acc}@arg2@
+@Arg1@ constricts @arg2@@punct@
+@Arg1@ umschlingt {acc}@arg2@@punct@
 %%%%
 You are constricted
 Du wirst umschlungen
@@ -735,17 +735,17 @@ Der Geruch von Chlor verschwindet.
 The staff's sickly green glow vanishes.
 Das kränklich grüne Leuchten des Stabes verschwindet.
 %%%%
-You envenom @arg@
-Du vergiftest {acc}@arg@
+You envenom @arg@@punct@
+Du vergiftest {acc}@arg@@punct@
 %%%%
-@Arg@ envenoms you
-@Arg@ vergiftet dich
+@Arg@ envenoms you@punct@
+@Arg@ vergiftet dich@punct@
 %%%%
-@Arg1@ envenoms @arg2@
-@Arg1@ vergiftet {acc}@arg2@
+@Arg1@ envenoms @arg2@@punct@
+@Arg1@ vergiftet {acc}@arg2@@punct@
 %%%%
-@Arg@ envenoms itself
-@Arg@ vergiftet sich selbst
+@Arg@ envenoms itself@punct@
+@Arg@ vergiftet sich selbst@punct@
 %%%%
 You sense an aura of extreme power.
 Du spürst eine Aura extremer Kraft.
@@ -807,11 +807,11 @@ Du verspürst ein unangenehmes Verlangen, Drachen zu töten.
 You feel an overwhelming desire to slay dragons!
 Du verspürst ein überwältigendes Verlangen, Drachen zu töten.
 %%%%
-You convulse
-Du krümmst dich
+You convulse@punct@
+Du krümmst dich@punct@
 %%%%
-@Arg@ convulses
-@Arg@ krümmt sich
+@Arg@ convulses@punct@
+@Arg@ krümmt sich@punct@
 %%%%
 The lance glows brightly as it skewers @arg@. You feel that it has reached its full power.
 Die Lanze leuchtet hell, während sie {acc}@arg@ aufspießt. Du spürst, dass sie ihre volle Kraft erreicht hat.
@@ -819,11 +819,11 @@ Die Lanze leuchtet hell, während sie {acc}@arg@ aufspießt. Du spürst, dass si
 The lance glows as it skewers @arg@.
 Die Lanze leuchtet, während sie {acc}@arg@ aufspießt.
 %%%%
-You are blasted by disruptive energy
-Du wirst von einer Welle disruptiver Energie getroffen
+You are blasted by disruptive energy@punct@
+Du wirst von einer Welle disruptiver Energie getroffen@punct@
 %%%%
-@Arg@ is blasted by disruptive energy
-@Arg@ wird von einer Welle disruptiver Energie getroffen
+@Arg@ is blasted by disruptive energy@punct@
+@Arg@ wird von einer Welle disruptiver Energie getroffen@punct@
 %%%%
 Time to lay down the shillelagh law.
 Es ist Zeit, das Gesetz des Shillelagh durchzusetzen.
@@ -1107,17 +1107,17 @@ Du windest dich in Qualen@punct@
 @Arg@ protects you from inadvertent hurry.
 @Arg@ schützt dich vor versehentlicher Eile.
 %%%%
-You drain @arg@
-Du zehrst {acc}@arg@ aus
+You drain @arg@@punct@
+Du zehrst {acc}@arg@ aus@punct@
 %%%%
-@Arg@ drains you
-@Arg@ zehrt dich aus
+@Arg@ drains you@punct@
+@Arg@ zehrt dich aus@punct@
 %%%%
-@Arg1@ drains @arg2@
-@Arg1@ zehrt {acc}@arg2@ aus
+@Arg1@ drains @arg2@@punct@
+@Arg1@ zehrt {acc}@arg2@ aus@punct@
 %%%%
-@Arg@ drains itself
-@Arg@ zehrt sich selbst aus
+@Arg@ drains itself@punct@
+@Arg@ zehrt sich selbst aus@punct@
 %%%%
 # note: @arg@ will be possessive (e.g. "the orc's", "Sigmund's")
 You drain @arg@ vigour!
@@ -1163,23 +1163,23 @@ Du blockst den Angriff {gen}@arg@.
 @Arg1@ blocks @arg2@'s attack.
 @Arg1@ blockiert den Angriff {gen}@arg2@.
 %%%%
-You melt @arg@
-Du schmilzt {acc}@arg@
+You melt @arg@@punct@
+Du schmilzt {acc}@arg@@punct@
 %%%%
-@Arg@ melts you
-@Arg@ schmilzt dich
+@Arg@ melts you@punct@
+@Arg@ schmilzt dich@punct@
 %%%%
-@Arg1@ melts @arg2@
-@Arg1@ schmilzt {acc}@arg2@
+@Arg1@ melts @arg2@@punct@
+@Arg1@ schmilzt {acc}@arg2@@punct@
 %%%%
-@Arg@ melts itself
-@Arg@ schmilzt sich selbst
+@Arg@ melts itself@punct@
+@Arg@ schmilzt sich selbst@punct@
 %%%%
-You are electrocuted
-Du bekommst einen elektrischen Schlag
+You are electrocuted@punct@
+Du bekommst einen elektrischen Schlag@punct@
 %%%%
-Lightning courses through @arg@
-Blitze durchzucken {acc}@arg@
+Lightning courses through @arg@@punct@
+Blitze durchzucken {acc}@arg@@punct@
 %%%%
 @Arg@ draws strength from your wounds!
 @Arg@ schöpft Kraft aus deinen Wunden!
@@ -1372,8 +1372,8 @@ Du ziehst Lebenskraft aus {dat}@the_monster@@punct@
 @Arg@ is healed by the life force!
 @Arg@ wird durch die Lebenskraft geheilt!
 %%%%
-You feel life coursing into your body@arg@
-Du spürst, wie Leben in deinen Körper strömt@arg@
+You feel life coursing into your body@punct@
+Du spürst, wie Leben in deinen Körper strömt@punct@
 %%%%
 The wave splashes down.
 Die Welle bricht herunter.
@@ -1414,8 +1414,8 @@ Etwas versucht, dich zu beeinflussen, aber du bist nicht betroffen.
 Something tries to affect you, but you resist.
 Etwas versucht, dich zu beeinflussen, aber du widerstehst.
 %%%%
-Your will lashes out at @arg1@@arg2@
-Dein Wille schlägt auf {acc}@arg1@ ein@arg2@
+Your will lashes out at @arg1@@punct@
+Dein Wille schlägt auf {acc}@arg1@ ein@punct@
 %%%%
 Strange energies course through your body.
 Seltsame Energien fließen durch deinen Körper.
@@ -1492,26 +1492,59 @@ Du fühlst, dass deine Anfälligkeit für Feuer länger anhalten wird.
 Cherry-coloured flames burn away your fire resistance!
 Kirschfarbene Flammen brennen deine Feuerresistenz weg!
 %%%%
-@Arg@ pierces through you
-@Arg@ durchbohrt dich
+@Arg@ pierces through you@punct@
+@Arg@ durchbohrt dich@punct@
 %%%%
-@Arg1@ pierces through @arg2@
-@Arg1@ durchbohrt {acc}@arg2@
+@Arg1@ pierces through @arg2@@punct@
+@Arg1@ durchbohrt {acc}@arg2@@punct@
 %%%%
-@Arg@ hits you
-@Arg@ trifft dich
+@Arg@ hits you@punct@
+@Arg@ trifft dich@punct@
 %%%%
-@Arg1@ hits @arg2@
-@Arg1@ trifft {acc}@arg2@
+@Arg1@ hits @arg2@@punct@
+@Arg1@ trifft {acc}@arg2@@punct@
 %%%%
-@Arg@ engulfs you
-@Arg@ erfasst dich
+@Arg@ engulfs you@punct@
+@Arg@ erfasst dich@punct@
 %%%%
-@Arg1@ engulfs @arg2@
-@Arg1@ erfasst {acc}@arg2@
+@Arg1@ engulfs @arg2@@punct@
+@Arg1@ erfasst {acc}@arg2@@punct@
 %%%%
-" but does no damage."
-, fügt aber keinen Schaden zu.
+@Arg@ hits you but does no damage.
+@Arg@ trifft dich, fügt aber keinen Schaden zu.
+%%%%
+@Arg1@ hits @arg2@ but does no damage.
+@Arg1@ trifft {acc}@arg2@, fügt aber keinen Schaden zu.
+%%%%
+@Arg@ engulfs you but does no damage.
+@Arg@ erfasst dich, fügt aber keinen Schaden zu.
+%%%%
+@Arg1@ engulfs @arg2@ but does no damage.
+@Arg1@ erfasst {acc}@arg2@, fügt aber keinen Schaden zu.
+%%%%
+The chaos hits you with @arg@@punct@
+The chaos trifft dich mit {dat}@arg@@punct@
+%%%%
+The chaos hits @arg1@ with @arg2@@punct@
+The chaos trifft {acc}@arg1@ mit {dat}@arg2@@punct@
+%%%%
+The chaos engulfs you with @arg@@punct@
+The chaos erfasst dich mit {dat}@arg@@punct@
+%%%%
+The chaos engulfs @arg1@ with @arg2@@punct@
+The chaos erfasst {acc}@arg1@ mit {dat}@arg2@@punct@
+%%%%
+The chaos hits you with @arg@ but does no damage.
+The chaos trifft dich mit {dat}@arg@, fügt aber keinen Schaden zu.
+%%%%
+The chaos hits @arg1@ with @arg2@ but does no damage.
+The chaos trifft {acc}@arg1@ mit {dat}@arg2@, fügt aber keinen Schaden zu.
+%%%%
+The chaos engulfs you with @arg@ but does no damage.
+The chaos erfasst dich mit {dat}@arg@, fügt aber keinen Schaden zu.
+%%%%
+The chaos engulfs @arg1@ with @arg2@ but does no damage.
+The chaos erfasst {acc}@arg1@ mit {dat}@arg2@, fügt aber keinen Schaden zu.
 %%%%
 Your attached jelly eats @arg@!
 Dein anhaftendes Gelee frisst @arg@!
@@ -1582,16 +1615,15 @@ Dein dämonischer Wächter vermeidet deinen Angriff.
 @Arg@ hits something.
 @Arg@ trifft etwas.
 %%%%
-@Arg@ is dispelled
-@Arg@ wird gebannt
+@Arg@ is dispelled@punct@
+@Arg@ wird gebannt@punct@
 %%%%
-# note: @arg@ will be possessive (e.g. "the orc's", "Sigmund's")
-@Arg@ mind is blasted
-Der Verstand @arg@ wird gesprengt
+@Arg@'s mind is blasted@punct@
+Der Verstand {gen}@arg@ wird gesprengt@punct@
 %%%%
-# note: this is for monsters with multiple heads, and @arg@ will be possessive (i.e. "the hydra's")
-@Arg@ minds are blasted
-Der Verstand @arg@ wird gesprengt
+# note: this is for monsters with multiple heads
+@Arg@'s minds are blasted@punct@
+Der Verstand {gen}@arg@ wird gesprengt@punct@
 %%%%
 @Arg@ looks drowsy...
 @Arg@ sieht schläfrig aus...
@@ -4879,11 +4911,11 @@ Das sterbende Gelée Royale spuckt @num@ mehr Gelees aus.
 @Arg@ shudders and withdraws towards its neighbour.
 @Arg@ zittert und zieht sich zu ihrem Nachbarn zurück.
 %%%%
-@Arg1@ electric aura discharges, shocking @arg2@!
-Die elektrische Aura @arg1@ entlädt sich und schockt {acc}@arg2@!
+@Arg1@'s electric aura discharges, shocking @arg2@@punct@
+Die elektrische Aura {gen}@arg1@ entlädt sich und schockt {acc}@arg2@@punct@
 %%%%
-@Arg1@ electric aura discharges violently, shocking @arg2@!
-Die elektrische Aura @arg1@ entlädt sich heftig und schockt {acc}@arg2@!
+@Arg1@'s electric aura discharges violently, shocking @arg2@@punct@
+Die elektrische Aura {gen}@arg1@ entlädt sich heftig und schockt {acc}@arg2@@punct@
 %%%%
 The air sparks with electricity, shocking @arg@@punct@
 Die Luft funkelt vor Elektrizität und schockt {acc}@arg@@punct@
@@ -8039,143 +8071,143 @@ Du schneidest einen der Köpfe @arg@ ab!
 @Arg@ is burned by acid!
 @Arg@ wird durch Säure verätzt!
 %%%%
-@Arg@ is electrocuted
-@Arg@ bekommt einen Stromschlag
+@Arg@ is electrocuted@punct@
+@Arg@ bekommt einen Stromschlag@punct@
 %%%%
-You shatter @arg@
-Du zerschmetterst {acc}@arg@
+You shatter @arg@@punct@
+Du zerschmetterst {acc}@arg@@punct@
 %%%%
-@Arg@ shatters you
-@Arg@ zerschmettert dich
+@Arg@ shatters you@punct@
+@Arg@ zerschmettert dich@punct@
 %%%%
-@Arg1@ shatters @arg2@
-@Arg1@ zerschmettert {acc}@arg2@
+@Arg1@ shatters @arg2@@punct@
+@Arg1@ zerschmettert {acc}@arg2@@punct@
 %%%%
-@Arg@ shatters itself
-@Arg@ zerschmettert sich selbst
+@Arg@ shatters itself@punct@
+@Arg@ zerschmettert sich selbst@punct@
 %%%%
-@Arg@ blasts you
-@Arg@ sprengt dich
+@Arg@ blasts you@punct@
+@Arg@ sprengt dich@punct@
 %%%%
-@Arg1@ blasts @arg2@
-@Arg1@ sprengt {acc}@arg2@
+@Arg1@ blasts @arg2@@punct@
+@Arg1@ sprengt {acc}@arg2@@punct@
 %%%%
-@Arg@ blasts itself
-@Arg@ sprengt sich selbst
+@Arg@ blasts itself@punct@
+@Arg@ sprengt sich selbst@punct@
 %%%%
-@Arg@ pokes you
-@Arg@ stößt dich an
+@Arg@ pokes you@punct@
+@Arg@ stößt dich an@punct@
 %%%%
-@Arg1@ pokes @arg2@
-@Arg1@ stößt {acc}@arg2@ an
+@Arg1@ pokes @arg2@@punct@
+@Arg1@ stößt {acc}@arg2@ an@punct@
 %%%%
-@Arg@ prods you
-@Arg@ stößt dich an
+@Arg@ prods you@punct@
+@Arg@ stößt dich an@punct@
 %%%%
-@Arg1@ prods @arg2@
-@Arg1@ stößt {acc}@arg2@ an
+@Arg1@ prods @arg2@@punct@
+@Arg1@ stößt {acc}@arg2@ an@punct@
 %%%%
-@Arg@ flogs you
-@Arg@ peitscht dich
+@Arg@ flogs you@punct@
+@Arg@ peitscht dich@punct@
 %%%%
-@Arg1@ flogs @arg2@
-@Arg1@ peitscht {acc}@arg2@
+@Arg1@ flogs @arg2@@punct@
+@Arg1@ peitscht {acc}@arg2@@punct@
 %%%%
-@Arg@ pounds you
-@Arg@ schlägt dich
+@Arg@ pounds you@punct@
+@Arg@ schlägt dich@punct@
 %%%%
-@Arg1@ pounds @arg2@
-@Arg1@ schlägt {acc}@arg2@
+@Arg1@ pounds @arg2@@punct@
+@Arg1@ schlägt {acc}@arg2@@punct@
 %%%%
-@Arg@ slaps you
-@Arg@ ohrfeigt dich
+@Arg@ slaps you@punct@
+@Arg@ ohrfeigt dich@punct@
 %%%%
-@Arg1@ slaps @arg2@
-@Arg1@ ohrfeigt {acc}@arg2@
+@Arg1@ slaps @arg2@@punct@
+@Arg1@ ohrfeigt {acc}@arg2@@punct@
 %%%%
-@Arg@ tickles you
-@Arg@ kitzelt dich
+@Arg@ tickles you@punct@
+@Arg@ kitzelt dich@punct@
 %%%%
-@Arg1@ tickles @arg2@
-@Arg1@ kitzelt {acc}@arg2@
+@Arg1@ tickles @arg2@@punct@
+@Arg1@ kitzelt {acc}@arg2@@punct@
 %%%%
-@Arg@ defenestrates you
-@Arg@ wirft dich aus dem Fenster
+@Arg@ defenestrates you@punct@
+@Arg@ wirft dich aus dem Fenster@punct@
 %%%%
-@Arg1@ defenestrates @arg2@
-@Arg1@ wirft {acc}@arg2@ aus dem Fenster
+@Arg1@ defenestrates @arg2@@punct@
+@Arg1@ wirft {acc}@arg2@ aus dem Fenster@punct@
 %%%%
-@Arg@ sucker-punches you
-@Arg@ versetzt dir einen Tiefschlag
+@Arg@ sucker-punches you@punct@
+@Arg@ versetzt dir einen Tiefschlag@punct@
 %%%%
-@Arg1@ sucker-punches @arg2@
-@Arg1@ versetzt {dat}@arg2@ einen Tiefschlag
+@Arg1@ sucker-punches @arg2@@punct@
+@Arg1@ versetzt {dat}@arg2@ einen Tiefschlag@punct@
 %%%%
-@Arg@ elbows you
-@Arg@ schlägt dich mit dem Ellbogen
+@Arg@ elbows you@punct@
+@Arg@ schlägt dich mit dem Ellbogen@punct@
 %%%%
-@Arg1@ elbows @arg2@
-@Arg1@ schlägt {acc}@arg2@ mit dem Ellbogen
+@Arg1@ elbows @arg2@@punct@
+@Arg1@ schlägt {acc}@arg2@ mit dem Ellbogen@punct@
 %%%%
-@Arg@ pinches you
-@Arg@ kneift dich
+@Arg@ pinches you@punct@
+@Arg@ kneift dich@punct@
 %%%%
-@Arg1@ pinches @arg2@
-@Arg1@ kneift {acc}@arg2@
+@Arg1@ pinches @arg2@@punct@
+@Arg1@ kneift {acc}@arg2@@punct@
 %%%%
-@Arg@ strangle-hugs you
-@Arg@ umarmt dich zu fest
+@Arg@ strangle-hugs you@punct@
+@Arg@ umarmt dich zu fest@punct@
 %%%%
-@Arg1@ strangle-hugs @arg2@
-@Arg1@ umarmt {acc}@arg2@ zu fest
+@Arg1@ strangle-hugs @arg2@@punct@
+@Arg1@ umarmt {acc}@arg2@ zu fest@punct@
 %%%%
-@Arg@ squeezes you
-@Arg@ presst dich aus
+@Arg@ squeezes you@punct@
+@Arg@ presst dich aus@punct@
 %%%%
-@Arg1@ squeezes @arg2@
-@Arg1@ presst {acc}@arg2@ aus
+@Arg1@ squeezes @arg2@@punct@
+@Arg1@ presst {acc}@arg2@ aus@punct@
 %%%%
-@Arg@ teases you
-@Arg@ stichelt dich
+@Arg@ teases you@punct@
+@Arg@ stichelt dich@punct@
 %%%%
-@Arg1@ teases @arg2@
-@Arg1@ stichelt {acc}@arg2@
+@Arg1@ teases @arg2@@punct@
+@Arg1@ stichelt {acc}@arg2@@punct@
 %%%%
-@Arg@ eye-gouges you
-@Arg@ drückt dir einen Finger ins Auge
+@Arg@ eye-gouges you@punct@
+@Arg@ drückt dir einen Finger ins Auge@punct@
 %%%%
-@Arg1@ eye-gouges @arg2@
-@Arg1@ drückt {dat}@arg2@ einen Finger ins Auge
+@Arg1@ eye-gouges @arg2@@punct@
+@Arg1@ drückt {dat}@arg2@ einen Finger ins Auge@punct@
 %%%%
-@Arg@ karate-kicks you
-@Arg@ verpasst dir einen Karatetritt
+@Arg@ karate-kicks you@punct@
+@Arg@ verpasst dir einen Karatetritt@punct@
 %%%%
-@Arg1@ karate-kicks @arg2@
-@Arg1@ verpasst {dat}@arg2@ einen Karatetritt
+@Arg1@ karate-kicks @arg2@@punct@
+@Arg1@ verpasst {dat}@arg2@ einen Karatetritt@punct@
 %%%%
-@Arg@ headlocks you
-@Arg@ nimmt dich in den Schwitzkasten
+@Arg@ headlocks you@punct@
+@Arg@ nimmt dich in den Schwitzkasten@punct@
 %%%%
-@Arg1@ headlocks @arg2@
-@Arg1@ nimmt {acc}@arg2@ in den Schwitzkasten
+@Arg1@ headlocks @arg2@@punct@
+@Arg1@ nimmt {acc}@arg2@ in den Schwitzkasten@punct@
 %%%%
-@Arg@ wrestles you
-@Arg@ ringt dich nieder
+@Arg@ wrestles you@punct@
+@Arg@ ringt dich nieder@punct@
 %%%%
-@Arg1@ wrestles @arg2@
-@Arg1@ ringt {acc}@arg2@ nieder
+@Arg1@ wrestles @arg2@@punct@
+@Arg1@ ringt {acc}@arg2@ nieder@punct@
 %%%%
-@Arg@ trip-wires you
-@Arg@ stellt dir ein Bein
+@Arg@ trip-wires you@punct@
+@Arg@ stellt dir ein Bein@punct@
 %%%%
-@Arg1@ trip-wires @arg2@
-@Arg1@ stellt {dat}@arg2@ ein Bein
+@Arg1@ trip-wires @arg2@@punct@
+@Arg1@ stellt {dat}@arg2@ ein Bein@punct@
 %%%%
-@Arg@ kneecaps you
-@Arg@ zerschmettert deine Kniescheibe
+@Arg@ kneecaps you@punct@
+@Arg@ zerschmettert deine Kniescheibe@punct@
 %%%%
-@Arg1@ kneecaps @arg2@
-@Arg1@ zerschmettert {dat}@arg2@ die Kniescheibe
+@Arg1@ kneecaps @arg2@@punct@
+@Arg1@ zerschmettert {dat}@arg2@ die Kniescheibe@punct@
 %%%%
 " with @arg@"
 " mit {dat}@arg@"
@@ -8186,23 +8218,23 @@ Du zerschmetterst {acc}@arg@
 @Arg1@ poisons @arg2@!
 @Arg1@ vergiftet @arg2@!
 %%%%
-You are covered in liquid flames
-Du bist mit flüssigen Flammen bedeckt
+You are covered in liquid flames@punct@
+Du bist mit flüssigen Flammen bedeckt@punct@
 %%%%
-@Arg@ is covered in liquid flames
-@Arg@ ist mit flüssigen Flammen bedeckt
+@Arg@ is covered in liquid flames@punct@
+@Arg@ ist mit flüssigen Flammen bedeckt@punct@
 %%%%
-You are engulfed in flames
-Du bist in Flammen gehüllt
+You are engulfed in flames@punct@
+Du bist in Flammen gehüllt@punct@
 %%%%
-@Arg@ is engulfed in flames
-@Arg@ ist in Flammen gehüllt
+@Arg@ is engulfed in flames@punct@
+@Arg@ ist in Flammen gehüllt@punct@
 %%%%
-@Arg@ shocks you
-@Arg@ gibt dir einen elektrischen Schlag
+@Arg@ shocks you@punct@
+@Arg@ gibt dir einen elektrischen Schlag@punct@
 %%%%
-@Arg1@ shocks @arg2@
-@Arg1@ gibt {dat}@arg2@ einen elektrischen Schlag
+@Arg1@ shocks @arg2@@punct@
+@Arg1@ gibt {dat}@arg2@ einen elektrischen Schlag@punct@
 %%%%
 @Arg@ draws strength from your injuries!
 @Arg@ zieht Kraft aus deinen Verletzungen!
@@ -8225,11 +8257,11 @@ Deine göttliche Ausdauer schützt dich vor Gift!
 @Arg1@ infuriates @arg2@!
 @Arg1@ macht {acc}@arg2@ wütend!
 %%%%
-@Arg@ sears you
-@Arg@ versengt dich
+@Arg@ sears you@punct@
+@Arg@ versengt dich@punct@
 %%%%
-@Arg1@ sears @arg2@
-@Arg1@ versengt {acc}@arg2@
+@Arg1@ sears @arg2@@punct@
+@Arg1@ versengt {acc}@arg2@@punct@
 %%%%
 @Arg@ drains your magic.
 @Arg@ entzieht deine Magie.
@@ -8276,11 +8308,11 @@ the ooze
 @Arg@ willpower is stripped away!
 Die Willenskraft {gen}@arg@ wird abgebaut!
 %%%%
-@Arg@ drowns you
-@Arg@ ertränkt dich
+@Arg@ drowns you@punct@
+@Arg@ ertränkt dich@punct@
 %%%%
-@Arg1@ drowns @arg2@
-@Arg1@ ertränkt {acc}@arg2@
+@Arg1@ drowns @arg2@@punct@
+@Arg1@ ertränkt {acc}@arg2@@punct@
 %%%%
 @Arg@ is very cold.
 @Arg@ ist völlig durchgefroren.
@@ -8919,11 +8951,11 @@ Zins Macht schützt deinen Mitkrieger vor böser Magie!
 Send 'em back where they came from!
 Schickt sie dorthin zurück, wo sie hergekommen sind!
 %%%%
-You are frozen
-Du wirst eingefroren
+You are frozen@punct@
+Du wirst eingefroren@punct@
 %%%%
-@Arg@ is frozen
-@Arg@ wird eingefroren
+@Arg@ is frozen@punct@
+@Arg@ wird eingefroren@punct@
 %%%%
 @Arg@ attempts to bespell you!
 @Arg@ versucht, dich zu verzaubern!
@@ -8998,26 +9030,26 @@ Ein eisiger Wirbel erscheint und hebt {acc}@arg@ hoch!
 A freezing vortex appears out of thin air!
 Ein eisiger Wirbel erscheint aus dem Nichts!
 %%%%
-The water rises up and strikes you
-Das Wasser steigt auf und schlägt dich
+The water rises up and strikes you@@punct@
+Das Wasser steigt auf und schlägt dich@@punct@
 %%%%
-The water swirls and strikes you
-Das Wasser wirbelt und schlägt dich
+The water swirls and strikes you@@punct@
+Das Wasser wirbelt und schlägt dich@@punct@
 %%%%
-The water rises up and strikes @arg@
-Das Wasser steigt auf und schlägt {acc}@arg@
+The water rises up and strikes @arg@@@punct@
+Das Wasser steigt auf und schlägt {acc}@arg@@@punct@
 %%%%
-The water swirls and strikes @arg@
-Das Wasser wirbelt und schlägt {acc}@arg@
+The water swirls and strikes @arg@@@punct@
+Das Wasser wirbelt und schlägt {acc}@arg@@@punct@
 %%%%
-The air twists around and violently strikes you in flight
-Die Luft wirbelt herum und schlägt heftig auf dich im Flug ein
+The air twists around and violently strikes you in flight@@punct@
+Die Luft wirbelt herum und schlägt heftig auf dich im Flug ein@@punct@
 %%%%
-The air twists around and strikes you
-Die Luft wirbelt herum und schlägt heftig auf dich ein
+The air twists around and strikes you@@punct@
+Die Luft wirbelt herum und schlägt heftig auf dich ein@@punct@
 %%%%
-The air twists around and strikes @arg1@@arg2@
-Die Luft wirbelt herum und schlägt {acc}@arg1@@arg2@
+The air twists around and strikes @arg1@@punct@
+Die Luft wirbelt herum und schlägt {acc}@arg1@@punct@
 %%%%
 Something feeds on your intellect!
 Etwas ernährt sich von deinem Intellekt!
@@ -10191,8 +10223,8 @@ Du hörst ein plätscherndes Geräusch.
 @Arg@ seems to be corroded for longer.
 @Arg@ scheint länger korrodiert zu sein.
 %%%%
-@Arg@ is splashed with acid
-@Arg@ wird mit Säure bespritzt
+@Arg@ is splashed with acid@punct@
+@Arg@ wird mit Säure bespritzt@punct@
 %%%%
 @Arg@ begins to crumble.
 @Arg@ beginnt zu bröckeln.
@@ -14191,11 +14223,11 @@ Der Kerker bebt!
 The dungeon rumbles!
 Der Kerker rumpelt!
 %%%%
-You shudder from the earth-shattering force@arg@
-Du schauderst vor der erderschütternden Kraft@arg@
+You shudder from the earth-shattering force@punct@
+Du schauderst vor der erderschütternden Kraft@punct@
 %%%%
-You shudder@arg@
-Du schauderst@arg@
+You shudder@punct@
+Du schauderst@punct@
 %%%%
 The dungeon shakes around @arg@!
 Der Kerker wackelt um @arg@!
@@ -14209,8 +14241,8 @@ Der Kerker rumpelt um @arg@!
 There is a shattering impact!
 Es gibt einen erschütternden Aufprall!
 %%%%
-@Arg1@ is blasted with magical radiation@arg2@
-@Arg1@ wird mit magischer Strahlung bestrahlt@arg2@
+@Arg@ is blasted with magical radiation@punct@
+@Arg@ wird mit magischer Strahlung bestrahlt@punct@
 %%%%
 You erupt in a fountain of uncontrolled magic!
 Du brichst in eine Fontäne unkontrollierter Magie aus!
@@ -14218,8 +14250,8 @@ Du brichst in eine Fontäne unkontrollierter Magie aus!
 @Arg@ erupts in a fountain of uncontrolled magic!
 @Arg@ bricht in eine Fontäne unkontrollierter Magie aus!
 %%%%
-@Arg1@ seems to burn from within@arg2@
-@Arg1@ scheint von innen zu brennen@arg2@
+@Arg@ seems to burn from within@punct@
+@Arg@ scheint von innen zu brennen@punct@
 %%%%
 You feel like your blood is boiling!
 Du hast das Gefühl, dein Blut kocht!
@@ -14507,8 +14539,8 @@ Du brauchst mehr Platz um {acc}@arg@ einzusperren.
 Zin imprisons @arg@ with walls of pure silver!
 Zin sperrt {acc}@arg@ in Wänden aus reinem Silber ein!
 %%%%
-You smite @arg@!
-Du zerschmetterst {acc}@arg@!
+You smite @arg@@punct@
+Du zerschmetterst {acc}@arg@@punct@
 %%%%
 You are blasted by holy energy!
 Du wirst von heiliger Energie durchdrungen!
@@ -14800,8 +14832,8 @@ Du wirst von einem Feld räumlicher Verzerrung erfasst
 Space twists in upon itself
 Der Raum verdreht sich in sich selbst
 %%%%
-Space warps crazily around you
-Der Raum verformt sich auf verrückte Weise um dich herum
+Space warps crazily around you@punct@
+Der Raum verformt sich auf verrückte Weise um dich herum@punct@
 %%%%
 @The_monster@ jerks violently for a moment
 @The_monster@ zuckt einen Moment lang heftig
@@ -14818,20 +14850,20 @@ Der Raum verformt sich auf verrückte Weise um dich herum
 @The_monster@ is caught in a field of spatial distortion
 @The_monster@ wird von einem Feld räumlicher Verzerrung erfasst
 %%%%
-Space bends around @the_monster@
-Der Raum krümmt sich um {acc}@the_monster@
+Space bends around @the_monster@@punct@
+Der Raum krümmt sich um {acc}@the_monster@@punct@
 %%%%
-Space warps around @the_monster@
-Der Raum verzieht sich um {acc}@the_monster@ herum
+Space warps around @the_monster@@punct@
+Der Raum verzieht sich um {acc}@the_monster@ herum@punct@
 %%%%
-Space warps crazily around @the_monster@
-Der Raum verzieht sich auf verrückte Weise um {acc}@the_monster@ herum
+Space warps crazily around @the_monster@@punct@
+Der Raum verzieht sich auf verrückte Weise um {acc}@the_monster@ herum@punct@
 %%%%
-The air around something crackles with energy
-Die Luft um etwas herum knistert vor Energie
+The air around something crackles with energy@punct@
+Die Luft um etwas herum knistert vor Energie@punct@
 %%%%
-A piece of empty space twists and distorts
-Ein Stück leerer Raum verdreht und verzerrt sich
+A piece of empty space twists and distorts@punct@
+Ein Stück leerer Raum verdreht und verzerrt sich@punct@
 %%%%
 A rift temporarily opens in the fabric of space
 Ein Riss öffnet sich vorübergehend in der Struktur des Raums

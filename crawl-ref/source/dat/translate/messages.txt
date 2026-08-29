@@ -487,19 +487,19 @@ The grasping roots
 You constrict @arg@ but do no damage.
 
 %%%%
-You constrict @arg@
+You constrict @arg@@punct@
 
 %%%%
-@Arg@ constrict you
+@Arg@ constrict you@punct@
 
 %%%%
-@Arg@ constricts you
+@Arg@ constricts you@punct@
 
 %%%%
-@Arg1@ constrict @arg2@
+@Arg1@ constrict @arg2@@punct@
 
 %%%%
-@Arg1@ constricts @arg2@
+@Arg1@ constricts @arg2@@punct@
 
 %%%%
 You are constricted
@@ -735,16 +735,16 @@ The smell of chlorine vanishes.
 The staff's sickly green glow vanishes.
 
 %%%%
-You envenom @arg@
+You envenom @arg@@punct@
 
 %%%%
-@Arg@ envenoms you
+@Arg@ envenoms you@punct@
 
 %%%%
-@Arg1@ envenoms @arg2@
+@Arg1@ envenoms @arg2@@punct@
 
 %%%%
-@Arg@ envenoms itself
+@Arg@ envenoms itself@punct@
 
 %%%%
 You sense an aura of extreme power.
@@ -807,10 +807,10 @@ You feel an uncomfortable desire to slay dragons.
 You feel an overwhelming desire to slay dragons!
 
 %%%%
-You convulse
+You convulse@punct@
 
 %%%%
-@Arg@ convulses
+@Arg@ convulses@punct@
 
 %%%%
 The lance glows brightly as it skewers @arg@. You feel that it has reached its full power.
@@ -819,10 +819,10 @@ The lance glows brightly as it skewers @arg@. You feel that it has reached its f
 The lance glows as it skewers @arg@.
 
 %%%%
-You are blasted by disruptive energy
+You are blasted by disruptive energy@punct@
 
 %%%%
-@Arg@ is blasted by disruptive energy
+@Arg@ is blasted by disruptive energy@punct@
 
 %%%%
 Time to lay down the shillelagh law.
@@ -1107,16 +1107,16 @@ You writhe in agony@punct@
 @Arg@ protects you from inadvertent hurry.
 
 %%%%
-You drain @arg@
+You drain @arg@@punct@
 
 %%%%
-@Arg@ drains you
+@Arg@ drains you@punct@
 
 %%%%
-@Arg1@ drains @arg2@
+@Arg1@ drains @arg2@@punct@
 
 %%%%
-@Arg@ drains itself
+@Arg@ drains itself@punct@
 
 %%%%
 # note: @arg@ will be possessive (e.g. "the orc's", "Sigmund's")
@@ -1163,22 +1163,22 @@ You block @arg@'s attack.
 @Arg1@ blocks @arg2@'s attack.
 
 %%%%
-You melt @arg@
+You melt @arg@@punct@
 
 %%%%
-@Arg@ melts you
+@Arg@ melts you@punct@
 
 %%%%
-@Arg1@ melts @arg2@
+@Arg1@ melts @arg2@@punct@
 
 %%%%
-@Arg@ melts itself
+@Arg@ melts itself@punct@
 
 %%%%
-You are electrocuted
+You are electrocuted@punct@
 
 %%%%
-Lightning courses through @arg@
+Lightning courses through @arg@@punct@
 
 %%%%
 @Arg@ draws strength from your wounds!
@@ -1372,7 +1372,7 @@ You draw life force from @the_monster@@punct@
 @Arg@ is healed by the life force!
 
 %%%%
-You feel life coursing into your body@arg@
+You feel life coursing into your body@punct@
 
 %%%%
 The wave splashes down.
@@ -1414,7 +1414,7 @@ Something tries to affect you, but you are unaffected.
 Something tries to affect you, but you resist.
 
 %%%%
-Your will lashes out at @arg1@@arg2@
+Your will lashes out at @arg1@@punct@
 
 %%%%
 Strange energies course through your body.
@@ -1492,25 +1492,58 @@ You feel your vulnerability to fire will last longer.
 Cherry-coloured flames burn away your fire resistance!
 
 %%%%
-@Arg@ pierces through you
+@Arg@ pierces through you@punct@
 
 %%%%
-@Arg1@ pierces through @arg2@
+@Arg1@ pierces through @arg2@@punct@
 
 %%%%
-@Arg@ hits you
+@Arg@ hits you@punct@
 
 %%%%
-@Arg1@ hits @arg2@
+@Arg1@ hits @arg2@@punct@
 
 %%%%
-@Arg@ engulfs you
+@Arg@ engulfs you@punct@
 
 %%%%
-@Arg1@ engulfs @arg2@
+@Arg1@ engulfs @arg2@@punct@
 
 %%%%
-" but does no damage."
+@Arg@ hits you but does no damage.
+
+%%%%
+@Arg1@ hits @arg2@ but does no damage.
+
+%%%%
+@Arg@ engulfs you but does no damage.
+
+%%%%
+@Arg1@ engulfs @arg2@ but does no damage.
+
+%%%%
+The chaos hits you with @arg@@punct@
+
+%%%%
+The chaos hits @arg1@ with @arg2@@punct@
+
+%%%%
+The chaos engulfs you with @arg@@punct@
+
+%%%%
+The chaos engulfs @arg1@ with @arg2@@punct@
+
+%%%%
+The chaos hits you with @arg@ but does no damage.
+
+%%%%
+The chaos hits @arg1@ with @arg2@ but does no damage.
+
+%%%%
+The chaos engulfs you with @arg@ but does no damage.
+
+%%%%
+The chaos engulfs @arg1@ with @arg2@ but does no damage.
 
 %%%%
 Your attached jelly eats @arg@!
@@ -1582,15 +1615,14 @@ Your demonic guardian avoids your attack.
 @Arg@ hits something.
 
 %%%%
-@Arg@ is dispelled
+@Arg@ is dispelled@punct@
 
 %%%%
-# note: @arg@ will be possessive (e.g. "the orc's", "Sigmund's")
-@Arg@ mind is blasted
+@Arg@'s mind is blasted@punct@
 
 %%%%
-# note: this is for monsters with multiple heads, and @arg@ will be possessive (i.e. "the hydra's")
-@Arg@ minds are blasted
+# note: this is for monsters with multiple heads
+@Arg@'s minds are blasted@punct@
 
 %%%%
 @Arg@ looks drowsy...
@@ -4879,10 +4911,10 @@ The dying Royal Jelly spits out @num@ more jellies.
 @Arg@ shudders and withdraws towards its neighbour.
 
 %%%%
-@Arg1@ electric aura discharges, shocking @arg2@!
+@Arg1@'s electric aura discharges, shocking @arg2@@punct@
 
 %%%%
-@Arg1@ electric aura discharges violently, shocking @arg2@!
+@Arg1@'s electric aura discharges violently, shocking @arg2@@punct@
 
 %%%%
 The air sparks with electricity, shocking @arg@@punct@
@@ -8039,142 +8071,142 @@ You chop one of @arg@ heads off!
 @Arg@ is burned by acid!
 
 %%%%
-@Arg@ is electrocuted
+@Arg@ is electrocuted@punct@
 
 %%%%
-You shatter @arg@
+You shatter @arg@@punct@
 
 %%%%
-@Arg@ shatters you
+@Arg@ shatters you@punct@
 
 %%%%
-@Arg1@ shatters @arg2@
+@Arg1@ shatters @arg2@@punct@
 
 %%%%
-@Arg@ shatters itself
+@Arg@ shatters itself@punct@
 
 %%%%
-@Arg@ blasts you
+@Arg@ blasts you@punct@
 
 %%%%
-@Arg1@ blasts @arg2@
+@Arg1@ blasts @arg2@@punct@
 
 %%%%
-@Arg@ blasts itself
+@Arg@ blasts itself@punct@
 
 %%%%
-@Arg@ pokes you
+@Arg@ pokes you@punct@
 
 %%%%
-@Arg1@ pokes @arg2@
+@Arg1@ pokes @arg2@@punct@
 
 %%%%
-@Arg@ prods you
+@Arg@ prods you@punct@
 
 %%%%
-@Arg1@ prods @arg2@
+@Arg1@ prods @arg2@@punct@
 
 %%%%
-@Arg@ flogs you
+@Arg@ flogs you@punct@
 
 %%%%
-@Arg1@ flogs @arg2@
+@Arg1@ flogs @arg2@@punct@
 
 %%%%
-@Arg@ pounds you
+@Arg@ pounds you@punct@
 
 %%%%
-@Arg1@ pounds @arg2@
+@Arg1@ pounds @arg2@@punct@
 
 %%%%
-@Arg@ slaps you
+@Arg@ slaps you@punct@
 
 %%%%
-@Arg1@ slaps @arg2@
+@Arg1@ slaps @arg2@@punct@
 
 %%%%
-@Arg@ tickles you
+@Arg@ tickles you@punct@
 
 %%%%
-@Arg1@ tickles @arg2@
+@Arg1@ tickles @arg2@@punct@
 
 %%%%
-@Arg@ defenestrates you
+@Arg@ defenestrates you@punct@
 
 %%%%
-@Arg1@ defenestrates @arg2@
+@Arg1@ defenestrates @arg2@@punct@
 
 %%%%
-@Arg@ sucker-punches you
+@Arg@ sucker-punches you@punct@
 
 %%%%
-@Arg1@ sucker-punches @arg2@
+@Arg1@ sucker-punches @arg2@@punct@
 
 %%%%
-@Arg@ elbows you
+@Arg@ elbows you@punct@
 
 %%%%
-@Arg1@ elbows @arg2@
+@Arg1@ elbows @arg2@@punct@
 
 %%%%
-@Arg@ pinches you
+@Arg@ pinches you@punct@
 
 %%%%
-@Arg1@ pinches @arg2@
+@Arg1@ pinches @arg2@@punct@
 
 %%%%
-@Arg@ strangle-hugs you
+@Arg@ strangle-hugs you@punct@
 
 %%%%
-@Arg1@ strangle-hugs @arg2@
+@Arg1@ strangle-hugs @arg2@@punct@
 
 %%%%
-@Arg@ squeezes you
+@Arg@ squeezes you@punct@
 
 %%%%
-@Arg1@ squeezes @arg2@
+@Arg1@ squeezes @arg2@@punct@
 
 %%%%
-@Arg@ teases you
+@Arg@ teases you@punct@
 
 %%%%
-@Arg1@ teases @arg2@
+@Arg1@ teases @arg2@@punct@
 
 %%%%
-@Arg@ eye-gouges you
+@Arg@ eye-gouges you@punct@
 
 %%%%
-@Arg1@ eye-gouges @arg2@
+@Arg1@ eye-gouges @arg2@@punct@
 
 %%%%
-@Arg@ karate-kicks you
+@Arg@ karate-kicks you@punct@
 
 %%%%
-@Arg1@ karate-kicks @arg2@
+@Arg1@ karate-kicks @arg2@@punct@
 
 %%%%
-@Arg@ headlocks you
+@Arg@ headlocks you@punct@
 
 %%%%
-@Arg1@ headlocks @arg2@
+@Arg1@ headlocks @arg2@@punct@
 
 %%%%
-@Arg@ wrestles you
+@Arg@ wrestles you@punct@
 
 %%%%
-@Arg1@ wrestles @arg2@
+@Arg1@ wrestles @arg2@@punct@
 
 %%%%
-@Arg@ trip-wires you
+@Arg@ trip-wires you@punct@
 
 %%%%
-@Arg1@ trip-wires @arg2@
+@Arg1@ trip-wires @arg2@@punct@
 
 %%%%
-@Arg@ kneecaps you
+@Arg@ kneecaps you@punct@
 
 %%%%
-@Arg1@ kneecaps @arg2@
+@Arg1@ kneecaps @arg2@@punct@
 
 %%%%
 " with @arg@"
@@ -8186,22 +8218,22 @@ You shatter @arg@
 @Arg1@ poisons @arg2@!
 
 %%%%
-You are covered in liquid flames
+You are covered in liquid flames@punct@
 
 %%%%
-@Arg@ is covered in liquid flames
+@Arg@ is covered in liquid flames@punct@
 
 %%%%
-You are engulfed in flames
+You are engulfed in flames@punct@
 
 %%%%
-@Arg@ is engulfed in flames
+@Arg@ is engulfed in flames@punct@
 
 %%%%
-@Arg@ shocks you
+@Arg@ shocks you@punct@
 
 %%%%
-@Arg1@ shocks @arg2@
+@Arg1@ shocks @arg2@@punct@
 
 %%%%
 @Arg@ draws strength from your injuries!
@@ -8225,10 +8257,10 @@ Your divine stamina protects you from poison!
 @Arg1@ infuriates @arg2@!
 
 %%%%
-@Arg@ sears you
+@Arg@ sears you@punct@
 
 %%%%
-@Arg1@ sears @arg2@
+@Arg1@ sears @arg2@@punct@
 
 %%%%
 @Arg@ drains your magic.
@@ -8276,10 +8308,10 @@ the ooze
 @Arg@ willpower is stripped away!
 
 %%%%
-@Arg@ drowns you
+@Arg@ drowns you@punct@
 
 %%%%
-@Arg1@ drowns @arg2@
+@Arg1@ drowns @arg2@@punct@
 
 %%%%
 @Arg@ is very cold.
@@ -8919,10 +8951,10 @@ Zin's power protects your fellow warrior from evil magic!
 Send 'em back where they came from!
 
 %%%%
-You are frozen
+You are frozen@punct@
 
 %%%%
-@Arg@ is frozen
+@Arg@ is frozen@punct@
 
 %%%%
 @Arg@ attempts to bespell you!
@@ -8998,25 +9030,25 @@ A freezing vortex appears and lifts @arg@ up!
 A freezing vortex appears out of thin air!
 
 %%%%
-The water rises up and strikes you
+The water rises up and strikes you@@punct@
 
 %%%%
-The water swirls and strikes you
+The water swirls and strikes you@@punct@
 
 %%%%
-The water rises up and strikes @arg@
+The water rises up and strikes @arg@@@punct@
 
 %%%%
-The water swirls and strikes @arg@
+The water swirls and strikes @arg@@@punct@
 
 %%%%
-The air twists around and violently strikes you in flight
+The air twists around and violently strikes you in flight@@punct@
 
 %%%%
-The air twists around and strikes you
+The air twists around and strikes you@@punct@
 
 %%%%
-The air twists around and strikes @arg1@@arg2@
+The air twists around and strikes @arg1@@punct@
 
 %%%%
 Something feeds on your intellect!
@@ -10191,7 +10223,7 @@ You hear a splashing noise.
 @Arg@ seems to be corroded for longer.
 
 %%%%
-@Arg@ is splashed with acid
+@Arg@ is splashed with acid@punct@
 
 %%%%
 @Arg@ begins to crumble.
@@ -14191,10 +14223,10 @@ The dungeon shakes!
 The dungeon rumbles!
 
 %%%%
-You shudder from the earth-shattering force@arg@
+You shudder from the earth-shattering force@punct@
 
 %%%%
-You shudder@arg@
+You shudder@punct@
 
 %%%%
 The dungeon shakes around @arg@!
@@ -14209,7 +14241,7 @@ The dungeon rumbles around @arg@!
 There is a shattering impact!
 
 %%%%
-@Arg1@ is blasted with magical radiation@arg2@
+@Arg@ is blasted with magical radiation@punct@
 
 %%%%
 You erupt in a fountain of uncontrolled magic!
@@ -14218,7 +14250,7 @@ You erupt in a fountain of uncontrolled magic!
 @Arg@ erupts in a fountain of uncontrolled magic!
 
 %%%%
-@Arg1@ seems to burn from within@arg2@
+@Arg@ seems to burn from within@punct@
 
 %%%%
 You feel like your blood is boiling!
@@ -14507,7 +14539,7 @@ You need more space to imprison @arg@.
 Zin imprisons @arg@ with walls of pure silver!
 
 %%%%
-You smite @arg@!
+You smite @arg@@punct@
 
 %%%%
 You are blasted by holy energy!
@@ -14800,7 +14832,7 @@ You are caught in a field of spatial distortion
 Space twists in upon itself
 
 %%%%
-Space warps crazily around you
+Space warps crazily around you@punct@
 
 %%%%
 @The_monster@ jerks violently for a moment
@@ -14818,19 +14850,19 @@ Space warps crazily around you
 @The_monster@ is caught in a field of spatial distortion
 
 %%%%
-Space bends around @the_monster@
+Space bends around @the_monster@@punct@
 
 %%%%
-Space warps around @the_monster@
+Space warps around @the_monster@@punct@
 
 %%%%
-Space warps crazily around @the_monster@
+Space warps crazily around @the_monster@@punct@
 
 %%%%
-The air around something crackles with energy
+The air around something crackles with energy@punct@
 
 %%%%
-A piece of empty space twists and distorts
+A piece of empty space twists and distorts@punct@
 
 %%%%
 A rift temporarily opens in the fabric of space
