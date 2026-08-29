@@ -547,11 +547,14 @@ Heal Self ability
 
 Heals a moderate amount of health, depending on Invocations skill.
 %%%%
-Divine Vigour ability
+Aura of Vigour ability
 
 Greatly increases your maximum health and magic points, depending on
 Invocations skill. Your current health and magic points will also be increased
 proportionally.
+
+Any friendly creatures near you will also have their health doubled for as long
+as the effect lasts.
 %%%%
 # Lugonu
 Depart the Abyss ability

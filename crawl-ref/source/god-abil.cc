@@ -1418,7 +1418,7 @@ void elyvilon_divine_vigour()
     if (you.duration[DUR_DIVINE_VIGOUR])
         return;
 
-    mprf("%s grants you divine vigour.",
+    mprf("%s grants you and your allies divine vigour.",
          god_name(GOD_ELYVILON).c_str());
 
     const int vigour_amt = 1 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
@@ -1437,6 +1437,8 @@ void elyvilon_divine_vigour()
                  / old_mp_max
                - you.magic_points);
     }
+
+    player_update_auras();
 }
 
 void elyvilon_remove_divine_vigour()

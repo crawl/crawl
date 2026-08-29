@@ -547,7 +547,7 @@ static vector<ability_def> &_get_ability_list()
             2, 0, 3, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
         { ABIL_ELYVILON_DIVINE_ALMS, "Divine Alms",
             3, 0, 0, -1, {fail_basis::invo, 40, 5, 20}, abflag::target },
-        { ABIL_ELYVILON_DIVINE_VIGOUR, "Divine Vigour",
+        { ABIL_ELYVILON_AURA_OF_VIGOUR, "Aura of Vigour",
             0, 0, 6, -1, {fail_basis::invo, 80, 4, 25}, abflag::none },
 
         // Lugonu
@@ -2007,7 +2007,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
-    case ABIL_ELYVILON_DIVINE_VIGOUR:
+    case ABIL_ELYVILON_AURA_OF_VIGOUR:
         if (you.duration[DUR_DIVINE_VIGOUR])
         {
             if (!quiet)
@@ -2741,7 +2741,7 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_TROG_HAND:
     case ABIL_ELYVILON_PURIFICATION:
     case ABIL_ELYVILON_HEAL_SELF:
-    case ABIL_ELYVILON_DIVINE_VIGOUR:
+    case ABIL_ELYVILON_AURA_OF_VIGOUR:
     case ABIL_LUGONU_ABYSS_EXIT:
     case ABIL_LUGONU_ABYSS_ENTER:
     case ABIL_NEMELEX_DRAW_DESTRUCTION: // Sometimes targeted, but not always.
@@ -3814,7 +3814,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         return spret::success;
     }
 
-    case ABIL_ELYVILON_DIVINE_VIGOUR:
+    case ABIL_ELYVILON_AURA_OF_VIGOUR:
         fail_check();
         elyvilon_divine_vigour();
         break;

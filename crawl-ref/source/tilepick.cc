@@ -4496,8 +4496,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_ELYVILON_DIVINE_ALMS;
     case ABIL_ELYVILON_PACIFY:
         return TILEG_ABILITY_ELYVILON_PACIFY;
-    case ABIL_ELYVILON_DIVINE_VIGOUR:
-        return TILEG_ABILITY_ELYVILON_DIVINE_VIGOUR;
+    case ABIL_ELYVILON_AURA_OF_VIGOUR:
+        return TILEG_ABILITY_ELYVILON_AURA_OF_VIGOUR;
     // Lugonu
     case ABIL_LUGONU_ABYSS_EXIT:
         return TILEG_ABILITY_LUGONU_EXIT_ABYSS;

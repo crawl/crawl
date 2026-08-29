@@ -278,8 +278,22 @@ void mons_update_aura(const monster& mon)
     _update_aura(aura, mon.pos(), mon.mid, mon.temp_attitude());
 }
 
+static const aura_data AURA_OF_VIGOR = {ENCH_DOUBLED_VIGOUR, 1, false};
+
+void player_update_auras()
+{
+    if (you.duration[DUR_DIVINE_VIGOUR])
+        _update_aura(AURA_OF_VIGOR, you.pos(), MID_PLAYER, ATT_FRIENDLY);
+}
+
 bool aura_is_active(const monster& affected, enchant_type type)
 {
+    if (type == ENCH_DOUBLED_VIGOUR && you.duration[DUR_DIVINE_VIGOUR]
+        && _aura_could_affect(AURA_OF_VIGOR, you.pos(), MID_PLAYER, ATT_FRIENDLY, affected))
+    {
+        return true;
+    }
+
     for (monster_near_iterator mi(affected.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (!mons_has_aura_of_type(**mi, type))

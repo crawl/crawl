@@ -1415,6 +1415,8 @@ void player_reacts()
     if (you.duration[DUR_PRIMORDIAL_NIGHTFALL])
         update_vision_range();
 
+    player_update_auras();
+
     incr_gem_clock();
     incr_zot_clock();
 }

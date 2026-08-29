@@ -471,7 +471,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_DOUBLED_VIGOUR:
         scale_hp(1, 2);
         if (!quiet)
-            simple_monster_message(*this, " excess health fades away.", true);
+            simple_monster_message(*this, " divine vigour fades away.", true);
         break;
 
     case ENCH_HASTE:

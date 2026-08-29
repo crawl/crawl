@@ -241,7 +241,7 @@ const vector<vector<god_power>> & get_all_god_powers()
             { 2, ABIL_ELYVILON_PACIFY, "attempt to pacify hostile creatures" },
             { 3, ABIL_ELYVILON_HEAL_SELF, "provide healing for yourself" },
             { 3, ABIL_ELYVILON_DIVINE_ALMS, "comfort your suffering allies" },
-            { 5, ABIL_ELYVILON_DIVINE_VIGOUR, "call upon Elyvilon for divine vigour" },
+            { 5, ABIL_ELYVILON_AURA_OF_VIGOUR, "call upon Elyvilon for divine vigour" },
         },
 
         // Lugonu
