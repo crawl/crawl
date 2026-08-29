@@ -630,10 +630,16 @@ private:
         desc << "   " << menu_keyhelp_cmd(CMD_MENU_SEARCH) << " search"
                 "   [<w>?</w>] help"; // XX hardcoded for this menu
 
+        string desc_str = localise(desc.str());
+
         if (search_text.size())
-            return pad_more_with(desc.str(), "[<w>Esc</w>] clear"); // esc is hardcoded for this case
+        {
+            // esc is hardcoded for this case
+            string suffix = localise("[<w>Esc</w>] clear");
+            return pad_more_with(desc_str, suffix);
+        }
         else
-            return pad_more_with_esc(desc.str());
+            return pad_more_with_esc(desc_str);
     }
 
     bool cycle_mode(bool forward) override

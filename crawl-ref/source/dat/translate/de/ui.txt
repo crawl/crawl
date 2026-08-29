@@ -1716,6 +1716,18 @@ help
 Hilfe
 %%%%
 
+# footer
+%%%%
+[@cmd1@] @action1@|@action2@|@action3@|@action4@   [@cmd2@] search   [<w>?</w>] help
+[@cmd1@] @action1@|@action2@|@action3@|@action4@   [@cmd2@] Suche   [<w>?</w>] Hilfe
+%%%%
+<w>@arg@</w>
+<w>@arg@</w>
+%%%%
+[<w>Esc</w>] clear
+[<w>Esc</w>] löschen
+%%%%
+
 ##############################################
 # Runes menu
 ##############################################

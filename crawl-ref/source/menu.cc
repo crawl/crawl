@@ -1361,7 +1361,8 @@ static string _command_to_string(command_type cmd)
 // standardized formatting for this
 string pad_more_with_esc(const string &s)
 {
-    return pad_more_with(s, menu_keyhelp_cmd(CMD_MENU_EXIT) + " exit");
+    string suffix = localise(menu_keyhelp_cmd(CMD_MENU_EXIT) + " exit");
+    return pad_more_with(s, suffix);
 }
 
 string menu_keyhelp_cmd(command_type cmd)

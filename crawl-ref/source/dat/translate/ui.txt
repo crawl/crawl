@@ -1604,10 +1604,38 @@ focus
 %%%%
 
 ##############################################
-# Spell casting/library menus
+# Spell casting/library/book menus
 ##############################################
 
-# headings
+# Memorised spells
+# 1st column heading - 35 chars -->|
+%%%%
+Your spells (cast)
+
+%%%%
+Your spells (describe)
+
+%%%%
+Your spells (forget)
+
+%%%%
+Your spells (adjust)
+
+%%%%
+Your spells (adjust it to)
+
+%%%%
+
+# other column headings
+%%%%
+Type
+
+%%%%
+Failure
+
+%%%%
+Level
+
 %%%%
 Power
 
@@ -1619,6 +1647,9 @@ Range
 
 %%%%
 Noise
+
+%%%%
+Known
 
 %%%%
 
@@ -1663,24 +1694,75 @@ Hide
 Show
 
 %%%%
-help
+# imbue servitor?
+Imbue
 
 %%%%
 search
 
 %%%%
-<w>Cast</w>|Describe|Hide|Show
+help
 
 %%%%
-<w>Memorise</w>|Describe|Hide|Show
+
+# footer
+%%%%
+[@cmd1@] @action1@|@action2@|@action3@|@action4@   [@cmd2@] search   [<w>?</w>] help
 
 %%%%
-|<w>Describe</w>|Hide|Show
+<w>@arg@</w>
 
 %%%%
-|Describe|<w>Hide</w>|Show
+[<w>Esc</w>] clear
 
 %%%%
-|Describe|Hide|<w>Show</w>
+
+##############################################
+# Runes menu
+##############################################
+
+# header
+%%%%
+# note: @arg@ contains colour tags as well as the number
+<white>Runes of Zot (@arg@ collected) & Orbs of Power</white>
+
+%%%%
+
+%%%%
+<magenta>The Orb of Zot</magenta>
+
+%%%%
+<darkgrey>The Orb of Zot (the Realm of Zot)</darkgrey>
+
+%%%%
+
+# footer
+%%%%
+[<w>!</w>/<w>^</w>]: @arg@
+
+%%%%
+[<w>!</w>/<w>^</w>|<w>Right-click</w>]: @arg@
+
+%%%%
+Show Gems
+
+%%%%
+
+##############################################
+# Gems menu
+##############################################
+
+# header
+%%%%
+<white>Gems (@num@ collected)</white>
+
+%%%%
+<white>Gems (@num1@ collected, @num2@ intact)</white>
+
+%%%%
+
+# footer
+%%%%
+Show Runes
 
 %%%%
