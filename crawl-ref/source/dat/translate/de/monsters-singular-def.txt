@@ -1510,7 +1510,467 @@ the zot statue
 the archer statue
 {f}die Bogenschützen-Statue
 %%%%
-
+the abyssal acolyte
+{m}der Abgrundsakolyth
+%%%%
+# a walking alder tree and also a reference to Goethe's Erlking (Erlkönig)
+the alderking
+{m}der Erlkönig
+%%%%
+the antique champion
+{m}der uralte Champion
+%%%%
+the arcanist
+{m}der Arkanist
+%%%%
+the armour echo
+{n}das Rüstungsecho
+%%%%
+the aspiring flesh
+{n}das aufstrebende Fleisch
+%%%%
+the bes kemwar
+{m}der Bes Kemwar
+%%%%
+the blazeheart core
+{m}der Flammenherz-Kern
+%%%%
+the blazeheart golem
+{m}der Flammenherz-Golem
+%%%%
+the bombardier beetle
+{m}der Bombardierkäfer
+%%%%
+the bomblet
+{n}das Bomblet
+%%%%
+the boulder
+{m}der Rollstein
+%%%%
+the bound soul
+{f}die gebundene Seele
+%%%%
+the boundless tesseract
+{m}der grenzenlose Tesserakt
+%%%%
+the brain worm
+{m}der Gehirnwurm
+%%%%
+the broodmother
+{f}die Brutmutter
+%%%%
+the burial acolyte
+{m}der Begräbnisakolyth
+%%%%
+the burstshroom
+{m}der aufplatzende Pilz
+%%%%
+the cactus giant
+{m}der Kaktus-Riese
+%%%%
+the caustic sporangium
+{n}das ätzende Sporangium
+%%%%
+the cerulean imp
+{n}das himmelblaue Teufelchen
+%%%%
+the chonchon
+{m}der Chonchon
+%%%%
+the clockroach
+{f}die Uhrenkakerlake
+%%%%
+the clockwork bee
+{f}die Uhrwerkbiene
+%%%%
+the cognitogaunt
+{m}der Cognitogaunt
+%%%%
+the colossal amoeba
+{f}die kolossale Amöbe
+%%%%
+the crawling flesh cage
+{m}der kriechende Fleischkäfig
+%%%%
+the creeping inferno
+{n}das schleichende Inferno
+%%%%
+the creeping plasmodium
+{n}das schleichende Plasmodium
+%%%%
+the crocodile
+{n}das Krokodil
+%%%%
+the crystal echidna
+{n}das Kristall-Echidna
+%%%%
+the culicivora
+{f}die Culicivora
+%%%%
+the demonspawn blood saint
+{m}der Dämonenbrut-Blutheilige
+%%%%
+the demonspawn corrupter
+{m}der Dämonenbrut-Verderber
+%%%%
+the demonspawn soul scholar
+{m}der Dämonenbrut-Seelengelehrte
+%%%%
+the demonspawn warmonger
+{m}der Dämonenbrut-Kriegstreiber
+%%%%
+the diamond sawblade
+{n}das Diamantsägeblatt
+%%%%
+the dormant clockwork bee
+{f}die schlummernde Uhrwerkbiene
+%%%%
+the draugr
+{m}der Draugr
+%%%%
+the drude
+{m}der Drude
+%%%%
+the elementalist
+{m}der Elementalist
+%%%%
+the erythrospite
+{m}der Erythrospite
+%%%%
+the eye of draining
+{n}das Auge der Auszehrung
+%%%%
+the formless jellyfish
+{f}die formlose Qualle
+%%%%
+the fravashi
+{m}der Fravashi
+%%%%
+the fungal shambler
+{m}der Pilz-Wankende
+%%%%
+the glass eye
+{n}das Glasauge
+%%%%
+the globe of annihilation
+{f}die Kugel der Vernichtung
+%%%%
+the glowmurk ghast
+{m}der Glühdunkel-Ghast
+%%%%
+the gnoll bouda
+{m}der Gnoll-Bouda
+%%%%
+the goblin rider
+{m}der Goblin-Reiter
+%%%%
+the god wrath avatar
+{m}der Avatar des göttlichen Zorns
+%%%%
+the guardian sphinx
+{f}die Wächtersphinx
+%%%%
+# summoned by Poltergeist ability
+the haunted armour
+{f}die Spuk-Rüstung
+%%%%
+the hellfire mortar
+{m}der Höllenfeuer-Mörser
+%%%%
+the herald of the Abyss
+{m}der Herold des Abgrunds
+%%%%
+the hippogriff
+{m}der Hippogryph
+%%%%
+the hoarfrost cannon
+{f}die Raureif-Kanone
+%%%%
+the inugami
+{m}der Inugami
+%%%%
+the ironbound mechanist
+{m}der eisengebundene Mechaniker
+%%%%
+the jorogumo
+{f}die Jorogumo
+%%%%
+the kobold blastminer
+{m}der Kobold-Sprengmeister
+%%%%
+the kobold fleshcrafter
+{m}der Kobold-Fleischschmied
+%%%%
+the kobold geomancer
+{m}der Kobold-Geomant
+%%%%
+the laughing skull
+{m}der lachende Schädel
+%%%%
+the living spell
+{m}der lebendige Zauber
+%%%%
+# a portmanteau of (bone) marrow and barracuda
+the marrowcuda
+{m}der Markuda
+%%%%
+the martyred shade
+{m}der Märtyrerschatten
+%%%%
+the meteoran
+{m}der Meteoran
+%%%%
+the monarch bomb
+{f}die Monarch-Bombe
+%%%%
+the mongrel wurm
+{m}der Mischlingswurm
+%%%%
+the morphogenic ooze
+{m}der morphogene Schlamm
+%%%%
+# a tortoise with a thick, rock-encrusted shell
+the mountainshell
+{f}die Bergschildkröte
+%%%%
+the nargun
+{m}der Nargun
+%%%%
+the nascent plasmodium
+{n}das werdende Plasmodium
+%%%%
+the nekomata
+{f}die Nekomata
+%%%%
+the oblivion hound
+{m}der Verwüstungshund
+%%%%
+the obsidian bat
+{f}die Obsidianfledermaus
+%%%%
+the occultist
+{m}der Okkultist
+%%%%
+the oni
+{m}der Oni
+%%%%
+the oni incarcerator
+{m}der Oni-Gefängniswärter
+%%%%
+the orb of entropy
+{f}die Kugel der Entropie
+%%%%
+the orb of winter
+{f}die Kugel des Winters
+%%%%
+the orc apostle
+{m}der Ork-Apostel
+%%%%
+the petrified flower
+{f}die versteinerte Blume
+%%%%
+the phalanx beetle
+{m}der Phalanx-Käfer
+%%%%
+the pharaoh ant
+{f}die Pharao-Ameise
+%%%%
+the pile of debris
+{m}der Trümmerhaufen
+%%%%
+the pile of flesh
+{m}der Fleischhaufen
+%%%%
+the pillar of rime
+{f}die Raureif-Säule
+%%%%
+the platinum paragon
+{n}das Platin-Parademodell
+%%%%
+the poltergeist
+{m}der Poltergeist
+%%%%
+the polterguardian
+{m}der Polterwächter
+%%%%
+the protean progenitor
+{m}der proteische Vorläufer
+%%%%
+the putrid mouth
+{m}der faulige Mund
+%%%%
+the quicksilver elemental
+{m}der Quecksilber-Elementar
+%%%%
+the radroach
+{f}die Strahlungskakerlake
+%%%%
+the raven
+{m}der Rabe
+%%%%
+the rending blade
+{f}die zerreißende Klinge
+%%%%
+the revenant soulmonger
+{m}der Wiedergänger-Seelenhändler
+%%%%
+the ribbon worm
+{m}der Schnurwurm
+%%%%
+the roaming sludgefish
+{m}der wandernde Schlammfisch
+%%%%
+the rock fish
+{m}der Felsenfisch
+%%%%
+the rusted inspector
+{m}der verrostete Inspektor
+%%%%
+the sacred lotus
+{m}der heilige Lotus
+%%%%
+the scrapshell chimera
+{f}die Schrottenhüllen-Chimäre
+%%%%
+the screaming refraction
+{f}die schreiende Refraktion
+%%%%
+the scrub nettle
+{f}die Buschbrennnessel
+%%%%
+the searing wretch
+{m}der sengende Jämmerling
+%%%%
+the seismosaurus
+{m}der Seismosaurus
+%%%%
+the seismosaurus egg
+{n}das Seismosaurus-Ei
+%%%%
+the sewage sovereign
+{m}der Abwasser-Herrscher
+%%%%
+the shadow prism
+{n}das Schattenprisma
+%%%%
+the shadow puppet
+{f}die Schattenpuppe
+%%%%
+the shadow turret
+{m}der Schattenturm
+%%%%
+the shadowghast
+{m}der Schattenghast
+%%%%
+the shooting star
+{f}die Sternschnuppe
+%%%%
+the sickly merfolk siren
+{f}die kränkliche Meervolk-Sirene
+%%%%
+the sin beast
+{n}das Sündenbiest
+%%%%
+the skyshark
+{m}der Himmelshai
+%%%%
+# a kind of mushroom
+the sleepcap
+{f}die Schlafkappe
+%%%%
+the slymdra
+{f}die Schleimdra
+%%%%
+the solar ember
+{f}die Sonnenglut
+%%%%
+the soul wisp
+{m}der Seelenflimmer
+%%%%
+the spectator
+{m}der Zuschauer
+%%%%
+the spellspark servitor
+{m}der Zauberfunken-Diener
+%%%%
+the sphinx marauder
+{m}der Sphinx-Plünderer
+%%%%
+the splinterfrost barricade
+{f}die Splitterfrost-Barrikade
+%%%%
+the stack of scrap
+{m}der Schrotthaufen
+%%%%
+the star jelly
+{n}das Sternengelee
+%%%%
+the starflower
+{f}die Sternenblume
+%%%%
+the steelbarb worm
+{m}der Stahlstachelwurm
+%%%%
+the stoker
+{m}der Heizer
+%%%%
+the strange machine
+{f}die seltsame Maschine
+%%%%
+the sun moth
+{f}die Sonnenmotte
+%%%%
+the tainted leviathan
+{m}der verdorbene Leviathan
+%%%%
+the telencephalon
+{n}das Telencephalon
+%%%%
+the thermic dynamo
+{m}der thermische Dynamo
+%%%%
+the undertaker
+{m}der Leichenbestatter
+%%%%
+the undying armoury
+{f}die unsterbliche Waffenkammer
+%%%%
+the vampire bloodprince
+{m}der Vampir-Blutprinz
+%%%%
+the void ooze
+{m}der Leerenschleim
+%%%%
+the walking alembic
+{m}der wandernde Alambik
+%%%%
+the walking crystal tome
+{m}der wandernde Kristallfoliant
+%%%%
+the walking divine tome
+{m}der wandernde göttliche Foliant
+%%%%
+the walking earthen tome
+{m}der wandernde Tonfoliant
+%%%%
+the walking frostbound tome
+{m}der wandernde frostumhüllte Foliant
+%%%%
+the walking tome
+{m}der wandernde Foliant
+%%%%
+the weeping skull
+{m}der weinende Schädel
+%%%%
+the wendigo
+{m}der Wendigo
+%%%%
+the wyrmhole
+{n}das Wyrmloch
+%%%%
+the zykzyl
+{m}der Zykzyl
+%%%%
 
 # subtypes of mutant beast
 %%%%
