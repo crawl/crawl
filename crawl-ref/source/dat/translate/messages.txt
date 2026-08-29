@@ -7,17 +7,6 @@
 ##################
 # item-name.cc
 ##################
-%%%%
-<magenta>The Orb of Zot</magenta>
-
-%%%%
-<darkgrey>The Orb of Zot (the Realm of Zot)</darkgrey>
-
-%%%%
-# @arg@ contains colour tags as well as the number
-<white>Runes of Zot (@arg@ collected) & Orbs of Power</white>
-
-%%%%
 
 ##################
 # ability.cc
