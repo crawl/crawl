@@ -6124,7 +6124,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
              && mons_get_damage_level(*this) >= MDAM_SEVERELY_DAMAGED)
     {
         add_ench(mon_enchant(ENCH_DIMINISHED_SPELLS, this, random_range(500, 650)));
-        schedule_stardust_fineff(this, 150, 3, true);
+        schedule_stardust_fineff(this, 150, 3, SHOOTING_STAR_JELLY);
     }
     else if (type == MONS_TELENCEPHALON && !has_ench(ENCH_WEAK)
              && mons_get_damage_level(*this) >= MDAM_SEVERELY_DAMAGED)

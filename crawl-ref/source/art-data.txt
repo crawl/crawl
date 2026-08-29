@@ -1996,6 +1996,19 @@ DESCRIP: IceExpos:  Whenever you deal cold damage to an enemy without rCold∞,
  reducing its Willpower.
 +IceWiz:   It increases the success rate of your Ice Magic spells.
 
+ENUM:    CARINA
+NAME:    giant spiked club "Carina at Dusk"
+INSCRIP: ShootingStar
+OBJ:     OBJ_WEAPONS/WPN_GIANT_SPIKED_CLUB
+PLUS:    +9
+COLOUR:  LIGHTMAGENTA
+TILE:    urand_carina
+TILE_EQ: CARINA
+BRAND:   SPWPN_CONCUSSION
+LIFE:    1
+DESCRIP: ShootingStar: When knocking back an enemy, and on half of other hits,
+ it spawns a shooting star with power proportional to the damage dealt.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

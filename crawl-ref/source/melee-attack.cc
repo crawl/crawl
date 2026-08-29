@@ -635,7 +635,7 @@ void melee_attack::do_vampire_lifesteal()
     }
 }
 
-void melee_attack::handle_concussion_brand()
+void melee_attack::handle_concussion_brand(bool unrand)
 {
     const coord_def old_pos = defender->pos();
     bool did_move = false;
@@ -675,6 +675,9 @@ void melee_attack::handle_concussion_brand()
     {
         schedule_trample_follow_fineff(attacker, old_pos);
     }
+
+    if (unrand && damage_done > 0 && (did_move || coinflip()))
+            schedule_stardust_fineff(attacker, 15 + damage_done, 1, SHOOTING_STAR_CARINA);
 }
 
 static void _apply_flux_contam(monster &m)
@@ -912,7 +915,7 @@ bool melee_attack::handle_phase_hit()
         do_valour_beam();
 
     if (weapon && damage_brand == SPWPN_CONCUSSION)
-        handle_concussion_brand();
+        handle_concussion_brand(is_unrandom_artefact(*weapon, UNRAND_CARINA));
 
     if (weapon && testbits(weapon->flags, ISFLAG_CHAOTIC)
         && defender->alive())
