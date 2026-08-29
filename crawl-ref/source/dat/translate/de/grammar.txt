@@ -234,16 +234,16 @@ KEY:/^\{adj-e\}/{adj-em}/
 #################################
 %%%%
 GENERATE:adj-er
-/e\b/er/
+/^[^A-ZÄÖÜ]+/e /er /
 %%%%
 GENERATE:adj-es
-/e\b/es/
+/^[^A-ZÄÖÜ]+/e /es /
 %%%%
 GENERATE:adj-en
-/e\b/en/
+/^[^A-ZÄÖÜ]+/e /en /
 %%%%
 GENERATE:adj-em
-/e\b/em/
+/^[^A-ZÄÖÜ]+/e /em /
 %%%%
 
 #################################
