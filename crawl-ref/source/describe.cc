@@ -8033,8 +8033,8 @@ string extra_cloud_info(cloud_type cloud_type)
         "\nThis cloud is opaque; one tile will not block vision, but "
         "multiple will.\n";
     const string vanish_info
-        = make_stringf("\nClouds of this kind an adventurer makes will vanish"
-                       " %s once outside their sight.\n",
+        = make_stringf("\nClouds of this kind, once out of an adventurer's sight,"
+                       " vanish %s.\n",
                        opaque ? "quickly" : "almost instantly");
     return opacity_info + vanish_info;
 }
