@@ -1645,9 +1645,6 @@ Art
 Failure
 Versagen
 %%%%
-Level
-Stufe
-%%%%
 Power
 Kraft
 %%%%
