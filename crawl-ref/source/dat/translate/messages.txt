@@ -10729,9 +10729,6 @@ Thought so.
 (Hit _)
 
 %%%%
-Turn:
-
-%%%%
 
 ##################
 # player-act.cc

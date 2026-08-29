@@ -1634,9 +1634,6 @@ Type
 Failure
 
 %%%%
-Level
-
-%%%%
 Power
 
 %%%%
