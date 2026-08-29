@@ -161,6 +161,12 @@ TEST_CASE( "Localise German", "[single-file]" )
 
     SECTION("UI")
     {
+        // inventory section title
+        CHECK( localise("(go to first with <w>(</w><blue>)") ==
+                        "(zum ersten gehen mit <w>(</w><blue>)" );
+        CHECK( localise("(select first with <w>!</w><blue>)") ==
+                        "(ersten wählen mit <w>!</w><blue>)" );
+
         // spell memorise menu footer
         string english = "[<w>Tab</w>] <w>Memorise</w>|Describe|Hide|Show   [<w>Ctrl-F</w>] search   [<w>?</w>] help";
         string german = "[<w>Tab</w>] <w>Auswendiglernen</w>|Beschreiben|Ausblenden|Zeigen   [<w>Strg-F</w>] Suche   [<w>?</w>] Hilfe";

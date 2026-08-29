@@ -1444,11 +1444,25 @@ Quit menu
 ##############################################
 # Inventory and item menus
 ##############################################
+
+# heading
 %%%%
-Inventory:
+Inventory: @num1@/@num2@ gear slots
 
 %%%%
-@num1@/@num2@ slots
+Gear: @num1@/@num2@ gear slots
+
+%%%%
+Potions:
+
+%%%%
+Scrolls:
+
+%%%%
+Evocable Items:
+
+%%%%
+(Left/Right/Tab to switch category)
 
 %%%%
 
@@ -1487,10 +1501,33 @@ Carrion
 Runes of Zot
 
 %%%%
+Ancient Gems
+
+%%%%
+Talismans
+
+%%%%
+Gizmos
+
+%%%%
+Baubles
+
+%%%%
 Miscellaneous
 
 %%%%
 Other Items
+
+%%%%
+
+%%%%
+(go to first with <w>@glyph@</w><blue>)
+
+%%%%
+(select first with <w>@glyph@</w><blue>)
+
+%%%%
+(select all with <w>@glyph@</w><blue>)
 
 %%%%
 
