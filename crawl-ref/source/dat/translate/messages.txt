@@ -375,9 +375,6 @@ Ability - do what?
 Cost
 
 %%%%
-Failure
-
-%%%%
 Ability - describe what?
 
 %%%%
@@ -2888,12 +2885,6 @@ This monster has the following natural abilities@arg@:
 %%%%
 # the "d" here stands for "dice" (e.g. 3x2d10)
 (@arg@@num1@d@num2@)
-
-%%%%
-Type
-
-%%%%
-Known
 
 %%%%
 

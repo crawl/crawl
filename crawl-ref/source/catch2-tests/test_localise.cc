@@ -122,6 +122,10 @@ TEST_CASE( "Localise German", "[single-file]" )
         CHECK( localise("m - 2 potions of might") == "m - 2 Tränke der Macht" );
         CHECK( localise("a +2 leather armour" ) == "eine +2 Lederrüstung" );
         CHECK( localise("a +2 leather armour of fire resistance" ) == "eine +2 Lederrüstung der Feuerresistenz" );
+
+        // search result
+        CHECK( localise("[Vaults:3] a +3 great sword of distortion (1 further duplicate)") ==
+               "[Gewölbe:3] ein +3 Großschwert der Verzerrung (1 weiteres Duplikat)" );
     }
 
     SECTION("Parameterised messages")
@@ -153,6 +157,14 @@ TEST_CASE( "Localise German", "[single-file]" )
                         "Du siehst einen Goblin, 2 Orks und einen Kobold hier." );
         CHECK( localise("You see a goblin; 2 orcs and a kobold here.") ==
                         "Du siehst einen Goblin; 2 Orks und einen Kobold hier." );
+    }
+
+    SECTION("UI")
+    {
+        // spell memorise menu footer
+        string english = "[<w>Tab</w>] <w>Memorise</w>|Describe|Hide|Show   [<w>Ctrl-F</w>] search   [<w>?</w>] help";
+        string german = "[<w>Tab</w>] <w>Auswendiglernen</w>|Beschreiben|Ausblenden|Zeigen   [<w>Strg-F</w>] Suche   [<w>?</w>] Hilfe";
+        CHECK( localise(english) == german );
     }
 
     shutdown_localisation();

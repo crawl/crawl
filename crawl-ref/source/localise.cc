@@ -542,13 +542,35 @@ static string _get_correct_plural_form(const string& s)
 // localise parameterised string
 static string _localise_parameterised_string(const string& s, bool full_sentence_only)
 {
+    if (s.empty())
+        return s;
+
+    if (full_sentence_only)
+        debuglog("Searching for sentence to match: \"%s\"", s.c_str())
+    else
+        debuglog("Searching for pattern to match: \"%s\"", s.c_str())
+
     // try to find matching pattern
     int match_idx = _get_matching_pattern_index(s, full_sentence_only);
     if (match_idx < 0)
+    {
+        debuglog("No match");
         return "";
+    }
 
     const pair<text_pattern, string>& match = _patterns[match_idx];
-    debuglog("Param string: %s", match.second.c_str());
+    debuglog("Parameterised string: %s", match.second.c_str());
+
+    bool reject = false;
+    if (s[0] == '[' && match.second[0] != '[')
+        reject = true;
+    if (s[0] == '(' && match.second[0] != '(')
+        reject = true;
+    if (reject)
+    {
+        debuglog("Rejecting pattern because arg would contain prefix annotation");
+        return "";
+    }
 
     vector<string> param_keys = extract_params(match.second);
     vector<string> param_vals = match.first.capture(s);
@@ -709,14 +731,6 @@ static string _localise_string(const string& s, bool fallback_en)
     }
 
     string annotation;
-    separate_prefix_annotation(s, annotation, rest);
-    if (!annotation.empty())
-    {
-        result = _localise_string(rest, fallback_en);
-        if (!result.empty() || rest.empty())
-            return _localise_annotation(annotation) + result;
-    }
-
     separate_postfix_annotation(s, annotation, rest);
     if (!annotation.empty())
     {
@@ -779,6 +793,15 @@ static string _localise_string(const string& s, bool fallback_en)
                 _context = saved_context;
         }
         return result;
+    }
+
+    separate_prefix_annotation(s, annotation, rest);
+    if (!annotation.empty())
+    {
+        annotation = _localise_annotation(annotation);
+        result = _localise_string(rest, fallback_en);
+        if (!result.empty() || rest.empty())
+            return annotation + result;
     }
 
     debuglog("No translation found for \"%s\"", s.c_str());
