@@ -1509,6 +1509,467 @@ the zot statue's
 the archer statue's
 
 %%%%
+the abyssal acolyte's
+
+%%%%
+# a walking alder tree and also a reference to Goethe's Erlking (Erlkönig)
+the alderking's
+
+%%%%
+the antique champion's
+
+%%%%
+the arcanist's
+
+%%%%
+the armour echo's
+
+%%%%
+the aspiring flesh's
+
+%%%%
+the bes kemwar's
+
+%%%%
+the blazeheart core's
+
+%%%%
+the blazeheart golem's
+
+%%%%
+the bombardier beetle's
+
+%%%%
+the bomblet's
+
+%%%%
+the boulder's
+
+%%%%
+the bound soul's
+
+%%%%
+the boundless tesseract's
+
+%%%%
+the brain worm's
+
+%%%%
+the broodmother's
+
+%%%%
+the burial acolyte's
+
+%%%%
+the burstshroom's
+
+%%%%
+the cactus giant's
+
+%%%%
+the caustic sporangium's
+
+%%%%
+the cerulean imp's
+
+%%%%
+the chonchon's
+
+%%%%
+the clockroach's
+
+%%%%
+the clockwork bee's
+
+%%%%
+the cognitogaunt's
+
+%%%%
+the colossal amoeba's
+
+%%%%
+the crawling flesh cage's
+
+%%%%
+the creeping inferno's
+
+%%%%
+the creeping plasmodium's
+
+%%%%
+the crocodile's
+
+%%%%
+the crystal echidna's
+
+%%%%
+the culicivora's
+
+%%%%
+the demonspawn blood saint's
+
+%%%%
+the demonspawn corrupter's
+
+%%%%
+the demonspawn soul scholar's
+
+%%%%
+the demonspawn warmonger's
+
+%%%%
+the diamond sawblade's
+
+%%%%
+the dormant clockwork bee's
+
+%%%%
+the draugr's
+
+%%%%
+the drude's
+
+%%%%
+the elementalist's
+
+%%%%
+the erythrospite's
+
+%%%%
+the eye of draining's
+
+%%%%
+the formless jellyfish's
+
+%%%%
+the fravashi's
+
+%%%%
+the fungal shambler's
+
+%%%%
+the glass eye's
+
+%%%%
+the globe of annihilation's
+
+%%%%
+the glowmurk ghast's
+
+%%%%
+the gnoll bouda's
+
+%%%%
+the goblin rider's
+
+%%%%
+the god wrath avatar's
+
+%%%%
+the guardian sphinx's
+
+%%%%
+# summoned by Poltergeist ability
+the haunted armour's
+
+%%%%
+the hellfire mortar's
+
+%%%%
+the herald of the Abyss's
+
+%%%%
+the hippogriff's
+
+%%%%
+the hoarfrost cannon's
+
+%%%%
+the inugami's
+
+%%%%
+the ironbound mechanist's
+
+%%%%
+the jorogumo's
+
+%%%%
+the kobold blastminer's
+
+%%%%
+the kobold fleshcrafter's
+
+%%%%
+the kobold geomancer's
+
+%%%%
+the laughing skull's
+
+%%%%
+the living spell's
+
+%%%%
+# a portmanteau of (bone) marrow and barracuda
+the marrowcuda's
+
+%%%%
+the martyred shade's
+
+%%%%
+the meteoran's
+
+%%%%
+the monarch bomb's
+
+%%%%
+the mongrel wurm's
+
+%%%%
+the morphogenic ooze's
+
+%%%%
+# a tortoise with a thick, rock-encrusted shell
+the mountainshell's
+
+%%%%
+the nargun's
+
+%%%%
+the nascent plasmodium's
+
+%%%%
+the nekomata's
+
+%%%%
+the oblivion hound's
+
+%%%%
+the obsidian bat's
+
+%%%%
+the occultist's
+
+%%%%
+the oni's
+
+%%%%
+the oni incarcerator's
+
+%%%%
+the orb of entropy's
+
+%%%%
+the orb of winter's
+
+%%%%
+the orc apostle's
+
+%%%%
+the petrified flower's
+
+%%%%
+the phalanx beetle's
+
+%%%%
+the pharaoh ant's
+
+%%%%
+the pile of debris's
+
+%%%%
+the pile of flesh's
+
+%%%%
+the pillar of rime's
+
+%%%%
+the platinum paragon's
+
+%%%%
+the poltergeist's
+
+%%%%
+the polterguardian's
+
+%%%%
+the protean progenitor's
+
+%%%%
+the putrid mouth's
+
+%%%%
+the quicksilver elemental's
+
+%%%%
+the radroach's
+
+%%%%
+the raven's
+
+%%%%
+the rending blade's
+
+%%%%
+the revenant soulmonger's
+
+%%%%
+the ribbon worm's
+
+%%%%
+the roaming sludgefish's
+
+%%%%
+the rock fish's
+
+%%%%
+the rusted inspector's
+
+%%%%
+the sacred lotus's
+
+%%%%
+the scrapshell chimera's
+
+%%%%
+the screaming refraction's
+
+%%%%
+the scrub nettle's
+
+%%%%
+the searing wretch's
+
+%%%%
+the seismosaurus's
+
+%%%%
+the seismosaurus egg's
+
+%%%%
+the sewage sovereign's
+
+%%%%
+the shadow prism's
+
+%%%%
+the shadow puppet's
+
+%%%%
+the shadow turret's
+
+%%%%
+the shadowghast's
+
+%%%%
+the shooting star's
+
+%%%%
+the sickly merfolk siren's
+
+%%%%
+the sin beast's
+
+%%%%
+the skyshark's
+
+%%%%
+# a kind of mushroom
+the sleepcap's
+
+%%%%
+the slymdra's
+
+%%%%
+the solar ember's
+
+%%%%
+the soul wisp's
+
+%%%%
+the spectator's
+
+%%%%
+the spellspark servitor's
+
+%%%%
+the sphinx marauder's
+
+%%%%
+the splinterfrost barricade's
+
+%%%%
+the stack of scrap's
+
+%%%%
+the star jelly's
+
+%%%%
+the starflower's
+
+%%%%
+the steelbarb worm's
+
+%%%%
+the stoker's
+
+%%%%
+the strange machine's
+
+%%%%
+the sun moth's
+
+%%%%
+the tainted leviathan's
+
+%%%%
+the telencephalon's
+
+%%%%
+the thermic dynamo's
+
+%%%%
+the undertaker's
+
+%%%%
+the undying armoury's
+
+%%%%
+the vampire bloodprince's
+
+%%%%
+the void ooze's
+
+%%%%
+the walking alembic's
+
+%%%%
+the walking crystal tome's
+
+%%%%
+the walking divine tome's
+
+%%%%
+the walking earthen tome's
+
+%%%%
+the walking frostbound tome's
+
+%%%%
+the walking tome's
+
+%%%%
+the weeping skull's
+
+%%%%
+the wendigo's
+
+%%%%
+the wyrmhole's
+
+%%%%
+the zykzyl's
+
+%%%%
 
 # subtypes of mutant beast
 %%%%
