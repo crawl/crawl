@@ -375,9 +375,6 @@ Welche Fähigkeit ausführen?
 Cost
 Preis
 %%%%
-Failure
-Versagen
-%%%%
 Ability - describe what?
 Welche Fähigkeit beschreiben?
 %%%%
@@ -2889,12 +2886,6 @@ Dieses Monster hat die folgenden natürlichen Fähigkeiten@arg@:
 # the "d" here stands for "dice" (e.g. 3x2d10)
 (@arg@@num1@d@num2@)
 (@arg@@num1@W@num2@)
-%%%%
-Type
-Art
-%%%%
-Known
-Bekannt
 %%%%
 
 ##################

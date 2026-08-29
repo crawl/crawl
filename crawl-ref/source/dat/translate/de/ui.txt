@@ -1615,10 +1615,38 @@ fokussieren
 %%%%
 
 ##############################################
-# Spell casting/library menus
+# Spell casting/library/book menus
 ##############################################
 
-# headings
+# Memorised spells
+# 1st column heading - 35 chars -->|
+%%%%
+Your spells (cast)
+Deine Zaubersprüche (wirken)
+%%%%
+Your spells (describe)
+Deine Zaubersprüche (beschreiben)
+%%%%
+Your spells (forget)
+Deine Zaubersprüche (vergessen)
+%%%%
+Your spells (adjust)
+Deine Zaubersprüche (anpassen)
+%%%%
+Your spells (adjust it to)
+Zauber (auf welchen Buchstaben?)
+%%%%
+
+# other column headings
+%%%%
+Type
+Art
+%%%%
+Failure
+Versagen
+%%%%
+Level
+Stufe
 %%%%
 Power
 Kraft
@@ -1627,10 +1655,13 @@ Damage
 Schaden
 %%%%
 Range
-Reichweite
+Reichw.
 %%%%
 Noise
 Lärm
+%%%%
+Known
+Bekannt
 %%%%
 
 # values for the noise column
@@ -1674,24 +1705,63 @@ Ausblenden
 Show
 Zeigen
 %%%%
-help
-Hilfe
+# imbue servitor?
+Imbue
+Erfüllen
 %%%%
 search
 Suche
 %%%%
-<w>Cast</w>|Describe|Hide|Show
-<w>Wirken</w>|Beschreiben|Ausblenden|Zeigen
+help
+Hilfe
 %%%%
-<w>Memorise</w>|Describe|Hide|Show
-<w>Auswendiglernen</w>|Beschreiben|Ausblenden|Zeigen
+
+##############################################
+# Runes menu
+##############################################
+
+# header
 %%%%
-|<w>Describe</w>|Hide|Show
-|<w>Beschreiben</w>|Ausblenden|Zeigen
+# note: @arg@ contains colour tags as well as the number
+<white>Runes of Zot (@arg@ collected) & Orbs of Power</white>
+<white>Runen von Zot (@arg@ gesammelt) & Kugeln der Macht</white>
 %%%%
-|Describe|<w>Hide</w>|Show
-|Beschreiben|<w>Ausblenden</w>|Zeigen
+
 %%%%
-|Describe|Hide|<w>Show</w>
-|Beschreiben|Ausblenden|<w>Zeigen</w>
+<magenta>The Orb of Zot</magenta>
+<magenta>Die Kugel von Zot</magenta>
+%%%%
+<darkgrey>The Orb of Zot (the Realm of Zot)</darkgrey>
+<darkgrey>Die Kugel von Zot (das Reich von Zot)</darkgrey>
+%%%%
+
+# footer
+%%%%
+[<w>!</w>/<w>^</w>]: @arg@
+[<w>!</w>/<w>^</w>]: @arg@
+%%%%
+[<w>!</w>/<w>^</w>|<w>Right-click</w>]: @arg@
+[<w>!</w>/<w>^</w>|<w>Rechtsklick</w>]: @arg@
+%%%%
+Show Gems
+Edelsteine anzeigen
+%%%%
+
+##############################################
+# Gems menu
+##############################################
+
+# header
+%%%%
+<white>Gems (@num@ collected)</white>
+<white>Edelsteine (@num@ gesammelt)</white>
+%%%%
+<white>Gems (@num1@ collected, @num2@ intact)</white>
+<white>Edelsteine (@num1@ gesammelt, @num2@ intakt)</white>
+%%%%
+
+# footer
+%%%%
+Show Runes
+Runen anzeigen
 %%%%
