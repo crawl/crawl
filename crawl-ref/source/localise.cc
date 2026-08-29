@@ -196,7 +196,7 @@ void init_localisation()
         pattern = punct_arg_patt.replace(pattern, "([.!?]+)");
         pattern = glyph_arg_patt.replace(pattern, "(.+)");
         pattern = adj_arg_patt.replace(pattern, "([a-zA-Z0-9 +-]*)");
-        pattern = str_arg_patt.replace(pattern, "([^.!?]*)");
+        pattern = str_arg_patt.replace(pattern, "(.*)");
         // adjectives can change "a" to "an" or vice versa
         pattern = a_an_patt.replace(pattern, "an? ");
         pattern = "^" + pattern + "$";
@@ -588,6 +588,8 @@ static string _localise_parameterised_string(const string& s, bool full_sentence
         debuglog("ERROR: %ld keys, %ld vals\n", (long)param_keys.size(), (long)param_vals.size());
         return "";
     }
+
+    fixup_greedy_matching(param_keys, param_vals);
 
     map<string, string> params;
     for (size_t i = 0; i < param_keys.size(); i++)

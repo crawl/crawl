@@ -63,6 +63,9 @@ vector<string> tokenise_parameterised_string(const string& s);
 //  -> ["a goblin", ", ", "2 orcs", " and ", "a kobold"]
 vector<string> tokenise_comma_separated_list(const string& s);
 
+// because POSIX regex can't do non-greedy matching
+void fixup_greedy_matching(vector<string>& params, vector<string>& values);
+
 // Apply a regex rule to a string.
 //
 // Rules can have two forms:

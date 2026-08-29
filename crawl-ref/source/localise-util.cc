@@ -362,6 +362,25 @@ vector<string> tokenise_comma_separated_list(const string& s)
     return result;
 }
 
+// because POSIX regex can't do non-greedy matching
+void fixup_greedy_matching(vector<string>& params, vector<string>& values)
+{
+    if (params.size() < 2 || values.size() != params.size())
+        return;
+
+    size_t last = params.size() - 1;
+    if (starts_with(params[last], "punct"))
+    {
+        string punct, rest;
+        separate_end_punctuation(values[last-1], punct, rest);
+        if (!punct.empty())
+        {
+            values[last-1] = rest;
+            values[last] = punct + values[last];
+        }
+    }
+}
+
 string apply_regex_rule(const string& rule, const string& s)
 {
     // need to accept empties because replacement could be empty.
