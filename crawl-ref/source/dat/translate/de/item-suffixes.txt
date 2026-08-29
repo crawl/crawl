@@ -151,9 +151,6 @@
 @item@ of venom
 @item@ des Giftes
 %%%%
-@item@ of dispersal
-@item@ der Zerstreuung
-%%%%
 @item@ of speedy slithering
 @item@ des schnellen Rutschens
 %%%%

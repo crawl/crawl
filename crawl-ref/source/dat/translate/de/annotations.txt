@@ -330,8 +330,8 @@ Atropa
 silver
 Silber
 %%%%
-disperse
-streuen
+disjunct
+Disjunkt
 %%%%
 
 # armour egos
