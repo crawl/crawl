@@ -1522,6 +1522,469 @@
 @num@ archer statues
 
 %%%%
+@num@ abyssal acolytes
+
+%%%%
+# a walking alder tree and also a reference to Goethe's Erlking (Erlkönig)
+@num@ alderkings
+
+%%%%
+@num@ antique champions
+
+%%%%
+@num@ arcanists
+
+%%%%
+@num@ armour echos
+
+%%%%
+@num@ aspiring fleshes
+
+%%%%
+# English plural is same as singular
+@num@ bes kemwar
+
+%%%%
+@num@ blazeheart cores
+
+%%%%
+@num@ blazeheart golems
+
+%%%%
+@num@ bombardier beetles
+
+%%%%
+@num@ bomblets
+
+%%%%
+@num@ boulders
+
+%%%%
+@num@ bound souls
+
+%%%%
+@num@ boundless tesseracts
+
+%%%%
+@num@ brain worms
+
+%%%%
+@num@ broodmothers
+
+%%%%
+@num@ burial acolytes
+
+%%%%
+@num@ burstshrooms
+
+%%%%
+@num@ cactus giants
+
+%%%%
+# Although Crawl uses plasmodia and simulacra, it does not use sporangia
+@num@ caustic sporangiums
+
+%%%%
+@num@ cerulean imps
+
+%%%%
+@num@ chonchones
+
+%%%%
+@num@ clockroachs
+
+%%%%
+@num@ clockwork bees
+
+%%%%
+@num@ cognitogaunts
+
+%%%%
+@num@ colossal amoebas
+
+%%%%
+@num@ crawling flesh cages
+
+%%%%
+@num@ creeping infernos
+
+%%%%
+@num@ creeping plasmodia
+
+%%%%
+@num@ crocodiles
+
+%%%%
+@num@ crystal echidnas
+
+%%%%
+@num@ culicivoras
+
+%%%%
+@num@ demonspawn blood saints
+
+%%%%
+@num@ demonspawn corrupters
+
+%%%%
+@num@ demonspawn soul scholars
+
+%%%%
+@num@ demonspawn warmongers
+
+%%%%
+@num@ diamond sawblades
+
+%%%%
+@num@ dormant clockwork bees
+
+%%%%
+@num@ draugrs
+
+%%%%
+@num@ drudes
+
+%%%%
+@num@ elementalists
+
+%%%%
+@num@ erythrospites
+
+%%%%
+@num@ eyes of draining
+
+%%%%
+@num@ formless jellyfishs
+
+%%%%
+@num@ fravashis
+
+%%%%
+@num@ fungal shamblers
+
+%%%%
+@num@ glass eyes
+
+%%%%
+@num@ globes of annihilation
+
+%%%%
+@num@ glowmurk ghasts
+
+%%%%
+@num@ gnoll boudas
+
+%%%%
+@num@ goblin riders
+
+%%%%
+@num@ god wrath avatars
+
+%%%%
+@num@ guardian sphinxes
+
+%%%%
+# summoned by Poltergeist ability
+@num@ haunted armours
+
+%%%%
+@num@ hellfire mortars
+
+%%%%
+@num@ heralds of the Abyss
+
+%%%%
+@num@ hippogriffs
+
+%%%%
+@num@ hoarfrost cannons
+
+%%%%
+@num@ inugamis
+
+%%%%
+@num@ ironbound mechanists
+
+%%%%
+@num@ jorogumos
+
+%%%%
+@num@ kobold blastminers
+
+%%%%
+@num@ kobold fleshcrafters
+
+%%%%
+@num@ kobold geomancers
+
+%%%%
+@num@ laughing skulls
+
+%%%%
+@num@ living spells
+
+%%%%
+# a portmanteau of (bone) marrow and barracuda
+@num@ marrowcudas
+
+%%%%
+@num@ martyred shades
+
+%%%%
+@num@ meteorans
+
+%%%%
+@num@ monarch bombs
+
+%%%%
+@num@ mongrel wurms
+
+%%%%
+@num@ morphogenic oozes
+
+%%%%
+# a tortoise with a thick, rock-encrusted shell
+@num@ mountainshells
+
+%%%%
+@num@ narguns
+
+%%%%
+@num@ nascent plasmodia
+
+%%%%
+@num@ nekomatas
+
+%%%%
+@num@ oblivion hounds
+
+%%%%
+@num@ obsidian bats
+
+%%%%
+@num@ occultists
+
+%%%%
+@num@ onis
+
+%%%%
+@num@ oni incarcerators
+
+%%%%
+@num@ orbs of entropy
+
+%%%%
+@num@ orbs of winter
+
+%%%%
+@num@ orc apostles
+
+%%%%
+@num@ petrified flowers
+
+%%%%
+@num@ phalanx beetles
+
+%%%%
+@num@ pharaoh ants
+
+%%%%
+@num@ piles of debris
+
+%%%%
+@num@ piles of flesh
+
+%%%%
+@num@ pillars of rime
+
+%%%%
+@num@ platinum paragons
+
+%%%%
+@num@ poltergeists
+
+%%%%
+@num@ polterguardians
+
+%%%%
+@num@ protean progenitors
+
+%%%%
+@num@ putrid mouths
+
+%%%%
+@num@ quicksilver elementals
+
+%%%%
+@num@ radroachs
+
+%%%%
+@num@ ravens
+
+%%%%
+@num@ rending blades
+
+%%%%
+@num@ revenant soulmongers
+
+%%%%
+@num@ ribbon worms
+
+%%%%
+@num@ roaming sludgefishs
+
+%%%%
+@num@ rock fishs
+
+%%%%
+@num@ rusted inspectors
+
+%%%%
+@num@ sacred lotuses
+
+%%%%
+@num@ scrapshell chimeras
+
+%%%%
+@num@ screaming refractions
+
+%%%%
+@num@ scrub nettles
+
+%%%%
+@num@ searing wretchs
+
+%%%%
+@num@ seismosauri
+
+%%%%
+@num@ seismosaurus eggs
+
+%%%%
+@num@ sewage sovereigns
+
+%%%%
+@num@ shadow prisms
+
+%%%%
+@num@ shadow puppets
+
+%%%%
+@num@ shadow turrets
+
+%%%%
+@num@ shadowghasts
+
+%%%%
+@num@ shooting stars
+
+%%%%
+@num@ sickly merfolk sirens
+
+%%%%
+@num@ sin beasts
+
+%%%%
+@num@ skysharks
+
+%%%%
+# a kind of mushroom
+@num@ sleepcaps
+
+%%%%
+@num@ slymdras
+
+%%%%
+@num@ solar embers
+
+%%%%
+@num@ soul wisps
+
+%%%%
+@num@ spectators
+
+%%%%
+@num@ spellspark servitors
+
+%%%%
+@num@ sphinx marauders
+
+%%%%
+@num@ splinterfrost barricades
+
+%%%%
+@num@ stacks of scrap
+
+%%%%
+@num@ star jellies
+
+%%%%
+@num@ starflowers
+
+%%%%
+@num@ steelbarb worms
+
+%%%%
+@num@ stokers
+
+%%%%
+@num@ strange machines
+
+%%%%
+@num@ sun moths
+
+%%%%
+@num@ tainted leviathans
+
+%%%%
+@num@ telencephalons
+
+%%%%
+@num@ thermic dynamos
+
+%%%%
+@num@ undertakers
+
+%%%%
+@num@ undying armouries
+
+%%%%
+@num@ vampire bloodprinces
+
+%%%%
+@num@ void oozes
+
+%%%%
+@num@ walking alembics
+
+%%%%
+@num@ walking crystal tomes
+
+%%%%
+@num@ walking divine tomes
+
+%%%%
+@num@ walking earthen tomes
+
+%%%%
+@num@ walking frostbound tomes
+
+%%%%
+@num@ walking tomes
+
+%%%%
+@num@ weeping skulls
+
+%%%%
+@num@ wendigos
+
+%%%%
+@num@ wyrmholes
+
+%%%%
+@num@ zykzyls
+
+%%%%
 
 # slime creatures can merge into bigger slime creatures
 %%%%
