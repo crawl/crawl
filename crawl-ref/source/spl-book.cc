@@ -28,6 +28,7 @@
 #include "item-status-flag-type.h"
 #include "invent.h"
 #include "libutil.h"
+#include "localise.h"
 #include "message.h"
 #include "output.h"
 #include "prompt.h"
