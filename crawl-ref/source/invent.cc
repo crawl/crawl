@@ -1035,7 +1035,7 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
         if (!inv_class[i])
             continue;
 
-        string subtitle = item_class_name(i);
+        string subtitle = localise(item_class_name(i));
 
         if (subkeys)
         {
@@ -1043,11 +1043,12 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
             get_class_hotkeys(i, glyphs);
             if (!glyphs.empty())
             {
-                subtitle += string(1 + max_width - strwidth(subtitle), ' ');
-                subtitle += "("+select_all+" with <w>";
+                subtitle = chop_string(subtitle, max_width + 1);
+                string suffix = "("+select_all+" with <w>";
                 for (char gly : glyphs)
-                    subtitle += gly;
-                subtitle += "</w><blue>)";
+                    suffix += gly;
+                suffix += "</w><blue>)";
+                subtitle += localise(suffix);
             }
         }
         add_entry(new MenuEntry(subtitle, MEL_SUBTITLE));

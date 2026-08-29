@@ -20,7 +20,7 @@
 
 using namespace std;
 
-//#define debuglog(...) {fprintf(stderr, "DEBUG: %s: ", __FUNCTION__); fprintf (stderr, __VA_ARGS__); fprintf(stderr, "\n");}
+#define debuglog(...) {fprintf(stderr, "DEBUG: %s: ", __FUNCTION__); fprintf (stderr, __VA_ARGS__); fprintf(stderr, "\n");}
 
 #ifndef debuglog
 #define debuglog(...) {}
@@ -172,6 +172,7 @@ void init_localisation()
     static const text_pattern int_arg_patt("@integer[^@]*@", true);
     static const text_pattern float_arg_patt("@float[^@]*@", true);
     static const text_pattern punct_arg_patt("@punct[^@]*@", true);
+    static const text_pattern glyph_arg_patt("@glyph[^@]*@", true);
     static const text_pattern adj_arg_patt("@[adj^@]+@");
     static const text_pattern str_arg_patt("@[^@]+@");
     static const text_pattern a_an_patt("^an? ");
@@ -193,6 +194,7 @@ void init_localisation()
         // float is problematic because decimal point may already be changed by user's locale
         //pattern = float_arg_patt.replace(pattern, "([\\+|\\-]?[0-9]*[\\.,][0-9]+)");
         pattern = punct_arg_patt.replace(pattern, "([.!?]+)");
+        pattern = glyph_arg_patt.replace(pattern, "(.)");
         pattern = adj_arg_patt.replace(pattern, "([a-zA-Z0-9 +-]*)");
         pattern = str_arg_patt.replace(pattern, "([^.!?]*)");
         // adjectives can change "a" to "an" or vice versa
@@ -730,15 +732,6 @@ static string _localise_string(const string& s, bool fallback_en)
             return prefix + result;
     }
 
-    string annotation;
-    separate_postfix_annotation(s, annotation, rest);
-    if (!annotation.empty())
-    {
-        result = _localise_string(rest, fallback_en);
-        if (!result.empty() || rest.empty())
-            return result + _localise_annotation(annotation);
-    }
-
     string punct = get_end_punctuation(s);
     if (!punct.empty())
     {
@@ -793,6 +786,15 @@ static string _localise_string(const string& s, bool fallback_en)
                 _context = saved_context;
         }
         return result;
+    }
+
+        string annotation;
+    separate_postfix_annotation(s, annotation, rest);
+    if (!annotation.empty())
+    {
+        result = _localise_string(rest, fallback_en);
+        if (!result.empty() || rest.empty())
+            return result + _localise_annotation(annotation);
     }
 
     separate_prefix_annotation(s, annotation, rest);
