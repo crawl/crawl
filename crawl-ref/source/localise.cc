@@ -20,7 +20,7 @@
 
 using namespace std;
 
-#define debuglog(...) {fprintf(stderr, "DEBUG: %s: ", __FUNCTION__); fprintf (stderr, __VA_ARGS__); fprintf(stderr, "\n");}
+//#define debuglog(...) {fprintf(stderr, "DEBUG: %s: ", __FUNCTION__); fprintf (stderr, __VA_ARGS__); fprintf(stderr, "\n");}
 
 #ifndef debuglog
 #define debuglog(...) {}
