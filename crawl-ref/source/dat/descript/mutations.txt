@@ -1071,6 +1071,11 @@ Your body lacks a metabolism that can be affected by poison or disease. You do
 not need to breathe, protecting you from mushroom spores and drowning attacks.
 You also cannot be put to sleep.
 %%%%
+plant physiology mutation
+
+You do not need to breathe air, protecting you from mushroom spores and drowning
+attacks. You cannot be blinded or put to sleep.
+%%%%
 undead mutation
 
 You are fully undead, granting you immunity to poison, miasma, fear, sleep,

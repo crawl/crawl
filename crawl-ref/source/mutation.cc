@@ -885,6 +885,13 @@ static vector<pair<string, string>> _get_fakemuts()
                             (you.holiness(true, false) & MH_NONLIVING) ? _innatemut(desc)
                                                                        : _formmut(desc)});
     }
+    else if (you.holiness() & MH_PLANT)
+    {
+        const string desc = "Your plant body is immune to sleep, blinding, and asphyxiation.";
+        result.push_back({"plant physiology",
+                            (you.holiness(true, false) & MH_PLANT) ? _innatemut(desc)
+                                                                   : _formmut(desc)});
+    }
     else if (you.holiness() == MH_UNDEAD)
     {
         const string desc = "You are undead, granting you many immunities and vulnerabilities.";
