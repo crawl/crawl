@@ -726,7 +726,7 @@ bool summon_holy_warrior(int pow, bool punish)
                  punish ? BEH_HOSTILE : BEH_FRIENDLY,
                  you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, GOD_SHINING_ONE);
     mg.set_summoned(punish ? 0 : &you, SPELL_NO_SPELL,
-                    summ_dur(punish ? 0 : min(2 + (random2(pow) / 4), 6)));
+                    punish ? 0 : random_range(80, 110) + pow / 2);
 
     if (punish)
     {
