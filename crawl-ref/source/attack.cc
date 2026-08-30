@@ -89,10 +89,6 @@ void attack::handle_phase_blocked()
     if (attacker->is_player())
         behaviour_event(defender->as_monster(), ME_WHACK, attacker);
 
-    // Use up a charge of Divine Shield, if active.
-    if (defender->is_player())
-        tso_expend_divine_shield_charge();
-
     defender->shield_block_succeeded(attacker);
 }
 
@@ -1113,11 +1109,8 @@ bool attack::attack_shield_blocked()
         return false; // You can't block your own attacks!
 
     // Divine Shield blocks are guaranteed, no matter what.
-    if (defender->incapacitated()
-        && !(defender->is_player() && you.duration[DUR_DIVINE_SHIELD]))
-    {
+    if (defender->incapacitated() && !defender->divinely_shielded())
         return false;
-    }
 
     const int con_block = random2(attacker->shield_bypass_ability(to_hit));
     int pro_block = defender->shield_bonus();
@@ -1129,7 +1122,7 @@ bool attack::attack_shield_blocked()
          actor_name(defender, DESC_PLAIN, true).c_str(), pro_block, con_block);
 
     if (pro_block >= con_block && !defender->shield_exhausted()
-        || defender->is_player() && you.duration[DUR_DIVINE_SHIELD])
+        || defender->divinely_shielded())
     {
         perceived_attack = true;
 

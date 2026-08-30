@@ -3821,14 +3821,6 @@ bool player::faith(bool items) const
     return you.has_mutation(MUT_FAITH) || actor::faith(items);
 }
 
-bool player::reflection(bool items) const
-{
-    if (you.duration[DUR_DIVINE_SHIELD])
-        return true;
-
-    return actor::reflection(items);
-}
-
 /// Does the player have permastasis?
 bool player::stasis() const
 {
@@ -6297,11 +6289,24 @@ int player::shield_bypass_ability(int tohit) const
     return 15 + tohit / 2;
 }
 
+bool player::divinely_shielded() const
+{
+    return duration[DUR_DIVINE_SHIELD];
+}
+
 void player::shield_block_succeeded(actor *attacker)
 {
     actor::shield_block_succeeded(attacker);
 
-    if (!you.duration[DUR_DIVINE_SHIELD])
+    if (divinely_shielded())
+    {
+        if (--duration[DUR_DIVINE_SHIELD] <= 0)
+        {
+            mprf(MSGCH_DURATION, "Your divine shield fades away.");
+            duration[DUR_DIVINE_SHIELD] = 0;
+        }
+    }
+    else
         shield_blocks++;
 
     practise_shield_block();

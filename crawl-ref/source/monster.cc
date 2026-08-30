@@ -3085,12 +3085,26 @@ void monster::shield_block_succeeded(actor *attacker)
 {
     actor::shield_block_succeeded(attacker);
 
-    ++shield_blocks;
+    if (divinely_shielded())
+    {
+        mon_enchant shield = get_ench(ENCH_DIVINE_SHIELD);
+        if (--shield.degree <= 0)
+            del_ench(ENCH_DIVINE_SHIELD);
+        else
+            update_ench(shield);
+    }
+    else
+        ++shield_blocks;
 }
 
 int monster::shield_bypass_ability(int) const
 {
     return mon_shield_bypass(get_hit_dice());
+}
+
+bool monster::divinely_shielded() const
+{
+    return has_ench(ENCH_DIVINE_SHIELD);
 }
 
 int monster::missile_repulsion() const

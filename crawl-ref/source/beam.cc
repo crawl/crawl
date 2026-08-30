@@ -3520,9 +3520,6 @@ bool bolt::misses_player()
             }
             you.shield_block_succeeded(agent());
 
-            // Use up a charge of Divine Shield, if active.
-            tso_expend_divine_shield_charge();
-
             return true;
         }
 
@@ -5389,11 +5386,11 @@ bool bolt::god_cares() const
 bool bolt::attempt_block(monster* mon)
 {
     const int shield_block = mon->shield_bonus();
-    if (shield_block <= 0)
+    if (shield_block <= 0 && !mon->divinely_shielded())
         return false;
 
     const int sh_hit = random2(hit * 130 / 100);
-    if (sh_hit >= shield_block || mon->shield_exhausted())
+    if (!mon->divinely_shielded() && (sh_hit >= shield_block || mon->shield_exhausted()))
         return false;
 
     mon->sense_if_invisible();
@@ -5413,8 +5410,10 @@ bool bolt::attempt_block(monster* mon)
             }
             else
             {
-                mprf("The %s reflects off an invisible shield around %s!",
+                mprf("The %s reflects off %s %s!",
                      name.c_str(),
+                     mon->divinely_shielded() ? "the divine shield protecting"
+                                              : "an invisible shield around",
                      mon->name(DESC_THE).c_str());
             }
         }

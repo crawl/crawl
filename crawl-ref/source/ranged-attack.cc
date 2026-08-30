@@ -189,6 +189,8 @@ void ranged_attack::handle_phase_blocked()
                 punctuation = " with " + defender->pronoun(PRONOUN_POSSESSIVE)
                               + " " + defender_shield->name(DESC_PLAIN).c_str();
             }
+            else if (defender->divinely_shielded())
+                punctuation = " with a divine shield";
             else
                 punctuation = " with an invisible shield";
         }

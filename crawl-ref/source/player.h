@@ -916,7 +916,6 @@ public:
 
     bool clarity(bool items = true) const override;
     bool faith(bool items = true) const override;
-    bool reflection(bool items = true) const override;
     bool stasis() const override;
     bool cloud_immune(bool items = true) const override;
     bool sunder_is_ready() const override;
@@ -986,6 +985,7 @@ public:
     int shield_bonus() const override;
     int shield_bypass_ability(int tohit) const override;
     void shield_block_succeeded(actor *attacker) override;
+    bool divinely_shielded() const override;
     int missile_repulsion() const override;
 
     // Combat-related adjusted penalty calculation methods

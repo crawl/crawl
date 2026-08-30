@@ -1097,6 +1097,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             start_lurking(*this);
         break;
 
+    case ENCH_DIVINE_SHIELD:
+        if (!quiet)
+            simple_monster_message(*this, " divine shield fades away.", true);
+        break;
+
     default:
         break;
     }
@@ -1420,6 +1425,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_STAMPEDE:
     case ENCH_PREPARING_TO_LURK:
     case ENCH_PHASE_SHIFT:
+    case ENCH_DIVINE_SHIELD:
         decay_enchantment(en);
         break;
 
@@ -2183,7 +2189,7 @@ static const char *enchant_names[] =
     "phalanx_barrier", "figment", "paradox-touched", "warding",
     "diminished_spells", "orb_cooldown", "sunder_charge",
     "exposed", "briar_cooldown", "stampeding",
-    "preparing_to_lurk", "phase_shift",
+    "preparing_to_lurk", "phase_shift", "divine_shield",
     "buggy", // NUM_ENCHANTMENTS
 };
 

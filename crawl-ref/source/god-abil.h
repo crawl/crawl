@@ -116,7 +116,6 @@ spret zin_imprison(const coord_def& target, bool fail);
 void zin_sanctuary();
 
 void tso_divine_shield();
-void tso_expend_divine_shield_charge();
 
 void elyvilon_purification();
 bool elyvilon_divine_alms_eligible(const monster& target);

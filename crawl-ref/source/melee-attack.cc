@@ -326,16 +326,26 @@ void melee_attack::handle_phase_blocked()
                                       : atk_name(DESC_ITS).c_str());
     }
 
-    if (defender->is_player() && you.duration[DUR_DIVINE_SHIELD]
-        && coinflip() && attacker->as_monster()->res_blind() <= 1)
+    if (defender->divinely_shielded()
+        && coinflip() && attacker->res_blind() <= 1)
     {
-        const bool need_msg = !attacker->as_monster()->has_ench(ENCH_BLIND);
-        if (attacker->as_monster()->add_ench(mon_enchant(ENCH_BLIND, &you,
-                                        random_range(3, 5) * BASELINE_DELAY))
-            && need_msg)
+        if (monster* mon = attacker->as_monster())
         {
-            mprf("%s is struck blind by the light of your shield.",
-                    attacker->name(DESC_THE).c_str());
+            const bool need_msg = !mon->has_ench(ENCH_BLIND);
+            if (mon->add_ench(mon_enchant(ENCH_BLIND, &you,
+                                random_range(3, 5) * BASELINE_DELAY))
+                && need_msg)
+            {
+                mprf("%s is struck blind by the light of %s divine shield.",
+                        attacker->name(DESC_THE).c_str(),
+                        defender->name(DESC_ITS).c_str());
+            }
+        }
+        else
+        {
+            blind_player(random_range(3, 5), WHITE);
+            mprf("You are blinded by the light of %s divine shield.",
+                        defender->name(DESC_ITS).c_str());
         }
     }
 
