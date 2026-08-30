@@ -1455,12 +1455,26 @@ Abbrechen
 ##############################################
 # Inventory and item menus
 ##############################################
+
+# heading
 %%%%
-Inventory:
-Inventar:
+Inventory: @num1@/@num2@ gear slots
+Inventar: @num1@/@num2@ Ausrüstungsplätze
 %%%%
-@num1@/@num2@ slots
-@num1@/@num2@ Plätze
+Gear: @num1@/@num2@ gear slots
+Ausrüstung: @num1@/@num2@ Ausrüstungsplätze
+%%%%
+Potions:
+Zaubertränke:
+%%%%
+Scrolls:
+Schriftrollen:
+%%%%
+Evocable Items:
+Evozierbare Gegenstände:
+%%%%
+(Left/Right/Tab to switch category)
+(Links/Rechts/Tab um Klasse zu wechseln)
 %%%%
 
 # subheadings
@@ -1498,11 +1512,34 @@ Aas
 Runes of Zot
 Runen von Zot
 %%%%
+Ancient Gems
+Uralte Edelsteine
+%%%%
+Talismans
+Talismane
+%%%%
+Gizmos
+Gadgets
+%%%%
+Baubles
+Glaskugeln
+%%%%
 Miscellaneous
 Verschiedenes
 %%%%
 Other Items
 Andere Gegenstände
+%%%%
+
+%%%%
+(go to first with <w>@glyph@</w><blue>)
+(zum ersten gehen mit <w>@glyph@</w><blue>)
+%%%%
+(select first with <w>@glyph@</w><blue>)
+(ersten wählen mit <w>@glyph@</w><blue>)
+%%%%
+(select all with <w>@glyph@</w><blue>)
+(alle wählen mit <w>@glyph@</w><blue>)
 %%%%
 
 ##############################################
