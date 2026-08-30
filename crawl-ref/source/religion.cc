@@ -310,7 +310,7 @@ const vector<vector<god_power>> & get_all_god_powers()
         {   { 0, "Ashenzari warns you of distant threats and treasures.\n"
                  "Ashenzari shows you where magical portals lie." },
             { 1, "Ashenzari will now identify your possessions.",
-                 "Ashenzari will no longer identify your possesions.",
+                 "Ashenzari will no longer identify your possessions.",
                  "Ashenzari identifies your possessions." },
             { 2, "Ashenzari will now reveal the unseen.",
                  "Ashenzari will no longer reveal the unseen.",
