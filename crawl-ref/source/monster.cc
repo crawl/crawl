@@ -3065,6 +3065,8 @@ int monster::shield_class() const
     if (wearing_ego(OBJ_WEAPONS, SPWPN_REBUKE))
         sh += 20;
 
+    sh += scan_artefacts(ARTP_SHIELDING) * 2;
+
     return sh;
 }
 
