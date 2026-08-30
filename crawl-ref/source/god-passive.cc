@@ -100,6 +100,7 @@ static const vector<god_passive> god_passives[] =
         { -1, passive_t::no_stabbing },
         {  0, passive_t::halo },
         {  1, passive_t::restore_hp_mp_vs_evil },
+        {  1, passive_t::inspire_followers },
     },
 
     // Kikubaaqudgha
@@ -2353,4 +2354,50 @@ bool makhleb_haemoclasm_trigger_check(const monster& victim)
     // hit, scaling slightly with *how* many things could be hit.
     else
         return x_chance_in_y(6, 30 - count * 3);
+}
+
+void tso_maybe_bless_follower()
+{
+    // Chance scales from 20% at 1* to 35% at 6*.
+    int chance = 15 * (min(piety_breakpoint(5), (int)you.piety()) - 30)
+                                    / (piety_breakpoint(5) - piety_breakpoint(0)) + 20;
+    if (!x_chance_in_y(chance, 100))
+        return;
+
+    // Can either give a divine shield to an injured ally or extra energy to any
+    // ally who is able to act (and hasn't just gotten an energy infusion already).
+    monster* fervor_targ = nullptr;
+    monster* protection_targ = nullptr;
+    int fervor_count = 0;
+    int protection_count = 0;
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if (mi->friendly() && !mi->is_peripheral())
+        {
+            if (mi->hit_points < mi->max_hit_points && !mi->has_ench(ENCH_DIVINE_SHIELD))
+                if (one_chance_in(++protection_count))
+                    protection_targ = *mi;
+
+            if (mi->speed_increment < 100 && !mi->cannot_act())
+                if (one_chance_in(++fervor_count))
+                    fervor_targ = *mi;
+        }
+    }
+
+    if (protection_targ && (!fervor_targ || coinflip()))
+    {
+        flash_tile(protection_targ->pos(), YELLOW, 35);
+        string msg = make_stringf(" blesses %s with protection!", protection_targ->name(DESC_THE).c_str());
+        simple_god_message(msg.c_str());
+        protection_targ->add_ench(mon_enchant(ENCH_DIVINE_SHIELD, &you, random_range(100, 150), random_range(4, 7)));
+    }
+    else if (fervor_targ)
+    {
+        flash_tile(fervor_targ->pos(), YELLOW, 35);
+        string msg = make_stringf(" blesses %s with fervor!", fervor_targ->name(DESC_THE).c_str());
+        simple_god_message(msg.c_str());
+
+        fervor_targ->speed_increment += 30;
+        queue_monster_for_action(fervor_targ);
+    }
 }

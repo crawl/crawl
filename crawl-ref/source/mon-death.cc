@@ -2428,6 +2428,12 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
         makhleb_tyrant_buff();
     }
 
+    if ((killer == KILL_YOU || killer == KILL_YOU_MISSILE)
+        && gives_player_xp && have_passive(passive_t::inspire_followers))
+    {
+        tso_maybe_bless_follower();
+    }
+
     // Apply unrand effects.
     unrand_death_effects(&mons, killer);
 

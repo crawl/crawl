@@ -1357,7 +1357,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SICK:
     case ENCH_CORONA:
     case ENCH_CONTAM:
-    case ENCH_SUMMON_TIMER:
     case ENCH_CHARM:
     case ENCH_SLEEP_WARY:
     case ENCH_LOWERED_WL:
@@ -1426,6 +1425,17 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_PREPARING_TO_LURK:
     case ENCH_PHASE_SHIFT:
     case ENCH_DIVINE_SHIELD:
+        decay_enchantment(en);
+        break;
+
+    case ENCH_SUMMON_TIMER:
+        // Allies of TSO worshippers never expire while fighting evil.
+        if (friendly() && you_worship(GOD_SHINING_ONE))
+        {
+            const actor* _foe = get_foe();
+            if (_foe && !mons_aligned(this, _foe) && !_foe->is_firewood() && _foe->evil())
+                break;
+        }
         decay_enchantment(en);
         break;
 

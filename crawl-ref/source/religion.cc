@@ -113,9 +113,13 @@ const vector<vector<god_power>> & get_all_god_powers()
         },
 
         // TSO
-        {   { 1, "You and your allies can now gain power from killing the unholy and evil.",
-                 "You and your allies can no longer gain power from killing the unholy and evil.",
-                 "You and your allies can gain power from killing the unholy and evil." },
+        {   {-1, "", "", "Your summoned allies will not expire while fighting evil." },
+            { 1, "You can now gain power from killing the unholy and evil.",
+                 "You can no longer gain power from killing the unholy and evil.",
+                 "You can gain power from killing the unholy and evil." },
+            { 1, "The Shining One may bless your followers whenever you slay foes.",
+                 "The Shining One will no longer blesses your followers when you slay foes.",
+                 "The Shining One sometimes blesses your followers when you slay foes."},
             { 1, ABIL_TSO_DIVINE_SHIELD, "call upon the Shining One for a divine shield" },
             { 3, ABIL_TSO_CLEANSING_FLAME, "channel blasts of cleansing flame", },
             { 5, ABIL_TSO_SUMMON_DIVINE_WARRIOR, "summon a divine warrior" },
