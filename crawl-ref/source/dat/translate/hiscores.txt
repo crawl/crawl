@@ -155,8 +155,10 @@ Was a Favourite Plaything of Xom.
 Was a Plaything of Xom.
 
 %%%%
-# Was <title> of <god>[ (penitent)]
-Was @arg1@ of @arg2@@arg3@.
+Was @arg@ of @god@.
+
+%%%%
+Was @arg@ of @god@ (penitent).
 
 %%%%
 
@@ -493,6 +495,7 @@ Killed themself with bad targeting
 %%%%
 Killed themself with a badly aimed @arg@
 
+# TODO: fix this. It will be wrong for feminine
 %%%%
 reflected bolt
 
