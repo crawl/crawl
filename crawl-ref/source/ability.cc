@@ -3554,6 +3554,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_TSO_CLEANSING_FLAME:
     {
         fail_check();
+        mpr("You channel a blast of cleansing flame!");
         cleansing_flame(_tso_cleansing_flame_power(),
                         cleansing_flame_source::invocation, you.pos(), &you);
         break;

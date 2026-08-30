@@ -124,6 +124,10 @@ Creeping Frost cast
 
 @The_monster@ calls freezing cold from the walls.
 %%%%
+Cleansing Flame cast
+
+@The_monster@ channels a blast of cleansing flame!
+%%%%
 Divine Armament cast
 
 @The_monster@ beseeches @My_God@ to grant them a weapon.
