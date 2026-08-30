@@ -1,6 +1,17 @@
 {{
-function nico_shoals_archipelago_setup(e)
-    e.tags("transparent decor water_ok no_tide uniq_nicotiledpelago")
+function nico_shoals_archipelago_setup(e, ununiq)
+    -- the ununiq parameter, if present, means that the primary vault in 
+    -- question will be able to appear in the same game as the other primary
+    -- vaults, but not on the same level. currently this only applies to the 
+    -- 1x1 primary vault
+    ununiq = ununiq or false
+    e.tags("transparent decor water_ok no_tide luniq_nicotiledpelago")
+    -- some of the subvaults have isolated areas that should be no_descent
+    -- rather than tag them all individually we're just vetoing the whole thing
+    e.tags("no_descent")
+    if not ununiq then
+       e.tags("uniq_nicotiledpelago")
+    end
     e.depth("Shoals")
     e.orient("float")
     local glyphs = "DEFHJKLMNOPQRSZa"
@@ -26,7 +37,7 @@ end
 }}
 
 NAME:   nicolae_shoals_tiled_archipelago_1x1
-: nico_shoals_archipelago_setup(_G)
+: nico_shoals_archipelago_setup(_G, true)
 WEIGHT: 5
 MAP
  ``  ``WW``
