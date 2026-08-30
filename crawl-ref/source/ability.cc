@@ -3553,17 +3553,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     case ABIL_TSO_CLEANSING_FLAME:
     {
-        targeter_radius hitfunc(&you, LOS_SOLID, 2);
-        {
-            if (stop_attack_prompt(hitfunc, "invoke Cleansing Flame",
-                                   [](const actor *act)
-                                     {
-                                        return act->res_holy_energy() < 3;
-                                     }))
-            {
-                return spret::abort;
-            }
-        }
         fail_check();
         cleansing_flame(_tso_cleansing_flame_power(),
                         cleansing_flame_source::invocation, you.pos(), &you);

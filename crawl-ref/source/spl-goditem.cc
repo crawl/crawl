@@ -1194,6 +1194,7 @@ void setup_cleansing_flame_beam(bolt &beam, int pow,
     beam.target       = where;
     beam.name         = "golden flame";
     beam.colour       = YELLOW;
+    beam.origin_spell = SPELL_CLEANSING_FLAME;
     beam.aux_source   = (caster == cleansing_flame_source::tso)
                         ? "the Shining One's cleansing flame"
                         : "cleansing flame";
@@ -1210,6 +1211,7 @@ void setup_cleansing_flame_beam(bolt &beam, int pow,
     {
         beam.thrower   = KILL_YOU;
         beam.source_id = MID_PLAYER;
+        beam.attitude  = ATT_FRIENDLY;
     }
     else
     {
@@ -1219,6 +1221,7 @@ void setup_cleansing_flame_beam(bolt &beam, int pow,
 
         beam.thrower   = KILL_MON;
         beam.source_id = attacker->mid;
+        beam.attitude  = attacker->temp_attitude();
     }
 }
 

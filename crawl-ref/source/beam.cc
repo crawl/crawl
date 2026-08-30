@@ -5806,7 +5806,8 @@ bool bolt::ignores_monster(const monster* mon) const
 
     if ((origin_spell == SPELL_PERCUSSIVE_TEMPERING
          || origin_spell == SPELL_FORTRESS_BLAST
-         || origin_spell == SPELL_AWAKEN_FLESH)
+         || origin_spell == SPELL_AWAKEN_FLESH
+         || origin_spell == SPELL_CLEANSING_FLAME)
         && mons_atts_aligned(attitude, mon->temp_attitude()))
     {
         return true;
