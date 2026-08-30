@@ -3272,6 +3272,18 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
     return dam_str;
 }
 
+string spell_effect_string(spell_type spell, bool evoked, int pow)
+{
+    if (pow == -1)
+        pow = evoked ? wand_power(spell) : calc_spell_power(spell);
+   string description = "";
+   switch (spell)
+   {
+   default:
+      break;
+   }
+   return description;
+}
 int spell_acc(spell_type spell)
 {
     const zap_type zap = spell_to_zap(spell);
