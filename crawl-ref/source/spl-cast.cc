@@ -3279,6 +3279,9 @@ string spell_effect_string(spell_type spell, bool evoked, int pow)
    string description = "";
    switch (spell)
    {
+   case SPELL_PASSWALL:
+      description = make_stringf("~%d AC",passwall_ac(pow));
+      break;
    default:
       break;
    }
