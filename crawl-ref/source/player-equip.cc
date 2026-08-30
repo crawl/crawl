@@ -1217,7 +1217,7 @@ void player_equip_set::handle_melding(vector<item_def*>& to_meld, bool skip_effe
 
     // Now, simultaneously do unequip effects for all melded items.
     for (item_def* meld_item : to_meld)
-        unequip_effect(meld_item->link, true, true, false);
+        unequip_effect(meld_item->link, true, true, false, true);
 }
 
 /**
@@ -1617,7 +1617,8 @@ void equip_item(equipment_slot slot, int item_slot, bool msg, bool skip_effects)
 }
 
 // Unequip an equipped item (possibly melded).
-bool unequip_item(item_def& item, bool msg, bool skip_effects)
+bool unequip_item(item_def& item, bool msg, bool skip_effects,
+                  bool maybe_destroy)
 {
 #ifdef USE_TILE_LOCAL
     const unsigned int old_talents = your_talents().size();
@@ -1639,7 +1640,7 @@ bool unequip_item(item_def& item, bool msg, bool skip_effects)
     you.equipment.update();
 
     if (!skip_effects)
-        unequip_effect(item_slot, false, msg, was_melded);
+        unequip_effect(item_slot, false, msg, was_melded, maybe_destroy);
 
     ash_check_bondage();
     you.last_unequip = item_slot;
@@ -1711,7 +1712,8 @@ static void _unequip_maybe_destroy_item(item_def& item)
     }
 }
 
-void unequip_effect(int item_slot, bool meld, bool msg, bool was_melded)
+void unequip_effect(int item_slot, bool meld, bool msg, bool was_melded,
+                    bool maybe_destroy)
 {
     item_def& item = you.inv[item_slot];
 
@@ -1730,7 +1732,7 @@ void unequip_effect(int item_slot, bool meld, bool msg, bool was_melded)
     if (item_affects_agrid(item))
         invalidate_agrid();
 
-    if (!meld)
+    if (!meld && maybe_destroy)
         _unequip_maybe_destroy_item(item);
 }
 
