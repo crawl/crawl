@@ -609,7 +609,7 @@ void wizard_make_object_randart()
         return;
     }
 
-    // If it was equipped, requip the item.
+    // If it was equipped, reequip the item.
     if (eq != SLOT_UNUSED)
         equip_item(eq, invslot);
 
