@@ -166,8 +166,8 @@ TEST_CASE( "Localise German", "[single-file]" )
     SECTION("UI")
     {
         // inventory section title
-        CHECK( localise("(go to first with <w>(</w><blue>)") ==
-                        "(zum ersten gehen mit <w>(</w><blue>)" );
+        CHECK( localise("Missiles    (go to first with <w>(</w><blue>)") ==
+                        "Geschosse    (zum ersten gehen mit <w>(</w><blue>)" );
         CHECK( localise("(select first with <w>!</w><blue>)") ==
                         "(ersten wählen mit <w>!</w><blue>)" );
         CHECK( localise("(select all with <w>\"=</w><blue>)") ==
