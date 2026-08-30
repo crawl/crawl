@@ -565,13 +565,13 @@ static void _add_randart_weapon_brand(const item_def &item,
     else if (is_demonic(item) && one_chance_in(3))
     {
         item_props[ARTP_BRAND] = random_choose_weighted(
-            2, SPWPN_CHAOS,
-            2, SPWPN_DRAINING,
-            2, SPWPN_REAPING,
-            2, SPWPN_VAMPIRISM,
-            1, SPWPN_ANTIMAGIC,
-            1, SPWPN_DISTORTION,
-            1, SPWPN_PAIN);
+            8, SPWPN_CHAOS,
+            8, SPWPN_DRAINING,
+            8, SPWPN_REAPING,
+            8, SPWPN_VAMPIRISM,
+            4, SPWPN_ANTIMAGIC,
+            3, SPWPN_DISTORTION,
+            2, SPWPN_PAIN);
         // fall back to regular melee brands 2/3 of the time
     }
     else
