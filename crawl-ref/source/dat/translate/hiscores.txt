@@ -186,12 +186,6 @@ an Initiate
 
 %%%%
 
-# optional penitent suffix
-%%%%
-" (penitent)"
-
-%%%%
-
 ########################
 # Won
 ########################

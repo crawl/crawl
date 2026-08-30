@@ -186,12 +186,6 @@ an Initiate
 {m}ein Novize
 %%%%
 
-# optional penitent suffix
-%%%%
-" (penitent)"
-" (reuig)"
-%%%%
-
 ########################
 # Won
 ########################
