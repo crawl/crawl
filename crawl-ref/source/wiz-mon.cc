@@ -22,7 +22,6 @@
 #include "english.h"
 #include "files.h"
 #include "ghost.h"
-#include "god-blessing.h"
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
@@ -550,24 +549,6 @@ void debug_make_monster_shout(monster* mon)
     }
 
     mpr("== Done ==");
-}
-
-void wizard_apply_monster_blessing(monster* mon)
-{
-    mprf(MSGCH_PROMPT, "Apply blessing of the (S)hining One? ");
-
-    char type = (char) getchm(KMC_DEFAULT);
-    type = toalower(type);
-
-    if (type != 's')
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
-    god_type god = GOD_SHINING_ONE;
-
-    if (!bless_follower(mon, god, true))
-        mprf("%s won't bless this monster for you!", god_name(god).c_str());
 }
 
 void wizard_give_monster_item(monster* mon)

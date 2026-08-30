@@ -97,7 +97,6 @@ static const vector<god_passive> god_passives[] =
     {
         { -1, passive_t::protect_from_harm },
         { -1, passive_t::abjuration_protection_hd },
-        { -1, passive_t::bless_followers_vs_evil },
         { -1, passive_t::no_stabbing },
         {  0, passive_t::halo },
         {  1, passive_t::restore_hp_mp_vs_evil },

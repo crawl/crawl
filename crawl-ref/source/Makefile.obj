@@ -74,7 +74,6 @@ game-options.o \
 geom2d.o \
 ghost.o \
 god-abil.o \
-god-blessing.o \
 god-companions.o \
 god-conduct.o \
 god-item.o \
@@ -413,7 +412,6 @@ game-type.h.o \
 gender-type.h.o \
 geom2d.h.o \
 god-abil.h.o \
-god-blessing.h.o \
 god-companions.h.o \
 god-item.h.o \
 god-passive.h.o \

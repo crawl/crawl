@@ -56,9 +56,6 @@ enum class passive_t
     /// You can walk on water.
     water_walk,
 
-    /// Your god blesses your followers when they kill evil things.
-    bless_followers_vs_evil,
-
     /// You cannot be hasted.
     no_haste,
 

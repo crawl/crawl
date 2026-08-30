@@ -38,7 +38,6 @@
 #include "files.h"
 #include "fineff.h"
 #include "format.h" // formatted_string
-#include "god-blessing.h"
 #include "god-companions.h"
 #include "god-item.h"
 #include "god-passive.h"
