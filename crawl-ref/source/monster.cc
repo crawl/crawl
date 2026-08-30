@@ -3040,14 +3040,6 @@ bool monster::can_feel_fear(bool /*include_unknown*/) const
            && !clarity();
 }
 
-/**
- * Returns whether the monster currently has any kind of shield.
- */
-bool monster::shielded() const
-{
-    return shield() || wearing_jewellery(AMU_REFLECTION);
-}
-
 /// I honestly don't know what this means, really. It's vaguely similar
 /// to the player equivalent.
 int monster::shield_class() const

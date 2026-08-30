@@ -286,13 +286,13 @@ static bool _iood_shielded(monster& mon, actor &victim)
     if (victim.is_player() && you.duration[DUR_DIVINE_SHIELD])
         return true;
 
-    if (!victim.shielded() || victim.incapacitated() || victim.shield_exhausted())
+    const int pro_block = victim.shield_bonus();
+    if (pro_block <= 0 || victim.incapacitated() || victim.shield_exhausted())
         return false;
 
     const int to_hit = 15 + (mons_is_projectile(mon.type) ?
         mon.props[IOOD_POW].get_short()/12 : mon.get_hit_dice()/2);
     const int con_block = random2(to_hit);
-    const int pro_block = victim.shield_bonus();
     dprf("iood shield: pro %d, con %d", pro_block, con_block);
     return pro_block >= con_block;
 }

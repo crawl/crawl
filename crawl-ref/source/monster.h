@@ -533,7 +533,6 @@ public:
     int stealth() const override { return 0; }
 
 
-    bool    shielded() const override;
     int     shield_class() const;
     int     shield_bonus() const override;
     void    shield_block_succeeded(actor *attacker) override;

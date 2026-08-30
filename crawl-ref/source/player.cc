@@ -6283,25 +6283,6 @@ bool player::liquefied_ground() const
            && !airborne() && !is_insubstantial();
 }
 
-/**
- * Returns whether the player currently has any kind of shield.
- *
- * XXX: why does this function exist?
- */
-bool player::shielded() const
-{
-    return shield()
-           || duration[DUR_DIVINE_SHIELD]
-           || duration[DUR_EPHEMERAL_SHIELD]
-           || duration[DUR_PARRYING]
-           || get_mutation_level(MUT_LARGE_BONE_PLATES) > 0
-           || qazlal_sh_boost() > 0
-           || you.wearing_jewellery(AMU_REFLECTION)
-           || you.scan_artefacts(ARTP_SHIELDING)
-           || (get_mutation_level(MUT_CONDENSATION_SHIELD)
-                && !you.duration[DUR_ICEMAIL_DEPLETED]);
-}
-
 int player::shield_bonus() const
 {
     const int shield_class = player_shield_class();
