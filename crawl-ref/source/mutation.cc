@@ -948,7 +948,7 @@ static vector<bane_type> _get_active_banes()
     return banes;
 }
 
-static vector<string> _get_mutations_descs(bool terse)
+static vector<string> _get_mutation_and_bane_descs(bool terse)
 {
     vector<pair<string, string>> fakemuts = _get_fakemuts();
     vector<string> result;
@@ -966,12 +966,15 @@ static vector<string> _get_mutations_descs(bool terse)
                                                you.sacrifices[mut] != 0));
     }
 
+    for (bane_type bane : _get_active_banes())
+        result.push_back(terse ? bane_name(bane) : bane_desc(bane));
+
     return result;
 }
 
 string terse_mutation_list()
 {
-    const vector<string> mutations = _get_mutations_descs(true);
+    const vector<string> mutations = _get_mutation_and_bane_descs(true);
 
     if (mutations.empty())
         return "no striking features";
@@ -982,7 +985,7 @@ string terse_mutation_list()
     }
 }
 
-string describe_mutations(bool drop_title)
+string describe_muts_for_chardump(bool drop_title)
 {
 #ifdef DEBUG
 #ifndef USE_TILE_LOCAL
@@ -1000,7 +1003,7 @@ string describe_mutations(bool drop_title)
         result += "</white>\n\n";
     }
 
-    const vector<string> mutations = _get_mutations_descs(false);
+    const vector<string> mutations = _get_mutation_and_bane_descs(false);
 
     if (mutations.empty())
         result += "You are rather mundane.\n";
