@@ -994,7 +994,7 @@ COLOUR:  ETC_SHIMMER_BLUE
 TILE:    urand_dragonmask
 TILE_EQ: ART_DRAGONHELM
 BOOL:    seeinv
-DESCRIP: Dragonpray: It occasionally summons a dragon when using Invocations
+DESCRIP: Dragonpray: It occasionally summons a dragon when using divine abilities
  with hostile monsters in sight. Chance is 10% + twice the piety cost of the
  ability used.
 
