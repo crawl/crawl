@@ -304,45 +304,6 @@ void wizard_set_piety_to(int newpiety, bool force)
         return;
     }
 
-    if (you_worship(GOD_XOM))
-    {
-        you.raw_piety = newpiety;
-        you.redraw_title = true; // redraw piety display
-
-        int newinterest;
-        if (!force)
-        {
-            char buf[30];
-
-            // For Xom, also allow setting interest.
-            mprf(MSGCH_PROMPT,
-                 "Enter new interest (current = %d, Enter for 0): ",
-                 you.gift_timeout);
-
-            if (cancellable_get_line_autohist(buf, sizeof buf))
-            {
-                canned_msg(MSG_OK);
-                return;
-            }
-
-            newinterest = atoi(buf);
-        }
-        else
-            newinterest = newpiety;
-
-        if (newinterest >= 0 && newinterest < 256)
-            you.gift_timeout = newinterest;
-        else
-            mpr("Interest must be between 0 and 255.");
-
-        mprf("Set piety to %d, interest to %d.", you.raw_piety, newinterest);
-
-        const string new_xom_favour = describe_xom_favour();
-        const string msg = "You are now " + new_xom_favour;
-        god_speaks(you.religion, msg.c_str());
-        return;
-    }
-
     if (newpiety < 1 && !force)
     {
         if (yesno("Are you sure you want to be excommunicated?", false, 'n'))
@@ -1099,8 +1060,7 @@ void wizard_xom_acts()
     msgwin_get_line("What action should Xom take? (Blank = any) " ,
                     specs, sizeof(specs));
 
-    const int severity = you_worship(GOD_XOM) ? abs(you.raw_piety - HALF_MAX_PIETY)
-                                              : random_range(0, HALF_MAX_PIETY);
+    const int severity = random_range(0, HALF_MAX_PIETY);
 
     if (specs[0] == '\0')
     {

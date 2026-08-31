@@ -2268,14 +2268,8 @@ static string _god_asterisks(bool leading_space)
     string str;
     if (you_worship(GOD_XOM))
     {
-        const int p_rank = xom_favour_rank() - 1;
-        if (p_rank >= 0)
-        {
-            str = string(p_rank, '.') + "*"
-                  + string(NUM_PIETY_STARS - 1 - p_rank, '.');
-        }
-        else
-            str = string(NUM_PIETY_STARS, '.'); // very special plaything
+        const int pips = xom_tension_pips();
+        str = string(pips, '*') + string(NUM_PIETY_STARS - pips, '.');
     }
     else
     {
@@ -2299,16 +2293,13 @@ static string _god_asterisks(bool leading_space)
 /**
  * What colour should the god status display be?
  *
- * @param default_colour   The default colour, if not under penance or boredom.
+ * @param default_colour   The default colour, if not under penance.
  * @return                 A colour for the god status display.
  */
 static int _god_status_colour(int default_colour)
 {
     if (player_under_penance())
         return RED;
-
-    if (you_worship(GOD_XOM) && you.gift_timeout <= 1)
-        return you.gift_timeout ? RED : LIGHTRED;
 
     return default_colour;
 }
