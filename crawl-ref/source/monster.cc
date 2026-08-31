@@ -3867,12 +3867,8 @@ int monster::res_holy_energy() const
     if (undead_or_demonic())
         return -1;
 
-    if (is_holy()
-        || is_good_god(god)
-        || is_good_god(you.religion) && is_follower(*this))
-    {
+    if (is_holy() || is_good_god(god))
         return 3;
-    }
 
     return 0;
 }
@@ -3882,13 +3878,8 @@ int monster::res_foul_flame() const
     if (undead_or_demonic())
         return 1;
 
-    if (is_holy()
-        || is_good_god(god)
-        || (!crawl_state.game_is_arena()
-            && (is_good_god(you.religion) && is_follower(*this))))
-    {
+    if (is_holy() || is_good_god(god))
         return -1;
-    }
 
     return 0;
 }
