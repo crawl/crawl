@@ -917,7 +917,7 @@ static bool _beogh_maybe_convert_orc(monster &mons, killer_type killer,
     if (MON_KILL(killer) && !invalid_monster_index(killer_index))
     {
         const monster* responsible_monster = &env.mons[killer_index];
-        if (is_follower(*responsible_monster) && !one_chance_in(3))
+        if (is_apostle_follower(*responsible_monster) && !one_chance_in(3))
             return _beogh_forcibly_convert_orc(mons, killer);
     }
 

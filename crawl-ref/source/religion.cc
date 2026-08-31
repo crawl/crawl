@@ -1678,29 +1678,6 @@ bool is_fellow_slime(const monster& mon)
            && mons_is_god_gift(mon, GOD_JIYVA);
 }
 
-static bool _is_plant_follower(const monster* mon)
-{
-    return mon->alive() && mons_is_plant(*mon)
-           && mon->attitude == ATT_FRIENDLY;
-}
-
-bool is_follower(const monster& mon)
-{
-    if (you_worship(GOD_YREDELEMNUL))
-        return is_yred_undead_follower(mon);
-    else if (you_worship(GOD_BEOGH))
-        return is_apostle_follower(mon);
-    else if (you_worship(GOD_JIYVA))
-        return is_fellow_slime(mon);
-    else if (you_worship(GOD_FEDHAS))
-        return _is_plant_follower(&mon);
-    else
-    {
-        return mon.alive() && mon.attitude == ATT_FRIENDLY
-                           && !mon.is_summoned();
-    }
-}
-
 /**
  * What's the name of the ally Hepliaklqana granted the player?
  *
