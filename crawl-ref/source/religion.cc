@@ -4063,11 +4063,20 @@ static void _choose_ecu_gods(CrawlVector &gods)
         gods.push_back(possible_gods[i]);
 }
 
+static string _ecu_altar_key(coord_def pos)
+{
+    return make_stringf("ecu-%d,%d", pos.x, pos.y);
+}
+
+bool faded_altar_is_visited(coord_def pos)
+{
+    return env.properties.exists(_ecu_altar_key(pos));
+}
+
 /// Returns a list of gods the player might get from the ecu altar at the given position.
 vector<god_type> get_ecu_gods(coord_def pos)
 {
-    const string key = make_stringf("ecu-%d,%d", pos.x, pos.y);
-    CrawlVector &saved_gods = env.properties[key].get_vector();
+    CrawlVector &saved_gods = env.properties[_ecu_altar_key(pos)].get_vector();
     if (saved_gods.empty())
         _choose_ecu_gods(saved_gods);
     vector<god_type> gods;
