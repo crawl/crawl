@@ -1265,7 +1265,7 @@ static string _your_skill_desc(skill_type skill, bool show_target_button,
  * value.
  */
 static string _skill_target_desc(skill_type skill, int scaled_target,
-                                        unsigned int training)
+                                        unsigned int training, bool base)
 {
     string description = "";
     scaled_target = min(scaled_target, 270);
@@ -1275,7 +1275,7 @@ static string _skill_target_desc(skill_type skill, int scaled_target,
                                     (training != you.training[skill]);
 
     const skill_diff diffs = skill_level_to_diffs(skill,
-                                (double) scaled_target / 10, training, false);
+                                (double) scaled_target / 10, training, base);
     const int level_diff = xp_to_level_diff(diffs.experience / 10, 10);
 
     if (max_training)
@@ -1308,15 +1308,19 @@ static string _skill_target_desc(skill_type skill, int scaled_target,
  * current training rate.
  */
 static void _append_skill_target_desc(string &description, skill_type skill,
-                                        int scaled_target, int indent)
+                                        int scaled_target, int indent,
+                                        bool base = false)
 {
     const string prefix = "\n" + string(indent, ' ');
     if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
-        description += prefix + _skill_target_desc(skill, scaled_target, 100);
+    {
+        description += prefix + _skill_target_desc(skill, scaled_target, 100,
+                                                   base);
+    }
     if (you.training[skill] > 0 && you.training[skill] < 100)
     {
         description += prefix + _skill_target_desc(skill, scaled_target,
-                                                    you.training[skill]);
+                                                   you.training[skill], base);
     }
 }
 
@@ -4511,6 +4515,18 @@ string get_skill_description(skill_type skill, bool need_title)
                                 target / 10.0);
 
         _append_skill_target_desc(result, skill, target, 0);
+
+        result += "\n";
+    }
+
+    const int base_target = you.get_training_target(skill, true);
+    if (base_target > 0 && base_target <= 270
+        && base_target > you.skill(skill, 10, true))
+    {
+        result += make_stringf("\nYour current base training target is %.1f.",
+                               base_target / 10.0);
+
+        _append_skill_target_desc(result, skill, base_target, 0, true);
 
         result += "\n";
     }

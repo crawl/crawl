@@ -23,6 +23,7 @@ struct skill_state
     FixedVector<unsigned int, NUM_SKILLS> training;
     FixedVector<unsigned int, NUM_SKILLS> skill_points;
     FixedVector<unsigned int, NUM_SKILLS> training_targets;
+    FixedVector<unsigned int, NUM_SKILLS> base_training_targets;
     FixedVector<uint8_t, NUM_SKILLS>      skill_order;
     FixedVector<unsigned int, NUM_SKILLS> skill_manual_points;
     int skill_cost_level;
@@ -133,8 +134,8 @@ void dump_skills(string &text);
 int skill_bump(skill_type skill, int scale = 1, bool allow_random = true);
 void fixup_skills();
 
-bool target_met(skill_type sk);
-bool target_met(skill_type sk, unsigned int target);
+bool target_met(skill_type sk, bool base);
+bool target_met(skill_type sk, unsigned int target, bool base);
 bool check_training_target(skill_type sk);
 bool check_training_targets();
 

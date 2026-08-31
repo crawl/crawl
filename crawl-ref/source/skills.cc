@@ -54,7 +54,9 @@
 static int _train(skill_type exsk, int &max_exp,
                   bool simu = false, bool check_targets = true);
 static void _train_skills(int exp, const int cost, const bool simu);
-static int _training_target_skill_point_diff(skill_type exsk, int training_target);
+static int _training_target_skill_point_diff(skill_type exsk,
+                                             int training_target, bool base);
+static int _skill_points_for_target(skill_type exsk);
 
 // Basic goals for titles:
 // The higher titles must come last.
@@ -971,17 +973,10 @@ static int _innate_casting_magic_max_spend_for_target()
     int max_training = INT_MAX;
     for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
     {
-        if (!you.training[sk] || !you.training_targets[sk])
+        if (!you.training[sk])
             continue;
 
-        int training_target = you.training_targets[sk];
-        if (training_target > you.skill(sk, 10, false, false))
-        {
-            int target_skill_point_diff = _training_target_skill_point_diff(
-                                                          sk, training_target);
-            if (target_skill_point_diff > 0)
-                max_training = min(max_training, target_skill_point_diff);
-        }
+        max_training = min(max_training, _skill_points_for_target(sk));
     }
     return max_training;
 }
@@ -1244,41 +1239,42 @@ bool skill_trained(int i)
 }
 
 /**
- * Is the training target, if any, met or exceeded for skill sk?
+ * Is the given training target met or exceeded for skill sk?
  *
- * @param sk the skill to check. This checks crosstraining and ash bonuses,
- * but not other skill modifiers.
- * @param target the target to check against. Defaults to you.training_targets[sk]
+ * @param sk the skill to check.
+ * @param target the target to check against.
+ * @param base whether to check the base skill level, rather than the modified
+ * one. The modified level checks crosstraining and ash bonuses, but not other
+ * skill modifiers.
  *
  * @return whether the skill target has been met.
  */
-bool target_met(skill_type sk, unsigned int target)
+bool target_met(skill_type sk, unsigned int target, bool base)
 {
-    return you.skill(sk, 10, false, false) >= (int) target;
-}
-
-bool target_met(skill_type sk)
-{
-    return target_met(sk, you.training_targets[sk]);
+    return you.skill(sk, 10, base, false) >= (int) target;
 }
 
 /**
- * Check the training target (if any) for skill sk, and change state
- * appropriately. If the target has been met or exceeded, this will turn off
- * targeting for that skill, and stop training it. This does *not* reset the
- * training percentages, though, so if it's used mid-training, you need to take
- * care of that.
+ * Is the training target of the given kind, if any, met or exceeded for skill
+ * sk?
  *
  * @param sk the skill to check.
- * @return whether a target was reached.
+ * @param base whether to check the base target, rather than the modified one.
+ *
+ * @return whether the skill target has been met.
  */
-bool check_training_target(skill_type sk)
+bool target_met(skill_type sk, bool base)
 {
-    if (you.training_targets[sk] && target_met(sk))
+    return target_met(sk, you.get_training_target(sk, base), base);
+}
+
+static bool _check_training_target(skill_type sk, bool base)
+{
+    auto &targets = base ? you.base_training_targets : you.training_targets;
+    if (targets[sk] && target_met(sk, base))
     {
-        bool base = you.skill(sk, 10, false, false) != you.skill(sk, 10);
-        auto targ = you.training_targets[sk];
-        you.training_targets[sk] = 0;
+        auto targ = targets[sk];
+        targets[sk] = 0;
         if (you.has_mutation(MUT_INNATE_CASTER) && is_magic_skill(sk))
             set_magic_training(TRAINING_DISABLED);
         else
@@ -1288,6 +1284,23 @@ bool check_training_target(skill_type sk)
         return true;
     }
     return false;
+}
+
+/**
+ * Check the training targets (if any) for skill sk, and change state
+ * appropriately. If a target has been met or exceeded, this will turn off
+ * that target for that skill, and stop training it. This does *not* reset the
+ * training percentages, though, so if it's used mid-training, you need to take
+ * care of that.
+ *
+ * @param sk the skill to check.
+ * @return whether a target was reached.
+ */
+bool check_training_target(skill_type sk)
+{
+    bool change = _check_training_target(sk, false);
+    change |= _check_training_target(sk, true);
+    return change;
 }
 
 /**
@@ -1539,7 +1552,8 @@ void update_four_winds(bool force_recheck)
 // Calculates the skill points required to reach the training target
 // Does not currently consider Ashenzari skill boost for experience currently being gained
 // so this may still result in some overtraining
-static int _training_target_skill_point_diff(skill_type exsk, int training_target)
+static int _training_target_skill_point_diff(skill_type exsk,
+                                             int training_target, bool base)
 {
     int target_level = training_target / 10;
     int target_fractional = training_target % 10;
@@ -1557,9 +1571,13 @@ static int _training_target_skill_point_diff(skill_type exsk, int training_targe
                             * target_fractional, 10);
     }
 
-    int you_skill_points = you.skill_points[exsk] + get_crosstrain_points(exsk);
-    if (ash_has_skill_boost(exsk))
-        you_skill_points += ash_skill_point_boost(exsk, training_target);
+    int you_skill_points = you.skill_points[exsk];
+    if (!base)
+    {
+        you_skill_points += get_crosstrain_points(exsk);
+        if (ash_has_skill_boost(exsk))
+            you_skill_points += ash_skill_point_boost(exsk, training_target);
+    }
 
     int target_skill_point_diff = target_skill_points - you_skill_points;
 
@@ -1568,6 +1586,24 @@ static int _training_target_skill_point_diff(skill_type exsk, int training_targe
         target_skill_point_diff -= min(manual_charges, target_skill_point_diff / 2);
 
     return target_skill_point_diff;
+}
+
+// How many skill points can be put into a skill before its training target
+// is reached? INT_MAX if it has no unmet target.
+static int _skill_points_for_target(skill_type exsk)
+{
+    int max_points = INT_MAX;
+    for (bool base : { false, true })
+    {
+        const int target = you.get_training_target(exsk, base);
+        if (!target || target <= you.skill(exsk, 10, base, false))
+            continue;
+
+        const int diff = _training_target_skill_point_diff(exsk, target, base);
+        if (diff > 0)
+            max_points = min(max_points, diff);
+    }
+    return max_points;
 }
 
 static int _train(skill_type exsk, int &max_exp, bool simu, bool check_targets)
@@ -1593,13 +1629,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu, bool check_targets)
         const int spending_limit = min(10 * MAX_SPENDING_LIMIT, max_exp);
         skill_inc = spending_limit / cost;
 
-        int training_target = you.training_targets[exsk];
-        if (training_target > you.skill(exsk, 10, false, false))
-        {
-            int target_skill_point_diff = _training_target_skill_point_diff(exsk, training_target);
-            if (target_skill_point_diff > 0)
-                skill_inc = min(skill_inc, target_skill_point_diff);
-        }
+        skill_inc = min(skill_inc, _skill_points_for_target(exsk));
         cost = skill_inc * cost;
     }
 
@@ -1848,70 +1878,92 @@ int get_skill_percentage(const skill_type x)
 }
 
 /**
- * Get the training target for a skill.
+ * Get a training target for a skill.
  *
  * @param sk the skill to set
+ * @param base whether to get the base target, rather than the modified one.
  * @return the current target, scaled by 10 -- so between 0 and 270.
  *         0 means no target.
  */
-int player::get_training_target(const skill_type sk) const
+int player::get_training_target(const skill_type sk, bool base) const
 {
-    ASSERT_LESS(training_targets[sk], 271);
-    return training_targets[sk];
+    const auto &targets = base ? base_training_targets : training_targets;
+    ASSERT_LESS(targets[sk], 271);
+    return targets[sk];
 }
 
 /**
- * Set the training target for a skill.
+ * Set a training target for a skill.
  *
  * @param sk the skill to set
  * @param target the new target, between 0.0 and 27.0.  0.0 means no target.
+ * @param base whether to set the base target, rather than the modified one.
  */
-bool player::set_training_target(const skill_type sk, const double target, bool announce)
+bool player::set_training_target(const skill_type sk, const double target,
+                                 bool announce, bool base)
 {
-    return set_training_target(sk, (int) round(target * 10), announce);
+    return set_training_target(sk, (int) round(target * 10), announce, base);
 }
 
-void player::clear_training_targets()
+void player::clear_training_targets(bool base)
 {
     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
-        set_training_target(sk, 0);
+        set_training_target(sk, 0, false, base);
+}
+
+void player::clear_all_training_targets()
+{
+    clear_training_targets(false);
+    clear_training_targets(true);
 }
 
 /**
- * Set the training target for a skill, scaled by 10.
+ * Set a training target for a skill, scaled by 10.
  *
  * @param sk the skill to set
  * @param target the new target, scaled by ten, so between 0 and 270.  0 means
  *               no target.
+ * @param base whether to set the base target, rather than the modified one.
+ *               Setting one kind of target clears the other kind.
  *
  * @return whether setting the target succeeded.
  */
-bool player::set_training_target(const skill_type sk, const int target, bool announce)
+bool player::set_training_target(const skill_type sk, const int target,
+                                 bool announce, bool base)
 {
+    auto &targets = base ? base_training_targets : training_targets;
     if (target > 270) // if target is above 270, reject with an error
     {
         mpr("Your training target must be 27 or below!");
         return false;
     }
     const int ranged_target = min(max((int) target, 0), 270);
-    if (announce && ranged_target != (int) training_targets[sk])
+    if (announce && ranged_target != (int) targets[sk])
     {
         if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
             mpr("You can't set training targets!");
         else if (ranged_target == 0)
-            mprf("Clearing the skill training target for %s.", skill_name(sk));
+        {
+            mprf("Clearing the %sskill training target for %s.",
+                 base ? "base " : "", skill_name(sk));
+        }
         else
         {
-            mprf("Setting a skill training target for %s at %d.%d.", skill_name(sk),
-                                    ranged_target / 10, ranged_target % 10);
+            mprf("Setting a %sskill training target for %s at %d.%d.",
+                 base ? "base " : "", skill_name(sk),
+                 ranged_target / 10, ranged_target % 10);
         }
     }
     if (!can_enable_skill(sk)) // checks for gnolls
     {
-        training_targets[sk] = 0;
+        targets[sk] = 0;
         return false;
     }
-    training_targets[sk] = ranged_target;
+    // Clear the other kind of target (base/modified)
+    if (ranged_target)
+        set_training_target(sk, 0, announce, !base);
+
+    targets[sk] = ranged_target;
     return true;
 }
 
@@ -2696,6 +2748,7 @@ void skill_state::save()
     training            = you.training;
     skill_points        = you.skill_points;
     training_targets    = you.training_targets;
+    base_training_targets = you.base_training_targets;
     skill_cost_level    = you.skill_cost_level;
     skill_order         = you.skill_order;
     auto_training       = you.auto_training;
@@ -2736,6 +2789,7 @@ void skill_state::restore_training()
         {
             you.train[sk] = train[sk];
             you.training_targets[sk] = training_targets[sk];
+            you.base_training_targets[sk] = base_training_targets[sk];
         }
     }
 

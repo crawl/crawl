@@ -1802,6 +1802,7 @@ static void _tag_construct_you(writer &th)
         marshallInt(th, you.skill_points[j]);
         marshallByte(th, you.skill_order[j]);   // skills ordering
         marshallInt(th, you.training_targets[j]);
+        marshallInt(th, you.base_training_targets[j]);
         marshallInt(th, you.skill_manual_points[j]);
     }
 
@@ -3497,6 +3498,15 @@ static void _tag_read_you(reader &th)
         }
         else
             you.training_targets[j] = 0;
+
+        if (th.getMinorVersion() >= TAG_MINOR_BASE_TRAINING_TARGETS)
+        {
+#endif
+            you.base_training_targets[j] = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+        }
+        else
+            you.base_training_targets[j] = 0;
 
         if (th.getMinorVersion() >= TAG_MINOR_GOLDIFY_MANUALS)
         {

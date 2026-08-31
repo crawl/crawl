@@ -409,9 +409,24 @@ EditableTextItem *SkillMenuEntry::get_progress()
     return m_progress;
 }
 
+// Whether to display the base target or the modified one.
+static bool _shown_target_is_base(skill_type sk)
+{
+    const bool base = skm.get_state(SKM_LEVEL) == SKM_LEVEL_NORMAL;
+    // If the skill isn't actually modified, show whatever target exists.
+    if (!you.get_training_target(sk, base)
+        && you.get_training_target(sk, !base)
+        && you.skill(sk, 10, true, false) == you.skill(sk, 10, false, false))
+    {
+        return !base;
+    }
+    return base;
+}
+
 void SkillMenuEntry::set_targets()
 {
-    int target = you.get_training_target(m_sk);
+    const bool base = _shown_target_is_base(m_sk);
+    int target = you.get_training_target(m_sk, base);
     if (target == 0)
     {
         m_progress->set_text("--");
@@ -420,7 +435,7 @@ void SkillMenuEntry::set_targets()
     else
     {
         m_progress->set_text(_format_skill_target(target));
-        if (target_met(m_sk))
+        if (target_met(m_sk, base))
             m_progress->set_fg_colour(DARKGREY); // mainly comes up in wizmode
         else
             m_progress->set_fg_colour(get_colour());
@@ -772,7 +787,7 @@ void SkillMenu::init_experience()
             }
         you.auto_training = false;
         reset_training();
-        you.clear_training_targets();
+        you.clear_all_training_targets();
     }
 }
 
@@ -925,7 +940,8 @@ int SkillMenu::read_skill_target(skill_type sk)
     EditableTextItem *progress = entry->get_progress();
     ASSERT(progress);
 
-    const int old_target = you.get_training_target(sk);
+    const bool base = _shown_target_is_base(sk);
+    const int old_target = you.get_training_target(sk, base);
     const string prefill = old_target <= 0 ? "0"
                                            : _format_skill_target(old_target);
 
@@ -933,7 +949,8 @@ int SkillMenu::read_skill_target(skill_type sk)
     progress->set_highlight_colour(RED);
 
     // for webtiles dialog input
-    progress->set_prompt(make_stringf("Enter a skill target for %s: ",
+    progress->set_prompt(make_stringf("Enter a %sskill target for %s: ",
+                                            base ? "base " : "",
                                             skill_name(sk)));
     progress->set_tag("skill_target");
 
@@ -962,7 +979,7 @@ int SkillMenu::read_skill_target(skill_type sk)
         else
             set_help("");
     }
-    you.set_training_target(sk, input);
+    you.set_training_target(sk, input, false, base);
     cancel_set_target();
     refresh_display();
     return input;
@@ -1151,7 +1168,7 @@ void SkillMenu::clear_targets()
 {
     if (get_state(SKM_VIEW) != SKM_VIEW_TARGETS)
         return;
-    you.clear_training_targets();
+    you.clear_all_training_targets();
     refresh_display();
 }
 
