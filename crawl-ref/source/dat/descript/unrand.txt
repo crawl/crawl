@@ -902,3 +902,10 @@ mangrove bardiche
 A massive polearm hewn in one piece from a mangrove tree. Its blade is no less
 sharp for being made of wood, and those caught in its enchanted branches will
 soon find themselves at home in the bog from which this deadly weapon sprouted.
+%%%%
+staff of Five Virtues
+
+The staff of a venerable master monk who drove away her foes as easily as her
+attachments and (so the legend says) eventually transcended life and death
+altogether. A worthy wielder may unlock the staff's great potential, provided
+they follow its former owner's peculiar ideas of balance and comportment.

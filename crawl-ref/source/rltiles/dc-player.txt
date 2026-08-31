@@ -720,6 +720,7 @@ skullcrusher SKULLCRUSHER
 carina CARINA
 %rim 1
 mangrove MANGROVE
+five_virtues FIVE_VIRTUES
 
 %sdir player/hand1
 # blades

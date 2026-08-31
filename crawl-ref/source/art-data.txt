@@ -2024,6 +2024,24 @@ DESCRIP: ConstrDrown: When attacking a constricted enemy, it has a 50% chance to
 +ConstrBog: When attacking a constricted enemy, it has a 50% chance to
  tempoarily transform the ground beneath them into a noxious bog.
 
+ENUM:    FIVE_VIRTUES
+NAME:    staff of Five Virtues
+INSCRIP: VirtueSH, VirtueRefl
+OBJ:     OBJ_WEAPONS/WPN_LAJATANG
+PLUS:    +5
+COLOUR:  WHITE
+TILE:    urand_five_virtues
+TILE_EQ: FIVE_VIRTUES
+BRAND:   SPWPN_REBUKE
+WILL:    1
+BOOL:    fragile
+DESCRIP: VirtueSH: It provides +5 SH for each of five conditions you meet:
+ Staves is your highest skill, or is at maximum level; Your stealth is at
+ least +++++; Your base invocations skill is at least 15; Your intelligence is
+ at least 20; Your base EV is at least 25.
++VirtueRefl: If you meet at least three of the five conditions, it provides
+ reflection and an extra maximum block per turn.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

@@ -1823,3 +1823,9 @@ static void _ICE_DRAGON_ARCANIST_SCALES_unequip(item_def */*item*/, bool *show_m
     if (!show_msgs || *show_msgs)
         mprf(MSGCH_TALK, "%s", getSpeakString("ice dragon arcanist scales farewell").c_str());
 }
+
+/////////////////////////////////////////////////////
+static void _FIVE_VIRTUES_world_reacts(item_def */*item*/)
+{
+    you.redraw_armour_class = true;
+}
