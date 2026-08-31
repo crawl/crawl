@@ -507,7 +507,7 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_MAKHLEB_INFERNAL_SERVANT, "Infernal Servant",
             0, scaling_cost::fixed(8), 4, -1, {fail_basis::invo, 40, 5, 20}},
         { ABIL_MAKHLEB_INFERNAL_LEGION, "Infernal Legion",
-            0, scaling_cost::fixed(10), 8, -1, {fail_basis::invo, 55, 5, 20}},
+            0, scaling_cost::fixed(10), 6, -1, {fail_basis::invo, 55, 5, 20}},
         { ABIL_MAKHLEB_BRAND_SELF_1, "Brand Self #1",
             0, 0, 0, -1, {fail_basis::invo}, abflag::injury },
         { ABIL_MAKHLEB_BRAND_SELF_2, "Brand Self #2",
