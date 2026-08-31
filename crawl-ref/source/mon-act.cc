@@ -3826,6 +3826,10 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     // of doing literally nothing.
     if (mons.cannot_move())
     {
+        // Don't consider making intelligent attacks while impaired.
+        if (mons_is_fleeing(mons) || mons_is_confused(mons))
+            return false;
+
         int count = 0;
         actor* targ = nullptr;
         for (radius_iterator ri(mons.pos(), mons.reach_range(), C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
@@ -3834,6 +3838,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
             {
                 if (could_harm_enemy(&mons, act)
                     && !act->is_firewood()
+                    && mons.can_see(*act)
                     && one_chance_in(++count))
                 {
                     targ = act;
