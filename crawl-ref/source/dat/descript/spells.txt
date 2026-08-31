@@ -1038,7 +1038,10 @@ Hurl Torchlight spell
 
 Hurls a gout of umbral torchlight which deals irresistible damage to living,
 demonic, and holy beings. The torchlight will also briefly empower any friendly
-undead caught in its blast and is harmless to those who worship Yredelemnul.
+undead caught in its blast, increasing their melee damage and granting them one
+free action.
+
+It is harmless to those who worship Yredelemnul.
 %%%%
 Iceblast spell
 
