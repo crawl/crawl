@@ -1996,6 +1996,34 @@ DESCRIP: IceExpos:  Whenever you deal cold damage to an enemy without rCold∞,
  reducing its Willpower.
 +IceWiz:   It increases the success rate of your Ice Magic spells.
 
+ENUM:    CARINA
+NAME:    giant spiked club "Carina at Dusk"
+INSCRIP: ShootingStar
+OBJ:     OBJ_WEAPONS/WPN_GIANT_SPIKED_CLUB
+PLUS:    +9
+COLOUR:  LIGHTMAGENTA
+TILE:    urand_carina
+TILE_EQ: CARINA
+BRAND:   SPWPN_CONCUSSION
+LIFE:    1
+DESCRIP: ShootingStar: When knocking back an enemy, and on half of other hits,
+ it spawns a shooting star with power proportional to the damage dealt.
+
+ENUM:    MANGROVE_BARDICHE
+NAME:    mangrove bardiche
+INSCRIP: ConstrDrown ConstrBog
+OBJ:     OBJ_WEAPONS/WPN_BARDICHE
+PLUS:    +6
+COLOUR:  ETC_WATER
+TILE:    urand_mangrove
+TILE_EQ: MANGROVE
+BRAND:   SPWPN_ENTANGLING
+BOOL:    poison
+DESCRIP: ConstrDrown: When attacking a constricted enemy, it has a 50% chance to
+ flood their lungs with water.
++ConstrBog: When attacking a constricted enemy, it has a 50% chance to
+ tempoarily transform the ground beneath them into a noxious bog.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

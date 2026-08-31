@@ -716,6 +716,10 @@ crystal_spear CRYSTAL_SPEAR
 flaming_death FLAMING_DEATH
 # end TAG_MAJOR_VERSION
 skullcrusher SKULLCRUSHER
+%rim 0
+carina CARINA
+%rim 1
+mangrove MANGROVE
 
 %sdir player/hand1
 # blades

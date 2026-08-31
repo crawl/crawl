@@ -645,7 +645,7 @@ void melee_attack::do_vampire_lifesteal()
     }
 }
 
-void melee_attack::handle_concussion_brand()
+void melee_attack::handle_concussion_brand(bool unrand)
 {
     const coord_def old_pos = defender->pos();
     bool did_move = false;
@@ -685,6 +685,9 @@ void melee_attack::handle_concussion_brand()
     {
         schedule_trample_follow_fineff(attacker, old_pos);
     }
+
+    if (unrand && damage_done > 0 && (did_move || coinflip()))
+            schedule_stardust_fineff(attacker, 15 + damage_done, 1, SHOOTING_STAR_CARINA);
 }
 
 static void _apply_flux_contam(monster &m)
@@ -805,6 +808,27 @@ void melee_attack::grow_burstshrooms(int hd)
         mprf("Mushrooms sprout behind %s.", defender->name(DESC_THE).c_str());
 }
 
+static void _trigger_mangrove_bardiche(actor* attacker, actor* defender, int dam)
+{
+    if (defender->is_constricted() && defender->alive() && dam)
+    {
+        if (coinflip())
+            defender->floodify(attacker, min(20 + random2(dam * 4), 80));
+
+        coord_def pos = defender->pos();
+
+        if (coinflip() && in_bounds(pos) && env.grid(pos) != DNGN_DEEP_WATER
+            && env.grid(pos) != DNGN_LAVA)
+        {
+            mprf("A bog forms beneath %s!", defender->name(DESC_THE).c_str());
+            temp_change_terrain(pos, DNGN_TOXIC_BOG, min(20 + random2(dam * 4), 80),
+                TERRAIN_CHANGE_BOG, attacker->mid);
+
+            flash_tile(pos, LIGHTGREEN, 0, TILE_BOLT_BOG_FLASH);
+        }
+    }
+}
+
 /* An attack has been determined to have hit something
  *
  * Handles to-hit effects for both attackers and defenders,
@@ -915,6 +939,11 @@ bool melee_attack::handle_phase_hit()
 
     maybe_trigger_jinxbite();
 
+    // Using a separate function and not a melee unrand effect because this
+    // needs to check constriction status before applying the entangling brand
+    if (weapon && is_unrandom_artefact(*weapon, UNRAND_MANGROVE_BARDICHE))
+        _trigger_mangrove_bardiche(attacker, defender, damage_done);
+
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
 
@@ -922,7 +951,7 @@ bool melee_attack::handle_phase_hit()
         do_valour_beam();
 
     if (weapon && damage_brand == SPWPN_CONCUSSION)
-        handle_concussion_brand();
+        handle_concussion_brand(is_unrandom_artefact(*weapon, UNRAND_CARINA));
 
     if (weapon && testbits(weapon->flags, ISFLAG_CHAOTIC)
         && defender->alive())

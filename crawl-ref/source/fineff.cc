@@ -556,9 +556,9 @@ class stardust_fineff : public final_effect
 public:
     void fire() override;
 
-    stardust_fineff(actor* agent, int _power, int _max, bool _is_star_jelly)
+    stardust_fineff(actor* agent, int _power, int _max, shooting_star_fineff_type _typ)
         : final_effect(agent, nullptr, you.pos()), power(_power), max_stars(_max),
-                                                   is_star_jelly(_is_star_jelly)
+                                                   type(_typ)
     {
     }
 protected:
@@ -566,7 +566,7 @@ protected:
 
     int power;
     int max_stars;
-    bool is_star_jelly;
+    shooting_star_fineff_type type;
 };
 
 class pyromania_fineff : public final_effect
@@ -828,9 +828,9 @@ void schedule_detonation_fineff(const coord_def& pos, const item_def* wpn)
     _schedule_final_effect(new detonation_fineff(pos, wpn));
 }
 
-void schedule_stardust_fineff(actor* agent, int power, int max_stars, bool force_max)
+void schedule_stardust_fineff(actor* agent, int power, int max_stars, shooting_star_fineff_type type)
 {
-    _schedule_final_effect(new stardust_fineff(agent, power, max_stars, force_max));
+    _schedule_final_effect(new stardust_fineff(agent, power, max_stars, type));
 }
 
 void schedule_pyromania_fineff()
@@ -1726,12 +1726,15 @@ void stardust_fineff::fire()
     if (count == 0)
         return;
 
-    if (is_star_jelly)
+    if (type == SHOOTING_STAR_JELLY)
         mprf("A flurry of magic pours from %s injured body!", agent->name(DESC_ITS).c_str());
     else
-        mprf("%s orb unleashes a flurry of shooting stars!", agent->name(DESC_ITS).c_str());
+    {
+        mprf("%s %s unleashes a flurry of shooting stars!", agent->name(DESC_ITS).c_str(),
+            type == SHOOTING_STAR_CARINA ? " weapon" : " orb");
+    }
 
-    count = is_star_jelly ? max_stars : min(max_stars, count + 1);
+    count = type == SHOOTING_STAR_JELLY ? max_stars : min(max_stars, count + 1);
     const int foe = agent->is_player() ? int{MHITYOU} : agent->as_monster()->foe;
     for (int i = 0; i < count; ++i)
     {
@@ -1746,10 +1749,13 @@ void stardust_fineff::fire()
             mon->steps_remaining = 12;
     }
 
-    if (agent->is_player())
-        you.duration[DUR_STARDUST_COOLDOWN] = random_range(40, 70);
-    else if (!is_star_jelly)
-        agent->as_monster()->add_ench(mon_enchant(ENCH_ORB_COOLDOWN, agent, random_range(300, 500)));
+    if (type == SHOOTING_STAR_ORB)
+    {
+        if (agent->is_player())
+            you.duration[DUR_STARDUST_COOLDOWN] = random_range(40, 70);
+        else
+            agent->as_monster()->add_ench(mon_enchant(ENCH_ORB_COOLDOWN, agent, random_range(300, 500)));
+    }
 }
 
 void pyromania_fineff::fire()
