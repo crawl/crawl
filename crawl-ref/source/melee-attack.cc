@@ -217,8 +217,6 @@ bool melee_attack::handle_phase_attempted()
     if (attk_type == AT_NONE)
         return false;
 
-    to_hit = calc_to_hit(true);
-
     if (attacker != defender && !is_riposte)
     {
         // Allow setting of your allies' target, etc.
@@ -1890,6 +1888,11 @@ bool melee_attack::attack()
 
     // Apparently I'm insane for believing that we can still stay general past
     // this point in the combat code, mebe I am! --Cryptic
+
+    // XXX: to_hit may be set already in handle_phase_attempted(), but cleaving
+    //      attacks skip that, so this must be done later.
+    if (to_hit != AUTOMATIC_HIT)
+        to_hit = calc_to_hit(true);
 
     // Calculate various ev values and begin to check them to determine the
     // correct handle_phase_ handler.
