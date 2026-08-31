@@ -1840,7 +1840,7 @@ bool mons_shatter(monster* caster, bool actual)
         }
     }
 
-    int pow = 5 + div_rand_round(caster->get_hit_dice() * 9, 2);
+    int pow = 5 + div_rand_round(caster->spell_hd() * 9, 2);
 
     if (actual)
     {
