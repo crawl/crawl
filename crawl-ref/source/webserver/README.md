@@ -21,12 +21,63 @@ app's code.
 
 ## Contents
 
+* [Running with Docker](#docker)
 * [Prerequisites](#prerequisites)
 * [Running the server for testing purposes](#running-the-server-for-testing-purposes)
 * [Running a production server](#running-a-production-server)
 * [Contributing](#contributing)
 
+## Running with Docker
+
+This is the easiest way to run a webtiles server locally for testing.
+The only prequisite is Docker itself. If you still want to install and run
+everything on your local system, or you you want to run a production server,
+skip to [Prerequisites](#prerequisites) and read from there.
+
+### Build the Docker container
+
+This only needs to be done once ever, unless the system dependencies change,
+or your Docker cache is cleared.
+
+```
+./scripts/build-docker
+```
+
+### Start the Docker container
+
+This gives you an interactive prompt inside the container. Port 8080 is
+exposed and routed to 127.0.0.1 so you can access webtiles from your
+local browser.
+
+```
+./scripts/start-docker
+```
+
+### Build and run server inside container
+
+Now you have an interactive prompt inside the container you can run
+the scripts that were copied there. To build a webtiles build of crawl:
+
+```
+./build-crawl
+```
+
+(If you want to make a different build of crawl just cd into
+`/crawl/crawl-ref/source` and run any usual build command.)
+
+Once a build has been created, run the server:
+
+```
+./start-webtiles
+```
+
+Since port 8080 is mapped to localhost you should now be able to go to
+http://localhost:8080 and play webtiles!
+
 ## Prerequisites
+
+From here on are instructions for building and running the webserver on your
+own machine or a production server.
 
 To run the server, you need:
 
