@@ -1814,6 +1814,12 @@ static int _shatter_player(int pow, actor *wielder, bool devastator = false)
     return damage;
 }
 
+// For UI purposes.
+dice_def mons_shatter_damage(int spell_hd)
+{
+    return dice_def(3, 5 + (5 + spell_hd * 9 / 2) / 3);
+}
+
 bool mons_shatter(monster* caster, bool actual)
 {
     const bool silence = silenced(caster->pos());

@@ -42,6 +42,7 @@ spret fire_los_attack_spell(spell_type spell, int pow, const actor* agent,
                             bool fail = false, int* damage_done = nullptr);
 int adjacent_huddlers(coord_def pos, bool only_in_sight = false);
 void sonic_damage(bool scream);
+dice_def mons_shatter_damage(int spell_hd);
 bool mons_shatter(monster* caster, bool actual = true);
 void shillelagh(actor *wielder, coord_def where, int pow);
 spret cast_freeze(int pow, monster* mons, bool fail);
