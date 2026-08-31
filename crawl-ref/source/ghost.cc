@@ -427,9 +427,11 @@ void ghost_demon::init_player_ghost()
 {
     // don't preserve transformations for ghosty purposes
     unwind_var<transformation> form(you.form, transformation::none);
+    unwind_var<transformation> def_form(you.default_form, transformation::none);
+    unwind_var<int8_t> talisman(you.cur_talisman, -1);
     unwind_var<player_equip_set> eq(you.equipment);
     unwind_var<bool> fishtail(you.fishtail, false);
-    you.equipment.unmeld_all_equipment(true);
+    you.equipment.reconcile_form_change(transformation::none, true);
 
     name   = you.your_name;
     max_hp = min(get_real_hp(false, false), MAX_GHOST_HP);

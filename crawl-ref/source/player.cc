@@ -6872,6 +6872,24 @@ player_stats player::calc_stats(int scale) const
  */
 player_stats player::preview_stats_with_specific_item(int scale, const item_def& new_item)
 {
+    // If we have no usable slot of some type this item needs, do not display
+    // changes in stats.
+    for (equipment_slot needed : get_all_item_slots(new_item))
+    {
+        bool usable = false;
+        for (equipment_slot alt : get_alternate_slots(needed))
+        {
+            if (you.equipment.unmelded_slot_count(alt) > 0)
+            {
+                usable = true;
+                break;
+            }
+        }
+
+        if (!usable)
+            return calc_stats(scale);
+    }
+
     // Since there are a lot of things which can affect the calculation of
     // EV/SH/fail, including artifact properties on either the item we're
     // equipped or the one we're swapping out for it, we check by very briefly
@@ -6937,7 +6955,6 @@ player_stats player::preview_stats_with_specific_item(int scale, const item_def&
 
     // Now actually equip the item.
     you.equipment.add(item, slot);
-    you.equipment.meld_equipment(get_form()->blocked_slots, true);
     you.equipment.update();
 
     // Now, simply calculate the resulting stats without temporary boosts.
@@ -7002,11 +7019,10 @@ player_stats player::preview_stats_in_specific_form(int scale, const item_def& t
     you.default_form = which_trans;
     you.form = which_trans;
     you.cur_talisman = _talisman.link;
-    you.equipment.unmeld_all_equipment(true);
-    you.equipment.meld_equipment(get_form(which_trans)->blocked_slots, true);
+    you.equipment.reconcile_form_change(which_trans, true);
 
     // Pretend incompatible items fell away.
-    vector<item_def*> forced_remove = you.equipment.get_forced_removal_list();
+    vector<item_def*> forced_remove = you.equipment.get_forced_removal_list(true);
     for (item_def* item : forced_remove)
         you.equipment.remove(*item);
 

@@ -2508,16 +2508,13 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
 
 static string _describe_lignify_ac()
 {
-    const Form* tree_form = get_form(transformation::tree);
-
     // Turn into a tree, check our resulting AC, and then turn back without
     // anyone being the wiser.
     unwind_var<player_equip_set> unwind_eq(you.equipment);
     unwind_var<int8_t> unwind_talisman(you.cur_talisman, -1);
     unwind_var<transformation> unwind_form(you.form, transformation::tree);
 
-    you.equipment.unmeld_all_equipment(true);
-    you.equipment.meld_equipment(tree_form->blocked_slots, true);
+    you.equipment.reconcile_form_change(transformation::tree, true);
 
     return make_stringf("If you quaff this potion your AC would be %d.",
                         you.armour_class_scaled(1));

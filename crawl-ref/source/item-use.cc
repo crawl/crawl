@@ -1425,13 +1425,19 @@ bool try_equip_item(item_def& item)
     {
         vector<equipment_slot> slots = get_all_item_slots(item);
         vector<item_def*> candidates;
+
+        // Track slots which we have claimed and can't move things to.
+        FixedVector<int, NUM_EQUIP_SLOTS> claimed;
+        claimed.init(0);
+
         for (equipment_slot wanted_slot : slots)
         {
             // Has freeing an earlier slot also freed this slot?
-            equipment_slot free_slot = equipment.find_free_compatible_slot(wanted_slot);
+            equipment_slot free_slot =
+                equipment.find_free_compatible_slot(wanted_slot, &claimed);
             if (free_slot != SLOT_UNUSED)
             {
-                equipment.num_slots[free_slot] -= 1;
+                ++claimed[free_slot];
                 continue;
             }
 
@@ -1453,7 +1459,7 @@ bool try_equip_item(item_def& item)
 
             equipment.remove(*to_remove.back());
 
-            equipment.num_slots[used_slot] -= 1;
+            ++claimed[used_slot];
             candidates.clear();
 
             // If find_slot_to_equip_item didn't give us a more specific slot,
@@ -1515,11 +1521,17 @@ bool handle_chain_removal(vector<item_def*>& to_remove, bool interactive)
 
     for (size_t n = 0; n < to_remove.size(); ++n)
     {
-        for (equipment_slot slot : item_granted_slots(*to_remove[n]))
+        // We need to remove melded gear iff we are removing a melded item.
+        const bool melded = you.equipment.is_melded(*to_remove[n]);
+
+        for (const granted_slot& granted : item_granted_slots(*to_remove[n]))
         {
+            const equipment_slot slot = granted.slot;
+
             vector<item_def*> chain_remove;
-            int chain_remove_num = you.equipment.needs_chain_removal(
-                slot, chain_remove, !interactive, to_remove);
+            int chain_remove_num = needs_chain_removal(slot, chain_remove,
+                                                       !interactive, to_remove,
+                                                       melded);
             if (chain_remove_num <= 0)
                 continue;
 

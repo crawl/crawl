@@ -44,13 +44,37 @@
 #include "stringutil.h"
 #include "tag-version.h"
 #include "transform.h"
+#include "unwind.h"
 #include "xom.h"
 
 static void _mark_unseen_monsters();
 
-static bool _use_slots(unrand_type item, bool count_melded, bool count_items)
+static bool _form_slots_apply(transformation form, bool count_default_form)
 {
-    return count_items && you.unrand_equipped(item, count_melded);
+    return you.form == form
+           || (count_default_form && you.default_form == form);
+}
+
+// Whether this slot is entirely banned, even if we have gear-granting items.
+static bool _slot_is_banned(equipment_slot slot, string* reason = nullptr)
+{
+    switch (slot)
+    {
+    case SLOT_RING:
+    case SLOT_AMULET:
+        if (!you.has_mutation(MUT_NO_JEWELLERY))
+            return false;
+
+        if (reason)
+        {
+            *reason = slot == SLOT_RING ? "You can't wear any rings."
+                                        : "You can't wear amulets.";
+        }
+        return true;
+
+    default:
+        return false;
+    }
 }
 
 /**
@@ -69,16 +93,25 @@ static bool _use_slots(unrand_type item, bool count_melded, bool count_items)
  *                                are currently melded. (Defaults to false.)
  * @param count_items       Whether to count slots granted by items.
  *                          (Defaults to true.)
+ * @param count_default_form Whether to count slots provided by our default
+ *                           form if it is being overridden by a temporary
+ *                           transformation. (Defaults to true.)
  *
  * @return The number of slots of the given type the player has.
  */
-int get_player_equip_slot_count(equipment_slot slot, string* zero_reason,
-                                bool count_melded_unrands, bool count_items)
+int player_equip_set::slot_count(equipment_slot slot, string* zero_reason,
+                                 bool count_melded_unrands, bool count_items,
+                                 bool count_default_form) const
 {
+// No innate slots of this type.
 #define NO_SLOT(x) {if (count == 0) {if (zero_reason) { *zero_reason = x; }; return 0;}}
 
-size_type player_size = you.body_size(PSIZE_TORSO, true);
-int count = 0;
+    if (_slot_is_banned(slot, zero_reason))
+        return 0;
+
+    size_type player_size = you.body_size(PSIZE_TORSO, true);
+    int count = count_items ? item_granted_slot_count(slot, count_melded_unrands)
+                            : 0;
 
     switch (slot)
     {
@@ -87,7 +120,9 @@ int count = 0;
         if (you.has_mutation(MUT_NO_GRASPING))
             NO_SLOT("You can't wield any weapon.")
         else
-            return 1;
+            ++count;
+
+        break;
 
     case SLOT_OFFHAND:
         if (you.has_mutation(MUT_MISSING_HAND))
@@ -103,16 +138,16 @@ int count = 0;
         else if (you.has_mutation(MUT_NO_GRASPING))
             NO_SLOT("You can't hold anything in your paws.")
         // Coglins get a SLOT_WEAPON_OR_OFFHAND instead.
-        else if (you.has_mutation(MUT_WIELD_OFFHAND))
-            return 0;
+        else if (!you.has_mutation(MUT_WIELD_OFFHAND))
+            ++count;
 
-        return 1;
+        break;
 
     case SLOT_WEAPON_OR_OFFHAND:
         if (you.has_mutation(MUT_WIELD_OFFHAND))
-            return 1;
+            ++count;
 
-        return 0;
+        break;
 
     case SLOT_BODY_ARMOUR:
         if (you.has_mutation(MUT_FORMLESS))
@@ -124,21 +159,24 @@ int count = 0;
                                     ? "" : ", even vestigial as they are,"))
         }
         else if (you.species == SP_OCTOPODE || you.has_mutation(MUT_NO_ARMOUR))
-            NO_SLOT("You can't wear armour!");
+            NO_SLOT("You can't wear armour!")
+        else
+            ++count;
 
-        return 1;
+        break;
 
     // Hats versus helmets is handled elsewhere. If you can wear at least a hat,
     // this should be non-zero.
     case SLOT_HELMET:
-        if (_use_slots(UNRAND_SKULL_OF_ZONGULDROK, count_melded_unrands, count_items))
-            ++count;
-
         if (you.has_mutation(MUT_FORMLESS))
             NO_SLOT("You don't have a head.")
         else if (you.has_mutation(MUT_NO_ARMOUR))
             NO_SLOT("That is much too large for your head.")
-        else if (you.form == transformation::serpent)
+        // We deliberately don't count the skull, even if we are counting
+        // melded unrands. It's impossible to get a skull there (it will have
+        // jumped onto the serpent), so for example Ash shouldn't count it.
+        // This is a bit hacky but seems to work.
+        else if (_form_slots_apply(transformation::serpent, count_default_form))
             return 2;
         else if (you.get_mutation_level(MUT_HORNS, false) >= 3)
             NO_SLOT("You can't wear any headgear with your large horns!")
@@ -147,12 +185,9 @@ int count = 0;
         else
             ++count;
 
-        return count;
+        break;
 
     case SLOT_GLOVES:
-        if (_use_slots(UNRAND_FISTICLOAK, count_melded_unrands, count_items))
-            ++count;
-
         if (you.has_mutation(MUT_QUADRUMANOUS))
             ++count;
 
@@ -171,7 +206,7 @@ int count = 0;
         else
             ++count;
 
-        return count;
+        break;
 
     case SLOT_BOOTS:
         if (species::wears_barding(you.species) || you.has_mutation(MUT_FORMLESS))
@@ -188,38 +223,44 @@ int count = 0;
             NO_SLOT("Your talons can't fit into boots.")
         else if (you.has_mutation(MUT_FLOAT))
             NO_SLOT("You have no feet!")
+        else
+            ++count;
 
-        return 1;
+        break;
 
     case SLOT_BARDING:
-        if (species::wears_barding(you.species))
-            return 1;
+        if (species::wears_barding(you.species)
+            || _form_slots_apply(transformation::sphinx, count_default_form)
+               && !you.has_mutation(MUT_NO_ARMOUR))
+        {
+            ++count;
+        }
+        else
+            NO_SLOT("You can't fit into that!")
 
-        if (you.form == transformation::sphinx && !you.has_mutation(MUT_NO_ARMOUR))
-            return 1;
-
-        NO_SLOT("You can't fit into that!")
+        break;
 
     case SLOT_CLOAK:
         // If octopodes are allowed to wear bardings, then surely they can also
         // get a cloak, too.
-        if (you.form == transformation::sphinx && !you.has_mutation(MUT_NO_ARMOUR))
-            return 1;
-
-        if (you.has_mutation(MUT_FORMLESS))
+        if (_form_slots_apply(transformation::sphinx, count_default_form)
+            && !you.has_mutation(MUT_NO_ARMOUR))
+        {
+            ++count;
+        }
+        else if (you.has_mutation(MUT_FORMLESS))
             NO_SLOT("You don't have any shoulders.")
         else if (you.species == SP_OCTOPODE || you.has_mutation(MUT_NO_ARMOUR))
             NO_SLOT("You can't wear that.")
         else if (you.get_mutation_level(MUT_WEAKNESS_STINGER, false) >= 3)
             NO_SLOT("You can't wear that with your sharp stinger!")
+        else
+            ++count;
 
-        return 1;
+        break;
 
     case SLOT_RING:
     {
-        if (you.has_mutation(MUT_NO_JEWELLERY))
-            NO_SLOT("You can't wear any rings.")
-
         int ring_count = 2;
         if (you.species == SP_OCTOPODE)
             ring_count = 8;
@@ -227,47 +268,49 @@ int count = 0;
         if (you.has_mutation(MUT_MISSING_HAND))
             ring_count -= 1;
 
-        if (_use_slots(UNRAND_FINGER_AMULET, count_melded_unrands, count_items))
-            ring_count += 1;
-
-        if (_use_slots(UNRAND_VAINGLORY, count_melded_unrands, count_items))
-            ring_count += 2;
-
-        return ring_count;
+        count += ring_count;
+        break;
     }
 
     case SLOT_AMULET:
-        if (you.has_mutation(MUT_NO_JEWELLERY))
-            NO_SLOT("You can't wear amulets.")
-
-        if (_use_slots(UNRAND_JUSTICARS_REGALIA, count_melded_unrands, count_items))
-            return 2;
-
-        return 1;
+        ++count;
+        break;
 
     case SLOT_GIZMO:
         if (you.species != SP_COGLIN)
             NO_SLOT("You lack an exoframe to install that in.")
+        else
+            ++count;
 
-        return 1;
+        break;
 
     case SLOT_HAUNTED_AUX:
         if (you.has_mutation(MUT_FORMLESS))
-            return 6;
-        else
-            return 0;
+            count += 6;
+
+        break;
 
     case SLOT_TWOHANDER_ONLY:
-        if (you.form == transformation::fortress_crab)
-            return 1;
-        else
-            return 0;
+        if (_form_slots_apply(transformation::fortress_crab, count_default_form))
+            ++count;
+
+        break;
 
     default:
         return 0;
 
     }
+
+    return count;
 #undef NO_SLOT
+}
+
+int get_player_equip_slot_count(equipment_slot slot, string* zero_reason,
+                                bool count_melded_unrands, bool count_items,
+                                bool count_default_form)
+{
+    return you.equipment.slot_count(slot, zero_reason, count_melded_unrands,
+                                    count_items, count_default_form);
 }
 
 const static vector<equipment_slot> _flex_slots[] =
@@ -401,22 +444,6 @@ int player_equip_set::get_artprop(artefact_prop_type prop) const
     return artprop_cache[prop];
 }
 
-/**
- * Returns an array of exactly how many of each type of equipment slot the
- * player character has (including things like the Macabre Finger, if the player
- * is currently wearing it).
- *
- * This array can be used directly by player_equip_set
- */
-FixedVector<int, NUM_EQUIP_SLOTS> get_total_player_equip_slots()
-{
-    FixedVector<int, NUM_EQUIP_SLOTS> slots;
-    for (int i = 0; i < NUM_EQUIP_SLOTS; ++i)
-        slots[i] = get_player_equip_slot_count(static_cast<equipment_slot>(i));
-
-    return slots;
-}
-
 item_def& player_equip_entry::get_item() const
 {
     ASSERT(slot != SLOT_UNUSED);
@@ -442,6 +469,45 @@ bool slot_is_melded(equipment_slot slot)
 {
     return get_form()->slot_is_blocked(slot)
                 || you.fishtail && slot == SLOT_BOOTS;
+}
+
+/**
+ * How many slots of a given type our equipped gear is granting us.
+ *
+ * @param slot          The type of slot being counted.
+ * @param count_melded  Whether to count slots granted by gear which is itself
+ *                      currently melded.
+ */
+int player_equip_set::item_granted_slot_count(equipment_slot slot,
+                                              bool count_melded) const
+{
+    int count = 0;
+    for (const player_equip_entry& entry : items)
+    {
+        if (entry.is_overflow || !count_melded && entry.melded)
+            continue;
+
+        for (const granted_slot& granted : item_granted_slots(entry.get_item()))
+        {
+            if (granted.slot == slot)
+                count += granted.count;
+        }
+    }
+
+    return count;
+}
+
+int player_equip_set::unmelded_slot_count(equipment_slot slot) const
+{
+    if (_slot_is_banned(slot))
+        return 0;
+
+    // Slots which are independent from items.
+    int count = slot_is_melded(slot)
+                    ? 0 : slot_count(slot, nullptr, false, false, false);
+
+    // Plus whatever our unmelded gear is granting us.
+    return count + item_granted_slot_count(slot, false);
 }
 
 /**
@@ -497,9 +563,9 @@ bool can_equip_item(const item_def& item, bool temp, string* veto_reason,
         for (equipment_slot alt_slot : flex)
         {
             // If we don't have this slot, veto_reason will be set here.
-            if (get_player_equip_slot_count(alt_slot, veto_reason))
+            if (get_player_equip_slot_count(alt_slot, veto_reason, true))
             {
-                if (temp && slot_is_melded(alt_slot))
+                if (temp && you.equipment.unmelded_slot_count(alt_slot) == 0)
                 {
                     // Note that this slot is blocked due to transformation, in
                     // the likely case that no other compatible slot exists.
@@ -646,7 +712,251 @@ void player_equip_set::update()
     }
 
     for (int i = SLOT_UNUSED; i < NUM_EQUIP_SLOTS; ++i)
-        num_slots[i] = get_player_equip_slot_count(static_cast<equipment_slot>(i));
+    {
+        num_slots[i] = slot_count(static_cast<equipment_slot>(i), nullptr,
+                                  true);
+    }
+}
+
+// This is an ordering of slots such that every slot of every item-granter
+// comes before the item it grants. If we ever don't have such an order, then
+// we could have a granting loop, which is illegal.
+static vector<equipment_slot> _dag_ordered_slots()
+{
+    // Map from equip slots to all slots that grant them.
+    vector<vector<equipment_slot>> grants(NUM_EQUIP_SLOTS);
+    FixedVector<int, NUM_EQUIP_SLOTS> num_granters;
+    num_granters.init(0);
+
+    for (int i = UNRAND_START + 1; i < UNRAND_LAST; ++i)
+    {
+        const vector<granted_slot>& granted = unrand_granted_slots(i);
+        if (granted.empty())
+            continue;
+
+        // get_all_item_slots() needs an item, not an unrand index.
+        item_def granter;
+        granter.base_type = get_unrand_entry(i)->base_type;
+        granter.sub_type = get_unrand_entry(i)->sub_type;
+        granter.unrand_idx = i;
+        granter.flags |= ISFLAG_UNRANDART;
+
+        for (equipment_slot occupied : get_all_item_slots(granter))
+        {
+            for (equipment_slot slot : get_alternate_slots(occupied))
+            {
+                for (const granted_slot& grant : granted)
+                {
+                    grants[slot].push_back(grant.slot);
+                    ++num_granters[grant.slot];
+                }
+            }
+        }
+    }
+
+    // Repeatedly add all slots with all their granters already in the order.
+    vector<equipment_slot> order;
+    FixedVector<bool, NUM_EQUIP_SLOTS> placed;
+    placed.init(false);
+    bool changed = true;
+    while (changed)
+    {
+        changed = false;
+        for (int i = SLOT_FIRST_STANDARD; i < NUM_EQUIP_SLOTS; ++i)
+        {
+            const equipment_slot slot = static_cast<equipment_slot>(i);
+            if (placed[slot] || num_granters[slot] > 0)
+                continue;
+
+            order.push_back(slot);
+            placed[slot] = true;
+            changed = true;
+
+            for (equipment_slot granted : grants[slot])
+                --num_granters[granted];
+        }
+    }
+
+    // Any slot left over is part of a granting loop, which must not happen.
+    ASSERT((int)order.size() == NUM_EQUIP_SLOTS - SLOT_FIRST_STANDARD);
+
+    return order;
+}
+
+// Meld a single equipment slot.
+//
+// This is for transformations like fishtail, which don't take responsibility
+// for the entire form and should preserve the meldedness of other items. It
+// assumes that the slot is neither granted by nor granting another slot.
+bool player_equip_set::meld_slot(equipment_slot slot)
+{
+    vector<item_def*> melded;
+    for (player_equip_entry& entry : items)
+    {
+        if (entry.slot != slot || entry.melded)
+            continue;
+
+        melded.push_back(&entry.get_item());
+
+        for (player_equip_entry& other : items)
+            if (other.item == entry.item)
+                other.melded = true;
+    }
+
+    update();
+    handle_melding(melded);
+
+    return !melded.empty();
+}
+
+// Unmeld a single equipment slot.
+//
+// This is for transformations like fishtail, which don't take responsibility
+// for the entire form and should preserve the meldedness of other items. It
+// assumes that the slot is not granting another slot; no chain melding.
+bool player_equip_set::unmeld_slot(equipment_slot slot)
+{
+    vector<item_def*> unmelded;
+    for (player_equip_entry& entry : items)
+    {
+        if (entry.slot != slot || !entry.melded)
+            continue;
+
+        // Every slot this item occupies must have an unmelded slot for it.
+        bool still_blocked = false;
+        for (const player_equip_entry& other : items)
+        {
+            if (other.item != entry.item)
+                continue;
+
+            int in_use = 0;
+            for (const player_equip_entry& rival : items)
+            {
+                if (rival.slot == other.slot && !rival.melded
+                    && rival.item != entry.item)
+                {
+                    ++in_use;
+                }
+            }
+
+            if (in_use >= unmelded_slot_count(other.slot))
+                still_blocked = true;
+        }
+
+        if (still_blocked)
+            continue;
+
+        unmelded.push_back(&entry.get_item());
+
+        for (player_equip_entry& other : items)
+            if (other.item == entry.item)
+                other.melded = false;
+    }
+
+    update();
+    handle_unmelding(unmelded);
+
+    return !unmelded.empty();
+}
+
+/**
+ * Melds and unmelds equipment for a new form.
+ *
+ * This recomputes the legal state from scratch: everything unmelds, and then
+ * whatever no longer fits melds again.
+ *
+ * Any items that no longer fit at all will be left equipped - this can only
+ * happen when exiting a form which grants slots. The caller should follow up
+ * by using forced_removal_list to deal with the extra items.
+ *
+ * @param target         The form being entered, which may not be the form the
+ *                       player is in yet: gear is melded before the change so
+ *                       that unequip effects happen while we are still
+ *                       ourselves.
+ * @param skip_effects   If true, no message will be printed about doing any of
+ *                       this, and no equip/unequip effects will be processed.
+ */
+void player_equip_set::reconcile_form_change(transformation target,
+                                             bool skip_effects)
+{
+    // First unmeld everything.
+    player_equip_set scratch = *this;
+    for (player_equip_entry& entry : scratch.items)
+        entry.melded = false;
+
+    // An order that guarantees we examine every item-granting item before the
+    // item it grants.
+    const vector<equipment_slot> order = _dag_ordered_slots();
+
+    // Temporarily change form for the melding calculation.
+    {
+        unwind_var<transformation> unwind_form(you.form, target);
+
+        for (equipment_slot slot : order)
+        {
+            const int usable = scratch.unmelded_slot_count(slot);
+
+            const int total = scratch.slot_count(slot, nullptr, true);
+            const int meldable = total - usable;
+
+            ASSERT(meldable >= 0);
+
+            vector<player_equip_entry*> occupants;
+            for (player_equip_entry& entry : scratch.items)
+            {
+                if (entry.slot == slot && !entry.melded)
+                    occupants.push_back(&entry);
+            }
+
+            // Take from the end, so that the gear put on most recently is the
+            // gear that melds.
+            for (int i = (int)occupants.size() - 1; i >= usable; --i)
+            {
+                // No room to meld these - they will be left equipped without
+                // space, and the caller has to deal with them.
+                if (i - usable >= meldable)
+                    continue;
+
+                for (player_equip_entry& entry : scratch.items)
+                {
+                    if (entry.item == occupants[i]->item)
+                        entry.melded = true;
+                }
+            }
+        }
+    }
+
+    // Gather what changed.
+    vector<item_def*> melded;
+    vector<item_def*> unmelded;
+    for (equipment_slot slot : order)
+    {
+        for (size_t i = 0; i < items.size(); ++i)
+        {
+            if (items[i].slot != slot || items[i].is_overflow
+                || scratch.items[i].melded == items[i].melded)
+            {
+                continue;
+            }
+
+            if (scratch.items[i].melded)
+                melded.push_back(&items[i].get_item());
+            else
+                unmelded.push_back(&items[i].get_item());
+        }
+    }
+
+    // Now do the actual melding.
+    for (size_t i = 0; i < items.size(); ++i)
+        items[i].melded = scratch.items[i].melded;
+
+    update();
+
+    if (skip_effects)
+        return;
+
+    handle_melding(melded);
+    handle_unmelding(unmelded);
 }
 
 /**
@@ -697,13 +1007,20 @@ equipment_slot player_equip_set::find_slot_to_equip_item(const item_def& item,
     vector<item_def*> to_replace;
     player_equip_set equipment = *this;
     equipment_slot ret = SLOT_UNUSED;
+
+    // Slots this item has already been given, which are no longer free for the
+    // rest of it.
+    FixedVector<int, NUM_EQUIP_SLOTS> claimed;
+    claimed.init(0);
+
     for (size_t i = 0; i < slots.size(); ++i)
     {
-        equipment_slot slot = find_free_compatible_slot(slots[i]);
+        equipment_slot slot = equipment.find_free_compatible_slot(slots[i],
+                                                                  &claimed);
         if (slot == SLOT_UNUSED)
         {
-            find_removable_items_for_slot(slots[i], to_replace, ignore_curses,
-                                          false);
+            equipment.find_removable_items_for_slot(slots[i], to_replace,
+                                                    ignore_curses, false);
         }
 
         // If a slot is unavailable and there is nothing the player could
@@ -721,7 +1038,8 @@ equipment_slot player_equip_set::find_slot_to_equip_item(const item_def& item,
         // Track that this slot was used (to handle the case of multi-slot
         // items competing for the same flex slot, such as poltergeists wearing
         // the Fungal Fisticloak).
-        equipment.num_slots[slot] -= 1;
+        if (slot != SLOT_UNUSED)
+            ++claimed[slot];
 
         // If we had to remove an item to free this slot, remove it from the
         // equipment now so that we don't remove the same item again if we need
@@ -738,26 +1056,38 @@ equipment_slot player_equip_set::find_slot_to_equip_item(const item_def& item,
     return ret;
 }
 
-equipment_slot player_equip_set::find_free_compatible_slot(equipment_slot base_slot) const
+equipment_slot player_equip_set::find_free_compatible_slot(equipment_slot base_slot,
+                       const FixedVector<int, NUM_EQUIP_SLOTS>* claimed) const
 {
     const vector<equipment_slot>& slots = get_alternate_slots(base_slot);
     for (equipment_slot slot : slots)
     {
+        const int usable = unmelded_slot_count(slot);
+
         // Skip slots the player doesn't have at all.
-        if (num_slots[slot] == 0)
+        if (usable == 0)
             continue;
 
         // Otherwise, iterate all slots of this type and see if one is free.
-        int count = 0;
+        int in_use = claimed ? (*claimed)[slot] : 0;
+        int occupied = in_use;
         for (const player_equip_entry& entry : items)
         {
-            if (entry.slot == slot)
-                ++count;
+            if (entry.slot != slot)
+                continue;
+
+            ++occupied;
+            if (!entry.melded)
+                ++in_use;
         }
 
-        // The player has more slots than they're currently using, so this one
-        // should be fine.
-        if (count < num_slots[slot])
+        // To have a free slot, we need both:
+        // - Not all unmelded slots are full of unmelded items
+        // - Not all slots are full of items
+        // The latter covers the case where a melded item has an overflow slot
+        // which blocks an unmelded slot.
+        const int total = slot_count(slot, nullptr, true);
+        if (in_use < usable && occupied < total)
             return slot;
     }
     return SLOT_UNUSED;
@@ -769,6 +1099,7 @@ void player_equip_set::find_removable_items_for_slot(equipment_slot base_slot,
                                                  bool quiet) const
 {
     item_def* cursed_item = nullptr;
+    item_def* melded_item = nullptr;
     bool found_item = false;
     const vector<equipment_slot>& slots = get_alternate_slots(base_slot);
     for (equipment_slot slot : slots)
@@ -779,9 +1110,11 @@ void player_equip_set::find_removable_items_for_slot(equipment_slot base_slot,
             {
                 item_def& item = entry.get_item();
 
-                // Note any cursed item we find, in case *all* the items we find
-                // are cursed and we want to report this.
-                if (!ignore_curses && item.cursed())
+                // Note any cursed/melded item we find, in case *all* the items
+                // we find are cursed/melded and we want to report this.
+                if (entry.melded)
+                    melded_item = &item;
+                else if (!ignore_curses && item.cursed())
                     cursed_item = &item;
                 // Otherwise, add this as a candidate to replace.
                 else
@@ -810,8 +1143,19 @@ void player_equip_set::find_removable_items_for_slot(equipment_slot base_slot,
         }
     }
 
-    if (!quiet && !found_item && cursed_item)
-        mprf(MSGCH_PROMPT, "%s is stuck to your body!", cursed_item->name(DESC_YOUR).c_str());
+    if (!quiet && !found_item)
+    {
+        if (cursed_item)
+        {
+            mprf(MSGCH_PROMPT, "%s is stuck to your body!",
+                 cursed_item->name(DESC_YOUR).c_str());
+        }
+        else if (melded_item)
+        {
+            mprf(MSGCH_PROMPT, "%s is melded into your body!",
+                 melded_item->name(DESC_YOUR).c_str());
+        }
+    }
 }
 
 /**
@@ -826,26 +1170,35 @@ void player_equip_set::find_removable_items_for_slot(equipment_slot base_slot,
  *                          (generally because this is called by someone looking
  *                          to meld rather than remove them).
  * @param already_removing  The set of items being removed.
+ * @param melded            Whether we are accounting for melded slots and the
+ *                          melded gear in them, rather than for the slots we
+ *                          can actually use. Losing a slot granted by a melded
+ *                          item (or one our form melds) costs us a melded slot,
+ *                          and only melded gear can vacate one of those.
  *
  * @return How many occupants of the slot must still be removed. If this is
  *         non-zero and to_replace is still empty, that means there are *no*
  *         valid candidates to remove, despite needing to do so (almost
  *         certainly because every occupant of the slot is cursed.)
  */
-int player_equip_set::needs_chain_removal(equipment_slot slot,
-                                          vector<item_def*>& to_replace,
-                                          bool cursed_okay,
-                                          const vector<item_def*>& already_removing)
+int needs_chain_removal(equipment_slot slot, vector<item_def*>& to_replace,
+                        bool cursed_okay,
+                        const vector<item_def*>& already_removing, bool melded)
 {
     unwind_var<player_equip_set> unwind_eq(you.equipment);
     for (item_def* removing : already_removing)
-        remove(*removing);
+        you.equipment.remove(*removing);
 
-    const int new_num_slots = get_player_equip_slot_count(slot);
+    const int usable = you.equipment.unmelded_slot_count(slot);
+    const int new_num_slots = melded
+                              ? get_player_equip_slot_count(slot, nullptr, true)
+                                - usable
+                              : usable;
+
     int count = 0;
-    for (const player_equip_entry& entry : items)
+    for (const player_equip_entry& entry : you.equipment.items)
     {
-        if (entry.slot != slot)
+        if (entry.slot != slot || entry.melded != melded)
             continue;
 
         ++count;
@@ -889,6 +1242,22 @@ static bool _forced_removal_goodness(player_equip_entry* entry1, player_equip_en
     return false;
 }
 
+static void _add_forced_removals(vector<player_equip_entry*>& candidates,
+                                 int num_to_remove,
+                                 vector<item_def*>& to_remove)
+{
+    if (num_to_remove <= 0)
+        return;
+
+    // We have more items than we need to remove, so try to pick the
+    // 'least bad' in a very coarse way.
+    if (num_to_remove < (int)candidates.size())
+        sort(candidates.begin(), candidates.end(), _forced_removal_goodness);
+
+    for (int i = 0; i < num_to_remove; ++i)
+        to_remove.push_back(&candidates[i]->get_item());
+}
+
 /**
  * Returns a list of all items that might need to be forced off the player due
  * to a decrease their number of equipment slots (or hat/helmet eligability) for
@@ -903,10 +1272,6 @@ static bool _forced_removal_goodness(player_equip_entry* entry1, player_equip_en
  *                           be able to fit, rather than only looking at slots
  *                           whose capacity has changed since the last call to
  *                           ::update()
- * @param is_save_cleanup    Whether this is being done for save cleanup
- *                           purposes (ie: to scan and remove 'impossible'
- *                           items) and thus should allow for items to remain in
- *                           slots granted by melded items.
  * @param num_direct[out]    If non-null, set to the number of items removed
  *                           directly (ie: the leading entries of the returned
  *                           vector); the rest are due to lost slots.
@@ -915,48 +1280,43 @@ static bool _forced_removal_goodness(player_equip_entry* entry1, player_equip_en
  *         player's current state to become valid again.
  */
 vector<item_def*> player_equip_set::get_forced_removal_list(bool force_full_check,
-                                                            bool is_save_cleanup,
                                                             size_t* num_direct)
 {
     vector<item_def*> to_remove;
 
-    // Next, calculate our new slot count and compare to see if we need to
-    // lose any items for that reason.
+    // Next, calculate our new slot count and compare to see if we need to lose
+    // any items for that reason.
     FixedVector<int, NUM_EQUIP_SLOTS> new_num_slots;
     for (int i = SLOT_UNUSED; i < NUM_EQUIP_SLOTS; ++i)
     {
-        new_num_slots[i] = get_player_equip_slot_count(static_cast<equipment_slot>(i),
-                                                       nullptr, is_save_cleanup);
+        new_num_slots[i] = slot_count(static_cast<equipment_slot>(i), nullptr,
+                                      true);
     }
 
     for (int i = SLOT_UNUSED; i < NUM_EQUIP_SLOTS; ++i)
     {
-        if (force_full_check || new_num_slots[i] < num_slots[i])
-        {
-            vector<player_equip_entry*> maybe_remove;
-            for (player_equip_entry& entry : items)
-            {
-                if (entry.slot == i)
-                    maybe_remove.push_back(&entry);
-            }
+        if (!force_full_check && new_num_slots[i] >= num_slots[i])
+            continue;
 
-            // Simple case: we don't have to remove anything.
-            if ((int)maybe_remove.size() <= new_num_slots[i])
-                continue;
-            // Another simple case: we have to remove everything.
-            if (new_num_slots[i] == 0)
-                for (player_equip_entry* entry : maybe_remove)
-                    to_remove.push_back(&entry->get_item());
-            // We have more items than we need to remove, so try to pick the
-            // 'least bad' in a very coarse way.
-            else
-            {
-                const int num_to_remove = maybe_remove.size() - new_num_slots[i];
-                sort(maybe_remove.begin(), maybe_remove.end(), _forced_removal_goodness);
-                for (int j = 0; j < num_to_remove; ++j)
-                    to_remove.push_back(&maybe_remove[j]->get_item());
-            }
+        const equipment_slot slot = static_cast<equipment_slot>(i);
+
+        vector<player_equip_entry*> unmelded;
+        vector<player_equip_entry*> melded;
+        for (player_equip_entry& entry : items)
+        {
+            if (entry.slot == slot)
+                (entry.melded ? melded : unmelded).push_back(&entry);
         }
+
+        // We must drop unmelded items that don't fit in unmelded slots, and
+        // any further melded items to make everything fit in all the slots.
+        const int drop_unmelded = max(0, (int)unmelded.size()
+                                         - unmelded_slot_count(slot));
+        const int drop_melded = max(0, (int)unmelded.size() - drop_unmelded
+                                       + (int)melded.size() - new_num_slots[i]);
+
+        _add_forced_removals(unmelded, drop_unmelded, to_remove);
+        _add_forced_removals(melded, drop_melded, to_remove);
     }
 
     // Next, see if any items have become unwearable for non-slot reasons
@@ -1078,13 +1438,13 @@ equipment_slot player_equip_set::find_compatible_occupied_slot(const item_def& o
 bool player_equip_set::has_compatible_slot(equipment_slot slot, bool include_form) const
 {
     // Check the exact slot first.
-    if (num_slots[slot] > 0 && (!include_form || !slot_is_melded(slot)))
+    if (num_slots[slot] > 0 && (!include_form || unmelded_slot_count(slot) != 0))
         return true;
 
     // Now look for compatible alternative slots.
     const vector<equipment_slot>& alt_slots = get_alternate_slots(slot);
     for (const auto& alt_slot : alt_slots)
-        if (num_slots[alt_slot] > 0 && (!include_form || !slot_is_melded(alt_slot)))
+        if (num_slots[alt_slot] > 0 && (!include_form || unmelded_slot_count(alt_slot) != 0))
             return true;
 
     return false;
@@ -1101,107 +1461,9 @@ bool player_equip_set::is_melded(const item_def& item)
     return false;
 }
 
-/**
- * Melds a specified set of equipment and then calls unequip_item on each one
- * of them afterward.
- *
- * @param slots        A set of bitflags representing which slots to meld. (See
- *                     form_entry::blocked_slots)
- * @param skip_effects If true, no message will be printed about doing any of
- *                     this, and no unequip effects will be processed.
- */
-void player_equip_set::meld_equipment(int slots, bool skip_effects)
+void player_equip_set::handle_melding(const vector<item_def*>& to_meld)
 {
-    vector<item_def*> was_melded;
-    for (player_equip_entry& entry : items)
-    {
-        if ((1 << entry.slot) & slots)
-        {
-            item_def* item = &entry.get_item();
-
-            if (!entry.melded)
-                was_melded.push_back(item);
-
-            entry.melded = true;
-
-            // If this is an item occupying multiple slots, find all the other
-            // entries and meld them as well.
-            if (get_all_item_slots(*item).size() > 1)
-            {
-                for (player_equip_entry& overflow : items)
-                {
-                    if (overflow.item == entry.item)
-                        overflow.melded = true;
-                }
-            }
-        }
-    }
-
-    handle_melding(was_melded, skip_effects);
-}
-
-void player_equip_set::meld_equipment(vector<item_def*> to_meld, bool skip_effects)
-{
-    for (player_equip_entry& entry : items)
-    {
-        for (item_def* meld_item : to_meld)
-        {
-            if (meld_item->link != entry.item)
-                continue;
-
-            item_def* item = &entry.get_item();
-            entry.melded = true;
-
-            // If this is an item occupying multiple slots, find all the other
-            // entries and meld them as well.
-            if (get_all_item_slots(*item).size() > 1)
-            {
-                for (player_equip_entry& overflow : items)
-                {
-                    if (overflow.item == entry.item)
-                        overflow.melded = true;
-                }
-            }
-        }
-
-    }
-
-    handle_melding(to_meld, skip_effects);
-}
-
-void player_equip_set::handle_melding(vector<item_def*>& to_meld, bool skip_effects)
-{
-    // If melding these items will remove slots that contain other items, meld
-    // those too (to keep from constantly popping them off during certain
-    // transformations).
-    int num_melded = to_meld.size();
-    handle_chain_removal(to_meld, false);
-    if ((int)to_meld.size() > num_melded)
-    {
-        for (size_t i = num_melded; i < to_meld.size(); ++i)
-        {
-            for (player_equip_entry& entry : items)
-            {
-                if (entry.item == to_meld[i]->link)
-                {
-                    entry.melded = true;
-                    if (entry.is_overflow)
-                    {
-                        for (player_equip_entry& overflow : items)
-                        {
-                            if (overflow.item == entry.item)
-                                overflow.melded = true;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     if (to_meld.empty())
-        return;
-
-    if (skip_effects)
         return;
 
     // Print a message.
@@ -1213,133 +1475,28 @@ void player_equip_set::handle_melding(vector<item_def*>& to_meld, bool skip_effe
             comma_separated_line(meld_msg.begin(), meld_msg.end()).c_str(),
             meld_msg.size() > 1 ? "" : "s");
 
-    update();
-
     // Now, simultaneously do unequip effects for all melded items.
     for (item_def* meld_item : to_meld)
         unequip_effect(meld_item->link, true, true, false, true);
 }
 
-/**
- * Unmelds equipment in a single slot and does associated bookeeping.
- *
- * @param slot           The slot type to unmeld.
- * @param skip_effects   If true, no message will be printed about doing any of
- *                       this, and no equip effects will be processed.
- */
-void player_equip_set::unmeld_slot(equipment_slot slot, bool skip_effects)
-{
-    vector<item_def*> was_unmelded;
-    for (player_equip_entry& entry : items)
-    {
-        if (entry.slot == slot)
-        {
-            if (entry.melded)
-            {
-                if (entry.is_overflow)
-                {
-                    // If this item takes up multiple slots, verify that none of
-                    // them should be melded by our current form before
-                    // unmelding any of them.
-                    bool keep_melded = false;
-                    for (player_equip_entry& overflow : items)
-                    {
-                        if (overflow.item != entry.item)
-                            continue;
-
-                        if (get_form()->slot_is_blocked(overflow.slot))
-                        {
-                            keep_melded = true;
-                            break;
-                        }
-                    }
-
-                    // If we should actually unmeld this item, make sure to
-                    // unmeld every slot of it.
-                    if (!keep_melded)
-                    {
-                        for (player_equip_entry& overflow : items)
-                        {
-                            if (overflow.item != entry.item)
-                                continue;
-
-                            overflow.melded = false;
-                        }
-                        was_unmelded.push_back(&entry.get_item());
-                    }
-                }
-                else
-                {
-                    entry.melded = false;
-                    was_unmelded.push_back(&entry.get_item());
-                }
-            }
-        }
-    }
-
-    handle_unmelding(was_unmelded, skip_effects);
-}
-
-/**
- * Unmelds all equipment and does associated bookeeping.
- *
- * @param skip_effects   If true, no message will be printed about doing any of
- *                       this, and no equip effects will be processed.
- */
-void player_equip_set::unmeld_all_equipment(bool skip_effects)
-{
-    vector<item_def*> was_unmelded;
-    for (player_equip_entry& entry : items)
-    {
-        if (entry.melded)
-        {
-            // If the player is untransforming from a form where fishtail is
-            // active, don't unmeld their boots.
-            if (you.fishtail)
-            {
-                if (entry.slot == SLOT_BOOTS)
-                    continue;
-
-                // Also skip items filling the boots slot and some other slot.
-                vector<equipment_slot> slots = get_all_item_slots(entry.get_item());
-                if (find(slots.begin(), slots.end(), SLOT_BOOTS) != slots.end())
-                    continue;
-            }
-
-            entry.melded = false;
-            if (!entry.is_overflow)
-                was_unmelded.push_back(&entry.get_item());
-        }
-    }
-
-    handle_unmelding(was_unmelded, skip_effects);
-}
-
-void player_equip_set::handle_unmelding(vector<item_def*>& to_unmeld, bool skip_effects)
+void player_equip_set::handle_unmelding(const vector<item_def*>& to_unmeld)
 {
     if (to_unmeld.empty())
         return;
 
     // Print a message.
-    if (!skip_effects)
-    {
-        vector<string> unmeld_msg;
-        for (item_def* unmeld_item : to_unmeld)
-            unmeld_msg.emplace_back(unmeld_item->name(DESC_PLAIN));
+    vector<string> unmeld_msg;
+    for (item_def* unmeld_item : to_unmeld)
+        unmeld_msg.emplace_back(unmeld_item->name(DESC_PLAIN));
 
-        mprf("Your %s unmeld%s from your body.",
-                comma_separated_line(unmeld_msg.begin(), unmeld_msg.end()).c_str(),
-                unmeld_msg.size() > 1 ? "" : "s");
-    }
+    mprf("Your %s unmeld%s from your body.",
+            comma_separated_line(unmeld_msg.begin(), unmeld_msg.end()).c_str(),
+            unmeld_msg.size() > 1 ? "" : "s");
 
-    update();
-
-    // Now, simultaneously do unequip effects for all melded items.
-    if (!skip_effects)
-    {
-        for (item_def* meld_item : to_unmeld)
-            equip_effect(meld_item->link, true, true);
-    }
+    // Now, simultaneously do equip effects for all unmelded items.
+    for (item_def* unmeld_item : to_unmeld)
+        equip_effect(unmeld_item->link, true, true);
 }
 
 /**
@@ -1471,11 +1628,17 @@ player_equip_entry& player_equip_set::get_entry_for(const item_def& item)
  */
 bool player_equip_set::innate_slot_is_covered(equipment_slot slot) const
 {
-    int innate_slots = get_player_equip_slot_count(slot, nullptr, false, false);
+    int innate_slots = slot_count(slot, nullptr, false, false, false);
     if (innate_slots == 0 || slot_is_melded(slot))
         return false;
 
-    return (int)get_slot_entries(slot).size() == num_slots[slot];
+    // Check whether we have an unmelded slot free.
+    int filled = 0;
+    for (const player_equip_entry& entry : items)
+        if (entry.slot == slot && !entry.melded)
+            ++filled;
+
+    return filled >= unmelded_slot_count(slot);
 }
 
 /**
@@ -2259,7 +2422,8 @@ static void _zonguldrok_comment_on_hat(const item_def& hat)
     // consider to be 'your last one'. It's possible in the future, this may
     // become untrue.)
     vector<item_def*> hats = you.equipment.get_slot_items(SLOT_HELMET);
-    if ((int)hats.size() != you.equipment.num_slots[SLOT_HELMET]
+    if (hats.empty()
+        || (int)hats.size() != you.equipment.unmelded_slot_count(SLOT_HELMET)
         || &hat != hats.back())
     {
         return;
