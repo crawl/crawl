@@ -718,6 +718,8 @@ flaming_death FLAMING_DEATH
 skullcrusher SKULLCRUSHER
 %rim 0
 carina CARINA
+%rim 1
+mangrove MANGROVE
 
 %sdir player/hand1
 # blades
