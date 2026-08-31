@@ -1247,7 +1247,7 @@ static void _handle_werewolf_kill_bonus(const monster& victim, bool takedown)
         const int howl_power = get_form()->get_howl_power();
         mpr("You let out a blood-chilling howl!");
         draw_ring_animation(you.pos(), you.current_vision, DARKGRAY, 0, true, 10);
-        for (monster_near_iterator mi(you.pos()); mi; ++mi)
+        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
             if (could_harm_enemy(&you, *mi, true)
                 && mi->can_feel_fear(true) && !mi->has_ench(ENCH_FEAR)
