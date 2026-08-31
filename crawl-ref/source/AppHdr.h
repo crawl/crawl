@@ -97,13 +97,9 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     #define HAVE_UTIMES
 
     // Use POSIX regular expressions
-#ifndef REGEX_PCRE
+#if !defined(REGEX_PCRE) && !defined(REGEX_PCRE2)
     #define REGEX_POSIX
 #endif
-
-    // If you have libpcre, you can use that instead of POSIX regexes -
-    // uncomment the line below and add -lpcre to your makefile.
-    // #define REGEX_PCRE
 
     #include "libunix.h"
 
@@ -240,8 +236,14 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
 #define TIME_FN localtime
 #endif
 
-#if defined(REGEX_POSIX) && defined(REGEX_PCRE)
-#error You can use either REGEX_POSIX or REGEX_PCRE, or neither, but not both.
+#if defined(REGEX_POSIX) && defined(REGEX_PCRE) && defined(REGEX_PCRE2)
+#error You can only use one of REGEX_POSIX, REGEX_PCRE, REGEX_PCRE2
+#elif defined(REGEX_POSIX) && defined(REGEX_PCRE)
+#error You can use either REGEX_POSIX or REGEX_PCRE, but not both.
+#elif defined(REGEX_POSIX) && defined(REGEX_PCRE2)
+#error You can use either REGEX_POSIX or REGEX_PCRE2, but not both.
+#elif defined(REGEX_PCRE) && defined(REGEX_PCRE2)
+#error You can use either REGEX_PCRE or REGEX_PCRE2, but not both.
 #endif
 
 #include "debug-defines.h"
