@@ -639,6 +639,9 @@
     <ClCompile Include="..\l-spells.cc">
       <Filter>cc</Filter>
     </ClCompile>
+    <ClCompile Include="..\localise.cc">
+      <Filter>cc</Filter>
+    </ClCompile>
     <ClCompile Include="..\losparam.cc">
       <Filter>cc</Filter>
     </ClCompile>
@@ -1471,6 +1474,9 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\loading-screen.h">
+      <Filter>h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\localise.h">
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\lookup-help.h">

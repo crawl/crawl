@@ -62,7 +62,7 @@ public:
 
 // Convenience functions for (read-only) access to generic
 // berkeley DB databases.
-static void _store_text_db(const string &in, DBM *db);
+static void _store_text_db(const string &in, DBM *db, bool value_translates_key);
 
 static string _query_database(TextDB &db, string key, bool canonicalise_key,
                               bool run_lua, bool untranslated = false);
@@ -153,6 +153,11 @@ static TextDB AllDBs[] =
     TextDB("egos", "descript/",
           { "egos.txt",     // weapon/armour/missile egos
             }),
+
+    // in this db, the keys are English strings to be translated
+    TextDB("translate", "translate/",
+          { "ui.txt", // UI
+            }),
 };
 
 static TextDB& DescriptionDB = AllDBs[0];
@@ -166,6 +171,7 @@ static TextDB& HelpDB        = AllDBs[7];
 static TextDB& FAQDB         = AllDBs[8];
 static TextDB& HintsDB       = AllDBs[9];
 static TextDB& EgosDB        = AllDBs[10];
+static TextDB& TranslateDB   = AllDBs[11];
 
 static string _db_cache_path(string db, const char *lang)
 {
@@ -211,6 +217,12 @@ bool TextDB::open_db()
 
 void TextDB::init()
 {
+    if (Options.language == lang_t::EN && string(_db_name) == "translate")
+    {
+        // No need for the translate db if language is English
+        return;
+    }
+
     if (Options.lang_name && !_parent)
     {
         translation = new TextDB(this);
@@ -312,6 +324,9 @@ void TextDB::_regenerate_db()
     unlink_u(full_db_path.c_str());
 #endif
 
+    // in the "translate" db, the key is an English string rather than an
+    // internal id, and the value is a translation of the key
+    bool value_translates_key = string(_db_name) == "translate";
     string ts;
     if (!(_db = dbm_open(db_path.c_str(), O_RDWR | O_CREAT, 0660)))
         end(1, true, "Unable to open DB: %s", db_path.c_str());
@@ -326,7 +341,7 @@ void TextDB::_regenerate_db()
         {
             snprintf(buf, sizeof(buf), ":%" PRId64, (int64_t)mtime);
             ts += buf;
-            _store_text_db(full_input_path, _db);
+            _store_text_db(full_input_path, _db, value_translates_key);
         }
     }
     _add_entry(_db, "TIMESTAMP", ts);
@@ -510,7 +525,7 @@ static void _add_entry(DBM *db, const string &k, string &v)
         end(1, true, "Error storing %s", k.c_str());
 }
 
-static void _parse_text_db(LineInput &inf, DBM *db)
+static void _parse_text_db(LineInput &inf, DBM *db, bool value_translates_key)
 {
     string key;
     string value;
@@ -540,12 +555,16 @@ static void _parse_text_db(LineInput &inf, DBM *db)
         {
             key = line;
             trim_string(key);
-            lowercase(key);
+            // If the key is the English string to translate, don't mess with it
+            if (!value_translates_key)
+                lowercase(key);
         }
         else
         {
             trim_string_right(line);
-            value += line + "\n";
+            value += line;
+            if (!value_translates_key)
+                value += "\n";
         }
     }
 
@@ -553,13 +572,13 @@ static void _parse_text_db(LineInput &inf, DBM *db)
         _add_entry(db, key, value);
 }
 
-static void _store_text_db(const string &in, DBM *db)
+static void _store_text_db(const string &in, DBM *db, bool value_translates_key)
 {
     UTF8FileLineInput inf(in.c_str());
     if (inf.error())
         end(1, true, "Unable to open input file: %s", in.c_str());
 
-    _parse_text_db(inf, db);
+    _parse_text_db(inf, db, value_translates_key);
 }
 
 static string _chooseStrByWeight(const string &entry, int fixed_weight = -1)
@@ -942,4 +961,16 @@ string getHintString(const string &key)
 string getEgoString(const string &key)
 {
     return unwrap_desc(_query_database(EgosDB, key, true, true));
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Translate DB specific functions.
+
+string getTranslatedString(const string &original)
+{
+    if (Options.language == lang_t::EN)
+        return original;
+
+    string result = _query_database(TranslateDB, original, false, false);
+    return trim_string_right(result);
 }
