@@ -1371,8 +1371,9 @@ A vial of roiling blood that pulses with the beat of an unseen heart. Transforms
 the wearer into a fearsome vampire - a creature that straddles the border between
 life and undeath. They can drink the lifeblood of the living to heal themselves,
 and even turn those they slay stealthily into vampiric thralls, but do not heal
-in the presence of monsters. At great effort, they may scatter into a swarm of
-bats - either to flee or to assail their enemies.
+in the presence of monsters. Their hypnotic gaze often prevents monsters from
+shouting when alerted and may even daze them. At great effort, they can also
+scatter into a swarm of bats - either to flee or to assail their enemies.
 %%%%
 sanguine gem
 
