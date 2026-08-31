@@ -986,7 +986,7 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
         mg.hp += you.skill_rdiv(SK_INVOCATIONS, 5, 2);
 
     if (!friendly)
-        mg.hp = mg.hp * 2;
+        mg.hp = mg.hp * 3;
     else
         mg.set_summoned(&you, SPELL_NO_SPELL, random_range(4, 6) * BASELINE_DELAY, false);
 
@@ -1030,8 +1030,8 @@ monster* create_player_shadow(coord_def pos, bool friendly, spell_type spell_kno
         you.props[DITH_SHADOW_MID_KEY].get_int() = mon->mid;
     else
     {
-        mon->props[DITH_SHADOW_ATTACK_KEY].get_int() += you.experience_level;
-        mon->props[DITH_SHADOW_SPELLPOWER_KEY] = div_rand_round(you.experience_level * 2, 3);
+        mon->props[DITH_SHADOW_ATTACK_KEY].get_int() += 3 + (you.experience_level * 3 / 2);
+        mon->props[DITH_SHADOW_SPELLPOWER_KEY] = div_rand_round(you.experience_level * 3, 4);
     }
 
     // Now, if there was a previously-existing shadow that was in decoy mode,
