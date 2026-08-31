@@ -1146,7 +1146,7 @@ static void _devour(monster &victim)
          victim.name(DESC_THE).c_str());
 
     // give a clearer message for eating invisible things
-    if (!you.can_see(victim))
+    if (!you.aware_of(victim))
     {
         mprf("It tastes like %s.",
              mons_type_name(mons_genus(victim.type), DESC_PLAIN).c_str());
