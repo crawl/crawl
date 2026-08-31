@@ -78,7 +78,7 @@ function c_save()
 
     local res = ""
     for i, fn in ipairs(chk_lua_save) do
-        res = res .. fn(file)
+        res = res .. (fn(file) or "")
     end
     return res
 end
