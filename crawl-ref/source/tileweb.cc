@@ -1176,6 +1176,12 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.piety_rank, prank, "piety_rank");
     _update_int(force_full, c.ostracism_pips, ostracism_pips(), "ostracism_pips");
 
+    // Species/god line (e.g. "Minotaur of Trog")
+    string species_god = player_species_name();
+    if (!you_worship(GOD_NO_GOD))
+        species_god += " of " + god;
+    _update_string(force_full, c.species_god, species_god, "species_god");
+
     _update_int(force_full, c.form, (uint8_t) you.form, "form");
 
     _update_int(force_full, c.hp, you.hp, "hp");
