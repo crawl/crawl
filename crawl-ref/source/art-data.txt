@@ -1064,9 +1064,7 @@ COLOUR:    ETC_BEOGH
 TILE:      urand_ratskin_cloak
 TILE_EQ:   RATSKIN_CLOAK
 INSCRIP:   *Rats
-STR:       -1
-INT:       -1
-DEX:       1
+DEX:       2
 LIFE:      1
 BOOL:      poison
 DESCRIP:   *Rats:     When the wearer is hurt, rats may emerge from it to assist
