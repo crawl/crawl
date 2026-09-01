@@ -199,16 +199,9 @@
 #################################
 # Artefact name suffixes
 #################################
-# generic
-%%%%
-@item@ of @arg@
-
 %%%%
 @item@ of Zot
 
-%%%%
-# specific artefacts don't necessarily need to be translated
-# if there's no specific translation, the English text will put in quotes.
 %%%%
 @item@ of the Moon
 
@@ -217,6 +210,18 @@
 
 %%%%
 @item@ of Dice, Bag, and Bottle
+
+%%%%
+
+# generic fallbacks
+%%%%
+@item@ of the @arg@
+
+%%%%
+@item@ of @arg@
+
+%%%%
+@item@ "@name@"
 
 %%%%
 

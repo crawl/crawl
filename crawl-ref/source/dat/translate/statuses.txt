@@ -1460,9 +1460,6 @@ You are ready to recite again.
 
 # Fire vulnerability
 %%%%
-rF-
-
-%%%%
 fire vulnerable
 
 %%%%
@@ -1634,9 +1631,6 @@ You can drink potions again.
 
 # Fire resistance
 %%%%
-rF+
-
-%%%%
 protected from fire
 
 %%%%
@@ -1654,9 +1648,6 @@ Your protection from fire is fading.
 %%%%
 
 # Cold resistance
-%%%%
-rC+
-
 %%%%
 protected from cold
 

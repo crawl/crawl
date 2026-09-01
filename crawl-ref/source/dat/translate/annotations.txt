@@ -52,37 +52,46 @@ willpower
 # attribute +/-
 %%%%
 # strength
-Str
+Str@integer@
 
 %%%%
 # dexterity
-Dex
+Dex@integer@
 
 %%%%
 # intelligence
-Int
+Int@integer@
 
 %%%%
-HP
+HP@integer@
 
 %%%%
-MP
+MP@integer@
 
 %%%%
 # armour class
-AC
+AC@integer@
 
 %%%%
 # evasion
-EV
+EV@integer@
 
 %%%%
 # shields
-SH
+SH@integer@
 
 %%%%
 # stealth
 Stlth
+
+%%%%
+Stlth+
+
+%%%%
+Stlth-
+
+%%%%
+Slay@integer@
 
 %%%%
 
@@ -92,12 +101,67 @@ Stlth
 rF
 
 %%%%
+rF+
+
+%%%%
+rF++
+
+%%%%
+rF+++
+
+%%%%
+rF-
+
+%%%%
+rF--
+
+%%%%
+rF---
+
+%%%%
 # cold
 rC
 
 %%%%
+rC+
+
+%%%%
+rC++
+
+%%%%
+rC+++
+
+%%%%
+rC-
+
+%%%%
+rC--
+
+%%%%
+rC---
+
+%%%%
+%%%%
 # negative energy
 rN
+
+%%%%
+rN+
+
+%%%%
+rN++
+
+%%%%
+rN+++
+
+%%%%
+rN-
+
+%%%%
+rN--
+
+%%%%
+rN---
 
 %%%%
 # poison
@@ -244,6 +308,9 @@ Acrobat
 %%%%
 # random teleport
 *Tele
+
+%%%%
+backblast
 
 %%%%
 
