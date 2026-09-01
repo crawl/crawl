@@ -1474,7 +1474,7 @@ Evocable Items:
 Evozierbare Gegenstände:
 %%%%
 (Left/Right/Tab to switch category)
-(Links/Rechts/Tab um Klasse zu wechseln)
+(Links/Rechts/Tab um Kategorie zu wechseln)
 %%%%
 
 # subheadings
@@ -1519,10 +1519,10 @@ Talismans
 Talismane
 %%%%
 Gizmos
-Gadgets
+Dingsbums
 %%%%
 Baubles
-Glaskugeln
+Perlen
 %%%%
 Miscellaneous
 Verschiedenes
@@ -1532,14 +1532,14 @@ Andere Gegenstände
 %%%%
 
 %%%%
-(go to first with <w>@glyphs@</w><blue>)
-(zum ersten gehen mit <w>@glyphs@</w><blue>)
+(go to first with <w>@glyph@</w><blue>)
+(zum ersten Gegenstand mit <w>@glyph@</w><blue>)
 %%%%
-(select first with <w>@glyphs@</w><blue>)
-(ersten wählen mit <w>@glyphs@</w><blue>)
+(select first with <w>@glyph@</w><blue>)
+(ersten Gegenstand wählen mit <w>@glyph@</w><blue>)
 %%%%
-(select all with <w>@glyphs@</w><blue>)
-(alle wählen mit <w>@glyphs@</w><blue>)
+(select all with <w>@glyph@</w><blue>)
+(alle wählen mit <w>@glyph@</w><blue>)
 %%%%
 
 ##############################################
