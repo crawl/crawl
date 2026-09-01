@@ -660,6 +660,12 @@ static int _spell_enhancement(spell_type spell)
     enhanced += you.duration[DUR_BRILLIANCE] > 0
                 || you.unrand_equipped(UNRAND_FOLLY);
 
+    if (you.unrand_equipped(UNRAND_HANAS_SCIMITAR) && you.max_magic_points > 0
+        && you.magic_points * 100 >= you.max_magic_points * 66)
+    {
+        enhanced++;
+    }
+
     // These are used in an exponential way, so we'll limit them a bit. -- bwr
     if (enhanced > 3)
         enhanced = 3;

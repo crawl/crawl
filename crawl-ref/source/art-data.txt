@@ -2055,6 +2055,20 @@ INT:     +5
 DESCRIP: DevInvis: When you attack an enemy while devious, you have a chance to
  turn invisible. The chance increases the more devious you are.
 
+ENUM:    HANAS_SCIMITAR
+NAME:    Hana's Scimitar
+INSCRIP: ValArchmagi ^Dim
+OBJ:     OBJ_WEAPONS/WPN_SCIMITAR
+PLUS:    +10
+COLOUR:  LIGHTRED
+TILE:    urand_hana_scimitar
+TILE_EQ: HANA
+BRAND:   SPWPN_VALOUR
+MP:      +6
+DESCRIP: ValArchmagi: Enhances your magic if you have at least 66% MP remaining
+ (after spending MP)
++^Dim: Unequipping it temporarily diminishes your spells.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

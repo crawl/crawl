@@ -722,6 +722,7 @@ carina CARINA
 mangrove MANGROVE
 five_virtues FIVE_VIRTUES
 stagehand STAGEHAND
+hana HANA
 
 %sdir player/hand1
 # blades

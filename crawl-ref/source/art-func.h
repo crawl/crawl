@@ -1830,6 +1830,7 @@ static void _FIVE_VIRTUES_world_reacts(item_def */*item*/)
     you.redraw_armour_class = true;
 }
 
+/////////////////////////////////////////////////////
 static void _STAGEHANDS_SWORD_melee_effects(item_def* /*weapon*/, actor* attacker,
                                   actor* defender, int /*dam*/, melee_attack* /*atk*/)
 {
@@ -1849,4 +1850,11 @@ static void _STAGEHANDS_SWORD_melee_effects(item_def* /*weapon*/, actor* attacke
             you.increase_duration(DUR_INVIS, 3 + random2(5), 20);
         }
     }
+}
+
+/////////////////////////////////////////////////////
+static void _HANAS_SCIMITAR_unequip(item_def */*item*/, bool *show_msgs)
+{
+    mpr("You feel a bit dim.");
+    you.diminish(&you, 10);
 }
