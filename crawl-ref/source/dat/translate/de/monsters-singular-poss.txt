@@ -1628,7 +1628,7 @@ the draugr's
 {m}des Draugrs
 %%%%
 the drude's
-{m}des Druden
+{f}der Drude
 %%%%
 the elementalist's
 {m}des Elementalisten
