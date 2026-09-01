@@ -721,6 +721,7 @@ carina CARINA
 %rim 1
 mangrove MANGROVE
 five_virtues FIVE_VIRTUES
+stagehand STAGEHAND
 
 %sdir player/hand1
 # blades

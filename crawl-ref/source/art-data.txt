@@ -2042,6 +2042,19 @@ DESCRIP: VirtueSH: It provides +5 SH for each of five conditions you meet:
 +VirtueRefl: If you meet at least three of the five conditions, it provides
  reflection and an extra maximum block per turn.
 
+ENUM:    STAGEHANDS_SWORD
+NAME:    Stagehand's Sword
+INSCRIP: DevInvis
+OBJ:     OBJ_WEAPONS/WPN_SHORT_SWORD
+PLUS:    +8
+COLOUR:  BROWN
+TILE:    urand_stagehands_sword
+TILE_EQ: STAGEHAND
+BRAND:   SPWPN_DEVIOUS
+INT:     +5
+DESCRIP: DevInvis: When you attack an enemy while devious, you have a chance to
+ turn invisible. The chance increases the more devious you are.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

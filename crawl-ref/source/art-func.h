@@ -1829,3 +1829,24 @@ static void _FIVE_VIRTUES_world_reacts(item_def */*item*/)
 {
     you.redraw_armour_class = true;
 }
+
+static void _STAGEHANDS_SWORD_melee_effects(item_def* /*weapon*/, actor* attacker,
+                                  actor* defender, int /*dam*/, melee_attack* /*atk*/)
+{
+    if (!attacker->is_player())
+        return;
+
+    if (defender->is_monster() && !mons_aligned(defender, &you)
+        && mons_class_gives_xp(defender->as_monster()->type) && you.duration[DUR_DEVIOUS])
+    {
+        if (x_chance_in_y(you.props[DEVIOUS_KEY].get_int(), 3) &&
+            (!you.duration[DUR_INVIS] || coinflip()))
+        {
+            mprf("The Stagehand's Sword gleams wickedly %s",
+                you.backlit() ? "but you remain visible."
+                : you.duration[DUR_INVIS] ? "and you become more transparent."
+                : "and you slip into invisibility!");
+            you.increase_duration(DUR_INVIS, 3 + random2(5), 20);
+        }
+    }
+}
