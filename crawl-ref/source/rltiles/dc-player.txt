@@ -719,7 +719,7 @@ skullcrusher SKULLCRUSHER
 %rim 0
 carina CARINA
 %rim 1
-mangrove MANGROVE
+coolibah COOLIBAH
 five_virtues FIVE_VIRTUES
 stagehand STAGEHAND
 hana HANA

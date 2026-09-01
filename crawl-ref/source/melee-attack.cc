@@ -798,20 +798,20 @@ void melee_attack::grow_burstshrooms(int hd)
         mprf("Mushrooms sprout behind %s.", defender->name(DESC_THE).c_str());
 }
 
-static void _trigger_mangrove_bardiche(actor* attacker, actor* defender, int dam)
+static void _trigger_coolibah_bardiche(actor* attacker, actor* defender, int dam)
 {
     if (defender->is_constricted() && defender->alive() && dam)
     {
-        if (coinflip())
-            defender->floodify(attacker, min(20 + random2(dam * 4), 80));
+        if (one_chance_in(3))
+            defender->floodify(attacker, min(20 + random2(dam * 6), 80));
 
         coord_def pos = defender->pos();
 
-        if (coinflip() && in_bounds(pos) && env.grid(pos) != DNGN_DEEP_WATER
-            && env.grid(pos) != DNGN_LAVA)
+        if (one_chance_in(3) && in_bounds(pos) && env.grid(pos) != DNGN_DEEP_WATER
+            && env.grid(pos) != DNGN_LAVA && env.grid(pos) != DNGN_TOXIC_BOG)
         {
             mprf("A bog forms beneath %s!", defender->name(DESC_THE).c_str());
-            temp_change_terrain(pos, DNGN_TOXIC_BOG, min(20 + random2(dam * 4), 80),
+            temp_change_terrain(pos, DNGN_TOXIC_BOG, min(20 + random2(dam * 6), 80),
                 TERRAIN_CHANGE_BOG, attacker->mid);
 
             flash_tile(pos, LIGHTGREEN, 0, TILE_BOLT_BOG_FLASH);
@@ -931,8 +931,8 @@ bool melee_attack::handle_phase_hit()
 
     // Using a separate function and not a melee unrand effect because this
     // needs to check constriction status before applying the entangling brand
-    if (weapon && is_unrandom_artefact(*weapon, UNRAND_MANGROVE_BARDICHE))
-        _trigger_mangrove_bardiche(attacker, defender, damage_done);
+    if (weapon && is_unrandom_artefact(*weapon, UNRAND_COOLIBAH_BARDICHE))
+        _trigger_coolibah_bardiche(attacker, defender, damage_done);
 
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();

@@ -2014,19 +2014,19 @@ LIFE:    1
 DESCRIP: ShootingStar: When knocking back an enemy, and on half of other hits,
  it spawns a shooting star with power proportional to the damage dealt.
 
-ENUM:    MANGROVE_BARDICHE
-NAME:    mangrove bardiche
+ENUM:    COOLIBAH_BARDICHE
+NAME:    coolibah bardiche
 INSCRIP: ConstrDrown ConstrBog
 OBJ:     OBJ_WEAPONS/WPN_BARDICHE
 PLUS:    +6
 COLOUR:  ETC_WATER
-TILE:    urand_mangrove
-TILE_EQ: MANGROVE
+TILE:    urand_coolibah
+TILE_EQ: COOLIBAH
 BRAND:   SPWPN_ENTANGLING
 BOOL:    poison
-DESCRIP: ConstrDrown: When attacking a constricted enemy, it has a 50% chance to
- flood their lungs with water.
-+ConstrBog: When attacking a constricted enemy, it has a 50% chance to
+DESCRIP: ConstrDrown: When attacking a constricted enemy, it has a one in three
+ chance to flood their lungs with water.
++ConstrBog: When attacking a constricted enemy, it has a one in three chance to
  tempoarily transform the ground beneath them into a noxious bog.
 
 ENUM:    FIVE_VIRTUES
