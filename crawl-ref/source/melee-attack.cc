@@ -676,8 +676,8 @@ void melee_attack::handle_concussion_brand(bool unrand)
         schedule_trample_follow_fineff(attacker, old_pos);
     }
 
-    if (unrand && damage_done > 0 && (did_move || coinflip()))
-            schedule_stardust_fineff(attacker, 15 + damage_done, 1, SHOOTING_STAR_CARINA);
+    if (unrand && damage_done > 0 && (did_move || one_chance_in(4)))
+            schedule_stardust_fineff(attacker, 20 + damage_done * 3 / 2, 1, SHOOTING_STAR_CARINA);
 }
 
 static void _apply_flux_contam(monster &m)

@@ -2011,8 +2011,8 @@ TILE:    urand_carina
 TILE_EQ: CARINA
 BRAND:   SPWPN_CONCUSSION
 LIFE:    1
-DESCRIP: ShootingStar: When knocking back an enemy, and on half of other hits,
- it spawns a shooting star with power proportional to the damage dealt.
+DESCRIP: ShootingStar: When knocking back an enemy, and on one in four other
+ hits, it spawns a shooting star with power proportional to the damage dealt.
 
 ENUM:    COOLIBAH_BARDICHE
 NAME:    coolibah bardiche
