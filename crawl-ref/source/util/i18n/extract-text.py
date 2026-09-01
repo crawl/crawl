@@ -238,6 +238,8 @@ def pluralise(string):
             return string + "es"
         else:
             return string[:-2] + "i";
+    elif re.search('(larva|antenna|hypha|noma|amoeba)$', string):
+        return string + "e"
     elif string.endswith("ex"):
         return string[:-2] + "ices"
     elif string.endswith("mosquito") or string.endswith("ss"):
@@ -246,21 +248,28 @@ def pluralise(string):
         return string[:-1] + "es"
     elif string.endswith("catoblepas"):
         return string[:-1] + "e"
+    elif string == "stratum":
+        return "strata"
     elif string.endswith("s"):
         return string
-    elif string.endswith("y") and not string.endswith("ey"):
-        return string[:-1] + "ies"
+    elif string.endswith("y"):
+        if string[-2] in "aeiou":
+            return string + "s"
+        else:
+            return string[:-1] + "ies"
+    elif string.endswith("fe"):
+        return string[:-2] + "ves"
     elif string.endswith("staff"):
         return string[:-2] + "ves"
     elif string.endswith("f") and not string.endswith("ff"):
         return string[:-1] + "ves"
     elif string.endswith("mage") and not string.endswith("damage"):
         return string[:-1] + "i"
-    elif re.search('(gold|fish|folk|spawn|tengu|sheep|swine|efreet|jiangshi|raiju|meliai)$', string):
+    elif re.search('(gold|fish|folk|spawn|tengu|sheep|swine|efreet|jiangshi|raiju|meliai|kemwar)$', string):
         return string
-    elif re.search('(ch|sh|x)$', string):
+    elif re.search('(ch|sh|x|chon)$', string):
         return string + "es"
-    elif re.search('(simulacrum|eidolon)$', string):
+    elif re.search('(simulacrum|eidolon|plasmodium)$', string):
         return string[:-2] + "a"
     elif string.endswith("djinni"):
         return string[:-1]

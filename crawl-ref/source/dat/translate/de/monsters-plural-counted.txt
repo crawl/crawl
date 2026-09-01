@@ -1390,7 +1390,7 @@
 @num@ royal mummies
 {pl}@num@ königliche Mumien
 %%%%
-@num@ eleionomas
+@num@ eleionomae
 {pl}@num@ Eleionomai
 %%%%
 @num@ lemures
@@ -1591,7 +1591,7 @@
 @num@ chonchones
 {pl}@num@ Chonchons
 %%%%
-@num@ clockroachs
+@num@ clockroaches
 {pl}@num@ Uhrenkakerlaken
 %%%%
 @num@ clockwork bees
@@ -1600,7 +1600,7 @@
 @num@ cognitogaunts
 {pl}@num@ Cognitogaunts
 %%%%
-@num@ colossal amoebas
+@num@ colossal amoebae
 {pl}@num@ kolossale Amöben
 %%%%
 @num@ crawling flesh cages
@@ -1654,7 +1654,7 @@
 @num@ eyes of draining
 {pl}@num@ Augen der Auszehrung
 %%%%
-@num@ formless jellyfishes
+@num@ formless jellyfish
 {pl}@num@ formlose Quallen
 %%%%
 @num@ fravashis
@@ -1816,7 +1816,7 @@
 @num@ quicksilver elementals
 {pl}@num@ Quecksilber-Elementare
 %%%%
-@num@ radroachs
+@num@ radroaches
 {pl}@num@ Strahlungskakerlaken
 %%%%
 @num@ ravens
@@ -1831,10 +1831,10 @@
 @num@ ribbon worms
 {pl}@num@ Schnurwürmer
 %%%%
-@num@ roaming sludgefishes
+@num@ roaming sludgefish
 {pl}@num@ wandernde Schlammfische
 %%%%
-@num@ rock fishes
+@num@ rock fish
 {pl}@num@ Felsenfische
 %%%%
 @num@ rusted inspectors
@@ -1852,7 +1852,7 @@
 @num@ scrub nettles
 {pl}@num@ Buschbrennnesseln
 %%%%
-@num@ searing wretchs
+@num@ searing wretches
 {pl}@num@ sengende Jämmerlinge
 %%%%
 @num@ seismosauri
