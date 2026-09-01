@@ -1509,6 +1509,467 @@ the zot statue's
 the archer statue's
 {f}der Bogenschützen-Statue
 %%%%
+the abyssal acolyte's
+{m}des Abgrundsakolythen
+%%%%
+# a walking alder tree and also a reference to Goethe's Erlking (Erlkönig)
+the alderking's
+{m}des Erlkönigs
+%%%%
+the antique champion's
+{m}des uralten Champions
+%%%%
+the arcanist's
+{m}des Arkanisten
+%%%%
+the armour echo's
+{n}des Rüstungsechos
+%%%%
+the aspiring flesh's
+{n}des aufstrebenden Fleisches
+%%%%
+the bes kemwar's
+{m}des Bes Kemwars
+%%%%
+the blazeheart core's
+{m}des Flammenherz-Kerns
+%%%%
+the blazeheart golem's
+{m}des Flammenherz-Golems
+%%%%
+the bombardier beetle's
+{m}des Bombardierkäfers
+%%%%
+the bomblet's
+{n}des Bomblets
+%%%%
+the boulder's
+{m}des Rollsteins
+%%%%
+the bound soul's
+{f}der gebundenen Seele
+%%%%
+the boundless tesseract's
+{m}des grenzenlosen Tesserakts
+%%%%
+the brain worm's
+{m}des Gehirnwurms
+%%%%
+the broodmother's
+{f}der Brutmutter
+%%%%
+the burial acolyte's
+{m}des Begräbnisakolythen
+%%%%
+the burstshroom's
+{m}des aufplatzenden Pilzes
+%%%%
+the cactus giant's
+{m}des Kaktus-Riesen
+%%%%
+the caustic sporangium's
+{n}des ätzenden Sporangiums
+%%%%
+the cerulean imp's
+{n}des himmelblauen Teufelchens
+%%%%
+the chonchon's
+{m}des Chonchons
+%%%%
+the clockroach's
+{f}der Uhrenkakerlake
+%%%%
+the clockwork bee's
+{f}der Uhrwerkbiene
+%%%%
+the cognitogaunt's
+{m}des Cognitogaunts
+%%%%
+the colossal amoeba's
+{f}der kolossalen Amöbe
+%%%%
+the crawling flesh cage's
+{m}des kriechenden Fleischkäfigs
+%%%%
+the creeping inferno's
+{n}des schleichenden Infernos
+%%%%
+the creeping plasmodium's
+{n}des schleichenden Plasmodiums
+%%%%
+the crocodile's
+{n}des Krokodils
+%%%%
+the crystal echidna's
+{n}des Kristall-Echidnas
+%%%%
+the culicivora's
+{f}der Culicivora
+%%%%
+the demonspawn blood saint's
+{m}des Dämonenbrut-Blutheiligen
+%%%%
+the demonspawn corrupter's
+{m}des Dämonenbrut-Verderbers
+%%%%
+the demonspawn soul scholar's
+{m}des Dämonenbrut-Seelengelehrten
+%%%%
+the demonspawn warmonger's
+{m}des Dämonenbrut-Kriegstreibers
+%%%%
+the diamond sawblade's
+{n}des Diamantsägeblatts
+%%%%
+the dormant clockwork bee's
+{f}der schlummernden Uhrwerkbiene
+%%%%
+the draugr's
+{m}des Draugrs
+%%%%
+the drude's
+{m}des Druden
+%%%%
+the elementalist's
+{m}des Elementalisten
+%%%%
+the erythrospite's
+{m}des Erythrospites
+%%%%
+the eye of draining's
+{n}des Auges der Auszehrung
+%%%%
+the formless jellyfish's
+{f}der formlosen Qualle
+%%%%
+the fravashi's
+{m}des Fravashis
+%%%%
+the fungal shambler's
+{m}des Pilz-Wankenden
+%%%%
+the glass eye's
+{n}des Glasauges
+%%%%
+the globe of annihilation's
+{f}der Kugel der Vernichtung
+%%%%
+the glowmurk ghast's
+{m}des Glühdunkel-Ghasts
+%%%%
+the gnoll bouda's
+{m}des Gnoll-Boudas
+%%%%
+the goblin rider's
+{m}des Goblin-Reiters
+%%%%
+the god wrath avatar's
+{m}des Avatars des göttlichen Zorns
+%%%%
+the guardian sphinx's
+{f}der Wächtersphinx
+%%%%
+# summoned by Poltergeist ability
+the haunted armour's
+{f}der Spuk-Rüstung
+%%%%
+the hellfire mortar's
+{m}des Höllenfeuer-Mörsers
+%%%%
+the herald of the Abyss's
+{m}des Herolds des Abgrunds
+%%%%
+the hippogriff's
+{m}des Hippogryphs
+%%%%
+the hoarfrost cannon's
+{f}der Raureif-Kanone
+%%%%
+the inugami's
+{m}des Inugamis
+%%%%
+the ironbound mechanist's
+{m}des eisengebundenen Mechanikers
+%%%%
+the jorogumo's
+{f}der Jorogumo
+%%%%
+the kobold blastminer's
+{m}des Kobold-Sprengmeisters
+%%%%
+the kobold fleshcrafter's
+{m}des Kobold-Fleischschmieds
+%%%%
+the kobold geomancer's
+{m}des Kobold-Geomanten
+%%%%
+the laughing skull's
+{m}des lachenden Schädels
+%%%%
+the living spell's
+{m}des lebendigen Zaubers
+%%%%
+# a portmanteau of (bone) marrow and barracuda
+the marrowcuda's
+{m}des Markudas
+%%%%
+the martyred shade's
+{m}des Märtyrerschattens
+%%%%
+the meteoran's
+{m}des Meteorans
+%%%%
+the monarch bomb's
+{f}der Monarch-Bombe
+%%%%
+the mongrel wurm's
+{m}des Mischlingswurms
+%%%%
+the morphogenic ooze's
+{m}des morphogenen Schlamms
+%%%%
+# a tortoise with a thick, rock-encrusted shell
+the mountainshell's
+{f}der Bergschildkröte
+%%%%
+the nargun's
+{m}des Narguns
+%%%%
+the nascent plasmodium's
+{n}des werdenden Plasmodiums
+%%%%
+the nekomata's
+{f}der Nekomata
+%%%%
+the oblivion hound's
+{m}des Verwüstungshundes
+%%%%
+the obsidian bat's
+{f}der Obsidianfledermaus
+%%%%
+the occultist's
+{m}des Okkultisten
+%%%%
+the oni's
+{m}des Onis
+%%%%
+the oni incarcerator's
+{m}des Oni-Gefängniswärters
+%%%%
+the orb of entropy's
+{f}der Kugel der Entropie
+%%%%
+the orb of winter's
+{f}der Kugel des Winters
+%%%%
+the orc apostle's
+{m}des Ork-Apostels
+%%%%
+the petrified flower's
+{f}der versteinerten Blume
+%%%%
+the phalanx beetle's
+{m}des Phalanx-Käfers
+%%%%
+the pharaoh ant's
+{f}der Pharao-Ameise
+%%%%
+the pile of debris's
+{m}des Trümmerhaufens
+%%%%
+the pile of flesh's
+{m}des Fleischhaufens
+%%%%
+the pillar of rime's
+{f}der Raureif-Säule
+%%%%
+the platinum paragon's
+{n}des Platin-Parademodells
+%%%%
+the poltergeist's
+{m}des Poltergeists
+%%%%
+the polterguardian's
+{m}des Polterwächters
+%%%%
+the protean progenitor's
+{m}des proteischen Vorläufers
+%%%%
+the putrid mouth's
+{m}des fauligen Mundes
+%%%%
+the quicksilver elemental's
+{m}des Quecksilber-Elementars
+%%%%
+the radroach's
+{f}der Strahlungskakerlake
+%%%%
+the raven's
+{m}des Raben
+%%%%
+the rending blade's
+{f}der zerreißenden Klinge
+%%%%
+the revenant soulmonger's
+{m}des Wiedergänger-Seelenhändlers
+%%%%
+the ribbon worm's
+{m}des Schnurwurms
+%%%%
+the roaming sludgefish's
+{m}des wandernden Schlammfisches
+%%%%
+the rock fish's
+{m}des Felsenfisches
+%%%%
+the rusted inspector's
+{m}des verrosteten Inspektors
+%%%%
+the sacred lotus's
+{m}des heiligen Lotus
+%%%%
+the scrapshell chimera's
+{f}der Schrottenhüllen-Chimäre
+%%%%
+the screaming refraction's
+{f}der schreienden Refraktion
+%%%%
+the scrub nettle's
+{f}der Buschbrennnessel
+%%%%
+the searing wretch's
+{m}des sengenden Jämmerlings
+%%%%
+the seismosaurus's
+{m}des Seismosaurus
+%%%%
+the seismosaurus egg's
+{n}des Seismosaurus-Eis
+%%%%
+the sewage sovereign's
+{m}des Abwasser-Herrschers
+%%%%
+the shadow prism's
+{n}des Schattenprismas
+%%%%
+the shadow puppet's
+{f}der Schattenpuppe
+%%%%
+the shadow turret's
+{m}des Schattenturms
+%%%%
+the shadowghast's
+{m}des Schattenghasts
+%%%%
+the shooting star's
+{f}der Sternschnuppe
+%%%%
+the sickly merfolk siren's
+{f}der kränklichen Meervolk-Sirene
+%%%%
+the sin beast's
+{n}des Sündenbiests
+%%%%
+the skyshark's
+{m}des Himmelshais
+%%%%
+# a kind of mushroom
+the sleepcap's
+{f}der Schlafkappe
+%%%%
+the slymdra's
+{f}der Schleimdra
+%%%%
+the solar ember's
+{f}der Sonnenglut
+%%%%
+the soul wisp's
+{m}des Seelenflimmers
+%%%%
+the spectator's
+{m}des Zuschauers
+%%%%
+the spellspark servitor's
+{m}des Zauberfunken-Dieners
+%%%%
+the sphinx marauder's
+{m}des Sphinx-Plünderers
+%%%%
+the splinterfrost barricade's
+{f}der Splitterfrost-Barrikade
+%%%%
+the stack of scrap's
+{m}des Schrotthaufens
+%%%%
+the star jelly's
+{n}des Sternengelees
+%%%%
+the starflower's
+{f}der Sternenblume
+%%%%
+the steelbarb worm's
+{m}des Stahlstachelwurms
+%%%%
+the stoker's
+{m}des Heizers
+%%%%
+the strange machine's
+{f}der seltsamen Maschine
+%%%%
+the sun moth's
+{f}der Sonnenmotte
+%%%%
+the tainted leviathan's
+{m}des verdorbenen Leviathans
+%%%%
+the telencephalon's
+{n}des Telencephalons
+%%%%
+the thermic dynamo's
+{m}des thermischen Dynamos
+%%%%
+the undertaker's
+{m}des Leichenbestatters
+%%%%
+the undying armoury's
+{f}der unsterblichen Waffenkammer
+%%%%
+the vampire bloodprince's
+{m}des Vampir-Blutprinzen
+%%%%
+the void ooze's
+{m}des Leerenschleims
+%%%%
+the walking alembic's
+{m}des wandernden Alambiks
+%%%%
+the walking crystal tome's
+{m}des wandernden Kristallfolianten
+%%%%
+the walking divine tome's
+{m}des wandernden göttlichen Folianten
+%%%%
+the walking earthen tome's
+{m}des wandernden Tonfolianten
+%%%%
+the walking frostbound tome's
+{m}des wandernden frostumhüllten Folianten
+%%%%
+the walking tome's
+{m}des wandernden Folianten
+%%%%
+the weeping skull's
+{m}des weinenden Schädels
+%%%%
+the wendigo's
+{m}des Wendigos
+%%%%
+the wyrmhole's
+{n}des Wyrmlochs
+%%%%
+the zykzyl's
+{m}des Zykzyls
+%%%%
 
 # subtypes of mutant beast
 %%%%
