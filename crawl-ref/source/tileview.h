@@ -46,6 +46,7 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile);
 
 // Tile view related
 void tile_draw_map_cells();
+void tile_draw_entire_map();
 void tile_draw_floor();
 void tile_reset_fg(const coord_def &gc);
 void tile_draw_map_cell(const coord_def &gc, bool foreground_only = false);

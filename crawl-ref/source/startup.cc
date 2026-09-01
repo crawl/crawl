@@ -346,6 +346,13 @@ static void _post_init(bool newc)
 
     read_init_file(true);
     Options.fixup_options();
+
+#ifdef USE_TILE
+    // Redraw the map in case the init file has changed anything - at least
+    // autopickup can have changed.
+    tile_draw_entire_map();
+#endif
+
     read_startup_prefs();
 #ifdef USE_TILE_WEB
     tiles.send_options();
