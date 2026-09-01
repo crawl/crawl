@@ -335,7 +335,7 @@ def dump_lines(orig_filename, lines):
 ################################
 
 # remove comments and optionally whitespace
-def get_preprocessed_c_lines(filename, strip_whitespace=True):
+def get_preprocessed_cpp_lines(filename, strip_whitespace=True):
     with open(filename, 'r') as f:
         text = f.read()
     # strip multiline comments
@@ -439,7 +439,7 @@ def remove_conditionally_compiled_code(lines):
     return result
 
 # should line be ignored?
-def ignore_c_line(line):
+def ignore_cpp_line(line):
     if '"' not in line:
         return True
 
@@ -613,7 +613,7 @@ def dummy_up_keys(line):
     line = re.sub(r"\b(menu_colour *\([^,]+,[^,]+,)[^,)]+", "$1, dummy", line)
     return line
 
-def extract_c_strings(line, filter_results):
+def extract_cpp_strings(line, filter_results):
     strings = re.findall(STRING_PATTERN, line)
     strings = list(map(lambda x: x.strip('"'), strings))
     strings = split_on_newlines(strings)
@@ -622,7 +622,7 @@ def extract_c_strings(line, filter_results):
     return strings
 
 def process_cplusplus_file(filename):
-    lines = get_preprocessed_c_lines(filename, False)
+    lines = get_preprocessed_cpp_lines(filename, False)
     lines = remove_conditionally_compiled_code(lines)
     #if filename == "item-name.cc":
     #    dump_lines(filename, lines)
@@ -651,10 +651,10 @@ def process_cplusplus_file(filename):
                 results[section] = []
         if ignore_section(filename, section):
             continue
-        if ignore_c_line(line):
+        if ignore_cpp_line(line):
             continue
         line = dummy_up_keys(line)
-        strings = extract_c_strings(line, True)
+        strings = extract_cpp_strings(line, True)
         if len(strings) == 0:
             continue
         if "MSGCH_ERROR" in line and ignore_error_message(strings[0]):
