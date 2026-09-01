@@ -7224,7 +7224,6 @@ bool player::res_torment() const
         return true;
 
     return get_form()->res_neg() == 3
-           || bool(you.holiness() & MH_PLANT)
 #if TAG_MAJOR_VERSION == 34
            || you.unrand_equipped(UNRAND_ETERNAL_TORMENT)
 #endif
