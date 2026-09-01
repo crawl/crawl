@@ -1390,7 +1390,7 @@
 @num@ royal mummies
 
 %%%%
-@num@ eleionomas
+@num@ eleionomae
 
 %%%%
 @num@ lemures
@@ -1591,7 +1591,7 @@
 @num@ chonchones
 
 %%%%
-@num@ clockroachs
+@num@ clockroaches
 
 %%%%
 @num@ clockwork bees
@@ -1600,7 +1600,7 @@
 @num@ cognitogaunts
 
 %%%%
-@num@ colossal amoebas
+@num@ colossal amoebae
 
 %%%%
 @num@ crawling flesh cages
@@ -1654,7 +1654,7 @@
 @num@ eyes of draining
 
 %%%%
-@num@ formless jellyfishs
+@num@ formless jellyfish
 
 %%%%
 @num@ fravashis
@@ -1816,7 +1816,7 @@
 @num@ quicksilver elementals
 
 %%%%
-@num@ radroachs
+@num@ radroaches
 
 %%%%
 @num@ ravens
@@ -1831,10 +1831,10 @@
 @num@ ribbon worms
 
 %%%%
-@num@ roaming sludgefishs
+@num@ roaming sludgefish
 
 %%%%
-@num@ rock fishs
+@num@ rock fish
 
 %%%%
 @num@ rusted inspectors
@@ -1852,7 +1852,7 @@
 @num@ scrub nettles
 
 %%%%
-@num@ searing wretchs
+@num@ searing wretches
 
 %%%%
 @num@ seismosauri
