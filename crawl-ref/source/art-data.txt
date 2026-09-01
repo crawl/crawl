@@ -206,6 +206,7 @@ DBRAND:  Sonic Wave: It radiates damaging sonic waves as it strikes, especially
 NAME:    Wrath of Trog
 OBJ:     OBJ_WEAPONS/WPN_BATTLEAXE
 FALLBACK: OBJ_WEAPONS/WPN_EXECUTIONERS_AXE
+INSCRIP: RageSunder
 PLUS:    +8
 COLOUR:  ETC_BLOOD
 TILE:    spwpn_wrath_of_trog
@@ -214,7 +215,11 @@ VALUE:   800
 ANGRY:   50
 BOOL:    rampage
 BRAND:   SPWPN_ANTIMAGIC
-DESCRIP: It causes slowness and exhaustion when equipped.
+DESCRIP: RageSunder: After you perform multiple consecutive attacks, its next
++attack will deal greatly increased damage and also cleave into targets an extra
++space away. This effect charges faster and partially retains its charge between
++attacks while you are berserk.
++It causes slowness and exhaustion when equipped.
 +It extends the wielder's berserk rage when killing foes.
 
 NAME:     mace of Variability

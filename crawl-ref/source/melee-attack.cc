@@ -5212,7 +5212,8 @@ bool melee_attack::apply_damage_brand(const char *what)
 
 bool melee_attack::is_sundering_weapon() const
 {
-    return damage_brand == SPWPN_SUNDERING;
+    return damage_brand == SPWPN_SUNDERING
+        || attacker->unrand_equipped(UNRAND_TROG);
 }
 
 string mut_aux_attack_desc(mutation_type mut)

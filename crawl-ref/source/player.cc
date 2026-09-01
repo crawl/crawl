@@ -3886,13 +3886,19 @@ bool player::cloud_immune(bool items) const
 
 bool player::sunder_is_ready() const
 {
+    int sunder_threshold = SUNDERING_THRESHOLD;
+
+    if (unrand_equipped(UNRAND_TROG) && you.berserk())
+        sunder_threshold -= 2;
+
     if (you.attribute[ATTR_SUNDERING_CHARGE] >= 0
-        && you.attribute[ATTR_SUNDERING_CHARGE] < SUNDERING_THRESHOLD)
+        && you.attribute[ATTR_SUNDERING_CHARGE] < sunder_threshold)
     {
         return false;
     }
 
-    return wearing_ego(OBJ_WEAPONS, SPWPN_SUNDERING);
+    return wearing_ego(OBJ_WEAPONS, SPWPN_SUNDERING)
+            || unrand_equipped(UNRAND_TROG);
 }
 
 /**
