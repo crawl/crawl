@@ -173,7 +173,7 @@ void init_localisation()
     static const text_pattern float_arg_patt("@float[^@]*@", true);
     static const text_pattern punct_arg_patt("@punct[^@]*@", true);
     static const text_pattern glyph_arg_patt("@glyph[^@]*@", true);
-    static const text_pattern adj_arg_patt("@[adj^@]+@");
+    static const text_pattern adj_arg_patt("@adj[^@]*@");
     static const text_pattern str_arg_patt("@[^@]+@");
     static const text_pattern a_an_patt("^an? ");
     for (const string& key: keys)
@@ -214,6 +214,17 @@ void init_localisation()
                     "There is no way to tell where one value ends and the next starts.\n",
                     key.c_str());
         }
+
+        // avoid matching annotation as part of item
+        if (contains(pattern, " of "))
+        {
+            // this doesn't work with posix regex
+            //pattern = replace_all(pattern, "(.*) of ", "([^:\\]]+) of ");
+            pattern = replace_all(pattern, "(.*) of ", "([A-Za-z0-9' +-]+) of ");
+            pattern = replace_all(pattern, "of (.*)$", "of ([^(){}]+)$");
+        }
+        // named artefact (e.g. "Mule")
+        pattern = replace_all(pattern, "(.*) \"(.*)\"", "([A-Za-z0-9' +-]+) \"([^\"]+)\"");
 
         _patterns.emplace_back(make_pair(text_pattern(pattern), key));
     }
@@ -779,7 +790,26 @@ static string _localise_string(const string& s, bool fallback_en)
         return result;
     }
 
+    string annotation;
+    separate_prefix_annotation(s, annotation, rest);
+    if (!annotation.empty())
+    {
+        annotation = _localise_annotation(annotation);
+        result = _localise_string(rest, fallback_en);
+        if (!result.empty() || rest.empty())
+            return annotation + result;
+    }
+
+    separate_postfix_annotation(s, annotation, rest);
+    if (!annotation.empty())
+    {
+        result = _localise_string(rest, fallback_en);
+        if (!result.empty() || rest.empty())
+            return result + _localise_annotation(annotation);
+    }
+
     // test for list
+    // this must be done after annotations because they can contain commas
     auto tokens = tokenise_comma_separated_list(s);
     if (tokens.size() > 1)
     {
@@ -792,24 +822,6 @@ static string _localise_string(const string& s, bool fallback_en)
                 _context = saved_context;
         }
         return result;
-    }
-
-        string annotation;
-    separate_postfix_annotation(s, annotation, rest);
-    if (!annotation.empty())
-    {
-        result = _localise_string(rest, fallback_en);
-        if (!result.empty() || rest.empty())
-            return result + _localise_annotation(annotation);
-    }
-
-    separate_prefix_annotation(s, annotation, rest);
-    if (!annotation.empty())
-    {
-        annotation = _localise_annotation(annotation);
-        result = _localise_string(rest, fallback_en);
-        if (!result.empty() || rest.empty())
-            return annotation + result;
     }
 
     debuglog("No translation found for \"%s\"", s.c_str());

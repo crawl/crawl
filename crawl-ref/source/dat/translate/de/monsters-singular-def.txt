@@ -2109,6 +2109,30 @@ the @monster@ simulacrum
 {n}das Simulacrum {gen}@a_monster@
 %%%%
 
+# make sure adjective doesn't get treated as part of the base monster
+# (e.g. we want "the neutral skeleton of an orc", not "the skeleton of a neutral orc")
+%%%%
+the neutral @monster@ zombie
+{m}der neutrale Zombie {gen}@a_monster@
+%%%%
+the neutral @monster@ skeleton
+{n}das neutrale Skelett {gen}@a_monster@
+%%%%
+the neutral @monster@ simulacrum
+{n}das neutrale Simulacrum {gen}@a_monster@
+%%%%
+
+%%%%
+the non-hostile @monster@ zombie
+{m}der nicht feindliche Zombie {gen}@a_monster@
+%%%%
+the non-hostile @monster@ skeleton
+{n}das nicht feindliche Skelett {gen}@a_monster@
+%%%%
+the non-hostile @monster@ simulacrum
+{n}das nicht feindliche Simulacrum {gen}@a_monster@
+%%%%
+
 # irregular derived monsters
 
 %%%%

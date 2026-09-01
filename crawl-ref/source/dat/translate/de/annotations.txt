@@ -52,38 +52,47 @@ Willenskraft
 # attribute +/-
 %%%%
 # strength
-Str
-Stä
+Str@integer@
+Stä@integer@
 %%%%
 # dexterity
-Dex
-Ges
+Dex@integer@
+Ges@integer@
 %%%%
 # intelligence
-Int
-Int
+Int@integer@
+Int@integer@
 %%%%
-HP
-TP
+HP@integer@
+TP@integer@
 %%%%
-MP
-MP
+MP@integer@
+MP@integer@
 %%%%
 # armour class
-AC
-RK
+AC@integer@
+RK@integer@
 %%%%
 # evasion
-EV
-AW
+EV@integer@
+AW@integer@
 %%%%
 # shields
-SH
-SCH
+SH@integer@
+SCH@integer@
 %%%%
 # stealth
 Stlth
 Heiml
+%%%%
+Stlth+
+Heiml+
+%%%%
+Stlth-
+Heiml-
+%%%%
+Slay@integer@
+Töten@integer@
 %%%%
 
 # resistances +/-
@@ -92,13 +101,68 @@ Heiml
 rF
 rF
 %%%%
+rF+
+rF+
+%%%%
+rF++
+rF++
+%%%%
+rF+++
+rF+++
+%%%%
+rF-
+rF-
+%%%%
+rF--
+rF--
+%%%%
+rF---
+rF---
+%%%%
 # cold
 rC
 rK
 %%%%
+rC+
+rK+
+%%%%
+rC++
+rK++
+%%%%
+rC+++
+rK+++
+%%%%
+rC-
+rK-
+%%%%
+rC--
+rK--
+%%%%
+rC---
+rK---
+%%%%
+%%%%
 # negative energy
 rN
 rN
+%%%%
+rN+
+rN+
+%%%%
+rN++
+rN++
+%%%%
+rN+++
+rN+++
+%%%%
+rN-
+rN-
+%%%%
+rN--
+rN--
+%%%%
+rN---
+rN---
 %%%%
 # poison
 rPois
@@ -245,6 +309,9 @@ Akrobat
 # random teleport
 *Tele
 *Tele
+%%%%
+backblast
+Rückprall
 %%%%
 
 # weapon brands

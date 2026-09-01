@@ -1648,6 +1648,30 @@ the @monster@ simulacrum
 
 %%%%
 
+# make sure adjective doesn't get treated as part of the base monster
+# (e.g. we want "the neutral skeleton of an orc", not "the skeleton of a neutral orc")
+%%%%
+the neutral @monster@ zombie
+
+%%%%
+the neutral @monster@ skeleton
+
+%%%%
+the neutral @monster@ simulacrum
+
+%%%%
+
+%%%%
+the non-hostile @monster@ zombie
+
+%%%%
+the non-hostile @monster@ skeleton
+
+%%%%
+the non-hostile @monster@ simulacrum
+
+%%%%
+
 # irregular derived monsters
 
 %%%%

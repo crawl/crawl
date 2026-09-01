@@ -159,7 +159,7 @@ Was @arg@ of @god@.
 War @arg@ {gen}@god@.
 %%%%
 Was @arg@ of @god@ (penitent).
-War @arg@ {gen}@god@ (penitent).
+War @arg@ {gen}@god@ (Büßer).
 %%%%
 
 # titles used above, in declining order of piety

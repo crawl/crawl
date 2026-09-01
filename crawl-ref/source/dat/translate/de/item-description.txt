@@ -829,7 +829,7 @@ Gelegentlich verabreicht sie Gegnern erstickendes Gift, das Giftschaden verursac
 # Sniper (heavy crossbow)
 %%%%
 Acc+∞
-Gen+∞
+Treffs+∞
 %%%%
 Any ammunition fired from it never misses its target.
 Jede Munition, die damit verschossen wird, verfehlt nie ihr Ziel.

@@ -1460,9 +1460,6 @@ Du bist bereit, erneut zu rezitieren.
 
 # Fire vulnerability
 %%%%
-rF-
-rF-
-%%%%
 fire vulnerable
 feuerempfindlich
 %%%%
@@ -1634,9 +1631,6 @@ Du kannst wieder Tränke trinken.
 
 # Fire resistance
 %%%%
-rF+
-rF+
-%%%%
 protected from fire
 geschützt vor Feuer
 %%%%
@@ -1654,9 +1648,6 @@ Dein Schutz vor Feuer lässt nach.
 %%%%
 
 # Cold resistance
-%%%%
-rC+
-rK+
 %%%%
 protected from cold
 geschützt vor Kälte
