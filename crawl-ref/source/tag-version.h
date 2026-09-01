@@ -363,6 +363,7 @@ enum tag_minor_version
     TAG_MINOR_FIX_UNCANCELS,       // Fix monsters sometimes getting their turn before the effect of the players action
     TAG_MINOR_MIMIC_PROP,          // Move flag for mimics from env.level_map_mask to env.pgrid
     TAG_MINOR_MON_ATTACK_DEF_RANGE,// Add 'range' and 'cleaving' members to mon_attack_def
+    TAG_MINOR_EXPAND_UNRANDARTS,   // Expand MAX_UNRANDARTS from 150 to 255
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
