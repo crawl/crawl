@@ -25,6 +25,7 @@ class monster;
 
 bool trap_is_bad_for_player(dungeon_feature_type trap);
 bool trap_is_safe(dungeon_feature_type trap, const actor* act = 0);
+bool trap_is_safe_from_afar(dungeon_feature_type trap, const actor* act = 0);
 void trigger_trap(actor& triggerer);
 
 bool chaos_lace_criteria(monster* mon);
