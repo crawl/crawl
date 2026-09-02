@@ -259,7 +259,7 @@ static bool _multiplicity_clone(monster* mon)
     {
         bool obviousness; // dummy argument
         monster *clone = clone_mons(mon, true, &obviousness,
-                                    mon->attitude, spot);
+                                    mon->temp_attitude(), spot);
         if (!clone)
             return false;
         clone->foe = mon->foe;

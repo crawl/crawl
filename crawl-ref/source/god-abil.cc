@@ -4268,11 +4268,8 @@ spret qazlal_disaster_area(bool fail)
             continue;
 
         const monster *mon = monster_at(*ri);
-        if (mon && mons_att_wont_attack(mon->attitude)
-            && !mons_is_projectile(mon->type))
-        {
+        if (mon && mon->wont_attack() && !mon->is_firewood())
             friendlies = true;
-        }
 
         const int range = you.pos().distance_from(*ri);
         if (range <= upheaval_radius)

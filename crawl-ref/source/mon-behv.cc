@@ -1090,21 +1090,11 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             break;
         }
 
-        // Monster types that you can't gain experience from cannot
-        // fight back, so don't bother having them do so. If you
-        // worship Fedhas, create a ring of friendly plants, and try
-        // to break out of the ring by killing a plant, you'll get
-        // a warning prompt and penance only once. Without the
-        // hostility check, the plant will remain friendly until it
-        // dies, and you'll get a warning prompt and penance once
-        // *per hit*. This may not be the best way to address the
-        // issue, though. -cao
-        if (!mons_is_threatening(*mon)
-            && mon->attitude != ATT_FRIENDLY
-            && mon->attitude != ATT_GOOD_NEUTRAL)
-        {
+        // Don't bother alerting monsters that can't fight you (but *do* aggro
+        // them if friendly, though this mostly applies to butterflies at the
+        // moment.)
+        if (!mons_is_threatening(*mon) && !mon->wont_attack())
             return;
-        }
 
         // Even when hit, don't make monsters set their foe to 'nothing' or to
         // an ally (which will cause hostile monsters to automatically set it to

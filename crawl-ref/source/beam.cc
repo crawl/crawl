@@ -2748,7 +2748,7 @@ void bolt::affect_endpoint()
             monster* blitzer = agent(true)->as_monster();
             bool obviousness; // dummy argument
             monster *mirror = clone_mons(blitzer, true, &obviousness,
-                                         blitzer->attitude, spot);
+                                         blitzer->temp_attitude(), spot);
             if (!mirror)
                 break;
             mirror->mark_summoned(SPELL_PHANTOM_BLITZ, summ_dur(2), true, true);

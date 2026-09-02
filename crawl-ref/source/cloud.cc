@@ -1538,9 +1538,8 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
     {
     case CLOUD_BLASTMOTES:
         // As with traps, make friendly monsters not walk into blastmotes.
-        return mons->attitude == ATT_FRIENDLY
-        // Hack: try to avoid penance.
-            || mons->attitude == ATT_GOOD_NEUTRAL;
+        // (And good neutral monsters, to avoid penance.)
+        return mons->wont_attack();
 
     case CLOUD_RAIN:
         return !mons->is_fiery() || !extra_careful;

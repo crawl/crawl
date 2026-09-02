@@ -3374,15 +3374,13 @@ static bool _can_force_door_shut(const vector<coord_def>& door_spots)
 
     for (coord_def dc : door_spots)
     {
-        const actor* act = actor_at(dc);
-        if (!act)
-            continue;
-        // Only attempt to push players and non-hostile monsters out of
-        // doorways
-        bool should_push = act->is_player()
-                           || act->as_monster()->attitude != ATT_HOSTILE;
-        if (!should_push)
-            return false;
+        if (const actor* act = actor_at(dc))
+        {
+            // Only attempt to push players and non-hostile monsters out of
+            // doorways
+            if (act->temp_attitude() == ATT_HOSTILE)
+                return false;
+        }
     }
 
     vector<const actor*> pushed_actors;

@@ -1284,7 +1284,7 @@ spret cast_malign_gateway(actor * caster, int pow, bool fail, bool test)
             caster->mid,
             is_player ? BEH_FRIENDLY
                       : attitude_creation_behavior(
-                          caster->as_monster()->attitude),
+                          caster->as_monster()->temp_attitude()),
             "",
             pow);
 

@@ -704,7 +704,7 @@ monster_info::monster_info(const monster* m, int milev)
         }
         else if (m->foe == MHITNOT
                  && m->behaviour != BEH_BATTY
-                 && m->attitude == ATT_HOSTILE)
+                 && m->temp_attitude() == ATT_HOSTILE)
         {
             mb.set(MB_UNAWARE);
         }
