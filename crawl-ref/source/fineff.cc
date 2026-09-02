@@ -1154,22 +1154,12 @@ void trj_spawn_fineff::fire()
     if (invalid_monster_index(foe) && foe != MHITYOU)
         foe = MHITNOT;
 
-    // Give spawns the same attitude as TRJ; if TRJ is now dead, make them
-    // hostile.
-    const beh_type spawn_beh = trj
-        ? attitude_creation_behavior(trj->as_monster()->attitude)
-        : BEH_HOSTILE;
-
-    // No permanent friendly jellies from a charmed TRJ.
-    if (spawn_beh == BEH_FRIENDLY && !crawl_state.game_is_arena())
-        return;
-
     int spawned = 0;
     for (int i = 0; i < tospawn; ++i)
     {
         const monster_type jelly = royal_jelly_ejectable_monster();
         if (monster *mons = create_monster(
-                              mgen_data(jelly, spawn_beh, posn, foe,
+                              mgen_data(jelly, BEH_HOSTILE, posn, foe,
                                         MG_DONT_COME, GOD_JIYVA)
                               .set_summoned(trj, 0)
                               .set_range(1, LOS_RADIUS)
