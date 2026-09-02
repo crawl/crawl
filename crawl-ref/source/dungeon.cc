@@ -46,6 +46,7 @@
 #include "items.h"
 #include "lev-pand.h"
 #include "libutil.h"
+#include "map-knowledge.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
@@ -5955,6 +5956,11 @@ bool seen_destroy_feat(dungeon_feature_type old_feat)
             destroy_wall(*ri);
             if (you.see_cell(*ri))
                 seen = true;
+            if (env.map_knowledge(*ri).feat() == old_feat)
+            {
+                update_terrain_knowledge(*ri, !env.map_knowledge(*ri).seen());
+                redraw_view_at(*ri);
+            }
         }
     }
 
