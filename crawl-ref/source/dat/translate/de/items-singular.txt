@@ -637,6 +637,18 @@ the wand of acid
 the wand of mindburst
 {m}der Zauberstab des Kopfzerplatzens
 %%%%
+the wand of light
+{m}der Zauberstab des Lichts
+%%%%
+the wand of quicksilver
+{m}der Zauberstab des Quecksilbers
+%%%%
+the wand of roots
+{m}der Zauberstab der Wurzeln
+%%%%
+the wand of warping
+{m}der Zauberstab der Verzerrung
+%%%%
 # obsolete item (can occur if player loads a saved game from an older version)
 the wand of removedness
 {m}der Zauberstab der Obsoleszenz
@@ -712,6 +724,9 @@ the scroll of blinking
 the scroll of brand weapon
 {f}die Schriftrolle der Waffenprägung
 %%%%
+the scroll of butterflies
+{f}die Schriftrolle der Schmetterlinge
+%%%%
 the scroll of enchant armour
 {f}die Schriftrolle der Rüstungsverzauberung
 %%%%
@@ -733,14 +748,17 @@ the scroll of identify
 the scroll of immolation
 {f}die Schriftrolle des Entflammens
 %%%%
-the scroll of magic mapping
-{f}die Schriftrolle des magischen Kartierens
-%%%%
 the scroll of noise
 {f}die Schriftrolle des Lärms
 %%%%
+the scroll of poison
+{f}die Schriftrolle des Giftes
+%%%%
 the scroll of remove curse
 {f}die Schriftrolle des Fluchaufhebens
+%%%%
+the scroll of revelation
+{f}die Schriftrolle der Offenbarung
 %%%%
 the scroll of silence
 {f}die Schriftrolle der Stille
@@ -795,6 +813,9 @@ the potion of curing
 the potion of degeneration
 {m}der Trank der Degeneration
 %%%%
+the potion of enlightenment
+{m}der Trank der Erleuchtung
+%%%%
 the potion of experience
 {m}der Trank der Erfahrung
 %%%%
@@ -818,6 +839,9 @@ the potion of magic
 %%%%
 the potion of might
 {m}der Trank der Macht
+%%%%
+the potion of moonshine
+{m}der Trank des Fusels
 %%%%
 the potion of mutation
 {m}der Trank der Mutation
@@ -1057,6 +1081,12 @@ the piece from Xom's chessboard
 %%%%
 the tin of tremorstones
 {f}die Dose Erdbebensteine
+%%%%
+the sack of spiders
+{m}der Sack der Spinnen
+%%%%
+the Gell's gravitambourine
+{n}das Gells Gravitamburin
 %%%%
 the quad damage
 {m}der Vierfachschaden
