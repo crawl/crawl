@@ -5771,17 +5771,11 @@ static bool _get_stomped(monster& mons)
 
 bool uskayaw_stomp()
 {
-    // Demonic guardians are immune but check for other friendlies
-    const bool friendlies = apply_monsters_around_square([] (monster& mons) {
-        return could_harm(&you, &mons) && mons_att_wont_attack(mons.attitude);
-    }, you.pos());
+    vector<coord_def> adj;
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        adj.push_back(*ai);
 
-    // XXX: this 'friendlies' wording feels a little odd, but we do use it in a
-    // a few places already; see spl-vortex.cc, disaster area, etc.
-    if (friendlies
-        && !yesno("There are friendlies around, "
-                  "are you sure you want to hurt them?",
-                  true, 'n'))
+    if (warn_about_bad_targets("The shockwave", adj, nullptr, "Stomp anyway?"))
     {
         canned_msg(MSG_OK);
         return false;
