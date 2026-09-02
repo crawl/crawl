@@ -109,6 +109,9 @@ static void _print_bar(int value, int scale, const string &name,
 
 static void _describe_mons_to_hit(const monster_info& mi, ostringstream &result);
 static string _describe_weapon_brand(const item_def &item);
+static void _get_spell_description(spell_type spell,
+                                   const monster_info *mon_owner,
+                                   string &description);
 
 struct property_descriptor;
 static const property_descriptor & _get_artp_desc_data(artefact_prop_type p);
@@ -2861,6 +2864,15 @@ string get_item_description(const item_def &item,
                            "own hands.";
             need_base_desc = false;
         }
+        else if (item.is_type(OBJ_BOOKS, BOOK_PARCHMENT)
+                 && item.plus > 0 && mode == IDM_DEFAULT)
+        {
+            string spell_desc;
+            _get_spell_description(static_cast<spell_type>(item.plus), nullptr,
+                                   spell_desc);
+            description << spell_desc;
+            need_base_desc = false;
+        }
 
         if (need_base_desc)
         {
@@ -4171,7 +4183,8 @@ command_type describe_item_popup(const item_def &item,
 
     formatted_string fs_desc = formatted_string::parse_string(desc);
 
-    spellset spells = item_spellset(item);
+    const bool parchment = item.is_type(OBJ_BOOKS, BOOK_PARCHMENT);
+    spellset spells = parchment ? spellset() : item_spellset(item);
     formatted_string spells_desc;
     describe_spellset(spells, &item, spells_desc, nullptr);
 #ifdef USE_TILE_WEB
@@ -4182,6 +4195,8 @@ command_type describe_item_popup(const item_def &item,
     vector<command_type> actions;
     if (do_actions)
         actions = _allowed_actions(item);
+
+    const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells);
 
     auto vbox = make_shared<Box>(Widget::VERT);
     auto title_hbox = make_shared<Box>(Widget::HORZ);
@@ -4218,11 +4233,16 @@ command_type describe_item_popup(const item_def &item,
     vbox->add_child(scroller);
 
     formatted_string footer_text("", CYAN);
-    if (!actions.empty())
+    if (!spells.empty() || !actions.empty())
     {
         if (!spells.empty())
-            footer_text.cprintf("Select a spell, or ");
-        footer_text += formatted_string(_actions_desc(actions));
+            footer_text.cprintf("Press a spell letter to describe it");
+        if (!actions.empty())
+        {
+            if (!spells.empty())
+                footer_text.cprintf(", or ");
+            footer_text += formatted_string(_actions_desc(actions));
+        }
         auto footer = make_shared<Text>();
         footer->set_text(footer_text);
         footer->set_margin_for_crt(1, 0, 0, 0);
@@ -4243,6 +4263,7 @@ command_type describe_item_popup(const item_def &item,
     popup->on_keydown_event([&](const KeyEvent& ev) {
         const auto key = ev.key() == '{' ? 'i' : ev.key();
         lastch = key;
+
         action = _get_action(key, actions);
         if (action != CMD_NO_CMD || ui::key_exits_popup(key, true))
             done = true;
@@ -4273,7 +4294,6 @@ command_type describe_item_popup(const item_def &item,
 #endif
         }
 
-        const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells);
         auto entry = find_if(spell_map.begin(), spell_map.end(),
                 [key](const pair<spell_type,char>& e) { return e.second == key; });
         if (entry == spell_map.end())
@@ -4800,8 +4820,8 @@ string player_spell_desc(spell_type spell)
  * @param description   Set to the description & details of the spell.
  */
 static void _get_spell_description(const spell_type spell,
-                                  const monster_info *mon_owner,
-                                  string &description)
+                                   const monster_info *mon_owner,
+                                   string &description)
 {
     description.reserve(500);
 

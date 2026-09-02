@@ -24,6 +24,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "spl-book.h"
+#include "spl-cast.h"
 #include "spl-damage.h"
 #include "spl-summoning.h" // mons_ball_lightning_hd
 #include "spl-util.h"
@@ -629,10 +630,17 @@ static void _describe_book(const spellbook_contents &book,
     // only display header for book spells
     if (source_item)
     {
-        description.cprintf(
-            "\n Spells                              Type                    Level");
         if (crawl_state.need_save)
-            description.cprintf("       Known");
+        {
+            description.cprintf("\n %-31s%-28s%-6s%-9s%s",
+                                "Spells", "Type", "Level", "Failure",
+                                "Known");
+        }
+        else
+        {
+            description.cprintf(
+                "\n Spells                              Type                    Level");
+        }
     }
     description.cprintf("\n");
 
@@ -672,8 +680,9 @@ static void _describe_book(const spellbook_contents &book,
         const int effect_len = effect_str.length();
         const int range_len = range_str.empty() ? 0 : 3;
         const int effect_range_space = effect_len && range_len ? 1 : 0;
-        const int chop_len = 32 - effect_len - range_len - effect_range_space
-                                - (dith_marker.length() > 0 ? 1 : 0);
+        const int chop_len = source_item && crawl_state.need_save ? 27
+                           : 32 - effect_len - range_len - effect_range_space
+                                  - (dith_marker.length() > 0 ? 1 : 0);
 
         if (effect_len && !testbits(get_spell_flags(spell), spflag::WL_check))
             effect_str = colourize_str(effect_str, _spell_colour(spell));
@@ -712,14 +721,24 @@ static void _describe_book(const spellbook_contents &book,
 #endif
                          _spell_schools(spell);
 
-        string known = "";
-        if (!mon_owner && crawl_state.need_save)
-            known = you.spell_library[spell] ? "         yes" : "          no";
+        if (crawl_state.need_save)
+        {
+            description.cprintf("%s%-6d",
+                                chop_string(schools, 28).c_str(),
+                                spell_difficulty(spell));
 
-        description.cprintf("%s%d%s\n",
-                            chop_string(schools, 28).c_str(),
-                            spell_difficulty(spell),
-                            known.c_str());
+            const string failure = spell_failure_rate_string(spell, true);
+            description += formatted_string::parse_string(failure);
+            const int failure_width = strwidth(
+                formatted_string::parse_string(failure).tostring());
+            description.cprintf("%s%s\n", string(9 - failure_width, ' ').c_str(),
+                                you.spell_library[spell] ? "yes" : "no");
+        }
+        else
+        {
+            description.cprintf("%s%d\n", chop_string(schools, 28).c_str(),
+                                spell_difficulty(spell));
+        }
     }
 
     // are we halfway through a column?
