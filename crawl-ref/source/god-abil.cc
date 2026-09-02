@@ -1942,17 +1942,13 @@ bool fedhas_passthrough_class(const monster_type mc)
 bool fedhas_passthrough(const monster* target)
 {
     return target
-           && fedhas_passthrough_class(target->type)
-           && (mons_species(target->type) != MONS_OKLOB_PLANT
-               || target->attitude != ATT_HOSTILE);
+           && fedhas_passthrough_class(target->type);
 }
 
 bool fedhas_passthrough(const monster_info* target)
 {
     return target
-           && fedhas_passthrough_class(target->type)
-           && (mons_species(target->type) != MONS_OKLOB_PLANT
-               || target->attitude != ATT_HOSTILE);
+           && fedhas_passthrough_class(target->type);
 }
 
 void cheibriados_time_bend(int pow)
