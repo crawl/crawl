@@ -1604,7 +1604,8 @@ static void _append_weapon_stats(string &description, const item_def &item)
 
     const item_def *shield = you.shield();
     if (you.skill(SK_SHIELDS) < MAX_SKILL_LEVEL
-        && you_can_wear(SLOT_OFFHAND) != false)
+        && you_can_wear(SLOT_OFFHAND) != false
+        && you.hands_reqd(item) == HANDS_ONE)
     {
         if (shield)
         {
