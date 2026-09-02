@@ -694,6 +694,14 @@ void bolt::initialise_fire()
           hit, damage.num, damage.size,
           range);
 #endif
+
+    msg_generated = false;
+    if (!aimed_at_feet)
+    {
+        choose_ray();
+        // Take *one* step, so as not to hurt the source.
+        ray.advance();
+    }
 }
 
 void bolt::precalc_agent_properties()
@@ -1167,7 +1175,13 @@ void bolt::fire()
         _undo_tracer(*this, boltcopy);
     }
     else
+    {
+        cursor_control coff(false);
+        // Visible beams reveal the presence of invisible monsters.
+        if (visible() && agent() && agent()->is_monster())
+            agent()->as_monster()->sense_if_invisible();
         do_fire();
+    }
 
     //XXX: suspect, but code relies on path_taken being non-empty
     if (path_taken.empty())
@@ -1196,182 +1210,8 @@ void bolt::do_fire()
 {
     initialise_fire();
 
-    if (range < extra_range_used && range > 0)
-    {
-#ifdef DEBUG
-        dprf(DIAG_BEAM, "fire_beam() called on already done beam "
-             "'%s'", name.c_str());
-#endif
-        return;
-    }
-
-    // Visible beams reveal the presence of invisible monsters.
-    if (visible() && agent() && agent()->is_monster() && !is_tracer())
-        agent()->as_monster()->sense_if_invisible();
-
-    cursor_control coff(false);
-
-    msg_generated = false;
-    if (!aimed_at_feet)
-    {
-        choose_ray();
-        // Take *one* step, so as not to hurt the source.
-        ray.advance();
-    }
-
-    // Tracks if the *last* cell seen was a wall monster, therefore pretend
-    // next cell is solid for purposes of bouncing or stopping the beam.
-    bool wall_monster_hit = false;
-
-    // Note: nothing but this loop should be changing the ray.
-    while (map_bounds(pos()))
-    {
-        if (range_used() > range)
-        {
-            ray.regress();
-            extra_range_used++;
-            ASSERT(range_used() >= range);
-            break;
-        }
-
-        const dungeon_feature_type feat = env.grid(pos());
-
-        // If requested to stop before hitting allies (or neutrals our god would
-        // object to us harming), do so now.
-        const actor* act_at = actor_at(pos());
-        if (act_at && stop_at_allies
-            && (mons_atts_aligned(attitude, act_at->temp_attitude())
-                || (act_at->temp_attitude() == ATT_NEUTRAL
-                    && (is_good_god(you.religion)
-                        || you_worship(GOD_BEOGH) && mons_genus(act_at->type) == MONS_ORC)
-                    && !(act_at->is_monster() && act_at->as_monster()->has_ench(ENCH_FRENZIED))))
-            && can_affect_actor(act_at) && !aimed_at_feet
-            && !(act_at->is_player() && ignores_player() || ignores_monster(act_at->as_monster())))
-        {
-            ray.regress();
-            finish_beam();
-            return;
-        }
-
-        // If this is a friendly monster, firing a penetrating beam in the player's
-        // direction, always stop immediately before them if this attack wouldn't
-        // be harmless to them.
-        if (act_at && act_at->is_player()
-            && agent() && agent()->is_monster() && mons_att_wont_attack(attitude)
-            && !ignores_player() && !harmless_to_player() && pierce && !is_explosion)
-        {
-            ray.regress();
-            finish_beam();
-            return;
-        }
-
-        const monster* mon_at = monster_at(pos());
-        // digging is taken care of in affect_cell
-        if (feat_is_solid(feat) && !can_affect_wall(pos())
-            && flavour != BEAM_DIGGING)
-        {
-            // If wall monster then don't bounce or explode, it's handled later
-            // Rush breath only places clouds, and so cannot affect monsters in walls.
-            if (mon_at && !wall_monster_hit && origin_spell != SPELL_RUST_BREATH)
-                wall_monster_hit = true;
-            else if (is_bouncy(feat))
-            {
-                // Reset so we can hit another
-                wall_monster_hit = false;
-                bounce();
-                // see comment in bounce(); the beam will be cancelled if this
-                // is a tracer and showing the bounce would be an info leak.
-                // In that case, we have to break early to avoid adding this
-                // square to path_taken twice, which would make it look like a
-                // a bounce ANYWAY.
-                if (range_used() > range)
-                    break;
-            }
-            else
-            {
-                // Regress for explosions: blow up in an open grid (if regressing
-                // makes any sense). Also regress when dropping items.
-                if (pos() != source && need_regress())
-                {
-                    do
-                    {
-                        ray.regress();
-                    }
-                    while (ray.pos() != source && cell_is_solid(ray.pos()));
-
-                    // target is where the explosion is centered, so update it.
-                    if (is_explosion && !is_tracer())
-                        target = ray.pos();
-                }
-                break;
-            }
-        }
-
-        path_taken.push_back(pos());
-
-        // Roots only have an effect during explosions.
-        if (flavour == BEAM_ROOTS)
-        {
-            if (cell_is_solid(pos()))
-                affect_wall();
-            const actor *victim = actor_at(pos());
-            if (victim
-                && !ignores_monster(victim->as_monster())
-                && (!is_tracer() || agent()->can_see(*victim)))
-            {
-                finish_beam();
-            }
-        }
-        else
-            affect_cell();
-
-        if (range_used() > range)
-            break;
-
-        // Weapons of returning should find an inverse ray
-        // through find_ray and setup_retrace, but they didn't
-        // always in the past, and we don't want to crash
-        // if they accidentally pass through a corner.
-        // Dig tracers continue through unseen cells.
-        ASSERT(!cell_is_solid(pos())
-               || is_tracer() && can_affect_wall(pos(), true)
-               || mon_at // If there *was* a monster (they might have died by now)
-               || affects_nothing); // returning weapons and BEAM_VISUAL
-
-        const bool was_seen = seen;
-        if (!was_seen && range > 0 && visible() && you.see_cell(pos()))
-            seen = true;
-
-        if (flavour != BEAM_VISUAL && !was_seen && seen && !is_tracer())
-        {
-            mprf("%s appears from out of your range of vision.",
-                 article_a(name, false).c_str());
-        }
-
-        // Reset chaos beams so that it won't be considered an invisible
-        // enchantment beam for the purposes of animation.
-        if (real_flavour == BEAM_CHAOS)
-            flavour = real_flavour;
-
-        // Actually draw the beam/missile/whatever, if the player can see
-        // the cell.
-        if (animate)
-            draw(pos(), redraw_per_cell);
-
-        if (pos() == target)
-        {
-            passed_target = true;
-            if (stop_at_target())
-                break;
-        }
-
-        noise_generated = false;
-
-        // If a wall monster was hit and the beam is continuing, don't
-        // actually advance the ray: next iteration will take care of the bounce
-        if (!wall_monster_hit)
-            ray.advance();
-    }
+    // Keep advancing the beam until we're told to stop.
+    while (map_bounds(pos()) && do_fire_step()) {};
 
     if (!map_bounds(pos()))
     {
@@ -1388,10 +1228,162 @@ void bolt::do_fire()
     // The beam has terminated.
     affect_endpoint();
 
-    // Tracers need nothing further.
-    if (is_tracer() || affects_nothing)
-        return;
+    if (!is_tracer() && !affects_nothing)
+        do_post_fire();
+}
 
+// Handles potentially affecting a single cell, then advances the beam.
+// Returns true if the beam should continue;
+bool bolt::do_fire_step(bool ignore_wall_monsters)
+{
+    const dungeon_feature_type feat = env.grid(pos());
+
+    // If requested to stop before hitting allies (or neutrals our god would
+    // object to us harming), do so now.
+    const actor* act_at = actor_at(pos());
+    if (act_at && stop_at_allies
+        && (mons_atts_aligned(attitude, act_at->temp_attitude())
+            || (act_at->temp_attitude() == ATT_NEUTRAL
+                && (is_good_god(you.religion)
+                    || you_worship(GOD_BEOGH) && mons_genus(act_at->type) == MONS_ORC)
+                && !(act_at->is_monster() && act_at->as_monster()->has_ench(ENCH_FRENZIED))))
+        && can_affect_actor(act_at) && !aimed_at_feet
+        && !(act_at->is_player() && ignores_player() || ignores_monster(act_at->as_monster())))
+    {
+        ray.regress();
+        return false;
+    }
+
+    // If this is a friendly monster, firing a penetrating beam in the player's
+    // direction, always stop immediately before them if this attack wouldn't
+    // be harmless to them.
+    if (act_at && act_at->is_player()
+        && agent() && agent()->is_monster() && mons_att_wont_attack(attitude)
+        && !ignores_player() && !harmless_to_player() && pierce && !is_explosion)
+    {
+        ray.regress();
+        return false;
+    }
+
+
+    bool wall_monster_hit = false;
+    const monster* mon_at = monster_at(pos());
+    // digging is taken care of in affect_cell
+    if (feat_is_solid(feat) && !can_affect_wall(pos())
+        && flavour != BEAM_DIGGING)
+    {
+        // When hitting a wall monster inside a wall, don't bounce or explode
+        // on this step. Handle hitting the monster first; a second call will
+        // handle the bouncing later.
+        // (Rust breath only places clouds, and so cannot affect monsters in walls.)
+        if (mon_at && !ignore_wall_monsters && origin_spell != SPELL_RUST_BREATH)
+            wall_monster_hit = true;
+        else if (is_bouncy(feat))
+        {
+            bounce();
+            // see comment in bounce(); the beam will be cancelled if this
+            // is a tracer and showing the bounce would be an info leak.
+            // In that case, we have to break early to avoid adding this
+            // square to path_taken twice, which would make it look like a
+            // a bounce ANYWAY.
+            if (range_used() > range)
+                return false;
+        }
+        else
+        {
+            // Regress for explosions: blow up in an open grid (if regressing
+            // makes any sense). Also regress when dropping items.
+            if (pos() != source && need_regress())
+            {
+                do
+                {
+                    ray.regress();
+                }
+                while (ray.pos() != source && cell_is_solid(ray.pos()));
+
+                // target is where the explosion is centered, so update it.
+                if (is_explosion && !is_tracer())
+                    target = ray.pos();
+            }
+            return false;
+        }
+    }
+
+    path_taken.push_back(pos());
+
+    // Roots only have an effect during explosions.
+    if (flavour == BEAM_ROOTS)
+    {
+        if (cell_is_solid(pos()))
+            affect_wall();
+        const actor *victim = actor_at(pos());
+        if (victim
+            && !ignores_monster(victim->as_monster())
+            && (!is_tracer() || agent()->can_see(*victim)))
+        {
+            finish_beam();
+        }
+    }
+    else
+        affect_cell();
+
+    if (range_used() > range)
+        return false;
+
+    // Weapons of returning should find an inverse ray
+    // through find_ray and setup_retrace, but they didn't
+    // always in the past, and we don't want to crash
+    // if they accidentally pass through a corner.
+    // Dig tracers continue through unseen cells.
+    ASSERT(!cell_is_solid(pos())
+            || is_tracer() && can_affect_wall(pos(), true)
+            || mon_at // If there *was* a monster (they might have died by now)
+            || affects_nothing); // returning weapons and BEAM_VISUAL
+
+    const bool was_seen = seen;
+    if (!was_seen && range > 0 && visible() && you.see_cell(pos()))
+        seen = true;
+
+    if (flavour != BEAM_VISUAL && !was_seen && seen && !is_tracer())
+    {
+        mprf("%s appears from out of your range of vision.",
+                article_a(name, false).c_str());
+    }
+
+    // Reset chaos beams so that it won't be considered an invisible
+    // enchantment beam for the purposes of animation.
+    if (real_flavour == BEAM_CHAOS)
+        flavour = real_flavour;
+
+    // Actually draw the beam/missile/whatever, if the player can see
+    // the cell.
+    if (animate)
+        draw(pos(), redraw_per_cell);
+
+    if (pos() == target)
+    {
+        passed_target = true;
+        if (stop_at_target())
+            return false;
+    }
+
+    noise_generated = false;
+
+    // If a wall monster was hit, take another step while ignoring the monster,
+    // in order to handle bouncing.
+    if (wall_monster_hit)
+        return do_fire_step(true);
+    else if (range_used() < range)
+    {
+        ray.advance();
+        return true;
+    }
+
+    return false;
+}
+
+void bolt::do_post_fire()
+{
     // final delay for any draws that happened in the above loop
     if (animate && Options.reduce_animations && draw_delay > 0)
         animation_delay(15 + draw_delay, true);

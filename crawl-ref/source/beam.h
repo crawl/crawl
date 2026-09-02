@@ -331,6 +331,10 @@ private:
     void do_fire();
     void initialise_fire();
 
+    // Handles a single step of the beam firing.
+    bool do_fire_step(bool ignore_wall_monsters = false);
+    void do_post_fire();
+
     // Lots of properties of the beam.
     coord_def pos() const;
     coord_def leg_source() const;
