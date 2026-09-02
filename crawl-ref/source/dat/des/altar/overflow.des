@@ -6255,6 +6255,8 @@ TAGS:  transparent decor
 KPROP: _1 = no_tele_into
 KMASK: _1 = opaque
 KMASK: _1 = no_trap_gen
+KMASK: _1 = no_item_gen
+KMASK: _ = no_monster_gen
 FTILE: n_1 = floor_limestone
 : standard_overflow_setup(_G, { { "xom", "A" }, { "zin", "B" } }, true)
 MAP
