@@ -637,6 +637,18 @@ the wand of acid
 the wand of mindburst
 
 %%%%
+the wand of light
+
+%%%%
+the wand of quicksilver
+
+%%%%
+the wand of roots
+
+%%%%
+the wand of warping
+
+%%%%
 # obsolete item (can occur if player loads a saved game from an older version)
 the wand of removedness
 
@@ -712,6 +724,9 @@ the scroll of blinking
 the scroll of brand weapon
 
 %%%%
+the scroll of butterflies
+
+%%%%
 the scroll of enchant armour
 
 %%%%
@@ -733,13 +748,16 @@ the scroll of identify
 the scroll of immolation
 
 %%%%
-the scroll of magic mapping
-
-%%%%
 the scroll of noise
 
 %%%%
+the scroll of poison
+
+%%%%
 the scroll of remove curse
+
+%%%%
+the scroll of revelation
 
 %%%%
 the scroll of silence
@@ -795,6 +813,9 @@ the potion of curing
 the potion of degeneration
 
 %%%%
+the potion of enlightenment
+
+%%%%
 the potion of experience
 
 %%%%
@@ -817,6 +838,9 @@ the potion of magic
 
 %%%%
 the potion of might
+
+%%%%
+the potion of moonshine
 
 %%%%
 the potion of mutation
@@ -1056,6 +1080,12 @@ the piece from Xom's chessboard
 
 %%%%
 the tin of tremorstones
+
+%%%%
+the sack of spiders
+
+%%%%
+the Gell's gravitambourine
 
 %%%%
 the quad damage

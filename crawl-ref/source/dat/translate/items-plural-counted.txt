@@ -128,6 +128,9 @@
 @num@ scrolls of brand weapon
 
 %%%%
+@num@ scrolls of butterflies
+
+%%%%
 @num@ scrolls of enchant armour
 
 %%%%
@@ -149,13 +152,16 @@
 @num@ scrolls of immolation
 
 %%%%
-@num@ scrolls of magic mapping
-
-%%%%
 @num@ scrolls of noise
 
 %%%%
+@num@ scrolls of poison
+
+%%%%
 @num@ scrolls of remove curse
+
+%%%%
+@num@ scrolls of revelation
 
 %%%%
 @num@ scrolls of silence
@@ -211,6 +217,9 @@
 @num@ potions of degeneration
 
 %%%%
+@num@ potions of enlightenment
+
+%%%%
 @num@ potions of experience
 
 %%%%
@@ -233,6 +242,9 @@
 
 %%%%
 @num@ potions of might
+
+%%%%
+@num@ potions of moonshine
 
 %%%%
 @num@ potions of mutation
