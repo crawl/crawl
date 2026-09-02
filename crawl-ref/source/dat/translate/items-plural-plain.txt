@@ -78,6 +78,18 @@ wands of acid
 wands of mindburst
 
 %%%%
+wands of light
+
+%%%%
+wands of quicksilver
+
+%%%%
+wands of roots
+
+%%%%
+wands of warping
+
+%%%%
 
 #################################
 # Scrolls
@@ -234,6 +246,12 @@ pieces from Xom's chessboard
 
 %%%%
 tins of tremorstones
+
+%%%%
+sacks of spiders
+
+%%%%
+Gell's gravitambourines
 
 %%%%
 quad damages
