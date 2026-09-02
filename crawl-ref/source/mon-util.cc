@@ -5823,7 +5823,7 @@ bool shoot_through_actor(const actor* agent, const actor* target, bool announce)
         if (agent->is_monster()
             && (mons_is_hepliaklqana_ancestor(agent->type)
                 || mons_is_player_shadow(*agent->as_monster())
-                || agent->real_attitude() == ATT_MARIONETTE
+                || agent->temp_attitude() == ATT_MARIONETTE
                 || agent->type == MONS_PLATINUM_PARAGON
                 || you_worship(GOD_FEDHAS)
                    && agent->deity() == GOD_FEDHAS

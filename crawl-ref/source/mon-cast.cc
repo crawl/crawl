@@ -2044,7 +2044,7 @@ static bool _monster_will_buff(const monster &caster, const monster &targ)
         return false;
 
     // don't buff only temporarily-aligned pals (charmed, hexed)
-    if (!mons_atts_aligned(caster.temp_attitude(), targ.real_attitude()))
+    if (!mons_atts_aligned(caster.temp_attitude(), targ.attitude))
         return false;
 
     if (caster.type == MONS_IRONBOUND_CONVOKER

@@ -613,7 +613,7 @@ monster_info::monster_info(const monster* m, int milev)
         // This displays an icon over the monster, and a status line when
         // examining them, which looks a little weird and unnecessary for
         // friendly monsters, as it's *always* the case with them.
-        if (m->real_attitude() != ATT_FRIENDLY)
+        if (m->attitude != ATT_FRIENDLY)
             mb.set(MB_UNREWARDING);
     }
 

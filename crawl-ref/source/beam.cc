@@ -3261,7 +3261,7 @@ bool bolt::harmless_to_player() const
     dprf(DIAG_BEAM, "beam flavour: %d", flavour);
 
     // Marionettes can't hurt the player with anything, so don't worry about it.
-    if (agent() && agent()->real_attitude() == ATT_MARIONETTE)
+    if (agent() && agent()->temp_attitude() == ATT_MARIONETTE)
         return true;
 
     if (you.cloud_immune() && is_big_cloud())
