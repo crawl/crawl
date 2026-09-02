@@ -387,94 +387,94 @@ Wz
 
 %%%%
 # Abyssal Knight
-@adj@@species@AK
+@adj@@two_letter_code@AK
 
 %%%%
 # Air Elementalist
-@adj@@species@AE
+@adj@@two_letter_code@AE
 
 %%%%
 # Arcane Marksman
-@adj@@species@AM
+@adj@@two_letter_code@AM
 
 %%%%
 # Artificer
-@adj@@species@Ar
+@adj@@two_letter_code@Ar
 
 %%%%
 # Berserker
-@adj@@species@Be
+@adj@@two_letter_code@Be
 
 %%%%
 # Brigand
-@adj@@species@Br
+@adj@@two_letter_code@Br
 
 %%%%
 # Chaos Knight
-@adj@@species@CK
+@adj@@two_letter_code@CK
 
 %%%%
 # Conjurer
-@adj@@species@Cj
+@adj@@two_letter_code@Cj
 
 %%%%
 # Earth Elementalist
-@adj@@species@EE
+@adj@@two_letter_code@EE
 
 %%%%
 # Enchanter
-@adj@@species@En
+@adj@@two_letter_code@En
 
 %%%%
 # Fighter
-@adj@@species@Fi
+@adj@@two_letter_code@Fi
 
 %%%%
 # Fire Elementalist
-@adj@@species@FE
+@adj@@two_letter_code@FE
 
 %%%%
 # Gladiator
-@adj@@species@Gl
+@adj@@two_letter_code@Gl
 
 %%%%
 # Ice Elementalist
-@adj@@species@IE
+@adj@@two_letter_code@IE
 
 %%%%
 # Delver
-@adj@@species@De
+@adj@@two_letter_code@De
 
 %%%%
 # Monk
-@adj@@species@Mo
+@adj@@two_letter_code@Mo
 
 %%%%
 # Necromancer
-@adj@@species@Ne
+@adj@@two_letter_code@Ne
 
 %%%%
 # Summoner
-@adj@@species@Su
+@adj@@two_letter_code@Su
 
 %%%%
 # Transmuter
-@adj@@species@Tm
+@adj@@two_letter_code@Tm
 
 %%%%
 # Venom Mage
-@adj@@species@VM
+@adj@@two_letter_code@VM
 
 %%%%
 # Wanderer
-@adj@@species@Wn
+@adj@@two_letter_code@Wn
 
 %%%%
 # Warper
-@adj@@species@Wr
+@adj@@two_letter_code@Wr
 
 %%%%
 # (Hedge) Wizard
-@adj@@species@Wz
+@adj@@two_letter_code@Wz
 
 %%%%
