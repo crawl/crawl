@@ -1160,19 +1160,11 @@ bool mon_special_ability(monster* mons)
         break;
 
     case MONS_BALL_LIGHTNING:
-        if (mons->attitude == ATT_HOSTILE
-            && grid_distance(you.pos(), mons->pos()) <= 2)
-        {
-            mons->suicide();
-            used = true;
-            break;
-        }
-
-        for (monster_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
+        for (actor_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
         {
             if (mons_aligned(mons, *targ) || targ->is_firewood()
                 || grid_distance(mons->pos(), targ->pos()) > 2
-                || !you.see_cell(targ->pos()))
+                || (mons->friendly() && !you.see_cell(targ->pos())))
             {
                 continue;
             }
@@ -1185,15 +1177,7 @@ bool mon_special_ability(monster* mons)
 
     case MONS_FOXFIRE:
     case MONS_SHOOTING_STAR:
-        if (mons->attitude == ATT_HOSTILE
-            && grid_distance(you.pos(), mons->pos()) == 1)
-        {
-            seeker_attack(*mons, you);
-            used = true;
-            break;
-        }
-
-        for (monster_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
+        for (actor_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
         {
             if (mons_aligned(mons, *targ) || targ->is_firewood()
                 || grid_distance(mons->pos(), targ->pos()) > 1
