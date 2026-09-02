@@ -120,15 +120,6 @@ int actor::check_willpower(const actor* source, int power) const
     if (source)
         wl = apply_willpower_bypass(*source, wl);
 
-    // Marionettes get better hex success against friends to avoid hex casts
-    // often being wasted with normal monster spellpower.
-    if (source && source->is_monster()
-        && source->as_monster()->attitude == ATT_MARIONETTE
-        && mons_atts_aligned(source->real_attitude(), temp_attitude()))
-    {
-        wl /= 2;
-    }
-
     const int adj_pow = ench_power_stepdown(power);
 
     const int wlchance = (100 + wl) - adj_pow;
