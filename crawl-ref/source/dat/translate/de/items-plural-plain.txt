@@ -78,6 +78,18 @@ wands of acid
 wands of mindburst
 {pl}Zauberstäbe des Kopfzerplatzens
 %%%%
+wands of light
+{pl}Zauberstäbe des Lichts
+%%%%
+wands of quicksilver
+{pl}Zauberstäbe des Quecksilbers
+%%%%
+wands of roots
+{pl}Zauberstäbe der Wurzeln
+%%%%
+wands of warping
+{pl}Zauberstäbe der Verzerrung
+%%%%
 
 #################################
 # Scrolls
@@ -235,6 +247,12 @@ pieces from Xom's chessboard
 %%%%
 tins of tremorstones
 {pl}Dosen Zittersteine
+%%%%
+sacks of spiders
+{pl}Säcke der Spinnen
+%%%%
+Gell's gravitambourines
+{pl}Gells Gravitamburine
 %%%%
 quad damages
 {pl}Vierfach-Schäden

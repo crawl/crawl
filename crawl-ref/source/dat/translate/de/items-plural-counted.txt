@@ -128,6 +128,9 @@
 @num@ scrolls of brand weapon
 {pl}@num@ Schriftrollen der Waffenprägung
 %%%%
+@num@ scrolls of butterflies
+{pl}@num@ Schriftrollen der Schmetterlinge
+%%%%
 @num@ scrolls of enchant armour
 {pl}@num@ Schriftrollen der Rüstungsverzauberung
 %%%%
@@ -149,14 +152,17 @@
 @num@ scrolls of immolation
 {pl}@num@ Schriftrollen des Entflammens
 %%%%
-@num@ scrolls of magic mapping
-{pl}@num@ Schriftrollen des magischen Kartierens
-%%%%
 @num@ scrolls of noise
 {pl}@num@ Schriftrollen des Lärms
 %%%%
+@num@ scrolls of poison
+{pl}@num@ Schriftrollen des Giftes
+%%%%
 @num@ scrolls of remove curse
 {pl}@num@ Schriftrollen des Fluchaufhebens
+%%%%
+@num@ scrolls of revelation
+{pl}@num@ Schriftrollen der Offenbarung
 %%%%
 @num@ scrolls of silence
 {pl}@num@ Schriftrollen der Stille
@@ -211,6 +217,9 @@
 @num@ potions of degeneration
 {pl}@num@ Tränke der Degeneration
 %%%%
+@num@ potions of enlightenment
+{pl}@num@ Tränke der Erleuchtung
+%%%%
 @num@ potions of experience
 {pl}@num@ Tränke der Erfahrung
 %%%%
@@ -234,6 +243,9 @@
 %%%%
 @num@ potions of might
 {pl}@num@ Tränke der Macht
+%%%%
+@num@ potions of moonshine
+{pl}@num@ Tränke des Fusels
 %%%%
 @num@ potions of mutation
 {pl}@num@ Tränke der Mutation
