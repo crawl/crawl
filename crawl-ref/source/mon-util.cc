@@ -4405,17 +4405,7 @@ string do_mon_str_replacements(const string& in_msg, const monster& mons,
     {
         string foe_name;
         const monster* m_foe = foe->as_monster();
-        if (m_foe->attitude == ATT_FRIENDLY
-            && !mons_is_unique(m_foe->type)
-            && !crawl_state.game_is_arena())
-        {
-            foe_name = foe->name(DESC_YOUR);
-            const string::size_type pos = foe_name.find("'");
-            if (pos != string::npos)
-                foe_name = foe_name.substr(0, pos);
-        }
-        else
-            foe_name = foe->name(DESC_THE);
+        foe_name = foe->name(DESC_THE);
 
         string prep = "at";
         if (s_type == S_SILENT || s_type == S_SHOUT || s_type == S_NORMAL_VOLUME)
