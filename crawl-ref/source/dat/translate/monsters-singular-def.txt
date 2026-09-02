@@ -1509,7 +1509,467 @@ the zot statue
 the archer statue
 
 %%%%
+the abyssal acolyte
 
+%%%%
+# a walking alder tree and also a reference to Goethe's Erlking (Erlkönig)
+the alderking
+
+%%%%
+the antique champion
+
+%%%%
+the arcanist
+
+%%%%
+the armour echo
+
+%%%%
+the aspiring flesh
+
+%%%%
+the bes kemwar
+
+%%%%
+the blazeheart core
+
+%%%%
+the blazeheart golem
+
+%%%%
+the bombardier beetle
+
+%%%%
+the bomblet
+
+%%%%
+the boulder
+
+%%%%
+the bound soul
+
+%%%%
+the boundless tesseract
+
+%%%%
+the brain worm
+
+%%%%
+the broodmother
+
+%%%%
+the burial acolyte
+
+%%%%
+the burstshroom
+
+%%%%
+the cactus giant
+
+%%%%
+the caustic sporangium
+
+%%%%
+the cerulean imp
+
+%%%%
+the chonchon
+
+%%%%
+the clockroach
+
+%%%%
+the clockwork bee
+
+%%%%
+the cognitogaunt
+
+%%%%
+the colossal amoeba
+
+%%%%
+the crawling flesh cage
+
+%%%%
+the creeping inferno
+
+%%%%
+the creeping plasmodium
+
+%%%%
+the crocodile
+
+%%%%
+the crystal echidna
+
+%%%%
+the culicivora
+
+%%%%
+the demonspawn blood saint
+
+%%%%
+the demonspawn corrupter
+
+%%%%
+the demonspawn soul scholar
+
+%%%%
+the demonspawn warmonger
+
+%%%%
+the diamond sawblade
+
+%%%%
+the dormant clockwork bee
+
+%%%%
+the draugr
+
+%%%%
+the drude
+
+%%%%
+the elementalist
+
+%%%%
+the erythrospite
+
+%%%%
+the eye of draining
+
+%%%%
+the formless jellyfish
+
+%%%%
+the fravashi
+
+%%%%
+the fungal shambler
+
+%%%%
+the glass eye
+
+%%%%
+the globe of annihilation
+
+%%%%
+the glowmurk ghast
+
+%%%%
+the gnoll bouda
+
+%%%%
+the goblin rider
+
+%%%%
+the god wrath avatar
+
+%%%%
+the guardian sphinx
+
+%%%%
+# summoned by Poltergeist ability
+the haunted armour
+
+%%%%
+the hellfire mortar
+
+%%%%
+the herald of the Abyss
+
+%%%%
+the hippogriff
+
+%%%%
+the hoarfrost cannon
+
+%%%%
+the inugami
+
+%%%%
+the ironbound mechanist
+
+%%%%
+the jorogumo
+
+%%%%
+the kobold blastminer
+
+%%%%
+the kobold fleshcrafter
+
+%%%%
+the kobold geomancer
+
+%%%%
+the laughing skull
+
+%%%%
+the living spell
+
+%%%%
+# a portmanteau of (bone) marrow and barracuda
+the marrowcuda
+
+%%%%
+the martyred shade
+
+%%%%
+the meteoran
+
+%%%%
+the monarch bomb
+
+%%%%
+the mongrel wurm
+
+%%%%
+the morphogenic ooze
+
+%%%%
+# a tortoise with a thick, rock-encrusted shell
+the mountainshell
+
+%%%%
+the nargun
+
+%%%%
+the nascent plasmodium
+
+%%%%
+the nekomata
+
+%%%%
+the oblivion hound
+
+%%%%
+the obsidian bat
+
+%%%%
+the occultist
+
+%%%%
+the oni
+
+%%%%
+the oni incarcerator
+
+%%%%
+the orb of entropy
+
+%%%%
+the orb of winter
+
+%%%%
+the orc apostle
+
+%%%%
+the petrified flower
+
+%%%%
+the phalanx beetle
+
+%%%%
+the pharaoh ant
+
+%%%%
+the pile of debris
+
+%%%%
+the pile of flesh
+
+%%%%
+the pillar of rime
+
+%%%%
+the platinum paragon
+
+%%%%
+the poltergeist
+
+%%%%
+the polterguardian
+
+%%%%
+the protean progenitor
+
+%%%%
+the putrid mouth
+
+%%%%
+the quicksilver elemental
+
+%%%%
+the radroach
+
+%%%%
+the raven
+
+%%%%
+the rending blade
+
+%%%%
+the revenant soulmonger
+
+%%%%
+the ribbon worm
+
+%%%%
+the roaming sludgefish
+
+%%%%
+the rock fish
+
+%%%%
+the rusted inspector
+
+%%%%
+the sacred lotus
+
+%%%%
+the scrapshell chimera
+
+%%%%
+the screaming refraction
+
+%%%%
+the scrub nettle
+
+%%%%
+the searing wretch
+
+%%%%
+the seismosaurus
+
+%%%%
+the seismosaurus egg
+
+%%%%
+the sewage sovereign
+
+%%%%
+the shadow prism
+
+%%%%
+the shadow puppet
+
+%%%%
+the shadow turret
+
+%%%%
+the shadowghast
+
+%%%%
+the shooting star
+
+%%%%
+the sickly merfolk siren
+
+%%%%
+the sin beast
+
+%%%%
+the skyshark
+
+%%%%
+# a kind of mushroom
+the sleepcap
+
+%%%%
+the slymdra
+
+%%%%
+the solar ember
+
+%%%%
+the soul wisp
+
+%%%%
+the spectator
+
+%%%%
+the spellspark servitor
+
+%%%%
+the sphinx marauder
+
+%%%%
+the splinterfrost barricade
+
+%%%%
+the stack of scrap
+
+%%%%
+the star jelly
+
+%%%%
+the starflower
+
+%%%%
+the steelbarb worm
+
+%%%%
+the stoker
+
+%%%%
+the strange machine
+
+%%%%
+the sun moth
+
+%%%%
+the tainted leviathan
+
+%%%%
+the telencephalon
+
+%%%%
+the thermic dynamo
+
+%%%%
+the undertaker
+
+%%%%
+the undying armoury
+
+%%%%
+the vampire bloodprince
+
+%%%%
+the void ooze
+
+%%%%
+the walking alembic
+
+%%%%
+the walking crystal tome
+
+%%%%
+the walking divine tome
+
+%%%%
+the walking earthen tome
+
+%%%%
+the walking frostbound tome
+
+%%%%
+the walking tome
+
+%%%%
+the weeping skull
+
+%%%%
+the wendigo
+
+%%%%
+the wyrmhole
+
+%%%%
+the zykzyl
+
+%%%%
 
 # subtypes of mutant beast
 %%%%
