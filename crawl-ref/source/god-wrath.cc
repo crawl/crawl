@@ -408,12 +408,9 @@ void lucy_check_meddling()
 
     vector<monster*> potential_banishees;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-    {
-        monster *mon = *mi;
-        if (!mon || mon->attitude != ATT_HOSTILE || mon->is_peripheral())
-            continue;
-        potential_banishees.push_back(mon);
-    }
+        if (mi->attitude() == ATT_HOSTILE && !mi->is_peripheral())
+            potential_banishees.push_back(*mi);
+
     if (potential_banishees.empty())
         return;
 
@@ -507,12 +504,12 @@ static monster* _get_wrath_avatar(god_type god)
     if (!avatar)
         return nullptr;
 
-    avatar->type       = MONS_GOD_WRATH_AVATAR;
-    avatar->behaviour  = BEH_SEEK;
-    avatar->attitude   = ATT_HOSTILE;
-    avatar->flags      = MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
-                         | MF_WAS_IN_VIEW | MF_HARD_RESET | MF_NAME_REPLACE;
-    avatar->god        = god;
+    avatar->type            = MONS_GOD_WRATH_AVATAR;
+    avatar->behaviour       = BEH_SEEK;
+    avatar->base_attitude   = ATT_HOSTILE;
+    avatar->flags           = MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
+                            | MF_WAS_IN_VIEW | MF_HARD_RESET | MF_NAME_REPLACE;
+    avatar->god             = god;
     avatar->set_position(you.pos());
     avatar->set_new_monster_id();
     env.mgrid(you.pos()) = avatar->mindex();
@@ -1486,7 +1483,7 @@ static bool _qazlal_retribution()
 
 static bool _choose_hostile_monster(const monster& mon)
 {
-    return mon.attitude == ATT_HOSTILE;
+    return mon.base_attitude == ATT_HOSTILE;
 }
 
 static int _wu_jian_summon_weapons()

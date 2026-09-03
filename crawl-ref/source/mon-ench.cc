@@ -429,9 +429,9 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             monster* twin = mons_find_elven_twin_of(this);
             if (twin && !twin->has_ench(ENCH_FRENZIED))
-                attitude = twin->attitude;
+                base_attitude = twin->base_attitude;
             else
-                attitude = ATT_HOSTILE;
+                base_attitude = ATT_HOSTILE;
         }
         mons_att_changed(this);
 
@@ -1589,7 +1589,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                     mpr("You hear a distant and violent thrashing sound.");
             }
 
-            attitude = ATT_HOSTILE;
+            base_attitude = ATT_HOSTILE;
             mons_att_changed(this);
             if (!crawl_state.game_is_arena())
                 behaviour_event(this, ME_ALERT, &you);

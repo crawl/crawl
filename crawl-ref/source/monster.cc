@@ -87,7 +87,7 @@ monster::monster()
     : hit_points(0), max_hit_points(0), exp(0),
       speed(0), speed_increment(0), target(), firing_pos(),
       patrol_point(), travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
-      attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
+      base_attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
       enchantments(), flags(), xp_tracking(XP_NON_VAULT),
       base_monster(MONS_NO_MONSTER), number(0), colour(COLOUR_INHERIT),
       foe_memory(0), god(GOD_NO_GOD), ghost(),
@@ -164,7 +164,7 @@ void monster::clear()
     exp             = 0;
     hit_dice        = 0;
     speed_increment = 0;
-    attitude        = ATT_HOSTILE;
+    base_attitude   = ATT_HOSTILE;
     behaviour       = BEH_SLEEP;
     foe             = MHITNOT;
     summoner        = 0;
@@ -222,7 +222,7 @@ void monster::init_with(const monster& mon)
     travel_path       = mon.travel_path;
     inv               = mon.inv;
     spells            = mon.spells;
-    attitude          = mon.attitude;
+    base_attitude     = mon.base_attitude;
     behaviour         = mon.behaviour;
     foe               = mon.foe;
     enchantments      = mon.enchantments;
@@ -263,10 +263,10 @@ void monster::ensure_has_client_id()
         client_id = ++last_client_id;
 }
 
-mon_attitude_type monster::temp_attitude() const
+mon_attitude_type monster::attitude() const
 {
     // This takes priority over everything.
-    if (attitude == ATT_MARIONETTE)
+    if (base_attitude == ATT_MARIONETTE)
         return ATT_MARIONETTE;
 
     if (has_ench(ENCH_FRENZIED))
@@ -279,7 +279,7 @@ mon_attitude_type monster::temp_attitude() const
     else if (has_ench(ENCH_NEUTRAL_BRIBED))
         return ATT_GOOD_NEUTRAL; // ???
     else
-        return attitude;
+        return base_attitude;
 }
 
 bool monster::swimming() const
@@ -3018,12 +3018,12 @@ int monster::off_level_regen_rate() const
 
 bool monster::wont_attack() const
 {
-    return friendly() || good_neutral() || attitude == ATT_MARIONETTE;
+    return friendly() || good_neutral() || base_attitude == ATT_MARIONETTE;
 }
 
 bool monster::pacified() const
 {
-    return (attitude == ATT_NEUTRAL || attitude == ATT_GOOD_NEUTRAL)
+    return (base_attitude == ATT_NEUTRAL || base_attitude == ATT_GOOD_NEUTRAL)
            && testbits(flags, MF_PACIFIED);
 }
 
@@ -4363,7 +4363,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         // Damage over time effects are excluded for similar reasons.
         if (agent && agent->is_player()
             && mons_class_gives_xp(type)
-            && (temp_attitude() == ATT_HOSTILE || has_ench(ENCH_FRENZIED))
+            && (attitude() == ATT_HOSTILE || has_ench(ENCH_FRENZIED))
             && type != MONS_NAMELESS) // hack - no usk piety for miscasts
         {
            did_hurt_monster(*this, amount, flavour, kill_type);
@@ -4570,7 +4570,7 @@ void monster::ghost_init(bool need_pos)
     ghost_demon_init();
 
     god             = ghost->religion;
-    attitude        = ATT_HOSTILE;
+    base_attitude   = ATT_HOSTILE;
     behaviour       = BEH_WANDER;
     flags           = MF_NO_FLAGS;
     foe             = MHITNOT;
@@ -6767,7 +6767,7 @@ bool monster::is_illusion() const
 
 bool monster::is_divine_companion() const
 {
-    return attitude == ATT_FRIENDLY
+    return base_attitude == ATT_FRIENDLY
            && !is_summoned()
            // Orcs from Blood for Blood still count as god gifts, but should not
            // be considered companions for most functions - only apostles should
@@ -6848,7 +6848,7 @@ void monster::remove_summons(bool check_attitude)
 {
     for (monster_iterator mi; mi; ++mi)
     {
-        if ((!check_attitude || attitude != mi->attitude)
+        if ((!check_attitude || base_attitude != mi->base_attitude)
             && mi->summoner == mid)
         {
             if (mi->is_summoned() && !(mi->flags & MF_PERSISTS))

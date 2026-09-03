@@ -1284,7 +1284,7 @@ spret cast_malign_gateway(actor * caster, int pow, bool fail, bool test)
             caster->mid,
             is_player ? BEH_FRIENDLY
                       : attitude_creation_behavior(
-                          caster->as_monster()->temp_attitude()),
+                          caster->as_monster()->attitude()),
             "",
             pow);
 
@@ -4498,7 +4498,7 @@ bool splinterfrost_block_fragment(monster& block, const coord_def& aim)
     bolt beam;
     zappy(ZAP_SPLINTERFROST_FRAGMENT, pow, !agent->is_player(), beam);
     beam.source = block.pos();
-    beam.attitude = block.attitude;
+    beam.attitude = block.attitude();
     beam.set_agent(agent);
     beam.target = aim;
     beam.seen = true;

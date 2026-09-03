@@ -186,7 +186,7 @@ static const map<spschool, miscast_datum> miscast_effects = {
                 {
                     monster* mon_target = target.as_monster();
 
-                    switch (mon_target->temp_attitude())
+                    switch (mon_target->attitude())
                     {
                         case ATT_FRIENDLY:
                             data.behaviour = BEH_HOSTILE;

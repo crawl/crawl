@@ -1326,7 +1326,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     // have somehow killed themselves in the process)
     if (monster* mon_source = monster_by_mid(source, false, /*allow_dead=*/true))
     {
-        if (mon_source->attitude == ATT_MARIONETTE)
+        if (mon_source->attitude() == ATT_MARIONETTE)
             dam = 0;
     }
 

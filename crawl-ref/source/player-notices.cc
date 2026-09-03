@@ -65,7 +65,7 @@ static bool _check_monster_alert(const monster& mon)
          || Options.monster_alert_min_threat < MTHRT_UNDEF
             && mons_threat_level(mon) >= Options.monster_alert_min_threat
          || Options.monster_alert_unusual && monster_info(&mon).has_unusual_items())
-        && !mon.is_firewood() && !mons_att_wont_attack(mon.attitude))
+        && !mon.is_firewood() && !mons_att_wont_attack(mon.base_attitude))
     {
         // If the player encountered this by moving, make sure to actually
         // draw the monster we're warning about.
@@ -545,7 +545,7 @@ void update_monsters_in_view()
     {
         if (you.see_cell(mi->pos()))
         {
-            if (mi->attitude == ATT_HOSTILE && !mi->is_firewood())
+            if (mi->base_attitude == ATT_HOSTILE && !mi->is_firewood())
                 num_hostile++;
 
             if (mi->visible_to(&you))
@@ -609,7 +609,7 @@ void seen_monster(monster* mons, bool do_encounter_message)
     mons->flags |= MF_WAS_IN_VIEW;
 
     // Don't perform most of these effects for friendly/good neutral monsters.
-    if (mons->flags & MF_SEEN || mons_att_wont_attack(mons->attitude))
+    if (mons->flags & MF_SEEN || mons_att_wont_attack(mons->base_attitude))
         return;
 
     // First time we've seen this particular monster.

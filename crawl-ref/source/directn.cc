@@ -99,7 +99,7 @@ static void _wizard_make_friendly(monster* m)
     if (m == nullptr)
         return;
 
-    mon_attitude_type att = m->attitude;
+    mon_attitude_type att = m->base_attitude;
 
     // Propogate attitude change up to the ultimate head, if this is a tentacle.
     m = &get_tentacle_head(*m);
@@ -111,7 +111,7 @@ static void _wizard_make_friendly(monster* m)
     switch (att)
     {
     case ATT_FRIENDLY:
-        m->attitude = ATT_GOOD_NEUTRAL;
+        m->base_attitude = ATT_GOOD_NEUTRAL;
         m->flags &= ~MF_NO_REWARD;
         m->flags |= MF_WAS_NEUTRAL;
         break;
@@ -119,14 +119,14 @@ static void _wizard_make_friendly(monster* m)
 #if TAG_MAJOR_VERSION == 34
     case ATT_OLD_STRICT_NEUTRAL:
 #endif
-        m->attitude = ATT_NEUTRAL;
+        m->base_attitude = ATT_NEUTRAL;
         break;
     case ATT_NEUTRAL:
-        m->attitude = ATT_HOSTILE;
+        m->base_attitude = ATT_HOSTILE;
         m->flags &= ~MF_WAS_NEUTRAL;
         break;
     case ATT_HOSTILE:
-        m->attitude = ATT_FRIENDLY;
+        m->base_attitude = ATT_FRIENDLY;
         m->flags |= MF_NO_REWARD;
         break;
     // This attitude is transient, so this should be impossible.

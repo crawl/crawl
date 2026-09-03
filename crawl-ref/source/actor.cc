@@ -89,18 +89,18 @@ int actor::skill_rdiv(skill_type sk, int mult, int div) const
 
 bool actor::friendly() const
 {
-    return temp_attitude() == ATT_FRIENDLY;
+    return attitude() == ATT_FRIENDLY;
 }
 
 bool actor::neutral() const
 {
-    const mon_attitude_type att = temp_attitude();
+    const mon_attitude_type att = attitude();
     return att == ATT_NEUTRAL || att == ATT_GOOD_NEUTRAL;
 }
 
 bool actor::good_neutral() const
 {
-    return temp_attitude() == ATT_GOOD_NEUTRAL;
+    return attitude() == ATT_GOOD_NEUTRAL;
 }
 
 int actor::wearing_jewellery(int sub_type) const

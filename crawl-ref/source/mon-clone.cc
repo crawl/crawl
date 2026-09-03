@@ -89,7 +89,7 @@ static void _mons_summon_monster_illusion(monster* caster,
     // If a charmed caster creates a clone from a regular hostile,
     // the clone should still be friendly.
     if (monster *clone = clone_mons(foe, true, &cloning_visible,
-                                    caster->temp_attitude()))
+                                    caster->attitude()))
     {
         const string clone_id = _monster_clone_id_for(foe);
         clone->props[CLONE_REPLICA_KEY] = clone_id;
@@ -280,7 +280,7 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
 monster* clone_mons(const monster* orig, bool quiet, bool* obvious)
 {
     // Pass temp_attitude to handle charmed monsters cloning monsters
-    return clone_mons(orig, quiet, obvious, orig->temp_attitude());
+    return clone_mons(orig, quiet, obvious, orig->attitude());
 }
 
 /**
@@ -325,7 +325,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     *mons          = *orig;
     mons->set_new_monster_id();
     mons->move_to(pos, MV_INTERNAL);
-    mons->attitude = mon_att;
+    mons->base_attitude = mon_att;
 
     // The monster copy constructor doesn't copy constriction, so no need to
     // worry about that. We do need to worry about the enchantment associated

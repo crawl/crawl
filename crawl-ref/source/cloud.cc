@@ -802,7 +802,7 @@ bool place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
 
     // Pretend clouds made by a marionette are from the player
     // (Except for purposes of conducts).
-    const actor* agent = orig_agent && orig_agent->temp_attitude() == ATT_MARIONETTE
+    const actor* agent = orig_agent && orig_agent->attitude() == ATT_MARIONETTE
                             ? &you
                             : orig_agent;
 
@@ -2019,10 +2019,10 @@ static const vector<chaos_effect> chaos_effects = {
             const bool obvious_effect = you.can_see(*victim) && you.can_see(*clone);
 
             if (one_chance_in(3))
-                clone->attitude = coinflip() ? ATT_FRIENDLY : ATT_NEUTRAL;
+                clone->base_attitude = coinflip() ? ATT_FRIENDLY : ATT_NEUTRAL;
 
             // The player shouldn't get new permanent followers from cloning.
-            if (clone->attitude == ATT_FRIENDLY && !clone->is_summoned())
+            if (clone->base_attitude == ATT_FRIENDLY && !clone->is_summoned())
                 clone->mark_summoned(MON_SUMM_CLONE, summ_dur(6));
             else
                 clone->flags |= (MF_NO_REWARD | MF_HARD_RESET);

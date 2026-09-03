@@ -1782,7 +1782,7 @@ bool yred_can_bind_soul(monster* mon)
 {
     return mons_can_be_spectralised(*mon, true, true)
            && !mon->has_ench(ENCH_SOUL_RIPE)
-           && mon->attitude != ATT_FRIENDLY;
+           && mon->base_attitude != ATT_FRIENDLY;
 }
 
 int yred_get_bound_soul_hp(monster_type mt, bool estimate_only)
@@ -1865,7 +1865,7 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
 
     name_zombie_from_mon(*mon, orig);
 
-    mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
+    mon->base_attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
     behaviour_event(mon, ME_ALERT, force_hostile ? &you : 0);
 
     mons_att_changed(mon);
@@ -2587,7 +2587,7 @@ void spare_beogh_convert()
         // An invis player converting is ok, for simplicity.
         if (!mon || !cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
             continue;
-        if (mon->attitude != ATT_HOSTILE)
+        if (mon->base_attitude != ATT_HOSTILE)
             continue;
         if (mons_genus(mon->type) != MONS_ORC)
             continue;
@@ -2604,7 +2604,7 @@ void spare_beogh_convert()
                     continue;
                 if (mons_genus(orc->type) != MONS_ORC)
                     continue;
-                if (mon->attitude != ATT_HOSTILE)
+                if (mon->base_attitude != ATT_HOSTILE)
                     continue;
                 witnesses.insert(orc->mid);
             }
@@ -3145,8 +3145,8 @@ static int _dithmenos_marionette_spells_possible(monster& target)
     // Save target state, so we can restore after we test.
     const int old_foe = target.foe;
     const coord_def old_target = target.target;
-    const mon_attitude_type old_attitude = target.attitude;
-    target.attitude = ATT_MARIONETTE;
+    const mon_attitude_type old_attitude = target.base_attitude;
+    target.base_attitude = ATT_MARIONETTE;
 
     int valid_count = 0;
     for (spell_type spell : mon_spells)
@@ -3156,7 +3156,7 @@ static int _dithmenos_marionette_spells_possible(monster& target)
     // Restore state, like nothing even happened
     target.foe = old_foe;
     target.target = old_target;
-    target.attitude = old_attitude;
+    target.base_attitude = old_attitude;
 
     return valid_count;
 }
@@ -3231,7 +3231,7 @@ spret dithmenos_marionette(monster& target, bool fail)
     const int old_foe = target.foe;
     const coord_def old_target = target.target;
     const int old_energy = target.speed_increment;
-    target.attitude = ATT_MARIONETTE;
+    target.base_attitude = ATT_MARIONETTE;
 
     // Attempt to cast all valid spells the monster has, in randomized order,
     // (but using all spells at least once before repeating). End early if the
@@ -3268,7 +3268,7 @@ spret dithmenos_marionette(monster& target, bool fail)
         target.foe = old_foe;
         target.target = old_target;
         target.speed_increment = old_energy;
-        target.attitude = ATT_HOSTILE;
+        target.base_attitude = ATT_HOSTILE;
     }
 
     if (!target.alive())

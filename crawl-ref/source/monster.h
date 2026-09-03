@@ -74,7 +74,7 @@ public:
     vector<coord_def> travel_path;
     FixedVector<short, NUM_MONSTER_SLOTS> inv;
     monster_spells spells;
-    mon_attitude_type attitude;
+    mon_attitude_type base_attitude;
     beh_type behaviour;
     unsigned short foe;
     int8_t ench_countdown;
@@ -134,7 +134,7 @@ public:
 
     void set_hit_dice(int new_hd);
 
-    mon_attitude_type temp_attitude() const override;
+    mon_attitude_type attitude() const override;
 
     // Returns true if the monster is named with a proper name, or is
     // a player ghost.

@@ -1515,7 +1515,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #endif
         print_hint("HINT_MONSTER_FRIENDLY");
 
-        if (!mons_att_wont_attack(m->attitude))
+        if (!mons_att_wont_attack(m->base_attitude))
             print_hint("HINT_TEMPORARILY_FRIENDLY");
 
         break;

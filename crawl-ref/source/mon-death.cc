@@ -640,7 +640,7 @@ static bool _is_pet_kill(killer_type killer, int i)
 
     const monster* m = &env.mons[i];
     // This includes charmed monsters.
-    if (m->friendly() || m->attitude == ATT_MARIONETTE)
+    if (m->friendly() || m->attitude() == ATT_MARIONETTE)
         return true;
 
     // Check if the monster was confused by you or a friendly, which
@@ -814,7 +814,7 @@ static bool _vampire_make_thrall(monster* mons, killer_type killer)
     mons->props[NO_ANNOTATE_KEY] = true;
     remove_unique_annotation(mons);
 
-    mons->attitude = ATT_FRIENDLY;
+    mons->base_attitude = ATT_FRIENDLY;
     mons->add_ench(mon_enchant(ENCH_VAMPIRE_THRALL, &you, INFINITE_DURATION));
 
     const int pow = get_form(transformation::vampire)->get_level(10);
@@ -2068,7 +2068,7 @@ static bool should_blame_you_for_kill(int killer_index, bool pet_kill) noexcept
         const monster& m = env.mons[killer_index];
 
         // always blame the player for marionette kills
-        if (m.attitude == ATT_MARIONETTE)
+        if (m.attitude() == ATT_MARIONETTE)
             return true;
 
         const mon_enchant ench = m.get_ench(ENCH_CONFUSION);
@@ -3838,7 +3838,7 @@ item_def* mounted_kill(monster* real_mon, monster_type mc, killer_type killer,
     mon.enchantments = real_mon->enchantments;
     mon.ench_cache = real_mon->ench_cache;
 
-    mon.attitude = real_mon->attitude;
+    mon.base_attitude = real_mon->base_attitude;
     mon.damage_friendly = real_mon->damage_friendly;
     mon.damage_total = real_mon->damage_total;
     // Keep the rider's name, if it had one (Mercenary card).

@@ -1553,7 +1553,7 @@ static void _illusion_card(int power)
 
     mon->type = MONS_PLAYER;
     mon->behaviour = BEH_SEEK;
-    mon->attitude = ATT_FRIENDLY;
+    mon->base_attitude = ATT_FRIENDLY;
     mon->set_position(you.pos());
     mon->mid = MID_PLAYER;
     env.mgrid(you.pos()) = mon->mindex();

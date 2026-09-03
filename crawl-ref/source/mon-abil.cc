@@ -282,7 +282,7 @@ static monster* _do_split(monster* thing, const coord_def & target, bool quiet =
 
     // Inflict the new slime with any enchantments on the parent.
     _share_ench_durations(thing, new_slime);
-    new_slime->attitude = thing->attitude;
+    new_slime->base_attitude = thing->base_attitude;
     new_slime->behaviour = thing->behaviour;
     new_slime->flags = thing->flags;
     new_slime->props = thing->props;
@@ -465,7 +465,7 @@ static bool _slime_merge(monster* thing)
         if (!merge_target
             && other_thing
             && other_thing->type == MONS_SLIME_CREATURE
-            && other_thing->attitude == thing->attitude
+            && other_thing->base_attitude == thing->base_attitude
             && other_thing->has_ench(ENCH_CHARM) == thing->has_ench(ENCH_CHARM)
             && other_thing->has_ench(ENCH_HEXED) == thing->has_ench(ENCH_HEXED)
             && other_thing->is_summoned() == thing->is_summoned()

@@ -1201,7 +1201,7 @@ static bool _scan_rending_blade_paths(coord_def start,
                     continue;
 
                 // Don't hurt allies.
-                if (mons_atts_aligned(ATT_FRIENDLY, act->temp_attitude()))
+                if (mons_atts_aligned(ATT_FRIENDLY, act->attitude()))
                 {
                     enemy_power = 0;
                     break;
@@ -2785,7 +2785,7 @@ void clear_monster_flags()
 static void _update_monster_attitude(monster *mon)
 {
     if (mons_can_hate(mon->type))
-        mon->attitude = ATT_HOSTILE;
+        mon->base_attitude = ATT_HOSTILE;
 }
 
 vector<monster *> just_seen_queue;

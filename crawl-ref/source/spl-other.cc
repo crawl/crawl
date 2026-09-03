@@ -663,7 +663,7 @@ spret cast_spike_launcher(const actor& agent, int pow, bool fail)
     const int timer = agent.is_player() ? 10 : 0;   // Don't delay monster launchers a second turn.
     temp_change_terrain(spot, DNGN_SPIKE_LAUNCHER, dur, TERRAIN_CHANGE_SPIKE_LAUNCHER, agent.mid);
     env.markers.add(new map_active_feature_marker(spot, DNGN_SPIKE_LAUNCHER, agent.mid,
-                    agent.temp_attitude(), pow, dur, timer, true));
+                    agent.attitude(), pow, dur, timer, true));
 
     if (you.see_cell(spot))
     {

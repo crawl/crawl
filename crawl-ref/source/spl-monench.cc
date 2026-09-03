@@ -415,7 +415,7 @@ spret cast_percussive_tempering(const actor& caster, monster& target, int power,
 
     bolt shockwave;
     shockwave.set_agent(&caster);
-    shockwave.attitude = caster.temp_attitude();
+    shockwave.attitude = caster.attitude();
     shockwave.source = target.pos();
     shockwave.target = target.pos();
     shockwave.is_explosion = true;

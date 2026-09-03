@@ -313,7 +313,7 @@ dice_def iood_damage(int pow, int dist, bool random)
 
 static void _iood_common_beam_setup(monster& orb, const coord_def& pos, bolt& beam)
 {
-    beam.attitude = orb.attitude;
+    beam.attitude = orb.attitude();
 
     actor *caster = actor_by_mid(orb.summoner);
     if (!caster)        // caster is dead/gone, blame the orb itself (as its

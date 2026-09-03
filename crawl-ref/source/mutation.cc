@@ -3691,8 +3691,8 @@ void maybe_apply_bane_to_monster(monster& mons)
 {
     if (mons.is_peripheral()
         || mons.is_summoned()
-        || mons.attitude != ATT_HOSTILE
-        || mons.temp_attitude() != ATT_HOSTILE)
+        || mons.base_attitude != ATT_HOSTILE
+        || mons.attitude() != ATT_HOSTILE)
     {
         return;
     }
@@ -3722,7 +3722,7 @@ void maybe_apply_bane_to_monster(monster& mons)
             if (monster* mon2 = monster_at(*di))
             {
                 if (!testbits(mon2->flags, MF_SEEN) && !mon2->is_peripheral()
-                    && mon2->attitude == ATT_HOSTILE)
+                    && mon2->base_attitude == ATT_HOSTILE)
                 {
                     mon2->add_ench(mon_enchant(ENCH_WARDING, nullptr, INFINITE_DURATION));
                     if (--max_affected == 0)

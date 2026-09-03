@@ -1951,7 +1951,7 @@ targeter_drain_life::targeter_drain_life()
 bool targeter_drain_life::affects_monster(const monster_info& mon)
 {
     return get_resist(mon.resists(), MR_RES_NEG) < 3
-           && !mons_atts_aligned(agent->temp_attitude(), mon.attitude);
+           && !mons_atts_aligned(agent->attitude(), mon.attitude);
 }
 
 targeter_discord::targeter_discord()
@@ -1986,7 +1986,7 @@ bool targeter_fear::affects_monster(const monster_info& mon)
 {
     return mon.willpower() != WILL_INVULN
            && mon.can_feel_fear
-           && !mons_atts_aligned(agent->temp_attitude(), mon.attitude);
+           && !mons_atts_aligned(agent->attitude(), mon.attitude);
 }
 
 targeter_intoxicate::targeter_intoxicate()
@@ -2009,7 +2009,7 @@ bool targeter_anguish::affects_monster(const monster_info& mon)
 {
     return mon.mintel > I_BRAINLESS
         && mon.willpower() != WILL_INVULN
-        && !mons_atts_aligned(agent->temp_attitude(), mon.attitude)
+        && !mons_atts_aligned(agent->attitude(), mon.attitude)
         && !mon.is(MB_ANGUISH);
 }
 

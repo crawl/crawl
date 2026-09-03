@@ -1472,7 +1472,7 @@ static int _xom_random_stickable(const int HD)
 
 static bool _hostile_snake(monster& mon)
 {
-    return mon.attitude == ATT_HOSTILE
+    return mon.base_attitude == ATT_HOSTILE
             && mons_genus(mon.type) == MONS_SNAKE;
 }
 
@@ -4127,12 +4127,12 @@ static void _xom_send_in_clones(int /*sever*/)
 
         if (hostiles_summon_count < hostile_count)
         {
-            mon->attitude = ATT_HOSTILE;
+            mon->base_attitude = ATT_HOSTILE;
             power = -1;
         }
         else
         {
-            mon->attitude = ATT_FRIENDLY;
+            mon->base_attitude = ATT_FRIENDLY;
             power = 0;
         }
 

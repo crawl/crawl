@@ -512,7 +512,7 @@ bool bolt::can_affect_actor(const actor *act) const
         return false;
     // Xak'krixis' prisms are smart enough not to affect friendlies
     else if (origin_spell == SPELL_FULMINANT_PRISM && thrower == KILL_MON
-        && act->temp_attitude() == attitude)
+        && act->attitude() == attitude)
     {
         return false;
     }
@@ -1262,8 +1262,8 @@ bool bolt::do_fire_step(bool ignore_wall_monsters)
     // object to us harming), do so now.
     const actor* act_at = actor_at(pos());
     if (act_at && stop_at_allies
-        && (mons_atts_aligned(attitude, act_at->temp_attitude())
-            || (act_at->temp_attitude() == ATT_NEUTRAL
+        && (mons_atts_aligned(attitude, act_at->attitude())
+            || (act_at->attitude() == ATT_NEUTRAL
                 && (is_good_god(you.religion)
                     || you_worship(GOD_BEOGH) && mons_genus(act_at->type) == MONS_ORC)
                 && !(act_at->is_monster() && act_at->as_monster()->has_ench(ENCH_FRENZIED))))
@@ -2748,7 +2748,7 @@ void bolt::affect_endpoint()
             monster* blitzer = agent(true)->as_monster();
             bool obviousness; // dummy argument
             monster *mirror = clone_mons(blitzer, true, &obviousness,
-                                         blitzer->temp_attitude(), spot);
+                                         blitzer->attitude(), spot);
             if (!mirror)
                 break;
             mirror->mark_summoned(SPELL_PHANTOM_BLITZ, summ_dur(2), true, true);
@@ -2843,7 +2843,7 @@ bool bolt::found_player() const
         && (!agent()
             || (agent()->is_monster()
                 && !agent()->friendly()
-                && agent()->temp_attitude() != ATT_MARIONETTE))
+                && agent()->attitude() != ATT_MARIONETTE))
         // No point in fuzzing to a position that could never be hit.
         && you.see_cell_no_trans(pos())
         && !cell_is_solid(pos())
@@ -3261,7 +3261,7 @@ bool bolt::harmless_to_player() const
     dprf(DIAG_BEAM, "beam flavour: %d", flavour);
 
     // Marionettes can't hurt the player with anything, so don't worry about it.
-    if (agent() && agent()->temp_attitude() == ATT_MARIONETTE)
+    if (agent() && agent()->attitude() == ATT_MARIONETTE)
         return true;
 
     if (you.cloud_immune() && is_big_cloud())
@@ -4830,7 +4830,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
                 power = 100;
             // Marionettes will avoid harming other 'allies', but are
             // deliberately reckless about themselves.
-            else if (!(mon_source == mon && mon_source->attitude == ATT_MARIONETTE))
+            else if (!(mon_source == mon && mon_source->attitude() == ATT_MARIONETTE))
                 power = 2 * final * mon->get_experience_level() / preac;
         }
         tracer->actor_affected(friendly_fire, power);
@@ -5830,7 +5830,7 @@ bool bolt::ignores_monster(const monster* mon) const
          || origin_spell == SPELL_FORTRESS_BLAST
          || origin_spell == SPELL_AWAKEN_FLESH
          || origin_spell == SPELL_CLEANSING_FLAME)
-        && mons_atts_aligned(attitude, mon->temp_attitude()))
+        && mons_atts_aligned(attitude, mon->attitude()))
     {
         return true;
     }
@@ -6427,7 +6427,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         // Being a puppet on magic strings is a nasty thing.
         // Mindless creatures shouldn't probably mind, but because of complex
         // behaviour of charmed neutrals, let's disallow that for now.
-        mon->attitude = ATT_HOSTILE;
+        mon->base_attitude = ATT_HOSTILE;
 
         // XXX: Another hackish thing for Pikel's band neutrality.
         if (mons_is_mons_class(mon, MONS_PIKEL))

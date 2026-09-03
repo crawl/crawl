@@ -1864,7 +1864,7 @@ bool spell_no_hostile_in_range(spell_type spell)
             if (you.aware_of(mon)
                 && mons_intel(mon) > I_BRAINLESS
                 && mon.willpower() != WILL_INVULN
-                && !mons_atts_aligned(you.temp_attitude(), mon.temp_attitude())
+                && !mons_aligned(&you, &mon)
                 && !mon.has_ench(ENCH_ANGUISH))
             {
                 return false;

@@ -4918,7 +4918,7 @@ void melee_attack::do_valour_beam()
     beam.target = defender->pos();
     beam.range = 4;
     beam.stop_at_allies = true;
-    beam.attitude = attacker->temp_attitude();
+    beam.attitude = attacker->attitude();
     beam.ray = ray;
     beam.chose_ray = true;
 

@@ -1160,7 +1160,7 @@ static void _try_monster_cast(spell_type spell, int /*powc*/,
     mon->mname      = "Dummy Monster";
     mon->type       = MONS_HUMAN;
     mon->behaviour  = BEH_SEEK;
-    mon->attitude   = ATT_FRIENDLY;
+    mon->base_attitude = ATT_FRIENDLY;
     mon->flags      = (MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
                        | MF_WAS_IN_VIEW | MF_HARD_RESET);
     mon->hit_points = you.hp;

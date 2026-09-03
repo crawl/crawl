@@ -6829,7 +6829,7 @@ void marshallMonster(writer &th, const monster& m)
     if (parts & MP_SPELLS)
         _marshallSpells(th, m.spells);
     marshallByte(th, m.god);
-    marshallByte(th, m.attitude);
+    marshallByte(th, m.base_attitude);
     marshallShort(th, m.foe);
     marshallInt(th, m.foe_memory);
     marshallShort(th, m.damage_friendly);
@@ -8072,12 +8072,12 @@ void unmarshallMonster(reader &th, monster& m)
     }
 
     m.god      = static_cast<god_type>(unmarshallByte(th));
-    m.attitude = static_cast<mon_attitude_type>(unmarshallByte(th));
+    m.base_attitude = static_cast<mon_attitude_type>(unmarshallByte(th));
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_CUT_STRICT_NEUTRAL
-        && m.attitude == ATT_OLD_STRICT_NEUTRAL)
+        && m.base_attitude == ATT_OLD_STRICT_NEUTRAL)
     {
-        m.attitude = ATT_GOOD_NEUTRAL;
+        m.base_attitude = ATT_GOOD_NEUTRAL;
     }
 #endif
     m.foe      = unmarshallShort(th);
@@ -8370,7 +8370,7 @@ void unmarshallMonster(reader &th, monster& m)
     // with the original attitude stored in a prop.
     if (m.props.exists("old_attitude"))
     {
-        m.attitude = static_cast<mon_attitude_type>(
+        m.base_attitude = static_cast<mon_attitude_type>(
                                         m.props["old_attitude"].get_short());
         m.props.erase("old_attitude");
     }

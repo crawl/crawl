@@ -1227,7 +1227,7 @@ static const map<spell_type, mons_spell_logic> marionette_spell_to_logic {
 static const mons_spell_logic* _get_spell_logic(const monster& caster, spell_type spell)
 {
     // Use marionette overrides when appropriate
-    if (caster.attitude == ATT_MARIONETTE)
+    if (caster.attitude() == ATT_MARIONETTE)
     {
         const mons_spell_logic* logic = map_find(marionette_spell_to_logic, spell);
         if (logic)
@@ -2044,7 +2044,7 @@ static bool _monster_will_buff(const monster &caster, const monster &targ)
         return false;
 
     // don't buff only temporarily-aligned pals (charmed, hexed)
-    if (!mons_atts_aligned(caster.temp_attitude(), targ.attitude))
+    if (!mons_atts_aligned(caster.attitude(), targ.base_attitude))
         return false;
 
     if (caster.type == MONS_IRONBOUND_CONVOKER
@@ -2713,7 +2713,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
 
     // Avoid overshooting and potentially hitting the player.
     // Piercing beams' tracers already account for this.
-    if (mons->temp_attitude() == ATT_FRIENDLY && !beam.pierce)
+    if (mons->attitude() == ATT_FRIENDLY && !beam.pierce)
         beam.aimed_at_spot = true;
 
     return beam;
@@ -3289,16 +3289,16 @@ static bool _mons_awaken_flesh(const monster& caster, const int power,
         // under the monster that just awakened it.
         mon->del_ench(ENCH_SUMMON_TIMER, true, false);
         mon->mark_summoned(SPELL_AWAKEN_FLESH, random_range(250, 350));
-        if (mon->attitude != caster.temp_attitude())
+        if (mon->base_attitude != caster.attitude())
         {
-            mon->attitude = caster.temp_attitude();
+            mon->base_attitude = caster.attitude();
             mons_att_changed(mon);
         }
         mon->summoner = caster.mid;
 
         bolt shockwave;
         shockwave.set_agent(&caster);
-        shockwave.attitude = caster.temp_attitude();
+        shockwave.attitude = caster.attitude();
         shockwave.source = mon->pos();
         shockwave.target = mon->pos();
         shockwave.is_explosion = true;
@@ -3378,7 +3378,7 @@ static bool _can_force_door_shut(const vector<coord_def>& door_spots)
         {
             // Only attempt to push players and non-hostile monsters out of
             // doorways
-            if (act->temp_attitude() == ATT_HOSTILE)
+            if (act->attitude() == ATT_HOSTILE)
                 return false;
         }
     }
@@ -4569,7 +4569,7 @@ static bool _glaciate_tracer(monster *caster, int pow, coord_def aim)
     targeter_cone hitfunc(caster, spell_range(SPELL_GLACIATE, caster, pow));
     hitfunc.set_aim(aim);
 
-    mon_attitude_type castatt = caster->temp_attitude();
+    mon_attitude_type castatt = caster->attitude();
     int friendly = 0, enemy = 0;
 
     for (const auto &entry : hitfunc.zapped)
@@ -4581,7 +4581,7 @@ static bool _glaciate_tracer(monster *caster, int pow, coord_def aim)
         if (!victim)
             continue;
 
-        if (mons_atts_aligned(castatt, victim->temp_attitude()))
+        if (mons_atts_aligned(castatt, victim->attitude()))
         {
             if (victim->is_player() && !(caster->holiness() & MH_DEMONIC))
                 return false; // never glaciate the player! except demons
@@ -4727,8 +4727,7 @@ static coord_def _mons_bomblet_target(const monster& caster)
 
 static bool _can_injury_bond(const monster &protector, const monster &protectee)
 {
-    return mons_atts_aligned(protector.temp_attitude(),
-                             protectee.temp_attitude())
+    return mons_aligned(&protector, &protectee)
         && !protectee.has_ench(ENCH_CHARM)
         && !protectee.has_ench(ENCH_HEXED)
         && !mons_is_projectile(protectee)
@@ -5045,7 +5044,7 @@ static bool _should_cast_spell(const monster &mons, spell_type spell,
     // Spells with custom marionette logic get to bypass certain normal checks
     // (largely so that they will use some aggressive 'self-buffs' without
     // needing the presence of another enemy.)
-    if (mons.attitude == ATT_MARIONETTE && spell_has_marionette_override(spell))
+    if (mons.attitude() == ATT_MARIONETTE && spell_has_marionette_override(spell))
         return true;
 
     // Don't use blinking spells in sight of a trap the player can see if we're
@@ -9593,7 +9592,7 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
     // (Marionettes pass their summons onto the player, so count for them instead)
     if (summons_are_capped(spell))
     {
-        if (mon->attitude == ATT_MARIONETTE)
+        if (mon->attitude() == ATT_MARIONETTE)
         {
             if (count_summons(&you, spell) >= summons_limit(spell, false))
                 return ai_action::impossible();

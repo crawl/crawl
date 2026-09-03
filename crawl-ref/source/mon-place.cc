@@ -1274,8 +1274,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     }
 
     // Set attitude, behaviour and target.
-    mon->attitude  = ATT_HOSTILE;
-    mon->behaviour = mg.behaviour;
+    mon->base_attitude  = ATT_HOSTILE;
+    mon->behaviour      = mg.behaviour;
 
     // Statues cannot sleep (nor wander but it means they are a bit
     // more aware of the player than they'd be otherwise).
@@ -1291,20 +1291,20 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     {
         if (mg.behaviour == BEH_FRIENDLY)
         {
-            mon->attitude = ATT_FRIENDLY;
-            mon->flags   |= MF_NO_REWARD;
+            mon->base_attitude = ATT_FRIENDLY;
+            mon->flags        |= MF_NO_REWARD;
         }
 
         if (mg.behaviour == BEH_GOOD_NEUTRAL)
         {
-            mon->attitude = ATT_GOOD_NEUTRAL;
-            mon->flags   |= MF_WAS_NEUTRAL;
+            mon->base_attitude = ATT_GOOD_NEUTRAL;
+            mon->flags        |= MF_WAS_NEUTRAL;
         }
 
         if (mg.behaviour == BEH_NEUTRAL)
         {
-            mon->attitude = ATT_NEUTRAL;
-            mon->flags   |= MF_WAS_NEUTRAL;
+            mon->base_attitude = ATT_NEUTRAL;
+            mon->flags        |= MF_WAS_NEUTRAL;
         }
 
         mon->behaviour = BEH_WANDER;
@@ -1375,7 +1375,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             }
         }
 
-        if (mon->attitude == ATT_HOSTILE && you.has_bane(BANE_HUNTED))
+        if (mon->base_attitude == ATT_HOSTILE && you.has_bane(BANE_HUNTED))
             mon->add_ench(mon_enchant(ENCH_HAUNTING, &you, INFINITE_DURATION));
     }
 
@@ -1385,7 +1385,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
         // Copy the underlying attitude of the parent, along with any temporary
         // changes to it.
-        mon->attitude = parent->attitude;
+        mon->base_attitude = parent->base_attitude;
         if (parent->has_ench(ENCH_CHARM))
             mon->add_ench(parent->get_ench(ENCH_CHARM));
         if (parent->has_ench(ENCH_HEXED))
@@ -1563,7 +1563,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     // If MG_AUTOFOE is set, find the nearest valid foe and point this monster
     // towards it immediately.
-    if (mg.flags & MG_AUTOFOE && (mon->attitude == ATT_FRIENDLY
+    if (mg.flags & MG_AUTOFOE && (mon->base_attitude == ATT_FRIENDLY
                                   || mg.behaviour == BEH_CHARMED))
     {
         set_nearest_monster_foe(mon, true);
@@ -3159,7 +3159,7 @@ void check_lovelessness(monster &mons)
     if (!mons_can_hate(mons.type) || !mons.wont_attack())
         return;
 
-    mons.attitude = ATT_HOSTILE;
+    mons.base_attitude = ATT_HOSTILE;
     mons.del_ench(ENCH_CHARM);
     behaviour_event(&mons, ME_ALERT, &you);
     mprf("%s feels only hate for you!", mons.name(DESC_THE).c_str());

@@ -57,7 +57,7 @@ static void _setup_base_explosion(bolt & beam, const monster& origin)
         beam.thrower = KILL_MON;
 
     beam.aux_source.clear();
-    beam.attitude = origin.temp_attitude();
+    beam.attitude = origin.attitude();
 }
 
 static int _inferno_power(int hd)

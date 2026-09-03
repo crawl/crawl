@@ -1661,20 +1661,20 @@ bool mons_is_god_gift(const monster& mon, god_type god)
 bool is_yred_undead_follower(const monster& mon)
 {
     return mon.alive() && mon.holiness() & MH_UNDEAD
-           && mon.attitude == ATT_FRIENDLY
+           && mon.base_attitude == ATT_FRIENDLY
            && mons_is_god_gift(mon, GOD_YREDELEMNUL);
 }
 
 bool is_apostle_follower(const monster& mon)
 {
-    return mon.alive() && mon.attitude == ATT_FRIENDLY
+    return mon.alive() && mon.base_attitude == ATT_FRIENDLY
            && mon.type == MONS_ORC_APOSTLE;
 }
 
 bool is_fellow_slime(const monster& mon)
 {
     return mon.alive() && mons_is_slime(mon)
-           && mon.attitude == ATT_GOOD_NEUTRAL
+           && mon.base_attitude == ATT_GOOD_NEUTRAL
            && mons_is_god_gift(mon, GOD_JIYVA);
 }
 

@@ -923,7 +923,7 @@ static bool _handle_player_step(const coord_def& targ, int& delay, const int del
     // First, check for fighting a monster.
     if (mon)
     {
-        if (mon->temp_attitude() == ATT_NEUTRAL
+        if (mon->attitude() == ATT_NEUTRAL
             && !mon->has_ench(ENCH_FRENZIED)
             && !you.confused()
             && you.aware_of(*mon))

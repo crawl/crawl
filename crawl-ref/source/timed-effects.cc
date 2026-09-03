@@ -259,7 +259,7 @@ static bool _multiplicity_clone(monster* mon)
     {
         bool obviousness; // dummy argument
         monster *clone = clone_mons(mon, true, &obviousness,
-                                    mon->temp_attitude(), spot);
+                                    mon->attitude(), spot);
         if (!clone)
             return false;
         clone->foe = mon->foe;
@@ -827,7 +827,7 @@ bool map_malign_gateway_marker::run(int time)
 
                 // Severed tentacles immediately become "hostile" to everyone
                 // (or frenzied)
-                mon->attitude = ATT_NEUTRAL;
+                mon->base_attitude = ATT_NEUTRAL;
                 mons_att_changed(mon);
                 if (!crawl_state.game_is_arena())
                     behaviour_event(mon, ME_ALERT);
@@ -1239,7 +1239,7 @@ bool map_active_feature_marker::run_spike_launcher(int time)
             if (actor* targ = actor_at(*ai))
             {
                 if (!act->see_cell_no_trans(*ai)
-                    || mons_atts_aligned(attitude, targ->temp_attitude())
+                    || mons_atts_aligned(attitude, targ->attitude())
                     || targ->is_firewood())
                 {
                     continue;

@@ -3361,7 +3361,7 @@ bool mons_aligned(const actor *m1, const actor *m2)
     if (mons_is_projectile(m1->type) || mons_is_projectile(m2->type))
         return true; // they won't directly attack each-other, anyway
 
-    return mons_atts_aligned(m1->temp_attitude(), m2->temp_attitude());
+    return mons_atts_aligned(m1->attitude(), m2->attitude());
 }
 
 bool mons_atts_aligned(mon_attitude_type fr1, mon_attitude_type fr2)
@@ -3421,7 +3421,7 @@ bool mons_att_wont_attack(mon_attitude_type fr)
 
 mon_attitude_type mons_attitude(const monster& m)
 {
-    return m.temp_attitude();
+    return m.attitude();
 }
 
 bool mons_is_confused(const monster& m, bool class_too)
@@ -3542,7 +3542,7 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
 {
     // If the _real_ (non-charmed) attitude is already that or better,
     // don't degrade it.
-    if (mon.attitude >= att)
+    if (mon.base_attitude >= att)
         return;
 
     // Must be done before attitude change, so that proper targets are affected
@@ -3550,7 +3550,7 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
         end_flayed_effect(&mon);
 
     // Make the monster permanently neutral.
-    mon.attitude = att;
+    mon.base_attitude = att;
     mon.flags |= MF_WAS_NEUTRAL;
 
     if (!testbits(mon.flags, MF_PACIFIED) // Don't allow repeatedly pacifying.
@@ -4454,7 +4454,7 @@ string do_mon_str_replacements(const string& in_msg, const monster& mons,
         msg = replace_all(msg, "@The_monster_possessive@",
                           apostrophise(name));
     }
-    else if (mons.attitude == ATT_FRIENDLY
+    else if (mons.base_attitude == ATT_FRIENDLY
              && !mons_is_unique(mons.type)
              && !crawl_state.game_is_arena()
              && you.can_see(mons))
@@ -4965,14 +4965,14 @@ void init_anon()
     mon.reset();
     mon.type = MONS_PROGRAM_BUG;
     mon.mid = MID_ANON_FRIEND;
-    mon.attitude = ATT_FRIENDLY;
+    mon.base_attitude = ATT_FRIENDLY;
     mon.hit_points = mon.max_hit_points = 1000;
 
     monster &yf = env.mons[YOU_FAULTLESS];
     yf.reset();
     yf.type = MONS_PROGRAM_BUG;
     yf.mid = MID_YOU_FAULTLESS;
-    yf.attitude = ATT_FRIENDLY; // higher than this, actually
+    yf.base_attitude = ATT_FRIENDLY; // higher than this, actually
     yf.hit_points = mon.max_hit_points = 1000;
 }
 
@@ -5326,7 +5326,7 @@ bool mons_is_wrath_avatar(const monster &mon)
 bool mons_is_player_shadow(const monster& mon)
 {
     return mon.type == MONS_PLAYER_SHADOW
-        && mon.attitude == ATT_FRIENDLY; // hostile shadows are god wrath
+        && mon.base_attitude == ATT_FRIENDLY; // hostile shadows are god wrath
 }
 
 // Zero-damage attacks with special effects (constriction, drowning, pure fire,
@@ -5823,7 +5823,7 @@ bool shoot_through_actor(const actor* agent, const actor* target, bool announce)
         if (agent->is_monster()
             && (mons_is_hepliaklqana_ancestor(agent->type)
                 || mons_is_player_shadow(*agent->as_monster())
-                || agent->temp_attitude() == ATT_MARIONETTE
+                || agent->attitude() == ATT_MARIONETTE
                 || agent->type == MONS_PLATINUM_PARAGON
                 || you_worship(GOD_FEDHAS)
                    && agent->deity() == GOD_FEDHAS

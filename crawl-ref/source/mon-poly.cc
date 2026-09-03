@@ -743,8 +743,8 @@ void slimify_monster(monster* mon)
     // If a monster slimifies and you're not with Jiyva, it shouldn't change
     // that monster's attitude any more than other polymorph does. If you are
     // with Jiyva, either let it stay friendly or make it non-hostile.
-    if (you_worship(GOD_JIYVA) && mon->attitude != ATT_FRIENDLY)
-        mon->attitude = ATT_GOOD_NEUTRAL;
+    if (you_worship(GOD_JIYVA) && mon->base_attitude != ATT_FRIENDLY)
+        mon->base_attitude = ATT_GOOD_NEUTRAL;
 
     mons_make_god_gift(*mon, GOD_JIYVA);
 

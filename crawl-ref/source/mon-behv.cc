@@ -255,7 +255,7 @@ void handle_behaviour(monster* mon)
     {
         for (monster_iterator mi; mi; ++mi)
         {
-            if (mon->attitude != mi->attitude)
+            if (mon->base_attitude != mi->base_attitude)
             {
                 mon->foe       = mi->mindex();
                 mon->target    = mi->pos();
@@ -921,7 +921,7 @@ void handle_behaviour(monster* mon)
         // Wandering lurkers can eventually go back to lurking (but not if you
         // would just detect them again anyway).
         if (mon->behaviour == BEH_WANDER
-            && mon->attitude == ATT_HOSTILE
+            && mon->base_attitude == ATT_HOSTILE
             && mons_class_flag(mon->type, M_LURKER)
             && !have_passive(passive_t::see_unseen)
             && !mon->has_ench(ENCH_PREPARING_TO_LURK))
@@ -1138,7 +1138,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
         if (src == &you && mon->angered_by_attacks())
         {
-            if (mon->attitude == ATT_FRIENDLY && mon->is_summoned()
+            if (mon->base_attitude == ATT_FRIENDLY && mon->is_summoned()
                 && mon->type != MONS_ELDRITCH_TENTACLE
                 && !mon->is_child_monster() && !mons_is_tentacle_segment(mon->type))
             {
@@ -1148,7 +1148,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             // Don't attempt to 'anger' monsters that are already hostile; this can
             // have weird and unexpected effects, such as prematurely ending hostile
             // effects.
-            else if (mon->temp_attitude() != ATT_HOSTILE)
+            else if (mon->attitude() != ATT_HOSTILE)
             {
                 // Pass aggro events along to the head, so that attitude changes
                 // can be propogated in a way that makes sense.
@@ -1156,9 +1156,9 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
                 if (head != mon)
                     behaviour_event(head, event, src, src_pos, allow_shout);
 
-                const bool was_friend = mons_att_wont_attack(mon->attitude);
-                mon->attitude = ATT_HOSTILE;
-                breakCharm    = true;
+                const bool was_friend = mons_att_wont_attack(mon->base_attitude);
+                mon->base_attitude = ATT_HOSTILE;
+                breakCharm = true;
 
                 // If we're angered a monster that previously would not have
                 // registered as hostile, let the player encounter them 'again'.
@@ -1350,10 +1350,10 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     {
         mon->target = src_pos;
         if (src->is_player() && mon->angered_by_attacks()
-            && mon->temp_attitude() != ATT_HOSTILE)
+            && mon->attitude() != ATT_HOSTILE)
         {
             // Why only attacks by the player change attitude? -- 1KB
-            mon->attitude = ATT_HOSTILE;
+            mon->base_attitude = ATT_HOSTILE;
             // Non-hostile uniques might be removed from dungeon annotation
             // so we add them back.
             if (mon->props.exists(NO_ANNOTATE_KEY))
@@ -1521,7 +1521,7 @@ void make_mons_leave_level(monster* mon)
 bool monster_needs_los(const monster* mons)
 {
     return !crawl_state.game_is_arena()
-           && mons->attitude == ATT_FRIENDLY;
+           && mons->base_attitude == ATT_FRIENDLY;
 }
 
 // Check whether the player has line of sight to both the attacker and defender,

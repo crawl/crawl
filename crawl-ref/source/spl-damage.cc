@@ -578,7 +578,7 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
     else
     {
         hurted = check_your_resists(hurted, beam.flavour, beam.name, 0, doFlavour);
-        if (agent->temp_attitude() == ATT_MARIONETTE)
+        if (agent->attitude() == ATT_MARIONETTE)
             hurted = 0;
     }
     dprf("damage done: %d", hurted);
@@ -4328,7 +4328,7 @@ static void _hailstorm_cell(coord_def where, int pow, actor *agent)
     zappy(ZAP_HAILSTORM, pow, agent->is_monster(), beam);
     beam.thrower    = agent->is_player() ? KILL_YOU : KILL_MON;
     beam.source_id  = agent->mid;
-    beam.attitude   = agent->temp_attitude();
+    beam.attitude   = agent->attitude();
     beam.draw_delay = 0;
     beam.redraw_per_cell = false;
     beam.source     = where;
@@ -5326,7 +5326,7 @@ void unleash_fortress_blast(actor& caster)
     bolt blast;
     zappy(ZAP_FORTRESS_BLAST, power, caster.is_monster(), blast);
     blast.set_agent(&caster);
-    blast.attitude = caster.temp_attitude();
+    blast.attitude = caster.attitude();
     blast.source = caster.pos();
     blast.target = caster.pos();
     blast.origin_spell = SPELL_FORTRESS_BLAST;
