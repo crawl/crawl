@@ -277,13 +277,13 @@ occasionally protect the follower's allies from death.
 Fedhas powers
 
 Plants and fungi will not attack Fedhas' worshippers without provocation.
-Worshippers may walk through plants or fungi, and even fire missiles or spells
-through them without causing harm. Fedhas grants powers to temporarily grow a
-menagerie of plant allies whose strength and duration increase with Invocations
-skill. Worshippers may grow a protective wall of briar patches as well as
-ballistomycetes that fire damaging spores whose explosions confuse living
-creatures. Devout followers can overgrow a stretch of solid terrain with a
-cluster of plant allies or even summon a mighty oklob plant.
+Worshippers may walk slowly through plants or fungi, and even fire missiles or
+spells through them without causing harm. Fedhas grants powers to temporarily
+grow a menagerie of plant allies whose strength and duration increase with
+Invocations skill. Worshippers may grow a protective wall of briar patches as
+well as ballistomycetes that fire damaging spores whose explosions confuse
+living creatures. Devout followers can overgrow a stretch of solid terrain with
+a cluster of plant allies or even summon a mighty oklob plant.
 %%%%
 Gozag powers
 
