@@ -4005,15 +4005,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
 
 tileidx_t tileidx_zap(int colour, coord_def pos)
 {
-    switch (colour)
-    {
-    case ETC_HOLY:
-        colour = YELLOW;
-        break;
-    default:
-        colour = element_colour(colour, pos);
-        break;
-    }
+    colour = element_colour(colour, pos);
 
     if (colour < 1)
         colour = 7;
