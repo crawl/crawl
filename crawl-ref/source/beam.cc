@@ -742,10 +742,10 @@ void bolt::draw(const coord_def& p, bool force_refresh)
         return;
 
 #ifdef USE_TILE
-    // Set default value if none specified.
-    if (tile_beam == 0)
-        tile_beam = tileidx_zap(colour, p);
-    view_add_tile_overlay(p, vary_bolt_tile(tile_beam, source, target, p));
+    tileidx_t draw_tile = tile_beam;
+    if (draw_tile == 0)
+        draw_tile = tileidx_zap(colour, p);
+    view_add_tile_overlay(p, vary_bolt_tile(draw_tile, source, target, p));
 #endif
     colour_t adjusted_colour = colour == BLACK ? colour_t{ETC_RANDOM} : colour;
     const unsigned short c = element_colour(adjusted_colour, p);
@@ -7068,15 +7068,16 @@ bool bolt::explosion_draw_cell(const coord_def& p)
         if (in_los_bounds_v(drawpos))
         {
 #ifdef USE_TILE
+            tileidx_t draw_tile = tile_explode;
             // Use default value if none specified.
-            if (tile_explode == 0)
+            if (draw_tile == 0)
             {
                 if (tile_beam != 0)
-                    tile_explode = tile_beam;
+                    draw_tile = tile_beam;
                 else
-                    tile_explode = tileidx_zap(colour, p);
+                    draw_tile = tileidx_zap(colour, p);
             }
-            view_add_tile_overlay(p, vary_bolt_tile(tile_explode, source, target, p));
+            view_add_tile_overlay(p, vary_bolt_tile(draw_tile, source, target, p));
 #endif
             colour_t adjusted_colour = colour == BLACK ? colour_t{ETC_RANDOM} : colour;
             const unsigned short c = element_colour(adjusted_colour, p, false);
