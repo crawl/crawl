@@ -1656,15 +1656,10 @@ void attack::maybe_trigger_autodazzler()
     if (defender->is_player() && you.wearing_ego(OBJ_GIZMOS, SPGIZMO_AUTODAZZLE)
         && one_chance_in(20))
     {
-        bolt proj;
-        zappy(ZAP_AUTODAZZLE, you.get_experience_level(), false, proj);
-
+        bolt proj(you, ZAP_AUTODAZZLE, you.get_experience_level());
         proj.target = attacker->pos();
-        proj.source = you.pos();
-        proj.source_id = MID_PLAYER;
         proj.draw_delay = 5;
-        proj.attitude = ATT_FRIENDLY;
-        proj.thrower = KILL_YOU_MISSILE;
+
         targeting_tracer tracer;
 
         // Make sure the beam path is clear

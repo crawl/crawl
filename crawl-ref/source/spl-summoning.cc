@@ -3939,13 +3939,7 @@ static void _paragon_tempest(const coord_def& target)
     {
         const coord_def old_pos = paragon->pos();
 
-        bolt visual;
-        visual.flavour = BEAM_VISUAL;
-        visual.colour = WHITE;
-        visual.source = old_pos;
-        visual.target = target;
-        visual.aimed_at_spot = true;
-        visual.fire();
+        bolt::visual_beam(old_pos, target, 15, WHITE).fire();
 
         paragon->move_to(target, MV_INTERNAL);
         paragon->check_redraw(old_pos);
@@ -4045,13 +4039,8 @@ spret cast_platinum_paragon(const coord_def& target, int pow, bool fail)
     paragon->ghost_demon_init();
 
     // Do the landing shockwave.
-    bolt shockwave;
-    shockwave.source_id = paragon->mid;
-    shockwave.source = target;
-    shockwave.target = target;
-    shockwave.is_explosion = true;
-    shockwave.ex_size = 1;
-    zappy(ZAP_PARAGON_IMPACT, pow, true, shockwave);
+    bolt shockwave(*paragon, ZAP_PARAGON_IMPACT, pow);
+    shockwave.source = shockwave.target = target;
     shockwave.explode(true, true);
 
     return spret::success;

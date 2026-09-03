@@ -97,20 +97,17 @@ static void _magic_contamination_effects()
     // radius and damage.
     if (x_chance_in_y(min(2000, you.magic_contamination), 3200))
     {
-        bolt beam;
-
         const int pow = severe ? you.experience_level * 3 / 2
                                : you.experience_level;
-        zappy(ZAP_CONTAM_EXPLOSION, pow, false, beam);
 
-        beam.source       = you.pos();
+        bolt beam(you, ZAP_CONTAM_EXPLOSION, pow);
         beam.target       = you.pos();
         beam.source_id    = MID_YOU_FAULTLESS;
         beam.aux_source   = "a magical explosion";
         beam.ex_size      = severe ? 2 : 1;
 
         // Ignores the player's own AC (it's your body exploding!), but not
-        // enemies.
+        // the AC of enemies.
         beam.ac_rule = ac_type::none;
         beam.is_explosion = false;
         beam.fire();

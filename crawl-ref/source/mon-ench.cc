@@ -1208,16 +1208,7 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
 
     // We use a beam tracer here since it is better at navigating
     // obstructing walls than merely comparing our relative positions
-    bolt tracer;
-    tracer.pierce          = true;
-    tracer.affects_nothing = true;
-    tracer.target          = mons->pos();
-    tracer.source          = you.pos();
-    tracer.set_is_tracer(true);
-    tracer.aimed_at_spot   = true;
-    tracer.fire();
-
-    const coord_def newpos = tracer.path_taken[0];
+    const coord_def newpos = bolt::path_tracer(you.pos(), mons->pos()).path_taken[0];
 
     if (!in_bounds(newpos)
         || is_feat_dangerous(env.grid(newpos))

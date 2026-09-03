@@ -1043,12 +1043,7 @@ bool do_west_wind_shot()
 
     if (_salvo_shot_tracer(you.pos(), targ, true, nullptr))
     {
-        bolt wind;
-        wind.source = you.pos();
-        wind.target = targ;
-        wind.pierce = true;
-        wind.set_is_tracer(true);
-        wind.fire();
+        bolt wind = bolt::path_tracer(you.pos(), targ);
 
         // Push monsters from back to front (but never pushing them out of sight)
         for (int i = wind.path_taken.size() - 2; i >= 0; --i)

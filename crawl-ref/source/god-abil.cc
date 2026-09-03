@@ -1163,7 +1163,6 @@ bool zin_recite_to_single_monster(const coord_def& where)
     case zin_eff::ignite_chaos:
         ASSERT(prayertype == RECITE_CHAOTIC);
         {
-            bolt beam;
             dice_def dam_dice(0, 5 + spellpower/7);  // Dice added below if applicable.
             dam_dice.num = degree;
 
@@ -7151,14 +7150,9 @@ void makhleb_vessel_of_slaughter()
     transform(random_range(70, 110), transformation::slaughter);
     you.transform_uncancellable = true;
 
-    bolt damnation;
-    zappy(ZAP_HURL_DAMNATION, 100, false, damnation);
-    damnation.thrower = KILL_YOU;
-    damnation.source_id = MID_PLAYER;
-    damnation.is_explosion = true;
+    bolt damnation(you, ZAP_HURL_DAMNATION, 100);
     damnation.ex_size = 3;
     damnation.damage = dice_def(3, 7 + you.experience_level);
-    damnation.source = you.pos();
     damnation.target = you.pos();
     damnation.explode(true, true);
 }

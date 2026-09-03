@@ -4911,14 +4911,10 @@ void melee_attack::do_valour_beam()
     if (!found_targ)
         return;
 
-    bolt beam;
-    zappy(ZAP_VALOUR_BEAM, weapon_damage(), attacker->is_monster(), beam);
-    beam.set_agent(attacker);
+    bolt beam(*attacker, ZAP_VALOUR_BEAM, weapon_damage());
     beam.source = attacker->pos();
-    beam.target = defender->pos();
     beam.range = 4;
     beam.stop_at_allies = true;
-    beam.attitude = attacker->attitude();
     beam.ray = ray;
     beam.chose_ray = true;
 

@@ -481,6 +481,9 @@ void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
     pbolt.pierce         = zinfo->can_beam;
     pbolt.is_explosion   = zinfo->is_explosion;
 
+    if (zinfo->is_explosion && pbolt.ex_size == 0)
+        pbolt.ex_size = 1;
+
     ASSERT(zinfo->is_enchantment == pbolt.is_enchantment());
 
     pbolt.ench_power = zap_ench_power(z_type, power, is_monster);
@@ -580,6 +583,56 @@ static void _combustion_breath_explode(bolt *parent, coord_def pos)
     beam.refine_for_explosion();
     beam.explode();
     _copy_affected_counts(*parent, beam);
+}
+
+bolt::bolt(const actor& _agent, spell_type _origin_spell, int power)
+    : bolt(_agent, spell_to_zap(_origin_spell), power)
+{
+    origin_spell = _origin_spell;
+    range = spell_range(_origin_spell, &_agent, power);
+}
+
+bolt::bolt(const actor& _agent, zap_type ztype, int power)
+    : bolt()
+{
+    set_agent(&_agent);
+    zappy(ztype, power, _agent.is_monster(), *this);
+    source = _agent.pos();
+}
+
+bolt bolt::visual_beam(const coord_def& start, const coord_def& end,
+                       int _draw_delay, colour_t colour, tileidx_t tile)
+{
+    bolt ret;
+    ret.flavour = BEAM_VISUAL;
+    ret.source = start;
+    ret.target = end;
+    ret.aimed_at_spot = true;
+    ret.colour = colour;
+    ret.tile_beam = tile;
+    ret.draw_delay = _draw_delay;
+    ret.explode_delay = _draw_delay;
+
+    return ret;
+}
+
+bolt bolt::path_tracer(const coord_def& start, const coord_def& end,
+                       int range, spell_type origin_spell)
+{
+    bolt tracer;
+
+    // (Mainly used to give proper digging properties to hellfire mortar tracers)
+    if (origin_spell != SPELL_NO_SPELL)
+        zappy(spell_to_zap(origin_spell), 100, true, tracer);
+
+    tracer.source = start;
+    tracer.target = end;
+    tracer.range = range;
+    tracer.pierce = true;
+    tracer.set_is_tracer(true);
+    tracer.fire();
+
+    return tracer;
 }
 
 bool bolt::visible() const

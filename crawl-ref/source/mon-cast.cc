@@ -1658,16 +1658,7 @@ static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&)
 static void _regen_monster(monster* mon, monster* source, int dur)
 {
     mon->add_ench(mon_enchant(ENCH_REGENERATION, source, dur), false);
-
-    // Animate visuals
-    bolt beam;
-    beam.source = mon->pos();
-    beam.target = mon->pos();
-    beam.colour = ETC_HOLY;
-    beam.aimed_at_spot = true;
-    beam.flavour = BEAM_VISUAL;
-    beam.draw_delay = 3;
-    beam.fire();
+    bolt::visual_beam(mon->pos(), mon->pos(), 5, ETC_HOLY).fire();
 }
 
 static void _cast_regenerate_other(monster* caster)
@@ -3238,7 +3229,7 @@ static bool _mons_call_of_chaos(const monster& mon, bool check_only = false)
  * Awakens piles of flesh into buffed large abominations, while also making
  * explosions of chaos that'll only hit enemies.
  */
-static bool _mons_awaken_flesh(const monster& caster, const int power,
+static bool _mons_awaken_flesh(monster& caster, const int power,
                                bool check_only = false)
 {
     vector<monster*> affected;
@@ -3296,15 +3287,8 @@ static bool _mons_awaken_flesh(const monster& caster, const int power,
         }
         mon->summoner = caster.mid;
 
-        bolt shockwave;
-        shockwave.set_agent(&caster);
-        shockwave.attitude = caster.attitude();
-        shockwave.source = mon->pos();
-        shockwave.target = mon->pos();
-        shockwave.is_explosion = true;
-        shockwave.ex_size = 1;
-        shockwave.origin_spell = SPELL_AWAKEN_FLESH;
-        zappy(ZAP_AWAKEN_FLESH, power, true, shockwave);
+        bolt shockwave(caster, SPELL_AWAKEN_FLESH, power);
+        shockwave.source = shockwave.target = mon->pos();
         shockwave.explode(true, true);
     }
 
@@ -7435,14 +7419,8 @@ static bool _mons_cast_hellfire_mortar(monster& caster, actor& foe, int pow, boo
     coord_def found_target;
     for (size_t i = 0; i < possible_targets.size(); ++i)
     {
-        bolt tracer;
-        zappy(ZAP_HELLFIRE_MORTAR_DIG, pow, true, tracer);
-        tracer.source = caster.pos();
-        tracer.target = possible_targets[i];
-        tracer.source_id = caster.mid;
-        tracer.origin_spell = SPELL_HELLFIRE_MORTAR;
-        tracer.set_is_tracer(true);
-        tracer.fire();
+        bolt tracer = bolt::path_tracer(caster.pos(), possible_targets[i],
+                                        LOS_RADIUS, SPELL_HELLFIRE_MORTAR);
 
         // Skip paths that are less than 3 tiles long (which generally requires
         // them to be 4 tiles long, since the last tile will be some obstruction)
@@ -9446,18 +9424,9 @@ static void _throw_ally_to(const monster &thrower, monster &throwee,
              (throwee_seen ? throwee.name(DESC_THE, true).c_str() : "something"),
              destination.c_str());
 
-        bolt beam;
-        beam.hit     = AUTOMATIC_HIT;
-        beam.name    = throwee.name(DESC_THE, true);
-        beam.flavour = BEAM_VISUAL;
-        beam.source  = thrower.pos();
-        beam.target  = chosen_dest;
-        beam.glyph   = mons_char(throwee.type);
-        const monster_info mi(&throwee);
-        beam.colour  = mi.colour();
-
-        beam.draw_delay = 30; // Make beam animation somewhat slower than normal.
-        beam.aimed_at_spot = true;
+        bolt beam = bolt::visual_beam(thrower.pos(), chosen_dest, 30,
+                                      mons_class_colour(throwee.type));
+        beam.glyph = mons_char(throwee.type);
         beam.fire();
     }
 

@@ -809,13 +809,7 @@ static bool _handle_swoop_or_flank(monster& mons)
 
     coord_def target = defender->pos();
 
-    bolt tracer;
-    tracer.source = mons.pos();
-    tracer.target = target;
-    tracer.set_is_tracer(true);
-    tracer.pierce = true;
-    tracer.fire();
-
+    bolt tracer = bolt::path_tracer(mons.pos(), target);
     for (unsigned int j = 0; j < tracer.path_taken.size() - 1; ++j)
     {
         if (tracer.path_taken[j] != target)
@@ -1234,12 +1228,9 @@ static bool _scan_rending_blade_paths(coord_def start,
 
 static void _fire_rending_blade(monster& blade, coord_def target, int pow)
 {
-    bolt slash;
-    zappy(ZAP_RENDING_SLASH, pow, true, slash);
-    slash.range = 4;
-    slash.source = blade.pos();
+    bolt slash(blade, ZAP_RENDING_SLASH, pow);
     slash.set_agent(&you);
-    slash.origin_spell = SPELL_RENDING_BLADE;
+    slash.range = 4;
     slash.target = target;
     slash.aimed_at_spot = true;
     slash.hit_verb = "slices through";

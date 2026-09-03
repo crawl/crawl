@@ -138,6 +138,21 @@ struct bolt
 {
     bolt();
 
+    // Some convenience constructors for commonly-used setup.
+    bolt(const actor& agent, spell_type origin_spell, int power);
+    bolt(const actor& agent, zap_type ztype, int power);
+
+    // Returns a simple visual beam, used for some vfx.
+    static bolt visual_beam(const coord_def& start, const coord_def& end,
+                            int draw_delay = 15, colour_t colour = WHITE,
+                            tileidx_t tile = 0);
+
+    // Returns a bolt that has traced a path between two given coordinates.
+    // (Its path_taken member will already contain useful information.)
+    static bolt path_tracer(const coord_def& start, const coord_def& end,
+                            int range = LOS_RADIUS,
+                            spell_type origin_spell = SPELL_NO_SPELL);
+
     // INPUT parameters set by caller
     spell_type  origin_spell = SPELL_NO_SPELL; // may remain SPELL_NO_SPELL for
                                                // non-spell beams.

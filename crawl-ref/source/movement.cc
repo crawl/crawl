@@ -579,17 +579,7 @@ monster* get_rampage_target(coord_def move)
     const int tracer_range = you.current_vision;
     const coord_def tracer_target = you.pos() + (move * tracer_range);
 
-    bolt beam;
-    beam.aimed_at_spot   = true;
-    beam.target          = tracer_target;
-    beam.source_name     = "you";
-    beam.source          = you.pos();
-    beam.source_id       = MID_PLAYER;
-    beam.thrower         = KILL_YOU;
-    beam.pierce          = true;
-    beam.affects_nothing = true;
-    beam.set_is_tracer(true);
-    beam.fire();
+    bolt beam = bolt::path_tracer(you.pos(), tracer_target, tracer_range);
 
     // Iterate the tracer to see if the first visible target is a hostile mons.
     for (coord_def p : beam.path_taken)

@@ -475,12 +475,7 @@ void wind_blast(actor* agent, int pow, coord_def target)
     far_to_near_sorter sorter = {agent->pos()};
     sort(act_list.begin(), act_list.end(), sorter);
 
-    bolt wind_beam;
-    wind_beam.hit             = AUTOMATIC_HIT;
-    wind_beam.pierce          = true;
-    wind_beam.affects_nothing = true;
-    wind_beam.source          = agent->pos();
-    wind_beam.set_is_tracer(true);
+    bolt wind_beam = bolt::path_tracer(agent->pos(), coord_def());
 
     if (agent->is_player())
     {

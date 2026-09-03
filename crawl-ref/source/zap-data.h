@@ -152,8 +152,8 @@ static const zap_info zap_data[] =
     false,
     BEAM_CHAOS,
     DCHAR_FIRED_ZAP,
-    true,
     false,
+    true,
     TILE_BOLT_CHAOS,
 },
 
@@ -2455,7 +2455,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     BEAM_MMISSILE,
     DCHAR_FIRED_ZAP,
     false,
-    false,
+    true,
 },
 
 {

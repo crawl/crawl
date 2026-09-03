@@ -1799,12 +1799,9 @@ void pyromania_fineff::fire()
     if (!found)
         return;
 
-    bolt exp;
-    zappy(ZAP_FIREBALL, 50, false, exp);
+    bolt exp(you, ZAP_FIREBALL, 50);
     exp.damage = pyromania_damage();
-    exp.set_agent(&you);
     exp.target = you.pos();
-    exp.source = you.pos();
     exp.ex_size = 3;
 
     mpr("Your orb flickers with a hungry flame!");
@@ -1837,13 +1834,7 @@ void celebrant_bloodrite_fineff::fire()
     int shots_fired = 0;
     int repeats = 0;
 
-    bolt beam;
-    beam.source       = you.pos();
-    beam.source_id    = MID_PLAYER;
-    beam.attitude     = ATT_FRIENDLY;
-    beam.thrower      = KILL_YOU;
-    zappy(ZAP_BLOOD_ARROW, 15 + you.skill(SK_INVOCATIONS, 2), false, beam);
-
+    bolt beam(you, ZAP_BLOOD_ARROW, 15 + you.skill(SK_INVOCATIONS, 2));
     beam.draw_delay   = 10;
 
     // Fire once at every visible target. If that doesn't hit the minimum number

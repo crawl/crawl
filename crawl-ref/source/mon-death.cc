@@ -1807,15 +1807,7 @@ static void _martyr_death_wail(monster &mons)
     mons.heal(50000);
 
     // Show brief animation
-    bolt visual;
-    visual.target = mons.pos();
-    visual.source = mons.pos();
-    visual.aimed_at_spot = true;
-    visual.colour = ETC_DARK;
-    visual.glyph      = '*';
-    visual.draw_delay = 100;
-    visual.flavour = BEAM_VISUAL;
-    visual.fire();
+    flash_tile(mons.pos(), DARKGREY, 100);
 
     // Have it instantly flay a few nearby things
     vector <actor*> targets;
@@ -2953,14 +2945,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                 did_death_message = true;
 
                 if (armoury->alive() && armoury->see_cell_no_trans(mons.pos()))
-                {
-                    bolt visual;
-                    visual.source = mons.pos();
-                    visual.target = armoury->pos();
-                    visual.flavour = BEAM_VISUAL;
-                    visual.aimed_at_spot = true;
-                    visual.fire();
-                }
+                    bolt::visual_beam(mons.pos(), armoury->pos(), 15, LIGHTCYAN).fire();
             }
         }
         // Let summoned dancing weapons be handled like normal summoned creatures.
