@@ -6119,6 +6119,12 @@ static int _mesmerise_could_affect(const monster& source,
         if (player_stair_delay())
             return 0;
 
+        // Features like statues and grates break mesmerism (to keep the player
+        // from potentially being softlocked by a monster behind grates), so
+        // don't try to mesmerise the player from such a position.
+        if (!cell_see_cell(you.pos(), source.pos(), LOS_SOLID_SEE))
+            return 0;
+
         if (you.beheld_by(source))
             return 1;
         else
