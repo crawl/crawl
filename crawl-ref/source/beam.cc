@@ -7420,6 +7420,8 @@ void bolt::set_agent(const actor *actor)
         thrower = KILL_YOU_MISSILE;
     else
         thrower = KILL_MON_MISSILE;
+
+    attitude = actor->attitude();
 }
 
 /**
