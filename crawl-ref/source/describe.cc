@@ -7573,7 +7573,7 @@ string get_ghost_description(const monster_info &mi, bool concise)
     }
 #endif
 
-    gstr << mi.mname << " the "
+    gstr << mi.mname << " "
          << title
          << ", " << _xl_rank_name(mi.i_ghost.xl_rank) << " ";
 
