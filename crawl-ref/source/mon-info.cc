@@ -524,7 +524,7 @@ monster_info::monster_info(const monster* m, int milev)
     pos = m->pos();
     mid = m->mid;
 
-    attitude = mons_attitude(*m);
+    attitude = m->attitude();
 
     type = m->type;
     base_type = m->base_monster;

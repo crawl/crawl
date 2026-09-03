@@ -1094,7 +1094,7 @@ static ai_action::goodness _fire_permafrost_at(const actor &agent, int pow,
     targeting_tracer tracer;
     beam.set_is_tracer(is_tracer);
     beam.set_agent(&agent);
-    beam.attitude     = mon ? mons_attitude(*agent.as_monster()) : ATT_FRIENDLY;
+    beam.attitude     = agent.attitude();
     beam.foe_ratio    = 80; // default
     beam.origin_spell = SPELL_PERMAFROST_ERUPTION;
     beam.source = beam.target = target;
@@ -3176,7 +3176,7 @@ static targeting_tracer _fire_plasma_beam_at(const actor &agent, int pow,
     beam.source       = agent.pos();
     beam.target       = target;
     beam.set_agent(&agent);
-    beam.attitude     = mon ? mons_attitude(*agent.as_monster()) : ATT_FRIENDLY;
+    beam.attitude     = agent.attitude();
     beam.origin_spell = SPELL_PLASMA_BEAM;
     beam.draw_delay   = 5;
     targeting_tracer tracer;
@@ -5240,8 +5240,7 @@ spret cast_grave_claw(actor& caster, coord_def targ, int pow, bool fail)
 
     bolt beam;
     beam.set_agent(&caster);
-    beam.attitude = caster.is_player() ? ATT_FRIENDLY
-                                       : mons_attitude(*caster.as_monster());
+    beam.attitude = caster.attitude();
     beam.origin_spell = SPELL_GRAVE_CLAW;
     beam.source = beam.target = targ;
     zappy(ZAP_GRAVE_CLAW, pow, caster.is_monster(), beam);

@@ -472,7 +472,7 @@ void ranged_attack_beam::initialise_beam(actor &agent, item_def &item)
     {
         const monster* mon = agent.as_monster();
 
-        beam.attitude      = mons_attitude(*mon);
+        beam.attitude      = mon->attitude();
         beam.thrower       = KILL_MON_MISSILE;
     }
 

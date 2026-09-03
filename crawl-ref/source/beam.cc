@@ -2153,7 +2153,7 @@ void fire_tracer(const monster* mons, targeting_tracer& tracer,
     // Don't fiddle with any input parameters other than tracer stuff!
     pbolt.source        = mons->pos();
     pbolt.source_id     = mons->mid;
-    pbolt.attitude      = mons_attitude(*mons);
+    pbolt.attitude      = mons->attitude();
     pbolt.precalc_agent_properties();
 
     // Init tracer variables.
@@ -4568,7 +4568,7 @@ int bolt::apply_AC(const actor *victim, int hurted)
 
 void bolt::update_hurt_or_helped(monster* mon)
 {
-    if (!mons_atts_aligned(attitude, mons_attitude(*mon)))
+    if (!mons_atts_aligned(attitude, mon->attitude()))
     {
         if (nasty_to(mon))
             foes_hurt++;
@@ -4610,7 +4610,7 @@ void bolt::tracer_enchantment_affect_monster(monster* mon)
         && !(has_saving_throw() && mons_invuln_will(*mon)))
     {
         // Update friend or foe encountered.
-        bool friendly_fire = mons_atts_aligned(attitude, mons_attitude(*mon));
+        bool friendly_fire = mons_atts_aligned(attitude, mon->attitude());
         int power = mon->get_experience_level();
         tracer->actor_affected(friendly_fire, power);
     }
@@ -4815,7 +4815,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
 
         bool friendly_fire;
         int power;
-        if (!mons_atts_aligned(attitude, mons_attitude(*mon)))
+        if (!mons_atts_aligned(attitude, mon->attitude()))
         {
             friendly_fire = false;
             power = 2 * final * mon->get_experience_level() / preac;
@@ -5776,7 +5776,7 @@ bool bolt::ignores_monster(const monster* mon) const
          || origin_spell == SPELL_SHADOW_SHOT
          || origin_spell == SPELL_SHADOW_TORPOR
          || (origin_spell == SPELL_SHADOW_BALL && in_explosion_phase))
-        && mons_atts_aligned(attitude, mons_attitude(*mon)))
+        && mons_atts_aligned(attitude, mon->attitude()))
     {
         return true;
     }

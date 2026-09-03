@@ -754,7 +754,7 @@ static bool _is_chaos_upgradeable(const item_def &item)
 static bool _choose_chaos_upgrade(const monster& mon)
 {
     // Only choose monsters that will attack.
-    if (!mon.alive() || mons_attitude(mon) != ATT_HOSTILE
+    if (!mon.alive() || mon.attitude() != ATT_HOSTILE
         || mons_is_fleeing(mon))
     {
         return false;
@@ -2748,7 +2748,7 @@ static vector<monster*> _xom_find_weak_monsters(bool range)
         // No counting battlespheres or orbs of destruction. Try not to buff
         // the same target multiple times by checking the most prominent ones.
         // Fuzz the HD range to make it harder to deliberately plan around.
-        if (mons_attitude(**mi) == ATT_FRIENDLY
+        if (mi->attitude() == ATT_FRIENDLY
             && !mi->is_peripheral()
             && !(mi->has_ench(ENCH_HASTE) && mi->has_ench(ENCH_INVIS)
                  && mi->has_ench(ENCH_EMPOWERED_SPELLS) && mi->has_ench(ENCH_MIGHT))

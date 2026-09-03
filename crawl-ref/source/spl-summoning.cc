@@ -1985,7 +1985,6 @@ bool trigger_battlesphere(actor* agent)
     beam.flavour     = BEAM_MMISSILE;
     beam.pierce      = false;
     beam.target      = target->pos();
-    beam.attitude    = agent->temp_attitude();
     beam.set_agent(agent);
 
     coord_def fallback_pos;

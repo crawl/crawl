@@ -1702,7 +1702,7 @@ static bool _lrd_no_hostile_in_range(int pow, int range)
         const monster& mon = **mi;
         if (!you.aware_of(mon) || !mons_is_threatening(mon))
             continue;
-        if (mons_attitude(mon) != ATT_HOSTILE && !mon.has_ench(ENCH_FRENZIED))
+        if (mon.attitude() != ATT_HOSTILE && !mon.has_ench(ENCH_FRENZIED))
             continue;
         if (protected_from_spell(SPELL_LRD, mon, &you))
             continue;

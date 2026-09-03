@@ -3419,11 +3419,6 @@ bool mons_att_wont_attack(mon_attitude_type fr)
     return fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL || fr == ATT_MARIONETTE;
 }
 
-mon_attitude_type mons_attitude(const monster& m)
-{
-    return m.attitude();
-}
-
 bool mons_is_confused(const monster& m, bool class_too)
 {
     return (m.has_ench(ENCH_CONFUSION) || m.has_ench(ENCH_MAD) || m.sleepwalking())

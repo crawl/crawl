@@ -724,7 +724,7 @@ void _maybe_blood_hastes_allies()
     {
         // Try to look for valid allies that aren't already hasted,
         // and which would properly function when given haste.
-        if (mi->alive() && mons_attitude(**mi) == ATT_FRIENDLY
+        if (mi->alive() && mi->attitude() == ATT_FRIENDLY
             && !mi->berserk_or_frenzied() && you.can_see(**mi)
             && !mi->has_ench(ENCH_HASTE)
             && !mi->is_peripheral())

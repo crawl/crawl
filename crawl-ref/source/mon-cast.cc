@@ -2381,7 +2381,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     beam.thrower      = KILL_NON_ACTOR;
     beam.pierce       = false;
     beam.is_explosion = false;
-    beam.attitude     = mons_attitude(*mons);
+    beam.attitude     = mons->attitude();
 
     beam.range = spell_range(spell_cast, mons, power);
 
@@ -7470,7 +7470,7 @@ static bool _mons_cast_hellfire_mortar(monster& caster, actor& foe, int pow, boo
             magma_tracer.source = tracer.path_taken[j];
             magma_tracer.target = foe.pos();
             magma_tracer.source_id = caster.mid;
-            magma_tracer.attitude = mons_attitude(caster);
+            magma_tracer.attitude = caster.attitude();
             targeting_tracer magma_target_tracer;
             magma_tracer.foe_ratio = 100;
             magma_tracer.fire(magma_target_tracer);

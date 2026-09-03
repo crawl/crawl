@@ -4435,7 +4435,7 @@ int get_monster_tension(const monster& mons, god_type god)
     if (mons_is_irrelevant(&mons))
         return 0;
 
-    const mon_attitude_type att = mons_attitude(mons);
+    const mon_attitude_type att = mons.attitude();
 
     if (mons.helpless())
         return 0;

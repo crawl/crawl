@@ -1151,11 +1151,8 @@ bool should_cleave_into(const actor &attacker, const actor &defender)
         return true;
 
     // The player should only cleave into neutrals if they're frenzied.
-    if (attacker.is_player()
-        && mons_attitude(*defender.as_monster()) == ATT_NEUTRAL)
-    {
+    if (attacker.is_player() && defender.attitude() == ATT_NEUTRAL)
         return defender.as_monster()->has_ench(ENCH_FRENZIED);
-    }
 
     // The defender is either immune to the attack's efforts or not an enemy.
     return false;
