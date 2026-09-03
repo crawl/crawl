@@ -3711,8 +3711,8 @@ void maybe_apply_bane_to_monster(monster& mons)
     {
         mons.add_ench(mon_enchant(ENCH_WARDING, nullptr, INFINITE_DURATION));
 
-        // Cap the magnitude of number of things affects in extremely dense
-        // situations, preferring
+        // Cap the number of things affected in extremely dense situations,
+        // preferring those closest to the original monster.
         int max_affected = 8;
         for (distance_iterator di(mons.pos(), true, true, LOS_RADIUS); di; ++di)
         {
