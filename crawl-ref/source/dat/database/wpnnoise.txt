@@ -1308,6 +1308,9 @@ w:1
 # Terry Jacks
 @The_weapon@ sings, "We had joy, we had fun, we slew demons in the sun..."
 
+# "Little" Jimmy Dickens
+@The_weapon@ sings, "May the bird of paradise fly up your nose..."
+
 ############ real songs, low tension ############
 %%%%
 _real_song_low_tension_
