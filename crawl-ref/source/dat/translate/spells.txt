@@ -956,3 +956,474 @@ Stunning Burst
 nonexistent spell
 
 %%%%
+Acid Ball
+
+%%%%
+Agonising Touch
+
+%%%%
+Alistair's Walking Alembic
+
+%%%%
+Anguish
+
+%%%%
+Antimagic Gaze
+
+%%%%
+Arcjolt
+
+%%%%
+Awaken Armour
+
+%%%%
+Awaken Flesh
+
+%%%%
+Beckoning Gale
+
+%%%%
+Bestow Arms
+
+%%%%
+Bolster
+
+%%%%
+Bolt of Antimagic
+
+%%%%
+Bolt of Devastation
+
+%%%%
+Bolt of Flesh
+
+%%%%
+Bolt of Light
+
+%%%%
+Bombard
+
+%%%%
+Brain Bite
+
+%%%%
+Brom's Barrelling Boulder
+
+%%%%
+Cage of Brambles
+
+%%%%
+Call Lost Souls
+
+%%%%
+Caustic Breath
+
+%%%%
+Cigotuvi's Putrefaction
+
+%%%%
+Combustion Breath
+
+%%%%
+Conjure Living Spells
+
+%%%%
+Construct Spike Launcher
+
+%%%%
+Creeping Shadow
+
+%%%%
+Crystallising Shot
+
+%%%%
+Curse of Agony
+
+%%%%
+Deflect Missiles
+
+%%%%
+Detonation Catalyst
+
+%%%%
+Diamond Sawblades
+
+%%%%
+Dimensional Bullseye
+
+%%%%
+Diminish Spells
+
+%%%%
+Divine Armament
+
+%%%%
+Dominate Undead
+
+%%%%
+Doom Bolt
+
+%%%%
+Doomsaying
+
+%%%%
+Enfeeble
+
+%%%%
+Eringya's Surprising Crocodile
+
+%%%%
+Fastroot
+
+%%%%
+Flame Wave
+
+%%%%
+Flashing Balestra
+
+%%%%
+Fleetfoot
+
+%%%%
+Forge Blazeheart Golem
+
+%%%%
+Forge Lightning Spire
+
+%%%%
+Forge Monarch Bomb
+
+%%%%
+Forge Phalanx Beetle
+
+%%%%
+Fortress Blast
+
+%%%%
+Freezing Gust
+
+%%%%
+Fugue of the Fallen
+
+%%%%
+Fulsome Fusillade
+
+%%%%
+Funeral Dirge
+
+%%%%
+Galvanic Breath
+
+%%%%
+Gell's Gavotte
+
+%%%%
+Glacial Breath
+
+%%%%
+Gloom
+
+%%%%
+Golden Breath
+
+%%%%
+Grave Claw
+
+%%%%
+Greater Ensnare
+
+%%%%
+Hellfire Court
+
+%%%%
+Hellfire Mortar
+
+%%%%
+Hoarfrost Bullet
+
+%%%%
+Hoarfrost Cannonade
+
+%%%%
+Hunting Call
+
+%%%%
+Hurl Torchlight
+
+%%%%
+Ill Omen
+
+%%%%
+Infernal Servant
+
+%%%%
+Jinxbite
+
+%%%%
+Kinetic Grapnel
+
+%%%%
+Kiss of Death
+
+%%%%
+Landbreaker
+
+%%%%
+Launch Bomblet
+
+%%%%
+Launch Clockwork Bee
+
+%%%%
+Launch Sporangium
+
+%%%%
+Magma Barrage
+
+%%%%
+Magnavolt
+
+%%%%
+March of Sorrows
+
+%%%%
+Martyr's Knell
+
+%%%%
+Mass Regeneration
+
+%%%%
+Maxwell's Portable Piledriver
+
+%%%%
+Mercury Arrow
+
+%%%%
+Momentum Strike
+
+%%%%
+Mourning Wail
+
+%%%%
+Mud Breath
+
+%%%%
+Murky Legion
+
+%%%%
+Mutagenic Gaze
+
+%%%%
+Nazja's All-Purpose Tempering
+
+%%%%
+Nazja's Percussive Tempering
+
+%%%%
+Noxious Breath
+
+%%%%
+Nullifying Breath
+
+%%%%
+Oblivion Howl
+
+%%%%
+Ostracise
+
+%%%%
+Permafrost Eruption
+
+%%%%
+Phantom Blitz
+
+%%%%
+Phase Shift
+
+%%%%
+Planar Overlay
+
+%%%%
+Plasma Beam
+
+%%%%
+Platinum Paragon
+
+%%%%
+Prayer of Brilliance
+
+%%%%
+Pyre Arrow
+
+%%%%
+Pyrrhic Recollection
+
+%%%%
+Ravenous Swarm
+
+%%%%
+Rebounding Blaze
+
+%%%%
+Rebounding Chill
+
+%%%%
+Regenerate Other
+
+%%%%
+Rending Blade
+
+%%%%
+Rimeblight
+
+%%%%
+Rust Breath
+
+%%%%
+Scorch
+
+%%%%
+Sculpt Simulacrum
+
+%%%%
+Seismic Stomp
+
+%%%%
+Seracfall
+
+%%%%
+Shadow Beam
+
+%%%%
+Shadow Bind
+
+%%%%
+Shadow Draining
+
+%%%%
+Shadow Prism
+
+%%%%
+Shadow Puppet
+
+%%%%
+Shadow Shot
+
+%%%%
+Shadow Tempest
+
+%%%%
+Shadow Torpor
+
+%%%%
+Shadow Turret
+
+%%%%
+Shadowball
+
+%%%%
+Sheza's Dance
+
+%%%%
+Shred
+
+%%%%
+Sigil of Binding
+
+%%%%
+Sign of Ruin
+
+%%%%
+Siphon Essence
+
+%%%%
+Sleetstrike
+
+%%%%
+Sojourning Bolt
+
+%%%%
+Soul Splinter
+
+%%%%
+Spellspark Servitor
+
+%%%%
+Sphinx Sisters
+
+%%%%
+Splinterfrost Shell
+
+%%%%
+Stampede
+
+%%%%
+Steam Breath
+
+%%%%
+Sticks to Snakes
+
+%%%%
+Stoke Flames
+
+%%%%
+Summon Cactus Giant
+
+%%%%
+Summon Mortal Champion
+
+%%%%
+Summon Scorpions
+
+%%%%
+Summon Seismosaurus Egg
+
+%%%%
+Summon Sin Beast
+
+%%%%
+Summon Spiders
+
+%%%%
+Throw Bolas
+
+%%%%
+Touch of Paradox
+
+%%%%
+Tremorstone
+
+%%%%
+Ufetubi Swarm
+
+%%%%
+Unleash Destruction
+
+%%%%
+Vanquished Vanguard
+
+%%%%
+Vex
+
+%%%%
+Vhi's Electric Charge
+
+%%%%
+Vhi's Electrolunge
+
+%%%%
+Vitrify
+
+%%%%
+Vitrifying Gaze
+
+%%%%
+Volatile Blastmotes
+
+%%%%
+Warp Body
+
+%%%%
+Warp Space
+
+%%%%
