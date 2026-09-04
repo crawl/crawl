@@ -1999,6 +1999,14 @@ victims after a short delay. For particularly interesting morsels of adventurers
 such as yourself, this teleport will translocate those victims towards the
 caster's allies and bring the caster along for the ride, if possible.
 %%%%
+Sirocco spell
+
+Unleashes a gust of searingly hot wind, burning up to 3 adjacent creatures and
+blowing them backwards. Alas, the capricious winds left swirling around those
+creatures will also speed their movements for several turns afterward.
+
+This spell cannot be recast for several turns and moving will delay its recharge.
+%%%%
 Soul Splinter spell
 
 Attempts to force a tiny fragment of a living, holy, or demonic being's soul to

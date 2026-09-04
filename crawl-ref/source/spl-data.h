@@ -4772,6 +4772,17 @@ static const struct spell_desc spelldata[] =
 },
 
 
+{
+    SPELL_SIROCCO, "Sirocco",
+    spschool::fire | spschool::air,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::destructive,
+    2,
+    50,
+    1, 1,
+    0,
+    TILEG_SIROCCO,
+},
+
 #if TAG_MAJOR_VERSION == 34
 #define AXED_SPELL(tag, name) \
     { tag, name, spschool::none, spflag::none, 7, 0, -1, -1, 0, TILEG_ERROR },

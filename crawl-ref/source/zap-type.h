@@ -205,5 +205,6 @@ enum zap_type
     ZAP_DRAGON_VEIN_AIR,
     ZAP_DRAGON_VEIN_EARTH,
     ZAP_ICE_THORNS,
+    ZAP_SIROCCO,
     NUM_ZAPS
 };

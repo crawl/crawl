@@ -3960,6 +3960,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
     case TILE_BOLT_HARPOON_SHOT:
     case TILE_BOLT_METAL_SPLINTERS:
     case TILE_BOLT_FROSTFIRE:
+    case TILE_BOLT_SIROCCO:
     case TILE_MI_DART0:
     case TILE_MI_JAVELIN0:
     case TILE_MI_THROWING_NET0:

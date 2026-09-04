@@ -123,7 +123,7 @@ vector<coord_def> get_ignition_blast_sources(const actor *agent,
                                              bool tracer = false);
 spret cast_ignition(const actor *caster, int pow, bool fail);
 
-spret cast_starburst(int pow, bool fail, bool tracer=false);
+spret cast_multibeam(spell_type spell, const coord_def& target, int pow, bool fail);
 
 void seeker_attack(monster& seeker, actor& target,
                    coord_def attack_pos = coord_def());

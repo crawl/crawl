@@ -266,6 +266,7 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_POISON_VULN] = 0;
         you.duration[DUR_SLIMIFYING] = 0;
         you.duration[DUR_ANTISWIFT] = 0;
+        you.duration[DUR_SIROCCO_COOLDOWN] = 0;
         you.attribute[ATTR_DOOM] = 0;
         you.attribute[ATTR_OSTRACISM] = 0;
         delete_all_temp_mutations("Super heal");

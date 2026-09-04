@@ -1620,6 +1620,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you are already charging a Fortress Blast.";
         break;
 
+    case SPELL_SIROCCO:
+        if (temp && you.duration[DUR_SIROCCO_COOLDOWN])
+            return "you need to wait for the hot winds to gather around you again.";
+        break;
+
     default:
         break;
     }
@@ -1720,6 +1725,17 @@ static bool _lrd_no_hostile_in_range(int pow, int range)
     return true;
 }
 
+static bool _multibeam_target_in_range(spell_type spell)
+{
+    bolt beam(you, spell, 100);
+    beam.target = you.pos() + coord_def(1, 0);
+    multi_beam tracer_beam(beam, MULTI_BEAM_FAN, 8);
+
+    targeting_tracer tracer = tracer_beam.trace();
+
+    return tracer.foe_info.count > 0;
+}
+
 bool spell_no_hostile_in_range(spell_type spell)
 {
     // sanity check: various things below will be prone to crash in these cases.
@@ -1806,7 +1822,7 @@ bool spell_no_hostile_in_range(spell_type spell)
         return cast_ignite_poison(&you, -1, false, true) == spret::abort;
 
     case SPELL_STARBURST:
-        return cast_starburst(-1, false, true) == spret::abort;
+        return !_multibeam_target_in_range(spell);
 
     case SPELL_HAILSTORM:
         return cast_hailstorm(-1, false, true) == spret::abort;

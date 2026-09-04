@@ -38,8 +38,8 @@ static const vector<spell_type> spellbook_templates[] =
 {
 
 {   // Book of Minor Magic
-    SPELL_MAGIC_DART,
     SPELL_ICE_THORNS,
+    SPELL_SIROCCO,
     SPELL_BLINK,
     SPELL_CALL_IMP,
 },

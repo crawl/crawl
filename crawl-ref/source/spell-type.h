@@ -667,5 +667,6 @@ enum spell_type : int
     SPELL_DRAGON_VEIN_AIR,
     SPELL_DRAGON_VEIN_EARTH,
     SPELL_ICE_THORNS,
+    SPELL_SIROCCO,
     NUM_SPELLS
 };

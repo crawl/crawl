@@ -805,6 +805,10 @@ static const duration_def duration_data[] =
     { DUR_STAMPEDE, WHITE, "Stampede", "", "", "", D_NO_FLAGS, {{ "You stop stampeding."}}},
     { DUR_SALVO, LIGHTBLUE, "Salvo", "", "", "", D_NO_FLAGS},
     { DUR_TAILWIND, LIGHTBLUE, "Tailwind", "ready to rush forward", "tailwind", "", D_NO_FLAGS, {{"Your tailwind grows less brisk."}}},
+    { DUR_SIROCCO_COOLDOWN,
+        YELLOW, "-Sirocco",
+        "on sirocco cooldown", "sirocco cooldown",
+        "You are unable to cast Sirocco.", D_COOLDOWN, {{"You feel hot winds gather around you again."}}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

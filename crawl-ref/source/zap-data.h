@@ -2908,4 +2908,20 @@ _mon_hex_zap(ZAP_ILL_OMEN, BEAM_ILL_OMEN),
     false,
 },
 
+{
+    ZAP_SIROCCO,
+    "scorching wind",
+    new dicedef_calculator<2, 6, 1, 12>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    nullptr,
+    nullptr,
+    WHITE,
+    false,
+    BEAM_LAVA,
+    DCHAR_FIRED_BOLT,
+    true,
+    false,
+    TILE_BOLT_SIROCCO,
+},
+
 };

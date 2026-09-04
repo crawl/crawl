@@ -404,6 +404,15 @@ jade_earth_charge BOLT_JADE_CHARGE_EARTH
 jade_fire_charge BOLT_JADE_CHARGE_FIRE
 jade_ice_charge BOLT_JADE_CHARGE_ICE
 
+sirocco0 BOLT_SIROCCO
+sirocco1
+sirocco2
+sirocco3
+sirocco4
+sirocco5
+sirocco6
+sirocco7
+
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR
 indicator_2

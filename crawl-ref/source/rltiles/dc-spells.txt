@@ -8,6 +8,7 @@ magnavolt MAGNAVOLT
 maxwells MAXWELLS_COUPLING
 shock SHOCK
 silence SILENCE
+sirocco SIROCCO
 static_discharge STATIC_DISCHARGE
 swiftness SWIFTNESS
 

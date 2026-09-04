@@ -4082,21 +4082,21 @@ spret cast_glaciate(actor *caster, int pow, coord_def aim)
     return spret::success;
 }
 
-spret cast_starburst(int pow, bool fail, bool is_tracer)
+spret cast_multibeam(spell_type spell, const coord_def& target, int pow, bool fail)
 {
-    bolt beam(you, SPELL_STARBURST, pow);
-    beam.target       = you.pos() + coord_def(1, 0);
-    beam.draw_delay   = 40;
+    bolt beam(you, spell, pow);
+    beam.target = target;
+    beam.draw_delay = 40;
 
-    multi_beam multi(beam, MULTI_BEAM_FAN, 8);
+    int beam_width = 1;
+    multi_beam_shape shape = MULTI_BEAM_FAN;
 
-    if (is_tracer)
-    {
-        targeting_tracer tracer = multi.trace();
-        if (tracer.foe_info.count > 0)
-            return spret::success;
-        return spret::abort;
-    }
+    if (spell == SPELL_STARBURST)
+        beam_width = 8;
+    else if (spell == SPELL_SIROCCO)
+        beam_width = 3;
+
+    multi_beam multi(beam, shape, beam_width);
 
     player_beam_tracer tracer;
     multi.trace(tracer);
@@ -4107,9 +4107,11 @@ spret cast_starburst(int pow, bool fail, bool is_tracer)
 
     multi.fire();
 
+    if (spell == SPELL_SIROCCO)
+        you.duration[DUR_SIROCCO_COOLDOWN] = random_range(40, 50);
+
     return spret::success;
 }
-
 
 dice_def jinxbite_damage(int pow, bool random)
 {

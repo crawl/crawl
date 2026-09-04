@@ -1266,6 +1266,8 @@ void move_player_action(coord_def move)
             you.duration[DUR_NO_HOP] += you.time_taken;
         if (you.duration[DUR_MESMERISM_COOLDOWN])
             you.duration[DUR_MESMERISM_COOLDOWN] += you.time_taken;
+        if (you.duration[DUR_SIROCCO_COOLDOWN])
+            you.duration[DUR_SIROCCO_COOLDOWN] += you.time_taken;
 
         if (!did_attack && (num_steps > 1 || did_stampede) && you.has_mutation(MUT_STAMPEDE))
             did_attack |= do_west_wind_shot();

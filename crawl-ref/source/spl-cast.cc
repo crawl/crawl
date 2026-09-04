@@ -1387,6 +1387,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_STARBURST:
         return make_unique<targeter_multibeam>(&you, SPELL_STARBURST, range,
                                                MULTI_BEAM_FAN, 8, pow, false);
+    case SPELL_SIROCCO:
+        return make_unique<targeter_multibeam>(&you, SPELL_SIROCCO, range,
+                                               MULTI_BEAM_FAN, 3, pow, false);
     case SPELL_IRRADIATE:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
     case SPELL_DISCHARGE: // not entirely accurate...maybe should highlight
@@ -2803,7 +2806,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return electric_charge(you, powc, fail, beam.target);
 
     case SPELL_STARBURST:
-        return cast_starburst(powc, fail);
+    case SPELL_SIROCCO:
+        return cast_multibeam(spell, beam.target, powc, fail);
 
     case SPELL_HAILSTORM:
         return cast_hailstorm(powc, fail);

@@ -47,6 +47,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_SHRED, ZAP_SHRED },
     { SPELL_MAGMA_BARRAGE, ZAP_MAGMA_BARRAGE },
     { SPELL_RUST_BREATH, ZAP_RUST_BREATH },
+    { SPELL_SIROCCO, ZAP_SIROCCO, },
     // A minimum damage indicator for the UI
     { SPELL_DRAGON_VEINS, ZAP_DRAGON_VEIN_AIR },
     { SPELL_DRAGON_VEIN_FIRE, ZAP_DRAGON_VEIN_FIRE },
