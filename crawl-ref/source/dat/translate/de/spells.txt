@@ -956,3 +956,474 @@ Betäubende Explosion
 nonexistent spell
 nicht vorhandener Zauber
 %%%%
+Acid Ball
+Säurekugel
+%%%%
+Agonising Touch
+Qualvolle Berührung
+%%%%
+Alistair's Walking Alembic
+Alistairs wandelnder Alambik
+%%%%
+Anguish
+Leid
+%%%%
+Antimagic Gaze
+Antimagischer Blick
+%%%%
+Arcjolt
+Lichtbogenstoß
+%%%%
+Awaken Armour
+Rüstung erwecken
+%%%%
+Awaken Flesh
+Fleisch erwecken
+%%%%
+Beckoning Gale
+Lockender Wind
+%%%%
+Bestow Arms
+Waffen verleihen
+%%%%
+Bolster
+Verstärken
+%%%%
+Bolt of Antimagic
+Antimagischer Strahl
+%%%%
+Bolt of Devastation
+Verwüstender Strahl
+%%%%
+Bolt of Flesh
+Fleischstrahl
+%%%%
+Bolt of Light
+Lichtstrahl
+%%%%
+Bombard
+Bombardieren
+%%%%
+Brain Bite
+Gehirnbiss
+%%%%
+Brom's Barrelling Boulder
+Broms rollender Felsbrocken
+%%%%
+Cage of Brambles
+Dornenkäfig
+%%%%
+Call Lost Souls
+Verlorene Seelen rufen
+%%%%
+Caustic Breath
+Ätzender Odem
+%%%%
+Cigotuvi's Putrefaction
+Cigotuvis Verwesung
+%%%%
+Combustion Breath
+Verbrennender Odem
+%%%%
+Conjure Living Spells
+Lebende Zauber beschwören
+%%%%
+Construct Spike Launcher
+Stachelwerfer bauen
+%%%%
+Creeping Shadow
+Schleichender Schatten
+%%%%
+Crystallising Shot
+Kristallisierender Schuss
+%%%%
+Curse of Agony
+Fluch der Agonie
+%%%%
+Deflect Missiles
+Geschosse ablenken
+%%%%
+Detonation Catalyst
+Detonationskatalysator
+%%%%
+Diamond Sawblades
+Diamant-Sägeblätter
+%%%%
+Dimensional Bullseye
+Dimensionaler Volltreffer
+%%%%
+Diminish Spells
+Zauber abschwächen
+%%%%
+Divine Armament
+Göttliche Bewaffnung
+%%%%
+Dominate Undead
+Untote beherrschen
+%%%%
+Doom Bolt
+Verhängnisstrahl
+%%%%
+Doomsaying
+Unheilsprophezeiung
+%%%%
+Enfeeble
+Schwächen
+%%%%
+Eringya's Surprising Crocodile
+Eringyas überraschendes Krokodil
+%%%%
+Fastroot
+Festwurzeln
+%%%%
+Flame Wave
+Flammenwelle
+%%%%
+Flashing Balestra
+Blitzende Balestra
+%%%%
+Fleetfoot
+Flinkfüße
+%%%%
+Forge Blazeheart Golem
+Blazeheart-Golem schmieden
+%%%%
+Forge Lightning Spire
+Blitzturm schmieden
+%%%%
+Forge Monarch Bomb
+Monarch-Bombe schmieden
+%%%%
+Forge Phalanx Beetle
+Phalanxkäfer schmieden
+%%%%
+Fortress Blast
+Festungsschlag
+%%%%
+Freezing Gust
+Eisiger Windstoß
+%%%%
+Fugue of the Fallen
+Fuge der Gefallenen
+%%%%
+Fulsome Fusillade
+Überschwängliche Salve
+%%%%
+Funeral Dirge
+Klagelied
+%%%%
+Galvanic Breath
+Galvanischer Odem
+%%%%
+Gell's Gavotte
+Gells Gavotte
+%%%%
+Glacial Breath
+Gletscherodem
+%%%%
+Gloom
+Düsternis
+%%%%
+Golden Breath
+Goldener Odem
+%%%%
+Grave Claw
+Grabklaue
+%%%%
+Greater Ensnare
+Große Verstrickung
+%%%%
+Hellfire Court
+Höllenfeuerhof
+%%%%
+Hellfire Mortar
+Höllenfeuer-Mörser
+%%%%
+Hoarfrost Bullet
+Raureif-Geschoss
+%%%%
+Hoarfrost Cannonade
+Raureif-Kanonade
+%%%%
+Hunting Call
+Jagdruf
+%%%%
+Hurl Torchlight
+Fackelschein werfen
+%%%%
+Ill Omen
+Schlechtes Omen
+%%%%
+Infernal Servant
+Höllischer Diener
+%%%%
+Jinxbite
+Unglücksbiss
+%%%%
+Kinetic Grapnel
+Kinetischer Enterhaken
+%%%%
+Kiss of Death
+Kuss des Todes
+%%%%
+Landbreaker
+Landbrecher
+%%%%
+Launch Bomblet
+Bomblet starten
+%%%%
+Launch Clockwork Bee
+Uhrwerk-Biene starten
+%%%%
+Launch Sporangium
+Sporangium auswerfen
+%%%%
+Magma Barrage
+Magma-Trommelfeuer
+%%%%
+Magnavolt
+Magnavolt
+%%%%
+March of Sorrows
+Marsch der Leiden
+%%%%
+Martyr's Knell
+Märtyrerglockenschlag
+%%%%
+Mass Regeneration
+Massenregeneration
+%%%%
+Maxwell's Portable Piledriver
+Maxwells tragbare Pfahlramme
+%%%%
+Mercury Arrow
+Quecksilberpfeil
+%%%%
+Momentum Strike
+Impulsschlag
+%%%%
+Mourning Wail
+Trauergeheul
+%%%%
+Mud Breath
+Schlammodem
+%%%%
+Murky Legion
+Düstere Legion
+%%%%
+Mutagenic Gaze
+Mutagener Blick
+%%%%
+Nazja's All-Purpose Tempering
+Nazjas Allzweck-Härtung
+%%%%
+Nazja's Percussive Tempering
+Nazjas Perkussive Härtung
+%%%%
+Noxious Breath
+Schädlicher Odem
+%%%%
+Nullifying Breath
+Nullifizierender Odem
+%%%%
+Oblivion Howl
+Schrei der Verwüstung
+%%%%
+Ostracise
+Ausgrenzung
+%%%%
+Permafrost Eruption
+Permafrost-Eruption
+%%%%
+Phantom Blitz
+Phantom-Blitz
+%%%%
+Phase Shift
+Phasenverschiebung
+%%%%
+Planar Overlay
+Ebenenüberlagerung
+%%%%
+Plasma Beam
+Plasmastrahl
+%%%%
+Platinum Paragon
+Platin-Parademodell
+%%%%
+Prayer of Brilliance
+Gebet der Brillanz
+%%%%
+Pyre Arrow
+Scheiterhaufenpfeil
+%%%%
+Pyrrhic Recollection
+Pyrrhuserinnerung
+%%%%
+Ravenous Swarm
+Gefräßiger Schwarm
+%%%%
+Rebounding Blaze
+Zurückprallende Flamme
+%%%%
+Rebounding Chill
+Zurückprallende Kälte
+%%%%
+Regenerate Other
+Anderen regenerieren
+%%%%
+Rending Blade
+Zerreißende Klinge
+%%%%
+Rimeblight
+Raureif-Fäule
+%%%%
+Rust Breath
+Rostodem
+%%%%
+Scorch
+Versengen
+%%%%
+Sculpt Simulacrum
+Simulacrum formen
+%%%%
+Seismic Stomp
+Seismisches Stampfen
+%%%%
+Seracfall
+Séracfall
+%%%%
+Shadow Beam
+Schattenstrahl
+%%%%
+Shadow Bind
+Schattenbindung
+%%%%
+Shadow Draining
+Schattenentzug
+%%%%
+Shadow Prism
+Schattenprisma
+%%%%
+Shadow Puppet
+Schattenpuppe
+%%%%
+Shadow Shot
+Schattenschuss
+%%%%
+Shadow Tempest
+Schattensturm
+%%%%
+Shadow Torpor
+Schattenstarre
+%%%%
+Shadow Turret
+Schattenturm
+%%%%
+Shadowball
+Schattenball
+%%%%
+Sheza's Dance
+Shezas Tanz
+%%%%
+Shred
+Zerfetzen
+%%%%
+Sigil of Binding
+Signum der Bindung
+%%%%
+Sign of Ruin
+Zeichen des Untergangs
+%%%%
+Siphon Essence
+Essenz absaugen
+%%%%
+Sleetstrike
+Graupelschlag
+%%%%
+Sojourning Bolt
+Aufhaltender Strahl
+%%%%
+Soul Splinter
+Seelensplitter
+%%%%
+Spellspark Servitor
+Zauberfunken-Diener
+%%%%
+Sphinx Sisters
+Sphinx-Schwestern
+%%%%
+Splinterfrost Shell
+Splitterfrost-Hülle
+%%%%
+Stampede
+Stampede
+%%%%
+Steam Breath
+Dampfodem
+%%%%
+Sticks to Snakes
+Stöcke zu Schlangen
+%%%%
+Stoke Flames
+Flammen schüren
+%%%%
+Summon Cactus Giant
+Kaktusriesen beschwören
+%%%%
+Summon Mortal Champion
+Sterblichen Champion beschwören
+%%%%
+Summon Scorpions
+Skorpione beschwören
+%%%%
+Summon Seismosaurus Egg
+Seismosaurus-Ei beschwören
+%%%%
+Summon Sin Beast
+Sündenbestie beschwören
+%%%%
+Summon Spiders
+Spinnen beschwören
+%%%%
+Throw Bolas
+Bolas werfen
+%%%%
+Touch of Paradox
+Berührung des Paradoxes
+%%%%
+Tremorstone
+Erdbebenstein
+%%%%
+Ufetubi Swarm
+Ufetubi-Schwarm
+%%%%
+Unleash Destruction
+Zerstörung entfesseln
+%%%%
+Vanquished Vanguard
+Besiegte Vorhut
+%%%%
+Vex
+Ärgern
+%%%%
+Vhi's Electric Charge
+Vhis elektrischer Sturmangriff
+%%%%
+Vhi's Electrolunge
+Vhis elektrischer Sprung
+%%%%
+Vitrify
+Verglasen
+%%%%
+Vitrifying Gaze
+Verglasender Blick
+%%%%
+Volatile Blastmotes
+Flüchtige Sprengpartikel
+%%%%
+Warp Body
+Körper verzerren
+%%%%
+Warp Space
+Raum verzerren
+%%%%
