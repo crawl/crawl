@@ -97,7 +97,9 @@ action will cancel the Dig status.
 Shaft Self ability
 
 Sends you to a random position one to three floors down, as if you jumped into
-a shaft trap. It takes some time to dig the shaft.
+a shaft trap. It takes some time to dig the shaft, and requires solid, dry
+ground beneath you. You cannot shaft yourself while standing on stairs or
+portals or while in watery terrain.
 %%%%
 Evoke Blink ability
 
