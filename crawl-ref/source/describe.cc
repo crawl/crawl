@@ -1582,7 +1582,7 @@ static string _staff_damage_type_string(stave_type staff)
     case STAFF_ALCHEMY:
         return "poison";
     case STAFF_CONJURATION:
-        return "conj";
+        return "energy";
     default:
         return "buggy";
     }
@@ -1614,11 +1614,13 @@ static string _player_staff_damage_string(const item_def &item)
     }
 
     return make_stringf("At your current Evocations and %s skills, it has a "
-                        "%d%% chance to deal up to %d additional %s damage.",
+                        "%d%% chance to deal up to %d additional %s damage %s.",
                         skill_name(staff_skill(staff)),
                         proc_chance,
                         maxdam,
-                        _staff_damage_type_string(staff).c_str());
+                        _staff_damage_type_string(staff).c_str(),
+                        staff == STAFF_EARTH ? "that is resisted by flying"
+                        : "");
 }
 
 static void _append_weapon_stats(string &description, const item_def &item)
