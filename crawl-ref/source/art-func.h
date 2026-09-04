@@ -1853,8 +1853,23 @@ static void _STAGEHANDS_SWORD_melee_effects(item_def* /*weapon*/, actor* attacke
 }
 
 /////////////////////////////////////////////////////
+static void _HANAS_SCIMITAR_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
+{
+    if (!unmeld)
+    {
+        if (you.has_mutation(MUT_INNATE_CASTER))
+            _equip_mpr(show_msgs, "You feel unable to tap into the sword's magical power.");
+        else if (!you.skill(SK_SPELLCASTING))
+            _equip_mpr(show_msgs, "You feel strangely lacking in power.");
+        else if (you.magic_points * 100 >= you.max_magic_points * 80)
+            _equip_mpr(show_msgs, "You feel powerful.");
+        else
+            _equip_mpr(show_msgs, "You feel potentially powerful.");
+    }
+}
+
 static void _HANAS_SCIMITAR_unequip(item_def */*item*/, bool *show_msgs)
 {
-    mpr("You feel a bit dim.");
+    _equip_mpr(show_msgs,"You feel a bit dim.");
     you.diminish(&you, 10);
 }

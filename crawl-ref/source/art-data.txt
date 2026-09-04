@@ -2070,8 +2070,8 @@ TILE:    urand_hana_scimitar
 TILE_EQ: HANA
 BRAND:   SPWPN_VALOUR
 MP:      +6
-DESCRIP: ValArchmagi: Enhances your magic if you have at least 66% MP remaining
- (after spending MP)
+DESCRIP: ValArchmagi: Enhances your magic if you have at least 80% of your
+ maximum magical power remaining (before spending MP to cast the spell).
 +^Dim: Unequipping it temporarily diminishes your spells.
 
 # This entry must always be last.
