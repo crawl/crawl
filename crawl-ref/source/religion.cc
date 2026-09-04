@@ -3488,8 +3488,13 @@ void set_god_ability_slots()
     for (const god_power& power : get_all_god_powers()[you.religion])
     {
         if (power.abil != ABIL_NON_ABILITY
-            // hep ident goes to G, so don't take b for it (hack alert)
+            // Skip abilities that get assigned letters elsewhere. We only
+            // need to do this for abilities that are not the last powers
+            // in their gods list.
             && power.abil != ABIL_HEPLIAKLQANA_IDENTITY
+            && power.abil != ABIL_HEPLIAKLQANA_TYPE_KNIGHT
+            && power.abil != ABIL_HEPLIAKLQANA_TYPE_ELEMENTALIST
+            && power.abil != ABIL_HEPLIAKLQANA_TYPE_HEXER
             && find(begin(you.ability_letter_table),
                     end(you.ability_letter_table), power.abil)
                == end(you.ability_letter_table)
