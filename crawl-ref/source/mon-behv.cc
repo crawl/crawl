@@ -601,7 +601,11 @@ void handle_behaviour(monster* mon)
                     else if (!foepos.origin() && you.see_cell(foepos)
                              && afoe->visible_to(mon))
                     {
-                        try_pathfind(mon);
+                        // If no path exists to the target, at least try to move
+                        // as close as possible, instead of otherwise just
+                        // freezing in place, glaring at their enemy.
+                        if (!try_pathfind(mon))
+                            mon->target = foepos;
                     }
                     else
                     {
