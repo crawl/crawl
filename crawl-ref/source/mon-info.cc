@@ -1790,7 +1790,7 @@ int monster_info::reach_range(bool items) const
             const int wpn_reach = weapon_reach(*weapon);
             for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
                 if (attack[i].type == AT_HIT || attack[i].type == AT_WEAP_ONLY)
-                    range = max(range, attack[i].reach + wpn_reach);
+                    range = max(range, attack[i].reach + wpn_reach - 1);
         }
     }
 
