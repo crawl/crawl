@@ -929,13 +929,9 @@ void monster::unequip_message(item_def& item) const
  */
 void monster::do_unequip_effects(item_def &item)
 {
-    if (item.base_type == OBJ_WEAPONS
-        && get_weapon_brand(item) == SPWPN_SPECTRAL)
-    {
-        monster *spectral_weapon = find_spectral_weapon(item);
-        if (spectral_weapon)
-            end_spectral_weapon(spectral_weapon, false);
-    }
+    monster *spectral_weapon = find_spectral_weapon(item);
+    if (spectral_weapon)
+        end_spectral_weapon(spectral_weapon, false);
 
     if (item_affects_agrid(item))
         invalidate_agrid();
