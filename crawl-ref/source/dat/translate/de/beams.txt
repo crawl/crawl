@@ -160,7 +160,7 @@ the bolt of dispelling energy
 {m}der Strahl entzaubernder Energie
 %%%%
 the splash of acid
-{m}der Säurespritzer
+{m}der Säurenebel
 %%%%
 the agony
 {f}die Agonie
@@ -363,6 +363,222 @@ the blast of sapphire shards
 %%%%
 the blast of bone shards
 {f}die Explosion aus Knochensplittern
+%%%%
+the acid spray
+{m}der Säurespritzer
+%%%%
+the arc of electricity
+{m}der Lichtbogen
+%%%%
+the ball of acid
+{m}der Säureball
+%%%%
+the ball of mud
+{m}der Schlammball
+%%%%
+the beam of energy
+{m}der Energiestrahl
+%%%%
+the beckoning whirlwind
+{m}der lockende Wirbelwind
+%%%%
+the billowing rust
+{m}der wogende Rost
+%%%%
+the blast
+{f}die Explosion
+%%%%
+the blazing flames
+{f}die lodernden Flammen
+%%%%
+the blinding ray
+{m}der blendende Strahl
+%%%%
+the blood arrow
+{m}der Blutpfeil
+%%%%
+the bolt of antimagic
+{m}der Strahl der Antimagie
+%%%%
+the bolt of devastation
+{m}der Strahl der Verwüstung
+%%%%
+the bolt of flesh
+{m}der Fleischstrahl
+%%%%
+the bolt of light
+{m}der Lichtstrahl
+%%%%
+the concentrated momentum
+{m}der konzentrierte Impuls
+%%%%
+the concussive blast
+{f}die erschütternde Explosion
+%%%%
+the condensed magic
+{f}die verdichtete Magie
+%%%%
+the creeping shadow
+{m}der schleichende Schatten
+%%%%
+the crushing gravity
+{f}die erdrückende Schwerkraft
+%%%%
+the crystallising shot
+{m}der kristallisierende Schuss
+%%%%
+the curse of agony
+{m}der Fluch der Qual
+%%%%
+the destabilizing rupture
+{m}der destabilisierende Riss
+%%%%
+the detonation
+{f}die Detonation
+%%%%
+the dizzying spores
+{pl}die verwirrenden Sporen
+%%%%
+the doom bolt
+{m}der Verhängnisstrahl
+%%%%
+the explosive embers
+{f}die explosive Glut
+%%%%
+the falling rubble
+{f}die herabstürzenden Trümmer
+%%%%
+the fiery plasma
+{n}das feurige Plasma
+%%%%
+the flame wave
+{f}die Flammenwelle
+%%%%
+the flashing steel
+{m}der blitzende Stahl
+%%%%
+the fortress blast
+{f}die Festungsschlag
+%%%%
+the fragment of death
+{n}das Fragment des Todes
+%%%%
+the freeze
+{n}das Erfrieren
+%%%%
+the freezing gust
+{f}die eisige Böe
+%%%%
+the glacial breath
+{m}der eisige Odem
+%%%%
+the glob of mercury
+{m}der Quecksilberklumpen
+%%%%
+the gout of destruction
+{f}die Welle der Zerstörung
+%%%%
+the grasping water
+{n}das greifende Wasser
+%%%%
+the icy flash freeze
+{m}der eisige Schockfrost
+%%%%
+the jagged bones
+{f}die zerklüfteten Knochen
+%%%%
+the kinetic grapnel
+{m}der kinetische Enterhaken
+%%%%
+the malign ofering
+{n}die bösartige Opfergabe
+%%%%
+the mass of rock
+{f}die Felsmasse
+%%%%
+the noxious fumes
+{f}die schädlichen Dämpfe
+%%%%
+the nullifying energy
+{f}die vernichtende Energie
+%%%%
+the phantom echo
+{n}das Phantom-Echo
+%%%%
+the piercing cold
+{f}die durchdringende Kälte
+%%%%
+the pyre arrow
+{m}der Scheiterhaufenpfeil
+%%%%
+the ray of shadow
+{m}der Schattenstrahl
+%%%%
+the rebounding bolt of cold
+{m}der zurückspringende Kältestrahl
+%%%%
+the rebounding bolt of fire
+{m}der zurückspringende Feuertrahl
+%%%%
+the rocky spike
+{m}der felsige Stachel
+%%%%
+the rupture
+{m}der Riss
+%%%%
+the salvo of frigid ice
+{f}die frostige Eissalve
+%%%%
+the salvo of icicles
+{f}die Eiszapfensalve
+%%%%
+the seething chaos
+{n}das brodelnde Chaos
+%%%%
+the seismic shockwave
+{f}die seismische Schockwelle
+%%%%
+the shadow bullet
+{n}das Schattengeschoss
+%%%%
+the shadowball
+{m}der Schattenball
+%%%%
+the shadowy lightning
+{m}der schattenhafte Blitz
+%%%%
+the shard of frigid ice
+{m}der Splitter aus frostigem Eis
+%%%%
+the shard of hardened shadow
+{m}der Splitter aus gehärtetem Schatten
+%%%%
+the shards of blighted ice
+{pl}die Splitter aus verdorbenem Eis
+%%%%
+the shockwave
+{f}die Schockwelle
+%%%%
+the shred
+{m}der Fetzen
+%%%%
+the surge of chaos
+{f}die Chaoswelle
+%%%%
+the swarm of vampire bats
+{m}der Schwarm von Vampirfledermäusen
+%%%%
+the umbral torchlight
+{n}das Schattenlicht der Fackel
+%%%%
+the volatile concoction
+{f}die explosive Mixtur
+%%%%
+the wave of devouring shadow
+{f}die Welle des verschlingenden Schattens
+%%%%
+the whirling bolas
+{f}die wirbelnden Bolas
 %%%%
 
 # Qazlal Upheaval
