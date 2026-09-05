@@ -1024,14 +1024,6 @@ int attack::calc_damage()
         damage = player_apply_misc_modifiers(damage);
         damage = player_apply_slaying_bonuses(damage, false);
         damage = player_stab(damage);
-        // A failed stab may have awakened monsters, but that could have
-        // caused the defender to cease to exist (e.g. pacified monsters on a
-        // stair).
-        // FIXME: the correct thing to do would be either to delay the call to
-        // alert_nearby_monsters (currently in player_stab) until later
-        // in the attack; or to avoid removing monsters in handle_behaviour.
-        if (!defender->alive())
-            return 0;
         damage = player_apply_final_multipliers(damage);
         damage = apply_defender_ac(damage);
         damage = player_apply_postac_multipliers(damage);
