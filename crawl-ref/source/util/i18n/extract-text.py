@@ -334,6 +334,12 @@ def dump_lines(orig_filename, lines):
 # String extraction functions
 ################################
 
+def read_file_lines(filename):
+    infile = open(filename)
+    data = infile.read()
+    infile.close()
+    return data.splitlines()
+
 # remove comments and optionally whitespace
 def get_preprocessed_cpp_lines(filename, strip_whitespace=True):
     with open(filename, 'r') as f:
@@ -527,12 +533,9 @@ def extract_section_name(line):
 
 # process art-data.txt
 def process_art_data_txt():
-    infile = open('art-data.txt')
-    data = infile.read()
-    infile.close()
-
+    lines = read_file_lines('art-data.txt')
     result = []
-    lines = data.splitlines()
+
     name = ''
     desc = None
     brand_desc = None
@@ -598,8 +601,452 @@ def process_art_data_txt():
 def process_yaml_file(filename):
     return {}
 
-def process_des_or_lua_file(filename):
-    return {}
+def is_des_shop_rebadge_line(line):
+    if re.search(r'\bshop\b', line):
+        if "type:" in line or "suffix:" in line:
+            return True
+    elif "type:" in line and "suffix:" in line:
+        return True
+    return False
+
+def is_des_rebadge_line(line):
+    if re.search(r'\bname:', line):
+        return True
+    if is_des_shop_rebadge_line(line):
+        return True
+    return False
+
+# where a name is overriden in a .des/.lua file, extract the new name and inflections
+def extract_strings_from_des_rebadge_line(line):
+
+    strings = []
+
+    # multiple monsters can be on the same line separated by slashes or commas
+    # process them separately
+    if '/' in line or ',' in line:
+        lines = re.split('[/,]', line)
+        for l in lines:
+            strings.extend(extract_strings_from_des_rebadge_line(l.strip()))
+        return strings
+
+    if not is_des_rebadge_line(line):
+        return []
+
+    # remove inventory
+    line = re.sub(r';.*$', '', line)
+
+    line = re.sub(r'.*=\s*', '', line)
+    line = re.sub(r'K?MONS:\s*', '', line)
+    line = re.sub(r'K?FEAT:\s*', '', line)
+    line = re.sub(r'spells:[^ ]+', '', line)
+
+    #sys.stderr.write("LINE: " + line + "\n")
+
+    if is_des_shop_rebadge_line(line):
+        # Handle shop names
+        line = re.sub(r'\s*\.\.\s*([a-zA-Z_]+)\s*\.\.', r'@\1@', line)
+        line = line.replace('@smithy@', '@owner@')
+
+        # extract owner name
+        owner = "@owner@"
+        m = re.search(r'(?<=\bname:)[^ \)\}]+', line)
+        if m:
+            owner = m.group()
+
+        # extract shop type
+        shop_type = None
+        m = re.search(r'(?<=\btype:)[^ \)\}]+', line)
+        if m:
+            shop_type = m.group()
+
+        # extract shop suffix
+        suffix = None
+        m = re.search(r'(?<=\bsuffix:)[^ \)\}]+', line)
+        if m:
+            suffix = m.group()
+
+        if not shop_type:
+            return []
+
+        name = owner + "'s " + shop_type
+        if suffix:
+            name += " " + suffix
+        name = name.replace('_', ' ')
+
+        return [name]
+
+    if not is_des_rebadge_line(line):
+        return []
+
+    # clean up the line
+    line = re.sub(r'[\(\)\{\}\.]', ' ', line)
+    line = re.sub('  +', ' ', line).strip()
+    line = re.sub("^'", '', line)
+    line = re.sub("'$", '', line)
+
+    # extract base (original) name
+    words = re.findall(r'\b[^ ]+\b', line)
+    base_name = ''
+    for word in words:
+        if re.match(r'^[a-z]*$', word):
+            base_name += ' ' + word
+    base_name = base_name.strip()
+
+    # extract override
+    m = re.search(r'(?<=\bname:)[^ ]+', line)
+    if not m:
+        return []
+    override = m.group()
+    override = override.replace('_', ' ')
+
+    string = ""
+    is_adjective = False
+    if 'name_adjective' in line or 'n_adj' in line:
+        if override in ['sickly', 'monstrous', 'deformed', 'twisted', 'grotesque', 'hideous', 'febrile']:
+            # just take the adjective
+            string = override + " "
+            is_adjective = True
+        else:
+            # generate the full name
+            string = override + " " + base_name
+
+    elif 'name_suffix' in line or 'n_suf' in line:
+        string = base_name + " " + override
+    else:
+        string = override
+
+    if string == "":
+        return []
+
+    # if adjective, just return this single string as is
+    if is_adjective:
+        strings.append(string)
+        return strings
+
+    if " " in string:
+        for adj in ["rotten ", "ancient ", "large "]:
+            if string.startswith(adj):
+                strings.append(adj)
+                string = string.replace(adj, '')
+                break
+
+    is_item = string.endswith('corpse')
+    if is_item:
+        strings.append(article_the(string))
+    else:
+        #append_monster_permutations(strings, string)
+        strings.append(article_the(string))
+    return strings
+
+# extract strings from Lua line (can be enclosed in single or double quotes)
+def extract_lua_strings(line):
+
+    quote = None
+    start_pos = None
+    results = []
+
+    for i in range(0, len(line)):
+        if quote is None:
+            if line[i] == "'" or line[i] == '"':
+                quote = line[i]
+                start_pos = i
+        elif line[i] == quote:
+            # end of string
+            results.append(line[start_pos+1:i])
+            quote = None
+        elif line[i] == '\\':
+            i += 1
+
+    old_results = results
+    results = []
+    for string in old_results:
+        s = string.split("\\n")
+        results.extend(s)
+
+    results = list(filter(lambda s: s != "", results))
+
+    return results
+
+# lue string can be surrounded with single of double quotes
+# make them all double quotes
+def normalise_lua_strings(line):
+    if "'" not in line:
+        return line
+    elif '"' not in line:
+        #sys.stderr.write("LINE: " + line + "\n")
+        line = line.replace("'", '"')
+        return line
+    return line
+
+def handle_lua_string_concatenation(line):
+    if ".." not in line:
+        return line
+
+    line = re.sub(r'"\s*\.\.\s*"', '', line)
+    line = re.sub(r"'\s*\.\.\s*'", '', line)
+    if ".." not in line:
+        return line
+
+    #sys.stderr.write("LINE OLD: " + line + "\n")
+
+    # replace concatenation operator with something that's easier to search for
+    #line = re.sub(r'(?<=[^.])\.\.(?=[^.])', '~~', line)
+    #line = re.sub(r'\s*~~\s*', ' ~~ ', line)
+    line = re.sub(r'\s+\.\.\s+', ' ~~ ', line)
+    if " ~~ " not in line:
+        return line
+
+    # foo = foo .. whatever
+    line = re.sub(r'\s*([a-zA-Z0-9_]+)\s*=\s*\1 ~~ ', '', line)
+
+    # embedded function call
+    line = re.sub(r'crawl\.article_(a|the)\s*\(([^)]*)\)', r'\2', line)
+    line = re.sub(r' ~~ ([a-zA-Z0-9_.:]+)\s*\([^()]*\)', r' ~~ \1', line)
+    line = re.sub(r'([a-zA-Z0-9_.:]+)\s*\([^()]*\) ~~ ', r'\1 ~~ ', line)
+    line = line.strip()
+    line = re.sub(r'" ~~ "', '', line)
+    line = re.sub(r"' ~~ '", '', line)
+    # param in middle of string
+    line = re.sub(r'" ~~ *([^"]+?) ~~ "', r'@\1@', line)
+    line = re.sub(r"' ~~ *([^']+?) ~~ '", r'@\1@', line)
+    # param at start of string
+    line = re.sub(r'([^(= ]+) ~~ "', r'"@\1@', line)
+    line = re.sub(r"([^(= ]+) ~~ '", r"'@\1@", line)
+    # param at end of string
+    line = re.sub(r'" ~~ ([^)]+)', r'@\1@"', line)
+    line = re.sub(r"' ~~ ([^)]+)", r"@\1@'", line)
+
+    # clean up params names
+    for token in re.findall('@[^@]+@', line):
+        param = token
+        param = re.sub(r'@.*[:.]', '@', param)
+        param = re.sub('[^a-zA-Z0-9@]', '_', param)
+        line = line.replace(token, param)
+
+    line = re.sub("@bane[^@]+@ XL", "@num@ XL", line)
+    line = re.sub("@[^@]*AUTOMAGIC_SPELL_SLOT[^@]*@", "@slot@", line)
+    line = re.sub("@feature_desc_at[^@]*@", "@feature@", line)
+
+    #sys.stderr.write("LINE NEW: " + line + "\n")
+
+    return line
+
+
+def preprocess_lua_lines(lines):
+    result = []
+    for line in lines:
+        line = line.rstrip()
+        stripped = line.lstrip()
+
+        # remove comments
+        if stripped.startswith("--"):
+            continue
+
+        if len(result) == 0:
+            result.append(line)
+            continue
+
+        last = result[-1]
+
+        # join lines where appropriate
+        if last.endswith("\\"):
+            result[-1] = last[0:-1].rstrip() + " " + stripped
+            continue
+        elif last.endswith("..") or stripped.startswith(".."):
+            result[-1] = last  + " " + stripped
+            continue
+        elif last.endswith(",") and "(" in last:
+            result[-1] = last  + " " + stripped
+            continue
+        elif last.endswith('"') and stripped.startswith('"'):
+            result[-1] = last[0:-1] + stripped[1:]
+            continue
+        elif re.search(r'^\s*(if|elseif)', last) and not re.search(r'\bthen\b', last):
+            result[-1] = last  + " " + stripped
+            continue
+
+        result.append(line)
+
+    # split lines where appropriate
+    old_result = result
+    result = []
+    for line in old_result:
+        if re.search(r'\bthen\b', line):
+            line = re.sub(r'\bthen\b', 'then\n', line)
+        #line = re.sub(r'\\n', '"\n"', line)
+        if '\n' in line:
+            tokens = line.split('\n')
+            for token in tokens:
+                token = token.rstrip()
+                if token != "":
+                    result.append(token)
+        else:
+            result.append(line)
+
+
+    return result
+
+def process_lua_lines(filename, section, lines, result):
+    #dump_lines(section, lines)
+    lines = preprocess_lua_lines(lines)
+
+    for line in lines:
+        line = line.strip()
+        if line.startswith("function ") or line.startswith("local function "):
+            section = re.sub(".*function *", "", line)
+            section = re.sub(r" *\(.*$", "", section)
+            result[section] = []
+
+        if '"' not in line and "'" not in line:
+            continue
+
+        if "stderr" in line or "error" in line or "dpr" in line or "assert" in line:
+            continue
+
+        if re.search(r'^(if|elseif)\b', line):
+            continue
+
+        # dungeon building stuff
+        if re.search(r'\b(place_maps|colour|map|tile|ftile|tags|lua_marker)\s*\(', line):
+            continue
+        if "subvault" in line:
+            continue
+
+        if re.search(r'\b(crawl_require|setopt|tutorial_msg|take_note|mark_milestone)\s*\(', line):
+            continue
+
+        if re.search(r'\b(kprop|kmask|subst|nsubst)\s*\(', line):
+            continue
+
+        is_rebadge_line = False
+        if re.search(r'\bname:', line) or re.search(r'\bshop\b', line):
+            is_rebadge_line = is_des_rebadge_line(line)
+
+        if not is_rebadge_line:
+            if re.search(r'\bk?(feat|mons|item)\s*\(', line):
+                continue
+
+        #line = normalise_lua_strings(line)
+
+        line = handle_lua_string_concatenation(line)
+
+        if is_rebadge_line:
+            if '"' in line:
+                for token in re.findall('"([^"]*)"', line):
+                    #sys.stderr.write("TOKEN: " + token + "\n")
+                    strings = extract_strings_from_des_rebadge_line(token)
+                    result[section].extend(strings)
+            else:
+                for token in re.findall("'([^']*)'", line):
+                    #sys.stderr.write("TOKEN: " + token + "\n")
+                    strings = extract_strings_from_des_rebadge_line(token)
+                    result[section].extend(strings)
+            continue
+
+        if "crawl.mpr" in line:
+            # second param is channel
+            line = re.sub(r',\s*"[^"]*"\)', ')', line)
+
+        strings = extract_lua_strings(line)
+
+        if len(strings) == 0:
+            continue
+        elif "crawl.mpr" in line:
+            result[section].extend(strings)
+        elif re.search(r"(crawl\.god_speaks|set_feature_name|decorative_floor)", line):
+            result[section].append(strings[-1])
+        else:
+            #sys.stderr.write("IGNORE: " + line + "\n")
+            pass
+
+def process_lua_file(filename):
+    result = {}
+    lines = read_file_lines(filename)
+    result["none"] = []
+    process_lua_lines(filename, "none", lines, result)
+    return result
+
+def preprocess_des_lines(lines):
+    old_lines = lines
+    lines = []
+    in_map = False
+    for line in old_lines:
+        line = line.rstrip()
+        trimmed = line.lstrip()
+
+        # skip comments
+        if trimmed.startswith("#"):
+            continue
+
+        # skip map section
+        if trimmed == "ENDMAP":
+            in_map = False
+            continue
+        elif trimmed == "MAP":
+            in_map = True
+        if in_map:
+            continue
+
+        # join lines that end with backslash
+        if len(lines) > 0:
+            last = lines[-1]
+            if last.endswith('\\'):
+                if trimmed.startswith(":"):
+                    line = trimmed[1:]
+                lines[-1] = last[0:-1].rstrip() + " " + line.lstrip()
+                continue
+
+        lines.append(line)
+    return lines
+
+def process_des_file(filename):
+    lines = read_file_lines(filename)
+    lines = preprocess_des_lines(lines)
+    #dump_lines(filename, lines)
+
+    result = {}
+    lua_lines = []
+    in_lua_section = False
+    section = "none"
+    result[section] = []
+    for line in lines:
+        trimmed = line.strip()
+        if trimmed.startswith("{{"):
+            in_lua_section = True
+            continue
+        elif trimmed.endswith("}}"):
+            in_lua_section = False
+            lua_lines.append(line)
+            continue
+
+        is_lua_line = False
+        if in_lua_section:
+            is_lua_line = True
+        elif trimmed.startswith(":"):
+            is_lua_line = True
+            line = line[1:]
+            if line.startswith(" "):
+                line = line[1:]
+
+        if is_lua_line:
+            lua_lines.append(line)
+            continue
+        elif len(lua_lines) != 0:
+            process_lua_lines(filename, section, lua_lines, result)
+            lua_lines = []
+
+        if "NAME:" in line:
+            section = line.replace("NAME:", "").strip()
+            if section not in result:
+                result[section] = []
+        elif is_des_rebadge_line(line):
+            strings = extract_strings_from_des_rebadge_line(line)
+            result[section].extend(strings)
+
+    if len(lua_lines) != 0:
+        process_lua_lines(filename, section, lua_lines, result)
+
+    return result
 
 def split_on_newlines(strings):
     result = []
@@ -681,8 +1128,10 @@ def process_file(filename):
         results = process_art_data_txt()
     elif filename.endswith('.yaml'):
         results = process_yaml_file(filename)
-    elif filename.endswith('.lua') or filename.endswith('.des'):
-        results = process_des_or_lua_file(filename)
+    elif filename.endswith('.des'):
+        results = process_des_file(filename)
+    elif filename.endswith('.lua'):
+        results = process_lua_file(filename)
     else:
         results = process_cplusplus_file(filename)
     return results
@@ -1035,6 +1484,27 @@ def transform_messages(input):
 
     return results
 
+def filter_des_strings(filename, section, strings):
+    result = []
+    for string in strings:
+        if string == "":
+            continue
+        if filename.endswith("meat.des"):
+            # border_top and border_bottom end with a newline
+            string = string.replace("@border_top@", "")
+            string = string.replace("@border_bottom@", "")
+            # meatsprint border stuff
+            if re.search(r'-- +--', string) or re.search(r'-{30}', string):
+                continue
+        result.append(string)
+    return result
+
+def post_process_des_file(filename, input):
+    results = {}
+    for section, strings in input.items():
+        results[section] = filter_des_strings(filename, section, strings)
+    return results
+
 specific_post_processing_funcs = {
     'feature-data.h': post_process_feature_data_h,
     'item-prop.cc': post_process_item_prop_cc,
@@ -1051,6 +1521,9 @@ def post_process(filename, results):
     if filename in specific_post_processing_funcs:
         func = specific_post_processing_funcs[filename]
         results = func(results)
+
+    if filename.endswith('.des'):
+        results = post_process_des_file(filename, results)
 
     results = transform_messages(results)
 
