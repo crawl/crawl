@@ -1378,6 +1378,11 @@ bool bolt::do_fire_step(bool ignore_wall_monsters)
         }
     }
 
+    // Actually draw the beam/missile/whatever, if the player can see
+    // the cell.
+    if (animate)
+        draw(pos(), redraw_per_cell);
+
     path_taken.push_back(pos());
 
     // Roots only have an effect during explosions.
@@ -1423,11 +1428,6 @@ bool bolt::do_fire_step(bool ignore_wall_monsters)
     // enchantment beam for the purposes of animation.
     if (real_flavour == BEAM_CHAOS)
         flavour = real_flavour;
-
-    // Actually draw the beam/missile/whatever, if the player can see
-    // the cell.
-    if (animate)
-        draw(pos(), redraw_per_cell);
 
     if (pos() == target)
     {
