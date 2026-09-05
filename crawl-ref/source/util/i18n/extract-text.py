@@ -853,6 +853,9 @@ def preprocess_lua_lines(lines):
         if last.endswith("\\"):
             result[-1] = last[0:-1].rstrip() + " " + stripped
             continue
+        elif last.endswith("("):
+            result[-1] = last + stripped
+            continue
         elif last.endswith("..") or stripped.startswith(".."):
             result[-1] = last  + " " + stripped
             continue
@@ -907,6 +910,12 @@ def process_lua_lines(filename, section, lines, result):
         if re.search(r'^(if|elseif)\b', line):
             continue
 
+        if re.search(r'\b(map)\s*\(', line):
+            continue
+
+        if re.search(r'\b(take_note|mark_milestone)\s*\(', line):
+            continue
+
         is_rebadge_line = False
         if re.search(r'\bname:', line) or re.search(r'\bshop\b', line):
             is_rebadge_line = is_des_rebadge_line(line)
@@ -940,11 +949,17 @@ def process_lua_lines(filename, section, lines, result):
             result[section].extend(strings)
         elif section == "decorative_floor" and re.search(r'\]\s*=', line):
             result[section].append(article_a(strings[0]))
+        elif "decorative_floor" in line:
+            continue
         elif re.search(r"(crawl\.god_speaks|set_feature_name)", line):
             result[section].append(strings[-1])
         else:
-            #sys.stderr.write("IGNORE: " + line + "\n")
-            pass
+            for string in strings:
+                if re.search(r".{9}[.!?]$", string) and not re.search(r"[=:/]", string):
+                    result[section].append(string)
+                else:
+                    #sys.stderr.write("IGNORE: " + string + "\n")
+                    pass
 
 def process_lua_file(filename):
     result = {}
