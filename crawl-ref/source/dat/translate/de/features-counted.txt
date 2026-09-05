@@ -206,3 +206,6 @@
 @num@ ornate altars of the Wu Jian Council
 {pl}@num@ kunstvolle Altäre des Wu-Jian-Rates
 %%%%
+@num@ candlelit altars of Ignis
+{pl}@num@ mit Kerzen beleuchtete Altäre von Ignis
+%%%%
