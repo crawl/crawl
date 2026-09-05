@@ -953,7 +953,9 @@ def process_lua_lines(filename, section, lines, result):
             continue
         elif "crawl.mpr" in line:
             result[section].extend(strings)
-        elif re.search(r"(crawl\.god_speaks|set_feature_name|decorative_floor)", line):
+        elif section == "decorative_floor":
+            result[section].append(article_a(strings[0]))
+        elif re.search(r"(crawl\.god_speaks|set_feature_name)", line):
             result[section].append(strings[-1])
         else:
             #sys.stderr.write("IGNORE: " + line + "\n")
@@ -1557,6 +1559,7 @@ else:
     lua_files.append("dat/dlua/lm_timed.lua")
     lua_files.append("dat/dlua/lm_tmsg.lua")
     lua_files.append("dat/dlua/lm_trove.lua")
+    lua_files.append("dat/dlua/vault.lua")
     lua_files.sort()
     source_files.extend(lua_files)
 
