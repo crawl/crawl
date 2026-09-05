@@ -907,25 +907,9 @@ def process_lua_lines(filename, section, lines, result):
         if re.search(r'^(if|elseif)\b', line):
             continue
 
-        # dungeon building stuff
-        if re.search(r'\b(place_maps|colour|map|tile|ftile|tags|lua_marker)\s*\(', line):
-            continue
-        if "subvault" in line:
-            continue
-
-        if re.search(r'\b(crawl_require|setopt|tutorial_msg|take_note|mark_milestone)\s*\(', line):
-            continue
-
-        if re.search(r'\b(kprop|kmask|subst|nsubst)\s*\(', line):
-            continue
-
         is_rebadge_line = False
         if re.search(r'\bname:', line) or re.search(r'\bshop\b', line):
             is_rebadge_line = is_des_rebadge_line(line)
-
-        if not is_rebadge_line:
-            if re.search(r'\bk?(feat|mons|item)\s*\(', line):
-                continue
 
         #line = normalise_lua_strings(line)
 
@@ -954,7 +938,7 @@ def process_lua_lines(filename, section, lines, result):
             continue
         elif "crawl.mpr" in line:
             result[section].extend(strings)
-        elif section == "decorative_floor":
+        elif section == "decorative_floor" and re.search(r'\]\s*=', line):
             result[section].append(article_a(strings[0]))
         elif re.search(r"(crawl\.god_speaks|set_feature_name)", line):
             result[section].append(strings[-1])
