@@ -764,6 +764,7 @@ def extract_lua_strings(line):
         results.extend(s)
 
     results = list(filter(lambda s: s != "", results))
+    results = list(filter(lambda s: '_' not in s or not re.match('^[_A-Za-z0-9]+$', s) , results))
 
     return results
 
