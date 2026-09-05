@@ -3257,16 +3257,16 @@ static const pair<talisman_type, int> _talisman_tiers[] =
     { TALISMAN_SCARAB,      2 },
     { TALISMAN_MEDUSA,      2 },
     { TALISMAN_SPORE,       2 },
-    { TALISMAN_MAW,         2 },
 
     { TALISMAN_SERPENT,     3 },
-    { TALISMAN_BLADE,       3 },
     { TALISMAN_EEL,         3 },
     { TALISMAN_FORTRESS,    3 },
     { TALISMAN_WEREWOLF,    3 },
     { TALISMAN_SPIDER,      3 },
     { TALISMAN_AQUA,        3 },
+    { TALISMAN_MAW,         3 },
 
+    { TALISMAN_BLADE,       4 },
     { TALISMAN_STATUE,      4 },
     { TALISMAN_HIVE,        4 },
     { TALISMAN_DRAGON,      4 },
