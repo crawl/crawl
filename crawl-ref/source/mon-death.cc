@@ -3811,11 +3811,6 @@ void monster_cleanup(monster* mons, bool reset)
 
     mons->remove_summons();
 
-    // Remove any spectral weapon summoned by this monster.
-    for (monster_iterator mi; mi; ++mi)
-        if (mi->type == MONS_SPECTRAL_WEAPON && mi->summoner == mons->mid)
-            end_spectral_weapon(*mi, false);
-
     unsigned int monster_killed = mons->mindex();
     for (monster_iterator mi; mi; ++mi)
     {

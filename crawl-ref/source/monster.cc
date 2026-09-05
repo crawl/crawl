@@ -6843,11 +6843,12 @@ void monster::remove_summons(bool check_attitude)
     for (monster_iterator mi; mi; ++mi)
     {
         if ((!check_attitude || attitude != mi->attitude)
-            && mi->summoner == mid
-            && mi->is_summoned()
-            && !(mi->flags & MF_PERSISTS))
+            && mi->summoner == mid)
         {
-            mi->del_ench(ENCH_SUMMON_TIMER);
+            if (mi->is_summoned() && !(mi->flags & MF_PERSISTS))
+                mi->del_ench(ENCH_SUMMON_TIMER);
+            else if (mi->type == MONS_SPECTRAL_WEAPON)
+                end_spectral_weapon(*mi, false);
         }
     }
 }
