@@ -916,9 +916,10 @@ def process_lua_lines(filename, section, lines, result):
         if re.search(r'\b(take_note|mark_milestone)\s*\(', line):
             continue
 
-        is_rebadge_line = False
-        if re.search(r'\bname:', line) or re.search(r'\bshop\b', line):
-            is_rebadge_line = is_des_rebadge_line(line)
+        is_rebadge_line = is_des_rebadge_line(line)
+        if not is_rebadge_line:
+            if re.search(r'\b(kfeat|item|kitem|mons|kmons|subst|nsubst)\s*\(', line):
+                continue
 
         #line = normalise_lua_strings(line)
 
