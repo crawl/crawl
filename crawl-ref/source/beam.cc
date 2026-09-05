@@ -5718,9 +5718,10 @@ void bolt::affect_monster(monster* mon)
 
     if (mon->alive())
         monster_post_hit(mon, final);
-    // The monster (e.g. a spectral weapon) might have self-destructed in its
-    // behaviour_event called from mon->hurt() above. If that happened, it
-    // will have been cleaned up already (and is therefore invalid now).
+    // The monster might have self-destructed in its behaviour_event called
+    // from mon->hurt() above (e.g. if it was pacified and went up the stairs).
+    // If that happened, it will have been cleaned up already (and is therefore
+    // invalid now).
     else if (!invalid_monster(mon))
         kill_monster(*mon);
 

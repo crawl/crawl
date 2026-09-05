@@ -126,9 +126,9 @@ bool attack::handle_phase_damaged()
     }
 
     // It's okay if a monster took lethal damage, but we should stop
-    // the combat if it is already cleaned up (e.g. a spectral weapon that
-    // took damage and then noticed that its caster is gone), to prevent
-    // messages referencing the monster after its disappearance.
+    // the combat if it is already cleaned up (e.g. if it fell down a shaft
+    // after dragging), to prevent messages referencing the monster after its
+    // disappearance.
     return defender->is_player() || !invalid_monster(defender->as_monster());
 }
 
@@ -1025,9 +1025,9 @@ int attack::calc_damage()
         damage = player_apply_slaying_bonuses(damage, false);
         damage = player_stab(damage);
         // A failed stab may have awakened monsters, but that could have
-        // caused the defender to cease to exist (spectral weapons with
-        // missing summoners; or pacified monsters on a stair). FIXME:
-        // The correct thing to do would be either to delay the call to
+        // caused the defender to cease to exist (e.g. pacified monsters on a
+        // stair).
+        // FIXME: the correct thing to do would be either to delay the call to
         // alert_nearby_monsters (currently in player_stab) until later
         // in the attack; or to avoid removing monsters in handle_behaviour.
         if (!defender->alive())
