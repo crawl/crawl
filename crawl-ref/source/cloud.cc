@@ -1520,6 +1520,14 @@ bool cloud_damages_over_time(cloud_type type, bool accept_temp_resistances, bool
 static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
                                bool extra_careful)
 {
+    // As with traps, make friendly monsters not walk into blastmotes.
+    // (And good neutral monsters, to avoid penance.)
+    // Note: this is true even if they themselves have immunity to damage from
+    // the explosion (like ancestors do) to avoid potentially blasting the
+    // player in the face.
+    if (cloud.type == CLOUD_BLASTMOTES)
+        return mons->wont_attack();
+
     // clouds you're immune to are inherently safe.
     if (actor_cloud_immune(*mons, cloud))
         return false;
@@ -1536,11 +1544,6 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
 
     switch (cloud.type)
     {
-    case CLOUD_BLASTMOTES:
-        // As with traps, make friendly monsters not walk into blastmotes.
-        // (And good neutral monsters, to avoid penance.)
-        return mons->wont_attack();
-
     case CLOUD_RAIN:
         return !mons->is_fiery() || !extra_careful;
 
