@@ -11,6 +11,9 @@
 the unknown terrain
 {n}das unbekannte Terrain
 %%%%
+the explore horizon
+{m}der Erkundungshorizont
+%%%%
 the travel trail
 {f}die Reiseroute
 %%%%
@@ -95,6 +98,9 @@ the portal to somewhere
 the lava
 {f}die Lava
 %%%%
+the mud
+{m}der Schlamm
+%%%%
 the deep water
 {n}das tiefe Wasser
 %%%%
@@ -158,6 +164,27 @@ the alarm trap
 the Zot trap
 {f}die Zot-Falle
 %%%%
+the archmage's trap
+{f}die Falle des Erzmagiers
+%%%%
+the devourer's trap
+{f}die Falle des Verschlingers
+%%%%
+the dispersal trap (recharging)
+{f}die Zerstreuungsfalle (aufladend)
+%%%%
+the harlequin's trap
+{f}die Falle des Harlekins
+%%%%
+the tyrant's trap
+{f}die Falle des Tyrannen
+%%%%
+the binding sigil
+{n}das Signum der Bindung
+%%%%
+the spike launcher
+{m}der Stachelwerfer
+%%%%
 the passage of Golubria
 {f}die Passage von Golubria
 %%%%
@@ -215,8 +242,30 @@ the gateway to the decaying netherworld of Tartarus
 the gateway to Hell
 {n}das Tor zur Hölle
 %%%%
-the gateway back into the Dungeon
-{n}das Tor zurück in den Kerker
+the gateway back to the Dungeon
+{n}das Tor zurück zum Kerker
+%%%%
+the gateway leading out of Cocytus
+{n}das Tor, das aus dem Kokytos hinausführt
+%%%%
+the gateway leading out of Dis
+{n}das Tor, das aus Dis hinausführt
+%%%%
+the gateway leading out of Gehenna
+{n}das Tor, das aus Gehenna hinausführt
+%%%%
+the gateway leading out of Tartarus
+{n}das Tor, das aus dem Tartarus hinausführt
+%%%%
+the gate leading to Okawaru's Arena
+{n}das Tor zur Arena von Okawaru
+%%%%
+the gate leading to the Crucible of Flesh
+{n}das Tor zum Schmelztiegel des Fleisches
+%%%%
+# entry to necropolis
+the phantasmal passage
+{m}der geisterhafte Durchgang
 %%%%
 the one-way gate to the infinite horrors of the Abyss
 {n}das Einbahntor zu den unendlichen Schrecken des Abgrunds
@@ -248,8 +297,8 @@ the gate to the Realm of Zot
 the gate leading to a distant place
 {n}das Tor, das zu einem weit entfernten Ort führt
 %%%%
-the gateway to a ziggurat
-{n}das Tor zu einer Zikkurat
+the one-way gateway to a ziggurat
+{n}das Einbahntor zu einer Zikkurat
 %%%%
 the gateway to a bazaar
 {n}das Tor zu einem Basar
@@ -451,6 +500,9 @@ the hazy altar of Hepliaklqana
 %%%%
 the ornate altar of the Wu Jian Council
 {m}der kunstvolle Altar des Wu-Jian-Rates
+%%%%
+the candlelit altar of Ignis
+{m}der mit Kerzen beleuchtete Altar von Ignis
 %%%%
 the fountain
 {m}der Brunnen
@@ -669,6 +721,42 @@ a weirdly glowing ball
 a fleshy orifice
 {f}eine fleischige Öffnung
 %%%%
+the cache of baked goods
+{n}das Versteck mit Backwaren
+%%%%
+the cache of fruit
+{n}das Versteck mit Obst
+%%%%
+the cache of meat
+{n}das Versteck mit Fleisch
+%%%%
+the decorative floor
+{m}der verzierte Boden
+%%%%
+the fountain of eyes
+{m}der Brunnen der Augen
+%%%%
+the frigid wall
+{f}die eisige Wand
+%%%%
+the metal statue
+{f}die Metallstatue
+%%%%
+the mutagenic drain
+{m}der mutagene Abfluss
+%%%%
+the orb dais
+{n}das Podest der Kugel
+%%%%
+the patch of mould
+{m}der Schimmelfleck
+%%%%
+the purified mutation catalyst
+{m}der gereinigte Mutationskatalysator
+%%%%
+the runelight
+{n}das Runenlicht
+%%%%
 
 ################################
 # With "some" as determiner
@@ -677,6 +765,9 @@ a fleshy orifice
 %%%%
 some lava
 etwas Lava
+%%%%
+some mud
+etwas Schlamm
 %%%%
 some deep water
 etwas tiefes Wasser
