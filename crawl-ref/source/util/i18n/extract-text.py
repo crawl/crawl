@@ -763,7 +763,7 @@ def extract_lua_strings(line):
         s = string.split("\\n")
         results.extend(s)
 
-    results = list(filter(lambda s: s != "", results))
+    results = list(filter(lambda s: len(s.strip()) > 1, results))
     results = list(filter(lambda s: '_' not in s or not re.match('^[_A-Za-z0-9]+$', s) , results))
 
     return results
@@ -947,9 +947,9 @@ def process_lua_lines(filename, section, lines, result):
             continue
         elif "crawl.mpr" in line:
             result[section].extend(strings)
-        elif section == "decorative_floor" and re.search(r'\]\s*=', line):
+        elif section in ["decorative_floor", "vault_metal_statue_setup"] and re.search(r'\]\s*=', line):
             result[section].append(article_a(strings[0]))
-        elif "decorative_floor" in line:
+        elif re.search(r"(decorative_floor|vault_metal_statue_setup)", line):
             continue
         elif re.search(r"(crawl\.god_speaks|set_feature_name)", line):
             result[section].append(strings[-1])
@@ -958,7 +958,7 @@ def process_lua_lines(filename, section, lines, result):
                 if re.search(r".{9}[.!?]$", string) and not re.search(r"[=:/]", string):
                     result[section].append(string)
                 else:
-                    #sys.stderr.write("IGNORE: " + string + "\n")
+                    #sys.stderr.write('IGNORE: ' + line + '\n')
                     pass
 
 def process_lua_file(filename):
