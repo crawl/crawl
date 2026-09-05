@@ -33,7 +33,6 @@
 #include "player-notices.h"
 #include "religion.h"
 #include "shout.h"
-#include "spl-summoning.h"
 #include "stairs.h"
 #include "state.h"
 #include "stringutil.h"
@@ -311,12 +310,8 @@ void handle_behaviour(monster* mon)
     // Validate current target exists.
     _mon_check_foe_invalid(mon);
 
-    actor *owner = (mon->summoner ? actor_by_mid(mon->summoner) : nullptr);
     if (mon->type == MONS_SPECTRAL_WEAPON)
     {
-        if (mon->summoner && (!owner || !owner->alive()))
-            end_spectral_weapon(mon, false);
-
         // Spectral weapons never do anything on their own. They just attack
         // on command. A sad existence, really.
         return;
@@ -329,6 +324,7 @@ void handle_behaviour(monster* mon)
 
     // Handle leashing monster behavior: return to creator if non-adjacent,
     // otherwise try to pick a monster in reach to attack.
+    actor *owner = (mon->summoner ? actor_by_mid(mon->summoner) : nullptr);
     const int leash_range = mons_leash_range(mon->type);
     bool should_return = false;
     if (owner && leash_range > 0)
