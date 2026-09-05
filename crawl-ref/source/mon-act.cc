@@ -810,7 +810,7 @@ static bool _handle_swoop_or_flank(monster& mons)
     coord_def target = defender->pos();
 
     bolt tracer = bolt::path_tracer(mons.pos(), target);
-    for (unsigned int j = 0; j < tracer.path_taken.size() - 1; ++j)
+    for (int j = 0; j < (int)tracer.path_taken.size() - 1; ++j)
     {
         if (tracer.path_taken[j] != target)
             continue;

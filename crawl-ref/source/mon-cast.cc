@@ -2064,7 +2064,7 @@ static monster* _get_allied_target(const monster &caster, bolt &tracer)
     monster* selected_target = nullptr;
     int min_distance = tracer.range;
 
-    for (monster_near_iterator targ(&caster, LOS_NO_TRANS); targ; ++targ)
+    for (monster_near_iterator targ(&caster, LOS_SOLID_SEE); targ; ++targ)
     {
         if (*targ == &caster
             || !_monster_will_buff(caster, **targ)
@@ -2106,7 +2106,7 @@ static bool _set_hex_target(monster* caster, bolt& pbolt)
     if (!foe)
         return false;
 
-    for (monster_near_iterator targ(caster, LOS_NO_TRANS); targ; ++targ)
+    for (monster_near_iterator targ(caster, LOS_SOLID_SEE); targ; ++targ)
     {
         if (*targ == caster)
             continue;
@@ -9695,20 +9695,22 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         return ai_action::good_or_impossible(feat_is_water(env.grid(foe->pos())));
 
     // Don't use unless our foe is close to us and there are no allies already
-    // between the two of us
+    // between the two of us. (Otherwise, we will probably hurt those allies
+    // by making them collide with our intended foe.)
     case SPELL_WIND_BLAST:
         ASSERT(foe);
         if (foe->pos().distance_from(mon->pos()) < 4)
         {
             bolt tracer;
             tracer.target = foe->pos();
-            tracer.hit    = AUTOMATIC_HIT;
+            tracer.damage = dice_def(1, 100);
+            tracer.pierce = true;
+            tracer.aimed_at_spot = true;
             targeting_tracer target_tracer;
             fire_tracer(mon, target_tracer, tracer);
 
-            actor* act = actor_at(tracer.path_taken.back());
-            // XX does this handle multiple actors?
-            return ai_action::good_or_bad(!act || !mons_aligned(mon, act));
+            return ai_action::good_or_bad(target_tracer.foe_info.count > 0
+                                          && target_tracer.friend_info.count == 0);
         }
         else
             return ai_action::bad(); // no close foe

@@ -526,9 +526,7 @@ void wind_blast(actor* agent, int pow, coord_def target)
             break;
         }
 
-        for (unsigned int j = 0;
-             j < wind_beam.path_taken.size() - 1 && push;
-             ++j)
+        for (int j = 0; j < (int)wind_beam.path_taken.size() - 1 && push; ++j)
         {
             if (wind_beam.path_taken[j] == cloud_list[i])
             {
