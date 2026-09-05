@@ -676,11 +676,11 @@ static string _localise_annotation(const string& s)
         return replace_all(s, trimmed, result);
     }
 
-    result = _localise_parameterised_string(s);
+    result = _ctx_translate(_context, s);
     if (!result.empty())
         return strip_context(result);
 
-    result = _ctx_translate(_context, s);
+    result = _localise_parameterised_string(s);
     if (!result.empty())
         return strip_context(result);
 
