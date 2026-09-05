@@ -4,7 +4,7 @@
     "{description}",
     {skill.min}, {skill.max}, {hp_skill_penalty_mult}, {talisman},
     {melds}, {joined_resists},
-    {str}, {dex}, {size}, {hp_mod}, {move_speed},
+    {str}, {int}, {dex}, {size}, {hp_mod}, {move_speed},
     {ac_scaling}, {ev_scaling}, {body_ac_mult_scaling}, {can_cast}, {unarmed_scaling},
     {unarmed_brand}, {unarmed_colour}, "{unarmed_name}", {unarmed_verbs},
     {can_fly}, {can_swim}, {offhand_punch}, {changes_anatomy}, {changes_substance}, {holiness}, {undead_state},

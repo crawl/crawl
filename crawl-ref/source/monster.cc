@@ -5617,9 +5617,13 @@ void monster::finalise_movement(const actor* to_blame)
     if (!alive())
         return;
 
-    cloud_struct* cloud = cloud_at(pos());
-    if (cloud && cloud->type == CLOUD_BLASTMOTES)
-        explode_blastmotes_at(pos()); // schedules a fineff, so won't kill
+    if (cloud_struct* cloud = cloud_at(pos()))
+    {
+        if (cloud->type == CLOUD_BLASTMOTES)
+            explode_blastmotes_at(pos()); // schedules a fineff, so won't kill
+        else if (cloud->type == CLOUD_GLIMMER)
+            enter_glimmer_cloud(*this, pos());
+    }
 
     if (env.grid(pos()) == DNGN_BINDING_SIGIL)
         trigger_binding_sigil(*this);

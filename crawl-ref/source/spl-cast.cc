@@ -49,6 +49,7 @@
 #include "mon-project.h"
 #include "mon-util.h"
 #include "mutation.h"
+#include "nearby-danger.h"
 #include "options.h"
 #include "ouch.h"
 #include "output.h"
@@ -1151,6 +1152,23 @@ void do_post_spellcast_effects(spell_type spell)
     // Handle revenant passives
     if (you.has_mutation(MUT_SPELLCLAWS) && spell_can_be_enkindled(spell))
         spellclaws_attack(spell_difficulty(spell));
+
+    if (you.form == transformation::vision)
+    {
+        if (there_are_monsters_nearby(true, true, false))
+        {
+            for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
+            {
+                if (cloud_could_place(*ai, CLOUD_GLIMMER, &you)
+                    && !actor_at(*ai))
+                {
+                    place_cloud(CLOUD_GLIMMER, *ai, random_range(7, 9), &you);
+                    mpr("The residue of your spell condenses into glimmer.");
+                    break;
+                }
+            }
+        }
+    }
 }
 
 #ifdef WIZARD

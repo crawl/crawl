@@ -905,6 +905,7 @@ enum talisman_type
     TALISMAN_MEDUSA,
     TALISMAN_EEL,
     TALISMAN_SPORE,
+    TALISMAN_VISION,
     NUM_TALISMANS,
 };
 

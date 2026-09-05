@@ -11,6 +11,7 @@
 
 #include <algorithm>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
 #include "colour.h"
@@ -22,6 +23,7 @@
 #include "level-state-type.h"
 #include "libutil.h" // testbits
 #include "los.h"
+#include "losglobal.h"
 #include "mapmark.h"
 #include "map-knowledge.h"
 #include "melee-attack.h"
@@ -345,6 +347,12 @@ static const cloud_data clouds[] = {
         BEAM_ACID,                                // beam_effect
         { 2, 3, false },                          // base, random damage
       },
+    // CLOUD_GLIMMER,
+    { "glimmer", nullptr,                         // terse, verbose name
+        LIGHTMAGENTA,                             // colour
+        { TILE_CLOUD_GLIMMER, CTVARY_RANDOM },    // tile
+    },
+
 
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
@@ -758,9 +766,21 @@ void swap_clouds(coord_def p1, coord_def p2)
 
 bool cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
 {
-    return (is_harmless_cloud(cloud.type) && !is_opaque_cloud(cloud.type))
-           || cloud.type == CLOUD_STEAM
-           || ct == CLOUD_VORTEX; // soon gone
+    return ct != CLOUD_GLIMMER
+           && ((is_harmless_cloud(cloud.type) && !is_opaque_cloud(cloud.type))
+               || cloud.type == CLOUD_STEAM
+               || ct == CLOUD_VORTEX); // soon gone
+}
+
+// Returns whether a cloud of a given type could be placed at a given location
+bool cloud_could_place(const coord_def& loc, cloud_type ctype, const actor *agent)
+{
+    const cloud_struct *cloud = cloud_at(loc);
+    return in_bounds(loc)
+           && !cell_is_solid(loc)
+           && (!cloud || cloud_is_stronger(ctype, *cloud))
+           && (!is_sanctuary(loc) || is_harmless_cloud(ctype))
+           && (!agent || agent->see_cell_no_trans(loc));
 }
 
 /*
@@ -1078,6 +1098,70 @@ static bool _mephitic_cloud_roll(const monster* mons)
 {
     return mons->get_hit_dice() >= MEPH_HD_CAP ? one_chance_in(50)
            : !x_chance_in_y(mons->get_hit_dice(), MEPH_HD_CAP);
+}
+
+// Attempts to shift a glimmer cloud away from the actor that stepped onto it,
+// to some unoccupied space. Deletes the cloud, if this was impossible.
+static void _try_shift_glimmer(const coord_def& pos)
+{
+    for (fair_adjacent_iterator ai(pos); ai; ++ai)
+    {
+        if (actor_at(*ai) || !cloud_could_place(*ai, CLOUD_GLIMMER, &you))
+            continue;
+
+        if (cloud_struct* cloud = cloud_at(*ai))
+        {
+            // Don't swap a *different* glimmer cloud beneath the actor.
+            if (cloud->type == CLOUD_GLIMMER)
+                continue;
+
+            swap_clouds(pos, *ai);
+        }
+        else
+            move_cloud(pos, *ai);
+
+        return;
+    }
+
+    delete_cloud(pos);
+}
+
+void enter_glimmer_cloud(const actor& triggerer, const coord_def& pos)
+{
+    if (!triggerer.is_player() || you.form != transformation::vision)
+    {
+        _try_shift_glimmer(pos);
+        return;
+    }
+
+    bolt beam(you, ZAP_GLIMMER_BOLT, 10);
+    for (distance_iterator di(pos, true, true, you.current_vision); di; ++di)
+    {
+        if (!cell_see_cell(pos, *di, LOS_SOLID_SEE))
+            continue;
+
+        monster* mon = monster_at(*di);
+
+        if (!mon || !you.aware_of(*mon) || !could_harm_enemy(&you, mon))
+            continue;
+
+        targeting_tracer target_tracer;
+        beam.target = *di;
+        beam.fire(target_tracer);
+
+        if (target_tracer.friend_info.power == 0
+            && target_tracer.foe_info.power > 0)
+        {
+            mprf("You condense the glimmer around your %s and fire it at %s!",
+                    you.hand_name(true).c_str(), mon->name(DESC_THE).c_str());
+            beam.fire();
+            delete_cloud(pos);
+            return;
+        }
+    }
+
+    // No target found, so move cloud instead.
+    _try_shift_glimmer(pos);
 }
 
 // Applies cloud messages and side-effects and returns true if the

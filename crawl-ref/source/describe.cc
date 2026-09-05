@@ -7994,6 +7994,7 @@ static string _describe_talisman_form(transformation form_type)
         pr.AddCell("Size", uppercase_first(get_size_adj(form->size)));
 
     _desc_form_val(pr, "Str", form->str_mod);
+    _desc_form_val(pr, "Int", form->int_mod);
     _desc_form_val(pr, "Dex", form->dex_mod);
 
     _desc_form_resist(pr, MR_RES_FIRE, form->res_fire());
@@ -8049,8 +8050,11 @@ static string _describe_talisman_form(transformation form_type)
     else if (form_type == transformation::fortress_crab)
         pr.AddCell("Armour egos", "x2");
 
-    if (form_type == transformation::vampire || form_type == transformation::sphinx)
+    if (form_type == transformation::vampire || form_type == transformation::sphinx
+        || form_type == transformation::vision)
+    {
         pr.AddCell("SInv", "+");
+    }
 
     // Don't output extra blank lines if there's no content.
     if (pr.NumCells() > 0)

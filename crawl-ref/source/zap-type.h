@@ -198,5 +198,6 @@ enum zap_type
     ZAP_LANDBREAKER,
     ZAP_BURSTSPORE,
     ZAP_ANTIMAGIC,
+    ZAP_GLIMMER_BOLT,
     NUM_ZAPS
 };

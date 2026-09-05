@@ -71,6 +71,8 @@ void remove_vortex_clouds(mid_t whose);
 void move_cloud(coord_def src, coord_def newpos);
 void swap_clouds(coord_def p1, coord_def p2);
 
+bool cloud_could_place(const coord_def& loc, cloud_type ctype, const actor *agent);
+
 coord_def random_walk(coord_def start, int dist);
 
 bool cloud_is_stronger(cloud_type ct, const cloud_struct& cloud);
@@ -107,3 +109,5 @@ void surround_actor_with_cloud(const actor* a, cloud_type cloud);
 bool chaos_affects_actor(actor* victim, actor* source);
 
 bool get_vortex_phase(const coord_def& loc);
+
+void enter_glimmer_cloud(const actor& triggerer, const coord_def& pos);

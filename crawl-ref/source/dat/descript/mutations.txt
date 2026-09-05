@@ -1260,6 +1260,15 @@ or holy monster first notices you, it may become momentarily dazed, preventing
 it from shouting. Creatures which fail a Willpower check will be dazed for even
 longer.
 %%%%
+glimmercast mutation
+
+Whenever you cast spells while in sight of enemies (or witness monsters cast
+spells themselves), the leftover magical energy will condense into a short-lived
+cloud of glimmer. Touching that cloud will convert it into a small projectile
+which unerringly strikes a nearby enemy.
+
+Other creatures walking into those clouds will merely push them out of the way.
+%%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation
 

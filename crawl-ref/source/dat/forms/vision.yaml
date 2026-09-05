@@ -1,0 +1,12 @@
+enum: vision
+equivalent_mons: player
+talisman: vision
+skill: {min: 0, max: 7}
+special_damage: 1d4+(9/7)
+special_damage_name: Glimmer Dmg
+int: 3
+hp_mod: 90
+melds: [gloves, helmet]
+fakemuts:
+  - ["glimmercast", "You can weaponise the residue left behind from casting spells."]
+  - ["see invisible", "You have supernaturally acute vision. (SInv)"]

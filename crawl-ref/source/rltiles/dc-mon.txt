@@ -1576,6 +1576,7 @@ flux_form_octopode TRAN_FLUX_OCTOPODE
 blade_form_felid TRAN_BLADE_FELID
 eel_form_felid TRAN_EEL_FELID
 spore_form_felid TRAN_SPORE_FELID
+vision_form_felid TRAN_VISION_FELID
 
 %rim 1
 

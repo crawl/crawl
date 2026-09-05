@@ -2801,4 +2801,21 @@ _mon_hex_zap(ZAP_ILL_OMEN, BEAM_ILL_OMEN),
     false,
 },
 
+{
+    ZAP_GLIMMER_BOLT,
+    "glimmering dart",
+    new dicedef_calculator<1, 3, 1, 5>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    nullptr,
+    nullptr,
+    LIGHTMAGENTA,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+    TILE_BOLT_MAGIC_DART,
+},
+
+
 };

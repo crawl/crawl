@@ -591,6 +591,8 @@ quill_form_gargoyle QUILL_GARGOYLE
 quill_form_humanoid QUILL_HUMANOID
 quill_form_naga QUILL_NAGA
 hive_form HIVE_FORM
+vision_form_humanoid VISION_FORM_HUMANOID
+vision_form_octopode VISION_FORM_OCTOPODE
 
 %end_ctg
 

@@ -187,6 +187,8 @@ public:
 
     /// flat str bonus
     const int str_mod;
+    /// flat int bonus
+    const int int_mod;
     /// flat dex bonus
     const int dex_mod;
 

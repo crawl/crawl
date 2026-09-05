@@ -1787,6 +1787,14 @@ A collection of spells that assault everything in sight of the caster,
 unrestrained by petty limitations like 'needing a clear shot' or 'concern about
 collateral damage'.
 %%%%
+vision talisman
+
+A small charm bearing the likeness of an eye. It gives the wearer supernatural
+insight, allowing them to see invisible creatures and also the clouds of magical
+residue left behind whenever beings cast spells. Touching those clouds allows
+them to convert that leftover magic into unnerring projectiles against nearby foes.
+Alas, such wisdom comes at the cost of frailty.
+%%%%
 wand of acid
 
 A magical device which throws bolts of corrosive acid.

@@ -161,7 +161,8 @@ Form::Form(const form_entry &fe)
     : short_name(fe.short_name), wiz_name(fe.wiz_name),
       min_skill(fe.min_skill), max_skill(fe.max_skill),
       hp_skill_penalty_mult(fe.hp_skill_penalty_mult),
-      str_mod(fe.str_mod), dex_mod(fe.dex_mod), base_move_speed(fe.move_speed),
+      str_mod(fe.str_mod), int_mod(fe.int_mod), dex_mod(fe.dex_mod),
+      base_move_speed(fe.move_speed),
       blocked_slots(fe.blocked_slots), size(fe.size),
       can_cast(fe.can_cast),
       uc_colour(fe.uc_colour), uc_attack_verbs(fe.uc_attack_verbs),
@@ -1379,6 +1380,39 @@ public:
     }
 };
 
+class FormVision : public Form
+{
+private:
+    FormVision() : Form(transformation::vision) { }
+    DISALLOW_COPY_AND_ASSIGN(FormVision);
+public:
+    static const FormVision &instance() { static FormVision inst; return inst; }
+
+    /**
+     * @ description
+     */
+    string get_description(bool past_tense) const override
+    {
+        return make_stringf("Your third eye %s open.", past_tense ? "was" : "is");
+    }
+
+    /**
+     * Get a message for transforming into this form.
+     */
+    string transform_message() const override
+    {
+        return "Your third eye opens!";
+    }
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const override
+    {
+        return "Your hands return to normal.";
+    }
+};
+
 static const Form* forms[] =
 {
     &FormNone::instance(),
@@ -1425,6 +1459,7 @@ static const Form* forms[] =
     &FormMedusa::instance(),
     &FormEelHands::instance(),
     &FormSpore::instance(),
+    &FormVision::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -1996,10 +2031,14 @@ void set_form(transformation which_trans, int dur, bool scale_hp)
     update_player_symbol();
 
     const int str_mod = get_form(which_trans)->str_mod;
+    const int int_mod = get_form(which_trans)->int_mod;
     const int dex_mod = get_form(which_trans)->dex_mod;
 
     if (str_mod)
         notify_stat_change(STAT_STR, str_mod, true);
+
+    if (int_mod)
+        notify_stat_change(STAT_INT, int_mod, true);
 
     if (dex_mod)
         notify_stat_change(STAT_DEX, dex_mod, true);
@@ -2228,10 +2267,14 @@ void untransform(bool skip_move, bool scale_hp, bool preserve_equipment,
     set_form(transformation::none, 0, scale_hp);
 
     const int str_mod = get_form(old_form)->str_mod;
+    const int int_mod = get_form(old_form)->int_mod;
     const int dex_mod = get_form(old_form)->dex_mod;
 
     if (str_mod)
         notify_stat_change(STAT_STR, -str_mod, true);
+
+    if (int_mod)
+        notify_stat_change(STAT_DEX, -int_mod, true);
 
     if (dex_mod)
         notify_stat_change(STAT_DEX, -dex_mod, true);

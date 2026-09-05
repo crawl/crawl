@@ -698,6 +698,21 @@ void fill_doll_equipment(dolls_data &result)
         }
         result.parts[TILEP_PART_HAIR] = 0;
         break;
+    case transformation::vision:
+        switch (you.species)
+        {
+        case SP_OCTOPODE:
+            result.parts[TILEP_PART_HELM] = TILEP_BODY_VISION_FORM_OCTOPODE;
+            break;
+        case SP_FELID:
+            result.parts[TILEP_PART_BASE] = TILEP_TRAN_VISION_FELID;
+            break;
+        default:
+            result.parts[TILEP_PART_HELM] = TILEP_BODY_VISION_FORM_HUMANOID;
+            break;
+        }
+        result.parts[TILEP_PART_HAIR] = 0;
+        break;
     default:
         _fill_doll_equipment_default(result);
         break;

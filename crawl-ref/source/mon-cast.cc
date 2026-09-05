@@ -5276,6 +5276,21 @@ void mons_post_cast_effects(monster* mons, spell_type spell_cast, mon_spell_slot
         schedule_stardust_fineff(mons, pow(mons->get_hit_dice() / 2, 1.38) * 6,
                                  4 + mons->get_hit_dice() / 2, SHOOTING_STAR_ORB);
     }
+
+    if (you.form == transformation::vision && (flags & MON_SPELL_ANTIMAGIC_MASK)
+        && you.see_cell(mons->pos()))
+    {
+        for (fair_adjacent_iterator ai(mons->pos()); ai; ++ai)
+        {
+            if (cloud_could_place(*ai, CLOUD_GLIMMER, &you) && !actor_at(*ai))
+            {
+                place_cloud(CLOUD_GLIMMER, *ai, random_range(4, 7), &you);
+                mprf("The residue of %s spell condenses into glimmer.",
+                     mons->name(DESC_ITS).c_str());
+                break;
+            }
+        }
+    }
 }
 
 /**

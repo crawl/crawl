@@ -875,9 +875,13 @@ void player::finalise_movement(const actor* /*to_blame*/)
 
     if (last_move_pos != pos())
     {
-        cloud_struct* cloud = cloud_at(pos());
-        if (cloud && cloud->type == CLOUD_BLASTMOTES)
-            explode_blastmotes_at(pos()); // schedules a fineff
+        if (cloud_struct* cloud = cloud_at(pos()))
+        {
+            if (cloud->type == CLOUD_BLASTMOTES)
+                explode_blastmotes_at(pos()); // schedules a fineff
+            else if (cloud->type == CLOUD_GLIMMER)
+                enter_glimmer_cloud(*this, pos());
+        }
 
         if (env.grid(pos()) == DNGN_BINDING_SIGIL)
             trigger_binding_sigil(you);
@@ -8023,7 +8027,8 @@ bool player::innate_sinv() const
 
     if (form == transformation::jelly
         || form == transformation::sphinx
-        || form == transformation::vampire)
+        || form == transformation::vampire
+        || form == transformation::vision)
     {
         return true;
     }
