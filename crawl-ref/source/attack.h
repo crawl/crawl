@@ -219,3 +219,4 @@ private:
 };
 
 string attack_strength_punctuation(int dmg);
+int player_unarmed_base_accuracy(bool random);
