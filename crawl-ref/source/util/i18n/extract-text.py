@@ -832,6 +832,24 @@ def handle_lua_string_concatenation(line):
 
     return line
 
+def handle_lua_door_description(line):
+    strings = []
+    noun = "door"
+    prefix = ""
+    suffix = ""
+    for (key, value) in re.findall(r'([A-Za-z0-9_]+)\s*=\s*"([^"]+)"', line):
+        #sys.stderr.write(key + "=" + value + "\n")
+        if key == "door_description_noun":
+            noun = value
+        elif key == "door_description_prefix":
+            prefix = value
+        elif key == "door_description_suffix":
+            suffix = value
+        else:
+            strings.append(value)
+    desc = prefix + noun + suffix
+    strings.append(article_the(desc))
+    return strings
 
 def preprocess_lua_lines(lines):
     result = []
@@ -931,6 +949,11 @@ def process_lua_lines(filename, section, lines, result):
             for string in strings:
                 strings2 = extract_strings_from_des_rebadge_line(string)
                 result[section].extend(strings2)
+            continue
+
+        if "door_description_" in line:
+            strings = handle_lua_door_description(line)
+            result[section].extend(strings)
             continue
 
         if "crawl.mpr" in line:
