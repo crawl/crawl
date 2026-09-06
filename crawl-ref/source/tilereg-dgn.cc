@@ -21,6 +21,7 @@
 #include "items.h"
 #include "jobs.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "message.h"
 #include "mon-util.h"
@@ -1099,7 +1100,7 @@ void DungeonRegion::add_text_tag(text_tag_type type, const string &tag,
                                  const coord_def &gc)
 {
     TextTag t;
-    t.tag = tag;
+    t.tag = localise(tag);
     t.gc  = gc;
 
     m_tags[type].push_back(t);

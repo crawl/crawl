@@ -13,6 +13,7 @@
 #include "files.h"
 #include "glwrapper.h"
 #include "libutil.h"
+#include "localise.h"
 #include "map-knowledge.h"
 #include "menu.h"
 #include "message.h"
@@ -1356,7 +1357,7 @@ void TilesFramework::redraw()
         const coord_def min_pos = coord_def() + buffer;
         const coord_def max_pos = m_windowsz - buffer;
         m_tip_font->render_tooltip(m_mouse.x, m_mouse.y,
-                formatted_string(m_tooltip), min_pos, max_pos);
+                formatted_string(localise(m_tooltip)), min_pos, max_pos);
     }
     wm->swap_buffers();
 
