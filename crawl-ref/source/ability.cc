@@ -778,7 +778,7 @@ static const ability_def& get_ability_def(ability_type abil)
     // Initialize map on first lookup.
     if (abil_map.empty())
         for (const ability_def &ab_def : _get_ability_list())
-            abil_map.emplace(ab_def.ability, ab_def);
+            abil_map.insert(make_pair(ab_def.ability, ab_def));
 
     const ability_def* def = map_find(abil_map, abil);
     if (def)
