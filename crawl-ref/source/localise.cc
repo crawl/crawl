@@ -322,10 +322,9 @@ static int _get_matching_pattern_index(const string& s, bool full_sentence_only 
     if (s.empty())
         return -1;
 
-    string punct;
     if (full_sentence_only)
     {
-        punct = get_end_punctuation(s);
+        string punct = get_end_punctuation(s);
         if (punct.empty())
             return -1;
     }
@@ -350,8 +349,8 @@ static int _get_matching_pattern_index(const string& s, bool full_sentence_only 
             if (full_sentence_only)
             {
                 string format = _patterns[i].second;
-                string punct2 = get_end_punctuation(format);
-                if (punct2 == punct)
+                string punct = get_end_punctuation(format);
+                if (!punct.empty())
                     return (int)i;
 
                 // variable punctuation placeholder
