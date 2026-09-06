@@ -601,7 +601,7 @@ def process_art_data_txt():
 def process_yaml_file(filename):
     return {}
 
-def is_des_shop_rebadge_line(line):
+def is_shop_rebadge_line(line):
     if re.search(r'\bshop\b', line):
         if "type:" in line or "suffix:" in line:
             return True
@@ -609,12 +609,28 @@ def is_des_shop_rebadge_line(line):
         return True
     return False
 
+def is_book_rebadge_line(line):
+    if "title:" in line:
+        return True
+    return False
+
 def is_des_rebadge_line(line):
     if re.search(r'\bname:', line):
         return True
-    if is_des_shop_rebadge_line(line):
+    if is_shop_rebadge_line(line):
+        return True
+    if is_book_rebadge_line(line):
         return True
     return False
+
+def extract_rebadge_field(field, line):
+    result = ""
+    m = re.search(r'\b' + field + r':([^ \)\}]+)', line)
+    if m and m[1]:
+          result = m[1].replace('_', ' ')
+    if result == "player":
+        result = "@player_name@"
+    return result
 
 # where a name is overriden in a .des/.lua file, extract the new name and inflections
 def extract_strings_from_des_rebadge_line(line):
@@ -640,7 +656,7 @@ def extract_strings_from_des_rebadge_line(line):
     line = re.sub(r'K?FEAT:\s*', '', line)
     line = re.sub(r'spells:[^ ]+', '', line)
 
-    if is_des_shop_rebadge_line(line):
+    if is_shop_rebadge_line(line):
         # Handle shop names
         line = re.sub(r'\s*\.\.\s*([a-zA-Z_]+)\s*\.\.', r'@\1@', line)
         line = line.replace('@smithy@', '@owner@')
@@ -672,6 +688,16 @@ def extract_strings_from_des_rebadge_line(line):
         name = name.replace('_', ' ')
 
         return [name]
+
+    elif is_book_rebadge_line(line):
+        title = extract_rebadge_field("title", line)
+        owner = extract_rebadge_field("owner", line)
+        strings = []
+        if owner != "" and owner != "@player_name@":
+            strings.append(owner)
+        if title != "":
+            strings.append(title)
+        return strings
 
     if not is_des_rebadge_line(line):
         return []
@@ -1035,7 +1061,7 @@ def process_lua_lines(filename, section, lines, result):
             result[section].extend(keepers)
             if len(keepers) < len(strings):
                 if len(keepers) == 0:
-                    #sys.stderr.write('IGNORE: ' + line + '\n')
+                    sys.stderr.write('IGNORE: ' + line + '\n')
                     pass
                 else:
                     #sys.stderr.write('PARTIALLY IGNORE: ' + line + '\n')
