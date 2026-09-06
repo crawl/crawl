@@ -869,7 +869,14 @@ def handle_timed_portal_message(line):
             adjectives.extend(strings)
         else:
             result.extend(strings)
+
     if noisemaker != "":
+        old_result = result
+        result = []
+        for string in old_result:
+            string = string.replace("$F{The}", "The " + noisemaker)
+            result.append(string)
+
         for adj in adjectives:
             if adj == "" and sound == "":
                 continue
@@ -879,6 +886,7 @@ def handle_timed_portal_message(line):
                     thing = article_a(dist.replace("@arg@", noisemaker))
                 msg = "You hear the " + adj + sound + " of " + thing + ".";
                 result.append(msg)
+
     return result
 
 def preprocess_lua_lines(lines):
