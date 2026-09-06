@@ -904,7 +904,7 @@ def process_lua_lines(filename, section, lines, result):
         if '"' not in line and "'" not in line:
             continue
 
-        if "stderr" in line or "error" in line or "dpr" in line or "assert" in line:
+        if re.search("(stderr|error|dpr|assert|veto)", line):
             continue
 
         if re.search(r'^(if|elseif)\b', line):
@@ -1014,22 +1014,21 @@ def process_des_file(filename):
     result[section] = []
     for line in lines:
         trimmed = line.strip()
-        if trimmed.startswith("{{"):
-            in_lua_section = True
-            continue
-        elif trimmed.endswith("}}"):
-            in_lua_section = False
-            lua_lines.append(line)
-            continue
 
         is_lua_line = False
+        if trimmed.startswith(":"):
+            is_lua_line = True
+            line = re.sub('^: ?', '', line)
+        else:
+            if "{{" in line and not re.match('^N?SUBST:', line):
+                in_lua_section = True
+            # start and end can be on same line
+            if in_lua_section and trimmed.endswith("}}"):
+                in_lua_section = False
+                is_lua_line = True
+
         if in_lua_section:
             is_lua_line = True
-        elif trimmed.startswith(":"):
-            is_lua_line = True
-            line = line[1:]
-            if line.startswith(" "):
-                line = line[1:]
 
         if is_lua_line:
             lua_lines.append(line)
