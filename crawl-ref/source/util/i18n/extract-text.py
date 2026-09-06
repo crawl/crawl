@@ -923,7 +923,7 @@ def process_lua_lines(filename, section, lines, result):
             continue
 
         # debug/error stuff
-        if re.search("(stderr|error|dpr|assert|veto)", line):
+        if re.search("(stderr|error|dpr|assert)", line):
             continue
 
         if re.search(r'^(if|elseif)\b', line):
@@ -1476,6 +1476,8 @@ def post_process_generic(input):
         new_strings = []
         for string in old_strings:
             if string == "":
+                continue
+            if "veto" in string:
                 continue
             if section not in ["potion_colours", "ugly_colour_names", "drac_colour_names"]:
                 if is_text_colour(string):
