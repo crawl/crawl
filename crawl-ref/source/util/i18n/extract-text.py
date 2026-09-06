@@ -1021,6 +1021,9 @@ def process_des_file(filename):
         if trimmed.startswith(":"):
             is_lua_line = True
             line = re.sub('^: ?', '', line)
+        elif "lua:" in line:
+            is_lua_line = True
+            line = re.sub('^.*?lua:', '', line)
         else:
             if "{{" in line and not re.match('^N?SUBST:', line):
                 in_lua_section = True
@@ -1034,10 +1037,15 @@ def process_des_file(filename):
 
         if is_lua_line:
             lua_lines.append(line)
-            continue
-        elif len(lua_lines) != 0:
+            if in_lua_section or trimmed.startswith(":"):
+                continue
+
+        if len(lua_lines) != 0:
             process_lua_lines(filename, section, lua_lines, result)
             lua_lines = []
+
+        if is_lua_line:
+            continue
 
         if "NAME:" in line:
             section = line.replace("NAME:", "").strip()
