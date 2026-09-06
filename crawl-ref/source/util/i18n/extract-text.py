@@ -867,13 +867,10 @@ def preprocess_lua_lines(lines):
         if last.endswith("\\"):
             result[-1] = last[0:-1].rstrip() + " " + stripped
             continue
-        elif last.endswith("("):
-            result[-1] = last + stripped
-            continue
         elif last.endswith("..") or stripped.startswith(".."):
             result[-1] = last  + " " + stripped
             continue
-        elif last.endswith(",") and "(" in last:
+        elif "(" in last and re.search('[,{(]$', last):
             result[-1] = last  + " " + stripped
             continue
         elif last.endswith('"') and stripped.startswith('"'):
