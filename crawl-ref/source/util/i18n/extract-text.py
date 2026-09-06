@@ -612,6 +612,8 @@ def is_shop_rebadge_line(line):
 def is_book_rebadge_line(line):
     if "title:" in line:
         return True
+    if "randbook" in line and "owner:" in line:
+        return True
     return False
 
 def is_des_rebadge_line(line):
@@ -1061,7 +1063,7 @@ def process_lua_lines(filename, section, lines, result):
             result[section].extend(keepers)
             if len(keepers) < len(strings):
                 if len(keepers) == 0:
-                    sys.stderr.write('IGNORE: ' + line + '\n')
+                    #sys.stderr.write('IGNORE: ' + line + '\n')
                     pass
                 else:
                     #sys.stderr.write('PARTIALLY IGNORE: ' + line + '\n')
