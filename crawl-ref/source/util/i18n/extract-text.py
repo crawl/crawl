@@ -763,6 +763,7 @@ def extract_lua_strings(line):
 
     results = list(filter(lambda s: len(s.strip()) > 1, results))
     results = list(filter(lambda s: '_' not in s or not re.match('^[_A-Za-z0-9]+$', s) , results))
+    results = list(filter(lambda s: not re.match(r'^\.[A-Za-z0-9]', s) , results))
 
     return results
 
@@ -949,9 +950,8 @@ def process_lua_lines(filename, section, lines, result):
             result[section].extend(strings)
             continue
         elif section == "decorative_floor" or "_statue_setup" in section:
-            if re.search(r'\]\s*=', line):
-                strings = extract_lua_strings(line)
-                result[section].append(article_a(strings[0]))
+            for string in re.findall(r'\[\s*"([^"]+)"', line):
+                result[section].append(article_a(string))
             continue
         elif "decorative_floor" in line or "_statue_setup" in line:
             continue
