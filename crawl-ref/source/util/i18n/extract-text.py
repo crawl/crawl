@@ -904,6 +904,7 @@ def process_lua_lines(filename, section, lines, result):
         if '"' not in line and "'" not in line:
             continue
 
+        # debug/error stuff
         if re.search("(stderr|error|dpr|assert|veto)", line):
             continue
 
@@ -954,6 +955,8 @@ def process_lua_lines(filename, section, lines, result):
             continue
         elif re.search(r"(crawl\.god_speaks|set_feature_name)", line):
             result[section].append(strings[-1])
+        elif "wizlab_milestone" in line:
+            result[section].extend(strings)
         else:
             for string in strings:
                 if re.search(r".{9}[.!?]$", string) and not re.search(r"[=:/]", string):
