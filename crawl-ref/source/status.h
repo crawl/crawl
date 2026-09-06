@@ -98,3 +98,19 @@ const char *duration_expire_message(duration_type dur);
 int duration_expire_offset(duration_type dur);
 int duration_expire_point(duration_type dur);
 msg_channel_type duration_expire_chan(duration_type dur);
+
+class status_iterator : public iterator<forward_iterator_tag, int>
+{
+public:
+    status_iterator();
+    operator bool() const PURE;
+    int operator *() const PURE;
+    const int* operator->() const PURE;
+
+    virtual void operator ++ ();
+    void operator ++ (int);
+private:
+    int current;
+    bool in_priority_phase;
+    bitset<STATUS_LAST_STATUS + 1> done;
+};

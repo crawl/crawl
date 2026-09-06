@@ -1310,45 +1310,8 @@ static vector<status_light> _get_status_lights()
     }
 #endif
 
-    // We used to have to hardcode every status, now we just hardcode the
-    // statuses important enough to appear first. (Rightmost)
-    const unsigned int important_statuses[] =
-    {
-        STATUS_TESSERACT,
-        STATUS_ORB,
-        STATUS_ZOT,
-        STATUS_STAT_ZERO,
-        DUR_PARALYSIS,
-        DUR_CONF,
-        DUR_PETRIFYING,
-        DUR_PETRIFIED,
-        DUR_BERSERK,
-        DUR_TELEPORT,
-        DUR_ENKINDLED,
-        STATUS_MNEMOPHAGE,
-        DUR_HASTE,
-        DUR_SLOW,
-        STATUS_SPEED,
-        DUR_DEATHS_DOOR,
-        DUR_BLINK_COOLDOWN,
-        DUR_BERSERK_COOLDOWN,
-        DUR_EXHAUSTED,
-        DUR_WORD_OF_CHAOS_COOLDOWN,
-        DUR_DEATHS_DOOR_COOLDOWN,
-        DUR_QUAD_DAMAGE,
-        STATUS_SERPENTS_LASH,
-    };
-
-    bitset<STATUS_LAST_STATUS + 1> done;
-    for (unsigned important : important_statuses)
-    {
-        _add_status_light_to_out(important, out);
-        done.set(important);
-    }
-
-    for (unsigned status = 0; status <= STATUS_LAST_STATUS ; ++status)
-        if (!done[status])
-            _add_status_light_to_out(status, out);
+    for (status_iterator si; si; ++si)
+        _add_status_light_to_out(*si, out);
 
     return out;
 }

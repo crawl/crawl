@@ -1460,3 +1460,81 @@ void duration_end_effect(duration_type dur)
     if (_lookup_duration(dur)->decr.end.on_end)
         _lookup_duration(dur)->decr.end.on_end();
 }
+
+// Order of 'priority' status lights, to be drawn left-to-right on the HUD.
+// Any durations or statuses not listed here will be drawn afterward in enum order.
+static const vector<unsigned int> important_statuses =
+{
+    STATUS_TESSERACT,
+    STATUS_ORB,
+    STATUS_ZOT,
+    STATUS_STAT_ZERO,
+    DUR_PARALYSIS,
+    DUR_CONF,
+    DUR_PETRIFYING,
+    DUR_PETRIFIED,
+    DUR_BERSERK,
+    DUR_TELEPORT,
+    DUR_ENKINDLED,
+    STATUS_MNEMOPHAGE,
+    DUR_HASTE,
+    DUR_SLOW,
+    STATUS_SPEED,
+    DUR_DEATHS_DOOR,
+    DUR_BLINK_COOLDOWN,
+    DUR_BERSERK_COOLDOWN,
+    DUR_EXHAUSTED,
+    DUR_WORD_OF_CHAOS_COOLDOWN,
+    DUR_DEATHS_DOOR_COOLDOWN,
+    DUR_QUAD_DAMAGE,
+    STATUS_SERPENTS_LASH,
+};
+
+status_iterator::status_iterator()
+    : current(0), in_priority_phase(true)
+{
+    done.reset(false);
+}
+
+status_iterator::operator bool() const
+{
+    return current <= STATUS_LAST_STATUS;
+}
+
+int status_iterator::operator *() const
+{
+    if (in_priority_phase)
+        return important_statuses[current];
+    return current;
+}
+
+const int* status_iterator::operator->() const
+{
+    return &current;
+}
+
+void status_iterator::operator ++()
+{
+    if (in_priority_phase)
+    {
+        done.set(important_statuses[current]);
+        if (++current >= (int)important_statuses.size())
+        {
+            in_priority_phase = false;
+            current = -1;
+            ++(*this);
+        }
+    }
+    else
+    {
+        if (current <= STATUS_LAST_STATUS)
+            ++current;
+        while (current < STATUS_LAST_STATUS && done[current])
+            ++current;
+    }
+}
+
+void status_iterator::operator++(int)
+{
+    ++(*this);
+}
