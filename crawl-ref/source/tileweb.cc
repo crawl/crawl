@@ -1280,7 +1280,13 @@ void TilesFramework::_send_player(bool force_full)
             json_open_object();
             if (!status.light_text.empty())
             {
-                json_write_string("light", status.light_text);
+                if (!status.light_text_formatted.empty())
+                {
+                    json_write_string("light", status.light_text_formatted);
+                    json_write_bool("use_html", true);
+                }
+                else
+                    json_write_string("light", status.light_text);
                 json_write_string("desc", status_light_description(status));
             }
             if (!status.short_text.empty())

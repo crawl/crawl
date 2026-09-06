@@ -1232,10 +1232,9 @@ static void _print_stats_qv(int y)
 
 struct status_light
 {
-    status_light(int c, string t, int s = -1)
-        : colour(c), text(t), status(s) {}
-    colour_t colour;
-    string text;
+    status_light(formatted_string str, int _status = -1)
+        : text(str), status(_status) {}
+    formatted_string text;
     int status;
 };
 
@@ -1276,8 +1275,10 @@ static void _add_status_light_to_out(int i, vector<status_light>& out)
 
     if (fill_status_info(i, inf) && !inf.light_text.empty())
     {
-        status_light sl(inf.light_colour, inf.light_text, i);
-        out.push_back(sl);
+        if (!inf.light_text_formatted.empty())
+            out.emplace_back(formatted_string::parse_string(inf.light_text_formatted), i);
+        else
+            out.emplace_back(formatted_string(inf.light_text, inf.light_colour), i);
     }
 }
 
@@ -1294,8 +1295,10 @@ static void _add_status_light_to_out(int i, vector<status_light>& out)
 // using the '@' command. Things like confusion and sticky flame
 // hide their amounts and are thus always the same colour (so
 // we're not really exposing any new information). --bwr
-static void _get_status_lights(vector<status_light>& out)
+static vector<status_light> _get_status_lights()
 {
+    vector<status_light> out;
+
 #ifdef DEBUG_DIAGNOSTICS
     if (mouse_control::current_mode() != MOUSE_MODE_NORMAL
         || !(you.running > 0 || you.running < 0 && Options.travel_delay == -1))
@@ -1303,7 +1306,7 @@ static void _get_status_lights(vector<status_light>& out)
         static char static_pos_buf[80];
         snprintf(static_pos_buf, sizeof(static_pos_buf),
                  "%2d,%2d", you.pos().x, you.pos().y);
-        out.emplace_back(LIGHTGREY, static_pos_buf);
+        out.emplace_back(formatted_string(static_pos_buf, LIGHTGREY));
     }
 #endif
 
@@ -1346,13 +1349,14 @@ static void _get_status_lights(vector<status_light>& out)
     for (unsigned status = 0; status <= STATUS_LAST_STATUS ; ++status)
         if (!done[status])
             _add_status_light_to_out(status, out);
+
+    return out;
 }
 
 static void _print_status_lights(int y)
 {
-    vector<status_light> lights;
+    vector<status_light> lights = _get_status_lights();
     static int last_number_of_lights = 0;
-    _get_status_lights(lights);
     if (lights.empty() && last_number_of_lights == 0)
     {
         you.redraw_status_lights = false;
@@ -1381,16 +1385,15 @@ static void _print_status_lights(int y)
     while (true)
     {
         const int end_x = (wherex() - crawl_view.hudp.x)
-                + (i_light < lights.size() ? strwidth(lights[i_light].text)
+                + (i_light < lights.size() ? lights[i_light].text.width()
                                            : 10000);
 
         if (end_x <= crawl_view.hudsz.x)
         {
-            textcolour(lights[i_light].colour);
 #ifdef USE_TILE_LOCAL
-            _record_status_light(lights[i_light], strwidth(lights[i_light].text));
+            _record_status_light(lights[i_light], lights[i_light].text.width());
 #endif
-            NOWRAP_EOL_CPRINTF("%s", lights[i_light].text.c_str());
+            lights[i_light].text.display();
             if (end_x < crawl_view.hudsz.x)
                 NOWRAP_EOL_CPRINTF(" ");
             ++i_light;
@@ -1412,26 +1415,32 @@ static void _print_status_lights(int y)
         size_t i_light = 0;
         if (lights.size() == 1)
         {
-            textcolour(lights[0].colour);
-            _record_status_light(lights[0], strwidth(lights[0].text));
-            CPRINTF("%s", lights[0].text.c_str());
+            _record_status_light(lights[0], lights[0].text.width());
+            lights[0].text.display();
         }
         else
         {
             while (i_light < lights.size() && (int)i_light < crawl_view.hudsz.x - 1)
             {
-                textcolour(lights[i_light].colour);
                 const bool full = i_light == lights.size() - 1
-                    && strwidth(lights[i_light].text) < crawl_view.hudsz.x - wherex();
+                    && lights[i_light].text.width() < crawl_view.hudsz.x - wherex();
                 // Must do this before the print, as it uses the cursor position.
                 _record_status_light(lights[i_light],
-                                     full ? strwidth(lights[i_light].text) : 1);
+                                     full ? lights[i_light].text.width() : 1);
                 if (full)
-                    CPRINTF("%s",lights[i_light].text.c_str());
+                    lights[i_light].text.display();
                 else if ((int)lights.size() > crawl_view.hudsz.x / 2)
-                    CPRINTF("%.1s",lights[i_light].text.c_str());
+                {
+                    // Print the colour tag and then the first character.
+                    lights[i_light].text.display(0, 0);
+                    CPRINTF("%c",lights[i_light].text[0]);
+                }
                 else
-                    CPRINTF("%.1s ",lights[i_light].text.c_str());
+                {
+                    // Print the colour tag and then the first character.
+                    lights[i_light].text.display(0, 0);
+                    CPRINTF("%c ",lights[i_light].text[0]);
+                }
                 ++i_light;
             }
         }

@@ -506,7 +506,11 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
             let status = $("<span>");
             status.addClass("status_light");
             status.addClass("fg" + status_inf.col);
-            status.text(status_inf.light);
+            if (status_inf.use_html)
+                status.html(util.formatted_string_to_html(status_inf.light))
+            else
+                status.text(status_inf.light);
+
             status.on("mouseenter mousemove", ev => {
                 tooltip.css({top: ev.pageY + "px"});
                 tooltip.html(util.formatted_string_to_html(status_inf.desc));

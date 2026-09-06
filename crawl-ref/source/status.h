@@ -70,6 +70,7 @@ struct status_info
 
     int light_colour;
     string light_text; // status light
+    string light_text_formatted; // status light (if using multi-colour)
     string short_text; // @: line
     string long_text;  // @ message
 };
