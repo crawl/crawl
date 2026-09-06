@@ -948,6 +948,17 @@ def process_lua_lines(filename, section, lines, result):
             strings = handle_lua_door_description(line)
             result[section].extend(strings)
             continue
+        elif section == "decorative_floor" or "_statue_setup" in section:
+            if re.search(r'\]\s*=', line):
+                strings = extract_lua_strings(line)
+                result[section].append(article_a(strings[0]))
+            continue
+        elif "decorative_floor" in line or "_statue_setup" in line:
+            continue
+
+        # dict keys
+        line = re.sub(r'\["[^"]+"\]', '[dummy]', line)
+        line = re.sub(r"\['[^']+'\]", '[dummy]', line)
 
         if "crawl.mpr" in line:
             # second param is channel
@@ -959,26 +970,25 @@ def process_lua_lines(filename, section, lines, result):
             continue
         elif "crawl.mpr" in line:
             result[section].extend(strings)
-        elif section in ["decorative_floor", "vault_metal_statue_setup"] and re.search(r'\]\s*=', line):
-            result[section].append(article_a(strings[0]))
-        elif re.search(r"(decorative_floor|vault_metal_statue_setup)", line):
-            continue
         elif re.search(r"(crawl\.god_speaks|set_feature_name)", line):
             result[section].append(strings[-1])
         elif re.search(r"(wizlab|trove)_milestone", line):
             result[section].extend(strings)
         else:
-            used = False
+            sentences = []
             for string in strings:
-                if re.search(r".{9}[.!?]$", string) and not re.search(r"[=:/]", string):
-                    result[section].append(string)
-                    used = True
-                elif "The" in string:
-                    result[section].append(string)
-                    used = True
-            if not used:
-                #sys.stderr.write('IGNORE: ' + line + '\n')
-                pass
+                if "The" in string:
+                    sentences.append(string)
+                elif re.search(r".{9}[.!?]$", string) and not re.search(r"[=:/]", string):
+                    sentences.append(string)
+            result[section].extend(sentences)
+            if len(sentences) < len(strings):
+                if len(sentences) == 0:
+                    #sys.stderr.write('IGNORE: ' + line + '\n')
+                    pass
+                else:
+                    #sys.stderr.write('PARTIALLY IGNORE: ' + line + '\n')
+                    pass
 
 def process_lua_file(filename):
     result = {}
