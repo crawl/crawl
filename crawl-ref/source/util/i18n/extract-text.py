@@ -1043,6 +1043,9 @@ def process_des_file(filename):
             section = line.replace("NAME:", "").strip()
             if section not in result:
                 result[section] = []
+        elif "DESC:" in line:
+            string = line.replace("DESC:", "").strip()
+            result[section].append(string)
         elif is_des_rebadge_line(line):
             strings = extract_strings_from_des_rebadge_line(line)
             result[section].extend(strings)
