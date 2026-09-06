@@ -5,8 +5,12 @@
 #include "tilereg-stat.h"
 
 #include "command.h"
+#include "format.h"
 #include "libutil.h"
 #include "macro.h"
+#include "menu.h"
+#include "output.h"
+#include "status.h"
 #include "tiles-build-specific.h"
 
 StatRegion::StatRegion(FontWrapper *font_arg) : TextRegion(font_arg)
@@ -15,6 +19,12 @@ StatRegion::StatRegion(FontWrapper *font_arg) : TextRegion(font_arg)
 
 int StatRegion::handle_mouse(wm_mouse_event &event)
 {
+    int cx, cy;
+    if (mouse_pos(event.px, event.py, cx, cy))
+        m_mouse_cell = coord_def(cx, cy);
+    else
+        m_mouse_cell = coord_def(-1, -1);
+
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return 0;
 
@@ -37,6 +47,19 @@ bool StatRegion::update_tip_text(string& tip)
 {
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return false;
+
+    const int status = status_light_at(m_mouse_cell.x, m_mouse_cell.y);
+    status_info inf;
+    if (status >= 0 && fill_status_info(status, inf))
+    {
+        // Strip any formatting, as the tooltip doesn't handle it.
+        tip = formatted_string::parse_string(
+                    status_light_description(inf)).tostring();
+        // Wrap the string. Width chosen to be roughly the size of the status
+        // area in a full screen layout.
+        linebreak_string(tip, 48);
+        return true;
+    }
 
 #ifdef __ANDROID__
     if (tiles.is_using_small_layout())

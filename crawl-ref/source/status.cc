@@ -6,6 +6,7 @@
 #include "art-enum.h" // bearserk
 #include "artefact.h"
 #include "branch.h"
+#include "database.h"
 #include "dungeon.h" // DESCENT_STAIRS_KEY
 #include "duration-type.h"
 #include "env.h"
@@ -1043,6 +1044,26 @@ bool fill_status_info(int status, status_info& inf)
             break;
     }
     return true;
+}
+
+string status_light_description(const status_info& inf)
+{
+    // Split off any extra info, e.g. counts for things like Zot and Flay.
+    // (Status db descriptions never have spaces.)
+    string dbname = split_string(" ", inf.light_text, true, true, 1)[0];
+    // Don't claim Zot is impending when it's not near.
+    if (dbname == "Zot" && inf.light_colour == WHITE)
+        dbname = "Zot count";
+    string dbdesc = getLongDescription(dbname + " status");
+    trim_string_right(dbdesc);
+
+    if (dbdesc.empty())
+        dbdesc = "No description found";
+
+    if (inf.short_text.find(" (expiring)") != string::npos)
+        dbdesc += " (expiring)";
+
+    return dbdesc;
 }
 
 static colour_t _gem_light_colour(int d_aut_left)

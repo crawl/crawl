@@ -50,6 +50,7 @@
 #include "showsymb.h"
 #include "skills.h"
 #include "state.h"
+#include "status.h"
 #include "stringutil.h"
 #include "throw.h"
 #include "tile-flags.h"
@@ -1280,19 +1281,7 @@ void TilesFramework::_send_player(bool force_full)
             if (!status.light_text.empty())
             {
                 json_write_string("light", status.light_text);
-                // split off any extra info, e.g. counts for things like Zot
-                // and Flay. (Status db descriptions never have spaces.)
-                string dbname = split_string(" ", status.light_text, true, true, 1)[0];
-                // Don't claim Zot is impending when it's not near.
-                if (dbname == "Zot" && status.light_colour == WHITE)
-                    dbname = "Zot count";
-                string dbdesc = getLongDescription(dbname + " status");
-
-                // add expiring description
-                if (status.short_text.find(" (expiring)") != std::string::npos)
-                    dbdesc += " (expiring)";
-
-                json_write_string("desc", dbdesc.size() ? dbdesc : "No description found");
+                json_write_string("desc", status_light_description(status));
             }
             if (!status.short_text.empty())
                 json_write_string("text", status.short_text);
