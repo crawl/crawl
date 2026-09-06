@@ -848,6 +848,39 @@ def handle_lua_door_description(line):
     strings.append(article_the(desc))
     return strings
 
+def handle_timed_portal_message(line):
+    result = []
+    noisemaker = ""
+    sound = ""
+    adjectives = ["", "stately ", "brisk ", "urgent ", "frantic "]
+    distances = ["", "very distant @arg@", "distant @arg@", "@arg@ nearby", "@arg@ very nearby"]
+    line = re.sub(r'([A-Za-z_]+)\s*=', r'\n\1 =', line)
+    tokens = line.split("\n")
+    for token in tokens:
+        strings = extract_lua_strings(token)
+        if len(strings) == 0:
+            continue
+        if "noisemaker" in token:
+            noisemaker = strings[0]
+        elif "verb" in token:
+            sound = strings[0]
+        elif "ranges" in token:
+            adjectives = [""]
+            adjectives.extend(strings)
+        else:
+            result.extend(strings)
+    if noisemaker != "":
+        for adj in adjectives:
+            if adj == "" and sound == "":
+                continue
+            for dist in distances:
+                thing = article_a(noisemaker)
+                if dist != "":
+                    thing = article_a(dist.replace("@arg@", noisemaker))
+                msg = "You hear the " + adj + sound + " of " + thing + ".";
+                result.append(msg)
+    return result
+
 def preprocess_lua_lines(lines):
     result = []
     for line in lines:
@@ -880,6 +913,10 @@ def preprocess_lua_lines(lines):
         elif re.search(r'^\s*(if|elseif)', last) and not re.search(r'\bthen\b', last):
             result[-1] = last  + " " + stripped
             continue
+        elif re.search(r'timed_msg\s*\{', last):
+            if stripped != "}":
+                result[-1] = last  + " " + stripped
+                continue
 
         result.append(line)
 
@@ -947,6 +984,10 @@ def process_lua_lines(filename, section, lines, result):
 
         if "door_description_" in line:
             strings = handle_lua_door_description(line)
+            result[section].extend(strings)
+            continue
+        elif re.search(r'timed_msg\s*\{', line):
+            strings = handle_timed_portal_message(line)
             result[section].extend(strings)
             continue
         elif section == "decorative_floor" or "_statue_setup" in section:
