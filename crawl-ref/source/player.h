@@ -1375,3 +1375,5 @@ bool need_expiration_warning(coord_def p = you.pos());
 
 bool player_has_orb();
 bool player_on_orb_run();
+
+void display_damage_rating(const item_def *weapon);

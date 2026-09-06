@@ -711,7 +711,7 @@ void UseItemMenu::set_hovered(int hovered, bool force)
 bool UseItemMenu::examine_index(int i)
 {
     if (show_unarmed() && i == 0)
-        return true; // no description implemented
+        return unarmed_fake_item_popup();
     else if (is_inventory)
         return InvMenu::examine_index(i);
     else // floor item

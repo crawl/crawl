@@ -4189,6 +4189,120 @@ void target_item(item_def &item)
     reset_training();
 }
 
+// If someone wants to make a "real" fake item for this, be my guest - hellmonk
+command_type unarmed_fake_item_popup()
+{
+    string name = you.unarmed_attack_name("Unarmed Combat");
+    string desc = "A properly honed body is also a weapon.";
+
+    desc += make_stringf(
+        "\n\nBase accuracy: %+d  Base damage: %d  ",
+            you.form_uses_xl() ? you.experience_level * 100 / 200 : 6,
+            unarmed_base_damage(false) + unarmed_base_damage_bonus(false));
+    desc += "\nMinimum attack delay (0.5) is reached at skill level 27";
+    desc += make_stringf("\nCurrent attack delay: %.1f.",
+        you.attack_delay_with(nullptr).expected() / 10);
+    const item_def *shield = you.shield();
+    if (you.skill(SK_SHIELDS) < MAX_SKILL_LEVEL
+        && you_can_wear(SLOT_OFFHAND) != false)
+    {
+        if (shield)
+        {
+            _append_penalty(desc, shield,
+                            you.adjusted_shield_penalty(20), 20);
+        }
+        else
+            desc += "\nWearing a shield would reduce your attack speed.";
+    }
+    desc += "\nDamage rating: " + damage_rating(nullptr);
+    desc += "\n\nSome talismans increase unarmed base damage or give unarmed "
+            "attacks special properties.";
+
+    string quote = getQuoteString("unarmed combat");
+
+    if (!(crawl_state.game_is_hints_tutorial()
+          || quote.empty()))
+    {
+        desc += "\n_________________\n\n<darkgrey>" + quote + "</darkgrey>";
+    }
+
+    formatted_string fs_desc = formatted_string::parse_string(desc);
+
+    auto vbox = make_shared<Box>(Widget::VERT);
+    auto title_hbox = make_shared<Box>(Widget::HORZ);
+
+#ifdef USE_TILE
+    auto tiles_stack = make_shared<Stack>();
+    auto icon = make_shared<Image>();
+    icon->set_tile(TILEG_UNARMED_COMBAT_ON);
+    tiles_stack->add_child(std::move(icon));
+    title_hbox->add_child(std::move(tiles_stack));
+#endif
+
+    auto title = make_shared<Text>(name);
+    title->set_margin_for_sdl(0, 0, 0, 10);
+    title_hbox->add_child(std::move(title));
+
+    title_hbox->set_cross_alignment(Widget::CENTER);
+    title_hbox->set_margin_for_crt(0, 0, 1, 0);
+    title_hbox->set_margin_for_sdl(0, 0, 20, 0);
+    vbox->add_child(std::move(title_hbox));
+
+    auto scroller = make_shared<Scroller>();
+    auto text = make_shared<Text>(fs_desc.trim());
+    text->set_wrap_text(true);
+    scroller->set_child(text);
+    vbox->add_child(scroller);
+
+    formatted_string footer_text("", CYAN);
+
+#ifdef USE_TILE_LOCAL
+    vbox->max_size().width = tiles.get_crt_font()->char_width()*80;
+#endif
+
+    auto popup = make_shared<ui::Popup>(std::move(vbox));
+
+    bool done = false;
+    command_type action = CMD_NO_CMD;
+    int lastch; // unused??
+    popup->on_keydown_event([&](const KeyEvent& ev) {
+        const auto key = ev.key() == '{' ? 'i' : ev.key();
+        lastch = key;
+        if (ui::key_exits_popup(key, true))
+            done = true;
+        else if (scroller->on_event(ev))
+            return true;
+        return true;
+    });
+
+#ifdef USE_TILE_WEB
+    fs_desc = fs_desc.to_colour_string(LIGHTGRAY);
+    tiles.json_open_object();
+    tiles.json_write_string("title", name);
+    trim_string(fs_desc);
+    tiles.json_write_string("body", fs_desc);
+
+    tiles.json_write_string("actions", footer_text.tostring());
+    tiles.json_open_array("tiles");
+    for (const auto &tile : item_tiles)
+    {
+        tiles.json_open_object();
+        tiles.json_write_int("t", tile.tile);
+        tiles.json_write_int("tex", get_tile_texture(tile.tile));
+        if (tile.ymax != TILE_Y)
+            tiles.json_write_int("ymax", tile.ymax);
+        tiles.json_close_object();
+    }
+    tiles.json_close_array();
+    tiles.push_ui_layout("describe-item", 0);
+    popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
+#endif
+
+    ui::run_layout(std::move(popup), done);
+
+    return action;
+}
+
 /**
  *  Display a pop-up describe any item in the game.
  *

@@ -4414,3 +4414,8 @@ zombie
  never, ever be afraid!”
     -Max Brooks, _World War Z: An Oral History of the Zombie War_. 2006.
 %%%%
+unarmed combat
+
+"There is nothing much in this art. Take things as they are. Punch when you have
+to punch. Kick when you have to kick."
+    -Bruce Lee, _Tao of Jeet Kune Do_. 1975.
