@@ -4142,6 +4142,9 @@ sanctuary
 Disturbance
 
 %%%%
+@Arg1@: <lightgrey>@arg2@</lightgrey>
+
+%%%%
 Look
 
 %%%%
@@ -4152,6 +4155,9 @@ Aim
 
 %%%%
 <cyan>Items here: </cyan> @arg@.
+
+%%%%
+<cyan>Here:</cyan> @arg@
 
 %%%%
 This spell doesn't need a beam path.

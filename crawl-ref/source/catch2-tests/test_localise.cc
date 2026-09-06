@@ -118,6 +118,16 @@ TEST_CASE( "Localise German", "[single-file]" )
         CHECK( localise("a neutral orc skeleton") == "ein neutrales Skelett eines Orks" );
         CHECK( localise("a non-hostile red draconian simulacrum") ==
                         "ein nicht feindliches Simulacrum eines roten Drakoniers" );
+
+        CHECK( localise("a goblin") ==  "ein Goblin" );
+        CHECK( localise("a goblin, wielding a +0 dagger") ==
+                        "ein Goblin, mit einem +0 Dolch bewaffnet" );
+        CHECK( localise("a goblin, wielding a +0 dagger (asleep)") ==
+                        "ein Goblin, mit einem +0 Dolch bewaffnet (schlafend)" );
+        CHECK( localise("<cyan>Here:</cyan> a goblin, wielding a +0 dagger (asleep)") ==
+                        "<cyan>Hier:</cyan> ein Goblin, mit einem +0 Dolch bewaffnet (schlafend)" );
+        CHECK( localise("Here: <lightgrey>a goblin, wielding a +0 dagger (asleep)</lightgrey>") ==
+                        "Hier: <lightgrey>ein Goblin, mit einem +0 Dolch bewaffnet (schlafend)</lightgrey>" );
     }
 
     SECTION("Items")
