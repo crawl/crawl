@@ -955,7 +955,7 @@ def process_lua_lines(filename, section, lines, result):
             continue
         elif re.search(r"(crawl\.god_speaks|set_feature_name)", line):
             result[section].append(strings[-1])
-        elif "wizlab_milestone" in line:
+        elif re.search(r"(wizlab|trove)_milestone", line):
             result[section].extend(strings)
         else:
             for string in strings:
