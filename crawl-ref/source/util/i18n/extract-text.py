@@ -927,16 +927,10 @@ def process_lua_lines(filename, section, lines, result):
         line = handle_lua_string_concatenation(line)
 
         if is_rebadge_line:
-            if '"' in line:
-                for token in re.findall('"([^"]*)"', line):
-                    #sys.stderr.write("TOKEN: " + token + "\n")
-                    strings = extract_strings_from_des_rebadge_line(token)
-                    result[section].extend(strings)
-            else:
-                for token in re.findall("'([^']*)'", line):
-                    #sys.stderr.write("TOKEN: " + token + "\n")
-                    strings = extract_strings_from_des_rebadge_line(token)
-                    result[section].extend(strings)
+            strings = extract_lua_strings(line)
+            for string in strings:
+                strings2 = extract_strings_from_des_rebadge_line(string)
+                result[section].extend(strings2)
             continue
 
         if "crawl.mpr" in line:
