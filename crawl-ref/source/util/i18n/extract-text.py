@@ -640,8 +640,6 @@ def extract_strings_from_des_rebadge_line(line):
     line = re.sub(r'K?FEAT:\s*', '', line)
     line = re.sub(r'spells:[^ ]+', '', line)
 
-    #sys.stderr.write("LINE: " + line + "\n")
-
     if is_des_shop_rebadge_line(line):
         # Handle shop names
         line = re.sub(r'\s*\.\.\s*([a-zA-Z_]+)\s*\.\.', r'@\1@', line)
@@ -774,7 +772,6 @@ def normalise_lua_strings(line):
     if "'" not in line:
         return line
     elif '"' not in line:
-        #sys.stderr.write("LINE: " + line + "\n")
         line = line.replace("'", '"')
         return line
     return line
@@ -838,7 +835,6 @@ def handle_lua_door_description(line):
     prefix = ""
     suffix = ""
     for (key, value) in re.findall(r'([A-Za-z0-9_]+)\s*=\s*"([^"]+)"', line):
-        #sys.stderr.write(key + "=" + value + "\n")
         if key == "door_description_noun":
             noun = value
         elif key == "door_description_prefix":
