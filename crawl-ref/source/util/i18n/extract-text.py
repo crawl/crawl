@@ -958,12 +958,17 @@ def process_lua_lines(filename, section, lines, result):
         elif re.search(r"(wizlab|trove)_milestone", line):
             result[section].extend(strings)
         else:
+            used = False
             for string in strings:
                 if re.search(r".{9}[.!?]$", string) and not re.search(r"[=:/]", string):
                     result[section].append(string)
-                else:
-                    #sys.stderr.write('IGNORE: ' + line + '\n')
-                    pass
+                    used = True
+                elif "The" in string:
+                    result[section].append(string)
+                    used = True
+            if not used:
+                #sys.stderr.write('IGNORE: ' + line + '\n')
+                pass
 
 def process_lua_file(filename):
     result = {}
