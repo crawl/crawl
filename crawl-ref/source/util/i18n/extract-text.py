@@ -853,7 +853,7 @@ def handle_timed_portal_message(line):
     noisemaker = ""
     sound = ""
     adjectives = ["", "stately ", "brisk ", "urgent ", "frantic "]
-    distances = ["", "very distant @arg@", "distant @arg@", "@arg@ nearby", "@arg@ very nearby"]
+    distances = ["", "distant @arg@", "very distant @arg@", "@arg@ nearby", "@arg@ very nearby"]
     line = re.sub(r'([A-Za-z_]+)\s*=', r'\n\1 =', line)
     tokens = line.split("\n")
     for token in tokens:
@@ -1016,15 +1016,17 @@ def process_lua_lines(filename, section, lines, result):
         elif re.search(r"(wizlab|trove)_milestone", line):
             result[section].extend(strings)
         else:
-            sentences = []
+            keepers = []
             for string in strings:
                 if "The" in string:
-                    sentences.append(string)
+                    # looks like a sentence
+                    keepers.append(string)
                 elif re.search(r".{9}[.!?]$", string) and not re.search(r"[=:/]", string):
-                    sentences.append(string)
-            result[section].extend(sentences)
-            if len(sentences) < len(strings):
-                if len(sentences) == 0:
+                    # looks like a sentence
+                    keepers.append(string)
+            result[section].extend(keepers)
+            if len(keepers) < len(strings):
+                if len(keepers) == 0:
                     #sys.stderr.write('IGNORE: ' + line + '\n')
                     pass
                 else:
