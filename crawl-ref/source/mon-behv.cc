@@ -1610,7 +1610,7 @@ vector<monster *> find_allies_targeting(const actor &a)
 {
     vector<monster *> result;
     for (monster* m : monster_near_iterator(you.pos(), LOS_DEFAULT))
-        if (m->friendly() && m->foe == a.mindex())
+        if (m->friendly() && !m->is_peripheral() && m->foe == a.mindex())
             result.push_back(m);
     return result;
 }
@@ -1618,7 +1618,7 @@ vector<monster *> find_allies_targeting(const actor &a)
 bool is_ally_target(const actor &a)
 {
     for (monster* m : monster_near_iterator(you.pos(), LOS_DEFAULT))
-        if (m->friendly() && m->foe == a.mindex())
+        if (m->friendly() && !m->is_peripheral() && m->foe == a.mindex())
             return true;
     return false;
 }
