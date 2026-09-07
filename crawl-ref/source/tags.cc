@@ -5234,12 +5234,7 @@ static void _tag_read_you_items(reader &th)
     // how many unique items?
     count = unmarshallUByte(th);
     COMPILE_CHECK(NUM_UNRANDARTS <= 256);
-    int max_unrands = NUM_UNRANDARTS;
-#if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() < TAG_MINOR_EXPAND_UNRANDARTS)
-        max_unrands = 150;
-#endif
-    for (int j = 0; j < count && j < max_unrands; ++j)
+    for (int j = 0; j < count && j < NUM_UNRANDARTS; ++j)
     {
         you.unique_items[j] =
             static_cast<unique_item_status_type>(unmarshallByte(th));
