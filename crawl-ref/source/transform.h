@@ -9,12 +9,16 @@
 
 #include "enum.h"
 #include "player.h"
+#include "spl-util.h"
 
 constexpr int DRAGON_CLAWS = 3;
 constexpr int DRAGON_FANGS = 5;
 
 #define FLUX_ENERGY_KEY "flux_energy"
 constexpr int FLUX_ENERGY_WARNING = 10;
+
+#define JADEMANTLE_CRYSTAL_KEY "jade_crystals"
+#define JADEMANTLE_CRYSTAL_REVIVAL_KEY "jade_crystal_revival"
 
 enum form_capability
 {
@@ -382,3 +386,9 @@ bool maw_hunger_check(monster* mon);
 bool vampire_mesmerism_check(monster& mon);
 
 int walking_scroll_skill_bonus(int scale, int skill = -1);
+
+void jademantle_make_crystal(monster_type type);
+void jademantle_handle_crystal_revival(bool quiet = false);
+void jademantle_crystal_charge(spell_type spell);
+void jademantle_crystal_uncharge(monster_type type);
+bool jademantle_is_fully_charged();

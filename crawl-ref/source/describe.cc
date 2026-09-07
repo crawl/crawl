@@ -7944,6 +7944,8 @@ static string _describe_talisman_form(transformation form_type)
         _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Bat Swarm Recharge", skill, 0, true, false);
         _maybe_populate_form_table(items, bind(&Form::get_effect_chance, form, placeholders::_1), "Daze Power", skill, 0, false, false);
     }
+    if (form_type == transformation::jademantle)
+        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Crystal HP", skill, 0, true, false);
 
     vector<int> column_width;
 
@@ -7987,7 +7989,7 @@ static string _describe_talisman_form(transformation form_type)
         description << "\nClass: " << uppercase_first(holiness_description(form->holiness));
 
     // Now add various one-off bits of (generally non-scaling) data after that
-    TablePrinter pr(4, 80);
+    TablePrinter pr(form_type == transformation::jademantle ? 3 : 4, 80);
     pr.AddRow();
 
     if (form->size != SIZE_CHARACTER)
@@ -8049,6 +8051,11 @@ static string _describe_talisman_form(transformation form_type)
     }
     else if (form_type == transformation::fortress_crab)
         pr.AddCell("Armour egos", "x2");
+    else if (form_type == transformation::jademantle)
+    {
+        pr.AddCell("Elemental magic skill", "+2");
+        pr.AddCell("Other magic skill", "-33%", RED);
+    }
 
     if (form_type == transformation::vampire || form_type == transformation::sphinx
         || form_type == transformation::vision)

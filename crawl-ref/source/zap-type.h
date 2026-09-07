@@ -199,5 +199,6 @@ enum zap_type
     ZAP_BURSTSPORE,
     ZAP_ANTIMAGIC,
     ZAP_GLIMMER_BOLT,
+    ZAP_JADEMANTLE_SHOT,
     NUM_ZAPS
 };

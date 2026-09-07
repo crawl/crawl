@@ -1,0 +1,15 @@
+enum: jademantle
+equivalent_mons: shapeshifter
+talisman: jade
+skill: {min: 8, max: 14}
+short_name: Jade
+special_damage: 2d0+(11/14)
+special_damage_name: Surge Dmg
+melds: [helmet, cloak]
+fakemuts:
+  - ["elemental crystals", "You are flanked by elemental crystals which are charged by your spells."]
+  - ["", "Charging all four crystals gives a temporary defensive bonus."]
+  - ["", "Your skill with elemental magic is increased (+2)."]
+badmuts:
+  - ["", "Your skill with all non-elemental magic is decreased (-33%)."]
+  - ["", "The crystaline parts of your body are vulnerable to deconstruction."]

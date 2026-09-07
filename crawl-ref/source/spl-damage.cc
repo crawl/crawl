@@ -40,6 +40,7 @@
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-death.h"
+#include "mon-place.h"
 #include "mon-tentacle.h"
 #include "mutation.h"
 #include "ouch.h"
@@ -1246,6 +1247,13 @@ static bool _init_frag_player(frag_effect &effect)
             effect.damage = frag_damage_type::player_gargoyle;
         return true;
     }
+    else if (you.form == transformation::jademantle)
+    {
+        effect.name       = "blast of jade fragments";
+        effect.colour     = GREEN;
+        effect.damage = frag_damage_type::player_gargoyle;
+        return true;
+    }
     else if (you.species == SP_REVENANT)
     {
         effect.name   = "blast of bone shards";
@@ -1711,6 +1719,7 @@ static int _shatter_player_dice()
     if (you.petrified() || you.petrifying())
         return 6; // reduced later by petrification's damage reduction
     else if (you.form == transformation::statue
+             || you.form == transformation::jademantle
              || you.has_mutation(MUT_STONE_BODY)
              || you.species == SP_REVENANT)
     {

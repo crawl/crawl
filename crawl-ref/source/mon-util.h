@@ -245,6 +245,7 @@ bool mons_is_the(monster_type mc);
 bool mons_is_pghost(monster_type mc);
 bool mons_is_draconian_job(monster_type mc);
 bool mons_is_hepliaklqana_ancestor(monster_type mc);
+bool mons_is_jade_crystal(monster_type mc);
 
 int mutant_beast_tier(int xl);
 

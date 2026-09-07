@@ -2817,5 +2817,19 @@ _mon_hex_zap(ZAP_ILL_OMEN, BEAM_ILL_OMEN),
     TILE_BOLT_MAGIC_DART,
 },
 
+{
+    ZAP_JADEMANTLE_SHOT,
+    "surge of energy",
+    new dicedef_calculator<3, -2, 1, 10>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    nullptr,
+    nullptr,
+    LIGHTMAGENTA,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
 
 };

@@ -6,6 +6,7 @@
 #include "art-enum.h" // bearserk
 #include "artefact.h"
 #include "branch.h"
+#include "colour.h"
 #include "database.h"
 #include "dungeon.h" // DESCENT_STAIRS_KEY
 #include "duration-type.h"
@@ -1030,6 +1031,24 @@ bool fill_status_info(int status, status_info& inf)
         inf.light_text = make_stringf("Salvo (%d)", you.props[SALVO_KEY].get_int());
         inf.short_text = make_stringf("salvo (%d)", you.props[SALVO_KEY].get_int());
         break;
+
+    case STATUS_JADEMANTLE_CRYSTALS:
+    {
+        if (you.form == transformation::jademantle && you.props.exists(JADEMANTLE_CRYSTAL_KEY))
+        {
+            inf.light_text = "Crystals";
+            inf.light_colour = LIGHTGREEN;
+
+            const int crystals = you.props[JADEMANTLE_CRYSTAL_KEY].get_int();
+            inf.light_text_formatted =
+                make_stringf("<%s>Cr<%s>ys<%s>ta<%s>ls",
+                            (crystals & (int)spschool::earth) ? "yellow"    : "darkgrey",
+                            (crystals & (int)spschool::fire)  ? "lightred"  : "darkgrey",
+                            (crystals & (int)spschool::air)   ? "lightcyan" : "darkgrey",
+                            (crystals & (int)spschool::ice)   ? "lightblue" : "darkgrey");
+        }
+    }
+    break;
 
     default:
         if (!found)

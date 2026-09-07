@@ -399,6 +399,11 @@ slime_wave0 BOLT_SLIME_WAVE
 slime_wave1
 slime_merge BOLT_SLIME_MERGE
 
+jade_air_charge BOLT_JADE_CHARGE_AIR
+jade_earth_charge BOLT_JADE_CHARGE_EARTH
+jade_fire_charge BOLT_JADE_CHARGE_FIRE
+jade_ice_charge BOLT_JADE_CHARGE_ICE
+
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR
 indicator_2

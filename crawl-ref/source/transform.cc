@@ -11,8 +11,11 @@
 #include <cstring>
 
 #include "ability.h"
+#include "act-iter.h"
 #include "artefact.h"
 #include "art-enum.h"
+#include "colour.h"
+#include "coordit.h"
 #include "database.h"
 #include "delay.h"
 #include "describe.h"
@@ -47,7 +50,9 @@
 #include "tag-version.h"
 #include "terrain.h"
 #include "timed-effects.h"
+#include "throw.h"
 #include "traps.h"
+#include "view.h"
 #include "xom.h"
 
 // List of valid monsters newly seen this turn for a sphinx to tell a riddle to.
@@ -1413,6 +1418,46 @@ public:
     }
 };
 
+class FormJademantle : public Form
+{
+private:
+    FormJademantle() : Form(transformation::jademantle) { }
+    DISALLOW_COPY_AND_ASSIGN(FormJademantle);
+public:
+    static const FormJademantle &instance() { static FormJademantle inst; return inst; }
+
+    /**
+     * @ description
+     */
+    string get_description(bool past_tense) const override
+    {
+        return make_stringf("Jade crystal %s your upper body.",
+                            past_tense ? "shrouded" : "shrouds");
+    }
+
+    /**
+     * Get a message for transforming into this form.
+     */
+    string transform_message() const override
+    {
+        return "A mantle of jade grows out of you.";
+    }
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const override
+    {
+        return "Your mantle of jade crumbles away.";
+    }
+
+    // Percentage HP increase of crystals
+    int get_effect_size(int skill = -1) const override
+    {
+        return max(0, scaling_value(FormScaling().Base(100).Scaling(75), skill));
+    }
+};
+
 static const Form* forms[] =
 {
     &FormNone::instance(),
@@ -1460,6 +1505,7 @@ static const Form* forms[] =
     &FormEelHands::instance(),
     &FormSpore::instance(),
     &FormVision::instance(),
+    &FormJademantle::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -2019,6 +2065,10 @@ static void _on_enter_form(transformation which_trans)
         you.redraw_evasion = true;
         break;
 
+    case transformation::jademantle:
+        jademantle_handle_crystal_revival(true);
+        break;
+
     default:
         break;
     }
@@ -2304,7 +2354,7 @@ void untransform(bool skip_move, bool scale_hp, bool preserve_equipment,
     }
     else if (old_form == transformation::rime_yak)
     {
-        you.duration[DUR_RIME_YAK_AURA] = 0;
+        you.duration[DUR_FRIGID_WALLS_ACTIVE] = 0;
         end_terrain_changes(TERRAIN_CHANGE_RIME_YAK);
     }
     else if (old_form == transformation::werewolf)
@@ -2319,6 +2369,12 @@ void untransform(bool skip_move, bool scale_hp, bool preserve_equipment,
         notify_stat_change();
         you.redraw_armour_class = true;
         you.redraw_evasion = true;
+    }
+    else if (old_form == transformation::jademantle)
+    {
+        for (monster_iterator mi; mi; ++mi)
+            if (mi->was_created_by(MON_SUMM_JADEMANTLE))
+                monster_die(**mi, KILL_TIMEOUT, NON_MONSTER, true);
     }
 
     // If the player is no longer be eligible to equip some of the items that
@@ -2688,5 +2744,219 @@ bool vampire_mesmerism_check(monster& mon)
         return true;
     }
 
+    return false;
+}
+
+static monster* _jademantle_make_crystal(monster_type type, bool quiet)
+{
+    mgen_data mg(type, BEH_FRIENDLY, you.pos(), MHITYOU);
+    mg.set_summoned(&you, MON_SUMM_JADEMANTLE, 0, false, false);
+    coord_def pos = you.pos();
+    switch (type)
+    {
+        default:
+        case MONS_JADE_CRYSTAL_AIR:     pos += coord_def(-1, -1);   break;
+        case MONS_JADE_CRYSTAL_EARTH:   pos += coord_def(1, 1);     break;
+        case MONS_JADE_CRYSTAL_FIRE:    pos += coord_def(-1, 1);    break;
+        case MONS_JADE_CRYSTAL_ICE:     pos += coord_def(1, -1);    break;
+    }
+
+    if (in_bounds(pos) && !actor_at(pos) && monster_habitable_grid(type, pos))
+    {
+        mg.pos = pos;
+        mg.flags |= MG_FORCE_PLACE;
+    }
+    else
+        mg.set_range(1, 3);
+
+    if (monster* mon = create_monster(mg))
+    {
+        mon->behaviour = BEH_SEEK;
+        mon->speed_increment = 80;
+        you.props.erase(JADEMANTLE_CRYSTAL_REVIVAL_KEY + to_string(mon->type));
+
+        // Scale HP with shapeshifting skill.
+        mon->max_hit_points = mon->max_hit_points * get_form()->get_effect_size() / 100;
+        mon->hit_points = mon->max_hit_points;
+
+        if (!quiet)
+            mprf("%s finishes recrystalising.", mon->name(DESC_THE).c_str());
+
+        return mon;
+    }
+
+    return nullptr;
+}
+
+void jademantle_handle_crystal_revival(bool quiet)
+{
+    bool found[4] = {};
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->was_created_by(MON_SUMM_JADEMANTLE))
+            found[mi->type - MONS_JADE_CRYSTAL_AIR] = true;
+    }
+
+    for (int i = 0; i < 4; ++i)
+    {
+        if (found[i])
+            continue;
+
+        monster_type mtype = static_cast<monster_type>(MONS_JADE_CRYSTAL_AIR + i);
+        int timer = you.props[JADEMANTLE_CRYSTAL_REVIVAL_KEY + to_string(mtype)].get_int();
+        if (you.elapsed_time >= timer)
+            _jademantle_make_crystal(mtype, quiet);
+    }
+}
+
+static bolt _populate_jade_crystal_surge(monster& crystal)
+{
+    bolt beam(you, ZAP_JADEMANTLE_SHOT, 100);
+    beam.damage = get_form()->get_special_damage();
+    beam.source = crystal.pos();
+    beam.target = crystal.pos();
+
+    if (crystal.type == MONS_JADE_CRYSTAL_FIRE)
+    {
+        beam.flavour = BEAM_FIRE;
+        beam.colour = LIGHTRED;
+        beam.name = "surge of fire";
+    }
+    else if (crystal.type == MONS_JADE_CRYSTAL_ICE)
+    {
+        beam.flavour = BEAM_COLD;
+        beam.colour = LIGHTBLUE;
+        beam.name = "surge of cold";
+    }
+    else if (crystal.type == MONS_JADE_CRYSTAL_AIR)
+    {
+        beam.flavour = BEAM_ELECTRICITY;
+        beam.colour = LIGHTCYAN;
+        beam.name = "surge of electricity";
+    }
+    else if (crystal.type == MONS_JADE_CRYSTAL_EARTH)
+    {
+        beam.flavour = BEAM_SEISMIC;
+        beam.colour = YELLOW;
+        beam.name = "surge of tremors";
+    }
+
+    return beam;
+}
+
+void jademantle_crystal_charge(spell_type spell)
+{
+    const spschools_type ele_schools =
+        get_spell_disciplines(spell) & (spschool::earth | spschool::air | spschool::fire | spschool::ice);
+
+    if (!ele_schools)
+        return;
+
+    int already_charged = 0;
+    vector<monster*> crystals;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->was_created_by(MON_SUMM_JADEMANTLE))
+        {
+            crystals.push_back(*mi);
+            if (mi->has_ench(ENCH_SPELL_CHARGED))
+                ++already_charged;
+        }
+    }
+
+    shuffle_array(crystals);
+
+    bool did_charge = false;
+    for (monster* crystal : crystals)
+    {
+        if (!you.see_cell_no_trans(crystal->pos()) || crystal->has_ench(ENCH_SPELL_CHARGED))
+            continue;
+
+        spschool element = jade_crystal_to_school(crystal->type);
+        if (!(element & ele_schools))
+            continue;
+
+        bolt beam = _populate_jade_crystal_surge(*crystal);
+        beam.draw_delay = 20;
+
+        vector<monster*> targs;
+        for (radius_iterator ri(crystal->pos(), 3, C_SQUARE, LOS_SOLID_SEE, true); ri; ++ri)
+        {
+            if (monster* mon = monster_at(*ri))
+            {
+                if (!mon->wont_attack() && !mon->is_firewood()
+                    && you.see_cell_no_trans(mon->pos()))
+                {
+                    targs.push_back(mon);
+                }
+            }
+        }
+
+        if (targs.empty())
+            continue;
+
+        tileidx_t wave_tile =
+            (element == spschool::air     ? TILE_BOLT_JADE_CHARGE_AIR :
+             element == spschool::earth   ? TILE_BOLT_JADE_CHARGE_EARTH :
+             element == spschool::fire    ? TILE_BOLT_JADE_CHARGE_FIRE :
+             element == spschool::ice     ? TILE_BOLT_JADE_CHARGE_ICE
+                                          : TILE_BOLT_DEFAULT_BLACK);
+
+        draw_ring_animation(crystal->pos(), 3, beam.colour, beam.colour, true, 25, wave_tile);
+        mprf(MSGCH_DURATION, "%s surges with power!", crystal->name(DESC_THE).c_str());
+
+        shuffle_array(targs);
+        for (size_t i = 0; i < targs.size() && i < 3; ++i)
+        {
+            beam.source = beam.target = targs[i]->pos();
+            beam.fire();
+        }
+
+        crystal->heal(1000);
+        crystal->add_ench(mon_enchant(ENCH_SPELL_CHARGED, &you, random_range(150, 200)));
+
+        // Update the status light
+        int& crystal_hud = you.props[JADEMANTLE_CRYSTAL_KEY].get_int();
+        crystal_hud |= static_cast<int>(element);
+
+        did_charge = true;
+        break;
+    }
+
+    if (did_charge && already_charged == 3)
+    {
+        draw_ring_animation(you.pos(), 3, ETC_JADE, ETC_JADE, false, 35);
+        mprf(MSGCH_DURATION, "Your mantle thrums with power.");
+        const int dur = random_range(15, 20);
+        you.increase_duration(DUR_RESISTANCE, dur);
+        you.duration[DUR_INDOMITABLE] += random_range(1500, 2500);
+
+        // Set their charge timers to the same duration, so that you can't have
+        // just one uncharge and immediately rebuff yourself.
+        for (monster* crystal : crystals)
+        {
+            mon_enchant ench = crystal->get_ench(ENCH_SPELL_CHARGED);
+            ench.duration = dur * 10;
+            crystal->update_ench(ench);
+        }
+    }
+}
+
+void jademantle_crystal_uncharge(monster_type type)
+{
+    int& crystals = you.props[JADEMANTLE_CRYSTAL_KEY].get_int();
+    crystals &= ~static_cast<int>(jade_crystal_to_school(type));
+    if (crystals == 0)
+        you.props.erase(JADEMANTLE_CRYSTAL_KEY);
+}
+
+bool jademantle_is_fully_charged()
+{
+    if (you.props.exists(JADEMANTLE_CRYSTAL_KEY))
+    {
+        spschool schools = static_cast<spschool>(you.props[JADEMANTLE_CRYSTAL_KEY].get_int());
+        return (schools & (spschool::air | spschool::earth | spschool::fire | spschool::ice))
+                        == (spschool::air | spschool::earth | spschool::fire | spschool::ice);
+    }
     return false;
 }

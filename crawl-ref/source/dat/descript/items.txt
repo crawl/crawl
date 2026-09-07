@@ -891,6 +891,18 @@ Sigils of fire burn deep within this gem, symbol of the eternal compact between
 naga and salamander. Their bond is that of the poison which scourges the impure
 and the flame which burns away impurity.
 %%%%
+jade talisman
+
+A small statuette carved out of multi-hued jade which thrums with quiet power.
+Causes a great mantle of elementally-attuned crystal to grow out of the wearer's
+head and upper body, increasing their proficiency with fire, ice, earth, and air
+magic, but impairing all other schools.
+
+Each time the wearer casts a spell from one of those 4 schools, it will empower
+the corresponding crystal and unleash a burst of damaging magic. If all four
+crystals become charged at once, the wearer's resistances and fortitude will be
+temporarily enhanced.
+%%%%
 javelin
 
 A lightweight penetrating spear, designed for throwing. It will pass through the

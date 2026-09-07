@@ -1070,6 +1070,10 @@ enum monster_type                      // env.mons[].type
     MONS_PILE_OF_FLESH,
     MONS_SHOOTING_STAR,
     MONS_CAUSTIC_SPORANGIUM,
+    MONS_JADE_CRYSTAL_AIR,
+    MONS_JADE_CRYSTAL_EARTH,
+    MONS_JADE_CRYSTAL_FIRE,
+    MONS_JADE_CRYSTAL_ICE,
 #endif
     MONS_PILLAR_OF_SALT,
 #if TAG_MAJOR_VERSION > 34
@@ -1441,6 +1445,10 @@ enum monster_type                      // env.mons[].type
     MONS_GOJI_UNMOUNTED,    // 'Fake' monster to handle mount death properly
     MONS_HERALD_OF_THE_ABYSS,
     MONS_ABYSSAL_ACOLYTE,
+    MONS_JADE_CRYSTAL_AIR,
+    MONS_JADE_CRYSTAL_EARTH,
+    MONS_JADE_CRYSTAL_FIRE,
+    MONS_JADE_CRYSTAL_ICE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

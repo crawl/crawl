@@ -2812,6 +2812,12 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (!you.can_see(mons))
             mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You feel your sun fade away.");
     }
+    else if (mons_is_jade_crystal(mons.type))
+    {
+        jademantle_crystal_uncharge(mons.type);
+        if (real_death && !timeout)
+            you.props[JADEMANTLE_CRYSTAL_REVIVAL_KEY + to_string(mons.type)] = you.elapsed_time + random_range(150, 200);
+    }
     else if (mons.type == MONS_BATTLESPHERE)
         end_battlesphere(&mons, true);
     else if (mons.type == MONS_SPECTRAL_WEAPON)

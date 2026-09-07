@@ -638,7 +638,9 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     }
 
     // First try: move monster onto your position.
-    bool swap = !monster_at(loc) && monster_habitable_grid(mons, loc);
+    // (The player pushes jade crystals instead, so they don't get caught behind them.)
+    bool swap = !mons_is_jade_crystal(mons->type)
+                && !monster_at(loc) && monster_habitable_grid(mons, loc);
 
     // Choose an appropriate habitat square at random around the target.
     if (!swap)
@@ -6476,6 +6478,32 @@ int player::skill(skill_type sk, int scale, bool real, bool include_temp) const
         && sk >= SK_FIRST_MAGIC_SCHOOL && sk <= SK_LAST_MAGIC)
     {
         level += walking_scroll_skill_bonus(scale);
+    }
+
+    if (you.form == transformation::jademantle)
+    {
+        switch (sk)
+        {
+            case SK_ALCHEMY:
+            case SK_NECROMANCY:
+            case SK_SUMMONINGS:
+            case SK_CONJURATIONS:
+            case SK_FORGECRAFT:
+            case SK_TRANSLOCATIONS:
+            case SK_HEXES:
+                level = level * 2 / 3;
+                break;
+
+            case SK_FIRE_MAGIC:
+            case SK_ICE_MAGIC:
+            case SK_EARTH_MAGIC:
+            case SK_AIR_MAGIC:
+               level = level + (2 * scale);
+               break;
+
+            default:
+                break;
+        }
     }
 
     if (include_temp && skill_has_dilettante_penalty(sk))

@@ -1169,6 +1169,9 @@ void do_post_spellcast_effects(spell_type spell)
             }
         }
     }
+
+    if (you.form == transformation::jademantle)
+        jademantle_crystal_charge(spell);
 }
 
 #ifdef WIZARD

@@ -237,11 +237,14 @@ fungal_fisticloak_back FUNGAL_FISTICLOAK_BACK
 
 ### Must be before scarves to render behind the player!
 %sdir player/transform
+%rim 0
 medusa_form_gale_centaur_back MEDUSA_FORM_GALE_CENTAUR
 medusa_form_humanoid_back MEDUSA_FORM_HUMANOID
 blade_form_humanoid BLADE_FORM_HUMANOID
+jade_form_humanoid_back JADE_FORM_HUMANOID_BACK
 
 ###Scarf
+%rim 1
 %sdir player/cloak
 scarf_cyan SCARF_NORMAL SCARF_OFFSET
 %syn SCARF_CYAN
@@ -1510,12 +1513,20 @@ hood_purple HOOD_PURPLE
 hood_assassin HOOD_ASSASSIN
 
 %sdir player/transform
+%rim 0
 medusa_form_gale_centaur_front MEDUSA_FORM_GALE_CENTAUR
 medusa_form_humanoid_front MEDUSA_FORM_HUMANOID
+jade_form_centaur JADE_FORM_CENTAUR
+jade_form_centaur_charged JADE_FORM_CENTAUR_CHARGED
+jade_form_naga JADE_FORM_NAGA
+jade_form_naga_charged JADE_FORM_NAGA_CHARGED
+jade_form_humanoid_front JADE_FORM_HUMANOID
+jade_form_humanoid_front_charged JADE_FORM_HUMANOID_CHARGED
 
 %end_ctg
 
 # draconian wings and heads, need same order as draconians
+%rim 1
 %parts_ctg DRCWING
 %sdir player/drcwing
 drcwing_brown BROWN

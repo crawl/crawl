@@ -202,7 +202,7 @@ static void _do_rime_yak_freeze(coord_def targ)
     // Used to tell the game to run the wall damage phase after each player
     // turn. Just needs to be longer than the max possible duration of walls
     // which may exist.
-    you.duration[DUR_RIME_YAK_AURA] = 70;
+    you.duration[DUR_FRIGID_WALLS_ACTIVE] = 70;
 }
 
 bool melee_attack::handle_phase_attempted()

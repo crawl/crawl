@@ -2616,6 +2616,10 @@ void frigid_walls_damage(int delay)
             continue;
 
         int base_dmg = get_form()->get_special_damage().roll();
+
+        if (you.form == transformation::jademantle)
+            base_dmg = div_rand_round(base_dmg, 3);
+
         const int wall_bonus = (wall_count - 1) * 100 / 6;
         base_dmg = div_rand_round(base_dmg * (100 + wall_bonus), 100);
 

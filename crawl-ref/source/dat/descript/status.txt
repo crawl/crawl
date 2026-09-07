@@ -1329,3 +1329,13 @@ Vision status
 
 Your third eye is open, allowing you to see the magical energy left over from
 spellcasting and convert it into damaging projectiles.
+%%%%
+Jade status
+
+A mass of elemental crystal shrouds your upper body, granting you increased
+skill with elemental magic and the ability to unleash it in a powerful burst.
+%%%%
+Crystals status
+
+{{ return you.jademantle_crystals_desc()}}
+%%%%

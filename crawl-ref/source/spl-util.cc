@@ -2118,6 +2118,18 @@ bool is_monster_net_escape_spell(spell_type spell)
             || spell == SPELL_BLINK_CLOSE;
 }
 
+spschool jade_crystal_to_school(monster_type type)
+{
+    switch (type)
+    {
+        case MONS_JADE_CRYSTAL_AIR:     return spschool::air;
+        case MONS_JADE_CRYSTAL_EARTH:   return spschool::earth;
+        case MONS_JADE_CRYSTAL_FIRE:    return spschool::fire;
+        case MONS_JADE_CRYSTAL_ICE:     return spschool::ice;
+        default:                        return spschool::none;
+    }
+}
+
 /* How to regenerate this:
    comm -2 -3 \
     <(clang -P -E -nostdinc -nobuiltininc spell-type.h -DTAG_MAJOR_VERSION=34 | sort) \

@@ -67,6 +67,7 @@ ignore += feel your undeath return to normal\.
 ignore += (talons|horns|tentacle spike) disappear
 ignore += feel less shadowy\.
 ignore += you emerge from the shadows\.
+ignore += finished recrystalising\.
 
 # Uskayaw -- ignore all Uskayaw power gain/loss messages since they happen constantly
 #

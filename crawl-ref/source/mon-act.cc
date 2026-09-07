@@ -3497,7 +3497,10 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
 
     // Friendlies shouldn't try to move onto the player's
     // location, if they are aiming for some other target.
-    if (mons->foe != MHITYOU
+    // (And jade crystals shouldn't at all, to keep from being stuck on the
+    // player instead of fanning out to their desired positions around you.)
+    if ((mons->foe != MHITYOU
+         || mons_is_jade_crystal(mons->type))
         && targ == you.pos()
         && (mons->foe != MHITNOT || mons->is_patrolling())
         && !_unfriendly_or_impaired(*mons))

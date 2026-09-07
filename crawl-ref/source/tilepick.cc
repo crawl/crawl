@@ -2463,6 +2463,14 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 return TILEP_MONS_STAR_JELLY_EXPENDED;
             return base;
 
+        case MONS_JADE_CRYSTAL_AIR:
+        case MONS_JADE_CRYSTAL_EARTH:
+        case MONS_JADE_CRYSTAL_FIRE:
+        case MONS_JADE_CRYSTAL_ICE:
+            if (mon.is(MB_FULLY_CHARGED))
+                return base + 1;
+            return base;
+
         case MONS_DANCING_WEAPON:
         {
             // Use item tile.
@@ -2792,7 +2800,6 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_ANTIMAGIC, TILEI_ANTIMAGIC },
     { MB_DAZED, TILEI_DAZED },
     { MB_PARTIALLY_CHARGED, TILEI_PARTIALLY_CHARGED },
-    { MB_FULLY_CHARGED, TILEI_FULLY_CHARGED },
     { MB_FIRE_VULN, TILEI_FIRE_VULN },
     { MB_CONCENTRATE_VENOM, TILEI_CONC_VENOM },
     { MB_DEFLECT_MSL, TILEI_DEFLECT_MISSILES },
@@ -2862,6 +2869,8 @@ set<tileidx_t> status_icons_for(const monster_info &mons)
             icons.insert(status.second);
     if (mons.is(MB_PHASE_SHIFT) && !tileidx_monster_phase_shift(mons.type))
         icons.insert(TILEI_PHASE_SHIFT);
+    if (mons.is(MB_FULLY_CHARGED) && !mons_is_jade_crystal(mons.type))
+        icons.insert(TILEI_FULLY_CHARGED);
     return icons;
 }
 
@@ -2898,6 +2907,7 @@ set<tileidx_t> status_icons_for_player()
 #ifdef USE_TILE
     if (you.is_constricted() && _should_show_player_status_icon("constr"))
         icons.insert(TILEI_CONSTRICTED);
+
     if (you.has_mutation(MUT_MNEMOPHAGE)
         && you.props[ENKINDLE_CHARGES_KEY].get_int() == enkindle_max_charges()
         || you.duration[DUR_ENKINDLED])
@@ -2906,6 +2916,7 @@ set<tileidx_t> status_icons_for_player()
     }
     if (you.duration[DUR_ENKINDLED])
         icons.insert(TILEI_ENKINDLED_2);
+
     for (auto status : player_status_icons)
     {
         if (you.duration[status.first]
@@ -2914,6 +2925,7 @@ set<tileidx_t> status_icons_for_player()
             icons.insert(status.second.first);
         }
     }
+
 #endif
     return icons;
 }
@@ -3458,6 +3470,7 @@ static tileidx_t _tileidx_talisman(const item_def &item)
     case TALISMAN_AQUA:     return TILE_TALISMAN_AQUA;
     case TALISMAN_SERPENT:  return TILE_TALISMAN_SNAKE;
     case TALISMAN_SPORE:    return TILE_TALISMAN_SPORE;
+    case TALISMAN_JADE:     return TILE_TALISMAN_JADE;
     case TALISMAN_MAW:      return TILE_TALISMAN_MAW;
     case TALISMAN_EEL:      return TILE_TALISMAN_EEL;
     case TALISMAN_BLADE:    return TILE_TALISMAN_BLADE;

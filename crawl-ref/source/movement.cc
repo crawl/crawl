@@ -75,18 +75,22 @@ void player_displace_monster(monster* mons, const coord_def &loc)
     ASSERT(monster_habitable_grid(mons, loc));
     ASSERT(!monster_at(loc));
 
-    // Friendly seekers dissipate when the player swaps into them.
-    if (loc != you.pos())
-        mprf("You push %s out of the way.", mons->name(DESC_THE).c_str());
-    else if (mons_is_seeker(*mons))
+    // Don't print message for pushing crystals since this happens constantly.
+    if (!mons_is_jade_crystal(mons->type))
     {
-        simple_monster_message(*mons, " dissipates!", false,
-                               MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
-        monster_die(*mons, KILL_RESET, NON_MONSTER, true);
-        return;
+        if (loc != you.pos())
+            mprf("You push %s out of the way.", mons->name(DESC_THE).c_str());
+        // Friendly seekers dissipate when the player swaps into them.
+        else if (mons_is_seeker(*mons))
+        {
+            simple_monster_message(*mons, " dissipates!", false,
+                                MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+            monster_die(*mons, KILL_RESET, NON_MONSTER, true);
+            return;
+        }
+        else
+            mprf("You swap places with %s.", mons->name(DESC_THE).c_str());
     }
-    else
-        mprf("You swap places with %s.", mons->name(DESC_THE).c_str());
 
     mons->move_to(loc, MV_ALLOW_OVERLAP, true);
 }

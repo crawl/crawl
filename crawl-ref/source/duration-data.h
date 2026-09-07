@@ -21,6 +21,7 @@
 #include "stairs.h" // rise_through_ceiling
 #include "tag-version.h"
 #include "timed-effects.h"
+#include "transform.h"
 
 
 static void _end_invis()
@@ -882,7 +883,7 @@ static const duration_def duration_data[] =
     { DUR_PHALANX_BARRIER, 0, "", "phalanx barrier", "phalanx barrier", "", D_NO_FLAGS},
     { DUR_TRICKSTER_GRACE, 0, "", "", "trickster", "", D_NO_FLAGS, {{""}}},
     { DUR_DROWSY, 0, "Drowsy", "", "drowsy", "", D_NEGATIVE, {{"You feel less drowsy."}}},
-    { DUR_RIME_YAK_AURA, 0, "", "", "cold aura", "", D_NO_FLAGS, {{""}}},
+    { DUR_FRIGID_WALLS_ACTIVE, 0, "", "", "cold aura", "", D_NO_FLAGS, {{""}}},
     { DUR_AUTODODGE, 0, "", "", "autododge", "", D_NO_FLAGS},
     { DUR_DAZED, 0, "", "", "dazed", "", D_NEGATIVE},
     { DUR_CONSTRICTED, 0, "", "", "constricted", "", D_NO_FLAGS},

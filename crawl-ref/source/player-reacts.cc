@@ -1019,6 +1019,9 @@ static void _decrement_durations()
         sun_scarab_spawn_ember(false);
     }
 
+    if (you.form == transformation::jademantle)
+        jademantle_handle_crystal_revival();
+
     const bool sanguine_armour_is_valid = sanguine_armour_valid();
     if (sanguine_armour_is_valid)
         activate_sanguine_armour();
@@ -1373,7 +1376,7 @@ void player_reacts()
 
     actor_apply_toxic_bog(&you);
 
-    if (you.duration[DUR_RIME_YAK_AURA])
+    if (you.duration[DUR_FRIGID_WALLS_ACTIVE])
         frigid_walls_damage(you.time_taken);
 
     _regenerate_hp_and_mp(you.time_taken);

@@ -395,6 +395,14 @@ ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 %rim 0
 creeping_inferno1 MONS_CREEPING_INFERNO
 creeping_inferno2
+jade_crystal_air MONS_JADE_CRYSTAL_AIR
+jade_crystal_air_charged MONS_JADE_CRYSTAL_AIR_CHARGED
+jade_crystal_earth MONS_JADE_CRYSTAL_EARTH
+jade_crystal_earth_charged MONS_JADE_CRYSTAL_EARTH_CHARGED
+jade_crystal_fire MONS_JADE_CRYSTAL_FIRE
+jade_crystal_fire_charged MONS_JADE_CRYSTAL_FIRE_CHARGED
+jade_crystal_ice MONS_JADE_CRYSTAL_ICE
+jade_crystal_ice_charged MONS_JADE_CRYSTAL_ICE_CHARGED
 %sdir mon/undead
 poltergeist MONS_POLTERGEIST
 polterguardian MONS_POLTERGUARDIAN
@@ -1577,6 +1585,10 @@ blade_form_felid TRAN_BLADE_FELID
 eel_form_felid TRAN_EEL_FELID
 spore_form_felid TRAN_SPORE_FELID
 vision_form_felid TRAN_VISION_FELID
+jade_form_felid TRAN_JADE_FELID
+jade_form_felid_charged TRAN_JADE_FELID_CHARGED
+jade_form_octopode TRAN_JADE_OCTOPODE
+jade_form_octopode_charged TRAN_JADE_OCTOPODE_CHARGED
 
 %rim 1
 

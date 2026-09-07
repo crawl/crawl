@@ -666,6 +666,10 @@ air elemental
 A spirit drawn from the elemental plane of air. It exists in this world as a
 lightning-spitting spirit, stunning foes with its crackling bursts.
 %%%%
+airy jade
+
+A floating shard of crystaline jade which resonates with your air magic.
+%%%%
 alderking
 
 A self-styled monarch of a shambling black alder, half respected and half
@@ -1378,6 +1382,10 @@ A spirit drawn from the elemental plane of earth. It exists in this world as a
 sinuous stream of silt and stone, capable of smoothly flowing through solid
 rock.
 %%%%
+earthen jade
+
+A floating shard of crystaline jade which resonates with your earth magic.
+%%%%
 efreet
 
 An imposing, muscular figure engulfed in a cloud of searing flame.
@@ -1491,6 +1499,10 @@ fenstrider witch
 
 Followers of the ancient swamp ways, these witches rise above the muck and mire
 on a pair of stilt-like chicken legs. They are masters of pain and poison.
+%%%%
+fiery jade
+
+A floating shard of crystaline jade which resonates with your fire magic.
 %%%%
 fire bat
 
@@ -1871,6 +1883,10 @@ ice statue
 
 An imposing idol of some nameless arctic god, carved in glistening deep blue
 ice. Freezing vapours swirl about it, and a chill pervades the air.
+%%%%
+icy jade
+
+A floating shard of crystaline jade which resonates with your ice magic.
 %%%%
 iguana
 

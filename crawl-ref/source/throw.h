@@ -54,7 +54,8 @@ shared_ptr<quiver::action> get_ammo_to_shoot(int item, dist &target, bool telepo
 void untargeted_fire(quiver::action &a);
 void fire_item_no_quiver(dist *target=nullptr);
 
-coord_def best_ranged_aim(const coord_def& target, bool pierce, bool primary_must_be_first = false);
+coord_def best_ranged_aim(const coord_def& target, bool pierce, bool primary_must_be_first = false,
+                          int max_range = LOS_RADIUS);
 
 void aim_player_ranged_attack(quiver::action &a);
 bool do_player_ranged_attack(const coord_def& targ, item_def* thrown_projectile = nullptr,
@@ -65,3 +66,7 @@ bool mons_throw(monster* mons, ranged_attack_beam& beam, bool teleport = false,
                 bool was_redirected = false);
 
 bool do_west_wind_shot();
+
+vector<coord_def> get_salvo_targets(const coord_def& orig_target, int num_targets,
+                                    int max_range = LOS_RADIUS,
+                                    beam_type flavour = BEAM_MISSILE);

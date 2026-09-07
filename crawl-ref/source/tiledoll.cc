@@ -713,6 +713,36 @@ void fill_doll_equipment(dolls_data &result)
         }
         result.parts[TILEP_PART_HAIR] = 0;
         break;
+    case transformation::jademantle:
+    {
+        const bool charged = jademantle_is_fully_charged();
+        switch (you.species)
+        {
+        case SP_OCTOPODE:
+            result.parts[TILEP_PART_BASE] = charged ? TILEP_TRAN_JADE_OCTOPODE_CHARGED
+                                                    : TILEP_TRAN_JADE_OCTOPODE;
+            break;
+        case SP_FELID:
+            result.parts[TILEP_PART_BASE] = charged ? TILEP_TRAN_JADE_FELID_CHARGED
+                                                    : TILEP_TRAN_JADE_FELID;
+            break;
+        case SP_GALE_CENTAUR:
+            result.parts[TILEP_PART_HELM] = charged ? TILEP_HELM_JADE_FORM_CENTAUR_CHARGED
+                                                    : TILEP_HELM_JADE_FORM_CENTAUR;
+            break;
+        case SP_NAGA:
+            result.parts[TILEP_PART_HELM] = charged ? TILEP_HELM_JADE_FORM_NAGA_CHARGED
+                                                    : TILEP_HELM_JADE_FORM_NAGA;
+            break;
+        default:
+            result.parts[TILEP_PART_HELM] = charged ? TILEP_HELM_JADE_FORM_HUMANOID_CHARGED
+                                                    : TILEP_HELM_JADE_FORM_HUMANOID;
+            result.parts[TILEP_PART_CLOAK] = TILEP_CLOAK_JADE_FORM_HUMANOID_BACK;
+            break;
+        }
+        result.parts[TILEP_PART_HAIR] = 0;
+    }
+        break;
     default:
         _fill_doll_equipment_default(result);
         break;

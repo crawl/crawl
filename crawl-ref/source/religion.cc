@@ -3263,8 +3263,12 @@ bool god_forbids_form(god_type which_god, transformation which_trans)
     if (which_god == GOD_OKAWARU && which_trans == transformation::hive)
         return true;
 
-    if (which_god == GOD_TROG && which_trans == transformation::vision)
+    if (which_god == GOD_TROG
+        && (which_trans == transformation::vision
+            || which_trans == transformation::jademantle))
+    {
         return true;
+    }
 
     return false;
 }

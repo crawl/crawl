@@ -153,6 +153,8 @@ bool spell_can_be_enkindled(spell_type spell);
 
 bool is_monster_net_escape_spell(spell_type spell);
 
+spschool jade_crystal_to_school(monster_type type);
+
 bool spell_removed(spell_type spell);
 bool spell_is_monster_only(spell_type spell);
 #if TAG_MAJOR_VERSION == 34

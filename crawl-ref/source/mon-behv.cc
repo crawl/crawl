@@ -243,6 +243,45 @@ static bool _monster_guesses_invis_player(const monster &mon)
     return false;
 }
 
+// Try to make any jade crystals near the player assume fixed positions on
+// each diagonal, if possible.
+static bool _adjust_jade_crystal_positioning(monster* mon)
+{
+    coord_def target = you.pos();
+    switch (mon->type)
+    {
+        case MONS_JADE_CRYSTAL_AIR:
+            target += coord_def(-1, -1);
+            break;
+
+        case MONS_JADE_CRYSTAL_EARTH:
+            target += coord_def(1, 1);
+            break;
+
+        case MONS_JADE_CRYSTAL_FIRE:
+            target += coord_def(-1, 1);
+            break;
+
+        case MONS_JADE_CRYSTAL_ICE:
+            target += coord_def(1, -1);
+            break;
+
+        default:
+            return false;
+    }
+
+    // But don't set targets this way while out of sight or they can sometimes
+    // get stuck on things.
+    if (in_bounds(target) && mon->see_cell(you.pos()))
+    {
+        mon->target = target;
+        mon->behaviour = BEH_SEEK;
+        return true;
+    }
+    else
+        return false;
+}
+
 /**
  * Evaluates the monster's AI state, and sets its target based on its foe.
  */
@@ -467,6 +506,11 @@ void handle_behaviour(monster* mon)
         else
             mon->del_ench(ENCH_MISDIRECTED);
     }
+
+    // Make jade crystals align nicely around the player and do no other
+    // behaviour adjustments.
+    if (_adjust_jade_crystal_positioning(mon))
+        return;
 
     while (changed)
     {

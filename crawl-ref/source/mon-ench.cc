@@ -1102,6 +1102,15 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " divine shield fades away.", true);
         break;
 
+    case ENCH_SPELL_CHARGED:
+        if (mons_is_jade_crystal(type))
+        {
+            jademantle_crystal_uncharge(type);
+            if (!quiet)
+                simple_monster_message(*this, " is no longer glowing with power.");
+        }
+        break;
+
     default:
         break;
     }

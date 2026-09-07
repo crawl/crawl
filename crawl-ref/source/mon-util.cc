@@ -1440,6 +1440,14 @@ bool mons_is_hepliaklqana_ancestor(monster_type mc)
     return mons_class_flag(mc, M_ANCESTOR);
 }
 
+bool mons_is_jade_crystal(monster_type mc)
+{
+    return mc == MONS_JADE_CRYSTAL_AIR
+           || mc == MONS_JADE_CRYSTAL_EARTH
+           || mc == MONS_JADE_CRYSTAL_FIRE
+           || mc == MONS_JADE_CRYSTAL_ICE;
+}
+
 /**
  * How well does this monster resist blinding?
  *
@@ -5971,6 +5979,10 @@ int mons_leash_range(monster_type mc)
 {
     switch (mc)
     {
+        case MONS_JADE_CRYSTAL_AIR:
+        case MONS_JADE_CRYSTAL_EARTH:
+        case MONS_JADE_CRYSTAL_FIRE:
+        case MONS_JADE_CRYSTAL_ICE:
         case MONS_RENDING_BLADE:
         case MONS_SOLAR_EMBER:
         case MONS_PHALANX_BEETLE:   return 1;
