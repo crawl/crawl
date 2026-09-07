@@ -25,6 +25,7 @@
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-wrath.h" // lucy_check_meddling
+#include "items.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "melee-attack.h"
@@ -1610,6 +1611,13 @@ void spectral_weapon_fineff::fire()
     if (!weapon || !weapon->defined())
         return;
 
+    // Don't animate a weapon that has been dropped in the meantime.
+    if (atkr->is_monster() ? weapon->holding_monster() != atkr->as_monster()
+                           : !item_is_equipped(*weapon))
+    {
+        return;
+    }
+
     const coord_def target = defend->pos();
 
     // Do we already have a spectral weapon?
@@ -1819,7 +1827,6 @@ void celebrant_bloodrite_fineff::fire()
     int repeats = 0;
 
     bolt beam;
-    beam.range        = you.current_vision;
     beam.source       = you.pos();
     beam.source_id    = MID_PLAYER;
     beam.attitude     = ATT_FRIENDLY;

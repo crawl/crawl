@@ -1,8 +1,8 @@
 enum: tree
 equivalent_mons: animated_tree
-description: a tree.
+description: a banyan tree.
 melds: [aux, body]
-resists: {poison: 1}
+resists: {poison: 1, neg: 3}
 hp_mod: 150
 ac: {base: 20, scaling: 14, xl_based: yes}
 unarmed: {base: 9}
@@ -28,7 +28,7 @@ flesh_name: wood
 fakemuts:
   - ["resilient", "Your bark is very hard, but your evasion is minimal."]
   - ["branches", "Your unarmed attacks smack enemies forcefully with your branches."]
-  - ["torment immunity", "You are immune to unholy torment."]
+  - ["torment immunity", "You are immune to unholy torment and negative energy."]
 # Technically these can have marginal benefits in some situations, but they're
 # mostly bad so let's mark them as bad.
 badmuts:

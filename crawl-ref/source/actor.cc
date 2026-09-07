@@ -291,6 +291,9 @@ bool actor::no_cast(bool items) const
 
 bool actor::reflection(bool items) const
 {
+    if (divinely_shielded())
+        return true;
+
     return items &&
            (wearing_jewellery(AMU_REFLECTION)
             || wearing_ego(OBJ_ARMOUR, SPARM_REFLECTION));
@@ -1159,6 +1162,12 @@ bool actor::stumble_away_from(coord_def targ, string src)
 bool actor::evil() const
 {
     return bool(holiness() & (MH_UNDEAD | MH_DEMONIC));
+}
+
+bool actor::has_soul() const
+{
+    return bool(holiness() & (MH_NATURAL | MH_PLANT | MH_HOLY | MH_DEMONIC))
+           && !is_firewood();
 }
 
 // Triggers post-movement effects for this actor as if they had just moved into

@@ -631,10 +631,9 @@ void player_reacts_to_instant_action()
 static bool _check_recite()
 {
     if (you.is_silenced()
-        || you.paralysed()
+        || you.cannot_act()
         || you.confused()
         || you.asleep()
-        || you.petrified()
         || you.berserk())
     {
         mprf(MSGCH_DURATION, "Your recitation is interrupted.");
@@ -1426,6 +1425,8 @@ void player_reacts()
 
     if (you.duration[DUR_PRIMORDIAL_NIGHTFALL])
         update_vision_range();
+
+    player_update_auras();
 
     incr_gem_clock();
     incr_zot_clock();

@@ -5,7 +5,7 @@ resists: {poison: 1}
 species: snaplasher_vine
 genus: plant
 holiness: [plant]
-will: 40
+will: invuln
 attacks:
 hd: 12
 hp_10x: 360

@@ -3,8 +3,9 @@ glyph: {char: "f", colour: cyan}
 resists: {poison: 1, fire: -1}
 flags: [speaks]
 exp: 1978
+genus: plant
 holiness: [plant]
-will: 100
+will: 140
 attacks:
  - {type: hit, damage: 50}
  - {type: hit, damage: 40}

@@ -335,7 +335,6 @@ static void _tag_read_level_items(reader &th);
 static void _tag_read_level_monsters(reader &th);
 static void _tag_read_level_tiles(reader &th);
 static void _regenerate_tile_flavour();
-static void _draw_tiles();
 
 static void _tag_construct_ghost(writer &th, vector<ghost_demon> &);
 static vector<ghost_demon> _tag_read_ghost(reader &th);
@@ -1802,6 +1801,7 @@ static void _tag_construct_you(writer &th)
         marshallInt(th, you.skill_points[j]);
         marshallByte(th, you.skill_order[j]);   // skills ordering
         marshallInt(th, you.training_targets[j]);
+        marshallInt(th, you.base_training_targets[j]);
         marshallInt(th, you.skill_manual_points[j]);
     }
 
@@ -3497,6 +3497,15 @@ static void _tag_read_you(reader &th)
         }
         else
             you.training_targets[j] = 0;
+
+        if (th.getMinorVersion() >= TAG_MINOR_BASE_TRAINING_TARGETS)
+        {
+#endif
+            you.base_training_targets[j] = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+        }
+        else
+            you.base_training_targets[j] = 0;
 
         if (th.getMinorVersion() >= TAG_MINOR_GOLDIFY_MANUALS)
         {
@@ -6827,6 +6836,7 @@ void marshallMonster(writer &th, const monster& m)
     marshallShort(th, m.damage_total);
     marshallByte(th, m.revealed_this_turn);
     marshallCoord(th, m.revealed_at_pos);
+    marshallCoord(th, m.remembered_pos);
     marshall_level_id(th, m.origin_level);
 
     if (parts & MP_GHOST_DEMON)
@@ -6925,6 +6935,8 @@ void _marshallMonsterInfo(writer &th, const monster_info& mi)
         marshallShort(th, mi.i_ghost.ac);
         marshallString(th, mi.i_ghost.title);
     }
+
+    marshallInt(th, mi.mid);
 
     mi.props.write(th);
 }
@@ -7223,6 +7235,13 @@ void _unmarshallMonsterInfo(reader &th, monster_info& mi)
         unmarshallBoolean(th); // was can_sinv
     }
 #endif
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_FORGET_MONSTERS)
+        mi.mid = MID_NOBODY;
+    else
+#endif
+        mi.mid = unmarshallInt(th);
 
     mi.props.clear();
     mi.props.read(th);
@@ -8089,6 +8108,14 @@ void unmarshallMonster(reader &th, monster& m)
         m.revealed_at_pos = unmarshallCoord(th);
 #if TAG_MAJOR_VERSION == 34
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_FORGET_MONSTERS)
+        m.remembered_pos = coord_def(0, 0);
+    else
+#endif
+        m.remembered_pos = unmarshallCoord(th);
+
+#if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_TRACK_ORIGIN_LEVEL)
         m.origin_level = level_id::current();
     else
@@ -8473,6 +8500,7 @@ static void _tag_read_level_monsters(reader &th)
             continue;
 
         const mid_t mid = mi->mid;
+        forget_monster_memory(**mi, false);
         dprf("Killed elsewhere companion %s(%d) on %s",
                 mi->name(DESC_PLAIN, true).c_str(), mid,
                 level_id::current().describe(false, true).c_str());
@@ -8677,7 +8705,9 @@ void _tag_read_level_tiles(reader &th)
     _regenerate_tile_flavour();
 
     // Draw remembered map
-    _draw_tiles();
+#ifdef USE_TILE
+    tile_draw_entire_map();
+#endif
 }
 
 static tileidx_t _get_tile_from_vector(const unsigned int idx)
@@ -8787,16 +8817,6 @@ static void _regenerate_tile_flavour()
         tile_init_remembered_flavour(*ri);
 }
 
-static void _draw_tiles()
-{
-#ifdef USE_TILE
-    for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1));
-         ri; ++ri)
-    {
-        tile_draw_map_cell(*ri);
-    }
-#endif
-}
 // ------------------------------- ghost tags ---------------------------- //
 
 static void _marshallSpells(writer &th, const monster_spells &spells)

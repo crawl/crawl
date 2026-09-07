@@ -323,7 +323,7 @@ static resists_t _apply_holiness_resists(resists_t resists, mon_holy_type mh)
     if (!(mh & (MH_NATURAL | MH_PLANT)))
         resists = (resists & ~(MR_RES_NEG * 7)) | (MR_RES_NEG * 3);
 
-    if (mh & (MH_UNDEAD | MH_DEMONIC | MH_PLANT | MH_NONLIVING))
+    if (mh & (MH_UNDEAD | MH_DEMONIC | MH_NONLIVING))
         resists |= MR_RES_TORMENT;
 
     return resists;
@@ -950,33 +950,27 @@ bool mons_eats_items(const monster& mon)
     return mons_is_slime(mon) && have_passive(passive_t::jelly_eating);
 }
 
-/* Is the actor susceptible to vampirism?
+/* Can a given agent drain life from a given target?
  *
- * Undead actors and summoned, temporary, or ghostified monsters are all not
- * susceptible.
- * @param act The actor.
- * @param only_known Only include information known to the player.
- * @returns True if the actor is susceptible to vampirism, false otherwise.
+ * This does not include rN (which will usually reduce the amount drained and
+ * rN+++ naturally prevents)
+ *
+ * @param agent      The actor doing the draining
+ * @param victim     The actor being drained
+ * @returns True if the agent can drain health from the victim. False otherwise.
  */
-bool actor_is_susceptible_to_vampirism(const actor& act, bool only_known)
+bool actor_can_drain_life_from(const actor& agent, const actor& victim)
 {
-    if (!(act.holiness() & (MH_NATURAL | MH_PLANT)))
+    if (victim.is_firewood())
         return false;
 
-    if (act.is_player())
-        return true;
-
-    const monster *mon = act.as_monster();
-    // Don't leak phantom mirror info.
-    if (act.is_summoned() && (!only_known
-                              || !mon->has_ench(ENCH_PHANTOM_MIRROR)
-                              || mon->friendly()))
-    {
+    // Only the player is prevented from draining health from summons (for
+    // reasons of tedium). Monsters are allowed to feed off your summoned allies
+    // as much as they like!
+    if (victim.is_summoned() && agent.is_player())
         return false;
-    }
 
-    // Don't allow HP draining from firewood.
-    return !mon->is_firewood();
+    return true;
 }
 
 bool invalid_monster(const monster* mon)
@@ -1654,6 +1648,12 @@ bool mons_class_can_leave_corpse(monster_type mc)
     return smc->leaves_corpse;
 }
 
+bool mons_class_has_soul(monster_type mc)
+{
+    ASSERT_smc();
+    return (bool)(mons_class_holiness(mc) & (MH_NATURAL | MH_PLANT | MH_DEMONIC | MH_HOLY));
+}
+
 bool mons_class_can_be_zombified(monster_type mzc)
 {
     monster_type mc = mons_species(mzc);
@@ -1662,7 +1662,7 @@ bool mons_class_can_be_zombified(monster_type mzc)
             && !mons_class_flag(mzc, M_NO_ZOMBIE)
             && !mons_class_flag(mzc, M_INSUBSTANTIAL)
             && !mons_is_tentacle_or_tentacle_segment(mzc)
-            && (mons_class_holiness(mzc) & MH_NATURAL
+            && (mons_class_holiness(mzc) & (MH_NATURAL | MH_PLANT)
                 || mons_class_can_leave_corpse(mc))
             && smc->attack[0].damage; // i.e. has_attack
 }
@@ -1679,7 +1679,7 @@ bool mons_class_can_be_spectralised(monster_type mzc, bool divine)
 {
     monster_type mc = mons_species(mzc);
     ASSERT_smc();
-    return mons_class_holiness(mzc) & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
+    return mons_class_has_soul(mzc)
         && mc != MONS_PANDEMONIUM_LORD
         && mzc != MONS_ORC_APOSTLE
         && (divine || smc->attack[0].type != AT_NONE); // i.e. has_attack
@@ -1711,7 +1711,8 @@ bool mons_class_can_use_stairs(monster_type mc)
            && mc != MONS_SILENT_SPECTRE
            && mc != MONS_GERYON
            && mc != MONS_ROYAL_JELLY
-           && mc != MONS_BALL_LIGHTNING;
+           && mc != MONS_BALL_LIGHTNING
+           && mc != MONS_SPECTRAL_WEAPON;
 }
 
 bool mons_class_can_use_transporter(monster_type mc)
@@ -5824,7 +5825,11 @@ bool shoot_through_actor(const actor* agent, const actor* target, bool announce)
             && (mons_is_hepliaklqana_ancestor(agent->type)
                 || mons_is_player_shadow(*agent->as_monster())
                 || agent->real_attitude() == ATT_MARIONETTE
-                || agent->type == MONS_PLATINUM_PARAGON))
+                || agent->type == MONS_PLATINUM_PARAGON
+                || you_worship(GOD_FEDHAS)
+                   && agent->deity() == GOD_FEDHAS
+                   && mons_class_is_plant(agent->type)
+                   && (you.holiness() & MH_PLANT)))
         {
             return true;
         }

@@ -25,6 +25,11 @@ int wielded_weapon_colour(const item_def &weapon);
 void smallterm_warning();
 #endif
 
+#ifdef USE_TILE_LOCAL
+// The status of the light at the given coordinates, or -1 if none.
+int status_light_at(int x, int y);
+#endif
+
 void redraw_screen(bool show_updates = true);
 
 string mpr_monster_list(bool past = false);

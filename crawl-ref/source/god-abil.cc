@@ -38,7 +38,6 @@
 #include "files.h"
 #include "fineff.h"
 #include "format.h" // formatted_string
-#include "god-blessing.h"
 #include "god-companions.h"
 #include "god-item.h"
 #include "god-passive.h"
@@ -1334,15 +1333,6 @@ void tso_divine_shield()
     you.duration[DUR_DIVINE_SHIELD] = max(you.duration[DUR_DIVINE_SHIELD], charges);
 }
 
-void tso_expend_divine_shield_charge()
-{
-    if (you.duration[DUR_DIVINE_SHIELD] && --you.duration[DUR_DIVINE_SHIELD] <= 0)
-    {
-        mprf(MSGCH_DURATION, "Your divine shield fades away.");
-        you.duration[DUR_DIVINE_SHIELD] = 0;
-    }
-}
-
 void elyvilon_purification()
 {
     mpr("You feel purified!");
@@ -1357,12 +1347,68 @@ void elyvilon_purification()
     you.redraw_evasion = true;
 }
 
+static const vector<enchant_type> healable_enchantments =
+{
+    ENCH_SICK,
+    ENCH_POISON,
+    ENCH_CONFUSION,
+    ENCH_SLOW,
+    ENCH_PETRIFYING,
+    ENCH_PETRIFIED,
+    ENCH_WEAK,
+    ENCH_DRAINED,
+};
+
+bool elyvilon_divine_alms_eligible(const monster& target)
+{
+    if (!target.friendly() || target.is_peripheral())
+        return false;
+
+    if (target.hit_points < target.max_hit_points)
+        return true;
+
+    for (enchant_type ench : healable_enchantments)
+        if (target.has_ench(ench))
+            return true;
+
+    return false;
+}
+
+void elyvilon_divine_alms(monster& target)
+{
+    const int base = 10 + you.skill(SK_INVOCATIONS, 2);
+    const int healed = random_range(base, base * 3 / 2);
+
+    target.heal(healed);
+
+    for (enchant_type ench : healable_enchantments)
+        if (target.has_ench(ench))
+            target.del_ench(ench, true, ench != ENCH_PETRIFYING);
+
+    // Give healed summons a little more time in this world
+    string msg;
+    if (target.has_ench(ENCH_SUMMON_TIMER))
+    {
+        mon_enchant timer = target.get_ench(ENCH_SUMMON_TIMER);
+        if (timer.duration < 100)
+        {
+            timer.duration += random_range(150, 250);
+            target.update_ench(timer);
+            msg = make_stringf(" and grants %s more time in this world.",
+                               target.pronoun(PRONOUN_OBJECTIVE).c_str());
+        }
+    }
+
+    mprf("The light of Elyvilon comforts %s%s.",
+         target.name(DESC_THE).c_str(), msg.c_str());
+}
+
 void elyvilon_divine_vigour()
 {
     if (you.duration[DUR_DIVINE_VIGOUR])
         return;
 
-    mprf("%s grants you divine vigour.",
+    mprf("%s grants you and your allies divine vigour.",
          god_name(GOD_ELYVILON).c_str());
 
     const int vigour_amt = 1 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
@@ -1381,6 +1427,8 @@ void elyvilon_divine_vigour()
                  / old_mp_max
                - you.magic_points);
     }
+
+    player_update_auras();
 }
 
 void elyvilon_remove_divine_vigour()
@@ -1710,7 +1758,7 @@ void yred_fathomless_shackles_effect(int delay)
         }
 
         // Cache this first, since damage might kill them
-        bool can_drain = actor_is_susceptible_to_vampirism(**mi, false);
+        bool can_drain = actor_can_drain_life_from(you, **mi);
 
         int dam = resist_adjust_damage(*mi, BEAM_NEG, random2avg(pow, 2));
         if (_is_isolated_soul(*mi))
@@ -3960,7 +4008,6 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     beam.source_id   = MID_PLAYER;
     beam.source_name = "you";
     beam.thrower     = KILL_YOU;
-    beam.range       = LOS_RADIUS;
     beam.damage      = qazlal_upheaval_damage();
     beam.hit         = AUTOMATIC_HIT;
     beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
@@ -5570,7 +5617,6 @@ bool ru_power_leap()
     wave.flavour = BEAM_VISUAL;
     wave.colour = BROWN;
     wave.glyph = dchar_glyph(DCHAR_EXPLOSION);
-    wave.range = 1;
     wave.ex_size = 1;
     wave.is_explosion = true;
     wave.source = you.pos();
@@ -6772,7 +6818,6 @@ static void _makhleb_atrocity_trigger(int power)
     mpr("Your destruction surges wildly!");
 
     bolt beam;
-    beam.range = you.current_vision;
     beam.source = you.pos();
     beam.thrower = KILL_YOU;
 

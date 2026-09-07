@@ -210,7 +210,9 @@ enum monster_info_flags
     MB_WITHERING,
     MB_CRUMBLING,
     MB_ALLY_TARGET,
+#if TAG_MAJOR_VERSION == 34
     MB_CANT_DRAIN,
+#endif
     MB_CONCENTRATE_VENOM,
     MB_FIRE_CHAMPION,
     MB_SILENCE_IMMUNE,
@@ -275,6 +277,7 @@ enum monster_info_flags
     MB_KNOWN_INVIS, // Fully invisible, but the player has inferred their location
     MB_REMEMBERED_INVIS,
     MB_PHASE_SHIFT,
+    MB_DIVINE_SHIELD,
     NUM_MB_FLAGS
 };
 
@@ -327,6 +330,7 @@ struct monster_info_base
     int last_seen_at_turn;
     int threat_range;
 
+    mid_t mid;
     mid_t client_id;
     mid_t summoner_id;
 };
@@ -345,7 +349,7 @@ struct monster_info : public monster_info_base
 #define MILEV_ALL 0
 #define MILEV_SKIP_SAFE -1
 #define MILEV_NAME -2
-    monster_info() { client_id = 0; }
+    monster_info() { mid = MID_NOBODY; client_id = 0; }
     explicit monster_info(const monster* m, int level = MILEV_ALL);
     explicit monster_info(monster_type p_type,
                           monster_type p_base_type = MONS_NO_MONSTER);

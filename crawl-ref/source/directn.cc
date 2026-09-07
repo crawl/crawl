@@ -2147,10 +2147,6 @@ void direction_chooser::handle_wizard_command(command_type key_command,
     case CMD_TARGET_WIZARD_GIVE_ITEM:  wizard_give_monster_item(m); break;
     case CMD_TARGET_WIZARD_POLYMORPH:  wizard_polymorph_monster(m); break;
 
-    case CMD_TARGET_WIZARD_BLESS_MONSTER:
-        wizard_apply_monster_blessing(m);
-        break;
-
     case CMD_TARGET_WIZARD_MAKE_SUMMONED:
         wizard_make_monster_summoned(m);
         break;
@@ -2940,11 +2936,6 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
             || mon->has_ench(ENCH_FRENZIED);
     case TARG_FRIEND:
         return mon->friendly();
-    case TARG_INJURED_FRIEND:
-        if (mon->friendly() && mons_get_damage_level(*mon) > MDAM_OKAY)
-            return true;
-        return !mon->wont_attack() && !mon->neutral()
-            && unpacifiable_reason(*mon).empty();
     case TARG_MOVABLE_OBJECT:
         return false;
     case TARG_MOBILE_MONSTER:

@@ -57,6 +57,7 @@ malmutated: 8
 magnetised: 8
 seen_invis: 8
 phase_shift: 8
+divine_shield: 8
 
 recall: 9
 teleporting: 9

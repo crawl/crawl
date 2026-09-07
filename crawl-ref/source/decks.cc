@@ -1172,7 +1172,6 @@ static void _damaging_card(card_type card, int power,
     }
 
     bolt beam;
-    beam.range = LOS_RADIUS;
 
     direction_chooser_args args;
     args.mode = TARG_HOSTILE;

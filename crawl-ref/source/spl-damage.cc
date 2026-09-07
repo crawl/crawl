@@ -335,7 +335,6 @@ spret cast_chain_spell(spell_type spell_cast, int pow,
     beam.flavour        = BEAM_CHAOS;
     beam.source_id      = caster->mid;
     beam.thrower        = caster->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
-    beam.range          = 8;
     beam.hit            = AUTOMATIC_HIT;
     beam.obvious_effect = true;
     beam.pierce         = false;       // since we want to stop at our target
@@ -534,11 +533,8 @@ static void _player_hurt_monster(monster &mon, int damage, beam_type flavour,
 
 static bool _drain_lifeable(const actor* agent, const actor* act)
 {
-    if (!actor_is_susceptible_to_vampirism(*act)
-        || act->res_negative_energy() >= 3)
-    {
+    if (act->res_negative_energy() >= 3 || act->is_firewood())
         return false;
-    }
 
     if (!agent)
         return true;
@@ -615,10 +611,6 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
             target.expose_to_element(beam.flavour, 5, agent);
         }
     }
-
-    // So that summons don't restore HP.
-    if (beam.origin_spell == SPELL_DRAIN_LIFE && target.is_summoned())
-        return 0;
 
     return hurted;
 }
@@ -1774,7 +1766,6 @@ spret cast_shatter(int pow, bool fail)
         visual.colour        = WHITE;
         visual.tile_explode  = TILE_BOLT_SHATTER_WAVE_WHITE;
         visual.glyph         = dchar_glyph(DCHAR_EXPLOSION);
-        visual.range         = you.current_vision;
         visual.ex_size       = you.current_vision;
         visual.is_explosion  = true;
         visual.explode_delay = 15;
@@ -1823,6 +1814,12 @@ static int _shatter_player(int pow, actor *wielder, bool devastator = false)
     return damage;
 }
 
+// For UI purposes.
+dice_def mons_shatter_damage(int spell_hd)
+{
+    return dice_def(3, 5 + (5 + spell_hd * 9 / 2) / 3);
+}
+
 bool mons_shatter(monster* caster, bool actual)
 {
     const bool silence = silenced(caster->pos());
@@ -1843,7 +1840,7 @@ bool mons_shatter(monster* caster, bool actual)
         }
     }
 
-    int pow = 5 + div_rand_round(caster->get_hit_dice() * 9, 2);
+    int pow = 5 + div_rand_round(caster->spell_hd() * 9, 2);
 
     if (actual)
     {
@@ -4430,7 +4427,6 @@ static void _imb_actor(actor * act, int pow, coord_def source)
     beam.source          = source;
     beam.thrower         = KILL_YOU;
     beam.source_id       = MID_PLAYER;
-    beam.range           = LOS_RADIUS;
     beam.ench_power      = pow;
     beam.aimed_at_spot   = true;
 
@@ -4988,7 +4984,6 @@ spret cast_magnavolt(coord_def target, int pow, bool fail)
         volt.source = you.pos();
         volt.target = targets[i];
         volt.aimed_at_spot = true;
-        volt.range = LOS_RADIUS;
         volt.thrower = KILL_YOU_MISSILE;
         volt.fire();
     }

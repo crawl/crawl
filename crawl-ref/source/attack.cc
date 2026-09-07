@@ -89,10 +89,6 @@ void attack::handle_phase_blocked()
     if (attacker->is_player())
         behaviour_event(defender->as_monster(), ME_WHACK, attacker);
 
-    // Use up a charge of Divine Shield, if active.
-    if (defender->is_player())
-        tso_expend_divine_shield_charge();
-
     defender->shield_block_succeeded(attacker);
 }
 
@@ -130,9 +126,9 @@ bool attack::handle_phase_damaged()
     }
 
     // It's okay if a monster took lethal damage, but we should stop
-    // the combat if it is already cleaned up (e.g. a spectral weapon that
-    // took damage and then noticed that its caster is gone), to prevent
-    // messages referencing the monster after its disappearance.
+    // the combat if it is already cleaned up (e.g. if it fell down a shaft
+    // after dragging), to prevent messages referencing the monster after its
+    // disappearance.
     return defender->is_player() || !invalid_monster(defender->as_monster());
 }
 
@@ -381,8 +377,6 @@ void attack::init_attack(int attack_number)
     if (attacker->is_player() && you.form_uses_xl())
         wpn_skill = SK_FIGHTING; // for stabbing, mostly
 
-    to_hit          = calc_to_hit(true);
-
     defender_shield = defender ? defender->shield() : defender_shield;
 
     unrand_entry = nullptr;
@@ -586,7 +580,7 @@ static const vector<chaos_attack_type> chaos_types = {
       [](const actor &d) { return d.res_negative_energy() < 3; } },
     { AF_VAMPIRIC,  SPWPN_VAMPIRISM,     5,
       [](const actor &d) {
-          return actor_is_susceptible_to_vampirism(d); } },
+          return d.res_negative_energy() < 3; } },
     { AF_HOLY,      SPWPN_HOLY_WRATH,    5,
       [](const actor &d) { return d.holy_wrath_susceptible(); } },
     { AF_ANTIMAGIC, SPWPN_ANTIMAGIC,     5,
@@ -601,12 +595,16 @@ brand_type attack::random_chaos_brand()
     for (const chaos_attack_type &choice : chaos_types)
         if (!choice.valid || choice.valid(*defender))
         {
-            // Don't use vampiric brand if the attacker is at full health.
-            if (choice.brand != SPWPN_VAMPIRISM
-                || attacker->stat_hp() != attacker->stat_maxhp())
+            // Don't pick vampiric brand if the attacker is unable to heal from
+            // the attack.
+            if (choice.brand == SPWPN_VAMPIRISM
+                && !(actor_can_drain_life_from(*attacker, *defender)
+                     && attacker->stat_hp() != attacker->stat_maxhp()))
             {
-                weights.push_back({choice.brand, choice.chance});
+                continue;
             }
+
+            weights.push_back({choice.brand, choice.chance});
         }
 
     ASSERT(!weights.empty());
@@ -662,7 +660,7 @@ void attack::drain_defender()
     if (defender->is_monster() && coinflip())
         return;
 
-    if (!(defender->holiness() & (MH_NATURAL | MH_PLANT)))
+    if (defender->res_negative_energy() >= 3)
         return;
 
     special_damage = resist_adjust_damage(defender, BEAM_NEG,
@@ -1026,14 +1024,6 @@ int attack::calc_damage()
         damage = player_apply_misc_modifiers(damage);
         damage = player_apply_slaying_bonuses(damage, false);
         damage = player_stab(damage);
-        // A failed stab may have awakened monsters, but that could have
-        // caused the defender to cease to exist (spectral weapons with
-        // missing summoners; or pacified monsters on a stair). FIXME:
-        // The correct thing to do would be either to delay the call to
-        // alert_nearby_monsters (currently in player_stab) until later
-        // in the attack; or to avoid removing monsters in handle_behaviour.
-        if (!defender->alive())
-            return 0;
         damage = player_apply_final_multipliers(damage);
         damage = apply_defender_ac(damage);
         damage = player_apply_postac_multipliers(damage);
@@ -1109,11 +1099,8 @@ bool attack::attack_shield_blocked()
         return false; // You can't block your own attacks!
 
     // Divine Shield blocks are guaranteed, no matter what.
-    if (defender->incapacitated()
-        && !(defender->is_player() && you.duration[DUR_DIVINE_SHIELD]))
-    {
+    if (defender->incapacitated() && !defender->divinely_shielded())
         return false;
-    }
 
     const int con_block = random2(attacker->shield_bypass_ability(to_hit));
     int pro_block = defender->shield_bonus();
@@ -1125,7 +1112,7 @@ bool attack::attack_shield_blocked()
          actor_name(defender, DESC_PLAIN, true).c_str(), pro_block, con_block);
 
     if (pro_block >= con_block && !defender->shield_exhausted()
-        || defender->is_player() && you.duration[DUR_DIVINE_SHIELD])
+        || defender->divinely_shielded())
     {
         perceived_attack = true;
 
@@ -1293,7 +1280,7 @@ bool attack::apply_damage_brand(const char *what)
     {
         if (!weapon
             || damage_done < 1
-            || !actor_is_susceptible_to_vampirism(*defender)
+            || !actor_can_drain_life_from(*attacker, *defender)
             || attacker->stat_hp() == attacker->stat_maxhp()
             || attacker->is_player() && you.duration[DUR_DEATHS_DOOR]
             || x_chance_in_y(2, 5)
@@ -1317,7 +1304,7 @@ bool attack::apply_damage_brand(const char *what)
             {
                 if (defender->is_player())
                 {
-                    mprf("%s draws strength from your wounds!",
+                    mprf("%s draws vitality from your wounds!",
                          attacker->name(DESC_THE).c_str());
                 }
                 else
@@ -1674,7 +1661,6 @@ void attack::maybe_trigger_autodazzler()
 
         proj.target = attacker->pos();
         proj.source = you.pos();
-        proj.range = LOS_RADIUS;
         proj.source_id = MID_PLAYER;
         proj.draw_delay = 5;
         proj.attitude = ATT_FRIENDLY;

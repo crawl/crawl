@@ -154,6 +154,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_EXPOSED,         MB_EXPOSED },
     { ENCH_STAMPEDE,        MB_STAMPEDE },
     { ENCH_PHASE_SHIFT,     MB_PHASE_SHIFT },
+    { ENCH_DIVINE_SHIELD,   MB_DIVINE_SHIELD },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -300,6 +301,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     mb.reset();
     attitude = ATT_HOSTILE;
     pos = coord_def(0, 0);
+    mid = MID_NOBODY;
 
     type = p_type;
 
@@ -348,7 +350,7 @@ void monster_info::_populate_as_generic()
     if (mons_class_sees_invis(type, base_type))
         mb.set(MB_SEE_INVIS);
 
-    can_feel_fear = !!(holi & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
+    can_feel_fear = !(holi & (MH_UNDEAD | MH_NONLIVING));
 
     if (mons_resists_drowning(type, base_type))
         mb.set(MB_RES_DROWN);
@@ -520,6 +522,7 @@ monster_info::monster_info(const monster* m, int milev)
     mb.reset();
     attitude = ATT_HOSTILE;
     pos = m->pos();
+    mid = m->mid;
 
     attitude = mons_attitude(*m);
 
@@ -665,8 +668,6 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_UMBRAED);
     if (m->liquefied_ground())
         mb.set(MB_SLOW_MOVEMENT);
-    if (!actor_is_susceptible_to_vampirism(*m, true))
-        mb.set(MB_CANT_DRAIN);
     if (m->res_water_drowning())
         mb.set(MB_RES_DROWN);
     if (m->clarity())
@@ -1789,7 +1790,7 @@ int monster_info::reach_range(bool items) const
             const int wpn_reach = weapon_reach(*weapon);
             for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
                 if (attack[i].type == AT_HIT || attack[i].type == AT_WEAP_ONLY)
-                    range = max(range, attack[i].reach + wpn_reach);
+                    range = max(range, attack[i].reach + wpn_reach - 1);
         }
     }
 

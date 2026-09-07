@@ -1160,11 +1160,12 @@ completely ineffective while standing in water.
 %%%%
 potion of lignification
 
-A potion which transforms the imbiber into an animated tree with sap for blood and
-branches capable of holding weapons. Such a tree has minimal evasion but increased
-health and natural armour, and is resistant to poison, and immune to torment and
-drowning. However, it is rooted in place while the transformation lasts, and
-cannot teleport.
+A potion which transforms the imbiber into an animated banyan tree, with sap for
+blood and branches capable of holding weapons. Such a tree has minimal evasion
+but increased health and natural armour, and is resistant to poison, and immune
+to negative energy, torment, sleep, blinding, and does not need to breathe.
+
+However, it is rooted in place while the transformation lasts, and cannot teleport.
 %%%%
 potion of magic
 
@@ -1370,8 +1371,9 @@ A vial of roiling blood that pulses with the beat of an unseen heart. Transforms
 the wearer into a fearsome vampire - a creature that straddles the border between
 life and undeath. They can drink the lifeblood of the living to heal themselves,
 and even turn those they slay stealthily into vampiric thralls, but do not heal
-in the presence of monsters. At great effort, they may scatter into a swarm of
-bats - either to flee or to assail their enemies.
+in the presence of monsters. Their hypnotic gaze often prevents monsters from
+shouting when alerted and may even daze them. At great effort, they can also
+scatter into a swarm of bats - either to flee or to assail their enemies.
 %%%%
 sanguine gem
 

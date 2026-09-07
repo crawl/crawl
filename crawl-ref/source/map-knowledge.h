@@ -5,6 +5,7 @@
 #include "feature.h"
 #include "externs.h"
 
+class monster;
 class reader;
 class writer;
 
@@ -23,6 +24,11 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool full_info = false, bool range_falloff = true,
                    coord_def origin = coord_def(-1, -1),
                    bool respect_no_automap = false);
+
+// Record where we last saw the monster, and clear any old memories.
+void record_monster_seen_at(const coord_def& pos, monster& mon);
+void record_invisible_monster_seen_at(const coord_def& pos, monster& mon);
+void forget_monster_memory(monster& mon, bool redraw = true);
 
 /**
  * @brief Clear non-terrain knowledge from the map.

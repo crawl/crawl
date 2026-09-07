@@ -457,7 +457,7 @@ LUAFN(debug_check_moncasts)
             continue;
         // we need to reset the foe each time: some spells (e.g. lesser
         // and greater healing) could change it.
-        if (m2)
+        if (m2 && !mons_aligned(m1, m2))
             m1->foe = m2->mindex();
         else
             m1->foe = MHITNOT;

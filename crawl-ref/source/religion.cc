@@ -113,9 +113,13 @@ const vector<vector<god_power>> & get_all_god_powers()
         },
 
         // TSO
-        {   { 1, "You and your allies can now gain power from killing the unholy and evil.",
-                 "You and your allies can no longer gain power from killing the unholy and evil.",
-                 "You and your allies can gain power from killing the unholy and evil." },
+        {   {-1, "", "", "Your summoned allies will not expire while fighting evil." },
+            { 1, "You can now gain power from killing the unholy and evil.",
+                 "You can no longer gain power from killing the unholy and evil.",
+                 "You can gain power from killing the unholy and evil." },
+            { 1, "The Shining One may bless your followers whenever you slay foes.",
+                 "The Shining One will no longer blesses your followers when you slay foes.",
+                 "The Shining One sometimes blesses your followers when you slay foes."},
             { 1, ABIL_TSO_DIVINE_SHIELD, "call upon the Shining One for a divine shield" },
             { 3, ABIL_TSO_CLEANSING_FLAME, "channel blasts of cleansing flame", },
             { 5, ABIL_TSO_SUMMON_DIVINE_WARRIOR, "summon a divine warrior" },
@@ -233,14 +237,19 @@ const vector<vector<god_power>> & get_all_god_powers()
             { 4, ABIL_NEMELEX_DEAL_FOUR, "deal four cards at a time" },
             { 5, ABIL_NEMELEX_STACK_FIVE, "stack five cards from your decks",
                                         "stack cards" },
+            { 0, ABIL_NEMELEX_DRAW_STACK, ""},
+            { 0, ABIL_NEMELEX_DRAW_ESCAPE, ""},
+            { 0, ABIL_NEMELEX_DRAW_DESTRUCTION, ""},
+            { 0, ABIL_NEMELEX_DRAW_SUMMONING, ""},
         },
 
         // Elyvilon
         {
             { 1, ABIL_ELYVILON_PURIFICATION, "purify yourself" },
-            { 2, ABIL_ELYVILON_HEAL_OTHER, "heal and attempt to pacify others" },
+            { 2, ABIL_ELYVILON_PACIFY, "attempt to pacify hostile creatures" },
             { 3, ABIL_ELYVILON_HEAL_SELF, "provide healing for yourself" },
-            { 5, ABIL_ELYVILON_DIVINE_VIGOUR, "call upon Elyvilon for divine vigour" },
+            { 3, ABIL_ELYVILON_DIVINE_ALMS, "comfort your suffering allies" },
+            { 5, ABIL_ELYVILON_AURA_OF_VIGOUR, "call upon Elyvilon for divine vigour" },
         },
 
         // Lugonu
@@ -310,7 +319,7 @@ const vector<vector<god_power>> & get_all_god_powers()
         {   { 0, "Ashenzari warns you of distant threats and treasures.\n"
                  "Ashenzari shows you where magical portals lie." },
             { 1, "Ashenzari will now identify your possessions.",
-                 "Ashenzari will no longer identify your possesions.",
+                 "Ashenzari will no longer identify your possessions.",
                  "Ashenzari identifies your possessions." },
             { 2, "Ashenzari will now reveal the unseen.",
                  "Ashenzari will no longer reveal the unseen.",
@@ -401,6 +410,9 @@ const vector<vector<god_power>> & get_all_god_powers()
         {   { 1, "", "", "Your ancestor manifests to aid you." },
             { 1, ABIL_HEPLIAKLQANA_RECALL, "recall your ancestor" },
             { 1, ABIL_HEPLIAKLQANA_IDENTITY, "remember your ancestor's identity" },
+            { 2, ABIL_HEPLIAKLQANA_TYPE_KNIGHT, ""},
+            { 2, ABIL_HEPLIAKLQANA_TYPE_ELEMENTALIST, ""},
+            { 2, ABIL_HEPLIAKLQANA_TYPE_HEXER, ""},
             { 3, ABIL_HEPLIAKLQANA_TRANSFERENCE, "swap creatures with your ancestor" },
             { 4, ABIL_HEPLIAKLQANA_IDEALISE, "heal and protect your ancestor" },
             { 5, "You now drain nearby creatures when transferring your ancestor.",
@@ -1664,29 +1676,6 @@ bool is_fellow_slime(const monster& mon)
     return mon.alive() && mons_is_slime(mon)
            && mon.attitude == ATT_GOOD_NEUTRAL
            && mons_is_god_gift(mon, GOD_JIYVA);
-}
-
-static bool _is_plant_follower(const monster* mon)
-{
-    return mon->alive() && mons_is_plant(*mon)
-           && mon->attitude == ATT_FRIENDLY;
-}
-
-bool is_follower(const monster& mon)
-{
-    if (you_worship(GOD_YREDELEMNUL))
-        return is_yred_undead_follower(mon);
-    else if (you_worship(GOD_BEOGH))
-        return is_apostle_follower(mon);
-    else if (you_worship(GOD_JIYVA))
-        return is_fellow_slime(mon);
-    else if (you_worship(GOD_FEDHAS))
-        return _is_plant_follower(&mon);
-    else
-    {
-        return mon.alive() && mon.attitude == ATT_FRIENDLY
-                           && !mon.is_summoned();
-    }
 }
 
 /**
@@ -3499,8 +3488,13 @@ void set_god_ability_slots()
     for (const god_power& power : get_all_god_powers()[you.religion])
     {
         if (power.abil != ABIL_NON_ABILITY
-            // hep ident goes to G, so don't take b for it (hack alert)
+            // Skip abilities that get assigned letters elsewhere. We only
+            // need to do this for abilities that are not the last powers
+            // in their gods list.
             && power.abil != ABIL_HEPLIAKLQANA_IDENTITY
+            && power.abil != ABIL_HEPLIAKLQANA_TYPE_KNIGHT
+            && power.abil != ABIL_HEPLIAKLQANA_TYPE_ELEMENTALIST
+            && power.abil != ABIL_HEPLIAKLQANA_TYPE_HEXER
             && find(begin(you.ability_letter_table),
                     end(you.ability_letter_table), power.abil)
                == end(you.ability_letter_table)

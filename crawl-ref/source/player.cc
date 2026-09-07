@@ -1970,10 +1970,6 @@ int player_prot_life(bool allow_random, bool include_temp, bool items)
 
     pl += cur_form(include_temp)->res_neg();
 
-    // completely stoned, unlike statue which has some life force
-    if (include_temp && you.petrified())
-        pl += 3;
-
     if (items)
     {
         // rings
@@ -3854,9 +3850,6 @@ bool player::faith(bool items) const
 
 bool player::reflection(bool items) const
 {
-    if (you.duration[DUR_DIVINE_SHIELD])
-        return true;
-
     if (you.unrand_equipped(UNRAND_FIVE_VIRTUES)
         && _five_virtues_sh_score() >= 3)
     {
@@ -5925,6 +5918,7 @@ void player::init_skills()
     skill_order.init(MAX_SKILL_ORDER);
     skill_manual_points.init(0);
     training_targets.init(0);
+    base_training_targets.init(0);
     exercises.clear();
     exercises_all.clear();
 }
@@ -6343,25 +6337,6 @@ bool player::liquefied_ground() const
            && !airborne() && !is_insubstantial();
 }
 
-/**
- * Returns whether the player currently has any kind of shield.
- *
- * XXX: why does this function exist?
- */
-bool player::shielded() const
-{
-    return shield()
-           || duration[DUR_DIVINE_SHIELD]
-           || duration[DUR_EPHEMERAL_SHIELD]
-           || duration[DUR_PARRYING]
-           || get_mutation_level(MUT_LARGE_BONE_PLATES) > 0
-           || qazlal_sh_boost() > 0
-           || you.wearing_jewellery(AMU_REFLECTION)
-           || you.scan_artefacts(ARTP_SHIELDING)
-           || (get_mutation_level(MUT_CONDENSATION_SHIELD)
-                && !you.duration[DUR_ICEMAIL_DEPLETED]);
-}
-
 int player::shield_bonus() const
 {
     const int shield_class = player_shield_class();
@@ -6376,11 +6351,24 @@ int player::shield_bypass_ability(int tohit) const
     return 15 + tohit / 2;
 }
 
+bool player::divinely_shielded() const
+{
+    return duration[DUR_DIVINE_SHIELD];
+}
+
 void player::shield_block_succeeded(actor *attacker)
 {
     actor::shield_block_succeeded(attacker);
 
-    if (!you.duration[DUR_DIVINE_SHIELD])
+    if (divinely_shielded())
+    {
+        if (--duration[DUR_DIVINE_SHIELD] <= 0)
+        {
+            mprf(MSGCH_DURATION, "Your divine shield fades away.");
+            duration[DUR_DIVINE_SHIELD] = 0;
+        }
+    }
+    else
         shield_blocks++;
 
     practise_shield_block();
@@ -7120,6 +7108,8 @@ mon_holy_type player::holiness(bool include_temp, bool incl_form) const
         holi = MH_UNDEAD;
     else if (species::is_nonliving(you.species))
         holi = MH_NONLIVING;
+    else if (species::is_plant(you.species))
+        holi = MH_PLANT;
     else
         holi = MH_NATURAL;
 
@@ -7137,10 +7127,6 @@ mon_holy_type player::holiness(bool include_temp, bool incl_form) const
         else if (get_form(f)->holiness != MH_NONE)
             holi = get_form(f)->holiness;
     }
-
-    // Petrification takes precedence over base holiness and lich form
-    if (include_temp && petrified())
-        holi = MH_NONLIVING;
 
     return holi;
 }
@@ -7167,6 +7153,11 @@ bool player::is_holy() const
 bool player::is_nonliving(bool include_temp, bool incl_form) const
 {
     return bool(holiness(include_temp, incl_form) & MH_NONLIVING);
+}
+
+bool player::has_soul() const
+{
+    return undead_state() != US_UNDEAD;
 }
 
 // This is a stub. Check is used only for silver damage. Worship of chaotic
@@ -7294,8 +7285,6 @@ bool player::res_torment() const
         return true;
 
     return get_form()->res_neg() == 3
-           || you.petrified()
-           || bool(you.holiness() & MH_PLANT)
 #if TAG_MAJOR_VERSION == 34
            || you.unrand_equipped(UNRAND_ETERNAL_TORMENT)
 #endif
@@ -8333,8 +8322,8 @@ bool player::asleep() const
 
 bool player::can_feel_fear(bool include_unknown) const
 {
-    return (you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
-           && (!include_unknown || (!you.clarity() && !you.berserk()));
+    return undead_state() != US_UNDEAD
+           && (!include_unknown || (!clarity() && !berserk()));
 }
 
 bool player::can_throw_large_rocks() const
@@ -8766,6 +8755,9 @@ bool player::drain_magic(actor */*attacker*/, int pow)
 
 void player::daze(int dur)
 {
+    if (you.duration[DUR_DAZED] || you.duration[DUR_STUN_IMMUNITY])
+        return;
+
     stop_delay(true, true);
     stop_directly_constricting_all();
     stop_channelling_spells();

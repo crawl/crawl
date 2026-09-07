@@ -58,7 +58,7 @@ int mut_check_conflict(mutation_type mut, bool innate_only = false);
 bool mut_is_compatible(mutation_type mut, bool base_only = false);
 
 void display_mutations();
-string describe_mutations(bool center_title);
+string describe_muts_for_chardump(bool center_title);
 string terse_mutation_list();
 string get_mutation_desc(mutation_type mut);
 string get_mutation_tags(mutation_type mut);

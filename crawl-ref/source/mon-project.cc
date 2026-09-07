@@ -283,16 +283,16 @@ static bool _iood_shielded(monster& mon, actor &victim)
     if (mon.type == MONS_GLOBE_OF_ANNIHILATION)
         return false;
 
-    if (victim.is_player() && you.duration[DUR_DIVINE_SHIELD])
+    if (victim.divinely_shielded())
         return true;
 
-    if (!victim.shielded() || victim.incapacitated() || victim.shield_exhausted())
+    const int pro_block = victim.shield_bonus();
+    if (pro_block <= 0 || victim.incapacitated() || victim.shield_exhausted())
         return false;
 
     const int to_hit = 15 + (mons_is_projectile(mon.type) ?
         mon.props[IOOD_POW].get_short()/12 : mon.get_hit_dice()/2);
     const int con_block = random2(to_hit);
-    const int pro_block = victim.shield_bonus();
     dprf("iood shield: pro %d, con %d", pro_block, con_block);
     return pro_block >= con_block;
 }
@@ -664,8 +664,10 @@ move_again:
                     }
                     else
                     {
-                        mprf("%s reflects off an invisible shield around %s!",
+                        mprf("%s reflects off %s %s!",
                              mon.name(DESC_THE, true).c_str(),
+                             victim->divinely_shielded() ? "the divine shield protecting"
+                                                         : "an invisible shield around",
                              victim->name(DESC_THE, true).c_str());
                     }
                 }
@@ -676,10 +678,6 @@ move_again:
                 }
             }
             victim->shield_block_succeeded(&mon);
-
-            // Use up a charge of Divine Shield, if active.
-            if (victim->is_player())
-                tso_expend_divine_shield_charge();
 
             // mid_t is unsigned so won't fit in a plain int
             mon.props[IOOD_REFLECTOR] = (int64_t) victim->mid;

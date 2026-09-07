@@ -316,6 +316,11 @@ namespace species
         return species == SP_GARGOYLE || species == SP_DJINNI;
     }
 
+    bool is_plant(species_type species)
+    {
+        return species == SP_VINE_STALKER;
+    }
+
     bool can_swim(species_type species)
     {
         return get_species_def(species).habitat == HT_WATER;

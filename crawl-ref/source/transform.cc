@@ -2623,7 +2623,7 @@ bool maw_hunger_check(monster* mon)
 bool vampire_mesmerism_check(monster& mon)
 {
     if (you.form == transformation::vampire && you.can_see(mon) && mon.can_see(you)
-        && (mon.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
+        && mon.has_soul()
         && !one_chance_in(4))
     {
         if (mon.check_willpower(&you, get_form()->get_effect_chance()) <= 0)

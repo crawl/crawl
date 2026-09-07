@@ -1433,7 +1433,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_NEW_ABILITY_GOD:
-        if (get_god_abilities(true, false).size())
+        if (get_god_abilities(false).size())
             print_hint("HINT_NEW_ABILITY_GOD_ACTIVE");
         else
             print_hint("HINT_NEW_ABILITY_GOD_PASSIVE");

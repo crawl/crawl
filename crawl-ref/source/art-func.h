@@ -157,7 +157,7 @@ static void _CURSES_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
 static void _CURSES_melee_effects(item_def* /*weapon*/, actor* attacker,
                                   actor* defender, int dam, melee_attack*)
 {
-    if (defender->alive() && defender->holiness() & (MH_NATURAL | MH_PLANT))
+    if (defender->alive())
         death_curse(*defender, attacker, "the scythe of Curses", min(dam, 27));
 }
 
@@ -1391,7 +1391,6 @@ static int _harvest_corpses()
                 beam.tile_beam = tileidx_item(item);
                 beam.glyph = get_item_glyph(item).ch;
                 beam.colour = item.get_colour();
-                beam.range = LOS_RADIUS;
                 beam.aimed_at_spot = true;
                 beam.flavour = BEAM_VISUAL;
                 beam.draw_delay = 3;

@@ -798,9 +798,6 @@
     <ClCompile Include="..\god-companions.cc">
       <Filter>cc</Filter>
     </ClCompile>
-    <ClCompile Include="..\god-blessing.cc">
-      <Filter>cc</Filter>
-    </ClCompile>
     <ClCompile Include="..\god-abil.cc">
       <Filter>cc</Filter>
     </ClCompile>
@@ -1345,9 +1342,6 @@
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\god-abil.h">
-      <Filter>h</Filter>
-    </ClInclude>
-    <ClInclude Include="..\god-blessing.h">
       <Filter>h</Filter>
     </ClInclude>
     <ClInclude Include="..\god-companions.h">

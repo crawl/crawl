@@ -814,7 +814,6 @@ static bool _handle_swoop_or_flank(monster& mons)
     tracer.target = target;
     tracer.set_is_tracer(true);
     tracer.pierce = true;
-    tracer.range = LOS_RADIUS;
     tracer.fire();
 
     for (unsigned int j = 0; j < tracer.path_taken.size() - 1; ++j)
@@ -2351,7 +2350,7 @@ void handle_monster_move(monster* mons)
         // Struggling against the net takes time.
         _swim_or_move_energy(*mons);
     }
-    else if (!mons->petrified())
+    else
     {
         // Calculates mmov based on monster target.
         mmov = _find_best_step(mons);
@@ -2721,13 +2720,6 @@ static void _post_monster_move(monster* mons)
         thorn_hunter_raise_barrier(*mons);
 
     update_mons_cloud_ring(mons);
-
-    const item_def * weapon = mons->mslot_item(MSLOT_WEAPON);
-    if (weapon && get_weapon_brand(*weapon) == SPWPN_SPECTRAL
-        && !mons_is_avatar(mons->type))
-    {
-        // TODO: implement monster spectral ego
-    }
 
     if (mons->behaviour == BEH_BATTY)
     {
@@ -3834,6 +3826,10 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     // of doing literally nothing.
     if (mons.cannot_move())
     {
+        // Don't consider making intelligent attacks while impaired.
+        if (mons_is_fleeing(mons) || mons_is_confused(mons))
+            return false;
+
         int count = 0;
         actor* targ = nullptr;
         for (radius_iterator ri(mons.pos(), mons.reach_range(), C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
@@ -3842,6 +3838,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
             {
                 if (could_harm_enemy(&mons, act)
                     && !act->is_firewood()
+                    && mons.can_see(*act)
                     && one_chance_in(++count))
                 {
                     targ = act;

@@ -277,13 +277,13 @@ occasionally protect the follower's allies from death.
 Fedhas powers
 
 Plants and fungi will not attack Fedhas' worshippers without provocation.
-Worshippers may walk through plants or fungi, and even fire missiles or spells
-through them without causing harm. Fedhas grants powers to temporarily grow a
-menagerie of plant allies whose strength and duration increase with Invocations
-skill. Worshippers may grow a protective wall of briar patches as well as
-ballistomycetes that fire damaging spores whose explosions confuse living
-creatures. Devout followers can overgrow a stretch of solid terrain with a
-cluster of plant allies or even summon a mighty oklob plant.
+Worshippers may walk slowly through plants or fungi, and even fire missiles or
+spells through them without causing harm. Fedhas grants powers to temporarily
+grow a menagerie of plant allies whose strength and duration increase with
+Invocations skill. Worshippers may grow a protective wall of briar patches as
+well as ballistomycetes that fire damaging spores whose explosions confuse
+living creatures. Devout followers can overgrow a stretch of solid terrain with
+a cluster of plant allies or even summon a mighty oklob plant.
 %%%%
 Gozag powers
 
@@ -421,14 +421,13 @@ the Shining One powers
 
 Followers of the Shining One are surrounded by a halo that reveals their
 enemies to them. Followers will gain power by killing evil beings, and with
-growing piety their life force will be protected. The Shining One will keep
-summoned and charmed allies on their side longer, should the allies prove
-worthy of the crusade. Followers will gain use of a divine shield to protect
-them in battle. Later, they can channel blasts of cleansing flame that are
-particularly damaging to unholy beings, and can call upon powerful divine
-beings as temporary allies. Highly pious followers may request the Shining
-One's blessing upon a weapon. The Shining One may occasionally directly
-intervene to save a follower's life.
+growing piety their life force will be protected. Followers will gain use of a
+divine shield to protect them in battle. Later, they can channel blasts of
+cleansing flame that are particularly damaging to unholy beings, and can call
+upon powerful divine beings as temporary allies. Highly pious followers may
+request the Shining One's blessing upon a weapon. The Shining One will sometimes
+grant fervor and protection to any allies a follower leads in the righteous
+crusade and even occasionally intervene directly to save a follower's life.
 %%%%
 Trog powers
 

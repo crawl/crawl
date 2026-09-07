@@ -471,7 +471,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_DOUBLED_VIGOUR:
         scale_hp(1, 2);
         if (!quiet)
-            simple_monster_message(*this, " excess health fades away.", true);
+            simple_monster_message(*this, " divine vigour fades away.", true);
         break;
 
     case ENCH_HASTE:
@@ -1097,6 +1097,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             start_lurking(*this);
         break;
 
+    case ENCH_DIVINE_SHIELD:
+        if (!quiet)
+            simple_monster_message(*this, " divine shield fades away.", true);
+        break;
+
     default:
         break;
     }
@@ -1208,7 +1213,6 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
     tracer.affects_nothing = true;
     tracer.target          = mons->pos();
     tracer.source          = you.pos();
-    tracer.range           = LOS_RADIUS;
     tracer.set_is_tracer(true);
     tracer.aimed_at_spot   = true;
     tracer.fire();
@@ -1352,7 +1356,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SICK:
     case ENCH_CORONA:
     case ENCH_CONTAM:
-    case ENCH_SUMMON_TIMER:
     case ENCH_CHARM:
     case ENCH_SLEEP_WARY:
     case ENCH_LOWERED_WL:
@@ -1420,6 +1423,18 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_STAMPEDE:
     case ENCH_PREPARING_TO_LURK:
     case ENCH_PHASE_SHIFT:
+    case ENCH_DIVINE_SHIELD:
+        decay_enchantment(en);
+        break;
+
+    case ENCH_SUMMON_TIMER:
+        // Allies of TSO worshippers never expire while fighting evil.
+        if (friendly() && you_worship(GOD_SHINING_ONE))
+        {
+            const actor* _foe = get_foe();
+            if (_foe && !mons_aligned(this, _foe) && !_foe->is_firewood() && _foe->evil())
+                break;
+        }
         decay_enchantment(en);
         break;
 
@@ -1761,8 +1776,8 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_MERFOLK_AVATAR_SONG:
         // If we've gotten silenced or somehow incapacitated since we started,
         // cancel the song
-        if (is_silenced() || paralysed() || petrified()
-            || confused() || asleep() || has_ench(ENCH_FEAR))
+        if (is_silenced() || cannot_act() || confused() || asleep()
+            || has_ench(ENCH_FEAR))
         {
             del_ench(ENCH_MERFOLK_AVATAR_SONG, true, false);
             if (you.can_see(*this))
@@ -1860,8 +1875,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (!alive())
             return;
         // Instakill living/demonic/holy creatures that reach <=20% max hp
-        if (holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
-            && hit_points * 5 <= max_hit_points)
+        if (has_soul() && hit_points * 5 <= max_hit_points)
         {
             props[RIMEBLIGHT_DEATH_KEY] = true;
             monster_die(*this, KILL_YOU, NON_MONSTER);
@@ -2184,7 +2198,7 @@ static const char *enchant_names[] =
     "phalanx_barrier", "figment", "paradox-touched", "warding",
     "diminished_spells", "orb_cooldown", "sunder_charge",
     "exposed", "briar_cooldown", "stampeding",
-    "preparing_to_lurk", "phase_shift",
+    "preparing_to_lurk", "phase_shift", "divine_shield",
     "buggy", // NUM_ENCHANTMENTS
 };
 

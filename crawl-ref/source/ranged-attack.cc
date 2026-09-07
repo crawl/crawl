@@ -170,6 +170,8 @@ bool ranged_attack::attack()
 // XXX: Are there any cases where this might fail?
 bool ranged_attack::handle_phase_attempted()
 {
+    to_hit = calc_to_hit(true);
+
     attacker->attacking(defender);
     return true;
 }
@@ -189,6 +191,8 @@ void ranged_attack::handle_phase_blocked()
                 punctuation = " with " + defender->pronoun(PRONOUN_POSSESSIVE)
                               + " " + defender_shield->name(DESC_PLAIN).c_str();
             }
+            else if (defender->divinely_shielded())
+                punctuation = " with a divine shield";
             else
                 punctuation = " with an invisible shield";
         }
@@ -479,11 +483,11 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
             break;
         case SPMSL_POISONED:
         case SPMSL_BLINDING:
-            if (defender->holiness() & (MH_UNDEAD | MH_NONLIVING))
+            if (defender->res_poison() >= 3)
                 susceptible = false;
             break;
         case SPMSL_CURARE:
-            if ((defender->is_player() && defender->holiness() & (MH_UNDEAD | MH_NONLIVING))
+            if ((defender->is_player() && defender->res_poison() >= 3)
                || defender->res_poison() > 0)
             {
                 susceptible = false;
@@ -494,7 +498,7 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
                 susceptible = false;
             break;
         case SPMSL_FRENZY:
-            if (defender->holiness() & (MH_UNDEAD | MH_NONLIVING)
+            if (defender->res_poison() >= 3
                 || defender->is_player()
                    && !you.can_go_berserk(false, false, false)
                 || defender->is_monster()
@@ -536,7 +540,7 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
 
 bool ranged_attack::dart_check(special_missile_type type)
 {
-    if (defender->holiness() & (MH_UNDEAD | MH_NONLIVING))
+    if (defender->res_poison() >= 3)
     {
         if (needs_message)
         {

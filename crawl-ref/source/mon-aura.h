@@ -29,3 +29,5 @@ bool aura_is_active(const monster& affected, enchant_type type);
 bool aura_is_active_on_player(string player_key);
 
 void mons_update_aura(const monster& mon);
+
+void player_update_auras();

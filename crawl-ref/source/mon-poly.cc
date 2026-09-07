@@ -332,6 +332,8 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     mon_enchant tempered  = mons->get_ench(ENCH_TEMPERED);
     mon_enchant thrall    = mons->get_ench(ENCH_VAMPIRE_THRALL);
 
+    const bool was_seen = (bool)(mons->flags & MF_SEEN);
+
     if (mons->affects_agrid())
         invalidate_agrid();
 
@@ -416,6 +418,9 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     // generate a new polymorph set
     mons->props.erase(POLY_SET_KEY);
     init_poly_set(mons);
+
+    if (!do_seen && was_seen)
+        mons->flags |= MF_SEEN;
 
     if (mons->affects_agrid())
         invalidate_agrid();

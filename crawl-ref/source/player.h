@@ -270,7 +270,9 @@ public:
     FixedVector<training_status, NUM_SKILLS> train_alt; ///< config of other mode
     FixedVector<unsigned int, NUM_SKILLS>  training; ///< percentage of XP used
     FixedVector<unsigned int, NUM_SKILLS> skill_points;
-    FixedVector<unsigned int, NUM_SKILLS> training_targets; ///< Training targets, scaled by 10 (so [0,270]).  0 means no target.
+    /// Training targets, scaled by 10 (so [0,270]).  0 means no target.
+    FixedVector<unsigned int, NUM_SKILLS> training_targets;
+    FixedVector<unsigned int, NUM_SKILLS> base_training_targets;
     int experience_pool; ///< XP waiting to be applied.
     FixedVector<uint8_t, NUM_SKILLS>  skill_order;
     /// manuals
@@ -759,10 +761,11 @@ public:
     int       get_innate_mutation_level(mutation_type mut) const;
     int       get_temp_mutation_level(mutation_type mut) const;
 
-    int       get_training_target(const skill_type sk) const;
-    bool      set_training_target(const skill_type sk, const double target, bool announce=false);
-    bool      set_training_target(const skill_type sk, const int target, bool announce=false);
-    void      clear_training_targets();
+    int       get_training_target(const skill_type sk, bool base=false) const;
+    bool      set_training_target(const skill_type sk, const double target, bool announce=false, bool base=false);
+    bool      set_training_target(const skill_type sk, const int target, bool announce=false, bool base=false);
+    void      clear_training_targets(bool base);
+    void      clear_all_training_targets();
 
     bool      has_temporary_mutation(mutation_type mut) const;
     bool      has_innate_mutation(mutation_type mut) const;
@@ -886,6 +889,7 @@ public:
     bool evil() const override;
     bool is_holy() const override;
     bool is_nonliving(bool include_temp = true, bool incl_form = true) const override;
+    bool has_soul() const override;
     int how_chaotic(bool check_spells_god) const override;
     bool is_unbreathing() const override;
     bool is_insubstantial() const override;
@@ -916,7 +920,6 @@ public:
 
     bool clarity(bool items = true) const override;
     bool faith(bool items = true) const override;
-    bool reflection(bool items = true) const override;
     bool stasis() const override;
     bool cloud_immune(bool items = true) const override;
     bool sunder_is_ready() const override;
@@ -983,10 +986,10 @@ public:
     int stat_maxhp() const override  { return hp_max; }
     int stealth() const override     { return player_stealth(); }
 
-    bool shielded() const override;
     int shield_bonus() const override;
     int shield_bypass_ability(int tohit) const override;
     void shield_block_succeeded(actor *attacker) override;
+    bool divinely_shielded() const override;
     int missile_repulsion() const override;
 
     // Combat-related adjusted penalty calculation methods

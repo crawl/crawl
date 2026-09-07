@@ -580,7 +580,6 @@ monster* get_rampage_target(coord_def move)
     const coord_def tracer_target = you.pos() + (move * tracer_range);
 
     bolt beam;
-    beam.range           = LOS_RADIUS;
     beam.aimed_at_spot   = true;
     beam.target          = tracer_target;
     beam.source_name     = "you";
@@ -1061,7 +1060,7 @@ static bool _handle_player_step(const coord_def& targ, int& delay, const int del
             const monster* current = monster_at(you.pos());
             if (!current || !fedhas_passthrough(current))
             {
-                mprf("You %s carefully through the %s.",
+                mprf("You %s slowly and carefully through the %s.",
                         _get_move_verb(rampaging).c_str(),
                     mons_genus(mon->type) == MONS_FUNGUS ? "fungus"
                                                          : "plants");

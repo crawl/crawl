@@ -56,9 +56,6 @@ enum class passive_t
     /// You can walk on water.
     water_walk,
 
-    /// Your god blesses your followers when they kill evil things.
-    bless_followers_vs_evil,
-
     /// You cannot be hasted.
     no_haste,
 
@@ -250,6 +247,9 @@ enum class passive_t
 
     // Immunity to misery clouds
     r_misery,
+
+    /// TSO provide blessings to allied creatures when you slay enemies
+    inspire_followers,
 };
 
 enum ru_interference
@@ -320,3 +320,5 @@ void makhleb_tyrant_buff();
 void makhleb_celebrant_bloodrite();
 void makhleb_execution_activate();
 bool makhleb_haemoclasm_trigger_check(const monster& victim);
+
+void tso_maybe_bless_follower();

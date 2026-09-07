@@ -2902,3 +2902,46 @@ bool targeter_single_monster::valid_aim(coord_def a)
 
     return true;
 }
+
+targeter_divine_alms::targeter_divine_alms()
+    : targeter_smite(&you, LOS_RADIUS)
+{
+}
+
+bool targeter_divine_alms::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    const monster* mon = monster_at(a);
+    if (!(mon && you.can_see(*mon)))
+        return notify_fail("");
+
+    if (!elyvilon_divine_alms_eligible(*mon))
+        return notify_fail("");
+
+    return true;
+}
+
+targeter_pacify::targeter_pacify()
+    : targeter_smite(&you, LOS_RADIUS)
+{
+}
+
+bool targeter_pacify::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    const monster* mon = monster_at(a);
+    if (mon && you.aware_of(*mon))
+    {
+        string reason = unpacifiable_reason(*mon);
+        if (!reason.empty())
+            return notify_fail(reason);
+    }
+
+    // Either a known-valid monster or an empty tile (which might contain an
+    // invisible monster).
+    return true;
+}

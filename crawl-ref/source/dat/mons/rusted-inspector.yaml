@@ -4,7 +4,7 @@ flags: [see_invis, no_skeleton]
 resists: {elec: 1, corr: 1}
 exp: 816
 holiness: [nonliving]
-will: 100
+will: invuln
 attacks:
  - {type: bite, flavour: corrode, damage: 34}
 hd: 14
@@ -14,7 +14,7 @@ ev: 2
 spells: rusted_inspector
 shout: squeak
 habitat: amphibious
-intelligence: human
+intelligence: brainless
 uses: open_doors
 size: medium
 shape: snake
