@@ -1393,6 +1393,7 @@ static void _print_status_lights(int y)
         size_t i_light = 0;
         if (lights.size() == 1)
         {
+            // i18n: TODO: Fix this
             _record_status_light(lights[0], lights[0].text.width());
             lights[0].text.display();
         }
@@ -1400,7 +1401,9 @@ static void _print_status_lights(int y)
         {
             while (i_light < lights.size() && (int)i_light < crawl_view.hudsz.x - 1)
             {
-                const int width = strwidth(localise(lights[i_light].text));
+                // i18n: TODO: Fix this
+                const string text = localise(lights[i_light].text);
+                const int width = strwidth(text);
                 const bool full = i_light == lights.size() - 1
                     && width < crawl_view.hudsz.x - wherex();
                 // Must do this before the print, as it uses the cursor position.
@@ -1437,7 +1440,7 @@ static void _draw_wizmode_flag(const char *word)
     const string text = localise(word);
     textcolour(LIGHTMAGENTA);
     // 3+ for the " **"
-    CGOTOXY(1 + crawl_view.hudsz.x - (3 + text.length()), 1, GOTO_STAT);
+    CGOTOXY(1 + crawl_view.hudsz.x - (3 + strwidth(text)), 1, GOTO_STAT);
     CPRINTF_NOLOC(" *%s*", text.c_str());
 }
 
