@@ -2031,7 +2031,7 @@ DESCRIP: ConstrDrown: When attacking a constricted enemy, it has a one in three
 
 ENUM:    FIVE_VIRTUES
 NAME:    staff of Five Virtues
-INSCRIP: VirtueSH, VirtueRefl
+INSCRIP: VirtueSH VirtueRefl
 OBJ:     OBJ_WEAPONS/WPN_LAJATANG
 PLUS:    +5
 COLOUR:  WHITE
