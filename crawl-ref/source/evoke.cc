@@ -1403,6 +1403,6 @@ void stardust_orb_trigger(int mp_spent)
         && !you.has_mutation(MUT_HP_CASTING))
     {
         schedule_stardust_fineff(&you, stardust_orb_power(mp_spent),
-                                 stardust_orb_max());
+                                 stardust_orb_max(), SHOOTING_STAR_ORB);
     }
 }

@@ -2517,6 +2517,9 @@ int player_shield_class(int scale, bool random, bool include_temp)
     if (include_temp && you.duration[DUR_PARRYING])
         shield += player_parrying() * 200;
 
+    if (you.unrand_equipped(UNRAND_FIVE_VIRTUES))
+        shield += five_virtues_sh_score() * 1000;
+
     if (you.has_mutation(MUT_RECKLESS))
         shield /= 2;
 
@@ -3841,13 +3844,19 @@ bool player::cloud_immune(bool items) const
 
 bool player::sunder_is_ready() const
 {
+    int sunder_threshold = SUNDERING_THRESHOLD;
+
+    if (unrand_equipped(UNRAND_TROG) && you.berserk())
+        sunder_threshold -= 2;
+
     if (you.attribute[ATTR_SUNDERING_CHARGE] >= 0
-        && you.attribute[ATTR_SUNDERING_CHARGE] < SUNDERING_THRESHOLD)
+        && you.attribute[ATTR_SUNDERING_CHARGE] < sunder_threshold)
     {
         return false;
     }
 
-    return wearing_ego(OBJ_WEAPONS, SPWPN_SUNDERING);
+    return wearing_ego(OBJ_WEAPONS, SPWPN_SUNDERING)
+            || unrand_equipped(UNRAND_TROG);
 }
 
 /**
@@ -6008,6 +6017,23 @@ int player::rampaging() const
         rampage = get_los_radius();
 
     return rampage;
+}
+
+int player::shield_block_limit() const
+{
+    int bonus_blocks = 0;
+
+    if (you.unrand_equipped(UNRAND_FIVE_VIRTUES)
+        && five_virtues_sh_score() >= 3)
+    {
+        bonus_blocks++;
+    }
+
+    const item_def *sh = you.shield();
+
+    if (!sh)
+        return 1 + bonus_blocks;
+    return ::shield_block_limit(*sh) + bonus_blocks;
 }
 
 bool player::is_banished() const
@@ -9716,4 +9742,28 @@ bool player::did_reprisal(reprisal_type rtype, mid_t target_mid)
 void player::did_trigger(player_trigger_type trigger)
 {
     triggers_done[trigger]++;
+}
+
+int five_virtues_sh_score()
+{
+    int count = 0;
+
+    // staves either highest skill or maxed
+    if (is_highest_skill(SK_STAVES) || you.skill(SK_STAVES) >= MAX_SKILL_LEVEL)
+        count++;
+
+    // five pips
+    if (you.stealth() > 200)
+        count++;
+
+    if (you.skill(SK_INVOCATIONS, 1, true, false) >= 15)
+        count++;
+
+    if (you.intel() >= 20)
+        count++;
+
+    if (_player_evasion(1, false) >= 25)
+        count++;
+
+    return count;
 }

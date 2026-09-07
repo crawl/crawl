@@ -621,6 +621,7 @@ public:
     bool can_water_walk() const;
     int visible_igrd(const coord_def&) const;
     int rampaging() const override;
+    int shield_block_limit() const override;
     bool is_banished() const override;
     bool is_sufficiently_rested(bool starting=false) const; // Up to rest_wait_percent HP and MP.
     bool is_web_immune() const override;
@@ -1375,3 +1376,4 @@ bool need_expiration_warning(coord_def p = you.pos());
 
 bool player_has_orb();
 bool player_on_orb_run();
+int five_virtues_sh_score();

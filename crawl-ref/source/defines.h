@@ -187,7 +187,7 @@ const int AGILITY_BONUS = 5;
 #define MAX_RUNES 15
 
 // Size of unique_items in player class
-#define MAX_UNRANDARTS 150
+#define MAX_UNRANDARTS 255
 
 // Haste/slow boost.
 #define haste_mul(x) div_rand_round((x) * 3, 2)

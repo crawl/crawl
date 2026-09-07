@@ -660,6 +660,14 @@ static int _spell_enhancement(spell_type spell)
     enhanced += you.duration[DUR_BRILLIANCE] > 0
                 || you.unrand_equipped(UNRAND_FOLLY);
 
+    // Hana's Scimitar provides an enhancer if you cast the spell from 80% mmp
+    // or more, and you have mp.
+    if (you.unrand_equipped(UNRAND_HANAS_SCIMITAR) && you.max_magic_points > 0
+        && (you.magic_points + spell_mana(spell)) * 100 >= you.max_magic_points * 80)
+    {
+        enhanced++;
+    }
+
     // These are used in an exponential way, so we'll limit them a bit. -- bwr
     if (enhanced > 3)
         enhanced = 3;

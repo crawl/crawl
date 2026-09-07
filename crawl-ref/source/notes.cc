@@ -32,7 +32,7 @@
 vector<Note> note_list;
 int last_screen_turn = -1;
 
-static bool _is_highest_skill(int skill)
+bool is_highest_skill(int skill)
 {
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
@@ -459,7 +459,7 @@ bool Note::hidden() const
     {
         return !(Options.note_all_skill_levels
                  || second <= 27 && Options.note_skill_levels[second]
-                 || Options.note_skill_max && _is_highest_skill(first));
+                 || Options.note_skill_max && is_highest_skill(first));
     }
     // Hide gems being shattered by default.
     if (type == NOTE_GEM_LOST)

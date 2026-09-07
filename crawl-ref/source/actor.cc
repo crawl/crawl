@@ -294,6 +294,12 @@ bool actor::reflection(bool items) const
     if (divinely_shielded())
         return true;
 
+    if (items && is_player() && you.unrand_equipped(UNRAND_FIVE_VIRTUES) &&
+        five_virtues_sh_score() > 3)
+    {
+        return true;
+    }
+
     return items &&
            (wearing_jewellery(AMU_REFLECTION)
             || wearing_ego(OBJ_ARMOUR, SPARM_REFLECTION));

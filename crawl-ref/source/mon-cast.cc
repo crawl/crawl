@@ -5436,7 +5436,7 @@ bool handle_mon_spell(monster* mons)
         && !mons->has_ench(ENCH_ORB_COOLDOWN))
     {
         schedule_stardust_fineff(mons, pow(mons->get_hit_dice() / 2, 1.38) * 6,
-                                 4 + mons->get_hit_dice() / 2);
+                                 4 + mons->get_hit_dice() / 2, SHOOTING_STAR_ORB);
     }
 
     if (!(flags & MON_SPELL_INSTANT))

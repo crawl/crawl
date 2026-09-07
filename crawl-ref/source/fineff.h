@@ -30,6 +30,12 @@ enum explosion_fineff_type : int {
     EXPLOSION_FINEFF_PYROMANIA,
 };
 
+enum shooting_star_fineff_type : int {
+    SHOOTING_STAR_ORB,
+    SHOOTING_STAR_JELLY,
+    SHOOTING_STAR_CARINA,
+};
+
 void schedule_mirror_damage_fineff(const actor* attack, const actor* defend,
                                    int dam);
 void schedule_anguish_fineff(const actor* attack, int dam);
@@ -81,7 +87,7 @@ void schedule_death_spawn_fineff(monster_type mon_type, coord_def pos, int dur,
 void schedule_death_spawn_fineff(mgen_data mg);
 void schedule_detonation_fineff(const coord_def& pos, const item_def* wpn);
 void schedule_stardust_fineff(actor* agent, int power, int max_stars,
-                              bool is_star_jelly = false);
+                              shooting_star_fineff_type type);
 void schedule_pyromania_fineff();
 void schedule_celebrant_bloodrite_fineff();
 void schedule_eeljolt_fineff();
