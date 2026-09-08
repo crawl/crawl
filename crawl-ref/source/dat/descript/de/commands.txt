@@ -1,13 +1,13 @@
 %%%%
 CMD_REST
 
-Rasten und Heilen
+Rasten und heilen
 %%%%
 CMD_REST verbose
 
-Verbringe bis zu 100 Runden um Lebenspunkte und/oder Magiepunkte zu
-regenerieren. Die Rast wird unterbrochen sobald ein feindseliges Monster in
-Sicht kommt.
+Rasten während sich deine Lebens- und Magiepunkte regenerieren. Die Rast wird
+unterbrochen, sobald ein feindseliges Monster in Sicht kommt. Falls Leben und
+Magie beide bereits voll sind, wartet das Rasten für 100 Runden.
 %%%%
 CMD_EXPLORE
 
@@ -15,66 +15,61 @@ Die aktuelle Ebene automatisch erforschen
 %%%%
 CMD_EXPLORE verbose
 
-Lässt deinen Charakter automatisch durch unerforschte Bereiche der aktuellen
-Ebene reisen und dabei brauchbare Gegenstände die auf dem Weg liegen aufheben.
-Die Reise wird unterbrochen, sobald ein feindseliges Monster in Sicht kommt,
-und auch um gefunden Gegenstände und Besonderheiten anzuzeigen.
+Erkundet automatisch die aktuelle Ebene, wobei brauchbare Gegenstände unterwegs
+aufgehoben werden. Die Erkundung stoppt, sobald ein feindseliges Monster in Sicht
+kommt oder du neue Gegenstände oder Kerkermerkmale findest.
 %%%%
 CMD_INTERLEVEL_TRAVEL
 
-Reise zu entfernten Ebenen
+Zu entfernten Ebenen reisen
 %%%%
 CMD_INTERLEVEL_TRAVEL verbose
 
-Automatische Reise zu entfernten Ebenen. Die Reise wird durch Monster, die in
-Sichtweite kommen, unterbrochen.
+Reist automatisch zu einer ausgewählten Ebene oder einem Zweig. Die Reise wird
+durch Monster, die in Sicht kommen, unterbrochen.
 %%%%
 CMD_USE_ABILITY
 
-Benutze göttliche oder angeborene Fähigkeiten
-%%%%
-CMD_PRAY
-
-Bete deinen Gott an
+Göttliche, angeborene oder evozierbare Fähigkeiten anwenden
 %%%%
 CMD_SEARCH_STASHES
 
-Suche nach Gegenständen/Besonderheiten
+Nach Gegenständen/Merkmalen suchen
 %%%%
 CMD_SEARCH_STASHES verbose
 
-Suche nach Gegenständen/Besonderheiten die du woanders gesehen hast, danach
-begib dich dort hin.
+Sucht nach Gegenständen oder Merkmalen, die du woanders gesehen hast und
+ermöglicht dir, zu ihrem Standort zu reisen.
 %%%%
 CMD_REPLAY_MESSAGES
 
-Letzte Meldung erneut lesen
+Letzte Meldungen erneut lesen
 %%%%
 CMD_RESISTS_SCREEN
 
-Charakter Übersicht anzeigen
+Charakterübersicht anzeigen
 %%%%
 CMD_RESISTS_SCREEN verbose
 
-Zeige Informationen über bekannte Resistenzen, Fähigkeiten, Ausrüstungs-Status,
-usw.
+Zeigt einen Überblick deiner aktuellen Resistenzen, Fähigkeiten, Ausrüstungsgegenstände
+und Attribute an.
 %%%%
 CMD_DISPLAY_OVERMAP
 
-Zeige die Verlies Übersichtskarte
+Die Kerker-Übersicht zeigen
 %%%%
 CMD_DISPLAY_OVERMAP verbose
 
-Zeige die Stellen von Abzweigungen, Läden und anderen Besonderheiten denen du
-bis jetzt begegnet bist.
+Zeigt eine Übersicht über die Standorte von Zweigen, entdeckten Altären,
+Läden und Level-Anmerkungen an.
 %%%%
 CMD_DISPLAY_RELIGION
 
-Religiösen Status anzeigen.
+Religiösen Status anzeigen
 %%%%
 CMD_DISPLAY_RELIGION verbose
 
-Zeige was deinem Gott ge- und missfällt, dein Betragen und deinen religiösen
+Zeigt, was deinem Gott ge- und missfällt, dein Betragen und deinen religiösen
 Stand sowie göttliche Fähigkeiten.
 %%%%
 CMD_DISPLAY_MUTATIONS
@@ -83,7 +78,7 @@ Mutationen anzeigen
 %%%%
 CMD_DISPLAY_SKILLS
 
-Fähigkeiten verwalten
+Fertigkeiten verwalten
 %%%%
 CMD_DISPLAY_CHARACTER_STATUS
 
@@ -91,134 +86,186 @@ Charakterstatus anzeigen
 %%%%
 CMD_DISPLAY_CHARACTER_STATUS verbose
 
-Zeigt aktive Verzauberungen und ein paar andere Dinge an.
+Zeigt Details an, zu deinem aktuellen Bewegungstempo, Angriffstempo, deiner
+Heimlichheit, Magieresistenz und zu allen derzeit aktiven Verzauberungen
+oder Statuseffekten.
 %%%%
 CMD_DISPLAY_KNOWN_OBJECTS
 
-Listet entdeckte Gegenstands-Typen auf
+Entdeckte Gegenstands-Typen auflisten
 %%%%
 CMD_SAVE_GAME_NOW
 
-Speichern und verlassen
+Spiel speichern und verlassen
 %%%%
 CMD_SAVE_GAME_NOW verbose
 
-Speichere, für später, und verlasse das Spiel. Sobald du das Spiel fortsetzt,
-wird die Speicherdatei gelöscht.
+Speichert und verlässt das Spiel. Sobald du das Spiel fortsetzt,
+wird die Speicherdatei wieder gelöscht.
 %%%%
 CMD_EDIT_PLAYER_TILE
 
-Verändere das Aussehen der Spielfigur
+Das Aussehen der Spielfigur verändern
 %%%%
 CMD_EDIT_PLAYER_TILE verbose
 
-Verändere die Ausrüstung und das Aussehen der Spielfigur.
+Erlaubt dir, die Ausrüstung und die Spezies der angezeigten Spielfigur zu verändern.
 %%%%
 CMD_DISPLAY_COMMANDS
 
-Spiel Hilfe
+Spielhilfe
 %%%%
 CMD_DISPLAY_COMMANDS verbose
 
-Liste von Kommandos, Optionen, etc.
+Zeigt eine Liste der Kommandos an.
+%%%%
+CMD_SHOW_CHARACTER_DUMP
+
+Dump des Fortschritts deines Charakters erzeugen und anzeigen
+%%%%
+CMD_SHOW_CHARACTER_DUMP verbose
+
+Speichert detaillierte Informationen über den Charakter in der Datei
+'playername.txt' im Verzeichnis 'morgue' und zeigt die Datei im Spiel an. Das
+umfasst die grundlegenden Attribute, Ausrüstung, Zaubersprüche, Fertigkeiten,
+Notizen, etc.
+%%%%
+CMD_CHARACTER_DUMP
+
+Dump des Fortschritts deines Charakters erzeugen
+%%%%
+CMD_CHARACTER_DUMP verbose
+
+Speichert detaillierte Informationen über den Charakter in der Datei
+'playername.txt' im Verzeichnis 'morgue', die du dir jederzeit ansehen kannst. Das
+umfasst die grundlegenden Attribute, Ausrüstung, Zaubersprüche, Fertigkeiten,
+Notizen, etc.
 %%%%
 CMD_AUTOFIGHT
 
-Bekämpfe das nächst stehende Monster
+Das am nächsten stehende Monster bekämpfen
 %%%%
 CMD_AUTOFIGHT verbose
 
-Bewege dich auf das am nächsten stehende feindselige Monster zu und greife es
-mit deiner ausgerüsteten Waffe an.
+Bewegt sich auf das am nächsten stehende Monster zu, oder greift ein Monster auf einem
+benachbarten Feld mit deiner ausgerüsteten Waffe an.
 %%%%
 CMD_AUTOFIGHT_NOMOVE
 
-Bekämpfe das benachbarte Monster.
+Ein benachbartes Monster bekämpfen
 %%%%
 CMD_AUTOFIGHT_NOMOVE verbose
 
-Greife das neben dir stehende Monster mir deiner ausgerüsteten Waffe an.
+Greift ein Monster auf einem benachbarten Feld mit deiner ausgerüsteten Waffe an.
 %%%%
 CMD_WAIT
 
-Warte eine Runde
+Eine Runde warten
 %%%%
 CMD_WAIT verbose
 
-Verbringe wartend und rastend eine einzige Runde.
+Verbringt eine einzige Runde mit Warte und Rasten.
+%%%%
+CMD_SAFE_WAIT
+
+Eine Runde warten, falls es sicher ist
+%%%%
+CMD_SAFE_WAIT verbose
+
+Verbringt eine einzige Runde mit Warte und Rasten, aber nur, wenn keine
+feindlichen Monster in Sicht sind.
 %%%%
 CMD_DISPLAY_INVENTORY
 
-Zeige den Inhalt deines Inventars an
+Den Inhalt deines Inventars anzeigen
 %%%%
 CMD_DISPLAY_INVENTORY verbose
 
-Zeige den Inhalt deines Inventars an.
+Zeigt den Inhalt deines Inventars an.
 %%%%
 CMD_CAST_SPELL
 
-Wirke einen Zauberspruch
+Zaubern
 %%%%
 CMD_CAST_SPELL verbose
 
-Wirke einen Zauberspruch.
+Wirkt einen Zauberspruch.
 %%%%
 CMD_MEMORISE_SPELL
 
-Zauberspruch einprägen
+Zauberspruch auswendig lernen
 %%%%
 CMD_MEMORISE_SPELL verbose
 
-Präge dir einen Zauber in dein Gedächtnis ein, lese von einem Buch das du im
-Besitz hast oder auf dem du stehst.
+Lernt einen ausgewählten Spruch aus deiner Zauber-Bibliothek auswendig.
+%%%%
+CMD_LOOKUP_HELP
+
+Hilfetext nachschlagen
+%%%%
+CMD_LOOKUP_HELP verbose
+
+Zeigt Beschreibungen von Monstern, Zaubern, Fähigkeiten, Gegenständen und mehr.
 %%%%
 CMD_DROP
 
-Gegenstand ablegen
+Gegenstände fallen lassen
 %%%%
 CMD_DROP verbose
 
-Lege einen oder mehrere Gegenstände, die du gerade bei dir hast, ab.
+Lässt einen oder mehrere Gegenstände fallen, die du aktuell bei dir hast.
 %%%%
 CMD_DISPLAY_MAP
 
-Betrete den Karten-Modus
+Kartenmodus aufrufen
+%%%%
+CMD_MAP_EXIT_MAP
+
+Kartenmodus verlassen
 %%%%
 CMD_DISPLAY_MAP verbose
 
-Navigiere in der zuvor erkundeten Karte.
+Zeigt eine Karte der aktuellen Ebene an.
 %%%%
 CMD_MAP_GOTO_TARGET
 
-Bewege dich bis zum Cursor
+Zum Cursor reisen
 %%%%
 CMD_MAP_GOTO_TARGET verbose
 
-Starte Bewegung zur aktuellen Position des Cursors
+Beginnt damit, zur aktuellen Position des Cursors zu reisen.
+%%%%
+CMD_MAP_EXPLORE
+
+Nächstes Ziel zum automatischen Erkunden finden
+%%%%
+CMD_MAP_EXPLORE verbose
+
+Setzt den Cursor auf das nächste Feld, zu dem die automatische Erkundung reisen wird.
 %%%%
 CMD_MAP_ADD_WAYPOINT
 
-Füge einen Wegpunkt hinzu
+Wegpunkt hinzufügen
 %%%%
 CMD_MAP_ADD_WAYPOINT verbose
 
-Setze einen Wegpunkt auf die aktuelle Position.
+Setzt einen Wegpunkt auf deine aktuelle Position.
 %%%%
 CMD_MAP_EXCLUDE_AREA
 
-Reise-Ausnahme
+Sperrgebiet erstellen
 %%%%
 CMD_MAP_EXCLUDE_AREA verbose
 
-Erstelle eine Reise-Ausnahme, ändere ihren Radius, oder entferne sie.
+Legt ein Reise-Sperrgebiet fest, ändert seinen Radius oder löscht es.
 %%%%
 CMD_MAP_CLEAR_EXCLUDES
 
-Reise-Ausnahme aufheben.
+Sperrgebiete löschen
 %%%%
 CMD_MAP_CLEAR_EXCLUDES verbose
 
-Hebe alle Reise-Ausnahmen auf der Ebene auf.
+Löscht alle Reise-Sperrgebiete auf der aktuelle Ebene.
 %%%%
 CMD_MAP_NEXT_LEVEL
 
@@ -226,7 +273,7 @@ Eine Ebene runter
 %%%%
 CMD_MAP_NEXT_LEVEL verbose
 
-Untersuche die nächst tiefere Ebene.
+Zeigt die nächstniedrigere Ebene an.
 %%%%
 CMD_MAP_PREV_LEVEL
 
@@ -234,47 +281,47 @@ Eine Ebene rauf
 %%%%
 CMD_MAP_PREV_LEVEL verbose
 
-Untersuche die nächst höhere Ebene.
+Zeigt die nächsthöhere Ebene an.
 %%%%
 CMD_MAP_GOTO_LEVEL
 
-Gehe zur Ebene
+Ebenenauswahl
 %%%%
 CMD_MAP_GOTO_LEVEL verbose
 
-Gehe zu einer anderen Ebene in dem du Abzweig und Tiefe wählst.
+Zeigt eine andere, nach Zweig und Tiefe ausgewählte Ebene an.
 %%%%
 CMD_MAP_FIND_UPSTAIR
 
-Finde Treppen nach oben
+Treppen nach oben finden
 %%%%
 CMD_MAP_FIND_UPSTAIR verbose
 
-Durchlaufe alle Treppen nach oben.
+Geht mit dem Karten-Cursor alle Treppen nach oben durch.
 %%%%
 CMD_MAP_FIND_DOWNSTAIR
 
-Finde Treppen nach unten
+Treppen nach unten finden
 %%%%
 CMD_MAP_FIND_DOWNSTAIR verbose
 
-Durchlaufe alle Treppen nach unten.
+Geht mit dem Karten-Cursor alle Treppen nach unten durch.
 %%%%
 CMD_MAP_FIND_YOU
 
-Finde mich
+Mich finden
 %%%%
 CMD_MAP_FIND_YOU verbose
 
-Bewege den Karten-Cursor zurück zur aktuellen Position.
+Bewegt den Karten-Cursor zurück zu deiner aktuellen Position.
 %%%%
 CMD_MAP_FIND_PORTAL
 
-Finde Läden und Portale
+Läden und Portale finden
 %%%%
 CMD_MAP_FIND_PORTAL verbose
 
-Durchlaufe alle Läden und Portale in der aktuellen Ebene.
+Geht mit dem Karten-Cursor alle Läden und Portale auf der aktuellen Ebene durch.
 %%%%
 CMD_MAP_FIND_TRAP
 
@@ -282,7 +329,7 @@ Fallen finden
 %%%%
 CMD_MAP_FIND_TRAP verbose
 
-Durchlaufe alle Fallen in der aktuellen Ebene.
+Geht mit dem Karten-Cursor alle Fallen auf der aktuellen Ebene durch.
 %%%%
 CMD_MAP_FIND_ALTAR
 
@@ -290,15 +337,15 @@ Altäre finden
 %%%%
 CMD_MAP_FIND_ALTAR verbose
 
-Durchlaufe alle Altäre auf der aktuellen Ebene.
+Geht mit dem Karten-Cursor alle Altäre auf der aktuellen Ebene durch.
 %%%%
 CMD_MAP_FIND_EXCLUDED
 
-Reise-Ausnahmen finden
+Sperrgebiete finden
 %%%%
 CMD_MAP_FIND_EXCLUDED verbose
 
-Durchlaufe alle Reise-Ausnahmen auf der aktuellen Ebene.
+Geht mit dem Karten-Cursor alle Reise-Sperrgebiete auf der aktuellen Ebene durch.
 %%%%
 CMD_MAP_FIND_WAYPOINT
 
@@ -306,7 +353,7 @@ Wegpunkt finden
 %%%%
 CMD_MAP_FIND_WAYPOINT verbose
 
-Durchlaufe alle Wegpunkte auf der aktuellen Ebene
+Geht mit dem Karten-Cursor alle Wegpunkte auf der aktuellen Ebene durch.
 %%%%
 CMD_MAP_FIND_STASH
 
@@ -314,7 +361,7 @@ Versteck finden
 %%%%
 CMD_MAP_FIND_STASH verbose
 
-Durchlaufe alle Verstecke auf der aktuellen Ebene
+Geht mit dem Karten-Cursor alle Verstecke auf der aktuellen Ebene durch.
 %%%%
 CMD_ZOOM_IN
 
@@ -322,13 +369,28 @@ Heranzoomen
 %%%%
 CMD_ZOOM_IN verbose
 
-In das Kerker Gebiet heranzoomen
+Zoomt an den Bereich des Kerkers heran.
 %%%%
 CMD_ZOOM_OUT
 
-Heraus zoomen
+Herauszoomen
 %%%%
 CMD_ZOOM_OUT verbose
 
-Aus dem Kerker Gebiet heraus zoomen
+Zoomt aus dem Bereich des Kerkers heraus.
 %%%%
+CMD_SHOW_KEYBOARD
+
+Tastatur zeigen
+%%%%
+CMD_SHOW_KEYBOARD verbose
+
+Ruft die Bildschirmtastatur auf, sofern verfügbar.
+%%%%
+CMD_GAME_MENU
+
+Spielmenü anzeigen
+%%%%
+CMD_GAME_MENU verbose
+
+Zeigt das Spielmenü an.

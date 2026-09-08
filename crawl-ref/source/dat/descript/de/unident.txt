@@ -4,6 +4,10 @@ amulet
 Ein Talisman der als Schmuck um den Hals getragen wird, durchströmt von Magie
 unbekannten Ursprungs.
 %%%%
+book
+
+Ein arkanes Lehrbuch mit magischen Zaubersprüchen unbekannter Herkunft.
+%%%%
 deck of cards
 
 Ein Satz mächtiger magischer Karten, getuscht in Dämonenblut. Das Ziehen von

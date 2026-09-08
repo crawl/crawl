@@ -1,36 +1,291 @@
 %%%%
+Dungeon
+
+Es ist immer noch ein Rätsel, wie dieser bizarre Ort entstanden ist. Einige
+behaupten, er sei der Spielplatz gelangweilter Götter, während andere
+behaupten, er sei von allen möglichen Spezies geformt worden, die vor der
+Überwelt geflohen sind und das Licht gemieden haben. Wie auch immer sie
+entstanden sein mag, diese tiefe Höhle birgt ungeahnte Reichtümer, aber auch
+große Gefahren für jeden Eindringling. Nur wenige sind lebend entkommen, und
+noch weniger haben einen Funken Verstand bewahrt, der dafür ausreicht, die
+Geschichte zu erzählen.
+%%%%
+Temple
+
+Der Ökumenische Tempel ist ein Ort des Friedens und der Zuflucht vor dem
+Irrsinn des Kerkers. Er enthält normalerweise Altäre für die meisten der
+bekannten Götter. Götter, die das Erforschen schätzen, gewähren keine
+Pietät für das Erforschen des Tempels.
+%%%%
+Orcish Mines
+
+Die Ork-Minen sind voll mit den im Kerker heimischen Höhlenorks, ihren
+humanoiden Arbeitern und haufenweise frisch abgebautem Gold.
+Unternehmungslustige Kaufleute haben Handelsposten eingerichtet, um die Orks
+von letzterem zu befreien.
+%%%%
 Elven Halls
 
-Obwohl die meisten Elfenvölker sich nie in einen dunklen und unterirdischen
-Komplex wie diesen begeben würden, die Tiefenelfen tun es. Ihre Hallen sind
-gefüllt mit Reichtümern, doch jeder Durchreisende sollte sich über die
-legendären magischen Fähigkeiten dieses Volkes bewusst sein.
-
-Die Elfenhallen sind drei Ebenen tief.
+Die Elfenhallen sind die Heimat der Tiefenelfen, einer Rasse, die sich vor
+langer Zeit von der Sonne abgewandt hat. Ihre Hallen sind mit Reichtümern
+gefüllt, aber auf jeden Möchtegernräuber wartet ein tödlicher Empfang. In
+ihrer langen Abgeschiedenheit haben die Tiefenelfen dunkle Zaubereien von einer
+Macht perfektioniert, von der die Orks nur träumen können!
 %%%%
+
 Lair
 
-Die meisten Abenteurer finden die Höhle der Bestien als eine spannende
-Veränderung des Klimas. Und tatsächlich, man wird eher durchbohrt, zerfleischt
+Die meisten Abenteurer empfinden die Höhle der Bestien als spannende
+Veränderung des Klimas. Und tatsächlich wird man eher aufgespießt, zerfleischt
 und gefressen als aufgeschlitzt, verbrannt oder erstochen.
 
-Diese Höhle ist fünf Ebenen tief und enthält Stufen zu drei weiteren Gebieten.
+Die Höhle enthält Eingänge entweder zum Sumpf oder den Untiefen sowie
+entweder zur Schlangengrube oder dem Spinnennest. Außerdem zu den Schleimgruben.
+%%%%
+Swamp
+
+Der Sumpf ist ein sumpfiges Ödland, das mit Schlamm, Dreck, Fliegen und
+großen fleischfressenden Monstern gefüllt ist.
+
+Ein Kerker enthält nur einen der beiden Zweige Sumpf und Untiefen.
+%%%%
+Shoals
+
+Die exotischen unterirdischen Strände der Untiefen bestehen aus ein paar kleinen
+Inseln in einem scheinbar endlosen Meer. Das Meervolk hat sie zu seiner Heimat
+gemacht, zusammen mit vielen gefürchteten Meereskreaturen.
+
+Ein Kerker enthält nur einen der beiden Zweige Sumpf und Untiefen.
+%%%%
+Snake Pit
+
+Die Gänge der Schlangengrube beherbergen alle Arten von Schlangen und werden
+von einer Gesellschaft mächtiger Nagas und Salamander bewohnt.
+
+Ein Kerker enthält nur einen der beiden Zweige Schlangengrube und Spinnennest.
+%%%%
+Spider Nest
+
+Die bröckeligen, mit Spinnweben durchzogenen Höhlen des Spinnennests sind
+voll von giftigen Gliederfüßlern und anderen gruseligen Krabbeltieren.
+
+Ein Kerker enthält nur einen der beiden Zweige Spinnennest und Schlangengrube.
+%%%%
+Slime Pits
+
+Die Schleimgruben sind das amorphe Reich der Säuren, Gelees und Schleime.
+Selbst die Wände triefen vor schmerzhafter Säure. Jede Spur von intelligenten
+Wesen hat sich längst aufgelöst. Dennoch gibt es Gerüchte über große
+Schätze, die tief unten in geheimen, unzugänglichen Kammern verborgen sind.
+%%%%
+Vaults
+
+Möglicherweise von einem mächtigen Verrückten erbaut, sollen die Gewölbe
+große Schätze beherbergen. Die großzügig rund um den Eingang verteilen Blutspritzer
+deuten darauf hin, dass hier auch ein gewisses Maß an Gewalt auftritt.
+%%%%
+Crypt
+
+Die Krypta ist ein riesiger Aufbewahrungsort für uralte Tote. Die Luft ist
+kühl und übelriechend, die Wände sind kalt und feucht. Überall liegen Knochen
+verstreut und jedes Geräusch hallt beunruhigend wider und stört die
+erdrückende Stille des Grabes.
+%%%%
+Tomb
+
+Das Grab der Uralten ist ein Ort der Verdammnis, ein Ort des Schreckens, belebt
+durch die übelste Nekromantie. Die Liste derer, die von diesem Ort des reinen
+Todes zurückgekehrt sind, ist äußerst kurz.
+%%%%
+Hell
+
+Der Vorhof der Hölle wird von Geryon bewacht, zusammen mit verschiedenen
+Bewohnern der einzelnen Höllen selbst.
+
+Portale zum Vorhof der Hölle gibt es in den Tiefen zuhauf.
+%%%%
+Dis
+
+Die Eiserne Stadt Dis ist die Heimat vieler der widerstandsfähigsten Wächter
+der Hölle. Diejenigen, die nicht in die Hallen von Dis gehören, werden merken, dass
+die Erde selbst sich ihnen entgegenstellt.
+%%%%
+Gehenna
+
+Gehenna ist ein Reich der Lava, der Flammen und der Verdammnis. Auf diejenigen,
+die dort verweilen, werden Feuer und Schwefel herabregnen.
+%%%%
+Cocytus
+
+Kokytus ist ein bitteres und erfrorenes Ödland. Eindringlinge werden
+feststellen, dass die beißenden Winde und die eisigen Bewohner der Einöde ihr
+Vorankommen erschweren.
+%%%%
+Tartarus
+
+Tartarus ist eine zerfallende Unterwelt. Im Laufe der Zeit verzehren die
+Untoten, Dämonen und Teufel dieses Ortes das Leben eines jedem, der es wagt,
+einzutreten.
+%%%%
+Zot
+
+Das Reich von Zot ist eine Region des Kerkers, die so furchterregend ist, so
+voller Wahnsinn, Raserei und Irrsinn, dass sie gegen zufällige Eindringlinge
+sicher verschlossen wurde. Nur die wahnsinnigsten Abenteurer würden es wagen,
+die erforderlichen Schlüssel zu besorgen, das Siegel zu brechen und tiefer
+einzudringen - in der vergeblichen Hoffnung auf ein sagenumwobenes Artefakt,
+das noch nie jemand zu Gesicht bekommen hat.
+%%%%
+Abyss
+
+Der Abgrund ist ein wahrhaft bizarrer Ort, der sich ständig ändert und
+verdreht. Er ist voll von allen möglichen Monstern, meist dämonischer Natur,
+deren gemeinsames Ziel es ist, sich an Eindringlingen zu laben. Er ist auch die
+Müllhalde vieler Zauberer, die Möchtegern-Champions wie dich nur all zu gern
+auf diese Versuchsfelder des Wahnsinns schicken. Angeblich hat das Chaos eine
+gewisse Struktur, da Lugonu ein Komplott rund um diesen Ort und seine
+Bewohner aushecken zu scheint.
+
+Portale zum Abgrund gibt es in den Tiefen zuhauf.
+
+Der Abgrund besteht aus fünf unendlichen Ebenen. Die Abgrundsrune von Zot kann
+ab der dritten Ebene gefunden werden und ist in größeren Tiefen häufiger zu
+finden. Portale, die zurück in den Kerker führen, sind überall im Abgrund
+verstreut und werden häufiger in größeren Tiefen oder beim Tragen der
+Abgrundsrune gefunden. Abenteurer, die sich im Abhrund aufhalten, werden
+unwiderstehlich in die Tiefe gezogen. Durch das Töten von Monstern wird die
+Substanz des Abgrunds verformt und schließlich ein Ausgang geschaffen.
+Weiteres Ausharren wird Löcher in den Abgrund reißen, die den Abstieg in
+tiefere Ebenen ermöglichen.
+%%%%
+Pandemonium
+
+Pandämonium ist ein unendliches Reich des Schmerzes und des Leidens. Hier gibt
+es zwar viele Schätze zu finden, aber sie werden von grausamen Dämonen und
+noch grausameren Dämonenfürsten bewacht.
+
+Portale nach Pandämonium gibt es in den Tiefen zuhauf.
+
+Pandämonium ist endlos. Jeder Bereich von Pandämonium hat eine kleine Chance,
+ein Portal zurück in den Kerker zu enthalten, entweder direkt oder über den
+Abgrund.
+
+Nicht weniger als fünf Runen von Zot sind in Pandämonium zu finden:
+ • die feurige Rune befindet sich im flammenden Reich von Cerebov
+ • die glühende Rune findet sich im verseuchten Reich von Mnoleg
+ • die magische Rune wird von den arkanen Kräften Lom Lobons bewacht
+ • die dunkle Rune ist in der schattigen Wohnstätte von Gloorx Vloq verborgen
+ • die dämonische Rune existiert an mehreren Orten, die sich im Besitz
+weniger berühmter Fürsten befinden
+%%%%
+Ziggurat
+
+Eine Zikkurat ist ein seltsamer Turm, der aus immer größeren Kampfarenen
+besteht, von denen jede mehr Reichtum und noch größere Gefahren birgt als die
+vorherige. Vorsicht, denn eine Zikkurat ist nichts für schwache Nerven: Selbst
+die mutigsten und geschicktesten Abenteurer haben dort schon ihr Ende gefunden.
+Zwar gibt es auf jeder Ebene ein Fluchtportal, aber einmal verlassen,
+kann eine Zikkurat nicht wieder betreten werden.
+
+Eine Ziggurat ist in den Tiefen garantiert. Geschichten zufolge befindet sich am Boden
+jeder Zikkurat ein magischer Gegenstand, der den Zugang zu einer
+neuen Zikkurat ermöglicht. Ein solcher Gegenstand soll sich auch auf dem Boden
+der Gruft der Alten befinden. Jedes Mal, wenn eine Zikkurat durch Verlassen des
+finalen Stockwerks erobert wird, werden die folgenden Zikkurate immer
+gefährlicher und lukrativer.
+%%%%
+Gauntlet
+
+Ein ausgeklügelter Komplex, der tollkühne Abenteurer auf der Suche nach
+Reichtum und Ruhm anlockt. Wer ihn betritt, muss sich einen Weg durch mehrere
+Kampfarenen bahnen, von denen jede einen Schatz enthält, der von gefährlichen
+und manchmal exotischen Kreaturen bewacht wird. Am Ende wartet ein
+furchterregender Minotaur, der einen großen Haufen Beute bewacht, die er
+von den Leichen törichter Abenteurer geplündert hat.
+
+Vorsicht! Im Spießrutenlauf verhindert mächtige Magie Teleportation über weite Strecken.
+Schlimmer noch, einige dieser Komplexe bieten nur einen Ausgang... in die
+Höhle des Minotaurs.
+%%%%
+Bazaar
+
+Während sich einige Händler im Kerker niederlassen, ziehen andere mit
+Karawanen von Ort zu Ort. Auf den Basaren dieser reisenden Händler gibt es
+eine Reihe verschiedener Läden und oft ein besseres Angebot als bei den
+sesshaften Händlern, manchmal sogar zum Schnäppchenpreis.
+%%%%
+Trove
+
+Es war einmal ein geschäftstüchtiger Dieb und Zauberer, der ein System von
+Portalen schuf, die in die geheimen Schatzkammern der Reichen führten. Da er
+zu ängstlich war, sie selbst zu plündern, verlangte er stattdessen von
+jedem, der sie durchstöbern wollte, eine Wuchergebühr für den Eintritt.
+
+Die Gegenstände in diesen Schatzkammern sind wahrscheinlich nützlich, aber
+Vorsicht: Der Zauberer ist schon lange tot und selbst zu Lebzeiten gab er
+keine Geld-zurück-Garantie.
 %%%%
 Sewer
 
-Jeder bewohnte Ort muss seine Abfallprodukte irgendwo beseitigen. Auch das
-Verlies hat seine stinkende Kanalisation und Abläufe voll schmutzigem Wasser
-und von den meisten gemieden aber die als Versteck der Abscheulichen und
-Verzweifelten genutzt wird. Alte Legenden erzählen von gefährlichen Kreaturen,
-die durch das faule, stinkende grüne Wasser pirschen und jedem ohne Gnade
+Jeder bewohnte Ort muss seine Abfallprodukte irgendwo beseitigen. Auch der
+Kerker hat eine stinkende Kanalisation und Abflussrohre, voll mit schmutzigem Wasser
+und von den meisten gemieden, aber von Abscheulichen und
+Verzweifelten als Versteck genutzt. Alte Legenden erzählen von gefährlichen Kreaturen,
+die durch das faule, stinkende grüne Wasser pirschen und sich gegenseitig ohne Gnade
 auflauern. Die Legenden erwähnen auch die wertvollen Gegenstände, die in die
-Abflusskanälen gespült wurden, vergessen und zum Verschimmeln in den feuchten
+Abflusstunnel gespült wurden, vergessen und verschimmelt in den feuchten
 Höhlen liegen gelassen.
+%%%%
+Ossuary
+
+Das Beinhaus ist eine kleine Gruft, die die Überreste und Grabbeigaben einiger
+entfernter Verwandter der Pharaonen sowie die Leichen ihrer Gefolgsleute und
+Haustiere enthält. Es ist zweifellos mit vielen Fallen gespickt, und seine
+untoten Bewohner werden Plünderungen wohl kaum dulden.
+%%%%
+Bailey
+
+Der Burghof ist die noch immer bewohnte und gut bewachte Festung eines
+orkischen Fürsten. Die Schätze im Inneren werden sowohl durch physische Barrieren
+als auch durch eine große Anzahl gut bewaffneter humanoider Krieger geschützt.
+%%%%
+Ice Cave
+
+Die Eishöhle ist eine trostlose, aus massivem Eis geformte Höhle, in der das
+Echo bestialischer Schreie widerhallt. Die kunstvollen Schnitzereien und
+Statuen, die einst die Wände säumten, wurden durch jahrhundertelanges langsames
+Schmelzen und erneutes Gefrieren verformt und unkenntlich gemacht.
 %%%%
 Volcano
 
-Gebaut aus riesigen Blöcken Obsidians könnte diese glühend heiße Kammer einst
-als Tempel für fremde Götter gedient haben. Oder es war die Behausung eines
-mächtigen Feuerriesen. Die Luft flimmert von der erdrückenden Hitze, und das
-dumpfe Grollen der Vulkane scheint nie abzuklingen.
+Die aus riesigen Obsidianblöcken errichteten schwülen Kammern des Vulkans
+mögen einst als Tempel für eine seltsame Gottheit gedient haben, vielleicht
+aber auch als Wohnstätte eines mächtigen Feuerriesen. Die Luft flimmert vor
+drückender Hitze und das dumpfe Dröhnen des Vulkanherzens verstummt nie.
+%%%%
+Wizlab
+
+In vergangenen Zeitaltern schufen oder fanden die mächtigsten Magier häufig
+kleine, vom Rest der Welt abgeschottete Reiche, in denen sie sich
+auf der Suche nach immer größerem magischen Wissen und größerer Macht
+isolieren konnten. Die Magier sind schon lange tot, aber viele ihrer arkanen
+Laboratorien existieren noch, gefüllt mit den Ergebnissen ihrer Experimente.
+Jene, die bereit sind, diese Laboratorien zu erforschen, könne mächtige magische
+Schätze finden, aber sei gewarnt: Jeder Zauberer, der in der Lage war, ein
+solches Reich zu errichten, hat seinen Ruf verdient.
+%%%%
+Depths
+
+Die Tiefen sind der tiefste Teil des eigentlichen Kerkers, der dem
+verderblichen Einfluss des Reichs von Zot unterliegt, aber nicht als Teil
+desselben angesehen wird.
+%%%%
+Desolation
+
+Die Trostlosigkeit wurde einst von den Gottheiten Scheza und Sargol regiert.
+Nach dem Sturz der gefürchteten Zwillinge reduzierten die guten
+Götter ihr ehemaliges Reich zu Salz, damit solch ein schrecklicher Kult nie
+wieder auferstehen würde. Inmitten der Ruinen harren nur noch die letzten
+Kultisten der toten Götter, ihre ketzerischen Konstrukte und die Hüter des
+legendären Kultschatzes aus.
 %%%%
