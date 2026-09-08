@@ -8,11 +8,6 @@ book
 
 Ein arkanes Lehrbuch mit magischen Zaubersprüchen unbekannter Herkunft.
 %%%%
-deck of cards
-
-Ein Satz mächtiger magischer Karten, getuscht in Dämonenblut. Das Ziehen von
-Karten kann vielerlei nützliche oder riskante Auswirkungen zur Folge haben.
-%%%%
 potion
 
 Ein unetikettiertes Fläschchen, das eine einzelne Dosis einer unbekannten

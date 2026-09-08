@@ -1,9 +1,4 @@
 %%%%
-Abyssal Knight
-
-Abgrundritter verehren Lugonu und wurden aus dem Abgrund geschickt, um Verderbtheit und
-Chaos zu verbreiten.
-%%%%
 Air Elementalist
 
 Luftmagier haben den Zauber Schock erlernt. Später verschafft ihnen ihre Auswahl

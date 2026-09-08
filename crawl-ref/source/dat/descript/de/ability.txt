@@ -54,24 +54,6 @@ Breathe Noxious Fumes ability
 
 Speit einen Strahl giftiger Dämpfe auf eine anvisierte Kreatur.
 %%%%
-Bat Form ability
-
-Verwandelt den Anwender in eine flinke Vampirfledermaus. Erhöht
-das Ausweichen, schwächt aber Nahkampfangriffe erheblich. Die Verwandlung
-zehrt an den Attributen des Anwenders.
-
-Während der Verwandlung werden alle verwendeten Waffen, Rüstungsgegenstände und
-Ringe verschmolzen und der Anwender kann keine Zauber mehr wirken.
-%%%%
-Exsanguinate ability
-
-Dein gesamtes Blut entfernen und in einen blutleeren Zustand übergehen.
-%%%%
-Revivify ability
-
-Ins Leben rückkehren, von blutleer zu lebendig wechseln. Durch diesen Vorgang
-wird der Anwender vorübergehend geschwächt.
-%%%%
 Hurl Damnation ability
 
 Verbrennt einen anvisierten Feind mit Verdammnis. Diese unheiligen Kräfte

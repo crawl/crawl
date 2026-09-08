@@ -43,10 +43,6 @@ Regen status
 Du regenerierst Gesundheit übernatürlich schnell. Dies wird nur bei
 vorübergehender Regeneration angezeigt.
 %%%%
-RMsl status
-
-Du wehrst Geschosse ab und verbesserst so deine Chance, ihnen auszuweichen.
-%%%%
 Touch status
 
 Deine Angriffe verursachen keinen Schaden, es besteht jedoch die Chance, dass sie
@@ -210,26 +206,6 @@ Deine Magie ist geschwächt. Mit jedem Zauberspruch besteht die Chance, dass
 der Effekt stärker wird, was dazu führt, dass deine Erfolgsquote für das
 Zauberwirken sinkt.
 %%%%
-Brainless status
-
-Deine Intelligenz ist auf 0 gesunken. Du bist verlangsamt, kannst keine Zauber
-wirken oder lernen und beim Lesen von Schriftrollen scheiterst du
-normalerweise. Der Status bleibt auch nach der Wiederherstellung deiner
-Intelligenz noch für kurze Zeit bestehen.
-%%%%
-Clumsy status
-
-Deine Geschicklichkeit ist auf 0 gesunken. Du bist verlangsamt, kannst nicht
-schleichen oder Schilde verwenden und bist fast völlig unfähig auszuweichen. Der
-Status bleibt auch nach Wiederherstellung deiner Geschicklichkeit noch für kurze
-Zeit bestehen.
-%%%%
-Collapse status
-
-Deine Stärke ist auf 0 gesunken. Du bist verlangsamt und deine
-Gesundheitsregeneration ist stark reduziert. Der Status bleibt auch nach
-Wiederherstellung deiner Stärke noch für kurze Zeit bestehen.
-%%%%
 DChan status
 
 Du kanalisierst die Toten und sorgst dafür, dass alle in deiner Nähe getöteten
@@ -296,25 +272,6 @@ Du bist verstummt. Dadurch ist es unmöglich, Schriftrollen zu
 lesen, Zauber zu wirken, göttliche Kräfte anzurufen oder zu schreien. Der
 bedrückende, unnatürliche Effekt behindert deine Heimlichheit erheblich.
 %%%%
-Engulf status
-
-{{
-    local desc = "Du bist von einer benachbarten Kreatur umhüllt"
-
-    if not you.res_drowning() then
-        desc = desc .. " und kannst nicht atmen. Du nimmst jede Runde"
-                       .. " zunehmend Ertickungsschaden, bis du"
-                       .. " entkommst. Dies macht das Lesen von Schriftrollen"
-                       .. " , Zauberwirken und die Anrufung göttlicher Kräfte"
-                       .. " unmöglich. Das Wegbewegen von der umhüllenden"
-                       .. " Kreatur beendet die Wirkung"
-    else
-        desc = desc .. " aber erleidest keine negativen Auswirkungen"
-    end
-
-    return desc .. "."
-}}
-%%%%
 Stealth status
 
 Deine Heimleichheit wird erheblich verbessert.
@@ -347,22 +304,10 @@ Finesse status
 
 Deine Kampfgeschwindigkeit ist erheblich erhöht.
 %%%%
-Prot status
-
-Du flehst Elyvilon an, dein Leben zu retten. Wenn du tödlich verwundet wirst,
-kann der Heiler den Todesstoß rückgängig machen. Andere zu töten, während man um
-göttlichen Schutz bittet, führt zu Buße.
-%%%%
 Disjoin status
 
 Du destabilisierst den Raum um dich herum und bewirkst, dass in der Nähe
 befindliche Monster zufällig von dir weggeblinzelt werden.
-%%%%
-Slay status
-
-Du hast das Blut eines Wer-Biests, das dich heilt und deinen Fern- und
-Nahkampfangriffen Boni verleiht, die sich jedes Mal erhöhen, wenn du einen
-Feind tötest.
 %%%%
 Toxic status
 
@@ -387,12 +332,6 @@ Du bist anfälliger für Feuer.
 rP- status
 
 Du bist anfälliger für Gift.
-%%%%
-PProj status
-
-Du teleportierst abgefeuerte oder geworfene Projektile mit erhöhter Genauigkeit
-direkt zu deinen Zielen, wobei du für jedes Projektil eine kleine Menge Magie
-verbrauchst.
 %%%%
 Forest status
 
@@ -459,26 +398,9 @@ Blood status
 Dein Körper ist mit geronnenem Blut bedeckt, das als Rüstung dient, solange
 du schwer verletzt bist.
 %%%%
--Cast status
-
-Du kannst keine Zauber wirken.
-%%%%
 Channel status
 
 Du kanalisierst magische Energie.
-%%%%
-Spider status
-
-Du wurdest in eine giftige, spinnenartige Kreatur verwandelt. Du kannst sehr gut
-ausweichen und hast einen giftigen Biss, bist aber anfällig für Gift. Alle
-ausgerüsteten Waffen und Rüstungen sind verschmolzen und deine Erfolgsrate bei
-Zaubersprüchen ist leicht reduziert.
-%%%%
-Blade status
-
-Aus deinen Händen sind lange, sensenförmige Klingen gewachsen, die deinen
-Nahkampfschaden deutlich erhöhen. Alle ausgerüsteten Waffen sind verschmolzen
-und deine Erfolgsrate mit Zaubern ist etwas reduziert.
 %%%%
 Statue status
 
@@ -487,13 +409,6 @@ Nahkampfschaden, sowohl unbewaffnet als auch mit Waffen, ist erheblich erhöht.
 Dein Steinkörper ist gegen Elektrizität isoliert und resistent gegen Gift und
 negative Energie. Alle ausgerüsteten Körperpanzer, Handschuhe und Stiefel sind
 verschmolzen.
-%%%%
-Ice status
-
-Du wurdest in eine gefrorene Eiskreatur verwandelt, die leicht genug ist, um auf
-dem Wasser zu schwimmen. Du erhältst einen eisigen Nahkampfangriff und bist
-unglaublich kälteresistent und resistent gegen Gift, aber anfällig für Feuer.
-Alle ausgerüsteten Waffen und Rüstungen sind verschmolzen.
 %%%%
 Dragon status
 
@@ -532,7 +447,7 @@ robuster, aber weniger geschickt beim Ausweichen.
 
 Alle ausgerüsteten Waffen und Rüstungen sind verschmolzen.
 %%%%
-Lich status
+Death status
 
 Du wurdest in einen Lich verwandelt. Du bist resistent gegen Kälte und
 feindliche Verhexungen und für die Dauer der Verwandlung vollkommen immun gegen
@@ -644,7 +559,7 @@ Du bewegst dich mit übernatürlicher Geschwindigkeit, wodurch Bewegungsaktionen
 augenblicklich ausgeführt werden. Alle martialischen Angriffe, die du während dieser
 Bewegung ausführst, verursachen erhöhten Schaden und verfehlen nie ihr Ziel.
 %%%%
-Storm status
+Heavenly status
 
 Du bist von einem Sturm himmlischer Wolken umgeben. Während der Sturm tobt,
 sind dein Ausweichen und deine Treffsicherheit sowie dein Schaden im Kampf
@@ -711,7 +626,6 @@ Recall status
 Du rufst deine Verbündeten zurück.
 %%%%
 Water status
-
 {{
     local feat = view.feature_at(0, 0):gsub("_", " ")
     if you.flying() then
@@ -734,10 +648,6 @@ Water status
     end
 }}
 %%%%
--Wiz status
-
-Du hast die Kontrolle über deine Magie verloren.
-%%%%
 Attr status
 
 Feinde werden magisch zu dir hingezogen.
@@ -754,10 +664,16 @@ Zot count status
 Wenn du die angegebene Anzahl an Runden in diesem Zweig verbringst, ohne in eine
 neue Ebene hinabzusteigen, wird Zot dich finden und auszehren.
 %%%%
-Curl status
+Spider status
 
-Nachdem ein Angriff dich getroffen hat, hast du dich reflexartig zusammengerollt,
-um dich vor weiteren Schlägen zu schützen. Du löst dich gerade aus dieser
-Verteidigungshaltung und erhältst weiteren Schutz erst wieder, nachdem du erneut
-getroffen wurdest.
+Du wurdest in eine giftige, spinnenartige Kreatur verwandelt. Du kannst sehr gut
+ausweichen und hast einen giftigen Biss, bist aber anfällig für Gift. Alle
+ausgerüsteten Waffen und Rüstungen sind verschmolzen und deine Erfolgsrate bei
+Zaubersprüchen ist leicht reduziert.
+%%%%
+Blade status
+
+Aus deinen Händen sind lange, sensenförmige Klingen gewachsen, die deinen
+Nahkampfschaden deutlich erhöhen. Alle ausgerüsteten Waffen sind verschmolzen
+und deine Erfolgsrate mit Zaubern ist etwas reduziert.
 %%%%

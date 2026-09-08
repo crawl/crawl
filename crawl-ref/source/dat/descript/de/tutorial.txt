@@ -17,6 +17,9 @@ oder den Kampf ganz vermeidest. Versuche es weiter, dann wirst du schließlich
 siegen!
 
 %%%%
+##############################################
+# Tutorial map 1: Movement and exploration   #
+##############################################
 tutorial1 start
 
 In dieser Lektion lernst du wie man herumwandert und eine Ebene erkundet. Du
@@ -156,6 +159,9 @@ Num-Block:       <w>7 8 9</w>        vi-Tasten:     <w>$cmd[CMD_MOVE_UP_LEFT] $c
 
                    <cyan>Drücke <input>irgendeine Taste</input> um diese Meldung zu löschen...</cyan>
 %%%%
+##############################################
+# Tutorial map 2: Monsters and combat        #
+##############################################
 tutorial2 start
 
 Diese Lektion bringt dir etwas über Monster und das Kämpfen bei. Zuerst
@@ -285,6 +291,9 @@ tutorial2 exit
 
                    <cyan>Drücke <input>irgendeine Taste</input> um diese Meldung zu löschen...</cyan>
 %%%%
+#######################################
+# Tutorial map 3: Items and Inventory #
+#######################################
 tutorial3 start
 
 In dieser Lektion lernst du etwas über Gegenstände und wie sie benutzt werden.
@@ -452,6 +461,7 @@ Gut gemacht! Um das Tutorial zu beenden, geh einfach diese Treppe hinunter.
 %%%%
 tutorial3 exit
 
+# A single screen recapping all commands.
 :nowrap
 <yellow>Gegenstands-Befehle</yellow>
   <input>$cmd[CMD_PICKUP]</input>  einen Gegenstand aufheben
@@ -474,6 +484,9 @@ tutorial3 exit
 
                    <cyan>Drücke <input>irgendeine Taste</input> um diese Meldung zu löschen...</cyan>
 %%%%
+##############################################
+# Tutorial map 4: Magic and Spellcasting     #
+##############################################
 tutorial4 start
 
 In dieser Lektion erfährst du, wie man Zauber lernt und wirkt.
@@ -607,6 +620,7 @@ beenden, gehe einfach diese Treppe hinunter.
 %%%%
 tutorial4 exit
 
+# A single screen recapping all commands.
 :nowrap
 <yellow>Zauberbefehle</yellow>
   <input>$cmd[CMD_MEMORISE_SPELL]</input>  einen Zauberspruch lernen
@@ -623,6 +637,9 @@ tutorial4 exit
 
                    <cyan>Drücke <input>irgendeine Taste</input> um diese Meldung zu löschen...</cyan>
 %%%%
+##############################################
+# Tutorial map 5: Gods and divine abilities  #
+##############################################
 tutorial5 start
 
 In dieser Lektion lernst du alles über Götter und wie man ihre Kräfte nutzt.
@@ -689,6 +706,7 @@ Um das Tutorial zu verlassen, gehe einfach diese Treppe hinunter.
 %%%%
 tutorial5 exit
 
+# A single screen recapping all commands.
 :nowrap
 <yellow>Religionsbefehle</yellow>
   <input>$cmd[CMD_GO_DOWNSTAIRS]</input>  bete an einem Altar, um dich einem Gott anzuschließen
