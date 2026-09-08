@@ -24,7 +24,7 @@ mace of Variability
 Ein großer Streitkolben, der entstanden sein soll, als Xom von der
 Vorhersehbarkeit gewöhnlicher Instrumente des Chaos gelangweilt war.
 %%%%
-glaive of Prune
+partisan of Prune
 
 Eine violette Gleve, die von einem verrückten Gott geschaffen wurde und einen
 Fluch trägt, der jeden, der sie benutzt, in eine Pflaume verwandelt.
@@ -32,21 +32,9 @@ Glücklicherweise wirkt der Fluch sehr langsam und man kann sie kurzzeitig
 benutzen, ohne schlimmere Folgen als leicht lila gefärbte Haut und ein paar
 Falten.
 %%%%
-sword of Power
-
-Ein mächtiges Schwert, das die Starken mit Macht und die Sanftmütigen mit
-Schwäche belohnt.
-%%%%
 staff of Olgreb
 
 Ein Stab, der einst vom mächtigen Zauberer Olgreb geschwungen wurde.
-%%%%
-staff of Wucad Mu
-
-Ein kristallener Stab voller magischer Energien, die von einem geschickten
-Träger so kanalisiert werden können, dass er Zauber wirken kann, ohne seine
-eigene magische Energie zu verbrauchen - auf die Gefahr hin, dass der Geist
-des Benutzers Schaden nimmt.
 %%%%
 Vampire's Tooth
 
@@ -65,21 +53,10 @@ Ein verfluchtes Knochenzepter, das von einer unbekannten höllischen Macht
 geschaffen wurde. Wenn es im Kampf eingesetzt wird, verursacht es qualvolle
 Schmerzen bei allen, die das Pech haben, es zu sehen, außer bei seinem Träger.
 %%%%
-sword of Zonguldrok
-
-Eine Klinge, die mit der Essenz eines legendären Nekromanten durchdrungen ist.
-Diejenigen, die in seiner Gegenwart getötet werden, werden durch seine Macht
-wiederbelebt und gezwungen, weiterzukämpfen.
-%%%%
 sword of Cerebov
 
 Eine gewundene Klinge, bedeckt mit unheimlichen Flammen. Ihre dämonische Kraft
 verbrennt die Essenz der Getroffenen.
-%%%%
-staff of Dispater
-
-Ein legendärer Stab, der die Macht verleiht, Verdammnis zu entfesseln -
-allerdings nicht, ohne dabei die Lebenskraft des Trägers zu entziehen.
 %%%%
 sceptre of Asmodeus
 
@@ -118,7 +95,7 @@ Anfall von Wut wegwarf.
 Die Klinge gibt ein leises Wehklagen von sich, während sie die Luft
 durchschneidet.
 %%%%
-sling "Punk"
+greatsling "Punk"
 
 Eine Schleuder aus seltsamem grünem Leder, das ätzenden Schleim absondert.
 Ursprünglich die Waffe eines berüchtigten Unruhestifters und Schurken, ist
@@ -393,7 +370,7 @@ ring of Shadows
 
 Ein schwarzer Ring, der seinen Träger eins mit den Schatten werden lässt.
 %%%%
-amulet of the Four Winds
+amulet of Tranquility
 
 Ein Anhänger aus reinster Jade. Er verleiht seinem Träger immense
 Willenskraft und geistige Stärke.
@@ -604,7 +581,7 @@ Eine kleine Falte im Gewebe der Realität, die von einem verrückten
 Diener Lugonus magisch an einen Schaft gebunden wurde. Seine Angriffe
 können sich auf Befehl des Trägers durch den nahen Raum verzerren.
 %%%%
-staff of Battle
+sphere of Battle
 
 Ein Stab, umhüllt von farbenprächtigen Schuppen, gefertigt von einem
 längst vergessenen Zauberer. Es war das Lieblingsspielzeug der Magierin

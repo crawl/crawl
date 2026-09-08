@@ -66,23 +66,6 @@ schneller anzugreifen und erhöht deine Treffsicherheit und deinen Schaden mit i
 Mit Stäben geübt zu sein, erhöht deine Effektivität mit Keulen & Flegeln und
 Stangenwaffen und umgekehrt.
 %%%%
-Slings
-
-Mit Schleudern geübt zu sein, ermöglicht es dir, mehr Schaden zu verursachen,
-wenn du die richtige Fernkampfwaffe und die richtige Munition verwendest.
-
-Mit Schleudern geübt zu sein, erhöht deine Effektivität im Werfen und umgekehrt.
-%%%%
-Bows
-
-Mit Bögen geübt zu sein, ermöglicht es dir, mehr Schaden zu verursachen,
-wenn du die richtige Fernkampfwaffe und die richtige Munition verwendest.
-%%%%
-Crossbows
-
-Mit Armbrüsten geübt zu sein, ermöglicht es dir, mehr Schaden zu verursachen,
-wenn du die richtige Fernkampfwaffe und die richtige Munition verwendest.
-%%%%
 Throwing
 
 Das Training der Fertigkeit Werfen macht geworfene Waffen (z.B. Wurfspeere) effektiver.

@@ -5,12 +5,6 @@ Barachim sind langsam laufende, amphibische Humanoide, die über weite Strecken
 hüpfen können. Ihr erweitertes Sichtfeld ermöglicht es ihnen, aus
 größerer Entfernung gesehen zu werden.
 %%%%
-Deep Dwarf
-
-Tiefenzwerge leben unter der Erde und können ihre Gesundheit nicht auf
-natürliche Weise regenerieren, aber sie sind sehr widerstandsfähig gegen
-Schaden und haben eine begrenzte Fähigkeit, sich nach Belieben zu heilen.
-%%%%
 Deep Elf
 
 Tiefenelfen haben eine starke Affinität zu allen Arten von Magie, sind aber
@@ -47,11 +41,6 @@ Feliden sind empfindungsfähige Katzen mit vielen Leben. Sie sind nicht in der
 Lage, komplizierte Gegenstände handzuhaben oder Rüstungen oder Waffen zu
 tragen.
 %%%%
-Ghoul
-
-Ghule sind untote Kreaturen und dazu verdammt, ewig zu verrotten. Sie
-haben scharfe Klauen und heilen sich durch den Tod der Lebenden.
-%%%%
 Gargoyle
 
 Gargoyles bestehen aus lebendem Stein und haben eine übernatürliche
@@ -63,11 +52,6 @@ Gnoll
 Gnolle sind hundeähnliche Humanoide. Sie können sich nicht auf eine einzelne
 Fertigkeit spezialisieren, sondern beherrschen nach und nach alle Fertigkeiten
 auf einmal.
-%%%%
-Hill Orc
-
-Hügelorks sind geschickt im Nahkampf und befassen sich nebenbei oft mit
-offensiver Magie. Nur sie dürfen den Ork-Gott Beogh verehren.
 %%%%
 Human
 
@@ -112,17 +96,6 @@ Octopode
 
 Oktopoden sind eine Art amphibischer Kopffüßer. Sie können acht Ringe
 tragen, aber ihnen passt fast keine Rüstung.
-%%%%
-Ogre
-
-Oger sind groß, stark und äußerst widerstandsfähig und beherrschen alle
-Formen des Nahkampfes. Sie sind nicht nur brutal, sondern auch recht fähige
-Zauberwirker.
-%%%%
-Palentonga
-
-Palentongas sind geschuppte Säugetiere von der Größe eines Pferdes. Sie
-können sich einrollen um mächtige Sturmangriffe durchzuführen.
 %%%%
 Spriggan
 
