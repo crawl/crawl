@@ -2,51 +2,62 @@
 tutorial intro
 
 Alle Meldungen kannst du jederzeit noch mal mit
-<input>$cmd[CMD_REPLAY_MESSAGES]</input> lesen. Um die <cyan>--more--</cyan>
-Meldung zu löschen drücke die <input>Leertaste</input>.
+<input>$cmd[CMD_REPLAY_MESSAGES]</input> lesen. Um die <cyan>--mehr--</cyan>
+Meldung zu bestätigen, drücke die <input>Leertaste</input>.
+
+%%%%
+tutorial death
+
+Du stirbst...
+
+In Crawl ist der Tod ein trauriges, aber alltägliches Ereignis. Beachte, dass
+es normalerweise etwas gibt, was du hättest tun können, um zu überleben, z.B.
+indem du einen Gegenstand benutzt, wegläufst, dich zwischen den Kämpfen ausruhst
+oder den Kampf ganz vermeidest. Versuche es weiter, dann wirst du schließlich
+siegen!
+
 %%%%
 tutorial1 start
 
 In dieser Lektion lernst du wie man herumwandert und eine Ebene erkundet. Du
-kannst dich bewegen indem du <localtiles>irgendwo mit der <input>Maus</input>
-klickst, oder</localtiles> mit den <input>Pfeiltasten</input>.
+kannst dich mit den <input>Pfeiltasten</input> bewegen<localtiles>, oder indem
+du irgendwohin mit der <input>Maus</input> klickst</localtiles>.
 %%%%
 tutorial1 go_on
 
-Du machst das großartig! Jetzt erkunde ein wenig alleine bis du das nächst
+Du machst das großartig! Jetzt erkunde ein wenig, bis du das nächste
 blaue Feld erreichst.
 %%%%
 tutorial1 diagonal
 
 :nowrap
-Du kannst dich diagonal bewegen indem du den <input>Nummern-Block</input> (versuche Numlock an/aus) oder die <input>Vorgabe-Tasten</input> benutzt.
-Num-Block:      <w>7 8 9</w>     Vorg.-Tasten:     <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+Du kannst dich diagonal bewegen, indem du den <input>Nummernblock</input> (probiere Num-Lock an/aus) oder die <input>vi-Tasten</input> benutzt.
+Num-Block:      <w>7 8 9</w>        vi-Tasten:     <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
                  \|/                         \|/
                 <w>4</w>-<w>.</w>-<w>6</w>                       <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
                  /|\                         /|\
                 <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 
-<localtiles>Du kannst dich auch mit <input>Maus klicks</input> bewegen.</localtiles>
+<localtiles>Du kannst dich auch mit <input>Mausklicks</input> diagonal bewegen.</localtiles>
 %%%%
 tutorial1 shiftmove
 
-Es gibt eine schnellere Möglichkeit um durch einen Gang zu „rennen“, indem man
-<input>Shift</input> zusammen mit dem <input>Tastenfeld</input> drückt.
-(probiere es mit ‚Numlock‘ ein/aus) oder mit <input>vi Tasten</input>.
+Eine schnellere Möglichkeit, durch einen Gang zu "rennen", ist es
+<input>Shift</input> zusammen mit dem <input>Nummernblock</input> zu drücken
+(probiere es mit Num-Lock ein/aus) oder mit den <input>vi-Tasten</input>.
 %%%%
 tutorial1 downstairs
 
-Wenn du auf einer Treppe stehst die nach unten führt kannst du die nächste
+Wenn du auf einer Treppe stehst, die nach unten führt, kannst du die nächste
 Ebene mit <input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles> oder mit einem
 <input>Shift-Klick</input> auf deinen Charakter</localtiles> betreten.
 %%%%
 tutorial1 levelmap
 
-Was ist das? Um herauszufinden, wo du bist, <tiles>musst du einen Blick auf die
-<w>Mini-Karte</w> am rechten Bildschirmrand werfen.</tiles><localtiles> Du
-kannst einen näheren Blick auf einen Kartenausschnitt mit einem
-<input>Rechts-Klick</input> werfen und dann ebenso mit einem
-<input>Links-Klick</input> dort hingehen.</localtiles><webtiles> Die
+Was ist das? Um herauszufinden, wo du bist, <tiles>werfe einen Blick auf die
+<w>Mini-Karte</w> am rechten Bildschirmrand.</tiles><localtiles> Du kannst
+dir einen Kartenausschnitt mit <input>Rechts-Klick</input> genauer ansehen
+und außerdem mit <input>Linksklick</input> dort hingehen.</localtiles><webtiles> Die
 Übersichtskarte kannst du mit <input>$cmd[CMD_DISPLAY_MAP]</input> aufrufen und
 dann den Cursor herumbewegen, um dich auf der Ebene umzuschauen. Wo auch immer
 dein Cursor hinzeigt, kannst du dich mit einem Druck auf <input>.</input> oder
@@ -60,46 +71,47 @@ normalen Spielmodus zurückzukehren.</console>
 %%%%
 tutorial1 autoexplore
 
-Manuelles erforschen kann mit der Zeit recht langweilig werden, deswegen
-möchtest du vielleicht das es automatisch passiert. Versuche es indem du
-<input>$cmd[CMD_EXPLORE]</input> drückst.
+Manuelles Erkunden kann mit der Zeit recht langweilig werden, deswegen
+möchtest du vielleicht, dass es automatisch passiert. Probiere es aus, indem
+du <input>$cmd[CMD_EXPLORE]</input> drückst.
 %%%%
 tutorial1 exclusion
 
-Einige gefährliche Gegenden sind mit <w>Abgrenzungen</w> markiert. Die
-Auto-Erkundung<localtiles> (<input>Mausklick</input> eingeschlossen!
-</localtiles> führt dich nicht in diese abgegrenzten Gebiete. Anstelle dessen
-hältst du automatisch an!
+Einige gefährliche Gegenden sind mit <w>Reiseausschlüssen</w> markiert. Die
+Auto-Erkundung<localtiles> (<input>Mausklick</input> eingeschlossen!)
+</localtiles>führt dich nicht in diese ausgeschlossenen Gebiete. Stattdessen
+hältst du automatisch an.
 
-Wie auch immer, Auto-Erkundung führt dich sicher um diese Abgrenzungen herum so
-das du <input>$cmd[CMD_EXPLORE]</input> benutzen kannst, um fortzufahren.
+Aber, Auto-Erkundung führt dich sicher um diese Ausschlüsse herum, sodass
+du <input>$cmd[CMD_EXPLORE]</input> benutzen kannst, um fortzufahren.
 %%%%
 tutorial1 autoexplore_announce
 
-Auto-Erforschen stoppt, um Besonderheiten und Gegenstände anzuzeigen. Wenn du
-direkt zu den Treppen gehen willst, kannst du auf sie <localtiles>
-<input>klicken</input> oder du drückst <w>[$cmd[CMD_DISPLAY_MAP] <<
-Eingabe]</w>.
+Auto-Erkunden stoppt, wenn du zum ersten Mal Besonderheiten und Gegenstände
+siehst, so wie diese Treppe. Um direkt zur Treppe zu gehen, kannst du <localtiles>auf sie
+<input>klicken</input> oder du kannst</localtiles> <input>$cmd[CMD_DISPLAY_MAP]</input>
+drücken, um die Übersichtskarte zu öffnen, dann <input><<</input> um den Cursor zur nächsten
+nach oben führenden Treppe zu bewegen und <input>Eingabe</input> um zu dieser zu gehen.
 %%%%
 tutorial1 tutorial_end
 
 Glückwunsch! Du hast die erste Lektion beendet!
 
-Um den Übungskurs zu beenden gehe einfach diese Stufen hinauf indem du
-<input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> drückst oder mit
+Um das Tutorial zu beenden, gehe einfach die Stufen hinauf, indem du
+<input>$cmd[CMD_GO_UPSTAIRS]</input> drückst<localtiles> oder mit
 <input>Shift-Klick</input> auf deinen Charakter</localtiles>. Bestätige dann
-die folgende Anzeige mit <input>Y</input>, achte dabei auf die Großschreibung.
+die Abfrage mit <input>Y</input>. Achte dabei auf die Großschreibung.
 %%%%
 tutorial1 newlevel
 
-Eine neue Ebene! Um mit ihr zu beginnen gehe zu der Tür auf der rechten Seite.
+Eine neue Ebene! Gehe als Erstes zu der Tür auf der rechten Seite.
 
-Denke auch daran das du ältere Nachrichten mit
+Denke außerdem daran, dass du ältere Nachrichten mit
 <input>$cmd[CMD_REPLAY_MESSAGES]</input> nochmal lesen kannst.
 %%%%
 tutorial1 door
 
-Du kannst eine geschlossene Tür öffnen indem du in sie hinein gehst.
+Du kannst eine geschlossene Tür öffnen, indem du in sie hinein gehst.
 %%%%
 tutorial1 close_door
 
@@ -107,7 +119,7 @@ Um eine offene Tür zu schließen, drücke <input>$cmd[CMD_CLOSE_DOOR]</input>.
 %%%%
 tutorial1 water
 
-Beachte das du durch flaches aber nicht durch tiefes Wasser laufen kannst.
+Beachte, dass du durch seichtes, aber nicht durch tiefes Wasser laufen kannst.
 %%%%
 tutorial1 upstairs
 
@@ -119,27 +131,27 @@ tutorial1 exit
 
 :nowrap
 <yellow>Bewegungsbefehle</yellow>
-Num-Block:       <w>7 8 9</w>     Vorg.-Tasten:     <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+Num-Block:       <w>7 8 9</w>        vi-Tasten:     <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
                   \|/                         \|/
                  <w>4</w>-<w>.</w>-<w>6</w>                       <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
                   /|\                         /|\
                  <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 
   <input>Shift + Richtug</input> bewegt dich mehrere Felder in diese Richtung.<localtiles>
-  Mit einem <input>Mausklick</input> irgendwo in Sichtweite oder auf der <w>Mini-Karte</w> kannst du dich auch fortbewegen.</localtiles>
+  Du kannst dich auch mit einem <input>Mausklick</input> auf ein Feld in Sichtweite oder auf der <w>Mini-Karte</w> fortbewegen.</localtiles>
 
 <yellow>Treppen</yellow>
   <input>$cmd[CMD_GO_UPSTAIRS]</input>  gehe zurück zur vorherigen Ebene
   <input>$cmd[CMD_GO_DOWNSTAIRS]</input>  betrete die nächste Ebene
-  <input>$cmd[CMD_DISPLAY_MAP]></input>/<input>$cmd[CMD_DISPLAY_MAP]<<</input> gehe zur nächsten Treppe die hoch oder runter führt
+  <input>$cmd[CMD_DISPLAY_MAP]></input>/<input>$cmd[CMD_DISPLAY_MAP]<<</input> gehe zur nächsten Treppe, die nach unten oder oben führt
 
 <yellow>Türen</yellow>
-  können geöffnet werden indem man in sie hinein läuft
+  können geöffnet werden, indem man in sie hinein läuft
   <input>$cmd[CMD_CLOSE_DOOR]</input>  schließe eine offene Tür
 
 <yellow>Reisen</yellow><localtiles>
-  Maus-Klick auf die  <w>Mini-Karte</w></localtiles><nomouse>
-  <input>$cmd[CMD_DISPLAY_MAP]</input>  betritt die Karten-Ebene, reise mit <input>Eingabe</input></nomouse>
+  Mausklick auf die  <w>Mini-Karte</w></localtiles><nomouse>
+  <input>$cmd[CMD_DISPLAY_MAP]</input>  öffne die Ebenenkarte, reise mit <input>Eingabe</input></nomouse>
   <input>$cmd[CMD_EXPLORE]</input>  Auto-Erkunden
 
                    <cyan>Drücke <input>irgendeine Taste</input> um diese Meldung zu löschen...</cyan>
@@ -147,15 +159,14 @@ Num-Block:       <w>7 8 9</w>     Vorg.-Tasten:     <w>$cmd[CMD_MOVE_UP_LEFT] $c
 tutorial2 start
 
 Diese Lektion bringt dir etwas über Monster und das Kämpfen bei. Zuerst
-brauchen wir eine Waffe! Geh und greife dir diese, welche dort drüben auf dem
-Boden liegt.
+brauchen wir eine Waffe! Geh und schnapp dir die dort drüben auf dem Boden.
 %%%%
 tutorial2 pickup_weapon
 
 Hebe diese Waffe mit <input>$cmd[CMD_PICKUP]</input> oder <input>g</input> auf
-und rüste dich damit mit <input>$cmd[CMD_WIELD_WEAPON]</input> aus.<localtiles>
-Alternativ kannst du dies auch mit einem <input>Klick</input> in deinem
-Inventar-Feld ausführen.</localtiles>
+und wähle sie mit <input>$cmd[CMD_WIELD_WEAPON]</input>.<localtiles>
+Alternativ kannst du dies auch mit einem <input>Klick</input> in deiner
+Inventarleiste ausführen.</localtiles>
 %%%%
 tutorial2 melee
 
@@ -164,96 +175,109 @@ einfach in es hinein.
 %%%%
 tutorial2 resting
 
-Sehr gut! Du hast beim Ausruhen mit <input>$cmd[CMD_REST]</input> jeden
-verlorenen Lebenspunkt wiedererlangt. Damit kannst du Rasten und für 100 Züge
-suchen, aber auch durch unzählige Ereignisse unterbrochen werden.
+Sehr gut! Du kannst rasten und deine Wunden heilen lassen, indem du
+<input>$cmd[CMD_REST]</input> drückst<localtiles> oder auf den "Rasten"-Button
+in der Befehlsleiste unter der Mini-Karte klickst</localtiles>. Das lässt dich
+rasten, bis deine Gesundheit wieder voll ist, wird aber durch wichtige
+Ereignisse unterbrochen.
 %%%%
 tutorial2 wait
 
-Besser als einen Raum zu stürmen und von Monstern überrannt zu werden kannst du
-auch zurückweichen und (mit <input>$cmd[CMD_WAIT]</input>) warten, bis
-sie zu dir vordringen.
+Anstatt einen Raum zu stürmen und von Monstern überrannt zu werden, kannst du
+auch einen Schritt zurückgehen und (mit <input>$cmd[CMD_WAIT]</input>) darauf
+warten, dass sie zu dir kommen.
 %%%%
 tutorial2 resting_reminder
 
-Danke daran, du kannst dich mit <input>$cmd[CMD_REST]</input> ausruhen.
+Denke daran, du kannst dich mit <input>$cmd[CMD_REST]</input> ausruhen.
 %%%%
 tutorial2 compare_monster_desc
 
-:nowrap
-Untersuche diese Monster (<localtiles>mittels <input>Maus-Drüber</input></localtiles><nomouse>mit <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]</input></nomouse>) und vergleiche ihre Beschreibungen mit einem (<localtiles><input>Rechts-Klick</input></localtiles><nomouse><w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]]</w></nomouse>) um heraus zu finden welcher dieser beiden Käfige der Sichere ist, um sich hindurch zu kämpfen.
+Untersuche diese Monster (<localtiles>bewege die <input>Maus</input>
+darauf</localtiles>
+<nomouse>drücke <input>$cmd[CMD_LOOK_AROUND]</input> um den Betrachtungsmodus
+zu aktivieren, dann <input>$cmd[CMD_TARGET_CYCLE_FORWARD]</input> um durch alle
+Monster in der Nähe zu wechseln</nomouse>) und vergleiche ihre Beschreibungen
+(<localtiles>mit einem <input>Rechts-Klick</input></localtiles><nomouse>mit
+<input>$cmd[CMD_LOOK_AROUND]</input> und sobald du sie ausgewählt hast <input>$cmd[CMD_TARGET_DESCRIBE]</input></nomouse>) um herauszufinden,
+welcher dieser beiden Käfige sicherer ist, um sich hindurch zu kämpfen.
 %%%%
 tutorial2 downstairs
 
-In Ordnung! Nachdem du dich vollständig ausgeruht und geheilt hast, fahre fort
-mit der nächsten Ebene mit <input>$cmd[CMD_GO_DOWNSTAIRS]</input>.
+Gut gemacht! Nachdem du gerastet hast und deine Gesundheit voll
+wiederhergestellt ist, begebe dich mit <input>$cmd[CMD_GO_DOWNSTAIRS]</input>
+<localtiles> oder <input>Klick</input> auf deinen Character</localtiles> zur
+nächsten Ebene.
 %%%%
 tutorial2 newlevel
 
 Denke daran: Du kannst alte Mitteilungen mit
 <input>$cmd[CMD_REPLAY_MESSAGES]</input> noch einmal lesen.
 %%%%
-tutorial2 darts
+tutorial2 boomerangs
 
-Und nun zum Fernkampf! Hebe diese Darts mit <input>$cmd[CMD_PICKUP]</input>
-<localtiles> oder mit einem <input>Maus-Klick</input> auf,</localtiles> und
+Und nun zum Fernkampf! Hebe diese Bumerangs mit <input>$cmd[CMD_PICKUP]</input>
+<localtiles> oder mit einem <input>Mausklick</input></localtiles> auf und
 fahre fort.
 %%%%
 tutorial2 throwing
 
-Du kannst deine Darts mit <input>$cmd[CMD_FIRE]</input> abfeuern<localtiles>
+Du kannst deine Bumerangs mit <input>$cmd[CMD_FIRE]</input> abfeuern<localtiles>
 oder diese in deinem Inventar <input>anklicken</input></localtiles>. Um das
-Ziel des automatisch anvisierten Monsters zu bestätigen drücke
-<input>$cmd[CMD_TARGET_SELECT]</input> oder <input>Eingabe</input>.
+automatisch anvisierte Monster zu bestätigen, drücke
+<input>$cmd[CMD_TARGET_SELECT]</input> oder <input>Eingabe</input>. Du
+kannst das überspringen und mit <input>Shift-Tab</input> oder <input>p</input> auf
+das nächste Monster feuern.
 %%%%
 tutorial2 wield_bow
 
-Hebe diesen Bogen auf und rüste dich damit mit
+Hebe diesen Kurzbogen auf und wähle ihn mit
 <input>$cmd[CMD_WIELD_WEAPON]</input><localtiles> oder mit einem
-<input>Maus-Klick</input></localtiles> aus.
+<input>Mausklick</input></localtiles>.
 %%%%
 tutorial2 firing
 
-Pfeile mit deinem ausgerüsteten Bogen abzuschießen funktioniert genauso wie
-Darts werfen: mittels <input>$cmd[CMD_FIRE]</input><localtiles> oder
-<input>mouseclick</input></localtiles>. Du kannst das anvisierte Monster mit
-<input>$cmd[CMD_TARGET_CYCLE_FORWARD]</input> wechseln wenn du im Ziel-Modus
-bist. Der Wurm ist harmlos, denn er befindet sich hinter der Lava, deswegen
-konzentriere dich auf die Übungspuppe, welche auf dich schießen kann. Bestätige
-deine Auswahl dann wieder mit <input>$cmd[CMD_TARGET_SELECT]</input> oder
+Das Abfeuern von Pfeilen mit deinem Kurzbogen funktioniert genauso wie das
+Werfen von Bumerangs: mittels <input>$cmd[CMD_FIRE]</input><localtiles> oder
+<input>Mausklick</input></localtiles>. Du kannst das anvisierte Monster mit
+<input>$cmd[CMD_TARGET_CYCLE_FORWARD]</input> wechseln, wenn du im Ziel-Modus
+bist. Der Wurm ist harmlos, denn er befindet sich hinter der Lava. Konzentriere dich
+deswegen auf die Trainingspuppe, die auf dich schießen kann. Bestätige
+deine Auswahl wieder mit <input>$cmd[CMD_TARGET_SELECT]</input> oder
 <input>Eingabe</input>.
 %%%%
 tutorial2 travel_reminder
 
-Denke daran, dass du mit <input>$cmd[CMD_EXPLORE]</input> auf Auto-Erforschen
+Denke daran, dass du mit <input>$cmd[CMD_EXPLORE]</input> auf Auto-Erkundung
 umschalten kannst.
 %%%%
 tutorial2 explore
 
 Finde den Ausgang! Denke daran, dass du mit <input>$cmd[CMD_EXPLORE]</input>
-auf Auto-Erforschen umschalten kannst.
+auf Auto-Erkundung umschalten kannst.
 %%%%
 tutorial2 tutorial_end
 
-Glückwunsch! Du hast die erste Welle an Monstern überstanden! Um den Übungskurs
-zu verlassen gehe einfach diese Treppe hinauf.
+Glückwunsch! Du hast die erste Welle an Monstern überstanden! Um das Tutorial
+zu verlassen, gehe einfach diese Treppe hinunter.
 %%%%
 tutorial2 exit
 
 :nowrap
 <yellow>Waffen<console> <cyan>)</cyan></console></yellow>
   <input>$cmd[CMD_PICKUP]</input>  Gegenstand aufheben
-  <input>$cmd[CMD_WIELD_WEAPON]</input>  eine Waffe ausrüsten<localtiles>
-  Du kannst dies auch mit einem <input>Klick</input> auf die Waffe in deinem Inventar-Feld ausführen.</localtiles>
+  <input>$cmd[CMD_WIELD_WEAPON]</input>  eine Waffe wählen<localtiles>
+  Du kannst dies auch mit einem <input>Klick</input> auf die Waffe in deinem Inventar erledigen.</localtiles>
+  <input>$cmd[CMD_QUIVER_ITEM]</input>  deinen Köcher anpassen
 
 <yellow>Monster</yellow><localtiles>
-  <input>Maus-Drüber</input>  ein Monster untersuchen
+  <input>Maus</input>  ein Monster untersuchen
   <input>Rechts-Klick</input> lies eine detailliertere Beschreibung</localtiles><nomouse>
   <input>$cmd[CMD_LOOK_AROUND]</input>  ein Monster untersuchen
   <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> lies eine detailliertere Beschreibung</nomouse>
-  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</input> feuere Munition auf ein vorabgewähltes Monster ab
+  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</input> feuere Köcher auf ein zuvor anvisiertes Monster ab
   <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</input> visiere ein anderes Monster an<localtiles>
-  Du kannst einen Gegenstand auch mit einem <input>klick</input> darauf abfeuern und das Ziel mit <input>Eingabe</input> bestätigen.</localtiles>
+  Du kannst einen Gegenstand auch mit einem <input>Klick</input> darauf abfeuern und das Ziel mit <input>Eingabe</input> bestätigen.</localtiles>
 
 <yellow>Rasten</yellow>
   <input>$cmd[CMD_WAIT]</input>  warte und raste eine einzige Runde
@@ -263,341 +287,374 @@ tutorial2 exit
 %%%%
 tutorial3 start
 
-In dieser Lektion lernst du was über Gegenstände und wie sie benutzt werden.
+In dieser Lektion lernst du etwas über Gegenstände und wie sie benutzt werden.
 %%%%
 tutorial3 armour
 
 Hebe diese Stiefel mit <input>$cmd[CMD_PICKUP]</input> auf und ziehe sie mit
-<input>$cmd[CMD_WEAR_ARMOUR]</input> an.<localtiles> Oder einfacher,
-<input>Klicke</input> sie einfach in deinem Inventar-Feld an.
+<input>$cmd[CMD_WEAR_ARMOUR]</input> an.<localtiles> Oder
+<input>klicke</input> sie einfach in deiner Inventarleiste an.
 %%%%
 tutorial3 autopickup
 
-Bestimmte Gegenstanden die mit <tiles> einem grünen Ramen markiert sind
-</tiles>werden automatisch aufgehoben, wenn du über sie drüber läufst.
+Bestimmte<tiles>, mit einem grünen Rahmen markierte</tiles> Gegenstände
+werden automatisch aufgehoben, wenn du über sie läufst.
 %%%%
 tutorial3 scroll
 
-Die meisten Gegenstände sind nicht identifiziert, wenn du sie findest. Ein Weg
-herauszufinden was sie können ist, sie zu benutzen. Versuche diese Schriftrolle
+Die meisten Gegenstände sind nicht identifiziert wenn du sie findest. Ein Weg
+herauszufinden was sie können, ist sie zu benutzen. Versuche diese Schriftrolle
 mit <input>$cmd[CMD_READ]</input><localtiles> oder mit einem
-<input>Klick</input> darauf in deinem Inventar-Feld</localtiles> zu lesen.
+<input>Klick</input> darauf in deiner Inventarleiste</localtiles> zu lesen.
 %%%%
 tutorial3 scroll_noautopickup
 
-Automatisches Einsammeln funktioniert nicht wenn ein Monster in der Nähe ist.
-Du kannst diese Schriftrolle entweder mit <input>$cmd[CMD_PICKUP]</input>
-<localtiles> oder durch <input>klicken</input> auf deinen Charakter
-aufheben.</localtiles> Oder du bekämpfst das sich nähernde Monster und hebst
+Automatisches Aufheben funktioniert nicht wenn ein Monster in der Nähe ist.
+Du kannst diese Schriftrolle jetzt entweder mit <input>$cmd[CMD_PICKUP]</input>
+<localtiles> oder durch <input>Klick</input> auf deinen Charakter</localtiles>
+aufheben. Oder du bekämpfst das Monster in der Nähe und hebst
 sie danach auf.
 %%%%
 tutorial3 ego_weapon
 
-Ein Gegenstand der mit <lightblue>runenhaft</lightblue> oder mit
-<lightblue>leuchtend</lightblue>, oder mit beidem, gekennzeichnet ist, wird
-immer verzaubert sein oder spezielle Eigenschaften haben. Du wirst diesen
-Krummsäbel ausrüsten müssen (mit <input>$cmd[CMD_WIELD_WEAPON]</input>
-<localtiles> mit einem <input>klick</input> darauf in deinem
-Inventar</localtiles>), um heraus zu finden was diese sind.
+Ein Gegenstand der als <lightblue>runenverziert</lightblue> oder
+<lightblue>glühend</lightblue> beschrieben wird, ist immer verzaubert, hat
+spezielle Eigenschaften, oder beides. Sobald du über solch einen Gegenstand
+läufst, werden dir seine Eigenschaften offenbart.
 %%%%
 tutorial3 inventory
 
 Um dir die Beschreibung deiner neuen Waffe anzusehen, finde und wähle sie in
 deinem Inventar aus (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>).<localtiles>
-Das kannst auch mit<input>Mausdrüber</input> und <input>Rechts-Klick</input> in
-deinem Inventar Feld machen.</localtiles> Merke dir, das alle
+Du kannst auch mit der <input>Maus</input> über sie fahren oder in deiner Inventarleiste
+einen <input>Rechts-Klick</input> auf sie machen.</localtiles> Beachte, das alle
 Gegenstands-Befehle auch in der Gegenstands-Beschreibung funktionieren.
+%%%%
+tutorial3 battle
+
+Sobald es dir gelungen ist, ein Monster zu vergiften, ist es manchmal am besten,
+dich zurückzuziehen und das Gift seine Arbeit machen zu lassen. Vergiss auch nicht,
+dich zurückzuziehen, um dich zu heilen, falls notwendig.
 %%%%
 tutorial3 downstairs
 
 Gut gekämpft! Wenn nötig, raste nun mit <input>$cmd[CMD_REST]</input>, dann
 gehe weiter hinunter mit <input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles>
-oder mit einem <input>Shift-Klick</input> auf deinen Charakter.</localtiles>.
+oder mit einem <input>Shift-Klick</input> auf deinen Charakter</localtiles>.
 %%%%
 tutorial3 command_help
 
-Wenn die ganzen Befehle zu verwirrend sind, kannst du sie dir auch noch mal in
-der Befehls-Hilfe mit <input>$cmd[CMD_DISPLAY_COMMANDS]</input> ansehen.
-<localtiles>Ein Teil der Befehle sind auch in dem klickbaren
-<w>Befehls-Feld</w> auf der rechten Seite des Bildschirms verfügbar.
-</localtiles>Ältere Mitteilungen kann man wie immer mit
+Falls die ganzen Befehle zu verwirrend sind, kannst du sie dir auch noch mal in
+der Befehls-Hilfe ansehen, mit <input>$cmd[CMD_DISPLAY_COMMANDS]</input>.
+<localtiles>Einige der Befehle sind auch in der klickbaren
+<w>Befehlsleiste</w> auf der rechten Seite des Bildschirms verfügbar.
+</localtiles>Ältere Mitteilungen lassen sich wie immer mit
 <input>$cmd[CMD_REPLAY_MESSAGES]</input> noch einmal lesen.
 %%%%
-tutorial3 potion
+tutorial3 trap
 
-Du kannst einen dieser Tränke mit <input>$cmd[CMD_QUAFF]</input><localtiles>
-oder mit einem <input>Maus-Klick</input></localtiles> trinken.
+Fallen können eine Vielzahl unangenehmer Auswirkungen haben und zum
+Beispiel Monster alarmieren oder dich in Gefahr teleportieren. Manche Fallen
+sind dauerhaft und werden immer als Teil der Karte angezeigt, andere Fallen
+können durch das Erkunden neuer Kacheln ausgelöst werden und verschwinden
+nach ihrer Auslösung. Wenn es keinen Weg vorbei gibt, musst du die Falle
+auslösen und mit den Folgen leben.
+%%%%
+tutorial3 potion
+Tränke können lebenswichtige Heilung oder nützliche Verzauberungen bewirken,
+aber manche haben weniger wünschenswerte Effekte. Du kannst diesen Trank
+mit <input>$cmd[CMD_QUAFF]</input><localtiles> oder mit einem
+<input>Mausklick</input></localtiles> trinken, um herauszufinden, was er
+bewirkt.
 %%%%
 tutorial3 artefact_armour
 
-Gegenstände mit <w>ausgefallenen Namen</w> sind Artefakte. Artefakte können
-eine Vielzahl an speziellen Eigenschaften haben. Einige Gegenstände (so wie
-dieser Umhang) sind bekannt und schon vorab identifiziert, andere sind zufällig
-und haben unbekannte Eigenschaften. Versuche diesen Umhang mit
-<input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles> oder einem
-<input>Maus-Klick</input> im Inventar-Feld</localtiles>.
+Gegenstände mit <w>ungewöhnlichen Namen</w> sind Artefakte. Artefakte können
+einige spezielle Eigenschaften haben. Manche Gegenstände (so wie dieser Umhang)
+sind immer identifiziert und können besondere Eigenschaften haben, die sich sonst
+nirgendwo finden lassen. Andere werden mit einer zufälligen Auswahl von
+Eigenschaften erzeugt und bleiben unindentifziert, bis du über sie läufst.
+Versuche, diesen Umhang anzuziehen, mit <input>$cmd[CMD_WEAR_ARMOUR]</input>
+<localtiles> oder einem <input>Mausklick</input> im Inventar-Feld</localtiles>.
 %%%%
 tutorial3 wand_fire
 
-Du kannst die Macht eines Zauberstabes hervorrufen wenn du
-<input>$cmd[CMD_EVOKE]</input> drückst<localtiles>, oder mit einem
-<input>Mausklick</input> im Inventar-Feld</localtiles>.
+Du kannst einen Zauberstab evozieren, indem du <input>$cmd[CMD_EVOKE]</input>
+drückst<localtiles>, oder per <input>Mausklick</input> in die
+Inventarleiste</localtiles>.
+
+%%%%
+tutorial3 wand_digging
+
+Ein Zauberstab des Grabens kann Felswände zerstören. Verwende
+<input>$cmd[CMD_LOOK_AROUND]][$cmd[CMD_TARGET_DESCRIBE]</input>
+<localtiles> oder fahre mit der <input>Maus</input> über eine Wand und
+mach einen <input>Rechtsklick</input></localtiles>, um die Art der Wand
+zu prüfen.
 %%%%
 tutorial3 amulet
 
 Schmuck wird mit <input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles> oder
-einem <input>Maus-Klick</input> im Inventar-Feld angelegt</localtiles>. Einige
-Schmucksorten werden identifiziert wenn du sie anlegst. Für Andere brauchst du
-einen anderen Weg sie zu identifizieren.
-%%%%
-tutorial3 scroll_id
-
-Ein wichtiger Weg unbekannte Gegenstände zu identifizieren ist Spruchrollen der
-Identifikation zu lesen. Versuche diese Spruchrolle auf dein Amulett mit
-<input>$cmd[CMD_READ]</input><localtiles> oder mit einem <input>Klick</input>
-im Inventar-Feld anzuwenden</localtiles>, und dann wähle das Amulett von der
-Liste mittels seinem zugeteiltem Buchstaben<localtiles>, oder mit einem
-<input>Maus-Klick</input></localtiles>.
+einem <input>Mausklick</input> in die Inventarleiste</localtiles>
+angelegt.
 %%%%
 tutorial3 drop
 
-Das Amulett ist nutzlos; du möchtest vielleicht abwerfen indem du
-<input>$cmd[CMD_DROP]</input><localtiles> drückst, oder mit einem
-<input>Shift-Links-Klick</input> darauf im Inventar-Feld</localtiles>.
+Dieses Amulett wäre sehr mächtig, wenn dein Charakter einen Gott verehren
+würde, aber hier und jetzt ist es nutzlos. Du möchtest es vielleicht fallen
+lassen, indem du <input>$cmd[CMD_DROP]</input> drückst<localtiles>, oder per
+<input>Shift-Linksklick</input> darauf in der Inventarleiste</localtiles>.
 %%%%
 tutorial3 gold
 
-Gold kann in Läden ausgegeben werden. Es hat kein Gewicht und kann nicht
-abgelegt werden.
+Gold kann in Läden ausgegeben werden. Es belegt keinen Platz im Inventar und
+kann nicht fallengelassen werden.
 %%%%
 tutorial3 shop
 
-Läden bieten eine Vielzahl an Gegenständen an, allerdings kaufen sie niemals
+Läden bieten eine Vielzahl an Gegenständen an, sie kaufen aber niemals
 Sachen an.
 %%%%
 tutorial3 enter_shop
 
-Um das Geschäft zu betreten drücke <input>$cmd[CMD_GO_UPSTAIRS]</input>
-<localtiles> oder <input>Shift-Linksklick</input> auf deinen
-Charakter</localtiles>. Um Gegenstände zu kaufen wähle sie über ihre Buchstaben
-aus, drücke <input>Eingabe</input> und bestätige mit <input>y</input>es (ja).
-Du kannst in den Beschreibungs-Modus mit <input>!</input> wechseln.
+Um diesen Laden zu betreten, drücke <input>$cmd[CMD_GO_UPSTAIRS]</input>
+<localtiles> oder <input>klicke</input> auf deinen Charakter</localtiles>. Um
+Gegenstände zu kaufen, wähle sie über ihre Buchstaben aus, drücke
+<input>Eingabe</input> und bestätige mit <input>j</input>a.
+Du kannst mit <input>!</input> in den Beschreibungs-Modus wechseln.
 %%%%
 tutorial3 autoexplore_reminder
 
-Denke daran, du kannst die Ebene automatisch erkunden, benutze dazu
-<input>$cmd[CMD_EXPLORE]</input><localtiles> oder <input>Klicke</input> den
-Auto-Erforschen Befehls-Knopf im <w>Befehls-Feld</w></localtiles>.
+Denke daran, du kannst die Ebene automatisch erkunden. Benutze dazu
+<input>$cmd[CMD_EXPLORE]</input><localtiles> oder <input>klicke</input> auf
+den Button für Auto-Erkundung in der <w>Befehlsleiste</w></localtiles>.
 %%%%
 tutorial3 go_shopping
 
-Du hast genug Gold um ernsthaft einkaufen zu gehen. Der schnellste Weg zurück
-zum Laden ist, indem man nach ihm sucht. Gebe
-<input>$cmd[CMD_SEARCH_STASHES]</input> ein, und dann „<w>shop</w>“. Wähle das
-Resultat aus und beginne die Reise.<localtiles> Du kannst auch der Suchen-Knopf
-im Befehls-Feld <input>anklicken</input>, oder die Mini-Karte nutzen um zum
-Laden zurück zu gelangen.</localtiles>
+Du hast genug Gold um im großen Stil einkaufen zu gehen. Der schnellste Weg
+zurück zum Laden ist es, nach ihm zu suchen. Gebe
+<input>$cmd[CMD_SEARCH_STASHES]</input> ein, dann "<w>Laden</w>" oder
+"<w>laden</w>" (Groß/Kleinschreibung wird nicht beachtet). Wähle ein
+Suchergebnis aus, um die Reise zu beginnen.<localtiles> Du kannst auch auf den
+Suchen-Button in der Befehlsleiste <input>klicken</input> oder die Mini-Karte
+nutzen, um zum Laden zurückzukehren.</localtiles>
 %%%%
 tutorial3 optional_battle
 
 Warnung, dieser Weg führt zu <lightred>einem schweren Kampf</lightred>. Du
-kannst dir aussuchen, ob du das bis jetzt gelernte im Kampf nutzt, oder den
+kannst dir aussuchen, ob du das bis jetzt gelernte im Kampf nutzen, oder den
 anderen Ausgang auf der Insel erreichen möchtest. So oder so könnte es eine
-gute Idee sein etwas einzukaufen, wenn du das nicht schon getan hast.
+gute Idee sein, etwas einzukaufen, falls du das nicht schon getan hast.
 %%%%
 tutorial3 tutorial_end
 
-Gut gemacht! Um den Übungskurs zu beenden, gehe einfach diese Stufen hinunter,
+Gut gemacht! Um das Tutorial zu beenden, geh einfach diese Treppe hinunter.
 %%%%
 tutorial3 exit
 
 :nowrap
-<yellow>Gegenstands Befehle</yellow>
+<yellow>Gegenstands-Befehle</yellow>
   <input>$cmd[CMD_PICKUP]</input>  einen Gegenstand aufheben
-  <input>$cmd[CMD_WEAR_ARMOUR]</input>  einen Rüstungsteil anlegen
-  <input>$cmd[CMD_READ]</input>  eine Spruchrolle lesen
-  <input>$cmd[CMD_WIELD_WEAPON]</input>  eine Waffe ausrüsten
+  <input>$cmd[CMD_WEAR_ARMOUR]</input>  ein Rüstungsstück anlegen
+  <input>$cmd[CMD_READ]</input>  eine Schriftrolle lesen
+  <input>$cmd[CMD_WIELD_WEAPON]</input>  eine Waffe zur Hand nehmen
   <input>$cmd[CMD_QUAFF]</input>  einen Trank trinken
-  <input>$cmd[CMD_EVOKE]</input>  die Kräfte eines Zauberstabes hervorrufen
+  <input>$cmd[CMD_EVOKE]</input>  einen Zauberstab evozieren
   <input>$cmd[CMD_WEAR_JEWELLERY]</input>  Schmuck anlegen
   <input>$cmd[CMD_REMOVE_JEWELLERY]</input>  Schmuck ablegen
   <input>$cmd[CMD_DROP]</input>  einen Gegenstand fallen lassen
-  Anwendungbefehle sind auch über das Gegenstands-Menü verfügbar(<input>$cmd[CMD_DISPLAY_INVENTORY]</input>), so wie auch die Beschreibungen der Gegenstände.<localtiles>
+  Verwendungsbefehle sind auch über das Gegenstands-Menü verfügbar(<input>$cmd[CMD_DISPLAY_INVENTORY]</input>), so wie auch die Beschreibungen der Gegenstände.<localtiles>
   Und natürlich funktionierten <input>Mausklicks</input> auch.</localtiles>
 
-<yellow>Anderes</yellow>
-  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> betrete den Hilfe Bereich
-  <input>$cmd[CMD_RESISTS_SCREEN]</input>  Charakter Übersicht anzeigen
-  <input>$cmd[CMD_USE_ABILITY]</input>  eine Fähigkeit benutzen
-  <input>$cmd[CMD_EXPLORE]</input>  Auto-Erforschen
-  <input>$cmd[CMD_SEARCH_STASHES]</input> suche nach Gegenständen/Besonderheiten die du vorher gesehen hattest<localtiles>
-  Einige dieser Befehle können auch ausgeführt werden indem man sie im <w>Befehls-Feld</w> anklickt.</localtiles>
+<yellow>Andere Befehle</yellow>
+  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> Befehlshilfe öffnen
+  <input>$cmd[CMD_EXPLORE]</input>  Auto-Erkundung
+  <input>$cmd[CMD_SEARCH_STASHES]</input> suche nach gesehenen Gegenständen/Merkmalen<localtiles>
+  Einige dieser Befehle können auch ausgeführt werden, indem man sie in der <w>Befehlsleiste</w> anklickt.</localtiles>
 
                    <cyan>Drücke <input>irgendeine Taste</input> um diese Meldung zu löschen...</cyan>
 %%%%
 tutorial4 start
 
-In dieser Lehre sind Sie dabei zu erfahren, wie man erlernt und Zauber wirft.
+In dieser Lektion erfährst du, wie man Zauber lernt und wirkt.
+%%%%
+tutorial4 spellbook
+
+Zum Auswendiglernen eines Zaubers aus deiner Zauberbibliothek, drücke
+<input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> oder
+<input>klicke</input> auf den Reiter Auswendiglernen und wähle die Kachel
+des Zaubers aus</localtiles>. Auf Erfahrungsstufe 1 sind für dich nur Stufe 1 Zauber
+verfügbar. Das ändert sich, wenn du Erfahrung sammelst. Um neue Zauber zu entdecken,
+finde Zauberbücher und hebe sie auf. Die Zauber werden deiner Zauberbibliothek hinzugefügt.
 %%%%
 tutorial4 spellcasting
 
-Sie können Zauber mit <input>$cmd[CMD_CAST_SPELL]</input><localtiles> oder
-durch Anklicken <input>klicken</input> auf den Zauber Fliesen </localtiles>
-gegossen. Drücke <input>$cmd[CMD_CAST_SPELL]?</input>, um eine Liste Eurer
-Zauber erhalten.
+Du kannst Zauber mit <input>$cmd[CMD_CAST_SPELL]</input> wirken<localtiles>, oder
+durch <input>Mausklick</input> auf die Kachel eines Zaubers</localtiles>.
+Drücke <input>$cmd[CMD_CAST_SPELL]?</input>, um deine Zauber aufzulisten.
+Du kannst Zauber genau wie Munition auch mit <input>$cmd[CMD_QUIVER_ITEM]</input>
+in den Köcher legen. Verwende <input>$cmd[CMD_FIRE]</input> oder <input>Shift-Tab</input>,
+um den aktuell geköcherten Zauber abzufeuern.
 
-Sobald Sie von Magie Punkte sind, um Rückzug und Ruhe sie mit
-<input>$cmd[CMD_REST]</input><localtiles> oder durch Anklicken
-<input>klicken</input> der Rest Icon in der Kommando-Panel </localtiles>.
+Wenn du keine Magiepunkte mehr hast, ziehe dich zurück und raste, um sie wiederherzustellen.
+Verwende dafür <input>$cmd[CMD_REST]</input><localtiles> oder
+<input>klicke</input> auf das Rasten-Symbol in der Befehlsleiste</localtiles>.
 %%%%
 tutorial4 ring_power
 
-Setzen Sie diesen Ring auf, mit <input>$cmd[CMD_WEAR_JEWELLERY]</input>
-<localtiles> oder durch <input>Anklicken</input> es in der Bestandsliste
-aus</localtiles>, und ruhen Sie sich anschließend bis zu Ihrem neuen volles
-Potenzial auszuschöpfen.
+Stecke diesen Ring an, mit <input>$cmd[CMD_WEAR_JEWELLERY]</input>
+<localtiles> oder per <input>Mausklick</input> in der Inventarleiste</localtiles>.
+Raste anschließend, um dein neues, volles Potenzial zu erreichen.
 %%%%
 tutorial4 undead
 
-Anders als die meisten Monster, Untote nicht regenerieren Gesundheit und es ist
-unmöglich zu sagen, wie sie sind verwundet.<localtiles> Sie können übrigens
-auch zaubern, indem Sie <input>Strg + Linksklick</input> auf das
-Monster.</localtiles>
+Im Gegensatz zu den meisten Monstern regenerieren Zombies und Skelette keine Gesundheit.
+<localtiles>Du kannst auch mit <input>Strg + Linksklick</input> auf das Monster
+versuchen, den zuletzt verwendeten Zauberspruch erneut zu wirken.</localtiles>
 %%%%
 tutorial4 spell_success
 
-Um Ihre Kenntnisse von Zauber zu überprüfen, drücken Sie
-<input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> oder
-<input>mouseover</input> über Ihre gespeicherten Zauber</localtiles>.
-Vergleichen Sie Ihre Zauber Erfolgsraten vor und nach schwingt dieses Personal.
+Um deine Zauberkenntnisse zu überprüfen, drücke
+<input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> oder fahre mit der
+<input>Maus</input> über deine auswendig gelernten Zauber</localtiles>.
+Vergleiche die Erfolgsraten deiner Zauber bevor und nachdem du diesen
+Ring angesteckt hast.
 %%%%
 tutorial4 mephitic_cloud
 
-Mephistische Wolke ist ein Zauberspruch der Stufe 3. Du kannst dir diesen
-Zauberspruch noch nicht einprägen. Um schneller in der Stufe aufzusteigen, sind
-hier noch ein einige Trainingspuppen —  dieses Mal ohne Steine zum Werfen.
+Mephitische Wolke ist ein Zauber der Stufe 3, also kannst du ihn dir noch
+nicht einprägen. Damit du schnell in der Erfahrungsstufe aufzusteigst, sind
+hier weitere Trainingspuppen —  dieses Mal ohne Steine zum Werfen.
 
-Auf der Erfahrungsstufe 3 wirst du in der Lage sein eine deiner Eigenschaften
-zu verbessern — wenn du <input>I</input>ntelligenz auswählst, wird dir dies
-beim Zaubern noch mehr helfen.
+Auf Erfahrungsstufe 3 wirst du in der Lage sein, eines deiner Attribute
+zu verbessern — wenn du <input>I</input>ntelligenz auswählst, hilft dir
+das beim Zaubern noch mehr.
 %%%%
 tutorial4 meph_reminder
 
-Vergiss nicht dir den neu verfügbaren Zauberspruch einzuprägen, indem du
-<input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> oder auf den
-Gedächtnis-Tab <input>klickst</input> und das Zauberspruch-Symbol
+Vergiss nicht, deinen neu verfügbaren Zauberspruch auswendigzulernen, indem du
+<input>$cmd[CMD_MEMORISE_SPELL]</input> drückst<localtiles> oder auf den
+Reiter Auswendiglernen <input>klickst</input> und die Kachel des Zaubers
 auswählst</localtiles>!
 %%%%
 tutorial4 aiming_clouds
 
-Eine verpestete Wolke bedeckt, wenn geworfen, eine Fläche mit schädlichen
-Dämpfen und während du zielst wirst du in der Lage sein zu sehen welchen
-Bereich sie betrifft. Versuche mehrere Feinde in einer einzigen Wolke zu
-fangen, um mit deiner Magie effizienter zu sein.
+Eine mephitische Wolke bedeckt, wenn sie gewirkt wird, eine Fläche mit schädlichem
+Dunst. Während du zielst, siehst du welchen Bereich sie betreffen wird. Versuche
+mehrere Feinde mit einer einzigen Wolke zu treffen, um mit deiner Magie effizienter
+umzugehen.
 %%%%
 tutorial4 forget_spell
 
-Eine Stufe aufsteigen und das Erhöhen der Zaubern Fertigkeit geben weitere
-Plätze für Zaubersprüche in deinem Gedächtnis frei. Ebenfalls kannst du
-<w>einen gelernten Spruch vergessen</w> um Platz für einen neuen/weiteren zu
-machen. Der einfachste Weg dies zu tun ist mit einer Schriftrolle der Amnesie.
-Lese einfach laut die Schriftrolle (mit <input>$cmd[CMD_READ]</input>
-<localtiles> oder <input>klicke</input> sie einfach</localtiles>) und wähle
-dann den Spruch/Zauber den du vergessen willst.
+In Erfahrungsstufen aufzusteigen und das Erhöhen der Fertigkeit Zaubern geben dir
+weitere Plätze für Zaubersprüche. Außerdem kannst du mit einer Schriftrolle der Amnesie
+<w>einen gelernten Spruch vergessen</w>, um Platz für einen neuen zu schaffen.
+Lese die Schriftrolle (mit <input>$cmd[CMD_READ]</input><localtiles> oder per
+<input>Mausklick</input> auf sie</localtiles>) und wähle dann den Zauber, den du
+vergessen willst. Du kannst vergessene Zauber mithilfe deiner Zauberbibliothek später
+erneut lernen, solange du Zauberplätze frei hast.
 %%%%
 tutorial4 memorise2
 
-Wiederum, lerne einen Spruch mit <input>$cmd[CMD_MEMORISE_SPELL]</input>
-<localtiles> oder <input>klicke</input> auf den Gedächtnis Reiter und wähle
-eine Zauberkachel</localtiles>. Und dann erhebe deine Armee von Untoten!
+Nachdem du einen deiner alten Zauber vergessen hast um Platz zu schaffen, lerne
+mit <input>$cmd[CMD_MEMORISE_SPELL]</input> diesen neuen Zauber auswendig
+<localtiles> (oder <input>klicke</input> auf den Reiter Auswendiglernen und wähle
+die Kachel des Zaubers aus)</localtiles>. Probiere den neuen Zauber anschließend
+aus und beschwöre ein paar dämonische Verbündete!
 %%%%
 tutorial4 displace_allies
 
-Haben du bemerkt, du kannst die Position mit deinen Verbündeten tauschen, indem
-du in sie hinein läufst? Unter anderem kann das Verschieben eines freundlichen
-Wesens ein guter Weg sein, um einem Kampf zu entkommen.
+Hast du bemerkt, dass du mit deinen Verbündeten die Plätze tauschen kannst,
+indem du in sie hinein läufst? Unter anderem kann das Verdrängen eines freundlichen
+Wesens ein guter Weg sein, einem Kampf zu entkommen.
 %%%%
 tutorial4 order_allies
 
-Versuche das Töten deinen Verbündeten zu überlassen! Wenn notwendig kannst du
-sie mit <input>$cmd[CMD_SHOUT]</input> rufen. Bevor du diese Pforte öffnest
-kannst du mit <input>$cmd[CMD_WAIT]</input> so lange warten bis sie zu
-dir aufgeschlossen haben.
+Versuche, deinen Verbündeten das Töten zu überlassen! Falls notwendig kannst du
+sie mit <input>$cmd[CMD_SHOUT]</input> herumkommandieren. Bevor du dieses Tor
+öffnest, möchtest du vielleicht mit <input>$cmd[CMD_WAIT]</input> warten, bis deine
+Verbündeten zu dir aufgeschlossen haben. Von dir beschworene Kreaturen bleiben
+nur für eine kurze Zeit bei dir. Warte also nicht zu lange, oder beschwöre neue, bevor
+du dich auf einen Kampf einlässt.
 %%%%
 tutorial4 heavy_armour
 
-Schwere Rüstung behindert dich sehr beim Zaubern. Lege diese Rüstung und Schild
+Schwere Rüstung behindert dich beim Zaubern sehr. Lege diese Rüstung und den Schild
 an (mit <input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles> oder indem du auf sie
 <input>klickst</input></localtiles>) und vergleiche die Erfolgsquote mit
-<input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> oder mit einem
-<input>Mouseover</input> über deine gelernten Zaubersprüche</localtiles>. Deine
+<input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> oder indem du mit der
+<input>Maus</input> über deine gelernten Zaubersprüche fährst</localtiles>. Deine
 Rüstung kannst du mit <input>$cmd[CMD_REMOVE_ARMOUR]</input> wieder
-ablegen<localtiles> oder, wiederum, via <input>Mausklick</input></localtiles>.
+ablegen<localtiles> oder, nochmals, per <input>Mausklick</input></localtiles>.
 %%%%
 tutorial4 resting_reminder
 
-Vergewissere dich das deine Lebens- und Zauberenergie voll ist, bevor du in ein
-neues Gebiet eintrittst. Falls notwendig, pausiere mit
-<input>$cmd[CMD_REST]</input><localtiles> oder <input>mausklicke</input> in
-das Kommandofeld</localtiles>.
+Stelle sicher, dass du bei voller Gesundheit und vollen Magiepunkten bist, bevor du ein
+neues Gebiet betrittst. Falls notwendig, pausiere mit
+<input>$cmd[CMD_REST]</input><localtiles> oder <input>klicke</input> in
+die Befehlsleiste</localtiles>.
 
-Außerdem, da Untote nicht atmen kannst du verpestete Wolke werfen ohne deinen
+Du kannst mit jedem Zauber nur eine begrenzte Anzahl von Verbündeten beschwören,
+also versuche dir durch eine große Bandbreite von Zaubern einen Vorteil zu verschaffen.
+Zum Beispiel sind deine beschworenen Teufelchen gegen Gift resistent, also kannst du
+eine mephitische Wolke einsetzen, um an ihrer Seite zu kämpfen, ohne deinen
 Verbündeten zu schaden.
 %%%%
 tutorial4 tutorial_end
 
-Herzlichen Glückwunsch, du bist jetzt ein echter Zauberer! Um die Einführung zu
-beenden, gehe einfach diese Stufen hinunter.
+Herzlichen Glückwunsch, du bist jetzt ein echter Zauberer! Um das Tutorial zu
+beenden, gehe einfach diese Treppe hinunter.
 %%%%
 tutorial4 exit
 
 :nowrap
-<yellow>Zauber Kommandos</yellow>
+<yellow>Zauberbefehle</yellow>
   <input>$cmd[CMD_MEMORISE_SPELL]</input>  einen Zauberspruch lernen
-  <input>$cmd[CMD_DISPLAY_SPELLS]</input>  die Leistung des Zauberspruchs prüfen
-  <input>$cmd[CMD_CAST_SPELL]</input>  einen Zauberspruch aufsagen<localtiles>
-  Ausserdem kannst du neue Sprüche mit dem <w>Lernreiter</w> lernen.
-  Bereits erlernte Zaubersprüche rufst du mit <input>Linksklick</input> ab, und lies ihre Beschreibung und überprüfe deine Zauber Kenntnisse mit einem <input>Mouseover</input> oder <input>Rechtsklick</input></localtiles>
+  <input>$cmd[CMD_DISPLAY_SPELLS]</input>  Zauberkenntnisse prüfen
+  <input>$cmd[CMD_CAST_SPELL]</input>  einen Zauber wirken<localtiles>
+  Außerdem kannst du neue Zaubersprüche über den <w>Reiter Auswendiglernen</w> lernen.
+  Bereits erlernte Zauber wirkst du mit <input>Linksklick</input> und du liest ihre Beschreibung und überprüfst deine Zauberkenntnisse,
+  indem du mit der <input>Maus</input> über sie fährst oder einen <input>Rechtsklick</input> auf sie machst</localtiles>
+  <input>$cmd[CMD_QUIVER_ITEM]</input>  belege deinen Köcher
 
-  <input>$cmd[CMD_READ]</input>  lies ein Buch, um die Beschreibung zu lesen oder einen Zauberspruch zu vergessen
-  <input>$cmd[CMD_REST]</input>  pausiere für bis zu 100 Runden um Magie- und Lebenspunkte aufzufrischen
-  <input>$cmd[CMD_SHOUT]</input>  Verbündete rufen
+  <input>$cmd[CMD_REST]</input>  pausiere bis zu 100 Runden, um Magie- und Lebenspunkte aufzufüllen
+  <input>$cmd[CMD_SHOUT]</input>  Verbündete befehligen
   <input>$cmd[CMD_REMOVE_ARMOUR]</input>  Rüstung ablegen
 
                    <cyan>Drücke <input>irgendeine Taste</input> um diese Meldung zu löschen...</cyan>
 %%%%
 tutorial5 start
 
-In dieser Lektion lernst du alles über Götter und wie man ihre Mächte benutzt.
+In dieser Lektion lernst du alles über Götter und wie man ihre Kräfte nutzt.
 %%%%
 tutorial5 dungeon_overview
 
-Trog ist nur einer von vielen Göttern. Im richtigen Spiel kannst du dir mit
-<input>$cmd[CMD_DISPLAY_OVERMAP]</input><localtiles> oder mit einem klick auf
-den <input>Verlies Karten Knopf</input> im Kontrollfeld</localtiles> eine Liste
-aller Altare und anderen interessanten Merkmalen anzeigen lassen.
+Da vorne steht ein Altar von Trog dem Zornigen! Trog ist nur einer von vielen Göttern.
+Im richtigen Spiel kannst du dir mit <input>$cmd[CMD_DISPLAY_OVERMAP]</input><localtiles>
+oder mit einem Klick auf den <input>Kerker-Übersichtskarten-Button</input> in der
+Befehlsleiste</localtiles> eine Liste aller Altäre und aller anderen interessanten Merkmale
+anzeigen lassen, die bereits gefunden wurden.
 %%%%
 tutorial5 altar
 
-Beten kannst du an einem Altar mit <input>$cmd[CMD_PRAY]</input><localtiles>
-(oder wenn du in das <input>Befehls-Feld klickst</input>, oder mit
-<input>Shift-Klick</input> auf deinen Charakter)</localtiles>, womit du dann
-erfährst was dieser Gott dir anbietet und diesem Glauben beizutreten. Wenn du
-<input>!</input><localtiles> oder einen <input>Rechts-Klick</input>
-</localtiles> im Glaubens-Bildschirm ausführst kann du eine noch genauere
-Beschreibung bekommen.
+Du kannst an einem Altar mit <input>$cmd[CMD_GO_DOWNSTAIRS]</input> beten<localtiles>
+(oder mit <input>Linksklick</input> auf deinen Charakter)</localtiles>, um zu
+erfahren, was ein Gott dir anbietet und dem Glauben beizutreten. Wenn du
+<input>!</input> drückst<localtiles> oder einen <input>Rechtsklick</input>
+</localtiles> in der Glaubensübersicht machst, siehst du eine noch detailliertere
+Beschreibung.
 
-Bestätige deine Wahl mit einem <input>Y</input>, denke dabei an die
-Großschreibung.
+Bestätige deine Wahl mit einem <input>J</input> (denke an die Großschreibung)
+oder <input>Eingabe</input>.
 %%%%
 tutorial5 religion
 
-Schau dir aktuellen Stand deines Glaubens mit
+Schau dir den aktuellen Stand deines Glaubens mit
 <input>$cmd[CMD_DISPLAY_RELIGION]</input> an<localtiles> (oder über den
-<w>Religion Knopf</w> im Befehls-Feld, oder mit einem
-<input>Shift-Rechts-Klick</input> auf deine Spielfigur)</localtiles>. Nochmals,
-wenn du <input>!</input><localtiles> eingibst oder einen
-<input>Rechts-Klick</input></localtiles> machst, bekommst du eine
+<w>Religions-Button</w> in der Befehlsleiste, oder mit einem
+<input>Shift-Rechtsklick</input> auf deine Spielfigur)</localtiles>. Nochmals,
+wenn du <input>!</input> drückst<localtiles> oder einen
+<input>Rechtsklick</input> machst</localtiles>, bekommst du eine
 detailliertere Beschreibung deines Gottes.
 %%%%
 tutorial5 piety_on_kill
@@ -605,62 +662,47 @@ tutorial5 piety_on_kill
 Einige Götter mögen es wirklich, wenn du in ihrem Namen Monster tötest. Lass
 das Niedermetzeln beginnen!
 %%%%
-tutorial5 sacrificing
-
-Wenn man über einer Leiche mit <input>$cmd[CMD_PRAY]</input><localtiles> oder
-über das <w>Befehls-Feld</w></localtiles> betest wirst du diese an Trog
-opfern. Versuche es!
-%%%%
-tutorial5 burn_book
-
-Trog wird es mögen wenn du dieses Buch verbrennst (mit
-<input>$cmd[CMD_USE_ABILITY]</input><localtiles> oder über das
-<w>Befehls-Feld</w></localtiles>). Manchmal möchtest du vielleicht warten (mit
-<input>$cmd[CMD_WAIT]</input>) bis ein Monster drauf tritt, bevor du
-das tust.
-%%%%
 tutorial5 berserk
 
-Gegen manche starke Gegner könntest du Trog's Raserei Kraft mit
-<input>$cmd[CMD_USE_ABILITY]</input><localtiles> oder über das
-<w>Befehls-Feld</w></localtiles> benutzen.
+Gegen besonders starke Gegner möchtest du vielleicht mit
+<input>$cmd[CMD_USE_ABILITY]</input><localtiles> oder über die
+<w>Befehlsleiste</w></localtiles> Trogs Fähigkeit der Berserkerwut nutzen.
 %%%%
 tutorial5 exhaustion
 
-Die Wut des Berserkers ist wirklich anstrengend. Wenn du ermüdet bist kannst du
-nicht wieder in Raserei verfallen und wirst langsamer. Am besten ist es dann
-mit <input>$cmd[CMD_REST]</input><localtiles> (oder über das
-<w>Befehls-Feld</w>) zu rasten</localtiles> bis du dich wieder fit genug
-fühlst.
+Eine Berserkerwut ist wirklich anstrengend. Nachdem sie endet, kannst du für
+eine kurze Zeit nicht erneut wüten und du wirst langsamer. Am besten ist es dann
+mit <input>$cmd[CMD_REST]</input><localtiles> (oder über die
+<w>Befehlsleiste</w>) zu rasten</localtiles>, bis du dich wieder fit fühlst.
 %%%%
 tutorial5 berserk2
 
-Raserei ist auch sehr sinnvoll gegen mehrere Gegner — solange du dabei nicht
-die Kraft verlierst.
+Berserkerwut ist auch sehr sinnvoll gegen mehrere Gegner — solange dir nicht
+zwischendrin die Puste ausgeht.
 %%%%
 tutorial5 tutorial_end
 
-Glückwunsch! Du hast die letzte Lektion der Übungskurses beendet und bist nun
-für das richtige Spiel bereit!
+Glückwunsch! Du hast die letzte Lektion des Tutorials beendet und bist nun
+für das richtige Spiel bereit. Viel Glück!
 
-Um den Übungskurs zu verlassen gehe einfach diese Stufen hinunter.
+Um das Tutorial zu verlassen, gehe einfach diese Treppe hinunter.
 %%%%
 tutorial5 exit
 
 :nowrap
-<yellow>Religions Befehle</yellow>
-  <input>$cmd[CMD_PRAY]</input>  bete an einem Altar um dich einem Gott anzuschließen, oder opfere eine Leiche
+<yellow>Religionsbefehle</yellow>
+  <input>$cmd[CMD_GO_DOWNSTAIRS]</input>  bete an einem Altar, um dich einem Gott anzuschließen
   <input>$cmd[CMD_USE_ABILITY]</input>  benutze eine göttliche Fähigkeit
-  <input>$cmd[CMD_DISPLAY_RELIGION]</input>  überprüfe deinen Glaubens-Stand<localtiles>
-  Ein <input>Rechts-Klick</input> auf deine Spielfigur zeigt öffnet ebenfall den Religions-Bildschirm.</localtiles>
+  <input>$cmd[CMD_DISPLAY_RELIGION]</input>  den Stand deines Glaubens prüfen<localtiles>
+  Ein <input>Rechtsklick</input> auf deine Spielfigur öffnet ebenfalls die Glaubensübersicht.</localtiles>
 
 <yellow>Rasten</yellow>
   <input>$cmd[CMD_WAIT]</input>  warte und raste eine einzige Runde
   <input>$cmd[CMD_REST]</input>  warte und raste bis zu 100 Runden
 
 <yellow>Andere Befehle</yellow>
-  <input>$cmd[CMD_DISPLAY_OVERMAP]</input> zeige eine Übersicht des Verlieses
-  <input>$cmd[CMD_DISPLAY_COMMANDS]/</input>  durchsuche die Datenbank nach Beschreibungen
+  <input>$cmd[CMD_DISPLAY_OVERMAP]</input> zeige eine Übersicht des Kerkers
+  <input>$cmd[CMD_DISPLAY_COMMANDS]/</input>  durchsuche die Beschreibungsdatenbank
 
                    <cyan>Drücke <input>irgendeine Taste</input> um diese Meldung zu löschen...</cyan>
 %%%%

@@ -1,0 +1,189 @@
+%%%%
+flame cloud
+
+Eine Wolke aus wütendem Feuer. Jede Kreatur, die nicht völlig immun gegen
+Feuer ist, wird verletzt, wenn sie Zeit in den Flammen verbringt.
+
+Kalte Fernangriffe, die durch die Wolke hindurchgehen, werden in ihrer
+Reichweite erheblich reduziert und die Wolke löst sich dabei auf.
+
+Wird sie in der Nähe von Wasser oder darüber platziert, erzeugt die Hitze
+in der Nähe Dampf.
+%%%%
+noxious fumes cloud
+
+Eine Wolke aus widerlichen, erstickenden Dämpfen. Jede Kreatur, die sich darin
+aufhält, läuft Gefahr, von den Gasen verwirrt zu werden, es sei denn, sie ist
+resistent gegen Gift. Stärkere, erfahrenere Kreaturen sind weniger gefährdet.
+%%%%
+freezing vapour cloud
+
+Eine Wolke aus eiskalter Luft. Jede Kreatur, die nicht völlig immun gegen
+Kälte ist, wird verletzt, wenn sie Zeit darin verbringt.
+
+Fernangriffe mit Feuer, die durch die Wolke hindurchgehen, werden in ihrer
+Reichweite erheblich reduziert und die Wolke löst sich dabei auf.
+%%%%
+poison gas cloud
+
+Eine Wolke aus tödlichem Gift. Jede Kreatur, die nicht resistent gegen Gift
+ist, wird vergiftet und erleidet direkten Schaden, wenn sie sich darin aufhält.
+%%%%
+_smoke_cloud_
+
+Eine Wolke aus farbigem Rauch. Harmlos, außer für Asthmatiker.
+%%%%
+black smoke cloud
+
+<_smoke_cloud_>
+%%%%
+grey smoke cloud
+
+<_smoke_cloud_>
+%%%%
+blue smoke cloud
+
+<_smoke_cloud_>
+%%%%
+purple smoke cloud
+
+<_smoke_cloud_>
+%%%%
+translocational energy cloud
+
+Das Überbleibsel einer Kreatur, die vor kurzem hier war, es aber nicht mehr ist,
+verbannt in die Nähe, an eine andere Stelle der Ebene oder aus der Realität hinaus,
+bis in den Abgrund. Manche Zauberer sagen, es handele sich um eine Art "allergische
+Reaktion", die das Universum als Reaktion auf Magie hervorbringt, die den Raum
+auf unmögliche Weise verformt; ein kosmischer Nieser. Vielleicht metaphysisch
+ekelhaft, aber ansonsten harmlos.
+%%%%
+spreading flames cloud
+
+Ein wütender Waldbrand. Jede Kreatur, die nicht völlig immun gegen Feuer ist,
+wird durch den Aufenthalt in den Flammen verletzt. Die Flammen flackern
+gelegentlich auf und erfüllen ihre Umgebung mit kleineren Feuern. Bäume, die
+das Pech haben, in der Nähe zu sein, werden oft zu weiterem Zündstoff für das
+Feuer.
+
+Kalte Fernangriffe, die durch die Wolke hindurchgehen, werden in ihrer
+Reichweite erheblich reduziert und die Wolke löst sich dabei auf.
+
+Wird sie in der Nähe von Wasser oder darüber platziert, erzeugt die Hitze
+in der Nähe Dampf.
+%%%%
+steam cloud
+
+Eine Wolke aus kochend heißem Dampf. Kreaturen, die damit in Berührung kommen,
+werden leicht verletzt. Feuerresistenz reduziert den Schaden.
+%%%%
+ink cloud
+
+Eine Wolke aus Tinte, die das Wasser vollständig ausfüllt.
+%%%%
+calcifying dust cloud
+
+Eine versteinernde Wolke. Kreaturen, die sich in der Wolke zu lang aufhalten,
+verwandeln sich in Stein, obwohl erfahrenere Kreaturen in der Lage sein
+können, den Auswirkungen zu widerstehen.
+%%%%
+blessed fire cloud
+
+Eine Wolke aus göttlichem Feuer, durchdrungen von heiliger Macht. Diejenigen,
+die in den Diensten eines guten Gotts stehen, werden von ihr nicht
+beeinträchtigt. Alle anderen Kreaturen werden von ihr verletzt, wobei Untote
+und dämonische Kreaturen großen Schaden erleiden.
+%%%%
+foul pestilence cloud
+
+# XXX: clarify gargoyles
+Eine Wolke aus fauliger Pestilenz. Jedes Lebewesen, das sich in ihr aufhält,
+wird vergiftet und kann in seinen Bewegungen verlangsamt werden.
+%%%%
+thin mist cloud
+
+Eine Wolke aus dünnem Nebel. Atmosphärisch, aber harmlos.
+%%%%
+seething chaos cloud
+
+Eine Wolke aus brodelndem Chaos. Eine Vielzahl von unvorhersehbaren Effekten
+wirkt auf diejenigen, die sich in den Wolken befinden, von Unsichtbarkeit über
+Berserkerwut bis hin zu vollständiger Lähmung.
+%%%%
+rain cloud
+
+Ein lokal extrem begrenzter Regensturm. Er kann Pfützen mit flachem Wasser
+erzeugen oder bestehende Pfützen vorübergehend vertiefen. Wesen, die ganz aus
+Feuer bestehen, halten sich ungern lange im Regen auf.
+%%%%
+mutagenic fog cloud
+
+Eine Wolke aus reiner, unstrukturierter Magie, zu einem schillernden
+Nebel verdichtet; im Grunde magischer Giftmüll. Kreaturen, die sich
+hineinwagen, werden zunehmend mit magischer Strahlung kontaminiert, die in
+ausreichender Menge negative Mutationen verursacht, wenn sie sich auflöst.
+%%%%
+magical condensation cloud
+
+Der Rückstand einer hochkonzentrierten magischen Energie, die selbst völlig harmlos
+ist.
+%%%%
+whirling frost cloud
+
+Die Winde eines Polarwirbels. Sie fügen jedem, der sich in ihnen befindet,
+schweren Schaden zu, der nur teilweise durch Kälteresistenz gemildert wird.
+%%%%
+sparse dust cloud
+
+Eine Wolke aus aufgewirbeltem Staub. Atmosphärisch, aber harmlos.
+%%%%
+spectral mist cloud
+
+Eine Wolke aus spektralem Nebel. Sie fügt allen Kreaturen außer Untoten
+geringen Schaden zu. Aus dem Nebel entstehen mit der Zeit gefährliche, aber
+kurzlebige spektrale untote Kreaturen.
+%%%%
+acidic fog cloud
+
+Eine Wolke aus fleischverätzender Säure, die Schaden anrichtet und denjenigen,
+die sich in ihr befinden, Korrosion zufügt. Resistenz gegen Korrosion
+macht immun gegen ihre Auswirkungen.
+%%%%
+thunder cloud
+
+Eine dunkle Gewitterwolke. Sie schlägt diejenigen, die sich in ihr befinden,
+in gewissen Abständen mit Blitzen und fügt denjenigen, die keinen Widerstand
+gegen Elektrizität haben, schweren Schaden zu.
+%%%%
+negative energy cloud
+
+Eine Wolke aus nekromantischer Energie. Lebewesen, die sich darin befinden,
+wird ihre Lebensenergie entzogen, wobei Schutz vor negativer Energie
+die Auswirkungen abschwächt.
+%%%%
+white fluffiness cloud
+
+Eine weiße, flauschige Wolke. Nicht wirklich fest genug, um sie als Kissen
+zu benutzen, doch seltsam friedlich.
+%%%%
+salt cloud
+
+Eine Wolke aus schnell wirbeldem Staub und Salz. Sie sticht in den Augen
+und auf der Haut von Lebewesen, die sich darin befinden, obwohl sie letztlich
+harmlos ist.
+%%%%
+golden dust cloud
+
+Eine Wolke aus schimmerndem goldenem Staub. In ihr gewinnen die Anhänger des
+Rates enorme Stärke im Kampf.
+%%%%
+smouldering embers cloud
+
+Eine Wolke aus schwelender Glut. Sie wird von jedem Wesen, das über ihr steht,
+leicht erstickt, aber wenn man sie in Ruhe lässt, entzündet sie sich
+zu einer lodernden Flammenwolke.
+%%%%
+wisps of flame cloud
+
+Eine Spur aus Funken und Flämmchen. Atmosphärisch, aber harmlos.
+%%%%
