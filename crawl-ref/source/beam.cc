@@ -1779,7 +1779,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                                            random_range(4, 8)));
                 if (seen)
                 {
-                    mprf("The bolas warps around %s and binds %s in place!",
+                    mprf("The bolas wraps around %s and binds %s in place!",
                             mons->name(DESC_THE).c_str(),
                             mons->pronoun(PRONOUN_OBJECTIVE).c_str());
                 }
