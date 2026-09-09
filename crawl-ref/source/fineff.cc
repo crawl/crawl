@@ -1739,7 +1739,7 @@ void stardust_fineff::fire()
     else
     {
         mprf("%s %s unleashes a flurry of shooting stars!", agent->name(DESC_ITS).c_str(),
-            type == SHOOTING_STAR_CARINA ? " weapon" : " orb");
+            type == SHOOTING_STAR_CARINA ? "weapon" : "orb");
     }
 
     count = type == SHOOTING_STAR_JELLY ? max_stars : min(max_stars, count + 1);
