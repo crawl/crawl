@@ -6809,6 +6809,11 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     if (mons_class_flag(mi.type, M_BURROWS))
         result << uppercase_first(pronoun) << " can burrow through diggable terrain.\n";
 
+    // check item use to exclude ranged dancing weapons, who will fire in melee
+    // range, but don't really "use" a weapon.
+    if (mons_class_flag(mi.type, M_PREFER_RANGED) && mi.itemuse() > MONUSE_OPEN_DOORS)
+        result << uppercase_first(pronoun) << " can use ranged and thrown weapons in melee range.\n";
+
     if (mons_class_flag(mi.type, M_ACID_SPLASH))
     {
         result << uppercase_first(pronoun) << " "
