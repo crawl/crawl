@@ -143,6 +143,7 @@ string spell_power_string(spell_type spell);
 string spell_damage_string(spell_type spell, bool evoked = false, int pow = -1,
                            bool terse = false);
 string spell_max_damage_string(spell_type spell);
+string spell_effect_string(spell_type spell, bool evoked = false, int pow = -1);
 int spell_acc(spell_type spell);
 string spell_defence_string(spell_type spell, bool is_monster = false,
                             int pow = -1);
