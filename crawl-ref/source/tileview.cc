@@ -27,6 +27,7 @@
 #include "terrain.h"
 #include "tile-flags.h"
 #include "rltiles/tiledef-dngn.h"
+#include "rltiles/tiledef-icons.h"
 #include "rltiles/tiledef-player.h"
 #include "tilemcache.h"
 #include "tilepick.h"
@@ -1113,6 +1114,21 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
         _tile_place_cloud(gc, *cell.cloudinfo());
     else
         tile_env.bk_cloud(gc) = 0;
+
+    // Draw dragon veins on top of monsters or items, when appropriate
+    if (feat_is_dragon_vein(cell.feat())
+        && (cell.monsterinfo() || cell.item()))
+    {
+        tileidx_t tile = TILEI_DRAGON_VEIN_AIR + (cell.feat() - DNGN_DRAGON_VEIN_AIR);
+        if (set<tileidx_t>* icons = map_find(tile_env.icons, gc))
+            icons->insert(tile);
+        else
+        {
+            set<tileidx_t> new_icons;
+            new_icons.insert(tile);
+            tile_env.icons[gc] = std::move(new_icons);
+        }
+    }
 }
 
 #ifndef USE_TILE_WEB

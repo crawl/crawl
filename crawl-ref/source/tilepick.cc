@@ -211,6 +211,14 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_TOXIC_BOG;
     case DNGN_MUD:
         return TILE_LIQUEFACTION;
+    case DNGN_DRAGON_VEIN_AIR:
+        return TILE_DNGN_DRAGON_VEIN_AIR;
+    case DNGN_DRAGON_VEIN_EARTH:
+        return TILE_DNGN_DRAGON_VEIN_EARTH;
+    case DNGN_DRAGON_VEIN_FIRE:
+        return TILE_DNGN_DRAGON_VEIN_FIRE;
+    case DNGN_DRAGON_VEIN_ICE:
+        return TILE_DNGN_DRAGON_VEIN_ICE;
     case DNGN_MOULD_PATCH:
         if (player_in_branch(BRANCH_GULCH))
             return TILE_DNGN_MOULD_PATCH_GULCH;

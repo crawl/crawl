@@ -258,6 +258,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of the Dragon
+    SPELL_DRAGON_VEINS,
     SPELL_CAUSE_FEAR,
     SPELL_FIREBALL,
     SPELL_DRAGON_CALL,

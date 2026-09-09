@@ -4705,6 +4705,62 @@ static const struct spell_desc spelldata[] =
     TILEG_PHASE_SHIFT,
 },
 
+{
+    SPELL_DRAGON_VEINS, "Dragon Veins",
+    spschool::earth | spschool::fire | spschool::air | spschool::ice,
+    spflag::destructive,
+    3,
+    75,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_DRAGON_VEINS,
+},
+
+{
+    SPELL_DRAGON_VEIN_FIRE, "Dragon Vein (Fire)",
+    spschool::fire,
+    spflag::destructive,
+    3,
+    75,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_DRAGON_VEINS,
+},
+
+{
+    SPELL_DRAGON_VEIN_ICE, "Dragon Vein (Ice)",
+    spschool::ice,
+    spflag::destructive,
+    3,
+    75,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_DRAGON_VEINS,
+},
+
+{
+    SPELL_DRAGON_VEIN_AIR, "Dragon Vein (Air)",
+    spschool::air,
+    spflag::destructive,
+    3,
+    75,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_DRAGON_VEINS,
+},
+
+{
+    SPELL_DRAGON_VEIN_EARTH, "Dragon Vein (Earth)",
+    spschool::earth,
+    spflag::destructive,
+    3,
+    75,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_DRAGON_VEINS,
+},
+
+
 #if TAG_MAJOR_VERSION == 34
 #define AXED_SPELL(tag, name) \
     { tag, name, spschool::none, spflag::none, 7, 0, -1, -1, 0, TILEG_ERROR },

@@ -5266,7 +5266,8 @@ void bolt::monster_post_hit(monster* mon, int dmg)
              || origin_spell == SPELL_GLACIATE && !is_explosion
              || origin_spell == SPELL_UNLEASH_DESTRUCTION
                 && flavour == BEAM_COLD
-                && you.has_mutation(MUT_MAKHLEB_DESTRUCTION_COC))
+                && you.has_mutation(MUT_MAKHLEB_DESTRUCTION_COC)
+             || origin_spell == SPELL_DRAGON_VEIN_ICE)
     {
         if (!mon->has_ench(ENCH_FROZEN))
         {
@@ -5780,6 +5781,9 @@ void bolt::affect_monster(monster* mon)
             mon->props[MAKHLEB_HAEMOCLASM_KEY] = true;
         }
     }
+
+    if (origin_spell == SPELL_DRAGON_VEIN_FIRE && !mon->alive())
+        place_cloud(CLOUD_FIRE, pos(), random_range(2, 5), agent());
 
     if (mon->alive())
         monster_post_hit(mon, final);

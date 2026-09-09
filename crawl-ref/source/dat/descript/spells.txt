@@ -615,6 +615,30 @@ dragon which answers the call will further drain the summoner's magical
 reserves. After the call ends, it cannot be issued again for a short time. The
 duration of the call and the species of dragons called depend on spell power.
 %%%%
+Dragon Veins spell
+
+Allow the caster to tap into ley lines of elemental energy which pervade the
+dungeon and channel their destructive power against enemies. Casting it exposes
+up to four dragon veins on adjacent floor tiles - one corresponding to each of
+fire, ice, air, and earth magic. Stepping onto any of them will trigger an
+immediate destructive spellcast targeting up to 3 random enemies with an
+additional property that depends on the element tapped into:
+
+Fire (West): Prioritizes enemies with the least health. Leaves behind brief fire
+clouds when it kills something.
+
+Ice (East): Prioritizes enemies with the most health. Briefly freezes them,
+slowing their movement.
+
+Air (North): Prioritizes the most distant enemies. Unlike the other 3 elements,
+does full damage even to distant targets.
+
+Earth (South): Prioritizes the closest enemies. Strikes one fewer target and
+does greatly reduced damage to flying creatures, but enemies hit at close range
+may be staggered.
+
+You may channel from up to two of these dragon veins before the spell expires.
+%%%%
 Drain Life spell
 
 Drains the life force from all nearby enemies, healing the user proportional to

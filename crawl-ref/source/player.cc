@@ -888,6 +888,9 @@ void player::finalise_movement(const actor* /*to_blame*/)
         if (env.grid(pos()) == DNGN_BINDING_SIGIL)
             trigger_binding_sigil(you);
 
+        if (feat_is_dragon_vein(env.grid(pos())))
+            trigger_dragon_vein();
+
         apply_cloud_trail(last_move_pos);
 
         // Traps go off.

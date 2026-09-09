@@ -883,6 +883,11 @@ transporter_landing_site DNGN_TRANSPORTER_LANDING
 mould_patch0 DNGN_MOULD_PATCH
 mould_patch1
 
+air_vein DNGN_DRAGON_VEIN_AIR
+earth_vein DNGN_DRAGON_VEIN_EARTH
+fire_vein DNGN_DRAGON_VEIN_FIRE
+ice_vein DNGN_DRAGON_VEIN_ICE
+
 purified_mutation_catalyst DNGN_PURIFIED_MUTATION_CATALYST
 empty_mutation_catalyst DNGN_EMPTY_MUTATION_CATALYST
 

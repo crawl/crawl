@@ -3633,6 +3633,12 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
             long_desc += make_stringf("\nIt does %dd%d damage.", dmg.num, dmg.size);
         }
     }
+    else if (feat_is_dragon_vein(feat))
+    {
+        long_desc += make_stringf("\nIt inflicts %s damage when channelled.",
+                        spell_damage_string(dragon_vein_to_spell(feat),
+                                            false, calc_spell_power(SPELL_DRAGON_VEINS)).c_str());
+    }
 
     // mention that trees are usually flammable
     // (except for autumnal trees in Wucad Mu's Monastery)

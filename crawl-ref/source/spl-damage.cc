@@ -50,6 +50,7 @@
 #include "shout.h"
 #include "spl-clouds.h" // big_cloud
 #include "spl-goditem.h"
+#include "spl-other.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
 #include "spl-zap.h"
@@ -58,6 +59,7 @@
 #include "target.h"
 #include "terrain.h"
 #include "tilepick.h"
+#include "timed-effects.h"
 #include "transform.h"
 #include "traps.h"
 #include "unicode.h"
@@ -5347,4 +5349,143 @@ void do_catalyst_explosion(coord_def center, const item_def* wpn)
 
     for (coord_def pos : blast_targets)
         _explosion_square(&you, beam_actual, pos, pos == center, SPELL_DETONATION_CATALYST);
+}
+
+spell_type dragon_vein_to_spell(dungeon_feature_type feat)
+{
+    switch (feat)
+    {
+        default:
+        case DNGN_DRAGON_VEIN_AIR:      return SPELL_DRAGON_VEIN_AIR;
+        case DNGN_DRAGON_VEIN_EARTH:    return SPELL_DRAGON_VEIN_EARTH;
+        case DNGN_DRAGON_VEIN_FIRE:     return SPELL_DRAGON_VEIN_FIRE;
+        case DNGN_DRAGON_VEIN_ICE:      return SPELL_DRAGON_VEIN_ICE;
+    }
+}
+
+// Triggers a dragon vein at the player's feet. This counts as casting a real
+// spell for most trigger purposes.
+void trigger_dragon_vein()
+{
+    const spell_type spell = dragon_vein_to_spell(env.grid(you.pos()));
+    const int pow = calc_spell_power(SPELL_DRAGON_VEINS);
+
+    if (!can_cast_spells(true, true))
+    {
+        mpr("You can't tap into the dragon vein in your current state.");
+        return;
+    }
+    else if (!enough_mp(1, true))
+    {
+        mpr("You don't have enough magical energy left to tap into this dragon vein.");
+        return;
+    }
+
+    vector<monster*> targets;
+
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mi->is_firewood()
+            && you.can_see(**mi)
+            && could_harm_enemy(&you, *mi))
+        {
+            targets.push_back(*mi);
+        }
+    }
+
+    if (targets.empty())
+    {
+        mpr("You attempt to draw power from the ground, but there is nothing in range to harm.");
+        return;
+    }
+
+    shuffle_array(targets);
+
+    bolt blast(you, spell, pow);
+    blast.draw_delay = 100;
+    int num_targs = 3;
+
+    switch (spell)
+    {
+        case SPELL_DRAGON_VEIN_AIR:
+        {
+            // Prioritizes most distant targets, but hits more.
+            far_to_near_sorter sorter = {you.pos()};
+            sort(targets.begin(), targets.end(), sorter);
+        }
+        break;
+
+        case SPELL_DRAGON_VEIN_FIRE:
+        {
+            // Prioritizes the monsters with the least current health.
+            sort(targets.begin(), targets.end(),
+                 [](const monster* a, const monster* b)
+                    { return a->hit_points < b->hit_points;});
+        }
+        break;
+
+        case SPELL_DRAGON_VEIN_ICE:
+        {
+            // Prioritizes the monsters with the most current health.
+            sort(targets.begin(), targets.end(),
+                 [](const monster* a, const monster* b)
+                    { return a->hit_points < b->hit_points;});
+        }
+        break;
+
+        default:
+        case SPELL_DRAGON_VEIN_EARTH:
+        {
+            // Prioritizes the closest monsters.
+            near_to_far_sorter sorter = {you.pos()};
+            sort(targets.begin(), targets.end(), sorter);
+
+            num_targs = 2;
+        }
+        break;
+    }
+
+    mprf("You draw %s magic from the ground and channel it!",
+         lowercase_string(spell_schools_string(spell)).c_str());
+
+    const dice_def base_dmg = blast.damage;
+    for (int i = 0; i < num_targs && i < (int)targets.size(); ++i)
+    {
+        monster* mon = targets[i];
+
+        blast.source = blast.target = mon->pos();
+
+        // Dammage falloff with distance
+        const int dist = grid_distance(you.pos(), mon->pos());
+        if (dist > 3 && spell != SPELL_DRAGON_VEIN_AIR)
+        {
+            blast.damage.size = div_rand_round(blast.damage.size * 5 , dist + 2);
+            if (dist >= 5)
+                blast.hit_verb = "weakly hits";
+        }
+
+        blast.fire();
+        blast.damage = base_dmg;
+        blast.hit_verb = "hits";
+
+        if (spell == SPELL_DRAGON_VEIN_EARTH && dist <= 2 && mon->alive()
+            && !one_chance_in(3))
+        {
+            simple_monster_message(*mon, " is staggered.");
+            mon->speed_increment -= random_range(10, 13);
+        }
+    }
+
+    pay_mp(1);
+    do_post_spellcast_effects(spell);
+
+    // If this is your second usage on this spell cast, remove the remaining dragon veins.
+    // (Otherwise, just remove the one you stepped on.)
+    if (you.props.exists(DRAGON_VEIN_USED_KEY))
+        end_terrain_changes(you, TERRAIN_CHANGE_DRAGON_VEINS);
+    else
+    {
+        you.props[DRAGON_VEIN_USED_KEY] = true;
+        revert_terrain_change(you.pos(), TERRAIN_CHANGE_DRAGON_VEINS);
+    }
 }

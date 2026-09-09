@@ -193,3 +193,6 @@ spret cast_watery_grave();
 
 spret cast_golden_breath(bolt& beam, int power, bool fail);
 spret do_crystal_burst();
+
+spell_type dragon_vein_to_spell(dungeon_feature_type feat);
+void trigger_dragon_vein();

@@ -10,6 +10,8 @@ using std::vector;
 
 #define ANIMATE_DEAD_POWER_KEY "animate_dead_power"
 
+#define DRAGON_VEIN_USED_KEY "dragon_vein_used"
+
 class actor;
 
 spret cast_sublimation_of_blood(int pow, bool fail);
@@ -58,5 +60,7 @@ spret cast_intoxicate(int pow, bool fail, bool tracer = false);
 vector<coord_def> find_spike_launcher_walls(const coord_def& origin,
                                             const actor* only_useful_to = nullptr);
 spret cast_spike_launcher(const actor& agent, int pow, bool fail);
+
+spret cast_dragon_veins(bool fail);
 
 bool has_adjacent_enemy(const coord_def& pos, const actor& viewer);

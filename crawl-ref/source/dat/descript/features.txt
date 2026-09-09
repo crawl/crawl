@@ -495,6 +495,29 @@ an empty mutation catalyst
 
 A complex arcane still, cracked open and fully emptied of its contents.
 %%%%
+an earthen dragon vein
+
+An exposed ley line of earth magic. It can be tapped into by stepping on it,
+causing shockwaves that damage the 3 closest enemies. This does greatly reduced
+damage to distant and flying enemies.
+%%%%
+a fiery dragon vein
+
+An exposed ley line of fire magic. It can be tapped into by stepping on it,
+blasting the 3 enemies with the least health with fire. Any enemies killed by
+this will briefly leave behind a cloud of fire.
+%%%%
+an icy dragon vein
+
+An exposed ley line of ice magic. It can be tapped into by stepping on it,
+inflicting cold damage on the 3 enemies with the most health and slowing their
+movement for a short time.
+%%%%
+an airy dragon vein
+
+An exposed ley line of air magic. It can be tapped into by stepping on it,
+blasting the 4 most distant enemies with cutting wind.
+%%%%
 ########################################################################
 ### Branch entrances and exits
 ########################################################################

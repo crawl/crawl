@@ -337,6 +337,14 @@ bool feat_is_gate(dungeon_feature_type feat)
     }
 }
 
+bool feat_is_dragon_vein(dungeon_feature_type feat)
+{
+    return feat == DNGN_DRAGON_VEIN_AIR
+           || feat == DNGN_DRAGON_VEIN_EARTH
+           || feat == DNGN_DRAGON_VEIN_FIRE
+           || feat == DNGN_DRAGON_VEIN_ICE;
+}
+
 /** What command do you use to traverse this feature?
  *
  *  @param feat the feature.

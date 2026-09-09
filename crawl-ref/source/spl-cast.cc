@@ -732,10 +732,11 @@ void inspect_spells()
  * Can the player cast any spell at all? Checks for things that limit
  * spellcasting regardless of the specific spell we want to cast.
  *
- * @param quiet    If true, don't print a reason why no spell can be cast.
+ * @param quiet     If true, don't print a reason why no spell can be cast.
+ * @param ignore_silence   If true, ignore the effect of Silence.
  * @return True if we could cast a spell, false otherwise.
 */
-bool can_cast_spells(bool quiet)
+bool can_cast_spells(bool quiet, bool ignore_silence)
 {
     if (!get_form()->can_cast)
     {
@@ -773,7 +774,7 @@ bool can_cast_spells(bool quiet)
         return false;
     }
 
-    if (you.is_silenced())
+    if (!ignore_silence && you.is_silenced())
     {
         if (!quiet)
         {
@@ -2868,6 +2869,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_HELLFIRE_MORTAR:
         return cast_hellfire_mortar(you, beam, powc, fail);
 
+    case SPELL_DRAGON_VEINS:
+        return cast_dragon_veins(fail);
+
     default:
         if (spell_removed(spell))
         {
@@ -3291,6 +3295,19 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
             return make_stringf("%s (+%s)",
                 dam_str.c_str(),
                 describe_collision_dam(default_collision_damage(pow, false)).c_str());
+    }
+    else if (spell == SPELL_DRAGON_VEINS)
+    {
+        if (terse)
+            return dam_str + "*";
+        else
+        {
+            const dice_def fire_dmg = zap_damage(ZAP_DRAGON_VEIN_FIRE, pow, false, false);
+            const dice_def earth_dmg = zap_damage(ZAP_DRAGON_VEIN_EARTH, pow, false, false);
+            const dice_def air_dmg = zap_damage(ZAP_DRAGON_VEIN_AIR, pow, false, false);
+            return make_stringf("%dd(%d/%d/%d/%d) [Fire/Ice/Earth/Air]",
+                                fire_dmg.num, fire_dmg.size, fire_dmg.size, earth_dmg.size, air_dmg.size);
+        }
     }
 
     if (spell == SPELL_LRD

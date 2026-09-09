@@ -697,3 +697,45 @@ bool has_adjacent_enemy(const coord_def& pos, const actor& viewer)
 
     return false;
 }
+
+static bool _can_place_dragon_vein(const coord_def& pos)
+{
+    return in_bounds(pos) && feat_is_floor(env.grid(pos));
+}
+
+static void _place_dragon_vein(const coord_def& pos, dungeon_feature_type type, int dur)
+{
+    if (!_can_place_dragon_vein(pos))
+        return;
+
+    temp_change_terrain(pos, type, dur, TERRAIN_CHANGE_DRAGON_VEINS, MID_PLAYER);
+}
+
+spret cast_dragon_veins(bool fail)
+{
+    if (!_can_place_dragon_vein(you.pos() + coord_def(0, 1))
+        && !_can_place_dragon_vein(you.pos() + coord_def(0, -1))
+        && !_can_place_dragon_vein(you.pos() + coord_def(1, 0))
+        && !_can_place_dragon_vein(you.pos() + coord_def(-1, 0)))
+    {
+        mpr("You cannot tap into any power from your present location.");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    const int dur = random_range(40, 60);
+
+    end_terrain_changes(you, TERRAIN_CHANGE_DRAGON_VEINS);
+
+    _place_dragon_vein(you.pos() + coord_def(0, -1), DNGN_DRAGON_VEIN_AIR, dur);
+    _place_dragon_vein(you.pos() + coord_def(0, 1), DNGN_DRAGON_VEIN_EARTH, dur);
+    _place_dragon_vein(you.pos() + coord_def(1, 0), DNGN_DRAGON_VEIN_ICE, dur);
+    _place_dragon_vein(you.pos() + coord_def(-1, 0), DNGN_DRAGON_VEIN_FIRE, dur);
+
+    mprf("You tap into the flow of magic beneath your %s.", you.foot_name(true).c_str());
+
+    you.props.erase(DRAGON_VEIN_USED_KEY);
+
+    return spret::success;
+}
