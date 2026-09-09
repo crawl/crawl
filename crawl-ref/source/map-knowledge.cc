@@ -55,6 +55,44 @@ int count_detected_mons()
     return count;
 }
 
+void forget_monster_memory(monster& mon, bool redraw)
+{
+    const coord_def pos = mon.remembered_pos;
+    mon.remembered_pos.reset();
+
+    if (!in_bounds(pos))
+        return;
+
+    map_cell& cell = env.map_knowledge(pos);
+    const monster_info* mi = cell.monsterinfo();
+    if (!mi || mi->mid != mon.mid)
+        return;
+
+    cell.clear_monster();
+    if (redraw)
+        redraw_view_at(pos);
+}
+
+static void _record_monster_memory(const coord_def& pos, monster& mon)
+{
+    if (mon.remembered_pos != pos)
+        forget_monster_memory(mon);
+
+    mon.remembered_pos = pos;
+}
+
+void record_monster_seen_at(const coord_def& pos, monster& mon)
+{
+    _record_monster_memory(pos, mon);
+    env.map_knowledge(pos).set_monster(monster_info(&mon));
+}
+
+void record_invisible_monster_seen_at(const coord_def& pos, monster& mon)
+{
+    _record_monster_memory(pos, mon);
+    env.map_knowledge(pos).set_invisible_monster(&mon);
+}
+
 void clear_map(bool clear_items, bool clear_mons)
 {
     for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)

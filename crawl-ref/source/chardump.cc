@@ -1748,7 +1748,7 @@ static void _sdump_mutations(dump_params &par)
     if (you.has_any_mutations())
     {
         text += "\n";
-        text += (formatted_string::parse_string(describe_mutations(false)));
+        text += (formatted_string::parse_string(describe_muts_for_chardump(false)));
         text += "\n\n";
     }
 }

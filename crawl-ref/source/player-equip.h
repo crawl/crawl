@@ -140,14 +140,16 @@ bool can_equip_item(const item_def& item, bool temp = false,
 // XXX: the msg flag isn't implemented in all cases.
 void equip_item(equipment_slot slot, int item_slot, bool msg=true,
                 bool skip_effects=false);
-bool unequip_item(item_def& item, bool msg=true, bool skip_effects=false);
+bool unequip_item(item_def& item, bool msg=true, bool skip_effects=false,
+                  bool maybe_destroy=true);
 
 bool slot_is_melded(equipment_slot slot);
 
 void autoequip_item(item_def& item);
 
 void equip_effect(int item_slot, bool unmeld, bool msg);
-void unequip_effect(int item_slot, bool meld, bool msg, bool was_melded);
+void unequip_effect(int item_slot, bool meld, bool msg, bool was_melded,
+                    bool maybe_destroy);
 
 struct item_def;
 void equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld);

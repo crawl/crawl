@@ -6,7 +6,7 @@ exp: 39
 species: bush
 genus: plant
 holiness: [plant]
-will: 40
+will: invuln
 attacks:
 hd: 3
 hp_10x: 280

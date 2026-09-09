@@ -97,7 +97,9 @@ action will cancel the Dig status.
 Shaft Self ability
 
 Sends you to a random position one to three floors down, as if you jumped into
-a shaft trap. It takes some time to dig the shaft.
+a shaft trap. It takes some time to dig the shaft, and requires solid, dry
+ground beneath you. You cannot shaft yourself while standing on stairs or
+portals or while in watery terrain.
 %%%%
 Evoke Blink ability
 
@@ -519,32 +521,42 @@ Purification ability
 Purges your body of poison, confusion, slowness, petrification, weakness, and
 sickness. Any drained maximum health will also be fully restored.
 %%%%
-Heal Other ability
+Pacify ability
 
-Heals a creature other than yourself by a moderate amount, depending on
-Invocations skill. Using this ability on hostile monsters will try to turn them
-neutral. This works best on living creatures, with the undead and demons being
-progressively harder to pacify. Intelligent creatures are also more difficult
-to pacify.
+Attempts to soothe a hostile creature and convince them to give up their violent
+ways. If successful, the creature will turn neutral and attempt to leave the
+floor as quickly as possible. You will be granted its full experience value.
 
-Ghosts of dead adventurers and demon lords are too wrathful to be pacified,
-mindless creatures are too unintelligent to be pacified, and no monster can be
+This works best on holy and living creatures, with the undead and demons being
+progressively harder to pacify - particularly if they are intelligent.
+
+Neither mindless nor nonliving creatures can be pacified and no monster can be
 pacified while it is asleep.
 
-Whether the pacification succeeds or not, the invested piety and magic points
-are lost. If it does succeed, the monster is healed and you gain the monster's
-full experience value. Otherwise, the monster is unaffected and you gain
-nothing.
+Invocations skill increases your chance of success and allows you to pacify more
+powerful creatures.
+%%%%
+Divine Alms ability
+
+Comforts a friendly creature who is suffering, healing some of its wounds
+(based on your Invocations skill) and also curing poison, confusion, slowing,
+sickness, weakness, draining, and petrification.
+
+Any summoned creature who is healed by this ability may also be granted a
+small amount of additional time in this world.
 %%%%
 Heal Self ability
 
 Heals a moderate amount of health, depending on Invocations skill.
 %%%%
-Divine Vigour ability
+Aura of Vigour ability
 
 Greatly increases your maximum health and magic points, depending on
 Invocations skill. Your current health and magic points will also be increased
 proportionally.
+
+Any friendly creatures near you will also have their health doubled for as long
+as the effect lasts.
 %%%%
 # Lugonu
 Depart the Abyss ability

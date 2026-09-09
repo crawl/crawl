@@ -5,7 +5,7 @@ resists: {poison: 1}
 exp: 600
 genus: giant
 holiness: [plant]
-will: 60
+will: 80
 attacks:
  - {type: hit, damage: 10}
 hd: 9

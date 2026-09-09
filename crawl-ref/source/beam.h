@@ -141,7 +141,7 @@ struct bolt
     // INPUT parameters set by caller
     spell_type  origin_spell = SPELL_NO_SPELL; // may remain SPELL_NO_SPELL for
                                                // non-spell beams.
-    int         range = -2;
+    int         range = LOS_RADIUS;
     char32_t    glyph = '*';           // missile gfx
     colour_t    colour = BLACK;
     beam_type   flavour = BEAM_MAGIC;
@@ -493,6 +493,7 @@ void clear_zap_info_on_exit();
 bool zap_explodes(zap_type ztype);
 bool zap_is_enchantment(zap_type ztype);
 int zap_ench_power(zap_type z_type, int pow, bool is_monster);
+bool zap_has_tohit(zap_type z_type, bool is_monster);
 int zap_to_hit(zap_type z_type, int power, bool is_monster);
 dice_def zap_damage(zap_type z_type, int power, bool is_monster, bool random = true);
 colour_t zap_colour(zap_type z_type);

@@ -2,7 +2,7 @@ name: "lurking horror"
 glyph: {char: "*", colour: blue}
 flags: [flies, insubstantial, no_exp_gain]
 holiness: [nonliving]
-will: 10
+will: invuln
 attacks:
  - {type: hit, damage: 1}
 hd: 1

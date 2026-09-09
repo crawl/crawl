@@ -1091,19 +1091,15 @@ void map_markers::run_all(int time, map_marker_type type)
     to_delete.clear();
 }
 
-void map_markers::add(map_marker *marker)
+void map_markers::add(map_marker *marker, bool is_move)
 {
     markers.insert(dgn_pos_marker(marker->pos, marker));
     if (marker->needs_activation())
         have_inactive_markers = true;
-    // The marker may already be in the dynamic_markers array if this is a
-    // move - add it if not.
-    if (marker->is_dynamic()
-        && std::find(dynamic_markers.begin(), dynamic_markers.end(), marker)
-               == dynamic_markers.end())
-    {
+    // If this is merely relocating an existing marker, don't re-add it to the
+    // dynamic marker list.
+    if (!is_move && marker->is_dynamic())
         dynamic_markers.push_back(marker);
-    }
 }
 
 void map_markers::unlink_marker(const map_marker *marker)
@@ -1199,7 +1195,7 @@ void map_markers::move(const coord_def &from, const coord_def &to)
     for (auto mark : tmarkers)
     {
         mark->pos = to;
-        add(mark);
+        add(mark, true);
     }
 }
 
@@ -1208,7 +1204,7 @@ void map_markers::move_marker(map_marker *marker, const coord_def &to)
     unwind_bool inactive(have_inactive_markers);
     unlink_marker(marker);
     marker->pos = to;
-    add(marker);
+    add(marker, true);
 }
 
 vector<map_marker*> map_markers::get_all(map_marker_type mat)

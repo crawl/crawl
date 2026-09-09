@@ -1118,7 +1118,7 @@ void floor_transition(dungeon_feature_type how,
         you.duration[DUR_OOZE_REGEN] = random_range(170, 210);
     }
 
-    if (you.unrand_equipped(UNRAND_VAINGLORY))
+    if (you.unrand_equipped(UNRAND_VAINGLORY, true))
         _vainglory_arrival();
 
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_MESMERISM))

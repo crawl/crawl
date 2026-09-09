@@ -80,6 +80,8 @@ struct status_info
 // returns true if the status has a description
 bool fill_status_info(int status, status_info& info);
 
+string status_light_description(const status_info& info);
+
 const char *duration_name(duration_type dur);
 duration_type duration_by_name(const string &name);
 vector<duration_type> all_duration_with_flag(uint64_t flag);

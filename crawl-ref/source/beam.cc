@@ -375,6 +375,17 @@ bool zap_is_enchantment(zap_type z_type)
     return zinfo && zinfo->is_enchantment;
 }
 
+// Does this zap define a to-hit for the given caster?
+bool zap_has_tohit(zap_type z_type, bool is_monster)
+{
+    const zap_info* zinfo = _seek_zap(z_type);
+    if (!zinfo)
+        return false;
+    if (zinfo->is_enchantment)
+        return true;
+    return (is_monster ? zinfo->monster_tohit : zinfo->player_tohit) != nullptr;
+}
+
 int zap_to_hit(zap_type z_type, int power, bool is_monster)
 {
     const zap_info* zinfo = _seek_zap(z_type);
@@ -443,23 +454,6 @@ static int _zap_loudness(zap_type zap, spell_type spell)
     return 0;
 }
 
-#ifdef WIZARD
-static bool _needs_monster_zap(const zap_info &zinfo)
-{
-    // for enchantments we can't know from this data
-    if (zinfo.is_enchantment)
-        return false;
-    // if player tohit is missing from a non-enchantment, then it has to use
-    // a fake monster cast
-    if (!zinfo.player_tohit)
-        return true;
-
-    // otherwise, it should be possible to use a player zap (damage may or may
-    // not be defined)
-    return false;
-}
-#endif
-
 void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
 {
     const zap_info* zinfo = _seek_zap(z_type);
@@ -474,7 +468,7 @@ void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
 #ifdef WIZARD
     // we are in a wizmode cast scenario: use monster zap data to avoid crashes.
     // N.b. this suppresses some player effects, such as inaccuracy.
-    if (!is_monster && you.wizard && _needs_monster_zap(*zinfo))
+    if (!is_monster && you.wizard && !zap_has_tohit(z_type, false))
         is_monster = true;
 #endif
 
@@ -629,6 +623,11 @@ void bolt::initialise_fire()
 
     if (flavour == BEAM_VISUAL)
         affects_nothing = true;
+
+    // Player vision sets an absolute cap on the range of all beams and projectiles.
+    // (Yes, being a kobold does very bad things to the draw strength of every
+    // centaur in the dungeon, but that's just life.)
+    range = min(range, (int)you.current_vision);
 
     ASSERT_IN_BOUNDS(source);
     ASSERT_RANGE(flavour, BEAM_NONE + 1, BEAM_FIRST_PSEUDO);
@@ -1743,8 +1742,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_UMBRAL_TORCHLIGHT:
-        if (mons->god == GOD_YREDELEMNUL
-            || mons->holiness() & ~(MH_NATURAL | MH_DEMONIC | MH_HOLY))
+        if (mons->god == GOD_YREDELEMNUL || !mons->has_soul())
         {
             if (doFlavouredEffects && !mons_aligned(mons, pbolt.agent(true)))
                 simple_monster_message(*mons, " completely resists.");
@@ -1781,7 +1779,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                                            random_range(4, 8)));
                 if (seen)
                 {
-                    mprf("The bolas warps around %s and binds %s in place!",
+                    mprf("The bolas wraps around %s and binds %s in place!",
                             mons->name(DESC_THE).c_str(),
                             mons->pronoun(PRONOUN_OBJECTIVE).c_str());
                 }
@@ -2274,8 +2272,7 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
 
 static void _vampiric_draining_effect(actor& victim, actor& agent, int damage)
 {
-    if (damage < 1 || !actor_is_susceptible_to_vampirism(victim))
-        return;
+    const bool can_drain = actor_can_drain_life_from(agent, victim);
 
     if (you.can_see(victim) || you.can_see(agent))
     {
@@ -2284,6 +2281,9 @@ static void _vampiric_draining_effect(actor& victim, actor& agent, int damage)
              agent.conj_verb("draw").c_str(),
              victim.name(DESC_THE).c_str(),
              attack_strength_punctuation(damage).c_str());
+
+        if (agent.is_player() && !can_drain)
+            mpr("...but it dissipates before reaching you.");
     }
 
     if (agent.is_player())
@@ -3234,8 +3234,7 @@ bool bolt::is_harmless(const monster* mon) const
         return mon->res_poison() > 0 || mon->clarity();
 
     case BEAM_UMBRAL_TORCHLIGHT:
-        return mon->god == GOD_YREDELEMNUL
-               || (bool)!(mon->holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
+        return mon->god == GOD_YREDELEMNUL || !mon->has_soul();
 
     default:
         return false;
@@ -3315,8 +3314,7 @@ bool bolt::harmless_to_player() const
         return mons_att_wont_attack(attitude) || !agent()->can_constrict(you, CONSTRICT_BVC);
 
     case BEAM_UMBRAL_TORCHLIGHT:
-        return you_worship(GOD_YREDELEMNUL)
-               || (bool)!(you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY));
+        return you_worship(GOD_YREDELEMNUL) || !you.has_soul();
 
     case BEAM_QAZLAL:
         return true;
@@ -3473,7 +3471,6 @@ bool bolt::misses_player()
     const int SH = player_shield_class();
     if ((player_omnireflects() && is_omnireflectable()
          || is_blockable())
-        && you.shielded()
         && !you.shield_exhausted()
         && !aimed_at_feet
         && (SH > 0 || you.duration[DUR_DIVINE_SHIELD]))
@@ -3531,9 +3528,6 @@ bool bolt::misses_player()
                 finish_beam();
             }
             you.shield_block_succeeded(agent());
-
-            // Use up a charge of Divine Shield, if active.
-            tso_expend_divine_shield_charge();
 
             return true;
         }
@@ -3906,7 +3900,7 @@ void bolt::affect_player_enchantment(bool resistible)
     case BEAM_VAMPIRIC_DRAINING:
     {
         const int dam = resist_adjust_damage(&you, flavour, damage.roll());
-        if (dam && actor_is_susceptible_to_vampirism(you))
+        if (dam > 0)
         {
             _vampiric_draining_effect(you, *agent(), dam);
             obvious_effect = true;
@@ -3972,7 +3966,7 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_SOUL_SPLINTER:
         obvious_effect = true;
-        if (you.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
+        if (you.has_soul())
             make_soul_wisp(*agent(), you);
         else
             canned_msg(MSG_YOU_UNAFFECTED);
@@ -5401,11 +5395,11 @@ bool bolt::god_cares() const
 bool bolt::attempt_block(monster* mon)
 {
     const int shield_block = mon->shield_bonus();
-    if (shield_block <= 0)
+    if (shield_block <= 0 && !mon->divinely_shielded())
         return false;
 
     const int sh_hit = random2(hit * 130 / 100);
-    if (sh_hit >= shield_block || mon->shield_exhausted())
+    if (!mon->divinely_shielded() && (sh_hit >= shield_block || mon->shield_exhausted()))
         return false;
 
     mon->sense_if_invisible();
@@ -5425,8 +5419,10 @@ bool bolt::attempt_block(monster* mon)
             }
             else
             {
-                mprf("The %s reflects off an invisible shield around %s!",
+                mprf("The %s reflects off %s %s!",
                      name.c_str(),
+                     mon->divinely_shielded() ? "the divine shield protecting"
+                                              : "an invisible shield around",
                      mon->name(DESC_THE).c_str());
             }
         }
@@ -5726,9 +5722,10 @@ void bolt::affect_monster(monster* mon)
 
     if (mon->alive())
         monster_post_hit(mon, final);
-    // The monster (e.g. a spectral weapon) might have self-destructed in its
-    // behaviour_event called from mon->hurt() above. If that happened, it
-    // will have been cleaned up already (and is therefore invalid now).
+    // The monster might have self-destructed in its behaviour_event called
+    // from mon->hurt() above (e.g. if it was pacified and went up the stairs).
+    // If that happened, it will have been cleaned up already (and is therefore
+    // invalid now).
     else if (!invalid_monster(mon))
         kill_monster(*mon);
 
@@ -5819,7 +5816,8 @@ bool bolt::ignores_monster(const monster* mon) const
 
     if ((origin_spell == SPELL_PERCUSSIVE_TEMPERING
          || origin_spell == SPELL_FORTRESS_BLAST
-         || origin_spell == SPELL_AWAKEN_FLESH)
+         || origin_spell == SPELL_AWAKEN_FLESH
+         || origin_spell == SPELL_CLEANSING_FLAME)
         && mons_atts_aligned(attitude, mon->temp_attitude()))
     {
         return true;
@@ -5949,8 +5947,7 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
         break;
 
     case BEAM_VAMPIRIC_DRAINING:
-        rc = actor_is_susceptible_to_vampirism(*mon)
-                && (mon->res_negative_energy(intrinsic_only) < 3);
+        rc = mon->res_negative_energy(intrinsic_only) < 3;
         break;
 
     case BEAM_VIRULENCE:
@@ -6157,7 +6154,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     case BEAM_VAMPIRIC_DRAINING:
     {
         const int dam = resist_adjust_damage(mon, flavour, damage.roll());
-        if (dam && actor_is_susceptible_to_vampirism(*mon))
+        if (dam > 0)
         {
             _vampiric_draining_effect(*mon, *agent(), dam);
             obvious_effect = true;
@@ -6315,16 +6312,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_HEALING:
-        // No KILL_YOU_CONF, or we get "You heal ..."
-        if (thrower == KILL_YOU || thrower == KILL_YOU_MISSILE)
-        {
-            const int pow = min(50, 3 + damage.roll());
-            const int amount = pow + roll_dice(2, pow) - 2;
-            if (heal_monster(*mon, amount))
-                obvious_effect = true;
-            msg_generated = true; // to avoid duplicate "nothing happens"
-        }
-        else if (mon->heal(3 + damage.roll()))
+        if (mon->heal(3 + damage.roll()))
         {
             if (mon->hit_points == mon->max_hit_points)
             {

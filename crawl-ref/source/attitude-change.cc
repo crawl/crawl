@@ -145,15 +145,8 @@ void fedhas_neutralise(monster* mons)
 void dismiss_god_summons(god_type god)
 {
     for (monster_iterator mi; mi; ++mi)
-    {
-        if (is_follower(**mi)
-            && mi->is_summoned()
-            && mons_is_god_gift(**mi, god))
-        {
-            // The monster disappears.
-            monster_die(**mi, KILL_RESET, NON_MONSTER);
-        }
-    }
+        if (mi->is_summoned() && mons_is_god_gift(**mi, god))
+            monster_die(**mi, KILL_TIMEOUT, NON_MONSTER);
 }
 
 static void _print_converted_orc_speech(const string& key,

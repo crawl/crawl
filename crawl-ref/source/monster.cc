@@ -106,6 +106,7 @@ monster::monster()
     clear_constricted();
     revealed_this_turn = false;
     revealed_at_pos = coord_def(0, 0);
+    remembered_pos = coord_def(0, 0);
     origin_level = level_id();
 
     clear_deferred_move();
@@ -169,6 +170,7 @@ void monster::reset()
     god             = GOD_NO_GOD;
     revealed_this_turn = false;
     revealed_at_pos = coord_def(0, 0);
+    remembered_pos  = coord_def(0, 0);
     origin_level    = level_id();
 
     mons_remove_from_grid(*this);
@@ -941,13 +943,9 @@ void monster::unequip_message(item_def& item) const
  */
 void monster::do_unequip_effects(item_def &item)
 {
-    if (item.base_type == OBJ_WEAPONS
-        && get_weapon_brand(item) == SPWPN_SPECTRAL)
-    {
-        monster *spectral_weapon = find_spectral_weapon(item);
-        if (spectral_weapon)
-            end_spectral_weapon(spectral_weapon, false);
-    }
+    monster *spectral_weapon = find_spectral_weapon(item);
+    if (spectral_weapon)
+        end_spectral_weapon(spectral_weapon, false);
 
     if (item_affects_agrid(item))
         invalidate_agrid();
@@ -3047,17 +3045,9 @@ bool monster::pacified() const
 
 bool monster::can_feel_fear(bool /*include_unknown*/) const
 {
-    return (holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
+    return (holiness() & (MH_NATURAL | MH_PLANT | MH_DEMONIC | MH_HOLY))
            && !berserk_or_frenzied()
            && !clarity();
-}
-
-/**
- * Returns whether the monster currently has any kind of shield.
- */
-bool monster::shielded() const
-{
-    return shield() || wearing_jewellery(AMU_REFLECTION);
 }
 
 /// I honestly don't know what this means, really. It's vaguely similar
@@ -3085,6 +3075,8 @@ int monster::shield_class() const
     if (wearing_ego(OBJ_WEAPONS, SPWPN_REBUKE))
         sh += 20;
 
+    sh += scan_artefacts(ARTP_SHIELDING) * 2;
+
     return sh;
 }
 
@@ -3103,12 +3095,26 @@ void monster::shield_block_succeeded(actor *attacker)
 {
     actor::shield_block_succeeded(attacker);
 
-    ++shield_blocks;
+    if (divinely_shielded())
+    {
+        mon_enchant shield = get_ench(ENCH_DIVINE_SHIELD);
+        if (--shield.degree <= 0)
+            del_ench(ENCH_DIVINE_SHIELD);
+        else
+            update_ench(shield);
+    }
+    else
+        ++shield_blocks;
 }
 
 int monster::shield_bypass_ability(int) const
 {
     return mon_shield_bypass(get_hit_dice());
+}
+
+bool monster::divinely_shielded() const
+{
+    return has_ench(ENCH_DIVINE_SHIELD);
 }
 
 int monster::missile_repulsion() const
@@ -3871,12 +3877,8 @@ int monster::res_holy_energy() const
     if (undead_or_demonic())
         return -1;
 
-    if (is_holy()
-        || is_good_god(god)
-        || is_good_god(you.religion) && is_follower(*this))
-    {
+    if (is_holy() || is_good_god(god))
         return 3;
-    }
 
     return 0;
 }
@@ -3886,13 +3888,8 @@ int monster::res_foul_flame() const
     if (undead_or_demonic())
         return 1;
 
-    if (is_holy()
-        || is_good_god(god)
-        || (!crawl_state.game_is_arena()
-            && (is_good_god(you.religion) && is_follower(*this))))
-    {
+    if (is_holy() || is_good_god(god))
         return -1;
-    }
 
     return 0;
 }
@@ -4576,6 +4573,7 @@ void monster::set_ghost(const ghost_demon &g)
 void monster::set_new_monster_id()
 {
     mid = ++you.last_mid;
+    remembered_pos.reset();
     // Sorry, if you made 4294901759 monsters over the course of your
     // game you deserve a crash, particularly when the game doesn't
     // even last that many turns.
@@ -4852,9 +4850,13 @@ bool monster::needs_abyss_transit() const
 
 void monster::set_transit(const level_id &dest)
 {
-    add_monster_to_transit(dest, *this);
     if (you.can_see(*this))
+    {
+        forget_monster_memory(*this);
         remove_unique_annotation(this);
+    }
+    remembered_pos.reset();
+    add_monster_to_transit(dest, *this);
 }
 
 void monster::load_ghost_spells()
@@ -5024,7 +5026,7 @@ bool monster::can_go_frenzy() const
 
 bool monster::can_go_berserk() const
 {
-    return bool(holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
+    return bool(holiness() & (MH_NATURAL | MH_PLANT | MH_DEMONIC | MH_HOLY))
            && mons_has_attacks(*this)
            && can_go_frenzy();
 }
@@ -6142,7 +6144,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
              && mons_get_damage_level(*this) >= MDAM_SEVERELY_DAMAGED)
     {
         add_ench(mon_enchant(ENCH_DIMINISHED_SPELLS, this, random_range(500, 650)));
-        schedule_stardust_fineff(this, 150, 3, true);
+        schedule_stardust_fineff(this, 150, 3, SHOOTING_STAR_JELLY);
     }
     else if (type == MONS_TELENCEPHALON && !has_ench(ENCH_WEAK)
              && mons_get_damage_level(*this) >= MDAM_SEVERELY_DAMAGED)
@@ -6859,11 +6861,12 @@ void monster::remove_summons(bool check_attitude)
     for (monster_iterator mi; mi; ++mi)
     {
         if ((!check_attitude || attitude != mi->attitude)
-            && mi->summoner == mid
-            && mi->is_summoned()
-            && !(mi->flags & MF_PERSISTS))
+            && mi->summoner == mid)
         {
-            mi->del_ench(ENCH_SUMMON_TIMER);
+            if (mi->is_summoned() && !(mi->flags & MF_PERSISTS))
+                mi->del_ench(ENCH_SUMMON_TIMER);
+            else if (mi->type == MONS_SPECTRAL_WEAPON)
+                end_spectral_weapon(*mi, false);
         }
     }
 }

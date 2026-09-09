@@ -1244,8 +1244,17 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         if (mons_class_wields_two_weapons(mg.cls))
             give_weapon(mon, place.absdepth());
 
+        // If a monster was given two weapons, start with a ranged weapon
+        // wielded if they're an archer, and a melee weapon wielded otherwise.
+        // (But if they only have one weapon, don't stow it away, even if it's
+        // a launcher.)
         unwind_var<int> save_speedinc(mon->speed_increment);
-        mon->wield_melee_weapon(false);
+        const item_def *weap = mon->mslot_item(MSLOT_WEAPON);
+        const item_def *alt = mon->mslot_item(MSLOT_ALT_WEAPON);
+        if (!weap && alt)
+            mon->swap_weapons(false);
+        else if (!(mon->flags & MF_ARCHER))
+            mon->wield_melee_weapon(false);
     }
 
     if (mon->type == MONS_SLIME_CREATURE && mon->blob_size > 1)

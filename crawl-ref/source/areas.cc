@@ -484,7 +484,7 @@ int player::halo_radius() const
 
     if (you.unrand_equipped(UNRAND_VAINGLORY))
         size = max(size, 0);
-    else if (you.unrand_equipped(UNRAND_ISKENDERUNS_PLASMA_BLADE))
+    else if (you.unrand_equipped(UNRAND_PLASMA_BLADE))
         size = max(size, 0);
 
 

@@ -186,6 +186,14 @@ diminished spells monstatus
 This creature's spells are less powerful - dealing less damage, being less able to
 overcome their target's willpower, and occasionally being weaker in other ways.
 %%%%
+divinely shielded monstatus
+
+This creature is protected by a divine shield which will unerringly block the
+next several blockable assaults before dissipating.
+
+All blocked projectiles will be reflected and melee attackers may be blinded by
+light.
+%%%%
 dormant monstatus
 
 [[asleep monstatus]]

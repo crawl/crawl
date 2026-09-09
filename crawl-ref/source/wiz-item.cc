@@ -568,7 +568,9 @@ void wizard_make_object_randart()
     if (eq != SLOT_UNUSED)
     {
         invslot = item.link;
-        unequip_item(item);
+        // Ensure the item isn't destroyed on unequip, just in case it's
+        // cursed or ^Fragile.
+        unequip_item(item, true, false, false);
     }
 
     if (is_random_artefact(item))
@@ -609,7 +611,7 @@ void wizard_make_object_randart()
         return;
     }
 
-    // If it was equipped, requip the item.
+    // If it was equipped, reequip the item.
     if (eq != SLOT_UNUSED)
         equip_item(eq, invslot);
 

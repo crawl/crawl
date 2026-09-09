@@ -662,6 +662,14 @@ static int _spell_enhancement(spell_type spell)
     enhanced += you.duration[DUR_BRILLIANCE] > 0
                 || you.unrand_equipped(UNRAND_FOLLY);
 
+    // Hana's Scimitar provides an enhancer if you cast the spell from 80% mmp
+    // or more, and you have mp.
+    if (you.unrand_equipped(UNRAND_HANAS_SCIMITAR) && you.max_magic_points > 0
+        && (you.magic_points + spell_mana(spell)) * 100 >= you.max_magic_points * 80)
+    {
+        enhanced++;
+    }
+
     // These are used in an exponential way, so we'll limit them a bit. -- bwr
     if (enhanced > 3)
         enhanced = 3;
@@ -1833,10 +1841,12 @@ static vector<string> _desc_insubstantial(const monster_info& mi, string desc)
     return vector<string>{};
 }
 
-static vector<string> _desc_vampiric_draining_valid(const monster_info& mi)
+static vector<string> _desc_vampiric_draining_valid(const monster_info& mi, targeter* hitfunc)
 {
-    if (mi.mb.get(MB_CANT_DRAIN))
+    if (hitfunc && !hitfunc->affects_monster(mi))
         return vector<string>{"not susceptible"};
+    if (mi.is(MB_SUMMONED) || mi.is(MB_FIREWOOD))
+        return vector<string>{"cannot heal from"};
 
     return vector<string>{};
 }
@@ -2027,7 +2037,7 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
         case SPELL_NOXIOUS_BREATH:
             return bind(_desc_meph_chance, placeholders::_1);
         case SPELL_VAMPIRIC_DRAINING:
-            return bind(_desc_vampiric_draining_valid, placeholders::_1);
+            return bind(_desc_vampiric_draining_valid, placeholders::_1, hitfunc);
         case SPELL_RIMEBLIGHT:
             return bind(_desc_rimeblight_valid, placeholders::_1);
         case SPELL_STARBURST:
@@ -3328,6 +3338,7 @@ static const map<spell_type, spell_defence_info> _spell_defences =
     { SPELL_ARCJOLT,
       { ac_type::half, false, false, false, { BEAM_ELECTRICITY } } },
     { SPELL_BATTLESPHERE, _ac_only },
+    { SPELL_BECKONING_GALE, _ac_only },
     { SPELL_BOULDER, _ac_only },
     { SPELL_CONJURE_BALL_LIGHTNING,
       { ac_type::half, false, false, false, { BEAM_ELECTRICITY } } },
@@ -3431,6 +3442,9 @@ static spell_defence_info _get_spell_defences(spell_type spell,
         zap = spell_to_zap(spell);
 
     if (zap == NUM_ZAPS)
+        return info;
+
+    if (!zap_has_tohit(zap, is_monster))
         return info;
 
     if (pow < 0)

@@ -6,7 +6,7 @@ exp: 60
 species: oklob_plant
 genus: plant
 holiness: [plant]
-will: 20
+will: invuln
 attacks:
 hd: 4
 hp_10x: 220

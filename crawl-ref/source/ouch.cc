@@ -300,11 +300,8 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_UMBRAL_TORCHLIGHT:
-        if (you_worship(GOD_YREDELEMNUL)
-            || you.holiness() & ~(MH_NATURAL | MH_DEMONIC | MH_HOLY))
-        {
+        if (you_worship(GOD_YREDELEMNUL) || !you.has_soul())
             hurted = 0;
-        }
         break;
 
     case BEAM_WARPING:

@@ -339,6 +339,8 @@ MAP
       '
 ENDMAP
 
+# This was originally kept separate of the other subvaults to push in and hide
+# the escape items from those who teleported in, but that's not really needed.
 NAME:  grated_community_mu_sprite_home
 TAGS:  grated_community_mu_home_escape
 MONS:  kobold / goblin / hobgoblin, kobold brigand w:4

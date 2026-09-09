@@ -93,7 +93,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/geom2d.cc \
     $(CRAWL_PATH)/ghost.cc \
     $(CRAWL_PATH)/god-abil.cc \
-    $(CRAWL_PATH)/god-blessing.cc \
     $(CRAWL_PATH)/god-companions.cc \
     $(CRAWL_PATH)/god-conduct.cc \
     $(CRAWL_PATH)/god-item.cc \

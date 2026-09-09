@@ -101,7 +101,7 @@ function ch_stash_search_annotate_item(it)
   if it.class(true) == "potion" or it.class(true) == "scroll" then
     local props = {
       ["enlightenment"] = "Will+ flight Fly",
-      ["lignification"] = "rPois rTorment rDrown",
+      ["lignification"] = "rPois rN+++ rTorment rDrown",
       ["resistance"] = "rF+ rC+ rElec rPois rCorr",
       ["revelation"] = "sInv"
     }

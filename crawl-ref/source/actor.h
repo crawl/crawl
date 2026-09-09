@@ -244,12 +244,12 @@ public:
                  bool for_real = true) const;
     virtual int evasion(bool include_temp = true,
                         const actor *attacker = nullptr) const = 0;
-    virtual bool shielded() const = 0;
     virtual int shield_block_limit() const;
     bool shield_exhausted() const;
     virtual int shield_bonus() const = 0;
     virtual int shield_bypass_ability(int tohit) const = 0;
     virtual void shield_block_succeeded(actor *attacker);
+    virtual bool divinely_shielded() const = 0;
     virtual int missile_repulsion() const = 0;
 
     virtual monster_type mons_species(bool zombie_base = false) const = 0;
@@ -259,6 +259,7 @@ public:
     virtual bool holy_wrath_susceptible() const;
     virtual bool is_holy() const = 0;
     virtual bool is_nonliving(bool include_temp = true, bool incl_form = true) const = 0;
+    virtual bool has_soul() const;
     virtual bool evil() const;
     virtual int  how_chaotic(bool check_spells_god = false) const = 0;
     virtual bool is_unbreathing() const = 0;
@@ -299,7 +300,7 @@ public:
     virtual bool faith(bool items = true) const;
     virtual int archmagi(bool items = true) const;
     virtual bool no_cast(bool items = true) const;
-    virtual bool reflection(bool items = true) const;
+    bool reflection(bool items = true) const;
     virtual int extra_harm(bool items = true) const;
     virtual bool sunder_is_ready() const = 0;
 

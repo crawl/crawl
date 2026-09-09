@@ -1303,6 +1303,7 @@ LUAFN(you_train_skill)
 
 /*** Get a training target.
  * @tparam string name
+ * @tparam[opt=false] boolean base target the base skill level
  * @treturn number
  * @function get_training_target
  */
@@ -1311,12 +1312,14 @@ LUAFN(you_get_training_target)
     skill_type sk = l_skill(ls);
     if (sk > NUM_SKILLS)
         return 0;
-    PLUARET(number, (double) you.get_training_target(sk) * 0.1);
+    const bool base = lua_toboolean(ls, 2);
+    PLUARET(number, (double) you.get_training_target(sk, base) * 0.1);
 }
 
 /*** Set a training target.
  * @tparam string name
  * @tparam number target
+ * @tparam[opt=false] boolean base target the base skill level
  * @treturn number|nil if successfully set the new target
  * @function set_training_target
  */
@@ -1325,7 +1328,8 @@ LUAFN(you_set_training_target)
     skill_type sk = l_skill(ls);
     if (sk > NUM_SKILLS)
         return 0;
-    if (!you.set_training_target(sk, luaL_checknumber(ls, 2), true))
+    const bool base = lua_toboolean(ls, 3);
+    if (!you.set_training_target(sk, luaL_checknumber(ls, 2), true, base))
         return 0; // not a full-on error
     return 1;
 }

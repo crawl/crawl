@@ -33,10 +33,9 @@
 #include "evoke.h"
 #include "fineff.h"
 #include "god-abil.h"
-#include "god-blessing.h"
 #include "god-companions.h"
 #include "god-conduct.h"
-#include "god-passive.h" // passive_t::bless_followers, convert_orcs
+#include "god-passive.h" // convert_orcs
 #include "hints.h"
 #include "hiscores.h"
 #include "item-name.h"
@@ -918,7 +917,7 @@ static bool _beogh_maybe_convert_orc(monster &mons, killer_type killer,
     if (MON_KILL(killer) && !invalid_monster_index(killer_index))
     {
         const monster* responsible_monster = &env.mons[killer_index];
-        if (is_follower(*responsible_monster) && !one_chance_in(3))
+        if (is_apostle_follower(*responsible_monster) && !one_chance_in(3))
             return _beogh_forcibly_convert_orc(mons, killer);
     }
 
@@ -2074,13 +2073,6 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool corpse_gone,
     return false;
 }
 
-static bool _god_will_bless_follower(monster* victim)
-{
-    return have_passive(passive_t::bless_followers_vs_evil)
-           && victim->evil()
-           && random2(you.piety()) >= piety_breakpoint(0);
-}
-
 static bool should_blame_you_for_kill(int killer_index, bool pet_kill) noexcept
 {
     if (killer_index == YOU_FAULTLESS)
@@ -2376,10 +2368,6 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
 
     if (YOU_KILL(killer) && gives_player_xp)
     {
-        // TSO follower blessing.
-        if (_god_will_bless_follower(&mons))
-            bless_follower();
-
         if (you.wearing_ego(OBJ_ARMOUR, SPARM_MAYHEM))
             _orb_of_mayhem(you, mons);
     }
@@ -2438,6 +2426,12 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
         && !one_chance_in(3))
     {
         makhleb_tyrant_buff();
+    }
+
+    if ((killer == KILL_YOU || killer == KILL_YOU_MISSILE)
+        && gives_player_xp && have_passive(passive_t::inspire_followers))
+    {
+        tso_maybe_bless_follower();
     }
 
     // Apply unrand effects.
@@ -2979,7 +2973,6 @@ item_def* monster_die(monster& mons, killer_type killer,
                     visual.source = mons.pos();
                     visual.target = armoury->pos();
                     visual.flavour = BEAM_VISUAL;
-                    visual.range = LOS_RADIUS;
                     visual.aimed_at_spot = true;
                     visual.fire();
                 }
@@ -3166,9 +3159,6 @@ item_def* monster_die(monster& mons, killer_type killer,
 
             if (killer_mon->wearing_ego(OBJ_ARMOUR, SPARM_MAYHEM))
                 _orb_of_mayhem(*killer_mon, mons);
-
-            if (pet_kill && _god_will_bless_follower(&mons))
-                bless_follower(killer_mon);
 
             break;
         }

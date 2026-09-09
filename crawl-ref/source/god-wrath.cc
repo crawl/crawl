@@ -1354,9 +1354,11 @@ static bool _dithmenos_retribution()
         if (!pos.origin())
         {
             monster* shadow = create_player_shadow(pos, false, spell);
-            simple_god_message(shadow ? " turns your shadow against you."
-                                      : " fails to turn your shadows against you.",
+            simple_god_message(shadow ? " turns your own shadow against you."
+                                      : " fails to turn your shadow against you.",
                                false, god);
+            if (shadow)
+                mons_add_blame(shadow, "animated by the will of Dithmenos.");
         }
 
         break;

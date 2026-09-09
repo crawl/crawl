@@ -157,7 +157,7 @@ static void _CURSES_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
 static void _CURSES_melee_effects(item_def* /*weapon*/, actor* attacker,
                                   actor* defender, int dam, melee_attack*)
 {
-    if (defender->alive() && defender->holiness() & (MH_NATURAL | MH_PLANT))
+    if (defender->alive())
         death_curse(*defender, attacker, "the scythe of Curses", min(dam, 27));
 }
 
@@ -1391,7 +1391,6 @@ static int _harvest_corpses()
                 beam.tile_beam = tileidx_item(item);
                 beam.glyph = get_item_glyph(item).ch;
                 beam.colour = item.get_colour();
-                beam.range = LOS_RADIUS;
                 beam.aimed_at_spot = true;
                 beam.flavour = BEAM_VISUAL;
                 beam.draw_delay = 3;
@@ -1825,17 +1824,17 @@ static void _ICE_DRAGON_ARCANIST_SCALES_unequip(item_def */*item*/, bool *show_m
 }
 
 /////////////////////////////////////////////////////
-static void _ISKENDERUNS_PLASMA_BLADE_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
+static void _PLASMA_BLADE_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {
     _equip_mpr(show_msgs, "The plasma blade comes to life!");
 }
 
-static void _ISKENDERUNS_PLASMA_BLADE_unequip(item_def */*item*/, bool *show_msgs)
+static void _PLASMA_BLADE_unequip(item_def */*item*/, bool *show_msgs)
 {
     _equip_mpr(show_msgs, "The plasma blade fades away.");
 }
 
-static void _ISKENDERUNS_PLASMA_BLADE_melee_effects(item_def* /*weapon*/, actor* /*attacker*/,
+static void _PLASMA_BLADE_melee_effects(item_def* /*weapon*/, actor* /*attacker*/,
                                      actor* defender, int /*dam*/, melee_attack* atk)
 {
     if (coinflip())
@@ -1850,3 +1849,53 @@ static void _ISKENDERUNS_PLASMA_BLADE_melee_effects(item_def* /*weapon*/, actor*
         }
     }
 }
+
+static void _FIVE_VIRTUES_world_reacts(item_def */*item*/)
+{
+    you.redraw_armour_class = true;
+}
+
+/////////////////////////////////////////////////////
+static void _STAGEHANDS_SWORD_melee_effects(item_def* /*weapon*/, actor* attacker,
+                                  actor* defender, int /*dam*/, melee_attack* /*atk*/)
+{
+    if (!attacker->is_player())
+        return;
+
+    if (defender->is_monster() && !mons_aligned(defender, &you)
+        && mons_class_gives_xp(defender->as_monster()->type) && you.duration[DUR_DEVIOUS])
+    {
+        if (x_chance_in_y(you.props[DEVIOUS_KEY].get_int(), 3) &&
+            (!you.duration[DUR_INVIS] || coinflip()))
+        {
+            mprf("The Stagehand's Sword gleams wickedly %s",
+                you.backlit() ? "but you remain visible."
+                : you.duration[DUR_INVIS] ? "and you become more transparent."
+                : "and you slip into invisibility!");
+            you.increase_duration(DUR_INVIS, 3 + random2(5), 20);
+        }
+    }
+}
+
+/////////////////////////////////////////////////////
+static void _HANAS_SCIMITAR_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
+{
+    if (!unmeld)
+    {
+        if (you.has_mutation(MUT_INNATE_CASTER))
+            _equip_mpr(show_msgs, "You feel unable to tap into the sword's magical power.");
+        else if (!you.skill(SK_SPELLCASTING))
+            _equip_mpr(show_msgs, "You feel strangely lacking in power.");
+        else if (you.magic_points * 100 >= you.max_magic_points * 80)
+            _equip_mpr(show_msgs, "You feel powerful.");
+        else
+            _equip_mpr(show_msgs, "You feel potentially powerful.");
+    }
+}
+
+static void _HANAS_SCIMITAR_unequip(item_def */*item*/, bool *show_msgs)
+{
+    _equip_mpr(show_msgs,"You feel a bit dim.");
+    you.diminish(&you, 10);
+}
+

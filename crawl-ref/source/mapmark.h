@@ -361,7 +361,7 @@ public:
     void activate_all(bool verbose = true);
     void activate_markers_at(coord_def p);
     void run_all(int time, map_marker_type type = MAT_ANY);
-    void add(map_marker *marker);
+    void add(map_marker *marker, bool is_move = false);
     void remove(map_marker *marker);
     void remove_markers_at(const coord_def &c, map_marker_type type = MAT_ANY);
     map_marker *find(const coord_def &c, map_marker_type type = MAT_ANY);

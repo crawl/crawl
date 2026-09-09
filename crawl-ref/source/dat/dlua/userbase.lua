@@ -428,7 +428,7 @@ function c_message(text, channel) end
 
 --- Okawaru weapon acquirement hook.
 --
--- This hook can be defined to execute lua when Okawaru's Recieve Weapon
+-- This hook can be defined to execute lua when Okawaru's Receive Weapon
 -- capstone ability is used.
 --
 -- The hook should call @{items.acquirement_items} with an argument of 2 to get
@@ -441,7 +441,7 @@ function c_message(text, channel) end
 
 --- Okawaru armour acquirement hook.
 --
--- This hook can be defined to execute lua when Okawaru's Recieve Armour
+-- This hook can be defined to execute lua when Okawaru's Receive Armour
 -- capstone ability is used.
 --
 -- The hook should call @{items.acquirement_items} with an argument of 3 to get

@@ -790,3 +790,17 @@ private:
     bool hostile_only;
     string no_hostile_msg;
 };
+
+class targeter_divine_alms : public targeter_smite
+{
+public:
+    targeter_divine_alms();
+    bool valid_aim(coord_def a) override;
+};
+
+class targeter_pacify : public targeter_smite
+{
+public:
+    targeter_pacify();
+    bool valid_aim(coord_def a) override;
+};

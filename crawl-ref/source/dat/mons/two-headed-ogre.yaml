@@ -6,8 +6,8 @@ exp: 824
 genus: ogre
 will: 40
 attacks:
- - {type: hit, damage: 20}
- - {type: hit, damage: 15}
+ - {type: hit, damage: 18}
+ - {type: hit, damage: 13}
 hd: 10
 hp_10x: 550
 ac: 3
