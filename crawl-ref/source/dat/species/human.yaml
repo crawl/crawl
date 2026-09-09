@@ -22,6 +22,7 @@ recommended_jobs:
   - conjurer
   - necromancer
   - ice elementalist
+  - mystic
 mutations:
   1:
     MUT_EXPLORE_REGEN: 1

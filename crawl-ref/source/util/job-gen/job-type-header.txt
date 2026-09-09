@@ -55,5 +55,6 @@ enum job_type
     JOB_CINDER_ACOLYTE,
     JOB_REAVER,
     JOB_FORGEWRIGHT,
+    JOB_MYSTIC,
 
     // Auto-generated enums start here

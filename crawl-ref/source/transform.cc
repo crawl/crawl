@@ -2576,6 +2576,11 @@ transformation form_for_talisman(const item_def &talisman)
     return transformation::none;
 }
 
+talisman_type talisman_for_form(transformation form)
+{
+    return _find_form_entry(form).talisman;
+}
+
 void clear_form_info_on_exit()
 {
     for (const form_entry &entry : formdata)
