@@ -168,7 +168,7 @@ static void _maybe_practice_shapeshifting()
         return; // train shapeshifting less than UC/weapon skills
     if (you.form == transformation::none || you.form != you.default_form)
         return;
-    const int to_max = get_form()->max_skill - you.skill(SK_SHAPESHIFTING);
+    const int to_max = get_form()->max_skill - get_form()->get_level(1);
     if (to_max <= 0)
         return;
     if (to_max <= 5 && coinflip())

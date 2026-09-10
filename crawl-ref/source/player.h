@@ -39,6 +39,7 @@
 #include "uncancel.h"
 #include "unique-creature-list-type.h"
 #include "unique-item-status-type.h"
+#include "unwind.h"
 
 #define ICY_ARMOUR_KEY "ozocubu's_armour_pow"
 #define BARBS_MOVE_KEY "moved_with_barbs_status"
@@ -1099,6 +1100,17 @@ protected:
 
 class monster;
 struct item_def;
+
+// Class to temporarily equip a possible-not-in-inventory talisman, reversing
+// changes when it goes out of scope.
+class talisman_preview
+{
+public:
+    talisman_preview(const item_def *talisman);
+private:
+    unwind_var<item_def> preview_slot;
+    unwind_var<int8_t> cur_talisman;
+};
 
 class player_vanishes
 {

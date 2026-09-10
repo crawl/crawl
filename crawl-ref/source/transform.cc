@@ -204,14 +204,27 @@ bool Form::slot_is_blocked(equipment_slot slot) const
 }
 
 /**
- * Get the (capped) skill level the player has with this form.
+ * Get the (capped) skill level the player has with this form, counting any
+ * enchantment on the active talisman if it matches that form.
  *
  * @param scale  A scaling factor to avoid integer rounding issues.
  * @return      The 'level' of the form.
  */
 int Form::get_level(int scale) const
 {
-    return min(you.skill(SK_SHAPESHIFTING, scale), max_skill * scale);
+    int level = you.skill(SK_SHAPESHIFTING, scale);
+    if (const item_def *talisman = you.active_talisman())
+    {
+        const transformation talisman_form = form_for_talisman(*talisman);
+        // Bat form shares the vampire form's talisman.
+        if (get_form(talisman_form) == this
+            || talisman_form == transformation::vampire
+               && get_form(transformation::bat_swarm) == this)
+        {
+            level += talisman->plus * scale;
+        }
+    }
+    return max(0, min(level, max_skill * scale));
 }
 
 /**
@@ -1848,6 +1861,13 @@ string cant_transform_reason(transformation which_trans,
     return "";
 }
 
+static bool _form_lowers_max_hp(transformation which_trans,
+                                const item_def *talisman)
+{
+    talisman_preview preview(talisman);
+    return get_form(which_trans)->mult_hp(100) < 90;
+}
+
 bool check_transform_into(transformation which_trans, bool involuntary,
                           const item_def* talisman)
 {
@@ -1884,7 +1904,7 @@ bool check_transform_into(transformation which_trans, bool involuntary,
         return false;
     }
 
-    if (!involuntary && get_form(which_trans)->mult_hp(100) < 90)
+    if (!involuntary && _form_lowers_max_hp(which_trans, talisman))
     {
         if (!yesno("This transformation would significantly lower your maximum hit points. "
                   "Transform anyway?", true, 'n'))
@@ -2169,12 +2189,18 @@ bool transform(int dur, transformation which_trans, bool involuntary,
     }
 
     // If swapping to a different talisman of the same type, make sure to
-    // activate properties of the new one.
+    // activate properties and the enchantment of the new one.
     if (using_talisman && you.form == which_trans
         && is_artefact(*you.active_talisman()))
     {
         you.equipment.update();
         equip_artefact_effect(*you.active_talisman(), nullptr, false);
+
+        calc_hp();
+        calc_mp();
+        you.redraw_armour_class = true;
+        you.redraw_evasion = true;
+        you.wield_change = true;
 
         return true;
     }
@@ -2475,6 +2501,11 @@ transformation form_for_talisman(const item_def &talisman)
         if (formdata[i].talisman == talisman.sub_type)
             return static_cast<transformation>(i);
     return transformation::none;
+}
+
+int known_talisman_plus(const item_def &talisman)
+{
+    return talisman.is_identified() ? talisman.plus : 0;
 }
 
 void clear_form_info_on_exit()

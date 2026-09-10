@@ -114,7 +114,8 @@ struct property_descriptor;
 static const property_descriptor & _get_artp_desc_data(artefact_prop_type p);
 
 static string _describe_talisman(const item_def &item, bool verbose);
-static string _describe_talisman_form(transformation form_type);
+static string _describe_talisman_form(transformation form_type,
+                                      const item_def *talisman = nullptr);
 
 int show_description(const string &body, const tile_def *tile)
 {
@@ -1166,10 +1167,10 @@ static int _item_training_target(const item_def &item)
     if (item.base_type == OBJ_TALISMANS)
     {
         // Train to minimum level if below it, else maximum level.
-        int current_skill = get_form(form_for_talisman(item))->get_level(10);
-        int min_skill = get_form(form_for_talisman(item))->min_skill * 10;
-        int max_skill = get_form(form_for_talisman(item))->max_skill * 10;
-        return current_skill < min_skill ? min_skill : max_skill;
+        const int plus = known_talisman_plus(item);
+        int min_skill = (get_form(form_for_talisman(item))->min_skill - plus) * 10;
+        int max_skill = (get_form(form_for_talisman(item))->max_skill - plus) * 10;
+        return you.skill(SK_SHAPESHIFTING, 10) < min_skill ? min_skill : max_skill;
     }
     if (item.base_type == OBJ_BAUBLES)
         return get_form(transformation::flux)->min_skill * 10;
@@ -7856,9 +7857,13 @@ static void _desc_form_val(TablePrinter& pr, string label, int val)
     pr.AddCell(label, make_stringf("%+d", val).c_str(), val < 0 ? RED : LIGHTGREY);
 }
 
-static string _describe_talisman_form(transformation form_type)
+static string _describe_talisman_form(transformation form_type,
+                                      const item_def *talisman)
 {
     const Form* form = get_form(form_type);
+
+    // Put the talisman on to make the current row accurate.
+    talisman_preview preview(talisman);
 
     // First comes the big table of scaling values, at min, max and current
     // skill; we get values at the latter by passing -1 to the various form
@@ -7868,12 +7873,15 @@ static string _describe_talisman_form(transformation form_type)
 
     items.push_back({" ", "Min", "Max", "Cur"});
 
+    const int plus_bonus = talisman ? known_talisman_plus(*talisman) : 0;
+    const int min_needed = form->min_skill - plus_bonus;
+    const int max_needed = form->max_skill - plus_bonus;
     const int shapeshifting = you.skill(SK_SHAPESHIFTING, 10);
     const string skill_string = make_stringf("%d.%d", shapeshifting / 10, shapeshifting % 10);
-    const string cur_skill = (shapeshifting < 10*form->min_skill ? make_stringf("<red>%s</red>", skill_string.c_str())
-                             : (shapeshifting >= 10*form->max_skill ? make_stringf("[%d]", form->max_skill)
+    const string cur_skill = (shapeshifting < 10*min_needed ? make_stringf("<red>%s</red>", skill_string.c_str())
+                             : (shapeshifting >= 10*max_needed ? make_stringf("[%d]", max_needed)
                              : skill_string));
-    items.push_back({"Skill", to_string(skill[0]), to_string(skill[1]), cur_skill});
+    items.push_back({"Skill", to_string(min_needed), to_string(max_needed), cur_skill});
 
     _maybe_populate_form_table(items, bind(&Form::mult_hp, form, 100, true, placeholders::_1), "HP", skill, -100, true, true, 1);
     _maybe_populate_form_table(items, bind(&Form::get_base_unarmed_damage, form, false, placeholders::_1), "UC Base Dmg", skill, -3);
@@ -8071,7 +8079,15 @@ static string _describe_talisman(const item_def &item, bool verbose)
     ostringstream description;
 
     if (verbose && !is_useless_item(item, false) && item.sub_type != TALISMAN_PROTEAN)
-        description << "\n" << _describe_talisman_form(form_for_talisman(item));
+        description << "\n" << _describe_talisman_form(form_for_talisman(item), &item);
+
+    if (item.plus && item.is_identified())
+    {
+        description << "\nIts enchantment "
+                    << (item.plus > 0 ? "reduces" : "increases")
+                    << " the Shapeshifting skill needed for its form by "
+                    << abs(item.plus) << ".\n";
+    }
 
     // Artefact properties.
     string art_desc = _artefact_descrip(item);

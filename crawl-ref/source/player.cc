@@ -7009,26 +7009,14 @@ player_stats player::preview_stats_in_specific_form(int scale, const item_def& t
     // Save the current state of the player, so that we can rewind once
     // we're done.
     unwind_var<player_equip_set> unwind_eq(you.equipment);
-    unwind_var<int8_t> unwind_talisman(you.cur_talisman);
     unwind_var<transformation> unwind_default_form(you.default_form);
     unwind_var<transformation> unwind_form(you.form);
-
-    // Players can only equip items that are currently in their inventory, so if
-    // we're trying to preview a talisman *not* in our inventory, we must copy it
-    // into the hidden 'preview' slot before calling any subsequent functions.
-    if (!in_inventory(talisman))
-    {
-        you.inv[ENDOFPACK] = talisman;
-        you.inv[ENDOFPACK].pos = ITEM_IN_INVENTORY;
-        you.inv[ENDOFPACK].link = ENDOFPACK;
-    }
-    item_def& _talisman = in_inventory(talisman) ? you.inv[talisman.link] : you.inv[ENDOFPACK];
+    talisman_preview preview(&talisman);
 
     // Quickly simulate being in the new form
     transformation which_trans = form_for_talisman(talisman);
     you.default_form = which_trans;
     you.form = which_trans;
-    you.cur_talisman = _talisman.link;
     you.equipment.unmeld_all_equipment(true);
     you.equipment.meld_equipment(get_form(which_trans)->blocked_slots, true);
 
@@ -7040,13 +7028,23 @@ player_stats player::preview_stats_in_specific_form(int scale, const item_def& t
     you.equipment.update();
 
     // Now, calculate the resulting stats without temporary boosts.
-    const player_stats stats = calc_stats(scale);
+    return calc_stats(scale);
+}
 
-    // Clear out our preview item. (Other equipment state will be unwound
-    // automatically.)
-    you.inv[ENDOFPACK].clear();
+talisman_preview::talisman_preview(const item_def *talisman)
+    : preview_slot(you.inv[ENDOFPACK]), cur_talisman(you.cur_talisman)
+{
+    if (!talisman)
+        return;
 
-    return stats;
+    ASSERT(talisman->base_type == OBJ_TALISMANS);
+    // Copy the talisman into a preview slot even if already in our inventory,
+    // so that we can use the plus only if identified.
+    you.inv[ENDOFPACK] = *talisman;
+    you.inv[ENDOFPACK].plus = known_talisman_plus(*talisman);
+    you.inv[ENDOFPACK].pos = ITEM_IN_INVENTORY;
+    you.inv[ENDOFPACK].link = ENDOFPACK;
+    you.cur_talisman = ENDOFPACK;
 }
 
 bool player::heal(int amount)

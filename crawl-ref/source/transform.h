@@ -365,6 +365,7 @@ void merfolk_start_swimming();
 void merfolk_stop_swimming();
 
 transformation form_for_talisman(const item_def &talisman);
+int known_talisman_plus(const item_def &talisman);
 void clear_form_info_on_exit();
 
 void sphinx_notice_riddle_target(monster* mon);
