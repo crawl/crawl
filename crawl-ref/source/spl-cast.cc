@@ -371,14 +371,16 @@ static void _apply_post_zap_effect(spell_type spell, coord_def target)
     }
 }
 
+/// XXX: we might want slightly more precision here?
 static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
 {
     int fail_reduce = 100;
+    bool crab = you.form == transformation::fortress_crab;
 
     if (have_passive(passive_t::spells_success) && vehumet_supports_spell(spell))
     {
         // [dshaligram] Fail rate multiplier used to be .5, scaled
-        // back to 67%.
+        // back to 66%.
         fail_reduce = fail_reduce * 2 / 3;
     }
 
@@ -391,19 +393,24 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
         fail_reduce = fail_reduce * 2 / 3;
 
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_COMMAND) && spell_typematch(spell, spschool::summoning))
+    {
+        // stacks multiplicatively in crab form
         fail_reduce = fail_reduce * 180 / (180 + you.skill(SK_ARMOUR, 10));
+        if (crab)
+            fail_reduce = fail_reduce * 180 / (180 + you.skill(SK_ARMOUR, 10));
+    }
 
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_DEATH) && spell_typematch(spell, spschool::necromancy))
         fail_reduce = fail_reduce / 2;
 
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_RESONANCE) && spell_typematch(spell, spschool::forgecraft))
-        fail_reduce = fail_reduce * 2 / 3;
+        fail_reduce = crab ? fail_reduce * 4 / 9 : fail_reduce * 2 / 3;
 
     if (you.unrand_equipped(UNRAND_FIRE_DRAGON_OCCULTIST_SCALES) && spell_typematch(spell, spschool::fire))
-        fail_reduce = fail_reduce * 3 / 4;
+        fail_reduce = crab ? fail_reduce * 9 / 16 : fail_reduce * 3 / 4;
 
     if (you.unrand_equipped(UNRAND_ICE_DRAGON_ARCANIST_SCALES) && spell_typematch(spell, spschool::ice))
-        fail_reduce = fail_reduce * 3 / 4;
+        fail_reduce = crab ? fail_reduce * 9 / 16 : fail_reduce * 3 / 4;
 
     const int wizardry = player_wizardry();
 
@@ -586,7 +593,10 @@ int calc_spell_power(spell_type spell)
         power = (power + (you.experience_level * 300)) * 3 / 2;
 
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_COMMAND) && spell_typematch(spell, spschool::summoning))
-        power = power * (270 + you.skill(SK_ARMOUR, 10)) / 270;
+    {
+        int skfactor = you.form == transformation::fortress_crab ? 20 : 10;
+        power = power * (270 + you.skill(SK_ARMOUR, skfactor)) / 270;
+    }
 
     // at this point, `power` is assumed to be basically in centis.
     // apply a stepdown, and scale.

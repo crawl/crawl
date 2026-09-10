@@ -1811,8 +1811,9 @@ int resonance_damage_mod(int dam, bool random)
 {
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_RESONANCE))
     {
-        dam = random ? div_rand_round(dam * (100 + you.skill(SK_FORGECRAFT, 2)), 100)
-                     : dam * (100 + you.skill(SK_FORGECRAFT, 2)) / 100;
+        int skmod = you.form == transformation::fortress_crab ? 4 : 2;
+        dam = random ? div_rand_round(dam * (100 + you.skill(SK_FORGECRAFT, skmod)), 100)
+                     : dam * (100 + you.skill(SK_FORGECRAFT, skmod)) / 100;
     }
 
     return dam;
