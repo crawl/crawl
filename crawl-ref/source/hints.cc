@@ -661,25 +661,13 @@ static void _hints_healing_reminder()
 
             Hints.hints_just_triggered = true;
 
-            string text;
-            text =  "Remember to rest between fights and to enter unexplored "
-                    "terrain with full health and magic. Ideally you "
-                    "should retreat into areas you've already explored and "
-                    "cleared of monsters; resting on the edge of the explored "
-                    "terrain increases the chances of your rest being "
-                    "interrupted by wandering monsters. To rest, press "
-                    "<w>5</w> or <w>Shift-numpad 5</w>"
-                    "<tiles>, or <w>click the rest button</w></tiles>"
-                    ".";
+            print_hint("HINT_REST_BETWEEN_FIGHTS");
 
             if (you.hp < you.hp_max && you_worship(GOD_TROG)
                 && you.can_go_berserk())
             {
-                text += "\nAlso, berserking might help you not to lose so much "
-                        "health in the first place. To use your abilities "
-                        "press <w>a</w>.";
+                 print_hint("HINT_BERSERK_CONSERVES_HP");
             }
-            mprf(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
 
             if (is_resting())
                 stop_running();
@@ -856,78 +844,35 @@ void hints_monster_seen(const monster& mon)
     tiles.add_text_tag(TAG_TUTORIAL, mi);
 #endif
 
-    string text = "That ";
-
     if (is_tiles())
-    {
-        text +=
-            "monster is " + mon.name(DESC_A) +
-            ". You can learn about any monster by hovering your mouse over it,"
-            " and read its description by <w>right-clicking</w> on it.";
-    }
+        print_hint("HINT_SEEN_MONSTER_TILES", mon.name(DESC_A));
     else
     {
-        text +=
-            glyph_to_tagstr(get_mons_glyph(mi)) +
-            " is a monster, usually depicted by a letter. Some typical "
-            "early monsters look like <brown>r</brown>, <green>l</green>, "
-            "<brown>K</brown> or <lightgrey>g</lightgrey>. ";
+        print_hint("HINT_SEEN_MONSTER_CONSOLE",
+                   glyph_to_tagstr(get_mons_glyph(mi)));
+
         if (crawl_view.mlistsz.y > 0)
-        {
-            text += "Your console settings allowing, you'll always see a "
-                    "list of monsters somewhere on the screen.\n";
-        }
-        text += "You can gain information about it by pressing <w>x</w> and "
-                "moving the cursor over the monster, and read the monster "
-                "description by then pressing <w>v</w>. ";
+            print_hint("HINT_MONSTER_LIST_CONSOLE");
+        print_hint("HINT_LEARN_ABOUT_MONSTER_CONSOLE");
     }
 
-    text += "\nTo attack this monster with your wielded weapon, just move "
-            "into it. ";
-    if (is_tiles())
-    {
-        text +=
-            "Note that as long as there's a non-friendly monster in view you "
-            "won't be able to automatically move to distant squares, to avoid "
-            "death by misclicking.";
-    }
-
-    mprf(MSGCH_TUTORIAL, "%s", text.c_str());
+    print_hint("HINT_ATTACK_MONSTER");
 
     if (Hints.hints_type == HINT_RANGER_CHAR)
     {
-        text =  "However, as a hunter you will want to deal with it using your "
-                "bow. If you have a look at your shortbow from your "
-                "<w>i</w>nventory, you'll find an explanation of how to do "
-                "this. ";
+        print_hint("HINT_ATTACK_MONSTER_RANGED");
 
         if (!you.weapon()
             || you.weapon()->base_type != OBJ_WEAPONS
             || you.weapon()->sub_type != WPN_SHORTBOW)
         {
-            text += "First <w>w</w>ield it, then follow the instructions."
-                "<tiles>\nAs a short-cut you can also <w>right-click</w> on your "
-                "shortbow to read its description, and <w>left-click</w> to wield "
-                "it.</tiles>";
+            print_hint("HINT_RANGED_NOT_WIELDED");
         }
         else
-        {
-            text += "<tiles>Clicking with your <w>right mouse button</w> on your "
-                    "shortbow will also let you read its description.</tiles>";
-        }
-
-        mprf(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
-
+            print_hint("HINT_RANGED_WIELDED");
     }
     else if (Hints.hints_type == HINT_MAGIC_CHAR)
-    {
-        text =  "However, as a conjurer you will want to deal with it using "
-                "magic. If you look at the help entry for the "
-                "<w>M</w>emorisation screen you'll find an explanation of how "
-                "to do this.";
-        mprf(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
-
-    }
+        print_hint("HINT_ATTACK_MONSTER_MAGIC");
 }
 
 void hints_first_item(const item_def &item)
@@ -1499,29 +1444,12 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (new_god == GOD_NO_GOD)
         {
             if (old_piety < 1)
-            {
-                text << "Uh-oh, " << old_god_name << " just excommunicated you "
-                        "for running out of piety (your divine favour went "
-                        "to nothing). Maybe you repeatedly violated the "
-                        "religious rules, or maybe you failed to please your "
-                        "deity often enough, or some combination of the two. "
-                        "If you can find an altar dedicated to "
-                     << old_god_name;
-            }
+                print_hint("HINT_EXCOMMUNICATED", old_god_name);
             else
-            {
-                text << "Should you decide that abandoning " << old_god_name
-                     << "wasn't such a smart move after all, and you'd like to "
-                        "return to your old faith, you'll have to find an "
-                        "altar dedicated to " << old_god_name << " where";
-            }
-            text << " you can re-convert, and all will be well.";
+                print_hint("HINT_GOD_ABANDONED", old_god_name);
 
             if (god_hates_your_god(old_god, new_god))
-            {
-                text << "Otherwise, you'll have to weather this god's "
-                        "displeasure until their divine wrath is spent.";
-            }
+                print_hint("HINT_ENDURE_GOD_WRATH");
 
             break;
         }
@@ -1531,57 +1459,30 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         {
             if (is_good_god(new_god))
             {
-                text << "Fortunately, it seems that " << old_god_name <<
-                        " didn't mind your converting to " << new_god_name
-                     << ". ";
-
-                if (old_piety > piety_breakpoint(0))
-                    text << "You even kept some of your piety! ";
-
-                text << "Note that this kind of alliance only exists "
-                        "between the three good gods, so don't expect this "
-                        "to be the norm.";
+                print_hint("HINT_CONVERTED_GOOD_TO_GOOD",
+                           old_god_name, new_god_name);
             }
             else if (!god_hates_your_god(old_god))
             {
-                text << "Fortunately, it seems that " << old_god_name <<
-                        " didn't mind your converting to " << new_god_name
-                     << ". That's because " << old_god_name << " is one of "
-                        "the good gods who generally are rather forgiving "
-                        "about change of faith - unless you switch over to "
-                        "the path of evil, in which case their retribution "
-                        "can be nasty indeed!";
+                    print_hint("HINT_CONVERTED_GOOD_TO_NEUTRAL",
+                               old_god_name, new_god_name);
             }
             else
             {
-                text << "Looks like " << old_god_name << " didn't "
-                        "appreciate your converting to " << new_god_name
-                     << "! But really, changing from one of the good gods "
-                        "to an evil one, what did you expect!? For any god "
-                        "not on the opposing side of the faith, "
-                     << old_god_name << " would have been much more "
-                        "forgiving. ";
-
+                print_hint("HINT_CONVERTED_GOOD_TO_EVIL",
+                           old_god_name, new_god_name);
                 angry = true;
             }
         }
         else if (god_hates_your_god(old_god))
         {
-            text << "Looks like " << old_god_name << " didn't appreciate "
-                    "your converting to " << new_god_name << "! (Actually, "
-                    "only the three good gods will usually be forgiving "
-                    "about this kind of faithlessness.) ";
-
+            print_hint("HINT_CONVERTED_NONGOOD_TO_HATED",
+                       old_god_name, new_god_name);
             angry = true;
         }
 
         if (angry)
-        {
-            text << "Unfortunately, while converting back would appease "
-                 << old_god_name << ", it would annoy " << new_god_name
-                 << ", so you're stuck with having to suffer the wrath of "
-                    "one god or another.";
-        }
+            print_hint("HINT_CONVERTED_WRATH", old_god_name, new_god_name);
 
         break;
     }
@@ -1800,11 +1701,7 @@ formatted_string hints_abilities_info()
 {
     ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-    string broken = "This screen shows your character's set of talents. "
-        "You can gain new abilities via certain items, through religion or by "
-        "way of mutations. Activation of an ability usually comes at a cost, "
-        "e.g. Magic power. Press '<w>!</w>' or '<w>?</w>' to "
-        "toggle between ability selection and description.";
+    string broken = _get_hint("HINT_ABILITIES_SCREEN");
     linebreak_string(broken, _get_hints_cols());
     text << broken;
 
@@ -1819,14 +1716,7 @@ string hints_skills_info()
 {
     ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-    string broken = "This screen shows the skill set of your character. "
-        "The number next to the skill is your current level, the higher the "
-        "better. <w>Training</w> displays training percentages. "
-        "<w>Costs</w> displays relative training costs. "
-        "<w>Targets</w> displays skill training targets. "
-        "You can toggle which skills to train by "
-        "pressing their slot letters. A <darkgrey>grey</darkgrey> skill "
-        "will not be trained and ease the training of others.";
+    string broken = _get_hint("HINT_SKILLS_SCREEN");
     text << broken;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
@@ -1837,11 +1727,7 @@ string hints_skill_training_info()
 {
     ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-    string broken = "The training percentage (in <brown>brown</brown>) "
-        "shows the relative amount of the experience gained which will be "
-        "used to train each skill. It is automatically set depending on "
-        "which skills you have used recently. Disabling a skill sets the "
-        "training rate to 0.";
+    string broken = _get_hint("HINT_SKILL_TRAINING");
     text << broken;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
@@ -1852,10 +1738,7 @@ string hints_skill_costs_info()
 {
     ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-    string broken = "The training cost (in <cyan>cyan</cyan>) "
-        "shows the experience cost to raise the given skill one level, "
-        "relative to the cost of raising an aptitude zero skill from level "
-        "zero to level one.";
+    string broken = _get_hint("HINT_SKILL_COSTS");
     text << broken;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
@@ -1866,9 +1749,7 @@ string hints_skill_targets_info()
 {
     ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-    string broken = "Press the letter of a skill to set a training target. "
-        "When the target is reached a message will appear and "
-        "the training of the skill will be disabled.";
+    string broken = _get_hint("HINT_SKILL_TARGETS");
     text << broken;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
@@ -1879,9 +1760,7 @@ string hints_skills_description_info()
 {
     ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-    string broken = "This screen shows the skill set of your character. "
-                    "Press the letter of a skill to read its description, or "
-                    "press <w>?</w> again to return to the skill selection.";
+    string broken = _get_hint("HINT_SKILL_DESCRIPTIONS");
 
     linebreak_string(broken, _get_hints_cols());
     text << broken;
@@ -1893,27 +1772,20 @@ string hints_skills_description_info()
 // A short explanation of Crawl's target mode and its most important commands.
 static string _hints_target_mode(bool spells = false)
 {
-    string result;
-    result = "then be taken to target mode with the nearest monster or "
-             "previous target already targeted. You can also cycle through "
-             "all hostile monsters in sight with <w>+</w> or <w>-</w>. "
-             "Once you're aiming at the correct monster, simply hit "
-             "<w>f</w>, <w>Enter</w> or <w>.</w> to shoot at it. "
-             "If you miss, <w>";
-
     command_type cmd;
+    string arg;
     if (spells)
     {
-        result += "%ap";
+        arg = "%ap";
         cmd = CMD_CAST_SPELL;
     }
     else
     {
-        result += "%f";
+        arg = "%f";
         cmd = CMD_FIRE;
     }
 
-    result += "</w> fires at the same target again.";
+    string result = _get_hint("HINT_TARGET_MODE", arg);
     insert_commands(result, { cmd });
 
     return result;
@@ -1924,50 +1796,21 @@ string hints_memorise_info()
     // TODO: this should probably be in z or I, but adding it to the memorise
     // menu was easier for the moment.
     ostringstream text;
-    vector<command_type> cmd;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-    string m = "This screen shows the spells in your spell library. From here "
-               "you can memorise spells by selecting them, as well as view "
-               "spell descriptions, search for them, and organize them. As a "
-               "conjurer, you start with five memorisable spells, and one "
-               "already memorised: Magic Dart. (To view memorised spells, you "
-               "can exit this menu and select <w>I</w>.)";
+    string m = _get_hint("HINT_MEMORISE_SCREEN");
 
+    m += "\n";
     if (player_has_available_spells())
-    {
-        m += "\n\nA spell that isn't <darkgray>grayed out</darkgray> or "
-             "<lightred>forbidden</lightred> can be "
-             "memorised right away by selecting it at this menu.";
-    }
+        m += _get_hint("HINT_MEMORISE");
     else
-    {
-        m += "\n\nYou cannot memorise any ";
-        m += (you.spell_no ? "more " : "");
-        m += "spells right now. This will change as you grow in levels and "
-             "Spellcasting proficiency. ";
-    }
+        m += _get_hint("HINT_CANNOT_MEMORISE");
 
     if (you.spell_no)
-    {
-        m += "\n\nTo use magic, ";
-#ifdef USE_TILE
-        m += "you can <w>left mouse click</w> on the monster you wish to "
-             "target (or on your player character to cast a spell on "
-             "yourself) while pressing the <w>Control key</w>, and then select "
-             "a spell from the menu. Or you can switch to the spellcasting "
-             "display by <w>clicking on the</w> corresponding <w>tab</w>."
-             "\n\nAlternatively, ";
-#endif
-        m += "you can press <w>%</w> and choose a spell, e.g. <w>a</w> (check "
-             "with <w>?</w>). For attack spells you'll ";
-        cmd.push_back(CMD_CAST_SPELL);
-    }
+        m += "\n" + _get_hint("HINT_CAST_SPELL");
 
     if (you.spell_no)
         m += _hints_target_mode(true);
     linebreak_string(m, _get_hints_cols());
-    if (!cmd.empty())
-        insert_commands(m, cmd);
     text << m;
 
     return text.str();
@@ -1975,37 +1818,29 @@ string hints_memorise_info()
 
 static string _hints_abilities(const item_def& item)
 {
-    string str = "To do this, ";
+    string str;
 
-    vector<command_type> cmd;
-    if (!item_is_equipped(item))
+    if (item_is_equipped(item))
+        str = _get_hint("HINT_ACTIVATE_ABILITY_ITEM_EQUIPPED");
+    else
     {
         switch (item.base_type)
         {
         case OBJ_WEAPONS:
-            str += "first <w>%</w>ield it";
-            cmd.push_back(CMD_WIELD_WEAPON);
+            str = _get_hint("HINT_ACTIVATE_ABILITY_WEAPON_NOT_WIELDED");
             break;
         case OBJ_ARMOUR:
-            str += "first <w>%</w>ear it";
-            cmd.push_back(CMD_WEAR_ARMOUR);
+            str = _get_hint("HINT_ACTIVATE_ABILITY_ARMOUR_NOT_WORN");
             break;
         case OBJ_JEWELLERY:
-            str += "first <w>%</w>ut it on";
-            cmd.push_back(CMD_WEAR_JEWELLERY);
+            str = _get_hint("HINT_ACTIVATE_ABILITY_JEWELLERY_NOT_WORN");
             break;
         default:
             str += "<r>(BUG! this item shouldn't give an ability)</r>";
             break;
         }
-        str += ", then ";
     }
-    str += "enter the ability menu with <w>%</w>, and then "
-           "choose the corresponding ability. Note that such an attempt of "
-           "activation, especially by the untrained, is likely to fail.";
-    cmd.push_back(CMD_USE_ABILITY);
 
-    insert_commands(str, cmd);
     return str;
 }
 
@@ -2013,26 +1848,18 @@ static string _hints_throw_stuff(const item_def &item)
 {
     string result;
 
-    result  = "To do this, press <w>%</w> to fire, then ";
     if (item.slot)
     {
-        result += "<w>";
-        result += item.slot;
-        result += "</w> for";
+        string slot = string(1, (char)item.slot);
+        result = _get_hint("HINT_THROW_INVENTORY_ITEM", slot);
     }
     else
     {
-        // you don't have this/these stuff(s) at present
-        result += "select ";
+        // you don't have this item at present
+        result = _get_hint("HINT_THROW_GROUND_ITEM");
     }
-    result += (item.quantity > 1 ? "these" : "this");
-    result += " ";
-    result += item_base_name(item);
-    result += (item.quantity > 1? "s" : "");
-    result += ". You'll ";
-    result += _hints_target_mode();
 
-    insert_commands(result, { CMD_FIRE });
+    result += _hints_target_mode();
     return result;
 }
 
@@ -2058,7 +1885,6 @@ string hints_describe_item(const item_def &item)
 {
     ostringstream ostr;
     ostr << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-    vector<command_type> cmd;
 
     switch (item.base_type)
     {
@@ -2069,23 +1895,13 @@ string hints_describe_item(const item_def &item)
                 if (gives_ability(item))
                 {
                     // You can activate it.
-                    ostr << "When wielded, some weapons (such as this one) "
-                            "offer certain abilities you can activate. ";
+                    ostr << _get_hint("HINT_WEAPON_HAS_ABILITY");
                     ostr << _hints_abilities(item);
                     break;
                 }
                 else if (gives_resistance(item))
                 {
-                    // It grants a resistance.
-                    ostr << "\nThis weapon offers its wearer protection from "
-                            "certain damage sources. For an overview of your "
-                            "resistances (among other things) press <w>%</w>"
-#ifdef USE_TILE
-                            " or click on your avatar with the <w>right mouse "
-                            "button</w>"
-#endif
-                            ".";
-                    cmd.push_back(CMD_RESISTS_SCREEN);
+                    ostr << _get_hint("HINT_WEAPON_HAS_RESIST");
                     break;
                 }
                 else
@@ -2094,12 +1910,7 @@ string hints_describe_item(const item_def &item)
 
             if (!item_is_equipped(item))
             {
-                ostr << "You can wield this weapon with <w>%</w>, or use "
-                        "<w>%</w> to switch between the weapons in slot "
-                        "a and b. (Use <w>%i</w> to adjust item slots.)";
-                cmd.push_back(CMD_WIELD_WEAPON);
-                cmd.push_back(CMD_WEAPON_SWAP);
-                cmd.push_back(CMD_ADJUST_INVENTORY);
+                ostr << _get_hint("HINT_WIELD_WEAPON");
 
                 // Weapon skill used by this weapon and the best weapon skill.
                 skill_type curr_wpskill = item_attack_skill(item);
@@ -2117,32 +1928,17 @@ string hints_describe_item(const item_def &item)
 
                 if (you.skills[curr_wpskill] + 2 < you.skills[best_wpskill])
                 {
-                    ostr << "\nHowever, you've been training in <w>"
-                         << skill_name(best_wpskill)
-                         << "</w> for a while, so maybe you should "
-                            "continue training that rather than <w>"
-                         << skill_name(curr_wpskill)
-                         << "</w>. (Press <w>%</w> to see the skill "
-                            "management screen for the actual numbers.)";
-
-                    cmd.push_back(CMD_DISPLAY_SKILLS);
+                    ostr << _get_hint("HINT_WEAPON_SKILL",
+                                      skill_name(best_wpskill),
+                                      skill_name(curr_wpskill));
                 }
             }
             else // wielded weapon
             {
                 if (is_range_weapon(item))
-                {
-                    ostr << "To attack a monster, ";
-#ifdef USE_TILE
-                    ostr << "<w>left mouse click</w> on the monster.\n\n";
-                    ostr << "To fire a ranged weapon using the keyboard, ";
-#endif
-                    ostr << "press <w>%</w>. You'll ";
-                    ostr << _hints_target_mode();
-                    cmd.push_back(CMD_PRIMARY_ATTACK);
-                }
+                    ostr << _get_hint("HINT_ATTACK_WITH_RANGED_WEAPON");
                 else
-                    ostr << "To attack a monster, you can simply walk into it.";
+                    ostr << _get_hint("HINT_ATTACK_WITH_MELEE_WEAPON");
             }
 
             Hints.hints_events[HINT_SEEN_WEAPON] = false;
@@ -2151,10 +1947,8 @@ string hints_describe_item(const item_def &item)
         case OBJ_MISSILES:
             if (is_throwable(&you, item))
             {
-                ostr << item.name(DESC_YOUR)
-                     << " can be <w>%</w>ired without the use of a launcher. ";
+                ostr << _get_hint("HINT_THROWABLE", item.name(DESC_YOUR));
                 ostr << _hints_throw_stuff(item);
-                cmd.push_back(CMD_FIRE);
             }
             Hints.hints_events[HINT_SEEN_MISSILES] = false;
             break;
@@ -2165,228 +1959,122 @@ string hints_describe_item(const item_def &item)
             if (you.get_innate_mutation_level(MUT_HORNS) > 0
                 && is_hard_helmet(item))
             {
-                ostr << "Because of your horns you cannot wear helmets. "
-                        "(Press <w>%</w> to see a list of your mutations and "
-                        "innate abilities.)";
-                cmd.push_back(CMD_DISPLAY_MUTATIONS);
+                ostr << _get_hint("HINT_CANNOT_WEAR_HELMET");
                 wearable = false;
             }
             else if (item.sub_type == ARM_BARDING)
             {
-                ostr << "Only nagas and gale centaurs can wear barding.";
+                ostr << _get_hint("HINT_CANNOT_WEAR_BARDING");
                 wearable = false;
             }
             else
-            {
-                ostr << "You can wear pieces of armour with <w>%</w> and take "
-                        "them off again with <w>%</w>"
-#ifdef USE_TILE
-                        ", or, alternatively, simply click on their tiles to "
-                        "perform either action"
-#endif
-                        ".";
-                cmd.push_back(CMD_WEAR_ARMOUR);
-                cmd.push_back(CMD_REMOVE_ARMOUR);
-            }
+                ostr << _get_hint("HINT_EQUIP_UNEQUIP_ARMOUR");
 
             if (Hints.hints_type == HINT_MAGIC_CHAR
                 && get_armour_slot(item) == SLOT_BODY_ARMOUR
                 && !is_effectively_light_armour(&item))
             {
-                ostr << "\nNote that body armour with a high encumbrance "
-                        "rating may hinder your ability to cast spells. Light "
-                        "armour such as robes and leather armour will be "
-                        "generally safe for any aspiring spellcaster.";
+                ostr << _get_hint("HINT_ARMOUR_HINDERS_CASTING");
             }
             else if (Hints.hints_type == HINT_MAGIC_CHAR
                      && is_shield(item))
             {
-                ostr << "\nNote that shields will hinder your ability to "
-                        "cast spells, until you've gained enough Shields "
-                        "skill to remove the penalty.";
+                ostr << _get_hint("HINT_SHIELD_HINDERS_CASTING");
             }
             else if (Hints.hints_type == HINT_RANGER_CHAR
                      && is_offhand(item))
             {
-                ostr << "\nNote that many ranged weapons are two handed and so "
-                        "cannot be used with an offhand item.";
+                ostr << _get_hint("HINT_NO_OFFHAND_WITH_MOST_LAUNCHERS");
             }
 
             if (!item.is_identified()
                 && (is_artefact(item)
                     || get_equip_desc(item) != ISFLAG_NO_DESC))
             {
-                ostr << "\n\nWeapons and armour that have unusual descriptions "
-                     << "like this are much more likely to be of higher "
-                     << "enchantment or have special properties, good or bad.";
+                ostr << "\n" << _get_hint("HINT_UNUSUAL_EQUIPMENT");
             }
             if (wearable)
             {
                 if (gives_resistance(item))
-                {
-                    ostr << "\n\nThis armour offers its wearer protection from "
-                            "certain sources. For an overview of your"
-                            " resistances (among other things) press <w>%</w>"
-#ifdef USE_TILE
-                            " or click on your avatar with the <w>right mouse "
-                            "button</w>"
-#endif
-                            ".";
-                    cmd.push_back(CMD_RESISTS_SCREEN);
-                }
+                    ostr << "\n" << _get_hint("HINT_ARMOUR_HAS_RESIST");
                 if (gives_ability(item))
                 {
-                    ostr << "\n\nWhen worn, some types of armour (such as "
-                            "this one) offer certain <w>%</w>bilities you can "
-                            "activate. ";
+                    ostr << "\n" << _get_hint("HINT_ARMOUR_HAS_ABILITY");
                     ostr << _hints_abilities(item);
-                    cmd.push_back(CMD_USE_ABILITY);
                 }
             }
             Hints.hints_events[HINT_SEEN_ARMOUR] = false;
             break;
         }
         case OBJ_WANDS:
-            ostr << "The magic within can be unleashed by evoking "
-                    "(<w>%</w>) it.";
-            cmd.push_back(CMD_EVOKE);
+            {
+                string keys;
 #ifdef USE_TILE
-            ostr << " Alternatively, you can 1) <w>left mouse click</w> on "
-                    "the monster you wish to target (or your player character "
-                    "to target yourself) while pressing the <w>";
 #ifdef USE_TILE_WEB
-            ostr << "Ctrl + Shift keys";
+                keys = "Ctrl + Shift";
 #else
 #if defined(UNIX) && defined(USE_TILE_LOCAL)
-            if (!tiles.is_fullscreen())
-              ostr << "Ctrl + Shift keys";
-            else
+                if (!tiles.is_fullscreen())
+                    keys = "Ctrl + Shift";
+                else
 #endif
-              ostr << "Alt key";
+                    keys = "Alt";
 #endif
-            ostr << "</w> and pick the wand from the menu, or 2) "
-                    "<w>left mouse click</w> on the wand tile and then "
-                    "<w>left mouse click</w> on your target.";
 #endif
+                ostr << _get_hint("HINT_DESCRIBE_WAND", keys);
+            }
             Hints.hints_events[HINT_SEEN_WAND] = false;
             break;
 
         case OBJ_SCROLLS:
-            ostr << "Press <w>%</w> to read this scroll"
-#ifdef USE_TILE
-                    "or simply click on it with your <w>left mouse button</w>"
-#endif
-                    ".";
-            cmd.push_back(CMD_READ);
-
+            ostr << _get_hint("HINT_DESCRIBE_SCROLL");
             Hints.hints_events[HINT_SEEN_SCROLL] = false;
             break;
 
         case OBJ_JEWELLERY:
         {
-            ostr << "Jewellery can be <w>%</w>ut on or <w>%</w>emoved "
-                    "again"
-#ifdef USE_TILE
-                    ", though in Tiles, either can be done by clicking on the "
-                    "item in your inventory"
-#endif
-                    ".";
-            cmd.push_back(CMD_WEAR_JEWELLERY);
-            cmd.push_back(CMD_REMOVE_JEWELLERY);
+            ostr << _get_hint("HINT_DESCRIBE_JEWELLERY");
 
             if (gives_resistance(item))
-            {
-                ostr << "\n\nThis "
-                     << (item.sub_type < NUM_RINGS ? "ring" : "amulet")
-                     << " offers its wearer protection "
-                        "from certain sources. For an overview of your "
-                        "resistances (among other things) press <w>%</w>"
-#ifdef USE_TILE
-                        " or click on your avatar with the <w>right mouse "
-                        "button</w>"
-#endif
-                        ".";
-                cmd.push_back(CMD_RESISTS_SCREEN);
-            }
+                ostr << "\n" <<  _get_hint("HINT_JEWELLERY_HAS_RESIST");
             if (gives_ability(item))
             {
-                ostr << "\n\nWhen worn, some types of jewellery (such as this "
-                        "one) offer certain <w>%</w>bilities you can activate. ";
-                cmd.push_back(CMD_USE_ABILITY);
+                ostr << "\n" <<  _get_hint("HINT_JEWELLERY_HAS_ABILITY");
                 ostr << _hints_abilities(item);
             }
             Hints.hints_events[HINT_SEEN_JEWELLERY] = false;
             break;
         }
         case OBJ_POTIONS:
-            ostr << "Press <w>%</w> to quaff this potion"
-#ifdef USE_TILE
-                    "or simply click on it with your <w>left mouse button</w>"
-#endif
-                    ".";
-            cmd.push_back(CMD_QUAFF);
+            ostr << _get_hint("HINT_DESCRIBE_POTION");
             Hints.hints_events[HINT_SEEN_POTION] = false;
             break;
 
         case OBJ_BOOKS:
             if (item.sub_type == BOOK_MANUAL)
-            {
-                ostr << "A manual can greatly help you in training a skill. "
-                        "After you pick one up, the skill in question will be "
-                        "trained more efficiently and will level up faster "
-                        "until you exhaust the manual's contents.";
-                cmd.push_back(CMD_READ);
-            }
+                ostr << _get_hint("HINT_DESCRIBE_MANUAL");
             else // It's a spellbook!
-            {
-                ostr << "\nYou can pick up a spellbook to add its spells to "
-                        "your spell library. (View your spell library with "
-                        "<w>%</w>.)";
-                cmd.push_back(CMD_MEMORISE_SPELL);
-            }
+                ostr << _get_hint("HINT_DESCRIBE_SPELLBOOK");
             ostr << "\n";
             Hints.hints_events[HINT_SEEN_SPBOOK] = false;
             break;
 
         case OBJ_CORPSES:
-            ostr << "Skeletons and corpses can be used as components for "
-                    "certain necromantic spells. Apart from that, they are "
-                    "largely useless.";
+            ostr << _get_hint("HINT_DESCRIBE_CORPSE");
             break;
 
        case OBJ_STAVES:
-            ostr << "This staff can enhance your spellcasting, making spells "
-                    "of its related spell school more powerful.";
+            ostr << _get_hint("HINT_DESCRIBE_MAGICAL_STAFF");
 
             if (gives_resistance(item))
-            {
-                ostr << "It also offers its wielder protection from "
-                        "certain sources. For an overview of your "
-                        "resistances (among other things) press <w>%</w>"
-#ifdef USE_TILE
-                        " or click on your avatar with the <w>right mouse "
-                        "button</w>"
-#endif
-                        ".";
-
-                cmd.push_back(CMD_RESISTS_SCREEN);
-            }
+                ostr << _get_hint("HINT_MAGICAL_STAFF_HAS_RESISTANCE");
             else if (you_worship(GOD_TROG))
-            {
-                ostr << "\n\nSeeing how "
-                     << god_name(GOD_TROG, false)
-                     << " frowns upon the use of magic, this staff will be "
-                        "of little use to you and you might just as well "
-                        "<w>%</w>rop it now.";
-                cmd.push_back(CMD_DROP);
-            }
+                ostr << _get_hint("HINT_MAGICAL_STAFF_WITH_TROG");
             Hints.hints_events[HINT_SEEN_STAFF] = false;
             break;
 
         case OBJ_MISCELLANY:
-            ostr << "Miscellaneous items sometimes harbour magical powers "
-                    "that can be harnessed by e<w>%</w>oking the item.";
-            cmd.push_back(CMD_EVOKE);
+            ostr << _get_hint("HINT_DESCRIBE_MISCELLANEOUS_ITEM");
 
             Hints.hints_events[HINT_SEEN_MISC] = false;
             break;
@@ -2397,8 +2085,6 @@ string hints_describe_item(const item_def &item)
 
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
     string broken = ostr.str();
-    if (!cmd.empty())
-        insert_commands(broken, cmd);
     return broken;
 }
 
@@ -2461,85 +2147,45 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
 #endif
     case DNGN_TRAP_NET:
     case DNGN_TRAP_PLATE:
-        ostr << "These nasty constructions can cause a range of "
-                "unpleasant effects. You won't be able to avoid "
-                "tripping traps by flying over them; their magic "
-                "construction will cause them to be triggered anyway.";
+        ostr << _get_hint("HINT_DESCRIBE_TRAP_PLATE");
         Hints.hints_events[HINT_SEEN_TRAP] = false;
         break;
 
     case DNGN_TRAP_SHAFT:
-        ostr << "The dungeon contains a number of natural obstacles such "
-                "as shafts, which lead one to three levels down. Once you "
-                "know the shaft is there, you can safely step over it.\n"
-                "If you want to jump down there, use <w>></w> to do so. "
-                "Be warned that getting back here might be difficult.";
+        ostr << _get_hint("HINT_DESCRIBE_TRAP_SHAFT");
         Hints.hints_events[HINT_SEEN_TRAP] = false;
         break;
 
     case DNGN_TRAP_WEB:
-        ostr << "Some areas of the dungeon, such as the Spider Nest, may "
-                "be strewn with giant webs that may ensnare you for a short "
-                "time. Insects, oozes and incorporeal entities can navigate "
-                "the webs safely.";
+        ostr << _get_hint("HINT_DESCRIBE_TRAP_WEB");
         Hints.hints_events[HINT_SEEN_WEB] = false;
         break;
 
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
-        ostr << "You can enter the next (deeper) level by following them "
-                "down (<w>></w>). To get back to this level again, "
-                "press <w><<</w> while standing on the upstairs.";
-#ifdef USE_TILE
-        ostr << " In Tiles, you can achieve the same, in either direction, "
-                "by clicking the <w>left mouse button</w>.";
-#endif
-
+        ostr << _get_hint("HINT_DESCRIBE_DOWNSTAIRS");
         if (is_unknown_stair(where))
-        {
-            ostr << "\n\nYou have not yet passed through this particular "
-                    "set of stairs. ";
-        }
-
+            ostr << "\n" << _get_hint("HINT_DESCRIBE_UNKNOWN_STAIRS");
         Hints.hints_events[HINT_SEEN_STAIRS] = false;
         break;
 
     case DNGN_EXIT_DUNGEON:
-        ostr << "These stairs lead out of the dungeon. Following them "
-                "will end the game. The only way to win is to "
-                "transport the fabled Orb of Zot outside.";
+        ostr << _get_hint("HINT_DESCRIBE_DUNGEON_EXIT");
         break;
 
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
-        ostr << "You can enter the previous (shallower) level by "
-                "following these up (<w><<</w>). This is ideal for "
-                "retreating or finding a safe resting spot, since the "
-                "previous level will have less monsters, and monsters "
-                "on this level can't follow you up unless they're "
-                "standing right next to you. To get back to this "
-                "level again, press <w>></w> while standing on the "
-                "downstairs.";
-#ifdef USE_TILE
-        ostr << " In Tiles, you can perform either action simply by "
-                "clicking the <w>left mouse button</w> instead.";
-#endif
+        ostr << _get_hint("HINT_DESCRIBE_UPSTAIRS");
         if (is_unknown_stair(where))
-        {
-            ostr << "\n\nYou have not yet passed through this "
-                    "particular set of stairs. ";
-        }
+            ostr << "\n" << _get_hint("HINT_DESCRIBE_UNKNOWN_STAIRS");
         Hints.hints_events[HINT_SEEN_STAIRS] = false;
         break;
 
     case DNGN_ESCAPE_HATCH_DOWN:
     case DNGN_ESCAPE_HATCH_UP:
-        ostr << "Escape hatches can be used to quickly leave a level with "
-                "<w><<</w> and <w>></w>, respectively. Note that you will "
-                "usually be unable to return right away.";
-
+        ostr << _get_hint("HINT_DESCRIBE_ESCAPE_HATCH");
         Hints.hints_events[HINT_SEEN_ESCAPE_HATCH] = false;
         break;
 
@@ -2553,15 +2199,7 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
     case DNGN_CLOSED_DOOR:
     case DNGN_CLOSED_CLEAR_DOOR:
         if (!Hints.hints_explored)
-        {
-            ostr << "\nTo avoid accidentally opening a door you'd rather "
-                    "remain closed during travel or autoexplore, you can "
-                    "mark it with an exclusion from the map view "
-                    "(<w>X</w>) with <w>ee</w> while your cursor is on the "
-                    "grid in question. Such an exclusion will prevent "
-                    "autotravel from ever entering that grid until you "
-                    "remove the exclusion with another press of <w>Xe</w>.";
-        }
+        ostr << _get_hint("HINT_DESCRIBE_CLOSED_DOOR");
         break;
 
     default:
@@ -2572,27 +2210,13 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
             // TODO: mention Gozag here?
             if (you_worship(GOD_NO_GOD))
             {
-                ostr << "This is your chance to join a religion! In "
-                        "general, the gods will help their followers, "
-                        "bestowing powers of all sorts upon them, but many "
-                        "of them demand a life of dedication, constant "
-                        "tributes or entertainment in return.\n";
+                ostr << _get_hint("HINT_DESCRIBE_ALTAR_ATHEIST") << "\n";
                 if (altar_god == GOD_ECUMENICAL)
-                {
-                    ostr << "This particular altar is so ancient that you "
-                            "cannot make out which god it is dedicated to! "
-                            "Converting here by pressing <w>></w> while "
-                            "standing on the altar will enter you into service "
-                            "of a random god, who will grant you some "
-                            "additional piety in thanks.";
-                }
+                    ostr << _get_hint("HINT_DESCRIBE_FADED_ALTAR_ATHEIST");
                 else
                 {
-                    ostr << "You can get information about <w>"
-                         << god_name(altar_god)
-                         << "</w> by pressing <w>></w> while standing on the "
-                            "altar. Before taking up the responding faith "
-                            "you'll be asked for confirmation.";
+                    ostr << _get_hint("HINT_DESCRIBE_FADED_ALTAR_ATHEIST",
+                                      god_name(altar_god));
                 }
             }
             else if (you_worship(altar_god))
@@ -2602,44 +2226,22 @@ static void _hints_describe_feature(int x, int y, ostringstream& ostr)
             }
             else if (altar_god == GOD_ECUMENICAL)
             {
-                ostr << "This particular altar is so ancient that you cannot "
-                        "make out which god it is dedicated to, and "
-                     << god_name(you.religion)
-                     << " probably won't like it if you switch allegiance. If "
-                        "you want to take the risk, you can convert here by "
-                        "pressing <w>></w> while standing on the altar. Doing "
-                        "so will enter you into service of a random god, who "
-                        "will grant you some additional piety in thanks.";
+                ostr << _get_hint("HINT_DESCRIBE_FADED_ALTAR",
+                                  god_name(you.religion));
             }
             else
             {
-                ostr << god_name(you.religion)
-                     << " probably won't like it if you switch allegiance, "
-                        "but having a look won't hurt: to get information "
-                        "on <w>";
-                ostr << god_name(altar_god);
-                ostr << "</w>, press <w>></w> while standing on the "
-                        "altar. Before taking up the responding faith (and "
-                        "abandoning your current one!) you'll be asked for "
-                        "confirmation."
-                        "\nTo see your current standing with "
-                     << god_name(you.religion)
-                     << " press <w>^</w>"
-#ifdef USE_TILE
-                        ", or click with your <w>right mouse button</w> "
-                        "on your avatar while pressing <w>Shift</w>"
-#endif
-                        ".";
+                ostr << _get_hint("HINT_DESCRIBE_FADED_ALTAR",
+                                  god_name(you.religion), god_name(altar_god));
             }
             Hints.hints_events[HINT_SEEN_ALTAR] = false;
             break;
         }
         else if (feat_is_branch_entrance(feat))
         {
-            ostr << "An entryway into one of the many dungeon side branches in "
-                    "Crawl. ";
+            ostr << _get_hint("HINT_DESCRIBE_BRANCH_ENTRY");
             if (feat != DNGN_ENTER_TEMPLE)
-                ostr << "Beware, sometimes these can be deadly!";
+                ostr << _get_hint("HINT_DESCRIBE_BRANCH_ENTRY_DANGEROUS");
             break;
         }
     }
@@ -2657,36 +2259,28 @@ static void _hints_describe_cloud(int x, int y, ostringstream& ostr)
     if (!ostr.str().empty())
         ostr << "\n\n";
 
-    ostr << "The " << cname << " ";
+    bool plural = ends_with(cname, "s");
+    string hint_key;
 
-    if (ends_with(cname, "s"))
-        ostr << "are ";
-    else
-        ostr << "is ";
-
-    bool need_cloud = false;
     if (is_harmless_cloud(ctype))
-        ostr << "harmless. ";
+    {
+        hint_key = plural ? "HINT_DESCRIBE_HARMLESS_CLOUD_PLURAL"
+                          : "HINT_DESCRIBE_HARMLESS_CLOUD_SINGULAR";
+    }
     else if (is_damaging_cloud(ctype, true))
     {
-        ostr << "probably dangerous, and you should stay out of it if you "
-                "can. ";
+        hint_key = plural ? "HINT_DESCRIBE_HARMFUL_CLOUD_PLURAL"
+                          : "HINT_DESCRIBE_HARMFUL_CLOUD_SINGULAR";
     }
     else
     {
-        ostr << "currently harmless, but that could change at some point. "
-                "Check the overview screen (<w>%</w>) to view your "
-                "resistances.";
-        need_cloud = true;
+        hint_key = plural ? "HINT_DESCRIBE_CURRENTLY_HARMLESS_CLOUD_PLURAL"
+                          : "HINT_DESCRIBE_CURRENTLY_HARMLESS_CLOUD_SINGULAR";
     }
+    ostr << uppercase_first(_get_hint(hint_key, "the " + cname));
 
     if (is_opaque_cloud(ctype))
-    {
-        ostr << (need_cloud? "\nThis cloud" : "It")
-             << " is opaque. If two or more opaque clouds are between "
-                "you and a square, you won't be able to see anything in that "
-                "square.";
-    }
+        ostr << _get_hint("HINT_DESCRIBE_OPAQUE_CLOUD");
 }
 
 bool hints_monster_interesting(const monster* mons)
@@ -2704,16 +2298,12 @@ string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
     bool dangerous = false;
     if (mons_is_unique(mi.type))
     {
-        ostr << "Did you think you were the only adventurer in the dungeon? "
-                "Well, you thought wrong! These unique adversaries often "
-                "possess skills that normal monsters wouldn't, so be "
-                "careful.\n\n";
+        ostr << _get_hint("HINT_DESCRIBE_UNIQUE_MONSTER") << "\n\n";
         dangerous = true;
     }
     else if (mi.type == MONS_PLAYER_GHOST)
     {
-        ostr << "The ghost of a deceased adventurer, it would like nothing "
-                "better than to send you the same way.\n\n";
+        ostr << _get_hint("HINT_DESCRIBE_PLAYER_GHOST") << "\n\n";
         dangerous = true;
     }
     // Don't call friendly monsters dangerous.
@@ -2721,80 +2311,55 @@ string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
     {
         if (mi.threat == MTHRT_NASTY)
         {
-            ostr << "This monster appears to be really dangerous!\n";
+            ostr << _get_hint("HINT_DESCRIBE_NASTY_MONSTER") << "\n";
             dangerous = true;
         }
         else if (mi.threat == MTHRT_TOUGH)
         {
-            ostr << "This monster appears to be quite dangerous.\n";
+            ostr << _get_hint("HINT_DESCRIBE_TOUGH_MONSTER") << "\n";
             dangerous = true;
         }
     }
 
     if (mi.is(MB_BERSERK))
     {
-        ostr << "A berserking monster is bloodthirsty and fighting madly. "
-                "Such a blood rage makes it particularly dangerous!\n\n";
+        ostr << _get_hint("HINT_DESCRIBE_BERSERKED_MONSTER") << "\n\n";
         dangerous = true;
     }
 
     // Monster is highlighted.
     if (mi.attitude == ATT_FRIENDLY)
     {
-        ostr << "Friendly monsters will follow you around and attempt to aid "
-                "you in battle. You can order nearby allies by <w>t</w>alking "
-                "to them.";
+        ostr << _get_hint("HINT_DESCRIBE_FRIENDLY_MONSTER");
 
         if (!mons_att_wont_attack(mi.attitude))
         {
-            ostr << "\n\nHowever, it is only <w>temporarily</w> friendly, "
-                    "and will become dangerous again when this friendliness "
-                    "wears off.";
+            ostr << "\n"
+                 << _get_hint("HINT_DESCRIBE_TEMPORARILY_FRIENDLY_MONSTER");
         }
     }
     else if (dangerous)
     {
         if (!Hints.hints_explored && (mi.is(MB_WANDERING) || mi.is(MB_UNAWARE)))
-        {
-            ostr << "You can easily mark its square as dangerous to avoid "
-                    "accidentally entering into its field of view when using "
-                    "auto-explore or auto-travel. To do so, enter targeting "
-                    "mode with <w>x</w> and then press <w>e</w> when your "
-                    "cursor is hovering over the monster's grid. Doing so will "
-                    "mark this grid and all surrounding ones within a radius "
-                    "of 8 as \"excluded\" ones that explore or travel modes "
-                    "won't enter.";
-        }
+            ostr << _get_hint("HINT_DESCRIBE_DANGEROUS_UNAWARE_MONSTER");
         else
         {
-            ostr << "This might be a good time to run away";
-
             if (you_worship(GOD_TROG) && you.can_go_berserk())
-                ostr << " or apply your Berserk <w>a</w>bility";
-            ostr << ".";
+                ostr << _get_hint("HINT_RUN_AWAY_OR_BERSERK");
+            else
+                ostr << _get_hint("HINT_RUN_AWAY");
         }
     }
     else if (mi.asleep() || mi.is(MB_UNAWARE) || mi.is(MB_WANDERING))
-    {
-        ostr << "Apparently it has not noticed you - yet. Note that you do "
-                "not have to engage every monster you meet. Sometimes, "
-                "discretion is the better part of valour.";
-    }
+        ostr << _get_hint("HINT_DESCRIBE_UNAWARE_MONSTER");
     else if (Options.may_stab_highlight != CHATTR_NORMAL
              && mi.is(MB_DISTRACTED))
     {
-        ostr << "Apparently it has been distracted by something. You could "
-                "use this opportunity to sneak up on this monster - or to "
-                "sneak away.";
+        ostr << _get_hint("HINT_DESCRIBE_DISTRACTED_MONSTER");
     }
 
     if (!dangerous && !has_stat_desc)
-    {
-        ostr << "\nThis monster doesn't appear to have any resistances or "
-                "susceptibilities. It cannot fly and is of average speed. "
-                "Examining other, possibly more high-level monsters can give "
-                "important clues as to how to deal with them.";
-    }
+        ostr << _get_hint("HINT_DESCRIBE_UNREMARKABLE_MONSTER");
 
     if (ostr.str().empty())
         return "";
