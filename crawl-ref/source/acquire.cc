@@ -890,6 +890,22 @@ static bool _skill_useless_with_god(int skill)
     }
 }
 
+static bool _djinn_manual_useless(int skill)
+{
+    // not a spell skill
+    if (skill < SK_FIRST_MAGIC_SCHOOL || skill > SK_LAST_MAGIC)
+        return false;
+
+    // This only checks spells we already have to avoid spoiling future spells
+    for (auto spell : you.spells)
+    {
+        const spschools_type disciplines = get_spell_disciplines(spell);
+        if (disciplines & static_cast<spschool>(skill))
+            return false;
+    }
+    return true;
+}
+
 /**
  * Randomly decide whether the player should get a manual from a given instance
  * of book acquirement.
@@ -941,6 +957,9 @@ static bool _acquire_manual(item_def &book)
         const int skl = _skill_rdiv(sk);
 
         if (skl == 27 || is_useless_skill(sk) || _skill_useless_with_god(sk))
+            continue;
+
+        if (you.has_mutation(MUT_INNATE_CASTER) && _djinn_manual_useless(sk))
             continue;
 
         int w = (skl < 12) ? skl + 3 : max(0, 25 - skl);
