@@ -1224,7 +1224,7 @@ HINT_WIELD_WEAPON
 
 You can wield this weapon with <w>$cmd[CMD_WIELD_WEAPON]</w>, or use
 <w>$cmd[CMD_WEAPON_SWAP]</w> to switch between the weapons in slot a and b.
-(Use <w>$[CMD_ADJUST_INVENTORY]i</w> to adjust item slots.)
+(Use <w>$cmd[CMD_ADJUST_INVENTORY]i</w> to adjust item slots.)
 %%%%
 HINT_WEAPON_SKILL
 
@@ -1235,9 +1235,8 @@ actual numbers.)
 %%%%
 HINT_ATTACK_WITH_RANGED_WEAPON
 
-To attack a monster, <tiles><w>left mouse click</w> on the monster.
-\nTo fire a ranged weapon using the keyboard, </tiles>
-press <w>$cmd[CMD_PRIMARY_ATTACK]</w>.
+To attack a monster, <tiles><w>left mouse click</w> on the monster.\nTo fire a
+ranged weapon using the keyboard, </tiles>press <w>$cmd[CMD_PRIMARY_ATTACK]</w>.
 %%%%
 HINT_ATTACK_WITH_MELEE_WEAPON
 
