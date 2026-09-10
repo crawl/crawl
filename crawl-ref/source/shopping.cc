@@ -1706,7 +1706,7 @@ string shop_name(const shop_struct& shop)
     {
         uint32_t seed = static_cast<uint32_t>(shop.keeper_name[0])
             | (static_cast<uint32_t>(shop.keeper_name[1]) << 8)
-            | (static_cast<uint32_t>(shop.keeper_name[1]) << 16);
+            | (static_cast<uint32_t>(shop.keeper_name[2]) << 16);
 
         sh_name += apostrophise(make_name(seed)) + " ";
     }
