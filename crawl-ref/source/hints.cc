@@ -1632,40 +1632,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_LOAD_SAVED_GAME:
     {
-        text << "Welcome back! If it's been a while, you may want to refresh "
-                "your memory.\nYour <w>%</w>nventory, ";
-        cmd.push_back(CMD_DISPLAY_INVENTORY);
-
-        vector<const char *> listed;
-        if (you.spell_no > 0)
-        {
-            listed.push_back("your spells (<w>%?</w>)");
-            cmd.push_back(CMD_CAST_SPELL);
-        }
-        if (!your_talents().empty())
-        {
-            listed.push_back("your <w>%</w>bilities");
-            cmd.push_back(CMD_USE_ABILITY);
-        }
-        if (Hints.hints_type != HINT_MAGIC_CHAR || you.has_any_mutations())
-        {
-            listed.push_back("your set of mutations (<w>%</w>)");
-            cmd.push_back(CMD_DISPLAY_MUTATIONS);
-        }
-        if (!you_worship(GOD_NO_GOD))
-        {
-            listed.push_back("your religious standing (<w>%</w>)");
-            cmd.push_back(CMD_DISPLAY_RELIGION);
-        }
-
-        listed.push_back("the message history (<w>%</w>)");
-        listed.push_back("the character overview screen (<w>%</w>)");
-        listed.push_back("the dungeon overview screen (<w>%</w>)");
-        text << comma_separated_line(listed.begin(), listed.end())
-             << " are good things to check.";
-        cmd.push_back(CMD_REPLAY_MESSAGES);
-        cmd.push_back(CMD_RESISTS_SCREEN);
-        cmd.push_back(CMD_DISPLAY_OVERMAP);
+        print_hint("HINT_LOAD_SAVED_GAME");
         break;
     }
     case HINT_AUTOPICKUP_THROWN:

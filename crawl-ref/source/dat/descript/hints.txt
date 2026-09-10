@@ -1033,6 +1033,35 @@ field of silence (recognizable by <tiles>the special-looking frame tiles</tiles>
 and will move along with you. The radius will gradually shrink, eventually
 making you the only one affected, before the effect fades entirely.
 %%%%
+HINT_LOAD_SAVED_GAME
+
+Welcome back! If it's been a while, you may want to refresh your memory.\n
+{{
+    local msg = "Your <w>$cmd[CMD_DISPLAY_INVENTORY]</w>nventory"
+
+    if you.spell_letters() ~= nil and #you.spell_letters() > 0 then
+        msg = msg .. ", your spells (<w>$cmd[CMD_CAST_SPELL]?</w>)"
+    end
+
+    if you.ability_info() ~= nil and #you.ability_info() > 0 then
+        msg = msg .. ", your <w>$cmd[CMD_USE_ABILITY]</w>bilities"
+    end
+
+    if you.how_mutated(true, true, true) > 0 then
+        msg = msg .. ", your set of mutations (<w>$cmd[CMD_DISPLAY_MUTATIONS]</w>)"
+    end
+
+    if you.god() ~= "No God" then
+        msg = msg .. ", your religious standing (<w>$cmd[CMD_DISPLAY_RELIGION]</w>)"
+    end
+
+    msg = msg .. ", the message history (<w>$cmd[CMD_REPLAY_MESSAGES]</w>)"
+    msg = msg .. ", the character overview screen (<w>$cmd[CMD_RESISTS_SCREEN]</w>)"
+    msg = msg .. ", and the dungeon overview screen (<w>$cmd[CMD_DISPLAY_OVERMAP]</w>)"
+    msg = msg .. " are good things to check.";
+    return msg
+}}
+%%%%
 HINT_AUTOPICKUP_THROWN
 
 When stepping on items you've thrown, they will be picked up automatically.
