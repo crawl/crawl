@@ -638,6 +638,18 @@ protected:
     terrain_change_type type;
 };
 
+class hypnogecko_tail_fineff : public final_effect
+{
+public:
+    void fire() override;
+
+    hypnogecko_tail_fineff()
+        : final_effect(&you, nullptr, you.pos())
+    {
+    }
+protected:
+    bool mergeable(const final_effect&) const override { return true; }
+};
 
 // Things to happen when the current attack/etc finishes.
 static vector<final_effect*> _final_effects;
@@ -873,6 +885,11 @@ void schedule_revert_terrain_fineff(const coord_def& pos,
                                     terrain_change_type type)
 {
     _schedule_final_effect(new revert_terrain_fineff(pos, type));
+}
+
+void schedule_hypnogecko_tail_fineff()
+{
+    _schedule_final_effect(new hypnogecko_tail_fineff());
 }
 
 bool mirror_damage_fineff::mergeable(const final_effect &fe) const
@@ -1915,6 +1932,144 @@ void psychokinetic_burst_fineff::fire()
 void revert_terrain_fineff::fire()
 {
     revert_terrain_change(posn, type);
+}
+
+// Calculate a score for how desireable it is to retreat to a given spot, as
+// part of a hypnogecko tail-dropping effect.
+//
+// (Lower scores are better.)
+static int _movement_score_for(const coord_def& pos)
+{
+    int total_score = 0;
+    for (radius_iterator ri(pos, 2, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    {
+        int score = 0;
+        // Prefer not to shift towards unknown territory
+        if (env.map_knowledge(*ri).feat() == DNGN_UNSEEN)
+            score += 50;
+
+        // But *do* prefer to shift towards spaces not currently in LoS
+        // (ie: corners)
+        if (!cell_see_cell(you.pos(), *ri, LOS_SOLID_SEE))
+            score -= 25;
+
+        // Prefer as few monsters adjacent to this space as possible.
+        if (monster* mon = monster_at(*ri))
+        {
+            if (!mon->wont_attack() && !mon->is_firewood()
+                && you.aware_of(*mon))
+            {
+                score += 50;
+            }
+        }
+
+        // Value conditions 2 tiles away much less than adjacent ones.
+        if (grid_distance(*ri, pos) == 2)
+            score /= 3;
+
+        total_score += score;
+    }
+
+    return total_score;
+}
+
+// Attempt to slip away and leave your shed tail behind.
+// There are two variants on this:
+// 1) Move a step and leave the tail where the player was.
+// 2) Stay in place and leave the tail on an adjacent tile.
+//
+// We always prefer (1), but in cases where either the player cannot move of the
+// tail cannot be placed at the player's location, we attempt to fall back to (2).
+void hypnogecko_tail_fineff::fire()
+{
+    coord_def move_pos;
+
+    mgen_data mg(MONS_HYPNOTAIL, BEH_FRIENDLY, you.pos(), MHITNOT, MG_FORCE_PLACE);
+    mg.set_summoned(&you, MON_SUMM_HYPNOTAIL, random_range(150, 220), false);
+    mg.hp = random_range(10, 14) * get_form(transformation::hypnogecko)->get_effect_size() / 100;
+
+    // Determine either where to move the player or where to drop the tail.
+    if (!monster_habitable_grid(MONS_HYPNOTAIL, you.pos())
+        // A Fedhas character may be standing on a plant.
+        || monster_at(you.pos())
+        || you.cannot_move())
+    {
+        for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
+        {
+            if (!monster_at(*ai) && monster_habitable_grid(MONS_HYPNOTAIL, *ai))
+            {
+                mg.pos = *ai;
+                break;
+            }
+        }
+
+        // Couldn't find a valid spot.
+        if (mg.pos == you.pos())
+            return;
+    }
+    else
+    {
+        int best_score = 10000;
+        int best_count = 0;
+
+        for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        {
+            if (!in_bounds(*ai) || actor_at(*ai)
+                || !you.is_habitable(*ai)
+                || is_feat_dangerous(env.grid(*ai))
+                || feat_is_trap(env.grid(*ai))
+                || harmful_cloud_at(*ai))
+            {
+                continue;
+            }
+
+            const int score = _movement_score_for(*ai);
+
+            mprf("(%d, %d): %d", ai->x, ai->y, score);
+
+            if (score == best_score)
+            {
+                if (one_chance_in(++best_count))
+                    move_pos = *ai;
+            }
+            else if (score < best_score)
+            {
+                best_score = score;
+                best_count = 0;
+                move_pos = *ai;
+            }
+        }
+
+        // Couldn't find anywhere to retreat to.
+        if (move_pos.origin())
+            return;
+
+        you.move_to(move_pos, MV_DEFAULT, true);
+    }
+
+    if (monster* tail = create_monster(mg))
+    {
+        you.props[HYPNOGECKO_LOST_TAIL_KEY].get_int() = random_range(300, 425);
+        for (monster_near_iterator mi(tail->pos(), LOS_NO_TRANS); mi; ++mi)
+        {
+            if (!mi->wont_attack())
+            {
+                mi->add_ench(mon_enchant(ENCH_MISDIRECTED, tail, INFINITE_DURATION));
+                mi->target = tail->pos();
+                mi->foe = tail->mindex();
+            }
+        }
+
+        mprf("You shed your tail %sto distract predators!",
+             !move_pos.origin() ? "and slip away " : "");
+
+        if (!move_pos.origin())
+        {
+            you.clear_constricted();
+            you.stop_being_caught();
+            you.finalise_movement();
+        }
+    }
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

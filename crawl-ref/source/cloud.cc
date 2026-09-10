@@ -899,6 +899,14 @@ bool cloud_is_yours_at(const coord_def &c)
     return cloud_at(c) ? YOU_KILL(cloud_at(c)->killer) : false;
 }
 
+bool harmful_cloud_at(const coord_def& pos, const actor& act)
+{
+    if (cloud_struct* cloud = cloud_at(pos))
+        return !actor_cloud_immune(act, cloud->type);
+
+    return false;
+}
+
 cloud_type random_smoke_type()
 {
     return random_choose(CLOUD_GREY_SMOKE, CLOUD_BLUE_SMOKE,

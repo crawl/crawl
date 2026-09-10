@@ -1589,10 +1589,14 @@ void attack::player_stab_check()
     {
         const bool devious = using_weapon()
                                 && get_weapon_brand(*weapon) == SPWPN_DEVIOUS;
+        const int distract_bonus = st == STAB_DISTRACTED && you.form == transformation::hypnogecko
+                                        ? get_form()->get_effect_chance()
+                                        : 0;
         stab_attempt = x_chance_in_y(you.skill_rdiv(wpn_skill, 1, 2)
                                      + you.skill_rdiv(SK_STEALTH, 1, 2)
                                      + you.dex() + 1
-                                     + (devious ? 10 : 0),
+                                     + (devious ? 10 : 0)
+                                     + distract_bonus,
                                      100);
     }
 

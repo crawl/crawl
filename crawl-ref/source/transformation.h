@@ -47,6 +47,7 @@ enum class transformation
     spore,
     vision,
     jademantle,
+    hypnogecko,
     COUNT
 };
 constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);

@@ -907,6 +907,7 @@ enum talisman_type
     TALISMAN_SPORE,
     TALISMAN_VISION,
     TALISMAN_JADE,
+    TALISMAN_GECKO,
     NUM_TALISMANS,
 };
 

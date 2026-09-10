@@ -693,7 +693,8 @@ static vector<pair<string,string>> _get_form_fakemuts()
             result.push_back({p.first, _badmut(p.second)});
 
     // Note: serpent form suppresses any innate cold-bloodedness
-    if (you.form == transformation::serpent)
+    if (you.form == transformation::serpent
+        || you.form == transformation::hypnogecko)
     {
         // XXX Hacky suppression with rC+
         if (you.res_cold())

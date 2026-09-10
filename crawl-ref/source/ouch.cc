@@ -365,7 +365,8 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
 
     if (flavour == BEAM_COLD && slow_cold_blooded
         && (you.get_mutation_level(MUT_COLD_BLOODED)
-            || you.form == transformation::serpent)
+            || you.form == transformation::serpent
+            || you.form == transformation::hypnogecko)
         && you.res_cold() <= 0 && coinflip())
     {
         you.slow_down(0, strength);
@@ -992,6 +993,18 @@ static void _maybe_eeljolt()
     you.duration[DUR_EELJOLT_COOLDOWN] = 1;
 }
 
+static void _maybe_hynogecko_retreat()
+{
+    if (you.form != transformation::hypnogecko
+        || you.hp * 10 > you.hp_max * 4
+        || you.props.exists(HYPNOGECKO_LOST_TAIL_KEY))
+    {
+        return;
+    }
+
+    schedule_hypnogecko_tail_fineff();
+}
+
 static void _handle_poor_constitution(int dam)
 {
     const int level = you.get_mutation_level(MUT_POOR_CONSTITUTION);
@@ -1464,6 +1477,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         _maybe_hive_swarm();
         _maybe_medusa_lithotoxin();
         _maybe_eeljolt();
+        _maybe_hynogecko_retreat();
         _maybe_trigger_spiteful_blood();
         _maybe_scream(source);
         if (sanguine_armour_valid())

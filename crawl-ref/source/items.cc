@@ -4182,6 +4182,8 @@ colour_t item_def::talisman_colour() const
         return BLUE;
     case TALISMAN_VISION:
         return ETC_MAGIC;
+    case TALISMAN_GECKO:
+        return ETC_SHIMMER_BLUE;
     case TALISMAN_PROTEAN:
         return ETC_RANDOM;
     case TALISMAN_RIMEHORN:

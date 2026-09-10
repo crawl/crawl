@@ -743,6 +743,24 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_HAIR] = 0;
     }
         break;
+    case transformation::hypnogecko:
+        switch (you.species)
+        {
+        case SP_GALE_CENTAUR:   ch = TILEP_TRAN_HYPNOGECKO_CENTAUR;     break;
+        case SP_DJINNI:         ch = TILEP_TRAN_HYPNOGECKO_DJINNI;      break;
+        case SP_GARGOYLE:       ch = TILEP_TRAN_HYPNOGECKO_GARGOYLE;    break;
+        case SP_NAGA:           ch = TILEP_TRAN_HYPNOGECKO_NAGA;        break;
+        case SP_FELID:          ch = TILEP_TRAN_HYPNOGECKO_FELID;       break;
+        case SP_OCTOPODE:       ch = TILEP_TRAN_HYPNOGECKO_OCTOPODE;    break;
+        default:                ch = TILEP_TRAN_HYPNOGECKO_HUMANOID;    break;
+        }
+        result.parts[TILEP_PART_BASE]    = ch;
+
+        // Tail-less variants are immediately after the full tile.
+        if (you.props.exists(HYPNOGECKO_LOST_TAIL_KEY))
+            result.parts[TILEP_PART_BASE]++;
+        result.parts[TILEP_PART_LEG]     = 0;
+        break;
     default:
         _fill_doll_equipment_default(result);
         break;

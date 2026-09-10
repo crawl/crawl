@@ -751,6 +751,7 @@ unsigned int item_value(item_def item, bool ident)
         case TALISMAN_QUILL:
         case TALISMAN_INKWELL:
         case TALISMAN_VISION:
+        case TALISMAN_GECKO:
         default:
             valued += 75;
             break;

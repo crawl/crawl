@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "player.h"
+
 struct cloud_struct
 {
     coord_def     pos;
@@ -64,6 +66,8 @@ cloud_struct* cloud_at(coord_def pos);
 
 cloud_type cloud_type_at(const coord_def &pos);
 bool cloud_is_yours_at(const coord_def &pos);
+
+bool harmful_cloud_at(const coord_def& pos, const actor& act = you);
 
 void delete_all_clouds();
 void delete_cloud(coord_def p);

@@ -3590,6 +3590,9 @@ int player_stealth()
         stealth += (STEALTH_PIP * 2);
     }
 
+    if (you.form == transformation::hypnogecko)
+        stealth += STEALTH_PIP;
+
     if (feat_is_water(env.grid(you.pos())))
     {
         if (you.has_mutation(MUT_NIMBLE_SWIMMER))

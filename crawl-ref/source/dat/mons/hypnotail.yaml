@@ -1,0 +1,16 @@
+name: "hypnotail"
+glyph: {char: "l", colour: etc_shimmer_blue}
+flags: [cold_blood, no_poly_to, no_threat, no_gen_derived, fast_regen]
+exp: 1
+genus: giant_lizard
+will: invuln
+attacks:
+hd: 1
+hp_10x: 200
+ac: 5
+ev: 0
+has_corpse: false
+intelligence: animal
+habitat: amphibious
+size: tiny
+shape: misc

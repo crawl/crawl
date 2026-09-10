@@ -1050,6 +1050,17 @@ bool fill_status_info(int status, status_info& inf)
     }
     break;
 
+    case STATUS_HYPNOTAIL:
+        if (you.form == transformation::hypnogecko)
+        {
+            if (you.props.exists(HYPNOGECKO_LOST_TAIL_KEY))
+            {
+                inf.light_text = "-Tail";
+                inf.light_colour = YELLOW;
+            }
+        }
+        break;
+
     default:
         if (!found)
         {

@@ -20,6 +20,9 @@ constexpr int FLUX_ENERGY_WARNING = 10;
 #define JADEMANTLE_CRYSTAL_KEY "jade_crystals"
 #define JADEMANTLE_CRYSTAL_REVIVAL_KEY "jade_crystal_revival"
 
+// Amount of exploration left before your tail recovers.
+#define HYPNOGECKO_LOST_TAIL_KEY "hynogecko_tail_recovery"
+
 enum form_capability
 {
     FC_DEFAULT,

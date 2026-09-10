@@ -1344,3 +1344,12 @@ Crystals status
 
 {{ return you.jademantle_crystals_desc()}}
 %%%%
+Gecko status
+
+You are a hypnogecko, a stealthy lizard who can shed their own tail as a decoy
+when badly injured.
+%%%%
+-Tail status
+
+You have recently shed your tail and need to explore more of the dungeon before
+it can grow back again.

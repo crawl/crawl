@@ -739,6 +739,15 @@ place for a short time with inescapable waves of crushing gravity.
 
 The area of effect and duration increases with Evocations skill.
 %%%%
+gecko talisman
+
+The dried remains of a tail shed under duress. Partially transforms the user
+into a hypnogecko, a reptile with remarkable degree of metachrosis. Their
+skin naturally changes colour to blend in with their surrounding, making them
+stealthy, and when badly injured, reflexively shed their own tail and make it
+scintillate with bright colours as a decoy - allowing them to either flee
+or even strike at their distracted predators from a blind spot.
+%%%%
 gem
 
 A stone of unearthly beauty and almost immeasurable value outside the dungeon.

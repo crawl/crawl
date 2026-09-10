@@ -7961,6 +7961,11 @@ static string _describe_talisman_form(transformation form_type)
     }
     if (form_type == transformation::jademantle)
         _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Crystal HP", skill, 0, true, false);
+    if (form_type == transformation::hypnogecko)
+    {
+        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Shed Tail HP", skill, 0, true, false);
+        _maybe_populate_form_table(items, bind(&Form::get_effect_chance, form, placeholders::_1), "Distraction Stab Chance", skill, 0, true, true);
+    }
 
     vector<int> column_width;
 
@@ -8044,8 +8049,11 @@ static string _describe_talisman_form(transformation form_type)
         pr.AddCell("Will", "+");
     else if (form_type == transformation::vampire)
         pr.AddCell("Stealth", "++");
-    else if (form_type == transformation::spider)
+    else if (form_type == transformation::spider
+             || form_type == transformation::hypnogecko)
+    {
         pr.AddCell("Stealth", "+");
+    }
     else if (form_type == transformation::aqua)
         pr.AddCell("Reach", "+2");
     else if (form_type == transformation::sphinx)

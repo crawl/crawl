@@ -2459,7 +2459,9 @@ void handle_monster_move(monster* mons)
             mons->props.erase(BLOCKED_DEADLINE_KEY);
         }
 
-        if (invalid_monster(mons) || mons->is_stationary())
+        if (invalid_monster(mons) || mons->is_stationary()
+            // Can't move on its own, but can be swapped with or pushed
+            || mons->type == MONS_HYPNOTAIL)
         {
             if (mons->speed_increment == old_energy)
                 mons->speed_increment -= non_move_energy;

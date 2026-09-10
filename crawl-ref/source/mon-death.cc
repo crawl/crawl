@@ -3263,6 +3263,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             {
                 msg = " shrivels and dies.";
             }
+            else if (mons.type == MONS_HYPNOTAIL)
+                msg = " shrivels and falls limp.";
             else
             {
                 if (mons.props.exists(KIKU_WRETCH_KEY))

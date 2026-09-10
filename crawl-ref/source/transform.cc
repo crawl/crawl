@@ -1458,6 +1458,29 @@ public:
     }
 };
 
+class FormHypnogecko : public Form
+{
+private:
+    FormHypnogecko() : Form(transformation::hypnogecko) { }
+    DISALLOW_COPY_AND_ASSIGN(FormHypnogecko);
+public:
+    static const FormHypnogecko &instance() { static FormHypnogecko inst; return inst; }
+
+    // Percentage HP increase of shed tail
+    int get_effect_size(int skill = -1) const override
+    {
+        return max(0, scaling_value(FormScaling().Base(100).Scaling(100), skill));
+    }
+
+    // Additional chance to land distraction stabs
+    int get_effect_chance(int skill = -1) const override
+    {
+        return max(0, scaling_value(FormScaling().Base(5).Scaling(10), skill));
+    }
+
+    int regen_bonus(int /*skill*/ = -1) const override { return REGEN_PIP / 4; }
+};
+
 static const Form* forms[] =
 {
     &FormNone::instance(),
@@ -1506,6 +1529,7 @@ static const Form* forms[] =
     &FormSpore::instance(),
     &FormVision::instance(),
     &FormJademantle::instance(),
+    &FormHypnogecko::instance(),
 };
 
 const Form* get_form(transformation xform)

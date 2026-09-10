@@ -276,6 +276,7 @@ void wizard_heal(bool super_heal)
         gain_draconian_breath_uses(MAX_DRACONIAN_BREATH);
         gain_grave_claw_soul(true, true);
         you.props[ENKINDLE_CHARGES_KEY].get_int() = enkindle_max_charges();
+        you.props.erase(HYPNOGECKO_LOST_TAIL_KEY);
 
         you.props.erase(COGLIN_GIZMO_KEY);
     }

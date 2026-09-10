@@ -1279,6 +1279,15 @@ damaging up to 3 enemies within 3 tiles and charging it.
 When all crystals become fully charged, you will temporarily gain resistance to
 elemental damage and regenerate a small amount of health over time.
 %%%%
+atotomy mutation
+
+When gravely wounded, you automatically shed your tail as a defensive response
+and step away to an adjacent tile. The shed tail will pulse with scintillating
+colours that distract all nearby monsters and force them to attack it instead of
+you.
+
+Your tail will eventually regrow as you explore more of the dungeon.
+%%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation
 

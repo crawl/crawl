@@ -20,6 +20,7 @@ enum monster_type                      // env.mons[].type
     MONS_BASILISK,
 #if TAG_MAJOR_VERSION > 34
     MONS_SEISMOSAURUS,
+    MONS_HYPNOTAIL,
 #endif
     MONS_BAT,
     MONS_FIRE_BAT,
@@ -1449,6 +1450,7 @@ enum monster_type                      // env.mons[].type
     MONS_JADE_CRYSTAL_EARTH,
     MONS_JADE_CRYSTAL_FIRE,
     MONS_JADE_CRYSTAL_ICE,
+    MONS_HYPNOTAIL,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

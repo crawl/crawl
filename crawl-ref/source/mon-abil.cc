@@ -1301,6 +1301,22 @@ bool mon_special_ability(monster* mons)
 
         break;
 
+    case MONS_HYPNOTAIL:
+    {
+        for (monster_near_iterator mi(mons->pos(), LOS_NO_TRANS); mi; ++mi)
+        {
+            if (!mi->wont_attack() && !mi->has_ench(ENCH_MISDIRECTED))
+            {
+                if (you.aware_of(**mi))
+                    mprf("%s is distracted by your tail.", mi->name(DESC_THE).c_str());
+                mi->add_ench(mon_enchant(ENCH_MISDIRECTED, mons, INFINITE_DURATION));
+                mi->target = mons->pos();
+                mi->foe = mons->mindex();
+            }
+        }
+    }
+    break;
+
     default:
         break;
     }
