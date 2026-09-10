@@ -5771,8 +5771,8 @@ bool monster::do_shaft()
     if (!is_valid_shaft_level())
         return false;
 
-    // Tentacles are immune to shafting
-    if (mons_is_tentacle_or_tentacle_segment(type))
+    // Tentacles and Blorkula bats are immune to shafting
+    if (mons_is_tentacle_or_tentacle_segment(type) || props.exists(BLORKULA_REVIVAL_TIMER_KEY))
         return false;
 
     level_id lev = shaft_dest();
