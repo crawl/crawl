@@ -1154,7 +1154,7 @@ static bool _shaft_safely()
 
         if (!in_bounds(pos)
             || is_feat_dangerous(env.grid(pos), true)
-            || cloud_at(pos) // XXX: ignore if is_harmless_cloud?
+            || harmful_cloud_at(pos)
             || monster_at(pos)
             || env.pgrid(pos) & FPROP_NO_TELE_INTO
             || _nonfriendly_nearby(pos))

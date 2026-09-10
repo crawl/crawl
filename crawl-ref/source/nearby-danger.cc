@@ -407,7 +407,7 @@ bool bring_to_safety()
         pos.y = random2(GYM);
         if (!in_bounds(pos)
             || env.grid(pos) != DNGN_FLOOR
-            || cloud_at(pos)
+            || harmful_cloud_at(pos)
             || monster_at(pos)
             || env.pgrid(pos) & FPROP_NO_TELE_INTO
             || crawl_state.game_is_sprint()

@@ -4413,7 +4413,7 @@ void mons_felid_revive(monster* mons)
         revive_place.y = random2(GYM);
         if (!in_bounds(revive_place)
             || env.grid(revive_place) != DNGN_FLOOR
-            || cloud_at(revive_place)
+            || harmful_cloud_at(revive_place)
             || monster_at(revive_place)
             || env.pgrid(revive_place) & FPROP_NO_TELE_INTO
             || grid_distance(revive_place, mons->pos()) < 9)

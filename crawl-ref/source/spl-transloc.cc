@@ -1004,8 +1004,8 @@ bool cell_vetoes_teleport(const coord_def cell, bool check_monsters,
     if (monster_at(cell) && check_monsters)
         return true;
 
-    // As do all clouds; this may change.
-    if (cloud_at(cell) && !wizard_tele)
+    // As do any harmful clouds.
+    if (harmful_cloud_at(cell) && !wizard_tele)
         return true;
 
     if (cell_is_solid(cell))
