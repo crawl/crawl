@@ -2325,6 +2325,11 @@ void item_set_appearance(item_def &item)
         }
         break;
 
+    case OBJ_TALISMANS:
+        if (item.plus > 0)
+            set_equip_desc(item, random_choose(ISFLAG_GLOWING, ISFLAG_RUNED));
+        break;
+
     default:
         break;
     }

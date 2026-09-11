@@ -38,6 +38,7 @@ menu += white:.*artefact.*
 # Possible egos
 menu += lightblue:^unidentified .*weapon.*(runed|glowing)
 menu += lightblue:^unidentified .*armour.*(runed|glowing|embroidered|shiny|dyed)
+menu += lightblue:^unidentified .*talisman.*(runed|glowing)
 
 # Enchanté
 menu += green:enchanted

@@ -1394,12 +1394,12 @@ static string _plus_prefix(const item_def &weap)
 }
 
 /**
- * Cosmetic text for weapons (e.g. glowing, runed). Includes trailing space,
+ * Cosmetic text for items (e.g. glowing, runed). Includes trailing space,
  * if appropriate. (Empty if there is no cosmetic property.)
  */
-static string _cosmetic_text(const item_def &weap)
+static string _cosmetic_text(const item_def &item)
 {
-    const iflags_t desc = get_equip_desc(weap);
+    const iflags_t desc = get_equip_desc(item);
 
     switch (desc)
     {
@@ -1819,6 +1819,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     case OBJ_TALISMANS:
         if (identified && !dbname && !qualname && plus)
             buff << make_stringf("%+d ", plus);
+        else if (show_cosmetic)
+            buff << _cosmetic_text(*this);
 
         if (is_random_artefact(*this) && !dbname && !basename)
             buff << get_artefact_name(*this, ident);
@@ -3592,7 +3594,8 @@ string item_prefix(const item_def &item, bool temp)
         prefixes.push_back("stationary");
 
     if (!is_artefact(item) && (item.base_type == OBJ_WEAPONS
-                               || item.base_type == OBJ_ARMOUR)
+                               || item.base_type == OBJ_ARMOUR
+                               || item.base_type == OBJ_TALISMANS)
         && item.is_identified())
     {
         if (item.plus > 0)
