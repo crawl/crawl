@@ -1695,6 +1695,15 @@ static const mutation_def mut_data[] =
   TILEG_MUT_PETRIFICATION_RES,
 },
 
+{ MUT_DEMONIC_STINGER, 0, 1, mutflag::good | mutflag::anatomy,
+  "demonic stinger",
+
+  {"You have a small protuberance ending in a sharp stinger.", "", ""},
+  {"A small protuberance with a sharp stinger grows from your body.", "", ""},
+  {"Your protuberance and stinger retract into your body.", "", ""},
+  TILEG_MUT_STINGER,
+},
+
 { MUT_BLACK_MARK, 0, 2, mutflag::good,
   "black mark",
 
