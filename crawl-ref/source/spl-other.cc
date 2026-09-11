@@ -374,8 +374,10 @@ bool passwall_path::check_moveto() const
 
 }
 
-int passwall_ac(int pow){
-   return 5 + div_rand_round(pow, 10);
+int passwall_ac(int pow, bool random)
+{
+    return 5 + (random ? div_rand_round(pow, 10)
+                       : div_round_near(pow, 10));
 }
 spret cast_passwall(const coord_def& c, int pow, bool fail)
 {
@@ -410,7 +412,7 @@ spret cast_passwall(const coord_def& c, int pow, bool fail)
         start_delay<PasswallDelay>(p.actual_walls() + 1, p.actual_dest);
 
         // Give bonus AC while moving through the wall.
-        you.props[PASSWALL_ARMOUR_KEY].get_int() = passwall_ac(pow);
+        you.props[PASSWALL_ARMOUR_KEY].get_int() = passwall_ac(pow, true);
         you.redraw_armour_class = true;
 
         return spret::success;
