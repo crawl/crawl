@@ -1922,6 +1922,7 @@ int player_spec_hex()
     // Demonspawn mutation
     sh += you.get_mutation_level(MUT_HEX_ENHANCER);
     sh += you.scan_artefacts(ARTP_ENHANCE_HEXES);
+    sh += you.wearing(OBJ_WEAPONS, WPN_ATHAME) ? 1 : 0;
 
     return sh;
 }
