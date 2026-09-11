@@ -2510,6 +2510,33 @@ public:
     }
 };
 
+class AuxDemonicStinger: public AuxAttackType
+{
+public:
+    AuxDemonicStinger()
+    : AuxAttackType(6, 50, "demonic stinger") { };
+
+    int get_damage(bool /*random*/) const override
+    {
+        const int base_damage = 6 * you.get_mutation_level(MUT_DEMONIC_STINGER);
+        return base_damage;
+    }
+
+    string get_name() const override
+    {
+        return "demonic stinger";
+    }
+
+    string get_verb() const override
+    {
+        return "devilishly sting";
+    }
+
+    bool is_usable() const override
+    {
+        return you.get_mutation_level(MUT_DEMONIC_STINGER) > 0;
+    }
+};
 static const AuxConstrict   AUX_CONSTRICT = AuxConstrict();
 static const AuxKick        AUX_KICK = AuxKick();
 static const AuxPeck        AUX_PECK = AuxPeck();
@@ -2525,6 +2552,7 @@ static const AuxBlades      AUX_EXECUTIONER_BLADE = AuxBlades();
 static const AuxFisticloak  AUX_FUNGAL_FISTICLOAK = AuxFisticloak();
 static const AuxMedusaStinger AUX_MEDUSA_STINGER = AuxMedusaStinger();
 static const AuxTalismanBlade AUX_TALISMAN_BLADE = AuxTalismanBlade();
+static const AuxDemonicStinger AUX_DEMONIC_STINGER = AuxDemonicStinger();
 static const AuxAttackType* const aux_attack_types[] =
 {
     &AUX_CONSTRICT,
@@ -2542,12 +2570,11 @@ static const AuxAttackType* const aux_attack_types[] =
     &AUX_FUNGAL_FISTICLOAK,
     &AUX_MEDUSA_STINGER,
     &AUX_TALISMAN_BLADE,
-    &AUX_TALISMAN_BLADE,
+    &AUX_DEMONIC_STINGER,
 };
 
 
 /* Setup all unarmed (non attack_type) variables
- *
  * Clears any previous unarmed attack information and sets everything from
  * noise_factor to verb and damage. Called after player_aux_choose_uc_attack
  */
