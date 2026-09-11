@@ -2792,6 +2792,10 @@ void bolt::drop_object()
 {
     ASSERT(ranged_atk);
 
+    // Don't drop throwing nets from summoned monsters onto the ground.
+    if (ranged_atk->weapon->flags & ISFLAG_SUMMONED)
+        return;
+
     // If the player is throwing this item at a wall, attempt to place it at
     // the tile on the path immediately before hitting the wall.
     // XXX: If Dimensional Bullseye is active on a target in a wall, the
