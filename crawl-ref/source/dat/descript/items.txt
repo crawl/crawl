@@ -78,7 +78,7 @@ athame
 An ornate and bewitched ritual knife. Even just wielding it will cost a small
 piece of your health, but blows made with it against those suffering negative
 statuses (other than poison) have increased base damage, up to +4 for two
-such baleful ailments.
+such baleful ailments. It also empowers your hexes.
 %%%%
 azure gem
 
