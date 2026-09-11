@@ -4744,7 +4744,7 @@ static const struct spell_desc spelldata[] =
         | spflag::needs_tracer,
     7,
     200,
-    6, 6,
+    5, 5,
     0,
     TILEG_ACID_BALL,
 },
