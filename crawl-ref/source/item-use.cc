@@ -2305,7 +2305,7 @@ static spret _handle_brand_weapon(bool alreadyknown, const string &pre_msg)
         if (!clua.error.empty())
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
     }
-    else if (isalpha(letter.c_str()[0]))
+    else if (isaalpha(letter.c_str()[0]))
     {
         item_def &item = you.inv[letter_to_index(letter.c_str()[0])];
         if (item.defined() && is_brandable_weapon(item, true))
@@ -2378,7 +2378,7 @@ static spret _identify(bool alreadyknown, const string &pre_msg)
         if (!clua.error.empty())
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
     }
-    else if (isalpha(letter.c_str()[0]))
+    else if (isaalpha(letter.c_str()[0]))
     {
         // XXX: It is not guaranteed that each letter maps uniquely to a single
         //      item (ie: the player could have both an unidentified potion and
@@ -2452,7 +2452,7 @@ static spret _handle_enchant_weapon(bool alreadyknown, const string &pre_msg)
         if (!clua.error.empty())
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
     }
-    else if (isalpha(letter.c_str()[0]))
+    else if (isaalpha(letter.c_str()[0]))
     {
         item_def &item = you.inv[letter_to_index(letter.c_str()[0])];
         if (item.defined() && is_enchantable_weapon(item, true))
@@ -2522,7 +2522,7 @@ static spret _handle_enchant_armour(bool alreadyknown, const string &pre_msg)
         if (!clua.error.empty())
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
     }
-    else if (isalpha(letter.c_str()[0]))
+    else if (isaalpha(letter.c_str()[0]))
     {
         item_def &item = you.inv[letter_to_index(letter.c_str()[0])];
         if (item.defined() && is_enchantable_armour(item, true))
