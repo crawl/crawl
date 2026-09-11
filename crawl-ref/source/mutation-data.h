@@ -1715,7 +1715,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_BLACK_MARK,
 },
 
-{ MUT_SILENCE_HALO, 30, 3, mutflag::good,
+{ MUT_SILENCE_HALO, 3, 3, mutflag::good,
   "halo of silence",
 
   {"You are surrounded by a small halo of silence.", 
