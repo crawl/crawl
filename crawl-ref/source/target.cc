@@ -1030,16 +1030,17 @@ targeter_cleave::targeter_cleave(coord_def target)
 {
     agent = &you;
     origin = you.pos();
-    range = you.reach_range() - (you.form == transformation::aqua ? 2 : 0);
+    bonus_reach = you.form == transformation::aqua ? 2 : 0;
+    cleave_range = you.reach_range() - bonus_reach;
     set_aim(target);
 }
 
 bool targeter_cleave::valid_aim(coord_def a)
 {
     const coord_def delta = a - origin;
-    if (delta.rdist() > range)
+    if (delta.rdist() > cleave_range + bonus_reach)
         return notify_fail("You can't reach that far!");
-    if (range == 2)
+    if (cleave_range == 2)
     {
         const coord_def first_middle(origin + delta / 2);
         const coord_def second_middle(a - delta / 2);
