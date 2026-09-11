@@ -1,0 +1,265 @@
+%%%%
+Fighting
+
+Uměńje Boja povyšaje tvojų akuratnost́, škodų v fizičnom boju i takože tvoje
+maksimaĺno zdråvje.
+%%%%
+Short Blades
+
+Kråtke Ostŕja sųt najefektivnějše srěd drugyh orųžij dlja pričinjeńja skrytyh
+udarov bezpomoćnym neprijateljam.
+
+Uměńje vlåděti Kråtkymi Ostŕjami bųde dopustiti tobě atakovati bystrěje ljubym
+orųžjem tutogo tipa, a takože bųde povysiti akuratnost́ i škodų, pričinjajemų jimi.
+
+Uměńje vlåděti Kråtkymi Ostŕjami povyšaje tvojų efektivnost́ vȯ vlåděńju Dȯlgymi
+Ostŕjami i obråtno.
+%%%%
+Long Blades
+
+Uměńje vlåděti Dȯlgymi Ostŕjami bųde dopustiti tobě atakovati bystrěje ljubym
+orųžjem tutogo tipa, a takože bųde povysiti akuratnost́ i škodų, pričinjajemų jimi.
+
+Uměńje vlåděti Dȯlgymi Ostŕjami povyšaje tvojų efektivnost́ vȯ vlåděńju Kråtkymi
+Ostŕjami i obråtno.
+%%%%
+Axes
+
+Sěkyry råzrųbajųt několikyh neprijateljev jednym råzmahom, poražajųći jih po
+dųge okolo vlådětelja.
+
+Uměńje vlåděti Sěkyrami bųde dopustiti tobě atakovati bystrěje ljubym orųžjem
+tutogo tipa, a takože bųde povysiti akuratnost́ i škodų, pričinjajemų jimi.
+
+Uměńje vlåděti Sěkyrami povyšaje tvojų efektivnost́ vȯ vlåděńju Žezlov i Cěpov
+i Prųtovyh Orųžij i obråtno.
+%%%%
+Maces & Flails
+
+Uměńje vlåděti Žezlami i Cěpami bųde dopustiti tobě atakovati bystrěje ljubym
+orųžjem tutogo tipa, a takože bųde povysiti akuratnost́ i škodų, pričinjajemų jimi.
+
+Uměńje vlåděti Žezlami i Cěpami povyšaje tvojų efektivnost́ vȯ vlåděńju Sěkyrami i
+Palami i obråtno.
+%%%%
+Polearms
+
+Prųtove Orųžja možno aktivovati klavišejų ‘v’, da by atakovati neprijateljev
+na dalju dvoh klětȯk.
+
+Uměńje vlåděti Prųtovymi Orųžjami bųde dopustiti tobě atakovati bystrěje ljubym
+orųžjem tutogo tipa, a takože bųde povysiti akuratnost́ i škodų, pričinjajemų jimi.
+
+Uměńje vlåděti Prųtovymi Orųžjami povyšaje tvojų efektivnost́ vȯ vlåděńju Sěkyrami i
+Palami i obråtno.
+%%%%
+Staves
+
+Paly dlja efektivnogo koristańja potrěbujųt poměrno nizky rang, ale jim
+nedostavaje vysokoj škody, obyčajnoj dlja drugyh klasov orųžja.
+
+Uměńje vlåděti Palami bųde dopustiti tobě atakovati bystrěje ljubym orųžjem
+tutogo tipa, a takože bųde povysiti akuratnost́ i škodų, pričinjajemų jimi.
+
+Uměńje vlåděti Palami povyšaje tvojų efektivnost́ vȯ vlåděńju Žezlami i Cěpami i
+Prųtovymi Orųžjami i obråtno.
+%%%%
+Ranged Weapons
+
+Uměńje vlåděti Daljnjimi Orųžjami bųde dopustiti tobě atakovati bystrěje
+ljubymi lųkami, samostrělami i pračkami, a takože bųde povysiti tvojų akuratnost́
+i škodų, pričinjajemų jimi.
+%%%%
+Throwing
+
+Trenovańje Metańja bųde sdělati metajemo orųžje (kako napriklad kopja) vyše
+akuratnym i škodlivym. Takože ono bųde povysiti pravdopodobnost́ togo, že magične tŕny
+bųdųt imati poslědstva.
+%%%%
+Armour
+
+Uměńje Brȯnje množi bonus dlja AC, dobyvajemy pri nošeńju brȯnje vsih tipov,
+vključajųći tělesnų brȯnjų, plašče, rųkavice i tako dalje. Ono takože nemnogo
+smėnšaje kaznj dlja bystrosti čarovańja zaklinanij i daljnjego orųžja, objavjajųćų sę
+pri nošeńju tęžkoj brȯnje.
+%%%%
+Dodging
+
+Uměńje Izběgańja bųde vlivati na tvoj šans izběgti atakų bližnjų, daljnjų ili
+magičnų. jednako, něktore tipy ataky nemožno izběgti, take kako čarovańja (ktorym
+trěba odpirati sę silojų volje) i eksplozije.
+%%%%
+Stealth
+
+Trenujųći Skrytost́, ty možeš umėnšiti pravdopodobnost́ togo, že monstri bųdųt
+uględěti tebe, jestli oni spęt ili ne trėvožni, i povysiti tvoje šansy na to,
+že monstri bųdųt utratiti tebe iz vida, kȯgda ty bųdeš izȯjdti iz jih polja zrěńja.
+Zauvaži, že vyše moćni monstri, kako pravilo, sųt vyše podzirlivi i čutlivi.
+
+Uměńje Skrytosti, zajedno s uměńjem orųžja, takože vlivaje na pravdopodobnost́
+pričinjeńja značnoj škody pri atakovańju odvlěčenogo ili bezpomoćnogo stvora,
+a takože na kolikost́ dodatnoj pričinjajemoj škody.
+%%%%
+Shields
+
+Vysoky rang uměńja Ščity pomagaje blokovati bližnje ataky ili neprobivajųće
+projektily (magične i nemagične) tvojim orųdujemym ščitom i umėnšaje jih kaznj
+k izběgańju, bystrosti ataky i uspěhu čarovańja zaklinańja.
+%%%%
+Unarmed Combat
+
+Uměńje Bezorųžnogo Boja povyšaje tvojų akuratnost́, škodų i bystrost́ ataky
+v bližnjem boju s golymi rųkami.
+%%%%
+Spellcasting
+
+{{
+    if you.race() == "Djinni" then
+        return "Uměńje Čarovańja Zaklinanij povyšaje pravdopodobnost́"..
+               "uspěha i moć vsih zaklinanij."
+    else
+        return "Uměńje Čarovańja Zaklinanij povyšaje pravdopodobnost́" ..
+                "uspěha i moć vsih zaklinanij, zajedno s povyšeńjem" ..
+                "rezervov magije. Trenovańje tutogo uměńja takože" ..
+                "dodavaje vyše města dlja zaklinanij."
+    end
+}}
+%%%%
+Conjurations
+
+Zaklęt́ja sųt bojove zaklinańja, ktore čęsto dějųt posrědstvom stvorjeńja kųska
+kråtkoživųćej materije i jego navedeńja k žrtvě dlja pričinjeńja pręmoj škody.
+Uměńje Zaklętij obyčajno povyšaje škodų i akuratnost́ takyh zaklinanij, a poněkȯgda
+vlivajųt na jih dalj ili råzměr oblåsti poražeńja.
+
+Uměńje Zaklętij povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
+%%%%
+Hexes
+
+Proklęt́ja probujųt nadati različne čarovańja na bližnjih stvorov. One ne nanosęt
+pręmoj škody, jednako jih čarovańje može efektivno izjęti protivnika iz bitvy,
+ale dlja togo trěba prěodolěti jego silų volje. Uměńje v Proklęt́jah mogųt pomogti
+sdělati to.
+
+Uměńje Proklętij povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
+%%%%
+Summonings
+
+Prizyvy dozvaljajųt prizyvati stvorov iz drugoj reaĺnosti dlja dočasnoj pomoći.
+Povyšeńje uměńja Prizyvov može dati ręd efektov v zavisnosti od každogo zaklinańja,
+takyh kako povyšeńje trvańja prizyva ili usiljeńje sȯjųznikov. Zauvaži, že prizvane
+stvory ne ostavjajųt trupov i ne davajųt prěživańja poslě svojej smŕti, a jih
+orųdovańje takože kråtkotrajno kako i one same.
+
+Uměńje Prizyvov povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
+%%%%
+Forgecraft
+
+Kovačno Dělo jest umětnost́ stvorjeńja materiaĺnyh objektov s pomoćjų magije.
+Zaklinańja Kovačnogo Děla dozvaljajųt konstruovati samyh råznyh mehaničnyh stvorov,
+ktore bųdųt vojevati na stråně čarovnika; a takože stvarjati pasti i barikady i
+obraćati nosimų brȯnjų v orųžje.
+
+Uměńje Kovačnogo Děla povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
+%%%%
+Necromancy
+
+Nekromantija jest umětnost́ vpivańja i iziskańja žit́ja, ale čęstěje vsego jego
+svęzyvajųt s zombi i drugymi mŕtvecami. Zatom, zaklinańja Nekromantije imajųt
+veliko množstvo efektov, od stvorjeńja i råzrvańja mŕtvecov do nabyvańja
+nečėstivogo izlěčeńja v råznyh formah.
+
+Uměńje Nekromantije povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
+%%%%
+Translocations
+
+Zaklinańja Prěměšćeńja sųsrědotočene na prostrånnom prěměšćeńju stvorov ili objektov,
+vključajųći koristne zaklinańja dlja bystrogo prěměšćeńja sebe na kråtke dalje ili
+svojih neprijateljev - na dȯlge dalje.
+
+Uměńje Prěměšćenij povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
+%%%%
+Alchemy
+
+Alhimija jest umětnost́ otrav i transmutacij. Zaklinańja tutoj školy mogųt měnjati
+izględ objektov i stvorov, izpušćati moćne otravy ili až råzpletati samų tkaninų magije.
+
+Uměńje Alhimije povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
+%%%%
+Fire Magic
+
+Magija Ognja jest sųsrědotočena na pričinjeńju ognjenoj škody na dȯlge dalje,
+s koristańjem množstva efektivnyh Zaklętij.
+
+Uměńje Magije Ognja povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
+%%%%
+Ice Magic
+
+Magija Leda vključaje v sebę ręd zaklinanij pręmoj škody, i takože něktore zaščitne
+efekty - napriklad, stvorjeńje dočasnoj ledovoj brȯnje.
+
+Uměńje Magije Leda povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
+%%%%
+Air Magic
+
+Magija Vȯzduha zabezpečaje zaklinańja, pričinjajųće škodų s pomoćjų větra, a takože
+šumne, ale moćne Zaklęt́ja blěskavice. Ona takože zabezpečaje něktore utilitarne
+zaklinańja, take kako prizyv větra dlja oblėgčeńja prěměšćeńja ili Proklęt́je,
+ogråđajųće koristańje množiństva magije v prostråństvu okolo tebe.
+
+Uměńje Magije Vȯzduha povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
+%%%%
+Earth Magic
+
+Magija Zemje vključaje v sebę zaklinańja, sposobne pričinjati velikų fizičnų škodų,
+ktoroj nemožno odpirati sę, v odråzlikě od ognjenoj, hlådnoj i blěskavičnoj škody.
+Ona takože jest svęzana s Alhimijejų, s zaklinańjami råztopjeńja zemje okolo tebe ili
+okamenjeńja tvojih neprijateljev.
+
+Uměńje Magije Zemje povyšaje šans uspěha i moć zaklinanij tutoj školy. Mnoge zaklinańja
+naležęt k kombinacije několikyh škol, v tutom slučaju uspěh čarovańja zaklinańja
+i jego moć bųdųt zavisěti od srědnjego ranga uměnij tyh škol.
+%%%%
+Invocations
+
+Uměńje Invokacije vlivaje na pravdopodobnost́ uspěha proby koristati božske sposobnosti
+něktoryh bogov i takože na moć tutyh sposobnostij.
+
+{{
+    if you.race() ~= "Djinni" then
+        return "Uměńje Invokacije takože povyšaje magične zapasy, " ..
+               "ale značno mėnje, než Čarovańje Zaklinanij. Jedino " ..
+               "vysše uměńje koristaje sę."
+    end
+}}
+%%%%
+Evocations
+
+Uměńje Evokacije vlivaje na sposobnost́ koristati magične prědměty, kako napriklad
+magične palky i druge neobyčajne objekty, povyšajųći moć ili uspěh takyh prědmětov.
+%%%%
+Shapeshifting
+
+Obraćańje dozvaljaje koristati magične talismany dlja izměnjeńja oblika. Dostatȯčno
+majstrstvo dozvaljaje koristati vyše moćne formy bez smėnšeńja zdråvja. Tuto uměńje
+takože dělaje množiństvo form siĺněje, s samobytnymi dlja každoj formy efektami.

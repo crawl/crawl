@@ -1,0 +1,84 @@
+%%%%
+no teleportation passive
+
+Ty ne možeš teleportovati sę ili migati.
+%%%%
+no spellcasting passive
+
+Ty ne možeš čarovati zaklinańja.
+%%%%
+random rage passive
+
+Pri pričinjeńju bližnjej ataky u tebe jest šans upasti v běsnost́.
+%%%%
+corrode self passive
+
+Kȯgda ty nabyvaješ poranjeńje, tebe može råzjedati korozija.
+%%%%
+slow self passive
+
+Kȯgda ty nabyvaješ poranjeńje, ty možeš nabyti pomalost́.
+%%%%
+harm passive
+
+Vśaka nabyta ili pričinjena škoda jest povyšena.
+%%%%
+mayhem passive
+
+Ubijstvo neprijatelja može stati povodom dlja gněva u vidimyh monstrov.
+%%%%
+repel missiles passive
+
+Ty odražaješ rakety, povyšajųći svoj šans izběgańja jih.
+%%%%
+reflection passive
+
+Ty odbivaješ vśake uspěšno blokovane daljne ataky obråtno v neprijatelja.
+%%%%
+acrobat passive
+
+Tvoje izběgańje jest povyšeno, kȯgda ty ideš i čekaješ.
+%%%%
+clarity passive
+
+Ty jesi ohrånjeny od mimovoljnogo zaměšańja, běsnosti, straha i hipnoza.
+%%%%
+resist mutation passive
+
+Ty jesi čęstično ohhrånjeny od mutacij.
+%%%%
+guardian spirit passive
+
+Vśako nabyto tobojų poranjeńje råzděljaje sę među tvojimi zapasami zdråvja i
+magije.
+%%%%
+rampage passive
+
+Ty imaješ dodatny svobodny krok, kȯgda běžiš k neprijateljam.
+%%%%
+roll passive
+
+<rollpage mutation>
+%%%%
+faith passive
+
+Ty bystro nabyvaješ božskų blågomilost́ i k ljubym tvojim religioznym pogrěšeńjam
+bųdųt odnositi sę c vęćim čuvańjem.
+%%%%
+wizardry passive
+
+Tvoj uspěh čarovańja zaklinańja jest povyšeny.
+%%%%
+archmagi passive
+
+Tvoja moć zaklinańja jest povyšena.
+%%%%
+channel magic passive
+
+Pri uspěšnom čarovańju zaklinańja u tebe jest šans izlěčiti iztraćenų magijų,
+a pri neuspěšnom čarovańju zaklinańja iztraćena magija vsėgda izlěči sę.
+%%%%
+infuse magic passive
+
+Každy raz, kȯgda ty dělaješ bližnjų atakų, ty tratiš magijų na ulěpšeńje ataky.
+%%%%
