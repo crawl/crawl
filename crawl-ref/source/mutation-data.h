@@ -1746,7 +1746,7 @@ static const mutation_def mut_data[] =
     "Your aura of unnatural quiet shrinks."},
 },
 
-{ MUT_HEX_ENHANCER, 0, 1, mutflag::good,
+{ MUT_HEX_ENHANCER, 2, 1, mutflag::good,
   "bedevilling",
 
   {"Your hexes are more powerful.", "", ""},
