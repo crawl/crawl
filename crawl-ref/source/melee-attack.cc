@@ -2574,7 +2574,7 @@ static const AuxAttackType* const aux_attack_types[] =
 
 
 /* Setup all unarmed (non attack_type) variables
-  Clears any previous unarmed attack information and sets everything from
+ * Clears any previous unarmed attack information and sets everything from
  * noise_factor to verb and damage. Called after player_aux_choose_uc_attack
  */
 void melee_attack::player_aux_setup(unarmed_attack_type atk)
