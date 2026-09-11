@@ -5198,6 +5198,14 @@ bool monster::cannot_move() const
     return is_stationary() || has_ench(ENCH_BOUND);
 }
 
+// Whether the monster has lost the focus and ability to continue channelling
+// effects like Word of Recall or Searing Ray.
+bool monster::cannot_keep_channelling() const
+{
+    return is_silenced() || cannot_act() || confused() || asleep()
+            || has_ench(ENCH_FEAR);
+}
+
 bool monster::can_burrow() const
 {
     return mons_class_flag(type, M_BURROWS)

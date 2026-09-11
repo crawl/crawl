@@ -2281,10 +2281,16 @@ void handle_monster_move(monster* mons)
 
     if (mons->has_ench(ENCH_CHANNEL_SEARING_RAY))
     {
+        if (mons->cannot_keep_channelling())
+        {
+            mons->del_ench(ENCH_CHANNEL_SEARING_RAY, true, false);
+            if (you.can_see(*mons))
+                mprf("%s searing ray is interrupted.", mons->name(DESC_ITS).c_str());
+        }
         // If we are continuing to fire searing ray, remain in place.
         // XXX: Doesn't track how many turns this has been channelled, but that
         //      doesn't presently matter.
-        if (handle_searing_ray(*mons, 1))
+        else if (handle_searing_ray(*mons, 1))
         {
             mons->speed_increment -= non_move_energy;
             return;
