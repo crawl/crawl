@@ -34,6 +34,7 @@
 #include "tag-version.h"
 #include "terrain.h"
 #include "travel.h"
+#include "traps.h"
 #include "unicode.h"
 #include "zot.h"
 
@@ -272,7 +273,7 @@ static string _pad_cs(string colour_string, size_t width)
 }
 
 // iterate through every dungeon branch, listing the ones which have been found
-static string _get_seen_branches(bool display)
+static string _get_seen_branches(bool display, bool &any_shafted)
 {
     string disp;
 
@@ -344,10 +345,13 @@ static string _get_seen_branches(bool display)
                                     zcol, zturns, zcol);
                 }
 
+                const bool shafted = shafted_in(branch);
+                any_shafted |= shafted;
                 const string main_desc = make_stringf(
-                    "<yellow>%*s</yellow> <darkgrey>(%d/%d)</darkgrey>%s",
+                    "<yellow>%*s</yellow> <darkgrey>(%d/%d)%s</darkgrey>%s",
                     7,
                     brname, lid.depth, brdepth[branch],
+                    shafted ? "*" : "",
                     entry_desc.c_str());
                 cells.push_back(_pad_cs(main_desc, 22) + zclock_desc);
             }
@@ -468,7 +472,11 @@ static string _get_unseen_branches()
 
 static string _get_branches(bool display)
 {
-    return _get_seen_branches(display) + _get_unseen_branches();
+    bool any_shafted = false;
+    string disp = _get_seen_branches(display, any_shafted) + _get_unseen_branches();
+    if (any_shafted)
+        disp += "\n<darkgrey>*You can no longer be shafted in this branch</darkgrey>\n";
+    return disp;
 }
 
 // iterate through every god and display their altar's discovery state by colour
