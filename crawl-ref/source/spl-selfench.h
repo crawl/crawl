@@ -11,6 +11,7 @@ class actor;
 
 spret cast_deaths_door(int pow, bool fail);
 void remove_ice_armour();
+int ice_armour_ac(int pow);
 spret ice_armour(int pow, bool fail);
 
 void fiery_armour();

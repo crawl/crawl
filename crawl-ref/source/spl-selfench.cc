@@ -56,6 +56,12 @@ void remove_ice_armour()
     you.duration[DUR_ICY_ARMOUR] = 0;
 }
 
+int ice_armour_ac(int pow)
+{
+    return max(0, 500 + pow * 8
+                      - you.unadjusted_body_armour_penalty() * 50);
+}
+
 spret ice_armour(int pow, bool fail)
 {
     fail_check();
