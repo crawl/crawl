@@ -401,7 +401,7 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     }
 
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_DEATH) && spell_typematch(spell, spschool::necromancy))
-        fail_reduce = fail_reduce / 2;
+        fail_reduce = crab ? fail_reduce * 4 / 9 : fail_reduce * 2 / 3;
 
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_RESONANCE) && spell_typematch(spell, spschool::forgecraft))
         fail_reduce = crab ? fail_reduce * 4 / 9 : fail_reduce * 2 / 3;
@@ -856,21 +856,11 @@ static bool _majin_charge_hp()
     return you.unrand_equipped(UNRAND_MAJIN) && !you.duration[DUR_DEATHS_DOOR];
 }
 
-static bool _death_ego_charge_hp(spell_type spell)
-{
-    return you.wearing_ego(OBJ_ARMOUR, SPARM_DEATH)
-            && !spell_typematch(spell, spschool::necromancy)
-            && !you.duration[DUR_DEATHS_DOOR];
-}
-
-
 static int _spell_addition_hp_cost(spell_type spell)
 {
     const int spell_cost = spell_mana(spell);
     int hp_cost = 0;
     if (_majin_charge_hp())
-        hp_cost += spell_cost;
-    if (_death_ego_charge_hp(spell))
         hp_cost += spell_cost;
     // The cost shouldn't ever kill you
     hp_cost = min(hp_cost, you.hp - 1);
@@ -1074,8 +1064,6 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         // Return the MP since the spell is aborted.
         refund_mp(cost);
         if (_majin_charge_hp())
-            refund_hp(hp_cost);
-        if (_death_ego_charge_hp(spell))
             refund_hp(hp_cost);
 
         redraw_screen();
@@ -2379,6 +2367,16 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
             do_demonic_magic(spell_difficulty(spell) * 6, demonic_magic);
         }
 
+        if (you.wearing_ego(OBJ_ARMOUR, SPARM_DEATH)
+            && (actual_spell || you.divine_exegesis)
+            && get_spell_disciplines(spell) & spschool::necromancy)
+        {
+            death_ego_lifedrain(spell_difficulty(spell));
+            // crab form activates the life drain twice
+            if (you.form == transformation::fortress_crab)
+                death_ego_lifedrain(spell_difficulty(spell));
+        }
+
         if (ephemeral_shield && (actual_spell || you.divine_exegesis))
         {
             you.set_duration(DUR_EPHEMERAL_SHIELD, 2);
@@ -3652,6 +3650,44 @@ void do_demonic_magic(int pow, int rank)
 
         if (mons->check_willpower(&you, pow) <= 0)
             mons->paralyse(&you, random_range(2, 5));
+    }
+}
+
+void death_ego_lifedrain(int splevel)
+{
+    if (!x_chance_in_y(3 + splevel, 6 + splevel))
+        return;
+
+    for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        actor* act = actor_at(*ai);
+
+        if (!act || act->wont_attack() || !mons_is_threatening(*act->as_monster())
+            || !actor_can_drain_life_from(you, *act))
+        {
+            continue;
+        }
+
+        mprf("Your unholy armour drains life force from %s.",
+            act->name(DESC_THE).c_str());
+
+        int damage = 1 + random2avg(splevel * 4, 2);
+        const int drain_amount = act->hurt(&you, damage,
+                                         BEAM_VAMPIRIC_DRAINING,
+                                         KILLED_BY_BEAM, "",
+                                         "by vampiric draining");
+
+        if (you.duration[DUR_DEATHS_DOOR] || you.hp == you.hp_max)
+            return;
+
+        const int hp_gain = div_rand_round(drain_amount, 2);
+        if (hp_gain)
+        {
+            mprf("You feel life coursing into your body%s",
+                 attack_strength_punctuation(hp_gain).c_str());
+            inc_hp(hp_gain);
+        }
+        return;
     }
 }
 
