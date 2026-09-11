@@ -29,6 +29,8 @@
 
 #ifdef __ANDROID__
 #define HAVE_STAT
+#include "playable.h"
+#include "religion.h"
 #include "player.h"
 #include <errno.h>
 #include <android/asset_manager.h>
@@ -49,6 +51,29 @@ Java_org_libsdl_app_SDLActivity_nativeSaveGame(
 {
     if (you.save)
         save_game(false);
+}
+
+extern "C" JNIEXPORT jintArray JNICALL
+Java_org_develz_crawl_DCSSMorgueRoster_nativeCurrentCounts(
+    JNIEnv *env, jclass)
+{
+    int gods = 0;
+    for (god_iterator god; god; ++god)
+    {
+        if (*god != GOD_NO_GOD && !is_unavailable_god(*god))
+            ++gods;
+    }
+
+    const jint values[] = {
+        (jint) playable_species().size(),
+        (jint) playable_jobs().size(),
+        (jint) gods,
+        (jint) playable_combos().size()
+    };
+    jintArray result = env->NewIntArray(4);
+    if (result)
+        env->SetIntArrayRegion(result, 0, 4, values);
+    return result;
 }
 
 int jni_ref_display_size()
