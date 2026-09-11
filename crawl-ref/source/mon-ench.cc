@@ -1671,8 +1671,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_WORD_OF_RECALL:
         // If we've gotten silenced or somehow incapacitated since we started,
         // cancel the recitation
-        if (is_silenced() || cannot_act() || has_ench(ENCH_BREATH_WEAPON)
-            || confused() || asleep() || has_ench(ENCH_FEAR))
+        if (cannot_keep_channelling())
         {
             del_ench(en, true, false);
             if (you.can_see(*this))
@@ -1691,8 +1690,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_CLOCKWORK_BEE_CAST:
-        if (is_silenced() || cannot_act() || has_ench(ENCH_BREATH_WEAPON)
-            || confused() || asleep() || has_ench(ENCH_FEAR))
+        if (cannot_keep_channelling())
         {
             del_ench(en, true, false);
             if (you.can_see(*this))
@@ -1777,8 +1775,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_MERFOLK_AVATAR_SONG:
         // If we've gotten silenced or somehow incapacitated since we started,
         // cancel the song
-        if (is_silenced() || cannot_act() || confused() || asleep()
-            || has_ench(ENCH_FEAR))
+        if (cannot_keep_channelling())
         {
             del_ench(ENCH_MERFOLK_AVATAR_SONG, true, false);
             if (you.can_see(*this))
@@ -1810,17 +1807,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_ANGUISH:
         if (decay_enchantment(en))
             simple_monster_message(*this, " is no longer haunted by guilt.");
-        break;
-
-    case ENCH_CHANNEL_SEARING_RAY:
-        // If we've gotten incapacitated since we started, cancel the spell
-        if (is_silenced() || cannot_act() || confused() || asleep()
-            || has_ench(ENCH_FEAR))
-        {
-            del_ench(en, true, false);
-            if (you.can_see(*this))
-                mprf("%s searing ray is interrupted.", name(DESC_ITS).c_str());
-        }
         break;
 
     case ENCH_BOUND:

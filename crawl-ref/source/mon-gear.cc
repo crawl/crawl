@@ -1588,7 +1588,7 @@ static void _give_weapon(monster *mon, int level, bool second_weapon = false)
 
 // Hands out ammunition fitting the monster's launcher (if any), or else any
 // throwable missiles depending on the monster type.
-static void _give_ammo(monster* mon, int level, bool mons_summoned)
+static void _give_ammo(monster* mon, int level)
 {
     if (mon->launcher())
         return;
@@ -1698,7 +1698,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
             if (active_monster_band == BAND_MERFOLK_JAVELINEER)
                 break;
         }
-        if (one_chance_in(8) && !mons_summoned)
+        if (one_chance_in(8))
         {
             weap_type  = MI_THROWING_NET;
             qty        = 1;
@@ -1714,9 +1714,6 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
         // deliberate fall-through to harold
 
     case MONS_HAROLD: // bounty hunter, up to 5 nets
-        if (mons_summoned)
-            break;
-
         weap_type  = MI_THROWING_NET;
         qty        = 1;
         if (one_chance_in(3))
@@ -2571,7 +2568,7 @@ static void _give_book(monster* mon)
     }
 }
 
-void give_item(monster *mons, int level_number, bool mons_summoned)
+void give_item(monster *mons, int level_number)
 {
     ASSERT(level_number > -1); // debugging absdepth0 changes
 
@@ -2579,7 +2576,7 @@ void give_item(monster *mons, int level_number, bool mons_summoned)
     _give_talisman(mons, level_number);
     _give_wand(mons, level_number);
     _give_weapon(mons, level_number);
-    _give_ammo(mons, level_number, mons_summoned);
+    _give_ammo(mons, level_number);
     _give_armour(mons, 1 + level_number / 2);
     _give_shield(mons, 1 + level_number / 2);
     _give_extra_equipment(mons, 1 + level_number / 2);

@@ -1211,7 +1211,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             mon->props[TUKIMA_WEAPON] = true;
         }
         else
-            give_item(mon, place.absdepth(), mg.is_summoned());
+            give_item(mon, place.absdepth());
 
 
         // Dancing weapons *always* have a weapon. Fail to create them
@@ -1239,7 +1239,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     else if (mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT
              && !mg.props.exists(KIKU_WRETCH_KEY))
     {
-        give_item(mon, place.absdepth(), mg.is_summoned());
+        give_item(mon, place.absdepth());
         // Give these monsters a second weapon. - bwr
         if (mons_class_wields_two_weapons(mg.cls))
             give_weapon(mon, place.absdepth());

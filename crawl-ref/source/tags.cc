@@ -2623,6 +2623,11 @@ static void unmarshall_shop(reader &th, shop_struct& shop)
     shop.keeper_name[0] = unmarshallUByte(th);
     shop.keeper_name[1] = unmarshallUByte(th);
     shop.keeper_name[2] = unmarshallUByte(th);
+#if TAG_MAJOR_VERSION == 34
+    // We used to use keeper_name[1] twice, so fix to keep existing names.
+    if (th.getMinorVersion() < TAG_MINOR_SHOP_KEEPER_NAME)
+        shop.keeper_name[2] = shop.keeper_name[1];
+#endif
     shop.pos.x = unmarshallByte(th);
     shop.pos.y = unmarshallByte(th);
     shop.greed = unmarshallByte(th);

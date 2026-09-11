@@ -218,7 +218,8 @@ public:
     bool affects_anything();
 private:
     set<coord_def> targets;
-    int range;
+    int cleave_range;
+    int bonus_reach;
 };
 
 class targeter_cloud : public targeter

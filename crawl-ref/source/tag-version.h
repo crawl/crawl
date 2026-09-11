@@ -365,6 +365,7 @@ enum tag_minor_version
     TAG_MINOR_MON_ATTACK_DEF_RANGE,// Add 'range' and 'cleaving' members to mon_attack_def
     TAG_MINOR_FORGET_MONSTERS,     // Forget stale monster memories.
     TAG_MINOR_BASE_TRAINING_TARGETS, // Separate training targets for base skill levels
+    TAG_MINOR_SHOP_KEEPER_NAME,    // Seed shopkeeper names from all three keeper_name bytes
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

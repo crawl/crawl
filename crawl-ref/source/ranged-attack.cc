@@ -293,7 +293,7 @@ bool ranged_attack::handle_phase_hit()
     {
         set_attack_verb(0);
         announce_hit();
-        if (defender->trap_in_net(true))
+        if (defender->trap_in_net(!(weapon->flags & ISFLAG_SUMMONED)))
             _did_net = true;
         if (defender->is_player())
             xom_is_stimulated(50);
