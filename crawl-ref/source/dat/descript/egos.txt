@@ -148,7 +148,8 @@ It enhances your Air magic.
 %%%%
 archery (Archery) armour ego
 
-It has one-third the normal encumbrance for the purpose of ranged combat.
+It has one-third the normal encumbrance for the purpose of ranged combat, and
+slightly increases ranged damage depending on the wearer's armour skill.
 %%%%
 attunement (Attunement) armour ego
 

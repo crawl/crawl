@@ -1371,6 +1371,8 @@ string damage_rating(const item_def *item, int *rating_value)
     }
 
     const bool thrown = item && item->base_type == OBJ_MISSILES;
+    const bool archery = item && is_range_weapon(*item)
+                              && you.wearing_ego(OBJ_ARMOUR, SPARM_ARCHERY);
     if (item && !thrown && !is_weapon(*item))
         return "0.";
 
@@ -1411,6 +1413,10 @@ string damage_rating(const item_def *item, int *rating_value)
     rating /= DAM_RATE_SCALE;
     rating += plusses;
 
+    // this is a final damage multiplier, it applies after enchant
+    if (archery)
+        rating = player_archery_damage_bonus(rating, false);
+
     if (rating_value)
         *rating_value = rating;
 
@@ -1435,8 +1441,12 @@ string damage_rating(const item_def *item, int *rating_value)
 
     const string dmg_brand_desc = thrown ? _describe_missile_dmg_brand(*item) : "";
 
+    const string archery_bonus_string = archery ? make_stringf(" x %d%% (Archery)",
+            100 + you.wearing_ego(OBJ_ARMOUR, SPARM_ARCHERY) * you.skill (SK_ARMOUR))
+                                               : "";
+
     return make_stringf(
-        "%d (Base %s x %d%% (%s) x %d%% (%s)%s)%s.",
+        "%d (Base %s x %d%% (%s) x %d%% (%s)%s)%s%s.",
         rating,
         base_dam_desc.c_str(),
         stat_mult,
@@ -1444,7 +1454,8 @@ string damage_rating(const item_def *item, int *rating_value)
         skill_mult,
         use_weapon_skill ? "Skill" : "Fight",
         plusses_desc.c_str(),
-        dmg_brand_desc.c_str());
+        dmg_brand_desc.c_str(),
+        archery_bonus_string.c_str());
 }
 
 static string _weapon_ego_key(brand_type ego)

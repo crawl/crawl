@@ -1809,12 +1809,11 @@ int brand_adjust_weapon_damage(int base_dam, int brand, bool random)
 
 int resonance_damage_mod(int dam, bool random)
 {
-    if (you.wearing_ego(OBJ_ARMOUR, SPARM_RESONANCE))
-    {
-        int skmod = you.form == transformation::fortress_crab ? 4 : 2;
-        dam = random ? div_rand_round(dam * (100 + you.skill(SK_FORGECRAFT, skmod)), 100)
-                     : dam * (100 + you.skill(SK_FORGECRAFT, skmod)) / 100;
-    }
+    int bonus = you.wearing_ego(OBJ_ARMOUR, SPARM_RESONANCE)
+                    * you.skill(SK_FORGECRAFT, 2);
+
+    dam = random ? div_rand_round(dam * 100 + bonus, 100)
+                 : dam * (100 + bonus) / 100;
 
     return dam;
 }
