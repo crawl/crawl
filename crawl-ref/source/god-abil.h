@@ -87,8 +87,7 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
 #define MAKHLEB_OFFERED_MARKS_KEY "makhleb_offered_marks"
 #define MAKHLEB_ATROCITY_STACKS_KEY "makhleb_atrocity_stacks"
-#define MAKHLEB_ATROCITY_MAX_STACKS 3
-#define MAKHLEB_SLAUGHTER_BOOST_KEY "makhleb_slaughter_slaying"
+#define MAKHLEB_ATROCITY_MAX_STACKS 2
 #define MAKHLEB_CRUCIBLE_VICTIM_KEY "makhleb_crucible_victim"
 #define MAKHLEB_CRUCIBLE_DEBT_KEY "makhleb_crucible_debt"
 
