@@ -892,6 +892,57 @@ public:
     }
 };
 
+class PotionMist : public PotionEffect
+{
+private:
+    PotionMist() : PotionEffect(POT_MIST) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionMist);
+public:
+    static const PotionMist &instance()
+    {
+        static PotionMist inst; return inst;
+    }
+
+    bool effect(bool= true, int=40, bool is_potion = true) const override
+    {
+        const int dur = _scale_pot_duration(random_range(15, 25), is_potion);
+        if (you.is_insubstantial())
+            mprf(MSGCH_DURATION, "You become very slightly more insubstantial.");
+        else
+            mprf(MSGCH_DURATION, "Your body becomes insubstantial.");
+        you.increase_duration(DUR_INSUBSTANTIAL, dur, 40);
+
+        you.stop_being_caught();
+        you.stop_being_constricted();
+        if (you.duration[DUR_STICKY_FLAME])
+        {
+            mprf(MSGCH_RECOVERY, "The liquid fire falls away from your body.");
+            end_sticky_flame_player();
+        }
+        if (you.duration[DUR_PETRIFYING])
+        {
+            mprf(MSGCH_RECOVERY, "You body stops petrifying.");
+            you.duration[DUR_PETRIFYING] = 0;
+            you.redraw_evasion = true;
+        }
+        if (you.duration[DUR_BARBS])
+        {
+            mprf(MSGCH_RECOVERY, "The spiked barbs fall from your body.");
+            you.duration[DUR_BARBS] = 0;
+            you.attribute[ATTR_BARBS_POW] = 0;
+            you.props.erase(BARBS_MOVE_KEY);
+        }
+
+        return true;
+    }
+
+    bool quaff(bool was_known) const override
+    {
+        effect(was_known);
+        return true;
+    }
+};
+
 static const unordered_map<potion_type, const PotionEffect*, std::hash<int>> potion_effects = {
     { POT_CURING, &PotionCuring::instance(), },
     { POT_HEAL_WOUNDS, &PotionHealWounds::instance(), },
@@ -910,6 +961,7 @@ static const unordered_map<potion_type, const PotionEffect*, std::hash<int>> pot
     { POT_MUTATION, &PotionMutation::instance(), },
     { POT_RESISTANCE, &PotionResistance::instance(), },
     { POT_LIGNIFY, &PotionLignify::instance(), },
+    { POT_MIST, &PotionMist::instance(), },
 };
 
 const PotionEffect* get_potion_effect(potion_type pot)
@@ -934,6 +986,7 @@ static const map<potion_type, string> _spore_msg =
     { POT_MAGIC, "magical" },
     { POT_BERSERK_RAGE, "infuriating" },
     { POT_RESISTANCE, "bolstering" },
+    { POT_MIST, "insubstantial" },
 };
 
 static void _handle_potion_fungus(potion_type potion)
@@ -1068,6 +1121,9 @@ bool mons_benefits_from_potion(const monster& mon, potion_type potion)
         case POT_RESISTANCE:
             return !mon.has_ench(ENCH_RESISTANCE);
 
+        case POT_MIST:
+            return !mon.is_insubstantial();
+
         default:
             return false;
     }
@@ -1125,6 +1181,11 @@ void mons_potion_effect(monster& mon, potion_type potion, const actor& source)
 
         case POT_RESISTANCE:
             enchant_actor_with_flavour(&mon, &source, BEAM_RESISTANCE);
+            break;
+
+        case POT_MIST:
+            simple_monster_message(mon, " becomes insubstantial!");
+            mon.add_ench(mon_enchant(ENCH_INSUBSTANTIAL, &source, random_range(300, 450)));
             break;
 
         default:

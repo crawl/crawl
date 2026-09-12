@@ -231,7 +231,7 @@ public:
                  || item->base_type == OBJ_POTIONS)
         {
             name = pluralise(item->name(DESC_DBNAME))
-                   + " (" + describe_item_rarity(*item) + ")";
+                   + " (" + describe_item_rarity(*item, true) + ")";
         }
         else
         {
@@ -300,7 +300,7 @@ public:
         if (item->base_type == OBJ_SCROLLS || item->base_type == OBJ_POTIONS)
         {
             return " " + item->name(DESC_PLAIN, false, true, false)
-                   + " (" + describe_item_rarity(*item) + ")";
+                   + " (" + describe_item_rarity(*item, true) + ")";
         }
 
         description_level_type desctype =
@@ -395,7 +395,7 @@ void check_item_knowledge(bool unknown_items)
 
             // Don't show items the player knows can't generate.
             // (unless they *have* generated, ha...)
-            if (!known && item_known_excluded_from_set((object_class_type)i, j))
+            if (!known && item_known_not_to_generate((object_class_type)i, j))
                 continue;
 
             if (known != unknown_items) // logical xor

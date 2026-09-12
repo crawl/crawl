@@ -3732,6 +3732,13 @@ bool item_known_excluded_from_set(object_class_type type, int sub_type)
     return you.type_ids[item_sets[ist].cls][chosen];
 }
 
+bool item_known_not_to_generate(object_class_type type, int sub_type)
+{
+    return item_known_excluded_from_set(type, sub_type)
+           || (type == OBJ_POTIONS || type == OBJ_SCROLLS)
+               && consumable_rarity(type, sub_type) == RARITY_NONE;
+}
+
 item_set_type item_set_by_name(string name)
 {
     // We could cache this if we wanted to.
@@ -3890,9 +3897,13 @@ bool item_affects_agrid(const item_def& item)
 
     return false;
 }
+
 bool item_is_droppable(const item_def& item)
 {
     if (item.base_type == OBJ_GIZMOS && item_is_equipped(item))
+        return false;
+
+    if (item.is_type(OBJ_POTIONS, POT_MIST))
         return false;
 
     return true;

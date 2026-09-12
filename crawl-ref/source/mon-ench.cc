@@ -381,6 +381,14 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             env.invis_knowledge.update(*this);
         break;
 
+    case ENCH_INSUBSTANTIAL:
+        stop_being_caught();
+        stop_being_constricted();
+        del_ench(ENCH_STICKY_FLAME);
+        del_ench(ENCH_PETRIFYING, true, false);
+        del_ench(ENCH_BARBS);
+        break;
+
     default:
         break;
     }
@@ -1111,6 +1119,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         }
         break;
 
+    case ENCH_INSUBSTANTIAL:
+        if (!quiet && !is_insubstantial())
+            simple_monster_message(*this, " is no longer insubstantial");
+        break;
+
     default:
         break;
     }
@@ -1424,6 +1437,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_PREPARING_TO_LURK:
     case ENCH_PHASE_SHIFT:
     case ENCH_DIVINE_SHIELD:
+    case ENCH_INSUBSTANTIAL:
         decay_enchantment(en);
         break;
 
@@ -2185,6 +2199,7 @@ static const char *enchant_names[] =
     "diminished_spells", "orb_cooldown", "sunder_charge",
     "exposed", "briar_cooldown", "stampeding",
     "preparing_to_lurk", "phase_shift", "divine_shield",
+    "insubstantial",
     "buggy", // NUM_ENCHANTMENTS
 };
 

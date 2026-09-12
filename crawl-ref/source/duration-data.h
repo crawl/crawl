@@ -809,6 +809,15 @@ static const duration_def duration_data[] =
         YELLOW, "-Sirocco",
         "on sirocco cooldown", "sirocco cooldown",
         "You are unable to cast Sirocco.", D_COOLDOWN, {{"You feel hot winds gather around you again."}}},
+    { DUR_INSUBSTANTIAL,
+      LIGHTBLUE, "Insubst",
+      "insubstantial", "insubstantial",
+      "You are insubstantial.", D_DISPELLABLE,
+      {{ "", []() {
+          if (!you.is_insubstantial())
+            mprf(MSGCH_DURATION, "You feel more solid again.");
+          }
+      }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

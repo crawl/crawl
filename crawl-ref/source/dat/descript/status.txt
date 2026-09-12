@@ -1353,3 +1353,8 @@ when badly injured.
 
 You have recently shed your tail and need to explore more of the dungeon before
 it can grow back again.
+%%%%
+Insubst status
+
+Your body is insubstantial, granting you immunity to constriction, petrification,
+barbs, sticky flame, webs, nets, and being caught by bolas.

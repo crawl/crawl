@@ -2622,10 +2622,8 @@ static string _describe_lignify_ac()
                         you.armour_class_scaled(1));
 }
 
-string describe_item_rarity(const item_def &item)
+static string _rarity_to_str(item_rarity_type rarity)
 {
-    item_rarity_type rarity = consumable_rarity(item);
-
     switch (rarity)
     {
     case RARITY_VERY_RARE:
@@ -2639,8 +2637,27 @@ string describe_item_rarity(const item_def &item)
     case RARITY_VERY_COMMON:
         return "very common";
     case RARITY_NONE:
+        return "not found normally";
     default:
         return "buggy";
+    }
+}
+
+string describe_item_rarity(const item_def &item, bool terse)
+{
+    item_rarity_type rarity = consumable_rarity(item);
+    string desc = _rarity_to_str(rarity);
+
+    if (terse)
+        return desc;
+
+    if (rarity == RARITY_NONE)
+        return "It cannot be found normally.";
+    else
+    {
+        return make_stringf("It is %s %s.",
+                            article_a(desc).c_str(),
+                            item.base_type == OBJ_POTIONS ? "potion" : "scroll");
     }
 }
 
@@ -3144,9 +3161,7 @@ string get_item_description(const item_def &item,
                         describe_player_cancellation() << ".";
                 }
             }
-            description << "\n\nIt is "
-                        << article_a(describe_item_rarity(item))
-                        << " potion.";
+            description << "\n\n" << describe_item_rarity(item);
             need_extra_line = false;
         }
         break;
@@ -3175,9 +3190,7 @@ string get_item_description(const item_def &item,
             if (verbose)
                 _uselessness_desc(description, item);
 
-            description << "\n\nIt is "
-                        << article_a(describe_item_rarity(item))
-                        << " scroll.";
+            description << "\n\n" << describe_item_rarity(item);
             need_extra_line = false;
         }
         break;

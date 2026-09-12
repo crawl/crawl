@@ -7192,6 +7192,7 @@ bool player::is_insubstantial() const
 {
     return form == transformation::wisp
         || form == transformation::storm
+        || duration[DUR_INSUBSTANTIAL]
         || has_mutation(MUT_FORMLESS);
 }
 

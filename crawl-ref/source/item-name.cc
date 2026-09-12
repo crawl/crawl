@@ -728,6 +728,8 @@ const char* potion_type_name(int potiontype)
     case POT_RESISTANCE:        return "resistance";
     case POT_LIGNIFY:           return "lignification";
 
+    case POT_MIST:              return "mist";
+
     // FIXME: Remove this once known-items no longer uses this as a sentinel.
     default:
                                 return "bugginess";
@@ -2049,7 +2051,7 @@ void check_if_everything_is_identified()
         for (const auto s : all_item_subtypes(t))
         {
             if (!item_type_known(t, s)
-                && !item_known_excluded_from_set(t, s)
+                && !item_known_not_to_generate(t, s)
                 && unidentified++)
             {
                 you.props.erase(IDENTIFIED_ALL_KEY);

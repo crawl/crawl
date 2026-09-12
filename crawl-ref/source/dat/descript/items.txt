@@ -1197,6 +1197,14 @@ potion of might
 
 A potion which greatly increases the power of the drinker's melee attacks.
 %%%%
+potion of mist
+
+A vial of mist which temporarily turns the imbiber's body insubstantial,
+protecting them from constriction, petrification, barbs, sticky flame, webs,
+nets, and being caught by bolas.
+
+It will also end most of those effects if they are already afflicted.
+%%%%
 potion of moonshine
 
 A potent alcohol, distilled in some dubious corner of the dungeon. Drinking it

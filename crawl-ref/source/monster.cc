@@ -3606,7 +3606,7 @@ bool monster::is_unbreathing() const
 
 bool monster::is_insubstantial() const
 {
-    return mons_class_flag(type, M_INSUBSTANTIAL);
+    return mons_class_flag(type, M_INSUBSTANTIAL) || has_ench(ENCH_INSUBSTANTIAL);
 }
 
 bool monster::is_amorphous() const
