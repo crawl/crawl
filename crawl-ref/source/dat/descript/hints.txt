@@ -810,7 +810,7 @@ the opposing side of the faith, $1 would have been much more forgiving.
 %%%%
 HINT_CONVERTED_NONGOOD_TO_HATED
 
-Looks like $1 didn't appreciate your converting to $2. (Actually,only the three
+Looks like $1 didn't appreciate your converting to $2. (Actually, only the three
 good gods will usually be forgiving about this kind of faithlessness.)
 %%%%
 HINT_CONVERTED_WRATH
