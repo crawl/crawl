@@ -143,7 +143,8 @@ TEST_CASE( "Localise German", "[single-file]" )
                         "der +11 Morgenstern von Chance {Antimagie, rElek rK- UnsS}" );
         CHECK( localise("the +7 hand cannon \"Mule\" {flame, backblast, rF+}") ==
                         "die +7 Handkanone \"Mule\" {Flammen, Rückprall, rF+}" );
-
+        CHECK( localise("j - +5 fire dragon scales of Perfidy {rElec rF++ rC- rCorr}") ==
+                        "j - +5 Feuerdrachenschuppen von Perfidy {rElek rF++ rK- rKorr}" );
         // search result
         CHECK( localise("[Vaults:3] a +3 great sword of distortion (1 further duplicate)") ==
                "[Gewölbe:3] ein +3 Großschwert der Verzerrung (1 weiteres Duplikat)" );
@@ -182,6 +183,8 @@ TEST_CASE( "Localise German", "[single-file]" )
 
     SECTION("UI")
     {
+        CHECK( localise("Stlth   +++") == "Heiml   +++" );
+
         // inventory section title
         CHECK( localise("Missiles    (go to first with <w>(</w><blue>)") ==
                         "Geschosse    (zum ersten Gegenstand mit <w>(</w><blue>)" );
