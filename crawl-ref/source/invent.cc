@@ -52,7 +52,8 @@
 // Inventory menu shenanigans
 
 static void _get_inv_items_to_show(vector<const item_def*> &v,
-                                   int selector, int excluded_slot = -1);
+                                   int selector, int excluded_slot = -1,
+                                   bool droppable_only = false);
 
 InvTitle::InvTitle(Menu *mn, const string &title, invtitle_annotator tfn)
     : MenuEntry(title, MEL_TITLE)
@@ -652,7 +653,8 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
                              function<MenuEntry* (MenuEntry*)> procfn)
 {
     vector<const item_def *> tobeshown;
-    _get_inv_items_to_show(tobeshown, item_selector, excluded_slot);
+    _get_inv_items_to_show(tobeshown, item_selector, excluded_slot,
+                           type == menu_type::drop);
 
     load_items(tobeshown, procfn, 'a', true, true);
 
@@ -1379,13 +1381,15 @@ bool item_is_selected(const item_def &i, int selector)
 }
 
 static void _get_inv_items_to_show(vector<const item_def*> &v,
-                                   int selector, int excluded_slot)
+                                   int selector, int excluded_slot,
+                                   bool droppable_only)
 {
     for (const auto &item : you.inv)
     {
         if (item.defined()
             && item.link != excluded_slot
-            && item_is_selected(item, selector))
+            && item_is_selected(item, selector)
+            && (!droppable_only || item_is_droppable(item)))
         {
             v.push_back(&item);
         }
@@ -1445,8 +1449,8 @@ static int _invent_select(const char *title = nullptr,
     menu.f_selitem = selitemfn;
     if (filter)
         menu.set_select_filter(*filter);
-    menu.load_inv_items(item_selector, excluded_slot);
     menu.set_type(type);
+    menu.load_inv_items(item_selector, excluded_slot);
 
     // Don't override title if there are no items.
     if (title && menu.item_count())

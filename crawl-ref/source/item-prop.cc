@@ -3890,3 +3890,10 @@ bool item_affects_agrid(const item_def& item)
 
     return false;
 }
+bool item_is_droppable(const item_def& item)
+{
+    if (item.base_type == OBJ_GIZMOS && item_is_equipped(item))
+        return false;
+
+    return true;
+}

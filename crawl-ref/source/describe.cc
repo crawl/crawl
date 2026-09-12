@@ -4010,7 +4010,8 @@ static vector<command_type> _allowed_actions(const item_def& item)
     default:
         break;
     }
-    actions.push_back(CMD_DROP);
+    if (item_is_droppable(item))
+        actions.push_back(CMD_DROP);
     actions.push_back(CMD_ADJUST_INVENTORY);
     if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING)
         && _is_below_training_target(item, false))

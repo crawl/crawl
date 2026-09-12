@@ -2819,12 +2819,6 @@ bool drop_item(int item_dropped, int quant_drop)
 
     if (item_is_equipped(item))
     {
-        if (item.base_type == OBJ_GIZMOS)
-        {
-            mpr("That is permanently installed in your exoskeleton.");
-            return false;
-        }
-
         const bool is_wpn = is_weapon(item);
         if (!Options.easy_unequip && !is_wpn)
         {
