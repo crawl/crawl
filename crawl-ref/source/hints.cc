@@ -1412,8 +1412,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             return print_hint("HINT_CONVERT Uskayaw");
         case GOD_XOM:
             return print_hint("HINT_CONVERT Xom");
-        case GOD_YREDELEMNUL:
-            return print_hint("HINT_CONVERT Yredelemnul");
         default:
             print_hint("HINT_CONVERT");
 
