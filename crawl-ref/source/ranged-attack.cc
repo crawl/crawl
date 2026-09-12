@@ -412,7 +412,10 @@ int ranged_attack::apply_mon_damage_modifiers(int damage)
 int ranged_attack::player_apply_final_multipliers(int damage, bool /*aux*/)
 {
     if (!throwing())
+    {
+        damage = player_archery_damage_bonus(damage, true);
         damage = apply_rev_penalty(damage);
+    }
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_SNIPING)
         && defender->incapacitated())
     {
@@ -841,4 +844,13 @@ string ranged_attack::projectile_name() const
 bool ranged_attack::is_piercing() const
 {
     return pierce || is_penetrating_attack(*weapon);
+}
+
+int player_archery_damage_bonus(int dam, bool random)
+{
+    int bonus = you.wearing_ego(OBJ_ARMOUR, SPARM_ARCHERY) * you.skill(SK_ARMOUR);
+    dam = random ? div_rand_round(dam * 100 + bonus, 100)
+                 : dam * (100 + bonus) / 100;
+
+    return dam;
 }
