@@ -862,3 +862,18 @@ string localise(const string &s)
     debuglog("OUT: \"%s\"", result.c_str());
     return result;
 }
+
+formatted_string localise(const formatted_string& fs)
+{
+    if (!localisation_active())
+        return fs;
+
+    _context = "";
+    formatted_string result;
+    for (auto op: fs.ops)
+    {
+        op.text = _localise_string(op.text);
+        result.ops.push_back(op);
+    }
+    return result;
+}
