@@ -171,7 +171,7 @@ KEY:/^@num1@ /@num2@ @adj@/
 %%%%
 
 #############
-# generate uncounted plural from counted plural without
+# generate uncounted plural from counted plural
 PREGENERATE:7
 
 SELECT_BY_KEY:/^@num@ /
@@ -193,11 +193,22 @@ KEY:/^@num@/the/
 %%%%
 
 #############
+# generate no determiner plural from definite plural
+PREGENERATE:9
+
+SELECT_BY_KEY:/^the .*[^']{2}$/
+
+KEY:/^the //
+
+/^(\{pl\})die /{pl}/
+%%%%
+
+#############
 # English possessive translates to German genitive (or von + dative for named monsters).
 # Re-use these entries for the situation when English nominative has to be translated
 # to German genitive.
 %%%%
-PREGENERATE:9
+PREGENERATE:10
 
 SELECT_BY_KEY:/'s$/
 
@@ -208,22 +219,22 @@ KEY:/^(.*)'s$/{gen}$1/
 #############
 # if adjective already has a context, we can't generate other forms on the fly, so pre-generate
 %%%%
-PREGENERATE:10
+PREGENERATE:20
 SELECT_BY_KEY:/^\{adj-e\}/
 KEY:/^\{adj-e\}/{adj-er}/
 /e$/er/
 %%%%
-PREGENERATE:11
+PREGENERATE:21
 SELECT_BY_KEY:/^\{adj-e\}/
 KEY:/^\{adj-e\}/{adj-es}/
 /e$/es/
 %%%%
-PREGENERATE:12
+PREGENERATE:22
 SELECT_BY_KEY:/^\{adj-e\}/
 KEY:/^\{adj-e\}/{adj-en}/
 /e$/en/
 %%%%
-PREGENERATE:13
+PREGENERATE:23
 SELECT_BY_KEY:/^\{adj-e\}/
 KEY:/^\{adj-e\}/{adj-em}/
 /e$/em/

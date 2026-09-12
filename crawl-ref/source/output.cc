@@ -2160,13 +2160,13 @@ static void _append_overview_screen_item(column_composer& cols,
     const int item_idx = item.link;
     const char equip_char = index_to_letter(item_idx);
 
+    string name = (melded ? "melded " : "") + item.name(DESC_PLAIN, true);
+    name = localise(name);
     string str = make_stringf(
-                    "<w>%c</w> - <%s>%s%s</%s>",
+                    "<w>%c</w> - <%s>%s</%s>",
                     equip_char,
                     colname.c_str(),
-                    melded ? "melded " : "",
-                    chop_string(item.name(DESC_PLAIN, true),
-                            melded ? sw - 32 : sw - 25, false).c_str(),
+                    chop_string(name, sw - 25, false).c_str(),
                     colname.c_str());
     equip_chars.push_back(equip_char);
 
