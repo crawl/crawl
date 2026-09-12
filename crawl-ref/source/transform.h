@@ -10,6 +10,7 @@
 #include "enum.h"
 #include "player.h"
 #include "spl-util.h"
+#include "potion-type.h"
 
 constexpr int DRAGON_CLAWS = 3;
 constexpr int DRAGON_FANGS = 5;
@@ -22,6 +23,9 @@ constexpr int FLUX_ENERGY_WARNING = 10;
 
 // Amount of exploration left before your tail recovers.
 #define HYPNOGECKO_LOST_TAIL_KEY "hynogecko_tail_recovery"
+
+#define MISTMANE_POTION_PROGRESS_KEY "mistmane_potion_progress"
+#define MISTMANE_VAPOUR_KEY "mistane_vapourise"
 
 enum form_capability
 {
@@ -161,6 +165,9 @@ public:
     virtual int get_werefury_kill_bonus(int /*skill*/ = -1) const { return 0; }
     virtual int get_takedown_multiplier(int /*skill*/ = -1) const { return 0; }
     virtual int get_howl_power(int /*skill*/ = -1) const { return 0; }
+
+    // XXX: mistmane-specific
+    virtual int get_cloud_duration(int /*skill*/ = -1) const { return 0; }
 
     virtual int get_effect_size(int /*skill*/ = -1) const { return 0; }
     virtual int get_effect_chance(int /*skill*/ = -1) const { return 0; }
@@ -396,3 +403,8 @@ void jademantle_handle_crystal_revival(bool quiet = false);
 void jademantle_crystal_charge(spell_type spell);
 void jademantle_crystal_uncharge(monster_type type);
 bool jademantle_is_fully_charged();
+
+void mistmane_distill_potions(int tiles_explored);
+cloud_type mistmane_cloud_type(potion_type potion);
+void mistmane_quaff_potion(potion_type potion);
+void mistmane_spew_potion(const coord_def& target);

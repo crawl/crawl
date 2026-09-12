@@ -7324,7 +7324,7 @@ bool player::res_constrict() const
 
 int player::res_blind() const
 {
-    if (bool(holiness() & MH_PLANT))
+    if (bool(holiness() & MH_PLANT) || you.form == transformation::mistmane)
         return 2;
     else if (undead_state() != US_ALIVE || you.form == transformation::jelly)
         return 1;

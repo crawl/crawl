@@ -1020,6 +1020,17 @@ Smooth as a spider's silk, white as the eyes of some crawling thing which has
 lived too long in the dark, this gem buzzes with a fearful potential. Still, to
 a certain eye, it possesses a strange allure...
 %%%%
+mist talisman
+
+A small censer from which pours an endless smoky haze. Transforms the wearer's
+head into a billowing shroud of mist. Any potions they drink in this form will
+be rapidly decomposed into gases which they can expel via melee attacks as
+blasts of harmful clouds. They can also slowly condense the dungeon's air into
+potions of mist, allowing them to become intangible and blind monsters.
+
+However, the lack of typical mouth parts makes it difficult to pronounce
+incantations, greatly slowing the speed at which they cast spells.
+%%%%
 morningstar
 
 A mace with a head covered in short spikes.

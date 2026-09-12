@@ -1288,6 +1288,28 @@ you.
 
 Your tail will eventually regrow as you explore more of the dungeon.
 %%%%
+gather mist mutation
+
+As you explore, you will gradually condense the dungeon air into potions of mist,
+which allow you to become intangible.
+
+You can carry no more than five of these at a time and they will be destroyed if
+you ever permanently leave this form.
+%%%%
+potion clouds mutation
+
+Whenever you drink a potion, vapours from it are transmuted within your mane. If
+you perform a melee attack shortly thereafter, you will spray hazardous clouds
+in a wide line in the direction of your attack, whose quantity and duration are
+increased by your Shapeshifting skill.
+
+The type of cloud created depends on the potion drank:
+
+ Mist and Curing: Blinding Haze\n
+Berserk Rage: Flame\n
+Mutation: Mutagenic Fog\n
+All Others: Noxious Fumes\n
+%%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation
 

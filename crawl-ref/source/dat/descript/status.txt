@@ -1358,3 +1358,13 @@ Insubst status
 
 Your body is insubstantial, granting you immunity to constriction, petrification,
 barbs, sticky flame, webs, nets, and being caught by bolas.
+%%%%
+Vapour status
+
+A gaseous mixture from a recently-consumed potion swirls within you. Your next
+melee attack will spew clouds based on the type of potion that was quaffed.
+%%%%
+Mistmane status
+
+Your head is a cloud of swirling mist. Any potions you drink will be metabolised
+into clouds of baleful gas which you can expel with your melee attack.

@@ -1460,6 +1460,12 @@ void melee_attack::handle_phase_end()
     if (did_hit && attacker->is_player() && you.props.exists(RENDING_BLADE_MP_KEY))
         trigger_rending_blade();
 
+    if (attacker->is_player() && you.form == transformation::mistmane
+        && you.duration[DUR_VAPOURISE] && defender)
+    {
+        mistmane_spew_potion(defender->pos());
+    }
+
     // Dead but not yet cleaned up, most likely due to an attack flavour that
     // destroys the attacker on-hit.
     if (attacker->is_monster()

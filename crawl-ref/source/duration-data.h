@@ -7,6 +7,7 @@
 #include "areas.h"
 #include "act-iter.h"
 #include "cloud.h"
+#include "item-name.h"
 #include "mon-death.h"
 #include "god-abil.h"
 #include "god-companions.h"
@@ -96,6 +97,13 @@ static void _end_exegesis()
     mprf(MSGCH_DURATION, "Your divinely inspired understanding of %s fades.",
                          spell_title(static_cast<spell_type>(you.props[EXEGESIS_SPELL].get_int())));
     you.props.erase(EXEGESIS_SPELL);
+}
+
+static void _end_vapourise()
+{
+  mprf(MSGCH_DURATION, "Your vapourised %s dissipates without effect.",
+       potion_type_name(static_cast<potion_type>(you.props[MISTMANE_VAPOUR_KEY].get_int())));
+  you.props.erase(MISTMANE_VAPOUR_KEY);
 }
 
 // properties of the duration.
@@ -907,6 +915,7 @@ static const duration_def duration_data[] =
        {{"The regenerative ooze finishes dripping off of you."}}},
     { DUR_INDOMITABLE, LIGHTBLUE, "Indom", "", "", "", D_NO_FLAGS},
     { DUR_EXEGESIS, WHITE, "Exegesis", "", "", "", D_NO_FLAGS, {{"", _end_exegesis}}},
+    { DUR_VAPOURISE, WHITE, "Vapour", "", "vapourise_ready", "", D_NO_FLAGS, {{"", _end_vapourise}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

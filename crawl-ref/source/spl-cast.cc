@@ -1108,6 +1108,8 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
     makhleb_celebrant_bloodrite();
     _maybe_blood_hastes_allies();
     you.turn_is_over = true;
+    if (you.form == transformation::mistmane)
+        you.time_taken *= 2;
 
     return cast_result;
 }

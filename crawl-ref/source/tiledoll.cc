@@ -761,6 +761,21 @@ void fill_doll_equipment(dolls_data &result)
             result.parts[TILEP_PART_BASE]++;
         result.parts[TILEP_PART_LEG]     = 0;
         break;
+    case transformation::mistmane:
+        switch (you.species)
+        {
+        case SP_OCTOPODE:
+            result.parts[TILEP_PART_BASE] = TILEP_TRAN_MISTMANE_OCTOPODE;
+            break;
+        case SP_FELID:
+            result.parts[TILEP_PART_BASE] = TILEP_TRAN_MISTMANE_FELID;
+            break;
+        default:
+            result.parts[TILEP_PART_HELM] = TILEP_HELM_MISTMANE_FORM_HUMANOID;
+            break;
+        }
+        result.parts[TILEP_PART_HAIR] = 0;
+        break;
     default:
         _fill_doll_equipment_default(result);
         break;

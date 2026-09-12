@@ -1053,8 +1053,7 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
         case CLOUD_RUST:
             return act.is_player() && you.form == transformation::fortress_crab;
         case CLOUD_BLINDING_HAZE:
-            return act.res_blind()
-                   || act.is_player() && you.form == transformation::mist;
+            return act.res_blind();
         default:
             return false;
     }

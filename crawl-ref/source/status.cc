@@ -1061,6 +1061,17 @@ bool fill_status_info(int status, status_info& inf)
         }
         break;
 
+    case DUR_VAPOURISE:
+    {
+        cloud_struct dummy;
+        dummy.type = mistmane_cloud_type(static_cast<potion_type>(you.props[MISTMANE_VAPOUR_KEY].get_int()));
+        inf.light_text = "Vapour";
+        inf.light_colour = element_colour(get_cloud_colour(dummy), you.pos(), true);
+        inf.short_text = make_stringf("vapourise (%s)", cloud_type_name(dummy.type, true).c_str());
+        inf.long_text = make_stringf("producing %s", cloud_type_name(dummy.type).c_str());
+    }
+    break;
+
     default:
         if (!found)
         {

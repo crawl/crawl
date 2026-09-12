@@ -4182,6 +4182,8 @@ colour_t item_def::talisman_colour() const
         return ETC_RANDOM;
     case TALISMAN_RIMEHORN:
         return LIGHTBLUE;
+    case TALISMAN_MIST:
+        return ETC_SMOKE;
     case TALISMAN_SPIDER:
         return LIGHTGREEN;
     case TALISMAN_AQUA:

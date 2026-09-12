@@ -1606,6 +1606,8 @@ hypnogecko_form_naga TRAN_HYPNOGECKO_NAGA
 hypnogecko_form_naga_tailless TRAN_HYPNOGECKO_NAGA_TAILLESS
 hypnogecko_form_octopode TRAN_HYPNOGECKO_OCTOPODE
 hypnogecko_form_octopode_tailless TRAN_HYPNOGECKO_OCTOPODE_TAILLESS
+mistmane_form_felid TRAN_MISTMANE_FELID
+mistmane_form_octopode TRAN_MISTMANE_OCTOPODE
 
 %rim 1
 

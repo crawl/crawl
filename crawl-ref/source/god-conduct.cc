@@ -1057,6 +1057,9 @@ void trigger_exploration_conducts()
             remaining -= you.newly_revealed_cells;
     }
 
+    if (you.form == transformation::mistmane)
+        mistmane_distill_potions(you.newly_revealed_cells);
+
     while (you.newly_revealed_cells > 0)
     {
         you.newly_revealed_cells--;

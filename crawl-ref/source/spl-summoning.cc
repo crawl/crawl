@@ -4197,6 +4197,9 @@ static void _do_player_potion()
     if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && oni_likes_potion(potion))
         oni_drunken_swing();
 
+    if (you.form == transformation::mistmane)
+        mistmane_quaff_potion(potion);
+
     if (you.magic_points < you.max_magic_points)
     {
         const int amu = you.wearing(OBJ_JEWELLERY, AMU_CHEMISTRY, false, true);

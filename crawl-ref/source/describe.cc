@@ -7980,6 +7980,12 @@ static string _describe_talisman_form(transformation form_type)
         _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Shed Tail HP", skill, 0, true, false);
         _maybe_populate_form_table(items, bind(&Form::get_effect_chance, form, placeholders::_1), "Distraction Stab Chance", skill, 0, true, true);
     }
+    if (form_type == transformation::mistmane)
+    {
+        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Cloud range", skill, 0, false, false, 10, 1);
+        _maybe_populate_form_table(items, bind(&Form::get_cloud_duration, form, placeholders::_1), "Cloud duration", skill, 0, true, false);
+        _maybe_populate_form_table(items, bind(&Form::get_effect_chance, form, placeholders::_1), "Distill rate", skill, 0, true, false);
+    }
 
     vector<int> column_width;
 

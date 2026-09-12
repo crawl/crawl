@@ -1522,6 +1522,7 @@ jade_form_naga JADE_FORM_NAGA
 jade_form_naga_charged JADE_FORM_NAGA_CHARGED
 jade_form_humanoid_front JADE_FORM_HUMANOID
 jade_form_humanoid_front_charged JADE_FORM_HUMANOID_CHARGED
+mistmane_form_humanoid MISTMANE_FORM_HUMANOID
 
 %end_ctg
 

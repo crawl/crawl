@@ -1049,6 +1049,9 @@ bool quaff_potion(item_def &potion, bool force)
             inc_mp(random_range(5, 9));
         }
 
+        if (you.form == transformation::mistmane)
+            mistmane_quaff_potion(ptyp);
+
         if (you.has_mutation(MUT_POTION_FUNGUS))
             _handle_potion_fungus(ptyp);
 
