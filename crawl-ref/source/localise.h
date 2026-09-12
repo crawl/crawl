@@ -7,6 +7,8 @@
 
 #include <string>
 
+#include "format.h"
+
 using std::string;
 
 void init_localisation();
@@ -18,3 +20,5 @@ void shutdown_localisation();
 bool localisation_active();
 
 string localise(const string &s);
+
+formatted_string localise(const formatted_string& fs);
