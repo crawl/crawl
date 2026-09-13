@@ -198,10 +198,6 @@ rSteam
 Will
 
 %%%%
-# stealth
-Stlth
-
-%%%%
 dropped
 
 %%%%
