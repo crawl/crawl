@@ -638,7 +638,7 @@ Gd
 #
 ###############################################################
 %%%%
-" Turns: @num@, Time: "
+Turns: @num@, Time: @time@
 
 %%%%
 # Health changes to HP if player rotted

@@ -2236,14 +2236,17 @@ static string _overview_screen_title(int sw)
 {
     string title = player_title();
     title = (title[0] == ',' ? "" : " ") + title + " ";
+    title = localise(title);
 
     string species_job = make_stringf("(%s %s)",
                                       species::name(you.species).c_str(),
                                       get_job_name(you.char_class));
+    species_job = localise(species_job);
 
     handle_real_time();
     string time_turns = make_stringf(" Turns: %d, Time: ", you.num_turns)
                       + make_time_string(you.real_time(), true);
+    time_turns = localise(time_turns);
 
     const int char_width = strwidth(species_job);
     const int title_width = strwidth(title);
@@ -2256,6 +2259,7 @@ static string _overview_screen_title(int sw)
         species_job = make_stringf("(%s%s)",
                                     species::get_abbrev(you.species),
                                     get_job_abbrev(you.char_class));
+        species_job = localise(species_job);
         linelength -= (char_width - strwidth(species_job));
     }
 
