@@ -3581,7 +3581,7 @@ void column_composer::add_formatted(int ncol,
     ASSERT_RANGE(ncol, 0, (int) columns.size());
 
     column &col = columns[ncol];
-    vector<string> segs = split_string("\n", s, false, true);
+    vector<string> segs = split_string("\n", localise(s), false, true);
 
     vector<formatted_string> newlines;
     // Add a blank line if necessary. Blank lines will not

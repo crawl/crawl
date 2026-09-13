@@ -641,78 +641,76 @@ Gd
 Turns: @num@, Time: @time@
 Runde: @num@, Zeit: @time@
 %%%%
-# Health changes to HP if player rotted
+Health: @arg@
+Gesund: @arg@
 %%%%
-"HP:   "
-"TP:   "
+# Health changes to HP if player drained
+HP:   @arg@
+TP:   @arg@
 %%%%
-# Magic changes to MP if player rotted
+Magic:  @arg@
+Magie:  @arg@
 %%%%
-"MP:   "
-"MP:   "
+# Magic changes to MP if player drained
+MP:   @arg@
+MP:   @arg@
 %%%%
-"Gold:   "
-"Gold:   "
+Gold:   @arg@
+Gold:   @arg@
 %%%%
-# Align Gold with HP/MP if player rotted
+# Align Gold with HP/MP if player drained
 %%%%
-"Gold: "
-"Gold: "
+Gold: @arg@
+Gold: @arg@
 %%%%
 # Armour Class
 %%%%
-"AC: "
-"RK:  "
+AC: @arg@
+RK:  @arg@
 %%%%
 # Evasion
 %%%%
-"EV: "
-"AW:  "
+EV: @arg@
+AW:  @arg@
 %%%%
 # Shields
 %%%%
-"SH: "
-"Sch: "
+SH: @arg@
+Sch: @arg@
 %%%%
 # Strength
 %%%%
-"Str: "
-"Stä: "
+Str: @arg@
+Stä: @arg@
 %%%%
 # Intelligence
 %%%%
-"Int: "
-"Int: "
+Int: @arg@
+Int: @arg@
 %%%%
 # Dexterity
 %%%%
-"Dex: "
-"Ges: "
+Dex: @arg@
+Ges: @arg@
 %%%%
 # eXperience Level
 %%%%
-"XL:     "
-"Stufe:  "
+XL:     @arg@   Next: @arg@
+Stufe:  @arg@  Nächste: @arg@
 %%%%
-"   Next: "
-" Nächste: "
+# Next: disappears once max XL is reached
+XL:     @arg@
+Stufe:  @arg@
 %%%%
-"God:    "
-"Gott:   "
+God:    @arg@
+Gott:   @arg@
 %%%%
-"Spells: "
-"Zauber: "
-%%%%
-@num1@/@num2@ levels left
-@num1@/@num2@ Stufen übrig
+Spells: @arg1@/@arg2@ levels left
+Zauber: @arg1@/@arg2@ Stufen übrig
 %%%%
 # Felids have multiple lives (and deaths)
-%%%%
-"Lives:  "
-"Leben:  "
-%%%%
-"   Deaths: "
-"   Tode: "
+Lives:  @arg@   Deaths: @arg@
+Leben:  @arg@   Tode: @arg@
 %%%%
 # fire resistance
 rFire   @pips@

@@ -2207,14 +2207,12 @@ static void _print_overview_screen_equip(column_composer& cols,
                 else
                     str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
 
-                str = localise(str);
                 cols.add_formatted(1, str, false);
                 continue;
             }
             else if (equipped[i].is_overflow)
             {
                 str = "  <darkgrey>[" + slot_name_lwr + " occupied]</darkgrey>";
-                str = localise(str);
                 cols.add_formatted(1, str, false);
                 continue;
             }
@@ -2301,7 +2299,7 @@ static string _god_powers()
     if (you_worship(GOD_NO_GOD))
         return "";
 
-    const string name = god_name(you.religion);
+    const string name = localise(god_name(you.religion));
     if (you_worship(GOD_GOZAG))
         return colour_string(name, _god_status_colour(god_colour(you.religion)));
 
