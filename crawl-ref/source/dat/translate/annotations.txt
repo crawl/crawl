@@ -168,6 +168,10 @@ rN---
 rPois
 
 %%%%
+# electricity
+rElec
+
+%%%%
 # corrosion
 rCorr
 
@@ -192,6 +196,10 @@ rSteam
 %%%%
 # will (magic resistance)
 Will
+
+%%%%
+# stealth
+Stlth
 
 %%%%
 dropped

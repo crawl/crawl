@@ -205,18 +205,77 @@ void separate_menu_letter_prefix(const string& s, string& prefix, string& rest)
     if (s.length() < 3)
         return;
 
-    if (isaalpha(s[0]) || isadigit(s[0]))
+    if (s.length() >= 4 && s.substr(1, 3) == " - ")
     {
-        if (s.length() >= 4 && s.substr(1, 3) == " - ")
+        prefix = s.substr(0, 4);
+        rest = s.substr(4);
+    }
+    else if (s.substr(1, 2) == ") ")
+    {
+        prefix = s.substr(0, 3);
+        rest = s.substr(3);
+    }
+    else if (s.substr(0, 2) == "- ")
+    {
+        prefix = s.substr(0, 2);
+        rest = s.substr(2);
+    }
+}
+
+void separate_enclosing_tags(const string& s, string& prefix,
+                             string& suffix, string& rest)
+{
+    prefix = "";
+    suffix = "";
+    rest = s;
+
+    if (s.length() < 2)
+        return;
+
+    if (s[0] == '<')
+    {
+        size_t prefix_end = s.find('>');
+        if (prefix_end != string::npos)
         {
-            prefix = s.substr(0, 4);
-            rest = s.substr(4);
+            prefix = s.substr(0, prefix_end + 1);
+            rest = s.substr(prefix_end + 1);
         }
-        else if (s.length() >= 3 && s.substr(1, 2) == ") ")
+    }
+
+    if (rest.length() < 2)
+        return;
+
+    if (rest[rest.length()-1] == '>')
+    {
+        size_t suffix_start = rest.rfind('<');
+        if (suffix_start != string::npos)
         {
-            prefix = s.substr(0, 3);
-            rest = s.substr(3);
+            suffix = rest.substr(suffix_start);
+            rest = rest.substr(0, suffix_start);
         }
+    }
+
+    // don't separate a tag from its partner
+    bool revert = false;
+    if (!prefix.empty())
+    {
+        string closing = "</" + prefix.substr(1);
+        if (suffix != closing && contains(rest, closing))
+            revert = true;
+
+    }
+    else if (!suffix.empty())
+    {
+        string opening = "<" + suffix.substr(2);
+        if (contains(rest, opening))
+            revert = true;
+    }
+
+    if (revert)
+    {
+        rest = s;
+        prefix = "";
+        suffix = "";
     }
 }
 

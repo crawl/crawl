@@ -19,6 +19,11 @@ void shutdown_localisation();
 // Is localisation active?
 bool localisation_active();
 
+// localise string
 string localise(const string &s);
 
+// convenience function, equivalent to localise(make_stringf(format, ...))
+string localisef(const char* format, ...);
+
+// localise formatted string
 formatted_string localise(const formatted_string& fs);

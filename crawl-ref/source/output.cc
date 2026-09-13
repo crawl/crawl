@@ -2160,6 +2160,7 @@ static void _append_overview_screen_item(column_composer& cols,
     const int item_idx = item.link;
     const char equip_char = index_to_letter(item_idx);
 
+    // i18n: Must localise before string is chopped
     string name = (melded ? "melded " : "") + item.name(DESC_PLAIN, true);
     name = localise(name);
     string str = make_stringf(
@@ -2206,12 +2207,14 @@ static void _print_overview_screen_equip(column_composer& cols,
                 else
                     str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
 
+                str = localise(str);
                 cols.add_formatted(1, str, false);
                 continue;
             }
             else if (equipped[i].is_overflow)
             {
                 str = "  <darkgrey>[" + slot_name_lwr + " occupied]</darkgrey>";
+                str = localise(str);
                 cols.add_formatted(1, str, false);
                 continue;
             }
@@ -2688,6 +2691,7 @@ static vector<formatted_string> _get_overview_resistances(
 #endif
     }
 
+    out = localise(out);
     cols.add_formatted(0, out, false);
 
     // Second column.
