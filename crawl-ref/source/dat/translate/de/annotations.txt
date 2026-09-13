@@ -168,6 +168,10 @@ rN---
 rPois
 rGift
 %%%%
+# electricity
+rElec
+rElek
+%%%%
 # corrosion
 rCorr
 rKorr
@@ -193,6 +197,10 @@ rDampf
 # will (magic resistance)
 Will
 Wille
+%%%%
+# stealth
+Stlth
+Heiml
 %%%%
 dropped
 fallengelassen

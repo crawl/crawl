@@ -533,6 +533,7 @@ Health:
 
 %%%%
 # Health changes to HP when more space is needed (e.g. need to show HP drain)
+# HP = Hit Points
 HP:
 
 %%%%
@@ -540,22 +541,28 @@ Magic:
 
 %%%%
 # Magic changes to MP when more more space is needed
+# MP = Magic Points
 MP:
 
 %%%%
+# Armour Class
 AC:
 
 %%%%
+# Evasion
 EV:
 
 %%%%
+# Shields
 SH:
 
 %%%%
+# eXperience Level
 XL:
 
 %%%%
 # percentage progress to next XL
+# Next = Nächste, but that's too long, so I used Komm for Kommende
 Next:
 
 %%%%
@@ -574,12 +581,15 @@ Equip:
 Eq:
 
 %%%%
+# Strength
 Str:
 
 %%%%
+# Intelligence
 Int:
 
 %%%%
+# Dexterity
 Dex:
 
 %%%%
@@ -649,37 +659,37 @@ Gd
 "Gold: "
 
 %%%%
-# Armour Class = Rüstingsklasse
+# Armour Class
 %%%%
 "AC: "
 
 %%%%
-# Evasion = Ausweichen
+# Evasion
 %%%%
 "EV: "
 
 %%%%
-# Shields = Schilde
+# Shields
 %%%%
 "SH: "
 
 %%%%
-# Strength = Stärke
+# Strength
 %%%%
 "Str: "
 
 %%%%
-# Intelligence = Intelligenz
+# Intelligence
 %%%%
 "Int: "
 
 %%%%
-# Dexterity = Geschicklichkeit
+# Dexterity
 %%%%
 "Dex: "
 
 %%%%
-# eXperience Level = Erfahrungsstufe
+# eXperience Level
 %%%%
 "XL:     "
 
@@ -705,57 +715,50 @@ Gd
 
 %%%%
 # fire resistance
-%%%%
-rFire
+rFire   @pips@
 
 %%%%
 # cold resistance
-%%%%
-rCold
+rCold   @pips@
 
 %%%%
 # negative energy resistance
-%%%%
-rNeg
+rNeg    @pips@
 
 %%%%
 # poison resistance
-%%%%
-# duplicate of item brand
-#rPois
-#
+rPois   @pips@
+
 %%%%
 # electricity resistance
-%%%%
-rElec
+rElec   @pips@
 
 %%%%
 # corrosion resistance
-%%%%
-# duplicate of item brand
-#rCorr
-#
-%%%%
-# duplicate of item brand
-#Will
-#
-%%%%
-# Stealth = Heimlichkeit
-%%%%
-"Stlth    "
+rCorr   @pips@
 
 %%%%
-# HP regeneration rate
-%%%%
-HPRegen  %03.2f/turn
+# see invisible
+SInv    @pips@
 
 %%%%
-# MP regeneration rate
-%%%%
-MPRegen  %03.2f/turn
+# will
+Will    @pips@
 
 %%%%
-SeeInvis
+# stealth
+%%%%
+Stlth   @pips@
+
+%%%%
+HPRegen @num1@.@num2@/turn
+
+%%%%
+# indomitable status
+HPRegen <lightblue>@num1@.@num2@</lightblue>/turn
+
+%%%%
+MPRegen @num1@.@num2@/turn
 
 %%%%
 Faith
@@ -852,7 +855,7 @@ Nothing quivered
 @arg@ unavailable
 
 %%%%
-@arg@ currently unavailable
+@arg@ occupied
 
 %%%%
 @arg@ restricted

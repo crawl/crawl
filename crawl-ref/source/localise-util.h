@@ -49,6 +49,11 @@ string get_end_punctuation(const string& s);
 // separate menu letter prefix (e.g. "a - ", "a) ")
 void separate_menu_letter_prefix(const string& s, string& annotation, string& rest);
 
+// separate enclosing formatting tags (e.g. <w>...</w>)
+// also separates a leading/trailing tag that has no partner in the string
+void separate_enclosing_tags(const string& s, string& prefix,
+                             string& suffix, string& rest);
+
 void separate_prefix_annotation(const string& s, string& annotation, string& rest);
 void separate_postfix_annotation(const string& s, string& annotation, string& rest);
 

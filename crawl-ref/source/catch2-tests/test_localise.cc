@@ -183,7 +183,16 @@ TEST_CASE( "Localise German", "[single-file]" )
 
     SECTION("UI")
     {
+        // character overview screen
         CHECK( localise("Stlth   +++") == "Heiml   +++" );
+        CHECK( localise("<lightgrey>Stlth   ") == "<lightgrey>Heiml   " );
+        CHECK( localise("  - Nothing wielded") == "  - Nichts geführt" );
+        CHECK( localise("<darkgrey>(no helmet)</darkgrey>") ==
+                        "<darkgrey>(kein Helm)</darkgrey>" );
+        CHECK( localise("<darkgrey>(cloak unavailable)</darkgrey>") ==
+                        "<darkgrey>(Umhang nicht verfügbar)</darkgrey>" );
+        CHECK( localise("  <darkgrey>[gloves occupied]</darkgrey>") ==
+                        "  <darkgrey>[Handschuhe besetzt]</darkgrey>" );
 
         // inventory section title
         CHECK( localise("Missiles    (go to first with <w>(</w><blue>)") ==

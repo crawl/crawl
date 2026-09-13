@@ -533,7 +533,7 @@ Health:
 Gesund:
 %%%%
 # Health changes to HP when more space is needed (e.g. need to show HP drain)
-# Hit points = Trefferpunkte
+# HP = Hit Points
 HP:
 TP:
 %%%%
@@ -541,23 +541,23 @@ Magic:
 Magie:
 %%%%
 # Magic changes to MP when more more space is needed
-# Magic points = Magiepunkte
+# MP = Magic Points
 MP:
 MP:
 %%%%
-# Armour Class = Rüstungsklasse
+# Armour Class
 AC:
 RK:
 %%%%
-# Evasion = Ausweichen
+# Evasion
 EV:
 AW:
 %%%%
-# Shields = Schilde
+# Shields
 SH:
 Sch:
 %%%%
-# eXperience Level = Erfahrungsstufe
+# eXperience Level
 XL:
 St:
 %%%%
@@ -574,7 +574,6 @@ Silenced
 Stille
 %%%%
 # There is an option to show equipment instead of noise
-# equipment = Ausrüstung
 Equip:
 Ausr:
 %%%%
@@ -582,15 +581,15 @@ Ausr:
 Eq:
 Ar:
 %%%%
-# Strength = Stärke
+# Strength
 Str:
 Stä:
 %%%%
-# Intelligence = Intelligenz
+# Intelligence
 Int:
 Int:
 %%%%
-# Dexterity = Geschicklichkeit
+# Dexterity
 Dex:
 Ges:
 %%%%
@@ -660,37 +659,37 @@ Gd
 "Gold: "
 "Gold: "
 %%%%
-# Armour Class = Rüstingsklasse
+# Armour Class
 %%%%
 "AC: "
 "RK:  "
 %%%%
-# Evasion = Ausweichen
+# Evasion
 %%%%
 "EV: "
 "AW:  "
 %%%%
-# Shields = Schilde
+# Shields
 %%%%
 "SH: "
 "Sch: "
 %%%%
-# Strength = Stärke
+# Strength
 %%%%
 "Str: "
 "Stä: "
 %%%%
-# Intelligence = Intelligenz
+# Intelligence
 %%%%
 "Int: "
 "Int: "
 %%%%
-# Dexterity = Geschicklichkeit
+# Dexterity
 %%%%
 "Dex: "
 "Ges: "
 %%%%
-# eXperience Level = Erfahrungsstufe
+# eXperience Level
 %%%%
 "XL:     "
 "Stufe:  "
@@ -716,58 +715,51 @@ Gd
 "   Tode: "
 %%%%
 # fire resistance
-%%%%
-rFire
-rFeuer
+rFire   @pips@
+rFeuer  @pips@
 %%%%
 # cold resistance
-%%%%
-rCold
-rKälte
+rCold   @pips@
+rKälte  @pips@
 %%%%
 # negative energy resistance
-%%%%
-rNeg
-rNeg
+rNeg    @pips@
+rNeg    @pips@
 %%%%
 # poison resistance
-%%%%
-# duplicate of item brand
-#rPois
-#
+rPois   @pips@
+rGift   @pips@
 %%%%
 # electricity resistance
-%%%%
-rElec
-rElek
+rElec   @pips@
+rElek   @pips@
 %%%%
 # corrosion resistance
+rCorr   @pips@
+rKorr   @pips@
 %%%%
-# duplicate of item brand
-#rCorr
-#
+# see invisible
+SInv    @pips@
+UnsS    @pips@
 %%%%
-# duplicate of item brand
-#Will
-#
+# will
+Will    @pips@
+Wille   @pips@
 %%%%
-# Stealth = Heimlichkeit
+# stealth
 %%%%
-"Stlth    "
-"Heiml    "
+Stlth   @pips@
+Heiml   @pips@
 %%%%
-# HP regeneration rate
+HPRegen @num1@.@num2@/turn
+TPRegen @num1@,@num2@/Runde
 %%%%
-HPRegen  %03.2f/turn
-TPRegen  %03.2f/Runde
+# indomitable status
+HPRegen <lightblue>@num1@.@num2@</lightblue>/turn
+TPRegen <lightblue>@num1@,@num2@</lightblue>/Runde
 %%%%
-# MP regeneration rate
-%%%%
-MPRegen  %03.2f/turn
-MPRegen  %03.2f/Runde
-%%%%
-SeeInvis
-UnsSehen
+MPRegen @num1@.@num2@/turn
+MPRegen @num1@,@num2@/Runde
 %%%%
 Faith
 Glaube
@@ -863,8 +855,8 @@ Nichts im Köcher
 @arg@ unavailable
 @arg@ nicht verfügbar
 %%%%
-@arg@ currently unavailable
-@arg@ zurzeit nicht verfügbar
+@arg@ occupied
+@arg@ besetzt
 %%%%
 @arg@ restricted
 @arg@ beschränkt

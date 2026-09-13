@@ -716,6 +716,8 @@ static string _localise_string(const string& s, bool fallback_en)
     if (s.empty())
         return s;
 
+    debuglog("\"%s\"", s.c_str());
+
     // check if all whitespace
     string trimmed = trimmed_string(s);
     if (trimmed.empty())
@@ -739,7 +741,19 @@ static string _localise_string(const string& s, bool fallback_en)
             return replace_first(s, trimmed, result);
     }
 
-    string prefix, rest;
+    string prefix, suffix, rest;
+    separate_enclosing_tags(s, prefix, suffix, rest);
+    if (!prefix.empty() || !suffix.empty())
+    {
+        result = _localise_string(rest, fallback_en);
+        if (!result.empty() || rest.empty())
+        {
+            debuglog("Prefix=\"%s\", suffix=\"%s\"", prefix.c_str(), suffix.c_str());
+            debuglog("Rest: \"%s\" -> \"%s\"", rest.c_str(), result.c_str());
+            return prefix + result + suffix;
+        }
+    }
+
     separate_menu_letter_prefix(s, prefix, rest);
     if (!prefix.empty())
     {
@@ -840,7 +854,6 @@ string localise(const string &s)
     if (s.empty())
         return s;
 
-    debuglog("IN:  \"%s\"", s.c_str());
     string result;
 
     // localise lines individually
@@ -854,13 +867,23 @@ string localise(const string &s)
         else
         {
             _context = "";
+            debuglog("IN:  \"%s\"", lines[i].c_str());
             string line = _localise_string(lines[i]);
+            debuglog("OUT: \"%s\"", line.c_str());
             result += line;
         }
     }
 
-    debuglog("OUT: \"%s\"", result.c_str());
     return result;
+}
+
+string localisef(const char* format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    string ret = vmake_stringf(format, args);
+    va_end(args);
+    return localise(ret);
 }
 
 formatted_string localise(const formatted_string& fs)
