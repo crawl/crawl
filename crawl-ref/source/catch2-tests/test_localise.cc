@@ -184,6 +184,9 @@ TEST_CASE( "Localise German", "[single-file]" )
     SECTION("UI")
     {
         // character overview screen
+        CHECK( localise("(Deep Elf Conjurer)") == "(Tiefenelf Konjurant)" );
+        CHECK( localise("(DECj)") == "(TEKj)" );
+        CHECK( localise(" Turns: 1234, Time: 01:02:03") == " Runde: 1234, Zeit: 01:02:03" );
         CHECK( localise("Stlth   +++") == "Heiml   +++" );
         CHECK( localise("<lightgrey>Stlth   ") == "<lightgrey>Heiml   " );
         CHECK( localise("  - Nothing wielded") == "  - Nichts geführt" );

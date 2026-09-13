@@ -318,7 +318,7 @@ CR
 %%%%
 # Conjurer
 Cj
-Bs
+Kj
 %%%%
 # Earth Elementalist
 EE
@@ -416,7 +416,7 @@ Zb
 %%%%
 # Conjurer
 @adj@@two_letter_code@Cj
-{adj-er}@adj@@two_letter_code@Bs
+{adj-er}@adj@@two_letter_code@Kj
 %%%%
 # Earth Elementalist
 @adj@@two_letter_code@EE
