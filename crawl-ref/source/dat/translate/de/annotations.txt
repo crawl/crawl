@@ -198,10 +198,6 @@ rDampf
 Will
 Wille
 %%%%
-# stealth
-Stlth
-Heiml
-%%%%
 dropped
 fallengelassen
 %%%%
