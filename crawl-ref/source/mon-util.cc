@@ -3573,7 +3573,7 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
     mon.behaviour = BEH_WANDER;
 
     // Remove haunting, which would otherwise cause monster to continue attacking
-    mon.del_ench(ENCH_HAUNTING, true, true);
+    mon.del_ench(ENCH_HAUNTING, true);
 
     // Remove bullseye, since we shouldn't be shooting monster anymore
 	mon.del_ench(ENCH_BULLSEYE_TARGET, true);
