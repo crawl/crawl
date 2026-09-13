@@ -3576,7 +3576,7 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
     mon.del_ench(ENCH_HAUNTING, true);
 
     // Remove bullseye, since we shouldn't be shooting monster anymore
-	mon.del_ench(ENCH_BULLSEYE_TARGET, true);
+    mon.del_ench(ENCH_BULLSEYE_TARGET, true);
 
     // Remove level annotation.
     mon.props[NO_ANNOTATE_KEY] = true;
