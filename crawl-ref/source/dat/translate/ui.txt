@@ -641,77 +641,75 @@ Gd
 Turns: @num@, Time: @time@
 
 %%%%
-# Health changes to HP if player rotted
-%%%%
-"HP:   "
+Health: @arg@
 
 %%%%
-# Magic changes to MP if player rotted
-%%%%
-"MP:   "
+# Health changes to HP if player drained
+HP:   @arg@
 
 %%%%
-"Gold:   "
+Magic:  @arg@
 
 %%%%
-# Align Gold with HP/MP if player rotted
+# Magic changes to MP if player drained
+MP:   @arg@
+
 %%%%
-"Gold: "
+Gold:   @arg@
+
+%%%%
+# Align Gold with HP/MP if player drained
+%%%%
+Gold: @arg@
 
 %%%%
 # Armour Class
 %%%%
-"AC: "
+AC: @arg@
 
 %%%%
 # Evasion
 %%%%
-"EV: "
+EV: @arg@
 
 %%%%
 # Shields
 %%%%
-"SH: "
+SH: @arg@
 
 %%%%
 # Strength
 %%%%
-"Str: "
+Str: @arg@
 
 %%%%
 # Intelligence
 %%%%
-"Int: "
+Int: @arg@
 
 %%%%
 # Dexterity
 %%%%
-"Dex: "
+Dex: @arg@
 
 %%%%
 # eXperience Level
 %%%%
-"XL:     "
+XL:     @arg@   Next: @arg@
 
 %%%%
-"   Next: "
+# Next: disappears once max XL is reached
+XL:     @arg@
 
 %%%%
-"God:    "
+God:    @arg@
 
 %%%%
-"Spells: "
-
-%%%%
-@num1@/@num2@ levels left
+Spells: @arg1@/@arg2@ levels left
 
 %%%%
 # Felids have multiple lives (and deaths)
-%%%%
-"Lives:  "
-
-%%%%
-"   Deaths: "
+Lives:  @arg@   Deaths: @arg@
 
 %%%%
 # fire resistance
