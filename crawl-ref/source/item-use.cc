@@ -2341,6 +2341,8 @@ bool enchant_weapon(item_def &wpn, bool quiet)
     if (is_enchantable_weapon(wpn))
     {
         wpn.plus++;
+        // Make sure newly enchanted items appear as such.
+        item_set_appearance(wpn);
         success = true;
         if (!quiet)
         {
@@ -2499,6 +2501,8 @@ bool enchant_armour(item_def &arm, bool quiet)
     string name = _item_name(arm);
 
     ++arm.plus;
+    // Make sure newly enchanted items appear as such.
+    item_set_appearance(arm);
 
     if (!quiet)
     {
