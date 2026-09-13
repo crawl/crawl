@@ -212,7 +212,7 @@ chances of your rest being interrupted by wandering monsters. To rest, press
 HINT_BERSERK_CONSERVES_HP
 
 Also, berserking might help you not to lose so much health in the first place.
-To use your abilities press <w>a</w>.;
+To use your abilities press <w>a</w>.
 
 %%%%
 HINT_SEEN_FIRST_OBJECT
