@@ -918,7 +918,7 @@ When stepping on items you've thrown, they will be picked up automatically.
 HINT_GAINED_SPELLCASTING
 
 As your Spellcasting skill increases, you will be able to memorise more spells,
-and will have somewhat more MP. You'll also beomce lsightly better at casting
+and will have somewhat more MP. You'll also become slightly better at casting
 all kinds of spells.
 
 Press <w>$cmd[CMD_DISPLAY_SKILLS]</w> <localtiles>(or click on the <w>skill
