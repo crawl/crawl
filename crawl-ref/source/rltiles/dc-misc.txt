@@ -555,6 +555,11 @@ cloud_ice_dust0 CLOUD_FAINT_FROST
 cloud_ice_dust1
 cloud_ice_dust2
 
+cloud_blind0 CLOUD_BLIND
+cloud_blind1
+cloud_blind2
+cloud_blind3
+
 %sdir mon
 fungi_plants/ballistomycete_spore SPORE_OVERLAY
 

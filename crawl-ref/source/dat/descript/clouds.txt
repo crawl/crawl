@@ -226,3 +226,9 @@ frost cloud
 
 A cloud of tiny floating ice crystals, glittering in the dungeon air.
 Atmospheric, but harmless.
+%%%%
+blinding haze cloud
+
+A thick haze that blurs the vision of creatures that spend time inside it,
+rendering them temporarily blind. Tougher, more experienced creatures are less
+likely to be affected.

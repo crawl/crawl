@@ -357,7 +357,11 @@ static const cloud_data clouds[] = {
       BLUE,                                       // colour
       { TILE_CLOUD_FAINT_FROST, CTVARY_RANDOM },  // tile
     },
-
+    // CLOUD_BLINDING_HAZE,
+    { "blinding haze", nullptr,                   // terse, verbose name
+        BLUE,                                     // colour
+        { TILE_CLOUD_BLIND, CTVARY_DUR },         // tile
+    },
 
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
@@ -930,6 +934,7 @@ static bool _cloud_has_negative_side_effects(cloud_type cloud)
     case CLOUD_BLASTMOTES:
     case CLOUD_BATS:
     case CLOUD_RUST:
+    case CLOUD_BLINDING_HAZE:
         return true;
     default:
         return false;
@@ -1047,6 +1052,9 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
             return bool(act.holiness() & MH_UNDEAD);
         case CLOUD_RUST:
             return act.is_player() && you.form == transformation::fortress_crab;
+        case CLOUD_BLINDING_HAZE:
+            return act.res_blind()
+                   || act.is_player() && you.form == transformation::mist;
         default:
             return false;
     }
@@ -1111,6 +1119,12 @@ static bool _mephitic_cloud_roll(const monster* mons)
 {
     return mons->get_hit_dice() >= MEPH_HD_CAP ? one_chance_in(50)
            : !x_chance_in_y(mons->get_hit_dice(), MEPH_HD_CAP);
+}
+
+static bool _blinding_haze_roll(const monster* mons)
+{
+    const int chance = max(10, 80 - (int)(pow(mons->get_hit_dice(), 1.3) * 2));
+    return x_chance_in_y(chance, 100);
 }
 
 // Attempts to shift a glimmer cloud away from the actor that stepped onto it,
@@ -1307,6 +1321,27 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         act->corrode(cloud.agent(), "the rust", 1);
         act->weaken(cloud.agent(), 1);
         return true;
+
+    case CLOUD_BLINDING_HAZE:
+        if (player)
+        {
+            if (x_chance_in_y(70 - you.get_experience_level() * 2, 100))
+            {
+                mpr("The haze blurs your vision!");
+                blind_player(random_range(3, 6), BLACK);
+                return true;
+            }
+        }
+        else
+        {
+            if (_blinding_haze_roll(mons))
+            {
+                mons->add_ench(mon_enchant(ENCH_BLIND, cloud.agent(),
+                                           random_range(3, 6) * BASELINE_DELAY));
+                return true;
+            }
+        }
+        break;
 
     case CLOUD_MISERY:
     {
