@@ -638,6 +638,8 @@ static void _setup_generic(const newgame_def& ng,
         _set_starting_form(transformation::quill);
     else if (you.char_class == JOB_MYSTIC)
         _set_starting_form(transformation::vision);
+    else if (you.char_class == JOB_STALKER)
+        _set_starting_form(transformation::hypnogecko);
 
     reassess_starting_skills(false);
     init_skill_order();

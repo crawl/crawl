@@ -4849,6 +4849,8 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
             return TILEG_JOB_SHAPESHIFTER;
         case JOB_MYSTIC:
             return TILEG_JOB_MYSTIC;
+        case JOB_STALKER:
+            return TILEG_JOB_STALKER;
         case JOB_MONK:
             return TILEG_JOB_MONK;
         case JOB_WARPER:

@@ -119,6 +119,12 @@ Shapeshifter
 Shapeshifters use talismans to shift their form, making them powerful melee
 fighters (especially when unarmed) at the cost of armour.
 %%%%
+Stalker
+
+Stalkers transform their bodies with talismans to better decieve and debilitate
+their enemies. Eventually they can even transform potions into sprays of harmful
+clouds.
+%%%%
 Alchemist
 
 Alchemists start with the Poisonous Vapours spell, and their magic is very

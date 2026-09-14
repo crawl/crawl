@@ -1139,11 +1139,11 @@ static job_group jobs_order[] =
     {
         "Adventurer",
         coord_def(1, 0), 20,
-        { JOB_ARTIFICER, JOB_SHAPESHIFTER, JOB_MYSTIC, JOB_WANDERER, JOB_DELVER, }
+        { JOB_ARTIFICER, JOB_SHAPESHIFTER, JOB_MYSTIC, JOB_STALKER, JOB_WANDERER, JOB_DELVER, }
     },
     {
         "Warrior-mage",
-        coord_def(1, 6), 26,
+        coord_def(1, 7), 26,
         { JOB_WARPER, JOB_HEXSLINGER, JOB_ENCHANTER, JOB_REAVER }
     },
     {
