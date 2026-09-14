@@ -248,6 +248,9 @@ shock
 
 sinusoidal
 
+# Shazam (Captain Marvel)
+sivanium
+
 sonic
 
 spiral
@@ -290,6 +293,9 @@ twisted
 utility
 
 vacuum
+
+# Legion of Superheroes
+valorium
 
 vanadium
 
