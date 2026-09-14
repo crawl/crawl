@@ -1,6 +1,6 @@
 enum: JOB_STALKER
 name: "Stalker"
-category: Adventurer
+category: Metamorph
 category_priority: 40
 str: 3
 int: 0

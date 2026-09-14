@@ -1,6 +1,6 @@
 enum: JOB_MYSTIC
 name: "Mystic"
-category: Adventurer
+category: Metamorph
 category_priority: 30
 str: 0
 int: 7

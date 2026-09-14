@@ -106,6 +106,7 @@ JobGroupEntry = collections.namedtuple('JobGroupEntry', ['priority', 'enum'])
 JOB_GROUPS_TEMPLATE = {
     'Warrior': JobGroup('coord_def(0, 0)', '15', []),
     'Adventurer': JobGroup('coord_def(0, 7)', '15', []),
+    'Metamorph': JobGroup('coord_def(0, 7)', '15', []),
     'Zealot': JobGroup('coord_def(15, 0)', '20', []),
     'Warrior-mage': JobGroup('coord_def(35, 0)', '21', []),
     'Mage': JobGroup('coord_def(56, 0)', '22', []),

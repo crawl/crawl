@@ -1,6 +1,6 @@
 enum: JOB_SHAPESHIFTER
 name: "Shapeshifter"
-category: Adventurer
+category: Metamorph
 category_priority: 90
 str: 6
 int: 2
