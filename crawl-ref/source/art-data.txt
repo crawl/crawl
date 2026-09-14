@@ -2074,6 +2074,21 @@ DESCRIP: ValArchmagi: Enhances your magic if you have at least 80% of your
  maximum magical power remaining (before spending MP to cast the spell).
 +^Dim: Unequipping it temporarily diminishes your spells.
 
+ENUM:    ARCANE_SPLINT
+NAME:    Arcane Splint Mail
+INSCRIP: Corona
+OBJ:     OBJ_ARMOUR/ARM_CHAIN_MAIL
+PLUS:    +8
+COLOUR:  ETC_IRON
+TILE:    urand_arcane_splint
+TILE_EQ: ARCANE_SPLINT
+BRAND:   SPARM_ARCHERY
+STR:     +2
+DEX:     +2
+BOOL:    elec
+DESCRIP: Corona: Enemies hit by the wearer's projectiles are outlined in light.
+
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
