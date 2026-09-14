@@ -3655,15 +3655,13 @@ void do_demonic_magic(int pow, int rank)
 
 void death_ego_lifedrain(int splevel)
 {
-    if (!x_chance_in_y(3 + splevel, 6 + splevel))
-        return;
-
     for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
     {
         actor* act = actor_at(*ai);
 
         if (!act || act->wont_attack() || !mons_is_threatening(*act->as_monster())
-            || !actor_can_drain_life_from(you, *act))
+            || !actor_can_drain_life_from(you, *act)
+            || !x_chance_in_y(3 + splevel, 6 + splevel))
         {
             continue;
         }
@@ -3671,14 +3669,15 @@ void death_ego_lifedrain(int splevel)
         mprf("Your unholy armour drains life force from %s.",
             act->name(DESC_THE).c_str());
 
-        int damage = 1 + random2avg(splevel * 4, 2);
+        int damage = 1 + random2avg(splevel * 5, 2);
+        damage = resist_adjust_damage(act, BEAM_NEG, damage);
         const int drain_amount = act->hurt(&you, damage,
                                          BEAM_VAMPIRIC_DRAINING,
                                          KILLED_BY_BEAM, "",
                                          "by vampiric draining");
 
         if (you.duration[DUR_DEATHS_DOOR] || you.hp == you.hp_max)
-            return;
+            continue;
 
         const int hp_gain = div_rand_round(drain_amount, 2);
         if (hp_gain)
@@ -3687,7 +3686,6 @@ void death_ego_lifedrain(int splevel)
                  attack_strength_punctuation(hp_gain).c_str());
             inc_hp(hp_gain);
         }
-        return;
     }
 }
 
