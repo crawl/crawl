@@ -1128,32 +1128,32 @@ static job_group jobs_order[] =
 {
     {
         "Warrior",
-        coord_def(0, 0), 20,
+        coord_def(0, 0),
         { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_HUNTER, JOB_BRIGAND }
     },
     {
         "Warrior-mage",
-        coord_def(0, 6), 26,
+        coord_def(0, 6),
         { JOB_WARPER, JOB_HEXSLINGER, JOB_ENCHANTER, JOB_REAVER }
     },
     {
         "Zealot",
-        coord_def(1, 0), 25,
+        coord_def(1, 0),
         { JOB_BERSERKER, JOB_CINDER_ACOLYTE, JOB_CHAOS_KNIGHT }
     },
     {
         "Adventurer",
-        coord_def(1, 4), 20,
+        coord_def(1, 4),
         { JOB_ARTIFICER, JOB_WANDERER, JOB_DELVER, }
     },
     {
         "Metamorph",
-        coord_def(1, 8), 20,
+        coord_def(1, 8),
         { JOB_SHAPESHIFTER, JOB_MYSTIC, JOB_STALKER, }
     },
     {
         "Mage",
-        coord_def(2, 0), 22,
+        coord_def(2, 0),
         { JOB_HEDGE_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
           JOB_FORGEWRIGHT, JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
           JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_ALCHEMIST }
