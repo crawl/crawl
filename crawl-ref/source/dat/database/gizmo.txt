@@ -181,6 +181,8 @@ morphic
 
 neodymium
 
+nickel
+
 nominal
 
 nondeterministic
@@ -294,7 +296,7 @@ utility
 
 vacuum
 
-# Legion of Superheroes
+# Legion of Super-Heroes
 valorium
 
 vanadium
