@@ -1053,15 +1053,6 @@ public:
     {
         return "Makhleb calls their payment due...";
     }
-
-    /**
-     * % screen description
-     */
-    string get_long_name() const override
-    {
-        const int boost = you.props[MAKHLEB_SLAUGHTER_BOOST_KEY].get_int();
-        return make_stringf("vessel of slaughter (+%d%% damage done)", boost);
-    }
 };
 
 class FormVampire : public Form
@@ -2347,7 +2338,7 @@ void untransform(bool skip_move, bool scale_hp, bool preserve_equipment,
         you.transform_uncancellable = false;
 
     if (old_form == transformation::slaughter)
-        makhleb_enter_crucible_of_flesh(15);
+        makhleb_enter_crucible_of_flesh(12);
 
     if (old_form == transformation::sphinx)
         riddle_targs.clear();
