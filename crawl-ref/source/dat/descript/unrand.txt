@@ -924,9 +924,15 @@ alleged demigoddess who often boasted that one spell and one slash were enough
 to settle any battle. Indeed, all of her duels ended in just such a fashion,
 including her last.
 %%%%
-Arcane Splint Mail
+arcane splint mail
 
 A truly ancient set of armour designed for maximum protection and flexibility.
 Evidently intended for use by mounted hexslingers, its magic wards and sigils
 are in a hopeless state of disrepair. Nevertheless, some traces of their power
 still remain.
+%%%%
+bonemail plate
+
+The half-stitched, or half-unstitched, torso of a bone dragon, fashioned (if one
+may call it that) into a truly wretched piece of armour. Its jagged bones seem
+to pulse with unlife, awaiting the command of some unholy master.

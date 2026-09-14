@@ -2075,7 +2075,7 @@ DESCRIP: ValArchmagi: Enhances your magic if you have at least 80% of your
 +^Dim: Unequipping it temporarily diminishes your spells.
 
 ENUM:    ARCANE_SPLINT
-NAME:    Arcane Splint Mail
+NAME:    arcane splint mail
 INSCRIP: Corona
 OBJ:     OBJ_ARMOUR/ARM_CHAIN_MAIL
 PLUS:    +8
@@ -2088,6 +2088,19 @@ DEX:     +2
 BOOL:    elec
 DESCRIP: Corona: Enemies hit by the wearer's projectiles are outlined in light.
 
+# This is internally a pds so small/large species can acquire and use it
+ENUM:    BONEMAIL_PLATE
+NAME:    bonemail plate
+OBJ:     OBJ_ARMOUR/ARM_PEARL_DRAGON_ARMOUR
+BASE_ENCUMBRANCE: +7
+PLUS:    +6
+COLOUR:  ETC_BONE
+TILE:    urand_bonemail_plate
+TILE_EQ: BONEMAIL_PLATE
+BRAND:   SPARM_DEATH
+SLAY:    +3
+SH:      +6
+BOOL:    poison, bane
 
 # This entry must always be last.
 ENUM:   DUMMY2
