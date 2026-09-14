@@ -143,6 +143,32 @@ A smirking vizier told you that the Orb of Zot is just within this dungeon.
 If you return without finding the Orb of Zot, so far below, it's all over!
 
 It's a long way down to the Orb of Zot, but that shouldn't be any trouble.
+
+They told you never to seek the Orb. Yet here you are.
+
+Hmm... If I were an Orb, I'd be down here.
+
+This must be the place.
+
+Get in, grab the Orb, get out. Easy job.
+
+A surly barkeep said this cave is the deepest in the world.
+
+The tattered map led you here, but it's useless now.
+
+It's much bigger on the inside, isn't it?
+
+It was inevitable you'd end up here.
+
+The exit is right here. You can turn back anytime.
+
+As you cross the threshold, the sounds of the outside world fade away.
+
+Let's see if what they say about this place is true...
+
+They say this place changes you.
+
+It's all downstairs from here.
 %%%%
 welcome_spam dungeon descent
 
