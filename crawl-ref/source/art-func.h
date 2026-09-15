@@ -33,6 +33,7 @@
 #include "exercise.h"      // For practise_evoking
 #include "fight.h"
 #include "fineff.h"        // For the Storm Queen's Shield
+#include "god-abil.h"      // For Forgewarden's curiass (ru_reject_sacrifices)
 #include "mgen-data.h"     // For Sceptre of Asmodeus
 #include "melee-attack.h"  // For Fungal Fisticloak
 #include "message.h"
@@ -1871,4 +1872,39 @@ static void _HANAS_SCIMITAR_unequip(item_def */*item*/, bool *show_msgs)
 {
     _equip_mpr(show_msgs,"You feel a bit dim.");
     you.diminish(&you, 10);
+}
+
+static void _FORGEWARDEN_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
+{
+    // This is mostly verbatim from _remove_amulet_of_faith but has a different
+    // condition and needs different messaging
+    if (!unmeld)
+    {
+
+        if (!faith_has_penalty())
+        {
+            if (you.has_mutation(MUT_FORLORN))
+                _equip_mpr(show_msgs, "You feel a moment of crushing self-doubt.");
+            else if (you.religion == GOD_NO_GOD)
+                _equip_mpr(show_msgs, "You feel a strange surge of divine displeasure.");
+            return;
+        }
+        if (you_worship(GOD_RU))
+        {
+            // next sacrifice is going to be delaaaayed.
+            ASSERT(you.raw_piety < piety_breakpoint(5));
+            ru_reject_sacrifices(true);
+            return;
+        }
+
+        if (show_msgs)
+            simple_god_message(" seems less inclined to favour you.");
+
+        // Identical penalty to removing an amulet of faith
+        const int piety_loss = div_rand_round(you.raw_piety, 3);
+        if (show_msgs)
+            mprf(MSGCH_GOD, "You feel less pious.");
+
+        lose_piety(piety_loss);
+    }
 }

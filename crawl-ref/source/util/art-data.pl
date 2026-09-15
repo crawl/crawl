@@ -24,6 +24,7 @@ my %field_type = (
     BASE_ACC => "num",
     BASE_DAM => "num",
     BASE_DELAY => "num",
+    BASE_ENCUMBRANCE => "num",
     BLINK    => "bool",
     BRAND    => "enum",
     CHAOTIC  => "bool",
@@ -557,7 +558,8 @@ my @art_order = (
     "SH", "HARM", "RAMPAGE", "ARCHMAGI", "ENH_CONJ", "ENH_HEXES", "\n",
     "ENH_SUMM", "ENH_NECRO", "ENH_TLOC", "unused", "ENH_FIRE", "\n",
     "ENH_ICE", "ENH_AIR", "ENH_EARTH", "ENH_ALCH", "\n",
-    "ACROBAT", "REGEN_MP", "WIZ", "ENH_FORGE", "SILENCE", "BANE",
+    "ACROBAT", "REGEN_MP", "WIZ", "ENH_FORGE", "SILENCE", "BANE", "\n",
+    "BASE_ENCUMBRANCE",
     "}",
 # end TAG_MAJOR_VERSION
 # start TAG_MAJOR_VERSION == 35
@@ -572,7 +574,8 @@ my @art_order = (
 #     "SH", "HARM", "RAMPAGE", "ARCHMAGI", "ENH_CONJ", "ENH_HEXES", "\n",
 #     "ENH_SUMM", "ENH_NECRO", "ENH_TLOC", "ENH_FIRE", "\n",
 #     "ENH_ICE", "ENH_AIR", "ENH_EARTH", "ENH_ALCH", "\n",
-#     "ACROBAT", "REGEN_MP", "ENH_FORGE", "SILENCE", "BANE",
+#     "ACROBAT", "REGEN_MP", "ENH_FORGE", "SILENCE", "BANE", "\n",
+#     "BASE_ENCUMBRANCE",
 #     "}",
 # end TAG_MAJOR_VERSION
 
