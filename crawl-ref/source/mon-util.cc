@@ -2806,6 +2806,12 @@ colour_t random_monster_colour()
     return col;
 }
 
+void mons_set_starting_heads(monster& mons, int heads)
+{
+    mons.num_heads = heads;
+    mons.props[ORIGINAL_HEADS_KEY] = heads;
+}
+
 // Generate a shiny, new and unscarred monster.
 void define_monster(monster& mons, bool friendly)
 {
@@ -2832,16 +2838,16 @@ void define_monster(monster& mons, bool friendly)
 
     case MONS_HYDRA:
         // Hydras start off with 4 to 8 heads.
-        mons.num_heads = random_range(4, 8);
+        mons_set_starting_heads(mons, random_range(4, 8));
         break;
 
     case MONS_LERNAEAN_HYDRA:
         // The Lernaean hydra starts off with 27 heads.
-        mons.num_heads = 27;
+        mons_set_starting_heads(mons, 27);
         break;
 
     case MONS_SLYMDRA:
-        mons.num_heads = random_range(3, 5);
+        mons_set_starting_heads(mons, random_range(3, 5));
         break;
 
     case MONS_TIAMAT:

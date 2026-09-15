@@ -322,6 +322,7 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define BLOCKED_DEADLINE_KEY "blocked_deadline"
 #define BROTHERS_KEY "brothers_count"
 #define OLD_HEADS_KEY "old_heads"
+#define ORIGINAL_HEADS_KEY "original_heads"
 #define ELY_WRATH_HEALED_KEY "ely_wrath_healed"
 #define CAN_CLIMB_KEY "can_climb"
 #define SPEECH_PREFIX_KEY "speech_prefix"

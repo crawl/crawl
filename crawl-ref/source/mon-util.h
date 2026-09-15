@@ -363,6 +363,7 @@ monster_type draconian_colour_for_job(monster_type job);
 monster_type draconian_job_for_colour(monster_type colour);
 
 void define_monster(monster& mons, bool friendly = false);
+void mons_set_starting_heads(monster& mons, int heads);
 
 void mons_pacify(monster& mon, mon_attitude_type att = ATT_GOOD_NEUTRAL,
                  bool no_xp = false);

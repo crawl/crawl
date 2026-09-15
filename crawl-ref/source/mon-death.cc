@@ -1551,7 +1551,7 @@ static string _derived_undead_message(const monster &mons, monster_type which_z,
 static void _make_derived_undead(monster* mons, bool quiet,
                                  monster_type which_z, beh_type beh,
                                  int spell, god_type god,
-                                 string msg = "", string fail_msg = "",
+                                 string msg = "",
                                  function<bool ()> should_trigger = []() {
                                     return true;
                                 }
@@ -1621,21 +1621,8 @@ static void _make_derived_undead(monster* mons, bool quiet,
     if (msg.empty())
         msg = "A " + mist + " mist starts to gather...";
 
-    if (fail_msg.empty())
-        fail_msg = "A " + mist + " mist gathers momentarily, then fades.";
-
     if (mons->mons_species() == MONS_HYDRA || mons->type == MONS_SLYMDRA)
-    {
-        // No undead 0-headed hydras, sorry.
-        if (mons->heads() == 0)
-        {
-            if (!quiet)
-                mpr(fail_msg);
-            return;
-        }
-        else
-            mg.props[MGEN_NUM_HEADS] = mons->heads();
-    }
+        mg.props[MGEN_NUM_HEADS] = mons->props[ORIGINAL_HEADS_KEY].get_int();
 
     string agent_name = "";
     if (mons->has_ench(ENCH_BOUND_SOUL))
@@ -1968,10 +1955,8 @@ static bool _mons_reaped(actor &killer, monster& victim)
     beh_type beh = SAME_ATTITUDE(&killer);
     string msg = victim.name(DESC_ITS) + " spirit is torn from " +
                      victim.pronoun(PRONOUN_POSSESSIVE) + " body!";
-    string fail_msg = victim.name(DESC_ITS) + " spirit is momentarily torn from " +
-                          victim.pronoun(PRONOUN_POSSESSIVE) + " body, then fades!";
     _make_derived_undead(&victim, !you.can_see(victim), MONS_SPECTRAL_THING, beh,
-                         MON_SUMM_WPN_REAP, GOD_NO_GOD, msg, fail_msg);
+                         MON_SUMM_WPN_REAP, GOD_NO_GOD, msg);
 
     return true;
 }
@@ -3534,8 +3519,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                                  BEH_FRIENDLY,
                                  SPELL_DEATH_CHANNEL,
                                  static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
-                                 "", "",
-                                 should_trigger);
+                                 "", should_trigger);
         }
         else if (!you_worship(GOD_YREDELEMNUL))
             (_reaping_brand(mons));

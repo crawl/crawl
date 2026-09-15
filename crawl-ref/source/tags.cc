@@ -8393,6 +8393,9 @@ void unmarshallMonster(reader &th, monster& m)
 
     if (m.type == MONS_SLYMDRA && m.num_heads <= 0)
         m.num_heads = 1;
+
+    if (m.has_hydra_multi_attack() && !m.props.exists(ORIGINAL_HEADS_KEY))
+        m.props[ORIGINAL_HEADS_KEY] = m.num_heads;
 #endif
 
     if (m.type != MONS_PROGRAM_BUG && mons_species(m.type) == MONS_PROGRAM_BUG)
