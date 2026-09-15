@@ -1905,7 +1905,6 @@ static void _FORGEWARDEN_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
         if (show_msgs)
             mprf(MSGCH_GOD, "You feel less pious.");
 
-        dprf("%s: piety drain: %d", item.name(DESC_PLAIN).c_str(), piety_loss);
         lose_piety(piety_loss);
     }
 }
