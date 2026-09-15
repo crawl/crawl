@@ -2102,6 +2102,20 @@ SLAY:    +3
 SH:      +6
 BOOL:    poison, bane
 
+ENUM:    FORGEWARDEN
+NAME:    Forgewarden's curiass
+INSCRIP: Apostate
+OBJ:     OBJ_ARMOUR/ARM_PLATE_ARMOUR
+PLUS:    +12
+COLOUR:  ETC_FIRE
+TILE:    urand_forgewarden
+TILE_EQ: FORGEWARDEN
+BRAND:   SPARM_RESONANCE
+FIRE:    2
+BOOL:    enh_forge, evil
+DESCRIP: Apostate: Equipping it will reduce your piety. While worn, you gain
+ piety at three quarters of the normal rate.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

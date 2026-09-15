@@ -580,6 +580,7 @@ talos TALOS
 justicar JUSTICAR
 arcane_splint ARCANE_SPLINT
 bonemail_plate BONEMAIL_PLATE
+forgewarden FORGEWARDEN
 
 %sdir player/transform
 maw_form0 MAW_FORM
