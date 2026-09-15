@@ -835,7 +835,8 @@ bool targeter_unravelling::valid_aim(coord_def a)
     if (mons && you.can_see(*mons) && _unravelling_explodes_at(a)
         && !could_harm(&you, mons))
     {
-        return notify_fail("You cannot do harm to " + mons->name(DESC_THE));
+        return notify_fail("You cannot do harm to " + mons->name(DESC_THE) +
+                           ".");
     }
 
     return true;
