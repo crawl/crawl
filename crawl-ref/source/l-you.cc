@@ -1081,7 +1081,7 @@ static int you_have_rune(lua_State *ls)
 /*** Are you intrinsically immune to this particular hex spell?
  * @tparam string spell name
  * @treturn boolean
- * @function you_immune_to_hex
+ * @function immune_to_hex
  */
 static int you_immune_to_hex(lua_State *ls)
 {
