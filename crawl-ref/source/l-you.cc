@@ -1399,6 +1399,21 @@ LUAFN(you_passives)
     return clua_stringtable(ls, player_passive_effects());
 }
 
+/*** Checks which spell you are channelling.
+ * @treturn string|nil The name of the spell being channelled or nil if the
+ * player is not channelling a spell.
+ * @function channelled_spell
+ */
+LUAFN(you_channelled_spell)
+{
+    const spell_type spell = (spell_type)you.attribute[ATTR_CHANNELLED_SPELL];
+    if (spell == SPELL_NO_SPELL)
+        lua_pushnil(ls);
+    else
+        lua_pushstring(ls, spell_title(spell));
+    return 1;
+}
+
 /*** Is your quivered action valid?
  * @treturn boolean
  * @function quiver_valid
@@ -1604,6 +1619,7 @@ static const struct luaL_Reg you_clib[] =
     { "status",       you_status },
     { "passives",     you_passives },
     { "immune_to_hex", you_immune_to_hex },
+    { "channelled_spell", you_channelled_spell},
     { "reach_range", you_reach_range },
     { "movement_cost", you_movement_cost },
 
