@@ -9,6 +9,9 @@
 ################################
 
 %%%%
+the door
+{f}die Tür
+%%%%
 the broken door
 {f}die zerbrochene Tür
 %%%%
@@ -23,6 +26,11 @@ the runed door
 %%%%
 the sealed door
 {f}die versiegelte Tür
+%%%%
+
+%%%%
+the translucent door
+{f}die durchsichtige Tür
 %%%%
 the broken translucent door
 {f}die zerbrochene durchsichtige Tür
@@ -41,6 +49,9 @@ the sealed translucent door
 %%%%
 
 %%%%
+the large door
+{f}die große Tür
+%%%%
 the large broken door
 {f}die große zerbrochene Tür
 %%%%
@@ -55,6 +66,11 @@ the large runed door
 %%%%
 the large sealed door
 {f}die große versiegelte Tür
+%%%%
+
+%%%%
+the large translucent door
+{f}die große durchsichtige Tür
 %%%%
 the large broken translucent door
 {f}die große zerbrochene durchsichtige Tür
@@ -73,6 +89,9 @@ the large sealed translucent door
 %%%%
 
 %%%%
+the gate
+{n}das Tor
+%%%%
 the broken gate
 {n}das zerbrochene Tor
 %%%%
@@ -87,6 +106,11 @@ the runed gate
 %%%%
 the sealed gate
 {n}das versiegelte Tor
+%%%%
+
+%%%%
+the translucent gate
+{n}das durchsichtige Tor
 %%%%
 the broken translucent gate
 {n}das zerbrochene durchsichtige Tor
@@ -105,6 +129,9 @@ the sealed translucent gate
 %%%%
 
 %%%%
+the huge gate
+{n}das riesige Tor
+%%%%
 the huge broken gate
 {n}das riesige zerbrochene Tor
 %%%%
@@ -119,6 +146,11 @@ the huge runed gate
 %%%%
 the huge sealed gate
 {n}das riesige versiegelte Tor
+%%%%
+
+%%%%
+the huge translucent gate
+{n}das riesige durchsichtige Tor
 %%%%
 the huge broken translucent gate
 {n}das riesige zerbrochene durchsichtige Tor
