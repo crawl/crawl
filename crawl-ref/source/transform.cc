@@ -1946,10 +1946,16 @@ static void _on_enter_form(transformation which_trans)
     case transformation::dragon:
         // The first time the player becomes a dragon, given them a charge of
         // their breath weapon so they can actually use them.
-        if (!you.props.exists(HAS_USED_DRAGON_TALISMAN_KEY)
-            && !species::is_draconian(you.species))
+        if (!you.props.exists(HAS_USED_DRAGON_TALISMAN_KEY))
         {
-            gain_draconian_breath_uses(1);
+            if (!species::is_draconian(you.species))
+                gain_draconian_breath_uses(1);
+            // Level 7 to match level_change().
+            if (SP_BASE_DRACONIAN == you.species)
+            {
+                mpr("You will transform on reaching level 7, even in dragon"
+                    " form.");
+            }
             you.props[HAS_USED_DRAGON_TALISMAN_KEY] = true;
         }
         break;
