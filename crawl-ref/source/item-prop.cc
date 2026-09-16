@@ -2810,6 +2810,11 @@ int property(const item_def &item, int prop_type)
         {
             return 0;
         }
+        else if (prop_type == PARM_EVASION && is_unrandom_artefact(item))
+        {
+            return armour_prop(item.sub_type, prop_type)
+                - artefact_property(item, ARTP_BASE_ENCUMBRANCE) * 10;
+        }
         return armour_prop(item.sub_type, prop_type);
 
     case OBJ_WEAPONS:

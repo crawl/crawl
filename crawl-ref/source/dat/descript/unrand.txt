@@ -923,3 +923,22 @@ The favored sword of one of the battlemage Yara's most illustrious pupils, an
 alleged demigoddess who often boasted that one spell and one slash were enough
 to settle any battle. Indeed, all of her duels ended in just such a fashion,
 including her last.
+%%%%
+arcane splint mail
+
+A truly ancient set of armour designed for maximum protection and flexibility.
+Evidently intended for use by mounted hexslingers, its magic wards and sigils
+are in a hopeless state of disrepair. Nevertheless, some traces of their power
+still remain.
+%%%%
+bone scales
+
+The half-stitched, or half-unstitched, torso of a bone dragon, fashioned (if one
+may call it that) into a truly wretched piece of armour. Its jagged bones seem
+to pulse with unlife, awaiting the command of some unholy master.
+%%%%
+Forgewarden's cuirass
+
+A bronze chestpiece of masterful make. It is etched all over with religious
+imagery, but the focus of the scene is obscured by a great dark stain that
+smells strongly of ashes and salt. It seems somehow blasphemous to wear.

@@ -48,7 +48,7 @@ public:
 
     void register_join();
     void register_excommunication();
-    // Lost through any means (spend, faith removal, decay, penance, ...).
+    // Lost through any means (spend, faith removal, penance, ...).
     void register_piety_loss(unsigned int amount);
     void register_piety_decay();
     void register_piety_gain(PietyGainEvent event);

@@ -1031,6 +1031,7 @@ static const artefact_prop_data artp_data[] =
         nullptr, []() { return 1; }, 0, 0 },
     { "Bane", ARTP_VAL_BOOL, 20,     // ARTP_BANE,
         nullptr, []() {return 1;}, 0, 0},
+    { "BEnc", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 },  // ARTP_BASE_ENCUMBRANCE,
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 // weights sum to 1000

@@ -578,6 +578,9 @@ vines VINES
 kryias KRYIAS
 talos TALOS
 justicar JUSTICAR
+arcane_splint ARCANE_SPLINT
+bone_scales BONE_SCALES
+forgewarden FORGEWARDEN
 
 %sdir player/transform
 maw_form0 MAW_FORM
