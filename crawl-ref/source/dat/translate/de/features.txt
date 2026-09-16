@@ -7,6 +7,135 @@
 ################################
 # Definite article
 ################################
+
+%%%%
+the broken door
+{f}die zerbrochene Tür
+%%%%
+the closed door
+{f}die geschlossene Tür
+%%%%
+the open door
+{f}die offene Tür
+%%%%
+the runed door
+{f}die runenverzierte Tür
+%%%%
+the sealed door
+{f}die versiegelte Tür
+%%%%
+the broken translucent door
+{f}die zerbrochene durchsichtige Tür
+%%%%
+the closed translucent door
+{f}die geschlossene durchsichtige Tür
+%%%%
+the open translucent door
+{f}die offene durchsichtige Tür
+%%%%
+the runed translucent door
+{f}die runenverzierte durchsichtige Tür
+%%%%
+the sealed translucent door
+{f}die versiegelte durchsichtige Tür
+%%%%
+
+%%%%
+the large broken door
+{f}die große zerbrochene Tür
+%%%%
+the large closed door
+{f}die große geschlossene Tür
+%%%%
+the large open door
+{f}die große offene Tür
+%%%%
+the large runed door
+{f}die große runenverzierte Tür
+%%%%
+the large sealed door
+{f}die große versiegelte Tür
+%%%%
+the large broken translucent door
+{f}die große zerbrochene durchsichtige Tür
+%%%%
+the large closed translucent door
+{f}die große geschlossene durchsichtige Tür
+%%%%
+the large open translucent door
+{f}die große offene durchsichtige Tür
+%%%%
+the large runed translucent door
+{f}die große runenverzierte durchsichtige Tür
+%%%%
+the large sealed translucent door
+{f}die große versiegelte durchsichtige Tür
+%%%%
+
+%%%%
+the broken gate
+{n}das zerbrochene Tor
+%%%%
+the closed gate
+{n}das geschlossene Tor
+%%%%
+the open gate
+{n}das offene Tor
+%%%%
+the runed gate
+{n}das runenverzierte Tor
+%%%%
+the sealed gate
+{n}das versiegelte Tor
+%%%%
+the broken translucent gate
+{n}das zerbrochene durchsichtige Tor
+%%%%
+the closed translucent gate
+{n}das geschlossene durchsichtige Tor
+%%%%
+the open translucent gate
+{n}das offene durchsichtige Tor
+%%%%
+the runed translucent gate
+{n}das runenverzierte durchsichtige Tor
+%%%%
+the sealed translucent gate
+{n}das versiegelte durchsichtige Tor
+%%%%
+
+%%%%
+the huge broken gate
+{n}das riesige zerbrochene Tor
+%%%%
+the huge closed gate
+{n}das riesige geschlossene Tor
+%%%%
+the huge open gate
+{n}das riesige offene Tor
+%%%%
+the huge runed gate
+{n}das riesige runenverzierte Tor
+%%%%
+the huge sealed gate
+{n}das riesige versiegelte Tor
+%%%%
+the huge broken translucent gate
+{n}das riesige zerbrochene durchsichtige Tor
+%%%%
+the huge closed translucent gate
+{n}das riesige geschlossene durchsichtige Tor
+%%%%
+the huge open translucent gate
+{n}das riesige offene durchsichtige Tor
+%%%%
+the huge runed translucent gate
+{n}das riesige runenverzierte durchsichtige Tor
+%%%%
+the huge sealed translucent gate
+{n}das riesige versiegelte durchsichtige Tor
+%%%%
+
 %%%%
 the unknown terrain
 {n}das unbekannte Terrain
@@ -16,12 +145,6 @@ the explore horizon
 %%%%
 the travel trail
 {f}die Reiseroute
-%%%%
-the door
-{f}die Tür
-%%%%
-the gate
-{n}das Tor
 %%%%
 the tree
 {m}der Baum
