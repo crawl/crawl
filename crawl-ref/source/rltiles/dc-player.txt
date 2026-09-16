@@ -579,7 +579,7 @@ kryias KRYIAS
 talos TALOS
 justicar JUSTICAR
 arcane_splint ARCANE_SPLINT
-bonemail_plate BONEMAIL_PLATE
+bone_scales BONE_SCALES
 forgewarden FORGEWARDEN
 
 %sdir player/transform

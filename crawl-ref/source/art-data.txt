@@ -2089,14 +2089,14 @@ BOOL:    elec
 DESCRIP: Corona: Enemies hit by the wearer's projectiles are outlined in light.
 
 # This is internally a pds so small/large species can acquire and use it
-ENUM:    BONEMAIL_PLATE
-NAME:    bonemail plate
+ENUM:    BONE_SCALES
+NAME:    bone scales
 OBJ:     OBJ_ARMOUR/ARM_PEARL_DRAGON_ARMOUR
 BASE_ENCUMBRANCE: +7
 PLUS:    +6
 COLOUR:  ETC_BONE
-TILE:    urand_bonemail_plate
-TILE_EQ: BONEMAIL_PLATE
+TILE:    urand_bone_scales
+TILE_EQ: BONE_SCALES
 BRAND:   SPARM_DEATH
 SLAY:    +3
 SH:      +6

@@ -931,7 +931,7 @@ Evidently intended for use by mounted hexslingers, its magic wards and sigils
 are in a hopeless state of disrepair. Nevertheless, some traces of their power
 still remain.
 %%%%
-bonemail plate
+bone scales
 
 The half-stitched, or half-unstitched, torso of a bone dragon, fashioned (if one
 may call it that) into a truly wretched piece of armour. Its jagged bones seem

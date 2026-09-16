@@ -1883,9 +1883,7 @@ static void _FORGEWARDEN_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
 
         if (!faith_has_penalty())
         {
-            if (you.has_mutation(MUT_FORLORN))
-                _equip_mpr(show_msgs, "You feel a moment of crushing self-doubt.");
-            else if (you.religion == GOD_NO_GOD)
+            if (you.religion == GOD_NO_GOD && !you.has_mutation(MUT_FORLORN))
                 _equip_mpr(show_msgs, "You feel a strange surge of divine displeasure.");
             return;
         }
