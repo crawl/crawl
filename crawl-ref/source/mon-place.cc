@@ -3315,7 +3315,7 @@ bool you_can_see_habitable_spot_near(coord_def pos, habitat_type habitat,
             continue;
 
         actor* blocking_actor = actor_at(*ri);
-        if (blocking_actor && blocking_actor->visible_to(&you)
+        if (blocking_actor && you.aware_of(*blocking_actor)
             && (ignore_summons_of == SPELL_NO_SPELL
                 || !blocking_actor->was_created_by(you, ignore_summons_of)))
         {

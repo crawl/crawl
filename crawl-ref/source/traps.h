@@ -7,6 +7,7 @@
 
 #include <vector>
 
+#include "branch-type.h"
 #include "enum.h"
 
 using std::vector;
@@ -35,6 +36,7 @@ void destroy_trap(const coord_def& pos);
 
 bool is_valid_shaft_level(bool respect_brflags = true);
 void set_shafted();
+bool shafted_in(branch_type branch);
 void roll_trap_effects();
 void do_trap_effects();
 level_id generic_shaft_dest(level_id place);

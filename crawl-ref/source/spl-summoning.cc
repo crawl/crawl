@@ -1210,7 +1210,7 @@ bool is_gateway_target(const actor& caster, coord_def location, bool only_known)
         if (!only_known)
             return false;
 
-        if (creature->visible_to(&caster))
+        if (caster.aware_of(*creature))
             return false;
     }
 

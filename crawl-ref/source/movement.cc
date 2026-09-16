@@ -910,9 +910,9 @@ static bool _handle_player_step(const coord_def& targ, int& delay, const int del
     bool fedhas_move = false;
 
     // If we can't move, and don't have a non-move action, stop. We sometimes want
-    // to hit invisible monsters, but if we can't see them and can't move, it leaks
-    // information to allow the player to hit them.
-    if ((!mon || !mon->visible_to(&you))
+    // to hit invisible monsters, but if we aren't aware of their location and
+    // can't move, it leaks information to allow the player to hit them.
+    if ((!mon || !you.aware_of(*mon))
         && you.cannot_move()
         && !feat_is_closed_door(env.grid(targ)))
     {
@@ -926,7 +926,7 @@ static bool _handle_player_step(const coord_def& targ, int& delay, const int del
         if (mon->temp_attitude() == ATT_NEUTRAL
             && !mon->has_ench(ENCH_FRENZIED)
             && !you.confused()
-            && mon->visible_to(&you))
+            && you.aware_of(*mon))
         {
             simple_monster_message(*mon, " refuses to make way for you. "
                             "(Use ctrl+direction or * direction to attack.)");
