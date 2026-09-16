@@ -4,6 +4,8 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
     "use strict";
 
     var player = {}, last_time;
+    // i18n: HUD labels ("Health:", etc.) in the user's language
+    var stats_captions = {};
 
     var stat_boosters = {
         "str": "vitalised",
@@ -102,7 +104,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
             noise_cat = "blank";
             // I couldn't get this to work just directly putting the text in #stats_noise_bar,
             // because clearing the text later will adjust the span width.
-            $("#stats_noise_status").text("Silenced");
+            $("#stats_noise_status").text(stats_captions.silenced || "Silenced");
         } else {
             $("#stats_noise_status").text("");
         }
@@ -424,7 +426,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
 
         if (player.god == "Gozag")
         {
-            $("#stats_gozag_gold_label").text(" Gold: ");
+            $("#stats_gozag_gold_label").text(stats_captions.gold || " Gold: ");
             $("#stats_gozag_gold_label").css("padding-left", "0.5em");
             $("#stats_gozag_gold").text(player.gold);
         } else {
@@ -441,8 +443,12 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         for (var i = 0; i < simple_stats.length; ++i)
             $("#stats_" + simple_stats[i]).text(player[simple_stats[i]]);
 
-        $("#stats_hpline > .stats_caption").text(
-            (player.real_hp_max != player.hp_max) ? "HP:" : "Health:");
+        let hp_caption = "";
+        if (player.real_hp_max != player.hp_max)
+            hp_caption = stats_captions.hp || "HP:";
+        else
+            hp_caption = stats_captions.health || "Health:"
+        $("#stats_hp_caption").text(hp_caption);
 
         if (player.real_hp_max != player.hp_max)
             $("#stats_real_hp_max").text("(" + player.real_hp_max + ")");
@@ -479,12 +485,12 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
 
         if (options.get("show_game_time") === true)
         {
-            $("#stats_time_caption").text("Time:");
+            $("#stats_time_caption").text(stats_captions.time || "Time:");
             $("#stats_time").text((player.time / 10.0).toFixed(1));
         }
         else
         {
-            $("#stats_time_caption").text("Turn:");
+            $("#stats_time_caption").text(stats_captions.turn || "Turn:");
             $("#stats_time").text(player.turn);
         }
 
@@ -584,6 +590,27 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         }
     }
 
+    function update_caption(id, value) {
+        if (value)
+            $("#" + id).text(value);
+    }
+
+    function handle_stats_captions_message(data) {
+        $.extend(stats_captions, data);
+
+        update_caption("stats_mp_caption", stats_captions.magic);
+        update_caption("stats_ac_caption", stats_captions.ac);
+        update_caption("stats_ev_caption", stats_captions.ev);
+        update_caption("stats_sh_caption", stats_captions.sh);
+        update_caption("stats_xl_caption", stats_captions.xl);
+        update_caption("stats_progress_caption", stats_captions.progress);
+        update_caption("stats_noise_caption", stats_captions.noise);
+        update_caption("stats_str_caption", stats_captions.str);
+        update_caption("stats_int_caption", stats_captions.int);
+        update_caption("stats_dex_caption", stats_captions.dex);
+        update_caption("stats_place_caption", stats_captions.place);
+    }
+
     options.add_listener(function ()
     {
         if (player.name !== "")
@@ -607,6 +634,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
 
     comm.register_handlers({
         "player": handle_player_message,
+        "stats_captions": handle_stats_captions_message,
     });
 
     $(document).off("game_init.player")

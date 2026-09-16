@@ -63,7 +63,7 @@
       <div id="stats_hpline">
         <!-- These <span>s must be on the same logical line to prevent rendering bugs -->
         <span id="stats_hp_bar" class="bar" style="float: right; width: 55%; height: 1em"><span id="stats_hp_bar_full"></span><span id="stats_hp_bar_poison"></span><span id="stats_hp_bar_decrease"></span><span id="stats_hp_bar_increase"></span></span>
-        <span class="stats_caption">HP:</span>
+        <span id="stats_hp_caption" class="stats_caption">HP:</span>
         <!-- These <span>s must be on the same logical line to prevent rendering bugs -->
         <span id="stats_hp"></span><span id="stats_hp_separator">/</span><span id="stats_hp_max"></span>
         <span id="stats_real_hp_max"></span>
@@ -71,7 +71,7 @@
       <div id="stats_mpline">
         <!-- These <span>s must be on the same logical line to prevent rendering bugs -->
         <span id="stats_mp_bar" class="bar" style="float: right; width: 55%; height: 1em"><span id="stats_mp_bar_full"></span><span id="stats_mp_bar_decrease"></span><span id="stats_mp_bar_increase"></span></span>
-        <span class="stats_caption">Magic:</span>
+        <span id="stats_mp_caption" class="stats_caption">Magic:</span>
         <!-- These <span>s must be on the same logical line to prevent rendering bugs -->
         <span id="stats_mp"></span><span id="stats_mp_separator">/</span><span id="stats_mp_max"></span>
         <span id="stats_dd_real_mp_max"></span>
@@ -79,18 +79,18 @@
       <div>
         <div id="stats_leftcolumn" style="float: left; width: 45%">
           <div>
-            <span class="stats_caption">AC:</span> <span id="stats_ac"></span>
+            <span id = "stats_ac_caption" class="stats_caption">AC:</span> <span id="stats_ac"></span>
           </div>
           <div>
-            <span class="stats_caption">EV:</span> <span id="stats_ev"></span>
+            <span id = "stats_ev_caption" class="stats_caption">EV:</span> <span id="stats_ev"></span>
           </div>
           <div>
-            <span class="stats_caption">SH:</span> <span id="stats_sh"></span>
+            <span id = "stats_sh_caption" class="stats_caption">SH:</span> <span id="stats_sh"></span>
           </div>
           <div>
-            <span class="stats_caption">XL:</span>
+            <span id = "stats_xl_caption" class="stats_caption">XL:</span>
             <span id="stats_xl"></span>
-            <span class="stats_caption">Next:</span>
+            <span id = "stats_progress_caption" class="stats_caption">Next:</span>
             <span id="stats_progress"></span>%
           </div>
           <div id="stats_noise" style="float: left; width: 95%">
@@ -108,24 +108,24 @@
               id="stats_noise_status"
               style="float: right; width: 0%"
             ></span>
-            <span class="stats_caption">Noise:</span>
+            <span id="stats_noise_caption" class="stats_caption">Noise:</span>
             <span id="stats_noise_num"></span>
           </div>
         </div>
         <div id="stats_rightcolumn" style="float: right; width: 55%">
           <div>
-            <span class="stats_caption">Str:</span> <span id="stats_str"></span>
+            <span id="stats_str_caption" class="stats_caption">Str:</span> <span id="stats_str"></span>
             <span id="stats_doom_ui"><span class="stats_caption" style="margin-left:2.2em">Doom:</span><span id="stats_doom"></span></span>
           </div>
           <div>
-            <span class="stats_caption">Int:</span> <span id="stats_int"></span>
+            <span id="stats_int_caption" class="stats_caption">Int:</span> <span id="stats_int"></span>
             <span id="stats_contam_ui"><span class="stats_caption" style="margin-left:1.1em">Contam:</span><span id="stats_contam"></span></span>
           </div>
           <div>
-            <span class="stats_caption">Dex:</span> <span id="stats_dex"></span>
+            <span id="stats_dex_caption" class="stats_caption">Dex:</span> <span id="stats_dex"></span>
           </div>
           <div>
-            <span class="stats_caption">Place:</span>
+            <span id="stats_place_caption" class="stats_caption">Place:</span>
             <span id="stats_place"></span>
           </div>
           <div>
