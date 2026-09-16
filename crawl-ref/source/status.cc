@@ -1049,8 +1049,11 @@ bool fill_status_info(int status, status_info& inf)
 string status_light_description(const status_info& inf)
 {
     // Split off any extra info, e.g. counts for things like Zot and Flay.
-    // (Status db descriptions never have spaces.)
+    // (Status db descriptions never have spaces. Except Trog's Hand.)
     string dbname = split_string(" ", inf.light_text, true, true, 1)[0];
+    // unsplit Trog's Hand so it uses the correct entry
+    if (inf.light_text == "Regen Will++")
+        dbname = inf.light_text;
     // Don't claim Zot is impending when it's not near.
     if (dbname == "Zot" && inf.light_colour == WHITE)
         dbname = "Zot count";
