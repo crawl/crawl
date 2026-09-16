@@ -128,6 +128,8 @@ spret your_spells(spell_type spell, int powc = 0, bool actual_spell = true,
                   const item_def* const evoked_item = nullptr,
                   dist *_target = nullptr, bool force_failure = false);
 
+void do_post_spellcast_effects(spell_type spell);
+
 extern const char *fail_severity_adjs[];
 
 int max_miscast_damage(spell_type spell);
