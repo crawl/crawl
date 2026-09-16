@@ -33,7 +33,7 @@
 #include "exercise.h"      // For practise_evoking
 #include "fight.h"
 #include "fineff.h"        // For the Storm Queen's Shield
-#include "god-abil.h"      // For Forgewarden's curiass (ru_reject_sacrifices)
+#include "god-abil.h"      // For Forgewarden's cuirass (ru_reject_sacrifices)
 #include "mgen-data.h"     // For Sceptre of Asmodeus
 #include "melee-attack.h"  // For Fungal Fisticloak
 #include "message.h"
