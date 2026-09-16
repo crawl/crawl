@@ -2103,7 +2103,7 @@ SH:      +6
 BOOL:    poison, bane
 
 ENUM:    FORGEWARDEN
-NAME:    Forgewarden's curiass
+NAME:    Forgewarden's cuirass
 INSCRIP: Apostate
 OBJ:     OBJ_ARMOUR/ARM_PLATE_ARMOUR
 PLUS:    +12
