@@ -8,6 +8,7 @@
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
+#include "directn.h"
 #include "domino.h"
 #include "domino-data.h"
 #include "dungeon.h"
@@ -1103,8 +1104,13 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
         _tile_place_monster(gc, *cell.monsterinfo());
     else if (cell.item())
     {
-        if (feat_is_stair(cell.feat()))
+        // Stairs draw on top of all items, but corpses will never cover any
+        // interesting terrain.
+        if (feat_is_stair(cell.feat())
+            || cell.item()->base_type == OBJ_CORPSES && is_terrain_interesting(cell.feat()))
+        {
             _tile_place_item_marker(gc, *cell.item(), cell.flags);
+        }
         else
             _tile_place_item(gc, *cell.item(), cell.flags);
     }

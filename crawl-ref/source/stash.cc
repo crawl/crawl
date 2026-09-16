@@ -147,6 +147,11 @@ void Stash::populate_map_cell_with_item(map_cell& cell)
 
     cell.set_item(items[0]);
 
+    // Corpses aren't important enough to list as being 'beneath' anything.
+    // (Don't waste the player's time examining piles to see purely decorative items.)
+    if (items[0].base_type == OBJ_CORPSES)
+        return;
+
     // Staircases hide drawing items on their tile, so we need to use stack
     // indicators that consider the top item to also be buried.
     const bool top_hidden = feat_is_stair(cell.feat());
@@ -159,7 +164,7 @@ void Stash::populate_map_cell_with_item(map_cell& cell)
         else
             cell.flags |= MAP_MORE_ITEMS;
     }
-    else if (items.size() > 1)
+    else if (items.size() > 1 && items[1].base_type != OBJ_CORPSES)
     {
         if (artefact_in_stack)
             cell.flags |= MAP_MORE_ITEMS_ARTEFACT;
