@@ -327,7 +327,7 @@ jobs:
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
+        uses: Homebrew/actions/setup-homebrew@main
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # all history
