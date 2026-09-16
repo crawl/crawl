@@ -6510,6 +6510,13 @@ void monster::steal_item_from_player()
         return;
     item_def& new_item = *tmp;
 
+    // immediately drop unusable weapons from main slot (like giant clubs)
+    if (mslot == MSLOT_WEAPON && !wants_weapon(new_item))
+    {
+        swap_weapons();
+        drop_item(MSLOT_ALT_WEAPON, "");
+    }
+
     // If Maurice steals a melee weapon, let him wield it (assuming he thinks
     // it's better than we he already has.)
     if (mslot == MSLOT_ALT_WEAPON && !is_range_weapon(new_item)
