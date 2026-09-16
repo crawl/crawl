@@ -2828,10 +2828,9 @@ bool full_describe_square(const coord_def &c, bool cleanup)
         ++quantity;
     }
 
-    // I'm not sure if features should be included. But it seems reasonable to
-    // at least include what full_describe_view shows
-    if (feat_stair_direction(feat) != CMD_NO_CMD || feat_is_trap(feat)
-        || feat == DNGN_MOULD_PATCH)
+    // Allow more important (and less common) features to be examined even if
+    // there's an item on top of them.
+    if (show_terrain_before_item(feat) || feat == DNGN_DECORATIVE_FLOOR)
     {
         list_features.push_back(c);
         ++quantity;
