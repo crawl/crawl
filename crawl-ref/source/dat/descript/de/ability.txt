@@ -7,60 +7,70 @@ Spit Poison ability
 
 Gift auf ein anvisiertes Monster spucken.
 %%%%
-Breathe Dispelling Energy ability
+Combustion Breath ability
 
-Einen Strahl entzaubernder Energie auf eine anvisierte Kreatur speien und
-möglicherweise einige ihrer Verzauberungen entfernen.
+Speit einen Strahl volatiler, glühender Asche, die um jede Kreatur herum
+explodiert, die sie berührt. Sie ist harmlos für den Anwender.
+%%%%
+Glacial Breath ability
+
+Atmet eine mächtige Frostwelle aus, die alles was sie tötet in einen
+festen und robusten Eisblock einhüllt.
+%%%%
+Nullifying Breath ability
+
+Speit einen großen Strahl purer Antimagie, die von jeder Kreatur die
+sie berührt, magische Effekte entfernt und außerdem ihre Fähigkeit Zauber
+zu wirken erheblich beeinträchtigt. Sie ist harmlos für den Anwender.
+%%%%
+Steam Breath ability
+
+Speit einen mächtigen Dampfstrahl, der ein Ziel verbrüht und Dampfwolken
+zurücklässt, welche die Sicht verdecken.
+%%%%
+Galvanic Breath ability
+
+Atmet einen Stromstoß aus, der ein Ziel trifft und auf jede andere Kreatur
+überspringt, die mit dem Ziel verbunden ist.
+%%%%
+Mud Breath ability
+
+Spuckt einen riesigen Schlammklumpen, der zurückstößt, was er trifft und
+die Umgebung mit einer Schlammpfütze bedeckt, welche die Bewegung von Feinden
+einschränkt und bewirkt, dass sie manchmal ihre Angriffe verpatzen.
+%%%%
+Caustic Breath ability
+
+Speit einen konzentrierten Säurenebel, der auf leeren Feldern, über die er zieht,
+korrosive Wolken hinterlässt und korrodiert was er trifft.
+%%%%
+Noxious Breath ability
+
+Speit einen Strahl schädlicher Dämpfe, die alles verwirren können, was in ihnen
+steht und nicht resistent gegen Gift ist. Auf höheren Stufen können die
+Wolken ein größeres Gebiet bedecken und bleiben länger bestehen.
 %%%%
 Breathe Fire ability
 
-{{
-    local desc = "Einen Feuerstrahl auf eine anvisierte Kreatur speien"
-
-    if you.race() == "Red Draconian" then
-        desc = desc .. " und eine Flammenwolke am Endpunkt hinterlassen"
-    end
-
-    desc = desc .. "."
-
-    return desc
-}}
-%%%%
-Breathe Frost ability
-
-<Chilling Breath spell>
+Speit einen Feuerstrahl auf eine anvisierte Kreatur.
 %%%%
 Breathe Poison Gas ability
 
-Einen Strahl Giftgas auf eine anvisierte Kreatur speien.
+Speit einen Strahl Giftgas auf eine anvisierte Kreatur.
 %%%%
-Breathe Lightning ability
+Invent Gizmo ability
 
-Setzt eine große elektrische Entladung frei, die ein unkontrollierbares
-Blitzgewitter verursacht. Sie durchschlägt teilweise die Rüstung des Ziels.
-%%%%
-Breathe Acid ability
-
-Einen Säureklumpen auf eine Kreatur in der Nähe spucken, der sie für kurze
-Zeit mit ätzendem Schleim bedeckt. Beim Aufprall kann dieser auch auf andere
-Kreaturen in der Nähe spritzen.
-%%%%
-Breathe Steam ability
-
-Speit einen Dampfstrahl auf eine bestimmte Stelle, der alle getroffenen
-Kreaturen verbrüht und die Sicht verdeckt.
-%%%%
-Breathe Noxious Fumes ability
-
-Speit einen Strahl giftiger Dämpfe auf eine anvisierte Kreatur.
+Verwendet deine unvergleichliche Coglin-Genialität, um ein einzigartiges
+Ausrüstungsstück zu erfinden und es permanent in dir selbst einzubauen.
+Solche Inspiration schlägt nicht zweimal zu, also wähle mit Bedacht.
 %%%%
 Hurl Damnation ability
 
-Verbrennt einen anvisierten Feind mit Verdammnis. Diese unheiligen Kräfte
-schaden dem Opfer und allen, die sich in der Nähe aufhalten, und werden nicht
-durch Schutzmittel wie Rüstungen oder Resistenzen beeinträchtigt.
-Bestimmte Kreaturen, in der Regel solche, die Verdammnis selbst
-heraufbeschwören können, bleiben von der Verdammnis jedoch völlig verschont.
+Verbrennt einen anvisierten Gegner mit Verdammnis. Diese unheiligen Kräfte fügen
+dem Opfer und seinen direkten Nachbarn Schaden zu und werden nicht durch
+Schutzmittel wie Rüstung oder Resistenzen beeinträchtigt. Bestimmte Kreaturen,
+in der Regel solche, die Verdammnis selbst heraufbeschwören können, bleiben von
+der Verdammnis jedoch völlig verschont.
 %%%%
 Word of Chaos ability
 
@@ -91,19 +101,14 @@ Shaft Self ability
 
 Lässt dich an eine zufällige Stelle ein bis drei Ebenen tiefer fallen, als ob du in
 eine Schachtfalle gesprungen wärst. Es dauert einige Zeit, den Schacht zu
-graben.
-%%%%
-Rolling Charge ability
-
-Du rollst mit Schuppenklappern auf einen Gegner zu und
-schlägst ihn im Nahkampf mit erhöhter Treffsicherheit. Je größer die Entfernung,
-desto mehr Schwung wird der Wucht deines Schlags hinzugefügt. Du
-rollst mit ausreichender Geschwindigkeit, um Fallen und schädlichem Terrain auf
-dem Weg auszuweichen, nicht aber am Zielort.
+graben und es erfordert festen, trockenen Boden unter dir. Du kannst keinen
+Schacht graben, während du auf Treppen oder Portalen oder im Wasser stehst.
 %%%%
 Evoke Blink ability
 
-Transportiert den Anwender ein kurzes Stück in eine zufällige Richtung.
+Transportiert den Anwender ein kurzes Stück in eine zufällige Richtung. Nach
+einer solchen Translokation kann die Fähigkeit für eine kurze Weile nicht
+erneut verwendet werden, abhängig von der Fertigkeit Evokationen.
 %%%%
 Evoke Berserk Rage ability
 
@@ -111,17 +116,94 @@ Evoke Berserk Rage ability
 %%%%
 Evoke Invisibility ability
 
-Macht den Anwender unsichtbar. Unsichtbar werden verursacht magische
-Kontamination und kann ein Glühen hervorrufen, wodurch die
-Unsichtbarkeit wieder zunichte gemacht wird.
-%%%%
-Evoke Thunderclouds ability
+Macht den Anwender für eine kurze Weile unsichtbar.
 
-Erzeugt eine mächtige Gewitterwolke um den Anwender herum.
+[[player invis desc]]
 %%%%
 End Transformation ability
 
 Lässt dich in deine normale Form zurückkehren.
+%%%%
+Begin Untransformation ability
+
+Fängt an, dich in deine ursprüngliche Form zurückzuverwandeln. Eine kurze
+Konzentrationsphase ist erforderlich.
+%%%%
+Imbue Servitor ability
+
+Wählt einen der zerstörerischen Zauber des Anwenders aus, um zukünftig von
+ihm erschaffene Zauberfunken-Diener damit zu erfüllen, wobei zuvor gewährte
+Zauber ersetzt werden. Der Zauberer muss in der Lage sein, diesen Zauber mit
+einer Versagensquote von nicht mehr als 20% zu wirken.
+
+Hinweis: Das Gewähren eines Zaubers auf diese Weise dauert einige Runden und
+entlässt deinen Diener, falls er aktiv ist.
+%%%%
+Imprint Weapon ability
+
+Analysiert die strukturelle Zusammensetzung eines Nahkampfwaffen-Artefaktes
+in deinem Inventar und prägt damit deinen Zauber Platin-Parademodell, sodass
+das Modell, immer wenn du es erschaffst, eine funktionsgleiche Nachbildung der
+Waffe verwenden kann.
+%%%%
+Cacophony ability
+
+Manifestiert deine volle Poltergeist-Natur, wodurch alle Rüstungstücke, die du
+heimsuchst, losfliegen und für eine kurze Weile unabhängig von deinen anderen
+Aktionen angreifen - Stiefel, Schals und Helme bedrängen deine Gegner von allen
+Seiten, während ein schadenfroher Lärm die Luft erfüllt.
+
+Diese Gegenstände sind immer noch mit dir verbunden und können sich nicht weit
+von dir entfernen, aber sie teilen keinen Schaden mit dir und du kannst frei
+durch sie hindurch feuern. Ihre Attacken können deinen Gegnern eine Vielzahl
+kleinerer Beschwerden zufügen und sie manchmal benommen machen, auszehren oder
+sogar verwirren.
+
+Nach der Verwendung dieser Fähigkeit musst du Erfahrungspunkte gewinnen, um genug
+Kraft zu schöpfen, sie erneut zu verwenden.
+%%%%
+Bat Swarm ability
+
+Zerstreut deine physische Form in einen Schwarm aus Vampirfledermäusen, wodurch
+deine Ausrüstung verschmilzt, du dich aber schneller und ausweichender bewegen
+kannst. Die Anzahl der Fledermäuse, die aus deinem Körper hervorbrechen, ist so
+immens, dass sie Felder in der Nähe wie eine erstickende Wolke füllen, Gegner
+plagen und sie nach und nach in Schlaf versetzen.
+
+Nach der Verwendung dieser Fähigkeit musst du Erfahrungspunkte gewinnen, um genug
+Kraft zu schöpfen, sie erneut zu verwenden. (Die Fertigkeit Gestaltwandeln
+beschleunigt die Geschwindigkeit, mit der sich diese Fähigkeit wieder auflädt.)
+%%%%
+Enkindle ability
+
+Entfacht deine gespenstischen Flammen und verbessert so deine Zauberkräfte
+erheblich, wobei du jedoch alle angesammelten Erinnerungen verbrennst.
+
+Während du in diesem Zustand bist, verbrauchen deine Schaden verursachenden
+Zauber keine MP, ignorieren die Belastung durch Rüstung und erhalten einen
+Bonus auf ihren Zaubererfolg und ihre Macht (letzteres nimmt mit deiner
+Erfahrungsstufe zu). Jeder Zauberklauen-Angriff während des Aufflammens
+verursacht zusätzlichen Schaden proportional zur Stufe des gewirkten Zaubers
+und heilt dich für einen Prozentsatz des ausgeteilten Schadens.
+
+Jeder Zauber, den du während des Aufflammens wirkst, verbraucht eine Erinnerung
+und der Zustand endet, sobald du keine mehr übrig hast (oder unabhängig davon
+nach einer kurzen Weile).
+
+Mit deiner aktuellen Erfahrungsstufe kannst du genug Erinnerungen speichern,
+um maximal {{return 3 + math.floor(you.xl() * 3 / 20);}} Zauber auf diese Weise
+zu wirken.
+%%%%
+Breathe Rust ability
+
+Speit einen Schwall oxidierenden Nebel, der die Angriffe von Kreaturen, die darin
+stehen, fortlaufend korrodiert und schwächt. Diese Wolken halten lange an,
+verursachen jedoch nur minimalen Schaden.
+%%%%
+Golden Breath ability
+
+Speit einen mächtigen Strahl elementarer Zerstörung, der sowohl Feuer- als auch
+Kälteschaden verursacht und giftige Dunstwolken hinterlässt.
 %%%%
 # Zin
 Recite ability
@@ -141,8 +223,7 @@ Vitalisation ability
 Bietet vorübergehend Schutz vor Gift, Verwirrung, Versteinerung und Krankheit
 sowie vor den Wirkungen von Pestilenzwolken. Deine Stärke, Intelligenz und
 Geschicklichkeit werden außerdem vorübergehend um einen Grad erhöht, der von
-der Fertigkeit Anrufungen abhängt und können nicht ausgezehrt werden,
-solange der Effekt aktiv ist.
+der Fertigkeit Anrufungen abhängt.
 %%%%
 Imprison ability
 
@@ -151,9 +232,14 @@ Gefängnisses wird durch die Fertigkeit Anrufungen erhöht.
 %%%%
 Sanctuary ability
 
-Erschafft für kurze Zeit eine göttliche Zuflucht. Solange du in der Zuflucht
-bist, greifen dich Monster nicht an, aber der Schutz verschwindet sofort,
-wenn du den göttlichen Frieden brichst.
+Verwandelt den Bereich um den Anwender herum für kurze Zeit in einen Raum
+unumstößlicher Gesetze. Solange sich jemand innerhalb dieser Zuflucht aufhält,
+kann ihm von anderen kein Leid zugefügt werden und er darf seinerseits anderen
+kein Leid zufügen.
+
+Wesen mit feindlichen Absichten können eine Zuflucht nicht betreten und
+jene, die bei ihrer Schaffung bereits in der Nähe sind, werden zur Flucht
+gezwungen.
 %%%%
 Cure All Mutations ability
 
@@ -162,10 +248,14 @@ Heilt all deine Mutationen - aber nur einmal.
 # The Shining One
 Divine Shield ability
 
-Gewährt vorübergehend einen göttlichen Schild. Da er von der Macht des
-Strahlenden in der Luft gehalten wird, beeinträchtigt er deine Ausrüstung
-nicht, funktioniert ansonsten aber wie ein normaler physischer Schild. Die
-Stärke und Dauer des Schildes werden durch die Fertigkeit Anrufungen erhöht.
+Erzeugt vor dem Anwender einen blendend hellen Schild. Getragen von der Kraft
+des Strahlenden blockt er zielsicher die nächsten paar Angriffe, sofern diese
+auch von einem gewöhnlichen Schild geblockt werden könnten. Fernkampfangriffe
+werden reflektiert und bei Angreifern im Nahkampf besteht eine Chance, dass sie
+durch den resultierenden Lichtblitz kurz geblendet werden.
+
+Dieser Schild wehrt nur eine begrenzte Anzahl von Angriffen ab, bevor er
+verschwindet. Die Fertigkeit Anrufungen erhöht diese Anzahl.
 %%%%
 Cleansing Flame ability
 
@@ -189,18 +279,15 @@ Segen kann nur einmal verwendet werden und er kann nicht auf Artefaktwaffen
 angewendet werden.
 %%%%
 # Kikubaaqudgha
-Receive Corpses ability
+Unearth Wretches ability
 
-Erzeugt eine oder mehrere wiederbelebbare Monsterleiche(n) in der Nähe. Die
-Anzahl und Frische der Leichen hängt von der Nekromantie-Fertigkeit ab.
+Holt die Sterbenden aus der Nekropole von Kikubaaqudgha hervor und stellt
+damit reichlich Material für alle Arten der Nekromantie bereit. Ihre Anzahl
+und Qualität hängen von der Fertigkeit Nekromantie ab.
 %%%%
-Torment ability
+Sign of Ruin ability
 
-Opfert einen Kadaver, um allen Lebewesen in Sichtweite alle Schmerzen
-zuzufügen, die jenes Wesen in seinem Leben erlitten hat. Dieser Schaden ist
-niemals direkt tödlich. Kikubaaqudgha kann dich vor diesem Effekt schützen,
-je nach deiner Pietät.
-.
+[[Sign of Ruin spell]]
 %%%%
 Brand Weapon With Pain ability
 
@@ -211,48 +298,76 @@ Zaubersprüche wählen und beide Gaben können nur einmal empfangen werden.
 %%%%
 Receive Forbidden Knowledge ability
 
-Verleiht dir die Kenntnis der mächtigsten und dunkelsten Nekromantie-Zauber.
-Du musst zwischen dieser Gabe und der Gabe, eine Waffe mit Schmerz zu verstärken,
-wählen und beide Gaben können nur einmal erhalten werden.
+Verleiht dir die Kenntnis der mächtigsten und dunkelsten Nekromantie-Zauber:
+Heimsuchung, Borgnjor's Wiederbelebung, Infestation und Pforte des Todes. Du
+musst wählen zwischen dieser Gabe und der Gabe, eine Waffe mit Schmerz zu
+verstärken. Beide Gaben können nur einmal erhalten werden.
 %%%%
 # Yredelemnul
-Animate Remains ability
+Recall Undead Harvest ability
 
-Reanimiert eine einzelne Leiche oder ein Skelett als Mitstreiter. Zombies und
-Skelette können die Ebene, auf der sie erschaffen wurden, nicht verlassen.
-%%%%
-Recall Undead Slaves ability
-
-Ruft eure untoten Mitstreiter von irgendwo im Kerker in eure unmittelbare
+Ruft deine untoten Mitstreiter von irgendwo im Kerker in deine unmittelbare
 Umgebung zurück.
 %%%%
-Injury Mirror ability
+Light the Black Torch ability
 
-Reflektiert den erlittenen Schaden für eine kurze Dauer, wodurch Angreifer jedes
-Mal verletzt werden, wenn du Schaden nimmst und deine Pietät in
-Abhängigkeit von der Höhe des erlittenen Schadens reduziert wird.
+Hebt die Schwarze Fackel in die Höhe und ruft Yredelemnul an, sie zu
+entzünden. Damit beginnt dein Versuch, die aktuelle Ebene des Kerkers zu
+erobern. Yredelemnul gewährt Pietät ausschließlich für Tötungen, die
+durchgeführt werden, während die Fackel brennt.
+
+Jene, die sich ein gewisses Maß an Gunst bei Yredelemnul verdient haben,
+erhalten vorübergehend untote Diener, die ihnen beim Beginn ihrer Eroberung
+helfen, wobei den Erfahrenen und besonders Frommen stärkere Diener zur
+Verfügung gestellt werden.
+
+Yredelemnul gewährt keine zweiten Chancen - die Fackel erlischt, sobald du
+die aktuelle Ebene verlässt und sie darf pro Ebene nur ein einziges Mal
+entzündet werden.
 %%%%
-Animate Dead ability
+Hurl Torchlight ability
 
-Reanimiert alle Leichen und Skelette in der Nähe als Mitstreiter. Zombies und
-Skelette können die Ebene, auf der sie erschaffen wurden, nicht verlassen.
+Schleudert Schattenfeuer aus der Schwarzen Fackel, welches lebenden,
+dämonischen und heiligen Wesen unwiderstehlichen Schaden zufügt. Das
+Fackellicht stärkt zudem kurzzeitig all deine untoten Diener, die davon
+erfasst werden. Es ist harmlos für diejenigen, die Yredelemnul verehren.
+Der Schaden wird durch die Fertigkeit Anrufungen erhöht.
+
+Diese Fähigkeit kann nur verwendet werden, solange die Fackel brennt und nur
+für eine begrenzte Anzahl von Malen pro Ebene. Die verfügbaren Anwendungen pro
+Ebene steigen mit der Pietät. Wenn man die Flammen der Schwarzen Fackel mit einer
+besonders bemerkenswerten Seele anfacht, indem man einen einzigartigen, benannten
+Gegner tötet, erhält man ebenfalls eine zusätzliche Anwendung.
 %%%%
-Drain Life ability
+Bind Soul ability
 
-[[Drain Life spell]] Die Menge der verzehrten Lebenskraft wird durch die
-Fertigkeit Anrufungen erhöht.
+Versucht die Seele eines lebenden, heiligen oder dämonischen Wesens in deinen
+ewigen Dienst zu binden. Wird das anvisierte Monster getötet, bevor es dein
+Blickfeld verlässt, kehrt es als gebundene Seele zurück und behält dabei die
+Ausrüstung, Zauber und Fähigkeiten, die es zu Lebzeiten besaß.
+
+Es können nur relative unverletzte Wesen ausgewählt werden und die erforderliche
+Konzentration um zu verhindern, dass ihre Seele entweicht, verbraucht 1/3 der
+aktuellen Gesundheit des Anwenders - diese wird erst nach dem Töten des Wesens
+wiederhergestellt. Der Versuch schlägt vollständig fehl, wenn das gewählte Monster
+dein Blickfeld verlässt, bevor der Vorgang abgeschlossen ist.
+
+Die Gesundheit der gebunden Seele wird von der Fertigkeit Anrufungen des
+Anwenders beeinflusst. Sie folgt ihrem Fänger über Treppen und kann von
+anderen Ebenen zurückgerufen werden.
+
+Es kann zu jeder Zeit immer nur eine Seele gebunden werden.
 %%%%
-Enslave Soul ability
+Fathomless Shackles ability
 
-Markiert die Seele eines Monsters als reif zur Versklavung. Intelligente lebende,
-heilige und dämonische Monster können markiert werden (mit Ausnahme der
-meisten Fürsten des Pandämoniums), solange sie relativ unverletzt sind. Die
-Dauer der Markierung hängt von der Fertigkeit Anrufungen ab. Wenn das Monster
-stirbt, während es noch markiert ist, geht seine Seele in deinen Besitz über.
+Hüllt die Umgebung des Anwenders in Yredelemnuls unerbittlichen Griff. Solange
+du dich in diesem profanen Heiligtum aufhältst, werden alle feindlichen Kreaturen,
+die sich mit dir darin befinden, an Ort und Stelle festgehalten und ihre
+Lebenskraft wird kontinuierlich ausgezehrt, um deine eigene wiederherzustellen.
+Opfer, die von ihren Verbündeten isoliert sind, erleiden deutlich schneller Schaden.
 
-Die versklavte Seele behält ihre Begabungen, Ausrüstung und
-Fähigkeiten sowie einen Teil ihrer angeborenen Heilung. Es kann
-jedoch immer nur eine Seele versklavt werden.
+Der betroffene Bereich schrumpft mit der Zeit und ein neuer kann nicht geschaffen
+werden bevor der alte vollständig verschwunden ist.
 %%%%
 # Okawaru
 Heroism ability
@@ -265,26 +380,123 @@ Finesse ability
 Erhöht deine Kampfgeschwindigkeit erheblich. Die Effektdauer wird durch die
 Fertigkeit Anrufungen erhöht.
 %%%%
+Duel ability
+
+Versetzt dich in einen Zweikampf mit einem würdigen Gegner. Bei Erfolg werden
+du und der herausgeforderte Gegner in Okawarus Arena versetzt, um dort bis zum
+Tod zu kämpfen, ohne Entkommen bevor du als Sieger hervorgehst oder getötet wirst.
+
+Zu Beginn des Duells wird die Hälfte deiner fehlenden Trefferpunkte
+wiederhergestellt und beim Sieg setzt Okawaru deine Treffer- und Magiepunkte
+wieder auf denselben Stand wie vor der Herausforderung – was dich jeglichen
+Schaden, den du während des Duells erlitten hast, im Handumdrehen abschütteln
+lässt.
+%%%%
+Receive Weapon ability
+
+Erwirbt eine Waffe aus einer Auswahl von vier. Dieser Segen kann nur einmal
+eingelöst werden.
+%%%%
+Receive Armour ability
+
+Erwirbt ein Rüstungsteil aus einer Auswahl von vier. Dieser Segen kann nur
+einmal eingelöst werden.
+%%%%
 # Makhleb
-Minor Destruction ability
+Unleash Destruction ability
 
-Schleudert einen zufälligen schädlichen Strahl auf die anvisierte Kreatur.
-Schaden und Treffsicherheit werden durch die Fertigkeit Anrufungen erhöht.
+Kanalisiert einen höllischen, durchdringenden Strahl aus {{
+    if you.get_base_mutation_level("Gehenna destruction") == 1 then
+        return "Feuer, Lava (durch den Einfluss von Gehenna), Blitzen oder negativer Energie"
+    elseif you.get_base_mutation_level("Cocytus destruction") == 1 then
+        return "Eis (durch den Einfluss von Kokytus), Kälte, Blitzen oder negativer Energie"
+    elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
+        return "Feuer, Kälte, Verwüstung (durch den Einfluss von Tartarus) oder negativer Energie"
+    elseif you.get_base_mutation_level("Dis destruction") == 1 then
+        return "Feuer, Kälte, Blitzen, Säure oder Metallsplittern (die letzten zwei durch den Einfluss von Dis)"
+    else
+        return "Feuer, Kälte, Blitzen oder negativer Energie"
+    end
+}} auf eine anvisierte Kreatur. Schaden und Treffsicherheit werden durch die
+Fertigkeit Anrufungen erhöht.
 %%%%
-Lesser Servant of Makhleb ability
+Infernal Servant ability
 
-Ruft einen kleineren Dämon herbei. Scheiterst du diese Fähigkeit richtig
-einzusetzen, wird der Dämon feindselig.
+Beschwört einen Dämon aus den entlegensten Tiefen der Hölle und bindet ihn mit
+deinem Blut in deinen Dienst. Bei geringer Fertigkeit Anrufungen können nur
+niedere Teufel beschworen werden, doch große Dämonen und sogar Scharfrichter
+können dem Ruf derer folgen, die über eine hohe Fertigkeit Anrufungen verfügen.
+
+Beachte, dass die Armeen des Chaos zu internen Machtkämpfen neigen und manchmal
+neben deinem beschworenen Diener auch ein feindlicher Dämon dem Ritual folgt.
 %%%%
-Major Destruction ability
+Brand Self ability
 
-[[Major Destruction spell]] Schaden und Treffsicherheit werden durch die Fertigkeit
-Anrufungen erhöht.
+Schneidet dauerhaft ein höllisches Mal in dich und befleckt Körper und Seele
+für immer im Dienste des Zerstörers.
+
+Solange du weiterhin Makhleb verehrst, gewährt dieses Mal dir folgende Kraft:
+
 %%%%
-Greater Servant of Makhleb ability
+Infernal Legion ability
 
-[[Greater Servant of Makhleb spell]] Scheiterst du diese Fähigkeit richtig
-einzusetzen, wird der Dämon feindselig.
+Nutzt den eigenen Körper als Kanal, um eine Armee des Chaos auf die Welt
+loszulassen. Für kurze Zeit manifestieren sich in der Nähe des Anwenders
+ständig niedere Dämonen - vorausgesetzt, es gibt in der Nähe etwas, gegen
+das sie kämpfen können. Auch wenn diese Dämonen einzeln keine lange Lebensdauer
+haben, sind die Legionen des Chaos insgesamt praktisch unerschöpflich.
+%%%%
+Globe of Annihilation ability
+
+Entfesselt eine wirbelnde Kugel enormer zerstörerischer Kraft, geschaffen aus {{
+    if you.get_base_mutation_level("Gehenna destruction") == 1 then
+        return "dem endlosem Feuer von Gehenna."
+    elseif you.get_base_mutation_level("Cocytus destruction") == 1 then
+        return "der eiskalten Einöde von Kokytus."
+    elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
+        return "der heulenden Trauer von Tartarus."
+    elseif you.get_base_mutation_level("Dis destruction") == 1 then
+        return "der gnadenlosen Bosheit von Dis."
+    else
+        return "den Höllen selbst."
+    end
+}}
+
+Diese Kugel gewinnt während sie fliegt an Kraft und versucht, ein bestimmtes
+Ziel anzusteuern, bewegt und dreht sich dabei jedoch mit erheblicher Trägheit.
+Wenn sie mit einer Kreatur oder einem anderen Hindernis kollidiert, detoniert
+sie in einer heftigen Explosion aus {{
+    if you.get_base_mutation_level("Gehenna destruction") == 1 then
+        return "Feuer oder Lava"
+    elseif you.get_base_mutation_level("Cocytus destruction") == 1 then
+        return "Kälte oder Eis"
+    elseif you.get_base_mutation_level("Tartarus destruction") == 1 then
+        return "negativer Energie oder Verwüstung"
+    elseif you.get_base_mutation_level("Dis destruction") == 1 then
+        return "Säure oder Metallsplitter"
+    else
+        return "höllischer Energie"
+    end
+}}, deren Radius von der zurückgelegten Distanz abhängt.
+
+Du selbst bist vor der Explosion geschützt.
+%%%%
+Vessel of Slaughter ability
+
+Geht einen Blutpakt mit dem Zerstörer ein, der dir vorübergehend enorme Macht
+verleiht, zu einem gefährlichen Preis.
+
+In dem Moment, in dem der Pakt besiegelt wird, umgibt dich eine gewaltige
+Explosion der Verdammnis und du verwandelst dich in einen dämonischen Avatar,
+was dir dämonische Resistenzen, einen unerschütterlichen Willen, doppelte Heilung
+durch Tötungen und eine Reduzierung des gesamten erlittenen Schadens um 1/3 gewährt.
+Zusätzlich erhältst du einen Bonus auf deinen gesamten ausgeteilten Schaden,
+der proportional dazu ist, wie schwer du verletzt warst, als du diese Fähigkeit
+eingesetzt hast.
+
+Wenn deine Verwandlung endet, wirst du in den Schmelztiegel des Fleisches
+hinabgezogen und musst dich durch Wellen von Dämonen kämpfen, bis Makhleb deine
+Schuld als beglichen ansieht.
 %%%%
 # Sif Muna
 %%%%
@@ -300,10 +512,13 @@ Erlernen anderer Zauber freizugeben.
 %%%%
 Divine Exegesis ability
 
-Wirkt einen beliebigen Zauber aus deiner Zaubersammlung mit garantiertem Erfolg.
-Du erhältst einen Bonus auf die Zaubermacht, der auf deiner
-Anrufungen-Fertigkeit basiert und 50% mehr Gewicht hat, als entsprechende
-Stufen in den relevanten Fertigkeiten des Zaubers selbst.
+Wirkt einen beliebigen Zauber aus deiner Zauberbibliothek mit garantiertem
+Erfolg. Du erhältst einen Bonus auf die Zaubermacht, der auf deiner Fertigkeit
+Zaubern basiert, welche dasselbe Gewicht erhält, wie entsprechende Stufen in den
+relevanten Fertigkeiten des Zaubers selbst.
+
+Für kurze Zeit kannst du anschließend denselben Zauber zu deutlich reduzierten
+Pietätskosten erneut wirken (mithilfe der Fähigkeit "Erneut wirken").
 %%%%
 # Trog
 Berserk ability
@@ -325,55 +540,56 @@ schützt ihn vor vielen magischen Effekten.
 Brothers in Arms ability
 
 Ruft riesige wütende Verbündete herbei, um alles zu verwüsten.
+
+Die Kraft der beschworenen Verbündeten steigt mit dem Erfahrungslevel
+des Anwenders.
 %%%%
 # Elyvilon
-Divine Protection ability
-
-Fleht Elyvilon an, dein Leben zu retten. Wenn du tödlich verwundet wirst, kann
-der Heiler den tödlichen Schlag rückgängig machen. Besonders fromme Gläubige
-können sich dieser Hilfe sicher sein, aber in diesem Fall kostet jedes
-Eingreifen Pietät (im Gegensatz zum bloßen Bitten um Hilfe, das immer
-kostenlos ist). Tötest du andere, während du um göttlichen Schutz
-bittest, so musst du Buße tun.
-%%%%
-Lesser Healing ability
-
-Heilt eine kleine Menge Gesundheit, je nach Anrufungsfertigkeit.
-%%%%
 Purification ability
 
 Befreit deinen Körper von Gift, Verwirrung, Verlangsamung, Versteinerung,
-Schwäche und Krankheit. Verringerte Stärke, Geschicklichkeit oder Intelligenz
-werden ebenfalls vollständig wiederhergestellt, ebenso wie die maximale
-Gesundheit.
+Schwäche und Krankheit. Jegliche ausgezehrte maximale Gesundheit wird ebenfalls
+vollständig wiederhergestellt.
 %%%%
-Heal Other ability
+Pacify ability
 
-Heilt eine andere Kreatur als dich selbst um eine moderate Menge, abhängig von
-der Fertigkeit Anrufungen. Wenn du diese Fähigkeit bei feindseligen Monstern
-anwendest, versuchst du, sie neutral zu machen. Dies funktioniert am besten bei
-Tieren und ist weniger effektiv bei Humanoiden und anderen intelligenten
-Kreaturen. Untote und Dämonen sind noch schwieriger zu besänftigen. Pflanzen
-reagieren nicht auf die Heilkunst und können nicht besänftigt werden.
-Dämonenfürsten und Geister von toten Abenteurern sind zu zornig und
-geistlose Kreaturen sind zu einfältig, um besänftigt zu werden und kein
-Monster kann besänftigt werden, wenn es schläft.
+Versucht, eine feindselige Kreatur zu besänftigen und sie davon zu überzeugen,
+ihre gewalttätigen Handlungen aufzugeben. Bei Erfolg wird die Kreatur neutral
+und versucht, die Ebene so schnell wie möglich zu verlassen. Du erhältst ihren
+vollen Erfahrungswert.
 
-Unabhängig davon, ob die Besänftigung erfolgreich ist oder nicht, werden die
-investierten Pietäts- und Magiepunkte verbraucht. Wenn es gelingt, wird das
-Monster geheilt und du erhältst die Hälfte des Erfahrungswerts des Monsters.
-Andernfalls wird das Monster nicht beeinflusst und du erhältst keine Erfahrung.
+Dies funktioniert am besten bei heiligen und lebenden Wesen, während Untote
+und Dämonen zunehmend schwieriger zu besänftigen sind - insbesondere, wenn sie
+intelligent sind.
+
+Weder hirnlose noch nicht-lebende Wesen lassen sich besänftigen und kein
+Monster kann besänftigt werden während es schläft.
+
+Die Fertigkeit Anrufungen erhöht deine Chance auf Erfolg und ermöglicht es
+dir, mächtigere Kreaturen zu besänftigen.
 %%%%
-Greater Healing ability
+Divine Alms ability
 
-Heilt eine mäßige Menge an Gesundheit, je nach Anrufungsfertigkeit. Größere
-Heilung heilt etwa dreimal so viel wie Kleinere Heilung, kostet aber insgesamt
-etwas mehr Pietät.
+Tröstet ein freundliches Wesen, das leidet, heilt einige seiner Wunden
+(abhängig von deiner Fertigkeit Anrufungen) und beseitigt außerdem
+Vergiftungen, Verwirrung, Verlangsamung, Krankheit, Schwäche, Auszehrung und
+Versteinerung.
+
+Jeder beschworenen Kreatur, die durch diese Fähigkeit geheilt wird, kann
+außerdem ein wenig zusätzliche Zeit in dieser Welt gewährt werden.
 %%%%
-Divine Vigour ability
+Heal Self ability
 
-Erhöht die maximalen Treffer- und Magiepunkte, je nach Anrufungsfertigkeit.
+Heilt eine moderate Menge an Gesundheit, abhängig von der Fertigkeit
+Anrufungen.
+%%%%
+Aura of Vigour ability
+
+Erhöht deine maximalen Treffer- und Magiepunkte, je nach Anrufungsfertigkeit.
 Deine aktuellen Treffer- und Magiepunkte werden ebenfalls proportional erhöht.
+
+Auch alle verbündeten Wesen in deiner Nähe erhalten die doppelte Gesundheit,
+solange der Effekt anhält.
 %%%%
 # Lugonu
 Depart the Abyss ability
@@ -381,26 +597,17 @@ Depart the Abyss ability
 Transportiert dich aus dem Abgrund heraus und bringt dich an den Ort zurück,
 von dem aus du ihn betreten hast.
 %%%%
-Bend Space ability
-
-Verbiegt das Gefüge des Raums, wodurch der Anwender sofort über eine kurze
-Distanz transportiert wird und möglicherweise auch andere benachbarte Kreaturen
-transportiert und beschädigt werden. Durch die Verformung des Raumgefüges
-ignoriert diese Fähigkeit Effekte, die normalerweise Translokationen
-verhindern würden. Die Fertigkeit Anrufungen erhöht die Wahrscheinlichkeit,
-dass benachbarte Kreaturen betroffen sind und den Schaden, der den Betroffenen
-zugefügt wird.
-%%%%
 Banish ability
 
 Versucht, eine Kreatur in den Abgrund zu verbannen. Ist der Versuch erfolgreich,
-erhältst du etwas Pietät und den vollen Erfahrungswert der Kreatur.
-Die Fertigkeit Anrufungen macht es schwieriger zu widerstehen.
+erhältst du etwas Pietät und den vollen Erfahrungswert der Kreatur. Selbst
+Kreaturen, die widerstehen werden durch die Berührung mit dem Abgrund malmutiert
+und geschwächt. Die Fertigkeit Anrufungen macht es schwieriger zu widerstehen.
 %%%%
 Corrupt ability
 
 Korrumpiert die aktuelle Ebene mit chaotischer Energie aus dem Abgrund.
-Dies führt dazu, dass die nährere Umgebung ihr Aussehen verändert und es werden
+Dies führt dazu, dass die nähere Umgebung ihr Aussehen verändert und es werden
 Kreaturen aus dem Abgrund herbeigerufen, die Zerstörung anrichten wollen. Dies
 funktioniert nicht auf Ebenen, die bereits korrumpiert sind oder im Abgrund
 selbst. Die Größe des Effekts wird durch die Fertigkeit Anrufungen erhöht.
@@ -408,7 +615,7 @@ selbst. Die Größe des Effekts wird durch die Fertigkeit Anrufungen erhöht.
 Enter the Abyss ability
 
 Versetzt dich augenblicklich ins Reich von Lugonu. Die Anstrengung, diese
-Fähigkeit überhaupt zu benutzen, braucht einen Großteil deiner Gesundheit auf.
+Fähigkeit überhaupt zu benutzen, beeinträchtigt deine Gesundheit.
 %%%%
 Brand Weapon With Distortion ability
 
@@ -443,25 +650,44 @@ Smiting ability
 
 [[Smiting spell]] Die Stärke des Zerschmetterns wird durch die Fertigkeit
 Anrufungen erhöht.
-%%%%
-Recall Orcish Followers ability
 
-Ruft deine orkischen Anhänger von überall im Kerker in deine unmittelbare
+Beogh gestattet dir nicht, dies während einer göttlichen Prüfung direkt
+gegen einen anderen Apostel einzusetzen.
+%%%%
+Recall Apostles ability
+
+Ruft deine orkischen Apostel von überall im Kerker in deine unmittelbare
 Umgebung zurück.
 %%%%
-Stop Recall ability
+Dismiss Apostle ability
 
-Beendet den Rückruf deiner Anhänger.
+Entlässt diesen Apostel aus deinem Dienst und sendet ihn aus, um in der Welt
+Gutes im Namen Beoghs zu tun.
 %%%%
-Give Item to Named Follower ability
+Recruit Apostle ability
 
-Stattet einen benannten Ork-Mitstreiter mit einer Waffe oder einem Rüstungsteil aus.
-Ein Ork kann immer nur eines dieser Geschenke erhalten.
+Salbt einen besiegten Apostel und nimmt ihn als festen Anhänger auf. Er wird
+dir über Ebenen hinweg und in jede Gefahr folgen und bereitwillig sein Leben
+für die Sache und seine Sippe opfern.
+
+Sollte er sterben, wird Beogh ihn irgendwann wieder zum Leben erwecken,
+sobald du genügend Pietät gesammelt hast - dieser Vorgang lässt sich erheblich
+beschleunigen, indem du Beogh damit zufriedenstellst, alle Feinde zu töten,
+die möglicherweise zum Tod des Apostels beigetragen haben.
+
+Du kannst höchstens 3 Gefolgsleute gleichzeitig haben, darfst aber jederzeit
+alte Gefolgsleute entlassen, um neue einzuladen.
 %%%%
-Resurrection ability
+Blood for Blood ability
 
-Erweckt eine Ork-Leiche wieder zum Leben. Der Ork wird zum Verbündeten,
-selbst wenn er es vor seinem Tod noch nicht war.
+Bittet Beogh inständig, dir eine Armee zu gewähren, mit der du blutige Rache
+üben kannst. Der Anwender wird sofort mit orkischen Verbündeten umgeben, wobei
+im Laufe der Zeit weitere aus allen Richtungen hinzukommen. Das Gebet hält eine
+erhebliche Zeit lang an, erlischt jedoch deutlich schneller, sobald keine Feinde
+mehr in Sicht sind.
+
+Kann nur eingesetzt werden, während du über der Leiche eines deiner Apostel
+stehst und höchstens einmal pro Tod.
 %%%%
 # Fedhas
 Wall of Briars ability
@@ -514,26 +740,24 @@ Schaden umso höher ist, je größer der Geschwindigkeitsunterschied ist.
 Step From Time ability
 
 Entfernt dich vollständig aus dem Fluss der Zeit. Die Dinge um dich herum
-geschehen in ihrem üblichen Tempo und Monster wandern umher und vergessen
-dich vielleicht sogar. Nachdem einige Zeit vergangen ist, kehrst du in demselben
-Zustand zurück, wie zu der Sekunde, in der du den Zeitfluss verlassen hattest. Die
-Fertigkeit Anrufungen erhöht die Zeit, die vergeht, während du weg bist.
+geschehen in ihrem üblichen Tempo und Monster wandern umher und schlafen vielleicht
+sogar wieder ein. Nachdem einige Zeit vergangen ist, kehrst du in demselben
+Zustand zurück, wie zu der Sekunde, in der du den Zeitfluss verlassen hattest.
+
+Die Fertigkeit Anrufungen erhöht die Wahrscheinlichkeit, dass die Zeit deiner
+Abwesenheit so lang war, dass wachsame Monster wieder eingeschlafen sind.
 %%%%
 # Jiyva
-Request Jelly ability
-
-Erzeugt ein neutrales Gelee, das auf dem Boden umherwandert und Gegenstände
-verdaut.
-%%%%
 Slimify ability
 
 Umhüllt eine verwendete Waffe oder deine Fäuste mit Schleim und verwandelt
 das nächste getroffene lebende oder körperliche untote Monster in einen
 neutralen Schleim.
 %%%%
-Cure Bad Mutation ability
+Oozemancy ability
 
-Entfernt eine zufällig ausgewählte schlechte Mutation.
+Zieht sauren Schleim aus den Wänden des Kerkers um dich herum, der Gegnern
+Schaden zufügt, abhängig von der Anzahl der benachbarten schleimigen Wände.
 %%%%
 # Ashenzari
 Curse Item ability
@@ -548,22 +772,50 @@ Zerstört einen gewählten verfluchten Ausrüstungsgegenstand und befreit den
 Träger vom Fluch.
 %%%%
 # Dithmenos
-Shadow Step ability
+Shadowslip ability
 
-Erlaubt es dir, in den Schatten einer beliebigen feindlichen Kreatur innerhalb
-deiner Umbra zu treten und an einem zufälligen Ort in der Nähe des Ziels zu
-landen.
+Wechselt sofort den Platz mit deinem Schatten (solange dieser aktiv ist) und
+täuscht alle Gegner in Sichtweite darüber, wer von beiden wer ist. Gegner,
+die zuvor auf dich fokussiert waren, richten ihre Aufmerksamkeit stattdessen
+mehrere Runden lang ausschließlich auf deinen Schatten, bevor sie ihren Irrtum
+bemerken - sollten sie es jedoch schaffen, deinen Schatten zu zerstören, endet
+die Illusion vorzeitig.
+
+Die Dauer dieses Effekts steigt mit der Fertigkeit Anrufungen, ebenso wie die
+Haltbarkeit deines Schattens unmittelbar nach der Verwendung.
 %%%%
-Shadow Form ability
+Aphotic Marionette ability
 
-Verwandelt dich in eine wirbelnde Masse aus dunklen Schatten. In dieser Form
-bist du dauerhaft unsichtbar und immun gegen Gift, Auszehrung und Peinigung. Der
-gesamte eingehende Schaden wird halbiert, du blutest Rauch bei jedem
-eingehenden Angriff und hast unendlich viel Willenskraft. Allerdings wird deine
-Fähigkeit halbiert, im Nahkampf und mit Fernkampfangriffen Schaden zu verursachen,
-deine Zauberkraft wird stark beeinträchtigt und deine maximale
-Gesundheit wird weiter reduziert, wenn du Schaden nimmst. Die Fertigkeit
-Anrufungen erhöht die Dauer der Verwandlung.
+Ergreift den Schatten einer anderen Kreatur und entfesselt schnell deren Zauber
+und Fähigkeiten, als wären es deine eigenen, gegen zufällige Gegner gerichtet.
+Kreaturen, die auf diese Weise beschworen werden, gehören dir und viele positive
+Effekte, die sie auf sich selbst anwenden würden, werden stattdessen auf dich
+angewendet. Außerdem bist du vollständig vor jeglichem Schaden geschützt, den
+sie verursachen würden.
+
+Kann nur auf Wesen angewendet werden, die über geeignete Zaubersprüche verfügen,
+die sie in diesem Moment sinnvoll wirken könnten. Durch diesen Vorgang wird der
+Schatten des Opfers außerdem zu schwach, um ihn ein zweites Mal zu fassen -
+einmal erfolgreich auf ein Ziel angewendet, kann er nie wieder auf dieses
+Ziel angewendet werden.
+
+(Nicht alle Zaubersprüche lassen sich auf diese Weise wirken; diejenigen, bei
+denen dies nicht möglich ist, werden beim Betrachten mit einem Ausrufezeichen
+gekennzeichnet.)
+%%%%
+Primordial Nightfall ability
+
+Ruft eine Nacht aus der Zeit, bevor die Sterne zum ersten Mal am Himmel brannten,
+und hüllt deine Umgebung in undurchdringliche Dunkelheit. Der Sichtradius des
+Anwenders wird auf Null reduziert, wodurch Gegner dich weder aufspüren noch
+Fähigkeiten auf dich richten können. Über die Dauer des Effekts erweitert sich
+der Radius langsam wieder auf den Normalwert. Deine Heimlichkeit wird ebenfalls
+erhöht.
+
+Kann erst wieder angerufen werden, wenn die Wirkung vollständig nachgelassen hat,
+denn selbst die allererste Nacht der Schöpfung muss schließlich dem Tag weichen.
+
+Die Fertigkeit Anrufungen erhöht die Dauer des Effekts.
 %%%%
 # Gozag
 Potion Petition ability
@@ -635,12 +887,13 @@ Opfert die Reinheit von Körper oder Geist und verursacht eine einzige Mutation.
 %%%%
 Sacrifice Words ability
 
-Opfert die Fähigkeit, magische Schriftrollen zu benutzen, während du bedroht
-bist.
+Opfert die Fähigkeit, im Kampf magische Schriftrollen zu benutzen, es sei denn
+du bist schwer verwundet.
 %%%%
 Sacrifice Drink ability
 
-Opfert die Fähigkeit, Tränke zu trinken, während du bedroht bist.
+Opfert die Fähigkeit, im Kampf Tränke zu trinken, es sei denn du bist schwer
+verwundet.
 %%%%
 Sacrifice Essence ability
 
@@ -655,10 +908,20 @@ Sacrifice Stealth ability
 Opfert die Heimlichkeit, wodurch du immer von Feinden bemerkt wirst und keine
 Ränge mehr in der Fertigkeit Heimlichkeit haben kannst.
 %%%%
+Sacrifice Forms ability
+
+Opfert Gestalten, wodurch du daran gehindert wirst, freiwillig deine Gestalt
+zu ändern und keine Ränge mehr in der Fertigkeit Gestaltwandeln haben kannst.
+%%%%
 Sacrifice Artifice ability
 
 Opfert die Fähigkeit, magische Gegenstände zu evozieren und verhindert, dass
 du Ränge in der Fertigkeit Evozieren haben kannst.
+
+Dazu gehören Zauberstäbe und andere Gegenstände, welche die Fertigkeit Evozieren
+verwenden - was bedeutet, dass es hat *keine* Auswirkungen auf Fernkampfwaffen,
+Talismane und Zikkurat-Figuren hat. Außerdem macht dieses Opfer magische Stäbe
+deutlich weniger effektiv im Nahkampf.
 %%%%
 Sacrifice Love ability
 
@@ -686,8 +949,8 @@ kannst.
 %%%%
 Sacrifice Durability ability
 
-Opfert die Widerstandskraft, wodurch du alle Ränge in der Fertigkeit Rüstung
-verlierst. Dieses Opfer ist mehr wert, wenn du auch Ausweichen nicht
+Opfert die Widerstandskraft, wodurch du in der Fertigkeit Rüstung keine Ränge
+mehr haben kannst. Dieses Opfer ist mehr wert, wenn du auch Ausweichen nicht
 trainieren kannst.
 %%%%
 Sacrifice a Hand ability
@@ -700,8 +963,9 @@ Opfert eine Hand, wodurch du die Fähigkeit verlierst, Schilde{{
 %%%%
 Sacrifice Experience ability
 
-Opfert einen Teil deiner bisherigen Erfahrung, wodurch du sofort zwei Stufen
-verlierst und die maximale Stufe, die du erreichen kannst, um zwei gesenkt wird.
+Opfert einen Teil deiner bisherigen Erfahrung, wodurch du sofort eine Stufe
+verlierst und außerdem die maximale Stufe, die du erreichen kannst, um eins
+verringert wird.
 %%%%
 Sacrifice Skill ability
 
@@ -772,6 +1036,7 @@ Donate Gold ability
 Spendet die Hälfte deines Goldes an Zin, was deine Pietät mit der Zeit
 erhöht. Der Gesamtanstieg hängt von der Höhe deiner Spende ab.
 %%%%
+# Hepliaklqana
 Recall Ancestor ability
 
 Ruft deinen Ahnen von irgendwo im Kerker in deine unmittelbare Umgebung zurück.
@@ -799,11 +1064,11 @@ Erinnert dich an deinen Ahnen als Ritter, einen starken Nahkämpfer mit
 überlegenen Verteidigungsmöglichkeiten. Diese Wahl ist dauerhaft und kann
 nicht rückgängig gemacht werden.
 %%%%
-Ancestor Life: Battlemage ability
+Ancestor Life: Elementalist ability
 
-Erinnert dich an deinen Vorfahren als Kampfmagier, der sowohl im
-Nahkampf als auch mit Konjurationen unerbittlich angreifen kann. Diese Wahl
-ist dauerhaft und kann nicht rückgängig gemacht werden.
+Erinnert dich an deinen Vorfahren als Elementaristen, einen mächtigen aber
+fragilen Magier, der in der Lage ist, aus der Entfernung zerstörerische Zauber
+zu entfesseln. Diese Wahl ist dauerhaft und kann nicht rückgängig gemacht werden.
 %%%%
 Ancestor Life: Hexer ability
 
@@ -816,6 +1081,7 @@ Ancestor Identity ability
 Erinnert dich, wie dein Ahne bevorzugt genannt werden wollte, und korrigiert seinen
 Namen und sein Geschlecht.
 %%%%
+# Wu Jian
 Wall Jump ability
 
 Springt von einer angrenzenden Wand auf Feinde zu und attackiert alle Feinde in der
@@ -836,6 +1102,25 @@ Sturm wird mit der Zeit schwächer und verschwindet, sobald der Bonus auf Null
 fällt. Die himmlischen Wolken verhindern Unsichtbarkeit und verschleiern die
 Sicht derer, die sich außerhalb des Sturms befinden.
 %%%%
+# Ignis
+Fiery Armour ability
+
+Panzert dich mit Feuer, das dir +7 RK gewährt und Gegner verbrennt, die
+töricht genug sind, dich im Nahkampf anzugreifen. Es dauert ziemlich lange,
+bis das Feuer erlischt.
+%%%%
+Foxfire Swarm ability
+
+Beschwört einen Schwarm lebender Flammen um dich herum. Diese suchen rasch
+die nächstgelegenen Monster und verbrennen sie. Sie verpuffen harmlos, wenn
+sie kein Ziel erreichen können oder wenn du den Platz mit ihnen tauschst.
+%%%%
+Rising Flame ability
+
+Lässt dich nach oben schweben und sprengt dich nach einer kurzen Verzögerung,
+in der Ignis genug Kraft sammelt, durch die Decke auf die darüber liegende Ebene.
+Diese Fähigkeit kann nur einmal eingesetzt werden.
+%%%%
 Hop ability
 
 Hüpft in Richtung eines gewählten Ziels und landet irgendwo in der Nähe.
@@ -845,9 +1130,70 @@ Wirken von Zaubern und Angriffe, sind erlaubt.)
 %%%%
 Blinkbolt ability
 
-Verwandelt den Anwender in einen lebendigen Blitz und schleudert ihn auf ein anvisiertes
-Monster, wobei alles, was im Weg steht, elektrischen Schaden erleidet. Der Anwender
-wird am Ende des Blitzes abgesetzt.
-Nach dem Einsatz dieser Fähigkeit kannst du sie für eine kurze Zeit nicht
-erneut einsetzen.
+Verwandelt den Anwender in einen lebendigen Blitz und schleudert ihn auf ein
+anvisiertes Monster, wobei alles, was im Weg steht, elektrischen Schaden erleidet.
+Der Anwender wird am Ende des Blitzes abgesetzt. Nach dem Einsatz dieser Fähigkeit
+kannst du sie für eine kurze Zeit nicht erneut einsetzen.
 %%%%
+Siphon Essence ability
+
+Peinigt in der Nähe befindliche lebende Gegner und halbiert deren Lebenspunkte.
+Der verursachte Schmerz heilt den Anwender in einem Umfang, der von der Fertigkeit
+Gestaltwandeln abhängt. Nach dem Einsatz dieser Fähigkeit kannst du sie für kurze
+Zeit nicht erneut einsetzen.
+%%%%
+Evoke the Sceptre of Asmodeus ability
+
+Ruft die Macht von Asmodeus an, um feurige Dämonen der Hölle zu beschwören. Die
+beschworenen Dämonen bleiben nur für eine begrenzte Zeit verbündet und werden
+irgendwann feindselig bevor sie verschwinden. Der Erfolg dieser Fähigkeit hängt von
+der Fertigkeit Evokationen ab und sie ist nur verfügbar, solange das Zepter von
+Asmodeus geführt wird.
+%%%%
+Evoke Damnation ability
+
+Verbrennt einen anvisierten Gegner mit Verdammnis. Diese unheiligen Kräfte fügen
+dem Opfer und seinen direkten Nachbarn Schaden zu und werden nicht durch
+Schutzmittel wie Rüstung oder Resistenzen beeinträchtigt. Bestimmte Kreaturen,
+in der Regel solche, die Verdammnis selbst heraufbeschwören können, bleiben von
+der Verdammnis jedoch völlig verschont. Die Macht dieser Fähigkeit skaliert mit der
+Fertigkeit Evokationen.
+%%%%
+Evoke the Staff of Olgreb ability
+
+Bewirkt, dass der Zaubernde toxische Energie ausstrahlt und allen in Sichtlinie
+kontinuierlich Giftschaden zufügt, solange die Aura anhält. Die Macht dieser
+Fähigkeit skaliert mit der Fertigkeit Evokationen und diese Fähigkeit ist nur
+verfügbar, während der Stab von Olgreb geführt wird.
+%%%%
+Jump ability
+
+Springt im Handumdrehen durch die Luft. Zwar lässt sich das Ziel nicht
+kontrollieren, doch die Bewegung ist so abrupt und flink, dass kein Monster
+dir einen Treffer versetzen kann, bevor du wieder handeln kannst und viele
+können deine Position gänzlich aus den Augen verlieren.
+
+Zwischen jeder Verwendung dieser Fähigkeit musst du eine kurze Erholungspause
+einlegen.
+%%%%
+Watery Grave ability
+
+Verwandelt das gesamte Wasser in deiner Nähe in eine wogende Flut, die jeden
+Gegner zu ertränken versucht, der darin steht oder sich darüber befindet.
+Diejenigen, die Luft zum Atmen benötigen, werden zudem überflutet, wodurch
+sie mehrere Runden lang keine Zauber wirken können, die von Stille betroffen
+sind. Außerdem erleiden sie leichten Erstickungsschaden.
+
+Nach der Verwendung dieser Fähigkeit musst du Erfahrungspunkte gewinnen, um genug
+Kraft zu schöpfen, sie erneut zu verwenden.
+%%%%
+Bestial Takedown ability
+
+Entfesselt die volle Kraft deiner Raubtierinstinkte und lässt dich zu einem
+verängstigten Gegner springen und einen brutalen Nahkampfangriff gegen ihn
+auszuführen. Dieser Angriff erhält einen Schadensmultiplikator, der von deiner
+Fertigkeit Gestaltwandeln abhängt. Wenn der Gegner dadurch getötet wird, stößt
+du anschließend immer ein Heulen aus.
+
+Kann nur gegen einen Feind verwendet werden, der Angst hat und an den mindestens
+ein besetzbares Feld angrenzt.
