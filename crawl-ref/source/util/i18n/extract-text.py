@@ -622,50 +622,59 @@ def process_species_yaml_lines(lines, deprecated):
     strings = []
     name = None
     short_name = None
+    orc_name = None
     adjective = None
-    child = "Child"
+    child = None
     for line in lines:
-        [key, value] = extract_key_value(line, ";")
+        [key, value] = extract_key_value(line, ":")
         if key in ["", "size", "difficulty", "undead_type"]:
             continue
         if value == "" or is_boolean(value) or is_integer(value):
             continue
-        if "_" in value or "Buggy" in value or "buggily" in value:
+        if "_" in value or "#" in value or "Buggy" in value or "buggily" in value:
             continue
-        if deprecated:
-            if key in ["altar_action", "orcification_msg"]:
-                continue
-            if key == "orc_name":
-                # orc_name added in 0.32 when Beogh worship was opened up for non-orcs
-                # any species removed before this does not need orc name
-                if deprecated and name not in ["Ghoul", "Vampire"]:
-                    continue
-        if key == "adjective":
-            adjective = value
-        elif key == "name":
-            if adjective == None:
-                adjective = value
+
+        if key == "name":
             name = value
-            continue
-        elif key == "child_name":
-            child = value
-            continue
         elif key == "short_name":
             short_name = value
-            continue
-        elif key == "altar_action":
-            value = "You " + value + " @the_altar@."
-        #strings.append("# " + key)
-        strings.append(value)
+        elif key == "child_name":
+            child = value
+        elif key == "orc_name":
+            orc_name = value
+        elif key == "walking_verb":
+            verb = value.lower()
+            if verb in ["glid", "wriggl"]:
+                verb += "e"
+            elif verb == "trott":
+                verb = verb[0:-1]
+            strings.append(verb)
+            if value == "Hop":
+                value = "Hopp"
+            strings.append(value + "ing")
+            strings.append(value + "er")
+        elif key in ["genus"] or not deprecated:
+            if key == "altar_action":
+                value = "You " + value + " @the_altar@."
+            elif key == "adjective":
+                adjective = value
+            #strings.append("# " + key)
+            strings.append(value)
 
     strings.insert(0, name)
     if short_name == None:
         short_name = name[0:2]
     strings.insert(1, short_name)
 
-    # specific Hep title
-    if adjective != None and not deprecated:
-        strings.append(adjective + " " + child)
+    if short_name not in ["LO", "SE", "HE", "Ce", "Ha", "DD", "Pa"]:
+        if child != None:
+            # Hep title (changed to use specific child noun in 0.31)
+            if adjective == None:
+                adjective = name
+            strings.append(adjective + " " + child)
+        if orc_name != None and short_name not in ["Og", "Me"]:
+            # orc_name added in 0.32 when Beogh worship was opened up for non-orcs
+            strings.append(orc_name)
 
     return strings
 
