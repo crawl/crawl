@@ -8036,6 +8036,8 @@ static string _describe_talisman_form(transformation form_type)
     {
         pr.AddCell("Melee damage", "-50%", RED);
     }
+    else if (form_type == transformation::fortress_crab)
+        pr.AddCell("Armour egos", "x2");
 
     if (form_type == transformation::vampire || form_type == transformation::sphinx)
         pr.AddCell("SInv", "+");
