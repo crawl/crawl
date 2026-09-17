@@ -16,7 +16,6 @@ Relevant enums are noted with a (filename ➡ enum).
   and, as other enum-based fields, the `TILE_CORPSE_` prefix should be omitted.
 - energy (associative array of string to int mappings): The energy the monster
   takes for various types of actions. Lower is faster.
-  "move" is a shorthand which sets both `EUT_WALK` and `EUT_SWIM`.
   (energy-use-type.h ➡ energy_use_type).
 - enum (string): The monster's enum. Defaults to `name`.
   (monster-type.h ➡ monster-type).
@@ -35,10 +34,10 @@ Relevant enums are noted with a (filename ➡ enum).
   (god-type.h ➡ god_type)
 - habitat (string): The monster's native terrain type. Defaults to "land".
   (mon-enum.h ➡ habitat_type)
-- ✨has_corpse✨ (bool): Whether the monster leaves a corpse behind on death.
+- has_corpse (bool): Whether the monster leaves a corpse behind on death.
   Defaults to false.
 - ✨hd✨ (int): The monster's 'hit dice', or level. Affects many small things.
-- holiness (string): The grand category to which the monster belongs.
+- holiness (list of strings): The grand categories to which the monster belongs.
   Defaults to "natural".
   (mon-holy-type.h ➡ mon_holy_type_flags).
 - ✨hp_10x✨ (int): Ten times the monster's average hit points. (That is, a
@@ -78,7 +77,7 @@ Relevant enums are noted with a (filename ➡ enum).
 - uses (string): The monster's ability to manipulate items and terrain.
   Defaults to "nothing".
   (mon-enum.h ➡ mon_itemuse_type)
-- will (int): The monster's Willpower, or "invuln".
+- will (string): The monster's Willpower, or "invuln".
   Exactly one of this and `will_per_hd` must be set.
 - will_per_hd (int): A multiplier for the monster's `hd` to get its Willpower.
   Exactly one of this and `will` must be set.
@@ -94,6 +93,8 @@ following fields:
 - flavour: (string): Special effects associated with the attack.
   Defaults to `none`.
   (mon-enum.h ➡ attack_flavour)
+- reach (int): The reach of the attack.
+- cleaves (bool): Whether or not the attack has the cleaving property.
 
 `glyph` entries are associative arrays with the following fields:
 
