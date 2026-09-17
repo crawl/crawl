@@ -244,7 +244,6 @@ static void initialize_crawl()
     you.hp = you.hp_max = PLAYER_MAXHP;
     you.magic_points = you.max_magic_points = PLAYER_MAXMP;
     you.species = SP_HUMAN;
-    shopping_list.refresh();
 }
 
 static string dice_def_string(dice_def dice)
