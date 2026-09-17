@@ -324,6 +324,18 @@ def is_only_formatting(string):
     temp = strip_formatting(string)
     return not re.search("[A-Za-z0-9]", temp)
 
+def is_boolean(string):
+    string = string.lower()
+    return string == "false" or string == "true"
+
+def is_integer(string):
+    if string == "":
+        return False
+    if string[0] == "-" or string[0] == "+":
+        return string[1:].isdigit()
+    else:
+        return string.isdigit()
+
 def dump_lines(orig_filename, lines):
     with open(orig_filename + ".tmp", "w") as file:
         for line in lines:
@@ -598,8 +610,73 @@ def process_art_data_txt():
 
     return { "art_data" : result }
 
+def extract_key_value(string, sep):
+        tokens = string.split(":")
+        if len(tokens) != 2:
+            return ["", ""]
+        key = tokens[0].strip()
+        value = tokens[1].strip()
+        return [key, value]
+
+def process_species_yaml_lines(lines, deprecated):
+    strings = []
+    name = None
+    short_name = None
+    adjective = None
+    child = "Child"
+    for line in lines:
+        [key, value] = extract_key_value(line, ";")
+        if key in ["", "size", "difficulty", "undead_type"]:
+            continue
+        if value == "" or is_boolean(value) or is_integer(value):
+            continue
+        if "_" in value or "Buggy" in value or "buggily" in value:
+            continue
+        if deprecated:
+            if key in ["altar_action", "orcification_msg"]:
+                continue
+            if key == "orc_name":
+                # orc_name added in 0.32 when Beogh worship was opened up for non-orcs
+                # any species removed before this does not need orc name
+                if deprecated and name not in ["Ghoul", "Vampire"]:
+                    continue
+        if key == "adjective":
+            adjective = value
+        elif key == "name":
+            if adjective == None:
+                adjective = value
+            name = value
+            continue
+        elif key == "child_name":
+            child = value
+            continue
+        elif key == "short_name":
+            short_name = value
+            continue
+        elif key == "altar_action":
+            value = "You " + value + " @the_altar@."
+        #strings.append("# " + key)
+        strings.append(value)
+
+    strings.insert(0, name)
+    if short_name == None:
+        short_name = name[0:2]
+    strings.insert(1, short_name)
+
+    # specific Hep title
+    if adjective != None and not deprecated:
+        strings.append(adjective + " " + child)
+
+    return strings
+
 def process_yaml_file(filename):
-    return {}
+    strings = []
+    with open(filename) as file:
+        lines = file.readlines()
+    deprecated = "deprecated" in filename
+    if "/species/" in filename:
+        strings = process_species_yaml_lines(lines, deprecated)
+    return { "none": strings }
 
 def is_shop_rebadge_line(line):
     if re.search(r'\bshop\b', line):
