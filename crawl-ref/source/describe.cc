@@ -7857,6 +7857,11 @@ static void _desc_form_val(TablePrinter& pr, string label, int val)
     pr.AddCell(label, make_stringf("%+d", val).c_str(), val < 0 ? RED : LIGHTGREY);
 }
 
+static int _clamp(int value, int minimum, int maximum)
+{
+    return max(minimum, min(maximum, value));
+}
+
 static string _describe_talisman_form(transformation form_type,
                                       const item_def *talisman)
 {
@@ -7866,16 +7871,23 @@ static string _describe_talisman_form(transformation form_type,
     talisman_preview preview(talisman);
 
     // First comes the big table of scaling values, at min, max and current
-    // skill; we get values at the latter by passing -1 to the various form
-    // methods.
-    const int skill[3] = {form->min_skill, form->max_skill, -1};
+    // skill. Work out the minimum and maximum skill value to show.
+    const int plus_bonus = talisman ? known_talisman_plus(*talisman) : 0;
+    const int min_needed = _clamp(form->min_skill - plus_bonus, 0, MAX_SKILL_LEVEL);
+    const int max_needed = _clamp(form->max_skill - plus_bonus, 0, MAX_SKILL_LEVEL);
+
+    // We get values at the current skill by passing -1 to the various form
+    // methods. For the min and max, we add back in the plus to get to the
+    // skill value the form methods expect (and then clamp, though this only
+    // does anything for unreasonably large bonuses).
+    const int skill[3] = {
+        _clamp(min_needed + plus_bonus, 0, form->max_skill),
+        _clamp(max_needed + plus_bonus, 0, form->max_skill),
+        -1};
     vector<vector<string>> items;
 
     items.push_back({" ", "Min", "Max", "Cur"});
 
-    const int plus_bonus = talisman ? known_talisman_plus(*talisman) : 0;
-    const int min_needed = form->min_skill - plus_bonus;
-    const int max_needed = form->max_skill - plus_bonus;
     const int shapeshifting = you.skill(SK_SHAPESHIFTING, 10);
     const string skill_string = make_stringf("%d.%d", shapeshifting / 10, shapeshifting % 10);
     const string cur_skill = (shapeshifting < 10*min_needed ? make_stringf("<red>%s</red>", skill_string.c_str())
