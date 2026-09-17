@@ -1480,6 +1480,20 @@ def post_process_item_name_cc(input):
 
     return results
 
+def post_process_job_data_h(input):
+    results = {}
+    for section, old_strings in input.items():
+        strings = []
+        for string in old_strings:
+            if len(string) == 2:
+                # abbreviation
+                strings.append(string)
+                strings.append("@adj@@two_letter_code@" + string)
+            elif string[0].isupper():
+                strings.append(article_the(string))
+        results[section] = strings
+    return results
+
 def is_unique_monster(string):
     # non-uniques with uppercase letters
     specials = [
@@ -1631,6 +1645,7 @@ specific_post_processing_funcs = {
     'feature-data.h': post_process_feature_data_h,
     'item-prop.cc': post_process_item_prop_cc,
     'item-name.cc': post_process_item_name_cc,
+    'job-data.h': post_process_job_data_h,
     'mon-data.h': post_process_mon_data_h,
     'spl-data.h': post_process_spl_data_h,
     'zap-data.h': post_process_zap_data_h,
