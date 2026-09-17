@@ -623,6 +623,21 @@ protected:
     bool mergeable(const final_effect&) const override { return false; }
 };
 
+class revert_terrain_fineff : public final_effect
+{
+public:
+    void fire() override;
+
+    revert_terrain_fineff(const coord_def& pos, terrain_change_type _type)
+        : final_effect(nullptr, nullptr, pos), type(_type)
+    {
+    }
+protected:
+    bool mergeable(const final_effect&) const override { return false; }
+
+    terrain_change_type type;
+};
+
 
 // Things to happen when the current attack/etc finishes.
 static vector<final_effect*> _final_effects;
@@ -852,6 +867,12 @@ void schedule_eeljolt_fineff()
 void schedule_psychokinetic_burst_fineff(actor* agent)
 {
     _schedule_final_effect(new psychokinetic_burst_fineff(agent));
+}
+
+void schedule_revert_terrain_fineff(const coord_def& pos,
+                                    terrain_change_type type)
+{
+    _schedule_final_effect(new revert_terrain_fineff(pos, type));
 }
 
 bool mirror_damage_fineff::mergeable(const final_effect &fe) const
@@ -1908,6 +1929,11 @@ void psychokinetic_burst_fineff::fire()
     for (actor *act : act_list)
         if (!mons_aligned(agent, act) && act->willpower() != WILL_INVULN)
             act->confuse(agent, random_range(2, 5));
+}
+
+void revert_terrain_fineff::fire()
+{
+    revert_terrain_change(posn, type);
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

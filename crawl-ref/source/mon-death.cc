@@ -3025,7 +3025,10 @@ item_def* monster_die(monster& mons, killer_type killer,
             {
                 if (dynamic_cast<map_malign_gateway_marker*>(mark)->tentacle == mons.mid)
                 {
-                    revert_terrain_change(mark->pos, TERRAIN_CHANGE_MALIGN_GATEWAY);
+                    // Defer the terrain change because beams don't like walls
+                    // to disappear while they process them.
+                    schedule_revert_terrain_fineff(mark->pos,
+                                                   TERRAIN_CHANGE_MALIGN_GATEWAY);
                     env.markers.remove(mark);
                 }
             }

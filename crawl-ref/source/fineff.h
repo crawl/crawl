@@ -15,6 +15,7 @@
 #include "killer-type.h"
 #include "monster-type.h"
 #include "spell-type.h"
+#include "terrain-change-type.h"
 
 class actor;
 struct bolt;
@@ -92,6 +93,8 @@ void schedule_pyromania_fineff();
 void schedule_celebrant_bloodrite_fineff();
 void schedule_eeljolt_fineff();
 void schedule_psychokinetic_burst_fineff(actor* agent);
+void schedule_revert_terrain_fineff(const coord_def& pos,
+                                    terrain_change_type type);
 
 void fire_final_effects();
 void clear_final_effects();
