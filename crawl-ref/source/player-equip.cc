@@ -721,7 +721,7 @@ void player_equip_set::update()
 // This is an ordering of slots such that every slot of every item-granter
 // comes before the item it grants. If we ever don't have such an order, then
 // we could have a granting loop, which is illegal.
-static vector<equipment_slot> _dag_ordered_slots()
+static vector<equipment_slot> _compute_dag_ordered_slots()
 {
     // Map from equip slots to all slots that grant them.
     vector<vector<equipment_slot>> grants(NUM_EQUIP_SLOTS);
@@ -780,6 +780,12 @@ static vector<equipment_slot> _dag_ordered_slots()
     // Any slot left over is part of a granting loop, which must not happen.
     ASSERT((int)order.size() == NUM_EQUIP_SLOTS - SLOT_FIRST_STANDARD);
 
+    return order;
+}
+
+static const vector<equipment_slot>& _dag_ordered_slots()
+{
+    static const vector<equipment_slot> order = _compute_dag_ordered_slots();
     return order;
 }
 
@@ -886,7 +892,7 @@ void player_equip_set::reconcile_form_change(transformation target,
 
     // An order that guarantees we examine every item-granting item before the
     // item it grants.
-    const vector<equipment_slot> order = _dag_ordered_slots();
+    const vector<equipment_slot>& order = _dag_ordered_slots();
 
     // Temporarily change form for the melding calculation.
     {
