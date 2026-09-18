@@ -172,10 +172,11 @@ int player_equip_set::slot_count(equipment_slot slot, string* zero_reason,
             NO_SLOT("You don't have a head.")
         else if (you.has_mutation(MUT_NO_ARMOUR))
             NO_SLOT("That is much too large for your head.")
-        // We deliberately don't count the skull, even if we are counting
-        // melded unrands. It's impossible to get a skull there (it will have
-        // jumped onto the serpent), so for example Ash shouldn't count it.
-        // This is a bit hacky but seems to work.
+        // A hack: in serpent form, we do not count the melded unrand slot even
+        // if asked to. This has the effect that serpent form with melded skull
+        // of zonguldrok has only two hat slots, not a third melded one. This
+        // is better because that third slot could never have a hat it in, but
+        // would still be counted as a slot for the purposes of Ash cursedness.
         else if (_form_slots_apply(transformation::serpent, count_default_form))
             return 2;
         else if (you.get_mutation_level(MUT_HORNS, false) >= 3)
