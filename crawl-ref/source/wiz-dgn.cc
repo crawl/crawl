@@ -592,15 +592,12 @@ static void debug_load_map_by_name(string name, bool primary)
         unwind_var<string_set> umt_a(you.uniq_map_tags_abyss, string_set());
         unwind_var<string_set> lum(env.level_uniq_maps, string_set());
         unwind_var<string_set> lumt(env.level_uniq_map_tags, string_set());
-        if (dgn_place_map(toplace, false, false, where))
+        if (dgn_add_vault_to_existing_level(toplace, where))
         {
             mprf("Successfully placed %s.", toplace->name.c_str());
             // Fix up doors from vaults and any changes to the default walls
             // and floors from the vault.
             tile_init_flavour();
-            // Transporters would normally be made from map markers by the
-            // builder.
-            dgn_make_transporters_from_markers();
         }
         else
         {
