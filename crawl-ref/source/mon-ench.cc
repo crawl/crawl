@@ -1107,6 +1107,50 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     }
 }
 
+static bool _monench_is_negative_dispellable(mon_enchant e)
+{
+    switch (e.ench)
+    {
+    case ENCH_SLOW:
+    case ENCH_FEAR:
+    case ENCH_CONFUSION:
+    case ENCH_CORONA:
+    case ENCH_STICKY_FLAME:
+    case ENCH_CHARM:
+    case ENCH_PARALYSIS:
+    case ENCH_SICK:
+    case ENCH_PETRIFIED:
+    case ENCH_LOWERED_WL:
+    case ENCH_INNER_FLAME:
+    case ENCH_FLAYED:
+    case ENCH_WEAK:
+    case ENCH_DIMENSION_ANCHOR:
+    case ENCH_FIRE_VULN:
+    case ENCH_POISON_VULN:
+    case ENCH_FROZEN:
+    case ENCH_SAP_MAGIC:
+    case ENCH_CORROSION:
+    case ENCH_HEXED:
+    case ENCH_INFESTATION:
+    case ENCH_BLIND:
+    case ENCH_FRENZIED:
+    case ENCH_ANGUISH:
+    case ENCH_CONTAM:
+    case ENCH_BOUND:
+    case ENCH_VITRIFIED:
+    case ENCH_CURSE_OF_AGONY:
+    case ENCH_RIMEBLIGHT:
+    case ENCH_MAGNETISED:
+    case ENCH_BLINKITIS:
+    case ENCH_DIMINISHED_SPELLS:
+    case ENCH_VEXED:
+    case ENCH_EXPOSED:
+        return true;
+    default:
+        return false;
+    }
+}
+
 bool monster::lose_ench_duration(const mon_enchant &e, int dur)
 {
     if (!dur)
@@ -1128,6 +1172,11 @@ bool monster::lose_ench_duration(const mon_enchant &e, int dur)
     {
         mon_enchant newe(e);
         newe.duration -= dur;
+        if (_monench_is_negative_dispellable(newe) 
+            && wearing_jewellery(AMU_DISSIPATION))
+        {
+            newe.duration -= dur;
+        }
         update_ench(newe);
         return false;
     }
