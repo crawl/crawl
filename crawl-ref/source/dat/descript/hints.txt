@@ -750,18 +750,19 @@ overview button</w> in the command panel</localtiles>) for details.
 HINT_GOD_DISPLEASED
 
 Uh-oh, $1 is growing displeased because your piety is running low. Possibly this
-is the case because you're committing heretical acts, because $1 finds your
-worship lacking, or a combination of the two. If your piety goes to zero, then
-you'll be excommunicated. Better get cracking on raising your piety, and/or stop
-annoying your god. In any case, you'd better reread the religious description.
-To do so, press <w>$cmd[CMD_DISPLAY_RELIGION]</w><localtiles> or press
-<w>Shift</w> and <w>right-click</w> on your avatar</localtiles>.
+is the case because you're committing heretical acts, because you're spending
+a lot of piety on $1's powers, or a combination of the two. If your piety goes
+to zero, then you'll be excommunicated. Better get cracking on raising your
+piety, and stop annoying your god. In any case, you'd better reread the
+religious description. To do so, press
+<w>$cmd[CMD_DISPLAY_RELIGION]</w><localtiles> or press <w>Shift</w> and
+<w>right-click</w> on your avatar</localtiles>.
 %%%%
 HINT_EXCOMMUNICATED
 
 Uh-oh, $1 just excommunicated you for running out of piety (your divine favour
 went to nothing). Maybe you repeatedly violated the religious rules, or maybe
-you failed to please your deity often enough, or some combination of the two.
+you spent piety faster than you could gain it, or some combination of the two.
 If you can find an altar dedicated to $1, you can re-convert, and all will be
 well.
 %%%%
