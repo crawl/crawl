@@ -40,8 +40,8 @@ enum daction_type
     DACT_KIRKE_HOGS,
 #if TAG_MAJOR_VERSION == 34
     DACT_END_SPIRIT_HOWL,
-#endif
     DACT_GOLD_ON_TOP,
+#endif
     DACT_BRIBE_TIMEOUT,
     DACT_REMOVE_GOZAG_SHOPS,
     DACT_SET_BRIBES,
@@ -53,6 +53,7 @@ enum daction_type
     DACT_UPGRADE_ANCESTOR,
     DACT_REMOVE_IGNIS_ALTARS,
     DACT_BEOGH_VENGEANCE_CLEANUP,
+    DACT_BANE_MORTALITY_CLEANUP,
     NUM_DACTIONS,
     // If you want to add a new daction, you need to
     // add a corresponding entry to *daction_names[]

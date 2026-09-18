@@ -23,9 +23,9 @@ WEIGHT:  1
 # Terrain includes zot traps, and per-hell clouds, liquid, statues.
 NSUBST:  . = 2:1 / 1:0 / 2:9 / 4 = 0:3 1:1 / 1 = 9:6 / 2:1 / *:.
 NSUBST:  . = 1:^ / 1:^~ / 1:F~ / 4 = F~~ / 1:{ / 1:} / *:.
-KFEAT:   ^ = zot trap
+KFEAT:   ^ = trap_zot
 : if you.in_branch("Geh") then
-MONS:    zombie / skeleton
+MONS:    zombie / draugr
 MONS:    brimstone fiend / oni incarcerator
 MARKER:  F = lua:fog_machine {cloud_type = "flame", \
              pow_min = 8, pow_max = 10, delay = 100, \
@@ -52,7 +52,7 @@ SUBST:   ~ = G
 FTILE:   F = floor_crystal_squares
 COLOUR:  F = lightmagenta
 : elseif you.in_branch("Dis") then
-MONS:    zombie / skeleton
+MONS:    zombie / draugr
 MONS:    hell sentinel / iron giant
 SUBST:   xc = v, F~ = G
 : vault_metal_statue_setup(_G, "G", "iron statue")
@@ -87,17 +87,23 @@ KPROP:   l = no_cloud_gen
 KMONS:   1 = ice fiend
 KMONS:   2 = wendigo band / nargun
 KMONS:   34 = frost giant / shard shrike w:5
-KMONS:   56 = reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe \
-         ego:freezing pre_id
+:    kmons("56 = reaper ; " .. scythe("freezing"))
 KMONS:   7 = simulacrum
 SUBST:   l = w, W = .
 :  else -- Zot
 KMONS:   1 = shard shrike
 KMONS:   2 = seven-headed hydra simulacrum / eight-headed hydra simulacrum
-KMONS:   3 = orb of fire / hellephant w:5
+KMONS:   3 = hellephant
 KMONS:   4 = draconian scorcher
 KMONS:   5 = red draconian ; cloak . mace ego:freezing pre_id
 KMONS:   6 = white draconian ; cloak . mace ego:flaming pre_id
+KMONS:   ? = orb of fire
+KMONS:   ! = orb of winter
+: if dgn.zot_orb_type() == "orb of fire" then
+SUBST:   3 = 3??
+: elseif dgn.zot_orb_type() == "orb of winter" then
+SUBST:   1 = 1!!
+: end
 KFEAT:   1 = w
 KFEAT:   3 = l
 NSUBST:  0 = 1:5 / 1:6
@@ -276,7 +282,14 @@ ENDMAP
 NAME:  nicolae_hells_hurtin_island
 TAGS:  transparent no_pool_fixup
 DEPTH: Dis, !Dis:$, Geh, !Geh:$, Coc, !Coc:$, Tar, !Tar:$
-KMONS: 1> = tormentor / hellion / nothing
+KMONS: 1 = tormentor / hellion / nothing
+: if you.in_branch("Coc") then
+KMONS: > = ice statue
+: elseif you.in_branch("Dis") then
+KMONS: > = orange crystal statue
+: else
+KMONS: > = obsidian statue
+: end
 KFEAT: ! = iron_grate
 KFEAT: > = >
 KMASK: 1> = opaque
@@ -325,7 +338,7 @@ ENDMAP
 NAME:  nicolae_hells_seeping_fissure
 TAGS:  transparent luniq allow_dup no_monster_gen
 DEPTH: Dis, !Dis:$, Geh, !Geh:$, Coc, !Coc:$, Tar, !Tar:$
-KFEAT: ^ = shaft trap
+KFEAT: ^ = shaft
 {{
   if is_validating() then return end
   local cloudtypes =
@@ -363,7 +376,7 @@ SUBST:  L = l
 : elseif you.in_branch("Geh") then
 # The oni are ready to catch them as they would for any other foolish mortals.
 KMONS:  2 = juggernaut / oni incarcerator w:5
-KMONS:  3 = fire giant / frost giant skeleton / stone giant skeleton
+KMONS:  3 = fire giant / frost giant draugr / stone giant draugr
 SUBST:  L = l
 : elseif you.in_branch("Coc") then
 KMONS:  2 = juggernaut

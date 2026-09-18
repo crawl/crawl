@@ -4,6 +4,10 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
           dungeon_renderer) {
     "use strict";
 
+    // Message indicating any invisible monsters nearby whose location was
+    // never known to the player.
+    var inv_mons_msg;
+
     function invalidate(minimap_too)
     {
         var b = map_knowledge.bounds();
@@ -47,7 +51,7 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
 
         dungeon_renderer.animate();
 
-        monster_list.update();
+        monster_list.update(inv_mons_msg);
 
         var render_time = (new Date() - t1);
         if (!window.render_times)
@@ -66,6 +70,8 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
         minimap.clear();
 
         monster_list.clear();
+
+        inv_mons_msg = "";
     }
 
     // Message handlers
@@ -82,6 +88,9 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
 
         if (data.cells)
             map_knowledge.merge(data.cells);
+
+        if ("invis_mon_desc" in data)
+            inv_mons_msg = data.invis_mon_desc;
 
         // Mark cells overlapped by dirty cells as dirty
         $.each(map_knowledge.dirty().slice(), function (i, loc) {

@@ -17,6 +17,7 @@
 #include "initfile.h"
 #include "libutil.h"
 #include "luaterp.h"
+#include "macro.h"
 #include "menu.h"
 #include "monster.h"
 #include "mon-util.h"
@@ -696,6 +697,9 @@ public:
             show();
         }
 
+        if (user)
+            flush_input_buffer(FLUSH_FORCE_MORE);
+
         int last_row = crawl_view.msgsz.y;
         if (first_col_more())
         {
@@ -1361,8 +1365,6 @@ void dprf(diag_type param, const char *format, ...)
 }
 #endif
 
-static bool _updating_view = false;
-
 static bool _check_option(const string& line, msg_channel_type channel,
                           const vector<message_filter>& option)
 {
@@ -1528,15 +1530,6 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
 
     if (msg::uses_stderr(channel))
         fprintf(stderr, "%s\n", formatted_string::parse_string(text).tostring().c_str());
-
-    // Flush out any "comes into view" monster announcements before the
-    // monster has a chance to give any other messages.
-    if (!_updating_view && crawl_state.io_inited)
-    {
-        _updating_view = true;
-        flush_comes_into_view();
-        _updating_view = false;
-    }
 
     if (channel == MSGCH_GOD && param == 0)
         param = you.religion;
@@ -2054,12 +2047,6 @@ void canned_msg(canned_message_type which_message)
         case MSG_DETECT_NOTHING:
             mpr("You detect nothing.");
             break;
-        case MSG_CALL_DEAD:
-            mpr("You call on the dead to rise...");
-            break;
-        case MSG_ANIMATE_REMAINS:
-            mpr("You attempt to give life to the dead...");
-            break;
         case MSG_CANNOT_MOVE:
             mpr("You cannot move.");
             break;
@@ -2097,6 +2084,9 @@ void canned_msg(canned_message_type which_message)
             break;
         case MSG_GOD_DECLINES:
             mpr("Your god isn't willing to do this for you now.");
+            break;
+        case MSG_NO_AVAILABLE_SPACE:
+            mpr("There is no available space!");
             break;
     }
 }

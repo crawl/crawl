@@ -28,10 +28,7 @@
 static void _mark_neighbours_target_unreachable(monster* mon)
 {
     const mon_intel_type intel = mons_intel(*mon);
-    const bool flies         = mon->airborne();
-    const bool amphibious    = (mons_habitat(*mon) == HT_AMPHIBIOUS);
-    const bool amph_lava     = (mons_habitat(*mon) == HT_AMPHIBIOUS_LAVA);
-    const habitat_type habit = mons_primary_habitat(*mon);
+    habitat_type habitat = mons_habitat(*mon);
 
     for (radius_iterator ri(mon->pos(), 2, C_SQUARE); ri; ++ri)
     {
@@ -52,18 +49,11 @@ static void _mark_neighbours_target_unreachable(monster* mon)
         if (mons_intel(*m) > intel)
             continue;
 
-        // Monsters of differing habitats might prefer different routes.
-        if (mons_primary_habitat(*m) != habit)
-            continue;
+        habitat_type other_habitat = mons_habitat(*m);
 
-        // A flying monster has an advantage over a non-flying one.
-        // Same for a swimming one.
-        if (!flies && m->airborne()
-            || !amphibious && mons_habitat(*m) == HT_AMPHIBIOUS
-            || !amph_lava  && mons_habitat(*m) == HT_AMPHIBIOUS_LAVA)
-        {
+        // Monsters of less restrictive habitats might prefer different routes.
+        if ((habitat & other_habitat) != other_habitat)
             continue;
-        }
 
         // If the monster is trying to reach the same foe, consider their
         // foe also unreachable.
@@ -114,30 +104,25 @@ bool try_pathfind(monster* mon)
 
     bool need_pathfind = !can_go_straight(mon, mon->pos(), targpos);
 
-    // Smart monsters that can fire through obstacles won't use
-    // pathfinding.
-    if (need_pathfind
-        && !mon->friendly()
-        && mon->can_see(*foe)
-        && mons_has_los_ability(mon->type))
-    {
-        need_pathfind = false;
-    }
+    const int threat_range_lof = mon->threat_range(true, false);
+    const int threat_range_no_lof = mon->threat_range(false, true);
+    const int dist = grid_distance(mon->pos(), targpos);
 
-    // Also don't use pathfinding if the monster can shoot
-    // across the blocking terrain, and is smart enough to
-    // realise that.
+    // Monsters that are already in range to do something threatening to their
+    // target don't need pathfinding.
     if (need_pathfind
         && !mon->friendly()
-        && mons_has_ranged_attack(*mon)
-        && cell_see_cell(mon->pos(), targpos, LOS_SOLID_SEE))
+        && ((dist <= threat_range_lof
+             && cell_see_cell(mon->pos(), targpos, LOS_SOLID_SEE))
+             || (dist <= threat_range_no_lof
+                 && cell_see_cell(mon->pos(), targpos, LOS_NO_TRANS))))
     {
         need_pathfind = false;
     }
 
     if (!need_pathfind)
     {
-        // The target is easily reachable.
+        // The target is easily reachable (or we're close enough already).
         // Clear travel path and target, if necessary.
         if (mon->travel_target != MTRAV_PATROL
             && mon->travel_target != MTRAV_NONE)
@@ -189,8 +174,6 @@ bool try_pathfind(monster* mon)
     }
 
     // Use pathfinding to find a (new) path to the target.
-    const int dist = grid_distance(mon->pos(), targpos);
-
 #ifdef DEBUG_PATHFIND
     mprf("Need to calculate a path... (dist = %d)", dist);
 #endif
@@ -214,7 +197,11 @@ bool try_pathfind(monster* mon)
     monster_pathfind mp;
     mp.set_range(range);
 
-    if (mp.init_pathfind(mon, targpos))
+    bool found_path = mp.init_pathfind(mon, targpos);
+    if (!found_path)
+        found_path = mp.find_fallback(threat_range_lof, threat_range_no_lof);
+
+    if (found_path)
     {
         mon->travel_path = mp.calc_waypoints();
         if (!mon->travel_path.empty())
@@ -238,7 +225,7 @@ static bool _is_level_exit(const coord_def& pos)
         return true;
 
     // Shaft traps.
-    if (get_trap_type(pos) == TRAP_SHAFT)
+    if (env.grid(pos) == DNGN_TRAP_SHAFT)
         return true;
 
     return false;
@@ -1098,6 +1085,8 @@ static bool _can_safely_go_through(const monster * mon, const coord_def p)
 // FIXME: This is used for monster movement. It should instead be
 //        something like exists_ray(p1, p2, opacity_monmove(mons)),
 //        where opacity_monmove() is fixed to include opacity_immob.
+//        Additionally wall monsters should be allowed to pathfind past
+//        stationary monsters in the corridor.
 bool can_go_straight(const monster* mon, const coord_def& p1,
                      const coord_def& p2)
 {

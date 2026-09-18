@@ -115,6 +115,14 @@ A granite statue
  The lone and level sands stretch far away.”
     -Percy Bysshe Shelley, “Ozymandias”. 1818.
 %%%%
+A hide-covered altar of Uskayaw
+
+“We skipped the light fandango
+ Turned cartwheels 'cross the floor
+ I was feeling kinda seasick
+ But the crowd called out for more”
+    -Procul Harum, “A Whiter Shade of Pale”. 1967.
+%%%%
 A one-way gate to the infinite horrors of the Abyss
 
 “And if you gaze for long into an abyss, the abyss gazes also into you.”
@@ -401,7 +409,7 @@ Animate Dead spell
     -Mary Shelley, _Frankenstein, or the Modern Prometheus_,
      Vol. I, Chapter 3. 1818 (1st Ed.)
 %%%%
-Animate Armour spell
+Awaken Armour spell
 
 "A blacksmith shapes the heart of their steel just as much as any leader shapes
 the hearts of their soldiers. If this armour of mine could speak, I know it
@@ -520,7 +528,7 @@ Ensorcelled Hibernation spell
 “Sweet dreams are made of this; who am I to disagree?”
     -Eurythmics, “Sweet Dreams (Are Made of This)”. 1983.
 %%%%
-Eringya's Surprising Crocodile
+Eringya's Surprising Crocodile spell
 
 A popular legend states that Eringya first demonstrated this spell as the
 closing remark of a particularly acrimonious debate about wetlands conservation,
@@ -553,6 +561,14 @@ Iskenderun's Battlesphere spell
 “Maxim 4: Close air support covereth a multitude of sins.”
     -Howard Tayler, _The Seventy Maxims of Maximally Effective Mercenaries_,
      in _Schlock Mercenary_. 2008.
+%%%%
+Launch Clockwork Bee spell
+
+“According to all known laws of aviation, there is no way a bee should be able
+ to fly. Its wings are too small to get its fat little body off the ground.
+ The bee, of course, flies anyway, because bees don't care what humans think
+ is impossible.”
+    -Bee Movie. 2007.
 %%%%
 Lee's Rapid Deconstruction spell
 
@@ -1883,7 +1899,7 @@ staff of conjuration
 
 <staff>
 %%%%
-staff of death
+staff of necromancy
 
 “'I am Aed Abaid of Ess Rúaid, that is, the good god of wizardry of the Tuatha
  Dé Danann, and the Rúad Rofhessa, and Eochaid Ollathair are my three names.’
@@ -2284,7 +2300,7 @@ Kirke
  shalt not thyself return, but shalt remain there with the others.”
     -Homer, Odysseia
 %%%%
-the Lernaean hydra
+Lernaean hydra
 
 “The second Labour which he undertook was the slaying of the Lernaian Hydra,
  springing from whose single body were fashioned a hundred necks, each bearing
@@ -2400,21 +2416,6 @@ Prince Ribbit
  Open the door for me!”
     -Brothers Grimm (Margaret Hunt), _The Frog King, or Iron Henry_
 %%%%
-Psyche
-
-“Let Psyche's corpse be clad in mourning weed
- And set on rock of yonder hill aloft;
- Her husband is no wight of human seed,
- But serpent dire and fierce, as may be thought,
- Who flies with wings above in starry skies,
- And doth subdue each thing with fiery flight.
- The Gods themselves and powers that seem so wise
- With mighty love be subject to his might.
- The rivers black and deadly floods of pain
- And darkness eke as thrall to him remain.”
-    -Apuleius, _Asinus aureus_, “Cupid and Psyche”. circa. 160 AD.
-    trans. William Adlington, 1566.
-%%%%
 Sigmund
 
 “But Sigmund turned him about, and he said: ‘What aileth thee, son?
@@ -2521,7 +2522,6 @@ mad acolyte of Lugonu
 microbat
 
 <bat>
-
 %%%%
 phase bat
 
@@ -2585,6 +2585,12 @@ HAMLET [Drawing his sword.]: How now! a rat? Dead, for a ducat, dead
        [Stabs through the arras.]
     -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, III, 4.
 1603.
+%%%%
+__s_suffix
+
+“Ere the worm pierce your winding-sheet, ere the spider
+ Make a thin curtain for your epitaphs.”
+    - John Webster, _The White Devil_, V, 6. 1612.
 %%%%
 __cap-D_suffix
 
@@ -2722,6 +2728,22 @@ battlesphere
  But I am”
     -They Might Be Giants, “Birdhouse in Your Soul”. 1989.
 %%%%
+bes kemwar
+
+# would prefer a more prose-like passage translating Teoh's Bes Hyang Dney or
+# Werner's Jah-hět of Malaysia, Art and Culture, but until then:
+“The Bès Kěmwar, “maggot spirit”, is one of the many _bès_ or disease spirits
+ known to the Jah Hut of Malaysia. A polyvalent spirit, it is depicted as a
+ maggot or caterpillar, with variants distinguished by hair, thorns, wings, and
+ other details. It eats rice, vegetables, and other crops. It is responsible for
+ aches in bones, joints, and muscles. If its caterpillar hair falls into water
+ and that water is drunk, it causes coughing and bleeding in the throat. Maggot
+ spirits are also known to live in rotten tree trunks and feed in them. Anyone
+ who approaches the fallen tree will be bitten in the leg by the spirit, causing
+ redness, swelling, and itching. All the toenails fall off but the swelling will
+ be gone by two or three months.”
+    - _A Book of Creatures_, 2020.
+%%%%
 boggart
 
 “He thinks every bush a boggart.”
@@ -2801,6 +2823,27 @@ cherub
  the voice of God Almighty when he speaks.”
     -WEB Bible, Ezekiel 10:4-5
 %%%%
+chonchon
+
+# would prefer a more prose-like passage translating Aguirre's Mitos De Chile or
+# Coluccio's Diccionario Folklórico Argentino, but until then:
+“In its simplest form it is a bird of the night, an owl (_Strix rufipes_) that
+ flies on silent wings during the night to announce illness, death, or some
+ other unwelcome event. When its croaking is heard it is advised to throw ash
+ into the air and utter a few prayers in the hopes of turning away its evil.
+
+ The chonchón is also said to be a _calcu_ or evil sorcerer in disguise. It
+ resemble a human head, with oversized wing-like ears that allow it to fly.
+ During the night, these sorcerers’ heads detach themselves from their bodies
+ and fly around to cause mischief, invisible to most, their ominous _tué, tué,
+ tué_ call announcing misfortune. They have the same powers as sorcerers do,
+ and have been known to suck the blood of sleepers.”
+    - _A Book of Creatures_, 2015.
+%%%%
+clockwork bee
+
+<Launch Clockwork Bee spell>
+%%%%
 crimson imp
 
 “The Devil, too, sometimes steals human children; it is not infrequent for him
@@ -2869,7 +2912,11 @@ diamond obelisk
     -“Expert Judgment on Markers to Deter Inadvertent Human Intrusion into the
       Waste Isolation Pilot Plant”, Sandia National Laboratories report. 1993
 %%%%
-doom hound
+dormant clockwork bee
+
+<Launch Clockwork Bee spell>
+%%%%
+oblivion hound
 
 “Standing over Hugo, and plucking at his throat, there stood a foul thing, a
  great, black beast, shaped like a hound, yet larger than any hound that ever
@@ -3292,20 +3339,23 @@ kraken
  one doubt that this is the Leviathan of Job?”
     -Jacob Wallenberg, “Min son på galejan”. 1781.
 %%%%
+large abomination
+
+<small abomination>
+%%%%
 lindwurm
 
 “Freilich verbürgt uns keine Silbe die Existenz von solcherlei Thieren, wenn
  wir uns den Drachen oder Lindwurm als ein Ungeheuer vorstellen, dessen langer
  Hals in einen Adler-, Löwen- oder Delphinenkopf endigt; das auf dem breiten
  Rücken Greifs- oder Nachisittige trägt; und am vielfach
- gerollten Schweif
- einen Stachel mit Widerhaken hat; Feuer speit; sich in Mädchen verliebt und
- diese entführt; bald diese bald jene Gestalt annimmt; auf sauer erworbenen
- Schatzen ruht — kurz, als ein Ungeheuer, das alle Eigenschaften besitzt,
- welche die Fabel ihm andichtet; dann wäre es Wahnsinn, an Drachen und
- Lindwürmer glauben zu wollen. Nehmen wir aber dafür bloß ein furchtbares
- Ungeheuer überhaupt, welches nun aus unserem Welttheile vertilgt ist, so hat
- der Glaube daran nichts Lächerliches.”
+ gerollten Schweif einen Stachel mit Widerhaken hat; Feuer speit; sich in
+ Mädchen verliebt und diese entführt; bald diese bald jene Gestalt annimmt; auf
+ sauer erworbenen Schatzen ruht — kurz, als ein Ungeheuer, das alle
+ Eigenschaften besitzt, welche die Fabel ihm andichtet; dann wäre es Wahnsinn,
+ an Drachen und Lindwürmer glauben zu wollen. Nehmen wir aber dafür bloß ein
+ furchtbares Ungeheuer überhaupt, welches nun aus unserem Welttheile vertilgt
+ ist, so hat der Glaube daran nichts Lächerliches.”
     -Leopold Ziegelhauſer, _Schattenbilder der Vorzeit: Ein Kranz von
      Geschichten, Sagen, Legenden, Märchen, Skizzen und Heldenmahlen, Aus allen
      Gegenden Deutschlands und des österreichischen Kaiserstaates_. 1844.
@@ -3558,9 +3608,8 @@ ogre mage
 oklob plant
 
 “Carbonic acid is one of the three materials which together form the starting
- point of vegetable growth; the others being water and
- nitric acid. This acid
- is formed of carbon and oxygen in the proportion of one part of the former to
+ point of vegetable growth; the others being water and nitric acid. This acid is
+ formed of carbon and oxygen in the proportion of one part of the former to
  two of the latter chemically combined. It is a colorless gas, having an acid
  taste and smell; is soluble in water; weighs one-half more than air and can be
  poured from one vessel to another, as a liquid may be; 100 parts of water
@@ -3725,6 +3774,12 @@ rakshasa
     -_Mahābhārata_, Adi Parva, Hidimva-vadha Parva, section CLIV. ca. 500 B.C.
      trans. Kisari Mohan Ganguli, 1883.
 %%%%
+raven
+
+“The Hatter opened his eyes very wide on hearing this; but all he said was ‘Why
+is a raven like a writing-desk?’”
+    -Lewis Carroll, Alice’s Adventures in Wonderland
+%%%%
 reaper
 
 “All our times have come.
@@ -3806,13 +3861,14 @@ shadow dragon
 
 “Crux sacra sit mihi lux / Non draco sit mihi dux
  Vade retro satana / Numquam suade mihi vana
- Sunt mala quae libas / Ipse venena bibas”
-        “Let the Holy Cross be my light / Let not the dragon be my guide
-        Step back Satan / Never tempt me with vain things
-        What you offer me is evil / You drink the poison yourself.”
-    -full text of initials on the Saint Benedict Medal, worn to ward off evil
-spririts. Inscription from 11-15th century, formally approved by pope Benedict
-XIV in 18th century
+ Sunt mala quae libas / Ipse venena bibas
+
+ [Let the Holy Cross be my light / Let not the dragon be my guide
+  Step back Satan / Never tempt me with vain things
+  What you offer me is evil / You drink the poison yourself.]”
+    -Full text of initials on the Saint Benedict Medal, worn to ward off evil
+     spirits. Inscription from 11-15th century, formally approved by Pope
+     Benedict XIV in 18th century.
 %%%%
 shadow wraith
 
@@ -3999,6 +4055,13 @@ sphinx marauder
  guile-entangled words, the grim riddle of the winged beast, I solved.'”
     -Seneca, _Oedipus_, 1st cent. A.D.
      trans. Frank Justus Miller, 1917.
+%%%%
+star jelly
+
+"My colleagues may have dismissed the sightings as blink frog egg casings, but
+today I shall prove that these creatures came from beyond the firmament. Let's
+begin the dissection."
+        -Ardun Idrick, cryptozoologist, last words
 %%%%
 starcursed mass
 
@@ -4197,6 +4260,14 @@ vampire bat
 “For something is amiss and out of place
  When mice with wings can wear a human face.”
     -Theodore Roethke, “The Bat”. 1938.
+%%%%
+vampire mosquito
+
+“I lit a thin green candle
+ To make you jealous of me
+ But the room just filled up with mosquitoes
+ They heard that my body was free”
+    -Leonard Cohen, “One of Us Cannot Be Wrong”. 1967.
 %%%%
 very ugly thing
 

@@ -10,9 +10,6 @@ using std::vector;
 
 #define ANIMATE_DEAD_POWER_KEY "animate_dead_power"
 
-#define SPIKE_LAUNCHER_TIMER "spike_launcher_timer"
-#define SPIKE_LAUNCHER_POWER "spike_launcher_power"
-
 class actor;
 
 spret cast_sublimation_of_blood(int pow, bool fail);
@@ -58,7 +55,8 @@ bool passwall_simplified_check(const actor &act);
 spret cast_passwall(const coord_def& delta, int pow, bool fail);
 spret cast_intoxicate(int pow, bool fail, bool tracer = false);
 
-vector<coord_def> find_spike_launcher_walls();
-spret cast_spike_launcher(int pow, bool fail);
-void handle_spike_launcher(int delay);
-void end_spike_launcher();
+vector<coord_def> find_spike_launcher_walls(const coord_def& origin,
+                                            const actor* only_useful_to = nullptr);
+spret cast_spike_launcher(const actor& agent, int pow, bool fail);
+
+bool has_adjacent_enemy(const coord_def& pos, const actor& viewer);

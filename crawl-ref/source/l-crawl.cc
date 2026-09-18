@@ -11,6 +11,7 @@
 #include "cluautil.h"
 #include "command.h"
 #include "delay.h"
+#include "describe.h"
 #include "directn.h"
 #include "dlua.h"
 #include "end.h"
@@ -24,6 +25,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
+#include "mutation.h"
 #include "notes.h"
 #include "output.h"
 #include "perlin.h"
@@ -277,12 +279,12 @@ LUAFN(crawl_get_target) {
 /*** Get input key (combo).
  * @treturn int the key (combo) input
  * @function getch */
-LUARET1(crawl_getch, number, getchm())
+LUARET1(crawl_getch, integer, getchm())
 /*** Check for pending input.
  * @return int 1 if there is, 0 otherwise
  * @function kbhit
  */
-LUARET1(crawl_kbhit, number, kbhit())
+LUARET1(crawl_kbhit, integer, kbhit())
 /*** Flush the input buffer (typeahead).
  * @function flush_input
  */
@@ -706,7 +708,7 @@ static int crawl_msgch_num(lua_State *ls)
     if (ch == -1)
         return 0;
 
-    lua_pushnumber(ls, ch);
+    lua_pushinteger(ls, ch);
     return 1;
 }
 
@@ -783,9 +785,9 @@ static int crawl_regex(lua_State *ls)
  * passed.
  * @tparam string s
  * @treturn boolean|nil
- * @function Regex:find
+ * @function Regex:matches
  */
-static int crawl_regex_find(lua_State *ls)
+static int crawl_regex_matches(lua_State *ls)
 {
     text_pattern **pattern =
             clua_get_userdata< text_pattern* >(ls, REGEX_METATABLE);
@@ -826,9 +828,9 @@ static int crawl_regex_equals(lua_State *ls)
     lua_pushboolean(ls, **pattern == **arg);
     return 1;
 }
-static const luaL_reg crawl_regex_ops[] =
+static const luaL_Reg crawl_regex_ops[] =
 {
-    { "matches",        crawl_regex_find },
+    { "matches",        crawl_regex_matches },
     { "equals",         crawl_regex_equals },
     { nullptr, nullptr }
 };
@@ -910,7 +912,7 @@ static int crawl_messf_equals(lua_State *ls)
     return 1;
 }
 
-static const luaL_reg crawl_messf_ops[] =
+static const luaL_Reg crawl_messf_ops[] =
 {
     { "matches",        crawl_messf_matches },
     { "equals",         crawl_messf_equals },
@@ -974,7 +976,7 @@ static int crawl_string_compare(lua_State *ls)
 {
     const string s1 = luaL_checkstring(ls, 1),
                  s2 = luaL_checkstring(ls, 2);
-    lua_pushnumber(ls, s1.compare(s2));
+    lua_pushinteger(ls, s1.compare(s2));
     return 1;
 }
 
@@ -993,7 +995,7 @@ static int crawl_string_compare(lua_State *ls)
  * And some specific types for partial item naming:
  *
  *  - "base": base name of the item subtype
- *  - "qualname": name without articles, quantities, or enchantments
+ *  - "qual": name without articles, quantities, or enchantments
  *
  * These are used as the allowable values for how.
  * @tparam string what thing to describe
@@ -1045,7 +1047,7 @@ LUARET1(crawl_stat_gain_prompt, boolean, crawl_state.stat_gain_prompt)
  * @treturn int
  * @function random2
  * */
-LUARET1(crawl_random2, number, random2(luaL_safe_checkint(ls, 1)))
+LUARET1(crawl_random2, integer, random2(luaL_safe_checkint(ls, 1)))
 /*** Perform a weighted coinflip.
  * @tparam int in
  * @treturn boolean
@@ -1058,7 +1060,7 @@ LUARET1(crawl_one_chance_in, boolean, one_chance_in(luaL_safe_checkint(ls, 1)))
  * @treturn int
  * @function random2avg
  */
-LUARET1(crawl_random2avg, number,
+LUARET1(crawl_random2avg, integer,
         random2avg(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2)))
 /*** Random number in a range.
  * @tparam int min
@@ -1066,7 +1068,7 @@ LUARET1(crawl_random2avg, number,
  * @tparam[opt=1] int rolls Average over multiple rolls
  * @function random_range
  */
-LUARET1(crawl_random_range, number,
+LUARET1(crawl_random_range, integer,
         random_range(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2),
                       lua_isnumber(ls, 3)? luaL_safe_checkint(ls, 3) : 1))
 /*** Flip a coin.
@@ -1080,7 +1082,7 @@ LUARET1(crawl_coinflip, boolean, coinflip())
  * @treturn int
  * @function roll_dice
  */
-LUARET1(crawl_roll_dice, number,
+LUARET1(crawl_roll_dice, integer,
         lua_gettop(ls) == 1
         ? roll_dice(1, luaL_safe_checkint(ls, 1))
         : roll_dice(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2)))
@@ -1098,7 +1100,7 @@ LUARET1(crawl_x_chance_in_y, boolean, x_chance_in_y(luaL_safe_checkint(ls, 1),
  * @treturn int
  * @function div_rand_round
  */
-LUARET1(crawl_div_rand_round, number, div_rand_round(luaL_safe_checkint(ls, 1),
+LUARET1(crawl_div_rand_round, integer, div_rand_round(luaL_safe_checkint(ls, 1),
                                                      luaL_safe_checkint(ls, 2)))
 /*** A random floating point number in [0,1.0)
  * @treturn number
@@ -1109,7 +1111,7 @@ LUARET1(crawl_random_real, number, random_real())
  * @treturn boolean
  * @function weapon_check
  */
-LUARET1(crawl_weapon_check, boolean, wielded_weapon_check(you.weapon()))
+LUARET1(crawl_weapon_check, boolean, wielded_weapon_check())
 
 /*** Get the full Worley noise datum for a given point
  * @tparam number px
@@ -1137,8 +1139,8 @@ static int crawl_worley(lua_State *ls)
     worley::noise_datum n = worley::noise(px,py,pz);
     lua_pushnumber(ls, n.distance[0]);
     lua_pushnumber(ls, n.distance[1]);
-    lua_pushnumber(ls, n.id[0]);
-    lua_pushnumber(ls, n.id[1]);
+    lua_pushinteger(ls, n.id[0]);
+    lua_pushinteger(ls, n.id[1]);
     lua_pushnumber(ls, n.pos[0][0]);
     lua_pushnumber(ls, n.pos[0][1]);
     lua_pushnumber(ls, n.pos[0][2]);
@@ -1164,7 +1166,7 @@ static int crawl_worley_diff(lua_State *ls)
 
     worley::noise_datum n = worley::noise(px,py,pz);
     lua_pushnumber(ls, n.distance[1]-n.distance[0]);
-    lua_pushnumber(ls, n.id[0]);
+    lua_pushinteger(ls, n.id[0]);
 
     return 2;
 }
@@ -1181,7 +1183,7 @@ static int crawl_worley_diff(lua_State *ls)
  */
 static int crawl_split_bytes(lua_State *ls)
 {
-    uint32_t val = lua_tonumber(ls,1);
+    uint32_t val = lua_tointeger(ls,1);
     uint8_t bytes[4] =
     {
         (uint8_t)(val >> 24),
@@ -1189,10 +1191,10 @@ static int crawl_split_bytes(lua_State *ls)
         (uint8_t)(val >> 8),
         (uint8_t)(val)
     };
-    lua_pushnumber(ls, bytes[0]);
-    lua_pushnumber(ls, bytes[1]);
-    lua_pushnumber(ls, bytes[2]);
-    lua_pushnumber(ls, bytes[3]);
+    lua_pushinteger(ls, bytes[0]);
+    lua_pushinteger(ls, bytes[1]);
+    lua_pushinteger(ls, bytes[2]);
+    lua_pushinteger(ls, bytes[3]);
     return 4;
 }
 
@@ -1325,7 +1327,7 @@ static int crawl_err_trace(lua_State *ls)
     {
         // This code from lua.c:traceback() (mostly)
         (void) lua_tostring(ls, 1);
-        lua_getfield(ls, LUA_GLOBALSINDEX, "debug");
+        lua_getglobal(ls, "debug");
         if (!lua_istable(ls, -1))
         {
             lua_pop(ls, 1);
@@ -1476,7 +1478,28 @@ LUAFN(crawl_hints_type)
     return 1;
 }
 
-static const struct luaL_reg crawl_clib[] =
+static int crawl_bane_name(lua_State *ls)
+{
+    const char *s = luaL_checkstring(ls, 1);
+    if (!s || !*s)
+        return 0;
+
+    lua_pushstring(ls, uppercase_first(bane_name(bane_from_name(s))).c_str());
+    return 1;
+}
+
+static int crawl_bane_desc(lua_State *ls)
+{
+    const char *s = luaL_checkstring(ls, 1);
+    if (!s || !*s)
+        return 0;
+
+    const bane_type bane = bane_from_name(s);
+    lua_pushstring(ls, bane_long_description(bane, true).c_str());
+    return 1;
+}
+
+static const struct luaL_Reg crawl_clib[] =
 {
     { "mpr",                crawl_mpr },
     { "formatted_mpr",      crawl_formatted_mpr },
@@ -1548,6 +1571,8 @@ static const struct luaL_reg crawl_clib[] =
     { "version",            crawl_version },
     { "weapon_check",       crawl_weapon_check},
     { "hints_type",         crawl_hints_type },
+    { "bane_name",          crawl_bane_name },
+    { "bane_description",   crawl_bane_desc },
     { nullptr, nullptr },
 };
 
@@ -1558,7 +1583,12 @@ void cluaopen_crawl(lua_State *ls)
     clua_register_metatable(ls, MESSF_METATABLE, crawl_messf_ops,
                             lua_object_gc<message_filter>);
 
-    luaL_openlib(ls, "crawl", crawl_clib, 0);
+    if (lua_getglobal(ls, "crawl") == LUA_TNIL) {
+        lua_pop(ls, 1);
+        lua_newtable(ls);
+    }
+    luaL_setfuncs(ls, crawl_clib, 0);
+    lua_setglobal(ls, "crawl");
 }
 
 //
@@ -1650,11 +1680,11 @@ LUAFN(_crawl_millis)
     tt |= ft.dwLowDateTime;
     tt /= 10000;
     tt -= 11644473600000ULL;
-    lua_pushnumber(ls, tt);
+    lua_pushinteger(ls, tt);
 #else
     struct timeval tv;
     gettimeofday(&tv, nullptr);
-    lua_pushnumber(ls, tv.tv_sec * 1000 + tv.tv_usec / 1000);
+    lua_pushinteger(ls, tv.tv_sec * 1000 + tv.tv_usec / 1000);
 #endif
     return 1;
 }
@@ -1808,9 +1838,34 @@ LUAWRAP(crawl_clear_message_store, clear_message_store())
  * @treturn int the number of hups seen
  * @function seen_hups
  */
-LUARET1(crawl_seen_hups, number, crawl_state.seen_hups)
+LUARET1(crawl_seen_hups, integer, crawl_state.seen_hups)
 
-static const struct luaL_reg crawl_dlib[] =
+/*** Set the environment table for a lua function.
+ * By default, functions have _G as their environment. This function can
+ * change a function's environment to an arbitrary table.
+ * @within dlua
+ * @tparam function fn The lua function to modify
+ * @tparam table env The new environment for the function
+ * @treturn function The function fn
+ * @function setfenv
+ */
+LUAFN(crawl_setfenv)
+{
+    if (!lua_isfunction(ls, 1))
+        luaL_error(ls, "crawl.setfenv: First argument must be a function");
+    if (!lua_istable(ls, 2))
+    {
+        luaL_error(ls, "crawl.setfenv: Second argument must be an environment "
+                   "table");
+    }
+    if (lua_gettop(ls) != 2)
+        luaL_error(ls, "crawl.setfenv: Too many arguments given");
+
+    lua_setupvalue(ls, 1, 1);
+    return 1;
+}
+
+static const struct luaL_Reg crawl_dlib[] =
 {
 { "args", _crawl_args },
 { "mark_milestone", _crawl_milestone },
@@ -1828,11 +1883,17 @@ static const struct luaL_reg crawl_dlib[] =
 { "rng_wrap", crawl_rng_wrap },
 { "clear_message_store", crawl_clear_message_store },
 { "seen_hups", crawl_seen_hups },
+{ "setfenv", crawl_setfenv },
 
 { nullptr, nullptr }
 };
 
 void dluaopen_crawl(lua_State *ls)
 {
-    luaL_openlib(ls, "crawl", crawl_dlib, 0);
+    if (lua_getglobal(ls, "crawl") == LUA_TNIL) {
+        lua_pop(ls, 1);
+        lua_newtable(ls);
+    }
+    luaL_setfuncs(ls, crawl_dlib, 0);
+    lua_setglobal(ls, "crawl");
 }

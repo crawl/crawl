@@ -244,6 +244,7 @@ conjurations CONJURATIONS_MAX
 hexes HEXES_MAX
 summonings SUMMONINGS_MAX
 necromancy NECROMANCY_MAX
+forgecraft FORGECRAFT_MAX
 translocations TRANSLOCATIONS_MAX
 transmutations TRANSMUTATIONS_MAX
 fire_magic FIRE_MAGIC_MAX

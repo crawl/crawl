@@ -12,7 +12,7 @@
 #include "macros.h"
 
 // In this case, an x86 CPU will use x87 math for floating point calculations,
-// which uses 80 bit intermediate results, andleads to difference from the
+// which uses 80 bit intermediate results, and leads to difference from the
 // (much more common, in 2019) SSE-based calculations.
 // probably far from the only case where seeding isn't reliable...
 #if defined(TARGET_CPU_X86) && !defined(__SSE__)
@@ -37,8 +37,9 @@
     #endif
 #endif
 
-// max size of inventory array {dlb}:
-#define ENDOFPACK 52
+#define ENDOFPACK 127           // Max size of player inventory array
+constexpr int MAX_GEAR = 52;    // Max number of slots of gear inventory
+                                // (and start of consumable inventory).
 
 // Max ghosts in a bones file.
 const int MAX_GHOSTS = 127;
@@ -61,7 +62,7 @@ enum extra_monster_index_type
 #define PAN_MONS_ALLOC 10
 #define MAX_MONS_ALLOC 20
 
-#define MAX_SUBTYPES   60
+#define MAX_SUBTYPES   64
 
 // max size of item list {dlb}:
 #define MAX_ITEMS 2000
@@ -153,9 +154,6 @@ const int ICEMAIL_TIME = 30 * BASELINE_DELAY;
 // This value is used to mark immune levels of WL
 const int WILL_INVULN = 5000;
 
-// This is the damage amount used to signal insta-death
-const int INSTANT_DEATH = -9999;
-
 // Maximum enchantment on weapons/secondary armours
 // Note: use armour_max_enchant(item) to get the correct limit for item
 const int MAX_WPN_ENCHANT = 9;
@@ -186,8 +184,10 @@ const int AGILITY_BONUS = 5;
 
 #define ZOT_ENTRY_RUNES 3
 
+#define MAX_RUNES 15
+
 // Size of unique_items in player class
-#define MAX_UNRANDARTS 150
+#define MAX_UNRANDARTS 255
 
 // Haste/slow boost.
 #define haste_mul(x) div_rand_round((x) * 3, 2)
@@ -302,7 +302,6 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define REAPING_DAMAGE_KEY "reaping_damage"
 #define REAPER_KEY "reaper"
 #define BAND_LEADER_KEY "band_leader"
-#define ZIN_ID_KEY "zin_id"
 #define BLAME_KEY "blame"
 #define NO_ANNOTATE_KEY "no_annotate"
 #define BENNU_REVIVES_KEY "bennu_revives"
@@ -311,12 +310,11 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define FAKE_MON_KEY "fake"
 #define MMOV_KEY "mmov"
 #define BATTLESPHERE_KEY "battlesphere"
-#define FOE_APPROACHING_KEY "foe_approaching"
-#define FAUX_PAS_KEY "foe_pos"
 #define SWOOP_COOLDOWN_KEY "swoop_cooldown"
 #define OUTWARDS_KEY "outwards"
 #define INWARDS_KEY "inwards"
 #define BASE_POSITION_KEY "base_position"
+#define TREE_POSITION_KEY "tree_position"
 #define SUMMON_ID_KEY "summon_id"
 #define FLAY_BLOOD_KEY "flay_blood"
 #define IDEAL_RANGE_KEY "ideal_range"
@@ -324,6 +322,7 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define BLOCKED_DEADLINE_KEY "blocked_deadline"
 #define BROTHERS_KEY "brothers_count"
 #define OLD_HEADS_KEY "old_heads"
+#define ORIGINAL_HEADS_KEY "original_heads"
 #define ELY_WRATH_HEALED_KEY "ely_wrath_healed"
 #define CAN_CLIMB_KEY "can_climb"
 #define SPEECH_PREFIX_KEY "speech_prefix"
@@ -346,6 +345,7 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define STICKY_FLAME_AUX_KEY "sticky_flame_aux"
 #define STICKY_FLAME_POWER_KEY "sticky_flame_pow"
 #define WATER_HOLDER_KEY "water_holder"
+#define WATER_HOLDER_NAME_KEY "water_holder_name"
 #define WATER_HOLD_SUBSTANCE_KEY "water_hold_substance"
 #define BLINKITIS_SOURCE_KEY "disjunctioner"
 #define BLINKITIS_AUX_KEY "disjunction_aux"
@@ -360,7 +360,6 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define FORCE_MAP_KEY "force_map"
 #define DEBUG_BUILDER_LOGS_KEY "debug_builder_logs"
 
-#define NEEDS_AUTOPICKUP_KEY "needs_autopickup"
 #define CHARGES_KEY "charges"
 #define PLUS_KEY "plus"
 #define IDENT_KEY "ident"

@@ -35,6 +35,7 @@
 #include "describe.h"
 #include "directn.h"
 #include "dlua.h"
+#include "duration-data.h"
 #include "end.h"
 #include "errors.h"
 #include "explore-greedy-options.h"
@@ -48,6 +49,7 @@
 #include "jobs.h"
 #include "kills.h"
 #include "libutil.h"
+#include "longwalk-range-mode.h"
 #include "macro.h"
 #include "mapdef.h"
 #include "maps.h"
@@ -64,6 +66,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
+#include "status.h"
 #include "stringutil.h"
 #include "syscalls.h"
 #include "tags.h"
@@ -128,6 +131,7 @@ static bool _force_allow_explore();
 static species_type _str_to_species(const string &str);
 static sound_mapping _interrupt_sound_mapping(const string &s);
 static pair<text_pattern,string> _slot_mapping(const string &s);
+static pair<string, char> _consumable_mapping(const string &s);
 
 #ifdef USE_TILE
 static tag_pref _str_to_tag_pref(const string &opt)
@@ -427,11 +431,7 @@ const vector<GameOption*> game_options::build_options_list()
 #endif // else case of defined(DGAMELAUNCH)
 
         new BoolGameOption(SIMPLE_NAME(autopickup_starting_ammo), true),
-        new MultipleChoiceGameOption<int>(
-            autopickup_on, {"default_autopickup"},
-            1,
-            {{"true", 1}, // XX this would be better as an enum
-             {"false", 0}}, true),
+        new BoolGameOption(autopickup_on, {"default_autopickup"}, true),
         new StringGameOption(SIMPLE_NAME(game_seed), "", false,
             [this]() {
                 // special handling because of the large type.
@@ -466,10 +466,14 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(easy_unequip,
                            { "easy_unequip", "easy_armour", "easy_armor" },
                            true),
-        new BoolGameOption(SIMPLE_NAME(equip_unequip), false),
+        new BoolGameOption(SIMPLE_NAME(equip_unequip), true),
         new BoolGameOption(SIMPLE_NAME(jewellery_prompt), false),
         new BoolGameOption(SIMPLE_NAME(easy_door), true),
         new BoolGameOption(SIMPLE_NAME(warn_hatches), false),
+        new BoolGameOption(SIMPLE_NAME(warn_contam_cost), true),
+        new BoolGameOption(SIMPLE_NAME(show_invis_targeter), true),
+        new BoolGameOption(SIMPLE_NAME(show_resist_percent), true),
+        new BoolGameOption(SIMPLE_NAME(always_show_doom_contam), false),
         new BoolGameOption(SIMPLE_NAME(enable_recast_spell), true),
         new BoolGameOption(SIMPLE_NAME(auto_hide_spells), false),
         new BoolGameOption(SIMPLE_NAME(blink_brightens_background), false),
@@ -544,6 +548,7 @@ const vector<GameOption*> game_options::build_options_list()
                         set_menu_sort(frag);
             }),
         new BoolGameOption(SIMPLE_NAME(bad_item_prompt), true),
+        new BoolGameOption(SIMPLE_NAME(show_paged_inventory), true),
         new MultipleChoiceGameOption<slot_select_mode>(
             SIMPLE_NAME(assign_item_slot),
             SS_FORWARD,
@@ -552,6 +557,9 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(dos_use_background_intensity), true),
         new BoolGameOption(SIMPLE_NAME(explore_greedy), true),
         new BoolGameOption(SIMPLE_NAME(explore_auto_rest), true),
+        new ListGameOption<string>(ON_SET_NAME(explore_auto_rest_status),
+            {"all_negative", "all_cooldown", "contam"}, false,
+            [this]() { update_explore_auto_rest_status(); }),
         new BoolGameOption(SIMPLE_NAME(travel_key_stop), true),
         new ListGameOption<string>(ON_SET_NAME(explore_stop),
             {"item", "stair", "portal", "branch", "shop", "altar",
@@ -569,6 +577,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(dump_on_save), true),
         new BoolGameOption(SIMPLE_NAME(rest_wait_both), false),
         new BoolGameOption(SIMPLE_NAME(rest_wait_ancestor), false),
+        new BoolGameOption(SIMPLE_NAME(rest_wait_ignore_mp), false),
         new BoolGameOption(SIMPLE_NAME(cloud_status), !is_tiles()),
         new BoolGameOption(SIMPLE_NAME(always_show_zot), false),
         new BoolGameOption(SIMPLE_NAME(always_show_gems), false),
@@ -589,8 +598,18 @@ const vector<GameOption*> game_options::build_options_list()
             false
 #endif
             ),
+        new BoolGameOption(SIMPLE_NAME(alt_shatter_animation),
+#ifdef USE_TILE_WEB
+            tiles.is_controlled_from_web()
+#else
+            false
+#endif
+            ),
 
-        new ListGameOption<text_pattern>(SIMPLE_NAME(unusual_monster_items), {}, true),
+        new ListGameOption<text_pattern>(SIMPLE_NAME(unusual_monster_items), {}, true,
+                                         {[this]() { process_unusual_items(); }}),
+        new ListGameOption<string>(ON_SET_NAME(monster_alert),
+            {"uniques"}, false, [this]() { update_monster_alerts(); }),
 
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs), false),
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs_all), false),
@@ -701,8 +720,10 @@ const vector<GameOption*> game_options::build_options_list()
             {"message_colour", "message_color"}, {}, true),
         new ListGameOption<colour_mapping>(menu_colour_mappings,
             {"menu_colour", "menu_color"}, {}, true),
-        new ListGameOption<pair<text_pattern,string>, OPTFUN(_slot_mapping)>(auto_item_letters,
-            {"item_slot"}, {}, true),
+        new ListGameOption<pair<text_pattern,string>, OPTFUN(_slot_mapping)>(auto_gear_letters,
+            {"gear_slot"}, {}, true),
+        new ListGameOption<pair<string, char>, OPTFUN(_consumable_mapping)>(auto_consumable_letters,
+            {"consumable_shortcut"}, {}, true, {[this]() { update_consumable_shortcuts(); }}),
         new ListGameOption<pair<text_pattern,string>, OPTFUN(_slot_mapping)>(auto_spell_letters,
             {"spell_slot"}, {}, true),
         new ListGameOption<pair<text_pattern,string>, OPTFUN(_slot_mapping)>(auto_ability_letters,
@@ -752,6 +773,8 @@ const vector<GameOption*> game_options::build_options_list()
              {"open", travel_open_doors_type::open},
              {"false", travel_open_doors_type::_false},
              {"true", travel_open_doors_type::_true}}),
+        new StringGameOption(ON_SET_NAME(longwalk_range), "15", false,
+            [this]() { set_longwalk_range(longwalk_range_option); }),
 
         new MultipleChoiceGameOption<level_gen_type>(
             SIMPLE_NAME(pregen_dungeon),
@@ -850,7 +873,7 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(tile_tooltip_ms), 0, 0, INT_MAX),
 #endif
         new IntGameOption(SIMPLE_NAME(tile_update_rate), 1000, 50, INT_MAX),
-        new IntGameOption(SIMPLE_NAME(tile_runrest_rate), 100, 0, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(tile_runrest_rate), 17, 0, INT_MAX),
         // minimap colours
         new TileColGameOption(SIMPLE_NAME(tile_branchstairs_col), "#ff7788"),
         new TileColGameOption(SIMPLE_NAME(tile_deep_water_col), "#001122"),
@@ -888,7 +911,7 @@ const vector<GameOption*> game_options::build_options_list()
             split_string(",", "minimap, inventory, command, "
                               "spell, ability, monster")),
         new ListGameOption<string>(SIMPLE_NAME(tile_player_status_icons),
-            split_string(",", "slow, fragile, constr, will/2")),
+            split_string(",", "slow, fragile, constr, will/2, mark")),
         new ListGameOption<colour_remapping>(SIMPLE_NAME(custom_text_colours), {}, false),
 #endif
 #ifdef USE_TILE_LOCAL
@@ -909,6 +932,7 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(tile_font_stat_file), MONOSPACED_FONT, true),
         new StringGameOption(SIMPLE_NAME(tile_font_tip_file), MONOSPACED_FONT, true),
         new StringGameOption(SIMPLE_NAME(tile_font_lbl_file), PROPORTIONAL_FONT, true),
+        new IntGameOption(SIMPLE_NAME(tile_min_stat_width_characters), 42, 1, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_sidebar_pixels), 32, 1, INT_MAX),
         new MultipleChoiceGameOption<screen_mode>(
             SIMPLE_NAME(tile_full_screen),
@@ -925,7 +949,7 @@ const vector<GameOption*> game_options::build_options_list()
         // it'd be a pain to maintain without further macros
 #ifdef USE_TILE_WEB
         new BoolGameOption(SIMPLE_NAME(tile_realtime_anim), false),
-        new BoolGameOption(SIMPLE_NAME(tile_level_map_hide_messages), true),
+        new BoolGameOption(SIMPLE_NAME(tile_level_map_hide_messages), false),
         new BoolGameOption(SIMPLE_NAME(tile_level_map_hide_sidebar), false),
         new BoolGameOption(SIMPLE_NAME(tile_web_mouse_control), true),
         new MultipleChoiceGameOption<string>(
@@ -1054,7 +1078,11 @@ object_class_type item_class_by_sym(char32_t c)
         return OBJ_RODS;
 #endif
     case U'\x2666': // ♦
+    case 'G':
         return OBJ_GEMS;
+    case U'\x2022': // •
+    case 'B':
+        return OBJ_BAUBLES;
     default:
         return NUM_OBJECT_CLASSES;
     }
@@ -1370,14 +1398,8 @@ void game_options::update_enemy_hp_colour()
 
 static string _correct_spelling(const string& str)
 {
-    if (str == "armor_on")
-        return "armour_on";
-    if (str == "armor_off")
-        return "armour_off";
     if (str == "memorize")
         return "memorise";
-    if (str == "jewelry_on")
-        return "jewellery_on";
     return str;
 }
 
@@ -1385,29 +1407,18 @@ void game_options::set_default_activity_interrupts()
 {
     const char *default_activity_interrupts[] =
     {
-        "interrupt_armour_on = hp_loss, monster_attack, monster, mimic",
-        "interrupt_armour_off = interrupt_armour_on",
-        "interrupt_drop_item = interrupt_armour_on",
-        "interrupt_jewellery_on = interrupt_armour_on",
-        "interrupt_transform = interrupt_armour_on",
-        "interrupt_memorise = hp_loss, monster_attack, stat",
-        "interrupt_butcher = interrupt_armour_on, teleport, stat",
-        "interrupt_imbue_servitor = interrupt_butcher",
-        "interrupt_multidrop = hp_loss, monster_attack, teleport, stat",
+        "interrupt_equip_on = hp_loss, monster_attack, monster, mimic",
+        "interrupt_equip_off = interrupt_equip_on",
+        "interrupt_drop_item = interrupt_equip_on",
+        "interrupt_transform = interrupt_equip_on",
+        "interrupt_memorise = hp_loss, monster_attack",
+        "interrupt_imbue_servitor = interrupt_equip_on",
+        "interrupt_imprint_weapon = interrupt_imbue_servitor",
+        "interrupt_multidrop = hp_loss, monster_attack",
         "interrupt_macro = interrupt_multidrop",
-        "interrupt_travel = interrupt_butcher, hit_monster, sense_monster, ally_attacked, abyss_exit_spawned",
+        "interrupt_travel = interrupt_equip_on, hit_monster, sense_monster, ally_attacked, abyss_exit_spawned",
         "interrupt_run = interrupt_travel, message",
         "interrupt_rest = interrupt_run, full_hp, full_mp, ancestor_hp",
-
-        // Stair ascents/descents cannot be interrupted except by
-        // teleportation. Attempts to interrupt the delay will just
-        // trash all queued delays, including travel.
-        "interrupt_ascending_stairs = teleport",
-        "interrupt_descending_stairs = teleport",
-        // These are totally uninterruptible by default, since it's
-        // impossible for them to be interrupted anyway.
-        "interrupt_drop_item = ",
-        "interrupt_jewellery_off =",
     };
 
     for (const char* line : default_activity_interrupts)
@@ -1614,7 +1625,6 @@ void game_options::reset_options()
 
     flush_input[ FLUSH_ON_FAILURE ]     = true;
     flush_input[ FLUSH_BEFORE_COMMAND ] = false;
-    flush_input[ FLUSH_ON_MESSAGE ]     = false;
     flush_input[ FLUSH_LUA ]            = true;
 
     fire_items_start       = 0;           // start at slot 'a'
@@ -1640,7 +1650,7 @@ void game_options::reset_options()
         { SPELL_HAILSTORM, SPELL_STARBURST, SPELL_FROZEN_RAMPARTS,
           SPELL_IGNITION, SPELL_NOXIOUS_BOG, SPELL_ANGUISH,
           SPELL_CAUSE_FEAR, SPELL_INTOXICATE, SPELL_DISCORD, SPELL_DISPERSAL,
-          SPELL_ENGLACIATION, SPELL_DAZZLING_FLASH, SPELL_FLAME_WAVE,
+          SPELL_ENGLACIATION, SPELL_GLOOM, SPELL_FLAME_WAVE,
           SPELL_PLASMA_BEAM, SPELL_PILEDRIVER, SPELL_DIAMOND_SAWBLADES,
           SPELL_FORTRESS_BLAST };
     always_use_static_spell_targeters = false;
@@ -1651,8 +1661,13 @@ void game_options::reset_options()
           ABIL_GALVANIC_BREATH, ABIL_YRED_FATHOMLESS_SHACKLES,
           ABIL_CHEIBRIADOS_SLOUCH, ABIL_QAZLAL_DISASTER_AREA,
           ABIL_RU_APOCALYPSE, ABIL_LUGONU_CORRUPT, ABIL_IGNIS_FOXFIRE,
-          ABIL_SIPHON_ESSENCE, ABIL_DITHMENOS_SHADOWSLIP };
+          ABIL_SIPHON_ESSENCE, ABIL_DITHMENOS_SHADOWSLIP,
+          ABIL_WATERY_GRAVE, ABIL_MAKHLEB_VESSEL_OF_SLAUGHTER };
     always_use_static_ability_targeters = false;
+
+    force_scroll_targeter =
+        { SCR_FEAR, SCR_SILENCE, SCR_VULNERABILITY, SCR_IMMOLATION, SCR_TORMENT };
+    always_use_static_scroll_targeters = false;
 
 #ifdef DGAMELAUNCH
     // not settable via rc on DGL, so no Options object to initialize them
@@ -1680,7 +1695,11 @@ void game_options::reset_options()
 
     // Currently enabled by default for testing in trunk.
     if (Version::ReleaseType == VER_ALPHA)
+    {
         dump_order.push_back("turns_by_place");
+        dump_order.push_back("dlua_errors");
+        dump_order.push_back("piety_info");
+    }
 
     use_animations = (UA_BEAM | UA_RANGE | UA_HP | UA_MONSTER_IN_SIGHT
                       | UA_PICKUP | UA_MONSTER | UA_PLAYER | UA_BRANCH_ENTRY
@@ -1925,9 +1944,65 @@ void game_options::remove_force_ability_targeter(const string &s)
         force_ability_targeter.erase(abil);
 }
 
+void game_options::add_force_scroll_targeter(const string &s, bool)
+{
+    if (lowercase_string(s) == "all")
+    {
+        always_use_static_scroll_targeters = true;
+        return;
+    }
+
+    string name;
+    if (starts_with(s, "scroll of"))
+        name = s;
+    else
+        name = "scroll of " + s;
+    item_kind kind = item_kind_by_name(name);
+
+    if (kind.base_type == OBJ_SCROLLS)
+        force_scroll_targeter.insert(kind.sub_type);
+    else
+        report_error("Unknown scroll '%s'\n", s.c_str());
+}
+
+void game_options::remove_force_scroll_targeter(const string &s)
+{
+    if (lowercase_string(s) == "all")
+    {
+        always_use_static_scroll_targeters = false;
+        return;
+    }
+
+    string name;
+    if (starts_with(s, "scroll of"))
+        name = s;
+    else
+        name = "scroll of " + s;
+    item_kind kind = item_kind_by_name(name);
+
+    if (kind.base_type == OBJ_SCROLLS)
+        force_scroll_targeter.erase(kind.sub_type);
+    else
+        report_error("Unknown scroll '%s'\n", s.c_str());
+}
+
 static monster_type _mons_class_by_string(const string &name)
 {
     const string match = lowercase_string(name);
+
+    // These are cases of multiple enums sharing the same in-game name, and must
+    // be handled separately
+    if (match == "bai suzhen (dragon)")
+        return MONS_BAI_SUZHEN_DRAGON;
+    else if (match == "serpent of hell (geh)")
+        return MONS_SERPENT_OF_HELL;
+    else if (match == "serpent of hell (coc)")
+        return MONS_SERPENT_OF_HELL_COCYTUS;
+    else if (match == "serpent of hell (tar)")
+        return MONS_SERPENT_OF_HELL_TARTARUS;
+    else if (match == "serpent of hell (dis)")
+        return MONS_SERPENT_OF_HELL_DIS;
+
     for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
     {
         const monsterentry *me = get_monster_data(i);
@@ -1940,7 +2015,7 @@ static monster_type _mons_class_by_string(const string &name)
     return MONS_0;
 }
 
-static set<monster_type> _mons_classes_by_glyph(const char letter)
+static set<monster_type> _mons_classes_by_glyph(const char32_t letter)
 {
     set<monster_type> matches;
     for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
@@ -1962,7 +2037,7 @@ cglyph_t game_options::parse_mon_glyph(const string &s) const
     vector<string> phrases = split_string(" ", s);
     for (const string &p : phrases)
     {
-        const int col = str_to_colour(p, -1, false);
+        const int col = str_to_colour(p, -1, false, true);
         if (col != -1)
             md.col = col;
         else
@@ -2203,6 +2278,7 @@ static const char* config_defaults[] =
     "defaults/glyph_colours.txt",
     "defaults/messages.txt",
     "defaults/misc.txt",
+    "defaults/consumable_shortcuts.txt",
 };
 
 void base_game_options::reset_loaded_state()
@@ -3080,6 +3156,93 @@ void game_options::update_travel_terrain()
     }
 }
 
+void game_options::update_consumable_shortcuts()
+{
+    potion_shortcuts.init(0);
+    scroll_shortcuts.init(0);
+    evokable_shortcuts.init(0);
+
+    for (const auto& entry : auto_consumable_letters)
+    {
+        item_kind kind = item_kind_by_name(entry.first);
+        if (kind.base_type == OBJ_UNASSIGNED)
+        {
+            report_error("Unknown consumable type: %s\n", entry.first.c_str());
+            continue;
+        }
+
+        if (kind.base_type == OBJ_POTIONS)
+            potion_shortcuts[kind.sub_type] = entry.second;
+        else if (kind.base_type == OBJ_SCROLLS)
+            scroll_shortcuts[kind.sub_type] = entry.second;
+        else if (kind.base_type == OBJ_WANDS)
+            evokable_shortcuts[kind.sub_type] = entry.second;
+        else if (kind.base_type == OBJ_MISCELLANY)
+            evokable_shortcuts[kind.sub_type + NUM_WANDS] = entry.second;
+        else if (kind.base_type == OBJ_BAUBLES)
+            evokable_shortcuts[kind.sub_type + NUM_WANDS + NUM_MISCELLANY] = entry.second;
+    }
+}
+
+// Extract 'vulnerable brand' options from unusual_monster_items
+void game_options::process_unusual_items()
+{
+    for (int i = (int)unusual_monster_items.size() - 1; i >= 0; --i)
+    {
+        text_pattern& pattern = unusual_monster_items[i];
+        string str = pattern.tostring();
+
+        if (!starts_with(str, "vulnerable:"))
+            continue;
+
+        vector<string> splits = split_string(":", str, true, true, -1, true);
+
+        if (splits.size() >= 2)
+        {
+            int brand = str_to_ego(OBJ_WEAPONS, splits[1]);
+            if (brand <= 0)
+                continue;
+
+            int xl = 27;
+            if (splits.size() >= 3)
+                parse_int(splits[2].c_str(), xl);
+
+            vulnerable_brand_warning.push_back({static_cast<brand_type>(brand), xl});
+        }
+
+        unusual_monster_items.erase(unusual_monster_items.begin() + i);
+    }
+}
+
+void game_options::update_monster_alerts()
+{
+    monster_alert.init(false);
+    monster_alert_uniques = false;
+    monster_alert_unusual = false;
+    monster_alert_min_threat = MTHRT_UNDEF;
+
+    for (string& str : monster_alert_option)
+    {
+        if (str == "uniques")
+            monster_alert_uniques = true;
+        else if (str == "nasty")
+            monster_alert_min_threat = min(MTHRT_NASTY, monster_alert_min_threat);
+        else if (str == "tough")
+            monster_alert_min_threat = min(MTHRT_TOUGH, monster_alert_min_threat);
+        else if (str == "easy")
+            monster_alert_min_threat = min(MTHRT_EASY, monster_alert_min_threat);
+        else if (str == "trivial")
+            monster_alert_min_threat = min(MTHRT_TRIVIAL, monster_alert_min_threat);
+        else if (str == "unusual")
+            monster_alert_unusual = true;
+        else
+        {
+            monster_type type = get_monster_by_name(str);
+            if (type != MONS_PROGRAM_BUG)
+                monster_alert[type] = true;
+        }
+    }
+}
 
 void game_options::update_use_animations()
 {
@@ -3174,6 +3337,57 @@ void game_options::update_explore_greedy_visit_conditions()
             report_error("Unknown greedy visit condition '%s'", c.c_str());
     }
     explore_greedy_visit = conditions;
+}
+
+void game_options::update_explore_auto_rest_status()
+{
+    set<duration_type> durs;
+    explore_auto_rest_contam = false;
+
+    for (const auto& str : explore_auto_rest_status_option)
+    {
+        if (str == "all_negative")
+        {
+            const vector<duration_type> neg = all_duration_with_flag(D_NEGATIVE);
+            durs.insert(neg.begin(), neg.end());
+        }
+        else if (str == "all_cooldown")
+        {
+            const vector<duration_type> cooldown = all_duration_with_flag(D_COOLDOWN);
+            durs.insert(cooldown.begin(), cooldown.end());
+        }
+        else if (str == "contam")
+            explore_auto_rest_contam = true;
+        else
+        {
+            string str_nospace = lowercase_string(str);
+            remove_whitespace(str_nospace);
+
+            bool invert = false;
+            if (!str_nospace.empty() && str_nospace[0] == '*')
+            {
+                invert = true;
+                str_nospace = str_nospace.substr(1);
+            }
+
+            duration_type dur = duration_by_name(str_nospace);
+
+            if (dur == NUM_DURATIONS)
+                continue;
+
+            if (invert)
+                durs.erase(dur);
+            else
+                durs.insert(dur);
+        }
+    }
+
+    // Erase effects that do not expire with time in general.
+    durs.erase(DUR_HORROR);
+    durs.erase(DUR_MESMERISED);
+    durs.erase(DUR_AFRAID);
+
+    explore_auto_rest_status.assign(durs.begin(), durs.end());
 }
 
 message_filter::message_filter(const string &filter)
@@ -3277,7 +3491,7 @@ sound_mapping::sound_mapping(const string &s)
         mprf(MSGCH_ERROR, "Options error: invalid sound mapping '%s'", s.c_str());
         return;
     }
-#if !defined(USE_SOUND) || !defined(WINMM_PLAY_SOUNDS) || !defined(SOUND_PLAY_COMMAND) || !defined(USE_SDL)
+#if !(defined(USE_SOUND) && (defined(WINMM_PLAY_SOUNDS) || defined(SOUND_PLAY_COMMAND) || defined(USE_SDL)))
     static bool _sound_warning_issued = false;
     if (!_sound_warning_issued)
     {
@@ -3306,6 +3520,18 @@ static pair<text_pattern,string> _slot_mapping(const string &s)
     return make_pair(text_pattern(thesplit[0], true), thesplit[1]);
 }
 
+static pair<string, char> _consumable_mapping(const string &s)
+{
+    vector<string> thesplit = split_string(":", s, true, false, 1);
+    if (thesplit.size() != 2)
+    {
+        mprf(MSGCH_ERROR, "Error parsing consumable mapping: '%s'\n",
+                            s.c_str());
+        return make_pair("", '-'); // pattern is marked as invalid
+    }
+    return make_pair(thesplit[0], thesplit[1][0]);
+}
+
 // Option syntax is:
 // sort_menu = [menu_type:]yes|no|auto:n[:sort_conditions]
 void game_options::set_menu_sort(const string &field)
@@ -3317,7 +3543,8 @@ void game_options::set_menu_sort(const string &field)
     {
         sort_menus.clear();
         set_menu_sort("pickup: true");
-        set_menu_sort("inv: true : equipped, charged");
+        set_menu_sort("inv: true : equipped, charged, identified, usefulness, slot");
+        set_menu_sort("drop: true : equipped, charged, identified, usefulness, slot");
         return;
     }
 
@@ -3337,6 +3564,33 @@ void game_options::set_menu_sort(const string &field)
         }
 
     sort_menus.push_back(cond);
+}
+
+// Option syntax is:
+// longwalk_range = los | visible | unlimited | <positive integer>
+// A bare number sets a constant maximum distance.
+void game_options::set_longwalk_range(const string &field)
+{
+    const string f = lowercase_string(trimmed_string(field));
+
+    if (f == "los")
+        longwalk_range = LWR_LOS;
+    else if (f == "visible")
+        longwalk_range = LWR_VISIBLE;
+    else if (f == "unlimited")
+        longwalk_range = LWR_UNLIMITED;
+    else
+    {
+        int dist;
+        if (!parse_int(f.c_str(), dist) || dist < 1)
+        {
+            report_error("Bad longwalk_range: \"%s\" (expected los, visible, "
+                         "unlimited, or a positive number)", field.c_str());
+            return;
+        }
+        longwalk_range = LWR_CONSTANT;
+        longwalk_range_constant = dist;
+    }
 }
 
 void base_game_options::set_option_fragment(const string &s, bool /*prepend*/)
@@ -3913,11 +4167,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
             flush_input[FLUSH_BEFORE_COMMAND]
                 = read_bool(state.field, flush_input[FLUSH_BEFORE_COMMAND]);
         }
-        else if (state.subkey == "message")
-        {
-            flush_input[FLUSH_ON_MESSAGE]
-                = read_bool(state.field, flush_input[FLUSH_ON_MESSAGE]);
-        }
         else if (state.subkey == "lua")
         {
             flush_input[FLUSH_LUA]
@@ -4073,6 +4322,21 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
         split_parse(state, ",",
             &game_options::add_force_ability_targeter,
             &game_options::remove_force_ability_targeter,
+            false);
+        return true;
+    }
+    else if (key == "force_scroll_targeter")
+    {
+        if (state.plain())
+        {
+            always_use_static_scroll_targeters = false;
+            force_scroll_targeter.clear();
+        }
+
+        state.ignore_prepend();
+        split_parse(state, ",",
+            &game_options::add_force_scroll_targeter,
+            &game_options::remove_force_scroll_targeter,
             false);
         return true;
     }
@@ -4554,6 +4818,7 @@ enum commandline_option_type
     CLO_MACRO,
     CLO_MAPSTAT,
     CLO_MAPSTAT_DUMP_DISCONNECT,
+    CLO_MAPSTAT_VETO_CLOSETS,
     CLO_OBJSTAT,
     CLO_ITERATIONS,
     CLO_FORCE_MAP,
@@ -4615,6 +4880,7 @@ static set<commandline_option_type> clo_headless_ok = {
     CLO_EDIT_BONES,
     CLO_MAPSTAT,
     CLO_MAPSTAT_DUMP_DISCONNECT,
+    CLO_MAPSTAT_VETO_CLOSETS,
     CLO_OBJSTAT,
 #ifndef USE_TILE_LOCAL
 // TODO: still too crashy in local tiles to enable
@@ -4636,8 +4902,9 @@ static const char *cmd_ops[] =
 {
     "scores", "name", "species", "background", "dir", "rc", "rcdir", "tscores",
     "vscores", "scorefile", "morgue", "macro", "mapstat", "dump-disconnect",
-    "objstat", "iters", "force-map", "arena", "dump-maps", "test", "script",
-    "builddb", "help", "version", "seed", "pregen", "save-version", "sprint",
+    "veto-closets", "objstat", "iters", "force-map", "arena", "dump-maps",
+    "test", "script", "builddb", "help", "version", "seed", "pregen",
+    "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
     "print-charset", "tutorial", "wizard", "explore", "no-save",
     "no-player-bones", "gdb", "no-gdb", "nogdb", "throttle", "no-throttle",
@@ -5333,6 +5600,7 @@ void game_options::write_webtiles_options(const string& name)
     tiles.json_write_int("glyph_mode_font_size", glyph_mode_font_size);
 
     tiles.json_write_bool("show_game_time", show_game_time);
+    tiles.json_write_bool("always_show_doom_contam", always_show_doom_contam);
 
     // TODO: convert action_panel_show into a yes/no/never option. It would be
     // better to have a more straightforward way of disabling the panel
@@ -5624,9 +5892,18 @@ bool parse_args(int argc, char **argv, bool rc_only)
 #else
             end(1, false, "%s", dbg_stat_err);
 #endif
+        case CLO_MAPSTAT_VETO_CLOSETS:
+#ifdef DEBUG_STATISTICS
+            crawl_state.map_stat_veto_closets = true;
+            break;
+#else
+            end(1, false, "%s", dbg_stat_err);
+#endif
+
         case CLO_MAPSTAT_DUMP_DISCONNECT:
 #ifdef DEBUG_STATISTICS
             crawl_state.map_stat_dump_disconnect = true;
+            break;
 #else
             end(1, false, "%s", dbg_stat_err);
 #endif
@@ -5641,6 +5918,13 @@ bool parse_args(int argc, char **argv, bool rc_only)
                     SysEnv.map_gen_iters = 1;
                 else if (SysEnv.map_gen_iters > 10000)
                     SysEnv.map_gen_iters = 10000;
+
+                if (Options.seed_from_rc && SysEnv.map_gen_iters > 1)
+                {
+                    end(1, false, "Can't run more than one mapstat/objstat "
+                        "iterations with a custom seed\n");
+                }
+
                 nextUsed = true;
             }
 #else

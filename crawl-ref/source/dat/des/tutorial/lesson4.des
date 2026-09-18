@@ -40,7 +40,7 @@ ITEM:    ring of magical power
 ITEM:    ring of wizardry
 # TODO: g was rations for spell hunger, replace with something more modern
 MONS:    training dummy ; stone q:20
-MONS:    bat skeleton, goblin skeleton
+MONS:    bat zombie, goblin zombie
 MONS:    rat, goblin
 KMONS:   8 = training dummy hd:3 hp:7
 MARKER:  d = lua:tutorial4.msg("spellbook")
@@ -105,7 +105,7 @@ KFEAT:   ABCDE = .
 COLOUR:  dABCDEe = lightblue
 FTILE:   dABCDEe = tutorial_pad
 ITEM:    scroll of amnesia pre_id q:3
-ITEM:    randbook numspells:1 spells:call_imp title:Demonology_for_Dummies owner:player
+ITEM:    parchment of call imp
 ITEM:    kite shield
 ITEM:    ring mail
 MONS:    hobgoblin

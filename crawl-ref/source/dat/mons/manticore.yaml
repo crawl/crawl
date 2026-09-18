@@ -1,6 +1,7 @@
 name: "manticore"
-glyph: {char: "H", colour: red}
+glyph: {char: "Þ", colour: red}
 flags: [flies, warm_blood]
+exp: 529
 will: 40
 attacks:
  - {type: bite, damage: 26}
@@ -14,4 +15,4 @@ spells: manticore
 has_corpse: true
 intelligence: animal
 size: large
-shape: quadruped
+shape: quadruped_winged

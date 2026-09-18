@@ -10,6 +10,7 @@
 #include <sstream>
 
 #include "l-libs.h"
+#include "maps.h"
 #include "stringutil.h"
 
 static int dlua_compiled_chunk_writer(lua_State *ls, const void *p,
@@ -40,7 +41,7 @@ dlua_chunk::dlua_chunk(lua_State *ls)
 
     lua_stack_cleaner cln(ls);
     ostringstream out;
-    const int err = lua_dump(ls, dlua_compiled_chunk_writer, &out);
+    const int err = lua_dump(ls, dlua_compiled_chunk_writer, &out, 0);
     if (err)
     {
         const char *e = lua_tostring(ls, -1);
@@ -167,7 +168,7 @@ int dlua_chunk::load(CLua &interp)
     if (err)
         return err;
     ostringstream out;
-    err = lua_dump(interp, dlua_compiled_chunk_writer, &out);
+    err = lua_dump(interp, dlua_compiled_chunk_writer, &out, 0);
     if (err)
     {
         const char *e = lua_tostring(interp, -1);
@@ -220,6 +221,8 @@ bool dlua_chunk::rewrite_chunk_errors(string &s) const
     if (!dlwhere)
     {
         s = rewrite_chunk_prefix(s);
+        if (!dlua_errors.empty())
+            dlua_errors.back().message = s;
         return true;
     }
 
@@ -242,6 +245,9 @@ bool dlua_chunk::rewrite_chunk_errors(string &s) const
         }
     }
     s = newmsg;
+    if (!dlua_errors.empty())
+        dlua_errors.back().message = s;
+
     return true;
 }
 
@@ -264,9 +270,10 @@ string dlua_chunk::rewrite_chunk_prefix(const string &line, bool skip_body) cons
         pe = lns + newlnum.length();
     }
 
-    return s.substr(0, ps) + (file.empty()? context : file) + ":"
-        + (skip_body? s.substr(lns, pe - lns)
-                    : s.substr(lns));
+    return s.substr(0, ps) + (file.empty() ? context : file)
+        + ":" + s.substr(lns, pe - lns)
+        + (lc_map.name.empty() ? "" : " (map " + lc_map.name + ")")
+        + (skip_body ? "" : s.substr(pe));
 }
 
 string dlua_chunk::get_chunk_prefix(const string &sorig) const
@@ -297,9 +304,17 @@ void init_dungeon_lua()
     dluaopen_wiz(dlua);
     #endif
 
-    luaL_openlib(dlua, "feat", feat_dlib, 0);
-    luaL_openlib(dlua, "debug", debug_dlib, 0);
-    luaL_openlib(dlua, "los", los_dlib, 0);
+    lua_newtable(dlua);
+    luaL_setfuncs(dlua, feat_dlib, 0);
+    lua_setglobal(dlua, "feat");
+
+    lua_newtable(dlua);
+    luaL_setfuncs(dlua, debug_dlib, 0);
+    lua_setglobal(dlua, "debug");
+
+    lua_newtable(dlua);
+    luaL_setfuncs(dlua, los_dlib, 0);
+    lua_setglobal(dlua, "los");
 
     dlua.execfile("dlua/dungeon.lua", true, true);
     dlua.execfile("dlua/luamark.lua", true, true);

@@ -2,9 +2,10 @@ name: "oklob plant"
 glyph: {char: "P", colour: lightgreen}
 flags: [stationary]
 resists: {poison: 1, corr: 3}
+exp: 564
 genus: plant
 holiness: [plant]
-will: 40
+will: invuln
 attacks:
 hd: 10
 hp_10x: 550

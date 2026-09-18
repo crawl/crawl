@@ -8,7 +8,6 @@ hd: 0
 hp_10x: 0
 ac: 0
 ev: 0
-has_corpse: true
 intelligence: brainless
 speed: 0
 size: medium

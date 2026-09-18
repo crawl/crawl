@@ -130,7 +130,7 @@ static int dgn_order(lua_State *ls)
 {
     MAP(ls, 1, map);
     map->order = luaL_safe_checkint(ls, 2);
-    PLUARET(number, map->order);
+    PLUARET(integer, map->order);
 }
 
 static int dgn_tags(lua_State *ls)
@@ -153,6 +153,12 @@ static int dgn_has_tag(lua_State *ls)
 {
     MAP(ls, 1, map);
     PLUARET(boolean, map->has_tag(luaL_checkstring(ls, 2)));
+}
+
+static int dgn_uniq_tag_used(lua_State *ls)
+{
+    const char *tag = luaL_checkstring(ls, 1);
+    PLUARET(boolean, get_uniq_map_tags().count(tag) > 0);
 }
 
 static int dgn_tags_remove(lua_State *ls)
@@ -524,8 +530,8 @@ static int dgn_fheight(lua_State *ls)
 static int dgn_map_size(lua_State *ls)
 {
     MAP(ls, 1, map);
-    lua_pushnumber(ls, map->map.width());
-    lua_pushnumber(ls, map->map.height());
+    lua_pushinteger(ls, map->map.width());
+    lua_pushinteger(ls, map->map.height());
     return 2;
 }
 
@@ -615,18 +621,18 @@ static int dgn_has_exit_from(lua_State *ls)
 
 static int _dgn_count_disconnected_zones(lua_State *ls)
 {
-    PLUARET(number, dgn_count_disconnected_zones(false));
+    PLUARET(integer, dgn_count_disconnected_zones(false));
 }
 
 static int _dgn_count_tele_zones(lua_State *ls)
 {
-    PLUARET(number, dgn_count_tele_zones(true));
+    PLUARET(integer, dgn_count_tele_zones(true));
 }
 
 static void dlua_push_coordinates(lua_State *ls, const coord_def &c)
 {
-    lua_pushnumber(ls, c.x);
-    lua_pushnumber(ls, c.y);
+    lua_pushinteger(ls, c.x);
+    lua_pushinteger(ls, c.y);
 }
 
 static int dgn_gly_point(lua_State *ls)
@@ -868,7 +874,7 @@ static int dgn_num_matching_markers(lua_State *ls)
 
     vector<map_marker*> markers = env.markers.get_all(key, val);
 
-    PLUARET(number, markers.size());
+    PLUARET(integer, markers.size());
 }
 
 static int dgn_terrain_changed(lua_State *ls)
@@ -1474,7 +1480,7 @@ LUAFN(dgn_map_by_index)
     return 0;
 }
 
-LUARET1(dgn_map_count, number, map_count())
+LUARET1(dgn_map_count, integer, map_count())
 
 LUARET1(dgn_last_builder_error, string, crawl_state.last_builder_error.c_str())
 
@@ -1563,7 +1569,10 @@ LUAFN(_dgn_map_parameters)
 
 static int _dgn_push_vault_placement(lua_State *ls, const vault_placement *vp)
 {
-    return dlua_push_object_type(ls, VAULT_PLACEMENT_METATABLE, *vp);
+    const vault_placement** ptr = clua_new_userdata<const vault_placement*>(ls,
+                                                    VAULT_PLACEMENT_METATABLE);
+    *ptr = vp;
+    return 1;
 }
 
 static int _dgn_push_vault_placement_uptr(lua_State *ls,
@@ -1739,7 +1748,7 @@ LUAFN(_dgn_inspect_map)
     c.x = luaL_safe_checkint(ls, 2);
     c.y = luaL_safe_checkint(ls, 3);
 
-    lua_pushnumber(ls, vp.feature_at(c));
+    lua_pushinteger(ls, vp.feature_at(c));
     lua_pushboolean(ls, vp.is_exit(c));
     lua_pushboolean(ls, vp.is_space(c));
     return 3;
@@ -1780,7 +1789,7 @@ LUAFN(dgn_state_is_descent)
     return 1;
 }
 
-const struct luaL_reg dgn_dlib[] =
+const struct luaL_Reg dgn_dlib[] =
 {
 { "reset_level", _dgn_reset_level },
 
@@ -1792,6 +1801,7 @@ const struct luaL_reg dgn_dlib[] =
 { "order", dgn_order },
 { "tags",  dgn_tags },
 { "has_tag", dgn_has_tag },
+{ "uniq_tag_used", dgn_uniq_tag_used },
 { "tags_remove", dgn_tags_remove },
 { "chance", dgn_chance },
 { "depth_chance", dgn_depth_chance },
@@ -1940,7 +1950,7 @@ LUAFN(_vp_exits)
     return clua_gentable(ls, (*vp)->exits, clua_pushpoint);
 }
 
-static const luaL_reg dgn_vaultplacement_ops[] =
+static const luaL_Reg dgn_vaultplacement_ops[] =
 {
     { "pos", _vp_pos },
     { "size", _vp_size },
@@ -1954,21 +1964,24 @@ static void _dgn_register_metatables(lua_State *ls)
 {
     clua_register_metatable(ls,
                             VAULT_PLACEMENT_METATABLE,
-                            dgn_vaultplacement_ops,
-                            lua_object_gc<vault_placement>);
+                            dgn_vaultplacement_ops);
 }
 
 void dluaopen_dgn(lua_State *ls)
 {
     _dgn_register_metatables(ls);
 
-    luaL_openlib(ls, "dgn", dgn_dlib, 0);
-    luaL_openlib(ls, "dgn", dgn_build_dlib, 0);
-    luaL_openlib(ls, "dgn", dgn_event_dlib, 0);
-    luaL_openlib(ls, "dgn", dgn_grid_dlib, 0);
-    luaL_openlib(ls, "dgn", dgn_item_dlib, 0);
-    luaL_openlib(ls, "dgn", dgn_level_dlib, 0);
-    luaL_openlib(ls, "dgn", dgn_mons_dlib, 0);
-    luaL_openlib(ls, "dgn", dgn_subvault_dlib, 0);
-    luaL_openlib(ls, "dgn", dgn_tile_dlib, 0);
+    lua_newtable(ls);
+
+    luaL_setfuncs(ls, dgn_dlib, 0);
+    luaL_setfuncs(ls, dgn_build_dlib, 0);
+    luaL_setfuncs(ls, dgn_event_dlib, 0);
+    luaL_setfuncs(ls, dgn_grid_dlib, 0);
+    luaL_setfuncs(ls, dgn_item_dlib, 0);
+    luaL_setfuncs(ls, dgn_level_dlib, 0);
+    luaL_setfuncs(ls, dgn_mons_dlib, 0);
+    luaL_setfuncs(ls, dgn_subvault_dlib, 0);
+    luaL_setfuncs(ls, dgn_tile_dlib, 0);
+
+    lua_setglobal(ls, "dgn");
 }

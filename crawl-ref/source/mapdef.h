@@ -29,7 +29,6 @@
 #include "mon-ench.h"
 #include "mon-flags.h"
 #include "tags.h"
-#include "trap-type.h"
 #include "travel-defs.h"
 
 #define NEVER_CORPSE_KEY "never_corpse"
@@ -611,7 +610,7 @@ public:
     size_t size() const { return items.size(); }
     bool empty() const { return items.empty(); }
 
-    string add_item(const string &spec, bool fix = false);
+    string add_item(const string &spec, bool fix = false, bool ignore_excluded = false);
 
     // Set this list to be a copy of the item_spec_slot in list.
     void set_from_slot(const item_list &list, int slot_index);
@@ -631,14 +630,14 @@ private:
 
 private:
     item_spec item_by_specifier(const string &spec);
-    item_spec_slot parse_item_spec(string spec);
+    item_spec_slot parse_item_spec(string spec, bool ignore_excluded = false);
     int parse_acquirement_source(const string &source);
     void parse_raw_name(string name, item_spec &spec);
     void parse_random_by_class(string c, item_spec &spec);
     item_spec pick_item(item_spec_slot &slot);
     bool parse_corpse_spec(item_spec &result, string s);
     bool monster_corpse_is_valid(monster_type *, const string &name,
-                                 bool skeleton);
+                                 bool need_skeleton);
 
 private:
     vector<item_spec_slot> items;
@@ -665,6 +664,7 @@ public:
 
     int hd;
     int hp;
+    int exp;
     int summon_duration;
     int summon_type;
 
@@ -687,8 +687,8 @@ public:
           quantity(1), genweight(10),
           generate_awake(false), patrolling(false), band(false),
           colour(COLOUR_INHERIT), god(GOD_NO_GOD), god_gift(false), hd(0),
-          hp(0), summon_duration(0), summon_type(0), items(), monname(""),
-          non_actor_summoner(""), explicit_spells(false), spells(),
+          hp(0), exp(0), summon_duration(0), summon_type(0), items(),
+          monname(""), non_actor_summoner(""), explicit_spells(false), spells(),
           extra_monster_flags(), initial_shifter(RANDOM_MONSTER), props()
     {
     }
@@ -708,7 +708,8 @@ public:
     mons_spec get_monster(int slot_index, int list_index) const;
 
     // Returns an error string if the monster is unrecognised.
-    string add_mons(const string &s, bool fix_slot = false);
+    string add_mons(const string &s, bool fix_slot = false,
+                    bool ignore_excluded = false);
     string set_mons(int slot, const string &s);
 
     bool empty()               const { return mons.empty(); }
@@ -739,12 +740,13 @@ private:
     mons_spec drac_monspec(string name) const;
     mons_spec soh_monspec(string name) const;
     void get_zombie_type(string s, mons_spec &spec) const;
-    mons_spec get_hydra_spec(const string &name) const;
+    mons_spec get_hydra_spec(const string &name, monster_type type) const;
     mons_spec get_slime_spec(const string &name) const;
-    mons_spec get_salt_spec(const string &name) const;
+    mons_spec get_shaped_spec(const string &name, monster_type type) const;
     mons_spec get_zombified_monster(const string &name,
                                     monster_type zomb) const;
-    mons_spec_slot parse_mons_spec(string spec);
+    mons_spec_slot parse_mons_spec(string spec,
+                                   bool ignore_excluded = false);
     void parse_mons_spells(mons_spec &slot, vector<string> &spells);
     mon_enchant parse_ench(string &ench_str, bool perm);
     mons_spec pick_monster(mons_spec_slot &slot);
@@ -806,35 +808,19 @@ struct shop_spec
 };
 
 /**
- * @class trap_spec
- * @ingroup mapdef
- * @brief Specify how to create a trap.
- *
- * This specification struct is used when converting a vault-specified trap
- * string into something that the builder can use to place a trap.
-**/
-struct trap_spec
-{
-    trap_type tr_type; /*> One of the trap_type enum values. */
-    trap_spec(trap_type tr)
-        : tr_type(static_cast<trap_type>(tr)) { }
-};
-
-/**
  * @class feature_spec
  * @ingroup mapdef
  * @brief Specify how to create a feature.
  *
  * This specification struct is used firstly when a feature is specified in
- * vault code (any feature), and secondly, if that feature is either a trap or a
- * shop, as a container for a unique_ptr to that shop_spec or trap_spec.
+ * vault code (any feature), and secondly, if that feature is a shop, as a
+ * container for a unique_ptr to that shop_spec.
 **/
 struct feature_spec
 {
     int genweight;                 /**> The weight of this specific feature. */
     int feat;                      /**> The specific feature being placed. */
     unique_ptr<shop_spec> shop;    /**> A pointer to a shop_spec. */
-    unique_ptr<trap_spec> trap;    /**> A pointer to a trap_spec. */
     int glyph;                     /**> What glyph to use instead. */
     int mimic;                     /**> 1 chance in x to be a feature mimic. */
     bool no_mimic;                 /**> Prevents random feature mimic here. */
@@ -918,7 +904,6 @@ private:
     void parse_features(const string &);
     feature_spec_list parse_feature(const string &s);
     feature_spec parse_shop(string s, int weight, int mimic, bool no_mimic);
-    feature_spec parse_trap(string s, int weight);
 };
 
 class dlua_set_map
@@ -1177,6 +1162,7 @@ private:
     bool cache_minivault;
     bool cache_overwritable;
     bool cache_extra;
+    bool cache_extra_post_overflow;
 
 public:
     map_def();
@@ -1227,19 +1213,15 @@ public:
     // Executes post-generation lua code.
     bool run_lua_epilogue(bool croak = false);
 
-    string validate_map_def(const depth_ranges &);
+    string validate_map_def();
     string validate_temple_map();
     // Returns true if this map is in the middle of validation.
     bool is_validating() const { return validating_map_flag; }
-
-    void add_prelude_line(int line,  const string &s);
-    void add_main_line(int line, const string &s);
 
     void hmirror();
     void vmirror();
     void rotate(bool clockwise);
     void normalise();
-    string resolve();
     void fixup();
 
     bool is_usable_in(const level_id &lid) const;

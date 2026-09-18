@@ -1,13 +1,13 @@
 name: "water elemental"
-glyph: {char: "E", colour: etc_water}
+glyph: {char: "Σ", colour: blue}
 flags: [amorphous]
 resists: {elec: 1, fire: -1}
-xp_mult: 12
+exp: 212
 genus: elemental
 holiness: [nonliving]
 will: invuln
 attacks:
- - {type: hit, flavour: engulf, damage: 22}
+ - {type: engulf, flavour: flood, damage: 22}
 hd: 6
 hp_10x: 420
 ac: 4

@@ -3,7 +3,7 @@ monster: MONS_TROLL
 name: Troll
 adjective: Trollish
 difficulty: Simple
-difficulty_priority: 50
+difficulty_priority: 40
 aptitudes:
   xp: -1
   hp: 3

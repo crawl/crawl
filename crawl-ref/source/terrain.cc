@@ -11,6 +11,7 @@
 #include <functional>
 #include <sstream>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "attack.h"
 #include "branch.h"
@@ -36,6 +37,7 @@
 #include "mapmark.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mon-gear.h"
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-util.h"
@@ -43,6 +45,7 @@
 #include "player.h"
 #include "random.h"
 #include "religion.h"
+#include "shout.h"
 #include "species.h"
 #include "spl-damage.h" // ramparts_damage
 #include "spl-transloc.h"
@@ -50,6 +53,7 @@
 #include "stringutil.h"
 #include "tag-version.h"
 #include "tileview.h"
+#include "timed-effects.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -67,11 +71,27 @@ actor* actor_at(const coord_def& c)
     return monster_at(c);
 }
 
+/** Is this feature safe to replace in all circumstances?
+ */
+bool feat_is_floor(dungeon_feature_type feat)
+{
+    return feat == DNGN_FLOOR
+            || feat == DNGN_DECORATIVE_FLOOR
+            || feat == DNGN_RUNELIGHT
+            || feat_is_fountain(feat)
+            || feat_is_food(feat);
+}
+
 /** Can a malign gateway be placed on this feature?
  */
 bool feat_is_malign_gateway_suitable(dungeon_feature_type feat)
 {
-    return feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER;
+    return feat == DNGN_SHALLOW_WATER
+            || feat == DNGN_DEEP_WATER
+            || feat == DNGN_LAVA
+            || feat == DNGN_MUD
+            || feat == DNGN_TOXIC_BOG
+            || feat_is_floor(feat);
 }
 
 /** Is this feature a type of wall?
@@ -336,7 +356,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
         return CMD_GO_UPSTAIRS;
     }
 
-    if (feat_is_altar(feat))
+    if (feat_is_altar(feat) || feat == DNGN_PURIFIED_MUTATION_CATALYST)
         return CMD_GO_DOWNSTAIRS; // arbitrary; consistent with shops
 
     switch (feat)
@@ -400,6 +420,13 @@ bool cell_is_solid(const coord_def &c)
     return feat_is_solid(env.grid(c));
 }
 
+/** Can spells and other abilities target this cell?
+ */
+bool cell_is_invalid_target(const coord_def &c)
+{
+    return cell_is_solid(c) && !actor_at(c);
+}
+
 /** Can a human stand on this feature without flying?
  */
 bool feat_has_solid_floor(dungeon_feature_type feat)
@@ -443,6 +470,17 @@ bool feat_is_open_door(dungeon_feature_type feat)
         || feat == DNGN_BROKEN_CLEAR_DOOR;
 }
 
+/** Is this feature a door that you can see through?
+*/
+bool feat_is_clear_door(dungeon_feature_type feat)
+{
+    return feat == DNGN_CLOSED_CLEAR_DOOR
+           || feat == DNGN_BROKEN_CLEAR_DOOR
+           || feat == DNGN_OPEN_CLEAR_DOOR
+           || feat == DNGN_RUNED_CLEAR_DOOR
+           || feat == DNGN_SEALED_CLEAR_DOOR;
+}
+
 /** Has this feature been sealed by a vault warden?
  */
 bool feat_is_sealed(dungeon_feature_type feat)
@@ -474,7 +512,8 @@ bool feat_is_statuelike(dungeon_feature_type feat)
 {
     return feat == DNGN_ORCISH_IDOL
       || feat == DNGN_GRANITE_STATUE
-      || feat == DNGN_METAL_STATUE;
+      || feat == DNGN_METAL_STATUE
+      || feat == DNGN_ZOT_STATUE;
 }
 
 /** Is this feature permanent, unalterable rock?
@@ -499,7 +538,7 @@ bool feat_is_diggable(dungeon_feature_type feat)
     return feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL
            || feat == DNGN_SLIMY_WALL || feat == DNGN_GRATE
            || feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE
-           || feat == DNGN_PETRIFIED_TREE;
+           || feat == DNGN_PETRIFIED_TREE || feat == DNGN_FRIGID_WALL;
 }
 
 /** Is this feature a type of trap?
@@ -514,15 +553,30 @@ bool feat_is_trap(dungeon_feature_type feat)
     return get_feature_def(feat).flags & FFT_TRAP;
 }
 
+/** Is this feature a type of water that is too deep for most creatures to
+*   wade through?
+*/
+bool feat_is_deep_water(dungeon_feature_type feat)
+{
+    return feat == DNGN_DEEP_WATER
+           || feat == DNGN_OPEN_SEA;
+}
+
+/** Is this feature a type of water that is shallow enough to wade through?
+*/
+bool feat_is_shallow_water(dungeon_feature_type feat)
+{
+    return feat == DNGN_SHALLOW_WATER
+           || feat == DNGN_TOXIC_BOG
+           || feat == DNGN_MANGROVE;
+}
+
 /** Is this feature a type of water, with the concomitant dangers/bonuses?
  */
 bool feat_is_water(dungeon_feature_type feat)
 {
-    return feat == DNGN_SHALLOW_WATER
-           || feat == DNGN_DEEP_WATER
-           || feat == DNGN_OPEN_SEA
-           || feat == DNGN_TOXIC_BOG
-           || feat == DNGN_MANGROVE;
+    return feat_is_shallow_water(feat)
+           || feat_is_deep_water(feat);
 }
 
 /** Is this feature a kind of lava?
@@ -1061,11 +1115,19 @@ static bool _item_traversable_square(const coord_def &pos)
     return !cell_is_solid(pos);
 }
 
+static bool _item_visible_square(const coord_def &pos)
+{
+    return _item_safe_square(pos) && you.see_cell(pos) && you.pos() != pos;
+}
+
 // Moves an item on the floor to the nearest adjacent floor-space.
-static bool _dgn_shift_item(const coord_def &pos, item_def &item)
+static bool _dgn_shift_item(const coord_def &pos, item_def &item,
+                            bool keep_visible)
 {
     // First try to avoid pushing things through solid features...
-    coord_def np = _dgn_find_nearest_square(pos, _item_safe_square,
+    coord_def np = _dgn_find_nearest_square(pos,
+                                            keep_visible ? _item_visible_square
+                                                         : _item_safe_square,
                                             _item_traversable_square);
     // ... but if we have to, so be it.
     if (!in_bounds(np) || np == pos)
@@ -1121,14 +1183,6 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
         env.shop.erase(src);
         env.grid(src) = DNGN_FLOOR;
     }
-    else if (feat_is_trap(dfeat))
-    {
-        ASSERT(trap_at(src));
-        env.trap[dst] = env.trap[src];
-        env.trap[dst].pos = dst;
-        env.trap.erase(src);
-        env.grid(src) = DNGN_FLOOR;
-    }
 
     env.grid(dst) = dfeat;
 
@@ -1139,7 +1193,7 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
     {
         if (monster* mon = monster_at(src))
         {
-            mon->moveto(dst);
+            mon->move_to(dst, MV_INTERNAL);
             if (mon->type == MONS_ELDRITCH_TENTACLE)
             {
                 if (mon->props.exists(BASE_POSITION_KEY))
@@ -1151,8 +1205,6 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
                 }
 
             }
-            env.mgrid(dst) = env.mgrid(src);
-            env.mgrid(src) = NON_MONSTER;
         }
     }
 
@@ -1173,11 +1225,6 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
     // Move terrain colours and properties.
     env.pgrid(dst) = env.pgrid(src);
     env.grid_colours(dst) = env.grid_colours(src);
-#ifdef USE_TILE
-    tile_env.bk_fg(dst) = tile_env.bk_fg(src);
-    tile_env.bk_bg(dst) = tile_env.bk_bg(src);
-    tile_env.bk_cloud(dst) = tile_env.bk_cloud(src);
-#endif
     tile_env.flv(dst) = tile_env.flv(src);
 
     // Move vault masks.
@@ -1193,6 +1240,8 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
     env.map_knowledge(dst) = env.map_knowledge(src);
     env.map_seen.set(dst, env.map_seen(src));
     StashTrack.move_stash(src, dst);
+
+    redraw_view_at(dst);
 }
 
 static bool _dgn_shift_feature(const coord_def &pos)
@@ -1208,7 +1257,8 @@ static bool _dgn_shift_feature(const coord_def &pos)
     return true;
 }
 
-static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
+void dgn_check_terrain_items(const coord_def &pos, bool preserve_items,
+                             bool keep_in_sight)
 {
     const dungeon_feature_type feat = env.grid(pos);
 
@@ -1223,7 +1273,7 @@ static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
 
         // Game-critical item.
         if (preserve_items || env.item[curr].is_critical())
-            _dgn_shift_item(pos, env.item[curr]);
+            _dgn_shift_item(pos, env.item[curr], keep_in_sight);
         else
         {
             feat_splash_noise(feat);
@@ -1236,7 +1286,7 @@ static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
 static void _dgn_check_terrain_monsters(const coord_def &pos)
 {
     if (monster* m = monster_at(pos))
-        m->apply_location_effects(pos);
+        m->trigger_movement_effects();
 }
 
 // Clear blood or off of terrain that shouldn't have it. Also clear of blood if
@@ -1276,34 +1326,18 @@ static void _dgn_check_terrain_player(const coord_def pos)
         return;
 
     if (you.can_pass_through(pos))
-        move_player_to_grid(pos, false);
+        you.trigger_movement_effects(MV_NO_TRAVEL_STOP);
     else
         push_or_teleport_actor_from(pos);
 }
 
-/**
- * Change a given feature to a new type, cleaning up associated issues
- * (monsters/items in walls, blood on water, etc) in the process.
- *
- * @param pos               The location to be changed.
- * @param nfeat             The feature to be changed to.
- * @param preserve_features Whether to shunt the old feature to a nearby loc.
- * @param preserve_items    Whether to shunt items to a nearby loc, if they
- *                          can't stay in this one.
- * @param temporary         Whether the terrain change is only temporary & so
- *                          shouldn't affect branch/travel knowledge.
- * @param wizmode           Whether this is a wizmode terrain change,
- *                          & shouldn't check whether the player can actually
- *                          exist in the new feature.
- */
-void dungeon_terrain_changed(const coord_def &pos,
-                             dungeon_feature_type nfeat,
-                             bool preserve_features,
-                             bool preserve_items,
-                             bool temporary,
-                             bool wizmode,
-                             unsigned short flv_nfeat,
-                             unsigned short flv_nfeat_idx)
+static void _current_terrain_changed(coord_def pos,
+                                     dungeon_feature_type nfeat,
+                                     bool preserve_features,
+                                     bool preserve_items,
+                                     bool wizmode,
+                                     unsigned short flv_nfeat,
+                                     unsigned short flv_nfeat_idx)
 {
     if (env.grid(pos) == nfeat)
         return;
@@ -1316,9 +1350,6 @@ void dungeon_terrain_changed(const coord_def &pos,
     // way first.
     if (feat_is_wall(nfeat) && monster_at(pos))
         push_or_teleport_actor_from(pos);
-    if (feat_is_trap(nfeat) && env.trap.find(pos) == env.trap.end())
-        place_specific_trap(pos, trap_type_from_feature(nfeat), 1);
-
 
     _dgn_check_terrain_covering(pos, env.grid(pos), nfeat);
 
@@ -1327,32 +1358,77 @@ void dungeon_terrain_changed(const coord_def &pos,
         if (preserve_features)
             _dgn_shift_feature(pos);
 
-        if (!temporary)
-            unnotice_feature(level_pos(level_id::current(), pos));
-
         env.grid(pos) = nfeat;
         tile_env.flv(pos).feat = flv_nfeat;
         tile_env.flv(pos).feat_idx = flv_nfeat_idx;
 
         if (is_notable_terrain(nfeat) && you.see_cell(pos))
             seen_notable_thing(nfeat, pos);
-
-        // Don't destroy a trap which was just placed.
-        if (!feat_is_trap(nfeat))
-            destroy_trap(pos);
     }
 
-    _dgn_check_terrain_items(pos, preserve_items);
+    dgn_check_terrain_items(pos, preserve_items);
     _dgn_check_terrain_monsters(pos);
     if (!wizmode)
         _dgn_check_terrain_player(pos);
-    if (!temporary && feature_mimic_at(pos))
-        env.level_map_mask(pos) &= ~MMT_MIMIC;
 
     set_terrain_changed(pos);
+}
 
-    // Deal with doors being created by changing features.
-    tile_init_flavour(pos);
+static void _permanent_terrain_changed(coord_def pos,
+                                       dungeon_feature_type nfeat,
+                                       bool preserve_mimics)
+{
+    // XXX: do we ever call this with nfeat == DNGN_UNSEEN?
+    if (nfeat != DNGN_UNSEEN)
+        unnotice_feature(level_pos(level_id::current(), pos));
+    if (!preserve_mimics)
+        env.pgrid(pos) &= ~FPROP_MIMIC;
+}
+
+/**
+ * Change a given feature to a new type, cleaning up associated issues
+ * (monsters/items in walls, blood on water, etc) in the process.
+ *
+ * @param pos               The location to be changed.
+ * @param nfeat             The feature to be changed to.
+ * @param preserve_features Whether to shunt the old feature to a nearby loc.
+ * @param preserve_items    Whether to shunt items to a nearby loc, if they
+ *                          can't stay in this one.
+ * @param wizmode           Whether this is a wizmode terrain change,
+ *                          & shouldn't check whether the player can actually
+ *                          exist in the new feature.
+ */
+void dungeon_terrain_changed(const coord_def &pos,
+                             dungeon_feature_type nfeat,
+                             bool preserve_features,
+                             bool preserve_items,
+                             bool wizmode,
+                             bool preserve_mimics)
+{
+    // XXX: If there is a temporary terrain change, reverting it will also
+    // revert this change. This isn't always what we want.
+    if (!is_temp_terrain(pos))
+        _permanent_terrain_changed(pos, nfeat, preserve_mimics);
+    _current_terrain_changed(pos, nfeat, preserve_features, preserve_items,
+                             wizmode, 0, 0);
+}
+
+void dungeon_change_base_terrain(coord_def pos, dungeon_feature_type nfeat)
+{
+    bool temp_terrain = false;
+    for (map_marker* marker : env.markers.get_markers_at(pos, MAT_TERRAIN_CHANGE))
+    {
+        map_terrain_change_marker* tmarker =
+            dynamic_cast<map_terrain_change_marker*>(marker);
+        tmarker->old_feature = nfeat;
+        tmarker->flv_old_feature = 0;
+        tmarker->flv_old_feature_idx = 0;
+        temp_terrain = true;
+    }
+    _permanent_terrain_changed(pos, nfeat, false);
+    if (temp_terrain)
+        return;
+    _current_terrain_changed(pos, nfeat, false, true, false, 0, 0);
 }
 
 static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
@@ -1468,9 +1544,6 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     const terrain_property_t prop1 = env.pgrid(pos1);
     const terrain_property_t prop2 = env.pgrid(pos2);
 
-    trap_def* trap1 = trap_at(pos1);
-    trap_def* trap2 = trap_at(pos2);
-
     shop_struct* shop1 = shop_at(pos1);
     shop_struct* shop2 = shop_at(pos2);
 
@@ -1505,10 +1578,12 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
 
     // OK, now we guarantee the move.
 
+    const dungeon_feature_type temp_feat = env.grid(temp);
     (void) move_notable_thing(pos1, temp);
     env.markers.move(pos1, temp);
     dungeon_events.move_listeners(pos1, temp);
     env.grid(pos1) = DNGN_UNSEEN;
+    env.grid(temp) = feat1;
     env.pgrid(pos1) = terrain_property_t{};
 
     (void) move_notable_thing(pos2, pos1);
@@ -1520,6 +1595,7 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     (void) move_notable_thing(temp, pos2);
     env.markers.move(temp, pos2);
     dungeon_events.move_listeners(temp, pos2);
+    env.grid(temp) = temp_feat;
 
     // Swap features and colours.
     env.grid(pos2) = feat1;
@@ -1528,27 +1604,9 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     env.grid_colours(pos1) = col2;
     env.grid_colours(pos2) = col1;
 
-    // Swap traps.
-    if (trap1 && !trap2)
-    {
-        env.trap[pos2] = env.trap[pos1];
-        env.trap[pos2].pos = pos2;
-        env.trap.erase(pos1);
-    }
-    else if (!trap1 && trap2)
-    {
-        env.trap[pos1] = env.trap[pos2];
-        env.trap[pos1].pos = pos1;
-        env.trap.erase(pos2);
-    }
-    else if (trap1 && trap2)
-    {
-        trap_def tmp = env.trap[pos1];
-        env.trap[pos1] = env.trap[pos2];
-        env.trap[pos2] = tmp;
-        env.trap[pos1].pos = pos1;
-        env.trap[pos2].pos = pos2;
-    }
+    // Swap feature flavours.
+    swap(tile_env.flv(pos1).feat, tile_env.flv(pos2).feat);
+    swap(tile_env.flv(pos1).feat_idx, tile_env.flv(pos2).feat_idx);
 
     // Swap shops.
     if (shop1 && !shop2)
@@ -1574,12 +1632,12 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
 
     if (!swap_everything)
     {
-        _dgn_check_terrain_items(pos1, false);
+        dgn_check_terrain_items(pos1, false);
         _dgn_check_terrain_monsters(pos1);
         _dgn_check_terrain_player(pos1);
         set_terrain_changed(pos1);
 
-        _dgn_check_terrain_items(pos2, false);
+        dgn_check_terrain_items(pos2, false);
         _dgn_check_terrain_monsters(pos2);
         _dgn_check_terrain_player(pos2);
         set_terrain_changed(pos2);
@@ -1654,7 +1712,7 @@ static bool _ok_dest_cell(const actor* orig_actor,
     if (is_notable_terrain(dest_feat))
         return false;
 
-    if (trap_at(dest_pos))
+    if (feat_is_trap(dest_feat))
         return false;
 
     actor* dest_actor = actor_at(dest_pos);
@@ -1965,28 +2023,8 @@ void set_terrain_changed(const coord_def p)
 
     if (env.grid(p) == DNGN_SLIMY_WALL)
         env.level_state |= LSTATE_SLIMY_WALL;
-    if (env.grid(p) == DNGN_PASSAGE_OF_GOLUBRIA)
-        env.level_state |= LSTATE_GOLUBRIA;
-    else if (env.grid(p) == DNGN_OPEN_DOOR)
-    {
-        // Restore colour from door-change markers
-        for (map_marker *marker : env.markers.get_markers_at(p))
-        {
-            if (marker->get_type() == MAT_TERRAIN_CHANGE)
-            {
-                map_terrain_change_marker* tmarker =
-                    dynamic_cast<map_terrain_change_marker*>(marker);
-
-                if (tmarker->change_type == TERRAIN_CHANGE_DOOR_SEAL
-                    && tmarker->colour != BLACK)
-                {
-                    // Restore the unsealed colour.
-                    dgn_set_grid_colour_at(p, tmarker->colour);
-                    break;
-                }
-            }
-        }
-    }
+    else if (env.grid(p) == DNGN_MOULD_PATCH)
+        update_mould_tracking(p);
 
     env.map_knowledge(p).flags |= MAP_CHANGED_FLAG;
 
@@ -2050,6 +2088,13 @@ dungeon_feature_type orig_terrain(coord_def pos)
     return terch->old_feature;
 }
 
+dungeon_feature_type orig_terrain_no_mimic(coord_def pos)
+{
+    if (base_feature_is_mimic_at(pos))
+        return DNGN_FLOOR;
+    return orig_terrain(pos);
+}
+
 void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                          terrain_change_type type, int mid)
 {
@@ -2061,42 +2106,40 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
         return;
 
     tile_flavour old_flv = tile_env.flv(pos);
-    for (map_marker *marker : env.markers.get_markers_at(pos))
+    for (map_marker *marker : env.markers.get_markers_at(pos, MAT_TERRAIN_CHANGE))
     {
-        if (marker->get_type() == MAT_TERRAIN_CHANGE)
-        {
-            map_terrain_change_marker* tmarker =
-                    dynamic_cast<map_terrain_change_marker*>(marker);
+        map_terrain_change_marker* tmarker =
+                dynamic_cast<map_terrain_change_marker*>(marker);
 
-            // If change type matches, just modify old one; no need to add new one
-            if (tmarker->change_type == type)
+        // If change type matches, just modify old one; no need to add new one
+        if (tmarker->change_type == type)
+        {
+            if (tmarker->new_feature == newfeat)
             {
-                if (tmarker->new_feature == newfeat)
+                if (tmarker->duration < dur)
                 {
-                    if (tmarker->duration < dur)
-                    {
-                        tmarker->duration = dur;
-                        tmarker->mon_num = mid;
-                    }
-                }
-                else
-                {
-                    tmarker->new_feature = newfeat;
                     tmarker->duration = dur;
-                    tmarker->mon_num = mid;
+                    tmarker->source_mid = mid;
                 }
-                // ensure that terrain change happens. Sometimes a terrain
-                // change marker can get stuck; this allows re-doing such
-                // cases. Also probably needed by the else case above.
-                dungeon_terrain_changed(pos, newfeat, false, true, true);
-                return;
             }
             else
             {
-                old_feat = tmarker->old_feature;
-                old_flv.feat = tmarker->flv_old_feature;
-                old_flv.feat_idx = tmarker->flv_old_feature_idx;
+                tmarker->new_feature = newfeat;
+                tmarker->duration = dur;
+                tmarker->source_mid = mid;
             }
+            // ensure that terrain change happens. Sometimes a terrain
+            // change marker can get stuck; this allows re-doing such
+            // cases. Also probably needed by the else case above.
+            _current_terrain_changed(pos, newfeat, false, true, false,
+                                        0, 0);
+            return;
+        }
+        else
+        {
+            old_feat = tmarker->old_feature;
+            old_flv.feat = tmarker->flv_old_feature;
+            old_flv.feat_idx = tmarker->flv_old_feature_idx;
         }
     }
 
@@ -2110,36 +2153,32 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                                       old_flv.feat_idx, dur, type, mid,
                                       env.grid_colours(pos));
     env.markers.add(marker);
-    env.markers.clear_need_activate();
-    dungeon_terrain_changed(pos, newfeat, false, true, true);
+    _current_terrain_changed(pos, newfeat, false, true, false, 0, 0);
 }
 
 static bool _revert_terrain_to(coord_def pos, dungeon_feature_type feat)
 {
     dungeon_feature_type newfeat = feat;
-    for (map_marker *marker : env.markers.get_markers_at(pos))
+    for (map_marker *marker : env.markers.get_markers_at(pos, MAT_TERRAIN_CHANGE))
     {
-        if (marker->get_type() == MAT_TERRAIN_CHANGE)
-        {
-            map_terrain_change_marker* tmarker =
-                    dynamic_cast<map_terrain_change_marker*>(marker);
+        map_terrain_change_marker* tmarker =
+                dynamic_cast<map_terrain_change_marker*>(marker);
 
-            // Don't revert sealed doors to normal doors if we're trying to
-            // remove the door altogether
-            // Same for destroyed trees and slime walls
-            if ((tmarker->change_type == TERRAIN_CHANGE_DOOR_SEAL
-                || tmarker->change_type == TERRAIN_CHANGE_FORESTED
-                || tmarker->change_type == TERRAIN_CHANGE_SLIME)
-                && newfeat == feat)
-            {
+        // Don't revert sealed doors to normal doors if we're trying to
+        // remove the door altogether
+        // Same for destroyed trees and slime walls
+        if ((tmarker->change_type == TERRAIN_CHANGE_DOOR_SEAL
+            || tmarker->change_type == TERRAIN_CHANGE_FORESTED
+            || tmarker->change_type == TERRAIN_CHANGE_SLIME)
+            && newfeat == feat)
+        {
+            env.markers.remove(tmarker);
+        }
+        else
+        {
+            newfeat = tmarker->old_feature;
+            if (tmarker->new_feature == env.grid(pos))
                 env.markers.remove(tmarker);
-            }
-            else
-            {
-                newfeat = tmarker->old_feature;
-                if (tmarker->new_feature == env.grid(pos))
-                    env.markers.remove(tmarker);
-            }
         }
     }
 
@@ -2173,67 +2212,75 @@ static bool _revert_terrain_to(coord_def pos, dungeon_feature_type feat)
 
 // If ctype == NUM_TERRAIN_CHANGE_TYPES, will revert *all* terrain changes on
 // the given pos.
-bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
+bool revert_terrain_change(coord_def pos, terrain_change_type ctype, bool expire)
 {
     dungeon_feature_type newfeat = DNGN_UNSEEN;
     unsigned short newfeat_flv = 0;
     unsigned short newfeat_flv_idx = 0;
     int colour = BLACK;
 
-    for (map_marker *marker : env.markers.get_markers_at(pos))
+    for (map_marker *marker : env.markers.get_markers_at(pos, MAT_TERRAIN_CHANGE))
     {
-        if (marker->get_type() == MAT_TERRAIN_CHANGE)
-        {
-            map_terrain_change_marker* tmarker =
-                    dynamic_cast<map_terrain_change_marker*>(marker);
+        map_terrain_change_marker* tmarker =
+                dynamic_cast<map_terrain_change_marker*>(marker);
 
-            if (tmarker->change_type == ctype || ctype == NUM_TERRAIN_CHANGE_TYPES)
+        if (tmarker->change_type == ctype || ctype == NUM_TERRAIN_CHANGE_TYPES)
+        {
+            if (tmarker->colour != BLACK)
+                colour = tmarker->colour;
+            if (!newfeat)
             {
-                if (tmarker->colour != BLACK)
-                    colour = tmarker->colour;
-                if (!newfeat)
-                    newfeat = tmarker->old_feature;
-                if (!newfeat_flv)
-                    newfeat_flv = tmarker->flv_old_feature;
-                if (!newfeat_flv_idx)
-                    newfeat_flv_idx = tmarker->flv_old_feature_idx;
-                env.markers.remove(tmarker);
+                newfeat = tmarker->old_feature;
+                newfeat_flv = tmarker->flv_old_feature;
+                newfeat_flv_idx = tmarker->flv_old_feature_idx;
             }
-            else
-            {
-                // If we had an old colour, give it to the other marker.
-                if (colour != BLACK)
-                    tmarker->colour = colour;
-                colour = BLACK;
-                newfeat = tmarker->new_feature;
-            }
+            env.markers.remove(tmarker);
+        }
+        else
+        {
+            // If we had an old colour, give it to the other marker.
+            if (colour != BLACK)
+                tmarker->colour = colour;
+            colour = BLACK;
+            newfeat = tmarker->new_feature;
+            newfeat_flv = 0;
+            newfeat_flv_idx = 0;
         }
     }
 
+    if (newfeat == DNGN_UNSEEN)
+        return false;
+
     // Don't revert opened sealed doors.
     if (feat_is_door(newfeat) && env.grid(pos) == DNGN_OPEN_DOOR)
-        newfeat = DNGN_UNSEEN;
-
-    if (newfeat != DNGN_UNSEEN)
-    {
-        if (ctype == TERRAIN_CHANGE_BOG)
-            env.map_knowledge(pos).set_feature(newfeat, colour);
-        dungeon_terrain_changed(pos, newfeat, false, true, false, false,
-                                newfeat_flv, newfeat_flv_idx);
-        env.grid_colours(pos) = colour;
-        return true;
-    }
-    else
         return false;
+
+    if (env.grid(pos) == DNGN_PASSAGE_OF_GOLUBRIA && expire)
+    {
+        if (you.see_cell(pos))
+            mpr("Your passage of Golubria closes with a snap!");
+        else
+            mprf(MSGCH_SOUND, "You hear a snapping sound.");
+        noisy(spell_effect_noise(SPELL_GOLUBRIAS_PASSAGE), pos);
+    }
+
+    _current_terrain_changed(pos, newfeat, false, true, false, newfeat_flv,
+                             newfeat_flv_idx);
+    env.grid_colours(pos) = colour;
+
+    if (ctype == TERRAIN_CHANGE_BOG)
+    {
+        update_terrain_knowledge(pos);
+        update_grid_colour_knowledge(pos);
+        redraw_view_at(pos);
+    }
+
+    return true;
 }
 
 bool is_temp_terrain(coord_def pos)
 {
-    for (map_marker *marker : env.markers.get_markers_at(pos))
-        if (marker->get_type() == MAT_TERRAIN_CHANGE)
-            return true;
-
-    return false;
+    return env.markers.find(pos, MAT_TERRAIN_CHANGE);
 }
 
 bool plant_forbidden_at(const coord_def &p, bool connectivity_only)
@@ -2415,9 +2462,9 @@ coord_def push_actor_from(const coord_def& pos,
     const coord_def newpos = random ? targets[random2(targets.size())]
                                     : targets.front();
     ASSERT(!newpos.origin());
-    act->move_to_pos(newpos);
-    // The new position of the monster is now an additional veto spot for
-    // monsters.
+    act->move_to(newpos, MV_INTERNAL);
+    // The new position of the monster might be used as an additional veto spot
+    // for other monsters.
     return newpos;
 }
 
@@ -2439,30 +2486,25 @@ coord_def push_or_teleport_actor_from(const coord_def& pos)
 
     if (push_actor_from(pos, nullptr, true).origin())
     {
-        for (distance_iterator di(pos, false, true, LOS_RADIUS); di; ++di)
+        for (distance_iterator di(pos, true, true); di; ++di)
         {
             if (!actor_at(*di)
-                && ((act->is_player() && you.can_pass_through(*di))
+                && ((act->is_player()
+                     && you.can_pass_through(*di)
+                     && !is_feat_dangerous(env.grid(*di))
+                     && !testbits(env.pgrid(*di), FPROP_NO_TELE_INTO))
                     || act->is_monster() && monster_habitable_grid(act->as_monster(), *di)))
             {
-                if (act->is_player())
-                    move_player_to_grid(*di, false);
-                else
-                    act->move_to_pos(*di);
+                act->move_to(*di, MV_INTERNAL);
                 return act->pos();
             }
         }
-
-        // Failed to find anywhere in LOS_RADIUS that was valid to put this actor,
-        // so just teleport them instead
-        act->teleport(true);
     }
 
     return act->pos();
 }
 
-/** Close any door at the given position. Handles the grid change, but does not
- * mark terrain or do any event handling.
+/** Close any door at the given position. Does't do any event handling.
  *
  * @param dest The location of the door.
  */
@@ -2472,15 +2514,15 @@ void dgn_close_door(const coord_def &dest)
         return;
 
     // Yes, this fixes broken doors.
-    const auto feat = env.grid(dest);
-    if (feat == DNGN_OPEN_CLEAR_DOOR || feat == DNGN_BROKEN_CLEAR_DOOR)
+    if (feat_is_clear_door(env.grid(dest)))
         env.grid(dest) = DNGN_CLOSED_CLEAR_DOOR;
     else
         env.grid(dest) = DNGN_CLOSED_DOOR;
+
+    set_terrain_changed(dest);
 }
 
-/** Open any door at the given position. Handles the grid change, but does not
- * mark terrain or do any event handling.
+/** Open any door at the given position. Does't do any event handling.
  *
  * @param dest The location of the door.
  */
@@ -2489,17 +2531,17 @@ void dgn_open_door(const coord_def &dest)
     if (!feat_is_closed_door(env.grid(dest)))
         return;
 
-    if (env.grid(dest) == DNGN_CLOSED_CLEAR_DOOR
-        || env.grid(dest) == DNGN_RUNED_CLEAR_DOOR)
-    {
+    revert_terrain_change(dest, TERRAIN_CHANGE_DOOR_SEAL);
+
+    if (feat_is_clear_door(env.grid(dest)))
         env.grid(dest) = DNGN_OPEN_CLEAR_DOOR;
-    }
     else
         env.grid(dest) = DNGN_OPEN_DOOR;
+
+    set_terrain_changed(dest);
 }
 
-/** Breaks any door at the given position. Handles the grid change, but does not
- * mark terrain or do any event handling.
+/** Breaks any door at the given position. Does't do any event handling.
  *
  * @param dest The location of the door.
  */
@@ -2508,13 +2550,14 @@ void dgn_break_door(const coord_def &dest)
     if (!feat_is_closed_door(env.grid(dest)))
         return;
 
-    if (env.grid(dest) == DNGN_CLOSED_CLEAR_DOOR
-        || env.grid(dest) == DNGN_RUNED_CLEAR_DOOR)
-    {
+    revert_terrain_change(dest, TERRAIN_CHANGE_DOOR_SEAL);
+
+    if (feat_is_clear_door(env.grid(dest)))
         env.grid(dest) = DNGN_BROKEN_CLEAR_DOOR;
-    }
     else
         env.grid(dest) = DNGN_BROKEN_DOOR;
+
+    set_terrain_changed(dest);
 }
 
 
@@ -2522,7 +2565,7 @@ void ice_wall_damage(monster &mons, int delay)
 {
     if (!you.duration[DUR_FROZEN_RAMPARTS]
         || !you.see_cell_no_trans(mons.pos())
-        || mons_aligned(&you, &mons))
+        || !could_harm_enemy(&you, &mons))
     {
         return;
     }
@@ -2557,6 +2600,50 @@ void ice_wall_damage(monster &mons, int delay)
     }
 }
 
+void frigid_walls_damage(int delay)
+{
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mi->wont_attack())
+            continue;
+
+        int wall_count = 0;
+        for (adjacent_iterator ai(mi->pos()); ai; ++ai)
+            if (env.grid(*ai) == DNGN_FRIGID_WALL)
+                ++wall_count;
+
+        if (wall_count == 0)
+            continue;
+
+        int base_dmg = get_form()->get_special_damage().roll();
+        const int wall_bonus = (wall_count - 1) * 100 / 6;
+        base_dmg = div_rand_round(base_dmg * (100 + wall_bonus), 100);
+
+        const int post_ac_dam = mi->apply_ac(base_dmg);
+        const int orig_dam = div_rand_round(delay * post_ac_dam, BASELINE_DELAY);
+
+        bolt beam;
+        beam.flavour = BEAM_COLD;
+        beam.thrower = KILL_YOU;
+        int dam = mons_adjust_flavoured(*mi, beam, orig_dam);
+        mprf("The frigid air chills %s%s%s",
+            you.can_see(**mi) ? mi->name(DESC_THE).c_str() : "something",
+            dam ? "" : " but does no damage",
+            attack_strength_punctuation(dam).c_str());
+
+        if (dam > 0)
+        {
+            mi->hurt(&you, dam, BEAM_COLD);
+
+            if (mi->alive())
+            {
+                behaviour_event(*mi, ME_WHACK, &you);
+                mi->expose_to_element(BEAM_COLD, orig_dam, &you);
+            }
+        }
+    }
+}
+
 static bool _feat_is_descent_upstairs(dungeon_feature_type feat)
 {
     if (feat_is_descent_exitable(feat))
@@ -2576,19 +2663,18 @@ void descent_crumble_stairs()
 
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        dungeon_feature_type feat = env.grid(*ri);
-        if (_feat_is_descent_upstairs(feat))
+        dungeon_feature_type original_feat = orig_terrain(*ri);
+        if (!_feat_is_descent_upstairs(original_feat))
+            continue;
+
+        dungeon_change_base_terrain(*ri, DNGN_FLOOR);
+        if (you.see_cell(*ri) && !is_temp_terrain(*ri))
+            mpr("The exit collapses.");
+        if (env.map_knowledge(*ri).feat() == original_feat)
         {
-            dungeon_terrain_changed(*ri, DNGN_FLOOR);
-            if (you.see_cell(*ri))
-                mpr("The exit collapses.");
-            if (env.map_knowledge(*ri).feat())
-            {
-                env.map_knowledge(*ri).set_feature(DNGN_FLOOR);
-                set_terrain_mapped(*ri);
-            }
-            force_show_update_at(*ri);
-            view_update_at(*ri);
+            update_terrain_knowledge(*ri, !env.map_knowledge(*ri).seen());
+            set_terrain_mapped(*ri);
+            redraw_view_at(*ri);
         }
     }
 
@@ -2604,6 +2690,10 @@ static void _descent_reveal_around(coord_def p)
     {
         if (cell_see_cell_nocache(p, *ri))
         {
+            monster* mons = monster_at(*ri);
+            if (mons)
+                view_monster_equipment(mons);
+
             force_show_update_at(*ri);
             update_item_at(*ri, true);
             set_terrain_visible(*ri);
@@ -2621,4 +2711,11 @@ void descent_reveal_stairs()
         if (_feat_is_descent_upstairs(feat))
             _descent_reveal_around(*ri);
     }
+}
+
+dungeon_feature_type feat_at_no_mimic(coord_def pos)
+{
+    if (current_feature_is_mimic_at(pos))
+        return DNGN_FLOOR;
+    return env.grid(pos);
 }

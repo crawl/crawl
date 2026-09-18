@@ -37,8 +37,8 @@ static const sacrifice_def sac_data[] =
   nullptr,
 },
 
-{ ABIL_RU_SACRIFICE_WORDS, MUT_READ_SAFETY,
-  "sacrifice your ability to read when injured",
+{ ABIL_RU_SACRIFICE_WORDS, MUT_RENOUNCE_SCROLLS,
+  "sacrifice your ability to read unless badly injured",
   "sacrificed words",
 
   30,
@@ -47,8 +47,8 @@ static const sacrifice_def sac_data[] =
   nullptr,
 },
 
-{ ABIL_RU_SACRIFICE_DRINK, MUT_DRINK_SAFETY,
-  "sacrifice your ability to drink when injured",
+{ ABIL_RU_SACRIFICE_DRINK, MUT_RENOUNCE_POTIONS,
+  "sacrifice your ability to drink unless badly injured",
   "sacrificed drink",
 
   30,

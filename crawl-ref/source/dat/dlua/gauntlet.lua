@@ -257,7 +257,7 @@ function gauntlet_arena_terrain_setup(e, rock_unchanged, liquid, plant)
     else
         e.subst("^ : ^...")
     end
-    e.kfeat("^ = dispersal trap / net trap")
+    e.kfeat("^ = trap_dispersal / trap_net")
 
     if not plant then plant = "default" end
     if plant == "demonic" then
@@ -535,7 +535,13 @@ tier2_gauntlet_arenas = {
   },
   {
     first  = {mons = "cacodemon", min = 1, max = 1},
-    second = {mons = "neqoxec", min = 0, max = 3},
+    second = {mons = "drude", min = 1, max = 2},
+    plant  = "demonic",
+    weight = 5
+  },
+  {
+    first  = {mons = "zykzyl", min = 1, max = 1},
+    second = {mons = "neqoxec", min = 0, max = 1},
     loot   = "potion of mutation pre_id",
     plant  = "demonic",
     weight = 5

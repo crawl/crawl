@@ -1,0 +1,16 @@
+name: "stack of scrap"
+glyph: {char: "Δ", colour: yellow}
+flags: [fragile, stationary, no_exp_gain, no_threat]
+resists: {fire: 3, cold: 3, elec: 3}
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 10
+hp_10x: 560
+ac: 18
+ev: 0
+intelligence: brainless
+habitat: amphibious
+size: giant
+shape: misc
+tile_variance: mod

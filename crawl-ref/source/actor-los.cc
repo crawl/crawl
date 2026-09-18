@@ -1,6 +1,7 @@
 #include "AppHdr.h"
 
 #include "actor.h"
+#include "monster.h"
 
 #include "coord.h"
 #include "god-passive.h"
@@ -27,6 +28,8 @@ bool player::see_cell(const coord_def &p) const
         return false; // Players can't see (-1,-1) but maybe can see (0,0).
     if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
         return true;
+    if (!on_current_level)
+        return false;
     if (!in_bounds(pos()))
         return false; // A non-arena player at (0,0) can't see anything.
     if (wizard_vision || you.duration[DUR_REVELATION])
@@ -37,6 +40,11 @@ bool player::see_cell(const coord_def &p) const
 bool actor::can_see(const actor &target) const
 {
     return target.visible_to(this) && see_cell(target.pos());
+}
+
+bool actor::aware_of(const actor &target) const
+{
+    return can_see(target);
 }
 
 bool actor::see_cell_no_trans(const coord_def &p) const
@@ -55,4 +63,12 @@ bool player::can_see(const actor& a) const
         return see_cell(a.pos());
     else
         return actor::can_see(a);
+}
+
+bool player::aware_of(const actor& a) const
+{
+    if (!see_cell(a.pos()))
+        return false;
+    return a.visible_to(this)
+           || a.is_monster() && (a.as_monster()->flags & MF_KNOWN_INVISIBLE);
 }

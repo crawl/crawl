@@ -1,0 +1,9 @@
+---
+include:
+  - https://salsa.debian.org/salsa-ci-team/pipeline/raw/master/recipes/debian.yml
+
+reprotest:
+  allow_failure: true
+
+blhc:
+  allow_failure: true

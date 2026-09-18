@@ -12,7 +12,6 @@
 #include "mon-info.h"
 #include "targ-mode-type.h"
 #include "targeting-type.h"
-#include "trap-type.h"
 #include "view.h"
 
 using std::vector;
@@ -29,7 +28,7 @@ public:
 class monster_view_annotator
 {
 public:
-    monster_view_annotator(vector<monster *> *monsters);
+    monster_view_annotator(vector<coord_def> *pos);
     virtual ~monster_view_annotator();
 };
 
@@ -77,6 +76,8 @@ struct direction_chooser_args
     bool try_multizap;
     bool unrestricted; // for wizmode
     bool allow_shift_dir;
+    bool is_ranged_attack;
+    bool is_piercing;
     confirm_prompt_type self;
     const char *target_prefix;
     string top_prompt;
@@ -97,6 +98,8 @@ struct direction_chooser_args
         try_multizap(false),
         unrestricted(false),
         allow_shift_dir(true),
+        is_ranged_attack(false),
+        is_piercing(false),
         self(confirm_prompt_type::prompt),
         target_prefix(nullptr),
         behaviour(nullptr),
@@ -215,8 +218,13 @@ private:
     // Apport: A short sword.
     void print_target_description(bool &did_cloud) const;
 
-    // Helper functions for the above.
+    // Prints a targeting prompt, with a string describing the monster
+    // at the choosen target location respecting visibility, if any.
+    // If there is a monster, dungeon features and clouds are also described.
     void print_target_monster_description(bool &did_cloud) const;
+    // Prints an aiming prompt, for the top level item
+    // at the current target location.
+    // Used for spells targeting items, like aportation.
     void print_target_object_description() const;
 
     // You see 2 +3 dwarven bolts here.
@@ -229,13 +237,7 @@ private:
     // terrain (i.e. floor.)
     void print_floor_description(bool boring_too) const;
 
-    string target_interesting_terrain_description() const;
-    string target_cloud_description() const;
-    string target_sanctuary_description() const;
-    string target_silence_description() const;
-    vector<string> target_cell_description_suffixes() const;
-    vector<string> monster_description_suffixes(const monster_info& mi) const;
-
+    // Top level description method used to describe what is located in a cell
     void describe_cell() const;
 
     // Move the target to where the mouse pointer is (on tiles.)
@@ -282,6 +284,12 @@ private:
     bool show_floor_desc;       // Describe the floor of the current target
     bool show_boring_feats;
     targeter *hitfunc;         // Determine what would be hit.
+    bool is_ranged_attack;     // Is this a launcher/throwing attack being aimed?
+    bool is_piercing;          // If a ranged attack, does it penetrate targets?
+    bool is_autotargeting;     // True if this is getting a default target
+                               // non-interactively which using autofight with
+                               // quivered spells (and thus we should be more
+                               // stringent about only returning useful paths).
     coord_def default_place;    // Start somewhere other than you.pos()?
 
     // Internal data.
@@ -319,6 +327,9 @@ private:
     bool need_text_redraw;
     bool need_all_redraw;       // All of the above.
 
+    // Whether the player has moved the cursor themselves.
+    bool player_changed_target;
+
     // Default behaviour, saved across instances.
     static targeting_behaviour stock_behaviour;
 
@@ -334,18 +345,25 @@ public:
 // Monster equipment description level.
 enum mons_equip_desc_level_type
 {
+    DESC_NO_EQUIPMENT,
     DESC_WEAPON,
+    DESC_NOTEWORTHY,
+    DESC_NOTEWORTHY_AND_WEAPON,
     DESC_FULL,
-    DESC_IDENTIFIED,
-    DESC_WEAPON_WARNING, // like DESC_WEAPON but also includes dancing weapons
 };
 
 void direction(dist &moves, const direction_chooser_args& args);
 
-string get_terse_square_desc(const coord_def &gc);
-void terse_describe_square(const coord_def &c, bool in_range = true);
+string get_cell_mouseover_tag(const coord_def &gc);
 bool full_describe_square(const coord_def &c, bool cleanup = true);
-void get_square_desc(const coord_def &c, describe_info &inf);
+
+string get_square_desc(const coord_def &pos);
+string cell_monster_description(const coord_def& pos, bool include_areas = false,
+                                targeting_behaviour* behavior = nullptr);
+string cell_items_description(const coord_def& pos);
+string cell_floor_description(const coord_def& pos, bool boring_too);
+
+vector<string> get_monster_status_descriptors(const monster_info& mi);
 
 void describe_floor();
 void _walk_on_decor(dungeon_feature_type new_grid);
@@ -359,12 +377,13 @@ string feature_description_at(const coord_def& where, bool covering = false,
                               description_level_type dtype = DESC_A);
 string raw_feature_description(const coord_def& where);
 string feature_description(dungeon_feature_type grid,
-                           trap_type trap = NUM_TRAPS,
                            const string & cover_desc = "",
-                           description_level_type dtype = DESC_A);
+                           description_level_type dtype = DESC_A,
+                           level_id place = level_id::current());
 
 vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern);
 
+bool is_terrain_interesting(dungeon_feature_type feat);
 void full_describe_view();
 void do_look_around(const coord_def &whence = coord_def(0, 0));
 bool get_look_position(coord_def *c);

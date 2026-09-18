@@ -12,10 +12,10 @@ aptitudes:
   wl: 3
   fighting: 1
   short_blades: 2
-  long_blades: 2
+  long_blades: 1
   axes: -2
   maces_and_flails: -2
-  polearms: 3
+  polearms: 4
   staves: -2
   ranged weapons: -2
   armour: -3

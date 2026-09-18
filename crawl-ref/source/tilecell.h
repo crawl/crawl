@@ -8,7 +8,12 @@ enum halo_type: uint8_t
 {
     HALO_NONE = 0,
     HALO_RANGE = 1,
-    HALO_UMBRA = 2,
+    HALO_UMBRA_FIRST = 2,
+    HALO_UMBRA_1 = HALO_UMBRA_FIRST,
+    HALO_UMBRA_2,
+    HALO_UMBRA_3,
+    HALO_UMBRA_4,
+    HALO_UMBRA_LAST = HALO_UMBRA_4,
 };
 
 struct packed_cell
@@ -16,10 +21,10 @@ struct packed_cell
     // For anything that requires multiple dungeon tiles (such as waves)
     // These tiles will be placed directly on top of the bg tile.
     static constexpr size_t MAX_DNGN_OVERLAY = 16;
-    FixedVector<int, MAX_DNGN_OVERLAY> dngn_overlay;
+    FixedVector<tileidx_t, MAX_DNGN_OVERLAY> dngn_overlay;
     // SSE2 / XMM registers = 128 bits or 16 bytes
-    // Current size of 16x int32 == 512 bits aligns nicely
-    COMPILE_CHECK(sizeof(FixedVector<int, MAX_DNGN_OVERLAY>) % 16 == 0);
+    // Current size of 16x uint16 == 256 bits aligns nicely
+    COMPILE_CHECK(sizeof(dngn_overlay) % 16 == 0);
 
     // This is directly copied from env.map_knowledge by viewwindow()
     // Here for packing / alignment purposes
@@ -46,8 +51,8 @@ struct packed_cell
     uint8_t disjunct;
 
     tile_flavour flv;
-    tileidx_t fg;
-    tileidx_t bg;
+    tile_with_flags_t fg;
+    tile_with_flags_t bg;
     tileidx_t cloud;
     set<tileidx_t> icons;
 
@@ -92,7 +97,7 @@ struct packed_cell
 
     void clear();
     // Add an overlay if not already present
-    void add_overlay(int tileidx);
+    void add_overlay(tileidx_t tileidx);
 };
 
 class crawl_view_buffer;
@@ -100,5 +105,7 @@ class crawl_view_buffer;
 // For a given location, pack any waves/ink/wall shadow tiles
 // that require knowledge of the surrounding env cells.
 void pack_cell_overlays(const coord_def &gc, crawl_view_buffer &vbuf);
+
+bool is_in_water(const packed_cell& cell);
 
 #endif // TILECELL_H

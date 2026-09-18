@@ -30,7 +30,7 @@ end
 
 -- Returns distance from the origin, useful for circles and ellipses
 function primitive.distance(x,y)
-  return math.sqrt(math.pow(x, 2) + math.pow(y, 2))
+  return math.sqrt(x ^ 2 + y ^ 2)
 end
 
 -- Gives the radial value from a point, i.e. the arctangent of the line

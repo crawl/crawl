@@ -1,8 +1,8 @@
 name: "Murray"
-glyph: {char: "z", colour: lightred}
+glyph: {char: "ž", colour: magenta}
 flags: [see_invis, speaks, unique, male]
 resists: {elec: 1, fire: 2, cold: 2}
-xp_mult: 15
+exp: 1586
 species: curse_skull
 holiness: [undead]
 will: invuln

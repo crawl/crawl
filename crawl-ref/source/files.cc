@@ -66,6 +66,7 @@
 #include "level-state-type.h"
 #include "libutil.h"
 #include "macro.h"
+#include "map-knowledge.h"
 #include "mapmark.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -157,6 +158,8 @@ static void _redraw_all()
     you.redraw_evasion       = true;
     you.redraw_experience    = true;
     you.redraw_status_lights = true;
+    you.redraw_doom          = true;
+    you.redraw_contam        = true;
 }
 
 static bool is_save_file_name(const string &name)
@@ -1159,7 +1162,7 @@ static bool _shaft_safely()
             continue;
         }
 
-        you.moveto(pos);
+        you.move_to(pos, MV_INTERNAL);
         return true;
     }
 
@@ -1182,14 +1185,15 @@ static void _place_player_on_stair(int stair_taken, const coord_def& dest_pos,
             return;
         // If we can't find a safe place, fall through to default random placement.
     }
-    you.moveto(dgn_find_nearby_stair(stair_type, dest_pos, find_first,
-                                     hatch_name));
+    you.move_to(dgn_find_nearby_stair(stair_type, dest_pos, find_first,
+                                      hatch_name), MV_INTERNAL);
 }
 
 static void _clear_env_map()
 {
     env.map_knowledge.init(map_cell());
     env.map_forgotten.reset();
+    tile_env.remembered_flavour.reset();
 }
 
 static void _grab_follower(monster* fol)
@@ -1198,12 +1202,13 @@ static void _grab_follower(monster* fol)
 
     dprf("%s is following to %s.", fol->name(DESC_THE, true).c_str(),
          dest.describe().c_str());
-    bool could_see = you.can_see(*fol);
+    const bool could_see = you.can_see(*fol);
+    const coord_def old_pos = fol->pos();
     fol->set_transit(dest);
     fol->destroy_inventory();
     monster_cleanup(fol);
     if (could_see)
-        view_update_at(fol->pos());
+        view_update_at(old_pos);
 }
 
 // Expire all friendly summons / zombies / etc. when the player is leaving a floor.
@@ -1433,7 +1438,7 @@ static void _place_player_randomly()
     monster* const mons = monster_at(newpos);
     if (mons)
         mons->teleport(true);
-    you.moveto(newpos);
+    you.move_to(newpos, MV_INTERNAL);
 }
 
 /**
@@ -1448,9 +1453,9 @@ static void _place_player(dungeon_feature_type stair_taken,
                           const coord_def &dest_pos, const string &hatch_name)
 {
     if (player_in_branch(BRANCH_ABYSS))
-        you.moveto(ABYSS_CENTRE);
+        you.move_to(ABYSS_CENTRE, MV_INTERNAL);
     else if (!return_pos.origin())
-        you.moveto(return_pos);
+        you.move_to(return_pos, MV_INTERNAL);
     else if (stair_taken == DNGN_ALTAR_IGNIS) // hack: we're rocketeers!
         _place_player_randomly();
     else
@@ -1462,18 +1467,16 @@ static void _place_player(dungeon_feature_type stair_taken,
         || feat_is_trap(env.grid(you.pos())))
     {
         for (distance_iterator di(you.pos(), true, false); di; ++di)
-            if (you.is_habitable_feat(env.grid(*di))
+            if (you.is_habitable(*di)
                 && !is_feat_dangerous(env.grid(*di), true)
                 && !feat_is_trap(env.grid(*di))
                 && !(env.pgrid(*di) & FPROP_NO_TELE_INTO))
             {
                 if (you.pos() != *di)
-                    you.moveto(*di);
+                    you.move_to(*di, MV_INTERNAL);
                 break;
             }
     }
-
-
 
     // This should fix the "monster occurring under the player" bug.
     monster *mon = monster_at(you.pos());
@@ -1483,7 +1486,7 @@ static void _place_player(dungeon_feature_type stair_taken,
         {
             if (!monster_at(*di) && mon->is_habitable(*di))
             {
-                mon->move_to_pos(*di);
+                mon->move_to(*di, MV_INTERNAL);
                 return;
             }
         }
@@ -1493,6 +1496,8 @@ static void _place_player(dungeon_feature_type stair_taken,
         monster_die(*mon, KILL_RESET_KEEP_ITEMS, NON_MONSTER);
         // XXX: do we need special handling for uniques...?
     }
+
+    you.finalise_movement();
 
     // Dump all arena contents on the player's feet when exiting the arena
     if (stair_taken == DNGN_EXIT_ARENA && you.props.exists(OKAWARU_DUEL_ITEMS_KEY))
@@ -1594,13 +1599,11 @@ static void _generic_level_reset()
     // TODO: can more be pulled into here?
 
     you.prev_targ = MID_NOBODY;
-    you.prev_grd_targ.reset();
 
     // Lose all listeners.
     dungeon_events.clear();
     clear_travel_trail();
 }
-
 
 // used to resolve generation order for cases where a single level has multiple
 // portals. This currently should only include portals that can appear at most
@@ -1609,6 +1612,7 @@ static const vector<branch_type> portal_generation_order =
 {
     BRANCH_SEWER,
     BRANCH_OSSUARY,
+    // do not pregenerate Necropolis: see bazaars
     BRANCH_ICE_CAVE,
     BRANCH_VOLCANO,
     BRANCH_BAILEY,
@@ -1618,9 +1622,15 @@ static const vector<branch_type> portal_generation_order =
 #endif
     // do not pregenerate bazaar (TODO: this is non-ideal)
     // do not pregenerate trove
+    BRANCH_GULCH,
     BRANCH_WIZLAB,
     BRANCH_DESOLATION,
 };
+
+const vector<branch_type> &dgn_portal_generation_order()
+{
+    return portal_generation_order;
+}
 
 void update_portal_entrances()
 {
@@ -1629,14 +1639,15 @@ void update_portal_entrances()
     // add any portals not currently registered
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        dungeon_feature_type feat = env.grid(*ri);
+        dungeon_feature_type feat = feat_at_no_mimic(*ri);
         // excludes pan, hell, abyss.
-        if (feat_is_portal_entrance(feat) && !feature_mimic_at(*ri))
+        if (feat_is_portal_entrance(feat))
         {
             level_id whither = stair_destination(feat, "", false);
             if (whither.branch == BRANCH_ZIGGURAT // not (quite) pregenerated
                 || whither.branch == BRANCH_TROVE // not pregenerated
-                || whither.branch == BRANCH_BAZAAR) // multiple bazaars possible
+                || whither.branch == BRANCH_BAZAAR // multiple bazaars possible
+                || whither.branch == BRANCH_NECROPOLIS) // multiple possible
             {
                 continue; // handle these differently
             }
@@ -1846,6 +1857,19 @@ static const vector<branch_type> branch_generation_order =
     NUM_BRANCHES,
 };
 
+const vector<branch_type> &dgn_branch_generation_order()
+{
+    return branch_generation_order;
+}
+
+bool dgn_branch_will_generate(branch_type br)
+{
+    return br < NUM_BRANCHES &&
+        (brentry[br].is_valid()
+         || br == BRANCH_DUNGEON || br == BRANCH_VESTIBULE
+         || !is_connected_branch(br));
+}
+
 static bool _branch_pregenerates(branch_type b)
 {
     if (!you.deterministic_levelgen)
@@ -1904,10 +1928,7 @@ bool pregen_dungeon(const level_id &stopping_point)
         // `initialise_branch_depths` for some reason. The vestibule is invalid
         // because its depth isn't set until the player actually enters a
         // portal, similarly for other portal branches.
-        if (br < NUM_BRANCHES &&
-            (brentry[br].is_valid()
-             || br == BRANCH_DUNGEON || br == BRANCH_VESTIBULE
-             || !is_connected_branch(br)))
+        if (dgn_branch_will_generate(br))
         {
             for (int i = 1; i <= brdepth[br]; i++)
             {
@@ -2029,7 +2050,7 @@ static void _rescue_player_from_wall()
         }
         // if things get this messed up, don't make them worse
         ASSERT(in_bounds(target));
-        you.moveto(target);
+        you.move_to(target, MV_INTERNAL);
     }
 }
 
@@ -2037,10 +2058,10 @@ static void _rescue_player_from_wall()
 static void _fixup_transmuters()
 {
     vector<pair<spell_type, talisman_type>> forms = {
-        { SPELL_BEASTLY_APPENDAGE, TALISMAN_BEAST },
-        { SPELL_SPIDER_FORM,       TALISMAN_FLUX },
+        { SPELL_BEASTLY_APPENDAGE, TALISMAN_QUILL },
+        { SPELL_SPIDER_FORM,       TALISMAN_SPIDER },
         { SPELL_ICE_FORM,          TALISMAN_SERPENT },
-        { SPELL_BLADE_HANDS,       TALISMAN_BLADE },
+        { SPELL_BLADE_HANDS,       TALISMAN_EEL },
         { SPELL_STATUE_FORM,       TALISMAN_STATUE },
         { SPELL_DRAGON_FORM,       TALISMAN_DRAGON },
         { SPELL_STORM_FORM,        TALISMAN_STORM },
@@ -2055,6 +2076,11 @@ static void _fixup_transmuters()
         // Funny but tragic if the player is over red or blue lava.
         move_item_to_grid(&obj, you.pos(), true);
         del_spell_from_memory(p.first);
+    }
+    if (you.props.exists("consolation_talisman"))
+    {
+        copy_item_to_grid(you.props["consolation_talisman"].get_item(), you.pos());
+        you.props.erase("consolation_talisman");
     }
 }
 #endif
@@ -2080,10 +2106,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     const string level_name = level_id::current().describe();
     if (!you.save->has_chunk(level_name) && load_mode == LOAD_VISITOR)
         return false;
-
-    const bool fast = load_mode == LOAD_ENTER_LEVEL_FAST;
-    if (fast)
-        load_mode = LOAD_ENTER_LEVEL;
 
     const bool make_changes =
         (load_mode == LOAD_START_GAME || load_mode == LOAD_ENTER_LEVEL);
@@ -2146,6 +2168,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         update_companions();
     }
+
+    // At this point there should be no monsters in the reset queue.
+    ASSERT(!any_pending_monster_reset());
 
 #ifdef USE_TILE
     if (load_mode != LOAD_VISITOR)
@@ -2220,8 +2245,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     show_update_emphasis();
 
     // Shouldn't happen, but this is too unimportant to assert.
-    deleteAll(env.final_effects);
-    env.final_effect_monster_cache.clear();
+    clear_final_effects();
 
     los_changed();
 
@@ -2245,8 +2269,11 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         env.markers.activate_all(message);
     }
 
-    if (make_changes && env.elapsed_time && !just_created_level && !descent_peek)
+    if (make_changes && env.elapsed_time && !just_created_level && !descent_peek
+        && stair_taken != DNGN_EXIT_ARENA)
+    {
         update_level(you.elapsed_time - env.elapsed_time);
+    }
 
     // Apply all delayed actions, if any. TODO: logic for marshalling this is
     // kind of odd.
@@ -2311,20 +2338,15 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 descent_crumble_stairs(); // no sense waiting
         }
         else
-        {
-            // new stairs have less wary monsters, and we don't
-            // want them to attack players quite as soon.
-            // (just_created_level only relevant if we crashed.)
-            const bool fast_entry = fast || just_created_level;
-            you.time_taken *= fast_entry ? 1 : 2;
-            you.time_taken = div_rand_round(you.time_taken * 3, 4);
-        }
+            you.time_taken = div_rand_round(you.time_taken * 3, 2);
 
         if (just_created_level)
             run_map_epilogues();
 
         // no cross-level pursuits
         crawl_state.potential_pursuers.clear();
+
+        ash_detect_portals(is_map_persistent());
     }
 
     // Save the created/updated level out to disk:
@@ -2416,8 +2438,23 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         gozag_count_level_gold();
         if (branches[you.where_are_you].branch_flags & brflag::fully_map)
         {
-            magic_mapping(GDM, 100, true, false, false, true, false);
-            _learn_transporters();
+            magic_mapping(GDM, 100, true, false, false, true, false, coord_def(), true);
+
+            if (player_in_branch(BRANCH_TEMPLE))
+                _learn_transporters();
+            for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)
+            {
+                if (env.map_knowledge(*ri).seen())
+                {
+                    force_show_update_at(*ri);
+#ifdef USE_TILE
+                    tiles.update_minimap(*ri);
+                    tile_draw_map_cell(*ri, true);
+#elif defined(USE_TILE_WEB)
+                    tiles.mark_for_redraw(*ri);
+#endif
+                }
+            }
         }
     }
 
@@ -2440,8 +2477,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 && feat_stair_direction(feat) != CMD_NO_CMD
                 && feat_stair_direction(stair_taken) != CMD_NO_CMD)
             {
-                string stair_str = feature_description(feat, NUM_TRAPS, "",
-                                                       DESC_THE);
+                string stair_str = feature_description(feat, "", DESC_THE);
                 string verb = stair_climb_verb(feat);
 
                 if (coinflip()
@@ -2461,8 +2497,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
             }
         }
 
-        ash_detect_portals(is_map_persistent());
-
         if (just_created_level)
             xom_new_level_noise_or_stealth();
     }
@@ -2471,7 +2505,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         decr_zot_clock();
 
     // Initialize halos, etc.
-    invalidate_agrid(true);
+    invalidate_agrid();
 
     // Maybe make a note if we reached a new level.
     // Don't do so if we are just moving around inside Pan, though.
@@ -2488,6 +2522,13 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     if (make_changes)
         maybe_break_floor_gem();
+
+    // When entering another floor, make monsters in sight of the player's
+    // arrival, but which the player has never seen before, skip their first turn.
+    if (make_changes)
+        for (monster_near_iterator mi(you.pos()); mi; ++mi)
+            if (!(mi->flags & MF_SEEN))
+                mi->flags |= MF_JUST_SUMMONED;
 
 #if TAG_MAJOR_VERSION == 34
     if (make_changes && you.props.exists("zig-fixup")
@@ -2516,6 +2557,9 @@ void save_level(const level_id& lid)
     if (you.level_visited(lid))
         travel_cache.get_level_info(lid).update();
 
+    // Reset any monsters that died/left this action.
+    flush_monster_reset();
+
     // Nail all items to the ground.
     fix_item_coordinates();
 
@@ -2523,16 +2567,16 @@ void save_level(const level_id& lid)
 }
 
 #if TAG_MAJOR_VERSION == 34
-# define CHUNK(short, long) short
+# define CHUNK(short_name, long_name) short_name
 #else
-# define CHUNK(short, long) long
+# define CHUNK(short_name, long_name) long_name
 #endif
 
-#define SAVEFILE(short, long, savefn)           \
-    do                                          \
-    {                                           \
-        writer w(you.save, CHUNK(short, long)); \
-        savefn(w);                              \
+#define SAVEFILE(short_name, long_name, savefn)           \
+    do                                                    \
+    {                                                     \
+        writer w(you.save, CHUNK(short_name, long_name)); \
+        savefn(w);                                        \
     } while (false)
 
 // Stack allocated string's go in separate function, so Valgrind doesn't
@@ -2560,6 +2604,9 @@ static void _save_game_base()
 
     /* messages */
     SAVEFILE("msg", "messages", save_messages);
+
+    /* dlua errors */
+    SAVEFILE("de", "dlua_errors", save_dlua_errors);
 
     /* tile dolls (empty for ASCII)*/
 #ifdef USE_TILE
@@ -2660,28 +2707,32 @@ void save_game_state()
         save_game(true);
 }
 
-static bool _bones_save_individual_levels(bool store)
+static bool _bones_save_individual_levels(branch_type branch, bool store)
 {
     // Only use level-numbered bones files for places where players die a lot.
     // For the permastore, go even coarser (just D and Lair use level numbers).
     // n.b. some branches here may not currently generate ghosts.
     // TODO: further adjustments? Make Zot coarser?
-    return store ? player_in_branch(BRANCH_DUNGEON) ||
-                   player_in_branch(BRANCH_LAIR)
-                 : !(player_in_branch(BRANCH_ZIGGURAT) ||
-                     player_in_branch(BRANCH_CRYPT) ||
-                     player_in_branch(BRANCH_TOMB) ||
-                     player_in_branch(BRANCH_ABYSS) ||
-                     player_in_branch(BRANCH_SLIME));
+    return store ? branch == BRANCH_DUNGEON ||
+                   branch == BRANCH_LAIR
+                 : !(branch == BRANCH_ZIGGURAT ||
+                     branch ==BRANCH_CRYPT ||
+                     branch == BRANCH_TOMB ||
+                     branch == BRANCH_ABYSS ||
+                     branch == BRANCH_SLIME);
 }
 
 static string _make_ghost_filename(bool store=false)
 {
-    const bool with_number = _bones_save_individual_levels(store);
+    const level_id lvl = player_in_branch(BRANCH_NECROPOLIS)
+                            ? !you.level_stack.empty() ? you.level_stack.back().id
+                                                       : level_id(BRANCH_DUNGEON, 15)
+                            : level_id::current();
+    const bool with_number = _bones_save_individual_levels(lvl.branch, store);
     // Players die so rarely in hell in practice that it doesn't even make
     // sense to have per-hell bones. (Maybe vestibule should be separate?)
-    const string level_desc = player_in_hell(true) ? "Hells" :
-        replace_all(level_id::current().describe(false, with_number), ":", "-");
+    const string level_desc = is_hell_branch(lvl.branch) ? "Hells" :
+        replace_all(lvl.describe(false, with_number), ":", "-");
     return string("bones.") + (store ? "store." : "") + level_desc;
 }
 
@@ -2942,9 +2993,10 @@ vector<ghost_demon> load_bones_file(string ghost_filename, bool backup)
     }
     inf.close();
 
-    if (!debug_check_ghosts(result))
+    string err_msg;
+    if (!debug_check_ghosts(result, err_msg))
     {
-        string error = "Bones file is buggy: " + ghost_filename;
+        string error = "Bones file is buggy: " + ghost_filename + "\n" + err_msg;;
         throw corrupted_save(error, version);
     }
 
@@ -3296,10 +3348,18 @@ static bool _restore_game(const string& filename)
         load_messages(inf);
     }
 
+    /* dlua errors */
+    if (you.save->has_chunk(CHUNK("de", "dlua_errors")))
+    {
+        reader inf(you.save, CHUNK("de", "dlua_errors"), minorVersion);
+        load_dlua_errors(inf);
+    }
+
     // Handle somebody SIGHUP'ing out of the skill menu with every skill
     // disabled. Doing this here rather in tags code because it can trigger
     // UI, which may not be safe if everything isn't fully loaded.
     check_selected_skills();
+    init_four_winds();
 
     return true;
 }
@@ -3349,6 +3409,9 @@ bool is_existing_level(const level_id &level)
 
 void delete_level(const level_id &level)
 {
+    // This level's env.mons is being discarded, so clear any pending resets.
+    drop_pending_monster_resets();
+
     travel_cache.erase_level_info(level);
     StashTrack.remove_level(level);
     shopping_list.del_things_from(level);
@@ -3369,8 +3432,9 @@ void delete_level(const level_id &level)
     }
     // Since Pandemonium is internally all the same floor, we need to actually
     // clean up our torch status whenever we leave a Pan floor so that the player
-    // will be able to use it on the next one.
-    else if (level.branch == BRANCH_PANDEMONIUM && you.religion == GOD_YREDELEMNUL)
+    // will be able to use it on the next one. Do the same for portals as well
+    // (for the few cases of repeatable portals, like Necropolis).
+    else if (!is_connected_branch(level) && you.props.exists(YRED_TORCH_USED_KEY))
     {
         CrawlHashTable &levels = you.props[YRED_TORCH_USED_KEY].get_table();
         levels.erase(level.describe());
@@ -3433,6 +3497,11 @@ void level_excursion::go_to(const level_id& next)
         ever_changed_levels = true;
 
         save_level(level_id::current());
+
+        // This must be set before loading a level as it redraws the map knowledge
+        // which checks what is currently in view.
+        you.on_current_level = (next == original);
+
         _load_level(next);
 
         if (you.level_visited(next))
@@ -3445,6 +3514,9 @@ void level_excursion::go_to(const level_id& next)
         // abyss procgen.
     }
 
+    // I don't trust that excursions to levels you haven't visited during
+    // abyss generation won't mess with this when the pregen_dungeon option is
+    // set to false, so reset it to the correct value --Wizard Ike
     you.on_current_level = (level_id::current() == original);
 }
 
@@ -3538,6 +3610,24 @@ static bool _convert_obsolete_species()
                 "if you want to remain a Vampire.");
         }
         change_species_to(SP_HUMAN);
+        return true;
+    }
+    else if (you.species == SP_ARMATAUR)
+    {
+        if (!yesno(
+            "This Armataur save game cannot be loaded as-is. If you load it now,\n"
+            "your character will be converted to a Gale Centaur. Continue?",
+                       false, 'N'))
+        {
+            you.save->abort(); // don't even rewrite the header
+            delete you.save;
+            you.save = 0;
+            game_ended(game_exit::abort,
+                "Please load the save in an earlier version "
+                "if you want to remain an Armataur.");
+        }
+        change_species_to(SP_GALE_CENTAUR);
+        you.duration[DUR_STAMPEDE] = 0; // Was DUR_ROLLPAGE
         return true;
     }
 #endif
@@ -3732,7 +3822,7 @@ static FILE* _make_bones_file(string * return_gfilename)
 
 static size_t _ghost_permastore_size()
 {
-    if (_bones_save_individual_levels(true))
+    if (_bones_save_individual_levels(you.where_are_you, true))
         return GHOST_PERMASTORE_SIZE;
     else
         return GHOST_PERMASTORE_SIZE * 2;

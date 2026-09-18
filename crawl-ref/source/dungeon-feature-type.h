@@ -46,6 +46,10 @@ enum dungeon_feature_type
     DNGN_CLEAR_STONE_WALL,
     DNGN_CLEAR_PERMAROCK_WALL,
 
+#if TAG_MAJOR_VERSION > 34
+    DNGN_FRIGID_WALL,
+#endif
+
     DNGN_GRATE,
 
     // Misc solid features
@@ -57,6 +61,7 @@ enum dungeon_feature_type
     DNGN_ORCISH_IDOL,
 #if TAG_MAJOR_VERSION > 34
     DNGN_METAL_STATUE,                 // Vault statues that aren't rock
+    DNGN_ZOT_STATUE,                   // Statue of the orbs guardian Zot
 #endif
     DNGN_GRANITE_STATUE,
     DNGN_MALIGN_GATEWAY,
@@ -98,6 +103,7 @@ enum dungeon_feature_type
     DNGN_TRAP_ALARM,
     DNGN_TRAP_ZOT,
     DNGN_TRAP_DISPERSAL,
+    DNGN_TRAP_DISPERSAL_INACTIVE,
     DNGN_PASSAGE_OF_GOLUBRIA,
 #endif
 #if TAG_MAJOR_VERSION > 34
@@ -105,6 +111,7 @@ enum dungeon_feature_type
     DNGN_TRAP_PLATE,
     DNGN_SPIKE_LAUNCHER,
     DNGN_ORB_DAIS,
+    DNGN_MOULD_PATCH,
 #endif
 #if TAG_MAJOR_VERSION == 34
     DNGN_UNDISCOVERED_TRAP,
@@ -112,6 +119,9 @@ enum dungeon_feature_type
 
     DNGN_ENTER_SHOP,
     DNGN_ABANDONED_SHOP,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_PURIFIED_MUTATION_CATALYST,
+#endif
 
     DNGN_STONE_STAIRS_DOWN_I,
     DNGN_STONE_STAIRS_DOWN_II,
@@ -284,6 +294,9 @@ enum dungeon_feature_type
     DNGN_ENTER_ZIGGURAT,
     DNGN_ENTER_BAZAAR,
     DNGN_ENTER_TROVE,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_ENTER_NECROPOLIS,
+#endif
     DNGN_ENTER_SEWER,
     DNGN_ENTER_OSSUARY,
     DNGN_ENTER_BAILEY,
@@ -292,6 +305,9 @@ enum dungeon_feature_type
 #endif
     DNGN_ENTER_ICE_CAVE,
     DNGN_ENTER_VOLCANO,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_ENTER_GULCH,
+#endif
     DNGN_ENTER_WIZLAB,
     DNGN_ENTER_DESOLATION,
 #if TAG_MAJOR_VERSION > 34
@@ -302,6 +318,9 @@ enum dungeon_feature_type
     DNGN_EXIT_ZIGGURAT,
     DNGN_EXIT_BAZAAR,
     DNGN_EXIT_TROVE,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_EXIT_NECROPOLIS,
+#endif
     DNGN_EXIT_SEWER,
     DNGN_EXIT_OSSUARY,
     DNGN_EXIT_BAILEY,
@@ -310,6 +329,9 @@ enum dungeon_feature_type
 #endif
     DNGN_EXIT_ICE_CAVE,
     DNGN_EXIT_VOLCANO,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_EXIT_GULCH,
+#endif
     DNGN_EXIT_WIZLAB,
 #if TAG_MAJOR_VERSION == 34
     DNGN_EXIT_LABYRINTH,
@@ -381,7 +403,15 @@ enum dungeon_feature_type
     DNGN_DECORATIVE_FLOOR,  // XXX: dummy for redefinition until we rewrite code
     DNGN_SPIKE_LAUNCHER,
     DNGN_TRAP_DEVOURER,
-
+    DNGN_ENTER_NECROPOLIS,
+    DNGN_EXIT_NECROPOLIS,
+    DNGN_FRIGID_WALL,
+    DNGN_ZOT_STATUE,
+    DNGN_TRAP_DISPERSAL_INACTIVE,
+    DNGN_ENTER_GULCH,
+    DNGN_EXIT_GULCH,
+    DNGN_MOULD_PATCH,
+    DNGN_PURIFIED_MUTATION_CATALYST,
 #endif
 
     NUM_FEATURES

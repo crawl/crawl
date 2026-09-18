@@ -135,7 +135,7 @@ function ($, comm, client, enums, util, options, ui) {
                 comm.send_message("key", { keycode: 21 });
                 comm.send_message("key", { keycode: 11 });
             }
-            comm.send_message("input", { text: text });
+            comm.send_message("text_input", { text: text });
             // seed-selection handles this on its own, because there is first
             // a validation step -- the input loop only terminates on abort
             // or if there is an actual number to be found.
@@ -309,23 +309,6 @@ function ($, comm, client, enums, util, options, ui) {
         "close_input": close_input,
         "update_input": update_input
     });
-
-
-    function handle_size_change()
-    {
-        if (!input_data)
-            return;
-
-        client.center_element($("#input_dialog"));
-    }
-
-    $(document).off("game_init.textinput")
-               .on("game_init.textinput", function ()
-    {
-        $(window).off("resize.textinput")
-                 .on("resize.textinput", handle_size_change);
-    });
-
 
     return {
         input_active: input_active,

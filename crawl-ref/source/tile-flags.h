@@ -28,6 +28,10 @@ enum tile_flags : unsigned long long
 
     TILE_FLAG_NET          = 0x00800000ULL,
     TILE_FLAG_WEB          = 0x01000000ULL,
+
+    TILE_FLAG_S_UNDER_GOOD     = 0x100000000000000ULL,
+    TILE_FLAG_S_UNDER_ARTEFACT = 0x200000000000000ULL,
+
     // Other icons were previously stored here. Lots of space now.
     // Different levels of poison are mutually exclusive, so we can encode them in 2 bits.
     TILE_FLAG_POISON_MASK  = 0x1800000000000000ULL,
@@ -63,9 +67,10 @@ enum tile_flags : unsigned long long
 
     //// Background flags
 
-    TILE_FLAG_RAY          = 0x00010000ULL,
-    TILE_FLAG_MM_UNSEEN    = 0x00020000ULL,
-    TILE_FLAG_UNSEEN       = 0x00040000ULL,
+    TILE_FLAG_MM_UNSEEN        = 0x00020000ULL,
+    TILE_FLAG_UNSEEN           = 0x00040000ULL,
+    TILE_FLAG_INVIS            = 0x04000000000ULL,
+    TILE_FLAG_REMEMBERED_INVIS = 0x08000000000ULL,
 
     // 3 mutually exclusive flags for cursors.
     TILE_FLAG_CURSOR1      = 0x00180000ULL,
@@ -76,7 +81,6 @@ enum tile_flags : unsigned long long
     TILE_FLAG_TUT_CURSOR   = 0x00200000ULL,
     TILE_FLAG_TRAV_EXCL    = 0x00400000ULL,
     TILE_FLAG_EXCL_CTR     = 0x00800000ULL,
-    TILE_FLAG_RAY_OOR      = 0x01000000ULL,
     TILE_FLAG_OOR          = 0x02000000ULL,
     TILE_FLAG_WATER        = 0x04000000ULL,
     TILE_FLAG_NEW_STAIR    = 0x08000000ULL,
@@ -98,13 +102,6 @@ enum tile_flags : unsigned long long
     // 0x04000000000ULL was TILE_FLAG_STARSPAWN_NE
     // 0x08000000000ULL was TILE_FLAG_STARSPAWN_SE
     // 0x10000000000ULL was TILE_FLAG_STARSPAWN_SW
-
-    //// General
-
-    // Should go up with RAY/RAY_OOR, but they need to be exclusive for those
-    // flags and there's no room.
-    TILE_FLAG_LANDING     = 0x20000000000ULL,
-    TILE_FLAG_RAY_MULTI   = 0x40000000000ULL,
 
     // More tentacle types
     TILE_FLAG_TENTACLE_ZOMBIE_KRAKEN = 0x80000000000ULL,

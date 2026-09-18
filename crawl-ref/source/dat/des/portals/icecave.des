@@ -187,12 +187,11 @@ ratios 18:6:2:1.
 function ice_cave_undead_demon_monster_set(e, reaper_glyphs)
     simul = simulacrum_monsters()
 
-    local reaper_equip = " ; halberd plus:-4 itemname:scythe" ..
-                         " tile:wpn_scythe wtile:scythe ego:freezing"
+    local reaper_equip = " ; " .. scythe("freezing") .. " plus:-6"
     -- Make sure this reaper has rC+++ so it doesn't die in freezing vapour.
     if reaper_glyphs ~= nil then
         reaper_equip = reaper_equip .. " . robe ego:cold_resistance" ..
-            " . ring of protection from cold | ring of ice"
+            " . ring of protection from cold"
     end
 
     if dgn.persist.ice_cave_hard then
@@ -398,7 +397,7 @@ function ice_cave_magic_loot(e, glyphs)
     end
     e.kitem(glyphs .. " = book of ice / book of the tundra" ..
         " / randbook disc:ice" ..
-        " / manual of ice magic / staff of cold / ring of ice" .. quality ..
+        " / manual of ice magic / staff of cold" .. quality ..
         " / ring of protection from cold" .. quality ..
         " / wand of iceblast / phial of floods / condenser vane")
 end
@@ -424,8 +423,8 @@ function ice_cave_common_loot(e, glyphs)
 end
 
 --[[
-Define one kitem glyph containing necromancy themed items, including
-spellbooks, a manual, staff of death, and an artefact ring of positive energy.
+Define one kitem glyph containing necromancy themed items, including books,
+a manual, staff of necromancy, and an artefact ring of positive energy.
 
 @tab e The map environment.
 @string[opt="j"] glyphs Glyphs to use for the single KITEM statement.
@@ -437,7 +436,7 @@ function ice_cave_necro_loot(e, glyphs)
 
     e.kitem(glyphs .. " = book of unlife / randbook disc:ice" ..
             "    disc2:necromancy numspells:6" ..
-            "/ manual of necromancy w:5 / staff of death" ..
+            "/ manual of necromancy w:5 / staff of necromancy" ..
             "/ ring of positive energy randart")
 end
 
@@ -662,7 +661,7 @@ NAME:   portal_ice_cave_entry_ice_statue_one
 TAGS:   no_monster_gen no_pool_fixup transparent
 : ice_cave_portal(_G)
 MONS:   ice statue
-KFEAT:  ^ = web trap
+KFEAT:  ^ = web
 : if you.in_branch("Swamp") then
 SUBST:  + = ., x = t
 : elseif you.in_branch("Shoals") then
@@ -985,7 +984,7 @@ KPROP:   yY'j = bloody
 : ice_cave_undead_demon_monster_set(_G)
 KMONS:   D = necromancer
 KFEAT:   _ = altar_kikubaaqudgha
-KFEAT:   ^ = alarm trap
+KFEAT:   ^ = trap_alarm
 KFEAT:   y = x
 KFEAT:   " = +
 # For the easy ice cave, necromancer + elephants as boss, second area gets a
@@ -1112,9 +1111,9 @@ xx............xxxsssxxxxxxx...xx
   xx---xxxxxxxxx...S..x.....xxxx
  xx-----xxxxxxxxx.xx.R...Sxxx
  x---A---xxxxxccccc.R.R.ccccc
- x-------xxxxxc...cccFccc...c
- xx--<--xxxxxxc.f...FEF...h.c
-  xx---xxxxxxxc...cc*i*cc...c
+ x-------xxxxxc*.$cccFccc$.*c
+ xx--<--xxxxxxc.....FEF.....c
+  xx---xxxxxxxcf.$cc*i*cc$.hc
    xxxxxxxxxxxcccccccbccccccc
          xxxxx
 ENDMAP
@@ -1142,8 +1141,7 @@ KITEM:   D = any scroll
 # more. For ice fiend, minimum of one and 50% chance for another.
 : if dgn.persist.ice_cave_hard then
 : ice_cave_undead_demon_monster_set(_G)
-KMONS:   D7 = reaper ; halberd plus:-4 itemname:scythe \
-              tile:wpn_scythe wtile:scythe ego:freezing
+: kmons("D7 = reaper ; " .. scythe("freezing") .. " plus:-6")
 SHUFFLE: D7 / 88
 NSUBST:  7 = 7 / 7.., 8 = 8 / 8. / .
 NSUBST:  4 = 6 / 446, F = 122445
@@ -1592,7 +1590,7 @@ ORIENT:  encompass
 : ice_cave_common_loot(_G)
 # Loot always includes at least one randart so Jiyva worshipers get something
 KITEM:   j = any weapon randart ego:freezing pre_id / any armour randart \
-             / ring of ice randart pre_id / ice dragon scales randart w:5 \
+             / ice dragon scales randart w:5 \
              / ring of protection from cold randart pre_id \
              / any ring randart / any amulet randart \
              / randbook disc:ice numspells:3

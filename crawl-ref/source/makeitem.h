@@ -6,6 +6,7 @@
 #pragma once
 
 #include "item-prop-enum.h"
+#include "spl-util.h"
 
 static const int NO_AGENT = -1;
 
@@ -17,13 +18,17 @@ int create_item_named(string name, coord_def pos, string *error);
 
 int items(bool allow_uniques, object_class_type force_class, int force_type,
           int item_level, int force_ego = 0, int agent = NO_AGENT,
+          bool acquirement = false,
           string custom_name = "",
-          CrawlHashTable const *fixed_props = nullptr);
+          CrawlHashTable const *fixed_props = nullptr,
+          monster *mons = nullptr);
 
 void item_colour(item_def &item);
 
 jewellery_type get_random_ring_type();
 jewellery_type get_random_amulet_type();
+short determine_jewellery_plus(int subtype);
+
 misc_item_type get_misc_item_type(int force_type, bool exclude = true);
 void item_set_appearance(item_def &item);
 
@@ -38,9 +43,21 @@ void set_artefact_brand(item_def &item, int brand);
 
 bool got_curare_roll(const int item_level);
 void reroll_brand(item_def &item, int item_level);
+bool item_has_invalid_brand(const item_def& item);
 
 void generate_wand_item(item_def& item, int force_type, int item_level);
 bool is_high_tier_wand(int type);
+
+spell_type choose_parchment_spell(int item_level, spschool school = spschool::none,
+                                  int fixed_spell_level = 0);
+
+void lucky_upgrade_item(item_def& item);
+
+void drop_net_at(const coord_def& pos);
+
+armour_type pick_random_aux_armour_type();
+armour_type pick_random_shield_type();
+armour_type pick_random_body_armour_type(int item_level);
 
 void squash_plusses(int item_slot);
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)

@@ -29,9 +29,16 @@ enum stab_type
     NUM_STABS
 };
 
-bool fight_melee(actor *attacker, actor *defender, bool *did_hit = nullptr,
-                 bool simu = false);
+bool mons_fight(monster* attacker, actor* defender,
+                bool* did_hit = nullptr, bool simu = false);
+bool player_fight(monster* defender, bool is_rampage = false,
+                  bool* did_hit = nullptr, bool simu = false);
 
+void player_attempted_attack(bool trigger_effects, bool maintain_statuses = true,
+                             actor* primary_target = nullptr);
+
+beam_type get_beam_resist_type(beam_type flavour);
+int beam_resistible_fraction(beam_type flavour);
 int resist_adjust_damage(const actor *defender, beam_type flavour,
                          int rawdamage);
 
@@ -39,31 +46,23 @@ int apply_chunked_AC(int dam, int ac);
 
 int melee_confuse_chance(int HD);
 
-bool wielded_weapon_check(const item_def *weapon, string attack_verb="");
+bool wielded_weapon_check(string attack_verb="");
 
 stab_type find_player_stab_type(const monster &victim);
 
 int stab_bonus_denom(stab_type stab);
 
-bool dont_harm(const actor &attacker, const actor &defender);
+bool should_cleave_into(const actor &attacker, const actor &defender);
 bool force_player_cleave(coord_def target);
-bool attack_cleaves(const actor &attacker, const item_def *weapon = nullptr);
+bool attack_cleaves(const actor &attacker, const item_def *weapon = nullptr,
+                    int attack_num = -1);
 bool weapon_cleaves(const item_def &item);
 int weapon_hits_per_swing(const item_def &item);
 bool weapon_multihits(const item_def *item);
 void get_cleave_targets(const actor &attacker, const coord_def& def,
-                        list<actor*> &targets, int which_attack = -1,
-                        bool force_cleaving = false,
-                        const item_def *weapon = nullptr);
-// too many params... need to pass in a mini-struct or something
-int attack_multiple_targets(actor &attacker, list<actor*> &targets,
-                            int attack_number = 0,
-                            int effective_attack_number = 0,
-                            wu_jian_attack_type wu_jian_attack
-                              = WU_JIAN_ATTACK_NONE,
-                            bool is_projected = false,
-                            bool is_cleave = true,
-                            item_def *weapon = nullptr);
+                        vector<actor*> &targets, int range = 1);
+vector<actor*> get_player_attack_targets();
+vector<actor*> get_player_cleave_targets(const coord_def& aim);
 
 class attack;
 int to_hit_pct(const monster_info& mi, attack &atk,
@@ -109,31 +108,34 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         function<bool(const actor *victim)> affects = nullptr,
                         bool *prompted = nullptr,
                         const monster *mons = nullptr,
-                        bool check_only = false);
+                        bool check_only = false,
+                        bool include_player = false);
 
 string stop_summoning_reason(resists_t resists, monclass_flags_t flags);
 bool stop_summoning_prompt(resists_t resists = MR_NO_FLAGS,
                            monclass_flags_t flags = M_NO_FLAGS,
-                           string verb = "summon");
+                           string verb = "do that");
 
 bool warn_about_bad_targets(spell_type spell, vector<coord_def> targets,
-                            function<bool(const monster& mon)> should_ignore = nullptr);
+                            function<bool(const monster& mon)> should_ignore = nullptr,
+                            const char* msg = "Cast it anyway?");
 bool warn_about_bad_targets(const char* source_name, vector<coord_def> targets,
-                            function<bool(const monster&)> should_ignore = nullptr);
+                            function<bool(const monster&)> should_ignore = nullptr,
+                            const char* msg = "Cast it anyway?");
 
-bool can_reach_attack_between(coord_def source, coord_def target,
-                              reach_type range);
+bool can_reach_attack_between(coord_def source, coord_def target, int range);
 dice_def spines_damage(monster_type mon);
 int archer_bonus_damage(int hd);
 
 int aux_to_hit();
 
-bool weapon_uses_strength(skill_type wpn_skill, bool using_weapon);
-int stat_modify_damage(int base_dam, skill_type wpn_skill, bool using_weapon);
+bool weapon_uses_strength(skill_type wpn_skill);
+int stat_modify_damage(int base_dam, skill_type wpn_skill);
 int apply_weapon_skill(int base_dam, skill_type wpn_skill, bool random);
 int apply_fighting_skill(int base_dam, bool aux, bool random);
 int throwing_base_damage_bonus(const item_def &projectile, bool random);
 int brand_adjust_weapon_damage(int base_dam, int brand, bool random);
+int resonance_damage_mod(int dam, bool random);
 
 int unarmed_base_damage(bool random);
 int unarmed_base_damage_bonus(bool random);

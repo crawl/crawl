@@ -1,9 +1,9 @@
 define(["jquery", "./view_data", "./tileinfo-gui", "./tileinfo-main",
         "./tileinfo-player", "./tileinfo-icons", "./tileinfo-dngn", "./enums",
         "./map_knowledge", "./tileinfos", "./player", "./options",
-        "contrib/jquery.json"],
+        "./status-icon-sizes", "contrib/jquery.json"],
 function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
-          map_knowledge, tileinfos, player, options) {
+          map_knowledge, tileinfos, player, options, icon_sizes) {
     "use strict";
 
     function DungeonCellRenderer()
@@ -247,7 +247,6 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 this.render_glyph(x, y, map_cell, false);
 
                 this.render_cursors(cx, cy, x, y);
-                this.draw_ray(x, y, cell);
                 return;
             }
 
@@ -663,22 +662,6 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             }
         },
 
-        draw_ray: function(x, y, cell)
-        {
-            var bg = cell.bg;
-            var bg_idx = cell.bg.value;
-            var renderer = this;
-
-            if (bg.RAY)
-                this.draw_dngn(dngn.RAY, x, y);
-            else if (bg.RAY_OOR)
-                this.draw_dngn(dngn.RAY_OUT_OF_RANGE, x, y);
-            else if (bg.LANDING)
-                this.draw_dngn(dngn.LANDING, x, y);
-            else if (bg.RAY_MULTI)
-                this.draw_dngn(dngn.RAY_MULTI, x, y);
-        },
-
         draw_background: function(x, y, cell)
         {
             var bg = cell.bg;
@@ -808,8 +791,12 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                         this.draw_dngn(dngn.SILENCED, x, y);
                     if (cell.halo == enums.HALO_RANGE)
                         this.draw_dngn(dngn.HALO_RANGE, x, y);
-                    if (cell.halo == enums.HALO_UMBRA)
-                        this.draw_dngn(dngn.UMBRA, x, y);
+                    if (cell.halo >= enums.HALO_UMBRA_FIRST
+                        && cell.halo <= enums.HALO_UMBRA_LAST)
+                    {
+                        var variety = cell.halo - enums.HALO_UMBRA_FIRST;
+                        this.draw_dngn(dngn.UMBRA + variety, x, y);
+                    }
                     if (cell.orb_glow)
                         this.draw_dngn(dngn.ORB_GLOW + cell.orb_glow - 1, x, y);
                     if (cell.quad_glow)
@@ -869,9 +856,46 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                     else if (bg.TRAV_EXCL)
                         this.draw_dngn(dngn.TRAVEL_EXCLUSION_BG, x, y);
                 }
+
+                if (bg.REMEMBERED_INVIS)
+                    this.draw_dngn(dngn.REMEMBERED_INVIS, x, y);
+            }
+        },
+
+        draw_submerged_tile: function(base_idx, idx, x, y, trans, img_scale)
+        {
+            this.ctx.save();
+            try
+            {
+                this.ctx.globalAlpha = trans ? 0.5 : 1.0;
+
+                this.set_nonsubmerged_clip(x, y, 20);
+
+                if (base_idx)
+                    this.draw_main(base_idx, x, y, img_scale);
+
+                this.draw_main(idx, x, y, img_scale);
+            }
+            finally
+            {
+                this.ctx.restore();
             }
 
-            this.draw_ray(x, y, cell);
+            this.ctx.save();
+            try
+            {
+                this.ctx.globalAlpha = trans ? 0.1 : 0.3;
+                this.set_submerged_clip(x, y, 20);
+
+                if (base_idx)
+                    this.draw_main(base_idx, x, y, img_scale);
+
+                this.draw_main(idx, x, y, img_scale);
+            }
+            finally
+            {
+                this.ctx.restore();
+            }
         },
 
         draw_foreground: function(x, y, map_cell, img_scale)
@@ -887,38 +911,8 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 var base_idx = cell.base;
                 if (is_in_water)
                 {
-                    this.ctx.save();
-                    try
-                    {
-                        this.ctx.globalAlpha = cell.trans ? 0.5 : 1.0;
-
-                        this.set_nonsubmerged_clip(x, y, 20);
-
-                        if (base_idx)
-                            this.draw_main(base_idx, x, y, img_scale);
-
-                        this.draw_main(fg_idx, x, y, img_scale);
-                    }
-                    finally
-                    {
-                        this.ctx.restore();
-                    }
-
-                    this.ctx.save();
-                    try
-                    {
-                        this.ctx.globalAlpha = cell.trans ? 0.1 : 0.3;
-                        this.set_submerged_clip(x, y, 20);
-
-                        if (base_idx)
-                            this.draw_main(base_idx, x, y, img_scale);
-
-                        this.draw_main(fg_idx, x, y, img_scale);
-                    }
-                    finally
-                    {
-                        this.ctx.restore();
-                    }
+                    this.draw_submerged_tile(base_idx, fg_idx, x, y,
+                                             cell.trans, img_scale);
                 }
                 else
                 {
@@ -927,11 +921,34 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
 
                     this.draw_main(fg_idx, x, y, img_scale);
                 }
+
+                if (fg_idx >= main.PARCHMENT_LOW && fg_idx <= main.PARCHMENT_HIGH)
+                {
+                    if (cell.overlay1)
+                    {
+                        if (is_in_water)
+                        {
+                            this.draw_submerged_tile(null, cell.overlay1, x, y,
+                                                     cell.trans, img_scale)
+                        }
+                        else
+                            this.draw_main(cell.overlay1, x, y, img_scale);
+                    }
+                    if (cell.overlay2)
+                    {
+                        if (is_in_water)
+                        {
+                            this.draw_submerged_tile(null, cell.overlay2, x, y,
+                                                     cell.trans, img_scale)
+                        }
+                        else
+                            this.draw_main(cell.overlay2, x, y, img_scale);
+                    }
+                }
             }
             else if (options.get("tile_display_mode") == "hybrid")
             {
                 this.render_glyph(x, y, map_cell, true, true);
-                this.draw_ray(x, y, cell);
                 img_scale = undefined; // TODO: make this work?
             }
 
@@ -942,7 +959,11 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.TRAP_WEB, x, y, undefined, undefined, img_scale);
 
             if (fg.S_UNDER)
-                this.draw_icon(icons.SOMETHING_UNDER, x, y, undefined, undefined, img_scale);
+                this.draw_icon(icons.ITEM_STACK_1, x, y, undefined, undefined, img_scale);
+            else if (fg.S_UNDER_GOOD)
+                this.draw_icon(icons.ITEM_STACK_2, x, y, undefined, undefined, img_scale);
+            else if (fg.S_UNDER_ARTEFACT)
+                this.draw_icon(icons.ITEM_STACK_3, x, y, undefined, undefined, img_scale);
 
             // Pet mark
             if (fg.PET)
@@ -951,6 +972,9 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.GOOD_NEUTRAL, x, y, undefined, undefined, img_scale);
             else if (fg.NEUTRAL)
                 this.draw_icon(icons.NEUTRAL, x, y, undefined, undefined, img_scale);
+
+            if (bg.REMEMBERED_INVIS)
+                this.draw_icon(icons.UNSEEN_INVIS_REMEMBERED, x, y, undefined, undefined, img_scale);
 
             var status_shift = 0;
             if (fg.PARALYSED)
@@ -1077,97 +1101,14 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
 
         draw_icon_type: function(idx, x, y, ofsx, ofsy, img_scale)
         {
-            switch (idx)
-            {
-                //These icons are in the lower right, so status_shift doesn't need changing.
-                case icons.BERSERK:
-                case icons.IDEALISED:
-                case icons.TOUCH_OF_BEOGH:
-                case icons.SHADOWLESS:
-                // Anim. weap. and summoned might overlap, but that's okay
-                case icons.SUMMONED:
-                case icons.MINION:
-                case icons.UNREWARDING:
-                case icons.ANIMATED_WEAPON:
-                case icons.VENGEANCE_TARGET:
-                case icons.VAMPIRE_THRALL:
-                case icons.ENKINDLED_1:
-                case icons.ENKINDLED_2:
-                case icons.NOBODY_MEMORY_1:
-                case icons.NOBODY_MEMORY_2:
-                case icons.NOBODY_MEMORY_3:
-                case icons.PYRRHIC:
-                    this.draw_icon(idx, x, y, undefined, undefined, img_scale);
-                    return 0;
-                case icons.DRAIN:
-                case icons.MIGHT:
-                case icons.SWIFT:
-                case icons.DAZED:
-                case icons.HASTED:
-                case icons.SLOWED:
-                case icons.CORRODED:
-                case icons.INFESTED:
-                case icons.WEAKENED:
-                case icons.PETRIFIED:
-                case icons.PETRIFYING:
-                case icons.BOUND_SOUL:
-                case icons.POSSESSABLE:
-                case icons.PARTIALLY_CHARGED:
-                case icons.FULLY_CHARGED:
-                case icons.VITRIFIED:
-                case icons.CONFUSED:
-                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
-                    return 6;
-                case icons.CONC_VENOM:
-                case icons.FIRE_CHAMP:
-                case icons.INNER_FLAME:
-                case icons.PAIN_MIRROR:
-                case icons.STICKY_FLAME:
-                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
-                    return 7;
-                case icons.ANGUISH:
-                case icons.FIRE_VULN:
-                case icons.RESISTANCE:
-                case icons.GHOSTLY:
-                case icons.MALMUTATED:
-                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
-                    return 8;
-                case icons.RECALL:
-                case icons.TELEPORTING:
-                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
-                    return 9;
-                case icons.BLIND:
-                case icons.BRILLIANCE:
-                case icons.SLOWLY_DYING:
-                case icons.WATERLOGGED:
-                case icons.STILL_WINDS:
-                case icons.ANTIMAGIC:
-                case icons.REPEL_MISSILES:
-                case icons.INJURY_BOND:
-                case icons.GLOW_LIGHT:
-                case icons.GLOW_HEAVY:
-                case icons.BULLSEYE:
-                case icons.CURSE_OF_AGONY:
-                case icons.REGENERATION:
-                case icons.RETREAT:
-                case icons.RIMEBLIGHT:
-                case icons.UNDYING_ARMS:
-                case icons.BIND:
-                case icons.SIGN_OF_RUIN:
-                case icons.WEAK_WILLED:
-                case icons.DOUBLED_HEALTH:
-                case icons.KINETIC_GRAPNEL:
-                case icons.TEMPERED:
-                case icons.HEART:
-                case icons.UNSTABLE:
-                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
-                    return 10;
-                case icons.CONSTRICTED:
-                case icons.VILE_CLUTCH:
-                case icons.PAIN_BOND:
-                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
-                    return 11;
-            }
+            var size = icon_sizes.status_icon_size(idx);
+            if (size < 0)
+                return 0;
+            if (size == 0)
+                this.draw_icon(idx, x, y, undefined, undefined, img_scale);
+            else
+                this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
+            return size;
         },
 
         // Helper functions for drawing from specific textures

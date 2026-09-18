@@ -18,6 +18,8 @@
 #include "dungeon.h"
 #include "fineff.h"
 #include "god-conduct.h"
+#include "god-passive.h"
+#include "god-wrath.h"
 #include "hints.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
@@ -25,23 +27,36 @@
 #include "level-state-type.h"
 #include "libutil.h"
 #include "message.h"
+#include "mon-act.h"
 #include "mon-death.h"
 #include "mon-gear.h"
 #include "mon-place.h"
 #include "mon-tentacle.h"
+#include "mutation.h"
 #include "notes.h"
+#include "output.h"
+#include "player-notices.h"
 #include "religion.h"
+#include "spl-transloc.h"
+#include "shout.h"
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
+#include "transform.h"
 #include "traps.h"
+#include "view.h"
 #include "xom.h"
 
 #define ORIG_HD_KEY "orig_hd"
 
-bool feature_mimic_at(const coord_def &c)
+bool base_feature_is_mimic_at(coord_def c)
 {
-    return map_masked(c, MMT_MIMIC);
+    return testbits(env.pgrid(c), FPROP_MIMIC);
+}
+
+bool current_feature_is_mimic_at(coord_def c)
+{
+    return base_feature_is_mimic_at(c) && !is_temp_terrain(c);
 }
 
 item_def* item_mimic_at(const coord_def &c)
@@ -54,7 +69,7 @@ item_def* item_mimic_at(const coord_def &c)
 
 bool mimic_at(const coord_def &c)
 {
-    return feature_mimic_at(c) || item_mimic_at(c);
+    return current_feature_is_mimic_at(c) || item_mimic_at(c);
 }
 
 void monster_drop_things(monster* mons,
@@ -64,18 +79,15 @@ void monster_drop_things(monster* mons,
     // Drop weapons and missiles last (i.e., on top), so others pick up.
     for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; --i)
     {
+        const mon_inv_type slot = static_cast<mon_inv_type>(i);
         int item = mons->inv[i];
         if (item == NON_ITEM || !suitable(env.item[item]))
             continue;
 
-        mons->do_unequip_effects(env.item[item], false, true);
-
-        int old_halo = mons->halo_radius();
-        int old_umbra = mons->umbra_radius();
-
         if (testbits(env.item[item].flags, ISFLAG_SUMMONED))
         {
             item_was_destroyed(env.item[item]);
+            mons->unequip(slot);
             destroy_item(item);
         }
         else
@@ -92,29 +104,29 @@ void monster_drop_things(monster* mons,
                 env.item[item].props.erase("autoinscribe");
             }
 
+            mons->unequip(slot);
+
             // If a monster is swimming, the items are ALREADY underwater.
-            if (move_item_to_grid(&item, mons->pos(), mons->swimming())
-                && player_under_penance(GOD_GOZAG)
+            move_item_to_grid(&item, mons->pos(), mons->swimming());
+
+            if (player_under_penance(GOD_GOZAG)
                 // Dropping items into water/lava may have destroyed them
                 && item != NON_ITEM
                 && env.item[item].base_type == OBJ_GOLD
                 && you.see_cell(mons->pos())
-                && x_chance_in_y(env.item[item].quantity, 100)
-                && you.can_be_dazzled())
+                && x_chance_in_y(env.item[item].quantity, 100))
             {
                 string msg = make_stringf("%s dazzles you with the glint of coin.",
                     god_name(GOD_GOZAG).c_str());
                 mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
                 blind_player(10 + random2(8), ETC_GOLD);
             }
-            mons->inv[i] = NON_ITEM;
         }
-
-        int new_halo = mons->halo_radius();
-        int new_umbra = mons->umbra_radius();
-        if (old_halo != new_halo || old_umbra != new_umbra)
-            invalidate_agrid(true);
     }
+
+    // If the monster died in a wall, try to push the items out of it.
+    if (cell_is_solid(mons->pos()))
+        dgn_check_terrain_items(mons->pos(), true, you.see_cell(mons->pos()));
 }
 
 static bool _valid_type_morph(const monster &mons, monster_type new_mclass)
@@ -231,8 +243,8 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     {
         simple_monster_message(*mons, " form twists and warps, and jellies "
                                "spill out!", true);
-        trj_spawn_fineff::schedule(nullptr, mons, mons->pos(),
-                                   mons->hit_points);
+        schedule_trj_spawn_fineff(nullptr, mons, mons->pos(),
+                                  mons->hit_points);
     }
 
     // Inform listeners that the original monster is gone.
@@ -247,39 +259,31 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     string name;
 
     // Preserve the names of uniques and named monsters.
-    if (mons->type == MONS_ROYAL_JELLY
-        || mons->mname == "shaped Royal Jelly")
+    if (mons_is_mons_class(mons, MONS_ROYAL_JELLY))
     {
         name   = "shaped Royal Jelly";
         flags |= MF_NAME_SUFFIX;
     }
-    else if (mons->type == MONS_LERNAEAN_HYDRA
-             || mons->mname == "shaped Lernaean hydra")
+    else if (mons_is_mons_class(mons, MONS_LERNAEAN_HYDRA))
     {
         name   = "shaped Lernaean hydra";
         flags |= MF_NAME_SUFFIX;
     }
-    else if (mons->mons_species() == MONS_SERPENT_OF_HELL
-             || mons->mname == "shaped Serpent of Hell")
-    {
-        name   = "shaped Serpent of Hell";
-        flags |= MF_NAME_SUFFIX;
-    }
-    else if (mons->type == MONS_ENCHANTRESS
-             || mons->mname == "shaped Enchantress")
+    else if (mons_is_mons_class(mons, MONS_ENCHANTRESS))
     {
         name   = "shaped Enchantress";
+        flags |= MF_NAME_SUFFIX;
+    }
+    else if (mons_is_mons_species(mons, MONS_SERPENT_OF_HELL))
+    {
+        name   = "shaped Serpent of Hell";
         flags |= MF_NAME_SUFFIX;
     }
     else if (!mons->mname.empty())
     {
         if (flags & MF_NAME_MASK)
-        {
             // Remove the replacement name from the new monster
-            flags = flags & ~(MF_NAME_MASK | MF_NAME_DESCRIPTOR
-                              | MF_NAME_DEFINITE | MF_NAME_SPECIES
-                              | MF_NAME_ZOMBIE | MF_NAME_NOCORPSE);
-        }
+            flags &= ~MF_ALL_NAMES;
         else
             name = mons->mname;
     }
@@ -296,8 +300,10 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     const god_type old_god        = mons->god;
     const int  old_hp             = mons->hit_points;
     const int  old_hp_max         = mons->max_hit_points;
-    const bool old_mon_caught     = mons->caught();
     const char old_ench_countdown = mons->ench_countdown;
+
+    const caught_type old_caught  = mons->caught_by();
+    mon_enchant held              = mons->get_ench(ENCH_HELD);
 
     const bool old_mon_unique = mons_is_or_was_unique(*mons);
 
@@ -307,7 +313,7 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
                                 ? draconian_subspecies(*mons)
                                 : mons->type;
         mons->props[ORIGINAL_TYPE_KEY].get_int() = type;
-        if (mons->mons_species() == MONS_HYDRA)
+        if (mons->has_hydra_multi_attack())
             mons->props[OLD_HEADS_KEY].get_int() = mons->num_heads;
     }
     if (!mons->props.exists(ORIG_HD_KEY))
@@ -324,6 +330,12 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     mon_enchant insanity  = mons->get_ench(ENCH_FRENZIED);
     mon_enchant vengeance = mons->get_ench(ENCH_VENGEANCE_TARGET);
     mon_enchant tempered  = mons->get_ench(ENCH_TEMPERED);
+    mon_enchant thrall    = mons->get_ench(ENCH_VAMPIRE_THRALL);
+
+    const bool was_seen = (bool)(mons->flags & MF_SEEN);
+
+    if (mons->affects_agrid())
+        invalidate_agrid();
 
     mons->number       = 0;
 
@@ -365,11 +377,15 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     mons->add_ench(insanity);
     mons->add_ench(vengeance);
     mons->add_ench(tempered);
+    mons->add_ench(thrall);
 
     mons->ench_countdown = old_ench_countdown;
 
     if (mons_class_flag(mons->type, M_INVIS))
         mons->add_ench(ENCH_INVIS);
+
+    if (mons_class_flag(mons->type, M_WARDED))
+        mons->add_ench(mon_enchant(ENCH_WARDING, mons, INFINITE_DURATION));
 
     mons->hit_points = mons->max_hit_points * old_hp / old_hp_max;
 
@@ -403,8 +419,21 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     mons->props.erase(POLY_SET_KEY);
     init_poly_set(mons);
 
-    if (old_mon_caught)
-        check_net_will_hold_monster(mons);
+    if (!do_seen && was_seen)
+        mons->flags |= MF_SEEN;
+
+    if (mons->affects_agrid())
+        invalidate_agrid();
+
+    // Try to keep the monster caught in any existing nets, but if the new form
+    // is net immune, remember to drop the net on the ground.
+    if (old_caught >= CAUGHT_NET)
+    {
+        if (mons->trap_in_net(old_caught == CAUGHT_NET, true))
+            mons->update_ench(held);    // Preserve damage to the net.
+        else if (old_caught == CAUGHT_NET)
+            drop_net_at(mons->pos());
+    }
 
     // Even if the new form can constrict, it might be with a different
     // body part. Likewise, the new form might be too large for its
@@ -413,7 +442,6 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     // evaporating and reforming justifies this behaviour.
     mons->stop_constricting_all();
     mons->stop_being_constricted();
-    mons->clear_far_engulf(true);
 }
 
 // Is the new monster able to live in *any* habitat that the original
@@ -432,23 +460,8 @@ static bool _habitat_matches(bool orig_flies, habitat_type orig_hab,
         return false;
 
     const habitat_type new_hab = mons_habitat_type(new_type, new_type, false);
-    switch (orig_hab)
-    {
-        case HT_AMPHIBIOUS:
-        case HT_AMPHIBIOUS_LAVA:
-            return new_hab == orig_hab;
-        case HT_WATER:
-            return new_hab == orig_hab || new_hab == HT_AMPHIBIOUS;
-        case HT_LAVA:
-            return new_hab == orig_hab || new_hab == HT_AMPHIBIOUS_LAVA;
-        case HT_LAND:
-            return new_hab == orig_hab
-                || new_hab == HT_AMPHIBIOUS
-                || new_hab == HT_AMPHIBIOUS_LAVA;
-        case NUM_HABITATS:
-            break;
-    }
-    return false; // should never happen
+
+    return (new_hab & orig_hab) == orig_hab;
 }
 
 static int _goal_hd(int orig_hd, poly_power_type ppt)
@@ -609,7 +622,6 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (targetc == MONS_NO_MONSTER)
         return simple_monster_message(*mons, " shudders.");
 
-    const bool was_invisible = mons->has_ench(ENCH_INVIS) && !mons->friendly();
     bool could_see = you.can_see(*mons);
     bool need_note = could_see && mons_is_notable(*mons);
     string old_name_a = mons->full_name(DESC_A);
@@ -658,22 +670,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name_a, new_name));
     }
 
-    const bool is_invisible = mons->has_ench(ENCH_INVIS) && !mons->friendly();
-    if (you.see_cell(mons->pos()))
-    {
-        if (was_invisible && !is_invisible)
-        {
-            // If we poly an invisible monster reactivate autopickup.
-            // We need to check for actual invisibility rather than
-            // whether we can see the monster. There are several edge
-            // cases where a monster is visible to the player but we
-            // still need to turn autopickup back on, such as
-            // TSO's halo or sticky flame.
-            autotoggle_autopickup(false);
-        }
-        else if (could_see && !can_see)
-            autotoggle_autopickup(true);
-    }
+    if (could_see && !can_see)
+        mons->sense_if_invisible();
 
     // do this here, so that any "changes into" notes come first
     if (can_see)
@@ -702,10 +700,19 @@ bool mon_can_be_slimified(const monster* mons)
 
 static monster_type _slime_target(const monster &mon)
 {
+    // Easter egg!
+    if (mons_genus(mon.type) == MONS_HYDRA)
+        return MONS_SLYMDRA;
+
     const int hd = mon.get_hit_dice();
     const int target = random_range(hd - 4, hd + 4);
     if (!feat_has_solid_floor(env.grid(mon.pos())))
-        return target < 7 ? MONS_JELLY : MONS_SLIME_CREATURE; // Don't drown.
+    {
+        // Don't drown.
+        return target < 7    ? MONS_JELLY
+               : target < 12 ? MONS_SLIME_CREATURE
+                             : MONS_ROCKSLIME;
+    }
 
     if (target < 3)
         return MONS_ENDOPLASM;
@@ -713,9 +720,8 @@ static monster_type _slime_target(const monster &mon)
         return MONS_JELLY;
     if (target < 12)
         return MONS_SLIME_CREATURE;
-    if (coinflip())
-        return MONS_ACID_BLOB;
-    return MONS_AZURE_JELLY;
+    else
+        return royal_jelly_ejectable_monster();
 }
 
 void slimify_monster(monster* mon)
@@ -734,7 +740,11 @@ void slimify_monster(monster* mon)
 
     monster_polymorph(mon, target, PPT_SLIME);
 
-    mon->attitude = ATT_GOOD_NEUTRAL;
+    // If a monster slimifies and you're not with Jiyva, it shouldn't change
+    // that monster's attitude any more than other polymorph does. If you are
+    // with Jiyva, either let it stay friendly or make it non-hostile.
+    if (you_worship(GOD_JIYVA) && mon->attitude != ATT_FRIENDLY)
+        mon->attitude = ATT_GOOD_NEUTRAL;
 
     mons_make_god_gift(*mon, GOD_JIYVA);
 
@@ -746,63 +756,4 @@ void slimify_monster(monster* mon)
 
     if (mons_is_elven_twin(mon))
         elven_twin_died(mon, false, KILL_YOU, MID_PLAYER);
-}
-
-void seen_monster(monster* mons)
-{
-    set_unique_annotation(mons);
-
-    // id equipment (do this every time we see them, it may have changed)
-    view_monster_equipment(mons);
-
-    // Monster was viewed this turn
-    mons->flags |= MF_WAS_IN_VIEW;
-
-    if (mons->flags & MF_SEEN)
-        return;
-
-    // First time we've seen this particular monster.
-    mons->flags |= MF_SEEN;
-
-    if (crawl_state.game_is_hints())
-        hints_monster_seen(*mons);
-
-    if (mons_is_notable(*mons))
-    {
-        string name = mons->name(DESC_A, true);
-        if (mons->type == MONS_PLAYER_GHOST)
-        {
-            name += make_stringf(" (%s)",
-                                 short_ghost_description(mons, true).c_str());
-        }
-        else if (mons->flags & MF_KNOWN_SHIFTER)
-        {
-            name += make_stringf(" (%sshapeshifter)",
-                mons->has_ench(ENCH_GLOWING_SHAPESHIFTER) ? "glowing " : "");
-        }
-        take_note(Note(NOTE_SEEN_MONSTER, mons->type, 0, name));
-    }
-
-    if (you.unrand_equipped(UNRAND_WYRMBANE))
-    {
-        const item_def *wyrmbane = you.weapon();
-        if (wyrmbane && mons->dragon_level() > wyrmbane->plus)
-            mpr("<green>Wyrmbane glows as a worthy foe approaches.</green>");
-    }
-
-    // attempt any god conversions on first sight
-    do_conversions(mons);
-
-    if (!(mons->flags & MF_TSO_SEEN))
-    {
-        if (mons_gives_xp(*mons, you) && !crawl_state.game_is_arena())
-        {
-            did_god_conduct(DID_SEE_MONSTER, mons->get_experience_level(),
-                            true, mons);
-        }
-        mons->flags |= MF_TSO_SEEN;
-    }
-
-    if (mons_offers_beogh_conversion(*mons))
-        env.level_state |= LSTATE_BEOGH;
 }

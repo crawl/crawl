@@ -12,7 +12,9 @@
 
 #include "abyss.h"
 #include "acquire.h"
+#include "act-iter.h"
 #include "dbg-util.h"
+#include "env.h"
 #include "god-abil.h"
 #include "god-wrath.h"
 #include "item-use.h"
@@ -132,6 +134,15 @@ void wizard_change_species()
     }
 
     change_species_to(sp);
+
+    if (you.can_see_invisible())
+        env.invis_knowledge.clear();
+    else
+    {
+        for (monster_iterator mi; mi; ++mi)
+            if (testbits((*mi)->flags, MF_WAS_IN_VIEW) && !you.can_see(**mi))
+                mi->sense_if_invisible();
+    }
 }
 
 // Casts a specific spell by number or name.
@@ -191,7 +202,7 @@ void wizard_memorise_spec_spell()
         }
     }
 
-    if (get_spell_flags(static_cast<spell_type>(spell)) & spflag::monster)
+    if (spell_is_monster_only(static_cast<spell_type>(spell)))
         mpr("Spell is monster-only - unpredictable behaviour may result.");
     if (!learn_spell(static_cast<spell_type>(spell), true))
         crawl_state.cancel_cmd_repeat();
@@ -205,12 +216,13 @@ void wizard_heal(bool super_heal)
         // Clear more stuff.
         undrain_hp(9999);
         you.magic_contamination = 0;
+        you.redraw_contam = true;
         you.duration[DUR_STICKY_FLAME] = 0;
         you.clear_beholders();
         you.duration[DUR_PETRIFIED] = 0;
         you.duration[DUR_PETRIFYING] = 0;
         you.duration[DUR_CORROSION] = 0;
-        you.duration[DUR_DOOM_HOWL] = 0;
+        you.duration[DUR_OBLIVION_HOWL] = 0;
         you.duration[DUR_WEAK] = 0;
         you.duration[DUR_NO_HOP] = 0;
         you.duration[DUR_DIMENSION_ANCHOR] = 0;
@@ -221,6 +233,7 @@ void wizard_heal(bool super_heal)
         you.props.erase(BARBS_MOVE_KEY);
         you.props.erase(CACOPHONY_XP_KEY);
         you.props.erase(BATFORM_XP_KEY);
+        you.props.erase(WATERY_GRAVE_XP_KEY);
         you.duration[DUR_SICKNESS]  = 0;
         you.duration[DUR_EXHAUSTED] = 0;
         you.duration[DUR_BREATH_WEAPON] = 0;
@@ -235,6 +248,8 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_SAP_MAGIC] = 0;
         you.duration[DUR_SLOW] = 0;
         you.duration[DUR_BLIND] = 0;
+        you.duration[DUR_FLOODED] = 0;
+        you.duration[DUR_DIMINISHED_SPELLS] = 0;
         you.duration[DUR_SIGN_OF_RUIN] = 0;
         you.duration[DUR_SENTINEL_MARK] = 0;
         you.duration[DUR_CANINE_FAMILIAR_DEAD] = 0;
@@ -249,9 +264,14 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_WORD_OF_CHAOS_COOLDOWN] = 0;
         you.duration[DUR_FIRE_VULN] = 0;
         you.duration[DUR_POISON_VULN] = 0;
+        you.duration[DUR_SLIMIFYING] = 0;
+        you.duration[DUR_ANTISWIFT] = 0;
+        you.attribute[ATTR_DOOM] = 0;
+        you.attribute[ATTR_OSTRACISM] = 0;
         delete_all_temp_mutations("Super heal");
         decr_zot_clock();
         you.redraw_stats = true;
+        you.redraw_doom = true;
         gain_draconian_breath_uses(MAX_DRACONIAN_BREATH);
         gain_grave_claw_soul(true, true);
         you.props[ENKINDLE_CHARGES_KEY].get_int() = enkindle_max_charges();
@@ -286,7 +306,7 @@ void wizard_set_piety_to(int newpiety, bool force)
 
     if (you_worship(GOD_XOM))
     {
-        you.piety = newpiety;
+        you.raw_piety = newpiety;
         you.redraw_title = true; // redraw piety display
 
         int newinterest;
@@ -315,7 +335,7 @@ void wizard_set_piety_to(int newpiety, bool force)
         else
             mpr("Interest must be between 0 and 255.");
 
-        mprf("Set piety to %d, interest to %d.", you.piety, newinterest);
+        mprf("Set piety to %d, interest to %d.", you.raw_piety, newinterest);
 
         const string new_xom_favour = describe_xom_favour();
         const string msg = "You are now " + new_xom_favour;
@@ -327,7 +347,7 @@ void wizard_set_piety_to(int newpiety, bool force)
     {
         if (yesno("Are you sure you want to be excommunicated?", false, 'n'))
         {
-            you.piety = 0;
+            you.raw_piety = 0;
             excommunication();
         }
         else
@@ -363,6 +383,29 @@ void wizard_set_gold()
     mprf("You now have %d gold piece%s.", you.gold, you.gold != 1 ? "s" : "");
 }
 
+void wizard_set_gift_timeout()
+{
+    mprf(MSGCH_PROMPT, "Enter new gift timeout (current = %d, Enter for 0): ",
+         you.gift_timeout);
+
+    char buf[30];
+    if (cancellable_get_line_autohist(buf, sizeof buf))
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    const int newtimeout = atoi(buf);
+    if (newtimeout < 0 || newtimeout > 255)
+    {
+        mpr("Gift timeout must be between 0 and 255.");
+        return;
+    }
+
+    you.gift_timeout = newtimeout;
+    mprf("Set gift timeout to %d.", you.gift_timeout);
+}
+
 void wizard_set_piety()
 {
     if (you_worship(GOD_NO_GOD))
@@ -379,7 +422,7 @@ void wizard_set_piety()
     }
 
     mprf(MSGCH_PROMPT, "Enter new piety value (current = %d, Enter for 0): ",
-         you.piety);
+         you.raw_piety);
     char buf[30];
     if (cancellable_get_line_autohist(buf, sizeof buf))
     {
@@ -455,6 +498,8 @@ void wizard_set_skill_level(skill_type skill)
                                       old_amount > amount ? "Lowered"
                                                           : "Reset"),
          skill_name(skill), amount);
+
+    update_four_winds(true);
 }
 
 void wizard_set_all_skills()
@@ -491,6 +536,8 @@ void wizard_set_all_skills()
 
         you.redraw_armour_class = true;
         you.redraw_evasion = true;
+
+        update_four_winds(true);
     }
 }
 
@@ -572,6 +619,67 @@ bool wizard_add_mutation()
                 if (delete_mutation(mutat, "wizard power", true, true))
                     success = true;
         }
+    }
+
+    return success;
+}
+
+bool wizard_toggle_bane()
+{
+    bool success = false;
+    char specs[80];
+
+    msgwin_get_line("Which bane? ", specs, sizeof(specs));
+
+    if (specs[0] == '\0')
+    {
+        canned_msg(MSG_OK);
+        return true;
+    }
+
+    vector<bane_type> partial_matches;
+    bane_type bane = bane_from_name(specs, &partial_matches);
+
+    if (bane == NUM_BANES)
+    {
+        crawl_state.cancel_cmd_repeat();
+
+        if (partial_matches.empty())
+            mpr("No matching bane names.");
+        else
+        {
+            vector<string> matches;
+
+            for (bane_type ban : partial_matches)
+            {
+                const string banname = bane_name(ban, true);
+                ASSERT(!banname.empty()); // `bane_name` is empty if something went wrong getting the desc for `ban`.
+                matches.emplace_back(banname);
+            }
+
+            string prefix = make_stringf("No exact match for bane '%s', possible matches are: ", specs);
+
+            // Use mpr_comma_separated_list() because the list
+            // might be *LONG*.
+            mpr_comma_separated_list(prefix, matches, " and ", ", ",
+                                     MSGCH_DIAGNOSTICS);
+        }
+
+        return false;
+    }
+    else
+    {
+        mprf("Found #%d: %s (\"%s\")", (int) bane,
+             bane_name(bane).c_str(),
+             bane_desc(bane).c_str());
+
+        if (you.has_bane(bane))
+        {
+            remove_bane(bane);
+            success = true;
+        }
+        else
+            success = add_bane(bane, "wizard power");
     }
 
     return success;
@@ -909,16 +1017,30 @@ void wizard_god_mollify()
 
 void wizard_transform()
 {
-    vector<WizardEntry> choices;
-    for (int i = 0; i < NUM_TRANSFORMS; ++i)
+    vector<pair<int, string>> form_names;
+    for (int i = 1; i < NUM_TRANSFORMS; ++i)
     {
-            const auto tr = static_cast<transformation>(i);
+        const auto tr = static_cast<transformation>(i);
 #if TAG_MAJOR_VERSION == 34
-            if (tr == transformation::jelly || tr == transformation::porcupine)
-                continue;
+        if (tr == transformation::porcupine || tr == transformation::hydra
+            || tr == transformation::appendage || tr == transformation::shadow)
+        {
+            continue;
+        }
 #endif
-        choices.emplace_back(WizardEntry(0, transform_name(tr), i));
+        form_names.push_back({i, transform_name(tr)});
     }
+    sort(form_names.begin(), form_names.end(),
+            [](const pair<int, string>& a, const pair<int, string>& b)
+                {
+                    return a.second < b.second;
+                });
+
+    vector<WizardEntry> choices;
+    choices.emplace_back(WizardEntry(0, "None", 0));
+    for (const auto &form_name : form_names)
+        choices.emplace_back(WizardEntry(0, form_name.second, form_name.first));
+
     auto menu = WizardMenu("Which form (ESC to exit)?", choices);
     if (!menu.run(true))
         return;
@@ -928,7 +1050,7 @@ void wizard_transform()
     if (you.default_form == you.form && you.form != transformation::none)
     {
         you.default_form = form; // ehhh
-        you.active_talisman.clear();
+        you.cur_talisman = -1;
     }
     if (!transform(200, form, true) && you.form != form)
         mpr("Transformation failed.");
@@ -977,7 +1099,7 @@ void wizard_xom_acts()
     msgwin_get_line("What action should Xom take? (Blank = any) " ,
                     specs, sizeof(specs));
 
-    const int severity = you_worship(GOD_XOM) ? abs(you.piety - HALF_MAX_PIETY)
+    const int severity = you_worship(GOD_XOM) ? abs(you.raw_piety - HALF_MAX_PIETY)
                                               : random_range(0, HALF_MAX_PIETY);
 
     if (specs[0] == '\0')
@@ -1018,5 +1140,31 @@ void wizard_set_zot_clock()
         mprf("Zot clock should be between 0 and %d", max_zot_clock);
     else
         set_turns_until_zot(turns_left);
+}
+
+void wizard_reset_god_capstones()
+{
+    // generic
+    you.one_time_ability_used.reset();
+
+    // Makhleb
+    for (int i = 0; i < NUM_MUTATIONS; i++)
+    {
+        if (you.innate_mutation[i] && is_makhleb_mark((mutation_type)i))
+        {
+            you.innate_mutation[i]--;
+            delete_mutation((mutation_type)i,"wizard power", false, true, false);
+        }
+    }
+    you.props.erase(MAKHLEB_OFFERED_MARKS_KEY);
+    makhleb_initialize_marks();
+
+    // Okawaru
+    you.props.erase(OKAWARU_WEAPON_GIFTED_KEY);
+    you.props.erase(OKAWARU_ARMOUR_GIFTED_KEY);
+    you.props.erase(OKAWARU_WEAPONS_KEY);
+    you.props.erase(OKAWARU_ARMOUR_KEY);
+
+    mpr("Reset capstone god abilities.");
 }
 #endif

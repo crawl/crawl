@@ -394,9 +394,9 @@ function item_resist(str, it)
         return 2
       elseif ego == "fire resistance" or ego == "resistance"
              or subtype == "ring of protection from fire"
-             or name:find("gold dragon") or subtype == "ring of fire" then
+             or name:find("gold dragon") then
         return 1
-      elseif name:find("ice dragon") or subtype == "ring of ice" then
+      elseif name:find("ice dragon") then
         return -1
       else
         return 0
@@ -406,9 +406,9 @@ function item_resist(str, it)
         return 2
       elseif ego == "cold resistance" or ego == "resistance"
              or subtype == "ring of protection from cold"
-             or name:find("gold dragon") or subtype == "ring of ice" then
+             or name:find("gold dragon") then
         return 1
-      elseif name:find("fire dragon") or subtype == "ring of fire" then
+      elseif name:find("fire dragon") then
         return -1
       else
         return 0
@@ -1664,7 +1664,7 @@ local scary_monsters = {
   ["Xtahua"] = check_resist(100,"rF",1),
   ["deep elf annihilator"] = 100,
   ["deep elf sorcerer"] = 100,
-  ["the Enchantress"] = 100,
+  ["Enchantress"] = 100,
   ["Vashnia"] = 100,
   ["Sojobo"] = 100,
   ["Roxanne"] = 100,
@@ -1761,7 +1761,7 @@ local bia_monsters = {
 
   ["deep troll shaman"] = 100,
   ["spriggan air mage"] = check_resist(100,"rElec",1),
-  ["the Enchantress"] = 100,
+  ["Enchantress"] = 100,
   ["Sojobo"] = 100,
   ["Roxanne"] = 100,
   ["Erolcha"] = 100,
@@ -1834,7 +1834,7 @@ local hand_monsters = {
   ["guardian sphinx"] = 100,
   ["great orb of eyes"] = 100,
   ["vault sentinel"] = 100,
-  ["the Enchantress"] = 100,
+  ["Enchantress"] = 100,
   ["satyr"] = 100,
   ["vampire knight"] = 100,
   ["siren"] = 100,
@@ -2401,7 +2401,7 @@ function mon_speed_num(m)
   if m:status("slow") then
     num = num - 1
   end
-  if m:name():find("spriggan") or m:name() == "the Enchantress" then
+  if m:name():find("spriggan") or m:name() == "Enchantress" then
     num = num + 1
   elseif m:name():find("naga") or m:name() == "Vashnia" then
     num = num - 1
@@ -2497,7 +2497,7 @@ function check_monsters(r, mlist)
   local xl = you.xl()
   for _,e in ipairs(enemy_list) do
     if supdist(e.x,e.y) <= r then
-      if not contains_string_in(e.m:name(), {"skeleton", "zombie",
+      if not contains_string_in(e.m:name(), {"draugr", "zombie",
          "simulacrum", "spectral"}) then
         local name = e.m:name()
         local entry = mlist[name]
@@ -5548,7 +5548,7 @@ end
 
 -- adding some clua for this would be better
 function can_use_stairs(mname)
-  if mname:find("zombie") or mname:find("skeleton") or mname:find("spectral")
+  if mname:find("zombie") or mname:find("draugr") or mname:find("spectral")
      or mname:find("simulacrum") or mname:find("oklob")
      or mname:find("statue") or mname:find("ballistomycete")
      or mname == "scrub nettle" or mname == "lightning spire"

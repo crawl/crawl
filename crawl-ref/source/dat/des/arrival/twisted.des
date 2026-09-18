@@ -9,6 +9,8 @@
 # extremely long headers, so we put them here.
 ##############################################################################
 
+: crawl_require('dlua/vault.lua')
+
 ##############################################################################
 # 37 x 22 -- this one is huge and twisted, but it's also old...
 NAME:   dpeg_arrival_water_fire
@@ -94,10 +96,10 @@ KMONS:   I = demigod ; nothing
 KMONS:   J = spriggan ; nothing
 KMONS:   K = minotaur ; nothing
 KMONS:   L = demonspawn ; nothing
-KMONS:   M = ghoul
+KMONS:   M = revenant
 KMONS:   N = tengu ; nothing
 KMONS:   O = merfolk ; nothing
-KMONS:   P = vampire ; nothing
+KMONS:   P = poltergeist
 KMONS:   Q = felid
 KMONS:   R = octopode ; nothing
 KMONS:   S = gargoyle ; nothing
@@ -106,7 +108,7 @@ KMONS:   U = vine stalker ; nothing
 KMONS:   V = barachi ; nothing
 KMONS:   W = gnoll ; nothing
 KMONS:   X = djinni ; nothing
-KMONS:   Y = armataur ; nothing
+KMONS:   Y = centaur ; nothing
 KMONS:   Z = oni ; nothing
 KMONS:   1 = goblin ; nothing
 SUBST:   - = ABCDEFGHIJKLMNOPQRSTUVWXYZ1
@@ -130,7 +132,7 @@ TAGS:    arrival no_monster_gen no_pool_fixup no_trap_gen
 ORIENT:  west
 KPROP:   M = no_tele_into
 NSUBST:  M = 2:E / * = M E:2
-KFEAT:   E = permanent teleport trap
+KFEAT:   E = trap_teleport_permanent
 KFEAT:   MNOQR = shallow_water
 SHUFFLE: M/N/O/P/Q/R
 SUBST:   P = MNO
@@ -142,7 +144,7 @@ KMONS: M = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
            revenant / tengu ; nothing / merfolk ; nothing / poltergeist / \
            felid / octopode ; nothing / djinni ; nothing / \
            gargoyle ; nothing / formicid ; nothing / vine stalker ; nothing / \
-           barachi ; nothing / gnoll ; nothing / armataur ; nothing / \
+           barachi ; nothing / gnoll ; nothing / centaur ; nothing / \
            oni ; nothing / goblin ; nothing
 # Player monsters, zombie versions (undead, vine stalkers, gargoyles and djinni
 # don't leave corpses):
@@ -150,24 +152,23 @@ KMONS: N = human zombie / elf zombie / dwarf zombie / kobold zombie / \
            naga zombie / troll zombie / draconian zombie / demigod zombie / \
            spriggan zombie / minotaur zombie / demonspawn zombie / \
            tengu zombie / merfolk zombie / felid zombie / octopode zombie / \
-           formicid zombie / barachi zombie / gnoll zombie / armataur zombie / \
+           formicid zombie / barachi zombie / gnoll zombie / centaur zombie / \
            oni zombie / goblin zombie
-# Player monsters, skeleton versions (octopodes and formicids drop out because
-# they have no skeletons):
-KMONS: N = human skeleton / elf skeleton / dwarf skeleton / kobold skeleton / \
-           naga skeleton / troll skeleton / draconian skeleton / \
-           demigod skeleton / spriggan skeleton / minotaur skeleton / \
-           demonspawn skeleton / tengu skeleton / merfolk skeleton / \
-           felid skeleton /  barachi skeleton / gnoll skeleton / \
-           armataur skeleton / oni skeleton / goblin skeleton
+# Player monsters, skeletonish versions (octopodes and formicids drop out
+# because they have no bones):
+: local d = "draugr ; mundane long sword | mundane mace"
+: kmons("N = human " .. d .. " / elf " .. d .. " / dwarf " .. d .. " / " ..
+:           "kobold " .. d .. " / naga " .. d .. " / troll " .. d .. " / " ..
+:           "draconian " .. d .. " / demigod " .. d .. " / spriggan " .. d .. " / " ..
+:           "minotaur " .. d .. " / demonspawn " .. d .. " / tengu " .. d .. " / " ..
+:           "merfolk " .. d .. " / felid " .. d .. " / barachi " .. d .. " / " ..
+:           "gnoll " .. d .. " / centaur " .. d .. " / oni " .. d .. " / " ..
+:           "goblin " .. d .. " / revenant")
 # And now for something completely different (if any of these turn out to be
 # able to escape or project spells out of their cells, they should be removed):
-KMONS: Q = orb of fire / ice dragon / shadow dragon / iron dragon / \
+KMONS: Q = storm dragon / shadow dragon / iron dragon / \
            golden dragon w:1 / quicksilver dragon w:1 / \
-           tentacled monstrosity / black draconian w:1 ; nothing / \
-           yellow draconian w:1 ; nothing / green draconian w:1 ; nothing / \
-           purple draconian w:1 ; nothing / red draconian w:1 ; nothing / \
-           white draconian w:1 ; nothing
+           tentacled monstrosity / base draconian w:6 ; nothing
 # Let's show off those many tiles for these weird things.
 KMONS: R = large abomination / small abomination w:1
 MAP
@@ -395,7 +396,7 @@ KMONS:   3 = orc warrior
 : elseif rnd == 1 then
 KFEAT:   C = altar_lugonu
 KFEAT:   D = enter_abyss
-KMONS:   1 = iron imp / ufetubus / shadow imp / crimson imp / white imp w:5
+KMONS:   1 = shadow imp / crimson imp / white imp w:5 / drude w:5
 SUBST:   t : U'''', 23 = 0
 : elseif rnd == 2 then
 KFEAT:   C = altar_jiyva
@@ -628,18 +629,16 @@ ENDMAP
 NAME:    dpeg_arrival_caged_fury
 TAGS:    arrival no_rotate
 ORIENT:  float
-MONS:    w:30 nothing / giant cockroach / w:2 ribbon worm
-MONS:    w:30 nothing / endoplasm
-MONS:    w:20 nothing / jackal / rat
-MONS:    w:30 nothing / endoplasm / w:2 jelly / giant cockroach / w:2 ribbon worm / \
-         w:5 jackal / w:5 rat
-FTILE:   1234ABCDEabcdem = floor_dirt
+MONS:    clockroach w:2 / ribbon worm / jelly, endoplasm, jackal / rat
+MONS:    endoplasm / dart slug w:12 / jackal w:5 / rat w:5
+NSUBST:  1 = 1:1 / 1:1' / *:'
+SUBST:   2 = 2''', 3 = 33', 4 = 4'
+FTILE:   1234ABCDEabcdem' = floor_dirt
 SHUFFLE: abcde / fghij
-SUBST:   f=A, g=B, h=C, i=D, j=E
-SUBST:   abcde = mx
-SUBST:   ABCDE : mx
+SUBST:   f = A, g = B, h = C, i = D, j = E
+SUBST:   abcde = mx, ABCDE : mx
 SHUFFLE: xc, 123
-KMASK:   T = no_monster_gen
+KPROP:   1234' = no_tele_into
 MAP
 .................
 .xxxxxxxxxxxxxxx.
@@ -705,7 +704,7 @@ KMONS:  ! = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
             revenant / tengu ; nothing / merfolk ; nothing / poltergeist / \
             felid / octopode ; nothing / djinni ; nothing / \
             gargoyle ; nothing / formicid ; nothing / vine stalker ; nothing / \
-            barachi ; nothing / gnoll ; nothing / armataur ; nothing / \
+            barachi ; nothing / gnoll ; nothing / centaur ; nothing / \
             oni ; nothing / goblin ; nothing
 KPROP:  Kw'! = no_tele_into
 KMASK:  '! = no_item_gen
@@ -739,7 +738,7 @@ KMONS:  ! = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
             revenant / tengu ; nothing / merfolk ; nothing / poltergeist / \
             felid / octopode ; nothing / djinni ; nothing / \
             gargoyle ; nothing / formicid ; nothing / vine stalker ; nothing / \
-            barachi ; nothing / gnoll ; nothing / armataur ; nothing / \
+            barachi ; nothing / gnoll ; nothing / centaur ; nothing / \
             oni ; nothing / goblin ; nothing
 KPROP:  Kw'! = no_tele_into
 KMASK:  '! = no_item_gen
@@ -813,7 +812,7 @@ NAME:    nagdon_arrival_zigzag_paths
 TAGS:    arrival no_trap_gen no_monster_gen
 ORIENT:  float
 MONS:    plant, toadstool
-ITEM:    orc skeleton / kobold skeleton / goblin skeleton / place:D:1 skeleton
+: item(vault_species_skeletons(_G, "early"))
 : if crawl.one_chance_in(3) then
   SUBST:   GHIJ = x
   SUBST:   " = .
@@ -861,7 +860,7 @@ SUBST:   x : x c:1
   SUBST:   x = t
   SUBST:   1 : 2 T
 : end
-KFEAT:   A = abandoned_shop / stone_arch / shaft trap / teleport trap
+KFEAT:   A = abandoned_shop / stone_arch / shaft / trap_teleport
 NSUBST:  A = A / x
 SUBST:   X = x
 SUBST:   ([ = .
@@ -886,7 +885,7 @@ XXxxxxxxx'xxxxx'x'JxxXX   XXxxGHIx@
 ENDMAP
 
 NAME: nicolae_arrival_memento_mori
-TAGS: arrival no_monster_gen no_trap_gen
+TAGS: arrival no_monster_gen no_trap_gen uniq_your_own_corpse
 ORIENT: float
 SUBST: n = nN
 KPROP: u = no_tele_into

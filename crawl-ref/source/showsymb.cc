@@ -107,7 +107,7 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
     if (feat == DNGN_SHALLOW_WATER && player_in_branch(BRANCH_SHOALS))
         colour = ETC_WAVES;
 
-    if (feat_is_tree(feat) && env.forest_awoken_until)
+    if (cell.flags & MAP_AWOKEN_FOREST)
         colour = ETC_AWOKEN_FOREST;
 
     if (feat == DNGN_MUD)
@@ -139,6 +139,8 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
         }
         else if (cell.flags & MAP_SILENCED)
             colour = CYAN; // Silence but no holy/unholy
+        else if (env.pgrid(loc) & FPROP_SEISMOROCK)
+            colour = BROWN;
         else if (cell.flags & MAP_ORB_HALOED)
             colour = ETC_ORB_GLOW;
         else if (cell.flags & MAP_QUAD_HALOED)
@@ -150,27 +152,10 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
 
 static monster_type _show_mons_type(const monster_info& mi)
 {
-    if (mi.type == MONS_SLIME_CREATURE && mi.slime_size > 1)
-        return MONS_MERGED_SLIME_CREATURE;
-    else if (mi.type == MONS_ZOMBIE)
-    {
-        return mons_zombie_size(mi.base_type) == Z_BIG ?
-            MONS_ZOMBIE_LARGE : MONS_ZOMBIE_SMALL;
-    }
-    else if (mi.type == MONS_SKELETON)
-    {
-        return mons_zombie_size(mi.base_type) == Z_BIG ?
-            MONS_SKELETON_LARGE : MONS_SKELETON_SMALL;
-    }
-    else if (mi.type == MONS_SIMULACRUM)
-    {
-        return mons_zombie_size(mi.base_type) == Z_BIG ?
-            MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
-    }
-    else if (mi.type == MONS_SENSED)
+    if (mi.type == MONS_SENSED)
         return mi.base_type;
-
-    return mi.type;
+    else
+        return mi.type;
 }
 
 static int _get_mons_colour(const monster_info& mi)
@@ -185,12 +170,28 @@ static int _get_mons_colour(const monster_info& mi)
 
     int col = mi.colour();
 
-    // We really shouldn't store unmodified colour. This hack compares
-    // effective type, but really, all redefinitions should work instantly,
-    // rather than for newly spawned monsters only.
-    monster_type stype = _show_mons_type(mi);
-    if (stype != mi.type && mi.type != MONS_SENSED)
-        col = mons_class_colour(stype);
+    // Automatically adjust the color of a few monsters based on their state,
+    // assuming the user has not remapped their colour.
+    if (col == mons_class_colour(mi.type))
+    {
+        if (mi.type == MONS_SLIME_CREATURE)
+        {
+            if (mi.slime_size == 2)
+                col = LIGHTBLUE;
+            else if (mi.slime_size > 2 && mi.slime_size <= 4)
+                col = LIGHTCYAN;
+            else if (mi.slime_size == 5)
+                col = LIGHTMAGENTA;
+        }
+        else if (mi.type == MONS_ZOMBIE && mi.hd > 10)
+            col = YELLOW;
+        else if (mi.type == MONS_SIMULACRUM && mi.hd > 10)
+            col = LIGHTCYAN;
+        else if (mi.type == MONS_DRAUGR && mi.hd > 10)
+            col = WHITE;
+        else if (mi.type == MONS_SPECTRAL_THING && mi.hd > 10)
+            col = LIGHTGREEN;
+    }
 
     if (mi.is(MB_ROLLING))
         col = ETC_BONE;
@@ -239,14 +240,9 @@ static int _get_mons_colour(const monster_info& mi)
         }
     }
 
-    // Backlit monsters are fuzzy and override colours, but not highlights.
-    if (!crawl_state.game_is_arena()
-        && !you.can_see_invisible()
-        && mi.is(MB_INVISIBLE)
-        && mi.attitude != ATT_FRIENDLY)
-    {
+    // 'Remembered' invisible monsters override colours.
+    if (!crawl_state.game_is_arena() && mi.is(MB_REMEMBERED_INVIS))
         col = (col & COLFLAG_MASK) | DARKGREY;
-    }
 
     return col;
 }
@@ -301,15 +297,26 @@ static cglyph_t _get_item_override(const item_def &item)
     return g;
 }
 
+bool show_terrain_before_item(dungeon_feature_type feat)
+{
+    return feat && feat_is_solid(feat)
+           || feat_has_dry_floor(feat)
+              && feat != DNGN_FLOOR
+              && feat != DNGN_ORB_DAIS
+              && !feat_is_open_door(feat)
+              && feat != DNGN_ABANDONED_SHOP
+              && feat != DNGN_STONE_ARCH
+              && feat != DNGN_EXPIRED_PORTAL
+              && !feat_is_fountain(feat)
+              && feat != DNGN_DECORATIVE_FLOOR;
+}
+
 show_class get_cell_show_class(const map_cell& cell,
                                bool only_stationary_monsters)
 {
-    if (cell.invisible_monster())
-        return SH_INVIS_EXPOSED;
-
-    if (cell.monster() != MONS_NO_MONSTER
+    if (cell.mon_type() != MONS_NO_MONSTER
         && (!only_stationary_monsters
-            || mons_class_is_stationary(cell.monster())))
+            || mons_class_is_stationary(cell.mon_type())))
     {
         return SH_MONSTER;
     }
@@ -317,19 +324,8 @@ show_class get_cell_show_class(const map_cell& cell,
     if (cell.cloud() != CLOUD_NONE)
         return SH_CLOUD;
 
-    const dungeon_feature_type feat = cell.feat();
-    if (feat && feat_is_solid(feat)
-        || feat_has_dry_floor(feat)
-           && feat != DNGN_FLOOR
-           && feat != DNGN_ORB_DAIS
-           && !feat_is_open_door(feat)
-           && feat != DNGN_ABANDONED_SHOP
-           && feat != DNGN_STONE_ARCH
-           && feat != DNGN_EXPIRED_PORTAL
-           && !feat_is_fountain(feat))
-    {
+    if (show_terrain_before_item(cell.feat()))
         return SH_FEATURE;
-    }
 
     if (cell.item())
         return SH_ITEM;
@@ -339,26 +335,6 @@ show_class get_cell_show_class(const map_cell& cell,
 
     return SH_NOTHING;
 }
-
-static const unsigned short ripple_table[] =
-{
-     BLUE,          // BLACK        => BLUE (default)
-     BLUE,          // BLUE         => BLUE
-     GREEN,         // GREEN        => GREEN
-     CYAN,          // CYAN         => CYAN
-     RED,           // RED          => RED
-     MAGENTA,       // MAGENTA      => MAGENTA
-     BROWN,         // BROWN        => BROWN
-     DARKGREY,      // LIGHTGREY    => DARKGREY
-     DARKGREY,      // DARKGREY     => DARKGREY
-     BLUE,          // LIGHTBLUE    => BLUE
-     GREEN,         // LIGHTGREEN   => GREEN
-     BLUE,          // LIGHTCYAN    => BLUE
-     RED,           // LIGHTRED     => RED
-     MAGENTA,       // LIGHTMAGENTA => MAGENTA
-     BROWN,         // YELLOW       => BROWN
-     LIGHTGREY,     // WHITE        => LIGHTGREY
-};
 
 static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
                                            const coord_def& loc,
@@ -374,19 +350,9 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
 
     switch (cls)
     {
-    case SH_INVIS_EXPOSED:
-        ASSERT(cell.invisible_monster());
-
-        show.cls = SH_INVIS_EXPOSED;
-        if (cell_cloud != CLOUD_NONE)
-            g.col = cell.cloud_colour();
-        else
-            g.col = ripple_table[cell.feat_colour() & 0xf];
-        break;
-
     case SH_MONSTER:
     {
-        show = cell.monster();
+        show = cell.mon_type();
         const monster_info* mi = cell.monsterinfo();
         ASSERT(mi);
 
@@ -486,7 +452,7 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
             == CTVARY_DUR)
         {
             // duration is already clamped to 0-3
-            int dur = cell.cloudinfo()->duration;
+            int dur = cell.cloudinfo()->variety;
             switch (dur)
             {
             case 0:
@@ -540,7 +506,7 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
             g.col = eitem->get_colour();
 
         // monster(mimic)-owned items have link = NON_ITEM+1+midx
-        if (cell.flags & MAP_MORE_ITEMS)
+        if (cell.flags & (MAP_MORE_ITEMS | MAP_MORE_ITEMS_GOOD | MAP_MORE_ITEMS_ARTEFACT))
             g.col |= COLFLAG_ITEM_HEAP;
         break;
     }
@@ -563,6 +529,9 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
 
         g.col |= COLFLAG_REVERSE;
     }
+
+    if (cell.flags & MAP_BFB_CORPSE)
+        g.col |= COLFLAG_UNUSUAL_MASK;
 
     if (!g.ch)
     {
@@ -615,7 +584,7 @@ cglyph_t get_mons_glyph(const monster_info& mi)
 
     g.ch = mons_char(stype);
     g.col = _get_mons_colour(mi);
-    g.col = real_colour(g.col);
+    g.col = real_colour(g.col, mi.pos);
     return g;
 }
 

@@ -8,10 +8,11 @@
 #include "coord.h"
 #include "fprop.h"
 #include "map-cell.h"
+#include "map-knowledge.h"
 #include "mapmark.h"
 #include "monster.h"
+#include "mon-lurk.h"
 #include "shopping.h"
-#include "trap-def.h"
 
 using std::vector;
 
@@ -24,7 +25,6 @@ typedef vector<unique_ptr<vault_placement>> vault_placement_refv;
 
 typedef FixedArray< map_cell, GXM, GYM > MapKnowledge;
 
-class final_effect;
 struct crawl_environment
 {
     colour_t rock_colour;
@@ -54,6 +54,9 @@ struct crawl_environment
     string_set                               level_uniq_maps;
     string_set                               level_uniq_map_tags;
     string_set                               level_layout_types;
+    // copied from branch_uniq_map_tags, copied back again after level gen
+    // (if level is vetoed we need to reset to the original)
+    string_set                               branch_uniq_map_tags;
 
     string                                   level_build_method;
 
@@ -68,12 +71,15 @@ struct crawl_environment
     unique_ptr<MapKnowledge>                 map_forgotten;
     set<coord_def> visible;
 
+    // Tracking of invisible monsters that the player was recently aware of,
+    // but cannot currently see.
+    invis_monster_knowledge                  invis_knowledge;
+
     vector<coord_def>                        travel_trail;
 
     map<coord_def, cloud_struct> cloud;
 
     map<coord_def, shop_struct> shop; // shop list
-    map<coord_def, trap_def> trap; // trap list
 
     FixedVector< monster_type, MAX_MONS_ALLOC > mons_alloc;
     map_markers                              markers;
@@ -96,12 +102,13 @@ struct crawl_environment
     unsigned int dactions_done;
 
     coord_def sanctuary_pos;
-    coord_def orb_pos;
     int sanctuary_time;
     int forest_awoken_until;
     bool forest_is_hostile;
     int density;
     int absdepth0;
+
+    vector<lurker_data> lurkers;
 
     // Remaining fields not marshalled:
 
@@ -111,20 +118,13 @@ struct crawl_environment
     // Mapping mid->mindex until the transition is finished.
     map<mid_t, unsigned short> mid_cache;
 
-    // Things to happen when the current attack/etc finishes.
-    vector<final_effect *> final_effects;
-    // Copies of monsters cached so they can be looked up during a final_effect
-    // that will be processed after their death. Used mainly to assign proper
-    // blame for dead exploders. (Cleared every time final_effects is)
-    vector<monster> final_effect_monster_cache;
-
     // A stack that accumulates subvaults being placed. A failure may pop a
     // part of the stack before retrying.
     vector<string> new_subvault_names, new_subvault_tags;
     // A set of the unique subvaults being placed. These are considered used
     // for the purposes of placing additional subvaults.
     string_set new_used_subvault_names;
-    // A set of uniq_ or luniq_ map tags being placed.
+    // A set of uniq_, luniq_ or buniq_ map tags being placed.
     string_set new_used_subvault_tags;
 
     // Vault currently being placed, for crash dump purposes.

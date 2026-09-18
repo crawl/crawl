@@ -1,14 +1,15 @@
 name: "martyred shade"
-glyph: {char: "W", colour: yellow}
+glyph: {char: "ŵ", colour: yellow}
 flags: [flies, speaks, insubstantial, fast_regen, has_aura]
+exp: 307
 genus: phantom
 holiness: [undead]
 will: 60
 attacks:
 hd: 11
-hp_10x: 605
-ac: 0
-ev: 14
+hp_10x: 320
+ac: 8
+ev: 18
 intelligence: human
 speed: 7
 uses: open_doors

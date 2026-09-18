@@ -15,6 +15,7 @@ enum attribute_type
     ATTR_DELAYED_FIREBALL,      // bwr: reserve fireballs
 #endif
     ATTR_HELD,                  // caught in a net or web
+                                // (If netted, is the remaining durability of the net.)
     ATTR_ABYSS_ENTOURAGE,       // maximum number of hostile monsters in
                                 // sight of the player while in the Abyss.
     ATTR_DIVINE_VIGOUR,         // strength of Ely's Divine Vigour
@@ -36,17 +37,17 @@ enum attribute_type
     ATTR_INVIS_UNCANCELLABLE,  // Spell/potion of invis is in effect.
 #endif
     ATTR_PERM_FLIGHT,          // Cache for flight from equipment
+#if TAG_MAJOR_VERSION == 34
     ATTR_SEEN_INVIS_TURN,      // Last turn you saw something invisible.
     ATTR_SEEN_INVIS_SEED,      // Random seed for invis monster positions.
-#if TAG_MAJOR_VERSION == 34
     ATTR_UNUSED3,            // old Beastly Appendage
 #endif
     ATTR_TITHE_BASE,           // Remainder of untithed gold.
     ATTR_EVOL_XP,              // XP needed for next [d]evolution mutation
     ATTR_LIFE_GAINED,          // XL when a felid gained a life.
     ATTR_TEMP_MUTATIONS,       // Number of temporary mutations the player has.
-    ATTR_TEMP_MUT_XP,          // Amount of XP remaining before some temp muts
-                               // will be removed
+    ATTR_TEMP_MUT_KILLS,       // Number of kills remaining before some temp
+                               // mutations will be removed.
 #if TAG_MAJOR_VERSION == 34
     ATTR_NEXT_RECALL_TIME,     // aut remaining until next ally will be recalled
     ATTR_NEXT_RECALL_INDEX,    // index+1 into recall_list for next recall
@@ -106,5 +107,11 @@ enum attribute_type
     ATTR_DEATHS_DOOR_HP,       // How much HP we should have under Death's Door
     ATTR_VOUCHER,              // How many shop vouchers you have
     ATTR_TRAITOR,              // God who has been abandoned with an invocations title
+    ATTR_DOOM,                 // How much Doom the player has accrued
+    ATTR_OSTRACISM,            // How much your piety is temporarily capped by
+    ATTR_LAST_CONTAM,          // Timestamp of when contam was last inflicted
+    ATTR_SUNDERING_CHARGE,     // Number of standard attack actions that have
+                               // happened since the last time the player spent
+                               // a turn without attempting an attack.
     NUM_ATTRIBUTES
 };

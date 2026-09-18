@@ -10,6 +10,7 @@
 #include <cmath>
 #include <sstream>
 
+#include "act-iter.h"
 #include "art-enum.h"
 #include "artefact.h"
 #include "chardump.h"
@@ -47,6 +48,7 @@
 #include "stringutil.h"
 #include "tag-version.h"
 #include "terrain.h"
+#include "tilepick.h"
 #include "transform.h"
 #include "traps.h"
 #include "viewchar.h"
@@ -56,14 +58,11 @@ static shared_ptr<quiver::action> _fire_prompt_for_item();
 static int  _get_dart_chance(const int hd);
 static bool _thrown_object_destroyed(const item_def &item);
 
-bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
-                           const item_def& projectile)
+bool is_penetrating_attack(const item_def& weapon)
 {
-    return is_throwable(&attacker, projectile)
-            && projectile.is_type(OBJ_MISSILES, MI_JAVELIN)
-           || weapon
-              && (get_weapon_brand(*weapon) == SPWPN_PENETRATION
-                  || is_unrandom_artefact(*weapon, UNRAND_STORM_BOW));
+    return weapon.is_type(OBJ_MISSILES, MI_JAVELIN)
+            || get_weapon_brand(weapon) == SPWPN_PENETRATION
+            || is_unrandom_artefact(weapon, UNRAND_STORM_BOW);
 }
 
 class fire_target_behaviour : public targeting_behaviour
@@ -207,8 +206,13 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
 
     if (get_ammo_brand(*item) == SPMSL_SILVER && mi.is(MB_CHAOTIC))
         descs.emplace_back("chaotic");
-    if (item->is_type(OBJ_MISSILES, MI_THROWING_NET) && mi.net_immune())
-        descs.emplace_back("immune to nets");
+    if (item->is_type(OBJ_MISSILES, MI_THROWING_NET))
+    {
+        if (mi.net_immune())
+            descs.emplace_back("immune to nets");
+        else if (mi.net_escape_capable())
+            descs.emplace_back("can blink free");
+    }
 
     // Display the chance for a dart of para/confuse/sleep/frenzy
     // to affect monster
@@ -294,29 +298,20 @@ static shared_ptr<quiver::action> _fire_prompt_for_item()
 
     int slot = -1;
     const string title = make_stringf(
-        "<lightgray>Fire%s/use which item?%s</lightgray>",
-        (can_throw ? "/throw" : ""),
-        (can_throw ? " ([<w>*</w>] to toss any item)" : ""));
-    const string alt_title =
-        "<lightgray>Toss away which item?</lightgray>";
-    int selector = fireables ? OSEL_QUIVER_ACTION : OSEL_ANY;
+        "<lightgray>Fire%s/use which item?</lightgray>",
+        (can_throw ? "/throw" : ""));
     // TODO: the output api here is awkward
     // TODO: it would be nice if items with disabled actions got grayed out
     slot = prompt_invent_item(
                 title.c_str(),
                 menu_type::invlist,
-                selector, OPER_FIRE,
-                invprompt_flag::no_warning // warning handled in quiver
-                    | invprompt_flag::hide_known,
-                '\0',
-                can_throw ? alt_title.c_str() : nullptr,
-                &selector);
+                OSEL_QUIVER_ACTION, OPER_FIRE,
+                invprompt_flag::no_warning, // warning handled in quiver
+                '\0');
     if (slot == -1)
         return nullptr;
 
-    return selector == OSEL_ANY && can_throw
-        ? quiver::ammo_to_action(slot, true) // throw/toss only
-        : quiver::slot_to_action(slot, false); // use
+    return quiver::slot_to_action(slot);
 }
 
 // Returns true if warning is given.
@@ -414,14 +409,7 @@ void fire_item_no_quiver(dist *target)
     // handles slot == -1
     if (!a || !a->is_valid())
     {
-        string warn;
-        if (a && a->get_item() >= 0
-                    && !quiver::toss_validate_item(a->get_item(), &warn))
-        {
-            mpr(warn);
-        }
-        else if (!a)
-            canned_msg(MSG_OK);
+        canned_msg(MSG_OK);
         return;
     }
 
@@ -436,89 +424,73 @@ void fire_item_no_quiver(dist *target)
     else
         q.get()->trigger(*target);
 
-    if (target->isCancel)
+    if (q.get()->target.isCancel)
         canned_msg(MSG_OK);
+    else
+        you.last_fired = a->get_item();
 }
 
-static string _ammo_name(const item_def &item, item_def const *launcher)
-{
-    if (launcher && is_unrandom_artefact(*launcher, UNRAND_DAMNATION))
-        return "a damnation bolt";
-    if (is_artefact(item))
-        return "the " + item.name(DESC_PLAIN);
-    return article_a(item.name(DESC_PLAIN), true);
-}
+static void _player_shoot(ranged_attack_beam &pbolt, bool allow_salvo = true);
 
 static bool _returning(const item_def &item)
 {
     return item.is_type(OBJ_MISSILES, MI_BOOMERANG);
 }
 
-static void _setup_missile_beam(const actor *agent, bolt &beam,
-                                item_def &item, item_def const *launcher)
+ranged_attack_beam::ranged_attack_beam(actor& agent, item_def& item)
+    : atk(ranged_attack(&agent, nullptr, &item))
+{
+    initialise_beam(agent, item);
+}
+
+ranged_attack_beam::ranged_attack_beam(actor& agent, item_def& item, bolt& _beam)
+    : beam(_beam), atk(ranged_attack(&agent, nullptr, &item))
+{
+    initialise_beam(agent, item);
+}
+
+void ranged_attack_beam::fire()
+{
+    beam.fire_as_ranged_attack(atk);
+}
+
+void ranged_attack_beam::initialise_beam(actor &agent, item_def &item)
 {
     const auto cglyph = get_item_glyph(item);
     beam.glyph  = cglyph.ch;
     beam.colour = cglyph.col;
-    beam.was_missile = true;
+#ifdef USE_TILE
+    beam.tile_beam = tileidx_item_projectile(item);
+#endif
 
-    if (agent->is_player())
+    if (agent.is_player())
     {
         beam.attitude      = ATT_FRIENDLY;
         beam.thrower       = KILL_YOU_MISSILE;
     }
     else
     {
-        const monster* mon = agent->as_monster();
+        const monster* mon = agent.as_monster();
 
         beam.attitude      = mons_attitude(*mon);
         beam.thrower       = KILL_MON_MISSILE;
     }
 
-    beam.range        = you.current_vision;
-    beam.source_id    = agent->mid;
-    beam.launcher     = launcher;
-    beam.item         = &item;
-    beam.source       = agent->pos();
+    // Arbitrary damage for the tracer (will be unused when fired for real)
+    beam.damage       = dice_def(10, 10);
+    beam.source_id    = agent.mid;
+    beam.source       = agent.pos();
     beam.flavour      = BEAM_MISSILE;
-    beam.pierce       = is_penetrating_attack(*agent, launcher, item);
+    beam.pierce       = is_penetrating_attack(item);
     beam.aux_source.clear();
 
-    beam.name = item.name(DESC_PLAIN, false, false, false);
+    beam.name = launched_projectile_name(item);
 
-    const unrandart_entry* entry = launcher && is_unrandom_artefact(*launcher)
-        ? get_unrand_entry(launcher->unrand_idx) : nullptr;
+    const unrandart_entry* entry = is_unrandom_artefact(item)
+        ? get_unrand_entry(item.unrand_idx) : nullptr;
 
     if (entry && entry->launch)
-    {
         entry->launch(&beam);
-        return;
-    }
-
-    if (item.base_type == OBJ_MISSILES
-        && get_ammo_brand(item) == SPMSL_EXPLODING)
-    {
-        bolt *expl = new bolt(beam);
-
-        expl->is_explosion = true;
-        expl->damage       = dice_def(2, 5);
-        expl->ex_size      = 1;
-
-        if (beam.flavour == BEAM_MISSILE)
-        {
-            expl->flavour = BEAM_FRAG;
-            expl->name   += " fragments";
-
-            const string short_name =
-                item.name(DESC_BASENAME, true, false, false, false);
-
-            expl->name = replace_all(expl->name, item.name(DESC_PLAIN),
-                                     short_name);
-        }
-        expl->name = "explosion of " + expl->name;
-
-        beam.special_explosion = expl;
-    }
 }
 
 static void _handle_cannon_fx(actor &act, const item_def &weapon, coord_def targ)
@@ -528,16 +500,8 @@ static void _handle_cannon_fx(actor &act, const item_def &weapon, coord_def targ
 
     // blast smoke
     for (fair_adjacent_iterator ai(act.pos()); ai; ++ai)
-    {
-        if (!in_bounds(*ai)
-            || cell_is_solid(*ai)
-            || cloud_at(*ai))
-        {
-            continue;
-        }
-        place_cloud(CLOUD_MAGIC_TRAIL, *ai, random_range(3, 6), &act);
-        break;
-    }
+        if (place_cloud(CLOUD_MAGIC_TRAIL, *ai, random_range(3, 6), &act))
+            break;
 
     if (!is_unrandom_artefact(weapon, UNRAND_MULE))
         return;
@@ -596,28 +560,110 @@ static void _throw_noise(actor* act, const item_def &ammo)
     noisy(noise, act->pos(), msg, act->mid);
 }
 
-static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher);
-
-// throw_it - handles player throwing/firing only. Monster throwing is handled
-// in mons_throw().
-// called only from ammo_action::trigger; this could probably be further
-// refactored to be a method of quiver::ammo_action.
-void throw_it(quiver::action &a)
+static vector<ranged_attack_beam> _construct_player_ranged_beams(item_def* throwing_weapon = nullptr)
 {
-    const item_def *primary = a.get_launcher();
-    const item_def *offhand = you.offhand_weapon();
-    const item_def *launcher = primary;
-    const item_def *alt_launcher = offhand;
-    if (primary && offhand && is_range_weapon(*offhand) && coinflip())
+    if (throwing_weapon)
+        return vector<ranged_attack_beam>{ranged_attack_beam(you, *throwing_weapon)};
+    else
     {
-        launcher = offhand;
-        alt_launcher = primary;
+        // We can assume the player has at least one launcher equipped to get this far,
+        // but it won't necessarily be in their main hand.
+        item_def *launcher = you.weapon();
+        if (!launcher || !is_range_weapon(*launcher))
+            launcher = you.offhand_weapon();
+        item_def *alt_launcher = you.offhand_weapon();
+        if (!alt_launcher || !is_range_weapon(*alt_launcher) || launcher == alt_launcher)
+            return vector<ranged_attack_beam>{ranged_attack_beam(you, *launcher)};
+
+        return vector<ranged_attack_beam>{ranged_attack_beam(you, *launcher),
+                                          ranged_attack_beam(you, *alt_launcher)};
     }
-    // launchers have get_item set to the launcher. But, if we are tossing
-    // the launcher itself, get_launcher() will be nullptr.
-    // XX can this api be simplified now that projectiles and launchers are
-    // completely distinct?
-    const int ammo_slot = launcher ? -1 : a.get_item();
+}
+
+// Returns true if the player aborted for any reason.
+static bool _trace_player_ranged_attacks(vector<ranged_attack_beam>& atks, bool no_harm_allies = false)
+{
+    // Don't trace at all when confused.
+    if (you.confused())
+        return false;
+
+    player_beam_tracer tracer;
+    bool using_mule = false;
+    for (size_t i = 0; i < atks.size(); ++i)
+    {
+        atks[i].beam.overshoot_prompt = false;
+        if (no_harm_allies)
+            atks[i].beam.stop_at_allies = true;
+        atks[i].beam.fire(tracer);
+        if (atks[i].beam.friendly_past_target)
+            atks[i].beam.aimed_at_spot = true;
+        using_mule |= is_unrandom_artefact(*atks[i].atk.weapon, UNRAND_MULE);
+    }
+
+    if (no_harm_allies && tracer.has_any_warnings())
+        return true;
+
+    if (cancel_beam_prompt(atks[0].beam, tracer))
+        return true;
+
+    // Warn about Mule potentially knocking the player back into a trap.
+    if (using_mule)
+    {
+        const coord_def back = you.stumble_pos(atks[0].beam.target);
+        if (!back.origin()
+            && back != you.pos()
+            && !check_moveto(back, "potentially stumble back", false, false))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+static void _fire_player_ranged_attacks(vector<ranged_attack_beam>& atks, bool allow_salvo = true)
+{
+    // If attacking with more than one weapon, do so in a random order.
+    if (atks.size() > 1)
+        shuffle_array(atks);
+
+    // XXX: We must save this before the ranged attack itself is fired, since
+    //      consuming the last of a stack of missiles will erase all information
+    //      about what type of missile was just thrown.
+    const missile_type missile = atks[0].atk.weapon->base_type == OBJ_MISSILES
+                                    ? static_cast<missile_type>(atks[0].atk.weapon->sub_type)
+                                    : NUM_MISSILES;
+
+    bool shot_at_enemy = false;
+    for (ranged_attack_beam& atk : atks)
+    {
+        _player_shoot(atk, allow_salvo);
+        if (atk.beam.foes_hurt)
+            shot_at_enemy = true;
+    }
+
+    if (shot_at_enemy)
+    {
+        if (will_have_passive(passive_t::shadow_attacks)
+            && (missile != MI_DART && missile != MI_THROWING_NET))
+        {
+            dithmenos_shadow_shoot(atks[0].beam.target, missile);
+        }
+
+        if (you.duration[DUR_PARAGON_ACTIVE] && !you.triggers_done[DID_PARAGON])
+            paragon_attack_trigger();
+
+        if (you.has_mutation(MUT_WARMUP_STRIKES) && !you.triggers_done[DID_REV_UP] && missile == NUM_MISSILES)
+            you.rev_up(you.attack_delay().roll());
+    }
+}
+
+// Aim and then perform a standard ranged attack, either by autofight or the quiver interface.
+void aim_player_ranged_attack(quiver::action &a)
+{
+    ASSERT(a.get_item() >= 0);
+    item_def* item = &you.inv[a.get_item()];
+    const bool throwing = item->base_type == OBJ_MISSILES;
 
     if (you.confused())
     {
@@ -638,135 +684,163 @@ void throw_it(quiver::action &a)
         args.behaviour = &beh;
         args.mode = TARG_HOSTILE;
         args.self = confirm_prompt_type::cancel;
+        args.is_ranged_attack = true;
+        args.is_piercing = is_penetrating_attack(*item);
         direction(a.target, args);
     }
     if (!a.target.isValid || a.target.isCancel)
         return;
 
-    bolt pbolt;
-    pbolt.set_target(a.target);
+    // Now that we have a target, set up the attacks and run tracers
+    // (which may also adjust targeting slightly).
+    vector<ranged_attack_beam> atks = _construct_player_ranged_beams(throwing ? item : nullptr);
 
-    item_def fake_proj;
-    item_def& thrown = fake_proj;
-    if (launcher)
-        populate_fake_projectile(*launcher, fake_proj);
-    else
-        thrown = you.inv[ammo_slot];
-    ASSERT(thrown.defined());
+    for (ranged_attack_beam& atk : atks)
+        atk.beam.set_target(a.target);
 
-    // Figure out if we're thrown or launched.
-    const bool is_thrown = is_throwable(&you, thrown);
+    if (_trace_player_ranged_attacks(atks))
+        return;
 
-    // Make a copy of the item.
-    item_def item = thrown;
-    item.quantity = 1;
-    if (ammo_slot != -1)
-        item.slot     = index_to_letter(item.link);
+    // Actually perform the attack and spend time.
+    you.time_taken = you.attack_delay(item).roll();
+    _fire_player_ranged_attacks(atks);
+    you.turn_is_over = true;
+}
 
-    _setup_missile_beam(&you, pbolt, item, launcher);
-
-    // Don't trace at all when confused.
-    // Give the player a chance to be warned about helpless targets when using
-    // Portaled Projectile, but obviously don't trace a path.
-    bool aimed_at_foe = false;
-    if (!you.confused())
+// Make the player immediately perform a ranged attack at a given target, optionally
+// with a specific projectile. Does not handle spending time.
+bool do_player_ranged_attack(const coord_def& targ, item_def* thrown_projectile,
+                             const ranged_attack* prototype, bool no_harm_allies,
+                             bool allow_salvo)
+{
+    vector<ranged_attack_beam> atks = _construct_player_ranged_beams(thrown_projectile);
+    for (ranged_attack_beam& atk : atks)
     {
-        // Set values absurdly high to make sure the tracer will
-        // complain if we're attempting to fire through allies.
-        pbolt.damage = dice_def(1, 100);
+        atk.beam.target = targ;
+        if (prototype)
+            prototype->copy_params_to(atk.atk);
+    }
+    if (_trace_player_ranged_attacks(atks, no_harm_allies))
+        return false;
+    _fire_player_ranged_attacks(atks, allow_salvo);
+    return true;
+}
 
-        // Init tracer variables.
-        pbolt.foe_info.reset();
-        pbolt.friend_info.reset();
-        pbolt.foe_ratio = 100;
-        pbolt.is_tracer = true;
-        pbolt.overshoot_prompt = false;
+// Runs a simple tracer from source to target, stopping before any allies.
+//
+// Returns true if a given target will hit at least one enemy, and optionally
+// passes out the first target hit as first_hit.
+static bool _salvo_shot_tracer(coord_def source, coord_def target, bool pierce,
+                               mid_t* first_hit = nullptr)
+{
+    bolt tracer;
+    tracer.attitude = ATT_FRIENDLY;
+    tracer.source = source;
+    tracer.target = target;
+    tracer.source_id = MID_PLAYER;
+    tracer.stop_at_allies = true;
+    tracer.damage = dice_def(100, 1);
+    tracer.pierce = pierce;
+    targeting_tracer target_tracer;
+    tracer.fire(target_tracer);
 
-        pbolt.fire();
+    if (target_tracer.friend_info.power != 0 || target_tracer.foe_info.power == 0)
+        return false;
 
-        pbolt.hit    = 0;
-        pbolt.damage = dice_def();
-        if (pbolt.friendly_past_target)
-            pbolt.aimed_at_spot = true;
-        if (pbolt.foe_info.count)
-            aimed_at_foe = true; // dubious
-
-        // Should only happen if the player answered 'n' to one of those
-        // "Fire through friendly?" prompts.
-        if (pbolt.beam_cancelled)
+    if (first_hit)
+    {
+        for (const coord_def& pos : tracer.path_taken)
         {
-            you.turn_is_over = false;
-            return;
+            if (actor_at(pos) && tracer.hit_count[actor_at(pos)->mid])
+            {
+                *first_hit = actor_at(pos)->mid;
+                break;
+            }
         }
     }
 
-    pbolt.is_tracer = false;
+    return true;
+}
 
-    // Now start real firing!
-    origin_set_unknown(item);
+// Get a list of up to num_target additional targets that have some unblocked
+// shot path from the player's current position.
+static vector<coord_def> _get_salvo_targets(const coord_def& orig_target, int num_targets)
+{
+    mid_t primary;
+    vector<coord_def> targs;
 
-    // Even though direction is allowed, we're throwing so we
-    // want to use tx, ty to make the missile fly to map edge.
-    pbolt.set_target(a.target);
+    // Add primary target from the originating shot.
+    _salvo_shot_tracer(you.pos(), orig_target, false, &primary);
 
-    you.time_taken = you.attack_delay(&item).roll();
-    _player_shoot(pbolt, item, launcher);
-    if (ammo_slot != -1 && (pbolt.item_mulches || !_returning(item)))
-        dec_inv_item_quantity(ammo_slot, 1);
-
-    if (launcher && alt_launcher && is_range_weapon(*alt_launcher))
+    // Scan all visible monsters in LoS for any that *might* have an unblocked
+    // shot path.
+    vector<monster*> to_check;
+    for (monster_near_iterator mi(&you, LOS_SOLID_SEE); mi; ++mi)
     {
-        item_def alt_fake_proj;
-        populate_fake_projectile(*alt_launcher, alt_fake_proj);
+        if (mi->wont_attack() || mi->pacified() || mi->is_firewood()
+            || mi->mid == primary)
+        {
+            continue;
+        }
 
-        bolt alt_pbolt;
-        alt_pbolt.set_target(a.target);
-        if (pbolt.friendly_past_target)
-            alt_pbolt.aimed_at_spot = true;
-        _setup_missile_beam(&you, alt_pbolt, alt_fake_proj, alt_launcher);
-        _player_shoot(alt_pbolt, alt_fake_proj, alt_launcher);
+        if (exists_ray(you.pos(), mi->pos(), opc_unblocked_shot, you.current_vision))
+            to_check.push_back(*mi);
     }
 
-    // ...any monster nearby can see that something has been thrown, even
-    // if it didn't make any noise.
-    alert_nearby_monsters();
+    shuffle_array(to_check);
 
-    you.turn_is_over = true;
-    if (aimed_at_foe && launcher && you.has_mutation(MUT_WARMUP_STRIKES))
-        you.rev_up(you.time_taken);
-
-    if ((launcher || is_thrown)
-        && will_have_passive(passive_t::shadow_attacks)
-        && item.base_type == OBJ_MISSILES
-        && item.sub_type != MI_DART
-        && item.sub_type != MI_THROWING_NET)
+    // For each monster that it might be possible to shoot at, see if we can
+    // find a valid shot.
+    for (monster* mon : to_check)
     {
-        dithmenos_shadow_shoot(a.target, item);
+        coord_def aim = best_ranged_aim(mon->pos(), false, true);
+        if (!aim.origin())
+        {
+            targs.push_back(aim);
+
+            // Stop if we've hit our target limit.
+            if ((int)targs.size() >= num_targets)
+                break;
+        }
     }
 
-    if (aimed_at_foe && launcher && you.duration[DUR_PARAGON_ACTIVE])
-        paragon_attack_trigger();
+    return targs;
+}
+
+static void _fire_salvo(const ranged_attack_beam &pbolt)
+{
+    vector<coord_def> targs = _get_salvo_targets(pbolt.beam.target, 4);
+
+    for (coord_def aim : targs)
+    {
+        // We copy the ranged_attack_beam and fire manually to avoid
+        // printing superfluous messages and triggering conducts repeatedly.
+        ranged_attack_beam salvo = pbolt;
+        salvo.beam.chose_ray = false;
+        salvo.beam.target = aim;
+        salvo.fire();
+    }
 }
 
 // Once the player has committed to a target, shoot/throw/toss at it.
-static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher)
+// Handles conducts, action counts, ammunition use, etc.
+static void _player_shoot(ranged_attack_beam &pbolt, bool allow_salvo)
 {
-    const int bow_brand = launcher ? get_weapon_brand(*launcher) : SPWPN_NORMAL;
-    const int ammo_brand = get_ammo_brand(item);
+    const item_def& item = *pbolt.atk.weapon;
     const bool returning = _returning(item);
     const bool is_thrown = is_throwable(&you, item);
-    const bool tossing = !launcher && !is_thrown;
+    const bool will_mulch = _thrown_object_destroyed(item);
 
-    if (launcher)
+    if (is_range_weapon(item))
     {
-        practise_launching(*launcher);
-        if (is_unrandom_artefact(*launcher)
-            && get_unrand_entry(launcher->unrand_idx)->type_name)
+        practise_launching(item);
+        if (is_unrandom_artefact(item)
+            && get_unrand_entry(item.unrand_idx)->type_name)
         {
-            count_action(CACT_FIRE, launcher->unrand_idx);
+            count_action(CACT_FIRE, item.unrand_idx);
         }
         else
-            count_action(CACT_FIRE, launcher->sub_type);
+            count_action(CACT_FIRE, item.sub_type);
     }
     else if (is_thrown)
     {
@@ -774,32 +848,31 @@ static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher)
         count_action(CACT_THROW, item.sub_type, OBJ_MISSILES);
     }
 
+    const bool do_salvo = allow_salvo
+                            && (you.duration[DUR_SALVO] && is_range_weapon(item)
+                                || is_unrandom_artefact(item, UNRAND_ZEPHYR));
+    const string proj_name = do_salvo ? make_stringf("a salvo of %ss", pbolt.atk.projectile_name().c_str())
+                                      : article_a(pbolt.atk.projectile_name()).c_str();
+
     // Create message.
     mprf("You %s %s%s.",
-          is_thrown ? "throw" : launcher ? "shoot" : "toss away",
-          _ammo_name(item, launcher).c_str(),
+          is_thrown ? "throw" : "shoot" ,
+          proj_name.c_str(),
           you.current_vision == 0 ? " into the darkness" : "");
 
-    // Ensure we're firing a 'missile'-type beam.
-    pbolt.pierce    = false;
-    pbolt.is_tracer = false;
+    pbolt.beam.set_is_tracer(false);
 
-    pbolt.loudness = item.base_type == OBJ_MISSILES
+    pbolt.beam.loudness = item.base_type == OBJ_MISSILES
                    ? ammo_type_damage(item.sub_type) / 3
                    : 0; // Maybe not accurate, but reflects the damage.
 
-    // Mark this item as thrown if it's a missile, so that we'll pick it up
-    // when we walk over it.
-    if (item.base_type == OBJ_MISSILES)
-        item.flags |= ISFLAG_THROWN;
-    pbolt.item_mulches = !tossing && _thrown_object_destroyed(item);
-    pbolt.drop_item = !pbolt.item_mulches && !returning;
-    pbolt.hit = 0;
+    pbolt.beam.drop_item = is_thrown && !returning && !will_mulch;
+    pbolt.atk.will_mulch = will_mulch;
 
     if (crawl_state.game_is_hints())
         Hints.hints_throw_counter++;
 
-    const coord_def target = pbolt.target;
+    const coord_def target = pbolt.beam.target;
 
     // XXX: Firing via beam will never hit a target outside our vision range,
     //      so create the ranged_attack manually when bumping into something
@@ -809,26 +882,32 @@ static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher)
         monster* mon = monster_at(target);
         if (mon && mon->alive())
         {
-            ranged_attack attk(&you, mon, launcher, pbolt.item, false, &you, false);
+            ranged_attack attk(&you, mon, &item, false, &you);
+            attk.will_mulch = will_mulch;
             attk.attack();
         }
     }
     else
+    {
         pbolt.fire();
 
-    if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
-        did_god_conduct(DID_CHAOS, 2 + random2(3), bow_brand == SPWPN_CHAOS);
+        if (do_salvo)
+        {
+            _fire_salvo(pbolt);
+            if (!is_unrandom_artefact(item, UNRAND_ZEPHYR))
+            {
+                if (--you.props[SALVO_KEY] == 0)
+                    you.duration[DUR_SALVO] = 0;
+                else
+                    you.duration[DUR_SALVO] = random_range(30, 50);
+            }
+        }
+    }
 
-    if (bow_brand == SPWPN_SPEED)
-        did_god_conduct(DID_HASTY, 1, true);
-
-    if (ammo_brand == SPMSL_FRENZY)
-        did_god_conduct(DID_HASTY, 6 + random2(3), true);
-
-    if (returning && !pbolt.item_mulches)
+    if (returning && !will_mulch)
     {
         // Fire beam in reverse.
-        pbolt.setup_retrace();
+        pbolt.beam.setup_retrace();
         viewwindow();
         update_screen();
         pbolt.fire();
@@ -836,72 +915,52 @@ static void _player_shoot(bolt &pbolt, item_def &item, item_def const *launcher)
 
     _throw_noise(&you, item);
 
-    if (launcher)
-        _handle_cannon_fx(you, *launcher, target);
+    _handle_cannon_fx(you, item, target);
 
-    if (pbolt.special_explosion != nullptr)
-        delete pbolt.special_explosion;
+    if (pbolt.beam.special_explosion != nullptr)
+        delete pbolt.beam.special_explosion;
+
+    // Actually expend a throwing item, if it didn't return to the player's hands.
+    if (item.base_type == OBJ_MISSILES && (!returning || will_mulch))
+        dec_inv_item_quantity(item.link, 1);
 }
 
-void setup_monster_throw_beam(monster* mons, bolt &beam)
+bool mons_throw(monster* mons, ranged_attack_beam& ratk, bool teleport, bool was_redirected)
 {
-    beam.range = you.current_vision;
-    beam.source_id = mons->mid;
-
-    beam.glyph   = dchar_glyph(DCHAR_FIRED_MISSILE);
-    beam.flavour = BEAM_MISSILE;
-    beam.thrower = KILL_MON_MISSILE;
-    beam.aux_source.clear();
-    beam.pierce  = false;
-}
-
-bool mons_throw(monster* mons, bolt &beam, bool teleport)
-{
-    ASSERT(beam.item);
-    const item_def &missile = *beam.item;
-    ASSERT(missile.base_type == OBJ_MISSILES);
+    const item_def &weapon = *ratk.atk.weapon;
+    bolt& beam = ratk.beam;
 
     // Energy is already deducted for the spell cast, if using portal projectile
     // FIXME: should it use this delay and not the spell delay?
     if (!teleport)
     {
         const int energy = mons->action_energy(EUT_MISSILE);
-        const int delay = mons->attack_delay(&missile).roll();
+        const int delay = mons->attack_delay(&weapon).roll();
         ASSERT(energy > 0);
         ASSERT(delay > 0);
         mons->speed_increment -= div_rand_round(energy * delay, 10);
     }
 
-    // Dropping item copy, since the launched item might be different.
-    item_def item = missile;
-    item.quantity = 1;
+    // Avoid overshooting unless we're *trying* to hit allies.
+    // (Piercing beam tracers should already handle this).
+    if (!was_redirected)
+        beam.stop_at_allies |= !beam.pierce;
+    beam.aimed_at_spot  |= _returning(weapon);
 
-    item_def *launcher = nullptr;
-    if (!is_throwable(mons, item))
-        launcher = mons->weapon(0);
-    _setup_missile_beam(mons, beam, item, launcher);
-    beam.aimed_at_spot |= _returning(item);
-    // Avoid overshooting and potentially hitting the player.
-    // Piercing beams' tracers already account for this.
-    beam.aimed_at_spot |= mons->temp_attitude() == ATT_FRIENDLY
-                          && !beam.pierce;
-
-    if (beam.name.empty())
-        beam.name = item.name(DESC_PLAIN, false, false, false);
-
-    const bool thrown = is_throwable(mons, missile);
+    const bool thrown = is_throwable(mons, weapon);
     if (mons->observable())
     {
         mpr(make_stringf("%s%s %s %s.",
                          mons->name(DESC_THE).c_str(),
                          teleport ? " magically" : "",
                          thrown ? "throws" : "shoots",
-                         article_a(beam.name).c_str()).c_str());
+                         article_a(ratk.atk.projectile_name()).c_str()).c_str());
     }
 
-    _throw_noise(mons, item);
+    _throw_noise(mons, weapon);
 
-    beam.drop_item = item.sub_type == MI_THROWING_NET;
+    const bool uses_ammo = weapon.is_type(OBJ_MISSILES, MI_THROWING_NET);
+    beam.drop_item = uses_ammo;
 
     // Redraw the screen before firing, in case the monster just
     // came into view and the screen hasn't been updated yet.
@@ -911,21 +970,31 @@ bool mons_throw(monster* mons, bolt &beam, bool teleport)
     if (teleport)
     {
         beam.use_target_as_pos = true;
+        unwind_var<ranged_attack*> old_atk(beam.ranged_atk, &ratk.atk);
         beam.affect_cell();
         beam.affect_endpoint();
     }
     else
-        beam.fire();
+        ratk.fire();
 
-    if (beam.drop_item && dec_mitm_item_quantity(mons->inv[MSLOT_MISSILE], 1, false))
-        mons->inv[MSLOT_MISSILE] = NON_ITEM;
+    if (_returning(weapon))
+    {
+        // Fire beam in reverse.
+        beam.setup_retrace();
+        viewwindow();
+        update_screen();
+        ratk.fire();
+    }
 
     if (beam.special_explosion != nullptr)
         delete beam.special_explosion;
 
+    if (uses_ammo && dec_mitm_item_quantity(mons->inv[MSLOT_MISSILE], 1, false))
+        mons->inv[MSLOT_MISSILE] = NON_ITEM;
+
     // dubious...
-    if (mons->alive() && mons->weapon())
-        _handle_cannon_fx(*mons, *(mons->weapon()), target);
+    if (mons->alive())
+        _handle_cannon_fx(*mons, weapon, target);
 
     return true;
 }
@@ -941,17 +1010,60 @@ static bool _thrown_object_destroyed(const item_def &item)
     if (ammo_never_destroyed(item))
         return false;
 
-    const int base_chance = ammo_type_destroy_chance(item.sub_type);
-    const int brand = get_ammo_brand(item);
+    return one_chance_in(ammo_destroy_chance(item));
+}
 
-    // Inflate by 2 to avoid rounding errors.
-    const int mult = 2;
-    int chance = base_chance * mult;
+bool do_west_wind_shot()
+{
+    // Perform at most one gale-force shot per turn, and only if the player moved.
+    if (!you.has_mutation(MUT_WEST_WIND) || you.triggers_done[DID_WEST_WIND_SHOT]
+        || you.pos() == you.pos_at_turn_start)
+    {
+        return false;
+    }
 
-    if (brand == SPMSL_CURARE)
-        chance /= 2;
+    const item_def* wpn = you.weapon();
+    if (!wpn || !is_range_weapon(*wpn) || you.berserk() || you.confused())
+        return false;
 
-    dprf("mulch chance: %d in %d", mult, chance);
+    you.did_trigger(DID_WEST_WIND_SHOT);
 
-    return x_chance_in_y(mult, chance);
+    const coord_def targ = (you.pos() - you.pos_at_turn_start).sgn() + you.pos();
+    ranged_attack prototype(&you, nullptr, wpn);
+
+    prototype.dmg_mult = 33;
+    prototype.pierce = true;
+    prototype.set_projectile_prefix("wind-blessed");
+
+    // Downscale damage from slow weapons versus the player's movement speed.
+    const int attack_delay = you.attack_delay().roll() * BASELINE_DELAY;
+    const int move_delay = player_overall_move_delay(BASELINE_DELAY);
+    if (attack_delay > move_delay)
+        prototype.dmg_mult += (move_delay * 100 / attack_delay) - 100;
+
+    if (_salvo_shot_tracer(you.pos(), targ, true, nullptr))
+    {
+        bolt wind;
+        wind.source = you.pos();
+        wind.target = targ;
+        wind.pierce = true;
+        wind.set_is_tracer(true);
+        wind.fire();
+
+        // Push monsters from back to front (but never pushing them out of sight)
+        for (int i = wind.path_taken.size() - 2; i >= 0; --i)
+        {
+            const int dist = min((int)wind.path_taken.size() - i - 1, random_range(1, 2));
+            if (monster* mon = monster_at(wind.path_taken[i]))
+                mon->knockback(you, dist, 0, "wind");
+        }
+
+        do_player_ranged_attack(targ, nullptr, &prototype, true, false);
+
+        you.duration[DUR_SALVO] = random_range(20, 40);
+        int& stacks = you.props[SALVO_KEY].get_int();
+        stacks = min(5, stacks + 1);
+    }
+
+    return true;
 }

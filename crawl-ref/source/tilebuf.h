@@ -77,7 +77,8 @@ public:
 
     void add(tileidx_t idx, int x, int y, int z,
              int ox, int oy, int ymin, int ymax,
-             int alpha_top, int alpha_bottom);
+             int alpha_top, int alpha_bottom,
+             int r = 255, int g = 255, int b = 255);
 };
 
 // Helper class for tiles submerged in water.
@@ -87,7 +88,8 @@ public:
     SubmergedTileBuffer(const TilesTexture *tex, int water_level);
 
     void add(tileidx_t idx, int x, int y, int z = 0, bool submerged = false,
-             bool ghost = false, int ox = 0, int oy = 0, int ymax = -1);
+             bool ghost = false, int ox = 0, int oy = 0, int ymax = -1,
+             bool invis = false);
     void add_alpha(tileidx_t idx, int x, int y, int z,
                    int ox, int oy, int ymax, int alpha);
     void add_masked(tileidx_t idx, int x, int y, int z,

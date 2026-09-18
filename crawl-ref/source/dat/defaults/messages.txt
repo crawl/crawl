@@ -7,7 +7,7 @@ msc := message_colour
 # Really important messages
 #
 msc += $danger:drains you
-msc += $danger:feel drained
+msc += $danger:feel (heavily|very heavily|extremely) drained
 msc += $danger:strangely .*stable
 msc += $danger:curare-tipped.*hits you
 msc += $danger:Space warps( horribly)? around you
@@ -17,6 +17,8 @@ msc += $danger:goes berserk!
 msc += $danger:The blast of calcifying dust hits you
 msc += $danger:you are engulfed in calcifying dust
 msc += $danger:is moving more slowly
+msc += $danger:You turn into a( bat| filthy swine| sentient fungus)
+msc += $danger:You turn into a( tree| lump of jelly|n insubstantial wisp)
 # Don't recolour acquirement messages along with messages about invisible monsters.
 msc += lightgrey:Something appears (at your feet|before you)
 msc += $danger:^Something .* you
@@ -29,9 +31,14 @@ msc += $danger:cause instant excommunication
 msc += $danger:corrodes you
 msc += $danger:Your body becomes as fragile as glass
 msc += lightmagenta:malevolent force fills
+msc += lightmagenta:too known and too boring
 
 # Less urgent, but still significant messages
 #
+msc += $warning:feel drained
+msc += $warning:solemn chanting
+msc += $warning:hear.*funeral chant
+msc += $warning:funeral rites reach a fever pitch
 msc += $warning:distant snort
 msc += $warning:beating.*drum
 msc += $warning:drumbeats cease
@@ -46,7 +53,7 @@ msc += $warning:portcullis has been lowered
 msc += $warning:wave of frost
 msc += $warning:crackling.*melting
 msc += $warning:hiss.*sand
-msc += $warning:sound.*rushing water
+msc += $warning:sound.*rushing (water|sludge)
 msc += $warning:rusting.*drain
 msc += $warning:drain falling apart
 msc += $warning:heat about you
@@ -57,8 +64,11 @@ msc += $warning:crackle.*magical portal
 msc += $warning:distant wind
 msc += $warning:whistling.*wind
 msc += $warning:rapidly growing quiet
-msc += $warning:slides
+msc += $warning:slides (away|towards)
 msc += $warning:settles down
+msc += white:There is a(n entrance| portal| gateway) to.*on this level
+msc += white:caravan has stopped on this level
+msc += lightcyan:(There is|Found).*purified mutation catalyst
 
 msc += lightcyan:LOW MAGIC WARNING
 msc += $warning:no longer ripe
@@ -100,6 +110,8 @@ force_more_message += This is a scroll of acquirement
 force_more_message += create your gizmo
 force_more_message += malevolent force fills
 force_more_message += malevolence running through your instability
+force_more_message += You feel space start to destabilise
+force_more_message += You feel the winds around you beginning to shift
 
 ## Zot is coming!
 force_more_message += You have lingered too long
@@ -108,23 +120,18 @@ force_more_message += Zot has nearly found you
 force_more_message += Zot already knows
 force_more_message += Zot's attention fixes on you
 force_more_message += Zot's power touches on you
+force_more_message += You feel the power of Zot begin to gather
 
 ## Reduce chance of draining because flight or form runs out:
 force_more_message += ^Careful!
 
 # Announcements of timed portal vaults:
 force_more_message += interdimensional caravan
-force_more_message += distant snort
-force_more_message += roar of battle
-force_more_message += wave of frost
-force_more_message += hiss of flowing sand
-force_more_message += sound of rushing water
-force_more_message += oppressive heat about you
-force_more_message += crackle of arcane power
-force_more_message += hear a distant wind
+force_more_message += There is a(n entrance| portal| gateway) to.*on this level
 force_more_message += Beware! This is a limited time offer
 
 # Religion
+force_more_message += warns you to remove
 force_more_message += press .* to convert to Beogh
 force_more_message += welcomes you( back)?!
 force_more_message += You have lost your religion
@@ -134,6 +141,7 @@ force_more_message += is wielding.*distortion
 # dancing weapons require special handling...
 force_more_message += there is a.*distortion
 force_more_message += of distortion comes into view
+force_more_message += encounter a dancing.* distortion
 
 # Banishment
 force_more_message += You are cast into the Abyss
@@ -145,6 +153,10 @@ force_more_message += You are slowing down
 
 # Sleep
 force_more_message += You fall asleep
+
+# Banes
+force_more_message += befalls you\.
+force_more_message += upon you is lifted
 
 # Abyss exits and rune
 force_more_message += Found a gateway leading out of the Abyss
@@ -189,6 +201,7 @@ force_more_message += Beogh speaks to you:
 
 # Xom doing things you really shouldn't miss
 force_more_message += is forced to slowly start .* word of recall
+force_more_message += too known and too boring
 
 # Crucible exit notification
 force_more_message += Makhleb acknowledges your contrition

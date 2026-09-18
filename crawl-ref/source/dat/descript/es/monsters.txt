@@ -253,10 +253,6 @@ Polyphemus
 Un pastor cíclope, celoso guardián de su rebaño al que vigila con incansable
 fervor mediante su único ojo masivo.
 %%%%
-Psyche
-
-Una hechicera rubia aparentemente medio loca que deambula con culpa y pesar.
-%%%%
 Pargi
 
 Un troll inusualmente delgado.
@@ -416,15 +412,37 @@ Executioner
 Un horrible, poderoso y ágil demonio cuya forma está oculta en un remolino de
 hojas de guadaña
 %%%%
+gnoll
+
+Un pariente a los duendes y aliado a los orcos. Está más alto y de alguna
+manera mejor equipado que los duendes y ve un poco como un perro.
+%%%%
 Hell Sentinel
 
 Un imponente monolito construido y poseído por fuerzas demoníacas. Unos mil
 ojos miran lascivamente por las rendijas de su armadura dentada y espinosa.
 %%%%
+hellion
+
+Un demonio malévolo que quiere ver toda vida destruido por su fuego.
+%%%%
+Ice Devil
+
+Un demonio tan grande como una humana. Es cubierto en hielo.
+%%%%
 Ice Fiend
 
 Un enorme y frío demonio cubierto en escarcha y revestido en aire helado. Es
 uno de los habitantes más terribles de los muchos y variados Infiernos.
+%%%%
+Iron Golem
+
+Una estatua grande, pesada y muy robusta, dada el poder de movimiento por
+esotéricos (y posiblemente a base de calabaza) medios.
+%%%%
+Iron Imp
+
+Un demonio feo y pequeño con piel metálica.
 %%%%
 Killer Klown
 

@@ -47,6 +47,8 @@ string padded_str(const string &s, int pad_to, bool prepend = false);
 
 string replace_all(string s, const string &tofind, const string &replacement);
 
+string replace_all_func(string s, const string &find, string (*repl_func)());
+
 string replace_all_of(string s, const string &tofind, const string &replacement);
 
 string replace_keys(const string &text, const map<string, string>& replacements);
@@ -249,6 +251,8 @@ vector<string> split_string(const string &sep, string s, bool trim = true,
 set<size_t> find_escapes(const string &s);
 string deescape(string s, const set<size_t> &escapes);
 string deescape(string s);
+
+string remove_prepended_the(string s);
 
 // time
 

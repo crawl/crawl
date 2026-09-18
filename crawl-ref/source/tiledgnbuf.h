@@ -47,10 +47,11 @@ protected:
     void pack_background(int x, int y, const packed_cell &cell);
     void pack_foreground(int x, int y, const packed_cell &cell);
 
-    void pack_mcache(mcache_entry *entry, int x, int y, bool submerged);
+    void pack_mcache(mcache_entry *entry, int x, int y, bool submerged,
+                     bool invis = false);
     void pack_player(int x, int y, bool submerged);
     void pack_doll(const dolls_data &doll, int x, int y,
-                   bool submerged, bool ghost);
+                   bool submerged, bool ghost, bool invis = false);
 
     TileBuffer m_buf_floor;
     TileBuffer m_buf_wall;

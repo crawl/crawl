@@ -34,16 +34,19 @@ map_marker::marker_reader map_marker::readers[NUM_MAP_MARKER_TYPES] =
     &map_corruption_marker::read,
     &map_wiz_props_marker::read,
     &map_tomb_marker::read,
-    &map_malign_gateway_marker::read,
 #if TAG_MAJOR_VERSION == 34
-    &map_phoenix_marker::read,
+    nullptr,
+    nullptr,
 #endif
     &map_position_marker::read,
 #if TAG_MAJOR_VERSION == 34
-    &map_door_seal_marker::read,
+    nullptr,
 #endif
     &map_terrain_change_marker::read,
-    &map_cloud_spreader_marker::read
+    &map_cloud_spreader_marker::read,
+    nullptr,
+    &map_malign_gateway_marker::read,
+    &map_active_feature_marker::read,
 };
 
 map_marker::marker_parser map_marker::parsers[NUM_MAP_MARKER_TYPES] =
@@ -56,7 +59,7 @@ map_marker::marker_parser map_marker::parsers[NUM_MAP_MARKER_TYPES] =
 };
 
 map_marker::map_marker(map_marker_type t, const coord_def &p)
-    : pos(p), type(t)
+    : pos(p), type(t), pending_deletion(false)
 {
 }
 
@@ -91,11 +94,31 @@ string map_marker::property(const string &pname) const
     return "";
 }
 
-map_marker *map_marker::read_marker(reader &inf)
+void map_marker::flag_for_deletion()
+{
+    pending_deletion = true;
+}
+
+bool map_marker::is_deleted() const
+{
+    return pending_deletion;
+}
+
+map_marker *map_marker::read_marker(reader &inf, int size)
 {
     const map_marker_type mtype =
         static_cast<map_marker_type>(unmarshallShort(inf));
-    return readers[mtype]? (*readers[mtype])(inf, mtype) : nullptr;
+
+    if (readers[mtype])
+        return (*readers[mtype])(inf, mtype);
+    else
+    {
+        // When reading an obsolete marker, skip ahead to the end of it.
+        // (Skipping 2 bytes for the marker type, which has already been
+        // read above.)
+        inf.advance(size - 2);
+        return nullptr;
+    }
 }
 
 map_marker *map_marker::parse_marker(const string &s, const string &ctx)
@@ -622,37 +645,37 @@ string map_tomb_marker::debug_describe() const
 // map_malign_gateway_marker
 
 map_malign_gateway_marker::map_malign_gateway_marker(const coord_def &p,
-                                 int dur, bool ip, string sum, beh_type b,
-                                 god_type gd, int pow)
-    : map_marker(MAT_MALIGN, p), duration(dur), is_player(ip), monster_summoned(false),
-      summoner_string(sum), behaviour(b), god(gd), power(pow)
+                                 int _delay, int pow, int _duration,
+                                 mid_t summoner_mid, string blame,
+                                 beh_type b)
+    : map_marker(MAT_MALIGN_GATEWAY, p), delay(_delay), power(pow),
+      duration(_duration), summoner(summoner_mid), tentacle(MID_NOBODY),
+      blame_string(blame), behaviour(b)
 {
 }
 
 void map_malign_gateway_marker::write(writer &out) const
 {
     map_marker::write(out);
+    marshallShort(out, delay);
     marshallShort(out, duration);
-    marshallBoolean(out, is_player);
-    marshallBoolean(out, monster_summoned);
-    marshallString(out, summoner_string);
-    marshallUByte(out, behaviour);
-    marshallUByte(out, god);
     marshallShort(out, power);
+    marshallInt(out, summoner);
+    marshallInt(out, tentacle);
+    marshallString(out, blame_string);
+    marshallUByte(out, behaviour);
 }
 
 void map_malign_gateway_marker::read(reader &in)
 {
     map_marker::read(in);
-    duration  = unmarshallShort(in);
-    is_player = unmarshallBoolean(in);
-
-    monster_summoned = unmarshallBoolean(in);
-    summoner_string = unmarshallString(in);
-    behaviour = static_cast<beh_type>(unmarshallUByte(in));
-
-    god       = static_cast<god_type>(unmarshallByte(in));
-    power     = unmarshallShort(in);
+    delay        = unmarshallShort(in);
+    duration     = unmarshallShort(in);
+    power        = unmarshallShort(in);
+    summoner     = unmarshallInt(in);
+    tentacle     = unmarshallInt(in);
+    blame_string = unmarshallString(in);
+    behaviour    = static_cast<beh_type>(unmarshallUByte(in));
 }
 
 map_marker *map_malign_gateway_marker::read(reader &in, map_marker_type)
@@ -665,115 +688,15 @@ map_marker *map_malign_gateway_marker::read(reader &in, map_marker_type)
 map_marker *map_malign_gateway_marker::clone() const
 {
     map_malign_gateway_marker *mark = new map_malign_gateway_marker(pos,
-        duration, is_player, summoner_string, behaviour, god, power);
+        delay, power, duration, summoner, blame_string, behaviour);
     return mark;
 }
 
 string map_malign_gateway_marker::debug_describe() const
 {
-    return make_stringf("Malign gateway (%d, %s)", duration,
-                        is_player ? "player" : "monster");
+    return make_stringf("Malign gateway (summoner: %d, duration: %d)",
+                        (int)summoner, duration);
 }
-#if TAG_MAJOR_VERSION == 34
-
-//////////////////////////////////////////////////////////////////////////
-// map_phoenix_marker
-
-map_phoenix_marker::map_phoenix_marker(const coord_def& p,
-                    int dur, int mnum, beh_type bh, mon_attitude_type at,
-                    god_type gd, coord_def cp)
-    : map_marker(MAT_PHOENIX, p), duration(dur), mon_num(mnum),
-            behaviour(bh), attitude(at), god(gd), corpse_pos(cp)
-{
-}
-
-void map_phoenix_marker::write(writer &out) const
-{
-    map_marker::write(out);
-    marshallShort(out, duration);
-    marshallShort(out, mon_num);
-    marshallUByte(out, behaviour);
-    marshallUByte(out, attitude);
-    marshallUByte(out, god);
-    marshallCoord(out, corpse_pos);
-}
-
-void map_phoenix_marker::read(reader &in)
-{
-    map_marker::read(in);
-
-    duration = unmarshallShort(in);
-    mon_num = unmarshallShort(in);
-    behaviour = static_cast<beh_type>(unmarshallUByte(in));
-    attitude = static_cast<mon_attitude_type>(unmarshallUByte(in));
-    god       = static_cast<god_type>(unmarshallByte(in));
-    corpse_pos = unmarshallCoord(in);
-}
-
-map_marker *map_phoenix_marker::read(reader &in, map_marker_type)
-{
-    map_phoenix_marker *mc = new map_phoenix_marker();
-    mc->read(in);
-    return mc;
-}
-
-map_marker *map_phoenix_marker::clone() const
-{
-    map_phoenix_marker *mark = new map_phoenix_marker(pos, duration, mon_num,
-                                    behaviour, attitude, god, corpse_pos);
-    return mark;
-}
-
-string map_phoenix_marker::debug_describe() const
-{
-    return make_stringf("Phoenix marker (%d, %d)", duration, mon_num);
-}
-
-////////////////////////////////////////////////////////////////////////////
-// map_door_seal_marker
-
-map_door_seal_marker::map_door_seal_marker(const coord_def& p,
-                    int dur, int mnum, dungeon_feature_type oldfeat)
-    : map_marker(MAT_DOOR_SEAL, p), duration(dur), mon_num(mnum),
-        old_feature(oldfeat)
-{
-}
-
-void map_door_seal_marker::write(writer &out) const
-{
-    map_marker::write(out);
-    marshallShort(out, duration);
-    marshallShort(out, mon_num);
-    marshallUByte(out, old_feature);
-}
-
-void map_door_seal_marker::read(reader &in)
-{
-    map_marker::read(in);
-
-    duration = unmarshallShort(in);
-    mon_num = unmarshallShort(in);
-    old_feature = static_cast<dungeon_feature_type>(unmarshallUByte(in));
-}
-
-map_marker *map_door_seal_marker::read(reader &in, map_marker_type)
-{
-    map_door_seal_marker *mc = new map_door_seal_marker();
-    mc->read(in);
-    return mc;
-}
-
-map_marker *map_door_seal_marker::clone() const
-{
-    map_door_seal_marker *mark = new map_door_seal_marker(pos, duration, mon_num, old_feature);
-    return mark;
-}
-
-string map_door_seal_marker::debug_describe() const
-{
-    return make_stringf("Door seal marker (%d, %d)", duration, mon_num);
-}
-#endif
 
 ////////////////////////////////////////////////////////////////////////////
 // map_terrain_change_marker
@@ -781,8 +704,8 @@ string map_door_seal_marker::debug_describe() const
 map_terrain_change_marker::map_terrain_change_marker (const coord_def& p,
                     dungeon_feature_type oldfeat, dungeon_feature_type newfeat,
                     unsigned short flv_oldfeat, unsigned short flv_oldfeat_idx,
-                    int dur, terrain_change_type ctype, int mnum, int oldcol)
-    : map_marker(MAT_TERRAIN_CHANGE, p), duration(dur), mon_num(mnum),
+                    int dur, terrain_change_type ctype, mid_t mid, int oldcol)
+    : map_marker(MAT_TERRAIN_CHANGE, p), duration(dur), source_mid(mid),
       old_feature(oldfeat), new_feature(newfeat), flv_old_feature(flv_oldfeat),
       flv_old_feature_idx(flv_oldfeat_idx), change_type(ctype), colour(oldcol)
 {
@@ -797,7 +720,7 @@ void map_terrain_change_marker::write(writer &out) const
     marshallShort(out, flv_old_feature);
     marshallShort(out, flv_old_feature_idx);
     marshallUByte(out, change_type);
-    marshallShort(out, mon_num);
+    marshallInt(out, source_mid);
     marshallUByte(out, colour);
 }
 
@@ -823,7 +746,12 @@ void map_terrain_change_marker::read(reader &in)
     }
 #endif
     change_type = static_cast<terrain_change_type>(unmarshallUByte(in));
-    mon_num = unmarshallShort(in);
+#if TAG_MAJOR_VERSION == 34
+    if (in.getMinorVersion() < TAG_MINOR_TERRAIN_CHANGE_MID)
+        source_mid = unmarshallShort(in);
+    else
+#endif
+    source_mid = unmarshallInt(in);
 #if TAG_MAJOR_VERSION == 34
     if (in.getMinorVersion() < TAG_MINOR_SAVE_TERRAIN_COLOUR)
         colour = BLACK;
@@ -844,7 +772,7 @@ map_marker *map_terrain_change_marker::clone() const
     map_terrain_change_marker *mark =
         new map_terrain_change_marker(pos, old_feature, new_feature,
                                       flv_old_feature, flv_old_feature_idx,
-                                      duration, change_type, mon_num, colour);
+                                      duration, change_type, source_mid, colour);
     return mark;
 }
 
@@ -852,6 +780,18 @@ string map_terrain_change_marker::debug_describe() const
 {
     return make_stringf("Terrain change marker (%d->%d, %d)",
                         old_feature, new_feature, duration);
+}
+
+bool map_terrain_change_marker::any_at(coord_def pos, function<bool(map_terrain_change_marker&)> predicate)
+{
+    for (map_marker *marker : env.markers.get_markers_at(pos))
+        if (marker->get_type() == MAT_TERRAIN_CHANGE)
+        {
+            auto terrain_marker = dynamic_cast<map_terrain_change_marker*>(marker);
+            if (predicate(*terrain_marker))
+                return true;
+        }
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -867,7 +807,7 @@ map_cloud_spreader_marker::map_cloud_spreader_marker(const coord_def &p,
     {
         agent_mid = agent->mid;
         if (agent->is_monster())
-            kcat = (agent->as_monster()->friendly() ? KC_FRIENDLY : KC_OTHER);
+            kcat = (agent->friendly() ? KC_FRIENDLY : KC_OTHER);
         else
             kcat = KC_YOU;
     }
@@ -980,6 +920,63 @@ string map_position_marker::debug_describe() const
     return make_stringf("position (%d,%d)", dest.x, dest.y);
 }
 
+////////////////////////////////////////////////////////////////////////////
+// map_active_feature_marker
+
+map_active_feature_marker::map_active_feature_marker(
+    const coord_def &p, dungeon_feature_type _feat, mid_t _owner,
+    mon_attitude_type att, int _power, int _duration, int timer,
+    bool _is_dependent)
+    : map_marker(MAT_ACTIVE_FEATURE, p), feat(_feat), owner(_owner),
+      attitude(att), power(_power), duration(_duration), action_timer(timer),
+      is_dependent(_is_dependent)
+{
+}
+
+void map_active_feature_marker::write(writer &outf) const
+{
+    map_marker::write(outf);
+    marshallShort(outf, feat);
+    marshallInt(outf, owner);
+    marshallUByte(outf, attitude);
+    marshallShort(outf, power);
+    marshallShort(outf, duration);
+    marshallShort(outf, action_timer);
+    marshallBoolean(outf, is_dependent);
+}
+
+void map_active_feature_marker::read(reader &inf)
+{
+    map_marker::read(inf);
+    feat          = static_cast<dungeon_feature_type>(unmarshallShort(inf));
+    owner         = unmarshallInt(inf);
+    attitude      = static_cast<mon_attitude_type>(unmarshallUByte(inf));
+    power         = unmarshallShort(inf);
+    duration      = unmarshallShort(inf);
+    action_timer  = unmarshallShort(inf);
+    is_dependent  = unmarshallBoolean(inf);
+}
+
+map_marker *map_active_feature_marker::clone() const
+{
+    map_active_feature_marker* marker = new map_active_feature_marker(
+        pos, feat, owner, attitude, power, duration, action_timer, is_dependent);
+    return marker;
+}
+
+map_marker *map_active_feature_marker::read(reader &inf, map_marker_type)
+{
+    map_marker *mapf = new map_active_feature_marker();
+    mapf->read(inf);
+    return mapf;
+}
+
+string map_active_feature_marker::debug_describe() const
+{
+    return make_stringf("active feature (%s, owner: %d, power: %d)",
+            dungeon_feature_name(feat), (int)owner, power);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Map markers in env.
 
@@ -1073,10 +1070,36 @@ void map_markers::activate_markers_at(coord_def p)
     }
 }
 
-void map_markers::add(map_marker *marker)
+void map_markers::run_all(int time, map_marker_type type)
+{
+    for (size_t i = 0; i < dynamic_markers.size(); ++i)
+    {
+        if (type != MAT_ANY && dynamic_markers[i]->get_type() != type)
+            continue;
+
+        // Skip any markers that are flagged for deletion (which can sometimes
+        // even happen during an invocation of this method).
+        if (!dynamic_markers[i]->is_deleted() && dynamic_markers[i]->run(time))
+        {
+            remove(dynamic_markers[i]);
+            --i;
+        }
+    }
+
+    for (map_marker* mark : to_delete)
+        delete_marker(mark);
+    to_delete.clear();
+}
+
+void map_markers::add(map_marker *marker, bool is_move)
 {
     markers.insert(dgn_pos_marker(marker->pos, marker));
-    have_inactive_markers = true;
+    if (marker->needs_activation())
+        have_inactive_markers = true;
+    // If this is merely relocating an existing marker, don't re-add it to the
+    // dynamic marker list.
+    if (!is_move && marker->is_dynamic())
+        dynamic_markers.push_back(marker);
 }
 
 void map_markers::unlink_marker(const map_marker *marker)
@@ -1098,10 +1121,27 @@ void map_markers::check_empty()
         have_inactive_markers = false;
 }
 
+void map_markers::flag_for_deletion(map_marker* marker)
+{
+    marker->flag_for_deletion();
+    to_delete.push_back(marker);
+}
+
+void map_markers::delete_marker(map_marker *marker)
+{
+    if (marker->is_dynamic())
+    {
+        auto pos = std::find(dynamic_markers.begin(), dynamic_markers.end(), marker);
+        if (pos != dynamic_markers.end())
+            dynamic_markers.erase(pos);
+    }
+    delete marker;
+}
+
 void map_markers::remove(map_marker *marker)
 {
     unlink_marker(marker);
-    delete marker;
+    flag_for_deletion(marker);
     check_empty();
 }
 
@@ -1114,7 +1154,7 @@ void map_markers::remove_markers_at(const coord_def &c,
         auto todel = i++;
         if (type == MAT_ANY || todel->second->get_type() == type)
         {
-            delete todel->second;
+            flag_for_deletion(todel->second);
             markers.erase(todel);
         }
     }
@@ -1155,7 +1195,7 @@ void map_markers::move(const coord_def &from, const coord_def &to)
     for (auto mark : tmarkers)
     {
         mark->pos = to;
-        add(mark);
+        add(mark, true);
     }
 }
 
@@ -1164,7 +1204,7 @@ void map_markers::move_marker(map_marker *marker, const coord_def &to)
     unwind_bool inactive(have_inactive_markers);
     unlink_marker(marker);
     marker->pos = to;
-    add(marker);
+    add(marker, true);
 }
 
 vector<map_marker*> map_markers::get_all(map_marker_type mat)
@@ -1194,13 +1234,47 @@ vector<map_marker*> map_markers::get_all(const string &key, const string &val)
     return rmarkers;
 }
 
-vector<map_marker*> map_markers::get_markers_at(const coord_def &c)
+vector<map_marker*> map_markers::get_markers_at(const coord_def &c, map_marker_type type)
 {
     auto els = markers.equal_range(c);
     vector<map_marker*> rmarkers;
     for (auto i = els.first; i != els.second; ++i)
-        rmarkers.push_back(i->second);
+        if (type == MAT_ANY || i->second->get_type() == type)
+            rmarkers.push_back(i->second);
     return rmarkers;
+}
+
+vector<map_active_feature_marker*> map_markers::get_active_features(dungeon_feature_type feat, mid_t owner)
+{
+    vector<map_active_feature_marker*> out;
+    for (map_marker* mark : dynamic_markers)
+    {
+        if (mark->get_type() != MAT_ACTIVE_FEATURE)
+            continue;
+
+        map_active_feature_marker* marker = dynamic_cast<map_active_feature_marker*>(mark);
+        if ((feat == DNGN_UNSEEN || marker->feat == feat)
+            && (owner == MID_NOBODY || marker->owner == owner))
+        {
+            out.push_back(marker);
+        }
+    }
+    return out;
+}
+
+// Gets the most recently-added matching active feature marker at a given position.
+map_active_feature_marker* map_markers::get_active_feature_at(const coord_def& pos, dungeon_feature_type feat)
+{
+    for (int i = (int)dynamic_markers.size() - 1; i >= 0; --i)
+    {
+        if (dynamic_markers[i]->pos != pos || dynamic_markers[i]->get_type() != MAT_ACTIVE_FEATURE)
+            continue;
+
+        map_active_feature_marker* marker = dynamic_cast<map_active_feature_marker*>(dynamic_markers[i]);
+        if (feat == DNGN_UNSEEN || marker->feat == feat)
+            return marker;
+    }
+    return nullptr;
 }
 
 string map_markers::property_at(const coord_def &c, map_marker_type type,
@@ -1223,9 +1297,13 @@ string map_markers::property_at(const coord_def &c, map_marker_type type,
 
 void map_markers::clear()
 {
+    for (auto &entry : to_delete)
+        delete entry;
     for (auto &entry : markers)
         delete entry.second;
     markers.clear();
+    dynamic_markers.clear();
+    to_delete.clear();
     check_empty();
 }
 
@@ -1261,9 +1339,8 @@ void map_markers::read(reader &inf)
     const int nmarkers = unmarshallShort(inf);
     for (int i = 0; i < nmarkers; ++i)
     {
-        // used by tools
-        unmarshallInt(inf);
-        if (map_marker *mark = map_marker::read_marker(inf))
+        const int size = unmarshallInt(inf);
+        if (map_marker *mark = map_marker::read_marker(inf, size))
             add(mark);
     }
 }

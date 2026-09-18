@@ -1,16 +1,17 @@
-name: "the Serpent of Hell"
-enum: serpent_of_hell
+name: "Serpent of Hell"
 glyph: {char: "D", colour: etc_fire}
-flags: [crash_doors, flies, see_invis, unique, tall_tile]
+flags: [name_the, crash_doors, flies, see_invis, unique, tall_tile]
 resists: {poison: 1, fire: 3}
-xp_mult: 21
+exp: 6666
+species: serpent_of_hell
 genus: dragon
 holiness: [demonic]
 will: 180
 attacks:
  - {type: bite, flavour: fire, damage: 35}
- - {type: claw, damage: 15}
- - {type: trample, flavour: trample, damage: 15}
+ - {type: bite, flavour: fire, damage: 35}
+ - {type: bite, flavour: fire, damage: 35}
+ - {type: trample, flavour: trample, damage: 25}
 hd: 17
 hp_10x: 3230
 ac: 16

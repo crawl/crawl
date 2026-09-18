@@ -164,7 +164,7 @@ LUAFN(dgn_tile_floor_changed)
     return 0;
 }
 
-const struct luaL_reg dgn_tile_dlib[] =
+const struct luaL_Reg dgn_tile_dlib[] =
 {
 { "lrocktile", dgn_lrocktile },
 { "lfloortile", dgn_lfloortile },

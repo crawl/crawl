@@ -81,9 +81,6 @@ public:
     void get_bounding_box(int &x0, int &y0, int &w, int &h);
 
     tile_colour &get_pixel(int x, int y);
-
-    void add_variation(int colour, int idx);
-    bool get_variation(int colour, int &idx);
 protected:
     int m_width;
     int m_height;
@@ -92,8 +89,6 @@ protected:
     string m_parts_ctg;
     tile_colour *m_pixels;
     bool m_shrink;
-
-    int m_variations[MAX_COLOUR];
 };
 
 #endif

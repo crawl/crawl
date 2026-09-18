@@ -64,7 +64,8 @@ string pluralise(const string &name, const char * const qualifiers[],
         return name.substr(0, name.length() - 2) + "i";
     }
     else if (ends_with(lowname, "larva") || ends_with(lowname, "antenna")
-             || ends_with(lowname, "hypha") || ends_with(lowname, "noma"))
+             || ends_with(lowname, "hypha") || ends_with(lowname, "noma")
+             || ends_with(lowname, "amoeba"))
     {
         return name + "e";
     }
@@ -119,19 +120,23 @@ string pluralise(const string &name, const char * const qualifiers[],
              || ends_with(lowname, "spawn")    || ends_with(lowname, "tengu")
              || ends_with(lowname, "sheep")    || ends_with(lowname, "swine")
              || ends_with(lowname, "efreet")   || ends_with(lowname, "jiangshi")
-             || ends_with(lowname, "raiju")    || ends_with(lowname, "meliai"))
+             || ends_with(lowname, "raiju")    || ends_with(lowname, "meliai")
+             || ends_with(lowname, "kemwar"))
     {
         return name;
     }
     else if (ends_with(lowname, "ch") || ends_with(lowname, "sh")
-             || ends_with(lowname, "x"))
+             || ends_with(lowname, "x") || ends_with(lowname, "chon"))
     {
         // To handle cockroaches, sphinxes, and bushes.
+        // Also the correct Chilean pluralisation for chonchon.
         return name + "es";
     }
-    else if (ends_with(lowname, "simulacrum") || ends_with(lowname, "eidolon"))
+    else if (ends_with(lowname, "simulacrum") || ends_with(lowname, "plasmodium")
+             || ends_with(lowname, "eidolon"))
     {
         // simulacrum -> simulacra (correct Latin pluralisation)
+        // also plasmodium -> plasmodia (correct Latin pluralisation)
         // also eidolon -> eidola (correct Greek pluralisation)
         return name.substr(0, name.length() - 2) + "a";
     }
@@ -180,7 +185,7 @@ string pluralise(const string &name, const char * const qualifiers[],
 //      moth of wrath zombie    => moth of wrath zombies.
 static const char * const _monster_suffixes[] =
 {
-    "zombie", "skeleton", "simulacrum", nullptr
+    "zombie", "draugr", "simulacrum", nullptr
 };
 
 string pluralise_monster(const string &name)
@@ -256,6 +261,9 @@ string conjugate_verb(const string &verb, bool plural)
     if (verb == "are" || verb == "be")
         return "is";
 
+    if (verb == "aren't")
+        return "isn't";
+
     if (verb == "have")
         return "has";
 
@@ -294,6 +302,8 @@ string walk_verb_to_present(string verb)
 {
     if (verb == "wriggl")
         return "wriggle";
+    if (verb == "trott")
+        return "trot";
     if (verb == "glid")
     {
         return "walk"; // it's a lie! tengu only get this

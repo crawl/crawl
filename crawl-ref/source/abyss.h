@@ -9,6 +9,11 @@
 // plus a little extra so that the player won't be disoriented by taking a
 // step backward after an abyss shift.
 const int ABYSS_AREA_SHIFT_RADIUS = LOS_RADIUS + 2;
+
+// How far the player may stray from the centre before the area shifts
+const int ABYSS_SHIFT_DISTANCE = min(GXM, GYM) / 2 - 1
+                                 - MAPGEN_BORDER - ABYSS_AREA_SHIFT_RADIUS;
+
 const int ABYSSAL_RUNE_MIN_LEVEL = 3;
 extern const coord_def ABYSS_CENTRE;
 
@@ -18,9 +23,19 @@ extern const coord_def ABYSS_CENTRE;
 #define ABYSS_SPAWNED_XP_EXIT_KEY "abyss_spawned_xp_exit"
 const int EXIT_XP_COST = 10; // ref _reduce_abyss_xp_timer() for details
 // but it's equivalent to roughly half the recharge xp for an elemental evoker
-#define ABYSS_MIN_DEPTH_KEY "abyss_min_depth_key"
+
+/// Number of times the Abyss generated new areas on the current trip into the
+/// Abyss (used to prevent placing the rune until a minimal ammount of
+/// exploration has happened.)
+#define ABYSS_AREAS_SEEN_KEY "abyss_areas_seen"
+
+/// Minimum number of areas that must be generated before the rune can place.
+const int ABYSS_RUNE_AREAS_MIN = 4;
 
 #define ABYSSAL_RUNE_LOC_KEY "abyssal_rune_loc"
+
+// How much time the player has spent on Abyss:5 at XL 27
+#define ABYSS_LOITERING_TIME_KEY "abyss_loitering_timer"
 
 struct abyss_state
 {
@@ -36,8 +51,11 @@ extern abyss_state abyssal_state;
 
 void abyss_morph();
 
-void banished(const string &who = "", const int power = 0);
+void banished(const string &who = "");
+void check_banished();
 void push_features_to_abyss();
+
+int abyss_default_depth(bool max_possible = false);
 
 void clear_abyssal_rune_knowledge();
 void generate_abyss();
@@ -49,7 +67,6 @@ bool is_level_incorruptible(bool quiet = false);
 bool is_level_incorruptible_monster();
 void lugonu_corrupt_level(int power);
 void lugonu_corrupt_level_monster(const monster &who);
-void run_corruption_effects(int duration);
 void splash_corruption(coord_def centre);
 void set_abyss_state(coord_def coord, uint32_t depth);
 void destroy_abyss();

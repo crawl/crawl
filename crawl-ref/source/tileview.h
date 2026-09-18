@@ -16,7 +16,7 @@ class monster;
 struct tile_flavour;
 struct packed_cell;
 
-tileidx_t pick_dngn_tile(tileidx_t idx, int value, int variant = 0);
+tileidx_t pick_dngn_tile(tileidx_t idx, int value);
 
 // Initialize the flavour and the tile env when changing or creating levels.
 void tile_new_level(bool first_time, bool init_unseen);
@@ -39,20 +39,21 @@ void tile_clear_flavour();
 void tile_init_flavour();
 // Init the flavour of a single cell.
 void tile_init_flavour(const coord_def &gc, const int domino = -1);
+void tile_init_remembered_flavour(coord_def pos);
 // Draw a halo using 'tile' (which has 9 variations) around any features
 // that match target.
 void tile_floor_halo(dungeon_feature_type target, tileidx_t tile);
 
 // Tile view related
 void tile_draw_map_cells();
+void tile_draw_entire_map();
 void tile_draw_floor();
 void tile_reset_fg(const coord_def &gc);
 void tile_draw_map_cell(const coord_def &gc, bool foreground_only = false);
-void tile_wizmap_terrain(const coord_def &gc);
 
 void tile_apply_animations(tileidx_t bg, tile_flavour *flv);
 void tile_apply_properties(const coord_def &gc, packed_cell &cell);
-void apply_variations(const tile_flavour &flv, tileidx_t *bg,
-                      const coord_def &gc);
 
 void tile_forget_map(const coord_def &gc);
+
+unsigned short tile_door_connect(coord_def gc);

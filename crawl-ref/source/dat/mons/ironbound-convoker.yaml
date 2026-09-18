@@ -1,7 +1,7 @@
 name: "ironbound convoker"
 glyph: {char: "p", colour: yellow}
 flags: [speaks, warm_blood]
-xp_mult: 12
+exp: 644
 species: human
 will: 40
 attacks:

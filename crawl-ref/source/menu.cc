@@ -196,8 +196,10 @@ protected:
     int m_mouse_x = -1, m_mouse_y = -1;
     void update_hovered_entry(bool force=false);
 
+    void mark_buffers_dirty();
     void pack_buffers();
 
+    bool m_buffers_dirty = false;
     bool m_draw_tiles;
     FontWrapper *m_font_entry;
     ShapeBuffer m_shape_buf;
@@ -558,6 +560,12 @@ int UIMenu::get_max_viewport_height()
 void UIMenu::_render()
 {
 #ifdef USE_TILE_LOCAL
+    if (m_buffers_dirty)
+    {
+        pack_buffers();
+        m_buffers_dirty = false;
+    }
+
     GLW_3VF t = {(float)m_region.x, (float)m_region.y, 0}, s = {1, 1, 1};
     glmanager->set_transform(t, s);
 
@@ -897,7 +905,7 @@ void UIMenu::_allocate_region()
         update_hovered_entry();
     else
         m_hover_idx = m_menu->last_hovered;
-    pack_buffers();
+    mark_buffers_dirty();
 #endif
 }
 
@@ -906,8 +914,7 @@ void UIMenu::set_hovered_entry(int i)
     m_hover_idx = i;
 
 #ifdef USE_TILE_LOCAL
-    if (row_heights.size() > 0) // check for initial layout
-        pack_buffers();
+    mark_buffers_dirty();
 #endif
     _expose();
 }
@@ -977,7 +984,7 @@ bool UIMenu::on_event(const Event& ev)
         do_layout(m_region.width, m_num_columns);
         if (!(m_menu->flags & MF_ARROWS_SELECT) || m_menu->last_hovered < 0)
             update_hovered_entry(true);
-        pack_buffers();
+        mark_buffers_dirty();
         _expose();
         return false;
     }
@@ -992,7 +999,7 @@ bool UIMenu::on_event(const Event& ev)
             m_hover_idx = -1;
         m_real_hover_idx = -1;
         do_layout(m_region.width, m_num_columns);
-        pack_buffers();
+        mark_buffers_dirty();
         _expose();
         return false;
     }
@@ -1001,7 +1008,7 @@ bool UIMenu::on_event(const Event& ev)
     {
         do_layout(m_region.width, m_num_columns);
         update_hovered_entry(true);
-        pack_buffers();
+        mark_buffers_dirty();
         _expose();
         return true;
     }
@@ -1014,7 +1021,7 @@ bool UIMenu::on_event(const Event& ev)
         m_mouse_pressed = true;
         do_layout(m_region.width, m_num_columns);
         update_hovered_entry(true);
-        pack_buffers();
+        mark_buffers_dirty();
         _expose();
     }
     else if (event.type() == Event::Type::MouseUp
@@ -1041,6 +1048,11 @@ bool UIMenu::on_event(const Event& ev)
     }
 
     return true;
+}
+
+void UIMenu::mark_buffers_dirty()
+{
+    m_buffers_dirty = true;
 }
 
 void UIMenu::pack_buffers()
@@ -2018,7 +2030,6 @@ bool Menu::process_key(int keyin)
     {
     case CK_NO_KEY:
     case CK_REDRAW:
-    case CK_RESIZE:
         return true;
     case 0:
         return true;
@@ -2169,39 +2180,80 @@ int Menu::get_first_visible(bool skip_init_headers, int col) const
 
 bool Menu::is_hotkey(int i, int key)
 {
-    bool ishotkey = items[i]->is_hotkey(key);
-    return ishotkey && (!is_set(MF_SELECT_BY_PAGE) || in_page(i));
+    return items[i]->is_hotkey(key);
 }
 
 /// find the first item (if any) that has hotkey `key`.
 int Menu::hotkey_to_index(int key, bool primary_only)
 {
-    // when called without a ui, just check from the beginning
-    const int first_entry = ui_is_initialized() ? get_first_visible() : 0;
     const int final = items.size();
 
     // Process all items, in case user hits hotkey for an
     // item not on the current page.
 
-    // We have to use some hackery to handle items that share
-    // the same hotkey (as for pickup when there's a stack of
-    // >52 items). If there are duplicate hotkeys, the items
-    // are usually separated by at least a page, so we should
-    // only select the item on the current page. We use only
-    // one loop, but we look through the menu starting with the first
-    // visible item, and check to see if we've matched an item
-    // by its primary hotkey (hotkeys[0] for multiple-selection
-    // menus), in which case we stop selecting further items. If
-    // not, we loop around back to the beginning.
-    for (int i = 0; i < final; ++i)
+    // Depending on flags, we have one of two behaviors:
+    //
+    // If MF_SELECT_BY_CATEGORY is set (used for single-page inventory screen),
+    // we first check for the first matching hotkey, starting from the top of
+    // the current menu subsection the cursor is in. If no match is found, we
+    // next check from the start of the menu to the current position. (This
+    // means that in cases where a menu has multiple entries with the same
+    // letter, we will select one within the current subsection, if one exists,
+    // and then check elsewhere if not.)
+    //
+    // If it is not, we simply select the nearest entry with a matching hotkey.
+
+    if (is_set(MF_SELECT_BY_CATEGORY))
     {
-        const int index = (i + first_entry) % final;
-        if (is_hotkey(index, key)
-            && (!primary_only || items[index]->hotkeys[0] == key))
+        // First, determine the top of our current section.
+        int top = 0;
+        for (int i = last_hovered; i >= 0; --i)
         {
-            return index;
+            if (items[i]->level != MEL_ITEM)
+            {
+                top = i;
+                break;
+            }
+        }
+
+        for (int i = top; i < final; ++i)
+        {
+            if (is_hotkey(i, key)
+                && (!primary_only || items[i]->hotkeys[0] == key))
+            {
+                return i;
+            }
+        }
+        for (int i = 0; i < top; ++i)
+        {
+            if (is_hotkey(i, key)
+                && (!primary_only || items[i]->hotkeys[0] == key))
+            {
+                return i;
+            }
         }
     }
+    else
+    {
+        int nearest_index = -1;
+        int nearest_dist = INT_MAX;
+        for (int i = 0; i < (int)items.size(); ++i)
+        {
+            if (is_hotkey(i, key)
+                && (!primary_only || items[i]->hotkeys[0] == key))
+            {
+                int dist = abs(i - last_hovered);
+                if (dist < nearest_dist)
+                {
+                    nearest_dist = dist;
+                    nearest_index = i;
+                }
+            }
+        }
+
+        return nearest_index;
+    }
+
     return -1;
 }
 
@@ -2401,13 +2453,7 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
     tileidx_t       ch = TILE_FLOOR_NORMAL;
 
     if (!fake)
-    {
         ch = tileidx_feature(c);
-        if (ch == TILE_FLOOR_NORMAL)
-            ch = tile_env.flv(c).floor;
-        else if (ch == TILE_WALL_NORMAL)
-            ch = tile_env.flv(c).wall;
-    }
 
     tileset.emplace_back(ch);
 
@@ -2488,12 +2534,12 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
     }
     else
     {
-        tileidx_t idx = tileidx_monster(*m) & TILE_FLAG_MASK;
+        tileidx_t idx = tileidx_monster(*m).tile();
         tileset.emplace_back(idx);
     }
 
     // A fake monster might not have its ghost member set up properly.
-    if (!fake && m->ground_level())
+    if (!fake && !m->airborne())
     {
         if (ch == TILE_DNGN_LAVA)
             tileset.emplace_back(TILEI_MASK_LAVA);
@@ -2551,6 +2597,11 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
     {
         tileset.emplace_back(TILEI_UNAWARE);
     }
+
+    if (m->is(MB_KNOWN_INVIS))
+        tileset.emplace_back(TILEI_UNSEEN_INVIS_KNOWN);
+    else if (m->is(MB_REMEMBERED_INVIS))
+        tileset.emplace_back(TILEI_UNSEEN_INVIS_REMEMBERED);
 
     return true;
 }
@@ -2858,14 +2909,6 @@ void Menu::set_hovered(int index, bool force)
     }
     // intentionally goes to -1 on size 0
     last_hovered = min(index, static_cast<int>(items.size()) - 1);
-#ifdef USE_TILE_LOCAL
-    // don't crash if this gets called on local tiles before the menu has been
-    // displayed. If your initial hover isn't showing up on local tiles, it
-    // may be because of this -- adjust the timing so it is set after
-    // update_menu is called.
-    if (m_ui.menu->shown_items() == 0)
-        return;
-#endif
 
     m_ui.menu->set_hovered_entry(last_hovered);
     if (last_hovered >= 0)
@@ -3452,7 +3495,10 @@ void Menu::webtiles_write_item(const MenuEntry* me) const
 
 int menu_colour(const string &text, const string &prefix, const string &tag, bool strict)
 {
-    const string tmp_text = prefix + text;
+    bool extra_space = !text.empty() && text.front() != ' '
+                       && !prefix.empty() && prefix.back() != ' ';
+
+    const string tmp_text = prefix + (extra_space ? " " : "") + text;
 
     for (const colour_mapping &cm : Options.menu_colour_mappings)
     {
@@ -3478,7 +3524,7 @@ int MenuHighlighter::entry_colour(const MenuEntry *entry) const
 // column_composer
 
 column_composer::column_composer(int cols, ...)
-    : columns()
+    :  columns()
 {
     ASSERT(cols > 0);
 
@@ -3499,6 +3545,23 @@ column_composer::column_composer(int cols, ...)
     va_end(args);
 }
 
+column_composer::column_composer(int cols, vector<int> widths)
+    :  columns()
+{
+    ASSERT(cols > 0 && (int)widths.size() >= cols);
+
+    columns.emplace_back(1);
+    int lastcol = 1;
+    for (int i = 0; i < cols; ++i)
+    {
+        int nextcol = widths[i];
+        ASSERT(nextcol > lastcol);
+
+        lastcol = nextcol;
+        columns.emplace_back(nextcol);
+    }
+}
+
 void column_composer::clear()
 {
     flines.clear();
@@ -3507,7 +3570,9 @@ void column_composer::clear()
 void column_composer::add_formatted(int ncol,
                                     const string &s,
                                     bool add_separator,
-                                    int  margin)
+                                    int  margin,
+                                    bool centered,
+                                    colour_t colour)
 {
     ASSERT_RANGE(ncol, 0, (int) columns.size());
 
@@ -3518,12 +3583,27 @@ void column_composer::add_formatted(int ncol,
     // Add a blank line if necessary. Blank lines will not
     // be added at page boundaries.
     if (add_separator && col.lines && !segs.empty())
-        newlines.emplace_back();
+        newlines.emplace_back(formatted_string::parse_string("", colour));
 
     for (const string &seg : segs)
-        newlines.push_back(formatted_string::parse_string(seg));
+        newlines.push_back(formatted_string::parse_string(seg, colour));
 
     strip_blank_lines(newlines);
+
+    if (centered && ncol < (int)columns.size() - 1)
+    {
+        for (size_t i = 0; i < newlines.size(); ++i)
+        {
+            const int delta = columns[ncol+1].margin - col.margin - newlines[i].width();
+            const int pad_left = max(0, delta / 2 - 1);
+            const int pad_right = delta - pad_left;
+
+            formatted_string new_str = formatted_string::parse_string(string(pad_left, ' '));
+            new_str += newlines[i];
+            new_str.cprintf("%-*s", pad_right, "");
+            newlines[i] = new_str;
+        }
+    }
 
     compose_formatted_column(newlines,
                               col.lines,

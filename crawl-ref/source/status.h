@@ -54,7 +54,12 @@ enum status_type
     STATUS_STAT_ZERO,
     STATUS_TRICKSTER,
     STATUS_MNEMOPHAGE,
-    STATUS_LAST_STATUS = STATUS_MNEMOPHAGE
+    STATUS_SHROUD,
+    STATUS_CLAUSTROPHOBIA,
+    STATUS_OSTRACISM,
+    STATUS_TESSERACT,
+    STATUS_SUNDER_READY,
+    STATUS_LAST_STATUS = STATUS_SUNDER_READY
 };
 
 struct status_info
@@ -75,8 +80,14 @@ struct status_info
 // returns true if the status has a description
 bool fill_status_info(int status, status_info& info);
 
+string status_light_description(const status_info& info);
+
 const char *duration_name(duration_type dur);
+duration_type duration_by_name(const string &name);
+vector<duration_type> all_duration_with_flag(uint64_t flag);
 bool duration_dispellable(duration_type dur);
+bool duration_negative(duration_type dur);
+bool duration_extended_by_attacks(duration_type dur);
 void init_duration_index();
 
 bool duration_decrements_normally(duration_type dur);

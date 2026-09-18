@@ -269,7 +269,7 @@ Willpower
 
 Size
   Different species have different sizes: Spriggans and Felids are very small;
-  Kobolds are small; Oni and Trolls are large; Nagas and Armataurs are large
+  Kobolds are small; Oni and Trolls are large; Nagas and Gale Centaurs are large
   with a medium torso; all other species are medium-sized. Many talismans will
   change your size. Size affects your evasion: the smaller your character, the
   more evasive it is. On the other hand, characters of larger than medium size
@@ -379,9 +379,8 @@ that most monsters adjacent to you will follow when you change levels; this
 holds both for hostile and allied monsters. Notable exceptions are zombies
 and other mindless undead, who are too stupid to properly operate stairs.
 
-When taking stairs with an unknown destination, you are guaranteed a chance to
-move before any adjacent monsters. When taking stairs that you've already seen
-the other side of, monsters will be alert and get a chance to move before you.
+When taking stairs, you are guaranteed a chance to act before any monsters on
+the other side that you have not previously encountered.
 
 If you ascend an up staircase on level one, you will leave the dungeon forever;
 if you are carrying the magical Orb of Zot, you win the game by doing this.
@@ -710,7 +709,7 @@ adventures, how they are displayed, and what commands there are to use them:
 "        amulets        (use 'P'ut on and 'R'emove)
 \|        staves         (use 'w'ield)
 :        spellbooks     (use 'M'emorise and 'z'ap, 'Q' to quiver)
-%        talismans      (use 'V' to evoke)
+%        talismans      (use 'P'ut on and 'R'remove)
 }        miscellaneous  (use 'V' to evoke, 'Q' to quiver)
 $        gold           (use 'g' to pick up)
 =======  =============  ================================================
@@ -949,10 +948,10 @@ Talismans allow their user to shift into a different form. Entering or leaving
 a form with a talisman requires a brief period of concentration, but otherwise,
 forms last until the user chooses to leave them.
 
-More powerful talismans require some amount of Shapeshifting skill, without
-which a user will find their maximum health reduced until they leave the form.
-Shapeshifting skill also increases other benefits provided by talismans' forms,
-though weaker talismans have a limit to how helpful skill can be.
+Most talismans require some amount of Shapeshifting skill, without which a user
+will find their maximum health reduced until they leave the form. Shapeshifting
+skill also increases other benefits provided by talismans' forms, though weaker
+talismans have a limit to how helpful skill can be.
 
 { Miscellaneous
 ========================================
@@ -1160,11 +1159,10 @@ as a single mutation.
 
 Miscasting spells will cause magical contamination, which in turn can cause
 mutations if too much contamination is accrued at once. Certain powerful
-magical effects or spells (such as 'Invisibility' and 'Irradiate') also cause
-contamination as a side-effect even when successful. A single use of these
-effects is safe on its own, but multiple uses in short succession, or usage with
-existing contamination from other sources can cause dangerous levels of
-contamination.
+magical spells (such as 'Irradiate') also cause contamination as a side-effect
+even when successful. A single use of these effects is safe on its own, but
+multiple uses in short succession, or usage with existing contamination from
+other sources can cause dangerous levels of contamination.
 
 Mutations from magical contamination are almost always harmful. Mutations can
 also be caused by specific potions or by spells cast by powerful enemies found
@@ -1539,19 +1537,22 @@ the player to set aside many aspects of the game while still developing a
 strong character.
 
 
-Mountain Dwarves (MD)
+Gnolls (Gn)
+  Gnolls are a species of caniform humanoids originally hailing from the arid
+  deserts and grasslands of the east. In recent history they have become
+  unusually attracted to the Dungeon, establishing tribes around and even
+  inside of it. Unfortunately their long stay in the Dungeon has exposed their
+  somewhat fragile minds to excessive amounts of its magic.
 
-  Mountain Dwarves are stout and hardy folk, adept at fighting with axes and
-  blugeoning weapons, though lacking the dexterity to excel at other forms of
-  combat. Their reserves of magic are somewhat poor, though they still make
-  passable spellcasters, and their connection with the blood of the earth gives
-  them a particular talent at fire and earth magics. Their spell success is
-  significantly less encumbered by armour than other species.
+  On the one hand, their bizarrely altered brains now have incredible
+  proficiency at learning every skill. On the other, these same alterations
+  have rendered Gnolls incapable of selective learning. They learn all skills
+  at the same time, so are generally unable to specialise in any one thing.
 
-  They are superlative artisans and smiths, employed in ancient times by even the
-  gods themselves, and this spiritual history makes them exceptional at invoking
-  divine aid. They can even use enchantment scrolls to improve artefacts that
-  would be beyond the understanding of any other species.
+  In order to survive with this limitation, Gnolls use their universal
+  knowledge to take advantage of every resource they find in the Dungeon. They
+  also have a knack for finding items, allowing them to easily locate the
+  Dungeon's hidden treasures.
 
 Minotaurs (Mi)
   The Minotaurs are a species of hybrids, possessing Human bodies with bovine
@@ -1585,15 +1586,28 @@ Merfolk (Mf)
 
 Gargoyles (Gr)
   A cross between ordinary stone gargoyles and living beings, Gargoyles are
-  hideous humanoids with an affinity to rock. They have low health, but large
-  amounts of innate armour which increases further as they gain levels. They
-  eventually gain the ability to fly.
+  hideous humanoids with an affinity to earth magic. They have low health, but
+  large amounts of innate armour which increases further as they gain levels.
+  They eventually gain the ability to fly.
 
   Gargoyles' partially living form grants them immunity to poison, as well as
   resistance to electricity, and protection from some effects of necromancy.
   Their natural armour makes them strong melee fighters, and they are naturally
   skilled with blunt weapons and in unarmed combat. They can also be exceptional
   earth-based conjurers.
+
+Mountain Dwarves (MD)
+  Mountain Dwarves are stout and hardy folk, adept at fighting with axes and
+  blugeoning weapons, though lacking the dexterity to excel at other forms of
+  combat. Their reserves of magic are somewhat poor, though they still make
+  passable spellcasters, and their connection with the blood of the earth gives
+  them a particular talent at fire and earth magics. Their spell success is
+  significantly less encumbered by armour than other species.
+
+  They are superlative artisans and smiths, employed in ancient times by even the
+  gods themselves, and this spiritual history makes them exceptional at invoking
+  divine aid. They can even use enchantment scrolls to improve artefacts that
+  would be beyond the understanding of any other species.
 
 Draconians (Dr)
   Draconians are Human-dragon hybrids: humanoid in form and approximately
@@ -1632,34 +1646,16 @@ Deep Elves (DE)
    melee combat and physical defence, although they are capable at using bows
    and other ranged weapons.
 
-Armataurs (At)
-  The Armataurs are a large, scaled mammalian species, walking on four feet
-  and swinging a powerful tail behind them. Their elephant-back armies
-  terrorise the lands outside the Dungeon.
+Barachim (Ba)
+  Barachim are an amphibious humanoid species, spawned at the dawn of time as
+  servants for the gods. Inevitably, they rebelled and fled into the mortal
+  world; but even uncounted years later, the darkness still flees at their
+  approach, remembering those who they once served.
 
-  Armataurs instinctively roll when moving toward foes, getting a free move and
-  regenerating magic. They have great aptitudes with armour and shields, though
-  their body shape reduces the protection offered by body armour early on. At
-  higher levels they also regenerate both health and magic when rolling, making
-  them truly resilient.
-
-Gnolls (Gn)
-  Gnolls are a species of caniform humanoids originally hailing from the arid
-  deserts and grasslands of the east. In recent history they have become
-  unusually attracted to the Dungeon, establishing tribes around and even
-  inside of it. Unfortunately their long stay in the Dungeon has exposed their
-  somewhat fragile minds to excessive amounts of its magic.
-
-  On the one hand, their bizarrely altered brains now have incredible
-  proficiency at learning every skill. On the other, these same alterations
-  have rendered Gnolls incapable of selective learning. They learn all skills
-  at the same time, so are generally unable to specialise in any one thing.
-
-  In order to survive with this limitation, Gnolls use their universal
-  knowledge to take advantage of every resource they find in the Dungeon. They
-  also have powerful noses adapted to the Dungeon's scents, allowing them to
-  easily locate where treasures lay hidden.
-
+  Barachim's most remarkable trait is their grossly overmuscled legs, which
+  allow them to leap great distances. When not leaping, they are somewhat
+  slow-moving, and the long sight-lines that their heritage creates can be a
+  major disadvantage, but they can master almost any skill.
 
 Intermediate Species
 ====================
@@ -1734,10 +1730,10 @@ Revenants (Re)
   recollections of their former life and an all-consuming hunger to claw back
   that existence which the world forgot.
 
-  So powerful is this drive which animates them that they can they can actually
-  rip the very existence from others, tearing fragments of souls and memories
-  and even the fundamental essence of inanimate objects and turning them into
-  fuel for the unholy fire that forever flickers upon their form.
+  So powerful is this drive which animates them that they can actually rip the
+  very existence from others, tearing fragments of souls and memories and even
+  the fundamental essence of inanimate objects and turning them into fuel for
+  the unholy fire that forever flickers upon their form.
 
   Their nature makes them uniquely skilled at wielding destructive magic;
   while their reserves of magical energy are poor and their aptitudes
@@ -1777,26 +1773,6 @@ Oni (On)
   Their large size prevents them from wearing most forms of armour, and are poor
   at dodging, relying on their enormous bulk to survive battles instead.
 
-Barachim (Ba)
-  Barachim are an amphibious humanoid species, spawned at the dawn of time as
-  servants for the gods. Inevitably, they rebelled and fled into the mortal
-  world; but even uncounted years later, the darkness still flees at their
-  approach, remembering those who they once served.
-
-  Barachim's most remarkable trait is their grossly overmuscled legs, which
-  allow them to leap great distances. When not leaping, they are somewhat
-  slow-moving, and the long sight-lines that their heritage creates can be a
-  major disadvantage, but they can master almost any skill.
-
-Advanced Species
-================
-
-*Advanced* species have some substantial weaknesses, and/or add multiple complex
-new mechanics to gameplay. This category includes several species that
-experienced players may not find difficult per se, but that may require quite
-a bit of experience to adapt to. It also includes species that are just
-plain difficult, such as Mummies.
-
 Coglins (Co)
    Unlike most of their goblin kin, Coglins augment their tiny frames with
    charm-wrought steel. Their exoskeletons, capable of wielding weapons
@@ -1815,6 +1791,28 @@ Coglins (Co)
    that spirits of steel and sandalwood come to rest within every thing that
    draws blood, slowly and carefully re-attuning their exoskeletons to those
    spirits whenever they wield or remove weapons. Never scorn the spirits!
+
+Advanced Species
+================
+
+*Advanced* species have some substantial weaknesses, and/or add multiple complex
+new mechanics to gameplay. This category includes several species that
+experienced players may not find difficult per se, but that may require quite
+a bit of experience to adapt to. It also includes species that are just
+plain difficult, such as Mummies.
+
+Gale Centaur (GC)
+  Gale Centaurs are hardy hybrids with the lower body of a horse and the torso
+  of a human. Distant descendants of the Four Winds, they can stampede swiftly
+  towards enemies in battle and trample entire groups of them backward. As they
+  become more experienced, one of the Four Winds will further augment their
+  combat prowess based on the skills they have trained the most.
+
+  Their lineage gives them an excellent affinity for air and translocations
+  magic as well as invocations. Their defensive aptitudes are solid, though
+  their size impairs their evasion and unusual body shape reduces the benefit
+  they get from heavy armour. They learn many other skills slowly, but the
+  strength of their winds make them a force to be reckoned with nonetheless.
 
 Vine Stalkers (VS)
   Limber in shape, Vine Stalkers are anthropomorphic masses of thick vines.
@@ -1899,10 +1897,10 @@ Nagas (Na)
   invisible creatures, and have tough skin, but their tails are relatively slow
   and cannot move them around as quickly as can other creatures' legs (this only
   affects their movement rate; all other actions are at normal speed). Like
-  Armataurs, their body shape also prevents them from gaining full protection
-  from body armour. A Naga's biggest forte is stealth: Nagas are very good at
-  moving unnoticed. Their tails eventually grow strong enough to constrict
-  their foes in combat.
+  Gale Centaurs, their body shape also prevents them from gaining full
+  protection from body armour. A Naga's biggest forte is stealth: Nagas are very
+  good at moving unnoticed. Their tails eventually grow strong enough to
+  constrict their foes in combat.
 
   Nagas can spit poison; the accuracy and damage of this poison increases with
   the Naga's experience level.
@@ -2028,7 +2026,7 @@ Warriors are experienced at using physical weapons and defending themselves.
 
 Fighters
   Fighters usually start with a good weapon of their choice, a suit of medium
-  armour, a shield, and a potion of might.
+  armour, a shield, and two potions of might.
 
 Gladiators
   The Gladiator has been trained to fight in the ring. They start with a good
@@ -2087,7 +2085,8 @@ Artificers
 Shapeshifters
   Shapeshifters use talismans to shift their body into different forms,
   granting them uncanny power but making them unable to use some items.
-  They enter the dungeon with two talismans and a potion of lignification.
+  They enter the dungeon with two talismans, some flux baubles, and a
+  potion of lignification.
 
 Wanderers
   Wanderers are "jacks-of-all-trades, masters of none". They start the game
@@ -2110,7 +2109,7 @@ Warpers
   Warpers specialise in translocation magic, and are experts in travelling long
   distances and positioning themselves precisely and use this to their advantage
   in melee or missile combat. They start with a scroll of blinking, a selection
-  of translocation spells, some dispersal darts, a simple weapon of their choice,
+  of translocation spells, some disjunction darts, a simple weapon of their choice,
   and leather armour.
 
 Hexslinger
@@ -2245,7 +2244,7 @@ command to target a specific monster with a reaching attack, or use Autofight
 
 Finally, Unarmed Combat skill increases the accuracy, damage, and speed of
 attacks made while unarmed. Note that most auxiliary attacks, such as an
-Armataur's tail-slap or a Minotaur's headbutt, are not affected by Unarmed
+Draconian's tail-slap or a Minotaur's headbutt, are not affected by Unarmed
 Combat. The only exception is the off-hand punch attack granted by using
 neither weapon nor shield, which Unarmed Combat makes somewhat more effective.
 

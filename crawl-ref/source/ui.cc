@@ -1640,7 +1640,10 @@ bool Scroller::on_event(const Event& event)
 Layout::Layout(shared_ptr<Widget> child)
 {
 #ifdef USE_TILE_LOCAL
-    m_depth = ui_root.num_children();
+    if (tiles.is_using_small_layout())
+        m_depth = 0;
+    else
+        m_depth = ui_root.num_children();
 #endif
     child->_set_parent(this);
     m_child = std::move(child);
@@ -1748,6 +1751,8 @@ Size Popup::get_max_child_size()
 #ifdef USE_TILE_LOCAL
 int Popup::base_margin()
 {
+    if (tiles.is_using_small_layout())
+        return 0;
     const int screen_small = 800, screen_large = 1000;
     const int margin_small = 10, margin_large = 50;
     const int clipped = max(screen_small, min(screen_large, m_region.height));
@@ -2262,9 +2267,7 @@ void TextEntry::LineReader::insert_char_at_cursor(int ch)
 #ifdef USE_TILE_LOCAL
 void TextEntry::LineReader::clipboard_paste()
 {
-    if (wm && wm->has_clipboard())
-        for (char ch : wm->get_clipboard())
-            process_key(ch);
+    paste_clipboard([this](char32_t c) { process_key(c); });
 }
 #endif
 
@@ -3290,28 +3293,19 @@ void pump_events(int wait_event_timeout)
 #else
     if (wait_event_timeout <= 0) // resizing probably breaks this case
         return;
-    set_getch_returns_resizes(true);
-    int k = macro_key != -1 ? macro_key : getch_ck();
-    set_getch_returns_resizes(false);
 
-    if (k == CK_RESIZE)
+    int k;
     {
-        // This may be superfluous, since the resize handler may have already
-        // resized the screen
-        clrscr();
-        console_shutdown();
-        console_startup();
-        ui_root.resize(get_number_of_cols(), get_number_of_lines());
+        unwind_bool safe_resize(crawl_state.waiting_for_ui, true);
+        k = macro_key != -1 ? macro_key : getch_ck();
     }
-    else
-    {
-        wm_event ev = {0};
-        ev.type = WME_KEYDOWN;
-        ev.key.keysym.sym = k;
-        if (macro_key == -1)
-            remap_key(ev);
-        ui_root.on_event(ev);
-    }
+
+    wm_event ev = {0};
+    ev.type = WME_KEYDOWN;
+    ev.key.keysym.sym = k;
+    if (macro_key == -1)
+        remap_key(ev);
+    ui_root.on_event(ev);
 #endif
 }
 
@@ -3396,6 +3390,11 @@ void delay(unsigned int ms)
             pump_events();
     }
 #endif
+    if (crawl_state.seen_hups)
+    {
+        macro_buf_add(CK_ESCAPE, true); // Let the caller respond to seen_hups.
+        pump_events();
+    }
 }
 
 /**
@@ -3612,6 +3611,7 @@ wm_mouse_event to_wm_event(const MouseEvent &ev)
     wm_mouse_event mev;
     mev.event = ev.type() == Event::Type::MouseMove ? wm_mouse_event::MOVE :
                 ev.type() == Event::Type::MouseDown ? wm_mouse_event::PRESS :
+                ev.type() == Event::Type::MouseUp ? wm_mouse_event::RELEASE :
                 wm_mouse_event::WHEEL;
     mev.button = static_cast<wm_mouse_event::mouse_event_button>(ev.button());
     int x = 0;

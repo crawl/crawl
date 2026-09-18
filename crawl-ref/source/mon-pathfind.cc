@@ -2,9 +2,11 @@
 
 #include "mon-pathfind.h"
 
+#include "coordit.h"
 #include "directn.h"
 #include "env.h"
 #include "los.h"
+#include "losglobal.h"
 #include "misc.h"
 #include "mon-movetarget.h"
 #include "mon-place.h"
@@ -39,15 +41,12 @@ int mons_tracking_range(const monster* mon)
         range = 3;
         break;
     case I_ANIMAL:
-        range = 5;
+        range = 8;
         break;
     case I_HUMAN:
-        range = LOS_DEFAULT_RANGE;
+        range = 11;
         break;
     }
-
-    if (mons_is_native_in_branch(*mon))
-        range += 3;
 
     if (player_under_penance(GOD_ASHENZARI))
         range *= 5;
@@ -109,6 +108,9 @@ bool monster_pathfind::init_pathfind(const monster* mon, coord_def dest,
 
         return true;
     }
+
+    if (mon->is_stationary())
+        return false;
 
     return start_pathfind(msg);
 }
@@ -437,40 +439,35 @@ bool monster_pathfind::is_reachable(const coord_def& p)
 
 bool monster_pathfind::traversable(const coord_def& p)
 {
-    if (!traverse_unmapped && env.grid(p) == DNGN_UNSEEN)
+    const dungeon_feature_type feat = env.grid(p);
+    if (!traverse_unmapped && feat == DNGN_UNSEEN)
         return false;
 
     if (traverse_no_actors && actor_at(p))
         return false;
 
-    // XXX: Hack to be somewhat consistent with uses of
-    //      opc_immob elsewhere in pathfinding.
-    //      All of this should eventually be replaced by
-    //      giving the monster a proper pathfinding LOS.
-    if (opc_immob(p) == OPC_OPAQUE && !feat_is_closed_door(env.grid(p)))
+    if (monster* mon_at = monster_at(p))
     {
-        // XXX: Ugly hack to make thorn hunters use their briars for defensive
-        //      cover instead of just pathing around them.
-        if (mons && mons->type == MONS_THORN_HUNTER
-            && monster_at(p)
-            && monster_at(p)->type == MONS_BRIAR_PATCH)
-        {
+        // Thorn hunters can walk freely through their own briars.
+        if (mons && mons->type == MONS_THORN_HUNTER && mon_at->was_created_by(*mons))
             return true;
-        }
 
-        return false;
+        // Try to path around immobile monsters.
+        if (mon_at->is_stationary())
+            return false;
     }
 
     if (mons)
         return mons_traversable(p);
 
-    if (traverse_doors && feat_is_closed_door(env.grid(p))
-        && !cell_is_runed(p))
-    {
+    // No monster specified, default to a normal walking monster.
+    if (traverse_doors && feat_is_closed_door(feat) && !cell_is_runed(p))
         return true;
-    }
 
-    return feat_has_solid_floor(env.grid(p));
+    if (feat_is_solid(feat))
+        return false;
+
+    return feat_has_solid_floor(feat);
 }
 
 // Checks whether a given monster can pass over a certain position, respecting
@@ -506,10 +503,9 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
         return 2;
 
     // Try to avoid traps.
-    const trap_def* ptrap = trap_at(npos);
-    if (ptrap)
+    if (feat_is_trap(env.grid(npos)))
     {
-        if (ptrap->is_bad_for_player())
+        if (trap_is_bad_for_player(env.grid(npos)))
         {
             // Your allies take extra precautions to avoid traps that are bad
             // for you (elsewhere further checks are made to mark Zot traps as
@@ -555,4 +551,55 @@ void monster_pathfind::update_pos(coord_def npos, int total)
     }
 
     add_new_pos(npos, total);
+}
+
+// If the desired target isn't reachable, use existing pathfind data to see if
+// there are any reachable positions that are at least within a certain range of
+// the desired target. If so, set our target to that, so waypoints can be later
+// calculated using 'best fallback position'
+//
+// This must be called only after start_pathfind() has been called, as it relies
+// on the data created by this!
+bool monster_pathfind::find_fallback(int need_lof_range, int ignore_lof_range)
+{
+    // Don't bother if we have no range.
+    if (need_lof_range == 1 && ignore_lof_range == 1)
+        return false;
+
+    int best_dist = LOS_RADIUS + 1;
+    coord_def best_pos;
+    for (distance_iterator di(target, false, true, LOS_RADIUS); di; ++di)
+    {
+        const int d = grid_distance(target, *di);
+
+        // Ignore if we've already found a better spot, if this is untraversable,
+        // or it's outside of the range we calculated pathfinding for.
+        if (d > best_dist || dist[di->x][di->y] > range * 2 || traversable_cache[di->x][di->y] != true)
+            continue;
+
+        if (d <= need_lof_range && cell_see_cell(target, *di, LOS_SOLID_SEE))
+        {
+            best_pos = *di;
+            best_dist = d;
+        }
+        else if (d <= ignore_lof_range && cell_see_cell(target, *di, LOS_NO_TRANS))
+        {
+            best_pos = *di;
+            best_dist = d;
+        }
+
+        // This is about the best we can hope to do, so bail early.
+        if (best_dist == min(need_lof_range, ignore_lof_range))
+            break;
+    }
+
+    // We found a reachable spot in our threat range, so let's set this as our
+    // target instead.
+    if (!best_pos.origin())
+    {
+        target = best_pos;
+        return true;
+    }
+
+    return false;
 }

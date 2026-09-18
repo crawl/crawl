@@ -1,0 +1,25 @@
+%%%%
+archmagi passive
+
+Tu poder de hechizos es aumentado.
+%%%%
+corrode self passive
+
+Cada vez que recibes daño tienes posibilidad de carcomer.
+%%%%
+guardian spirit passive
+
+Tu reserva de magia absorbe una parte del daño que recibes.
+%%%%
+harm passive
+
+Todo daño recibes o haces es aumentado.
+%%%%
+no spellcasting passive
+
+No puedes lanzar hechizos.
+%%%%
+slow self passive
+
+Cada vez que recibes daño tienes posibilidad de lentificar.
+%%%%

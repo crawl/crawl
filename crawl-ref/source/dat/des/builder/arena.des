@@ -362,6 +362,33 @@ X...X...A...X...X
 XXXXXXXXXXXXXXXXX
 ENDMAP
 
+NAME: arena_widebaffles
+TAGS: arena_widebaffles
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST:  A = ., B = ., O = .
+ORIENT: encompass
+MAP
+XXXXXXXXXXXXXXXXX
+X.......B.......X
+X.......X.......X
+X..XXX..X..XXX..X
+X.......X.......X
+X.......X.......X
+X..X..XXXXX..X..X
+X..X.........X..X
+X..X..X.O.X..X..X
+X..X.........X..X
+X..X..XXXXX..X..X
+X.......X.......X
+X.......X.......X
+X..XXX..X..XXX..X
+X.......X.......X
+X.......A.......X
+XXXXXXXXXXXXXXXXX
+ENDMAP
+
 NAME: arena_glassbaffles
 TAGS: arena_glassbaffles
 MARKER: A = feat: stone_stairs_up_i

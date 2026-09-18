@@ -660,7 +660,7 @@ static const char *kill_method_names[] =
     "mon", "pois", "cloud", "beam", "lava", "water",
     "stupidity", "weakness", "clumsiness", "trap", "leaving", "winning",
     "quitting", "wizmode", "draining", "starvation", "freezing", "burning",
-    "wild_magic", "xom", "rotting", "targeting", "spore",
+    "wild_magic", "xom", "rotting", "targeting", "death_explosion",
     "tso_smiting", "petrification", "something",
     "falling_down_stairs", "acid", "curare",
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
@@ -1346,10 +1346,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
     death_type   = dtype;
     damage       = dam;
 
-    // Try searching for both a living monster and a dead-but-cached monster
-    const monster *source_monster = monster_by_mid(death_source)
-                                     ? monster_by_mid(death_source)
-                                     : cached_monster_copy_by_mid(death_source);
+    const monster *source_monster = monster_by_mid(death_source, false, /*allow_dead=*/true);
     if (source_monster)
         killer_map = source_monster->originating_map();
 
@@ -1423,6 +1420,9 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
         if (mons->mid == MID_YOU_FAULTLESS)
             death_source_name = "themself";
 
+        if (mons->mid == MID_ANON_FRIEND)
+            death_source_name = "an ally";
+
         if (mons->has_ench(ENCH_SHAPESHIFTER))
             death_source_name += " (shapeshifter)";
         else if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
@@ -1445,6 +1445,11 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             _strip_to(indirectkiller, " by ");
             _strip_to(indirectkiller, "ed to "); // "attached to" and similar
             _strip_to(indirectkiller, "ed from "); // "spawned from" and similar
+
+            // XXX: We want to keep a more appropriate death message, but still
+            //      link the deaths to Cassandra for tracking purposes.
+            if (indirectkiller == "an inevitable fate")
+                indirectkiller = "Cassandra";
 
             vector<string> path_parts;
             for (const auto &bl : blame)
@@ -1493,6 +1498,10 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
         death_source_name = you.props[STICKY_FLAMER_KEY].get_string();
         auxkilldata = you.props[STICKY_FLAME_AUX_KEY].get_string();
     }
+
+    // Deaths without a living source must (at least in modern Crawl) be from Flooding.
+    if (death_type == KILLED_BY_WATER && !source_monster)
+        death_source_name = you.props[WATER_HOLDER_NAME_KEY].get_string();
 
     if (death_type == KILLED_BY_BLINKING)
     {
@@ -1664,10 +1673,8 @@ void scorefile_entry::init(time_t dt)
     points = 0;
     bool base_score = true;
 
-    dlua.pushglobal("dgn.persist.calc_score");
-    lua_pushboolean(dlua, death_type == KILLED_BY_WINNING);
-    if (dlua.callfn(nullptr, 1, 2))
-        dlua.fnreturns(">db", &points, &base_score);
+    dlua.callfn("dgn.persist.calc_score", "b>db",
+                death_type == KILLED_BY_WINNING, &points, &base_score);
 
     num_runes      = runes_in_pack();
     num_diff_runes = num_runes;
@@ -1766,7 +1773,7 @@ void scorefile_entry::init(time_t dt)
     god = you.religion;
     if (!you_worship(GOD_NO_GOD))
     {
-        piety   = you.piety;
+        piety   = you.raw_piety;
         penance = you.penance[you.religion];
     }
 
@@ -2598,7 +2605,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (terse)
         {
             if (death_source_name.empty())
-                desc += "spore";
+                desc += "death explosion";
             else
                 desc += death_source_name;
         }
@@ -2606,7 +2613,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         {
             desc += "Killed by an exploding ";
             if (death_source_name.empty())
-                desc += "spore";
+                desc += "monster";
             else
                 desc += death_source_name;
         }

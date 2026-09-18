@@ -71,8 +71,11 @@ bool del_spell_from_memory(spell_type spell);
 int spell_mana(spell_type which_spell, bool real_spell = true);
 int spell_difficulty(spell_type which_spell);
 int spell_power_cap(spell_type spell);
-int spell_range(spell_type spell, int pow, bool allow_bonus = true,
-                bool ignore_shadows = false);
+int spell_range(spell_type spell, const actor* caster = nullptr, int pow = 1,
+                bool ignore_los_reductions = false);
+int calc_spell_range(spell_type spell, int pow,
+                     bool allow_veh_bonus = false,
+                     bool ignore_los_reductions = false);
 int spell_noise(spell_type spell);
 int spell_effect_noise(spell_type spell);
 
@@ -81,7 +84,6 @@ tileidx_t get_spell_tile(spell_type which_spell);
 
 bool spell_is_direct_explosion(spell_type spell);
 bool spell_harms_target(spell_type spell);
-bool spell_harms_area(spell_type spell);
 bool spell_is_direct_attack(spell_type spell);
 int spell_levels_required(spell_type which_spell);
 
@@ -126,7 +128,8 @@ skill_type arcane_mutation_to_skill(mutation_type mutation);
 bool cannot_use_schools(spschools_type schools);
 
 bool casting_is_useless(spell_type spell, bool temp);
-string casting_uselessness_reason(spell_type spell, bool temp);
+string casting_uselessness_reason(spell_type spell, bool temp,
+                                  bool *god_forbids=nullptr);
 bool spell_is_useless(spell_type spell, bool temp = true,
                       bool prevent = false, bool fake_spell = false) PURE;
 string spell_uselessness_reason(spell_type spell, bool temp = true,
@@ -138,6 +141,8 @@ int spell_highlight_by_utility(spell_type spell,
                                 bool transient = false,
                                 bool memcheck = false);
 bool spell_no_hostile_in_range(spell_type spell);
+bool protected_from_spell(spell_type spell, const monster &mon,
+                          const actor *agent);
 
 bool spell_is_soh_breath(spell_type spell);
 const vector<spell_type> *soh_breath_spells(spell_type spell);
@@ -146,7 +151,10 @@ bool spell_has_variable_range(spell_type spell);
 
 bool spell_can_be_enkindled(spell_type spell);
 
+bool is_monster_net_escape_spell(spell_type spell);
+
 bool spell_removed(spell_type spell);
+bool spell_is_monster_only(spell_type spell);
 #if TAG_MAJOR_VERSION == 34
 bool spell_was_form(spell_type spell);
 #endif

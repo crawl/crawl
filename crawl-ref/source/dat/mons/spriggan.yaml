@@ -1,6 +1,7 @@
 name: "spriggan"
 glyph: {char: "i", colour: lightgray}
 flags: [see_invis, speaks, warm_blood]
+exp: 217
 will: 60
 attacks:
  - {type: hit, damage: 15}

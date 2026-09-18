@@ -89,7 +89,7 @@ static void _ouch(actor& target, actor * source, miscast_source_info mc_info, in
         else if (source && source->is_monster())
         {
             if (source->as_monster()->confused_by_you()
-                && !source->as_monster()->friendly())
+                && !source->friendly())
             {
                 kt = KILL_YOU_CONF;
             }
@@ -135,9 +135,8 @@ static void _ouch(actor& target, actor * source, miscast_source_info mc_info, in
         else
             method = KILLED_BY_SOMETHING;
 
-        bool see_source = source && you.can_see(*source);
         ouch(dam, method, source ? source->mid : MID_NOBODY,
-             cause.c_str(), see_source,
+             cause.c_str(),
              source ? source->name(DESC_A, true).c_str() : nullptr);
     }
 }
@@ -242,7 +241,7 @@ static const map<spschool, miscast_datum> miscast_effects = {
                     // TODO: monster version? something else?
                      target.as_monster()->add_ench(
                          mon_enchant(ENCH_DIMENSION_ANCHOR,
-                                     0, source, dam * BASELINE_DELAY));
+                                     source, dam * BASELINE_DELAY));
                 }
             }
 
@@ -296,8 +295,8 @@ static const map<spschool, miscast_datum> miscast_effects = {
         {
             BEAM_NONE,
             [] (actor& target, actor* source, miscast_source_info /*mc_info*/,
-                int /*dam*/, string /*cause*/) {
-                target.corrode(source, "wild magic");
+                int dam, string /*cause*/) {
+                target.corrode(source, "wild magic", 4 + div_rand_round(dam, 4));
             }
         },
     },
@@ -315,7 +314,7 @@ void miscast_effect(spell_type spell, int fail)
     // contamination!
     const int nastiness = spell_difficulty(spell) * spell_difficulty(spell)
                           * fail + 250;
-    const int cont_points = 2 * nastiness;
+    const int cont_points = 2 * nastiness / 5;
 
     contaminate_player(cont_points, true);
 
@@ -344,7 +343,7 @@ void miscast_effect(spell_type spell, int fail)
     if (school == spschool::necromancy
         && have_passive(passive_t::miscast_protection_necromancy))
     {
-        if (x_chance_in_y(you.piety, piety_breakpoint(5)))
+        if (x_chance_in_y(you.piety(), piety_breakpoint(5)))
         {
             simple_god_message(" protects you from your miscast "
                                "necromantic spell!");

@@ -48,7 +48,12 @@ define(function () {
     // Halo flags
     exports.HALO_NONE = 0;
     exports.HALO_RANGE = 1;
-    exports.HALO_UMBRA = 2;
+    exports.HALO_UMBRA_FIRST = 2;
+    exports.HALO_UMBRA_1 = exports.HALO_UMBRA_FIRST;
+    exports.HALO_UMBRA_2 = 3;
+    exports.HALO_UMBRA_3 = 4;
+    exports.HALO_UMBRA_4 = 5;
+    exports.HALO_UMBRA_LAST = exports.HALO_UMBRA_4;
 
     // Tile flags.
     // Mostly this complicated because they need more than 32 bits.
@@ -146,6 +151,8 @@ define(function () {
 
     fg_flags.flags.S_UNDER = 0x00040000;
     fg_flags.flags.FLYING  = 0x00080000;
+    fg_flags.flags.S_UNDER_GOOD     = [0, 0x1000000],
+    fg_flags.flags.S_UNDER_ARTEFACT = [0, 0x2000000],
 
     // 4 mutually exclusive flags for behaviour.
     fg_flags.exclusive_flags.push({
@@ -203,9 +210,10 @@ define(function () {
 
     // Background flags
     var bg_flags = { flags: {}, exclusive_flags: [] };
-    bg_flags.flags.RAY        = 0x00010000;
     bg_flags.flags.MM_UNSEEN  = 0x00020000;
     bg_flags.flags.UNSEEN     = 0x00040000;
+    bg_flags.flags.INVIS            = [0, 0x040];
+    bg_flags.flags.REMEMBERED_INVIS = [0, 0x080];
     bg_flags.exclusive_flags.push({
         mask       : 0x00180000,
         CURSOR1    : 0x00180000,
@@ -215,7 +223,6 @@ define(function () {
     bg_flags.flags.TUT_CURSOR = 0x00200000;
     bg_flags.flags.TRAV_EXCL  = 0x00400000;
     bg_flags.flags.EXCL_CTR   = 0x00800000;
-    bg_flags.flags.RAY_OOR    = 0x01000000;
     bg_flags.flags.OOR        = 0x02000000;
     bg_flags.flags.WATER      = 0x04000000;
     bg_flags.flags.NEW_STAIR  = 0x08000000;
@@ -229,8 +236,6 @@ define(function () {
 
     bg_flags.flags.RAMPAGE     = [0, 0x020];
 
-    bg_flags.flags.LANDING     = [0, 0x200];
-    bg_flags.flags.RAY_MULTI   = [0, 0x400];
     bg_flags.mask              = 0x0000FFFF;
 
     // Since the current flag implementation is really slow we use a trivial

@@ -19,6 +19,11 @@ flame2
 magma0 BOLT_MAGMA
 magma1
 
+ignite_poison_target0 BOLT_IGNITE_POISON_TARGET
+ignite_poison_target1
+ignite_poison_terrain0 BOLT_IGNITE_POISON_TERRAIN
+ignite_poison_terrain1
+
 fire_storm0 BOLT_FIRE_STORM
 
 # Ice bolts
@@ -37,6 +42,12 @@ icicle7
 # also used for hoarfrost cannonade
 iceblast0 BOLT_ICEBLAST
 iceblast1
+
+permafrost_earth0 BOLT_PERMAFROST_EARTH
+permafrost_earth1
+
+permafrost_cold0 BOLT_PERMAFROST_COLD
+permafrost_cold1
 
 icicle_salvo0 BOLT_ICICLE_SALVO
 icicle_salvo1
@@ -60,6 +71,23 @@ medium_air1
 strong_air0 BOLT_STRONG_AIR
 strong_air1
 
+weak_elec_shot0 BOLT_WEAK_ELEC
+weak_elec_shot1
+weak_elec_shot2
+
+strong_elec_shot0 BOLT_STRONG_ELEC
+strong_elec_shot1
+strong_elec_shot2
+
+electric_blast0 BOLT_ELECTRIC_BLAST
+electric_blast1
+
+electric_arc0 BOLT_ELECTRIC_ARC
+electric_arc1
+electric_arc2
+electric_arc3
+electric_arc4
+
 # Earth bolts
 sandblast0 BOLT_SANDBLAST
 sandblast1
@@ -73,6 +101,9 @@ stone_arrow4
 stone_arrow5
 stone_arrow6
 stone_arrow7
+
+liquefy_brown BOLT_LIQUEFY_BROWN
+liquefy_green BOLT_LIQUEFY_GREEN
 
 iron_shot0 BOLT_IRON_SHOT
 iron_shot1
@@ -92,6 +123,15 @@ crystal_spear5
 crystal_spear6
 crystal_spear7
 
+shatter_wave_yellow0 BOLT_SHATTER_WAVE_YELLOW
+shatter_wave_yellow1
+shatter_wave_white0 BOLT_SHATTER_WAVE_WHITE
+shatter_wave_white1
+shatter_wall0 BOLT_SHATTER_WALL
+shatter_wall1
+
+# Pure conjurations bolts
+
 magic_dart0 BOLT_MAGIC_DART
 magic_dart1
 magic_dart2
@@ -100,8 +140,8 @@ magic_dart4
 magic_dart5
 
 damnation BOLT_DAMNATION
+singing BOLT_SINGING
 
-# Pure conjurations bolts
 searing_ray4 BOLT_SEARING_RAY
 searing_ray5
 
@@ -118,6 +158,11 @@ bomblet_blast1
 
 paragon_tempest0 BOLT_PARAGON_TEMPEST
 paragon_tempest1
+
+sundering0 BOLT_SUNDERING
+sundering1
+sundering2
+sundering3
 
 # Necromantic bolts
 drain0 BOLT_DRAIN
@@ -140,10 +185,20 @@ alembic_potion2
 alembic_potion3
 alembic_potion4
 
+bog_flash0 BOLT_BOG_FLASH
+bog_flash1
+bog_flash2
+bog_flash3
+
 irradiate0 BOLT_IRRADIATE
 irradiate1
 irradiate2
 irradiate3
+
+contam0 BOLT_CONTAM
+contam1
+contam2
+contam3
 
 fulsome_fire BOLT_FULSOME_FIRE
 fulsome_ice BOLT_FULSOME_ICE
@@ -170,6 +225,12 @@ light_beam7
 warping_blast0 BOLT_WARP_SPACE
 
 # Monster bolts
+chaos0 BOLT_CHAOS
+chaos1
+chaos2
+
+beckoning_gale BOLT_BECKONING_GALE
+
 force_lance0 BOLT_FORCE_LANCE
 force_lance1
 force_lance2
@@ -208,7 +269,9 @@ splinters_thornwood7
 
 entropic_weave BOLT_ENTROPIC_WEAVE
 
+antimagic_gaze BOLT_ANTIMAGIC_GAZE
 draining_gaze BOLT_DRAINING_GAZE
+draining_smirk BOLT_DRAINING_SMIRK
 
 bolas BOLT_BOLAS
 
@@ -223,6 +286,24 @@ splinters_metal5
 splinters_metal6
 splinters_metal7
 
+antimagic0 BOLT_ANTIMAGIC
+antimagic1
+antimagic2
+
+flesh0 BOLT_FLESH
+flesh1
+
+gloom0 BOLT_GLOOM
+gloom1
+
+doom_bolt0 BOLT_DOOM
+doom_bolt1
+
+draining_life0 BOLT_DRAINING_LIFE
+draining_life1
+drain_life0 BOLT_DRAIN_LIFE
+drain_life1
+
 ghostfire0 BOLT_GHOSTLY_FIREBALL
 ghostfire1
 
@@ -235,14 +316,32 @@ pie5
 pie6
 pie7
 
+corruption0 BOLT_CORRUPTION
+corruption1
+corruption2
+corruption3
+corruption4
+corruption5
+corruption6
+corruption7
+
 chaos_buff0 BOLT_CHAOS_BUFF
 chaos_buff1
 
 sap_magic BOLT_SAP_MAGIC
 
-doom_howl BOLT_DOOM_HOWL
+oblivion_howl BOLT_OBLIVION_HOWL
 
 phantom_blitz BOLT_PHANTOM_BLITZ
+
+frostfire0 BOLT_FROSTFIRE
+frostfire1
+frostfire2
+frostfire3
+frostfire4
+frostfire5
+frostfire6
+frostfire7
 
 # Divine bolts
 shadow_beam0 BOLT_SHADOW_BEAM
@@ -287,7 +386,18 @@ blood_arrow5
 blood_arrow6
 blood_arrow7
 
+ostracise BOLT_OSTRACISE
+
 umbral_torchlight BOLT_UMBRAL_TORCHLIGHT
+
+wind_hush0 BOLT_WIND_HUSH
+wind_hush1
+wind_hush2
+wind_hush3
+
+slime_wave0 BOLT_SLIME_WAVE
+slime_wave1
+slime_merge BOLT_SLIME_MERGE
 
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR
@@ -419,6 +529,11 @@ cloud_bat_mist1
 cloud_bat_mist2
 cloud_bat_mist3
 
+cloud_rust0 CLOUD_RUST
+cloud_rust1
+cloud_rust2
+cloud_rust3
+
 %sdir mon
 fungi_plants/ballistomycete_spore SPORE_OVERLAY
 
@@ -430,6 +545,7 @@ unseen_weapon UNSEEN_WEAPON
 unseen_monster UNSEEN_MONSTER
 unseen_armour UNSEEN_ARMOUR
 unseen_item UNSEEN_ITEM
+unseen_invis UNSEEN_INVISIBLE
 sensed_monster_friendly MONS_SENSED_FRIENDLY
 sensed_monster_trivial MONS_SENSED_TRIVIAL
 sensed_monster_easy MONS_SENSED_EASY

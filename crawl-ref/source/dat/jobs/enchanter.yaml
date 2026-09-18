@@ -9,7 +9,7 @@ spells:
   - SPELL_HIBERNATION
   - SPELL_CONFUSING_TOUCH
   - SPELL_TUKIMAS_DANCE
-  - SPELL_DAZZLING_FLASH
+  - SPELL_GLOOM
 equipment:
   - "dagger plus:1"
   - "robe"

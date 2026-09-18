@@ -1,3 +1,14 @@
+##########################################################
+# colourname.txt: lookup colour names
+#
+# This file contains a list of names of colours, and of colour-related
+# things such as names of colour patterns.
+#
+# Feel free to add to this list. Like for the other database lists,
+# you may add weights (defaults to w:10) to make certain names more
+# or less likely.
+#
+##########################################################
 %%%%
 rainbow_colour
 
@@ -370,6 +381,8 @@ ivy green
 
 jade
 
+jale
+
 jasmine
 
 jonquil
@@ -506,6 +519,8 @@ olive ochre
 
 olivine
 
+olo
+
 orange ochre
 
 orchid
@@ -585,6 +600,8 @@ realgar
 red emerald
 
 red ochre
+
+rej
 
 rocket green
 
@@ -704,6 +721,8 @@ turmeric
 
 turquoise
 
+ulfire
+
 ultramarine
 
 umber
@@ -766,7 +785,6 @@ w:40
 w:20
 @misc_colour@
 
-w:10
 @mono_colour@
 %%%%
 any_pattern
@@ -795,6 +813,8 @@ leopard spots
 
 ogee
 
+ombre
+
 paisley
 
 pinstripes
@@ -820,17 +840,11 @@ tartan
 triangles
 
 whorls
-%%%%
-any_colour_pattern
 
-# Single colour
-@any_colour@ @any_pattern@
-
-# Two colours. There's a chance of them being the same but
-# in practise it happens little enough to just be funny when it does.
-@any_colour@ on @any_colour@ @any_pattern@
+zigzags
 %%%%
-# Any word other than "glowing" itself will work here.
+# Any word other than "glowing" itself will work here, as long as it's
+# not already in @_writing_adj_@ in graffiti.txt.
 glowing_adj
 
 bright
@@ -839,7 +853,11 @@ brilliant
 
 dark
 
+deep
+
 dull
+
+dusky
 
 faint
 
@@ -847,15 +865,19 @@ gleaming
 
 glossy
 
+intense
+
 luminous
+
+lurid
+
+lustrous
 
 mottled
 
 murky
 
 pale
-
-pulsating
 
 shimmering
 
@@ -866,3 +888,22 @@ vivid
 any_glowing_colour
 
 @glowing_adj@ @any_colour@
+%%%%
+# Patterns can be single colour or two colours. There's a chance of the
+# two colours being the same but in practise it happens little enough to
+# just be funny when it does.
+any_colour_pattern
+
+@any_colour@ @any_pattern@
+
+@any_colour@ on @any_colour@ @any_pattern@
+%%%%
+any_glowing_colour_pattern
+
+@any_glowing_colour@ @any_pattern@
+
+@any_glowing_colour@ on @any_colour@ @any_pattern@
+
+@any_colour@ on @any_glowing_colour@ @any_pattern@
+
+@any_glowing_colour@ on @any_glowing_colour@ @any_pattern@

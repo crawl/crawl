@@ -1,6 +1,7 @@
 name: "satyr"
 glyph: {char: "c", colour: lightgreen}
 flags: [speaks, warm_blood, archer, prefer_ranged]
+exp: 821
 genus: faun
 will: 40
 attacks:

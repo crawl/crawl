@@ -38,8 +38,8 @@ surroundings.
 %%%%
 A white marble altar of Elyvilon
 
-An altar to Elyvilon the Healer, made from purest white marble and topped by a
-sculpture of the Chalice of Purification.
+An altar to Elyvilon the Healer, made from invigorated white marble and topped
+by a sculpture of the Chalice of Purification.
 %%%%
 A blossoming altar of Fedhas
 
@@ -228,17 +228,22 @@ walls.
 %%%%
 A slime covered rock wall
 
-A rock wall coated with bright green slime. It is acidic to the touch; just
-standing near it is enough to cause temporary corrosion.
+A rock wall coated with acidic green slime; just standing near it is enough to
+cause temporary corrosion.
 %%%%
 A metal wall
 
-A wall of bluish-grey metal. As every dungeon electrician knows, it will ground
+A wall of shiny grey metal. As every dungeon electrician knows, it will ground
 even magical bolts of lightning.
 %%%%
 A rock wall
 
 A wall consisting of simple rock.
+%%%%
+A frigid wall
+
+A wall that radiates a chill so intense it can damage enemies which stand next
+to it.
 %%%%
 ########################################################################
 ### Features
@@ -258,6 +263,51 @@ A staircase leading further down.
 A stone staircase leading up
 
 A staircase leading back up.
+%%%%
+# For the Vaults:5 staircases in and out.
+A metal staircase leading down
+
+A staircase leading down to the grand vaults containing the silver rune of Zot,
+whose wealth attracts the most powerful champions from across the Dungeon to its
+defence.
+%%%%
+A metal staircase leading up
+
+A staircase leading up from the grand vaults containing the silver rune of Zot,
+whose wealth attracts the most powerful champions from across the Dungeon to its
+defence.
+%%%%
+A slimy stone staircase leading down
+
+A stone staircase leading further down.
+
+{{
+    if you.god() == "Jiyva" then
+        return "It is slick with slippery slime, but that is no obstacle for one " ..
+               "such as yourself who has embraced the way of all slime."
+    else
+        return "It is slick with slippery slime which will make it impossible " ..
+               "for you to climb back up again until the power ruling this place " ..
+               "is destroyed (or you choose to join it). However, being coated in " ..
+               "this slime will greatly increase your HP and MP regenaration for " ..
+               "short while afterward."
+    end
+}}
+%%%%
+A slimy stone staircase leading up
+
+A stone staircase leading back up.
+
+{{
+    if you.god() == "Jiyva" then
+        return "It is slick with slippery slime, but that is no obstacle for one " ..
+               "such as yourself who has embraced the way of all slime."
+    else
+        return "It is slick with slippery slime, making it impossible for you to " ..
+               "climb until the power ruling this place is destroyed (or you choose " ..
+               "to join it)."
+    end
+}}
 %%%%
 A tree
 
@@ -413,6 +463,37 @@ The orb dais
 
 A raised pedestal upon which rests the fabled Orb of Zot. More ancient than even
 the dungeon itself, it cannot be destroyed or transformed by any means.
+%%%%
+A statue of an orb of fire
+
+A statue of a terrifying globe of raw primordial fire, said to dwell within the
+Realm of Zot.
+%%%%
+A statue of an orb of winter
+
+A statue of a terrifying globe of uttermost cold, said to dwell within the
+Realm of Zot.
+%%%%
+A statue of an orb of entropy
+
+A statue of a terrifying globe of profound nothingness, said to dwell within the
+Realm of Zot.
+%%%%
+A patch of mould
+
+A dense carpet of colourful mould, rustling with fecundity. The towering fungi
+which sprout from it can grow back in the blink of an eye, no matter how many
+times they are cut down.
+%%%%
+a purified mutation catalyst
+
+An experimental arcane still, brewing some incomplete- if refined- mutagenic
+serum. Breaking this open will bathe you in mystic mists, imparting upon you one
+beneficial mutation (excluding those that could restrict equipment slots).
+%%%%
+an empty mutation catalyst
+
+A complex arcane still, cracked open and fully emptied of its contents.
 %%%%
 ########################################################################
 ### Branch entrances and exits
@@ -784,9 +865,17 @@ will avoid stepping on it.
 %%%%
 A dispersal trap
 
-Anyone stepping on this trap will translocate themself and anyone else in view
+Anyone stepping on this trap will translocate themselves and anyone else in view
 to a new location nearby. Hostile monsters may trigger this trap, but your
 allies will avoid stepping on it.
+
+After triggering, it cannot be triggered again for several turns.
+%%%%
+A dispersal trap (recharging)
+
+[[A dispersal trap]]
+
+It is currently recharging and will become active again in a short while.
 %%%%
 A harlequin's trap
 
@@ -838,10 +927,10 @@ made for trapping {{ return you.genus(true) }} rather than flies.
 A Zot trap
 
 A trap which inflicts dangerously unpredictable magical effects on those
-unlucky enough to step on it. You may find yourself thrown into the Abyss,
-contaminated with enormous amounts of wild magic, have mighty fiends summoned
-against you, or the like. Hostile monsters may trigger this trap themselves to
-invoke its effects against you, but your allies will avoid stepping on it.
+unlucky enough to step on it. You may find yourself petrified, contaminated
+with enormous amounts of wild magic, have mighty fiends summoned against you,
+or the like. Hostile monsters may trigger this trap themselves to invoke its
+effects against you, but your allies will avoid stepping on it.
 %%%%
 ########################################################################
 ### Portal vault entrances
@@ -867,6 +956,12 @@ A gateway to a bazaar
 A portal leading to a bazaar, where itinerant merchants gather to sell their
 wares. They will wait for you, but once you get a chance to browse their
 inventory, the merchants will depart in search of other customers.
+%%%%
+A phantasmal passage
+
+A portal leading to one of many Necropolis repositories, where the freshly slain
+and deeply resentful are sealed away. This wandering rift will eventually move
+elsewhere to receive further dead.
 %%%%
 A frozen archway
 
@@ -904,6 +999,11 @@ contain the evils sealed therein. Whatever protections this arch once offered
 have finally succumbed to the ravages of time, and a bitter breeze pours forth
 from the distant land beyond.
 %%%%
+A mutagenic drain
+
+A passage leading to a gutter gulch, gradually rusting away. Entering it will
+inflict three temporary mutations upon you, or decompose you if you're undead.
+%%%%
 A magical portal
 
 A portal leading to a wizard's laboratory. It is fading away.
@@ -917,6 +1017,14 @@ A collapsed passage which cannot be used anymore.
 ########################################################################
 ### Portal redefinitions
 ########################################################################
+# Necropolis
+An archival metal wall
+
+An ensorcelled metal wall coated in an inscrutable non-linear script, recording
+the regrets of the interred and their visitors alike. As with all metal walls,
+it is next to impossible to destroy, and will ground all varieties of bounding
+lightning.
+%%%%
 # sewer_minmay_treatment (Sewer)
 A large window
 
@@ -1056,11 +1164,7 @@ flow of clouds.
 %%%%
 A wall of orange crystal
 
-<A crystal wall>
-%%%%
-A wall of pink crystal
-
-<A crystal wall>
+A wall made from orange crystal. It has a mind-boggling sheen.
 %%%%
 A wall of white crystal
 
@@ -1094,6 +1198,11 @@ A decorative floor
 
 A base floor type for various decorations one can walk over. If you see this,
 file a bug report.
+%%%%
+# Necropolis.
+A tree of woe
+
+A half-alive tree burdened with fruits of crystallised sorrow.
 %%%%
 A dead tree
 
@@ -1272,6 +1381,33 @@ A fur brush
 
 A grooming brush laid to rest beside a pile of tangled, matted yak fur.
 %%%%
+A set of bottled spirits
+
+A mix of various alcoholic drinks with worn-down labels. Unfortunately, the
+preservative magic sealing each bottle makes it impossible to sample from them
+without smashing their bottles open.
+%%%%
+A djembe set
+
+A drum ensemble whose rhythm serves as peaceful recreation here in the depths of
+the earth.
+%%%%
+A caliginous standard
+
+A murky flag of dark conquest shimmering with vile energies, planted in the name
+of some grand despoiling crusade.
+%%%%
+a skull pike
+
+Bones are a common sight in the Dungeon, but skulls left impaled in a shrike's
+manner on display send a more deliberate message to trespassers: the pike has
+room for one more skull, and whoever set it up is happy to help relieve its
+owner of theirs.
+%%%%
+An assortment of trash
+
+A scattered mess of fragmented, crumbling garbage, caked in ashes and dirt.
+%%%%
 # Graveyards, Crypt, Necropolis.
 A mourning vase
 
@@ -1281,6 +1417,13 @@ is difficult to tell whether it is even still alive.
 A broken floral vase
 
 A delicate arrangement, smashed to pieces and consigned to slow starvation.
+%%%%
+# The Hall of Blades
+A weapon-inlaid floor
+
+The decorative elvish inlayings of weapons mark here the Hall of Blades, where
+many of the Dungeon's keenest weapons originate, magically animated to
+demonstrate their own lethality on would-be thieves.
 %%%%
 # Bailies and other Orc-containing larger vaults
 An orcish standard

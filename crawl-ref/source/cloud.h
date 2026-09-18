@@ -17,7 +17,8 @@ struct cloud_struct
     int           excl_rad;
 
     cloud_struct() : pos(), type(CLOUD_NONE), decay(0), spread_rate(0),
-                     whose(KC_OTHER), killer(KILL_NONE), excl_rad(-1)
+                     whose(KC_OTHER), killer(KILL_NONE), source(MID_NOBODY),
+                     excl_rad(-1)
     {
     }
     cloud_struct(coord_def p, cloud_type c, int d, int spread, kill_category kc,
@@ -41,9 +42,11 @@ struct cloud_struct
 
 enum cloud_tile_variation
 {
-    CTVARY_NONE,     ///< fixed tile (or special case)
+    CTVARY_NONE,     ///< fixed tile
     CTVARY_DUR,      ///< tile based on remaining cloud duration
     CTVARY_RANDOM,   ///< choose a random tile in set with every redraw
+    CTVARY_MUTAGENIC,///< choose a tile for a mutagenic cloud
+    CTVARY_VORTEX,   ///< choose a tile for a polar vortex cloud
 };
 
 struct cloud_tile_info
@@ -71,16 +74,12 @@ void swap_clouds(coord_def p1, coord_def p2);
 coord_def random_walk(coord_def start, int dist);
 
 bool cloud_is_stronger(cloud_type ct, const cloud_struct& cloud);
-void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
-                       const actor *agent, int spread_rate = -1,
-                       int excl_rad = -1);
-void place_cloud(cloud_type cl_type, const coord_def& ctarget,
+bool place_cloud(cloud_type cl_type, const coord_def& ctarget,
                  int cl_range, const actor *agent,
                  int spread_rate = -1, int excl_rad = -1,
                  bool do_conducts = true);
 
 void manage_clouds();
-void run_cloud_spreaders(int dur);
 string desc_cloud_damage(cloud_type cl_type, bool vs_player);
 void actor_apply_cloud(actor *act);
 bool actor_cloud_immune(const actor &act, const cloud_struct &cloud);
@@ -106,3 +105,5 @@ void end_still_winds();
 void surround_actor_with_cloud(const actor* a, cloud_type cloud);
 
 bool chaos_affects_actor(actor* victim, actor* source);
+
+bool get_vortex_phase(const coord_def& loc);

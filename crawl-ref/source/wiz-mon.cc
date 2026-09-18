@@ -22,7 +22,6 @@
 #include "english.h"
 #include "files.h"
 #include "ghost.h"
-#include "god-blessing.h"
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
@@ -36,6 +35,7 @@
 #include "mon-poly.h"
 #include "mon-speak.h"
 #include "output.h"
+#include "player-notices.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
@@ -67,7 +67,7 @@ void wizard_create_spec_monster_name()
     }
 
     mons_list mlist;
-    string err = mlist.add_mons(specs);
+    string err = mlist.add_mons(specs, false, true);
 
     if (!err.empty())
     {
@@ -78,7 +78,8 @@ void wizard_create_spec_monster_name()
         if (strlen(specs) >= 3 && partial != MONS_PROGRAM_BUG)
         {
             mlist.clear();
-            newerr = mlist.add_mons(mons_type_name(partial, DESC_PLAIN));
+            newerr = mlist.add_mons(remove_prepended_the(mons_type_name(partial, DESC_PLAIN)),
+                                    false, true);
         }
 
         if (!newerr.empty())
@@ -99,7 +100,7 @@ void wizard_create_spec_monster_name()
         fixup_zombie_type(static_cast<monster_type>(mspec.type),
                           mspec.monbase);
 
-    coord_def place = find_newmons_square(type, you.pos());
+    coord_def place = find_newmons_square(type, you.pos(), 2, you.current_vision);
     if (!in_bounds(place))
     {
         // Try again with habitat HT_LAND.
@@ -122,71 +123,6 @@ void wizard_create_spec_monster_name()
     {
         mprf(MSGCH_DIAGNOSTICS, "Unable to place monster.");
         return;
-    }
-
-    // FIXME: This is a bit useless, seeing how you cannot set the
-    // ghost's stats, brand or level, among other things.
-    if (mspec.type == MONS_PLAYER_GHOST)
-    {
-        unsigned short idx = env.mgrid(place);
-
-        if (idx >= MAX_MONSTERS || env.mons[idx].type != MONS_PLAYER_GHOST)
-        {
-            for (idx = 0; idx < MAX_MONSTERS; idx++)
-            {
-                if (env.mons[idx].type == MONS_PLAYER_GHOST
-                    && env.mons[idx].alive())
-                {
-                    break;
-                }
-            }
-        }
-
-        if (idx >= MAX_MONSTERS)
-        {
-            mpr("Couldn't find player ghost, probably going to crash.");
-            more();
-            return;
-        }
-
-        monster    &mon = env.mons[idx];
-        ghost_demon ghost;
-
-        ghost.name = random_choose("John Doe", "Jane Doe", "Jay Doe");
-
-        char input_str[80];
-        msgwin_get_line("Make player ghost which species? (case-sensitive) ",
-                        input_str, sizeof(input_str));
-
-        species_type sp_id = species::from_abbrev(input_str);
-        if (sp_id == SP_UNKNOWN)
-            sp_id = species::from_str(input_str);
-        if (sp_id == SP_UNKNOWN)
-        {
-            mpr("No such species, making it Human.");
-            sp_id = SP_HUMAN;
-        }
-        ghost.species = static_cast<species_type>(sp_id);
-
-        msgwin_get_line("Give player ghost which background? ",
-                        input_str, sizeof(input_str));
-
-        int job_id = get_job_by_abbrev(input_str);
-
-        if (job_id == JOB_UNKNOWN)
-            job_id = get_job_by_name(input_str);
-
-        if (job_id == JOB_UNKNOWN)
-        {
-            mpr("No such background, making it a Fighter.");
-            job_id = JOB_FIGHTER;
-        }
-        ghost.job = static_cast<job_type>(job_id);
-        ghost.xl = 7;
-        ghost.max_hp = 20;
-        ASSERT(debug_check_ghost(ghost));
-
-        mon.set_ghost(ghost);
     }
 }
 
@@ -228,7 +164,7 @@ void debug_list_monsters()
 
     sort(mon_nums, mon_nums + MAX_MONSTERS, _sort_monster_list);
 
-    int total_exp = 0, total_adj_exp = 0, total_nonuniq_exp = 0;
+    int total_exp = 0, total_nonuniq_exp = 0;
 
     string prev_name = "";
     int    count     = 0;
@@ -263,18 +199,16 @@ void debug_list_monsters()
         count++;
         prev_name = name;
 
-        int exp = exper_value(*mi);
-        total_exp += exp;
-        if (!mons_is_unique(mi->type))
-            total_nonuniq_exp += exp;
-
         if ((mi->flags & (MF_WAS_NEUTRAL | MF_NO_REWARD))
             || mi->is_summoned())
         {
             continue;
         }
 
-        total_adj_exp += exp;
+        int exp = exp_value(*mi);
+        total_exp += exp;
+        if (!mons_is_unique(mi->type))
+            total_nonuniq_exp += exp;
     }
 
     char buf[80];
@@ -287,28 +221,50 @@ void debug_list_monsters()
         snprintf(buf, sizeof(buf), "%s", prev_name.c_str());
     mons.emplace_back(buf);
 
-    mpr_comma_separated_list("Monsters: ", mons);
+    if (!mons.empty())
+        mpr_comma_separated_list("Monsters: ", mons);
 
-    if (total_adj_exp == total_exp)
+    if (!env.lurkers.empty())
     {
-        mprf("%d monsters, %d total exp value (%d non-uniq)",
-             nfound, total_exp, total_nonuniq_exp);
+        vector<monster*> lurkers;
+        for (lurker_data &lurker : env.lurkers)
+        {
+            lurkers.push_back(&lurker.mon.mons);
+            const int exp = exp_value(lurker.mon.mons);
+            total_exp += exp;
+            if (!mons_is_unique(lurker.mon.mons.type))
+                total_nonuniq_exp += exp;
+            nfound++;
+        }
+        mprf("Lurkers: %s", multimonster_name_string(lurkers, true).c_str());
     }
-    else
-    {
-        mprf("%d monsters, %d total exp value (%d non-uniq, %d adjusted)",
-             nfound, total_exp, total_nonuniq_exp, total_adj_exp);
-    }
+
+    mprf("%d monsters, %d total exp value (%d non-uniq)",
+            nfound, total_exp, total_nonuniq_exp);
 }
 
-static const char* ht_names[] =
+static string _habitat_debug_name(habitat_type ht)
 {
-    "land",
-    "amphibious",
-    "water",
-    "lava",
-    "amphibious_lava",
-};
+    string result;
+    if (ht & HT_DRY_LAND)
+        result += "dry_land|";
+    if (ht & HT_SHALLOW_WATER)
+        result += "shallow_water|";
+    if (ht & HT_DEEP_WATER)
+        result += "deep_water|";
+    if (ht & HT_LAVA)
+        result += "lava|";
+    if (ht & HT_MALIGN_GATEWAY)
+        result += "malign_gateway|";
+    if (ht & HT_WALLS_ONLY)
+        result += "walls|";
+    if (ht >= (HT_WALLS_ONLY << 1))
+        result += "INVALID|";
+    if (result.empty())
+        return "none";
+    result.pop_back();
+    return result;
+}
 
 // Prints a number of useful (for debugging, that is) stats on monsters.
 void debug_stethoscope(int mon)
@@ -371,7 +327,7 @@ void debug_stethoscope(int mon)
          mons.base_armour_class(), mons.armour_class(),
          mons.base_evasion(), mons.evasion(),
          mons.willpower(),
-         exper_value(mons),
+         exp_value(mons),
          mons.speed, mons.speed_increment,
          mons.base_monster != MONS_NO_MONSTER ? " base=" : "",
          mons.base_monster != MONS_NO_MONSTER ?
@@ -387,14 +343,11 @@ void debug_stethoscope(int mon)
     }
 
     // Print habitat and behaviour information.
-    const habitat_type hab = mons_habitat(mons);
-
-    COMPILE_CHECK(ARRAYSZ(ht_names) == NUM_HABITATS);
     const actor * const summoner = actor_by_mid(mons.summoner);
     mprf(MSGCH_DIAGNOSTICS,
          "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d) "
          "firing_pos=(%d,%d) patrol_point=(%d,%d) god=%s%s",
-         (hab >= 0 && hab < NUM_HABITATS) ? ht_names[hab] : "INVALID",
+         _habitat_debug_name(mons_habitat(mons)).c_str(),
          mons.asleep()                    ? "sleep"
          : mons.behaviour == BEH_BATTY   ? "flitting"
          : mons_is_wandering(mons)       ? "wander"
@@ -547,9 +500,6 @@ void wizard_dismiss_all_monsters(bool force_all)
 
     int count = dismiss_monsters(buf);
     mprf("Dismissed %i monster%s.", count, count == 1 ? "" : "s");
-    // If it was turned off turn autopickup back on if all monsters went away.
-    if (!*buf)
-        autotoggle_autopickup(false);
 }
 
 void debug_make_monster_shout(monster* mon)
@@ -601,24 +551,6 @@ void debug_make_monster_shout(monster* mon)
     mpr("== Done ==");
 }
 
-void wizard_apply_monster_blessing(monster* mon)
-{
-    mprf(MSGCH_PROMPT, "Apply blessing of the (S)hining One? ");
-
-    char type = (char) getchm(KMC_DEFAULT);
-    type = toalower(type);
-
-    if (type != 's')
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
-    god_type god = GOD_SHINING_ONE;
-
-    if (!bless_follower(mon, god, true))
-        mprf("%s won't bless this monster for you!", god_name(god).c_str());
-}
-
 void wizard_give_monster_item(monster* mon)
 {
     mon_itemuse_type item_use = mons_itemuse(*mon);
@@ -667,7 +599,7 @@ static void _move_player(const coord_def& where)
         env.grid(where) = DNGN_FLOOR;
         set_terrain_changed(where);
     }
-    move_player_to_grid(where, false);
+    you.move_to(where, MV_INTERNAL);
     // If necessary, update the Abyss.
     if (player_in_branch(BRANCH_ABYSS))
         maybe_shift_abyss_around_player();
@@ -690,7 +622,7 @@ static void _move_monster(const coord_def& where, int idx1)
     const int idx2 = env.mgrid(moves.target);
     monster* mon2 = monster_at(moves.target);
 
-    mon1->moveto(moves.target);
+    mon1->move_to(moves.target, MV_INTERNAL | MV_NO_MGRID_UPDATE);
     env.mgrid(moves.target) = idx1;
     mon1->check_redraw(moves.target);
 
@@ -698,14 +630,14 @@ static void _move_monster(const coord_def& where, int idx1)
 
     if (mon2 != nullptr)
     {
-        mon2->moveto(where);
+        mon2->move_to(where, MV_INTERNAL | MV_NO_MGRID_UPDATE);
         mon1->check_redraw(where);
+        env.invis_knowledge.update(*mon2);
     }
     if (!you.see_cell(moves.target))
-    {
-        mon1->flags &= ~(MF_WAS_IN_VIEW | MF_SEEN);
-        mon1->seen_context = SC_NONE;
-    }
+        mon1->flags &= ~(MF_WAS_IN_VIEW | MF_SEEN | MF_SENSED);
+
+    env.invis_knowledge.update(*mon1);
 }
 
 void wizard_move_player_or_monster(const coord_def& where)

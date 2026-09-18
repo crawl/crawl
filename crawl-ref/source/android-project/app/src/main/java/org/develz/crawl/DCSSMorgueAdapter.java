@@ -1,8 +1,11 @@
 package org.develz.crawl;
 
+import android.content.res.Resources;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,26 +23,34 @@ public class DCSSMorgueAdapter extends RecyclerView.Adapter<DCSSMorgueAdapter.Vi
 
     // Constructor
     public DCSSMorgueAdapter(File morgueDir, OnMorgueListener morgueListener) {
-        if (morgueDir.isDirectory()) {
-            this.morgueFiles = morgueDir.listFiles();
-        } else {
-            this.morgueFiles = new File[0];
+        if (!morgueDir.exists()) {
+            if (!morgueDir.mkdir()) {
+                Log.e(DCSSLauncher.TAG, "Can't create folder "+morgueDir.getPath());
+            }
         }
+        this.morgueFiles = morgueDir.listFiles();
         this.morgueListener = morgueListener;
     }
 
     // Single element in the RecyclerView
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnFocusChangeListener {
+        private final LinearLayout layout;
         private final TextView nameView;
         private final TextView timeView;
         private OnMorgueListener morgueListener;
 
         public ViewHolder(View view, OnMorgueListener morgueListener) {
             super(view);
+            layout = view.findViewById(R.id.layout);
             nameView = view.findViewById(R.id.fileName);
             timeView = view.findViewById(R.id.fileTime);
             view.setOnClickListener(this);
+            view.setOnFocusChangeListener(this);
             this.morgueListener = morgueListener;
+        }
+
+        public LinearLayout getLayout() {
+            return layout;
         }
 
         public TextView getNameView() {
@@ -52,7 +63,17 @@ public class DCSSMorgueAdapter extends RecyclerView.Adapter<DCSSMorgueAdapter.Vi
 
         @Override
         public void onClick(View v) {
-            this.morgueListener.onMorgueClick(getAdapterPosition());
+            this.morgueListener.onMorgueClick(getBindingAdapterPosition());
+        }
+
+        @Override
+        public void onFocusChange(View view, boolean b) {
+            Resources resources = getNameView().getResources();
+            if (view.isFocused()) {
+                getLayout().setBackgroundColor(resources.getColor(R.color.black_focused));
+            } else {
+                getLayout().setBackgroundColor(resources.getColor(R.color.black));
+            }
         }
     }
 
@@ -68,7 +89,6 @@ public class DCSSMorgueAdapter extends RecyclerView.Adapter<DCSSMorgueAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         viewHolder.getNameView().setText(morgueFiles[position].getName());
-
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date modifiedDate = new Date(morgueFiles[position].lastModified());
         viewHolder.getTimeView().setText(dateFormat.format(modifiedDate));

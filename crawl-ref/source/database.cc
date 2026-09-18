@@ -85,8 +85,10 @@ static TextDB AllDBs[] =
             "commands.txt",
             "clouds.txt",
             "status.txt",
+            "monstatus.txt",
             "mutations.txt",
-            "passives.txt", }),
+            "passives.txt",
+            "egos.txt", }),
 
     TextDB("gamestart", "descript/",
           { "species.txt",
@@ -108,8 +110,9 @@ static TextDB AllDBs[] =
             "insult.txt",   // imp/demon taunts
             "godspeak.txt", // god speech
             "monname.txt",  // names for Beogh apostles and Hep ancestors
-                            // and weapon spirits
-            "colourname.txt", // colour names
+                            // and weapon spirits, plus graffiti authors
+            "colourname.txt", // colour/colour pattern names
+            "graffiti.txt", // graffiti
             "miscast.txt",  // spell miscasts
             }),
 
@@ -122,8 +125,11 @@ static TextDB AllDBs[] =
           { "miscname.txt", // names for miscellaneous things
             "godname.txt",  // god-related names (mostly His Xomminess)
             "montitle.txt", // titles for monsters (i.e. uniques)
-            "decorlines.txt", //  miscellaneous lines for walking on decoration
-            "colourname.txt", // colour names again
+            "decorlines.txt", // miscellaneous lines for walking on decoration
+            "monname.txt",  // names for Beogh apostles and Hep ancestors
+                            // and weapon spirits, plus graffiti authors, again
+            "colourname.txt", // colour/colour pattern names, again
+            "graffiti.txt", // graffiti, again
             "gizmo.txt",    // name-assembling for gizmos
             }),
 
@@ -143,6 +149,10 @@ static TextDB AllDBs[] =
           { "hints.txt",    // hints mode
             "tutorial.txt", // tutorial mode
             }),
+
+    TextDB("egos", "descript/",
+          { "egos.txt",     // weapon/armour/missile egos
+            }),
 };
 
 static TextDB& DescriptionDB = AllDBs[0];
@@ -155,6 +165,7 @@ static TextDB& QuotesDB      = AllDBs[6];
 static TextDB& HelpDB        = AllDBs[7];
 static TextDB& FAQDB         = AllDBs[8];
 static TextDB& HintsDB       = AllDBs[9];
+static TextDB& EgosDB        = AllDBs[10];
 
 static string _db_cache_path(string db, const char *lang)
 {
@@ -923,4 +934,12 @@ string getMiscString(const string &misc, const string &suffix)
 string getHintString(const string &key)
 {
     return unwrap_desc(_query_database(HintsDB, key, true, true));
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Egos DB specific functions.
+
+string getEgoString(const string &key)
+{
+    return unwrap_desc(_query_database(EgosDB, key, true, true));
 }

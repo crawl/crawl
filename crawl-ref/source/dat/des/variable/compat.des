@@ -39,6 +39,10 @@ function callback.dk_crumbling_turn(data, triggerable, triggerer, marker, ev)
   -- do nothing
 end
 
+function callback.cathedral_bats (data, triggerable, triggerer, marker, ev)
+  -- do nothing
+end
+
 -- I'm keeping the code here in case someone is unfortunate enough to
 -- have this vault present in the game; connectivity might be broken
 -- otherwise.

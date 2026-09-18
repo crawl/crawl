@@ -32,7 +32,7 @@ int lua_element_colour_calc::get(const coord_def& loc, bool non_random) const
     lua_State *ls = dlua.state();
 
     function.push();
-    lua_pushinteger(ls, rand(non_random));
+    lua_pushinteger(ls, rand(non_random, loc));
     lua_pushinteger(ls, loc.x);
     lua_pushinteger(ls, loc.y);
     if (!dlua.callfn(nullptr, 3, 1))
@@ -89,7 +89,7 @@ LUAFN(l_add_colour)
     return 0;
 }
 
-static const struct luaL_reg colour_lib[] =
+static const struct luaL_Reg colour_lib[] =
 {
     { "add_colour", l_add_colour },
 
@@ -98,5 +98,7 @@ static const struct luaL_reg colour_lib[] =
 
 void dluaopen_colour(lua_State *ls)
 {
-    luaL_openlib(ls, "colour", colour_lib, 0);
+    lua_newtable(ls);
+    luaL_setfuncs(ls, colour_lib, 0);
+    lua_setglobal(ls, "colour");
 }

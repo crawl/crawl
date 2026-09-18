@@ -28,6 +28,7 @@
 game_state::game_state()
     : game_crashed(false), crash_debug_scans_safe(true),
       mouse_enabled(false), waiting_for_command(false),
+      waiting_for_ui(false),
       terminal_resized(false), last_winch(0),
       seed(0),
       io_inited(false),
@@ -39,6 +40,7 @@ game_state::game_state()
       smallterm(false),
 #endif
       seen_hups(0), map_stat_gen(false), map_stat_dump_disconnect(false),
+      map_stat_veto_closets(false),
       obj_stat_gen(false), type(GAME_TYPE_NORMAL),
       last_type(GAME_TYPE_UNSPECIFIED), last_game_exit(game_exit::unknown),
       marked_as_won(false), arena_suspended(false),
@@ -68,6 +70,7 @@ game_state::game_state()
       minor_version(-1), save_rcs_version(),
       nonempty_buffer_flush_errors(false),
       last_builder_error_fatal(false),
+      known_unlinked_items(),
       mon_act(nullptr)
 {
     reset_cmd_repeat();
@@ -211,7 +214,6 @@ bool interrupt_cmd_repeat(activity_interrupt ai,
 
     switch (ai)
     {
-    case activity_interrupt::teleport:
     case activity_interrupt::force:
     case activity_interrupt::hp_loss:
     case activity_interrupt::monster_attacks:
@@ -225,7 +227,7 @@ bool interrupt_cmd_repeat(activity_interrupt ai,
 
     if (ai == activity_interrupt::see_monster)
     {
-        const monster* mon = at.mons_data;
+        monster* mon = at.mons_data;
         ASSERT(mon);
         if (!you.can_see(*mon))
             return false;
@@ -239,13 +241,7 @@ bool interrupt_cmd_repeat(activity_interrupt ai,
         crawl_state.cancel_cmd_repeat();
 
 #ifndef DEBUG_DIAGNOSTICS
-        if (at.context == SC_NEWLY_SEEN)
-        {
-            monster_info mi(mon);
-
-            mprf(MSGCH_WARN, "%s comes into view.",
-                 get_monster_equipment_desc(mi, DESC_WEAPON).c_str());
-        }
+        monster_interrupt_message(ai, at);
 
         if (crawl_state.game_is_hints())
             hints_monster_seen(*mon);
@@ -446,7 +442,6 @@ void game_state::dec_mon_acting(monster* mon)
     if (size > 0)
     {
         mon_act = mon_act_stack[size - 1];
-        ASSERT(!invalid_monster(mon_act));
         mon_act_stack.pop_back();
     }
 }

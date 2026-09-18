@@ -3,6 +3,8 @@
 
 # Before allowed to worship Yredelemnul, he demands a sacrifice!
 {{
+crawl_require('dlua/vault.lua')
+
 function callback.dk_yredelemnul_ordeal_los(data, triggerable, triggerer, marker, ev)
   if data.triggered == true then
     return
@@ -30,8 +32,8 @@ end
 
 NAME:   dk_yredelemnul_ordeal
 TAGS:   temple_overflow_yredelemnul temple_overflow_1 no_monster_gen
-MONS:   goblin zombie / kobold zombie / human zombie / jackal zombie, \
-        goblin skeleton / kobold skeleton / human skeleton / jackal skeleton
+MONS:   goblin zombie / kobold zombie / human zombie / jackal zombie
+MONS:   goblin draugr / kobold draugr / orc draugr / jackal draugr
 # Uses a neutral human to make the player feel extra evil. Neutral also means
 # good gods will get mad if you choose to obey Yred.
 KMONS:  h = generate_awake human att:neutral
@@ -39,9 +41,8 @@ MARKER: h = lua:portal_desc {replica_name="victim"}
 MARKER: h = lua:MonPropsMarker:new{yreplica="yreplica"}
 KFEAT:  h = .
 KFEAT:  _ = altar_yredelemnul
-KFEAT:  d = .
-KITEM:  d = human skeleton / goblin skeleton / gnoll skeleton / troll skeleton
-SUBST:  1 = ....12
+: kitem("d = " .. vault_species_skeletons(_G, "early"))
+NSUBST: 1 = 1:12 / * = 1..
 FTILE:  _-M = floor_tomb
 SUBST:  G : G.
 {{
@@ -69,7 +70,7 @@ MAP
  xc---cx
  xc-_-cx
 xxc---cxx
-G.cMMMc.G
+GdcMMMcdG
 .1.....1.
 ...n=n...
 ...nhn...

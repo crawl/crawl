@@ -13,16 +13,6 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         "mp": "divinely vigorous"
     };
 
-    var defense_boosters = {
-        "ac": "ice-armoured|protected from physical damage|sanguine armoured"
-              + "|under a protective aura|fiery-armoured|phalanx barrier"
-              + "|trickster",
-        "ev": "^agile|acrobatic|in a heavenly storm",
-
-        // RIP "I am here because empty strings match everything and this does not"
-        "sh": "ephemerally shielded"
-    }
-
     /**
      * Update the stats area bar of the given type.
      * @param name     The name of the bar.
@@ -164,7 +154,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
     }
     player.index_to_letter = index_to_letter;
 
-    function inventory_item_desc(index, parens=false)
+    function inventory_item_desc(index, parens=false, colour=-1)
     {
         var item = player.inv[index];
         var elem = $("<span>");
@@ -172,7 +162,10 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
             elem.text("(" + item.name + ")");
         else
             elem.text(item.name);
-        if (item.col != -1 && item.col != null)
+
+        if (colour != -1)
+            elem.addClass("fg" + colour);
+        else if (item.col != -1 && item.col != null)
             elem.addClass("fg" + item.col);
         return elem;
     }
@@ -182,17 +175,16 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
     {
         var elem;
         var wielded = offhand ? player.offhand_index : player.weapon_index;
+        var colour = offhand ? player.offhand_weapon_colour
+                             : player.weapon_colour;
         if (wielded == -1)
         {
             elem = $("<span>");
             elem.text(player.unarmed_attack);
-            elem.addClass("fg" + player.unarmed_attack_colour);
+            elem.addClass("fg" + colour);
         }
         else
-            elem = inventory_item_desc(wielded);
-
-        if (player.has_status("corroded"))
-            elem.addClass("corroded_weapon");
+            elem = inventory_item_desc(wielded, false, colour);
 
         return elem;
     }
@@ -238,19 +230,28 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         var elem = $("#stats_"+type);
         elem.text(player[type]);
         elem.removeClass();
-        if (type == "sh" && player.incapacitated()
-            && player.offhand_index != -1)
-            // XXX This really doesn't work properly
-            // Orbs, and coglins with offhand weapons, also trigger this...
-            // Amulets of reflection on the other hand, do not...
-            elem.addClass("degenerated_defense");
-        else if (player.has_status(defense_boosters[type]))
-            elem.addClass("boosted_defense");
-        else if (type == "ac" && player.has_status("corroded"))
-            elem.addClass("degenerated_defense");
-        else if (type == "sh" && player.god == "Qazlal"
-                 && player.piety_rank > 0)
-            elem.addClass("boosted_defense");
+
+        if (type == "ac")
+        {
+            if (player.ac_mod > 0)
+                elem.addClass("boosted_defense");
+            else if (player.ac_mod < 0)
+                elem.addClass("degenerated_defense");
+        }
+        else if (type == "ev")
+        {
+            if (player.ev_mod > 0)
+                elem.addClass("boosted_defense");
+            else if (player.ev_mod < 0)
+                elem.addClass("degenerated_defense");
+        }
+        else if (type == "sh")
+        {
+            if (player.sh_mod > 0)
+                elem.addClass("boosted_defense");
+            else if (player.sh_mod < 0)
+                elem.addClass("degenerated_defense");
+        }
     }
 
     function stat_class(stat)
@@ -286,6 +287,67 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         }
         elem.addClass(stat_class(stat));
         $("#stats_" + stat).html(elem);
+    }
+
+    function update_doom()
+    {
+        if (player.doom == 0 && options.get("always_show_doom_contam") === false)
+        {
+            $("#stats_doom_ui").hide();
+            return;
+        }
+        else
+            $("#stats_doom_ui").show();
+
+        var val = player["doom"];
+        var elem = $("<span>");
+        elem.text(" " + val + "%");
+
+        var colour = "fg7";
+        if (player.doom == 0)
+            colour = "fg8";
+        if (player.doom >= 75)
+            colour = "fg5";
+        else if (player.doom >= 50)
+            colour = "fg12";
+        else if (player.doom >= 25)
+            colour = "fg14";
+
+        elem.addClass(colour);
+        var tooltip = $("#stats_status_lights_tooltip");
+        // Hide the tooltip so that it goes away if expired.
+        tooltip.hide();
+        $("#stats_doom").html(elem);
+
+        elem.on("mouseenter mousemove", ev => {
+                tooltip.css({top: ev.pageY + "px"});
+                tooltip.html(util.formatted_string_to_html(player["doom_desc"]));
+                tooltip.show();
+            });
+        elem.on("mouseleave", ev => tooltip.hide());
+    }
+
+    function update_contam()
+    {
+        if (player.contam == 0 && options.get("always_show_doom_contam") === false)
+        {
+            $("#stats_contam_ui").hide();
+            return;
+        }
+        else
+            $("#stats_contam_ui").show();
+
+        var val = player.contam;
+        var elem = $("<span>");
+        elem.text(" " + val + "%");
+
+        var colour = "fg8";
+        if (val >= 200)
+            colour = "fg4";
+        else if (val >= 100)
+            colour = "fg14";
+        elem.addClass(colour);
+        $("#stats_contam").html(elem);
     }
 
     function percentage_color(name)
@@ -335,12 +397,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
                                     + player.title);
         $("#stats_wizmode").text(player.wizard ? "*WIZARD*" : player.explore ? "*EXPLORE*" : "");
 
-        // Setup species
-        // TODO: Move to a proper initialisation task
-        if ($("#stats").attr("data-species") != player.species)
-            $("#stats").attr("data-species", player.species);
-
-        var species_god = player.species;
+        var species_god = player.species_display_name;
         if (player.god != "")
             species_god += " of " + player.god;
         if (player.god == "Xom")
@@ -356,8 +413,11 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         else if ((player.piety_rank > 0 || player.god != "")
                  && player.god != "Gozag")
         {
-            $("#stats_piety").text(repeat_string("*", player.piety_rank)
-                                   + repeat_string(".", 6-player.piety_rank));
+            $("#stats_piety").html(repeat_string("*", player.piety_rank)
+                                   + repeat_string(".", 6-player.piety_rank-player.ostracism_pips)
+                                   + "<span class=fg5>"
+                                   + repeat_string("X", player.ostracism_pips)
+                                   + "</span>");
         }
         else
             $("#stats_piety").text("");
@@ -405,6 +465,9 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
 
         update_bar("mp");
 
+        update_doom();
+        update_contam();
+
         update_defense("ac");
         update_defense("ev");
         update_defense("sh");
@@ -433,6 +496,8 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         $("#stats_place").text(place_desc);
 
         var tooltip = $("#stats_status_lights_tooltip");
+        // Hide the tooltip so that it goes away if expired.
+        tooltip.hide();
         $("#stats_status_lights").html("");
         for (var i = 0; i < player.status.length; ++i)
         {
@@ -536,7 +601,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         if (family !== "" && family !== "monospace")
         {
             family += ", monospace";
-            $("#stats").css("font-family", family);
+            document.documentElement.style.setProperty("--stat-font", family);
         }
     });
 
@@ -548,6 +613,7 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
         .on("game_init.player", function () {
             $.extend(player, {
                 name: "", god: "", title: "", species: "",
+                species_display_name: "",
                 hp: 0, hp_max: 0, real_hp_max: 0, poison_survival: 0,
                 mp: 0, mp_max: 0, dd_real_mp_max: 0,
                 ac: 0, ev: 0, sh: 0,
@@ -561,6 +627,8 @@ function ($, comm, client, enums, map_knowledge, messages, options, util) {
                 inv: {},
                 weapon_index: -1,
                 offhand_index: -1,
+                weapon_colour: 0,
+                offhand_weapon_colour: 0,
                 quiver_item: -1,
                 unarmed_attack: "",
                 pos: {x: 0, y: 0},

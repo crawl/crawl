@@ -17,8 +17,8 @@
 
 #ifdef USE_UNIX_SIGNALS
 #include <sys/time.h>
-#include <csignal>
 #endif
+#include <csignal>
 
 
 #ifndef TARGET_OS_WINDOWS
@@ -94,14 +94,11 @@ template <typename TO, typename FROM> TO nasty_cast(FROM f)
 /////////////////////////////////////////////////////////////////////////////
 // Code for printing out debugging info on a crash.
 ////////////////////////////////////////////////////////////////////////////
-#ifdef USE_UNIX_SIGNALS
 static int _crash_signal    = 0;
 static int _recursion_depth = 0;
 static mutex_t crash_mutex;
 
 // Make this non-static so stack traces are easier to follow
-void crash_signal_handler(int sig_num);
-
 void crash_signal_handler(int sig_num)
 {
     // We rely on mutexes ignoring locks held by the same thread.
@@ -201,13 +198,12 @@ void crash_signal_handler(int sig_num)
     signal(sig_num, SIG_DFL);
     raise(sig_num);
 }
-#endif
 
 void init_crash_handler()
 {
-#if defined(USE_UNIX_SIGNALS)
     mutex_init(crash_mutex);
 
+#if defined(USE_UNIX_SIGNALS)
     for (int i = 1; i <= 64; i++)
     {
 #ifdef SIGALRM
@@ -447,9 +443,7 @@ void disable_other_crashes()
     // If one thread calls end() without going through a crash (a handled
     // fatal error), no one else should be allowed to crash. We're already
     // going down so blocking the other thread is ok.
-#ifdef USE_UNIX_SIGNALS
     mutex_lock(crash_mutex);
-#endif
 }
 
 void watchdog()

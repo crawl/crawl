@@ -84,7 +84,8 @@ public abstract class DCSSKeyboardBase extends RelativeLayout implements View.On
     // Identify action events
     private boolean isActionEvent(KeyEvent event) {
         return (actionKeys.contains(event.getKeyCode()) ||
-                ((event.getMetaState() & KeyEvent.META_CTRL_ON) == KeyEvent.META_CTRL_ON));
+                ((event.getMetaState() & KeyEvent.META_CTRL_ON) == KeyEvent.META_CTRL_ON) ||
+                event.getUnicodeChar() == 0);
     }
 
     // Process software keyboard events

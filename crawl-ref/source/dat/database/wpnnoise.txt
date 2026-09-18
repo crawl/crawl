@@ -284,6 +284,8 @@ w:20
 
 @Your_weapon@ tootles away.
 
+@Your_weapon@ buzzes like a kazoo.
+
 @Your_weapon@ chimes like a gong.
 
 @Your_weapon@ applauds itself.
@@ -359,6 +361,8 @@ snatches of song.
 
 a twanging sound.
 
+the buzz of a distant kazoo.
+
 the chiming of a distant gong.
 
 the tinkle of an enormous bell.
@@ -406,7 +410,7 @@ a muffled joke.
 #
 # Generally, the Sword is arrogant: it sees itself as the main hero, with the
 # wielder just being a disposable tool/fool. Also, it does not like allies --
-# all the fame belong to our steely hero!
+# all the fame belongs to our steely hero!
 #
 # There are some (occasionally modified) lines from actual songs. Those are
 # okay to use, but particularly rare.
@@ -1224,8 +1228,8 @@ w:1
 # Order of the Stick's Belkar Bitterleaf, chaotic evil ranger/barbarian halfling
 @The_weapon@ @_screams_@, "I AM A SEXY SHOELESS GOD OF WAR!"
 
-# Terry Pratchett, Foul Old Ron
-@The_weapon@ @_screams_@, "BUGGRIT, MILLENNIUM HAND AND SHRIMP!"
+# Terry Pratchett, Foul Ole Ron
+@The_weapon@ @_screams_@, "BUGRIT, MILLENNIUM HAND AND SHRIMP!"
 
 # Tolkien, Turin Turambar on Gurthang
 @The_weapon@ @_screams_@, "I AM THE IRON OF DEATH! FROM NO BLOOD WILL I SHRINK!"
@@ -1297,6 +1301,15 @@ w:1
 
 # Swedish folk song, anonymous translation
 @The_weapon@ sings, "Come roses or sage, come lovely mint, come balm..."
+
+# Jerry Reed
+@The_weapon@ sings, "Orcs got the gold mine, I got the shaft..."
+
+# Terry Jacks
+@The_weapon@ sings, "We had joy, we had fun, we slew demons in the sun..."
+
+# "Little" Jimmy Dickens
+@The_weapon@ sings, "May the bird of paradise fly up your nose..."
 
 ############ real songs, low tension ############
 %%%%
@@ -1922,6 +1935,50 @@ Bah, this is suited for peasants, not a master of souls.
 
 How lamentable, to be reduced to wearing... this.
 %%%%
+zonguldrok hat crown of Dyrovepreva
+
+I can see much more clearly than that foolish titan prince!
+
+The purity of bronze and the beauty of gems: a fitting combination.
+
+Let us go off to war, my scion!
+%%%%
+zonguldrok hat hat of the Bear Spirit
+
+# Dylan Thomas
+My scion, our enemies will not go gentle into that good night!
+
+# Dylan Thomas, again
+Rage, rage against the shining of the light!
+
+Our combined strength is more than our foes can bear!
+%%%%
+zonguldrok hat hood of the Assassin
+
+# Tolkien, Glaurung on Turin Turambar
+Be a stabber in the dark, treacherous to foes!
+
+# Star Trek, Klingon saying
+Four thousand throats may be cut in one night by a running man.
+
+Ah, the thrill of more efficient killing!
+%%%%
+zonguldrok hat mask of the Dragon
+
+A mask of a dragon worshipper? I shall make the dragons worship me!
+
+Such primal killing power, scion....
+
+Be of strong will, and bring death to all who oppose us!
+%%%%
+zonguldrok hat hat of the Alchemist
+
+Ah, alchemy. So many new and exciting ways to cause harm....
+
+All our enemies can now be test subjects!
+
+Even if you find the elixir of immortality, remember: I was immortal first!
+%%%%
 zonguldrok hat hat of Pondering
 
 # Pinky and the Brain
@@ -1930,6 +1987,14 @@ Scion, are you pondering what I'm pondering?
 I can tolerate a stained cap for power such as this!
 
 I must contemplate what to do next....
+%%%%
+zonguldrok hat crown of vainglory
+
+All will be laid low in my presence!
+
+I can tolerate light if it grants the power to send my enemies to eternal darkness!
+
+Kill for my glory, not yours, scion!
 ###############################################################################
 ###############################################################################
 #
@@ -1967,3 +2032,75 @@ You long to contribute to the soil cycle.
 You ponder forming a long-term relationship with algae.
 
 You feel a longing for dead leaves.
+###############################################################################
+###############################################################################
+#
+# Eel hands
+#
+###############################################################################
+###############################################################################
+%%%%
+eel hand actions
+
+An eel nuzzles against your @head@.
+
+A quiet electric buzzing fills the air.
+
+Your eels briefly tussle with each other.
+
+One of your eels playfully nips at the other.
+
+An eel wriggles against you, leaving your @skin@ tingling.
+
+An eel investigates your inventory.
+
+Your eels vigilantly scan the vicinity for threats.
+%%%%
+eel hand solo actions
+
+w:20
+Your eel searches [frantically|wistfully] for its partner.
+
+Your eel nuzzles against your @head@.
+
+A quiet electric buzzing fills the air.
+
+Your eel wriggles against you, leaving your @skin@ tingling.
+
+###############################################################################
+###############################################################################
+#
+# Fire dragon occultist scales and ice dragon arcanist scales
+#
+###############################################################################
+###############################################################################
+%%%%
+fire dragon occultist scales greeting
+
+You feel a tender gaze of renewed flame flicker just behind you.
+
+Curious cinders crackle about, eager for new kindling.
+
+w:5
+You feel the weight of ages crawl through your mind and magic.
+%%%%
+fire dragon occultist scales farewell
+
+You hear a draconic huff of impatience grumble through your mind.
+
+The scales rumble violently with feverish dissatisfaction.
+%%%%
+ice dragon arcanist scales greeting
+
+You feel a knowing smirk of echoing frost flicker just behind you.
+
+Ripples of frost crackle about, eager for new victims.
+
+w:5
+You feel the weight of ages crawl through your mind and magic.
+%%%%
+ice dragon arcanist scales farewell
+
+You almost hear a draconic scoff of disaproval growl through your mind.
+
+The scales rattle violently with cold frustration.

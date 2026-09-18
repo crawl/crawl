@@ -158,7 +158,7 @@ ENDMAP
 NAME:   ebering_ecumenical_altar_webs
 TAGS:   transparent
 NSUBST: ^ = 4=^. / 4=^..
-KFEAT:  ^ = web trap
+KFEAT:  ^ = web
 : ecumenical_altar_setup(_G)
 MAP
 ^^^
@@ -262,7 +262,7 @@ ENDMAP
 NAME:    ebering_ecumenical_altar_petrified
 TAGS:    transparent
 KFEAT:   t = petrified_tree
-KMONS:   p = withered plant perm_ench:petrified
+KMONS:   p = petrified flower
 SHUFFLE: tp
 SUBST:   p = pp.
 SUBST:   t = t.
@@ -322,8 +322,10 @@ ENDMAP
 
 NAME:   shapermc_ecumenical_altar_totnotflames
 TAGS:   transparent
-COLOUR: . = green / brown
-FTILE:  A. = floor_grass:20 / floor_dirt
+COLOUR: . = green
+COLOUR: ' = brown
+FTILE:  A. = floor_grass_dark
+FTILE:  '_Gt@ = floor_moss
 SUBST:  A = ATUV
 : ecumenical_altar_setup(_G)
 MAP
@@ -339,8 +341,8 @@ MAP
 @tt t...t
 t.ttt.A.tttt@
 t...t...tt..t
-tt........ttt
- tt..G_G.tt
+tt...'''..ttt
+ tt.'G_G'tt
   tttttttt
 ENDMAP
 
@@ -444,7 +446,8 @@ MONS:   plant
 KITEM:  E = gnoll skeleton
 SUBST:  z = t111
 SUBST:  1 = 11'
-FTILE:  1Et'_  = floor_grass
+FTILE:  1E'_  = floor_grass_dark
+FTILE:  t = floor_moss
 COLOUR: 1E'_ = green
 : ecumenical_altar_setup(_G)
 MAP
@@ -489,7 +492,7 @@ ENDMAP
 
 NAME:   shapermc_ecumenical_altar_mp_highgroup
 TAGS:   transparent
-KFEAT:  ^ = web trap
+KFEAT:  ^ = web
 SUBST:  - = --., G = GGG-, ^ = ^^.
 COLOUR: - = brown
 FTILE:  -G = floor_rough_brown
@@ -575,7 +578,7 @@ MAP
 ENDMAP
 
 NAME:  hellmonk_ecumenical_altar_leap_of_faith
-KFEAT: ^ = shaft trap
+KFEAT: ^ = shaft
 : ecumenical_altar_setup(_G)
 MAP
 xxx
@@ -654,8 +657,8 @@ ENDMAP
 
 NAME:  hellmonk_ecumenical_altar_crossroads
 TAGS:  transparent
-KFEAT: r = abandoned_shop / G / l / t / V / T / web / shaft trap / \
-            net trap / A / > / Y w:2
+KFEAT: r = abandoned_shop / G / l / t / V / T / web / shaft / \
+            trap_net / A / > / Y w:2
 : ecumenical_altar_setup(_G)
 MAP
 @@@xxxxxxx@@@
@@ -736,27 +739,25 @@ ENDMAP
 NAME:    hellmonk_ecumenical_altar_arch_garden
 TAGS:    transparent
 NSUBST:  A = 1:_ / *:A
-SUBST:   A = tGAA.
-SUBST:   . = ..'
-FTILE:   ._t = floor_grass
+SUBST:   A = tGAA"
+FTILE:   ._ = floor_grass_dark
 COLOUR:  . = green
-FTILE:   'GA = floor_dirt
-COLOUR:  ' = brown
+FTILE:   "tGA = floor_moss
 : ecumenical_altar_setup(_G)
 MAP
+A""A""A""A""A
+"..........."
+"..........."
 A..A..A..A..A
-.............
-.............
+"..........."
+"..........."
 A..A..A..A..A
-.............
-.............
+"..........."
+"..........."
 A..A..A..A..A
-.............
-.............
-A..A..A..A..A
-.............
-.............
-A..A..A..A..A
+"..........."
+"..........."
+A""A""A""A""A
 ENDMAP
 
 NAME:   hellmonk_ecumenical_altar_watching_god
@@ -843,14 +844,12 @@ NAME:   hellmonk_ecumenical_altar_defaced_shrine
 TAGS:   no_monster_gen transparent
 WEIGHT: 5
 : if you.absdepth() > 1 then
-MONS:   orc
+MONS:   orc / clockroach w:2
 : else
-MONS:   rat / giant cockroach / dart slug
+MONS:   rat / dart slug
 : end
 KMONS:  d = pile of debris / nothing w:30
-KITEM:  d = human skeleton / kobold skeleton / elf skeleton / gnoll skeleton / \
-            ogre skeleton / naga skeleton / minotaur skeleton / \
-            merfolk skeleton / tengu skeleton / draconian skeleton
+: kitem("d = " .. vault_species_skeletons(_G, "dungeon"))
 KITEM:  _ = stone q:1 / large rock q:1 w:3
 KFEAT:  B = altar_beogh
 KPROP:  B = no_tele_into
@@ -889,7 +888,7 @@ SUBST:  ' = pf .:100
 KMONS:  p = plant
 KMONS:  f = fungus
 SUBST:  ^ = ^..
-KFEAT:  ^ = web trap
+KFEAT:  ^ = web
 : ecumenical_altar_setup(_G)
 MAP
    .........
@@ -958,7 +957,7 @@ SUBST:   ' = f...
 TILE:    C = wall_stone_puffball
 : else
 NSUBST:  ' = 3 = ^^. / .
-KFEAT:   ^ = web trap
+KFEAT:   ^ = web
 : end
 SUBST:   B = b
 : ecumenical_altar_setup(_G)
@@ -1001,7 +1000,7 @@ ENDMAP
 NAME:   dreamdust_ecumenical_altar_hidden_monk_grotto
 TAGS:   transparent
 KMONS:  p = plant / fungus
-KITEM:  h = human skeleton, robe mundane
+KITEM:  h = human skeleton, mundane robe
 SUBST:  ? = pW
 : ecumenical_altar_setup(_G)
 MAP
@@ -1071,9 +1070,9 @@ TAGS:   transparent
 KMONS:  p = plant / fungus
 SUBST:  # = g t p
 SUBST:  - = .:20 g p
-SUBST:  . = .g
 COLOUR: g = green / lightgreen
-FTILE:  _gtp = floor_grass
+FTILE:  _gtp = floor_grass_dark
+FTILE:  . = floor_moss
 : ecumenical_altar_setup(_G)
 MAP
  .......
@@ -1185,9 +1184,9 @@ WEIGHT:  0 (D:1), 10
 SHUFFLE: {[(<
 SUBST:   x : xxxm, c : cccb
 FTILE:   {[(<_cbxm; : floor_black_cobalt / floor_cobble_blood / floor_crypt / \
-         floor_crystal_squares / floor_etched / floor_grass / floor_limestone /\
-         floor_moss / floor_mud / floor_sand / floor_sandstone / floor_vines / \
-         floor_w_marble / none
+         floor_crystal_squares / floor_grass_dark / \
+         floor_limestone / floor_moss / floor_mud / floor_sand / \
+         floor_sandstone / floor_vines / floor_w_marble
 COLOUR:  ; : blue / green / cyan / red / magenta / brown / lightgrey / \
              lightblue / lightgreen / lightcyan / lightred / lightmagenta / \
              yellow / white

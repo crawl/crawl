@@ -63,7 +63,7 @@ void lua_push_moninf(lua_State *ls, monster_info *mi)
  * @treturn boolean
  * @function damage_level
  */
-MIRET1(number, damage_level, dam)
+MIRET1(integer, damage_level, dam)
 /*** Is this monster safe by default?
  * Check if this monster is thought of as safe by crawl internally. Does not
  * check @{Hooks.ch_mon_is_safe}, so this can be used there without causing an
@@ -78,6 +78,12 @@ MIRET1(boolean, is_safe, is(MB_SAFE))
  * @function is_firewood
  */
 MIRET1(boolean, is_firewood, is(MB_FIREWOOD))
+/*** Is this monster currently immune to damage from the player (due to Warding
+ *   or another effect)
+ * @treturn boolean
+ * @function is_damage_immune
+ */
+MIRET1(boolean, is_damage_immune, is(MB_PLAYER_DAMAGE_IMMUNE))
 /*** The monster's current attitude.
  * A numerical value representing the monster's attitude. Possible values:
  *
@@ -90,7 +96,7 @@ MIRET1(boolean, is_firewood, is(MB_FIREWOOD))
  * @treturn int
  * @function attitude
  */
-MIRET1(number, attitude, attitude)
+MIRET1(integer, attitude, attitude)
 /*** The monster's threat level.
  * A numeric representation of the the threat level in the monster list.
  *
@@ -102,7 +108,7 @@ MIRET1(number, attitude, attitude)
  * @treturn int
  * @function threat
  */
-MIRET1(number, threat, threat)
+MIRET1(integer, threat, threat)
 /*** Simple monster name.
  * Returns the name of the monster.
  * @treturn string
@@ -110,30 +116,27 @@ MIRET1(number, threat, threat)
  * @function mname
  */
 MIRET1(string, mname, mname.c_str())
+/*** The last turn the monster was seen at this location.
+ * @treturn int
+ * @function type
+ */
+MIRET1(integer, last_seen_at_turn, last_seen_at_turn)
 /*** Monster type enum value as in monster_type.h.
  * @treturn int
  * @function type
  */
-MIRET1(number, type, type)
+MIRET1(integer, type, type)
 /*** Monster base type as in monster_type.h.
  * @treturn int
  * @function base_type
  */
-MIRET1(number, base_type, base_type)
+MIRET1(integer, base_type, base_type)
 /*** Monster number field.
  * Contains hydra heads or slime size. Meaningless for all others.
  * @treturn int
  * @function number
  */
-MIRET1(number, number, number)
-/*** Does this monster have a ranged attack we know about?
- * A monster is considered to have a ranged attack if it has any of the
- * following: a reach attack, a throwable missile, a launcher weapon, an
- * attack wand, or an attack spell with a range greater than 1.
- * @treturn boolean
- * @function has_ranged_attack
- */
-MIRET1(boolean, has_known_ranged_attack, is(MB_RANGED_ATTACK))
+MIRET1(integer, number, number)
 /*** A string describing monster speed.
  * Possible values are: "very slow", "slow", "normal", "fast", "very fast", and
  * "extremely fast".
@@ -145,12 +148,12 @@ MIRET1(string, speed_description, speed_description().c_str())
  * @treturn int
  * @function x_pos
  */
-MIRET1(number, x_pos, pos.x - you.pos().x)
+MIRET1(integer, x_pos, pos.x - you.pos().x)
 /*** The monster's y coordinate in player centered coordinates.
  * @treturn int
  * @function y_pos
  */
-MIRET1(number, y_pos, pos.y - you.pos().y)
+MIRET1(integer, y_pos, pos.y - you.pos().y)
 
 /*** Monster glyph colour.
  * Return is a crawl colour number.
@@ -160,7 +163,7 @@ MIRET1(number, y_pos, pos.y - you.pos().y)
 static int moninf_get_colour(lua_State *ls)
 {
     MONINF(ls, 1, mi);
-    lua_pushnumber(ls, mi->colour());
+    lua_pushinteger(ls, mi->colour());
     return 1;
 }
 
@@ -172,8 +175,8 @@ static int moninf_get_colour(lua_State *ls)
 static int moninf_get_pos(lua_State *ls)
 {
     MONINF(ls, 1, mi);
-    lua_pushnumber(ls, mi->pos.x - you.pos().x);
-    lua_pushnumber(ls, mi->pos.y - you.pos().y);
+    lua_pushinteger(ls, mi->pos.x - you.pos().x);
+    lua_pushinteger(ls, mi->pos.y - you.pos().y);
     return 2;
 }
 
@@ -181,7 +184,7 @@ static int moninf_get_pos(lua_State *ls)
     static int moninf_get_##field(lua_State *ls) \
     { \
         MONINF(ls, 1, mi); \
-        lua_pushnumber(ls, get_resist(mi->resists(), resist)); \
+        lua_pushinteger(ls, get_resist(mi->resists(), resist)); \
         return 1; \
     }
 
@@ -249,7 +252,7 @@ static int moninf_get_max_hp(lua_State *ls)
 static int moninf_get_wl(lua_State *ls)
 {
     MONINF(ls, 1, mi);
-    lua_pushnumber(ls, ceil(1.0*mi->willpower()/WL_PIP));
+    lua_pushinteger(ls, ceil(1.0*mi->willpower()/WL_PIP));
     return 1;
 }
 
@@ -290,7 +293,7 @@ static int moninf_get_defeat_wl(lua_State *ls)
     zap_type zap = spell_to_zap(spell);
     int eff_power = zap == NUM_ZAPS ? power : zap_ench_power(zap, power, false);
     int success = hex_success_chance(wl, eff_power, 100);
-    lua_pushnumber(ls, success);
+    lua_pushinteger(ls, success);
     return 1;
 }
 
@@ -302,7 +305,7 @@ static int moninf_get_defeat_wl(lua_State *ls)
 static int moninf_get_ac(lua_State *ls)
 {
     MONINF(ls, 1, mi);
-    lua_pushnumber(ls, ceil(mi->ac/5.0));
+    lua_pushinteger(ls, ceil(mi->ac/5.0));
     return 1;
 }
 /*** The monster's EV value, in "pips" (number of +'s shown on its description).
@@ -316,7 +319,7 @@ static int moninf_get_ev(lua_State *ls)
     int value = mi->ev;
     if (!value && mi->base_ev != INT_MAX)
         value = mi->base_ev;
-    lua_pushnumber(ls, ceil(value/5.0));
+    lua_pushinteger(ls, ceil(value/5.0));
     return 1;
 }
 
@@ -457,7 +460,7 @@ LUAFN(moninf_get_intelligence)
 LUAFN(moninf_get_avg_local_depth)
 {
     MONINF(ls, 1, mi);
-    PLUARET(number, monster_pop_depth_avg(you.where_are_you, mi->type));
+    PLUARET(integer, monster_pop_depth_avg(you.where_are_you, mi->type));
 }
 
 /*** Get the monster's probability of randomly generating on the current floor
@@ -471,7 +474,7 @@ LUAFN(moninf_get_avg_local_depth)
 LUAFN(moninf_get_avg_local_prob)
 {
     MONINF(ls, 1, mi);
-    PLUARET(number, monster_probability(level_id::current(), mi->type));
+    PLUARET(integer, monster_probability(level_id::current(), mi->type));
 }
 
 
@@ -523,7 +526,7 @@ LUAFN(moninf_get_is)
 }
 
 /*** Get the monster's flags.
- * Returns all flags set for the moster, as a list of flag names.
+ * Returns all flags set for the monster, as a list of flag names.
  * @treturn array
  * @function flags
  */
@@ -669,22 +672,10 @@ LUAFN(moninf_get_is_constricting_you)
 LUAFN(moninf_get_can_be_constricted)
 {
     MONINF(ls, 1, mi);
-    if (!mi->constrictor_name.empty()
-        || !form_keeps_mutations()
-        || (you.get_mutation_level(MUT_CONSTRICTING_TAIL) < 2
-                || you.is_constricting())
-            && (you.has_mutation(MUT_TENTACLE_ARMS)
-                || !you.has_usable_tentacle()))
-    {
-        lua_pushboolean(ls, false);
-    }
-    else
-    {
-        monster dummy;
-        dummy.type = mi->type;
-        dummy.base_monster = mi->base_type;
-        lua_pushboolean(ls, !dummy.res_constrict());
-    }
+    monster dummy;
+    dummy.type = mi->type;
+    dummy.base_monster = mi->base_type;
+    lua_pushboolean(ls, !dummy.res_constrict());
     return 1;
 }
 
@@ -706,6 +697,40 @@ LUAFN(moninf_get_can_traverse)
     return 1;
 }
 
+/*** Returns the monster's items as an array of items.
+ * @treturn array
+ * @function items
+ */
+LUAFN(moninf_get_items)
+{
+    MONINF(ls, 1, mi);
+    lua_newtable(ls);
+    int index = 0;
+    for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
+    {
+        item_def* item = mi->inv[i].get();
+        if (item)
+        {
+            clua_push_item(ls, item);
+            lua_rawseti(ls, -2, ++index);
+        }
+
+    }
+    return 1;
+}
+
+/*** What's the monster's maximum range with a weapon, spell, or wand?
+ * @treturn int
+ * @function range
+ */
+LUAFN(moninf_get_range)
+{
+    MONINF(ls, 1, mi);
+
+    lua_pushinteger(ls, mi->threat_range);
+    return 1;
+}
+
 /*** How far can the monster reach with their melee weapon?
  * @treturn int
  * @function reach_range
@@ -714,7 +739,7 @@ LUAFN(moninf_get_reach_range)
 {
     MONINF(ls, 1, mi);
 
-    lua_pushnumber(ls, mi->reach_range());
+    lua_pushinteger(ls, mi->reach_range());
     return 1;
 }
 
@@ -850,8 +875,8 @@ LUAFN(moninf_get_summoner_pos)
     const auto *summoner = mi->get_known_summoner();
     if (summoner)
     {
-        lua_pushnumber(ls, summoner->pos().x - you.pos().x);
-        lua_pushnumber(ls, summoner->pos().y - you.pos().y);
+        lua_pushinteger(ls, summoner->pos().x - you.pos().x);
+        lua_pushinteger(ls, summoner->pos().y - you.pos().y);
         return 2;
     }
     else
@@ -861,17 +886,19 @@ LUAFN(moninf_get_summoner_pos)
     }
 }
 
-static const struct luaL_reg moninf_lib[] =
+static const struct luaL_Reg moninf_lib[] =
 {
     MIREG(type),
     MIREG(base_type),
     MIREG(number),
     MIREG(colour),
     MIREG(mname),
+    MIREG(last_seen_at_turn),
     MIREG(is),
     MIREG(flags),
     MIREG(is_safe),
     MIREG(is_firewood),
+    MIREG(is_damage_immune),
     MIREG(stabbability),
     MIREG(holiness),
     MIREG(intelligence),
@@ -883,6 +910,8 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(is_constricting_you),
     MIREG(can_be_constricted),
     MIREG(can_traverse),
+    MIREG(items),
+    MIREG(range),
     MIREG(reach_range),
     MIREG(is_unique),
     MIREG(is_stationary),
@@ -892,7 +921,6 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(desc),
     MIREG(status),
     MIREG(name),
-    MIREG(has_known_ranged_attack),
     MIREG(speed_description),
     MIREG(spells),
     MIREG(res_poison),
@@ -948,14 +976,14 @@ LUAFN(mi_get_monster_at)
     if (env.mgrid(p) == NON_MONSTER)
         return 0;
     monster* m = &env.mons[env.mgrid(p)];
-    if (!m->visible_to(&you))
+    if (!you.aware_of(*m))
         return 0;
-    monster_info mi(m);
+    monster_info mi = *env.map_knowledge(p).monsterinfo();
     lua_push_moninf(ls, &mi);
     return 1;
 }
 
-static const struct luaL_reg mon_lib[] =
+static const struct luaL_Reg mon_lib[] =
 {
     { "get_monster_at", mi_get_monster_at },
 
@@ -966,5 +994,8 @@ void cluaopen_moninf(lua_State *ls)
 {
     clua_register_metatable(ls, MONINF_METATABLE, moninf_lib,
                             lua_object_gc<monster_info>);
-    luaL_openlib(ls, "monster", mon_lib, 0);
+
+    lua_newtable(ls);
+    luaL_setfuncs(ls, mon_lib, 0);
+    lua_setglobal(ls, "monster");
 }

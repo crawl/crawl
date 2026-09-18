@@ -18,7 +18,6 @@ void debug_ghosts();
 class monster;
 struct coord_def;
 
-void wizard_apply_monster_blessing(monster* mon);
 void wizard_give_monster_item(monster* mon);
 void wizard_move_player_or_monster(const coord_def& where);
 void wizard_make_monster_summoned(monster* mon);

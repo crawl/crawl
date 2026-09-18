@@ -329,6 +329,25 @@ string replace_all(string s, const string &find, const string &repl)
     return s;
 }
 
+// Replaces all occurrences of find with the return value of repl_func(),
+// which is evaluated once per occurrence so that multiple instances of find
+// aren't always replaced with the same string.
+string replace_all_func(string s, const string &find, string (*repl_func)())
+{
+    ASSERT(!find.empty());
+    string::size_type start = 0;
+    string::size_type found;
+
+    while ((found = s.find(find, start)) != string::npos)
+    {
+        const string repl = repl_func();
+        s.replace(found, find.length(), repl);
+        start = found + repl.length();
+    }
+
+    return s;
+}
+
 // Replaces all occurrences of any of the characters in tofind with the
 // replacement string.
 string replace_all_of(string s, const string &tofind, const string &replacement)
@@ -563,6 +582,12 @@ vector<string> split_string(const string &sep, string s, bool trim_segments,
     return segments;
 }
 
+string remove_prepended_the(string s)
+{
+    if (starts_with(s, "the "))
+        s.erase(0, 4); // strlen("the ")
+    return s;
+}
 
 // Crude, but functional.
 string make_time_string(time_t abs_time, bool terse)

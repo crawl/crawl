@@ -50,6 +50,10 @@
 #include "view.h"
 #include "windowmanager.h"
 
+#ifdef __ANDROID__
+# include "syscalls.h"
+#endif
+
 #ifdef TARGET_OS_WINDOWS
 # include <windows.h>
 #endif
@@ -73,11 +77,11 @@ static int _screen_sizes[4][8] =
 // width, height, map, crt, stat, msg, tip, lbl, view scale, map scale
 static int _screen_sizes[5][10] =
 {
-    {800, 800, 1, 15, 17, 17, 15, 15, 150, 100},
-    {720, 720, 1, 13, 15, 15, 13, 13, 130, 80},
-    {640, 640, 1, 12, 14, 14, 12, 12, 120, 70},
+    {800, 800, 1, 15, 17, 17, 15, 15, 148, 74},
+    {720, 720, 1, 13, 15, 15, 13, 13, 132, 66},
+    {640, 640, 1, 12, 14, 14, 12, 12, 120, 60},
     {540, 540, 1, 10, 12, 12, 10, 10, 100, 50},
-    {480, 480, 1, 9, 11, 11, 9, 9, 90, 40}
+    {480, 480, 1, 9, 11, 11, 9, 9, 90, 45}
 };
 #endif
 
@@ -282,10 +286,10 @@ void TilesFramework::calculate_default_options()
         //     * game scale  => 2
         //     * screen size => 540x540 (usually it can be rotated)
         int adjust_scale = 1;
-        if (Options.game_scale == min(m_windowsz.x, m_windowsz.y)/960+1)
+        int ref_display_size = jni_ref_display_size();
+        if (Options.game_scale == ref_display_size/960+1)
             adjust_scale = Options.game_scale;
-        if (m_windowsz.x >= (_screen_sizes[auto_size][0]*adjust_scale)
-            && m_windowsz.y >= (_screen_sizes[auto_size][1])*adjust_scale)
+        if (ref_display_size >= (_screen_sizes[auto_size][0]*adjust_scale))
 #endif
         {
             break;
@@ -791,13 +795,10 @@ int TilesFramework::getch_ck()
 
 static const int map_margin      = 2;
 static const int map_stat_margin = 4;
-static const int min_stat_height = 12;
+static const int min_stat_height = 13;
 static const int min_inv_height  = 4;
-static const int max_inv_height  = 6;
+static const int max_inv_height  = 8;
 static const int max_mon_height  = 3;
-
-// Width of status area in characters.
-static const int stat_width      = 42;
 
 static int round_up_to_multiple(int a, int b)
 {
@@ -883,7 +884,7 @@ void TilesFramework::do_layout()
         m_region_tab->resize_to_fit(m_windowsz.x, m_windowsz.y);
 
         const int sidebar_min_pw = m_region_stat->grid_width_to_pixels(
-                                                                stat_width);
+                                                        Options.tile_min_stat_width_characters);
         sidebar_pw = m_region_tab->grid_width_to_pixels(14) - 10;
         if (sidebar_pw > m_windowsz.x / 3)
             sidebar_pw = m_region_tab->grid_width_to_pixels(7) - 10;
@@ -1014,17 +1015,13 @@ void TilesFramework::do_layout()
 
 bool TilesFramework::is_using_small_layout()
 {
-    if (Options.tile_use_small_layout == maybe_bool::maybe)
-#ifndef __ANDROID__
+    if (Options.tile_use_small_layout == maybe_bool::maybe
+        && m_stat_font && m_msg_font)
+    {
         // Rough estimation of the minimum usable window size
-        //   - width > stats font width * 45 + msg font width * 45
-        //   - height > tabs area size (192) + stats font height * 11
         // Not using Options.tile_font_xxx_size because it's reset on new game
-        return m_windowsz.x < (int)(m_stat_font->char_width()*45+m_msg_font->char_width()*45)
-            || m_windowsz.y < (int)(192+m_stat_font->char_height()*11);
-#else
-        return true;
-#endif
+        return m_windowsz.x < (int)(m_stat_font->char_width()*45+m_msg_font->char_width()*55);
+    }
     else
         return bool(Options.tile_use_small_layout);
 }
@@ -1043,9 +1040,9 @@ void TilesFramework::zoom_dungeon(bool in)
     current_scale = min(ceil(max_zoom*10)/10, max(0.2,
                     current_scale + (in ? ZOOM_INC : -ZOOM_INC)));
     do_layout(); // recalculate the viewport setup
+    redraw_screen(false);
     if (current_scale != orig)
         mprf(MSGCH_PROMPT, "Zooming to %.2f", (float) current_scale);
-    redraw_screen(false);
     update_screen();
 #endif
 }
@@ -1120,7 +1117,7 @@ void TilesFramework::place_tab(int idx)
     }
     else if (idx == TAB_ABILITY)
     {
-        unsigned int talents = your_talents(false).size();
+        unsigned int talents = your_talents().size();
         if (talents == 0)
         {
             m_region_tab->enable_tab(TAB_ABILITY);
@@ -1492,19 +1489,20 @@ const coord_def &TilesFramework::get_cursor() const
     return m_region_tile->get_cursor();
 }
 
-void TilesFramework::set_need_redraw(unsigned int min_tick_delay)
+void TilesFramework::set_need_redraw()
 {
     if (in_headless_mode())
-        return;
-    unsigned int ticks = (wm->get_ticks() - m_last_tick_redraw);
-    if (min_tick_delay && ticks <= min_tick_delay)
         return;
 
     m_need_redraw = true;
 }
 
-bool TilesFramework::need_redraw() const
+bool TilesFramework::need_redraw(unsigned int min_tick_delay) const
 {
+    unsigned int ticks_passed = (wm->get_ticks() - m_last_tick_redraw);
+    if (ticks_passed < min_tick_delay)
+        return false;
+
     return m_need_redraw;
 }
 

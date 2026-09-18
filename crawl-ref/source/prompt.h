@@ -15,7 +15,7 @@ namespace ui
         bool format_msg=false);
 }
 
-bool yes_or_no(PRINTF(0, ));
+bool confirm_prompt(const char* require, const char* fmt, ...);
 typedef map<int, int> explicit_keymap;
 int yesno(const char * str, bool allow_lowercase, int default_answer,
           bool clear_after = true, bool interrupt_delays = true,

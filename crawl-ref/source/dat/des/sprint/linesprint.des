@@ -85,7 +85,7 @@ SUBVAULT:  o : pan_hell_end
 MARKER:    & = lua:restrict_door()
 KFEAT:     & = closed_door
 KMONS:     a = Erica / Erolcha / Eustachio / Gastronok / Grum band /\
-               Harold / Joseph / Josephine band / Maurice / Psyche /\
+               Harold / Joseph / Josephine band / Maurice /\
                Sonja / Urug
 NSUBST:    a = 1:a. / 1:a.. / 1:a... / 1:a.... / * = .:70 a:1
 KMONS:     b = Agnes / Aizul / Azrael band / Donald / Frances / Kirke band /\
@@ -219,7 +219,7 @@ KITEM:    a = potion of curing q:4 pre_id, \
 KITEM:    b = scroll of blinking q:1 pre_id, \
               scroll of amnesia q:2 pre_id
 KITEM:    d = any blast wand charges:10 pre_id /\
-              any beam wand charges:10 pre_id, \
+              any beam wand charges:10 pre_id
 KITEM:    e = rapier plus:2 ego:electrocution pre_id /\
            rapier plus:2 ego:draining pre_id /\
            rapier plus:2 ego:venom pre_id /\
@@ -405,8 +405,6 @@ TAGS:     items_4
 KITEM:    a = ring of protection from fire pre_id /\
           ring of protection from cold pre_id /\
           ring of willpower pre_id /\
-          ring of fire pre_id /\
-          ring of ice pre_id /\
           ring of see invisible pre_id /\
           ring of poison resistance pre_id /\
           any jewellery pre_id
@@ -421,6 +419,7 @@ KITEM:    b = any weapon level:27 pre_id /\
           great mace plus:1 pre_id /\
           demon whip plus:1 pre_id w:5 /\
           giant spiked club plus:1 pre_id /\
+          athame plus:3 pre_id /\
           quick blade plus:3 pre_id /\
           great sword plus:1 pre_id /\
           double sword plus:1 pre_id /\
@@ -734,7 +733,7 @@ ORIENT:   encompass
 KMONS:    1 = vault guard
 KMONS:    2 = place:Vaults:$
 KMONS:    3 = shadow dragon w:15 / quicksilver dragon / golden dragon /\
-              titan / tentacled monstrosity / stone giant / lich w:5 /\
+              titan / undying armoury / stone giant / lich w:5 /\
               ancient lich / place:Vaults:$ w:40
 KMONS:    4 = shadow dragon
 KMONS:    5 = shadow dragon
@@ -787,8 +786,6 @@ KITEM:    a = amulet of faith randart pre_id /\
     ring of protection from fire randart pre_id /\
     ring of protection from cold randart pre_id /\
     ring of willpower randart pre_id /\
-    ring of fire randart pre_id /\
-    ring of ice randart pre_id /\
     ring of see invisible randart pre_id /\
     ring of poison resistance randart pre_id /\
     ring of slaying plus:3 pre_id /\
@@ -950,7 +947,7 @@ ENDMAP
 
 NAME:     forest_end
 TAGS:     forest_end
-KMONS:    1 = spriggan col:white name:baker n_suf ; robe . dagger
+KMONS:    1 = spriggan col:white name:baker n_suf n_noc ; robe . dagger
 COLOUR:   t = green / lightgreen w:5
 COLOUR:   1 = brown
 : line_setup(_G)
@@ -990,7 +987,7 @@ NAME:     slime_end
 TAGS:     slime_end
 KMONS:    1 = azure jelly / acid blob w:20 / rockslime / glass eye w:4 /\
               golden eye w:4 / void ooze w:4
-KMONS:    2 = the Royal Jelly
+KMONS:    2 = Royal Jelly
 KITEM:    2 = slimy rune of zot
 COLOUR:   # = lightgreen
 COLOUR:   12 = green

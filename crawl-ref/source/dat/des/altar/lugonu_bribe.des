@@ -20,7 +20,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
       return
     end
 
-    local weapon = util.random_from({"short sword", "rapier",
+    local weapon = util.random_from({"rapier", "athame",
                  "long sword", "scimitar", "partisan", "bardiche",
                  "broad axe", "battleaxe", "quarterstaff",
                  "lajatang", "morningstar", "great mace"})
@@ -32,16 +32,18 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
                         orb ego:mayhem pre_id",
          Dithmenos = "scroll of noise pre_id q:3",
          Elyvilon = "book of Necromancy / book of Death / book of Unlife",
-         Gozag = "randbook owner:Lugonu spells:animate_dead numspells:1",
+         Gozag = "parchment of Animate Dead",
          Kikubaaqudgha = "rat corpse / kobold corpse",
          Okawaru = "any ally scroll pre_id q:3 / any ally misc /\
                     phantom mirror",
-         ["Sif Muna"] = "plate armour randart plus:-1 artprops:-cast:1&&int:-6",
+         Qazlal = "cloak plus:-1 ego:stealth /\
+                   pair of boots plus:-1 ego:stealth",
+         ["Sif Muna"] = "plate armour randart plus:-1 artprops:*silence:1&&int:-6",
          Trog = "manual of Spellcasting / manual of Air Magic w:5 /\
                  manual of Earth Magic w:5 / manual of Fire Magic w:5 /\
                  manual of Ice Magic w:5 / manual of Alchemy w:5 /\
                  any magical staff pre_id / ring of wizardry pre_id",
-         Vehumet = "tower shield randart plus:-1 artprops:-cast:1&&int:-6",
+         Vehumet = "tower shield randart plus:-1 artprops:*silence:1&&int:-6",
          ["Wu Jian"] = "mundane ring of slaying pre_id",
          Xom = "manual of Invocations",
          Yredelemnul = "good_item " .. weapon .. " ego:holy_wrath pre_id",
@@ -51,7 +53,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          ["the Shining One"] = "good_item " .. weapon .. " ego:pain pre_id /\
               good_item " .. weapon .. " ego:draining pre_id /\
               good_item " .. weapon .. " ego:vampirism pre_id /\
-              potion of invisibility pre_id q:3 / orb of light",
+              potion of invisibility pre_id q:3 / orb ego:light",
     }
     data.triggered = true
     if item[you.god()] ~= nil then
@@ -65,7 +67,7 @@ end
 
 
 NAME:   tgw_lugonu_bribe
-TAGS:   transparent
+TAGS:   transparent extra
 DEPTH:  D:12-, Depths
 KFEAT:  _ = altar_lugonu
 MARKER: _ = lua:portal_desc {replica_name="altar"}

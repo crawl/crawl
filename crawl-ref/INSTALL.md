@@ -78,7 +78,7 @@ These instructions may work for other DPKG-based distros.
 
 ```sh
 # python-is-python3 is required for Ubuntu 20.04 and newer
-sudo apt install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
+sudo apt install build-essential libncursesw5-dev bison flex liblua5.4-dev \
 libsqlite3-dev libz-dev pkg-config python3-yaml binutils-gold python-is-python3
 
 # Dependencies for tiles builds
@@ -120,7 +120,7 @@ You can install these dependencies from your OS package manager, or use DCSS's
 packaged versions (as described in [Packaged
 Dependencies](#packaged-dependencies) above):
 
-* lua 5.1
+* lua 5.4
 * sqlite
 * zlib
 * pcre
@@ -307,7 +307,15 @@ from within the MSYS2 Shell.
     you to also uninstall other packages that are part of the `base-devel`
     group, but they aren't needed for developing with python.
 
-5. To get the DCSS source, follow the steps in the [Getting The
+5. Actually there's a final dependency to install, for advcomp and pngcrush.
+   Technically they're optional but you'll get warnings (and, clearly, inflated
+   image sizes) if you don't do this.
+
+   ```sh
+   pacman -S mingw-w64-x86_64-advancecomp
+   ```
+
+6. To get the DCSS source, follow the steps in the [Getting The
    Source](#getting-the-source) section above to clone DCSS into your MSYS2
    home directory. We recommend using the MSYS2-installed version of git for
    these steps. In brief:
@@ -319,7 +327,7 @@ from within the MSYS2 Shell.
     3. Run `cd crawl/crawl-ref/source`.
     4. Run `git submodule update --init`.
 
-6. Build DCSS by simply running:
+7. Build DCSS by simply running:
 
     ```sh
     # for the console build:
@@ -331,14 +339,14 @@ from within the MSYS2 Shell.
     If you want a debug build, add the target `debug` to the above commands (eg
     `make debug TILES=y`).
 
-7. When the build process finishes, you can run crawl.exe directly from the
+8. When the build process finishes, you can run crawl.exe directly from the
    source directory in the MSYS2 shell. For Tiles, type `./crawl.exe`, and for
    console, type `start crawl`, which will open DCSS in a new command.exe
    window (the Windows version of DCSS requires a command.exe shell and will
    not run in an MSYS2 shell). Both versions can also be started by
    double-clicking `crawl.exe` using the file explorer.
 
-8. If you want to build the installer or zipped packages instead,
+9. If you want to build the installer or zipped packages instead,
    you need to install zip and nsis:
 
     ```sh
@@ -380,9 +388,13 @@ These instructions have been successfully tested with Ubuntu only.
 This build process is currently unsupported, and unlikely to be straightforward
 in versions of MSVC besides those explicitly mentioned here.
 
-This build is tested on Visual Studio 2017 15.9.60 on Windows 10 and 11.
-Tested configurations are `Debug/Release;Console/Tiles;Win32/x64`, Python and
-Lua support for editing are untested, and a webtiles build is not available.
+This build is tested on Visual Studio 2022 17.14.4 on Windows 10. However, the
+build uses the Visual Studio 2019 build tools for maximum backward
+compatibility. You can either install them and use them with VS2022
+(https://aka.ms/vs/16/release/vs_buildtools.exe), or simply use VS2019 directly
+(https://aka.ms/vs/16/release/vs_community.exe). Tested configurations are
+`Debug/Release;Console/Tiles;Win32/x64`, Python and Lua support for editing are
+untested, and a webtiles build is not available.
 
 1. You will need to download Crawl's source code, as well as its submodules.
     You can do this by opening a terminal such as command prompt and navigating
@@ -419,9 +431,7 @@ MSVC solution files are finicky. Opening the "All Configurations" or
 Troubleshooting tips:
 
 - Make sure Windows Universal C Runtime is installed in MSVC.
-- Make sure the Windows 8.1 SDK is installed in Visual Studio. This
-     doesn't appear to be available in the latest version of Visual Studio.
-- Use "Rebuild Solution" to make sure all files are rewritten
+- Make sure a Windows 10 or 11 SDK is installed in Visual Studio.
 - Make sure all projects use `/MD` (or `/MDd` for the debug version)
 - Make sure the appropriate (`/MD` or `/MDd`) CRT libraries are included for
   SDL, crawl, and

@@ -2,7 +2,7 @@ name: "cane toad"
 glyph: {char: "F", colour: yellow}
 flags: [cold_blood]
 resists: {poison: 1}
-xp_mult: 16
+exp: 407
 genus: frog
 will: 20
 attacks:

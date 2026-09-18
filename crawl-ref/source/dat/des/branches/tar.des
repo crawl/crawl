@@ -178,34 +178,37 @@ TAGS:    transparent no_monster_gen
 DEPTH:   Tar, !Tar:$, Zot:1-4
 ORIENT:  centre
 : if you.in_branch("Tar") then
-KMONS:   12 = patrolling bone dragon
+KMONS:   12 = patrolling undertaker
 KMONS:   34 = patrolling tormentor
 KMONS:   56 = patrolling profane servitor
 KMONS:   7 = eidolon
 KMONS:   8 = patrolling shadow wraith
 KMONS:   AB = ancient lich / dread lich
-KMONS:   CD : doom hound
+KMONS:   CD : oblivion hound
 KMONS:   EF : putrid mouth
 KITEM:   | = nothing
 : else
 KMONS:   12 = patrolling lich / ancient lich / dread lich
 KMONS:   34 = patrolling curse toe
 KMONS:   56 = patrolling bone dragon
-KMONS:   7 = death cob w:12 / zombie w:4 / skeleton w:4 / guardian mummy w:4
+KMONS:   7 = death cob w:12 / zombie w:4 / base draconian draugr w:4
 KMONS:   8 = patrolling death cob
 KMONS:   ABCD = shadow dragon
 KMONS:   EF = death drake
+KMONS:   & = orb of entropy
+:   if dgn.zot_orb_type() == "orb of entropy" then
+SUBST:   34 = &
+:   end
 : end
 KMONS:   0 = soul eater
 KMONS:   Z = obsidian statue
-KFEAT:   Z = zot trap
+KFEAT:   Z = trap_zot
 SHUFFLE: 1234, 12 / 34 / 56, ABCD, AB / CD / EF, {'" / {'" / }`_, {', }`, GHI
 SUBST:   { : -_ |:3, } : -_ |:2, ' : |:1 .:4, " = ., Z = Z:1 c:8
 SUBST:   G : O:20 X, H : O X:50, I = X, X : xc
 NSUBST:  - = 1:{ / 1:}, _ = 1:> / 1 = .:80 <
 NSUBST:  7 = 3:7 / 3:0 / 2 = 70
-MARKER:  O = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 200, \
-                pow_max = 300, delay = 25, size = 1, walk_dist = 0, excl_rad = 0 }
+: single_cloud(_G, "O", "foul pestilence", true)
 MAP
          xxxxxxxxx
         xxxx...7.xx.@@.
@@ -267,17 +270,12 @@ NAME:    hangedman_tartarus_temple_path
 TAGS:    transparent
 DEPTH:   Tar, !Tar:$
 ORIENT:  centre
+ITEM:    base draconian skeleton / shadow dragon skeleton
 SHUFFLE: hH / hH / Hh, iI / iI / Ii
 SUBST:   h : cccx, H : cxGF, i : cccx, I : cxGF
-SUBST:   d = d., + = +..., { = {}., c = c:49 .:1, C = c
-MARKER:  F = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 200, \
-             pow_max = 300, delay = 25, size = 1, walk_dist = 0, excl_rad = 0 }
-{{
-dgn.delayed_decay(_G, 'd', 'base draconian corpse w:5 / ' ..
-                           'base draconian skeleton / ' ..
-                           'shadow dragon corpse w:5 / ' ..
-                           'shadow dragon skeleton')
-}}
+SUBST:   d = dde..., + = +..., { = {}., c = c:49 .:1, C = c
+: single_cloud(_G, "F", "foul pestilence", true)
+: dgn.delayed_decay(_G, 'e', 'base draconian corpse / shadow dragon corpse')
 MAP
  .@xxxxxxxxxxxxxxxxxxxxxxx@.
 .x..cccccccCCCCCCCccccccc..x.
@@ -598,8 +596,8 @@ TAGS:    no_monster_gen transparent patrolling
 DEPTH:   Tar, !Tar:$
 ORIENT:  centre
 WEIGHT:  5
-MONS:    zombie / skeleton / spectral thing w:20
-MONS:    jiangshi / shadow wraith w:4, doom hound
+MONS:    zombie / draugr / spectral thing w:20
+MONS:    jiangshi / shadow wraith w:4, oblivion hound
 MONS:    vampire knight ; demon whip | demon trident | demon blade . \
                           plate armour | chain mail
 MONS:    putrid mouth, tormentor w:3, silent spectre
@@ -1046,8 +1044,8 @@ DEPTH:  Tar, !Tar:$
 ORIENT: encompass
 KMONS:  1 = silent spectre
 KMONS:  2 = tormentor / hellion
-KMONS:  3 = eidolon / profane servitor / bone dragon / shadow wraith / \
-            putrid mouth / spectral thing
+KMONS:  3 = eidolon / profane servitor / undertaker w:6 / shadow wraith / \
+            putrid mouth / spectral thing w:14
 KMONS:  } = tzitzimitl / tainted leviathan
 KFEAT:  } = }
 KMASK:  1 = no_trap_gen
@@ -1174,16 +1172,16 @@ ENDMAP
 # Ereshkigal (Tartarus)
 ##############################################################################
 
-# FIXME: southeast chambers are excessively aggressive for little reward.
+# XXX: Too much of this is skippable- there should be another gate.
 NAME:    tar_old
 ORIENT:  encompass
 MONS:    patrolling Ereshkigal, tainted leviathan, profane servitor
 MONS:    shadow wraith, ancient lich / dread lich, putrid mouth
 MONS:    tzitzimitl
-KMONS:   8 = bone dragon
-KMONS:   9 = doom hound
+KMONS:   8 = spectral caustic shrike / spectral hellephant
+KMONS:   9 = oblivion hound
 KMONS:   0 = eidolon
-KMONS:   Z = skeleton / zombie
+KMONS:   Z = zombie / draugr w:5 / spectral thing w:5
 SUBST:   ? = ?..., ? = 2., 0 = 002
 SHUFFLE: 3569
 : serpent_of_hell_setup(_G)
@@ -1258,7 +1256,7 @@ ENDMAP
 NAME:     tar_mu
 ORIENT:   encompass
 MONS:     patrolling Ereshkigal, tzitzimitl, tainted leviathan, putrid mouth
-MONS:     profane servitor, bone dragon, shadow wraith
+MONS:     profane servitor, undertaker, shadow wraith
 KMONS:    8 = shadow imp
 : serpent_of_hell_setup(_G)
 SUBVAULT: = : tar_mu_maze
@@ -1344,7 +1342,7 @@ TAGS:     tar_mu_maze no_rotate no_hmirror no_vmirror unrand
 : tar_dig_maze(_G, 0, 0)
 NSUBST:   L = 2:M / 3 = M. / 5:N / 5:P / 5:V / 1:L / *:.
 NSUBST:   . = 5:Q / *:.
-KFEAT:    L = zot trap
+KFEAT:    L = trap_zot
 KMONS:    M = tzitzimitl
 KFEAT:    N = floor
 KITEM:    N = superb_item
@@ -1592,7 +1590,7 @@ ENDMAP
 
 NAME: tar_grunt_big_loot
 TAGS: tar_grunt_big_loot unrand
-MONS: Tzitzimitl / bone dragon, profane servitor / tainted leviathan
+MONS: Tzitzimitl / patrolling undertaker, profane servitor / tainted leviathan
 MONS: ancient lich / dread lich
 MAP
 ..................
@@ -1617,7 +1615,7 @@ ENDMAP
 
 NAME:   tar_grunt_small_loot
 TAGS:   tar_grunt_small_loot allow_dup unrand no_exits
-MONS:   doom hound w:20 / profane servitor w:15 / shadow wraith w:10 / \
+MONS:   oblivion hound w:20 / profane servitor w:15 / shadow wraith w:10 / \
         putrid mouth w:5
 NSUBST: x = 1:m / *:x
 MAP
@@ -1791,7 +1789,7 @@ ENDMAP
 NAME:     tar_grunt_cathedral
 ORIENT:   encompass
 MONS:     patrolling Ereshkigal, patrolling tzitzimitl, tainted leviathan
-MONS:     doom hound, ancient lich / dread lich, bone dragon
+MONS:     oblivion hound, ancient lich / dread lich, undertaker
 MONS:     shadow wraith / eidolon
 NSUBST:   K = 1:D / *:.
 : serpent_of_hell_setup(_G)

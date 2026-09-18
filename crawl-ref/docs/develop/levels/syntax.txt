@@ -5,8 +5,8 @@ How to make levels for Dungeon Crawl Stone Soup
 Part II:      SYNTAX
               ======
 
-Contents:  G. Glyphs
-           H. Header information
+Contents:  H. Glyphs
+           I. Header information
 
 This document contains the syntax needed for making maps and vaults. It
 does not say anything about principles of vault making; for this, see
@@ -14,7 +14,7 @@ introduction.txt. For more technical aspects, including tests, lua and
 portal vaults, refer to advanced.txt. For Triggerables, please see
 triggerables.txt.
 
-G.   Glyphs
+H.   Glyphs
 ===========
 
 By default, a glyph that has no mapping is turned into floor (DNGN_FLOOR).
@@ -22,18 +22,18 @@ By default, a glyph that has no mapping is turned into floor (DNGN_FLOOR).
 Terrain
 -------
  x - rock wall                                            (DNGN_ROCK_WALL)
- X - permanent rock wall - always undiggable         (DNGN_PERMAROCK_WALL)
+ X - permanent rock wall (unbreakable)               (DNGN_PERMAROCK_WALL)
  c - stone wall                                          (DNGN_STONE_WALL)
  m - clear rock wall                                (DNGN_CLEAR_ROCK_WALL)
  n - clear stone wall                              (DNGN_CLEAR_STONE_WALL)
- o - clear permanent rock wall - always undiggable (DNGN_CLEAR_PERMAROCK_WALL)
+ o - clear permanent rock wall (unbreakable)   (DNGN_CLEAR_PERMAROCK_WALL)
  v - metal wall - grounds electricity                    (DNGN_METAL_WALL)
- b - crystal wall - reflects cold and fire              (DNGN_CRYSTAL_WALL)
+ b - crystal wall - reflects cold and fire             (DNGN_CRYSTAL_WALL)
  t - tree - combustible                                        (DNGN_TREE)
 
  . - floor                                                    (DNGN_FLOOR)
  + - closed door                                        (DNGN_CLOSED_DOOR)
- = - runed door                                          (DNGN_RUNED_DOOR)
+ = - runed clear door                              (DNGN_RUNED_CLEAR_DOOR)
 
  W - shallow water
  w - deep water - can be randomly turned into shallow water by the
@@ -75,9 +75,15 @@ Features
  I - orcish idol. As granite statue, generally used for theme.
 
  T - Water fountain
- U - Magic fountain
- V - Permanently dry fountain
+ U - Sparkling fountain
+ V - Dry fountain
  Y - Blood fountain (use sparingly!)
+
+ ^ - Trap. By default, this places a random trap chosen via the same logic
+     that generates random non-vault traps at the given depth. Typically,
+     this glyph is used with a KFEAT substitution to place a vault-specific
+     set of traps, e.g.:
+        KFEAT: ^ = alarm trap / net trap
 
 Items
 -----
@@ -101,9 +107,11 @@ Monsters
  1-7 - monster array monster. See section below on MONS: arrays for more
      information
 
-Both 8 and 9 in early dungeon (through D:8) are capped to 2 * placement_depth.
+Both 8 and 9 in early Dungeon (D:1-8) are capped to 2 * placement_depth.
 
-H.   Header information
+(TODO: List features without default glyph assignments.)
+
+I.   Header information
 =======================
 
 (All declarations apart from NAME: are translated to Lua function calls
@@ -115,8 +123,25 @@ the \ symbol to break a line. You can break a line anywhere, with the
 exception of comma-separated lists, where you cannot start a new line with
 a comma. See the end of this section for examples.
 
+Unless various piece of Lua syntax make it smoother to read or define a vault
+header (see advanced.txt for more follow-up there), the specific order each of
+these lines should follow is:
+ * NAME -> DESC -> ORDER -> TAGS -> DEPTH -> PLACE -> ORIENT -> WEIGHT -> CHANCE
+ * MONS -> KMONS -> KITEM -> KFEAT
+ * SUBVAULT
+ * SUBST, SHUFFLE, and NSUBST lines in any order -> CLEAR
+ * KMASK -> KPROP -> MARKER
+ * COLOUR -> FTILE -> TILE
+ * LFLOORCOLOUR -> LFLOORTILE -> LROCKCOLOUR -> LROCKTILE
+
+Most vaults don't need all of these lines, of course. Submissions may end up
+having a developer handle this ordering themselves, but clarifying the matter
+and acquiring permission or getting the vault creator to adjust to this style
+results in more friction for the vault being properly processed and added.
+
 NAME:     a_string
-          Each map must have a unique name. Underscores and digits are ok.
+          Each map must have a unique name. Underscores, digits, and apostrophes
+          are ok. Spaces are not.
 
 DESC:     readable name
           A map may optionally have a description. If provided, and if
@@ -328,13 +353,28 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              have a vault that can be used more than once, use allow_dup to tell
              the dungeon builder that the vault can be reused. This is tracked
              separately for the abyss and the rest of the dungeon.
+          * "allow_tele_closets": Exempts the vault from teleport-closet
+             masking. The builder normally finds regions a random teleport
+             could strand the player in (with no way to walk or fly back to a
+             stair) and marks them no_tele_into. Cells inside a vault with this
+             tag are not marked in this way. Also available as a KMASK to
+             exempt only particular symbols.
           * "chance_FOO": Maps can be tagged chance_ with any unique suffix
              to indicate that if the map's CHANCE roll is made, one of the maps
              tagged chance_FOO should be picked.
           * "decor": this tag indicates that the vault is purely decorative,
-             and has neither threats nor items. Levels of Dungeon deeper than
-             D:14 and all of Depths have an 80% chance to place an extra vault
-             with this tag; see dungeon_decor in builder/decor.des.
+             and has neither threats nor items. (This should always be paired
+             with the "extra" tag.) Levels of Dungeon deeper than D:13 and all
+             of Depths have an 80% chance to place an extra vault with this tag;
+             see builder/decor.des.
+          *  "lairdec", "snakedec", and "zotdec" are further indicators for
+             purely decorative vaults to get their own extra vault placements
+             in Lair, Snake, and Zot respectively. These are used for solely
+             decorative vaults that place in their respective branches, but
+             other vaults that place in multiple branches can use these tags if
+             they're neither too generic nor too obtrusive- see vaults in
+             mini_features.des with and without the specific tags for comparison
+             purposes.
           * "dummy": this tag indicates that the vault is a stub; if the dungeon
              builder picks a dummy vault, it pretends no vault was selected.
              Dummies are used to reduce the probability of other vaults at the
@@ -348,10 +388,15 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              placed after all other vaults. For minivaults, if the map is
              selected, the builder will attempt to place another minivault
              immediately afterwards. "extra" is good to use for things like
-             labyrinth entries that should not affect the chance of other
+             gauntlet entries that should not affect the chance of other
              minivaults on the level. If you use "extra" and your map is
              tagged "allow_dup", it is a good idea to use a "luniq" tag so
              that the same map does not place more than once on a given level.
+          * "extra_post_overflow": the "extra" tag only functions if it's not
+             made conditional, like in given branches. This makes vaults only
+             count as "extra" if they're outside D:1-10, and should be applied
+             mostly to vaults past that range with just altars or with an
+             average of 2 or less non-specified floor spawns.
           * "generate_awake": Monsters placed (using MONS, KMONS) in this vault
              will be generated awake.
           * "patrolling": Monsters placed (using MONS, KMONS) in this vault
@@ -365,14 +410,14 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              (mini)vault. Usually only used when the vault is completely
              enclosed and accessible through other means.
           * "no_monster_gen": Prevents random monster generation at the time of
-             the vault's creation. Highly advised for arrival vaults with a
-             player-hostile geography, MUST-HAVE for those with water/lava.
-             Can be applied only to particular symbols with KMASK.
+             the vault's creation. Highly advised for arrival vaults with
+             player-hostile geography, very frequently for those with
+             water / lava. Can be applied only to particular symbols with KMASK.
           * "no_pool_fixup": prevents water squares next to land from being
              randomly converted from deep water (the default) to shallow.
           * "no_wall_fixup": In Dis, the Vaults and the Crypt a vault's
              rock walls will be changed to be the same as the wall type of
-             the rest of the level. If you don't want that to happen then
+             the rest of the level. If you don't want that to happen, then
              use this tag.
           * "no_trap_gen": Prevents random trap generation at the time of the
              vault's creation.
@@ -385,7 +430,10 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              given level. "luniq" is only relevant when used with "allow_dup".
           * "luniq_BAR": (luniq_ with any suffix) specifies that only one
              of the vaults with this tag can be used on any given level.
-             "luniq_BAR" is only relevant when used with "allow_dup".
+             Unlike "luniq", "luniq_BAR" does not need "allow_dup".
+          * "buniq_BAR": (buniq_ with any suffix) specifies that only one
+             of the vaults with this tag can be used in the entirety of any
+             given branch.
           * "branch_entry" eg. "orc_entry", "lair_entry" etc.
              If chosen, these maps will contain the stairs for that branch.
              If a branch has very few entries, a dummy entry is advisable to
@@ -488,7 +536,7 @@ ITEM:     (list of items, separated by comma)
           builder sees a "d" in the vault definition, the second will be used
           for "e"s, etc. Positions are comma-separated; several ITEM: lines
           are possible as well. The following defines letters "d" - "g":
-            ITEM: stone, ring mail, potion of haste, ring of ice
+            ITEM: stone, ring mail, potion of haste, ring of wizardry
 
           Positions can contain multiple possibilities, one of which the
           builder will choose randomly. Separate such multiple possibilities
@@ -605,7 +653,7 @@ ITEM:     (list of items, separated by comma)
           isn't given to a weapon, a weapon ego to a missile, and so on, and
           also to make sure that egos are only given to armours, weapons and
           missiles, no other checking is done. Thus it is possible to create
-          a demonic weapon of holy wrath or a helmet of running.
+          a demonic weapon of holy wrath or a helmet of rampaging.
 
           Corpses
           -------
@@ -614,10 +662,11 @@ ITEM:     (list of items, separated by comma)
 
           For instance: "rat corpse", "18-headed hydra skeleton".
 
-          Corpses and skeletons are by default created with maximum freshness
-          (210). They may still rot away before the player finds your vault.
-          To prevent corpses from decaying, you can define them using a
-          "never_decay" property as:
+          Corpses are by default created with maximum freshness (210). They may
+          still rot away before the player finds your vault. (Note that as of
+          0.32, skeletons don't decay, but corpses without skeletons will still
+          disappear entirely.) To prevent corpses from decaying, you can define
+          them using a "never_decay" property as:
 
           ITEM: never_decay human corpse
 
@@ -702,6 +751,16 @@ ITEM:     (list of items, separated by comma)
             A book may contain at most 8 spells.
           * "title:title" will define the title of the book.
 
+          Parchments
+          ----------
+          Parchments are usually specified per spell:
+
+          ITEM: parchment of Scorch
+
+          but may also use slevel and disc tags as clarified above:
+
+          ITEM: parchment disc:Hexes slevel:3
+
           NOTE: You can place multiple items on the same square by using the
           KITEM directive. See that section for more information.
 
@@ -717,9 +776,9 @@ MONS:     (list of monsters)
           monsters in sight of the hero are removed. This does not hold for
           plants. You can use weights as for ITEM: lines.
 
-          A hydra can be given a specific number of heads by calling it
-          an "n-headed hydra" (with a maximum of 20 heads):
-              MONS: four-headed hydra
+          Hydras and slymdras can be given a specific number of heads by calling
+          for a "n-headed hydra" or "n-headed slymdra", with a maximum of 20:
+              MONS: four-headed hydra / six-headed slymdra
 
           A mutant beast can be customized by prefacing it with a maturity level
           and/or hyphen-separated set of traits, as follows:
@@ -738,7 +797,9 @@ MONS:     (list of monsters)
               MONS: patrolling guardian serpent
 
           Monsters can also be given colours that override their default
-          colour. Use this *very* sparingly:
+          colour in console, though this won't affect their tiles. Use this
+          *extremely* sparingly, especially if you're not changing the monster's
+          name (see later in this document).
               MONS: col:darkgrey fungus
 
           The colour "any" can be given, in which case a random colour
@@ -777,6 +838,9 @@ MONS:     (list of monsters)
              0 - normal monster (this is equivalent to MONS: random)
              9 - +5 depth monster
              8 - (+2) * 2 depth monster.
+          Not all branches have monsters set up for any deeper than the floors
+          one can already visit, but the Dungeon, the Vaults, and the Depths
+          have always been readied for such.
 
           If you want to place a random monster suitable for the level
           the map is generated on, you can use
@@ -784,9 +848,9 @@ MONS:     (list of monsters)
 
           If you want to place a random monster suitable for some other
           place, you can use a place: tag in the monster spec:
-              MONS: place:Abyss
+              MONS: place:Abyss:1
           or
-              MONS: place:Slime:6
+              MONS: place:Slime:5
 
           Using place: with MONS implies that you want a random monster.
           You can also request zombies from random monsters suitable
@@ -807,8 +871,15 @@ MONS:     (list of monsters)
 
           Specifying "band" doesn't force bands to be placed - it
           requests that the game use the normal chances of creating a
-          band. If you use "band", leave some empty space around the
+          band, which will be zero if the monster in question has no innate
+          band company. (See mon-place.cc for lists of which monsters have
+          bands.) If you use "band", leave some empty space around the
           monster for its band members to be placed.
+
+          (Notably, band specifications can work with random specifications like
+          "place:" and "0". For the most part, the deployment of "9 band" and
+          "8 band" is somewhat discouraged in lategame due to the very spiky
+          danger level this has compared to the rest of the game.)
 
           A monster can be given specific items by following the monster
           name with a semi-colon and then with an item list as described
@@ -826,9 +897,7 @@ MONS:     (list of monsters)
 
           Limitations: If an item in the item list has alternatives,
           there's no way to force all monsters derived from that monster
-          spec to choose the same alternative. If a monster is given
-          a random launcher, there is no way to force the ammo type to
-          match the launcher type.
+          spec to choose the same alternative.
 
           You can specify that a monster will always generate a corpse by
           using the tag "always_corpse", and that it will never generate
@@ -849,7 +918,7 @@ MONS:     (list of monsters)
           The name tag is also useable in KMONS. It should be used carefully
           to avoid having multiple monsters named the same (ie, as above,
           and then using the glyph "1" multiple times will result in multiple
-          "Durwent the Kobold"s).
+          "Durwent the kobold"s).
 
           There are three different modifiers that can be used on a name:
           name_adjective, name_suffix and name_replace. name_adjective
@@ -869,7 +938,7 @@ MONS:     (list of monsters)
           name, as if the monster was a unique:
               MONS: kobold name:Durwent name_replace
 
-          Will result in "Durwent" rather than "Durwent the Kobold". The
+          Will result in "Durwent" rather than "Durwent the kobold". The
           corpse will still be a "kobold corpse of Durwent".
 
           In combination with name_replace or name_species, there are two
@@ -904,8 +973,8 @@ MONS:     (list of monsters)
 
           Finally, name_nocorpse will cause the name to be completely ignored
           for corpses. For example:
-              MONS: wizard name:sad name_adjective name_nocorpse
-          will result in "a sad wizard" that leaves "a wizard corpse".
+              MONS: kobold name:sad name_adjective name_nocorpse
+          will result in "a sad kobold" that leaves "a kobold corpse".
 
           For instances where space in definitions is limited, you can use
           abbreviated forms of these tags:
@@ -1021,27 +1090,20 @@ MONS:     (list of monsters)
 FHEIGHT:  xyz = 40
 
           FHEIGHT sets the height in the level's heightmap for any
-          specified features. If the level does not already have a heightmap,
-          a heightmap will be attached to it when the dungeon builder
-          sees FHEIGHT used.
+          specified features. If the level does not use a heightmap, it
+          will be ignored.
 
           Heightmaps are currently only useful in the Shoals, as a means of
           influencing how the tide interacts with your vault. The Shoals
           heightmap uses these heights when the tide's height is 0, i.e.
           at neutral tide:
                >= 0     Floor
-               >= -14   Shallow water
-               <= -15   Deep water
+               >= -30   Shallow water
+               <= -31   Deep water
 
           In general, you do not need to use explicit FHEIGHT lines in
           your vaults. The Shoals dungeon builder will automatically
-          assign suitable heights to features in vaults. FHEIGHT is
-          primarily useful to override the default heights of
-          features. If you use FHEIGHT to set nonstandard heights for
-          features such as deep water (if you want deep water at
-          heights > 0, for instance), you must also use KPROP to set
-          the no_tide flag on that square, or the Shoals level builder
-          will undo your height changes.
+          assign suitable heights to features in vaults.
 
 
 COLOUR:   . = green / blue:5 / red / none
@@ -1129,7 +1191,8 @@ FTILE:    . = floor_grass:20 / floor_dirt / none
 
 RTILE:    x = wall_wax:15 / wall_lair / none
           Identical to FTILE, but for rock walls. Not useful for anything
-          but the rock wall feature.
+          but the rock wall feature. For the most part, default to using the
+          TILE line below.
 
 TILE:     x = wall_flesh
           Identical to FTILE and RTILE in syntax, but closer to COLOUR in
@@ -1252,6 +1315,9 @@ KFEAT:    G = C / net trap / antique armour shop / altar_zin
 
           You'll notice that "G" is the symbol of a granite statue. Kxxx
           directives allow you to assign arbitrary definitions to any symbol.
+          (However, for the most part, this should usually not overlap with the
+           predefined character assignments if the feature associated with
+           that character is also being used in the vault.)
 
           KFEAT features are specified as a feature name (see feature-data.h
           in the source/ directory for a full list of feature names). As
@@ -1282,10 +1348,17 @@ KFEAT:    G = C / net trap / antique armour shop / altar_zin
           operations for the placeholder are performed. Also, all Kxxx
           lines accept weights as for MONS or ITEM.
 
-          KFEAT overrides the normal meaning of the glyph: In the absence
+          KFEAT overrides the normal meaning of the glyph. In the absence
           of further declarations,
-            KFEAT: 1 = shallow_water
-          will result in 1 producing shallow water with no monster.
+
+          KFEAT: 1 = shallow_water
+
+          will result in 1 producing shallow water with no monster. As clarified
+          later on, it can stack with other character declarations:
+
+          KMONS: 1 = water moccasin
+          KITEM: 1 = any
+          KFEAT: 1 = shallow_water
 
           KFEAT applies to cells that have the specified glyph after applying
           all shuffles and substitutions.
@@ -1369,7 +1442,7 @@ KFEAT:    G = C / net trap / antique armour shop / altar_zin
           shouldn't need placement via KFEAT. See the Transporters section
           below.
 
-KMONS:    ? = orc priest / w:3 deep elf priest
+KMONS:    ? = orc knight / deep elf knight w:3
 
           KMONS: allows you to specify a placeholder symbol that indicates
           the position of a monster (or monsters).
@@ -1416,6 +1489,9 @@ KMASK:    Z = no_monster_gen
              symbol. The symbol is considered impassable for level-building
              purposes. A "transparent" vault with a deliberately disconnected
              region must use this mask on the disconnected part.
+          * "allow_tele_closets": Exempts the symbol from teleport closet
+             detection, like the tag of the same name but for particular
+             symbols rather than the whole vault.
 
           For example
 
@@ -1723,8 +1799,8 @@ Transporters
 
 Transporters are placed in vaults via two lua marker classes, which can be
 created with the functions transp_loc(name) and transp_dest_loc(name). Here
-`name' is a string shared between the transporter marker and the the
-transporter destination marker. For example,
+`name' is a string shared between the transporter marker and the transporter
+destination marker. For example,
 
     MARKER: E = lua:transp_loc("the_bubble_entry")
     MARKER: F = lua:transp_dest_loc("the_bubble_entry")
@@ -1739,3 +1815,8 @@ will all lead to the same destination after placement. Note that it's not valid
 to have multiple glyphs with the same destination marker. Any randomization of
 destinations can be done through normal SUBST/NSUBST/SHUFFLE operations before
 the MARKER statements.
+
+(For the most part, due to transporters being a major tactical terrain
+disadvantage, vaults containing any notable amount of monsters shouldn't cut
+off regular level navigation. Exceptions exist mostly for various portals and
+lesser threats.)

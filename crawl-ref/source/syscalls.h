@@ -24,7 +24,8 @@ int mkstemp(char *dummy);
 #endif
 
 #ifdef __ANDROID__
-bool jni_keyboard_control(bool toggle);
+int jni_ref_display_size();
+bool jni_keyboard_control(int toggle);
 #endif
 
 #ifndef CRAWL_HAVE_FDATASYNC

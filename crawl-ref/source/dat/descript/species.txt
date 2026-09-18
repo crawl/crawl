@@ -1,9 +1,4 @@
 %%%%
-Armataur
-
-Scaled mammals the size of horses, Armataurs are fast-rolling and tenacious when
-pursuing enemies, but lack dexterity.
-%%%%
 Barachi
 
 Barachim are slow-moving, amphibious humanoids who can hop long distances.
@@ -31,8 +26,8 @@ they grow.
 %%%%
 Djinni
 
-Djinn are ever-burning spirits. They learn spells innately, without books, and
-cast by drawing down their own fires.
+Djinn are ever-burning spirits. They learn spells automatically as they grow,
+and cast by drawing down their own fires.
 %%%%
 Draconian
 
@@ -48,9 +43,14 @@ Felid
 
 Felids are many-lived sentient cats. They cannot use armour or weapons.
 %%%%
+Gale Centaur
+
+Powerful equine hybrids who trace their ancestry to the four winds themselves,
+Gale Centaurs are at their strongest while galloping swiftly towards foes.
+%%%%
 Gargoyle
 
-Made of living stone, Gargoyles have a preternatural affinity for the earth.
+Made of living stone, Gargoyles have a preternatural affinity for earth magic.
 They have low health, but their stone bodies are incredibly tough.
 %%%%
 Gnoll
@@ -95,7 +95,7 @@ at Necromancy, but learn other skills very slowly. They cannot drink potions.
 %%%%
 Naga
 
-Nagas are hybrids; human from the waist up, with a snake-like tail instead of
+Nagas are hybrids: human from the waist up, with a snake-like tail instead of
 legs. They move very slowly but are naturally resilient.
 %%%%
 Octopode

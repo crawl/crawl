@@ -161,6 +161,8 @@ Capriciousness
 
 Entertainment
 
+Facetiousness
+
 Fair Game
 
 Flight of Fancy
@@ -177,14 +179,16 @@ Ringing Laughter
 
 Sleight of Hands
 
-Wantonness
-
-Whimsicality
+Taradiddle
 
 Temerity
 
+Wantonness
+
+Whimsicality
 %%%%
 _time_name_
+
 Autumn
 
 Dawn
@@ -198,6 +202,8 @@ Eternal Night
 Eternal Winter
 
 Eternity
+
+Evenfall
 
 Midnight
 
@@ -246,7 +252,6 @@ the Past
 the Present
 
 the Solstice
-
 %%%%
 _sky_colour_name_
 
@@ -368,6 +373,8 @@ Dishonesty
 
 Dishonour
 
+Equivocation
+
 Foolhardiness
 
 Immorality
@@ -388,7 +395,11 @@ Sin
 
 Spite
 
+Tergiversation
+
 Untruth
+
+Vice
 
 Youthful Indiscretion
 

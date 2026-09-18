@@ -31,8 +31,13 @@ end
 -- D/F opposite/adjacent vault entrances, that may or may not be there
 -- E/H placed in front of the alternate doors. become w tiles if there's no door there
 
-function ks_random_setup(e, norandomexits)
+function ks_random_setup(e, extra, norandomexits)
     e.tags("no_pool_fixup")
+    if extra then
+      e.tags("extra")
+      e.depth_weight("Depths", 5)
+      e.depth_weight("D", 10)
+    end
     -- 1/2 chance the adjacent door is there, followed by a 1/2 chance every
     -- side has a door.
     if norandomexits == nil then
@@ -84,21 +89,25 @@ function ks_random_setup(e, norandomexits)
     end
 end
 
-function zot_entry_setup(e)
+function zot_entry_setup(e, use_default_mons)
   e.tags("zot_entry")
   e.place("Depths:$")
   e.orient("float")
   e.kitem("R = midnight gem")
   e.kfeat("O = enter_zot")
-  e.mons("patrolling base draconian")
-  e.mons("fire dragon w:12 / ice dragon w:12 / storm dragon / \
-          shadow dragon / golden dragon w:12 / wyrmhole w:4")
-  e.mons("patrolling nonbase draconian")
-  e.kmons("0 = ettin / rakshasa / glowing shapeshifter w:5 / \
-              stone giant w:12 / spriggan berserker w:8 / hell knight w:5")
-  e.kmons("9 = fire giant w:12 / titan w:8 / vampire knight / \
-              spriggan air mage w:8 / deep troll earth mage w:8 / \
-              tengu reaver w:12 / tentacled monstrosity / lich w:2")
+  e.kfeat("Z = zot_statue")
+  e.kmask("R = no_item_gen")
+  if use_default_mons then
+    e.mons("patrolling base draconian")
+    e.mons("fire dragon w:12 / ice dragon w:12 / storm dragon / \
+            shadow dragon / golden dragon w:12 / wyrmhole w:4")
+    e.mons("patrolling nonbase draconian")
+    e.kmons("0 = ettin / rakshasa / glowing shapeshifter w:5 / \
+                stone giant w:12 / spriggan berserker w:8 / hell knight w:5")
+    e.kmons("9 = fire giant w:12 / titan w:8 / vampire knight / \
+                 spriggan air mage w:8 / deep troll earth mage w:8 / \
+                  tengu reaver w:12 / tentacled monstrosity / lich w:2")
+  end
 end
 
 function soh_hangout()
@@ -113,10 +122,10 @@ end
 -- should guarantee that `D` is present.
 function serpent_of_hell_setup(e)
   local b = soh_hangout()
-  if not you.uniques("the Serpent of Hell")
+  if not you.uniques("Serpent of Hell")
         and you.in_branch(b)
         and you.depth() == dgn.br_depth(b) then
-    e.kmons('D = the Serpent of Hell')
+    e.kmons('D = Serpent of Hell')
   end
 end
 
@@ -161,29 +170,90 @@ function door_vault_setup(e)
 end
 
 --[[
-Set up a KMONS for a master elementalist vault-defined monster. This monster
+Set up a string for a master elementalist vault-defined monster. This monster
 will have either the elemental staff or a staff of air and a robe of
 resistance, so it has all of the elemental resistances.
 
 @tab e The map environment.
 @string glyph The glyph on which to define the KMONS.
 ]]
-function master_elementalist_setup(e, glyph, ele_staff)
+function master_elementalist_setup(e, sprintscale)
     local equip_def = " ; elemental staff . robe ego:willpower good_item"
     -- Don't want to use the fallback here, so we can know to give resistance
     -- ego robe if the elemental staff isn't available.
     if you.unrands("elemental staff") then
-        equip_def = " ; staff of air . robe ego:resistance good_item"
+        equip_def = " ; staff of air . robe randart artprops:rF&&rC&&Will"
     end
 
-    e.kmons(glyph .. " = occultist hd:18 name:master_elementalist n_rpl" ..
-        " n_des n_noc tile:mons_master_elementalist" ..
-        " spells:lehudib's_crystal_spear.11.wizard;" ..
-            "chain_lightning.11.wizard;" ..
-            "fire_storm.11.wizard;" ..
-            "ozocubu's_refrigeration.11.wizard;" ..
-            "haste.11.wizard;" ..
-            "repel_missiles.11.wizard" .. equip_def)
+    pow = "hd:18"
+    name = ""
+
+    -- For use in arenasprint.
+    if sprintscale then
+        pow = pow .. " hp:200 exp:3950"
+        name = "name:grandmaster_elementalist n_rpl n_des n_noc"
+    else
+        pow = pow .. " hp:100 exp:1425"
+        name = "name:master_elementalist n_rpl n_des n_noc"
+    end
+
+    return "occultist " .. pow .. " " .. name .. " " ..
+           "tile:mons_master_elementalist " ..
+           "spells:lehudib's_crystal_spear.11.wizard;" ..
+           "chain_lightning.11.wizard;" ..
+           "fire_storm.11.wizard;" ..
+           "ozocubu's_refrigeration.11.wizard;" ..
+           "haste.11.wizard;" ..
+           "deflect_missiles.11.wizard" .. equip_def .. " . ring of willpower"
+end
+
+-- A function to reduce all the scythe definition boilerplate.
+function scythe(ego)
+  local s = "halberd itemname:scythe tile:wpn_scythe wtile:scythe"
+  if ego ~= nil then
+    s = s .. " ego:" .. ego
+  end
+  return s
+end
+
+-- A handy boilerplate-reducing function for getting a cloud generator to place
+-- just a single cloud in-place. @fade makes it rarely briefly fade away.
+function single_cloud(e, glyph, cloud, fade)
+  local pow = ""
+  if fade == nil then fade = false end
+  if fade then
+    pow = "pow_min = 5, pow_max = 7, delay_min = 55, delay_max = 75, excl_rad = 0"
+  else
+    pow = "pow_min = 90, pow_max = 100, delay = 10, excl_rad = -1"
+  end
+  e.marker(glyph .. ' = lua:fog_machine { cloud_type = "' .. cloud .. '", ' ..
+          "size = 1, " .. pow .. ", walk_dist = 0, " ..
+          "start_clouds = 1, spread_rate = 0 }")
+end
+
+-- A function to crunch down decorative skeletons.
+-- Vaults that only want to place regular branch skeletons or given vault
+-- theme skeletons don't need to call this whole function.
+function vault_species_skeletons(e, category)
+-- (Djinni, gargoyles, mummies, octopodes, poltergeists, revenants don't leave
+-- corpses. I don't want to think about how one recognizes vine stalkers
+-- post-rotting. Orcs are included to cover Beogh's popularity in the Dungeon.
+-- Coglins have their exoskeletons stolen. Species that only show up
+-- in extended are counted as the rarest type.
+  local s1 = {"goblin", "gnoll", "elf", "kobold", "troll", "orc", "centaur"}
+  local s2 = {"draconian", "naga", "merfolk", "minotaur", "spriggan", "tengu"}
+  local s3 = {"barachi", "demigod", "dwarf", "demonspawn", "felid", "oni"}
+  local output = "human skeleton"
+  if category == "early" or category == "dungeon" or category == "all" then
+    output = output .. " / " .. table.concat(s1, " skeleton / ") .. " skeleton"
+  end
+  if category == "late" or category == "dungeon" or category == "all" then
+    output = output .. " / " .. table.concat(s2, " skeleton / ") .. " skeleton"
+  end
+  if category == "all" then
+    output = output .. " / " .. table.concat(s3, " skeleton / ") .. " skeleton"
+  end
+  return output
 end
 
 -- Three sets of reusable vault feature redefines scattered across the game,
@@ -252,9 +322,16 @@ function decorative_floor (e, glyph, type)
                               "dngn_dark_flower_pot_broken"},
     ["orcish standard"] = {"lightcyan", "dngn_ensign_beogh"},
     ["infernal standard"] = {"red", "dngn_ensign_gehenna"},
+    ["caliginous standard"] = {"magenta", "dngn_ensign_dark"},
     ["fur brush"] = {"brown", "dngn_yak_fur"},
+    ["set of bottled spirits"] = {"lightgreen", "dngn_bottled_spirits"},
+    ["djembe set"] = {"brown", "dngn_djembe"},
+    ["skull pike"] = {"lightgrey", "dngn_skull_pike"},
     ["mop and bucket"] = {"lightblue", "dngn_mop"},
-    ["bloodied mop and bucket"] = {"lightred", "dngn_mop_bloody"}
+    ["bloodied mop and bucket"] = {"lightred", "dngn_mop_bloody"},
+    ["assortment of trash"] = {"lightgrey", "dngn_assortment_of_trash"},
+    ["weapon-inlaid floor"] = {"lightgrey", "floor_blade"},
+    ["empty mutation catalyst"] = {"blue", "dngn_empty_mutation_catalyst"}
   }
 
   for name, contents in pairs(dec) do
@@ -267,6 +344,13 @@ function decorative_floor (e, glyph, type)
   e.set_feature_name('decorative_floor', type)
 end
 
+-- The animation implementation for these tiles needs to be each discrete
+-- tiles, alas, so to help shorten its use, just use this each time.
+function crackle_def(e)
+  return "wall_stone_crackle_1 / wall_stone_crackle_2 / " ..
+         "wall_stone_crackle_3 / wall_stone_crackle_4"
+end
+
 -- A reusable poison / fire / snake theming for statues that show up in Snake.
 function snake_statue_setup (e, glyph)
   if crawl.x_chance_in_y(2, 3) then
@@ -275,6 +359,26 @@ function snake_statue_setup (e, glyph)
     vault_metal_statue_setup(e, glyph, "fiery conduit")
   end
   e.tile("G : dngn_statue_naga / dngn_statue_archer w:7")
+end
+
+-- A function for standardizing some tags and some floor tiles for vaults_hard
+-- subvaults.
+function vaults_hard_standard(e, ngen, ft)
+  e.tags('vaults_hard')
+  if ngen == nil then
+    ngen = false
+  end
+  if ngen then
+    e.tags('no_monster_gen')
+    e.tags('no_item_gen')
+  end
+  if you.in_branch("Vaults") then
+    if not ft then
+      e.ftile('0123456789._^~$%*|defghijkmnFGISTUVY+mn{([<})]}> = floor_metal_gold')
+    else
+      e.ftile(ft .. ' = floor_metal_gold')
+    end
+  end
 end
 
 -- A function that uses what's in the mon-pick-data (and bands) for V in 0.32
@@ -295,16 +399,16 @@ function index_vaults_room_themes (e, set, hard)
     if crawl.x_chance_in_y(d, 10) then
       sl = sl + 1
     end
-    e.mons('ugly thing w:' .. 7 - d .. ' / lindwurm w:4 / ' ..
-           'freezing wraith w:4 / crystal guardian w:' .. d)
+    e.mons('lindwurm w:' .. 7 - d .. ' / crawling flesh cage w:5 / ' ..
+           'crystal guardian w:' .. d)
     e.mons('great orb of eyes w:' .. 7 - d .. ' / ' ..
            'boggart band w:5 / glowing orange brain w:' .. d + 1)
-    e.mons('arcanist w:' .. 14 - d * 2 .. ' / sphinx marauder w:10 / ' ..
-           'ironbound convoker w:5 / deep elf annihilator w:1')
+    e.mons('arcanist w:' .. 14 - d * 2 .. ' / sphinx marauder w:8 / ' ..
+           'ironbound convoker w:4 / ironbound mechanist w:4')
     e.mons('deep elf annihilator / deep elf sorcerer / lich / ' ..
            'guardian sphinx w:5 / tengu reaver')
     e.item('robe / mundane hat')
-    e.item('randbook numspells:1 slevels:' .. sl  .. ' / ' ..
+    e.item('parchment slevel:' .. sl  .. ' / ' ..
            'mundane ring of magical power w:2')
     e.tile('c = wall_studio')
   elseif set == 'icebox' then
@@ -312,9 +416,9 @@ function index_vaults_room_themes (e, set, hard)
     local f = 'ego:freezing pre_id'
     local c = 'ego:cold_resistance pre_id'
     e.mons('white ugly thing w:' .. 8 - d * 2 .. ' / ' ..
-           'redback simulacrum w:' .. 8 - d * 2 .. ' / ' ..
+           'harpy simulacrum w:' .. 8 - d * 2 .. ' / ' ..
            'freezing wraith w:2 / guardian sphinx simulacrum w:' .. d - 1)
-    e.mons('necromancer w:2 / arcanist / white very ugly thing')
+    e.mons('arcanist / crawling flesh cage')
     e.mons('ironbound frostheart / frost giant w:1')
     e.mons('golden dragon / tengu reaver w:25 ; halberd ' .. f .. ' | war axe ' .. f ..
                                             ' . ring mail ' .. c)
@@ -322,7 +426,7 @@ function index_vaults_room_themes (e, set, hard)
                 'long sword ' .. f .. ' no_pickup/ ' ..
                 'mace ' .. f .. ' no_pickup')
     e.kitem('e = robe ' .. c .. ' / leather armour ' .. c)
-    e.kfeat('m = cache of meat')
+    e.kfeat('m = cache_of_meat')
     e.kfeat('I = rock_wall')
     e.tile('I = wall_ice_block')
     e.tile('v = dngn_metal_wall_lightblue')
@@ -330,7 +434,6 @@ function index_vaults_room_themes (e, set, hard)
   elseif set == 'garden' then
     e.tags('no_pool_fixup')
     e.mons('harpy w:' .. 80 - d * 20 .. ' / ' ..
-           'redback w:' .. 100 - d * 16 .. ' / ' ..
            'wolf spider w:' .. 20 - d * 3 .. ' / ' ..
            'lindwurm w:' .. 140 - d * 20 .. ' / ' ..
            'dire elephant w:' .. d * 3 )
@@ -341,8 +444,8 @@ function index_vaults_room_themes (e, set, hard)
            'entropy weaver w:' .. 2 + d * 3 .. ' / ' ..
            'ironbound beastmaster w:' .. -2 + d * 4)
     e.kmons('S = bush')
-    e.kfeat('F = cache of fruit')
-    e.ftile('`SF = floor_lair')
+    e.kfeat('F = cache_of_fruit')
+    e.ftile('`SF = floor_sprouting_stone')
     e.tile('T = dngn_fountain_novelty_fancy')
     e.kitem('d = animal skin / club / whip w:5 / quarterstaff w:5')
     decorative_floor(e, 'p', "garden patch")
@@ -366,9 +469,9 @@ function index_vaults_room_themes (e, set, hard)
     e.mons('vault guard w:' .. 14 - d .. ' / ' ..
            'vault sentinel w:' .. 10 - d .. ' / ' ..
            'orc knight')
-    e.mons('necromancer w:' .. 10 - d .. ' / ' ..
+    e.mons('phantasmal warrior w:' .. 10 - d .. ' / ' ..
            'flayed ghost w:' .. 10 - d .. ' / ' ..
-           'phantasmal warrior w:' .. d + 2)
+           'death knight w:' .. d + 2)
     e.mons('war gargoyle w:' .. 16 - d * 2 .. ' / ' ..
            'deep elf death mage w:4 / ' ..
            'undying armoury w:' .. -2 + d)

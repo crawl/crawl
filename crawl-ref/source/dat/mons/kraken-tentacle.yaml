@@ -1,6 +1,6 @@
 name: "tentacle"
 enum: kraken_tentacle
-glyph: {char: "w", colour: lightmagenta}
+glyph: {char: "ω", colour: lightmagenta}
 flags: [flies, stationary, cold_blood, no_exp_gain, no_poly_to, peripheral]
 genus: kraken
 will: invuln

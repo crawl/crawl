@@ -86,8 +86,13 @@ void dgn_event_dispatcher::fire_event(const dgn_event &e)
     {
         auto copy = listeners;
         for (const auto &ldef : copy)
-            if (ldef.eventmask & e.type)
+        {
+            if (ldef.eventmask & e.type
+                    && is_registered_listener(ldef.listener))
+            {
                 ldef.listener->notify_dgn_event(e);
+            }
+        }
     }
 }
 
@@ -158,6 +163,16 @@ void dgn_event_dispatcher::remove_listener_at(const coord_def &pos,
         erase_val(alarm->listeners, listener);
 }
 
+bool dgn_event_dispatcher::is_registered_listener(
+        const dgn_event_listener *listener) const
+{
+    for (auto i = listeners.begin(); i != listeners.end(); ++i)
+    {
+        if (i->listener == listener)
+            return true;
+    }
+    return false;
+}
 /////////////////////////////////////////////////////////////////////////////
 // dgn_event_listener
 

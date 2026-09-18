@@ -45,4 +45,4 @@ void los_actor_moved(const actor* act, const coord_def& oldpos);
 void los_monster_died(const monster* mon);
 void los_terrain_changed(const coord_def& p);
 void los_changed();
-opacity_type mons_opacity(const monster* mon, los_type how);
+opacity_type mons_opacity(monster_type mc, los_type how);

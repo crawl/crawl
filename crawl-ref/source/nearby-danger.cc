@@ -37,28 +37,26 @@
 #include "travel.h"
 #include "zot.h" // decr_zot_clock
 
-// Returns true if the monster has a path to the player, or it has to be
-// assumed that this is the case.
-static bool _mons_has_path_to_player(const monster* mon)
+// Checks if this is a monster that should be completely ignored for autoexplore
+// or tension purposes. This errs on the side of false positives, since there
+// are many situations where a monster is *realistically* harmless, but cannot
+// be categorically ruled out.
+bool mons_is_irrelevant(const monster* mon)
 {
-    // Short-cut if it's already adjacent.
-    if (grid_distance(mon->pos(), you.pos()) <= 1)
-        return true;
-
-    // Non-adjacent non-tentacle stationary monsters are only threatening
-    // because of any ranged attack they might possess, which is handled
-    // elsewhere in the safety checks. Presently all stationary monsters
-    // have a ranged attack, but if a melee stationary monster is introduced
-    // this will fail. Don't add a melee stationary monster it's not a good
-    // monster.
-    if (mon->is_stationary() && !mons_is_tentacle(mon->type))
+    // If we can see a monster with no walls in the way, there's always a chance
+    // they could be relevant. (Even melee-only monsters on the other side of
+    // water can cause issues with autotravel if the player can cross water
+    // themselves).
+    if (you.see_cell_no_trans(mon->pos()))
         return false;
 
+    // Otherwise, test if the player has enough map knowledge to be sure that
+    // the monster cannot path to them somehow.
 
     // If the monster is awake and knows a path towards the player
     // (even though the player cannot know this) treat it as unsafe.
     if (mon->travel_target == MTRAV_FOE)
-        return true;
+        return false;
 
     // use MTRAV_KNOWN_UNREACHABLE as a cache, but only for monsters
     // that aren't visible. This forces a pathfinding check whenever previously
@@ -67,15 +65,10 @@ static bool _mons_has_path_to_player(const monster* mon)
     // like sensed monsters via ash (which will get set as known unreachable
     // on detection).
     if (mon->travel_target == MTRAV_KNOWN_UNREACHABLE
-                                        && !you.see_cell_no_trans(mon->pos()))
+                                        && !you.see_cell(mon->pos()))
     {
         return false;
     }
-
-    // First do a *quick* check to see whether a straight path exists to the
-    // player before bothering with full pathfinding.
-    if (can_go_straight(mon, mon->pos(), you.pos()))
-        return true;
 
     // Try to find a path from monster to player, using the map as it's
     // known to the player and assuming unknown terrain to be traversable.
@@ -88,43 +81,16 @@ static bool _mons_has_path_to_player(const monster* mon)
     mp.set_range(max(LOS_RADIUS, range * 2));
 
     if (mp.init_pathfind(mon, you.pos(), true, false, true))
-        return true;
+        return false;
 
     // Now we know the monster cannot possibly reach the player.
     mon->travel_target = MTRAV_KNOWN_UNREACHABLE;
-
-    return false;
-}
-
-bool mons_can_hurt_player(const monster* mon)
-{
-    // FIXME: This takes into account whether the player knows the map!
-    //        It should, for the purposes of i_feel_safe. [rob]
-    // It also always returns true for sleeping monsters, but that's okay
-    // for its current purposes. (Travel interruptions and tension.)
-    if (_mons_has_path_to_player(mon))
-        return true;
-
-    // Even if the monster can not actually reach the player it might
-    // still use some ranged form of attack.
-    //
-    // This also doesn't account for explosion radii, which is a false positive
-    // for a player waiting near (but not in range of) their own fulminant
-    // prism
-    if (you.see_cell_no_trans(mon->pos())
-        && (mons_blows_up(*mon)
-            || mons_has_ranged_attack(*mon)
-            || mons_has_ranged_spell(*mon, false, true)))
-    {
-        return true;
-    }
-
-    return false;
+    return true;
 }
 
 // Returns true if a monster can be considered safe regardless
 // of distance.
-static bool _mons_is_always_safe(const monster *mon)
+bool mons_is_always_safe(const monster *mon)
 {
     return (mon->wont_attack() && (!mons_blows_up(*mon) || mon->type == MONS_SHADOW_PRISM))
           || mon->type == MONS_BUTTERFLY
@@ -146,14 +112,12 @@ bool mons_is_safe(const monster* mon, const bool want_move,
 
     int  dist    = grid_distance(you.pos(), mon->pos());
 
-    bool is_safe = (_mons_is_always_safe(mon)
+    bool is_safe = (mons_is_always_safe(mon)
                     || check_dist
                        && (mon->pacified() && dist > 1
                            || crawl_state.disables[DIS_MON_SIGHT] && dist > 2
-                           // Only seen through glass walls or within water?
-                           // Assuming that there are no water-only/lava-only
-                           // monsters capable of throwing or zapping wands.
-                           || !mons_can_hurt_player(mon)));
+                           // Only seen through glass walls?
+                           || mons_is_irrelevant(mon)));
 
     // If is_safe is true, ch_mon_is_safe will always immediately return true
     // anyway, so let's skip constructing another monster_info and handling lua
@@ -179,25 +143,19 @@ bool mons_is_safe(const monster* mon, const bool want_move,
     return is_safe;
 }
 
-static string _seen_monsters_announcement(const vector<monster*> &visible,
-                                          bool sensed_monster)
+static void _announce_monsters(string announcement, vector<coord_def> &visible,
+                               bool none_visible)
 {
-    // Announce the presence of monsters (Eidolos).
-    if (visible.size() == 1)
-    {
-        const monster& m = *visible[0];
-        return make_stringf("%s is nearby!", m.name(DESC_A).c_str());
-    }
-    if (visible.size() > 1)
-        return "There are monsters nearby!";
-    if (sensed_monster)
-        return "There is a strange disturbance nearby!";
-    return "";
-}
-
-static void _announce_monsters(string announcement, vector<monster*> &visible)
-{
-    mprf(MSGCH_WARN, "%s", announcement.c_str());
+    mprf(MSGCH_WARN, "%s!%s", announcement.c_str(),
+         none_visible && !you.gave_invis_clear_prompt
+#ifdef USE_TILE_WEB
+            ? " (Press *t to temporarily disregard this.)"
+#else
+            ? " (Press Ctrl+T to temporarily disregard this.)"
+#endif
+            : "");
+    if (none_visible)
+        you.gave_invis_clear_prompt = true;
 
     if (Options.use_animations & UA_MONSTER_IN_SIGHT)
     {
@@ -221,14 +179,14 @@ static void _announce_monsters(string announcement, vector<monster*> &visible)
 // want_move       (??) Somehow affects what monsters are considered dangerous
 // just_check      Return zero or one monsters only
 // dangerous_only  Return only "dangerous" monsters
-// require_visible Require that monsters be visible to the player
+// require_aware   Require that the player be aware of the monster
 // range           search radius (defaults: LOS)
 //
 vector<monster* > get_nearby_monsters(bool want_move,
                                       bool just_check,
                                       bool dangerous_only,
                                       bool consider_user_options,
-                                      bool require_visible,
+                                      bool require_known,
                                       bool check_dist,
                                       int range)
 {
@@ -248,7 +206,7 @@ vector<monster* > get_nearby_monsters(bool want_move,
         if (monster* mon = monster_at(*ri))
         {
             if (mon->alive()
-                && (!require_visible || mon->visible_to(&you))
+                && (!require_known || you.aware_of(*mon))
                 && (!dangerous_only || !mons_is_safe(mon, want_move,
                                                      consider_user_options,
                                                      check_dist)))
@@ -262,8 +220,16 @@ vector<monster* > get_nearby_monsters(bool want_move,
     return mons;
 }
 
+#define UNSAFE_MSG(msg) {                           \
+    if (announce)                                   \
+        mprf(MSGCH_WARN, "%s!", msg);               \
+    if (reason)                                     \
+        *reason = msg;                              \
+    return false;                                   \
+    }
+
 bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
-                 bool check_dist, int range)
+                 bool check_dist, int range, string* reason)
 {
     if (!just_monsters)
     {
@@ -277,43 +243,20 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
             // Qazlal immunity will allow for it, however.
             bool your_fault = cloud_is_yours_at(you.pos());
             if (cloud_damages_over_time(type, want_move, your_fault))
-            {
-                if (announce)
-                {
-                    mprf(MSGCH_WARN, "You are in a cloud of %s!",
-                         cloud_type_name(type).c_str());
-                }
-                return false;
-            }
+                UNSAFE_MSG(make_stringf("you are in a cloud of %s", cloud_type_name(type).c_str()).c_str());
         }
 
         if (poison_is_lethal())
-        {
-            if (announce)
-            {
-                mprf(MSGCH_WARN,
-                     "There is a lethal amount of poison in your body!");
-            }
-            return false;
-        }
+            UNSAFE_MSG("there is a lethal amount of poison in your body");
+
+        if (contam_max_damage() >= you.hp)
+            UNSAFE_MSG("you are contaminated with a potentially lethal amount of magic");
 
         if (you.duration[DUR_STICKY_FLAME])
-        {
-            if (announce)
-                mprf(MSGCH_WARN, "You are on fire!");
-
-            return false;
-        }
+            UNSAFE_MSG("you are on fire");
 
         if (you.props[EMERGENCY_FLIGHT_KEY])
-        {
-            if (announce)
-            {
-                mprf(MSGCH_WARN,
-                     "You are being drained by your emergency flight!");
-            }
-            return false;
-        }
+            UNSAFE_MSG("you are being drained by your emergency flight");
 
         // No monster will attack you inside a sanctuary,
         // so presence of monsters won't matter -- until it starts shrinking...
@@ -323,56 +266,81 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
 
     // Monster check.
     vector<monster* > monsters =
-        get_nearby_monsters(want_move, !announce, true, true, false,
-                            check_dist, range);
+        get_nearby_monsters(want_move, !announce, true, true, true, check_dist, range);
+    vector<monster_info> unknown_invis = env.invis_knowledge.get_unknown_in_los();
 
-    vector<monster* > visible;
-    copy_if(monsters.begin(), monsters.end(), back_inserter(visible),
-            [](const monster *mon){ return mon->visible_to(&you); });
-    const bool sensed = any_of(monsters.begin(), monsters.end(),
-                   [](const monster *mon){
-                       return env.map_knowledge(mon->pos()).flags
-                              & MAP_INVISIBLE_MONSTER;
-                   });
-
-    const string announcement = _seen_monsters_announcement(visible, sensed);
-    if (!announce || announcement.empty())
-        return announcement.empty();
-    _announce_monsters(announcement, visible);
-    return false;
-}
-
-bool can_rest_here(bool announce)
-{
-    // XXX: consider doing a check for whether your regen is *ever* inhibited
-    // before iterating over each monster.
-    vector<monster*> visible;
-    bool sensed = false;
-    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    string announcement;
+    bool invis_only = false;
+    if (monsters.empty() && !unknown_invis.empty())
     {
-        if (!regeneration_is_inhibited(*mi))
-            continue;
-        if (mi->visible_to(&you))
-            visible.push_back(*mi);
-        else if (env.map_knowledge(mi->pos()).flags & MAP_INVISIBLE_MONSTER)
-            sensed = true;
+        if (unknown_invis.size() > 1)
+            announcement = "There are probably monsters nearby";
+        else
+            announcement = unknown_invis[0].full_name(DESC_A) + " is probably nearby";
+        invis_only = true;
     }
-
-    const string announcement = _seen_monsters_announcement(visible, sensed);
-    if (announcement.empty())
+    else if (monsters.size() + unknown_invis.size() > 1)
+        announcement = "There are monsters nearby";
+    else if (!monsters.empty())
+        announcement = monsters[0]->name(DESC_A) + " is nearby";
+    else
         return true;
 
     if (announce)
-        _announce_monsters(announcement, visible);
+    {
+        vector<coord_def> pos;
+        for (const auto* mon : monsters)
+            pos.push_back(mon->pos());
+        for (const auto& mon : unknown_invis)
+            pos.push_back(mon.pos);
+
+        _announce_monsters(announcement, pos, invis_only);
+    }
+    if (reason)
+        *reason = announcement;
+
+    return false;
+}
+#undef UNSAFE_MSG
+
+// Purely checks whether it is possible for the player to regenerate HP while
+// standing in this spot. General danger checks (including the danger of unseen
+// monsters) is handled by i_feel_safe())
+bool can_rest_here(bool announce)
+{
+    vector<coord_def> pos;
+    string msg;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (regeneration_is_inhibited(*mi))
+        {
+            if (pos.empty())
+               msg = mi->name(DESC_A);
+            pos.push_back(mi->pos());
+        }
+    }
+
+    if (pos.empty())
+        return true;
+
+    if (announce)
+    {
+        if (pos.size() == 1)
+            msg = "You cannot rest while " + msg + " is nearby.";
+        else
+            msg = "You cannot rest while monsters are nearby.";
+        _announce_monsters(msg, pos, false);
+    }
+
     return false;
 }
 
-bool there_are_monsters_nearby(bool dangerous_only, bool require_visible,
+bool there_are_monsters_nearby(bool dangerous_only, bool require_known,
                                bool consider_user_options)
 {
     return !get_nearby_monsters(false, true, dangerous_only,
                                 consider_user_options,
-                                require_visible).empty();
+                                require_known).empty();
 }
 
 // General threat = sum_of_logexpervalues_of_nearby_unfriendly_monsters.
@@ -390,7 +358,7 @@ static void _monster_threat_values(double *general, double *highest,
         if (mi->friendly())
             continue;
 
-        const int xp = exper_value(**mi);
+        const int xp = exp_value(**mi);
         const double log_xp = log((double)xp);
         sum += log_xp;
         if (xp > highest_xp)
@@ -465,7 +433,7 @@ bool bring_to_safety()
     if (min_threat == DBL_MAX)
         return false;
 
-    you.moveto(best_pos);
+    you.move_to(best_pos, MV_INTERNAL);
     return true;
 }
 
@@ -477,7 +445,8 @@ void revive()
 
     you.magic_contamination = 0;
 
-    clear_trapping_net();
+    you.stop_being_caught(true);
+    you.stop_being_constricted();
     you.attribute[ATTR_DIVINE_VIGOUR] = 0;
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
     if (you.form != you.default_form)
@@ -517,7 +486,7 @@ void revive()
         }
 
         if (dur == DUR_TELEPORT)
-            you.props.erase(SJ_TELEPORTITIS_SOURCE);
+            you.props.erase(TELEPORTITIS_SOURCE);
     }
 
     update_vision_range(); // in case you had darkness cast before
@@ -537,7 +506,7 @@ void revive()
         mpr("You are too frail to live.");
         // possible only with an extreme abuse of Borgnjor's
         // might be impossible now that felids don't level down on death?
-        ouch(INSTANT_DEATH, KILLED_BY_DRAINING);
+        player_die(KILLED_BY_DRAINING);
     }
 
     mpr("You rejoin the land of the living...");

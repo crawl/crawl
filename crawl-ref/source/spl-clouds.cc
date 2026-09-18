@@ -46,7 +46,6 @@ spret cast_putrefaction(monster* target, int pow, bool fail)
     // Start the cloud at radius 1, regardless of the speed of the killing blow
     marker->speed_increment -= you.time_taken - 7;
     env.markers.add(marker);
-    env.markers.clear_need_activate();
 
     mprf("Rot billows forth from %s wounds!", target->name(DESC_ITS).c_str());
 
@@ -96,85 +95,26 @@ void explode_blastmotes_at(coord_def p)
 
     const string boom  = "The cloud of blastmotes explodes!";
     const string sanct = "By Zin's power, the fiery explosion is contained.";
-    explosion_fineff::schedule(beam, boom, sanct, EXPLOSION_FINEFF_CONCUSSION,
-                               nullptr, "");
+    schedule_explosion_fineff(beam, boom, sanct, EXPLOSION_FINEFF_CONCUSSION,
+                              nullptr, "");
 }
 
-cloud_type spell_to_cloud(spell_type spell)
+spret cast_freezing_cloud(int pow, const coord_def& target, bool fail)
 {
-    static map<spell_type, cloud_type> cloud_map =
-    {
-        { SPELL_POISONOUS_CLOUD, CLOUD_POISON },
-        { SPELL_FREEZING_CLOUD, CLOUD_COLD },
-        { SPELL_HOLY_BREATH, CLOUD_HOLY },
-    };
+    targeter_cloud hitfunc(&you, CLOUD_COLD, LOS_RADIUS);
+    hitfunc.set_aim(target);
 
-    return lookup(cloud_map, spell, CLOUD_NONE);
-}
-
-spret cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
-                 bool fail)
-{
-    if (grid_distance(beam.target, you.pos()) > beam.range
-        || !in_bounds(beam.target))
+    if (stop_attack_prompt(hitfunc, "conjure a freezing cloud",
+                            [](const actor *act) { return (act->is_player() || act->res_cold() < 3) && !act->cloud_immune();},
+                            nullptr, nullptr, false, true))
     {
-        mpr("That is beyond the maximum range.");
         return spret::abort;
     }
-
-    if (cell_is_solid(beam.target))
-    {
-        const char *feat = feat_type_name(env.grid(beam.target));
-        mprf("You can't place clouds on %s.", article_a(feat).c_str());
-        return spret::abort;
-    }
-
-    cloud_type cty = spell_to_cloud(spl);
-    if (is_sanctuary(beam.target) && !is_harmless_cloud(cty))
-    {
-        mpr("You can't place harmful clouds in a sanctuary.");
-        return spret::abort;
-    }
-
-    //XXX: there should be a better way to specify beam cloud types
-    switch (spl)
-    {
-        case SPELL_POISONOUS_CLOUD:
-            beam.flavour = BEAM_POISON;
-            beam.name = "blast of poison";
-            break;
-        case SPELL_HOLY_BREATH:
-            beam.flavour = BEAM_HOLY;
-            beam.origin_spell = SPELL_HOLY_BREATH;
-            break;
-        case SPELL_FREEZING_CLOUD:
-            beam.flavour = BEAM_COLD;
-            beam.name = "freezing blast";
-            break;
-        default:
-            break;
-    }
-
-    if (cty == CLOUD_NONE)
-    {
-        mpr("That kind of cloud doesn't exist!");
-        return spret::abort;
-    }
-
-    beam.thrower           = KILL_YOU;
-    beam.hit               = AUTOMATIC_HIT;
-    beam.damage            = CONVENIENT_NONZERO_DAMAGE;
-    beam.is_tracer         = true;
-    beam.use_target_as_pos = true;
-    beam.origin_spell      = spl;
-    beam.affect_endpoint();
-    if (beam.beam_cancelled)
-        return spret::abort;
 
     fail_check();
 
-    big_cloud(cty, caster, beam.target, pow, 8 + random2(3), -1);
-    noisy(spell_effect_noise(spl), beam.target);
+    big_cloud(CLOUD_COLD, &you, target, pow, 8 + random2(3), -1);
+    noisy(spell_effect_noise(SPELL_FREEZING_CLOUD), target);
     return spret::success;
 }
 
@@ -235,17 +175,11 @@ void holy_flames(monster* caster, actor* defender)
 
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
-        if (!in_bounds(*ai)
-            || cell_is_solid(*ai)
-            || is_sanctuary(*ai)
-            || monster_at(*ai))
-        {
+        if (monster_at(*ai))
             continue;
-        }
 
-        place_cloud(CLOUD_HOLY, *ai, dur, caster);
-
-        cloud_count++;
+        if (place_cloud(CLOUD_HOLY, *ai, dur, caster))
+            cloud_count++;
     }
 
     if (cloud_count)
@@ -264,19 +198,14 @@ spret scroll_of_poison(bool scroll_unknown)
     bool unknown_unseen = false;
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
-        if (cell_is_solid(*ri))
-            continue;
-        if (cloud_type_at(*ri) != CLOUD_NONE)
-            continue;
-        const actor* act = actor_at(*ri);
-        if (act != nullptr)
+        if (const actor* act = actor_at(*ri))
         {
-            unknown_unseen = unknown_unseen || !you.can_see(*act);
+            unknown_unseen = unknown_unseen || !you.aware_of(*act);
             continue;
         }
 
-        place_cloud(CLOUD_POISON, *ri, 10 + random2(11), &you);
-        ++created;
+        if (place_cloud(CLOUD_POISON, *ri, 10 + random2(11), &you))
+            ++created;
     }
 
     if (created > 0)

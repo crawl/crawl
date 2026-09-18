@@ -794,7 +794,7 @@ Summon Swarm spell
 
 Ce sort convoque un essaim pestilentiel.
 %%%%
-Summon Ufetubus spell
+Ufetubi Swarm spell
 
 Ce sort convoque plein d'ufetubi, petits démons ennuyeux se pressant autour de
 vous.
@@ -820,12 +820,6 @@ Ce sort téléporte le lanceur à un endroit aléatoire.
 Thunderbolt spell
 
 Ce sort crée un arc électrique.
-%%%%
-Twisted Resurrection spell
-
-Ce sort amène les cadavres environnant à ramper et à fusionner en une
-agglomération horrible de chairs. Plus les corps sont grands et puissants, plus
-la création le sera aussi.
 %%%%
 Volley of Thorns spell
 

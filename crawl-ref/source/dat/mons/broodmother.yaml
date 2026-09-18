@@ -1,6 +1,7 @@
 name: "broodmother"
 glyph: {char: "s", colour: lightcyan}
 flags: [web_immune, no_skeleton]
+exp: 1104
 genus: spider
 will: 60
 attacks:
@@ -14,5 +15,5 @@ has_corpse: true
 shout: skitter
 intelligence: animal
 speed: 12
-size: giant
+size: large
 shape: arachnid

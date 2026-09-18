@@ -722,7 +722,7 @@ Summon Swarm spell
 
 이 주문은 역병을 일으킨다고 알려진 벌레 떼를 소환한다.
 %%%%
-Summon Ufetubus spell
+Ufetubi Swarm spell
 
 이 주문은 당신 주위에 떼지어 귀찮게 구는 작은 악마인 우페투비를 여럿 소환한다.
 %%%%
@@ -746,12 +746,6 @@ Teleport Self spell
 Thunderbolt spell
 
 이 주문은 전기의 원호를 만들어낸다.
-%%%%
-Twisted Resurrection spell
-
-이 주문은 시전자 주변의 시체들을 기어 다니게 하며, 서로 융합하여 끔찍한
-살덩어리의 집합체가 되도록 만든다. 더 크고 많은 시체들을 이용할수록 더 강한
-생명체가 만들어질 것이다.
 %%%%
 Volley of Thorns spell
 

@@ -5,7 +5,7 @@
 
 {
 function safe_upstairs()
-  if you.branch() == "Gauntlet" or you.branch() == "Trove" then
+  if you.branch() == "Gauntlet" then
      crawl.formatted_mpr("Really leave this portal?", "prompt")
      local res = crawl.getch()
      if string.lower(string.char(res)) == "y" then
@@ -15,26 +15,6 @@ function safe_upstairs()
      crawl.sendkeys("<")
   end
 end
-}
-
-######################################################################
-# Add the following to your options file to automatically pick up
-# armour for non-body armour slots (gloves, boots, etc.), if you don't
-# already have an item equipped there.
-{
-add_autopickup_func(function(it, name)
-  if it.is_useless then
-    return
-  end
-  if it.class(true) == "armour" then
-    local good_slots = {cloak="cloak", helmet="helmet", gloves="gloves",
-                        boots="boots", barding="barding"}
-    st, _ = it.subtype()
-    if good_slots[st] ~= nil and items.slot_is_available(good_slots[st]) == true then
-      return true
-    end
-  end
-end)
 }
 
 ######################################################################

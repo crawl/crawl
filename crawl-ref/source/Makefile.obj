@@ -74,7 +74,6 @@ game-options.o \
 geom2d.o \
 ghost.o \
 god-abil.o \
-god-blessing.o \
 god-companions.o \
 god-conduct.o \
 god-item.o \
@@ -95,6 +94,7 @@ jobs.o \
 json.o \
 kills.o \
 known-items.o \
+l-autofight.o \
 l-colour.o \
 l-crawl.o \
 l-debug.o \
@@ -155,6 +155,7 @@ mon-ench.o \
 mon-explode.o \
 mon-gear.o \
 mon-info.o \
+mon-lurk.o \
 mon-movetarget.o \
 mon-pathfind.o \
 mon-pick.o \
@@ -185,11 +186,13 @@ package.o \
 pattern.o \
 pcg.o \
 perlin.o \
+piety-info.o \
 place-info.o \
 place.o \
 playable.o \
 player-act.o \
 player-equip.o \
+player-notices.o \
 player-reacts.o \
 player-stats.o \
 player.o \
@@ -318,6 +321,7 @@ catch2-tests/test_player_fixture.o \
 catch2-tests/test_randbook.o \
 catch2-tests/test_stringutil.o \
 catch2-tests/test_species.o \
+catch2-tests/test_shopping.o \
 catch2-tests/test_tags.o \
 catch2-tests/test_tilecell.o \
 catch2-tests/test_ui.o \
@@ -408,7 +412,6 @@ game-type.h.o \
 gender-type.h.o \
 geom2d.h.o \
 god-abil.h.o \
-god-blessing.h.o \
 god-companions.h.o \
 god-item.h.o \
 god-passive.h.o \
@@ -504,7 +507,6 @@ randbook.h.o \
 random.h.o \
 random-pick.h.o \
 random-var.h.o \
-reach-type.h.o \
 recite-eligibility.h.o \
 recite-type.h.o \
 religion-enum.h.o \
@@ -566,7 +568,6 @@ timed-effect-type.h.o \
 torment-source-type.h.o \
 transformation.h.o \
 transform.h.o \
-trap-type.h.o \
 travel-defs.h.o \
 tutorial.h.o \
 uncancel.h.o \

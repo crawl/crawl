@@ -35,7 +35,7 @@ brick_dark_2_5
 brick_dark_2_6
 brick_dark_2_7
 
-%weight 5
+%weight 1
 brick_dark_2_8 WALL_BRICK_DARK_2_TORCH
 brick_dark_2_9
 brick_dark_2_10
@@ -77,7 +77,7 @@ brick_dark_4_13
 brick_dark_4_14
 brick_dark_4_15
 
-%weight 10
+%weight 1
 brick_dark_4_8 WALL_BRICK_DARK_4_TORCH
 brick_dark_4_9
 brick_dark_4_10
@@ -127,7 +127,7 @@ brick_dark_6_17
 brick_dark_6_18
 brick_dark_6_19
 
-%weight 15
+%weight 1
 brick_dark_6_12 WALL_BRICK_DARK_6_TORCH
 brick_dark_6_13
 brick_dark_6_14
@@ -623,10 +623,24 @@ wall_vines4
 wall_vines5
 wall_vines6
 
+%weight 4
 lair0 WALL_LAIR
 lair1
 lair2
 lair3
+%weight 3
+lair4
+lair5
+%weight 1
+lair6
+lair7
+
+%weight 3
+wall_stone_lair0 STONE_WALL_LAIR
+wall_stone_lair1
+wall_stone_lair2
+%weight 1
+wall_stone_lair3
 
 # Swamp tiles.
 lab-rock0 WALL_LAB_ROCK WALL_SWAMP
@@ -634,6 +648,7 @@ lab-rock1
 lab-rock2
 lab-rock3
 
+%weight 10
 stone_mossy0 WALL_STONE_MOSSY
 stone_mossy1
 %weight 3
@@ -719,9 +734,11 @@ slime7
 %weight 3
 slime_stone0 STONE_WALL_SLIME
 slime_stone1
-%weight 10
+%weight 20
 slime_stone2
-slime_stone3
+
+slimy_transparent_stone0 SLIMY_TRANSPARENT_STONE
+slimy_transparent_stone1
 
 %weight 10
 orc0 WALL_ORC
@@ -738,12 +755,34 @@ orc9
 orc10
 orc11
 
-# Elf walls and variations used elsewhere.
+%weight 10
+wall_stone_orc0 STONE_WALL_ORC
+%weight 5
+wall_stone_orc1
+%weight 2
+wall_stone_orc2
+%weight 1
+wall_stone_orc3
+
+# Elf rock and walls, plus variations used elsewhere.
 
 relief0 WALL_HALL
 relief1
 relief2
 relief3
+
+%weight 2
+elf-stone0 STONE_WALL_ELF
+elf-stone1
+%weight 1
+elf-stone2
+elf-stone3
+%weight 2
+elf-stone_runic0 STONE_WALL_ELF_RUNIC
+elf-stone_runic1
+%weight 1
+elf-stone_runic2
+elf-stone_runic3
 
 %variation WALL_HALL white
 %lum 0 20
@@ -854,6 +893,25 @@ vault_stone13
 vault_stone14
 vault_stone15
 
+%weight 10
+vaults-metal0 WALL_VAULTS_METAL
+vaults-metal1
+vaults-metal2
+%weight 2
+vaults-metal3
+vaults-metal4
+vaults-metal5
+%weight 1
+vaults-metal6
+vaults-metal7
+vaults-metal8
+
+%weight 10
+vaults-crystal0 WALL_VAULTS_CRYSTAL
+vaults-crystal1
+%weight 1
+vaults-crystal2
+vaults-crystal3
 
 rock_wall_crypt0 ROCK_WALL_CRYPT
 %weight 2
@@ -884,13 +942,22 @@ crypt-metal1
 crypt-metal2
 crypt-metal3
 crypt-metal4
-%weight 10
 
 %weight 10
 tomb0 WALL_TOMB
 tomb1
 tomb2
 tomb3
+
+%weight 10
+wall_stone_depths_entry0 STONE_WALL_DEPTHS_ENTRY
+wall_stone_depths_entry1
+%weight 9
+wall_stone_depths_entry2
+wall_stone_depths_entry3
+%weight 8
+wall_stone_depths_entry4
+wall_stone_depths_entry5
 
 %weight 10
 wall_stone_depths0 STONE_WALL_DEPTHS
@@ -911,6 +978,12 @@ wall_metal_depths_leafy0 WALL_DEPTHS_METAL_LEAFY
 wall_metal_depths_leafy1
 wall_metal_depths_leafy2
 wall_metal_depths_leafy3
+
+%weight 10
+crystal_wall_depths_0 WALL_DEPTHS_CRYSTAL
+crystal_wall_depths_1
+crystal_wall_depths_2
+crystal_wall_depths_3
 
 zot_blue0 WALL_ZOT WALL_ZOT_BLUE
 zot_blue1
@@ -998,6 +1071,24 @@ zot_blue3
 %resetcol
 
 %sdir dngn/wall
+%weight 18
+zot_stone_last00 STONE_WALL_ZOT_LAST
+zot_stone_last01
+%weight 16
+zot_stone_last02
+zot_stone_last03
+%weight 12
+zot_stone_last04
+zot_stone_last05
+%weight 6
+zot_stone_last06
+zot_stone_last07
+zot_stone_last08
+zot_stone_last09
+%weight 2
+zot_stone_last10
+zot_stone_last11
+
 wall_metal_zot0 DNGN_METAL_ZOT
 wall_metal_zot1
 wall_metal_zot2
@@ -1392,6 +1483,16 @@ wall_stone_flesh_cage4
 
 # Gloorx Vloq's level.
 %weight 10
+wall_hall_shadows0 WALL_HALL_OF_SHADOWS
+wall_hall_shadows1
+%weight 4
+wall_hall_shadows2
+wall_hall_shadows3
+wall_hall_shadows4
+%weight 2
+wall_hall_shadows5
+
+%weight 10
 wall_stone_shadow_mesh0 STONE_WALL_SHADOW_MESH
 wall_stone_shadow_mesh1
 %weight 9
@@ -1489,6 +1590,11 @@ wall_oozing3
 %weight 10
 
 # Ossuaries.
+wall_stone_ossuary0 STONE_WALL_OSSUARY
+wall_stone_ossuary1
+wall_stone_ossuary2
+wall_stone_ossuary3
+
 %weight 5
 sandstone_wall0 WALL_SANDSTONE
 sandstone_wall1
@@ -1583,6 +1689,12 @@ stone_black_marked7
 %weight 1
 stone_black_marked8
 
+# Zonguldrok's Shrine.
+shrine_stone_wall0 WALL_STONE_SHRINE
+shrine_stone_wall1
+shrine_stone_wall2
+shrine_stone_wall3
+
 # Lehudib's Moon Base.
 wall_moon0 WALL_MOON
 wall_moon1
@@ -1592,15 +1704,87 @@ wall_moon4
 wall_moon5
 wall_moon6
 
+# Maxwell's Workshop.
+%weight 10
+workshop0 METAL_WALL_WORKSHOP
+workshop1
+%weight 8
+workshop2
+workshop3
+%weight 2
+workshop2b
+workshop3b
+
 %weight 10
 bmaus_stone_wall0 WALL_BORG_STONE
 bmaus_stone_wall1
 bmaus_stone_wall2
 bmaus_stone_wall3
 
+# Gulch tiles.
+gulch_rock0 WALL_GULCH_BRICK
+gulch_rock1
+gulch_rock2
+gulch_rock3
+%weight 4
+gulch_rock4
+gulch_rock5
+gulch_rock6
+gulch_rock7
+
+%weight 10
+wall_stone_gulch0 WALL_STONE_GULCH
+wall_stone_gulch1
+wall_stone_gulch2
+wall_stone_gulch3
+%weight 4
+wall_stone_gulch4
+wall_stone_gulch5
+wall_stone_gulch6
+wall_stone_gulch7
+
+wall_metal_gulch0 METAL_WALL_GULCH
+wall_metal_gulch1
+wall_metal_gulch2
+wall_metal_gulch3
+
 desolation1 WALL_DESOLATION
 desolation2
 
+%weight 20
+wall_stone_necropolis_1 WALL_STONE_NECROPOLIS
+wall_stone_necropolis_2
+wall_stone_necropolis_3
+wall_stone_necropolis_4
+wall_stone_necropolis_5
+%weight 5
+wall_stone_necropolis_6
+wall_stone_necropolis_7
+wall_stone_necropolis_8
+%weight 2
+wall_stone_necropolis_9
+wall_stone_necropolis_10
+
+metal_wall_necropolis_0 METAL_WALL_NECROPOLIS
+metal_wall_necropolis_1
+metal_wall_necropolis_2
+metal_wall_necropolis_3
+metal_wall_necropolis_4
+metal_wall_necropolis_5
+
+metal_wall_necropolis_red_0 METAL_WALL_NECROPOLIS_RED
+metal_wall_necropolis_red_1
+metal_wall_necropolis_red_2
+metal_wall_necropolis_red_3
+metal_wall_necropolis_red_4
+metal_wall_necropolis_red_5
+
+wall_clear_permarock_necropolis0 CLEAR_PERMAROCK_NECROPOLIS
+wall_clear_permarock_necropolis1
+wall_clear_permarock_necropolis2
+wall_clear_permarock_necropolis3
+
+%weight 10
 crucible_of_flesh0 WALL_CRUCIBLE
 %weight 6
 crucible_of_flesh1
@@ -1618,6 +1802,7 @@ crucible_of_flesh8
 crucible_of_flesh9
 
 ## Vault tiles without specific homes
+## First, rock walls.
 
 # These 15 variants are referenced from tileview.cc
 pebble_red0 WALL_PEBBLE WALL_PEBBLE_RED
@@ -1799,7 +1984,7 @@ brick_brown7
 
 %variation WALL_BRICK lightred
 %hue 30 0
-%lum 30 10
+%lum 30 0
 %lum 0 5
 %repeat WALL_BRICK WALL_BRICK_LIGHTRED
 %resetcol
@@ -1828,9 +2013,12 @@ brick_brown7
 %resetcol
 
 # Variant of BRICK_WALL_BROWN with vines
-brick_brown-vines1 WALL_BRICK_VINES WALL_BRICK_BROWN_VINES
+%weight 10
+brick_brown-vines0 WALL_BRICK_VINES WALL_BRICK_BROWN_VINES
+brick_brown-vines1
 brick_brown-vines2
 brick_brown-vines3
+%weight 8
 brick_brown-vines4
 
 brick_gray0 WALL_BRICK_GRAY
@@ -1860,6 +2048,17 @@ catacombs14
 catacombs15
 %weight 10
 
+wall_baleful0 WALL_BALEFUL
+wall_baleful1
+%weight 8
+wall_baleful2
+%weight 4
+wall_baleful3
+wall_baleful4
+%weight 3
+wall_baleful5
+
+%weight 10
 beehives0 WALL_WAX
 beehives1
 beehives2
@@ -1870,6 +2069,8 @@ beehives6
 beehives7
 beehives8
 beehives9
+
+## Stone walls start here.
 
 %weight 5
 marble_wall1 WALL_MARBLE
@@ -1930,6 +2131,28 @@ church3
 %weight 4
 church4
 
+stone_magic_shelf0 WALL_STONE_MAGIC_SHELF
+stone_magic_shelf1
+stone_magic_shelf2
+stone_magic_shelf3
+
+%weight 4
+stone_magic_crackle_1a WALL_STONE_CRACKLE_1
+%weight 1
+stone_magic_crackle_1b
+%weight 4
+stone_magic_crackle_2a WALL_STONE_CRACKLE_2
+%weight 1
+stone_magic_crackle_2b
+%weight 4
+stone_magic_crackle_3a WALL_STONE_CRACKLE_3
+%weight 1
+stone_magic_crackle_3b
+%weight 4
+stone_magic_crackle_4a WALL_STONE_CRACKLE_4
+%weight 1
+stone_magic_crackle_4b
+
 # Wooden bookcase tiles.
 studio0 WALL_STUDIO
 studio1
@@ -1947,6 +2170,8 @@ stone_wall_scorched0 WALL_STONE_SCORCHED
 stone_wall_scorched1
 stone_wall_scorched2
 stone_wall_scorched3
+
+# Other vault wall types start here.
 
 mirrored_wall DNGN_MIRROR_WALL
 
@@ -2022,3 +2247,6 @@ icy_wall_overlay0 DNGN_WALL_ICY_WALL_OVERLAY
 icy_wall_overlay1
 icy_wall_overlay2
 icy_wall_overlay3
+
+rime_wall0 DNGN_WALL_FRIGID
+rime_wall1

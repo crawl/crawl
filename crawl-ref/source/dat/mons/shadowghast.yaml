@@ -2,7 +2,7 @@ name: "shadowghast"
 glyph: {char: "W", colour: magenta}
 flags: [flies, see_invis, insubstantial]
 resists: {cold: 3}
-xp_mult: 18
+exp: 218
 genus: wraith
 holiness: [undead]
 will: 40

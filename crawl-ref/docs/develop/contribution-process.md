@@ -41,20 +41,13 @@ board](https://tavern.dcss.io/c/back-room/gdd/9) (GDD) on the official
 Tavern forums. Please follow the GDD discussion guidelines posted at the top of
 that forum.
 
-For planning and brainstorming, there is a [Doku development
-wiki](https://crawl.develz.org/wiki/doku.php) where anyone can register to
-create and edit wiki pages. This wiki is more useful if you're working on a
-larger project that's in need of outside ideas
+You could also try discussing your ideas in [any of the crawl community
+forums](../../../README.md#community), or wherever you might find other players.
 
-An alternative to the Doku wiki is github wiki system. You can fork the crawl
-repository if you haven't done so already and create wiki pages in that fork.
-By default, github users who aren't collaborators for your repo can't edit wiki
-pages. You can allow other github users to edit your repository's wiki without
-allowing them commit access to the repository itself by going to the Settings
-tab of the repository and unchecking the box "Restrict editing to collaborators
-only". Finally, you can also add specific github users (such as a dev you are
-working with) to your repo's list of collaborators, which also grants them
-commit access in your repo.
+Do note that crawl has a decades-long history: While we welcome new gameplay
+ideas, our desired changes may be substantially different from what you would
+want *as a player*. Try to consider the gameplay impact of your proposals from
+multiple perspectives, and be open to design feedback from devs.
 
 ## Development documentation and references
 
@@ -72,20 +65,32 @@ WebTiles server is coded in python3 and uses the Tornado framework. The
 WebTiles browser client is written in JavaScript using the jQuery and other JS
 libraries. The local Tiles version uses the SDL2 graphics library.
 
-If you're doing tiles art, or splash screen art, then it's recommended to look
-at previous artwork and try to match the general style presented there. This is
-not a hard-and-fast rule, and clear improvements are always welcome.
-
 If you have questions for how to progress further, then feel free to pop into
 `#crawl-dev` and ask for help. Responses are reliant on dev availability and
 knowledge/expertise.
 
+## Submitting artwork
+
+If you want to submit artwork (tiles, icons, splash screens) for consideration,
+you can link it to us in `#crawl-dev`, or you can open a github issue, or you
+can submit a pull request.
+
+If you're doing tiles art, or splash screen art, then it's recommended to look
+at our existing artwork and try to match the general style presented there. This
+is not a hard-and-fast rule, and clear improvements are always welcome.
+
+However, there are some [hard requirements](tiles_creation.txt) on tile
+formatting and size: For most tiles, they need to be a 32 pixels by 32 pixels
+png file. Please see the tiles docs for further details; when in doubt, ask us.
+
+If you're looking for a tile to work on, we maintain a standing list of art
+requests here: https://github.com/crawl/crawl/wiki/Art-Requests
+
 ## Submitting a pull request
 
-The normal way to submit a contributing to crawl is by making Pull Request (PR)
+The normal way to submit a contribution to crawl is by making Pull Request (PR)
 on github. The technical parts of this process are fairly standard for any
-github-hosted project. We also will accept patches uploaded to mantis, but
-would prefer this to be limited to small changes like vaults or artwork.
+github-hosted project.
 
 ### A typical example of the process
 
@@ -94,15 +99,17 @@ would prefer this to be limited to small changes like vaults or artwork.
     * Observe the [code style guidelines](coding_conventions.md) and [commit
       message style guidelines](coding_conventions.md#1---commit-conventions)
       (72 char width, line between title and body, bug # or reporter in title).
-    * Include a commit message with meaningful content for every commit. It's
-      fine if a PR comment duplicates this, but the priority for explaining the
-      changes should be in the commit messages themselves.
+    * Clearly explain *why* you are making the commit in the body of every
+      commit message. It's fine if a PR comment duplicates this, but you should
+      be explaining the context for your changes in the commit message itself.
 2. You open a PR in the main repository based on your branch.
-3. Some member(s) of the devteam reviews the commit, probably asking some
-   questions and making some suggestions for changes. This happens at the pace
-   of devteam availability, which can fluctuate. Be prepared to check in with devs
-   from time to time to ask about your PR.
-4. You make some changes to your branch and push, which will automatically
+3. When you think your PR is ready for review, be proactive! Ask us about it,
+   seek feedback, be responsive and professional. Our time is limited and
+   reviews will happen at the pace of developer availability, but sometimes a
+   gentle nudge can help to keep things moving.
+4. Some member(s) of the devteam reviews the commit, probably asking some
+   questions and making some suggestions for changes.
+5. You make some changes to your branch and push, which will automatically
    update the PR.
     * Devteam members won't make changes in a PR branch, and force-pushing to
       your fork's branch is fine. However, in some cases where changes were
@@ -111,8 +118,8 @@ would prefer this to be limited to small changes like vaults or artwork.
       requirement to rebase changes.
     * In branches we generally prefer rebasing on master rather than merge
       commits. However we can rebase your branch ourselves when merging.
-    * Steps 3-4 may repeat.
-5. If all goes well, a devteam member merges the PR. This will typically
+    * Steps 3-5 may repeat.
+6. If all goes well, a devteam member merges the PR. This will typically
    involve a rebase, and the devteam member may tweak some details of the
    commit(s) at this time, and potentially squash commits.
 

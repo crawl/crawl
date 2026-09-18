@@ -1,12 +1,13 @@
 name: "formless jellyfish"
 glyph: {char: "J", colour: white}
 flags: [unblindable, amorphous, no_skeleton]
-resists: {poison: 1}
+resists: {poison: 1, corr: 3}
+exp: 1091
 genus: jelly
 will: 60
 attacks:
  - {type: sting, flavour: minipara, damage: 37}
- - {type: constrict, flavour: crush, damage: 5}
+ - {type: constrict, flavour: constrict, damage: 5}
 hd: 15
 hp_10x: 1200
 ac: 0

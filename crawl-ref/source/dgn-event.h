@@ -103,6 +103,7 @@ public:
     void clear();
     void clear_listeners_at(const coord_def &pos);
     bool has_listeners_at(const coord_def &pos) const;
+    bool is_registered_listener(const dgn_event_listener *listener) const;
     void move_listeners(const coord_def &from, const coord_def &to);
 
     // Returns false if the event is vetoed.

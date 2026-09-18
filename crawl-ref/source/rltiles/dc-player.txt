@@ -113,6 +113,12 @@ djinni_gold_m
 djinni_purple_f
 djinni_purple_m
 coglin COGLIN
+gale_centaur_m GALE_CENTAUR
+gale_centaur_f
+gale_centaur_cloud_m
+gale_centaur_cloud_f
+gale_centaur_sky_m
+gale_centaur_sky_f
 %rim 1
 formicid FORMICID
 vine_stalker_green_f VINE_STALKER
@@ -133,7 +139,6 @@ draconian_purple DRACONIAN_PURPLE
 draconian_red DRACONIAN_RED
 draconian_white DRACONIAN_WHITE DRACONIAN_LAST
 
-armataur ARMATAUR
 demigod_f DEMIGOD
 demigod_m
 spriggan_m SPRIGGAN
@@ -205,27 +210,49 @@ sticky_flame STICKY_FLAME
 ###Cloak
 %parts_ctg CLOAK
 %sdir player/cloak
-red RED FIRST_NORM
-blue BLUE
-magenta MAGENTA
-yellow YELLOW
-black BLACK
-gray GRAY
-brown LBROWN
-green GREEN
-cyan CYAN
-white WHITE LAST_NORM
+red NORMAL
+%syn RED
+blue
+%syn BLUE
+magenta
+%syn MAGENTA
+yellow
+%syn YELLOW
+black
+%syn BLACK
+gray
+%syn GRAY
+brown
+%syn LBROWN
+green
+%syn GREEN
+cyan
+%syn CYAN
+white
+%syn WHITE
 #unrand
 ratskin RATSKIN_CLOAK
 dragonskin DRAGONSKIN_CLOAK
 fungal_fisticloak_back FUNGAL_FISTICLOAK_BACK
 
+### Must be before scarves to render behind the player!
+%sdir player/transform
+medusa_form_gale_centaur_back MEDUSA_FORM_GALE_CENTAUR
+medusa_form_humanoid_back MEDUSA_FORM_HUMANOID
+blade_form_humanoid BLADE_FORM_HUMANOID
+
 ###Scarf
-scarf_cyan SCARF_CYAN SCARF_FIRST_NORM
-scarf_red SCARF_RED
-scarf_white SCARF_WHITE
-scarf_magenta SCARF_MAGENTA
-scarf_green SCARF_GREEN SCARF_LAST_NORM
+%sdir player/cloak
+scarf_cyan SCARF_NORMAL SCARF_OFFSET
+%syn SCARF_CYAN
+scarf_red
+%syn SCARF_RED
+scarf_white
+%syn SCARF_WHITE
+scarf_magenta
+%syn SCARF_MAGENTA
+scarf_green
+%syn SCARF_GREEN
 #unrand
 scarf_invisibility SCARF_INVISIBILITY
 %end_ctg
@@ -234,37 +261,62 @@ scarf_invisibility SCARF_INVISIBILITY
 %parts_ctg BOOTS
 %sdir player/boots
 
-short_red SHORT_RED FIRST_NORM
-short_purple SHORT_PURPLE
-short_brown SHORT_BROWN
-short_brown2 SHORT_BROWN2
-short_blue SHORT_BLUE
-pj PJ
-middle_brown MIDDLE_BROWN
-middle_gray MIDDLE_GRAY
-middle_ybrown MIDDLE_YBROWN
-middle_brown2 MIDDLE_BROWN2
-middle_brown3 MIDDLE_BROWN3
-middle_gold MIDDLE_GOLD
-middle_green MIDDLE_GREEN
-middle_purple MIDDLE_PURPLE
-long_red LONG_RED
-long_white LONG_WHITE
-blue_gold BLUE_GOLD
-mesh_red MESH_RED
-mesh_black MESH_BLACK
-mesh_white MESH_WHITE
-mesh_blue MESH_BLUE LAST_NORM
+short_red NORMAL
+%syn SHORT_RED
+short_purple
+%syn SHORT_PURPLE
+short_brown
+%syn SHORT_BROWN
+short_brown2
+%syn SHORT_BROWN2
+short_blue
+%syn SHORT_BLUE
+pj
+%syn PJ
+middle_brown
+%syn MIDDLE_BROWN
+middle_gray
+%syn MIDDLE_GRAY
+middle_ybrown
+%syn MIDDLE_YBROWN
+middle_brown2
+%syn MIDDLE_BROWN2
+middle_brown3
+%syn MIDDLE_BROWN3
+middle_gold
+%syn MIDDLE_GOLD
+middle_green
+%syn MIDDLE_GREEN
+middle_purple
+%syn MIDDLE_PURPLE
+long_red
+%syn LONG_RED
+long_white
+%syn LONG_WHITE
+blue_gold
+%syn BLUE_GOLD
+mesh_red
+%syn MESH_RED
+mesh_black
+%syn MESH_BLACK
+mesh_white
+%syn MESH_WHITE
+mesh_blue
+%syn MESH_BLUE
 spider SPIDER
 seven_league_boots SEVEN_LEAGUE_BOOTS
 slippers SLIPPERS
+april_boots1 APRIL1
+april_boots2 APRIL2
 
 ## Mutations
 hooves HOOVES
 ## Bardings
 %sdir player/barding
 barding1 BARDING
+%enchant_variation BARDING shiny runed glowing
 barding2 BARDING_EGO
+%enchant_variation BARDING randart
 barding3 BARDING_RANDART
 lightning_scales LIGHTNING_SCALES
 black_knight BLACK_KNIGHT
@@ -319,33 +371,60 @@ pants16 LOWARM3
 %parts_ctg BODY
 %sdir player/body
 
-robe_blue ROBE_BLUE ROBE_FIRST_NORM
-robe_black ROBE_BLACK
-robe_white ROBE_WHITE
-robe_red ROBE_RED
-robe_purple ROBE_MAGENTA
-robe_green ROBE_GREEN
-robe_yellow ROBE_YELLOW
-robe_brown ROBE_BROWN
-robe_cyan ROBE_CYAN
-gandalf_g GANDALF_G
-saruman SARUMAN
-robe_black_hood ROBE_BLACK_HOOD
-monk_blue MONK_BLUE
-monk_black MONK_BLACK
-robe_black_gold ROBE_BLACK_GOLD
-robe_white2 ROBE_WHITE2
-robe_white_red ROBE_WHITE_RED
-robe_white_green ROBE_WHITE_GREEN
-robe_blue_white ROBE_BLUE_WHITE
-robe_red_gold ROBE_RED_GOLD
-robe_black_red ROBE_BLACK_RED
-robe_blue_green ROBE_BLUE_GREEN
-robe_red3 ROBE_RED3
-robe_brown2 ROBE_BROWN2
-robe_green_gold ROBE_GREEN_GOLD
-robe_brown3 ROBE_BROWN3
-robe_gray2 ROBE_GRAY2 ROBE_LAST_NORM
+robe_blue ROBE_NORMAL
+%syn ROBE_BLUE
+robe_black
+%syn ROBE_BLACK
+robe_white
+%syn ROBE_WHITE
+robe_red
+%syn ROBE_RED
+robe_purple
+%syn ROBE_MAGENTA
+robe_green
+%syn ROBE_GREEN
+robe_yellow
+%syn ROBE_YELLOW
+robe_brown
+%syn ROBE_BROWN
+robe_cyan
+%syn ROBE_CYAN
+gandalf_g
+%syn GANDALF_G
+saruman
+%syn SARUMAN
+robe_black_hood
+%syn ROBE_BLACK_HOOD
+monk_blue
+%syn MONK_BLUE
+monk_black
+%syn MONK_BLACK
+robe_black_gold
+%syn ROBE_BLACK_GOLD
+robe_white2
+%syn ROBE_WHITE2
+robe_white_red
+%syn ROBE_WHITE_RED
+robe_white_green
+%syn ROBE_WHITE_GREEN
+robe_blue_white
+%syn ROBE_BLUE_WHITE
+robe_red_gold
+%syn ROBE_RED_GOLD
+robe_black_red
+%syn ROBE_BLACK_RED
+robe_blue_green
+%syn ROBE_BLUE_GREEN
+robe_red3
+%syn ROBE_RED3
+robe_brown2
+%syn ROBE_BROWN2
+robe_green_gold
+%syn ROBE_GREEN_GOLD
+robe_brown3
+%syn ROBE_BROWN3
+robe_gray2
+%syn ROBE_GRAY2
 #robes for the doll editor, but not picked randomly
 robe_rainbow ROBE_RAINBOW
 dress_green DRESS_GREEN
@@ -396,8 +475,10 @@ coat_red COAT_RED
 coat_black COAT_BLACK
 
 leather_armour LEATHER_ARMOUR
-leather_armour2
-leather_armour3
+%enchant_variation LEATHER_ARMOUR shiny runed glowing
+leather_armour2 LEATHER_ARMOUR_MAGIC
+%enchant_variation LEATHER_ARMOUR randart
+leather_armour3 LEATHER_ARMOUR_RANDART
 shirt_vest SHIRT_VEST
 karate KARATE
 karate2 KARATE2
@@ -421,25 +502,35 @@ bplate_green BPLATE_GREEN
 bplate_metal1 BPLATE_METAL1
 armour_blue_gold
 ringmail RINGMAIL
-ringmail2
-ringmail3
+%enchant_variation RINGMAIL shiny runed glowing
+ringmail2 RINGMAIL_MAGIC
+%enchant_variation RINGMAIL randart
+ringmail3 RINGMAIL_RANDART
 chainmail CHAINMAIL
-chainmail2
-chainmail3
+%enchant_variation CHAINMAIL shiny runed glowing
+chainmail2 CHAINMAIL_MAGIC
+%enchant_variation CHAINMAIL randart
+chainmail3 CHAINMAIL_RANDART
 plate_and_cloth PLATE_AND_CLOTH
 plate_and_cloth2 PLATE_AND_CLOTH2
 scalemail SCALEMAIL
-scalemail2
-scalemail3
+%enchant_variation SCALEMAIL shiny runed glowing
+scalemail2 SCALEMAIL_MAGIC
+%enchant_variation SCALEMAIL randart
+scalemail3 SCALEMAIL_RANDART
 scalemail_light SCALEMAIL_LIGHT
 leather_metal LEATHER_METAL
 plate PLATE
-plate2
-plate3
+%enchant_variation PLATE shiny runed glowing
+plate2 PLATE_MAGIC
+%enchant_variation PLATE randart
+plate3 PLATE_RANDART
 plate_black PLATE_BLACK
 crystal_plate CRYSTAL_PLATE
-crystal_plate2
-crystal_plate3
+%enchant_variation CRYSTAL_PLATE shiny runed glowing
+crystal_plate2 CRYSTAL_PLATE_MAGIC
+%enchant_variation CRYSTAL_PLATE randart
+crystal_plate3 CRYSTAL_PLATE_RANDART
 armour_mummy ARMOUR_MUMMY
 
 ##cloth_u_sail SAILOR
@@ -477,41 +568,75 @@ maxwell MAXWELL
 lears_hauberk LEARS_HAUBERK
 faerie_dragon_armour FAERIE_DRAGON_ARMOUR
 moon_troll_leather_armour MOON_TROLL_LEATHER_ARMOUR
+swamp_witch SWAMP_WITCH
+%rim 0
+occultist_scales OCCULTIST_SCALES
+arcanist_scales ARCANIST_SCALES
+%rim 1
 orange_crystal ORANGE_CRYSTAL
 vines VINES
 kryias KRYIAS
 talos TALOS
 justicar JUSTICAR
+arcane_splint ARCANE_SPLINT
+bone_scales BONE_SCALES
+forgewarden FORGEWARDEN
 
 %sdir player/transform
 maw_form0 MAW_FORM
 maw_form1
+quill_form_gale_centaur QUILL_GALE_CENTAUR
+quill_form_djinn QUILL_DJINN
+quill_form_gargoyle QUILL_GARGOYLE
+quill_form_humanoid QUILL_HUMANOID
+quill_form_naga QUILL_NAGA
+hive_form HIVE_FORM
 
 %end_ctg
 
 ### Arms
 %parts_ctg ARM
 %sdir player/gloves
-glove_red GLOVE_RED FIRST_NORM
-glove_gray GLOVE_GRAY
-glove_white GLOVE_WHITE
-glove_blue GLOVE_BLUE
-glove_black GLOVE_BLACK
-glove_orange GLOVE_ORANGE
-glove_brown GLOVE_BROWN
-glove_black2 GLOVE_BLACK2
-glove_grayfist GLOVE_GRAYFIST
-glove_purple GLOVE_PURPLE
-glove_wrist_purple GLOVE_WRIST_PURPLE
-glove_chunli GLOVE_CHUNLI
-gauntlet_blue GAUNTLET_BLUE
-glove_gold GLOVE_GOLD
-glove_short_yellow GLOVE_SHORT_YELLOW
-glove_short_red GLOVE_SHORT_RED
-glove_short_white GLOVE_SHORT_WHITE
-glove_short_green GLOVE_SHORT_GREEN
-glove_short_blue GLOVE_SHORT_BLUE
-glove_short_gray GLOVE_SHORT_GRAY LAST_NORM
+glove_red NORMAL
+%syn GLOVE_RED
+glove_gray
+%syn GLOVE_GRAY
+glove_white
+%syn GLOVE_WHITE
+glove_blue
+%syn GLOVE_BLUE
+glove_black
+%syn GLOVE_BLACK
+glove_orange
+%syn GLOVE_ORANGE
+glove_brown
+%syn GLOVE_BROWN
+glove_black2
+%syn GLOVE_BLACK2
+glove_grayfist
+%syn GLOVE_GRAYFIST
+glove_purple
+%syn GLOVE_PURPLE
+glove_wrist_purple
+%syn GLOVE_WRIST_PURPLE
+glove_chunli
+%syn GLOVE_CHUNLI
+gauntlet_blue
+%syn GAUNTLET_BLUE
+glove_gold
+%syn GLOVE_GOLD
+glove_short_yellow
+%syn GLOVE_SHORT_YELLOW
+glove_short_red
+%syn GLOVE_SHORT_RED
+glove_short_white
+%syn GLOVE_SHORT_WHITE
+glove_short_green
+%syn GLOVE_SHORT_GREEN
+glove_short_blue
+%syn GLOVE_SHORT_BLUE
+glove_short_gray
+%syn GLOVE_SHORT_GRAY
 ## mutations
 claws CLAWS
 player/mutations/octopode1 OCTOPODE_SPIKE
@@ -524,7 +649,7 @@ player/mutations/octopode1 OCTOPODE_SPIKE
 %sdir player/hand1/artefact
 # blades
 bloodbane BLOODBANE FIRST
-doom_knight DOOM_KNIGHT
+dread_knight DREAD_KNIGHT
 leech LEECH
 morg MORG
 plutonium_sword PLUTONIUM_SWORD
@@ -535,7 +660,10 @@ sword_of_power SWORD_OF_POWER
 knife_of_accuracy KNIFE_OF_ACCURACY
 vampires_tooth VAMPIRES_TOOTH
 spriggans_knife SPRIGGANS_KNIFE
+fimbulwinter FIMBULWINTER
+%rim 0
 capt_cutlass CAPT_CUTLASS
+%rim 1
 arc_blade ARC_BLADE
 gyre GYRE
 thermic_engine THERMIC_ENGINE
@@ -554,7 +682,7 @@ firestarter FIRESTARTER
 majin MAJIN
 ## polearms
 trident_octopus_king TRIDENT_OCTOPUS_KING
-glaive_of_prune GLAIVE_OF_PRUNE
+partisan_of_prune PARTISAN_OF_PRUNE
 finisher FINISHER
 scythe_of_curses SCYTHE_OF_CURSES
 glaive_of_the_guard GLAIVE_OF_THE_GUARD
@@ -591,33 +719,67 @@ crystal_spear CRYSTAL_SPEAR
 flaming_death FLAMING_DEATH
 # end TAG_MAJOR_VERSION
 skullcrusher SKULLCRUSHER
+%rim 0
+carina CARINA
+%rim 1
+coolibah COOLIBAH
+five_virtues FIVE_VIRTUES
+stagehand STAGEHAND
+hana HANA
 
 %sdir player/hand1
 # blades
 dagger DAGGER
-dagger2
-dagger_slant DAGGER_SLANT
-dagger_slant2
+%enchant_variation DAGGER shiny runed glowing
+dagger2 DAGGER_MAGIC
+%enchant_variation DAGGER randart
+dagger3 DAGGER_RANDART
+quick_blade QUICK_BLADE
+%enchant_variation QUICK_BLADE shiny runed glowing
+quick_blade2 QUICK_BLADE_MAGIC
+%enchant_variation QUICK_BLADE randart
+quick_blade3 QUICK_BLADE_RANDART
 short_sword SHORT_SWORD
 short_sword_slant SHORT_SWORD_SLANT
-short_sword_slant2
+%enchant_variation SHORT_SWORD_SLANT shiny runed glowing
+short_sword_slant2 SHORT_SWORD_SLANT_MAGIC
+%enchant_variation SHORT_SWORD_SLANT randart
+short_sword_slant3 SHORT_SWORD_SLANT_RANDART
+short_sword_slant_two SHORT_SWORD_SLANT2
 short_sword_two SHORT_SWORD2
 sword_thief SWORD_THIEF
 double_sword DOUBLE_SWORD
-double_sword2
-double_sword3
+%enchant_variation DOUBLE_SWORD shiny runed glowing
+double_sword2 DOUBLE_SWORD_MAGIC
+%enchant_variation DOUBLE_SWORD randart
+double_sword3 DOUBLE_SWORD_RANDART
 long_sword_slant LONG_SWORD_SLANT
-long_sword_slant2
+%enchant_variation LONG_SWORD_SLANT shiny runed glowing
+long_sword_slant2 LONG_SWORD_SLANT_MAGIC
+%enchant_variation LONG_SWORD_SLANT randart
+long_sword_slant3 LONG_SWORD_SLANT_RANDART
 blessed_blade BLESSED_BLADE
-great_sword_slant GREAT_SWORD_SLANT
-great_sword_slant2
+great_sword GREAT_SWORD
+%enchant_variation GREAT_SWORD shiny runed glowing
+great_sword2 GREAT_SWORD_MAGIC
+%enchant_variation GREAT_SWORD randart
+great_sword3 GREAT_SWORD_RANDART
 triple_sword TRIPLE_SWORD
-triple_sword2
+%enchant_variation TRIPLE_SWORD shiny runed glowing
+triple_sword2 TRIPLE_SWORD_MAGIC
+%enchant_variation TRIPLE_SWORD randart
+triple_sword3 TRIPLE_SWORD_RANDART
 katana_slant KATANA_SLANT
 scimitar SCIMITAR
-scimitar2
+%enchant_variation SCIMITAR shiny runed glowing
+scimitar2 SCIMITAR_MAGIC
+%enchant_variation SCIMITAR randart
+scimitar3 SCIMITAR_RANDART
 falchion FALCHION
-falchion2
+%enchant_variation FALCHION shiny runed glowing
+falchion2 FALCHION_MAGIC
+%enchant_variation FALCHION randart
+falchion3 FALCHION_RANDART
 sword_two SWORD2
 broadsword BROADSWORD
 black_sword BLACK_SWORD
@@ -626,13 +788,23 @@ sword_twist SWORD_TWIST
 knife KNIFE
 heavy_sword HEAVY_SWORD
 rapier RAPIER
-rapier2
+%enchant_variation RAPIER shiny runed glowing
+rapier2 RAPIER_MAGIC
+%enchant_variation RAPIER randart
+rapier3 RAPIER_RANDART
+%rim 0
+athame ATHAME
+%enchant_variation ATHAME shiny runed glowing
+athame2 ATHAME_MAGIC
+%enchant_variation ATHAME randart
+athame3 ATHAME_RANDART
+%rim 1
 sword_three SWORD3
 sword_breaker SWORD_BREAKER
 sword_jag SWORD_JAG
 demonblade DEMON_BLADE
-demonblade
-randart_demon_blade
+%enchant_variation DEMON_BLADE randart
+randart_demon_blade DEMON_BLADE_RANDART
 enchantress_dagger ENCHANTRESS_DAGGER
 
 ## blunt
@@ -647,35 +819,58 @@ giant_club_spike GIANT_CLUB_SPIKE
 giant_club_spike_slant GIANT_CLUB_SPIKE_SLANT
 giant_club_plain GIANT_CLUB_PLAIN
 whip WHIP
-whip2
+%enchant_variation WHIP shiny runed glowing
+whip2 WHIP_MAGIC
+%enchant_variation WHIP randart
+whip3 WHIP_RANDART
 sceptre SCEPTRE
 mace_two MACE2
 mace MACE
-mace2
+%enchant_variation MACE shiny runed glowing
+mace2 MACE_MAGIC
+%enchant_variation MACE randart
+mace3 MACE_RANDART
 great_mace GREAT_MACE
-great_mace2
+%enchant_variation GREAT_MACE shiny runed glowing
+great_mace2 GREAT_MACE_MAGIC
+%enchant_variation GREAT_MACE randart
+great_mace3 GREAT_MACE_RANDART
 mace_ruby MACE_RUBY
 morningstar_two MORNINGSTAR2
 morningstar MORNINGSTAR
-morningstar2
+%enchant_variation MORNINGSTAR shiny runed glowing
+morningstar2 MORNINGSTAR_MAGIC
+%enchant_variation MORNINGSTAR randart
+morningstar3 MORNINGSTAR_RANDART
 eveningstar EVENINGSTAR
-eveningstar2
-eveningstar3
+%enchant_variation EVENINGSTAR shiny runed glowing
+eveningstar2 EVENINGSTAR_MAGIC
+%enchant_variation EVENINGSTAR randart
+eveningstar3 EVENINGSTAR_RANDART
 hammer HAMMER
-hammer2
+%enchant_variation HAMMER shiny runed glowing
+hammer2 HAMMER_MAGIC
+%enchant_variation HAMMER randart
+hammer3 HAMMER_RANDART
 hammer_one HAMMER1
 hammer_two HAMMER2
 large_mace LARGE_MACE
 black_whip BLACK_WHIP
-black_whip
-randart_demon_whip
+%enchant_variation BLACK_WHIP randart
+randart_demon_whip BLACK_WHIP_RANDART
 sacred_scourge SACRED_SCOURGE
 sacred_scourge_two SACRED_SCOURGE2
+flail FLAIL
+%enchant_variation FLAIL shiny runed glowing
+flail2 FLAIL_MAGIC
+%enchant_variation FLAIL randart
+flail3 FLAIL_RANDART
+dire_flail DIRE_FLAIL
+%enchant_variation DIRE_FLAIL shiny runed glowing
+dire_flail2 DIRE_FLAIL_MAGIC
+%enchant_variation DIRE_FLAIL randart
+dire_flail3 DIRE_FLAIL_RANDART
 flail_stick FLAIL_STICK
-flail_ball FLAIL
-flail_ball2
-flail_great GREAT_FLAIL
-flail_great2
 flail_stick_slant FLAIL_STICK_SLANT
 flail_ball_two FLAIL_BALL2
 flail_balls FLAIL_BALLS
@@ -685,53 +880,80 @@ nunchaku NUNCHAKU
 
 ## polearms
 spear SPEAR
-spear2
+%enchant_variation SPEAR shiny runed glowing
+spear2 SPEAR_MAGIC
+%enchant_variation SPEAR randart
+spear3 SPEAR_RANDART
 spear_two SPEAR2
 spear_three SPEAR3
 spear_four SPEAR4
 spear_five SPEAR5
 hook HOOK
 halberd HALBERD
-halberd2
+%enchant_variation HALBERD shiny runed glowing
+halberd2 HALBERD_MAGIC
+%enchant_variation HALBERD randart
+halberd3 HALBERD_RANDART
 pick_axe PICK_AXE
 trident TRIDENT
 trident_demon DEMON_TRIDENT
-trident_demon
-randart_demon_trident
+%enchant_variation DEMON_TRIDENT randart
+randart_demon_trident DEMON_TRIDENT_RANDART
 trident_elec TRIDENT_ELEC
 trident_two TRIDENT2
-trident_two2
+%enchant_variation TRIDENT2 shiny runed glowing
+trident_two2 TRIDENT2_MAGIC
+%enchant_variation TRIDENT2 randart
+trident_two3 TRIDENT2_RANDART
 trident_three TRIDENT3
 partisan_1 PARTISAN
-partisan_2
-partisan_3
+%enchant_variation PARTISAN shiny runed glowing
+partisan_2 PARTISAN_MAGIC
+%enchant_variation PARTISAN randart
+partisan_3 PARTISAN_RANDART
 lance LANCE
 lance_two LANCE2
 scythe SCYTHE
-scythe2
+%enchant_variation SCYTHE shiny runed glowing
+scythe2 SCYTHE_MAGIC
+%enchant_variation SCYTHE randart
+scythe3 SCYTHE_RANDART
 scythe_slant SCYTHE_SLANT
 pike PIKE
 staff STAFF
 quarterstaff QUARTERSTAFF1
-quarterstaff2
+%enchant_variation QUARTERSTAFF1 shiny runed glowing
+quarterstaff2 QUARTERSTAFF1_MAGIC
+%enchant_variation QUARTERSTAFF1 randart
+quarterstaff3 QUARTERSTAFF1_RANDART
 quarterstaff_two QUARTERSTAFF2
 quarterstaff_three QUARTERSTAFF3
 quarterstaff_four QUARTERSTAFF4
 quarterstaff_jester QUARTERSTAFF_JESTER
 sickle SICKLE
 glaive GLAIVE
-glaive2
+%enchant_variation GLAIVE shiny runed glowing
+glaive2 GLAIVE_MAGIC
+%enchant_variation GLAIVE randart
+glaive3 GLAIVE_RANDART
 glaive_two GLAIVE2
-glaive_three GLAIVE3
-glaive_three2
+bardiche BARDICHE
+%enchant_variation BARDICHE shiny runed glowing
+bardiche2 BARDICHE_MAGIC
+%enchant_variation BARDICHE randart
+bardiche3 BARDICHE_RANDART
 d_glaive D_GLAIVE
 pole_forked POLE_FORKED
 fork FORK2
 trishula TRISHULA
 lajatang1 LAJATANG
-lajatang2
-lajatang3
+%enchant_variation LAJATANG shiny runed glowing
+lajatang2 LAJATANG_MAGIC
+%enchant_variation LAJATANG randart
+lajatang3 LAJATANG_RANDART
 xmas-scythe XMAS_SCYTHE
+april_staff1 APRIL_STAFF1
+april_staff2 APRIL_STAFF2
 
 ## staves
 
@@ -763,15 +985,30 @@ staff-artefact7
 ## axes
 axe_small AXE_SMALL
 hand_axe HAND_AXE
-hand_axe2
+%enchant_variation HAND_AXE shiny runed glowing
+hand_axe2 HAND_AXE_MAGIC
+%enchant_variation HAND_AXE randart
+hand_axe3 HAND_AXE_RANDART
 war_axe WAR_AXE
-war_axe2
+%enchant_variation WAR_AXE shiny runed glowing
+war_axe2 WAR_AXE_MAGIC
+%enchant_variation WAR_AXE randart
+war_axe3 WAR_AXE_RANDART
 broad_axe BROAD_AXE
-broad_axe2
+%enchant_variation BROAD_AXE shiny runed glowing
+broad_axe2 BROAD_AXE_MAGIC
+%enchant_variation BROAD_AXE randart
+broad_axe3 BROAD_AXE_RANDART
 battleaxe BATTLEAXE
-battleaxe2
+%enchant_variation BATTLEAXE shiny runed glowing
+battleaxe2 BATTLEAXE_MAGIC
+%enchant_variation BATTLEAXE randart
+battleaxe3 BATTLEAXE_RANDART
 axe_executioner EXECUTIONERS_AXE
-axe_executioner2
+%enchant_variation EXECUTIONERS_AXE shiny runed glowing
+axe_executioner2 EXECUTIONERS_AXE_MAGIC
+%enchant_variation EXECUTIONERS_AXE randart
+axe_executioner3 EXECUTIONERS_AXE_RANDART
 axe_double AXE_DOUBLE
 axe_blood AXE_BLOOD
 axe_short AXE_SHORT
@@ -781,13 +1018,17 @@ sling SLING
 bow BOW
 shortbow SHORTBOW
 orcbow1 ORCBOW
-orcbow1
-orcbow3
+%enchant_variation ORCBOW shiny runed glowing
+orcbow1 ORCBOW_MAGIC
+%enchant_variation ORCBOW randart
+orcbow3 ORCBOW_RANDART
 great_bow GREAT_BOW
 storm_bow STORM_BOW
 hand_cannon HAND_CANNON
-hand_cannon2
-hand_cannon3
+%enchant_variation HAND_CANNON shiny runed glowing
+hand_cannon2 HAND_CANNON_MAGIC
+%enchant_variation HAND_CANNON randart
+hand_cannon3 HAND_CANNON_RANDART
 arbalest ARBALEST
 arbalest_two ARBALEST2
 arbalest_three ARBALEST3
@@ -820,9 +1061,9 @@ spark SPARK
 fire_dark FIRE_DARK
 fire_white2 FIRE_WHITE2
 
-bladehands BLADEHAND
-bladehands_op BLADEHAND_OP
-bladehands_fe BLADEHAND_FE LAST
+%sdir player/transform
+eel_form_humanoid EEL_FORM_HUMANOID
+eel_form_octopode EEL_FORM_OCTOPODE LAST
 %end_ctg
 
 %parts_ctg HAND1_MIRROR
@@ -836,32 +1077,54 @@ bladehands_fe BLADEHAND_FE LAST
 %sdir player/hand2
 
 ##random shields
-buckler_round BUCKLER_ROUND BUCKLER_FIRST_NORM
-buckler_round2 BUCKLER_ROUND2
-buckler_round3 BUCKLER_ROUND3
-buckler_rb BUCKLER_RB
-buckler_green BUCKLER_GREEN
-buckler_spiral BUCKLER_SPIRAL BUCKLER_LAST_NORM
+buckler_round BUCKLER
+%syn BUCKLER_ROUND
+buckler_round2
+%syn BUCKLER_ROUND2
+buckler_round3
+%syn BUCKLER_ROUND3
+buckler_rb
+%syn BUCKLER_RB
+buckler_green
+%syn BUCKLER_GREEN
+buckler_spiral
+%syn BUCKLER_SPIRAL
 
-kite_shield_knight_blue KITE_SHIELD_KNIGHT_BLUE KITE_SHIELD_FIRST_NORM
-kite_shield_knight_gray KITE_SHIELD_KNIGHT_GRAY
-kite_shield_knight_rw KITE_SHIELD_KNIGHT_RW
-kite_shield_kite1 KITE_SHIELD_KITE1
-kite_shield_kite2 KITE_SHIELD_KITE2
-kite_shield_kite3 KITE_SHIELD_KITE3
-kite_shield_kite4 KITE_SHIELD_KITE4 KITE_SHIELD_LAST_NORM
+kite_shield_knight_blue KITE_SHIELD
+%syn KITE_SHIELD_KNIGHT_BLUE
+kite_shield_knight_gray
+%syn KITE_SHIELD_KNIGHT_GRAY
+kite_shield_knight_rw
+%syn KITE_SHIELD_KNIGHT_RW
+kite_shield_kite1
+%syn KITE_SHIELD_KITE1
+kite_shield_kite2
+%syn KITE_SHIELD_KITE2
+kite_shield_kite3
+%syn KITE_SHIELD_KITE3
+kite_shield_kite4
+%syn KITE_SHIELD_KITE4
 
-tower_shield_long_red TOWER_SHIELD_LONG_RED TOWER_SHIELD_FIRST_NORM
-tower_shield_gold TOWER_SHIELD_GOLD
-tower_shield_green TOWER_SHIELD_GREEN
-tower_shield_quartered TOWER_SHIELD_QUARTERED
-tower_shield_teal TOWER_SHIELD_TEAL
-tower_shield_spiral TOWER_SHIELD_SPIRAL TOWER_SHIELD_LAST_NORM
+tower_shield_long_red TOWER_SHIELD
+%syn TOWER_SHIELD_LONG_RED
+tower_shield_gold
+%syn TOWER_SHIELD_GOLD
+tower_shield_green
+%syn TOWER_SHIELD_GREEN
+tower_shield_quartered
+%syn TOWER_SHIELD_QUARTERED
+tower_shield_teal
+%syn TOWER_SHIELD_TEAL
+tower_shield_spiral
+%syn TOWER_SHIELD_SPIRAL
 
 ## orbs
-orb1 ORB1 ORB_FIRST
-orb2 ORB2
-orb3 ORB3 ORB_LAST
+orb1 ORB
+%syn ORB1
+orb2
+%syn ORB2
+orb3
+%syn ORB3
 
 ##unrand (or unique) shields
 orb_of_dispater ORB_OF_DISPATER
@@ -944,7 +1207,13 @@ torch TORCH
 pj PJ
 torch2 TORCH2
 
-bladehands BLADEHAND
+%sdir player/transform
+spore_form_gale_centaur SPORE_FORM_GALE_CENTAUR
+spore_form_djinni SPORE_FORM_DJINNI
+spore_form_humanoid SPORE_FORM_HUMANOID
+spore_form_naga SPORE_FORM_NAGA
+spore_form_octopode SPORE_FORM_OCTOPODE
+
 %end_ctg
 
 ###Hair
@@ -1046,6 +1315,8 @@ muttonchops_green MUTTONCHOPS_GREEN
 bushy_green BUSHY_GREEN
 pj PJ
 wizard WIZARD
+%sdir player/transform
+blade_form_octopode BLADE_FORM_OCTOPODE
 %end_ctg
 
 ###Helms
@@ -1053,31 +1324,56 @@ wizard WIZARD
 %sdir player/head
 
 ## Hats
-cone_blue CONE_BLUE HAT_FIRST_NORM
-straw STRAW
-cap_blue CAP_BLUE
-feather_green FEATHER_GREEN
-feather_red FEATHER_RED
-feather_blue FEATHER_BLUE
-feather_yellow FEATHER_YELLOW
-feather_white FEATHER_WHITE
-bandana_ybrown BANDANA_YBROWN
-hat_black HAT_BLACK
-gandalf WIZARD_GRAY
-wizard_blue WIZARD_BLUE
-wizard_purple WIZARD_PURPLE
-wizard_bluegreen WIZARD_BLUEGREEN
-wizard_darkgreen WIZARD_DARKGREEN
-wizard_brown WIZARD_BROWN
-wizard_blackgold WIZARD_BLACKGOLD
-wizard_blackred WIZARD_BLACKRED
-wizard_red WIZARD_RED
-wizard_white WIZARD_WHITE
-turban_white TURBAN_WHITE
-turban_brown TURBAN_BROWN
-turban_purple TURBAN_PURPLE HAT_LAST_NORM
+cone_blue HAT_NORMAL
+%syn CONE_BLUE
+straw
+%syn STRAW
+cap_blue
+%syn CAP_BLUE
+feather_green
+%syn FEATHER_GREEN
+feather_red
+%syn FEATHER_RED
+feather_blue
+%syn FEATHER_BLUE
+feather_yellow
+%syn FEATHER_YELLOW
+feather_white
+%syn FEATHER_WHITE
+bandana_ybrown
+%syn BANDANA_YBROWN
+hat_black
+%syn HAT_BLACK
+gandalf
+%syn WIZARD_GRAY
+wizard_blue
+%syn WIZARD_BLUE
+wizard_purple
+%syn WIZARD_PURPLE
+wizard_bluegreen
+%syn WIZARD_BLUEGREEN
+wizard_darkgreen
+%syn WIZARD_DARKGREEN
+wizard_brown
+%syn WIZARD_BROWN
+wizard_blackgold
+%syn WIZARD_BLACKGOLD
+wizard_blackred
+%syn WIZARD_BLACKRED
+wizard_red
+%syn WIZARD_RED
+wizard_white
+%syn WIZARD_WHITE
+turban_white
+%syn TURBAN_WHITE
+turban_brown
+%syn TURBAN_BROWN
+turban_purple
+%syn TURBAN_PURPLE
 pumpkin PUMPKIN
 santa_hat SANTA
+april_hat1 APRIL1
+april_hat2 APRIL2
 hat_archer ARCHER
 hat_archer2 ARCHER2
 hat_explorer EXPLORER
@@ -1133,38 +1429,64 @@ vainglory VAINGLORY
 wizard_lightgreen WIZARD_LIGHTGREEN
 
 ## All helmets below (HELM_OFS and greater) hide hair.
-iron1 HELM_IRON HELM_OFS FIRST_NORM
-helm_red HELM_RED
-horned HELM_HORNED
-helm_gimli HELM_GIMLI
-helm_green HELM_GREEN
+iron1 NORMAL HELM_OFS
+%syn HELM_IRON
+helm_red
+%syn HELM_RED
+horned
+%syn HELM_HORNED
+helm_gimli
+%syn HELM_GIMLI
+helm_green
+%syn HELM_GREEN
 cheek_red
-iron_red IRON_RED
-blue_horn_gold BLUE_HORN_GOLD
-viking_brown1 VIKING
+iron_red
+%syn IRON_RED
+blue_horn_gold
+%syn BLUE_HORN_GOLD
+viking_brown1
+%syn VIKING
 viking_brown2
 viking_gold
-hood_white WHITE
+hood_white
+%syn WHITE
 
-yellow_wing YELLOW_WING
-brown_gold BROWN_GOLD
-black_horn BLACK_HORN
-full_gold FULL_GOLD
-chain CHAIN
+yellow_wing
+%syn YELLOW_WING
+brown_gold
+%syn BROWN_GOLD
+black_horn
+%syn BLACK_HORN
+full_gold
+%syn FULL_GOLD
+chain
+%syn CHAIN
 
 ## All full helmets below (FHELM_OFS and greater) hide both hair and beard.
-black_horn2 FHELM_HORN_BLACK FHELM_OFS
-full_black FHELM_BLACK
-horn_gray FHELM_HORN_GRAY
-iron2 FHELM_GRAY
-iron3 FHELM_GRAY2
-fhelm_gray3 FHELM_GRAY3
-fhelm_horn_yellow FHELM_HORN_YELLOW
-fhelm_horn2 FHELM_HORN2
-horn_evil FHELM_EVIL
-helm_plume FHELM_PLUME
-mummy FHELM_MUMMY
-isildur FHELM_ISILDUR LAST_NORM
+black_horn2
+%syn FHELM_HORN_BLACK FHELM_OFS
+full_black
+%syn FHELM_BLACK
+horn_gray
+%syn FHELM_HORN_GRAY
+iron2
+%syn FHELM_GRAY
+iron3
+%syn FHELM_GRAY2
+fhelm_gray3
+%syn FHELM_GRAY3
+fhelm_horn_yellow
+%syn FHELM_HORN_YELLOW
+fhelm_horn2
+%syn FHELM_HORN2
+horn_evil
+%syn FHELM_EVIL
+helm_plume
+%syn FHELM_PLUME
+mummy
+%syn FHELM_MUMMY
+isildur
+%syn FHELM_ISILDUR
 art_dragonhelm ART_DRAGONHELM
 etheric_cage ETHERIC_CAGE
 
@@ -1182,6 +1504,11 @@ hood_green HOOD_GREEN
 ninja_black MASK_NINJA_BLACK
 hood_purple HOOD_PURPLE
 hood_assassin HOOD_ASSASSIN
+
+%sdir player/transform
+medusa_form_gale_centaur_front MEDUSA_FORM_GALE_CENTAUR
+medusa_form_humanoid_front MEDUSA_FORM_HUMANOID
+
 %end_ctg
 
 # draconian wings and heads, need same order as draconians
@@ -1197,3 +1524,9 @@ drcwing_purple PURPLE
 drcwing_red RED
 drcwing_white WHITE
 %end_ctg
+%rim 0
+stampeding_wind_default STAMPEDE_WIND
+stampeding_wind_north STAMPEDE_WIND_NORTH
+stampeding_wind_south STAMPEDE_WIND_SOUTH
+stampeding_wind_east STAMPEDE_WIND_EAST
+stampeding_wind_west STAMPEDE_WIND_WEST

@@ -284,11 +284,6 @@ Polyphemus
 Un berger cyclope, il protège énormément son troupeau, qu'il regarde d'une
 ferveur impérissable a travers son unique œil massif.
 %%%%
-Psyche
-
-Un mage aux cheveux blonds, vagabondant et semblant à moitié fou de chagrin et
-de culpabilité.
-%%%%
 Pargi
 
 Un troll inhabituellement mince.
@@ -349,7 +344,7 @@ Xtahua
 
 Un ancien dragon puissant.
 %%%%
-the Serpent of Hell gehenna
+Serpent of Hell gehenna
 
 Un gros dragon rouge brillant, brulant des flammes de l'enfer. Il semble être
 possédé par l'essence même de Gehenna et ses feux éternels.
@@ -902,11 +897,6 @@ vivants. Le peu qui l'ont vu et qui lui ont survécu disent qu'il ressemble a
 une énorme mite épineuse. Son cycle de vie étrange consiste à produire de
 l'ambroisie, très prisée chez les dieux et les magiciens.
 %%%%
-giant cockroach
-
-Un gros insecte brun qui produit des sifflements désagréables. Contrairement à
-la croyance populaire, ils sont en fait assez sensibles aux énergies mutagènes.
-%%%%
 giant eyeball
 
 Un globe oculaire géant en lévitation au regard hypnotique. Certains disent que
@@ -1051,6 +1041,11 @@ hill giant
 
 Bien qu'étant une des plus petite espèce de géant, ce géant des collines est
 encore bien assez grand pour être dangereux.
+%%%%
+hippogriff
+
+Une grande créature avec le postérieur d'un cheval et les ailes, la tête et les
+serres d'un aigle.
 %%%%
 hobgoblin
 

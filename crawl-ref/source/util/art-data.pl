@@ -20,9 +20,11 @@ my %field_type = (
     ANGRY    => "num",
     APPEAR   => "str",
     ARCHMAGI => "bool",
+    BANE     => "bool",
     BASE_ACC => "num",
     BASE_DAM => "num",
     BASE_DELAY => "num",
+    BASE_ENCUMBRANCE => "num",
     BLINK    => "bool",
     BRAND    => "enum",
     CHAOTIC  => "bool",
@@ -54,13 +56,13 @@ my %field_type = (
     FRAGILE  => "bool",
     HARM     => "bool",
     HOLY     => "bool",
+    HP       => "num",
     INSCRIP  => "str",
     INT      => "num",
     INV      => "bool",
     FLY      => "bool",
     LIFE     => "num",
-    WILL     => "num",
-    HP       => "num",
+    MAX_LEVEL => "num",
     MP       => "num",
     MUTATE   => "bool",
     NAME     => "str",
@@ -80,14 +82,17 @@ my %field_type = (
     SEEINV   => "bool",
     SKIP_EGO => "bool",
     SH       => "num",
+    SILENCE  => "bool",
     SLAY     => "num",
     SPECIAL  => "bool",
     SLOW     => "bool",
     STEALTH  => "num",
     STR      => "num",
+    WIZ      => "bool",
     TYPE     => "str",
     UNIDED   => "bool",
     VALUE    => "num",
+    WILL     => "num",
 
     TILE     => "str",
     TILE_EQ  => "str",
@@ -534,7 +539,7 @@ sub process_line
 my @art_order = (
     "NAME", "APPEAR", "TYPE", "\n",
     "INSCRIP", "DBRAND", "DESCRIP", "\n",
-    "base_type", "sub_type", "\n",
+    "MAX_LEVEL", "base_type", "sub_type", "\n",
     "fallback_base_type", "fallback_sub_type", "FB_BRAND", "\n",
     "plus", "plus2", "COLOUR", "VALUE", "\n",
     "flags",
@@ -553,7 +558,8 @@ my @art_order = (
     "SH", "HARM", "RAMPAGE", "ARCHMAGI", "ENH_CONJ", "ENH_HEXES", "\n",
     "ENH_SUMM", "ENH_NECRO", "ENH_TLOC", "unused", "ENH_FIRE", "\n",
     "ENH_ICE", "ENH_AIR", "ENH_EARTH", "ENH_ALCH", "\n",
-    "ACROBAT", "REGEN_MP", "ENH_FORGE",
+    "ACROBAT", "REGEN_MP", "WIZ", "ENH_FORGE", "SILENCE", "BANE", "\n",
+    "BASE_ENCUMBRANCE",
     "}",
 # end TAG_MAJOR_VERSION
 # start TAG_MAJOR_VERSION == 35
@@ -568,7 +574,8 @@ my @art_order = (
 #     "SH", "HARM", "RAMPAGE", "ARCHMAGI", "ENH_CONJ", "ENH_HEXES", "\n",
 #     "ENH_SUMM", "ENH_NECRO", "ENH_TLOC", "ENH_FIRE", "\n",
 #     "ENH_ICE", "ENH_AIR", "ENH_EARTH", "ENH_ALCH", "\n",
-#     "ACROBAT", "REGEN_MP", "ENH_FORGE",
+#     "ACROBAT", "REGEN_MP", "ENH_FORGE", "SILENCE", "BANE", "\n",
+#     "BASE_ENCUMBRANCE",
 #     "}",
 # end TAG_MAJOR_VERSION
 
@@ -937,42 +944,6 @@ HEADER_END
         }
     }
 
-    $tilefile = "dc-player.txt";
-    unless (open(TILES, "<$tilefile"))
-    {
-        die "Couldn't open '$tilefile' for reading: $!\n";
-    }
-
-    my $curr_part = "";
-    my $content = do { local $/; <TILES> };
-    my @lines   = split "\n", $content;
-    foreach my $line (@lines)
-    {
-        if ($line =~ /parts_ctg\s+(\S+)/)
-        {
-            $curr_part = $1;
-            next;
-        }
-        next if (not defined $parts{$curr_part});
-
-        if ($line =~ /^(\S+)\s+(\S+)/)
-        {
-            my $name = $1;
-            my $enum = $2;
-
-            foreach my $art (@{$parts{$curr_part}})
-            {
-                if ($art->{TILE_EQ} eq $name)
-                {
-                    $art->{TILE_EQ_ENUM} = "TILEP_".$curr_part."_".$enum;
-                    # Don't break from the loop in case several artefacts
-                    # share the same tile.
-                }
-            }
-        }
-    }
-    close(TILES);
-
     # Create tiledef-unrand.cc for the function unrandart_to_tile().
     # Should we also create tiledef-unrand.h this way?
     $tilefile = "tiledef-unrand.cc";
@@ -999,7 +970,7 @@ HEADER_END
 #include "rltiles/tiledef-main.h"
 #include "rltiles/tiledef-player.h"
 
-int unrandart_to_tile(int unrand)
+tileidx_t unrandart_to_tile(int unrand)
 {
     switch (unrand)
     {
@@ -1027,7 +998,7 @@ HEADER_END
     $text .= (" " x 4) . "}\n";
     $text .= "}\n\n";
 
-    $text .= "int unrandart_to_doll_tile(int unrand)\n{\n";
+    $text .= "tileidx_t unrandart_to_doll_tile(int unrand)\n{\n";
     $text .= (" " x 4) . "switch (unrand)\n";
     $text .= (" " x 4) . "{\n";
     foreach my $part (sort keys %parts)
@@ -1035,14 +1006,8 @@ HEADER_END
         $text .= (" " x 4) . "// $part\n";
         foreach my $artefact (@{$parts{$part}})
         {
-            if (not defined $artefact->{TILE_EQ_ENUM})
-            {
-                print STDERR "Tile '$artefact->{TILE_EQ}' for part '$part' not "
-                           . "found in 'dc-player.txt'.\n";
-                next;
-            }
             my $enum   = "UNRAND_$artefact->{_ENUM}";
-            my $t_enum = $artefact->{TILE_EQ_ENUM};
+            my $t_enum = "TILEP_".$part."_".$artefact->{TILE_EQ};
             $text .= (" " x 4) . "case $enum:"
                 . " " x ($longest_enum - length($enum) + 2) . "return $t_enum;\n";
         }

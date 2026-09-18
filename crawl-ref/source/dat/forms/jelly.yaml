@@ -1,0 +1,34 @@
+enum: jelly
+equivalent_mons: jelly
+description: a lump of jelly.
+melds: [physical]
+resists: {poison: 1, corr: 3}
+hp_mod: 125
+ac: {base: 1, scaling: 7, xl_based: yes}
+can_cast: yes
+unarmed: {base: 9, scaling: 14, xl_based: yes}
+unarmed_brand: acid
+unarmed_colour: lightgrey
+unarmed_name: Pseudopod
+unarmed_verbs: [slap, smack, body-slam, engulf]
+can_swim: yes
+is_badform: yes
+changes_anatomy: yes
+changes_substance: yes
+holiness: natural
+has_blood: no
+has_hair: no
+has_bones: no
+has_feet: no
+has_ears: no
+shout_verb: gurgle
+hand_name: pseudopod
+foot_name: pseudopod
+prayer_action: squish down before
+flesh_name: jelly
+fakemuts:
+  - ["acid body", "You are resistant to acid and immune to corrosive walls."]
+  - ["amorphous state", "Your amorphous body is immune to blinding, drowning, and ensnarement."]
+  - ["acidic touch", "Your melee attacks splash acid on your foes."]
+badmuts:
+  - ["heavily diminished spells", "You cast all spells with heavily decreased power."]

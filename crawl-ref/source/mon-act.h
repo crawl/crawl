@@ -25,15 +25,22 @@ public:
 
 void mons_set_just_seen(monster *mon);
 void mons_reset_just_seen();
+void print_mons_left_view_messages();
 
 bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
                          bool just_check = false);
 
-bool handle_throw(monster* mons, bolt &beem, bool teleport, bool check_only);
+bool handle_throw(monster* mons, bolt &beem, bool teleport, bool check_only,
+                  bool force = false);
 
 void handle_monsters(bool with_noise = false);
 void handle_monster_move(monster* mon);
 
 void queue_monster_for_action(monster* mons);
 
+bool mon_do_stampede(monster& mon);
+
 void clear_monster_flags();
+
+bool mon_enemies_around(const monster* mons);
+void seen_monsters_react();

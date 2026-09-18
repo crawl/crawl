@@ -189,7 +189,7 @@ static void _write_mon(FILE * o, monster &mon)
 
 static bool _equip_weapon(const string &weapon, bool &abort)
 {
-    for (int i = 0; i < ENDOFPACK; ++i)
+    for (int i = 0; i < MAX_GEAR; ++i)
     {
         if (!you.inv[i].defined())
             continue;
@@ -252,7 +252,7 @@ static bool _fsim_kit_equip(const string &kit, string &error)
 
     if (!missile.empty())
     {
-        for (int i = 0; i < ENDOFPACK; ++i)
+        for (int i = 0; i < MAX_GEAR; ++i)
         {
             if (!you.inv[i].defined())
                 continue;
@@ -329,7 +329,7 @@ static monster* _init_fsim()
     if (!adjacent(mon->pos(), you.pos()))
     {
         for (adjacent_iterator ai(you.pos()); ai; ++ai)
-            if (mon->move_to_pos(*ai))
+            if (mon->move_to(*ai, MV_INTERNAL))
                 break;
     }
 
@@ -354,7 +354,7 @@ static monster* _init_fsim()
 
 static void _uninit_fsim(monster *mon)
 {
-    monster_die(*mon, KILL_RESET, NON_MONSTER);
+    monster_die(*mon, KILL_RESET, NON_MONSTER, true, false, /*reset=*/true);
     reset_training();
 }
 
@@ -392,7 +392,7 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
         if (missile != -1 && you.inv[missile].base_type == OBJ_MISSILES
             && !iweap)
         {
-            ranged_attack attk(&you, &mon, nullptr, &you.inv[missile], false);
+            ranged_attack attk(&you, &mon, &you.inv[missile]);
             attk.simu = true;
             attk.attack();
             if (attk.ev_margin >= 0)
@@ -406,9 +406,7 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
         else if (iweap && iweap->base_type == OBJ_WEAPONS
                 && is_range_weapon(*iweap))
         {
-            item_def fake_proj;
-            populate_fake_projectile(*iweap, fake_proj);
-            ranged_attack attk(&you, &mon, iweap, &fake_proj, false);
+            ranged_attack attk(&you, &mon, iweap);
             attk.simu = true;
             attk.attack();
             if (attk.ev_margin >= 0)
@@ -416,11 +414,11 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
                 did_hit = true;
                 fd.player.hits++;
             }
-            you.time_taken = you.attack_delay(&fake_proj).roll();
+            you.time_taken = you.attack_delay(iweap).roll();
         }
         else // otherwise, melee combat
         {
-            fight_melee(&you, &mon, &did_hit, true);
+            player_fight(&mon, false, &did_hit, true);
             if (did_hit)
                 fd.player.hits++;
         }
@@ -433,7 +431,7 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
     }
     else
     {
-        fight_melee(&mon, &you, &did_hit, true);
+        mons_fight(&mon, &you, &did_hit, true);
         int time_taken = 1000 / (mon.speed ? mon.speed : 10);
         fd.monster.time_taken += time_taken;
         fd.player.time_taken += time_taken;
@@ -453,8 +451,8 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
     you.stop_constricting_all(true, true);
     mon.stop_constricting_all(true, true);
 
-    mon.move_to_pos(start_pos);
-    you.move_to_pos(you_start_pos);
+    mon.move_to(start_pos, MV_INTERNAL);
+    you.move_to(you_start_pos, MV_INTERNAL);
 }
 
 static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
@@ -473,6 +471,10 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     crawl_state.disables.set(DIS_DEATH);
     crawl_state.disables.set(DIS_DELAY);
     crawl_state.disables.set(DIS_AFFLICTIONS);
+
+    // Disable animations (there's no screen redraw, so the player can't see
+    // them, but they will often still delay for significant lengths of time).
+    unwind_var<use_animations_type> unwind_anim(Options.use_animations, UA_NONE);
 
     {
         msg::suppress mx;
@@ -573,6 +575,9 @@ static string _init_scale(skill_map &scale, bool &xl_mode)
         else
             sk = skill_from_name(sk_str.c_str());
 
+        if (is_useless_skill(sk))
+            continue;
+
         scale[sk] = divider;
         if (divider == 1 && ret.empty())
             ret = skill_name(sk);
@@ -597,8 +602,11 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
     if (Options.fsim_scale.empty())
     {
         skill_type sk = defense ? SK_ARMOUR : _equipped_skill();
-        scale[sk] = 1;
-        col_name = skill_name(sk);
+        if (!is_useless_skill(sk))
+        {
+            scale[sk] = 1;
+            col_name = skill_name(sk);
+        }
     }
     else
         col_name = _init_scale(scale, xl_mode);
@@ -623,7 +631,7 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
             set_xl(i, true);
         else
         {
-            for (const auto &entry : scale)
+            for (const auto& entry : scale)
                 set_skill_level(entry.first, i / entry.second);
         }
 

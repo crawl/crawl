@@ -45,14 +45,11 @@ levelup_stats:
 mutations:
   1:
     MUT_NEGATIVE_ENERGY_RESISTANCE: 1
-    MUT_PETRIFICATION_RESISTANCE: 1
+    MUT_STONE_BODY: 1
     MUT_SHOCK_RESISTANCE: 1
     MUT_TORMENT_RESISTANCE: 1
   14:
     MUT_BIG_WINGS: 1
-fake_mutations:
-  - long: You are immune to sickness and miasma.
-    short: sickness immunity
 recommended_jobs:
   - fighter
   - gladiator
@@ -66,3 +63,4 @@ recommended_weapons:
   - staves
 
 orc_name: Gargorcle
+orcification_msg: You feel a divine power chisel tusks from your teeth and sculpt your ears to a sharp point.

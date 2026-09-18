@@ -2,7 +2,7 @@
 # Voices of fleeing monsters.
 # 'flee' is for when they start running.
 # 'fleeing' is for flight in progress (sometimes).
-# 'cornered' is when they realize they have nowhere to go.
+# 'cornered' is when they realise they have nowhere to go.
 #########
 %%%%
 dream sheep flee

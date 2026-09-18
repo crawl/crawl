@@ -21,3 +21,9 @@ static inline uint64_t hash3(uint64_t x, uint64_t y, uint64_t z)
 
 uint32_t hash32(const void *data, int len) PURE;
 unsigned int hash_with_seed(int x, uint32_t seed, uint32_t id = 0);
+uint32_t hash_uint32(const uint32_t* data, size_t count);
+template<size_t n>
+uint32_t hash_uint32(const uint32_t(&data)[n])
+{
+    return hash_uint32(data, n);
+}

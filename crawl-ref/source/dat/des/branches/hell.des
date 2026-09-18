@@ -29,7 +29,7 @@ end
 
 function hell_water_abbrev(e, type, baseweight)
     return "patrolling " .. type .. " zombie w:" .. math.floor(baseweight/2) ..
-        " / patrolling " .. type .. " skeleton w:" .. math.floor(baseweight/3) ..
+        " / patrolling " .. type .. " draugr w:" .. math.floor(baseweight/3) ..
         " / patrolling " .. type .. " simulacrum w:" .. math.floor(baseweight/6)
 end
 
@@ -80,7 +80,7 @@ MONS:   sun demon / smoke demon / soul eater / hell hog
 MONS:   hellion / balrug / reaper / sin beast / hell knight
 ITEM:   good_item demon blade / good_item demon whip / \
         good_item demon trident
-ITEM:   ring of fire pre_id / Necronomicon / \
+ITEM:   Necronomicon / \
         grand grimoire / scroll of torment pre_id
 SUBST:  d=de, ?:?.l, ?=l.
 : hell_entry_feature(_G, 'A')
@@ -116,7 +116,7 @@ MONS:   sun demon / smoke demon / soul eater / hell hog / nothing w:20
 MONS:   hellion / balrug / reaper / sin beast / hell knight
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident
-ITEM:   ring of fire pre_id / Necronomicon / \
+ITEM:   Necronomicon / \
         grand grimoire / scroll of torment pre_id
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / w:30 nothing
@@ -188,10 +188,10 @@ NAME:   grunt_hell_entry_demonic_statue
 WEIGHT: 6
 ORIENT: float
 TAGS:   no_monster_gen no_tele_into
-MONS:   sun demon / smoke demon / soul eater / ynoxinul / sixfirhy \
-        / neqoxec w:5 / w:50 nothing
-MONS:   blizzard demon / sin beast / cacodemon / green death / reaper \
-        / balrug / hellion w:5 / tormentor w:5 / nothing w:30
+MONS:   sun demon / smoke demon / soul eater / ynoxinul / sixfirhy / \
+        neqoxec / w:50 nothing
+MONS:   blizzard demon / sin beast / cacodemon / green death / reaper / \
+        balrug / hellion w:5 / tormentor w:5 / nothing w:30
 ITEM:   skeleton
 KFEAT:  b = .
 KMONS:  A = obsidian statue
@@ -314,7 +314,7 @@ KMONS: O = sin beast
 MONS: frost giant / quicksilver dragon simulacrum / freezing wraith
 MONS: iron dragon / war gargoyle / ancient champion
 MONS: salamander tyrant / hell hog / balrug
-MONS: eidolon / spectral spark wasp / bone dragon
+MONS: eidolon / spectral spark wasp / spectral guardian sphinx
 : hell_entry_tier(_G, "high")
 MAP
   .....@.....
@@ -421,7 +421,6 @@ ENDMAP
 NAME:   pf_dread_powers_of_hell
 TAGS:   transparent uniq_hell_entry_geh
 WEIGHT: 2
-KMONS:  i = reaper ; wand of flame / balrug ; wand of flame pre_id
 TILE:   c = dngn_stone_wall_red
 COLOUR: c = red
 FTILE:  'iO = floor_infernal_blank
@@ -430,7 +429,7 @@ FTILE:  'iO = floor_infernal_blank
 MAP
      ........
     ..cccccc...
-   ....cci'ccc..
+   ....cc''ccc..
   ...l..cc'''cc..
  ...lll..cc'''cc..
 ...lllll..cc'''cc..
@@ -438,7 +437,7 @@ MAP
 ...lllll..cc'''cc..
  ...lll..cc'''cc..
   ...l..cc'''cc..
-   ....cci'ccc..
+   ....cc''ccc..
     ..cccccc...
      ........
 ENDMAP
@@ -682,7 +681,7 @@ WEIGHT: 2
   -- some potions of invisibility since a lot of monsters there can't sInv,
   -- and some tloc since you can't use blink/tele scrolls
   local gehinv = util.random_subset( { "any weapon randart ego:freezing",
-    "ring of protection from fire randart", "ring of fire randart",
+    "ring of protection from fire randart",
     "fire dragon scales randart", "wand of iceblast charges:25",
     "any weapon randart artprops:rF:1", "any armour randart artprops:rF:1",
     "potion of invisibility q:10", "randbook disc:ice slevels:13",
@@ -691,7 +690,7 @@ WEIGHT: 2
   -- the Cocytus inventory focuses on cold resistance and fire damage, and
   -- throws in some willpower for narguns
   local cocinv = util.random_subset( { "any weapon randart ego:flaming",
-    "ring of protection from cold randart", "ring of ice randart",
+    "ring of protection from cold randart",
     "ice dragon scales randart", "any weapon randart artprops:rC:1",
     "staff of air randart", "staff of cold randart", "wand of flame charges:55",
     "any armour randart artprops:rC:1", "ring of willpower randart",
@@ -705,7 +704,7 @@ WEIGHT: 2
     "any armour randart artprops:Will:1", "pearl dragon scales randart",
     "scroll of fog q:10", "quicksilver dragon scales randart",
     "any weapon randart artprops:Will:1", "any weapon randart artprops:rN:1",
-    "staff of death randart" }, 2 )
+    "staff of necromancy randart" }, 2 )
 
   -- Generically useful in all the Hells, a lot of scrolls and potions in bulk,
   -- but also rings of rN+ and willpower, which are useful in all the Hells, and
@@ -770,8 +769,8 @@ TAGS:   transparent patrolling
 ORIENT: float
 WEIGHT: 5
 KMONS:  1 = sun demon
-KMONS:  2 = shining eye / eye of devastation / great orb of eyes
-KMONS:  3 = hell hound / hell hog / sin beast / hellion
+KMONS:  2 = eye of devastation / great orb of eyes
+KMONS:  3 = shining eye w:5 / hell hound / hell hog / sin beast / hellion
 NSUBST: - = 4=1 / 8=1. / 2=2 / 4=2. / 1=3 / 2=3. / .
 SUBST:  b = bc
 KMASK:  O = opaque
@@ -1004,7 +1003,7 @@ ENDMAP
 
 NAME:   vestibule_tar_nicolae_cwn_annwn
 TAGS:   vestibule_tar patrolling
-KMONS:  1D = doom hound / nothing
+KMONS:  1D = oblivion hound / nothing
 KFEAT:  D = enter_tartarus
 TILE:   c = dngn_stone_dark
 : vault_metal_statue_setup(_G, "G", "mystic cage")
@@ -1057,7 +1056,8 @@ ENDMAP
 
 NAME:    vestibule_tar_nicolae_seven_gates_of_the_underworld
 TAGS:    vestibule_tar
-KMONS:   H = lich / halazid warlock / shadow dragon / bone dragon / revenant soulmonger
+KMONS:   H = lich / halazid warlock / shadow dragon / \
+             undertaker / revenant soulmonger
 KMONS:   12 = ancient champion / skeletal warrior / phantasmal warrior / \
               reaper / soul eater / shadow demon / shadow wraith / \
               flayed ghost / putrid mouth

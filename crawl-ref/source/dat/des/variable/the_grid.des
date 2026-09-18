@@ -1680,10 +1680,10 @@ ENDMAP
 
 NAME:   minmay_the_grid_tri_star
 TAGS:   the_grid unrand
-MONS:   occultist w:5 / arcanist w:5 / ogre mage / orc sorcerer w:5 / \
-        deep elf pyromancer w:2 / deep elf zephyrmancer w:2
-MONS:   deep elf pyromancer / deep elf zephyrmancer / \
-        orc sorcerer w:20 / kobold demonologist
+MONS:   arcanist / ogre mage / kobold demonologist w:5 / \
+        deep elf pyromancer / kobold geomancer
+MONS:   occultist / deep elf zephyrmancer / \
+        orc sorcerer w:20 / tengu conjurer
 MONS:   walking crystal tome / walking frostbound tome / lich / ancient lich w:5
 ITEM:   any wand / any jewellery / any book / any magical staff
 ITEM:   any randart jewellery / any misc / any weapon good_item w:5 / \
@@ -1696,6 +1696,7 @@ NSUBST: d = 1:e / *:.
 : else
 SUBST:  1 = 3, d = e
 : end
+FTILE:  .123de = floor_mystic_chasm
 MAP
    .....
   ....b..

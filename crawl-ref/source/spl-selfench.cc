@@ -102,7 +102,7 @@ spret cast_revivification(int pow, bool fail)
     {
         mprf(MSGCH_DURATION, "Your life is in your own hands once again.");
         // XXX: better cause name?
-        paralyse_player("Death's Door abortion");
+        you.paralyse(&you, random_range(2, 5), "breaking free from death's doorway");
         you.duration[DUR_DEATHS_DOOR] = 0;
     }
     return spret::success;
@@ -132,7 +132,7 @@ int cast_selective_amnesia(const string &pre_msg)
     int slot;
 
     // Pick a spell to forget.
-    keyin = list_spells(false, false, false, "forget");
+    keyin = list_spells(false, false, false, false, "forget");
     redraw_screen();
     update_screen();
 
@@ -211,12 +211,12 @@ void do_fugue_wail(const coord_def pos)
 
 int silence_min_range(int pow)
 {
-    return shrinking_aoe_range((20 + pow/5) * BASELINE_DELAY);
+    return shrinking_aoe_range(min(100, (20 + pow/5)) * BASELINE_DELAY);
 }
 
 int silence_max_range(int pow)
 {
-    return shrinking_aoe_range((19 + pow/5 + pow/2) * BASELINE_DELAY);
+    return shrinking_aoe_range(min(100, (20 + pow/5 + pow/2)) * BASELINE_DELAY);
 }
 
 spret cast_silence(int pow, bool fail)
@@ -226,10 +226,7 @@ spret cast_silence(int pow, bool fail)
 
     you.increase_duration(DUR_SILENCE, 20 + div_rand_round(pow,5)
                             + random2avg(div_rand_round(pow,2), 2), 100);
-    invalidate_agrid(true);
-
-    if (you.beheld())
-        you.update_beholders();
+    invalidate_agrid();
 
     learned_something_new(HINT_YOU_SILENCE);
     return spret::success;
@@ -243,21 +240,40 @@ int liquefaction_max_range(int pow)
 spret cast_liquefaction(int pow, bool fail)
 {
     fail_check();
-    flash_view_delay(UA_PLAYER, BROWN, 80);
-    flash_view_delay(UA_PLAYER, YELLOW, 80);
-    flash_view_delay(UA_PLAYER, BROWN, 140);
+    int power = 15 + random2avg(pow, 2);
+    int l_radius = isqrt(max(0, min(3 * (power - 5) / 4, 25)));
+
+    // Collect appearance spaces, then flash multiple colours over them.
+    vector<coord_def> flash;
+    for (radius_iterator ri(you.pos(), l_radius, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    {
+        if (*ri == you.pos() || feat_has_solid_floor(env.grid(*ri)) &&
+                                !feat_is_shallow_water((env.grid(*ri))))
+        {
+            flash.push_back(*ri);
+        }
+    }
+
+    for (int i = 0; i < 3; i++)
+    {
+        tileidx_t tile = i == 1 ? TILE_BOLT_LIQUEFY_GREEN : TILE_BOLT_LIQUEFY_BROWN;
+        colour_t col = i == 1 ? YELLOW : BROWN;
+        for (coord_def animate : flash)
+            flash_tile(animate, col, 0, tile);
+        animation_delay(i < 2 ? 75 : 140, true);
+    }
 
     mpr("The ground around you becomes liquefied!");
 
-    you.increase_duration(DUR_LIQUEFYING, 15 + random2avg(pow, 2), 100);
-    invalidate_agrid(true);
+    you.increase_duration(DUR_LIQUEFYING, power, 100);
+    invalidate_agrid();
     return spret::success;
 }
 
 // Is there at least one valid hostile thing in sight?
 bool jinxbite_targets_available()
 {
-    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS, true); mi; ++mi)
     {
         if (mons_is_threatening(**mi) && !mi->wont_attack()
             && mi->willpower() != WILL_INVULN)
@@ -305,6 +321,18 @@ spret cast_confusing_touch(int power, bool fail)
                          you.duration[DUR_CONFUSING_TOUCH]),
                      20, nullptr);
     you.props[CONFUSING_TOUCH_KEY] = power;
+
+    return spret::success;
+}
+
+spret cast_detonation_catalyst(bool fail)
+{
+    fail_check();
+
+    mpr("You ready an explosive catalyst.");
+
+    // base duration is very low to minimize precasting
+    you.set_duration(DUR_DETONATION_CATALYST, random_range(3,5));
 
     return spret::success;
 }

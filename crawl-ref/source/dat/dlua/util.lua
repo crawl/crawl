@@ -84,7 +84,7 @@ function util.curry(fn, ...)
            end
   else
     return function (...)
-             return fn(unpack(util.catlist(params, ...)))
+             return fn(table.unpack(util.catlist(params, ...)))
            end
   end
 end
@@ -219,7 +219,7 @@ function util.map(fn, ...)
       if #args < #lists then
         break
       end
-      local nval = fn(unpack(args))
+      local nval = fn(table.unpack(args))
       if nval ~= nil then
         table.insert(res, nval)
       end

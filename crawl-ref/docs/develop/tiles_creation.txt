@@ -5,7 +5,7 @@ This document aims to give a simultaneously short and detailed explanation
 about everything you need to know if you want to design tiles for Dungeon Crawl
 Stone Soup. You can also find this text, and potentially a more up-to-date
 version of it, at:
-http://crawl.develz.org/wiki/doku.php?id=dcss:help:tiles_creation
+https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/tiles_creation.txt
 
 
 Table of Contents
@@ -65,7 +65,7 @@ having access to existing ones, it can be useful to have them around for
 comparison.
 
 You can download the latest source from the usual release site:
-http://sourceforge.net/projects/crawl-ref/files/
+https://github.com/crawl/crawl
 
 To download the development version, you'll need to install and use git.
 See docs/develop/git/quickstart.txt for further instructions.
@@ -459,8 +459,8 @@ to said link.
 ========================
 
 To submit new tiles, please submit a pull request to our github
-(https://github.com/crawl/crawl/pulls), or contact one of our tiles developers
-(these currently include Sastreii and CanOfWorms).
+(https://github.com/crawl/crawl/pulls), contact us in #crawl-dev, or contact one
+of our tiles developers.
 
 Please note that, unless you specify otherwise, tiles you submit to Crawl will
 be released under the CC0 license, which is similar to placing them in the

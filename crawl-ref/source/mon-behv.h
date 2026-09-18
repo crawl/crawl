@@ -40,8 +40,6 @@ void handle_behaviour(monster* mon);
 
 beh_type attitude_creation_behavior(mon_attitude_type att);
 
-void alert_nearby_monsters();
-
 void make_mons_stop_fleeing(monster* mon);
 
 void make_mons_leave_level(monster* mon);

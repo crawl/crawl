@@ -1,5 +1,5 @@
 name: "moth"
-glyph: {char: "y", colour: white}
+glyph: {char: "λ", colour: white}
 flags: [cant_spawn]
 holiness: [nonliving]
 will: 10

@@ -40,6 +40,7 @@ enum class abflag
     card                = 0x00004000, // deck drawing (Nemelex)
     torchlight          = 0x00008000, // costs torchlight (Yred)
     drac_charges        = 0x00010000, // consumes draconian breath charges
+    silence_ok          = 0x00020000, // usable while silenced
 
     // targeting flags
     dir_or_target       = 0x10000000, // uses DIR_NONE targeting
@@ -60,7 +61,7 @@ const string make_cost_description(ability_type ability);
 unsigned int ability_mp_cost(ability_type abil);
 int ability_range(ability_type abil);
 ability_flags get_ability_flags(ability_type ability);
-talent get_talent(ability_type ability, bool check_confused);
+talent get_talent(ability_type ability);
 string ability_name(ability_type ability, bool dbname = false);
 vector<string> get_ability_names();
 string get_ability_desc(const ability_type ability, bool need_title = true);
@@ -75,11 +76,19 @@ bool check_ability_possible(const ability_type ability, bool quiet = false);
 bool ability_has_targeter(ability_type abil);
 unique_ptr<targeter> find_ability_targeter(ability_type ability);
 bool activate_talent(const talent& tal, dist *target = nullptr);
+bool handle_post_ability_effects(ability_type ability,
+                                 spret ability_result,
+                                 int piety_cost,
+                                 int mp_cost,
+                                 int hp_cost,
+                                 bool is_invocation);
+spret run_ability_uncancel(uncancellable_type kind, int piety_cost,
+                           int mp_cost, int hp_cost);
 bool is_religious_ability(ability_type abil);
 bool is_card_ability(ability_type abil);
 bool player_has_ability(ability_type abil, bool include_unusable = false);
-vector<talent> your_talents(bool check_confused, bool include_unusable = false,
-                                        bool ignore_piety = false);
+vector<talent> your_talents(bool include_unusable = false,
+                            bool ignore_piety = false);
 bool string_matches_ability_name(const string& key);
 ability_type ability_by_name(const string &name);
 string print_abilities();
@@ -87,7 +96,9 @@ ability_type fixup_ability(ability_type ability);
 
 int find_ability_slot(ability_type abil, char firstletter = 'f');
 int auto_assign_ability_slot(int slot);
-vector<ability_type> get_god_abilities(bool ignore_silence = true,
-                                       bool ignore_piety = true,
+vector<ability_type> get_god_abilities(bool ignore_piety = true,
                                        bool ignore_penance = true);
 void swap_ability_slots(int index1, int index2, bool silent = false);
+
+spell_type draconian_breath_to_spell(ability_type abil);
+int draconian_breath_power(int shapeshifting_skill = -1);

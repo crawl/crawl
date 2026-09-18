@@ -46,9 +46,11 @@ struct player_info
     bool wizard;
     bool explore;
     string species;
+    string species_display_name;
     string god;
     bool under_penance;
     int piety_rank;
+    int ostracism_pips;
 
     uint8_t form;
 
@@ -65,6 +67,14 @@ struct player_info
     int8_t strength;
     int8_t intel;
     int8_t dex;
+
+    // Temporary modifiers to defenses.
+    int ac_boost;
+    int ev_boost;
+    int sh_boost;
+
+    int doom;
+    string doom_desc;
 
     int experience_level;
     int8_t exp_progress;
@@ -86,7 +96,8 @@ struct player_info
     int8_t quiver_item;
     string quiver_desc;
     string unarmed_attack;
-    uint8_t unarmed_attack_colour;
+    uint8_t weapon_colour;
+    uint8_t offhand_weapon_colour;
     bool quiver_available;
 
     int8_t weapon_index;
@@ -116,8 +127,8 @@ public:
     void update_tabs();
 
     void mark_for_redraw(const coord_def& gc);
-    void set_need_redraw(unsigned int min_tick_delay = 0);
-    bool need_redraw() const;
+    void set_need_redraw();
+    bool need_redraw(unsigned int min_tick_delay = 0) const;
     void redraw();
 
     void place_cursor(cursor_type type, const coord_def &gc);
@@ -160,6 +171,7 @@ public:
     bool has_receivers() { return !m_dest_addrs.empty(); }
     bool is_controlled_from_web() { return m_controlled_from_web; }
 
+    wint_t try_await_input();
     /* Webtiles can receive input both via stdin, and on the
        socket. Also, while waiting for input, it should be
        able to handle other control messages (for example,
@@ -167,15 +179,10 @@ public:
 
        This function waits until input is available either via
        stdin or from a control message. If the input came from
-       a control message, it will be written into c; otherwise,
-       it still has to be read from stdin.
-
-       If block is false, await_input will immediately return,
-       even if no input is available. The return value indicates
-       whether input can be read from stdin; c will be non-zero
-       if input came via a control message.
+       a control message, it will be returned; otherwise, zero
+       will be returned and it still has to be read from stdin.
      */
-    bool await_input(wint_t& c, bool block);
+    wint_t await_input(bool(*has_console_input)());
 
     void check_for_control_messages();
 
@@ -213,15 +220,17 @@ public:
     void dump();
     void update_input_mode(mouse_mode mode, bool force=false);
 
-    void send_mcache(mcache_entry *entry, bool submerged,
+    void send_mcache(mcache_entry *entry, bool submerged, bool invis,
                      bool send = true);
-    void write_tileidx(tileidx_t t);
+    void write_tile_with_flags(tile_with_flags_t t);
 
     void zoom_dungeon(bool in);
 
     void send_doll(const dolls_data &doll, bool submerged, bool ghost);
     void send_milestone(const xlog_fields &xl);
     void send_options();
+
+    void invalidate_item(int index);
 
 protected:
     int m_sock;
@@ -310,6 +319,10 @@ protected:
 
     player_info m_current_player_info;
 
+    string invis_mon_desc;
+
+    string m_pending_text_input;
+
     void _send_version();
     void _send_layout();
 
@@ -319,7 +332,7 @@ protected:
     void _mcache_ref(bool inc);
 
     void _send_cursor(cursor_type type);
-    void _send_map(bool force_full = false);
+    void _send_map(bool spectator_only = false);
     void _send_cell(const coord_def &gc,
                     const screen_cell_t &current_sc, const screen_cell_t &next_sc,
                     const map_cell &current_mc, const map_cell &next_mc,

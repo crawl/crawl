@@ -9,6 +9,7 @@
 
 #include "artefact-prop-type.h"
 #include "defines.h"
+#include "item-prop-enum.h"
 #include "unique-item-status-type.h"
 #include "object-class-type.h"
 #include "killer-type.h"
@@ -22,7 +23,6 @@
 #define ARTEFACT_APPEAR_KEY "artefact_appearance"
 #define FIXED_PROPS_KEY     "artefact_fixed_props"
 
-#define DAMNATION_BOLT_KEY "damnation_bolt"
 #define EMBRACE_ARMOUR_KEY "embrace_armour"
 #define VICTORY_STAT_KEY    "victory_stat"
 #define VICTORY_CONDUCT_KEY "victory_conduct"
@@ -32,6 +32,7 @@ struct item_def;
 class actor;
 class CrawlVector;
 class monster;
+class melee_attack;
 
 enum unrand_flag_type
 {
@@ -60,6 +61,8 @@ struct unrandart_entry
     const char *dbrand;      // description of extra brand
     const char *descrip;     // description of extra power
 
+    int pref_max_level;
+
     object_class_type base_type;
     uint8_t           sub_type;
     object_class_type fallback_base_type;
@@ -78,7 +81,7 @@ struct unrandart_entry
     void (*unequip_func)(item_def* item, bool* show_msgs);
     void (*world_reacts_func)(item_def* item);
     void (*melee_effects)(item_def* item, actor* attacker,
-                          actor* defender, bool mondied, int damage);
+                          actor* defender, int damage, melee_attack* atk);
     void (*launch)(bolt* beam);
     void (*death_effects)(item_def* item, monster* mons, killer_type killer);
 };
@@ -103,7 +106,8 @@ string make_artefact_name(const item_def &item, bool appearance = false);
 string replace_name_parts(const string &name_in, const item_def& item);
 
 int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level,
-                        bool in_abyss);
+                        bool in_abyss, bool acquirement,
+                        monster *mons);
 
 typedef FixedVector< int, ART_PROPERTIES >  artefact_properties_t;
 
@@ -112,10 +116,12 @@ void artefact_desc_properties(const item_def         &item,
 
 void artefact_properties(const item_def &item,
                               artefact_properties_t  &proprt);
+void populate_armour_intrinsic_artps(const armour_type arm,
+                                     artefact_properties_t &proprt);
 
 int artefact_property(const item_def &item, artefact_prop_type prop);
 
-bool make_item_randart(item_def &item, bool force_mundane = false);
+bool make_item_randart(item_def &item, bool ignore_mundane = false);
 void make_ashenzari_randart(item_def &item);
 bool make_item_unrandart(item_def &item, int unrand_index);
 void setup_unrandart(item_def &item, bool creating = true);
@@ -149,6 +155,7 @@ const char *artp_name(artefact_prop_type prop);
 artefact_prop_type artp_type_from_name(const string &name);
 bool artp_potentially_good(artefact_prop_type prop);
 bool artp_potentially_bad(artefact_prop_type prop);
+artefact_prop_type ego_to_artprop(special_armour_type type);
 
 int get_unrandart_num(const char *name);
 int extant_unrandart_by_exact_name(string name);

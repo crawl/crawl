@@ -14,12 +14,13 @@
 
 ## Insects ('a')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
-giant_cockroach CORPSE_GIANT_COCKROACH
+clockroach CORPSE_CLOCKROACH
 radroach CORPSE_RADROACH
 
 ## Batty monsters ('b')
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 bat CORPSE_BAT
+raven CORPSE_RAVEN
 caustic_shrike CORPSE_CAUSTIC_SHRIKE
 shard_shrike CORPSE_SHARD_SHRIKE
 
@@ -30,8 +31,9 @@ howler CORPSE_HOWLER_MONKEY
 warg CORPSE_WARG
 wolf CORPSE_WOLF
 hog CORPSE_HOG
+sewage_sovereign CORPSE_SEWAGE_SOVEREIGN
 hell_hound CORPSE_HELL_HOUND
-doom_hound CORPSE_DOOM_HOUND
+oblivion_hound CORPSE_OBLIVION_HOUND
 raiju CORPSE_RAIJU
 hell_hog CORPSE_HELL_HOG
 black_bear CORPSE_BLACK_BEAR
@@ -75,6 +77,7 @@ crocodile CORPSE_CROCODILE
 alligator CORPSE_ALLIGATOR
 snapping_turtle CORPSE_SNAPPING_TURTLE
 alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
+mountainshell CORPSE_MOUNTAINSHELL
 fire_crab CORPSE_FIRE_CRAB
 ghost_crab CORPSE_GHOST_CRAB
 %sdir mon/abyss
@@ -129,8 +132,11 @@ blink_frog CORPSE_BLINK_FROG
 cane_toad CORPSE_CANE_TOAD
 goliath_frog CORPSE_GOLIATH_FROG
 skyshark CORPSE_SKYSHARK
+%sdir mon/aquatic
+roaming_sludgefish0 CORPSE_ROAMING_SLUDGEFISH
 
 ## Snakes ('S')
+%sdir mon/animals
 ball_python CORPSE_BALL_PYTHON
 adder CORPSE_ADDER
 black_mamba CORPSE_BLACK_MAMBA
@@ -184,6 +190,7 @@ rime_drake CORPSE_RIME_DRAKE
 lindwurm CORPSE_LINDWURM
 death_drake CORPSE_DEATH_DRAKE
 wind_drake CORPSE_WIND_DRAKE
+mongrel_wurm CORPSE_MONGREL_WURM
 
 ## Merfolk ('m')
 mon/demihumanoids/merfolk/merfolk_water CORPSE_MERFOLK
@@ -198,6 +205,8 @@ eleionoma CORPSE_ELEIONOMA
 bog_body CORPSE_BOG_BODY
 necrophage CORPSE_NECROPHAGE
 ghoul CORPSE_GHOUL
+# maybe this should be customized, to avoid showing the psychic eyes?
+cognitogaunt CORPSE_COGNITOGAUNT
 
 ## Orcs ('o')
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
@@ -216,6 +225,8 @@ killer_klown_purple
 killer_klown_red
 killer_klown_yellow
 mon/demihumanoids/entropy_weaver CORPSE_ENTROPY_WEAVER
+mon/abyss/abyssal_acolyte CORPSE_ABYSSAL_ACOLYTE
+mon/abyss/herald_of_the_abyss CORPSE_HERALD_OF_THE_ABYSS
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 %sdir mon/amorphous
 shapeshifter CORPSE_SHAPESHIFTER
@@ -273,6 +284,7 @@ mon/holy/pearl_dragon CORPSE_PEARL_DRAGON
 ## Hybrids ('H')
 %sdir mon/animals
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
+hippogriff CORPSE_HIPPOGRIFF
 manticore CORPSE_MANTICORE
 %sdir mon/demihumanoids
 harpy CORPSE_HARPY
@@ -282,8 +294,8 @@ sphinx_marauder CORPSE_SPHINX_MARAUDER
 guardian_sphinx CORPSE_GUARDIAN_SPHINX
 tengu CORPSE_TENGU
 jorogumo CORPSE_JOROGUMO
-armataur CORPSE_ARMATAUR
 mon/unique/arachne_staveless CORPSE_ARACHNE
+mon/aberrations/scrapshell_chimera CORPSE_SCRAPSHELL_CHIMERA
 %sdir mon/mutantbeast
 base3 CORPSE_MUTANT_BEAST
 
@@ -309,7 +321,9 @@ troll CORPSE_TROLL
 iron_troll CORPSE_IRON_TROLL
 deep_troll CORPSE_DEEP_TROLL
 
-## Cephalopods ('x')
+## Lesser miscelllaney ('x')
+%sdir mon/aberrations
+chonchon0 CORPSE_CHONCHON
 %sdir player
 base/octopode1 CORPSE_OCTOPODE
 %sdir mon/animals

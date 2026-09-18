@@ -126,6 +126,7 @@ enum armour_property_type
 
 const int SP_FORBID_EGO   = -1;
 const int SP_FORBID_BRAND = -1;
+const int SUNDERING_THRESHOLD = 5;
 
 // Be sure to update _debug_acquirement_stats and _str_to_ego to match.
 enum brand_type // item_def.special
@@ -146,8 +147,8 @@ enum brand_type // item_def.special
     SPWPN_SPEED,
     SPWPN_HEAVY,
 #if TAG_MAJOR_VERSION == 34
-    SPWPN_FLAME,   // ranged, only
-    SPWPN_FROST,   // ranged, only
+    SPWPN_FLAME_OLD,   // ranged, only
+    SPWPN_FROST_OLD,   // ranged, only
 #endif
     SPWPN_VAMPIRISM,
     SPWPN_PAIN,
@@ -171,6 +172,12 @@ enum brand_type // item_def.special
     SPWPN_PENETRATION,
     SPWPN_REAPING,
     SPWPN_SPECTRAL,
+    SPWPN_REBUKE,
+    SPWPN_VALOUR,
+    SPWPN_ENTANGLING,
+    SPWPN_SUNDERING,
+    SPWPN_CONCUSSION,
+    SPWPN_DEVIOUS,
 
 // From this point on save compat is irrelevant.
     NUM_REAL_SPECIAL_WEAPONS,
@@ -181,7 +188,7 @@ enum brand_type // item_def.special
 #endif
     SPWPN_WEAKNESS,  // Weakness Stinger
     SPWPN_VULNERABILITY, // Demonic Touch
-    SPWPN_FOUL_FLAME,
+    SPWPN_FOUL_FLAME, // Pan lords and Brilliance
     SPWPN_DEBUG_RANDART,
     NUM_SPECIAL_WEAPONS,
 };
@@ -228,9 +235,9 @@ enum jewellery_type
     RING_FLIGHT,
     RING_POSITIVE_ENERGY,
     RING_WILLPOWER,
+#if TAG_MAJOR_VERSION == 34
     RING_FIRE,
     RING_ICE,
-#if TAG_MAJOR_VERSION == 34
     RING_TELEPORT_CONTROL,
 #endif
     NUM_RINGS,                         //   keep as last ring; should not overlap
@@ -263,16 +270,11 @@ enum jewellery_type
     AMU_FAITH,
     AMU_REFLECTION,
     AMU_REGENERATION,
+    AMU_WILDSHAPE,
+    AMU_CHEMISTRY,
+    AMU_DISSIPATION,
 
     NUM_JEWELLERY
-};
-
-enum class launch_retval
-{
-    BUGGY = -1, // could be 0 maybe? TODO: test
-    FUMBLED,
-    LAUNCHED,
-    THROWN,
 };
 
 enum misc_item_type
@@ -363,21 +365,24 @@ enum missile_type
     MI_DART,
 #if TAG_MAJOR_VERSION == 34
     MI_NEEDLE,
-#endif
     MI_ARROW,
     MI_BOLT,
+#endif
     MI_JAVELIN,
 
     MI_STONE,
     MI_LARGE_ROCK,
+#if TAG_MAJOR_VERSION == 34
     MI_SLING_BULLET,
+#endif
     MI_THROWING_NET,
     MI_BOOMERANG,
 
+#if TAG_MAJOR_VERSION == 34
     MI_SLUG,
+#endif
 
     NUM_MISSILES,
-    MI_NONE             // was MI_EGGPLANT... used for launch type detection
 };
 
 enum rune_type
@@ -486,6 +491,9 @@ enum special_armour_type
     SPARM_FIRE_RESISTANCE,
     SPARM_COLD_RESISTANCE,
     SPARM_POISON_RESISTANCE,
+#if TAG_MAJOR_VERSION > 34
+    SPARM_CORROSION_RESISTANCE,
+#endif
     SPARM_SEE_INVISIBLE,
     SPARM_INVISIBILITY,
     SPARM_STRENGTH,
@@ -499,7 +507,9 @@ enum special_armour_type
     SPARM_RESISTANCE,
     SPARM_POSITIVE_ENERGY,
     SPARM_ARCHMAGI,
-    SPARM_PRESERVATION,
+#if TAG_MAJOR_VERSION == 34
+    SPARM_CORROSION_RESISTANCE,
+#endif
     SPARM_REFLECTION,
     SPARM_SPIRIT_SHIELD,
     SPARM_HURLING,
@@ -519,6 +529,21 @@ enum special_armour_type
     SPARM_MAYHEM,
     SPARM_GUILE,
     SPARM_ENERGY,
+    SPARM_SNIPING,
+    SPARM_ICE,
+    SPARM_FIRE,
+    SPARM_AIR,
+    SPARM_EARTH,
+    SPARM_ARCHERY,
+    SPARM_COMMAND,
+    SPARM_DEATH,
+    SPARM_RESONANCE,
+    SPARM_PARRYING,
+    SPARM_GLASS,
+    SPARM_PYROMANIA,
+    SPARM_STARDUST,
+    SPARM_MESMERISM,
+    SPARM_ATTUNEMENT,
     NUM_REAL_SPECIAL_ARMOURS,
     NUM_SPECIAL_ARMOURS,
 };
@@ -540,8 +565,8 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_PENETRATION,
 #endif
     SPMSL_DISPERSAL,
-    SPMSL_EXPLODING,                   // Only used by Damnation crossbow
 #if TAG_MAJOR_VERSION == 34
+    SPMSL_EXPLODING,
     SPMSL_STEEL,
 #endif
     SPMSL_SILVER,
@@ -578,7 +603,7 @@ enum stave_type
 #if TAG_MAJOR_VERSION == 34
     STAFF_ENERGY,
 #endif
-    STAFF_DEATH,
+    STAFF_NECROMANCY,
     STAFF_CONJURATION,
 #if TAG_MAJOR_VERSION == 34
     STAFF_ENCHANTMENT,
@@ -630,6 +655,9 @@ enum weapon_type
     WPN_QUICK_BLADE,
     WPN_SHORT_SWORD,
     WPN_RAPIER,
+#if TAG_MAJOR_VERSION > 34
+    WPN_ATHAME,
+#endif
 
     WPN_FALCHION,
     WPN_LONG_SWORD,
@@ -714,6 +742,7 @@ enum weapon_type
     WPN_CUTLASS,
     WPN_ORCBOW,
     WPN_PARTISAN,
+    WPN_ATHAME,
 #endif
 
     NUM_WEAPONS,
@@ -854,7 +883,7 @@ enum item_set_type
 
 enum talisman_type
 {
-    TALISMAN_BEAST,
+    TALISMAN_QUILL,
     TALISMAN_MAW,
     TALISMAN_SERPENT,
     TALISMAN_BLADE,
@@ -862,9 +891,27 @@ enum talisman_type
     TALISMAN_DRAGON,
     TALISMAN_DEATH,
     TALISMAN_STORM,
-    TALISMAN_FLUX,
+    TALISMAN_PROTEAN,
     TALISMAN_VAMPIRE,
+    TALISMAN_RIMEHORN,
+    TALISMAN_SPIDER,
+    TALISMAN_HIVE,
+    TALISMAN_AQUA,
+    TALISMAN_SPHINX,
+    TALISMAN_WEREWOLF,
+    TALISMAN_INKWELL,
+    TALISMAN_FORTRESS,
+    TALISMAN_SCARAB,
+    TALISMAN_MEDUSA,
+    TALISMAN_EEL,
+    TALISMAN_SPORE,
     NUM_TALISMANS,
+};
+
+enum bauble_type
+{
+    BAUBLE_FLUX,
+    NUM_BAUBLES,
 };
 
 enum special_gizmo_type
@@ -872,6 +919,7 @@ enum special_gizmo_type
     SPGIZMO_NORMAL,
     SPGIZMO_SPELLMOTOR,
     SPGIZMO_GADGETEER,
-    SPGIZMO_PARRYREV,
+    SPGIZMO_REVGUARD,
     SPGIZMO_AUTODAZZLE,
+    NUM_GIZMOS,
 };

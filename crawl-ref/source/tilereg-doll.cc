@@ -39,7 +39,7 @@ void DollEditRegion::clear()
     m_font_buf.clear();
 }
 
-static int _get_next_part(int cat, int part, int inc)
+static tileidx_t _get_next_part(int cat, tileidx_t part, int inc)
 {
     // Can't increment or decrement on show equip.
     if (part == TILEP_SHOW_EQUIP)
@@ -48,12 +48,13 @@ static int _get_next_part(int cat, int part, int inc)
     // Increment max_part by 1 to include the special value of "none".
     // (Except for the base, for which "none" is disallowed.)
     int max_part = tile_player_part_count[cat] + 1;
-    int offset   = tile_player_part_start[cat];
+    tileidx_t category_start = tile_player_part_start[cat];
 
     if (cat == TILEP_PART_BASE)
     {
-        offset   = tilep_species_to_base_tile(you.species, you.experience_level);
-        max_part = tile_player_count(offset);
+        category_start = tilep_species_to_base_tile(you.species,
+                                                    you.experience_level);
+        max_part = tile_player_count(category_start);
     }
 
     ASSERT(inc > -max_part || inc == -1);
@@ -61,14 +62,16 @@ static int _get_next_part(int cat, int part, int inc)
     // Translate the "none" value into something we can do modulo math with.
     if (part == 0)
     {
-        part = offset;
+        part = category_start;
         inc--;
     }
 
-    // Valid part numbers are in the range [offset, offset + max_part - 1].
-    int ret = (part + max_part + inc - offset) % (max_part);
+    // Valid part numbers are in the range
+    // [category_start, category_start + max_part - 1].
+    int offset_in_category = (int)(part - category_start);
+    int new_offset = (offset_in_category + max_part + inc) % (max_part);
 
-    if (cat != TILEP_PART_BASE && ret == max_part - 1)
+    if (cat != TILEP_PART_BASE && new_offset == max_part - 1)
     {
         // "none" value.
         return 0;
@@ -76,7 +79,7 @@ static int _get_next_part(int cat, int part, int inc)
     else
     {
         // Otherwise, valid part number.
-        return ret + offset;
+        return category_start + new_offset;
     }
 }
 

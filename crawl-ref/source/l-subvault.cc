@@ -36,12 +36,12 @@ static int dgn_subvault_size(lua_State *ls)
 {
     MAP(ls, 1, map);
 
-    lua_pushnumber(ls, map->subvault_width());
-    lua_pushnumber(ls, map->subvault_height());
+    lua_pushinteger(ls, map->subvault_width());
+    lua_pushinteger(ls, map->subvault_height());
     return 2;
 }
 
-const struct luaL_reg dgn_subvault_dlib[] =
+const struct luaL_Reg dgn_subvault_dlib[] =
 {
 { "is_subvault", dgn_is_subvault },
 { "default_subvault_glyphs", dgn_default_subvault_glyphs },

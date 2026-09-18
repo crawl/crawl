@@ -194,7 +194,7 @@ function hyper.build_layout(e, options)
   -- placing standard vaults in places where it'll mess up our architecture.
   local gxm, gym = dgn.max_bounds()
   for p in iter.rect_iterator(dgn.point(0, 0), dgn.point(gxm - 1, gym - 1)) do
-    local usage = hyper.usage.get_usage(usage_grid,p.x,p.y)
+    local usage = hyper.usage.get_usage(main_state.usage_grid,p.x,p.y)
     if usage ~= nil and usage.protect then
       dgn.set_map_mask(p.x,p.y)
     end

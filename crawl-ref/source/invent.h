@@ -30,8 +30,6 @@ enum class invprompt_flag
     unthings_ok        = 1 << 2,
     /// Don't start in the '?' list InvMenu.
     manual_list        = 1 << 3,
-    /// Only allow exiting with escape, not also space.
-    escape_only        = 1 << 4,
 };
 DEF_BITFIELD(invent_prompt_flags, invprompt_flag);
 
@@ -48,11 +46,17 @@ struct SelItem
     int slot;
     int quantity;
     const item_def *item;
-    bool has_star;
-    SelItem() : slot(0), quantity(0), item(nullptr), has_star(false) { }
-    SelItem(int s, int q, const item_def *it = nullptr, bool do_star = false)
-        : slot(s), quantity(q), item(it), has_star(do_star)
+    SelItem() : slot(0), quantity(0), item(nullptr) { }
+    SelItem(int s, int q, const item_def *it = nullptr)
+        : slot(s), quantity(q), item(it)
     {
+    }
+
+    bool operator== (const SelItem &o) const
+    {
+        return slot == o.slot
+               && quantity == o.quantity
+               && item == o.item;
     }
 };
 
@@ -105,8 +109,6 @@ public:
     virtual int highlight_colour(bool temp=false) const override;
 
     virtual void select(int qty = -1) override;
-    void set_star(bool);
-    bool has_star() const;
 
     virtual string get_filter_text() const override;
 
@@ -115,7 +117,6 @@ public:
 
 private:
     void add_class_hotkeys(const item_def &i);
-    bool _has_star;
 };
 
 class InvMenu : public Menu
@@ -128,6 +129,8 @@ public:
 
     void set_preselect(const vector<SelItem> *pre);
     void set_type(menu_type t);
+
+    void hover_item(const item_def* item);
 
     // Sets function to annotate the title with meta-information if needed.
     // If you set this, do so *before* calling set_title, or it won't take
@@ -158,22 +161,24 @@ public:
     void load_inv_items(int item_selector = OSEL_ANY, int excluded_slot = -1,
                         function<MenuEntry* (MenuEntry*)> procfn = nullptr);
 
-    vector<SelItem> get_selitems() const;
+    vector<SelItem> get_selitems(bool include_offscreen = false) const;
 
     const menu_sort_condition *find_menu_sort_condition() const;
     void sort_menu(vector<InvEntry*> &items, const menu_sort_condition *cond);
 
-    // Drop menu only: if true, dropped items are removed from autopickup.
-    bool mode_special_drop() const;
+    void cycle_page(int dir);
+    void set_page(int page);
 
 protected:
     void do_preselect(InvEntry *ie);
-    void select_item_index(int idx, int qty) override;
     bool examine_index(int i) override;
     int pre_process(int key) override;
+    bool process_command(command_type cmd) override;
+    string get_select_count_string(int count) const override;
     virtual bool skip_process_command(int keyin) override;
     virtual bool is_selectable(int index) const override;
     virtual string help_key() const override;
+    void select_index(int index, int qty) override;
 
 protected:
     menu_type type;
@@ -182,8 +187,10 @@ protected:
     invtitle_annotator title_annotate;
     string temp_title;
 
-private:
-    bool _mode_special_drop;
+    // Current tab in MF_PAGED_INVENTORY menus.
+    // Has no effect if that flag is not set.
+    int cur_osel;
+    vector<SelItem> offscreen_sel[4];
 };
 
 void get_class_hotkeys(const int type, vector<char> &glyphs);
@@ -199,9 +206,7 @@ int prompt_invent_item(const char *prompt,
                        int type_expect,
                        operation_types oper = OPER_ANY,
                        invent_prompt_flags flags = invprompt_flag::none,
-                       const char other_valid_char = '\0',
-                       const char *view_all_prompt = nullptr,
-                       int *type_out = nullptr);
+                       const char other_valid_char = '\0');
 
 vector<SelItem> select_items(
                         const vector<const item_def*> &items,
@@ -233,6 +238,6 @@ void list_charging_evokers(FixedVector<item_def*, NUM_MISCELLANY> &evokers);
 bool item_is_wieldable(const item_def &item);
 bool needs_notele_warning(const item_def &item, operation_types oper);
 bool needs_handle_warning(const item_def &item, operation_types oper,
-                          bool &penance);
+                          bool check_inscriptions = true);
 item_def *digit_inscription_to_item(char digit, operation_types oper);
 operation_types generalize_oper(operation_types oper);

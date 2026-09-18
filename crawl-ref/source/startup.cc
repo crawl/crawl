@@ -52,8 +52,8 @@
 #include "status.h"
 #include "stringutil.h"
 #include "terrain.h"
-#ifdef USE_TILE
  #include "tilepick.h"
+#ifdef USE_TILE
  #include "tilepick-p.h"
 #endif
 #include "tileview.h"
@@ -101,6 +101,7 @@ static void _initialize()
     init_duration_index();
     init_mon_name_cache();
     init_mons_spells();
+    init_parchment_overlays();
 
     // init_item_name_cache() needs to be redone after init_char_table()
     // and init_show_table() have been called, so that the glyphs will
@@ -323,6 +324,8 @@ static void _post_init(bool newc)
     init_properties();
 
     you.redraw_stats.init(true);
+    you.redraw_contam       = true;
+    you.redraw_doom         = true;
     you.redraw_hit_points   = true;
     you.redraw_magic_points = true;
     you.redraw_armour_class = true;
@@ -343,6 +346,13 @@ static void _post_init(bool newc)
 
     read_init_file(true);
     Options.fixup_options();
+
+#ifdef USE_TILE
+    // Redraw the map in case the init file has changed anything - at least
+    // autopickup can have changed.
+    tile_draw_entire_map();
+#endif
+
     read_startup_prefs();
 #ifdef USE_TILE_WEB
     tiles.send_options();
@@ -402,7 +412,7 @@ static void _post_init(bool newc)
     if (newc)
         run_map_epilogues();
 
-    // Sanitize skills, init can_currently_train[].
+    // Sanitize skills and recompute training.
     fixup_skills();
 }
 
@@ -834,6 +844,7 @@ void UIStartupMenu::on_show()
         else if (keyn == '\t' && _game_defined(defaults))
         {
             ng_choice = defaults;
+            forget_weapon_if_random(ng_choice);
             return done = true;
         }
         else if (keyn == '?')
@@ -1036,7 +1047,7 @@ bool startup_step()
 #ifdef __ANDROID__
     // Request the Android virtual keyboard. Waiting for the SDLActivity to be
     // resized avoids some display bugs.
-    jni_keyboard_control(false);
+    jni_keyboard_control(1);
     sleep(1);
 #endif
 

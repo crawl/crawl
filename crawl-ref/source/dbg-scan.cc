@@ -106,21 +106,35 @@ void debug_item_scan()
     for (i = 0; i < MAX_ITEMS; ++i)
     {
         if (!env.item[i].defined())
+        {
+            crawl_state.known_unlinked_items.set(i, false);
             continue;
+        }
 
         strlcpy(name, env.item[i].name(DESC_PLAIN).c_str(), sizeof(name));
 
         const monster* mon = env.item[i].holding_monster();
 
+        // Report each unlinked item only once until it heals, to prevent spam.
+        auto report_item = [&](const char *message)
+        {
+            if (crawl_state.known_unlinked_items[i])
+                return false;
+            crawl_state.known_unlinked_items.set(i);
+            debug_dump_item(name, i, env.item[i], "%s", message);
+            return true;
+        };
+
         // Don't check (-1, -1) player items or (-2, -2) monster items
         // (except to make sure that the monster is alive).
         if (env.item[i].pos.origin())
-            debug_dump_item(name, i, env.item[i], "Unlinked temporary item:");
+            report_item("Unlinked temporary item:");
         else if (mon != nullptr && mon->type == MONS_NO_MONSTER)
-            debug_dump_item(name, i, env.item[i], "Unlinked item held by dead monster:");
+            report_item("Unlinked item held by dead monster:");
         else if ((env.item[i].pos.x > 0 || env.item[i].pos.y > 0) && !visited[i])
         {
-            debug_dump_item(name, i, env.item[i], "Unlinked item:");
+            if (!report_item("Unlinked item:"))
+                continue;
 
             if (!in_bounds(env.item[i].pos))
             {
@@ -148,6 +162,8 @@ void debug_item_scan()
                 }
             }
         }
+        else
+            crawl_state.known_unlinked_items.set(i, false);
 
         // Current bad items of interest:
         //   -- armour and weapons with large enchantments/illegal special vals
@@ -378,7 +394,7 @@ void debug_mons_scan()
             }
         } // if (env.mgrid(m->pos()) != i)
 
-        if (feat_is_wall(env.grid(pos)))
+        if (feat_is_wall(env.grid(pos)) && !m->is_habitable(pos))
         {
 #if defined(DEBUG_FATAL)
             // if we're going to dump, point out the culprit
@@ -461,7 +477,7 @@ void debug_mons_scan()
             } // if (holder != m)
         } // for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
 
-        monster* m1 = monster_by_mid(m->mid);
+        monster* m1 = monster_by_mid(m->mid, false, true);
         if (m1 != m)
         {
             if (!m1)
@@ -626,8 +642,6 @@ void check_map_validity()
             portal = DNGN_ENTER_HELL;
         else if (you.depth == 2)
             portal = DNGN_ENTER_PANDEMONIUM;
-        else if (you.depth == 3)
-            portal = DNGN_ENTER_ABYSS;
     }
 
     dungeon_feature_type exit = DNGN_UNSEEN;
@@ -649,8 +663,6 @@ void check_map_validity()
         ASSERT(name);
         ASSERT(*name); // placeholders get empty names
 
-        trap_at(*ri); // this has all needed asserts already
-
         if (shop_struct *shop = shop_at(*ri))
             ASSERT_RANGE(shop->type, 0, NUM_SHOPS);
 
@@ -658,7 +670,7 @@ void check_map_validity()
         if (!in_bounds(*ri))
             ASSERT(feat_is_solid(feat));
 
-        if (env.level_map_mask(*ri) & MMT_MIMIC)
+        if (env.pgrid(*ri) & FPROP_MIMIC)
             continue;
         // no mimics below
 

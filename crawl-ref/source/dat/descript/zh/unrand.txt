@@ -22,7 +22,7 @@ mace of Variability
 
 据说，当佐姆对普通混沌工具的可预测性感到厌倦时，出现了一个巨大的权杖。
 %%%%
-glaive of Prune
+partisan of Prune
 
 这把梅干大刀带有可怕而阴险的诅咒。
 持有它的人除非有着坚定的自制力，
@@ -30,10 +30,6 @@ glaive of Prune
 反抗通常是徒劳的，而无能的持有者肯定会屈服，他们会发现自己变得湿软、美味，
 颜色也变成梦魇般的紫色。
 他们可以感到欣慰的是，弄伤一颗巨大的梅干却出人意料地难。
-%%%%
-sword of Power
-
-一把强大的剑，使强者愈强、弱者愈弱。
 %%%%
 staff of Olgreb
 
@@ -159,7 +155,7 @@ arbalest "Damnation"
 值得庆幸的是，这把武器产生的爆炸不会对开火的人造成伤害。
 %%%%
 # 标签_主要_版本 == 34
-sword of the Doom Knight
+sword of the Dread Knight
 
 一把刚劲的巨剑。第一个持有它的人是伊莱德莱姆努尔的信徒，
 她不屑于使用魔法，喜欢用蛮力毁灭敌人。
@@ -391,7 +387,7 @@ amulet of Cekugob
 
 一根看似普通的丝绳上串着一串奇怪的水晶，里面灌有各种奇异的能量。
 %%%%
-amulet of the Four Winds
+amulet of Tranquility
 
 这个垂饰是用纯净的玉制成的。它能赋予佩戴者强大的意志力和毅力。
 %%%%

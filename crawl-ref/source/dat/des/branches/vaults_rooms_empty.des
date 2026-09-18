@@ -348,16 +348,17 @@ ENDMAP
 
 NAME:    v_misc_15
 TAGS:    vaults_empty allow_dup
-NSUBST:  y = 1:+ / *:x
-NSUBST:  . = 1:( / *:.
+NSUBST:  y = 1:+ / *:x, . = 1:( / *:.
+SUBST:   M : M..
+: decorative_floor(_G, 'M', "assortment of trash")
 MAP
 xxxx...xxxx
 xxx.....xxx
 xx.......xx
 x..xxyxx..x
-...x...x...
+...xM.Mx...
 ...y...y...
-...x...x...
+...xM.Mx...
 x..xxyxx..x
 xx.......xx
 xxx.....xxx
@@ -716,15 +717,11 @@ xxx.......
 ........xx
 ENDMAP
 
-NAME: grunt_vaults_focal
-TAGS: vaults_empty
-SHUFFLE: ABCD
-SHUFFLE: Aa, Bb, Cc, Dd
-NSUBST: A = 1:+ / *:x
-NSUBST: B = 1:+ / *:x
-NSUBST: C = 1:+ / *:x
-NSUBST: D = 1:+ / *:x
-SUBST: abcd = .
+NAME:    grunt_vaults_focal
+TAGS:    vaults_empty
+SHUFFLE: ABCD, Aa, Bb, Cc, Dd
+NSUBST:  A = 1:+ / *:x,  B = 1:+ / *:x, C = 1:+ / *:x, D = 1:+ / *:x
+SUBST:   abcd = .
 MAP
 xx......xx
 xxx....xxx
@@ -738,19 +735,12 @@ xxx....xxx
 xx......xx
 ENDMAP
 
-NAME: grunt_vaults_bifocal
-TAGS: vaults_empty
-SHUFFLE: ABCD, EFGH
-SHUFFLE: Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh
-NSUBST: A = 1:+ / *:x
-NSUBST: B = 1:+ / *:x
-NSUBST: C = 1:+ / *:x
-NSUBST: D = 1:+ / *:x
-NSUBST: E = 1:+ / *:x
-NSUBST: F = 1:+ / *:x
-NSUBST: G = 1:+ / *:x
-NSUBST: H = 1:+ / *:x
-SUBST: abcdefgh = .
+NAME:    grunt_vaults_bifocal
+TAGS:    vaults_empty
+SHUFFLE: ABCD, EFGH, Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh
+NSUBST:  A = 1:+ / *:x, B = 1:+ / *:x, C = 1:+ / *:x, D = 1:+ / *:x
+NSUBST:  E = 1:+ / *:x, F = 1:+ / *:x, G = 1:+ / *:x, H = 1:+ / *:x
+SUBST:   abcdefgh = .
 MAP
 xx......xx
 xxx....xxx
@@ -954,7 +944,7 @@ ENDMAP
 NAME:  vaults_dpeg_emergency_exit
 TAGS:  vaults_empty no_tele_into
 DEPTH: Vaults:1-3
-KFEAT: ^ = shaft trap
+KFEAT: ^ = shaft
 MAP
 .....
 .mmm.
@@ -1159,28 +1149,28 @@ MAP
         ...
 ENDMAP
 
-NAME: nicolae_vaults_little_squares_1
-TAGS: vaults_empty allow_dup
+NAME:   nicolae_vaults_little_squares_1
+TAGS:   vaults_empty allow_dup
 NSUBST: A = 1:+ / *:x
+SUBST:  M = M..
+: decorative_floor(_G, 'M', "assortment of trash")
 MAP
 ..xxxx.(.
 (.+..+...
 ..x..xx+x
 x+xxAx..x
-x..A.A..x
+x..AMA..x
 x..xAxx+x
 x+xx..x..
 ...+..+.(
 .(.xxxx..
 ENDMAP
 
-NAME: nicolae_vaults_little_squares_2
-TAGS: vaults_empty allow_dup
-NSUBST: A = 1:+ / *:x
-NSUBST: B = 1:+ / *:x
-NSUBST: C = 1:+ / *:x
-NSUBST: D = 1:+ / *:x
-SUBST: E = ...(TG
+NAME:   nicolae_vaults_little_squares_2
+TAGS:   vaults_empty allow_dup
+NSUBST: A = 1:+ / *:x, B = 1:+ / *:x, C = 1:+ / *:x, D = 1:+ / *:x
+SUBST:  E = ...(TGM
+: decorative_floor(_G, 'M', "mop and bucket")
 MAP
 ...xxx...
 ...A.A...
@@ -1400,18 +1390,12 @@ aaax..xxx..xaaa
 aaxx..xxx..xxaa
 ENDMAP
 
-NAME: nicolae_vaults_little_ls
-TAGS: vaults_empty
-SUBST: g : xg
-NSUBST: a = 1:+ / *:x
-NSUBST: b = 1:+ / *:x
-NSUBST: c = 1:+ / *:x
-NSUBST: d = 1:+ / *:x
-NSUBST: e = 1:+ / *:x
-NSUBST: f = 1:+ / *:x
-NSUBST: g = 1:+ / *:x
-NSUBST: h = 1:+ / *:x
-SUBST: x = x:80 n:10 +:5
+NAME:   nicolae_vaults_little_ls
+TAGS:   vaults_empty
+SUBST:  g : xg
+NSUBST: a = 1:+ / *:x, b = 1:+ / *:x, c = 1:+ / *:x, d = 1:+ / *:x
+NSUBST: e = 1:+ / *:x, f = 1:+ / *:x, g = 1:+ / *:x, h = 1:+ / *:x
+SUBST:  x = x:80 n:10 +:5
 MAP
 x.a.b.c.x
 ..a.b.c..
@@ -1424,13 +1408,11 @@ fff.g.hhh
 x.f.g.h.x
 ENDMAP
 
-# XXX: doesn't this produce teleport closets?...
-NAME: nicolae_vaults_little_squares_5
-TAGS: vaults_empty allow_dup
-NSUBST: a = 1:+ / *:xx+
-NSUBST: b = 1:+ / *:xx+
+NAME:    nicolae_vaults_little_squares_5
+TAGS:    vaults_empty allow_dup
 SHUFFLE: cd
-SUBST: c : +, d = x+
+NSUBST:  a = 1:+ / *:xx+, b = 1:+ / *:xx+, c = 1:+ / * = xxx+
+SUBST:   c = +
 MAP
 xxxxx..xx
 xxxxx..xx
@@ -1447,10 +1429,7 @@ NAME: nicolae_vaults_little_squares_6
 TAGS: vaults_empty allow_dup
 SHUFFLE: AB, CD
 SUBST: AC : +
-NSUBST: B = 1:+ / *:xx+
-NSUBST: D = 1:+ / *:xx+
-NSUBST: E = 1:+ / *:xx+
-NSUBST: F = 1:+ / *:xx+
+NSUBST: B = 1:+ / *:xx+, D = 1:+ / *:xx+, E = 1:+ / *:xx+, F = 1:+ / *:xx+
 MAP
 ...xxx..
 .(.E.C..
@@ -1511,15 +1490,15 @@ MAP
     .....
 ENDMAP
 
-NAME: nicolae_vaults_specimen_jars
-TAGS: vaults_empty
+NAME:  nicolae_vaults_specimen_jars
+TAGS:  vaults_empty
 KPROP: S = no_tele_into
 KMASK: S = opaque
 KMASK: S = no_trap_gen
 KMASK: S = no_item_gen
 # the W is because they're floating in solution in the jars, you see
-KFEAT: S = W
 KMONS: S = 0 / 9 / 8
+KFEAT: S = W
 MAP
 .............
 .nnn.nnn.nnn.
@@ -1528,11 +1507,13 @@ MAP
 .............
 ENDMAP
 
-NAME: nicolae_vaults_back_hallway
-TAGS: vaults_empty
+NAME:   nicolae_vaults_back_hallway
+TAGS:   vaults_empty
+NSUBST: M = 1:M... / *:.
+: decorative_floor(_G, 'M', "mop and bucket")
 MAP
 .....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.....
-.....x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.....
+.....x.x.x.x.x.x.x.xMxMxMx.x.x.x.x.x.x.x.....
 ..(..+.................................+..(..
 .....x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.....
 .....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.....

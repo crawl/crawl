@@ -24,7 +24,7 @@ AbilityRegion::AbilityRegion(const TileRegionInit &init) : GridRegion(init)
 
 void AbilityRegion::activate()
 {
-    if (your_talents(false, true).size() == 0)
+    if (your_talents(true).size() == 0)
     {
         no_ability_msg();
         flush_prev_message();
@@ -44,8 +44,7 @@ void AbilityRegion::draw_tag()
         return;
 
     const ability_type ability = (ability_type) idx;
-    const string failure = failure_rate_to_string(get_talent(ability,
-                                                             false).fail);
+    const string failure = failure_rate_to_string(get_talent(ability).fail);
     string desc = make_stringf("%s    (%s)",
                                ability_name(ability).c_str(), failure.c_str());
     draw_desc(desc.c_str());
@@ -65,10 +64,7 @@ int AbilityRegion::handle_mouse(wm_mouse_event &event)
     {
         m_last_clicked_item = item_idx;
         tiles.set_need_redraw();
-        // TODO get_talent returns ABIL_NON_ABILITY if you are confused,
-        // but not if you're silenced/penanced, so you only get a message in the
-        // latter case. We'd like these three cases to behave similarly.
-        talent tal = get_talent(ability, true);
+        talent tal = get_talent(ability);
         if (tal.which == ABIL_NON_ABILITY || !activate_talent(tal))
             flush_input_buffer(FLUSH_ON_FAILURE);
         return CK_MOUSE_CMD;
@@ -212,7 +208,7 @@ void AbilityRegion::update()
 
     const unsigned int max_abilities = min(get_max_slots(), mx*my);
 
-    vector<talent> talents = your_talents(false, true);
+    vector<talent> talents = your_talents(true);
     if (talents.empty())
         return;
 

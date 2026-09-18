@@ -22,6 +22,11 @@ Demonspawn
 Los semidemonios son medio humano, medio demonio. Adquieren poderosas
 mutaciones demoníacas a medida que se desarrollan.
 %%%%
+Djinni
+
+Los genios son espíritus siempre-quemándose. Aprenden hechizos sin libros y
+lanzarlos por usando sus propios fuegos.
+%%%%
 Draconian
 
 Los draconianos son híbridos versátiles. Alcanzan la madurez en el nivel 7 y
@@ -29,8 +34,13 @@ desarrollan un color.
 %%%%
 Felid
 
-Estos gatos son sentientes, pero son incapaces de manipular objetos de una
-forma avanzada o de usar armaduras o armas.
+Estos gatos tienen muchas vidas y son sentientes, pero son incapaces de manipular
+objetos de una forma avanzada o de usar armaduras o armas.
+%%%%
+Gargoyle
+
+Hechos de piedra viviendo, gárgolas son en sintonía con la tierra. Tienen salud
+baja, pero sus cuerpos son incredíblemente duros.
 %%%%
 Halfling
 
@@ -65,7 +75,8 @@ cualquier forma de combate, tanto cuerpo a cuerpo como a distancia.
 Mummy
 
 Una figura no-muerta cubierta en vendas y fluidos de embalsamado, obligada a
-caminar por una antigua maldición.
+caminar por una antigua maldición. Tienen fe innata y son expertas en nigromancia,
+pero aprenden otras habilidades lentamente. No pueden beber pociones.
 %%%%
 Naga
 

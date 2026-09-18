@@ -484,11 +484,8 @@ NAME:   kennysheep_iron_temple
 TAGS:   transparent no_rotate no_vmirror no_monster_gen
 ORIENT: centre
 MONS:   hell sentinel, iron golem
-MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
-                              pow_max = 100, delay = 10, size = 1, \
-                              delay = 10, size = 1, walk_dist = 0, \
-                              excl_rad = 0 }
-NSUBST:  } = 1:} / *.
+: single_cloud(_G, "F", "flame", false)
+NSUBST: } = 1:} / *.
 KFEAT:  B = altar_makhleb
 MAP
     .....             .....
@@ -530,7 +527,7 @@ ORIENT:  encompass
 MONS:    ancient champion / war gargoyle / hellion / tormentor / \
          crystal echidna w:2
 MONS:    ancient lich / dread lich / hell sentinel / iron giant / juggernaut
-KFEAT:   Z = zot trap
+KFEAT:   Z = trap_zot
 NSUBST:  > = 1 = { / 1 = } / 2 = >:1 .:49 / *:.
 # Always place at least one door per room, possibly wider or multiplied.
 # Variation provided across either half of the vault and per-room.
@@ -882,17 +879,18 @@ KMONS:  2} = dancing weapon ; executioner's axe good_item ego:heavy | \
 # The ones with armour get the best armour on their list.
 # Balrugs and profane servitors get weapons outside their normal purview,
 # because I wanted them here but they don't normally wield blades.
-KMONS:  3 = ancient champion ; battleaxe good_item | \
-          great sword good_item . plate armour / \
-        hell knight ; battleaxe good_item | glaive good_item | \
-          great sword good_item . plate armour / \
-        reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe \
-          good_item / \
-        war gargoyle ; lajatang good_item / \
-        fire giant ; great sword good_item ego:flaming / \
-        frost giant ; battleaxe good_item ego:freezing / \
-        balrug ; demon blade good_item / \
-        profane servitor ; demon blade good_item
+: local ba = "battleaxe good_item"
+: local gs = "great sword good_item"
+: local gl = "glaive good_item"
+: kmons("3 = ancient champion ; " .. ba .. " | " .. gs .. " . plate armour / " ..
+:           "hell knight ; " .. ba .. " | " .. gs .. " | " .. gl ..
+:                          " . plate armour / " ..
+:           "reaper ; " .. scythe() .. " good_item / " ..
+:           "war gargoyle ; lajatang good_item / " ..
+:           "fire giant ; " .. gs .. " ego:flaming / " ..
+:           "frost giant ; " .. ba .. " ego:freezing / " ..
+:           "balrug ; demon blade good_item / " ..
+:           "profane servitor ; demon blade good_item")
 KFEAT:  } = }
 NSUBST: } = } / 1
 SUBST:  S = 12233.

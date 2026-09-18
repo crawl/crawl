@@ -26,9 +26,6 @@
 
 bool player::blink_to(const coord_def& dest, bool quiet)
 {
-    // We rely on the non-generalized move_player_to_cell.
-    ASSERT(is_player());
-
     if (dest == pos())
         return false;
 
@@ -42,13 +39,8 @@ bool player::blink_to(const coord_def& dest, bool quiet)
     if (!quiet)
         canned_msg(MSG_YOU_BLINK);
 
-    stop_delay(true);
-
-    const coord_def origin = pos();
-    move_player_to_grid(dest, false);
-
-    if (!cell_is_solid(origin))
-        place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), this);
+    place_cloud(CLOUD_TLOC_ENERGY, pos(), 1 + random2(3), this);
+    move_to(dest, MV_TRANSLOCATION);
 
     return true;
 }
@@ -66,40 +58,35 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
     if (dest == pos())
         return false;
 
-    bool was_constricted = false;
     const string verb = (jump ? mons_genus(type) == MONS_FROG ? "hop" : "leap" : "blink");
 
     if (is_constricted())
     {
-        was_constricted = true;
-        stop_being_constricted(false, "blinks");
+        // Constriction escape will already produce an appropriate message.
+        quiet = true;
+        stop_being_constricted(false, verb + "s");
     }
 
     if (!quiet)
     {
-        string message = " " + conj_verb(verb)
-                         + (was_constricted ? " free!" : "!");
+        string message = " " + conj_verb(verb) + "!";
         simple_monster_message(*this, message.c_str());
     }
 
-    if (!(flags & MF_WAS_IN_VIEW))
-        seen_context = jump ? SC_LEAP_IN : SC_TELEPORT_IN;
-
     const coord_def oldplace = pos();
-    if (!move_to_pos(dest, true))
+    if (!move_to(dest, MV_TRANSLOCATION, true))
         return false;
 
     // Leave a cloud.
-    if (!props.exists(FAKE_BLINK_KEY) && !cell_is_solid(oldplace))
+    if (!props.exists(FAKE_BLINK_KEY))
     {
         place_cloud(jump ? CLOUD_DUST : CLOUD_TLOC_ENERGY,
                     oldplace, 1 + random2(3), this);
     }
 
     check_redraw(oldplace);
-    apply_location_effects(oldplace);
 
-    mons_relocated(this);
+    finalise_movement();
 
     return true;
 }
@@ -237,8 +224,7 @@ void monster_teleport(monster* mons, bool instan, bool silent, bool away_from_pl
             if (!silent)
                 simple_monster_message(*mons, " looks slightly unstable.");
 
-            mons->add_ench(mon_enchant(ENCH_TP, 0, agent,
-                                       random_range(20, 30)));
+            mons->add_ench(mon_enchant(ENCH_TP, agent, random_range(20, 30)));
         }
 
         return;
@@ -264,37 +250,24 @@ void monster_teleport(monster* mons, bool instan, bool silent, bool away_from_pl
     const coord_def oldplace = mons->pos();
 
     // Move it to its new home.
-    mons->move_to_pos(newpos);
+    mons->move_to(newpos, MV_TRANSLOCATION, true);
 
-    const bool now_visible = you.see_cell(newpos);
-    if (!silent && now_visible)
+    if (!silent && you.can_see(*mons))
     {
         if (was_seen)
             simple_monster_message(*mons, " reappears nearby!");
         else
-        {
-            // Even if it doesn't interrupt an activity (the player isn't
-            // delayed, the monster isn't hostile) we still want to give
-            // a message.
-            activity_interrupt_data ai(mons, SC_TELEPORT_IN);
-            if (!interrupt_activity(activity_interrupt::see_monster, ai))
-                simple_monster_message(*mons, " appears out of thin air!");
-        }
+            mprf("%s appears out of thin air!", mons->name(DESC_A).c_str());
     }
-
-    if (mons->visible_to(&you) && now_visible)
-        handle_seen_interrupt(mons);
 
     // Leave a purple cloud.
     // XXX: If silent is true, this is not an actual teleport, but
     //      the game moving a monster out of the way.
-    if (!silent && !cell_is_solid(oldplace))
+    if (!silent)
         place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3), mons);
 
     mons->check_redraw(oldplace);
-    mons->apply_location_effects(oldplace);
-
-    mons_relocated(mons);
+    mons->finalise_movement();
 
     shake_off_monsters(mons);
 }
@@ -369,8 +342,6 @@ void blink_other_close(actor* victim, const coord_def &target)
 {
     actor* caster = actor_at(target);
     if (!caster)
-        return;
-    if (is_sanctuary(you.pos()))
         return;
     coord_def dest = random_space_weighted(victim, caster, true);
     if (!in_bounds(dest))

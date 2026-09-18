@@ -176,6 +176,11 @@ mesh1
 mesh2
 mesh3
 
+blade_floor0 FLOOR_BLADE
+blade_floor1
+blade_floor2
+blade_floor3
+
 mud0 FLOOR_MUD
 mud1
 mud2
@@ -186,28 +191,27 @@ ice1
 ice2
 ice3
 
-%weight 16
+%weight 24
 lair0 FLOOR_LAIR
 lair1
+%weight 12
 lair2
 lair3
 lair4
-%weight 8
-lair0b
-lair1b
-lair2b
-lair3b
-lair4b
-%weight 6
 lair5
+%weight 6
 lair6
-%weight 3
-lair5b
-lair6b
-%weight 2
 lair7
+lair8
+lair9
+%weight 2
+lair10
+lair11
+lair12
+lair13
 %weight 1
-lair7b
+lair14
+lair15
 
 %weight 10
 orc0 FLOOR_ORC
@@ -324,6 +328,27 @@ rect_gray0 FLOOR_VAULT
 rect_gray1
 rect_gray2
 rect_gray3
+
+%weight 1
+metal_silver0 FLOOR_METAL_SILVER
+metal_silver1
+metal_silver2
+metal_silver3
+
+metal_gold0 FLOOR_METAL_GOLD
+metal_gold1
+metal_gold2
+metal_gold3
+
+metal_infernal0 FLOOR_METAL_INFERNAL
+metal_infernal1
+metal_infernal2
+metal_infernal3
+
+crystal0 FLOOR_CRYSTAL
+crystal1
+crystal2
+crystal3
 
 %weight 10
 depthstone_floor0 FLOOR_DEPTHSTONE
@@ -499,21 +524,73 @@ crystal_floor4
 %weight 1
 crystal_floor5
 
+%weight 8
+mystic_chasm0 FLOOR_MYSTIC_CHASM
+mystic_chasm1
+mystic_chasm2
+mystic_chasm3
+%weight 6
+mystic_chasm4
+mystic_chasm5
+%weight 4
+mystic_chasm6
+mystic_chasm7
+
+%weight 14
+necro_squares00 FLOOR_NECRO_SQUARES
+necro_squares01
+necro_squares02
+necro_squares03
+%weight 6
+necro_squares04
+necro_squares05
+necro_squares06
+necro_squares07
+%weight 4
+necro_squares08
+necro_squares09
+%weight 2
+necro_squares10
+necro_squares11
+necro_squares12
+necro_squares13
+necro_squares14
+necro_squares15
+
 %sdir dngn/floor/grass
-%weight 15
+%weight 12
 grass0 FLOOR_GRASS
 grass1
+%weight 6
 grass2
+grass3
+grass4
+grass5
+%weight 2
+grass_flowers0
+grass_flowers1
+grass_flowers2
+grass_flowers3
 %weight 1
-grass_flowers_blue1
-grass_flowers_blue2
-grass_flowers_blue3
-grass_flowers_red1
-grass_flowers_red2
-grass_flowers_red3
-grass_flowers_yellow1
-grass_flowers_yellow2
-grass_flowers_yellow3
+grass_flowers4
+grass_flowers5
+
+%weight 12
+grass-dark0 FLOOR_GRASS_DARK
+grass-dark1
+%weight 6
+grass-dark2
+grass-dark3
+grass-dark4
+grass-dark5
+%weight 2
+grass-dark_flowers0
+grass-dark_flowers1
+grass-dark_flowers2
+grass-dark_flowers3
+%weight 1
+grass-dark_flowers4
+grass-dark_flowers5
 
 grass_n HALO_GRASS
 grass_ne
@@ -525,11 +602,54 @@ grass_w
 grass_nw
 grass_full
 
-grass0-dirt-mix1 FLOOR_GRASS_DIRT_MIX
-grass0-dirt-mix2
-grass0-dirt-mix3
-
 %sdir dngn/floor
+sprouting_stone00 FLOOR_SPROUTING_STONE
+sprouting_stone01
+sprouting_stone02
+sprouting_stone03
+sprouting_stone04
+sprouting_stone05
+sprouting_stone06
+sprouting_stone07
+sprouting_stone08
+sprouting_stone09
+sprouting_stone10
+sprouting_stone11
+
+%weight 12
+sprouting_squares00 FLOOR_SPROUTING_SQUARES
+sprouting_squares01
+%weight 8
+sprouting_squares02
+sprouting_squares03
+sprouting_squares04
+sprouting_squares05
+%weight 4
+sprouting_squares06
+sprouting_squares07
+sprouting_squares08
+sprouting_squares09
+%weight 2
+sprouting_squares10
+sprouting_squares11
+
+%weight 10
+sprouting_ruin00 FLOOR_SPROUTING_RUIN
+sprouting_ruin01
+%weight 8
+sprouting_ruin02
+sprouting_ruin03
+sprouting_ruin04
+sprouting_ruin05
+%weight 6
+sprouting_ruin06
+sprouting_ruin07
+sprouting_ruin08
+sprouting_ruin09
+%weight 4
+sprouting_ruin10
+sprouting_ruin11
+
 floor_nerves0 FLOOR_NERVES FLOOR_NERVES_RED
 floor_nerves1
 floor_nerves2
@@ -539,10 +659,14 @@ floor_nerves5
 floor_nerves6
 
 %variation FLOOR_NERVES blue
-%hue 0 240
-%hue 15 255
-%hue 17 257
-%hue 18 258
+%hue 0 225
+%hue 15 218
+%hue 17 219
+%hue 18 215
+%lum 0 3
+%lum 15 3
+%lum 17 3
+%lum 18 3
 %repeat FLOOR_NERVES FLOOR_NERVES_BLUE
 %resetcol
 
@@ -841,29 +965,35 @@ gauntlet2
 gauntlet3
 
 %weight 10
-%domino 0
 crypt_domino_1a FLOOR_CRYPT
 %weight 2
 crypt_domino_1b
+%domino FLOOR_CRYPT 1
+crypt_domino_2a FLOOR_CRYPT_B
+%domino FLOOR_CRYPT 2
+crypt_domino_3a FLOOR_CRYPT_C
+%domino FLOOR_CRYPT 3
 %weight 10
-%domino 1
-crypt_domino_2a
-%domino 2
-crypt_domino_3a
-%domino 3
-crypt_domino_4a
+crypt_domino_4a FLOOR_CRYPT_D
 %weight 2
 crypt_domino_4b
-%weight 10
-%domino 4
-crypt_domino_5a
-%domino 5
-crypt_domino_6a
-%domino 6
-crypt_domino_7a
-%domino 7
-crypt_domino_8a
-%domino 0
+%domino FLOOR_CRYPT 4
+crypt_domino_5a FLOOR_CRYPT_E
+%domino FLOOR_CRYPT 5
+crypt_domino_6a FLOOR_CRYPT_F
+%domino FLOOR_CRYPT 6
+crypt_domino_7a FLOOR_CRYPT_G
+%domino FLOOR_CRYPT 7
+crypt_domino_8a FLOOR_CRYPT_H
+
+zot_diamonds0 FLOOR_ZOT_DIAMONDS
+zot_diamonds1
+zot_diamonds2
+zot_diamonds3
+zot_diamonds4
+zot_diamonds5
+zot_diamonds6
+zot_diamonds7
 
 iron0 FLOOR_IRON
 %weight 1
@@ -903,6 +1033,11 @@ frozen9
 frozen10
 frozen11
 frozen12
+
+seismorock0 FLOOR_SEISMOROCK
+seismorock1
+seismorock2
+seismorock3
 
 %lum 0 -5
 %weight 50
@@ -1001,6 +1136,15 @@ demonic_red9
 %resetcol
 
 %weight 10
+swirlstone0 FLOOR_SWIRLSTONE
+swirlstone1
+swirlstone2
+swirlstone3
+swirlstone4
+swirlstone5
+swirlstone6
+swirlstone7
+
 green_bones01 FLOOR_GREEN_BONES
 green_bones02
 green_bones03
@@ -1015,15 +1159,48 @@ green_bones10
 green_bones11
 green_bones12
 
-woodground01 FLOOR_WOODGROUND
-woodground02
-woodground03
-woodground04
-woodground05
-woodground06
-woodground07
-woodground08
-woodground09
+necropolis_squares_1 FLOOR_NECROPOLIS_SQUARES
+necropolis_squares_2
+necropolis_squares_3
+necropolis_squares_4
+necropolis_square_grass_1 FLOOR_NECROPOLIS_SQUARE_GRASS
+necropolis_square_grass_2
+necropolis_square_grass_3
+necropolis_square_grass_4
+necropolis_grass_1 FLOOR_NECROPOLIS_GRASS
+necropolis_grass_2
+necropolis_grass_3
+necropolis_grass_4
+
+%weight 24
+floor_gulch0 FLOOR_GULCH
+floor_gulch1
+floor_gulch2
+floor_gulch3
+%weight 4
+floor_gulch4
+floor_gulch5
+%weight 3
+floor_gulch6
+%weight 2
+floor_gulch7
+floor_gulch8
+%weight 1
+floor_gulch9
+
+%weight 7
+floor_gulch_trash0 FLOOR_GULCH_TRASH
+floor_gulch_trash1
+floor_gulch_trash2
+%weight 3
+floor_gulch_trash3
+floor_gulch_trash4
+floor_gulch_trash5
+%weight 2
+floor_gulch_trash6
+floor_gulch_trash7
+
+floor_gulch_catalyst FLOOR_GULCH_CATALYST
 
 studio0 FLOOR_STUDIO
 studio1
@@ -1078,6 +1255,7 @@ endless_salt3
 %sdir dngn/floor
 ## from here on multiple tile definitions are CHANGEABLE, i.e. they may
 ## change from turn to turn
+%weight 1
 lava00 DNGN_LAVA
 lava01
 lava02
@@ -1130,19 +1308,49 @@ shallow_water DNGN_SHALLOW_WATER
 shallow_water2
 shallow_water_disturbance DNGN_SHALLOW_WATER_DISTURBANCE
 shallow_water_disturbance2
+%variation DNGN_DEEP_WATER green
+%variation DNGN_DEEP_WATER lightgreen
 %weight 2
 deep_water_murky DNGN_DEEP_WATER_MURKY
 %weight 1
 deep_water_murky2
+%variation DNGN_SHALLOW_WATER green
+%variation DNGN_SHALLOW_WATER lightgreen
 %weight 3
 shallow_water_murky DNGN_SHALLOW_WATER_MURKY
 %weight 1
 shallow_water_murky2
+%variation DNGN_SHALLOW_WATER_DISTURBANCE green
+%variation DNGN_SHALLOW_WATER_DISTURBANCE lightgreen
 shallow_water_murky_disturbance DNGN_SHALLOW_WATER_MURKY_DISTURBANCE
 shallow_water_murky_disturbance2
+%weight 120
+starwater_00 DNGN_STARWATER
+%weight 60
+starwater_01
+%weight 30
+starwater_02
+%weight 15
+starwater_03
+%weight 3
+starwater_04
+starwater_05
+starwater_06
+starwater_07
+%weight 1
+starwater_08
+starwater_09
+starwater_10
+starwater_11
 
 toxic_bog1 DNGN_TOXIC_BOG
 toxic_bog2
+toxic_bog3
+toxic_bog4
+toxic_bog5
+toxic_bog6
+toxic_bog7
+toxic_bog8
 
 grey_dirt_bb SHORE_N
 grey_dirt_bl SHORE_W
@@ -1159,6 +1367,8 @@ shallow_bord_bl DNGN_WAVE_SW
 shallow_bord_lft DNGN_WAVE_W
 shallow_bord_tl DNGN_WAVE_NW
 
+%variation DNGN_WAVE_N green
+%variation DNGN_WAVE_N lightgreen
 murky_bord_top MURKY_WAVE_N
 murky_bord_tr MURKY_WAVE_NE
 murky_bord_rgt MURKY_WAVE_E

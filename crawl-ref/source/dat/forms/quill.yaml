@@ -1,0 +1,10 @@
+enum: quill
+description: covered in sharp quills.
+equivalent_mons: player
+skill: {min: 0, max: 7}
+talisman: quill
+melds: [aux]
+special_damage: 1d2+(6/7)
+special_damage_name: Quill Dmg
+fakemuts:
+  - ["quills", "Your quills sometimes injure those who attack you in melee."]

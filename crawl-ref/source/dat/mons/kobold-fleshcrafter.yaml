@@ -1,0 +1,21 @@
+name: "kobold fleshcrafter"
+glyph: {char: "K", colour: lightmagenta}
+flags: [speaks, warm_blood, fast_regen]
+resists: {poison: 1}
+exp: 955
+species: kobold
+will: 60
+attacks:
+ - {type: hit, damage: 24}
+ - {type: tentacle_slap, flavour: poison, damage: 16}
+hd: 13
+hp_10x: 660
+ac: 8
+ev: 16
+spells: kobold_fleshcrafter
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: small
+shape: humanoid

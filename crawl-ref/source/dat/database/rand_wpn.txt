@@ -321,9 +321,13 @@ _valour_name_
 
 Action
 
+Conatus
+
 Conscience
 
 Courage
+
+Daring
 
 Defiance
 
@@ -354,8 +358,6 @@ Tenacity
 True Grit
 
 Valiance
-
-Valour
 
 Watchfulness
 
@@ -451,6 +453,8 @@ Priest
 Queen
 
 Saviour
+
+Scapegrace
 
 Scavenger
 
@@ -892,7 +896,7 @@ Chance
 
 Change
 
-Chaos
+Confusion
 
 Constant Reorganisation
 
@@ -927,6 +931,8 @@ Incongruity
 Mayhem
 
 Revolt
+
+True Chaos
 
 Tumult
 
@@ -1360,8 +1366,9 @@ Stoicism
 
 Syndicalism
 
-the Ego
+Theistic Finitism
 
+the Ego
 %%%%
 _science_name_
 
@@ -1578,6 +1585,8 @@ Doors
 Entrepreneurial Spirit
 
 False Hope
+
+Fulguration
 
 Gin and Tonic
 

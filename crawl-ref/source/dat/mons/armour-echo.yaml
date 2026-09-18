@@ -1,6 +1,7 @@
 name: "armour echo"
 glyph: {char: "[", colour: green}
 flags: [flies, unblindable]
+exp: 800
 holiness: [nonliving]
 will: invuln
 attacks:

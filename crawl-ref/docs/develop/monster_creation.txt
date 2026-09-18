@@ -102,6 +102,11 @@ These files handle the monster's visuals and other fluff. Become pretty today!
         - Place it in an appropriate subdirectory.
         - If you can't think of an appropriate subdir, leave it in /mon/ and it'll
         eventually be sorted.
+- /source/rltiles/dc-mon.txt
+	-Find the line %sdir mon/<subdirectory>, based on the subdirectory you placed
+	the tile in.
+	-Add an entry with the name of the tile and the monster's enum somewhere below
+	that line. 
 - /source/rltiles/dc-corpse.txt
         - Add an entry so the game will generate a squashed & bloody version
         of the monster's tile for corpses.

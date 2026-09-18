@@ -40,6 +40,18 @@ tree_dead3
 tree_dead4
 tree_dead5
 
+%variation DNGN_TREE blue
+tree_of_woe1 DNGN_TREE_OF_WOE
+tree_of_woe2
+tree_of_woe3
+tree_of_woe4
+
+%variation DNGN_TREE lightblue
+dead_tree_of_woe1 DNGN_DEAD_TREE_OF_WOE
+dead_tree_of_woe2
+dead_tree_of_woe3
+dead_tree_of_woe4
+
 %weight 10
 mangrove1 DNGN_MANGROVE
 %weight 8
@@ -337,13 +349,23 @@ depths_crumbled_column DEPTHS_CRUMBLED_COLUMN
 # Statues in Dis
 statue_iron DNGN_STATUE_IRON
 
+# The zot orb statues.
+zot_fire_orb_statue DNGN_ZOT_FIRE_STATUE
+zot_winter_orb_statue DNGN_ZOT_WINTER_STATUE
+zot_entropy_orb_statue DNGN_ZOT_ENTROPY_STATUE
+
 ## Features only used in certain minivaults
 %sdir dngn/vaults
+
+##
 
 ## Renamed statues for undead vaults: gravestones
 gravestone_blank DNGN_GRAVESTONE
 gravestone_writing1
 gravestone_writing2
+necropolis_gravestone_0 DNGN_NECROPOLIS_GRAVESTONE
+necropolis_gravestone_1
+necropolis_gravestone_2
 zshrine DNGN_ZONGULDROK_SHRINE
 
 # start TAG_MAJOR_VERSION == 34
@@ -353,6 +375,11 @@ teleporter_ice_cave DNGN_TELEPORTER_ICE_CAVE
 ## golden statues for Gozag and TSO
 golden_statue_1 DNGN_GOLDEN_STATUE
 golden_statue_2
+golden_iron_statue DNGN_GOLDEN_IRON_STATUE
+
+## blue iron statues for Oka
+oka_iron_statue_1 DNGN_OKA_IRON_STATUE
+oka_iron_statue_2
 
 #### Random tile animation for statuary starts here.
 
@@ -462,6 +489,10 @@ djembe_set DNGN_DJEMBE
 ensign_beogh DNGN_ENSIGN_BEOGH
 ensign_dark DNGN_ENSIGN_DARK
 ensign_gehenna DNGN_ENSIGN_GEHENNA
+bottled_spirits DNGN_BOTTLED_SPIRITS
+assortment_of_trash0 DNGN_ASSORTMENT_OF_TRASH
+assortment_of_trash1
+assortment_of_trash2
 ## preferably have more of these
 %weight 10
 skull_pike_1 DNGN_SKULL_PIKE
@@ -480,6 +511,10 @@ fountain_xom DNGN_FOUNTAIN_NOVELTY_XOM
 ##
 stone_smooth_beogh_0 STONE_SMOOTH_WALL_BEOGH
 stone_smooth_beogh_1
+gilded_reliquary DNGN_GILDED_RELIQUARY
+
+mould_patch_gulch0 DNGN_MOULD_PATCH_GULCH
+mould_patch_gulch1
 
 %sdir dngn/wall
 spike_launcher DNGN_SPIKE_LAUNCHER
@@ -512,6 +547,7 @@ harlequin3
 harlequin4
 devourer DNGN_TRAP_DEVOURER
 dispersal DNGN_TRAP_DISPERSAL
+dispersal_inactive DNGN_TRAP_DISPERSAL_INACTIVE
 teleport DNGN_TRAP_TELEPORT
 teleport_permanent DNGN_TRAP_TELEPORT_PERMANENT
 zot DNGN_TRAP_ZOT
@@ -550,6 +586,12 @@ escape_hatch_down DNGN_ESCAPE_HATCH_DOWN
 escape_hatch_up DNGN_ESCAPE_HATCH_UP
 shoals_stairs_down DNGN_SHOALS_STAIRS_DOWN
 shoals_stairs_up DNGN_SHOALS_STAIRS_UP
+metal_stairs_down DNGN_METAL_STAIRS_DOWN
+metal_stairs_up DNGN_METAL_STAIRS_UP
+zot_stairs_down DNGN_ZOT_STAIRS_DOWN
+zot_stairs_up DNGN_ZOT_STAIRS_UP
+slimy_stairs_down DNGN_SLIMY_STAIRS_DOWN
+slimy_stairs_up DNGN_SLIMY_STAIRS_UP
 enter DNGN_ENTER
 %rim 1
 return DNGN_RETURN
@@ -651,10 +693,15 @@ exit_pandemonium DNGN_EXIT_PANDEMONIUM
 exit_pandemonium_flickering
 
 # portal vault entrances
+necropolis_portal DNGN_PORTAL_NECROPOLIS
+necropolis_gone DNGN_NECROPOLIS_GONE
+necropolis_exit0 DNGN_EXIT_NECROPOLIS
+necropolis_exit1
 volcano_portal DNGN_PORTAL_VOLCANO
 volcano_gone DNGN_PORTAL_VOLCANO_GONE
 volcano_exit DNGN_EXIT_VOLCANO
 sewer_portal DNGN_PORTAL_SEWER
+sewer_exit DNGN_EXIT_SEWER
 sewer_portal_rusted DNGN_PORTAL_SEWER_RUSTED
 ice_cave_portal DNGN_PORTAL_ICE_CAVE
 ice_cave_gone DNGN_PORTAL_ICE_CAVE_GONE
@@ -670,8 +717,10 @@ wizlab_portal6
 wizlab_portal7
 wizlab_gone DNGN_PORTAL_WIZLAB_GONE
 ossuary_portal DNGN_PORTAL_OSSUARY
+ossuary_exit DNGN_EXIT_OSSUARY
 ossuary_gone DNGN_PORTAL_OSSUARY_GONE
 bailey_portal DNGN_PORTAL_BAILEY
+bailey_exit DNGN_EXIT_BAILEY
 bailey_gone DNGN_PORTAL_BAILEY_GONE
 gauntlet_portal DNGN_PORTAL_GAUNTLET
 gauntlet_gone DNGN_PORTAL_GAUNTLET_GONE
@@ -682,7 +731,12 @@ bazaar_gone DNGN_PORTAL_BAZAAR_GONE
 zig_portal DNGN_PORTAL_ZIGGURAT
 zig_used DNGN_PORTAL_ZIGGURAT_GONE
 desolation_portal DNGN_PORTAL_DESOLATION
+desolation_exit DNGN_EXIT_DESOLATION
 desolation_portal_closed DNGN_PORTAL_DESOLATION_GONE
+gulch_portal DNGN_PORTAL_GULCH
+gulch_exit DNGN_EXIT_GULCH
+gulch_portal_rusted DNGN_PORTAL_GULCH_GONE
+crucible_exit DNGN_EXIT_CRUCIBLE
 
 portal_unknown DNGN_UNKNOWN_PORTAL
 
@@ -797,6 +851,8 @@ dry_fountain DNGN_DRY_FOUNTAIN
 %repeat DNGN_DRY_FOUNTAIN DNGN_DRY_FOUNTAIN_WHITE
 %resetcol
 
+decorative_floor DNGN_DECORATIVE_FLOOR
+
 %weight 8
 cache_of_fruit_0 DNGN_CACHE_OF_FRUIT
 cache_of_fruit_1
@@ -823,6 +879,12 @@ teleporter DNGN_TELEPORTER
 
 transporter DNGN_TRANSPORTER
 transporter_landing_site DNGN_TRANSPORTER_LANDING
+
+mould_patch0 DNGN_MOULD_PATCH
+mould_patch1
+
+purified_mutation_catalyst DNGN_PURIFIED_MUTATION_CATALYST
+empty_mutation_catalyst DNGN_EMPTY_MUTATION_CATALYST
 
 #### Automatic animation ends here.
 ## Miscellaneous entries that get drawn on the background.
@@ -970,6 +1032,7 @@ ghost_threat_easy THREAT_GHOST_EASY
 ghost_threat_tough THREAT_GHOST_TOUGH
 ghost_threat_nasty THREAT_GHOST_NASTY
 monster_threat_unusual THREAT_UNUSUAL
+remembered_invis REMEMBERED_INVIS
 
 travel_exclusion TRAVEL_EXCLUSION_BG
 travel_exclusion_centre TRAVEL_EXCLUSION_CENTRE_BG
@@ -1042,3 +1105,6 @@ vine_corner_SW VINE_OVERLAY_SW
 %blank 32 32
 %finish HIGHLIGHT_BRIGHT_YELLOW
 %syn RAY_MULTI
+
+%sdir effect
+east_wind OVERLAY_EAST_WIND

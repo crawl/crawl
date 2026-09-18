@@ -180,7 +180,13 @@ Kraken
 
 Leogriff
 
+Nuckelavee
+
 Pooka
+
+Quinotaur
+
+Sea Goat
 
 Skiapode
 
@@ -247,6 +253,8 @@ Bakunawa
 Minokawa
 
 # Unlikely hybrids
+
+Armchairtaur
 
 Giraffataur
 
@@ -396,7 +404,7 @@ Beauty
 
 Birdsong
 
-Brilliance
+Cleverness
 
 Contentment
 
@@ -504,6 +512,8 @@ Disguise
 
 Fashionability
 
+Fullness
+
 Grace
 
 Gravitas
@@ -519,8 +529,6 @@ Privacy
 Protective Custody
 
 Resilience
-
-Resonance
 
 Shadows and Fog
 
@@ -612,6 +620,9 @@ the Onion
 
 the Pink Corner
 
+# Schlock Mercenary, March 5, 2010
+the Plethaurus
+
 the Road Less Travelled
 
 the True Pharaoh
@@ -678,6 +689,8 @@ the Gusle
 
 the Harp
 
+the Kazoo
+
 the Kettle-Drum
 
 the Lute
@@ -737,7 +750,7 @@ Chill Winds
 
 Cloud Cover
 
-Dust Devil
+Dust Devils
 
 Howling Wind
 

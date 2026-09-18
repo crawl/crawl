@@ -81,7 +81,7 @@ int god_favour_rank(god_type which_god)
     else if (which_god == GOD_USKAYAW)
         return _invocations_level();
     else
-        return _piety_level(you.piety);
+        return _piety_level(you.raw_piety);
 }
 
 static string _describe_favour(god_type which_god)
@@ -102,7 +102,7 @@ static string _describe_favour(god_type which_god)
     const string godname = god_name(which_god);
     switch (god_favour_rank(which_god))
     {
-        case 7:  return "A prized avatar of " + godname;
+        case 7:  return "A prized avatar of " + godname + ".";
         case 6:  return "A favoured servant of " + godname + ".";
         case 5:
 
@@ -145,7 +145,7 @@ static const char *divine_title[][8] =
     {"Tormented",          "Purveyor of Pain",       "Pupil of Sorrows",        "Merchant of Misery",
      "Scholar of Souls",   "Artisan of Death",       "Demagogue of Despair",    "Lord of Darkness"},
 
-    // Yredelemnul -- ferverent death knight theme.
+    // Yredelemnul -- fervent death knight theme.
     {"Traitor",            "Torchbearer",            "Despoiler",               "Black Crusader",
      "Fallen @Genus@",     "Harbinger of Doom",      "Inexorable Tide",         "Bringer of Blasphemy"},
 
@@ -319,20 +319,24 @@ static const map<monster_type, vector<ancestor_upgrade> > ancestor_data =
         { 1,  "Shield" },
         { 1,  "Chain mail (+AC)" },
         { 15, "Broad axe (flame)" },
+        { 15, "Binding melee attacks" },
         { 19, "Tower shield (reflect)" },
-        { 19, "Haste" },
+        { 19, "Bolster" },
         { 24, "Broad axe (speed)" },
+        { 24, "Increased hit points" },
       }
     },
-    { MONS_ANCESTOR_BATTLEMAGE,
-      { { 1,  "Quarterstaff" },
-        { 1,  "Throw Frost" },
+    { MONS_ANCESTOR_ELEMENTALIST,
+      { { 1,  "Staff" },
+        { 1,  "Shock" },
         { 1,  "Stone Arrow" },
-        { 1,  "Increased melee damage" },
+        { 1,  "Deflect Missiles" },
+        { 15, "Iceblast" },
         { 15, "Bolt of Magma" },
-        { 19, "Lajatang (freeze)" },
-        { 19, "Haste" },
-        { 24, "Lehudib's Crystal Spear" },
+        { 19, "Lee's Rapid Deconstruction" },
+        { 19, "Increased spell damage" },
+        { 24, "Plasma Beam" },
+        { 24, "Permafrost Eruption" },
       }
     },
     { MONS_ANCESTOR_HEXER,
@@ -508,6 +512,7 @@ static formatted_string _god_wrath_description(god_type which_god)
 {
     formatted_string desc;
 
+    _add_par(desc, get_god_forbids(which_god));
     _add_par(desc, get_god_dislikes(which_god));
     _add_par(desc, _describe_god_wrath_causes(which_god));
     _add_par(desc, getLongDescription(god_name(which_god) + " wrath"));
@@ -711,7 +716,7 @@ static formatted_string _describe_god_powers(god_type which_god)
 {
     formatted_string desc;
 
-    int piety = you_worship(which_god) ? you.piety : 0;
+    int piety = you_worship(which_god) ? you.piety() : 0;
 
     desc.textcolour(LIGHTGREY);
     const char *header = "Granted powers:";
@@ -864,7 +869,7 @@ static formatted_string _describe_god_powers(god_type which_god)
                                : "some of Vehumet's most lethal spells";
             desc.cprintf("You can memorise %s.\n", offer);
         }
-        else if (!you.has_mutation(MUT_INNATE_CASTER))
+        else
         {
             desc.textcolour(DARKGREY);
             desc.cprintf("You can memorise some of Vehumet's spells.\n");
@@ -948,6 +953,14 @@ static formatted_string _describe_god_powers(god_type which_god)
             continue;
         }
 
+        if (power.abil == ABIL_MAKHLEB_BRAND_SELF_1
+            && !makhleb_mark_name().empty())
+        {
+                desc.textcolour(god_colour(which_god));
+                desc.cprintf("You have been branded with the %s.\n", makhleb_mark_name().c_str());
+                continue;
+        }
+
         string buf = power.general;
 
         // Skip listing powers with no description (they are intended to be hidden)
@@ -1001,7 +1014,7 @@ static formatted_string _god_overview_description(god_type which_god)
         desc.cprintf("\nTitle  - ");
         desc.textcolour(god_colour(which_god));
 
-        string title = god_title(which_god, you.species, you.piety);
+        string title = god_title(which_god, you.species, you.raw_piety);
         desc.cprintf("%s", title.c_str());
     }
 
@@ -1141,7 +1154,7 @@ static void _send_god_ui(god_type god, bool is_altar)
 
     tiles.json_write_string("description", getLongDescription(god_name(god)));
     if (you_worship(god))
-        tiles.json_write_string("title", god_title(god, you.species, you.piety));
+        tiles.json_write_string("title", god_title(god, you.species, you.piety()));
     tiles.json_write_string("favour", you_worship(god) ?
             _describe_favour(god) : _god_penance_message(god));
     tiles.json_write_string("powers_list",

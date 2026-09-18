@@ -86,7 +86,7 @@
 #---------------------------------------------------------------
 #Maxwell's Workshop       |big rooms with forge |metal
 #---------------------------------------------------------------
-#Yara's Duelist Academy   |campus               |stone and trees
+#Yara's Duellist Academy  |campus               |stone and trees
 #---------------------------------------------------------------
 #Borgnjor's Mausoleum     |split path           |tarlike
 #---------------------------------------------------------------
@@ -108,7 +108,7 @@ crawl_require("dlua/dungeon.lua")
 crawl_require('dlua/vault.lua')
 
 
-function wizlab_portal (e)
+function wizlab_portal (e, crystalise)
     local timeout_turns = crawl.random_range(600, 800)
 
     local messager =
@@ -136,10 +136,18 @@ function wizlab_portal (e)
 
     e.tags("uniq_wizlab vaults_wizlab no_item_gen no_monster_gen chance_wizlab")
 
-    -- Replace stone walls with whatever wall type the Vaults level is using.
+    -- Set up different tiles for Vaults.
     if you.in_branch("Vaults") then
-        e.subst("c = x")
+        e.subst("@ = .")
+        if crystalise == nil then
+            crystalise = false
+        end
+        if crystalise then
+            e.subst("x = b")
+            e.ftile("._O+Gmn = floor_crystal")
+        end
     end
+    e.tile("c = wall_stone_scorched")
 
     e.chance(math.floor(dgn.wizlab_chance_percent / 100 * 10000))
     -- Don't apply the chance in Vaults, since we use a Vaults room for that
@@ -206,7 +214,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
     end
     local graves = dgn.find_markers_by_prop("grave", 1)
 
-    local list_undead_types = { " zombie", " skeleton", " simulacrum" }
+    local list_undead_types = { " zombie", " draugr", " simulacrum" }
 
     local list_deriv_undead_base_mons = {
         "cyclops", "two-headed ogre", "swamp dragon",  -- tier 1
@@ -234,7 +242,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
             crawl.one_chance_in(8) then
 
             -- tier 1 spawns
-            if data.count < 8 or data.count < 15 and crawl.one_chance_in(6) then
+            if data.count < 6 or data.count < 13 and crawl.one_chance_in(6) then
                 if crawl.coinflip() then
                     monster = (list_deriv_undead_base_mons[pick_undead_base_mon]
                                .. list_undead_types[pick_undead_type])
@@ -243,7 +251,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                 end
 
             -- tier 2 spawns
-            elseif data.count < 16 or data.count < 23 and crawl.one_chance_in(4) then
+            elseif data.count < 14 or data.count < 19 and crawl.one_chance_in(4) then
                 if crawl.coinflip() then
                     pick_undead_base_mon = pick_undead_base_mon + 3
                     monster = (list_deriv_undead_base_mons[pick_undead_base_mon]
@@ -254,7 +262,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                 end
 
             -- tier 3 spawns
-            elseif data.count < 24 or crawl.x_chance_in_y(11, 14) then
+            elseif data.count < 20 or crawl.x_chance_in_y(11, 14) then
                 if crawl.coinflip() then
                     pick_undead_base_mon = pick_undead_base_mon + 6
                     monster = (list_deriv_undead_base_mons[pick_undead_base_mon]
@@ -476,7 +484,7 @@ NAME:   mu_enter_wizlab_1
 TAGS:   vaults_orient_s
 TILE:   m = dngn_transparent_wall_green
 COLOUR: m = lightgreen
-:       wizlab_portal(_G)
+: wizlab_portal(_G, true)
 MAP
     wwwww
    wwwwwww
@@ -494,8 +502,7 @@ TAGS:    vaults_orient_s
 SHUFFLE: tU
 TILE:    m = dngn_transparent_wall_green
 COLOUR:  m = lightgreen
-TILE:    c = wall_stone_gray
-:        wizlab_portal(_G)
+:  wizlab_portal(_G, true)
 MAP
 .................
 .bbbbbbbmbbbbbbb.
@@ -530,8 +537,7 @@ KPROP:  '?! = no_tele_into
 SUBST:  ' = .
 TILE:   n = dngn_transparent_stone_magenta
 COLOUR: n = lightmagenta
-TILE:   c = wall_stone_gray
-:       wizlab_portal(_G)
+: wizlab_portal(_G, false)
 MAP
  ccccccccc
 cc''!'?''cc
@@ -550,16 +556,15 @@ cc!n.n.n?cc
 ENDMAP
 
 NAME:   mu_enter_wizlab_4
-TAGS:   vaults_orient_s
-KFEAT:  ! = floor
-COLOUR: ! = magenta
-FTILE:  !O = floor_rough_magenta
-:       wizlab_portal(_G, false)
+TAGS:   vaults_orient_s no_pool_fixup
+COLOUR: ' = magenta
+FTILE:  'O = floor_rough_magenta
+: wizlab_portal(_G, true)
 MAP
     xxxxx
-    w!!!x
-   ww!O!x
-  www!!!x
+    w'''x
+   ww'O'x
+  www'''x
  www..www
 www..www
 ww..www
@@ -575,8 +580,7 @@ COLOUR: W = mutagenic
 KFEAT:  o = granite_statue
 FTILE:  WU.Oo = floor_rough_magenta
 TILE:   b = dngn_crystal_magenta
-:       wizlab_portal(_G)
-: set_feature_name("crystal_wall", "wall of crystal")
+: wizlab_portal(_G, true)
 MAP
 bbbbbbbbbbb
 bbbb...bbbb
@@ -592,12 +596,11 @@ bbbb...bbbb
      @
 ENDMAP
 
-NAME:       mu_enter_wizlab_6
-SUBST:      x = mc.
-TILE:       c = wall_stone_white
-TILE:       m = dngn_transparent_stone_magenta
-FTILE:      mcx.O = floor_rough_magenta
-:           wizlab_portal(_G)
+NAME:  mu_enter_wizlab_6
+SUBST: x = mc.
+TILE:  m = dngn_transparent_stone_magenta
+FTILE: m.O = floor_rough_magenta
+:  wizlab_portal(_G, false)
 MAP
 c.c.ccccccc
 x.x.x.x..Oc
@@ -634,7 +637,7 @@ FTILE:  - = floor_rough_lightgray
 FTILE:  ' = floor_rough_white
 FTILE:  " = floor_rough_blue
 FTILE:  ` = floor_rough_lightblue
-: wizlab_portal(_G)
+: wizlab_portal(_G, true)
 MAP
 xxxxxxxxxxxxx
 x...........@
@@ -659,7 +662,7 @@ TILE:     m = dngn_transparent_wall_green
 COLOUR:   m = lightgreen
 COLOUR:   _ = magenta
 TILE:     G = dngn_statue_dragon
-: wizlab_portal(_G)
+: wizlab_portal(_G, true)
 MAP
 .......
 .bmmmb.
@@ -675,8 +678,7 @@ FTILE:    cnO_ = floor_rough_magenta
 TILE:     n = dngn_transparent_stone_magenta
 COLOUR:   n = lightmagenta
 COLOUR:   _ = magenta
-TILE:     c = wall_stone_white
-: wizlab_portal(_G)
+: wizlab_portal(_G, false)
 MAP
 ww......ww
 ww.wwww.ww
@@ -691,6 +693,7 @@ ww......ww
 ENDMAP
 
 NAME:     infiniplex_enter_wizlab_spiral
+TAGS:     no_pool_fixup
 SUBST:    G : xG.
 SUBST:    x : xx.
 MARKER:   ! = lua:fog_machine { \
@@ -707,7 +710,7 @@ FTILE:    _! = floor_frozen
 COLOUR:   _! = lightcyan
 FTILE:    -? = floor_rough_magenta
 COLOUR:   -? = magenta
-: wizlab_portal(_G)
+: wizlab_portal(_G, true)
 MAP
 xx...........xx
 xG.bbbbbbbbb.Gx
@@ -730,7 +733,7 @@ NAME:   lightli_enter_wizlab_magi_temple
 TAGS:   vaults_orient_n
 COLOUR: . = magenta
 FTILE:  . = floor_rough_magenta
-: wizlab_portal(_G)
+: wizlab_portal(_G, true)
 MAP
 bmm.@.mmb
 m.......m
@@ -782,14 +785,15 @@ MARKER:     ! = lua:fog_machine { \
 # player complete the rest of the map.
 ITEM:       potion of haste / potion of resistance w:5 / any potion w:20 \
             / scroll of silence w:5 / scroll of fog w:5 / any scroll w:20
-ITEM:       scarf ego:repulsion / book of vapours / condenser vane \
+ITEM:       scarf ego:repulsion / trismegistus codex / condenser vane \
             / staff of air
 # Main loot, including some thematic items that are good even if you don't care
 # about flight.
 ITEM:       any w:20 / star_item / superb_item / any book w:5
 ITEM:       randart ring of flight / pair of boots ego:flying / \
             pair of boots ego:rampaging / good_item quick blade / \
-            ring of evasion good_item / storm talisman w:5
+            ring of evasion w:4 / cloak ego:air good_item w:6 / \
+            storm talisman w:5
 ITEM:       randbook disc:air
 KFEAT:      D = w
 KFEAT:      #6 = deep_water
@@ -905,10 +909,12 @@ kmons("4 = patrolling Hellbinder dbname:Hellbinder name:"
 KITEM:      d = scroll of summoning / w:5 scroll of torment / \
                 any scroll w:20 / potion of haste / \
                 potion of heal wounds / any potion w:20
-KITEM:      e = any beam wand / any blast wand / \
-                ring of fire / ring of ice / randbook disc:summoning
+KITEM:      e = any beam wand / any blast wand / randbook disc:summoning
 KITEM:      f = demon blade w:1 / demon whip w:1 / demon trident w:1 / \
-                any randart jewellery w:5 / star_item w:25 / superb_item
+                scale mail ego:command good_item w:4 / \
+                chain mail ego:command good_item w:3 / \
+                plate armour ego:command good_item w:3 / \
+                any randart jewellery w:5 / star_item w:15 / superb_item
 KITEM:      g = randbook disc:summoning
 KITEM:      h = manual of summonings
 NSUBST:     d = e / d, ' = 2:1 / 4 = 112......, " = 2:1 / 4 = 12....
@@ -1121,7 +1127,7 @@ SUBST:      opqrstu = *
 #            - Earth and spirits
 #            - Unholy undead and demons
 :           if crawl.x_chance_in_y(3, 7) then
-KMONS:      0% = stone giant skeleton / spectral iron troll / \
+KMONS:      0% = stone giant draugr / spectral iron troll / \
                  crystal guardian / gargoyle w:20 / skeletal warrior w:5
 KMONS:      * = war gargoyle w:30 / walking earthen tome / ancient champion
 KMONS:      | = undying armoury / walking crystal tome w:5
@@ -1141,24 +1147,23 @@ KMONS:      | = ancient lich / royal mummy / executioner / tzitzimitl
 #           Hints.
 KITEM:      ' = wand of digging charges:1 pre_id
 KITEM:      " = scroll of revelation q:1 pre_id
-#           Loot.
-#           0 = scrolls. 1 = armours. 2 = mixed.
-:           local lrnd = crawl.random2(3)
-:           if lrnd == 0 then
-KITEM:      % = any scroll / any scroll q:2 w:3 / any scroll q:3 w:1
+#           Loot: Scrolls or armour.
+:           if crawl.coinflip() then
+KITEM:      % = any scroll / any scroll q:2 w:3, $ / parchment disc:earth q:2
 :           kitem("* = " .. dgn.good_scrolls)
-KITEM:      | = scroll of acquirement q:1 pre_id / \
-                scroll of enchant weapon q:3 pre_id / \
-                scroll of blinking q:2 pre_id, scroll of fog q:2 pre_id
-:           elseif lrnd == 1 then
-KITEM:      % = any armour
-KITEM:      * = any good_item armour
-KITEM:      | = granite talisman randart artprops:Int:6&Stlth:1 / \
-                golden dragon scales
+KITEM:      | = $, scroll of acquirement q:1 pre_id / \
+                   scroll of enchant weapon q:3 pre_id / \
+                   scroll of blinking q:2 pre_id, scroll of fog q:2 pre_id
 :           else
-KITEM:      % = any / star_item w:2
-KITEM:      * = star_item / superb_item w:2
-KITEM:      | = superb_item
+KITEM:      % = any armour good_item
+KITEM:      * = $, hat ego:intelligence good_item w:6 / \
+                   cloak ego:stealth good_item w:4 / \
+                   pair of boots ego:earth good_item / \
+                   plate armour ego:death good_item w:8 / \
+                   kite shield ego:positive_energy w:4 / \
+                   crystal plate armour good_item w:4
+KITEM:      | = $, granite talisman randart artprops:Int:6&Stlth:1 / \
+                   golden dragon scales
 :           end
 #           Boxification:
 :           box_glyph('%', '!')
@@ -1243,7 +1248,7 @@ ENDMAP
 # others are ugly things and abominations.
 #
 # The central, circular chamber houses Cigotuvi's flesh golem.
-# The Eastern half of his lab is dominated by a snaking passageway filled with
+# The eastern half of his lab is dominated by a snaking passageway filled with
 # shapeshifters and the occasional ugly thing.
 #
 # The western half of his lab is full of abominations, including the terrible
@@ -1272,30 +1277,34 @@ KPROP:      ' = bloody / w:5 nothing
       "orc / orc " .. garbled .. "orc / orc " .. mangled ..
       "orc / orc " .. sickly .. "orc / orc " .. twisted .. "orc")
 }}
-MONS:       ugly thing, very ugly thing
-MONS:       glowing shapeshifter / radroach w:2
+MONS:       ugly thing / very ugly thing
+MONS:       very ugly thing / kobold fleshcrafter w:3
+MONS:       glowing shapeshifter / glowing shapeshifter hd:13 / radroach w:6
 MONS:       small abomination
 KMONS:      8 = large abomination
 KMONS:      9 = generate_awake glass eye
 KMONS:      0 = col:red iron golem hd:5 spells:corrupting_pulse.36.magical \
                 name:flesh_golem name_replace \
                 tile:mons_flesh_golem name_descriptor
-KMONS:      & = col:mutagenic primal ox-ox-weird mutant beast perm_ench:regen \
-                name:Cigotuvi's_Monster name_replace tile:mons_cigotuvis_monster
+KMONS:      & = col:mutagenic primal ox-ox-weird mutant beast \
+                perm_ench:chaos_laced perm_ench:regen \
+                name:Cigotuvi's_Monster n_rpl tile:mons_cigotuvis_monster
 ITEM:       potion of mutation q:1 pre_id
-ITEM:       randbook disc:alchemy disc2:necromancy owner:Cigotuvi
-ITEM:       flux talisman randart / maw talisman randart / \
-            serpent talisman randart / statue talisman w:8 / \
-            dragon-coil talisman / storm talisman w:8 / \
-            talisman of death w:2
-ITEM:       staff of death pre_id, scroll of poison pre_id
-ITEM:       w:5 any jewellery randart / w:5 hat_of_the_alchemist / \
+ITEM:       randbook disc:alchemy disc2:necromancy owner:Cigotuvi \
+            numspells:4 spells:cigotuvi's_putrefaction
+ITEM:       protean talisman randart w:2 / blade talisman randart / \
+            hive talisman randart / granite talisman w:8 / \
+            dragon-coil talisman randart / riddle talisman randart w:8 / \
+            sanguine talisman randart / talisman of death w:2
+ITEM:       staff of necromancy pre_id, scroll of poison pre_id
+ITEM:       any jewellery randart w:4 / amulet of wildshape randart w:1 / \
+            amulet of chemistry randart w:1 / hat_of_the_alchemist w:4 / \
             cigotuvi's_embrace
 KFEAT:      ? = fountain_eyes
 SHUFFLE:    d^ / e~ / g|
-NSUBST:     ^ = 2:d / 2:. / * = dd., e = 1:e / 2:f / *:.
+NSUBST:     ^ = 2:d / 2:. / * = dd., e = 1:e / 2:f / 1:$ / *:.
 NSUBST:     g = 1:g / *:h, i = 1:i / *:$
-SUBST:      4 = 4 5:2, " = 6:1 .:16, |~ = .
+SUBST:      4 = 4 5:2, " = 6:1 .:14, |~ = .
 KPROP:      -FGHIJKPR = no_tele_into
 SUBST:      - = ., F = 1, G = 2, H = 3, I = 4, J = 6, K = 7, P = !, R = W
 MARKER:     ! = lua:fog_machine { \
@@ -1349,34 +1358,34 @@ c.8........cc---H--m...m-I--ccccW~.......~Wcc
 c|.........cc-cccccm...mc---ccccc.......~Wccc
 c|...|ccc+ccccc--cccc+cccccccccccc.....eWcccc
 ccgggccc..ccccIII-cm...m--H--ccccc+cccccccccc
-cccccccc..ccc--P---m.7.m-F--cccccc""ccccccccc
-cc^^cccc..ccc-III--m...m---ccccccc""cc$$i$$cc
-c^dd^cc...cccc----cm...m-cccRccccc""c...c...c
-c^dd^+...cccccc--cccc+cccc---Rcccc""c...c...c
-c^dd^c...ccccccccc-m...m-KK---Rccc""ccc+c+ccc
-cc^ccccc+cccccccc--m.7.m---I--Rccc""c...9...c
+cccccccc..ccc--P---m.7.m-F--cccccc..ccccccccc
+cc^^cccc..ccc-III--m...m---ccccccc..cc$$i$$cc
+c^dd^cc...cccc----cm...m-cccRccccc..c...c...c
+c^dd^+...cccccc--cccc+cccc---Rcccc..c...c...c
+c^dd^c...ccccccccc-m...m-KK---Rccc..ccc+c+ccc
+cc^ccccc+cccccccc--m.7.m---I--Rccc..c...9...c
 ccccccc...cccc---F-m...m----K-ccic""c...6...c
 cccc.........c--G--m...mc----cc$$c""c..6.69.c
 c.68...ccc...cc--cccc+cccc--ccc+cc""c..66..cc
 c...ccccccc+cccccc.m.....cccc.666c""+.....ccc
 cc...ccccc'''cccc..m.....4cc9.666c""ccccccccc
-cc...ccc''''''cc.!.m.....<4c9....+"""""""""cc
-c..cccc''''''''cc.......c4ccc....cc"""""""""c
+cc...ccc''''''cc.!.m.....<4c9....+"""....""cc
+c..cccc''''''''cc.......c4ccc....cc""...."""c
 c..ccc'''''''''cccccc+cccccccccccccccccccc""c
-c..cc''''''''''ccccc...ccccccc""""""""""""""c
-c..cc''''''''''ccc.......cccc""""""""""""""cc
+c..cc''''''''''ccccc...ccccccc"""........"""c
+c..cc''''''''''ccc.......cccc""""........""cc
 c..c'''''''''''cc.........ccc""cccccccccccccc
-c..c'c'c'c'c'ccc...........cc""""""""""""""cc
-c..c8c7c'c7c8ccc...........ccc""""""""""""""c
+c..c'c'c'c'c'ccc...........cc""""........""cc
+c..c8c7c'c7c8ccc...........ccc"""........"""c
 c..cccccccccccc.....c.c.....cccccccccccccc""c
-c...76........+......?......+"""""ccc"""""""c
-c...76........c.....c.c.....c""""""c"""""""cc
+c...76........+......?......+...."ccc"".."""c
+c...76........c.....c.c.....c..."""c"""..""cc
 ccmmmccccmmmcccc...........cccccc""c""ccccccc
-c-----cc-----cccWW.......WWcc""""""c""""""ccc
-cc-JJccccIIIcccccWW..0..WWcc""""""ccc""""""cc
+c-----cc-----cccWW.......WWcc""."""c""".""ccc
+cc-JJccccIIIcccccWW..0..WWcc""".""ccc""."""cc
 ccJJ-cccc-F-ccccccWWWWWWWccc""ccccccccccc""cc
-cc-HccccccIIccccccccWWWccccc"""""""""""""""cc
-cccccccccccccccccccccZccccccc"""""""""""""ccc
+cc-HccccccIIccccccccWWWccccc"""""....."""""cc
+cccccccccccccccccccccZccccccc"""".....""""ccc
 ccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
@@ -1413,7 +1422,7 @@ TILE:       v = dngn_metal_wall_magenta
 TILE:       c = STONE_WALL_DEPTHS
 LROCKTILE:  wall_zot_magenta
 LROCKCOL:   lightmagenta
-LFLOORTILE: floor_rough_magenta
+LFLOORTILE: floor_mystic_chasm
 LFLOORCOL:  magenta
 :           vault_metal_statue_setup(_G, "G", "arcane conduit")
 :           set_random_mon_list("purple draconian / tengu conjurer")
@@ -1465,7 +1474,7 @@ NAME:       wizlab_zonguldrok
 TAGS:       no_rotate patrolling
 MONS:       skeletal warrior, ancient champion, lich
 ITEM:       any scroll q:2 w:8 / scroll of enchant weapon pre_id w:2 / \
-            randbook disc:necromancy numspells:1 w:2
+            parchment disc:necromancy w:2
 # Shortlist of one-handed skeletal warrior weapons.
 : local d = "ego:draining plus:6 "
 : local p = "ego:pain plus:6 "
@@ -1474,14 +1483,15 @@ ITEM:       any scroll q:2 w:8 / scroll of enchant weapon pre_id w:2 / \
 :      " / scimitar " .. d .. " / scimitar " .. p)
 ITEM:       shadow dragon scales good_item / shadow dragon scales randart / \
             crystal plate armour good_item / crystal plate armour randart / \
-            plate armour good_item w:15 / plate armour randart w:15 / \
-            chain mail good_item / chain mail randart / \
+            plate armour good_item ego:death w:15 / \
+            chain mail good_item ego:death w:15 / \
+            plate armour randart w:15 / chain mail randart / \
             kite shield randart / tower shield randart / \
             talisman of death randart artprops:str:2&dex:2&slay:2 w:15
 KITEM:      g = skull of zonguldrok
 KFEAT:      GW = G
 KFEAT:      T = petrified_tree
-NSUBST:     Z = Z / ', d = 5:e / 3:f / 1:g / * = d:20 e:2, G = 22:G / 5 = G. / *:.
+NSUBST:     Z = Z / ', d = 5:e / 3:f / 1:g / * = d:20 e:2, G = 18:G / 4 = G. / *:.
 {{
 lua_marker("G", portal_desc { grave = 1 })
 lua_marker("R", portal_desc { antique_grave_a = 1 })
@@ -1526,9 +1536,10 @@ KPROP:      'def$123L+ = no_tele_into
 COLOUR:     "W = lightmagenta
 COLOUR:     t = brown
 TILE:       W = dngn_zonguldrok_shrine
-TILE:       c = wall_stone_gray
+TILE:       c = wall_stone_shrine
 TILE:       t = dngn_tree_dead
 FTILE:      " = floor_nerves_darkgray
+FTILE:      `WRS = floor_necro_squares
 LFLOORCOL:  darkgrey
 LROCKCOL:   darkgrey
 LFLOORTILE: floor_tomb
@@ -1539,9 +1550,9 @@ LROCKTILE:  wall_hall_darkgray
 {{
 set_random_mon_list(
     -- Selected to make derived and regular undead equal.
-       [[ two-headed ogre skeleton / cyclops zombie / swamp dragon simulacrum / ]]
-    .. [[ deep troll skeleton / stone giant zombie / storm dragon simulacrum / ]]
-    .. [[ ettin skeleton / juggernaut zombie / golden dragon simulacrum / ]]
+       [[ two-headed ogre draugr / cyclops zombie / swamp dragon simulacrum / ]]
+    .. [[ deep troll draugr / stone giant zombie / storm dragon simulacrum / ]]
+    .. [[ ettin draugr / juggernaut zombie / golden dragon simulacrum / ]]
     .. [[ vampire / skeletal warrior / jiangshi / phantasmal warrior / ]]
     .. [[ vampire knight / ghoul / ancient champion w:20 / lich / ]]
 )
@@ -1561,12 +1572,12 @@ x?!G.G.G.cdddcdddc.G.G.G!?x
 x?!.G.G.ccdd'+'ddcc.G.G.!?x
 x?!G.Gcccddcc+ccddcccG.G!?x
 x?!.G.c$dddcLLLcddd$c.G.!?x
-x?!G.Gc$$ccc'''ccc$$cG.G!?x
-x?!.G.c$$c'''''''c$$c.G.!?x
-x?!G.Gcccc'RW'WS'ccccG.G!?x
-x?!.G.c''+'RR'SS'+''c.G.!?x
-x?!G.Gc'3ccc'''ccc2'cG.G!?x
-x?!.G.c''3'c'''c'1''c.G.!?x
+x?!G.Gc$$ccc```ccc$$cG.G!?x
+x?!.G.c$$c```````c$$c.G.!?x
+x?!G.Gcccc`RW`WS`ccccG.G!?x
+x?!.G.c''+`RR`SS`+''c.G.!?x
+x?!G.Gc'3ccc```ccc2'cG.G!?x
+x?!.G.c''3'c```c'1''c.G.!?x
 x?!G.GcCc''ccccc1'cCcG.G!?x
 x?!.G.G.cc'''+'''cc.G.G.!?x
 x?!G.G.G.c'''c'''c.G.G.G!?x
@@ -1729,7 +1740,7 @@ KMONS:   3 = ghost moth w:15 / entropy weaver / broodmother w:5
  local lowtier = "large abomination w:20 / unseen horror / " ..
                  "thrashing horror w:20 / raiju w:35 / worldbinder w:35 / " ..
                  "smoke demon / sixfirhy / hellwing / " ..
-                 "alligator skeleton / anaconda skeleton / " ..
+                 "alligator simulacrum / anaconda simulacrum / " ..
                  "efreet / air elemental / water elemental / " ..
                  "will-o-the-wisp w:5 / mana viper / demonic crawler w:5"
  local midtier = "tentacled starspawn w:50 / very ugly thing w:25 / " ..
@@ -1737,10 +1748,10 @@ KMONS:   3 = ghost moth w:15 / entropy weaver / broodmother w:5
                  "torpor snail perm_ench:glowing_shapeshifter w:25 / " ..
                  "soul eater / shadow demon / eidolon / " ..
                  "shadow wraith / emperor scorpion zombie / death drake / " ..
-                 "base draconian w:5 / spark wasp / glowing orange brain"
+                 "cognitogaunt w:15 / spark wasp / glowing orange brain"
  local hightier = "starcursed mass w:20 / apocalypse crab w:40 / " ..
                   "tentacled monstrosity w:20 / executioner w:15 /" ..
-                  "cacodemon / hellion w:5 / tormentor w:5 /  " ..
+                  "hellion w:5 / tormentor w:5 /  " ..
                   "lich / profane servitor / balrug w:20 / " ..
                   "blizzard demon w:20 / hellephant / " ..
                   "draconian shifter w:15 / demonspawn corrupter w:5"
@@ -1748,8 +1759,7 @@ KMONS:   3 = ghost moth w:15 / entropy weaver / broodmother w:5
  kmons("2 = rakshasa ; " .. distoquip .. " / boggart ; " .. distoquip)
  kmons("04 = " .. lowtier)
  kmons("95 = " .. midtier)
- kmons("6 = " .. hightier .. " / reaper w:15 ; halberd itemname:scythe " ..
-                                 "tile:wpn_scythe wtile:scythe ego:distortion")
+ kmons("6 = " .. hightier .. " / reaper w:15 ; " .. scythe("distortion"))
 
  dgn.set_random_mon_list(lowtier .. " / " .. midtier .. " / " .. midtier ..
                          " / " .. hightier .. " / " .. hightier .. " / reaper")
@@ -1778,7 +1788,7 @@ KITEM:   | = cloak good_item w:75 / randart cloak w:95 / \
 KITEM:   136 = mundane cloak no_pickup
 KFEAT:   m = iron_grate
 KFEAT:   ~ = deep_water / web w:4
-KFEAT:   ^ = permanent teleport trap / web w:20
+KFEAT:   ^ = trap_teleport_permanent / web w:20
 KFEAT:   _ = altar_lugonu
 KFEAT:   opqsrtuvw@}) = floor
 KPROP:   a"_~ = no_tele_into
@@ -1836,7 +1846,6 @@ for i = 1, #trans_glyph do
 end
 set_border_fill_type('permarock_wall')
 set_feature_name("permarock_wall", "The dimension's edge")
-set_feature_name("crystal_wall", "wall of crystal")
 wizlab_setup(_G)
 }}
 
@@ -1911,22 +1920,22 @@ ENDMAP
 NAME:       wizlab_lehudib
 KPROP:      ` = no_tele_into
 KMONS:      LM = demonic plant
-MONS:       w:15 tentacled starspawn / stone giant / eye of devastation
-MONS:       w:20 glowing orange brain / w:12 great orb of eyes / w:5 neqoxec \
-            / w:3 golden eye band
+MONS:       tentacled starspawn w:15 / stone giant / eye of devastation
+MONS:       glowing orange brain w:20 / great orb of eyes w:12 / neqoxec w:5 / \
+            golden eye band w:3
 MONS:       starcursed mass / brown very ugly thing band
 MONS:       cacodemon
-MONS:       quicksilver dragon / war gargoyle / crystal guardian \
-            / wretched star
+MONS:       quicksilver dragon / war gargoyle / crystal guardian / \
+            wretched star
 MONS:       orange crystal statue name:lunar_statue n_rpl n_des \
-                spells:brain_bite.24.magical;draining_gaze.24.magical;\
-                       lehudib's_crystal_spear.24.magical;\
-                       shadow_creatures.48.magical \
+                spells:antimagic_gaze.25.magical;\
+                       lehudib's_crystal_spear.25.magical;\
+                       shadow_creatures.50.magical \
                 col:lightmagenta tile:mons_zot_statue
 MONS:       moon troll ; moon troll leather armour
-
+KMONS:      8 = cognitogaunt
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
-ITEM:       potion of mutation
+ITEM:       potion of mutation pre_id
 # Equal chance between randart jewellery and good aux armour.
 : item("any randart jewellery w:60" .. " / " .. dgn.good_aux_armour)
 ITEM:       randbook owner:Lehudib disc:earth disc2:alchemy \
@@ -1947,16 +1956,16 @@ SUBST:      DE = ., F = c, K = n, OPQS! = G, RZ = N, ? = .
 ## Remaining level randomization
 SHUFFLE:    Hyp / Mgo
 SUBST:      o = 1234, ' = llc, ; = .JJJJJ, yp = .
-NSUBST:     h = 2:1 / ., i = 2:1 / ., j = 2:1 / ., k = 2:1 / ., q = 2:1 / .
-NSUBST:     r = 3:1 / ., s = 3:1 / ., u = 1:1 / ., z = 1 / 1234, " = 3:J / .
-NSUBST:     * = 2:d / *, ` = 3:M / 3=M. / 2:e / 3=..e / 4 / 233 / .
+NSUBST:     h = 2:1 / ., i = 2:1 / ., j = 2:1 / ., k = 2:1 / ., q = 2:1 / *:.
+NSUBST:     r = 3:1 / ., s = 3:1 / ., u = 1:1 / ., z = 1 / 1238, " = 3:J / *:.
+NSUBST:     * = 2:d / *, ` = 3:M / 3=M. / 2:e / 3=..e / 1:4 / 1:8 / *:.
 
 {{
 set_random_mon_list("eye of devastation / stone giant " ..
                     "/ tentacled starspawn / glowing orange brain " ..
                     "/ great orb of eyes / neqoxec w:5 / golden eye w:5 " ..
                     "/ very ugly thing w:5 / starcursed mass w:5 " ..
-                    "/ cacodemon w:1 / quicksilver dragon w:1 " ..
+                    "/ cognitogaunt w:1 / quicksilver dragon w:1 " ..
                     "/ war gargoyle w:1 / crystal guardian w:1 " ..
                     "/ wretched star w:1")
 }}
@@ -2008,8 +2017,8 @@ ccvi..v..ivccc.v...cHccc..bb...bb..cccMc...v.cL..ck.vv..cccc
 ccvv.....vvccc....ccu.bb...........bb.gcc....cc..cc.v*.ccccc
 cccv.....vccc..v..n...b.............b...n..v.2+.........bbcc
 cccv.viv.vccc..v..n...b......7......b...n..v..+.......5.Qbcc
-cccv.....vccc2.v..np..b....z...z....b..on..v..+.........bbcc
-ccvv.....vvccc....cc..bb...........bb..cc....cc..cc.v*.ccccc
+cccv.....vccc2.v..np..b.............b..on..v..+.........bbcc
+ccvv.....vvccc....cc..bb.....z.....bb..cc....cc..cc.v*.ccccc
 ccv..ivi..vccc.v..2c...b...........b...c2..v.cL..ck.vv..cccc
 ccv..vvv..vccc.....c...bb.........bb...c.....cc.kc......cccc
 ccv...v...vcc2...cccc...bb.......bb...cccc...2ccccccc...Lccc
@@ -2044,8 +2053,7 @@ ENDMAP
 # Redesigned by Hellmonk, loosely based on the old layout but reshaped to work
 # better with the monster set. No lua gimmick, just a set of plant and archery
 # themed monsters, plus some fenstrider witches.
-# Loot: staves, books, spectral branded weapons
-# Could use a slightly different grass tile for better color contrast
+# Loot: staves, books, spectral branded weapons, consumables
 NAME:       wizlab_eringya
 TAGS:       no_rotate
 MONS:       deep elf archer w:5 / faun / centaur warrior
@@ -2053,7 +2061,7 @@ MONS:       yaktaur / satyr / naga sharpshooter
 MONS:       shambling mangrove, thorn hunter / eleionoma, deep elf master archer
 MONS:       fenstrider witch, bush
 KMONS:      P = oklob plant
-ITEM:       any book, any magical staff
+ITEM:       any book, any magical staff / amulet of chemistry randart w:1
 : local s = "ego:spectral no_pickup "
 : item(dgn.loot_potions)
 : item("demon blade " .. s .. "w:3 / demon whip " .. s .. "w:3 / " ..
@@ -2061,10 +2069,10 @@ ITEM:       any book, any magical staff
 :      "lajatang " .. s .. "w:4 / quarterstaff randart plus:12 " .. s .. " w:1")
 KITEM:      h = potion of lignification pre_id q:4 / \
                 scroll of poison q:4 pre_id, \
-                randbook owner:Eringya numspells:1 spells:eringya's_noxious_bog
+                parchment of eringya's noxious bog
 KFEAT:      - = stone_arch
 KFEAT:      _ = altar_fedhas
-KFEAT:      F = cache of fruit
+KFEAT:      F = cache_of_fruit
 SHUFFLE:    pq/rs
 SUBST:      q : y., r : y., p = ., s = .
 NSUBST:     1 = 3:1 / *=1...., 2 = 2:2 / *=2..., 3 = 1:4 / 1:3 / *=34....
@@ -2080,7 +2088,7 @@ TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
 : end
 TILE:       G = dngn_statue_archer / dngn_statue_centaur w:5
 LROCKTILE:  wall_brick_vines
-LFLOORTILE: floor_grass
+LFLOORTILE: floor_grass_dark
 : decorative_floor(_G, 'L', "flower patch")
 : set_random_mon_list("deep elf archer / faun / centaur warrior / yaktaur / " ..
 :                     " satyr / naga sharpshooter / shambling mangrove / " ..
@@ -2146,39 +2154,48 @@ ENDMAP
 # "dangerous" properties, such as rampaging or harm.
 NAME:       wizlab_maxwell
 TAGS:       no_rotate no_pool_fixup
-MONS:       peacekeeper / gargoyle / earth elemental w:5
-MONS:       molten gargoyle / thermic dynamo / fire elemental w:5
+MONS:       peacekeeper / gargoyle / patrolling earth elemental w:5
+MONS:       molten gargoyle / thermic dynamo w:8 / fire elemental w:5
 MONS:       salamander tyrant / fire giant ; great mace ego:flaming
 MONS:       war gargoyle / crystal guardian
 MONS:       ettin / ironbound preserver ; great mace /\
             fire giant ; great mace ego:flaming /\
             frost giant ; great mace ego:freezing /\
-            angel ; great mace ego:holy_wrath w:5
+            angel w:5 ; great mace ego:holy_wrath w:5
 MONS:       ironbound thunderhulk ; great mace ego:electrocution
 MONS:       patrolling electric golem
 KMONS:      P = lightning spire
-ITEM:       scarf ego:harm w:25 / boots ego:rampaging w:25 /\
-            boots ego:rampaging randart / ring of fire randart /\
-            any armour good_item ego:ponderous randart / ring of ice randart /\
+KMONS:      M = ironbound mechanist
+KMONS:      S = stack of scrap
+ITEM:       scarf ego:harm randart w:25 / pair of boots ego:rampaging w:25 /\
+            pair of boots ego:rampaging randart /\
+            any body armour good_item ego:ponderousness randart /\
             plate armour good_item ego:ponderousness / any weapon ego:chaos /\
             maxwell's patent armour w:2 / maxwell's thermic engine w:2
 ITEM:       any armour good_item w:20 / any weapon good_item w:20 /\
-            any weapon randart / any armour randart / any jewellery randart w:5
+            any weapon randart / any armour randart w:8 / \
+            chain mail randart ego:resonance w:1 / \
+            plate armour randart ego:resonance w:1 / \
+            any jewellery randart w:5
 ITEM:       potion of attraction pre_id / any scroll w:20 /\
             scroll of vulnerability pre_id / any potion w:20
 SHUFFLE:    DE/JK, pqrs, ;~
-SUBST:      D : b+, E:., J:., K: b+, F:.+, p:v, q:b., r: v.., s:b...
+SUBST:      D : b+, E : ., J : ., K : b+, F : .+
+SUBST:      p = v, q : b., r : v.., s : b...
 SUBST:      ;:v+., -:v+.., ~:., 1 = 1..., 2 = 2..
-NSUBST:     3 = 1:3 / *=3.., 4 = 1:4 / *=4.., 5 = 1:5 / *=5.., 6 = 2:6 / *=6..
-NSUBST:     7 = 1:7 / *:P,  A = 1:< /*:A, H = 2:4 / 4:1 / *=11bG
+NSUBST:     3 = 1:3 / * = 3.., 4 = 1:4 / 1:. / * = 4..
+NSUBST:     5 = 1:5 / 1:. / * = 5.., 6 = 2:6 / * = 6..
+NSUBST:     7 = 1:7 / *:P, A = 1:< / *:A, H = 2:4 / 4:1 / * = 11bG
 NSUBST:     e = 3:e / *=dff
-TILE:       v = dngn_metal_wall_cyan
+TILE:       v = metal_wall_workshop
+TILE:       b = dngn_crystal_cyan
 :           vault_metal_statue_setup(_G, "Z", "nascence circuit")
 :           set_random_mon_list(
-:               "earth elemental / molten gargoyle / thermic dynamo / " ..
-:               "peacekeeper / war gargoyle / crystal guardian w:2 / " ..
+:               "molten gargoyle / thermic dynamo / peacekeeper / " ..
+:               "war gargoyle / crystal guardian w:2 / ironbound mechanist / " ..
 :               "ironbound thunderhulk / electric golem w:1")
 :           wizlab_setup(_G)
+LFLOORTILE: floor_metal_silver
 epilogue {{
             wizlab_milestone(_G, "Maxwell's Workshop")
 }}
@@ -2203,16 +2220,16 @@ MAP
       vv.3nln3.vvvvvvvvvvvvv+++vvvv
      vv..2nln2..vvvvvvvvvvvH6.6Hvvvvv
     vv...2nln2...vvvvvvvvvv.....vvvvvv
-    v2.2nnnlnnn2.2vvvvvH...4...4...Hvv
+    v2.2nnnlnnn2.2vvvvvH...4.M.4...Hvv
     v...nllllln...vvvvv....v111v....vv
     v...nllllln...vvvvv....veeev....vv
-    v2..nllllln..2vvvvvH...vvvvv...Hvv
-    v...nllllln...vvvvvvvD..bbb..Dvvvv
+    v2..nllllln..2vvvvvH..SvvvvvS..Hvv
+    v...nllllln...vvvvvvvD.SbbbS.Dvvvv
     v..2nllllln2..vvvvH..DD..H..DD..Hv
     vG..nnnnnnn..Gv..v....v..P..v....v
     v...3..3..3...+.4+....v.....v....v
-    v...v..2..v...v..v....vH...Hv....v
-    v...v2.3.2v...vvvvH..EvvFFFvvE..Hv
+    v..Sv..2..vS..v..v....vH...Hv....v
+    v.S.v2.3.2v.S.vvvvH..EvvFFFvvE..Hv
     v2vvvvdddvvvv2vvvvvvvEH.....HEvvvv
     v...vvvdvvv...vvvvvvv....v....v
     v...vvvvvvv...vvvvvvv....v....v
@@ -2221,13 +2238,13 @@ MAP
       vv.......vvvvvvvvv1.~.5...5.1v
        vv.....vvvvvvvvvv..~..1.....v
         vvv+vvvvvvvvvvvv..v--v--v..v
-       vv.....vvvvvvvvvv..v1.v..v..v
- vvvvvvvG1...1Gvvvvvvvvv..;..5..~.fv
+       vv.....vvvvvvvvvv..v1.v.Sv..v
+ vvvvvvvG1.M.1Gvvvvvvvvv..;..5..~.fv
 vv...vv.1..G..1.vvvvvvvv..;.....~5fv
-v..G..v.........v1....1v..vvvvvvv;;v
+v..G..v.........v1.S..1v..vvvvvvv;;v
 v1.4..+.G1.G.1G.+...4..+..;.....~5fv
-v..G..v.........v1....1v..;..5..~.fv
-vv...vv....G....vvvvvvvv..v1.v..v..v
+v..G..v.........v1.S..1v..;..5..~.fv
+vv...vv....G....vvvvvvvv..v1.v.Sv..v
  vvvvvvG1....1Gvvvvvvvvv..v--v--v..v
       vvv.....vvvvvvvvvv..~..1.....v
         vvv+vvvvvvvvvvvv1.~.....5.1v
@@ -2235,12 +2252,12 @@ vv...vv....G....vvvvvvvv..v1.v..v..v
         v.....v
         v.AZA.v
         v.....v
-        vv...vv
+        vv.S.vv
          vvvvv
 ENDMAP
 
 ###############################################################################
-# Yara's Duelist Academy
+# Yara's Duellist Academy
 # Designed by Hellmonk. Features warrior-mages with antimagic weaponry.
 # Said weaponry makes up part of the loot here. The remainder of the loot is
 # books, random good items, and gold.
@@ -2279,13 +2296,15 @@ kmons("5 = patrolling Head Instructor dbname:Head_Instructor name:"
 }}
 ITEM:   any book w:15 / randbook disc:hexes owner:Yara w:4 / spellbinder w:1
 ITEM:   scroll of enchant armour pre_id / scroll of enchant weapon pre_id
-KFEAT:  C = cache of fruit / cache of meat / cache of baked goods
-KFEAT:  ^ = archmage's trap
+KFEAT:  C = cache_of_fruit / cache_of_meat / cache_of_baked_goods
+KFEAT:  ^ = trap_archmage
 NSUBST: * = 4:d / 4:e / *=*., 5 = 1:5 / *:1, D = 1:2 / * = 1G
-NSUBST: E = 1:2 / *:1, 3 = 1:4 / * = 3", A = 1:< / *:A, C = 3 = C.. / *:.
+NSUBST: E = 1:2 / *:1, 3 = 1:4 / * = 3`, A = 1:< / *:A, C = 3 = C.. / *:.
 SUBST:  P : Pt", F = 211111, 1 = 1...., x = xxxx., - = x
 FTILE:  125.^C*de$GS+ = floor_limestone
-FTILE:  Tt"PA<34 = floor_dirt / floor_grass:15
+FTILE:  T`PA<34 = floor_dirt
+FTILE:  " = floor_grass
+FTILE:  t = floor_pebble_lightgreen
 TILE:   c = wall_church
 LROCKTILE: wall_brick
 :           vault_metal_statue_setup(_G, "S", "misfortune conduit")
@@ -2296,7 +2315,7 @@ LROCKTILE: wall_brick
 :               "tengu reaver w:1 / quicksilver dragon w:1")
 :           wizlab_setup(_G)
 epilogue {{
-            wizlab_milestone(_G, "Yara's Duelist Academy")
+            wizlab_milestone(_G, "Yara's Duellist Academy")
 }}
 MAP
           cccccccccccccccccccc
@@ -2307,36 +2326,36 @@ MAP
           c...+5........5+...ctt
      ttt  ccccc...1..1...ccccc3tt
   tttt""""""""cc........cc""""""tt
- tt"""..1....11ccc....ccc"""""3""tt
+ tt"""..1....11ccc....ccc"""`"3""tt
 tt""..xxxx.......cc++cc111"""T"""3t
-t".11xx.....11....1..1....""""3""tt
+t".11xx.....11....1..1....""`"3""tt
 t".1xx.11.xx.............1xx"""ttt
-t".xx..1.xx...1.xxt""txx..1xxttt
-t".xx..1xx...1.xx"3""3"xx...xxcccccccccccc
-t"1x...xx.....xx"3""""3"xx.....11......11c
-t".x...x.....xx"""c""c"""xx...^..^.....^.c
-t".x11.x..t..x""c""33""c""xx...cc"cc"cc..c
-t".t...t..t..t""""PWWP""""txx..cD"D""Dc..c
-t".........."""c"PWWWWP"c"".x.^""""""""^.c
-t"1....11.t."""c"WWWWWW"c""....c""cc"Dc.1c
-cccc++cccct."""""WWWWWW""""t...cD"cc""c.1c
-c*Cc..cC*ctt"""c"PWWWWP"c""x..^""""""""^.c
-cE.+..+.Ec-t""""c"PWWP"c"""x...cD""D"Dc..c
-ccccE.cccc-t""""""""""""""txt..cc"cc"cc..c
-cE.+..+CEc-t""""""c33c""""---.^.....^..^.c
+t".xx..1.xx...1.xxt``txx..1xxttt
+t".xx..1xx...1.xx`3``3`xx...xxcccccccccccc
+t"1x...xx.....xx`3````3`xx.....11......11c
+t".x...x.....xx"``c``c``"xx...^..^.....^.c
+t".x11.x..t..x""c``33``c""xx...cc`cc`cc..c
+t".t...t..t..t""``PWWP``""txx..cD"D""Dc..c
+t".........."""c`PWWWWP`c"".x.^`""""""`^.c
+t"1....11.t."""c`WWWWWW`c""....c""cc"Dc.1c
+cccc++cccct.""""`WWWWWW`"""t...cD"cc""c.1c
+c*Cc..cC*ctt"""c`PWWWWP`c""x..^`""""""`^.c
+cE.+..+.Ec-t""""c`PWWP`c"""x...cD""D"Dc..c
+ccccE.cccc-t""""````````""txt..cc`cc`cc..c
+cE.+..+CEc-t"""""`c33c`"""---.^.....^..^.c
 c*Cc^.cE*c---"""""t""t""""---..11......11c
 ccccE^cccc  --"""tt""tt"""--cccccccccccccc
 c*Cc^.cE*c   --"""t""t"""--
 cEE+..+CEc    --""""""""--
 cccc.Ecccc     --""""""--
-cE.+..+CEc      --""""--
-c*Cc.EcE*c       -G""G-
-cccccccccc      --""""--
+cE.+..+CEc      --````--
+c*Cc.EcE*c       -G``G-
+cccccccccc      --````--
                --""""""--
-               t""A""A""t
                t""""""""t
-               --""""""--
-                --T""T--
+               t""""""""t
+               --A""""A--
+                --T``T--
                  ------
 ENDMAP
 
@@ -2358,7 +2377,7 @@ MONS:    spriggan berserker zombie / titan zombie / spark wasp zombie /\
 MONS:    ancient champion / revenant soulmonger, laughing skull
 MONS:    deep elf death mage / vampire mage / necromancer, halazid warlock
 ITEM:    randbook disc:necromancy numspells:6 owner:Borgnjor w:5 / any book /\
-         necronomicon / randbook disc:necromancy / staff of death w:5 /\
+         necronomicon / randbook disc:necromancy / staff of necromancy w:5 /\
          sanguine talisman / macabre finger necklace w:1 /\
          sceptre of torment w:1
 : local p = "good_item ego:pain w:3"
@@ -2382,7 +2401,7 @@ NSUBST:  4 = 2:4 / 1:. / *=4.., 2 = 2:2 / * = 2..
 NSUBST:  A = 1:< / *:A
 SUBST:   1 = 1.., 3 = 3.., 5 = 55..., V = VVVY
 TILE:    c = wall_borg_stone
-LFLOORTILE: floor_borg
+LFLOORTILE: borg_floor
 : vault_metal_statue_setup(_G, "G", "soul conduit")
 {{
 local summon_marker = TriggerableFunction:new ({
@@ -2535,7 +2554,7 @@ TAGS:   no_rotate
 MONS:   arcanist / occultist / boggart w:4 / deep elf zephyrmancer w:6 /\
         deep elf pyromancer w:6 / worldbinder w:2
 MONS:   great orb of eyes / glowing orange brain / sphinx marauder / \
-        cacodemon w:2 / very ugly thing / glowing shapeshifter / \
+        zykzyl w:2 / crawling flesh cage / glowing shapeshifter / \
         entropy weaver / green death w:2 / tentacled starspawn / \
         golden eye band w:6 / worldbinder / glass eye w:4
 MONS:   nagaraja / deep elf high priest / guardian sphinx w:6 / \
@@ -2557,9 +2576,9 @@ KITEM:  " = gold q:1 no_pickup
 KITEM:  H = any magical staff no_pickup
 KITEM:  Q = star_item
 KITEM:  JKL = potion of moonshine pre_id
-KFEAT:  C = cache of meat / cache of fruit / cache of baked goods
+KFEAT:  C = cache_of_meat / cache_of_fruit / cache_of_baked_goods
 KFEAT:  E = shallow_water
-KFEAT:  ^ = harlequin's trap
+KFEAT:  ^ = trap_harlequin
 KFEAT:  N = granite_statue
 NSUBST: A = 1:< / *:A, D = 1:D/*:-, W = 1:E / * = E:1 W:16, F = 1:F / * = F----
 NSUBST: H = 1:H / *:", e = 4:e / 1:g / *=eedg, 5 = 3:5 / *=5..

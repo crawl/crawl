@@ -1,3 +1,11 @@
+:root {
+    --crt-font: DejaVu Sans Mono, monospace;
+}
+
+body, input, textarea, select, button {
+    font-family: var(--crt-font);
+}
+
 html, body, #loader {
     height: 100%;
     margin: 0;
@@ -7,7 +15,7 @@ html, body, #loader {
 body {
     background: black;
     color: white;
-    font: 16px monospace;
+    font-size: 16px;
 }
 
 #login {
@@ -17,6 +25,7 @@ body {
 
 #crt {
     display: inline-block;
+    font-family: var(--crt-font);
 }
 
 #lobby {
@@ -340,7 +349,7 @@ body {
 
 #chat_input {
     width: 394px;
-    font: small monospace;
+    font-size: small;
 }
 
 a:link, a:active, a:visited {

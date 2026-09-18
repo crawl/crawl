@@ -3,7 +3,6 @@
 
 #include <vector>
 
-#include "command-type.h"
 #include "tilereg-grid.h"
 
 using std::vector;
@@ -25,7 +24,6 @@ public:
     };
 
     int push_tab_region(GridRegion *reg, tileidx_t tile_tab);
-    int push_tab_button(command_type cmd, tileidx_t tile_tab);
     GridRegion *get_tab_region(int idx);
     tileidx_t get_tab_tile(int idx);
     void activate_tab(int idx);
@@ -72,9 +70,7 @@ protected:
     struct TabInfo
     {
         GridRegion *reg;
-        command_type cmd;
         tileidx_t tile_tab;
-        int ofs_y;
         int min_y;
         int max_y;
         int height;
@@ -85,7 +81,6 @@ protected:
     vector<TabInfo> m_tabs;
 
 private:
-    int _push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_tab);
     int _icon_width;
     bool _show_tab_icons;
 };

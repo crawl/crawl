@@ -25,6 +25,7 @@
 #include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "english.h"
 #include "env.h"
 #include "fineff.h"
@@ -33,6 +34,7 @@
 #include "item-prop.h"
 #include "libutil.h"
 #include "losglobal.h"
+#include "map-knowledge.h"
 #include "message.h"
 #include "mgen-data.h"
 #include "mon-act.h"
@@ -44,6 +46,7 @@
 #include "mon-poly.h"
 #include "mon-speak.h"
 #include "mon-util.h"
+#include "notes.h"
 #include "ouch.h"
 #include "random.h"
 #include "religion.h"
@@ -55,8 +58,11 @@
 #include "target.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "rltiles/tiledef-main.h"
+#include "transform.h"
 #include "view.h"
 #include "viewchar.h"
+#include "viewmap.h"
 
 static bool _slime_split_merge(monster* thing);
 
@@ -92,9 +98,8 @@ void boris_covet_orb(monster* boris)
     if (boris->observable())
         simple_monster_message(*boris, " is empowered by the presence of the orb!");
 
-    boris->add_ench(mon_enchant(ENCH_HASTE, 1, boris, INFINITE_DURATION));
-    boris->add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, 1, boris,
-                    INFINITE_DURATION));
+    boris->add_ench(mon_enchant(ENCH_HASTE, boris, INFINITE_DURATION));
+    boris->add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, boris, INFINITE_DURATION));
 }
 
 bool ugly_thing_mutate(monster& ugly, bool force)
@@ -113,8 +118,11 @@ bool ugly_thing_mutate(monster& ugly, bool force)
         if (!act)
             continue;
 
-        if (act->is_player() && get_contamination_level())
+        if (act->is_player() && player_harmful_contamination())
+        {
             msg = " basks in your mutagenic energy and changes!";
+            break;
+        }
         else if (mons_genus(act->type) == MONS_UGLY_THING)
         {
             msg = " basks in the mutagenic energy from its kin and changes!";
@@ -122,6 +130,7 @@ bool ugly_thing_mutate(monster& ugly, bool force)
                 make_low_colour(act->as_monster()->colour);
             if (make_low_colour(ugly.colour) != other_colour)
                 new_colour = other_colour;
+            break;
         }
     }
 
@@ -141,14 +150,13 @@ bool ugly_thing_mutate(monster& ugly, bool force)
 static bool _should_share_ench(enchant_type type)
 {
     return type != ENCH_HELD
-           && type != ENCH_GRASPING_ROOTS
-           && type != ENCH_VILE_CLUTCH
+           && type != ENCH_CONSTRICTED
            && type != ENCH_BULLSEYE_TARGET;
 }
 
 // Inflict any enchantments the parent slime has on its offspring,
 // leaving durations unchanged, I guess. -cao
-static void _split_ench_durations(monster* initial_slime, monster* split_off)
+static void _share_ench_durations(monster* initial_slime, monster* split_off)
 {
     for (const auto &entry : initial_slime->enchantments)
     {
@@ -158,8 +166,11 @@ static void _split_ench_durations(monster* initial_slime, monster* split_off)
 
             // The newly split slime will also be vengeance marked, so we need
             // to increment the total number of monsters the player has to kill
-            if (entry.second.ench == ENCH_VENGEANCE_TARGET)
+            if (entry.second.ench == ENCH_VENGEANCE_TARGET
+                && split_off->is_vengeance_target())
+            {
                 you.duration[DUR_BEOGH_SEEKING_VENGEANCE] += 1;
+            }
         }
     }
 }
@@ -211,6 +222,18 @@ void merge_ench_durations(monster& initial, monster& merge_to, bool usehd)
     }
 }
 
+// Scale current slymdra HP based on head count.
+void slymdra_scale_hp(monster& slymdra)
+{
+    const monsterentry *m_ent = get_monster_data(MONS_SLYMDRA);
+    const int new_avg_hp = div_rand_round(m_ent->avg_hp_10x * slymdra.get_hit_dice(), m_ent->HD);
+    const int hp = hit_points(new_avg_hp) + SLYMDRA_HP_PER_HEAD * slymdra.num_heads;
+
+    const int diff = slymdra.max_hit_points - hp;
+    slymdra.max_hit_points -= diff;
+    slymdra.hit_points = max(1, slymdra.hit_points - diff);
+}
+
 // Calculate slime creature hp based on how many are merged.
 static void _stats_from_blob_count(monster* slime, float max_per_blob,
                                    float current_per_blob)
@@ -221,14 +244,16 @@ static void _stats_from_blob_count(monster* slime, float max_per_blob,
 
 // Create a new slime creature at 'target', and split 'thing''s hp and
 // merge count with the new monster.
-// Now it returns index of new slime (-1 if it fails).
-static monster* _do_split(monster* thing, const coord_def & target)
+// Returns the new slime (nullptr if it fails).
+static monster* _do_split(monster* thing, const coord_def & target, bool quiet = false)
 {
     ASSERT(thing); // XXX: change to monster &thing
     ASSERT(thing->alive());
 
     // Create a new slime.
-    mgen_data new_slime_data = mgen_data(thing->type,
+    monster_type type = thing->type == MONS_SLYMDRA ? MONS_SLIME_CREATURE
+                                                    : thing->type;
+    mgen_data new_slime_data = mgen_data(type,
                                          SAME_ATTITUDE(thing),
                                          target,
                                          thing->foe,
@@ -244,11 +269,19 @@ static monster* _do_split(monster* thing, const coord_def & target)
     if (!new_slime)
         return 0;
 
-    if (you.can_see(*thing))
-        mprf("%s splits.", thing->name(DESC_A).c_str());
+    if (!quiet && you.can_see(*thing))
+    {
+        if (thing->type == MONS_SLYMDRA)
+        {
+            mprf("%s separates from %s.", new_slime->name(DESC_A).c_str(),
+                                          thing->name(DESC_A).c_str());
+        }
+        else
+            mprf("%s splits.", thing->name(DESC_A).c_str());
+    }
 
     // Inflict the new slime with any enchantments on the parent.
-    _split_ench_durations(thing, new_slime);
+    _share_ench_durations(thing, new_slime);
     new_slime->attitude = thing->attitude;
     new_slime->behaviour = thing->behaviour;
     new_slime->flags = thing->flags;
@@ -256,18 +289,39 @@ static monster* _do_split(monster* thing, const coord_def & target)
     new_slime->summoner = thing->summoner;
     if (thing->props.exists(BLAME_KEY))
         new_slime->props[BLAME_KEY] = thing->props[BLAME_KEY].get_vector();
+    if (thing->type == MONS_SLYMDRA)
+    {
+        new_slime->props.erase(POLY_SET_KEY);
+        init_poly_set(new_slime);
+    }
 
-    int split_off = thing->blob_size / 2;
-    float max_per_blob = thing->max_hit_points / float(thing->blob_size);
-    float current_per_blob = thing->hit_points / float(thing->blob_size);
+    // Lose heads and HP equivalent to those heads
+    if (thing->type == MONS_SLYMDRA)
+    {
+        --thing->num_heads;
+        const monsterentry *m_ent = get_monster_data(MONS_SLYMDRA);
 
-    thing->blob_size -= split_off;
-    new_slime->blob_size = split_off;
+        const int new_avg_hp = div_rand_round(m_ent->avg_hp_10x * thing->get_hit_dice(), m_ent->HD);
+        const int hp = hit_points(new_avg_hp) + SLYMDRA_HP_PER_HEAD * thing->num_heads;
 
-    new_slime->set_hit_dice(thing->get_experience_level());
+        const int diff = thing->max_hit_points - hp;
+        thing->max_hit_points -= diff;
+        thing->hit_points = max(1, thing->hit_points - diff);
+    }
+    else
+    {
+        int split_off = thing->blob_size / 2;
+        float max_per_blob = thing->max_hit_points / float(thing->blob_size);
+        float current_per_blob = thing->hit_points / float(thing->blob_size);
 
-    _stats_from_blob_count(thing, max_per_blob, current_per_blob);
-    _stats_from_blob_count(new_slime, max_per_blob, current_per_blob);
+        thing->blob_size -= split_off;
+        new_slime->blob_size = split_off;
+
+        new_slime->set_hit_dice(thing->get_experience_level());
+
+        _stats_from_blob_count(thing, max_per_blob, current_per_blob);
+        _stats_from_blob_count(new_slime, max_per_blob, current_per_blob);
+    }
 
     if (crawl_state.game_is_arena())
         arena_split_monster(thing, new_slime);
@@ -276,29 +330,6 @@ static monster* _do_split(monster* thing, const coord_def & target)
     ASSERT(new_slime->alive());
 
     return new_slime;
-}
-
-// Cause a monster to lose a turn. has_gone should be true if the
-// monster has already moved this turn.
-static void _lose_turn(monster* mons, bool has_gone)
-{
-    const monsterentry* entry = get_monster_data(mons->type);
-
-    // We want to find out if mons will move next time it has a turn
-    // (assuming for the sake of argument the next delay is 10). If it's
-    // already going to lose a turn we don't need to do anything.
-    mons->speed_increment += entry->speed;
-    if (!mons->has_action_energy())
-        return;
-    mons->speed_increment -= entry->speed;
-
-    mons->speed_increment -= entry->energy_usage.move;
-
-    // So we subtracted some energy above, but if mons hasn't moved yet
-    // /this turn, that will just cancel its turn in this round of
-    // world_reacts().
-    if (!has_gone)
-        mons->speed_increment -= entry->energy_usage.move;
 }
 
 // Actually merge two slime creatures, pooling their hp, etc.
@@ -328,13 +359,12 @@ static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
         merge_to->props[OKAWARU_DUEL_CURRENT_KEY] = true;
     }
 
-    // Merging costs the combined slime some energy. The idea is that if 2
-    // slimes merge you can gain a space by moving away the turn after (maybe
-    // this is too nice but there will probably be a lot of complaints about
-    // the damage on higher level slimes). We see if mons has gone already by
-    // checking its mindex (this works because handle_monsters just iterates
-    // over env.mons in ascending order).
-    _lose_turn(merge_to, merge_to->mindex() < initial_slime->mindex());
+    // Give the player 10 aut to act without the merged slime creature acting
+    // (if the slime isn't hasted). The idea is that if 2 slimes merge you can
+    // gain a space by moving away the turn after (maybe this is too nice but
+    // there will probably be a lot of complaints about the damage on higher
+    // level slimes).
+    merge_to->speed_increment = 79 - mons_class_base_speed(merge_to->type);
 
     // Overwrite the state of the slime getting merged into, because it
     // might have been resting or something.
@@ -363,8 +393,9 @@ static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
             mprf("Something merges into %s, and it vanishes!",
                  old_name.c_str());
         }
-
-        flash_view_delay(UA_MONSTER, LIGHTGREEN, 150);
+        draw_ring_animation(merge_to->pos(), 2, LIGHTGREEN, LIGHTGREEN,
+                            false, 50, TILE_BOLT_SLIME_WAVE);
+        flash_tile(merge_to->pos(), LIGHTGREEN, 50, TILE_BOLT_SLIME_MERGE);
     }
     else if (you.can_see(*initial_slime))
     {
@@ -423,7 +454,7 @@ static bool _slime_merge(monster* thing)
         // Don't merge if there is an open square that reduces distance
         // to target, even if we found a possible slime to merge with.
         if (!actor_at(*ai)
-            && mons_class_can_pass(MONS_SLIME_CREATURE, env.grid(*ai)))
+            && monster_habitable_grid(MONS_SLIME_CREATURE, *ai))
         {
             return false;
         }
@@ -439,6 +470,8 @@ static bool _slime_merge(monster* thing)
             && other_thing->has_ench(ENCH_HEXED) == thing->has_ench(ENCH_HEXED)
             && other_thing->is_summoned() == thing->is_summoned()
             && !other_thing->is_shapeshifter()
+            && other_thing->has_ench(ENCH_FIGMENT) == thing->has_ench(ENCH_FIGMENT)
+            && other_thing->is_unrewarding() == thing->is_unrewarding()
             && !_disabled_merge(other_thing))
         {
             // We can potentially merge if doing so won't take us over
@@ -463,13 +496,13 @@ static bool _slime_merge(monster* thing)
 
 static bool _slime_can_spawn(const coord_def target)
 {
-    return mons_class_can_pass(MONS_SLIME_CREATURE, env.grid(target))
+    return monster_habitable_grid(MONS_SLIME_CREATURE, target)
            && !actor_at(target);
 }
 
 // See if slime creature 'thing' can split, and carry out the split if
 // we can find a square to place the new slime creature on.
-static monster *_slime_split(monster* thing, bool force_split)
+static monster *_slime_split(monster* thing, bool force_split, bool quiet = false)
 {
     if (!thing || thing->blob_size <= 1 || thing->hit_points < 4
         || (coinflip() && !force_split) // Don't make splitting quite so reliable. (jpeg)
@@ -514,7 +547,7 @@ static monster *_slime_split(monster* thing, bool force_split)
             // This can fail if placing a new monster fails. That
             // probably means we have too many monsters on the level,
             // so just return in that case.
-            return _do_split(thing, *ai);
+            return _do_split(thing, *ai, quiet);
         }
     }
 
@@ -558,6 +591,64 @@ bool slime_creature_polymorph(monster& slime, poly_power_type power)
     }
 
     return monster_polymorph(&slime, RANDOM_POLYMORPH_MONSTER, power);
+}
+
+int slymdra_split(monster& slymdra, int count, bool quiet)
+{
+    ASSERT(slymdra.type == MONS_SLYMDRA);
+
+    int num_splits = 0;
+    int& fake_heads = slymdra.props[SLYMDRA_FAKE_HEADS_KEY].get_int();
+    int& real_slimes = slymdra.props[SLYMDRA_SLIMES_EATEN_KEY].get_int();
+    if (count == -1)
+        count = slymdra.num_heads - 4;
+
+    if (count <= 0 || real_slimes == 0 && fake_heads == 0)
+        return 0;
+    for (distance_iterator di(slymdra.pos(), true, true, 2); di; ++di)
+    {
+        if (cell_see_cell(slymdra.pos(), *di, LOS_NO_TRANS) && _slime_can_spawn(*di))
+        {
+            if (monster* slime = _do_split(&slymdra, *di, quiet))
+            {
+                if (real_slimes > 0)
+                    --real_slimes;
+                else
+                {
+                    slime->flags |= (MF_NO_REWARD | MF_HARD_RESET);
+                    --fake_heads;
+                }
+
+                // If we've split out as many things as we want or as many as we *can*, return.
+                if (++num_splits >= count || real_slimes == 0 && fake_heads == 0)
+                    return num_splits;
+            }
+        }
+    }
+
+    return num_splits;
+}
+
+bool slymdra_polymorph(monster& slymdra, poly_power_type power)
+{
+    ASSERT(slymdra.type == MONS_SLYMDRA);
+    int count = slymdra_split(slymdra, -1, true);
+
+    if (you.can_see(slymdra) && count > 0)
+    {
+        if (count == 1)
+        {
+            mprf("A slime creature is ejected from %s body as it begins to warp and change.",
+                 slymdra.name(DESC_ITS).c_str());
+        }
+        else
+        {
+            mprf("%d slime creatures are ejected from %s body as it begins to warp and change.",
+                 count, slymdra.name(DESC_ITS).c_str());
+        }
+    }
+
+    return monster_polymorph(&slymdra, RANDOM_POLYMORPH_MONSTER, power);
 }
 
 static bool _starcursed_split(monster* mon)
@@ -622,11 +713,14 @@ static void _starcursed_scream(monster* mon, actor* target)
     {
         if (you.see_cell(target->pos()))
         {
-            mprf(target->as_monster()->friendly() ? MSGCH_FRIEND_SPELL
-                                                  : MSGCH_MONSTER_SPELL,
-                 "%s writhes in pain as voices assail %s mind.",
+            bool mind = mons_intel(*target->as_monster()) > I_BRAINLESS;
+            mprf(mon->friendly() ? MSGCH_FRIEND_SPELL
+                                 : MSGCH_MONSTER_SPELL,
+                 "%s writhes%s as voices assail %s %s.",
                  target->name(DESC_THE).c_str(),
-                 target->pronoun(PRONOUN_POSSESSIVE).c_str());
+                 mind ? " in pain" : "",
+                 target->pronoun(PRONOUN_POSSESSIVE).c_str(),
+                 mind ? "mind" : "being" );
         }
     }
     else
@@ -639,7 +733,7 @@ static void _starcursed_scream(monster* mon, actor* target)
 
     for (monster *voice : chorus)
         if (voice->alive())
-            voice->add_ench(mon_enchant(ENCH_SCREAMED, 1, voice, 1));
+            voice->add_ench(mon_enchant(ENCH_ABILITY_COOLDOWN, voice, 1));
 }
 
 static bool _will_starcursed_scream(monster* mon)
@@ -653,7 +747,7 @@ static bool _will_starcursed_scream(monster* mon)
 
         // Don't scream if any part of the chorus has a scream timeout
         // (This prevents it being staggered into a bunch of mini-screams)
-        if (mi->has_ench(ENCH_SCREAMED))
+        if (mi->has_ench(ENCH_ABILITY_COOLDOWN))
             return false;
         else
             n++;
@@ -676,6 +770,10 @@ static bool _lost_soul_affectable(const monster &mons)
 
     // undead can be reknit, naturals ghosted, everyone else is out of luck
     if (!(mons.holiness() & (MH_UNDEAD | MH_NATURAL)))
+        return false;
+
+    // Slowly dying monsters should not be made permanently alive
+    if (mons.has_ench(ENCH_SLOWLY_DYING))
         return false;
 
     // already been revived once
@@ -761,16 +859,15 @@ bool lost_soul_revive(monster& mons, killer_type killer)
         }
 
         targeter_radius hitfunc(*mi, LOS_SOLID);
-        flash_view_delay(UA_MONSTER, GREEN, 200, &hitfunc);
+        flash_view_delay(UA_MONSTER, GREEN, 200, 75, &hitfunc);
 
         mons.heal(mons.max_hit_points);
-        mons.del_ench(ENCH_CONFUSION, true);
-        mons.timeout_enchantments(10);
+        mons.timeout_enchantments();
 
         coord_def newpos = mi->pos();
         if (was_alive)
         {
-            mons.move_to_pos(newpos);
+            mons.move_to(newpos, MV_INTERNAL);
             mons.flags |= (MF_SPECTRALISED | MF_FAKE_UNDEAD);
         }
 
@@ -808,22 +905,14 @@ void treant_release_fauna(monster& mons)
     int count = mons.mangrove_pests;
     bool created = false;
 
-    monster_type fauna_t = MONS_HORNET;
+    monster_type fauna_t = one_chance_in(4) ? MONS_RAVEN : MONS_HORNET;
 
     for (int i = 0; i < count; ++i)
     {
         mgen_data fauna_data(fauna_t, SAME_ATTITUDE(&mons),
                             mons.pos(),  mons.foe);
         fauna_data.extra_flags |= MF_WAS_IN_VIEW;
-
-        // If the mangrove was summoned, give its fauna the same summon type and duration.
-        if (mons.is_summoned())
-        {
-            mon_enchant summ = mons.get_ench(ENCH_SUMMON);
-            mon_enchant timer = mons.get_ench(ENCH_SUMMON_TIMER);
-            fauna_data.set_summoned(summ.agent(), summ.degree, timer.duration,
-                                    mons.is_abjurable(), !!(mons.flags & ~MF_PERSISTS));
-        }
+        fauna_data.copy_from_parent(&mons);
 
         if (create_monster(fauna_data))
         {
@@ -834,8 +923,16 @@ void treant_release_fauna(monster& mons)
 
     if (created && you.can_see(mons))
     {
-        mprf("Angry insects surge out from beneath %s foliage!",
-             mons.name(DESC_ITS).c_str());
+        if (fauna_t == MONS_RAVEN)
+        {
+            mprf("Jet-black ravens fly out from beneath %s foliage!",
+                 mons.name(DESC_ITS).c_str());
+        }
+        else
+        {
+            mprf("Angry insects surge out from beneath %s foliage!",
+                mons.name(DESC_ITS).c_str());
+        }
     }
 }
 
@@ -902,7 +999,7 @@ static void _weeping_skull_cloud_aura(monster* mons)
         place_cloud(CLOUD_MISERY, pos[i], random2(3) + 2, mons);
 }
 
-static void _seismosaurus_egg_hatch(monster* mons)
+void seismosaurus_egg_hatch(monster* mons)
 {
     mon_enchant hatch = mons->get_ench(ENCH_HATCHING);
     hatch.duration -= 1;
@@ -936,6 +1033,11 @@ static void _seismosaurus_egg_hatch(monster* mons)
         // Immediately stomp if anything is in range
         mons->speed_increment = 80;
         try_mons_cast(*mons, SPELL_SEISMIC_STOMP);
+        queue_monster_for_action(mons);
+
+        // Clean up range indicator
+        for (distance_iterator di(mons->pos(), false, false, 4); di; ++di)
+            env.pgrid(*di) &= ~FPROP_SEISMOROCK;
 
         return;
     }
@@ -943,10 +1045,81 @@ static void _seismosaurus_egg_hatch(monster* mons)
     mons->update_ench(hatch);
 }
 
-static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
-                                   spell_type spell_cast)
+// Attempt to merge with any nearby aligned slime creatures
+static bool _slymdra_try_merge(monster* mons)
 {
-    mons_cast(mons, pbolt, spell_cast, MON_SPELL_NATURAL);
+    int did_merge = 0;
+    const int old_heads = mons->num_heads;
+    int new_heads = old_heads;
+    for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+    {
+        if (monster* mon_at = monster_at(*ai))
+        {
+            if (mon_at->type == MONS_SLIME_CREATURE
+                && mons_aligned(mons, mon_at))
+            {
+                const int extra_heads = mon_at->blob_size;
+
+                // Don't absorb more heads than we can handle.
+                if (new_heads + extra_heads > 20)
+                    continue;
+
+                if (mon_at->is_unrewarding() || mon_at->is_summoned())
+                    mons->props[SLYMDRA_FAKE_HEADS_KEY].get_int() += extra_heads;
+                else
+                    mons->props[SLYMDRA_SLIMES_EATEN_KEY].get_int() += extra_heads;
+
+                new_heads += extra_heads;
+                merge_ench_durations(*mon_at, *mons);
+                monster_die(*mon_at, KILL_RESET, NON_MONSTER);
+
+                ++did_merge;
+            }
+        }
+    }
+
+    if (did_merge > 0)
+    {
+        if (you.see_cell(mons->pos()))
+        {
+            flash_tile(mons->pos(), LIGHTGREEN, 50, TILE_BOLT_SLIME_MERGE);
+            const int gained_heads = new_heads - old_heads;
+            const string head_msg = gained_heads == 1 ? "sprouts a new head"
+                                                      : make_stringf("sprouts %d new heads", gained_heads);
+            if (did_merge > 1)
+            {
+                mprf("%s absorbs %d nearby slime creatures and %s.",
+                        mons->name(DESC_THE).c_str(), did_merge, head_msg.c_str());
+            }
+            else
+            {
+                mprf("%s absorbs a nearby slime creature and %s.",
+                        mons->name(DESC_THE).c_str(), head_msg.c_str());
+            }
+        }
+        mons->num_heads = new_heads;
+        slymdra_scale_hp(*mons);
+        return true;
+    }
+
+    return false;
+}
+
+static bool _slymdra_split_or_merge(monster* mons)
+{
+    const actor* foe = mons->get_foe();
+    if (mons->behaviour == BEH_SEEK
+        && foe && mons->see_cell_no_trans(foe->pos()) && coinflip())
+    {
+        return _slymdra_try_merge(mons);
+    }
+    else if (mons->num_heads > 4
+             && (!foe || !mons->see_cell(foe->pos())) && one_chance_in(10))
+    {
+        return slymdra_split(*mons, 1);
+    }
+
+    return false;
 }
 
 bool mon_special_ability(monster* mons)
@@ -959,8 +1132,8 @@ bool mon_special_ability(monster* mons)
 
     // Slime creatures can split while out of sight.
     if ((!mons->near_foe() || mons->asleep())
-         && mons->type != MONS_SLIME_CREATURE
-         && mons->type != MONS_SEISMOSAURUS_EGG)
+         && !(mons->type == MONS_SLIME_CREATURE
+              || mons->type == MONS_SLYMDRA))
     {
         return false;
     }
@@ -982,10 +1155,11 @@ bool mon_special_ability(monster* mons)
             return true;
         break;
 
-    case MONS_BALL_LIGHTNING:
-        if (is_sanctuary(mons->pos()))
-            break;
+    case MONS_SLYMDRA:
+        used = _slymdra_split_or_merge(mons);
+        break;
 
+    case MONS_BALL_LIGHTNING:
         if (mons->attitude == ATT_HOSTILE
             && grid_distance(you.pos(), mons->pos()) <= 2)
         {
@@ -1003,26 +1177,18 @@ bool mon_special_ability(monster* mons)
                 continue;
             }
 
-            if (!cell_is_solid(targ->pos()))
-            {
-                mons->suicide();
-                used = true;
-                break;
-            }
+            mons->suicide();
+            used = true;
+            break;
         }
         break;
 
     case MONS_FOXFIRE:
-        if (is_sanctuary(mons->pos()))
-            break;
-
+    case MONS_SHOOTING_STAR:
         if (mons->attitude == ATT_HOSTILE
             && grid_distance(you.pos(), mons->pos()) == 1)
         {
-            foxfire_attack(mons, &you);
-            check_place_cloud(CLOUD_FLAME, mons->pos(), 2, mons);
-            if (mons->alive())
-                monster_die(*mons, KILL_RESET, NON_MONSTER, true);
+            seeker_attack(*mons, you);
             used = true;
             break;
         }
@@ -1031,19 +1197,14 @@ bool mon_special_ability(monster* mons)
         {
             if (mons_aligned(mons, *targ) || targ->is_firewood()
                 || grid_distance(mons->pos(), targ->pos()) > 1
-                || !you.see_cell(targ->pos()))
+                || (mons->friendly() && !you.see_cell(targ->pos())))
             {
                 continue;
             }
 
-            if (!cell_is_solid(targ->pos()))
-            {
-                foxfire_attack(mons, *targ);
-                if (mons->alive())
-                    monster_die(*mons, KILL_RESET, NON_MONSTER, true);
-                used = true;
-                break;
-            }
+            seeker_attack(*mons, **targ);
+            used = true;
+            break;
         }
         break;
 
@@ -1055,64 +1216,14 @@ bool mon_special_ability(monster* mons)
         }
 
         if (!mons_is_confused(*mons)
-                && !is_sanctuary(mons->pos()) && !is_sanctuary(mons->target)
-                && _will_starcursed_scream(mons)
-                && coinflip())
+            && could_harm(mons, actor_at(mons->target))
+            && _will_starcursed_scream(mons)
+            && coinflip())
         {
             _starcursed_scream(mons, actor_at(mons->target));
             used = true;
         }
         break;
-
-    case MONS_THORN_HUNTER:
-    {
-        // If we would try to move into a briar (that we might have just created
-        // defensively), let's see if we can shoot our foe through it instead
-        if (actor_at(mons->pos() + mons->props[MMOV_KEY].get_coord())
-            && actor_at(mons->pos() + mons->props[MMOV_KEY].get_coord())->type == MONS_BRIAR_PATCH
-            && !one_chance_in(3))
-        {
-            actor *foe = mons->get_foe();
-            if (foe && mons->can_see(*foe))
-            {
-                bolt beem = setup_targeting_beam(*mons);
-                beem.target = foe->pos();
-                setup_mons_cast(mons, beem, SPELL_THORN_VOLLEY);
-
-                fire_tracer(mons, beem);
-                if (mons_should_fire(beem))
-                {
-                    make_mons_stop_fleeing(mons);
-                    _mons_cast_abil(mons, beem, SPELL_THORN_VOLLEY);
-                    used = true;
-                }
-            }
-        }
-        // Otherwise, if our foe is approaching us, we might want to raise a
-        // defensive wall of brambles (use the number of brambles in the area
-        // as some indication if we've already done this, and shouldn't repeat)
-        else if (mons->props[FOE_APPROACHING_KEY].get_bool() == true
-                 && !mons_is_confused(*mons)
-                 && coinflip())
-        {
-            int briar_count = 0;
-            for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
-            {
-                if (mi->type == MONS_BRIAR_PATCH
-                    && grid_distance(mons->pos(), mi->pos()) > 3)
-                {
-                    briar_count++;
-                }
-            }
-            if (briar_count < 4) // Probably no solid wall here
-            {
-                bolt beem; // unused
-                _mons_cast_abil(mons, beem, SPELL_WALL_OF_BRAMBLES);
-                used = true;
-            }
-        }
-    }
-    break;
 
     case MONS_WATER_NYMPH:
     case MONS_NORRIS:
@@ -1132,9 +1243,10 @@ bool mon_special_ability(monster* mons)
             break;
         }
 
-        if (mons->move_to_pos(spot))
+        if (mons->move_to(spot, MV_DELIBERATE | MV_TRANSLOCATION, true))
         {
             simple_monster_message(*mons, " flows with the water.");
+            mons->finalise_movement();
             used = true;
         }
     }
@@ -1154,10 +1266,11 @@ bool mon_special_ability(monster* mons)
             break;
 
         const coord_def target = _find_nearer_tree(mons->pos(), foe->pos());
-        if (target.origin() || !mons->move_to_pos(target))
+        if (target.origin() || !mons->move_to(target, MV_DELIBERATE | MV_TRANSLOCATION, true))
             break;
 
         simple_monster_message(*mons, " flows through the trees.");
+        mons->finalise_movement();
         used = true;
     }
     break;
@@ -1178,29 +1291,28 @@ bool mon_special_ability(monster* mons)
         _weeping_skull_cloud_aura(mons);
         break;
 
-    case MONS_SEISMOSAURUS_EGG:
-        if (egg_is_incubating(*mons))
+    case MONS_CLOCKWORK_BEE_INACTIVE:
+    {
+        // Note: the player is not a monster, so this will never happen to them.
+        monster* summ = monster_by_mid(mons->summoner);
+        if (summ && adjacent(summ->pos(), mons->pos()) && !summ->incapacitated()
+            && summ->has_action_energy() && !one_chance_in(4))
         {
-            _seismosaurus_egg_hatch(mons);
-            used = true;
+            if (clockwork_bee_recharge(*summ, *mons))
+                summ->lose_energy(EUT_MOVE);
         }
         break;
+    }
 
     case MONS_NAMELESS_REVENANT:
-        // If we are injured and have full memories, burn one fairly immediately.
-        if (mons->hit_points < mons->max_hit_points
-            && mons->props[NOBODY_MEMORIES_KEY].get_vector().size() == 3
-            && coinflip())
+        // If we are engaging the player and have full memories, burn one fairly
+        // immediately.
+        if (mons->foe == MHITYOU && mons->can_see(you)
+            && mons->props[NOBODY_MEMORIES_KEY].get_vector().size() == NOBODY_MAX_MEMORIES
+            && one_chance_in(3))
         {
             pyrrhic_recollection(*mons);
             used = true;
-        }
-
-        // If Nobody is left alone long enough, allow their memories to return.
-        if (you.elapsed_time > mons->props[NOBODY_RECOVERY_KEY].get_int())
-        {
-            mons->props.erase(NOBODY_RECOVERY_KEY);
-            initialize_nobody_memories(*mons);
         }
 
         break;
@@ -1227,13 +1339,13 @@ bool egg_is_incubating(const monster& egg)
     if (!parent || !adjacent(parent->pos(), egg.pos()))
         return false;
 
-    // Finally, check that there are foes sufficiently nearby (and also in the
+    // Finally, check that there are foes sufficiently nearby (and in the
     // parent's LoS)
-    for (monster_near_iterator mi(&egg, LOS_NO_TRANS); mi; ++mi)
+    for (monster_near_iterator mi(parent->pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (!mons_aligned(*mi, &egg) && !mi->is_firewood()
             && grid_distance(egg.pos(), mi->pos()) <= 4
-            && parent->see_cell(mi->pos()))
+            && egg.can_see(**mi))
         {
             return true;
         }
@@ -1284,12 +1396,11 @@ void initialize_nobody_memories(monster& nobody)
     for (size_t i = 0; i < _recollections.size(); ++i)
         weights.push_back({i, _recollections[i].weight});
 
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < NOBODY_MAX_MEMORIES; ++i)
     {
         const int index = *random_choose_weighted(weights);
         memories.push_back(index);
-        weights[index] = weights.back();
-        weights.pop_back();
+        weights[index].second = 0;
     }
 }
 
@@ -1300,6 +1411,7 @@ bool pyrrhic_recollection(monster& nobody)
         return false;
 
     const bool can_see = you.see_cell(nobody.pos());
+    const bool was_injured = nobody.hit_points < nobody.max_hit_points;
 
     if (can_see)
         draw_ring_animation(nobody.pos(), 3, LIGHTCYAN, CYAN, true);
@@ -1320,25 +1432,44 @@ bool pyrrhic_recollection(monster& nobody)
 
     if (can_see)
     {
-        mprf(MSGCH_MONSTER_SPELL, "%s ignites a memory of %s to re-knit themselves.",
+        mprf(MSGCH_MONSTER_SPELL, "%s ignites a memory of %s%s.",
                 nobody.name(DESC_THE).c_str(),
-                comma_separated_line(spell_names.begin(), spell_names.end()).c_str());
+                comma_separated_line(spell_names.begin(), spell_names.end()).c_str(),
+                was_injured ? " to re-knit themselves" : "");
         string speech = make_stringf("\"We remember... %s...\"",
                             getSpeakString("nobody_recollection " + recollection.key).c_str());
         mons_speaks_msg(&nobody, speech, MSGCH_TALK);
     }
 
-    // Heal and move.
     nobody.heal(nobody.max_hit_points);
 
     // If this was a phantom mirror copy, allow it to revive, but don't wipe out
-    // its summoner timer at the same time, to keep it from having unlimited duration.
-    mon_enchant summon_timer = nobody.get_ench(ENCH_SUMMON_TIMER);
-    nobody.timeout_enchantments(1000);
-    nobody.update_ench(summon_timer);
+    // its summon timer at the same time, to keep it from having unlimited duration.
+    mon_enchant summon_timer;
+    if (nobody.has_ench(ENCH_SUMMON_TIMER))
+    {
+        summon_timer = nobody.get_ench(ENCH_SUMMON_TIMER);
+        nobody.del_ench(ENCH_SUMMON_TIMER, true, false);
+    }
+    // Also, manually delete the previous enkindle without effect, in case
+    // Nobody's taken a big enough hit to go from healthy to dead in one action,
+    // or we'll immediately wipe out the spells we just gave them.
+    nobody.del_ench(ENCH_PYRRHIC_RECOLLECTION, true, false);
+    // XXX: Also save their Haste and Might, since the *point* of that spellset
+    // is that the effects can linger into other phases. It would really be
+    // nice if there was a general 'clear *negative* status effects on a monster,
+    // but we don't have that at the moment.
+    mon_enchant haste = nobody.get_ench(ENCH_HASTE);
+    mon_enchant might = nobody.get_ench(ENCH_MIGHT);
+    nobody.timeout_enchantments(10000, true);
+    nobody.add_ench(summon_timer);
+    nobody.add_ench(haste);
+    nobody.add_ench(might);
 
-    monster_blink(&nobody, true, true);
-    nobody.add_ench(mon_enchant(ENCH_PYRRHIC_RECOLLECTION, 0, &nobody, random_range(300, 500)));
+    nobody.add_ench(mon_enchant(ENCH_PYRRHIC_RECOLLECTION, &nobody, random_range(300, 500)));
+
+    if (was_injured)
+        monster_blink(&nobody, true, true);
 
     // Don't immediately expire summons (we want them to stick around into the next phase),
     // but at least make them time out a bit faster.
@@ -1357,7 +1488,266 @@ bool pyrrhic_recollection(monster& nobody)
     // Allow Nobody to wake up if you kill them in their sleep
     behaviour_event(&nobody, ME_ALERT);
 
-    avoided_death_fineff::schedule(&nobody);
+    schedule_avoided_death_fineff(&nobody);
 
     return true;
+}
+
+// AoE attack when the player attacks in scarab form
+void solar_ember_blast()
+{
+    monster* ember = get_solar_ember();
+    if (!ember)
+        return;
+
+    if (!ember->has_ench(ENCH_SPELL_CHARGED))
+    {
+        simple_monster_message(*ember, " glows brighter.");
+        ember->add_ench(mon_enchant(ENCH_SPELL_CHARGED, ember, random_range(70, 90)));
+        you.did_trigger(DID_SOLAR_EMBER);
+        return;
+    }
+
+    vector<monster*> targs;
+    for (adjacent_iterator ai(ember->pos()); ai; ++ai)
+        if (monster* mon = monster_at(*ai))
+            if (could_harm_enemy(&you, mon) && !mon->is_firewood() && you.see_cell_no_trans(mon->pos()))
+                targs.push_back(mon);
+
+    if (targs.empty())
+        return;
+
+    simple_monster_message(*ember, " blazes with a fierce heat.", false, MSGCH_FRIEND_SPELL);
+
+    bolt beam;
+    beam.flavour = BEAM_FIRE;
+    dice_def dmg = get_form()->get_special_damage();
+    for (monster* mon : targs)
+    {
+        if (!mon->alive())
+            continue;
+
+        flash_tile(mon->pos(), RED, 0);
+        const int damage_done = mons_adjust_flavoured(mon, beam, mon->apply_ac(dmg.roll()));
+        mprf("The solar flare engulfs %s%s.", mon->name(DESC_THE).c_str(),
+                damage_done ? "" : " but does no damage");
+        mon->hurt(ember, damage_done, BEAM_FIRE);
+    }
+
+    animation_delay(10, true);
+
+    ember->hurt(ember, random_range(7, 10));
+    ember->del_ench(ENCH_SPELL_CHARGED);
+
+    you.did_trigger(DID_SOLAR_EMBER);
+}
+
+static bool _make_tesseract_spawn(bool near_player, bool outside_vault = false)
+{
+    mgen_data mg(one_chance_in(6) ? MONS_ORB_GUARDIAN : WANDERING_MONSTER);
+    mg.place = level_id::current();
+    mg.place.depth = 7;
+    mg.flags |= MG_FORBID_BANDS;
+    mg.extra_flags |= (MF_HARD_RESET | MF_TESSERACT_SPAWN);
+    mg.foe = MHITYOU;
+    mg.non_actor_summoner = "a Boundless Tesseract";
+    mg.proximity = near_player ? PROX_CLOSE_TO_PLAYER
+                               : PROX_AWAY_FROM_PLAYER;
+
+    if (outside_vault)
+    {
+        int tries = 500;
+        while (--tries > 0)
+        {
+            coord_def pos = random_in_bounds();
+            if (!monster_habitable_grid(mg.cls, pos))
+                continue;
+
+            const vault_placement *vp = dgn_vault_at(pos);
+            if (!(vp && vp->map_name_at(pos) == "hall_of_Zot"))
+            {
+                mg.pos = pos;
+                mg.flags |= MG_FORCE_PLACE;
+                break;
+            }
+        }
+
+        if (tries <= 0)
+            return false;
+    }
+
+    return mons_place(mg);
+}
+
+void activate_tesseracts()
+{
+    if (you.props.exists(TESSERACT_SPAWN_COUNTER_KEY))
+        return;
+
+    bool did_activate = false;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type != MONS_BOUNDLESS_TESSERACT)
+            continue;
+
+        if (!did_activate)
+        {
+            mprf(MSGCH_WARN, "You feel the power of Zot begin to gather its forces!");
+            take_note(Note(NOTE_TESSERACT_ACTIVATED));
+            mark_milestone("tesseract.activate", "activated a tesseract");
+            // Tracked on the player instead of the monster so status lookup is quicker.
+            you.props[TESSERACT_SPAWN_COUNTER_KEY] = 0;
+            mi->props[TESSERACT_SPAWN_TIMER_KEY] = you.elapsed_time;
+
+            // Remove patrolling from everything but Orb guardians.
+            for (monster_iterator mi2; mi2; ++mi2)
+                if (mi2->type != MONS_ORB_GUARDIAN && !mi2->friendly())
+                    mi2->patrol_point.reset();
+
+            tesseract_action(**mi);
+            did_activate = true;
+
+            // Spawn several monsters outside the orb vault immediately.
+            const int num = random_range(4, 7);
+            for (int i = 0; i < num; ++i)
+                _make_tesseract_spawn(false, true);
+        }
+
+        behaviour_event(*mi, ME_ALERT);
+        record_monster_seen_at(mi->pos(), **mi);
+        set_terrain_seen(mi->pos());
+        view_update_at(mi->pos());
+#ifdef USE_TILE
+        tiles.update_minimap(mi->pos());
+#endif
+    }
+}
+
+void tesseract_action(monster& mon)
+{
+    // Only operate logic on a single tesseract on the floor
+    if (!mon.props.exists(TESSERACT_SPAWN_TIMER_KEY))
+        return;
+
+    // Handle regular spawning
+    int& timer = mon.props[TESSERACT_SPAWN_TIMER_KEY].get_int();
+    int& count = you.props[TESSERACT_SPAWN_COUNTER_KEY].get_int();
+
+    // Don't act as if more than 500 turns have passed off-level. (It only runs
+    // off-level at all to prevent it being correct to return to Zot:4 every
+    // time you want to rest, and this is hopefully long enough to cover those
+    // situations.)
+    if (you.elapsed_time - timer > 5000)
+        timer = you.elapsed_time - 5000;
+
+    // Exit early if it's not yet time to spawn things.
+    if (you.elapsed_time < timer)
+        return;
+
+    // Count number of both tesseract spawns and remaining non-tesseract
+    // monsters on the floor.
+    int spawn_count = 0;
+    int non_spawn_count = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->flags & MF_TESSERACT_SPAWN)
+            ++spawn_count;
+        else if (!mi->is_summoned() && !mi->is_peripheral() && !mi->wont_attack())
+            ++non_spawn_count;
+    }
+
+    // Cap number of tesseract spawns at 60, and total number of monsters on the
+    // floor at 100 (which is above the average starting monster count, but not
+    // the *maximum* starting monster count).
+    int allowed = min(60 - spawn_count, 100 - spawn_count - non_spawn_count);
+
+    // Catch up however many spawns should have happened since the last time
+    // we activated.
+    while (you.elapsed_time >= timer && allowed > 0)
+    {
+        // Spawn a monster every ~50 turns.
+        timer += random_range(350, 650);
+
+        if (!_make_tesseract_spawn(count >= 50 && coinflip()))
+            break;
+
+        --allowed;
+        ++count;
+    }
+}
+
+// Checks if a thorn hunter is in range to shoot from their current position
+bool thorn_hunter_range_check(monster& mon)
+{
+    const actor* foe = mon.get_foe();
+    if (foe)
+    {
+        bolt beem = setup_targeting_beam(mon);
+        beem.target = foe->pos();
+        setup_mons_cast(&mon, beem, SPELL_THORN_VOLLEY);
+        targeting_tracer tracer;
+        fire_tracer(&mon, tracer, beem);
+        if (mons_should_fire(beem, tracer))
+            return true;
+    }
+
+    return false;
+}
+
+void thorn_hunter_raise_barrier(monster& mon, bool skip_proximity_check)
+{
+    if (mon.has_ench(ENCH_ABILITY_COOLDOWN))
+        return;
+
+    if (!skip_proximity_check)
+    {
+        bool found = false;
+        for (radius_iterator ri(mon.pos(), 3, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+        {
+            // Raising briars against adjacent enemies is pointless.
+            if (adjacent(*ri, mon.pos()))
+                continue;
+
+            if (const actor* act = actor_at(*ri))
+            {
+                if (!mons_aligned(act, &mon) && !act->is_firewood())
+                {
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        // Don't raise a proximity barrier without a nearby enemy.
+        if (found == false)
+            return;
+    }
+
+    // Now check that we can still fire usefully from our current position
+    // (or there's no point in bunkering down).
+    if (!thorn_hunter_range_check(mon))
+        return;
+
+    // Finally, let's actually make the barricade
+    bool made_briar = false;
+    for (radius_iterator ri(mon.pos(), 2, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+    {
+        if (ri->distance_from(mon.pos()) == 2 && coinflip())
+            continue;
+
+        if (in_bounds(*ri) && !actor_at(*ri) && monster_habitable_grid(MONS_BRIAR_PATCH, *ri))
+        {
+            mgen_data briar = mgen_data(MONS_BRIAR_PATCH, SAME_ATTITUDE(&mon),
+                                        *ri, MHITNOT, MG_FORCE_PLACE);
+            briar.set_summoned(&mon, SPELL_CAGE_OF_BRAMBLES, random_range(60, 110), false, false);
+            if (create_monster(briar))
+                made_briar = true;
+        }
+    }
+
+    if (made_briar)
+    {
+        mon.add_ench(mon_enchant(ENCH_ABILITY_COOLDOWN, &mon, random_range(150, 250)));
+        simple_monster_message(mon, " raises briars to defend itself!", false, MSGCH_MONSTER_SPELL);
+    }
 }

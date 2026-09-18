@@ -65,8 +65,8 @@ static const char *daction_names[] =
     "hogs to humans",
 #if TAG_MAJOR_VERSION == 34
     "end spirit howl",
-#endif
     "gold to top of piles",
+#endif
     "bribe timeout",
     "remove Gozag shops",
     "apply Gozag bribes",
@@ -78,6 +78,7 @@ static const char *daction_names[] =
     "upgrade ancestor",
     "remove Ignis altars",
     "cleanup Beogh vengeance markers",
+    "cleanup Bane of Mortality summons",
 };
 #endif
 
@@ -135,7 +136,10 @@ bool mons_matches_daction(const monster* mon, daction_type act)
     case DACT_BEOGH_VENGEANCE_CLEANUP:
         return mon->has_ench(ENCH_VENGEANCE_TARGET)
                && mon->get_ench(ENCH_VENGEANCE_TARGET).degree
-                  <= you.props[BEOGH_VENGEANCE_NUM_KEY].get_int();
+                  != you.props[BEOGH_VENGEANCE_NUM_KEY].get_int();
+
+    case DACT_BANE_MORTALITY_CLEANUP:
+        return mon->was_created_by(MON_SUMM_MORTALITY);
 
     default:
         return false;
@@ -179,7 +183,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
 {
     // Transiting monsters exist outside the normal monster list (env.mons or
     // env.mons for short). Be careful not to write them into the monster grid, by,
-    // for example, calling monster::move_to_pos on them.
+    // for example, calling monster::move_to() on them.
     // See _daction_hog_to_human for an example.
     switch (act)
     {
@@ -220,9 +224,15 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             if (companion_list.count(mon->mid))
                 break;
 
-            simple_monster_message(*mon, " is freed.");
-            // The monster disappears.
-            monster_die(*mon, KILL_RESET_KEEP_ITEMS, NON_MONSTER);
+            // XXX: Killing a transiting monster that can drop items directly is
+            //      very unsafe, since their item links will point to other
+            //      items on the player's current floor. Instead, mark them to
+            //      die the moment they actually get placed.
+            if (in_transit)
+                mon->add_ench(mon_enchant(ENCH_SLOWLY_DYING, &you, 1));
+            else
+                monster_die(*mon, KILL_RESET_KEEP_ITEMS, NON_MONSTER);
+
             break;
 
         case DACT_SLIME_NEW_ATTEMPT:
@@ -233,10 +243,8 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
         {
             simple_monster_message(*mon, " departs this earthly plane.");
             if (!in_transit)
-            {
-                check_place_cloud(CLOUD_BLACK_SMOKE, mon->pos(),
-                                                random_range(3, 5), nullptr);
-            }
+                place_cloud(CLOUD_BLACK_SMOKE, mon->pos(), random_range(3, 5), nullptr);
+
             // The monster disappears.
             monster_die(*mon, KILL_RESET, NON_MONSTER);
             break;
@@ -273,9 +281,44 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             mon->patrol_point.reset();
             break;
 
+        case DACT_BANE_MORTALITY_CLEANUP:
+            monster_die(*mon, KILL_RESET, NON_MONSTER);
+            break;
+
         // The other dactions do not affect monsters directly.
         default:
             break;
+    }
+}
+
+// Print a farewell message from any of Pikel's minions who are visible.
+static void _pikel_band_message()
+{
+    int visible_minions = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_LEMURE
+            && mi->props.exists(PIKEL_BAND_KEY)
+            && mi->observable())
+        {
+            visible_minions++;
+        }
+    }
+    if (visible_minions > 0 && you.num_turns > 0)
+    {
+        if (you.get_mutation_level(MUT_NO_LOVE))
+        {
+            const char *substr = visible_minions > 1 ? "minions" : "minion";
+            mprf("Pikel's spell is broken, but his former %s can only feel hate"
+                 " for you!", substr);
+        }
+        else
+        {
+            const char *substr = visible_minions > 1
+                ? "minions thank you for their"
+                : "minion thanks you for its";
+            mprf("With Pikel's spell broken, his former %s freedom.", substr);
+        }
     }
 }
 
@@ -284,6 +327,8 @@ static void _apply_daction(daction_type act)
     ASSERT_RANGE(act, 0, NUM_DACTIONS);
     dprf("applying delayed action: %s", daction_names[act]);
 
+    if (DACT_PIKEL_MINIONS == act)
+        _pikel_band_message();
     switch (act)
     {
     case DACT_JIYVA_DEAD:
@@ -304,6 +349,7 @@ static void _apply_daction(daction_type act)
     case DACT_BRIBE_TIMEOUT:
     case DACT_SET_BRIBES:
     case DACT_BEOGH_VENGEANCE_CLEANUP:
+    case DACT_BANE_MORTALITY_CLEANUP:
         for (monster_iterator mi; mi; ++mi)
         {
             if (mons_matches_daction(*mi, act))
@@ -329,9 +375,6 @@ static void _apply_daction(daction_type act)
             if (item.is_type(OBJ_CORPSES, CORPSE_BODY))
                 item.freshness = 1; // thoroughly rotten
         break;
-    case DACT_GOLD_ON_TOP:
-        gozag_move_level_gold_to_top();
-        break;
     case DACT_REMOVE_GOZAG_SHOPS:
     {
         gozag_abandon_shops_on_level();
@@ -354,6 +397,7 @@ static void _apply_daction(daction_type act)
     case DACT_ALLY_UNCLEAN_CHAOTIC:
     case DACT_ALLY_SPELLCASTER:
     case DACT_ALLY_YRED_RELEASE_SOULS:
+    case DACT_GOLD_ON_TOP:
 #endif
     case NUM_DACTION_COUNTERS:
     case NUM_DACTIONS:
@@ -412,13 +456,13 @@ static void _daction_hog_to_human(monster *mon, bool in_transit)
     *mon = orig;
 
     // If the hog is in transit, then it is NOT stored in the normal
-    // monster list (env.mons or env.mons for short). We cannot call move_to_pos
-    // on such a hog, because move_to_pos will attempt to update the
-    // monster grid (env.mgrid or env.mgrid for short). Since the hog is not
-    // stored in the monster list, this will corrupt the grid. The transit code
-    // will update the grid properly once the transiting hog has been placed.
+    // monster list (env.mons or env.mons for short). We cannot call move_to()
+    // on such a hog, because move_to() will attempt to update the
+    // monster grid (ie: env.mgrid). Since the hog is not stored in the monster
+    // list, this will corrupt the grid. The transit code will update the grid
+    // properly once the transiting hog has been placed.
     if (!in_transit)
-        mon->move_to_pos(pos);
+        mon->move_to(pos, MV_INTERNAL);
     // "else {mon->position = pos}" is unnecessary because the transit code will
     // ignore the old position anyway.
     mon->enchantments = enchantments;

@@ -10,6 +10,7 @@
 #include <functional>
 
 #include "ability.h"
+#include "abyss.h"
 #include "artefact.h"
 #include "branch.h"
 #include "cio.h"
@@ -51,6 +52,7 @@
 #include "tilepick.h"
 #include "tileview.h"
 #include "ui.h"
+#include "unicode.h"
 #include "viewchar.h"
 #include "view.h"
 
@@ -159,11 +161,13 @@ private:
 /**
  * What monster enum corresponds to the given Serpent of Hell name?
  *
- * @param soh_name  The name of the monster; e.g. "the Serpent of Hell dis".
+ * @param soh_name  The name of the monster; e.g. "Serpent of Hell dis".
  * @return          The corresponding enum; e.g. MONS_SERPENT_OF_HELL_DIS.
  */
 static monster_type _soh_type(string &soh_name)
 {
+    // If no branch or no valid branch was specified, this will be "hell", in
+    // which case we default to Gehenna below.
     const string flavour = lowercase_string(soh_name.substr(soh_name.find_last_of(' ')+1));
 
     branch_type branch = NUM_BRANCHES;
@@ -180,21 +184,20 @@ static monster_type _soh_type(string &soh_name)
         case BRANCH_TARTARUS:
             return MONS_SERPENT_OF_HELL_TARTARUS;
         case BRANCH_GEHENNA:
-            return MONS_SERPENT_OF_HELL;
         default:
-            die("bad serpent of hell name");
+            return MONS_SERPENT_OF_HELL;
     }
 }
 
 static bool _is_soh(string name)
 {
-    return starts_with(lowercase(name), "the serpent of hell");
+    return starts_with(lowercase(name), "serpent of hell");
 }
 
 static string _soh_name(monster_type m_type)
 {
     branch_type b = serpent_of_hell_branch(m_type);
-    return string("The Serpent of Hell (") + branches[b].longname + ")";
+    return string("Serpent of Hell (") + branches[b].longname + ")";
 }
 
 static monster_type _mon_by_name(string name)
@@ -369,7 +372,8 @@ static vector<string> _get_monster_keys(char32_t showchar)
         if (me->mc != i)
             continue;
 
-        if ((char32_t)me->basechar != showchar)
+        // Match either the default glyph or any player-remapped glyph for this monster.
+        if (me->basechar != showchar && mons_char(i) != showchar)
             continue;
 
         if (mons_species(i) == MONS_SERPENT_OF_HELL)
@@ -526,9 +530,37 @@ static bool _mutation_filter(string key, string /*body*/)
     return starts_with(key, "potion of"); // hack alert!
 }
 
+static bool _bane_filter(string key, string /*body*/)
+{
+    lowercase(key);
+
+    return !strip_suffix(key, " bane");
+}
+
 static bool _passive_filter(string key, string /*body*/)
 {
     return !strip_suffix(lowercase(key), " passive");
+}
+
+static bool _weapon_ego_filter(string key, string /*body*/)
+{
+    lowercase(key);
+
+    return !strip_suffix(key, " weapon ego");
+}
+
+static bool _armour_ego_filter(string key, string /*body*/)
+{
+    lowercase(key);
+
+    return !strip_suffix(key, " armour ego");
+}
+
+static bool _missile_ego_filter(string key, string /*body*/)
+{
+    lowercase(key);
+
+    return !strip_suffix(key, " missile ego");
 }
 
 static void _recap_mon_keys(vector<string> &keys)
@@ -538,7 +570,8 @@ static void _recap_mon_keys(vector<string> &keys)
         if (!_is_soh(keys[i]))
         {
             monster_type type = get_monster_by_name(keys[i]);
-            keys[i] = mons_type_name(type, DESC_PLAIN);
+            // No "the Royal Jelly".
+            keys[i] = remove_prepended_the(mons_type_name(type, DESC_PLAIN));
         }
     }
 }
@@ -593,7 +626,7 @@ static void _recap_feat_keys(vector<string> &keys)
         if (type == DNGN_ENTER_SHOP)
             keys[i] = "A shop";
         else
-            keys[i] = feature_description(type, NUM_TRAPS, "", DESC_A);
+            keys[i] = feature_description(type, "", DESC_A, NUM_BRANCHES);
     }
 }
 
@@ -639,7 +672,7 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
     mslot = fake_mon;
 
 #ifndef USE_TILE_LOCAL
-    int colour = mons_class_colour(m_type);
+    int colour = fake_mon.colour();
     if (colour == BLACK)
         colour = LIGHTGREY;
 
@@ -803,7 +836,7 @@ static MenuEntry* _cloud_menu_gen(char letter, const string &str, string &key)
     cloud_struct fake_cloud;
     fake_cloud.type = cloud;
     fake_cloud.decay = 1000;
-    me->colour = element_colour(get_cloud_colour(fake_cloud));
+    me->colour = element_colour(get_cloud_colour(fake_cloud), fake_cloud.pos);
 
     cloud_info fake_cloud_info;
     fake_cloud_info.type = cloud;
@@ -873,8 +906,12 @@ vector<string> LookupType::matching_keys(string regex) const
 
     if (no_search())
         key_list = simple_key_fetch();
-    else if (regex.size() == 1 && supports_glyph_lookup())
-        key_list = glyph_fetch(regex[0]);
+    else if (strwidth(regex) == 1 && supports_glyph_lookup())
+    {
+        char32_t c;
+        utf8towc(&c, &regex[0]);
+        key_list = glyph_fetch(c);
+    }
     else
         key_list = get_desc_keys(regex);
 
@@ -886,7 +923,8 @@ vector<string> LookupType::matching_keys(string regex) const
 
 static string _mons_desc_key(monster_type type)
 {
-    const string name = mons_type_name(type, DESC_PLAIN);
+    // No "the Royal Jelly".
+    string name = remove_prepended_the(mons_type_name(type, DESC_PLAIN));
     if (mons_species(type) == MONS_SERPENT_OF_HELL)
         return name + " " + serpent_of_hell_flavour(type);
     return name;
@@ -1035,6 +1073,16 @@ static int _describe_generic(const string &key, const string &suffix,
     return _describe_key(key, suffix, footer, "");
 }
 
+static map<monster_type, monster_type> draconian_job_to_colour =
+{
+    { MONS_DRACONIAN_STORMCALLER,   MONS_WHITE_DRACONIAN },
+    { MONS_DRACONIAN_MONK,          MONS_GREEN_DRACONIAN },
+    { MONS_DRACONIAN_SHIFTER,       MONS_PURPLE_DRACONIAN },
+    { MONS_DRACONIAN_ANNIHILATOR,   MONS_YELLOW_DRACONIAN },
+    { MONS_DRACONIAN_KNIGHT,        MONS_BLACK_DRACONIAN },
+    { MONS_DRACONIAN_SCORCHER,      MONS_RED_DRACONIAN }
+};
+
 /**
  * Describe & allow examination of the monster with the given name.
  *
@@ -1056,15 +1104,25 @@ static int _describe_monster(const string &key, const string &suffix,
         return _describe_generic(key, suffix, footer);
 
     monster_type base_type = MONS_NO_MONSTER;
-    // Might be better to show all possible combinations rather than picking
-    // one at random as this does?
     if (mons_is_draconian_job(mon_num))
-        base_type = random_draconian_monster_species();
+    {
+        // Classed draconians have a fixed colour per job since 0.28
+        const auto colour_it = draconian_job_to_colour.find(mon_num);
+        if (colour_it != draconian_job_to_colour.end())
+            base_type = colour_it -> second;
+        else
+        {
+            // Might be better to show all possible combinations rather than
+            // picking one at random as this does?
+            base_type = random_draconian_monster_species();
+        }
+    }
     monster_info mi(mon_num, base_type);
     // Avoid slime creature being described as "buggy"
     if (mi.type == MONS_SLIME_CREATURE)
         mi.slime_size = 1;
-    return describe_monsters(mi, footer);
+    mi.props[FAKE_MON_KEY] = true;
+    return describe_monster(mi, footer);
 }
 
 
@@ -1210,7 +1268,7 @@ static string _branch_transit_runes(branch_type br)
 
     string desc;
     const bool exit = br == BRANCH_VAULTS;
-    const int num_runes = br == BRANCH_ZOT ? 3 : 1;
+    const int num_runes = br == BRANCH_ZOT ? ZOT_ENTRY_RUNES : 1;
     return make_stringf("\n\nThis branch can only be %sed while carrying at "
                         "least %d rune%s of Zot.",
                         exit ? "exit" : "enter",
@@ -1223,6 +1281,11 @@ static string _branch_depth(branch_type br)
     const int depth = branches[br].numlevels;
 
     // Abyss depth is explained in the description.
+    if (br == BRANCH_ABYSS)
+    {
+        desc = make_stringf("\n(If you entered the Abyss now, you could be "
+                            "pulled as deep as Abyss:%d.)", abyss_default_depth(true));
+    }
     if (depth > 1 && br != BRANCH_ABYSS)
     {
         desc = make_stringf("\n\nThis %s is %d levels deep.",
@@ -1328,6 +1391,62 @@ static int _describe_mutation(const string &key, const string &suffix,
     return 0;
 }
 
+static int _describe_bane(const string &key, const string &suffix,
+                          string /*footer*/)
+{
+    const string bane_name = key.substr(0, key.size() - suffix.size());
+    const bane_type bane = bane_from_name(bane_name.c_str());
+    if (bane == NUM_BANES)
+    {
+        ui::error(make_stringf("Unable to get '%s' by name", key.c_str()));
+        return 0;
+    }
+    describe_bane(bane);
+    return 0;
+}
+
+static int _describe_weapon_ego(const string &key, const string &suffix,
+                                string /*footer*/)
+{
+    const string weapon_ego_name = key.substr(0, key.size() - suffix.size());
+    const brand_type wpn = weapon_ego_from_name(weapon_ego_name.c_str());
+    if (wpn == NUM_SPECIAL_WEAPONS)
+    {
+        ui::error(make_stringf("Unable to get '%s' by name", key.c_str()));
+        return 0;
+    }
+    describe_weapon_ego(wpn);
+    return 0;
+}
+
+static int _describe_armour_ego(const string &key, const string &suffix,
+                                string /*footer*/)
+{
+    const string armour_ego_name = key.substr(0, key.size() - suffix.size());
+    const special_armour_type arm = armour_ego_from_name(armour_ego_name.c_str());
+    if (arm == NUM_SPECIAL_ARMOURS)
+    {
+        ui::error(make_stringf("Unable to get '%s' by name", key.c_str()));
+        return 0;
+    }
+    describe_armour_ego(arm);
+    return 0;
+}
+
+static int _describe_missile_ego(const string &key, const string &suffix,
+                                 string /*footer*/)
+{
+    const string missile_ego_name = key.substr(0, key.size() - suffix.size());
+    const special_missile_type msl = missile_ego_from_name(missile_ego_name.c_str());
+    if (msl == NUM_SPECIAL_MISSILES)
+    {
+        ui::error(make_stringf("Unable to get '%s' by name", key.c_str()));
+        return 0;
+    }
+    describe_missile_ego(msl);
+    return 0;
+}
+
 /// All types of ?/ queries the player can enter.
 static const vector<LookupType> lookup_types = {
     LookupType('M', "monster", _recap_mon_keys, _monster_filter,
@@ -1369,6 +1488,23 @@ static const vector<LookupType> lookup_types = {
     LookupType('U', "mutation", nullptr, _mutation_filter,
                nullptr, nullptr, _mut_menu_gen,
                _describe_mutation, lookup_type::db_suffix),
+    LookupType('N', "bane", nullptr, _bane_filter,
+               nullptr, nullptr, _simple_menu_gen,
+               _describe_bane, lookup_type::db_suffix),
+    // XXX: Capitalise "Ego" when it's the second word in the menu
+    // titles that use it, so that it matches when the first word is
+    // capitalised, and so that the default settings in
+    // dat/defaults/menu_colours.txt don't colour the menu titles green
+    // just for containing "ego".
+    LookupType('W', "weapon Ego", nullptr, _weapon_ego_filter,
+               nullptr, nullptr, _simple_menu_gen,
+               _describe_weapon_ego, lookup_type::db_suffix),
+    LookupType('R', "armour Ego", nullptr, _armour_ego_filter,
+               nullptr, nullptr, _simple_menu_gen,
+               _describe_armour_ego, lookup_type::db_suffix),
+    LookupType('E', "missile Ego", nullptr, _missile_ego_filter,
+               nullptr, nullptr, _simple_menu_gen,
+               _describe_missile_ego, lookup_type::db_suffix),
 };
 
 /**
@@ -1437,7 +1573,7 @@ static bool _exact_lookup_match(const LookupType &lookup_type,
     if (lookup_type.no_search())
         return false; // no search, no exact match
 
-    if (lookup_type.supports_glyph_lookup() && regex.size() == 1)
+    if (lookup_type.supports_glyph_lookup() && strwidth(regex) == 1)
         return false; // glyph search doesn't have the concept
 
     if (lookup_type.filter_forbid && (*lookup_type.filter_forbid)(regex, ""))
@@ -1524,7 +1660,7 @@ bool LookupType::find_description(string &response) const
 
     vector<string> key_list = matching_keys(regex);
 
-    const bool by_symbol = supports_glyph_lookup() && regex.size() == 1;
+    const bool by_symbol = supports_glyph_lookup() && strwidth(regex) == 1;
     response = _keylist_invalid_reason(key_list, lowercase_string(type),
                                        regex, by_symbol);
     if (!response.empty())

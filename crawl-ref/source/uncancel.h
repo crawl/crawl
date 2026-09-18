@@ -8,11 +8,14 @@
 
 #include "uncancellable-type.h"
 
-void add_uncancel(uncancellable_type kind, int arg = 0);
-void run_uncancels();
-
-static inline void run_uncancel(uncancellable_type kind, int arg = 0)
+struct uncancellable
 {
-    add_uncancel(kind, arg);
-    run_uncancels();
-}
+    uncancellable_type kind;
+    int piety_cost_or_in_inventory;
+    int mp_cost_or_item_index;
+    int hp_cost;
+};
+
+bool has_uncancel();
+void resume_uncancel();
+bool run_uncancel(uncancellable uc);

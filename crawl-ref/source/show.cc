@@ -111,12 +111,9 @@ bool show_type::is_cleanable_monster() const
 static void _update_feat_at(const coord_def &gp)
 {
     dungeon_feature_type feat = env.grid(gp);
-    unsigned colour = env.grid_colours(gp);
-    trap_type trap = TRAP_UNASSIGNED;
-    if (feat_is_trap(feat))
-        trap = get_trap_type(gp);
 
-    env.map_knowledge(gp).set_feature(feat, colour, trap);
+    update_terrain_knowledge(gp);
+    update_grid_colour_knowledge(gp);
 
     if (haloed(gp))
         env.map_knowledge(gp).flags |= MAP_HALOED;
@@ -150,24 +147,31 @@ static void _update_feat_at(const coord_def &gp)
     if (is_blasphemy(gp))
         env.map_knowledge(gp).flags |= MAP_BLASPHEMY;
 
+    if (feat_is_tree(feat) && forest_awoken(gp))
+        env.map_knowledge(gp).flags |= MAP_AWOKEN_FOREST;
+
     if (you.get_beholder(gp))
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 
     if (you.get_fearmonger(gp))
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 
-    if (you.is_nervous() && you.see_cell(gp) && !monster_at(gp))
-        env.map_knowledge(gp).flags |= MAP_WITHHELD;
-
-    if ((feat_is_stone_stair(feat)
-         || feat_is_escape_hatch(feat))
-        && is_exclude_root(gp))
+    if (you.is_nervous() && you.see_cell(gp)
+        && (!monster_at(gp) || !monster_at(gp)->visible_to(&you)))
     {
-        env.map_knowledge(gp).flags |= MAP_EXCLUDED_STAIRS;
+        env.map_knowledge(gp).flags |= MAP_WITHHELD;
     }
 
     if (is_bloodcovered(gp))
+    {
         env.map_knowledge(gp).flags |= MAP_BLOODY;
+        if (testbits(env.pgrid(gp), FPROP_BLOOD_WEST))
+            env.map_knowledge(gp).flags |= MAP_BLOOD_WEST;
+        if (testbits(env.pgrid(gp), FPROP_BLOOD_NORTH))
+            env.map_knowledge(gp).flags |= MAP_BLOOD_NORTH;
+        if (testbits(env.pgrid(gp), FPROP_OLD_BLOOD))
+            env.map_knowledge(gp).flags |= MAP_OLD_BLOOD;
+    }
 
     if (env.level_state & LSTATE_SLIMY_WALL && slime_wall_neighbour(gp))
         env.map_knowledge(gp).flags |= MAP_CORRODING;
@@ -233,6 +237,7 @@ static show_item_type _item_to_show_code(const item_def &item)
             return SHOW_ITEM_CORPSE;
     case OBJ_GOLD:       return SHOW_ITEM_GOLD;
     case OBJ_GEMS:       return SHOW_ITEM_GEM;
+    case OBJ_BAUBLES:    return SHOW_ITEM_BAUBLE;
     case OBJ_DETECTED:   return SHOW_ITEM_DETECTED;
     case OBJ_RUNES:      return SHOW_ITEM_RUNE;
     default:             return SHOW_ITEM_ORB; // bad item character
@@ -245,48 +250,47 @@ void update_item_at(const coord_def &gp, bool wizard)
         return;
 
     item_def eitem;
-    bool more_items = false;
 
     if (you.see_cell(gp) || wizard)
     {
         const int item_grid = wizard ? env.igrid(gp) : you.visible_igrd(gp);
         if (item_grid == NON_ITEM)
             return;
-        eitem = env.item[item_grid];
-
-        // monster(mimic)-owned items have link = NON_ITEM+1+midx
-        if (eitem.link > NON_ITEM)
-            more_items = true;
-        else if (eitem.link < NON_ITEM && !crawl_state.game_is_arena())
-            more_items = true;
 
         if (wizard)
             StashTrack.add_stash(gp);
     }
-    else
-    {
-        const vector<item_def> stash = item_list_in_stash(gp);
-        if (stash.empty())
-            return;
 
-        eitem = stash[0];
-        if (stash.size() > 1)
-            more_items = true;
+    populate_map_cell_with_item(gp, env.map_knowledge(gp));
+}
+
+static int _get_cloud_variety(cloud_struct& cloud)
+{
+    const cloud_tile_info& tile_info = cloud_type_tile_info(cloud.type);
+    switch (tile_info.variation)
+    {
+    case CTVARY_VORTEX:
+        return get_vortex_phase(cloud.pos);
+
+    case CTVARY_DUR:
+    case CTVARY_MUTAGENIC:
+    default:
+        int dur = cloud.decay / 20;
+        if (dur < 0)
+            dur = 0;
+        else if (dur > 3)
+            dur = 3;
+        return dur;
     }
-    env.map_knowledge(gp).set_item(eitem, more_items);
+    return 0;
 }
 
 static void _update_cloud(cloud_struct& cloud)
 {
     const coord_def gp = cloud.pos;
+    const int variety = _get_cloud_variety(cloud);
 
-    int dur = cloud.decay/20;
-    if (dur < 0)
-        dur = 0;
-    else if (dur > 3)
-        dur = 3;
-
-    cloud_info ci(cloud.type, get_cloud_colour(cloud), dur, 0, gp,
+    cloud_info ci(cloud.type, get_cloud_colour(cloud), variety, 0, gp,
                   cloud.killer);
     env.map_knowledge(gp).set_cloud(ci);
 }
@@ -314,127 +318,16 @@ static void _check_monster_pos(const monster* mons)
 }
 
 /**
- * Determine if a location is valid to present a { glyph.
- *
- * @param where    The location being queried.
- * @param mons     The moster being mimicked.
- * @return         True if valid, otherwise False.
-*/
-static bool _valid_invisible_spot(const coord_def &where, const monster* mons)
-{
-    if (!you.see_cell(where) || where == you.pos()
-        || env.map_knowledge(where).flags & MAP_INVISIBLE_UPDATE)
-    {
-        return false;
-    }
-
-    monster *mons_at = monster_at(where);
-    if (mons_at && mons_at != mons)
-        return false;
-
-    if (monster_habitable_grid(mons, where))
-        return true;
-
-    return false;
-}
-
-static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
-{
-    if (die <= 1)
-        return 0;
-
-    struct
-    {
-        uint32_t mid;
-        uint32_t id;
-        uint32_t seed;
-    } data;
-    data.mid = mons->mid;
-    data.id  = id;
-    data.seed = you.attribute[ATTR_SEEN_INVIS_SEED];
-
-    return hash32(&data, sizeof(data)) % die;
-}
-
-/**
- * Mark the estimated position of an invisible monster.
- *
- * Marks a spot on the map as possibly containing an unseen monster
- * (showing up as a disturbance in the air). Also flags the square as
- * updated for invisible monster, which is used by show_init().
- *
- * @param where          The disturbance's map position.
- * @param do_tiles_draw  Trigger a tiles draw of this cell.
-**/
-static void _mark_invisible_at(const coord_def &where,
-                               bool do_tiles_draw = false)
-{
-    env.map_knowledge(where).set_invisible_monster();
-    env.map_knowledge(where).flags |= MAP_INVISIBLE_UPDATE;
-
-    if (do_tiles_draw)
-        show_update_at(where);
-}
-
-/**
- * Mark invisible monsters with a known position with an invisible monster
- * indicator.
- * @param mons      The monster to check.
- * @param hash_ind  The random hash index, combined with the mid to make a
- *                  unique hash for this roll. Needed for when we can't mark
- *                  the monster's true position and instead mark an adjacent
- *                  one.
-*/
-static void _handle_unseen_mons(monster* mons, uint32_t hash_ind)
-{
-    // Monster position is unknown.
-    if (mons->unseen_pos.origin())
-        return;
-
-    // We expire these unseen invis markers after one turn if the monster
-    // has moved away.
-    if (you.turn_is_over && !mons->went_unseen_this_turn
-        && mons->pos() != mons->unseen_pos)
-    {
-        mons->unseen_pos = coord_def(0, 0);
-        return;
-    }
-
-    bool do_tiles_draw;
-    // Try to use the unseen position.
-    if (_valid_invisible_spot(mons->unseen_pos, mons))
-    {
-        do_tiles_draw = mons->unseen_pos != mons->pos();
-        _mark_invisible_at(mons->unseen_pos, do_tiles_draw);
-        return;
-    }
-
-    // Fall back to a random position adjacent to the unseen position.
-    // This can only happen if the monster just became unseen.
-    vector <coord_def> adj_unseen;
-    for (adjacent_iterator ai(mons->unseen_pos, false); ai; ++ai)
-    {
-        if (_valid_invisible_spot(*ai, mons))
-            adj_unseen.push_back(*ai);
-    }
-    if (adj_unseen.size())
-    {
-        coord_def new_pos = adj_unseen[_hashed_rand(mons, hash_ind,
-                                                    adj_unseen.size())];
-        do_tiles_draw = mons->unseen_pos != mons->pos();
-        _mark_invisible_at(new_pos, do_tiles_draw);
-    }
-}
-
-/**
  * Update map knowledge for monsters
  *
  * This function updates the map_knowledge grid with a monster_info if relevant.
  * If the monster is not currently visible to the player, the map knowledge will
  * be updated with a disturbance if necessary.
  * @param mons  The monster at the relevant location.
+ *
+ * @return Whether the view was updated with some indicator for this monster.
 **/
-static void _update_monster(monster* mons)
+static bool _update_monster(monster* mons)
 {
     _check_monster_pos(mons);
     const coord_def gp = mons->pos();
@@ -442,57 +335,20 @@ static void _update_monster(monster* mons)
     if (mons->visible_to(&you))
     {
         mons->ensure_has_client_id();
-        monster_info mi(mons);
-        env.map_knowledge(gp).set_monster(mi);
-        return;
+        record_monster_seen_at(gp, *mons);
+        return true;
     }
 
     // From here on we're handling an invisible monster, possibly leaving an
     // invisible monster indicator.
 
-    // We cannot use regular randomness here, otherwise redrawing the screen
-    // would give out the real position. We need to save the seed too -- but it
-    // needs to be regenerated every turn.
-    if (you.attribute[ATTR_SEEN_INVIS_TURN] != you.num_turns)
+    if (you.aware_of(*mons))
     {
-        you.attribute[ATTR_SEEN_INVIS_TURN] = you.num_turns;
-        you.attribute[ATTR_SEEN_INVIS_SEED] = rng::get_uint32();
-    }
-    // After the player finishes this turn, the monster's unseen pos (and
-    // its invis indicator due to going unseen) will be erased.
-    if (!you.turn_is_over)
-        mons->went_unseen_this_turn = false;
-
-    // Ripple effect?
-    // Should match directn.cc's _mon_exposed
-    if (env.grid(gp) == DNGN_SHALLOW_WATER
-            && !mons->airborne()
-            && !cloud_at(gp)
-        || cloud_at(gp) && is_opaque_cloud(cloud_at(gp)->type)
-            && !mons->is_insubstantial())
-    {
-        _mark_invisible_at(gp);
-        mons->unseen_pos = gp;
-        return;
+        record_invisible_monster_seen_at(gp, *mons);
+        return true;
     }
 
-    int range = player_monster_detect_radius();
-    if (mons->constricted_by == MID_PLAYER
-        || (range > 0 && (you.pos() - mons->pos()).rdist() <= range))
-    {
-        _mark_invisible_at(gp);
-        mons->unseen_pos = gp;
-        return;
-    }
-
-    // 1/7 chance to leave an invis indicator at the real position.
-    if (!_hashed_rand(mons, 0, 7))
-    {
-        _mark_invisible_at(gp);
-        mons->unseen_pos = gp;
-    }
-    else
-        _handle_unseen_mons(mons, 2);
+    return false;
 }
 
 /**
@@ -523,10 +379,17 @@ void force_show_update_at(const coord_def &gp, layers_type layers)
     if (layers & Layer::MONSTERS)
     {
         monster* mons = monster_at(gp);
+        bool did_monster = false;
         if (mons && mons->alive())
-            _update_monster(mons);
-        else if (env.map_knowledge(gp).flags & MAP_INVISIBLE_UPDATE)
-            _mark_invisible_at(gp);
+            did_monster = _update_monster(mons);
+
+        // If there wasn't an actual monster here (that the player knows of),
+        // instead draw any remembered monster which used to be here.
+        if (!did_monster)
+        {
+            if (monster* old_mon = env.invis_knowledge.memory_at(gp))
+                env.map_knowledge(gp).set_old_invisible_monster(old_mon);
+        }
     }
 
     if (layers & Layer::CLOUDS)
@@ -543,26 +406,14 @@ void show_init(layers_type layers)
     if (crawl_state.game_is_arena())
     {
         for (rectangle_iterator ri(crawl_view.vgrdc, LOS_MAX_RANGE); ri; ++ri)
-        {
             show_update_at(*ri, layers);
-            // Invis indicators and update flags not used in Arena.
-            env.map_knowledge(*ri).flags &= ~MAP_INVISIBLE_UPDATE;
-        }
         return;
     }
 
     ASSERT(you.on_current_level);
 
-    vector <coord_def> update_locs;
     for (vision_iterator ri(you); ri; ++ri)
-    {
         show_update_at(*ri, layers);
-        update_locs.push_back(*ri);
-    }
-
-    // Need to clear these update flags now so they don't persist.
-    for (coord_def loc : update_locs)
-        env.map_knowledge(loc).flags &= ~MAP_INVISIBLE_UPDATE;
 }
 
 // Emphasis may change while off-level. This catches up.

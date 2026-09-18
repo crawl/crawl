@@ -84,7 +84,7 @@ enum wave_type
 };
 
 
-void packed_cell::add_overlay(int tileidx)
+void packed_cell::add_overlay(tileidx_t tileidx)
 {
     // Deduplicate existing identical overlays
     // There's a ton of ways to implement this.
@@ -185,10 +185,10 @@ static void _pack_shoal_waves(const coord_def &gc, crawl_view_buffer& vbuf)
     if (feat == DNGN_LAVA
         || (feat_is_solid(feat)
                 && feat != DNGN_TREE
-                && feat != DNGN_GRANITE_STATUE
-                && feat != DNGN_METAL_STATUE
+                && !feat_is_statuelike(feat)
                 && feat != DNGN_GRATE
-                && feat != DNGN_RUNED_CLEAR_DOOR))
+                && feat != DNGN_RUNED_CLEAR_DOOR
+                && feat != DNGN_MALIGN_GATEWAY))
     {
         return;
     }
@@ -396,16 +396,6 @@ static bool _is_seen_shallow(coord_def gc, crawl_view_buffer& vbuf)
     return feat == DNGN_SHALLOW_WATER || feat == DNGN_MANGROVE;
 }
 
-static tileidx_t _base_wave_tile(colour_t colour)
-{
-    switch (colour)
-    {
-        case BLACK: return TILE_DNGN_WAVE_N;
-        case GREEN: return TILE_MURKY_WAVE_N;
-        default: die("no %s deep water wave tiles", colour_to_str(colour).c_str());
-    }
-}
-
 static void _pack_default_waves(const coord_def &gc, crawl_view_buffer& vbuf)
 {
     auto& cell = vbuf(gc).tile;
@@ -421,10 +411,10 @@ static void _pack_default_waves(const coord_def &gc, crawl_view_buffer& vbuf)
     if (!feat_is_water(feat) && !feat_is_lava(feat))
         return;
 
-    if (feat == DNGN_DEEP_WATER && (colour == BLACK || colour == GREEN))
+    if (feat == DNGN_DEEP_WATER)
     {
         // +7 and -- reverse the iteration order
-        int tile = _base_wave_tile(colour) + 7;
+        int tile = tile_dngn_coloured(TILE_DNGN_WAVE_N, colour) + 7;
         for (adjacent_iterator ai(gc); ai; ++ai, --tile)
         {
             if (ai->x < 0 || ai->x >= vbuf.size().x || ai->y < 0 || ai->y >= vbuf.size().y)
@@ -438,7 +428,7 @@ static void _pack_default_waves(const coord_def &gc, crawl_view_buffer& vbuf)
     bool west  = _is_seen_land(coord_def(gc.x - 1, gc.y), vbuf);
     bool east  = _is_seen_land(coord_def(gc.x + 1, gc.y), vbuf);
 
-    if (north || west || east && (colour == BLACK || colour == LIGHTGREEN))
+    if (north || west || east)
     {
         if (north)
             cell.add_overlay(TILE_SHORE_N);
@@ -522,14 +512,12 @@ void pack_cell_overlays(const coord_def &gc, crawl_view_buffer &vbuf)
     else
         _pack_default_waves(gc, vbuf);
 
-    if (env.level_state & LSTATE_SLIMY_WALL
-        && cell.map_knowledge.feat() != DNGN_SLIMY_WALL)
+    if (cell.map_knowledge.flags & MAP_CORRODING)
     {
         _add_directional_overlays(gc, vbuf, TILE_SLIME_OVERLAY,
                                   _is_seen_slimy_wall);
     }
-    else if (env.level_state & LSTATE_ICY_WALL
-             && cell.map_knowledge.flags & MAP_ICY)
+    else if (cell.map_knowledge.flags & MAP_ICY)
     {
         if (feat_is_wall(cell.map_knowledge.feat()))
         {
@@ -550,5 +538,11 @@ void pack_cell_overlays(const coord_def &gc, crawl_view_buffer &vbuf)
             shadow_tile = TILE_DNGN_WALL_SHADOW_DARK;
         _pack_wall_shadows(gc, vbuf, shadow_tile);
     }
+}
+
+bool is_in_water(const packed_cell& cell)
+{
+    return cell.bg.has_flag(TILE_FLAG_WATER)
+           && !cell.fg.has_flag(TILE_FLAG_FLYING);
 }
 #endif //TILECELL.CC

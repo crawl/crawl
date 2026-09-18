@@ -16,12 +16,14 @@ enum object_selector
     OSEL_CURSABLE                = -12, // Items that are worn and cursable
     OSEL_UNCURSED_WORN_RINGS     = -13,
     OSEL_QUIVER_ACTION           = -14,
-    OSEL_QUIVER_ACTION_FORCE     = -15,
     OSEL_EQUIPABLE               = -16, // armour, jewellery, weapons
-    OSEL_WORN_JEWELLERY          = -17,
+    OSEL_WORN_JEWELLERY_OR_TALISMAN = -17,
     OSEL_WORN_EQUIPABLE          = -18,
     OSEL_WEARABLE                = -19,
     OSEL_AMULET                  = -20,
     OSEL_ARTEFACT_WEAPON         = -21,
     OSEL_MARKED_ITEMS            = -22,
+    OSEL_JEWELLERY_OR_TALISMAN   = -23,
+    OSEL_GEAR                    = -24, // Equippable items + throwables
+    OSEL_EVOKABLE_ALL            = -25, // All wands/baubles/misc, regardless of usability
 };

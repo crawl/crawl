@@ -52,11 +52,10 @@ enum map_mask_type
     MMT_NO_ITEM         = 0x02,  // Random items should not be placed here.
     MMT_NO_MONS         = 0x04,  // Random monsters should not be placed here.
     MMT_NO_POOL         = 0x08,  // Pool fixup should not be applied here.
-                       // 0x10,  // Unused
+    MMT_NO_TELE_CLOSET  = 0x10,  // Exempt from teleport closet detection.
     MMT_NO_WALL         = 0x20,  // Wall fixup should not be applied here.
     MMT_OPAQUE          = 0x40,  // Vault may impede connectivity.
     MMT_NO_TRAP         = 0x80,  // No trap generation
-    MMT_MIMIC           = 0x100, // Feature mimics
     MMT_NO_MIMIC        = 0x200, // Feature shouldn't be turned into a mimic.
 #if TAG_MAJOR_VERSION == 34
     MMT_WAS_DOOR_MIMIC  = 0x400, // There was a door mimic there.
@@ -194,6 +193,7 @@ private:
 extern vector<vault_placement> Temp_Vaults;
 
 extern const map_bitmask *Vault_Placement_Mask;
+extern FixedVector<string_set, NUM_BRANCHES> branch_uniq_map_tags;
 
 set<string> &get_uniq_map_tags();
 set<string> &get_uniq_map_names();
@@ -220,12 +220,12 @@ coord_def dgn_find_feature_marker(dungeon_feature_type feat);
 // Generate 3 stone stairs in both directions.
 void dgn_place_stone_stairs(bool maybe_place_hatches = false);
 
-void dgn_set_grid_colour_at(const coord_def &c, int colour);
-
 const vault_placement *dgn_place_map(const map_def *map,
                                      bool check_collision,
                                      bool make_no_exits,
                                      const coord_def &pos = INVALID_COORD);
+const vault_placement *dgn_add_vault_to_existing_level(const map_def *mdef,
+                                                       const coord_def &where);
 
 const vault_placement *dgn_safe_place_map(const map_def *map,
                                           bool check_collision,
@@ -237,11 +237,9 @@ void dgn_record_veto(const dgn_veto_exception &e);
 void level_clear_vault_memory();
 void run_map_epilogues();
 
-void place_specific_trap(const coord_def& where, trap_type trap_spec, int charges = 0);
-
 struct shop_spec;
-void place_spec_shop(const coord_def& where, shop_type force_type);
-void place_spec_shop(const coord_def& where, shop_spec &spec, int shop_level = 0);
+void make_spec_shop(const coord_def& where, shop_type force_type);
+void make_spec_shop(const coord_def& where, shop_spec &spec, int shop_level = 0);
 int greed_for_shop_type(shop_type shop, int level_number);
 object_class_type item_in_shop(shop_type shop_type);
 bool seen_destroy_feat(dungeon_feature_type old_feat);
@@ -269,20 +267,18 @@ void dgn_reset_level(bool enable_random_maps = true);
 const vault_placement *dgn_register_place(const vault_placement &place,
                                           bool register_vault);
 
-int dgn_count_disconnected_zones(
-    bool choose_stairless,
-    dungeon_feature_type fill = DNGN_UNSEEN);
+int dgn_count_disconnected_zones(bool choose_stairless);
 
 int dgn_count_tele_zones(bool choose_stairless);
 
 void dgn_replace_area(const coord_def& p1, const coord_def& p2,
                       dungeon_feature_type replace,
                       dungeon_feature_type feature,
-                      unsigned mmask = 0, bool needs_update = false);
+                      unsigned mmask = 0);
 void dgn_replace_area(int sx, int sy, int ex, int ey,
                       dungeon_feature_type replace,
                       dungeon_feature_type feature,
-                      unsigned mmask = 0, bool needs_update = false);
+                      unsigned mmask = 0);
 
 vault_placement *dgn_vault_at(coord_def gp);
 void dgn_seen_vault_at(coord_def gp);
@@ -310,3 +306,9 @@ void dgn_place_transporter(const coord_def &pos, const coord_def &dest);
 bool dgn_make_transporters_from_markers();
 
 int starting_absdepth();
+bool in_descent_parent(branch_type branch);
+
+int concretize_item_level(int spec_level, int dgn_level = INVALID_ABSDEPTH);
+
+void dgn_set_vault_height(coord_def pos, int height);
+int dgn_get_vault_height(coord_def pos);

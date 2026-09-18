@@ -2,7 +2,7 @@ name: "hellwing"
 glyph: {char: "4", colour: lightgray}
 flags: [flies]
 resists: {poison: 1}
-xp_mult: 12
+exp: 294
 holiness: [demonic]
 will: 60
 attacks:

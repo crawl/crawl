@@ -11,7 +11,14 @@
 #define BORIS_ORB_KEY "boris orb key"
 
 #define NOBODY_MEMORIES_KEY "nobody_memories"
+#define NOBODY_MAX_MEMORIES 3
 #define NOBODY_RECOVERY_KEY "nobody_recovery"
+
+#define TESSERACT_SPAWN_COUNTER_KEY "tesseract_spawn_count"
+#define TESSERACT_SPAWN_TIMER_KEY "tesseract_spawn_timer"
+
+#define SLYMDRA_FAKE_HEADS_KEY "slymdra_fake_heads"
+#define SLYMDRA_SLIMES_EATEN_KEY "slymdra_slimes_eaten"
 
 class actor;
 class monster;
@@ -26,13 +33,26 @@ void boris_covet_orb(monster* boris);
 bool ugly_thing_mutate(monster& ugly, bool force = true);
 bool slime_creature_polymorph(monster& slime, poly_power_type power = PPT_SAME);
 void merge_ench_durations(monster& initial, monster& merge_to, bool usehd = false);
+bool slymdra_polymorph(monster& slimedra, poly_power_type power = PPT_SAME);
+void slymdra_scale_hp(monster& slymdra);
 
 bool lost_soul_revive(monster& mons, killer_type killer);
 
 void treant_release_fauna(monster& mons);
 void check_grasping_roots(actor& act, bool quiet = false);
 
+void seismosaurus_egg_hatch(monster* mons);
 bool egg_is_incubating(const monster& egg);
 
 void initialize_nobody_memories(monster& nobody);
 bool pyrrhic_recollection(monster& nobody);
+
+void solar_ember_blast();
+
+void activate_tesseracts();
+void tesseract_action(monster& mon);
+
+int slymdra_split(monster& slymdra, int count = -1, bool quiet = false);
+
+bool thorn_hunter_range_check(monster& mon);
+void thorn_hunter_raise_barrier(monster& mon, bool skip_proximity_check = false);

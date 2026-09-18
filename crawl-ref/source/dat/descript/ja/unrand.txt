@@ -12,16 +12,12 @@ Mace of Variability
 
 この武器はどうも当てにならない。
 %%%%
-Glaive of Prune
+partisan of Prune
 
 この武器は狂った神の創造物で、所有者をプルーンに変える呪いがかかっている。
 幸いなことに呪いはゆっくり進行するので、
 短期間使うだけであれば皮膚が少し紫色になり、
 皺が寄ってくるという以上の実害はない。
-%%%%
-Sword of Power
-
-この武器は力ある者には激しく、力なき者には穏やかに応える。
 %%%%
 Staff of Olgreb
 
@@ -101,7 +97,7 @@ crossbow "Hellfire"
 地獄の炎で鍛えられた燃え上がるクロスボウだ。これから放たれた矢は名前の通り、
 弱い地獄の業火に包まれる。
 %%%%
-sword of the Doom Knight
+sword of the Dread Knight
 
 金剛のグレートソードだ。
 %%%%
@@ -276,7 +272,7 @@ amulet of Cekugob
 なんの変哲もない紐で括られたおかしな見た目の水晶の欠片だ。
 これには様々な能力が秘められている。
 %%%%
-amulet of the Four Winds
+amulet of Tranquility
 
 この透き通った翡翠の首飾りは着用者に敵対的な魔術に対する素晴らしい耐性を授ける。
 %%%%

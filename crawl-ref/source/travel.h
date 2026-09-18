@@ -77,7 +77,8 @@ bool is_unknown_stair(const coord_def &p);
 bool is_unknown_transporter(const coord_def &p);
 
 void fill_travel_point_distance(const coord_def& youpos,
-                     vector<coord_def>* coords = nullptr);
+                     vector<coord_def>* coords = nullptr,
+                     const level_id& level = level_id::current());
 
 bool is_stair_exclusion(const coord_def &p);
 
@@ -89,8 +90,8 @@ bool is_stair_exclusion(const coord_def &p);
  * grabs items that are eligible for autopickup and visits (previously
  * unvisited) shops.
  */
-void start_explore(bool grab_items = false);
-void do_explore_cmd();
+void start_explore(bool grab_items = false, bool skip_autorest = false);
+void do_explore_cmd(bool skip_autorest = false);
 
 struct level_pos;
 class level_id;
@@ -108,7 +109,7 @@ int prevent_travel_to(const string &dungeon_feature_name);
 void reset_travel_terrain();
 
 // Sort dungeon features as appropriate.
-int level_distance(level_id first, level_id second);
+int level_distance(level_id first, level_id second, bool ignore_knowledge = false);
 level_id find_deepest_explored(level_id curr);
 bool branch_entered(branch_type branch);
 
@@ -191,12 +192,14 @@ private:
     const LevelStashes *current_level;
     vector< named_thing<item_def> > items;
     vector< named_thing<int> > stairs;
+    vector< named_thing<int> > hatches;
     vector< named_thing<int> > portals;
     vector< named_thing<int> > shops;
     vector< named_thing<int> > altars;
     vector< named_thing<int> > runed_doors;
     vector< named_thing<int> > transporters;
     vector< named_thing<int> > runelights;
+    vector< named_thing<int> > mutation_catalysts;
 
     vector<string> marker_msgs;
     vector<string> marked_feats;
@@ -207,7 +210,7 @@ private:
 
     string cleaned_feature_description(const coord_def &) const;
     void add_item(const item_def &item);
-    void add_stair(const named_thing<int> &stair);
+    void add_stair(const named_thing<int> &stair, dungeon_feature_type feat);
     vector<string> apply_quantities(const vector< named_thing<int> > &v) const;
     bool merge_feature(vector< named_thing<int> > &v,
                        const named_thing<int> &feat) const;
@@ -337,9 +340,8 @@ struct LevelInfo
     FixedVector<int, NUM_DACTION_COUNTERS> daction_counters;
 
 private:
-    // Gets a list of coordinates of all player-known stairs on the current
-    // level.
-    static void get_stairs(vector<coord_def> &stairs);
+    // Gets a list of coordinates of all player-known stairs on this level.
+    void get_stairs(vector<coord_def> &stairs);
     static void get_transporters(vector<coord_def> &transporters);
 
     void correct_stair_list(const vector<coord_def> &s);
@@ -485,6 +487,13 @@ public:
         ignore_danger = true;
     }
 
+    // Which level this pathfinding is being done on. The caller must ensure
+    // that this matches the loaded env.
+    inline void set_level(const level_id &lev)
+    {
+        level = lev;
+    }
+
     // Determine if the level is fully explored, when called after pathfind().
     int explore_status();
 
@@ -523,6 +532,10 @@ protected:
     // Set to true for Tiles mode clicking, so you can move one step
     // at a time through excluded areas and around stationary monsters.
     bool ignore_danger;
+
+    // The level we are pathfinding on, used to look up transporter locations.
+    // Defaults to the player's current level.
+    level_id level;
 
     // If true, use magic numbers in point distance array which can be
     // used to colour the level-map.
@@ -584,7 +597,8 @@ void do_interlevel_travel();
 // If force is true, then the player will attack empty squares/open doors.
 #ifdef USE_TILE
 bool click_travel_safe(const coord_def &gc);
-int click_travel(const coord_def &gc, bool force);
+command_type click_travel(const coord_def &gc, bool force_attack,
+                          bool force_close_doors);
 #endif
 
 bool check_for_interesting_features();

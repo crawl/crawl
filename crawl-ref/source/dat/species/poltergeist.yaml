@@ -13,7 +13,7 @@ species_flags:
   - no_hair
   - no_ears
 aptitudes:
-  xp: -1
+  xp: 0
   hp: -1
   mp_mod: 0
   wl: 4
@@ -59,6 +59,7 @@ mutations:
     MUT_TORMENT_RESISTANCE: 2
     MUT_FORMLESS: 1
     MUT_TRICKSTER: 1
+    MUT_ACCURSED: 1
   13:
     MUT_FORMLESS: 1
 fake_mutations:
@@ -77,5 +78,6 @@ recommended_weapons:
   - axes
   - long blades
 
-orc_name: Phantasmorc
 walking_verb: Float
+orc_name: Phantasmorc
+orcification_msg: A small pair of spectral tusks begins to grow in your mouth.

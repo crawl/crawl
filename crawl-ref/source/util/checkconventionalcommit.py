@@ -33,7 +33,8 @@ def main():
     print(f"Checking commits being merged from {branch_to_check} to {base_branch}")
 
     git_args = [ "git", "log", "--no-merges", pretty, branch_to_check, f"^{base_branch}" ]
-    print(f"Running: {" ".join(git_args)}")
+    command_to_print = " ".join(git_args)
+    print(f"Running: {command_to_print}")
     ret = subprocess.run(git_args, capture_output = True, timeout=15)
 
     if ret.returncode != 0:
@@ -57,13 +58,13 @@ def main():
             continue
 
         if len(pieces) != 4:
-            print_err("Command output had unexpected number of results (%d), exiting" % len(pieces))
+            print_err(f"Command output had unexpected number of results ({len(pieces)}), exiting")
             failure = True
             continue
 
         (commit_hash, committer_name, subject, body) = pieces
         commit_hash = commit_hash.replace('\r\n', '').replace('\n', '')
-        print("Checking commit %s written by %s" % (commit_hash, committer_name))
+        print(f"Checking commit {commit_hash} written by {committer_name}")
         if len(subject) > allowed_subject_len:
             print_err(f"Commit {committer_name} from {committer_name} contained a subject "
                 f"{len(subject)} characters long,\n"

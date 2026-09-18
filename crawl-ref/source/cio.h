@@ -13,8 +13,12 @@
 #include "KeymapContext.h"
 
 #ifdef USE_TILE_LOCAL
+ #include <functional>
+
  #include "tilebuf.h"
  #include <SDL_keycode.h>
+
+void paste_clipboard(function<void (char32_t)> process_key);
 #endif
 
 enum keyfun_action
@@ -308,7 +312,6 @@ enum KEYS
     CK_MOUSE_CLICK,
     CK_TOUCH_DUMMY, // so a non-event can be passed from handle_mouse to the controlling code
     CK_REDRAW, // no-op to force redraws of things
-    CK_RESIZE,
 
     CK_NO_KEY, // so that the handle_mouse loop can be broken from early (for
               // popups), and otherwise for keys to ignore
@@ -383,6 +386,9 @@ public:
 
     void insert_char_at_cursor(int ch);
     void overwrite_char_at_cursor(int ch);
+#ifdef USE_TILE_LOCAL
+    void clipboard_paste();
+#endif
 #ifdef USE_TILE_WEB
     void set_tag(const string &tag);
 #endif

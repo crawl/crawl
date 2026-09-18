@@ -10,25 +10,17 @@
 #include "defines.h"
 #include "options.h"
 #include "player.h" // player_stealth()
+#include "seen-context-type.h"
 #include "viewgeom.h"
 
 using std::vector;
-
-bool mon_enemies_around(const monster* mons);
-void seen_monsters_react(int stealth = player_stealth());
-
-string describe_monsters_condensed(const vector<monster*>& monsters);
-
-bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
-                   bool force = false, bool deterministic = false,
-                   bool full_info = false, bool range_falloff = true,
-                   coord_def origin = coord_def(-1, -1));
 
 string screenshot();
 
 colour_t viewmap_flash_colour();
 bool view_update();
 void view_update_at(const coord_def &pos);
+void redraw_view_at(coord_def pos);
 class targeter;
 
 static inline void scaled_delay(unsigned int ms)
@@ -38,11 +30,10 @@ static inline void scaled_delay(unsigned int ms)
 
 void animation_delay(unsigned int ms, bool do_refresh);
 
-// beware, flash_view is broken for USE_TILE_LOCAL
-void flash_view(use_animation_type a, colour_t colour,
+void flash_view(use_animation_type a, colour_t colour, int alpha = 0,
                 targeter *where = nullptr);
 void flash_view_delay(use_animation_type a, colour_t colour, int delay,
-                      targeter *where = nullptr);
+                      int alpha = 0, targeter *where = nullptr);
 
 enum animation_type
 {
@@ -91,7 +82,7 @@ void flash_tile(coord_def p, colour_t colour = WHITE, int delay = 50,
                 tileidx_t tile = 0);
 void draw_ring_animation(const coord_def& center, int radius, colour_t colour,
                          colour_t colour_alt = BLACK, bool outward = false,
-                         int delay = 50);
+                         int delay = 50, tileidx_t tile = 0);
 
 void view_clear_overlays();
 
@@ -100,11 +91,8 @@ void run_animation(animation_type anim, use_animation_type type,
 void viewwindow(bool show_updates = true, bool tiles_only = false,
                 animation *a = nullptr, view_renderer *renderer = nullptr);
 void draw_cell(screen_cell_t *cell, const coord_def &gc,
-               bool anim_updates, int flash_colour);
+               bool anim_updates, int flash_colour, int flash_alpha);
 
-void update_monsters_in_view();
-bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf = nullptr);
-void flush_comes_into_view();
 void toggle_show_terrain();
 void reset_show_terrain();
 

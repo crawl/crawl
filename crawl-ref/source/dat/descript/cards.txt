@@ -43,8 +43,8 @@ the Cloud card
 
 The card depicts an iron gate enshrouded in mist.
 
-Drawing this card enshrouds the user's foes in rings of sight-blocking clouds.
-The duration of clouds produced will improve with card power.
+Drawing this card enshrouds the user's foes in rings of detrimental clouds. The
+effects of such clouds will vary with card power.
 %%%%
 # Destruction
 Vitriol card
@@ -58,7 +58,7 @@ the Storm card
 The card depicts a ship at sea sinking in a thunderstorm.
 
 Drawing this card unleashes a storm of wind and electrical discharges.
-Increasing card power will result in a stronger wind force and stronger more
+Increasing card power will result in a stronger wind force and stronger, more
 numerous discharges.
 %%%%
 Pain card

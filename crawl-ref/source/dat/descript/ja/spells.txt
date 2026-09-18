@@ -726,7 +726,7 @@ Summon Swarm spell
 
 この呪文は有害な昆虫の群れを召換する。
 %%%%
-Summon Ufetubus spell
+Ufetubi Swarm spell
 
 この呪文はウフェツバスの大群を召喚し、あなたを取り囲む。
 %%%%
@@ -751,11 +751,6 @@ Teleport Self spell
 Thunderbolt spell
 
 この呪文は弧を描く電気を作り出す。
-%%%%
-Twisted Resurrection spell
-
-この呪文は周辺の死体を一斉に這い回らせ、おぞましい肉の塊へと合体させる。多量の、
-もしくは巨大な死体はより強力な創造物を作り上げる。
 %%%%
 Volley of Thorns spell
 

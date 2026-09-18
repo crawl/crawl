@@ -37,7 +37,7 @@ function crucible_original_subvault_setup(e, branch)
   e.kitem("s : " .. n .. " human corpse / " .. n .. " kobold corpse / " ..
                     n .. " orc corpse / " .. n .. " naga corpse / " ..
                     n .. " merfolk corpse / " .. n .. " merfolk corpse")
-  e.kitem("S : " .. n .. " armataur corpse / " .. n .. " barachi corpse / " ..
+  e.kitem("S : " .. n .. " centaur corpse / " .. n .. " barachi corpse / " ..
                     n .. " demonspawn corpse / " .. n .. " dwarf corpse / " ..
                     n .. " felid corpse / " .. n .. " formicid corpse / " ..
                     n .. " octopode corpse / " .. n .. " oni corpse")
@@ -53,7 +53,7 @@ TAGS:     no_item_gen no_monster_gen no_pool_fixup allow_dup
 PLACE:    Crucible
 ORIENT:   encompass
 KFEAT:    M = altar_makhleb
-KFEAT:    ^ = teleport trap
+KFEAT:    ^ = trap_teleport
 SHUFFLE:  BCDE
 SUBVAULT: B : crucible_original_gehenna
 SUBVAULT: C : crucible_original_cocytus

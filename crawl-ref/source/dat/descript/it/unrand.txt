@@ -13,16 +13,12 @@ Mace of Variability
 
 È decisamente inaffidabile.
 %%%%
-Glaive of Prune
+partisan of Prune
 
 È la creazione di un dio pazzo, e porta una maledizione che trasforma chiunque
 la usi in una prugna. Per fortuna, la maledizione fa effetto molto lentamente,
 e si può utilizzarlo per brevi periodi senza alcun sintomo se non quello di
 avere la pelle vagamente viola e alcune rughe.
-%%%%
-Sword of Power
-
-Ricompensa i potenti con potere e i deboli con debolezza.
 %%%%
 Staff of Wucad Mu
 
@@ -77,7 +73,7 @@ glaive of the Guard
 Quest'arma era una volta di Gar Dogh, la guarda dei tesori reali. Secondo la
 legenda, lui si perse da qualche parte nel Dungeon.
 %%%%
-sword of the Doom Knight
+sword of the Dread Knight
 
 Uno spadone adamantino.
 %%%%
@@ -241,7 +237,7 @@ amulet of Cekugob
 Un strano pezzo di cristallo su uno stano filo, dotato di una strana selezione
 di poteri.
 %%%%
-amulet of the Four Winds
+amulet of Tranquility
 
 Questo pendente fatto della giada più pura da al suo indossatore un'immensa
 forza mistica per ignorare la magia ostile.

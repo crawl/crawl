@@ -11,6 +11,7 @@
 #include "mgen-data.h"
 #include "player.h"
 #include "religion-enum.h"
+#include "transform.h"
 
 using std::vector;
 
@@ -51,20 +52,29 @@ void dec_penance(god_type god, int val);
 void excommunication(bool voluntary = false, god_type new_god = GOD_NO_GOD);
 int excom_xp_docked();
 
+void player_change_ostracism(int amount);
+void ostracise_player(int amount);
+bool god_cares_about_ostracism(god_type god = you.religion);
+int ostracism_pips();
+
 bool gain_piety(int pgn, int denominator = 1, bool should_scale_piety = true);
 void dock_piety(int pietyloss, int penance, bool no_lecture = false);
 void god_speaks(god_type god, const char *mesg);
 void lose_piety(int pgn);
 void set_piety(int piety);
+void decay_piety();
 void handle_god_time(int /*time_delta*/);
 int god_colour(god_type god);
 colour_t god_message_altar_colour(god_type god);
 int gozag_service_fee();
-bool player_can_join_god(god_type which_god, bool temp = true);
+string cannot_join_god_reason(god_type which_god, bool include_temp = true,
+                              bool check_gear = true);
+bool player_can_join_god(god_type which_god, bool include_temp = true);
+bool god_forbids_form(god_type which_god, transformation which_trans);
+bool transformed_player_can_join_god(god_type which_god);
 void join_trog_skills(void);
 void join_religion(god_type which_god);
 void god_pitch(god_type which_god);
-void print_god_rejection(god_type which_god);
 god_type choose_god(god_type def_god = NUM_GODS);
 vector<god_type> get_ecu_gods(coord_def pos);
 
@@ -90,11 +100,11 @@ static inline int player_under_penance(god_type god = you.religion)
 static inline bool in_good_standing(god_type god, int pbreak = -1)
 {
     return you_worship(god) && !player_under_penance(god)
-           && (pbreak < 0 || you.piety >= piety_breakpoint(pbreak));
+           && (pbreak < 0 || you.piety() >= piety_breakpoint(pbreak));
 }
 
 int had_gods();
-int piety_rank(int piety = you.piety);
+int piety_rank(int piety = you.piety());
 int piety_scale(int piety_change);
 bool god_likes_your_god(god_type god, god_type your_god = you.religion);
 bool god_hates_your_god(god_type god, god_type your_god = you.religion);
@@ -102,9 +112,6 @@ bool god_hates_killing(god_type god, const monster& mon);
 bool god_hates_eating(god_type god, monster_type mc);
 
 bool god_likes_spell(spell_type spell, god_type god);
-bool god_hates_spellcasting(god_type god);
-bool god_hates_spell(spell_type spell, god_type god, bool fake_spell = false);
-string god_spell_warn_string(spell_type spell, god_type god);
 
 void initialize_ashenzari_props();
 bool god_protects_from_harm();
@@ -125,7 +132,6 @@ bool yred_reap_chance();
 bool is_yred_undead_follower(const monster& mon);
 bool is_apostle_follower(const monster& mon);
 bool is_fellow_slime(const monster& mon);
-bool is_follower(const monster& mon);
 
 // Vehumet gift interface.
 bool vehumet_is_offering(spell_type spell, bool only = false);
@@ -133,12 +139,13 @@ void vehumet_accept_gift(spell_type spell);
 
 mgen_data hepliaklqana_ancestor_gen_data();
 string hepliaklqana_ally_name();
-int hepliaklqana_ally_hp();
+int hepliaklqana_ally_hp(monster_type type);
 
 void upgrade_hepliaklqana_ancestor(bool quiet_force = false);
 void upgrade_hepliaklqana_weapon(monster_type mtyp, item_def &item);
 void upgrade_hepliaklqana_shield(const monster& ancestor, item_def &item);
 
+string makhleb_mark_name();
 void makhleb_initialize_marks();
 
 bool god_hates_attacking_friend(god_type god, const monster& fr);
@@ -148,7 +155,7 @@ void religion_turn_end();
 
 int get_tension(god_type god = you.religion);
 int get_monster_tension(const monster& mons, god_type god = you.religion);
-int get_fuzzied_monster_difficulty(const monster& mons);
+int okawaru_monster_difficulty(const monster& mons);
 
 typedef void (*delayed_callback)(const mgen_data &mg, monster *&mon, int placed);
 

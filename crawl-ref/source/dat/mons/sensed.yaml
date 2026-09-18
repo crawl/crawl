@@ -2,7 +2,7 @@ name: "sensed monster"
 enum: sensed
 glyph: {char: "{", colour: red}
 flags: [cant_spawn]
-xp_mult: 0
+exp: 0
 holiness: [nonliving]
 will: 0
 attacks:

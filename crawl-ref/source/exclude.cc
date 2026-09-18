@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <sstream>
 
+#include "act-iter.h"
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
@@ -20,6 +21,7 @@
 #include "libutil.h"
 #include "mon-util.h"
 #include "options.h"
+#include "player-notices.h"
 #include "stringutil.h"
 #include "tags.h"
 #include "terrain.h"
@@ -92,16 +94,21 @@ void add_auto_excludes()
         return;
 
     vector<monster*> mons;
-    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
+    // We don't use LOS_DEFAULT because we want to include monsters that are
+    // currently visible via revelation.
+    for (monster_near_iterator mi(you.pos(), LOS_NONE); mi; ++mi)
     {
-        monster *mon = monster_at(*ri);
-        if (!mon || mon->is_summoned())
+        monster *mon = *mi;
+        if (!you.can_see(*mon))
+            continue;
+
+        if (mon->is_summoned())
             continue;
 
         // Something of a speed hack, but some vaults have a TON of plants.
         if (mon->is_firewood())
             continue;
-        if (_need_auto_exclude(mon) && !is_exclude_root(*ri))
+        if (_need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
         {
             int radius = _get_full_exclusion_radius();
             // Sting and Harpoon Shot's minimum ranges, respectively.
@@ -110,7 +117,7 @@ void add_auto_excludes()
             else if (mon->type == MONS_STARFLOWER)
                 radius = min(radius, 6);
 
-            set_exclude(*ri, radius, true);
+            set_exclude(mon->pos(), radius, true);
             mons.emplace_back(mon);
         }
     }
@@ -123,22 +130,22 @@ void add_auto_excludes()
     learned_something_new(HINT_AUTO_EXCLUSION);
 }
 
+// The opacity for an exclusion rooted at p.
+static const opacity_func &_exclusion_opacity(const coord_def &p)
+{
+    const monster_info *mi = env.map_knowledge(p).monsterinfo();
+    // Don't exclude past glass for stationary monsters.
+    if (mi && mi->is_stationary())
+        return opc_excl_no_trans;
+    return opc_excl;
+}
+
 travel_exclude::travel_exclude(const coord_def &p, int r,
                                bool autoexcl, string dsc, bool vaultexcl)
     : pos(p), radius(r),
+      los(p, _exclusion_opacity(p), circle_def(r, C_SQUARE)),
       uptodate(false), autoex(autoexcl), desc(dsc), vault(vaultexcl)
 {
-    const monster* m = monster_at(p);
-    if (m)
-    {
-        // Don't exclude past glass for stationary monsters.
-        if (m->is_stationary())
-            los = los_def(p, opc_fully_no_trans, circle_def(r, C_SQUARE));
-        else
-            los = los_def(p, opc_excl, circle_def(r, C_SQUARE));
-    }
-    else
-        los = los_def(p, opc_excl, circle_def(r, C_SQUARE));
     set_los();
 }
 
@@ -157,6 +164,7 @@ void travel_exclude::set_los()
     uptodate = true;
     if (radius > 1)
     {
+        los.set_opacity(_exclusion_opacity(pos));
         // Radius might have been changed, and this is cheap.
         los.set_bounds(circle_def(radius, C_SQUARE));
         los.update();
@@ -328,6 +336,62 @@ void init_exclusion_los()
     curr_excludes.recompute_excluded_points(true);
 }
 
+static bool _is_gate_that_spreads_exclusion(coord_def c,
+                                            dungeon_feature_type type)
+{
+    if (!map_bounds(c))
+        return false;
+
+    if (env.grid(c) != type)
+        return false;
+
+    travel_exclude* exc = curr_excludes.get_exclude_root(c);
+    if (!exc || exc->radius != 0)
+        return false;
+
+    string prop = env.markers.property_at(c, MAT_ANY, "connected_exclude");
+    if (!prop.empty())
+        return false;
+
+    return true;
+}
+
+static void _exclude_gate(const coord_def& p, bool del = false)
+{
+    set<coord_def> all_doors;
+    find_connected_identical(p, all_doors, true);
+    for (const auto& dc : all_doors)
+    {
+        if (del)
+            del_exclude(dc);
+        else
+            set_exclude(dc, 0);
+    }
+}
+
+static void _update_gate_exclusions(coord_def c)
+{
+    const dungeon_feature_type feat = env.map_knowledge(c).feat();
+    if (!feat_is_door(feat))
+        return;
+
+    travel_exclude* exc = curr_excludes.get_exclude_root(c);
+    if (exc)
+        return;
+
+    string prop = env.markers.property_at(c, MAT_ANY, "connected_exclude");
+    if (!prop.empty())
+        return;
+
+    if (_is_gate_that_spreads_exclusion(c + coord_def(1, 0), feat)
+        || _is_gate_that_spreads_exclusion(c + coord_def(-1, 0), feat)
+        || _is_gate_that_spreads_exclusion(c + coord_def(0, 1), feat)
+        || _is_gate_that_spreads_exclusion(c + coord_def(0, -1), feat))
+    {
+        _exclude_gate(c);
+    }
+}
+
 /*
  * Update exclusions' LOS to reflect changes within their range.
  * "changed" is a list of coordinates that have been changed.
@@ -340,7 +404,10 @@ void update_exclusion_los(vector<coord_def> changed)
         return;
 
     for (coord_def c : changed)
+    {
         _mark_excludes_non_updated(c);
+        _update_gate_exclusions(c);
+    }
 
     curr_excludes.update_excluded_points(true);
 }
@@ -437,19 +504,6 @@ void clear_excludes()
     _exclude_update();
 }
 
-static void _exclude_gate(const coord_def &p, bool del = false)
-{
-    set<coord_def> all_doors;
-    find_connected_identical(p, all_doors, true);
-    for (const auto &dc : all_doors)
-    {
-        if (del)
-            del_exclude(dc);
-        else
-            set_exclude(dc, 0);
-    }
-}
-
 // Cycles the radius of an exclusion, including "off" state;
 // may start at 0 < radius < LOS_RADIUS, but won't cycle there.
 void cycle_exclude_radius(const coord_def &p)
@@ -509,9 +563,9 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
             // Don't list a monster in the exclusion annotation if the
             // exclusion was triggered by e.g. the flamethrowers' lua check.
             const map_cell& cell = env.map_knowledge(p);
-            if (cell.monster() != MONS_NO_MONSTER)
+            if (cell.mon_type() != MONS_NO_MONSTER)
             {
-                desc = mons_type_name(cell.monster(), DESC_PLAIN);
+                desc = mons_type_name(cell.mon_type(), DESC_PLAIN);
                 if (cell.detected_monster())
                     desc += " (detected)";
             }

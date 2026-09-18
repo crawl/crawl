@@ -2,7 +2,70 @@
 
 #include <vector>
 
-typedef uint64_t tileidx_t;
+#include "tile-flags.h"
+
+typedef uint16_t tileidx_t;
+typedef uint64_t tile_flag_t;
+
+struct tile_with_flags_t
+{
+    tile_with_flags_t(tile_flag_t v = 0) noexcept :
+        value(v)
+    {
+    }
+
+    tile_with_flags_t(tileidx_t tile, tile_flag_t flags) noexcept :
+        value((uint64_t)tile | flags)
+    {
+    }
+
+    tileidx_t tile() const noexcept
+    {
+        return (tileidx_t)(value & TILE_FLAG_MASK);
+    }
+
+    tile_flag_t flags(tile_flag_t mask = ~TILE_FLAG_MASK) const noexcept
+    {
+        return value & mask;
+    }
+
+    void operator|=(tile_flag_t flag) noexcept
+    {
+        value |= flag;
+    }
+
+    tile_with_flags_t operator|(tile_flag_t flag) const noexcept
+    {
+        return value | flag;
+    }
+
+    bool operator==(tile_with_flags_t other) const noexcept
+    {
+        return value == other.value;
+    }
+
+    bool operator!=(tile_with_flags_t other) const noexcept
+    {
+        return value != other.value;
+    }
+
+    bool has_flag(tile_flag_t flag) const noexcept
+    {
+        return (value & flag) != 0;
+    }
+
+    void remove_flag(tile_flag_t flag) noexcept
+    {
+        value &= ~flag;
+    }
+
+    void set_tile(tileidx_t tile) noexcept
+    {
+        value = tile | flags();
+    }
+
+    uint64_t value;
+};
 
 class tile_info
 {

@@ -116,14 +116,10 @@ static bool _check_train_dodging(int amount)
 }
 
 /// Skill training while not being noticed by a monster.
-void practise_sneaking(bool invis)
+void practise_sneaking()
 {
-    if (!x_chance_in_y(_armour_mass(), 1000)
-            // If invisible, training happens much more rarely.
-        && (!invis && one_chance_in(25) || one_chance_in(100)))
-    {
+    if (!x_chance_in_y(_armour_mass(), 1000))
         exercise(SK_STEALTH, 1);
-    }
 }
 
 /// Skill training while doing nothing in particular.

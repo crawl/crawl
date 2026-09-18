@@ -15,7 +15,7 @@ function get_altar_count(e, default)
   local params = dgn.map_parameters()
   local count = "";
   if params ~= nil then
-    local tag = unpack(params)
+    local tag = table.unpack(params)
     if tag ~= nil then
       -- temple_altars_ is 14 characters
       count = string.sub(tag, 15)
@@ -32,12 +32,21 @@ function temple_entry(e)
   e.tags("temple_entry")
   e.orient("float")
   e.kfeat("O = enter_temple")
+  e.kfeat("Z = zot_statue")
 end
 }}
 
 ##############################################################################
 # <<E>> Temple entries
 ##############################################################################
+
+# Dummy Temple entry
+NAME:   temple_entry_dummy
+TAGS:   transparent
+: temple_entry(_G)
+MAP
+ZOZ
+ENDMAP
 
 NAME:   temple_hall
 SUBST:  ? : c:20 x v b G:5
@@ -46,7 +55,7 @@ MAP
 ccccccccc
 c...O...c
 c.......c
-c.?...?.c
+c.Z...Z.c
 c.......c
 c.......c
 c.?...?.c
@@ -62,7 +71,6 @@ ENDMAP
 
 NAME:   temple_hall_moat
 TAGS:   no_pool_fixup no_monster_gen
-ORIENT: float
 WEIGHT: 1
 SUBST:  ? : v b G:5
 : temple_entry(_G)
@@ -70,7 +78,7 @@ MAP
    ccc
    cOc
 cccc+cccc
-cwwG.Gwwc
+cwwZ.Zwwc
 cwww.wwwc
 cw?w.w?wc
 cwww.wwwc
@@ -92,17 +100,10 @@ SUBST:  ? : T:30 U
 : temple_entry(_G)
 MAP
 ...?...
-.......
+..Z....
 .?.O.?.
-.......
+....Z..
 ...?...
-ENDMAP
-
-NAME:   temple_statues
-TAGS:   transparent
-: temple_entry(_G)
-MAP
-GOG
 ENDMAP
 
 NAME:   temple_green
@@ -112,9 +113,9 @@ NSUBST: ? = 1:+ / * = +bb
 MAP
 bbbb+bbbb
 b.......b
-b.......b
+b..Z....b
 ?...O...?
-b.......b
+b....Z..b
 b.......b
 bbbb?bbbb
 ENDMAP
@@ -124,38 +125,38 @@ ENDMAP
 NAME:    temple_doors_ab
 TAGS:    transparent
 WEIGHT:  2
-SHUFFLE: Y'"E& / ZD~~~
+SHUFFLE: Y'"E& / yD~~~
 NSUBST:  XY = + / m+
-SUBST:   Z = m, cCD : cxxx
+SUBST:   y = m, cCD : cxxx
 SUBST:   ? : ?:40 T:30 U, ? = T:30 U, & = @
 CLEAR:   ~
 : temple_entry(_G)
 MAP
 cccccccccCC
-cccmmmmmcCC
+cccmmZmmcCC
 cccm?.?mcCC
 @..X.O.Y'"&
 cccm?.?mcCC
-cccmmmmmcCC
+cccmmZmmcCC
 cccccccccCC
 ENDMAP
 
 NAME:    temple_doors_cd
 TAGS:    transparent
 WEIGHT:  2
-SHUFFLE: Y'"C& / ZD~~~
+SHUFFLE: Y'"C& / yD~~~
 NSUBST:  XY = + / m+
-SUBST:   Z = m, cCD : cxxx
+SUBST:   y = m, cCD : cxxx
 SUBST:   ? : ?:40 T:30 U, ? = T:30 U, & = @
 CLEAR:   ~
 : temple_entry(_G)
 MAP
 cccccccccCC
-cccmmmmmcCC
+cccZmmmmcCC
 cccm?.?mcCC
 @..X.O.Y'"&
 cccm?.?mcCC
-cccmmXmmcCC
+cccmmXmZcCC
 ccccc.cccCC
 ccccc.cccCC
 ccccc@cccCC
@@ -172,11 +173,11 @@ MAP
 cccccc@cccccc
 cccccc.cccccc
 cccccc.cccccc
-ccccmmXmmcccc
+ccccZmXmmcccc
 ccccm?.?mcccc
 @...X.O.X...@
 ccccm?.?mcccc
-ccccmmXmmcccc
+ccccmmXmZcccc
 cccccc.cccccc
 cccccc.cccccc
 cccccc@cccccc
@@ -196,13 +197,13 @@ SUBST:   ACD = W, B = wW, EFGHIJKLMNPQXY = w
 MAP
 .................
 ......wwwww......
-....wABwwwwwG....
+....wABwZwwwG....
 ..wwwCwwwwFHwww..
 .wwwwwD...Ewwwww.
 .wwwwww.O.YYYYYY.
 .wwwwww...wwwwww.
 .wwwwJLwXwQwwwww.
-..wwKIwwXwMNwww..
+..wwKIwXZwMNwww..
 ....wwwwXwwPw....
 ......wwXww......
 .................
@@ -230,9 +231,9 @@ MAP
  ........'''''!!!!!!!!!?!!!!!!!!!'''''........lx
  .......'''''!!!!!!!!!???!!!!!!!!!'''''........x
 .......'''''!!!!!!!!!?????!!!!!!!!!'''''........
-.......''''!!!!!!!!!???????!!!!!!!!!''''........
+.......''''!!!!!!!!!????Z??!!!!!!!!!''''........
 .......'''!!!!!!!!!????O????!!!!!!!!!'''........
-.......''''!!!!!!!!!???????!!!!!!!!!''''........
+.......''''!!!!!!!!!??Z????!!!!!!!!!''''........
 .......'''''!!!!!!!!!?????!!!!!!!!!'''''.......
 x.......'''''!!!!!!!!!???!!!!!!!!!'''''........
 x........'''''!!!!!!!!!?!!!!!!!!!'''''.........
@@ -285,7 +286,7 @@ x''''''---''''''x
 x''''''---''''''x
 x'D'E''---''F'D'x
 x''''''---''''''x
-x''''''-O-''''''x
+x''''Z'-O-'Z''''x
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -325,7 +326,7 @@ x''D'''---''''F'x
 x''''''---''''''x
 x'D''''---'''F''x
 x''''''---''''''x
-x''E'''-O-''''D'x
+x''E'Z'-O-'Z''D'x
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -344,11 +345,11 @@ xxl.'llxx
 xxx'.lxxx
 xxxx.xxxx
 xccc+cccx
-xcG...Gcx
+xcG...Zcx
 xc.....cx
 xc..O..cx
 xc.....cx
-xcG...Gcx
+xcZ...Gcx
 xcccccccx
 xxxxxxxxx
 ENDMAP
@@ -363,7 +364,7 @@ KPROP:  lw = no_tele_into
 MAP
 ccccccccccccc
 c???????????c
-c???????????c
+c?????Z?????c
 c???????????c
 c???nnnnn???c
 c???n...nnnnc
@@ -371,7 +372,7 @@ c???n.O.....@
 c???n...nnnnc
 c???nnnnn???c
 c???????????c
-c???????????c
+c?????Z?????c
 c???????????c
 ccccccccccccc
 ENDMAP
@@ -382,11 +383,11 @@ MONS:   plant, bush
 SUBST:  ? = .1, ! = ...1, 1 : 123, 2 = 2.., 3 = 12
 : temple_entry(_G)
 MAP
-!!!!!
+!!!!Z
 !???!
 !?O?!
 !???!
-!!!!!
+Z!!!!
 ENDMAP
 
 NAME:   minmay_temple_entry_junction
@@ -395,13 +396,13 @@ SUBST:  T = TV U:1, X : xc v:1 b:1
 : temple_entry(_G)
 MAP
 xxx...xxx
-xxX.T.Xxx
-xXX...XXx
+xXX.T.Xxx
+xXZ...XXx
 .........
 .T..O..T.
 .........
-xXX...XXx
-xxX.T.Xxx
+xXX...ZXx
+xxX.T.XXx
 xxx...xxx
 ENDMAP
 
@@ -414,9 +415,9 @@ MAP
 .m.m.m.m.m.
 ...........
 .m.......m.
-...........
+......Z....
 .m...O...m.
-...........
+....Z......
 .m.......m.
 ...........
 .m.m.m.m.m.
@@ -429,11 +430,11 @@ SUBST:  t : t1
 MONS:   bush
 : temple_entry(_G)
 MAP
-.....
+Z....
 .t.t.
 ..O..
 .t.t.
-.....
+....Z
 ENDMAP
 
 NAME:   minmay_temple_entry_butterflies
@@ -442,9 +443,9 @@ MONS:   butterfly
 NSUBST: . = 1:1 / 1:1.. / *:.
 : temple_entry(_G)
 MAP
-...
+Z..
 .O.
-...
+..Z
 ENDMAP
 
 NAME:   minmay_temple_entry_metal_lava
@@ -454,9 +455,9 @@ KMASK:  l = no_monster_gen
 : temple_entry(_G)
 MAP
 vvvvvvv
-vlvlvlv
+vlvlZlv
 @..O..@
-vlvlvlv
+vlZlvlv
 vvvvvvv
 ENDMAP
 
@@ -471,9 +472,9 @@ c...c...c...c
 B.A.D.A.E.A.B
 c...c...c...c
 ccDccc.cccEcc
-c...c...c...c
+c...cZ..c...c
 B.A...A...A.B
-c...c...c...c
+c...c..Zc...c
 ccCccc.cccFcc
 c...c...c...c
 B.A.C.A.F.A.B
@@ -492,9 +493,9 @@ KMASK:  W! = no_monster_gen
 MAP
 ..WWW..
 .WW!WW.
-WWWWWWW
+WWZWWWW
 W!WOW!W
-WWWWWWW
+WWWWZWW
 .WW!WW.
 ..WWW..
 ENDMAP
@@ -506,11 +507,11 @@ SUBST:  m : bm
 MAP
 .........
 ...m.m...
-..m.m.m..
+..Z.m.m..
 .m.m.m.m.
 ..m.O.m..
 .m.m.m.m.
-..m.m.m..
+..m.m.Z..
 ...m.m...
 .........
 ENDMAP
@@ -521,11 +522,11 @@ SUBST:  c : c:80 xv, T = T:80 UV
 : temple_entry(_G)
 MAP
 ccc+ccc
-c.....c
+cZ....c
 c.T.T.c
 +..O..+
 c.T.T.c
-c.....c
+c....Zc
 ccc+ccc
 ENDMAP
 
@@ -538,9 +539,9 @@ MARKER: O = lua:fog_machine { cloud_type = "purple smoke", pow_min = 1, \
 : temple_entry(_G)
 MAP
 .....
-.....
+...Z.
 ..O..
-.....
+.Z...
 .....
 ENDMAP
 
@@ -549,11 +550,11 @@ TAGS:   transparent
 : temple_entry(_G)
 MAP
 .......
-.G.G.G.
+.Z.G.G.
 ..T.T..
 .G.O.G.
 ..T.T..
-.G.G.G.
+.G.G.Z.
 .......
 ENDMAP
 
@@ -566,9 +567,9 @@ xx@xx@xx@xx
 x.........x
 @.........@
 x..T...T..x
-x.........x
+x...Z.....x
 @....O....@
-x.........x
+x.....Z...x
 x..T...T..x
 @.........@
 x.........x
@@ -580,11 +581,11 @@ TAGS:   transparent
 : temple_entry(_G)
 MAP
 xxx+xxx
-x.....x
+x....Zx
 x.m+m.x
 +.mOm.+
 x.mmm.x
-x.....x
+xZ....x
 xxx+xxx
 ENDMAP
 
@@ -598,9 +599,9 @@ MAP
 ..v..vvv..v..
 .v..v...v..v.
 .v.v.vvv.v.v.
-v.v.v...v.v.v
+v.v.v.Z.v.v.v
 v.v.v.O.v.v.v
-v.v.v...v.v.v
+v.v.v.Z.v.v.v
 .v.v.vvv.v.v.
 .v..v...v..v.
 ..v..vvv..v..
@@ -616,8 +617,8 @@ MONS:   plant, oklob sapling
 MAP
 ....1..
 1.111.1
-.11.11.
-.1.O211
+.11Z11.
+.1ZO211
 11.1111
 .111.1.
 1..11..
@@ -628,13 +629,13 @@ TAGS:   transparent
 WEIGHT: 5
 : temple_entry(_G)
 MAP
-.......
+...Z...
 .b...b.
 ..b.b..
 ...O...
 ..b.b..
 .b...b.
-.......
+...Z...
 ENDMAP
 
 NAME:   minmay_temple_entry_junction_2
@@ -645,13 +646,13 @@ SUBST:  x : xccbbmv, T = T:39 V U:1
 MAP
 ...........
 ...x...x...
-...x.T.x...
+..Zx.T.x...
 .xxx...xxx.
 ...........
 ..T..O..T..
 ...........
 .xxx...xxx.
-...x.T.x...
+...x.T.xZ..
 ...x...x...
 ...........
 ENDMAP
@@ -667,11 +668,11 @@ MAP
 .xxx.....xxx.
 .xWWWWWWWWWx.
 .xWx.....xWx.
-..W.......W..
+..W.Z.....W..
 ..W.......W..
 ..W...O...W..
 ..W.......W..
-..W.......W..
+..W.....Z.W..
 .xWx.....xWx.
 .xWWWWWWWWWx.
 .xxx.....xxx.
@@ -682,11 +683,11 @@ NAME:   minmay_temple_entry_statues
 WEIGHT: 5
 : temple_entry(_G)
 MAP
-xGGGx
+xGZGx
 G...G
 G.O.@
 G...G
-xGGGx
+xGZGx
 ENDMAP
 
 NAME:   minmay_temple_entry_statues_pillars
@@ -695,11 +696,11 @@ SUBST:  c : cccxxb
 KFEAT:  O = enter_temple
 : temple_entry(_G)
 MAP
-c.G.c
+c.Z.c
 .....
 G.O.G
 .....
-c.G.c
+c.Z.c
 ENDMAP
 
 NAME:   minmay_temple_entry_from_below_a
@@ -708,9 +709,9 @@ WEIGHT: 5
 MAP
       @.
 ccccccncc
-c.......c
+cZ......c
 c.O.c.}.c
-c.......c
+cZ......c
 ccncccccc
   @
 ENDMAP
@@ -721,11 +722,11 @@ WEIGHT: 2
 MAP
          @.
 cccccccccnccc
-cG.........Gc
+cZ.........Gc
 c....T.T....c
 c..O.....}..c
 c....T.T....c
-cG.........Gc
+cZ.........Gc
 cccnccccccccc
    @
 ENDMAP
@@ -738,7 +739,7 @@ MAP
  xxxxx
 xxtttxx
 xt...tx
-xt.O.tx
+xZ.O.Zx
 xt...tx
 xxt.txx
  xx+xx
@@ -756,7 +757,7 @@ MAP
  ccccc...ccccc
 ccccc-...-ccccc
 cc---..T..---cc
-c-...........-c
+c-...Z...Z...-c
 c-._..---..O.-c
 c-...-ccc-...-c
 cc---ccccc---cc
@@ -776,7 +777,7 @@ MAP
    ....ccc....
   ..c...c...c..
  ....c.....c....
-..ccccc.O.ccccc..
+..ccccZ.O.Zcccc..
  ....c.....c....
   ..c...c...c..
    ....ccc....
@@ -798,11 +799,11 @@ MAP
      .....
      .c.c.
     .......
-  ...c.?.c...
+  ...c.?.Z...
 ...c.......c...
 .c...?.O.?...c.
 ...c.......c...
-  ...c.?.c...
+  ...Z.?.c...
     .......
      .c.c.
      .....
@@ -820,11 +821,11 @@ MAP
       .....
     ...c.c.
   ...cnc.c..
-...ccc...cc.
+...cccZ..cc.
 .c........n..
 ...cc..O..cc...
   ..n........c.
-   .cc...ccc...
+   .cc..Zccc...
    ..c.cnc...
     .c.c...
     .....
@@ -840,11 +841,11 @@ SUBST:  ? : TG
 : temple_entry(_G)
 MAP
     ccccccc
-ccccc!...!ccccc
+cccccZ...!ccccc
 c...c.....c...c
 ..?....O....?..
 c...c.....c...c
-ccccc!...!ccccc
+ccccc!...Zccccc
     ccccccc
 ENDMAP
 
@@ -858,7 +859,7 @@ MAP
 ....c.c..c.
 .c..c....c.
 ..cc....c..
-.....O.....
+....ZOZ....
 ..c....cc..
 .c....c..c.
 .c..c.c....
@@ -876,11 +877,11 @@ MAP
  ..cc..c...cc..
   ..cc..cccccc.
   ..ccc..cccc..
-   .ccc.......
+   .cZc.......
    ..c..O...c.
     .......c..
      ..cc.cc.
-     .ccccc.
+     .cZccc.
      ..ccc.
       ....
 ENDMAP
@@ -891,11 +892,11 @@ SUBST:  T = T:99 V:1
 : temple_entry(_G)
 MAP
 ....
-.GT.
+.ZT.
 ......
 .GT.O.
 ......
-.GT.
+.ZT.
 ....
 ENDMAP
 
@@ -905,9 +906,9 @@ SHUFFLE: def$
 ITEM:    any weapon, any book, gold
 : temple_entry(_G)
 MAP
-d.e
+dZe
 .O.
-f.$
+fZ$
 ENDMAP
 
 NAME:   minmay_temple_entry_gardened_gates
@@ -918,9 +919,9 @@ SUBST:  c : ccccb
 MAP
   p@p
  cc.cc
-pc...cp
+pcZ..cp
 @..O..@
-pc...cp
+pc..Zcp
  cc.cc
   p@p
 ENDMAP
@@ -930,7 +931,7 @@ TAGS:   transparent
 KMONS:  O = orc priest
 : temple_entry(_G)
 MAP
-O
+ZOZ
 ENDMAP
 
 NAME:   minmay_temple_entry_stoned_glass
@@ -941,7 +942,7 @@ MAP
 .nc...cn.
 .cn...nc.
 .........
-....O....
+...ZOZ...
 .........
 .cn...nc.
 .nc...cn.
@@ -958,9 +959,9 @@ MAP
    ...c...
   ...ccc...
  ...........
-...c.....c...
+...c..Z..c...
 .ccc..O..ccc.
-...c.....c...
+...c..Z..c...
  ...........
   ...ccc...
    ...c...
@@ -979,7 +980,7 @@ MAP
 .c.cc.c.cc.c...
 .c....c........
 ....c...c.c.cc.
-.cc.c.O.c.c....
+.cc.Z.O.Z.c....
 ............c..
 ...c.c.c....c..
 .c.c.c.c.cc....
@@ -1000,9 +1001,9 @@ MAP
  ..cc.....cc..
 ..cc..c.c..cc..
 .cc..cc.cc..cc.
-....cc...cc....
+....cc.Z.cc....
 ..?....O....?..
-....cc...cc....
+....cc.Z.cc....
 .cc..cc.cc..cc.
 ..cc..c.c..cc..
  ..cc.....cc..
@@ -1172,7 +1173,7 @@ ORIENT: encompass
 KMONS:  p = plant
 SUBST:  p = ttp
 LFLOORCOL: green
-LFLOORTILE: floor_grass
+LFLOORTILE: floor_grass_dark
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xpppppppppppppppppppppppppppx
@@ -1222,7 +1223,7 @@ NSUBST: " = v / .
 TILE:   c = wall_lab_stone
 TILE:   v = wall_lab_metal
 FTILE:  -."apqvcbT{ = floor_gauntlet
-FTILE:  B` = floor_grass
+FTILE:  B` = floor_grass_dark
 : set_border_fill_type("open_sea")
 MAP
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
@@ -1278,7 +1279,7 @@ NSUBST:  . = 12:1 / 7:2 / *:.
 COLOUR:  ' : darkgrey w:3 / white w:1 / lightgrey
 COLOUR:  . = green
 COLOUR:  " = brown
-FTILE:   .t12 = floor_grass
+FTILE:   .t12 = floor_grass_dark
 FTILE:   'BGT+ = floor_vault
 FTILE:   D" = floor_dirt
 MAP
@@ -1317,7 +1318,7 @@ SUBST:   W = W:30 w, ~ = ':20 W
 NSUBST:  ' = 5:t / 7:1 / 4:2 / *:'
 NSUBST:  A = 1:{ / *:'
 COLOUR:  ' = green / brown w:2
-FTILE:   'A12 = floor_grass
+FTILE:   'A12 = floor_grass_dark
 FTILE:   .BT = floor_vault
 : set_border_fill_type("open_sea")
 MAP
@@ -1372,7 +1373,7 @@ SUBST:   - = ., " : """.
 COLOUR:  .12 = green
 COLOUR:  " : brown
 COLOUR:  ' : white
-FTILE:   T.t12 = floor_grass
+FTILE:   T.t12 = floor_grass_dark
 FTILE:   " = floor_dirt
 FTILE:   '{+GB = floor_vault
 MAP
@@ -1649,7 +1650,6 @@ MARKER: { = lua:fog_machine{cloud_type = "white fluffiness", pow_max = 20, \
 MARKER: B = lua:fog_machine{cloud_type = "white fluffiness", pow_max = 20, \
              delay_min = 10, delay_max = 50, size = 1,    \
              walk_dist = 5, start_clouds = 7}
-
 MAP
 ccccccccccccccccccc
 cccccc.......cccccc
@@ -1681,7 +1681,7 @@ SUBST:  - = t.
 FTILE:  `cB = floor_sandstone
 COLOUR: ` = brown
 LFLOORCOL: green
-LFLOORTILE: floor_grass
+LFLOORTILE: floor_grass_dark
 MAP
 tttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttt
@@ -2078,6 +2078,8 @@ SUBST:   d : ++., f : ++., eg = c
 SUBST:   h : ++., i : ++., j : ++., k : ++.
 SUBST:   D : Pbx.., E : Pbx..., F : Pxx...., G : Pxx.....
 SUBST:   H : Pxx......, I : Pxx......., ' : c.., " : c..
+TILE:    c = dngn_stone_wall_green
+LFLOORTILE: floor_sprouting_squares
 MAP
 ccccccccccccccccccccccccccccccccc
 c........c...'''.'''...c........c
@@ -2356,14 +2358,12 @@ TAGS:   no_pool_fixup
 PLACE:  Temple
 ORIENT: encompass
 KFEAT:  ~ = floor
-MARKER: d = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
-                              pow_max = 100, delay = 1, start_clouds = 1, \
-                              size = 1, spread_rate = 0, excl_rad = -1 }
+: single_cloud(_G, "d", "flame", false)
 COLOUR: c = white
 COLOUR: . = lightgrey
 COLOUR: ~ = green
 FTILE:  .BGd = floor_marble
-FTILE:  ~t{ = floor_grass
+FTILE:  ~t{ = floor_grass_dark
 TILE:   c = wall_marble
 MAP
 tttttttttttttttttttttttttttttttt
@@ -3036,7 +3036,7 @@ llllllClllllllllllllllllllEllllllllDlllllllllllllll
 ENDMAP
 
 NAME:    mainiacjoe_temple_archimedes_tessellation
-TAGS:    temple_altars_22
+TAGS:    temple_altars_21
 PLACE:   Temple
 ORIENT:  encompass
 TAGS:    no_pool_fixup
@@ -3233,7 +3233,7 @@ TAGS:    temple_altars_21
 PLACE:   Temple
 ORIENT:  encompass
 SUBST:   v : v b x:3 n:3
-FTILE:   '{t = floor_grass
+FTILE:   '{t = floor_grass_dark
 MAP
                                ttttttt
                              ttt'''''ttt
@@ -3313,7 +3313,7 @@ ORIENT:  encompass
 SUBST:   t : tGT
 SUBST:   c : cvbt
 SUBST:   x : xcvb
-FTILE:   '{tGT = floor_grass
+FTILE:   '{tGT = floor_grass_dark
 MAP
               ccccccc
             ccc'''''ccc
@@ -3370,6 +3370,94 @@ cc'''''''''''''''''''''ccccc
  cc''''''''''''ccccc
   ccc'''''cccccc
     ccccccc
+ENDMAP
+
+# 22 gods
+# Gluing together some trove layouts lost in the trove theming revamp:
+# minmay's trove_books_scrolls and trove_weapons_four_rooms
+# with DrKe's trove_misc_throne_room.
+NAME:    regret_index_temple_trove_trio
+TAGS:    temple_altars_22
+PLACE:   Temple
+ORIENT:  encompass
+KMONS:   P : plant / bush
+FTILE:   ' = floor_limestone
+SHUFFLE: cv / cv / cb / vb
+MAP
+xxxxxxxxxxxxxxx    xxxxx
+xT...........Ax    xB.Bx
+x.ccccc.ccccc.x    xx.xx
+x.cB..c.c..Bc.x    xP.Px    vvvvvvvvvvvv
+x.c...+.+...c.x   xxx+xxx   vA.vBvBvBvBvv
+x.cB..c.c..Bc.xxxxx.....xxxxx..v.......vvv
+x.ccccc.ccccc.x.xPx.....xPx.+..+'''''''vGv
+x......B......+...+..{..+...+..+'''''''+Bv
+x.ccccc.ccccc.x.xPx.....xPx.+..+'''''''vGv
+x.cB..c.c..Bc.xxxxx.....xxxxx..v.......vvv
+x.c...+.+...c.x   xxx+xxx   vA.vBvBvBvBvv
+x.cB..c.c..Bc.x    xP.Px    vvvvvvvvvvvv
+x.ccccc.ccccc.x    xx.xx
+xA...........Tx    xB.Bx
+xxxxxxxxxxxxxxx    xxxxx
+ENDMAP
+
+# 22 gods
+NAME:   nicolae_temple_ziggedy_zaggedy
+TAGS:   temple_altars_22 no_pool_fixup
+PLACE:  Temple
+ORIENT: encompass
+MAP
+    ccccccccccccccccccc
+   cc.ccc.ccc.ccc.ccc.cc
+  cc...c...c...c...c...cc
+  c..B...B...B...B...B..c
+  cc...c...c...c...c...cc
+ ccwc.c.c.c.c.c.c.c.c.cwcc
+ccwwwc...c...c...c...cwwwcc
+cwwwww.B...B...B...B.wwwwwc
+ccwwwc...c...c...c...cwwwcc
+ ccwc.c.c.c.c.c.c.c.c.cwcc
+  cc...c...c...c...c...cc
+  c..B...B...{...B...B..c
+  cc...c...c...c...c...cc
+ ccwc.c.c.c.c.c.c.c.c.cwcc
+ccwwwc...c...c...c...cwwwcc
+cwwwww.B...B...B...B.wwwwwc
+ccwwwc...c...c...c...cwwwcc
+ ccwc.c.c.c.c.c.c.c.c.cwcc
+  cc...c...c...c...c...cc
+  c..B...B...B...B...B..c
+  cc...c...c...c...c...cc
+   cc.ccc.ccc.ccc.ccc.cc
+    ccccccccccccccccccc
+ENDMAP
+
+# 22 gods
+NAME:   nicolae_temple_dense_god_circle
+TAGS:   temple_altars_22
+PLACE:  Temple
+ORIENT: encompass
+FTILE:  `B{<U = floor_limestone
+COLOUR: ` = yellow
+MAP
+     cccccccc
+   cccB`B`B`ccc
+  ccB```````B`cc
+ cc```......``Bcc
+ cB``........```c
+cc``..........`Bcc
+cB`....````....``c
+c``...`U``U`...`Bc
+cB`...``{```...``c
+c``...```<``...`Bc
+cB`...`U``U`...``c
+c``....````....`Bc
+ccB`..........``cc
+ c```........``Bc
+ ccB``......```cc
+  cc`B```````Bcc
+   ccc`B`B`Bccc
+     cccccccc
 ENDMAP
 
 ##############################################################################
@@ -3449,15 +3537,15 @@ cc.....BI...mmwwwwwTwWwTwwwwwmm...IB.....cc
                ccccccccccccc
 ENDMAP
 
-# 9, 18 gods
+# 9, 21 gods
 NAME:   dpeg_three_leaves_temple
-TAGS:   no_rotate temple_altars_9 temple_altars_18
+TAGS:   no_rotate temple_altars_9 temple_altars_21
 PLACE:  Temple
 ORIENT: encompass
-: local altar_count = get_altar_count(_G, 18)
+: local altar_count = get_altar_count(_G, 21)
 : if altar_count == "9" then
 SUBST:  C = .
-: elseif altar_count == "18" then
+: elseif altar_count == "21" then
 SUBST:  C = B, T = .
 : end
 MAP
@@ -3673,9 +3761,9 @@ SUBST:   ( = {, < = w
 SHUFFLE: '"w / "'W
 SUBST:   "W = t, CT = B, z = ., Ux : GUUTTxt
 FTILE:   'w = floor_dirt
-FTILE:   " = floor_grass
+FTILE:   " = floor_grass_dark
 : end
-FTILE:   .{tBxGTU = floor_grass
+FTILE:   .{tBxGTU = floor_grass_dark
 COLOUR:  . = green / brown w:2
 MAP
                 ttttttttt
@@ -4411,8 +4499,8 @@ NSUBST:  l = 1:+ / *:c, m = 1:+ / *:c, n = 1:+ / *:c, o = 1:+ / *:c
 NSUBST:  p = 1:+ / *:c, q = 1:+ / *:c, r = 1:+ / *:c, s = 1:+ / *:c
 NSUBST:  t = 1:+ / *:c, u = 1:+ / *:c
 SHUFFLE: '"
-FTILE:   ' = floor_grass
-FTILE:   " = floor_dirt
+FTILE:   '{ = floor_grass_dark
+FTILE:   "T = floor_dirt
 COLOUR:  ' = green
 COLOUR:  " = brown
 MAP
@@ -4525,7 +4613,7 @@ SUBST:  EH = B, D = ., F = AGT
 : else
 SUBST:  EFH = B, D = .
 : end
-FTILE:  .+{ABGTt = floor_grass
+FTILE:  .+{ABGTt = floor_grass_dark
 COLOUR: . = green
 MAP
    tttt         tttt
@@ -4620,7 +4708,7 @@ COLOUR: ' = red
 COLOUR: - = white
 COLOUR: G. = yellow
 : local altar_count = get_altar_count(_G, 19)
-: local half_count = (altar_count - 1) / 2
+: local half_count = math.floor((altar_count - 1) / 2)
 : nsubst ("D = " .. half_count .. ":B / *:'")
 : nsubst ("E = " .. half_count .. ":B / *:-")
 MARKER:  P = lua:transp_loc("pantheon_dark_entry")
@@ -4832,12 +4920,13 @@ cc-------cc
   ccccccc
 ENDMAP
 
-# 6 through 21 gods
+# 6 through 25 gods
 NAME:   nicolae_temple_bog_church
 TAGS:   temple_altars_6  temple_altars_7  temple_altars_8  temple_altars_9  \
         temple_altars_10 temple_altars_11 temple_altars_12 temple_altars_13 \
         temple_altars_14 temple_altars_15 temple_altars_16 temple_altars_17 \
-        temple_altars_18 temple_altars_19 temple_altars_20 temple_altars_21
+        temple_altars_18 temple_altars_19 temple_altars_20 temple_altars_21 \
+        temple_altars_22 temple_altars_23 temple_altars_24 temple_altars_25
 PLACE:  Temple
 ORIENT: encompass
 KFEAT:  t = mangrove
@@ -4861,16 +4950,16 @@ ttttttttttttttttttttttttttttttttttttt
 ttttttttttMMMwwwwttttttttttttDwwwwttt
 ttttttMMMMwwwwwwwwwwwwwttttDDDwwwwwtt
 tttttMM....wwwwww!wwwwwwtt...DDDwwwtt
-tttttw'..B...wwwwwwwwww........DDDttt
+tttttw'..B...wwwwwwwwww....B...DDDttt
 tttwwwWW....''WWwwww........`...DDttt
-ttwwwWWWWWWWWWWWW.....-..B.......tttt
+ttwwwWWWWWWWWWWWW.....-.B........tttt
 ttwww'...WWWWW'...B..--....-..B..tttt
 ttw!w..B..''...--.........-t....ttttt
-tttwww.......B.-ttt-.....tt-...Ettttt
-ttttwww..`.....-ttt-..B..ttt..EEEtttt
+tttwww.......B.-ttt-..B..tt-...Ettttt
+ttttwww..`.....-ttt-.....ttt..EEEtttt
 tttttwww.......-----.....---..EEEEttt
-tttttLww...B...................Ettttt
-tttttLLww........B....`......B..ttttt
+tttttLww...B.........B.........Ettttt
+tttttLLww.......B.....`......B..ttttt
 ttttttLLw..t--.....--....B......FFttt
 tttttttLLL.-t-....tt.......WW..FFFFtt
 tttttttLLL.--...`.tt.B.'WWWWW'.FFFwtt
@@ -4912,7 +5001,7 @@ SUBST:   LO = !, M = ., N = B
 SUBST:   L = ., MN = !, O = B
 : end
 SUBST:   T = 't
-FTILE:   . = floor_hall, t' = floor_grass, !{B = floor_limestone
+FTILE:   . = floor_hall, t' = floor_grass_dark, !{B = floor_limestone
 COLOUR:  r = red, o = brown, y = yellow, g = green, b = blue, i = cyan, \
          v = magenta, ' = green, . = blue, ! = lightgrey
 TILE:    r = dngn_transparent_stone_red, o = dngn_transparent_stone_brown, \
@@ -5337,12 +5426,8 @@ SUBST:   ^ = ^F.
 KFEAT:   ^ = web
 KMONS:   P = plant
 KMONS:   F = fungus
-MARKER:  L = lua:fog_machine { cloud_type = "flame", delay = 10, \
-                  pow_min = 100, pow_max = 100, size = 1, walk_dist = 0, \
-                  excl_rad = 0 }
-MARKER:  S = lua:fog_machine { cloud_type = "black smoke", delay = 50, \
-                  pow_min = 1, pow_max = 10, size = 1, walk_dist = 0, \
-                  excl_rad = 0, spread_rate = 0 }
+: single_cloud(_G, "L", "flame", false)
+: single_cloud(_G, "S", "black smoke", true)
 MAP
             ccc
         cccccLccccc

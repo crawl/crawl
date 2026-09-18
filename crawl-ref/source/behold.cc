@@ -14,39 +14,20 @@
 #include "env.h"
 #include "fprop.h"
 #include "losglobal.h"
+#include "religion.h"
 #include "state.h"
+#include "stringutil.h"
 
 // Add a monster to the list of beholders.
-void player::add_beholder(const monster& mon, bool axe)
+void player::add_beholder(monster& mon, bool forced, int dur)
 {
-    if (is_sanctuary(pos()) && !axe)
-    {
-        if (mons_is_siren_beholder(mon))
-        {
-            if (can_see(mon))
-            {
-                mprf("%s's singing sounds muted, and has no effect on you.",
-                     mon.name(DESC_THE).c_str());
-            }
-            else
-                mpr("The melody is strangely muted, and has no effect on you.");
-        }
-        else
-        {
-            if (can_see(mon))
-                mprf("%s's is no longer quite as mesmerising!", mon.name(DESC_THE).c_str());
-            else
-                mpr("Your mesmeriser suddenly seems less interesting!");
-        }
-
-        return;
-    }
-
     if (!duration[DUR_MESMERISED])
     {
-        set_duration(DUR_MESMERISED, random_range(7, 15), 15);
+        if (!dur)
+            dur = random_range(7, 15);
+        set_duration(DUR_MESMERISED, dur, 15);
         beholders.push_back(mon.mid);
-        if (!axe)
+        if (!forced)
         {
             mprf(MSGCH_WARN, "You are mesmerised by %s!",
                              mon.name(DESC_THE).c_str());
@@ -54,10 +35,17 @@ void player::add_beholder(const monster& mon, bool axe)
     }
     else
     {
-        increase_duration(DUR_MESMERISED, random_range(5, 8), 15);
+        if (!dur)
+            dur = random_range(5, 8);
+        increase_duration(DUR_MESMERISED, dur, 15);
         if (!beheld_by(mon))
             beholders.push_back(mon.mid);
     }
+
+    // If forced externally onto a creature, make sure it doesn't break if they
+    // become disabled.
+    if (forced)
+        mon.props[FORCED_MESMERISE_KEY] = true;
 }
 
 // Whether player is mesmerised.
@@ -101,12 +89,13 @@ monster* player::get_any_beholder() const
 }
 
 // Removes a monster from the list of beholders if present.
-void player::remove_beholder(const monster& mon)
+void player::remove_beholder(monster& mon)
 {
     for (unsigned int i = 0; i < beholders.size(); i++)
         if (beholders[i] == mon.mid)
         {
             beholders.erase(beholders.begin() + i);
+            mon.props.erase(FORCED_MESMERISE_KEY);
             _removed_beholder();
             return;
         }
@@ -126,61 +115,34 @@ static void _removed_beholder_msg(const monster *mons)
         return;
 
     const monster &mon = *mons;
-    if (!mon.alive() || !mons_is_siren_beholder(mon)
-        || !you.see_cell(mon.pos()))
-    {
+    if (!mon.alive() || !you.see_cell(mon.pos()))
         return;
-    }
 
     if (is_sanctuary(you.pos()) && !mons_is_fleeing(mon))
     {
-        if (mons_is_siren_beholder(mon))
-        {
-            if (you.can_see(mon))
-            {
-                mprf("%s's singing becomes strangely muted.",
-                     mon.name(DESC_THE).c_str());
-            }
-            else
-                mpr("Something's singing becomes strangely muted.");
-        }
-        else
-        {
-            if (you.can_see(mon))
-                mprf("%s's is no longer quite as mesmerising!", mon.name(DESC_THE).c_str());
-            else
-                mpr("Your mesmeriser suddenly seems less interesting!");
-        }
-
-        return;
-    }
-
-    if (you.can_see(mon))
-    {
-        if (silenced(you.pos()) || silenced(mon.pos()))
-        {
-            if (mons_is_siren_beholder(mon))
-            {
-                mprf("You can no longer hear %s's singing!",
-                     mon.name(DESC_THE).c_str());
-            }
-            else
-                mpr("The silence clears your mind.");
-            return;
-        }
-
-        if (mons_is_siren_beholder(mon))
-            mprf("%s stops singing.", mon.name(DESC_THE).c_str());
-        else
-            mprf("%s is no longer quite as mesmerising!", mon.name(DESC_THE).c_str());
-
+        string msg = make_stringf("The Sanctuary denies %s grip on your mind.",
+                                  mons->name(DESC_ITS).c_str());
+        god_speaks(GOD_ZIN, msg.c_str());
         return;
     }
 
     if (mons_is_siren_beholder(mon))
-        mpr("Something stops singing.");
+    {
+        if (silenced(you.pos()) || silenced(mon.pos()))
+        {
+            if (you.can_see(mon))
+                mprf("You can no longer hear %s singing!", mon.name(DESC_ITS).c_str());
+            else
+                mpr("The silence clears your mind.");
+        }
+        else
+            mprf("%s stops singing.", mon.name(DESC_THE).c_str());
+    }
     else
-        mpr("Your mesmeriser is now quite boring!");
+    {
+        mprf("%s loses %s grip on your mind.", mon.name(DESC_THE).c_str(),
+                                               mon.pronoun(PRONOUN_POSSESSIVE).c_str());
+    }
 }
 
 // Update all beholders' status after changes.
@@ -191,11 +153,14 @@ void player::update_beholders()
     bool removed = false;
     for (int i = beholders.size() - 1; i >= 0; i--)
     {
-        const monster* mon = monster_by_mid(beholders[i]);
+        monster* mon = monster_by_mid(beholders[i]);
         if (!possible_beholder(mon))
         {
             beholders.erase(beholders.begin() + i);
             removed = true;
+
+            if (mon)
+                mon->props.erase(FORCED_MESMERISE_KEY);
 
             // If that was the last one, clear the duration before
             // printing any subsequent messages, or a --more-- can
@@ -209,7 +174,7 @@ void player::update_beholders()
 }
 
 // Update a single beholder.
-void player::update_beholder(const monster* mon)
+void player::update_beholder(monster* mon)
 {
     if (possible_beholder(mon))
         return;
@@ -217,6 +182,7 @@ void player::update_beholder(const monster* mon)
         if (beholders[i] == mon->mid)
         {
             beholders.erase(beholders.begin() + i);
+            mon->props.erase(FORCED_MESMERISE_KEY);
             // Do this dance to clear the duration before printing messages
             // (#8844), but still print all messages in the right order.
             _removed_beholder(true);
@@ -235,11 +201,7 @@ void player::_removed_beholder(bool quiet)
         duration[DUR_MESMERISED] = 0;
         you.duration[DUR_MESMERISE_IMMUNE] = random_range(21, 40);
         if (!quiet)
-        {
-            mprf(MSGCH_DURATION,
-                 coinflip() ? "You break out of your daze!"
-                            : "You are no longer entranced.");
-        }
+            mprf(MSGCH_DURATION, "You are no longer mesmerised.");
     }
 }
 
@@ -251,16 +213,12 @@ bool player::possible_beholder(const monster* mon) const
         return false;
 
     return mon && mon->alive() && cell_see_cell(pos(), mon->pos(), LOS_SOLID_SEE)
-        && mon->see_cell_no_trans(pos())
-        && !mon->wont_attack() && !mon->pacified()
-        && ((mons_is_siren_beholder(mon->type)
-             || mon->has_spell(SPELL_MESMERISE))
-            && !silenced(pos())
-            && !mon->is_silenced()
-            && !mon->confused()
-            && !mon->asleep() && !mon->cannot_act()
-            && !mon->berserk_or_frenzied()
-            && !mons_is_fleeing(*mon)
-            && !is_sanctuary(pos())
-          || you.unrand_equipped(UNRAND_DEMON_AXE));
+        && !mon->wont_attack() && !mon->pacified() && !is_sanctuary(pos())
+        && (((!mons_is_siren_beholder(mon->type)
+                || (!silenced(pos()) && !mon->is_silenced()))
+             && !mon->confused()
+             && !mon->asleep() && !mon->cannot_act()
+             && !mon->berserk_or_frenzied()
+             && !mons_is_fleeing(*mon))
+            || mon->props.exists(FORCED_MESMERISE_KEY));
 }

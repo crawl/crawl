@@ -94,17 +94,17 @@ giving -1 to both your Strength and Intelligence for each level.
 weak mutation
 
 Your muscles have grown unnaturally weak. Each level of this mutation provides
--2 Strength.
+-3 Strength.
 %%%%
 dopey mutation
 
-Your mind has become unnaturally dopey. Each level of this mutation provides -2
+Your mind has become unnaturally dopey. Each level of this mutation provides -3
 Intelligence.
 %%%%
 clumsy mutation
 
 Your reflexes have become unnaturally clumsy. Each level of this mutation
-provides -2 Dexterity.
+provides -3 Dexterity.
 %%%%
 high mp mutation
 
@@ -140,11 +140,58 @@ guaranteed to trigger if your foe does any damage.
 %%%%
 time-warped blood mutation
 
-Your blood has desynchronized itself from the flow of time. Whenever you fall
-below 50% of your maximum HP, the spilling of your blood surges strangely
+Your blood has desynchronised itself from the flow of time. Whenever you fall
+below 66% of your maximum HP, the spilling of your blood surges strangely
 through your surroundings, hasting two of your strongest allies in sight for
 each level of this mutation. After doing so, your blood will be unable to
 further dilate time until your HP has fully recovered.
+%%%%
+efficient metabolism mutation
+
+Your altered digestive system extracts additional value out of select potion
+types, doubling the duration of all status effects gained via potions.
+%%%%
+protean grace mutation
+
+Your limbs are overflowing with morphogenic power, guiding your every movement.
+Each other non-innate mutation you have also provides +1 EV and Slay +1 (up to
+a limit of 7), improving your accuracy and damage with melee and ranged attacks.
+This still applies even when the mutations would be suppressed by a different
+form.
+
+You currently gain
+{{
+    num = math.min(you.how_mutated(true, false, false, true, false) - 1, 7)
+    return "+" .. num .. " EV and Slay +" .. num .. " from this mutation."
+}}
+%%%%
+feed off suffering mutation
+
+A vile yet invigorating energy permeates your soul, which resonates with
+specific other energies released at the moment of death. Whenever poisoned or
+drained enemies die in sight of you, you have a chance to siphon away a small
+portion of their life force and magical power. Each level of this mutation
+increases the chance this happens and the amount one siphons.
+%%%%
+lucky mutation
+
+You have an uncanny knack for uncovering hidden properties of items other people
+might ignore as mundane. Whenever you encounter a new item on the ground for the
+first time, there is a very tiny chance to discover that it is actually an
+artefact. Each level of this mutation increases that chance.
+%%%%
+reckless mutation
+
+Your recklessness halves your SH, but the damage you deal with two-handed melee
+weapons is increased by 15%.
+%%%%
+spark swarm mutation
+
+A subtle flock of eager sparks and bright cinders chases after your movements.
+Whenever you deal fire damage to a foe without rFire∞ or electric damage to a
+foe without rElec∞, you have a chance to outline it with a soft glow of light,
+which makes it easier to hit and reveals it if invisible. Each level of this
+mutation increases the chance this happens.
 %%%%
 # ------ Auxes -----
 horns mutation
@@ -220,12 +267,14 @@ stronger.
 %%%%
 naga tail mutation
 
-You have a long, snake-like tail in place of feet. The second level of this
-mutation allows you to constrict foes with your tail when attacking in melee.
-Your tail can constrict only one enemy at a time, and every attack at this
-mutation level will begin or renew a constriction attempt. The chances of
-succeeding are determined primarily by Dexterity, Fighting skill, and any
-slaying bonuses.
+You have a long, snake-like tail in place of feet. This gives you stability in
+water, but causes you to move much more slowly than most species.
+
+The second level of this mutation allows you to constrict foes with your tail
+when attacking in melee. Your tail can constrict only one enemy at a time, and
+every attack at this mutation level will begin or renew a constriction attempt.
+The chances of succeeding are determined primarily by Dexterity, Fighting skill,
+and any slaying bonuses.
 %%%%
 stinger mutation
 
@@ -235,23 +284,22 @@ sharper, longer, and stronger.
 %%%%
 weakness stinger mutation
 
-You have a thin, red tail, allowing you to tail-slap foes when launching melee
+You have a thin, orange tail, allowing you to attack foes when launching melee
 attacks. Each level of this mutation increases your tail's strength as it turns
 into a sharp stinger. The third level of this mutation prevents wearing cloaks
 or scarves, and causes the stinger to inflict brief weakness on those struck.
 %%%%
 armoured tail mutation
 
-You have a large armoured tail, allowing you to tail-slap foes when launching
+You have a large scaly tail, allowing you to tail-slap foes when launching
 melee attacks.
 %%%%
 pseudopods mutation
 
 You are covered in pseudopods, allowing you to slap your foes when launching
 melee attacks, but somewhat reducing the amount of protection provided by body
-armour. This has no effect on protection provided by armour enchantments, nor
-on the defensive benefits of training the Armour skill. Each level of this
-mutation makes your pseudopods larger and stronger.
+armour. This has no effect on protection provided by armour enchantments. Each
+level of this mutation makes your pseudopods larger and stronger.
 %%%%
 # ------ Resistance mutations -----
 steam resistance mutation
@@ -406,33 +454,32 @@ but less powerful. Each level of this mutation increases both effects further.
 # ------ Badmuts without matching goodmuts -----
 teleportitis mutation
 
-You occasionally teleport across the level to hostile monsters. Each level of
-this mutation increases the frequency with which this occurs.
+You periodically teleport towards hostile monsters. You will sense yourself
+destabilising several turns in advance of this happening, and may suppress it
+temporarily by reading a scroll of teleportation.
+
+Each level of this mutation increases the frequency with which you start to
+teleport.
 %%%%
 deformed body mutation
 
 Your body is shaped in an inhuman way, somewhat reducing the amount of
 protection provided by body armour. This has no effect on protection provided
-by armour enchantments, nor on the defensive benefits of training the Armour
-skill.
+by armour enchantments.
 %%%%
 screaming mutation
 
-You are sometimes seized by an uncontrollable urge to scream at foes when they
-first come into sight. All of your shouts are also louder than usual. The
-second level of this mutation makes this urge harder to resist and makes your
-shouts even louder.
+You are sometimes seized by an uncontrollable urge to scream whenever you
+sustain an injury. All of your shouts are also louder than usual.
+
+The second level of this mutation makes this urge harder to resist and makes
+your shouts even louder.
 %%%%
 poor constitution mutation
 
 Your body reacts poorly to injury; when you suffer damage, you have a chance for
 your attacks to become weakened for a short while. The second level of this
 mutation sometimes additionally causes this to slow you as well.
-%%%%
-berserk mutation
-
-When attacking foes in melee, you sometimes enter a berserk rage. Each level of
-this mutation makes it easier for you to lose your temper.
 %%%%
 no potion heal mutation
 
@@ -445,10 +492,52 @@ persistent drain mutation
 Your health recovers twice as slowly from being drained. (The total experience
 needed is doubled.)
 %%%%
+contamination susceptible mutation
+
+You absorb twice as much mutagenic energy from being contaminated.
+%%%%
 initially attractive mutation
 
-The first time you see a monster, it may be magically pulled toward you.
-This does not wake sleeping monsters.
+The first time you see a monster, it may be magically pulled toward you. This
+has a chance of waking sleeping monsters, though they will not necessarily be
+alerted to your position.
+
+The second level of this mutation increases the chance of this happening.
+%%%%
+booming voice mutation
+
+When reading scrolls in sight of hostile monsters, your voice resounds with a
+truly stupendous volume.
+%%%%
+potion fungus mutation
+
+Your body is covered in a fungus that metabolises beneficial potions you drink
+and sometimes emits spores which transmit their effects to nearby monsters -
+whether friend or foe.
+%%%%
+spiteful blood mutation
+
+Your blood pulses with a strange predatory malice. When you become significantly
+injured, some of it may rise up to attack you - though this may not happen again
+until you heal fully.
+
+The second level of this mutation causes two erythrospites to be created at
+once.
+%%%%
+spatial entanglement mutation
+
+Whenever you translocate, there is a chance that another monster is pulled
+along to your new location. If you translocated a short distance, this will
+always be some monster in sight of your previous location, but long distance
+teleports may pull a monster from anywhere else on the floor.
+
+The experience is mildly disorienting for the monster, and it will not be able
+to act immediately after being pulled this way.
+%%%%
+meek mutation
+
+All of your attacks are less effective, dealing less damage and being a little
+less accurate. This effect worsens with each level of this mutation.
 %%%%
 # ------ Demonspawn mutations -----
 demonic guardian mutation
@@ -630,12 +719,13 @@ extra vitality mutation
 You are built differently from most species, making you slightly harder to kill.
 Each level of this mutation increases your maximum health by 4 points.
 %%%%
-strong legs mutation
+frog-like legs mutation
 
-You have big, strong legs, allowing you to hop about with
-<input>$cmd[CMD_USE_ABILITY]</input>, though you can't perfectly aim where you
-land. The second level of this mutation allows you to hop farther. Each time
-you hop, you need to rest for a bit before you can hop again.
+Your uniquely muscular legs allow you to hop short distances in the blink of an
+eye with <input>$cmd[CMD_USE_ABILITY]</input>, though your walking speed is
+below average.
+
+The second level of this mutation allows you to hop farther.
 %%%%
 forlorn mutation
 
@@ -651,9 +741,11 @@ seen from.
 You are born to the light, increasing the distance that you can see and be seen
 from.
 %%%%
-petrification resistance mutation
+stone body mutation
 
-You are immune to petrification.
+You are made of living stone which is very resistant to damage. You gain a
+large bonus to your AC, which increases with your experience level, and are
+immune to petrification, poison, disease, sleep, and certain other effects.
 %%%%
 cold-blooded mutation
 
@@ -674,7 +766,8 @@ both arm-pairs.
 retaliatory headbutt mutation
 
 When a foe misses you in melee, you may reflexively retaliate, attempting to
-gore your attacker with your horns.
+gore your attacker with your horns. You can perform this against a given enemy
+no more than once per player action.
 %%%%
 multi-lived mutation
 
@@ -736,12 +829,11 @@ divine invocations can temporarily grant you the ability to regenerate.
 To compensate, you are able to heal yourself via the
 <input>$cmd[CMD_USE_ABILITY]</input> key, at the cost of permanent MP.
 %%%%
-strong nose mutation
+treasure sense mutation
 
-You have a powerful nose adapted to the Dungeon's scents, allowing you to
-detect where treasures lay hidden. As you explore the dungeon, nearby item
-locations that you cannot directly see will gain a marker for
-as-yet-undiscovered items.
+You have an uncanny knack for knowing where items can be found. As you explore
+the dungeon, nearby item locations that you cannot directly see will gain a
+marker for as-yet-undiscovered items.
 %%%%
 # ------ Jiyva muts ------
 gelatinous body mutation
@@ -762,6 +854,12 @@ Your skin is transparent, improving your stealth and reducing the accuracy of
 your foes' attacks against you. Each level of this mutation reduces your foes'
 accuracy further.
 %%%%
+slime shroud mutation
+
+When struck in melee, the slimy shroud covering your body may deflect the
+attack. Such deflection will break the shroud, however, and it will take time
+for it to reconstitute itself.
+%%%%
 tendrils mutation
 
 When struck in melee, the slimy tendrils covering your body may grab your
@@ -776,10 +874,10 @@ jelly absorbing missiles mutation
 When struck by a missile (such as an arrow or crossbow bolt), a jelly on your
 body may eat it, healing you somewhat.
 %%%%
-engulf mutation
+ooze flood mutation
 
-Your melee attacks may engulf living foes that are your size or smaller.
-Those foes will be silenced and unable to breathe.
+Your melee attacks may flood the airways of your foes with ooze. Those that need
+to breathe air will be silenced and take asphyxiation damage over time.
 %%%%
 otherworldly mutation
 
@@ -920,21 +1018,89 @@ enemy in your attack range.
 
 This attack does reduced damage if your attack speed is slower than your casting
 speed.
+%%%%
+accursed mutation
+
+Your accursed nature makes it harder to dispel malignant energies from your
+being, reducing the rate at which you can recover from Doom and Banes.
+%%%%
+stampede mutation
+
+You rampage swiftly towards enemies and can continue to trample forward once
+you reach them, pushing entire lines of enemies backwards as you attack.
+
+Performing any action besides a rampage movement will end your stampede.
+
+The second level of this mutation augments your stampede with the blessing of
+one of the four winds, based on your highest skill:
+
+ North Wind: Melee weapon skills (except Short Blades)\n
+South Wind: Short Blades or Stealth\n
+East Wind:  Magic skills (except Spellcasting)\n
+West Wind:  Ranged Weapons skill\n
+%%%%
+North Wind's embodiment mutation
+
+You rapidly regenerate up to 70% of all damage you suffer while Stampeding. The
+rate of this regeneration increases with your maximum HP.
+%%%%
+West Wind's embodiment mutation
+
+Whenever you rampage towards foes while wielding a ranged weapon, you also fire
+a penetrating shot that does increased damage and your next normal attack
+becomes empowered to fire at multiple foes at once.
+%%%%
+East Wind's embodiment mutation
+
+Whenever you Rampage, you regain a small percentage of your maxmimum MP and
+unleash a bitter wind that makes all enemies within 2 spaces of you Exposed,
+increasing the damage they take from non-attack sources by 35% and also their
+chance to be hit or affected by them.
+
+Additionally, casting spells will not cause you to stop Stampeding.
+%%%%
+South Wind's embodiment mutation
+
+Your stealth is increased by 50% while Rampaging and whenever you successfully
+stab an enemy, your next Rampage movement becomes instant.
+%%%%
 # ------ Fakemut descriptions ------
+fleshless physiology mutation
+
+Your body lacks a metabolism that can be affected by poison or disease. You do
+not need to breathe, protecting you from mushroom spores and drowning attacks.
+You also cannot be put to sleep.
+%%%%
+plant physiology mutation
+
+You do not need to breathe air, protecting you from mushroom spores and drowning
+attacks. You cannot be blinded or put to sleep.
+%%%%
+undead mutation
+
+You are fully undead, granting you immunity to poison, miasma, fear, sleep,
+negative energy, torment, drowning, and the effects of spore attacks.
+
+Your form cannot be further changed by magical means, protecting you from
+polymorph, but also preventing you from wearing talismans. If an effect would
+mutate you, your health will be temporarily drained instead.
+
+You are vulnerable to weapons of holy wrath and certain magics, and cannot go
+berserk.
 %%%%
 vampire fangs mutation
 
 When you perform a stab attack against a living monster with blood, you heal for
 a portion of the total damage dealt. When you are at 50% of your max HP or less,
-this has a chance to happen on all melee attacks which increases with your
-Shapeshifting skill.
+this has a 2/3 chance to happen on all melee attacks.
 %%%%
 bloodcurse mutation
 
 When you kill a living monster with a stab attack, they may rise again to serve
 you as a vampiric thrall. Thralls possess all the abilities they had in life,
-but are undead, and gain a vampiric bite attack. Spellcaster thralls will also
-gain knowledge of the Vampiric Draining spell.
+but are undead, and gain a vampiric bite attack as well as increased melee
+damage against sleeping foes. Spellcaster thralls will also gain knowledge of
+the Vampiric Draining spell.
 
 You can only create a thrall if you do not have one already, and they will
 inevitably turn to dust after a short time.
@@ -942,8 +1108,162 @@ inevitably turn to dust after a short time.
 insubstantial mutation
 
 You are insubstantial and immune to many effects that require a solid body. You
-cannot be constricted, petrified, engulfed, skewered by barbs, covered in sticky
-flame, or caught by webs, nets, or bolas.
+cannot be constricted, petrified, skewered by barbs, covered in sticky flame, or
+caught by webs, nets, or bolas.
+%%%%
+frigid aura mutation
+
+Your breath radiates an intense chill which freezes nearby walls solid as you
+fight.
+
+Whenever you attack, you turn a random wall adjacent to your target or yourself
+frigid. Frigid walls deal damage to any enemies adjacent to them each turn - up
+to twice as much when an enemy is adjacent to as many as possible. This damage
+increases with your shapeshifting skill.
+
+The walls will rapidly melt again if you stop attacking.
+%%%%
+hive swarm mutation
+
+Whenever an injury reduces your health to less than 50%, angry bees will swarm
+out of your body to defend you.
+
+This effect cannot happen again until your health is fully recovered.
+%%%%
+water reaching mutation
+
+Your body is formed of elemental water that changes shape flexibly, allowing you
+to reach and perform melee attacks from several tiles away - including auxiliary
+attacks of all sorts.
+
+The precision required to preform stab attacks is still impossible unless you're
+adjacent to your target, and axes can only cleave to enemies adjacent to you,
+regardless of where you strike.
+%%%%
+water splatter mutation
+
+When injured, parts of your watery body may splatter as puddles of shallow
+water nearby. The more damage you take at once, the more water is spread around.
+%%%%
+freeze response mutation
+
+Whenever you are exposed to cold damage, you have a chance to become Frozen,
+lowering your movement speed for a short while.
+%%%%
+steam response mutation
+
+Whenever you take fire damage from a projectile, you have a chance (increasing
+with the damage suffered) to spread steam clouds around yourself.
+%%%%
+airstrike attack mutation
+
+Whenever you strike an enemy in melee, the wind twists around and strikes them
+for additional damage which is increased for each empty space adjacent to them.
+%%%%
+hex mastery mutation
+
+Your Hexes spells are much easier to cast (reduced miscast chance and severity)
+and enemies have reduced willpower against all your effects.
+%%%%
+riddle compulsion mutation
+
+You compulsively pose riddles to enemies when you encounter them. Every now and
+again, these may confuse or vex them, but mostly they just attract their
+attention.
+%%%%
+werefury mutation
+
+Whenever you kill an enemy with a melee attack, you gain a temporary slaying
+bonus that increases with your Shapeshifting skill.
+
+This bonus stacks up to +12 and will not expire so long as you continue to
+perform melee attacks.
+%%%%
+werehowl mutation
+
+When you kill an enemy in melee, if your werefury bonus is at least 5, you may
+unleash a terrifying howl that attempts to freeze all nearby enemies in place
+with fear if it overcomes their willpower.
+%%%%
+stinger hair mutation
+
+Your hair is made of long prehensile jellyfish-like tendrils. Whenever you
+attack in melee, they will lash out and attempt to poison several visible
+enemies within 2 tiles of the player at random.
+
+The number of enemies they can afflict at once is improved by Shapeshifting
+skill.
+%%%%
+lithotoxin mutation
+
+When your health drops to 60% of your max HP or less, your tendrils reflexively
+attempt to petrify all poisoned enemies within 3 tiles of you.
+
+This effect cannot activate again until you fully heal and its success chance
+improves with your Shapeshifting skill.
+%%%%
+contaminating mutation
+
+When you strike an enemy in melee, a portion of the transmutational energy
+surging through will contaminate them. Upon landing the third strike in a row,
+this contamination will grow so acute that it will twist their bodily form,
+inflicting significant AC-ignoring damage and malmutating them.
+%%%%
+maw attack mutation
+
+Your maw sometimes bites enemies in melee, at a rate independant of your own
+attack speed (once per 15 aut, on average). Its base damage is directly
+increased by 75% of your strength.
+%%%%
+devouring maw mutation
+
+When you kill an edible enemy in melee (any hostile, non-summoned, living or
+plant monster), your maw devours it, greatly increasing your regeneration for a
+short while. More powerful enemies provide a longer duration of this effect.
+%%%%
+growling stomach mutation
+
+Your maw's appetite is insatiable. Whenever you first encounter an edible
+monster, there is a chance to become mesmerised by it and let out a loud growl.
+%%%%
+eel punch mutation
+
+Your melee hits have a 50% chance of discharging an arc of electricity that
+travels between several connected enemies.
+%%%%
+eeljolt mutation
+
+When your health drops to 40% of your max HP, your eels violently discharge
+electricity, striking all connected targets within 2 tiles of yourself - be they
+friend or foe - for twice the damage their electricity normally does.
+
+This effect cannot activate again until you fully heal.
+%%%%
+blade parry mutation
+
+You briefly gain SH equal to your slaying whenever you perform a melee attack
+(with an additional flat bonus based on your Shapeshifting skill).
+%%%%
+sporulate mutation
+
+Your melee attacks cause multiple burstshrooms to begin growing on unoccupied
+tiles behind your target. If they are allowed to grow for several turns, they
+will explode in a burst of spores that damages nearby enemies and can briefly
+daze them.
+%%%%
+armoured shell mutation
+
+Your body armour is fused into your shell, multiplying its base AC by a factor
+that increases with your Shapeshifting skill. The effectiveness of its ego and
+most artefact properties will also be doubled, though certain rare artefacts may
+be too unusual to enhance this way.
+%%%%
+hypnotic gaze mutation
+
+Your gaze has a hypnotic effect on many creatures. Whenever a living, demonic,
+or holy monster first notices you, it may become momentarily dazed, preventing
+it from shouting. Creatures which fail a Willpower check will be dazed for even
+longer.
 %%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation
@@ -1070,15 +1390,17 @@ period of time, in exchange for being dragged down into the Crucible of Flesh
 afterward and made to fight for your freedom.
 %%%%
 # ------ Ru sacrifices ------
-inability to drink after injury mutation
+renounce potions mutation
 
-When you are harmed, there is a chance that you will become temporarily unable
-to drink potions. Each level of this mutation increases this chance by 1%.
+You refuse to drink potions in combat unless badly injured. While enemies are in
+your line of sight (and for several turns afterward), you will be unable to
+drink anything unless your HP is below 50% of its maximum.
 %%%%
-inability to read after injury mutation
+renounce scrolls mutation
 
-When you are harmed, there is a chance that you will become temporarily unable
-to read scrolls. Each level of this mutation increases this chance by 1%.
+You refuse to read scrolls in combat unless badly injured. While enemies are in
+your line of sight (and for several turns afterward), you will be unable to
+read anything unless your HP is below 50% of its maximum.
 %%%%
 missing a hand mutation
 
@@ -1209,3 +1531,83 @@ Your Translocations skill is 0 and you cannot train the skill.
 no forgecraft magic mutation
 
 Your Forgecraft skill is 0 and you cannot train the skill.
+%%%%
+# ------ Banes ------
+lethargy bane
+
+You cover ground slowly - moving to new positions takes you 30% more time than
+normal. This has no effect on other types of actions, like attacking or casting
+spells.
+%%%%
+heatstroke bane
+
+When you are damaged by fire, you have a high chance to become slowed for a
+moderate length of time. This chance is decreased by your current level of fire
+resistance.
+%%%%
+snow-blindness bane
+
+When you are damaged by cold, you have a high chance to become weak and blind
+for a moderate length of time. This chance is decreased by your current level of
+cold resistance.
+%%%%
+electrospasm bane
+
+When you are damaged by electricity, you have a chance to become bound in place
+and unable to move for a short length of time. This chance is decreased by your
+current level of electrical resistance.
+%%%%
+claustrophobia bane
+
+You suffer a penalty to the damage and accuracy of your attacks and the power of
+your spells based on the number of solid feature you are currently adjacent to.
+(-2 slaying and -10% spell power per solid feature.)
+%%%%
+stumbling bane
+
+Your evasion is decreased by 25 on any turn where you either moved or waited in
+place without doing anything else.
+%%%%
+succour bane
+
+Whenever you kill an enemy, all other nearby enemies are healed for a large
+fraction of that enemy's maximum health.
+%%%%
+multiplicity bane
+
+Enemies in sight of you have a small chance each turn to create multiple clones
+of themselves. These clones are very fragile and do reduced damage with attacks
+and spells, but will not expire on their own.
+%%%%
+dilettante bane
+
+Your skill with your highest weapon skill (at the time of becoming afflicted by
+this bane) is reduced by 50% and your skill with your two highest skills among
+magical schools, Invocations, and Evocations are reduced by 25%.
+%%%%
+paradox bane
+
+Whenever you first spot a monster, it has a chance to become Touched by Paradox,
+giving it the ability to use Manifold Assault as a natural ability (and a small
+chance to blink randomly after doing so).
+%%%%
+warding bane
+
+Groups of enemies you encounter may have Warding, preventing all damage they
+would take from any source which is not currently adjacent to them (including
+clouds, if their creator is currently non-adjacent).
+%%%%
+hunted bane
+
+Whenever an enemy summons monsters against you, they will usually appear
+adjacent to you instead of their summoner. Their duration is also increased and
+they will never lose track of your position, no matter where you flee.
+%%%%
+mortality bane
+
+When you are badly injured and alone, a reaper may come to claim you. These reapers
+will be immune to all damage from non-adjacent sources and, if your XL is less
+than 14, will additionally be slow. At higher XL, multiple reapers may appear at
+once.
+
+When this bane is lifted, all reapers summoned this way will immediately vanish.

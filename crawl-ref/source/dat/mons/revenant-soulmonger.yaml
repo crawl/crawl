@@ -2,7 +2,7 @@ name: "revenant soulmonger"
 glyph: {char: "z", colour: magenta}
 flags: [see_invis, speaks]
 resists: {cold: 2}
-xp_mult: 18
+exp: 1345
 holiness: [undead]
 will: invuln
 attacks:
@@ -17,3 +17,4 @@ intelligence: human
 uses: open_doors
 size: medium
 shape: humanoid
+species: revenant

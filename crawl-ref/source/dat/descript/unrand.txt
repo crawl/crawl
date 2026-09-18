@@ -24,19 +24,14 @@ mace of Variability
 A large mace said to have appeared when Xom grew bored with the predictability
 of more ordinary instruments of chaos.
 %%%%
-glaive of Prune
+partisan of Prune
 
-The glaive of Prune carries a terrible and insidious curse. Unless its wielder
+The partisan of Prune carries a terrible and insidious curse. Unless its wielder
 maintains firm self-control, they are doomed to undergo a horrifying (albeit
 temporary) transformation. This is normally trivial to resist, but incapacitated
 wielders are certain to succumb, finding themselves nightmarishly purple, squishy,
 and delicious. They can take comfort in learning that it's surprisingly hard to
 injure a giant prune.
-%%%%
-sword of Power
-
-A mighty sword which rewards the powerful with power and the meek with
-weakness.
 %%%%
 staff of Olgreb
 
@@ -44,7 +39,8 @@ A staff which was once wielded by the great alchemist Olgreb.
 %%%%
 crystal ball of Wucad Mu
 
-A perfect sphere of crystal, overflowing with magical energies.
+A sphere of flawless crystal, shaped by countless mantras. When one focuses upon
+it, the boundaries between 'self' and 'other' sometimes seem to blur.
 {{
     if you.race() == "Djinni" then
         return "It is utterly useless to Djinn."
@@ -151,11 +147,10 @@ less savoury hands.
 %%%%
 longbow "Zephyr"
 
-This bow was woven from the air itself by Eiolaiphi the air mage as a gift for
-one of the children of Uskayaw. The bow can be pulled with incredible speed,
-and it launches swift and true. It is also nearly indestructible, which is
-fortunate given that the original owner was ripped to pieces by jealous
-celebrants.
+A golden bow, strung with a lock of hair from the West Wind themselves. Tales
+say it was crafted as a gift to an unrequited love and even centuries after their
+untimely death, one can still feel longing carried on the gentle breeze that
+surrounds its wielder.
 %%%%
 giant club "Skullcrusher"
 
@@ -184,7 +179,7 @@ An unholy crossbow, forged in the fires of Gehenna. It imbues the bolts it
 fires with the raw power of its namesake. Thankfully, the blasts this weapon
 produces never harm the one firing.
 %%%%
-sword of the Doom Knight
+sword of the Dread Knight
 
 An adamantine great sword. Its first wielder was a worshipper of Yredelemnul
 who eschewed the use of magic in combat, preferring to destroy her enemies with
@@ -398,7 +393,7 @@ robe of Night
 
 A long black robe made of strange glossy material. It shrouds its wearer in
 darkness, reducing the range of vision. According to legend, it was the gift
-of Ratri the Goddess of the Night to one of her followers.
+of Rutra, a renowned demigoddess of the night, to one of her followers.
 %%%%
 scales of the Dragon King
 
@@ -449,7 +444,7 @@ amulet of Cekugob
 A strange-looking piece of crystal on an ordinary-looking string, with an odd
 selection of powers.
 %%%%
-amulet of the Four Winds
+amulet of Tranquility
 
 A pendant made of purest jade. It grants its wearer immense willpower and
 mental fortitude.
@@ -495,7 +490,8 @@ obsidian axe
 
 An axe with a powerful curse placed on it by one of the lords of Pandemonium,
 so that unsuspecting adventurers would unleash demons into this world. Beware,
-for it has ways of taking its wielder under its command...
+for it has ways of mesmerising its wielder, no matter how clear and focused
+their mind...
 %%%%
 consecrated labrys
 
@@ -834,10 +830,10 @@ power to carry them out, no matter the adversity.
 %%%%
 skull of Zonguldrok
 
-The skull of a legendary necromancer, seemingly parted from the rest of his
-body. It seems disinclined to explain the precise circumstances of its ending up
-in this state, but offers no objection to others siphoning what considerable
-necromantic power still remains in his ancient bones.
+The skull of a legendary necromancer, seemingly parted from the rest of its
+body. When held, it seems disinclined to explain the precise circumstances of
+its ending up in this state, but offers no objection to others siphoning what
+considerable necromantic power still remains in its ancient bones.
 %%%%
 fungal fisticloak
 
@@ -868,3 +864,90 @@ alike may grasp their connection with the spirits of the dead, but these pincers
 make grasping anything else an exercise in frustration.
 
 (This item prohibits the use of a weapon or shield while equipped.)
+%%%%
+swamp witch's dragon scales
+
+A flamboyant suit of ancient armour that has led to many minor schisms between
+historians, as it is uncertain whether it was made from some renowned witch's
+pet dragon, or her frequent prey, or from her own non-human body itself.
+Regardless of its origins, the magic woven into it freely rains toxins all
+over its bearer's especially misfortunate foes.
+%%%%
+athame "Fimbulwinter"
+
+An instrument of terror crafted by some of Qazlal's most infamous prophets,
+meant to coax forth a three-year winter preceding the end of time. Those chilled
+by its wielder will feel fate's icy grip upon their throat.
+
+As with all athames, blows made with it against those suffering baleful negative
+statuses (other than poison) have increased base damage.
+%%%%
+fire dragon occultist's scales
+
+The resonating scales of the great fire-breathing dragon Zmysua, an ancient
+occultist fond of debilitation and devastation. Her loving rivalry with the
+elder dragon arcanist Yntzoia was legendarily destructive, and led to the both
+of them seeking out endless mystic augmentations to triumph over one another-
+even now, these scales still hum with thirst to confront what remains of their
+opposite beyond death.
+%%%%
+ice dragon arcanist's scales
+
+The thrumming scales of the great frost-breathing dragon Yntzoia, an ancient
+arcanist fond of spectacle and destruction. Her tumultous relationship with the
+elder dragon occultist Zmysua was quite infamous, and led to the both of them
+seeking out endless mystic augmentations seeking more time for reconciliation-
+even now, these scales still reverberate with hunger to return to what remains
+of their opposite beyond death.
+%%%%
+giant spiked club "Carina at Dusk"
+
+Even the trolls have their share of nature poets, glassy-eyed dreamers, and
+starving artists. This is the masterwork of one such restless soul, a paean to
+the heavens far above.
+%%%%
+coolibah bardiche
+
+A massive polearm hewn in one piece from a coolibah tree. Its blade is no less
+sharp for being made of wood, and those caught in its enchanted branches will
+soon find themselves at home in the bog from which this deadly weapon sprouted.
+%%%%
+staff of Five Virtues
+
+The staff of a venerable master monk who drove away her foes as easily as her
+attachments and (so the legend says) eventually transcended life and death
+altogether. A worthy wielder may unlock the staff's great potential, provided
+they follow its former owner's peculiar ideas of balance and comportment.
+%%%%
+Stagehand's Sword
+
+An unassuming sword resembling a prop weapon for theatrical use. But behold!
+A twist here, a press there, and the real blade springs forth; glittering,
+wicked, murderous. Has it killed before? If so, it left no witnesses. Shall it
+kill for you? If you're sly enough, it will do just as you like.
+%%%%
+Hana's Scimitar
+
+The favored sword of one of the battlemage Yara's most illustrious pupils, an
+alleged demigoddess who often boasted that one spell and one slash were enough
+to settle any battle. Indeed, all of her duels ended in just such a fashion,
+including her last.
+%%%%
+arcane splint mail
+
+A truly ancient set of armour designed for maximum protection and flexibility.
+Evidently intended for use by mounted hexslingers, its magic wards and sigils
+are in a hopeless state of disrepair. Nevertheless, some traces of their power
+still remain.
+%%%%
+bone scales
+
+The half-stitched, or half-unstitched, torso of a bone dragon, fashioned (if one
+may call it that) into a truly wretched piece of armour. Its jagged bones seem
+to pulse with unlife, awaiting the command of some unholy master.
+%%%%
+Forgewarden's cuirass
+
+A bronze chestpiece of masterful make. It is etched all over with religious
+imagery, but the focus of the scene is obscured by a great dark stain that
+smells strongly of ashes and salt. It seems somehow blasphemous to wear.

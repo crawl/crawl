@@ -1,6 +1,7 @@
 name: "lemure"
 glyph: {char: "5", colour: yellow}
 flags: [speaks]
+exp: 106
 holiness: [demonic]
 will: 20
 attacks:

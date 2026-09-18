@@ -4,6 +4,8 @@
 #
 #    ./requirements.in/sync.sh
 #
+crypt-r==3.13.1 ; python_version >= "3.13"
+    # via -r requirements.in/base.txt
 pyyaml==6.0.1
     # via -r requirements.in/base.txt
 tornado==6.4.2

@@ -31,9 +31,12 @@ enum class spflag
     targeting_mask     = spflag::dir_or_target | spflag::target,
     obj                = 0x00000010,      // TARG_MOVABLE_OBJECT used
     helpful            = 0x00000020,      // TARG_FRIEND used
+                                          // (Can be cast by friendly monsters without a non-player foe,
+                                          //  so long as enemies are around.)
     aim_at_space       = 0x00000040,      // Spell aims at a location, not a
                                           // monster. Defaults to aiming at self
     not_self           = 0x00000080,      // aborts on isMe
+                                          // Irrelevant when cast by a monster.
     unholy             = 0x00000100,      // counts as "unholy"
     unclean            = 0x00000200,      // counts as "unclean"
     chaotic            = 0x00000400,      // counts as "chaotic"
@@ -41,7 +44,8 @@ enum class spflag
     silent             = 0x00001000,      // makes no noise on cast
     escape             = 0x00002000,      // useful for running away
     recovery           = 0x00004000,      // healing or recovery spell
-    area               = 0x00008000,      // area affect
+                                          // (Can be cast by friendly monsters, even when out of combat)
+    direct_damage_only = 0x00008000,      // does nothing except deal damage
     destructive        = 0x00010000,      // not a conjuration, but still
                                           // supported by Vehumet/Battlesphere
     selfench           = 0x00020000,      // monsters use as selfench
@@ -49,16 +53,15 @@ enum class spflag
     needs_tracer       = 0x00080000,      // monster casting needs tracer
     noisy              = 0x00100000,      // makes noise, even if innate
     testing            = 0x00200000,      // a testing/debugging spell
-                     //  0x00400000,      // was spflag::corpse_violating
+    needs_target       = 0x00400000,      // cannot be cast without a target
                      //  0x00800000,      // was SPFLAG_ALLOW_SELF
-    utility            = 0x01000000,      // usable no matter what foe is
+                     //  0x01000000,      // was spflag::utility
     no_ghost           = 0x02000000,      // ghosts can't get this spell
     cloud              = 0x04000000,      // makes a cloud
     WL_check           = 0x08000000,      // spell that checks monster WL
     mons_abjure        = 0x10000000,      // monsters can cast abjuration
                                           // instead of this spell
-    not_evil           = 0x20000000,      // not considered evil by the
-                                          // good gods
+    dummy              = 0x20000000,      // not a real spell (and shouldn't be cast)
     holy               = 0x40000000,      // considered holy (can't be
                                           // used by Yred bound souls)
 };
@@ -69,6 +72,7 @@ enum class spret
     abort = 0,            // should be left as 0
     fail,
     success,
+    seen_hups,
     none,                 // spell was not handled
 };
 
@@ -87,18 +91,18 @@ enum class spret
 
 #define INNATE_SPELLS_KEY "innate_spells"
 
+#define EXEGESIS_SPELL "exegesis_spell"
+
 #define fail_check() if (fail) return spret::fail
 
 void surge_power(const int enhanced);
 void surge_power_wand(const int mp_cost);
 
-int list_spells(bool toggle_with_I = true, bool viewing = false,
-                bool allow_preselect = true,
+int list_spells(bool toggle_with_I = true, bool transient = false,
+                bool viewing = false, bool allow_preselect = true,
                 const string &title = "cast");
 int raw_spell_fail(spell_type spell, bool enkindled = false);
 int calc_spell_power(spell_type spell);
-int calc_spell_range(spell_type spell, int power = 0, bool allow_bonus = true,
-                     bool ignore_shadows = false);
 
 spret cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL,
                    dist *_target = nullptr, bool force_failure = false);
@@ -140,6 +144,10 @@ string spell_damage_string(spell_type spell, bool evoked = false, int pow = -1,
                            bool terse = false);
 string spell_max_damage_string(spell_type spell);
 int spell_acc(spell_type spell);
+string spell_defence_string(spell_type spell, bool is_monster = false,
+                            int pow = -1);
+string spell_resist_string(spell_type spell, bool is_monster = false,
+                           int pow = -1);
 string spell_range_string(spell_type spell);
 string range_string(int range, int maxrange = -1, int minrange = 0);
 string spell_schools_string(spell_type spell);
@@ -148,8 +156,11 @@ string spell_noise_string(spell_type spell, int chop_wiz_display_width = 0);
 
 void spell_skills(spell_type spell, set<skill_type> &skills);
 void do_demonic_magic(int pow, int rank);
+void death_ego_lifedrain(int splevel);
 
 bool channelled_spell_active(spell_type spell);
 void start_channelling_spell(spell_type spell, string reminder_msg = "", bool do_effect = true);
 void stop_channelling_spells(bool quiet = false);
 void handle_channelled_spell();
+
+bool warn_about_contam_cost(int max_contam);

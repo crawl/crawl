@@ -10,6 +10,8 @@ crawl_require('dlua/util.lua')
 -- Namespace for callbacks (just an aid to recognising callbacks, no magic)
 util.namespace('callback')
 
+dgn.necropolis_chance_percent = 3
+dgn.gulch_chance_percent = 6
 dgn.wizlab_chance_percent = 5
 dgn.desolation_chance_percent = 5
 
@@ -255,7 +257,7 @@ function dgn_run_map(...)
     local env = dgn_map_meta_wrap(g_dgn_curr_map, dgn)
     for _, map_chunk_function in ipairs(map_chunk_functions) do
       if map_chunk_function then
-        ret = setfenv(map_chunk_function, env)()
+        ret = crawl.setfenv(map_chunk_function, env)()
       end
     end
     return ret
@@ -275,7 +277,7 @@ function dgn.places_connected(map, map_glyph, test_connect, ...)
          error("Can't find coords for '" .. glyph .. "'")
       end
    end
-   return test_connect(map, unpack(points))
+   return test_connect(map, table.unpack(points))
 end
 
 function dgn.any_glyph_connected(map, ...)
@@ -713,14 +715,11 @@ dgn.loot_potions = [[
 dgn.aux_armour = "cloak / scarf / helmet / hat / pair of gloves " ..
     "/ pair of boots"
 
--- Scarves not influenced by good_item.
-dgn.good_aux_armour = "cloak good_item / scarf / helmet good_item " ..
-    "/ hat good_item / pair of gloves good_item / pair of boots good_item"
+dgn.good_aux_armour = "cloak good_item / scarf good_item / helmet good_item"
+    .. " / hat good_item / pair of gloves good_item / pair of boots good_item"
 
--- Scarves excluded since they can't be randart.
-dgn.randart_aux_armour = "cloak randart / helmet randart / hat randart " ..
-    "/ pair of gloves randart / pair of boots randart"
-
+dgn.randart_aux_armour = "cloak randart / scarf randart / helmet randart"
+    .. " / hat randart / pair of gloves randart / pair of boots randart"
 
 --[[
 Add an argument to every entry in a given string already containing a set of

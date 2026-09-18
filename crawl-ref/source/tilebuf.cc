@@ -190,7 +190,8 @@ static unsigned char _get_alpha(float lerp, int alpha_top, int alpha_bottom)
 
 void ColouredTileBuffer::add(tileidx_t idx, int x, int y, int z,
                              int ox,  int oy, int /*ymin*/, int ymax,
-                             int alpha_top, int alpha_bottom)
+                             int alpha_top, int alpha_bottom,
+                             int r, int g, int b)
 {
     float pos_sx = x;
     float pos_sy = y;
@@ -213,8 +214,8 @@ void ColouredTileBuffer::add(tileidx_t idx, int x, int y, int z,
     unsigned char alpha_s = _get_alpha(lerp_s, alpha_top, alpha_bottom);
     unsigned char alpha_e = _get_alpha(lerp_e, alpha_top, alpha_bottom);
 
-    VColour col_sy(255, 255, 255, alpha_s);
-    VColour col_ey(255, 255, 255, alpha_e);
+    VColour col_sy(r, g, b, alpha_s);
+    VColour col_ey(r, g, b, alpha_e);
 
     float pos_z = (float)z;
 
@@ -236,21 +237,28 @@ SubmergedTileBuffer::SubmergedTileBuffer(const TilesTexture *tex,
 }
 
 void SubmergedTileBuffer::add(tileidx_t idx, int x, int y, int z, bool submerged,
-                              bool ghost, int ox, int oy, int ymax)
+                              bool ghost, int ox, int oy, int ymax, bool invis)
 {
     // Arbitrary alpha values for the top and bottom.
-    int alpha_top = ghost ? 140 : 255;
-    int alpha_bottom = ghost ? 0 : 40;
+    const int alpha_top = ghost ? 140
+                        : invis ? 180
+                        : 255;
+    const int alpha_bottom = ghost ? 0
+                           : invis ? 40
+                           : 40;
+    const int r = invis ? 180 : 255;
+    const int g = invis ? 220 : 255;
+    const int b = invis ? 220 : 255;
 
     if (submerged)
     {
         m_below_water.add(idx, x, y, z, ox, oy, m_water_level, ymax,
-                          alpha_top, alpha_bottom);
+                          alpha_top, alpha_bottom, r, g, b);
         m_above_water.add(idx, x, y, z, ox, oy, -1, m_water_level,
-                          alpha_top, alpha_top);
+                          alpha_top, alpha_top, r, g, b);
     }
     else
-        m_above_water.add(idx, x, y, z, ox, oy, -1, ymax, alpha_top, alpha_top);
+        m_above_water.add(idx, x, y, z, ox, oy, -1, ymax, alpha_top, alpha_top, r, g, b);
 }
 
 // Adds a tile masked by the water later

@@ -1,0 +1,18 @@
+name: "eye of draining"
+glyph: {char: "G", colour: cyan}
+flags: [flies, see_invis, no_skeleton, cautious]
+resists: {corr: 3}
+exp: 766
+genus: floating_eye
+will: 80
+attacks:
+hd: 14
+hp_10x: 780
+ac: 3
+ev: 1
+spells: eye_of_draining
+intelligence: brainless
+energy: {move: 8}
+size: medium
+shape: orb
+tile_variance: random

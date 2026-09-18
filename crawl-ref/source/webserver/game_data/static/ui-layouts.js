@@ -73,7 +73,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
                 if (colour)
                     $item.addClass("fg"+spell.colour);
                 $item.on("click", function () {
-                    comm.send_message("input", { text: letter });
+                    comm.send_message("text_input", { text: letter });
                 });
             });
             $container.append($list);
@@ -119,7 +119,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
         if (desc.title === "")
             $popup.children(".header").remove();
         else
-            $popup.find(".header > span").html(desc.title);
+            $popup.find(".header > span").text(desc.title);
         $body.html(fmt_body_txt(desc.body + desc.footer));
         var s = scroller($popup.children(".body")[0]);
         s.contentElement.className += " describe-generic-body";
@@ -150,7 +150,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
         var $feat_tmpl = $(".templates > .describe-generic");
         desc.feats.forEach(function (feat) {
             var $feat = $feat_tmpl.clone().removeClass("hidden").addClass("describe-feature-feat");
-            $feat.find(".header > span").html(feat.title);
+            $feat.find(".header > span").text(feat.title);
             if (feat.body != feat.title)
             {
                 var text = feat.body;
@@ -234,7 +234,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
     function describe_item(desc)
     {
         var $popup = $(".templates > .describe-item").clone();
-        $popup.find(".header > span").html(desc.title);
+        $popup.find(".header > span").text(desc.title);
         var $body = $popup.find(".body");
         $body.html(_fmt_spellset_html(desc.body));
         _fmt_spells_list($body, desc.spellset, true);
@@ -274,7 +274,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
     function describe_spell(desc)
     {
         var $popup = $(".templates > .describe-spell").clone();
-        $popup.find(".header > span").html(desc.title);
+        $popup.find(".header > span").text(desc.title);
         $popup.find(".body").html(format_spell_html(desc.desc));
         var s = scroller($popup.find(".body")[0]);
         $popup.on("keydown keypress", function (event) {
@@ -302,7 +302,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
         var t = gui.NEMELEX_CARD, tex = enums.texture.GUI;
         desc.cards.forEach(function (card) {
             var $card = $card_tmpl.clone().removeClass("hidden").addClass("describe-card");
-            $card.find(".header > span").html(card.name);
+            $card.find(".header > span").text(card.name);
             $card.find(".body").html(fmt_body_txt(card.desc));
 
             var canvas = $card.find(".header > canvas");
@@ -443,21 +443,56 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
     function describe_monster(desc)
     {
         var $popup = $(".templates > .describe-monster").clone();
-        $popup.find(".header > span").html(desc.title);
+        $popup.find(".header > span").text(desc.title);
         var $body = $popup.find(".body.paneset");
         var $footer = $popup.find(".footer > .paneset");
         var $panes = $body.find(".pane");
+        var $footer_panes = $footer.find(".pane");
         $panes.eq(0).html(_fmt_spellset_html(desc.body));
         _fmt_spells_list($panes.eq(0), desc.spellset, false);
         var have_quote = desc.quote !== "";
+        var have_status = desc.status !== "";
+
+        var footer0 = "<b class=\"fg15\">Description</b>";
+        if (have_status)
+            footer0 += " | Status";
+        if (have_quote)
+            footer0 += " | Quote";
+
+        var footer1 = "Description";
+        if (have_status)
+            footer1 += " | <b class=\"fg15\">Status</b>";
+        if (have_quote)
+            footer1 += " | Quote";
+
+        var footer2 = "Description";
+        if (have_status)
+            footer2 += " | Status";
+        if (have_quote)
+            footer2 += " | <b class=\"fg15\">Quote</b>";
+
+        $footer_panes.eq(0).html(footer0);
+        $footer_panes.eq(1).html(footer1);
+        $footer_panes.eq(2).html(footer2);
 
         if (have_quote)
-            $panes.eq(1).html(_fmt_spellset_html(desc.quote));
+            $panes.eq(2).html(_fmt_spellset_html(desc.quote));
         else
         {
-            $footer.parent().remove();
-            $panes.eq(1).remove();
+            $panes.eq(2).remove();
+            $footer_panes.eq(2).remove();
         }
+
+        if (have_status)
+            $panes.eq(1).html(fmt_body_txt(desc.status));
+        else
+        {
+            $panes.eq(1).remove();
+            $footer_panes.eq(1).remove();
+        }
+
+        if (!have_status && !have_quote)
+            $footer.parent().remove();
 
         var $canvas = $popup.find(".header > canvas");
         var renderer = new cr.DungeonCellRenderer();
@@ -523,12 +558,12 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
             if (event.key === "!")
             {
                 paneset_cycle($body);
-                if (have_quote)
+                if (have_quote || have_status)
                     paneset_cycle($footer);
             }
         });
         paneset_cycle($body);
-        if (have_quote)
+        if (have_quote || have_status)
             paneset_cycle($footer);
 
         return $popup;
@@ -551,7 +586,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
     function version(desc)
     {
         var $popup = $(".templates > .describe-generic").clone();
-        $popup.find(".header > span").html(desc.information);
+        $popup.find(".header > span").text(desc.information);
         var $body = $popup.find(".body");
         $body.html(fmt_body_txt(desc.features) + fmt_body_txt(desc.changes));
         var s = scroller($body[0]);
@@ -932,7 +967,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
     function seed_selection(desc)
     {
         var $popup = $(".templates > .seed-selection").clone();
-        $popup.find(".header").html(desc.title);
+        $popup.find(".header").text(desc.title);
         $popup.find(".body-text").html(desc.body);
         $popup.find(".footer").html(desc.footer);
         if (!desc.show_pregen_toggle)

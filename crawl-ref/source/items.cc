@@ -42,7 +42,6 @@
 #include "god-passive.h"
 #include "god-prayer.h"
 #include "hints.h"
-#include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
 #include "item-name.h"
@@ -90,6 +89,7 @@ static int _autopickup_subtype(const item_def &item);
 static void _autoinscribe_item(item_def& item);
 static void _autoinscribe_floor_items();
 static void _autoinscribe_inventory();
+static void _maybe_disable_autopickup_for_dropped_items(vector<SelItem> &items);
 static void _multidrop(vector<SelItem> tmp_items);
 static bool _merge_items_into_inv(item_def &it, int quant_got,
                                   int &inv_slot, bool quiet);
@@ -145,8 +145,7 @@ void link_items()
             continue;
         }
 
-        bool move_below = item_is_stationary(env.item[i])
-            && !item_is_stationary_net(env.item[i]);
+        bool move_below = item_is_stationary(env.item[i]);
         int movable_ind = -1;
         // Stationary item, find index at location
         if (move_below)
@@ -154,7 +153,7 @@ void link_items()
 
             for (stack_iterator si(env.item[i].pos); si; ++si)
             {
-                if (!item_is_stationary(*si) || item_is_stationary_net(*si))
+                if (!item_is_stationary(*si))
                     movable_ind = si->index();
             }
         }
@@ -196,7 +195,7 @@ static bool _item_preferred_to_clean(int item)
     }
 
     if (env.item[item].base_type == OBJ_MISSILES
-        && env.item[item].plus <= 0 && !env.item[item].net_placed // XXX: plus...?
+        && env.item[item].plus <= 0
         && !is_artefact(env.item[item]))
     {
         return true;
@@ -380,12 +379,9 @@ bool dec_inv_item_quantity(int obj, int amount)
 
     if (you.inv[obj].quantity <= amount)
     {
-        item_skills(you.inv[obj], you.skills_to_hide);
-
         you.inv[obj].base_type = OBJ_UNASSIGNED;
         you.inv[obj].quantity  = 0;
         you.inv[obj].props.clear();
-
         ret = true;
 
         // If we're repeating a command, the repetitions used up the
@@ -394,6 +390,9 @@ bool dec_inv_item_quantity(int obj, int amount)
         crawl_state.cancel_cmd_repeat();
         crawl_state.cancel_cmd_again();
         quiver::on_actions_changed();
+
+        if (you.last_fired == obj)
+            you.last_fired = -1;
     }
     else
         you.inv[obj].quantity -= amount;
@@ -750,8 +749,46 @@ bool item_is_branded(const item_def& item)
     }
 }
 
+static bool _immune_to_brand(brand_type brand)
+{
+    switch (brand)
+    {
+        case SPWPN_HOLY_WRATH:
+            return !you.holy_wrath_susceptible();
+
+        case SPWPN_VENOM:
+            return you.res_poison() == 3;
+
+        case SPWPN_DRAINING:
+        case SPWPN_PAIN:
+            return you.res_negative_energy() == 3;
+
+        case SPWPN_ELECTROCUTION:
+            return you.res_elec() >= 1;
+
+        case SPWPN_ENTANGLING:
+            return you.res_constrict();
+
+        default:
+            return false;
+    }
+}
+
 bool item_is_unusual(const item_def& item)
 {
+    if (item.base_type == OBJ_WEAPONS)
+    {
+        for (auto& match : Options.vulnerable_brand_warning)
+        {
+            if (get_weapon_brand(item) == match.first
+                && you.experience_level <= match.second
+                && !_immune_to_brand(match.first))
+            {
+                return true;
+            }
+        }
+    }
+
     const auto &patterns = Options.unusual_monster_items;
     const string name = item.name(DESC_A, false, false, true, false);
 
@@ -769,7 +806,10 @@ bool item_is_worth_listing(const item_def& item)
     {
     case OBJ_STAVES:
     case OBJ_WANDS:
+    case OBJ_JEWELLERY:
         return true;
+    case OBJ_MISSILES:
+        return item.sub_type != MI_LARGE_ROCK || item_is_branded(item);
     case OBJ_WEAPONS:
         return is_unrandom_artefact(item)
                || get_weapon_brand(item) != SPWPN_NORMAL;
@@ -942,10 +982,7 @@ void identify_item(item_def& item)
         identify_item_type(item.base_type, item.sub_type);
 
     if (in_inventory(item))
-    {
         shopping_list.cull_identical_items(item);
-        item_skills(item, you.skills_to_show);
-    }
 
     if (notes_are_active()
         && is_interesting_item(item)
@@ -983,14 +1020,7 @@ static bool _id_floor_item(item_def &item)
     {
         if (item.is_identified())
             return false;
-
-        // autopickup hack for previously-unknown items
-        if (item_needs_autopickup(item))
-            item.props[NEEDS_AUTOPICKUP_KEY] = true;
         identify_item(item);
-        // but skip ones that we discover to be useless
-        if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
-            item.props.erase(NEEDS_AUTOPICKUP_KEY);
         return true;
     }
 
@@ -1529,6 +1559,7 @@ bool is_stackable_item(const item_def &item)
         case OBJ_SCROLLS:
         case OBJ_POTIONS:
         case OBJ_GOLD:
+        case OBJ_BAUBLES:
 #if TAG_MAJOR_VERSION == 34
         case OBJ_FOOD:
 #endif
@@ -1563,13 +1594,6 @@ bool items_similar(const item_def &item1, const item_def &item2)
     if (item1.base_type == OBJ_MISSILES && item1.brand != item2.brand)
         return false;
 
-    // Don't merge trapping nets with other nets.
-    if (item1.is_type(OBJ_MISSILES, MI_THROWING_NET)
-        && item1.net_placed != item2.net_placed)
-    {
-        return false;
-    }
-
 #define NO_MERGE_FLAGS (ISFLAG_MIMIC | ISFLAG_SUMMONED)
     if ((item1.flags & NO_MERGE_FLAGS) != (item2.flags & NO_MERGE_FLAGS))
         return false;
@@ -1602,10 +1626,23 @@ static int _userdef_find_free_slot(const item_def &i)
     return slot;
 }
 
+// Finds a free index in you.inv to put a given item.
+// For gear, this slot will match the letter assigned to the item.
+// For consumables, it will be the first free index (regardless of letter) and
+// the letter must be determined later.
 int find_free_slot(const item_def &i)
 {
+    if (inventory_category_for(i) == INVENT_CONSUMABLE)
+    {
+        for (int j = MAX_GEAR; j < ENDOFPACK; ++j)
+            if (!you.inv[j].defined())
+                return j;
+
+        return -1;
+    }
+
 #define slotisfree(s) \
-            ((s) >= 0 && (s) < ENDOFPACK && !you.inv[s].defined())
+            ((s) >= 0 && (s) < MAX_GEAR && !you.inv[s].defined())
 
     bool searchforward = false;
     // If we're doing Lua, see if there's a Lua function that can give
@@ -1625,7 +1662,7 @@ int find_free_slot(const item_def &i)
     if (slotisfree(slot))
         return slot;
 
-    FixedBitVector<ENDOFPACK> disliked;
+    FixedBitVector<MAX_GEAR> disliked;
     if (i.base_type == OBJ_POTIONS)
         disliked.set('y' - 'a');
 
@@ -1633,11 +1670,11 @@ int find_free_slot(const item_def &i)
     {
         // This is the new default free slot search. We look for the last
         // available slot that does not leave a gap in the inventory.
-        for (slot = ENDOFPACK - 1; slot >= 0; --slot)
+        for (slot = MAX_GEAR - 1; slot >= 0; --slot)
         {
             if (you.inv[slot].defined())
             {
-                if (slot + 1 < ENDOFPACK && !you.inv[slot + 1].defined()
+                if (slot + 1 < MAX_GEAR && !you.inv[slot + 1].defined()
                     && !disliked[slot + 1])
                 {
                     return slot + 1;
@@ -1645,7 +1682,7 @@ int find_free_slot(const item_def &i)
             }
             else
             {
-                if (slot + 1 < ENDOFPACK && you.inv[slot + 1].defined()
+                if (slot + 1 < MAX_GEAR && you.inv[slot + 1].defined()
                     && !disliked[slot])
                 {
                     return slot;
@@ -1659,7 +1696,7 @@ int find_free_slot(const item_def &i)
 
     int badslot = -1;
     // Return first free slot
-    for (slot = 0; slot < ENDOFPACK; ++slot)
+    for (slot = 0; slot < MAX_GEAR; ++slot)
         if (!you.inv[slot].defined())
         {
             if (disliked[slot])
@@ -1678,9 +1715,6 @@ static void _got_item(item_def& item)
     seen_item(item);
     shopping_list.cull_identical_items(item);
     item.flags |= ISFLAG_HANDLED;
-
-    if (item.props.exists(NEEDS_AUTOPICKUP_KEY))
-        item.props.erase(NEEDS_AUTOPICKUP_KEY);
 }
 
 void get_gold(const item_def& item, int quant, bool quiet)
@@ -1808,7 +1842,7 @@ static void _get_book(item_def& it)
         mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
 
         if (!library_add_spells(spells_in_book(it)))
-            mpr("Unfortunately, you learned nothing new.");
+            mpr("Unfortunately, you learned nothing new or useful.");
 
         taken_new_item(it.base_type);
 
@@ -1838,7 +1872,6 @@ static void _get_book(item_def& it)
     else
         mprf("You pick up %s and begin studying.", it.name(DESC_A).c_str());
     you.skill_manual_points[sk] += it.skill_points;
-    you.skills_to_show.insert(sk);
 }
 
 static void _get_voucher(item_def& it)
@@ -1977,7 +2010,6 @@ static void _get_orb()
     if (bezotted())
         mpr("Zot can harm you no longer.");
 
-    env.orb_pos = you.pos(); // can be wrong in wizmode
     orb_pickup_noise(you.pos(), 30);
 
     start_orb_run(CHAPTER_ESCAPING, "Now all you have to do is get back out "
@@ -2019,18 +2051,31 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
         inc_inv_item_quantity(inv_slot, quant_got);
         you.last_pickup[inv_slot] = quant_got;
 
+        // If we are purchasing an identified item from a shop, maybe update our
+        // item slot. (Pre-identified items on the floor will already be handled
+        // by seen_item().)
+        const short old_slot = you.inv[inv_slot].slot;
+        if (inventory_category_for(it) == INVENT_CONSUMABLE
+            && it.flags & ISFLAG_IDENTIFIED
+            && !(you.inv[inv_slot].flags & ISFLAG_IDENTIFIED))
+        {
+            you.inv[inv_slot].flags |= ISFLAG_IDENTIFIED;
+            auto_assign_item_slot(you.inv[inv_slot], true);
+        }
+
         if (!quiet)
         {
 #ifdef USE_SOUND
             parse_sound(PICKUP_SOUND);
 #endif
-            mprf_nocap("%s (gained %d)",
+            string prefix = you.inv[inv_slot].slot != old_slot
+                            ? make_stringf("%c -> ", old_slot) : "";
+            mprf_nocap("%s%s (gained %d)",
+                        prefix.c_str(),
                         menu_colour_item_name(you.inv[inv_slot],
                                                     DESC_INVENTORY).c_str(),
                         quant_got);
         }
-        auto_assign_item_slot(you.inv[inv_slot]);
-
         return true;
     }
 
@@ -2040,7 +2085,7 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
 
 static bool _merge_evokers(const item_def &it, int &inv_slot, bool quiet)
 {
-    for (inv_slot = 0; inv_slot < ENDOFPACK; inv_slot++)
+    for (inv_slot = MAX_GEAR; inv_slot < ENDOFPACK; inv_slot++)
     {
         if (you.inv[inv_slot].base_type != OBJ_MISCELLANY
             || you.inv[inv_slot].sub_type != it.sub_type)
@@ -2092,7 +2137,7 @@ static bool _merge_evokers(const item_def &it, int &inv_slot, bool quiet)
  */
 static bool _merge_wand_charges(const item_def &it, int &inv_slot, bool quiet)
 {
-    for (inv_slot = 0; inv_slot < ENDOFPACK; inv_slot++)
+    for (inv_slot = MAX_GEAR; inv_slot < ENDOFPACK; inv_slot++)
     {
         if (you.inv[inv_slot].base_type != OBJ_WANDS
             || you.inv[inv_slot].sub_type != it.sub_type)
@@ -2120,24 +2165,177 @@ static bool _merge_wand_charges(const item_def &it, int &inv_slot, bool quiet)
     return false;
 }
 
+// Returns the preferred letter for a given consumable item.
+static int _letter_for_consumable(item_def& item, bool first_pickup)
+{
+    // If this is an identified item, first check the consumable_slot option to
+    // see any default assignment and use this.
+    const operation_types oper = item_to_oper(&item);
+    if (item.is_identified())
+    {
+        char key = 0;
+        switch (item.base_type)
+        {
+            case OBJ_POTIONS:
+                key = Options.potion_shortcuts[item.sub_type];
+                break;
+            case OBJ_SCROLLS:
+                key = Options.scroll_shortcuts[item.sub_type];
+                break;
+            case OBJ_WANDS:
+                key = Options.evokable_shortcuts[item.sub_type];
+                break;
+            case OBJ_MISCELLANY:
+                key = Options.evokable_shortcuts[item.sub_type + NUM_WANDS];
+                break;
+            case OBJ_BAUBLES:
+                key = Options.evokable_shortcuts[item.sub_type + NUM_WANDS + NUM_MISCELLANY];
+                break;
+            default:
+                key = 0;
+        }
+
+        if (key > 0 && key != ' ')
+        {
+            // Verify that the player hasn't manually remapped something to this
+            // key already. (If they have, just jump to the next step.)
+            bool conflict = false;
+            for (int i = MAX_GEAR; i < ENDOFPACK; ++i)
+            {
+                if (you.inv[i].defined() && item_to_oper(&you.inv[i]) == oper
+                    && you.inv[i].slot == key)
+                {
+                    conflict = true;
+                    break;
+                }
+            }
+
+            if (!conflict)
+                return key;
+        }
+    }
+
+    if (!first_pickup)
+        return item.slot;
+
+    // If there wasn't any, or this is unidentified, try to pick any available
+    // letter that isn't 'reserved' by the consumable_slot option for this
+    // sub-category of item.
+    bool reserved[52] = {false};
+    switch (item.base_type)
+    {
+        case OBJ_POTIONS:
+            for (const char& key : Options.potion_shortcuts)
+                if (isalpha(key) > 0)
+                    reserved[letter_to_index(key)] = true;
+            break;
+        case OBJ_SCROLLS:
+            for (const char& key : Options.scroll_shortcuts)
+                if (isalpha(key) > 0)
+                    reserved[letter_to_index(key)] = true;
+            break;
+        case OBJ_WANDS:
+        case OBJ_MISCELLANY:
+        case OBJ_BAUBLES:
+            for (const char& key : Options.evokable_shortcuts)
+                if (isalpha(key))
+                    reserved[letter_to_index(key)] = true;
+            break;
+        default:
+            break;
+    }
+
+    // For unidentified potions/scrolls, also exclude any letters used by
+    // unidentified items of the opposite type that the player is currently
+    // holding (to prevent the ?id scroll menu from ever having the same
+    // keybind twice).
+    if (!item.is_identified())
+    {
+        for (int i = MAX_GEAR; i < ENDOFPACK; ++i)
+        {
+            if (!you.inv[i].defined() || you.inv[i].is_identified()
+                || !isalpha(you.inv[i].slot))
+            {
+                continue;
+            }
+
+            if ((item.base_type == OBJ_POTIONS && you.inv[i].base_type == OBJ_SCROLLS)
+                || (item.base_type == OBJ_SCROLLS && you.inv[i].base_type == OBJ_POTIONS))
+            {
+                reserved[letter_to_index(you.inv[i].slot)] = true;
+            }
+        }
+    }
+
+    // Check which slots are strictly used already.
+    bool used_slots[52] = {false};
+    for (int i = MAX_GEAR; i < ENDOFPACK; ++i)
+    {
+        if (you.inv[i].defined() && item_to_oper(&you.inv[i]) == oper
+            && isalpha(you.inv[i].slot))
+        {
+            used_slots[letter_to_index(you.inv[i].slot)] = true;
+        }
+    }
+
+    // Now select the first available slot that isn't reserved or in use.
+    for (int i = 0; i < 52; ++i)
+        if (!reserved[i] && !used_slots[i])
+            return index_to_letter(i);
+
+    // If somehow there aren't any letters neither reserved nor in use, pick
+    // the first one not currently in use, reserved or not
+    for (int i = 0; i < 52; ++i)
+        if (!used_slots[i])
+            return index_to_letter(i);
+
+    // Somehow, nothing is free. (This really shouldn't happen.)
+    die("Unable to find any slot for %s", item.name(DESC_THE, false, true).c_str());
+}
+
+// Assigns a letter to an item in you.inv.
+// For gear, this will strictly correspond to its index.
+// For consumables, this is more complicated.
+static int _assign_inventory_letter(item_def& item)
+{
+    if (inventory_category_for(item) == INVENT_GEAR)
+        return index_to_letter(item.link);
+    else
+        return _letter_for_consumable(item, true);
+}
+
 /**
  * Maybe move an item to the slot given by the item_slot option.
  *
  * @param[in] item the item to be checked. Note that any references to this
- *                 item will be invalidated by the swap_inv_slots call!
+ *                 item may be invalidated by the swap_inv_slots call!
+ * @param quiet    If true, don't print a message about moving this item.
  * @returns the new location of the item if it was moved, null otherwise.
  */
-item_def *auto_assign_item_slot(item_def& item)
+item_def *auto_assign_item_slot(item_def& item, bool quiet)
 {
     if (!item.defined())
         return nullptr;
     if (!in_inventory(item))
         return nullptr;
 
+    // Consumables can remap their letter when identified, but do not move
+    // themselves.
+    if (inventory_category_for(item) == INVENT_CONSUMABLE)
+    {
+        const short old_slot = item.slot;
+        item.slot = _letter_for_consumable(item, false);
+
+        if (item.slot != old_slot && !quiet)
+            mprf_nocap("%c -> %s", old_slot, item.name(DESC_INVENTORY).c_str());
+        // We return null since the previous item reference wasn't invalidated.
+        return nullptr;
+    }
+
     int newslot = -1;
     bool overwrite = true;
     // check to see whether we've chosen an automatic label:
-    for (auto& mapping : Options.auto_item_letters)
+    for (auto& mapping : Options.auto_gear_letters)
     {
         // `matches` has a validity check
         if (!mapping.first.matches(item.name(DESC_QUALNAME))
@@ -2172,7 +2370,7 @@ item_def *auto_assign_item_slot(item_def& item)
         }
         if (newslot != -1 && newslot != item.link)
         {
-            swap_inv_slots(item.link, newslot, you.num_turns);
+            swap_inv_slots(item, newslot, you.num_turns);
             return &you.inv[newslot];
         }
     }
@@ -2201,7 +2399,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     item          = it;
     item.link     = freeslot;
     item.quantity = quant_got;
-    item.slot     = index_to_letter(item.link);
+    item.slot     = _assign_inventory_letter(item);
     item.pos = ITEM_IN_INVENTORY;
     // Remove "unobtainable" as it was just proven false.
     item.flags &= ~ISFLAG_UNOBTAINABLE;
@@ -2217,7 +2415,6 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     you.last_pickup[item.link] = quant_got;
     quiver::on_item_pickup(freeslot);
     quiver::on_actions_changed();
-    item_skills(item, you.skills_to_show);
 
     if (const item_def* newitem = auto_assign_item_slot(item))
         return newitem->link;
@@ -2311,7 +2508,7 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
     }
 
     // Can't combine, check for slot space.
-    if (inv_count() >= ENDOFPACK)
+    if (inventory_category_for(it) == INVENT_GEAR && inv_count(INVENT_GEAR) >= MAX_GEAR)
         return false;
 
     inv_slot = _place_item_in_free_slot(it, quant_got, quiet);
@@ -2357,7 +2554,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
         return false;
 
     item_def& item(env.item[ob]);
-    bool move_below = item_is_stationary(item) && !item_is_stationary_net(item);
+    bool move_below = item_is_stationary(item);
 
     if (!silenced(p) && !silent)
         feat_splash_noise(env.grid(p));
@@ -2389,7 +2586,6 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
                 inc_mitm_item_quantity(si->index(), item.quantity);
                 destroy_item(ob);
                 ob = si->index();
-                gozag_move_gold_to_top(p);
                 if (you.see_cell(p))
                 {
                     // XXX: Is it actually necessary to identify when the
@@ -2399,11 +2595,8 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
                 }
                 return true;
             }
-            if (move_below
-                && (!item_is_stationary(*si) || item_is_stationary_net(*si)))
-            {
+            if (move_below && !item_is_stationary(*si))
                 movable_ind = si->index();
-            }
         }
     }
     else
@@ -2430,12 +2623,6 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
         item.link = env.igrid(p);
         env.igrid(p) = ob;
     }
-
-    if (item_is_orb(item))
-        env.orb_pos = p;
-
-    if (item.base_type != OBJ_GOLD)
-        gozag_move_gold_to_top(p);
 
     if (you.see_cell(p))
     {
@@ -2509,7 +2696,7 @@ int copy_item_to_grid(const item_def &item, const coord_def& p,
                     // If the items on the floor already have a nonzero slot,
                     // leave it as such, otherwise set the slot.
                     if (!si->slot)
-                        si->slot = index_to_letter(item.link);
+                        si->slot = item.slot;
 
                     si->flags |= ISFLAG_DROPPED;
                     si->flags &= ~ISFLAG_THROWN;
@@ -2535,7 +2722,7 @@ int copy_item_to_grid(const item_def &item, const coord_def& p,
 
     if (mark_dropped)
     {
-        new_item.slot   = index_to_letter(item.link);
+        new_item.slot   = item.slot;
         new_item.flags |= ISFLAG_DROPPED;
         new_item.flags &= ~ISFLAG_THROWN;
         origin_set_unknown(new_item);
@@ -2706,6 +2893,7 @@ void drop_last()
     else
     {
         you.last_pickup.clear();
+        _maybe_disable_autopickup_for_dropped_items(items_to_drop);
         _multidrop(items_to_drop);
     }
 }
@@ -2754,13 +2942,19 @@ int item_autopickup_level(const item_def &item)
     return you.force_autopickup[item.base_type][_autopickup_subtype(item)];
 }
 
-static void _disable_autopickup_for_starred_items(vector<SelItem> &items)
+static void _maybe_disable_autopickup_for_dropped_items(vector<SelItem> &items)
 {
     int autopickup_remove_count = 0;
     const item_def *last_touched_item;
     for (SelItem &si : items)
     {
-        if (si.has_star && item_autopickup_level(si.item[0]) != AP_FORCE_OFF)
+        const item_def& item = *si.item;
+        if (!item.is_identified() || is_artefact(item))
+            continue;
+
+        if ((inventory_category_for(item) == INVENT_CONSUMABLE
+             || item.base_type == OBJ_JEWELLERY)
+             && item_autopickup_level(si.item[0]) != AP_FORCE_OFF)
         {
             last_touched_item = si.item;
             ++autopickup_remove_count;
@@ -2797,7 +2991,7 @@ void drop()
         return;
     }
 
-    _disable_autopickup_for_starred_items(tmp_items);
+    _maybe_disable_autopickup_for_dropped_items(tmp_items);
     _multidrop(tmp_items);
 }
 
@@ -3027,18 +3221,12 @@ bool item_needs_autopickup(const item_def &item, bool ignore_force)
     if (item.flags & ISFLAG_DROPPED)
         return false;
 
-    if (item.props.exists(NEEDS_AUTOPICKUP_KEY))
-        return true;
-
     return _is_option_autopickup(item, ignore_force);
 }
 
 bool can_autopickup()
 {
-    // [ds] Checking for autopickups == 0 is a bad idea because
-    // autopickup is still possible with inscriptions and
-    // pickup_thrown.
-    if (Options.autopickup_on <= 0)
+    if (!Options.autopickup_on)
         return false;
 
     if (!i_feel_safe())
@@ -3287,9 +3475,79 @@ void autopickup(bool forced)
         item_check();
 }
 
-int inv_count()
+// Count how many items (of a given inventory category) are in the player's inventory.
+int inv_count(inventory_category category)
 {
-    return count_if(begin(you.inv), end(you.inv), mem_fn(&item_def::defined));
+    int count = 0;
+    int start = 0;
+    int end = ENDOFPACK;
+
+    if (category == INVENT_GEAR)
+        end = MAX_GEAR;
+    else if (category == INVENT_CONSUMABLE)
+        start = MAX_GEAR;
+
+    for (int i = start; i < end; ++i)
+        if (you.inv[i].defined())
+            ++count;
+
+    return count;
+}
+
+// Returns whether there is room in the player's inventory for a given item.
+bool room_in_inventory(const item_def& new_item)
+{
+    // Assume we always have room for any consumable. That is true as of this
+    // function being written, and ENDOFPACK should be increased before that
+    // ever *stops* being true for any reason.
+    if (inventory_category_for(new_item) == INVENT_CONSUMABLE)
+        return true;
+
+    // For gear, we'll need to check a bit more.
+    if (inv_count(INVENT_GEAR) < MAX_GEAR)
+        return true;
+
+    // Now that we know that our gear inventory is full, can this stack with
+    // anything we already have?
+    if (!is_stackable_item(new_item))
+        return false;
+
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        if (items_stack(you.inv[i], new_item))
+            return true;
+    }
+
+    return false;
+}
+
+inventory_category inventory_category_for(object_class_type type)
+{
+    switch (type)
+    {
+        case OBJ_WEAPONS:
+        case OBJ_MISSILES:
+        case OBJ_ARMOUR:
+        case OBJ_JEWELLERY:
+        case OBJ_STAVES:
+        case OBJ_TALISMANS:
+        case OBJ_GIZMOS:
+            return INVENT_GEAR;
+
+        // Don't toss 'non-items' into the consumable inventory.
+        case OBJ_UNASSIGNED:
+            return INVENT_ANY;
+
+        // A few of the remaining categories don't belong in the inventory at
+        // all, but it isn't necessary to check for that here.
+        default:
+            return INVENT_CONSUMABLE;
+    }
+}
+
+inventory_category inventory_category_for(const item_def& item)
+{
+    return inventory_category_for(item.base_type);
 }
 
 // sub_type == -1 means look for any item of the class
@@ -3346,6 +3604,7 @@ int get_max_subtype(object_class_type base_type)
         NUM_TALISMANS,
         NUM_GEM_TYPES,
         1,
+        1,
     };
     COMPILE_CHECK(ARRAYSZ(max_subtype) == NUM_OBJECT_CLASSES);
 
@@ -3365,8 +3624,13 @@ equipment_slot item_equip_slot(const item_def& item)
 // Includes melded items.
 bool item_is_equipped(const item_def &item, bool quiver_too)
 {
-    return item_equip_slot(item) != SLOT_UNUSED
-           || quiver_too && you.quiver_action.item_is_quivered(item);
+    if (item.base_type == OBJ_TALISMANS)
+        return you.active_talisman() == &item;
+    else
+    {
+        return item_equip_slot(item) != SLOT_UNUSED
+                || quiver_too && you.quiver_action.item_is_quivered(item);
+    }
 }
 
 bool item_is_melded(const item_def& item)
@@ -3513,11 +3777,11 @@ colour_t item_def::missile_colour() const
             return LIGHTGREY;
 #if TAG_MAJOR_VERSION == 34
         case MI_NEEDLE:
-#endif
         case MI_ARROW:         // removed as an item, but don't crash
         case MI_BOLT:          // removed as an item, but don't crash
         case MI_SLING_BULLET:  // removed as an item, but don't crash
         case MI_SLUG:          // never existed as an item
+#endif
         case MI_DART:
             return WHITE;
         case MI_JAVELIN:
@@ -3773,6 +4037,9 @@ colour_t item_def::book_colour() const
     if (sub_type == BOOK_MANUAL)
         return WHITE;
 
+    if (sub_type == BOOK_PARCHMENT)
+        return parchment_colour(static_cast<spell_type>(plus));
+
     switch (rnd % NDSC_BOOK_PRI)
     {
         case 0:
@@ -3909,20 +4176,44 @@ colour_t item_def::talisman_colour() const
 
     switch (sub_type)
     {
-    case TALISMAN_BEAST:
-        return YELLOW; // brown taken by staves
-    case TALISMAN_FLUX:
-        return CYAN; // could maybe swap this and death
+    case TALISMAN_QUILL:
+        return BROWN;
+    case TALISMAN_INKWELL:
+        return BLUE;
+    case TALISMAN_PROTEAN:
+        return ETC_RANDOM;
+    case TALISMAN_RIMEHORN:
+        return LIGHTBLUE;
+    case TALISMAN_SPIDER:
+        return LIGHTGREEN;
+    case TALISMAN_AQUA:
+        return ETC_WATER;
+    case TALISMAN_SCARAB:
+        return ETC_FIRE;
+    case TALISMAN_MEDUSA:
+        return ETC_POISON;
+    case TALISMAN_SPORE:
+        return BROWN;
     case TALISMAN_MAW:
         return ETC_BLOOD;
     case TALISMAN_SERPENT:
         return ETC_POISON;
+    case TALISMAN_EEL:
+        return LIGHTCYAN;
     case TALISMAN_BLADE:
         return ETC_IRON;
+    case TALISMAN_FORTRESS:
+        return GREEN;
+    case TALISMAN_WEREWOLF:
+        return LIGHTRED;
     case TALISMAN_STATUE:
         return ETC_EARTH;
+    case TALISMAN_HIVE:
+        return YELLOW;
     case TALISMAN_DRAGON:
         return ETC_FIRE;
+    case TALISMAN_SPHINX:
+        return ETC_MAGIC;
     case TALISMAN_VAMPIRE:
         return LIGHTMAGENTA;
     case TALISMAN_DEATH:
@@ -4257,22 +4548,12 @@ static bool _book_from_spell(const char* specs, item_def &item)
     if (type == SPELL_NO_SPELL)
         return false;
 
-    for (int i = 0; i < NUM_BOOKS; ++i)
-    {
-        const auto bt = static_cast<book_type>(i);
-        if (!book_exists(bt))
-            continue;
-        for (spell_type sp : spellbook_template(bt))
-        {
-            if (sp == type)
-            {
-                item.sub_type = i;
-                return true;
-            }
-        }
-    }
+    if (!is_player_book_spell(type))
+        return false;
 
-    return false;
+    item.sub_type = BOOK_PARCHMENT;
+    item.plus = static_cast<int>(type);
+    return true;
 }
 
 bool get_item_by_name(item_def *item, const char* specs,
@@ -4312,14 +4593,14 @@ bool get_item_by_name(item_def *item, const char* specs,
         for (const auto i : all_item_subtypes(item->base_type))
         {
             item->sub_type = i;
-            size_t pos = lowercase_string(item->name(DESC_PLAIN)).find(specs);
+            size_t pos = lowercase_string(item->name(DESC_DBNAME)).find(specs);
             if (pos != string::npos)
             {
                 // Earliest match is the winner.
                 if (pos < best_index)
                 {
                     if (create_for_real)
-                        mpr(item->name(DESC_PLAIN));
+                        mpr(item->name(DESC_DBNAME));
                     type_wanted = i;
                     best_index = pos;
                 }
@@ -4337,7 +4618,7 @@ bool get_item_by_name(item_def *item, const char* specs,
             switch (class_wanted)
             {
             case OBJ_BOOKS:
-                // Try if we get a match against a spell.
+                // Make a parchment if we get a match against a spell.
                 if (_book_from_spell(specs, *item))
                     type_wanted = item->sub_type;
                 break;
@@ -4451,13 +4732,18 @@ bool get_item_by_name(item_def *item, const char* specs,
             }
             item->skill_points = random_range(2000, 3000);
         }
+        else if (item->sub_type == BOOK_PARCHMENT)
+        {
+            char buf[80];
+            msgwin_get_line_autohist("What parchment spell? ", buf, sizeof(buf));
+            if (buf[0] != '\0')
+            {
+                if (!_book_from_spell(buf, *item))
+                    mpr("That parchment doesn't seem to exist.");
+            }
+        }
         else if (type_wanted == BOOK_RANDART_THEME)
             build_themed_book(*item, capped_spell_filter(20));
-        else if (type_wanted == BOOK_RANDART_LEVEL)
-        {
-            int level = random_range(1, 9);
-            make_book_level_randart(*item, level);
-        }
         break;
 
     case OBJ_WANDS:
@@ -4473,21 +4759,7 @@ bool get_item_by_name(item_def *item, const char* specs,
         break;
 
     case OBJ_JEWELLERY:
-        if (jewellery_is_amulet(*item))
-            break;
-
-        switch (item->sub_type)
-        {
-        case RING_SLAYING:
-        case RING_PROTECTION:
-        case RING_EVASION:
-        case RING_STRENGTH:
-        case RING_DEXTERITY:
-        case RING_INTELLIGENCE:
-            item->plus = 5;
-        default:
-            break;
-        }
+        item->plus = determine_jewellery_plus(item->sub_type);
 
     default:
         break;
@@ -4670,17 +4942,7 @@ static int _get_item_base(const item_def &item)
  */
 static void _identify_last_item(item_def &item)
 {
-    if (!in_inventory(item) && item_needs_autopickup(item)
-        && (item.base_type == OBJ_STAVES
-            || item.base_type == OBJ_JEWELLERY))
-    {
-        item.props[NEEDS_AUTOPICKUP_KEY] = true;
-    }
-
     identify_item(item);
-
-    if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
-        item.props.erase(NEEDS_AUTOPICKUP_KEY);
 
     const string class_name = item.base_type == OBJ_JEWELLERY ?
                                     item_base_name(item) :
@@ -4739,8 +5001,7 @@ bool maybe_identify_base_type(item_def &item)
 void name_weapon(item_def &item)
 {
     string name = getRandMonNameString("steelspirit");
-    if (name == "RANDGEN")
-        name = make_name();
+    name = do_mon_name_replacements(name);
     item.props[WEAPON_NAME_KEY] = name;
 
     if (!item.inscription.empty())
@@ -4794,29 +5055,29 @@ void say_farewell_to_weapon(const item_def &item)
     mprf("You whisper farewell to %s.", name.c_str());
 }
 
-// If there are more than one net on this square
-// split off one of them for checking/setting values.
-void maybe_split_nets(item_def &item, const coord_def& where)
+// Returns whether an additional copy of a given item in the player's inventory
+// would be strictly redundant with ones they already have.
+bool jewellery_is_redundant(const item_def& item)
 {
-    if (item.quantity == 1)
+    if (item.base_type != OBJ_JEWELLERY || is_artefact(item))
+        return false;
+
+    const jewellery_type type = static_cast<jewellery_type>(item.sub_type);
+    const int slots = jewellery_is_amulet(type) ? you.equipment.num_slots[SLOT_AMULET]
+                                                : you.equipment.num_slots[SLOT_RING];
+    const int limit = min(slots, jewellery_usefulness_limit(type));
+
+    // A new item would be useless if we already have as many copies as we can use.
+    int count = 0;
+    for (int i = 0; i < MAX_GEAR; ++i)
     {
-        set_net_stationary(item);
-        return;
+        if (you.inv[i].is_type(OBJ_JEWELLERY, type) && !is_artefact(you.inv[i]))
+        {
+            ++count;
+            if (count >= limit)
+                return true;
+        }
     }
 
-    item_def it;
-
-    it.base_type = item.base_type;
-    it.sub_type  = item.sub_type;
-    it.net_durability      = item.net_durability;
-    it.net_placed  = item.net_placed;
-    it.flags     = item.flags;
-    it.special   = item.special;
-    it.quantity  = --item.quantity;
-    item_colour(it);
-
-    item.quantity = 1;
-    set_net_stationary(item);
-
-    copy_item_to_grid(it, where);
+    return false;
 }

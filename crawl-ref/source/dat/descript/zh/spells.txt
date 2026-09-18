@@ -45,6 +45,11 @@ Animate Dead spell
 使怪物复活的几率和效果的持续时间，随法力的增强而增加。
 重新施放此法术将使丧尸归于尘土，即使是那些离开地面的也是如此。
 %%%%
+Antimagic Gaze spell
+
+该法术无需直射，能使目标的魔力泄到空中，就像他们被反魔法武器击中一样，
+并根据所抽出的魔力对施法者进行一定程度的治疗。
+%%%%
 Apportation spell
 
 把附近地上一堆物品中最顶端的一件物品或一组类似物品拉向施法者。
@@ -361,6 +366,11 @@ Debugging Ray spell
 
 射出一道能造成巨大伤害（1500 hp）的射线，而且百发百中。
 %%%%
+Deflect Missiles spell
+
+降低施法者受到投射攻击的几率，使其更容易躲闪。
+单目标性攻击比穿透性攻击更容易回避。
+%%%%
 Dig spell
 
 从未成形的岩石中挖出一条通道。
@@ -401,7 +411,7 @@ Dispersal spell
 而它所影响的任何怪物都有几率被空间的扭曲所混乱，
 这个几率的判定只取决于意志力。
 %%%%
-Doom Howl spell
+Oblivion Howl spell
 
 发放出刺耳的嚎叫，在受害者的脑海中回荡。
 当那些回声还在徘徊时，噩梦般的生物会听到并追踪它们的来源。
@@ -420,11 +430,6 @@ Drain Life spell
 Drain Magic spell
 
 使目标的魔力泄到空中，就像他们被反魔法武器击中一样。
-%%%%
-Draining Gaze spell
-
-该法术无需直射，能使目标的魔力泄到空中，就像他们被反魔法武器击中一样，
-并根据所抽出的魔力对施法者进行一定程度的治疗。
 %%%%
 Dream Dust spell
 
@@ -482,10 +487,6 @@ Fire Storm spell
 在造成火焰伤害的同时还会留下一些短暂存在的火旋涡。
 它造成的一半伤害，火抗无法抵御。
 %%%%
-Fire Summon spell
-
-召唤火属性的恶魔和天谴。
-%%%%
 Fireball spell
 
 掷出一个爆炸性的火球。
@@ -504,6 +505,10 @@ Flash Freeze spell
 
 冻结一个目标周围的空气，对目标造成重大伤害并减慢其移动速度。
 它造成的一半伤害，寒抗无法抵御。它对已被冻结的目标没有影响。
+%%%%
+Fleefoot spell
+
+使施法者在短时间内更快地穿越地形。
 %%%%
 Force Lance spell
 
@@ -577,7 +582,7 @@ Grasping Roots spell
 召唤来自地下深处的巨大抓握的根，抓住并束缚受害者。
 如果受害人挣脱或它离开召唤者的视野，则根会撤去。
 %%%%
-Greater Servant of Makhleb spell
+Infernal Servant spell
 
 召唤一个大恶魔。
 %%%%
@@ -608,6 +613,10 @@ Haunt spell
 Heal Other spell
 
 治疗一个附近的友方。
+%%%%
+Hellfire Court spell
+
+召唤火属性的恶魔和天谴。
 %%%%
 Hunting Call spell
 
@@ -1018,11 +1027,6 @@ Quicksilver Bolt spell
 
 <Breathe Dispelling Energy ability>
 %%%%
-Repel Missiles spell
-
-降低施法者受到投射攻击的几率，使其更容易躲闪。
-单目标性攻击比穿透性攻击更容易回避。
-%%%%
 Resonance Strike spell
 
 召唤一股来自大地的力量，攻击施法者视线内的敌人。
@@ -1043,10 +1047,6 @@ Sap Magic spell
 
 腐化目标生物施放咒语的能力。
 施法时如果被它影响会被打断，并被短暂阻止再次施法。
-%%%%
-Scattershot spell
-
-用金属碎片轰击施法者身前的锥形区域。防具可以大大削弱其造成的伤害。
 %%%%
 Scorch spell
 
@@ -1190,10 +1190,6 @@ Sporulate spell
 
 释放一个快速，充满气体的浮动孢子。
 在找到敌人后，孢子会爆炸，并对爆炸中的任何生物造成伤害和混乱。
-%%%%
-Sprint spell
-
-使施法者在短时间内更快地穿越地形。
 %%%%
 Starburst spell
 
@@ -1389,7 +1385,7 @@ Summon Tzitzimitl spell
 
 召唤一个蚀日星髅，一个疾病和绝望的恶魔。
 %%%%
-Summon Ufetubus spell
+Ufetubi Swarm spell
 
 召唤多个尖喙魔；小而恼人的恶魔。
 %%%%
@@ -1448,11 +1444,6 @@ Thunderbolt spell
 
 产生一道电弧。
 %%%%
-Tomb of Doroklohe spell
-
-将施法者置于岩墙内。生成这些墙会把阻挡它们的东西推开，
-但任何生物的存在都会阻碍它们生成。它们不是永久的，会在一段时间后消失。
-%%%%
 Trog's Hand spell
 
 <Trog's Hand ability>
@@ -1468,11 +1459,6 @@ Tukima's Dance spell
 一旦目标死亡，武器很快就会落地。
 
 某些强大的有名字的神器不会被影响，任何需要激活技能的属性都不会被激活。
-%%%%
-Twisted Resurrection spell
-
-这道法术让周围的尸体爬到一起，拼凑出一个恐怖的肉块怪物。
-尸体越多、越大，创造出的怪物就越强。
 %%%%
 Upheaval spell
 
@@ -1517,12 +1503,6 @@ Vitrifying Gaze spell
 Volley of Thorns spell
 
 射出一小束锋利的荆棘。
-%%%%
-Wall of Brambles spell
-
-使附近荆棘迅速生长。它们几乎没有结构性力量，
-但它们上面的恶刺使它们很难被清除。
-这种荆棘是稀疏的，几乎任何飞弹都可以穿过它们。
 %%%%
 Warning Cry spell
 

@@ -1,0 +1,20 @@
+name: "ironbound mechanist"
+glyph: {char: "g", colour: cyan}
+flags: [fighter, speaks, warm_blood, two_weapons]
+species: goblin
+exp: 1000
+will: 80
+attacks:
+ - {type: hit, damage: 22}
+ - {type: hit, damage: 22}
+hd: 13
+hp_10x: 645
+ac: 1
+ev: 13
+spells: ironbound_mechanist
+has_corpse: true
+shout: shout
+intelligence: human
+uses: weapons_armour
+size: medium
+shape: humanoid

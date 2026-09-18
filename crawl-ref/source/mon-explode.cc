@@ -34,7 +34,7 @@
 
 static void _setup_base_explosion(bolt & beam, const monster& origin)
 {
-    beam.is_tracer    = false;
+    beam.set_is_tracer(false);
     beam.is_explosion = true;
     beam.is_death_effect = true;
     beam.source_id    = origin.mid;
@@ -58,9 +58,6 @@ static void _setup_base_explosion(bolt & beam, const monster& origin)
 
     beam.aux_source.clear();
     beam.attitude = origin.attitude;
-
-    // Cache a copy of the exploding monster so we can look up blame info after it dies.
-    env.final_effect_monster_cache.push_back(origin);
 }
 
 static int _inferno_power(int hd)
@@ -133,6 +130,7 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
     beam.name      = "blast of lightning";
     beam.explode_noise_msg = "You hear a clap of thunder!";
     beam.colour    = LIGHTCYAN;
+    beam.tile_explode = TILE_BOLT_ELECTRIC_BLAST;
     beam.ex_size   = x_chance_in_y(origin.get_hit_dice(), 24) ? 3 : 2;
     if (origin.summoner)
         beam.origin_spell = SPELL_CONJURE_BALL_LIGHTNING;
@@ -237,6 +235,23 @@ static void _setup_bloated_husk_explosion(bolt & beam, const monster& origin)
 
 }
 
+static dice_def _sporangium_damage(int)
+{
+    return dice_def(3, 20);
+}
+
+static void _setup_sporangium_explosion(bolt & beam, const monster& origin)
+{
+    _setup_base_explosion(beam, origin);
+    beam.flavour = BEAM_ACID;
+    beam.damage  = _sporangium_damage(0);
+    beam.name    = "caustic explosion";
+    beam.explode_noise_msg = "You hear an extremely violent squelch.";
+    beam.colour  = YELLOW;
+    beam.ex_size = 3;
+    beam.origin_spell = SPELL_LAUNCH_SPORANGIUM;
+}
+
 struct monster_explosion {
     function<void(bolt&, const monster&)> prep_explode;
     function<dice_def(int)> damage;
@@ -281,6 +296,10 @@ static const map<monster_type, monster_explosion> explosions {
     { MONS_BLAZEHEART_CORE, {
         _setup_blazeheart_core_explosion,
         _blazeheart_damage,
+    } },
+    { MONS_CAUSTIC_SPORANGIUM, {
+        _setup_sporangium_explosion,
+        _sporangium_damage,
     } }
 };
 
@@ -312,12 +331,13 @@ dice_def mon_explode_dam(monster_type mc, int hd)
 
 bool explode_monster(monster* mons, killer_type killer, bool pet_kill)
 {
-    if (mons->hit_points > 0 || mons->hit_points <= -15
+    if (mons->hit_points <= -15
         || killer == KILL_RESET || killer == KILL_RESET_KEEP_ITEMS
-        || killer == KILL_BANISHED)
+        || killer == KILL_BANISHED
+    // Ball lightning explode on timeout, but more conventional summons should not
+        || (killer == KILL_TIMEOUT && !((mons->flags & MF_PERSISTS))))
     {
-        if (killer != KILL_TIMEOUT)
-            return false;
+        return false;
     }
 
     bolt beam;
@@ -325,7 +345,6 @@ bool explode_monster(monster* mons, killer_type killer, bool pet_kill)
     string sanct_msg = "";
     string boom_msg = make_stringf("%s explodes!", mons->full_name(DESC_THE).c_str());
     actor* agent = nullptr;
-    bool inner_flame = false;
 
     string poof_msg = "";
     if (mons->is_abjurable())
@@ -366,7 +385,6 @@ bool explode_monster(monster* mons, killer_type killer, bool pet_kill)
         mons->flags    |= MF_EXPLODE_KILL;
         sanct_msg       = "By Zin's power, the fiery explosion is contained.";
         beam.aux_source = "ignited by their inner flame";
-        inner_flame = true;
     }
     else if (mons->props.exists(MAKHLEB_HAEMOCLASM_KEY))
     {
@@ -404,10 +422,6 @@ bool explode_monster(monster* mons, killer_type killer, bool pet_kill)
     if (type == MONS_LURKING_HORROR)
         torment(mons, TORMENT_LURKING_HORROR, mons->pos());
 
-    // Detach monster from the grid first, so it doesn't get hit by
-    // its own explosion. (GDL)
-    env.mgrid(mons->pos()) = NON_MONSTER;
-
     // Exploding kills the monster a bit earlier than normal.
     mons->hit_points = -16;
 
@@ -415,15 +429,14 @@ bool explode_monster(monster* mons, killer_type killer, bool pet_kill)
     if (type == MONS_LURKING_HORROR)
     {
         targeter_radius hitfunc(mons, LOS_SOLID);
-        flash_view_delay(UA_MONSTER, DARKGRAY, 300, &hitfunc);
+        flash_view_delay(UA_MONSTER, DARKGRAY, 300, 0, &hitfunc);
     }
     else
     {
-        const auto typ = inner_flame ? EXPLOSION_FINEFF_INNER_FLAME
-                                     : EXPLOSION_FINEFF_GENERIC;
-        explosion_fineff::schedule(beam, boom_msg, sanct_msg, typ, agent, poof_msg);
+        schedule_explosion_fineff(beam, boom_msg, sanct_msg,
+                                  EXPLOSION_FINEFF_GENERIC, agent, poof_msg);
     }
 
-    // Monster died in explosion, so don't re-attach it to the grid.
+    // Monster died in explosion, so don't print a death message for it.
     return true;
 }

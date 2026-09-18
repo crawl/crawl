@@ -1,0 +1,1906 @@
+##############################################################################
+#
+# The Gulch (by regret-index).
+#
+# An experimental hard-mode Sewer much later than Sewers (in fact, so late and
+# so disconnected both can spawn in the same game). Unlike those sewers mostly
+# just deploying pests and rogues in wet tunnels and caverns, this focuses in on
+# mutant animals, abandoned constructs and experiments, and various borrowed
+# beasts. It also mixes those with fruiting mould patches and fields of metal
+# scrap, with fairly less (but still some) water than those sewers.
+#
+# Most notably, it comes with inflicting three transient mutations as soon as
+# you enter the portal, though none when exiting it. While this deploys its own
+# set of completely unique monsters much like Desolation, it's unlikely to end
+# up in any proper Crypt roulette set-up (autoexplore would need to handle
+# firewood better), but some notes have been left for some potential future.
+# See c33ae53 and b4834b1 for further details and intents.
+#
+# <<1>>     Gulch layout subvault functions
+# <<2>>     Gulch entry vaults
+# <<3>>     Gulch layout vaults and subvaults
+# <<4>>     Gulch planning area
+##############################################################################
+
+: crawl_require('dlua/vault.lua')
+
+{{
+function gulch_portal(e, shallow, deep)
+  local timeout_turns = crawl.random_range(600, 800)
+
+  local messager =
+    timed_msg {
+       initmsg = { "You hear the sound of rushing sludge.",
+                   "There is an entrance to a gutter gulch on this level. "
+                   .. "Hurry and find it before the portal rusts away!" },
+      finalmsg = "You hear the drain falling apart.",
+
+      verb = 'rusting',
+      noisemaker = 'mutagenic drain',
+      ranges = {
+        { 5000, 'slow ' },  { 4000, '' },
+        { 2500, 'brisk ' }, { 1500, 'quick ' },
+        { 0, 'rapid ' }
+      }
+    }
+
+  e.lua_marker('O',
+      timed_marker {
+        disappear = "The mutagenic drain falls to bits.",
+        entity = 'drain',
+        turns = timeout_turns,
+        single_timed = true,
+        floor = "expired_portal",
+        feat_tile = "dngn_portal_gulch_gone",
+        msg = messager })
+  e.tags("uniq_gulch vaults_gulch no_monster_gen chance_gulch no_pool_fixup")
+  -- We use the Vaults room generator to places these.
+  e.chance(0)
+  e.kfeat("O = enter_gulch")
+  e.kfeat(shallow .. "y = W")
+  e.kfeat("z = v")
+  e.colour(shallow .. " = lightgreen")
+  e.colour(deep .. " = green")
+  e.ftile("O = floor_gulch_trash")
+  e.tile("z = metal_wall_gulch")
+end
+
+-- Gulches can have three different terrain and boss themes. By default:
+-- 60%: Heavy mould patches, additional fungi, and sewage sovereigns.
+-- 30%: Many stacks of scrap and a scrapshell chimera.
+-- 10%: Extra deep water and either slymdra or amoebas.
+function gulch_boss_theme_sets(e, even_odds)
+  if (even_odds and crawl.one_chance_in(3)) or crawl.x_chance_in_y(3, 5) then
+    e.kmons("0 = mongrel wurm / roaming sludgefish w:8 / " ..
+                "crawling flesh cage w:2")
+    e.kmons("6 = sewage sovereign band")
+    e.kmons("'? = fungus")
+    e.kfeat("? = mould_patch")
+    e.nsubst("6 = 1:6 / 1:; / *:0")
+    e.nsubst("0 = 1:; / 1:0; / *:0")
+  elseif (even_odds and crawl.coinflip()) or crawl.x_chance_in_y(3, 4) then
+    e.kmons("0 = rusted inspector / fungal shambler / " ..
+                "telencephalon w:4 / crawling flesh cage w:2")
+    e.kmons("6 = scrapshell chimera")
+    e.kmons("? = stack of scrap")
+    e.kfeat("? = .")
+    e.subst("' = ;;?")
+    e.nsubst("6 = 1:6 / 1:600 / *:0")
+    e.nsubst("0 = 1:` / 1:0; / *:0")
+  else
+    e.kmons("0 = slime creature / telencephalon w:2")
+    e.kmons("6 = three-headed slymdra / four-headed slymdra / " ..
+                "colossal amoeba w:20")
+    e.kmons("7 = formless jellyfish")
+    e.subst("0 = 22335")
+    e.nsubst("6 = 1:6 / 1:700 / *:0")
+    e.subst("' = w")
+    e.subst("? = W")
+  end
+end
+
+function gulch_setup(e, main_vault, trap_count)
+  e.kfeat("^ = trap_tyrant w:20 / trap_dispersal w:4 / " ..
+              "trap_harlequin w:2 / trap_zot w:2")
+  e.kfeat("< = exit_gulch")
+  e.kfeat("} = purified_mutation_catalyst")
+  e.subst("^ : ^.")
+  e.nsubst("^ = " .. trap_count .. ":^ / 1:^. / *:.")
+  decorative_floor(e, ']', "empty mutation catalyst")
+  if main_vault then
+    e.place("Gulch")
+    e.tags("no_monster_gen no_item_gen no_pool_fixup")
+    e.orient("encompass")
+  end
+  e.colour("w = green")
+  e.colour("W = lightgreen")
+  e.ftile("`0123456 = floor_gulch / floor_gulch_trash")
+  e.ftile("|;?$ = floor_gulch_trash")
+  e.ftile("} = floor_gulch_catalyst")
+  e.tile("c = wall_stone_gulch")
+  e.tile("v = metal_wall_gulch")
+end
+
+-- Gulch loot uses the standard defghijk item glyphs to focus on poison, acid,
+-- and Forgecraft rewards. It always provides the following:
+--  * Two top-tier venom-branded weapons / good_item hand cannons
+--  * Two Alchemy, Hexes, or Forgecraft magic-enhancing items
+--  * A rPois / rCorr / prior schools / flying piece of armour / jewellery
+--  * Two random tier 3 or 4 talisman randarts with rPois / rCorr
+-- To fit both the trash themes and to help people who didn't bring in
+-- flaming weapons for the ~5% of encountering slymdra, there's also a bunch
+-- of damaged ego weapons, including flaming ones available via cross-training
+-- for all characters. Purified mutation catalysts- single use good mutation
+-- features- are set up in gulch_setup instead.
+function gulch_loot(e, item_nsubst, potion_count)
+  local weapon = {"quick blade w:6", "great mace w:4", "eveningstar w:6",
+                  "double sword w:5", "triple sword w:5", "broad axe w:4",
+                  "executioner's axe w:6", "partisan w:4", "bardiche w:6",
+                  "lajatang w:6"}
+  local schools1 = util.random_from({"alchemy", "hexes", "forgecraft"})
+  local schools2 = util.random_from({"fire", "ice", "air", "earth"})
+  local orbprop = util.random_from({"Alch", "Forge", "rPois", "rCorr"})
+  local weapon_string = ""
+  for _, wt in ipairs(weapon) do
+    weapon_string = weapon_string .. " / " .. wt .. " ego:venom pre_id good_item"
+  end
+  local n_weapon = string.gsub(weapon_string, "%s*/$", "")
+  local res_p = "ego:poison_resistance good_item"
+  local res_c = "ego:corrosion_resistance good_item"
+  local prop_p = "randart artprops:rPois"
+  local prop_c = "randart artprops:rCorr"
+  local def = { { i = "cloak " .. res_p, w = 6 }, { i = "cloak " .. prop_p, w = 2 },
+                { i = "cloak " .. res_c, w = 10 }, { i = "cloak " .. prop_c, w = 2 },
+                { i = "kite shield " .. res_c, w = 8 },
+                { i = "kite shield " .. prop_c, w = 2 },
+                { i = "scale mail ego:resonance good_item", w = 4 },
+                { i = "chain mail ego:resonance good_item", w = 6 },
+                { i = "any ring " .. prop_p, w = 8 },
+                { i = "any ring " .. prop_c, w = 12 },
+                { i = "any ring randart artprops:Fly", w = 2 },
+                { i = "amulet of chemistry randart", w = 15 }, }
+  local def_grab_1 = util.random_weighted_from("w", def).i
+  local def_grab_2 = util.random_weighted_from("w", def).i
+  if crawl.one_chance_in(7) then
+    def_grab_1 = "pair of boots ego:flying good_item, " ..
+                 "barding ego:flying good_item"
+  end
+  e.kitem("d = " .. n_weapon .. " / athame ego:draining w:4 / " ..
+               "hand cannon good_item w:20")
+  e.kitem("e = staff of alchemy randart artprops:Hexes w:5 / " ..
+          "staff of alchemy randart artprops:Forge w:5 / " ..
+          "randbook disc:" .. schools1 .. " disc2:" .. schools2 .. " " ..
+          "splevels:33 numspells:5 / " ..
+          "orb ego:attunement randart artprops:" .. orbprop .. " w:3 / " ..
+          "orb ego:stardust randart artprops:" .. orbprop .. " w:3 / " ..
+          "orb ego:guile randart artprops:" .. orbprop .. " w:2 / " ..
+          "orb ego:glass randart artprops:" .. orbprop .. " w:2 / " ..
+          "manual of alchemy w:5 / manual of forgecraft w:5")
+  e.kitem("f = " .. def_grab_1)
+  e.kitem("g = maw talisman w:8 " .. prop_p .. " / maw talisman w:12 " .. prop_c .. " / " ..
+              "eel talisman w:8 " .. prop_p .. " / eel talisman w:12 " .. prop_c .. " / " ..
+              "fortress talisman randart w:20 / lupine talisman w:8 " .. prop_p .. " / " ..
+              "lupine talisman w:12 " .. prop_c .. " / serpent talisman w:15 " .. prop_c .. " / " ..
+              "spider talisman w:15 " .. prop_c .. " / wellspring talisman w:8 " .. prop_p .. " / " ..
+              "wellspring talisman w:12 " .. prop_c .. " / blade talisman w:8 " .. prop_p .. " / " ..
+              "blade talisman w:8 " .. prop_p .. " / dragon-coil talisman w:15" .. prop_c .. " / " ..
+              "dragon-coil talisman w:15" .. prop_c .. " / hive talisman w:8 " .. prop_p .. " / " ..
+              "hive talisman w:12 " .. prop_c .. " / riddle talisman w:8 " .. prop_p .. " / " ..
+              "riddle talisman w:12 " .. prop_c .. " / sanguine talisman w:8 " .. prop_p .. " / " ..
+              "sanguine talisman w:12 " .. prop_c)
+  e.kitem("h = damaged broad axe ego:flaming pre_id no_pickup")
+  e.kitem("i = damaged scimitar ego:flaming pre_id no_pickup")
+  e.kitem("j = damaged glaive ego:flaming pre_id no_pickup")
+  e.kitem("k = damaged quarterstaff ego:freezing pre_id no_pickup / " ..
+              "damaged rapier ego:freezing pre_id no_pickup / " ..
+              "damaged dire flail ego:freezing pre_id no_pickup")
+  e.kitem("| = " .. n_weapon .. " / athame ego:draining w:4 / " ..
+               "hand cannon good_item w:20 / " ..
+               "randbook splevels:33 numspells:5 w:20 / " ..
+               def_grab_2 .. " w:30 / swamp dragon scales randart w:30 / " ..
+               "any aux armour randart w:14 / any control misc / " ..
+               "any jewellery randart w:4 / any manual w:4")
+  e.kitem("$ = $ no_pickup")
+  e.kitem("% = any potion q:2")
+  e.nsubst(item_nsubst .. " = 2:d / 2:e / 1:f / 2:g / *:|")
+  e.nsubst("i = 1:h / 1:i / 1:j / 2 = hij / *:k")
+  e.nsubst("$ = " .. potion_count - 1 .. " = %$$ / " .. potion_count.. ":% / *:$")
+end
+
+-- ############################################################################
+-- # <<1>> Gulch layout subvault functions
+-- ############################################################################
+-- # Various different functions for crunching down the base Gulch layouts'
+-- # subvault headers, one shared between each of them and then each layout's
+-- # given variations on monster choices and terrain randomization.
+-- ############################################################################
+function gulch_generic_subvaults(e, subst_glyphs, subst_string, break_doors, trap_count)
+  e.tags("allow_dup luniq unrand")
+  e.subst("1 = .11122")
+  if #subst_glyphs > 1 then
+    for i, _ in pairs(subst_glyphs) do
+      e.subst(subst_glyphs[i] .. " : " .. subst_string)
+    end
+  end
+  if break_doors then
+    e.kfeat("- = broken_door")
+    e.nsubst("+ = 1:x / 1:+ / * = + -:3")
+  end
+  gulch_setup(e, false, trap_count)
+end
+
+function gulch_onslaught(e, is_subvault)
+  e.kmons("1 : alligator / anaconda / large slime creature w:2 / " ..
+              "crawling flesh cage w:12")
+  e.kmons("2 = mongrel wurm / rusted inspector / roaming sludgefish w:4")
+  e.kmons("3 = roaming sludgefish / fungal shambler")
+  e.kmons("4 = great orb of eyes / crawling flesh cage")
+  e.kmons("5 = fungal shambler / formless jellyfish / " ..
+              "telencephalon w:4 / torpor snail w:1")
+  if is_subvault and crawl.coinflip() then
+    e.kmons("? = fungus")
+    e.subst("? : ;WW?")
+    e.subst("' = ;")
+  else
+    gulch_boss_theme_sets(e, false)
+  end
+  if is_subvault then
+    e.tags("gulch_onslaught_subvault allow_dup luniq unrand")
+    gulch_generic_subvaults(e, {"y", "Y", "z", "Z"}, "x`", false, "1")
+  end
+end
+
+function gulch_crossways_sections(e)
+  e.tags("gulch_crossways_sections")
+  e.kmons("1 : alligator / tyrant leech w:8 / large slime creature w:2 / " ..
+              "crawling flesh cage w:12")
+  e.kmons("2 = mongrel wurm / rusted inspector w:12 / roaming sludgefish w:4")
+  e.kmons("3 = roaming sludgefish / fungal shambler")
+  e.kmons("4 = great orb of eyes / glowing orange brain w:2 / telencephalon w:2")
+  e.kmons("5 = fungal shambler / formless jellyfish w:6 / " ..
+              "telencephalon w:4 / torpor snail w:1")
+  e.subst("~ = ..Wwx")
+  gulch_boss_theme_sets(e, false)
+  gulch_generic_subvaults(e, {"y", "z"}, "x.", true, "1")
+  gulch_loot(e, "|", 4)
+end
+
+function gulch_network(e)
+  e.tags("gulch_network")
+  e.kmons("1 : alligator / anaconda w:8 / large slime creature w:2 / " ..
+              "crawling flesh cage w:12")
+  e.kmons("2 = mongrel wurm / rusted inspector w:12 / roaming sludgefish w:4")
+  e.kmons("3 = roaming sludgefish / fungal shambler")
+  e.kmons("4 = great orb of eyes / crawling flesh cage / telencephalon w:2")
+  e.kmons("5 = fungal shambler / formless jellyfish w:6 / " ..
+              "telencephalon w:4 / torpor snail w:1")
+  gulch_boss_theme_sets(e, false)
+  gulch_generic_subvaults(e, {"y", "z"}, "xxW..", true, "1")
+  gulch_loot(e, "|", 4)
+end
+
+function gulch_chamber_river(e, is_subvault)
+  e.orient("float")
+  e.kmons("1 : alligator / tyrant leech w:8 / large slime creature w:2 / " ..
+              "crawling flesh cage w:12")
+  e.kmons("2 = mongrel wurm / rusted inspector w:12 / roaming sludgefish w:4")
+  e.kmons("3 = roaming sludgefish / fungal shambler")
+  e.kmons("4 = great orb of eyes / crawling flesh cage / telencephalon w:2")
+  e.kmons("5 = fungal shambler / formless jellyfish w:6 / " ..
+              "telencephalon w:4 / torpor snail w:1")
+  if crawl.one_chance_in(3) then
+    e.kmons("? = fungus")
+    e.subst("? : ;WW?")
+    e.subst("' = ?W;;")
+  else
+    gulch_boss_theme_sets(e, false)
+  end
+  if is_subvault then
+    gulch_loot(e, "|", 3)
+  end
+  gulch_generic_subvaults(e, {"y", "z", "Y", "Z"}, "xxW..", true, "1")
+end
+
+function gulch_winding_coils(e)
+  e.tags("gulch_coil")
+  e.kmons("1 : alligator / anaconda w:8 / large slime creature w:2 / " ..
+              "crawling flesh cage w:12")
+  e.kmons("2 = mongrel wurm / rusted inspector w:12 / roaming sludgefish w:4")
+  e.kmons("3 = roaming sludgefish / fungal shambler")
+  e.kmons("4 = great orb of eyes / crawling flesh cage / telencephalon w:2")
+  e.kmons("5 = fungal shambler / formless jellyfish w:6 / " ..
+              "telencephalon w:4 / torpor snail w:1")
+  if crawl.one_chance_in(4) then
+    e.kmons("? = fungus")
+    e.subst("? : ;WW?")
+    e.subst("' = ;")
+  else
+    gulch_boss_theme_sets(e, false)
+  end
+  e.subst("~ = ..Wwx")
+  gulch_generic_subvaults(e, {"y", "z"}, "xxW..", false, "1")
+  gulch_loot(e, "|", 2)
+end
+
+function gulch_divide_sides(e)
+  e.tags("gulch_divide_sides")
+  e.kmons("1 : alligator / anaconda w:4 / large slime creature w:2 / " ..
+              "crawling flesh cage")
+  e.kmons("2 = mongrel wurm / rusted inspector w:12 / roaming sludgefish w:4")
+  e.kmons("3 = roaming sludgefish / fungal shambler")
+  e.kmons("4 = great orb of eyes / crawling flesh cage / telencephalon w:2")
+  e.kmons("5 = fungal shambler / formless jellyfish w:6 / " ..
+              "telencephalon w:4 / torpor snail w:1")
+  gulch_boss_theme_sets(e, false)
+  e.subst("~ = .Wwx")
+  gulch_generic_subvaults(e, {"y", "z"}, "xw.", false, "2")
+  gulch_loot(e, "|", 2)
+end
+
+function gulch_divide_center(e)
+  e.tags("gulch_divide_center")
+  e.kmons("1 : alligator / anaconda w:8 / large slime creature w:2 / " ..
+              "crawling flesh cage w:12")
+  e.kmons("2 = mongrel wurm / rusted inspector w:12 / roaming sludgefish w:4")
+  e.kmons("3 = roaming sludgefish / fungal shambler")
+  e.kmons("4 = great orb of eyes / crawling flesh cage / telencephalon w:2")
+  gulch_boss_theme_sets(e, true)
+  e.subst("~ = ..Wwx")
+  gulch_generic_subvaults(e, {"y", "z"}, "xxW..", false, "1")
+  gulch_loot(e, "|", 2)
+end
+}}
+
+#############################################################################
+# <<2>> Gulch entry vaults
+#############################################################################
+# Baseline rules:
+# * Gulch entries should emphasize scrap or water and leave out mould.
+# * All Gulch entry vaults should use normal Vaults spawns (outside of
+#   rusted inspectors or the plainest Lair branch guest beasts), and
+#   should have some minor floor scaling.
+# * The gulch_portal(_G) function covers water recolouring and placement.
+#   It also assigns clean shallow water to `y`, Gulch metal walls to `z`,
+#   and the entrance feature on `O`.
+#############################################################################
+
+NAME:   regret_index_gulch_entry_containment_chores
+TAGS:   vaults_orient_n vaults_orient_w vaults_orient_e
+KMONS:  1 = vault guard
+KMONS:  2 = slime creature
+: local d = you.depth()
+: nsubst("2 = 1 = 2:" .. d .. " W:1 / *:2")
+SUBST:  a : x.
+: gulch_portal(_G, "12W", "w")
+MAP
+xxx.....xxx
+x.........x
+x.a..T..a.x
+x...xxx...x
+x..nnnnn..x
+x..nW1Wn..x
+x..+WWW+..x
+x..+WWW+..x
+...n1W1n...
+..xnW2Wnx..
+..xn2O2nx..
+..xnwwwnx..
+xxxzzzzzxxx
+xxxxxxxxxxx
+ENDMAP
+
+# Lower weight for the Lair branch animals.
+NAME:   regret_index_gulch_entry_beast_containment
+TAGS:   vaults_orient_s vaults_orient_e
+WEIGHT: 8
+KMONS:  1 = ironbound beastmaster
+KMONS:  23 = alligator / anaconda / lindwurm w:4
+KMONS:  4 = snapping turtle / tyrant leech
+SUBST:  ? = 33444, a : x.
+KMASK:  34 = no_item_gen
+KPROP:  34 = no_tele_into
+: local d = you.depth()
+: nsubst("2 = 1 = 2:" .. d .. " W:3 / *:2")
+: gulch_portal(_G, "23W", "w")
+MAP
+xxxxxx
+xzzzzxxxxxx
+xzwWw2..n?x
+xzWO2...nnx
+xzw2W.....x
+xx2..1...xxxxxx
+ x.....yy.x.n?x
+ x....yyyy..nnx
+ xnn..yyyy....x
+ x?n.x.yy......
+ xxxxxx....ya..
+     x....yTy..
+     xnn..ay..x
+     x?n......x
+     xxxx...xxx
+ENDMAP
+
+NAME:   regret_index_gulch_entry_oversized_closet
+TAGS:   vaults_orient_n
+KMONS:  1 = great orb of eyes
+KMONS:  23 = entropy weaver
+KMONS:  S = stack of scrap
+: local d = you.depth()
+: subst("? = 113 .:" .. 42 - d * 10)
+SUBST:  a : x., y = y., S = S..
+: gulch_portal(_G, "13W", "w")
+MAP
+x...xxxxxxx...x
+x......T......x
+x.a.........a.x
+x.............x
+xxxx+xx+xx+xxxx
+xx.....x.....xx
+xyxyxyxxxyxyxyx
+xx.xyx.2.xyx.xx
+xSx.x.1x1.x.xSx
+xxwx?WWOWW?xwxx
+xxxxzzzzzzzxxxx
+xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   regret_index_gulch_entry_watch_guard
+: local d = you.depth()
+: kmons("1 : centaur warrior w:" .. 4 - d .. " / boggart w:" .. d)
+: kmons("2 = vault sentinel w:" .. 4 - d .. " / vault warden w:" .. d)
+SUBST:  A = x., a : x..
+: gulch_portal(_G, "W", "w")
+MAP
+  ..       ..
+  ..       ..
+  .....a.....
+...............
+....xxxxxxx....
+  ..xzWWz1x.1
+  A.xzOW.x+2T
+  ..xzWWz1x.1
+....xxxxxxx....
+...............
+  .....a.....
+  ..       ..
+  ..       ..
+ENDMAP
+
+# Lower weight for the conduit deployment.
+NAME:   regret_index_gulch_entry_cage_makers
+TAGS:   vaults_orient_n vaults_orient_w vaults_orient_e
+WEIGHT: 8
+KMONS:  1 = arcanist
+KMONS:  2 = crawling flesh cage
+KMONS:  S = stack of scrap
+SUBST:  a = x.
+: local d = you.depth()
+: nsubst("2 = 2 = 2:" .. d .. " W:1 / 1:. / *:2")
+: vault_metal_statue_setup(_G, "G", "alchemical conduit")
+: gulch_portal(_G, "1W", "w")
+MAP
+xxxxxx...xxxxxx
+.......a.......
+...............
+xxx++xxxxx++xxx
+xy...........yx
+xx.....G.....xx
+xxnnxx+++xxnnxx
+x.22+2SSS2+22.x
+xSSS+.1O1.+SSSx
+xxxxxzzzzzxxxxx
+xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   regret_index_gulch_entry_scrap_sluice
+KMONS:  1 = ironbound mechanist
+KMONS:  23 = rusted inspector
+KMONS:  S = stack of scrap
+SUBST:  a : x..
+: local d = you.depth()
+NSUBST: 3 = 1:3 / *:W
+: nsubst("2 = 1 = 2:" .. d .. " W:1 / *:.")
+: gulch_portal(_G, "3W", "w")
+MAP
+x..xxxxxxxxx..x
+x..x.SxW1S.x..x
+x..+..xW.2.x..x
+x..x..xW2..+.ax
+...xS.x3x..xxxx
+..ax..zOz..xa..
+xxxx..x3x.Sx...
+xa.+..2Wx..x..x
+x..x.2.Wx..+..x
+x..x.S1WxS.x..x
+x..xxxxxxxxx..x
+ENDMAP
+
+###############################################################################
+# <<3>> Gulch layout vaults and subvaults
+###############################################################################
+# Gulch layouts foreground subvaulting heavily to still feel like an extension
+# of V and to avoid the reliable layouts of other portals, with at least three
+# different configurations at minimum. Not counting firewood, each map should
+# have about 44 normal enemies, with 80% or more being Gulch spawns. Most of
+# them should have immediate 5-or-less monster ambushes with weaker guest
+# monsters to make use of the entry transient mutations.
+# Map types:
+# * Standard maps get WEIGHT: 25 and deploy the seven Gulch-unique monsters
+#   with lua functions defined earlier in the file, with three different terrain
+#   themes shared across each section defined by gulch_boss_theme_sets. They
+#   may have a 1/5 chance to deploy one of the four arrangements:
+#   * A deathcap ambush with fungal shamblers
+#   * Dragon draugr with mongrel wurms
+#   * Radroaches with roaming sludgefish
+#   * Some ironbound mechanists with rusted inspectors
+# * Themed nonstandard maps should have WEIGHT: 15 and reliably present one or
+#   two of the above repeatable guest arrangements.
+# * Rare guest maps should have WEIGHT: 10 and not overlap in their uses of
+#   outside guest monsters- see <<4>> for various potential concepts.
+# Layout notes:
+#  * By default, each layout uses eight |s and the gulch_loot(_G) function to
+#    place thematic loot. When this is split between subvaults, use empty spaces
+#    in the subvault definitions and pass the subvault glyphs into that function
+#    to properly distribute those rewards- refer to how it's done in layouts
+#    like gulch_chambers_river, gulch_winding_coils, and gulch_divide.
+#  * With unique tiles for each, some simple wall progression between rock and
+#    stone and (bits of metal) from start to finish can easily look nice.
+#  * The current gulch_boss_theme_sets(_G) set-up uses ? and ' to place
+#    terrain features, with ? using mould patches or stacks of scrap as
+#    traversible blocking features and ' rarely being used for deep water that
+#    shouldn't produce teleport islands or needs to fly. Keep both of these in
+#    mind when placing either.
+###############################################################################
+
+default-depth: Gulch
+
+###############################################################################
+# The Gulch Onslaught, a chain of subvaults based off of Sewer layouts.
+# The outside of each chamber have water, but most of the insides don't.
+NAME:     regret_index_gulch_onslaught
+WEIGHT:   25
+KFEAT:    - = broken_door
+KFEAT:    P = mould_patch
+SUBST:    - = ++-., ~ = ...WWwx
+SUBST:    y : x.., z : x.., Y : x.., Z : x..
+SUBVAULT: B : gulch_onslaught_subvault
+SUBVAULT: C : gulch_onslaught_subvault
+SUBVAULT: D : gulch_onslaught_subvault
+: gulch_onslaught(_G, false)
+: gulch_loot(_G, "|", 4)
+: gulch_setup(_G, true, "2")
+MAP
+              ccccccccccccccccccccccc
+              ccccccccccccccccccccccc
+            cccCCCCCCCCCCCCCCCCCCCCCccc
+           cc.cCCCCCCCCCCCCCCCCCCCCCc.cc
+          cc..-CCCCCCCCCCCCCCCCCCCCC-..cc
+     cccccc..WcCCCCCCCCCCCCCCCCCCCCCcW..cccccc
+     cwWxx....-CCCCCCCCCCCCCCCCCCCCC-....xxWwc
+     cW<..?'.WCCCCCCCCCCCCCCCCCCCCCCcW.'?..<Wc
+     cx.1.'?..-CCCCCCCCCCCCCCCCCCCCC-..?'.1.xc
+     cx..^...WcCCCCCCCCCCCCCCCCCCCCCcW...^..xc
+    cc.?'.....-CCCCCCCCCCCCCCCCCCCCC-.....'?.cc
+   cc..'?....$cCCCCCCCCCCCCCCCCCCCCCc$....?'..cc
+  cc........v|cCCCCCCCCCCCCCCCCCCCCCc|v........cc
+  c..W.W.W..$|ccccccccccccccccccccccc|$..W.W.W..c
+cccc-c-c-c-ccccvvvvvvvvvvvvvvvvvvvvvcccc-c-D-c-cccc
+ccBBBBBBBBBBBcvw?'..Z....Y....Z..'?wvcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv?'........Y........'?vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv'.......v.'.v.......'vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv.....y..v.?.v........vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv....yy..v.'.v........vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv.......vv...vv.......vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv..z...vv.....vv...z..vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv..vvvvv...v...vvvvv..vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv....v$....v....$v....vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv...'v'.'.vvv.'.'v'...vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv.^v'v$?..vvv..?$v'v^.vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv...'v'.1.vvv.1.'v'...vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv....v$0.0$v$0.0$v....vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv..vvvvv0.6v6.0vvvvv..vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv..z...vv||6||vv...z..vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv.......vv|}|vv.......vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv........vvvvv..yy....vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv........v...v..y.....vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv'.......v...v.......'vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcv?'........Y........'?vcDDDDDDDDDDDcc
+ccBBBBBBBBBBBcvw?'..Z....Y....Z..'?wvcDDDDDDDDDDDcc
+cccc+c+B+c+ccccvvvv+v+v+vvvvvvvvvvvvcccc+c+c+c+cccc
+cc...W.W.W....xxxxxxPxPxccccxxxxxxxxx....W.W.W...cc
+cc.....^......~~~~~~~.~~ccc~~~~~~~~~~......^.....cc
+cci.v..............3.2<.ccc.A.W...1.3.........v.icc
+cc~'..............2^1...ccc..W.<...2.1.........'~cc
+ccx~|i~i~i~i~i~~~~~~~~~~ccc~~~~~~~~~~i~i~i~i~i|~xcc
+ccxxxxxxxxxxxxxxxxxxxxxcccccxxxxxxxxxxxxxxxxxxxxxcc
+ccccccccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+# Based off of sewer_the_crocodile.
+NAME:   regret_index_gulch_onslaught_flux
+: gulch_onslaught(_G, true)
+MAP
+x...Yxxz..?..ZxxW...x
+....1x...2'....x.....
+.''..c...'?'...c.3''.
+xxx......xcx......xxx
+.......cxxxxxc.......
+....y2?xxxxxxx?4y..5.c
+.......cxxxxxc.......
+xxx......xcx......xxx
+.''..c...'?'...c.3''.
+....1x...2'....x.....
+x...WxxZ..?..zxxY...x
+ENDMAP
+
+# Based off of sewer_minmay_w.
+NAME:   regret_index_gulch_onslaught_bends
+: gulch_onslaught(_G, true)
+MAP
+xx....ccxx?.....xcx.W
+...1.2.cZ.3.z4.3.cY..
+.......cx........c...
+..yx...xx.'.xY'..x...
+..yx'?.xx'?.xx'?.x...
+...x.'.xx.'.xx.'.x...c
+...x.?'xx.?'xx.?'xy..
+...x..'Yx.'.xx...xy..
+...c........xc.......
+..Yc.2.1z.3.Zc..2.5..
+W.xcx.....?xxcc....xx
+ENDMAP
+
+# Loosely based off of sewer_co_15_rooms.
+NAME:   regret_index_gulch_onslaught_nodes
+: gulch_onslaught(_G, true)
+MAP
+xcWcxxxxxc'cxxxxxc'cx
+x..2yx..x...x..xz1..x
+..?......2?3......?..
+x....xxxx...xxxx....x
+xx.xxxxxxc.cxxxxxx.xx
+x..cxxxxc5?4cxxxxc..xc
+xx.xxxxxxc.cxxxxxx.xx
+x....xxxx...xxxx....x
+..?......3?2......?..
+x..1zx..x...x..xy2..x
+xc'cxxxxxc'cxxxxxcWcx
+ENDMAP
+
+# Based off of sewer_co_tree.
+NAME:   regret_index_gulch_onslaught_branches
+NSUBST: R = 1:+ / *:., S = 1:+ / *:.
+: gulch_onslaught(_G, true)
+MAP
+xz.xxxxx'.cW'xxxxx.zx
+R...xxxxx.c3xxxZx...S
+xx?..2xyx...xxx...?xx
+R...x'.'xx.xc'.'x...S
+x..xx1x.x'2xc.x4xx..x
+cccccY?...?...?Ycccccc
+x..xx1x.cx2'x.x5xx..x
+R...x'.'cx.xx'.'x...S
+xx?..2xxx...xyx...?xx
+R...xZxxx3c.xxxxx...S
+xz.xxxxx'Wc.'xxxxx.zx
+ENDMAP
+
+# Loosely based off of kennysheep_door_sewer. Low weight for its gimmickry.
+NAME:   regret_index_gulch_onslaught_closets
+WEIGHT: 3
+: gulch_onslaught(_G, true)
+MAP
+W.x..x..c.2.c.3x..x?.
+..x..x..c+++c..x..x..
+..x1'x'2c'+'c.'x'4x..
+..+++++++?+?+++++++..
+........+.+.+........
+...y..z.cZ+Zc.z..y...c
+........+.+.+........
+..+++++++?+?+++++++..
+..x1'x'2c'+'c.'x'5x..
+..x..x..c+++c..x..x..
+.?x..x..c.3.c.2x..x.W
+ENDMAP
+
+# Loosely based off of sewer_hellmonk_down_the_drain.
+NAME:   regret_index_gulch_onslaught_sworl
+: gulch_onslaught(_G, true)
+MAP
+.Wxc..........cc?.y..
+.Zx.z..xxxxx..cc.4.5.
+..x..xxx..ZxY..x.c...
+..x..x....3xx..x..x..
+.xx.xx.cc'.?cc.xx.xx.
+Yx..x..c'2?2'c..x..xYc
+.xx.xx.cc?.'cc.xx.xx.
+..x..x..xx3....x..x..
+...c.x..YxZ..xxx..x..
+.1.2.cc..xxxxx..z.xZ.
+..y.?cc..........cxW.
+ENDMAP
+
+# Extremely loosely based off of sewer_co_scattered_pipes.
+# Low weight for foregrounding firewood more than average.
+NAME:   regret_index_gulch_onslaught_swirl
+WEIGHT: 7
+: gulch_onslaught(_G, true)
+MAP
+y..Y...z..c......y..Y
+..1.....z.cZ.........
+..xWWx....x....xWWx4.
+..x'?c.xxxxxxx2c?'x..
+..x?'x..W'?'W3.x'?x..
+..x''x..W???W..x''x..c
+..x?'x..W'?'W3.x'?x..
+..x'?c.xxxxxxx2c?'x..
+..xWWx....x....xWWx5.
+..2......Zc.z........
+Y..y......c..z...Y..y
+ENDMAP
+
+########################################
+# The Gulch Crossways: a wetter layout with an immediate ambush. One of the
+# nastiest ones for louder characters, since there's no real place to
+# retreat to from all sides, but we've got other portals centered around the
+# exact same conceit.
+
+NAME:     regret_index_gulch_crossways
+WEIGHT:   25
+: if crawl.one_chance_in(5) then
+KMONS:    1 = deathcap
+KMONS:    2 = fungal shambler
+KMONS:    3 = mongrel wurm / roaming sludgefish
+KFEAT:    23 = mould_patch
+: else
+KMONS:    1 : alligator w:8 / tyrant leech / crawling flesh cage w:14
+KMONS:    2 = mongrel wurm / rusted inspector / roaming sludgefish
+KMONS:    3 = fungal shambler / telencephalon w:4 / great orb of eyes w:2
+: end
+KMONS:    s = fungus
+KMONS:    S = stack of scrap
+KFEAT:    sS = W
+KFEAT:    M = mould_patch
+SHUFFLE:  CD / EF / GH / IJ
+SUBST:    C = M, D = s, EF = W, GHIJ = .
+SUBST:    y : xxW., z : xxW., - = ++-., ~ = .:35 W:20 s:5 S:5 w:25 x:15
+SUBVAULT: B : gulch_crossways_sections
+COLOUR:   sS = lightgreen
+: gulch_loot(_G, "|", 2)
+: gulch_setup(_G, true, "1")
+MAP
+BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.ww.BBBBBBBBBBBB.ww.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.^~.BBBBBBBBBBBB.^~.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBi~~iBBBBBBBBBBBBi~~iBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBDDDDBBBBBBBBBBBBFF2FBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBCCCCBBBBBBBBBBBBEEEEBBBBBBBBBBBBBBB
+BB.........3iHGy2..1.~.W.xW.1..z...GHi..........BB
+BB.~~~~~~~~~~HG.?.....W~A~......?..GH~^~~~~~~~~.BB
+BB.~~~~~~~~^~HG..?......~(~W.....?.GH~~~~~~~~~~.BB
+BB..........iHG...z..1.Wx.W.~.1..2yGHi3.........BB
+BBBBBBBBBBBBBBBEEEEBBBBBBBBBBBBCCCCBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBF2FFBBBBBBBBBBBBDDDDBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBi~~iBBBBBBBBBBBBi~~iBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~^.BBBBBBBBBBBB.~^.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.~~.BBBBBBBBBBBB.~~.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBB.ww.BBBBBBBBBBBB.ww.BBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+ENDMAP
+
+NAME:    regret_index_gulch_crossways_closets
+: gulch_crossways_sections(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvxx    x.2cvvvvc3.x    xxvvvvvvvvvvvvv
+vvvvvvvvvvvvvxx    +.2cvvvvc2.+    xxvvvvvvvvvvvvv
+vvvvvvvvvvvvvxx    +.$cvvvvc$.+    xxvvvvvvvvvvvvv
+vvvvvvvvvvvvvxx    xcccvvvvcccx    xxccccccccvvvvv
+vvvvvvvvcccccxx    x.'cvvvvc'.x    xx~~.~~|03cvvvv
+vvvvvvvvc$$$cxx    +.1cvvvvc$.+    xx.....060cvvvv
+vvvvvvvccc+ccxx    +.$cvvvvc0.+    .x..c$060|cvvvv
+vvvvvccc04...x.    x.'cvvvvc'.x    .+..c$|0.~cvvvv
+vvvvvc$c5'?..+.    xcccvvvvcccx    .+..c}$$.~cvvvv
+vvvvvc|+.?~..+.    +.$cvvvvc$.+    .+..cccc..cvvvv
+vvvvvc$c...3.+.    +.2cvvvvc2.+    .x.?.....~cvvvv
+vvvvvccc.....x.    x.2cvvvvc2.x    xx?......~cvvvv
+vxxxxxxxx+++xxx    xxxxxxxxxxxx    xxx+++xxxxxxxxv
+vxxxxxxxx...xxx    xxxxxxxxxxxx    xxx...xxxxxxxxv
+vv                                              vv
+vv                                              vv
+vv                                              vv
+vv                                              vv
+vxxxxxxxx...xxx    xxxxxxxxxxxx    xxx...xxxxxxxxv
+vxxxxxxxx+++xxx    xxxxxxxxxxxx    xxx+++xxxxxxxxv
+vvvvc~..'...?xx    x.2cvvvvc2.x    .x.....cccvvvvv
+vvvvc~.....?.xx    +.2cvvvvc2.+    .+.3...c$cvvvvv
+vvvvc..cccc..+.    +.$cvvvvc$.+    .+..~?.+|cvvvvv
+vvvvc~.$$|c..+.    xcccvvvvcccx    .+..?'5c$cvvvvv
+vvvvc~.0|$c..+.    x.'cvvvvc'.x    .x...40cccvvvvv
+vvvvc|040$c.'x.    +.0cvvvvc$.+    xxcc+cccvvvvvvv
+vvvvc130.....xx    +.$cvvvvc1.+    xxc$$$cvvvvvvvv
+vvvvc21|~~.~~xx    x.'cvvvvc'.x    xxcccccvvvvvvvv
+vvvvvccccccccxx    xcccvvvvcccx    xxvvvvvvvvvvvvv
+vvvvvvvvvvvvvxx    +.$cvvvvc$.+    xxvvvvvvvvvvvvv
+vvvvvvvvvvvvvxx    +.2cvvvvc2.+    xxvvvvvvvvvvvvv
+vvvvvvvvvvvvvxx    x.3cvvvvc2.x    xxvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:    regret_index_gulch_crossways_cuts
+: gulch_crossways_sections(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvxx    xccccccccccx    xxvvvvvvvvvvvvv
+vvvvvvvvvvvvvxx    x....'....cx    xxvvvvvvvvvvvvv
+vvvvvvvvvvvvvxx    +.c..?..c3cx    xxcvvvvvvvvvvvv
+vvvvcccccccccxx    +.cc$'$cc4cx    xxccvvvvvvvvvvv
+vvvvccc$3...'xx    +..cc?cc$2cx    xx$ccvvvvvvvvvv
+vvvvcc|c2.c..x.    x.'.ccc|3|vx    xx'.ccvvvvvvvvv
+vvvvc$cc5c...+.    x.'.ccc|3|vx    .x?c$ccvvvvvvvv
+vvvvc324v....+.    +..cc?cc$2cx    .+...1ccvvvvvvv
+vvvvc..c.c...x.    +.cc$'$cc5cx    .+..2v1ccvvvvvv
+vvvvc.c.....'xx    +.c..?..c3cx    .x..c2.$ccvvvvv
+vvvvc......?xxx    x....'....cx    xx.c...c.ccvvvv
+vvvvc'....'xxxx    xccccccccccx    xx?....?'$ccvvv
+vxxxxxx++xxxxxx    xxxxxxxxxxxx    xxxx++xxxxxxxxv
+vxxxxx....xxxxx    xxxxxxxxxxxx    xxx....xxxxxxxv
+vv                                              vv
+vv                                              vv
+vv                                              vv
+vv                                              vv
+vxxxxxxx....xxx    xxxxxxxxxxxx    xxxxx....xxxxxv
+vxxxxxxxx++xxxx    xxxxxxxxxxxx    xxxxxx++xxxxxxv
+vvvcc$.?....?xx    xccccccccccx    xxxx'....'cvvvv
+vvvvcc.c...c.xx    xc}...'....x    .xx?......cvvvv
+vvvvvcc..2c..x.    xc0c..?..c.+    .x'.....c.cvvvv
+vvvvvvcc1v2..+.    xc6cc$'.cc.+    .x...c.c..cvvvv
+vvvvvvvcc1...+.    xc0$cc?cc..+    .+....v523cvvvv
+vvvvvvvvcc.c?x.    xv|0|ccc.'.x    .+...c4cc$cvvvv
+vvvvvvvvvcc..xx    xv|0|ccc.'.x    xx..c.2c|ccvvvv
+vvvvvvvvvvcc$xx    xc0$cc?cc..+    xx'...3$cccvvvv
+vvvvvvvvvvvccxx    xc6cc$'.cc.+    xxcccccccccvvvv
+vvvvvvvvvvvvcxx    xc0c..?..c.+    xxvvvvvvvvvvvvv
+vvvvvvvvvvvvvxx    xc]...'....x    xxvvvvvvvvvvvvv
+vvvvvvvvvvvvvxx    xccccccccccx    xxvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:    regret_index_gulch_crossways_carvings
+: gulch_crossways_sections(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvcccxx    xccccccccccx    xxvvvvvvvvvvvvv
+vvvvvvvvvvc..x.    +...cccc...+    xxvccccvvvvvvvv
+vvvvvvvvvvc~.+.    +..~.3'.~..+    xxvc$$cvvvvvvvv
+vvvvvvvvvvc..+.    +....'0....+    xccc++ccvvvvvvv
+vvvvvvvvvvc1.x.    xcc..2?..ccx    xc...22ccvvvvvv
+vvvvvvvvvcc++xx    xvc+c?3c+cvx    xc~..|34vcvvvvv
+vvvvvvvccc...xx    xvc$cccc$cvx    xcc++c|.5ccvvvv
+vvvvvvvc$.~..xx    xvcccvvcccvx    xc...cc|32cccvv
+vvvvvvcc.2.4.xx    xvvvvvvvvvvx    xc...'cc|2+$cvv
+vcccccc.~.2$cxx    xvvvvvvvvvvx    xc.??..+..+$cvv
+vc.~.1+..3$|cxx    xvvvvvvvvvvx    xc'1...+..cccvv
+vc'...+...cccxx    xvvvvvvvvvvx    xc.....c~.cvvvv
+vxx++xxxxxxxxxx    xvvvvvvvvvvx    xcx+++xxxxxxxxv
+vv....xxxxxxxxx    xxxxxxxxxxxx    xx.....xxxxxxxv
+vv                                              vv
+vv                                              vv
+vv                                              vv
+vv                                              vv
+vxxxxxxx.....xx    xxxxxxxxxxxx    xxxxxxxxx....xv
+vvxxxxxxx+++xxx    xxxxxxxxxxxx    xxxxxxxxxx++xxv
+vvvvc..c.....cx    xvvvvvvvvvvx    xxccc...+...'cv
+vvccc..+...1'cx    xvvvvvvvvvvx    xxc|.3..+1.~.cv
+vvc$+..+..??.cx    xvvvvvvvvvvx    xxc.2.~.ccccccv
+vvc$+0|cc'...cx    xvvvvvvvvvvx    xx.4.2$ccvvvvvv
+vvccc00|cc...cx    xvcccvvcccvx    xx..~$$cvvvvvvv
+vvvvcc6}|c++ccx    xvc$cccc$cvx    xx...cccvvvvvvv
+vvvvvcv60|...cx    xvc+c2?c+cvx    xx++ccvvvvvvvvv
+vvvvvvcc00...cx    xcc..?3..ccx    .x.1cvvvvvvvvvv
+vvvvvvvcc++cccx    +....0'....+    .+..cvvvvvvvvvv
+vvvvvvvvc$$cvxx    +..~.'3.~..+    .+.~cvvvvvvvvvv
+vvvvvvvvccccvxx    +...cccc...+    .x..cvvvvvvvvvv
+vvvvvvvvvvvvvxx    xccccccccccx    xxcccvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:    regret_index_gulch_crossways_interlock
+# 25% chance for dual outer doors, 37.5% each for either inner door.
+SHUFFLE: PQR / PQR / QPR / QPR / QPR / QRP / QRP / QRP
+SUBST:   P = +, QR = c
+: gulch_crossways_sections(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvccccccxx    xcccccvvvvvx    xcvvvvvvvvvvvvv
+vvvvvvcc'.cc2x.    +...'cccccvx    xccccccvvvvvvvv
+vvvvvcc3.PP..+.    +.~?.c..$cvx    xc$$||cvvvvvvvv
+vvvvcc4..c...+.    +.?~.c.2.cvx    xcc++ccccccvvvv
+vvvcc5..cccccxx    x'...+..3cvx    xc$...'42|cvvvv
+vvcc0..QQQ...+.    xccc++.~.cvx    xc....3c$5cvvvv
+vcc3..RP.cc..+.    xvc......cvx    xx'..2ccc4cvvvv
+vc'..cR...cc1x.    xvc.~....ccx    .x...ccc3'cccvv
+vc.PccRc...ccxx    xvc2..++cccx    .+..ccc2..c|cvv
+vccP.c.cc...ccx    xvc.0.+....x    .+..?c....+|cvv
+vcc..c..cc.?$cx    xvc$..c.~?.+    .+.c......+$cvv
+vc2..c..1cc$|cx    xvccccc.?~.+    .x.....'..c$cvv
+vxx++x++xxccccx    xvvvvvc....+    xxx+++xxccccccv
+vx...x...xxxxxx    xxxxxxxxxxxx    xx.....xxxxxxxv
+vv                                              vv
+vv                                              vv
+vv                                              vv
+vv                                              vv
+vxxxxxxx.....xx    xxxxxxxxxxxx    xxxxxx...x...xv
+vccccccxx+++xxx    +....cvvvvvx    xccccxx++x++xxv
+vvc$c..'.....x.    +.~?.cccccvx    xc|$cc1..c..2cv
+vvc$+......c.+.    +.?~.c..$cvx    xc$?.cc..c..ccv
+vvc|+....c?..+.    x....+.0.cvx    xcc...cc.c.Pccv
+vvc|c..6ccc..+.    xccc++..2cvx    xxcc...cRccP.cv
+vvccc'0ccc...x.    xcc....~.cvx    .x1cc...Rc..'cv
+vvvvc0ccc6..'xx    xvc......cvx    .+..cc.PR..3ccv
+vvvvc0}c0....cx    xvc.~.++cccx    .+...QQQ..0ccvv
+vvvvc|00'...$cx    xvc3..+...'x    xxccccc..5ccvvv
+vvvvcccccc++ccx    xvc.2.c.~?.+    .+...c..4ccvvvv
+vvvvvvvvc||$$cx    xvc$..c.?~.+    .+..PP.3ccvvvvv
+vvvvvvvvccccccx    xvccccc'...+    .x2cc.'ccvvvvvv
+vvvvvvvvvvvvvcx    xvvvvvcccccx    xxccccccvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+########################################
+# The Gulch network: enter one building, walk through maintenance tunnels
+# and closets, arrive at at another building. One of the driest arrangements
+# to help with it being both narrow and open at the same time.
+
+NAME:     regret_index_gulch_network
+WEIGHT:   25
+: if crawl.one_chance_in(5) then
+KMONS:    1 = mongrel wurm / alligator w:8 / crawling flesh cage w:14
+KMONS:    2 = rusted inspector
+KMONS:    3 = ironbound mechanist
+KMONS:    4 = roaming sludgefish / telencephalon w:6
+KMONS:    ? = stack of scrap
+SUBST:    ' = ``?
+: else
+KMONS:    1 : alligator w:8 / anaconda / crawling flesh cage w:14
+KMONS:    2 = mongrel wurm / rusted inspector
+KMONS:    3 = roaming sludgefish / great orb of eyes w:2
+KMONS:    4 = fungal shambler / telencephalon w:4
+:   gulch_boss_theme_sets(_G, false)
+: end
+KMONS:    s = fungus
+KMONS:    S = stack of scrap
+KFEAT:    sS = W
+SUBST:    y : xxW., z : xxW., - = ++-., ~ = .:35 W:20 s:5 S:5 w:25 x:15
+SUBVAULT: X : gulch_network
+COLOUR:   sS = lightgreen
+: gulch_setup(_G, true, 2)
+MAP
+XXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXxxxxXXXXXXXXxxxxxxvvvXXXXXX
+XXXXXXXXXXXXXXXXXXx~~iXXXXXXXX...xxxi~~XXXXXX
+XXXXXXXXXXXXXXXXXXx~..XXXXXXXX...xxx...XXXXXX
+XXXXXXXXXXXXXXXXXXxi..XXXXXXXX...xxx...XXXXXX
+XXXXXXXXXXXXXXXX..x...XXXXXXXX...xxx...XXXXXX
+XXXXXXXXXXXXX.......'?'...............3...~vX
+XXXXXXXXXXXXX......'?'...............<....~vX
+XXXXXXXXXXXXX..^...?'.........^.1...2.....ivX
+XXXXXXXXXXXX....xxx'..xxxxxxxx...xxx...xxxxxX
+       XXXXX....xxx...xxxxxxxx...xxx..'xxxxxX
+       Xxxxxx...xxx...xxxxxxxx...xxx???xxxxxX
+       Xx~~i..'?'........WW.....2...1..'...xX
+       Xx~...'?'..........................^xX
+       Xxi...?'......4...''...3.....^......xX
+       XXXXXX'..xxx...xxxxxxxx...xxx...XXXXXX
+       XXXXXX...xxx...xvvvvvvx...xxx...XXXXXX
+       XXXXXX...xxx...xvvvvvvx...xxx...XXXXXX
+       XXXXXX..~~xxW.'xvvvvvvx'.Wxx~~..XXXXXX
+       XXXXXX..~~xxW.'xvvvvvvx'.Wxx~~..XXXXXX
+       XXXXXX...xxx...xvvvvvvx...xxx...XXXXXX
+       XXXXXX...xxx...xvvvvvvx...xxx...XXXXXX
+       XXXXXX...xxx...xxxxxxxx...xxx..'XXXXXX
+       Xx......^.....3...''...4......'?...ixX
+       Xx...........................'?'...~xX
+       Xx......2...1.....WW........'?'..i~~xX
+       Xxxxxx...xxx...xxxxxxxx...xxx...xxxxxX
+       Xxxxxx'..xxx...xxxxxxxx...xxx....XXXXX
+       Xxxxxx???xxx...xxxxxxxx..'xxx....XXXXXXXXXXXX
+       Xvi..'..1...2.^.........'?...^..XXXXXXXXXXXXX
+       Xv~....<...............'?'......XXXXXXXXXXXXX
+       Xv~...3...............'?'.......XXXXXXXXXXXXX
+       XXXXXX...xxx...XXXXXXXX...x..XXXXXXXXXXXXXXXX
+       XXXXXX...xxx...XXXXXXXX...xXXXXXXXXXXXXXXXXXX
+       XXXXXX...xxx...XXXXXXXX..~xXXXXXXXXXXXXXXXXXX
+       XXXXXX~~ixxx.^.XXXXXXXX.~~xXXXXXXXXXXXXXXXXXX
+       XXXXXXvvvxxxxxxXXXXXXXXxxxxXXXXXXXXXXXXXXXXXX
+       XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                                   XXXXXXXXXXXXXXXXX
+                                   XXXXXXXXXXXXXXXXX
+                                   XXXXXXXXXXXXXXXXX
+                                   XXXXXXXXXXXXXXXXX
+                                   XXXXXXXXXXXXXXXXX
+                                   XXXXXXXXXXXXXXXXX
+                                   XXXXXXXXXXXXXXXXX
+ENDMAP
+
+NAME:    regret_index_gulch_net_lineage
+: gulch_network(_G)
+ORIENT:  encompass
+MAP
+ccccccccccccccccc
+c<..........xxxxc
+c....x.1.......'c
+c....x...x...3..c
+c...Ax...x......c
+c.xxxx.2.x'.....c
+c.....1..x??xxx'c
+c.1..2..Wx'.y...ccvvvvvvvvvvvvvvvvvvvvvvvvvvv
+c......W3x..y...'c    x$$xx$$x         vvvvvv
+c..xxxxxxx0......c    x..xx.|x         xvvvvv
+c....'?'.0.......c    +..2'..+         xvvvvv
+c..3..?....?...c+c    +..'3..+         xvvvvv
+cx....xyy...c++c      xxxxxxxx         xxxxvv
+cx....x.....+                               v
+cx....x.....+                               v
+cx'...'....cc                               v
+cccccccc'..+                                v
+       ccccc                                v
+       v                                    v
+       v                                    v
+       v                                    v
+       v                                    v
+       vxxxxx                          xxxxxv
+       vxx..+                          +.'xxv
+       vx$..+                          +..$xv
+       vxxx2x                          x4xxxv
+       vxxx3x                          x5xxxv
+       vx$|.+                          +..|xv
+       vxx'.+                          +..xxv
+       vxxxxx                          xxxxxv
+       v                                    v
+       v                                    v
+       v                                    v
+       v                                    v
+       v                                ccccv
+       v                                c..'vvvvvvvv
+       v                               cc...?'...$|v
+       v                               +....?..x.|$v
+       v                               +....x..x..|v
+       vvxxxx         xxxxxxxx      c++c....x.'xxx.v
+       vvvvvx         +..4'..+    ccc.......x..'...v
+       vvvvvx         +..'5..+    c........2x......v
+       vvvvvx         x..xx..x    c.......1.x..xxx.v
+       vvvvvv         x$$xx|$x    c'.....2..x..z..3v
+       vvvvvvvvvvvvvvvvvvvvvvvvvvvvv??xxxxxxx..z...v
+                                   v'........}.....v
+                                   v...'......xxxx0v
+                                   v.xxx'.xzz.x6'0.v
+                                   v...x..x...x'6.$v
+                                   v$|.x..x...x0.6|v
+                                   v|$|....3..0.$|$v
+                                   vvvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:    regret_index_gulch_net_slashes
+: gulch_network(_G)
+ORIENT:  encompass
+MAP
+ccccccccccccccccc
+cA....<.1...Wyx'c
+c.x....x.2.....xc
+c..xx...x......yc
+c..xx....x.xx..Wc
+c....x..1.x..3..c
+c<....xx...x?...c
+c.x...xx...?x?..ccvvvvvvvvvvvvvvvvvvvvvvvvvvv
+c1.x.1..x.'.?x..0c    x|$...xx         x..$xv
+c.2.x....x....x..c    x$.x4x.x         +.2x$v
+c....x..'.xx...x.c    x.x5x..x         +.x3|v
+c...x.x?..xx'..c+c    xx.....x         xx...v
+cW..x.?x?..'ccc+      xxx++xxx         xx++xv
+cy...3.?x...c                               v
+cx.......x..c                               v
+c'xyW.....xc+                               v
+cccccccc0..+                                v
+       ccccc                                v
+       v                                    v
+       v                                    v
+       v                                    v
+       v                                    v
+       vxxxxx                          x?xxxv
+       vvvvvx                          ?xxvvv
+       vvvvvx                          xxvvvv
+       vvvvvx                          xvvvvv
+       vvvvvx                          xvvvvv
+       vvvvxx                          xvvvvv
+       vvvxx?                          xvvvvv
+       vxxx?x                          xxxxxv
+       v                                    v
+       v                                    v
+       v                                    v
+       v                                    v
+       v                                ccccc
+       v                                c|||cccccccc
+       v                               ccx$$|.x.zz.c
+       v                               +.xx$..+....c
+       v                               +..xx..+...6c
+       vx++xx         xxx++xxx      c++c...xx.x..0.c
+       v...xx         x.....xx    ccc...z...xxx.0..c
+       v.2x.+         x..x4x.x    c|xx......2xx.0.~c
+       v$x3.+         x.x5x.$x    c|$xx......3x...~c
+       vx$|.x         xx...$|x    c|$$xx......xx...c
+       vvvvvvvvvvvvvvvvvvvvvvvvvvvcc|..xx2..?...x..c
+                                   c....xx3..?...x.c
+                                   cx++xxxxx......xc
+                                   c.......x......0c
+                                   cz...00..x......c
+                                   cz..0.....x...}.c
+                                   c..6..~~...x0..6c
+                                   ccccccccccccccccc
+ENDMAP
+
+NAME:    regret_index_gulch_net_curvature
+: gulch_network(_G)
+ORIENT:  encompass
+MAP
+ccccccccccccccccc
+c<.......2..~''Wc
+c....y...x.....'c
+c..Axxx1.x.....'c
+c..xx~...xx.3..~c
+c.yx~.....x.....c
+c..x..1...xxx...c
+c..1....'??.xxx?ccvvvvvvvvvvvvvvvvvvvvvvvvvvv
+c......''.......'c    x$xxxx|x         xvvvvv
+c2xxx..?...x0....c    +.4xx5$+         xxxvvv
+c...xxx?..xxx....c    +..''..+         +$vxvv
+c.....x..xx....+cc    x......x         +?$xvv
+c~..3.xx.0x.ccc+      xxx++xxx         x++xxv
+c'.....x....c                               v
+c'.....x....c                               v
+cW''~..?...++                               v
+cccccccc'..c                                v
+       ccccc                                v
+       v                                    v
+       v                                    v
+       v                                    v
+       v                                    v
+       vx++xx                          xx++xv
+       v'...x                          x'...v
+       v.1..x                          x.1..v
+       v$xxxx                          x$xxxv
+       vxxx$x                          xxxx|v
+       v|23.x                          x.23.v
+       v...'x                          x...'v
+       vx++xx                          xx++xv
+       v                                    v
+       v                                    v
+       v                                    v
+       v                                    v
+       v                                ccccc
+       v                                c..?cccccccc
+       v                               cc.'?....zzzc
+       v                               +..'x3.....zc
+       v                               +..xxxx....zc
+       vxx++x         xxx++xxx      c++c..2x|xx~...c
+       vvx$?+         x......x    ccc......x|$xx...c
+       vvxv$+         +..''..+    c......1.x|~$xx..c
+       vvvxxx         +.4xx5.+    c.''x2..xx$..|x..c
+       vvvvvx         x$xxxx|x    c??xxxxxxxx++xx..c
+       vvvvvvvvvvvvvvvvvvvvvvvvvvvcc.3x|||$xx...x..c
+                                   c..xx$~.+.}.0..0c
+                                   c...xx$.+..6.0..c
+                                   c...~xx|x.0.6.0.c
+                                   cz....xxxx.0.6..c
+                                   cz..........0...c
+                                   czzz......0.....c
+                                   ccccccccccccccccc
+ENDMAP
+
+NAME:    regret_index_gulch_net_skyline
+: gulch_network(_G)
+ORIENT:  encompass
+MAP
+ccccccccccccccccc
+c<w..?.....2..~Wc
+cw...y....yx...'c
+c..A.xxx1..x...'c
+c...xx.....x3...c
+c?yxxxx'?.xxxxx0c
+c..x.xxx'xxx..y.c
+c..x.'xxxxx.w...ccvvvvvvvvvvvvvvvvvvvvvvvvvvv
+c..1.?'xxx.w....'c    x$x|'x$x         xxvvvv
+c.....xxxxx'.....c    +.2x$4.+         +xxxxv
+c.y..xxx.x?x.....c    +...x..+         +??|xv
+c2xxxxx.w'x?x'.+cc    xx....xx         x1$xxv
+c...3x.w...xccc+      ?xx++xx?         xxxxxv
+c....x.....'c                               v
+c~...xy.....c                               v
+cW''.0.....++                               v
+cccccccc'..c                                v
+       ccccc                                v
+       v                                    v
+       v                                    v
+       v                                    v
+       v                                    v
+       vxxx?x                          x?xxxv
+       vvvx'x                          x'xvvv
+       vvvxx?                          ?xxvvv
+       vvvvx?                          5xvvvv
+       vvvvx4                          ?xvvvv
+       vvvxx?                          ?xxvvv
+       vvvx'x                          x'xvvv
+       vxxx?x                          x?xxxv
+       v                                    v
+       v                                    v
+       v                                    v
+       v                                    v
+       v                                ccccc
+       v                                +...cccccccc
+       v                               c+.?.'?.....c
+       v                               c.....?xW~..c
+       v                               c.?...xx..~.c
+       vxxxxx         ?xx++xx?      cccc'....x...W.c
+       vxx$1x         xx....xx    c++..'2x1..xw.xx.c
+       vx|??+         +..x...+    c...?.xxx.xxxxx..c
+       vxxxx+         +.3$x5.+    c.?...1xxxx$|.3..c
+       vvvvxx         x$x'|x$x    c.......xx$|.0...c
+       vvvvvvvvvvvvvvvvvvvvvvvvvvvcc'....xx$}x.xx..c
+                                   c??xxxx$|x|x|x..c
+                                   c.xx.wx|..x|xx..c
+                                   c.W...x.0x|xx.0.c
+                                   c.~..xx3.xxx.0.6c
+                                   c..~Wx......0.6.c
+                                   c............6.0c
+                                   ccccccccccccccccc
+ENDMAP
+
+########################################
+# The Gulch chambers river- a dangerously open layout of a winding stream
+# that changes between water, mould, and scrap, split up by collapsing boxes.
+NAME:     regret_index_gulch_chambers_river
+WEIGHT:   25
+KFEAT:    - = broken_door
+SUBST:    - = ++-., ~ = ...WWwx
+SUBVAULT: B : gulch_river_chamber
+SUBVAULT: C : gulch_river_chamber
+: gulch_chamber_river(_G)
+: gulch_loot(_G, "BC|", 2)
+: gulch_boss_theme_sets(_G, false)
+: gulch_setup(_G, true, "1")
+MAP
+xxxxxxxxxxccccccccccccccccccccccccccccccccccccccvvvvvvvvvv
+x....w..AxcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv|||w.||}v
+x~..xWW..xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv|$WWx..~v
+x.<..xWWWxcBBBBBBBBBBBBBBBBB.CCCCCCCCCCCCCCCCCCcvWWWx..<.v
+x.....x..xcBBBBBBBBBBBBBBBBB'CCCCCCCCCCCCCCCCCCcv..x.....v
+x........xcBBBBBBBBBBBBBBBBB'CCCCCCCCCCCCCCCCCCcv.0.66.0.v
+x........xcBBBBBBBBBBBBBBBBB.CCCCCCCCCCCCCCCCCCcv..0..0..v
+x~.......xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv.0....0~v
+x.1.WW.1.xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv1..WW..1v
+xxx++++xxxcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcvvv++++vvv
+x..2..2..xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv........v
+x.......'xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv'.......v
+x.......?xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv?.......v
+xwW....?'xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv'?....Wwv
+xwWWW...?xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv?...WWWwv
+x...WW..'xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv'..WW...v
+xi...W...xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv...W...iv
+xi..WW...xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv...WW..iv
+xx++xxx+xxcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcvv+vvv++vv
+xi...WW..xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv..WW...iv
+xi...W...xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv...W...iv
+x...WWx.?xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv?.xWW...v
+x..WWx..'xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv'..xWW..v
+x..Wx..'?xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv?'..xW..v
+x.WW....'xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv'....WW.v
+xiW.....?xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv?.....Wiv
+xiWW2.?..xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv..?.2WWiv
+xxxx++xxxxcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcvvvv++vvvv
+xiW1.2?..xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv..?3.3Wiv
+xiWW.....xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv.....WWiv
+x..WW..WWWBBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCC+WWW..WW..v
+x...WWWW..BBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCC+..WWWW...v
+x.........BBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCC+.........v
+x.........BBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCC+.........v
+x|.......xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv.......|v
+x$$......xcBBBBBBBBBBBBBBBBBccCCCCCCCCCCCCCCCCCcv......$$v
+xxxxxxxxxxccccccccccccccccccccccccccccccccccccccvvvvvvvvvv
+ENDMAP
+
+# XXX: Why does Crawl complain if these use lua e.tags()?...
+NAME:    regret_index_gulch_river_twins
+TAGS:    gulch_river_chamber
+SHUFFLE: Pp / Qq / Rr
+SUBST:   Pp = ., QR = x, qr = +
+: gulch_chamber_river(_G)
+MAP
+  +xx+
+...W....P..zzzz.$Q$~......R...Wxx.~
+.<.'....p....z...q..'...Y.R.....$ .
+....?.''P~.......q...'.~..R.'..Z.$x
+...?y'.~.'''..'''Q...'.'..r..'..Z.x
+~.'y....P..~??~.WQ''?..'..r..'..Z..
+...'y...p........Q...??...R..'.Z...
+....''?WP......2.q.Y...''WR.?......
+..1..2^?P^......3Q2......?R?.3..4..
+xxx++xxxxx-xx+++xxx+++xx-xxxxx++xxx
+..1..3.?R?......2Q3......^P?^3..5..
+...Z..?.RW''...Y.q.2......PW?''....
+..Z..'..R...??...Q........p...y'...
+..Z..'..r..'..?''QW.~??~..P....y'.~
+x..Z.'..r..'.'...Q'''..'''.~.'y?...
+x$....'.R..~.'...q.......~P''.?....
+. $.....R.Y...'..q...z....p....'...
+~.xxW...R......~$Q$.zzzz..P....W...
+ENDMAP
+
+NAME:    regret_index_gulch_river_loops
+TAGS:    gulch_river_chamber
+: gulch_chamber_river(_G)
+MAP
+  ++++
+x.....Wz...x...$xxx$...x..yyy..'~~x
+.x....zW...x...........x.......'..~
+..<.....W.'x'.........'x'.......'.~
+...xx....?.x.?.......?.x.?....xx.?.
+..~..~..?..+..?.2.3.?..+..?.......w
+.......'...+...'...'...+...'......'
+.......W.Y^x..~?.'.?~..x^Z.'.......
+.1....2'.W.xZW'.. ..'WYx.W.'3....4.
+x.......?.wxw.?.'''1?.wxw.?.......x
+.1....3'.W.xYW'.. ..'WZx.W.'3....5.
+.......'.Z^x..~?.'.?~..x^Y.W.......
+'......'...+...'...'...+...'.......
+w.......?..+..'.3.2.?..+..?..~..~..
+.?.xx....?.x.?.......?.x.?....xx...
+~.'.......'x'.........'x'.W........
+~..'.......x...........x...Wz....x.
+x~~'..yyy..x...$xxx$...x...zW.....x
+ENDMAP
+
+NAME:    regret_index_gulch_river_wavering
+TAGS:    gulch_river_chamber
+: gulch_chamber_river(_G)
+MAP
+  x++x
+...'.........W......'..........~..?
+..'.......y..W....'?z'..........''.
+.<.'?.....y...W..'.z.'..Y....Z.'..'
+....x?.........??....z'.Y...Z''..'$
+x....x'.......'.......'....Z?....'$
+.x.....''...?'.........'...'......?
+x........'.'....'?'....'.''...1...w
+...1..2...?^...2? ?3....?...3..4.^.
+xx+x+xxxx??xxxxxxxxxxxxx??xxxx+x+xx
+.^.1..3...?....3? ?2...^?...3..5...
+w...1...''.'....'?'...?'.'........x
+?......'...'.........'....''.....x.
+$'....?Z....'.......'.......'x....x
+$'..''Z...Y.'z....??.........?x....
+'..'.Z....Y..'.z.'..W...y.....?'...
+.''..........'z?'....W..y.......'..
+?..~..........'......W.........'...
+ENDMAP
+
+# Lowered weight due to the very dense firewood arrangement.
+NAME:    regret_index_gulch_river_lace
+TAGS:    gulch_river_chamber
+WEIGHT:  8
+: gulch_chamber_river(_G)
+MAP
+  ++++
+'...'...x..Z'..$x x$..'YY.x.....''x
+.'y.'.<.x.Z'.'...x..Y'....x..z'z.3x
+'.y..'..x.'...?'....Y'....+..?.'z.w
+.'.y.?..x?...?..?...'.....+^'.4.'..
+...y.?.'x.?''....''..?'...+.'W5.?..
+..y..'x.x'.......1.'?..'.'x'.?W.'..
+..y.W.'.x.~..Z...^'.....'.x...''.3.
+~.....'zx?..Z.Z2.?.3.....?x..'z.W..
+~....'.?xxxxxxxx+++xxxxxxxx?.'....~
+..W.z'..x?.....3.?.2Z.Z..?x.'.....~
+.2.''...x.'.....'^...Z..~.x.'.W.y..
+..'.W?.'x'.'..?'.1.......'x.x'..y..
+..?.1W'.+...'?..''....''?.x..?.y...
+..'.3.'^+.....'...?..?...?x..?.y.'.
+w.z'.?..+....'Y....'?...'.x..'..y.'
+x1.z'z..x....'Y..x...'.'Z.x...'.y'.
+x''.....x.YY'..$x x$..'Z..x...'...'
+ENDMAP
+
+NAME:    regret_index_gulch_river_compression
+TAGS:    gulch_river_chamber
+: gulch_chamber_river(_G)
+MAP
+  +xx+
+x...'....~~xxxx$.~.Zxxxxx....xx..'.
+x..'.'....~x ~$..3Z....x........'.w
+~..'..'....x~.....Z...?x?........'.
+..yy..?....x.......Z..?+?.........'
+..yy.'.'...x.....1...'?+?..'.zz..~.
+.....'..'..x........'.?x?'.'.zz...~
+........'..xw..2...'.Y^x..'........
+W.1..^.2.?Wxw....?.'Y..x.?.3....3..
+xxx++x+xxxxx...Y'?'Y...xxxxx+x++xxx
+..3....1.?.x..Y'.?....wxW?.4.^..5.W
+........'..x^Y.'...2..wx..'........
+~...zz.'.'?x?.'........x..'..'.....
+.~..zz.'..?+?'...1.....x...'.'.yy..
+'.........?+?..Z.......x....?..yy..
+.'........?x?...Z.....~x....'..'..~
+w.'........x....Z3...~ x~....'.'..x
+.'...xx~..xxxxxZ.~$$xxxx~~....'...x
+ENDMAP
+
+########################################
+# The Gulch Winding Coils: another small layout of cross tunnels and open
+# subvault segments, notable for having different entrances than most other
+# symmetrical subvaults.
+NAME:     regret_index_gulch_winding_coils
+WEIGHT:   25
+: if crawl.one_chance_in(5) then
+KMONS:    1 = alligator w:8 / crawling flesh cage w:14 / rusted inspector w:4
+KMONS:    2 = mongrel wurm
+KMONS:    3 = fire dragon draugr ; halberd ego:venom | battleaxe ego:venom
+KMONS:    4 = fungal shambler / roaming sludgefish / telencephalon w:6
+: else
+KMONS:    1 : alligator w:8 / anaconda / crawling flesh cage w:14
+KMONS:    2 = mongrel wurm / rusted inspector
+KMONS:    3 = roaming sludgefish / great orb of eyes w:2
+KMONS:    4 = fungal shambler / telencephalon w:4
+: end
+KMONS:    5 = fungal shambler / formless jellyfish w:6 / telencephalon w:4
+KMONS:    s = fungus
+KMONS:    S = stack of scrap
+KFEAT:    sS = W
+SUBST:    y : xxW., z : xxW., - = ++-., ~ = .:35 W:20 s:5 S:5 w:25 x:15
+SUBVAULT: B : gulch_coil
+SUBVAULT: C : gulch_coil
+COLOUR:   sS = lightgreen
+: gulch_boss_theme_sets(_G, false)
+: gulch_loot(_G, "BC|", 2)
+: gulch_setup(_G, true, "2")
+MAP
+    vvvvvvv                        vvvvvvv
+    vxxxxxv                        vxxvxxv
+    vxwWwxv                        vxi'ixv
+    vxi1ixv                        vx.'.xv
+vvvvvx...xvvvvvvvvvvvvvvvvvvvvvvvvvvx.'.xvvvvv
+vxxxxx.~'xxxxxxxxxxxxxxxxxxxxxxxxxxxx'..xxxxxv
+vxwi..A..''2.....'??'......'??'xxx..?..2...ixv
+vxW1.~.<...W.........W.........W....?.<.....vv
+vxwi..'.~..2'.''......'??'......''.'?3..^..ixv
+vxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxx'..x...xv
+vvvvvxxxxcccccccccccccccccccccccccccx..2x...vv
+    vvvvvcBBBBBBBBBBBBBBBBBBBBBBBBBcx...x..'xv
+       vccBBBBBBBBBBBBBBBBBBBBBBBBBcx3..x...xv
+       vcBBBBBBBBBBBBBBBBBBBBBBBBBBcx...x'..xv
+       vcBBBBBBBBBBBBBBBBBBBBBBBBBBcx...?...xv
+       vcBBBBBBBBBBBBBBBBBBBBBBBBBBcx..'x...xv
+       vcBBBBBBBBBBBBBBBBBBBBBBBBBBcx...x...xv
+    vvvvcBBBBBBBBBBBBBBBBBBBBBBBBBBcx'..x...xv
+    vxxxccBBBBBBBBBBBBBBBBBBBBBBBBBcx...x...xv
+vvvvvx||.cBBBBBBBBBBBBBBBBBBBBBBBBBcx...x...xv
+vxxxxv...xcccBBBcccccBBBccccccccccccx..'x...xv
+vx......'...'.^.''''cc..cw.....'...'.^.'''..xv
+vv''...?.'.'.'.'....wc..cw....'.'.'.'.?...''vv
+vx..'''.^.'...'.....wc..cc''''.^.'...'......xv
+vx...v'..xccccccccccccCCCcccccCCCcccx...xxxxxv
+vx...x...xcCCCCCCCCCCCCCCCCCCCCCCCCCc.||xvvvvv
+vx...x...xcCCCCCCCCCCCCCCCCCCCCCCCCCccxxxxv
+vx...x..'xcCCCCCCCCCCCCCCCCCCCCCCCCCCcvvvvv
+vx...x...xcCCCCCCCCCCCCCCCCCCCCCCCCCCcv
+vx...x'..xcCCCCCCCCCCCCCCCCCCCCCCCCCCcv
+vx...?...xcCCCCCCCCCCCCCCCCCCCCCCCCCCcv
+vx..'x..2xcCCCCCCCCCCCCCCCCCCCCCCCCCCcv
+vx...x...xcCCCCCCCCCCCCCCCCCCCCCCCCCccv
+vx'..x3..xcCCCCCCCCCCCCCCCCCCCCCCCCCcvvvvv
+vx...x...xcccccccccccccccccccccccccccxxxxvvvvv
+vx...v..'xxxxxxxxxxxxxxxxxxxxxxxxxxxx.0.vxxxxv
+vvi..^..4?'.''......'??'......''.'6..1.0.$|wvv
+vv$....<.?.........W.........W...6W.0.<.0~]wvv
+vvi...5..?..vvv'??'......'??'.....6''1.0.$|wvv
+vxxxxv..'vxxxxxxxxxxxxxxxxxxxxxxxxxxv'0.vxxxxv
+vvvvvx.'.xvvvvvvvvvvvvvvvvvvvvvvvvvvx$~$xvvvvv
+    vx.'.xv                        vx|}|xv
+    vxi$ixv                        vxwwwxv
+    vxvvvxv                        vxvvvxv
+    vvvvvvv                        vvvvvvv
+ENDMAP
+
+NAME:     regret_index_gulch_coil_eyes
+: gulch_winding_coils(_G)
+MAP
+           +++     +++
+W?'..2.1.........cc'....w
+?~..x.3.....x....cccx....
+$..xxx.2....x....'cxxx...~
+ .xxxxx.1xyy.zz...xxxxx..~
+$$xxxxx.?..xxx..?.xxxxx..~
+ .xxxxx...zz.yyx..xxxxx..~
+$4.xxx'.....x....1.xxx...~
+5~3.x'c'....x.....2.x...?
+w.....'c...'.'...3.1..'?W
+ENDMAP
+
+NAME:     regret_index_gulch_coil_zag
+: gulch_winding_coils(_G)
+MAP
+           +++     +++
+x $$...x.........x......x
+ x.4...x''.....''x...1.x.
+$.x...yxyy?'?'?yyxy...x..~
+$5.x...x.........x..2xz1.~
+..x.3..x....1....x...3x..~
+..z...xx..x2.2x..xx...z..~
+..z...'x.?x.1.x?.x'...z..~
+.........'x3.3x'.........
+~~.~......x...x......~.~~
+ENDMAP
+
+NAME:     regret_index_gulch_coil_eaten
+: gulch_winding_coils(_G)
+MAP
+           +x+     +x+
+.~..y.xxxxx...xxxxx.y....
+Wz....x.x.x.~.x.x.x....zW
+4.z....x.x.....x.x....z.1~
+$$.x.'......~......'.x...~
+  3x....'.......'....x.12~
+$$.x.'......1......'.x...~
+5.z...x.x.x2y2x.x.x...z.3~
+Wz..y..x.x3.1.3x.x..y..zW
+....y..xxx..~..xxx..y..~.
+ENDMAP
+
+NAME:     regret_index_gulch_coil_compartments
+# Other coil subvaults don't use doors inside them, so the standard
+# broken door subst is only explicitly done for this one subvault.
+KFEAT:    - = broken_door
+NSUBST:   + = 1:- / 2:+ / 2:x / * = + -:3
+: gulch_winding_coils(_G)
+MAP
+           ...     ...
+$$  $$...x.....x.........
+.z......yx~'.'~xy......z.
+..z.....'x~.?.~x'.....z..~
+.5..1....x.....x....1..2.~
+xx+xx++xxxx+++xxxx++xx+xxx
+.4..3...?x.....x?...1..3.~
+..z....?.+.1'1.+.?....z..~
+.z.....'.+2'.'2+.'.....z.
+WW....y..x.3.3.x..y....WW
+ENDMAP
+
+NAME:     regret_index_gulch_coil_ridges
+: gulch_winding_coils(_G)
+MAP
+           +++     +++
+..~~..x.......x...'...'.1
+......x....z1.x'...x.x.1.
+.y....'x.......x....x.2y..
+.......x?.1.2z.x?....3....
+.y......x.......x......y..
+...1....?x.z3.2.?x........
+.y3.x....x.......x'....y..
+.4.x x...'x.3z....x......
+5$'$ $'$..x.......x..~~..
+ENDMAP
+
+########################################
+# The Gulch divide: the only current Gulch layout with two distinct subvault
+# shapes, to have a large open space in the middle deploying different terrain.
+# Loosely inspired by sewer_minmay_treatment and kennysheep_pipe_town.
+NAME:     regret_index_gulch_divide
+WEIGHT:   25
+SUBVAULT: B : gulch_divide_sides
+SUBVAULT: C : gulch_divide_center
+COLOUR:   sS = lightgreen
+: gulch_loot(_G, "BC", 2)
+: gulch_setup(_G, true, "1")
+MAP
+               BBBBBBBBBBBBBBBBBB
+               BCCCCCCCCCCCCCCCCB
+BBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBB
+BBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBBBBBBBB
+BBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBBBBBBBB
+BBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBBBBBBBB
+BBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBBBBBBBB
+BBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBBBBBBBB
+BBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBBBBBBBB
+BBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBBBBBBBB
+BBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBBBBBBBB
+BBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBBBBBBBB
+BBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBBBBBBBB
+BBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBB
+               BCCCCCCCCCCCCCCCCB
+               BBBBBBBBBBBBBBBBBB
+ENDMAP
+
+NAME:    regret_index_gulch_divide_clamp
+ORIENT:  encompass
+SHUFFLE: @&
+SUBST:   @ = +, & = x
+: gulch_divide_sides(_G)
+MAP
+               vvvvvvvvvvvvvvvvvv
+               v                v
+vvvvvvvvvvvvvvvv                vvvvvvvvvvvvvvvv
+vxxxxxxxxxxxxxxc                cxxxxxxxxxxxvvvv
+vxxxi...x.'?'.xc                cx<?''.x..$ vvvv
+vxxxi.y.x......c                c....5.x.z.$vvvv
+vxxi.yy.+...3..+                +...3..@.zz. xvv
+vxxi....+..2.1.+                +..1.2.@.....xxv
+vxi.....x.....^c                c^.....x......xv
+vxi....'x.''?.xc                cx.'?'.x'.....xv
+vx....2xcccccccc                ccccccccx....$vv
+vx....'x                                x'...$xv
+vx....'x                                x'... xv
+vx....1x                                x.6..}xv
+vxx~...x                                x0.0~xxv
+vxA....x                                x00.. xv
+vx<....x                                x00.. xv
+vxx~...x                                x0.0~xxv
+vx....1x                                x.6..]xv
+vx....'x                                x'... xv
+vx....'x                                x'...$xv
+vx....2xcccccccc                ccccccccx....$vv
+vxi....'x.'?'.xc                cx.?''.x'.....xv
+vxi.....x.....^c                c^.....x......xv
+vxxi....+..2.1.+                +..1.2.&.....xxv
+vxxi.zz.+...3..+                +...3..&.yy. xvv
+vxxxi.z.x......c                c....5.x.y.$vvvv
+vxxxi...x.''?.xc                cx<'?'.x..$ vvvv
+vxxxxxxxxxxxxxxc                cxxxxxxxxxxxvvvv
+vvvvvvvvvvvvvvvv                vvvvvvvvvvvvvvvv
+               v                v
+               vvvvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:    regret_index_gulch_divide_pipe
+ORIENT:  encompass
+: gulch_divide_sides(_G)
+MAP
+               vvvvvvvvvvvvvvvvvv
+               v                v
+vvvvvvvvvvvvvvvv                vvvvvvvvvvvvvvvv
+vxxxxxxxxxxxxxxc                cvxxxxxxxvxvxxvv
+vxxii....'.'.~xc                cx3...1.'xxxi'xv
+vxi.2.......A.xc                cx.2.z....'.'ixv
+vxi2.1.y......xc                cx..<......?.xxv
+vx..1.y.y.<...xc                cx.z.2.z.....xxv
+vx...y...y...~xc                cx....5......xxv
+vx....xxxxxxxxxc                cx....^xvx...ivv
+vx....xccccccccc                cxx+++xxxv^..ivv
+vx....xc                                cx...xxv
+vx....xc                                cx...xxv
+vx....xc                                cx...xxv
+vx~...xc                                cx....xv
+vx~...xc                                cx....xv
+vx....xc                                cx...~xv
+vx....xc                                cx...~xv
+vxx...xc                                cx....xv
+vxx...xc                                cx....xv
+vxx...xc                                cx....xv
+vxi..^xxxx+++xxc                cccccccccx....xv
+vxi...xxx^....xc                cvxxxxxxxv...0xv
+vxx......1....xc                cx~$ $y...y..0xv
+vxx.....z.2.z.xc                cx$}$$.y.y..0.xv
+vxx.?...... ..xc                cx $ ...y..6..xv
+vxi'.'....z.1.xc                cx$$. ....0..6vv
+vx'ixxx'.1...3xc                cx~ ' '.00..6vxv
+vxxxxxxxxxxxxxxc                cvxxxxxxxxxxvxvv
+vvvvvvvvvvvvvvvv                vvvvvvvvvvvvvvvv
+               v                v
+               vvvvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:    regret_index_gulch_divide_fragmentary
+ORIENT:  encompass
+: gulch_divide_sides(_G)
+MAP
+               vvvvvvvvvvvvvvvvvv
+               v                v
+vvvvvvvvvvvvvvvv                vvvvvvvvvvvvvvvv
+vvvvvvvvvvvvxxxc                cvxxvvvvvvvvvvvv
+vvxxxxxxxxvxx.xc                cx<xxvxxxxvvvvvv
+vvx~.xx.?xxx.2xc                cx..xxx?.vxxxxvv
+vxx..x...xx.1.xc                cx235xx...x.$vxv
+vx'..++..+.?.'xc                cx.?'.+..++.~ xv
+vx....xx.+'.?3xc                cx.'?.+.xx... xv
+vx.....xxx^...xc                cx...^xxx~...$xv
+vx..y..cxxx+++xc                cx+++xxxc..z.$xv
+vx..y.vc                                cv.z..xv
+vx2..1xc                                cx}..0xv
+vx...xxc                                cxx.60xv
+vxA..iic                                c ++.~xv
+vx~.x.ic                                c $x06xv
+vx~.x.ic                                c $x06xv
+vx<..iic                                c ++.~xv
+vx...xxc                                cxx.60xv
+vx1..2xc                                cx]..0xv
+vx..z.vc                                cv.y..xv
+vx..z..cxxx+++xc                cx+++xxxc..y.$xv
+vx.....xxx^...xc                cx...^xxx~...$xv
+vx'...xx.+.?'.xc                cx3?.'+.xx... xv
+vxx..++..+.'?.xc                cx'.?.+..++.~ xv
+vvx~.x...xx123xc                cx.2.xx...x.$vxv
+vvxxxxx.?xxx..xc                cx5.xxx?.vxxxxvv
+vvvvvvxxxxvxx.xc                cx<xxvxxxxvvvvvv
+vvvvvvvvvvvvxxxc                cvxxvvvvvvvvvvvv
+vvvvvvvvvvvvvvvv                vvvvvvvvvvvvvvvv
+               v                v
+               vvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# Lowered weight between the firewood density and geometric simplicity.
+NAME:    regret_index_gulch_divide_center_great_river
+WEIGHT:  7
+: gulch_divide_center(_G)
+MAP
+        xxxxx''''''xxxxx
+        xxxxx''??''xxxxx
+        ...W''????''W $.
+        ....W'?x??'W$ ..
+        .....'????'.....
+        ..z..''??''.....
+        .zzz.'????'.....
+        ..z..'??x?'.....
+        .....'??x?'.y...
+        ....2'????'1yy..
+.............'????'.yyy.........
+...z.z....2.4.????.3.1...y......
+x''''''''''''''.?''''''''''''''x
+''???????????'?''?'???????????''
+'???????xx?????3'???????????x??'
+'??x???????????'3?????xx???????'
+''???????????'?''?'???????????''
+x''''''''''''''?.''''''''''''''x
+......y...1.3.????.4.2....z.z...
+.........yyy.'????'.............
+        ..yy1'????'2....
+        ...y.'?x??'.....
+        .....'?x??'..z..
+        .....'????'.zzz.
+        .....''??''..z..
+        .....'????'.....
+        .. $W'??x?'W....
+        .$ W''????''W...
+        xxxxx''??''xxxxx
+        xxxxx''''''xxxxx
+ENDMAP
+
+NAME:    regret_index_gulch_divide_center_crossing
+: gulch_divide_center(_G)
+MAP
+        x??xxxxxxxxxxx..
+        .?W....xx.......
+        .?'.............
+        .'?...........'?
+        ..?....y.yy..'?.
+        ..?'.....y...'?.
+        ..'?..?.yy..'?..
+        ...?..?.y..'?...
+        ..3?.?....'?....
+        ..?'?.....'?....
+.?'..'?..?'.x?.1.'?.z....?'..'?.
+.'?..?'x?'...?'.'?.1..zz.'?..?'.
+W.?..?x'.....'?'?.2.zzz..2?..?.W
+...??.......3.'?'$.zz......??...
+..'??........$'?'  ..4.....??'..
+..'??.....4..  '?'$........??'..
+...??......zz.$'?'.3.......??...
+W.?..?2..zzz.2.?'?'.....'x?..?.W
+.'?..?'.zz..1.?'.'?...'?x'?..?'.
+.?'..'?....z.?'.1.?x.'?..?'..'?.
+        ....?'.....?'?..
+        ....?'....?.?...
+        ...?'..y.?..?3..
+        ..?'..yy.?..?'..
+        .?'...y.....'?..
+        .?'..yy.y....?..
+        ?'...........?'.
+        '............'?.
+        .......xx....W?.
+        ..xxxxxxxxxxx??x
+ENDMAP
+
+NAME:    regret_index_gulch_divide_swirl
+: gulch_divide_center(_G)
+MAP
+        ....xxxxx'?'xxx.
+        .....W.x'?'.x...
+        ....W.'??''.W...
+        .....??2...W....
+        ....?'..........
+        ...?'...yy......
+        ...?'..yy.......
+        ..?.'.yy...??...
+        ..?''.y...?x.??'
+        .?.......?'...'?
+.........?3......?'.....?.......
+.....?'.z.?....1?'4.......z.z...
+xW.??..z...??.. ?'i.'.3?......Wx
+x.?....zz....?$' ?2$.??.???..?.x
+'?'...1.....''?''????'''''?????'
+'?????'''''????''?''.....1...'?'
+x.?..???.??.$2? '$?....zz...'?.x
+xW......?3.'.i'? ..??...z..??.Wx
+...z.z.......4'?1....?.z.'?.....
+.......?.....'?......3?.........
+        ?'...'?.......?.
+        '??x.?...y.''?..
+        ...??...yy.'.?..
+        .......yy..'?...
+        ......yy...'?...
+        ..........'?....
+        ....W...2??.....
+        ...W.''??'.W....
+        ...x.'?'x.W.....
+        .xxx'?'xxxxx....
+ENDMAP
+
+################################################################################
+# <<4>> Gulch brainstorming area
+################################################################################
+# -- Unique rare maps: --
+# These should only have one map each at weight 10, with very few of these
+# guests of two or three of the given boss type. They don't have to randomize
+# the water / scrap / mould placement, and can instead try to match the monsters
+# with other wall tiles as is appropriate.
+#  * ironbound beastmasters + entropy weavers
+#  * green death + deep elf demonologists
+#  * death knights + merfolk impaler draugr
+#  * extra formless jellyfish + spectral kraken
+#  * acid blobs + one (1) eye of draining
+#
+# -- Branchform --
+# If this were to become a branch, with these layouts converted to endvaults,
+# it'd be in a roulette with Crypt. The current transient mutations would be
+# moved to mutagenic stairs, and the more mundane animal guests would try to
+# reach the variety of zombies by coming in bands with possessive sludge: it'd
+# hide in non-chaotic monsters to make them berserk and get AF_CURARE melee
+# bonuses (disappearing when giving the buff and reappearing when their host is
+# slain). Work on extended and other gods almost certainly comes first, though.
+################################################################################

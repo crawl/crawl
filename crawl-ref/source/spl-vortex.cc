@@ -121,8 +121,7 @@ spret cast_polar_vortex(int powc, bool fail, bool no_prompt)
     targeter_radius hitfunc(&you, LOS_NO_TRANS, POLAR_VORTEX_RADIUS);
     if (!no_prompt && stop_attack_prompt(hitfunc, "make a polar vortex",
                 [](const actor *act) -> bool {
-                    return !act->res_polar_vortex()
-                        && !never_harm_monster(&you, act->as_monster());
+                    return !act->res_polar_vortex();
                 }))
     {
         return spret::abort;
@@ -325,6 +324,9 @@ void polar_vortex_damage(actor *caster, int dur)
             bool leda = false; // squares with ledaed enemies are no-go
             if (actor* victim = actor_at(*dam_i))
             {
+                if (!could_harm(caster, victim, true))
+                    continue;
+
                 if (victim->is_player() && monster_at(*dam_i))
                 {
                     // A far-fetched case: you're using Fedhas' passthrough
@@ -349,7 +351,7 @@ void polar_vortex_damage(actor *caster, int dur)
                         {
                             // fly the monster so you get only one attempt
                             // at tossing them into water/lava
-                            mon_enchant ench(ENCH_FLIGHT, 0, caster, 20);
+                            mon_enchant ench(ENCH_FLIGHT, caster, 20);
                             if (mon->has_ench(ENCH_FLIGHT))
                                 mon->update_ench(ench);
                             else
@@ -370,9 +372,7 @@ void polar_vortex_damage(actor *caster, int dur)
 
                     // alive check here in case the annoy event above dismissed
                     // the victim.
-                    if (dur > 0 && victim->alive()
-                        && (!caster->is_player()
-                            || !never_harm_monster(caster, victim->as_monster())))
+                    if (dur > 0 && victim->alive())
                     {
                         const int base_dmg = polar_vortex_dice(rpow, true).roll();
                         const int post_res_dmg
@@ -400,7 +400,9 @@ void polar_vortex_damage(actor *caster, int dur)
                 continue;
 
             if ((!cloud_at(*dam_i) || cloud_at(*dam_i)->type == CLOUD_VORTEX)
-                && x_chance_in_y(rpow, 20))
+                && x_chance_in_y(rpow, 20)
+                // The clouds themselves are harmless in Sanctuary, but misleading.
+                && !is_sanctuary(*dam_i))
             {
                 place_cloud(CLOUD_VORTEX, *dam_i, 2 + random2(2), caster);
             }
@@ -426,7 +428,7 @@ void polar_vortex_damage(actor *caster, int dur)
             // Temporarily move to (0,0) to allow permutations.
             if (env.mgrid(act->pos()) == act->mindex())
                 env.mgrid(act->pos()) = NON_MONSTER;
-            act->moveto(coord_def());
+            act->set_position(coord_def());
             if (act->is_player())
                 stop_delay(true);
         }
@@ -451,7 +453,7 @@ void polar_vortex_damage(actor *caster, int dur)
         {
             const coord_def newpos = entry.second;
             ASSERT(!actor_at(newpos));
-            act->move_to_pos(newpos);
+            act->move_to(newpos, MV_DEFAULT, true);
             ASSERT(act->pos() == newpos);
 
             if (act->is_player())
@@ -471,9 +473,14 @@ void polar_vortex_damage(actor *caster, int dur)
                      .c_str());
         }
     }
+
+    // Finalise movement (traps, etc.)
+    for (auto &entry : move_dest)
+        if (actor* act = actor_by_mid(entry.first))
+            act->finalise_movement();
 }
 
-void cancel_polar_vortex(bool tloc)
+void cancel_polar_vortex()
 {
     if (!you.duration[DUR_VORTEX])
         return;
@@ -481,20 +488,9 @@ void cancel_polar_vortex(bool tloc)
     dprf("Aborting vortex.");
     if (you.duration[DUR_VORTEX] == you.duration[DUR_FLIGHT])
     {
-        if (tloc)
-        {
-            // it'd be better to abort flight instantly, but let's first
-            // make damn sure all ways of translocating are prevented from
-            // landing you in water. Insta-kill due to an arrow of dispersal
-            // is not nice.
-            you.duration[DUR_FLIGHT] = min(20, you.duration[DUR_FLIGHT]);
-        }
-        else
-        {
-            // Vortex ended by using something stairslike, so the destination
-            // is safe
-            you.duration[DUR_FLIGHT] = 0;
-        }
+        // Vortex ended by using something stairslike, so the destination
+        // is safe
+        you.duration[DUR_FLIGHT] = 0;
     }
     you.duration[DUR_VORTEX] = 0;
     you.duration[DUR_VORTEX_COOLDOWN] = random_range(35, 45);

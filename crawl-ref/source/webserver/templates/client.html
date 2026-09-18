@@ -4,10 +4,13 @@
     <title>WebTiles - Dungeon Crawl Stone Soup</title>
     <link rel="icon" href="/static/stone_soup_icon-32x32.png" type="image/png">
     <script type="text/javascript">
+      {% set fail_safe_game_version = globals().get('game_version', '') %}
       var socket_server = "{{ socket_server }}";
+      var game_version = "{{ fail_safe_game_version }}";
     </script>
-    <script src="/static/scripts/contrib/require.js" data-main="/static/scripts/app"></script>
-    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <script src="{{ static_url("scripts/contrib/require.js") }}" data-main="/static/scripts/app"></script>
+    <link rel="stylesheet" type="text/css" href="{{ static_url("style.css") }}">
+    <link rel="stylesheet" type="text/css" href="{{ static_url("fonts/fonts.css") }}">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="viewport" content="width=860, initial-scale=1.0">
@@ -285,6 +288,7 @@
         <img style="display:none;" alt="" loading="lazy" src="{{ static_url("title_kaonedong_ignis_the_dying_flame.png") }}">
         <img style="display:none;" alt="" loading="lazy" src="{{ static_url("title_kaonedong_menkaure_prince_of_dust.png") }}">
         <img style="display:none;" alt="" loading="lazy" src="{{ static_url("title_king7artist_eustachio.png") }}">
+        <img style="display:none;" alt="" loading="lazy" src="{{ static_url("title_lemurrobot_gozag_vaults.png") }}">
         <img style="display:none;" alt="" loading="lazy" src="{{ static_url("title_micah_c_ereshkigal.png") }}">
         <img style="display:none;" alt="" loading="lazy" src="{{ static_url("title_nibiki_octopode.png") }}">
         <img style="display:none;" alt="" loading="lazy" src="{{ static_url("title_omndra_zot_demon.png") }}">
@@ -299,6 +303,7 @@
         <img style="display:none;" alt="" loading="lazy" src="{{ static_url("title_SpinningBird_djinn_sears_gnolls.png") }}">
         <img style="display:none;" alt="" loading="lazy" src="{{ static_url("title_white_noise_entering_the_dungeon.png") }}">
         <img style="display:none;" alt="" loading="lazy" src="{{ static_url("title_white_noise_grabbing_the_orb.png") }}">
+        <img style="display:none;" alt="" loading="lazy" src="{{ static_url("title_ylam_formicid_shrikes.png") }}">
       </div>
 
       <div id="stale_processes_message" class="floating_dialog"

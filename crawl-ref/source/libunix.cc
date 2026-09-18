@@ -502,7 +502,56 @@ static int proc_mouse_event(int c, const MEVENT *me)
 }
 #endif
 
-static int pending = 0;
+static int curses_pending_key = 0;
+#ifdef USE_TILE_WEB
+static int tiles_pending_key = 0;
+#endif
+
+static bool _curses_fetch_pending_key(bool blocking)
+{
+    if (curses_pending_key)
+        return true;
+
+    wint_t c;
+    int i;
+    if (blocking)
+        i = get_wch(&c);
+    else
+    {
+        nodelay(stdscr, TRUE);
+        // apparently some need this to guarantee non-blocking -- bwr
+        timeout(0);
+        i = get_wch(&c);
+        nodelay(stdscr, FALSE);
+    }
+
+    switch (i)
+    {
+    case ERR:
+        // getch() returns -1 on EOF, convert that into an Escape. Evil hack,
+        // but the alternative is to explicitly check for -1 everywhere where
+        // we might otherwise spin in a tight keyboard input loop.
+        // XXX: this doesn't work with `blocking` false, because we can't tell
+        // a timeout from an error...
+        if (!blocking)
+            return false;
+        curses_pending_key = ESCAPE;
+        return true;
+    case OK:
+        // a normal (printable) key
+        curses_pending_key = c;
+        return true;
+    case KEY_CODE_YES:
+    default:
+        curses_pending_key = -c;
+        return true;
+    }
+}
+
+static bool _curses_has_key()
+{
+    return _curses_fetch_pending_key(false);
+}
 
 static int _get_key_from_curses()
 {
@@ -512,56 +561,38 @@ static int _get_key_from_curses()
     watchdog();
 #endif
 
-    if (pending)
+#ifdef USE_TILE_WEB
+    refresh();
+    tiles.redraw();
+
+    if (tiles_pending_key)
     {
-        int c = pending;
-        pending = 0;
+        wint_t c = tiles_pending_key;
+        tiles_pending_key = 0;
         return c;
     }
 
-    wint_t c;
-
-#ifdef USE_TILE_WEB
-    refresh();
-
-    tiles.redraw();
-    tiles.await_input(c, true);
-
+    wint_t c = tiles.await_input(&_curses_has_key);
     if (c != 0)
         return c;
 #endif
 
-    switch (get_wch(&c))
-    {
-    case ERR:
-        // getch() returns -1 on EOF, convert that into an Escape. Evil hack,
-        // but the alternative is to explicitly check for -1 everywhere where
-        // we might otherwise spin in a tight keyboard input loop.
-        return ESCAPE;
-    case OK:
-        // a normal (printable) key
-        return c;
-    }
-
-    return -c;
+    _curses_fetch_pending_key(true);
+    int result = curses_pending_key;
+    curses_pending_key = 0;
+    return result;
 }
 
 #if defined(KEY_RESIZE) || defined(USE_UNIX_SIGNALS)
 static void unix_handle_resize_event()
 {
     crawl_state.last_winch = time(0);
-    if (crawl_state.waiting_for_command)
+    if (crawl_state.waiting_for_command || crawl_state.waiting_for_ui)
         handle_terminal_resize();
     else
         crawl_state.terminal_resized = true;
 }
 #endif
-
-static bool getch_returns_resizes;
-void set_getch_returns_resizes(bool rr)
-{
-    getch_returns_resizes = rr;
-}
 
 static int _headless_getchk()
 {
@@ -571,19 +602,17 @@ static int _headless_getchk()
     watchdog();
 #endif
 
-    if (pending)
+#ifdef USE_TILE_WEB
+    tiles.redraw();
+
+    if (tiles_pending_key)
     {
-        int c = pending;
-        pending = 0;
+        wint_t c = tiles_pending_key;
+        tiles_pending_key = 0;
         return c;
     }
 
-
-#ifdef USE_TILE_WEB
-    wint_t c;
-    tiles.redraw();
-    tiles.await_input(c, true);
-
+    wint_t c = tiles.await_input([]() { return false; });
     if (c != 0)
         return c;
 #endif
@@ -597,11 +626,9 @@ static int _headless_getch_ck()
     do
     {
         c = _headless_getchk();
-        // TODO: release?
-        // XX this should possibly sleep
-    } while (
-             ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
-                 && !crawl_state.mouse_enabled));
+    }
+    while ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
+               && !crawl_state.mouse_enabled);
 
     return c;
 }
@@ -642,14 +669,10 @@ int getch_ck()
             // then scroll down one line. To fix this, we always sync termsz:
             crawl_view.init_geometry();
 
-            if (!getch_returns_resizes)
-                continue;
+            continue;
         }
 #endif
 
-        switch (-c)
-        {
-        case 127:
         // 127 is ASCII DEL, which some terminals (all mac, some linux) use for
         // the backspace key. ncurses does not typically map this to
         // KEY_BACKSPACE (though this may depend on TERM settings?). '\b' (^H)
@@ -658,6 +681,11 @@ int getch_ck()
         // reliably does get mapped to KEY_DC by ncurses. Some background:
         //     https://invisible-island.net/xterm/xterm.faq.html#xterm_erase
         // (I've never found documentation for the mac situation.)
+        if (c == 127)
+            return CK_BKSP;
+
+        switch (-c)
+        {
         case KEY_BACKSPACE: return CK_BKSP;
         case KEY_IC:        return CK_INSERT;
         case KEY_DC:        return CK_DELETE;
@@ -687,10 +715,6 @@ int getch_ck()
         case KEY_B2:        return CK_NUMPAD_5;
         case KEY_C1:        return CK_NUMPAD_1;
         case KEY_C3:        return CK_NUMPAD_3;
-
-#ifdef KEY_RESIZE
-        case KEY_RESIZE:    return CK_RESIZE;
-#endif
 
         // Undocumented ncurses control keycodes, here be dragons!!!
         case 515:           return CK_CTRL_DELETE; // Mac
@@ -1829,21 +1853,18 @@ void delay(unsigned int time)
 
 static bool _headless_kbhit()
 {
-    // TODO: ??
-    if (pending)
-        return true;
-
 #ifdef USE_TILE_WEB
-    wint_t c;
-    bool result = tiles.await_input(c, false);
-
-    if (result && c != 0)
-        pending = c;
-
-    return result;
-#else
-    return false;
+    if (tiles_pending_key)
+        return true;
+    wint_t c = tiles.try_await_input();
+    if (c != 0)
+    {
+        tiles_pending_key = c;
+        return true;
+    }
 #endif
+
+    return false;
 }
 
 /* This is Juho Snellman's modified kbhit, to work with macros */
@@ -1852,35 +1873,19 @@ bool kbhit()
     if (_headless_mode)
         return _headless_kbhit();
 
-    if (pending)
+    if (_curses_has_key())
         return true;
 
-    wint_t c;
-#ifndef USE_TILE_WEB
-    int i;
-
-    nodelay(stdscr, TRUE);
-    timeout(0);  // apparently some need this to guarantee non-blocking -- bwr
-    i = get_wch(&c);
-    nodelay(stdscr, FALSE);
-
-    switch (i)
+#ifdef USE_TILE_WEB
+    if (tiles_pending_key)
+        return true;
+    wint_t c = tiles.try_await_input();
+    if (c != 0)
     {
-    case OK:
-        pending = c;
+        tiles_pending_key = c;
         return true;
-    case KEY_CODE_YES:
-        pending = -c;
-        return true;
-    default:
-        return false;
     }
-#else
-    bool result = tiles.await_input(c, false);
-
-    if (result && c != 0)
-        pending = c;
-
-    return result;
 #endif
+
+    return false;
 }

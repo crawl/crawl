@@ -50,21 +50,24 @@ The contents of this text are:
                 tc_dangerous, tc_disconnected, tc_excluded, tc_exclude_circle,
                 tc_forbidden, runrest_ignore_message, runrest_stop_message,
                 interrupt_<delay>, delay_safe_poison, runrest_ignore_monster,
-                rest_wait_both, rest_wait_ancestor, rest_wait_percent,
-                explore_auto_rest, auto_exclude, travel_open_doors
+                rest_wait_both, rest_wait_ignore_mp, rest_wait_ancestor,
+                rest_wait_percent, explore_auto_rest, explore_auto_rest_status,
+                auto_exclude, travel_open_doors, longwalk_range
 3-g     Command Enhancements.
                 auto_switch, easy_unequip, equip_unequip, jewellery_prompt,
                 easy_confirm, simple_targeting, force_spell_targeter,
-                force_ability_targeter, allow_self_target, ability_menu,
-                spell_menu, easy_floor_use, sort_menus, spell_slot, item_slot,
-                ability_slot, autofight_stop, autofight_warning,
-                autofight_fires, autofight_nomove_fires, autofight_fire_stop,
-                autofight_caught, autofight_wait, autofight_prompt_range,
-                automagic_enable, automagic_slot, automagic_fight,
-                automagic_stop, fail_severity_to_confirm, easy_door,
-                warn_hatches, enable_recast_spell, confirm_action,
-                regex_search, autopickup_search, bad_item_prompt,
-                auto_hide_spells, menu_arrow_control, single_column_item_menus
+                force_ability_targeter, force_scroll_targeter,
+                show_invis_targeter allow_self_target, ability_menu, spell_menu,
+                easy_floor_use, sort_menus, spell_slot, gear_slot,
+                consumable_shortcut, ability_slot, autofight_stop,
+                autofight_warning, autofight_fires, autofight_nomove_fires,
+                autofight_fire_stop, autofight_caught, autofight_wait,
+                autofight_prompt_range, autofight_stampede, automagic_enable,
+                automagic_slot, automagic_fight, automagic_stop,
+                fail_severity_to_confirm, easy_door, warn_hatches,
+                enable_recast_spell, confirm_action, regex_search, autopickup_search,
+                bad_item_prompt, auto_hide_spells, menu_arrow_control,
+                single_column_item_menus, show_paged_inventory
 3-h     Message and Display Enhancements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
@@ -78,11 +81,12 @@ The contents of this text are:
                 monster_list_colour, view_delay, reduce_animations,
                 use_animations, unusual_monster_items, darken_beyond_range,
                 show_blood, food_snacking_frequency, fountain_line_frequency,
-                force_more_message, flash_screen_message, cloud_status,
-                always_show_zot, always_show_gems, more_gem_info, action_panel,
-                action_panel_filter, action_panel_show_unidentified,
-                action_panel_scale, action_panel_orientation,
-                action_panel_font_family, action_panel_font_size
+                force_more_message, flash_screen_message, monster_alert,
+                cloud_status, always_show_zot, always_show_gems, more_gem_info,
+                action_panel, action_panel_filter,
+                action_panel_show_unidentified, _panel_scale,
+                action_panel_orientation, action_panel_font_family,
+                action_panel_font_size, show_resist_percent
 3-i     Colours (messages and menus).
                 menu_colour, message_colour
 3-j     Quivers, firing, and ammo.
@@ -120,22 +124,23 @@ The contents of this text are:
                 tile_map_pixels, tile_viewport_scale, tile_map_scale,
                 tile_cell_pixels, tile_sidebar_pixels, tile_filter_scaling,
                 tile_force_overlay, tile_overlay_col,
-                tile_overlay_alpha_percent, tile_full_screen,
-                tile_use_small_layout, tile_font_crt_file, tile_font_stat_file,
-                tile_font_msg_file, tile_font_tip_file, tile_font_lbl_file,
-                tile_font_crt_family, tile_font_stat_family,
-                tile_font_msg_family, tile_font_lbl_family, tile_font_crt_size,
-                tile_font_stat_size, tile_font_msg_size, tile_font_tip_size,
-                tile_font_lbl_size, tile_font_ft_light, glyph_mode_font,
-                glyph_mode_font_size, tile_show_minihealthbar,
-                tile_show_minimagicbar, tile_show_demon_tier, tile_water_anim,
-                tile_misc_anim, tile_realtime_anim, tile_show_player_species,
-                tile_player_status_icons,
-                tile_show_threat_levels, tile_layout_priority,
-                tile_display_mode, tile_level_map_hide_messages,
-                tile_level_map_hide_sidebar, tile_player_tile,
-                tile_weapon_offsets, tile_shield_offsets, tile_grinch,
-                tile_web_mouse_control, tile_web_mobile_input_helper
+                tile_min_stat_width_characters, tile_overlay_alpha_percent,
+                tile_full_screen, tile_use_small_layout, tile_font_crt_file,
+                tile_font_stat_file, tile_font_msg_file, tile_font_tip_file,
+                tile_font_lbl_file, tile_font_crt_family,
+                tile_font_stat_family, tile_font_msg_family,
+                tile_font_lbl_family, tile_font_crt_size, tile_font_stat_size,
+                tile_font_msg_size, tile_font_tip_size, tile_font_lbl_size,
+                tile_font_ft_light, glyph_mode_font, glyph_mode_font_size,
+                tile_show_minihealthbar, tile_show_minimagicbar,
+                tile_show_demon_tier, tile_water_anim, tile_misc_anim,
+                tile_realtime_anim, tile_show_player_species,
+                tile_player_status_icons, tile_show_threat_levels,
+                tile_layout_priority, tile_display_mode,
+                tile_level_map_hide_messages, tile_level_map_hide_sidebar,
+                tile_player_tile, tile_weapon_offsets, tile_shield_offsets,
+                tile_grinch, tile_web_mouse_control,
+                tile_web_mobile_input_helper
 4-  Character Dump.
 4-a     Saving.
                 dump_on_save
@@ -388,9 +393,9 @@ weapon += (short sword |...| unarmed | random | viable), <weapon>, ...
         game to randomly select a weapon from the given list. The combo option
         overrides (and is overridden by) this option.
 
-species += (Human |...| Vampire | random | viable), <species>, ...
+species += (Human |...| Revenant | random | viable), <species>, ...
         (List option)
-        The usual abbreviations (Hu, HO, etc.) work. "viable" will choose a
+        The usual abbreviations (Hu, MD, etc.) work. "viable" will choose a
         viable species for a given background if the background is chosen
         first. Specifying multiple species causes one to be selected at
         random from the given species. The combo option overrides (and is
@@ -398,7 +403,7 @@ species += (Human |...| Vampire | random | viable), <species>, ...
 
 background += (Fighter |...| Wanderer | random | viable), <background>, ...
         (List option)
-        Here again the abbreviations (Fi, HW, AK, etc.) can be used. The same
+        Here again the abbreviations (Fi, HW, CA, etc.) can be used. The same
         caveat applies to "viable": it is only really meaningful if the
         species option is also set. Specifying multiple backgrounds causes
         one to be selected at random from the given species. The combo option
@@ -585,9 +590,11 @@ autopickup = $?!+"/♦
         + or :  Books
         |       Staves
         0       Orbs
+        %       Talismans
         }       Misc. items
         $       Gold
         ♦       Gems
+        •       Baubles
         Note that _whether_ items are picked up automatically or not, is
         controlled by the in-game toggle Ctrl-A. Also note that picking
         up takes a turn, but only one turn (regardless of the number of
@@ -739,8 +746,8 @@ unusual_highlight = hi:magenta
 
 stab_highlight = hi:blue
         This option highlights monsters that are fully unaware of the player
-        and therefore are will not attack, and are guaranteed to take stab
-        damage if attacked appropriately by the player.
+        and therefore will not attack, and are guaranteed to take stab damage
+        if attacked appropriately by the player.
 
 may_stab_highlight = hi:brown
         This option highlights monsters that are having trouble paying
@@ -1045,15 +1052,15 @@ interrupt_<delay> += <activity_interrupt_type>, <activity_interrupt_type>, ...
             interrupt_travel -= sense_monster
         to not interrupt autotravel when a monster is sensed but not seen.
 
-        Possible delay types are: armour_on, armour_off, ascending_stairs,
-        descending_stairs, drop_item, exsanguinate, jewellery_on, macro,
-        macro_process_key, memorise, multidrop, passwall, rest, revivify,
-        run, shaft_self, travel. (These are derived from the `name()`
+        Possible delay types are: equip_on, equip_off, ascending_stairs,
+        descending_stairs, imbue_servitor, imprint_weapon, macro,
+        macro_process_key, memorise, multidrop, passwall, rest, run,
+        shaft_self, transform, travel. (These are derived from the `name()`
         functions in delay.h.)
 
         Possible interrupt types are: abyss_exit_spawned, ally_attacked,
         ancestor_hp, force, full_hp, full_mp, hp_loss, hit_monster, keypress,
-        message, mimic, monster, monster_attack, stat, sense_monster, teleport.
+        message, mimic, monster, monster_attack, sense_monster, teleport.
         (These are derived from the `activity_interrupt_names` array in
         delay.cc.)
 
@@ -1085,6 +1092,12 @@ rest_wait_both = false
         when both HP and MP are fully restored, not when either one of
         them is restored.
 
+rest_wait_ignore_mp = false
+        Never continue to rest because MP are depleted. This option
+        overrules rest_wait_both. It is provided for characters who
+        are intermittently wielding antimagic weapons and have no use
+        for MP.
+
 rest_wait_ancestor = false
         If rest_wait_ancestor is set to true then resting will only stop when
         the ancestor's health is fully restored in addition to player HP or MP
@@ -1098,6 +1111,26 @@ rest_wait_percent = 100
 explore_auto_rest = true
         If true, auto-explore waits until your HP and MP are both at
         rest_wait_percent before moving.
+
+explore_auto_rest_status = <status name>, <cooldown name>, <duration name>...
+        (List option)
+        Auto-explore will wait until all statuses, durations, and cooldowns in
+        the list are finished before moving. The list will accept most
+        duration-based statuses by either the name of their status light or
+        the phrasing that appears on the % screen.
+
+        There are several special values:
+            "all_negative"   = all time-based negative statuses (eg: Slow)
+            "all_cooldown"   = all time-based cooldowns (eg: -Blink)
+            "contam"         = any amount of magic contamination
+            "transformation" = any time-based negative form (ie: pig/wisp).
+
+        To exclude a specific status from all_negative or all_cooldown, include
+        the status with an * at the start. For instance:
+            explore_auto_rest_status += *-blink
+        will remove -blink from the list of cooldowns it wants to wait on.
+
+        Defaults to "all_negative", "all_cooldown", "contam".
 
 auto_exclude += <monster name>, <monster name>, ...
         (List option)
@@ -1117,6 +1150,18 @@ travel_open_doors = (avoid | approach | open)
             open = Autoexplore/travel will open doors. (default)
         This does not affect runed doors, which are always avoided.
 
+longwalk_range = (<integer> | los | visible | unlimited)
+        Set the maximum distance for longwalking (shift+direction by default).
+        The default is 15.
+          <integer> = A constant maximum distance, e.g. longwalk_range = 15.
+          los = Your current line of sight range. This is 7 for most species and
+                is affected by items such as scarf of shadows.
+          visible = Only visit visible tiles. This is limited by line of sight
+                range but also by clouds such as steam or fog that could limit
+                which tiles are visible.
+          unlimited = No distance limitation. You'll keep moving until something
+                else stops you.
+
 3-g     Command Enhancements.
 -----------------------------
 
@@ -1130,17 +1175,16 @@ auto_switch = false
 easy_unequip = true
         Allows auto removal of armour and jewellery when dropping it.
 
-equip_unequip = false
+equip_unequip = true
         If this is true, selecting an already-equipped piece of equipment via
         the 'w', 'W' or 'P' menus (for weapons, armour or jewellery
         respectively) will unequip that item.
 
 jewellery_prompt = false
-        If this is true, equipping rings will always prompt for the slot to
-        use, instead of automatically equipping the ring if there is an
-        available empty slot. Unequipping jewellery will also always prompt for
-        an item to remove, instead of skipping the prompt if only one item
-        of jewellery is equipped.
+        If this is true, unequipping jewellery will always prompt for an item
+        to remove, instead of skipping the prompt if only one item of jewellery
+        is equipped. Also, if all slots are filled when equipping a jewellery
+        item, it will prompt for which you remove even if they are all identical.
 
 easy_confirm = (none | safe | all)
         Make confirmation questions easier to answer:
@@ -1160,9 +1204,11 @@ simple_targeting = false
         zapping as well as autotarget selection for quivered spells.
 
 force_spell_targeter = hailstorm, starburst, frozen ramparts, ignition,
-                       eringya's noxious bog, cause fear, alistair's
+                       eringya's noxious bog, anguish, cause fear, alistair's
                        intoxication, discord, dispersal, metabolic englaciation,
-                       dazzling flash, flame wave, anguish, plasma beam
+                       gloom, flame wave, plasma beam,
+                       maxwell's portable piledriver, diamond sawblades,
+                       fortress blast
         Force showing a targeter for the listed spells when casting normally,
         even if the spell isn't targeted. This for practical purposes only has
         an effect on statically targeted spells, such as the ones in the
@@ -1172,9 +1218,10 @@ force_spell_targeter = hailstorm, starburst, frozen ramparts, ignition,
         be shown with every spell.
 
 force_ability_targeter = sanctuary, cleansing flame, word of chaos, recite,
-                         elemental force, oozemancy, breathe lightning, torment,
-                         drain life, slouch, disaster area, apocalypse,
-                         corrupt, foxfire swarm
+                         elemental force, oozemancy, galvanic breath,
+                         fathomless shackles, slouch, disaster area, apocalypse,
+                         corrupt, foxfire swarm, siphon essence, shadowslip,
+                         watery grave
         Force showing a targeter for the listed abilities when activating them
         normally, even if the ability isn't targeted. This for practical
         purposes only has an effect on statically targeted abilities, such as
@@ -1182,6 +1229,18 @@ force_ability_targeter = sanctuary, cleansing flame, word of chaos, recite,
         with an unusual targeting pattern. If "all" appears in the options list,
         the rest of the list (however constructed) will be ignored, and
         targeters will be shown with every ability.
+
+force_scroll_targeter = fear, silence, vulnerability, immolation, torment
+        Force showing a targeter for the listed scrolls when reading them
+        normally (since these are unaimed, this is generally to show success
+        chance or what targets might be affected). If "all" appears in the
+        options list, the rest of the list (however constructed) will be
+        ignored, and targeters will be shown for every scroll that has one.
+
+show_invis_targeter = true
+        Before turning invisible, show a targeter indicating what monsters in
+        view would actually lose sight of you (and prompt if all enemies in
+        line of sight have sInv).
 
 allow_self_target = prompt
         Allow targeting yourself with risky magic (e.g., the spell Stone Arrow
@@ -1301,9 +1360,15 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
           items on the floor.
 
         * charged:
-          Makes wands known or assumed to have some charges left appear
-          before wands known to be empty; irrelevant for all other item
-          types.
+          Makes evokers with available charges appear before those which
+          are empty; irrelevant for all other item types.
+
+        * usefulness:
+          Sorts consumables by their current 'usefulness' in the
+          following order: Emergency (eg: ?blinking, !heal wounds),
+          Good (eg: ?acquirement), Normal, Dangerous (eg: !lignification),
+          Bad (eg: ?torment while worshipping a good god), and finally
+          permanently useless.
 
         You can ask for a descending order sort by prefixing one or more
         sort criteria with > as:
@@ -1315,10 +1380,6 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
              sort_menus = inv: true
         (Menu types must be specified as name:, with no space between
         name and colon.)
-
-        By default only pickup menus are sorted, and the sort criteria are:
-             "equipped, basename, qualname, curse, qty".
-        All other menus (drop, inv) will be sorted by inventory letter.
 
         The menu selectors available are:
 
@@ -1338,6 +1399,11 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
         If you define sort_menus differently for two or more selectors,
         the last one matching will always take precedence, i.e. "any"
         as last setting would override any of the others.
+
+        By default pickup menus are sorted, and the sort criteria are:
+             "equipped, basename, qualname, curse, qty".
+        Inv and drop menus are sorted by "equipped, charged, identified,
+             usefulness, slot".
 
 spell_slot ^= <regex>:<list of spell letters>
         (Ordered list option, one value per line)
@@ -1366,15 +1432,23 @@ spell_slot ^= <regex>:<list of spell letters>
           spell_slot lines):
             spell_slot += .*:ABCDEFGHIJKLMNOPQRSTUVWXYZ
 
-item_slot ^= <regex>:<inventory letters>
+gear_slot ^= <regex>:<inventory letters>
         (Ordered list option, one value per line)
         Uses the same interface as spell_slot, except that overwrite mode
         is on by default; overwrite mode can be disabled with a - in the
         list of letters.
 
-        Additionally, the item_slot option is applied on an item when it is
-        identified, so it can be moved to the right place even if it was
-        picked up unidentified.
+consumable_shortcut += <item name>:<inventory letter>
+        (Ordered list option, one value per line)
+        Similar to gear_slot, but accepts only a single letter per consumable
+        name and does not handle regex.
+
+        The game will try very hard to automatically assign a consumable to
+        any letter given a mapping by this option, unless it is an identified
+        item of a different category. (eg: 'potion of curing:c' will result
+        in no other potion ever being auto-assigned to 'c' and unidentified
+        scrolls also avoiding it where possible, since they share the ?id menu
+        together.)
 
 ability_slot ^= <regex>:<ability letters>
         (Ordered list option, one value per line)
@@ -1395,16 +1469,15 @@ autofight_warning = 0
         or equal to zero disables this check.
 
 autofight_fires = false
-        If your quiver contains contains a fireable action that does direct
-        damage to the enemy, regular CMD_AUTOFIGHT (tab on the default
-        binding) will trigger it at enemies out of melee range. Without this
-        option, only a wielded launcher (a bow, crossbow or sling) will be
-        triggered by CMD_AUTOFIGHT. If an action that does direct damage is
-        quivered but out of range, you will move towards the enemy. If an
-        action is quivered that does not do direct damage, CMD_AUTOFIGHT will
-        ignore it entirely. To prevent moving altogether, rebind with
-        CMD_AUTOFIGHT_NOMOVE instead of CMD_AUTOFIGHT. (Legacy name:
-        `autofight_throw`.)
+        If your quiver contains a fireable action that does direct damage to
+        the enemy, regular CMD_AUTOFIGHT (tab on the default binding) will
+        trigger it at enemies out of melee range. Without this option, only a
+        wielded launcher (a bow, crossbow or sling) will be triggered by
+        CMD_AUTOFIGHT. If an action that does direct damage is quivered but out
+        of range, you will move towards the enemy. If an action is quivered
+        that does not do direct damage, CMD_AUTOFIGHT will ignore it entirely.
+        To prevent moving altogether, rebind with CMD_AUTOFIGHT_NOMOVE instead
+        of CMD_AUTOFIGHT. (Legacy name: `autofight_throw`.)
 
 autofight_nomove_fires = true
         This option modifies the behavior of CMD_AUTOFIGHT_NOMOVE (unbound by
@@ -1426,11 +1499,15 @@ autofight_wait = false
         wait for a turn instead of aborting autofight.
 
 autofight_prompt_range = true
-        When wielding a weapon that would normally cause a prompt on attacking
-        (such as a weapon with a !a inscription, or one disliked by your god),
-        if this option is true then the prompt will be displayed when autofight
-        tries to walk towards an enemy, instead of only when actually trying
-        to attack.
+        If true, when wielding a weapon that would normally cause a prompt on
+        attacking (such as a weapon with a !a inscription, or one disliked by
+        your god), then its prompt will be displayed when autofight tries to
+        walk towards an enemy, instead of only when actually trying to attack.
+
+autofight_stampede = false
+        When playing a gale centaur, if this option is true, autofight will opt
+        to continue stampeding through adjacent monsters, rather than fighting
+        in place, when possible.
 
 automagic_enable = false
         Option to enable the old automagic system; new players are recommended
@@ -1477,6 +1554,11 @@ easy_door = true
 warn_hatches = false
         Ask for confirmation before using a one-way escape hatch or shaft.
 
+warn_contam_cost = true
+        Ask for confirmation before casting a spell with a contam cost, if it
+        is possible that casting it at your current level of magic contamination
+        could cause you to reach harmful levels of contamination.
+
 enable_recast_spell = true
         If enabled, allows recasting the previously cast spell by pressing
         Enter or '.' at the spellcasting prompt.
@@ -1519,6 +1601,11 @@ single_column_item_menus = true
         to true, all menus will use a single column under any circumstances.
         This option is only available on local tiles and console; on WebTiles
         all menus are single-column regardless of the value of this option.
+
+show_paged_inventory = true
+        If set to true, the 'i' menu will divide the player's items into
+        pages (gear, potions, scrolls, and evocable items) in the same way
+        that the 'd'rop menu does.
 
 3-h     Message and Display Enhancements.
 ------------------------------------------
@@ -1565,9 +1652,9 @@ enemy_hp_colour = green green brown brown magenta red
         omitted colour slots will be set to the default.
 
 clear_messages = false
-        Setting this option to true will cause messages to cleared
-        between player actions (default is false which will delay the
-        clearing of messages until the message space is full).
+        Setting this option to true will cause messages to be cleared between
+        player actions (default is false which will delay the clearing of
+        messages until the message space is full).
 
 show_more = false
         Setting this option to true will cause the game to prompt if more
@@ -1630,14 +1717,16 @@ mlist_allow_alternative_layout = false
         This option is not supported in the tiles build.
 
 monster_item_view_coordinates = false
-        Display player-centred coordinates in the ^x view description.
+        Display player-centred coordinates in the ^x view description,
+        targeters and level map.
 
 monster_item_view_features += <regex>, <regex>
         (List option)
-        Display features matching the <regex> in the ^x view description. Each
-        <regex> is a regular expression describing a dungeon feature. This
-        regex should match the description when using the 'x' command. In case
-        the regex matches several descriptions, all such features are listed.
+        Display features matching the <regex> in the ^x view description. It
+        also affects the X level map in console. Each <regex> is a regular
+        expression describing a dungeon feature. This regex should match the
+        description when using the 'x' command. In case the regex matches
+        several descriptions, all such features are listed.
 
         Two special keywords are active here, if any pattern matches the string
         "stair" all features that can be interacted with using the stair
@@ -1761,6 +1850,11 @@ use_animations += branch_entry
           branch_entry     - Animations that run when you enter a new branch.
                              Currently only the Abyss and Zot have animations.
 
+alt_shatter_animation = false
+        If set to true, replaces the traditional screenshaking effect when
+        casting Shatter with multiple waves of vfx instead, to reduce headaches
+        and nausea. Defaults to `true` for webtiles games and `false` otherwise.
+
 unusual_monster_items += <regex>, <regex>, ...
         (List option)
         Monsters whose inventory items match a regex in this comma-separated
@@ -1815,6 +1909,17 @@ flash_screen_message += <regex>, <regex>
         screen yellow, so it can be used to highlight very important events
         indeed.
         The syntax is identical to that of force_more_message.
+
+monster_alert += <monster name or symbol>
+        (List option)
+        Any monster listed here by name will cause a --More-- prompt whenever it
+        is first encountered by the player. Several special values are also
+        available, which will match groups of monsters:
+          -nasty, tough, easy, trivial  Any monster whose threat level is
+                                        at least as high.
+          -uniques                      All uniques.
+          -unusual                      Any monster carrying usual items
+                                        (as defined by unusual_monster_items)
 
 cloud_status = true
         Whether to show the "Cloud" status light; defaults to true, except if
@@ -1878,6 +1983,16 @@ action_panel_font_size = 16 (persistent)
 action_panel_glyphs = false
         If set to true, show glyphs instead of tiles in the action panel. This
         option is only available on webtiles.
+
+show_resist_percent = true
+        When set to true, the exact percentage of damage the player will take
+        from each element, based on their current pips of resistance, will be
+        shown on the % screen.
+
+always_show_doom_contam = false
+        If set to true, always display the doom and contam meters in the
+        upper-right of the side panel, even if the player doesn't currently
+        have any doom or contamination.
 
 3-i     Colours (messages and menus)
 -----------------
@@ -2172,14 +2287,14 @@ macros += M \{9} za
 
 flush.failure = true
 flush.command = false
-flush.message = false
+flush.lua     = true
         These are useful when using macros. Setting one of these
         sub-options to true will cause the entire input buffer to be
         dumped and thus effectively stop the macro. The sub-options
         currently are
            failure -- when spells/abilities get miscast
            command -- whenever the game is about to get the next command
-           message -- whenever the game outputs a non-mute message
+           lua     -- whenever crawl.flush_input() is called from lua
 
 additional_macro_file = path/to/filename
         Add an additional macro file to be loaded after macro.txt.
@@ -2296,7 +2411,7 @@ tile_update_rate = 1000
         number. If, on the other hand, response time is fine but it takes too
         long for redrawings to happen, set it to a lower value.
 
-tile_runrest_rate = 100
+tile_runrest_rate = 17
         The number of milliseconds that tick by before the screen is redrawn
         when running or resting. If Crawl is slow while running or resting,
         increase this number.
@@ -2381,6 +2496,9 @@ tile_cell_pixels = 32
         (logical) pixels. This is a legacy option, and it is recommended that
         you adjust scaling via tile_viewport_scale instead.
 
+tile_min_stat_width_characters = 42
+        Minimal width of the stats sidebar in characters.
+
 tile_sidebar_pixels = 32
         The width and height of tiles in the local tiles sidebar view,
         in (logical) pixels.
@@ -2416,8 +2534,9 @@ tile_full_screen = auto
         width 1200, or height 800.
 
 tile_use_small_layout = auto
-        Alternative layout designed for very small screens. It is enabled by
-        default on Android.
+        Alternative layout designed for narrow screens. If auto, it will be
+        enabled when the available horizontal space is not enough to display the
+        normal layout in a comfortable way.
 
 tile_font_crt_file  = VeraMono.ttf
 tile_font_stat_file = VeraMono.ttf
@@ -2453,11 +2572,12 @@ tile_font_lbl_size  = 14
 tile_font_ft_light = false
         Selects 'light' font hinting.
 
-glyph_mode_font = monospace
+glyph_mode_font = DejaVu Sans Mono
         Font used to render the dungeon in glyph mode for WebTiles. If set to
-        monospace (default) or the font is not available, the browser's default
-        monospaced font will be used.
-        This option is only available on WebTiles.
+        monospace or the font is not available, the browser's default monospaced
+        font will be used. The default "DejaVu Sans Mono" is available as a
+        webfont (and is the same as used in the desktop version). This option
+        is only available on WebTiles.
 
 glyph_mode_font_size = 24
         Font size (in points) for the dungeon view in glyph mode for WebTiles.
@@ -2487,8 +2607,8 @@ tile_realtime_anim = false
         This option is only available on WebTiles.
 
 tile_show_player_species = false
-        If enabled, displays the player using the monster tile for her species,
-        instead of using the normal doll and showing equipment.
+        If enabled, displays the player using the monster tile for their
+        species, instead of using the normal doll and showing equipment.
 
 tile_show_threat_levels = nasty, unusual
         This option controls which monsters will be highlighted with their
@@ -2499,10 +2619,10 @@ tile_show_threat_levels = nasty, unusual
         determine which items cause a monster to highlight as unusual.
 
 tile_player_status_icons = slow, constr
-        This option constrols which icons will be displayed on top of the
-        player's tile when they are afflicted by certain status effects.
-        Valid values include: slow, fragile, petr, mark, will/2, haste, weak,
-        corr, might, brill, -move.
+        This option controls which icons will be displayed on top of the
+        player's tile when they are afflicted by certain status effects. Valid
+        values include: slow, fragile, petr, mark, will/2, haste, weak, corr,
+        might, brill, -move.
 
 tile_layout_priority = minimap, inventory, command, spell, monster
         (Ordered list option)
@@ -2528,14 +2648,14 @@ tile_display_mode = (tiles | glyphs | hybrid)
 
         This option is only available on local tiles and webtiles.
 
-tile_level_map_hide_messages = true
+tile_level_map_hide_messages = false
 tile_level_map_hide_sidebar = false
         Controls what screen elements are hidden when using the level map.
         These options are only available on WebTiles.
 
 tile_player_tile = (normal | playermons | mons:<monster> | tile:<monster-tile>)
         If set to playermons, displays the player using the monster tile for
-        her species, instead of using the normal doll.
+        their species, instead of using the normal doll.
 
         If set to a value of the form mons:<monster>, where <monster> is the
         name of a monster, use the base tile of <monster> as the player
@@ -2549,8 +2669,8 @@ tile_player_tile = (normal | playermons | mons:<monster> | tile:<monster-tile>)
         of monster with multiple tiles, such as hydra and large abominations,
         or special tiles like Cigotuvi's Monster or player transformations that
         don't have their own base monster. The tile name must be the full name,
-        e.g. mons_hydra_7. For example, to use the hydra tile with many heads,
-        use a value of tile:mons_hydra_7. The tile names can be found in the
+        e.g. mons_slymdra_7. For example, to use the hydra tile with many heads,
+        use a value of tile:mons_slymdra_7. The tile names can be found in the
         source tree folder source/rltiles in the files dc-mon.txt,
         dc-demon.txt, and dc-player.txt. In these files, the tile name is in
         the second word in each entry after the file name of the image, and
@@ -2949,17 +3069,17 @@ mon_glyph -= <monster name or symbol>
 
              mon_glyph += deep elf annihilator : E lightmagenta
              mon_glyph += Xtahua : lightmagenta D
-             mon_glyph += large zombie : darkgrey
-             mon_glyph += small simulacrum : x
+             mon_glyph += ghoul : darkgrey
+             mon_glyph += cognitogaunt : x
 
         (The left hand side of the : is case-sensitive.)
 
         You can also specify another monster, so that it copies the base
         symbol and colour of that monster (this is not transitive). For
-        example, if you think that slime creature colours are backwards:
+        example, if you think that holy warrior colours are backwards:
 
-            mon_glyph += slime creature : merged slime creature
-            mon_glyph += merged slime creature : slime creature
+            mon_glyph += daeva : angel
+            mon_glyph += angel : daeva
 
         You can specify symbols using their code points using the syntax
         as shown in the "feature" option. You can also use Unicode code
@@ -2977,7 +3097,6 @@ mon_glyph -= <monster name or symbol>
              player
              sensed monster
              {trivial,easy,tough,nasty,friendly} sensed monster
-             merged slime creature
 
         Playable species that normally have no monster of the same name can
         also be redefined, for use with show_player_species = true.
@@ -2998,8 +3117,8 @@ item_glyph -= <regexp>
 
         Multiple rules can modify a single item, which is useful if you want
         to change the colour and glyph separately:
-            item_glyph += corpse : x625
-            item_glyph += inedible.* corpse : lightgreen
+            item_glyph += dart : x2191
+            item_glyph += curare.*dart : red
 
         Rules are applied in order, so later rules are higher priority.
 
@@ -3202,8 +3321,8 @@ lua_max_memory = 16
 Lua files are scripts which can provide existing commands with a new
 meaning or create new commands (to be used in macros). To use Lua
 files, Crawl needs to be compiled with support for user Lua scripts.
-You can if your Crawl has Lua support by hitting ?V in-game. The list
-of features Crawl displays should include "Lua user scripts".
+You can check to see if your Crawl has Lua support by hitting ?V in-game.
+The list of features Crawl displays should include "Lua user scripts".
 
 Lua files are included using the lua_file option (one file per line):
 
@@ -3334,7 +3453,7 @@ option for terminal configuration specifics):
 Allow auto-travel/move to advance one step even when monsters are present:
     travel_one_unsafe_move = true
 
-List player-relative coordinates in the ^x display:
+List player-relative coordinates in the ^x display, targeters and level map:
     monster_item_view_coordinates = true
 
 The ^x display can list a customizable set of features controlled with regular

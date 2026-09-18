@@ -65,8 +65,8 @@ enum enchant_type
     ENCH_EXPLODING,
 #if TAG_MAJOR_VERSION == 34
     ENCH_BLEED,
-#endif
     ENCH_PORTAL_TIMER,
+#endif
     ENCH_SEVERED,
     ENCH_ANTIMAGIC,
 #if TAG_MAJOR_VERSION == 34
@@ -92,7 +92,7 @@ enum enchant_type
 #if TAG_MAJOR_VERSION == 34
     ENCH_FAKE_ABJURATION,
 #endif
-    ENCH_DAZED,          // Dazed - less chance of acting each turn.
+    ENCH_DAZED,          // Dazed - briefly unable to act unless harmed.
     ENCH_MUTE,           // Silenced.
     ENCH_BLIND,          // Blind (everything is invisible).
     ENCH_DUMB,           // Stupefied (paralysis by a different name).
@@ -112,10 +112,12 @@ enum enchant_type
     ENCH_OZOCUBUS_ARMOUR,
 #endif
     ENCH_WRETCHED,       // An abstract placeholder for monster mutations
-    ENCH_SCREAMED,       // Starcursed scream timer
+    ENCH_ABILITY_COOLDOWN,
     ENCH_WORD_OF_RECALL, // Chanting word of recall
     ENCH_INJURY_BOND,
+#if TAG_MAJOR_VERSION == 34
     ENCH_WATER_HOLD,     // Silence and asphyxiation damage
+#endif
     ENCH_FLAYED,
     ENCH_HAUNTING,
 #if TAG_MAJOR_VERSION == 34
@@ -133,7 +135,7 @@ enum enchant_type
 #if TAG_MAJOR_VERSION == 34
     ENCH_GRASPING_ROOTS_SOURCE, // Not actually entangled, but entangling others
 #endif
-    ENCH_GRASPING_ROOTS,
+    ENCH_CONSTRICTED,
     ENCH_SPELL_CHARGED,
     ENCH_FIRE_VULN,
     ENCH_POLAR_VORTEX_COOLDOWN,
@@ -163,11 +165,13 @@ enum enchant_type
     ENCH_NEUTRAL_BRIBED,
     ENCH_FRIENDLY_BRIBED,
     ENCH_CORROSION,
-    ENCH_GOLD_LUST,
-    ENCH_DRAINED,
-    ENCH_REPEL_MISSILES,
 #if TAG_MAJOR_VERSION == 34
+    ENCH_GOLD_LUST,
+#endif
+    ENCH_DRAINED,
     ENCH_DEFLECT_MISSILES,
+#if TAG_MAJOR_VERSION == 34
+    ENCH_OLD_DEFLECT_MISSILES,
     ENCH_NEGATIVE_VULN,
     ENCH_CONDENSATION_SHIELD,
 #endif
@@ -191,9 +195,9 @@ enum enchant_type
     ENCH_WHIRLWIND_PINNED,
     ENCH_VORTEX,
     ENCH_VORTEX_COOLDOWN,
+    ENCH_VILE_CLUTCH_OLD,
 #endif
-    ENCH_VILE_CLUTCH,
-    ENCH_WATERLOGGED,
+    ENCH_FLOODED,
     ENCH_RING_OF_FLAMES,
     ENCH_RING_OF_CHAOS,
     ENCH_RING_OF_MUTATION,
@@ -229,7 +233,7 @@ enum enchant_type
     ENCH_MISDIRECTED,
     ENCH_CHANGED_APPEARANCE,  // Visual change for player shadow during Shadowslip
     ENCH_SHADOWLESS,
-    ENCH_DOUBLED_HEALTH,
+    ENCH_DOUBLED_VIGOUR,
     ENCH_KINETIC_GRAPNEL,
     ENCH_TEMPERED,
     ENCH_HATCHING,
@@ -240,6 +244,20 @@ enum enchant_type
     ENCH_DROWSY,
     ENCH_VAMPIRE_THRALL,
     ENCH_PYRRHIC_RECOLLECTION,
+    ENCH_CLOCKWORK_BEE_CAST,
+    ENCH_PHALANX_BARRIER,
+    ENCH_FIGMENT,
+    ENCH_PARADOX_TOUCHED,
+    ENCH_WARDING,
+    ENCH_DIMINISHED_SPELLS,
+    ENCH_ORB_COOLDOWN,
+    ENCH_SUNDER_CHARGE,
+    ENCH_EXPOSED,
+    ENCH_BRAMBLE_COOLDOWN,
+    ENCH_STAMPEDE,
+    ENCH_PREPARING_TO_LURK,
+    ENCH_PHASE_SHIFT,
+    ENCH_DIVINE_SHIELD,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

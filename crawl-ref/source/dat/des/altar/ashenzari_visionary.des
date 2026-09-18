@@ -123,7 +123,7 @@ NAME:   grunt_ashenzari_visionary_spider
 TAGS:   grunt_ashenzari_visionary_spider no_tele_into unrand
 TAGS:   no_monster_gen no_item_gen no_trap_gen
 MONS:   place:Spider:1
-KFEAT:  ^ = web trap
+KFEAT:  ^ = web
 SUBST:  x = xx^, . = W....., . = 11.
 COLOUR: 1. = brown
 COLOUR: x = yellow

@@ -14,7 +14,8 @@ define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
     {
         delete data["msg"];
         $.extend(spectators, data);
-        $("#spectator_count").html(data.count + " spectators");
+        let spectatorsLabel = data.count === 1 ? "spectator" : "spectators";
+        $("#spectator_count").html(`${data.count} ${spectatorsLabel}`);
         $("#spectator_list").html(data.names);
         $(document).trigger("spectators_changed", [spectators]);
     }

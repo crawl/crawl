@@ -1,7 +1,7 @@
 name: "iguana"
 glyph: {char: "l", colour: blue}
 flags: [cold_blood]
-xp_mult: 13
+exp: 37
 genus: giant_lizard
 will: 10
 attacks:

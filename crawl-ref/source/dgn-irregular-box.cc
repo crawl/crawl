@@ -130,7 +130,7 @@ static vector<int> _calculate_random_values(int min_value, int max_value,
 //  values. The first and last elements are set to the
 //  specified values. After this, one value at random is
 //  set to 0. If count <= 1, this function returns a vector
-//  contain the single value 0.
+//  containing the single value 0.
 static vector<int> _calculate_random_wall_distances(int first_value,
                                                     int last_value,
                                                     int max_value,

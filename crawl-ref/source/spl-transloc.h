@@ -1,5 +1,6 @@
 #pragma once
 
+#include "externs.h"
 #include "spl-cast.h"
 
 class actor;
@@ -16,6 +17,7 @@ spret cast_blink(int pow, bool fail = false);
 void uncontrolled_blink(bool override_stasis = false, int max_dist = LOS_RADIUS);
 spret controlled_blink(bool safe_cancel = true, dist *target = nullptr);
 void wizard_blink();
+spret spider_jump();
 
 int frog_hop_range();
 spret frog_hop(bool fail, dist *target = nullptr);
@@ -28,14 +30,16 @@ string movement_impossible_reason();
 
 coord_def get_electric_charge_landing_spot(const actor& agent,
                                            coord_def target,
-                                           string* fail_reason = nullptr);
+                                           string* fail_reason = nullptr,
+                                           bool* target_invalid = nullptr);
 
 bool valid_electric_charge_target(const actor& agent, coord_def target,
                                   string* fail_reason = nullptr);
 
-void you_teleport();
-void you_teleport_now(bool wizard_tele = false, bool teleportitis = false,
-                      string reason = "");
+bool hostile_teleport_is_possible();
+bool hostile_teleport_player(monster* mon_source = nullptr);
+void you_teleport(bool is_hostile = false, mid_t teleportitis_source = MID_NOBODY);
+void you_teleport_now(string reason = "", bool manual_tele = false, bool wizard_tele = false);
 bool you_teleport_to(const coord_def where,
                      bool move_monsters = false);
 bool cell_vetoes_teleport(coord_def cell, bool check_monsters = true,
@@ -45,7 +49,6 @@ spret cast_dimensional_bullseye(int pow, monster *target, bool fail);
 
 spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real = true,
                             actor* katana_defender = nullptr);
-string weapon_unprojectability_reason(const item_def* wpn);
 
 struct bolt;
 spret cast_apportation(int pow, bolt& beam, bool fail);
@@ -58,6 +61,8 @@ int gravitas_radius(int pow);
 spret cast_gravitas(int pow, const coord_def& where, bool fail);
 void pull_monsters_inward(const coord_def& center, int radius);
 
+bool can_beckon(const actor& beckoned);
+bool can_beckon(const monster_info& beckoned);
 bool beckon(actor &beckoned, const bolt &path);
 void attract_monsters(int delay);
 void attract_monster(monster &m, int max_move);
@@ -75,3 +80,6 @@ spret cast_gavotte(int pow, const coord_def dir, bool fail);
 vector<monster*> gavotte_affected_monsters(const coord_def dir);
 
 spret cast_teleport_other(const coord_def& target, int power, bool fail);
+
+vector<coord_def> get_bestial_landing_spots(coord_def target);
+spret do_bestial_takedown(coord_def target);

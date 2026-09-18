@@ -1,6 +1,7 @@
 name: "wandering mushroom"
 glyph: {char: "f", colour: brown}
 resists: {poison: 1}
+exp: 315
 genus: fungus
 holiness: [plant]
 will: 40

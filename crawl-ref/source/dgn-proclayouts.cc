@@ -217,6 +217,7 @@ dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
         case DNGN_UNSEEN:
         case DNGN_DECORATIVE_FLOOR:
         case DNGN_ENDLESS_SALT:
+        case DNGN_PURIFIED_MUTATION_CATALYST:
             return DNGN_FLOOR;
         case DNGN_OPEN_SEA:
             return DNGN_DEEP_WATER;

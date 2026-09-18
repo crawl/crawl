@@ -146,10 +146,7 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
         env.pgrid(where) |= FPROP_BLOODY;
         _orient_wall_blood(where, from, old_blood);
 
-        if (x_chance_in_y(ignite_blood, 3)
-            && you.see_cell(where)
-            && !cell_is_solid(where)
-            && !cloud_at(where))
+        if (x_chance_in_y(ignite_blood, 3) && you.see_cell(where))
         {
             int dur = 2 + ignite_blood + random2(2 * ignite_blood);
             place_cloud(CLOUD_FIRE, where, dur, &you, -1, -1,
@@ -185,14 +182,15 @@ void bleed_onto_floor(const coord_def& where, monster_type montype,
     _maybe_bloodify_square(where, damage, spatter, from, old_blood);
 }
 
-void blood_spray(const coord_def& origin, monster_type montype, int level)
+void blood_spray(const coord_def& origin, monster_type montype, int level,
+                 int max_ranged)
 {
     int tries = 0;
     for (int i = 0; i < level; ++i)
     {
         // Blood drops are small and light and suffer a lot of wind
         // resistance.
-        int range = random2(8) + 1;
+        int range = random2(max_ranged) + 1;
 
         while (tries < 5000)
         {

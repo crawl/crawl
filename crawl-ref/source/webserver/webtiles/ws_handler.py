@@ -1283,7 +1283,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         # Handle RC file not existing. IOError for py2, OSError for py3
         except (OSError, IOError):
             contents = ''
-        self.send_message("rcfile_contents", contents = contents)
+        self.send_message("rcfile_contents", game_id = game_id, contents = contents)
 
     def set_rc(self, game_id, contents):
         rcfile_path = self.rcfile_path(game_id)

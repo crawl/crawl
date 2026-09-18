@@ -32,6 +32,7 @@
 #include "prompt.h"
 #include "scroller.h"
 #include "showsymb.h"
+#include "sound.h"
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
@@ -404,7 +405,7 @@ static const char *targeting_help_wiz =
     "<w>\"</w>: get debugging information about a portal\n"
     "<w>~</w>: polymorph monster to specific type\n"
     "<w>,</w>: bring down the monster to 1 hp\n"
-    "<w>Ctrl-(</w>: place a mimic\n"
+    "<w>Ctrl-F</w>: place a mimic\n"
     "<w>Ctrl-B</w>: banish monster\n"
     "<w>Ctrl-K</w>: kill monster\n"
 ;
@@ -951,7 +952,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_insert_commands(cols, 0, "<red>\"</red> : amulets (<w>%</w>ut on and <w>%</w>emove)",
                          { CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY });
     _add_insert_commands(cols, 0, "<lightred>percent</lightred> : talismans (e<w>%</w>oke)",
-                         { CMD_EVOKE });
+                         { CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY });
     _add_insert_commands(cols, 0, "<lightgrey>/</lightgrey> : wands (e<w>%</w>oke)",
                          { CMD_EVOKE });
 
@@ -1074,6 +1075,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_SHOW_TERRAIN, "toggle view layers");
     _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "show dungeon Overview");
     _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "toggle auto-pickup");
+    _add_command(cols, 1, CMD_IGNORE_INVISIBLE, "suppress invisible monster warnings");
 #ifdef USE_SOUND
     _add_command(cols, 1, CMD_TOGGLE_SOUND, "mute/unmute sound effects");
 #endif
@@ -1480,4 +1482,17 @@ void show_help(int section, string highlight_string)
     // handle the case where one of the special case help sections is triggered
     // from the help main menu.
     _show_help_special(key);
+}
+
+int encode_command_as_key(command_type cmd) noexcept
+{
+    // Don't accept buggy commands
+    if (cmd < CMD_NO_CMD || cmd >= CMD_MAX_CMD)
+        cmd = CMD_NO_CMD;
+
+    // There should be room between the internal keys
+    // (CK_MIN_INTERNAL == -1021) and keys with alt set
+    // (about -3000 + 255) for command_type to fit
+    // (currently 2000 through 2287).
+    return -(int)cmd;
 }

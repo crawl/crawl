@@ -68,24 +68,25 @@ O
 ENDMAP
 
 # Scenery, no threat.
-NAME:   swamp_mist_pool
-TAGS:   swamp_entry no_pool_fixup transparent
-KFEAT:  O = enter_swamp
+NAME:    swamp_mist_pool
+TAGS:    swamp_entry no_pool_fixup transparent
+KFEAT:   O = enter_swamp
 SHUFFLE: XYZ
-SUBST: Y : YX, Z : ZX, X = W, Y = w, Z = w
-MARKER: O = lua:fog_machine { \
+SUBST:   Y : YX, Z : ZX, X = W, Y = w, Z = w
+SUBST:   ' : ``', ' = t@@, " = tw, t = ttw, A = Ww
+MARKER:  O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
              size = 2, walk_dist = 1, spread_rate= 33 }
-SUBST:  '= t.., "= tw, t=ttw, A=Ww
+CLEAR:   `
 MAP
-       @
-   't"Ywt@
-  't"wYwXt'
- 't"wAYXw"t'
- t"wwAOAZw"t
- 't"wAAZw"t'
-  't"wwZ"t'
-   't"wt@
+      @
+  't"Ywt@
+ 't"wYwXt'
+'t"wAYXw"t'
+t"wwAOAZw"t
+'t"wAAZw"t'
+ 't"wwZ"t'
+  't"wt@
 ENDMAP
 
 NAME:   minmay_swamp_entry_swarm
@@ -209,7 +210,7 @@ TAGS:    swamp_entry no_pool_fixup transparent
 KMONS:   1 = patrolling bog body
 KFEAT:   1 = W
 KFEAT:   O = enter_swamp
-NSUBST:  n = 1:1 / 1=W1 / *:W
+NSUBST:  n = 1:1 / 1=1WW / *:W
 NSUBST:  W = 4:t / *:W
 MARKER:  O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
@@ -226,7 +227,8 @@ ENDMAP
 
 NAME:   palyth_hydra_swamp_entry
 TAGS:   swamp_entry no_monster_gen no_pool_fixup
-MONS:   hydra, komodo dragon / tyrant leech, iguana / cane toad
+MONS:   four-headed hydra / five-headed hydra
+MONS:   komodo dragon / tyrant leech, iguana / bullfrog
 KMONS:  s = swamp worm
 KFEAT:  s = w / W
 NSUBST: 1 = 1:1 / 1:1123 / *:., - = 1:2 / 1:233. / *:.
@@ -259,7 +261,7 @@ ENDMAP
 NAME:   nicolae_swamp_entry_spooky
 TAGS:   swamp_entry patrolling transparent
 WEIGHT: 5
-KMONS:  s = spectral thing
+KMONS:  s = spectral spriggan
 KMONS:  OP = ghost crab
 KFEAT:  O = enter_swamp
 KFEAT:  t = mangrove
@@ -327,10 +329,11 @@ tttttt
 ENDMAP
 
 NAME:   mainiacjoe_swamp_entry_angry_trees
-TAGS:   swamp_entry transparent patrolling
-MONS:   spriggan druid, bullfrog w:5 / hornet / cane toad
+TAGS:   swamp_entry transparent no_monster_gen patrolling
+MONS:   spriggan druid ; mundane damaged quarterstaff . robe
+MONS:   spriggan, bullfrog w:8 / hornet / swamp drake
 KFEAT:  O = enter_swamp
-NSUBST: S = 1:1 / *:T, T = 1:1 / 2:2 / 1:2tt / 16:t / *:.
+NSUBST: S = 1:1 / *:T, T = 1:2 / 2:3 / 1:3tt / 16:t / *:.
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
              size = 2, walk_dist = 1, spread_rate= 33 }
@@ -385,7 +388,7 @@ MAP
 '""w"tt
 twwww"t
 '""wwtt
- ttw"t'
+ ttw"tt
   'tt'
 ENDMAP
 
@@ -399,7 +402,7 @@ MAP
  ''www't
 'twwwwwtt
  wwwww"tt
-'twww"tt'
+'twww"ttt
  ttwww"tt
   ttw'tt
 ENDMAP
@@ -412,8 +415,8 @@ KFEAT:  1 = deep_water
 SUBST:  " = ttttw
 NSUBST: ' = 1:@ / * = ttW
 MAP
- 't't'
-tt"""t'
+ 't'tt
+ttw""tt
 t"w1w"tt
 ww1ww"tt
 t"w1t"t
@@ -460,17 +463,18 @@ WEIGHT: 8
 #####
 NAME: nicolae_swamp_fairy_circle
 TAGS: transparent extra decor
-SUBST: W = .W, w = wwwW, q = w
-MONS: fungus / nothing w:7
+MONS: fungus
+ITEM: spore talisman
+SUBST: 1 = 1 .:7, d = d.., W = .W, w = wwwW, q = w
 MAP
     ...
   ..111..
  .11WWW11.
- .1WWwWW1.
+ .1WWwWW1d
 .1WWwwwWW1.
 .1WwwqwwW1.
 .1WWwwwWW1.
- .1WWwWW1.
+ d1WWwWW1.
  .11WWW11.
   ..111..
     ...
@@ -478,8 +482,7 @@ ENDMAP
 
 NAME: nicolae_swamp_treefoil
 TAGS: transparent extra decor
-SUBST: T = t.
-KFEAT: . = . w:30 / W
+SUBST: T = t., . = ...W
 MAP
 tt       @     tt
  ttt....T.T...Tttt
@@ -626,8 +629,9 @@ TAGS:    transparent extra no_pool_fixup decor
 MONS:    bush
 SHUFFLE: AB, CD, EF, GH, IJ / IJ / JI
 SUBST:   A : tww.., C : tww.., E : t., G = t.
-SUBST:   I = wt1GT., BDF = t, H = .
+SUBST:   I = wt1GT., BDF = t, HJ = .
 KMASK:   wW = no_monster_gen
+FTILE:   .@1GTt = floor_sprouting_stone
 MAP
    tt.tt@tt@tt.tt
    tt.tt.tt.tt.tt
@@ -652,7 +656,7 @@ NAME:   wheals_swamp_sinkhole
 TAGS:   extra no_monster_gen decor
 DEPTH:  Swamp:1-2
 WEIGHT: 5
-KFEAT: ^ = shaft trap
+KFEAT: ^ = shaft
 SUBST: u = Ww
 KPROP: wW^ = no_tele_into
 MAP
@@ -696,6 +700,7 @@ TAGS:  transparent extra decor no_pool_fixup
 KMONS: S = sacred lotus
 KFEAT: C = altar_elyvilon / altar_fedhas / altar_wu_jian
 SUBST: S = SSw
+FTILE: .@C = floor_sprouting_ruin
 MAP
 ttt     ttt
 ..ttttttt..
@@ -715,7 +720,7 @@ ENDMAP
 
 NAME:  nicolae_swamp_orc_logging_accident
 TAGS:  decor extra no_monster_gen no_trap_gen
-KFEAT: r = cache of baked goods
+KFEAT: r = cache_of_baked_goods
 SUBST: F = 't, T = _t
 NSUBST: p = 4:p / *:., ' = o / '
 SUBST: . = ...b
@@ -805,6 +810,7 @@ SHUFFLE: AB / AB / BA, CD / CD / DC, EF / EF / FE
 SUBST:   A = t, B = ., C : Pt~.., D = ., E = t, F = P
 KMASK:   ~ = no_monster_gen
 SUBST:   ~ = w
+FTILE:   .Pt = floor_sprouting_stone
 MAP
    .www.www.
   .w...w...w.
@@ -901,10 +907,10 @@ MAP
 ENDMAP
 
 NAME:   evilmike_swamp_ruin_house_5
+ITEM:   elf skeleton
 NSUBST: x = 1 = x:260 + / *:x
 SUBST:  yx = xxxxx-, - = ----.
 NSUBST: - = 2:d / *:-
-ITEM:   human skeleton
 : swamp_ruins(_G)
 MAP
   ............
@@ -1044,6 +1050,51 @@ MAP
   XXXX--XXXX
   ..........
 ENDMAP
+
+# Another riff off of evilmike_swamp_ruin_house_6.
+NAME:    regret_index_swamp_ruin_house_1
+SUBST:   ' : ..`, X : xx`, ~ = -```, x = xxxx-, - = -----.
+CLEAR:   `
+: swamp_ruins(_G)
+MAP
+   ...''
+ ......
+ .xxxx x X
+..x---
+..x---~
+..x---~       X
+..x---~
+'.  ~~        x '
+' x        ~~  .'
+          ~---x..
+  X       ~---x..
+          ~---x..
+           ---x..
+       X x xxxx.
+          ......
+         ''...
+ENDMAP
+
+NAME:   regret_index_swamp_ruin_wall
+SUBST:  x = xxxx-, - = -----.
+: swamp_ruins(_G)
+WEIGHT: 4
+MAP
+  x       x
+  xx      xx
+ -xx-.  .-xx-.
+.-xx--..--xx--.
+.-xx------xx----
+ xxxxxxxxxxxxxxxx
+ xxxxxxxxxxxxxxxx
+  ----xx------xx-.
+   .--xx--..--xx-.
+    .-xx-.  .-xx-
+      xx      xx
+      x       x
+ENDMAP
+
+####
 
 NAME:    nicolae_swamp_ascending_descending
 TAGS:    transparent decor no_pool_fixup no_descent
@@ -1220,6 +1271,7 @@ SHUFFLE: JKLMNO / ------ / -----q / ----q- / ----qq / ---q-- / ---q-q / \
          q-q-q- / q-q-qq / q-qq-- / q-qq-q / q-qqqq / qq---- / qq---q / \
          qq--q- / qq--qq / qq-q-- / qq-q-q / qq-qqq
 SUBST:   JKLMNOq = t, - = ., D = t_, p : t., P : t.
+FTILE:   .@t = floor_sprouting_stone
 CLEAR:   _
 MAP
    DDDDDDDDD
@@ -1567,6 +1619,7 @@ KMONS:   A = swamp dragon
 KMONS:   B = green draconian
 SUBST:   x = t
 NSUBST:  1 = 1:2 / 1:3 / * = 1:80 23
+FTILE:   .123AB%|Gx = floor_sprouting_ruin
 : else
 KMONS:   1 = green draconian
 KMONS:   a = death drake
@@ -1586,7 +1639,7 @@ TILE:    t = dngn_demonic_tree_1 w:3 / dngn_demonic_tree_16 w:3 / \
 KITEM:   *| = % no_pickup w:2 / * no_pickup / | no_pickup
 KFEAT:   aA = stone_arch
 KFEAT:   B = shallow_water
-KFEAT:   Z = zot trap
+KFEAT:   Z = trap_zot
 NSUBST:  < = 1:{ / 1:}
 SHUFFLE: {} / {[ / {[ / }] / }]
 MARKER:  A = lua:fog_machine { cloud_type = "translocational energy", \
@@ -1595,15 +1648,15 @@ MARKER:  A = lua:fog_machine { cloud_type = "translocational energy", \
 MAP
          xxxxx
         @xWxWxxxx
-       @@......<xx
-    xxxxxxxxx...Zxx
-   xxxxxcxxx..x1.<x
-  xxxWWW.WWW.xGx..x
- xxxW1..W...W.x...xx
-xxxW...twt...W..x.Wx
-xxW1.t..t..t..Wxx.xx
-xxW...t.w.t...Wxx.Wx
-xxW.t..w|w..t.Wxx.xx
+       @@''''''<xx
+    xxxxxxxxx'''Zxx
+   xxxxxcxxx..x1'<x
+  xxxWWW.WWW.xGx''x
+ xxxW1..W...W.x.''xx
+xxxW...twt...W..x'Wx
+xxW1.t..t..t..Wxx'xx
+xxW...t.w.t...Wxx'Wx
+xxW.t..w|w..t.Wxx'xx
 xc.Wwtw|A|wtwW.cx@@
 xxW.t.%w|w..t.Wxx@
 xxW...t%w.t...Wxx
@@ -1776,8 +1829,7 @@ y..c...c...0..$c...c..y
 ENDMAP
 
 NAME:    grunt_hermit_hut
-MONS:    orc high priest / orc sorcerer / arcanist w:5 / \
-         occultist w:5 / necromancer band
+MONS:    orc high priest / orc sorcerer / kobold fleshcrafter / necromancer band
 SHUFFLE: +d / +d / d+
 SUBST:   w = w t:10, d = c, c = ccx
 KPROP:   w = no_tele_into
@@ -1797,23 +1849,20 @@ www.cc+c.www
 ENDMAP
 
 NAME:   grunt_witch_cave
-MONS:   fenstrider witch
-MONS:   hydra
+MONS:   fenstrider witch, hydra
+ITEM:   spriggan skeleton / elf skeleton
 KITEM:  K = potion of moonshine pre_id w:20 / \
             potion of mutation pre_id
 KITEM:  * = *
 KFEAT:  K = shallow_water
-KFEAT:  * = cache of baked goods
+KFEAT:  * = cache_of_baked_goods
 NSUBST: : = 5:W / *:.
 SUBST:  w = w:10 t:10
 KPROP:  w = no_tele_into
 MARKER: K = lua:fog_machine { cloud_type="black smoke", \
                               pow_min = 10, pow_max = 30, delay = 50, \
                               size = 1, walk_dist = 2, spread_rate = 25 }
-MARKER: L = lua:fog_machine { cloud_type="flame", \
-                              pow_min = 100, pow_max = 100, delay = 100, \
-                              size = 1, excl_rad = 0, walk_dist = 0 }
-ITEM:   human skeleton / elf skeleton / dwarf skeleton / orc skeleton
+: single_cloud(_G, "L", "flame", false)
 MAP
      wwwwww
     wwxxxxww
@@ -1847,7 +1896,6 @@ KPROP: wK = no_tele_into
       data={triggered = false} }
   cf:add_triggerer(DgnTriggerer:new{type="player_move"})
   lua_marker("O", cf)
-  lua_marker(":", cf)
   lua_marker("K", props_marker { merfolk_avatar_spawn = 1 })
 }}
 MAP
@@ -1856,9 +1904,9 @@ MAP
  wwwwwKwwwww
  wwwwwWwwwww
 wwwwwwWwwwwww
-wwwwWW:WWwwww
-wwwwW:O:Wwwww
-wwwwwW:Wwwwww
+wwwwWW.WWwwww
+wwwwW.O.Wwwww
+wwwwwW.Wwwwww
 wwwww.wwwwwww
  wwwww.wwwww
  wwwww.wwwww
@@ -2171,7 +2219,7 @@ ENDMAP
 NAME:  cheibrodos_swamp_minitomb
 TAGS:  no_monster_gen
 KITEM: - = w:5 gold / w:2 any jewellery / w:20 nothing
-KMONS: - = bog body w:20 / troll zombie / troll skeleton / bloated husk w:5
+KMONS: - = bog body w:20 / troll zombie / troll draugr / bloated husk w:5
 SUBST: ' = .W
 MAP
 WWxxxxxxxxx
@@ -2189,7 +2237,7 @@ NAME:    nicolae_swamp_spriggan_camp
 KMONS:   D = patrolling spriggan rider
 KMONS:   SGHI = spriggan
 KMONS:   F = spriggan druid
-KFEAT:   C = cache of baked goods
+KFEAT:   C = cache_of_baked_goods
 SHUFFLE: Ff/Gg/Hh/Ii
 SUBST:   GHI = S., ghi = .
 MAP
@@ -2212,7 +2260,7 @@ NAME:    nicolae_swamp_oklob_treasure_island
 TAGS:    no_pool_fixup
 DEPTH:   Swamp, !Swamp:$
 KMONS:   o = oklob plant
-KFEAT:   ^ = permanent teleport trap
+KFEAT:   ^ = trap_teleport_permanent
 SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff/Gg/Hh/Ii, %*$
 NSUBST:  ' = 1:^ / 3:o / *:'
 SUBST:   abcde = w, fghi = t, ABCDE = .wW, FGHI = .t, ' = ':100 $$$%%
@@ -2300,15 +2348,15 @@ ENDMAP
 NAME:  beargit_kiku_chapel
 TAGS:  no_monster_gen
 DEPTH: Swamp:2-
-MONS:  bog body w:20 / bunyip zombie / bunyip skeleton / death scarab w:1
+MONS:  bog body w:20 / bunyip zombie / spectral bunyip / death scarab w:1
 MONS:  patrolling spriggan berserker simulacrum w:20 / \
        patrolling spriggan defender simulacrum / \
        patrolling spriggan air mage simulacrum / \
        juggernaut zombie w:5 / caustic shrike zombie w:1
-MONS:  patrolling necromancer / \
+MONS:  patrolling necromancer ; robe . athame ego:pain / \
        patrolling fenstrider_witch ; quick blade ego:pain
 MONS:  ghost crab / death drake w:1
-KMONS: 5 = bunyip zombie / bunyip skeleton / swamp dragon skeleton / \
+KMONS: 5 = bunyip zombie / spectral bunyip / swamp dragon draugr / \
            hornet zombie / death scarab w:1
 ITEM:  randbook disc:necromancy slevels:10 / \
        randbook disc:necromancy slevels:12 / randbook disc:necromancy slevels:16
@@ -2409,17 +2457,15 @@ ENDMAP
 NAME:   nzn_swamp_weyward_sisters
 TAGS:   no_pool_fixup
 DEPTH:  Swamp:2-
-MONS:   patrolling fenstrider witch, fungus, human att:good_neutral
-: dgn.delayed_decay(_G, 'd', 'human corpse')
-KITEM:  e = human skeleton
+MONS:   patrolling fenstrider witch, fungus, spriggan att:good_neutral
+: dgn.delayed_decay(_G, 'd', 'spriggan corpse')
+KITEM:  e = spriggan skeleton / elf skeleton
 KITEM:  f = any good_item no_pickup
 KFEAT:  n = iron_grate
 SUBST:  e = ddee. *:5
 SUBST:  2 = 222. *:1
 NSUBST: 3 = 3 / f / .
-MARKER: O = lua:fog_machine {   cloud_type = "flame", pow_min = 10, \
-                                pow_max = 10, delay = 10, size = 1, \
-                                walk_dist = 0, excl_rad = 0 }
+: single_cloud(_G, "O", "flame", false)
 MAP
     xxxxx@t
     xxOxxWt
@@ -2455,7 +2501,7 @@ MAP
 ENDMAP
 
 NAME:    nzn_swamp_blast_mining
-TAGS:    no_pool_fixup
+TAGS:    no_pool_fixup patrolling
 WEIGHT:  5
 ITEM:    stone, tin of tremorstones
 MONS:    bloated husk, earth elemental
@@ -2714,7 +2760,7 @@ NAME:   nicolae_swamp_necromancy_gone_wrong
 TAGS:   no_trap_gen patrolling
 MONS:   20-headed hydra zombie
 ITEM:   scimitar good_item ego:none / glaive good_item ego:none \
-        / broad axe good_item ego:none / staff of death / nothing w:40
+        / broad axe good_item ego:none / staff of necromancy / nothing w:40
 : item(dgn.good_aux_armour .. " / nothing w:60")
 ITEM:   scroll of brand weapon / scroll of fear / scroll of teleportation \
         / scroll of blinking / nothing w:40
@@ -2795,17 +2841,17 @@ ORIENT: northwest
 MONS:   spriggan, spriggan rider, spriggan druid, spriggan berserker
 MONS:   spriggan air mage
 ITEM:   gold q:1 / gold q:2 / gold q:3 / gold q:4
-ITEM:   buckler w:30 / robe w:30 / swamp dragon scales w:20 \
-        / steam dragon scales / acid dragon scales / troll leather armour
-ITEM:   short sword / rapier / quick blade / long sword / scimitar \
-        / war axe / morningstar / eveningstar / partisan / quarterstaff \
-        / lajatang
+ITEM:   buckler w:30 / robe w:30 / swamp dragon scales w:20 / \
+        steam dragon scales / acid dragon scales / troll leather armour
+ITEM:   rapier / athame / quick blade / long sword / scimitar / \
+        war axe / morningstar / eveningstar / partisan / quarterstaff / \
+        lajatang
 ITEM:   any magical staff, any jewellery, any book, any wand
 NSUBST: L = e / f / eeffhj$ / ghhijj$
 SUBST:  } = }]), O = c., D = tt., P = 112., Q = 1112, . = ...W
 # The shaft is just for flavor, to help hint at the notion of "go downstairs".
 # You can think of it as a "flavor shaft". Or a "flavor hole", if you prefer.
-KFEAT:  ^ = shaft trap
+KFEAT:  ^ = shaft
 MAP
 tttttttttttttttttttt
 tttD...3...Dtttttttt
@@ -2999,12 +3045,12 @@ NAME:    nicolae_swamp_thats_no_hydra
 TAGS:    transparent no_pool_fixup
 DEPTH:   Swamp
 KMONS:   1 = kraken
+KITEM:   H = hydra skeleton
 KFEAT:   @ = . / W
 KFEAT:   1 = w
 SHUFFLE: LMN, OPQ, RSZ
 NSUBST:  `- = 2=H / 2=H. / .
 SUBST:   LOR = @, MNPQSZ = t, - = .W, ` = wW, D = tww
-KITEM:   H = hydra skeleton
 MAP
      LLLLM
    ZZLLLLMMM
@@ -3058,8 +3104,8 @@ ENDMAP
 NAME:   tekkud_bubbles_buried_in_this_jungle
 TAGS:   no_monster_gen
 DEPTH:  Swamp
-KMONS:  1 = fenstrider witch ; staff of alchemy | staff of death . \
-                               orb ego:wrath | orb ego:mayhem w:5 . robe
+KMONS:  1 = fenstrider witch ; staff of alchemy | staff of necromancy . \
+                               orb ego:glass | orb ego:mayhem w:5 . robe
 KMONS:  2 = bog body
 KMONS:  3 = bloated husk
 KFEAT:  123 = W
@@ -3087,7 +3133,7 @@ MONS:   spriggan w:12 ; shortbow | sling good_item / spriggan rider w:8
 MONS:   spriggan druid / spriggan air mage w:5 / \
         spriggan berserker w:5 ; hand cannon . animal skin
 ITEM:   tin of tremorstones / staff of earth randart no_pickup w:2 / \
-        granite talisman / granite talisman randart w:2
+        medusa talisman randart / granite talisman randart w:2
 ITEM:   spear good_item / quick blade w:5 / shortbow / hand cannon w:5
 ITEM:   stone q:1 no_pickup
 KFEAT:  X = x
@@ -3139,7 +3185,7 @@ TAGS:    no_rotate
 MONS:    swamp dragon, swamp drake, hydra
 MONS:    thorn hunter / shambling mangrove / spriggan druid
 KMONS:   O = fire dragon w:1 / ice dragon w:1 / hydra w:18
-KMONS:   & = the lernaean hydra
+KMONS:   & = lernaean hydra
 KITEM:   R = mossy gem
 KITEM:   O& = decaying rune of Zot
 SHUFFLE: 12
@@ -3149,6 +3195,7 @@ NSUBST:  2 = 5:2 / 2:. / * = 2.., 3 = 7:3 / 3:. / * = 3..
 : if crawl.one_chance_in(11) then
 SUBST:   4 = .:999 4:1, O = &
 : end
+FTILE:   .OR1234& = floor_sprouting_squares
 MAP
       -t-t-
      2-2-2-2
@@ -3181,7 +3228,7 @@ MONS:    swamp dragon, swamp drake, hydra, lindwurm, rime drake, bog body
 MONS:    thorn hunter / shambling mangrove / spriggan druid
 KMONS:   O = fire dragon w:2 / hydra w:18
 KMONS:   P = ice dragon w:2 / hydra w:18
-KMONS:   & = the lernaean hydra
+KMONS:   & = lernaean hydra
 KITEM:   R = mossy gem
 KITEM:   OP& = decaying rune of Zot
 SHUFFLE: OR / de, 123,  lLO4 / wWP5, 56
@@ -3221,7 +3268,7 @@ PLACE:   Swamp:$
 WEIGHT:  20
 ORIENT:  southeast
 MONS:    swamp dragon, hydra, swamp drake
-MONS:    the lernaean hydra
+MONS:    lernaean hydra
 KITEM:   R = mossy gem
 KITEM:   O = decaying rune of Zot
 SHUFFLE: ab, 12
@@ -3273,7 +3320,7 @@ MONS:    spectral swamp dragon / spectral hydra w:12
 MONS:    swamp dragon zombie / hydra zombie w:12
 MONS:    spectral alligator w:12 / alligator zombie
 MONS:    death drake / spectral bunyip w:4
-MONS:    bloated husk, phantom, bog body
+MONS:    bloated husk, spectral spriggan, bog body
 KMONS:   8 = phantasmal warrior
 KMONS:   9 = ghost crab
 KMONS:   ? = swamp worm zombie / tyrant leech zombie w:15
@@ -3285,7 +3332,7 @@ KFEAT:   ?Y = deep_water
 KFEAT:   O* = shallow_water
 SHUFFLE: Oo / *s
 SUBST:   1 = 113, ? = ??w, " = tc, ' = .w, s = .
-NSUBST:  6 = 1:5 / 3 = 89 / 12 = 5666. / *:., y = 1:Y / *:W
+NSUBST:  6 = 1:5 / 3 = 89 / 14 = 5666. / *:., y = 1:Y / *:W
 MARKER:  Y = lua:fog_machine { cloud_type = "foul pestilence", \
              pow_min = 3, pow_max = 4, delay_min = 35, delay_max = 45, \
              size = 1, walk_dist = 0, excl_rad = 0}
@@ -3331,11 +3378,10 @@ NAME:    swamp_vile
 TAGS:    no_pool_fixup no_monster_gen
 PLACE:   Swamp:$
 ORIENT:  southeast
-MONS:    bog body / ugly thing / small abomination w:2
-MONS:    shadowghast / orange demon w:2
-MONS:    large abomination / very ugly thing / thrashing horror w:6
-MONS:    green death, sin beast band, great orb of eyes
-MONS:    shadow demon / titanic slime creature
+MONS:    bog body / thrashing horror w:4, cognitogaunt
+MONS:    large abomination / very ugly thing
+MONS:    green death, sin beast band, kobold fleshcrafter
+MONS:    shadow demon / titanic slime creature w:12
 KMONS:   8 = hydra / swamp dragon
 KMONS:   9 = tentacled monstrosity
 KITEM:   R = mossy gem
@@ -3345,19 +3391,20 @@ KFEAT:   T = demonic_tree
 SHUFFLE: yz, '"
 SUBST:   yX = x:20 t:3 T:1 W:1, z = ..wwwWWW, ' = ....W, " = wWWW
 SUBST:   b = bccc, 5 : 59
-NSUBST:  7 = 1:4 / 1:6 / 1:87 / *:7, 0 = 7:1 / 3:. / *:2
-NSUBST:  5 = 1:5 / 1:6 / * = 56, 9 = 1:9 / * = 3
+NSUBST:  7 = 1:4 / 1:6 / 1:87 / *:7, 0 = 1:2 / 2 = 211 / 6:1 / *:.
+NSUBST:  5 = 1:5 / 1:6 / 1:445563 / * = 556, 9 = 1:9 / * = 3
+FTILE:   .OR12345679T = floor_sprouting_ruin
 TILE:    b = bedevilled_crystal_pandemonium
 TILE:    T = dngn_demonic_tree_10 w:6 / dngn_demonic_tree_11 w:6 / \
              dngn_demonic_tree_12 / dngn_demonic_tree_13
 : set_feature_name("crystal_wall", "bedevilled crystal wall")
 MAP
-@@ "' Xxccxcxcct
-@'"'XWXW""'..Wcct
+@@ "' Txccxcxcct
+@'"WXWXW""'..Wcct
   'XWXWx''"zyW.xct
    WXWx"wwwyzwxWcct
   XXWx3x1wwzyw.x.xct
- txWx"x2wwwyzwx00.cctt
+ TxWx"xWwwwyzwx00.cctt
  xt"'w1w28wzywx30xWcctt
  ct"'www88wyxwcxx.xWxttt
   x'"wwwww.cXWwwwwWwWcttt
@@ -3392,7 +3439,7 @@ PLACE:   Swamp:$
 ORIENT:  float
 MONS:    swamp dragon, swamp drake, hydra, bog body
 MONS:    fungus w:12 / plant w:5 / bush w:1
-KMONS:   d = patrolling the lernaean hydra / hydra w:1, hydra
+KMONS:   d = patrolling lernaean hydra / hydra w:1, hydra
 KMONS:   ef = patrolling hydra
 KMONS:   P = pile of debris
 KITEM:   d = decaying rune of Zot
@@ -3403,7 +3450,8 @@ NSUBST:  @ = 1:@ / *:.
 SHUFFLE: dDP / eE? / fF!, 123
 SUBST:   EF?! = ., C = cc., = = +.
 NSUBST:  : = 6:1 / 6:2 / 6:3 / 9:4 / 3 = 0.... / 20:5 / * = '
-SUBST:   ' = .....WW, G = Gg
+SUBST:   ' = .....WW, G = Gg, - = .
+FTILE:   .123450defgDPGUV+ = floor_sprouting_ruin
 MAP
  cccccWWW'''''WWWccccc
 cc%..ccCC=C=C=CCcc..%cc
@@ -3416,7 +3464,7 @@ WC'''..'G:'C':G'..'''CW
 WC:G:G:G'''C'''G'G'G:CW
 '=::::::'':C:''::::::='
 'C'::'C'':VcV:''C'::'C.
-'=''CCCCCCcccCCCCCC''=@
+'=''CCCCCCcccCCCCCC''-@
 'C'::'C'':VcU:''C'::'C.
 '=::::::'':C:''::::::='
 WC:G'G'G'''C'''G'G'G:CW
@@ -3439,7 +3487,7 @@ ORIENT:  float
 WEIGHT:  20
 KMONS:   1 =  swamp dragon / swamp drake / hydra w:15 / bog body w:5
 : if crawl.one_chance_in(11) then
-     KMONS: O = the lernaean hydra
+     KMONS: O = lernaean hydra
 : else
      KMONS: O* = thorn hunter / shambling mangrove / spriggan berserker
      KITEM: * = *
@@ -3483,7 +3531,7 @@ PLACE:   Swamp:$
 ORIENT:  float
 MONS:    swamp drake w:12 / swamp dragon / hydra
 MONS:    freezing wraith w:20 / flayed ghost / phantasmal warrior
-MONS:    hydra skeleton / swamp dragon skeleton / swamp drake skeleton w:13
+MONS:    hydra draugr / swamp dragon draugr / swamp drake draugr w:13
 MONS:    hydra zombie / swamp dragon zombie / swamp drake zombie w:13
 MONS:    spectral hydra / hydra simulacrum
 MONS:    patrolling thorn hunter / patrolling shambling mangrove
@@ -3491,8 +3539,7 @@ MONS:    patrolling spriggan druid god:fedhas
 KMONS:   p = plant
 KMONS:   ' = oklob plant
 KMONS:   q = ghoul
-KMONS:   L = patrolling the lernaean hydra zombie / \
-             patrolling the lernaean hydra skeleton
+KMONS:   L = patrolling lernaean hydra zombie
 KITEM:   o = mossy gem
 KITEM:   O = decaying rune of Zot
 KFEAT:   _ = altar_fedhas
@@ -3501,7 +3548,7 @@ KFEAT:   T = tree
 KFEAT:   E = x
 SHUFFLE: Oo / Nn
 SUBST:   N = %, n = ., x = xxxxxxttT
-NSUBST:  1 = 5:1 / 6 = 1. / * = .W, 3 = 5:5 / 6:3 / 6 = 3. / *:.
+NSUBST:  1 = 4:1 / 6 = 1. / * = .W, 3 = 5:5 / 4:3 / 4 = 3. / *:.
 NSUBST:  6 = 2:6 / 3 = 6. / *:., P = 3=' / ppW
 SUBST:   3 = 2344, . = ...W
 KPROP:   q = bloody
@@ -3545,20 +3592,18 @@ NAME:   nzn_swamp_witches_coven
 PLACE:  Swamp:$
 ORIENT: float
 TAGS:   no_monster_gen no_rotate no_vmirror
-MONS:   fenstrider witch, green death / sin beast / blizzard demon
+MONS:   fenstrider witch, green death / sin beast / shadow demon
 MONS:   smoke demon / soul eater / sixfirhy
 MONS:   orange demon / hellwing / chaos spawn
-MONS:   spriggan druid / orc sorcerer / ogre mage / deep elf pyromancer w:5 / \
-        deep elf zephyrmancer w:5 / arcanist w:5 / occultist w:5
+MONS:   spriggan druid / orc sorcerer / ogre mage / kobold fleshcrafter /\
+        arcanist w:5 / occultist w:5
 KITEM:  R = mossy gem
 KITEM:  O = decaying rune of Zot
 KFEAT:  B = stone_arch
 KFEAT:  a = c
 NSUBST: ' = 16:4 / 6 = 4. / * = W:55 .:20
 SUBST:  4 = 004449, b = baaaa
-MARKER: B = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
-                              pow_max = 10, delay = 10, size = 1, \
-                              walk_dist = 0, excl_rad = 0 }
+: single_cloud(_G, "B", "flame", false)
 TILE:   a = wall_stone_dark
 COLOUR: a = magenta
 TILE:   G = dngn_statue_demonic_bust / dngn_statue_imp / dngn_statue_cerebov \

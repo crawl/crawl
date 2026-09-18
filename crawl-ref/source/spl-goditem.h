@@ -11,8 +11,8 @@
 
 class actor;
 
-spret cast_healing(int pow, bool fail);
-bool heal_monster(monster& patient, int amount);
+vector<string> desc_pacify_chance(const monster_info& mi);
+void cast_pacify(const coord_def& pos, int power);
 
 /// List of monster enchantments which can be dispelled.
 const enchant_type dispellable_enchantments[] =
@@ -38,7 +38,6 @@ const enchant_type dispellable_enchantments[] =
     ENCH_TP,
     ENCH_LIQUEFYING,
     ENCH_INNER_FLAME,
-    ENCH_WORD_OF_RECALL,
     ENCH_INJURY_BOND,
     ENCH_FLAYED,
     ENCH_WEAK,
@@ -48,10 +47,9 @@ const enchant_type dispellable_enchantments[] =
     ENCH_POISON_VULN,
     ENCH_AGILE,
     ENCH_FROZEN,
-    ENCH_SIGN_OF_RUIN,
     ENCH_SAP_MAGIC,
     ENCH_CORROSION,
-    ENCH_REPEL_MISSILES,
+    ENCH_DEFLECT_MISSILES,
     ENCH_RESISTANCE,
     ENCH_HEXED,
     ENCH_EMPOWERED_SPELLS,
@@ -62,18 +60,20 @@ const enchant_type dispellable_enchantments[] =
     ENCH_MIRROR_DAMAGE,
     ENCH_BLIND,
     ENCH_FRENZIED,
-    ENCH_DAZED,
     ENCH_ANTIMAGIC,
     ENCH_ANGUISH,
     ENCH_CONTAM,
     ENCH_BOUND,
-    ENCH_BULLSEYE_TARGET,
     ENCH_ARMED,
     ENCH_VITRIFIED,
     ENCH_CURSE_OF_AGONY,
     ENCH_RIMEBLIGHT,
     ENCH_MAGNETISED,
     ENCH_BLINKITIS,
+    ENCH_DIMINISHED_SPELLS,
+    ENCH_VEXED,
+    ENCH_EXPOSED,
+    ENCH_PHASE_SHIFT,
 };
 
 bool player_is_debuffable();
@@ -105,7 +105,7 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
 void holy_word_player(holy_word_source_type source);
 
 void torment(actor *attacker, torment_source_type taux, const coord_def& where);
-int torment_cell(coord_def where, actor *attacker, torment_source_type taux);
+int torment_actor(actor* victim, actor *attacker, torment_source_type taux);
 int torment_player(const actor *attacker, torment_source_type taux);
 
 void setup_cleansing_flame_beam(bolt &beam, int pow,

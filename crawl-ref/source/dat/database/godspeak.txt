@@ -121,19 +121,19 @@ Xom adds some personal touches to your environment.
 
 @Xom scenery generic@
 %%%%
-Xom scenery cache of fruit
+Xom scenery cache_of_fruit
 
 Xom accidentally drops some snacks.
 
 Xom prepares the finest cultivars of fruit found anywhere, then drops them.
 %%%%
-Xom scenery cache of meat
+Xom scenery cache_of_meat
 
 Xom [offers|fetches] you some snacks.
 
 Xom prepares a banquet formed from your trail of carnage through the Dungeon.
 %%%%
-Xom scenery cache of baked goods
+Xom scenery cache_of_baked_goods
 
 Xom offers some snacks, fresh out of the oven.
 %%%%
@@ -159,7 +159,7 @@ Xom creates a safe adventurer enclosure.
 %%%%
 Xom mean door ring
 
-Xom raises up and pulls in a makeshift [warmonger|duelist]'s arena.
+Xom raises up and pulls in a makeshift [warmonger|duellist]'s arena.
 
 Xom locks you up as an exhibit to study.
 
@@ -172,7 +172,10 @@ Xom whisks you away into a realm of unfathomable savings!
 
 Xom casts you into... a shopping extravaganza?
 
-Xom offers you everything you could ever want (according to Xom).
+Xom offers you everything you could ever need (to amuse Xom).
+
+w:5
+Xom offers you everything you could ever need (in Xom's infallible divine judgment).
 
 The world spins wildly as Xom's jovial laughter rings.
 
@@ -281,6 +284,10 @@ Dim shapes swim through @the_feature@.
 Faint @any_colour@ flames crawl over @the_feature@.
 
 @The_feature@ is briefly covered in @any_colour_pattern@.
+
+@The_feature@ is briefly covered in @any_glowing_colour_pattern@.
+
+@The_feature@ is briefly covered in @any_graffiti@.
 %%%%
 Xom feature metal wall
 
@@ -295,6 +302,14 @@ Xom feature stone arch
 @The_feature@ briefly shows a lifeless wasteland on the other side.
 
 @The_feature@ briefly shows strange @glowing_adj@ figures on the other side.
+
+@The_feature@ briefly shows bizarre @glowing_adj@ buildings on the other side.
+
+@The_feature@ briefly shows a translucent wall covered in @any_colour_pattern@ on the other side.
+
+@The_feature@ briefly shows a translucent wall covered in @any_glowing_colour_pattern@ on the other side.
+
+@The_feature@ briefly shows a translucent wall covered in @any_graffiti@ on the other side.
 %%%%
 Xom underfoot general
 
@@ -492,19 +507,19 @@ Xom cloak slot
 
 @Your_item@ billows in an unfelt wind.
 
-@Your_item@ briefly wraps itself around your head!
+@Your_item@ briefly wraps itself around your @head@!
 
-@Your_item@ is briefly covered in lurid @any_colour_pattern@!
+@Your_item@ is briefly covered in @any_glowing_colour_pattern@!
 %%%%
 Xom helmet slot
 
-@Your_item@ leaps into the air, briefly spins, then lands back on your head!
+@Your_item@ leaps into the air, briefly spins, then lands back on your @head@!
 %%%%
 Xom offhand slot
 
 @Your_item@ spins!
 
-@Your_item@ briefly flashes a lurid @any_colour@!
+@Your_item@ briefly flashes @any_glowing_colour@!
 %%%%
 Xom gloves slot
 
@@ -513,6 +528,14 @@ Xom gloves slot
 Xom boots slot
 
 @Your_item@ grows to a huge size, then shrinks back down!
+%%%%
+Xom amulet slot
+
+@Your_item@ pulsates!
+
+@Your_item@ flares @any_glowing_colour@, then returns to normal.
+
+@Your_item@ briefly flies off and hovers over your @head@!
 %%%%
 Xom gizmo slot
 
@@ -524,7 +547,9 @@ Xom ring slot
 
 @Your_item@ twitches!
 
-@Your_item@ briefly expands and covers your entire @hand@!
+@Your_item@ briefly dulls, then brightens again!
+
+@Your_item@ briefly brightens, then dulls again!
 %%%%
 Xom dragon armour
 
@@ -574,9 +599,14 @@ Xom's power touches on your mind for a moment.
 
 Xom titters.
 %%%%
-# 50% stat loss, 25% draining,
-# 25% torment (only the player if Xom's feeling nasty)
-Xom draining or torment
+Xom drinkless confusion
+
+"Stumble well, my pet!"
+
+Xom's power touches upon your body and mind for a moment.
+%%%%
+# Draining, player-only torment, or Doom.
+Xom suffering
 
 "You have displeased me, mortal."
 
@@ -620,6 +650,8 @@ Xom send in the clones
 Xom feels like there should be more of you to share with the Dungeon.
 
 Xom gently smashes a mirror over your [@random_body_part_external_singular@|@random_body_part_external_plural@].
+
+"Multiply and go forth!"
 %%%%
 # drain your mp, produce magicspawn
 Xom brain drain
@@ -820,6 +852,28 @@ Xom recounts a horror story in an instant.
 
 w:2
 Xom joyfully recalls the collapse of multiple Dungeon civilisations.
+%%%%
+Xom shifts sight and space
+
+w:30
+Xom folds spacetime into a dazzling origami [yak|yak|quokka|quokka|duck]!
+
+Xom fills the local spatial manifold with blazing incandescence!
+
+Xom bedazzles everyone with quantum filament yo-yo tricks!
+
+Xom tears open a glimmering gravimetric shear!
+
+w:5
+Xom's Hand of Warping reaches out!
+%%%%
+Xom chaos vex
+
+Xom calls for a fanfare of bloodshed!
+
+Xom infuses your enemies with raw chaos!
+
+Xom incites a rapturous dance of death!
 %%%%
 Xom good mutations
 
@@ -1494,6 +1548,8 @@ a delicious
 a mouldy
 
 a fake
+
+a moist
 
 w:2
 a kilgore

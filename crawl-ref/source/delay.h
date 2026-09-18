@@ -255,7 +255,7 @@ public:
 
     const char* name() const override
     {
-        return "armour_on";
+        return "equip_on";
     }
 
     bool is_being_used(const item_def& item) const override
@@ -291,7 +291,7 @@ public:
 
     const char* name() const override
     {
-        return "armour_off";
+        return "equip_off";
     }
 
     bool is_being_used(const item_def& item) const override
@@ -738,8 +738,8 @@ activity_interrupt get_activity_interrupt(const string &);
 
 void run_macro(const char *macroname = nullptr);
 
-void autotoggle_autopickup(bool off);
 bool interrupt_activity(activity_interrupt ai,
                         const activity_interrupt_data &a
-                            = activity_interrupt_data(),
-                        vector<string>* msgs_buf = nullptr);
+                            = activity_interrupt_data());
+
+void monster_interrupt_message(activity_interrupt ai, const activity_interrupt_data &at);

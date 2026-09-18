@@ -38,7 +38,6 @@
 #include "files.h"
 #include "fineff.h"
 #include "format.h" // formatted_string
-#include "god-blessing.h"
 #include "god-companions.h"
 #include "god-item.h"
 #include "god-passive.h"
@@ -54,6 +53,7 @@
 #include "libutil.h"
 #include "losglobal.h"
 #include "macro.h"
+#include "map-knowledge.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
@@ -89,6 +89,7 @@
 #include "spl-book.h"
 #include "spl-goditem.h"
 #include "spl-monench.h"
+#include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
 #include "sprint.h"
@@ -117,13 +118,21 @@ static bool _player_sacrificed_arcana();
 // Load the sacrifice_def definition and the sac_data array.
 #include "sacrifice-data.h"
 
+/**
+* What piety rank do you need to unlock your capstone?
+*/
+int capstone_piety_rank(god_type god)
+{
+    // Worshippers of Ignis can use their capstone with any amount of piety
+    return (god == GOD_IGNIS) ? -1 : 6;
+}
+
 /** Would a god currently allow using a one-time six-star ability?
  * Does not check whether the god actually grants such an ability.
  */
 bool can_do_capstone_ability(god_type god)
 {
-    // Worshippers of Ignis can use their capstone with any amount of piety
-    int pbreak = (god == GOD_IGNIS) ? -1 : 5;
+    int pbreak = capstone_piety_rank(god) - 1;
     return in_good_standing(god, pbreak) && !you.one_time_ability_used[god];
 }
 
@@ -157,8 +166,7 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
 
     int item_slot = prompt_invent_item("Brand which weapon?",
                                        menu_type::invlist,
-                                       OSEL_BLESSABLE_WEAPON, OPER_ANY,
-                                       invprompt_flag::escape_only);
+                                       OSEL_BLESSABLE_WEAPON, OPER_ANY);
 
     if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
     {
@@ -245,10 +253,8 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
                 maybe_bloodify_square(*ri);
     }
 
-#ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
     scaled_delay(1000);
-#endif
     return true;
 }
 
@@ -297,7 +303,7 @@ bool zin_donate_gold()
         you.duration[DUR_PIETY_POOL] = 30000;
 
     const int estimated_piety =
-        min(MAX_PENANCE + MAX_PIETY, you.piety + you.duration[DUR_PIETY_POOL]);
+        min(MAX_PENANCE + MAX_PIETY, you.raw_piety + you.duration[DUR_PIETY_POOL]);
 
     if (player_under_penance())
     {
@@ -317,7 +323,7 @@ bool zin_donate_gold()
             (estimated_piety >= piety_breakpoint(1)) ? "pleased with you" :
             (estimated_piety >= piety_breakpoint(0)) ? "aware of your devotion"
                                                      : "noncommittal";
-        result += (donation >= 30 && you.piety < piety_breakpoint(5)) ? "!" : ".";
+        result += (donation >= 30 && you.raw_piety < piety_breakpoint(5)) ? "!" : ".";
 
         mpr(result);
     }
@@ -752,7 +758,7 @@ int zin_recite_power()
     const int power_mult = 10;
     const int invo_power = you.skill_rdiv(SK_INVOCATIONS, power_mult)
                            + 3 * power_mult;
-    const int piety_power = you.piety * 3 / 2;
+    const int piety_power = you.piety() * 3 / 2;
     return (invo_power + piety_power) / 2 / power_mult;
 }
 
@@ -1060,17 +1066,14 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case zin_eff::daze:
-        if (mon->add_ench(mon_enchant(ENCH_DAZED, degree, &you,
-                          (degree + random2(spellpower)) * BASELINE_DELAY)))
-        {
-            simple_monster_message(*mon, " is dazed by your recitation.");
-            affected = true;
-        }
+        mon->daze(degree + random2avg(spellpower / 10, 2));
+        simple_monster_message(*mon, " is dazed by your recitation.");
+        affected = true;
         break;
 
     case zin_eff::confuse:
         if (!mon->clarity()
-            && mon->add_ench(mon_enchant(ENCH_CONFUSION, degree, &you,
+            && mon->add_ench(mon_enchant(ENCH_CONFUSION, &you,
                              (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
             if (prayertype == RECITE_HERETIC)
@@ -1082,7 +1085,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case zin_eff::paralyse:
-        if (mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, &you,
+        if (mon->add_ench(mon_enchant(ENCH_PARALYSIS, &you,
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
             simple_monster_message(*mon,
@@ -1105,7 +1108,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case zin_eff::blind:
-        if (mon->add_ench(mon_enchant(ENCH_BLIND, degree, &you, INFINITE_DURATION)))
+        if (mon->add_ench(mon_enchant(ENCH_BLIND, &you, INFINITE_DURATION)))
         {
             simple_monster_message(*mon, " is struck blind by the wrath of Zin!");
             affected = true;
@@ -1113,7 +1116,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case zin_eff::silver_corona:
-        if (mon->add_ench(mon_enchant(ENCH_SILVER_CORONA, degree, &you,
+        if (mon->add_ench(mon_enchant(ENCH_SILVER_CORONA, &you,
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
             simple_monster_message(*mon, " is limned with silver light.");
@@ -1123,7 +1126,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
 
     case zin_eff::antimagic:
         ASSERT(prayertype == RECITE_HERETIC);
-        if (mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, degree, &you,
+        if (mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, &you,
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
             simple_monster_message(*mon,
@@ -1134,7 +1137,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case zin_eff::mute:
-        if (mon->add_ench(mon_enchant(ENCH_MUTE, degree, &you, INFINITE_DURATION)))
+        if (mon->add_ench(mon_enchant(ENCH_MUTE, &you, INFINITE_DURATION)))
         {
             simple_monster_message(*mon, " is struck mute by the wrath of Zin!");
             affected = true;
@@ -1142,7 +1145,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case zin_eff::mad:
-        if (mon->add_ench(mon_enchant(ENCH_MAD, degree, &you, INFINITE_DURATION)))
+        if (mon->add_ench(mon_enchant(ENCH_MAD, &you, INFINITE_DURATION)))
         {
             simple_monster_message(*mon, " is driven mad by the wrath of Zin!");
             affected = true;
@@ -1150,7 +1153,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case zin_eff::dumb:
-        if (mon->add_ench(mon_enchant(ENCH_DUMB, degree, &you, INFINITE_DURATION)))
+        if (mon->add_ench(mon_enchant(ENCH_DUMB, &you, INFINITE_DURATION)))
         {
             simple_monster_message(*mon, " is left stupefied by the wrath of Zin!");
             affected = true;
@@ -1205,7 +1208,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
     // Recite time, to prevent monsters from being recited against
     // more than once in a given recite instance.
     if (affected)
-        mon->add_ench(mon_enchant(ENCH_RECITE_TIMER, degree, &you, 40));
+        mon->add_ench(mon_enchant(ENCH_RECITE_TIMER, &you, 40));
 
     // Monsters that have been affected may shout.
     if (affected
@@ -1242,7 +1245,7 @@ static void _zin_saltify(monster* mon)
     {
         // Enemies with more HD leave longer-lasting pillars of salt.
         int time_left = (random2(8) + hd) * BASELINE_DELAY;
-        mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
+        mon_enchant temp_en(ENCH_SLOWLY_DYING, pillar, time_left);
         pillar->add_ench(temp_en);
     }
 }
@@ -1311,10 +1314,8 @@ void zin_sanctuary()
         mpr("You are suddenly bathed in radiance!");
 
     flash_view(UA_PLAYER, WHITE);
-#ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
     scaled_delay(1000);
-#endif
 
     // Pets stop attacking and converge on you.
     you.pet_target = MHITYOU;
@@ -1332,15 +1333,6 @@ void tso_divine_shield()
     you.duration[DUR_DIVINE_SHIELD] = max(you.duration[DUR_DIVINE_SHIELD], charges);
 }
 
-void tso_expend_divine_shield_charge()
-{
-    if (you.duration[DUR_DIVINE_SHIELD] && --you.duration[DUR_DIVINE_SHIELD] <= 0)
-    {
-        mprf(MSGCH_DURATION, "Your divine shield fades away.");
-        you.duration[DUR_DIVINE_SHIELD] = 0;
-    }
-}
-
 void elyvilon_purification()
 {
     mpr("You feel purified!");
@@ -1355,12 +1347,68 @@ void elyvilon_purification()
     you.redraw_evasion = true;
 }
 
+static const vector<enchant_type> healable_enchantments =
+{
+    ENCH_SICK,
+    ENCH_POISON,
+    ENCH_CONFUSION,
+    ENCH_SLOW,
+    ENCH_PETRIFYING,
+    ENCH_PETRIFIED,
+    ENCH_WEAK,
+    ENCH_DRAINED,
+};
+
+bool elyvilon_divine_alms_eligible(const monster& target)
+{
+    if (!target.friendly() || target.is_peripheral())
+        return false;
+
+    if (target.hit_points < target.max_hit_points)
+        return true;
+
+    for (enchant_type ench : healable_enchantments)
+        if (target.has_ench(ench))
+            return true;
+
+    return false;
+}
+
+void elyvilon_divine_alms(monster& target)
+{
+    const int base = 10 + you.skill(SK_INVOCATIONS, 2);
+    const int healed = random_range(base, base * 3 / 2);
+
+    target.heal(healed);
+
+    for (enchant_type ench : healable_enchantments)
+        if (target.has_ench(ench))
+            target.del_ench(ench, true, ench != ENCH_PETRIFYING);
+
+    // Give healed summons a little more time in this world
+    string msg;
+    if (target.has_ench(ENCH_SUMMON_TIMER))
+    {
+        mon_enchant timer = target.get_ench(ENCH_SUMMON_TIMER);
+        if (timer.duration < 100)
+        {
+            timer.duration += random_range(150, 250);
+            target.update_ench(timer);
+            msg = make_stringf(" and grants %s more time in this world.",
+                               target.pronoun(PRONOUN_OBJECTIVE).c_str());
+        }
+    }
+
+    mprf("The light of Elyvilon comforts %s%s.",
+         target.name(DESC_THE).c_str(), msg.c_str());
+}
+
 void elyvilon_divine_vigour()
 {
     if (you.duration[DUR_DIVINE_VIGOUR])
         return;
 
-    mprf("%s grants you divine vigour.",
+    mprf("%s grants you and your allies divine vigour.",
          god_name(GOD_ELYVILON).c_str());
 
     const int vigour_amt = 1 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
@@ -1379,6 +1427,8 @@ void elyvilon_divine_vigour()
                  / old_mp_max
                - you.magic_points);
     }
+
+    player_update_auras();
 }
 
 void elyvilon_remove_divine_vigour()
@@ -1413,6 +1463,55 @@ void trog_remove_trogs_hand()
     mprf(MSGCH_DURATION, "Your skin stops crawling.");
     mprf(MSGCH_DURATION, "You feel less strong-willed.");
     you.duration[DUR_TROGS_HAND] = 0;
+}
+
+static const vector<random_pick_entry<monster_type>> _trog_brothers =
+{
+  { -3,  10,  150, PEAK, MONS_BLACK_BEAR },
+  { -1,  13,  150, PEAK, MONS_POLAR_BEAR },
+  {  3,  19,  250, PEAK, MONS_OGRE },
+  {  6,  19,  200, PEAK, MONS_TROLL },
+  {  8,  19,  150, PEAK, MONS_ELEPHANT },
+  {  10, 20,  100, PEAK, MONS_SKYSHARK },
+  {  12, 23,  200, PEAK, MONS_CYCLOPS },
+  {  13, 24,  125, PEAK, MONS_DEATH_YAK },
+  {  13, 27,  200, PEAK, MONS_TWO_HEADED_OGRE },
+  {  13, 27,  100, RISE, MONS_TWO_HEADED_OGRE },
+  {  15, 30,  200, PEAK, MONS_DEEP_TROLL },
+  {  18, 31,  150, PEAK, MONS_IRON_TROLL },
+  {  19, 35,  150, PEAK, MONS_STONE_GIANT },
+  {  20, 37,   90, PEAK, MONS_DIRE_ELEPHANT },
+  {  22, 38,   90, PEAK, MONS_ETTIN },
+};
+
+monster_type trog_get_brother_type(int power)
+{
+    monster_picker picker;
+    return picker.pick(_trog_brothers, power, MONS_OGRE);
+}
+
+spret trog_brothers_in_arms(bool fail)
+{
+    static const vector<monster_type> types = { MONS_BLACK_BEAR,
+                                                MONS_POLAR_BEAR,
+                                                MONS_OGRE,
+                                                MONS_TROLL,
+                                                MONS_ELEPHANT,
+                                                MONS_SKYSHARK,
+                                                MONS_CYCLOPS,
+                                                MONS_DEATH_YAK,
+                                                MONS_TWO_HEADED_OGRE,
+                                                MONS_DEEP_TROLL,
+                                                MONS_IRON_TROLL,
+                                                MONS_STONE_GIANT,
+                                                MONS_ETTIN };
+    if (!player_summon_check(types))
+        return spret::abort;
+
+    fail_check();
+
+    summon_berserker(&you, trog_get_brother_type(you.experience_level));
+    return spret::success;
 }
 
 // Return whether the player can light the torch on their current floor
@@ -1460,14 +1559,14 @@ bool yred_light_the_torch()
         [level_id::current().describe()] = true;
 
     // No instant allies at 0*
-    if (you.piety < piety_breakpoint(0))
+    if (you.piety() < piety_breakpoint(0))
         return true;
 
     bool aid = false;
 
     // The power of the allies you get is based on the player's xl, but capped
     // by their current piety. 5* allows fully uncapped servants.
-    int cap = div_rand_round(min((int)you.piety, piety_breakpoint(4)) * 27, piety_breakpoint(4));
+    int cap = div_rand_round(min((int)you.piety(), piety_breakpoint(4)) * 27, piety_breakpoint(4));
     int pow = min(you.experience_level, cap);
 
     // Summon one stronger servant and two lesser ones.
@@ -1642,7 +1741,8 @@ void yred_fathomless_shackles_effect(int delay)
 
     int total_drained = 0;
     const coord_def p = you.props[YRED_BLASPHEMY_CENTER_KEY].get_coord();
-    int pow = div_rand_round((7 + you.skill_rdiv(SK_INVOCATIONS, 7, 5)) * 5, delay);
+    int pow = delay > 0 ? div_rand_round((7 + you.skill_rdiv(SK_INVOCATIONS, 7, 5)) * 5, delay)
+                        : 0;
     for (monster_near_iterator mi(p); mi; ++mi)
     {
         if (grid_distance(mi->pos(), p) > radius
@@ -1653,12 +1753,12 @@ void yred_fathomless_shackles_effect(int delay)
 
         if (!mi->has_ench(ENCH_BOUND))
         {
-            mi->add_ench(mon_enchant(ENCH_BOUND, 0, &you, INFINITE_DURATION));
+            mi->add_ench(mon_enchant(ENCH_BOUND, &you, INFINITE_DURATION));
             mi->props[YRED_SHACKLES_KEY] = true;
         }
 
         // Cache this first, since damage might kill them
-        bool can_drain = actor_is_susceptible_to_vampirism(**mi, false);
+        bool can_drain = actor_can_drain_life_from(you, **mi);
 
         int dam = resist_adjust_damage(*mi, BEAM_NEG, random2avg(pow, 2));
         if (_is_isolated_soul(*mi))
@@ -1699,7 +1799,7 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     ASSERT(mon->has_ench(ENCH_SOUL_RIPE));
 
     remove_bound_soul_companion();
-    add_daction(DACT_OLD_CHARMD_SOULS_POOF);
+    schedule_delayed_action_fineff(DACT_OLD_CHARMD_SOULS_POOF, "");
 
     const string whose = you.can_see(*mon) ? apostrophise(mon->name(DESC_THE))
                                            : mon->pronoun(PRONOUN_POSSESSIVE);
@@ -1714,7 +1814,7 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     mon->del_ench(ENCH_INVIS, false, false);
 
     // If the monster's held in a net, get it out.
-    mons_clear_trapping_net(mon);
+    mon->stop_being_caught(true);
 
     // Rebrand or drop any holy equipment, and keep wielding the rest. Also
     // remove any active avatars.
@@ -1742,6 +1842,9 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     // the proper stats from it.
     define_zombie(mon, mon->type, MONS_BOUND_SOUL);
 
+    if (orig.has_hydra_multi_attack())
+        mons_set_starting_heads(*mon, orig.props[ORIGINAL_HEADS_KEY].get_int());
+
     // Modify health based on invocations skill
     mon->max_hit_points = yred_get_bound_soul_hp(orig.type);
     mon->hit_points = mon->max_hit_points;
@@ -1760,7 +1863,7 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
 
     mon->props[KNOWN_MAX_HP_KEY] = mon->max_hit_points;
 
-    name_zombie(*mon, orig);
+    name_zombie_from_mon(*mon, orig);
 
     mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
     behaviour_event(mon, ME_ALERT, force_hostile ? &you : 0);
@@ -1774,16 +1877,11 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     mon->stop_being_constricted();
 
     // Monsters' haloes should be removed when their souls are bound.
-    if (mon->halo_radius() >= 0
-        || mon->umbra_radius() >= 0
-        || mon->silence_radius() >= 0
-        || mon->liquefying_radius() >= 0)
-    {
+    if (mon->affects_agrid())
         invalidate_agrid();
-    }
 
     // schedule our actual revival for the end of this combat round
-    avoided_death_fineff::schedule(mon);
+    schedule_avoided_death_fineff(mon);
 
     mprf("%s soul %s.", whose.c_str(),
          !force_hostile ? "is now yours" : "fights you");
@@ -1822,10 +1920,8 @@ bool kiku_gift_capstone_spells()
     simple_god_message(" grants you forbidden knowledge!");
     library_add_spells(spells);
     flash_view(UA_PLAYER, RED);
-#ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
     scaled_delay(1000);
-#endif
     more();
     you.one_time_ability_used.set(you.religion);
     take_note(Note(NOTE_GOD_GIFT, you.religion, 0, "forbidden knowledge"));
@@ -1895,7 +1991,7 @@ int slouch_damage_for_speed(int mon_speed, int mon_action_energy, int jerk_num,
     const int player_number = BASELINE_DELAY * BASELINE_DELAY * BASELINE_DELAY;
     return 4 * (mon_speed * BASELINE_DELAY * jerk_num
                            / mon_action_energy / jerk_denom
-                - player_number / player_movement_speed() / player_speed());
+                - player_number / player_overall_move_delay(BASELINE_DELAY));
 }
 
 int slouch_damage(monster *victim)
@@ -1917,7 +2013,7 @@ int slouch_damage(monster *victim)
 bool is_slouchable(coord_def where)
 {
     monster* mon = monster_at(where);
-    if (mon == nullptr || mon->is_stationary() || mon->cannot_act()
+    if (mon == nullptr || mon->is_stationary() || mon->helpless()
         || mons_is_projectile(mon->type)
         || mon->asleep() && !mons_is_confused(*mon))
     {
@@ -2055,9 +2151,7 @@ static void _cheibriados_displace_monster(monster* mon)
         mp.set_range(50);   // Don't search further than this
         if (mp.init_pathfind(pos, mon->pos(), false))
         {
-            coord_def old_pos = mon->pos();
-            mon->move_to_pos(pos, true);
-            mon->apply_location_effects(old_pos);
+            mon->move_to(pos, MV_INTERNAL);
             break;
         }
         else
@@ -2074,18 +2168,17 @@ void cheibriados_time_step(int pow)
     // effects will work properly). This is more than adequate for most purposes
     // and monster wandering behavior doesn't improve tremendously beyond this.
     you.duration[DUR_TIME_STEP] = 100;
+    dec_frozen_ramparts(1000);
     {
-        player_vanishes absent(true);
+        player_vanishes absent;
 
         you.time_taken = 10;
         _run_time_step();
         // Update corpses, etc.
         update_level(1000);
 
-#ifndef USE_TILE_LOCAL
+        // Allow extra time for the flash to linger.
         scaled_delay(1000);
-#endif
-
     }
     _cleanup_time_steps();
 
@@ -2191,7 +2284,7 @@ static map<curse_type, curse_data> _ashenzari_curses =
 static bool _can_use_curse(const curse_data& c)
 {
     for (skill_type sk : c.boosted)
-        if (you.can_currently_train[sk])
+        if (!is_useless_skill(sk))
             return true;
 
     return false;
@@ -2237,7 +2330,7 @@ string desc_curse_skills(const CrawlStoreValue& curse)
     vector<skill_type> trainable;
 
     for (skill_type sk : c.boosted)
-        if (you.can_currently_train[sk])
+        if (!is_useless_skill(sk))
             trainable.push_back(sk);
 
     return c.name + ": "
@@ -2296,7 +2389,9 @@ static void _choose_curse_knowledge()
 void ashenzari_offer_new_curse()
 {
     // No curse at full piety, since shattering resets the curse timer anyway
-    if (piety_rank() > 5)
+    // Check raw piety rather than effective piety, since we don't want to
+    // offer curses while ostracised from full piety.
+    if (piety_rank(you.raw_piety) > 5)
         return;
 
     _choose_curse_knowledge();
@@ -2344,8 +2439,7 @@ bool ashenzari_curse_item()
     const string prompt_msg = make_stringf("Curse which item? (Esc to abort)");
     const int item_slot = prompt_invent_item(prompt_msg.c_str(),
                                              menu_type::invlist,
-                                             OSEL_CURSABLE, OPER_ANY,
-                                             invprompt_flag::escape_only);
+                                             OSEL_CURSABLE, OPER_ANY);
     if (prompt_failed(item_slot))
         return false;
 
@@ -2378,8 +2472,7 @@ bool ashenzari_uncurse_item()
 {
     int item_slot = prompt_invent_item("Uncurse and destroy which item?",
                                        menu_type::invlist,
-                                       OSEL_CURSED_WORN, OPER_ANY,
-                                       invprompt_flag::escape_only);
+                                       OSEL_CURSED_WORN, OPER_ANY);
     if (prompt_failed(item_slot))
         return false;
 
@@ -2416,7 +2509,6 @@ bool ashenzari_uncurse_item()
         return false;
 
     mprf("You shatter the curse binding %s!", item.name(DESC_THE).c_str());
-    item_skills(item, you.skills_to_hide);
 
     for (item_def* _item : to_remove)
     {
@@ -2470,10 +2562,10 @@ void announce_beogh_conversion_offer()
             mons_speaks_msg(m, getSpeakString("orc_priest_preaching"),
                             MSGCH_TALK);
 
-            ASSERT_RANGE(get_talent(ABIL_CONVERT_TO_BEOGH, false).hotkey,
+            ASSERT_RANGE(get_talent(ABIL_CONVERT_TO_BEOGH).hotkey,
                             'A', 'z' + 1);
             mprf("(press <w>%c</w> on the <w>%s</w>bility menu to convert to Beogh)",
-                    get_talent(ABIL_CONVERT_TO_BEOGH, false).hotkey,
+                    get_talent(ABIL_CONVERT_TO_BEOGH).hotkey,
                     command_to_string(CMD_USE_ABILITY).c_str());
             you.attribute[ATTR_SEEN_BEOGH] = 1;
 
@@ -2493,7 +2585,6 @@ void spare_beogh_convert()
 
     set<mid_t> witnesses;
 
-    you.religion = GOD_NO_GOD;
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
         const monster *mon = monster_at(*ri);
@@ -2524,19 +2615,6 @@ void spare_beogh_convert()
         }
     }
 
-    int witc = 0;
-    for (auto wit : witnesses)
-    {
-        monster *orc = monster_by_mid(wit);
-        if (!orc || !orc->alive())
-            continue;
-
-        ++witc;
-        orc->del_ench(ENCH_CHARM);
-        mons_pacify(*orc, ATT_GOOD_NEUTRAL, true);
-    }
-
-    you.religion = GOD_BEOGH;
     you.one_time_ability_used.set(GOD_BEOGH);
 
     // Grant the player succour for accepting the Shepherd as their god
@@ -2544,8 +2622,18 @@ void spare_beogh_convert()
     you.duration[DUR_CONF] = 0;
 
     mpr("The priest grants you succour and welcomes you into the fold.");
-    if (witc > 1)
+    if (witnesses.size() > 1)
         mpr("The other orcs roar their approval!");
+
+    for (auto wit : witnesses)
+    {
+        monster *orc = monster_by_mid(wit);
+        if (!orc || !orc->alive())
+            continue;
+
+        orc->del_ench(ENCH_CHARM);
+        mons_pacify(*orc, ATT_GOOD_NEUTRAL, true);
+    }
 }
 
 static monster_type _get_orc_reinforcement_type(int pow)
@@ -2628,8 +2716,7 @@ void beogh_blood_for_blood()
 
 bool mons_is_blood_for_blood_orc(const monster& mon)
 {
-    return mon.has_ench(ENCH_SUMMON)
-            && mon.get_ench(ENCH_SUMMON).degree == MON_SUMM_AID
+    return mon.was_created_by(MON_SUMM_AID)
             && mons_genus(mon.type) == MONS_ORC;
 }
 
@@ -2710,7 +2797,7 @@ void beogh_blood_for_blood_tick(int delay)
     if (count * 3 <= max)
         rate *= 2;
 
-    int num_to_summon = div_rand_round(rate, delay * 5);
+    int num_to_summon = div_rand_round(rate * delay, 500);
 
     for (int i = 0; i < num_to_summon; ++i)
         _place_orcish_reinforcement();
@@ -2722,9 +2809,7 @@ void beogh_end_blood_for_blood()
          "You reach the end of your prayer and your brethren are recalled.");
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->has_ench(ENCH_SUMMON)
-            && mi->get_ench(ENCH_SUMMON).degree == MON_SUMM_AID
-            && mons_genus(mi->type) == MONS_ORC)
+        if (mons_is_blood_for_blood_orc(**mi))
         {
             place_cloud(CLOUD_TLOC_ENERGY, mi->pos(), 1 + random2(3), *mi);
             monster_die(**mi, KILL_RESET, -1, true);
@@ -2737,7 +2822,7 @@ void beogh_ally_healing()
 {
     if (!you.props.exists(BEOGH_DAMAGE_DONE_KEY)
         || x_chance_in_y(2, 5)
-        || you.piety < piety_breakpoint(2))
+        || you.piety() < piety_breakpoint(2))
     {
         you.props.erase(BEOGH_DAMAGE_DONE_KEY);
         return;
@@ -2819,41 +2904,7 @@ void beogh_increase_orcification()
     }
 
     // Adjust the message we give to the player's physiology.
-    string msg;
-    switch (you.species)
-    {
-        case SP_FORMICID:
-            msg += "Your mandibles take on a glossy white sheen, and your antennae grow pointier.";
-            break;
-
-        case SP_TENGU:
-            msg += "Your beak becomes more hooked, and the plumage around your ears grows tufted.";
-            break;
-
-        case SP_GARGOYLE:
-            msg += "You feel a divine power chisel tusks from your teeth and sculpt your ears to a sharp point.";
-            break;
-
-        case SP_VINE_STALKER:
-            msg += "A pair of ivory tusks grows out from your maw, and flowers begin to bloom upon you.";
-            break;
-
-        case SP_MUMMY:
-            msg += "A small pair of tusks begins to pierce through your wrappings.";
-            break;
-
-        case SP_BARACHI:
-            msg += "Your teeth grow more tusk-like, and your tympanum bulges.";
-            break;
-
-        case SP_OCTOPODE:
-            msg += "Your beak grows more hooked, and small fins emerge from the sides of your head.";
-            break;
-
-        default:
-            msg += "Your teeth grow more tusk-like, and your ears lengthen.";
-            break;
-    }
+    string msg = species::orcification_msg(you.species);
 
     mprf(MSGCH_MUTATION, "%s", msg.c_str());
     you.props[ORCIFICATION_LEVEL_KEY] = 1;
@@ -2868,7 +2919,7 @@ void dithmenos_change_shadow_appearance(monster& shadow, int dur)
 
     // Change tile to show our shadow is in decoy mode
     shadow.props[MONSTER_TILE_KEY].get_int() = tileidx_player_shadow();
-    shadow.add_ench(mon_enchant(ENCH_CHANGED_APPEARANCE, 0, &you, dur));
+    shadow.add_ench(mon_enchant(ENCH_CHANGED_APPEARANCE, &you, dur));
 #else
     UNUSED(shadow, dur);
 #endif
@@ -2901,15 +2952,14 @@ spret dithmenos_shadowslip(bool fail)
     you.stop_being_constricted(false, "slip");
 
     const coord_def shadow_pos = shadow->pos();
-    const coord_def you_pos = you.pos();
 
     mpr("You swap places with your shadow and weave the vestiges of your form into it.");
 
-    shadow->move_to_pos(you.pos(), true, true);
-    you.move_to_pos(shadow_pos, true, true);
+    shadow->move_to(you.pos(), MV_ALLOW_OVERLAP | MV_TRANSLOCATION, true);
+    you.move_to(shadow_pos, MV_ALLOW_OVERLAP | MV_TRANSLOCATION, true);
 
-    you.apply_location_effects(you_pos);
-    shadow->apply_location_effects(shadow_pos);
+    you.finalise_movement();
+    shadow->finalise_movement();
 
     // Paranoia, in case swapping somehow killed our shadow entirely
     // (But clouds don't trigger without time passing? Maybe there's some way...)
@@ -2943,7 +2993,7 @@ spret dithmenos_shadowslip(bool fail)
             else if (mi->foe == MHITYOU && mi->behaviour == BEH_SEEK)
             {
                 // Add enchantment and immediately update the monster's target
-                mi->add_ench(mon_enchant(ENCH_MISDIRECTED, 0, shadow, dur));
+                mi->add_ench(mon_enchant(ENCH_MISDIRECTED, shadow, dur));
                 mi->foe = shadow->mindex();
                 mi->behaviour = BEH_SEEK;
 
@@ -2959,7 +3009,7 @@ spret dithmenos_shadowslip(bool fail)
     mon_enchant timer = shadow->get_ench(ENCH_SUMMON_TIMER);
     timer.duration = max(timer.duration, dur);
     shadow->update_ench(timer);
-    shadow->max_hit_points += you.skill_rdiv(SK_INVOCATIONS, 9, 4);
+    shadow->max_hit_points += you.skill_rdiv(SK_INVOCATIONS, 5, 2);
     shadow->hit_points = shadow->max_hit_points;
     shadow->props[KNOWN_MAX_HP_KEY] = shadow->max_hit_points;
 
@@ -2987,8 +3037,8 @@ bool valid_marionette_spell(spell_type spell)
     switch (spell)
     {
         // Generally bad for the player (or cannot be stolen by them)
-        case SPELL_REPEL_MISSILES:
-        case SPELL_SPRINT:
+        case SPELL_DEFLECT_MISSILES:
+        case SPELL_FLEETFOOT:
         case SPELL_ROLL:
         case SPELL_WOODWEAL:
         case SPELL_MINOR_HEALING:
@@ -3001,15 +3051,8 @@ bool valid_marionette_spell(spell_type spell)
         case SPELL_STILL_WINDS:
         case SPELL_DIG:
         case SPELL_SILENCE:
-        case SPELL_WALL_OF_BRAMBLES:
         case SPELL_CALL_TIDE:
         case SPELL_DRUIDS_CALL:
-        case SPELL_PYRRHIC_RECOLLECTION:
-
-        // Doesn't do anything to monsters
-        case SPELL_MESMERISE:
-        case SPELL_SIREN_SONG:
-        case SPELL_AVATAR_SONG:
 
         // Would be buggy to try
         case SPELL_CREATE_TENTACLES:
@@ -3028,8 +3071,6 @@ bool valid_marionette_spell(spell_type spell)
         case SPELL_INK_CLOUD:
 
         // Could possibly be adapted to function, but currently doesn't
-        case SPELL_SPECTRAL_CLOUD:
-        case SPELL_CORRUPTING_PULSE:
         case SPELL_SUMMON_ILLUSION:
         case SPELL_PHANTOM_BLITZ:
         case SPELL_AWAKEN_FOREST:
@@ -3044,11 +3085,22 @@ static bool _marionette_spell_attempt(monster& caster, spell_type spell,
                                       vector<monster*>& targs,
                                       bool check_only = false)
 {
-    shuffle_array(targs);
+    const spell_flags flags = get_spell_flags(spell);
+    const bool aggressive = (flags & (spflag::targeting_mask))
+                            && !(flags & ((spflag::helpful | spflag::escape)));
 
+    shuffle_array(targs);
     for (monster* targ : targs)
     {
-        if (!targ->alive())
+        // Don't cast attack spells directly on ourselves.
+        // (This is a very crude approximation, but in general we assume
+        // untargeted AoE already won't hurt its own caster.)
+        if (targ == &caster && aggressive)
+            continue;
+
+        // We verify alignment again at this point, just in case it's changed
+        // in the middle of Marionette (eg: by the monster charming something).
+        if (!targ->alive() || (targ->wont_attack() && targ != &caster))
             continue;
 
         caster.foe = targ->mindex();
@@ -3183,7 +3235,6 @@ spret dithmenos_marionette(monster& target, bool fail)
     const coord_def old_target = target.target;
     const int old_energy = target.speed_increment;
     target.attitude = ATT_MARIONETTE;
-    env.final_effect_monster_cache.push_back(target);
 
     // Attempt to cast all valid spells the monster has, in randomized order,
     // (but using all spells at least once before repeating). End early if the
@@ -3463,18 +3514,14 @@ bool gozag_setup_call_merchant(bool quiet)
     if (!is_connected_branch(level_id::current().branch))
     {
         if (!quiet)
-        {
             mpr("No merchants are willing to come to this location.");
-            return false;
-        }
+        return false;
     }
     if (env.grid(you.pos()) != DNGN_FLOOR)
     {
         if (!quiet)
-        {
             mpr("You need to be standing on open floor to call a merchant.");
-            return false;
-        }
+        return false;
     }
 
     return true;
@@ -3577,8 +3624,8 @@ static string _describe_gozag_shop(int index)
 /**
  * Let the player choose from the currently available merchants to call.
  *
- * @param   The index of the chosen shop; -1 if none was chosen (due to e.g.
- *          a seen_hup).
+ * @param   The index of the chosen shop; -1 if we had to return early
+ *          due to seen_hup being set.
  */
 static int _gozag_choose_shop()
 {
@@ -3612,6 +3659,7 @@ static string _gozag_shop_spec(int index)
     const shop_type type = _gozag_shop_type(index);
     const string name =
         you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)];
+    const int greed = 12 + random2avg(17,2);
 
     string suffix = replace_all(
                                 you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY,
@@ -3620,10 +3668,11 @@ static string _gozag_shop_spec(int index)
     if (!suffix.empty())
         suffix = " suffix:" + suffix;
 
-    return make_stringf("%s shop name:%s%s gozag",
+    return make_stringf("%s shop name:%s%s greed:%d gozag",
                         shoptype_to_str(type),
                         replace_all(name, " ", "_").c_str(),
-                        suffix.c_str());
+                        suffix.c_str(),
+                        greed);
 
 }
 
@@ -3641,11 +3690,11 @@ static void _gozag_place_shop(int index)
     feature_spec feat = kmspec.get_feat();
     if (!feat.shop)
         die("Invalid shop spec?");
-    place_spec_shop(you.pos(), *feat.shop, you.experience_level);
+    make_spec_shop(you.pos(), *feat.shop, you.experience_level);
+    dungeon_terrain_changed(you.pos(), DNGN_ENTER_SHOP);
 
     link_items();
     env.markers.add(new map_feature_marker(you.pos(), DNGN_ABANDONED_SHOP));
-    env.markers.clear_need_activate();
 
     shop_struct *shop = shop_at(you.pos());
     ASSERT(shop);
@@ -3962,7 +4011,6 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     beam.source_id   = MID_PLAYER;
     beam.source_name = "you";
     beam.thrower     = KILL_YOU;
-    beam.range       = LOS_RADIUS;
     beam.damage      = qazlal_upheaval_damage();
     beam.hit         = AUTOMATIC_HIT;
     beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
@@ -3985,7 +4033,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         if (!spell_direction(*player_target, beam, &args))
             return spret::abort;
 
-        if (cell_is_solid(beam.target))
+        if (cell_is_invalid_target(beam.target))
         {
             mprf("There is %s there.",
                  article_a(feat_type_name(env.grid(beam.target))).c_str());
@@ -4000,9 +4048,9 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         tempbeam.hit       = AUTOMATIC_HIT;
         tempbeam.damage    = dice_def(AUTOMATIC_HIT, 1);
         tempbeam.thrower   = KILL_YOU;
-        tempbeam.is_tracer = true;
-        tempbeam.explode(false);
-        if (tempbeam.beam_cancelled)
+        player_beam_tracer tracer;
+        tempbeam.explode(tracer, false);
+        if (cancel_beam_prompt(tempbeam, tracer))
             return spret::abort;
     }
     else
@@ -4052,7 +4100,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     for (radius_iterator ri(beam.target, max_radius, C_SQUARE, LOS_SOLID, true);
          ri; ++ri)
     {
-        if (!in_bounds(*ri) || cell_is_solid(*ri))
+        if (!in_bounds(*ri) || cell_is_invalid_target(*ri))
             continue;
 
         if (!_qazlal_affected(*ri))
@@ -4110,7 +4158,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
                 }
                 break;
             case BEAM_AIR:
-                if (!cell_is_solid(pos) && !cloud_at(pos) && coinflip())
+                if (coinflip())
                 {
                     place_cloud(CLOUD_STORM, pos,
                                 random2(you.skill_rdiv(SK_INVOCATIONS, 1, 4)),
@@ -4128,6 +4176,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
 static const map<cloud_type, monster_type> elemental_clouds = {
     { CLOUD_FIRE,           MONS_FIRE_ELEMENTAL },
     { CLOUD_FOREST_FIRE,    MONS_FIRE_ELEMENTAL },
+    { CLOUD_BLASTMOTES,     MONS_FIRE_ELEMENTAL },
     { CLOUD_COLD,           MONS_WATER_ELEMENTAL },
     { CLOUD_RAIN,           MONS_WATER_ELEMENTAL },
     { CLOUD_DUST,           MONS_EARTH_ELEMENTAL },
@@ -4136,6 +4185,7 @@ static const map<cloud_type, monster_type> elemental_clouds = {
     { CLOUD_GREY_SMOKE,     MONS_AIR_ELEMENTAL },
     { CLOUD_BLUE_SMOKE,     MONS_AIR_ELEMENTAL },
     { CLOUD_PURPLE_SMOKE,   MONS_AIR_ELEMENTAL },
+    { CLOUD_FLUFFY,         MONS_AIR_ELEMENTAL },
     { CLOUD_STORM,          MONS_AIR_ELEMENTAL },
 };
 
@@ -4214,7 +4264,7 @@ spret qazlal_disaster_area(bool fail)
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE, LOS_NO_TRANS, true);
          ri; ++ri)
     {
-        if (!in_bounds(*ri) || cell_is_solid(*ri))
+        if (!in_bounds(*ri) || cell_is_invalid_target(*ri))
             continue;
 
         if (!_qazlal_affected(*ri))
@@ -4397,6 +4447,10 @@ static bool _sac_mut_maybe_valid(mutation_type mut)
     {
         return false;
     }
+
+    // If we turn into a purple draconian, these will conflict.
+    if (mut == MUT_WEAK_WILLED && you.species == SP_BASE_DRACONIAN)
+        return false;
 
     // No potion heal doesn't affect mummies since they can't quaff potions
     if (mut == MUT_NO_POTION_HEAL && you.has_mutation(MUT_NO_DRINK))
@@ -4730,16 +4784,11 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             break;
         // words and drink cut off a lot of options if taken together
         case ABIL_RU_SACRIFICE_DRINK:
-            // less value if you already have some levels of the mutation
-            piety_gain -= 10 * you.get_mutation_level(MUT_DRINK_SAFETY);
-            // check innate mutation level to see if reading was sacrificed
-            if (you.get_innate_mutation_level(MUT_READ_SAFETY) == 2)
+            if (you.has_innate_mutation(MUT_RENOUNCE_SCROLLS))
                 piety_gain += 10;
             break;
         case ABIL_RU_SACRIFICE_WORDS:
-            // less value if you already have some levels of the mutation
-            piety_gain -= 10 * you.get_mutation_level(MUT_READ_SAFETY);
-            if (you.get_innate_mutation_level(MUT_DRINK_SAFETY) == 2)
+            if (you.has_innate_mutation(MUT_RENOUNCE_POTIONS))
                 piety_gain += 10;
             else if (you.get_mutation_level(MUT_NO_DRINK))
                 piety_gain += 15; // extra bad for mummies
@@ -4845,7 +4894,7 @@ static ability_type _random_cheap_sacrifice(
     int valid_sacrifices = 0;
     for (auto sacrifice : possible_sacrifices)
     {
-        if (get_sacrifice_piety(sacrifice) + you.piety > piety_cap)
+        if (get_sacrifice_piety(sacrifice) + you.raw_piety > piety_cap)
             continue;
 
         ++valid_sacrifices;
@@ -4932,7 +4981,7 @@ void ru_offer_new_sacrifices()
                                   < get_sacrifice_piety(b) ? a : b;
                          });
         const int min_piety = get_sacrifice_piety(min_piety_sacrifice);
-        const int piety_cap = max(179, you.piety + min_piety);
+        const int piety_cap = max(179, you.raw_piety + min_piety);
 
         dprf("cheapest sac %d (%d piety); cap %d",
              min_piety_sacrifice, min_piety, piety_cap);
@@ -5002,18 +5051,7 @@ static const string _piety_asterisks(int piety)
 
 static void _apply_ru_sacrifice(mutation_type sacrifice)
 {
-    if (sacrifice == MUT_READ_SAFETY || sacrifice == MUT_DRINK_SAFETY)
-    {
-        // get the safety mutation to the cap instead of 1 level higher
-        perma_mutate(sacrifice,
-                    3 - you.get_mutation_level(sacrifice),
-                    "Ru sacrifice");
-    }
-    else
-    {
-        // regular case for other sacrifices
-        perma_mutate(sacrifice, 1, "Ru sacrifice");
-    }
+    perma_mutate(sacrifice, 1, "Ru sacrifice");
     you.sacrifices[sacrifice] += 1;
 }
 
@@ -5033,9 +5071,9 @@ static bool _execute_sacrifice(ability_type sac, const char* message)
 static void _ru_kill_skill(skill_type skill)
 {
     change_skill_points(skill, -you.skill_points[skill], true);
-    you.can_currently_train.set(skill, false);
     reset_training();
     check_selected_skills();
+    update_four_winds(true);
 }
 
 static void _extra_sacrifice_code(ability_type sac)
@@ -5143,7 +5181,7 @@ string ru_sacrifice_description(ability_type sac)
     const int piety_gain = _ru_get_sac_piety_gain(sac);
     return make_stringf("This is %s sacrifice. Piety after sacrifice: %s",
                         _describe_sacrifice_piety_gain(piety_gain),
-                        _piety_asterisks(you.piety + piety_gain).c_str());
+                        _piety_asterisks(you.raw_piety + piety_gain).c_str());
 }
 
 
@@ -5188,7 +5226,7 @@ bool ru_do_sacrifice(ability_type sac)
                 }
             }
             else
-                sac_text = mut_upgrade_summary(mut);
+                sac_text = innate_mut_upgrade_summary(mut);
         }
         offer_text = make_stringf("%s: %s", sac_def.sacrifice_text,
             sac_text.c_str());
@@ -5260,9 +5298,9 @@ bool ru_do_sacrifice(ability_type sac)
         you.props[NUM_SACRIFICES_KEY] = num_sacrifices;
 
     // Actually give the piety for this sacrifice.
-    set_piety(min(piety_breakpoint(5), you.piety + piety_gain));
+    set_piety(min(piety_breakpoint(5), you.raw_piety + piety_gain));
 
-    if (you.piety == piety_breakpoint(5))
+    if (you.raw_piety == piety_breakpoint(5))
         simple_god_message(" indicates that your awakening is complete.");
 
     // Clean up.
@@ -5330,7 +5368,7 @@ void ru_reset_sacrifice_timer(bool clear_timer, bool faith_penalty)
         // based on piety. This extra delay stacks with any added delay for
         // previous rejections.
         added_delay = you.props[RU_SACRIFICE_PENALTY_KEY].get_int();
-        const int new_penalty = (max(100, static_cast<int>(you.piety))) / 3;
+        const int new_penalty = (max(100, static_cast<int>(you.raw_piety))) / 3;
         added_delay += new_penalty;
 
         // longer delay for each real rejection
@@ -5367,13 +5405,13 @@ bool will_ru_retaliate()
     // Scales up to a 20% chance of retribution
     return have_passive(passive_t::upgraded_aura_of_power)
            && crawl_state.which_god_acting() != GOD_RU
-           && one_chance_in(div_rand_round(800, you.piety));
+           && one_chance_in(div_rand_round(800, you.piety()));
 }
 
 // Power of retribution increases with damage, decreases with monster HD.
 void ru_do_retribution(monster* mons, int damage)
 {
-    int power = max(0, random2(div_rand_round(you.piety*10, 32))
+    int power = max(0, random2(div_rand_round(you.piety()*10, 32))
         + damage - (2 * mons->get_hit_dice()));
     const actor* act = &you;
 
@@ -5381,31 +5419,31 @@ void ru_do_retribution(monster* mons, int damage)
     {
         mprf(MSGCH_GOD, "You focus your inner power and drain %s's magic in "
                 "retribution!", mons->name(DESC_THE).c_str());
-        mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 1, act, power+random2(320)));
+        mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, act, power+random2(320)));
     }
     else if (power > 35)
     {
         mprf(MSGCH_GOD, "You focus your inner power and paralyse %s in retribution!",
                 mons->name(DESC_THE).c_str());
-        mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, act, power+random2(60)));
+        mons->add_ench(mon_enchant(ENCH_PARALYSIS, act, power+random2(60)));
     }
     else if (power > 25)
     {
         mprf(MSGCH_GOD, "You focus your inner power and slow %s in retribution!",
                 mons->name(DESC_THE).c_str());
-        mons->add_ench(mon_enchant(ENCH_SLOW, 1, act, power+random2(100)));
+        mons->add_ench(mon_enchant(ENCH_SLOW, act, power+random2(100)));
     }
-    else if (power > 10 && mons_can_be_blinded(mons->type))
+    else if (power > 10)
     {
         mprf(MSGCH_GOD, "You focus your inner power and blind %s in retribution!",
                 mons->name(DESC_THE).c_str());
-        mons->add_ench(mon_enchant(ENCH_BLIND, 1, act, power+random2(100)));
+        mons->add_ench(mon_enchant(ENCH_BLIND, act, power+random2(100)));
     }
     else if (power > 0)
     {
         mprf(MSGCH_GOD, "You focus your inner power and illuminate %s in retribution!",
                 mons->name(DESC_THE).c_str());
-        mons->add_ench(mon_enchant(ENCH_CORONA, 1, act, power+random2(150)));
+        mons->add_ench(mon_enchant(ENCH_CORONA, act, power+random2(150)));
     }
 }
 
@@ -5414,24 +5452,14 @@ void ru_draw_out_power()
     mpr("You are restored by drawing out deep reserves of power within.");
 
     //Escape nets and webs
-    int net = get_trapping_net(you.pos());
-    if (net == NON_ITEM)
+    if (you.caught())
     {
-        trap_def *trap = trap_at(you.pos());
-        if (trap && trap->type == TRAP_WEB)
-        {
-            destroy_trap(you.pos());
-            // XXX: destroying them is dubious in general - abuseable by loons?
-            // (but definitely destroy if ammo == 1, per trap-def.h!)
+        if (you.caught_by() == CAUGHT_WEB)
             mpr("You burst free from the webs!");
-        }
+        else
+            mpr("You burst free from the net!");
+        you.stop_being_caught();
     }
-    else
-    {
-        destroy_item(net);
-        mpr("You burst free from the net!");
-    }
-    stop_being_held();
 
     // Escape constriction
     you.stop_being_constricted(false, "burst");
@@ -5441,11 +5469,15 @@ void ru_draw_out_power()
     you.duration[DUR_SLOW] = 0;
     you.duration[DUR_PETRIFYING] = 0;
 
-    int hp_inc = div_rand_round(you.piety, 16);
-    hp_inc += roll_dice(div_rand_round(you.piety, 20), 6);
+    // remove fearmongers and mesmerizers
+    you.clear_beholders();
+    you.clear_fearmongers();
+
+    int hp_inc = div_rand_round(you.piety(), 16);
+    hp_inc += roll_dice(div_rand_round(you.piety(), 20), 6);
     inc_hp(hp_inc);
-    int mp_inc = div_rand_round(you.piety, 48);
-    mp_inc += roll_dice(div_rand_round(you.piety, 40), 4);
+    int mp_inc = div_rand_round(you.piety(), 48);
+    mp_inc += roll_dice(div_rand_round(you.piety(), 40), 4);
     inc_mp(mp_inc);
     drain_player(30, false, true);
 }
@@ -5455,11 +5487,11 @@ dice_def ru_power_leap_damage(bool allow_random)
 {
     if (allow_random)
     {
-        return dice_def(1 + div_rand_round(you.piety *
+        return dice_def(1 + div_rand_round(you.piety() *
             (54 + you.experience_level), 777), 3);
     }
     else
-        return dice_def(1 + you.piety * (54 + you.experience_level) / 777, 3);
+        return dice_def(1 + you.piety() * (54 + you.experience_level) / 777, 3);
 }
 
 bool ru_power_leap()
@@ -5526,7 +5558,7 @@ bool ru_power_leap()
         }
 
         monster* mons = monster_at(beam.target);
-        if (mons && you.can_see(*mons))
+        if (mons && you.aware_of(*mons))
         {
             clear_messages();
             mpr("You can't leap on top of the monster!");
@@ -5575,8 +5607,7 @@ bool ru_power_leap()
         return true;
     }
 
-    move_player_to_grid(beam.target, false);
-    player_did_deliberate_movement();
+    you.move_to(beam.target, MV_DELIBERATE);
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
@@ -5589,7 +5620,6 @@ bool ru_power_leap()
     wave.flavour = BEAM_VISUAL;
     wave.colour = BROWN;
     wave.glyph = dchar_glyph(DCHAR_EXPLOSION);
-    wave.range = 1;
     wave.ex_size = 1;
     wave.is_explosion = true;
     wave.source = you.pos();
@@ -5597,6 +5627,8 @@ bool ru_power_leap()
     wave.hit = AUTOMATIC_HIT;
     wave.loudness = 2;
     wave.explode();
+
+    mpr("You perform a powerful leap!");
 
     // we need to exempt the player from damage.
     for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
@@ -5626,9 +5658,9 @@ int cell_has_valid_target(coord_def where)
 int apocalypse_die_size(bool allow_random)
 {
     if (allow_random)
-        return 1 + div_rand_round(you.piety * (54 + you.experience_level), 584);
+        return 1 + div_rand_round(you.piety() * (54 + you.experience_level), 584);
     else
-        return 1 + you.piety * (54 + you.experience_level) / 584;
+        return 1 + you.piety() * (54 + you.experience_level) / 584;
 }
 
 static int _apply_apocalypse(coord_def where)
@@ -5687,7 +5719,7 @@ static int _apply_apocalypse(coord_def where)
     if (mons->alive() && enchantment != ENCH_NONE)
     {
         simple_monster_message(*mons, message.c_str());
-        mons->add_ench(mon_enchant(enchantment, 1, &you, duration));
+        mons->add_ench(mon_enchant(enchantment, &you, duration));
     }
     return 1;
 }
@@ -5711,11 +5743,6 @@ bool ru_apocalypse()
     return true;
 }
 
-static bool _mons_stompable(const monster &mons)
-{
-    return !never_harm_monster(&you, &mons) || !mons.friendly();
-}
-
 dice_def uskayaw_stomp_extra_damage(bool allow_random)
 {
     if (allow_random)
@@ -5726,7 +5753,7 @@ dice_def uskayaw_stomp_extra_damage(bool allow_random)
 
 static bool _get_stomped(monster& mons)
 {
-    if (!_mons_stompable(mons))
+    if (!could_harm(&you, &mons))
         return false;
 
     behaviour_event(&mons, ME_ANNOY, &you);
@@ -5749,7 +5776,7 @@ bool uskayaw_stomp()
 {
     // Demonic guardians are immune but check for other friendlies
     const bool friendlies = apply_monsters_around_square([] (monster& mons) {
-        return _mons_stompable(mons) && mons_att_wont_attack(mons.attitude);
+        return could_harm(&you, &mons) && mons_att_wont_attack(mons.attitude);
     }, you.pos());
 
     // XXX: this 'friendlies' wording feels a little odd, but we do use it in a
@@ -5894,8 +5921,7 @@ bool uskayaw_line_pass()
     {
         you.stop_being_constricted(false, "dance");
         line_pass.fire();
-        move_player_to_grid(beam.target, false);
-        player_did_deliberate_movement();
+        you.move_to(beam.target, MV_DELIBERATE);
     }
 
     crawl_state.cancel_cmd_again();
@@ -5946,13 +5972,18 @@ spret uskayaw_grand_finale(bool fail)
         if (!mons || !you.can_see(*mons))
         {
             clear_messages();
-            mpr("You can't perceive a target there!");
+            mpr("You can't see a target there!");
             continue;
         }
 
-        if (!check_moveto(beam.target, "move", false))
+        if (!check_moveto(beam.target, "move", false, false))
         {
             // try again (messages handled by check_moveto)
+        }
+        else if (cell_is_solid(beam.target))
+        {
+            clear_messages();
+            mprf("You cannot occupy %s.", article_a(feat_type_name(env.grid(beam.target))).c_str());
         }
         else if (you.see_cell_no_trans(beam.target))
         {
@@ -5978,15 +6009,7 @@ spret uskayaw_grand_finale(bool fail)
     string attack_punctuation = attack_strength_punctuation(mons->hit_points);
 
     // kill the target
-    if (mons->type == MONS_ROYAL_JELLY && !mons->is_summoned())
-    {
-        // need to do this here, because react_to_damage is never called
-        mprf("%s explodes violently into a cloud of jellies%s",
-                                        mons->name(DESC_THE, false).c_str(), attack_punctuation.c_str());
-        trj_spawn_fineff::schedule(&you, mons, mons->pos(), mons->hit_points);
-    }
-    else
-        mprf("%s explodes violently%s", mons->name(DESC_THE, false).c_str(), attack_punctuation.c_str());
+    mprf("%s explodes violently%s", mons->name(DESC_THE, false).c_str(), attack_punctuation.c_str());
     mons->flags |= MF_EXPLODE_KILL;
     if (!mons->is_insubstantial())
     {
@@ -6001,7 +6024,7 @@ spret uskayaw_grand_finale(bool fail)
 
     // a lost soul may sneak in here
     if (!mons->alive() && !monster_at(beam.target))
-        move_player_to_grid(beam.target, false);
+        you.move_to(beam.target, MV_TRANSLOCATION | MV_DELIBERATE);
     else
         mpr("You spring back to your original position.");
 
@@ -6032,7 +6055,7 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_choice)
 
     static const map<int, monster_type> ancestor_types = {
         { ABIL_HEPLIAKLQANA_TYPE_KNIGHT, MONS_ANCESTOR_KNIGHT },
-        { ABIL_HEPLIAKLQANA_TYPE_BATTLEMAGE, MONS_ANCESTOR_BATTLEMAGE },
+        { ABIL_HEPLIAKLQANA_TYPE_ELEMENTALIST, MONS_ANCESTOR_ELEMENTALIST },
         { ABIL_HEPLIAKLQANA_TYPE_HEXER, MONS_ANCESTOR_HEXER },
     };
 
@@ -6080,21 +6103,10 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_choice)
  */
 spret hepliaklqana_idealise(bool fail)
 {
-    const mid_t ancestor_mid = hepliaklqana_ancestor();
-    if (ancestor_mid == MID_NOBODY)
-    {
-        mpr("You have no ancestor to preserve!");
-        return spret::abort;
-    }
-
-    monster *ancestor = monster_by_mid(ancestor_mid);
-    if (!ancestor || !you.can_see(*ancestor))
-    {
-        mprf("%s is not nearby!", hepliaklqana_ally_name().c_str());
-        return spret::abort;
-    }
-
     fail_check();
+
+    monster *ancestor = hepliaklqana_ancestor_mon();
+    ASSERT(ancestor);
 
     simple_god_message(make_stringf(" grants %s healing and protection!",
                                     ancestor->name(DESC_YOUR).c_str()).c_str());
@@ -6113,36 +6125,8 @@ spret hepliaklqana_idealise(bool fail)
 
     const int dur = random_range(50, 80)
                     + random2avg(you.skill(SK_INVOCATIONS, 20), 2);
-    ancestor->add_ench({ ENCH_IDEALISED, 1, &you, dur});
+    ancestor->add_ench({ ENCH_IDEALISED, &you, dur});
     return spret::success;
-}
-
-/**
- * Prompt to allow the player to choose a target for the Transference ability.
- *
- * @return  The chosen target, or the origin if none was chosen.
- */
-static coord_def _get_transference_target()
-{
-    dist spd;
-
-    const int aoe_radius = have_passive(passive_t::transfer_drain) ? 1 : 0;
-    targeter_transference tgt(&you, aoe_radius);
-    direction_chooser_args args;
-    args.hitfunc = &tgt;
-    args.restricts = DIR_TARGET;
-    args.mode = TARG_MOBILE_MONSTER;
-    args.range = LOS_RADIUS;
-    args.needs_path = false;
-    args.self = confirm_prompt_type::none;
-    args.show_floor_desc = true;
-    args.top_prompt = "Select a target.";
-
-    direction(spd, args);
-
-    if (!spd.isValid)
-        return coord_def();
-    return spd.target;
 }
 
 /// Drain any monsters near the destination of Tranference.
@@ -6151,7 +6135,7 @@ static void _transfer_drain_nearby(coord_def destination)
     for (adjacent_iterator it(destination); it; ++it)
     {
         monster* mon = monster_at(*it);
-        if (!mon || mon->is_firewood() || never_harm_monster(&you, *mon))
+        if (!mon || mon->is_firewood() || !could_harm(&you, mon))
             continue;
 
         const int dur = random_range(60, 150);
@@ -6159,7 +6143,7 @@ static void _transfer_drain_nearby(coord_def destination)
         const int degree
             = random_range(1 + you.skill_rdiv(SK_INVOCATIONS, 1, 27),
                            2 + you.skill_rdiv(SK_INVOCATIONS, 4, 27));
-        if (mon->add_ench(mon_enchant(ENCH_DRAINED, degree, &you, dur)))
+        if (mon->add_ench(mon_enchant(ENCH_DRAINED, &you, dur, degree)))
             simple_monster_message(*mon, " is drained by nostalgia.");
     }
 }
@@ -6169,96 +6153,40 @@ static void _transfer_drain_nearby(coord_def destination)
  * ancestor with a targeted creature & potentially slowing monsters adjacent
  * to the target.
  *
+ * @param target    The location being targeted.
  * @param fail      Whether the effect should fail after checking validity.
  * @return          Whether the ability succeeded, failed, or was aborted.
  */
-spret hepliaklqana_transference(bool fail)
+spret hepliaklqana_transference(const coord_def& target, bool fail)
 {
     monster *ancestor = hepliaklqana_ancestor_mon();
-    if (!ancestor || !you.can_see(*ancestor))
-    {
-        mprf("%s is not nearby!", hepliaklqana_ally_name().c_str());
-        return spret::abort;
-    }
-
-    coord_def target = _get_transference_target();
-    if (target.origin())
-    {
-        canned_msg(MSG_OK);
-        return spret::abort;
-    }
-
     actor* victim = actor_at(target);
-    const bool victim_visible = victim && you.can_see(*victim);
-    if ((!victim || !victim_visible)
-        && !yesno("You can't see anything there. Try transferring anyway?",
-                  true, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return spret::abort;
-    }
-
-    if (victim == ancestor)
-    {
-        mprf("You can't transfer your ancestor with %s.",
-             ancestor->pronoun(PRONOUN_REFLEXIVE).c_str());
-        return spret::abort;
-    }
-
-    const bool victim_immovable
-        = victim && (mons_is_tentacle_or_tentacle_segment(victim->type)
-                     || victim->is_stationary()
-                     || mons_is_projectile(victim->type));
-    if (victim_visible && victim_immovable)
-    {
-        mpr("You can't transfer that.");
-        return spret::abort;
-    }
+    ASSERT(victim);
 
     const coord_def destination = ancestor->pos();
-    if (victim == &you && !check_moveto(destination, "transfer", false))
+    if (victim == &you && !check_moveto(destination, "transfer", false, false))
         return spret::abort;
-
-    const bool uninhabitable = victim && !victim->is_habitable(destination);
-    if (uninhabitable && victim_visible)
-    {
-        mprf("%s can't be transferred there.", victim->name(DESC_THE).c_str());
-        return spret::abort;
-    }
-
-    // we assume the ancestor flies & so can survive anywhere anything can.
 
     fail_check();
 
-    if (!victim || uninhabitable || victim_immovable)
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return spret::success;
-    }
-
     if (victim->is_player())
     {
-        if (cancel_harmful_move(false))
-            return spret::abort;
-        ancestor->move_to_pos(target, true, true);
-        victim->move_to_pos(destination, true, true);
+        ancestor->move_to(target, MV_ALLOW_OVERLAP | MV_TRANSLOCATION, true);
+        victim->move_to(destination, MV_ALLOW_OVERLAP | MV_TRANSLOCATION, true);
     }
     else
-        ancestor->swap_with(victim->as_monster());
+        ancestor->swap_with(victim->as_monster(), MV_TRANSLOCATION, true);
 
     mprf("%s swap%s with %s!",
          victim->name(DESC_THE).c_str(),
          victim->is_player() ? "" : "s",
          ancestor->name(DESC_YOUR).c_str());
 
-    check_place_cloud(CLOUD_MIST, target, random_range(10,20), ancestor);
-    check_place_cloud(CLOUD_MIST, destination, random_range(10,20), ancestor);
+    place_cloud(CLOUD_MIST, target, random_range(10,20), ancestor);
+    place_cloud(CLOUD_MIST, destination, random_range(10,20), ancestor);
 
-    if (victim->is_monster())
-        mons_relocated(victim->as_monster());
-
-    ancestor->apply_location_effects(destination);
-    victim->apply_location_effects(target);
+    ancestor->finalise_movement();
+    victim->finalise_movement();
     if (victim->is_monster())
         behaviour_event(victim->as_monster(), ME_DISTURB, &you, target);
 
@@ -6360,8 +6288,7 @@ bool wu_jian_can_wall_jump_in_principle(const coord_def& target)
 {
     if (!have_passive(passive_t::wu_jian_wall_jump)
         || !feat_can_wall_jump_against(env.grid(target))
-        || !you.is_motile()
-        || you.digging)
+        || you.cannot_move())
     {
         return false;
     }
@@ -6447,7 +6374,7 @@ bool wu_jian_do_wall_jump(coord_def targ)
     auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
                                    + wall_jump_direction);
     if ((wu_jian_wall_jump_triggers_attacks(wall_jump_landing_spot)
-         && !wielded_weapon_check(you.weapon())
+         && !wielded_weapon_check()
         || !check_moveto(wall_jump_landing_spot, "wall jump")))
     {
         you.turn_is_over = false;
@@ -6455,22 +6382,22 @@ bool wu_jian_do_wall_jump(coord_def targ)
     }
 
     auto initial_position = you.pos();
-    you.moveto(wall_jump_landing_spot);
+    you.stop_being_constricted(false, "jump");
+    you.move_to(wall_jump_landing_spot, MV_DELIBERATE, true);
     wu_jian_wall_jump_effects();
-    you.clear_far_engulf(false, true);
-    you.apply_location_effects(initial_position);
 
     int wall_jump_modifier = (you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2
                                                                       : 1;
 
-    you.time_taken = player_speed() * wall_jump_modifier
-                     * player_movement_speed();
-    you.time_taken = div_rand_round(you.time_taken, 10);
+    you.time_taken = player_overall_move_delay(wall_jump_modifier);
 
     // need to set this here in case serpent's lash isn't active
     you.turn_is_over = true;
     request_autopickup();
     wu_jian_post_move_effects(true, initial_position);
+    wu_jian_trigger_serpents_lash(true);
+
+    you.finalise_movement();
 
     return true;
 }
@@ -6483,12 +6410,6 @@ spret wu_jian_wall_jump_ability()
     {
         crawl_state.cancel_cmd_all("You can't repeat a wall jump.");
         return spret::abort;
-    }
-
-    if (you.digging)
-    {
-        you.digging = false;
-        mpr("You retract your mandibles.");
     }
 
     string wj_error;
@@ -6516,11 +6437,9 @@ spret wu_jian_wall_jump_ability()
     if (you.attribute[ATTR_HELD])
     {
         mprf("You cannot wall jump while caught in a %s.",
-             get_trapping_net(you.pos()) == NON_ITEM ? "web" : "net");
+             you.caught_by() == CAUGHT_WEB ? "web" : "net");
         return spret::abort;
     }
-
-    you.stop_being_constricted(false, "jump");
 
     // query for location:
     dist beam;
@@ -6566,7 +6485,6 @@ spret wu_jian_wall_jump_ability()
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
 
-    player_did_deliberate_movement();
     return spret::success;
 }
 
@@ -6577,12 +6495,11 @@ void wu_jian_heavenly_storm()
                          "keep fighting, disciple!");
 
     for (radius_iterator ai(you.pos(), 2, C_SQUARE, LOS_SOLID); ai; ++ai)
-        if (!cell_is_solid(*ai))
-            place_cloud(CLOUD_GOLD_DUST, *ai, 5 + random2(5), &you);
+        place_cloud(CLOUD_GOLD_DUST, *ai, 5 + random2(5), &you);
 
     you.set_duration(DUR_HEAVENLY_STORM, random_range(2, 3));
     you.props[WU_JIAN_HEAVENLY_STORM_KEY] = WU_JIAN_HEAVENLY_STORM_INITIAL;
-    invalidate_agrid(true);
+    invalidate_agrid();
 }
 
 bool okawaru_duel_active()
@@ -6606,9 +6523,9 @@ spret okawaru_duel(const coord_def& target, bool fail)
     }
 
     if (mons->is_peripheral()
-        || mons_primary_habitat(*mons) == HT_LAVA
-        || mons_primary_habitat(*mons) == HT_WATER
-        || mons->wont_attack())
+        || !(mons_habitat(*mons) & HT_DRY_LAND)
+        || mons->wont_attack()
+        || mons->type == MONS_BOUNDLESS_TESSERACT)
     {
         mpr("You cannot duel that!");
         return spret::abort;
@@ -6761,7 +6678,7 @@ spret jiyva_oozemancy(bool fail)
 
     fail_check();
 
-    const int dur = 10 + random2avg(you.piety / 8, 2);
+    const int dur = 10 + random2avg(you.piety() / 8, 2);
 
     for (auto pos : walls)
     {
@@ -6846,6 +6763,7 @@ void makhleb_setup_destruction_beam(bolt& beam, int power, bool signature_only)
         case BEAM_ELECTRICITY:
             beam.name = "torrent of electricity";
             beam.colour = LIGHTCYAN;
+            beam.tile_beam = TILE_BOLT_STRONG_ELEC;
             break;
 
         case BEAM_NEG:
@@ -6858,11 +6776,13 @@ void makhleb_setup_destruction_beam(bolt& beam, int power, bool signature_only)
         case BEAM_LAVA:
             beam.name = "gout of magma";
             beam.colour = RED;
+            beam.tile_beam = TILE_BOLT_MAGMA;
             break;
 
         case BEAM_ICE:
             beam.name = "flurry of ice";
             beam.colour = ETC_ICE;
+            beam.tile_beam = TILE_BOLT_ICEBLAST;
             break;
 
         case BEAM_DEVASTATION:
@@ -6901,7 +6821,6 @@ static void _makhleb_atrocity_trigger(int power)
     mpr("Your destruction surges wildly!");
 
     bolt beam;
-    beam.range = you.current_vision;
     beam.source = you.pos();
     beam.thrower = KILL_YOU;
 
@@ -7000,10 +6919,10 @@ static const vector<random_pick_entry<monster_type>> _makhleb_servants =
   { 17,  27,  220, SEMI, MONS_EXECUTIONER },
 
   // Accessible only through the Mark of the Tyrant
-  { 19,  27,  260, SEMI, MONS_TZITZIMITL },
-  { 21,  27,  280, SEMI, MONS_ICE_FIEND },
-  { 22,  27,  300, SEMI, MONS_BRIMSTONE_FIEND },
-  { 26,  27,  150, SEMI, MONS_HELL_SENTINEL },
+  { 19,  30,  260, SEMI, MONS_TZITZIMITL },
+  { 21,  30,  280, SEMI, MONS_ICE_FIEND },
+  { 22,  30,  300, SEMI, MONS_BRIMSTONE_FIEND },
+  { 26,  27,  180, SEMI, MONS_HELL_SENTINEL },
 };
 
 static monster* _find_carnage_target(monster_type demon_type, coord_def& demon_spot)
@@ -7163,7 +7082,7 @@ void makhleb_inscribe_mark(mutation_type mark)
 
     const int hploss = min(you.hp - 1, you.hp * 2 / 3);
     blood_spray(you.pos(), MONS_PLAYER, 50);
-    ouch(hploss, KILLED_BY_SELF_AIMED, MID_PLAYER, nullptr, true, nullptr, true);
+    ouch(hploss, KILLED_BY_SELF_AIMED, MID_PLAYER, nullptr, nullptr, true);
 
     perma_mutate(mark, 1, "inscribed by the player");
 
@@ -7194,6 +7113,9 @@ spret makhleb_infernal_legion(bool fail)
         mpr("You are already unleashing the legions of chaos!");
         return spret::abort;
     }
+
+    if (stop_summoning_prompt())
+        return spret::abort;
 
     fail_check();
     mpr("You carve a gateway into yourself and beckon forth the legions of chaos!");
@@ -7238,7 +7160,7 @@ void makhleb_vessel_of_slaughter()
     mpr("You offer yourself as an instrument of Makhleb's will and feel "
         "overwhelming power flowing through you!");
 
-    transform(100, transformation::slaughter);
+    transform(random_range(70, 110), transformation::slaughter);
     you.transform_uncancellable = true;
 
     bolt damnation;
@@ -7285,8 +7207,8 @@ static void _spawn_crucible_demon(bool allow_in_sight)
 {
     int pow = (you.experience_level - 7) * 5 / 4;
 
-    if (runes_in_pack() > 3)
-        pow += (runes_in_pack() - 3) * 2 / 3;
+    if (runes_in_pack() > ZOT_ENTRY_RUNES)
+        pow += (runes_in_pack() - ZOT_ENTRY_RUNES) * 2 / 3;
 
     if (coinflip())
         pow = pow * 2 / 3;
@@ -7347,14 +7269,14 @@ static void _spawn_crucible_victim(bool near_player_okay = false)
     if (monster* victim = mons_place(mg))
     {
         victim->destroy_inventory();
-        victim->add_ench(mon_enchant(ENCH_PARALYSIS, 0, nullptr, INFINITE_DURATION));
+        victim->add_ench(mon_enchant(ENCH_PARALYSIS, nullptr, INFINITE_DURATION));
 
         // Mostly meaningless, but flavorful, signs of torture
         enchant_type ench = random_choose(ENCH_CORROSION,
                                           ENCH_BLIND,
                                           ENCH_BARBS,
                                           ENCH_WEAK);
-        victim->add_ench(mon_enchant(ench, 0, nullptr, INFINITE_DURATION));
+        victim->add_ench(mon_enchant(ench, nullptr, INFINITE_DURATION));
 
         victim->hit_points = max(1, random_range(victim->hit_points * 3 / 10,
                                                  victim->hit_points * 8 / 10));
@@ -7386,8 +7308,8 @@ void makhleb_enter_crucible_of_flesh(int debt)
     for (int i = 0; i < num_victims; ++i)
         _spawn_crucible_victim(true);
 
-    simple_god_message(" says \"Flay and bleed and purify yourself, if you wish"
-                       " to be found worthy of leaving this place!\"", false,
+    simple_god_message(" says: Flay and bleed and purify yourself, if you wish"
+                       " to be found worthy of leaving this place!", false,
                        GOD_MAKHLEB);
 
     mpr("(Slaughtering mortal victims (and sometimes even demons) will "
@@ -7446,7 +7368,7 @@ void makhleb_crucible_kill(monster& victim)
         simple_god_message(" acknowledges your contrition and permits you to"
                            " depart the Crucible.", false, GOD_MAKHLEB);
 
-        env.map_knowledge(pos).set_feature(DNGN_EXIT_CRUCIBLE);
+        update_terrain_knowledge(pos);
 #ifdef USE_TILE
         tile_env.bk_bg(pos) = TILE_DNGN_PORTAL;
         tiles.update_minimap(pos);
@@ -7464,4 +7386,20 @@ void makhleb_crucible_kill(monster& victim)
 
         return;
     }
+}
+
+// A simplified version of Chei's time step, used for catching up off-level
+// monster movements. (Doesn't need to relocate the player since they're not
+// fully on the level yet anyway.)
+void simulate_time_passing(int turns)
+{
+    // Prevent a wizmode crash.
+    if (turns <= 0)
+        return;
+
+    msg::suppress quiet;
+    you.duration[DUR_TIME_STEP] = turns;
+    you.doing_monster_catchup = true;
+    _run_time_step();
+    you.doing_monster_catchup = false;
 }

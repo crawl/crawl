@@ -2,8 +2,7 @@ name: "marrowcuda"
 glyph: {char: "F", colour: lightblue}
 resists: {cold: 1}
 flags: [flies]
-xp_mult: 9
-species: skeleton
+exp: 73
 holiness: [undead]
 will: 10
 attacks:

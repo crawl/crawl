@@ -119,17 +119,23 @@ enum monster_info_flags
     MB_SUPPRESSED,
 #endif
     MB_ROLLING,
+#if TAG_MAJOR_VERSION == 34
     MB_RANGED_ATTACK,
+#endif
     MB_NO_NAME_TAG,
 #if TAG_MAJOR_VERSION == 34
     MB_MAGIC_ARMOUR,
 #endif
     MB_WRETCHED,
+#if TAG_MAJOR_VERSION == 34
     MB_SCREAMED,
+#endif
     MB_WORD_OF_RECALL,
     MB_INJURY_BOND,
+#if TAG_MAJOR_VERSION == 34
     MB_WATER_HOLD,
     MB_WATER_HOLD_DROWN,
+#endif
     MB_FLAYED,
 #if TAG_MAJOR_VERSION == 34
     MB_RETCHING,
@@ -159,7 +165,7 @@ enum monster_info_flags
     MB_SLOW_MOVEMENT,
     MB_LIGHTLY_DRAINED,
     MB_HEAVILY_DRAINED,
-    MB_REPEL_MSL,
+    MB_DEFLECT_MSL,
 #if TAG_MAJOR_VERSION == 34
     MB_NEGATIVE_VULN,
     MB_CONDENSATION_SHIELD,
@@ -191,7 +197,7 @@ enum monster_info_flags
     MB_PINNED,
 #endif
     MB_VILE_CLUTCH,
-    MB_WATERLOGGED,
+    MB_FLOODED,
     MB_CLOUD_RING_THUNDER,
     MB_CLOUD_RING_FLAMES,
     MB_CLOUD_RING_CHAOS,
@@ -204,7 +210,9 @@ enum monster_info_flags
     MB_WITHERING,
     MB_CRUMBLING,
     MB_ALLY_TARGET,
+#if TAG_MAJOR_VERSION == 34
     MB_CANT_DRAIN,
+#endif
     MB_CONCENTRATE_VENOM,
     MB_FIRE_CHAMPION,
     MB_SILENCE_IMMUNE,
@@ -239,8 +247,10 @@ enum monster_info_flags
     MB_PLAYER_SERVITOR,
     MB_FROZEN_IN_TERROR,
     MB_SOUL_SPLINTERED,
+#if TAG_MAJOR_VERSION == 34
     MB_ENGULFING_PLAYER,
-    MB_DOUBLED_HEALTH,
+#endif
+    MB_DOUBLED_VIGOUR,
     MB_ABJURABLE,
     MB_UNREWARDING,
     MB_MINION,
@@ -253,6 +263,21 @@ enum monster_info_flags
     MB_VEXED,
     MB_VAMPIRE_THRALL,
     MB_PYRRHIC_RECOLLECTION,
+    MB_CLOCKWORK_BEE_CAST,
+    MB_FIGMENT,
+    MB_PARADOX,
+    MB_WARDING,
+    MB_PLAYER_DAMAGE_IMMUNE,    // Currently immune to damage from the player for any reason
+    MB_DIMINISHED_SPELLS,
+    MB_TESSERACT_SPAWN,
+    MB_SUNDERING_READY,
+    MB_SEE_INVIS,
+    MB_EXPOSED,
+    MB_STAMPEDE,
+    MB_KNOWN_INVIS, // Fully invisible, but the player has inferred their location
+    MB_REMEMBERED_INVIS,
+    MB_PHASE_SHIFT,
+    MB_DIVINE_SHIELD,
     NUM_MB_FLAGS
 };
 
@@ -278,8 +303,6 @@ struct monster_info_base
     mon_dam_level_type dam;
     // TODO: maybe we should store the position instead
     dungeon_feature_type fire_blocker;
-    string description;
-    string quote;
     mon_holy_type holi;
     mon_intel_type mintel;
     int hd;
@@ -287,9 +310,9 @@ struct monster_info_base
     int ev;
     int base_ev;
     int sh;
-    int mr;
+    int wl;
+    int slay;
     resists_t mresists;
-    bool can_see_invis;
     mon_itemuse_type mitemuse;
     int mbase_speed;
     mon_energy_usage menergy;
@@ -300,10 +323,14 @@ struct monster_info_base
     mon_attack_def attack[MAX_NUM_ATTACKS];
     bool can_go_frenzy;
     bool can_feel_fear;
+    bool can_shoot_through_monster;
     bool sleepwalking;
     bool backlit;
     bool umbraed;
+    int last_seen_at_turn;
+    int threat_range;
 
+    mid_t mid;
     mid_t client_id;
     mid_t summoner_id;
 };
@@ -322,7 +349,7 @@ struct monster_info : public monster_info_base
 #define MILEV_ALL 0
 #define MILEV_SKIP_SAFE -1
 #define MILEV_NAME -2
-    monster_info() { client_id = 0; }
+    monster_info() { mid = MID_NOBODY; client_id = 0; }
     explicit monster_info(const monster* m, int level = MILEV_ALL);
     explicit monster_info(monster_type p_type,
                           monster_type p_base_type = MONS_NO_MONSTER);
@@ -364,6 +391,7 @@ struct monster_info : public monster_info_base
         short xl_rank;
         short damage;
         short ac;
+        string title;
     } i_ghost;
 
     inline bool is(unsigned mbflag) const
@@ -422,6 +450,7 @@ struct monster_info : public monster_info_base
     bool can_see_invisible() const;
     bool nightvision() const;
     int willpower() const;
+    int slaying() const;
     int lighting_modifiers() const;
 
     int base_speed() const
@@ -433,19 +462,18 @@ struct monster_info : public monster_info_base
 
     bool wields_two_weapons() const;
     bool can_regenerate() const;
-    reach_type reach_range(bool items = true) const;
+    int reach_range(bool items = true) const;
 
     size_type body_size() const;
     bool net_immune() const;
+    bool net_escape_capable() const;
 
     // These should be kept in sync with the actor equivalents
     // (Maybe unify somehow?)
-    // Note: actor version is now actor::cannot_act.
-    bool cannot_move() const;
+    bool helpless() const;
     bool asleep() const;
     bool incapacitated() const;
     bool airborne() const;
-    bool ground_level() const;
 
     bool is_named() const
     {
@@ -468,6 +496,7 @@ struct monster_info : public monster_info_base
     }
 
     bool fellow_slime() const;
+    bool has_hydra_multi_attack() const;
 
     vector<string> get_unusual_items() const;
     bool has_unusual_items() const;
@@ -475,6 +504,7 @@ struct monster_info : public monster_info_base
     bool has_spells() const;
     bool antimagic_susceptible() const;
     int spell_hd(spell_type spell = SPELL_NO_SPELL) const;
+    spell_type get_wand_spell() const;
     unsigned colour(bool base_colour = false) const;
     void set_colour(int colour);
 
@@ -483,17 +513,23 @@ struct monster_info : public monster_info_base
 
     monster* get_known_summoner() const;
 
+    bool is_stationary() const;
+    int perception() const;
+
+    bool invisible_to_player() const;
+
 protected:
     string _core_name() const;
     string _base_name() const;
     string _apply_adjusted_description(description_level_type desc, const string& s) const;
+
+    void _populate_as_generic();
+    void _add_name_info(const monster* m, int milev);
+    void _add_constriction_info(const monster* mon);
 };
 
-// Colour should be between -1 and 15 inclusive!
-bool set_monster_list_colour(monster_list_colour_type, int colour);
-void clear_monster_list_colours();
-
-void get_monster_info(vector<monster_info>& mons);
+void get_nearby_monster_info(vector<monster_info>& mons,
+                             vector<monster_info>* invis_mons = nullptr);
 
 void mons_to_string_pane(string& desc, int& desc_colour, bool fullname,
                            const vector<monster_info>& mi, int start,

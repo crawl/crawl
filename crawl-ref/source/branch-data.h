@@ -109,11 +109,11 @@ const Branch branches[NUM_BRANCHES] =
       {BRANCH_ORC} },
 
     { BRANCH_SLIME, BRANCH_LAIR, 4, 5, 5, 17,
-      brflag::no_items | brflag::dangerous_end | brflag::spotty,
+      brflag::no_items | brflag::dangerous_end | brflag::spotty | brflag::no_shafts,
       DNGN_ENTER_SLIME, DNGN_EXIT_SLIME, NUM_FEATURES,
       "Slime Pits", "the Pits of Slime", "Slime",
       nullptr,
-      GREEN, BROWN,
+      BROWN, BROWN,
       'M', { RUNE_SLIME }, branch_noise::quiet, 7,
       {BRANCH_LAIR, BRANCH_VAULTS } },
 
@@ -163,7 +163,7 @@ const Branch branches[NUM_BRANCHES] =
       nullptr,
       LIGHTGREY, BROWN,
       'U', {}, branch_noise::normal, 10,
-      {BRANCH_VAULTS, BRANCH_SLIME } },
+      {BRANCH_DUNGEON, BRANCH_VAULTS, BRANCH_SLIME } },
 #endif
 
     { BRANCH_VESTIBULE, NUM_BRANCHES, 27, 27, 1, 27,
@@ -319,7 +319,7 @@ const Branch branches[NUM_BRANCHES] =
 #if TAG_MAJOR_VERSION > 34
 
     { BRANCH_GAUNTLET, NUM_BRANCHES, -1, -1, 1, 15,
-      brflag::no_x_level_travel | brflag::no_items,
+      brflag::no_x_level_travel | brflag::no_items | brflag::fully_map,
       DNGN_ENTER_GAUNTLET, DNGN_EXIT_GAUNTLET, DNGN_EXIT_THROUGH_ABYSS,
       "Gauntlet", "a Gauntlet", "Gauntlet",
       "You enter a gauntlet!",
@@ -401,7 +401,7 @@ const Branch branches[NUM_BRANCHES] =
 #if TAG_MAJOR_VERSION == 34
 
     { BRANCH_GAUNTLET, NUM_BRANCHES, -1, -1, 1, 15,
-      brflag::no_x_level_travel | brflag::no_items,
+      brflag::no_x_level_travel | brflag::no_items | brflag::fully_map,
       DNGN_ENTER_GAUNTLET, DNGN_EXIT_GAUNTLET, DNGN_EXIT_THROUGH_ABYSS,
       "Gauntlet", "a Gauntlet", "Gauntlet",
       "You enter a gauntlet!",
@@ -433,6 +433,27 @@ const Branch branches[NUM_BRANCHES] =
       '@', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
       {}
     },
+
+    { BRANCH_NECROPOLIS, NUM_BRANCHES, -1, -1, 1, 0,
+      brflag::no_x_level_travel | brflag::no_items | brflag::fully_map,
+      DNGN_ENTER_NECROPOLIS, DNGN_EXIT_NECROPOLIS, NUM_FEATURES,
+      "Necropolis", "the Necropolis", "Necropolis",
+      "You enter an ornate necropolis!",
+      MAGENTA, LIGHTGREY,
+      '%', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {}
+    },
+
+    { BRANCH_GULCH, NUM_BRANCHES, -1, -1, 1, 20,
+      brflag::no_x_level_travel | brflag::no_items,
+      DNGN_ENTER_GULCH, DNGN_EXIT_GULCH, NUM_FEATURES,
+      "Gulch", "a gutter gulch", "Gulch",
+      "You enter the Vaults' gutter gulch!",
+      GREEN, LIGHTBLUE,
+      '^', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {}
+    },
+
 };
 
 /*

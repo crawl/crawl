@@ -2,7 +2,7 @@ name: "rime drake"
 glyph: {char: "k", colour: blue}
 flags: [flies, warm_blood]
 resists: {cold: 1}
-xp_mult: 22
+exp: 372
 genus: drake
 will: 20
 attacks:

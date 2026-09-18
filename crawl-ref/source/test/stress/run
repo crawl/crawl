@@ -52,8 +52,8 @@ run_one()
         $CRAWL_PTY -rc test/stress/qw.rc
     ;;
     12|orcs)
-        echo "arena: 99 orc v the Royal Jelly delay:0" 1>&2
-        $CRAWL -arena '99 orc v the Royal Jelly delay:0'
+        echo "arena: 99 orc v Royal Jelly delay:0" 1>&2
+        $CRAWL -arena '99 orc v Royal Jelly delay:0'
     ;;
     test) # Not in "all".
         echo "crawl -test" 1>&2

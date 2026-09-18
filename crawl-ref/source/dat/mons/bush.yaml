@@ -1,5 +1,5 @@
 name: "bush"
-glyph: {char: "P", colour: brown}
+glyph: {char: "◊", colour: brown}
 flags: [stationary, no_exp_gain, no_threat]
 resists: {poison: 1, fire: -1}
 genus: plant

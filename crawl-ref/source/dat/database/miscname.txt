@@ -6,8 +6,7 @@
 # This file contains a list of names for miscellaneous things.
 ######################################################
 %%%%
-# Used by Summon Horrible Things.
-SHT_int_loss
+summon_horrible_things
 
 Your mind reels, touched by the horrors through the portal.
 
@@ -107,6 +106,8 @@ marvelous
 
 splendid
 
+stupendous
+
 sublime
 
 terrific
@@ -201,7 +202,7 @@ You hope this place has the Orb of Zot, because it sure as hell doesn't have any
 
 Countless adventurers have entered the dungeon seeking the Orb of Zot, but there's always room for one more...
 
-You sense the Orb of Zot calling to you... with horror, you realize the call is coming from inside the dungeon!
+You sense the Orb of Zot calling to you... with horror, you realise the call is coming from inside the dungeon!
 
 %%%%
 hell_effect_quiet

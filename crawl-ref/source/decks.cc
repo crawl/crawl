@@ -526,7 +526,7 @@ deck_type ability_deck(ability_type abil)
 // deck passed.
 static char _deck_hotkey(deck_type deck)
 {
-    return get_talent(deck_ability[deck], false).hotkey;
+    return get_talent(deck_ability[deck]).hotkey;
 }
 
 static deck_type _choose_deck(const string title = "Draw")
@@ -645,7 +645,7 @@ bool deck_draw(deck_type deck)
     return true;
 }
 
-spret deck_stack(bool fail)
+spret deck_stack(bool fail, int piety_cost, int mp_cost, int hp_cost)
 {
     if (crawl_state.is_replaying_keys())
     {
@@ -681,8 +681,7 @@ spret deck_stack(bool fail)
     fail_check();
 
     you.props[NEMELEX_STACK_KEY].get_vector().clear();
-    run_uncancel(UNC_STACK_FIVE, min(total_cards, 5));
-    return spret::success;
+    return run_ability_uncancel(UNC_STACK_FIVE, piety_cost, mp_cost, hp_cost);
 }
 
 class StackFiveMenu : public Menu
@@ -828,9 +827,16 @@ static void _draw_stack(int to_stack)
     deck_menu.show(false);
 }
 
-bool stack_five(int to_stack)
+bool stack_five()
 {
     auto& stack = you.props[NEMELEX_STACK_KEY].get_vector();
+
+    int total_cards = 0;
+    for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; ++i)
+        total_cards += deck_cards((deck_type)i);
+    total_cards += stack.size();
+
+    int to_stack = min(total_cards, 5);
 
     // TODO: this loop makes me sad
     while (stack.size() < to_stack)
@@ -888,13 +894,22 @@ spret deck_deal(bool fail)
     const int num_to_deal = min(num_cards, 4);
 
     for (int i = 0; i < num_to_deal; ++i)
+    {
         _evoke_deck(choice, true);
+        if (choice == DECK_OF_DESTRUCTION && i < num_to_deal - 1)
+        {
+            // Update the screen after each card is dealt, so the player can
+            // see the results of each card to make choices for the next.
+            redraw_screen();
+            update_screen();
+        }
+    }
 
     return spret::success;
 }
 
 // Draw the next three cards, discard two and pick one.
-spret deck_triple_draw(bool fail)
+spret deck_triple_draw(bool fail, int piety_cost, int mp_cost, int hp_cost)
 {
     if (crawl_state.is_replaying_keys())
     {
@@ -942,8 +957,7 @@ spret deck_triple_draw(bool fail)
     for (int i = 0; i < num_to_draw; ++i)
         draw.push_back(_random_card(choice));
 
-    run_uncancel(UNC_DRAW_THREE, 0);
-    return spret::success;
+    return run_ability_uncancel(UNC_DRAW_THREE, piety_cost, mp_cost, hp_cost);
 }
 
 bool draw_three()
@@ -1131,6 +1145,8 @@ static void _damaging_card(card_type card, int power,
                        && coinflip()
                        && mons.corrode(&you);
             });
+            redraw_screen();
+            update_screen();
         }
         ztype = acidzaps[power_level];
         break;
@@ -1144,6 +1160,8 @@ static void _damaging_card(card_type card, int power,
         {
             mpr("You reveal a symbol of torment!");
             torment(&you, TORMENT_CARD_PAIN, you.pos());
+            redraw_screen();
+            update_screen();
         }
 
         ztype = painzaps[min(power_level, (int)ARRAYSZ(painzaps)-1)];
@@ -1154,7 +1172,6 @@ static void _damaging_card(card_type card, int power,
     }
 
     bolt beam;
-    beam.range = LOS_RADIUS;
 
     direction_chooser_args args;
     args.mode = TARG_HOSTILE;
@@ -1164,7 +1181,7 @@ static void _damaging_card(card_type card, int power,
     // Confirm aborts as they waste the card.
     prompt = make_stringf("Aiming: %s", card_name(card));
     while (!(spell_direction(target, beam, &args)
-            && player_tracer(ZAP_DEBUGGING_RAY, power/6, beam)))
+            && player_tracer(ZAP_SEARING_RAY, power/6, beam)))
     {
         if (crawl_state.seen_hups
             || yesno("Really abort (and waste the card)?", false, 0))
@@ -1177,13 +1194,13 @@ static void _damaging_card(card_type card, int power,
 
     if (ztype == ZAP_IOOD)
     {
-        if (power_level == 1)
+        if (power_level == 0)
         {
-            cast_iood(&you, power/6, &beam, 0, 0,
+            cast_iood(&you, power/10, &beam, 0, 0,
                       env.mgrid(beam.target), false, false);
         }
         else
-            cast_iood_burst(power/6, beam.target);
+            cast_iood_burst(power/6, power_level, beam.target);
     }
     else
         zapping(ztype, power/6, beam);
@@ -1265,8 +1282,8 @@ static void _elements_card(int power)
     const monster_type element_list[][3] =
     {
         {MONS_RAIJU, MONS_WIND_DRAKE, MONS_SHOCK_SERPENT},
-        {MONS_BASILISK, MONS_CATOBLEPAS, MONS_WAR_GARGOYLE},
-        {MONS_FIRE_BAT, MONS_MOLTEN_GARGOYLE, MONS_FIRE_DRAGON},
+        {MONS_BASILISK, MONS_CATOBLEPAS, MONS_MOUNTAINSHELL},
+        {MONS_FIRE_BAT, MONS_LINDWURM, MONS_FIRE_DRAGON},
         {MONS_ICE_BEAST, MONS_POLAR_BEAR, MONS_ICE_DRAGON}
     };
 
@@ -1474,7 +1491,7 @@ static void _storm_card(int power)
     int valid_targets = 0;
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS, true); ri; ++ri)
     {
-        if (grid_distance(*ri, you.pos()) > 3 && !cell_is_solid(*ri))
+        if (grid_distance(*ri, you.pos()) > 3 && !cell_is_invalid_target(*ri))
         {
             ++valid_targets;
             for (int i = 0; i < max_explosions; ++i)
@@ -1493,7 +1510,6 @@ static void _storm_card(int power)
     {
         bolt beam;
         beam.flavour           = BEAM_ELECTRICITY;
-        beam.is_tracer         = false;
         beam.is_explosion      = true;
         beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
         beam.name              = "electrical discharge";
@@ -1501,6 +1517,7 @@ static void _storm_card(int power)
         beam.explode_noise_msg = "You hear a clap of thunder!";
         beam.real_flavour      = beam.flavour;
         beam.colour            = LIGHTCYAN;
+        beam.tile_explode      = TILE_BOLT_ELECTRIC_BLAST;
         beam.source_id         = MID_PLAYER;
         beam.thrower           = KILL_YOU;
         beam.is_explosion      = true;
@@ -1567,8 +1584,7 @@ static void _degeneration_card(int power)
                }
                else
                {
-                   const int daze_time = (5 + 5 * power_level) * BASELINE_DELAY;
-                   mons.add_ench(mon_enchant(ENCH_DAZED, 0, &you, daze_time));
+                   mons.daze(2 + 3 * power_level);
                    simple_monster_message(mons,
                                           " is dazed by the mutagenic energy.");
                }
@@ -1648,11 +1664,11 @@ static int _card_power(bool punishment)
     if (punishment)
         return you.experience_level * 18;
 
-    int result = you.piety;
+    int result = you.piety();
     result *= you.skill(SK_INVOCATIONS, 100) + 2500;
     result /= 2700;
     result += you.skill(SK_INVOCATIONS, 9);
-    result += (you.piety * 3) / 2;
+    result += (you.piety() * 3) / 2;
 
     return result;
 }
@@ -1708,7 +1724,7 @@ void card_effect(card_type which_card,
         break;
 
     case CARD_SWINE:
-        if (transform(5 + power/10 + random2(power/10), transformation::pig, true))
+        if (transform(roll_dice(10, 10), transformation::pig, true))
             you.transform_uncancellable = true;
         else
             mpr("You feel a momentary urge to oink.");

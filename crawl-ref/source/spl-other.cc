@@ -13,6 +13,7 @@
 #include "coordit.h"
 #include "delay.h"
 #include "env.h"
+#include "fight.h"
 #include "god-companions.h"
 #include "libutil.h"
 #include "message.h"
@@ -24,6 +25,7 @@
 #include "potion.h"
 #include "religion.h"
 #include "spl-util.h"
+#include "target.h"
 #include "terrain.h"
 #include "timed-effects.h"
 #include "view.h"
@@ -171,7 +173,7 @@ void recall_orders(monster *mons)
 
     // Don't pursue distant enemies
     const actor *foe = mons->get_foe();
-    if (foe && !you.can_see(*foe))
+    if (foe && !you.aware_of(*foe))
         mons->foe = MHITYOU;
 }
 
@@ -194,13 +196,13 @@ bool try_recall(mid_t mid)
     }
     coord_def empty;
     if (!find_habitable_spot_near(you.pos(), mons->type, 3, empty)
-        || !mons->move_to_pos(empty))
+        || !mons->move_to(empty, MV_TRANSLOCATION, true))
     {
         return false;
     }
     recall_orders(mons);
     simple_monster_message(*mons, " is recalled.");
-    mons->apply_location_effects(mons->pos());
+    mons->finalise_movement();
     // mons may have been killed, shafted, etc,
     // but they were still recalled!
     return true;
@@ -383,7 +385,7 @@ spret cast_passwall(const coord_def& c, int pow, bool fail)
         return spret::abort;
 
     coord_def delta = c - you.pos();
-    passwall_path p(you, delta, spell_range(SPELL_PASSWALL, pow));
+    passwall_path p(you, delta, spell_range(SPELL_PASSWALL, &you));
     string fail_msg;
     bool valid = p.is_valid(&fail_msg);
     if (!p.spell_succeeds())
@@ -427,18 +429,22 @@ spret cast_passwall(const coord_def& c, int pow, bool fail)
     return spret::success;
 }
 
+static int _intoxicate_can_affect(const actor *actor)
+{
+    const monster *mons = actor->as_monster();
+    return mons
+           && mons_intel(*mons) >= I_HUMAN
+           && !mons->clarity()
+           && mons->res_poison() < 3;
+}
+
 static int _intoxicate_monsters(coord_def where, int pow, bool tracer)
 {
     monster* mons = monster_at(where);
-    if (mons == nullptr
-        || mons_intel(*mons) < I_HUMAN
-        || mons->clarity()
-        || mons->res_poison() >= 3)
-    {
+    if (!mons || !_intoxicate_can_affect(mons))
         return 0;
-    }
 
-    if (tracer && !you.can_see(*mons))
+    if (tracer && (!you.aware_of(*mons) || mons_aligned(mons, &you)))
         return 0;
 
     if (!tracer && monster_resists_this_poison(*mons))
@@ -446,7 +452,7 @@ static int _intoxicate_monsters(coord_def where, int pow, bool tracer)
 
     if (!tracer && x_chance_in_y(40 + div_rand_round(pow, 3), 100))
     {
-        mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you));
+        mons->add_ench(mon_enchant(ENCH_CONFUSION, &you));
         simple_monster_message(*mons, " looks rather confused.");
         return 1;
     }
@@ -464,6 +470,10 @@ spret cast_intoxicate(int pow, bool fail, bool tracer)
 
         return work > 0 ? spret::success : spret::abort;
     }
+
+    targeter_radius hitfunc(&you, LOS_NO_TRANS);
+    if (stop_attack_prompt(hitfunc, "intoxicate", _intoxicate_can_affect))
+        return spret::abort;
 
     fail_check();
     mpr("You attempt to intoxicate your foes!");
@@ -489,7 +499,7 @@ vector<coord_def> find_sigil_locations(bool tracer)
     {
         if (you.see_cell(*ri) && env.grid(*ri) == DNGN_FLOOR
             && (!actor_at(*ri) || (actor_at(*ri) && tracer
-                                   && !you.can_see(*actor_at(*ri)))))
+                                   && !you.aware_of(*actor_at(*ri)))))
         {
             positions.push_back(*ri);
         }
@@ -528,7 +538,7 @@ spret cast_sigil_of_binding(int pow, bool fail, bool tracer)
     }
 
     // Remove any old sigil that may still be active.
-    timeout_binding_sigils();
+    end_terrain_changes(you, TERRAIN_CHANGE_BINDING_SIGIL);
 
     int dur = BASELINE_DELAY * random_range(5 + div_rand_round(pow, 4),
                                             8 + div_rand_round(pow, 2));
@@ -585,8 +595,13 @@ void trigger_binding_sigil(actor& actor)
 {
     if (actor.is_binding_sigil_immune())
     {
-        mprf("%s cannot be bound by the sigil due to %s high momentum!",
-             actor.name(DESC_THE).c_str(), actor.pronoun(PRONOUN_POSSESSIVE).c_str());
+        if (actor.is_player())
+            mpr("You slip past the binding sigil.");
+        else
+        {
+            mprf("%s cannot be bound by the sigil due to %s high momentum!",
+                actor.name(DESC_THE).c_str(), actor.pronoun(PRONOUN_POSSESSIVE).c_str());
+        }
         return;
     }
 
@@ -605,7 +620,7 @@ void trigger_binding_sigil(actor& actor)
                         - div_rand_round(m->get_hit_dice(), 4))
                     * BASELINE_DELAY;
 
-    if (m->add_ench(mon_enchant(ENCH_BOUND, 0, &you, dur)))
+    if (m->add_ench(mon_enchant(ENCH_BOUND, &you, dur)))
     {
         simple_monster_message(*m,
             " moves over the binding sigil and is bound in place!",
@@ -618,170 +633,64 @@ void trigger_binding_sigil(actor& actor)
     revert_terrain_change(actor.pos(), TERRAIN_CHANGE_BINDING_SIGIL);
 }
 
-spret cast_spike_launcher(int pow, bool fail)
+spret cast_spike_launcher(const actor& agent, int pow, bool fail)
 {
     fail_check();
 
-    int valid = 0;
-    coord_def spot;
-    for (adjacent_iterator ai(you.pos()); ai; ++ai)
-    {
-        if (feat_is_wall(env.grid(*ai)))
-        {
-            if (one_chance_in(++valid))
-                spot = *ai;
-        }
-    }
+    // Allow monsters to cheat slightly with positioning, and choose a useful
+    // wall when possible (since they will otherwise never move into a place to
+    // make it useful and might waste time recasting)
+    vector<coord_def> spots = find_spike_launcher_walls(agent.pos(),
+                                                        !agent.is_player() ? &agent : nullptr);
 
     // Targeter should prevent this from happening.
-    if (spot.origin())
+    if (spots.empty())
         return spret::abort;
 
-    // Remove any existing spike launcher, if we have one
-    if (you.duration[DUR_SPIKE_LAUNCHER_ACTIVE])
-    {
-        for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
-        {
-            map_terrain_change_marker *marker =
-                dynamic_cast<map_terrain_change_marker*>(mark);
+    coord_def spot = spots[random2(spots.size())];
 
-            if (marker->change_type == TERRAIN_CHANGE_SPIKE_LAUNCHER)
-                revert_terrain_change(marker->pos, TERRAIN_CHANGE_SPIKE_LAUNCHER);
-        }
+    // Remove any existing spike launcher, if the agent has one.
+    for (map_active_feature_marker* marker : env.markers.get_active_features(DNGN_SPIKE_LAUNCHER, agent.mid))
+    {
+        end_terrain_changes(agent, TERRAIN_CHANGE_SPIKE_LAUNCHER);
+        env.markers.remove(marker);
     }
 
-    int dur = random_range(50, 90) + pow;
+    const int dur = random_range(50, 90) + pow;
+    const int timer = agent.is_player() ? 10 : 0;   // Don't delay monster launchers a second turn.
+    temp_change_terrain(spot, DNGN_SPIKE_LAUNCHER, dur, TERRAIN_CHANGE_SPIKE_LAUNCHER, agent.mid);
+    env.markers.add(new map_active_feature_marker(spot, DNGN_SPIKE_LAUNCHER, agent.mid,
+                    agent.temp_attitude(), pow, dur, timer, true));
 
-    temp_change_terrain(spot, DNGN_SPIKE_LAUNCHER, dur, TERRAIN_CHANGE_SPIKE_LAUNCHER);
-    you.duration[DUR_SPIKE_LAUNCHER_ACTIVE] = dur;
-    you.props.erase(SPIKE_LAUNCHER_TIMER);
-    you.props[SPIKE_LAUNCHER_POWER] = pow;
-
-    mpr("You shape a spike launcher from a nearby wall.");
+    if (you.see_cell(spot))
+    {
+        mprf("%s shape%s a spike launcher from a nearby wall.",
+             agent.name(DESC_THE).c_str(), agent.is_player() ? "" : "s");
+    }
 
     return spret::success;
 }
 
-static void _fire_spike_launcher(monster* target, const coord_def& origin)
-{
-    bolt spike;
-    zappy(ZAP_SPIKE_LAUNCHER, you.props[SPIKE_LAUNCHER_POWER].get_int(),
-            false, spike);
-    spike.source = target->pos();
-    spike.target = target->pos();
-    spike.seen = true;
-    spike.range = 1;
-    spike.hit_verb = "skewers";
-    spike.thrower = KILL_YOU;
-
-    dungeon_feature_type feat = orig_terrain(origin);
-    switch (feat)
-    {
-        case DNGN_STONE_WALL:
-        case DNGN_CLEAR_STONE_WALL:
-            spike.name = "stone spike";
-            break;
-
-        case DNGN_METAL_WALL:
-            spike.name = "metal spike";
-            break;
-
-        case DNGN_CRYSTAL_WALL:
-            spike.name = "crystalline spike";
-            break;
-
-        // Rock already handled by zappy()
-        default:
-            break;
-    }
-
-    flash_tile(target->pos(), CYAN);
-    spike.fire();
-}
-
-static coord_def _find_spike_launcher()
-{
-    for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
-    {
-        map_terrain_change_marker *marker =
-            dynamic_cast<map_terrain_change_marker*>(mark);
-
-        if (marker->change_type == TERRAIN_CHANGE_SPIKE_LAUNCHER)
-            return marker->pos;
-    }
-
-    return coord_def();
-}
-
-void handle_spike_launcher(int delay)
-{
-    coord_def pos = _find_spike_launcher();
-
-    // Somehow it doesn't exist. Maybe it got destroyed?
-    if (pos.origin())
-    {
-        you.duration[DUR_SPIKE_LAUNCHER_ACTIVE] = 0;
-        return;
-    }
-
-    // Check if we've gotten too far away from our launcher
-    if (!you.see_cell_no_trans(pos) || grid_distance(you.pos(), pos) > 3)
-    {
-        mpr("Your spike launcher falls apart as you grow too distant to "
-            "maintain it.");
-        revert_terrain_change(pos, TERRAIN_CHANGE_SPIKE_LAUNCHER);
-        you.duration[DUR_SPIKE_LAUNCHER_ACTIVE] = 0;
-        return;
-    }
-
-    int& timer = you.props[SPIKE_LAUNCHER_TIMER].get_int();
-    timer -= delay;
-
-    // Now, fire the launcher, if anything is in range.
-    while (timer < 0)
-    {
-        for (fair_adjacent_iterator ai(pos); ai; ++ai)
-        {
-            if (monster* targ = monster_at(*ai))
-            {
-                if (!you.see_cell_no_trans(*ai) || targ->wont_attack()
-                    || targ->is_firewood())
-                {
-                    continue;
-                }
-
-                _fire_spike_launcher(targ, pos);
-                break;
-            }
-        }
-
-        timer += BASELINE_DELAY;
-    }
-}
-
-void end_spike_launcher()
-{
-    for (map_marker *mark : env.markers.get_all(MAT_TERRAIN_CHANGE))
-    {
-        map_terrain_change_marker *marker =
-            dynamic_cast<map_terrain_change_marker*>(mark);
-
-        if (marker->change_type == TERRAIN_CHANGE_SPIKE_LAUNCHER)
-        {
-            mpr("Your spike launcher falls apart.");
-            revert_terrain_change(marker->pos, TERRAIN_CHANGE_SPIKE_LAUNCHER);
-            return;
-        }
-    }
-}
-
-vector<coord_def> find_spike_launcher_walls()
+vector<coord_def> find_spike_launcher_walls(const coord_def& origin, const actor* only_useful_to)
 {
     vector<coord_def> wall_locs;
-    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    for (adjacent_iterator ai(origin); ai; ++ai)
     {
-        if (feat_is_wall(env.grid(*ai)))
+        if (feat_is_wall(env.grid(*ai)) && env.grid(*ai) != DNGN_SPIKE_LAUNCHER
+            && (!only_useful_to || has_adjacent_enemy(*ai, *only_useful_to)))
+        {
             wall_locs.push_back(*ai);
+        }
     }
     return wall_locs;
+}
+
+bool has_adjacent_enemy(const coord_def& pos, const actor& viewer)
+{
+    for (adjacent_iterator ai(pos); ai; ++ai)
+        if (actor* act = actor_at(*ai))
+            if (viewer.can_see(*act) && !mons_aligned(&viewer, act) && !act->is_firewood())
+                return true;
+
+    return false;
 }

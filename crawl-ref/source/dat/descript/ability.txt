@@ -97,7 +97,9 @@ action will cancel the Dig status.
 Shaft Self ability
 
 Sends you to a random position one to three floors down, as if you jumped into
-a shaft trap. It takes some time to dig the shaft.
+a shaft trap. It takes some time to dig the shaft, and requires solid, dry
+ground beneath you. You cannot shaft yourself while standing on stairs or
+portals or while in watery terrain.
 %%%%
 Evoke Blink ability
 
@@ -111,9 +113,9 @@ Evoke Berserk Rage ability
 %%%%
 Evoke Invisibility ability
 
-Turns the user invisible. Turning invisible in this way causes magical
-contamination. Reaching high levels of contamination will cause you to glow
-brightly, nullifying the invisibility.
+Turns the user invisible for a short period of time.
+
+[[player invis desc]]
 %%%%
 End Transformation ability
 
@@ -163,24 +165,36 @@ from your body is so immense that it even fills nearby spaces like a choking
 cloud, assailing enemies and gradually putting them to sleep.
 
 After using this ability, you must gain experience points before you can recover
-enough power to use it again.
+enough power to use it again. (Shapeshifting skill will increase the rate at
+which this skill recharges.)
 %%%%
 Enkindle ability
 
 Stokes your ghostly flames to a fever pitch, greatly enhancing your spellcasting
 at the cost of burning away all accumulated memories.
 
-While in this state, your spells cost no MP, are unaffected by encumbrance, and
-you receive a bonus to spell success and power (the latter of which increases
-with your experience level). Any spellclaw attack made while Enkindled inflicts
-bonus damage proportional to the level of spell cast, and heals you for a
-percentage of the damage dealt.
+While in this state, your damage-dealing spells cost no MP, are unaffected by
+encumbrance, and you receive a bonus to their spell success and power (the
+latter of which increases with your experience level). Any spellclaw attack made
+while Enkindled inflicts bonus damage proportional to the level of spell cast,
+and heals you for a percentage of the damage dealt.
 
 Each spell you cast while Enkindled consumes a memory, and the state will end
 once you have no more left (or after a short period of time, regardless).
 
 At your current experience level, you can hold enough memories to cast a maximum
 of {{return 3 + math.floor(you.xl() * 3 / 20);}} spells in a row this way.
+%%%%
+Breathe Rust ability
+
+Exhales a blast of oxidizing vapour that continuously corrodes and weakens the
+attacks of creatures which stand inside it. These clouds are long-lasting, but
+do only minimal damage.
+%%%%
+Golden Breath ability
+
+Exhales a powerful blast of elemental devastation, which inflicts both fire and
+cold damage, and leaves clouds of poisonous vapour in its wake.
 %%%%
 # Zin
 Recite ability
@@ -209,9 +223,12 @@ is increased by Invocations skill.
 %%%%
 Sanctuary ability
 
-Creates a divine refuge for a short duration. While you are inside the
-sanctuary, monsters will not attack you, but the protection will disappear at
-once should you breach the divine peace.
+Transforms the area around the user into a domain of unbreakable law for a short
+duration. So long as anyone stands within this sanctuary, no harm may be done to
+them by others, and they may do no harm to others in turn.
+
+Beings with hostile intent are unable to enter a sanctuary and those already
+nearby when it is created will be forced to flee.
 %%%%
 Cure All Mutations ability
 
@@ -294,8 +311,8 @@ Hurl Torchlight ability
 
 Hurls a gout of umbral fire from the Black Torch, which deals irresistible
 damage to living, demonic, and holy beings. The torchlight will also briefly
-empower any of your undead servants caught in its blast, and is harmless to its
-user. The damage is increased by Invocations skill.
+empower any of your undead servants caught in its blast, and is harmless to
+those who worship Yredelemnul. The damage is increased by Invocations skill.
 
 This ability can be used only while the torch is lit, and only a limited number
 of times on each floor. The number of uses available per floor increases with
@@ -462,7 +479,7 @@ debt paid.
 Channel Magic ability
 
 Dramatically increases the user's regeneration of magical power for a duration
-that increases with Invocations skill.
+that increases with Spellcasting skill.
 %%%%
 Forget Spell ability
 
@@ -471,8 +488,11 @@ Removes a known spell from memory, so as to free memory to learn others.
 Divine Exegesis ability
 
 Casts any spell from your spell library with guaranteed success. You receive a
-bonus to spell power based on your Invocations skill that is worth 50% more
-than equivalent levels of training in the relevant skills of the spell itself.
+bonus to spell power based on your Spellcasting skill that is worth the same as
+equivalent levels of training in the relevant skills of the spell itself.
+
+For a short time afterward, you may recast the same spell (using the Recast
+ability), at a greatly reduced piety cost.
 %%%%
 # Trog
 Berserk ability
@@ -492,6 +512,8 @@ also fortifies the user's willpower, protecting against many magical effects.
 Brothers in Arms ability
 
 Summons huge angry allies to wreak havoc.
+
+The strength of the summoned allies increases with the user's experience level.
 %%%%
 # Elyvilon
 Purification ability
@@ -499,32 +521,42 @@ Purification ability
 Purges your body of poison, confusion, slowness, petrification, weakness, and
 sickness. Any drained maximum health will also be fully restored.
 %%%%
-Heal Other ability
+Pacify ability
 
-Heals a creature other than yourself by a moderate amount, depending on
-Invocations skill. Using this ability on hostile monsters will try to turn them
-neutral. This works best on living creatures, with the undead and demons being
-progressively harder to pacify. Intelligent creatures are also more difficult
-to pacify.
+Attempts to soothe a hostile creature and convince them to give up their violent
+ways. If successful, the creature will turn neutral and attempt to leave the
+floor as quickly as possible. You will be granted its full experience value.
 
-Ghosts of dead adventurers and demon lords are too wrathful to be pacified,
-mindless creatures are too unintelligent to be pacified, and no monster can be
+This works best on holy and living creatures, with the undead and demons being
+progressively harder to pacify - particularly if they are intelligent.
+
+Neither mindless nor nonliving creatures can be pacified and no monster can be
 pacified while it is asleep.
 
-Whether the pacification succeeds or not, the invested piety and magic points
-are lost. If it does succeed, the monster is healed and you gain the monster's
-full experience value. Otherwise, the monster is unaffected and you gain
-nothing.
+Invocations skill increases your chance of success and allows you to pacify more
+powerful creatures.
+%%%%
+Divine Alms ability
+
+Comforts a friendly creature who is suffering, healing some of its wounds
+(based on your Invocations skill) and also curing poison, confusion, slowing,
+sickness, weakness, draining, and petrification.
+
+Any summoned creature who is healed by this ability may also be granted a
+small amount of additional time in this world.
 %%%%
 Heal Self ability
 
 Heals a moderate amount of health, depending on Invocations skill.
 %%%%
-Divine Vigour ability
+Aura of Vigour ability
 
 Greatly increases your maximum health and magic points, depending on
 Invocations skill. Your current health and magic points will also be increased
 proportionally.
+
+Any friendly creatures near you will also have their health doubled for as long
+as the effect lasts.
 %%%%
 # Lugonu
 Depart the Abyss ability
@@ -554,7 +586,7 @@ ability will leave your health depleted.
 %%%%
 Brand Weapon With Distortion ability
 
-Permanently corrupts a weapon of your choice with a localised field of
+Permanently corrupts a melee weapon of your choice with a localised field of
 distortion. This blessing may only be used once, and it cannot be used on
 artefact weapons.
 %%%%
@@ -704,7 +736,7 @@ Shadowslip ability
 Instantly swaps places with your shadow (so long as it is active) and misleads
 all enemies in sight about which of the two is which. Enemies which were
 previously focused on you will instead focus their attention exclusively upon
-your shadow for several turns before they realize their mistake - though if they
+your shadow for several turns before they realise their mistake - though if they
 succeed in destroying your shadow, the illusion will end prematurely.
 
 The duration of this effect increases with Invocations skill, as will the
@@ -742,8 +774,10 @@ Invocations skill increases the duration of the effect.
 # Gozag
 Potion Petition ability
 
-Petitions Gozag to sell you the effects of a set of potions. Gozag will offer
-three lists at a time, with varying prices.
+Petitions Gozag to sell you the effects of a set of potions. (These effects will
+be applied instantly and directly to the petitioner, rather than being provided
+or being drunk as a normal potion.) Gozag will offer three lists at a time, with
+varying prices.
 %%%%
 Call Merchant ability
 
@@ -804,11 +838,11 @@ Sacrifices purity of body or mind, causing a single mutation.
 %%%%
 Sacrifice Words ability
 
-Sacrifices the ability to use magical scrolls after being injured.
+Sacrifices the ability to use magical scrolls in combat unless badly injured.
 %%%%
 Sacrifice Drink ability
 
-Sacrifices the ability to drink potions after being injured.
+Sacrifices the ability to drink potions in combat unless badly injured.
 %%%%
 Sacrifice Essence ability
 
@@ -968,10 +1002,11 @@ Ancestor Life: Knight ability
 Remembers your ancestor as a knight, a strong melee combatant with superior
 defences. This choice is permanent and cannot be undone.
 %%%%
-Ancestor Life: Battlemage ability
+Ancestor Life: Elementalist ability
 
-Remembers your ancestor as a battlemage, a warrior capable of relentless offence
-with both melee and conjurations. This choice is permanent and cannot be undone.
+Remembers your ancestor as a elementalist, a powerful but fragile mage capable
+of unleashing destructive spells from a safe distance. This choice is permanent
+and cannot be undone.
 %%%%
 Ancestor Life: Hexer ability
 
@@ -1061,3 +1096,32 @@ Causes the caster to radiate toxic energy, continuously inflicting poison on
 everything in line of sight for as long as the aura lasts. The power of this
 ability scales with the Evocations skill, and this ability is available only
 while wielding the Staff of Olgreb.
+%%%%
+Jump ability
+
+Leaps through the air in the blink of an eye. While it is impossible to control
+your destination, the movement is so abrupt and agile that no monster will be
+able to land a blow on you until you can act again, and many may lose track of
+your position entirely.
+
+You must spend a short while recovering between each use of this ability.
+%%%%
+Watery Grave ability
+
+Turns all of the water near you into a surging tide that attempts to drown every
+enemy standing in or above it. Those who need air to breathe will also become
+Flooded, preventing them from casting spells affected by Silence for several
+turns and dealing minor asphyxiation damage.
+
+After using this ability, you must gain experience points before you can recover
+enough power to use it again.
+%%%%
+Bestial Takedown ability
+
+Unleashes the full power of your predatory instincts to leap towards a terrified
+enemy and perform a vicious melee attack against them. This attack receives a
+damage multiplier based on your Shapeshifting skill. If it kills them, you will
+always perform a Howl afterward.
+
+Can only target an enemy who is afraid, and who has at least one occupiable tile
+adjacent to them.

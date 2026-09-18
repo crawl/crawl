@@ -2,9 +2,6 @@
 
 """
 Generate species-data.h, aptitudes.h, species-groups.h, and species-type.h
-
-Works with both Python 2 & 3. If that changes, update how the Makefile calls
-this.
 """
 
 from __future__ import print_function
@@ -38,7 +35,8 @@ class Species(MutableMapping):
             'undead_type', 'size', 'str', 'int', 'dex', 'levelup_stats',
             'levelup_stat_frequency', 'recommended_jobs', 'recommended_weapons',
             'difficulty', 'difficulty_priority', 'create_enum', 'walking_verb',
-            'altar_action', 'mutations', 'child_name', 'orc_name'}
+            'altar_action', 'mutations', 'child_name', 'orc_name',
+            'orcification_msg'}
 
     def __init__(self, yaml_dict):
         self.backing_dict = dict()
@@ -150,6 +148,7 @@ class Species(MutableMapping):
         self['altar_action'] = quote_or_nullptr('altar_action', s)
         self['child_name']   = quote_or_nullptr('child_name', s)
         self['orc_name']     = quote_or_nullptr('orc_name', s)
+        self['orcification_msg'] = quote_or_nullptr('orcification_msg', s)
 
         if 'TAG_MAJOR_VERSION' in s:
             self['tag_major_version_opener'] = (
@@ -347,6 +346,18 @@ def generate_species_type_data(s):
         return '    %s,\n' % s['enum']
 
 
+def maybe_write(filename, text):
+    """Write `text` to `filename`, but only if the file would be created or changed"""
+    if os.path.exists(filename):
+        with open(filename, 'r', encoding='utf-8') as f:
+            cur = f.read()
+        if cur == text:
+            return
+
+    with open(filename, 'w', encoding='utf-8') as f:
+        f.write(text)
+
+
 def main():
     parser = argparse.ArgumentParser(description='Generate species-data.h')
     parser.add_argument('datadir', help='dat/species source dir')
@@ -374,7 +385,7 @@ def main():
             continue
         f_path = os.path.join(args.datadir, f_name)
         try:
-            species_spec = yaml.safe_load(open(f_path))
+            species_spec = yaml.safe_load(open(f_path, encoding='utf-8'))
         except yaml.YAMLError as e:
             print("Failed to load %s: %s" % (f_name, e))
             sys.exit(1)
@@ -433,18 +444,15 @@ def main():
 
     species_data_out_text += load_template(args.templatedir,
                                         'species-data-footer.txt')
-    with open(args.species_data, 'w') as f:
-        f.write(species_data_out_text)
+    maybe_write(args.species_data, species_data_out_text)
 
     aptitudes_out_text += load_template(args.templatedir,
                                         'aptitudes-footer.txt')
-    with open(args.aptitudes, 'w') as f:
-        f.write(aptitudes_out_text)
+    maybe_write(args.aptitudes, aptitudes_out_text)
 
     species_type_out_text += load_template(args.templatedir,
                                         'species-type-footer.txt')
-    with open(args.species_type, 'w') as f:
-        f.write(species_type_out_text)
+    maybe_write(args.species_type, species_type_out_text)
 
     species_groups_out_text = ''
     species_groups_out_text += load_template(args.templatedir,
@@ -452,8 +460,7 @@ def main():
     species_groups_out_text += generate_species_groups(species_groups)
     species_groups_out_text += load_template(args.templatedir,
                                         'species-groups-footer.txt')
-    with open(args.species_groups, 'w') as f:
-        f.write(species_groups_out_text)
+    maybe_write(args.species_groups, species_groups_out_text)
 
 
 if __name__ == '__main__':

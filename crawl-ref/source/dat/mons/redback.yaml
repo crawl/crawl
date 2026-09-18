@@ -2,7 +2,7 @@ name: "redback"
 glyph: {char: "s", colour: lightred}
 flags: [web_immune, no_skeleton]
 resists: {poison: -1}
-xp_mult: 4
+exp: 181
 genus: spider
 will: 20
 attacks:

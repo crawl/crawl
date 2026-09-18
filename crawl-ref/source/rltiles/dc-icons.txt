@@ -19,6 +19,7 @@ cursor_green CURSOR3
 tutorial_cursor TUTORIAL_CURSOR
 travel_exclusion DISABLED
 rampage_indicator RAMPAGE
+rampage_indicator_instant RAMPAGE_INSTANT
 %sdir dngn/traps
 %alpha 128
 cobweb_none_0 TRAP_WEB
@@ -39,6 +40,7 @@ sticky_flame STICKY_FLAME
 inner_flame INNER_FLAME
 constricted CONSTRICTED
 berserk BERSERK
+frenzied FRENZIED
 slowed SLOWED
 hasted HASTED
 might MIGHT
@@ -51,6 +53,7 @@ confused CONFUSED
 sleeping STAB_BRAND
 pain_mirror PAIN_MIRROR
 recall RECALL
+corona GLOWING
 drain DRAIN
 idealised IDEALISED
 bound_soul BOUND_SOUL
@@ -69,7 +72,7 @@ fire_vulnerable FIRE_VULN
 injury_bond INJURY_BOND
 partially_charged PARTIALLY_CHARGED
 fully_charged FULLY_CHARGED
-repel_missiles REPEL_MISSILES
+deflect_missiles DEFLECT_MISSILES
 ghostly GHOSTLY
 still_winds STILL_WINDS
 waterlogged WATERLOGGED
@@ -95,7 +98,7 @@ shadowless SHADOWLESS
 bind BIND
 weak_willed WEAK_WILLED
 sign_of_ruin SIGN_OF_RUIN
-doubled_health DOUBLED_HEALTH
+doubled_vigour DOUBLED_VIGOUR
 kinetic_grapnel KINETIC_GRAPNEL
 tempered TEMPERED
 heart HEART
@@ -109,8 +112,27 @@ nobody_memory_1 NOBODY_MEMORY_1
 nobody_memory_2 NOBODY_MEMORY_2
 nobody_memory_3 NOBODY_MEMORY_3
 pyrrhic PYRRHIC
+magnetised MAGNETISED
+figment FIGMENT
+paradox PARADOX
+warding WARDING
+dim DIMMED
+sentinel_mark SENTINEL_MARK
+strong_willed STRONG_WILLED
+tesseract_spawn TESSERACT_SPAWN
+sundering SUNDERING
+mute MUTE
+exposed EXPOSED
+stampede STAMPEDE
+invis_known UNSEEN_INVIS_KNOWN
+invis_remembered UNSEEN_INVIS_REMEMBERED
+seen_invis SEEN_INVIS
+phase_shifted PHASE_SHIFT
+divine_shield DIVINE_SHIELD
 
-something_under SOMETHING_UNDER
+item_stack1 ITEM_STACK_1
+item_stack2 ITEM_STACK_2
+item_stack3 ITEM_STACK_3
 new_stair NEW_STAIR
 new_transporter NEW_TRANSPORTER
 

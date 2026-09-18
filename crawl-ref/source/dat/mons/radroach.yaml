@@ -1,7 +1,7 @@
 name: "radroach"
 glyph: {char: "B", colour: lightred}
 flags: [web_immune, no_skeleton]
-genus: giant_cockroach
+exp: 839
 will: 60
 attacks:
  - {type: bite, damage: 28}

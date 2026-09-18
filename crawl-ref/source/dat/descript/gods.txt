@@ -153,10 +153,10 @@ foes.
 Sif Muna
 
 Sif Muna the Loreminder is a contemplative but powerful deity, served by those
-who seek magical knowledge. Followers who triumph over their foes can call upon
-the Loreminder for magical power and the ability to cast spells beyond their
-magical training. The devout are rewarded with a supply of spellbooks taken
-directly from Sif Muna's legendary library.
+who seek magical knowledge. Followers who tirelessly pursue new horizons can
+call upon the Loreminder for magical power and the ability to cast spells
+beyond their magical training. The devout are rewarded with a supply of
+spellbooks taken directly from Sif Muna's legendary library.
 %%%%
 the Shining One
 
@@ -277,13 +277,13 @@ occasionally protect the follower's allies from death.
 Fedhas powers
 
 Plants and fungi will not attack Fedhas' worshippers without provocation.
-Worshippers may walk through plants or fungi, and even fire missiles or spells
-through them without causing harm. Fedhas grants powers to temporarily grow a
-menagerie of plant allies whose strength and duration increase with Invocations
-skill. Worshippers may grow a protective wall of briar patches as well as
-ballistomycetes that fire damaging spores whose explosions confuse living
-creatures. Devout followers can overgrow a stretch of solid terrain with a
-cluster of plant allies or even summon a mighty oklob plant.
+Worshippers may walk slowly through plants or fungi, and even fire missiles or
+spells through them without causing harm. Fedhas grants powers to temporarily
+grow a menagerie of plant allies whose strength and duration increase with
+Invocations skill. Worshippers may grow a protective wall of briar patches as
+well as ballistomycetes that fire damaging spores whose explosions confuse
+living creatures. Devout followers can overgrow a stretch of solid terrain with
+a cluster of plant allies or even summon a mighty oklob plant.
 %%%%
 Gozag powers
 
@@ -421,14 +421,13 @@ the Shining One powers
 
 Followers of the Shining One are surrounded by a halo that reveals their
 enemies to them. Followers will gain power by killing evil beings, and with
-growing piety their life force will be protected. The Shining One will keep
-summoned and charmed allies on their side longer, should the allies prove
-worthy of the crusade. Followers will gain use of a divine shield to protect
-them in battle. Later, they can channel blasts of cleansing flame that are
-particularly damaging to unholy beings, and can call upon powerful divine
-beings as temporary allies. Highly pious followers may request the Shining
-One's blessing upon a weapon. The Shining One may occasionally directly
-intervene to save a follower's life.
+growing piety their life force will be protected. Followers will gain use of a
+divine shield to protect them in battle. Later, they can channel blasts of
+cleansing flame that are particularly damaging to unholy beings, and can call
+upon powerful divine beings as temporary allies. Highly pious followers may
+request the Shining One's blessing upon a weapon. The Shining One will sometimes
+grant fervor and protection to any allies a follower leads in the righteous
+crusade and even occasionally intervene directly to save a follower's life.
 %%%%
 Trog powers
 
@@ -534,10 +533,10 @@ from death.
 %%%%
 Fedhas wrath
 
-Those who offend Fedhas will have forces of nature invoked against them in the
-form of pure elemental destruction. Waves of ballistomycete spores will rise
-from nearby corpses, and the worst offenders will be surrounded by animate
-mushrooms and acid-spitting oklob plants.
+Those who offend Fedhas will find the forces of nature invoked against them
+through a dramatic increase in greenery. They may find themselves transmuted
+into the plants they have forsaken, or surrounded by impenetrable walls of
+briars plus vicious acid-spitting oklob plants.
 %%%%
 Hepliaklqana wrath
 
@@ -570,16 +569,17 @@ Jiyva wrath
 
 Jiyva's vengeance is swift and gurgling. All slimes turn against those who
 offend Jiyva, and Jiyva ensures a plentiful supply of further slimes. Victims,
-too, will find their own bodies becoming unstable; regularly transmuting into
-strange forms and acquiring debilitating mutations, as well as having any gifts
-of slime mutations stripped away from them.
+too, will find their own bodies becoming unstable; acquiring debilitating
+mutations or contamination, as well as having any gifts of slime mutations
+stripped away from them.
 %%%%
 Kikubaaqudgha wrath
 
 Kikubaaqudgha's wrath brings forth all the dread powers of necromancy. Victims
-are wracked with screams of torment, and find their health and powers drained.
-Further, Kikubaaqudgha's gifts become tainted: the dead rise again as foes, and
-those that attempt to use necromantic magic to fend off wrath will find it
+may witness the devastating Sign of Ruin form upon themselves, or both doomed
+and drained without any respect for their negative energy resistance.
+Furthermore, Kikubaaqudgha's gifts become tainted: the dead rise again as foes,
+and those that attempt to use necromantic magic to fend off wrath will find it
 backfiring on them when least expected.
 %%%%
 Lugonu wrath
@@ -706,5 +706,4 @@ Wu Jian extra
   ..#....       ..#....  two turns. Activated via the (a)bility menu.
 
 These prevent enemies from getting free attacks on you while you move away.
-You cannot launch martial attacks while digging.
 %%%%

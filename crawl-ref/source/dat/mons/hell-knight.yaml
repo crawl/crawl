@@ -1,7 +1,8 @@
 name: "hell knight"
-glyph: {char: "p", colour: red}
+glyph: {char: "ψ", colour: red}
 flags: [fighter, speaks, warm_blood]
 resists: {fire: 3}
+exp: 781
 species: human
 will: 40
 attacks:

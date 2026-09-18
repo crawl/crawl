@@ -11,9 +11,11 @@
 #include <cstring>
 #include <unordered_map>
 
+#include "act-iter.h"
 #include "art-enum.h"
 #include "cloud.h"
 #include "english.h"
+#include "fight.h"
 #include "god-conduct.h"
 #include "god-passive.h"
 #include "god-wrath.h" // reduce_xp_penance
@@ -34,7 +36,15 @@
 #include "spl-goditem.h"
 #include "stringutil.h"
 #include "transform.h"
+#include "view.h"
 #include "xom.h"
+
+static int _scale_pot_duration(int base, bool is_potion)
+{
+    if (!is_potion || !you.has_mutation(MUT_EFFICIENT_METABOLISM))
+        return base;
+    return base * 2;
+}
 
 int _xom_factor(bool was_known);
 
@@ -101,7 +111,7 @@ public:
         if (!you.can_potion_heal(true) || temp && you.hp == you.hp_max)
         {
             // It's not useless to drink at full health if you could hit things.
-            if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && has_drunken_brawl_targets())
+            if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && !get_player_attack_targets().empty())
                 return true;
 
             if (reason)
@@ -181,7 +191,7 @@ public:
         if (temp && you.hp == you.hp_max)
         {
             // It's not useless to drink at full health if you could hit things.
-            if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && has_drunken_brawl_targets())
+            if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && !get_player_attack_targets().empty())
                 return true;
 
             if (reason)
@@ -244,9 +254,10 @@ public:
         return true;
     }
 
-    bool effect(bool=true, int pow = 40, bool=true) const override
+    bool effect(bool=true, int=0, bool is_potion = true) const override
     {
-        return haste_player(40 + random2(pow));
+        const int dur = _scale_pot_duration(random_range(26, 40), is_potion);
+        return haste_player(dur);
     }
 
     bool quaff(bool was_known) const override
@@ -270,13 +281,14 @@ public:
         static PotionMight inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40, bool=true) const override
+    bool effect(bool=true, int pow = 40, bool is_potion = true) const override
     {
         const bool were_mighty = you.duration[DUR_MIGHT] > 0;
 
         mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
              were_mighty ? "mightier" : "very mighty");
-        you.increase_duration(DUR_MIGHT, 35 + random2(pow), 80);
+        const int dur = _scale_pot_duration(35 + random2(pow), is_potion);
+        you.increase_duration(DUR_MIGHT, dur);
         return true;
     }
 };
@@ -311,13 +323,14 @@ public:
         return true;
     }
 
-    bool effect(bool=true, int pow = 40, bool=true) const override
+    bool effect(bool=true, int pow = 40, bool is_potion = true) const override
     {
         const bool were_brilliant = you.duration[DUR_BRILLIANCE] > 0;
 
         mprf(MSGCH_DURATION, "You feel %sclever all of a sudden.",
              were_brilliant ? "more " : "");
-        you.increase_duration(DUR_BRILLIANCE, 35 + random2(pow), 80);
+        const int dur = _scale_pot_duration(35 + random2(pow), is_potion);
+        you.increase_duration(DUR_BRILLIANCE, dur);
         return true;
     }
 };
@@ -337,14 +350,15 @@ public:
     // allowed with no monsters in LOS. Because it is marked as dangerous,
     // it always prompts. XX maybe add info to the prompt?
 
-    bool effect(bool=true, int pow = 40, bool=true) const override
+    bool effect(bool=true, int pow = 40, bool is_potion = true) const override
     {
         const bool was_attractive = you.duration[DUR_ATTRACTIVE] > 0;
 
         mprf(MSGCH_DURATION, "You feel %sattractive to monsters.",
              was_attractive ? "more " : "");
 
-        you.increase_duration(DUR_ATTRACTIVE, 20 + random2(pow)/2);
+        const int dur = _scale_pot_duration((20 + random2(pow)/2), is_potion);
+        you.increase_duration(DUR_ATTRACTIVE, dur);
         return true;
     }
 };
@@ -361,14 +375,16 @@ public:
         static PotionEnlightenment inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40, bool=true) const override
+    bool effect(bool=true, int pow = 40, bool is_potion = true) const override
     {
         fly_player(pow);
         // Try to sync up the flying and the enlightenment.
         // ...sorry about this.
-        you.duration[DUR_ENLIGHTENED] = max(you.duration[DUR_FLIGHT],
-                                            max(you.duration[DUR_ENLIGHTENED],
-                                                25 + random2(pow)));
+        const int dur =  max(you.duration[DUR_FLIGHT],
+                             max(you.duration[DUR_ENLIGHTENED],
+                                _scale_pot_duration(25 + random2(pow), is_potion)));
+
+        you.duration[DUR_ENLIGHTENED] = dur;
         return true;
     }
 };
@@ -400,10 +416,12 @@ public:
     {
         debuff_player(true);
         mpr("You feel magically purged.");
-        const int old_contam_level = get_contamination_level();
-        contaminate_player(-1 * (1000 + random2(4000)));
-        if (old_contam_level && old_contam_level == get_contamination_level())
-            mpr("You feel slightly less contaminated with magical energies.");
+        if (you.magic_contamination > 0)
+        {
+            contaminate_player(-1 * random_range(250, 1000));
+            if (you.magic_contamination > 0)
+                mpr("You feel slightly less contaminated with magical energies.");
+        }
         return true;
     }
 };
@@ -419,9 +437,9 @@ public:
         static PotionAmbrosia inst; return inst;
     }
 
-    bool effect(bool=true, int=40, bool=true) const override
+    bool effect(bool=true, int=40, bool is_potion = true) const override
     {
-        const int ambrosia_turns = 3 + random2(8);
+        const int ambrosia_turns = _scale_pot_duration(3 + random2(8), is_potion);
         if (confuse_player(ambrosia_turns, false, true))
         {
             print_potion_heal_message();
@@ -449,14 +467,14 @@ public:
         static PotionInvisibility inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40, bool=true) const override
+    bool effect(bool=true, int pow = 40, bool is_potion = true) const override
     {
         if (you.backlit())
         {
             vector<const char *> afflictions;
             if (you.haloed() && !you.umbraed())
                 afflictions.push_back("halo");
-            if (player_severe_contamination())
+            if (player_harmful_contamination())
                 afflictions.push_back("magical contamination");
             if (you.duration[DUR_CORONA])
                 afflictions.push_back("corona");
@@ -481,7 +499,8 @@ public:
                  : "You fade further into invisibility.");
         }
 
-        you.increase_duration(DUR_INVIS, 15 + random2(pow), 100);
+        const int dur = _scale_pot_duration(15 + random2(pow), is_potion);
+        you.increase_duration(DUR_INVIS, dur, 100);
         return true;
     }
 
@@ -501,6 +520,12 @@ public:
             canned_msg(MSG_OK);
             return false;
         }
+        if (Options.show_invis_targeter && !invisibility_target_check("Confirm quaff"))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+
         return true;
     }
 
@@ -584,7 +609,7 @@ public:
         else if (temp && you.magic_points == you.max_magic_points)
         {
             // It's not useless to drink at full health if you could hit things.
-            if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && has_drunken_brawl_targets())
+            if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && !get_player_attack_targets().empty())
                 return true;
 
             if (reason)
@@ -633,7 +658,7 @@ public:
         return you.can_go_berserk(true, true, true, reason, temp);
     }
 
-    bool effect(bool was_known = true, int = 40, bool=true) const override
+    bool effect(bool was_known = true, int = 40, bool is_potion = true) const override
     {
         if (you.is_lifeless_undead())
         {
@@ -641,7 +666,8 @@ public:
             return false;
         }
 
-        you.go_berserk(was_known, true);
+        // Duration scaling is handled in go_berserk().
+        you.go_berserk(was_known, is_potion);
         return true;
     }
 
@@ -691,10 +717,10 @@ public:
         static PotionResistance inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40, bool=true) const override
+    bool effect(bool=true, int pow = 40, bool is_potion = true) const override
     {
         mprf(MSGCH_DURATION, "You feel protected.");
-        const int add = random2(pow) + 35;
+        const int add = _scale_pot_duration(35 + random2(pow), is_potion);;
         you.increase_duration(DUR_RESISTANCE, add);
         return true;
     }
@@ -723,14 +749,15 @@ public:
         return false;
     }
 
-    bool effect(bool was_known = true, int=40, bool=true) const override
+    bool effect(bool was_known = true, int=40, bool is_potion = true) const override
     {
         if (you.form == transformation::death) // Gozag potion petition
         {
             mpr("You're too dead to put down roots!");
             return false;
         }
-        return transform(30, transformation::tree, !was_known);
+        const int dur = _scale_pot_duration(15 + random2(30) + random2(15), is_potion);
+        return transform(dur, transformation::tree, !was_known);
     }
 
     bool quaff(bool was_known) const override
@@ -757,7 +784,8 @@ public:
         if (effect(was_known))
         {
             you.transform_uncancellable = true;
-            did_god_conduct(DID_CHAOS, 10, was_known);
+            if (!was_known)
+                god_forgive_inadvertent_act(FORBID_TRANSFORMATION);
         }
         else
             mpr("You feel woody for a moment.");
@@ -821,22 +849,18 @@ public:
         if (was_known && !check_known_quaff())
             return false;
 
-        string msg = "Really drink that potion of mutation";
-        msg += you.rmut_from_item() ? " while resistant to mutation?" : "?";
-        const bool zin_check = you_worship(GOD_ZIN)
-                            && !have_passive(passive_t::cleanse_mut_potions);
-        if (zin_check)
-            msg += " Zin will disapprove.";
-        if (was_known && (zin_check || you.rmut_from_item())
-                      && !yesno(msg.c_str(), false, 'n'))
+        if (was_known && you.rmut_from_item()
+            && !yesno("Really drink that potion of mutation while resistant to mutation?", false, 'n'))
         {
             canned_msg(MSG_OK);
             return false;
         }
 
-        effect();
-        if (zin_check)
-            did_god_conduct(DID_DELIBERATE_MUTATING, 15, was_known);
+        if (effect() && !was_known
+            && !have_passive(passive_t::cleanse_mut_potions))
+        {
+            god_forgive_inadvertent_act(FORBID_TRANSFORMATION);
+        }
         return true;
     }
 };
@@ -852,10 +876,11 @@ public:
         static PotionMoonshine inst; return inst;
     }
 
-    bool effect(bool=true, int=40, bool=true) const override
+    bool effect(bool=true, int=40, bool is_potion = true) const override
     {
         mpr("You feel tipsy.");
-        you.increase_duration(DUR_VERTIGO, random_range(10, 25), 50);
+        const int dur = _scale_pot_duration(random_range(10, 25), is_potion);
+        you.increase_duration(DUR_VERTIGO, dur, 50);
         return true;
     }
 
@@ -897,14 +922,61 @@ const PotionEffect* get_potion_effect(potion_type pot)
     }
 }
 
+static const map<potion_type, string> _spore_msg =
+{
+    { POT_CURING, "curing" },
+    { POT_HEAL_WOUNDS, "healing" },
+    { POT_HASTE, "quickening", },
+    { POT_MIGHT, "strenghtening", },
+    { POT_BRILLIANCE, "amplifying" },
+    { POT_ENLIGHTENMENT, "enlightening" },
+    { POT_INVISIBILITY, "invisible" },
+    { POT_MAGIC, "magical" },
+    { POT_BERSERK_RAGE, "infuriating" },
+    { POT_RESISTANCE, "bolstering" },
+};
+
+static void _handle_potion_fungus(potion_type potion)
+{
+    // Baseline chance not to trigger.
+    if (!one_chance_in(3))
+        return;
+
+    // Now check if there are any monsters in sight which could benefit from
+    // this potion.
+    vector<monster*> targs;
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+        if (mons_benefits_from_potion(**mi, potion))
+            targs.push_back(*mi);
+
+    // Don't print a message if nothing will happen.
+    if (targs.empty())
+        return;
+
+    draw_ring_animation(you.pos(), you.current_vision, WHITE, CYAN, true, 10);
+
+    // Affect a percentage of nearby targets, but always at least one.
+    shuffle_array(targs);
+    int num_affected = min((int)targs.size(), random_range(targs.size() * 4 / 10 + 1,
+                                                           targs.size() * 9 / 10 + 1));
+
+
+    mprf("Your fungus emits %s spores!", _spore_msg.at(potion).c_str());
+
+
+    for (int i = 0; i < num_affected; ++i)
+        mons_potion_effect(*targs[i], potion, you);
+}
+
 /**
  * Quaff a potion, identifying it if appropriate & triggering its effects on
  * the player. Does not handle decrementing item quantities.
  *
  * @param potion    The potion (stack) being quaffed.
+ * @param force     Whether to consume the potion even if it is known to be useless.
  * @return          true if the potion was used; false if the player aborted.
  */
-bool quaff_potion(item_def &potion)
+bool quaff_potion(item_def &potion, bool force)
 {
     const bool was_known = item_type_known(potion);
 
@@ -915,7 +987,22 @@ bool quaff_potion(item_def &potion)
     }
 
     const potion_type ptyp = static_cast<potion_type>(potion.sub_type);
-    return get_potion_effect(ptyp)->quaff(was_known);
+    if (get_potion_effect(ptyp)->quaff(was_known && !force))
+    {
+        if (you.wearing(OBJ_JEWELLERY, AMU_CHEMISTRY, false, true)
+            && you.magic_points < you.max_magic_points)
+        {
+            mpr("You extract magical energy from the potion.");
+            inc_mp(random_range(5, 9));
+        }
+
+        if (you.has_mutation(MUT_POTION_FUNGUS))
+            _handle_potion_fungus(ptyp);
+
+        return true;
+    }
+
+    return false;
 }
 
 /**
@@ -941,4 +1028,106 @@ int _xom_factor(bool was_known)
             xom_factor *= 3;
     }
     return xom_factor;
+}
+
+// Returns true if a given monster could currently gain some benefit from a
+// given potion effect. (Among those implemented for monsters).
+bool mons_benefits_from_potion(const monster& mon, potion_type potion)
+{
+    switch (potion)
+    {
+        case POT_HASTE:
+            return !mon.has_ench(ENCH_HASTE) && !mon.stasis();
+
+        case POT_MIGHT:
+            return !mon.has_ench(ENCH_MIGHT) && mons_has_attacks(mon);
+
+        case POT_BRILLIANCE:
+            return !mon.has_ench(ENCH_EMPOWERED_SPELLS) && mon.antimagic_susceptible();
+
+        case POT_HEAL_WOUNDS:
+            return mon.hit_points < mon.max_hit_points;
+
+        case POT_CURING:
+            return mon.hit_points < mon.max_hit_points
+                    || mon.has_ench(ENCH_POISON)
+                    || mon.has_ench(ENCH_CONFUSION);
+
+        case POT_ENLIGHTENMENT:
+            return !mon.has_ench(ENCH_FLIGHT) || !mon.has_ench(ENCH_STRONG_WILLED);
+
+        case POT_INVISIBILITY:
+            return !mon.has_ench(ENCH_INVIS) && !mon.backlit();
+
+        case POT_MAGIC:
+            return mon.has_ench(ENCH_ANTIMAGIC);
+
+        case POT_BERSERK_RAGE:
+            return !mon.has_ench(ENCH_BERSERK) && mon.can_go_berserk();
+
+        case POT_RESISTANCE:
+            return !mon.has_ench(ENCH_RESISTANCE);
+
+        default:
+            return false;
+    }
+}
+
+void mons_potion_effect(monster& mon, potion_type potion, const actor& source)
+{
+    switch (potion)
+    {
+        case POT_HASTE:
+            enchant_actor_with_flavour(&mon, &source, BEAM_HASTE);
+            break;
+
+        case POT_MIGHT:
+            enchant_actor_with_flavour(&mon, &source, BEAM_MIGHT);
+            break;
+
+        case POT_BRILLIANCE:
+            simple_monster_message(mon, " magic is enhanced!", true);
+            mon.add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, &source));
+            break;
+
+        case POT_HEAL_WOUNDS:
+            simple_monster_message(mon, " is healed!");
+            mon.heal(random_range(30, 50));
+            break;
+
+        case POT_CURING:
+            simple_monster_message(mon, " is healed!");
+            mon.heal(random_range(10, 20));
+            mon.del_ench(ENCH_POISON);
+            mon.del_ench(ENCH_CONFUSION);
+            break;
+
+        case POT_ENLIGHTENMENT:
+        {
+            simple_monster_message(mon, " is enlightened!");
+            const int dur = random_range(300, 450);
+            mon.add_ench(mon_enchant(ENCH_FLIGHT, &source, dur));
+            mon.add_ench(mon_enchant(ENCH_STRONG_WILLED, &source, dur));
+        }
+            break;
+
+        case POT_INVISIBILITY:
+            enchant_actor_with_flavour(&mon, &source, BEAM_INVISIBILITY);
+            break;
+
+        case POT_MAGIC:
+            mon.del_ench(ENCH_ANTIMAGIC);
+            break;
+
+        case POT_BERSERK_RAGE:
+            mon.go_berserk(false);
+            break;
+
+        case POT_RESISTANCE:
+            enchant_actor_with_flavour(&mon, &source, BEAM_RESISTANCE);
+            break;
+
+        default:
+            break;
+    }
 }

@@ -5,14 +5,13 @@
 # The latter matters little in places that have loads of available vaults
 # but will greatly dilute them in places that have but a few.
 
-
 # This represents the old 8/9 chance of *not* placing a regular vault.
 # It's 5/6 now. -- 1KB
 # And always in Vaults - needs to be done through layouts. ~Grunt
 # Zot has a 2/3 chance now, to try to make it more interesting. ~Grunt
 NAME: primary_dummy
 TAGS: dummy
-DEPTH: 1-100, !Zig, !Gauntlet, !Bazaar, !Trove, !Sewer, !Ossuary, !Bailey, !IceCv, !Volcano, !WizLab, !Desolation, !Arena, !Depths:2-, !Pan
+DEPTH: 1-100, !Zig, !Gauntlet, !Bazaar, !Trove, !Necropolis, !Sewer, !Ossuary, !Bailey, !IceCv, !Volcano, !Gulch, !WizLab, !Desolation, !Arena, !Depths:2-, !Pan
 ORIENT: float
 CHANCE: 8333, 6666 (Zot), 10000 (Vaults)
 MAP
@@ -37,9 +36,9 @@ ENDMAP
 ##############################################################################
 # Regular vaults for depths 1-11.
 #
-# Why this is necessary: there are very few vaults in the 1-11 range (entries
-# are not considered here); to avoid too much repetition of the existing vaults,
-# we use this dummy vault.
+# Why this is necessary: there are very few larger vaults in the 1-11 range,
+# which players see the most; to avoid too much repetition of the existing
+# vaults, we use these dummy vaults.
 #
 NAME: dummy_balancer
 DEPTH: D:1-11
@@ -81,6 +80,8 @@ ENDMAP
 ##############################################################################
 # Minivaults
 #
+# This one is most notable on D:1-2 due to the low number of vaults that
+# early, to discourage startscumming.
 NAME: mini_dummy
 DEPTH: 1-50, !D, !Depths, !Abyss, !Gauntlet
 TAGS: dummy

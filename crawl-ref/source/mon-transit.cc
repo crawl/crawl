@@ -10,6 +10,7 @@
 #include <algorithm>
 
 #include "artefact.h"
+#include "branch.h" // is_connected_branch
 #include "coordit.h"
 #include "dactions.h"
 #include "dungeon.h"
@@ -19,12 +20,14 @@
 #include "items.h"
 #include "libutil.h" // map_find
 #include "mon-behv.h"
+#include "mon-death.h" //monster_die
 #include "mon-place.h"
 #include "mpr.h"
 #include "religion.h"
 #include "tag-version.h"
 #include "terrain.h"
 #include "timed-effects.h"
+#include "travel.h" //level_distance
 
 #define MAX_LOST 100
 
@@ -70,15 +73,20 @@ void add_monster_to_transit(const level_id &lid, const monster& m)
 {
     ASSERT(m.alive());
 
-    m_transit_list &mlist = the_lost_ones[lid];
+    // We always looks up abyss transits under Abyss:1.
+    level_id dest = lid;
+    if (dest.branch == BRANCH_ABYSS)
+        dest.depth = 1;
+
+    m_transit_list &mlist = the_lost_ones[dest];
     mlist.emplace_back(m);
     mlist.back().transit_start_time = you.elapsed_time;
 
-    dprf("Monster in transit to %s: %s", lid.describe().c_str(),
+    dprf("Monster in transit to %s: %s", dest.describe().c_str(),
          m.name(DESC_PLAIN, true).c_str());
 
     if (m.is_divine_companion())
-        move_companion_to(&m, lid);
+        move_companion_to(&m, dest);
 
     const int how_many = mlist.size();
     if (how_many > MAX_LOST)
@@ -104,12 +112,43 @@ void remove_monster_from_transit(const level_id &lid, mid_t mid)
     }
 }
 
+static void _handle_monster_leashing(monster& mon, bool using_stairs)
+{
+    // Summoned monsters might have 'died' immediately upon being placed across floors.
+    if (!mon.alive())
+        return;
+
+    // Monsters that are bored of being lured around go home
+    if (!mon.friendly()
+        && far_from_origin(using_stairs, mon.origin_level))
+    {
+        if (using_stairs && you.can_see(mon))
+        {
+            mprf("%s abandons %s pursuit.",
+            mon.name(DESC_THE).c_str(),
+            mon.pronoun(PRONOUN_POSSESSIVE).c_str());
+        }
+        mon.set_transit(mon.origin_level);
+        mon.destroy_inventory();
+        monster_cleanup(&mon);
+        return;
+    }
+
+    // When pulling monsters out of portals (or the Abyss), consider the level
+    // the player exited to be their new home.
+    if (!is_connected_branch(mon.origin_level) && is_connected_branch(level_id::current()))
+        mon.origin_level = level_id::current();
+}
+
 static void _level_place_followers(m_transit_list &m)
 {
     for (auto i = m.begin(); i != m.end();)
     {
         auto mon = i++;
-        if ((mon->mons.flags & MF_TAKING_STAIRS) && mon->place(true))
+
+        bool using_stairs = testbits(mon->mons.flags, MF_TAKING_STAIRS);
+
+        if (using_stairs && mon->place(true))
         {
             if (mon->mons.is_divine_companion())
             {
@@ -119,8 +158,10 @@ static void _level_place_followers(m_transit_list &m)
 
             // Now that the monster is onlevel, we can safely apply traps to it.
             if (monster* new_mon = monster_by_mid(mon->mons.mid))
-                // old loc isn't really meaningful
-                new_mon->apply_location_effects(new_mon->pos());
+            {
+                _handle_monster_leashing(*new_mon, using_stairs);
+                new_mon->trigger_movement_effects();
+            }
             m.erase(mon);
         }
     }
@@ -172,7 +213,7 @@ static void _place_oka_duel_target(monster* mons)
     }
 
     if (!targ.origin())
-        mons->move_to_pos(targ);
+        mons->move_to(targ);
 }
 
 static monster* _place_lost_monster(follower &f)
@@ -193,16 +234,14 @@ static monster* _place_lost_monster(follower &f)
             _place_oka_duel_target(mons);
 
         // Figure out how many turns we need to update the monster
-        int turns = (you.elapsed_time - f.transit_start_time)/10;
+        int time = (you.elapsed_time - f.transit_start_time);
 
-        //Unflag as summoned or else monster will be ignored in update_monster
-        mons->flags &= ~MF_JUST_SUMMONED;
         // Don't keep chasing forever.
         mons->props.erase(OKAWARU_DUEL_ABANDONED_KEY);
         // The status should already have been removed from the player, but
         // this prevents an erroneous status indicator sticking on the monster
         mons->del_ench(ENCH_BULLSEYE_TARGET);
-        return update_monster(*mons, turns);
+        return update_monster(*mons, time);
     }
     else
         return nullptr;
@@ -214,6 +253,8 @@ static void _level_place_lost_monsters(m_transit_list &m)
     {
         auto mon = i++;
 
+        bool using_stairs = testbits(mon->mons.flags, MF_TAKING_STAIRS);
+
         // Monsters transiting to the Abyss have a 50% chance of being
         // placed, otherwise a 100% chance.
         // Always place monsters that are chasing the player after abandoning
@@ -223,7 +264,7 @@ static void _level_place_lost_monsters(m_transit_list &m)
             // The Abyss can try to place monsters as 'lost' before it places
             // followers normally, and this can result in companion list desyncs.
             // Try to prevent that.
-            && ((mon->mons.flags & MF_TAKING_STAIRS)
+            && (using_stairs
                 || coinflip()))
         {
             continue;
@@ -231,9 +272,9 @@ static void _level_place_lost_monsters(m_transit_list &m)
 
         if (monster* new_mon =_place_lost_monster(*mon))
         {
-            // Now that the monster is on the level, we can safely apply traps
-            // to it.
-            new_mon->apply_location_effects(new_mon->pos());
+            _handle_monster_leashing(*new_mon, using_stairs);
+            new_mon->trigger_movement_effects();
+
             m.erase(mon);
         }
     }
@@ -262,7 +303,11 @@ void apply_daction_to_transit(daction_type act)
             // Removing this monster invalidates the iterator that
             // points to it, so decrement the iterator first.
             if (!mon->alive())
+            {
+                // Remove this monster from the deferred reset queue.
+                cancel_pending_monster_reset(mon);
                 m->erase(j--);
+            }
         }
     }
 }
@@ -312,6 +357,10 @@ monster* follower::place(bool near_player)
     // Shafts no longer retain the position, if anything else would
     // want to request a specific one, it should do so here if !near_player
 
+    // XXX: We must restore the monster's items *first*, since the habitability
+    //      check will look at them to determine if the monster is flying.
+    //      However, they must be destroyed again if the monster isn't placed!
+    restore_mons_items(*m);
     if (m->find_place_to_live(near_player))
     {
 #if TAG_MAJOR_VERSION == 34
@@ -326,13 +375,14 @@ monster* follower::place(bool near_player)
         dprf("Placed follower: %s", m->name(DESC_PLAIN, true).c_str());
         m->target.reset();
 
-        m->flags &= ~MF_TAKING_STAIRS & ~MF_BANISHED;
+        // Set MF_WAS_IN_VIEW to false to retrigger seen_monster.
+        m->flags &= ~MF_TAKING_STAIRS & ~MF_BANISHED & ~MF_WAS_IN_VIEW;
         m->flags |= MF_JUST_SUMMONED;
-        restore_mons_items(*m);
         env.mid_cache[m->mid] = m->mindex();
         return m;
     }
 
+    m->destroy_inventory();
     m->reset();
     return nullptr;
 }
@@ -396,10 +446,10 @@ static bool _mons_can_follow_player_from(const monster &mons,
     if (!mons.alive()
         || mons.speed_increment < 50
         || mons.incapacitated()
-        || mons.is_stationary()
+        || mons.cannot_move()
         || mons.is_constricted()
-        || mons.has_ench(ENCH_BOUND)
-        || mons.has_ench(ENCH_VEXED))
+        || mons.has_ench(ENCH_VEXED)
+        || mons.has_ench(ENCH_DAZED))
     {
         return false;
     }
@@ -517,6 +567,9 @@ static bool _transport_follower_at(const coord_def &pos, const coord_def &from)
         env.map_knowledge(pos).clear_monster();
         dprf("%s is transported.", fol->name(DESC_THE, true).c_str());
 
+        // Apply traps, etc.
+        fol->trigger_movement_effects(MV_TRANSLOCATION);
+
         return true;
     }
 
@@ -531,4 +584,29 @@ static bool _transport_follower_at(const coord_def &pos, const coord_def &from)
 void transport_followers_from(const coord_def &from)
 {
     handle_followers(from, _transport_follower_at);
+}
+
+// Is a monster too far away from its original level?
+bool far_from_origin(bool used_stairs, level_id origin, level_id current)
+{
+    // Monsters will chase forever if you have the orb
+    if (player_on_orb_run())
+        return false;
+
+    // A portal is involved somehow
+    if (!is_connected_branch(current.branch) || !is_connected_branch(origin.branch))
+        return false;
+
+    const int dist = level_distance(origin, current, true);
+
+    // The floors are either far apart. If not using stairs (maybe shafted?)
+    // then give a bit more wiggle room
+    if (dist > 2 && used_stairs || dist > 4)
+        return true;
+
+    // There is no obvious route between the floors at all
+    if (dist == -1)
+        return true;
+
+    return false;
 }

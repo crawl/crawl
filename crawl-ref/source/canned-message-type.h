@@ -27,8 +27,6 @@ enum canned_message_type
     MSG_MANA_DECREASE,
     MSG_DISORIENTED,
     MSG_DETECT_NOTHING,
-    MSG_CALL_DEAD,
-    MSG_ANIMATE_REMAINS,
     MSG_CANNOT_MOVE,
     MSG_YOU_DIE,
     MSG_GHOSTLY_OUTLINE,
@@ -40,4 +38,5 @@ enum canned_message_type
     MSG_SOMETHING_IN_WAY,
     MSG_CANNOT_SEE,
     MSG_GOD_DECLINES,
+    MSG_NO_AVAILABLE_SPACE,
 };

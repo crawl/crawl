@@ -56,6 +56,8 @@ enum xom_event_type
     XOM_GOOD_HYPER_ENCHANT_MONSTER,
     XOM_GOOD_MASS_CHARM,
     XOM_GOOD_WAVE_OF_DESPAIR,
+    XOM_GOOD_BLINDING_BLINKITIS,
+    XOM_GOOD_CHAOS_VEX,
     XOM_GOOD_FOG,
     XOM_GOOD_CLOUD_TRAIL,
     XOM_GOOD_CLEAVING,
@@ -74,6 +76,7 @@ enum xom_event_type
     XOM_BAD_FAKE_SHATTER,
     XOM_BAD_CONFUSION,
     XOM_BAD_DRAINING,
+    XOM_BAD_DOOM,
     XOM_BAD_TORMENT,
     XOM_BAD_BRAIN_DRAIN,
     XOM_BAD_SUMMON_HOSTILES,
@@ -109,8 +112,7 @@ xom_event_type xom_acts(int sever, maybe_bool niceness = maybe_bool::maybe,
 xom_event_type xom_choose_action(bool niceness,  int sever, int tension);
 void xom_take_action(xom_event_type action, int sever);
 
-xom_event_type xom_maybe_reverts_banishment(bool xom_banished = true,
-                                            bool debug = false);
+void xom_maybe_reverts_banishment();
 void xom_check_lost_item(const item_def& item);
 void xom_check_destroyed_item(const item_def& item);
 void xom_death_message(const kill_method_type killed_by);
@@ -123,7 +125,6 @@ string xom_effect_to_name(xom_event_type effect);
 void debug_xom_effects();
 #endif
 
-bool swap_monsters(monster* m1, monster* m2);
 bool move_stair(coord_def stair_pos, bool away, bool allow_under);
 
 void validate_xom_events();

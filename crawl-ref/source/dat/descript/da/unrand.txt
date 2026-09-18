@@ -21,10 +21,6 @@ bruger det, til en sveske. Heldigvis virker forbandelsen meget, meget langsomt,
 og man kan godt bruge den i korte perioder uden værre konsekvenser end en svag,
 lilla hudfarve og nogle rynker.
 %%%%
-Sword of Power
-
-Det belønner de stærke med styrke og de svage med svaghed.
-%%%%
 Staff of Olgreb
 
 Det var dette magiske våben, den mægtige troldmand Olgreb bar, da han afgik ved
@@ -106,7 +102,7 @@ crossbow "Hellfire"
 En flammende armbrøst, som er skabt i helvedernes ild. Den præger de bolte, den
 affyrer, med sit navns kraft.
 %%%%
-sword of the Doom Knight
+sword of the Dread Knight
 
 Et ubrydeligt slagsværd.
 %%%%
@@ -284,7 +280,7 @@ amulet of Cekugob
 Et underligt udseende stykke krystal i en almindeligt udseende snor med et
 besynderligt udvalg af kræfter.
 %%%%
-amulet of the Four Winds
+amulet of Tranquility
 
 Dette vedhæng er lavet af den reneste jade og giver sin bærer umådelig okkult
 styrke, når det kommer til at ryste fjendtlig magi af sig.

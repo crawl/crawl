@@ -2,7 +2,7 @@ name: "nameless horror"
 enum: nameless
 glyph: {char: "X", colour: cyan}
 flags: [see_invis, no_poly_to, no_gen_derived]
-xp_mult: 11
+exp: 11
 holiness: [nonliving]
 will: invuln
 attacks:

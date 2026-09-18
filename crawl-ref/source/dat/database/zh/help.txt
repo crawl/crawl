@@ -415,7 +415,7 @@ wiz-monster
 
 <w>place:Elf:3 zombie</w>
 
-可用的修饰语有<w>zombie</w>、<w>skeleton</w>、<w>simulacrum</w>和<w>spectre</w>。
+可用的修饰语有<w>zombie</w>、<w>draugr</w>、<w>simulacrum</w>和<w>spectre</w>。
 
 <h>覆盖怪物名称</h>
 
@@ -446,7 +446,7 @@ wiz-monster
 
 <w>kobold name:Durwent name_replace</w>
 
-会生成“<cyan>Durwent</cyan>”而不是“<cyan>Durwent the Kobold</cyan>”。
+会生成“<cyan>Durwent</cyan>”而不是“<cyan>Durwent the kobold</cyan>”。
 而尸体则仍然是“<cyan>kobold corpse of Durwent</cyan>”。
 
 <w>name_species</w>按原样使用尸体的名称，

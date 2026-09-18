@@ -1,11 +1,11 @@
 name: "tentacled starspawn"
 glyph: {char: "X", colour: lightcyan}
-xp_mult: 20
+exp: 1507
 holiness: [nonliving]
 will: 120
 attacks:
  - {type: bite, damage: 40}
- - {type: tentacle_slap, damage: 25}
+ - {type: engulf, damage: 25}
 hd: 16
 hp_10x: 880
 ac: 5

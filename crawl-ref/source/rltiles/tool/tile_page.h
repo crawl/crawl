@@ -19,9 +19,7 @@ public:
     int find(const string &enumname) const;
     int find_ctg_start(const string &ctgname) const;
     int find_ctg_end(const string &ctgname) const;
-    bool add_synonym(const string &enumname, const string &syn);
     bool add_synonym(int idx, const string &syn);
-    void add_variation(int var_idx, int base_idx, int colour);
 
     vector<tile*> m_tiles;
     vector<unsigned int> m_counts;
@@ -29,7 +27,6 @@ public:
     vector<int> m_offsets;
     vector<unsigned int> m_probs;
     vector<unsigned int> m_base_tiles;
-    vector<unsigned int> m_domino;
 
 protected:
     int m_width;

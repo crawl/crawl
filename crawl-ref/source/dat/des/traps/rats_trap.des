@@ -51,7 +51,7 @@ TAGS:   no_monster_gen
 KPROP:  R = no_tele_into
 MONS:   generate_awake rat, generate_awake river rat
 SUBST:  R = 112
-KFEAT:  ^ = pressure plate trap
+KFEAT:  ^ = trap_pressure_plate
 # some chance for a big hole in the wall
 : if crawl.one_chance_in(4) then
 SUBST:  Z : z

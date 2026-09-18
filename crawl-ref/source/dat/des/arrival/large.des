@@ -5,6 +5,8 @@
 # The maps in this section are not complicated, but rather big... possibly
 # too big. We are talking about sizes 25x25 and larger.
 
+: crawl_require('dlua/vault.lua')
+
 ##############################################################
 # 35 x 19
 # Ruined Dwarven Fortress Basement
@@ -264,14 +266,14 @@ ORIENT:  float
 WEIGHT:  2
 SHUFFLE: {[(
 SUBST:   [( = .
-SUBST:   ' : . x ':40
-SUBST:   '=x.
+SUBST:   ' : . x ':40, ' = x., M = M..
+: decorative_floor(_G, 'M', "assortment of trash")
 MAP
 xxxxxxx@xxxxxxxxxxxxx@xxxxxxx
 x....x..'.x.................x
 x...'.xxxx...........'x.....x
-x'..''.''.........xx..x'....x
-x'...'...x'...'....'xx.xx...x
+x'..''.''.........xx.Mx'....x
+x'...'...x'...'....'xxMxx...x
 x'...x'......x.x.....x..''..x
 x'.'x'x'.......'....'x......x
 x'..'x.......x'x.....''..x..x
@@ -279,13 +281,13 @@ x'...'...xxx..{...x'....'x'.x
 @''.......'.....'....'..'x'.x
 x''......xxx...xx........x..x
 x....x.......'xx.x...[....x.@
-x...'....x''..x.xx........x.x
+x...'....x''..xMxx........x.x
 x'....x....'..x'x..'''...x..x
-x...'.'....'.xx.x...x...'x.'x
+x...'.'....'.xxMx...x...'x.'x
 x..x.....(...x.xx.......'x.'x
 x..'..'x.........xx.....'x..x
-x...x...........xx.x..x..x..x
-x.......'x.'''..x.xx........x
+x...x...........xxMx..x..x..x
+x.......'x.'''..xMxx........x
 x.........'......xx.........x
 xxxxxxxxxxx@xxxxxxxxxxxxxxxxx
 ENDMAP
@@ -882,14 +884,12 @@ ENDMAP
 ##############################################################################
 
 NAME:   lightli_arrival_farm
-ORIENT: float
 TAGS:   no_monster_gen arrival
+ORIENT: float
 MONS:   plant
 KPROP:  F1 = no_tele_into
 SUBST:  1 = 1:2 t:2 .:1
-MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
-                              pow_max = 100, delay = 1, size = 1, \
-                              excl_rad = -1 }
+: single_cloud(_G, "F", "flame", false)
 MAP
          xxxxxxx
          x..{..x
@@ -947,8 +947,6 @@ MAP
 @.......................@
 ENDMAP
 
-#       arrival/large
-
 NAME:   kennysheep_arrival_seaside
 TAGS:   arrival no_monster_gen no_trap_gen transparent
 ORIENT: southeast
@@ -993,10 +991,11 @@ NAME:       psy_arrival_wood_between_worlds
 TAGS:       arrival no_monster_gen no_trap_gen no_pool_fixup transparent
 ORIENT:     float
 WEIGHT:     3
-FTILE:      t.qG^P{ = floor_grass
+FTILE:      .qG^P{ = floor_grass_dark
+FTILE:      t@ = floor_moss
 COLOUR:     . = green
 KMONS:      P = plant / bush
-KFEAT:      ^ = teleport trap
+KFEAT:      ^ = trap_teleport
 KFEAT:      p = W
 KMONS:      p = plant
 NSUBST:     p = 10=p / W, q = 10=P / .
@@ -1062,8 +1061,7 @@ ENDMAP
 NAME:    wander_arrival_abandoned_jail
 TAGS:    arrival no_monster_gen no_item_gen transparent
 ORIENT:  float
-ITEM:    human skeleton / orc skeleton, \
-         goblin skeleton / gnoll skeleton, \
+ITEM:    human skeleton / orc skeleton, goblin skeleton / gnoll skeleton, \
          kobold skeleton / ogre skeleton
 SHUFFLE: {def
 KFEAT:   x = iron_grate
@@ -1124,7 +1122,7 @@ NAME:   beargit_arrival_diablo_church
 TAGS:   arrival no_trap_gen no_item_gen no_monster_gen
 ORIENT: float
 MONS:   rat / nothing w:50
-FTILE:  `t = floor_grass, 1'G_> = floor_limestone
+FTILE:  `t = floor_grass_dark, 1'G_> = floor_limestone
 COLOUR: ` = green, 1'G = white
 KPROP:  ` = no_tele_into
 SUBST:  V = VVVT, H = ....H
@@ -1210,7 +1208,8 @@ NAME:   orjb1_clovarrival
 TAGS:   arrival transparent no_monster_gen no_trap_gen
 ORIENT: float
 MONS:   bush
-FTILE:  _1Wt = floor_grass
+FTILE:  _1W = floor_grass_dark
+FTILE:  t = floor_moss
 MAP
 .......tttt...tttt
 ......t____t.t____t

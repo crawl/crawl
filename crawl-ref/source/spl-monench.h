@@ -16,11 +16,13 @@ class monster;
 
 int englaciate(coord_def where, int pow, actor *agent);
 spret cast_englaciation(int pow, bool fail);
-bool backlight_monster(monster* mons, const actor* source);
+bool corona_monster(monster* mons, const actor* source);
 
 //returns true if it slowed the monster
 bool do_slow_monster(monster& mon, const actor *agent, int dur = 0);
+bool silence_monster(monster& mon, const actor* agent, int dur);
 bool enfeeble_monster(monster &mon, int pow);
+bool enfeeble_player(actor* source, int pow);
 spret cast_vile_clutch(int pow, bolt &beam, bool fail);
 bool start_ranged_constriction(actor& caster, actor& target, int duration,
                                constrict_type type);
@@ -35,6 +37,10 @@ void tick_rimeblight(monster& victim);
 spret cast_sign_of_ruin(actor& caster, coord_def target, int duration, bool check_only = false);
 
 spret cast_percussive_tempering(const actor& caster, monster& target, int power, bool fail);
-bool is_valid_tempering_target(const monster& mon, const actor& caster);
+bool is_valid_tempering_target(const monster& mon, const actor& caster,
+                               bool ignore_temp = false);
 
-void do_vexed_attack(actor& actor);
+void do_vexed_attack(actor& actor, bool always_hit_ally = false);
+
+int gloom_success_chance(int power, int target_hd);
+spret cast_gloom(const actor *caster, int pow, bool fail, bool tracer = false);

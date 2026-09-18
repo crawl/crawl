@@ -82,6 +82,9 @@ function volcano_portal (e)
     e.rtile("X = wall_volcanic")
     e.kfeat("X = rock_wall")
     e.ftile("OS = floor_rough_red")
+    if you.in_branch("Lair") then
+        e.ftile(".1@ = floor_sprouting_stone")
+    end
 end
 
 -- Destinations:
@@ -89,7 +92,7 @@ function volcano_setup (e)
     setup_loot(e)
     e.kfeat("< = exit_volcano")
     e.kfeat("I = exit_volcano")
-    e.kfeat("^ = alarm trap")
+    e.kfeat("^ = trap_alarm")
     e.subst("L : LLL.l")
     e.subst("L = lll.")
     e.subst("y : yyy.x")
@@ -101,7 +104,12 @@ end
 -- "Volcano" functions. While the sizes may appear extreme, they are carefully
 -- weighted and balanced and have been tested extensively.
 function callback.volcano_in_radius_12(x, y)
-  return dgn.point_in_radius(dgn.point(x, y), dgn.point(you.pos()), 12)
+  local px, py = you.pos()
+  -- May run during off-level catchup when the player is not placed.
+  if not dgn.in_bounds(px, py) then
+    return false
+  end
+  return dgn.point_in_radius(dgn.point(x, y), dgn.point(px, py), 12)
 end
 
 local large_warning = tw_machine(3, "The air gets thick with the scent of sulphur.",
@@ -117,14 +125,16 @@ function place_large_volcano(e)
     e.kfeat("V = l")
     e.lua_marker('V', fog_machine { cloud_type = "flame", walk_dist=15, pow_max=6,
                                    delay = 300, size = 10000, spread_rate = 30,
-                                   listener = large_warning, excl_rad = -1 })
+                                   listener = large_warning, excl_rad = -1,
+                                   countdown_limit = 1 })
 end
 
 function place_chained_volcano(e)
     e.kfeat("V = l")
     e.lua_marker('V', chained_fog_machine { cloud_type = "flame", walk_dist=15, pow_max=6,
-                                            delay = 300, size = 100, spread_rate = 30,
-                                            listener = large_warning, excl_rad = -1 } )
+                                           delay = 300, size = 100, spread_rate = 30,
+                                           listener = large_warning, excl_rad = -1,
+                                           countdown_limit = 1 })
 end
 
 
@@ -132,7 +142,8 @@ function place_small_volcano(e)
     e.kfeat("V = l")
     e.lua_marker('V', fog_machine { cloud_type = "flame", walk_dist=15, pow_max=6,
                                    delay = 300, size = 800, spread_rate = 30,
-                                   listener = small_warning, excl_rad = -1 })
+                                   listener = small_warning, excl_rad = -1,
+                                   countdown_limit = 1 })
 end
 
 function place_lake_volcanoes (e, glyphs)
@@ -146,14 +157,16 @@ function place_lake_volcano (e, glyph)
     e.lua_marker(glyph, chained_fog_machine { cloud_type = "flame", walk_dist=0,
                             pow_max=6, delay_min = 300, delay_max = 800,
                             size = 125, spread_rate = 5,
-                            listener = small_warning, excl_rad = -1 })
+                            listener = small_warning, excl_rad = -1,
+                            countdown_limit = 1 })
 end
 
 function place_tiny_volcano(e)
     e.kfeat("V = l")
     e.lua_marker('V', fog_machine { cloud_type = "flame", walk_dist=10, pow_max=6,
                                    delay = 800, size = 40, spread_rate = 10,
-                                   listener = large_warning, excl_rad = -1 })
+                                   listener = large_warning, excl_rad = -1,
+                                   countdown_limit = 1 })
 end
 -- #
 -- ###
@@ -188,7 +201,7 @@ function setup_loot (e)
                                  "fire dragon scales w:8 / granite talisman w:2 / " ..
                                  "dragon-coil talisman w:2")
     e.item(dgn.loot_potions)
-    e.item(make_fiery_weapon(e, {"rapier w:10", "quick blade w:5",
+    e.item(make_fiery_weapon(e, {"rapier w:8", "athame w:4", "quick blade w:4",
                                  "demon whip w:2", "eveningstar w:2",
                                  "great mace w:16", "demon blade w:2",
                                  "great sword w:16", "triple sword w:2",
@@ -271,7 +284,8 @@ function fiery_guardians (e, intelligent, village)
                    "hell knight ; " .. goodgear .. " . chain mail " .. res)
         else
             -- "Elemental" monster pack.
-            e.mons("fire elemental w:12 / earth elemental / gargoyle w:8")
+            e.mons("fire elemental w:12 / gargoyle / " ..
+                   "patrolling earth elemental w:8")
             e.mons("efreet / obsidian bat w:4")
             e.mons("stone giant")
         end
@@ -979,17 +993,21 @@ xxlllllllllllllXlllllXllllllllllllxx BBBBBBBBBBBBBBBBBBBBBBBBBB
             xxxxxx  xxx
 ENDMAP
 
-# XXX: This could use a map redesign in general
-# regarding where the loot chamber is hidden?...
+# XXX: Need more skeletons for earlier, need more fiery undead to make
+# any of this make sense, possibly also more randomization of chambers.
 NAME:    vts_original
 TAGS:    volcano_tomb_subvault no_item_gen no_monster_gen no_rotate no_hmirror
 TAGS:    no_vmirror unrand
 MONS:    gargoyle w:99 / toenail golem w:1
-MONS:    troll skeleton / spriggan skeleton / naga skeleton
-MONS:    alligator skeleton / harpy skeleton / anaconda skeleton
-MONS:    skeletal warrior ; halberd ego:flaming pre_id | \
-                            dire flail ego:flaming pre_id | \
-                            great sword ego:flaming pre_id
+MONS:    salamander draugr ; damaged trident ego:flaming / \
+         centaur draugr ; damaged long sword ego:flaming / \
+         ogre draugr ; damaged mace ego:flaming
+MONS:    wyvern draugr ; damaged hand axe ego:flaming / \
+         elephant draugr ; damaged mace ego:flaming / \
+         water moccasin draugr ; damaged spear ego:flaming
+MONS:    skeletal warrior ; halberd ego:flaming | \
+                            dire flail ego:flaming | \
+                            great sword ego:flaming
 KMONS:   D = pile of debris
 KFEAT:   ? = broken_door
 # Only one loot chamber. Scatter tomb residents.
@@ -1006,9 +1024,9 @@ xxxxxxxxxxxxxxxxxxD.y.$Lxx
 xxxxxxxxxcccccccx..y.1Lllx
 xxxxxxxxxc..Y..cD.xxx.lllx
 cccccccccc.....+.xxx.xllJx
-+...G....+..2..cccxxx.x.xx
-+...$....+.1<1.?4cxxxx.xxx
-+...G....+..2..cccxxxxxxxx
++...G....+..1..cccxxx.x.xx
++...$....+..<2.?4cxxxx.xxx
++...G....+..1..cccxxxxxxxx
 cccccccccc.....cxxxxxxxxxx
 xaaaaxxc4c..Y..cxxxxxxxxxx
 xa||accc?ccccc?cccbbbbbxxx
@@ -1024,11 +1042,15 @@ NAME:    vts_chambers
 TAGS:    volcano_tomb_subvault no_item_gen no_monster_gen no_rotate no_hmirror
 TAGS:    no_vmirror unrand
 MONS:    gargoyle w:99 / toenail golem w:1
-MONS:    troll skeleton / spriggan skeleton / naga skeleton
-MONS:    alligator skeleton / harpy skeleton / anaconda skeleton
-MONS:    skeletal warrior ; halberd ego:flaming pre_id | \
-                            dire flail ego:flaming pre_id | \
-                            great sword ego:flaming pre_id
+MONS:    salamander draugr ; damaged trident ego:flaming / \
+         centaur draugr ; damaged long sword ego:flaming / \
+         ogre draugr ; damaged mace ego:flaming
+MONS:    wyvern draugr ; damaged hand axe ego:flaming / \
+         elephant draugr ; damaged mace ego:flaming / \
+         water moccasin draugr ; damaged spear ego:flaming
+MONS:    skeletal warrior ; halberd ego:flaming | \
+                            dire flail ego:flaming | \
+                            great sword ego:flaming
 SHUFFLE: 23
 NSUBST:  5 = 1:1 / 1:23 / 1:4
 NSUBST:  X = 1:+ / *:v, Y = 1:+ / *:c
@@ -1040,15 +1062,15 @@ xxxxcccccxxxxxxxxxxxxxxxxx
 xxxxc...cxxxxxxxxxxxxxxxxx
 xxxcc.<.cccxxxccccvvvvvxxx
 xccc......ccccc..$v$$$vxxx
-cc1.........3....$X$$$vxxx
-.ccc.c2.c.ccccc..$v...vxxx
-...+...5..cxxxccccvv+vvxxx
-.ccc.c2.c.ccccc..$X2.2vxxx
-cc1.........3....$v.5.vxxx
+cc2...........3..$X$$$vxxx
+.ccc.c..c.ccccc..$v...vxxx
+...+...1..cxxxccccvv+vvxxx
+.ccc.c..c.ccccc..$X2.2vxxx
+cc2...........3..$v.5.vxxx
 xccc......ccccc..$X...vxxx
 xxxcc.cc.ccddecccvvvv+vxxx
-xxxxc3cc3c1eeg+^.+4Y..vvvx
-xxccc.cc.cccccccYvvv..+1vx
+xxxxc.cc.c1eeg+^.+4Y..vvvx
+xxccc3cc3cccccccYvvv..+5vx
 xxc...cc...c...c..3v+vvvvx
 xxc...cc...c...+.5.vffvxxx
 xxc$$$cc$$$+$$$c3..+fgvxxx
@@ -1067,8 +1089,8 @@ TAGS:   no_item_gen no_monster_gen
 ORIENT: encompass
 WEIGHT: 20
 MONS:   lindwurm, efreet
-MONS:   molten gargoyle w:40 / earth elemental w:38 / \
-        toenail golem w:2 / obsidian bat w:2
+MONS:   molten gargoyle w:40 / gargoyle w:28 /  \
+        patrolling earth elemental / toenail golem w:2 / obsidian bat w:2
 MONS:   fire elemental / nothing w:6
 KFEAT:  K = l
 NSUBST: R = 2:1 / * = ll'
@@ -1082,7 +1104,7 @@ MARKER: J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
 MARKER: K = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
                                   start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
 COLOUR: m = blue
-# Left side has lindwurms and constructs, right side has elementals.
+# Left side has lindwurms and earthy constructs, right side has fire elementals.
 MAP
       xxxxxxxxx
      xxKlllllKxx
@@ -1244,11 +1266,11 @@ ORIENT: encompass
 WEIGHT: 20
 MONS:   steam dragon / steam dragon / smoke demon / hell hound
 MONS:   sun demon, lindwurm
-KMONS:  4 = fire dragon
-KITEM:  4 = scroll of fog q:2 pre_id w:20 / condensation vane / \
+KMONS:  4 = fire crab / fire dragon w:5
+KITEM:  4 = scroll of fog q:2 pre_id w:20 / condenser vane / \
             cloak of the thief w:1
 SUBST:  a = ..xxl, p = ..'xl, q = .x, ' = '.
-NSUBST: 1 = 1:1 / 2:. / * = 1.., D2 = 1:., $ = 1:4 / *:$
+NSUBST: 1 = 1:1 / 2:. / * = 1.., D2 = 2:., $ = 1:4 / *:$
 SUBST:  D = 2., 2 : 22333
 SUBST:  $ = $$deef, b : bbGGG
 MARKER: ' = lua:fog_machine { cloud_type = "black smoke",  walk_dist=3, \
@@ -1415,7 +1437,7 @@ MONS:   human ; mace ego:flaming . robe ego:fire_resistance
 MONS:   occultist ; mace ego:flaming . robe ego:fire_resistance
 MONS:   orc sorcerer, toenail golem
 MONS:   dancing weapon ; mace ego:flaming
-KFEAT:  h = cache of fruit
+KFEAT:  h = cache_of_fruit
 KFEAT:  K = w
 : place_chained_volcano(_G)
 SUBST:  h = hhw
@@ -1475,13 +1497,14 @@ local collapse_marker = TriggerableFunction:new (
 
 collapse_marker:add_triggerer(DgnTriggerer:new {
   type="turn",
-  delay_min=50,
+  delay_min=100,
   delay_max=200
 })
 
 }}
-SUBST: Z = c., 4 = 332.
+SUBST: Z = c., 4 = 333222.
 SUBST: * = ddeeffgg$
+FTILE: M = floor_pebble_darkgray
 : fiery_guardians(_G)
 : lua_marker("M", Triggerable.synchronized_markers(collapse_marker))
 : volcano_setup(_G)
@@ -1489,34 +1512,34 @@ MAP
   lllllllllllllllllllllllll
  lllllllllllllllllllllllllll
 llllllllllllllllllllllllllllll
-llll.......4......llllllllllll
-llll.cccc...........lllllllllll
+llll..............llllllllllll
+llll.cccc........4..lllllllllll
 lll..cZZcccccccZZ.....llllllllll
-lll.ccZ<ZZ.ccZccc..4..llllllllll
+lll.ccZ<ZZ.ccZccc.....llllllllll
 lll.=*2....M.ZZ.=...........llll
 lll.=*1..ZZc..Z.=...........llll
 lll.cc**ccccZ...cccccccccc..llll
-lll..cccc<ccc...cc..Z<Z.Zc...lll
-lll....c2..Zc.1..M...1..*=...lll
+lll..cccc<ccc.1.cc..Z<Z.Zc...lll
+lll....c2..Zc....M...1..*=...lll
 lll.4..c*..Zc....cZZ...Z*=...lll
 lll....=*..cc...Zccccccccc...lll
 lll....=*..M...ZZc..ZZc.....llll
 llll...c*..c.c...M...*=.....llll
-llll...c11cccc...cc.1*=..4..llll
-llll...cZZcZ.M.1..cZ<ccc...lllll
+llll...c11cccc.1.cc.1*=..4..llll
+llll...cZZcZ.M....cZ<ccc...lllll
 lllll..cccc..c..Zccccc*=...lllll
 lllll...cZ...cZ..cZ.Z.*=...lllll
-lllll..cc..Zccc..M..1.cc...lllll
-lllll4.=*1ZccZZ1.cccZ<c....lllll
+lllll..cc..Zccc1.M..1.cc...lllll
+lllll4.=*1ZccZZ..cccZ<c....lllll
 lllll..=*<Zc..Z.Zc.ccccc....llll
 lllll..cccccc......M..Zcc...llll
 lllll..ccc..M......c<1.Zcc...lll
-lllll..cZ<..c.....ZccZ..Zc..4lll
+lllll..cZ<..c.....ZccZ..Zc...lll
 lllll..cZ.1ZccZ.A<..ccZ**c...lll
 llllll.ccc**ccc.....ccc==c...lll
-llllll...c==cccZ..Zcc.......llll
+llllll...c==cccZ..Zcc.....4.llll
 llllll.......ccc.Zcc........llll
-llllll....4...ccccc....4....llll
+llllll.....4..ccccc.........llll
  llllllll................llllll
   llllllllllllllllllllllllllll
    llllllllllllllllllllllllll
@@ -1533,12 +1556,13 @@ WEIGHT:  10
 # groups of lesser enemies led by a few nastier ones
 MONS:    patrolling fire dragon
 MONS:    salamander
-MONS:    ogre w:5 / two-headed ogre w:5 / steam dragon w:5 / wyvern / \
-         komodo dragon / fire bat
+MONS:    ogre w:4 ; great mace ego:flaming / \
+         two-headed ogre w:6 ; great mace ego:flaming . great mace ego:flaming / \
+         steam dragon w:5 / wyvern / komodo dragon / fire bat w:5
 MONS:    patrolling fire bat band
 KMONS:   p = plant
 KITEM:   C = human skeleton
-KFEAT:   F = cache of fruit
+KFEAT:   F = cache_of_fruit
 NSUBST:  G = 1:2 / *:3, H = 1:2 / *:3, I = 1:2 / *:3
 # fixed loot types for the cave, but shuffle it a little
 SHUFFLE: def

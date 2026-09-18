@@ -11,12 +11,12 @@ int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t)
     {
     case ai_payload::hp_loss:
         {
-            lua_pushnumber(ls, t->ait_hp_loss_data->hp);
-            lua_pushnumber(ls, t->ait_hp_loss_data->hurt_type);
+            lua_pushinteger(ls, t->ait_hp_loss_data->hp);
+            lua_pushinteger(ls, t->ait_hp_loss_data->hurt_type);
             return 1;
         }
     case ai_payload::int_payload:
-        lua_pushnumber(ls, *t->int_data);
+        lua_pushinteger(ls, *t->int_data);
         break;
     case ai_payload::string_payload:
         lua_pushstring(ls, t->string_data);
@@ -46,13 +46,14 @@ void clua_push_dgn_event(lua_State *ls, const dgn_event *devent)
 
 void luaopen_setmeta(lua_State *ls,
                      const char *global,
-                     const luaL_reg *lua_lib,
+                     const luaL_Reg *lua_lib,
                      const char *meta)
 {
     luaL_newmetatable(ls, meta);
-    lua_setglobal(ls, global);
+    luaL_setfuncs(ls, lua_lib, 0);
 
-    luaL_openlib(ls, global, lua_lib, 0);
+    lua_pushvalue(ls, -1);
+    lua_setglobal(ls, global);
 
     // Do <global>.__index = <global>
     lua_pushstring(ls, "__index");
@@ -61,7 +62,7 @@ void luaopen_setmeta(lua_State *ls,
 }
 
 void clua_register_metatable(lua_State *ls, const char *tn,
-                             const luaL_reg *lr,
+                             const luaL_Reg *lr,
                              int (*gcfn)(lua_State *ls))
 {
     lua_stack_cleaner clean(ls);
@@ -78,7 +79,7 @@ void clua_register_metatable(lua_State *ls, const char *tn,
     }
 
     if (lr)
-        luaL_openlib(ls, nullptr, lr, 0);
+        luaL_setfuncs(ls, lr, 0);
 }
 
 int clua_pushcxxstring(lua_State *ls, const string &s)
@@ -96,8 +97,8 @@ int clua_stringtable(lua_State *ls, const vector<string> &s)
 // different from dlua_pushcoord.
 int clua_pushpoint(lua_State *ls, const coord_def &pos)
 {
-    lua_pushnumber(ls, pos.x);
-    lua_pushnumber(ls, pos.y);
+    lua_pushinteger(ls, pos.x);
+    lua_pushinteger(ls, pos.y);
     CLua &vm(CLua::get_vm(ls));
     if (!vm.callfn("dgn.point", 2, 1))
     {

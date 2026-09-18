@@ -120,8 +120,8 @@ enum monclass_flag_type : uint64_t
     /// An ancestor granted by Hepliaklqana
     M_ANCESTOR          = BIT(35),
 
-    /// Gets a special name, like the Hellbinder
-    M_ALWAYS_NAMED      = BIT(36),
+    /// Has special ambush behaviour
+    M_LURKER            = BIT(36),
 
     /// prefer ranged attacks over melee
     M_PREFER_RANGED     = BIT(37),
@@ -155,9 +155,11 @@ enum monclass_flag_type : uint64_t
     /// derived undead can't be randomly generated
     M_NO_GEN_DERIVED    = BIT(47),
 
-                        //BIT(48), // was M_REQUIRE_BAND
+    /// Is a priest regardless of whether they have priest spells
+    M_PRIEST            = BIT(48),
 
-                        //BIT(49), // was M_HYBRID
+    /// Monster name always starts with "the ". Only works on uniques.
+    M_NAME_THE          = BIT(49),
 
                         //BIT(50),
 
@@ -191,6 +193,9 @@ enum monclass_flag_type : uint64_t
 
     // monster is made of liquid and is immune to webs, nets, and constriction
     M_AMORPHOUS         = BIT(61),
+
+    /// monster is immune to damage from outside of melee range
+    M_WARDED            = BIT(62),
 };
 DEF_BITFIELD(monclass_flags_t, monclass_flag_type);
 
@@ -205,7 +210,9 @@ enum monster_flag_type : uint64_t
     /// is following player through stairs
     MF_TAKING_STAIRS      = BIT(2),
 
-    //                      BIT(3),
+    /// Player has conclusively learned this monster's present location, despite
+    /// it being invisible to them.
+    MF_KNOWN_INVISIBLE    = BIT(3),
 
     /// Player has already seen monster
     MF_SEEN               = BIT(4),
@@ -310,9 +317,22 @@ enum monster_flag_type : uint64_t
     // death (eg: ball lightning)
     MF_PERSISTS           = BIT(43),
 
+    /// Is a priest regardless of whether they have priest spells
+    MF_PRIEST             = BIT(44),
+
+    /// Was created by a Boundless Tesseract
+    MF_TESSERACT_SPAWN    = BIT(45),
+
+    /// Dead/departed the level and cleaned up, but its slot has not been
+    /// reset yet.
+    MF_PENDING_RESET    = BIT(46),
+
 };
 DEF_BITFIELD(monster_flags_t, monster_flag_type);
 
 constexpr monster_flags_t MF_NAME_MASK = MF_NAME_REPLACE;
 constexpr monster_flags_t MF_MELEE_MASK = MF_FIGHTER | MF_TWO_WEAPONS
                                         | MF_ARCHER;
+constexpr monster_flags_t MF_ALL_NAMES = MF_NAME_MASK | MF_NAME_DESCRIPTOR
+                                       | MF_NAME_DEFINITE | MF_NAME_SPECIES
+                                       | MF_NAME_ZOMBIE | MF_NAME_NOCORPSE;

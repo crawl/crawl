@@ -16,9 +16,10 @@ exploration grant no piety for exploring the Temple.
 %%%%
 Orcish Mines
 
-The Orcish Mines are filled with the cave orcs native to the Dungeon, their
-humanoid labourers, and piles of freshly mined gold. Enterprising merchants
-have set up trading posts to help relieve the orcs of the latter.
+The Orcish Mines are home to the orcs that have settled in the Dungeon, their
+humanoid allies, and piles of freshly mined gold. Enterprising merchants who
+sell to all comers have set up trading posts among the orcs and their brethren
+to make good use of that gold.
 %%%%
 Elven Halls
 
@@ -74,9 +75,10 @@ away in secret chambers without any entrance.
 %%%%
 Vaults
 
-Possibly constructed by some powerful tyrant, the Vaults are said to be home to
-great treasures. The blood spattered liberally around the entrance suggests
-that there is a certain amount of violence, too.
+The Vaults are said to be home to great treasures and sealed evils alike, its
+origin known only to its guardians: the Ironbound Order. Intruders face an
+organised defence of trained maneuvers, arms and arcana, animated constructs,
+coerced allies, and tamed beasts, all in common cause.
 %%%%
 Crypt
 
@@ -143,19 +145,20 @@ in sending would-be champions like you to these proving grounds of madness.
 Reportedly, there is some structure to the chaos, as Lugonu seems to concoct
 schemes around this place and its denizens.
 
-Portals to the Abyss are found abundantly in the Depths.
+Many portals to the Abyss can be found corrupting one floor late in the Dungeon.
 
 The Abyss consists of seven infinite levels. The abyssal rune of Zot can be
 found from the third level onwards, and is more common at greater depths.
 Portals back to the dungeon are scattered throughout the Abyss, and are found
 more commonly at greater depths or while carrying the abyssal rune.
 
-Adventurers who linger in the Abyss will find themselves drawn irresistibly
-deeper. Killing monsters will warp the substance of the Abyss, eventually
-generating a gateway out. Further persistence will wear holes in the Abyss,
-allowing descent into deeper layers. The Abyss remembers its visitors - once
-an adventurer has entered a level, future visits to the Abyss will always
-take them at least that far down.
+Killing monsters will warp the substance of the Abyss, eventually generating a
+gateway out. Further persistence will wear holes in the Abyss, allowing descent
+into deeper layers.
+
+The fabric of the Abyss takes greater notice of the powerful; no matter how
+they arrive, more experienced adventurers will find themselves drawn deeper
+within the maddening expanse of that realm.
 %%%%
 Pandemonium
 
@@ -217,6 +220,17 @@ who wanted to rifle through them.
 The items inside such troves are likely to be useful, but beware: the wizard is
 long dead, and even while alive he never offered a money-back guarantee.
 %%%%
+Necropolis
+
+While many locales across the Dungeon are dedicated to the long-interred
+restless dead, those whose remains are fresh or lost are collected in the
+floating ceremonial chambers of the Necropolis. Each soul is enshrined and
+tended to by the maintenance staff recreating both their lives and their moments
+of death, helping visitors bid farewell to the departed. With the advent of
+adventurers seeking the Orb of Zot, these realms have been repurposed: such
+ghosts are blinded by rage and impossible to control, so both they and their
+stolen possessions are sealed away in these realms of reconciliation.
+%%%%
 Sewer
 
 Every inhabited place needs to dispose of its waste products. The Dungeon too
@@ -236,7 +250,7 @@ undead denizens are unlikely to take kindly to looting.
 %%%%
 Bailey
 
-The bailey is the still-occupied and well-guarded fortress of an orcish lord.
+The bailey is the occupied and well-guarded fortress of a ruthless warlord.
 The treasures within are protected by both physical barriers and large numbers
 of well-armed humanoid warriors.
 %%%%
@@ -255,6 +269,19 @@ Built from enormous blocks of obsidian, the volcano's sweltering chambers may
 once have served as a temple to some strange deity, or perhaps the dwelling of
 a mighty fire giant. The air shimmers with oppressive heat, and the dull roar
 of the volcano's heart never ceases.
+%%%%
+Gulch
+
+As the upper Dungeon has its sewer drainage system, so too do the Vaults. These
+gutter gulches serve as a containment space for accumulated garbage, various
+abandoned experiments, disorderly encroaching pests, and the particularly-broken
+corpses of intruders all alike. A great deal of mutagenic energy emanates from
+the mystic slag and mouldy waters running through it, such that even crossing
+its threshold will temporarily mutate new guests. Still, the widely-renowned
+defences of the Vaults would never dismiss any potential security front: mild
+maintenance via punished guards manage just barely enough direction to send such
+gulch monstrosities at anybody who would dare try to extract hidden riches from
+such filthy chambers.
 %%%%
 Wizlab
 

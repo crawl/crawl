@@ -26,6 +26,7 @@
 #include "stairs.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tile-env.h"
 #include "tileview.h"
 #include "unique-creature-list-type.h"
 #include "unwind.h"
@@ -103,6 +104,8 @@ LUAFN(debug_generate_level)
 {
     msg::suppress mx;
     env.map_knowledge.init(map_cell());
+    env.map_forgotten.reset();
+    tile_env.remembered_flavour.reset();
     los_changed();
     tile_init_default_flavour();
     tile_clear_flavour();
@@ -454,7 +457,7 @@ LUAFN(debug_check_moncasts)
             continue;
         // we need to reset the foe each time: some spells (e.g. lesser
         // and greater healing) could change it.
-        if (m2)
+        if (m2 && !mons_aligned(m1, m2))
             m1->foe = m2->mindex();
         else
             m1->foe = MHITNOT;
@@ -463,11 +466,16 @@ LUAFN(debug_check_moncasts)
         dprf("Forcing %s to cast %s", m1->name(DESC_THE, true).c_str(),
                                                 spell_title(spell));
         handle_mon_spell(m1);
+
+        // Heal 'target' after each spell, to make sure we don't kill it in the
+        // process of testing.
+        if (m2)
+            m2->heal(10000);
     }
     return 1;
 }
 
-const struct luaL_reg debug_dlib[] =
+const struct luaL_Reg debug_dlib[] =
 {
 { "goto_place", debug_goto_place },
 { "dungeon_setup", debug_dungeon_setup },

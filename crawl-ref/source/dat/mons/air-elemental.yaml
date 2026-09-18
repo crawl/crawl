@@ -1,8 +1,8 @@
 name: "air elemental"
-glyph: {char: "E", colour: etc_air}
+glyph: {char: "Σ", colour: lightcyan}
 flags: [flies, see_invis, insubstantial]
 resists: {elec: 3}
-xp_mult: 6
+exp: 219
 genus: elemental
 holiness: [nonliving]
 will: invuln

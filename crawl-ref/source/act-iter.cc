@@ -6,14 +6,17 @@
 #include "losglobal.h"
 
 actor_near_iterator::actor_near_iterator(coord_def c, los_type los)
-    : center(c), _los(los), viewer(nullptr), i(-1), max(env.max_mon_index)
+    : center(c), _los(los), viewer(nullptr),
+      include_known_invis(false), i(-1), max(env.max_mon_index)
 {
     if (!valid(&you))
         advance();
 }
 
-actor_near_iterator::actor_near_iterator(const actor* a, los_type los)
-    : center(a->pos()), _los(los), viewer(a), i(-1), max(env.max_mon_index)
+actor_near_iterator::actor_near_iterator(const actor* a, los_type los,
+                                         bool _include_known_invis)
+    : center(a->pos()), _los(los), viewer(a),
+      include_known_invis(_include_known_invis), i(-1), max(env.max_mon_index)
 {
     if (!valid(&you))
         advance();
@@ -56,7 +59,7 @@ bool actor_near_iterator::valid(const actor* a) const
 {
     if (!a || !a->alive())
         return false;
-    if (viewer && !a->visible_to(viewer))
+    if (viewer && (include_known_invis ? !viewer->aware_of(*a) : !viewer->can_see(*a)))
         return false;
     return cell_see_cell(center, a->pos(), _los);
 }
@@ -72,15 +75,18 @@ void actor_near_iterator::advance()
 //////////////////////////////////////////////////////////////////////////
 
 monster_near_iterator::monster_near_iterator(coord_def c, los_type los)
-    : center(c), _los(los), viewer(nullptr), i(0), max(env.max_mon_index)
+    : center(c), _los(los), viewer(nullptr),
+      include_known_invis(false), i(0), max(env.max_mon_index)
 {
     if (!valid(&env.mons[0]))
         advance();
     begin_point = i;
 }
 
-monster_near_iterator::monster_near_iterator(const actor *a, los_type los)
-    : center(a->pos()), _los(los), viewer(a), i(0), max(env.max_mon_index)
+monster_near_iterator::monster_near_iterator(const actor *a, los_type los,
+                                             bool _include_known_invis)
+    : center(a->pos()), _los(los), viewer(a),
+      include_known_invis(_include_known_invis), i(0), max(env.max_mon_index)
 {
     if (!valid(&env.mons[0]))
         advance();
@@ -146,7 +152,7 @@ bool monster_near_iterator::valid(const monster* a) const
 {
     if (!a || !a->alive())
         return false;
-    if (viewer && !a->visible_to(viewer))
+    if (viewer && (include_known_invis ? !viewer->aware_of(*a) : !viewer->can_see(*a)))
         return false;
     return cell_see_cell(center, a->pos(), _los);
 }

@@ -84,6 +84,9 @@ diffraction
 
 diffusion
 
+# Captain Atom
+dilustel
+
 dipole
 
 directional
@@ -178,6 +181,8 @@ morphic
 
 neodymium
 
+nickel
+
 nominal
 
 nondeterministic
@@ -245,6 +250,9 @@ shock
 
 sinusoidal
 
+# Shazam (Captain Marvel)
+sivanium
+
 sonic
 
 spiral
@@ -287,6 +295,9 @@ twisted
 utility
 
 vacuum
+
+# Legion of Super-Heroes
+valorium
 
 vanadium
 

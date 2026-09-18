@@ -9,112 +9,112 @@
   crawl.set_max_runes(1)
 
   local bag_of_meat =
-    "orc hp:400 hd:30 name:bag_of_meat n_rpl n_des n_spe n_zom " ..
+    "orc hp:400 hd:30 exp:9755 name:bag_of_meat n_rpl n_des n_spe n_zom " ..
     "col:red tile:mons_bag_of_meat generate_awake ; ring of slaying plus:30 " ..
     ". war axe plus:9 ego:none"
 
   local meat_berserker =
-    "ogre hp:500 hd:50 name:meat_berserker n_rpl n_des n_spe n_zom " ..
+    "ogre hp:500 hd:50 exp:19495 name:meat_berserker n_rpl n_des n_spe n_zom " ..
     "always_corpse col:red tile:mons_meatzerker perm_ench:berserk generate_awake " ..
     "; ring of slaying plus:30 . battleaxe plus:9 ego:none"
 
   local tyrant =
-    "lich hp:500 hd:35 name:tyrant n_rpl n_des n_spe n_zom " ..
+    "lich hp:500 hd:35 exp:18691 name:tyrant n_rpl n_des n_spe n_zom " ..
     "never_corpse col:lightred generate_awake " ..
     "spells:haste.34.wizard;airstrike.17.wizard;" ..
            "summon_horrible_things.34.wizard"
 
   local meat_hydra =
-    "eight-headed hydra hp:1000 hd:30 name:meat_hydra n_rpl n_des " ..
+    "eight-headed hydra hp:1000 hd:30 exp:18231 name:meat_hydra n_rpl n_des " ..
      "n_spe always_corpse col:lightred tile:mons_meat_hydra generate_awake " ..
      "spells:symbol_of_torment.80.natural " ..
      "dbname:meat_hydra"
 
   local dread =
-    "wraith hp:500 hd:50 name:dread n_rpl n_des n_spe " ..
+    "wraith hp:500 hd:50 exp:40135 name:dread n_rpl n_des n_spe " ..
     "never_corpse generate_awake " ..
     "col:lightred spells:symbol_of_torment.34.natural;" ..
                         "hurl_damnation.33.natural;" ..
                         "call_down_damnation.33.natural"
 
   local large_bag =
-    "two-headed ogre hp:400 hd:40 name:large_bag_of_meat n_rpl n_des " ..
+    "two-headed ogre hp:400 hd:40 exp:18974 name:large_bag_of_meat n_rpl n_des " ..
     "n_spe n_zom  col:red tile:mons_large_bag_of_meat generate_awake perm_ench:inner_flame " ..
     "; ring of slaying plus:100 . giant spiked club plus:9 ego:none"
 
   local destroyer =
-    "vampire knight hp:500 hd:40 name:destroyer n_rpl n_des n_spe " ..
+    "vampire knight hp:500 hd:40 exp:26057 name:destroyer n_rpl n_des n_spe " ..
     "never_corpse col:red tile:mons_destroyer generate_awake " ..
     "spells:blink_close.90.wizard " ..
     "; ring of slaying plus:200 . great sword plus:9 ego:heavy"
 
   local plague =
-    "sea snake hp:500 hd:30 name:scourge n_rpl n_des n_spe " ..
+    "sea snake hp:500 hd:30 exp:7595 name:scourge n_rpl n_des n_spe " ..
     "never_corpse col:lightred tile:mons_scourge generate_awake " ..
     "spells:poison_arrow.27.natural;" ..
            "venom_bolt.27.natural;" ..
            "poisonous_cloud.27.natural"
 
   local sculptor =
-    "skeletal warrior hp:500 hd:30 name:sculptor_of_flesh n_rpl " ..
+    "skeletal warrior hp:500 hd:30 exp:8175 name:sculptor_of_flesh n_rpl " ..
     "n_des n_spe n_zom never_corpse col:red generate_awake " ..
     "; ring of slaying plus:250 . great sword plus:9 ego:none"
 
   local observer =
-    "great orb of eyes hp:2000 hd:30 name:observer n_rpl n_des " ..
+    "great orb of eyes hp:2000 hd:30 exp:37370 name:observer n_rpl n_des " ..
     "n_spe never_corpse col:red generate_awake " ..
     "spells:bolt_of_fire.16.natural;fireball.32.natural;" ..
            "smiting.32.natural " ..
     "perm_ench:invis perm_ench:haste"
 
   local accursed =
-    "royal mummy hp:500 hd:40 name:accursed n_rpl n_des n_spe " ..
+    "royal mummy hp:500 hd:40 exp:43230 name:accursed n_rpl n_des n_spe " ..
     "never_corpse col:red generate_awake " ..
     "spells:smiting.90.wizard"
 
   local meat_beast =
-    "sin beast hp:1000 hd:40 name:meat_beast n_rpl n_des n_spe " ..
+    "sin beast hp:1000 hd:40 exp:77316 name:meat_beast n_rpl n_des n_spe " ..
     "col:red generate_awake perm_ench:haste"
 
   local wretched_soul =
-    "phantom hp:500 hd:50 name:wretched_soul n_rpl n_des n_spe " ..
+    "phantom hp:500 hd:50 exp:11916 name:wretched_soul n_rpl n_des n_spe " ..
     "never_corpse col:red generate_awake " ..
     "spells:bolt_of_draining.50.natural;dispel_undead_range.50.natural " ..
     "perm_ench:invis"
 
   local fleshlord =
-    "hell knight hp:3000 hd:60 name:fleshlord n_rpl n_des n_spe never_corpse " ..
+    "hell knight hp:3000 hd:60 exp:204209 name:fleshlord n_rpl n_des n_spe never_corpse " ..
     "col:lightmagenta generate_awake " ..
     "spells:slow.55.wizard;haste.55.wizard " ..
     "; ring of slaying plus:400 . great mace plus:9 ego:none"
 
   local vile =
-    "molten gargoyle hp:7000 hd:80 name:vile n_rpl n_des n_spe never_corpse " ..
+    "molten gargoyle hp:7000 hd:80 exp:1667630 name:vile n_rpl n_des n_spe never_corpse " ..
     "col:lightred generate_awake perm_ench:haste " ..
     "spells:dig.26.natural;confuse.52.natural;" ..
            "miasma_breath.26.natural;call_down_damnation.26.natural"
 
   -- Uniques --
   local servant =
-    "harold hp:650 hd:40 name:The_Servant n_rpl col:yellow " ..
+    "harold hp:650 hd:40 exp:35261 name:The_Servant n_rpl col:yellow " ..
     "generate_awake never_corpse spells:none " ..
     "; ring of slaying plus:130 . glaive plus:9 ego:flaming"
 
   local captor =
-    "sigmund hp:850 hd:40 name:The_Captor n_rpl col:lightcyan " ..
+    "sigmund hp:850 hd:40 exp:143519 name:The_Captor n_rpl col:lightcyan " ..
     "generate_awake never_corpse " ..
     "spells:sentinel's_mark.30.wizard;haste.30.wizard;ensnare.30.wizard " ..
     "; ring of slaying plus:200 . triple sword plus:9 ego:heavy"
 
   local defiler =
-    "edmund hp:1000 hd:50 name:The_Defiler n_rpl col:white " ..
+    "edmund hp:1000 hd:50 exp:67304 name:The_Defiler n_rpl col:white " ..
     "generate_awake never_corpse " ..
     "spells:fireball.60.natural;poisonous_cloud.20.natural " ..
     "; ring of slaying plus:250 . demon whip plus:9 ego:heavy . tower shield plus:12 ego:none"
 
   -- Meatlord shadow creatures will be tzitzimimeh
   local meatlord =
-    "dispater hp:10000 hd:60 name:The_Meatlord n_rpl col:lightmagenta tile:mons_meatlord " ..
+    "dispater hp:10000 hd:60 exp:1116161 name:The_Meatlord n_rpl col:lightmagenta tile:mons_meatlord " ..
     "generate_awake never_corpse " ..
     "spells:shadow_creatures.44.magical;airstrike.44.magical;conjure_ball_lightning.22.magical " ..
     "; ring of slaying plus:27000 . sceptre_of_torment"
@@ -122,7 +122,7 @@
   -- Unspeakable shadow creatures will be (a lot of) starcursed masses
   -- This is the secret boss.
   local avatar =
-    "slime creature hp:10000 hd:100 name:The_Unspeakable " ..
+    "slime creature hp:10000 hd:100 exp:470129 name:The_Unspeakable " ..
     "n_rpl col:jewel tile:mons_unspeakable generate_awake perm_ench:haste " ..
     "spells:shadow_creatures.25.natural;airstrike.25.natural;smiting.25.natural"
 

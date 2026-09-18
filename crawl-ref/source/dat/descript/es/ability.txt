@@ -16,6 +16,10 @@ Breathe Dispelling Energy ability
 Exhalas una descarga de energía al monstruo que apuntes, posiblemente
 eliminando alguno de sus encantamientos.
 %%%%
+Breathe Fire ability
+
+Exhalas una ráfaga de fuego al monstruo que apuntes.
+%%%%
 Breathe Frost ability
 
 Exhalas una ráfaga heladora al monstruo que apuntes.
@@ -42,6 +46,10 @@ Exhalas una ráfaga de vapor a alta temperatura al monstruo que apuntes.
 Breathe Noxious Fumes ability
 
 Exhalas humos nocivos al monstruo que apuntes.
+%%%%
+Heal Wounds ability
+
+Cura el usario considerablemente, con una posibilidad de reducando su magia máximo por uno.
 %%%%
 Bat Form ability
 

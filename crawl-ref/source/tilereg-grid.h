@@ -25,6 +25,7 @@ public:
     char key;
     // a special property, such as for brands
     int special;
+    int special2;
 
     bool empty() const;
 };

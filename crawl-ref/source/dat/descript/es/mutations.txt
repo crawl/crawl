@@ -1,0 +1,69 @@
+%%%%
+cold resistance mutation
+
+Tienes resistencia al frío. Cada nivel de esta mutación reduce el daño que recibes
+por el frío.
+%%%%
+fire resistance mutation
+
+Tienes resistencia al fuego. Cada nivel de esta mutación reduce el daño que recibes
+por el fuego.
+%%%%
+steam resistance mutation
+
+No recibes daño por exhalaciones ni nubes de vapor hirviente.
+%%%%
+electricity resistance mutation
+
+Tienes resistencia a la electricidad y recibes menos daño por la.
+%%%%
+poison resistance mutation
+
+Tienes resistencia al veneno. No tienes immunidad, pero reduce la probabilidad de
+tú estando affectado por lo a un tercio de que sería sin esta mutación.
+%%%%
+sense surroundings mutation
+
+Tienes un sexto sentido para la mazmorra, permitiéndote sentir terreno que no has
+visto. Cada nivel de esta mutación permites sentir más y más completamente.
+%%%%
+inability to train armour mutation
+
+Tu capacidad en Armaduras es cero, y no puedes aumentarlo.
+%%%%
+inability to train dodging mutation
+
+Tu capacidad de Esquivar es cero, y no puedes aumentarlo.
+%%%%
+no air magic mutation
+
+Tu habilidad de Magia de Aire es cero, y no puedes aumentarlo.
+%%%%
+no alchemy magic mutation
+
+Tu habilidad de Alquimia es cero, y no puedes aumentarlo.
+%%%%
+no armour mutation
+
+No puedes llevar armaduras.
+%%%%
+no conjurations magic mutation
+
+Tu habilidad de Conjuros es cero, y no puedes aumentarlo.
+%%%%
+no earth magic mutation
+
+Tu habilidad de Magia de Tierra es cero, y no puedes aumentarlo.
+%%%%
+no fire magic mutation
+
+Tu habilidad de Magia de Fuego es cero, y no puedes aumentarlo.
+%%%%
+no ice magic mutation
+
+Tu habilidad de Magia de Hielo es cero, y no puedes aumentarlo.
+%%%%
+no potions mutation
+
+No puedes beber pociones
+%%%%

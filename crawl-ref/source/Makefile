@@ -653,7 +653,7 @@ ifndef BUILD_LUA
     BUILD_LUA = yes
   endif
 endif
-# You can override the Lua package search with "make LUA_PACKAGE=lua-5-1".
+# You can override the Lua package search with "make LUA_PACKAGE=lua-5.4".
 # pkg-config is still required.
 ifndef LUA_PACKAGE
   ifndef BUILD_LUA
@@ -662,22 +662,22 @@ ifndef LUA_PACKAGE
         LUA_PACKAGE = luajit
       endif
     else
-      ifneq ($(shell $(PKGCONFIG) lua5.1 --exists || echo no),)
-        ifneq ($(shell $(PKGCONFIG) lua-5.1 --exists || echo no),)
-          ifneq ($(shell $(PKGCONFIG) lua51 --exists || echo no),)
+      ifneq ($(shell $(PKGCONFIG) lua5.4 --exists || echo no),)
+        ifneq ($(shell $(PKGCONFIG) lua-5.4 --exists || echo no),)
+          ifneq ($(shell $(PKGCONFIG) lua54 --exists || echo no),)
             ifeq ($(shell $(PKGCONFIG) lua --exists || echo no),)
-              ifeq ($(shell $(PKGCONFIG) lua --modversion | head -c 3),5.1)
+              ifeq ($(shell $(PKGCONFIG) lua --modversion | head -c 3),5.4)
                 LUA_PACKAGE = lua
               endif
             endif
           else
-            LUA_PACKAGE = lua51
+            LUA_PACKAGE = lua54
           endif
         else
-          LUA_PACKAGE = lua-5.1
+          LUA_PACKAGE = lua-5.4
         endif
       else
-        LUA_PACKAGE = lua5.1
+        LUA_PACKAGE = lua5.4
       endif
     endif
   endif
@@ -688,7 +688,7 @@ endif
 
 ifndef BUILD_LUA
   ifndef LUA_PACKAGE
-    LUA_PACKAGE = lua5.1
+    LUA_PACKAGE = lua5.4
   endif
   INCLUDES_L += $(shell $(PKGCONFIG) $(LUA_PACKAGE) --cflags-only-I | sed -e 's/-I/-isystem /')
   CFLAGS_L  += $(shell $(PKGCONFIG) $(LUA_PACKAGE) --cflags-only-other)
@@ -881,6 +881,9 @@ endif
 ifndef NOWIZARD
 DEFINES += -DWIZARD
 endif
+ifdef PROFILING
+CFOTHERS := -pg $(CFOTHERS)
+endif
 ifdef NO_OPTIMIZE
 CFOPTIMIZE  := -O0
 endif
@@ -925,7 +928,7 @@ endif
 
 ifneq ($(strip $(SAVEDIR)),)
   ifneq ($(filter ~%,$(SAVEDIR))$(ANDROID),)
-    CFOTHERS_L += -DSAVE_DIR_PATH=\"$(SAVEDIR)\"
+    INSTALL_PATH_CFLAGS_L += -DSAVE_DIR_PATH=\"$(SAVEDIR)\"
     savedir_fp :=
     shareddir_fp :=
   else
@@ -934,7 +937,7 @@ ifneq ($(strip $(SAVEDIR)),)
 	override SAVEDIR := $(strip $(prefix))/$(strip $(SAVEDIR))
       endif
     endif
-    CFOTHERS_L += -DSAVE_DIR_PATH=\"$(abspath $(SAVEDIR))\"
+    INSTALL_PATH_CFLAGS_L += -DSAVE_DIR_PATH=\"$(abspath $(SAVEDIR))\"
     savedir_fp := $(abspath $(strip $(DESTDIR))$(strip $(SAVEDIR)))
     shareddir_fp := $(savedir_fp)/saves
   endif
@@ -942,7 +945,7 @@ endif
 
 ifneq ($(strip $(SHAREDDIR)),)
   ifneq ($(filter ~%,$(SHAREDDIR)),)
-    CFOTHERS_L += -DSHARED_DIR_PATH=\"$(SHAREDDIR)\"
+    INSTALL_PATH_CFLAGS_L += -DSHARED_DIR_PATH=\"$(SHAREDDIR)\"
     shareddir_fp :=
   else
     ifeq ($(filter /%,$(SHAREDDIR)),)
@@ -950,7 +953,7 @@ ifneq ($(strip $(SHAREDDIR)),)
 	override SHAREDDIR := $(strip $(prefix))/$(strip $(SHAREDDIR))
       endif
     endif
-    CFOTHERS_L += -DSHARED_DIR_PATH=\"$(abspath $(SHAREDDIR))\"
+    INSTALL_PATH_CFLAGS_L += -DSHARED_DIR_PATH=\"$(abspath $(SHAREDDIR))\"
     shareddir_fp := $(abspath $(strip $(DESTDIR))$(strip $(SHAREDDIR)))
   endif
 endif
@@ -962,7 +965,7 @@ ifneq ($(strip $(DATADIR)),)
 	override DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
     endif
   endif
-  CFOTHERS_L += -DDATA_DIR_PATH=\"$(abspath $(DATADIR))/\"
+  INSTALL_PATH_CFLAGS_L += -DDATA_DIR_PATH=\"$(abspath $(DATADIR))/\"
   FONTDIR = $(abspath $(DATADIR))/dat/tiles/
 else
   ifneq ($(prefix),)
@@ -989,7 +992,7 @@ ifneq ($(strip $(WEBDIR)),)
 	override WEBDIR := $(strip $(prefix))/$(strip $(WEBDIR))
     endif
   endif
-  CFOTHERS_L += -DWEB_DIR_PATH=\"$(abspath $(WEBDIR))/\"
+  INSTALL_PATH_CFLAGS_L += -DWEB_DIR_PATH=\"$(abspath $(WEBDIR))/\"
 else
   ifneq ($(prefix),)
 	WEBDIR := $(strip $(prefix))/$(strip $(WEBDIR))
@@ -1112,6 +1115,9 @@ ifeq (,$(shell echo 'int main(){return 1;}'|$(GXX) -x c++ - -o /dev/null -fuse-l
   LINKER_LDFLAG = -fuse-ld=gold
 endif
 endif
+endif
+ifdef PROFILING
+LINKER_LDFLAG += -pg
 endif
 ifneq ($(LINKER_LDFLAG),)
 LDFLAGS += $(LINKER_LDFLAG)
@@ -1259,13 +1265,19 @@ CFLAGS_L := $(CFOPTIMIZE_L) $(DEFINES_L) $(CFWARN_L) $(INCLUDES_L) $(CFOTHERS_L)
 ALL_CFLAGS := $(CFLAGS) $(CFLAGS_L)
 YACC_CFLAGS  := $(ALL_CFLAGS) -Wno-unused-function -Wno-sign-compare -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0 -Wno-null-conversion
 RLTILES_CFLAGS := $(ALL_CFLAGS) -Wno-tautological-compare
+# These objects embed install path macros such as SAVE_DIR_PATH,
+# SHARED_DIR_PATH, DATA_DIR_PATH, and WEB_DIR_PATH. Keep those macros out of
+# global CFLAGS so unrelated objects can reuse ccache across trunk revisions.
+INSTALL_PATH_CFLAGS_OBJECTS := files.o initfile.o tilesdl.o tileweb.o
+$(INSTALL_PATH_CFLAGS_OBJECTS): ALL_CFLAGS += $(INSTALL_PATH_CFLAGS_L)
 
 
 DOC_BASE        := ../docs
 DOC_TEMPLATES   := $(DOC_BASE)/template
 GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/aptitudes-wide.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/crawl_manual.txt $(DOC_BASE)/quickstart.txt
 # Headers that need to exist before attempting to compile cc files
-GENERATED_HEADERS := art-enum.h config.h mon-mst.h species-type.h job-type.h
+GENERATED_HEADERS := art-enum.h config.h mon-mst.h species-type.h job-type.h \
+                     form-data.h $(RLTILES)status-icon-sizes.h
 # All other generated files will be created later
 GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mi-enum.h \
                    $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua \
@@ -1323,13 +1335,15 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
             kaonedong_ignis_the_dying_flame kaonedong_menkaure_prince_of_dust \
             philosopheropposite_palentonga_paladin gompami_kohu_xbow \
             micah_c_ereshkigal SpinningBird_djinn_sears_gnolls \
-            benadryl_antaeus king7artist_eustachio benadryl_oni
+            benadryl_antaeus king7artist_eustachio benadryl_oni \
+            ylam_formicid_shrikes lemurrobot_gozag_vaults
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
               $(TITLEIMGS:%=webserver/static/title_%.png) \
               $(TILEINFOJS:%=webserver/game_data/static/tileinfo-%.js) \
-              webserver/webtiles/version.txt
+              webserver/webtiles/version.txt \
+              webserver/game_data/static/status-icon-sizes.js
 
 $(TILEINFOJS:%=$(RLTILES)/tileinfo-%.js): build-rltiles
 
@@ -1385,9 +1399,16 @@ TRACK_CFLAGS = $(strip $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS)))
         # (stray ' for highlights)
 OLD_CFLAGS = $(strip $(subst ','\'',$(shell cat .cflags 2>/dev/null)))
         # (stray ' for highlights)
+TRACK_INSTALL_PATH_CFLAGS = $(strip $(subst ','\'',$(INSTALL_PATH_CFLAGS_L)))
+        # (stray ' for highlights)
+OLD_INSTALL_PATH_CFLAGS = $(strip $(subst ','\'',$(shell cat .install-path-cflags 2>/dev/null)))
+        # (stray ' for highlights)
 
 ifneq ($(TRACK_CFLAGS),$(OLD_CFLAGS))
   NEED_REBUILD = y
+endif
+ifneq ($(TRACK_INSTALL_PATH_CFLAGS),$(OLD_INSTALL_PATH_CFLAGS))
+  NEED_INSTALL_PATH_REBUILD = y
 endif
 
 .cflags: .force-cflags
@@ -1396,6 +1417,14 @@ ifdef NEED_REBUILD
 	@echo 'TRACK_CFLAGS = $(TRACK_CFLAGS) #EOL'
 	@echo 'OLD_CFLAGS   = $(OLD_CFLAGS) #EOL'
 	@echo '$(TRACK_CFLAGS)' > .cflags
+endif
+
+.install-path-cflags: .force-cflags
+ifdef NEED_INSTALL_PATH_REBUILD
+	@echo "    * rebuilding install-path-dependent objects: new paths"
+	@echo 'TRACK_INSTALL_PATH_CFLAGS = $(TRACK_INSTALL_PATH_CFLAGS) #EOL'
+	@echo 'OLD_INSTALL_PATH_CFLAGS   = $(OLD_INSTALL_PATH_CFLAGS) #EOL'
+	@echo '$(TRACK_INSTALL_PATH_CFLAGS)' > .install-path-cflags
 endif
 
 .android-cflags: .cflags
@@ -1652,7 +1681,7 @@ clean: clean-rltiles clean-webserver clean-android clean-monster clean-catch2 \
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
-	    .contrib-libs .cflags AppHdr.h.gch AppHdr.h.d util/fake_pty \
+	    .contrib-libs .cflags .install-path-cflags AppHdr.h.gch AppHdr.h.d util/fake_pty \
             rltiles/tiledef-unrand.cc
 	$(RM) -r build-win
 	$(RM) -r build
@@ -1781,6 +1810,10 @@ $(OBJECTS:%.o=%.cc) main.cc: $(CONTRIB_LIBS)
 $(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
 $(TILEDEFOBJS): ALL_CFLAGS=$(RLTILES_CFLAGS)
 
+ifneq ($(strip $(INSTALL_PATH_CFLAGS_L)),)
+$(INSTALL_PATH_CFLAGS_OBJECTS): .install-path-cflags
+endif
+
 # The "|" designates "order-only" dependencies. See: (make) Prerequisite Types.
 #
 # This ensures that we update these headers before building anything
@@ -1832,7 +1865,7 @@ $(foreach t,$(CONTRIB_LIBS),$(if $(wildcard $t),,$(shell rm -f .contrib-libs)))
 
 #############################################################################
 # Build unrandart data
-art-data.h: art-data.txt util/art-data.pl art-func.h $(RLTILES)/dc-player.txt
+art-data.h: art-data.txt util/art-data.pl art-func.h
 	util/art-data.pl
 art-enum.h rltiles/dc-unrand.txt rltiles/tiledef-unrand.cc: art-data.h
 
@@ -1850,6 +1883,9 @@ mi-enum.h: mon-info.h util/gen-mi-enum
 
 mon-data.h: dat/mons/*.yaml util/mon-gen.py util/mon-gen/*.txt
 	$(QUIET_PYTHON)$(PYTHON) util/mon-gen.py dat/mons/ util/mon-gen/ mon-data.h
+
+form-data.h: dat/forms/*.yaml util/form-gen.py util/form-gen/*.txt
+	$(QUIET_PYTHON)$(PYTHON) util/form-gen.py dat/forms/ util/form-gen/ transformation.h form-data.h
 
 # species-gen.py creates multiple files at once. Ensure Make doesn't run it once
 # per target file by adding all the files into a single dependency chain.
@@ -1875,6 +1911,12 @@ job-groups.h: job-data.h
 
 # no-op
 job-type.h: job-groups.h
+	$(QUIET_GEN)
+	
+$(RLTILES)status-icon-sizes.h : util/status-icon-sizes-gen.py $(RLTILES)/icon-sizes.txt
+	$(QUIET_PYTHON)$(PYTHON) util/status-icon-sizes-gen.py $(RLTILES)/icon-sizes.txt
+	
+$(RLTILES)status-icon-sizes.js : $(RLTILES)status-icon-sizes.h
 	$(QUIET_GEN)
 
 $(RLTILES)/dc-unrand.txt: art-data.h

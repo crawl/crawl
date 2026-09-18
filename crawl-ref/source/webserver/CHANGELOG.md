@@ -7,7 +7,44 @@ organizing principle, though it is important to know that the webtiles server
 as normally installed (e.g on dgamelaunch-config setups) always runs trunk
 code. This file is updated at least at major releases.
 
-## [0.31-a0 through 0.32-a0-22-g6ae6769602]
+## [0.34-a0 through 0.34-a0-958-gd0e9a9ddd5]
+
+Major changes:
+
+- **Breaking change**: The `crypt-r` package is now required for python
+  versions 3.13 and later.
+
+Fixes, improvements, changes:
+
+- Fix map data desynchronization that could happen when spectators join.
+
+## [0.33.0] - 2025-05-02
+
+Fixes, improvements, changes:
+
+- Fix an issue with the `signal` module that prevented python versions 3.12 and
+  later from working.
+
+## [0.32.0] - 2024-08-29
+
+New features:
+
+- A `max_chat_length` option for the maximum length of a send chat message.
+  Defaults to 1000 characters, and setting it to 0 or `None` disables chat
+  altogether.
+- The `bind_nonsecure` option now accepts a value of `"redirect"` to bind the
+  insecure port but redirect requests to the SSL port.
+- A command-line option `--ssl-port` to bind to an SSL port. Requires proper
+  configuration of `ssl_options`.
+- Non-yaml files in `games.d/` are now ignored.
+- The server now errors when run using an unsupported version of python.
+
+Fixes, improvements, changes:
+
+- Fix some race conditions that could happen when a forked game process failed
+  to run for any reason.
+- Fix the gameplay idle timer.
+- Improve behaviour when the server receives a shutdown signal.
 
 ## [0.31.0] - 2023-01-18
 

@@ -89,7 +89,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
         || mons->has_ench(ENCH_FIRE_CHAMPION)
         || mons->flags & MF_APOSTLE_BAND
         // If marked for vengeance, only deathbed conversion.
-        || (mons->has_ench(ENCH_VENGEANCE_TARGET) && !deathbed))
+        || (mons->is_vengeance_target() && !deathbed))
     {
         return;
     }
@@ -99,14 +99,14 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
     const int hd = mons->get_experience_level();
 
     if (have_passive(passive_t::convert_orcs)
-        && random2(you.piety / 15) + random2(4 + you.experience_level / 3)
+        && random2(you.piety() / 15) + random2(4 + you.experience_level / 3)
              > random2(hd) + hd + random2(5))
     {
         conv_t ctype = conv_t::sight;
         if (deathbed)
         {
-            ctype = mons->has_ench(ENCH_VENGEANCE_TARGET) ? conv_t::vengeance
-                                                          : conv_t::deathbed;
+            ctype = mons->is_vengeance_target() ? conv_t::vengeance
+                                                : conv_t::deathbed;
         }
 
         beogh_convert_orc(mons, ctype);
@@ -145,15 +145,8 @@ void fedhas_neutralise(monster* mons)
 void dismiss_god_summons(god_type god)
 {
     for (monster_iterator mi; mi; ++mi)
-    {
-        if (is_follower(**mi)
-            && mi->is_summoned()
-            && mons_is_god_gift(**mi, god))
-        {
-            // The monster disappears.
-            monster_die(**mi, KILL_RESET, NON_MONSTER);
-        }
-    }
+        if (mi->is_summoned() && mons_is_god_gift(**mi, god))
+            monster_die(**mi, KILL_TIMEOUT, NON_MONSTER);
 }
 
 static void _print_converted_orc_speech(const string& key,
@@ -215,7 +208,7 @@ void beogh_convert_orc(monster* orc, conv_t conv)
     }
 
     // Count as having gotten vengeance.
-    if (orc->has_ench(ENCH_VENGEANCE_TARGET))
+    if (orc->is_vengeance_target())
     {
         orc->del_ench(ENCH_VENGEANCE_TARGET);
         beogh_progress_vengeance();
@@ -239,7 +232,7 @@ void beogh_convert_orc(monster* orc, conv_t conv)
          || conv == conv_t::vengeance_follower)
         && orc->alive())
     {
-        avoided_death_fineff::schedule(orc);
+        schedule_avoided_death_fineff(orc);
     }
 }
 
@@ -328,7 +321,7 @@ void gozag_check_bribe(monster* traitor)
     if (branch_bribe[branch] == 0)
         return; // Do nothing if branch isn't currently bribed.
 
-    const int base_cost = max(1, exper_value(*traitor, true, true) / 20);
+    const int base_cost = max(1, exp_value(*traitor, true, true) / 20);
 
     int cost = 0;
 
@@ -337,7 +330,7 @@ void gozag_check_bribe(monster* traitor)
     if (traitor->props.exists(FRIENDLY_BRIBE_KEY))
     {
         traitor->props.erase(FRIENDLY_BRIBE_KEY);
-        traitor->add_ench(mon_enchant(ENCH_FRIENDLY_BRIBED, 0, 0,
+        traitor->add_ench(mon_enchant(ENCH_FRIENDLY_BRIBED, nullptr,
                                       INFINITE_DURATION));
         msg = getSpeakString(traitor->name(DESC_DBNAME, true)
                              + " Gozag permabribe");

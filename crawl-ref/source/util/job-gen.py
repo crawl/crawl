@@ -217,6 +217,18 @@ def generate_job_type_data(s):
         return '    %s,\n' % s['enum']
 
 
+def maybe_write(filename, text):
+    """Write `text` to `filename`, but only if the file would be created or changed"""
+    if os.path.exists(filename):
+        with open(filename, 'r', encoding='utf-8') as f:
+            cur = f.read()
+        if cur == text:
+            return
+
+    with open(filename, 'w', encoding='utf-8') as f:
+        f.write(text)
+
+
 def main():
     parser = argparse.ArgumentParser(description='Generate job-data.h')
     parser.add_argument('datadir', help='dat/jobs source dir')
@@ -242,7 +254,7 @@ def main():
             continue
         f_path = os.path.join(args.datadir, f_name)
         try:
-            job_spec = yaml.safe_load(open(f_path))
+            job_spec = yaml.safe_load(open(f_path, encoding='utf-8'))
         except yaml.YAMLError as e:
             print("Failed to load %s: %s" % (f_name, e))
             sys.exit(1)
@@ -277,13 +289,11 @@ def main():
                                         'job-data-deprecated-jobs.txt')
     job_data_out_text += load_template(args.templatedir,
                                         'job-data-footer.txt')
-    with open(args.job_data, 'w') as f:
-        f.write(job_data_out_text)
+    maybe_write(args.job_data, job_data_out_text)
 
     job_type_out_text += load_template(args.templatedir,
                                         'job-type-footer.txt')
-    with open(args.job_type, 'w') as f:
-        f.write(job_type_out_text)
+    maybe_write(args.job_type, job_type_out_text)
 
     job_groups_out_text = ''
     job_groups_out_text += load_template(args.templatedir,
@@ -291,8 +301,7 @@ def main():
     job_groups_out_text += generate_job_groups(job_groups)
     job_groups_out_text += load_template(args.templatedir,
                                         'job-groups-footer.txt')
-    with open(args.job_groups, 'w') as f:
-        f.write(job_groups_out_text)
+    maybe_write(args.job_groups, job_groups_out_text)
 
 
 if __name__ == '__main__':

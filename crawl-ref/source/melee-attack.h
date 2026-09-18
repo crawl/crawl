@@ -15,7 +15,7 @@ enum unarmed_attack_type
     UNAT_KICK,
     UNAT_HEADBUTT,
     UNAT_PECK,
-    UNAT_TAILSLAP,
+    UNAT_TAIL,
     UNAT_TOUCH,
     UNAT_PUNCH,
     UNAT_BITE,
@@ -24,8 +24,11 @@ enum unarmed_attack_type
     UNAT_MAW,
     UNAT_EXECUTIONER_BLADE,
     UNAT_FUNGAL_FISTICLOAK,
+    UNAT_MEDUSA_STINGER,
+    UNAT_TALISMAN_BLADE_1,
+    UNAT_TALISMAN_BLADE_2,  // 'Same' aux, but can trigger twice
     UNAT_FIRST_ATTACK = UNAT_CONSTRICT,
-    UNAT_LAST_ATTACK = UNAT_FUNGAL_FISTICLOAK,
+    UNAT_LAST_ATTACK = UNAT_TALISMAN_BLADE_2,
     NUM_UNARMED_ATTACKS,
 };
 
@@ -39,23 +42,25 @@ public:
     int       attack_number;
     int       effective_attack_number;
 
-    // A tally of all direct weapon + brand damage inflicted by this attack
-    // (including damage against cleave targets, both hits of quick blades,
-    // and aux attacks).
-    int       total_damage_done;
+    vector<actor*> cleave_targets;
 
-    list<actor*> cleave_targets;
+    // Important: any parameters that may be set from outside before attack()
+    //            is called *must* be included in melee_attack::copy_params_to()
+    //            or various incorrect behavior will result for multi-weapon or
+    //            multi-hit attacks.
     bool         cleaving;        // additional attack from cleaving
-    bool         is_multihit;     // quick blade follow-up attack
+    bool         is_followup;     // quick blade follow-up attack
     bool         is_riposte;      // fencers' retaliation attack
-    bool         is_projected;    // projected weapon spell attack
+    bool         is_projected;    // projected weapon spell attack (eg: from
+                                  // Manifold Assault)
+    bool         is_bestial_takedown;   // bestial takedown attack
+    bool         is_sunder;       // triggered attack from Sundering brand
     int          charge_pow;      // electric charge bonus damage
     bool         never_cleave;    // if this attack shouldn't trigger cleave
-                                  // followups, but still do 100% damage
-    int          dmg_mult;        // percentage multiplier to max damage roll
-    int          flat_dmg_bonus;  // flat slaying to add to this attack
-    bool         never_prompt;    // whether to skip prompting the player about
-                                  // harming allies
+                                  // followups, even if it ordinariy would.
+    bool         is_involuntary;  // whether this attack was forced (eg: by Vex)
+                                  // and should neither prompt the player nor
+                                  // upset their god.
     wu_jian_attack_type wu_jian_attack;
     int wu_jian_number_of_targets;
     coord_def attack_position;
@@ -64,9 +69,9 @@ public:
 public:
     melee_attack(actor *attacker, actor *defender,
                  int attack_num = 0, int effective_attack_num = 0);
-    void set_weapon(item_def *weapon, bool offhand = false);
+    void set_weapon(item_def *weapon);
 
-    bool launch_attack_set(bool allow_rev = true);
+    bool launch_attack_set(bool skip_player_post_attack = false);
     bool attack();
     int calc_to_hit(bool random) override;
     int post_roll_to_hit_modifiers(int mhit, bool random) override;
@@ -78,38 +83,45 @@ public:
     bool player_do_aux_attack(unarmed_attack_type atk);
     bool do_drag();
 
+    // Whether the attack targeted at least one hostile non-firewood target.
+    bool did_attack_hostiles() const;
+
 private:
     /* Attack phases */
     bool handle_phase_attempted() override;
-    bool handle_phase_blocked() override;
-    bool handle_phase_dodged() override;
+    void handle_phase_blocked() override;
+    void handle_phase_dodged() override;
     bool handle_phase_hit() override;
     bool handle_phase_damaged() override;
     bool handle_phase_aux(); // specific to melee attacks
-    bool handle_phase_killed() override;
-    bool handle_phase_end() override;
+    void handle_phase_killed() override;
+    void handle_phase_end() override;
+
+    // Handle cleaving and quick blade additional attacks
+    bool handle_phase_cleaving();
+    bool handle_phase_multihit();
 
     /* Combat Calculations */
     bool using_weapon() const override;
     int weapon_damage() const override;
     int calc_mon_to_hit_base() override;
-    int apply_damage_modifiers(int damage) override;
+    int apply_mon_damage_modifiers(int damage) override;
     int calc_damage() override;
     bool apply_damage_brand(const char *what = nullptr) override;
 
     /* Attack effects */
-    void check_autoberserk();
     bool check_unrand_effects() override;
 
-    void rot_defender(int amount);
+    void sear_defender();
 
     bool consider_decapitation(int damage_done);
     bool attack_chops_heads(int damage_done);
     void decapitate();
 
-    bool run_attack_set();
-    bool swing_with(item_def &weapon, bool offhand);
-    void force_cleave(item_def &weapon, coord_def target);
+    bool run_player_attack_set();
+    bool swing_with(item_def &weapon);
+
+    bool run_monster_attack_set();
 
     /* Axe cleaving */
     void cleave_setup();
@@ -133,6 +145,7 @@ private:
     /* Retaliation Effects */
     void do_minotaur_retaliation();
     void maybe_riposte();
+    void maybe_do_mesmerism();
 
     /* Item Effects */
     void do_starlight();
@@ -146,7 +159,7 @@ private:
 private:
     // Monster-attack specific stuff
     bool mons_attack_effects() override;
-    void mons_apply_attack_flavour();
+    void mons_apply_attack_flavour(attack_flavour flavour = AF_PLAIN);
     string mons_attack_verb();
     string mons_attack_desc();
     // TODO: Unify do_poison and poison_monster
@@ -156,7 +169,7 @@ private:
     void mons_do_tendril_disarm();
     void apply_black_mark_effects();
     void apply_sign_of_ruin_effects();
-    void do_ooze_engulf();
+    void do_ooze_flood();
     void try_parry_disarm();
     void do_vampire_lifesteal();
 private:
@@ -179,32 +192,42 @@ private:
     bool apply_staff_damage();
     void player_stab_check() override;
     bool player_good_stab() override;
-    void player_announce_aux_hit();
+    void player_announce_aux_hit(unarmed_attack_type atk);
     string charge_desc();
     string weapon_desc();
     void player_warn_miss();
-    void player_weapon_upsets_god();
     bool bad_attempt();
-    bool player_unrand_bad_attempt(const item_def *offhand,
-                                   bool check_only = false);
+    bool player_unrand_bad_attempt(bool check_only = false);
     void _defender_die();
     void handle_spectral_brand();
+    void do_valour_beam();
+    bool is_sundering_weapon() const;
+    void handle_concussion_brand(bool unrand = false);
+    void grow_burstshrooms(int hd);
+
+    // Spell effects.
+    void maybe_trigger_detonation();
 
     // Added in, were previously static methods of fight.cc
     bool _extra_aux_attack(unarmed_attack_type atk);
 
     bool can_reach(int dist);
 
+    item_def *primary_weapon() const;
     item_def *offhand_weapon() const;
 
     // XXX: set up a copy constructor instead?
-    void copy_to(melee_attack &other);
+    void copy_params_to(melee_attack &other) const;
+
+    bool do_followup_attacks(vector<actor*>& targets, bool is_cleaving);
+
+    bool is_attacking_hostiles;
 
     vorpal_damage_type damage_type;
 
     // Is a special stab against a sleeping monster by a Dithmenos player
     // shadow (affects messaging).
-    bool is_shadow_stab;
+    bool is_special_mon_stab;
 };
 
 string aux_attack_desc(unarmed_attack_type unat, int force_damage = -1);

@@ -33,6 +33,7 @@
 #include "prompt.h"
 #include "random-pick.h"
 #include "religion.h"
+#include "shopping.h"
 #include "spl-cast.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -129,6 +130,13 @@ vector<spell_type> spells_in_book(const item_def &book)
     ASSERT(book.base_type == OBJ_BOOKS);
 
     vector<spell_type> ret;
+
+    if (book.sub_type == BOOK_PARCHMENT && book.plus > 0)
+    {
+        ret.emplace_back(static_cast<spell_type>(book.plus));
+        return ret;
+    }
+
     const CrawlHashTable &props = book.props;
     if (!props.exists(SPELL_LIST_KEY))
         return spellbook_template(static_cast<book_type>(book.sub_type));
@@ -156,9 +164,9 @@ bool book_exists(book_type bt)
 {
     switch (bt)
     {
-    case BOOK_RANDART_LEVEL:
     case BOOK_RANDART_THEME:
     case BOOK_MANUAL:
+    case BOOK_PARCHMENT:
     case NUM_BOOKS:
         return false;
     default:
@@ -254,6 +262,9 @@ static unordered_set<int> _player_nonbook_spells =
     SPELL_CAUSTIC_BREATH,
     SPELL_GALVANIC_BREATH,
     SPELL_MUD_BREATH,
+    // Form spells
+    SPELL_RUST_BREATH,
+    SPELL_GOLDEN_BREATH,
 };
 
 bool is_player_spell(spell_type which_spell)
@@ -431,14 +442,18 @@ bool library_add_spells(vector<spell_type> spells, bool quiet)
                 you.hidden_spells.set(st, true);
         }
     }
-    if (!new_spells.empty() && !quiet)
+    if (!new_spells.empty())
     {
-        vector<string> spellnames(new_spells.size());
-        transform(new_spells.begin(), new_spells.end(), spellnames.begin(), spell_title);
-        mprf("You add the spell%s %s to your library.",
-             spellnames.size() > 1 ? "s" : "",
-             comma_separated_line(spellnames.begin(),
-                                  spellnames.end()).c_str());
+        if (!quiet)
+        {
+            vector<string> spellnames(new_spells.size());
+            transform(new_spells.begin(), new_spells.end(), spellnames.begin(), spell_title);
+            mprf("You add the spell%s %s to your library.",
+                spellnames.size() > 1 ? "s" : "",
+                comma_separated_line(spellnames.begin(),
+                                    spellnames.end()).c_str());
+        }
+        shopping_list.spells_added_to_library(new_spells, quiet);
     }
     return !new_spells.empty();
 }
@@ -588,7 +603,7 @@ private:
         const string act = default_action == action::memorise ? "Memorise"
                            : default_action == action::imbue ? "Imbue" : "Cast";
         // line 2
-        desc << menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE) << " ";
+        desc << menu_keyhelp_cmd(CMD_MENU_RIGHT) << " ";
         desc << ( current_action == action::cast
                             ? "<w>Cast</w>|Describe|Hide|Show"
                  : current_action == action::memorise
@@ -762,7 +777,7 @@ private:
                 continue;
             }
 
-            const bool spell_hidden = you.hidden_spells.get(spell.spell);
+            const bool spell_hidden = you.current_hidden_spells()->get(spell.spell);
 
             if (spell_hidden)
                 hidden_count++;
@@ -911,7 +926,8 @@ public:
                     return examine_by_key(item.hotkeys[0]);
             case action::hide:
             case action::unhide:
-                you.hidden_spells.set(spell, !you.hidden_spells.get(spell));
+                auto *hidden = you.current_hidden_spells();
+                hidden->set(spell, !hidden->get(spell));
                 update_entries();
                 update_menu(true);
                 update_more();
@@ -924,9 +940,6 @@ public:
 
 static spell_type _choose_mem_spell(spell_list &spells)
 {
-    // If we've gotten this far, we know that at least one spell here is
-    // memorisable, which is enough.
-
     SpellLibraryMenu spell_menu(spells, SpellLibraryMenu::action::memorise);
 
     const vector<MenuEntry*> sel = spell_menu.show();
@@ -963,7 +976,9 @@ bool can_learn_spell(bool silent)
 
 bool learn_spell()
 {
-    spell_list spells(_get_spell_list());
+    // Include spells we can't currently memorise (e.g. all of them, while
+    // worshipping Trog) so the library can still be browsed and described.
+    spell_list spells(_get_spell_list(false, false));
     if (spells.empty())
         return false;
 
@@ -1028,7 +1043,7 @@ static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
 
     if (you.spell_no >= MAX_KNOWN_SPELLS)
     {
-        mpr("Your head is already too full of spells!");
+        mpr("Your mind is already too full of spells!");
         return false;
     }
 
@@ -1068,11 +1083,6 @@ bool learn_spell(spell_type specspell, bool wizard, bool interactive)
     if (!_learn_spell_checks(specspell, wizard))
         return false;
 
-    string mem_spell_warning_string = god_spell_warn_string(specspell, you.religion);
-
-    if (!mem_spell_warning_string.empty())
-        mprf(MSGCH_WARN, "%s", mem_spell_warning_string.c_str());
-
     if (!wizard)
     {
         const int severity = fail_severity(specspell);
@@ -1087,19 +1097,28 @@ bool learn_spell(spell_type specspell, bool wizard, bool interactive)
         }
     }
 
+    string mem_spell_warning_string = "";
+
     if (interactive)
     {
         const string prompt = make_stringf(
-                 "Memorise %s, consuming %d spell level%s and leaving %d?",
+                 "Memorise %s, consuming %d spell level%s and leaving %d?%s%s",
                  spell_title(specspell), spell_levels_required(specspell),
                  spell_levels_required(specspell) != 1 ? "s" : "",
-                 player_spell_levels() - spell_levels_required(specspell));
+                 player_spell_levels() - spell_levels_required(specspell),
+                 !mem_spell_warning_string.empty() ? " " : "",
+                 mem_spell_warning_string.c_str());
 
         if (!yesno(prompt.c_str(), true, 'n', false))
         {
             canned_msg(MSG_OK);
             return false;
         }
+    }
+    else
+    {
+        if (!wizard && !mem_spell_warning_string.empty())
+            mprf(MSGCH_WARN, "%s", mem_spell_warning_string.c_str());
     }
 
     if (wizard)
@@ -1109,8 +1128,6 @@ bool learn_spell(spell_type specspell, bool wizard, bool interactive)
         if (!already_learning_spell(specspell))
             start_delay<MemoriseDelay>(spell_difficulty(specspell), specspell);
         you.turn_is_over = true;
-
-        did_god_conduct(DID_SPELL_CASTING, 2 + random2(5));
     }
 
     quiver::on_actions_changed();
@@ -1171,7 +1188,14 @@ spret divine_exegesis(bool fail)
 
     ASSERT(is_valid_spell(spell));
 
-    return cast_a_spell(false, spell, nullptr, fail);
+    spret ret = cast_a_spell(false, spell, nullptr, fail);
+    if (ret == spret::success)
+    {
+        you.duration[DUR_EXEGESIS] = random_range(90, 140);
+        you.props[EXEGESIS_SPELL] = spell;
+    }
+
+    return ret;
 }
 
 static spell_list _get_player_servitor_spells()

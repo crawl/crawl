@@ -4,6 +4,7 @@ genus: killer_bee
 resists: {fire: 1, elec: 1}
 holiness: [nonliving]
 flags: [flies]
+exp: 80
 will: invuln
 attacks:
  - {type: sting, damage: 13}

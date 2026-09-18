@@ -7,7 +7,7 @@
 hyper.usage = {}
 
 function hyper.usage.new_usage(width, height, initialiser)
-  usage_grid = { eligibles = { open = {}, closed = {} }, anchors = {}, width = width, height = height }
+  local usage_grid = { eligibles = { open = {}, closed = {} }, anchors = {}, width = width, height = height }
 
   if initialiser == nil then
     initialiser = function()
@@ -63,9 +63,16 @@ function hyper.usage.set_usage(usage_grid,x,y,usage)
   if usage_grid[y] == nil or usage_grid[y][x] == nil then return false end
   -- Check existing usage, remove it from eligibles if it's there
   local current = usage_grid[y][x]
-  if current.eligibles_index ~= nil then
-    table.remove(usage_grid.eligibles[current.eligibles_which],current.eligibles_index)
+  if current.eligibles_which ~= nil then
+    local eligibles = usage_grid.eligibles[current.eligibles_which]
+    for i,usage in ipairs(eligibles) do
+      if usage == current then
+        table.remove(eligibles, i)
+        break
+      end
+    end
   end
+
   if current ~= usage and current.anchors ~= nil then
     for i,anchor in ipairs(current.anchors) do
       -- TODO: util.remove will be pretty slow on large lists (which is why for eligibles we cache the index)
@@ -79,7 +86,6 @@ function hyper.usage.set_usage(usage_grid,x,y,usage)
     local which_table = usage.solid and "closed" or "open"
     table.insert(usage_grid.eligibles[which_table],usage)
     usage.eligibles_which = which_table
-    usage.eligibles_index = #(usage_grid.eligibles[which_table])  -- Store index of the new item so we can remove it when it's overwritten
   end
   if usage.anchors ~= nil then
     for i,anchor in ipairs(usage.anchors) do

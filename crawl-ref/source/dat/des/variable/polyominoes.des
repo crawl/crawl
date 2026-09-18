@@ -7,13 +7,17 @@
 # of the chiral polyominoes.)
 
 {{
-function polyominoes_setup(e)
+function polyominoes_setup(e, extra)
   e.tags('uniq_minmay_polyomino')
   e.tags('transparent')
+  if extra then
+    e.tags('extra')
+  end
   e.weight('4')
   e.subst('b : xcvbmGT%0 .:50')
   e.subst('" : xcvbmGT%0 .:120')
   e.subst('x : x:240 c:30 v:30 b m')
+  e.tile("x = wall_pebble_green")
   e.subst('0 = 000.')
   e.subst('% = %%%.')
 end
@@ -23,7 +27,7 @@ default-depth: D:1-2
 ################################################################################
 # dominoes
 NAME: minmay_domino_2
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
 ...
 .x0..
@@ -33,7 +37,7 @@ MAP
 ENDMAP
 
 NAME: minmay_domino_4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
 ......
 .xx0x.
@@ -46,7 +50,7 @@ ENDMAP
 ################################################################################
 # trominoes
 NAME: minmay_tromino_i2
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
 .....
 .xxx.
@@ -57,7 +61,7 @@ MAP
 ENDMAP
 
 NAME: minmay_tromino_i4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
     ...
 .....x.
@@ -70,7 +74,7 @@ MAP
 ENDMAP
 
 NAME: minmay_tromino_v2
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
 .....
 .xx..
@@ -81,7 +85,7 @@ MAP
 ENDMAP
 
 NAME: minmay_tromino_v4_a
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
    ...
  ...x..
@@ -94,7 +98,7 @@ MAP
 ENDMAP
 
 NAME: minmay_tromino_v4_b
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
 .. . . ..
 .........
@@ -108,7 +112,7 @@ MAP
 ENDMAP
 
 NAME: minmay_tromino_v4_c
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
    ...
   ..x.
@@ -122,7 +126,7 @@ MAP
 ENDMAP
 
 NAME: minmay_tromino_v7
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
 ....
 .xx......
@@ -136,7 +140,7 @@ MAP
 ENDMAP
 
 NAME: minmay_tromino_mix6
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
 ...
 .x...
@@ -152,7 +156,7 @@ ENDMAP
 ################################################################################
 # tetrominoes
 NAME: minmay_tetromino_i2
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
   ...
   .x.
@@ -166,7 +170,7 @@ MAP
 ENDMAP
 
 NAME: minmay_tetromino_i4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
      ...
 ......x.
@@ -180,7 +184,7 @@ MAP
 ENDMAP
 
 NAME: minmay_tetromino_l2
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
 .....
 .xxx.
@@ -191,7 +195,7 @@ MAP
 ENDMAP
 
 NAME: minmay_tetromino_l4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
  .....
  .xxx...
@@ -204,7 +208,7 @@ MAP
 ENDMAP
 
 NAME: minmay_tetromino_o2
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
 ....
 .xx0
@@ -215,7 +219,7 @@ MAP
 ENDMAP
 
 NAME: minmay_tetromino_o4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
  ....
  .xx....
@@ -228,7 +232,7 @@ MAP
 ENDMAP
 
 NAME: minmay_tetromino_t2
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
 .....
 .xxx%.
@@ -238,7 +242,7 @@ MAP
 ENDMAP
 
 NAME: minmay_tetromino_t4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
  .....
  .xxx...
@@ -251,7 +255,7 @@ MAP
 ENDMAP
 
 NAME: minmay_tetromino_s2
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
  ....
  .xx0.
@@ -262,7 +266,7 @@ MAP
 ENDMAP
 
 NAME: minmay_tetromino_s4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
   ...
   .x......
@@ -277,7 +281,7 @@ ENDMAP
 ################################################################################
 # pentominoes
 NAME: minmay_pentomino_r2
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
 ....
 .xx..
@@ -290,7 +294,7 @@ MAP
 ENDMAP
 
 NAME: minmay_pentomino_r4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
  ....
  .xx.  ..
@@ -304,7 +308,7 @@ MAP
 ENDMAP
 
 NAME: minmay_pentomino_u2
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
 .....
 .xxx.
@@ -316,7 +320,7 @@ MAP
 ENDMAP
 
 NAME: minmay_pentomino_u4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
  .....
  .xxx....
@@ -330,7 +334,7 @@ MAP
 ENDMAP
 
 NAME: minmay_pentomino_z2
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
 ....
 .xx....
@@ -341,7 +345,7 @@ MAP
 ENDMAP
 
 NAME: minmay_pentomino_z4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
   .. ...
 ...x0xx.
@@ -355,7 +359,7 @@ MAP
 ENDMAP
 
 NAME: minmay_pentomino_t2
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
 .....
 .xxx.
@@ -367,7 +371,7 @@ MAP
 ENDMAP
 
 NAME: minmay_pentomino_t4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
   ...
   .x....
@@ -382,7 +386,7 @@ MAP
 ENDMAP
 
 NAME: minmay_pentomino_x2
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
     ...
    ..x..
@@ -395,7 +399,7 @@ MAP
 ENDMAP
 
 NAME: minmay_pentomino_x4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
     ...
  ....x..
@@ -409,7 +413,7 @@ MAP
 ENDMAP
 
 NAME: minmay_pentomino_w2
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
 ....
 .xx....
@@ -420,7 +424,7 @@ MAP
 ENDMAP
 
 NAME: minmay_pentomino_w4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
   ....
  ..xx0...
@@ -436,7 +440,7 @@ ENDMAP
 
 # this pentomino sucks
 NAME: minmay_pentomino_p2
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
 .....
 .xxx.0..
@@ -446,7 +450,7 @@ MAP
 ENDMAP
 
 NAME: minmay_pentomino_p4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
 ........
 .xx0xxx.
@@ -459,7 +463,7 @@ MAP
 ENDMAP
 
 NAME: minmay_pentomino_q2
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
 .......
 .xxxx0.
@@ -469,7 +473,7 @@ MAP
 ENDMAP
 
 NAME: minmay_pentomino_q4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
   ....
   .xx.
@@ -486,7 +490,7 @@ ENDMAP
 
 # it took a while to figure out how to NOT draw a swastika with the V-pentomino
 NAME: minmay_pentomino_v2
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
   ...
   .x.
@@ -499,9 +503,7 @@ MAP
 ENDMAP
 
 NAME: minmay_pentomino_v4
-DEPTH: D:1-2
-WEIGHT: 4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
 .... ..
 .xxx0x.
@@ -515,7 +517,7 @@ MAP
 ENDMAP
 
 NAME: minmay_pentomino_o2
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
 .......
 .xxxxx.
@@ -525,7 +527,7 @@ MAP
 ENDMAP
 
 NAME: minmay_pentomino_o4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
 .........
 .xxxxx0x.
@@ -539,7 +541,7 @@ MAP
 ENDMAP
 
 NAME: minmay_pentomino_s2
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, true)
 MAP
 .....
 .xxx..
@@ -550,7 +552,7 @@ MAP
 ENDMAP
 
 NAME: minmay_pentomino_s4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
    .....
 ....xxx.
@@ -571,7 +573,7 @@ ENDMAP
 # I also don't know of any naming convention for hex+ ominoes, so I just gave
 # them the closest letters I could think of
 NAME: minmay_hexomino_p4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
  ......
  .xxxx...
@@ -587,7 +589,7 @@ ENDMAP
 NAME:    minmay_hexomino_r4
 SHUFFLE: "'
 SUBST:   ' = ..0%
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
       ...
   .....x.
@@ -605,7 +607,7 @@ ENDMAP
 NAME:    minmay_hexomino_u4
 SHUFFLE: "'
 SUBST:   ' = ..0%
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
      ...
     ..x..
@@ -621,7 +623,7 @@ MAP
 ENDMAP
 
 NAME: minmay_hexomino_f4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
  ......
  .xxxx...
@@ -635,7 +637,7 @@ MAP
 ENDMAP
 
 NAME: minmay_hexomino_c4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
   ......
   .xxxx.
@@ -652,7 +654,7 @@ ENDMAP
 ################################################################################
 # heptominoes
 NAME: minmay_heptomino_o4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
  .....
  .xxx.....
@@ -667,7 +669,7 @@ MAP
 ENDMAP
 
 NAME: minmay_heptomino_h4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
 .........
 .x0x.xxx.
@@ -681,7 +683,7 @@ MAP
 ENDMAP
 
 NAME: minmay_heptomino_d4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
  .......
 ..xx0xx..
@@ -697,7 +699,7 @@ ENDMAP
 NAME:    minmay_heptomino_w4
 SHUFFLE: "'?
 SUBST:   ' = 0%, ? = 0%
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
    ....
   ..xx0..
@@ -712,25 +714,24 @@ MAP
     ....
 ENDMAP
 
-NAME: minmay_heptomino_l4
-: polyominoes_setup(_G)
+NAME: regret_index_heptomino_l4
+: polyominoes_setup(_G, false)
 MAP
-  ......
-  .xxxx.
-...x..0...
-.x0x.xxxx.
-.x.x%%..x.
-.x..%%x.x.
-.xxxx.x0x.
-...0..x...
-  .xxxx.
-  ......
+     ...... ...
+     .xxxx.0.x.
+     .x%.....x.
+......x%.....x.
+.xxxx0x.x0xxxx.
+.x.....%x......
+.x.....%x.
+.x.0.xxxx.
+... ......
 ENDMAP
 
 ################################################################################
 # octominoes
 NAME: minmay_octomino_e4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
 ..........
 .xxxxx.xx.
@@ -745,7 +746,7 @@ MAP
 ENDMAP
 
 NAME: minmay_octomino_c4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
 ..........
 .xxx0xxxx.
@@ -760,7 +761,7 @@ MAP
 ENDMAP
 
 NAME:  minmay_octomino_j4
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
  ...
  .x........
@@ -781,7 +782,7 @@ NAME:    minmay_nonomino_d4
 SHUFFLE: "'?!
 # TODO: this subst can sometimes wall in the b tile, which is likely to be floor
 SUBST:   ' = 0%, ? = 0%, ! = "
-: polyominoes_setup(_G)
+: polyominoes_setup(_G, false)
 MAP
 ...........
 .xxxx0xxxx.

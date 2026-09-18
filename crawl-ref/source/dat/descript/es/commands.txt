@@ -147,6 +147,14 @@ CMD_WAIT verbose
 
 Gastar un único turno esperando y descansando
 %%%%
+CMD_SAFE_WAIT
+
+Esparar para una toca si estás seguro.
+%%%%
+CMD_SAFE_WAIT verbose
+
+Pasar una toca para esparar y decansar, pero solo si no hay monstruos hostiles cercanos.
+%%%%
 CMD_DISPLAY_INVENTORY
 
 Mostrar el contenido de tu inventario

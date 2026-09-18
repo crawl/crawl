@@ -15,44 +15,44 @@
 static int dgnevent_type(lua_State *ls)
 {
     DEVENT(ls, 1, dev);
-    PLUARET(number, dev->type);
+    PLUARET(integer, dev->type);
 }
 
 static int dgnevent_place(lua_State *ls)
 {
     DEVENT(ls, 1, dev);
-    lua_pushnumber(ls, dev->place.x);
-    lua_pushnumber(ls, dev->place.y);
+    lua_pushinteger(ls, dev->place.x);
+    lua_pushinteger(ls, dev->place.y);
     return 2;
 }
 
 static int dgnevent_dest(lua_State *ls)
 {
     DEVENT(ls, 1, dev);
-    lua_pushnumber(ls, dev->dest.x);
-    lua_pushnumber(ls, dev->dest.y);
+    lua_pushinteger(ls, dev->dest.x);
+    lua_pushinteger(ls, dev->dest.y);
     return 2;
 }
 
 static int dgnevent_ticks(lua_State *ls)
 {
     DEVENT(ls, 1, dev);
-    PLUARET(number, dev->elapsed_ticks);
+    PLUARET(integer, dev->elapsed_ticks);
 }
 
 static int dgnevent_arg1(lua_State *ls)
 {
     DEVENT(ls, 1, dev);
-    PLUARET(number, dev->arg1);
+    PLUARET(integer, dev->arg1);
 }
 
 static int dgnevent_arg2(lua_State *ls)
 {
     DEVENT(ls, 1, dev);
-    PLUARET(number, dev->arg2);
+    PLUARET(integer, dev->arg2);
 }
 
-static const struct luaL_reg dgnevent_dlib[] =
+static const struct luaL_Reg dgnevent_dlib[] =
 {
 { "type",  dgnevent_type },
 { "pos",   dgnevent_place },
@@ -104,7 +104,7 @@ static const char *dgn_event_type_name(unsigned evmask)
 static void dgn_push_event_type(lua_State *ls, int n)
 {
     if (lua_isstring(ls, n))
-        lua_pushnumber(ls, dgn_event_type_by_name(lua_tostring(ls, n)));
+        lua_pushinteger(ls, dgn_event_type_by_name(lua_tostring(ls, n)));
     else if (lua_isnumber(ls, n))
         lua_pushstring(ls, dgn_event_type_name(luaL_safe_checkint(ls, n)));
     else
@@ -145,7 +145,7 @@ static int dgn_dgn_event_is_position(lua_State *ls)
     return 1;
 }
 
-const struct luaL_reg dgn_event_dlib[] =
+const struct luaL_Reg dgn_event_dlib[] =
 {
 { "dgn_event_type",        dgn_dgn_event },
 { "dgn_event_is_global",   dgn_dgn_event_is_global },

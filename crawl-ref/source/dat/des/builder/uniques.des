@@ -109,6 +109,10 @@ NAME:   uniq_blorkula_the_orcula
 DEPTH:  D:5-8
 : place_unique(_G, "Blorkula the orcula")
 
+NAME:   uniq_cassandra
+DEPTH:  D:9-14, Lair:1
+: place_unique(_G, "Cassandra")
+
 # Crazy Yuif's hut is bottom of this file.
 
 NAME:   uniq_duvessa
@@ -120,7 +124,7 @@ DEPTH:  D:4-6
 : place_unique(_G, "Edmund")
 
 NAME:   uniq_erica
-DEPTH:  D:8-11, Orc:1, Lair:1-2
+DEPTH:  D:8-11, Orc, !Orc:$, Lair:1-2
 : place_unique(_G, "Erica")
 
 NAME:   uniq_erolcha
@@ -136,11 +140,11 @@ DEPTH:  D:12-14, Elf:1, Swamp:1-2, Snake:1-2, Shoals:1-2, Spider:1-2
 : place_unique(_G, "Frances")
 
 NAME:   uniq_fannar
-DEPTH:  D:10-12, Orc:1, Lair:1-3
+DEPTH:  D:10-12, Orc, !Orc:$, Lair:1-3
 : place_unique(_G, "Fannar")
 
 NAME:   uniq_gastronok
-DEPTH:  D:8-12, Orc:1, Lair:1-3
+DEPTH:  D:8-12, Orc, !Orc:$, Lair:1-3
 WEIGHT: 5, 15(Lair)
 : place_unique(_G, "Gastronok")
 
@@ -153,7 +157,7 @@ DEPTH:  D:3-6
 : place_unique(_G, "Grinder")
 
 NAME:   uniq_harold
-DEPTH:  D:9-11, Orc:1, Lair:1-2
+DEPTH:  D:9-11, Orc, !Orc:$, Lair:1-2
 : place_unique(_G, "Harold")
 
 NAME:   uniq_ijyb
@@ -174,7 +178,7 @@ DEPTH:  D:7-10, Lair:1
 : place_unique(_G, "Joseph")
 
 NAME:   uniq_josephine
-DEPTH:  D:10-, Orc, Lair:3-
+DEPTH:  D:10-14, Orc, !Orc:$, Lair:2-
 : place_unique(_G, "Josephine band")
 
 NAME:   uniq_kirke
@@ -233,10 +237,6 @@ DEPTH:  Lair:1-3
 WEIGHT: 3
 : place_unique(_G, "Prince Ribbit band")
 
-NAME:   uniq_psyche
-DEPTH:  D:8-12
-: place_unique(_G, "Psyche")
-
 NAME:   uniq_pargi
 DEPTH:  D:3-4
 WEIGHT: 1
@@ -272,6 +272,10 @@ NAME:   uniq_sonja
 DEPTH:  D:10-13, Orc, Lair
 : place_unique(_G, "Sonja")
 
+NAME:   uniq_sprozz
+DEPTH:  D:7-11, Lair:1
+: place_unique(_G, "Sprozz")
+
 NAME:   uniq_terence
 DEPTH:  D:2-3
 : place_unique(_G, "Terence")
@@ -279,6 +283,10 @@ DEPTH:  D:2-3
 NAME:   uniq_urug
 DEPTH:  D:10-13, Orc, Lair
 : place_unique(_G, "Urug")
+
+NAME:   uniq_goji
+DEPTH:  D:12-14, Lair:2-, Orc
+: place_unique(_G, "Goji")
 
 NAME:   uniq_agnes
 DEPTH:  D:14-, Elf, !Elf:$, Snake, Spider
@@ -304,7 +312,6 @@ DEPTH:  Depths:1-2, Elf, Snake, Spider, Vaults:1-3
 
 NAME:   uniq_bai_suzhen
 DEPTH:  Depths:1-2, Elf:$, Swamp:3-, Snake:3-, Shoals:3-, Spider:3-, Vaults:2-
-DEPTH:  Crypt
 : place_unique(_G, "Bai Suzhen")
 
 # Initial placement of Boris: he may regenerate on later levels after
@@ -315,8 +322,8 @@ DEPTH:  Depths, Elf:$, Vaults, Crypt, Tomb
 
 NAME:   uniq_enchantress
 DEPTH:  Depths
-MONS:   the Enchantress band
-: place_unique(_G, "the Enchantress band")
+MONS:   Enchantress band
+: place_unique(_G, "Enchantress band")
 
 NAME:   uniq_frederick
 DEPTH:  Depths:3-, Vaults:2-, Crypt
@@ -333,8 +340,8 @@ DEPTH:  Depths:2-, Zot:1-4, Crypt
 : place_unique(_G, "Josephina band")
 
 NAME:   uniq_margery
-# Higher WEIGHT to compensate for Maggie. Used objstat to calculate doubling the WEIGHT
-# would lead to numbers closest to Margery's pre-Maggie spawn rates
+# Higher WEIGHT to compensate for Maggie. Used objstat to calculate doubling
+# the WEIGHT would lead to numbers closest to Margery's pre-Maggie spawn rates
 WEIGHT: 20
 DEPTH:  Depths:3-, Vaults:2-, Crypt
 : place_unique(_G, "Margery band")
@@ -369,11 +376,11 @@ DEPTH:  Depths:3-, Zot:1-4
 : place_unique(_G, "Parghit")
 
 NAME:   uniq_norris
-DEPTH:  Depths:1-3, Elf, Vaults:1-4
+DEPTH:  Depths, !Depths:$, Elf, Vaults, !Vaults:$
 : place_unique(_G, "Norris band")
 
 NAME:   uniq_saint_roka
-DEPTH:  Orc:$, Depths:1-2, Elf:2-, Snake:2-, Vaults, Crypt:1-2
+DEPTH:  Orc:$, Depths:1, Elf:2-, Snake:2-, Vaults
 : place_unique(_G, "Saint Roka band")
 
 NAME:   uniq_sojobo
@@ -385,7 +392,7 @@ DEPTH:  Depths:2-, Zot:1-4, Crypt
 : place_unique(_G, "Vv")
 
 NAME:   uniq_xtahua
-DEPTH:  Depths:3-, Vaults:2-, Crypt
+DEPTH:  Depths:3-, Vaults:2-, Crypt, !Crypt:$
 : place_unique(_G, "Xtahua")
 
 NAME:   uniq_grunn
@@ -548,7 +555,7 @@ DEPTH:   D:2-7
 MONS:    Crazy Yiuf
 MONS:    fungus / bush w:1
 ITEM:    mace tile:wpn_hammer wtile:hammer itemname:hammer
-KFEAT:   e = cache of fruit
+KFEAT:   e = cache_of_fruit
 # Randomisation 1: Some chance for a gate.
 SHUFFLE: Bb / Aa
 SUBST:   Bb = ;

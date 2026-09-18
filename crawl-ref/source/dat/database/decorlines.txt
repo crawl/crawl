@@ -28,10 +28,16 @@ default peaceful fountain_blue
     return "You briefly stop to clean @your_weapon@."
   end
 }}
+
+w:1
+You see @any_graffiti@ on the fountain.
 %%%%
 default fountain_blue
 
 The fountain briefly ripples from your approaching presence.
+
+w:1
+You see @any_graffiti@ on the fountain.
 %%%%
 default peaceful fountain_sparkling
 
@@ -45,11 +51,14 @@ default peaceful fountain_sparkling
   elseif you.transform() == "storm" then
     return "The fountain curiously crackles underneath you."
   elseif crawl.coinflip() or you.god == "Zin" or you.god == "Cheibriados" then
-    return "The fountain pulses a strange @any_colour_pattern@, and you decide not to drink from it."
+    return "The fountain pulses with strange @any_colour_pattern@, and you decide not to drink from it."
   else
     return "You take a small sip from the fountain. @sparkling_message@"
   end
 }}
+
+w:1
+You see @any_graffiti@ on the fountain.
 %%%%
 sparkling_message
 
@@ -67,6 +76,9 @@ Your emotions uncomfortably twist.
 default fountain_sparkling
 
 The sparkling fountain shimmers a faint @any_colour@.
+
+w:1
+You see @any_graffiti@ on the fountain.
 %%%%
 default fountain_blood
 
@@ -99,8 +111,16 @@ The fountain's eyes stare blankly through you.
 The fountain's eyes stare idly in all directions.
 
 The fountain's eyes stare into nothing.
+%%%%
+default peaceful dry_fountain
 
-# nothing for default dry_fountain, they don't exactly do anything inherently.
+w:1
+You see @any_graffiti@ on the fountain.
+%%%%
+default dry_fountain
+
+w:1
+You see @any_graffiti@ on the fountain.
 %%%%
 Ashenzari peaceful fountain_blue
 
@@ -172,11 +192,11 @@ Hepliaklqana fountain_blue
 
 The fountain's ripples stir distant, transient memories.
 %%%%
-Hepliakqana dry_fountain
+Hepliaklqana dry_fountain
 
 You swear to never forget your legacy as this fountain's builders were forgotten.
 %%%%
-Hepliakqana peaceful fountain_blood
+Hepliaklqana peaceful fountain_blood
 
 You observe a moment of silence for whomever's blood flows through this fountain.
 %%%%
@@ -620,6 +640,30 @@ oni baked goods cache
 
 You reach down and grab @_baked_good_and_reaction_@ You go for seconds.
 %%%%
+poltergeist fruit cache
+
+@inediate fruit cache@
+%%%%
+poltergeist meat cache
+
+@inediate meat cache@
+%%%%
+poltergeist baked goods cache
+
+@inediate baked goods cache@
+%%%%
+revenant fruit cache
+
+@inediate fruit cache@
+%%%%
+revenant meat cache
+
+@inediate meat cache@
+%%%%
+revenant baked goods cache
+
+@inediate baked goods cache@
+%%%%
 spriggan fruit cache
 
 @short fruit cache@
@@ -646,19 +690,20 @@ troll fruit cache
 troll baked goods cache
 
 @oni baked goods cache@
-%%%%
-vampire fruit cache
-
-You root around, looking for a blood orange, but fail to find any.
-
-w:4
-You reach down and find a blood orange. Delicious.
-%%%%
-vampire baked goods cache
-
-You reach down and sample @_baked_good_and_reaction_@ Not filling, though, alas.
 ########################## Form diets ######################################
 # TODO: fungus, wisp messages?
+%%%%
+amphisbaena fruit cache
+
+You distend one of your jaws to swallow @_fruit_and_reaction_@
+%%%%
+amphisbaena meat cache
+
+You distend one of your jaws to swallow @_meat_and_reaction_@
+%%%%
+amphisbaena baked goods cache
+
+You distend one of your jaws to swallow @_baked_good_and_reaction_@
 %%%%
 bat fruit cache
 
@@ -726,18 +771,6 @@ pig baked goods cache
 
 @short baked goods cache@
 %%%%
-snake fruit cache
-
-You distend your jaw to swallow @_fruit_and_reaction_@
-%%%%
-snake meat cache
-
-You distend your jaw to swallow @_meat_and_reaction_@
-%%%%
-snake baked goods cache
-
-You distend your jaw to swallow @_baked_good_and_reaction_@
-%%%%
 statue fruit cache
 
 @stone fruit cache@
@@ -769,3 +802,14 @@ tree meat cache
 tree baked goods cache
 
 @short baked goods cache@
+%%%%
+vampire fruit cache
+
+You root around, looking for a blood orange, but fail to find any.
+
+w:4
+You reach down and find a blood orange. Delicious.
+%%%%
+vampire baked goods cache
+
+You reach down and sample @_baked_good_and_reaction_@ Not filling, though, alas.

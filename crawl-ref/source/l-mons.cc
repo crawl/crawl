@@ -94,17 +94,17 @@ MDEF(entry_name)
 
 MDEF(x)
 {
-    PLUARET(number, int(mons->pos().x) - int(you.pos().x));
+    PLUARET(integer, int(mons->pos().x) - int(you.pos().x));
 }
 
 MDEF(y)
 {
-    PLUARET(number, int(mons->pos().y) - int(you.pos().y));
+    PLUARET(integer, int(mons->pos().y) - int(you.pos().y));
 }
 
 MDEF(hp)
 {
-    PLUARET(number, int(mons->hit_points));
+    PLUARET(integer, int(mons->hit_points));
 }
 
 static const char* _behaviour_name(beh_type beh);
@@ -116,7 +116,7 @@ MDEF(beh)
 MDEF(energy)
 {
     // XXX: fix this after speed_increment clean up
-    PLUARET(number, (mons->speed_increment - 79));
+    PLUARET(integer, (mons->speed_increment - 79));
 }
 
 MDEF(in_local_population)
@@ -126,8 +126,7 @@ MDEF(in_local_population)
     // not in the population tables, but should be considered native, e.g.
     // vault gaurds in vaults, orb guardians in zot 5
     PLUARET(boolean,
-        mons_is_native_in_branch(*mons, you.where_are_you)
-     || monster_in_population(you.where_are_you, mons->type)
+     monster_in_population(you.where_are_you, mons->type)
      || monster_in_population(you.where_are_you, mons->mons_species(false))
      || monster_in_population(you.where_are_you, mons->mons_species(true)));
 }
@@ -160,17 +159,17 @@ LUANAMEFN(mbase_name, mons->base_name(dtype, true))
 
 MDEF(hd)
 {
-    PLUARET(number, mons->get_hit_dice());
+    PLUARET(integer, mons->get_hit_dice());
 }
 
 MDEF(targetx)
 {
-    PLUARET(number, mons->target.x);
+    PLUARET(integer, mons->target.x);
 }
 
 MDEF(targety)
 {
-    PLUARET(number, mons->target.y);
+    PLUARET(integer, mons->target.y);
 }
 
 MDEF(shapeshifter)
@@ -329,7 +328,7 @@ MDEFN(random_teleport, do_random_teleport)
 MDEF(experience)
 {
     ASSERT_DLUA;
-    PLUARET(number, exper_value(*mons));
+    PLUARET(integer, exp_value(*mons));
 }
 
 static int l_mons_do_set_prop(lua_State *ls)
@@ -399,14 +398,14 @@ static int l_mons_do_get_prop(lua_State *ls)
     case SV_NONE: lua_pushnil(ls); break;
     case SV_BOOL: lua_pushboolean(ls, prop.get_bool()); break;
     case SV_BYTE: lua_pushboolean(ls, prop.get_byte()); break;
-    case SV_SHORT: lua_pushnumber(ls, prop.get_short()); break;
-    case SV_INT: lua_pushnumber(ls, prop.get_int()); break;
+    case SV_SHORT: lua_pushinteger(ls, prop.get_short()); break;
+    case SV_INT: lua_pushinteger(ls, prop.get_int()); break;
     case SV_FLOAT: lua_pushnumber(ls, prop.get_float()); break;
     case SV_STR: lua_pushstring(ls, prop.get_string().c_str()); break;
     case SV_COORD:
         num_pushed++;
-        lua_pushnumber(ls, prop.get_coord().x);
-        lua_pushnumber(ls, prop.get_coord().y);
+        lua_pushinteger(ls, prop.get_coord().x);
+        lua_pushinteger(ls, prop.get_coord().y);
         break;
     default:
         // Do nothing for some things.
@@ -451,8 +450,10 @@ static int l_mons_do_add_ench(lua_State *ls)
         return 0;
     }
 
-    mons->add_ench(mon_enchant(met, luaL_safe_checkint(ls, 2), 0,
-                               luaL_safe_checkint(ls, 3)));
+    int deg = 0;
+    if (lua_isnumber(ls, 3))
+        deg = luaL_safe_tointeger(ls, 3);
+    mons->add_ench(mon_enchant(met, nullptr, luaL_safe_checkint(ls, 2), deg));
     return 0;
 }
 
@@ -666,14 +667,14 @@ static int mons_behaviour(lua_State *ls)
         const beh_type beh = behaviour_by_name(lua_tostring(ls, 1));
         if (beh != NUM_BEHAVIOURS)
         {
-            lua_pushnumber(ls, beh);
+            lua_pushinteger(ls, beh);
             return 1;
         }
     }
     return 0;
 }
 
-static const struct luaL_reg mons_lib[] =
+static const struct luaL_Reg mons_lib[] =
 {
     { "behaviour", mons_behaviour },
     { nullptr, nullptr }
@@ -690,5 +691,8 @@ void dluaopen_monsters(lua_State *ls)
     lua_pushstring(ls, "__newindex");
     lua_pushcfunction(ls, monster_set);
     lua_settable(ls, -3);
-    luaL_register(ls, "mons", mons_lib);
+
+    lua_newtable(ls);
+    luaL_setfuncs(ls, mons_lib, 0);
+    lua_setglobal(ls, "mons");
 }

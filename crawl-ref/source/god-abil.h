@@ -97,6 +97,7 @@ class stack_iterator;
 
 typedef FixedVector<int, NUM_RECITE_TYPES> recite_counts;
 
+int capstone_piety_rank(god_type god);
 bool can_do_capstone_ability(god_type god);
 bool bless_weapon(god_type god, brand_type brand, colour_t colour);
 bool zin_donate_gold();
@@ -115,9 +116,10 @@ spret zin_imprison(const coord_def& target, bool fail);
 void zin_sanctuary();
 
 void tso_divine_shield();
-void tso_expend_divine_shield_charge();
 
 void elyvilon_purification();
+bool elyvilon_divine_alms_eligible(const monster& target);
+void elyvilon_divine_alms(monster& target);
 void elyvilon_divine_vigour();
 void elyvilon_remove_divine_vigour();
 
@@ -125,6 +127,8 @@ bool vehumet_supports_spell(spell_type spell);
 
 void trog_do_trogs_hand(int power);
 void trog_remove_trogs_hand();
+monster_type trog_get_brother_type(int power);
+spret trog_brothers_in_arms(bool fail);
 
 string yred_cannot_light_torch_reason();
 bool yred_light_the_torch();
@@ -230,7 +234,7 @@ spret uskayaw_grand_finale(bool fail);
 
 bool hepliaklqana_choose_ancestor_type(int ancestor_type);
 spret hepliaklqana_idealise(bool fail);
-spret hepliaklqana_transference(bool fail);
+spret hepliaklqana_transference(const coord_def& target, bool fail);
 void hepliaklqana_choose_identity();
 
 bool wu_jian_can_wall_jump_in_principle(const coord_def& target);
@@ -263,3 +267,5 @@ void makhleb_vessel_of_slaughter();
 void makhleb_enter_crucible_of_flesh(int debt);
 void makhleb_handle_crucible_of_flesh();
 void makhleb_crucible_kill(monster& victim);
+
+void simulate_time_passing(int turns);

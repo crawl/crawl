@@ -50,14 +50,6 @@ level_id actor::shaft_dest() const
     return generic_shaft_dest(level_id::current());
 }
 
-/**
- * Check if the actor is on the ground (or in water).
- */
-bool actor::ground_level() const
-{
-    return !airborne();
-}
-
 // Give hands required to wield weapon.
 hands_reqd_type actor::hands_reqd(const item_def &item, bool base) const
 {
@@ -89,22 +81,31 @@ int actor::dragon_level() const {
     return min(get_experience_level(), 18);
 }
 
-bool actor::handle_trap()
-{
-    trap_def* trap = trap_at(pos());
-    if (trap)
-        trap->trigger(*this);
-    return trap != nullptr;
-}
-
 int actor::skill_rdiv(skill_type sk, int mult, int div) const
 {
     return div_rand_round(skill(sk, mult * 256), div * 256);
 }
 
+bool actor::friendly() const
+{
+    return temp_attitude() == ATT_FRIENDLY;
+}
+
+bool actor::neutral() const
+{
+    const mon_attitude_type att = temp_attitude();
+    return att == ATT_NEUTRAL || att == ATT_GOOD_NEUTRAL;
+}
+
+bool actor::good_neutral() const
+{
+    return temp_attitude() == ATT_GOOD_NEUTRAL;
+}
+
 int actor::wearing_jewellery(int sub_type) const
 {
-    return wearing(OBJ_JEWELLERY, sub_type, ring_plusses_matter(sub_type),
+    return wearing(OBJ_JEWELLERY, sub_type,
+                   jewellery_type_has_pluses(sub_type),
                    sub_type == AMU_REGENERATION || sub_type == AMU_MANA_REGENERATION);
 }
 
@@ -115,8 +116,8 @@ int actor::check_willpower(const actor* source, int power) const
     if (wl == WILL_INVULN)
         return 100;
 
-    if (source && source->wearing_ego(OBJ_ARMOUR, SPARM_GUILE))
-        wl = guile_adjust_willpower(wl);
+    if (source)
+        wl = apply_willpower_bypass(*source, wl);
 
     // Marionettes get better hex success against friends to avoid hex casts
     // often being wasted with normal monster spellpower.
@@ -144,7 +145,7 @@ void actor::set_position(const coord_def &c)
     const coord_def oldpos = position;
     position = c;
     los_actor_moved(this, oldpos);
-    areas_actor_moved(this, oldpos);
+    areas_actor_moved(this);
 }
 
 bool actor::can_hibernate(bool holi_only, bool intrinsic_only) const
@@ -200,7 +201,7 @@ void actor::shield_block_succeeded(actor *attacker)
         && (unrand_entry = get_unrand_entry(sh->unrand_idx))
         && unrand_entry->melee_effects)
     {
-        unrand_entry->melee_effects(sh, this, attacker, false, 0);
+        unrand_entry->melee_effects(sh, this, attacker, 0, nullptr);
     }
 }
 
@@ -259,8 +260,6 @@ bool actor::has_notele_item(vector<const item_def *> *matches) const
 int actor::angry(bool items) const
 {
     int anger = 0;
-    if (is_player() && you.has_mutation(MUT_BERSERK))
-        anger += pow(3, you.get_mutation_level(MUT_BERSERK));
 
     if (!items)
         return anger;
@@ -292,6 +291,15 @@ bool actor::no_cast(bool items) const
 
 bool actor::reflection(bool items) const
 {
+    if (divinely_shielded())
+        return true;
+
+    if (items && is_player() && you.unrand_equipped(UNRAND_FIVE_VIRTUES) &&
+        five_virtues_sh_score() > 3)
+    {
+        return true;
+    }
+
     return items &&
            (wearing_jewellery(AMU_REFLECTION)
             || wearing_ego(OBJ_ARMOUR, SPARM_REFLECTION));
@@ -343,11 +351,10 @@ int actor::spirit_shield(bool items) const
     return ss;
 }
 
-bool actor::rampaging() const
+int actor::rampaging() const
 {
     return wearing_ego(OBJ_ARMOUR, SPARM_RAMPAGING)
-           || scan_artefacts(ARTP_RAMPAGING)
-           || you.duration[DUR_EXECUTION];
+           + scan_artefacts(ARTP_RAMPAGING);
 }
 
 int actor::apply_ac(int damage, int max_damage, ac_type ac_rule, bool for_real) const
@@ -411,14 +418,32 @@ bool actor::shield_exhausted() const
 
 bool actor_slime_wall_immune(const actor *act)
 {
-    return act->is_player() && have_passive(passive_t::slime_wall_immune)
+    return act->is_player() && (have_passive(passive_t::slime_wall_immune)
+        || act->as_player()->form == transformation::jelly)
         || act->res_corr() >= 3
         || act->is_monster() && mons_is_slime(*act->as_monster());
+}
+
+caught_type actor::caught_by() const
+{
+    if (!caught())
+        return CAUGHT_NONE;
+
+    if (props.exists(NET_IS_REAL_KEY))
+    {
+        if (props[NET_IS_REAL_KEY].get_bool())
+            return CAUGHT_NET;
+        else
+            return CAUGHT_NET_NODROP;
+    }
+
+    return CAUGHT_WEB;
 }
 
 void actor::clear_constricted()
 {
     constricted_by = 0;
+    constricted_type = CONSTRICT_NONE;
     escape_attempts = 0;
 }
 
@@ -432,70 +457,45 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet,
     if (!constrictee)
         return;
 
+    const constrict_type ctype = constrictee->constricted_type;
     constrictee->clear_constricted();
-
-    monster * const mons = monster_by_mid(whom);
-    bool roots = constrictee->is_player() && you.duration[DUR_GRASPING_ROOTS]
-        || mons && mons->has_ench(ENCH_GRASPING_ROOTS);
-    bool vile_clutch = constrictee->is_player() && you.duration[DUR_VILE_CLUTCH]
-        || mons && mons->has_ench(ENCH_VILE_CLUTCH);
 
     if (!quiet && alive() && constrictee->alive()
         && (you.see_cell(pos()) || you.see_cell(constrictee->pos())))
     {
         string attacker_desc;
-        const string verb = intentional ? "release" : "lose";
-        bool force_plural = false;
+        bool force_plural = true;
 
-        if (vile_clutch)
-        {
-            attacker_desc = "The zombie hands";
-            force_plural = true;
-        }
-        else if (roots)
-        {
-            attacker_desc = "The roots";
-            force_plural = true;
-        }
+        if (ctype == CONSTRICT_BVC)
+            attacker_desc = "the zombie hands";
+        else if (ctype == CONSTRICT_ROOTS)
+            attacker_desc = "the grasping roots";
+        else if (ctype == CONSTRICT_ENTANGLE)
+            attacker_desc = "the vines";
         else
+        {
+            force_plural = false;
             attacker_desc = name(DESC_THE);
+        }
 
         // Print a different message when breaking free of constriction via
         // blinking or similar
-        if (!escape_verb.empty())
+        if (!intentional)
         {
-            mprf("%s %s free of %s.",
-                 constrictee->name(DESC_THE).c_str(), escape_verb.c_str(),
-                 lowercase(attacker_desc).c_str());
+            mprf("%s %s free of %s!",
+                 constrictee->name(DESC_THE).c_str(),
+                 constrictee->conj_verb(escape_verb).c_str(),
+                 attacker_desc.c_str());
         }
         else
         {
             mprf("%s %s %s grip on %s.",
                 attacker_desc.c_str(),
-                force_plural ? verb.c_str()
-                            : conj_verb(verb).c_str(),
+                force_plural ? "release" : "releases",
                 force_plural ? "their" : pronoun(PRONOUN_POSSESSIVE).c_str(),
                 constrictee->name(DESC_THE).c_str());
         }
     }
-
-    if (vile_clutch)
-    {
-        if (mons)
-            mons->del_ench(ENCH_VILE_CLUTCH);
-        else
-            you.duration[DUR_VILE_CLUTCH] = 0;
-    }
-    else if (roots)
-    {
-        if (mons)
-            mons->del_ench(ENCH_GRASPING_ROOTS);
-        else
-            you.duration[DUR_GRASPING_ROOTS] = 0;
-    }
-
-    if (constrictee->is_player())
-        you.redraw_evasion = true;
 }
 
 void actor::stop_constricting(mid_t whom, bool intentional, bool quiet,
@@ -551,11 +551,9 @@ static bool _invalid_constricting_map_entry(const actor *constrictee)
 /**
  * Stop directly constricting all defenders.
  *
- * @param intentional True if this was intentional, which affects the language
- *                    in any message.
- * @param quiet       If True, don't display a message.
+ * @param intentional If true, only end entangling brand constriction.
  */
-void actor::stop_directly_constricting_all(bool intentional, bool quiet)
+void actor::stop_directly_constricting_all(bool entangling_only)
 {
     if (!constricting)
         return;
@@ -564,9 +562,10 @@ void actor::stop_directly_constricting_all(bool intentional, bool quiet)
     {
         const actor * const constrictee = actor_by_mid((*constricting)[i]);
         if (_invalid_constricting_map_entry(constrictee)
-            || constrictee->get_constrict_type() == CONSTRICT_MELEE)
+            || ((!entangling_only && constrictee->constricted_type == CONSTRICT_MELEE)
+                || constrictee->constricted_type == CONSTRICT_ENTANGLE))
         {
-            end_constriction((*constricting)[i], intentional, quiet);
+            end_constriction((*constricting)[i], false, false);
             constricting->erase(constricting->begin() + i);
         }
     }
@@ -607,25 +606,18 @@ bool actor::has_invalid_constrictor(bool move) const
     if (!attacker || !attacker->alive())
         return true;
 
-    // When the player is at the origin, they don't have the normal
-    // considerations, since they're just here to avoid messages or LOS
-    // effects. Cheibriados' time step abilities are an exception to this as
-    // they have the player "leave the normal flow of time" and so should break
-    // constriction.
-    const bool ignoring_player = attacker->is_player()
-        && attacker->pos().origin()
-        && !you.duration[DUR_TIME_STEP];
-
     // Direct constriction (e.g. by nagas and octopode players or AT_CONSTRICT)
-    // must happen between adjacent squares.
-    const auto typ = get_constrict_type();
-    if (typ == CONSTRICT_MELEE)
-        return !ignoring_player && !adjacent(attacker->pos(), pos());
+    // must happen with aux range. Entangling brand constriction gets to add
+    // the polearm range on top of that.
+    if (constricted_type == CONSTRICT_MELEE)
+        return grid_distance(attacker->pos(), pos()) > attacker->reach_range(false);
+    else if (constricted_type == CONSTRICT_ENTANGLE)
+        return grid_distance(attacker->pos(), pos()) > attacker->reach_range();
 
     // Indirect constriction requires the defender not to move.
     return move
         // Constriction doesn't work out of LOS, to avoid sauciness.
-        || !ignoring_player && !attacker->see_cell(pos())
+        || !attacker->see_cell(pos())
         || !feat_has_solid_floor(env.grid(pos()));
 }
 
@@ -643,34 +635,68 @@ void actor::clear_invalid_constrictions(bool move)
     if (!constricting)
         return;
 
+    const coord_def last_pos = last_move_pos.origin() ? pos() : last_move_pos;
     for (int i = constricting->size() - 1; i >= 0; --i)
     {
         const actor * const constrictee = actor_by_mid((*constricting)[i]);
         if (_invalid_constricting_map_entry(constrictee)
-            || constrictee->has_invalid_constrictor())
+            || constrictee->has_invalid_constrictor()
+            // Break melee constriction that is still otherwise valid if we
+            // moved further away from our target than we previously were.
+            || ((constrictee->constricted_type == CONSTRICT_MELEE
+                 || constrictee->constricted_type == CONSTRICT_ENTANGLE)
+                && grid_distance(last_pos, constrictee->pos())
+                   < grid_distance(pos(), constrictee->pos()))
+            )
         {
             stop_constricting((*constricting)[i], false, false);
         }
     }
 }
 
-void actor::start_constricting(actor &whom)
+void actor::start_constricting(actor &whom, constrict_type ctype, int duration)
 {
     if (!constricting)
         constricting = new vector<mid_t>;
 
     ASSERT(!is_constricting(whom));
+    ASSERT(!whom.is_constricted());
 
     constricting->push_back(whom.mid);
     whom.constricted_by = mid;
+    whom.constricted_type = ctype;
 
     if (whom.is_player())
         you.redraw_evasion = true;
+    else if (you.see_cell(whom.pos())
+             && (ctype != CONSTRICT_MELEE || visible_to(&you)))
+    {
+        whom.as_monster()->sense_if_invisible();
+    }
+
+    if (duration > 0)
+    {
+        if (whom.is_player())
+            you.duration[DUR_CONSTRICTED] = duration * BASELINE_DELAY;
+        else
+            whom.as_monster()->add_ench(mon_enchant(ENCH_CONSTRICTED, this, duration * BASELINE_DELAY));
+    }
 }
 
-int actor::num_constricting() const
+int actor::num_constricting(constrict_type ctype) const
 {
-    return constricting ? constricting->size() : 0;
+    if (!constricting)
+        return 0;
+
+    int count = 0;
+    for (mid_t entry : *constricting)
+    {
+        const actor* constrictee = actor_by_mid(entry);
+        if (constrictee && constrictee->constricted_type == ctype)
+            ++count;
+    }
+
+    return count;
 }
 
 bool actor::is_constricting() const
@@ -690,46 +716,23 @@ bool actor::is_constricted() const
     return constricted_by;
 }
 
-/// Is this actor currently being constricted? If so, in what way?
-constrict_type actor::get_constrict_type() const
-{
-    if (!is_constricted())
-        return CONSTRICT_NONE;
-    if (is_player())
-    {
-        if (you.duration[DUR_GRASPING_ROOTS])
-            return CONSTRICT_ROOTS;
-        else if (you.duration[DUR_VILE_CLUTCH])
-            return CONSTRICT_BVC;
-        return CONSTRICT_MELEE;
-    }
-    const monster* mon = as_monster();
-    if (mon->has_ench(ENCH_VILE_CLUTCH))
-        return CONSTRICT_BVC;
-    if (mon->has_ench(ENCH_GRASPING_ROOTS))
-        return CONSTRICT_ROOTS;
-    return CONSTRICT_MELEE;
-}
-
-bool actor::can_engulf(const actor &defender) const
-{
-    return can_see(defender)
-        && !confused()
-        && body_size(PSIZE_BODY) >= defender.body_size(PSIZE_BODY)
-        && !defender.is_insubstantial()
-        && adjacent(pos(), defender.pos());
-}
-
 bool actor::can_constrict(const actor &defender, constrict_type typ) const
 {
     if (defender.is_constricted() || defender.res_constrict())
         return false;
 
-
     if (typ == CONSTRICT_MELEE)
     {
-        return can_engulf(defender)
-            && (!is_constricting() || has_usable_tentacle());
+        return can_see(defender)
+                && !confused()
+                && body_size(PSIZE_BODY) >= defender.body_size(PSIZE_BODY)
+                && grid_distance(pos(), defender.pos()) <= reach_range(false)
+                && (!num_constricting(CONSTRICT_MELEE) || has_usable_tentacle());
+    }
+    else if (typ == CONSTRICT_ENTANGLE)
+    {
+        return grid_distance(pos(), defender.pos()) <= reach_range()
+                && !num_constricting(CONSTRICT_ENTANGLE);
     }
 
     if (!see_cell_no_trans(defender.pos()))
@@ -753,7 +756,7 @@ bool actor::can_constrict(const actor &defender, constrict_type typ) const
  */
 void actor::constriction_damage_defender(actor &defender)
 {
-    const auto typ = defender.get_constrict_type();
+    const auto typ = defender.constricted_type;
     int damage = constriction_damage(typ);
     DIAG_ONLY(const int basedam = damage);
     damage = defender.apply_ac(damage, 0, ac_type::half);
@@ -770,21 +773,28 @@ void actor::constriction_damage_defender(actor &defender)
     else
         exclamations = attack_strength_punctuation(damage);
 
-    if (is_player() || you.can_see(*this))
+    // Describe the source of constriction if you reasonably see the physical
+    // object doing the constriction (which isn't actually the 'constricter'
+    // itself in the case of ranged constriction).
+    if (is_player()
+        || (typ == CONSTRICT_MELEE && you.can_see(*this))
+        || (typ != CONSTRICT_MELEE && you.aware_of(defender)))
     {
         string attacker_desc;
-        bool force_plural = false;
+        bool force_plural = true;
         switch (typ)
         {
         case CONSTRICT_BVC:
             attacker_desc = "The zombie hands";
-            force_plural = true;
             break;
         case CONSTRICT_ROOTS:
             attacker_desc = "The grasping roots";
-            force_plural = true;
+            break;
+        case CONSTRICT_ENTANGLE:
+            attacker_desc = "The vines";
             break;
         default:
+            force_plural = false;
             if (is_player())
                 attacker_desc = "You";
             else
@@ -803,7 +813,7 @@ void actor::constriction_damage_defender(actor &defender)
 #endif
              exclamations.c_str());
     }
-    else if (you.can_see(defender) || defender.is_player())
+    else if (typ == CONSTRICT_MELEE && you.can_see(defender))
     {
         mprf("%s %s constricted%s%s",
              defender.name(DESC_THE).c_str(),
@@ -826,7 +836,7 @@ void actor::constriction_damage_defender(actor &defender)
          basedam, acdam, timescale_dam, infdam);
 
     if (defender.is_monster()
-        && defender.type != MONS_NO_MONSTER // already dead and reset
+        && !invalid_monster(defender.as_monster()) // already dead
         && defender.as_monster()->hit_points < 1)
     {
         monster_die(*defender.as_monster(), this);
@@ -945,8 +955,8 @@ void actor::collide(coord_def newpos, const actor *agent, int damage)
 {
     actor *other = actor_at(newpos);
     // TODO: should the first of these check agent?
-    const bool immune = never_harm_monster(agent, as_monster());
-    const bool immune_other = other ? never_harm_monster(agent, other->as_monster())
+    const bool immune = !could_harm(agent, this);
+    const bool immune_other = other ? !could_harm(agent, other)
                                     : false;
 
     ASSERT(this != other);
@@ -975,9 +985,9 @@ void actor::collide(coord_def newpos, const actor *agent, int damage)
                  attack_strength_punctuation((dam + damother) / 2).c_str());
             // OK, now do the messaging for protected monsters.
             if (immune)
-                never_harm_monster(agent, *as_monster(), true);
+                could_harm(agent, this, true, true);
             if (immune_other)
-                never_harm_monster(agent, *other->as_monster(), true);
+                could_harm(agent, other, true, true);
         }
 
         if (other->is_monster() && !immune_other)
@@ -1022,7 +1032,7 @@ void actor::collide(coord_def newpos, const actor *agent, int damage)
         }
 
         if (immune)
-            never_harm_monster(agent, *as_monster(), true); // messaging
+            could_harm(agent, this, true, true); // messaging
     }
 
     if (!immune)
@@ -1043,15 +1053,16 @@ void actor::collide(coord_def newpos, const actor *agent, int damage)
  * @param dmg Amount of (pre-AC) damage to apply to us (and anything we hit) if
  *            we collide with something.
  * @param source_name The name of the thing that's pushing this actor.
+ * @param source_pos The position to be knocked back from. (Defaults to cause.pos())
  * @returns True if this actor is moved from their initial position; false otherwise.
  */
 
-bool actor::knockback(const actor &cause, int dist, int dmg, string source_name)
+bool actor::knockback(const actor &cause, int dist, int dmg, string source_name, coord_def source_pos)
 {
     if (is_stationary() || resists_dislodge("being knocked back"))
         return false;
 
-    const coord_def source = cause.pos();
+    const coord_def source = source_pos.origin() ? cause.pos() : source_pos;
     const coord_def oldpos = pos();
 
     if (source == oldpos)
@@ -1070,20 +1081,14 @@ bool actor::knockback(const actor &cause, int dist, int dmg, string source_name)
         ray.advance();
 
         newpos = ray.pos();
-        if (newpos == oldray.pos()
-            || !in_bounds(newpos)
-            || cell_is_solid(newpos)
-            || actor_at(newpos)
-            || !can_pass_through(newpos)
-            || !is_habitable(newpos))
+        if (newpos == oldray.pos() || actor_at(newpos)
+            || !in_bounds(newpos) || !is_habitable(newpos))
         {
             ray = oldray;
             break;
         }
 
-        move_to_pos(newpos);
-        if (is_player())
-            stop_delay(true);
+        move_to(newpos, MV_DEFAULT, true);
     }
 
     if (newpos == oldpos)
@@ -1106,8 +1111,7 @@ bool actor::knockback(const actor &cause, int dist, int dmg, string source_name)
     if (is_monster())
         as_monster()->speed_increment -= random2(6) + 4;
 
-    apply_location_effects(oldpos, cause.is_player()? KILL_YOU_MISSILE : KILL_MON_MISSILE,
-                                actor_to_death_source(&cause));
+    finalise_movement();
 
     return true;
 }
@@ -1128,32 +1132,26 @@ coord_def actor::stumble_pos(coord_def targ) const
     if (!adjacent(newpos, oldpos)) // !?
         return coord_def();
 
-    // copied from actor::knockback, ew
-    if (!in_bounds(newpos)
-        || cell_is_solid(newpos)
-        || !can_pass_through(newpos)
-        || !is_habitable(newpos))
-    {
+    if (!in_bounds(newpos) || !is_habitable(newpos))
         return coord_def();
-    }
 
     const actor* other = actor_at(newpos);
-    if (other && can_see(*other))
+    if (other && aware_of(*other))
         return coord_def();
 
     return newpos;
 }
 
-void actor::stumble_away_from(coord_def targ, string src)
+// Returns true if this actor actually moved.
+bool actor::stumble_away_from(coord_def targ, string src)
 {
-    const coord_def oldpos = pos();
     const coord_def newpos = stumble_pos(targ);
 
     if (newpos.origin()
         || actor_at(newpos)
         || resists_dislodge("being knocked back"))
     {
-        return;
+        return false;
     }
 
     if (is_player() && !src.empty())
@@ -1161,22 +1159,42 @@ void actor::stumble_away_from(coord_def targ, string src)
     else if (you.can_see(*this) && !src.empty())
         mprf("%s is knocked back by %s.", name(DESC_THE).c_str(), src.c_str());
 
-    move_to_pos(newpos);
+    move_to(newpos);
 
-    stop_directly_constricting_all(true);
-    if (get_constrict_type() == CONSTRICT_MELEE)
-        stop_being_constricted();
-    clear_far_engulf();
-
-    apply_location_effects(oldpos, is_player() ? KILL_YOU_MISSILE
-                                               : KILL_MON_MISSILE,
-                           actor_to_death_source(this));
+    return true;
 }
 
 /// Is this creature despised by the so-called 'good gods'?
 bool actor::evil() const
 {
     return bool(holiness() & (MH_UNDEAD | MH_DEMONIC));
+}
+
+bool actor::has_soul() const
+{
+    return bool(holiness() & (MH_NATURAL | MH_PLANT | MH_HOLY | MH_DEMONIC))
+           && !is_firewood();
+}
+
+// Triggers post-movement effects for this actor as if they had just moved into
+// their current location by some means.
+//
+// Prefer using ::finalise_movement() wherever possible. This should ideally be
+// used only for situations where that is not practical, such as moving a
+// monster between floors.
+void actor::trigger_movement_effects(movement_type mvflags, const actor* to_blame)
+{
+    move_needs_finalisation = true;
+    last_move_pos = pos();
+    last_move_flags = mvflags;
+    finalise_movement(to_blame);
+}
+
+void actor::clear_deferred_move()
+{
+    move_needs_finalisation = false;
+    last_move_pos = coord_def();
+    last_move_flags = MV_DEFAULT;
 }
 
 /**

@@ -1,5 +1,7 @@
 # Vehumet wants you to burn the damn trees down.
 # Currently disabled for being too problematic to access.
+# TODO: make the outside border bigger, then have Vehumet burn down the trees
+# as one enter the vault entirely, instead of being stuck behind the trees.
 
 {{
 function callback.dk_vehumet_trees_move(data, triggerable, triggerer, marker, ev)

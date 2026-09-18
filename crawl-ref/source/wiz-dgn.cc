@@ -21,8 +21,11 @@
 #include "files.h"
 #include "libutil.h"
 #include "maps.h"
+#include "map-knowledge.h"
+#include "mon-act.h"
 #include "message.h"
 #include "place.h"
+#include "player-notices.h"
 #include "prompt.h"
 #include "religion.h"
 #include "spl-goditem.h" // detect_items
@@ -161,8 +164,7 @@ static void _wizard_go_to_level(const level_pos &pos)
     _wizard_level_target = pos.id;
 
     leaving_level_now(stair_taken);
-    const bool newlevel = load_level(stair_taken, LOAD_ENTER_LEVEL, old_level);
-    tile_new_level(newlevel);
+    load_level(stair_taken, LOAD_ENTER_LEVEL, old_level);
     if (!crawl_state.test)
         save_game_state();
     new_level();
@@ -297,7 +299,7 @@ bool wizard_create_feature(dist &target, dungeon_feature_type feat, bool mimic)
             direction_chooser_args args;
             args.range = you.wizard_vision ? -1 : LOS_MAX_RANGE;
             args.restricts = DIR_TARGET;
-            args.mode = TARG_ANY;
+            args.mode = TARG_NON_ACTOR;
             args.needs_path = false;
             // TODO: a way to switch features while targeting?
             args.top_prompt = make_stringf(
@@ -316,35 +318,35 @@ bool wizard_create_feature(dist &target, dungeon_feature_type feat, bool mimic)
         }
         coord_def &pos = target.target;
 
+        bool done = false;
+        bool success = false;
         if (feat == DNGN_ENTER_SHOP)
-            return debug_make_shop(pos);
-
-        if (feat_is_trap(feat))
-            return debug_make_trap(pos);
-
-        tile_env.flv(pos).feat = 0;
-        tile_env.flv(pos).special = 0;
-        env.grid_colours(pos) = 0;
-        const dungeon_feature_type old_feat = env.grid(pos);
-        dungeon_terrain_changed(pos, feat, false, false, false, true);
-        // Update gate tiles, if existing.
-        if (feat_is_door(old_feat) || feat_is_door(feat))
         {
-            const coord_def left  = pos - coord_def(1, 0);
-            const coord_def right = pos + coord_def(1, 0);
-            if (map_bounds(left) && feat_is_door(env.grid(left)))
-                tile_init_flavour(left);
-            if (map_bounds(right) && feat_is_door(env.grid(right)))
-                tile_init_flavour(right);
+            success = debug_make_shop(pos);
+            done = true;
         }
-        if (pos == you.pos() && cell_is_solid(pos))
-            you.wizmode_teleported_into_rock = true;
+        else
+        {
+            tile_env.flv(pos).feat = 0;
+            tile_env.flv(pos).special = 0;
+            env.grid_colours(pos) = 0;
+            dungeon_terrain_changed(pos, feat, false, false, true);
+            tile_init_flavour(pos);
+            if (pos == you.pos() && cell_is_solid(pos))
+                you.wizmode_teleported_into_rock = true;
+        }
 
         if (mimic)
-            env.level_map_mask(pos) |= MMT_MIMIC;
+            env.pgrid(pos) |= FPROP_MIMIC;
 
         if (you.see_cell(pos))
-            view_update_at(pos);
+        {
+            show_update_at(pos);
+            StashTrack.update_stash(pos);
+            redraw_view_at(pos);
+        }
+        if (done)
+            return success;
     } while (targeting_mode && target.isEndpoint);
 
     return true;
@@ -447,41 +449,6 @@ void wizard_map_level()
     }
 }
 
-bool debug_make_trap(const coord_def& pos)
-{
-    if (env.grid(pos) != DNGN_FLOOR)
-    {
-        mpr("You need to be on a floor square to make a trap.");
-        return false;
-    }
-
-    vector<WizardEntry> options;
-    for (int i = TRAP_FIRST_TRAP; i < NUM_TRAPS; ++i)
-    {
-        auto name = trap_name(static_cast<trap_type>(i));
-        options.emplace_back(WizardEntry(name, i));
-    }
-    sort(options.begin(), options.end());
-    options.emplace_back(WizardEntry('*', "any", TRAP_RANDOM));
-
-    auto menu = WizardMenu("Make which kind of trap?", options);
-    if (!menu.run(true))
-        return false;
-
-    auto trap = static_cast<trap_type>(menu.result());
-    place_specific_trap(you.pos(), trap);
-
-    mprf("Created %s.",
-         (trap == TRAP_RANDOM)
-            ? "a random trap"
-            : trap_at(you.pos())->name(DESC_A).c_str());
-
-    if (trap == TRAP_SHAFT && !is_valid_shaft_level())
-        mpr("NOTE: Shaft traps aren't valid on this level.");
-
-    return true;
-}
-
 bool debug_make_shop(const coord_def& pos)
 {
     if (env.grid(pos) != DNGN_FLOOR)
@@ -504,7 +471,8 @@ bool debug_make_shop(const coord_def& pos)
     if (!menu.run(true))
         return false;
 
-    place_spec_shop(pos, static_cast<shop_type>(menu.result()));
+    make_spec_shop(pos, static_cast<shop_type>(menu.result()));
+    dungeon_terrain_changed(you.pos(), DNGN_ENTER_SHOP);
     mpr("Done.");
     return true;
 }
@@ -624,15 +592,12 @@ static void debug_load_map_by_name(string name, bool primary)
         unwind_var<string_set> umt_a(you.uniq_map_tags_abyss, string_set());
         unwind_var<string_set> lum(env.level_uniq_maps, string_set());
         unwind_var<string_set> lumt(env.level_uniq_map_tags, string_set());
-        if (dgn_place_map(toplace, false, false, where))
+        if (dgn_add_vault_to_existing_level(toplace, where))
         {
             mprf("Successfully placed %s.", toplace->name.c_str());
             // Fix up doors from vaults and any changes to the default walls
             // and floors from the vault.
             tile_init_flavour();
-            // Transporters would normally be made from map markers by the
-            // builder.
-            dgn_make_transporters_from_markers();
         }
         else
         {
@@ -679,7 +644,7 @@ static int _debug_time_explore()
 {
     viewwindow();
     update_screen();
-    start_explore(false);
+    start_explore(false, true);
 
     unwind_var<int> es(Options.explore_stop, 0);
 
@@ -738,7 +703,7 @@ void debug_test_explore()
     const int explore_turns = _debug_time_explore();
 
     // Return to starting point.
-    you.moveto(where);
+    you.move_to(where, MV_INTERNAL);
 
     mprf("Explore took %d turns.", explore_turns);
 }
@@ -817,11 +782,10 @@ void wizard_recreate_level()
 
     leaving_level_now(stair_taken);
     delete_level(lev);
-    const bool newlevel = load_level(stair_taken, LOAD_START_GAME, lev);
+    load_level(stair_taken, LOAD_START_GAME, lev);
     if (you.get_place_info().levels_seen > 1)
         you.get_place_info().levels_seen--; // this getting to 0 -> crashes
 
-    tile_new_level(newlevel);
     if (!crawl_state.test)
         save_game_state();
     new_level();
@@ -840,6 +804,8 @@ void wizard_clear_used_vaults()
     you.uniq_map_names_abyss.clear();
     env.level_uniq_maps.clear();
     env.level_uniq_map_tags.clear();
+    for (int i = 0; i < NUM_BRANCHES; ++i)
+        branch_uniq_map_tags[i].clear();
     mpr("All vaults are now eligible for [re]use.");
 }
 

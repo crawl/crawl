@@ -5,10 +5,8 @@
 enum class transformation
 {
     none,
-#if TAG_MAJOR_VERSION == 34
     spider,
-#endif
-    blade_hands,
+    blade,
     statue,
     serpent,
     dragon,
@@ -23,21 +21,30 @@ enum class transformation
     porcupine,
 #endif
     wisp,
-#if TAG_MAJOR_VERSION == 34
     jelly,
-#endif
     fungus,
 #if TAG_MAJOR_VERSION == 34
     shadow,
     hydra,
 #endif
     storm,
-    beast,
+    quill,
     maw,
     flux,
     slaughter,
     vampire,
     bat_swarm,
+    rime_yak,
+    hive,
+    aqua,
+    sphinx,
+    werewolf,
+    walking_scroll,
+    fortress_crab,
+    sun_scarab,
+    medusa,
+    eel_hands,
+    spore,
     COUNT
 };
 constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);

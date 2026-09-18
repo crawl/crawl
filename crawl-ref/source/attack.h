@@ -20,7 +20,10 @@ const int TRANSLUCENT_SKIN_TO_HIT_MALUS = -2;
 
 const int BULLSEYE_TO_HIT_DIV = 6;
 
-const int REPEL_MISSILES_EV_BONUS = 15;
+const int REPEL_MISSILES_EV_BONUS = 15;     // Players
+const int DEFLECT_MISSILES_EV_BONUS = 24;   // Monsters
+
+const int PHASE_SHIFT_EV_BONUS = 15;
 
 class attack
 {
@@ -33,7 +36,6 @@ public:
     // or a monster if this is a reflected ranged attack.
     actor *responsible;
 
-    bool    attack_occurred;
     bool    cancel_attack;
     bool    did_hit;
     bool    needs_message;
@@ -45,6 +47,11 @@ public:
     int     damage_done;
     int     special_damage; // TODO: We'll see if we can remove this
     int     aux_damage;     // TODO: And this too
+
+    // A tally of all direct weapon + brand damage inflicted by this attack
+    // (including damage against cleave targets, both hits of quick blades,
+    // and aux attacks).
+    int       total_damage_done;
 
     beam_type special_damage_flavour;
 
@@ -61,13 +68,12 @@ public:
     attack_type     attk_type;
     attack_flavour  attk_flavour;
     int             attk_damage;
+    int             attk_reach;
+    bool            attk_cleaves;
 
     const item_def  *weapon;
     brand_type      damage_brand;
     skill_type      wpn_skill;
-
-    // If weapon is an artefact, its properties.
-    artefact_properties_t art_props;
 
     // If a weapon is an unrandart, its unrandart entry.
     const unrandart_entry *unrand_entry;
@@ -83,6 +89,13 @@ public:
     item_def        *defender_shield;
 
     bool simu;
+
+    // Parameters that may be edited outside of attack and must be included in
+    // attack::copy_params_to()
+    int          dmg_mult;        // percentage multiplier to max damage roll
+                                  // (0 = +0% damage, 50 = +50% damage, etc.)
+    int          flat_dmg_bonus;  // flat damage to add to this attack, pre-AC
+    int          to_hit_bonus;    // flat to-hit bonus on this attack
 
 // Public Methods
 public:
@@ -105,22 +118,27 @@ public:
     // classes all the way up to monster/player (and actor) classes.
     string defender_name(bool allow_reflexive);
 
+    void copy_params_to(attack &other) const;
+
+    // Generally should not be called externally, but unrand melee effects need this.
+    int inflict_damage(int dam, beam_type flavour = NUM_BEAMS);
+
 // Private Properties
     string aux_source;
     kill_method_type kill_type;
 
 // Private Methods
 protected:
-    virtual void init_attack(skill_type unarmed_skill, int attack_number);
+    virtual void init_attack(int attack_number);
 
     /* Attack Phases */
     virtual bool handle_phase_attempted();
-    virtual bool handle_phase_dodged() = 0;
-    virtual bool handle_phase_blocked();
+    virtual void handle_phase_dodged() = 0;
+    virtual void handle_phase_blocked();
     virtual bool handle_phase_hit() = 0;
     virtual bool handle_phase_damaged();
-    virtual bool handle_phase_killed();
-    virtual bool handle_phase_end();
+    virtual void handle_phase_killed();
+    virtual void handle_phase_end();
 
     /* Combat Calculations */
     virtual bool using_weapon() const = 0;
@@ -128,8 +146,9 @@ protected:
     int adjusted_weapon_damage() const;
     virtual int get_weapon_plus();
     virtual int calc_base_unarmed_damage() const;
+    int target_debuff_count() const;
     virtual int calc_mon_to_hit_base() = 0;
-    virtual int apply_damage_modifiers(int damage) = 0;
+    virtual int apply_mon_damage_modifiers(int damage) = 0;
     int apply_rev_penalty(int damage) const;
     virtual int calc_damage();
     int lighting_effects();
@@ -137,10 +156,9 @@ protected:
     int apply_defender_ac(int damage, int damage_max = 0,
                           ac_type ac_rule = ac_type::normal) const;
     // Determine if we're blocking (partially or entirely)
-    virtual bool attack_shield_blocked(bool verbose);
-    virtual bool ignores_shield(bool verbose)
+    virtual bool attack_shield_blocked();
+    virtual bool ignores_shield()
     {
-        UNUSED(verbose);
         return false;
     }
     virtual bool apply_damage_brand(const char *what = nullptr);
@@ -165,9 +183,6 @@ protected:
     void maybe_trigger_autodazzler();
 
     bool paragon_defends_player();
-
-    virtual int inflict_damage(int dam, beam_type flavour = NUM_BEAMS,
-                               bool clean = false);
 
     /* Output */
     string debug_damage_number();

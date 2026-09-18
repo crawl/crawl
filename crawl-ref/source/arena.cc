@@ -1479,7 +1479,7 @@ static void _choose_arena_teams(newgame_def& choice,
     formatted_string prompt;
     prompt.cprintf("\nExamples:\n");
     prompt.cprintf("  Sigmund v Jessica\n");
-    prompt.cprintf("  99 orc v the Royal Jelly\n");
+    prompt.cprintf("  99 orc v Royal Jelly\n");
     prompt.cprintf("  20-headed hydra v 10 kobold ; scimitar ego:flaming");
     vbox->add_child(make_shared<Text>(std::move(prompt)));
 

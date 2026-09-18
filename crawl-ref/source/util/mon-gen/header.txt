@@ -22,7 +22,7 @@ static monsterentry mondata[] =
     id, 'X', LIGHTRED, "removed " name, \
     M_NO_EXP_GAIN | M_CANT_SPAWN | M_UNFINISHED, \
     MR_NO_FLAGS, \
-    10, MONS_PROGRAM_BUG, MONS_PROGRAM_BUG, MH_NONLIVING, 0, \
+    10, false, MONS_PROGRAM_BUG, MONS_PROGRAM_BUG, MH_NONLIVING, 0, \
     { }, \
     0, 0, \
     0, 0, MST_NO_SPELLS, true, S_SILENT, \
@@ -59,7 +59,6 @@ static monsterentry mondata[] =
     AXED_MON(MONS_SPINY_WORM, "spiny worm")
     AXED_MON(MONS_ROCK_TROLL, "rock troll")
     AXED_MON(MONS_MONSTROUS_ITEM_MIMIC, "monstrous item mimic")
-    AXED_MON(MONS_GIANT_AMOEBA, "giant amoeba")
     AXED_MON(MONS_DEEP_DWARF_BERSERKER, "deep dwarf berserker")
     AXED_MON(MONS_AGATE_SNAIL, "agate snail")
     AXED_MON(MONS_GIANT_CENTIPEDE, "giant centipede")
@@ -105,7 +104,6 @@ static monsterentry mondata[] =
     AXED_MON(MONS_BABY_ALLIGATOR, "baby alligator")
     AXED_MON(MONS_BORING_BEETLE, "boring beetle")
     AXED_MON(MONS_CHIMERA, "chimera")
-    AXED_MON(MONS_RAVEN, "raven")
     AXED_MON(MONS_SINGULARITY, "singularity")
     AXED_MON(MONS_GRAND_AVATAR, "grand avatar")
     AXED_MON(MONS_SALAMANDER_FIREBRAND, "salamander firebrand")
@@ -137,11 +135,9 @@ static monsterentry mondata[] =
     AXED_MON(MONS_MONSTROUS_FEATURE_MIMIC, "monstrous feature mimic")
     AXED_MON(MONS_SLAVE, "slave")
     AXED_MON(MONS_HUNGRY_GHOST, "hungry ghost")
-    AXED_MON(MONS_HIPPOGRIFF, "hippogriff")
     AXED_MON(MONS_PORCUPINE, "porcupine")
     AXED_MON(MONS_CRAWLING_CORPSE, "crawling corpse")
     AXED_MON(MONS_MACABRE_MASS, "macabre mass")
-    AXED_MON(MONS_EYE_OF_DRAINING, "eye of draining")
     AXED_MON(MONS_DEATH_OOZE, "death ooze")
     AXED_MON(MONS_LEOPARD_GECKO, "leopard gecko")
     AXED_MON(MONS_WORKER_ANT, "worker ant")
@@ -153,8 +149,18 @@ static monsterentry mondata[] =
     AXED_MON(MONS_TORTUROUS_DEMONSPAWN, "torturous demonspawn")
     AXED_MON(MONS_LOROCYPROCA, "lorocyproca")
     AXED_MON(MONS_ELECTROFERRIC_VORTEX, "electroferric vortex")
-    AXED_MON(MONS_QUASIT, "quasit")
     AXED_MON(MONS_DEEP_DWARF, "deep dwarf")
+    AXED_MON(MONS_ZOMBIE_SMALL, "small zombie")
+    AXED_MON(MONS_ZOMBIE_LARGE, "large zombie")
+    AXED_MON(MONS_SKELETON_SMALL, "small skeleton")
+    AXED_MON(MONS_SKELETON_LARGE, "large skeleton")
+    AXED_MON(MONS_SIMULACRUM_SMALL, "small simulacrum")
+    AXED_MON(MONS_SIMULACRUM_LARGE, "large simulacrum")
+    AXED_MON(MONS_MERGED_SLIME_CREATURE, "merged slime creature")
+    AXED_MON(MONS_PSYCHE, "psyche")
+    AXED_MON(MONS_GIANT_COCKROACH, "giant cockroach")
+    AXED_MON(MONS_INSUBSTANTIAL_WISP, "insubstantial wisp")
+    AXED_MON(MONS_ARMATAUR, "armataur")
 #endif
 
 // Real monsters begin here {dlb}:

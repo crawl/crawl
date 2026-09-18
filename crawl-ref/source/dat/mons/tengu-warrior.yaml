@@ -1,7 +1,7 @@
 name: "tengu warrior"
 glyph: {char: "Q", colour: cyan}
 flags: [flies, fighter, speaks, warm_blood, archer]
-xp_mult: 13
+exp: 808
 species: tengu
 will: 40
 attacks:

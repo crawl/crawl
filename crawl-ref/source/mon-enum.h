@@ -102,25 +102,30 @@ enum attack_flavour
 #if TAG_MAJOR_VERSION == 34
     AF_STICKY_FLAME,
 #endif
+    // Intentionally inconsistent with the naming of other chaos flavour enums
+    // which are usually * _CHAOS; due to AF_CHAOS conflicting with a macro for
+    // the CHAOS protocol on cygwin. See 3c404ee for full explanation.
     AF_CHAOTIC,
     AF_STEAL,
 #if TAG_MAJOR_VERSION == 34
     AF_STEAL_FOOD,
 #endif
-    AF_CRUSH,
+    AF_CONSTRICT,
+#if TAG_MAJOR_VERSION == 34
     AF_REACH,
+#endif
     AF_HOLY,
     AF_ANTIMAGIC,
     AF_PAIN,
     AF_ENSNARE,
-    AF_ENGULF,
+    AF_FLOOD,
     AF_PURE_FIRE,
     AF_DRAIN_SPEED,
     AF_VULN,
 #if TAG_MAJOR_VERSION == 34
     AF_PLAGUE,
-#endif
     AF_REACH_STING,
+#endif
     AF_SHADOWSTAB,
     AF_DROWN,
 #if TAG_MAJOR_VERSION == 34
@@ -136,13 +141,15 @@ enum attack_flavour
     AF_WEAKNESS,
 #if TAG_MAJOR_VERSION == 34
     AF_MIASMATA,
-#endif
     AF_REACH_TONGUE,
+#endif
     AF_BLINK_WITH,
     AF_SEAR,
     AF_BARBS,
     AF_SPIDER,
+#if TAG_MAJOR_VERSION == 34
     AF_RIFT,
+#endif
     AF_BLOODZERK,
     AF_SLEEP,
     AF_MINIPARA,
@@ -155,6 +162,12 @@ enum attack_flavour
     AF_BOMBLET,
     AF_AIRSTRIKE,
     AF_TRICKSTER,
+    AF_UGLY_THING,
+    AF_DOOM,
+    AF_SLIMIFY,
+    AF_DIM,
+    AF_BURSTSHROOM,
+    AF_CONTAM_WATER,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
@@ -180,6 +193,13 @@ enum mon_summon_type
     MON_SUMM_WPN_REAP,  // Reaping brand reaping
     MON_SUMM_CACOPHONY, // Poltergeist ability
     MON_SUMM_THRALL,    // Vampiric thralls
+    MON_SUMM_HIVE,      // Hive form insects
+    MON_SUMM_SUN_SCARAB, // Sun Scarab's solar ember
+    MON_SUMM_MULTIPLICITY, // Bane of Multiplicity
+    MON_SUMM_MORTALITY, // Bane of Mortality
+    MON_SUMM_STARDUST,  // Orb of Stardust
+    MON_SUMM_SPITEFUL_BLOOD, // Spiteful Blood mutation
+    MON_SUMM_SPORE,     // Spore form mushrooms
 };
 
 #include "mon-flags.h"
@@ -193,14 +213,23 @@ enum mon_intel_type             // Must be in increasing intelligence order
 
 enum habitat_type
 {
-    // Flying monsters will appear in all categories except rock walls
-    HT_LAND = 0,         // Land critters
-    HT_AMPHIBIOUS,       // Amphibious creatures
-    HT_WATER,            // Water critters
-    HT_LAVA,             // Lava critters
-    HT_AMPHIBIOUS_LAVA,  // Amphibious w/ lava (salamanders)
 
-    NUM_HABITATS
+    HT_NONE = 0,
+    HT_DRY_LAND = 1 << 0,
+    HT_SHALLOW_WATER = 1 << 1,
+    HT_DEEP_WATER = 1 << 2,
+    HT_LAVA = 1 << 3,
+    HT_MALIGN_GATEWAY = 1 << 4,
+    HT_WALLS_ONLY = 1 << 5,
+
+    HT_LAND = HT_DRY_LAND | HT_SHALLOW_WATER,
+    HT_AMPHIBIOUS = HT_LAND | HT_DEEP_WATER,
+    HT_WATER = HT_SHALLOW_WATER | HT_DEEP_WATER,
+    HT_AMPHIBIOUS_LAVA = HT_LAND | HT_LAVA,
+    HT_ELDRITCH_TENTACLE = HT_AMPHIBIOUS | HT_MALIGN_GATEWAY,
+    // Flying monsters will appear in all categories except HT_MALIGN_GATEWAY
+    HT_FLYER = HT_LAND | HT_WATER | HT_LAVA,
+    HT_WALL = HT_LAND | HT_WALLS_ONLY,
 };
 
 // order of these is important:
@@ -293,13 +322,15 @@ enum shout_type
     S_LOUD_ROAR,            // dragons, &c. loud!
     S_RUSTLE,               // books
     S_SQUEAK,               // rats and similar
+    S_CAW,                  // ravens
+    S_LAUGH,                // cacodemons
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt
     // Only used for the verb/volume of random demon taunts
     S_VERY_SOFT,
     S_SOFT,
-    S_NORMAL,
+    S_NORMAL_VOLUME,
     S_LOUD,
     S_VERY_LOUD,
 

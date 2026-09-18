@@ -15,6 +15,7 @@
 #include "clua.h"
 #include "dgn-event.h"
 #include "map-marker-type.h"
+#include "mon-attitude-type.h"
 #include "tag-version.h"
 #include "terrain-change-type.h"
 
@@ -58,13 +59,21 @@ public:
 
     virtual map_marker *clone() const = 0;
     virtual void init();
+    virtual bool needs_activation() const { return false; }
     virtual void activate(bool verbose = true);
+    virtual bool is_dynamic() const { return false; }
+    // Handle autonomous time-based effects for a given marker.
+    // Returns true if the marker's effects are complete and it should be removed.
+    virtual bool run(int /*time*/) { return false; };
     virtual void write(writer &) const;
     virtual void read(reader &);
     virtual string debug_describe() const = 0;
     virtual string property(const string &pname) const;
 
-    static map_marker *read_marker(reader &);
+    void flag_for_deletion();
+    bool is_deleted() const;
+
+    static map_marker *read_marker(reader &, int size);
     /// @throws bad_map_marker if text could not be parsed.
     static map_marker *parse_marker(const string &text, const string &ctx = "");
 
@@ -73,6 +82,9 @@ public:
 
 protected:
     map_marker_type type;
+
+    // Transient state; flagged to be deleted at the next call of map_markers::run_all()
+    bool pending_deletion;
 
     typedef map_marker *(*marker_reader)(reader &, map_marker_type);
     typedef map_marker *(*marker_parser)(const string &, const string &);
@@ -104,6 +116,8 @@ public:
     map_corruption_marker(const coord_def &pos = coord_def(0, 0),
                           int dur = 0);
 
+    bool is_dynamic() const override { return true; }
+    bool run(int time) override;
     void write(writer &) const override;
     void read(reader &) override;
     map_marker *clone() const override;
@@ -121,6 +135,8 @@ public:
     map_tomb_marker(const coord_def& pos = coord_def(0, 0),
                     int dur = 0, int src = 0, int targ = 0);
 
+    bool is_dynamic() const override { return true; }
+    bool run(int time) override;
     void write(writer &) const override;
     void read(reader &) override;
     map_marker *clone() const override;
@@ -136,10 +152,13 @@ class map_malign_gateway_marker : public map_marker
 {
 public:
     map_malign_gateway_marker (const coord_def& pos = coord_def(0, 0),
-                    int dur = 0, bool ip = false, string caster = "",
-                    beh_type bh = BEH_HOSTILE, god_type gd = GOD_NO_GOD,
-                    int pow = 0);
+                               int delay = 0, int power = 0, int duration = 0,
+                               mid_t summoner_mid = MID_NOBODY,
+                               string blame = "",
+                               beh_type bh = BEH_HOSTILE);
 
+    bool is_dynamic() const override { return true; }
+    bool run(int time) override;
     void write (writer &) const override;
     void read (reader &) override;
     map_marker *clone() const override;
@@ -148,64 +167,14 @@ public:
     static map_marker *read(reader &, map_marker_type);
 
 public:
-    int duration;
-    bool is_player;
-    bool monster_summoned;
-    string summoner_string;
-    beh_type behaviour;
-    god_type god;
+    int delay;
     int power;
-};
-
-#if TAG_MAJOR_VERSION == 34
-// A marker powered by phoenixes!
-class map_phoenix_marker : public map_marker
-{
-public:
-    map_phoenix_marker (const coord_def& pos = coord_def(0, 0),
-                    int dur = 0, int mnum = 0, beh_type bh = BEH_HOSTILE,
-                    mon_attitude_type at = ATT_HOSTILE, god_type gd = GOD_NO_GOD,
-                    coord_def cp = coord_def(-1, -1)
-                    );
-
-    void write (writer &) const override;
-    void read (reader &) override;
-    map_marker *clone() const override;
-    string debug_describe() const override;
-
-    static map_marker *read(reader &, map_marker_type);
-
-public:
     int duration;
-    int mon_num;
+    mid_t summoner;
+    mid_t tentacle;
+    string blame_string;
     beh_type behaviour;
-    mon_attitude_type attitude;
-    god_type god;
-    coord_def corpse_pos;
 };
-
-
-// A marker for sealed doors
-class map_door_seal_marker : public map_marker
-{
-public:
-    map_door_seal_marker (const coord_def& pos = coord_def(0, 0),
-                    int dur = 0, int mnum = 0,
-                    dungeon_feature_type oldfeat = DNGN_CLOSED_DOOR);
-
-    void write (writer &) const override;
-    void read (reader &) override;
-    map_marker *clone() const override;
-    string debug_describe() const override;
-
-    static map_marker *read(reader &, map_marker_type);
-
-public:
-    int duration;
-    int mon_num;
-    dungeon_feature_type old_feature;
-};
-#endif
 
 // A marker for temporary terrain changes
 class map_terrain_change_marker : public map_marker
@@ -217,7 +186,7 @@ public:
                     unsigned short flv_oldfeat = 0,
                     unsigned short flv_oldfeat_idx = 0,
                     int dur = 0, terrain_change_type type = TERRAIN_CHANGE_GENERIC,
-                    int mnum = 0, int oldcol = BLACK);
+                    mid_t mid = 0, int oldcol = BLACK);
 
     void write (writer &) const override;
     void read (reader &) override;
@@ -225,10 +194,11 @@ public:
     string debug_describe() const override;
 
     static map_marker *read(reader &, map_marker_type);
+    static bool any_at(coord_def pos, function<bool(map_terrain_change_marker&)> predicate);
 
 public:
     int duration;
-    int mon_num;
+    mid_t source_mid;
     dungeon_feature_type old_feature;
     dungeon_feature_type new_feature;
     unsigned short flv_old_feature;
@@ -246,6 +216,8 @@ public:
                               int max_radius = LOS_DEFAULT_RANGE,
                               int dur = 10, actor* agent = nullptr);
 
+    bool is_dynamic() const override { return true; }
+    bool run(int time) override;
     void write(writer &) const override;
     void read(reader &) override;
     map_marker *clone() const override;
@@ -276,6 +248,7 @@ public:
 
     void init() override;
     void activate(bool verbose) override;
+    bool needs_activation() const override { return true; }
 
     void write(writer &) const override;
     void read(reader &) override;
@@ -341,6 +314,39 @@ public:
 
 };
 
+class map_active_feature_marker : public map_marker
+{
+
+public:
+    map_active_feature_marker(const coord_def &pos = coord_def(0, 0),
+                              dungeon_feature_type feat = DNGN_UNSEEN,
+                              mid_t owner = MID_NOBODY,
+                              mon_attitude_type attitude = ATT_HOSTILE,
+                              int power = 0, int duration = 0,
+                              int action_timer = 10,
+                              bool is_dependent = false);
+    bool is_dynamic() const override { return true; }
+    bool run(int time) override;
+    void write(writer &) const override;
+    void read(reader &) override;
+    string debug_describe() const override;
+    map_marker *clone() const override;
+    static map_marker *read(reader &, map_marker_type);
+
+private:
+    bool run_spike_launcher(int time);
+    bool run_mould_patch(int time);
+
+public:
+    dungeon_feature_type feat;
+    mid_t owner;
+    mon_attitude_type attitude;
+    int power;
+    int duration;
+    int action_timer;
+    bool is_dependent;
+};
+
 class map_markers
 {
 public:
@@ -354,7 +360,8 @@ public:
     void init_all();
     void activate_all(bool verbose = true);
     void activate_markers_at(coord_def p);
-    void add(map_marker *marker);
+    void run_all(int time, map_marker_type type = MAT_ANY);
+    void add(map_marker *marker, bool is_move = false);
     void remove(map_marker *marker);
     void remove_markers_at(const coord_def &c, map_marker_type type = MAT_ANY);
     map_marker *find(const coord_def &c, map_marker_type type = MAT_ANY);
@@ -363,7 +370,9 @@ public:
     void move_marker(map_marker *marker, const coord_def &to);
     vector<map_marker*> get_all(map_marker_type type = MAT_ANY);
     vector<map_marker*> get_all(const string &key, const string &val = "");
-    vector<map_marker*> get_markers_at(const coord_def &c);
+    vector<map_marker*> get_markers_at(const coord_def &c, map_marker_type type = MAT_ANY);
+    vector<map_active_feature_marker*> get_active_features(dungeon_feature_type feat, mid_t owner = MID_NOBODY);
+    map_active_feature_marker* get_active_feature_at(const coord_def& pos, dungeon_feature_type feat);
     string property_at(const coord_def &c, map_marker_type type,
                        const string &key);
     string property_at(const coord_def &c, map_marker_type type,
@@ -380,11 +389,18 @@ private:
 
     void init_from(const map_markers &);
     void unlink_marker(const map_marker *);
+    void flag_for_deletion(map_marker *);
+    void delete_marker(map_marker *);
     void check_empty();
 
 private:
     dgn_marker_map markers;
     bool have_inactive_markers;
+    vector<map_marker*> dynamic_markers;
+
+    // A list of markers that were flagged for deletion since the last call of
+    // run_all(),
+    vector<map_marker*> to_delete;
 };
 
 map_position_marker *get_position_marker_at(const coord_def &pos,

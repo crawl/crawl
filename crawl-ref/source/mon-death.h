@@ -25,6 +25,11 @@
 
 #define VAMPIRIC_THRALL_KEY "vampiric_thrall"
 
+#define DOOMSAYING_USED_KEY "doomsaying_used"
+
+// Was this monster killed by an attack (as opposed to some other damage source)?
+#define ATTACK_KILL_KEY "was_attack_kill"
+
 class actor;
 class monster;
 
@@ -35,6 +40,7 @@ class monster;
 
 #define YOU_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE \
                      || (x) == KILL_YOU_CONF)
+#define BLAME_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE)
 #define MON_KILL(x) ((x) == KILL_MON || (x) == KILL_MON_MISSILE)
 #define RESET_KILL(x) ((x) == KILL_RESET || (x) == KILL_RESET_KEEP_ITEMS \
                        || (x) == KILL_TENTACLE_CLEANUP)
@@ -50,7 +56,8 @@ item_def* monster_die(monster& mons, const actor *killer, bool silent = false,
                       bool mount_death = false);
 
 item_def* monster_die(monster& mons, killer_type killer,
-                      int killer_index, bool silent = false, bool mount_death = false);
+                      int killer_index, bool silent = false,
+                      bool mount_death = false, bool reset = false);
 
 item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
                        int killer_index);
@@ -59,11 +66,16 @@ bool mons_will_goldify(const monster &mons);
 
 void handle_monster_dies_lua(monster& mons, killer_type killer);
 
-item_def* place_monster_corpse(const monster& mons, bool force = false);
+item_def* place_corpse_or_gold(const monster& mons, bool force = false,
+                               bool no_corpse = false);
 void maybe_drop_monster_organ(monster_type mon, monster_type orig,
                               coord_def pos, bool silent = false);
 
-void monster_cleanup(monster* mons);
+void monster_cleanup(monster* mons, bool reset = false);
+void flush_monster_reset();
+void cancel_pending_monster_reset(monster* mons);
+void drop_pending_monster_resets();
+bool any_pending_monster_reset();
 void record_monster_defeat(const monster* mons, killer_type killer);
 int mummy_curse_power(monster_type type);
 void fire_monster_death_event(monster* mons, killer_type killer, bool polymorph);
@@ -80,6 +92,8 @@ int dismiss_monsters(string pattern);
 string summoned_poof_msg(const monster& mons);
 
 bool mons_is_mons_class(const monster* mons, monster_type type);
+bool mons_is_mons_species(const monster* mons, monster_type spec);
+
 void pikel_band_neutralise();
 
 bool mons_is_elven_twin(const monster* mons);

@@ -17,7 +17,7 @@
 static int dgn_feature_number(lua_State *ls)
 {
     const string &name = luaL_checkstring(ls, 1);
-    PLUARET(number, dungeon_feature_by_name(name));
+    PLUARET(integer, dungeon_feature_by_name(name));
 }
 
 static int dgn_feature_name(lua_State *ls)
@@ -61,7 +61,7 @@ static int dgn_feature_desc(lua_State *ls)
         static_cast<description_level_type>(luaL_safe_checkint(ls, 2)) :
             description_type_by_name(lua_tostring(ls, 2));
     const bool need_stop = lua_isboolean(ls, 3)? lua_toboolean(ls, 3) : false;
-    const string s = feature_description(feat, NUM_TRAPS, "", dtype)
+    const string s = feature_description(feat, "", dtype)
         + (need_stop ? "." : "");
     lua_pushstring(ls, s.c_str());
     return 1;
@@ -84,15 +84,15 @@ static int dgn_feature_desc_at(lua_State *ls)
 
 static int dgn_max_bounds(lua_State *ls)
 {
-    lua_pushnumber(ls, GXM);
-    lua_pushnumber(ls, GYM);
+    lua_pushinteger(ls, GXM);
+    lua_pushinteger(ls, GYM);
     return 2;
 }
 
 static int dgn_builder_bounds(lua_State *ls)
 {
-    lua_pushnumber(ls, dgn_builder_x());
-    lua_pushnumber(ls, dgn_builder_y());
+    lua_pushinteger(ls, dgn_builder_x());
+    lua_pushinteger(ls, dgn_builder_y());
     return 2;
 }
 
@@ -117,17 +117,20 @@ static int dgn_grid(lua_State *ls)
             if (crawl_state.generating_level)
                 env.grid(c) = feat;
             else
+            {
+                revert_terrain_change(c);
                 dungeon_terrain_changed(c, feat);
+            }
         }
     }
-    PLUARET(number, env.grid(c));
+    PLUARET(integer, env.grid(c));
 }
 
 LUAFN(dgn_distance)
 {
     COORDS(p1, 1, 2);
     COORDS(p2, 3, 4);
-    lua_pushnumber(ls, distance2(p1, p2));
+    lua_pushinteger(ls, distance2(p1, p2));
     return 1;
 }
 
@@ -139,7 +142,7 @@ LUAFN(dgn_seen_destroy_feat)
     return 1;
 }
 
-const struct luaL_reg dgn_grid_dlib[] =
+const struct luaL_Reg dgn_grid_dlib[] =
 {
 { "feature_number", dgn_feature_number },
 { "feature_name", dgn_feature_name },

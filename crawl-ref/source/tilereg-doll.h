@@ -23,7 +23,7 @@ protected:
     // Currently edited category of parts.
     int m_cat_idx;
     // Current part in current category.
-    int m_part_idx;
+    tileidx_t m_part_idx;
 
     // Set of loaded dolls.
     dolls_data m_dolls[NUM_MAX_DOLLS];

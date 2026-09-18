@@ -20,18 +20,6 @@
 bool player::add_fearmonger(const monster* mon)
 {
     ASSERT(mon); // XXX: change to const monster &mon
-    if (is_sanctuary(pos()))
-    {
-        if (can_see(*mon))
-        {
-            mprf("%s's aura of fear is muted, and has no effect on you.",
-                 mon->name(DESC_THE).c_str());
-        }
-        else
-            mpr("The fearful aura is strangely muted, and has no effect on you.");
-
-        return false;
-    }
 
     if (!duration[DUR_AFRAID])
     {
@@ -171,8 +159,7 @@ bool player::_possible_fearmonger(const monster* mon) const
         return false;
 
     return mon && mon->alive()
-        && !silenced(pos()) && !silenced(mon->pos())
-        && see_cell(mon->pos()) && mon->see_cell(pos())
+        && see_cell(mon->pos())
         && !mon->confused() && !mon->asleep()
         && !mon->cannot_act() && !mon->wont_attack()
         && !mon->pacified() && !mon->berserk_or_frenzied()

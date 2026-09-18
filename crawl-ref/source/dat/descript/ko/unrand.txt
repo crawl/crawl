@@ -13,16 +13,12 @@ Mace of Variability
 
 이 무기는 — 특히 그 강화 수치를 — 믿을 수 없다.
 %%%%
-Glaive of Prune
+partisan of Prune
 
 이 창은 정신 나간 어떤 신의 창조물로, 소유자를 자두로 바꿔버리는 저주가
 걸려있다. 다행히도 이 저주는 굉장히 느리게 진행되기 때문에, 잠시 이 창을
 사용하는 정도로는 피부가 약간 보랏빛이 나고 살짝 주름지게 되는 정도의 부작용만
 일어난다.
-%%%%
-Sword of Power
-
-이 무기는 건강한 자에게는 강대한 힘을, 허약한 자에게는 미약한 힘을 준다.
 %%%%
 Staff of Olgreb
 
@@ -101,7 +97,7 @@ crossbow "Hellfire"
 
 지옥불에서 단조된 타오르는 석궁. 이름처럼 불타는 화살로 가득 차있다.
 %%%%
-sword of the Doom Knight
+sword of the Dread Knight
 
 아다만틴 합금으로 만든 대검이다.
 %%%%
@@ -282,7 +278,7 @@ amulet of Cekugob
 평범한 목줄에 무척 특이하게 생긴 수정 조각이 달린 목걸이로, 희귀한 힘이
 깃들어있다.
 %%%%
-amulet of the Four Winds
+amulet of Tranquility
 
 최고급 비취만을 사용하여 만든 이 팬던트는, 착용자에게 적대적인 주술로부터
 자유롭게 만들어주는 신비로운 힘을 부여한다.

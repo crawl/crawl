@@ -310,7 +310,10 @@ function ($, comm, client, options, focus_trap) {
             if (keycode)
                 comm.send_message("key", { keycode: keycode });
         } else if (ev.type == "keydown") {
-            var $elem = $("#ui-stack [data-hotkey=\""+event.key+"\"]");
+            var $top = top_popup();
+            if ($top === undefined)
+                return;
+            var $elem = $top.find("[data-hotkey=\""+ev.key+"\"]");
             if ($elem.length === 1) {
                 $elem.click();
                 ev.preventDefault();
@@ -389,7 +392,7 @@ function ($, comm, client, options, focus_trap) {
         if (family !== "" && family !== "monospace")
         {
             family += ", monospace";
-            $("#ui-stack").css("font-family", family);
+            document.documentElement.style.setProperty("--crt-font", family);
         }
 
         $("#ui-stack").attr('data-display-mode',

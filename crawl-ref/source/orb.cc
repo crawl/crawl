@@ -98,5 +98,5 @@ void start_orb_run(game_chapter chapter, const char* message)
     mprf(MSGCH_ORB, "%s", message);
     you.chapter = chapter;
     xom_is_stimulated(200, XM_INTRIGUED);
-    invalidate_agrid(true);
+    invalidate_agrid();
 }

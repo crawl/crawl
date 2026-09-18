@@ -96,7 +96,6 @@ static spell_type search_order_misc[] =
     SPELL_VITRIFY,
     SPELL_SLEEP,
     SPELL_MASS_CONFUSION,
-    SPELL_DRAIN_MAGIC,
     SPELL_PETRIFY,
     SPELL_POLYMORPH,
     SPELL_SLOW,
@@ -134,6 +133,7 @@ void ghost_demon::reset()
     max_hp           = 0;
     ev               = 0;
     ac               = 0;
+    willpower        = -1;
     damage           = 0;
     speed            = 10;
     move_energy      = 10;
@@ -146,6 +146,7 @@ void ghost_demon::reset()
     flies            = false;
     cloud_ring_ench  = ENCH_NONE;
     umbra_rad        = -1;
+    title            = "";
 }
 
 // Set values to the bare minimum required to function, in cases where full
@@ -188,15 +189,11 @@ static attack_type _pan_lord_random_attack_type()
     attack_type attack = AT_HIT;
     if (one_chance_in(4))
     {
-        do
-        {
-            // An ugly list, but less brittle and without e.g. false trampling.
-            attack = static_cast<attack_type>(random_choose(AT_BITE, AT_STING,
-                                      AT_SPORE, AT_TOUCH, AT_PECK, AT_HEADBUTT,
-                                      AT_PUNCH, AT_KICK, AT_TENTACLE_SLAP,
-                                      AT_TAIL_SLAP, AT_GORE, AT_TRUNK_SLAP));
-        }
-        while (attack == AT_HIT || !is_plain_attack_type(attack));
+        // An ugly list, but less brittle and without e.g. false trampling.
+        attack = static_cast<attack_type>(random_choose(AT_BITE, AT_STING,
+                                    AT_SPORE, AT_TOUCH, AT_PECK, AT_HEADBUTT,
+                                    AT_PUNCH, AT_KICK, AT_TENTACLE_SLAP,
+                                    AT_TAIL_SLAP, AT_GORE, AT_TRUNK_SLAP));
     }
     return attack;
 }
@@ -426,9 +423,6 @@ void ghost_demon::init_pandemonium_lord(bool friendly)
     colour = one_chance_in(10) ? colour_t{ETC_RANDOM} : random_monster_colour();
 }
 
-static const set<brand_type> ghost_banned_brands =
-                { SPWPN_HOLY_WRATH, SPWPN_CHAOS };
-
 void ghost_demon::init_player_ghost()
 {
     // don't preserve transformations for ghosty purposes
@@ -439,7 +433,7 @@ void ghost_demon::init_player_ghost()
 
     name   = you.your_name;
     max_hp = min(get_real_hp(false, false), MAX_GHOST_HP);
-    ev     = min(you.evasion(true), MAX_GHOST_EVASION);
+    ev     = min(you.evasion(false), MAX_GHOST_EVASION);
     ac     = you.armour_class();
     dprf("ghost ac: %d, ev: %d", ac, ev);
 
@@ -457,7 +451,7 @@ void ghost_demon::init_player_ghost()
     set_resist(resists, MR_RES_MIASMA, you.res_miasma());
     set_resist(resists, MR_RES_PETRIFY, you.res_petrify());
 
-    move_energy = 10;
+    move_energy = player_movement_speed(false, false);
     speed       = 10;
 
     damage = 4;
@@ -482,8 +476,8 @@ void ghost_demon::init_player_ghost()
             {
                 brand = static_cast<brand_type>(get_weapon_brand(weapon));
 
-                // normalize banned weapon brands
-                if (ghost_banned_brands.count(brand) > 0)
+                // No holy weapons for ghosts.
+                if (brand == SPWPN_HOLY_WRATH)
                     brand = SPWPN_NORMAL;
 
                 // Don't copy ranged- or artefact-only brands (reaping etc.).
@@ -498,7 +492,7 @@ void ghost_demon::init_player_ghost()
                 case STAFF_FIRE: brand = SPWPN_FLAMING; break;
                 case STAFF_COLD: brand = SPWPN_FREEZING; break;
                 case STAFF_ALCHEMY: brand = SPWPN_VENOM; break;
-                case STAFF_DEATH: brand = SPWPN_PAIN; break;
+                case STAFF_NECROMANCY: brand = SPWPN_PAIN; break;
                 case STAFF_AIR: brand = SPWPN_ELECTROCUTION; break;
                 case STAFF_EARTH: brand = SPWPN_HEAVY; break;
                 default: ;
@@ -531,6 +525,7 @@ void ghost_demon::init_player_ghost()
     best_skill = ::best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     best_skill_level = you.skills[best_skill];
     xl = you.experience_level;
+    title = player_title();
 
     flies = true;
 
@@ -800,6 +795,7 @@ void ghost_demon::init_orc_apostle(apostle_type type, int pow)
     {
         default:
         case APOSTLE_WARRIOR:
+            colour = YELLOW;
             max_hp = max_hp * 6 / 5;
             damage = 5 + div_rand_round(pow, 4);
             if (pow > 50)
@@ -807,6 +803,7 @@ void ghost_demon::init_orc_apostle(apostle_type type, int pow)
             break;
 
         case APOSTLE_WIZARD:
+            colour = LIGHTMAGENTA;
             max_hp = max_hp * 5 / 6;
             damage = 2 + div_rand_round(pow, 8);
             ev += div_rand_round(pow, 12);
@@ -818,6 +815,7 @@ void ghost_demon::init_orc_apostle(apostle_type type, int pow)
             break;
 
         case APOSTLE_PRIEST:
+            colour = LIGHTCYAN;
             damage = 3 + div_rand_round(pow, 6);
             break;
     }
@@ -889,6 +887,10 @@ static attack_flavour _ugly_thing_colour_to_flavour(colour_t u_colour)
         u_att_flav = AF_COLD;
         break;
 
+    case MAGENTA:
+        u_att_flav = AF_ANTIMAGIC;
+        break;
+
     default:
         break;
     }
@@ -945,11 +947,15 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
 
     // Pick a compatible attack flavour for this colour.
     att_flav = _ugly_thing_colour_to_flavour(colour);
-    if (colour == MAGENTA)
-        damage = damage * 4 / 3; // +5 for uglies, +9 for v uglies
 
     // Pick a compatible resistance for this attack flavour.
     ugly_thing_add_resistance(false, att_flav);
+
+    // Not really a normal resistance, so handle it separately.
+    if (colour == MAGENTA)
+        willpower = ((very_ugly) ? 120 : 80);
+    else
+        willpower = -1;
 
     // If this is a very ugly thing, upgrade it properly.
     if (very_ugly)
@@ -1117,7 +1123,7 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
         return SPELL_BLINK;
 #endif
     case SPELL_SWIFTNESS:
-        return SPELL_SPRINT;
+        return SPELL_FLEETFOOT;
     case SPELL_CONFUSING_TOUCH:
         return SPELL_CONFUSE;
     case SPELL_CURSE_OF_AGONY:
@@ -1128,6 +1134,12 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
         return SPELL_SUMMON_DRAGON;
     case SPELL_ELECTRIC_CHARGE:
         return SPELL_ELECTROLUNGE;
+    case SPELL_PERCUSSIVE_TEMPERING:
+        return SPELL_ALL_PURPOSE_TEMPERING;
+    case SPELL_FREEZING_CLOUD:
+        return SPELL_FREEZING_GUST;
+    case SPELL_NOXIOUS_BOG:
+        return SPELL_HURL_SLUDGE;
     default:
         break;
     }
@@ -1220,64 +1232,124 @@ bool ghost_demon::ghost_eligible()
         && ghosts_nosave.count(you.where_are_you) == 0;
 }
 
-bool debug_check_ghost(const ghost_demon &ghost)
+bool debug_check_ghost(const ghost_demon &ghost, string &err)
 {
     // Values greater than the allowed maximum or less then the
     // allowed minimum signalise bugginess.
     if (ghost.damage < 0 || ghost.damage > MAX_GHOST_DAMAGE)
+    {
+        err = make_stringf("Bad damage: %d", ghost.damage);
         return false;
+    }
+
     if (ghost.max_hp < 1 || ghost.max_hp > MAX_GHOST_HP)
+    {
+        err = make_stringf("Bad max HP: %d", ghost.max_hp);
         return false;
+    }
+
     if (ghost.xl < 1 || ghost.xl > 27)
+    {
+        err = make_stringf("Bad XL: %d", ghost.xl);
         return false;
+    }
+
     if (ghost.ev > MAX_GHOST_EVASION)
+    {
+        err = make_stringf("Bad EV: %d", ghost.ev);
         return false;
-    if (get_resist(ghost.resists, MR_RES_ELEC) < 0)
-        return false;
+    }
+
     if (ghost.brand < SPWPN_NORMAL || ghost.brand > MAX_GHOST_BRAND)
+    {
+        err = make_stringf("Bad brand: %d", ghost.brand);
         return false;
+    }
+
     if (!species::is_valid(ghost.species))
+    {
+        err = make_stringf("Bad species: %d", ghost.species);
         return false;
+    }
+
     if (!job_type_valid(ghost.job))
+    {
+        err = make_stringf("Bad job: %d", ghost.job);
         return false;
+    }
+
     if (ghost.best_skill < SK_FIGHTING || ghost.best_skill >= NUM_SKILLS)
+    {
+        err = make_stringf("Bad best skill: %d", ghost.best_skill);
         return false;
+    }
+
     if (ghost.best_skill_level < 0 || ghost.best_skill_level > 27)
+    {
+        err = make_stringf("Bad best skill level: %d", ghost.best_skill_level);
         return false;
+    }
+
     if (ghost.religion < GOD_NO_GOD || ghost.religion >= NUM_GODS)
+    {
+        err = make_stringf("Bad god: %d", ghost.religion);
         return false;
+    }
 
     if (ghost.brand == SPWPN_HOLY_WRATH)
+    {
+        err = "Has holy wrath";
         return false;
+    }
 
     // Ghosts don't get non-plain attack types and flavours.
     if (ghost.att_type != AT_HIT || ghost.att_flav != AF_PLAIN)
+    {
+        err = make_stringf("Bad attack type/flavour: %d/%d", ghost.att_type, ghost.att_flav);
         return false;
+    }
 
-    // Name validation.
-    if (!validate_player_name(ghost.name))
-        return false;
     // Many combining characters can come per every letter, but if there's
     // that much, it's probably a maliciously forged ghost of some kind.
-    if (ghost.name.length() > MAX_NAME_LENGTH * 10 || ghost.name.empty())
+    if (!validate_player_name(ghost.name)
+        || ghost.name.length() > MAX_NAME_LENGTH * 10
+        || ghost.name.empty())
+    {
+        err = "Invalid name";
         return false;
+    }
+
     if (ghost.name != trimmed_string(ghost.name))
+    {
+        err = "Mismatched name";
         return false;
+    }
 
     // Check for non-existing spells.
     for (const mon_spell_slot &slot : ghost.spells)
+    {
         if (slot.spell < 0 || slot.spell >= NUM_SPELLS)
+        {
+            err = make_stringf("Bad spell: %d", slot.spell);
             return false;
+        }
+    }
 
     return true;
 }
 
 // Sanity checks for some ghost values.
-bool debug_check_ghosts(vector<ghost_demon> &ghosts)
+bool debug_check_ghosts(vector<ghost_demon> &ghosts, string &err)
 {
     for (const ghost_demon &ghost : ghosts)
-        if (!debug_check_ghost(ghost))
+    {
+        if (!debug_check_ghost(ghost, err))
+        {
+            err = make_stringf("Buggy ghost %s: %s", ghost.name.c_str(), err.c_str());
             return false;
+        }
+    }
+
     return true;
 }
 

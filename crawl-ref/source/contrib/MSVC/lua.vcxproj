@@ -22,30 +22,30 @@
     <ProjectGuid>{A61349B6-4099-4688-AA1A-00D91397857D}</ProjectGuid>
     <RootNamespace>lua</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
@@ -79,22 +79,6 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>11.0.60315.1</_ProjectFileVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(ProjectDir)..\bin\8.0\$(PlatformName)\</OutDir>
-    <IntDir>$(ProjectDir)..\obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -143,6 +127,8 @@
     <ClCompile Include="..\lua\src\lauxlib.c" />
     <ClCompile Include="..\lua\src\lbaselib.c" />
     <ClCompile Include="..\lua\src\lcode.c" />
+    <ClCompile Include="..\lua\src\lcorolib.c" />
+    <ClCompile Include="..\lua\src\lctype.c" />
     <ClCompile Include="..\lua\src\ldblib.c" />
     <ClCompile Include="..\lua\src\ldebug.c" />
     <ClCompile Include="..\lua\src\ldo.c" />
@@ -166,9 +152,9 @@
     <ClCompile Include="..\lua\src\ltablib.c" />
     <ClCompile Include="..\lua\src\ltm.c" />
     <ClCompile Include="..\lua\src\lundump.c" />
+    <ClCompile Include="..\lua\src\lutf8lib.c" />
     <ClCompile Include="..\lua\src\lvm.c" />
     <ClCompile Include="..\lua\src\lzio.c" />
-    <ClCompile Include="..\lua\src\print.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\lua\src\lapi.h" />

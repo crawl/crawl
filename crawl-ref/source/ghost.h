@@ -62,7 +62,7 @@ public:
     short best_skill_level;
     short xl;
 
-    short max_hp, ev, ac, damage, speed, move_energy;
+    short max_hp, ev, ac, willpower, damage, speed, move_energy;
     bool see_invis, flies;
     brand_type brand;
     attack_type att_type;
@@ -70,6 +70,7 @@ public:
     resists_t resists;
     enchant_type cloud_ring_ench;
     int umbra_rad;
+    string title;
 
     colour_t colour;
 
@@ -115,7 +116,7 @@ private:
     void pick_apostle_spells(apostle_type type, int pow);
 };
 
-bool debug_check_ghosts(vector<ghost_demon> &ghosts);
-bool debug_check_ghost(const ghost_demon &ghost);
+bool debug_check_ghosts(vector<ghost_demon> &ghosts, string &err);
+bool debug_check_ghost(const ghost_demon &ghost, string &err);
 int ghost_level_to_rank(const int xl);
 int ghost_rank_to_level(const int rank);

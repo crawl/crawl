@@ -178,10 +178,6 @@ void modify_stat(stat_type which_stat, int amount, bool suppress_msg)
     if (amount == 0)
         return;
 
-    // Stop delays if a stat drops.
-    if (amount < 0)
-        interrupt_activity(activity_interrupt::stat_change);
-
     if (which_stat == STAT_RANDOM)
         which_stat = static_cast<stat_type>(random2(NUM_STATS));
 
@@ -204,10 +200,6 @@ void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg)
     // sanity - is non-zero amount?
     if (amount == 0)
         return;
-
-    // Stop delays if a stat drops.
-    if (amount < 0)
-        interrupt_activity(activity_interrupt::stat_change);
 
     if (which_stat == STAT_RANDOM)
         which_stat = static_cast<stat_type>(random2(NUM_STATS));
@@ -265,17 +257,12 @@ static const vector<mut_stat_effect> mut_stat_effects = {
     { MUT_STRONG,    4, -1, -1 },
     { MUT_AGILE,    -1, -1,  4 },
     { MUT_CLEVER,   -1,  4, -1 },
-    { MUT_WEAK,     -2,  0,  0 },
+    { MUT_WEAK,     -3,  0,  0 },
     { MUT_BIG_BRAIN, 0,  2,  0 },
-    { MUT_DOPEY,     0, -2,  0 },
-    { MUT_CLUMSY,    0,  0, -2 },
+    { MUT_DOPEY,     0, -3,  0 },
+    { MUT_CLUMSY,    0,  0, -3 },
     { MUT_THIN_SKELETAL_STRUCTURE,
                      0,  0,  2 },
-#if TAG_MAJOR_VERSION == 34
-    { MUT_ROUGH_BLACK_SCALES, 0, 0, -1},
-    { MUT_STRONG_STIFF, 1, 0, -1 },
-    { MUT_FLEXIBLE_WEAK, -1, 0, 1 },
-#endif
 };
 
 static int _get_mut_effects(stat_type which_stat, bool innate_only)
@@ -379,22 +366,22 @@ static int _base_stat_with_muts(stat_type s)
     return min(you.base_stats[s] + _get_mut_effects(s, false), MAX_STAT_VALUE);
 }
 
-static int _base_stat_with_new_mut(stat_type which_stat, mutation_type mut)
+static bool _decreases_to_below_zero(stat_type which_stat, mutation_type mut)
 {
     int base = _base_stat_with_muts(which_stat);
+    int with_mut = base;
     for (const auto &e : mut_stat_effects)
         if (e.mut == mut)
-            base += e.apply(which_stat, false);
-    return base;
+            with_mut += e.apply(which_stat, false);
+    return with_mut <= 0 && with_mut < base;
 }
 
 /// whether a mutation innately causes stat zero. Does not look at equpment etc.
 bool mutation_causes_stat_zero(mutation_type mut)
 {
-    // not very elegant...
-    return _base_stat_with_new_mut(STAT_STR, mut) <= 0
-        || _base_stat_with_new_mut(STAT_INT, mut) <= 0
-        || _base_stat_with_new_mut(STAT_DEX, mut) <= 0;
+    return _decreases_to_below_zero(STAT_STR, mut)
+        || _decreases_to_below_zero(STAT_INT, mut)
+        || _decreases_to_below_zero(STAT_DEX, mut);
 }
 
 static int _stat_modifier(stat_type stat, bool innate_only)

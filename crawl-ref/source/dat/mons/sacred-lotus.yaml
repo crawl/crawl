@@ -1,5 +1,5 @@
 name: "sacred lotus"
-glyph: {char: "P", colour: white}
+glyph: {char: "◊", colour: white}
 flags: [stationary, fast_regen, no_exp_gain, no_threat]
 resists: {poison: 3, neg: 3, miasma: 1}
 genus: plant

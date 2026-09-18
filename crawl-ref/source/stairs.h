@@ -6,6 +6,8 @@
 #pragma once
 
 bool check_next_floor_warning();
+level_id branch_exit_destination(dungeon_feature_type feat,
+                                 const level_id &from);
 level_id stair_destination(dungeon_feature_type feat, const string &dst,
                            bool for_real = false);
 level_id stair_destination(coord_def pos, bool for_real = false);

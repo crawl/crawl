@@ -1,7 +1,7 @@
 name: "Harold"
 glyph: {char: "@", colour: lightgreen}
 flags: [fighter, speaks, warm_blood, unique, male]
-xp_mult: 20
+exp: 875
 species: human
 will: 60
 attacks:

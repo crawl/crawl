@@ -3,7 +3,7 @@ monster: MONS_ONI
 name: Oni
 adjective: Oni
 difficulty: Intermediate
-difficulty_priority: 30
+difficulty_priority: 65
 aptitudes:
   xp: 0
   hp: 3

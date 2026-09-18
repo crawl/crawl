@@ -2,12 +2,12 @@ name: "will-o-the-wisp"
 enum: will_o_the_wisp
 glyph: {char: "v", colour: green}
 flags: [flies, see_invis, insubstantial]
-resists: {elec: 1, fire: 2}
+resists: {elec: 1, fire: 3}
+exp: 532
 holiness: [nonliving]
 will: invuln
 attacks:
- - {type: engulf, damage: 20}
-hd: 11
+hd: 10
 hp_10x: 400
 ac: 4
 ev: 10

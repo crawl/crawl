@@ -2,12 +2,12 @@ name: "Vashnia"
 glyph: {char: "N", colour: lightcyan}
 flags: [see_invis, speaks, warm_blood, unique, archer, female, prefer_ranged]
 resists: {poison: 1}
-xp_mult: 27
+exp: 3195
 species: naga
 will: 120
 attacks:
  - {type: hit, damage: 25}
- - {type: constrict, flavour: crush, damage: 7}
+ - {type: constrict, flavour: constrict, damage: 7}
 hd: 16
 hp_10x: 1600
 ac: 6

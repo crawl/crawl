@@ -9,14 +9,14 @@
 ###############################################################################
 # Probably looks better in tiles
 NAME:   evilmike_arrival_home_sweet_home
-WEIGHT: 3
 TAGS:   arrival no_monster_gen
+WEIGHT: 3
 ORIENT: float
 COLOUR: ' = brown
 COLOUR: `1 = green
 COLOUR: - = darkgrey
 COLOUR: t = lightgreen
-FTILE:  `1t = floor_grass
+FTILE:  `1t = floor_grass_dark
 FTILE:  ' = floor_dirt
 FTILE:  -{V = floor_vault
 TILE:   c = wall_stone_smooth
@@ -139,14 +139,14 @@ ENDMAP
 
 ###############################################################################
 NAME:    evilmike_arrival_grusome_pit
-WEIGHT: 1
 TAGS:    arrival no_rotate
+WEIGHT:  1
 ORIENT:  northwest
 # the exit will be placed elsewhere 25% of the time
 SUBST:   { = {:30 .
 ITEM:    skeleton, corpse
 SUBST:   Y = A.
-KFEAT:   A = shaft trap
+KFEAT:   A = shaft
 SUBST:   ` = de `:60
 SUBST:   . = ' .:120
 SUBST:   ` = ''., V = Xx, U = Xxxx, x = X x:60
@@ -306,9 +306,7 @@ NAME:    minmay_arrival_stair_chambers
 TAGS:    arrival no_monster_gen
 ORIENT:  float
 SHUFFLE: {[(
-SUBST:   T = T V G b:3 .:3
-SUBST:   [ = G
-SUBST:   ( = G
+SUBST:   T = T V G b:3 .:3, [( = G
 MAP
     x+xxx+x
 xxxxx.....xxxxx
@@ -697,7 +695,7 @@ NAME:    elethiomel_arrival_shortcut
 TAGS:    arrival
 ORIENT:  float
 SHUFFLE: XY/AB
-KFEAT:   X = permanent teleport trap
+KFEAT:   X = trap_teleport_permanent
 SUBST:   Y=x, A=., B=+
 MAP
    xxxx@xxxxxxx.@.x
@@ -1221,7 +1219,7 @@ SUBST:   A={, B=', C=', D=', E=', F=', G=', H=d
 SUBST:   ' = .:70 1 w:2
 SUBST:   . = .:60 2:1 3:1
 ITEM:    stone
-MONS:    fungus, rat, giant cockroach
+MONS:    fungus, rat, dart slug
 MAP
 xxxxxxxxxxxxxxxxx
 x'A'x'B'x'C'x'D'x
@@ -1698,7 +1696,7 @@ TAGS:    arrival
 ORIENT:  float
 MONS:    plant
 SUBST:   x : 1xp
-FTILE:   '1p{ = floor_grass
+FTILE:   '1p{ = floor_grass_dark
 FTILE:   " = floor_mud
 COLOUR:  ' = green
 : decorative_floor(_G, 'p', "flower patch")
@@ -2026,7 +2024,7 @@ ORIENT:  float
 SHUFFLE: '"XY/ABVW, !?/CD
 SUBST:   ':., ":+, A:x, B:x, !:., ?:+, C:x, D:x, V=x, W=x, Y=@x
 SUBST:   c : cxx
-KFEAT:   X = teleport trap / floor
+KFEAT:   X = trap_teleport / floor
 MAP
          x@x
          x.x
@@ -2471,7 +2469,7 @@ SUBST:  x : x:10 c:2 v:1
 SUBST:  a : ab
 NSUBST: a = 2:> / *:.
 NSUBST: b = 1:b / 1:b. / *:.
-KFEAT:  b = shaft trap
+KFEAT:  b = shaft
 SUBST:  G : G T t
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxx
@@ -2654,31 +2652,33 @@ xxDxxxDxxxDxxxDxx
 ENDMAP
 
 ##############################################################################
-NAME:   sevenhm_arrival_forest_fort_small_1
-TAGS:   arrival no_monster_gen
-ORIENT: float
-WEIGHT: 1
-KPROP: 1 = no_tele_into
-NSUBST: { = { / T> , z = + / n+
-SUBST:  T = TTG
+NAME:    sevenhm_arrival_forest_fort_small_1
+TAGS:    arrival no_monster_gen
+ORIENT:  float
+WEIGHT:  1
+KMONS:   12 = bullfrog / cane toad / yak
+KPROP:   1 = no_tele_into
+NSUBST:  { = { / T> , z = + / n+
+SUBST:   T = TTG
 : if crawl.one_chance_in(4) then
 SUBST:  " : +, ' : . , - : ccc.
 : else
 SUBST:  "'- : c
 : end
-MONS:   bullfrog / cane toad / yak / death yak w:1 / elephant
+SHUFFLE: 2N / ``
+SUBST:   ` = t
 MAP
           ccccccccc
        cccctccccctcccc
-      cctt1tc...ct1ttcc
-    cccttttnc.{.cnttttccc
+      cctt1tc...ct2ttcc
+    cccttttnc.{.cNttttccc
     ccccccccn...ncccccccc
     WWcc..+.......+..ccWW
    @WWz..."'-----'"...zWW@
     WWcc..+.......+..ccWW
     ccccccccn...ncccccccc
-    ccctttttc.{.ctttttccc
-      cctt1tc...ct1ttcc
+    cccttttNc.{.cnttttccc
+      cctt2tc...ct1ttcc
        cccctccccctcccc
           ccccccccc
 ENDMAP
@@ -2835,8 +2835,9 @@ ORIENT: float
 COLOUR: W# = lightgreen
 NSUBST: W = 6:% / 7:#
 KITEM:  % = nothing / w:5 river rat skeleton
-MARKER: # = lua:fog_machine { cloud_type = "foul pestilence", pow_max = 10, \
-                              delay = 5, size = 5, excl_rad = 0 }
+MARKER: # = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 5, \
+                              pow_max = 10, delay = 30, size = 5, \
+                              start_clouds = 5, walk_dist = 3, excl_rad = 0 }
 KFEAT:  %# = W
 KPROP:  W#% = no_tele_into
 MAP
@@ -2948,8 +2949,8 @@ ENDMAP
 ##############################################################################
 
 NAME:   lightli_arrival_boilingwater
-ORIENT: float
 TAGS:   arrival no_monster_gen
+ORIENT: float
 MAP
   @@@@@@
 WWWllllWWW
@@ -2967,10 +2968,10 @@ ENDMAP
 ##############################################################################
 
 NAME: lightli_arrival_quake
+TAGS: no_rotate no_hmirror no_vmirror arrival no_monster_gen
 ## No, door choice does not affect difficulty. Game is stuck on Nightmare as
 ## it is.
 ORIENT: float
-TAGS: no_rotate no_hmirror no_vmirror arrival no_monster_gen
 MAP
 cc+ccc+ccc+cc
 c...c...c...c
@@ -3079,7 +3080,7 @@ ENDMAP
 NAME:   kennysheep_arrival_forest
 TAGS:   arrival no_monster_gen
 ORIENT: south
-FTILE:  t'G = floor_grass
+FTILE:  t'G = floor_grass_dark
 COLOUR: ' = green
 MAP
         xx+++xx
@@ -3105,7 +3106,9 @@ SUBST:  de = ', f = t, gh = ., ij = -, kpqr = x, s = @, uy = A
 : else
 SUBST: dhjsy = x, gfru = -, ep = A, iq = ., k = @
 : end
-FTILE:  -G = floor_dirt, 'Tt = floor_grass
+FTILE:  -G = floor_sprouting_ruin
+FTILE:  'ATt = floor_lair
+FTILE:  .@ = floor_moss
 COLOUR: ' = green, - = brown
 MAP
                xkx
@@ -3132,7 +3135,7 @@ ENDMAP
 NAME:       psy_arrival_fountain
 TAGS:       arrival no_monster_gen no_trap_gen
 ORIENT:     float
-FTILE:      t.qpP{T = floor_grass
+FTILE:      t.qpP{T = floor_grass_dark
 COLOUR:     . = green
 SHUFFLE:    pq
 SUBST:      p = .P, q : .
@@ -3211,7 +3214,7 @@ ENDMAP
 NAME:       psy_arrival_terrarium
 TAGS:       arrival no_monster_gen
 ORIENT:     float
-FTILE:      Pqr' = floor_grass
+FTILE:      Pqr' = floor_grass_dark
 KMONS:      p = plant
 KMONS:      P = plant / bush
 KFEAT:      p = W
@@ -3282,13 +3285,8 @@ NAME:   wander_arrival_peaceful_grave
 TAGS:   arrival no_monster_gen no_item_gen
 ORIENT: float
 : vault_granite_statue_setup(_G, "G", "gravestone")
-FTILE:  ? = floor_grass, \
-        ! = floor_grass:20 / none, \
-        { = floor_grass:20 / none, \
-        t = floor_grass, \
-        G = floor_grass
-COLOUR: ? = green / lightgreen, \
-        ! = green:20 / lightgrey
+FTILE:  ?tG = floor_grass_dark, ! = floor_moss
+COLOUR: ? = green / lightgreen, ! = green:20 / lightgrey
 MAP
 .........
 ..!!!!!..
@@ -3306,13 +3304,11 @@ TAGS:   arrival no_monster_gen no_item_gen
 ORIENT: float
 MONS:   plant
 KMONS:  2 = fungus / fungus col:brown
-FTILE:  ? = floor_grass, \
-        . = floor_grass:25 / floor_dirt / none, \
-        2 = floor_grass, \
-        { = floor_grass
 SUBST:  . = .:20 t:3 1:3
-COLOUR: ? = green / lightgreen, \
-        . = green:25 / lightgreen:25 / brown / lightgrey
+COLOUR: ? = green / lightgreen
+COLOUR: . = green:25 / lightgreen:25 / brown / lightgrey
+FTILE:  .1t = floor_moss:25 / floor_pebble_red
+FTILE:  ?2{ = floor_grass_dark
 MAP
    .........
   ...........
@@ -3625,14 +3621,7 @@ ORIENT:  float
 WEIGHT:  5
 TILE:    G = dngn_statue_sigmund
 : set_feature_name("granite_statue", "a statue of a dreadful foe")
-# Bunch of player species
-KITEM:   ? = armataur skeleton / deep elf skeleton / demigod skeleton / \
-             demonspawn skeleton / draconian skeleton / felid skeleton / \
-             formicid skeleton / gnoll skeleton / \
-             orc skeleton / human skeleton / kobold skeleton / \
-             merfolk skeleton / minotaur skeleton / naga skeleton / \
-             octopode skeleton / oni skeleton / spriggan skeleton / \
-             tengu skeleton / troll skeleton
+: kitem("? = " .. vault_species_skeletons(_G, "all"))
 MAP
    vvv
 vvvv>vvvv
@@ -3771,8 +3760,8 @@ SUBST:  1 = 1222
 SUBST:  1 = 3, U = VVVJK
 KFEAT:  t = petrified_tree
 : end
-KFEAT:  J = abandoned_shop / shaft trap / granite_statue
-KFEAT:  K = web trap
+KFEAT:  J = abandoned_shop / shaft / granite_statue
+KFEAT:  K = web
 KITEM:  K = skeleton / corpse / nothing
 MAP
    ..p.. ..p..
@@ -3871,9 +3860,7 @@ SUBST:   t : 12tt
 MARKER:  F = lua:fog_machine{ cloud_type = "black smoke", \
              pow_min = 24, pow_max = 32, delay_min = 280, delay_max = 320, \
              size_min = 1, size_max = 2, start_clouds = 2, size_buildup_amnt = 2 }
-MARKER:  l = lua:fog_machine { cloud_type = "flame", \
-             pow_min = 1000, pow_max = 1000, delay = 1, \
-             size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+: single_cloud(_G, "l", "flame", false)
 MAP
   t@.v.@t
   t.vvv.t
@@ -3900,9 +3887,7 @@ SUBST:   t : 12tt
 MARKER:  F = lua:fog_machine{ cloud_type = "black smoke", \
              pow_min = 24, pow_max = 32, delay_min = 280, delay_max = 320, \
              size_min = 1, size_max = 2, start_clouds = 2, size_buildup_amnt = 2 }
-MARKER:  l = lua:fog_machine { cloud_type = "flame", \
-             pow_min = 1000, pow_max = 1000, delay = 1, \
-             size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+: single_cloud(_G, "l", "flame", false)
 MAP
       v
    t@vvv@t
@@ -3974,9 +3959,9 @@ ENDMAP
 NAME:    angelslayer_arrival_pockets_within_ring
 TAGS:    arrival no_monster_gen transparent
 ORIENT:  float
-SHUFFLE: {([
-SHUFFLE: DEFH
-SUBST:   [H = ., ( = >, DEF = x, T = TV
+SHUFFLE: {([, DEFH
+SUBST:   [ = M., H = ., ( = >, DEF = x, T = TV
+: decorative_floor(_G, 'M', "assortment of trash")
 MAP
       xxxxxxx
     DxD.....ExE
@@ -3996,5 +3981,26 @@ xF...x{.x.x.(x...Hx
   FF...........HH
    FF.........HH
     FxF.....HxH
+      xxxxxxx
+ENDMAP
+
+NAME:   ms813_arrival_eye
+TAGS:   arrival no_monster_gen
+ORIENT: float
+FTILE:  ' : floor_crypt / floor_depthstone
+FTILE:  " : floor_frozen / floor_demonic_green / \
+            floor_demonic_red / floor_demonic_blue
+FTILE:  . : floor_demonic_white / floor_salt
+MAP
+      xxxxxxx
+    xxx.....xxx
+  xxx.........xxx
+  x...."""""....x
+xxx...""'''""...xxx
+@+..."""'{'"""...+@
+xxx...""'''""...xxx
+  x...."""""....x
+  xxx.........xxx
+    xxx.....xxx
       xxxxxxx
 ENDMAP

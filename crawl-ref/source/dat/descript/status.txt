@@ -74,9 +74,10 @@ effects.
 Berserk status
 
 You are hasted, deal increased damage in combat, and have increased health, but
-are unable to make most actions other than moving and attacking. The status
-will wear off very quickly unless you are attacking monsters, and when it
-expires you will be slowed and unable to berserk again for a short duration.
+are unable to perform most actions other than moving and attacking in melee.
+The status will wear off very quickly unless you are attacking monsters, and
+when it expires you will be slowed and unable to berserk again for a short
+duration.
 %%%%
 -Berserk status
 
@@ -105,9 +106,17 @@ Confusion can be cured immediately by potions of curing.
 %%%%
 Contam status
 
-You glow with mutagenic radiation. This can mutate you over time, usually with
-a negative outcome. The colour indicates the severity: the first level (grey)
-is only a warning, and no mutation or loss of stealth will occur from it.
+You are glowing with mutagenic radiation. This can inflict mutations over time
+(usually negative) or even cause you to suffer damage as the unstable magic
+explodes violently. In addition, your glow prevents invisibility and reduces
+your stealth.
+{{
+    local dmg = you.contam_max_damage();
+    if dmg > 0 then
+        return "\nAn explosion at your current level of contamination could " ..
+               "inflict up to " .. dmg .. " damage."
+    end
+}}
 %%%%
 Drain status
 
@@ -317,27 +326,13 @@ QUAD DAMAGE!
 Sil status
 
 You are silenced. This makes reading scrolls, casting spells, invoking divine
-abilities, or shouting impossible. The oppressive, unnatural effect greatly
-hampers your stealth.
+abilities, or shouting impossible.
 %%%%
-Engulf status
+Flooded status
 
-{{
-    local desc = "You are engulfed by an adjacent creature"
-
-    if not you.res_drowning() then
-        desc = desc .. " and are unable to breathe. You will take increasing"
-                       .. " damage from asphyxiation every turn until you"
-                       .. " escape. This makes reading scrolls, casting"
-                       .. " spells, and invoking divine abilities impossible."
-                       .. " Moving away from the engulfing creature will end"
-                       .. " the effect"
-    else
-        desc = desc .. " but suffer no negative effects"
-    end
-
-    return desc .. "."
-}}
+Your lungs are filled with liquid, preventing you from breathing properly. This
+makes reading scrolls, casting spells, and invoking divine abilities impossible.
+You will also take asphyxiation damage every turn.
 %%%%
 Stealth status
 
@@ -481,10 +476,6 @@ Blood status
 Your body is covered in congealed blood, serving as armour for as long as you
 remain seriously injured.
 %%%%
--Cast status
-
-You are unable to cast spells.
-%%%%
 Channel status
 
 You are channelling magical energy.
@@ -493,8 +484,6 @@ Beast status
 
 You have been transformed into a monstrous, furry were-beast. The ferocious
 energy pulsing through your limbs keeps you ready to kill.
-
-Any gloves, cloaks, headgear and boots are melded.
 %%%%
 Flux status
 
@@ -506,22 +495,10 @@ However, this instability makes you unable to use weapons, shields, or
 body armour. You also glow, reducing stealth and preventing invisibility,
 and you do less damage in melee, as your limbs sometimes destabilise mid-swing.
 %%%%
-Blade status
-
-{{
-    local hands = you.hand() .. "s"
-    return "Long, needle-thin blades have grown from your " .. hands
-}}, and smaller fragments of metal have grown inside your body, deforming you
-and reducing the effectiveness of body armour.
-
-Any equipped weapons, shields, and gloves are melded.
-%%%%
 Serpent status
 
 You have been transformed into a giant, cold-blooded, poison-resistant serpent,
 ready to wind your coils around foes and crush them to death.
-
-Any equipped weapons and armour are melded.
 %%%%
 Maw status
 
@@ -529,8 +506,6 @@ Your midsection has transformed into a giant mouth, gnashing and ready to devour
 foes. The mouth may devour slain creatures, healing you to an extent increased
 by your Shapeshifting skill and the power of the creature eaten. Skill also
 increases the damage done by the maw.
-
-While transformed, any body armour is melded.
 %%%%
 Statue status
 
@@ -538,8 +513,6 @@ You have been transformed into a slow but extremely robust stone statue.
 Your melee damage, both unarmed and with weapons, is substantially increased.
 Your stone body is immune to poison and miasma, and gains resistance to
 electricity, negative energy and torment.
-
-Any equipped body armour, gloves and boots are melded.
 %%%%
 Dragon status
 
@@ -574,8 +547,6 @@ Dragon status
     return desc
 }} Your melee attacks deal incredible damage, and you are much more robust but
 less evasive.
-
-Any equipped weapons and armour are melded.
 %%%%
 Storm status
 
@@ -584,8 +555,6 @@ are strengthened and electrified, and strike all adjacent foes. You gain flight,
 increased evasion, immunity to poison, miasma, petrification, and constriction,
 and resistance to electricity. You gain the ability to launch yourself at foes
 as a lightning bolt.
-
-Any equipped weapons and armour are melded.
 %%%%
 Death status
 
@@ -603,13 +572,8 @@ You have been transformed into a swift-moving bat, increasing your evasion but
 substantially weakening your melee attacks.
 
 Any equipped weapons, armour and rings are melded, and you are unable to cast
-spells. {{
-    if you.race() ~= "Vampire" then
-        return "The effectiveness of your melee attacks while " ..
-               "in this form is based on experience level instead of on " ..
-               "Unarmed Combat skill."
-    end
-}}
+spells. The effectiveness of your melee attacks while in this form is based on
+experience level instead of on Unarmed Combat skill.
 %%%%
 Pig status
 
@@ -634,9 +598,10 @@ App status
 %%%%
 Tree status
 
-You have been transformed into a tree and are rooted to the ground, unable to
-move or teleport. You have minimal evasion but increased health and natural
-armour, and are resistant to poison, and immune to torment and drowning.
+You have been transformed into a banyan tree and are rooted to the ground,
+unable to move or teleport. You have minimal evasion but increased health and
+natural armour, and are resistant to poison, and immune to torment, negative
+energy, sleep, blinding, and do not need to breathe.
 
 Any equipped cloak, helmet, gloves, boots and body armour are melded.
 %%%%
@@ -673,12 +638,14 @@ maximum health is further drained when taking damage.
 Orb status
 
 You are near (or perhaps holding) the Orb of Zot, whose energies disrupt
-translocation magic. Teleportation will take longer.
+translocation magic. Teleportation will take longer and scrolls of blinking may
+transport you a short distance away from your intended destination.
 %%%%
 Orb? status
 
 You are holding the Charlatan's Orb, whose energies disrupt translocation
-magic. Teleportation will take longer.
+magic. Teleportation will take longer and scrolls of blinking may transport you
+a short distance away from your intended destination.
 %%%%
 -Hop status
 
@@ -745,7 +712,7 @@ You are bribing the inhabitants of the current branch.
 %%%%
 Cloud status
 
-You are standing in a cloud.
+You are in a cloud.
 %%%%
 -Clouds status
 
@@ -805,6 +772,11 @@ Gem status
 
 If you spend the indicated number of turns in this branch, its gem will be found
 and shattered by the power of Zot.
+%%%%
+Gem (*) status
+
+The power of Zot no longer hunts you, but this branch's gem still remains
+intact.
 %%%%
 rF0 status
 
@@ -1034,7 +1006,7 @@ targets and this bonus will reset.
 %%%%
 Slaughter status
 
-You are an instrument of Makhleb's destructive will. Your power and defenses are
+You are an instrument of Makhleb's destructive will. Your power and defences are
 greatly enhanced, but you must endure the Crucible of Flesh once this effect
 ends.
 %%%%
@@ -1149,3 +1121,206 @@ You are noisily attacking with all of your armour. Every piece of armour you
 haunt currently moves of its own volition; any damage it takes will not affect
 you, you can freely fire through it, and its attacks may daze, drain, or confuse
 your enemies.
+%%%%
+Catalyst status
+
+You have an explosive catalyst readied. The catalyst will detonate, dealing fire
+damage to the primary target of each of your melee attacks and any enemy
+adjacent to them, with each hit. Attacking will extend the duration of the
+catalyst even if you miss.
+%%%%
+Shroud status
+
+You are covered by a thin shroud of slime that may deflect a melee attack. When
+it does, the shroud will break for a short time, though it will soon repair
+itself naturally.
+%%%%
+Yak status
+
+You are a rime yak, fur encrusted with ice.
+%%%%
+Spider status
+
+You are an agile jumping spider whose attacks can web enemies.
+%%%%
+Quill status
+
+You have spiny quills growing out of your body which may damage melee attackers.
+%%%%
+Hive status
+
+You are a living beehive, abuzz with busy insects.
+%%%%
+-Swarm status
+
+The insects that dwell within you have recently swarmed to your defence. This
+will not happen again until your health fully recovers.
+%%%%
+Aqua status
+
+Your body is composed of elemental water that can reach to attack and drown
+enemies.
+%%%%
+Sphinx status
+
+You are a cunning, riddle-loving sphinx, with the force of a windstorm in your
+paws.
+%%%%
+Werewolf status
+
+You are a vicious werewolf.
+%%%%
+Slay status
+
+The damage and accuracy of your attacks is temporarily increased.
+%%%%
+Scroll status
+
+You are a walking scroll, parchment crisp and full of magic.
+%%%%
+Crab status
+
+You are a heavily-armoured crab with rusting breath.
+%%%%
+Scarab status
+
+You are a sun scarab, with solar fire blazing beside you.
+%%%%
+Medusa status
+
+You have a mane of venomous tendrils for hair.
+%%%%
+-Lithotox status
+
+Your lithotoxin has recently activated and will not do so again until you fully
+heal.
+%%%%
+Doom status
+
+A malevolent fate is gathering around you. If your Doom reaches 100%, you will
+be afflicted by a random bane and your Doom will reset to 0. Banes have diverse
+negative effects that can significantly endanger your character for an extended
+period of time.
+
+Both Doom and Banes are only cured by gaining experience, though Banes typically
+last much longer.
+%%%%
+Ostracised status
+
+Your connection to the divine has been partially cut-off, temporarily reducing
+your effective piety. Gaining experience will eventually recover all piety that
+has been locked away this way.
+%%%%
+Tesseract status
+
+A Boundless Tesseract is drawing in forces from a parallel reality. New monsters
+will steadily appear at random locations across the floor until either of the
+tesseracts is destroyed. If this is allowed to continue for a very long time,
+those monsters may sometimes appear near your location instead.
+%%%%
+-Star status
+
+Your orb of stardust has recently expended its energy. It will recharge once
+several turns pass while your MP is full and there are no enemies in sight.
+%%%%
+-Mesm status
+
+Your orb of mesmerism has recently expended its energy. It will recharge after
+a short length of time (but cannot recharge on turns where you move).
+%%%%
+Phobia status
+
+Your claustrophobia has given you a slaying malus. This is dependent on the
+number of walls surrounding you.
+%%%%
+Dim status
+
+The power of all your spells is reduced by half.
+%%%%
+Sunder status
+
+Your next attack will have increased accuracy, inflict three times its normal
+damage, and cleave at an increased range. This bonus is lost if you perform any
+action besides attacking.
+%%%%
+Devious status
+
+Your evasion and slaying are increased. This stacks up to 3 times and will never
+expire so long as you continue to perform melee attacks.
+%%%%
+Slimifying status
+
+Your body is slowly being turned into slime. Even if a full transformation
+occurs, you have enough force of will to eventually revert back.
+%%%%
+Jelly status
+
+You have been temporarily transformed into a jelly. You have several unusual
+resistances and extra health, but heavily weakened spells.
+
+Any equipped weapons and armour are melded. The effectiveness of your
+newly-acidic melee attacks while in this form is based on your experience level
+rather than Unarmed Combat skill.
+%%%%
+OozeRegen status
+
+You are covered in regenerative ooze from your recent trip down the stairs. For
+a brief time, your wounds will heal rapidly and your reserves of magic will
+recover quickly.
+%%%%
+-Hellfire status
+
+You are unable to cast Hellfire Mortar again until the effect of your last cast
+ends.
+%%%%
+Engorged status
+
+Your maw has just consumed a delicious meal, greatly increasing your
+regeneration until it finishes digesting it.
+%%%%
+Eel status
+
+Your arms are a pair of electric eels.
+%%%%
+Blade status
+
+Multiple vicious blades are growing out of your body.
+%%%%
+Spore status
+
+Your arm is a mass of multicoloured fungus.
+%%%%
+Stampede status
+
+You are stampeding forward. Any movement you take into an enemy will trample
+them backwards, but your stampede will end as soon as you perform any action
+{{
+    if you.mutation("East Wind's embodiment") > 0 then
+        return "besides rampaging, stampeding, or casting spells."
+    else
+        return "besides rampaging or stampeding."
+    end
+}}
+%%%%
+Indom status
+
+You are rapidly regenerating damage you sustained while stampeding.
+%%%%
+Salvo status
+
+Your next several ranged attacks will cause you to fire a flurry of additional
+shots at other targets in sight.
+%%%%
+Tailwind status
+
+Your next Rampage movement will be instant.
+%%%%
+Exegesis status
+
+You have recently used Divine Exegesis and may repeat the same spell you can
+this way at a greatly reduced piety cost.
+%%%%
+-Jolt status
+
+You have recently discharged a full-power jolt of electricity and cannot do this
+again until you fully heal.

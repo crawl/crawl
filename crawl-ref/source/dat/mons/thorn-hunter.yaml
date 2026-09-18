@@ -2,10 +2,10 @@ name: "thorn hunter"
 glyph: {char: "f", colour: white}
 flags: [see_invis]
 resists: {poison: 1, fire: -1}
-xp_mult: 14
+exp: 1431
 genus: plant
 holiness: [plant]
-will: 100
+will: 120
 attacks:
  - {type: hit, damage: 27}
  - {type: hit, damage: 23}

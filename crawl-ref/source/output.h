@@ -5,6 +5,8 @@
 
 #pragma once
 
+struct item_def;
+
 #ifdef DGL_SIMPLE_MESSAGING
 void update_message_status();
 #endif
@@ -17,8 +19,15 @@ void print_stats();
 void print_stats_level();
 void draw_border();
 
+int wielded_weapon_colour(const item_def &weapon);
+
 #ifndef USE_TILE_LOCAL
 void smallterm_warning();
+#endif
+
+#ifdef USE_TILE_LOCAL
+// The status of the light at the given coordinates, or -1 if none.
+int status_light_at(int x, int y);
 #endif
 
 void redraw_screen(bool show_updates = true);

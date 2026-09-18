@@ -1,0 +1,1092 @@
+##########################################################
+# graffiti.txt: lookup graffiti
+#
+# This file contains a list of graffiti, and of graffiti-related
+# things such as writing types.
+#
+# You can use monster names and everything else from monname.txt, as
+# well as colour names and everything else from colourname.txt, here.
+#
+# Feel free to add to this list. Like for the other database lists,
+# you may add weights (defaults to w:10) to make certain names more
+# or less likely.
+#
+##########################################################
+%%%%
+_graffiti_author_any_
+
+w:50
+@ancestor name@
+
+@_graffiti_author_orc_@
+
+w:2
+@_graffiti_author_bland_@
+
+w:2
+@RANDGEN@
+
+w:1
+@_rare_graffiti_author_any_@
+%%%%
+# Same as @_graffiti_author_any_@, but without orc names or rare names
+# (or rare orc names).
+_graffiti_author_any_changeable_
+
+w:50
+@ancestor name@
+
+w:2
+@_graffiti_author_bland_@
+
+w:2
+@RANDGEN@
+%%%%
+# Same as @_graffiti_author_any_@, but without orc names, randomly
+# generated names, or rare names (or rare orc names).
+_graffiti_author_any_changeable_non-randgen_
+
+w:50
+@ancestor name@
+
+w:2
+@_graffiti_author_bland_@
+%%%%
+# Same as @_graffiti_author_any_@, but without orc names.
+_graffiti_author_any_non-orc_
+
+w:50
+@ancestor name@
+
+w:2
+@_graffiti_author_bland_@
+
+w:2
+@RANDGEN@
+
+w:1
+@_rare_graffiti_author_any_non-orc_@
+%%%%
+_graffiti_author_bland_
+
+@bland name@
+
+w:2
+@bland name@ (not that one)
+
+w:2
+@bland name@ (the other one)
+
+w:2
+@bland name@ (yes, that one)
+%%%%
+# Aside from apostle-specific names, this doesn't include rare orc
+# names (which are aliases), so that rare orc names don't show up
+# significantly more often than other rare names. Assume orcs are less
+# inclined to hide behind aliases.
+_graffiti_author_orc_
+
+@any orc name@ the orc
+%%%%
+_rare_graffiti_author_any_
+
+@_rare_graffiti_author_ordinary_@
+
+w:2
+@_rare_graffiti_author_orc_@
+
+w:2
+@_rare_graffiti_author_title_@
+
+w:1
+@_rare_graffiti_author_god_@
+%%%%
+# Same as @_rare_graffiti_author_any_@, but without orc names.
+_rare_graffiti_author_any_non-orc_
+
+@_rare_graffiti_author_ordinary_@
+
+w:2
+@_rare_graffiti_author_title_@
+
+w:1
+@_rare_graffiti_author_god_@
+%%%%
+_rare_graffiti_author_god_
+
+# Funny option for rumours that "Woog the god" worships another god, or
+# is secretly an atheist, or is secretly Wu Jian (the similarity in
+# names is merely a coincidence, although it's likely tied to why this
+# god is rare).
+Woog the god
+%%%%
+# Any name will work here, as long as it's not already in the orc names
+# in monname.txt.
+_rare_graffiti_author_orc_
+
+Spartorcus the orc
+%%%%
+_rare_graffiti_author_ordinary_
+
+# Not just in the documentation!
+Durwent the kobold
+
+Zlaz the goblin
+
+Fneeb the oni
+
+Vethion the elf
+
+Frobof the imp
+%%%%
+_rare_graffiti_author_title_
+
+# Kilroy was here!
+Kilroy
+
+# Norby and the Terrified Taxi
+Garc the Great
+
+# A reference to ploggifying in make_name().
+Plog the Peerless
+
+# Funny option for rumours that "Dead [deliberately not Undead] Wendell"
+# deserves life, death, or undeath; or worships the Shining One.
+Dead Wendell
+
+Lady Dreamflight
+%%%%
+_pattern_type_
+
+@any_colour_pattern@
+
+@any_glowing_colour_pattern@
+%%%%
+# Any word will work here, as long as it's not already in @glowing_adj@
+# in colourname.txt.
+_writing_adj_
+
+angular
+
+blocky
+
+bold
+
+curvy
+
+flowing
+
+jagged
+
+pulsating
+
+shifting
+
+sinuous
+
+sloping
+
+spidery
+
+swirling
+
+throbbing
+
+twitching
+
+writhing
+%%%%
+# Any word other than "graffiti" will work here.
+_writing_noun_
+
+binary code
+
+characters
+
+cuneiform
+
+figures
+
+glyphs
+
+hieroglyphics
+
+ideograms
+
+letters
+
+print-out
+
+runes
+
+scrawl
+
+sigils
+
+symbols
+
+text
+
+writing
+%%%%
+_writing_style_
+
+@any_colour@
+
+@_writing_adj_@ @any_colour@
+
+@any_glowing_colour@
+%%%%
+_writing_type_
+
+@_writing_style_@ @_writing_noun_@
+%%%%
+_graffiti_type_
+
+@_writing_style_@ graffiti
+%%%%
+_graffiti_type_with_signature_maybe_
+
+@_graffiti_type_@
+
+@_graffiti_type_@ signed by @_graffiti_author_any_@
+%%%%
+_graffiti_type_with_signature_maybe_non-orc_
+
+@_graffiti_type_@
+
+@_graffiti_type_@ signed by @_graffiti_author_any_non-orc_@
+%%%%
+_graffiti_type_with_signature_maybe_orc_
+
+@_graffiti_type_@
+
+@_graffiti_type_@ signed by @_graffiti_author_orc_@
+%%%%
+_graffiti_advertisement_
+
+advertising a meeting @_graffiti_mass_meeting_ordinary_@
+
+advertising a meeting @_graffiti_mass_meeting_religious_@
+
+advertising a shop in the dungeon with [cheap|exclusive|expensive|quality|rare|useful] goods
+
+w:2
+advertising @_graffiti_class_any_@
+
+w:1
+advertising a meet-up with @_graffiti_author_any_@ to learn how to survive in the dungeon
+
+# Possibly too lowbrow, but a good time can mean many things.
+w:1
+advertising a meet-up with @_graffiti_author_any_@ for a good time
+
+# Paint that can come in this many colours and types is special.
+w:1
+advertising the very paint used to make it
+%%%%
+# There's sometimes a chance of the two names being the same, but maybe
+# the author's crazy, or maybe the author spells their name the same way
+# as before but pronounces it differently.
+#
+# Don't change from orc names to non-orc names or vice versa; that
+# implies the orc left Beogh, and there's more than just a name change
+# involved in that. Also, don't change from rare names to non-rare names
+# or vice versa; the rare names are effectively aliases or titles that
+# may also have suffixes.
+_graffiti_changed_names_
+
+@_graffiti_author_any_changeable_@ has changed names and now goes by @_graffiti_author_any_changeable_@
+
+w:2
+@_graffiti_author_orc_@ has changed names and now goes by @_graffiti_author_orc_@
+
+w:2
+@_rare_graffiti_author_any_@ has passed on the name to someone else worthy of it
+
+w:1
+@_graffiti_author_any_changeable_non-randgen_@ has changed names due to Xom's influence and now goes by @RANDGEN@
+%%%%
+# This can produce an author who's compared to themselves, an author who
+# is secretly the power of cheese or a wagon full of pancakes, an orc
+# who worships (or is) Zin, or a non-orc who worships (or is) Beogh, but
+# you shouldn't believe everything you read.
+_graffiti_changed_or_compared_religions_
+
+@_graffiti_author_any_@ has abandoned @random_god@
+
+@_graffiti_author_any_@ has converted away from @random_god@
+
+@_graffiti_author_any_@ has converted to @random_god@
+
+@_graffiti_author_any_@ is @_graffiti_religion_better_or_worse_@ than @_graffiti_author_any_@
+
+@_graffiti_author_any_@ is secretly an atheist
+
+@_graffiti_author_any_@ is secretly not an atheist
+
+@_graffiti_author_any_@ is secretly @random_god@
+
+@_graffiti_author_any_@ secretly worships Zin
+
+@_graffiti_author_any_@ secretly worships Zin instead of @random_god_chaotic@
+
+@_graffiti_author_any_@ secretly worships @random_god_chaotic@
+
+@_graffiti_author_any_@ secretly worships @random_god_chaotic@ instead of Zin
+
+@_graffiti_author_any_@ secretly worships @random_god_good@
+
+@_graffiti_author_any_@ secretly worships @random_god_good@ instead of @random_god_evil@
+
+@_graffiti_author_any_@ secretly worships @random_god_evil@
+
+@_graffiti_author_any_@ secretly worships @random_god_evil@ instead of @random_god_good@
+
+w:1
+@_graffiti_author_any_@ is secretly @_graffiti_hailed_god_@
+
+w:1
+@_graffiti_author_any_@ secretly worships @_graffiti_hailed_god_@
+%%%%
+_graffiti_class_any_
+
+@_graffiti_class_remedial_@
+
+w:2
+@_graffiti_class_master_@
+%%%%
+_graffiti_class_master_
+
+a master class on excavation taught by formicids
+
+a master class on insults taught by [demons|imps]
+
+# Not just for combat!
+a master class on the many uses of giant clubs taught by [ogres|oni]
+
+a master class on Unarmed Combat taught by felids
+
+w:1
+a master class on [art|calligraphy] taught by anonymous graffiti authors
+%%%%
+_graffiti_class_remedial_
+
+a Remedial @random_skill@ class taught by @_graffiti_professor_@
+
+a Remedial @random_skill_magic@ class taught by the @_graffiti_professor_magic_type_@ @_graffiti_professor_@
+
+a Remedial @random_skill_mundane@ class taught by the @_graffiti_professor_mundane_type_@ @_graffiti_professor_@
+
+w:2
+a Remedial Evocations class taught by the @_graffiti_professor_evocations_type_@ @_graffiti_professor_@
+
+w:2
+a Remedial Invocations class taught by the @_graffiti_professor_invocations_type_@ @_graffiti_professor_@
+
+w:2
+a Remedial Shapeshifting class taught by the @_graffiti_professor_shapeshifting_type_@ @_graffiti_professor_@
+
+# Necromancers should be able to teach necromancy or other magic (from
+# branching out) the same way other spellcasters can.
+
+w:2
+a Remedial Necromancy class taught by the @_graffiti_professor_necromancy_type_@ @_graffiti_professor_@
+
+w:2
+a Remedial @random_skill_magic@ class taught by the @_graffiti_professor_necromancy_type_@ @_graffiti_professor_@
+%%%%
+_graffiti_duplicate_
+
+a duplicate
+
+a duplicate indistinguishable from the original
+
+an impostor
+
+an impostor from another reality
+
+a shapeshifter
+%%%%
+_graffiti_fight_
+
+of an argument between @_graffiti_author_any_@ and @_graffiti_author_any_@
+
+of a three-way argument between @_graffiti_author_any_@, @_graffiti_author_any_@, and @_graffiti_author_any_@
+
+w:2
+of a fight between [berserkers|Trog worshippers] and erythrospite sufferers over the true meaning of blood rage
+
+w:2
+of a fight between ["artists"|artists|Dithmenos worshippers] and [death knights|death mages|Yredelemnul worshippers|necromancers] over whether something was a shadow or a shadowghast
+%%%%
+_graffiti_hailed_god_
+
+Xom
+
+w:2
+an unknown god
+
+w:1
+@_rare_graffiti_author_god_@
+
+# Behold the power of cheese!
+w:1
+the power of cheese
+
+# Strong Bad Email #117, "montage"
+w:1
+a wagon full of pancakes
+%%%%
+_graffiti_happened_reason_
+
+an accident
+
+a coincidence
+
+# Garak, Star Trek: Deep Space Nine
+a coincidence but @_graffiti_author_any_@ doesn't trust coincidences
+
+a cover-up
+
+a farce
+
+a frame-up
+
+a mistake
+
+a travesty
+
+a warning to others
+
+against the will of the gods
+
+completely random
+
+deliberate
+
+deserved
+
+just
+
+necessary
+
+no accident
+
+no mistake
+
+part of a larger plot
+
+# A reference to ploggifying in make_name().
+the work of the "Plog" Conspiracy
+
+self-inflicted
+
+the will of the gods
+
+uncalled for
+
+undeserved
+
+unjust
+
+unnecessary
+
+unthinkable
+%%%%
+_graffiti_image_
+
+of [a goblin|a kobold|a spriggan] with its head poking out of a tunnel
+
+of [a dragon|an elephant|a yak] trampling over all in its path
+
+of [a gnoll|a human|an orc] brandishing a nasty-looking weapon
+
+of [an ogre|an oni|a troll] ripping one of its enemies in half
+
+of [a deep elf|a lich|a tengu] shooting a blast of magic
+
+# Hang in There, Baby
+of a felid hanging from a tree branch
+
+of a demon grinning evilly
+
+of an eggplant just sitting there
+
+that looks like nothing you recognise
+%%%%
+_graffiti_life_or_death_
+
+deserves death
+
+deserves undeath
+
+deserves life
+
+is dead
+
+is undead
+
+lives
+%%%%
+_graffiti_loves_or_hates_
+
+curses
+
+defends
+
+hates
+
+insults
+
+loves
+
+praises
+%%%%
+_graffiti_mass_meeting_ordinary_
+
+of an athletic club playing [cards|darts|hammer throw|javelin throw|Whack-A-Rock-Fish]
+
+of an artificer club [testing|tinkering with] [devices|evokables|wands]
+
+of a support group for veterans of the surface wars
+
+of a group of [bakers|fruit vendors|meat vendors|shopkeepers] peddling their wares in the dungeon
+
+of a group of [apiarists|hive talisman users] discussing the [antics|emotional state|health] of their bees
+
+# Non-religious version of Gozag below.
+of a group of rich people discussing how to make more money
+
+# Non-religious version of Trog below.
+of a group of [knights|veterans|warlords|warriors] practising barely-restrained combat
+
+# Non-religious version of Okawaru below.
+of a group of [knights|veterans|warlords|warriors] practising solo combat
+
+# Non-religious version of Sif Muna below.
+of a group of [mages|sorcerers|spellcasters|wizards] practising [eclectic|esoteric] magic
+
+# Non-religious version of Vehumet below.
+of a group of [mages|sorcerers|spellcasters|wizards] practising [cataclysmic|destructive] magic
+
+# Non-religious version of Kikubaaqudgha below.
+of a group of [death mages|necromancers] practising [necromancy|bringing things to unlife]
+
+# Non-religious version of Cheibriados below.
+of a group of philosophers discussing [perfection|the nature of time] for who knows how long
+
+# Non-religious version of Makhleb below.
+of a group of [masochists|sadists] holding a pain endurance contest
+
+# Non-religious version of Fedhas below.
+of a group of gardeners showing off their green thumbs
+
+# Non-religious version of Hepliaklqana below.
+of a group of [bards|historians|lorekeepers] sharing glorious tales of their ancestors
+
+# Non-religious version of Uskayaw below.
+of a group of revellers throwing a wild dance party
+
+# Non-religious version of Dithmenos below.
+of a group of ["artists" holding a "shadow play"|artists holding a shadow play]
+
+# Non-religious version of the Wu Jian Council below.
+of a group of monks practising martial [attacks|movements]
+
+# Non-religious version of Elyvilon below.
+of a group of potion makers practising healing others
+
+# Non-religious version of Ru below.
+of a group of ascetics despising their bodies and discussing sacrifices
+
+# Non-religious version of the Shining One below.
+of a group of [crusaders|moralists] [discussing|opposing] evil in the world
+
+# Non-religious version of Lugonu below.
+of a varied group of people discussing their experiences in the Abyss
+%%%%
+_graffiti_mass_meeting_religious_
+
+of a [sharper club|group of Nemelex Xobeh worshippers] playing cards the way Nemelex Xobeh intended
+
+of a group of Zin worshippers supporting the Axioms of Law
+
+of a group of [chaos knights|Xom worshippers] contemplating the Divine Madness
+
+of a group of [death knights|Yredelemnul worshippers] embracing the Inexorable Grip
+
+of a group of Gozag worshippers discussing how to make more money
+
+of a group of [berserkers|Trog worshippers] practising barely-restrained combat
+
+of a group of Okawaru worshippers practising solo combat
+
+of a group of Sif Muna worshippers practising [eclectic|esoteric] magic
+
+of a group of Vehumet worshippers practising [cataclysmic|destructive] magic
+
+of a group of Kikubaaqudgha worshippers practising [necromancy|bringing things to unlife]
+
+of a group of Cheibriados worshippers discussing [perfection|the nature of time] for who knows how long
+
+of a group of Makhleb worshippers holding a pain endurance contest
+
+of a group of Fedhas worshippers showing off their green thumbs
+
+of a group of Hepliaklqana worshippers sharing glorious tales of their ancestors
+
+of a group of Uskayaw worshippers throwing a wild dance party
+
+of a group of Dithmenos worshippers holding a ["shadow play"|shadow play]
+
+of a group of worshippers of the Wu Jian Council practising martial [attacks|movements]
+
+of a group of Qazlal worshippers changing the weather indoors
+
+of a group of Elyvilon worshippers practising healing others
+
+of a group of Ashenzari worshippers practising scrying on things
+
+of a group of Ru worshippers despising their bodies and discussing sacrifices
+
+of a group of worshippers of the Shining One [discussing|opposing] evil in the world
+
+of a group of [Lugonu worshippers|mad acolytes of Lugonu] discussing their experiences in the Abyss
+
+of a group of orcs promoting Beogh's word
+%%%%
+_graffiti_obscenities_
+
+of various obscenities
+
+w:1
+of some very imaginative obscenities you've never seen before
+%%%%
+# Use changeable names for all graffiti professors (any, magic, and
+# mundane) so we can handle orcs (which, as graffiti authors, get names
+# ending with " the orc") and rare names (aliases or titles that may
+# also have suffixes, and may also be orcs) separately from them, just
+# as we do with changed names above. Professors can sometimes get titles
+# that monsters can't (e.g. "the mage So-and-so the orc", or "the
+# [non-priest-type] Judas the orc"), but they're supposed to be special.
+_graffiti_professor_
+
+@_graffiti_author_any_changeable_@
+
+w:2
+@_graffiti_author_orc_@
+
+w:1
+@_rare_graffiti_author_any_@ (supposedly)
+%%%%
+_graffiti_professor_evocations_type_
+
+artificer
+
+tinkerer
+%%%%
+_graffiti_professor_invocations_type_
+
+cleric
+
+high priest
+
+priest
+
+theologian
+%%%%
+_graffiti_professor_magic_type_
+
+mage
+
+sorcerer
+
+spellcaster
+
+wizard
+%%%%
+_graffiti_professor_mundane_type_
+
+knight
+
+veteran
+
+warlord
+
+warrior
+%%%%
+_graffiti_professor_necromancy_type_
+
+death mage
+
+necromancer
+%%%%
+_graffiti_professor_shapeshifting_type_
+
+shapeshifter
+
+talismancer
+%%%%
+_graffiti_relative_or_quality_
+
+all associates
+
+the bloodline
+
+the child
+
+the children
+
+the clan
+
+the dexterity
+
+the entire species
+
+the family
+
+the friend
+
+the friends
+
+the god
+
+the intelligence
+
+the lover
+
+the lovers
+
+the mate
+
+the mates
+
+the parent
+
+the parents
+
+the personality
+
+the spouse
+
+the spouses
+
+the strength
+%%%%
+_graffiti_religion_better_or_worse_
+
+less of a believer
+
+more of a believer
+
+# Yes, I've actually heard the phrase "I'm a better atheist than you."
+
+w:1
+a better atheist
+
+w:1
+a worse atheist
+%%%%
+_graffiti_religion_non-orc_
+
+lauding Zin and Zin's laws
+
+lauding Zin and talking about how following Zin's laws is essential
+
+lauding Zin and talking about how those who break Zin's laws deserve punishment
+
+# Paradox!
+lauding Zin but warning that putting graffiti on surfaces is often unlawful
+%%%%
+_graffiti_religion_not_non-orc_or_orc_
+
+[glorifying|blaspheming] the gods
+
+glorifying @random_god@ and blaspheming @random_god@
+
+# No entries for Ignis or Jiyva here. Ignis has one worshipper in the
+# Cinder Acolyte player, and Jiyva has one (sincere) worshipper in the
+# Royal Jelly who is brainless and tied to the Slime Pits. More
+# importantly, if the player kills Jiyva, Jiyva will no longer show up
+# in @random_god@ or @random_god_chaotic@, which will make detailed
+# graffiti praising Jiyva (which won't use @random_god@ or
+# @random_god_chaotic@) incongruous.
+
+revering Xom and the randomness of everything
+
+delighting in Nemelex Xobeh and whatever the next card deck brings
+
+extolling Yredelemnul and all things unholy
+
+commending Gozag and talking about how enough gold can buy anything
+
+praising Trog and talking about how blood rage can get rid of anything in your way
+
+adoring Okawaru and talking about how Okawaru is the only ally you need as a warrior
+
+applauding Sif Muna and talking about how all magic is accessible with enough effort
+
+venerating Vehumet and talking about how weaponised magic is the key to victory
+
+fawning over Kikubaaqudgha and talking about how necromancy turns all flesh and blood into useful tools
+
+giving kudos to Cheibriados and talking about how the slow and steady can conquer all
+
+paying tribute to Makhleb and talking about all the powers of hell that Makhleb grants
+
+exulting Fedhas and the enduring powers of nature
+
+honouring Hepliaklqana and talking about how those who live on in others' memories never truly die
+
+showing devotion to Uskayaw and talking about the complex dance that is life itself
+
+doting on Dithmenos and talking about the many things [shadows|the night] can do
+
+giving thanks to the Wu Jian Council and talking about how proper discipline is the key to greatness
+
+acclaiming Qazlal and talking about how the elements can work for you
+
+promoting Elyvilon and talking about how bringing peace to the world is essential
+
+admiring Ashenzari and talking about how curses and bondage are blessings when they lead to knowledge
+
+paying homage to Ru and talking about how all of reality is not what you think it is
+
+giving adulation to the Shining One and talking about how honourably removing evil from the world is essential
+
+flattering Lugonu and talking about how Lugonu and the forces of the Abyss will soon rule over all
+
+w:1
+glorifying an unknown god
+
+w:1
+not just hailing but glorifying @_graffiti_hailed_god_@
+%%%%
+_graffiti_religion_orc_
+
+proselytising for Beogh and proper orcishness
+
+proclaiming that Beogh's messiah will soon come
+
+thanking Beogh for granting salvation while the other gods just watched
+
+talking about how Beogh will help you when the other gods turn away from you
+
+talking about how Beogh is with them and not those other heretic orcs
+%%%%
+_graffiti_rumour_
+
+speculating about the powers of the Orb of Zot
+
+talking about how the Orb of Zot will [save|destroy] everyone and everything
+
+talking about how everyone is mistaken and the Orb of Zot is really the [Cube|Egg|Pyramid] of Zot
+
+telling of a secret passageway straight from here to the Orb of Zot
+
+counting down the days until the world ends
+
+claiming to know the meaning of [life|unlife]
+
+claiming to have found the elusive [cave yeti|death quokka|dire dormouse]
+
+# A reference to ploggifying in make_name().
+alluding to the "Plog" Conspiracy and why it hides that word everywhere
+%%%%
+_graffiti_short_saying_
+
+@_graffiti_author_any_@ was here
+
+@_graffiti_author_any_@ @_graffiti_loves_or_hates_@ @_graffiti_author_any_@
+
+@_graffiti_author_any_@ @_graffiti_loves_or_hates_@ @_graffiti_relative_or_quality_@ of @_graffiti_author_any_@
+
+@_graffiti_author_any_@ @_graffiti_life_or_death_@
+
+@_graffiti_author_any_@ sells @_graffiti_wares_quality_@ wares
+
+@_graffiti_author_any_@ steals from @_graffiti_author_any_@
+
+what happened to @_graffiti_author_any_@ was @_graffiti_happened_reason_@
+
+@_graffiti_author_any_@ has been replaced by @_graffiti_duplicate_@
+
+@_graffiti_vengeance_@
+
+@_graffiti_changed_or_compared_religions_@
+
+# Chrono Trigger, and a reference to ploggifying in make_name().
+all life begins with "Plog" and ends with "Plog"
+
+w:2
+@_graffiti_changed_names_@
+%%%%
+_graffiti_species_
+
+bemoaning how bizarre coglin engineering is to non-coglins
+
+repeating the legend of the lost prototype exo-suit that let a coglin wield three weapons at once
+
+wondering what led the barachim to rebel against the gods
+
+wondering if boneless species can ever spawn revenants
+
+wondering if Trog stops dead berserkers from spawning revenants
+
+claiming to know where goblins originally came from
+
+claiming to know the true origin of kobolds
+
+detailing the persecution of the cave orcs' ancestors
+
+claiming that some of the gods secretly serve the oni instead of the other way around
+
+# References to removed species mentioned elsewhere.
+
+claiming that some of the hill dwarves still live
+
+wondering what really happened to the last of the sludge elves
+
+# References to removed species not mentioned elsewhere.
+
+claiming that gnomes really exist and are just superb at hiding
+%%%%
+_graffiti_unique_comment_
+
+saying that Cassandra should stop being so negative
+
+saying that Crazy Yiuf needs to stop making so [little|much] sense
+
+saying that Donald should shut up and stop complaining
+
+saying that Sigmund needs to put down the scythe
+
+saying that Edmund needs to get over himself
+
+saying that Sprozz has gone too far trying to replace real bees with mechanical ones
+
+wondering how Robin can possibly throw that hard
+
+wondering why Terence wants to spend his retirement in the dungeon
+
+wondering whether Dowan and Duvessa are secretly triplets and have a third sibling
+
+wondering whether Goji will ever realise that he can actually be seen
+
+wondering what else Ijyb can make besides wands
+
+speculating on the true nature of Jeremiah's master
+%%%%
+# This is not in @_graffiti_religion_[whatever]_@ because it's
+# structured too differently. Assume one can hail a god without
+# necessarily worshipping a god.
+_graffiti_unreadable_
+
+graffiti of unreadable @_writing_type_@
+
+graffiti of @_writing_type_@ that are unreadable except for a signature by @_graffiti_author_any_@
+
+w:1
+graffiti of @_writing_type_@ that are unreadable except for bits hailing @_graffiti_hailed_god_@
+
+w:1
+graffiti of @_writing_type_@ that are unreadable except for bits hailing @_graffiti_hailed_god_@ and a signature by @_graffiti_author_any_@
+%%%%
+_graffiti_vengeance_
+
+@_graffiti_author_any_@ has avenged @_graffiti_author_any_@
+
+@_graffiti_author_any_@ has avenged @graffiti_author_any@ for @_graffiti_vengeance_reason_@
+
+@_graffiti_author_any_@ swears vengeance on @_graffiti_author_any_@
+
+@_graffiti_author_any_@ swears vengeance on @_graffiti_author_any_@ for @_graffiti_vengeance_reason_@
+
+the ghost of @_graffiti_author_any_@ still haunts @_graffiti_author_any_@
+
+the ghost of @_graffiti_author_any_@ still haunts @_graffiti_author_any_@ for @_graffiti_vengeance_reason_@
+
+# Vengeance is more common among orcs.
+
+@_graffiti_author_orc_@ has avenged @_graffiti_author_any_@
+
+@_graffiti_author_orc_@ has avenged @_graffiti_author_any_@ for @_graffiti_vengeance_reason_@
+
+@_graffiti_author_orc_@ swears vengeance on @_graffiti_author_any_@
+
+@_graffiti_author_orc_@ swears vengeance on @_graffiti_author_any_@ for @_graffiti_vengeance_reason_@
+
+the ghost of @_graffiti_author_orc_@ still haunts @_graffiti_author_any_@
+
+the ghost of @_graffiti_author_orc_@ still haunts @_graffiti_author_any_@ for @_graffiti_vengeance_reason_@
+%%%%
+_graffiti_vengeance_reason_
+
+abandoning @_graffiti_author_any_@
+
+abandoning them
+
+betraying @_graffiti_author_any_@
+
+betraying them
+
+killing @_graffiti_author_any_@
+
+killing them
+
+stealing from @_graffiti_author_any_@
+
+stealing from them
+
+wounding @_graffiti_author_any_@
+
+wounding them
+%%%%
+_graffiti_wares_quality_
+
+inferior
+
+high-quality
+
+low-quality
+
+mediocre
+
+superior
+%%%%
+any_graffiti
+
+graffiti of @_pattern_type_@
+
+graffiti of @_writing_type_@
+
+@_graffiti_unreadable_@
+
+@_graffiti_type_with_signature_maybe_@
+
+@_graffiti_type_with_signature_maybe_@ @_graffiti_image_@
+
+@_graffiti_type_with_signature_maybe_@ @_graffiti_rumour_@
+
+@_graffiti_type_with_signature_maybe_@ @_graffiti_unique_comment_@
+
+@_graffiti_type_with_signature_maybe_@ @_graffiti_species_@
+
+@_graffiti_type_@ @_graffiti_fight_@
+
+@_graffiti_type_@ @_graffiti_advertisement_@
+
+@_graffiti_type_@ saying that @_graffiti_short_saying_@
+
+w:2
+@_graffiti_type_with_signature_maybe_@ @_graffiti_religion_not_non-orc_or_orc_@
+
+w:2
+@_graffiti_type_with_signature_maybe_non-orc_@ @_graffiti_religion_non-orc_@
+
+w:2
+@_graffiti_type_with_signature_maybe_orc_@ @_graffiti_religion_orc_@
+
+w:1
+@_graffiti_type_@ @_graffiti_obscenities_@

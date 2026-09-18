@@ -16,6 +16,7 @@
 
 #include "ability.h"
 #include "clua.h"
+#include "chardump.h"
 #include "describe-god.h"
 #include "evoke.h"
 #include "files.h"
@@ -24,8 +25,10 @@
 #include "god-passive.h"
 #include "hints.h"
 #include "item-prop.h"
+#include "items.h"
 #include "libutil.h"
 #include "message.h"
+#include "mutation.h"
 #include "notes.h"
 #include "output.h"
 #include "random.h"
@@ -51,7 +54,9 @@
 static int _train(skill_type exsk, int &max_exp,
                   bool simu = false, bool check_targets = true);
 static void _train_skills(int exp, const int cost, const bool simu);
-static int _training_target_skill_point_diff(skill_type exsk, int training_target);
+static int _training_target_skill_point_diff(skill_type exsk,
+                                             int training_target, bool base);
+static int _skill_points_for_target(skill_type exsk);
 
 // Basic goals for titles:
 // The higher titles must come last.
@@ -209,7 +214,7 @@ int one_level_cost(skill_type sk)
  */
 float scaled_skill_cost(skill_type sk)
 {
-    if (you.skills[sk] == MAX_SKILL_LEVEL || is_useless_skill(sk))
+    if (you.skills[sk] == MAX_SKILL_LEVEL || is_useless_skill(sk, false))
         return 0;
     int baseline = skill_cost_baseline();
     int next_level = one_level_cost(sk);
@@ -226,7 +231,7 @@ void cleanup_innate_magic_skills()
     unsigned int n_skills = 0;
     for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; sk++)
     {
-        if (is_useless_skill(sk))
+        if (is_useless_skill(sk, false))
             continue;
         magic_xp += you.skill_points[sk];
         ++n_skills;
@@ -240,7 +245,7 @@ void cleanup_innate_magic_skills()
 
     for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; sk++)
     {
-        if (is_useless_skill(sk))
+        if (is_useless_skill(sk, false))
             continue;
         you.skill_points[sk] = xp_per;
         you.skills[sk] = lvl;
@@ -257,7 +262,7 @@ void reassess_starting_skills(bool balance_djinn)
     for (skill_type next = NUM_SKILLS; next > SK_FIRST_SKILL; )
     {
         skill_type sk = --next;
-        ASSERT(you.skills[sk] == 0 || !is_useless_skill(sk));
+        ASSERT(you.skills[sk] == 0 || !is_useless_skill(sk, false));
 
         // Grant the amount of skill points required for a human.
         you.skill_points[sk] = you.skills[sk] ?
@@ -376,8 +381,11 @@ void redraw_skill(skill_type exsk, skill_type old_best_skill, bool recalculate_o
     if (exsk == SK_FIGHTING || trained_form)
         calc_hp(true);
 
-    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING)
+    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING
+        || exsk == SK_SHAPESHIFTING && you.form == transformation::walking_scroll)
+    {
         calc_mp();
+    }
 
     if (exsk == SK_DODGING || exsk == SK_ARMOUR || trained_form)
         you.redraw_evasion = true;
@@ -462,151 +470,13 @@ static void _init_queue(list<skill_type> &queue, FixedVector<T, SIZE> &array)
     ASSERT(queue.size() == (unsigned)EXERCISE_QUEUE_SIZE);
 }
 
-static void _erase_from_skills_to_hide(const skill_set &can_train)
-{
-    for (skill_type sk : can_train)
-        you.skills_to_hide.erase(sk);
-}
-
-/*
- * Check the inventory to see what skills are likely to be useful
- * among the ones in you.skills_to_hide.
- * Useful skills are removed from the set.
- */
-static void _check_inventory_skills()
-{
-    for (const auto &item : you.inv)
-    {
-        // Exit early if there's no more skill to check.
-        if (you.skills_to_hide.empty())
-            return;
-
-        skill_set skills;
-        if (!item.defined() || !item_skills(item, skills))
-            continue;
-
-        _erase_from_skills_to_hide(skills);
-    }
-}
-
-static void _check_spell_skills()
-{
-    for (spell_type spell : you.spells)
-    {
-        // Exit early if there's no more skill to check.
-        if (you.skills_to_hide.empty())
-            return;
-
-        if (spell == SPELL_NO_SPELL)
-            continue;
-
-        skill_set skills;
-        spell_skills(spell, skills);
-        _erase_from_skills_to_hide(skills);
-    }
-}
-
-static void _check_abil_skills()
-{
-    for (ability_type abil : get_god_abilities())
-    {
-        // Exit early if there's no more skill to check.
-        if (you.skills_to_hide.empty())
-            return;
-
-        you.skills_to_hide.erase(abil_skill(abil));
-    }
-}
-
-static void _check_active_talisman_skills()
-{
-    skill_set skills;
-    if (you.active_talisman.defined()
-        && item_skills(you.active_talisman, skills))
-    {
-        _erase_from_skills_to_hide(skills);
-    }
-}
-
-/// Check to see if the player is a djinn with at least one magic skill
-/// un-hidden. If so, unhide all of them.
-static void _check_innate_magic_skills()
-{
-    if (!you.has_mutation(MUT_INNATE_CASTER))
-        return;
-
-    bool any_magic = false;
-    for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
-        if (!is_removed_skill(sk) && !you.skills_to_hide.count(sk))
-            any_magic = true;
-    if (!any_magic)
-        return;
-
-    for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
-        you.skills_to_hide.erase(sk);
-}
-
 string skill_names(const skill_set &skills)
 {
     return comma_separated_fn(begin(skills), end(skills), skill_name);
 }
 
-static void _check_skills_to_show()
-{
-    for (skill_type sk : you.skills_to_show)
-    {
-        if (is_invalid_skill(sk) || is_useless_skill(sk))
-            continue;
-
-        you.should_show_skill.set(sk);
-    }
-
-    reset_training();
-    you.skills_to_show.clear();
-}
-
-static void _check_skills_to_hide()
-{
-    // Gnolls can't stop training skills.
-    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
-        return;
-
-    _check_inventory_skills();
-    _check_spell_skills();
-    _check_abil_skills();
-    _check_active_talisman_skills();
-    _check_innate_magic_skills();
-
-    if (you.skills_to_hide.empty())
-        return;
-
-    skill_set skills;
-    for (skill_type sk : you.skills_to_hide)
-    {
-        if (is_invalid_skill(sk))
-            continue;
-        if (you.skill_manual_points[sk])
-            continue;
-
-        if (skill_trained(sk) && you.training[sk])
-            skills.insert(sk);
-        you.should_show_skill.set(sk, false);
-    }
-
-    reset_training();
-    you.skills_to_hide.clear();
-}
-
-void update_can_currently_train()
-{
-    if (!you.skills_to_show.empty())
-        _check_skills_to_show();
-
-    if (!you.skills_to_hide.empty())
-        _check_skills_to_hide();
-}
-
-bool skill_default_shown(skill_type sk)
+/// Do we show this skill regardless of equipment, abilities and spells?
+static bool _skill_always_shown(skill_type sk)
 {
     if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         return true;
@@ -619,44 +489,72 @@ bool skill_default_shown(skill_type sk)
     case SK_STEALTH:
     case SK_UNARMED_COMBAT:
     case SK_SPELLCASTING:
-        return !is_harmful_skill(sk);
+        return !is_useless_skill(sk);
     default:
         return false;
     }
 }
 
-/*
- * Init the can_currently_train array by examining inventory and spell list to
- * see which skills can be trained.
+/**
+ * Which skills should be shown in the skill menu when not showing all skills?
+ *
+ * This is the set of skills which are worth showing by default, examining the
+ * player's inventory, spells and god abilities to see which skills are useful.
  */
-void init_can_currently_train()
+skill_set default_shown_skills()
 {
-    // Clear everything out, in case this isn't the first game.
-    you.skills_to_show.clear();
-    you.skills_to_hide.clear();
-    you.can_currently_train.reset();
+    skill_set shown;
 
-    for (int i = 0; i < NUM_SKILLS; ++i)
+    // Skills that we show by default or have a manual for
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+        if (_skill_always_shown(sk) || you.skill_manual_points[sk])
+            shown.insert(sk);
+
+    // Skills for items
+    for (const auto &item : you.inv)
+        if (item.defined())
+            item_skills(item, shown);
+
+    // Skills for spells
+    for (spell_type spell : you.spells)
+        if (spell != SPELL_NO_SPELL)
+            spell_skills(spell, shown);
+
+    // Skills for gods
+    for (ability_type abil : get_god_abilities())
+        shown.insert(abil_skill(abil));
+
+    // Skills we are training or have experience in
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+        if (you.training[sk] || you.skill(sk, 10, false, false))
+            shown.insert(sk);
+
+    // Drop any invalid or useless skills
+    for (auto it = shown.begin(); it != shown.end(); )
     {
-        const skill_type sk = skill_type(i);
-
-        if (is_useless_skill(sk))
-            continue;
-
-        you.can_currently_train.set(sk);
-        you.should_show_skill.set(sk);
-        if (!skill_default_shown(sk))
-            you.skills_to_hide.insert(sk);
+        if (is_invalid_skill(*it) || is_useless_skill(*it))
+            it = shown.erase(it);
+        else
+            ++it;
     }
 
-    _check_skills_to_hide();
+    // Djinn show all of their magic skills if any one of them is shown.
+    if (you.has_mutation(MUT_INNATE_CASTER)
+        && any_of(begin(shown), end(shown), is_magic_skill))
+    {
+        for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
+            if (!is_useless_skill(sk))
+                shown.insert(sk);
+    }
+
+    return shown;
 }
 
 void init_train()
 {
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
-        if (you.can_currently_train[i] && you.skill_points[i])
+        if (!is_useless_skill((skill_type) i) && you.skill_points[i])
             you.train[i] = you.train_alt[i] = TRAINING_ENABLED;
         else
         {
@@ -732,7 +630,7 @@ static void _scale_array(FixedVector<T, SIZE> &array, int scale, bool exact)
     ASSERT(scaled_total == scale);
 }
 
-static int _calc_skill_cost_level(int xp, int start)
+int calc_skill_cost_level(int xp, int start)
 {
     while (start < MAX_SKILL_COST_LEVEL
            && xp >= (int) skill_cost_needed(start + 1))
@@ -929,7 +827,7 @@ void reset_training()
         // Focused skills get at least 20% training.
         for (int sk = 0; sk < NUM_SKILLS; ++sk)
             if (you.train[sk] == 2 && you.training[sk] < 20
-                && you.can_currently_train[sk])
+                && !is_useless_skill((skill_type) sk))
             {
                 you.training[sk] += 5 * (5 - you.training[sk] / 4);
             }
@@ -989,6 +887,11 @@ static bool _level_up_check(skill_type sk, bool simu)
     }
 
     return false;
+}
+
+bool is_mundane_skill(skill_type sk)
+{
+    return sk <= SK_LAST_MUNDANE;
 }
 
 bool is_magic_skill(skill_type sk)
@@ -1055,7 +958,7 @@ static bool _xp_available_for_skill_points(int points)
             return false;
 
         const int total_xp = you.total_experience + xp_needed;
-        const int new_level = _calc_skill_cost_level(total_xp, cost_level);
+        const int new_level = calc_skill_cost_level(total_xp, cost_level);
         if (new_level != cost_level)
         {
             cost_level = new_level;
@@ -1063,6 +966,19 @@ static bool _xp_available_for_skill_points(int points)
         }
     }
     return true;
+}
+
+static int _innate_casting_magic_max_spend_for_target()
+{
+    int max_training = INT_MAX;
+    for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
+    {
+        if (!you.training[sk])
+            continue;
+
+        max_training = min(max_training, _skill_points_for_target(sk));
+    }
+    return max_training;
 }
 
 /**
@@ -1082,12 +998,17 @@ static void _train_with_innate_casting(bool simu)
         if (!_xp_available_for_skill_points(points))
             break;
 
+        const int max_magic_skill_spend =
+                                  _innate_casting_magic_max_spend_for_target();
+
         // OK, we should be able to train everything.
         for (int i = 0; i < NUM_SKILLS; ++i)
         {
             if (!you.training[i])
                 continue;
-            const int p = you.training[i] / min;
+            int p = you.training[i] / min;
+            if (is_magic_skill((skill_type)i) && p > max_magic_skill_spend)
+                p = max_magic_skill_spend;
             int xp = calc_skill_cost(you.skill_cost_level) * p;
             // We don't want to disable training for magic skills midway.
             // Finish training all skills and check targets afterward.
@@ -1161,6 +1082,9 @@ void train_skills(bool simu)
 
     // We might have disabled some skills on level up.
     reset_training();
+
+    // Check if we need to update a gale centaur's prevailing wind.
+    update_four_winds();
 }
 
 //#define DEBUG_TRAINING_COST
@@ -1307,52 +1231,50 @@ static void _train_skills(int exp, const int cost, const bool simu)
     // (by inflated XP and inflated piety gain)
     if (crawl_state.game_is_sprint())
         magic_gain = sprint_modify_exp_inverse(magic_gain);
-
-    if (magic_gain && !simu)
-        did_god_conduct(DID_SPELL_PRACTISE, div_rand_round(magic_gain, 10));
 }
 
 bool skill_trained(int i)
 {
-    return you.can_currently_train[i] && you.train[i];
+    return !is_useless_skill((skill_type) i) && you.train[i];
 }
 
 /**
- * Is the training target, if any, met or exceeded for skill sk?
+ * Is the given training target met or exceeded for skill sk?
  *
- * @param sk the skill to check. This checks crosstraining and ash bonuses,
- * but not other skill modifiers.
- * @param target the target to check against. Defaults to you.training_targets[sk]
+ * @param sk the skill to check.
+ * @param target the target to check against.
+ * @param base whether to check the base skill level, rather than the modified
+ * one. The modified level checks crosstraining and ash bonuses, but not other
+ * skill modifiers.
  *
  * @return whether the skill target has been met.
  */
-bool target_met(skill_type sk, unsigned int target)
+bool target_met(skill_type sk, unsigned int target, bool base)
 {
-    return you.skill(sk, 10, false, false) >= (int) target;
-}
-
-bool target_met(skill_type sk)
-{
-    return target_met(sk, you.training_targets[sk]);
+    return you.skill(sk, 10, base, false) >= (int) target;
 }
 
 /**
- * Check the training target (if any) for skill sk, and change state
- * appropriately. If the target has been met or exceeded, this will turn off
- * targeting for that skill, and stop training it. This does *not* reset the
- * training percentages, though, so if it's used mid-training, you need to take
- * care of that.
+ * Is the training target of the given kind, if any, met or exceeded for skill
+ * sk?
  *
  * @param sk the skill to check.
- * @return whether a target was reached.
+ * @param base whether to check the base target, rather than the modified one.
+ *
+ * @return whether the skill target has been met.
  */
-bool check_training_target(skill_type sk)
+bool target_met(skill_type sk, bool base)
 {
-    if (you.training_targets[sk] && target_met(sk))
+    return target_met(sk, you.get_training_target(sk, base), base);
+}
+
+static bool _check_training_target(skill_type sk, bool base)
+{
+    auto &targets = base ? you.base_training_targets : you.training_targets;
+    if (targets[sk] && target_met(sk, base))
     {
-        bool base = you.skill(sk, 10, false, false) != you.skill(sk, 10);
-        auto targ = you.training_targets[sk];
-        you.training_targets[sk] = 0;
+        auto targ = targets[sk];
+        targets[sk] = 0;
         if (you.has_mutation(MUT_INNATE_CASTER) && is_magic_skill(sk))
             set_magic_training(TRAINING_DISABLED);
         else
@@ -1362,6 +1284,23 @@ bool check_training_target(skill_type sk)
         return true;
     }
     return false;
+}
+
+/**
+ * Check the training targets (if any) for skill sk, and change state
+ * appropriately. If a target has been met or exceeded, this will turn off
+ * that target for that skill, and stop training it. This does *not* reset the
+ * training percentages, though, so if it's used mid-training, you need to take
+ * care of that.
+ *
+ * @param sk the skill to check.
+ * @return whether a target was reached.
+ */
+bool check_training_target(skill_type sk)
+{
+    bool change = _check_training_target(sk, false);
+    change |= _check_training_target(sk, true);
+    return change;
 }
 
 /**
@@ -1382,17 +1321,19 @@ bool check_training_targets()
     return change;
 }
 
-void check_skill_cost_change()
+void check_skill_cost_change(bool quiet)
 {
 #ifdef DEBUG_TRAINING_COST
     int initial_cost = you.skill_cost_level;
 #endif
 
-    you.skill_cost_level = _calc_skill_cost_level(you.total_experience, you.skill_cost_level);
+    you.skill_cost_level = calc_skill_cost_level(you.total_experience, you.skill_cost_level);
 
 #ifdef DEBUG_TRAINING_COST
-    if (initial_cost != you.skill_cost_level)
+    if (!quiet && initial_cost != you.skill_cost_level)
         dprf("Adjusting skill cost level to %d", you.skill_cost_level);
+#else
+    UNUSED(quiet);
 #endif
 }
 
@@ -1438,7 +1379,7 @@ int _gnoll_total_skill_cost()
     {
         if (!you.training[i])
             continue;
-        cur_cost_level = _calc_skill_cost_level(you.total_experience + total_cost, cur_cost_level);
+        cur_cost_level = calc_skill_cost_level(you.total_experience + total_cost, cur_cost_level);
         this_cost = calc_skill_cost(cur_cost_level);
         if (num != denom)
             this_cost = (num * this_cost + denom - 1) / denom;
@@ -1457,10 +1398,162 @@ void change_skill_points(skill_type sk, int points, bool do_level_up)
     check_skill_level_change(sk, do_level_up);
 }
 
+enum wind_skill_type
+{
+    WIND_MELEE,
+    WIND_RANGED,
+    WIND_STEALTH,
+    WIND_MAGIC,
+
+    WIND_NONE = -1
+};
+
+static wind_skill_type _skill_to_wind(skill_type sk)
+{
+    switch (sk)
+    {
+        case SK_LONG_BLADES:
+        case SK_UNARMED_COMBAT:
+        case SK_MACES_FLAILS:
+        case SK_AXES:
+        case SK_STAVES:
+        case SK_POLEARMS:
+            return WIND_MELEE;
+
+        case SK_RANGED_WEAPONS:
+            return WIND_RANGED;
+
+        case SK_SHORT_BLADES:
+        case SK_STEALTH:
+            return WIND_STEALTH;
+
+        case SK_AIR_MAGIC:
+        case SK_EARTH_MAGIC:
+        case SK_FIRE_MAGIC:
+        case SK_ICE_MAGIC:
+        case SK_NECROMANCY:
+        case SK_FORGECRAFT:
+        case SK_SUMMONINGS:
+        case SK_ALCHEMY:
+        case SK_CONJURATIONS:
+        case SK_TRANSLOCATIONS:
+        case SK_HEXES:
+            return WIND_MAGIC;
+
+        default:
+            return WIND_NONE;
+    }
+}
+
+// Initialize tracking for four winds skills. (Called at game start and in some
+// other cases of direct skill changes.)
+void init_four_winds()
+{
+    you.wind_category_weight.init(0);
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+    {
+        wind_skill_type wind = _skill_to_wind(sk);
+        if (wind == WIND_NONE)
+            continue;
+
+        const int sk_lv = you.skill(sk, 10, true, false);
+        you.wind_category_weight[wind] = max(you.wind_category_weight[wind], sk_lv);
+    }
+
+    // Set the current prevailing wind based on any mutations the player may
+    // already have (in case of ties, on file load).
+    for (int i = 0; i < 4; ++i)
+        if (you.has_mutation(static_cast<mutation_type>(MUT_NORTH_WIND + i)))
+            you.prevailing_wind = i;
+}
+
+// Checks if the prevailing wind has changed (or is nearing change) and gives
+// appropriate messages and mutation adjustments
+void update_four_winds(bool force_recheck)
+{
+    if (you.get_mutation_level(MUT_STAMPEDE) < 2)
+        return;
+
+    if (force_recheck)
+        init_four_winds();
+
+    wind_skill_type prevailing = WIND_MELEE;
+    int prevailing_amount = 0;
+
+    // In case of ties, stay with the wind you already had.
+    // (This is especially important once the player reaches 27 in a skill, so
+    // that the skill that first reaches that becomes 'locked in'.)
+    if (you.prevailing_wind != -1)
+    {
+        prevailing_amount = you.wind_category_weight[you.prevailing_wind];
+        prevailing = static_cast<wind_skill_type>(you.prevailing_wind);
+    }
+
+    for (int i = 0; i < 4; ++i)
+    {
+        if (you.wind_category_weight[i] > prevailing_amount)
+        {
+            prevailing_amount = you.wind_category_weight[i];
+            prevailing = static_cast<wind_skill_type>(i);
+        }
+    }
+
+    if (you.prevailing_wind != prevailing)
+    {
+        you.gave_wind_change_warning = false;
+
+        // Lose old wind mutation (if one exists) and gain new one.
+        // (Messaging is handled by the mutations themselves.)
+        if (you.innate_mutation[MUT_NORTH_WIND + you.prevailing_wind])
+        {
+            you.innate_mutation[MUT_NORTH_WIND + you.prevailing_wind]--;
+            delete_mutation(static_cast<mutation_type>(MUT_NORTH_WIND + you.prevailing_wind), "Changing winds", false, true, false);
+        }
+        perma_mutate(static_cast<mutation_type>(MUT_NORTH_WIND + prevailing), 1, "Changing winds");
+        you.prevailing_wind = prevailing;
+    }
+    else if (!you.gave_wind_change_warning)
+    {
+        for (int i = 0; i < 4; ++i)
+        {
+            if (i == prevailing)
+                continue;
+
+            // If the player gained skill in a category that is within 1 level of being
+            // the top skill, and has never been warned about this, warn them now.
+            if (you.wind_category_inc[i]
+                && you.wind_category_weight[i] + 10 >= prevailing_amount)
+            {
+                mprf(MSGCH_WARN, "You feel the winds around you beginning to shift...");
+                you.gave_wind_change_warning = true;
+                break;
+            }
+        }
+    }
+    // If we've previously given a warning, check to see if a gap has opened up
+    // again, even if the player's wind has not actually changed.
+    else
+    {
+        int gap = INT_MAX;
+        for (int i = 0; i < 4; ++i)
+        {
+            if (i == prevailing)
+                continue;
+
+            gap = min(gap, you.wind_category_weight[prevailing] - you.wind_category_weight[i]);
+        }
+        if (gap >= 15)
+            you.gave_wind_change_warning = false;
+    }
+
+    you.wind_category_inc.init(false);
+}
+
 // Calculates the skill points required to reach the training target
 // Does not currently consider Ashenzari skill boost for experience currently being gained
 // so this may still result in some overtraining
-static int _training_target_skill_point_diff(skill_type exsk, int training_target)
+static int _training_target_skill_point_diff(skill_type exsk,
+                                             int training_target, bool base)
 {
     int target_level = training_target / 10;
     int target_fractional = training_target % 10;
@@ -1478,9 +1571,13 @@ static int _training_target_skill_point_diff(skill_type exsk, int training_targe
                             * target_fractional, 10);
     }
 
-    int you_skill_points = you.skill_points[exsk] + get_crosstrain_points(exsk);
-    if (ash_has_skill_boost(exsk))
-        you_skill_points += ash_skill_point_boost(exsk, training_target);
+    int you_skill_points = you.skill_points[exsk];
+    if (!base)
+    {
+        you_skill_points += get_crosstrain_points(exsk);
+        if (ash_has_skill_boost(exsk))
+            you_skill_points += ash_skill_point_boost(exsk, training_target);
+    }
 
     int target_skill_point_diff = target_skill_points - you_skill_points;
 
@@ -1489,6 +1586,24 @@ static int _training_target_skill_point_diff(skill_type exsk, int training_targe
         target_skill_point_diff -= min(manual_charges, target_skill_point_diff / 2);
 
     return target_skill_point_diff;
+}
+
+// How many skill points can be put into a skill before its training target
+// is reached? INT_MAX if it has no unmet target.
+static int _skill_points_for_target(skill_type exsk)
+{
+    int max_points = INT_MAX;
+    for (bool base : { false, true })
+    {
+        const int target = you.get_training_target(exsk, base);
+        if (!target || target <= you.skill(exsk, 10, base, false))
+            continue;
+
+        const int diff = _training_target_skill_point_diff(exsk, target, base);
+        if (diff > 0)
+            max_points = min(max_points, diff);
+    }
+    return max_points;
 }
 
 static int _train(skill_type exsk, int &max_exp, bool simu, bool check_targets)
@@ -1514,13 +1629,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu, bool check_targets)
         const int spending_limit = min(10 * MAX_SPENDING_LIMIT, max_exp);
         skill_inc = spending_limit / cost;
 
-        int training_target = you.training_targets[exsk];
-        if (training_target > you.skill(exsk, 10, false, false))
-        {
-            int target_skill_point_diff = _training_target_skill_point_diff(exsk, training_target);
-            if (target_skill_point_diff > 0)
-                skill_inc = min(skill_inc, target_skill_point_diff);
-        }
+        skill_inc = min(skill_inc, _skill_points_for_target(exsk));
         cost = skill_inc * cost;
     }
 
@@ -1533,7 +1642,6 @@ static int _train(skill_type exsk, int &max_exp, bool simu, bool check_targets)
     {
         const int bonus = min<int>(bonus_left, you.skill_manual_points[exsk]);
         skill_inc += bonus;
-        bonus_left -= bonus;
         you.skill_manual_points[exsk] -= bonus;
         if (!you.skill_manual_points[exsk] && !simu && !crawl_state.simulating_xp_gain)
         {
@@ -1561,6 +1669,18 @@ static int _train(skill_type exsk, int &max_exp, bool simu, bool check_targets)
     ASSERT(you.exp_available >= 0);
     ASSERT(max_exp >= 0);
     you.redraw_experience = true;
+
+    // If this raises the highest skill of one of our skill categories, update it.
+    // (We don't check if this changes the prevailing wind until later.)
+    if (_skill_to_wind(exsk) != WIND_NONE)
+    {
+        int sk_val = you.skill(exsk, 10, true, false);
+        if (you.wind_category_weight[_skill_to_wind(exsk)] < sk_val)
+        {
+            you.wind_category_weight[_skill_to_wind(exsk)] = sk_val;
+            you.wind_category_inc[_skill_to_wind(exsk)] = true;
+        }
+    }
 
     return skill_inc;
 }
@@ -1624,6 +1744,15 @@ skill_diff skill_level_to_diffs(skill_type skill, double amount,
         if (ash_has_skill_boost(skill))
             you_skill += ash_skill_point_boost(skill, you.skills[skill] * 10);
 
+        // Factor in wildshape amulet bonus (+5 shapeshifting levels)
+        if (skill == SK_SHAPESHIFTING && you.wearing_jewellery(AMU_WILDSHAPE))
+        {
+            const int wildshape_level = min(you.skills[skill] + 5,
+                                            (int)MAX_SKILL_LEVEL);
+            you_skill += skill_exp_needed(wildshape_level, skill)
+                         - skill_exp_needed(you.skills[skill], skill);
+        }
+
         if (you.skill_manual_points[skill])
             target = you_skill + (target - you_skill) / 2;
     }
@@ -1686,14 +1815,14 @@ skill_diff skill_level_to_diffs(skill_type skill, double amount,
         you_skill += (delta.skill_points * scaled_training
                                         + (decrease_skill ? -99 : 99)) / 100;
         you_xp += delta.experience;
-        you_skill_cost_level = _calc_skill_cost_level(you_xp, you_skill_cost_level);
+        you_skill_cost_level = calc_skill_cost_level(you_xp, you_skill_cost_level);
     }
 
     return skill_diff(you_skill - you.skill_points[skill],
                                 you_xp - you.total_experience);
 }
 
-void set_skill_level(skill_type skill, double amount)
+void set_skill_level(skill_type skill, double amount, bool quiet)
 {
     double level;
     modf(amount, &level);
@@ -1704,15 +1833,19 @@ void set_skill_level(skill_type skill, double amount)
     you.skill_points[skill] += diffs.skill_points;
     you.total_experience += diffs.experience;
 #ifdef DEBUG_TRAINING_COST
-    dprf("Change (total): %d skp (%d), %d xp (%d)",
-        diffs.skill_points, you.skill_points[skill],
-        diffs.experience, you.total_experience);
+    if (!quiet)
+    {
+        dprf("Change (total): %d skp (%d), %d xp (%d)",
+            diffs.skill_points, you.skill_points[skill],
+            diffs.experience, you.total_experience);
+    }
 #endif
 
-    check_skill_cost_change();
+    check_skill_cost_change(quiet);
 
     // need to check them all, to handle crosstraining.
-    check_training_targets();
+    if (!quiet)
+        check_training_targets();
 }
 
 int get_skill_progress(skill_type sk, int level, int points, int scale)
@@ -1745,70 +1878,92 @@ int get_skill_percentage(const skill_type x)
 }
 
 /**
- * Get the training target for a skill.
+ * Get a training target for a skill.
  *
  * @param sk the skill to set
+ * @param base whether to get the base target, rather than the modified one.
  * @return the current target, scaled by 10 -- so between 0 and 270.
  *         0 means no target.
  */
-int player::get_training_target(const skill_type sk) const
+int player::get_training_target(const skill_type sk, bool base) const
 {
-    ASSERT_LESS(training_targets[sk], 271);
-    return training_targets[sk];
+    const auto &targets = base ? base_training_targets : training_targets;
+    ASSERT_LESS(targets[sk], 271);
+    return targets[sk];
 }
 
 /**
- * Set the training target for a skill.
+ * Set a training target for a skill.
  *
  * @param sk the skill to set
  * @param target the new target, between 0.0 and 27.0.  0.0 means no target.
+ * @param base whether to set the base target, rather than the modified one.
  */
-bool player::set_training_target(const skill_type sk, const double target, bool announce)
+bool player::set_training_target(const skill_type sk, const double target,
+                                 bool announce, bool base)
 {
-    return set_training_target(sk, (int) round(target * 10), announce);
+    return set_training_target(sk, (int) round(target * 10), announce, base);
 }
 
-void player::clear_training_targets()
+void player::clear_training_targets(bool base)
 {
     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
-        set_training_target(sk, 0);
+        set_training_target(sk, 0, false, base);
+}
+
+void player::clear_all_training_targets()
+{
+    clear_training_targets(false);
+    clear_training_targets(true);
 }
 
 /**
- * Set the training target for a skill, scaled by 10.
+ * Set a training target for a skill, scaled by 10.
  *
  * @param sk the skill to set
  * @param target the new target, scaled by ten, so between 0 and 270.  0 means
  *               no target.
+ * @param base whether to set the base target, rather than the modified one.
+ *               Setting one kind of target clears the other kind.
  *
  * @return whether setting the target succeeded.
  */
-bool player::set_training_target(const skill_type sk, const int target, bool announce)
+bool player::set_training_target(const skill_type sk, const int target,
+                                 bool announce, bool base)
 {
+    auto &targets = base ? base_training_targets : training_targets;
     if (target > 270) // if target is above 270, reject with an error
     {
         mpr("Your training target must be 27 or below!");
         return false;
     }
     const int ranged_target = min(max((int) target, 0), 270);
-    if (announce && ranged_target != (int) training_targets[sk])
+    if (announce && ranged_target != (int) targets[sk])
     {
         if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
             mpr("You can't set training targets!");
         else if (ranged_target == 0)
-            mprf("Clearing the skill training target for %s.", skill_name(sk));
+        {
+            mprf("Clearing the %sskill training target for %s.",
+                 base ? "base " : "", skill_name(sk));
+        }
         else
         {
-            mprf("Setting a skill training target for %s at %d.%d.", skill_name(sk),
-                                    ranged_target / 10, ranged_target % 10);
+            mprf("Setting a %sskill training target for %s at %d.%d.",
+                 base ? "base " : "", skill_name(sk),
+                 ranged_target / 10, ranged_target % 10);
         }
     }
     if (!can_enable_skill(sk)) // checks for gnolls
     {
-        training_targets[sk] = 0;
+        targets[sk] = 0;
         return false;
     }
-    training_targets[sk] = ranged_target;
+    // Clear the other kind of target (base/modified)
+    if (ranged_target)
+        set_training_target(sk, 0, announce, !base);
+
+    targets[sk] = ranged_target;
     return true;
 }
 
@@ -1881,6 +2036,74 @@ unsigned get_skill_rank(unsigned skill_lev)
                            /* level 27 */    : 4;
 }
 
+/**
+ * Special conduct skill title tracking, extending the range of skill titles
+ * beyond what's covered in skill_title_by_rank. These titles are used only if
+ * "conducts" are enabled by that function, which excludes titles for player
+ * ghosts until someone wants to enable that, but allows going beyond the
+ * stat/skill/god paradigm of that function.
+ *
+ * When adding titles here, try to avoid "covering" the entirety of normal skill
+ * titles (ie don't add a lorekeeper title based on the tournament banner
+ * because it invalidates a large number of low skill level titles)
+ *
+ * Also, try to make the conducts interesting and challenging, not annoying,
+ * since some players like to chase titles.
+ */
+string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
+{
+    string title;
+
+    // All gem runs, as per the graceful banner (graceful seems a weird title)
+    if (gems_held_intact() >= 11)
+        return "Flawless";
+
+    // A very hard version of the ascetic banner
+    if (you.experience_level > 17
+        && !you.action_count.count(make_pair(CACT_USE, caction_compound(OBJ_POTIONS)))
+        && !you.action_count.count(make_pair(CACT_USE, caction_compound(OBJ_SCROLLS))))
+    {
+        return "True Ascetic";
+    }
+
+    // All rune deathless felid
+    if (you.species == SP_FELID && runes_in_pack() >= you.obtainable_runes && you.deaths == 0)
+        return "Incurious";
+
+    // A harder version of the ruthless efficiency banner
+    if (you.experience_level < 19 && player_has_orb())
+        return "Ruthless";
+
+    // Shopless, with Gozag
+    if (you_worship(GOD_GOZAG) && you.experience_level > 17
+        && you.attribute[ATTR_PURCHASES] == 0)
+    {
+        return "Miser";
+    }
+
+    // all runes with a zealot without ever abandoning
+    if (runes_in_pack() >= you.obtainable_runes && you.char_class == JOB_CHAOS_KNIGHT
+        && you_worship(GOD_XOM) && you.worshipped[GOD_XOM] == 1)
+    {
+        return "Chaos Fanatic";
+    }
+
+    if (runes_in_pack() >= you.obtainable_runes && you.char_class == JOB_CINDER_ACOLYTE
+        && you_worship(GOD_IGNIS) && you.worshipped[GOD_IGNIS] == 1)
+    {
+        return "Keeper of the Flame";
+    }
+
+    // Award for being very good at crab
+    if (you.form == transformation::fortress_crab
+        && best_skill == SK_SHAPESHIFTING && skill_rank == 5)
+    {
+        return "Pinnacle of Evolution";
+    }
+
+    return title;
+}
+
 // XX should at least some of this be in species.cc?
 
 /**
@@ -1889,14 +2112,17 @@ unsigned get_skill_rank(unsigned skill_lev)
  * @param best_skill    The skill used to determine the title.
  * @param skill_rank    The player's rank in the given skill.
  * @param species       The player's species.
- * @param dex_better    Whether the player's dexterity is higher than strength.
+ * @param dex           The player's base dexterity
+ * @param str           The player's base strength
+ * @param intel         The player's base intelligence
  * @param god           The god_type of the god the player follows.
  * @param piety         The player's piety with the given god.
+ * @param conducts      Whether or not to check "special" conduct titles
  * @return              An appropriate and/or humorous title.
  */
 string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
-                           species_type species, bool dex_better,
-                           god_type god, int piety)
+                           species_type species, int dex, int str, int intel,
+                           god_type god, int piety, bool conducts)
 {
 
     // paranoia
@@ -1915,11 +2141,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_FIGHTING:
             if (species == SP_HUMAN && skill_rank == 5 && god == GOD_MAKHLEB)
                 result = "Hell Knight";
-            break;
-
-        case SK_POLEARMS:
-            if (species == SP_ARMATAUR && skill_rank == 5)
-                result = "Prickly Pangolin";
+            else if (species == SP_HUMAN && skill_rank == 5 && god == GOD_YREDELEMNUL)
+                result = "Death Knight";
             break;
 
         case SK_UNARMED_COMBAT:
@@ -1927,36 +2150,37 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Pharaoh";
             else if (species == SP_FELID)
                 result = claw_and_tooth_titles[skill_rank];
-            else if (species == SP_OCTOPODE && skill_rank == 5)
+            else if (species == SP_OCTOPODE && skill_rank == 4)
                 result = "Crusher";
+            else if (species == SP_OCTOPODE && skill_rank == 5)
+                result = "Kraken";
             else if (species == SP_ONI && skill_rank == 5)
                 result = "Yokozuna";
-            else if (!dex_better && (species == SP_DJINNI || species == SP_POLTERGEIST)
+            else if (str >= dex && (species == SP_DJINNI || species == SP_POLTERGEIST)
                         && skill_rank == 5)
             {
                 result = "Weightless Champion";
             }
+            else if (str > intel + dex && species == SP_DEMIGOD
+                        && skill_rank == 5)
+            {
+                result = "Herculean";
+            }
             else
             {
-                result = dex_better ? martial_arts_titles[skill_rank]
+                result = dex > str ? martial_arts_titles[skill_rank]
                                     : skill_titles[best_skill][skill_rank];
             }
             break;
 
         case SK_SHORT_BLADES:
             if (species::is_elven(species) && skill_rank == 5)
-            {
                 result = "Blademaster";
-                break;
-            }
             break;
 
         case SK_LONG_BLADES:
             if (species == SP_MERFOLK && skill_rank == 5)
-            {
                 result = "Swordfish";
-                break;
-            }
             break;
 
         case SK_ARMOUR:
@@ -1981,12 +2205,17 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_THROWING:
             if (species == SP_POLTERGEIST && skill_rank == 5)
                 result = "Undying Armoury";
+            break;
 
         case SK_SPELLCASTING:
             if (species == SP_DJINNI && skill_rank == 5)
                 result = "Wishgranter";
             else if (species == SP_COGLIN && skill_rank == 5)
                 result = "Cogmind";
+            else if (species == SP_DEMIGOD && skill_rank == 5)
+                result = "Ascendant";
+            else if (god == GOD_SIF_MUNA)
+                result = god_title(god, species, piety);
             break;
 
         case SK_CONJURATIONS:
@@ -2000,6 +2229,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_HEXES:
             if (species::is_draconian(species) && skill_rank == 5)
                 result = "Faerie Dragon";
+            else if (species == SP_MERFOLK && skill_rank == 5)
+                result = "Siren";
             break;
 
         case SK_NECROMANCY:
@@ -2018,6 +2249,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Brimstone Smiter";
             else if (species == SP_ONI && skill_rank == 5)
                 result = "Titancaster";
+            else if (species == SP_BARACHI && skill_rank == 5)
+                result = "Frogwright";
             break;
 
         case SK_SUMMONINGS:
@@ -2077,6 +2310,11 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Iron Dragon";
             break;
 
+        case SK_STEALTH:
+            if (species == SP_DEMIGOD && skill_rank == 5)
+                result = "Thief of Divinity";
+            break;
+
         case SK_INVOCATIONS:
             if (species == SP_MUMMY && skill_rank == 5 && god == GOD_GOZAG)
                 result = "Royal Mummy";
@@ -2094,16 +2332,19 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Black Lotus";
             else if (species == SP_VINE_STALKER && skill_rank == 5 && god == GOD_DITHMENOS)
                 result = "Nightshade";
-            else if (species == SP_ARMATAUR && skill_rank == 5 && god == GOD_QAZLAL)
-                result = "Rolling Thunder";
-            else if (species == SP_ARMATAUR && skill_rank == 5 && is_good_god(god))
-                result = "Holy Roller";
             else if (species == SP_COGLIN && skill_rank == 5 && god == GOD_FEDHAS)
                 result = "Cobgoblin"; // hm.
             else if (species == SP_REVENANT && skill_rank == 5 && god == GOD_XOM)
                 result = "Laughing Skull";
             else if (species == SP_REVENANT && skill_rank == 5 && god == GOD_USKAYAW)
                 result = "Danse Macabre";
+            else if ((species == SP_MERFOLK || species == SP_OCTOPODE)
+                && skill_rank == 5 && god == GOD_LUGONU)
+            {
+                result = "Abyssopelagic";
+            }
+            else if (species == SP_OCTOPODE && skill_rank == 5 && is_evil_god(god))
+                result = "Leviathan";
             else if (god != GOD_NO_GOD)
                 result = god_title(god, species, piety);
             else if (species == SP_BARACHI)
@@ -2128,7 +2369,17 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         {
             god_type betrayed_god = static_cast<god_type>(
                 you.attribute[ATTR_TRAITOR]);
-            result = god_title(betrayed_god, species, piety);
+
+            // good gods shouldn't traitor title you unless wrath is active
+            if (!is_good_god(betrayed_god) || active_penance(betrayed_god))
+                result = god_title(betrayed_god, species, 0);
+        }
+
+        if (conducts)
+        {
+            string conduct = special_conduct_title(best_skill, skill_rank);
+            if (!conduct.empty())
+                result = conduct;
         }
 
         if (result.empty())
@@ -2259,6 +2510,20 @@ bool is_removed_skill(skill_type skill)
     return false;
 }
 
+skill_type random_skill()
+{
+    skill_type skill;
+
+    do
+    {
+        skill =
+            static_cast<skill_type>(random2(NUM_SKILLS));
+    }
+    while (is_removed_skill(skill));
+
+    return skill;
+}
+
 static map<skill_type, mutation_type> skill_sac_muts = {
     { SK_AIR_MAGIC,      MUT_NO_AIR_MAGIC },
     { SK_FIRE_MAGIC,     MUT_NO_FIRE_MAGIC },
@@ -2303,31 +2568,28 @@ static bool _is_sacrificed_skill(skill_type skill)
     return false;
 }
 
-bool is_useless_skill(skill_type skill)
+bool is_forbidden_skill(skill_type skill)
+{
+    return is_magic_skill(skill)
+           && god_forbids_training_magic(you.religion)
+           && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
+}
+
+bool is_useless_skill(skill_type skill, bool include_god)
 {
     return is_removed_skill(skill)
        || _is_sacrificed_skill(skill)
-       || species_apt(skill) == UNUSABLE_SKILL;
+       || species_apt(skill) == UNUSABLE_SKILL
+       || (include_god && is_forbidden_skill(skill));
 }
 
-bool is_harmful_skill(skill_type skill)
-{
-    return is_magic_skill(skill) && you_worship(GOD_TROG);
-}
-
-/**
- * Does the player have trainable skills?
- *
- * @param check_all If true, also consider skills that are harmful and/or
- *        currently untrainable. Useless skills are never considered.
- *        Defaults to false.
- */
-bool trainable_skills(bool check_all)
+/// Does the player have trainable skills?
+bool trainable_skills()
 {
     for (skill_type i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
         skill_type sk = static_cast<skill_type>(i);
-        if (can_enable_skill(sk, check_all))
+        if (can_enable_skill(sk))
             return true;
     }
 
@@ -2450,36 +2712,6 @@ int get_crosstrain_points(skill_type sk)
 
 }
 
-/**
- * Is the provided skill one of the elemental spellschools?
- *
- * @param sk    The skill in question.
- * @return      Whether it is fire, ice, earth, or air.
- */
-static bool _skill_is_elemental(skill_type sk)
-{
-    return sk == SK_FIRE_MAGIC || sk == SK_EARTH_MAGIC
-           || sk == SK_AIR_MAGIC || sk == SK_ICE_MAGIC;
-}
-
-/**
- * How skilled is the player at the elemental components of a spell?
- *
- * @param spell     The type of spell in question.
- * @param scale     Scaling factor for skill.
- * @return          The player's skill at the elemental parts of a given spell.
- */
-int elemental_preference(spell_type spell, int scale)
-{
-    skill_set skill_list;
-    spell_skills(spell, skill_list);
-    int preference = 0;
-    for (skill_type sk : skill_list)
-        if (_skill_is_elemental(sk))
-            preference += you.skill(sk, scale);
-    return preference;
-}
-
 void dump_skills(string &text)
 {
     for (uint8_t i = 0; i < NUM_SKILLS; i++)
@@ -2490,7 +2722,7 @@ void dump_skills(string &text)
         {
             text += make_stringf(" %c Level %.*f%s %s\n",
                                  real == 270       ? 'O' :
-                                 !you.can_currently_train[i] ? ' ' :
+                                 is_useless_skill((skill_type) i) ? ' ' :
                                  you.train[i] == 2 ? '*' :
                                  you.train[i]      ? '+' :
                                                      '-',
@@ -2514,12 +2746,12 @@ skill_state::skill_state() :
 
 void skill_state::save()
 {
-    can_currently_train = you.can_currently_train;
     skills              = you.skills;
     train               = you.train;
     training            = you.training;
     skill_points        = you.skill_points;
     training_targets    = you.training_targets;
+    base_training_targets = you.base_training_targets;
     skill_cost_level    = you.skill_cost_level;
     skill_order         = you.skill_order;
     auto_training       = you.auto_training;
@@ -2560,10 +2792,10 @@ void skill_state::restore_training()
         {
             you.train[sk] = train[sk];
             you.training_targets[sk] = training_targets[sk];
+            you.base_training_targets[sk] = base_training_targets[sk];
         }
     }
 
-    you.can_currently_train         = can_currently_train;
     you.auto_training               = auto_training;
     reset_training();
     check_training_targets();
@@ -2574,9 +2806,12 @@ void fixup_skills()
 {
     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
     {
+        // Skills we innately can't train should be zeroed, god-hated
+        // ones should not be trained.
+        if (is_useless_skill(sk, false))
+            you.skill_points[sk] = 0;
         if (is_useless_skill(sk))
         {
-            you.skill_points[sk] = 0;
             // gnolls have everything existent enabled, so that the
             // training percentage is calculated correctly. (Useless
             // skills still won't be trained for them.)
@@ -2594,7 +2829,6 @@ void fixup_skills()
                                    skill_exp_needed(MAX_SKILL_LEVEL, sk));
         check_skill_level_change(sk);
     }
-    init_can_currently_train();
     reset_training();
 
     if (you.exp_available >= 10 * calc_skill_cost(you.skill_cost_level)
@@ -2610,17 +2844,14 @@ void fixup_skills()
 /** Can the player enable training for this skill?
  *
  * @param sk The skill to check.
- * @param override if true, don't consider whether the skill is currently
- *                 untrainable / harmful.
  * @returns True if the skill can be enabled for training, false otherwise.
  */
-bool can_enable_skill(skill_type sk, bool override)
+bool can_enable_skill(skill_type sk)
 {
     // TODO: should this check you.skill_points or you.skills?
     return !you.has_mutation(MUT_DISTRIBUTED_TRAINING)
        && you.skills[sk] < MAX_SKILL_LEVEL
-       && !is_useless_skill(sk)
-       && (override || (you.can_currently_train[sk] && !is_harmful_skill(sk)));
+       && !is_useless_skill(sk);
 }
 
 void set_training_status(skill_type sk, training_status st)
@@ -2634,6 +2865,11 @@ void set_training_status(skill_type sk, training_status st)
 void set_magic_training(training_status st)
 {
     for (skill_type sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
-        if (!is_removed_skill(sk))
-            you.train[sk] = you.train_alt[sk] = st;
+    {
+        if (is_removed_skill(sk))
+            continue;
+        if (st != TRAINING_DISABLED && you.skills[sk] >= MAX_SKILL_LEVEL)
+            continue;
+        you.train[sk] = you.train_alt[sk] = st;
+    }
 }

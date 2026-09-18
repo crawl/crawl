@@ -385,6 +385,8 @@ explorer.dangerous_monsters = {
         "ancient lich",
         "dread lich",
         "orb of fire",
+        "orb of winter",
+        "orb of entropy",
         "royal mummy",
         "Hell Sentinel",
         "Ice Fiend",

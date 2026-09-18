@@ -1,5 +1,5 @@
 name: "elemental"
-glyph: {char: "E", colour: lightgray}
+glyph: {char: "Σ", colour: lightgray}
 flags: [cant_spawn]
 holiness: [nonliving]
 will: 10
@@ -8,7 +8,6 @@ hd: 0
 hp_10x: 0
 ac: 0
 ev: 0
-has_corpse: true
 intelligence: animal
 speed: 0
 size: medium

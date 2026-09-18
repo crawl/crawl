@@ -5,7 +5,7 @@ short_name: MD
 adjective: Dwarven
 genus: Dwarf
 difficulty: Simple
-difficulty_priority: 100
+difficulty_priority: 60
 aptitudes:
   xp: -1
   hp: 1

@@ -2,7 +2,7 @@ enum: SP_BASE_DRACONIAN
 monster: MONS_DRACONIAN
 name: Draconian
 difficulty: Simple
-difficulty_priority: 60
+difficulty_priority: 50
 species_flags:
   - draconian
   - no_hair
@@ -27,6 +27,7 @@ levelup_stat_frequency: 4
 mutations:
   1:
     MUT_COLD_BLOODED: 1
+    MUT_ARMOURED_TAIL: 1
 recommended_jobs:
   - berserker
   - shapeshifter

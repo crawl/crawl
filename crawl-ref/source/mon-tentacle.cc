@@ -17,10 +17,12 @@
 #include "libutil.h" // map_find
 #include "losglobal.h"
 #include "mgen-data.h"
+#include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "nearby-danger.h"
 #include "terrain.h"
+#include "view.h"
 
 const int MAX_KRAKEN_TENTACLE_DIST = 12;
 const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
@@ -184,24 +186,17 @@ bool mons_tentacle_adjacent(const monster* parent, const monster* child)
 monster& get_tentacle_head(const monster& mon)
 {
     const monster* m = &mon;
-    // For tentacle segments, find the associated tentacle.
-    if (m->is_child_tentacle_segment())
+
+    // Climb tentacle_connect until we reach the monster the part ultimately
+    // belongs to.
+    while (m->is_child_monster()
+           || mons_is_tentacle_segment(mons_base_type(*m)))
     {
-        monster* tentacle = monster_by_mid(m->tentacle_connect);
-        if (!tentacle)
-            return const_cast<monster&>(*m);
+        monster* parent = monster_by_mid(m->tentacle_connect);
+        if (!parent || parent == m)
+            break;
 
-        m = tentacle;
-    }
-
-    // For tentacles, find the associated head.
-    if (m->is_child_tentacle())
-    {
-        monster* head = monster_by_mid(m->tentacle_connect);
-        if (!head)
-            return const_cast<monster&>(*m);
-
-        m = head;
+        m = parent;
     }
 
     return const_cast<monster&>(*m);
@@ -242,6 +237,9 @@ static void _establish_connection(monster* tentacle,
 
             connect->max_hit_points = tentacle->max_hit_points;
             connect->hit_points = tentacle->hit_points;
+
+            if (head->props.exists(TREE_POSITION_KEY))
+                connect->props[TREE_POSITION_KEY].get_coord() = head->props[TREE_POSITION_KEY].get_coord();
         }
         else
         {
@@ -250,8 +248,12 @@ static void _establish_connection(monster* tentacle,
         }
     }
 
+    vector<coord_def> changed_cells;
+    changed_cells.push_back(last->pos);
     while (current)
     {
+        changed_cells.push_back(current->pos);
+
         // Last monster we visited or placed
         monster* last_mon = monster_at(last->pos);
         if (!last_mon)
@@ -287,6 +289,9 @@ static void _establish_connection(monster* tentacle,
 
             if (head->holiness() & MH_UNDEAD)
                 connect->flags |= MF_FAKE_UNDEAD;
+
+            if (head->props.exists(TREE_POSITION_KEY))
+                connect->props[TREE_POSITION_KEY].get_coord() = head->props[TREE_POSITION_KEY].get_coord();
         }
         else
         {
@@ -297,6 +302,20 @@ static void _establish_connection(monster* tentacle,
         last = current;
         current = current->last;
     }
+
+    // We must do view updates after the whole chain to get the right tiles.
+    bool updated = false;
+    for (const coord_def &pos : changed_cells)
+    {
+        if (you.see_cell(pos))
+        {
+            view_update_at(pos);
+            updated = true;
+        }
+    }
+
+    if (updated)
+        update_screen();
 }
 
 struct tentacle_attack_constraints
@@ -623,6 +642,9 @@ static void _collect_foe_positions(monster *mons,
 {
     coord_def foe_pos(-1, -1);
     actor * foe = mons->get_foe();
+    // We put the foe in the vector first, though note that the
+    // pathfinding algorithm that uses this don't actually care about
+    // the order, so in fact tentacles ignore their foe.
     if (foe && sight_check(foe))
     {
         foe_positions.push_back(mons->get_foe()->pos());
@@ -709,6 +731,7 @@ void move_solo_tentacle(monster* tentacle)
                 [tentacle, base_position](const actor *test) -> bool
                 {
                     return test->visible_to(tentacle)
+                        && monster_los_is_valid(tentacle, test)
                         && cell_see_cell(base_position, test->pos(),
                                          LOS_SOLID_SEE);
                 });
@@ -870,7 +893,7 @@ void move_solo_tentacle(monster* tentacle)
     // Why do I have to do this move? I don't get it.
     // specifically, if tentacle isn't registered at its new position on env.mgrid
     // the search fails (sometimes), Don't know why. -cao
-    tentacle->move_to_pos(new_pos, true, false, false);
+    tentacle->move_to(new_pos, MV_DELIBERATE | MV_PRESERVE_CONSTRICTION, true);
 
     if (pull_constrictee)
     {
@@ -879,17 +902,8 @@ void move_solo_tentacle(monster* tentacle)
             mprf("The vine drags %s backwards!",
                     constrictee->name(DESC_THE).c_str());
         }
-
-        const coord_def old_constrictee_pos  = constrictee->pos();
-        constrictee->move_to_pos(shift_pos);
-        constrictee->apply_location_effects(old_constrictee_pos);
-
-        // Interrupt stair travel and passwall.
-        if (constrictee->is_player())
-            stop_delay(true);
+        constrictee->move_to(shift_pos);
     }
-    tentacle->clear_invalid_constrictions();
-    tentacle->clear_far_engulf();
 
     tentacle_connect_constraints connect_costs;
     connect_costs.connection_constraints = &connection_data;
@@ -915,7 +929,7 @@ void move_solo_tentacle(monster* tentacle)
     }
 
     tentacle->check_redraw(old_pos);
-    tentacle->apply_location_effects(old_pos);
+    tentacle->finalise_movement();
 }
 
 void move_child_tentacles(monster* mons)
@@ -1064,7 +1078,7 @@ void move_child_tentacles(monster* mons)
         // Why do I have to do this move? I don't get it.
         // specifically, if tentacle isn't registered at its new position on
         // env.mgrid the search fails (sometimes), Don't know why. -cao
-        tentacle->move_to_pos(new_pos);
+        tentacle->move_to(new_pos, MV_DELIBERATE);
 
         if (pull_constrictee)
         {
@@ -1073,17 +1087,8 @@ void move_child_tentacles(monster* mons)
                 mprf("The tentacle pulls %s backwards!",
                      constrictee->name(DESC_THE).c_str());
             }
-
-            if (constrictee->as_player())
-                move_player_to_grid(old_pos, false);
-            else
-                constrictee->move_to_pos(old_pos);
-
-            // Interrupt stair travel and passwall.
-            if (constrictee->is_player())
-                stop_delay(true);
+            constrictee->move_to(old_pos);
         }
-        tentacle->clear_invalid_constrictions();
 
         connect_costs.connection_constraints = &connection_data;
         connect_costs.base_monster = tentacle;
@@ -1103,7 +1108,7 @@ void move_child_tentacles(monster* mons)
         }
 
         tentacle->check_redraw(old_pos);
-        tentacle->apply_location_effects(old_pos);
+        tentacle->finalise_movement();
     }
 }
 
@@ -1253,4 +1258,57 @@ void mons_create_tentacles(monster* head)
             mpr("Tentacles burst from the starspawn's body!");
     }
     return;
+}
+
+coord_def tree_anchor_pos(const coord_def vine_pos)
+{
+    for (adjacent_iterator tree_it(vine_pos); tree_it; tree_it++)
+    {
+        if (feat_is_tree(env.grid(*tree_it)))
+            return *tree_it;
+    }
+    return coord_def();
+}
+
+/**
+ * When destroying a tree, check for any vines it is supporting. These
+ * must find a new home or die.
+ *
+ * @param pos      The position of the tree being destroyed
+ * @param agent    The actor responsible for the destruction
+ */
+void reanchor_or_destroy_vines(const coord_def pos, actor *agent)
+{
+    for (adjacent_iterator ai(pos); ai; ai++)
+    {
+        monster *m = monster_at(*ai);
+        if (!m || (m->type != MONS_SNAPLASHER_VINE
+                   && m->type != MONS_SNAPLASHER_VINE_SEGMENT))
+        {
+            continue;
+        }
+
+        if (!m->props.exists(TREE_POSITION_KEY)
+            || m->props[TREE_POSITION_KEY].get_coord() != pos)
+        {
+            continue;
+        }
+
+        // Try to find a new tree for the vine.
+        coord_def new_tree = tree_anchor_pos(*ai);
+
+        if (new_tree.origin())
+            monster_die(*m, agent);
+        else
+        {
+            // Walk the vine fixing the tree positions.
+            while (m)
+            {
+                m->props[TREE_POSITION_KEY].get_coord() = new_tree;
+                if (!m->props.exists(OUTWARDS_KEY))
+                    break;
+                m = monster_by_mid(m->props[OUTWARDS_KEY].get_int());
+            }
+        }
+    }
 }

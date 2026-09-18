@@ -2,6 +2,18 @@
 #
 # Park is a new serial vault that generates wide open areas with lots of trees
 # and bushes.
+{{
+function init_park(e, plant_t, grass_f, vaults_f)
+  e.tags('transparent')
+  e.tags('extra')
+  e.tags('decor')
+  e.tags('serial_park')
+  e.kmons('1 = ' .. plant_t)
+  e.ftile(grass_f .. " = floor_grass_dark")
+  e.ftile(vaults_f .. " = floor_vault")
+end
+}}
+
 default-depth: D
 
 NAME:   serial_park
@@ -15,17 +27,15 @@ CHANCE: 1%
 }}
 
 NAME:     serial_park_central
-TAGS:     transparent extra decor serial_park
 ORIENT:   centre
-KMONS:    1 = bush
 SUBST:    F : GGTTT
-FTILE:    DTG = floor_vault
-FTILE:    E1t = floor_grass
-# TODO: this SUBST can occasionally produce pockets:
-SUBST:    E = .....11t
+# This can occasionally produce pockets, but they're tagged as no_tele_into.
+SUBST:    E = `````11t
 SUBST:    < = ({[
 SUBVAULT: H : serial_park_minivault
 SUBVAULT: J : serial_park_minivault
+KPROP:    ' = no_tele_into
+: init_park(_G, "bush", "`E1t", "DTG")
 MAP
     @       @@@
  xxx+xxxxxxxx+xxxxxxxxxxxx
@@ -57,15 +67,12 @@ MAP
 ENDMAP
 
 NAME:     serial_park_gazebo
-TAGS:     transparent extra decor serial_park
 ORIENT:   float
-KMONS:    1 = bush
-FTILE:    D = floor_vault
-FTILE:    Et1 = floor_grass
 # Small chance of random altar.
 SUBST:    F : GGGGTTTTVC
-SUBST:    E = ...11t
+SUBST:    E = ```11t
 SUBVAULT: H : serial_park_minivault
+: init_park(_G, "bush", "`E1t", "DFTVC")
 MAP
    ....
   .DDDD.
@@ -84,13 +91,11 @@ MAP
 ENDMAP
 
 NAME:     serial_park_square1
-TAGS:     allow_dup transparent extra decor serial_park
+TAGS:     allow_dup
 ORIENT:   float
-KMONS:    1 = bush
-FTILE:    D = floor_vault
-FTILE:    Et = floor_grass
-SUBST:    E = ...11t
+SUBST:    E = ```11t
 SUBVAULT: H : serial_park_minivault
+: init_park(_G, "bush", "`E1t", "D")
 MAP
 .............
 .DDDDDDDDDDD.
@@ -108,14 +113,12 @@ MAP
 ENDMAP
 
 NAME:   serial_park_square2
-TAGS:   allow_dup transparent extra decor serial_park
+TAGS:   allow_dup
 ORIENT: float
-KMONS:  1 = bush
-FTILE:  DF = floor_vault
-FTILE:  Et1 = floor_grass
+SUBST:  E = ```11t
 # Small chance of random altar.
 SUBST:  F : GGGGTTTTVC<>
-SUBST:  E = ...11t
+: init_park(_G, "bush", "`E1t", "DFGTVC<>")
 MAP
  .............
 ..DDDDD.DDDDD..
@@ -135,12 +138,10 @@ MAP
 ENDMAP
 
 NAME:     serial_park_square3
-TAGS:     allow_dup transparent extra decor serial_park
-ORIENT:   float
-FTILE:    D = floor_vault
-FTILE:    E = floor_grass
-SUBST:    E  = ...11t
+TAGS:     allow_dup
+SUBST:    E  = ```11t
 SUBVAULT: H : serial_park_minivault
+: init_park(_G, "plant", "`E1t", "D")
 MAP
   ... ...
  .DDD.DDD.
@@ -156,15 +157,12 @@ MAP
 ENDMAP
 
 NAME:     serial_park_paths
-TAGS:     transparent extra decor serial_park
 ORIENT:   float
-KMONS:    1 = bush
-FTILE:    DF = floor_vault
-FTILE:    Et = floor_grass
-SUBST:    E  = ...11t
+SUBST:    E  = ```11t
 SUBST:    t  : tt1
 SUBST:    F  = GT
 SUBVAULT: H : serial_park_minivault
+: init_park(_G, "bush", "`E1t", "DFGT")
 MAP
             @
  ............
@@ -195,13 +193,11 @@ ENDMAP
 
 
 NAME:   serial_park_avenue1
-TAGS:   allow_dup transparent extra decor serial_park
+TAGS:   allow_dup
 ORIENT: float
-KMONS:  1 = bush
-FTILE:  DGF = floor_vault
-SUBST:  F  : tt.
-FTILE:  Et = floor_grass
+SUBST:  F  : tt~
 SUBST:  t : tt1
+: init_park(_G, "bush", "`E1t", "~DF")
 MAP
    ..................................
    .DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD.
@@ -215,12 +211,10 @@ MAP
 ENDMAP
 
 NAME:    serial_park_fountain
-TAGS:    transparent extra decor serial_park
 ORIENT:  float
-FTILE:   DFGT = floor_vault
-FTILE:   Et = floor_grass
 KPROP:   T = no_tele_into
 KMASK:   T = opaque
+: init_park(_G, "bush", "Et", "DFGT")
 MAP
                ......
                .DDDDD.
@@ -247,10 +241,11 @@ MAP
 ENDMAP
 
 NAME:   serial_park_tiny_pond
-TAGS:   allow_dup transparent extra decor serial_park
+TAGS:   allow_dup
 FTILE:  DG = floor_vault
 FTILE:  Et = floor_grass
 SUBST:  G = GGTV
+: init_park(_G, "bush", "Et", "DGTV")
 MAP
   ......
  .DDDDDD.
@@ -262,11 +257,9 @@ MAP
 ENDMAP
 
 NAME:    serial_park_tiny_1
-TAGS:    allow_dup transparent extra decor serial_park
-KMONS:   1 = bush
-FTILE:   E = floor_grass
-SUBST:   E = .t1
-FTILE:   D = floor_vault
+TAGS:    allow_dup
+SUBST:   E = `t1
+: init_park(_G, "bush", "`E1t", "D")
 MAP
   ..
  .DD.
@@ -277,11 +270,9 @@ MAP
 ENDMAP
 
 NAME:    serial_park_tiny_2
-TAGS:    allow_dup transparent extra decor serial_park
-KMONS:   1 = bush
-FTILE:   E = floor_grass
-SUBST:   E = .t1
-FTILE:   D = floor_vault
+TAGS:    allow_dup
+SUBST:   E = `t1
+: init_park(_G, "bush", "`E1t", "D")
 MAP
   ..
  .DD.
@@ -295,9 +286,8 @@ ENDMAP
 
 NAME:     serial_park_minivault_5x5_1
 TAGS:     serial_park_minivault allow_dup unrand
-FTILE:    DG = floor_vault
 SUBST:    G = TTTGGt
-FTILE:    Et = floor_grass
+: init_park(_G, "bush", "`Et", "DGT")
 MAP
 tEEEt
 EEDEE
@@ -308,9 +298,8 @@ ENDMAP
 
 NAME:     serial_park_minivault_5x5_2
 TAGS:     serial_park_minivault allow_dup unrand
-FTILE:    t = floor_grass
-FTILE:    DF = floor_vault
 SUBST:    F  = TTTTWWWGVw
+: init_park(_G, "bush", "`Et", "DFGTV")
 MAP
 tDWDt
 DWWWD
@@ -321,7 +310,7 @@ ENDMAP
 
 NAME:     serial_park_minivault_5x5_3
 TAGS:     serial_park_minivault allow_dup unrand
-FTILE:    t = floor_grass
+: init_park(_G, "bush", "t", "D")
 MAP
 tc+ct
 cc0cc
@@ -333,9 +322,8 @@ ENDMAP
 NAME:     serial_park_minivault_5x5_4
 TAGS:     serial_park_minivault allow_dup unrand
 SUBST:    C : Ct
-FTILE:    Et = floor_grass
-FTILE:    CDT = floor_vault
 SUBST:    T : TTTTVVDG
+: init_park(_G, "bush", "Et", "CDTVDG")
 MAP
 tEEEt
 ETDTE
@@ -346,9 +334,8 @@ ENDMAP
 
 NAME:     serial_park_minivault_5x5_5
 TAGS:     serial_park_minivault allow_dup unrand
-KMONS:    1 = plant
-FTILE:    Et1 = floor_grass
-SUBST:    1 = 11.
+SUBST:    1 = 11`
+: init_park(_G, "plant", "`E1t", "D")
 MAP
 tEEEt
 E111E
@@ -359,11 +346,10 @@ ENDMAP
 
 NAME:     serial_park_minivault_5x5_6
 TAGS:     serial_park_minivault allow_dup unrand
-KMONS:    1 = fungus
-SUBST:    D = ..1
-FTILE:    t. = floor_grass
-FTILE:    1 = floor_swamp
+SUBST:    D = ``1
+FTILE:    1. = floor_swamp
 SUBST:    1 = 111.
+: init_park(_G, "fungus", "`t", "D")
 MAP
 tDDDt
 DD1DD
@@ -374,10 +360,8 @@ ENDMAP
 
 NAME:     serial_park_minivault_5x5_7
 TAGS:     serial_park_minivault allow_dup unrand
-KMONS:    1 = bush
-FTILE:    E1 = floor_grass
-FTILE:    T = floor_vault
-SUBST:    1 = 111.
+SUBST:    1 = 111`
+: init_park(_G, "bush", "`E1", "T")
 MAP
 E111E
 1EEE1
@@ -388,9 +372,8 @@ ENDMAP
 
 NAME:     serial_park_minivault_5x5_8
 TAGS:     serial_park_minivault allow_dup unrand
-KMONS:    1 = bush
-FTILE:    E1 = floor_grass
 SUBST:    1 : 11t
+: init_park(_G, "bush", "`E1", "D")
 MAP
 11E11
 11E11

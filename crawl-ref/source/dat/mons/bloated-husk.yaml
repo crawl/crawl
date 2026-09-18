@@ -1,7 +1,8 @@
 name: "bloated husk"
-glyph: {char: "n", colour: yellow}
+glyph: {char: "U", colour: yellow}
 flags: [no_zombie]
 resists: {cold: 1}
+exp: 299
 genus: ghoul
 holiness: [undead]
 will: 40

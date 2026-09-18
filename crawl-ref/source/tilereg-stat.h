@@ -17,6 +17,7 @@ public:
 
 protected:
     ShapeBuffer m_shape_buf;
+    coord_def m_mouse_cell {-1, -1};
     void _clear_buffers();
 };
 

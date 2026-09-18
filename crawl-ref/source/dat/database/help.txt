@@ -7,6 +7,8 @@ pick-up
 Use the usual navigation keys (<w>arrow</w> keys, <w>pgdn</w>/<w>pgup</w>, <w>home</w>, <w>end</w>) to select
 items, and <w>Space</w>/<w>.</w> to toggle whether the selected item will be picked up or
 dropped. Pressing an item's letter key will also toggle its pickup/drop state.
+Gear, potions, scrolls, and evocable items are on separate pages which can be
+switched between by <w>left arrow</w> and <w>right arrow</w> or <w>Tab</w> and <w>Shift-Tab</w>.
 Press <w>Return</w> to accept the current set of items.
 
 Entering a number before selecting by letter will toggle just that quantity of
@@ -25,11 +27,6 @@ Global selects:  <w>,</w>   select all     <w>*</w>   invert all      <w>-</w>  
                  <w>;</w>   select last unequipped
 Note that for dropping, the <w>,</w> command uses the <w>drop_filter</w> option, which
 narrows the range of items to be (de)selected. The default is all useless items.
-
-<h>Disabling autopickup via the drop menu</h>
-On the drop menu, items you select after pressing <w>\</w> will be marked with a <w>*</w>
-instead of the usual <w>+</w>. Autopickup for these items will be disabled when you
-leave the menu. To return to the normal selection mode, press <w>\</w> a second time.
 %%%%
 known-menu
 
@@ -160,8 +157,10 @@ level-map
              (Moves cursor to the staircase destination if a known staircase is
              highlighted.)
 <w>G</w>          : View another level by choosing a branch and depth.
-<w>o</w>          : Move the cursor to the next autoexplore target.
-<w>{</w> or <w>}</w>     : Zoom out or in (tiles only).
+<w>o</w>          : Move the cursor to the next autoexplore target.{{
+if crawl.is_tiles() then
+    return "\n<w>{</w> or <w>}</w>     : Zoom out or in."
+end }}
 
 <h>Travel exclusions</h>
 <w>e</w>          : Create a travel exclusion, change its radius, or remove it.
@@ -188,6 +187,10 @@ level-map
 <w>Ctrl-C</w>     : Clear monster memory.
 <w>Ctrl-F</w>     : Forget level map.
 <w>Ctrl-U</w>     : Restore forgotten level map.{{
+if not crawl.is_tiles() then
+    return "\n"
+           .. "<w>=</w>          : Toggle always showing stair list."
+end }}{{
 if you.wizard() then
     return "\n\n"
           .. "<h>Wizard commands</h>\n"
@@ -289,13 +292,14 @@ Apart from (de)selecting skills, you also have the following toggles:
 %%%%
 spell-library
 <h>Spell Library</h>
-<w>!</w>        : Cycle between <w>Memorise</w>, <w>Describe</w>, <w>Hide</w>, and <w>Show</w> pages.
-<w>Ctrl-F</w>   : Filter the list of spells shown with a regex.
-<w>?</w>        : Show this help.
+<w>Tab</w> or <w>!</w>  : Cycle forward through <w>Memorise</w>, <w>Describe</w>, <w>Hide</w>, and <w>Show</w> pages.
+<w>Shift-Tab</w> : Cycle backward through these pages.
+<w>Ctrl-F</w>    : Filter the list of spells shown with a regex.
+<w>?</w>         : Show this help.
 
 By default, the spell library opens to the <w>Memorise</w> page; to begin memorising a
 spell, just press its letter. To read a spell's description, first switch to
-the <w>Describe</w> page by pressing <w>!</w>, then press the spell's letter.
+the <w>Describe</w> page by pressing <w>Tab</w>, then press the spell's letter.
 
 Most characters will not be interested in memorising the majority of spells that
 accumulate in their spell library; this is where the <w>Show</w> and <w>Hide</w> pages come in
@@ -317,8 +321,8 @@ wiz-monster
 To create a monster with the default equipment for its species, simply enter
 the species name, such as <w>kobold</w> or <w>Yiuf</w>.
 
-A hydra can be given a specific number of heads by calling it an n<w>-headed</w>
-<w>hydra</w> (with a maximum of 20 heads):
+A hydra or slymdra can be given a specific number of heads by calling it an
+n<w>-headed</w> <w>hydra</w> or n<w>-headed</w> <w>slymdra</w> (with a maximum of 20 heads):
 
 <w>four-headed hydra</w>
 
@@ -436,7 +440,7 @@ zombies from random monsters suitable for some other depth as (e.g.):
 
 <w>place:Elf:3 zombie</w>
 
-The available modifiers are <w>zombie</w>, <w>skeleton</w>, <w>simulacrum</w>, and <w>spectre</w>.
+The available modifiers are <w>zombie</w>, <w>draugr</w>, <w>simulacrum</w>, and <w>spectre</w>.
 
 <h>Overriding Monster Names</h>
 
@@ -469,7 +473,7 @@ monster was a unique:
 
 <w>kobold name:Durwent name_replace</w>
 
-Will result in "<cyan>Durwent</cyan>" rather than "<cyan>Durwent the Kobold</cyan>". The corpse will
+Will result in "<cyan>Durwent</cyan>" rather than "<cyan>Durwent the kobold</cyan>". The corpse will
 still be a "<cyan>kobold corpse of Durwent</cyan>".
 
 <w>name_species</w> uses the name for corpses as-is, without prefixing it with
@@ -503,7 +507,7 @@ is exactly the same as:
 <w>kobold name:goblin name_replace name_descriptor name_definite</w>
 
 <w>name_zombie</w> can be used to redefine already zombified monsters (including
-skeletons, simulacra and spectrals).
+draugr, simulacra and spectrals).
 
 Finally, <w>name_nocorpse</w> will cause the name to be completely ignored for
 corpses. For example:
@@ -597,7 +601,7 @@ spell-less monster with:
 <h>Setting enchantments</h>
 
 You may give a monster any number of enchantments. It may start hasted, blind,
-have permanent RMsl, etc. The syntax is <w>ench:<<name>:<<degree>:<<duration></w> or
+have permanent RMsl, etc. The syntax is <w>ench:<<name>:<<duration>:<<degree></w> or
 <w>perm_ench:<<name>:<<degree></w>. The <w><<degree></w> and <w><<duration></w> fields may be
 omitted.
 

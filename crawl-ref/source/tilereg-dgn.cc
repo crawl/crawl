@@ -474,8 +474,7 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
         return 0;
 
     if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
-        && event.event == wm_mouse_event::PRESS
-        && event.button == wm_mouse_event::LEFT)
+        && event.event == wm_mouse_event::PRESS)
     {
         m_last_clicked_grid = m_cursor[CURSOR_MOUSE];
 
@@ -484,7 +483,10 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
         const coord_def gc(cx + m_cx_to_gx, cy + m_cy_to_gy);
         tiles.place_cursor(CURSOR_MOUSE, gc);
 
-        return CK_MOUSE_CLICK;
+        if (event.button == wm_mouse_event::LEFT)
+            return CK_MOUSE_CLICK;
+        else if (event.button == wm_mouse_event::RIGHT)
+            return CK_MOUSE_CMD;
     }
 
     if (mouse_control::current_mode() == MOUSE_MODE_MACRO
@@ -505,7 +507,7 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
 
     if (event.event == wm_mouse_event::MOVE)
     {
-        string desc = get_terse_square_desc(gc);
+        string desc = get_cell_mouseover_tag(gc);
         // Suppress floor description
         if (desc == "floor")
             desc = "";
@@ -567,14 +569,15 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
                 {
                     // if on stairs, travel them
                     const dungeon_feature_type feat = env.grid(gc);
-                    switch (feat_stair_direction(feat))
+                    const command_type cmd = feat_stair_direction(feat);
+                    switch (cmd)
                     {
                     case CMD_GO_DOWNSTAIRS:
                     case CMD_GO_UPSTAIRS:
-                        return command_to_key(feat_stair_direction(feat));
+                        return encode_command_as_key(cmd);
                     default:
                         // otherwise wait
-                        return command_to_key(CMD_WAIT);
+                        return encode_command_as_key(CMD_WAIT);
                     }
                 }
                 else
@@ -590,26 +593,32 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
                         update_screen();
                         return CK_MOUSE_CMD;
                     }
-                    return command_to_key(CMD_PICKUP);
+                    return encode_command_as_key(CMD_PICKUP);
                 }
             }
 
             const dungeon_feature_type feat = env.grid(gc);
-            switch (feat_stair_direction(feat))
+            const command_type cmd = feat_stair_direction(feat);
+            switch (cmd)
             {
             case CMD_GO_DOWNSTAIRS:
             case CMD_GO_UPSTAIRS:
-                return command_to_key(feat_stair_direction(feat));
+                return encode_command_as_key(cmd);
             default:
                 return 0;
             }
         }
         case wm_mouse_event::RIGHT:
             if (!(event.mod & TILES_MOD_SHIFT))
-                return command_to_key(CMD_RESISTS_SCREEN); // Character overview.
+            {
+                // Character overview.
+                return encode_command_as_key(CMD_RESISTS_SCREEN);
+            }
             if (!you_worship(GOD_NO_GOD))
-                return command_to_key(CMD_DISPLAY_RELIGION); // Religion screen.
-
+            {
+                // Religion screen.
+                return encode_command_as_key(CMD_DISPLAY_RELIGION);
+            }
             // fall through...
         default:
             return 0;
@@ -637,17 +646,18 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
 int tile_click_cell(const coord_def &gc, unsigned char mod)
 {
     monster* mon = monster_at(gc);
-    if (mon && you.can_see(*mon))
+    if (mon && you.aware_of(*mon))
     {
         if (_handle_distant_monster(mon, mod))
             return CK_MOUSE_CMD;
     }
 
-    if ((mod & TILES_MOD_CTRL) && adjacent(you.pos(), gc))
+    if ((mod & (TILES_MOD_CTRL | TILES_MOD_SHIFT)) && adjacent(you.pos(), gc))
     {
-        const int cmd = click_travel(gc, mod & TILES_MOD_CTRL);
-        if (cmd != CK_MOUSE_CMD)
-            process_command((command_type) cmd);
+        const command_type cmd = click_travel(gc, mod & TILES_MOD_CTRL,
+                                              mod & TILES_MOD_SHIFT);
+        if (cmd != CMD_NO_CMD)
+            process_command(cmd);
 
         return CK_MOUSE_CMD;
     }
@@ -658,9 +668,9 @@ int tile_click_cell(const coord_def &gc, unsigned char mod)
         return CK_MOUSE_CMD;
 
     dprf("click_travel");
-    const int cmd = click_travel(gc, mod & TILES_MOD_CTRL);
-    if (cmd != CK_MOUSE_CMD)
-        process_command((command_type) cmd);
+    const command_type cmd = click_travel(gc, false, false);
+    if (cmd != CMD_NO_CMD)
+        process_command(cmd);
 
     return CK_MOUSE_CMD;
 }
@@ -752,7 +762,8 @@ bool DungeonRegion::update_tip_text(string &tip)
                 tip += make_stringf("HEIGHT(%d)\n", dgn_height_at(gc));
 
             tip += "\n";
-            tip += tile_debug_string(tile_env.fg(ep), tile_env.bg(ep), ' ');
+            tip += tile_debug_string(tile_env.bk_fg(gc), tile_env.bk_bg(gc),
+                                     ' ');
             tip += "\n";
         }
         else
@@ -795,6 +806,9 @@ bool DungeonRegion::update_tip_text(string &tip)
 
             if (props & FPROP_SEEN_OR_NOEXP)
                 str.push_back("seen_or_noexp");
+
+            if (props & FPROP_NO_AUTOMAP)
+                str.push_back("no_automap");
 
             if (!str.empty())
             {
@@ -868,7 +882,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
     else // non-player squares
     {
         const monster* mon = monster_at(gc);
-        if (mon && you.can_see(*mon))
+        if (mon && you.aware_of(*mon))
         {
             has_monster = true;
             // TODO: is see_cell_no_trans too strong?
@@ -909,7 +923,14 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
         else if (!cell_is_solid(gc)) // no monster or player
         {
             if (adjacent(gc, you.pos()))
+            {
                 _add_tip(tip, "[L-Click] Move");
+                if (feat_is_open_door(env.grid(gc)))
+                {
+                    _add_tip(tip, "[Shift + L-Click] Close (%)");
+                    cmd.push_back(CMD_CLOSE_DOOR);
+                }
+            }
             else if (env.map_knowledge(gc).feat() != DNGN_UNSEEN)
             {
                 if (click_travel_safe(gc))
@@ -1047,7 +1068,7 @@ bool DungeonRegion::update_alt_text(string &alt)
     describe_info inf;
     dungeon_feature_type feat = env.map_knowledge(gc).feat();
     if (you.see_cell(gc))
-        get_square_desc(gc, inf);
+        inf.body << get_square_desc(gc);
     else if (feat != DNGN_FLOOR && !feat_is_wall(feat) && !feat_is_tree(feat))
         get_feature_desc(gc, inf);
     else

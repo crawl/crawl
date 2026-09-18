@@ -33,12 +33,12 @@
     Jan Anders Bremer (underhound.eu)
     Rax E. Dillon (crawl.akrasiac.org)
     dplusplus (lazy-life.ddo.jp)
-    floraline (crawl.kelbi.org)
-    Wongi Hong (webzook.net / kr.dobrazupa.org)
-    Alex Jurkiewicz (crawl.project357.org)
+    mcursa (crawl.project357.org)
     Marc H. Thoben (crawl.develz.org)
-    Namanix (crawl.xtahua.com)
+    melvinkitnick (crawl.xtahua.com)
     ZureaL (cbro.berotato.org)
+    ASCIIPhilia (crawl.nemelex.cards)
+    gammafunk (crawl.dcss.io)
   and past:
     Jan Anders Bremer (crawl.lantea.net)
     John Boyle (crawl.berotato.org)
@@ -49,6 +49,10 @@
     phunktion (crawl.somatika.net)
     sd1989 (kr.dobrazupa.org)
     ZiBuDo (crawl.jorgrun.rocks)
+    floraline (crawl.kelbi.org)
+    Wongi Hong (webzook.net / kr.dobrazupa.org)
+    Alex Jurkiewicz (crawl.project357.org)
+    Namanix (crawl.xtahua.com)
 
 * The members of various usability testing teams from the department of
   Information Processing Science in Oulu University:
@@ -91,6 +95,7 @@
     aMcNicky
     AndSDev
     Antern
+    antimachina
     Austin Appleby
     araganzar
     argonaut
@@ -107,6 +112,7 @@
     Beargit
     Bill Beher
     Alexander Beisig
+    Alex Beloi
     benadryl
     biasface
     Björn Bähre
@@ -130,9 +136,11 @@
     Joe Buzzelli
     Micah C
     Policarpo Caballero
+    cadi
     Ian Caltabiano
     David Candido
     Edgar Carballo
+    caryoscelus
     Cedor
     Cerol
     Marcelo Cerri
@@ -153,10 +161,12 @@
     cut1less
     Matthew Daley
     David Damerell
-    Darby
+    Victor 'Vji' Davidescu
     Paul Dejean
     Denzi
+    DevJac
     Sean Dewar
+    DewdropsOTG
     Ed Dewey
     dicedlemming
     Lothar Dierkes
@@ -185,7 +195,6 @@
     Brett Foster
     Kyle Fox
     Perry Fraser
-    freepotion
     Chris Galardi
     GenericPseudonym
     Ge0ff
@@ -208,8 +217,10 @@
     Brian Haase
     Sophie Hamilton
     Chris Hamons
+    hanchyan
     Tomas Krag Hansen
     Lexi Hattaway
+    Eivin Hatvik
     Taylor Hedberg
     Anders Heggestøyl
     Alex Henry
@@ -222,7 +233,6 @@
     Iainuki
     ICC
     Icy Lich
-    Wizard Ike
     Ilyak
     Matthew Ince
     Mitsuhiro Itakura
@@ -252,6 +262,7 @@
     Christopher Landry
     Lantier
     Maciej Lapinski
+    LemurRobot
     Lamil Lerran
     Jordan Lewis
     Lici
@@ -284,6 +295,8 @@
     mgdelmonte
     Midn8
     mikee
+    MikeJHeg
+    Jared Miller
     Nathan Mills
     Andrew Minton
     Mintice
@@ -296,16 +309,20 @@
     Mushboom
     Rosstin Murphy
     Eva Myers
+    Mystic Sailboat
     nagdon
+    NagyDonat
     Naruni
     neofelis
     nirrattner
     Jonathon Nooner
     NormalPerson7
     Michael Nowack
+    A. Noyd
     Erkki Nurmi
     Mattias Nyberg
     nyra
+    Weston Odom
     Dylan O'Donnell
     Heinrich Ody
     Chris Oelmueller
@@ -321,15 +338,17 @@
     Malwyn P
     palyth
     panicbit
+    Paperbell
     Anders Papitto
     William Parker
     Christopher Partin
     Pedro
     Pekkekke
+    person50605
+    pumpkincat
     Alejandro Ramirez
     Rytis Petronis
     Arlen Phillips
-    pianoman523
     pikaro
     Lemuel Pitkin
     valerie "ploomutoo"
@@ -338,8 +357,10 @@
     Iago Porto
     Alexander Posch
     Brian Power
+    Predelnik
     psywombats
     pubby
+    pyy156941
     Ashley Elizabeth Raine
     randomMesh
     Edward Randtke
@@ -366,6 +387,7 @@
     Risto Saarelma
     Sebastian Salman
     Petri Salminen
+    Lyla Sanders
     Sandman25
     Brett Scarborough
     Roderick Schertler
@@ -407,11 +429,13 @@
     Tedronai
     tekkud
     Chris Terenzi
+    tianmaster
     Jared 'Twinge' Tinney
     Matt Titus
     Jonathan Klabunde Tomer
     Tommy
     Sean VanMeter
+    Vaskritaya
     Mikko Vepsäläinen
     vla22
     WanderingBlade
@@ -424,15 +448,22 @@
     Evan Williams
     Mara Williamson
     Jeremey Wilson
+    Nicholas Wilson
     wjchen
     ximxim
     Yelve Yakut
     Edward Z. Yang
     Yermak
+    Christopher 'GoodKnight' Yim
+    YLam
     Andrew G. York
     Rob Young
     Zannick
     Zooko
+    Zhang Haocheng
+    Brian 'buehler' Faires
+    Dossy Shiobara
+    Jewel
 
 The Dungeon Crawl Stone Soup development team is:
     advil
@@ -447,6 +478,7 @@ The Dungeon Crawl Stone Soup development team is:
     Robert Burnham
     Kate Campbell
     Matthew Cline
+    Darby
     Florian Diebold
     Rax E. Dillon
     Nicholas Feinberg
@@ -476,6 +508,7 @@ The Dungeon Crawl Stone Soup development team is:
     Neil Moore
     nicolae
     Steven Noonan
+    Odds
     Stefan O'Rear
     Charles Otto
     Aaron Pixton
@@ -485,3 +518,4 @@ The Dungeon Crawl Stone Soup development team is:
     Marc H. Thoben
     Chris West
     Samuel Wilson
+    Wizard Ike

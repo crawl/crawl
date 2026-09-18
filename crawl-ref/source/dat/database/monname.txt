@@ -2,9 +2,10 @@
 # monname.txt: lookup monster names
 #
 # This file contains a list of names for monster names.
-# This is currently only used when one of your orcish followers as
+# This is currently only used when one of your orcish apostles as
 # Beogh's messiah gets named by Beogh, and for Hep's ancestor names.
-# The dual-wielding species also gets their weapon names from here.
+# The dual-wielding coglin species also gets their weapon names from
+# here.
 #
 # Some important orcish syllables
 #   beogh, bog = referring to Beogh
@@ -12,23 +13,38 @@
 #
 # Other syllables may be borrowed from real life, or made up.
 #
-# To determine a name for an orcish follower, the game first looks
-# for this follower's specific type, followed by the key word
-# "name", e.g. "orc warrior name" or "orc sorcerer name". If no name
-# has been found, the genus "orc" is tried instead. Should that also
-# fail, plain orcs as well as followers of professions that have not
-# been defined, won't ever be named.
+# To determine a name for an orcish apostle, the game looks for this
+# apostle's specific type, followed by the key word "name", e.g. "orc
+# apostle warrior name" or "orc apostle wizard name". An apostle can get
+# a name unique to its specific type or an ordinary orc name.
 #
-# A name, once chosen, is final. In particular, Blork and Urug cannot
-# be renamed. Also, note that plain orcs can grow up to be warriors
-# and follow the fighter route, or else be blessed by Beogh to become
-# priests. Either way, if already named, they will keep their name.
+# Monster names support a small subset of what monster speech does:
+# @RANDGEN@, @random_god@, @random_god_chaotic@, @random_god_evil@,
+# @random_god_good@, @random_skill@, @random_skill_magic@, and
+# @random_skill_mundane@.
 #
 # Feel free to add to this list. Like for the other database lists,
 # you may add weights (defaults to w:10) to make certain names more
 # or less likely.
 #
 ##########################################################
+%%%%
+# Any orc name, apostle-specific or otherwise. Any name will work here,
+# as long as it's not already in @_rare_graffiti_author_orc_@ in
+# graffiti.txt.
+any orc name
+
+w:1
+@_orc_warrior_name_@
+
+w:1
+@_orc_wizard_name_@
+
+w:1
+@_orc_priest_name_@
+
+w:50
+@orc name@
 %%%%
 orc name
 
@@ -44,7 +60,7 @@ w:45
 orc apostle warrior name
 
 w:1
-Orconan
+@_orc_warrior_name_@
 
 w:50
 @orc name@
@@ -52,22 +68,34 @@ w:50
 orc apostle wizard name
 
 w:1
-Simorc Magus
+@_orc_wizard_name_@
 
 w:50
 @orc name@
 %%%%
 orc apostle priest name
 
-# Watch out! :p
 w:1
-Judas
+@_orc_priest_name_@
 
 w:50
 @orc name@
 %%%%
+_orc_warrior_name_
+
+Orconan
+%%%%
+_orc_wizard_name_
+
+Simorc Magus
+%%%%
+_orc_priest_name_
+
+# Watch out! :p
+Judas
+%%%%
 # Obvious references to Beogh
-# (17 at last count)
+# (20 at last count)
 _beogh_name_
 
 Arbeogh
@@ -84,6 +112,8 @@ Bogbrand
 Bogfrid
 
 Boghold
+
+Bogloth
 
 Bogmar
 
@@ -105,10 +135,12 @@ Morbeogh
 
 Orbeogh
 
+Vorbog
+
 Warbeogh
 %%%%
 # Obvious references to orcs in general
-# (extremely subjective, and 19 at last count)
+# (extremely subjective, and 21 at last count)
 _orcish_name_
 
 Alork
@@ -148,9 +180,13 @@ Oruk
 Pellinorc
 
 Urtork
+
+Xexorm
+
+Zandor
 %%%%
 # Other
-# (52 at last count)
+# (62 at last count)
 _other_orcish_name_
 
 Agrik
@@ -183,9 +219,15 @@ Borgun
 
 Brandogh
 
+Brun
+
 Brunolf
 
+Creb
+
 Dorog
+
+Garatoth
 
 Garbold
 
@@ -203,19 +245,29 @@ Herok
 
 Hilgar
 
+Jathrek
+
 Jorge
 
 Koronagh
 
 Learuk
 
+Lorvak
+
 Margrim
+
+Mogdar
 
 Morguth
 
 Morun
 
+Mugrim
+
 Murdo
+
+Myglar
 
 Norbak
 
@@ -231,9 +283,13 @@ Ortolf
 
 Rocco
 
+Shobas
+
 Spirok
 
 Syrus
+
+Thalvi
 
 Thorok
 
@@ -339,6 +395,8 @@ Eadwine
 
 Eideard
 
+Erdrick
+
 Esmond
 
 Florimund
@@ -348,6 +406,8 @@ Gaiseric
 Gladwin
 
 Hondscioh
+
+Hrodric
 
 Hrodulf
 
@@ -362,6 +422,8 @@ Leofric
 Leofsige
 
 Osbert
+
+Sigurd
 
 Theodoric
 
@@ -644,11 +706,19 @@ _west_european_female_name_
 
 Ælfthryth
 
+Ælfwynn
+
 Æðelind
 
 Audrea
 
+Bealdhild
+
 Cyneburga
+
+Cynethryth
+
+Desdemona
 
 Eadburga
 
@@ -658,9 +728,17 @@ Edmée
 
 Edwyna
 
+Eormenhild
+
 Friðuswiþ
 
+Godgifu
+
+Gudrun
+
 Kendra
+
+Milburga
 
 Saranna
 
@@ -673,6 +751,8 @@ Synnove
 Walburga
 
 Wilfreda
+
+Wynnflæd
 %%%%
 _roman_female_name_
 
@@ -933,13 +1013,13 @@ w:50
 @ancestor name@
 
 w:1
-RANDGEN
+@RANDGEN@
 
 # The names below are contemporary, not antique.
 # That's why we aren't using them for ancestors.
 
 w:1
-@_bland_male_name_@
+@bland name@
 
 @_cantonese_female_name_@
 
@@ -971,20 +1051,57 @@ w:15
 @_thai_female_name_@
 
 @_thai_male_name_@
-
 %%%%
-_bland_male_name_
+bland name
 
 # Look, it's funny to me.
 # No offense intended.
 
+@_bland_female_name_@
+
+@_bland_male_name_@
+%%%%
+_bland_female_name_
+
+Abby
+
+Babs
+
+Betsy
+
+Carrie
+
+Deb
+
+Izzy
+
+Jen
+
+Mia
+
+Sue
+
+Vera
+%%%%
+_bland_male_name_
+
+Bill
+
 Bob
 
+Cal
+
 Dave
+
+Doug
 
 Jeff
 
 Jim
+
+Mack
+
+Ned
 
 Pete
 %%%%
@@ -1373,6 +1490,8 @@ Niamh
 Nóirín
 
 Onóra
+
+Órlaith
 
 # Another archaicism
 Raghnailt
@@ -1769,4 +1888,3 @@ Suthep
 Wira
 
 Udom
-%%%%

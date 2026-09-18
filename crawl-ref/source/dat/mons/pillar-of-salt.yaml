@@ -1,5 +1,5 @@
 name: "pillar of salt"
-glyph: {char: "I", colour: white}
+glyph: {char: "Δ", colour: white}
 flags: [stationary, no_exp_gain, remnant, no_threat]
 holiness: [nonliving]
 will: invuln

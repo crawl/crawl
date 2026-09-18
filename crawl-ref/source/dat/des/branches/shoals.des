@@ -43,7 +43,7 @@ function shoals_vault_is_mimic(e)
     return false
   end
 
-  local tag, tag2 = unpack(params)
+  local tag, tag2 = table.unpack(params)
   return tag2 ~= nil and string.find(tag2, "mimic")
 end
 
@@ -182,19 +182,19 @@ ENDMAP
 
 NAME:   elwin_shoals_entry_stream
 TAGS:   shoals_entry transparent
-KMONS:  1 = merfolk
-KMONS:  2 = merfolk siren
+KMONS:  1 = merfolk ; mundane spear
+KMONS:  2 = merfolk siren ; spear
 KFEAT:  12 = W
 KFEAT:  O = enter_shoals
-NSUBST: Y = 2:1 / *:W, Z = 2:1 / *:W, 1 = 1:122 / 1:1112 / *:1
+NSUBST: Y = 2:1 / *:W, Z = 2:1 / *:W, 1 = 1:122 / 1:1W / *:1
 MAP
-    xxxxx
-  xxx...xxx
-xxx..xOx..xxx
-x...YYWZZ...x
-x.YYYxxxZZZ.x
-+W.xxx xxx.W+
-+xxx     xxx+
+    xxxxxxx
+  xxx.....xxx
+xxx...xOx...xxx
+x....WWWWW....x
+x.YYYxxxxxZZZ.x
++W.xxx   xxx.W+
++xxx       xxx+
 ENDMAP
 
 NAME:   elwin_shoals_entry_rooms
@@ -291,12 +291,13 @@ default-depth: Shoals
 
 NAME:   overgrown_tower
 TAGS:   transparent extra
-WEIGHT: 2
+WEIGHT: 5
 MONS:   plant, fungus
-SUBST:  x = x:60 . '
-SUBST:  ' = ' 1:5
-SUBST:  . = . 2:1
-SUBST:  ' = .
+SUBST:  x = x:60 `
+SUBST:  . = . 2:1, ' = ' 1:5
+FTILE:  `+ = floor_pebble_lightcyan
+FTILE:  .2 = floor_sprouting_ruin
+TILE:   x = wall_lair
 MAP
  '''''''''
 '''xx+xx'''
@@ -530,7 +531,7 @@ ENDMAP
 
 NAME:  nicolae_shoals_dead_sea_scrolls
 SUBST: Z = PWs., p = P.., s = sW
-KITEM: d = any scroll w:30 / nothing w:20 / any randbook w:1
+KITEM: d = any scroll w:30 / any parchment slevel:1 / any parchment w:2
 KMONS: Ps = plant
 KPROP: .WwpPsd = no_tide
 KFEAT: y = w
@@ -831,6 +832,8 @@ NSUBST:  D = + / c, E = + / c, F = + / c, H = + / c, J = + / c, K = + / c, \
          P = 2=+ / 2=n / +c / nc / c, Q = + / n / +c / nc / c
 SUBST:   _ = _w, LMN = `
 KPROP:   +` = no_tide
+FTILE:   +n = floor_pebble_green
+FTILE:   ` = floor_sprouting_ruin
 CLEAR:   _
 MAP
 cccPccccPcccPccc+cc
@@ -854,6 +857,34 @@ c`````L```M```N```c
 cccPccccPcccPccc+cc
 ENDMAP
 
+NAME:    regret_index_shoalsdec_tripartite
+TAGS:    transparent water_ok shoalsdec
+DEPTH:   Shoals
+SHUFFLE: ABC, DEF
+SUBST:   AD = @, B : c``, E : c``, CF = c
+CLEAR:   `
+MAP
+cccABCccc cccFEDccc
+c       ccc       c
+c      cc cc      c
+A    wcc   ccw    D
+B   wcc     ccw   E
+C  wcc       ccw  F
+c  cc         cc  c
+c cc           cc c
+ccc             ccc
+ c
+ccc
+c cc
+c  cc
+F  wcc
+E   wcc
+D    wcc
+c      cc
+c       c
+cccDEFccc
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Monster-placing vaults.
@@ -864,12 +895,14 @@ ENDMAP
 # Appear rarely.
 #
 NAME:   overgrown_hall
-WEIGHT: 2
+WEIGHT: 5
 MONS:   plant, fungus, pile of debris
 MONS:   cyclops / stone giant w:2
-SUBST:  x = xx., G = GG33.
+SUBST:  x = xx", G = GG33.
 SUBST:  . = .:90 1:19 x:1
 SUBST:  1 = 1 2:1, ' = .
+FTILE:  " = floor_pebble_lightcyan
+FTILE:  .123G4 = floor_sprouting_ruin
 MAP
 xxxxxxxxxxx
 x.........x
@@ -942,8 +975,8 @@ SHUFFLE: 12 / 3"
 SUBST:   7 = 8
 : end
 SUBST:   6 = 66*, X = xx., x : x:9 .:1
-FTILE:   '678 = floor_pebble_red
-COLOUR:  '678 = red
+FTILE:   '678* = floor_volcanic
+COLOUR:  '678* = red
 MAP
    WWWWWWWW
  WWWW.xx.WWWW
@@ -991,10 +1024,11 @@ KMONS:   P = plant
 KMONS:   f = fungus
 KMONS:   D = pile of debris
 KFEAT:   Pfp = shallow_water
-KFEAT:   D5 = deep_water
+KFEAT:   D = deep_water
 SUBST:   p = ppWw, p = Pf, y = xxxcccPPfDDw, f = PPwW, x = x:10 c:1
 SHUFFLE: 23
 SUBST:   2 = 2:15 1:10, 3 = 3:15 1:10
+FTILE:   .123pf* = floor_sprouting_ruin
 MAP
    ppp  @ ppp
   pppxx..xxppp
@@ -1117,17 +1151,18 @@ ENDMAP
 NAME:   nicolae_shoals_aquamancer_cove
 TAGS:   no_monster_gen
 KMONS:  123 = merfolk aquamancer
-SUBST:  X = x.
 KFEAT:  1 = w
 KFEAT:  2 = .
 KFEAT:  3 = W
+SUBST:  X = x., c : cx
 NSUBST: 1 = 1:1 / 1:w / * = 1www
+: tile("c = " .. crackle_def(_G))
 MAP
      xxxX.@
     xx...2.
   xxxX.Xxx.
-xxxXX...Xxxx
-xXXX..*..XXxx
+xxcXX...Xcxx
+xXX...*..XXxx
 xX...3W3...Xxx
 x..WWwwwWW..Xx
 x.Ww1www1wW.Xx
@@ -1164,17 +1199,19 @@ TAGS:    water_ok
 MONS:    cyclops / stone giant w:2
 MONS:    merfolk siren, harpy, snapping turtle, centaur / centaur warrior
 MONS:    sea snake
+KFEAT:   z = c
 SHUFFLE: 234560, ABC
-SUBST:   A : x:6 .:1, B : xxw., C : xw.., c = c:29 .:1, x = x:9 c:1
+SUBST:   A : x:6 .:1, B : xxw., C : xw.., x = x:9 c:1
 SUBST:   % = %:8 *:1 .:1
+TILE:    z = wall_stone_magic_shelf
 MAP
  xxxx        xxxxx  xxxx
 xxxcxxxxW@Wxxxxcxxxxxcxxx
-xW..%xxWABAWxx414xxx5..Wx
-WA...2x.....x%...%x%...AW
+xW..%zxWABAWxz414zxz...Wx
+WA...2x.....x%...%x%5..AW
 @B.C.1c..C..c..C..c1.C.B@
-WA...2x3...3x.....x%...AW
-xW..%xxx%1%xxWABAWxx5..Wx
+WA...2x3...3x.....x%5..AW
+xW..%zxz%1%zxWABAWxz...Wx
 xxxcxxxxxcxxxxW@Wxxxxcxxx
  xxxx  xxxxx        xxxx
 ENDMAP
@@ -1274,8 +1311,8 @@ ENDMAP
 
 NAME:  nicolae_shoals_wave_tunnel
 TAGS:  water_ok transparent
-SUBST: b = .W, + = .++
-KMONS: m = merfolk / nothing w:5
+KMONS: m = merfolk
+SUBST: m = mm., b = .W, + = .++
 MAP
     xxxxxxxxxwwwwwwwxxxxx
    xx.......xxbbbbbxx...@
@@ -1290,27 +1327,28 @@ ENDMAP
 NAME:    nicolae_shoals_flooded_hall
 TAGS:    transparent
 DEPTH:   Shoals, !Shoals:$
-SHUFFLE: }}]]))>
-KPROP:   .123wqx = no_tide
-SUBST:   . = ....W, w = wWW..., q = w, x = xxxc
-KFEAT:   123 = . w:40 / W
-KMONS:   1 = merfolk / nothing w:5
+KMONS:   01 = merfolk / nothing w:5
 KMONS:   2 = merfolk / merfolk aquamancer / merfolk javelineer \
              / merfolk impaler / nothing w:45
 KMONS:   3 = merfolk siren / merfolk avatar w:5 / nothing w:5
+KFEAT:   0123 = . w:40 / W
+SHUFFLE: }}]]))>
+KPROP:   .123wqx = no_tide
+SUBST:   . = ....W, ' = ''''W, w = wWW''', q = w, x = xxxc
+FTILE:   '123}])> = floor_sprouting_ruin
 MAP
      .......
    ...xxxxx...
-  .1..x.3.x..1..
- ....xx.2.xx........
-..xxxx..w..xxxxxxxx.
-.xx..2.www.2..1..1.@
+  .0..x'3'x..0..
+ ....xx'2'xx........
+..xxxx''w''xxxxxxxx.
+.xx''2'www'2''1''1'@
 .x}1wwwwqwwwwwwwwww@
 .x]1wwwwqwwwwwwwwww@
-.xx..2.www.2..1..1.@
-..xxxx..w..xxxxxxxx.
- ....xx.2.xx........
-  .1..x.3.x..1..
+.xx''2'www'2''1''1'@
+..xxxx''w''xxxxxxxx.
+ ....xx'2'xx........
+  .0..x'3'x..0..
    ...xxxxx...
      .......
 ENDMAP
@@ -1321,7 +1359,7 @@ DEPTH:  Shoals, !Shoals:$
 KPROP:  .xrR-Ww = no_tide
 NSUBST: - = 1:] / *:-
 NSUBST: - = 3:z / *:-
-SUBST:  r = xx:, R = xxW, ] = ]}):
+SUBST:  r = xx`, R = xxW, ] = ]})`
 KMONS:  - = nothing w:20 / plant w:5 / water elemental w:1
 KMONS:  z = water elemental
 KFEAT:  -z = . / W
@@ -1330,9 +1368,12 @@ KFEAT:  m = w
 MARKER: m = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
         pow_max = 3, delay = 10, start_clouds = 1, size_min = 2, \
         size_max = 3, spread_rate = 33 }
+FTILE:  .`zWw-]}) = floor_sprouting_stone
+FTILE:  " = floor_pebble_green
+TILE:   x = wall_pebble_cyan
 MAP
-   xxxx.......
-  xxxx...xxxx@
+   xxxx'''''''
+  xxxx"""xxxx@
  xx.....xxrrxx
  x..x..xxwWrrxx
 xx..xxxxmwW--Rxx
@@ -1352,11 +1393,13 @@ ENDMAP
 NAME:   wheals_shoals_ruined_temple
 TAGS:   water_ok
 DEPTH:  Shoals, !Shoals:$
-KPROP:  c.GWuw1 = no_tide
 KMONS:  D = pile of debris
 KMONS:  1 = kraken
 KFEAT:  1D = w
+KPROP:  c.GWuw1 = no_tide
 SUBST:  u = Ww, . = .:500 0
+FTILE:  @ = floor_pebble_yellow
+FTILE:  .$C01DWwG = floor_sprouting_ruin
 TILE:   G = dngn_statue_centaur w:5 / dngn_statue_maw / dngn_statue_mermaid / \
             dngn_statue_orb w:5 / dngn_statue_princess / \
             dngn_statue_polearm / dngn_statue_tentacles
@@ -1521,7 +1564,10 @@ ENDMAP
 NAME:    regret_index_shoals_crete
 TAGS:    no_monster_gen
 MONS:    snapping turtle / elephant
-MONS:    faun, satyr, meliai, minotaur
+KMONS:   2M = faun
+KMONS:   3 = satyr
+KMONS:   4N = meliai
+KMONS:   5 = minotaur
 KMONS:   _ = merfolk javelineer
 KMONS:   b = bush
 KMONS:   p = plant
@@ -1529,15 +1575,16 @@ ITEM:    any potion, longbow good_item, arbalest good_item
 # Bacchus-approved.
 KFEAT:   _ = altar_uskayaw
 SHUFFLE: 35, ABC, FGHI
-SUBST:   0 = 24., X : xp.., Y : xp..
-SUBST:   A = x, B : p., F = x, G = p., CHI = .
+SUBST:   0 = 24., X : xpP., Y : xpP.
+SUBST:   A = x, B : ppP., F = x, G : ppP., CHI = .
 : dgn.delayed_decay(_G, 'g', 'snapping turtle corpse')
 : dgn.delayed_decay(_G, 'h', 'elephant corpse')
-: decorative_floor(_G, 'p', "flower patch")
+: decorative_floor(_G, 'P', "flower patch")
+FTILE:  'def*MN35+ = floor_sprouting_ruin
 MAP
     ccccccxxxxxxxcccccc
     c3dd*xxxg_hxxx*dd5c
-    c..2xx2.b0b.4xx4..c
+    c''Mxx2.b0b.4xxN''c
     cex+xWWx...xWWx+xfc
     cxx...WW.1.WW...xxc
    xxx2.CBAWX.XWABC.4xxx
@@ -1582,38 +1629,41 @@ Xwwwwwwwwwwwwww
 XwwwwwwwWWW@WW
 ENDMAP
 
-NAME: cheibrodos_shoals_epimethial_gifts
-TAGS: no_item_gen no_monster_gen
-ORIENT: float
-KPROP: . = no_tide
-MONS: sea snake, wind drake, manticore, alligator snapping turtle
-MONS: snapping turtle, merfolk impaler / merfolk aquamancer / merfolk javelineer
-SHUFFLE: -'"
-NSUBST: - = 2:1 / 2=1.., ' = 1:2 / 3=3., " = 1:4 / 2=5., ` = 1=|* / 2=*%
-NSUBST: _ = 2:6 / *=6...
+NAME:    cheibrodos_shoals_epimethial_gifts
+TAGS:    no_item_gen no_monster_gen
+ORIENT:  float
+MONS:    sea snake, wind drake, manticore
+MONS:    alligator snapping turtle, snapping turtle
+MONS:    merfolk impaler / merfolk aquamancer / merfolk javelineer
+SHUFFLE: ABC
+NSUBST:  A = 2:1 / 2=1'', B = 1:2 / 3=3', C = 1:4 / 2=5' / *:'
+NSUBST:  6 = 2:6 / * = 6''', * = 1=|* / 2=*%
+FTILE:   '123456%*|+ = floor_sprouting_ruin
+KPROP:   .' = no_tide
 MAP
        .cccccc
-cccccc.tc_..`c
-c`.._ct.c.''.c
-c.--.c..c.''.c
-c.--.c..c..._c
-c_...+..+ccccc
+cccccc.tc6''*c
+c*''6ct.c'BB'c
+c'AA'c..c'BB'c
+c'AA'c..c'''6c
+c6'''+..+ccccc
 cccccc......t.
 ...........t.
 ...t...c+cccc
-.......c..._c
-.t.G.t.c."".c
-.......c."".c
-...t...c_..`c
+.......c'''6c
+.t.G.t.c'CC'c
+.......c'CC'c
+...t...c6''*c
 @......cccccc
 ENDMAP
 
-NAME: cheibrodos_shoals_gigantism
-TAGS: no_item_gen no_monster_gen
+NAME:   cheibrodos_shoals_gigantism
+TAGS:   no_item_gen no_monster_gen
 ORIENT: float
-MONS: titan, cyclops / w:3 stone giant / w:3 frost giant
-SUBST: " = .:2 W, x = c:1 x
+MONS:   titan, cyclops / w:3 stone giant / w:3 frost giant
+SUBST:  " = .:2 W, x = c:1 x
 NSUBST: - = 1=|* / 1=|*% / 2=*%
+FTILE:  .%*|12Gm+ = floor_sprouting_ruin
 MAP
      xxxxxxxxx
    xxxxxxxxxxxx
@@ -1669,24 +1719,25 @@ MAP
 ....................
 ENDMAP
 
-NAME: cheibrodos_shoals_three_sisters
-TAGS: no_item_gen no_monster_gen
-DEPTH: Shoals, !Shoals:$
+NAME:   cheibrodos_shoals_three_sisters
+TAGS:   no_item_gen no_monster_gen
+DEPTH:  Shoals, !Shoals:$
 ORIENT: float
-KMONS: P = plant
-MONS: sea snake, merfolk aquamancer
-ITEM: buckler ego:reflection / kite shield ego:reflection \
-      / tower shield ego:reflection
-KPROP: . = no_tide
+MONS:   sea snake, merfolk aquamancer
+KMONS:  P = plant
+ITEM:   buckler ego:reflection / kite shield ego:reflection / \
+        tower shield ego:reflection
+KPROP:  . = no_tide
 NSUBST: " = 1:2 / 1:1 / 3=1., _ = 1:2 / 1:1 / 3=1.
 NSUBST: ' = 1:2 / 2:1 / 3=1., ` = 1=d* / 2:* / 3:% / 5=%.
-SUBST: P = PPPPP.
+SUBST:  P = PPPPP., c : cx
+TILE:   c : wall_stone_magic_shelf / stone_wall_shoals
 MAP
    P..............P
    .xxxxxxxxxxxxxx.
-   .x``x.''''.x``x.
+   .x``c.''''.c``x.
    .x``+.''''.+``x.
-   .x``x.''''.x``x.
+   .x``c.''''.c``x.
    .xxxxxx++xxxxxx.
 P....................P
 .xxxxx..........xxxxx.
@@ -1710,7 +1761,7 @@ KMONS:  ` = water elemental
 KFEAT:  " = w
 KFEAT:  ' = w
 KFEAT:  ` = w
-FTILE:  - = floor_marble
+FTILE:  - = floor_sprouting_ruin
 COLOUR: c- = white
 KPROP:  .- = no_tide
 # Should probably be less cloudy but idk what these numbers mean
@@ -1981,9 +2032,7 @@ KMASK:  L = no_monster_gen
 FTILE:  123DRL*n'} = floor_limestone
 SUBST:  } = }]), * = **|
 NSUBST: . = Q / *=% M:30 .:150, ' = Q / '
-MARKER: L = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
-            pow_max = 10, delay = 10, size = 1, walk_dist = 0, \
-            start_clouds = 1, excl_rad = 0 }
+: single_cloud(_G, "L", "flame", false)
 KITEM:  Q = human skeleton
 MAP
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -2024,13 +2073,13 @@ KMONS:   3 = merfolk avatar / merfolk javelineer / merfolk impaler / \
 local owner = string.gsub(crawl.make_name(), " ", "_")
 kfeat("D = weapon shop name:" .. owner .. " type:Merfolk suffix:Weapons ; \
       spear | trident | halberd | partisan | demon trident | glaive | bardiche | \
-      dagger | quick blade | short sword | rapier | dart | javelin | \
+      short sword | rapier | athame | quick blade | dart | javelin | \
       throwing net | boomerang" )
 kfeat("E = armour shop name:" .. owner .. " type:Merfolk suffix:Armours ; \
       robe | leather armour | helmet | hat | pair of boots | cloak | scarf | \
       pair of gloves | buckler" )
 kfeat("F = general shop name:" .. owner .. " type:Merfolk suffix:Magic ; \
-      ring of dexterity | ring of evasion | ring of ice | ring of protection | \
+      ring of dexterity | ring of evasion  | ring of protection | \
       ring of see invisible | ring of willpower | amulet of reflection | \
       amulet of the acrobat | randbook disc:alchemy | randbook disc:hexes | \
       randbook disc:ice | randbook disc:summoning | phial of floods | \
@@ -2201,6 +2250,7 @@ ENDMAP
 
 NAME:   nicolae_shoals_spectral_cove
 TAGS:   transparent patrolling
+WEIGHT: 0
 KMONS:  p = withered plant
 KMONS:  1 = spectral thing
 KMONS:  2 = ghost crab
@@ -2289,63 +2339,6 @@ cccc..c..M
 cww......M
 cww......L
 ccccJJKKLL
-ENDMAP
-
-NAME:    ebering_ghost_davey_jones
-ORIENT:  float
-TAGS:    water_ok no_descent
-KMONS:   O = player_ghost
-KITEM:   O = any ring randart w:20 / ring of the octopus king w:1
-KMONS:   1 = snapping turtle / sea snake / alligator snapping turtle w:2
-KMONS:   2 = spectral snapping turtle / spectral sea snake \
-             / spectral alligator snapping turtle w:2
-KMONS:   E = water elemental
-{{
-kmons("F = merfolk ; " .. dgn.monster_weapon("merfolk", "draining") ..
-      "    . throwing net w:3 | nothing w:9")
-local quality = crawl.one_chance_in(3) and "randart" or "good_item"
-kmons("3 = merfolk aquamancer ; " ..
-      dgn.monster_weapon("blademaster", "electrocution", quality) ..
-      "    . robe good_item")
-kmons("4 = merfolk impaler ; " ..
-      dgn.monster_weapon("impaler", "draining", quality) ..
-      "    . robe good_item | leather armour good_item")
-}}
-KMONS:   5 = kraken
-KMONS:   6 = spectral kraken
-KFEAT:   O = W
-KFEAT:   123456EF = w
-# Place 2-6 corpses around the perimiter. Place monsters on D, excluding the
-# merfolk leader's band, which goes on the E.
-NSUBST:  - = 2=- / 4=-s / s, D = 2=1 / 4=1w / 2=E / 3=Ew / 3 / w
-# Either the normal or spectral set. Also randomize wall patterns.
-SHUFFLE: 1E35 / 2F46, pq
-SUBST:   d = |*, r = wW, p = x, q = s, s = W.
-TILE:    G = dngn_statue_mermaid
-MARKER:  P = lua:transp_loc("davey_jones_entry")
-MARKER:  Q = lua:transp_dest_loc("davey_jones_entry")
-MARKER:  R = lua:transp_loc("davey_jones_exit")
-MARKER:  S = lua:transp_dest_loc("davey_jones_exit")
-KITEM:   - = minotaur skeleton / elf skeleton / dwarf skeleton /\
-             human skeleton / kobold skeleton / felid skeleton /\
-             orc skeleton / ogre skeleton
-: ghost_setup(_G)
-MAP
- WWssssSssssWW
-WWcccccccccccWW
-WccG---Q---GccW
-WcGspqpqpqpsGcW
-Wc-sqqrprqqs-cW
-Wc-srDDDDDrs-cW
-Wn-prDDDDDrp-nW
-Wn-qpDD5DDpq-nW
-Wn-prDDDDDrp-nW
-Wc-srDDDDDrs-cW
-Wc-sqqrprqqs-cW
-WcGspqpOpqpsGcW
-WccG-ddRdd-GccW
-WWccccnnnccccWW
- WWssssPssssWW
 ENDMAP
 
 NAME:   dreamdust_from_the_deep
@@ -2446,6 +2439,7 @@ KMASK:  =`pqrsS = no_trap_gen
 KMASK:  =`pqrsS = no_monster_gen
 SUBST:  M = w_, N = wwW.
 NSUBST: q = S / q
+FTILE:  =`pqrsS = floor_sprouting_ruin
 CLEAR:  _
 MAP
       MwwM
@@ -2475,8 +2469,8 @@ DEPTH:  Shoals
 ORIENT: float
 # Someone left their gear in the changing room.
 KITEM:  p = leather armour / ring mail / scale mail / chain mail, \
-             long sword / short sword / rapier / dagger, \
-             buckler / nothing w:20
+            long sword / short sword w:8 / rapier w:8 / athame w:4 / dagger, \
+            buckler / nothing w:20
 # Some people like having a little something to read or drink on the beach.
 KITEM:  12 = nothing w:30 / any book / any scroll / any potion
 # Deep elves have to bring the high-strength sunscreen. At least one potion
@@ -2531,15 +2525,16 @@ KMONS:   M = merfolk siren
 KMONS:   N = merfolk avatar
 KMONS:   S = satyr
 KFEAT:   N = w
-SUBST:   ' = xx", " = WW., - = Www, ` = _x
-NSUBST:  N = N / w, < = { / [[< / ((< / <, p = M / 1=M. / 1=MS... / ., \
-         q = M / 1=M. / 1=MS... / ., r = S / 1=S. / 1=SM... / .
-SHUFFLE: {[(
+NSUBST:  N = 1:N / *:w, < = 1:{ / 1:[[< / 1:((< / <, p = M / 1:M. / 1:MS... / *:.
+NSUBST:  q = 1:M / 1:M. / 1:MS... / ., r = 1:S / 1:S. / 1:SM... / *:.
+SHUFFLE: {[(, +- / +- / +- / +- / +- / +- / +- / +- / zz
+NSUBST:  - = 1 = x:5 .:4 / *:.
+SUBST:   ' = xx", " = WW., - = Www, ` = _x, z = x
 CLEAR:   _
 : decorative_floor(_G, 'V', "floral vase")
 MAP
         `x++x`
-       `xx''xx`
+       `xx--xx`
        xx'rr'xx
       `xxr..rxx`
       xxx."".xxx
@@ -2975,9 +2970,10 @@ KMONS:   O = sphinx marauder
 KMONS:   P = plant
 KITEM:   f = azure gem
 KITEM:   O = barnacled rune of Zot
+KITEM:   R = riddle talisman
 SHUFFLE: d% / e* / f|
 NSUBST:  | = 1:O / *:|
-SUBST:   de = ., %* = |, 1 = 1.., 2 = 2.., 3 = 334, G = G.
+SUBST:   de = ., %* = |, 1 = 1.., 2 = 2.., 3 = 334, G = G., R = R.
 SUBST:   ; : W.., p : W.., q : W.., r : W.., s : W.., y : W.., z : W..
 NSUBST:  . = 16 = 0. / *=.........W
 SUBST:   D = x., c = ccc.
@@ -3007,7 +3003,7 @@ wwwwwwW''''''.W+...pDx......Dyy.....D....D...ccccccccwwwwwwwww
 wwwwwwW'''''..W+...ppxD1..1DxyyDD1..x1..2x.ccc1....1cccwwwwwww
 wwwwwwW''''..ccccc..pxDDDDxxxxxDD...xD++Dxcc1.........ccwwwwww
 wwwwwwW'''..cc..1cc..G....G.....G....G....Gc.....2.....*cwwwww
-wwwwwwW'''..+....2+;;;;;;;;;;;;;;;;;;;;;;;;+..2.....e3.*cwwwww
+wwwwwwW'''..+....2+;;;;;;;;;;;;;;;;;;;;;;;;+..2.....e3R*cwwwww
 wwwwwwW'''..cc..1cc..G....G.....G....G....Gc.....2.....*cwwwww
 wwwwwwW''''..ccccc..qxDDDDxxxxxDD...xD++Dxcc1.........ccwwwwww
 wwwwwwW'''''..W+...qqxD1..1DxzzDD1..x1..2x.ccc1....1cccwwwwwww
@@ -3146,6 +3142,7 @@ SUBVAULT: H : storm_palace_corner
 SUBVAULT: J : storm_palace_corner
 TILE:     G = dngn_statue_mermaid w:25 / dngn_statue_polearm / \
               dngn_statue_dragon / dngn_statue_maw
+LFLOORTILE: floor_sprouting_ruin
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccccc
 cccccccccccccccccccccccccccccccccccccccccccccccc

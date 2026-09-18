@@ -3,13 +3,13 @@ monster: MONS_REVENANT
 name: Revenant
 short_name: Re
 difficulty: Intermediate
-difficulty_priority: 80
+difficulty_priority: 90
 species_flags:
   - no_hair
   - no_blood
   - no_ears
 aptitudes:
-  xp: 0
+  xp: -1
   hp: 1
   mp_mod: 1
   wl: 3
@@ -19,8 +19,8 @@ aptitudes:
   axes: -1
   maces_and_flails: -1
   polearms: -1
-  staves: -1
-  ranged weapons: -1
+  staves: -2
+  ranged weapons: -3
   throwing: -1
   armour: -1
   dodging: -1
@@ -40,7 +40,7 @@ aptitudes:
   earth_magic: 1
   alchemy: -1
   invocations: 1
-  evocations: -1
+  evocations: -2
 undead_type: undead
 str: 11
 int: 7
@@ -57,6 +57,7 @@ mutations:
     MUT_CLAWS: 1
     MUT_LOW_MAGIC: 2
     MUT_SPELLCLAWS: 1
+    MUT_ACCURSED: 1
   3:
     MUT_MNEMOPHAGE: 1
 recommended_jobs:
@@ -69,3 +70,4 @@ recommended_weapons:
   - unarmed combat
 
 orc_name: Skeletorc
+orcification_msg: A small pair of tusks begins to sprout from your jawbone.

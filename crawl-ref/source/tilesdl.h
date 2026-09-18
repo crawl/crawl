@@ -179,8 +179,8 @@ public:
     void toggle_inventory_display();
     void update_tabs();
 
-    void set_need_redraw(unsigned int min_tick_delay = 0);
-    bool need_redraw() const;
+    void set_need_redraw();
+    bool need_redraw(unsigned int min_tick_delay = 0) const;
     void redraw();
     bool update_dpi();
 

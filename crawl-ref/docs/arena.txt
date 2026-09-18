@@ -19,9 +19,9 @@ stops).
 
 You can also give each side more than one monster. For example:
 
-    crawl -arena "rat, giant cockroach v kobold, goblin"
+    crawl -arena "rat, clockroach v kobold, goblin"
 
-will give team A a rat and a cockroach and team B a kobold and a goblin; a
+will give team A a rat and a clockroach and team B a kobold and a goblin; a
 victory is declared when all of one team is dead and at lest one member of the
 other team is still alive.
 
@@ -35,7 +35,7 @@ You can also make multiple of a single type of monster (note that the singular
 form of the names are still used):
 
     crawl -arena "2 kobold v 3 goblin:
-    crawl -arena "2 rat, 3 giant cockroach v 4 kobold, 5 goblin"
+    crawl -arena "2 rat, 3 clockroach v 4 kobold, 5 goblin"
 
 You can even have multiple instances of uniques:
 

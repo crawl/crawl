@@ -47,7 +47,7 @@ CHANCE: 20% (D:2)
 CHANCE: 20% (Orc)
 CHANCE: 10% (Snake)
 CHANCE: 8% (Elf)
-CHANCE: 5% (Lair, Slime, Crypt)
+CHANCE: 5% (Lair, Crypt)
 CHANCE: 1% (Zot)
 CHANCE: 0
 : if crawl.one_chance_in(4) then
@@ -205,7 +205,7 @@ xxx...@..xxxx
 ENDMAP
 
 NAME:    lemuel_angel_altar
-TAGS:    no_trap_gen no_descent vaults_empty no_wall_fixup
+TAGS:    no_trap_gen no_descent vaults_empty no_wall_fixup extra
 DEPTH:   Vaults, !Vaults:$, Depths
 WEIGHT:  3 (Vaults), 10
 MONS:    patrolling Angel, patrolling Daeva
@@ -254,14 +254,14 @@ ENDMAP
 
 ### Altars possibly to Lugonu ################################################
 
-# Hell themed, to Lugonu, Yredelemnul, Kikubaaqudgha or Makhleb
+# Hell themed, to Lugonu, Kikubaaqudgha or Makhleb
 # Note: This altar would not make a decent overflow altar, it is too hard to
 #       access the altar early.
 #
 NAME:  lemuel_hellish_altar
-DEPTH: Crypt, Geh
 TAGS:  no_monster_gen no_descent
-MONS:  rust devil / orange demon
+DEPTH: Crypt, Geh
+MONS:  rust devil / neqoxec
 MONS:  sin beast / red devil
 MONS:  iron imp
 MONS:  hellion
@@ -274,7 +274,7 @@ SUBST: 1 = 1:20 4
 : end
 SUBST: L = l.
 SUBST: _ = _ P:1
-KFEAT: _ = altar_lugonu/altar_yredelemnul/altar_kikubaaqudgha/altar_makhleb
+KFEAT: _ = altar_lugonu / altar_kikubaaqudgha / altar_makhleb
 KFEAT: P = enter_abyss
 MAP
 ....LLLLL.....
@@ -407,7 +407,7 @@ COLOUR:   x : blue / red / magenta / brown / lightgreen / lightred / \
 NSUBST:   u = 1=p / 1=r / 1=q / 2=q...
 FTILE:    'upqrzc : floor_nerves
 MARKER:   r = lua:fog_machine { cloud_type="purple smoke", walk_dist=1, \
-            size=1, pow_max=5, delay=10, buildup_amnt=7, buildup_time=7, \
+            size = 1, pow_max=5, delay=10, buildup_amnt=7, buildup_time=7, \
             spread_rate=2, start_clouds=1, colour="purple" }
 TILE:     x : wall_abyss
 MAP
@@ -461,4 +461,21 @@ MAP
 .1_1.
 ..1..
 .....
+ENDMAP
+
+### Miscellaneous minor god altars ###########################################
+
+# places a random non-temple god that is hard to access
+NAME:   hellmonk_sealed_altar
+TAGS:   no_monster_gen no_descent extra
+DEPTH:  D:5-
+KFEAT:  B = altar_jiyva w:5 / altar_lugonu / altar_ignis w:2 / altar_beogh
+MAP
+lllll
+lxxxl
+lxBxl
+lx<xl
+lxmxl
+lllll
+  @
 ENDMAP

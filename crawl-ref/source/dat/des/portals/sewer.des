@@ -7,10 +7,13 @@
 # Flavour: drainage and sewer themed, so rats, kobolds, etc. Water is (dark
 # and light) green.
 # Gameplay: an early challenge, featuring monsters which are bland later but
-# interesting when encountered at low level (river rat, bullfrog etc.) Loot
-# consists of renewable items; the harder maps contain a few good items.
+# interesting when encountered at low level in wet environs (like bullfrogs),
+# plus a few semi-unique tutorializing enemies like brain worms and crocodiles.
+# Loot consists of consumables; the harder maps contain a few good items.
 #
 ##############################################################################
+
+: crawl_require('dlua/vault.lua')
 
 {{
 
@@ -73,7 +76,7 @@ SUBST:  1 = 2234..........
 MONS:   nothing
 MONS:   rat / river rat w:5
 MONS:   ball python / adder w:2
-MONS:   giant cockroach / ribbon worm w:3
+MONS:   clockroach w:5 / dart slug w:5 / ribbon worm w:3
 MAP
 .........
 ...111...
@@ -90,7 +93,7 @@ NAME:   portal_sewer_entry_b
 : sewer_portal(_G)
 SUBST:  ' = W. , W = WW1
 KMONS:  1 = rat w:20 / river rat / ball python / adder w:2 / \
-            giant cockroach / ribbon worm w:3
+            clockroach w:5 / dart slug w:5 / ribbon worm w:3
 MAP
 xxxxxx
 xOWWW'
@@ -107,7 +110,7 @@ NSUBST: W = 8 = 111W / *:W
 NSUBST: n = 1:+ / 2:n / *:c
 TILE:   c = wall_stone_mossy
 KMONS:  1 = rat w:20 / river rat / ball python / adder w:2 / \
-            giant cockroach / ribbon worm w:3
+            clockroach w:5 / dart slug w:5 / ribbon worm w:3
 MAP
 .........
 .nnnnnnn.
@@ -137,7 +140,7 @@ NSUBST: X = 2:+ / *:x
 SUBST:  w = WW.
 NSUBST: W = 8:111W / *:W
 KMONS:  1 = rat w:20 / river rat / ball python / adder w:2 / \
-            giant cockroach / ribbon worm w:3
+            clockroach w:5 / dart slug w:5 / ribbon worm w:3
 MAP
 zzzzzzzzzzzzzzzzzzzzzzzzz
 zzzzzzzzzzzzzzzzzzzzzzzzz
@@ -158,7 +161,7 @@ ENDMAP
 
 NAME:   portal_sewer_entry_f
 : sewer_portal(_G)
-KMONS:  1 = quokka / giant cockroach / nothing w:5
+KMONS:  1 = clockroach / dart slug /nothing w:5
 NSUBST: W = 6:1 / *:W
 COLOUR: W = green / cyan w:5
 MAP
@@ -172,7 +175,7 @@ ENDMAP
 NAME:   gup_sewer_entry_pipe
 TAGS:   patrolling no_pool_fixup
 : sewer_portal(_G)
-KMONS:  2 = giant cockroach / quokka / nothing
+KMONS:  2 = clockroach / dart slug / nothing
 SUBST:  W = WW.
 MAP
 @Wxxxxxxxxx
@@ -191,8 +194,8 @@ ENDMAP
 NAME:   gup_sewer_entry_spiral
 TAGS:   patrolling
 : sewer_portal(_G)
-KMONS:  1 = rat / river rat w:5 / adder w:5 / giant cockroach / \
-            quokka / ribbon worm w:5 / nothing
+KMONS:  1 = rat / river rat w:5 / adder w:5 / clockroach / \
+            dart slug / ribbon worm w:5 / nothing
 NSUBST: - : 8:1 / 8:. / *:W
 MAP
 xxxxxxxxxx
@@ -211,8 +214,8 @@ ENDMAP
 NAME:   gup_sewer_entry_bubbles
 TAGS:   patrolling
 : sewer_portal(_G)
-KMONS:  1 = rat / river rat w:5 / adder w:5 / giant cockroach / \
-            quokka / ribbon worm w:5 / nothing
+KMONS:  1 = rat / river rat w:5 / adder w:5 / clockroach / \
+            dart slug / ribbon worm w:5 / nothing
 NSUBST: - = 8:1 / *:W
 MAP
  xxx    xxx
@@ -231,8 +234,8 @@ ENDMAP
 
 NAME:   gup_sewer_entry_bowl
 : sewer_portal(_G)
-KMONS:  1 = rat / river rat w:5 / \
-            giant cockroach / quokka / ribbon worm w:3 / nothing
+KMONS:  1 = rat / river rat w:5 / clockroach / \
+            dart slug / ribbon worm w:3 / nothing
 MAP
 ..........
 .xxx.xxxx..
@@ -246,7 +249,7 @@ ENDMAP
 
 NAME:   gup_sewer_entry_glass
 : sewer_portal(_G)
-KMONS:  1 = adder / giant cockroach / nothing
+KMONS:  1 = adder / clockroach w:5 / dart slug w:5 / nothing
 MAP
 ..........
 .mmmmmmm.
@@ -259,8 +262,8 @@ ENDMAP
 
 NAME: lightli_sewer_entry_pipes
 NSUBST: o = 1:O / *:W
-SUBST: W = WWWWW1
-KMONS: 1 = river rat / adder / rat / ribbon worm
+NSUBST: W = 3:1 / 3 = 1W / 3 = 1WWW / *:W
+KMONS:  1 = river rat / adder / rat / ribbon worm
 : sewer_portal(_G)
 MAP
 vvvvvvvvvv
@@ -308,7 +311,7 @@ ENDMAP
 NAME: cheibrodos_sewer_entry_drain
 TAGS: no_monster_gen
 ORIENT: float
-KMONS: 1 = rat / ball python / giant cockroach / ribbon worm
+KMONS: 1 = rat / ball python / clockroach / ribbon worm
 NSUBST: 1 = 2:1 / 2=1.. / *:.
 : sewer_portal(_G)
 MAP
@@ -348,8 +351,8 @@ MAP
 ENDMAP
 
 NAME:    mainiacjoe_sewer_entry_somewhere_in_here_1
-KMONS:   1 = frilled lizard / rat / giant cockroach / ball python / \
-             river rat w:2 / ribbon worm w:3 / adder w:4
+KMONS:   1 = frilled lizard / rat / clockroach w:5 / dart slug w:5 / \
+             ball python / river rat w:2 / ribbon worm w:3 / adder w:4
 KMONS:   2 = iguana
 KFEAT:   @2 = shallow_water
 NSUBST:  O = 1:O / 5:1 / 1:1W / *:W
@@ -372,8 +375,8 @@ xxWxWxWxx
 ENDMAP
 
 NAME:    mainiacjoe_sewer_entry_somewhere_in_here_2
-KMONS:   1 = frilled lizard / rat / giant cockroach / ball python / \
-             river rat w:2 / ribbon worm w:3 / adder w:4
+KMONS:   1 = frilled lizard / rat / clockroach w:5 / dart slug w:5 / \
+             ball python / river rat w:2 / ribbon worm w:3 / adder w:4
 KMONS:   2 = iguana
 KFEAT:   @2 = shallow_water
 : if you.depth() > 4 then
@@ -517,12 +520,12 @@ TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 MONS:    kobold / kobold brigand w:2
 MONS:    bat / rat / endoplasm w:5 / ball python / frilled lizard w:5 /\
-         giant cockroach w:5 / adder w:1
+         dart slug w:5 / adder w:1
 MONS:    adder / brain worm w:2
 KMONS:   . = plant w:1 / fungus w:1 / nothing w:80
 KMONS:   p = plant
 : item(dgn.loot_potions .. " / any scroll w:30 / any armour / any weapon")
-KFEAT:   f = cache of meat
+KFEAT:   f = cache_of_meat
 KFEAT:   p = shallow_water
 SUBST:   p = ppW
 SHUFFLE: DEFH
@@ -562,6 +565,67 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxx.xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# If we're going to only rarely deploy warded pets across a moat,
+# we might as well lean into a certain reputation of trap-master jerks.
+NAME:    regret_index_sewer_gulch_wild_fort
+TAGS:    no_monster_gen no_item_gen no_pool_fixup
+ORIENT:  encompass
+MONS:    dart slug, ribbon worm, clockroach
+MONS:    brain worm, kobold, kobold brigand
+KMONS:   P = pile of debris
+: item(dgn.loot_potions)
+: item(dgn.loot_scrolls)
+ITEM:    any scroll / any potion, flux bauble
+ITEM:    stone q:1 no_pickup / stone q:2 no_pickup
+KITEM:   $ = $ no_pickup
+KFEAT:   M = cache_of_meat / cache_of_baked_goods w:3
+KFEAT:   Y = W
+KFEAT:   y = w
+SUBST:   0 = 1111223, 6 = 556, Z = xxvw.., z = xxWw...
+SHUFFLE: BCDEF
+# Higher average count of loot (but not a higher cap), in exchange for the pain.
+NSUBST:  B = 1:def / 1:$ / 3:1 / 1:2 / 1:3 / 3 = 1123... / *:.
+NSUBST:  C = 1:d / 2 = f$ / 4:5 / 2 = 5. / *:.
+NSUBST:  D = 1:def$$ / 2:3 / 2:5 / 1:35. / *:.
+NSUBST:  E = 2:f / 2:$ / 3 = 123.. / 1:4 / 1:M / *:.
+NSUBST:  F = 1:d / 1:e / 1:g / 1:4 / 2:5 / 2 = 5. / 1:6 / 1:M / *:.
+KPROP:   yY = no_tele_into
+: sewer_setup(_G)
+MAP
+     vxxxxx                   xxxxxv
+     xWBBBvx                 xvDDDWx
+     xWBBBBx                 xDDDDWx
+     xWBBBBx  xvvvvvvvvvvvx  xDDDDWx
+     vxxBBxvvvv...vYyyv...vvvvxDDxxv
+       vx+vW....v.vyYYv.v....Wv+xv
+       xvWw.Z.....vYyYv.....Z.wWvx
+      xvW.Z.....v.vYYyv.v.....Z.Wvx
+  vxv v...........vyyYv...........v vxv
+vxxCxxv..Z.Z....v.vnnnv.v....Z.Z..vxxExxv
+xWCCCvW...........+.n.+...........WvEEEWx
+xWCCC+w.Z.Z.......v.<.v.......Z.Z.w+EEEWx
+xWCCCvW...........+.n.+...........WvEEEWx
+vxxCxxv..Z.Z....v.vnnnv.v....Z.Z..vxxExxv
+  vxv v...........vyyYv...........v vxv
+      xvW.Z.....v.vYYyv.v.....Z.Wvx
+       xvWw.Z.....vYyYv.....Z.wWvx
+       vx+vW....v.vyYYv.v....Wv+xv
+     vxx..xvvvv...vYyyv...vvvvxFFxxv
+     xW.hh.xwWxn+nvnnnvn+nxWwxFFFFWx
+     xW.hh.xwwWW3W+W3W+W3WWwwxFFFFWx
+     xW...vPwwwwwwvwwwvwwwwwwxvFFFWx
+     vxxxxPw.5......W........wxxxxxv
+        xww.6.1x...zxz....x...wwx
+        xwx5.1x...WWWWW....x..xwx
+        xxxxxxxxxxxxxxxxxxxxxx.xx
+       xx<.xWW.00xWW....x0.0x...xx
+       xw..xxxWz0xxxWz..x0w0x.z.wx
+       xw....WW....WW...xWxWx...wx
+       xw...zWxxx.zWxxx.w.x.w.z.wx
+       xxA....WWx...WWx...x....<xx
+        xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ### FROGS ##################################################################
 # Giant frogs, specifically.
 
@@ -576,14 +640,14 @@ SUBST:    - = WWW.
 SHUFFLE:  |de
 : item(dgn.loot_scrolls)
 ITEM:     scroll of blinking pre_id
-MONS:     frilled lizard w:20 / ball python / giant cockroach w:20 / \
+MONS:     frilled lizard / ball python / endoplasm w:15 / \
           dart slug / adder w:8
 KMONS:    ? = dart slug
 KMONS:    ! = bullfrog
 KFEAT:    ? = W
 KFEAT:    ! = w
-NSUBST:   . = 80 = 1.. / *:.
-NSUBST:   ! = 1:! / 1:!!!!. / *:w
+NSUBST:   . = 72 = 1.. / 8:1 / *:.
+NSUBST:   ! = 1:! / 1:!!!!w / *:w
 COLOUR:   ? = lightgreen
 COLOUR:   ! = green
 SUBST:    ~ = .
@@ -607,8 +671,8 @@ c-WwWWWwwwW------wwwwwwwwcccc.WwW.c
 c-WwWWWwwww?---wwwwww?wwccccc.WwW.c
 c-WwW.WwwwwwwwwwwwwwWwwwccccc-WwW.c
 c.WwW.WwwwwwWWwwwwwwwWccccccc-WwW-c
-c.WwWW..WWWWwwWwWW.........---Www-c
-c.WwwWWWWwwwWWwWWWWWWWWWWWWWWWWwW-c
+c.Ww??..WWWWwwWwWW.........---Www-c
+c.Www?WWWwwwWWwWWWWWWWWWWWWWWWWwW-c
 c.WWwwwwwwwwwwwwwwwwwwwwwwwwwwwwW.c
 c..WWWWWWWWWWWWWWWWWWWWWWWWWWWWwW-c
 cc........................----WwW-c
@@ -625,7 +689,7 @@ NAME:     sewer_frog_island_02
 TAGS:     no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
 SUBST:    - = WWWW.
-KMONS:    1 = frilled lizard / ball python / giant cockroach / \
+KMONS:    1 = frilled lizard / ball python / clockroach / \
               dart slug / endoplasm / adder w:4
 KMONS:    2 = jelly
 KMONS:    ! = bullfrog
@@ -687,7 +751,7 @@ ITEM:    any scroll / any potion
 SUBST:   y : yyyyyyW., Y : YYYYYYWw, z = x., Z = wwwxx
 SUBST:   y = W., Y = Ww, c = c x:1
 NSUBST:  d = 2:d / * = d..., e = 2:e / * = e...
-NSUBST:  - = 84 = 1... / *:.
+NSUBST:  - = 74 = 1... / *:.
 SUBST:   2 = 2.
 : sewer_setup(_G)
 MAP
@@ -728,15 +792,16 @@ NAME:   sewer_hellmonk_circle_the_drain
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
 MONS:   bullfrog
-MONS:   ribbon worm w:5 / ball python / endoplasm / giant cockroach
-KMONS:  3 = brain worm / adder / river rat
+MONS:   ribbon worm w:5 / ball python / endoplasm / clockroach w:5 / \
+        river rat w:5 / dart slug
+KMONS:  3 = brain worm / adder
 KFEAT:  3 = shallow_water
 ITEM:   any scroll
 : item(dgn.loot_potions)
 NSUBST: d = 1:1 / * = de, f = 1:1 / * = de
 NSUBST: W = 4:2 / *:W, 2 = 2:2 / * = 2W
 SUBST:  - = WWWW.
-NSUBST: . = 6:2 / 12 = 2. / *:.
+NSUBST: . = 10:2 / 12 = 2. / *:.
 SUBST:  " = W., ~ = WW.
 COLOUR: 3 = lightgreen
 : sewer_setup(_G)
@@ -744,7 +809,7 @@ MAP
            ccccccccccc
        cccccdddWWWWWWccccc
      ccc---cdddWWWWWWWW-3ccc
-   ccc--...ccccccccccWW----ccc
+   ccc--...ccccccccccWW3---ccc
   cc--.....3--------cccww..--cc
  cc-...-----------..--cccw...wcc
  c-...-cccccccccccc...--ccw...wc
@@ -758,7 +823,7 @@ ccw..wcc-...ccc~""""~~~--cc-..-cc
  cw...wcc--...cccccccccccc-...-c
  ccw...wccc--..-----------...-cc
   cc--..wwccc--------3.....--cc
-   ccc----WWcccccccccc...--ccc
+   ccc---3WWcccccccccc...--ccc
      ccc3-WWWWWWWWfffc---ccc
        cccccWWWWWWfffccccc
            ccccccccccc
@@ -771,8 +836,8 @@ NAME:     sewer_big_baddie
 TAGS:     no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
 : sewer_setup(_G)
-MONS:     bat, brain worm
-KMONS:    3 = Pargi / crocodile, crocodile
+MONS:     bat, brain worm, patrolling rock fish band
+KMONS:    4 = Pargi / crocodile, crocodile
 ITEM:     potion of berserk rage pre_id / potion of haste pre_id w:5
 SUBST:    - = 1....
 MAP
@@ -780,7 +845,7 @@ MAP
 cc$***$cc
 c..$*$..c
 c.......c
-c...3...c
+c...4...c
 c.......c
 c.......c
 cc.....cc
@@ -788,7 +853,7 @@ cc.....cc
    cdc      cc---..cc
    c.c     cc---w...cc
 cccc.ccccccc---www...cc
-c21........---wwwww.A<c
+c23........---wwwww.A<c
 cccc.ccccccc---www...cc
    c.c     cc---w...cc
    c-c      cc---..cc
@@ -809,17 +874,18 @@ SUBST:  - = WW...
 MONS:   kobold, jackal
 KMONS:  3 = Pargi / crocodile w:20, crocodile
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls .. " / nothing w:300")
-NSUBST: ! = 2:2 / 4 = 2.. / *:., 1 = 1:1 / * = 1... / *:.
+ITEM:   skeleton
+NSUBST: ! = 3:2 / 4 = 2.. / *:., 1 = 2:1 / * = 1... / *:.
 : sewer_setup(_G)
 MAP
    ccccccccc
    c%*c3c*%c
-   c*-c-c-*c
+   c*-cec-*c
    ccc---ccc
     cc---cc
     c-----c
-   cc.---.cc
-   c..-c-..c
+   cc2---2cc
+   ce.-c-.ec
   cc.-ccc-.cc
   c.--ccc--.c
   c--ccccc--c
@@ -862,12 +928,15 @@ KMONS:   P = Pargi, crocodile
 #      lesser monsters.
 KMONS:   1 = brain worm
 KMONS:   2 = frilled lizard w:8 / ball python w:8 / adder w:2
+KMONS:   F = patrolling rock fish
 : kitem("? = " .. dgn.loot_potions)
 : kitem("! = " .. dgn.loot_scrolls)
 KFEAT:   1 = W
 KFEAT:   2 = w
+KFEAT:   F = x
 SUBST:   QR = .
-NSUBST:  2 = 2:2 / 1:w / * = 2w, . = 1:1 / 1 = 1. / * = .WW
+NSUBST:  2 = 2:2 / 1:w / * = 2w, F = 2:F / 1:Fx / *:x
+NSUBST:  . = 1:1 / 1 = 1. / * = .WW
 SUBST:   e = !!!!????%, X = xx., Y = xw
 COLOUR:  1 = lightgreen
 COLOUR:  2 = green
@@ -885,11 +954,11 @@ xxxxxxxYwwwwwwwwwwwwwwwwwww2wwwYxxxxxxxxxxx
 xxxxxxYwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxxx
 xxxxxxwwwww2wwwww....wwwwwwwwwwwwYxxxxxxxxx
 xxxxxYwwwwwwwww..XXXX..wwwwwwwwwwwYxxxxxxxx
-xxxxxwww2wwwww.XXxxxxXXQ.wwwwwww2wwwYxxxxxx
+xxxxxwww2wwwww.XXFxxxXXQ.wwwwwww2wwwYxxxxxx
 xxxxYwwwwwww...XxxxxxxxxX..wwwwwwwwwwxxxxxx
 xxxxYwwwwww.XXXxxxxxxxxxxxX..wwwwwwwwYxxxxx
-xxxYwwwwww.XxxxxxxxxxxxxxxxxX.www2wwwwYxxxx
-xxxYwwwww.XxxxxxxxxxxxxxxxxxxX.wwwwwwwwYxxx
+xxxYwwwwww.XFxxxxxxxxxxxxxxxX.www2wwwwYxxxx
+xxxYwwwww.XxxxxxxxxxxxxxxxxxFX.wwwwwwwwYxxx
 xxxxYwwww.XxxxxxxxxxxxxxxxxxxX.wwwwwwwwYxxx
 xxxxYwwwww.XxxxxxxxcccccxxxxxX.wwwwwwwYxxxx
 xxxYwwwwww.Xxxxxxxxceeeccccccc.wwwwwwwYxxxx
@@ -898,12 +967,12 @@ xxYwwwwwwwwwAXxxxxxceeeccccccc.wwww2wwYxxxx
 xxYwwww2wwww<XxxxxxcccccxxxxxX.wwwwwwwYxxxx
 xxxYwwwwwww.XxxxxxxxxxxxxxxxxxX.wwwwwwYxxxx
 xxxxwwwwww.XxxxxxxxxxxxxxxxxxxX.wwwwwwYxxxx
-xxxxYwwwwww.XXxxxxxxxxxxxxxxxX.wwwwwwwwYxxx
-xxxYwwwwwwww..XXxxxxxxxxxxxxX.wwwwwwwwYxxxx
+xxxxYwwwwww.XXFxxxxxxxxxxxxxFX.wwwwwwwwYxxx
+xxxYwwwwwwww..XxxxxxxxxxxxxxX.wwwwwwwwYxxxx
 xxxYwwwwwwww..XXxxxxxxxxxxXXX.wwwwwwwwYxxxx
 xxxxwwwwwwwwww..XxxxxxxxxX...wwwww2wwwwYxxx
 xxxxYwwww2wwwwww.XxxxxxXX.wwwwwwwwwwwwwYxxx
-xxxxxwwwwwwwwwww.XxxxxXR.wwwwwwwwwwwwwYxxxx
+xxxxxwwwwwwwwwww.XxxxFXR.wwwwwwwwwwwwwYxxxx
 xxxxYwwwwwwwwwwww.XXXX.wwwwwww2wwwwwYYxxxxx
 xxxxxYwwwwwwwwwwww....wwwwwwwwwwwwwYxxxxxxx
 xxxxxxYwwwww2wwwwwwwwwwwwwwwwwwwwwYxxxxxxxx
@@ -920,7 +989,7 @@ ENDMAP
 NAME:   kennysheep_door_sewer
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
-MONS:   kobold w:40 / frilled lizard / giant cockroach / adder w:5
+MONS:   kobold w:40 / frilled lizard / clockroach / adder w:5
 MONS:   kobold brigand / brain worm w:20 / jelly
 KMONS:  3 = Pargi, crocodile
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls .. " / any armour")
@@ -1004,21 +1073,21 @@ NAME:    sewer_fruit_machine
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 KMONS:   " = bat
-KMONS:   ? = bat / frilled lizard / ball python / giant cockroach / \
+KMONS:   ? = dart slug / frilled lizard / ball python w:25 / \
              quokka / endoplasm w:4 / ribbon worm w:4 / adder w:2
 MONS:    ribbon worm w:2 / ball python / jackal / adder w:5 / river rat w:5
-MONS:    adder, river rat, brain worm, dart slug
+MONS:    adder, river rat, brain worm
 ITEM:    any scroll, potion of enlightenment pre_id
 : item(dgn.aux_armour)
 : item(dgn.loot_potions)
 : item(dgn.loot_scrolls)
 KFEAT:   " = w
 KFEAT:   ? = W
-SHUFFLE: QED$ de
+SHUFFLE: QED$
 NSUBST:  Q = 1:442 / 2 = 2.. / * = ., E = 3 = 3355. / * = .
 SUBST:   D : fgh, - = WW.
 NSUBST:  e = 2:e / *:$, f = 1:f / *:', g = 2:g / *:', h = 2:h / *:'
-NSUBST:  w = 10 = "w / *:w, W = 42 = ?WWW / *:W, ! = 32 = 1... / *:.
+NSUBST:  w = 14 = "w / *:w, W = 42 = ?WWW / *:W, ! = 32 = 1... / *:.
 COLOUR:  " = green
 COLOUR:  ? = lightgreen
 : sewer_setup(_G)
@@ -1063,7 +1132,7 @@ MONS:    rat, river rat w:4
 KMONS:   G = sickly merfolk siren
 KMONS:   H = malarious merfolk avatar
 KMONS:   hJ = frilled lizard / ball python / adder
-KMONS:   g = frilled lizard / ball python / giant cockroach / quokka
+KMONS:   g = frilled lizard / ball python / dart slug / quokka
 KMONS:   K = crocodile
 KFEAT:   gsh = W
 KFEAT:   GnHJ = w
@@ -1199,7 +1268,7 @@ ENDMAP
 ############################################################################
 # Tree sewer. by co
 # This sewer is structured as a tree, in the sense that there are no loops.
-# At each endpoint there is  monster or loot.
+# At each endpoint there's monsters and loot.
 # At least you won't go in circles...
 #
 NAME:   sewer_co_tree
@@ -1215,7 +1284,7 @@ KITEM:  3 = stone
 : kitem("f =  " .. dgn.loot_scrolls)
 # less water in the middle, more at the endpoints.
 SUBST:  ~ = WWWW., - = WW..., " = W...
-NSUBST: ? = 4 = ef / * = 112233
+NSUBST: ? = 4 = ef / 1:2 / 2:3 / * = 112233
 : sewer_setup(_G)
 MAP
 xxxxxxxxxxxxxxcccccccccccccccccccccxxxxxxxxxxxxxx
@@ -1279,7 +1348,7 @@ NAME:    sewer_co_cracked_pipes
 TAGS:    no_item_gen no_monster_gen no_pool_fixup no_rotate no_vmirror
 ORIENT:  encompass
 MONS:    frilled lizard / ball python w:6 / adder w:4
-MONS:    rat / river rat w:6
+MONS:    rat w:20 / river rat w:12 / rock fish band w:2
 KMONS:   3 = adder
 KMONS:   4 = brain worm
 : item(dgn.loot_potions)
@@ -1410,8 +1479,8 @@ WEIGHT:  5
 # Placed monsters, then randomly distributed monsters.
 MONS:    kobold w:35 / shadow imp / ufetubus
 # Randomly generated monsters.
-MONS:    kobold w:50 / kobold zombie / endoplasm / giant cockroach / \
-         giant cockroach zombie w:3 / ball python / adder zombie w:3 / \
+MONS:    kobold w:50 / kobold zombie / endoplasm / dart slug / \
+         dart slug zombie w:3 / ball python / adder zombie w:3 / \
          bat / bat zombie w:3
 # Bosses and features for the temple, either Makhleb or Kiku
 : if crawl.random2(2) == 0 then
@@ -1419,12 +1488,11 @@ KMONS:   3 = kobold brigand / crimson imp ; club . dart ego:atropa q:2
 KMONS:   4 = kobold brigand
 KMONS:   5 = crimson imp ; club . dart ego:atropa q:2
 KFEAT:   B = altar_makhleb
-MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
-                               pow_max = 100, delay = 10, size = 1, \
-                               walk_dist = 0, excl_rad = 0 }
+:   single_cloud(_G, "F", "flame", false)
 : else
-KMONS:   34 = kobold brigand / kobold brigand zombie
-KMONS:   5 = phantom / crocodile skeleton
+KMONS:   3 = kobold brigand / kobold brigand zombie
+KMONS:   4 = patrolling rock fish zombie
+KMONS:   5 = phantom / crocodile zombie
 KFEAT:   B = altar_kikubaaqudgha
 SUBST:   F : VY
 : end
@@ -1441,27 +1509,27 @@ MAP
                                           c<c
                                          ccdcc
                                         ccd4dcc
-                                        c-111-c
+                                        c-1.1-c
                xxxxxxxxxxxxxxxxxxxxxxxxxc-...-c
                xwwwwwwwwwwwwwwww-W.+1W-xc-...-c
                xwwwwwwwwwwwwwwww-W.x1W-xc-...-c
                x---wwwwwwwwwwwww-W.x1W-xc-...-c
                xWW--wwwwwwwwwww--W.x1W-xc-...-c
-               xWWW-wwwwwwwwww--W..x1W-xcc+++cc
+               xWWW-wwwwwwwwww--W..x.W-xcc+++cc
                xWWW----ww-ww---W...x.W-xc.....ccccccccc
-               xxWxxxxWxxWxxWxxx1xxxx.xcc..F...c------cc
+               xxWxxxxWxxWxxWxxx1xxxx.xcc.cFc..c------cc
                x-W.x............1w-x...c..2.2F.+.....1dccc
-               x-W.............1www-...+.F.B3..+.....15d<c
+               x-W............11www-...+.F.B3..+......5d<c
                x-W.x............1w-x...c..2.2F.+.....1dccc
-               x-W.xxxxWxWWxxx-x1xxxx.xcc..F...c------cc
+               x-W.xxxxWxWWxxx-x1xxxx.xcc.cFc..c------cc
                x-W.xww------w-WW...x.W-xc.....ccccccccc
-               x-W.xwwwwwwwwww--W..x1W-xcc+++cc
+               x-W.xwwwwwwwwww--W..x.W-xcc+++cc
                x-W.xwwwwwwwwwww--W.x1W-xc-...-c
                x-W.xwwwwwwwwwwww-W.x1W-xc-...-c
                x-W.xwwwwwwwwwwww-W.x1W-xc-...-c
                x-W1xwwwwwwwwwwww-W.+1W-xc-...-c
 xxxxxxxxxxxxxxxx-W.xxxxxxxxxxxxxxxxxxWxxc-...-c
-x----------------w1xWW-wwwwwww-WWWWWWW-xc-111-c
+x----------------w1xWW-wwwwwww-WWWWWWW-xc-1.1-c
 xWWWWWWWWWWWWWWWww.WWW-wwwwwww--WWWWWW-xccd6dcc
 x...............1.1xW-wwwwwwwwww-------x ccdcc
 xxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  c<c
@@ -1483,14 +1551,14 @@ NAME:   sewer_hellmonk_slimy_pipes
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
 : item(dgn.loot_potions .. " / any scroll w:30 / any armour / any weapon")
-MONS:   endoplasm w:25 / rat / ball python / giant cockroach / adder w:5 /\
+MONS:   endoplasm w:25 / rat / ball python / dart slug / adder w:5 /\
         river rat w:5 / frilled lizard / ribbon worm w:2
 KMONS:  2 = jelly
 SUBST:  . = W..
 NSUBST: - = 32 = 1W.. / * = W..
-NSUBST: ! = 60 = 1WW. / * = W.
-NSUBST: 2 = 1:2 / *= 2W
-NSUBST: d = 4:d / *= d..
+NSUBST: ! = 54 = 1WW. / * = W.
+NSUBST: 2 = 1:2 / * = 2W
+NSUBST: d = 4:d / * = d..
 KFEAT:  B = altar_jiyva / altar_xom w:1
 : sewer_setup(_G)
 MAP

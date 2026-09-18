@@ -84,7 +84,7 @@ usually centred around a given monster's holiness.
 
 Notably, this also includes vampiric draining, revivification, and directly
 staving off death. All of these are flavoured as necromantic energy regenerating
-one's wounds, and are thus considered unholy by their very nature. 
+one's wounds, and are thus considered unholy by their very nature.
 
 Summonings
 ==========
@@ -180,7 +180,7 @@ provide non-poison damage, they have notable limitations and caveats of player
 risk even at higher spell levels, and the overall school still has level
 limitations compared to all other schools.
 
-Note: Most of the self-warping spells were moved over to the Shapeshifting 
+Note: Most of the self-warping spells were moved over to the Shapeshifting
 skill, which uses talismans. To keep the identity of both this school and those
 talismans clean and separate, keep self-transmutation out of these spells.
 

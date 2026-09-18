@@ -17,6 +17,7 @@
 #include "env.h"
 #include "evoke.h"
 #include "fight.h"
+#include "god-item.h"
 #include "invent.h"
 #include "item-prop.h"
 #include "item-use.h"
@@ -66,6 +67,13 @@ static vector<string> _desc_hit_chance(const monster_info &mi)
 
 namespace quiver
 {
+    formatted_string _empty_quiver_string(bool short_desc)
+    {
+        return formatted_string::parse_string(
+            short_desc ? "<darkgrey>Empty</darkgrey>"
+                       : "<darkgrey>Nothing quivered</darkgrey>");
+    }
+
     static bool _quiver_inscription_ok(int slot)
     {
         if (slot < 0 || slot >= ENDOFPACK || !you.inv[slot].defined())
@@ -138,11 +146,9 @@ namespace quiver
         return af_hp_check || af_mp_check;
     }
 
-    formatted_string action::quiver_description(bool short_desc) const
+    formatted_string action::valid_quiver_description(bool short_desc) const
     {
-        return formatted_string::parse_string(
-                        short_desc ? "<darkgrey>Empty</darkgrey>"
-                                   : "<darkgrey>Nothing quivered</darkgrey>");
+        return _empty_quiver_string(short_desc);
     }
 
     vector<tile_def> action::get_tiles() const
@@ -202,7 +208,7 @@ namespace quiver
     bool action::do_inscription_check() const
     {
         const int slot = get_item();
-        if (slot <= 0 || slot >= ENDOFPACK || !you.inv[slot].defined())
+        if (slot < 0 || slot >= ENDOFPACK || !you.inv[slot].defined())
             return true;
 
         return check_warning_inscriptions(you.inv[slot], OPER_FIRE);
@@ -211,7 +217,7 @@ namespace quiver
     int action::source_hotkey() const
     {
         if (get_item() >= 0 && is_valid())
-            return index_to_letter(get_item());
+            return you.inv[get_item()].slot;
         return 0;
     }
 
@@ -291,6 +297,9 @@ namespace quiver
             if (!item.defined())
                 continue;
 
+            if (god_forbids_item(item))
+                continue;
+
             // =F prevents item from being in fire order.
             const maybe_bool i_check = _fireorder_inscription_ok(i_inv, true);
             if (!ignore_inscription_etc && bool(!i_check))
@@ -335,6 +344,12 @@ namespace quiver
             return !you.confused();
         }
 
+        bool is_piercing() const override
+        {
+            const item_def* wpn = you.weapon();
+            return wpn && is_penetrating_attack(*wpn);
+        }
+
         bool allow_autofight() const override
         {
             return is_enabled();
@@ -350,10 +365,19 @@ namespace quiver
                 fire_warn_if_impossible(false, you.weapon()); // for messaging (TODO refactor; message about inscriptions?)
                 return;
             }
+            monster* mons = monster_at(target.target);
+            if (mons && is_valid_tempering_target(*mons, you, true) && !you.confused())
+            {
+                mprf("You deconstruct %s.", mons->name(DESC_THE).c_str());
+                monster_die(*mons, KILL_RESET, NON_MONSTER);
+                you.turn_is_over = true;
+                return;
+            }
+
             if (autofight_check() || !do_inscription_check())
                 return;
 
-            throw_it(*this);
+            aim_player_ranged_attack(*this);
         }
 
         item_def *get_launcher() const override
@@ -372,11 +396,8 @@ namespace quiver
             return "fire";
         }
 
-        formatted_string quiver_description(bool short_desc=false) const override
+        formatted_string valid_quiver_description(bool short_desc=false) const override
         {
-            if (!is_valid())
-                return action::quiver_description(short_desc);
-
             formatted_string qdesc;
             const item_def &weapon = *get_launcher();
 
@@ -388,7 +409,7 @@ namespace quiver
                 string verb = you.confused() ? "confused " : "";
                 verb += quiver_verb();
                 qdesc.cprintf("%s: %c) ", uppercase_first(verb).c_str(),
-                                index_to_letter(weapon.link));
+                                weapon.slot);
             }
 
             const string prefix = item_prefix(weapon);
@@ -418,6 +439,12 @@ namespace quiver
             save_target["type"] = "ranged_action";
         }
     };
+
+    static bool _either_weapon_cleaves()
+    {
+        return attack_cleaves(you, you.weapon())
+                || attack_cleaves(you, you.offhand_weapon());
+    }
 
     // class isn't intended for quivering per se. Rather, it's a wrapper on
     // targeted attacks involving melee weapons or unarmed fighting. This
@@ -460,26 +487,23 @@ namespace quiver
                     // this is actually a bitmask, but we will simplify quite a
                     // bit here and only use this for unarmed/forms. See
                     // melee_attack::set_attack_verb for the real thing.
-                    const int dt = you.damage_type();
+                    const vorpal_damage_type dt = you.damage_type(nullptr);
                     if (dt & DVORP_CLAWING || dt & DVORP_TENTACLE)
                         return "attack";
                 }
                 return "punch";
             }
 
-            if (weapon_reach(*weapon) > REACH_NONE)
+            if (you.reach_range() > 1)
                 return "reach";
-            else if (attack_cleaves(you))
+            else if (_either_weapon_cleaves())
                 return "cleave";
             else
                 return "hit"; // could use more subtype flavor Vs?
         }
 
-        formatted_string quiver_description(bool short_desc=false) const override
+        formatted_string valid_quiver_description(bool short_desc=false) const override
         {
-            if (!is_valid())
-                return action::quiver_description(short_desc);
-
             formatted_string qdesc;
             const item_def *weapon = you.weapon();
 
@@ -492,7 +516,7 @@ namespace quiver
 
                 verb += quiver_verb();
                 qdesc.cprintf("%s: %c) ", uppercase_first(verb).c_str(),
-                                weapon ? index_to_letter(weapon->link) : '-');
+                                weapon ? weapon->slot : '-');
             }
 
             const string prefix = weapon ? item_prefix(*weapon) : "";
@@ -521,10 +545,10 @@ namespace quiver
 
             if (you.confused())
             {
-                if (!you.is_motile())
+                if (you.cannot_move())
                 {
                     // XX duplicate code with movement.cc:move_player_action
-                    if (cancel_confused_move(true))
+                    if (!check_confused_move(true))
                         return;
 
                     if (!one_chance_in(3))
@@ -559,7 +583,7 @@ namespace quiver
                 {
                     // assume that if a target was explicitly supplied, it was
                     // done intentionally
-                    free_self_from_net();
+                    you.struggle_against_net();
                     you.turn_is_over = true;
                     return;
                 }
@@ -568,17 +592,15 @@ namespace quiver
 
             bool targ_mid = false;
 
-            const item_def *weapon = you.weapon();
-
             // This is redundant with a later check in fight_melee; but, the
             // way this check works, if the player overrides it once it won't
             // give a warning until they switch weapons. UI-wise, if there is
             // going to be a targeter it makes sense to show it first.
-            if (target.needs_targeting() && !wielded_weapon_check(weapon))
+            if (target.needs_targeting() && !wielded_weapon_check())
                 return;
 
             target.isEndpoint = true; // is this needed? imported from autofight code
-            const reach_type reach_range = you.reach_range();
+            const int reach_range = you.reach_range();
 
             direction_chooser_args args;
             args.restricts = DIR_TARGET;
@@ -588,11 +610,8 @@ namespace quiver
             args.self = confirm_prompt_type::cancel;
 
             unique_ptr<targeter> hitfunc;
-            if (attack_cleaves(you))
-            {
-                const int range = reach_range;
-                hitfunc = make_unique<targeter_cleave>(&you, you.pos(), range);
-            }
+            if (_either_weapon_cleaves())
+                hitfunc = make_unique<targeter_cleave>(you.pos());
             else
                 hitfunc = make_unique<targeter_reach>(&you, reach_range);
             args.hitfunc = hitfunc.get();
@@ -625,12 +644,6 @@ namespace quiver
                 return;
             }
 
-            // Failing to hit someone due to a friend blocking is infuriating,
-            // shadow-boxing empty space is not (and would be abusable to wait
-            // with no penalty).
-            if (mons)
-                you.apply_berserk_penalty = false;
-
             // Calculate attack delay now in case we have to apply it.
             const int attack_delay = you.attack_delay().roll();
 
@@ -645,7 +658,7 @@ namespace quiver
                     you.turn_is_over = true;
                     return;
                 }
-                else
+                else if (!monster_at(target.target))
                 {
                     canned_msg(MSG_SOMETHING_IN_WAY);
                     return;
@@ -654,12 +667,12 @@ namespace quiver
 
             // Check for a monster in the way. If there is one, it blocks the reaching
             // attack 50% of the time, and the attack tries to hit it if it is hostile.
-            // REACH_THREE entails smite targeting; this is a bit hacky in that
+            // Reach 3 entails smite targeting; this is a bit hacky in that
             // this is entirely for the sake of UNRAND_RIFT.
             // Cleaving reaches also will never fail to miss, since the player can
             // just attack another target in most cases to hit both.
-            if (reach_range < REACH_THREE
-                && !attack_cleaves(you)
+            if (reach_range < 3
+                && !_either_weapon_cleaves()
                 && (x_distance > 1 || y_distance > 1))
             {
                 const int x_first_middle = you.pos().x + (delta.x) / 2;
@@ -685,24 +698,29 @@ namespace quiver
                 bool success = true;
                 monster *midmons;
                 if ((midmons = monster_at(middle))
-                    && !never_harm_monster(&you, *midmons)
+                    && could_harm(&you, midmons)
                     && (midmons->type != MONS_SPECTRAL_WEAPON
                         || !midmons->wont_attack())
                     && coinflip())
                 {
+                    if (midmons->wont_attack())
+                    {
+                        // Let's assume friendlies cooperate.
+                        mprf("You fail to reach past %s.", midmons->name(DESC_THE).c_str());
+                        you.time_taken = attack_delay;
+                        you.turn_is_over = true;
+
+                        // Trying to attack and enemy and failing still counts as an attempted
+                        // attack for purposes of berserk and duration extensions.
+                        if (mons)
+                            player_attempted_attack(false, !mons->is_firewood() && !mons->wont_attack());
+                        return;
+                    }
                     success = false;
                     target.target = middle;
                     mons = midmons;
                     targ_mid = true;
                     t = target;
-                    if (mons->wont_attack())
-                    {
-                        // Let's assume friendlies cooperate.
-                        mpr("You could not reach far enough!");
-                        you.time_taken = attack_delay;
-                        you.turn_is_over = true;
-                        return;
-                    }
                 }
 
                 if (success)
@@ -732,7 +750,7 @@ namespace quiver
             }
             else
             {
-                if (is_valid_tempering_target(*mons, you) && !you.confused())
+                if (is_valid_tempering_target(*mons, you, true) && !you.confused())
                 {
                     mprf("You deconstruct %s.", mons->name(DESC_THE).c_str());
                     monster_die(*mons, KILL_RESET, NON_MONSTER);
@@ -742,7 +760,7 @@ namespace quiver
 
                 // something to attack, let's do it:
                 you.turn_is_over = true;
-                if (!fight_melee(&you, mons) && targ_mid)
+                if (!player_fight(mons) && targ_mid)
                 {
                     // turn_is_over may have been reset to false by fight_melee, but
                     // a failed attempt to reach further should not be free; instead,
@@ -750,8 +768,6 @@ namespace quiver
                     you.time_taken = attack_delay;
                     you.turn_is_over = true;
                 }
-                you.berserk_penalty = 0;
-                you.apply_berserk_penalty = false;
             }
 
             return;
@@ -806,12 +822,8 @@ namespace quiver
                                         && you.inv[item_slot].defined();
         }
 
-        formatted_string quiver_description(bool short_desc) const override
+        formatted_string valid_quiver_description(bool ) const override
         {
-            // TODO: generalize this code
-            if (!is_valid())
-                return action::quiver_description(short_desc);
-
             formatted_string qdesc;
 
             const item_def& quiver = you.inv[item_slot];
@@ -838,7 +850,7 @@ namespace quiver
 
     /**
      * An ammo_action is an action that fires ammo from a slot in the
-     * inventory. This covers throwing; tossing is handled by a subclass.
+     * inventory (ie: throwing)
      */
     struct ammo_action : public item_action
     {
@@ -856,6 +868,9 @@ namespace quiver
         virtual bool is_enabled() const override
         {
             if (!is_valid())
+                return false;
+
+            if (god_forbids_item(you.inv[item_slot]))
                 return false;
 
             if (fire_warn_if_impossible(true, nullptr))
@@ -881,6 +896,11 @@ namespace quiver
             return !you.confused();
         }
 
+        bool is_piercing() const override
+        {
+            return item_slot >= 0 && item_slot < MAX_GEAR && is_penetrating_attack(you.inv[item_slot]);
+        }
+
         bool allow_autofight() const override
         {
             if (!is_enabled())
@@ -901,14 +921,19 @@ namespace quiver
                 return;
             if (!is_enabled())
             {
-                fire_warn_if_impossible(false, nullptr); // for messaging (TODO refactor; message about inscriptions?)
+                if (god_forbids_item(you.inv[item_slot]))
+                {
+                    mprf(MSGCH_GOD, "%s forbids the use of this item.",
+                         uppercase_first(god_name(you.religion)).c_str());
+                }
+                else
+                    fire_warn_if_impossible(false, nullptr); // for messaging (TODO refactor; message about inscriptions?)
                 return;
             }
             if (autofight_check() || !do_inscription_check())
                 return;
 
-            // TODO: refactor throw_it into here?
-            throw_it(*this);
+            aim_player_ranged_attack(*this);
 
             // Update the legacy quiver history data structure
             // TODO: eliminate this? History should be stored per quiver, not
@@ -916,12 +941,9 @@ namespace quiver
             you.m_quiver_history.on_item_fired(you.inv[item_slot]);
         }
 
-        virtual formatted_string quiver_description(bool short_desc) const override
+        virtual formatted_string valid_quiver_description(bool short_desc) const override
         {
             ASSERT_RANGE(item_slot, -1, ENDOFPACK);
-            // or error?
-            if (!is_valid())
-                return action::quiver_description(short_desc);
 
             formatted_string qdesc;
 
@@ -994,37 +1016,6 @@ namespace quiver
             return result;
         }
 
-    };
-
-    bool toss_validate_item(int slot, string *err)
-    {
-        // make people manually take stuff off if they want to toss it
-        if (item_is_worn(slot))
-        {
-            if (err)
-            {
-                *err = make_stringf("You are %s that object!",
-                            you.inv[slot].base_type == OBJ_WEAPONS ? "wielding"
-                                                                   : "wearing");
-            }
-            return false;
-        }
-        return true;
-    }
-
-    // for fumble throwing / tossing
-    struct fumble_action : public ammo_action
-    {
-        fumble_action(int slot=-1) : ammo_action(slot, "fumble_action")
-        {
-        }
-
-        // uses ammo_action fire order
-
-        bool launch_type_check() const override
-        {
-            return toss_validate_item(item_slot);
-        }
     };
 
     static bool _spell_needs_manual_targeting(spell_type s)
@@ -1107,21 +1098,19 @@ namespace quiver
 
         bool use_autofight_targeting() const override
         {
-            return is_dynamic_targeted();
+            return false;
         }
 
         bool allow_autofight() const override
         {
-            if (!is_enabled())
-                return false;
-            if (_spell_needs_manual_targeting(spell))
-                return false;
-            return is_autofight_combat_spell(spell);
+            return false;
         }
 
         bool uses_mp() const override
         {
-            return is_valid();
+            const bool enkindled = you.duration[DUR_ENKINDLED]
+                                   && spell_can_be_enkindled(spell);
+            return is_valid() && !enkindled;
         }
 
         bool check_channelled_spells() const
@@ -1188,11 +1177,8 @@ namespace quiver
             return { tile_def(get_spell_tile(spell)) };
         }
 
-        formatted_string quiver_description(bool short_desc) const override
+        formatted_string valid_quiver_description(bool ) const override
         {
-            if (!is_valid())
-                return action::quiver_description(short_desc);
-
             formatted_string qdesc;
 
             qdesc.textcolour(Options.status_caption_colour);
@@ -1273,9 +1259,7 @@ namespace quiver
     static bool _pseudoability(ability_type a)
     {
         if (   static_cast<int>(a) >= ABIL_FIRST_SACRIFICE
-                    && static_cast<int>(a) <= ABIL_FINAL_SACRIFICE
-            || static_cast<int>(a) >= ABIL_HEPLIAKLQANA_FIRST_TYPE
-                    && static_cast<int>(a) <= ABIL_HEPLIAKLQANA_LAST_TYPE)
+                    && static_cast<int>(a) <= ABIL_FINAL_SACRIFICE)
         {
             return true;
         }
@@ -1283,7 +1267,6 @@ namespace quiver
         switch (a)
         {
         case ABIL_END_TRANSFORMATION:
-        case ABIL_BEGIN_UNTRANSFORM:
         case ABIL_TSO_BLESS_WEAPON:
         case ABIL_KIKU_BLESS_WEAPON:
         case ABIL_KIKU_GIFT_CAPSTONE_SPELLS:
@@ -1292,6 +1275,9 @@ namespace quiver
         case ABIL_ASHENZARI_CURSE:
         case ABIL_RU_REJECT_SACRIFICES:
         case ABIL_HEPLIAKLQANA_IDENTITY:
+        case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
+        case ABIL_HEPLIAKLQANA_TYPE_ELEMENTALIST:
+        case ABIL_HEPLIAKLQANA_TYPE_HEXER:
         case ABIL_RENOUNCE_RELIGION:
         case ABIL_CONVERT_TO_BEOGH:
         case ABIL_OKAWARU_GIFT_WEAPON:
@@ -1317,7 +1303,9 @@ namespace quiver
         // (What abilities are missing here?)
 
         if (get_dist_to_nearest_monster() > ability_range(abil)
-            && (get_ability_flags(abil) & abflag::targeting_mask))
+            && (get_ability_flags(abil) & abflag::targeting_mask)
+            // Wants friendly targets, not hostile ones.
+            && abil != ABIL_ELYVILON_DIVINE_ALMS)
 
         {
             if (!quiet)
@@ -1335,7 +1323,7 @@ namespace quiver
         case ABIL_RU_POWER_LEAP: // disable under nomove, or altogether?
         case ABIL_SPIT_POISON:
         case ABIL_CAUSTIC_BREATH:
-        case ABIL_BREATHE_FIRE:
+        case ABIL_GOLDEN_BREATH:
         case ABIL_GLACIAL_BREATH:
         case ABIL_BREATHE_POISON:
         case ABIL_NULLIFYING_BREATH:
@@ -1412,8 +1400,10 @@ namespace quiver
             case ABIL_STEAM_BREATH:
             case ABIL_NOXIOUS_BREATH:
             case ABIL_MUD_BREATH:
+            case ABIL_GOLDEN_BREATH:
+            case ABIL_BREATHE_RUST:
             case ABIL_DAMNATION:
-            case ABIL_ELYVILON_HEAL_OTHER:
+            case ABIL_ELYVILON_PACIFY:
             case ABIL_LUGONU_BANISH:
             case ABIL_BEOGH_SMITING:
             case ABIL_FEDHAS_OVERGROW:
@@ -1422,6 +1412,7 @@ namespace quiver
             case ABIL_USKAYAW_LINE_PASS:
             case ABIL_USKAYAW_GRAND_FINALE:
             case ABIL_WU_JIAN_WALLJUMP:
+            case ABIL_YRED_HURL_TORCHLIGHT:
             case ABIL_EVOKE_DISPATER:
             case ABIL_EVOKE_OLGREB:
 #ifdef WIZARD
@@ -1474,7 +1465,7 @@ namespace quiver
             if (autofight_check())
                 return;
 
-            talent tal = get_talent(ability, false);
+            talent tal = get_talent(ability);
             activate_talent(tal, &target);
 
             // TODO: does non-targeted case come up?
@@ -1484,11 +1475,8 @@ namespace quiver
             t = target; // copy back, in case they are different
         }
 
-        formatted_string quiver_description(bool short_desc) const override
+        formatted_string valid_quiver_description(bool ) const override
         {
-            if (!is_valid())
-                return action::quiver_description(short_desc);
-
             formatted_string qdesc;
 
             qdesc.textcolour(Options.status_caption_colour);
@@ -1522,7 +1510,7 @@ namespace quiver
         vector<shared_ptr<action>> get_fire_order(
             bool allow_disabled=true, bool menu=false) const override
         {
-            vector<talent> talents = your_talents(false, true, true);
+            vector<talent> talents = your_talents(true, true);
             // goes by letter order
             vector<shared_ptr<action>> result;
 
@@ -1716,7 +1704,10 @@ namespace quiver
             if (!is_enabled())
             {
                 const item_def *item = item_slot == -1 ? nullptr : &you.inv[item_slot];
-                mpr(cannot_evoke_item_reason(item));
+                bool god_forbids = false;
+                const string reason = cannot_evoke_item_reason(item, true, true,
+                                                               &god_forbids);
+                mprf(god_forbids ? MSGCH_GOD : MSGCH_PLAIN, "%s", reason.c_str());
                 return;
             }
 
@@ -1910,6 +1901,8 @@ namespace quiver
 #if TAG_MAJOR_VERSION == 34
         else if (type == "launcher_ammo_action")
             return make_shared<ammo_action>(-1);
+        else if (type == "fumble_action")
+            return make_shared<ammo_action>(-1);
 #endif
         else if (type == "spell_action")
             return make_shared<spell_action>(static_cast<spell_type>(param));
@@ -1921,8 +1914,6 @@ namespace quiver
             return make_shared<wand_action>(param);
         else if (type == "misc_action")
             return make_shared<misc_action>(param);
-        else if (type == "fumble_action")
-            return make_shared<fumble_action>(param);
         else if (type == "melee_action")
             return make_shared<melee_action>();
         else if (type == "ranged_action")
@@ -2281,42 +2272,15 @@ namespace quiver
     }
 
     /**
-     * Given an inventory slot containing ammo, return an appropriate throwing
-     * or firing action. If `slot` doesn't contain ammo, returns either an
-     * invalid action or a fumble action based on `force`.
-     *
-     * @param slot the inventory slot number to use.
-     * @param force whether to force non-ammo items to be throwable via
-     *              fumble throwing.
-     * @return the resulting action. May be invalid, or nullptr on an error.
-     */
-    shared_ptr<action> ammo_to_action(int slot, bool force)
-    {
-        if (slot < 0 || slot >= ENDOFPACK || !you.inv[slot].defined())
-            return nullptr;
-
-
-        shared_ptr<action> a = nullptr;
-        // use ammo as the fallback -- may well end up invalid
-        if (!a || !a->is_valid())
-            a = make_shared<ammo_action>(slot);
-        if (force && (!a || !a->is_valid()))
-            return make_shared<fumble_action>(slot);
-        return a;
-    }
-
-    /**
      * Given an inventory slot, return an appropriate action if possible.
      * For a weapon with both an attack and an evokable ability, this
      * will always give the latter. If not possible, this will return an invalid
-     * action or nullptr.
+     * action.
      *
      * @param slot the inventory slot number to use.
-     * @param force whether to force non-throwable, non-evokable items to be
-     *              throwable via fumble throwing.
-     * @return the resulting action. May be invalid, or nullptr on an error.
+     * @return the resulting action. May be invalid.
      */
-    shared_ptr<action> slot_to_action(int slot, bool force)
+    shared_ptr<action> slot_to_action(int slot)
     {
         if (slot < 0 || slot >= ENDOFPACK || !you.inv[slot].defined())
             return nullptr;
@@ -2330,16 +2294,16 @@ namespace quiver
         {
             return make_shared<consumable_action>(slot);
         }
+        else if (you.inv[slot].base_type == OBJ_MISSILES)
+            return make_shared<ammo_action>(slot);
         else if (you.weapon() && you.weapon()->link == slot
                                 && is_range_weapon(*you.weapon()))
         {
             return get_primary_action();
         }
 
-        // use ammo as the fallback -- may well end up invalid. This means that
-        // by this call, it isn't possible to get toss actions for anything
-        // handled in the above conditional.
-        return ammo_to_action(slot, force);
+        // An always-invalid action.
+        return make_shared<ammo_action>(-1);
     }
 
     /**
@@ -2369,6 +2333,16 @@ namespace quiver
         auto a = you.quiver_action.get();
         ASSERT(a); // should be redundant
         return a;
+    }
+
+    /**
+     * Return whether the quiver is empty.
+     *
+     * @return whether if the quiver is empty.
+     */
+    bool is_empty()
+    {
+        return you.quiver_action.is_empty();
     }
 
     /**
@@ -2440,17 +2414,12 @@ namespace quiver
 
     static bool _any_abils_to_quiver()
     {
-        return your_talents(true, true).size() > 0;
+        return your_talents(true).size() > 0;
     }
 
     static bool _any_items_to_quiver()
     {
-        // regular species can force-quiver any (non-equipped) item, but
-        // felids have a more limited selection, so we need to directly
-        // calculate it.
-        return you.has_mutation(MUT_NO_GRASPING)
-            ? any_items_of_type(OSEL_QUIVER_ACTION_FORCE)
-            : inv_count() > 0;
+        return any_items_of_type(OSEL_QUIVER_ACTION);
     }
 
     // note for editing this: Menu::action is defined and will take precedence
@@ -2676,12 +2645,17 @@ namespace quiver
                     first_abil += 1;
                 }
 
-                if (focus_mode != Focus::NONE)
+                // We use real letters for spells and abilities, but for items
+                // we use sequential letters, as we may have items sharing the
+                // same letter (e.g. a wand and a missile).
+                const bool use_real_letters = focus_mode != Focus::NONE
+                                              && i >= it_count;
+                if (use_real_letters)
                     hotkey = a->source_hotkey();
 
                 add_action(a, hotkey);
 
-                if (focus_mode == Focus::NONE)
+                if (!use_real_letters)
                     hotkey++;
                 i++;
             }
@@ -2720,8 +2694,8 @@ namespace quiver
         bool _choose_from_inv()
         {
             int slot = prompt_invent_item(allow_empty
-                                            ? "Quiver which item? (- for none, * to toggle full inventory)"
-                                            : "Quiver which item? (* to toggle full inventory)",
+                                            ? "Quiver which item? (- for none)"
+                                            : "Quiver which item?",
                                           menu_type::invlist, OSEL_QUIVER_ACTION,
                                           OPER_QUIVER, invprompt_flag::hide_known, '-');
 
@@ -2742,7 +2716,7 @@ namespace quiver
             // the message can  be seen.
             // TODO: in failure it would be better to set the more with an
             // error instead of exiting the menu
-            set_to_quiver(slot_to_action(slot, true));
+            set_to_quiver(slot_to_action(slot));
             return false;
         }
 
@@ -2750,7 +2724,7 @@ namespace quiver
         {
             // currently doesn't show usk disabled abilities even though they
             // are shown for Q, is this confusing?
-            vector<talent> talents = your_talents(false, true);
+            vector<talent> talents = your_talents(true);
             // TODO: better handling for no abilities?
             int selected = choose_ability_menu(talents);
 
@@ -2814,7 +2788,7 @@ namespace quiver
                 item_def *item = digit_inscription_to_item(key, OPER_QUIVER);
                 if (item && in_inventory(*item))
                 {
-                    auto a = slot_to_action(item->link, true);
+                    auto a = slot_to_action(item->link);
                     // XX would be better to show an error if a is invalid?
                     if (a->is_valid())
                     {
@@ -2827,7 +2801,7 @@ namespace quiver
                 return _choose_from_inv();
             else if (key == '&' && any_spells)
             {
-                const int skey = list_spells(false, false, false,
+                const int skey = list_spells(false, false, false, false,
                                                     "quiver");
                 if (skey == 0)
                     return true;
@@ -2898,7 +2872,13 @@ namespace quiver
         // involved to support that, but for now that project is too
         // impractical, because each code path (except throwing) is called from
         // many places.
+        if (is_empty())
+        {
+            mpr("Nothing quivered!");
+            return;
+        }
         shared_ptr<action> initial = get();
+
         clear_messages(); // this kind of looks better as a force clear, but
                           // for consistency with direct targeting commands,
                           // I will leave it as non-force
@@ -3172,7 +3152,7 @@ static int _get_pack_slot(const item_def &item)
         return item.link;
 
     // First try to find the exact same item.
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (int i = 0; i < MAX_GEAR; i++)
     {
         const item_def &inv_item = you.inv[i];
         if (inv_item.quantity && _items_similar(item, inv_item, false))
@@ -3180,7 +3160,7 @@ static int _get_pack_slot(const item_def &item)
     }
 
     // If that fails, try to find an item sufficiently similar.
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (int i = 0; i < MAX_GEAR; i++)
     {
         const item_def &inv_item = you.inv[i];
         if (inv_item.quantity && _items_similar(item, inv_item, true))

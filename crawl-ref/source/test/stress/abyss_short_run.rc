@@ -61,7 +61,7 @@ function ready()
     last_turn = you.turns()
 
     if you.turns() >= 1000 then
-      crawl.sendkeys("*qyes" .. eol .. esc .. esc)
+      crawl.sendkeys("*qquit" .. eol .. esc .. esc)
     end
   else
     command = command + 1

@@ -7,6 +7,7 @@
 
 #include "branch.h"
 #include "cluautil.h"
+#include "mon-util.h"
 #include "player.h"
 
 #define BRANCH(br, pos)                                                 \
@@ -22,8 +23,8 @@ BRANCH(br, 1);                   \
 PLUARET(type, expr);             \
 }
 
-BRANCHFN(floorcol, number, br.floor_colour)
-BRANCHFN(rockcol, number, br.rock_colour)
+BRANCHFN(floorcol, integer, br.floor_colour)
+BRANCHFN(rockcol, integer, br.rock_colour)
 BRANCHFN(parent_branch, string,
          br.parent_branch == NUM_BRANCHES
              ? ""
@@ -39,7 +40,7 @@ LUAFN(dgn_br_depth)
         if (brn == NUM_BRANCHES)
             luaL_argerror(ls, 1, "No such branch");
     }
-    PLUARET(number, brdepth[brn]);
+    PLUARET(integer, brdepth[brn]);
 }
 
 LUAFN(dgn_br_exists)
@@ -124,7 +125,13 @@ LUAFN(dgn_level_name)
     return 1;
 }
 
-const struct luaL_reg dgn_level_dlib[] =
+LUAFN(dgn_zot_orb_type)
+{
+    lua_pushstring(ls, mons_type_name(you.zot_orb_monster, DESC_DBNAME).c_str());
+    return 1;
+}
+
+const struct luaL_Reg dgn_level_dlib[] =
 {
 { "br_floorcol", dgn_br_floorcol },
 { "br_rockcol", dgn_br_rockcol },
@@ -135,6 +142,8 @@ const struct luaL_reg dgn_level_dlib[] =
 
 { "level_id", dgn_level_id },
 { "level_name", dgn_level_name },
+
+{ "zot_orb_type", dgn_zot_orb_type },
 
 { nullptr, nullptr }
 };

@@ -1,3 +1,10 @@
+:root {
+    --stat-font: var(--crt-font), monospace;
+    --msg-font: var(--crt-font), monospace;
+    --lbl-font: var(--crt-font), monospace;
+    --action-font: var(--crt-font), monospace;
+}
+
 body {
     margin: 0px;
     overflow: hidden;
@@ -48,6 +55,7 @@ canvas {
     display: inline-block;
     position: static;
     color: var(--color-7); /* lightgray */
+    font-family: var(--stat-font);
 }
 
 #stats_titleline, #stats_species_god {
@@ -88,12 +96,6 @@ canvas {
 .boosted_defense {
     color: var(--color-9); /* lightblue */
 }
-#game #stats_weapon .corroded_weapon {
-    color: var(--color-4); /* red */
-}
-#game #stats_offhand_weapon .corroded_weapon {
-    color: var(--color-4); /* red */
-}
 
 .bar span {
     display: inline-block;
@@ -128,6 +130,19 @@ canvas {
 }
 #stats_mp_bar_increase {
     background-color: var(--color-1); /* blue */
+}
+
+#stats_doom_bar {
+    background-color: var(--color-8); /* darkgray */
+}
+#stats_doom_bar_full {
+    background-color: var(--color-5); /* lightblue */
+}
+#stats_doom_bar_decrease {
+    background-color: var(--color-5); /* magenta */
+}
+#stats_doom_bar_increase {
+    background-color: var(--color-13); /* blue */
 }
 
 /* default color when showing "Silenced" */
@@ -241,6 +256,7 @@ canvas {
 
 #message_pane {
     width: 100%;
+    font-family: var(--msg-font);
 }
 #messages_container {
     display: block;
@@ -282,6 +298,7 @@ canvas {
 #monster_list {
     display: inline-block;
     overflow-x: hidden;
+    font-family: var(--lbl-font);
 }
 
 #monster_list .group {
@@ -317,6 +334,10 @@ canvas {
 #monster_list .good_neutral,
 #monster_list .neutral {
     color: var(--color-6); /* brown */
+}
+
+#monster_list .invisible {
+    color: var(--color-5); /* magenta */
 }
 
 #monster_list .health {
@@ -452,6 +473,7 @@ canvas {
     -ms-flex-direction: column;
     flex-direction: column;
     max-height: inherit;
+    font-family: var(--crt-font);
 }
 
 .menu_title {
@@ -504,7 +526,7 @@ canvas {
     border: 0;
     padding: 0px 2px 0px 2px;
     margin: 0px 0px 0px 4px;
-    font-family: monospace;
+    font-family: var(--crt-font);
     font-size: 16px;
 }
 
@@ -979,6 +1001,7 @@ canvas {
 
 #ui-stack {
     z-index: 3000;
+    font-family: var(--crt-font);
 }
 
 .ui-popup-overlay {
@@ -1326,7 +1349,7 @@ canvas {
     margin: 0 10px;
     color: #babdb6;
     padding: 4px 8px;
-    font-family: monospace;
+    font-family: var(--crt-font);
     cursor: pointer;
 }
 
@@ -1337,6 +1360,7 @@ canvas {
     top: 0px;
     border: 2px solid #7d623c;
     border-radius: 3px;
+    font-family: var(--action-font);
 }
 
 #action-panel-tooltip
@@ -1380,7 +1404,7 @@ canvas {
     border: 2px solid #7d623c;
     padding: 2px;
     font-size: 16px;
-    font-family: monospace;
+    font-family: var(--main-font);
 }
 
 #action-panel-settings fieldset {

@@ -15,9 +15,6 @@ generic_jiyva_mutation_2
 generic_jiyva_mutation_3
 
 # Scales
-shaggy_fur_1 SHAGGY_FUR
-shaggy_fur_2
-shaggy_fur_3
 blue_scales_1 ICY_BLUE_SCALES
 blue_scales_2
 blue_scales_3
@@ -45,6 +42,9 @@ sharp_scales_3
 thin_skeletal_structure_1 THIN_SKELETAL_STRUCTURE
 thin_skeletal_structure_2
 thin_skeletal_structure_3
+sanguine_armour_1 SANGUINE_ARMOUR
+sanguine_armour_2
+sanguine_armour_3
 yellow_scales_1 YELLOW_SCALES
 yellow_scales_2
 yellow_scales_3
@@ -82,6 +82,9 @@ subdued_magic_2
 subdued_magic_3
 efficient_magic_1 EFFICIENT_MAGIC
 efficient_magic_2
+meek_1 MEEK
+meek_2
+meek_3
 
 # Generic resists and vulnerabilities
 cold_res_1 COLD_RESISTANCE
@@ -129,35 +132,52 @@ talons_3
 hooves_1 HOOVES
 hooves_2
 hooves_3
+stinger_1 STINGER
+stinger_2
+stinger_3
 
 # Good mutations also used by regular species
+acute_vision ACUTE_VISION
 camouflage_1 CAMOUFLAGE
 camouflage_2
 camouflage_3
-passive_mapping_1 PASSIVE_MAPPING
-passive_mapping_2
-passive_mapping_3
 
 # Miscellaneous good mutations
-acute_vision ACUTE_VISION
 clarity CLARITY
 ephemeral_shield EPHEMERAL_SHIELD
+efficient_metabolism EFFICIENT_METABOLISM
+feed_off_suffering_1 FEED_OFF_SUFFERING
+feed_off_suffering_2
+lucky_1 LUCKY
+lucky_2
 mp_wands MP_WANDS
 passive_freeze PASSIVE_FREEZE
+passive_mapping_1 PASSIVE_MAPPING
+passive_mapping_2
+protean_grace PROTEAN_GRACE
 regeneration_1 REGENERATION
 regeneration_2
 regeneration_3
+spark_swarm_1 SPARK_SWARM
+spark_swarm_2
 time_warped_blood_1 TIME_WARPED_BLOOD
 time_warped_blood_2
 
 # Generic bad mutations
-berserk_1 BERSERK
-berserk_2
+booming_voice BOOMING_VOICE
+contamination_susceptible CONTAMINATION_SUSCEPTIBLE
 deterioration_1 POOR_CONSTITUTION
 deterioration_2
+initially_attractive_1 INITIALLY_ATTRACTIVE
+initially_attractive_2
 persistent_drain PERSISTENT_DRAIN
+potion_fungus POTION_FUNGUS
+reckless RECKLESS
 scream_1 SCREAM
 scream_2
+spatial_entanglement SPATIAL_ENTANGLEMENT
+spiteful_blood_1 SPITEFUL_BLOOD
+spiteful_blood_2
 teleport_1 TELEPORT
 teleport_2
 
@@ -165,6 +185,9 @@ teleport_2
 demonic_touch1 DEMONIC_TOUCH
 demonic_touch2
 demonic_touch3
+weakness_stinger_1 WEAKNESS_STINGER
+weakness_stinger_2
+weakness_stinger_3
 icemail_1 ICEMAIL
 icemail_2
 condensation_shield CONDENSATION_SHIELD
@@ -196,12 +219,15 @@ demonic_will DEMONIC_WILL
 torment_res_1 TORMENT_RES
 torment_res_2
 hurl_damnation HURL_DAMNATION
+bedevilling BEDEVILLING
+black_mark BLACK_MARK
 silence_aura SILENCE_AURA
 word_of_chaos WORD_OF_CHAOS
 
 # Per-species effects mutations
 hop_1 HOP
 hop_2
+accursed ACCURSED
 divine_attributes DIVINE_ATTRIBUTES
 forlorn FORLORN
 flat_hp_1 FLAT_HP
@@ -214,6 +240,9 @@ acidic_bite ACIDIC_BITE
 big_wings BIG_WINGS
 inviolate_magic INVIOLATE_MAGIC
 steam_res STEAM_RES
+shaggy_fur_1 SHAGGY_FUR
+shaggy_fur_2
+shaggy_fur_3
 multilived MULTILIVED
 no_armour NO_ARMOUR
 no_grasping NO_GRASPING
@@ -225,10 +254,15 @@ nightstalker_2
 nightstalker_3
 inhibited_regeneration INHIBITED_REGENERATION
 mertail MERTAIL
+in_touch_with_death_1 IN_TOUCH_WITH_DEATH
+in_touch_with_death_2
 no_drink NO_DRINK
 faith FAITH
+naga_tail_1 NAGA_TAIL
+naga_tail_2
 spit_poison_1 SPIT_POISON
 spit_poison_2
+double_potion_heal DOUBLE_POTION_HEAL
 acrobatic ACROBATIC
 antimagic_bite ANTIMAGIC_BITE
 no_potion_heal_1 NO_POTION_HEAL
@@ -239,6 +273,12 @@ formless_2
 trickster TRICKSTER
 spellclaws SPELLCLAWS
 mnemophage MNEMOPHAGE
+stampede_1 STAMPEDE
+stampede_2
+stampede_north STAMPEDE_NORTH
+stampede_south STAMPEDE_SOUTH
+stampede_east STAMPEDE_EAST
+stampede_west STAMPEDE_WEST
 
 # Makhleb mutations
 major_destruction_of_cocytus MAJOR_DESTRUCTION_OF_COCYTUS
@@ -266,6 +306,10 @@ gelatinous_body_2
 gelatinous_body_3
 jelly_absorbing_missiles JELLY_ABSORBING_MISSILES
 jelly_growth JELLY_GROWTH
+pseudopods_1 PSEUDOPODS
+pseudopods_2
+pseudopods_3
+slime_shroud SLIME_SHROUD
 tendrils TENDRILS
 
 # Ru sacrifices
@@ -284,6 +328,8 @@ no_ice_magic NO_ICE_MAGIC
 no_air_magic NO_AIR_MAGIC
 no_earth_magic NO_EARTH_MAGIC
 no_forms NO_FORMS
+renounce_potions RENOUNCE_POTIONS
+renounce_scrolls RENOUNCE_SCROLLS
 temperature_sensitivity TEMPERATURE_SENSITIVITY
 weak_willed_1 WEAK_WILLED
 weak_willed_2

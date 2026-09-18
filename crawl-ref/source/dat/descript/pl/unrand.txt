@@ -13,16 +13,12 @@ Mace of Variability
 
 Jest raczej niezbyt niezawodna.
 %%%%
-Glaive of Prune
+partisan of Prune
 
 Jest to dzieło jakiegoś szalonego boga, i niesie klątwę która zmienia
 posiadacza tej broni w śliwę. Na szczęście, klątwa ta działa bardzo powoli, i
 można używać tej glewii przez krótki czas bez konsekwencji gorszych niż lekko
 fioletowa skóra i parę zmarszczek.
-%%%%
-Sword of Power
-
-Nagradza silnych siłą, a słabych słabością.
 %%%%
 Staff of Wucad Mu
 
@@ -77,7 +73,7 @@ glaive of the Guard
 Ta broń kiedyś należała do Gar Dogha, strażnika królewskich skarbów. Podobno
 stracił ją podczas wyprawy w te lochy.
 %%%%
-sword of the Doom Knight
+sword of the Dread Knight
 
 Wielki miecz z czarnym diamentem w rękojeści.
 %%%%
@@ -227,7 +223,7 @@ amulet of Cekugob
 Ten wisiorek to dziwne kawałek kryształu na sznurku, z nietypowym zestawem
 mocy.
 %%%%
-amulet of the Four Winds
+amulet of Tranquility
 
 Ten wisior z najczystszego jadeitu daje nosicielowi mistyczną siłę aby odeprzeć
 wrogie uroki.

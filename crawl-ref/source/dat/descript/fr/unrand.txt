@@ -13,16 +13,12 @@ Mace of Variability
 
 C'est plutôt pas très fiable.
 %%%%
-Glaive of Prune
+Partisan of Prune
 
 Ceci est la création d'un dieu fou et, porte une malédiction qui transforme
 quiconque le possède en prune. Heureusement, la malédiction agit très lentement
 et, une personne peut l'utiliser brièvement sans conséquence plus grave que
 d'obtenir une peau légèrement violette et quelques rides.
-%%%%
-Sword of Power
-
-Elle récompense les puissants par la puissance et les faibles par la faiblesse.
 %%%%
 Staff of Olgreb
 
@@ -141,7 +137,7 @@ crossbow "Hellfire"
 Une arbalète enflammée, forgée dans les feux des Enfers ; elle imprègne les
 carreaux qu'elle tire avec la puissance brute du même nom.
 %%%%
-sword of the Doom Knight
+sword of the Dread Knight
 
 Une grande épée d'adamantine.
 %%%%
@@ -315,7 +311,7 @@ celui d'un dragon.
 robe of Night
 
 Une longue robe noire faite d'un étrange matériau brillant. Selon la légende,
-elle fut le don de Ratri la déesse de la Nuit à un de ses fidèles.
+elle fut le don de Rutra la déesse de la Nuit à un de ses fidèles.
 %%%%
 scales of the Dragon King
 
@@ -369,7 +365,7 @@ amulet of Cekugob
 Un étrange morceau de cristal accroché au bout d'une chaîne ordinaire, avec un
 choix aussi étrange de pouvoirs.
 %%%%
-amulet of the Four Winds
+amulet of Tranquility
 
 Ce pendentif de jade des plus pures accorde à son porteur une immense force
 mystique pour résister aux magies hostiles.

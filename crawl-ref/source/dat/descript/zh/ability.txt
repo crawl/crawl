@@ -618,11 +618,6 @@ Ancestor Life: Knight ability
 回想起你的先祖是个骑士，他是个有着出色近战和防御能力的战士。
 此选择是永久的，不能撤消。
 %%%%
-Ancestor Life: Battlemage ability
-
-回想你的先祖是个战斗法师，一个能够近战和使用魔法进行冷酷攻击的战士。
-此选择是永久的，不能撤消。
-%%%%
 Ancestor Life: Hexer ability
 
 回想起你的先祖是个妖术师，一个掌握熟练刀法和衰败魔法技能的狡猾的贼。

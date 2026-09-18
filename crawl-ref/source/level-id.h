@@ -26,8 +26,9 @@ public:
     static level_id current();
 
     // Returns the level_id of the level that the stair/portal/whatever at
-    // 'pos' on the current level leads to.
-    static level_id get_next_level_id(const coord_def &pos);
+    // 'pos' on this level leads to. The caller must ensure that the loaded
+    // env corresponds to this level.
+    level_id next_level_id(const coord_def &pos) const;
 
     // Important that if run after this, ::is_valid() is false.
     level_id()

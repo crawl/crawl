@@ -30,7 +30,7 @@ struct kill_monster_desc
 
     enum name_modifier
     {
-        M_NORMAL, M_ZOMBIE, M_SKELETON, M_SIMULACRUM, M_SPECTRE,
+        M_NORMAL, M_ZOMBIE, M_DRAUGR, M_SIMULACRUM, M_SPECTRE,
         M_SHAPESHIFTER, // A shapeshifter pretending to be 'monnum'
     };
 

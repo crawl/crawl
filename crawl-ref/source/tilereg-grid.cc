@@ -20,6 +20,7 @@ InventoryTile::InventoryTile()
     key      = 0;
     flag     = 0;
     special  = 0;
+    special2 = 0;
 }
 
 bool InventoryTile::empty() const

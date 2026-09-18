@@ -5,7 +5,7 @@ short_name: DE
 adjective: Elven
 genus: Elf
 difficulty: Simple
-difficulty_priority: 40
+difficulty_priority: 30
 aptitudes:
   xp: -1
   hp: -2

@@ -41,7 +41,7 @@ static void _maybe_rot_corpse(item_def &it, int mitm_index, int rot_time)
     if (it.freshness > 0)
         return;
 
-    if (!mons_skeleton(it.mon_type))
+    if (!mons_has_skeleton(it.mon_type))
     {
         item_was_destroyed(it);
         destroy_item(mitm_index);
@@ -81,7 +81,7 @@ bool turn_corpse_into_skeleton(item_def &item)
 
     // Some monsters' corpses lack the structure to leave skeletons
     // behind.
-    if (!mons_skeleton(item.mon_type))
+    if (!mons_has_skeleton(item.mon_type))
         return false;
 
     item.sub_type = CORPSE_SKELETON;

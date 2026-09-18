@@ -101,7 +101,7 @@ function ch_stash_search_annotate_item(it)
   if it.class(true) == "potion" or it.class(true) == "scroll" then
     local props = {
       ["enlightenment"] = "Will+ flight Fly",
-      ["lignification"] = "rPois rTorment rDrown",
+      ["lignification"] = "rPois rN+++ rTorment rDrown",
       ["resistance"] = "rF+ rC+ rElec rPois rCorr",
       ["revelation"] = "sInv"
     }
@@ -115,7 +115,7 @@ function ch_stash_search_annotate_item(it)
     local props = {
       ["air"] = "rElec",
       ["cold"] = "rC+",
-      ["death"] = "rN+",
+      ["necromancy"] = "rN+",
       ["fire"] = "rF+",
       ["alchemy"] = "rPois"
     }
@@ -135,7 +135,7 @@ function ch_stash_search_annotate_item(it)
       ["ice"] = "rC++ rF-",
       ["pearl"] = "rN+",
       ["storm"] = "rElec",
-      ["shadow"] = "Stlth++++",
+      ["shadow"] = "Stlth+",
       ["golden"] = "rF+ rC+ rPois"
     }
     local t = it.name("base"):match("%a+")

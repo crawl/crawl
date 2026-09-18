@@ -15,6 +15,8 @@
 #include "branch.h"
 #include "command.h"
 #include "describe.h"
+#include "dungeon.h"
+#include "english.h"
 #include "env.h"
 #include "feature.h"
 #include "files.h"
@@ -32,6 +34,7 @@
 #include "tag-version.h"
 #include "terrain.h"
 #include "travel.h"
+#include "traps.h"
 #include "unicode.h"
 #include "zot.h"
 
@@ -116,6 +119,12 @@ void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
         _seen_shop(pos);
     else if (feat_is_gate(which_thing)) // overinclusive
         _seen_portal(which_thing, pos);
+    else if (which_thing == DNGN_ZOT_STATUE && !you.zot_orb_monster_known)
+    {
+        const string monname = pluralise_monster(mons_type_name(you.zot_orb_monster, DESC_DBNAME)).c_str();
+        mark_milestone("zotorb", make_stringf("will face %s", monname.c_str()));
+        you.zot_orb_monster_known = true;
+    }
 }
 
 bool move_notable_thing(const coord_def& orig, const coord_def& dest)
@@ -140,7 +149,10 @@ bool move_notable_thing(const coord_def& orig, const coord_def& dest)
     if (portal_notes.count(pos1))
         portal_notes[pos2]          = portal_notes[pos1];
 
-    unnotice_feature(pos1);
+    // Don't unnotice branch entrances since we're only noticing which level
+    // it's on and that hasn't changed.
+    if (!feat_is_branch_entrance(env.grid(orig)))
+        unnotice_feature(pos1);
 
     return true;
 }
@@ -237,6 +249,11 @@ string overview_description_string(bool display)
 
     disp += "                    <white>Dungeon Overview and Level Annotations</white>\n" ;
     disp += _get_branches(display);
+    if (you.zot_orb_monster_known)
+    {
+        string mon_name = pluralise(mons_type_name(you.zot_orb_monster, DESC_DBNAME));
+        disp += make_stringf("\nThe Realm of Zot is guarded by %s.\n", mon_name.c_str());
+    }
     disp += _get_altars(display);
     disp += _get_shops(display);
     disp += _get_portals();
@@ -256,7 +273,7 @@ static string _pad_cs(string colour_string, size_t width)
 }
 
 // iterate through every dungeon branch, listing the ones which have been found
-static string _get_seen_branches(bool display)
+static string _get_seen_branches(bool display, bool &any_shafted)
 {
     string disp;
 
@@ -328,10 +345,13 @@ static string _get_seen_branches(bool display)
                                     zcol, zturns, zcol);
                 }
 
+                const bool shafted = shafted_in(branch);
+                any_shafted |= shafted;
                 const string main_desc = make_stringf(
-                    "<yellow>%*s</yellow> <darkgrey>(%d/%d)</darkgrey>%s",
+                    "<yellow>%*s</yellow> <darkgrey>(%d/%d)%s</darkgrey>%s",
                     7,
                     brname, lid.depth, brdepth[branch],
+                    shafted ? "*" : "",
                     entry_desc.c_str());
                 cells.push_back(_pad_cs(main_desc, 22) + zclock_desc);
             }
@@ -363,6 +383,8 @@ static string _get_unseen_branches()
     char buffer[100];
     string disp;
 
+    const bool descent = crawl_state.game_is_descent();
+
     for (branch_iterator it; it; ++it)
     {
         if (it->id < BRANCH_FIRST_NON_DUNGEON)
@@ -384,27 +406,19 @@ static string _get_unseen_branches()
             // Root branches.
             if (parent == NUM_BRANCHES)
                 continue;
-            level_id lid(parent, 0);
-            lid = find_deepest_explored(lid);
-            if (lid.depth >= it->mindepth)
+
+            if (descent)
             {
-                if (it->mindepth != it->maxdepth)
-                {
-                    snprintf(buffer, sizeof buffer,
-                        "<darkgrey>%6s: %s:%d-%d</darkgrey>",
-                            it->abbrevname,
-                            branches[parent].abbrevname,
-                            it->mindepth,
-                            it->maxdepth);
-                }
-                else
-                {
-                    snprintf(buffer, sizeof buffer,
-                        "<darkgrey>%6s: %s:%d</darkgrey>",
-                            it->abbrevname,
-                            branches[parent].abbrevname,
-                            it->mindepth);
-                }
+                if (!in_descent_parent(branch))
+                    continue;
+
+                bool in_dungeon = you.where_are_you == BRANCH_DUNGEON;
+
+                snprintf(buffer, sizeof buffer,
+                    "<darkgrey>%6s: %s:%d</darkgrey>",
+                    it->abbrevname,
+                    branches[you.where_are_you].abbrevname,
+                    in_dungeon ? 12 : branches[you.where_are_you].numlevels);
 
                 disp += buffer;
                 num_printed_branches++;
@@ -413,6 +427,40 @@ static string _get_unseen_branches()
                         ? "\n"
                         // Each branch entry takes up 20 spaces
                         : string(20 + 21 - strlen(buffer), ' ');
+            }
+            else
+            {
+                level_id lid(parent, 0);
+                lid = find_deepest_explored(lid);
+                if (lid.depth >= it->mindepth)
+                {
+                    if (it->mindepth != it->maxdepth)
+                    {
+                        snprintf(buffer, sizeof buffer,
+                            "<darkgrey>%6s: %s:%d-%d</darkgrey>",
+                                it->abbrevname,
+                                branches[parent].abbrevname,
+                                it->mindepth,
+                                it->maxdepth);
+                    }
+                    else
+                    {
+                        snprintf(buffer, sizeof buffer,
+                            "<darkgrey>%6s: %s:%d</darkgrey>",
+                                it->abbrevname,
+                                branches[parent].abbrevname,
+                                it->mindepth);
+                    }
+
+                    disp += buffer;
+                    num_printed_branches++;
+
+                    disp += (num_printed_branches % 4) == 0
+                            ? "\n"
+                            // Each branch entry takes up 20 spaces
+                            : string(20 + 21 - strlen(buffer), ' ');
+                }
+
             }
         }
     }
@@ -424,7 +472,11 @@ static string _get_unseen_branches()
 
 static string _get_branches(bool display)
 {
-    return _get_seen_branches(display) + _get_unseen_branches();
+    bool any_shafted = false;
+    string disp = _get_seen_branches(display, any_shafted) + _get_unseen_branches();
+    if (any_shafted)
+        disp += "\n<darkgrey>*You can no longer be shafted in this branch</darkgrey>\n";
+    return disp;
 }
 
 // iterate through every god and display their altar's discovery state by colour
@@ -628,38 +680,27 @@ static string _get_notes(bool display)
     return "\n<green>Annotations:</green>\n" + disp;
 }
 
-template <typename Z, typename Key>
-static inline bool _find_erase(Z &map, const Key &k)
+static void _unnotice_portal(const level_pos &pos)
 {
-    if (map.count(k))
-    {
-        map.erase(k);
-        return true;
-    }
-    return false;
+    portals_present.erase(pos);
+    portal_notes.erase(pos);
 }
 
-static bool _unnotice_portal(const level_pos &pos)
+static void _unnotice_altar(const level_pos &pos)
 {
-    (void) _find_erase(portal_notes, pos);
-    return _find_erase(portals_present, pos);
+    altars_present.erase(pos);
 }
 
-static bool _unnotice_altar(const level_pos &pos)
+static void _unnotice_shop(const level_pos &pos)
 {
-    return _find_erase(altars_present, pos);
+    StashTrack.remove_shop(pos);
+    shopping_list.forget_pos(pos);
+    shops_present.erase(pos);
 }
 
-static bool _unnotice_shop(const level_pos &pos)
+static void _unnotice_stair(const level_pos &pos)
 {
-    return _find_erase(shops_present, pos);
-}
-
-static bool _unnotice_stair(const level_pos &pos)
-{
-    const dungeon_feature_type feat = env.grid(pos.pos);
-    if (feat == DNGN_ENTER_HELL || !feat_is_branch_entrance(feat))
-        return false;
+    const dungeon_feature_type feat = orig_terrain(pos.pos);
 
     for (branch_iterator it; it; ++it)
         if (it->entry_stairs == feat)
@@ -670,21 +711,17 @@ static bool _unnotice_stair(const level_pos &pos)
                 stair_level[br].erase(level_id::current());
                 if (stair_level[br].empty())
                     stair_level.erase(br);
-                return true;
+                return;
             }
         }
-
-    return false;
 }
 
-bool unnotice_feature(const level_pos &pos)
+void unnotice_feature(const level_pos &pos)
 {
-    StashTrack.remove_shop(pos);
-    shopping_list.forget_pos(pos);
-    return _unnotice_portal(pos)
-        || _unnotice_altar(pos)
-        || _unnotice_shop(pos)
-        || _unnotice_stair(pos);
+    _unnotice_portal(pos);
+    _unnotice_altar(pos);
+    _unnotice_shop(pos);
+    _unnotice_stair(pos);
 }
 
 class dgn_overview : public formatted_scroller

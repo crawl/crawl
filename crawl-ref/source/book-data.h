@@ -114,10 +114,12 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_JINXBITE,
     SPELL_VIOLENT_UNRAVELLING,
     SPELL_ENFEEBLE,
+    SPELL_SPHINX_SISTERS,
 },
 
 {   // Book of Spontaneous Combustion
     SPELL_INNER_FLAME,
+    SPELL_DETONATION_CATALYST,
     SPELL_IRRADIATE,
     SPELL_IGNITION,
 },
@@ -200,6 +202,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Battle
     SPELL_FUGUE_OF_THE_FALLEN,
     SPELL_OZOCUBUS_ARMOUR,
+    SPELL_DETONATION_CATALYST,
     SPELL_MANIFOLD_ASSAULT,
 },
 
@@ -282,7 +285,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SUMMON_ICE_BEAST,
     SPELL_SUMMON_SEISMOSAURUS_EGG,
     SPELL_SUMMON_MANA_VIPER,
-    SPELL_MONSTROUS_MENAGERIE,
+    SPELL_SPHINX_SISTERS,
 },
 
 {   // Book of Annihilations
@@ -302,7 +305,9 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_DEATHS_DOOR,
 },
 
+#if TAG_MAJOR_VERSION == 34
 { }, // BOOK_RANDART_LEVEL
+#endif
 { }, // BOOK_RANDART_THEME
 { }, // BOOK_MANUAL
 #if TAG_MAJOR_VERSION == 34
@@ -310,7 +315,7 @@ static const vector<spell_type> spellbook_templates[] =
 #endif
 
 { // Book of Spectacle
-    SPELL_DAZZLING_FLASH,
+    SPELL_GLOOM,
     SPELL_STARBURST,
     SPELL_FULSOME_FUSILLADE,
 },
@@ -381,7 +386,7 @@ static const vector<spell_type> spellbook_templates[] =
 #endif
 
 { // Book of the Senses
-    SPELL_DAZZLING_FLASH,
+    SPELL_GLOOM,
     SPELL_MEPHITIC_CLOUD,
     SPELL_SILENCE,
     SPELL_CURSE_OF_AGONY,
@@ -588,7 +593,9 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_WALKING_ALEMBIC,
     SPELL_MONARCH_BOMB,
     SPELL_DIAMOND_SAWBLADES,
-}
+},
+
+{ } // BOOK_PARCHMENT
 
 };
 

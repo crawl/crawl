@@ -10,8 +10,8 @@ enum map_marker_type
     MAT_CORRUPTION_NEXUS,
     MAT_WIZ_PROPS,
     MAT_TOMB,
-    MAT_MALIGN,
 #if TAG_MAJOR_VERSION == 34
+    MAT_MALIGN_OLD,
     MAT_PHOENIX,
 #endif
     MAT_POSITION,
@@ -20,6 +20,9 @@ enum map_marker_type
 #endif
     MAT_TERRAIN_CHANGE,
     MAT_CLOUD_SPREADER,
+    MAT_HELLFIRE_MORTAR_LAVA,
+    MAT_MALIGN_GATEWAY,
+    MAT_ACTIVE_FEATURE,
     NUM_MAP_MARKER_TYPES,
     MAT_ANY,
 };

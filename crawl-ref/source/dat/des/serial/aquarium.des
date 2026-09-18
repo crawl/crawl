@@ -109,7 +109,7 @@ function init_aquarium(e)
     e.kmons('_ = diamond obelisk')
   elseif you.absdepth() <= 3 then
     e.subst('w = _')
-    e.ftile('_ = floor_grass')
+    e.ftile('_ = floor_grass_dark')
     e.colour('_ = green')
     e.kmons('_ = w:' .. nothing_weight .. [[ nothing /
                  w:50 bush /
@@ -168,8 +168,7 @@ function init_aquarium(e)
                                     pow_min = 5, pow_max = 20,
                                     cloud_type = "freezing vapour",
                                     delay_min = 10, delay_max = 30,
-                                    size = 1,
-                                    start_clouds = 1,
+                                    size = 1, start_clouds = 1,
                                     excl_rad = -1 } )
   elseif you.absdepth() <= 24 then
     e.subst('w = l')
@@ -193,8 +192,7 @@ function init_aquarium(e)
                                     pow_min = 1, pow_max = 20,
                                     cloud_type = "flame",
                                     delay_min = 5, delay_max = 25,
-                                    size = 1,
-                                    start_clouds = 2,
+                                    size = 1, start_clouds = 2,
                                     excl_rad = -1 } )
   end
 end

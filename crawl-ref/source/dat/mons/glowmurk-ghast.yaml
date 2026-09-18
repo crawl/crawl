@@ -1,0 +1,18 @@
+name: "glowmurk ghast"
+glyph: {char: "ŵ", colour: lightmagenta}
+flags: [flies, see_invis, speaks, insubstantial]
+resists: {cold: 3}
+exp: 120
+genus: phantom
+holiness: [undead]
+will: 60
+attacks:
+ - {type: touch, flavour: contam_water, damage: 24}
+hd: 13
+hp_10x: 245
+ac: 0
+ev: 13
+intelligence: human
+speed: 16
+size: medium
+shape: humanoid

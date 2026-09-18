@@ -121,22 +121,31 @@ skill_type SkillMenuEntry::get_skill() const
     return m_sk;
 }
 
-static bool _show_skill(skill_type sk, skill_menu_state state)
+static skill_set _shown_skills(skill_menu_state state)
 {
+    skill_set shown;
     switch (state)
     {
     case SKM_SHOW_DEFAULT:
-        return you.can_currently_train[sk] && (you.should_show_skill[sk]
-                                               || you.training[sk])
-            || you.skill(sk, 10, false, false);
-    case SKM_SHOW_ALL:     return true;
-    default:               return false;
+        shown = default_shown_skills();
+        break;
+    case SKM_SHOW_ALL:
+        for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+            if (!is_useless_skill(sk, false))
+                shown.insert(sk);
+        break;
+    default:
+        break;
     }
+    return shown;
 }
 
 bool SkillMenuEntry::is_selectable(bool)
 {
     if (is_invalid_skill(m_sk))
+        return false;
+
+    if (is_useless_skill(m_sk))
         return false;
 
     if (is_set(SKMF_HELP))
@@ -167,7 +176,7 @@ void SkillMenuEntry::refresh(bool keep_hotkey)
 {
     if (m_sk == SK_TITLE)
         set_title();
-    else if (is_invalid_skill(m_sk) || is_useless_skill(m_sk))
+    else if (is_invalid_skill(m_sk) || is_useless_skill(m_sk, false))
         _clear();
     else
     {
@@ -302,7 +311,7 @@ string SkillMenuEntry::get_prefix()
     else
         letter = ' ';
 
-    const int sign = (!you.can_currently_train[m_sk] || mastered()) ? ' ' :
+    const int sign = (is_useless_skill(m_sk) || mastered()) ? ' ' :
                                    (you.train[m_sk] == TRAINING_FOCUSED) ? '*' :
                                           you.train[m_sk] ? '+'
                                                           : '-';
@@ -400,9 +409,24 @@ EditableTextItem *SkillMenuEntry::get_progress()
     return m_progress;
 }
 
+// Whether to display the base target or the modified one.
+static bool _shown_target_is_base(skill_type sk)
+{
+    const bool base = skm.get_state(SKM_LEVEL) == SKM_LEVEL_NORMAL;
+    // If the skill isn't actually modified, show whatever target exists.
+    if (!you.get_training_target(sk, base)
+        && you.get_training_target(sk, !base)
+        && you.skill(sk, 10, true, false) == you.skill(sk, 10, false, false))
+    {
+        return !base;
+    }
+    return base;
+}
+
 void SkillMenuEntry::set_targets()
 {
-    int target = you.get_training_target(m_sk);
+    const bool base = _shown_target_is_base(m_sk);
+    int target = you.get_training_target(m_sk, base);
     if (target == 0)
     {
         m_progress->set_text("--");
@@ -411,7 +435,7 @@ void SkillMenuEntry::set_targets()
     else
     {
         m_progress->set_text(_format_skill_target(target));
-        if (target_met(m_sk))
+        if (target_met(m_sk, base))
             m_progress->set_fg_colour(DARKGREY); // mainly comes up in wizmode
         else
             m_progress->set_fg_colour(get_colour());
@@ -538,6 +562,16 @@ static bool _hermit_penalty()
     return false;
 }
 
+static bool _wildshape_bonus()
+{
+    if (you.skill(SK_SHAPESHIFTING, 10, true) > 0
+        && you.wearing_jewellery(AMU_WILDSHAPE))
+    {
+        return true;
+    }
+    return false;
+}
+
 string SkillMenuSwitch::get_help()
 {
     switch (m_state)
@@ -578,8 +612,12 @@ string SkillMenuSwitch::get_help()
                 causes.push_back("cross-training");
             if (_hermit_bonus())
                 causes.push_back("the Hermit's pendant");
+            if (_wildshape_bonus())
+                causes.push_back("wildshape");
             if (_charlatan_bonus())
                 causes.push_back("the Charlatan's Orb");
+            if (you.form == transformation::walking_scroll)
+                causes.push_back("scribal knowledge");
             result = "Skills enhanced by "
                      + comma_separated_line(causes.begin(), causes.end())
                      + " are in <green>green</green>.";
@@ -592,8 +630,10 @@ string SkillMenuSwitch::get_help()
                 causes.push_back("Ashenzari's anger");
             if (_hermit_penalty())
                 causes.push_back("the Hermit's pendant");
+            if (you.has_bane(BANE_DILETTANTE))
+                causes.push_back("the Bane of the Dilettante");
             if (!result.empty())
-                result += "\n";
+                result += " ";
             result += "Skills reduced by "
                       + comma_separated_line(causes.begin(), causes.end())
                       + " are in <magenta>magenta</magenta>.";
@@ -747,17 +787,7 @@ void SkillMenu::init_experience()
             }
         you.auto_training = false;
         reset_training();
-        you.clear_training_targets();
-
-        for (int i = 0; i < NUM_SKILLS; ++i)
-        {
-            const skill_type sk = skill_type(i);
-            if (!is_useless_skill(sk) && !you.can_currently_train[sk])
-            {
-                you.can_currently_train.set(sk);
-                you.train[sk] = TRAINING_DISABLED;
-            }
-        }
+        you.clear_all_training_targets();
     }
 }
 
@@ -910,7 +940,8 @@ int SkillMenu::read_skill_target(skill_type sk)
     EditableTextItem *progress = entry->get_progress();
     ASSERT(progress);
 
-    const int old_target = you.get_training_target(sk);
+    const bool base = _shown_target_is_base(sk);
+    const int old_target = you.get_training_target(sk, base);
     const string prefill = old_target <= 0 ? "0"
                                            : _format_skill_target(old_target);
 
@@ -918,7 +949,8 @@ int SkillMenu::read_skill_target(skill_type sk)
     progress->set_highlight_colour(RED);
 
     // for webtiles dialog input
-    progress->set_prompt(make_stringf("Enter a skill target for %s: ",
+    progress->set_prompt(make_stringf("Enter a %sskill target for %s: ",
+                                            base ? "base " : "",
                                             skill_name(sk)));
     progress->set_tag("skill_target");
 
@@ -947,7 +979,7 @@ int SkillMenu::read_skill_target(skill_type sk)
         else
             set_help("");
     }
-    you.set_training_target(sk, input);
+    you.set_training_target(sk, input, false, base);
     cancel_set_target();
     refresh_display();
     return input;
@@ -1030,8 +1062,8 @@ bool SkillMenu::do_skill_enabled_check()
         if (get_state(SKM_SHOW) == SKM_SHOW_DEFAULT)
         {
             bool showing_trainable = false;
-            for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
-                if (_show_skill(sk, SKM_SHOW_DEFAULT) && can_enable_skill(sk))
+            for (skill_type sk : _shown_skills(SKM_SHOW_DEFAULT))
+                if (can_enable_skill(sk))
                 {
                     showing_trainable = true;
                     break;
@@ -1044,27 +1076,21 @@ bool SkillMenu::do_skill_enabled_check()
     return true;
 }
 
-bool SkillMenu::exit(bool just_reset)
+void SkillMenu::reset()
 {
-    if (just_reset)
-    {
-        finish_experience(false);
-        clear();
-        return true;
-    }
+    finish_experience(false);
+    clear();
+}
+
+bool SkillMenu::exit()
+{
     if (crawl_state.seen_hups)
-    {
-        clear();
         return true;
-    }
 
     // Before we exit, make sure there's at least one skill enabled.
     if (!do_skill_enabled_check())
         return false;
 
-    finish_experience(true);
-
-    clear();
     return true;
 }
 
@@ -1142,7 +1168,7 @@ void SkillMenu::clear_targets()
 {
     if (get_state(SKM_VIEW) != SKM_VIEW_TARGETS)
         return;
-    you.clear_training_targets();
+    you.clear_all_training_targets();
     refresh_display();
 }
 
@@ -1412,7 +1438,15 @@ void SkillMenu::init_switches()
 void SkillMenu::refresh_display()
 {
     if (is_set(SKMF_EXPERIENCE))
+    {
+        // train_skills mutates you.training (when 27 is reached), so save and
+        // restore it. We cannot use m_skill_backup.restore_training here,
+        // because that respects our skills, and when displaying the menu we
+        // need to have updated skill values and the old training values.
+        const FixedVector<unsigned int, NUM_SKILLS> saved_training = you.training;
         train_skills(true);
+        you.training = saved_training;
+    }
 
     for (int ln = 0; ln < SK_ARR_LN; ++ln)
         for (int col = 0; col < SK_ARR_COL; ++col)
@@ -1534,6 +1568,8 @@ void SkillMenu::set_skills()
 
     int col = 0, ln = 0;
 
+    const skill_set shown = _shown_skills(get_state(SKM_SHOW));
+
     for (int i = 0; i < ndisplayed_skills; ++i)
     {
         skill_type sk = skill_display_order[i];
@@ -1550,7 +1586,7 @@ void SkillMenu::set_skills()
             ln = 0;
             continue;
         }
-        else if (!is_invalid_skill(sk) && !_show_skill(sk, get_state(SKM_SHOW)))
+        else if (!is_invalid_skill(sk) && !shown.count(sk))
             continue;
         else
         {
@@ -1571,7 +1607,7 @@ void SkillMenu::set_skills()
 
 void SkillMenu::toggle_practise(skill_type sk, int keyn)
 {
-    ASSERT(you.can_currently_train[sk]);
+    ASSERT(!is_useless_skill(sk));
     if (keyn >= 'A' && keyn <= 'Z')
         you.train.init(TRAINING_DISABLED);
     if (get_state(SKM_DO) == SKM_DO_PRACTISE)
@@ -1748,7 +1784,7 @@ SizeReq UISkillMenu::_get_preferred_size(Direction dim, int /*prosp_width*/)
 
 void UISkillMenu::_allocate_region()
 {
-    skm.exit(true);
+    skm.reset();
     skm.init(flag, m_region.height);
 }
 
@@ -1798,10 +1834,7 @@ bool UISkillMenu::on_event(const Event& ev)
 
 void skill_menu(int flag, int exp)
 {
-    // experience potion; you may elect to put experience in normally
-    // untrainable skills (e.g. skills that your god hates). The only
-    // case where we abort is if all in-principle trainable skills are maxed.
-    if (flag & SKMF_EXPERIENCE && !trainable_skills(true))
+    if (flag & SKMF_EXPERIENCE && !trainable_skills())
     {
         mpr("You feel omnipotent.");
         return;
@@ -1850,10 +1883,10 @@ void skill_menu(int flag, int exp)
                 }
             // Fallthrough
             default:
-                if (ui::key_exits_popup(keyn, true) && skm.exit(false))
+                if (ui::key_exits_popup(keyn, true) && skm.exit())
                     return done = true;
                 // Don't exit from !experience on random keys.
-                if (!skm.is_set(SKMF_EXPERIENCE) && skm.exit(false))
+                if (!skm.is_set(SKMF_EXPERIENCE) && skm.exit())
                     return done = true;
             }
         }
@@ -1891,7 +1924,9 @@ void skill_menu(int flag, int exp)
     });
 
 #ifdef USE_TILE_WEB
-    tiles_crt_popup show_as_popup("skills");
+    // Control this ourself rather than use tiles_crt_popup because we need to
+    // tear it down before apply a potion of experience.
+    tiles.push_crt_menu("skills");
 #endif
     // XXX: this is, in theory, an arbitrary initial height. In practice,
     // there's a bug where an item in the MenuFreeform stays at its original
@@ -1902,14 +1937,20 @@ void skill_menu(int flag, int exp)
 
     // Calling a user lua function here to let players automatically accept
     // the given skill distribution for a potion of experience.
-    if (skm.is_set(SKMF_EXPERIENCE)
+    const bool skip_menu = skm.is_set(SKMF_EXPERIENCE)
         && clua.callbooleanfn(false, "auto_experience", nullptr)
-        && skm.exit(false))
-    {
-        return;
-    }
+        && skm.exit();
 
-    ui::run_layout(std::move(popup), done);
+    if (!skip_menu)
+        ui::run_layout(std::move(popup), done);
 
+#ifdef USE_TILE_WEB
+    // Tear down the menu before applying experience, to stop force mores while
+    // applying experience causing weird issues.
+    tiles.pop_menu();
+#endif
+
+    if (!crawl_state.seen_hups)
+        skm.finish_experience(true);
     skm.clear();
 }

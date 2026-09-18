@@ -22,11 +22,6 @@
 #include "transform.h"
 #include "traps.h"
 
-static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
-{
-    return first + mod % (last - first + 1);
-}
-
 static tileidx_t _part_start(int p)
 {
     if (p != TILEP_PART_HAND2)
@@ -60,15 +55,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     if (item.base_type != OBJ_WEAPONS)
         return 0;
 
-    if (is_unrandom_artefact(item))
-    {
-        const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
-        if (tile)
-            return tile;
-    }
-
     tileidx_t tile = 0;
-
     switch (item.sub_type)
     {
     // Blunt
@@ -85,7 +72,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         tile = TILEP_HAND1_FLAIL;
         break;
     case WPN_DIRE_FLAIL:
-        tile = TILEP_HAND1_GREAT_FLAIL;
+        tile = TILEP_HAND1_DIRE_FLAIL;
         break;
     case WPN_MORNINGSTAR:
         tile = TILEP_HAND1_MORNINGSTAR;
@@ -111,7 +98,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
 
     // Edge
     case WPN_DAGGER:
-        tile = TILEP_HAND1_DAGGER_SLANT;
+        tile = TILEP_HAND1_DAGGER;
         break;
     case WPN_SHORT_SWORD:
         tile = TILEP_HAND1_SHORT_SWORD_SLANT;
@@ -120,7 +107,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         tile = TILEP_HAND1_LONG_SWORD_SLANT;
         break;
     case WPN_GREAT_SWORD:
-        tile = TILEP_HAND1_GREAT_SWORD_SLANT;
+        tile = TILEP_HAND1_GREAT_SWORD;
         break;
     case WPN_SCIMITAR:
         tile = TILEP_HAND1_SCIMITAR;
@@ -131,11 +118,14 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_RAPIER:
         tile = TILEP_HAND1_RAPIER;
         break;
+    case WPN_ATHAME:
+        tile = TILEP_HAND1_ATHAME;
+        break;
     case WPN_DEMON_BLADE:
         tile = TILEP_HAND1_DEMON_BLADE;
         break;
     case WPN_QUICK_BLADE:
-        tile = TILEP_HAND1_DAGGER;
+        tile = TILEP_HAND1_QUICK_BLADE;
         break;
     case WPN_DOUBLE_SWORD:
         tile = TILEP_HAND1_DOUBLE_SWORD;
@@ -164,7 +154,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         tile = TILEP_HAND1_EXECUTIONERS_AXE;
         break;
     case WPN_BARDICHE:
-        tile = TILEP_HAND1_GLAIVE3;
+        tile = TILEP_HAND1_BARDICHE;
         break;
 
     // Pole
@@ -233,7 +223,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     if (item.props.exists(WORN_TILE_KEY))
         tile = item.props[WORN_TILE_KEY].get_short();
 
-    return tile ? tileidx_enchant_equ(item, tile, true) : 0;
+    return tile ? tileidx_enchant_equ(item, tile) : 0;
 }
 
 tileidx_t tilep_equ_shield(const item_def &item)
@@ -247,29 +237,23 @@ tileidx_t tilep_equ_shield(const item_def &item)
     if (item.props.exists(WORN_TILE_KEY))
         return item.props[WORN_TILE_KEY].get_short();
 
-    if (is_unrandom_artefact(item))
-    {
-        const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
-        if (tile)
-            return tile;
-    }
-
+    tileidx_t tile = 0;
     switch (item.sub_type)
     {
-        case ARM_KITE_SHIELD:
-            return _modrng(item.rnd, TILEP_HAND2_KITE_SHIELD_FIRST_NORM,
-                           TILEP_HAND2_KITE_SHIELD_LAST_NORM);
-        case ARM_BUCKLER:
-            return _modrng(item.rnd, TILEP_HAND2_BUCKLER_FIRST_NORM,
-                           TILEP_HAND2_BUCKLER_LAST_NORM);
-        case ARM_TOWER_SHIELD:
-            return _modrng(item.rnd, TILEP_HAND2_TOWER_SHIELD_FIRST_NORM,
-                           TILEP_HAND2_TOWER_SHIELD_LAST_NORM);
-        case ARM_ORB:
-            return _modrng(item.rnd, TILEP_HAND2_ORB_FIRST,
-                           TILEP_HAND2_ORB_LAST);
-        default: return 0;
+    case ARM_KITE_SHIELD:
+        tile = TILEP_HAND2_KITE_SHIELD;
+        break;
+    case ARM_BUCKLER:
+        tile = TILEP_HAND2_BUCKLER;
+        break;
+    case ARM_TOWER_SHIELD:
+        tile = TILEP_HAND2_TOWER_SHIELD;
+        break;
+    case ARM_ORB:
+        tile = TILEP_HAND2_ORB;
+        break;
     }
+    return tile ? tileidx_enchant_equ(item, tile) : 0;
 }
 
 tileidx_t mirror_weapon(const item_def &weapon)
@@ -288,22 +272,10 @@ tileidx_t tilep_equ_armour(const item_def &item)
     if (item.props.exists(WORN_TILE_KEY))
         return item.props[WORN_TILE_KEY].get_short();
 
-    if (is_unrandom_artefact(item))
-    {
-        const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
-        if (tile)
-            return tile;
-    }
-
-    if (item.sub_type == ARM_ROBE)
-    {
-        return _modrng(item.rnd, TILEP_BODY_ROBE_FIRST_NORM,
-                       TILEP_BODY_ROBE_LAST_NORM);
-    }
-
     tileidx_t tile = 0;
     switch (item.sub_type)
     {
+    case ARM_ROBE:                  tile = TILEP_BODY_ROBE_NORMAL; break;
     case ARM_LEATHER_ARMOUR:        tile = TILEP_BODY_LEATHER_ARMOUR; break;
     case ARM_RING_MAIL:             tile = TILEP_BODY_RINGMAIL; break;
     case ARM_CHAIN_MAIL:            tile = TILEP_BODY_CHAINMAIL; break;
@@ -328,7 +300,7 @@ tileidx_t tilep_equ_armour(const item_def &item)
     default:                        tile = 0;
     }
 
-    return tileidx_enchant_equ(item, tile, true);
+    return tile ? tileidx_enchant_equ(item, tile) : 0;
 }
 
 tileidx_t tilep_equ_cloak(const item_def &item)
@@ -339,25 +311,18 @@ tileidx_t tilep_equ_cloak(const item_def &item)
     if (item.props.exists(WORN_TILE_KEY))
         return item.props[WORN_TILE_KEY].get_short();
 
-    if (is_unrandom_artefact(item))
-    {
-        const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
-        if (tile)
-            return tile;
-    }
-
+    tileidx_t tile = 0;
     switch (item.sub_type)
     {
-        case ARM_CLOAK:
-            return _modrng(item.rnd, TILEP_CLOAK_FIRST_NORM,
-                           TILEP_CLOAK_LAST_NORM);
-
-        case ARM_SCARF:
-            return _modrng(item.rnd, TILEP_CLOAK_SCARF_FIRST_NORM,
-                           TILEP_CLOAK_SCARF_LAST_NORM);
+    case ARM_CLOAK:
+        tile = TILEP_CLOAK_NORMAL;
+        break;
+    case ARM_SCARF:
+        tile = TILEP_CLOAK_SCARF_NORMAL;
+        break;
     }
 
-    return 0;
+    return tile ? tileidx_enchant_equ(item, tile) : 0;
 }
 
 tileidx_t tilep_equ_helm(const item_def &item)
@@ -368,50 +333,45 @@ tileidx_t tilep_equ_helm(const item_def &item)
     if (item.props.exists(WORN_TILE_KEY))
         return item.props[WORN_TILE_KEY].get_short();
 
-    if (is_unrandom_artefact(item))
-    {
-        const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
-        if (tile)
-            return tile;
-
-        // Although there shouldn't be any, just in case
-        // unhandled artefacts fall through to defaults...
-    }
-
+    tileidx_t tile = 0;
     switch (item.sub_type)
     {
 #if TAG_MAJOR_VERSION == 34
-        case ARM_CAP:
+    case ARM_CAP:
 #endif
-        case ARM_HAT:
+    case ARM_HAT:
+    {
+        auto equip_tile = tileidx_enchant_equ(item, TILE_THELM_HAT);
+        if (item.props.exists(ITEM_TILE_KEY))
+            equip_tile = item.props[ITEM_TILE_KEY].get_short();
+        switch (equip_tile)
         {
-            auto equip_tile = tileidx_enchant_equ(item, TILE_THELM_HAT, false);
-            if (item.props.exists(ITEM_TILE_KEY))
-                equip_tile = item.props[ITEM_TILE_KEY].get_short();
-            switch (equip_tile)
-            {
-            case TILE_THELM_ARCHER:
-                return TILEP_HELM_ARCHER;
-            case TILE_THELM_ARCHER2:
-                return TILEP_HELM_ARCHER2;
-            case TILE_THELM_HAT_EXPLORER:
-                return TILEP_HELM_EXPLORER;
-            case TILE_THELM_HAT_EXPLORER2:
-                return TILEP_HELM_EXPLORER2;
-            case TILE_THELM_HAT_SANTA:
-                return TILEP_HELM_SANTA;
-            default:
-                return _modrng(item.rnd, TILEP_HELM_HAT_FIRST_NORM,
-                               TILEP_HELM_HAT_LAST_NORM);
-            }
+        case TILE_THELM_ARCHER:
+            return TILEP_HELM_ARCHER;
+        case TILE_THELM_ARCHER2:
+            return TILEP_HELM_ARCHER2;
+        case TILE_THELM_HAT_EXPLORER:
+            return TILEP_HELM_EXPLORER;
+        case TILE_THELM_HAT_EXPLORER2:
+            return TILEP_HELM_EXPLORER2;
+        case TILE_THELM_HAT_SANTA:
+            return TILEP_HELM_SANTA;
+        case TILE_THELM_HAT_APRIL1:
+            return TILEP_HELM_APRIL1;
+        case TILE_THELM_HAT_APRIL2:
+            return TILEP_HELM_APRIL2;
+        default:
+            tile = TILEP_HELM_HAT_NORMAL;
+            break;
         }
-
-        case ARM_HELMET:
-            return _modrng(item.rnd, TILEP_HELM_FIRST_NORM,
-                           TILEP_HELM_LAST_NORM);
+        break;
     }
 
-    return 0;
+    case ARM_HELMET:
+        tile = TILEP_HELM_NORMAL;
+        break;
+    }
+    return tile ? tileidx_enchant_equ(item, tile) : 0;
 }
 
 tileidx_t tilep_equ_gloves(const item_def &item)
@@ -422,14 +382,7 @@ tileidx_t tilep_equ_gloves(const item_def &item)
     if (item.props.exists(WORN_TILE_KEY))
         return item.props[WORN_TILE_KEY].get_short();
 
-    if (is_unrandom_artefact(item))
-    {
-        const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
-        if (tile)
-            return tile;
-    }
-
-    return _modrng(item.rnd, TILEP_ARM_FIRST_NORM, TILEP_ARM_LAST_NORM);
+    return tileidx_enchant_equ(item, TILEP_ARM_NORMAL);
 }
 
 tileidx_t tilep_equ_boots(const item_def &item)
@@ -440,97 +393,34 @@ tileidx_t tilep_equ_boots(const item_def &item)
     if (item.props.exists(WORN_TILE_KEY))
         return item.props[WORN_TILE_KEY].get_short();
 
-    if (is_unrandom_artefact(item))
+    auto equip_tile = tileidx_enchant_equ(item, TILE_ARM_BOOTS);
+    switch (equip_tile)
     {
-        const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
-        if (tile)
-            return tile;
+        case TILE_ARM_BOOTS_APRIL1:
+            return TILEP_BOOTS_APRIL1;
+        case TILE_ARM_BOOTS_APRIL2:
+            return TILEP_BOOTS_APRIL2;
+        default:
+            break;
     }
 
-    if (item.sub_type == ARM_BARDING)
+    tileidx_t tile = 0;
+    switch (item.sub_type)
     {
-        if (is_artefact(item))
-            return TILEP_BOOTS_BARDING_RANDART;
-        if (item.flags & ISFLAG_COSMETIC_MASK)
-            return TILEP_BOOTS_BARDING_EGO;
-        return TILEP_BOOTS_BARDING;
+    case ARM_BARDING:
+        tile = TILEP_BOOTS_BARDING;
+        break;
+    case ARM_BOOTS:
+        tile = TILEP_BOOTS_NORMAL;
+        break;
     }
 
-    if (item.sub_type != ARM_BOOTS)
-        return 0;
-
-    return _modrng(item.rnd, TILEP_BOOTS_FIRST_NORM, TILEP_BOOTS_LAST_NORM);
+    return tile ? tileidx_enchant_equ(item, tile) : 0;
 }
 
-tileidx_t tileidx_player()
+tile_with_flags_t tileidx_player()
 {
-    tileidx_t ch = TILEP_PLAYER;
-
-    // Handle shapechange first
-    switch (you.form)
-    {
-    // equipment-using forms are handled regularly
-    case transformation::beast:
-    case transformation::flux:
-    case transformation::maw:
-    case transformation::statue:
-    case transformation::death:
-    case transformation::tree:
-    case transformation::vampire:
-    // (so is storm form)
-    case transformation::storm:
-        break;
-    // animals
-    case transformation::bat:       ch = TILEP_TRAN_BAT;       break;
-#if TAG_MAJOR_VERSION == 34
-    case transformation::spider:    ch = TILEP_TRAN_SPIDER;    break;
-    case transformation::porcupine:
-#endif
-    case transformation::pig:       ch = TILEP_TRAN_PIG;       break;
-    // non-animals
-    case transformation::serpent:   ch = TILEP_TRAN_SERPENT;   break;
-    case transformation::wisp:      ch = TILEP_MONS_INSUBSTANTIAL_WISP; break;
-#if TAG_MAJOR_VERSION == 34
-    case transformation::jelly:     ch = TILEP_MONS_JELLY;     break;
-#endif
-    case transformation::fungus:    ch = TILEP_TRAN_MUSHROOM;  break;
-    case transformation::bat_swarm: ch = TILEP_TRAN_BAT_SWARM; break;
-    case transformation::dragon:
-    {
-        switch (you.species)
-        {
-        case SP_OCTOPODE:          ch = TILEP_TRAN_DRAGON_OCTOPODE; break;
-        case SP_FELID:             ch = TILEP_TRAN_DRAGON_FELID;    break;
-        case SP_BLACK_DRACONIAN:   ch = TILEP_TRAN_DRAGON_BLACK;    break;
-        case SP_YELLOW_DRACONIAN:  ch = TILEP_TRAN_DRAGON_YELLOW;   break;
-        case SP_GREY_DRACONIAN:    ch = TILEP_TRAN_DRAGON_GREY;     break;
-        case SP_GREEN_DRACONIAN:   ch = TILEP_TRAN_DRAGON_GREEN;    break;
-        case SP_PALE_DRACONIAN:    ch = TILEP_TRAN_DRAGON_PALE;     break;
-        case SP_PURPLE_DRACONIAN:  ch = TILEP_TRAN_DRAGON_PURPLE;   break;
-        case SP_WHITE_DRACONIAN:   ch = TILEP_TRAN_DRAGON_WHITE;    break;
-        case SP_RED_DRACONIAN:
-        default:                   ch = TILEP_TRAN_DRAGON;          break;
-        }
-        break;
-    }
-    case transformation::slaughter:
-    {
-        switch (you.species)
-        {
-        case SP_ARMATAUR: ch = TILEP_TRAN_SLAUGHTER_ARMATAUR;  break;
-        case SP_NAGA:     ch = TILEP_TRAN_SLAUGHTER_NAGA;      break;
-        case SP_FELID:    ch = TILEP_TRAN_SLAUGHTER_FELID;     break;
-        case SP_OCTOPODE: ch = TILEP_TRAN_SLAUGHTER_OCTOPODE;  break;
-        default:          ch = TILEP_TRAN_SLAUGHTER_HUMANOID;  break;
-        }
-        break;
-    }
-    // no special tile
-    case transformation::blade_hands:
-    case transformation::none:
-    default:
-        break;
-    }
+    tile_with_flags_t ch = TILEP_PLAYER;
 
     // Currently, the flying flag is only used for not drawing the tile in the
     // water. in_water() checks Beogh's water walking. If the flying flag is
@@ -540,7 +430,7 @@ tileidx_t tileidx_player()
 
     if (you.attribute[ATTR_HELD])
     {
-        if (get_trapping_net(you.pos()) == NON_ITEM)
+        if (you.caught_by() == CAUGHT_WEB)
             ch |= TILE_FLAG_WEB;
         else
             ch |= TILE_FLAG_NET;
@@ -636,11 +526,6 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_PURPLE_DRACONIAN:
     case SP_PALE_DRACONIAN:
         return TILEP_BASE_DRACONIAN + _draconian_colour(sp, level);
-    case SP_ARMATAUR:
-#if TAG_MAJOR_VERSION == 34
-    case SP_CENTAUR:
-#endif
-        return TILEP_BASE_ARMATAUR;
 #if TAG_MAJOR_VERSION == 34
     case SP_METEORAN:
         return TILEP_BASE_METEORAN;
@@ -684,6 +569,11 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_POLTERGEIST;
     case SP_REVENANT:
         return TILEP_BASE_REVENANT;
+#if TAG_MAJOR_VERSION == 34
+    case SP_CENTAUR:
+#endif
+    case SP_GALE_CENTAUR:
+        return TILEP_BASE_GALE_CENTAUR;
     default:
         return TILEP_BASE_HUMAN;
     }
@@ -1056,7 +946,9 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
 
     if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_NAGA)
-        || is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_ARMATAUR))
+        || is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_GALE_CENTAUR)
+        || is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_TRAN_WEREWOLF_NAGA)
+        || is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_TRAN_WEREWOLF_GALE_CENTAUR))
     {
         flag[TILEP_PART_BOOTS] = flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_BOTTOM;
@@ -1081,12 +973,8 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_LEG]   = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BODY]  = TILEP_FLAG_HIDE;
         flag[TILEP_PART_ARM]   = TILEP_FLAG_HIDE;
-        if (!is_player_tile(doll.parts[TILEP_PART_HAND1],
-                            TILEP_HAND1_BLADEHAND_FE))
-        {
-            flag[TILEP_PART_HAND1] = TILEP_FLAG_HIDE;
-            flag[TILEP_PART_HAND2] = TILEP_FLAG_HIDE;
-        }
+        flag[TILEP_PART_HAND1] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_HAND2] = TILEP_FLAG_HIDE;
         if (!is_player_tile(doll.parts[TILEP_PART_HELM], TILEP_HELM_HORNS_CAT))
             flag[TILEP_PART_HELM] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_HAIR]  = TILEP_FLAG_HIDE;
@@ -1103,7 +991,8 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         if (doll.parts[TILEP_PART_ARM] != TILEP_ARM_OCTOPODE_SPIKE)
             flag[TILEP_PART_ARM] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_HAIR]  = TILEP_FLAG_HIDE;
-        flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
+        if (!is_player_tile(doll.parts[TILEP_PART_BEARD], TILEP_BEARD_BLADE_FORM_OCTOPODE))
+            flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_SHADOW]= TILEP_FLAG_HIDE;
         flag[TILEP_PART_DRCWING]=TILEP_FLAG_HIDE;
     }
@@ -1120,6 +1009,13 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_SHADOW]  = TILEP_FLAG_HIDE;
         flag[TILEP_PART_DRCWING] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BODY]    = TILEP_FLAG_CUT_BOTTOM;
+    }
+    // when merfolk in quill form, hide the quill legs to show the fishtail.
+    if (you.species == SP_MERFOLK && you.fishtail
+        && doll.parts[TILEP_PART_HELM] == TILEP_BODY_QUILL_HUMANOID
+        && flag[TILEP_PART_HELM] == TILEP_FLAG_NORMAL)   // No hide by other rules
+    {
+        flag[TILEP_PART_HELM] = TILEP_FLAG_CUT_BOTTOM;
     }
 
     if (doll.parts[TILEP_PART_ARM] == TILEP_ARM_OCTOPODE_SPIKE
@@ -1180,7 +1076,7 @@ void tilep_fill_order_and_flags(const dolls_data &doll, int (&order)[TILEP_PART_
     }
 
     // Draw scarves above other clothing.
-    if (doll.parts[TILEP_PART_CLOAK] >= TILEP_CLOAK_SCARF_FIRST_NORM)
+    if (doll.parts[TILEP_PART_CLOAK] >= TILEP_CLOAK_SCARF_OFFSET)
     {
         order[4] = order[5];
         order[5] = order[6];
@@ -1332,7 +1228,8 @@ bool player_uses_monster_tile()
 {
     return Options.tile_use_monster != MONS_0
             || you.duration[DUR_EXECUTION]
-            || (you.may_pruneify() && you.cannot_act());
+            || you.form == transformation::fortress_crab
+            || (you.may_pruneify() && you.helpless());
 }
 
 #endif

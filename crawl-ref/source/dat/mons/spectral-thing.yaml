@@ -2,7 +2,7 @@ name: "spectral thing"
 glyph: {char: "Z", colour: green}
 flags: [flies, see_invis, insubstantial]
 resists: {cold: 1}
-xp_mult: 11
+exp: 11
 genus: wraith
 holiness: [undead]
 will: invuln

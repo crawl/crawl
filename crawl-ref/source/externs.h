@@ -54,10 +54,10 @@ struct tile_flavour
     unsigned short wall_idx;
     unsigned short feat_idx;
 
-    unsigned short floor;
-    unsigned short wall;
+    tileidx_t floor;
+    tileidx_t wall;
     // Used (primarily) by the vault 'TILE' overlay.
-    unsigned short feat;
+    tileidx_t feat;
 
     // Used as a random value or for special cases e.g. (bazaars, gates).
     unsigned short special;
@@ -71,11 +71,11 @@ class tile_fg_store
 {
 public:
     tile_fg_store() : m_tile(0) {}
-    tile_fg_store(tileidx_t tile) : m_tile(tile) {}
-    operator tileidx_t() { return m_tile; }
-    tileidx_t operator=(tileidx_t tile);
+    tile_fg_store(tile_with_flags_t tile) : m_tile(tile) {}
+    operator tile_with_flags_t() { return m_tile; }
+    tile_with_flags_t operator=(tile_with_flags_t tile);
 protected:
-    tileidx_t m_tile;
+    tile_with_flags_t m_tile;
 };
 
 #define MAX_NAME_LENGTH 30
@@ -170,9 +170,11 @@ public:
     bool notified_mp_full;
     bool notified_hp_full;
     bool notified_ancestor_hp_full;
+    bool ancestor_was_injured;
     coord_def pos;
     int direction;
     int turns_passed;
+    bool skip_autorest;
 
     FixedVector<run_check_dir,3> run_check; // array of grids to check
 
@@ -207,6 +209,8 @@ public:
     bool check_stop_running();
 
 private:
+    coord_def starting_pos; // For long-walking
+    int max_longwalk_distance;
     void set_run_check(int index, int compass_dir);
     bool run_should_stop() const;
     bool diag_run_passes_door() const;

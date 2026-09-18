@@ -45,6 +45,6 @@ pregen_dungeon = false
 :   if you.turns() < 1000 then
 :     crawl.sendkeys(".")
 :   else
-:     crawl.sendkeys("*qyes" .. eol .. esc .. esc)
+:     crawl.sendkeys("*qquit" .. eol .. esc .. esc)
 :   end
 : end

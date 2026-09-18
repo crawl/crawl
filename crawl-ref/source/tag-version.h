@@ -318,6 +318,54 @@ enum tag_minor_version
     TAG_MINOR_REMOVE_STAT_DRAIN,   // Remove all stat draining
     TAG_MINOR_SIMPLIFY_STAT_ZERO,  // Simplify stat-zero to permaslow with no duration
     TAG_MINOR_REMOVE_VAMPIRES,     // Remove the player vampire species
+    TAG_MINOR_SPECTRAL_DUAL_WIELDING, // Allow having multiple spectral weapons out at the same time
+    TAG_MINOR_SPECIFY_EXP,         // Specify monster EXP in yaml rather than calculating from HD
+    TAG_MINOR_GHOST_MOVE_SPEED_FIX,// Fixup move speed of old spriggan/naga/barachi ghosts
+    TAG_MINOR_COMPRESS_MAPPING,    // Reduce another mutation to 2 levels
+    TAG_MINOR_FRENZY_FIXUP,        // Don't pair frenzy with haste and might
+    TAG_MINOR_GHOST_WILLPOWER,     // Allow specifying willpower for ghost_demons (and player ghosts)
+    TAG_MINOR_BANES,               // Added Banes
+    TAG_MINOR_TEMP_MUT_KILLS,      // Change how temp mutations are cured
+    TAG_MINOR_CONTAM_PERCENT,      // Rescale internal values for magic contamination
+    TAG_MINOR_ZOT_ORB_ROTATION,    // Add multiple rotating orb monster types to Zot
+    TAG_MINOR_GHOST_TITLE,         // Store ghost titles instead of generating them
+    TAG_MINOR_ZOT_ORB_MEMORY,      // Fix whether the player has learned the Zot orb type not being saved
+    TAG_MINOR_CONSUMABLE_INV,      // Split gear and consumable inventory, adding much inventory space.
+    TAG_MINOR_EQUIP_TALISMAN,      // Make talismans equipment you put on.
+    TAG_MINOR_EXCLUSIVE_ROLLPAGE,  // Don't give inhibited regen mutation to rollpage characters.
+    TAG_MINOR_ATTACK_ACTION_COUNTS, // Add tracking for attack action count sources
+    TAG_MINOR_ACCURATE_INVIS_INDICATORS, // Invis indicators now always show at the monsters position
+    TAG_MINOR_FIX_BLOOD_KNOWLEDGE, // Add blood rotation to map knowledge so out of sight changes aren't leaked
+    TAG_MINOR_BRANCH_UNIQ_MAPS,    // buniq_* tags for "only once per branch" vault groups
+    TAG_MINOR_TRACK_ORIGIN_LEVEL,  // Track the original level on which a monster was generated
+    TAG_MINOR_FIX_POLAR_VORTEX_INFO_LEAK, // Don't leak whether the polar vortex caster has moved or gone
+    TAG_MINOR_CONSTRICTED_TYPE,    // Refactor saving of constriction type on actors
+    TAG_MINOR_LUA_5_4,             // Upgrade from Lua 5.1 to Lua 5.4.
+    TAG_MINOR_PIETY_LOGGING,       // Log piety events
+    TAG_MINOR_MONINFO_CLEANUP,     // Stop marshalling some unused info and start marshalling some overlooked info
+    TAG_MINOR_FIX_HELLFIRE_MORTAR_LAVA_DURATION, // Fix lava from the hellfire mortar spell not lasting long enough
+    TAG_MINOR_FIX_PERMANENT_HELLFIRE_MORTAR, // Timeout permanent hellfire mortar lava
+    TAG_MINOR_NO_TRAP_DEF,         // Remove vestigal uses trap_def and refactor trap handling
+    TAG_MINOR_TERRAIN_CHANGE_MID,  // Marshall terrain change origin mids as int instead of shorts
+    TAG_MINOR_REFACTOR_MALIGN_MARKER,   // Refactor handling of map_malign_gateway_marker
+    TAG_MINOR_REMOVE_MORTAR_MARKERS, // Remove map_hellfire_mortar_lava_marker and refactor again
+    TAG_MINOR_FIX_VENGEANCE_CLEANUP, // Fix a crash when changing levels due to old vengeance targets
+    TAG_MINOR_FLAVOUR_KNOWLEDGE,   // Save player knowledge of feature flavour
+    TAG_MINOR_REMOVE_PIETY_DECAY,  // Remove piety decay and hysteresis mechanics
+    TAG_MINOR_TREE_POSITIONS,      // Save tree positions for forest vines
+    TAG_MINOR_DANGLING_CONSTRICTION, // Fix recalled companions leaving dangling constriction state
+    TAG_MINOR_EXEGESIS_HIDDEN,     // Divine exegesis gets a separate list of hidden spells
+    TAG_MINOR_FIX_DOOR_INFO_LEAK,  // Don't leak whether an out of view door has been covered in temporary terrain
+    TAG_MINOR_SWIFTNESS_REFACTOR,  // Split swiftness's backlash into DUR_ANTISWIFT
+    TAG_MINOR_MAX_PIETY_LOGGING,   // Separately log stepdown events and max piety wastage
+    TAG_MINOR_INVIS_REFORM,        // Improve player tracking of invisible monsters
+    TAG_MINOR_LURKER_MONSTERS,     // Add support for lurker monsters
+    TAG_MINOR_FIX_UNCANCELS,       // Fix monsters sometimes getting their turn before the effect of the players action
+    TAG_MINOR_MIMIC_PROP,          // Move flag for mimics from env.level_map_mask to env.pgrid
+    TAG_MINOR_MON_ATTACK_DEF_RANGE,// Add 'range' and 'cleaving' members to mon_attack_def
+    TAG_MINOR_FORGET_MONSTERS,     // Forget stale monster memories.
+    TAG_MINOR_BASE_TRAINING_TARGETS, // Separate training targets for base skill levels
+    TAG_MINOR_SHOP_KEEPER_NAME,    // Seed shopkeeper names from all three keeper_name bytes
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
@@ -335,6 +383,9 @@ const set<int> bones_minor_tags =
          TAG_MINOR_POSITIONAL_MAGIC,
          TAG_MINOR_GHOST_MAGIC,
          TAG_MINOR_GHOST_UMBRAS,
+         TAG_MINOR_GHOST_MOVE_SPEED_FIX,
+         TAG_MINOR_GHOST_WILLPOWER,
+         TAG_MINOR_GHOST_TITLE,
 #endif
         };
 

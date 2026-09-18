@@ -51,18 +51,16 @@ void whereis_record(const xlog_fields &xl);
 
 void record_turn_timestamp();
 
+#if TAG_MAJOR_VERSION == 34
 enum evoc_type
 {
     EVOC_WAND,
-#if TAG_MAJOR_VERSION == 34
     EVOC_ROD,
-#endif
     EVOC_DECK,
-#if TAG_MAJOR_VERSION == 34
     EVOC_MISC,
     EVOC_BUGGY_TOME,
-#endif
 };
+#endif
 
 enum dodge_type    // subtype for counted actions
 {

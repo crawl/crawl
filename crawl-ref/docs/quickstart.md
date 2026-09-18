@@ -44,7 +44,7 @@ Now you are in the game. The game screen has three parts:
 
  - the Map takes up the upper left part of the screen. In its very centre is
    the `@` sign (or player doll tile) which represents You. The bright parts of
-   the Map are the parts you can see, while places which you have visited 
+   the Map are the parts you can see, while places which you have visited
    before but cannot currently see are darkened.
  - the Message box is the large part of the screen below the map. It describes
    events as they happen and asks you questions from time to time.

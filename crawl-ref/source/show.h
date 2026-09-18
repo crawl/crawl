@@ -32,6 +32,7 @@ enum show_item_type
     SHOW_ITEM_SKELETON,
     SHOW_ITEM_GOLD,
     SHOW_ITEM_GEM,
+    SHOW_ITEM_BAUBLE,
     SHOW_ITEM_AMULET,
     NUM_SHOW_ITEMS
 };
@@ -42,7 +43,6 @@ enum show_class
     SH_FEATURE,
     SH_ITEM,
     SH_CLOUD,
-    SH_INVIS_EXPOSED,
     SH_MONSTER,
     NUM_SHOW_CLASSES
 };

@@ -30,7 +30,7 @@ function vaults_new_layout(width, height)
   return new_layout(width,height)
 end
 local function new_usage(width, height)
-  usage_grid = { eligibles = { }, width = width, height = height }
+  local usage_grid = { eligibles = { }, width = width, height = height }
 
   for y = 0, (height-1), 1 do
     usage_grid[y] = { }
@@ -62,14 +62,16 @@ local function set_usage(usage_grid,x,y,usage)
   if usage_grid[y] == nil or usage_grid[y][x] == nil then return false end
   -- Check existing usage, remove it from eligibles if it's there
   local current = usage_grid[y][x]
-  if current.eligibles_index ~= nil then
-    table.remove(usage_grid.eligibles,current.eligibles_index)
+  for i,usage in ipairs(usage_grid.eligibles) do
+    if usage == current then
+      table.remove(usage_grid.eligibles,i)
+      break
+    end
   end
   -- Add to the eligibles list if it's eligible
   if usage.usage == "eligible" or usage.usage == "eligible_open" or usage.usage == "open" then
     usage.spot = { x = x, y = y } -- Store x,y in the usage object otherwise when we look it up in the list we don't know where it came from!
     table.insert(usage_grid.eligibles,usage)
-    usage.eligibles_index = #(usage_grid.eligibles)  -- Store index of the new item so we can remove it when it's overwritten
   end
   -- Store usage in grid
   usage_grid[y][x] = usage
@@ -107,11 +109,6 @@ function vaults_set_layout(layout_grid,x,y,value)
 end
 
 local function determine_usage_from_layout(layout_grid,options)
-
-  usage_restricted_count = 0
-  usage_open_count = 0
-  usage_eligible_count = 0
-  usage_none_count = 0
 
   local gxm, gym = layout_grid.width,layout_grid.height
   local usage_grid = new_usage(gxm,gym)
@@ -229,7 +226,7 @@ local function inside_oval(x,y,item)
   local h = (item.corner2.x + item.corner1.x)/2
   local k = (item.corner2.y + item.corner1.y)/2
   -- Test
-  return ((math.pow(x-h,2)/math.pow(rx,2) + math.pow(y-k,2)/math.pow(ry,2))<=1)
+  return (x - h) ^ 2 / rx ^ 2 + (y - k) ^ 2 / ry ^ 2 <= 1
 end
 
 local function inside_trapese(x,y,item)
@@ -296,7 +293,7 @@ function paint_grid(paint, options, grid)
 
 end
 
-function paint_vaults_layout(paint, options, layout_grid)
+function paint_vaults_layout(e, paint, options, layout_grid)
 
   -- Default options
   if options == nil then options = vaults_default_options() end
@@ -307,6 +304,9 @@ function paint_vaults_layout(paint, options, layout_grid)
   if options.layout_wall_weights ~= nil then
     local chosen = util.random_weighted_from("weight", options.layout_wall_weights)
     wall_type = chosen.feature
+    if chosen.feature == "crystal_wall" then
+      e.lfloortile("floor_crystal")
+    end
   end
   -- Store it in options so it can be used for room surrounds also
   options.layout_wall_type = wall_type

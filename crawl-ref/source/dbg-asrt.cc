@@ -202,7 +202,7 @@ static void _dump_player(FILE *file)
     for (size_t i = 0; i < NUM_SKILLS; ++i)
     {
         const skill_type sk = skill_type(i);
-        if (is_useless_skill(sk))
+        if (is_useless_skill(sk, false))
             continue;
 
         int needed_min = 0, needed_max = 0;
@@ -213,7 +213,7 @@ static void _dump_player(FILE *file)
 
         fprintf(file, "%-16s|          %c          |   %u   |   %3u    |   %2d  | %6d | %d/%d\n",
                 skill_name(sk),
-                you.can_currently_train[sk] ? 'X' : ' ',
+                !is_useless_skill(sk) ? 'X' : ' ',
                 you.train[sk],
                 you.training[sk],
                 you.skills[sk],
@@ -359,7 +359,7 @@ static void _dump_player(FILE *file)
     for (player_equip_entry& entry : you.equipment.items)
     {
         fprintf(file, "    eq slot #%d, inv slot #%d", entry.slot, entry.item);
-        if (entry.item < 0 || entry.item >= ENDOFPACK)
+        if (entry.item < 0 || entry.item >= MAX_GEAR)
         {
             fprintf(file, " <invalid>\n");
             continue;
@@ -587,6 +587,7 @@ void do_crash_dump()
         // free'd and invalid, plus their content likely wouldn't help
         // tracking it down anyway. Thus, just do the bare bones
         // info to stderr and quit.
+#if !(defined(TARGET_COMPILER_VC) && defined(USE_TILE))
         fprintf(stderr, "Crashed while calling exit()!!!!\n");
 
         _dump_ver_stuff(stderr);
@@ -594,6 +595,7 @@ void do_crash_dump()
         fprintf(stderr, "%s\n\n", crash_signal_info().c_str());
         write_stack_trace(stderr);
         call_gdb(stderr);
+#endif
 
         return;
     }
@@ -616,6 +618,7 @@ void do_crash_dump()
     const string signal_info = crash_signal_info();
     const string cause_msg = _assert_msg.empty() ? signal_info : _assert_msg;
 
+#if !(defined(TARGET_COMPILER_VC) && defined(USE_TILE))
     if (!crawl_state.test && !cause_msg.empty())
         fprintf(stderr, "\n%s", cause_msg.c_str());
     // This message is parsed by the WebTiles server. In particular, if you
@@ -632,6 +635,7 @@ void do_crash_dump()
             "\n- A description of what you were doing when this crash occurred.\n\n",
             name, get_savedir_filename(you.your_name).c_str(),
             CRAWL, Version::Long, CRAWL_BUILD_NAME);
+#endif
     errno = 0;
     // TODO: this freopen of stderr persists into a recursive crash, making it
     // hard to directly log in webtiles...
@@ -642,6 +646,11 @@ void do_crash_dump()
     // only freak out if freopen() returned nullptr!
     if (!file)
     {
+#if defined(TARGET_COMPILER_VC) && defined(USE_TILE)
+        // stdout is invalid in this build configuration
+        return;
+#endif
+
         fprintf(stdout, "\nUnable to open file '%s' for writing: %s\n",
                 name, strerror(errno));
         file = stdout;
@@ -736,13 +745,21 @@ void do_crash_dump()
         fprintf(file, "%s\n", screenshot().c_str());
     }
 
+    fprintf(file, "dlua errors:\n");
+    for (const CLuaError &error : dlua_errors)
+    {
+        fprintf(file, "%s\n%s\n", error.message.c_str(),
+                error.stack_trace.c_str());
+    }
+    fprintf(file, "\n");
+
     // If anything has screwed up the Lua runtime stacks then trying to
     // print those stacks will likely crash, so do this after the others.
     fprintf(file, "clua stack:\n");
-    clua.print_stack();
+    fprintf(file, "%s\n", clua.get_stack_trace().c_str());
 
     fprintf(file, "dlua stack:\n");
-    dlua.print_stack();
+    fprintf(file, "%s\n", dlua.get_stack_trace().c_str());
 
     // Lastly try to dump the Lua persistent data and the contents of the Lua
     // markers, since actually running Lua code has the greatest chance of
@@ -787,7 +804,10 @@ NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
     // so it's in the message history if we call Crawl from a shell.
 #endif
 #endif
+
+#if !(defined(TARGET_COMPILER_VC) && defined(USE_TILE))
     fprintf(stderr, "%s\n", mesg);
+#endif
 
 #if defined(TARGET_OS_WINDOWS)
     OutputDebugString(mesg);
@@ -795,9 +815,13 @@ NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
         DebugBreak();
 #endif
 
+#ifdef USE_UNIX_SIGNALS
     // MSVCRT's abort() give's a funny message ...
     raise(SIGABRT);
     abort();
+#else
+    crash_signal_handler(SIGABRT);
+#endif
 }
 
 #ifdef ASSERTS

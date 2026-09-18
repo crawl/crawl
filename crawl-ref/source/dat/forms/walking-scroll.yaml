@@ -1,0 +1,32 @@
+enum: walking_scroll
+equivalent_mons: walking_tome
+short_name: Scroll
+description: a walking scroll.
+skill: {min: 0, max: 7}
+talisman: inkwell
+melds: [physical]
+resists: {fire: -1}
+holiness: nonliving
+size: tiny
+unarmed_name: Magic Parchment
+unarmed_colour: lightgrey
+# That last one is very unlikely to happen, but it amused me.
+unarmed_verbs: [flutter at, slap, unfurl around, read the riot act to]
+can_swim: no
+changes_anatomy: yes
+changes_substance: yes
+has_blood: no
+has_hair: no
+has_feet: yes
+has_ears: no
+shout_verb: flutter
+shout_volume: -2
+hand_name: parchment
+prayer_action: "unroll yourself before"
+flesh_name: parchment
+fakemuts:
+ - ["scribal knowledge", "You have increased skill with all magical schools."]
+ - ["magic absorption", "Your melee attacks sometimes restore your MP."]
+badmuts:
+ - ["novice magic", "You cannot cast spells above level 4."]
+ - ["weak attacks", "Your melee attacks are very weak."]
