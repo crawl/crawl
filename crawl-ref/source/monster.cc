@@ -130,15 +130,9 @@ monster &monster::operator = (const monster& mon)
     return *this;
 }
 
+// Reset the monster to a blank slate, and free up its MID slot.
 void monster::reset()
 {
-    mname.clear();
-    enchantments.clear();
-    ench_cache.reset();
-    ench_countdown = 0;
-    inv.init(NON_ITEM);
-    spells.clear();
-
     // Drop the mid_cache entry, but only if it still points at this monster.
     // This is not necessarily true, because a transiting copy may take the
     // spot in the cache.
@@ -148,6 +142,18 @@ void monster::reset()
         if (it != env.mid_cache.end() && it->second == mindex())
             env.mid_cache.erase(it);
     }
+
+    clear();
+}
+
+void monster::clear()
+{
+    mname.clear();
+    enchantments.clear();
+    ench_cache.reset();
+    ench_countdown = 0;
+    inv.init(NON_ITEM);
+    spells.clear();
 
     mid             = 0;
     flags           = MF_NO_FLAGS;
@@ -197,7 +203,7 @@ void monster::reset()
 
 void monster::init_with(const monster& mon)
 {
-    reset();
+    clear();
 
     mid               = mon.mid;
     mname             = mon.mname;

@@ -616,6 +616,7 @@ private:
     void unequip_weapon_message(item_def &item) const;
     void unequip_armour_message(item_def &item) const;
 
+    void clear();
     void init_with(const monster& mons);
 
     int armour_bonus(const item_def &item) const;
