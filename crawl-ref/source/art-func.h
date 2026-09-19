@@ -1880,7 +1880,6 @@ static void _FORGEWARDEN_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
     // condition and needs different messaging
     if (!unmeld)
     {
-
         if (!faith_has_penalty())
         {
             if (you.religion == GOD_NO_GOD && !you.has_mutation(MUT_FORLORN))
