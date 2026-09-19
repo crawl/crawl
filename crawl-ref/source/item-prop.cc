@@ -1721,14 +1721,14 @@ bool is_enchantable_armour(const item_def &arm, bool unknown)
     return true;
 }
 
-bool is_enchantable_weapon(const item_def &weapon, bool unknown)
+bool is_enchantable_weapon(const item_def &wpn, bool unknown)
 {
-    return weapon.base_type == OBJ_WEAPONS
-       && (!is_artefact(weapon)
-           || (!is_unrandom_artefact(weapon)
+    return wpn.base_type == OBJ_WEAPONS
+       && (!is_artefact(wpn)
+           || (!is_unrandom_artefact(wpn)
                && you.has_mutation(MUT_ARTEFACT_ENCHANTING)))
-       && (unknown && !weapon.is_identified()
-           || weapon.plus < MAX_WPN_ENCHANT);
+       && (unknown && !wpn.is_identified()
+           || wpn.plus < MAX_WPN_ENCHANT);
 }
 
 //
