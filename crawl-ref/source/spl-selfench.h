@@ -20,6 +20,7 @@ int harvest_corpses(const actor &harvester,
                     bool dry_run = false, bool defy_god = false);
 spret corpse_armour(int pow, bool fail);
 
+string revivification_loss_description(int pow);
 spret cast_revivification(int pow, bool fail);
 
 spret cast_swiftness(int power, bool fail);

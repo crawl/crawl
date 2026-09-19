@@ -22,6 +22,7 @@
 #include "output.h"
 #include "player.h"
 #include "prompt.h"
+#include "random.h"
 #include "religion.h"
 #include "spl-other.h"
 #include "spl-util.h"
@@ -95,13 +96,27 @@ void fiery_armour()
     you.redraw_armour_class = true;
 }
 
+string revivification_loss_description(int pow)
+{
+     int min_loss = 6 * you.hp_max / 100;
+     int max_loss = 15 * you.hp_max / 100;
+     //if pow is lower than 8 max_loss == mean_loss
+     double mean_loss = (6 + binomial_mean(9, 8, pow)) * you.hp_max / 100;
+     return make_stringf("%d-%d (mean ~%.1f) HP",
+                         min_loss, max_loss, mean_loss);
+}
+
+int _revivification_loss(int pow)
+{
+   return (6 + binomial(9, 8, pow)) * you.hp_max / 100;
+}
+
 spret cast_revivification(int pow, bool fail)
 {
     fail_check();
     mpr("Your body is healed in an amazingly painful way.");
 
-    const int loss = 6 + binomial(9, 8, pow);
-    dec_max_hp(loss * you.hp_max / 100);
+    dec_max_hp(_revivification_loss(pow));
     set_hp(you.hp_max);
 
     if (you.duration[DUR_DEATHS_DOOR])

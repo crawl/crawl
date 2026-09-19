@@ -3284,15 +3284,15 @@ string spell_effect_string(spell_type spell, bool evoked, int pow)
         break;
     case SPELL_OZOCUBUS_ARMOUR:
     {
-        if (you.props.exists(ICY_ARMOUR_KEY))
+        if (you.duration[DUR_ICY_ARMOUR])
         {
             int ice_armour = ice_armour_ac(you.props[ICY_ARMOUR_KEY].get_int());
-            int current_buff_ac = div_round_near(ice_armour, 100);
-            description = make_stringf("Current ice armour bonus AC: ~%d\n",
+            double current_buff_ac = ice_armour / 100.0;
+            description = make_stringf("Current ice armour bonus AC: %.1f\n",
                                        current_buff_ac);
         }
-        int cast_now_ac = div_round_near(ice_armour_ac(pow), 100);
-        description += make_stringf("Bonus AC: ~%d", cast_now_ac);
+        double cast_now_ac = ice_armour_ac(pow) / 100.0;
+        description += make_stringf("Next cast bonus AC: %.1f", cast_now_ac);
         break;
     }
     case SPELL_CALL_IMP:
@@ -3304,23 +3304,11 @@ string spell_effect_string(spell_type spell, bool evoked, int pow)
                                    1 + putrefaction_drain_amount(pow, false)
                                      * get_real_hp(false, false) / 750);
         break;
-    case SPELL_BLINK: //should I pull out the calculations for every one of these?
-                      //Feels like im making a mess but maybe it's worth?
-        description = "-Blink duration: 1d3";
-        if (pow != 50)
-            description += make_stringf("+(~%d)", div_round_near(50 - pow, 10));
-        description += " turns";
+    case SPELL_BLINK:
+        description = "-Blink duration: " + blink_cooldown_description(pow);
         break;
     case SPELL_BORGNJORS_REVIVIFICATION:
-    {
-        int min_loss = 6 * you.hp_max/100;
-        int max_loss = 15 * you.hp_max/100;
-        //if pow is lower than 8 max_loss == mean_loss
-        int scale = (pow < 8 ? 8 : pow);
-        int mean_loss = div_round_near((6 + 9 * 8.0 / scale) * you.hp_max, 100);
-        description = make_stringf("Loss to max HP: %d-%d (mean ~%d) HP",
-                                   min_loss, max_loss, mean_loss);
-    }
+        description = "Loss to max HP: " + revivification_loss_description(pow);
         break;
     default:
         break;
