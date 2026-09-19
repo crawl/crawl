@@ -1725,14 +1725,30 @@ bool is_enchantable_armour(const item_def &arm, bool unknown)
     return true;
 }
 
+// Returns whether a weapon can be enchanted further.
+// If unknown is true, unidentified weapons will return true.
 bool is_enchantable_weapon(const item_def &wpn, bool unknown)
 {
-    return wpn.base_type == OBJ_WEAPONS
-       && (!is_artefact(wpn)
-           || (!is_unrandom_artefact(wpn)
-               && you.has_mutation(MUT_ARTEFACT_ENCHANTING)))
-       && (unknown && !wpn.is_identified()
-           || wpn.plus < MAX_WPN_ENCHANT);
+    if (wpn.base_type != OBJ_WEAPONS)
+        return false;
+
+    // Artefacts (unless they're random artefacts and you have the relevant
+    // mutation) cannot be enchanted.
+    if (is_artefact(wpn)
+           && (is_unrandom_artefact(wpn)
+               || !you.has_mutation(MUT_ARTEFACT_ENCHANTING)))
+    {
+        return false;
+    }
+
+    // Highly enchanted weapons cannot be enchanted...
+    if (wpn.plus >= MAX_WPN_ENCHANT)
+    {
+        // ...but if we don't know the plusses, assume enchanting is possible.
+        return unknown && !wpn.is_identified();
+    }
+
+    return true;
 }
 
 //
