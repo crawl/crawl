@@ -940,5 +940,8 @@ to pulse with unlife, awaiting the command of some unholy master.
 Forgewarden's cuirass
 
 A bronze chestpiece of masterful make. It is etched all over with religious
-imagery, but the focus of the scene is obscured by a great dark stain that
-smells strongly of ashes and salt. It seems somehow blasphemous to wear.
+imagery, but the focus of the scene is obscured by a great dark stain {{
+    if you.can_smell() then
+        return "that smells strongly "
+    end
+}}of ashes and salt. It seems somehow blasphemous to wear.
