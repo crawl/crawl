@@ -859,7 +859,7 @@ bool ranged_attack::is_piercing() const
 int player_archery_damage_bonus(int dam, bool random)
 {
     int bonus = you.wearing_ego(OBJ_ARMOUR, SPARM_ARCHERY) * you.skill(SK_ARMOUR);
-    dam = random ? div_rand_round(dam * 100 + bonus, 100)
+    dam = random ? div_rand_round(dam * (100 + bonus), 100)
                  : dam * (100 + bonus) / 100;
 
     return dam;
