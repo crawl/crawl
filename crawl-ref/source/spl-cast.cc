@@ -856,6 +856,15 @@ static bool _majin_charge_hp()
     return you.unrand_equipped(UNRAND_MAJIN) && !you.duration[DUR_DEATHS_DOOR];
 }
 
+static void _trigger_ghost_crab_claws(int chance)
+{
+    if (x_chance_in_y(chance, 18) && !you.allies_forbidden())
+    {
+        big_cloud(CLOUD_SPECTRAL, &you, you.pos(), random_range(12, 20),
+            4 + random2(5));
+    }
+}
+
 static int _spell_addition_hp_cost(spell_type spell)
 {
     const int spell_cost = spell_mana(spell);
@@ -1078,6 +1087,14 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         stardust_orb_trigger(cost);
         if (you.unrand_equipped(UNRAND_MAJIN) && one_chance_in(500))
             _majin_speak(spell);
+        if (you.unrand_equipped(UNRAND_CRAB_CLAWS))
+        {
+            int chance = spell_difficulty(spell);
+            if (spell_typematch(spell, spschool::necromancy))
+                chance *= 2;
+            chance += 3;
+            _trigger_ghost_crab_claws(chance);
+        }
         count_action(CACT_CAST, spell);
     }
 
