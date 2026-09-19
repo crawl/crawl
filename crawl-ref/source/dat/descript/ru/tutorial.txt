@@ -190,12 +190,6 @@ tutorial2 newlevel
 Помните: Вы можете прочесть старые сообщения еще раз с помощью
 <input>$cmd[CMD_REPLAY_MESSAGES]</input>.
 %%%%
-tutorial2 darts
-
-Теперь, для дальнего боя! Поднимите эти дротики с помощью
-<input>$cmd[CMD_PICKUP]</input><localtiles> или
-<input>mouseclick</input>,</localtiles> и продолжайте.
-%%%%
 tutorial2 throwing
 
 Вы можете стрелять вашими дротиками в монстра с помощью
@@ -380,24 +374,19 @@ tutorial5 dungeon_overview
 %%%%
 tutorial5 altar
 
-Вы можете молиться над алтарем с помощью <input>$cmd[CMD_PRAY]</input>
-<localtiles> (или щелкнув в <w>command panel</w> или
-<input>Shift-clicking</input> на своем персонаже)</localtiles> чтобы получить
-представление о том, что Бог предлагает вам, и присоединиться к вере. Если вы
-нажмете <input>!</input><localtiles> или <input>rightclick</input>
-</localtiles> на экране религии, то увидите более детальное описание.
+Вы можете помолиться у алтаря с помощью <input>$cmd[CMD_GO_DOWNSTAIRS]</input>
+<localtiles> (или <input>щёлкнув левой кнопкой</input> по своему
+персонажу)</localtiles>, чтобы узнать, что предлагает бог, и присоединиться к
+вере. Если на экране религии нажать <input>!</input><localtiles> или
+<input>щёлкнуть правой кнопкой</input></localtiles>, вы увидите более подробное
+описание.
 
-Подтвердите свой выбор с помощью заглавной <input>Y</input>.
+Подтвердите свой выбор клавишей <input>J</input> или <input>Enter</input>.
 %%%%
 tutorial5 piety_on_kill
 
 Некоторые боги действительно любят, когда убивают монстров в их честь. Пусть
 начнется бойня!
-%%%%
-tutorial5 sacrificing
-
-Помолившись над трупом с помощью <input>$cmd[CMD_PRAY]</input><localtiles> или
-через <w>command panel</w></localtiles> принесете жертву Трогу. Попробуйте!
 %%%%
 tutorial5 berserk
 
