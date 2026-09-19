@@ -3288,6 +3288,49 @@ string spell_damage_string(spell_type spell, bool evoked, int pow, bool terse)
     return dam_str;
 }
 
+string spell_effect_string(spell_type spell, bool evoked, int pow)
+{
+    if (pow == -1)
+        pow = evoked ? wand_power(spell) : calc_spell_power(spell);
+    string description = "";
+    switch (spell)
+    {
+    case SPELL_PASSWALL:
+        description = make_stringf("Bonus AC: ~%d", passwall_ac(pow, false));
+        break;
+    case SPELL_OZOCUBUS_ARMOUR:
+    {
+        if (you.duration[DUR_ICY_ARMOUR])
+        {
+            int ice_armour = ice_armour_ac(you.props[ICY_ARMOUR_KEY].get_int());
+            double current_buff_ac = ice_armour / 100.0;
+            description = make_stringf("Current ice armour bonus AC: %.1f\n",
+                                       current_buff_ac);
+        }
+        double cast_now_ac = ice_armour_ac(pow) / 100.0;
+        description += make_stringf("Next cast bonus AC: %.1f", cast_now_ac);
+        break;
+    }
+    case SPELL_CALL_IMP:
+        description = make_stringf("Imp's weapon: %+d spear",
+                                   imp_weapon_modifier(pow));
+        break;
+    case SPELL_PUTREFACTION:
+        description = make_stringf("Self drain amount: ~%d HP",
+                                   1 + putrefaction_drain_amount(pow, false)
+                                     * get_real_hp(false, false) / 750);
+        break;
+    case SPELL_BLINK:
+        description = "-Blink duration: " + blink_cooldown_description(pow);
+        break;
+    case SPELL_BORGNJORS_REVIVIFICATION:
+        description = "Loss to max HP: " + revivification_loss_description(pow);
+        break;
+    default:
+        break;
+    }
+    return description;
+}
 int spell_acc(spell_type spell)
 {
     const zap_type zap = spell_to_zap(spell);
