@@ -811,7 +811,7 @@ HINT_CONVERTED_WRATH
 Unfortunately, while converting back would appease $1, it would annoy $2, so
 you're stuck with having to suffer the wrath of one god or another.
 %%%%
-HINT_WIELD_WEAPON
+HINT_WIELD_MELEE_WEAPON
 
 You can easily switch back to your weapon in slot a by
 pressing <w>$cmd[CMD_WEAPON_SWAP]</w>. To change the slot of an item, press

@@ -1485,8 +1485,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
     }
 
-    case HINT_WIELD_WEAPON:
-        print_hint("HINT_WIELD_WEAPON");
+    case HINT_WIELD_MELEE_WEAPON:
+        print_hint("HINT_WIELD_MELEE_WEAPON");
         break;
 
     case HINT_MONSTER_UNUSUAL:
