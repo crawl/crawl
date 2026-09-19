@@ -2333,31 +2333,30 @@ bool uncancel_brand_weapon()
 
 bool enchant_weapon(item_def &wpn, bool quiet)
 {
-    bool success = false;
+    // Cannot be enchanted.
+    if (!is_enchantable_weapon(wpn))
+    {
+        if (!quiet)
+            canned_msg(MSG_NOTHING_HAPPENS);
+        return false;
+    }
 
     // Get item name now before changing enchantment.
     string iname = _item_name(wpn);
 
-    if (is_enchantable_weapon(wpn))
+    wpn.plus++;
+    // Make sure newly enchanted items appear as such.
+    item_set_appearance(wpn);
+
+    if (!quiet)
     {
-        wpn.plus++;
-        // Make sure newly enchanted items appear as such.
-        item_set_appearance(wpn);
-        success = true;
-        if (!quiet)
-        {
-            const char* dur = wpn.plus < MAX_WPN_ENCHANT ? "moment" : "while";
-            mprf("%s glows red for a %s.", iname.c_str(), dur);
-        }
+        const char* dur = wpn.plus < MAX_WPN_ENCHANT ? "moment" : "while";
+        mprf("%s glows red for a %s.", iname.c_str(), dur);
     }
 
-    if (!success && !quiet)
-        canned_msg(MSG_NOTHING_HAPPENS);
+    you.wield_change = true;
 
-    if (success)
-        you.wield_change = true;
-
-    return success;
+    return true;
 }
 
 /**
