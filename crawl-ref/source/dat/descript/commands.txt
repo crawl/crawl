@@ -23,7 +23,7 @@ CMD_EXPLORE_NO_REST
 
 Autoexplore the current level without resting first
 %%%%
-CMD_EXPLORE_NO_REST
+CMD_EXPLORE_NO_REST verbose
 
 Automatically explores the current level, collecting items on the way.
 Exploration stops as soon as a hostile monster comes into view, or when you
@@ -35,7 +35,7 @@ CMD_IGNORE_INVISIBLE
 
 Temporarily suppresses warnings about resting when invisible creatures may be
 nearby.
-
+%%%%
 CMD_IGNORE_INVISIBLE verbose
 
 Deletes any recent memories about unseen invisible creatures being nearby,
