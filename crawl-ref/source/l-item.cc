@@ -1461,20 +1461,10 @@ static int l_slot_is_available(lua_State *ls)
     if (slot < SLOT_WEAPON || slot >= NUM_EQUIP_SLOTS)
         return false;
 
-    const vector<equipment_slot>& alt_slots = get_alternate_slots(static_cast<equipment_slot>(slot));
-    for (const auto& alt_slot : alt_slots)
-    {
-        if (you.equipment.num_slots[alt_slot] <= 0)
-            continue;
+    const equipment_slot free_slot = you.equipment.find_free_compatible_slot(
+                                        static_cast<equipment_slot>(slot));
 
-        if ((int)you.equipment.get_slot_entries(alt_slot).size() < you.equipment.num_slots[alt_slot])
-        {
-            lua_pushboolean(ls, true);
-            return 1;
-        }
-    }
-
-    lua_pushboolean(ls, false);
+    lua_pushboolean(ls, free_slot != SLOT_UNUSED);
     return 1;
 }
 
