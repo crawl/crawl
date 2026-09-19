@@ -1049,7 +1049,7 @@ bool wielded_weapon_check(string attack_verb)
     if (!result)
         canned_msg(MSG_OK);
 
-    learned_something_new(HINT_WIELD_MELEE_WEAPON); // for hints mode Rangers
+    learned_something_new(HINT_WIELD_MELEE_WEAPON);
 
     // Don't warn again if you decide to continue your attack.
     if (result)
