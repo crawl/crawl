@@ -1706,16 +1706,20 @@ bool is_enchantable_armour(const item_def &arm, bool unknown)
     if (!armour_is_enchantable(arm))
         return false;
 
-    // If we don't know the plusses, assume enchanting is possible.
-    if (unknown && !is_artefact(arm) && !arm.is_identified())
-        return true;
-
-    // Artefacts or highly enchanted armour cannot be enchanted.
+    // Artefacts (unless they're random artefacts and you have the relevant
+    // mutation) cannot be enchanted.
     if (is_artefact(arm)
-        && (!you.has_mutation(MUT_ARTEFACT_ENCHANTING) || is_unrandom_artefact(arm))
-        || arm.plus >= armour_max_enchant(arm))
+           && (is_unrandom_artefact(arm)
+               || !you.has_mutation(MUT_ARTEFACT_ENCHANTING)))
     {
         return false;
+    }
+
+    // Highly enchanted armour cannot be enchanted...
+    if (arm.plus >= armour_max_enchant(arm))
+    {
+        // ...but if we don't know the plusses, assume enchanting is possible.
+        return unknown && !arm.is_identified();
     }
 
     return true;
