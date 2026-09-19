@@ -8,6 +8,9 @@
 #include "item-prop.h"
 #include "item-prop-enum.h"
 #include "invent.h"
+#include "fight.h"
+#include "ranged-attack.h"
+#include "skills.h"
 #include "player-equip.h"
 #include "potion-type.h"
 
@@ -215,4 +218,44 @@ TEST_CASE("Test all_item_subtypes() does include items for each category",
     REQUIRE(all_item_subtypes(OBJ_RUNES).size() > 0);
     REQUIRE(all_item_subtypes(OBJ_TALISMANS).size() > 0);
     REQUIRE(all_item_subtypes(OBJ_GEMS).size() > 0);
+}
+
+TEST_CASE_METHOD(MockPlayerYouTestsFixture,
+                 "Armour ego damage bonuses scale the whole hit",
+                 "[armour-damage]")
+{
+    const bool archery = GENERATE(true, false);
+    CAPTURE(archery);
+    const auto damage_mod = archery ? player_archery_damage_bonus
+                                    : resonance_damage_mod;
+    const skill_type skill = archery ? SK_ARMOUR : SK_FORGECRAFT;
+    const auto ego = archery ? SPARM_ARCHERY : SPARM_RESONANCE;
+
+    set_skill_level(skill, 27, true);
+    SECTION("No ego leaves damage unchanged")
+    {
+        CHECK(damage_mod(100, true) == 100);
+        CHECK(damage_mod(100, false) == 100);
+    }
+    SECTION("Equipped ego applies a percentage bonus")
+    {
+        make_and_equip_item(OBJ_ARMOUR, ARM_ROBE, 0, ego);
+        const int expected = archery ? 127 : 154;
+        CHECK(damage_mod(100, true) == expected);
+        CHECK(damage_mod(100, false) == expected);
+        CHECK(damage_mod(0, true) == 0);
+
+        // Fractional damage is randomly rounded in combat, truncated in UI.
+        const int rounded = damage_mod(40, true);
+        CHECK(rounded >= (archery ? 50 : 61));
+        CHECK(rounded <= (archery ? 51 : 62));
+        CHECK(damage_mod(40, false) == (archery ? 50 : 61));
+    }
+    SECTION("Zero skill leaves damage unchanged")
+    {
+        set_skill_level(skill, 0, true);
+        make_and_equip_item(OBJ_ARMOUR, ARM_ROBE, 0, ego);
+        CHECK(damage_mod(100, true) == 100);
+        CHECK(damage_mod(100, false) == 100);
+    }
 }
