@@ -392,6 +392,7 @@
     Brett Scarborough
     Roderick Schertler
     sdynet
+    SeijiOokami
     SentientSupper
     Roman Sêk
     Brennan Shacklett
