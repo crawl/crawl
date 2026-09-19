@@ -736,11 +736,6 @@ nightstalker mutation
 You are attuned to the shadows, reducing the distance that you can see or be
 seen from.
 %%%%
-+LOS mutation
-
-You are born to the light, increasing the distance that you can see and be seen
-from.
-%%%%
 stone body mutation
 
 You are made of living stone which is very resistant to damage. You gain a

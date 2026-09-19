@@ -171,11 +171,6 @@ cursed with the promise of agony monstatus
 This creature is cursed, and will lose half its current health after the next time
 the source of the curse hits it with a melee attack.
 %%%%
-damage-immune at range monstatus
-
-This creature suffers no damage from any source which is not currently adjacent to
-them (including clouds, if their creator is non-adjacent).
-%%%%
 dazed monstatus
 
 This creature is temporarily unable to act, but any hostile action will cause it to
