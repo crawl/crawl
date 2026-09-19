@@ -1711,9 +1711,9 @@ bool is_enchantable_armour(const item_def &arm, bool unknown)
         return true;
 
     // Artefacts or highly enchanted armour cannot be enchanted.
-    if ((is_artefact(arm)
+    if (is_artefact(arm)
         && (!you.has_mutation(MUT_ARTEFACT_ENCHANTING) || is_unrandom_artefact(arm))
-        || arm.plus >= armour_max_enchant(arm)))
+        || arm.plus >= armour_max_enchant(arm))
     {
         return false;
     }
