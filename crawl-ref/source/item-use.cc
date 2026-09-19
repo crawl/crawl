@@ -2498,9 +2498,10 @@ bool enchant_armour(item_def &arm, bool quiet)
         return false;
     }
 
-    string name = _item_name(arm);
+    // Get item name now before changing enchantment.
+    string iname = _item_name(arm);
 
-    ++arm.plus;
+    arm.plus++;
     // Make sure newly enchanted items appear as such.
     item_set_appearance(arm);
 
@@ -2510,7 +2511,7 @@ bool enchant_armour(item_def &arm, bool quiet)
                             && arm.sub_type != ARM_TROLL_LEATHER_ARMOUR;
         string glow = conjugate_verb("glow", plural);
         const char* dur = is_enchantable_armour(arm) ? "moment" : "while";
-        mprf("%s %s green for a %s.", name.c_str(), glow.c_str(), dur);
+        mprf("%s %s green for a %s.", iname.c_str(), glow.c_str(), dur);
     }
 
     return true;
