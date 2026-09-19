@@ -4516,6 +4516,21 @@ bool splinterfrost_block_fragment(monster& block, const coord_def& aim)
     return true;
 }
 
+// Update seismorock around a given coord representing where the egg is/was.
+// It will add or clean up seismorock as needed.
+void update_seismorock (const coord_def pos)
+{
+    actor* egg = actor_at(pos);
+    bool isEgg = egg && egg->alive() && egg->type == MONS_SEISMOSAURUS_EGG;
+    for (distance_iterator di(pos, false, false, 4); di; ++di)
+    {
+        if (isEgg && egg->see_cell_no_trans(*di))
+            env.pgrid(*di) |= FPROP_SEISMOROCK;
+        else
+            env.pgrid(*di) &= ~FPROP_SEISMOROCK;
+    }
+}
+
 spret cast_summon_seismosaurus_egg(const actor& agent, int pow, bool fail)
 {
     if (agent.is_player() && !player_summon_check(MONS_SEISMOSAURUS_EGG, 3, 1))
@@ -4534,8 +4549,7 @@ spret cast_summon_seismosaurus_egg(const actor& agent, int pow, bool fail)
         mons->add_ench(mon_enchant(ENCH_HATCHING, &agent, random_range(6, 9)));
 
         // Mark all terrain in range.
-        for (distance_iterator di(mons->pos(), false, false, 4); di; ++di)
-            env.pgrid(*di) |= FPROP_SEISMOROCK;
+        update_seismorock(mons->pos());
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
