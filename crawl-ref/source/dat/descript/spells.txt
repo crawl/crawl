@@ -311,6 +311,12 @@ Summons some necromantic spectres. These lost souls can enter the bodies of more
 powerful undead to bring them back from brink of demise, or turn dying living
 creatures into ghostly versions of themselves.
 %%%%
+Call Ogre and Mule spell
+
+Calls forth an unlikely pair of allies: a brutish ogre and a stubborn mule. Both
+creatures will fight on the caster's behalf until the magic sustaining them
+expires.
+%%%%
 Call of Chaos spell
 
 Calls upon the powers of chaos to empower nearby allies, granting them haste,
