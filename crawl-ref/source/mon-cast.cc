@@ -5254,6 +5254,30 @@ static bool _valid_caution_spell(spell_type type)
     }
 }
 
+// Trigger various effects that happen after casting an arbitrary spell.
+void mons_post_cast_effects(monster* mons, spell_type spell_cast, mon_spell_slot_flags flags)
+{
+    // Dragons now have a time-out on their breath weapons, draconians too!
+    if (flags & MON_SPELL_BREATH)
+        setup_breath_timeout(mons);
+
+    if (battlesphere_can_mirror(spell_cast))
+        trigger_battlesphere(mons);
+
+    if (flags & MON_SPELL_WIZARD && mons->has_ench(ENCH_SAP_MAGIC))
+    {
+        mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, mons->get_ench(ENCH_SAP_MAGIC).agent(),
+                                   6 * BASELINE_DELAY));
+    }
+
+    if (mons->wearing_ego(OBJ_ARMOUR, SPARM_STARDUST)
+        && !mons->has_ench(ENCH_ORB_COOLDOWN))
+    {
+        schedule_stardust_fineff(mons, pow(mons->get_hit_dice() / 2, 1.38) * 6,
+                                 4 + mons->get_hit_dice() / 2, SHOOTING_STAR_ORB);
+    }
+}
+
 /**
  * Give a monster a chance to cast a spell.
  *
@@ -5381,25 +5405,13 @@ bool handle_mon_spell(monster* mons)
         return true;
     }
 
-    // Dragons now have a time-out on their breath weapons, draconians too!
-    if (flags & MON_SPELL_BREATH)
-        setup_breath_timeout(mons);
-
-    // FINALLY! determine primary spell effects {dlb}:
-    const bool battlesphere = mons->props.exists(BATTLESPHERE_KEY);
-
     // If we're performing an aggressive action, turn around to face our enemy.
     if (!(get_spell_flags(spell_cast) & (spflag::helpful | spflag::escape | spflag::recovery)))
         make_mons_stop_fleeing(mons);
 
     mons_cast(mons, beem, spell_cast, flags);
-    if (battlesphere && battlesphere_can_mirror(spell_cast))
-        trigger_battlesphere(mons);
-    if (flags & MON_SPELL_WIZARD && mons->has_ench(ENCH_SAP_MAGIC))
-    {
-        mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, mons->get_ench(ENCH_SAP_MAGIC).agent(),
-                                   6 * BASELINE_DELAY));
-    }
+
+    mons_post_cast_effects(mons, spell_cast, flags);
 
     // Reflection, fireballs, etc.
     if (!mons->alive())
@@ -5410,13 +5422,6 @@ bool handle_mon_spell(monster* mons)
     {
         monster_die(*mons, KILL_RESET, NON_MONSTER);
         return true;
-    }
-
-    if (mons->wearing_ego(OBJ_ARMOUR, SPARM_STARDUST)
-        && !mons->has_ench(ENCH_ORB_COOLDOWN))
-    {
-        schedule_stardust_fineff(mons, pow(mons->get_hit_dice() / 2, 1.38) * 6,
-                                 4 + mons->get_hit_dice() / 2, SHOOTING_STAR_ORB);
     }
 
     if (!(flags & MON_SPELL_INSTANT))
@@ -5462,11 +5467,13 @@ bool is_mons_cast_possible(monster& mons, spell_type spell)
     return _setup_simple_mons_cast(mons, spell, beam, slot);
 }
 
-// Attempts to have a given monster cast a given spell, while still performing
-// normal setup and target justification.
+// Attempts to have a given monster cast a given spell directly, while still
+// performing normal setup and target justification. Can optionally be given
+// a manual target coordinate, though whether or not this does anything
+// useful will depend on the spell in question.
 //
 // Returns whether the spell was cast.
-bool try_mons_cast(monster& mons, spell_type spell)
+bool try_mons_cast(monster& mons, spell_type spell, const coord_def& target)
 {
     // Perform setup (and return false if we fail)
     mon_spell_slot slot;
@@ -5474,8 +5481,13 @@ bool try_mons_cast(monster& mons, spell_type spell)
     if (!_setup_simple_mons_cast(mons, spell, beam, slot))
         return false;
 
+    if (in_bounds(target))
+        beam.target = target;
+
     // Actually cast the spell
     mons_cast(&mons, beam, spell, slot.flags);
+
+    mons_post_cast_effects(&mons, spell, slot.flags);
 
     return true;
 }

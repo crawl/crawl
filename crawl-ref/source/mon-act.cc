@@ -4102,16 +4102,10 @@ static bool _monster_move(monster* mons, coord_def& delta)
     const bool digs = _mons_can_cast_dig(mons, false) && feat_is_diggable(feat);
     if (digs)
     {
-        bolt beem;
         // XXX: Check for antimagic causing failure at this point. Ideally,
         //      monster spellcasting functions could allow this without duplication.
         if (_mons_can_cast_dig(mons, true))
-        {
-            setup_mons_cast(mons, beem, SPELL_DIG);
-            beem.target = target;
-            mons_cast(mons, beem, SPELL_DIG,
-                        mons->spell_slot_flags(SPELL_DIG));
-        }
+            try_mons_cast(*mons, SPELL_DIG, target);
         else
             simple_monster_message(*mons, " falters for a moment.");
         mons->lose_energy(EUT_SPELL);
