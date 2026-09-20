@@ -729,7 +729,7 @@ static bool _is_chaos_upgradeable(const item_def &item)
 
     // Only upgrade permanent items, since the player should get a
     // chance to use the item if they can defeat the monster.
-    if (item.flags & ISFLAG_SUMMONED)
+    if (item.summoned())
         return false;
 
     // Blessed weapons are protected, being gifts from good gods.
@@ -1602,7 +1602,7 @@ static monster* _find_monster_with_animateable_weapon()
         const item_def weapon = env.item[mweap];
 
         if (weapon.base_type == OBJ_WEAPONS
-            && !(weapon.flags & ISFLAG_SUMMONED)
+            && !weapon.summoned()
             && weapon.quantity == 1
             && !is_range_weapon(weapon)
             && !is_special_unrandom_artefact(weapon)

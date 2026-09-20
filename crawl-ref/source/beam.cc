@@ -2851,7 +2851,7 @@ void bolt::drop_object()
     ASSERT(ranged_atk);
 
     // Don't drop throwing nets from summoned monsters onto the ground.
-    if (ranged_atk->weapon->flags & ISFLAG_SUMMONED)
+    if (ranged_atk->weapon->summoned())
         return;
 
     // If the player is throwing this item at a wall, attempt to place it at

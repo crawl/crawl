@@ -1339,7 +1339,7 @@ void arena_monster_died(monster* mons, killer_type killer,
 
     for (mon_inv_iterator ii(*mons); ii; ++ii)
     {
-        if (ii->flags & ISFLAG_SUMMONED)
+        if (ii->summoned())
             continue;
 
         arena::item_drop_times[ii->index()] = arena::turns;

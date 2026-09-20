@@ -692,7 +692,7 @@ static void _push_items()
         if (!item.defined() || !in_bounds(item.pos) || item.held_by_monster())
             continue;
 
-        if (env.item[i].flags & ISFLAG_SUMMONED)
+        if (env.item[i].summoned())
         {
             // this is here because of hep-related crashes that no one has
             // figured out. Under some circumstances, a hep ancestor can drop

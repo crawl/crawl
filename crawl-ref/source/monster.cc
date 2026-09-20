@@ -1104,7 +1104,7 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
                                 || eslot == MSLOT_ALT_WEAPON
                                    && mons_wields_two_weapons(*this);
 
-    if (pitem.flags & ISFLAG_SUMMONED)
+    if (pitem.summoned())
     {
         // Monsters sometimes drop summoned items in the process of being
         // initialized and given equipment, but they should never try to do
@@ -6630,7 +6630,7 @@ item_def* monster::disarm()
         || !adjacent(you.pos(), pos())
         || !you.can_see(*this)
         || !mon_tile_ok
-        || mons_wpn->flags & ISFLAG_SUMMONED
+        || mons_wpn->summoned()
         || type == MONS_ORC_APOSTLE)
     {
         return nullptr;

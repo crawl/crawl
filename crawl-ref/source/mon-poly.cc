@@ -84,7 +84,7 @@ void monster_drop_things(monster* mons,
         if (item == NON_ITEM || !suitable(env.item[item]))
             continue;
 
-        if (testbits(env.item[item].flags, ISFLAG_SUMMONED))
+        if (env.item[item].summoned())
         {
             item_was_destroyed(env.item[item]);
             mons->unequip(slot);
