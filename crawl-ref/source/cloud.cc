@@ -1054,6 +1054,11 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
             return act.is_player() && you.form == transformation::fortress_crab;
         case CLOUD_BLINDING_HAZE:
             return act.res_blind();
+        case CLOUD_MUTAGENIC:
+            return act.is_monster()
+                   && (act.type == MONS_UGLY_THING
+                       || act.type == MONS_VERY_UGLY_THING
+                       || act.type == MONS_CRAWLING_FLESH_CAGE);
         default:
             return false;
     }
@@ -1288,11 +1293,45 @@ static bool _actor_apply_cloud_side_effects(actor *act,
             // and it's not your fault... so we'll say it's not intentional.
             // (it's quite bad in any case, so players won't scum, probably.)
             contaminate_player(random_range(250, 500), false);
-            return true;
         }
-        else if (coinflip() && mons->malmutate(cloud.agent(), "mutagenic cloud"))
-            return true;
-        return false;
+        else
+        {
+            const mon_enchant old_glow = mons->get_ench(ENCH_CONTAM);
+            if (old_glow.degree >= 2)
+            {
+                dice_def dam(3, 8);
+                const int dmg = dam.roll() + 7;
+                string msg = make_stringf(" shudders as wild magic violently cascades through %s%s",
+                                  mons->pronoun(PRONOUN_OBJECTIVE).c_str(),
+                                  attack_strength_punctuation(dmg).c_str());
+                mons->hurt(cloud.agent(), dmg);
+
+                bolt beam;
+                zappy(ZAP_CONTAM_EXPLOSION, 30, true, beam);
+                beam.source       = mons->pos();
+                beam.target       = mons->pos();
+                beam.set_agent(cloud.agent());
+                beam.aux_source   = "a magical explosion";
+                beam.ex_size      = 1;
+                beam.is_explosion = true;
+                beam.explode(true, true);
+
+                if (mons->alive())
+                {
+                    mons->del_ench(ENCH_CONTAM, true, false);
+                    mons->malmutate(cloud.agent());
+                }
+            }
+            else
+            {
+                if (!old_glow.degree)
+                    simple_monster_message(*mons, " begins to glow.");
+                else
+                    simple_monster_message(*mons, " glows dangerously bright.");
+                mons->add_ench(mon_enchant(ENCH_CONTAM, cloud.agent(), 0, 1));
+            }
+        }
+        return true;
 
     case CLOUD_ALCOHOL:
         if (player && (coinflip()))
