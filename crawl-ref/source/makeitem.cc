@@ -205,7 +205,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
                                       monster *mons = nullptr)
 {
     const int old_ego = item.brand;
-    if (item_level > 0 && x_chance_in_y(101 + item_level * 3, 4000)
+    if (item_level > 0 && x_chance_in_y(101 + item_level * 3, 2000)
         || force_randart)
     {
         // Make a randart or unrandart.
@@ -753,7 +753,7 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
     const bool force_randart = item_level == ISPEC_RANDART;
     const int old_ego = item.brand;
     if (!force_randart && (item_level <= 0
-                           || !x_chance_in_y(101 + item_level * 3, 4000)))
+                           || !x_chance_in_y(101 + item_level * 3, 2000)))
     {
         return false;
     }
@@ -1594,7 +1594,7 @@ static void _try_make_staff_artefact(item_def& item, bool allow_uniques,
 
     if (allow_uniques
         && !force_randart
-        && one_chance_in(item_level == ISPEC_GOOD_ITEM ? 27 : 100))
+        && x_chance_in_y(2, item_level == ISPEC_GOOD_ITEM ? 27 : 100))
     {
         // Temporarily fix the base_type to get enhancer staves
         // TODO: ???
@@ -1613,7 +1613,7 @@ static void _try_make_staff_artefact(item_def& item, bool allow_uniques,
     if (force_randart
         // These odds are taken uncritically from _try_make_weapon_artifact.
         // We should probably revisit them.
-        || item_level > 0 && x_chance_in_y(101 + item_level * 3, 8000))
+        || item_level > 0 && x_chance_in_y(101 + item_level * 3, 4000))
     {
         make_item_randart(item);
     }
@@ -1686,7 +1686,7 @@ static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
                                              : force_type;
     if (item_level > 0
         && one_chance_in(20)
-        && x_chance_in_y(101 + item_level * 3, 2000))
+        && x_chance_in_y(101 + item_level * 3, 1000))
     {
         if (_try_make_item_unrand(item, type, item_level, agent, false))
             return true;
@@ -1779,7 +1779,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     // All jewellery base types should now work. - bwr
     if (item_level == ISPEC_RANDART
         || allow_uniques && item_level > 0
-           && x_chance_in_y(101 + item_level * 3, 4000))
+           && x_chance_in_y(101 + item_level * 3, 2000))
     {
         make_item_randart(item);
     }
@@ -1854,7 +1854,7 @@ static void _generate_talisman_item(item_def& item, int force_type, int item_lev
     // compared to the expected average at a given item level (very roughly).
     const int tier = talisman_tier(static_cast<talisman_type>(item.sub_type));
     const int randart_chance = max(0, lvl - (tier - 1) * 6) * 5 / 2 + 5;
-    if (item_level == ISPEC_RANDART || x_chance_in_y(randart_chance, 100))
+    if (item_level == ISPEC_RANDART || x_chance_in_y(randart_chance, 50))
         make_item_randart(item);
 }
 
