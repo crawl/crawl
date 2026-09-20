@@ -1645,8 +1645,11 @@ bool maybe_warn_about_removing(const item_def& item)
         prompt += "Really remove ";
 
     // now ask
-    if (item.cursed())
+    if (item.cursed() || (item.summoned())
+        || (is_artefact(item) && artefact_property(item, ARTP_FRAGILE)))
+    {
         prompt += "and destroy ";
+    }
     prompt += item.name(DESC_INVENTORY);
     prompt += "?";
     return yesno(prompt.c_str(), false, 'n');
@@ -1738,6 +1741,9 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     {
         return true;
     }
+
+    if (oper == OPER_UNEQUIP && (item.summoned()))
+        return true;
 
     return false;
 }

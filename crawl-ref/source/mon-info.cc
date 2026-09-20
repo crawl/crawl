@@ -1052,6 +1052,10 @@ string monster_info::db_name() const
     if (type == MONS_SENSED)
         return get_monster_data(base_type)->name;
 
+    // Otherwise the game gets confused over the weapon and monster having the same name.
+    if (type == MONS_ASSASSIN_CENTIPEDE)
+        return "assassin centipede monster";
+
     return get_monster_data(type)->name;
 }
 

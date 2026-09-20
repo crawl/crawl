@@ -224,6 +224,11 @@ public:
     // Index into inv[] of the player's current talisman. (-1 if none.)
     int8_t cur_talisman;
 
+    // Index into inv[] of any weapon the player was wielding when they were
+    // granted a temporary weapon, so that they can automatically put it back
+    // on when the effect expires. (-1 if none.)
+    int8_t orig_wpn;
+
     // XXX: ENDOFPACK marks the total size of the player inventory, but we add
     //      a single extra slot after that for purposes of examining EV of
     //      non-inventory items, since implementation-wise the player can only

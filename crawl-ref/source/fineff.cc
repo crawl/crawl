@@ -26,6 +26,7 @@
 #include "god-companions.h"
 #include "god-wrath.h" // lucy_check_meddling
 #include "items.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "melee-attack.h"
@@ -651,6 +652,20 @@ protected:
     bool mergeable(const final_effect&) const override { return true; }
 };
 
+class ephemeral_weapon_end_fineff : public final_effect
+{
+public:
+    void fire() override;
+
+    ephemeral_weapon_end_fineff(item_def& _wpn)
+        : final_effect(&you, nullptr, you.pos()), wpn(_wpn)
+    {
+    }
+protected:
+    bool mergeable(const final_effect&) const override { return false; }
+    item_def& wpn;
+};
+
 // Things to happen when the current attack/etc finishes.
 static vector<final_effect*> _final_effects;
 
@@ -890,6 +905,11 @@ void schedule_revert_terrain_fineff(const coord_def& pos,
 void schedule_hypnogecko_tail_fineff()
 {
     _schedule_final_effect(new hypnogecko_tail_fineff());
+}
+
+void schedule_ephemeral_weapon_end(item_def& wpn)
+{
+    _schedule_final_effect(new ephemeral_weapon_end_fineff(wpn));
 }
 
 bool mirror_damage_fineff::mergeable(const final_effect &fe) const
@@ -2070,6 +2090,29 @@ void hypnogecko_tail_fineff::fire()
             you.finalise_movement();
         }
     }
+}
+
+void ephemeral_weapon_end_fineff::fire()
+{
+    ASSERT(item_is_equipped(wpn));
+
+    const int plus = wpn.plus;
+
+    unequip_item(wpn, false);
+
+    // Assumes the only ephemeral weapon is a centipede. Expand when this changes.
+    mgen_data mg(MONS_ASSASSIN_CENTIPEDE, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
+    mg.set_summoned(&you, MON_SUMM_CENTIPEDE, random_range(600, 900), false);
+    mg.set_range(1, 4);
+    mg.hd = 2 + plus * 4 / 3;
+    if (!you.allies_forbidden() && create_monster(mg))
+        mprf("Your assassin centipede leaps free of your %s with a hiss!", you.arm_name(false).c_str());
+    else
+        mprf("Your assassin centipede withers and dies.");
+
+    if (you.orig_wpn != -1)
+        try_equip_item(you.inv[you.orig_wpn], true);
+    you.orig_wpn = -1;
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

@@ -47,6 +47,8 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 
     ISFLAG_SEEN              = 0x20000000,  // has it been seen
     ISFLAG_SUMMONED          = 0x40000000,  // Item generated on a summon
+                                            // (Or an emphemeral player item
+                                            // which will vanish on unequip.)
 
     ISFLAG_REPLICA           = 0x80000000,  // Cosmetic descriptor for Paragon items
 

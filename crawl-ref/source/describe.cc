@@ -1172,7 +1172,12 @@ static int _item_training_target(const item_def &item)
         return current_skill < min_skill ? min_skill : max_skill;
     }
     if (item.base_type == OBJ_BAUBLES)
-        return get_form(transformation::flux)->min_skill * 10;
+    {
+        if (item.sub_type == BAUBLE_FLUX)
+            return get_form(transformation::flux)->min_skill * 10;
+        else if (item.sub_type == BAUBLE_CENTIPEDE)
+            return CENTIPEDE_BAUBLE_MINSKILL;
+    }
     return 0;
 }
 
@@ -3211,9 +3216,12 @@ string get_item_description(const item_def &item,
     case OBJ_BAUBLES:
         if (!is_useless_item(item, false))
         {
-            description << "\n" << _describe_talisman_form(transformation::flux);
-            _append_skill_needed(desc, item, false, "   ");
-            description << desc;
+            if (item.sub_type == BAUBLE_FLUX)
+            {
+                description << "\n" << _describe_talisman_form(transformation::flux);
+                _append_skill_needed(desc, item, false, "   ");
+                description << desc;
+            }
         }
         if (verbose)
             _uselessness_desc(description, item);

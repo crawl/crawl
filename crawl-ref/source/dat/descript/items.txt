@@ -73,6 +73,15 @@ arbalest
 A large piece of machinery used for firing bolts, braced with steel and cranked
 with a windlass. It takes some time to load and fire.
 %%%%
+assassin centipede
+
+A living weapon whose forcipules are dagger-sharp and reach is long. Its sting
+can deliver crippling toxins to those it strikes and at higher levels of
+enchantment, can even briefly slow or paralyse foes.
+
+After performing a moderate number of attacks with this, it will separate itself
+from your body to attack foes independently for a short while before dying.
+%%%%
 athame
 
 An ornate and bewitched ritual knife. Even just wielding it will cost a small
@@ -518,6 +527,20 @@ An axe with langets, spikes, a lengthed haft and a single-bladed crescent head.
 buckler
 
 A small piece of wood and metal, to be strapped on one arm for defence.
+%%%%
+centipede bauble
+
+A tiny figurine of a centipede coiled around a stone. Gripping it tightly will
+transform it into a living weapon that merges with one's own body. This weapon
+functions as a reaching short blade whose attacks can poison targets.
+
+After performing a moderate number of attacks with this weapon, it will separate
+itself from its wielder's body and fight alongside you as an independant ally
+for a short time before dying.
+
+Shapeshifting skill increases the power of this centipede in both weapon and
+insect form, as well the potency of its toxins - eventually allowing it to
+sometimes slow or even paralyse foes.
 %%%%
 chain mail
 

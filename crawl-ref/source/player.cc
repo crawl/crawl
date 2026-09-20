@@ -5661,6 +5661,7 @@ player::player()
     form            = transformation::none;
     default_form    = transformation::none;
     cur_talisman    = -1;
+    orig_wpn        = -1;
 
     for (auto &item : inv)
         item.clear();

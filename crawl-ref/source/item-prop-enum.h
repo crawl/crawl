@@ -657,6 +657,7 @@ enum weapon_type
     WPN_RAPIER,
 #if TAG_MAJOR_VERSION > 34
     WPN_ATHAME,
+    WPN_CENTIPEDE,
 #endif
 
     WPN_FALCHION,
@@ -743,6 +744,7 @@ enum weapon_type
     WPN_ORCBOW,
     WPN_PARTISAN,
     WPN_ATHAME,
+    WPN_CENTIPEDE,
 #endif
 
     NUM_WEAPONS,
@@ -915,6 +917,7 @@ enum talisman_type
 enum bauble_type
 {
     BAUBLE_FLUX,
+    BAUBLE_CENTIPEDE,
     NUM_BAUBLES,
 };
 

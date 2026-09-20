@@ -3087,6 +3087,7 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_QUICK_BLADE:           return TILE_WPN_QUICK_BLADE;
     case WPN_RAPIER:                return TILE_WPN_RAPIER;
     case WPN_ATHAME:                return TILE_WPN_ATHAME;
+    case WPN_CENTIPEDE:             return TILE_WPN_CENTIPEDE;
     case WPN_FALCHION:              return TILE_WPN_FALCHION;
     case WPN_LONG_SWORD:            return TILE_WPN_LONG_SWORD;
     case WPN_GREAT_SWORD:           return TILE_WPN_GREAT_SWORD;
@@ -3739,7 +3740,10 @@ tileidx_t tileidx_item(const item_def &item)
         return TILE_GIZMO + item.rnd % tile_main_count(TILE_GIZMO);
 
     case OBJ_BAUBLES:
-        return TILE_BAUBLE_FLUX;
+        if (item.sub_type == BAUBLE_FLUX)
+            return TILE_BAUBLE_FLUX;
+        else
+            return TILE_BAUBLE_CENTIPEDE;
 
     case OBJ_DETECTED:
         return TILE_UNSEEN_ITEM;

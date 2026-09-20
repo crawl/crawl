@@ -272,7 +272,9 @@ enum monster_type                      // env.mons[].type
 #endif
 #if TAG_MAJOR_VERSION == 34
     MONS_GIANT_COCKROACH,
-    MONS_GIANT_CENTIPEDE,
+#endif
+    MONS_ASSASSIN_CENTIPEDE,
+#if TAG_MAJOR_VERSION == 34
     MONS_GIANT_MITE,
 #endif
 #if TAG_MAJOR_VERSION > 34

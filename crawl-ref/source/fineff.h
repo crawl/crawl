@@ -96,6 +96,7 @@ void schedule_psychokinetic_burst_fineff(actor* agent);
 void schedule_revert_terrain_fineff(const coord_def& pos,
                                     terrain_change_type type);
 void schedule_hypnogecko_tail_fineff();
+void schedule_ephemeral_weapon_end(item_def& wpn);
 
 void fire_final_effects();
 void clear_final_effects();

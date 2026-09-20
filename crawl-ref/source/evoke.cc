@@ -35,6 +35,7 @@
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
+#include "item-use.h"
 #include "level-state-type.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -962,6 +963,50 @@ static bool _evoke_ally_only(const item_def &item, bool ident)
     return false;
 }
 
+static bool _centipede_bauble(item_def& item)
+{
+    const item_def* cur_wpn = you.weapon();
+    const int old_index = cur_wpn ? cur_wpn->link : -1;
+    const int skill = you.skill(SK_SHAPESHIFTING, 10);
+
+    int index = items(false, OBJ_WEAPONS, WPN_CENTIPEDE, 0);
+
+    // Let's be real; this isn't going to happen.
+    if (index == NON_ITEM)
+        return false;
+
+    item_def& wpn = env.item[index];
+    wpn.props[ATTACKS_REMAINING_KEY] = random_range(20, 25);
+    wpn.plus = div_rand_round(max(0, skill - 40), 10);
+    wpn.flags = ISFLAG_SUMMONED | ISFLAG_IDENTIFIED;
+
+    if (!room_in_inventory(wpn))
+    {
+        mpr("You don't have enough room in your inventory!");
+        destroy_item(index);
+        return false;
+    }
+
+    if (!try_equip_item(wpn))
+    {
+        destroy_item(index);
+        return false;
+    }
+
+    dec_mitm_item_quantity(index, 1);
+
+    // Remember what the player was previously wielding so we can automatically
+    // swap it back when the centipede expires. (Note that it's possible the
+    // player swapped off a fragile item, so ensure that the original weapon
+    // still exists.)
+    if (old_index != -1 && you.inv[old_index].defined())
+        you.orig_wpn = old_index;
+
+    dec_inv_item_quantity(item.link, 1);
+
+    return true;
+}
+
 string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident,
                                 bool *god_forbids)
 {
@@ -996,11 +1041,31 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident,
                             uppercase_first(god_name(you.religion)).c_str());
     }
 
-    if (item->is_type(OBJ_BAUBLES, BAUBLE_FLUX))
+    if (item->base_type == OBJ_BAUBLES)
     {
-        if (you.form == transformation::flux && temp)
+        if (you.form == transformation::flux && temp && item->sub_type == BAUBLE_FLUX)
             return "you are already filled with unstable energy.";
 
+        if (item->sub_type == BAUBLE_CENTIPEDE)
+        {
+            if (temp && you.skill(SK_SHAPESHIFTING) < CENTIPEDE_BAUBLE_MINSKILL)
+            {
+                return make_stringf("you need at least %s shapeshifting skill to use this effectively.",
+                                    to_string(CENTIPEDE_BAUBLE_MINSKILL).c_str());
+            }
+
+            item_def dummy;
+            dummy.base_type = OBJ_WEAPONS;
+            dummy.sub_type = WPN_CENTIPEDE;
+            string reason;
+            if (!can_equip_item(dummy, temp, &reason))
+                return reason;
+            if (you.allies_forbidden())
+                return "allies are forbidden to you.";
+        }
+
+        // XXX: Centipede bauble isn't actually changing you into flux form, of course,
+        //      but the same form-changing limitations apply.
         const string form_unreason = cant_transform_reason(transformation::flux, false, temp);
         if (!form_unreason.empty())
             return lowercase_first(form_unreason);
@@ -1080,16 +1145,23 @@ bool evoke_item(item_def& item, dist *preselect)
         return true;
 
     case OBJ_BAUBLES:
-        if (!check_transform_into(transformation::flux, false))
-            return false;
+        switch (item.sub_type)
+        {
+            case BAUBLE_FLUX:
+                if (!check_transform_into(transformation::flux, false))
+                    return false;
 
-        mprf("You crush the flux bauble in your %s and feel its energy "
-            "flooding your body.", you.hand_name(false).c_str());
-        ASSERT(in_inventory(item));
-        dec_inv_item_quantity(item.link, 1);
-        transform(0, transformation::flux, true);
-        you.props[FLUX_ENERGY_KEY] = 45;
-        return true;
+                mprf("You crush the flux bauble in your %s and feel its energy "
+                    "flooding your body.", you.hand_name(false).c_str());
+                ASSERT(in_inventory(item));
+                dec_inv_item_quantity(item.link, 1);
+                transform(0, transformation::flux, true);
+                you.props[FLUX_ENERGY_KEY] = 45;
+                return true;
+
+            case BAUBLE_CENTIPEDE:
+                return _centipede_bauble(item);
+        }
 
     case OBJ_MISCELLANY:
         ASSERT(in_inventory(item));

@@ -1073,6 +1073,16 @@ const char* gizmo_effect_name(int type)
     }
 }
 
+static const char* _bauble_type_name(int type)
+{
+    switch (static_cast<bauble_type>(type))
+    {
+        default:
+        case BAUBLE_FLUX:       return "flux";
+        case BAUBLE_CENTIPEDE:  return "centipede";
+    }
+}
+
 static const char* _book_type_name(int booktype)
 {
     switch (static_cast<book_type>(booktype))
@@ -1945,11 +1955,12 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     break;
 
     case OBJ_BAUBLES:
-        buff << "flux bauble";
-    break;
+        buff << _bauble_type_name(sub_type) << " bauble";
+        break;
+
     case OBJ_DETECTED:
         buff << "detected item";
-    break;
+        break;
 
     default:
         buff << "!";

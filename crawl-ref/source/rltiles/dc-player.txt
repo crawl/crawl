@@ -805,6 +805,7 @@ athame ATHAME
 athame2 ATHAME_MAGIC
 %enchant_variation ATHAME randart
 athame3 ATHAME_RANDART
+centipede CENTIPEDE
 %rim 1
 sword_three SWORD3
 sword_breaker SWORD_BREAKER

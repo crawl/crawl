@@ -393,6 +393,9 @@ bool dec_inv_item_quantity(int obj, int amount)
 
         if (you.last_fired == obj)
             you.last_fired = -1;
+
+        if (you.orig_wpn == obj)
+            you.orig_wpn = -1;
     }
     else
         you.inv[obj].quantity -= amount;
@@ -3598,7 +3601,7 @@ int get_max_subtype(object_class_type base_type)
         NUM_TALISMANS,
         NUM_GEM_TYPES,
         1,
-        1,
+        NUM_BAUBLES,
     };
     COMPILE_CHECK(ARRAYSZ(max_subtype) == NUM_OBJECT_CLASSES);
 

@@ -851,6 +851,12 @@ bool melee_attack::handle_phase_hit()
         if (crawl_state.game_is_hints())
             Hints.hints_melee_counter++;
 
+        if (weapon && weapon->summoned())
+        {
+            if (--mutable_wpn->props[ATTACKS_REMAINING_KEY].get_int() <= 0)
+                schedule_ephemeral_weapon_end(*mutable_wpn);
+        }
+
         // TODO: Remove this (placed here so I can get rid of player_attack)
         if (have_passive(passive_t::convert_orcs)
             && mons_genus(defender->mons_species()) == MONS_ORC
@@ -955,6 +961,9 @@ bool melee_attack::handle_phase_hit()
 
     if (weapon && damage_brand == SPWPN_CONCUSSION)
         handle_concussion_brand(is_unrandom_artefact(*weapon, UNRAND_CARINA));
+
+    if (weapon && weapon->is_type(OBJ_WEAPONS, WPN_CENTIPEDE))
+        handle_centipede_poison(weapon->plus);
 
     if (weapon && testbits(weapon->flags, ISFLAG_CHAOTIC)
         && defender->alive())
@@ -4930,6 +4939,23 @@ void melee_attack::do_valour_beam()
         beam.draw_delay = 5;
 
     beam.fire();
+}
+
+void melee_attack::handle_centipede_poison(int power) const
+{
+    if (defender->res_poison() >= 3
+        || defender->res_poison() && !one_chance_in(3))
+    {
+        return;
+    }
+
+    if (x_chance_in_y(power + 1, 4))
+        defender->poison(attacker, random_range(10, 20) + power * 5);
+
+    if (x_chance_in_y(power - 4, power + 6))
+        defender->paralyse(attacker, roll_dice(1, 3));
+    else if (x_chance_in_y(power - 2, power + 4))
+        defender->slow_down(attacker, roll_dice(1, 3));
 }
 
 bool melee_attack::do_knockback(bool slippery)

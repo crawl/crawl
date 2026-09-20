@@ -2102,6 +2102,16 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number,
     }
     else if (mon.type == MONS_ERYTHROSPITE)
         attk.damage = 3 + m.get_experience_level() * 10 / 9;
+    else if (mon.type == MONS_ASSASSIN_CENTIPEDE)
+    {
+        attk.damage = 5 + m.get_experience_level() * 5 / 2;
+        if (m.get_experience_level() > 10)
+            attk.flavour = AF_POISON_PARALYSE;
+        else if (m.get_experience_level() > 5)
+            attk.flavour = AF_POISON_STRONG;
+        else
+            attk.flavour = AF_POISON;
+    }
 
     // Vampires get a bite aux in addition to normal attacks.
     if (mon.has_ench(ENCH_VAMPIRE_THRALL)

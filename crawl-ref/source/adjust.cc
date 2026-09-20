@@ -339,6 +339,11 @@ void swap_inv_slots(item_def& to_adjust, int to_slot, bool verbose)
     else if (you.cur_talisman == to_slot)
         you.cur_talisman = from_slot;
 
+    if (you.orig_wpn == from_slot)
+        you.orig_wpn = to_slot;
+    else if (you.orig_wpn == to_slot)
+        you.orig_wpn = from_slot;
+
 // Mark the swapped items as dirty so webtiles will update them properly, even
 // in the case that they otherwise appear identical (eg: artefacts of the same
 // base type and plus).

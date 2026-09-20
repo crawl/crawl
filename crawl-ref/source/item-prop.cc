@@ -650,6 +650,10 @@ static const weapon_def Weapon_prop[] =
         SK_SHORT_BLADES, SIZE_LITTLE, SIZE_LITTLE,
         DAMV_SLICING | DAM_PIERCE, 0, 0, 0, {}},
 #endif
+    // Temporary weapon
+    { WPN_CENTIPEDE,          "assassin centipede",          7,  4, 10,
+        SK_SHORT_BLADES, SIZE_LITTLE, SIZE_LITTLE,
+        DAM_PIERCE, 0, 0, 0, {}},
 
     // Long Blades
     { WPN_FALCHION,              "falchion",               8,  2, 13,
@@ -1729,8 +1733,11 @@ bool is_enchantable_armour(const item_def &arm, bool unknown)
 // If unknown is true, unidentified weapons will return true.
 bool is_enchantable_weapon(const item_def &wpn, bool unknown)
 {
-    if (wpn.base_type != OBJ_WEAPONS)
+    if (wpn.base_type != OBJ_WEAPONS
+        || wpn.summoned())
+    {
         return false;
+    }
 
     // Artefacts (unless they're random artefacts and you have the relevant
     // mutation) cannot be enchanted.
@@ -1958,7 +1965,7 @@ bool is_brandable_weapon(const item_def &wpn, bool allow_ranged, bool divine)
     if (wpn.base_type != OBJ_WEAPONS)
         return false;
 
-    if (is_artefact(wpn))
+    if (is_artefact(wpn) || wpn.summoned())
         return false;
 
     if (!allow_ranged && is_range_weapon(wpn)
@@ -2349,7 +2356,8 @@ int weapon_reach(const item_def &item)
     if (is_unrandom_artefact(item, UNRAND_RIFT))
         return 3;
     if (item_attack_skill(item) == SK_POLEARMS
-        || is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
+        || is_unrandom_artefact(item, UNRAND_LOCHABER_AXE)
+        || item.is_type(OBJ_WEAPONS, WPN_CENTIPEDE))
     {
         return 2;
     }

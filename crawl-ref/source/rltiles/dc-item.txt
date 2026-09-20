@@ -248,6 +248,10 @@ staff_mummy WPN_STAFF_MUMMY
 xmas-scythe WPN_XMAS_SCYTHE
 april_staff1 WPN_APRIL_STAFF1
 april_staff2 WPN_APRIL_STAFF2
+
+%sdir mon/animals
+assassin_centipede WPN_CENTIPEDE
+
 %rim 1
 
 
@@ -1567,6 +1571,7 @@ mist TALISMAN_MIST
 %sdir item/misc
 %rim 0
 bauble_flux BAUBLE_FLUX
+bauble_centipede BAUBLE_CENTIPEDE
 
 %sdir item/misc/uncollected_runes
 generic MISC_UNCOLLECTED_RUNE_OF_ZOT

@@ -2016,6 +2016,7 @@ static void _tag_construct_you_items(writer &th)
     for (int i = 0; i < ENDOFPACK; ++i)
         marshallItem(th, you.inv[i]);
     marshallByte(th, you.cur_talisman);
+    marshallByte(th, you.orig_wpn);
 
     _marshallFixedBitVector<NUM_RUNE_TYPES>(th, you.runes);
     marshallByte(th, you.obtainable_runes);
@@ -5125,6 +5126,13 @@ static void _tag_read_you_items(reader &th)
     else
 #endif
         you.cur_talisman = unmarshallByte(th);
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_TEMPORARY_WEAPONS)
+        you.orig_wpn = -1;
+    else
+#endif
+        you.orig_wpn = unmarshallByte(th);
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_EQUIP_SLOT_REWRITE)
