@@ -1238,8 +1238,7 @@ static void _fire_rending_blade(monster& blade, coord_def target, int pow)
     zappy(ZAP_RENDING_SLASH, pow, true, slash);
     slash.range = 4;
     slash.source = blade.pos();
-    slash.source_id = blade.mid;
-    slash.thrower = KILL_MON_MISSILE;
+    slash.set_agent(&you);
     slash.origin_spell = SPELL_RENDING_BLADE;
     slash.target = target;
     slash.aimed_at_spot = true;

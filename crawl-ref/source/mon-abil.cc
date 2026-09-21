@@ -1531,7 +1531,7 @@ void solar_ember_blast()
         const int damage_done = mons_adjust_flavoured(mon, beam, mon->apply_ac(dmg.roll()));
         mprf("The solar flare engulfs %s%s.", mon->name(DESC_THE).c_str(),
                 damage_done ? "" : " but does no damage");
-        mon->hurt(ember, damage_done, BEAM_FIRE);
+        mon->hurt(&you, damage_done, BEAM_FIRE);
     }
 
     animation_delay(10, true);

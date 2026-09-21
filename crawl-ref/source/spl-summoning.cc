@@ -1921,7 +1921,6 @@ static bool _battlesphere_should_fire(actor* target,
 
 static void _fire_battlesphere(monster* battlesphere, bolt& beam)
 {
-    beam.thrower = battlesphere->summoner == MID_PLAYER ? KILL_YOU : KILL_MON;
     beam.set_is_tracer(false);
 
     battlesphere->foe = actor_at(beam.target)->mindex();
@@ -1986,8 +1985,8 @@ bool trigger_battlesphere(actor* agent)
     beam.flavour     = BEAM_MMISSILE;
     beam.pierce      = false;
     beam.target      = target->pos();
-    beam.source_id   = battlesphere->mid;
-    beam.attitude    = mons_attitude(*battlesphere);
+    beam.attitude    = agent->temp_attitude();
+    beam.set_agent(agent);
 
     coord_def fallback_pos;
     // First, just try to fire from our present position
