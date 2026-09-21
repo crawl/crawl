@@ -1812,7 +1812,7 @@ int resonance_damage_mod(int dam, bool random)
     int bonus = you.wearing_ego(OBJ_ARMOUR, SPARM_RESONANCE)
                     * you.skill(SK_FORGECRAFT, 2);
 
-    dam = random ? div_rand_round(dam * 100 + bonus, 100)
+    dam = random ? div_rand_round(dam * (100 + bonus), 100)
                  : dam * (100 + bonus) / 100;
 
     return dam;
