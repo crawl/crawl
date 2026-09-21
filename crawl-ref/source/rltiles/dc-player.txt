@@ -617,6 +617,8 @@ glove_grayfist
 %syn GLOVE_GRAYFIST
 glove_purple
 %syn GLOVE_PURPLE
+glove_green
+%syn GLOVE_GREEN
 glove_wrist_purple
 %syn GLOVE_WRIST_PURPLE
 glove_chunli

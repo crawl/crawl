@@ -1089,10 +1089,9 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
             _majin_speak(spell);
         if (you.unrand_equipped(UNRAND_CRAB_CLAWS))
         {
-            int chance = spell_difficulty(spell);
+            int chance = spell_difficulty(spell) + 1;
             if (spell_typematch(spell, spschool::necromancy))
                 chance *= 2;
-            chance += 3;
             _trigger_ghost_crab_claws(chance);
         }
         count_action(CACT_CAST, spell);

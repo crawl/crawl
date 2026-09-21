@@ -1932,19 +1932,6 @@ DESCRIP: Majesty:   You are bathed in light that prevents you from turning
  enemies and refuse to leave the floor again for some time.
 +Ring++:   You can equip two additional rings.
 
-ENUM:    CRAB_CLAWS
-NAME:    ghost crab claws
-INSCRIP: Mist
-OBJ:     OBJ_ARMOUR/ARM_GLOVES
-PLUS:    +4
-STR:     4
-INT:     4
-COLOUR:  ETC_MAGIC
-TILE:    urand_crab_claws
-BOOL:    evil, enh_necro, special
-DESCRIP: Mist:   It may create clouds of spectral mist when the wearer attacks
- or casts spells, and grants immunity from such clouds.
-
 # Fedhas sprint, to allow coglins access to evocable invisibility.
 ENUM:     SCARF_INVISIBILITY
 NAME:     scarf of invisibility
@@ -2128,6 +2115,23 @@ FIRE:    2
 BOOL:    enh_forge, evil
 DESCRIP: Apostate: Equipping it will reduce your piety. While worn, you gain
  piety at three quarters of the normal rate.
+
+ENUM:    CRAB_CLAWS
+NAME:    ghost crab claws
+INSCRIP: Mist
+OBJ:     OBJ_ARMOUR/ARM_GLOVES
+PLUS:    +2
+INT:     +2
+STR:     +4
+SLAY:    +4
+COLOUR:  ETC_MAGIC
+TILE:    urand_crab_claws
+TILE_EQ: GLOVE_GREEN
+BOOL:    evil, enh_necro, special
+DESCRIP: Mist:   It may create clouds of spectral mist when the wearer attacks
+ or casts spells, and grants immunity from such clouds. Necromancy spells have
+ a greater chance to produce spectral mist.
+MAX_LEVEL: 11
 
 # This entry must always be last.
 ENUM:   DUMMY2
