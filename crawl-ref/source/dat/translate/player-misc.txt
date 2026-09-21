@@ -296,6 +296,10 @@ AK
 AE
 
 %%%%
+# Alchemist
+Al
+
+%%%%
 # Arcane Marksman
 AM
 
@@ -316,8 +320,16 @@ Br
 CK
 
 %%%%
+# Cinder Acolyte
+CA
+
+%%%%
 # Conjurer
 Cj
+
+%%%%
+# Delver
+De
 
 %%%%
 # Earth Elementalist
@@ -336,16 +348,28 @@ Fi
 FE
 
 %%%%
+# Forgewright
+Fw
+
+%%%%
 # Gladiator
 Gl
 
 %%%%
-# Ice Elementalist
-IE
+# Hedge Wizard
+HW
 
 %%%%
-# Delver
-De
+# Hexslinger
+Hs
+
+%%%%
+# Hunter
+#Hu (same as Human, d'oh!)
+#
+%%%%
+# Ice Elementalist
+IE
 
 %%%%
 # Monk
@@ -354,6 +378,14 @@ Mo
 %%%%
 # Necromancer
 Ne
+
+%%%%
+# Reaver
+Re
+
+%%%%
+# Shapeshifter
+Sh
 
 %%%%
 # Summoner
@@ -376,7 +408,7 @@ Wn
 Wr
 
 %%%%
-# (Hedge) Wizard
+# Wizard
 Wz
 
 %%%%
@@ -392,6 +424,10 @@ Wz
 %%%%
 # Air Elementalist
 @adj@@two_letter_code@AE
+
+%%%%
+# Alchemist
+@adj@@two_letter_code@Al
 
 %%%%
 # Arcane Marksman
@@ -414,8 +450,16 @@ Wz
 @adj@@two_letter_code@CK
 
 %%%%
+# Cinder Acolyte
+@adj@@two_letter_code@CA
+
+%%%%
 # Conjurer
 @adj@@two_letter_code@Cj
+
+%%%%
+# Delver
+@adj@@two_letter_code@De
 
 %%%%
 # Earth Elementalist
@@ -434,16 +478,28 @@ Wz
 @adj@@two_letter_code@FE
 
 %%%%
+# Forgewright
+@adj@@two_letter_code@Fw
+
+%%%%
 # Gladiator
 @adj@@two_letter_code@Gl
 
 %%%%
-# Ice Elementalist
-@adj@@two_letter_code@IE
+# Hedge Wizard
+@adj@@two_letter_code@HW
 
 %%%%
-# Delver
-@adj@@two_letter_code@De
+# Hexslinger
+@adj@@two_letter_code@Hs
+
+%%%%
+# Hunter
+@adj@@two_letter_code@Hu
+
+%%%%
+# Ice Elementalist
+@adj@@two_letter_code@IE
 
 %%%%
 # Monk
@@ -452,6 +508,14 @@ Wz
 %%%%
 # Necromancer
 @adj@@two_letter_code@Ne
+
+%%%%
+# Reaver
+@adj@@two_letter_code@Re
+
+%%%%
+# Shapeshifter
+@adj@@two_letter_code@Sh
 
 %%%%
 # Summoner
@@ -474,7 +538,7 @@ Wz
 @adj@@two_letter_code@Wr
 
 %%%%
-# (Hedge) Wizard
+# Wizard
 @adj@@two_letter_code@Wz
 
 %%%%
