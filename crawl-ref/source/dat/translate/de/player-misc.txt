@@ -296,6 +296,10 @@ AR
 AE
 LM
 %%%%
+# Alchemist
+Al
+Al
+%%%%
 # Arcane Marksman
 AM
 AS
@@ -316,9 +320,17 @@ Br
 CK
 CR
 %%%%
+# Cinder Acolyte
+CA
+Aa
+%%%%
 # Conjurer
 Cj
 Kj
+%%%%
+# Delver
+De
+Fo
 %%%%
 # Earth Elementalist
 EE
@@ -336,17 +348,29 @@ Kä
 FE
 FM
 %%%%
+# Forgewright
+Fw
+Sm
+%%%%
 # Gladiator
 Gl
 Gl
 %%%%
+# Hedge Wizard
+HW
+Hz
+%%%%
+# Hexslinger
+Hs
+Bs
+%%%%
+# Hunter
+#Hu (same as Human, d'oh!)
+#
+%%%%
 # Ice Elementalist
 IE
 Ei
-%%%%
-# Delver
-De
-Gr
 %%%%
 # Monk
 Mo
@@ -355,6 +379,14 @@ Mö
 # Necromancer
 Ne
 Ne
+%%%%
+# Reaver
+Re
+Pl
+%%%%
+# Shapeshifter
+Sh
+Gw
 %%%%
 # Summoner
 Su
@@ -376,7 +408,7 @@ Wn
 Wr
 Wr
 %%%%
-# (Hedge) Wizard
+# Wizard
 Wz
 Zb
 %%%%
@@ -393,6 +425,10 @@ Zb
 # Air Elementalist
 @adj@@two_letter_code@AE
 {adj-er}@adj@@two_letter_code@LM
+%%%%
+# Alchemist
+@adj@@two_letter_code@Al
+{adj-er}@adj@@two_letter_code@Al
 %%%%
 # Arcane Marksman
 @adj@@two_letter_code@AM
@@ -414,9 +450,17 @@ Zb
 @adj@@two_letter_code@CK
 {adj-er}@adj@@two_letter_code@CR
 %%%%
+# Cinder Acolyte
+@adj@@two_letter_code@CA
+{adj-er}@adj@@two_letter_code@Aa
+%%%%
 # Conjurer
 @adj@@two_letter_code@Cj
 {adj-er}@adj@@two_letter_code@Kj
+%%%%
+# Delver
+@adj@@two_letter_code@De
+{adj-er}@adj@@two_letter_code@Fo
 %%%%
 # Earth Elementalist
 @adj@@two_letter_code@EE
@@ -434,17 +478,29 @@ Zb
 @adj@@two_letter_code@FE
 {adj-er}@adj@@two_letter_code@FM
 %%%%
+# Forgewright
+@adj@@two_letter_code@Fw
+{adj-er}@adj@@two_letter_code@Sm
+%%%%
 # Gladiator
 @adj@@two_letter_code@Gl
 {adj-er}@adj@@two_letter_code@Gl
 %%%%
+# Hedge Wizard
+@adj@@two_letter_code@HW
+{adj-er}@adj@@two_letter_code@Hz
+%%%%
+# Hexslinger
+@adj@@two_letter_code@Hs
+{adj-er}@adj@@two_letter_code@Bs
+%%%%
+# Hunter
+@adj@@two_letter_code@Hu
+{adj-er}@adj@@two_letter_code@Jä
+%%%%
 # Ice Elementalist
 @adj@@two_letter_code@IE
 {adj-er}@adj@@two_letter_code@Ei
-%%%%
-# Delver
-@adj@@two_letter_code@De
-{adj-er}@adj@@two_letter_code@Gr
 %%%%
 # Monk
 @adj@@two_letter_code@Mo
@@ -453,6 +509,14 @@ Zb
 # Necromancer
 @adj@@two_letter_code@Ne
 {adj-er}@adj@@two_letter_code@Ne
+%%%%
+# Reaver
+@adj@@two_letter_code@Re
+{adj-er}@adj@@two_letter_code@Pl
+%%%%
+# Shapeshifter
+@adj@@two_letter_code@Sh
+{adj-er}@adj@@two_letter_code@Gw
 %%%%
 # Summoner
 @adj@@two_letter_code@Su
@@ -474,7 +538,7 @@ Zb
 @adj@@two_letter_code@Wr
 {adj-er}@adj@@two_letter_code@Wr
 %%%%
-# (Hedge) Wizard
+# Wizard
 @adj@@two_letter_code@Wz
 {adj-er}@adj@@two_letter_code@Zb
 %%%%

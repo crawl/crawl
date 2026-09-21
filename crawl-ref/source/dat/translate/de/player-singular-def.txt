@@ -285,6 +285,10 @@ the Earth Elementalist
 the Venom Mage
 {m}der Giftmagier
 %%%%
+# old name for Hedge Wizard
+the Wizard
+{m}der Zauberer
+%%%%
 the Artificer
 {m}der Artifizient
 %%%%
@@ -293,6 +297,24 @@ the Delver
 %%%%
 the Wanderer
 {m}der Wanderer
+%%%%
+the Alchemist
+{m}der Alchemist
+%%%%
+the Cinder Acolyte
+{m}der Aschenakolyth
+%%%%
+the Forgewright
+{m}der Schmied
+%%%%
+the Hexslinger
+{m}der Bannschütze
+%%%%
+the Reaver
+{m}der Plünderer
+%%%%
+the Shapeshifter
+{m}der Gestaltwandler
 %%%%
 
 ##############################################
@@ -372,4 +394,26 @@ the @species@ Delver
 %%%%
 the @species@ Wanderer
 {m}der @species@ Wanderer
+%%%%
+# old name for Hedge Wizard
+the @species@ Wizard
+{m}der @species@ Zauberer
+%%%%
+the @species@  Alchemist
+{m}der @species@ Alchemist
+%%%%
+the @species@ Cinder Acolyte
+{m}der @species@ Aschenakolyth
+%%%%
+the @species@ Forgewright
+{m}der @species@ Schmied
+%%%%
+the @species@ Hexslinger
+{m}der @species@ Bannschütze
+%%%%
+the @species@ Reaver
+{m}der @species@ Plünderer
+%%%%
+the @species@ Shapeshifter
+{m}der @species@ Gestaltwandler
 %%%%

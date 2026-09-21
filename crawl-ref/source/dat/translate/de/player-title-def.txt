@@ -1108,8 +1108,9 @@ the Changer
 the Transmogrifier
 {m}der Transmogrifizierer
 %%%%
-the Alchemist
-{m}der Alchemist
+# duplicate of background
+#the Alchemist
+#{m}der Alchemist
 %%%%
 the Malleable
 {m}der Verformbare
