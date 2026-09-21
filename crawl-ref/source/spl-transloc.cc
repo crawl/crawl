@@ -1978,7 +1978,7 @@ void attract_monster(monster &mon, int max_move)
     mprf("%s is attracted toward you.", mon.name(DESC_THE).c_str());
 
     _place_tloc_cloud(old_pos);
-    _place_tloc_cloud(ray.pos());
+    place_cloud(CLOUD_MAGIC_TRAIL, ray.pos(), random_range(3, 5), &you);
     mon.check_redraw(old_pos);
     mon.finalise_movement();
 }
