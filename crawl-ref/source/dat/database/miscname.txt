@@ -169,6 +169,8 @@ A legendary dungeon that contains the Orb of Zot. Let's see if what they say abo
 No one who enters this dungeon returns the same. But you must have the Orb of Zot, hidden deep inside...
 
 It looks like the Orb of Zot is deeper inside. Sigh... it's all downstairs from here.
+
+They say this dungeon is filled with gold! And the greatest treasure of all is the Orb of Zot!
 %%%%
 welcome_spam dungeon descent
 
