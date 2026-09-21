@@ -1108,7 +1108,8 @@ the Changer
 the Transmogrifier
 
 %%%%
-the Alchemist
+# duplicate of background
+#the Alchemist
 
 %%%%
 the Malleable
