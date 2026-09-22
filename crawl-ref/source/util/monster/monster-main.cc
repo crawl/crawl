@@ -295,9 +295,7 @@ static std::string _post_process_spell_effect_str(std::string spell_effect_str)
     spell_effect_str.pop_back();
   }
   if (spell_effect_str == "immune")
-  {
     return "";
-  }
   int end_pos;
   const auto len = static_cast<int>(spell_effect_str.length());
   if (sscanf(spell_effect_str.c_str(), "%*d%%%n", &end_pos) == 0 && end_pos == len)
@@ -314,14 +312,10 @@ static std::string _post_process_spell_effect_str(std::string spell_effect_str)
   char buf[16];
   // If spell effect string has format xxx (yyy%), % is based on player's will and irrelevant for our case:
   if (sscanf(spell_effect_str.c_str(), "%15s (%*d%%)%n", buf, &end_pos) == 1 && end_pos == len)
-  {
     return buf;
-  }
   // If spell effect string has format x%,ydz, e.g. pain:
   if (sscanf(spell_effect_str.c_str(), "%*d%%,%15s%n", buf, &end_pos) == 1 && end_pos == len)
-  {
     return buf;
-  }
   return spell_effect_str;
 }
 
@@ -332,9 +326,7 @@ static string mons_human_readable_spell_damage_string(const monster_info* mi, mo
 {
   const auto str = spell_effect_string(sp, mi);
   if (!str.empty())
-  {
     return _post_process_spell_effect_str(str);
-  }
   return mons_human_readable_spell_damage_string_fallback(mon, sp);
 }
 
