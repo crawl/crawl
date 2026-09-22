@@ -1861,9 +1861,10 @@ and reach to attack from a great distance, though without the precision needed
 to stab from range. From time to time, they can even cause the water around them
 to rise up and drown their enemies.
 
-The malleability of this water even allows them to retain the benefits of their
-physical mutations, but cold attacks can freeze it solid and fire may cause it
-to erupt with steam.
+The malleability of this water preserves most other aspects of the wearer's
+physiology such as their blood and bones, and even allows them to retain the
+benefits of their physical mutations, but cold attacks can freeze it solid and
+fire may cause it to erupt with steam.
 %%%%
 whip
 

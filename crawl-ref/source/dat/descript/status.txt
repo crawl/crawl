@@ -1158,8 +1158,8 @@ will not happen again until your health fully recovers.
 %%%%
 Aqua status
 
-Your body is composed of elemental water that can reach to attack and drown
-enemies.
+Your body is composed mostly of elemental water that can reach to attack and
+drown enemies.
 %%%%
 Sphinx status
 
