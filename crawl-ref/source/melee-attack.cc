@@ -611,7 +611,8 @@ void melee_attack::do_vampire_lifesteal()
         if (!stab_attempt && !x_chance_in_y(2, 3))
             return;
 
-        const bool can_heal = actor_can_drain_life_from(you, *mon);
+        const bool can_heal = actor_can_drain_life_from(you, *mon)
+                              && mon->res_negative_energy() < 3;
         const bool can_enthrall = stab_attempt && !mon->is_summoned()
                                   && !mon->alive()
                                   && mon->holiness() & (MH_NATURAL | MH_PLANT | MH_DEMONIC);
@@ -636,7 +637,7 @@ void melee_attack::do_vampire_lifesteal()
 
         if (can_heal)
         {
-            int heal = random2(damage_done);
+            int heal = resist_adjust_damage(mon, BEAM_NEG, random2(damage_done));
             if (heal > 0 && you.hp < you.hp_max && !you.duration[DUR_DEATHS_DOOR])
             {
                 you.heal(heal);
