@@ -71,7 +71,7 @@ int englaciate(coord_def where, int pow, actor *agent)
     }
 
     // Guarantee a minimum duration if not fully resisted.
-    duration = max(duration, 2 + random2(4));
+    duration = max(duration, 4 + random2(4));
 
     if (!mons)
         return slow_player(duration);
