@@ -176,6 +176,8 @@ phantasmagorical visions
 # things you don't want a witch to turn you into
 _lowly_
 
+frog
+
 newt
 
 slug
@@ -203,7 +205,6 @@ You hope this place has the Orb of Zot, because it sure as hell doesn't have any
 Countless adventurers have entered the dungeon seeking the Orb of Zot, but there's always room for one more...
 
 You sense the Orb of Zot calling to you... with horror, you realise the call is coming from inside the dungeon!
-
 %%%%
 hell_effect_quiet
 
