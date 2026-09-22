@@ -1515,13 +1515,23 @@ brand_type weapon_ego_from_name(string name, vector<brand_type> *partial_matches
     return wpn;
 }
 
+// Check whether this item is actually in the player's inventory, rather than
+// merely a copy of an inventory item (as stash search creates), which we must
+// not interact with.
+static bool _is_original_inventory_item(const item_def &item)
+{
+    return in_inventory(item)
+           && item.link >= 0 && item.link <= ENDOFPACK
+           && &item == &you.inv[item.link];
+}
+
 static void _append_skill_needed(string &description, const item_def &item,
                                  bool indent = true, string skill_padding = "")
 {
     const skill_type skill = _item_training_skill(item);
     const int target_skill = _item_training_target(item);
     const bool below_target = _is_below_training_target(item, true);
-    const bool can_set_target = below_target && in_inventory(item)
+    const bool can_set_target = below_target && _is_original_inventory_item(item)
                                 && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
     const bool useful = !is_useless_item(item) && crawl_state.need_save;
     if (useful)
@@ -3920,7 +3930,7 @@ static vector<command_type> _allowed_actions(const item_def& item)
 
     // this is a copy, we can't do anything with it. (Probably via stash
     // search.)
-    if (!valid_item_index(item.index()) && !in_inventory(item))
+    if (!valid_item_index(item.index()) && !_is_original_inventory_item(item))
         return actions;
 
     // XX CMD_ACTIVATE

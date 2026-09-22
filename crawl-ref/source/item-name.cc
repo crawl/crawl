@@ -3409,15 +3409,14 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     }
 
     case OBJ_MISCELLANY:
-        if (is_xp_evoker(item) && evoker_plus(item.sub_type) >= MAX_EVOKER_ENCHANT)
+        if (is_xp_evoker(item) && !in_inventory(item)
+            && evoker_plus(item.sub_type) >= MAX_EVOKER_ENCHANT)
         {
+            // A maxed evoker is useless if we have one in our inventory.
             for (const item_def &inv_item : you.inv)
             {
                 if (inv_item.base_type == OBJ_MISCELLANY
-                    && inv_item.sub_type == item.sub_type
-                    // Have to check this way because stash passes item with pos == you.pos()
-                    // instead of pos == ITEM_IN_INVENTORY so in_inventory check doesn't work
-                    && inv_item.pos != item.pos && inv_item.link != item.link)
+                    && inv_item.sub_type == item.sub_type)
                 {
                     return true;
                 }

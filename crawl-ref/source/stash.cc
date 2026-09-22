@@ -1391,9 +1391,6 @@ static vector<stash_search_result> _inventory_search(const base_pattern &search)
             res.match = s;
             res.primary_sort = s; // don't use DESC_QUALNAME for inventory items
             res.item = item;
-            // Needs to not be equal to ITEM_IN_INVENTORY so the describe
-            // menu doesn't think it can manipulate the item.
-            res.item.pos = you.pos();
             res.in_inventory = true;
             res.pos = level_pos::current();
             results.push_back(res);
