@@ -894,7 +894,7 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->props.exists(SOUL_SPLINTERED_KEY))
         mb.set(MB_SOUL_SPLINTERED);
 
-    if (m->type == MONS_ASPIRING_FLESH)
+    if (m->type == MONS_ASPIRING_FLESH && m->props.exists(PROTEAN_TARGET_KEY))
         props[PROTEAN_TARGET_KEY] = m->props[PROTEAN_TARGET_KEY];
 
     if (m->type == MONS_PLATINUM_PARAGON)
