@@ -350,7 +350,7 @@ FM
 %%%%
 # Forgewright
 Fw
-Sm
+Ms
 %%%%
 # Gladiator
 Gl
@@ -480,7 +480,7 @@ Zb
 %%%%
 # Forgewright
 @adj@@two_letter_code@Fw
-{adj-er}@adj@@two_letter_code@Sm
+{adj-er}@adj@@two_letter_code@Ms
 %%%%
 # Gladiator
 @adj@@two_letter_code@Gl

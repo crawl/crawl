@@ -305,7 +305,7 @@ the Cinder Acolyte
 {m}der Aschenakolyth
 %%%%
 the Forgewright
-{m}der Schmied
+{m}der Magieschmied
 %%%%
 the Hexslinger
 {m}der Bannschütze
@@ -406,7 +406,7 @@ the @species@ Cinder Acolyte
 {m}der @species@ Aschenakolyth
 %%%%
 the @species@ Forgewright
-{m}der @species@ Schmied
+{m}der @species@ Magieschmied
 %%%%
 the @species@ Hexslinger
 {m}der @species@ Bannschütze
