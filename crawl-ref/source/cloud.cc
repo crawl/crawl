@@ -606,7 +606,9 @@ static void _dissipate_cloud(cloud_struct& cloud)
 
 static void _handle_spectral_cloud(const cloud_struct& cloud)
 {
-    if (actor_at(cloud.pos) || !actor_by_mid(cloud.source))
+    const actor *act = actor_by_mid(cloud.source);
+
+    if (actor_at(cloud.pos) || !act)
         return;
 
     int countn = 0;
@@ -628,6 +630,9 @@ static void _handle_spectral_cloud(const cloud_struct& cloud)
                                3,   MONS_SNAPPING_TURTLE,
                                2,   MONS_ALLIGATOR_SNAPPING_TURTLE,
                                100, RANDOM_MONSTER);
+
+    if (act->is_player())
+        basetype = RANDOM_MONSTER;
 
     monster* agent = monster_by_mid(cloud.source);
     create_monster(mgen_data(MONS_SPECTRAL_THING,
