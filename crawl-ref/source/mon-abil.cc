@@ -1468,9 +1468,6 @@ bool pyrrhic_recollection(monster& nobody)
 
     nobody.add_ench(mon_enchant(ENCH_PYRRHIC_RECOLLECTION, &nobody, random_range(300, 500)));
 
-    if (was_injured)
-        monster_blink(&nobody, true, true);
-
     // Don't immediately expire summons (we want them to stick around into the next phase),
     // but at least make them time out a bit faster.
     for (monster_iterator mi; mi; ++mi)
@@ -1489,6 +1486,12 @@ bool pyrrhic_recollection(monster& nobody)
     behaviour_event(&nobody, ME_ALERT);
 
     schedule_avoided_death_fineff(&nobody);
+
+    // This needs to occur after the avoided death fineff is scheduled to avoid
+    // crashes with shafts - MF_PENDING_REVIVAL will prevent the shafting which
+    // otherwise crashes when the fineff triggers.
+    if (was_injured)
+        monster_blink(&nobody, true, true);
 
     return true;
 }
