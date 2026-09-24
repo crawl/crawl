@@ -318,6 +318,38 @@ static void _establish_connection(monster* tentacle,
         update_screen();
 }
 
+// Constraints on tentacle movement and connection. These are intended to make
+// tentacles move sensibly.
+//
+// There are two key constraints on the new tentacle layout:
+// - The tentacle must continuously move from the old to new layouts. To
+//   formalise this: we must be able to walk from the tip to the base of the
+//   new layout, tracking a "connect level", which is how far along the old
+//   body we have got. Number segments from 0 at the tip. When placing a new
+//   segment, if the connect level is L, it must be adjacent to old segments
+//   (L, L+1, ..., L+n) and no larger segment for some n >= 0; the new connect
+//   level is then L+n.
+// - The tentacle must have no holes. That is, if a segment touches a higher
+//   numbered segment, it must also touch all segments in between.
+//
+// The connection constraints are then the easy bit to describe - they enforce
+// these rules exactly.
+//
+// The rules for where the tip can go (if not just retracting one) are more
+// complicated. To state them, let L be the connect level of the old tip -
+// so the old tip touches segments (0, ..., L). Then if the new tip touches
+// some segment L + n, it must also touch all of (L, L+1, ... , L+n).
+//
+// This rule guarantees a valid layout in the case where the base does not
+// move. In most cases, we can build one from
+// (new tip, 0, L, c(L), c(c(L)), ...), where c(x) is the largest segment x
+// touches (this is a retraction of the old tentacle, plus the new segment).
+// In the case where the connect level of the new tip, C > L, we can instead
+// use the sequence (new tip, C, c(C), c(c(C)), ...). In either case,
+// holelessness after the tip is guaranteed by this being a subsequence of a
+// holeless sequence, and holeless at the tip is guaranteed by the rule in
+// the previous paragraph.
+
 struct tentacle_attack_constraints
 {
     vector<coord_def> * target_positions;
@@ -407,6 +439,7 @@ struct tentacle_attack_constraints
                         temp.string_distance -= delta;
                 }
 
+                // This would leave a hole, so reject it.
                 if (connect_level < max_val)
                    temp.path_distance = DISCONNECT_DIST;
             }
@@ -435,8 +468,9 @@ struct tentacle_connect_constraints
     map<coord_def, set<int> > * connection_constraints;
 
     monster* base_monster;
+    bool allow_holes;
 
-    tentacle_connect_constraints()
+    tentacle_connect_constraints() : allow_holes(false)
     {
         for (int i=0; i<8; i++)
             connect_idx[i] = i;
@@ -459,6 +493,7 @@ struct tentacle_connect_constraints
 
             auto constraint = map_find(*connection_constraints, temp.pos);
 
+            // Must still be in touch with the connect level we have reached.
             if (!constraint || !constraint->count(node.connect_level))
                 continue;
 
@@ -477,8 +512,32 @@ struct tentacle_connect_constraints
 
             int max = constraint->empty() ? INT_MAX : *constraint->rbegin();
 
+            // Don't shortcut and miss out some segments of the old tentacle.
             if (test_level < max)
                 continue;
+
+            // Prevent holes in the new tentacle.
+            if (!allow_holes)
+            {
+                bool hole = false;
+                for (const position_node *back = node.last; back && !hole;
+                     back = back->last)
+                {
+                    if (!adjacent(back->pos, temp.pos))
+                        continue;
+                    for (const position_node *mid = &node; mid != back;
+                         mid = mid->last)
+                    {
+                        if (!adjacent(back->pos, mid->pos))
+                        {
+                            hole = true;
+                            break;
+                        }
+                    }
+                }
+                if (hole)
+                    continue;
+            }
 
             temp.connect_level = test_level;
 
@@ -602,6 +661,17 @@ static bool _try_tentacle_connect(const coord_def & new_pos,
     search_astar(temp,
                  current_target, connect_costs,
                  visited, candidates);
+
+    // Fall back to a search allowing holes.
+    if (candidates.empty())
+    {
+        connect_costs.allow_holes = true;
+        visited.clear();
+        search_astar(temp,
+                     current_target, connect_costs,
+                     visited, candidates);
+        connect_costs.allow_holes = false;
+    }
 
     if (candidates.empty())
         return false;
