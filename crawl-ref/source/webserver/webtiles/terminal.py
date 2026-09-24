@@ -86,6 +86,15 @@ class TerminalRecorder(object):
             # so, sometimes, a race condition here leads to the main process
             # reloading its config...currently some key cases are handled
             # elsewhere by a brute force delay.
+
+            # Create a async event loop if it is not already running.
+            # It appears to not be copied over on a fork, so the child has its
+            # own event loop
+            try:
+                asyncio.get_event_loop()
+            except RuntimeError:
+                asyncio.set_event_loop(asyncio.new_event_loop())
+
             asyncio.get_event_loop().remove_signal_handler(signal.SIGHUP)
 
             # Set window size
