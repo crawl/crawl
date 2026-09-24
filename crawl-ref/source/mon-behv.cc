@@ -950,6 +950,9 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
            && (friendly || !is_sanctuary(p))
            && !foe->is_firewood()
            && !foe->props.exists(KIKU_WRETCH_KEY)
+           // Don't target friendly wall monsters from the 'other side' of the
+           // wall than the player is on, since this can be used to peek through walls.
+           && !monster_on_wrong_wall_side(mon, foe)
            || p == you.pos() && mon->has_ench(ENCH_FRENZIED);
 }
 
@@ -1542,6 +1545,21 @@ bool monster_los_is_valid(const monster* mons, const coord_def &p)
 bool monster_los_is_valid(const monster* mons, const actor* targ)
 {
     return monster_los_is_valid(mons, targ->pos());
+}
+
+// Try to roughly determine whether a monster is on the 'other side' of a wall
+// from the player, with a friendly wall monster inbetween them (in order to
+// prevent them from attacking the wall monster and leaking their existence to
+// the player.)
+//
+// This has some false-positives with corners, but I think that is far less
+// important than preventing the player from using these monsters to scout
+// across walls.
+bool monster_on_wrong_wall_side(const monster* attacker, const monster* target)
+{
+    return target->friendly() && cell_is_solid(target->pos())
+           && !attacker->wont_attack()
+           && !attacker->see_cell(you.pos());
 }
 
 vector<monster *> find_allies_targeting(const actor &a)

@@ -2436,6 +2436,7 @@ void handle_monster_move(monster* mons)
             && !is_sanctuary(mons->pos())
             && (!(mons_aligned(mons, targ) || mons_is_seeker(*targ))
                 || mons->has_ench(ENCH_FRENZIED))
+            && !monster_on_wrong_wall_side(mons, targ)
             && monster_los_is_valid(mons, targ))
         {
             // Figure out if they fight.
@@ -3466,6 +3467,11 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         }
 
         if (!monster_los_is_valid(mons, targ))
+            return false;
+
+        // Don't leak info to the player by hitting their allies from the other
+        // side of walls.
+        if (monster_on_wrong_wall_side(mons, targmonster))
             return false;
 
         // Cut down plants only when no alternative, or they're
