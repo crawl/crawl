@@ -1729,6 +1729,12 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         }
     }
 
+    if (oper == OPER_UNEQUIP && is_unrandom_artefact(item, UNRAND_VICTORY)
+        && item.props[VICTORY_STAT_KEY].get_int() > 0)
+    {
+        return true;
+    }
+
     return false;
 }
 
