@@ -504,9 +504,9 @@ regenerating monstatus
 This creature regenerates health at a greatly increased rate, proportion to their
 maximum health.
 %%%%
-repelling missiles monstatus
+deflecting missiles monstatus
 
-This creature has +15 EV when dodging projectiles, whether physical or magical.
+This creature has +24 EV when dodging projectiles, whether physical or magical.
 %%%%
 retreating monstatus
 
