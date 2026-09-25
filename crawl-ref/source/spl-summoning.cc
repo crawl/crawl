@@ -1938,7 +1938,7 @@ static void _fire_battlesphere(monster* battlesphere, bolt& beam)
         end_battlesphere(battlesphere, false);
 }
 
-bool trigger_battlesphere(actor* agent)
+bool trigger_battlesphere(actor* agent, bool just_check)
 {
     monster* battlesphere = find_battlesphere(agent);
 
@@ -1960,12 +1960,15 @@ bool trigger_battlesphere(actor* agent)
     if (targets.empty())
         return false;
 
-    shuffle_array(targets);
-    sort(targets.begin( ), targets.end( ), [](actor* a, actor* b)
+    if (!just_check)
     {
-        return a->stat_maxhp() - a->stat_hp()
-               > b->stat_maxhp() - b->stat_hp();
-    });
+        shuffle_array(targets);
+        sort(targets.begin( ), targets.end( ), [](actor* a, actor* b)
+        {
+            return a->stat_maxhp() - a->stat_hp()
+                   > b->stat_maxhp() - b->stat_hp();
+        });
+    }
 
     actor* target = targets[0];
 
@@ -1992,7 +1995,8 @@ bool trigger_battlesphere(actor* agent)
     // First, just try to fire from our present position
     if (_battlesphere_should_fire(target, battlesphere->pos(), beam, fallback_pos))
     {
-        _fire_battlesphere(battlesphere, beam);
+        if (!just_check)
+            _fire_battlesphere(battlesphere, beam);
         return true;
     }
 
@@ -2015,6 +2019,9 @@ bool trigger_battlesphere(actor* agent)
 
         if (_battlesphere_should_fire(target, *di, beam, fallback_pos))
         {
+            if (just_check)
+                return true;
+
             const coord_def old_pos = battlesphere->pos();
             battlesphere->move_to(*di, MV_DELIBERATE, true);
 
@@ -2027,6 +2034,8 @@ bool trigger_battlesphere(actor* agent)
             battlesphere->finalise_movement();
             return true;
         }
+        else if (just_check && !fallback_pos.origin())
+            return true;
     }
 
     // We didn't find any reachable spot that fires on our primary target, but
@@ -2044,7 +2053,7 @@ bool trigger_battlesphere(actor* agent)
         return true;
     }
 
-    return true;
+    return false;
 }
 
 int prism_hd(int pow, bool random)
