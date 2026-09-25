@@ -606,7 +606,9 @@ static void _dissipate_cloud(cloud_struct& cloud)
 
 static void _handle_spectral_cloud(const cloud_struct& cloud)
 {
-    if (actor_at(cloud.pos) || !actor_by_mid(cloud.source))
+    const actor *act = actor_by_mid(cloud.source);
+
+    if (actor_at(cloud.pos) || !act)
         return;
 
     int countn = 0;
@@ -628,6 +630,9 @@ static void _handle_spectral_cloud(const cloud_struct& cloud)
                                3,   MONS_SNAPPING_TURTLE,
                                2,   MONS_ALLIGATOR_SNAPPING_TURTLE,
                                100, RANDOM_MONSTER);
+
+    if (act->is_player())
+        basetype = RANDOM_MONSTER;
 
     monster* agent = monster_by_mid(cloud.source);
     create_monster(mgen_data(MONS_SPECTRAL_THING,
@@ -991,7 +996,8 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
         case CLOUD_SPECTRAL:
             return bool(act.holiness() & MH_UNDEAD)
                    || act.is_player()
-                      && have_passive(passive_t::r_spectral_mist);
+                      && (have_passive(passive_t::r_spectral_mist)
+                      || you.unrand_equipped(UNRAND_CRAB_CLAWS));
         case CLOUD_ACID:
             return act.res_corr() > 0;
         case CLOUD_STORM:

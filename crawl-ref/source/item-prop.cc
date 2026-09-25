@@ -3120,6 +3120,15 @@ vector<equipment_slot> get_all_item_slots(const item_def& item)
                 return {SLOT_HELMET};
 
             case SLOT_GLOVES:
+                if (is_unrandom_artefact(item,UNRAND_CRAB_CLAWS))
+                {
+                    // Crab claws are wearable if you've sacrificed hand, but
+                    // should take the offhand slot otherwise
+                    if (you_can_wear(SLOT_OFFHAND))
+                        return {SLOT_GLOVES, SLOT_OFFHAND, SLOT_WEAPON};
+                    else
+                        return {SLOT_GLOVES, SLOT_WEAPON};
+                }
                 return {SLOT_GLOVES};
 
             default:
