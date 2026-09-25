@@ -649,6 +649,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)
             if (!monster_at(*ai) && monster_habitable_grid(mons, *ai)
+                && !feat_is_trap(env.grid(*ai))
                 && one_chance_in(++num_found))
             {
                 loc = *ai;
