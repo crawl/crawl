@@ -1710,11 +1710,10 @@ static bool _flying_in_new_form(transformation which_trans, const item_def* tali
     else
         you.cur_talisman = -1;
 
-    you.equipment.unmeld_all_equipment(true);
-    you.equipment.meld_equipment(get_form(which_trans)->blocked_slots, true);
+    you.equipment.reconcile_form_change(which_trans, true);
 
     // Pretend incompatible items fell away.
-    vector<item_def*> forced_remove = you.equipment.get_forced_removal_list();
+    vector<item_def*> forced_remove = you.equipment.get_forced_removal_list(true);
     for (item_def* item : forced_remove)
         you.equipment.remove(*item);
 
@@ -1777,8 +1776,7 @@ bool transforming_is_unsafe(transformation which_trans)
     you.default_form = which_trans;
     you.form = which_trans;
 
-    you.equipment.unmeld_all_equipment(true);
-    you.equipment.meld_equipment(get_form(which_trans)->blocked_slots, true);
+    you.equipment.reconcile_form_change(which_trans, true);
 
     // Pretend incompatible items fell away.
     vector<item_def*> forced_remove = you.equipment.get_forced_removal_list(true);
@@ -2033,7 +2031,7 @@ static void _enter_form(int dur, transformation which_trans, bool using_talisman
     // Update your status.
     // Order matters here, take stuff off (and handle attendant HP and stat
     // changes) before adjusting the player to be transformed.
-    you.equipment.meld_equipment(get_form(which_trans)->blocked_slots, false);
+    you.equipment.reconcile_form_change(which_trans);
     set_form(which_trans, dur, !using_talisman);
 
     if (you.digging && form_changes_anatomy(which_trans))
@@ -2183,7 +2181,7 @@ bool transform(int dur, transformation which_trans, bool involuntary,
     if (you.form != transformation::none
         && !(you.form == transformation::vampire && which_trans == transformation::bat_swarm))
     {
-        untransform(true, !using_talisman, !using_talisman, which_trans);
+        untransform(true, !using_talisman);
     }
 
     _enter_form(dur, which_trans, using_talisman);
@@ -2201,15 +2199,8 @@ bool transform(int dur, transformation which_trans, bool involuntary,
  *                       talisman-related shapeshifting, to prevent exploits
  *                       such as instantly healing via entering a -90% HP form
  *                       and then leaving it again immediately.)
- * @param preserve_equipment    True if incompatible equipment should be melded
- *                              instead of being unequipped (such as when
- *                              entering a temporary form from a talisman that
- *                              gave additional equipment slotsshifting).
- * @param new_form       If this untransform is being done in the process of
- *                       entering a new form, what form is that?
  */
-void untransform(bool skip_move, bool scale_hp, bool preserve_equipment,
-                 transformation new_form)
+void untransform(bool skip_move, bool scale_hp)
 {
     // Skip if there's nothing that needs doing.
     if (you.form == transformation::none)
@@ -2236,11 +2227,11 @@ void untransform(bool skip_move, bool scale_hp, bool preserve_equipment,
     if (dex_mod)
         notify_stat_change(STAT_DEX, -dex_mod, true);
 
-    // This will keep merfolk boots melded, if mertail is currently active.
-    you.equipment.unmeld_all_equipment();
-
     if (old_form == transformation::fortress_crab)
         you.equipment.shift_twohander_to_slot(SLOT_OFFHAND);
+
+    // This will keep merfolk boots melded, if mertail is currently active.
+    you.equipment.reconcile_form_change(transformation::none, false);
 
     // Update regarding talisman properties, just in case we didn't actually
     // meld or unmeld anything.
@@ -2278,24 +2269,17 @@ void untransform(bool skip_move, bool scale_hp, bool preserve_equipment,
         you.redraw_evasion = true;
     }
 
-    // If the player is no longer be eligible to equip some of the items that
-    // they were wearing (possibly due to losing slots from their default form
-    // changing), calculate that now. If they're outright exiting the form,
-    // make them fall off. If they're entering a temporary form, meld them.
-    // If they're returning back to the form that granted those slots in the
-    // first place, do nothing.
+    // If the player is no longer eligible to equip some of the items that they
+    // were wearing, calculate that now and make them fall off. Slots granted by
+    // the form we will return to are still ours, so anything left over here has
+    // lost its slot for good, whatever we are about to turn into.
     vector<item_def*> forced_remove = you.equipment.get_forced_removal_list(true);
-    if (preserve_equipment && new_form != you.default_form)
-        you.equipment.meld_equipment(forced_remove);
-    else if (!preserve_equipment)
+    for (item_def* item : forced_remove)
     {
-        for (item_def* item : forced_remove)
-        {
-            mprf("%s falls away%s!", item->name(DESC_YOUR).c_str(),
-                    item->cursed() ? ", shattering the curse!" : "");
+        mprf("%s falls away%s!", item->name(DESC_YOUR).c_str(),
+                item->cursed() ? ", shattering the curse!" : "");
 
-            unequip_item(*item, false);
-        }
+        unequip_item(*item, false);
     }
 
     // Update skill boosts for the current state of equipment melds
@@ -2363,7 +2347,7 @@ void return_to_default_form(bool new_form)
         // only be called in situations where those should end and transform()
         // will refuse to do that on its own)
         if (you.transform_uncancellable)
-            untransform(true, false, !new_form, you.default_form);
+            untransform(true, false);
         transform(0, you.default_form, true, new_form);
     }
     ASSERT(you.form == you.default_form);
@@ -2407,12 +2391,9 @@ void merfolk_start_swimming()
     you.fishtail = true;
     you.redraw_evasion = true;
 
-    // Don't meld boots if we're in a form that already melded them.
-    if (!get_form()->slot_is_blocked(SLOT_BOOTS))
-    {
-        you.equipment.meld_equipment(1 << SLOT_BOOTS);
+    // No-op if they are already melded.
+    if (you.equipment.meld_slot(SLOT_BOOTS))
         ash_check_bondage();
-    }
 
 #ifdef USE_TILE
     init_player_doll();
@@ -2427,12 +2408,9 @@ void merfolk_stop_swimming()
     you.fishtail = false;
     you.redraw_evasion = true;
 
-    // Don't unmeld boots if we're in a form that would meld them on its own.
-    if (!get_form()->slot_is_blocked(SLOT_BOOTS))
-    {
-        you.equipment.unmeld_slot(SLOT_BOOTS);
+    // No-op if they are not melded.
+    if (you.equipment.unmeld_slot(SLOT_BOOTS))
         ash_check_bondage();
-    }
 
 #ifdef USE_TILE
     init_player_doll();

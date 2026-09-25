@@ -289,7 +289,15 @@ inline constexpr bool item_type_is_equipment(object_class_type base_type)
                || base_type == OBJ_GIZMOS;
 }
 
-vector<equipment_slot> item_granted_slots(const item_def& item);
+// An extra equipment slot an item grants its wearer, and how many of them.
+struct granted_slot
+{
+    equipment_slot slot;
+    int count;
+};
+
+const vector<granted_slot>& unrand_granted_slots(int unrand_idx);
+const vector<granted_slot>& item_granted_slots(const item_def& item);
 bool item_gives_equip_slots(const item_def& item);
 
 bool item_grants_flight(const item_def& item);
