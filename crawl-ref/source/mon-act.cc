@@ -2721,6 +2721,10 @@ static void _post_monster_move(monster* mons)
     if (mons->type == MONS_SEISMOSAURUS_EGG && egg_is_incubating(*mons))
         seismosaurus_egg_hatch(mons);
 
+    // If the egg hatched it was already cleaned up so no worries.
+    if (mons->type == MONS_SEISMOSAURUS_EGG)
+        update_seismorock(mons->pos());
+
     if (mons->type == MONS_THORN_HUNTER)
         thorn_hunter_raise_barrier(*mons);
 
