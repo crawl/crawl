@@ -200,6 +200,7 @@ private:
     vector< named_thing<int> > transporters;
     vector< named_thing<int> > runelights;
     vector< named_thing<int> > mutation_catalysts;
+    vector< named_thing<int> > traps;
 
     vector<string> marker_msgs;
     vector<string> marked_feats;

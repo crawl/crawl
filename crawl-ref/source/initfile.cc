@@ -3296,6 +3296,7 @@ void game_options::update_explore_stop_conditions()
         { "artefact", ES_ARTEFACT }, { "artefacts", ES_ARTEFACT },
         { "artifact", ES_ARTEFACT }, { "artifacts", ES_ARTEFACT },
         { "rune", ES_RUNE }, { "runes", ES_RUNE },
+        { "trap", ES_TRAP }, { "traps", ES_TRAP },
     };
     // convert the options list into a bitfield, and save it by side-effect
     // into game_options::explore_stop. List processing is handled by the
