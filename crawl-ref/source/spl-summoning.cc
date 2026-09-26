@@ -1020,6 +1020,11 @@ spret cast_forge_blazeheart_golem(int pow, bool fail)
     return spret::success;
 }
 
+int imp_weapon_modifier(int pow)
+{
+    return pow/10 - 4;
+}
+
 /**
  * Cast the spell Call Imp, summoning a friendly imp nearby.
  *
@@ -1038,7 +1043,7 @@ spret cast_call_imp(int pow, bool fail)
     if (monster *imp = create_monster(imp_data))
     {
         mpr("A tiny devil pulls itself out of the air.");
-        imp->weapon()->plus = pow/10 - 4;
+        imp->weapon()->plus = imp_weapon_modifier(pow);
         _monster_greeting(imp, "_friendly_imp_greeting");
     }
     else

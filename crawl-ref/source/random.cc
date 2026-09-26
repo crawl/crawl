@@ -377,6 +377,27 @@ int biased_random2(int max, int n)
     return 0;
 }
 
+/** Mean of a binomial distribution.
+ *
+ * Returns the mean value of successes in a sequence of independent trials with
+ * fixed probability. *
+ *
+ * @param n_trials The number of trials.
+ * @param trial_prob The numerator of the probability of success of each trial.
+ *                   If greater than scale, the probability is 1.0.
+ * @param scale The denominator of trial_prob, default 100.
+ * @param random Whether to randomize round the return value or just round,
+ *               default true.
+ * @return The mean number of successes, range [0, n_trials]
+ */
+double binomial_mean(unsigned n_trials, unsigned trial_prob,
+                     unsigned scale)
+{
+    trial_prob = std::min(trial_prob, scale);
+
+    return static_cast<double>(n_trials) * trial_prob / scale;
+}
+
 /** Sample from a binomial distribution.
  *
  * This is the number of successes in a sequence of independent trials with
