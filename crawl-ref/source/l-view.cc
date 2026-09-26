@@ -328,6 +328,8 @@ LUAFN(view_get_map)
         }
         if (feat_is_traversable_now(feat))
             LUA_PUSHBOOL("traversable", true);
+        if (is_excluded(p))
+            LUA_PUSHBOOL("excluded", true);
         if (feat_is_solid(feat))
         {
             LUA_PUSHBOOL("solid", true);
@@ -339,8 +341,6 @@ LUAFN(view_get_map)
             continue;
         }
 
-        if (is_excluded(p))
-            LUA_PUSHBOOL("excluded", true);
         if (feat == DNGN_ENTER_SHOP)
         {
             LevelStashes *lev = StashTrack.find_current_level();
