@@ -311,6 +311,9 @@ voltage
 
 voltaic
 
+# Calvin and Hobbes
+zarnium
+
 @gizmo_modifier@axial
 
 @gizmo_modifier@bolic
