@@ -27,7 +27,8 @@
 #endif
 
 #ifdef BACKTRACE_SUPPORTED
-#if defined(TARGET_CPU_MIPS) || \
+#if !defined(__GLIBC__) || \
+    defined(TARGET_CPU_MIPS) || \
     defined(TARGET_OS_FREEBSD) || \
     defined(TARGET_OS_NETBSD) || \
     defined(TARGET_OS_OPENBSD) || \
