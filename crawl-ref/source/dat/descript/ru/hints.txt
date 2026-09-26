@@ -142,14 +142,6 @@ finished random 3
 Вы можете попросить других игроков о помощи на IRC (Internet Relay Chat) канале
 <w>#crawl</w> на Libera (<w>irc.libera.chat</w>).
 %%%%
-dissection reminder
-
-Если вы не собираетесь использовать убитого монстра для еды, можно предложить
-жертву (<input>$cmd[CMD_PRAY]</input>) {{ return you.god() }}. <localtiles>Вы
-можете разделать любой труп под ногами нажав <input>left mouse button</input>.
-</localtiles> Каждый раз, когда вы видите мертвое тело в режиме помощи, вы
-будете получать это сообщение.
-%%%%
 HINT_CONVERT Xom
 
 Вы только что сменили религию на поклонение <w>Ксому</w>. Вам придется
@@ -162,16 +154,14 @@ HINT_CONVERT Xom
 %%%%
 HINT_CONVERT
 
-You've just converted to worshipping <w>{{ return you.god() }}</w>. Your piety
-(divine favour) will gradually decrease over time, and if it runs out {{ return
-you.god() }} will excommunicate you and punish you. You can prevent this,
-however, and even gain enough piety to get powers and divine gifts, by doing
-things to please {{ return you.god() }}. But don't panic: you start out with a
-decent amount of piety, so any danger of excommunication is far off.
+Вы только что обратились к <w>{{ return you.god() }}</w>. Ваше благочестие
+(божественная благосклонность) будет расти, когда вы делаете угодное новому
+богу, и понемногу убывать со временем.
 
-You can check your god's likes and dislikes, as well as your current standing
-and divine abilities, by typing <input>^</input><localtiles> (alternatively
-press <input>Shift-right-click</input> on your avatar)</localtiles>.
+Узнать, что ваш бог любит и не любит, а также своё нынешнее положение и
+божественные способности, можно по
+<input>$cmd[CMD_DISPLAY_RELIGION]</input><localtiles>, либо нажав
+<input>Shift-правую кнопку</input> на своём персонаже</localtiles>.
 %%%%
 HINT_SEEN_FIRST_OBJECT
 

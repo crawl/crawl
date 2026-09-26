@@ -191,7 +191,14 @@ Lear's hauberk
 %%%%
 skin of Zhor
 
-Пахучая шкура загадочного животного.
+{{
+    if you.can_smell() then
+        return "Пахучая шкура"
+    else
+        return "Шкура"
+    end
+}} загадочного животного, обитающего в холодных и далёких краях. Она источает
+стужу родных мест.
 %%%%
 salamander hide armour
 
