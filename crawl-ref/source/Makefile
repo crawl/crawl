@@ -1092,6 +1092,15 @@ else
   endif
 endif
 
+ifdef BUILD_PCRE2
+DEFINES += -DREGEX_PCRE2
+else
+  ifdef USE_PCRE2
+  DEFINES += -DREGEX_PCRE2
+  LIBS += -lpcre2-8
+  endif
+endif
+
 ifdef USE_ICC
 NO_INLINE_DEPGEN := YesPlease
 GCC := icc
