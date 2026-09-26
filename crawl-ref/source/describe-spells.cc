@@ -37,9 +37,6 @@
  #include "tilepick.h"
 #endif
 
-static string _effect_string(spell_type spell, const monster_info *mon_owner,
-                             bool is_wand = false);
-
 /**
  * Returns a spellset containing the player-known spells for the given item.
  *
@@ -403,11 +400,13 @@ static dice_def _spell_damage(spell_type spell, int hd, int pow)
         case SPELL_IRRADIATE:
             return irradiate_damage(pow, false);
         case SPELL_GLACIATE:
-            return glaciate_damage(pow, 3);
+            return glaciate_damage(pow, 3, false);
         case SPELL_CONJURE_BALL_LIGHTNING:
             return ball_lightning_damage(mons_ball_lightning_hd(pow, false));
         case SPELL_ERUPTION:
             return eruption_damage();
+        case SPELL_DEATH_RATTLE:
+            return death_rattle_damage();
         case SPELL_LRD:
             return base_fragmentation_damage(pow, false);
         case SPELL_AIRSTRIKE:
@@ -423,7 +422,7 @@ static dice_def _spell_damage(spell_type spell, int hd, int pow)
             return electrolunge_damage(pow);
         case SPELL_FULMINANT_PRISM:
         case SPELL_SHADOW_PRISM:
-            return prism_damage(prism_hd(pow, false), true);
+            return prism_damage(prism_hd(pow, false), true, false);
         case SPELL_HELLFIRE_MORTAR:
             return hellfire_mortar_damage(pow);
         case SPELL_DETONATION_CATALYST:
@@ -499,14 +498,14 @@ static string _describe_living_spells(const monster_info &mon_owner)
 {
     const spell_type spell = living_spell_type_for(mon_owner.type);
     const int n = living_spell_count(spell, false);
-    const string base_desc = _effect_string(spell, &mon_owner);
+    const string base_desc = spell_effect_string(spell, &mon_owner);
     const string desc = base_desc[0] == '(' ? base_desc : make_stringf("(%s)",
             base_desc.c_str());
     return make_stringf("%dx%s", n, desc.c_str());
 }
 
 
-static string _effect_string(spell_type spell, const monster_info *mon_owner,
+string spell_effect_string(spell_type spell, const monster_info *mon_owner,
                              bool is_wand)
 {
     if (!mon_owner)
@@ -658,7 +657,7 @@ static void _describe_book(const spellbook_contents &book,
                                             ? entry->second : ' ';
 
         const string range_str = _range_string(spell, mon_owner, hd);
-        string effect_str = _effect_string(spell, mon_owner, book.is_wand);
+        string effect_str = spell_effect_string(spell, mon_owner, book.is_wand);
 
         const string dith_marker = mon_owner
                                    && crawl_state.need_save
@@ -782,7 +781,7 @@ static void _write_book(const spellbook_contents &book,
         const char spell_letter = entry != spell_map.end() ? entry->second : ' ';
         tiles.json_write_string("letter", string(1, spell_letter));
 
-        string effect_str = _effect_string(spell, mon_owner, book.is_wand);
+        string effect_str = spell_effect_string(spell, mon_owner, book.is_wand);
         if (!testbits(get_spell_flags(spell), spflag::WL_check))
             effect_str = colourize_str(effect_str, _spell_colour(spell));
         tiles.json_write_string("effect", effect_str);

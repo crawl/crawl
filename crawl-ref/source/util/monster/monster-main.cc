@@ -8,6 +8,7 @@
 #include "fake-main.hpp"
 
 #include "coordit.h"
+#include "describe-spells.h"
 #include "describe.h" // get_item_description
 #include "fight.h" // spines_damage
 #include "item-name.h"
@@ -251,158 +252,82 @@ static string dice_def_string(dice_def dice)
                            make_stringf("%dd%d", dice.num, dice.size);
 }
 
-static dice_def mi_calc_iood_damage(monster* mons)
-{
-    const int pow = mons_power_for_hd(SPELL_IOOD, mons->get_hit_dice());
-    return iood_damage(pow, INFINITE_DISTANCE);
-}
-
-static string mi_calc_smiting_damage(monster* /*mons*/) { return "7-17"; }
-
-static string mi_calc_brain_bite_damage(monster* /*mons*/) { return "4-8*"; }
-
-static string mi_calc_pyre_arrow_damage(monster* mons)
-{
-    return make_stringf("2d%d*", 2 + mons->get_hit_dice() * 12 / 14);
-}
-
-static string mi_calc_antimagic_gaze_drain(monster* mons)
-{
-    const int pow = mons_power_for_hd(SPELL_ANTIMAGIC_GAZE, mons->get_hit_dice());
-    return make_stringf("0-%d MP", pow / 8);
-}
-
-static string mi_calc_airstrike_damage(monster* mons, spell_type spell_cast)
-{
-    const int pow = mons_power_for_hd(spell_cast, mons->get_hit_dice());
-    dice_def dice = base_airstrike_damage(pow);
-    return make_stringf("%dd%d+(%d/space)", dice.num, dice.size,
-                        spell_cast == SPELL_SLEETSTRIKE ? 3 : 2);
-}
-
-static string mi_calc_glaciate_damage(monster* mons)
-{
-    int pow = 12 * mons->get_experience_level();
-    // Minimum of the number of dice, or the max damage at max range
-    int minimum = min(10, (54 + 3 * pow / 2) / 6);
-    // Maximum damage at minimum range.
-    int max = (54 + 3 * pow / 2) / 3;
-
-    return make_stringf("%d-%d", minimum, max);
-}
-
-static string mi_calc_chain_lightning_damage(monster* mons)
-{
-    const spell_type spell = SPELL_CHAIN_LIGHTNING;
-    const zap_type zap = spell_to_zap(spell);
-    const int pow = mons_power_for_hd(spell, mons->spell_hd(spell));
-    const dice_def dice = zap_damage(zap, pow, true, false);
-    return dice_def_string(dice);
-}
-
-static string mi_calc_vampiric_drain_damage(monster* mons)
-{
-    int pow = 12 * mons->get_experience_level();
-
-    // The current formula is 3 + random2avg(9, 2) + 1 + random2(pow) / 7.
-    // Min is 3 + 0 + 1 + (0 / 7) = 4.
-    // Max is 3 + 8 + 1 + (pow - 1) / 7 = 12 + (pow - 1) / 7.
-    int min = 4;
-    int max = 12 + (pow - 1) / 7;
-    return make_stringf("%d-%d", min, max);
-}
-
 static string mi_calc_major_healing(monster* mons)
 {
     const int min = 50;
-    const int max = min + mons->spell_hd(SPELL_MAJOR_HEALING) * 10;
-    return make_stringf("%d-%d", min, max);
+    const int dice = mons->spell_hd(SPELL_MAJOR_HEALING) * 5;
+    return make_stringf("%d + 2d%d", min, dice);
 }
 
-static string mi_calc_scorch_damage(monster* mons)
-{
-    const int pow = mons_power_for_hd(SPELL_SCORCH, mons->get_hit_dice());
-    return dice_def_string(scorch_damage(pow, false));
-}
-
-static string mi_calc_irradiate_damage(const monster &mon)
-{
-    const int pow = mons_power_for_hd(SPELL_IRRADIATE, mon.get_hit_dice());
-    return dice_def_string(irradiate_damage(pow));
-}
-
-static string mi_calc_resonance_strike_damage(monster* mons)
-{
-    const int pow = mons->spell_hd(SPELL_RESONANCE_STRIKE);
-    dice_def dice = resonance_strike_base_damage(pow);
-    return describe_resonance_strike_dam(dice);
-}
-
-/**
- * @return e.g.: "2d6", "5-12".
- */
-static string mons_human_readable_spell_damage_string(monster* monster,
-                                                      spell_type sp)
+// Fallback used for spells not having damage displayed in game
+static string mons_human_readable_spell_damage_string_fallback(monster* monster,
+                                                               spell_type sp)
 {
     const int pow = mons_power_for_hd(sp, monster->spell_hd(sp));
     bolt spell_beam = mons_spell_beam(monster, sp, pow, true);
     switch (sp)
     {
-        case SPELL_PORTAL_PROJECTILE:
-        case SPELL_LRD:
-            return ""; // Fake damage beam
-        case SPELL_SCORCH:
-            return mi_calc_scorch_damage(monster);
-        case SPELL_SMITING:
-            return mi_calc_smiting_damage(monster);
-        case SPELL_BRAIN_BITE:
-            return mi_calc_brain_bite_damage(monster);
-        case SPELL_PYRE_ARROW:
-            return mi_calc_pyre_arrow_damage(monster);
-        case SPELL_ANTIMAGIC_GAZE:
-            return mi_calc_antimagic_gaze_drain(monster);
-        case SPELL_AIRSTRIKE:
-        case SPELL_SLEETSTRIKE:
-            return mi_calc_airstrike_damage(monster, sp);
-        case SPELL_GLACIATE:
-            return mi_calc_glaciate_damage(monster);
-        case SPELL_CHAIN_LIGHTNING:
-            return mi_calc_chain_lightning_damage(monster);
-        case SPELL_CONJURE_BALL_LIGHTNING:
-            return "3x" + dice_def_string(ball_lightning_damage(mons_ball_lightning_hd(pow, false)));
-        case SPELL_MARSHLIGHT:
-            return "2x" + dice_def_string(zap_damage(ZAP_FOXFIRE, pow, true));
-        case SPELL_PLASMA_BEAM:
-            return "2x" + dice_def_string(zap_damage(ZAP_PLASMA, pow, true));
-        case SPELL_PERMAFROST_ERUPTION:
-            return "2x" + dice_def_string(zap_damage(ZAP_PERMAFROST_ERUPTION_COLD, pow, true));
-        case SPELL_WATERSTRIKE:
-            spell_beam.damage = waterstrike_damage(monster->spell_hd(sp));
-            break;
-        case SPELL_RESONANCE_STRIKE:
-            return mi_calc_resonance_strike_damage(monster);
-        case SPELL_IOOD:
-            spell_beam.damage = mi_calc_iood_damage(monster);
-            break;
-        case SPELL_POLAR_VORTEX:
-            return dice_def_string(polar_vortex_dice(pow, true)) + "*";
-        case SPELL_IRRADIATE:
-            return mi_calc_irradiate_damage(*monster);
-        case SPELL_VAMPIRIC_DRAINING:
-            return mi_calc_vampiric_drain_damage(monster);
+        // spells with random effect:
+        case SPELL_UPHEAVAL:
+        case SPELL_MAJOR_DESTRUCTION:
+        case SPELL_LEGENDARY_DESTRUCTION:
+          break;
         case SPELL_MAJOR_HEALING:
-            return mi_calc_major_healing(monster);
+          return mi_calc_major_healing(monster);
         case SPELL_MINOR_HEALING:
         case SPELL_HEAL_OTHER:
-            return dice_def_string(spell_beam.damage) + "+3";
+          return dice_def_string(spell_beam.damage) + "+3";
 
         default:
-            break;
+            return "";
     }
 
     if (spell_beam.damage.size && spell_beam.damage.num)
         return dice_def_string(spell_beam.damage);
     return "";
+}
+
+static std::string _post_process_spell_effect_str(std::string spell_effect_str)
+{
+  if (spell_effect_str.front() == '(' && spell_effect_str.back() == ')')
+  {
+    spell_effect_str.erase(spell_effect_str.begin());
+    spell_effect_str.pop_back();
+  }
+  if (spell_effect_str == "immune")
+    return "";
+  int end_pos;
+  const auto len = static_cast<int>(spell_effect_str.length());
+  if (sscanf(spell_effect_str.c_str(), "%*d%%%n", &end_pos) == 0 && end_pos == len)
+  {
+    // If it's just percent, e.g. something like petrify
+    return "";
+  }
+  if (sscanf(spell_effect_str.c_str(), "%*dx(%*d%%)%n", &end_pos) == 0 && end_pos == len)
+  {
+    // Special case for conjure living spells petrify
+    return "";
+  }
+
+  char buf[16];
+  // If spell effect string has format xxx (yyy%), % is based on player's will and irrelevant for our case:
+  if (sscanf(spell_effect_str.c_str(), "%15s (%*d%%)%n", buf, &end_pos) == 1 && end_pos == len)
+    return buf;
+  // If spell effect string has format x%,ydz, e.g. pain:
+  if (sscanf(spell_effect_str.c_str(), "%*d%%,%15s%n", buf, &end_pos) == 1 && end_pos == len)
+    return buf;
+  return spell_effect_str;
+}
+
+/**
+ * @return e.g.: "2d6", "5-12".
+ */
+static string mons_human_readable_spell_damage_string(const monster_info* mi, monster* mon, spell_type sp)
+{
+  const auto str = spell_effect_string(sp, mi);
+  if (!str.empty())
+    return _post_process_spell_effect_str(str);
+  return mons_human_readable_spell_damage_string_fallback(mon, sp);
 }
 
 static string shorten_spell_name(string name)
@@ -477,7 +402,7 @@ static string _spell_flag_string(const mon_spell_slot& slot)
 
 // ::first is spell name, ::second is possible damages
 typedef multimap<string, string> spell_damage_map;
-static void record_spell_set(monster* mp, set<string>& spell_lists,
+static void record_spell_set(const monster_info* mi, monster* mp, set<string>& spell_lists,
                              spell_damage_map& damages)
 {
     string ret;
@@ -500,7 +425,7 @@ static void record_spell_set(monster* mp, set<string>& spell_lists,
                 ret += make_stringf("head %d: ", k + 1)
                        + shorten_spell_name(rawname) + " (";
                 ret +=
-                    mons_human_readable_spell_damage_string(mp, breath) + ")";
+                    mons_human_readable_spell_damage_string(mi, mp, breath) + ")";
             }
             ret += "}";
 
@@ -516,7 +441,7 @@ static void record_spell_set(monster* mp, set<string>& spell_lists,
         for (int j = 0; j < 100; j++)
         {
             string damage =
-            mons_human_readable_spell_damage_string(mp, sp);
+            mons_human_readable_spell_damage_string(mi, mp, sp);
             const auto range = damages.equal_range(spell_name);
             if (!damage.empty()
                 && none_of(range.first, range.second, [&](const pair<string,string>& entry){ return entry.first == spell_name && entry.second == damage; }))
@@ -750,6 +675,7 @@ int main(int argc, char* argv[])
 {
     alarm(5);
     crawl_state.test = true;
+    crawl_state.need_save = true;
     if (argc < 2)
     {
         printf("Usage: @? <monster name>\n");
@@ -883,8 +809,9 @@ int main(int argc, char* argv[])
         mev += mp->evasion();
         set_min_max(mp->speed, speed_min, speed_max);
         set_min_max(mp->hit_points, hp_min, hp_max);
+        monster_info mi(mp, MILEV_SKIP_SAFE);
 
-        record_spell_set(mp, spell_lists, damages);
+        record_spell_set(&mi, mp, spell_lists, damages);
 
         // If it was a unique or had unrands, let it/them generate in future
         // iterations as well.
