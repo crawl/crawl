@@ -704,10 +704,12 @@ string map_malign_gateway_marker::debug_describe() const
 map_terrain_change_marker::map_terrain_change_marker (const coord_def& p,
                     dungeon_feature_type oldfeat, dungeon_feature_type newfeat,
                     unsigned short flv_oldfeat, unsigned short flv_oldfeat_idx,
-                    int dur, terrain_change_type ctype, mid_t mid, int oldcol)
+                    int dur, terrain_change_type ctype, mid_t mid, int oldcol,
+                    int pow)
     : map_marker(MAT_TERRAIN_CHANGE, p), duration(dur), source_mid(mid),
       old_feature(oldfeat), new_feature(newfeat), flv_old_feature(flv_oldfeat),
-      flv_old_feature_idx(flv_oldfeat_idx), change_type(ctype), colour(oldcol)
+      flv_old_feature_idx(flv_oldfeat_idx), change_type(ctype), colour(oldcol),
+      power(pow)
 {
 }
 
@@ -722,6 +724,7 @@ void map_terrain_change_marker::write(writer &out) const
     marshallUByte(out, change_type);
     marshallInt(out, source_mid);
     marshallUByte(out, colour);
+    marshallShort(out, power);
 }
 
 void map_terrain_change_marker::read(reader &in)
@@ -758,6 +761,12 @@ void map_terrain_change_marker::read(reader &in)
     else
 #endif
         colour = unmarshallUByte(in);
+#if TAG_MAJOR_VERSION == 34
+    if (in.getMinorVersion() < TAG_MINOR_TERRAIN_CHANGE_POWER)
+        power = 0;
+    else
+#endif
+        power = unmarshallShort(in);
 }
 
 map_marker *map_terrain_change_marker::read(reader &in, map_marker_type)

@@ -186,7 +186,7 @@ public:
                     unsigned short flv_oldfeat = 0,
                     unsigned short flv_oldfeat_idx = 0,
                     int dur = 0, terrain_change_type type = TERRAIN_CHANGE_GENERIC,
-                    mid_t mid = 0, int oldcol = BLACK);
+                    mid_t mid = 0, int oldcol = BLACK, int power = 0);
 
     void write (writer &) const override;
     void read (reader &) override;
@@ -205,6 +205,8 @@ public:
     unsigned short flv_old_feature_idx;
     terrain_change_type  change_type;
     int colour;
+    int power;      // Unused for most terrain changes, but allows certain ones
+                    // to store spellpower used for creation.
 };
 
 class map_cloud_spreader_marker : public map_marker

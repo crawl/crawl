@@ -2104,7 +2104,7 @@ dungeon_feature_type orig_terrain_no_mimic(coord_def pos)
 }
 
 void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
-                         terrain_change_type type, int mid)
+                         terrain_change_type type, int mid, int power)
 {
     dungeon_feature_type old_feat = env.grid(pos);
 
@@ -2135,6 +2135,7 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                 tmarker->new_feature = newfeat;
                 tmarker->duration = dur;
                 tmarker->source_mid = mid;
+                tmarker->power = power;
             }
             // ensure that terrain change happens. Sometimes a terrain
             // change marker can get stuck; this allows re-doing such
@@ -2159,7 +2160,7 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
     map_terrain_change_marker *marker =
         new map_terrain_change_marker(pos, old_feat, newfeat, old_flv.feat,
                                       old_flv.feat_idx, dur, type, mid,
-                                      env.grid_colours(pos));
+                                      env.grid_colours(pos), power);
     env.markers.add(marker);
     _current_terrain_changed(pos, newfeat, false, true, false, 0, 0);
 }
