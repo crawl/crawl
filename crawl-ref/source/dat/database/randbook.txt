@@ -1413,6 +1413,8 @@ the Wyrd
 %%%%
 Ice
 
+Absolute Zero
+
 Algor
 
 Chilblains
@@ -1423,9 +1425,13 @@ Congelation
 
 Cryomancy
 
+Frazil
+
 Firn
 
 Freezing
+
+Frigidity
 
 Frost
 
@@ -1443,6 +1449,14 @@ Hypothermia
 
 Ice
 
+Infrigidation
+
+Kibes
+
+Névé
+
+Perniones
+
 Refrigeration
 
 Rime
@@ -1453,9 +1467,15 @@ the Blizzard
 
 the Chill
 
+the Cold Snap
+
 the Crevasse
 
 the Deep Freeze
+
+the Floe
+
+the Frost Giant
 
 the Glacier
 
@@ -1463,7 +1483,13 @@ the Iceberg
 
 the Icicle
 
+the Mountaintop
+
+the Polar Bear
+
 the Serac
+
+the Shard Shrike
 
 the Snowflakes
 
@@ -2680,12 +2706,16 @@ Ice adj
 
 Algid
 
+Algific
+
 Alpine
 
 Arctic
 
 # Like the infamous jellies
 Azure
+
+Benumbed
 
 Bitter
 
@@ -2694,6 +2724,8 @@ Bleak
 Boreal
 
 Brumal
+
+Cauldrife
 
 Chilled
 
@@ -2706,6 +2738,8 @@ Cold
 Congealing
 
 Crystallised
+
+Encoldened
 
 Freezing
 
@@ -2727,6 +2761,8 @@ Gelid
 
 Glacial
 
+Hibernal
+
 Hiemal
 
 Hyperborean
@@ -2739,21 +2775,37 @@ Iced
 
 Icy
 
+Key-cold
+
+Nithering
+
 Nival
+
+Nivean
 
 Niveous
 
+Nixious
+
 Numb
+
+Ourie
 
 Polar
 
 Shivering
+
+Shrammed
+
+Snowblind
 
 Snowing
 
 Snowy
 
 Snow-white
+
+Subnivean
 
 Subzero
 
