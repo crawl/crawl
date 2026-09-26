@@ -1,0 +1,135 @@
+%%%%
+Air Elementalist
+
+Elementalisti Vozduha izučili zaklinanje "Šok". Jih električna magija može
+poškoditi grupy neprijateljev, a zaklinanja vozduha pomagajut v boju ili
+izběganju.
+%%%%
+Artificer
+
+Umětniki startujut s několikymi magičnymi palkami i prutom. Jim potrěbno najdti
+lěpše oružje i bronju prědže, čim oni budut skončiti se.
+%%%%
+Berserker
+
+Berserkeri věret v Troga, boga běsnosti, ktory nenavidi magiju. Na ranjih etapah
+malo čto može ostanoviti razjarjenogo berserkera, kromě nadutosti.
+%%%%
+Brigand
+
+Razbojniki nesųt otravjene trny i nemnogo gnusnyh trnov kurare.
+%%%%
+Chaos Knight
+
+Rycari Haosa sut igrački neprědvidlivogo Ksoma, i oni sut podležet vlivu
+neprěstanno izměnjajučemu se nastrojenju boga.
+%%%%
+Cinder Acolyte
+
+Pepelavi Akoliti služet Ignisu, črpuči sily iz plamenja umirajučego boga,
+dopoka ničego ne ostane. U njih sut sposobnosti i bližnjego boja, i ognjenoj
+magije.
+%%%%
+Conjurer
+
+Zaklinatelji startujut s zaklinanjem "Magičny trn" i mogut izučiti druge
+neelementarne zaklinanja, da by věrodostojno poražati svojih neprijateljev.
+%%%%
+Delver
+
+Razvědyvatelji počinajut svoj put na pet uravnjev niže než površina. Sbirka
+močnyh magičnyh prědmětov pomagaje jim prěžiti nebezpečno putovanje vgoru.
+%%%%
+Earth Elementalist
+
+Elementalisti Zemje vědut zaklinanje "Pěsočna struja" i potom mogut izučiti
+druge zaklinanja zemje, godeče se dlja skrytyh koljučih udarov ili izbuhov
+okrutnoj sily.
+%%%%
+Enchanter
+
+Čarovatelji vědut množstvo Prokletij, ktore sut sposobne oslabiti jih
+neprijateljev, i takože sut orudovani začarovanym nožom i napojami nevidimosti.
+%%%%
+Fighter
+
+Bojci sut orudovani bronjeju i ščitom, a takože oružjem po jih izboru i
+napojami moči.
+%%%%
+Fire Elementalist
+
+Elementalisti Ognja sųt izučili zaklinanje "Lisji Ogonj". Jih druge početkove
+zaklinanja sut takože susrědotočene na ognjenom i eksplozivnom izniščenju.
+%%%%
+Gladiator
+
+Gladiatori sut gotovi izojdti na arenu v legkoj bronji, s oružjem po svojemu
+izboru i s nekolikymi metajemymi oružjami i sětkami.
+%%%%
+Hedge Wizard
+
+Samoučni Čarovniki sut universali v magiji, umějuči koristati široko množstvo
+instrumentov, da by razočarovati neprijateljev i dobyti prědnost na polju boja.
+%%%%
+Hunter
+
+Lovci nesųt kratky luk, legku bronju i svitok motyljev.
+# TODO: fix this for coglins
+%%%%
+Hexslinger
+
+Pračniki Prokletij nesut pračku i koristajut magiju prokletij, da by sdělati
+svojih neprijateljev vyše bezzaščitnymi dlja atak izdaleka.
+%%%%
+Ice Elementalist
+
+Elementalisti Leda startujut s zaklinanjem "Leděněnje". Jih pozdnějše zaklinanja
+zabezpečajut silnu ataku i zaščitu, ale mogut ograničati jih ruh.
+%%%%
+Monk
+
+Mnihi startujut s prostym oružjem po jih izboru, kuljeju světla i napojem božskoj
+ambrozije, a takože dobyvajut dodatnu pobožnost k prvogmu bogu, ktoromu oni
+budut služiti.
+%%%%
+Necromancer
+
+Nekromanti startujut s zaklinanjem "Odlomok Duše". V koncu oni budut smogti
+obračati mrtvyh v sojuznikov i koristati žitove sily živyh dlja rekreacije
+svojih sil.
+%%%%
+Reaver
+
+Grabitelji startujut s oružjem po jih izboru i smrteljnoju magijeju kako
+dopolnjenje, kogda to je potrěbno. Oni startujut s zaklinanjem "Pocěluj Smrti".
+%%%%
+Summoner
+
+Prizyvatelji iz početka mogut čarovati "Prizyv Malogo Sosavca" i
+startujut so svojeju bibliotekoju zaklinanij dlja prizyva vyše egzotičnyh
+sojuznikov.
+%%%%
+Forgewright
+
+Kovači sut čarovniki, ktori specializujut se v stvorjenju vežic i mehaničnyh
+suputnikov dlja bitvy.
+%%%%
+Shapeshifter
+
+Měnjatelji koristajut talismany dlja izměnjenja svojej formy, čto dělaje
+jih silnymi bojcami bližnjego boja (osoblivo bez oružja) cěnoju izguby bronje.
+%%%%
+Alchemist
+
+Alhimiki startujut s zaklinanjem "Otravne pary" i jih magija jest mnogo
+efektivna protiv neprijateljev, poddavajemyh otravě.
+%%%%
+Wanderer
+
+Putniki startujut s slučajnym orudovanjem i uměnjami.
+%%%%
+Warper
+
+Prěměščatelji startujut s oružjem po jih izboru, svitkom miganja, trnami
+dizjunkcije i něktorymi zaklinanjami Prěměščenja v jih bibliotekě.
+%%%%
