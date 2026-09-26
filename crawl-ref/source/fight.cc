@@ -1016,7 +1016,7 @@ static bool _missing_weapon(const item_def *weapon, const item_def *offhand)
            && you.form != transformation::tree
            && any_of(you.inv.begin(), you.inv.end(),
                      [](item_def &it) {
-               return is_melee_weapon(it) && can_equip_item(it);
+               return is_melee_weapon(it) && can_equip_item(it, true);
             });
 }
 
