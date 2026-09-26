@@ -176,6 +176,10 @@ dazed monstatus
 This creature is temporarily unable to act, but any hostile action will cause it to
 immediately regain its senses.
 %%%%
+deflecting missiles monstatus
+
+This creature has +24 EV when dodging projectiles, whether physical or magical.
+%%%%
 diminished spells monstatus
 
 This creature's spells are less powerful - dealing less damage, being less able to
@@ -503,10 +507,6 @@ regenerating monstatus
 
 This creature regenerates health at a greatly increased rate, proportion to their
 maximum health.
-%%%%
-deflecting missiles monstatus
-
-This creature has +24 EV when dodging projectiles, whether physical or magical.
 %%%%
 retreating monstatus
 
