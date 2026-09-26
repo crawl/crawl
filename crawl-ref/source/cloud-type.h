@@ -50,6 +50,7 @@ enum cloud_type
     CLOUD_BATS,
     CLOUD_RUST,
     CLOUD_GLIMMER,
+    CLOUD_FAINT_FROST,
     NUM_CLOUD_TYPES,
 
     // Random per-square.

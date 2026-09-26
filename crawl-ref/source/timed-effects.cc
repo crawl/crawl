@@ -958,7 +958,8 @@ void timeout_terrain_changes(int duration, bool force)
 
         if ((marker->source_mid == MID_PLAYER
              && (marker->change_type == TERRAIN_CHANGE_BOG
-                 || marker->change_type == TERRAIN_CHANGE_BINDING_SIGIL))
+                 || marker->change_type == TERRAIN_CHANGE_BINDING_SIGIL
+                 || marker->change_type == TERRAIN_CHANGE_ICE_THORNS))
             && !you.see_cell(marker->pos))
         {
             marker->duration = 0;

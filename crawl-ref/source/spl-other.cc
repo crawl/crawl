@@ -739,3 +739,25 @@ spret cast_dragon_veins(bool fail)
 
     return spret::success;
 }
+
+spret cast_ice_thorns(const actor& agent, const coord_def& pos, int pow, bool fail)
+{
+    fail_check();
+
+    bool saw_work = false;
+    for (adjacent_iterator ai(pos); ai; ++ai)
+    {
+        if (feat_is_floor(env.grid(*ai)))
+        {
+            temp_change_terrain(*ai, DNGN_ICE_THORNS, random_range(50, 80),
+                                TERRAIN_CHANGE_ICE_THORNS, agent.mid, pow);
+            if (!saw_work && you.see_cell(*ai))
+                saw_work = true;
+        }
+    }
+
+    if (saw_work)
+        mprf("Thorns of ice sprout around %s.", actor_at(pos)->name(DESC_THE).c_str());
+
+    return spret::success;
+}

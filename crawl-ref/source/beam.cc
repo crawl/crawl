@@ -4917,7 +4917,7 @@ void bolt::enchantment_affect_monster(monster* mon)
     {
         if (BLAME_KILL(thrower))
         {
-            set_attack_conducts(conducts, *mon, you.aware_of(*mon));
+            set_attack_conducts(conducts, *mon, you.aware_of(*mon) && !no_anger_allies);
 
             if (have_passive(passive_t::convert_orcs)
                 && mons_genus(mon->type) == MONS_ORC
@@ -4988,7 +4988,9 @@ void bolt::enchantment_affect_monster(monster* mon)
         const actor* to_blame = agent();
         if (thrower == KILL_YOU_CONF)
             to_blame = actor_by_mid(source_id);
-        behaviour_event(mon, ME_ANNOY, to_blame);
+
+        if (!(to_blame == &you && mon->wont_attack() && no_anger_allies))
+            behaviour_event(mon, ME_ANNOY, to_blame);
     }
     else
         behaviour_event(mon, ME_ALERT, agent());
@@ -5178,7 +5180,9 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         const actor* to_blame = agent();
         if (thrower == KILL_YOU_CONF)
             to_blame = actor_by_mid(source_id);
-        behaviour_event(mon, ME_ANNOY, to_blame);
+
+        if (!(to_blame == &you && mon->wont_attack() && no_anger_allies))
+            behaviour_event(mon, ME_ANNOY, to_blame);
 
         // behaviour_event can make a monster leave the level or vanish.
         if (!mon->alive())
@@ -5613,7 +5617,7 @@ void bolt::affect_monster(monster* mon)
 
     if (nasty_to(mon))
     {
-        if (agent() && agent()->is_player()  && final > 0)
+        if (agent() && agent()->is_player()  && final > 0 && !no_anger_allies)
             set_attack_conducts(conducts, *mon, you.aware_of(*mon));
     }
 

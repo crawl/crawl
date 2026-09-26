@@ -219,6 +219,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_DRAGON_VEIN_FIRE;
     case DNGN_DRAGON_VEIN_ICE:
         return TILE_DNGN_DRAGON_VEIN_ICE;
+    case DNGN_ICE_THORNS:
+        return TILE_DNGN_ICE_THORNS;
     case DNGN_MOULD_PATCH:
         if (player_in_branch(BRANCH_GULCH))
             return TILE_DNGN_MOULD_PATCH_GULCH;

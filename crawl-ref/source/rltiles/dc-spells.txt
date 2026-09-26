@@ -86,6 +86,7 @@ hailstorm HAILSTORM
 hoarfrost_cannonade HOARFROST_CANNONADE
 ice_form ICE_FORM
 ice_storm ICE_STORM
+ice_thorns ICE_THORNS
 metabolic_englaciation METABOLIC_ENGLACIATION
 ozocubus_armour OZOCUBUS_ARMOUR
 ozocubus_refrigeration OZOCUBUS_REFRIGERATION

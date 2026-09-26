@@ -5628,6 +5628,9 @@ void monster::finalise_movement(const actor* to_blame)
     if (env.grid(pos()) == DNGN_BINDING_SIGIL)
         trigger_binding_sigil(*this);
 
+    if (env.grid(pos()) == DNGN_ICE_THORNS && last_move_pos != pos())
+        ice_thorns_trigger(*this, pos());
+
     terrain_property_t &prop = env.pgrid(pos());
     if (prop & FPROP_BLOODY)
     {

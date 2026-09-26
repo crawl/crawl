@@ -1887,6 +1887,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_DIMENSIONAL_BULLSEYE:
     case SPELL_SURPRISING_CROCODILE:
     case SPELL_SIMULACRUM:
+    case SPELL_ICE_THORNS:
         return !_any_valid_targets(find_spell_targeter(spell, pow, range), range);
 
     case SPELL_POISONOUS_VAPOURS:

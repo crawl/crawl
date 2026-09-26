@@ -3639,6 +3639,15 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
                         spell_damage_string(dragon_vein_to_spell(feat),
                                             false, calc_spell_power(SPELL_DRAGON_VEINS)).c_str());
     }
+    else if (feat == DNGN_ICE_THORNS)
+    {
+        map_terrain_change_marker* mark = env.markers.get_terrain_change_at(pos, TERRAIN_CHANGE_ICE_THORNS);
+        if (mark)
+        {
+            dice_def dmg = zap_damage(ZAP_ICE_THORNS, mark->power, mark->source_mid != MID_PLAYER, false);
+            long_desc += make_stringf("\nStepping on it inflicts %dd%d damage.", dmg.num, dmg.size);
+        }
+    }
 
     // mention that trees are usually flammable
     // (except for autumnal trees in Wucad Mu's Monastery)

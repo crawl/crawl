@@ -202,6 +202,9 @@ struct bolt
 
     bool   affects_nothing = false; // should not hit monsters or features
 
+    bool   no_anger_allies = false;  // Damage from this won't anger allies
+                                     // or otherwise be blamed on the player.
+
     bool   no_saving_throw = false;   // whether to ignore any saving throw
                                       // this beam might otherwise have
     int    draw_delay = 15;       // delay used when drawing beam.

@@ -63,4 +63,6 @@ spret cast_spike_launcher(const actor& agent, int pow, bool fail);
 
 spret cast_dragon_veins(bool fail);
 
+spret cast_ice_thorns(const actor& agent, const coord_def& pos, int pow, bool fail);
+
 bool has_adjacent_enemy(const coord_def& pos, const actor& viewer);

@@ -375,6 +375,7 @@ public:
     vector<map_marker*> get_markers_at(const coord_def &c, map_marker_type type = MAT_ANY);
     vector<map_active_feature_marker*> get_active_features(dungeon_feature_type feat, mid_t owner = MID_NOBODY);
     map_active_feature_marker* get_active_feature_at(const coord_def& pos, dungeon_feature_type feat);
+    map_terrain_change_marker* get_terrain_change_at(const coord_def& pos, terrain_change_type type);
     string property_at(const coord_def &c, map_marker_type type,
                        const string &key);
     string property_at(const coord_def &c, map_marker_type type,

@@ -2283,6 +2283,8 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype, bool expire
         update_grid_colour_knowledge(pos);
         redraw_view_at(pos);
     }
+    else if (ctype == TERRAIN_CHANGE_ICE_THORNS)
+        place_cloud(CLOUD_FAINT_FROST, pos, random_range(2, 4), nullptr);
 
     return true;
 }
@@ -2655,6 +2657,43 @@ void frigid_walls_damage(int delay)
             }
         }
     }
+}
+
+// A creature stepped onto ice thorns. Maybe damage them and maybe remove it.
+void ice_thorns_trigger(actor& victim, const coord_def& pos)
+{
+    // Flying creatures don't interact with ice thorns either way.
+    if (victim.airborne())
+        return;
+
+    ASSERT(env.grid(pos) == DNGN_ICE_THORNS);
+
+    map_terrain_change_marker* mark = env.markers.get_terrain_change_at(pos, TERRAIN_CHANGE_ICE_THORNS);
+
+    actor* owner = actor_by_mid(mark->source_mid);
+
+    // The original caster stepping onto them just removes them.
+    if (&victim == owner)
+    {
+        if (you.see_cell(pos))
+        {
+            mprf("%s icy thorns crumble before %s.",
+                 owner->is_player() ? "Your" : "The",
+                 owner->name(DESC_THE).c_str());
+        }
+        revert_terrain_change(pos, TERRAIN_CHANGE_ICE_THORNS);
+        return;
+    }
+
+    bolt beam(*owner, ZAP_ICE_THORNS, mark->power);
+    beam.source = beam.target = pos;
+    beam.animate = false;
+    beam.hit_verb = "skewer";
+    beam.plural = true;
+    beam.no_anger_allies = true;
+    beam.fire();
+
+    revert_terrain_change(pos, TERRAIN_CHANGE_ICE_THORNS);
 }
 
 static bool _feat_is_descent_upstairs(dungeon_feature_type feat)

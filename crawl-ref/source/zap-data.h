@@ -2893,4 +2893,19 @@ _mon_hex_zap(ZAP_ILL_OMEN, BEAM_ILL_OMEN),
     false,
 },
 
+{
+    ZAP_ICE_THORNS,
+    "ice thorns",
+    new dicedef_calculator<1, 4, 1, 5>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    nullptr,
+    nullptr,
+    LIGHTBLUE,
+    false,
+    BEAM_ICE,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
+
 };

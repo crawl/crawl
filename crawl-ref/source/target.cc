@@ -2951,3 +2951,37 @@ bool targeter_pacify::valid_aim(coord_def a)
     // invisible monster).
     return true;
 }
+
+targeter_ice_thorns::targeter_ice_thorns()
+    : targeter_smite(&you, LOS_RADIUS, 0, 0, true)
+{
+}
+
+bool targeter_ice_thorns::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    const monster* mon = monster_at(a);
+    if (!mon || !you.can_see(*mon) || mon->wont_attack())
+        return notify_fail("This spell must target an enemy.");
+
+    // Now check that at least one space could place any thorns.
+    for (adjacent_iterator ai(a); ai; ++ai)
+        if (you.see_cell_no_trans(*ai) && feat_is_floor(env.grid(*ai)))
+            return true;
+
+    return notify_fail("There is nowhere near that target where thorns could grow.");
+}
+
+aff_type targeter_ice_thorns::is_affected(coord_def loc)
+{
+    if (valid_aim(aim) && adjacent(aim, loc)
+        && you.see_cell_no_trans(loc)
+        && feat_is_floor(env.grid(loc)))
+    {
+        return AFF_YES;
+    }
+
+    return AFF_NO;
+}

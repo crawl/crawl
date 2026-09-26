@@ -352,6 +352,11 @@ static const cloud_data clouds[] = {
         LIGHTMAGENTA,                             // colour
         { TILE_CLOUD_GLIMMER, CTVARY_RANDOM },    // tile
     },
+    // CLOUD_FAINT_FROST,
+    { "faint frost", nullptr,                     // terse, verbose name
+      BLUE,                                       // colour
+      { TILE_CLOUD_FAINT_FROST, CTVARY_RANDOM },  // tile
+    },
 
 
 };

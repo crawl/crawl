@@ -4760,6 +4760,17 @@ static const struct spell_desc spelldata[] =
     TILEG_DRAGON_VEINS,
 },
 
+{
+    SPELL_ICE_THORNS, "Ice Thorns",
+    spschool::earth | spschool::ice,
+    spflag::destructive | spflag::target | spflag::needs_target,
+    1,
+    25,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    TILEG_ICE_THORNS,
+},
+
 
 #if TAG_MAJOR_VERSION == 34
 #define AXED_SPELL(tag, name) \

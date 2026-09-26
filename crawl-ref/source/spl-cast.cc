@@ -1615,6 +1615,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_HAUNT:
         return make_unique<targeter_single_monster>();
 
+    case SPELL_ICE_THORNS:
+        return make_unique<targeter_ice_thorns>();
+
     default:
         break;
     }
@@ -2225,7 +2228,8 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     if (use_targeter)
     {
         const targ_mode_type targ =
-              spell == SPELL_PLATINUM_PARAGON           ? TARG_HOSTILE_OR_EMPTY :
+              spell == SPELL_PLATINUM_PARAGON
+              || spell == SPELL_ICE_THORNS              ? TARG_HOSTILE_OR_EMPTY :
               testbits(flags, spflag::aim_at_space)     ? TARG_NON_ACTOR :
               testbits(flags, spflag::helpful)          ? TARG_FRIEND :
               testbits(flags, spflag::obj)              ? TARG_MOVABLE_OBJECT :
@@ -2871,6 +2875,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_DRAGON_VEINS:
         return cast_dragon_veins(fail);
+
+    case SPELL_ICE_THORNS:
+        return cast_ice_thorns(you, beam.target, powc, fail);
 
     default:
         if (spell_removed(spell))

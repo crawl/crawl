@@ -803,3 +803,11 @@ public:
     targeter_pacify();
     bool valid_aim(coord_def a) override;
 };
+
+class targeter_ice_thorns : public targeter_smite
+{
+public:
+    targeter_ice_thorns();
+    bool valid_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
+};

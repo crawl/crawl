@@ -191,6 +191,8 @@ void dgn_break_door(const coord_def &dest);
 void ice_wall_damage(monster &victim, int delay);
 void frigid_walls_damage(int delay);
 
+void ice_thorns_trigger(actor& victim, const coord_def& pos);
+
 void descent_crumble_stairs();
 void descent_reveal_stairs();
 

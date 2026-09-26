@@ -1286,6 +1286,19 @@ map_active_feature_marker* map_markers::get_active_feature_at(const coord_def& p
     return nullptr;
 }
 
+// Gets the most recently added matching terrain change marker at a given position.
+map_terrain_change_marker* map_markers::get_terrain_change_at(const coord_def& pos, terrain_change_type type)
+{
+    for (map_marker* marker : get_markers_at(pos, MAT_TERRAIN_CHANGE))
+    {
+        map_terrain_change_marker* tmark = dynamic_cast<map_terrain_change_marker*>(marker);
+        if (tmark->change_type == type)
+            return tmark;
+    }
+
+    return nullptr;
+}
+
 string map_markers::property_at(const coord_def &c, map_marker_type type,
                                 const string &key)
 {

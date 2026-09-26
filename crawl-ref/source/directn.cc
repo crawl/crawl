@@ -3189,6 +3189,7 @@ string feature_description_at(const coord_def& where, bool covering,
 
         if (is_temp_terrain(where) && grid != DNGN_BINDING_SIGIL
                                    && grid != DNGN_TRAP_DISPERSAL_INACTIVE
+                                   && grid != DNGN_ICE_THORNS
                                    && !feat_is_dragon_vein(grid))
         {
             covering_description = ", temporary";

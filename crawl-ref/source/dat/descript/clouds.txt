@@ -221,3 +221,8 @@ convert it into a small projectile and launch it at a nearby enemy.
 Any other entity stepping into it will instead displace the cloud to a nearby
 tile - and if there are no valid targets in range when you do so, it will be
 likewise displaced.
+%%%%
+frost cloud
+
+A cloud of tiny floating ice crystals, glittering in the dungeon air.
+Atmospheric, but harmless.

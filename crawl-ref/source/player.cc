@@ -891,6 +891,9 @@ void player::finalise_movement(const actor* /*to_blame*/)
         if (feat_is_dragon_vein(env.grid(pos())))
             trigger_dragon_vein();
 
+        if (env.grid(pos()) == DNGN_ICE_THORNS)
+            ice_thorns_trigger(you, pos());
+
         apply_cloud_trail(last_move_pos);
 
         // Traps go off.
@@ -3145,6 +3148,7 @@ static void _revenant_spell_gift()
         {SPELL_KINETIC_GRAPNEL, "the bite of steel piercing you"},
         {SPELL_SANDBLAST, "the sting of sand against your skin"},
         {SPELL_POISONOUS_VAPOURS, "the taste of poison filling your lungs"},
+        {SPELL_ICE_THORNS, "icy daggers piercing you"}
     };
 
     vector<spell_type> gift_possibilities;

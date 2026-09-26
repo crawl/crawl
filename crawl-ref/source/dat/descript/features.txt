@@ -913,6 +913,12 @@ A large concealed net launcher hanging from the dungeon's ceiling. Enchanted by
 the power of Zot, whenever an intelligent creature steps here - whether friend
 or foe - the net will land only on you.
 %%%%
+A patch of ice thorns
+
+A patch of ground covered in sharp frozen spines. It deals a small amount of
+damage to any non-flying creature that steps onto it (other than its creator)
+and then crumbles away. Its damage is partially reduced by rC.
+%%%%
 A permanent teleport trap
 
 A magical trap which will displace anyone passing over it to a random place on

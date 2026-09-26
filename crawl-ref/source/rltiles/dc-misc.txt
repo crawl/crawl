@@ -542,6 +542,10 @@ cloud_rust3
 cloud_glimmer0 CLOUD_GLIMMER
 cloud_glimmer1
 
+cloud_ice_dust0 CLOUD_FAINT_FROST
+cloud_ice_dust1
+cloud_ice_dust2
+
 %sdir mon
 fungi_plants/ballistomycete_spore SPORE_OVERLAY
 

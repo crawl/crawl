@@ -302,6 +302,13 @@ static feature_def feat_defs[] =
 },
 
 {
+    DNGN_ICE_THORNS, "a patch of ice thorns", "ice_thorns",
+    DCHAR_TRAP, NUM_DCHAR_TYPES,
+    COLOUR_IS(LIGHTBLUE),
+    FFT_NONE, MF_FLOOR,
+},
+
+{
     DNGN_MOULD_PATCH, "a patch of mould", "mould_patch",
     DCHAR_SHALLOW_WAVY, NUM_DCHAR_TYPES,
     COLOUR_IS(LIGHTGREY),

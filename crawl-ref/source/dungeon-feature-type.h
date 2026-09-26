@@ -116,6 +116,7 @@ enum dungeon_feature_type
     DNGN_DRAGON_VEIN_EARTH,
     DNGN_DRAGON_VEIN_FIRE,
     DNGN_DRAGON_VEIN_ICE,
+    DNGN_ICE_THORNS,
 #endif
 #if TAG_MAJOR_VERSION == 34
     DNGN_UNDISCOVERED_TRAP,
@@ -420,6 +421,7 @@ enum dungeon_feature_type
     DNGN_DRAGON_VEIN_EARTH,
     DNGN_DRAGON_VEIN_FIRE,
     DNGN_DRAGON_VEIN_ICE,
+    DNGN_ICE_THORNS,
 #endif
 
     NUM_FEATURES
