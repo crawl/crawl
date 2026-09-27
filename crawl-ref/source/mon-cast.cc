@@ -963,7 +963,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
                     mprf("%s shreds %s%s", caster.name(DESC_THE).c_str(),
                         victim->name(DESC_THE).c_str(),
                         final ? attack_strength_punctuation(final).c_str()
-                                : ", but does no damage.");
+                                : " but does no damage.");
                 }
 
                 if (final)
