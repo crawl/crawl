@@ -1052,8 +1052,8 @@ NAME:   rogga_village
 #       (formely known as: kennysheep_town)
 TAGS:   uniq_d_encompass allow_dup unrand no_rotate no_pool_fixup
 ORIENT: encompass
-DEPTH:  D:2
-PLACE:  D:2
+DEPTH:  D:3
+PLACE:  D:3
 WEIGHT: 2000
 KMONS:  op = plant
 KMONS:  P = bush

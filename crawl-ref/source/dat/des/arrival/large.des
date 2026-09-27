@@ -106,8 +106,8 @@ ENDMAP
 # 29 x 22
 NAME:    dpeg_arrival_castle
 TAGS:    no_monster_gen no_rotate transparent
-DEPTH:   D:2
-PLACE:   D:2
+DEPTH:   D:3
+PLACE:   D:3
 WEIGHT:  2000
 ITEM:    gold, any potion / any scroll, any potion / any scroll / nothing
 MONS:    goblin / hobgoblin / kobold / gnoll w:2

@@ -79,9 +79,9 @@ static const vector<pop_entry> population[] =
   {  4,  5,  175, FALL, MONS_JACKAL },
   {  4,  5,  500, FALL, MONS_QUOKKA },
   {  4,  5,  375, FALL, MONS_DART_SLUG },
-  {  1,  8,  200, PEAK, MONS_GNOLL },
 
 // Shouldn't show up on D:1.
+  {  2,  8,  200, PEAK, MONS_GNOLL },
   {  2,  5,  500, FALL, MONS_CINDER_NEWT},
   {  2,  5,  500, FALL, MONS_RIBBON_WORM },
   {  2,  6, 1000, FLAT, MONS_ADDER },
