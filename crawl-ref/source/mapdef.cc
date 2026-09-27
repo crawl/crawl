@@ -2919,10 +2919,10 @@ string map_def::validate_map_def()
         }
     }
 
-    const bool d4_ossuary_float = orient == MAP_FLOAT
-                                  && has_tag("dcchili_d4_ossuary");
+    const bool d5_ossuary_float = orient == MAP_FLOAT
+                                  && has_tag("dcchili_d5_ossuary");
 
-    if ((orient == MAP_FLOAT || is_minivault()) && !d4_ossuary_float)
+    if ((orient == MAP_FLOAT || is_minivault()) && !d5_ossuary_float)
     {
         if (map.width() > GXM - MAPGEN_BORDER * 2
             || map.height() > GYM - MAPGEN_BORDER * 2)
@@ -2967,7 +2967,7 @@ string map_def::validate_map_def()
     case MAP_NORTHEAST: case MAP_SOUTHEAST:
     case MAP_NORTHWEST: case MAP_SOUTHWEST:
     case MAP_FLOAT:     case MAP_CENTRE:
-        if (d4_ossuary_float)
+        if (d5_ossuary_float)
             break;
         if (map.width() > GXM * 2 / 3 || map.height() > GYM * 2 / 3)
         {
