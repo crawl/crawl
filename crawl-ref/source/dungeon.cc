@@ -3114,6 +3114,14 @@ static void _build_dungeon_level()
                                      false, "D:1 faded altar");
         }
 
+        // Guarantee a shop stocked with basic supplies on the first floor.
+        if (player_in_branch(BRANCH_DUNGEON) && you.depth == 1)
+        {
+            const map_def *shop = find_map_by_name("dcchili_d1_basic_shop");
+            _dgn_ensure_vault_placed(shop && _build_secondary_vault(shop),
+                                     false, "D:1 basic shop");
+        }
+
         // Add two random god altars to the Corrupted Forest.
         if (player_in_branch(BRANCH_DUNGEON) && you.depth == 2)
         {
