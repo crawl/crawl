@@ -2748,7 +2748,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             mprf("You %s %s%s.",
                     aux_verb.c_str(),
                     defender->name(DESC_THE).c_str(),
-                    you.can_see(*defender) ? ", but do no damage" : "");
+                    you.can_see(*defender) ? " but do no damage" : "");
         }
 
         if (atk == UNAT_MEDUSA_STINGER)
