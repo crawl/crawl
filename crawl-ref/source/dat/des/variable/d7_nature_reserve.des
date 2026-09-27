@@ -1,18 +1,18 @@
 ###############################################################################
-# Lair:1 Nature Reserve
+# D:7 Nature Reserve
 #
 # The same reserve plan, rebased around Lair families. Every habitat contains
 # one deliberately OOD specimen, protected by a player-openable runed gate.
 ###############################################################################
 
-NAME:    dcchili_lair1_nature_reserve
-PLACE:   Lair:1
-DEPTH:   Lair:1
+NAME:    dcchili_d7_nature_reserve
+PLACE:   D:7
+DEPTH:   D:7
 WEIGHT:  5000
-TAGS:    dcchili_lair1_zoo no_monster_gen no_item_gen no_pool_fixup no_rotate
+TAGS:    dcchili_d7_zoo no_monster_gen no_item_gen no_pool_fixup no_rotate
 ORIENT:  float
 
-# Loose animals in the normally generated portions of Lair:1.
+# Loose animals in the normally generated portions of D:7.
 MONS:    bullfrog w:10 / cane toad w:8 / water moccasin w:10 / wolf w:8 / \
          yak w:8 / giraffe w:6 / komodo dragon w:6 / black bear w:5 / \
          basilisk w:4 / hell rat w:4 / scorpion w:3 / blink frog w:2
@@ -99,11 +99,11 @@ ENDMAP
 # deep moats and reinforced runed gates keep the larger exhibits separate.
 ###############################################################################
 
-NAME:    dcchili_lair1_grand_zoo
-PLACE:   Lair:1
-DEPTH:   Lair:1
+NAME:    dcchili_d7_grand_zoo
+PLACE:   D:7
+DEPTH:   D:7
 WEIGHT:  5000
-TAGS:    dcchili_lair1_zoo no_monster_gen no_item_gen no_pool_fixup no_rotate
+TAGS:    dcchili_d7_zoo no_monster_gen no_item_gen no_pool_fixup no_rotate
 ORIENT:  float
 
 MONS:    bullfrog w:10 / cane toad w:8 / water moccasin w:10 / wolf w:8 / \
@@ -184,11 +184,11 @@ ENDMAP
 # contours. Runed gates provide the only dry passage through each boundary.
 ###############################################################################
 
-NAME:    dcchili_lair1_wildlife_preserve
-PLACE:   Lair:1
-DEPTH:   Lair:1
+NAME:    dcchili_d7_wildlife_preserve
+PLACE:   D:7
+DEPTH:   D:7
 WEIGHT:  5000
-TAGS:    dcchili_lair1_zoo no_monster_gen no_item_gen no_pool_fixup no_rotate
+TAGS:    dcchili_d7_zoo no_monster_gen no_item_gen no_pool_fixup no_rotate
 ORIENT:  float
 
 MONS:    bullfrog w:10 / cane toad w:8 / water moccasin w:10 / wolf w:8 / \
