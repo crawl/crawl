@@ -743,6 +743,7 @@ def process_yaml_file(filename):
     strings = []
     with open(filename) as file:
         lines = file.readlines()
+    lines = list(map(lambda x: re.sub("#.*", "", x).strip(), lines))
     deprecated = "deprecated" in filename
     if "/species/" in filename:
         strings = process_species_yaml_lines(lines, deprecated)
