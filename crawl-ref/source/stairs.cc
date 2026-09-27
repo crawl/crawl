@@ -1090,6 +1090,8 @@ void floor_transition(dungeon_feature_type how,
         mpr("Welcome to the Sewer!");
     else if (player_in_branch(BRANCH_DUNGEON) && you.depth == 5)
         mpr("Welcome to the Catacomb!");
+    else if (player_in_branch(BRANCH_DUNGEON) && you.depth == 6)
+        mpr("There's a cold and hot theme on this floor.");
 
     if (newlevel)
     {
