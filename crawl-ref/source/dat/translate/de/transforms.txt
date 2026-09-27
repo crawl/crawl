@@ -615,45 +615,6 @@ Fuß
 %%%%
 
 ################################
-# Beastly Appendage
-################################
-%%%%
-# abbreviation for HUD
-App
-Extr
-%%%%
-# long name / wizmode name
-appendages
-Extremitäten
-%%%%
-
-# untransform messages
-%%%%
-Your horns disappear.
-Deine Hörner verschwinden.
-%%%%
-Your talons disappear.
-Deine Krallen verschwinden.
-%%%%
-# this one is for octopode only
-Your tentacle spike disappears.
-Dein Tentakelstachel verschwindet.
-%%%%
-
-# untransform messages (when player keeps appendage due to mutation)
-%%%%
-Your horns shrink.
-Deine Hörner schrumpfen.
-%%%%
-Your talons shrink.
-Deine Krallen schrumpfen.
-%%%%
-# this one is for octopode only
-Your tentacle spike shrinks.
-Dein Tentakelstachel schrumpft.
-%%%%
-
-################################
 # Tree-form
 ################################
 %%%%
@@ -703,28 +664,6 @@ Wurzel
 # flesh type
 wood
 Holz
-%%%%
-
-################################
-# Porcupine-form
-################################
-%%%%
-# abbreviation for HUD
-Porc
-Stach
-%%%%
-# long name
-porcupine-form
-Stachelschweingestalt
-%%%%
-# wizmode name
-# duplicate of monster name
-#porcupine
-#
-%%%%
-# description
-a spiny porcupine
-{n}ein stacheliges Stachelschwein
 %%%%
 
 ################################
@@ -848,46 +787,6 @@ your hyphae
 %%%%
 
 ################################
-# Shadow-form
-################################
-%%%%
-# abbreviation for HUD
-Shadow
-Schatte
-%%%%
-# long name
-shadow-form
-Schattengestalt
-%%%%
-# wizmode name
-# duplicate: shadow
-%%%%
-# description
-a swirling mass of dark shadows
-{f}eine wirbelnde Masse aus dunklen Schatten
-%%%%
-
-################################
-# Hydra-form
-################################
-%%%%
-# abbreviation for HUD
-Hydra
-Hydra
-%%%%
-# long name
-hydra-form
-Hydragestalt
-%%%%
-# wizmode name
-# duplicate: hydra
-%%%%
-# unarmed attack
-Bite (x@num@)
-Biss (x@num@)
-%%%%
-
-################################
 # Storm-form
 ################################
 %%%%
@@ -948,10 +847,6 @@ Du windest dich vor dem Altar von {dat}@arg@.
 You hover solemnly before the altar of @arg@.
 Du schwebst feierlich vor dem Altar {gen}@arg@.
 %%%%
-# porcupine form
-You curl into a sanctuary of spikes before the altar of @arg@.
-Du rollst dich vor dem Altar {gen}@arg@ zu einem Heiligtum aus Stacheln zusammen.
-%%%%
 # spider form
 You crawl onto the altar of @arg@.
 Du krabbelst auf den Altar {gen}@arg@.
@@ -967,10 +862,6 @@ Du hockst dich auf den Altar {gen}@arg@.
 # ice/pig/dragon form
 You bow your head before the altar of @arg@.
 Du verneigst deinen Kopf vor dem Altar {gen}@arg@.
-%%%%
-# hydra form
-You bow your heads before the altar of @arg@.
-Du verneigst deine Köpfe vor dem Altar {gen}@arg@.
 %%%%
 # statue/storm form
 You place yourself before the altar of @arg@.
