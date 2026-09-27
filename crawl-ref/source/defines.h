@@ -132,7 +132,7 @@ const int MAPGEN_BORDER    = 2;
 
 // range of overflow temples
 #define MIN_OVERFLOW_LEVEL 3
-#define MAX_OVERFLOW_LEVEL 10
+#define MAX_OVERFLOW_LEVEL 8
 
 #define MAX_BRANCH_DEPTH 27
 COMPILE_CHECK(MAX_BRANCH_DEPTH < 256); // 8 bits
