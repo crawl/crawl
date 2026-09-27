@@ -3105,6 +3105,15 @@ static void _build_dungeon_level()
             _place_chance_vaults();
         }
 
+        // Guarantee a faded altar even if its decorative chance vault failed.
+        if (player_in_branch(BRANCH_DUNGEON) && you.depth == 1
+            && _find_level_feature(DNGN_ALTAR_ECUMENICAL).origin())
+        {
+            const map_def *altar = find_map_by_name("basic_ecumenical_altar");
+            _dgn_ensure_vault_placed(altar && _build_secondary_vault(altar),
+                                     false, "D:1 faded altar");
+        }
+
         level_id lid = level_id::current();
         bool above_sewer = lid.branch == sewer_location.branch && lid.depth == (sewer_location.depth - 1);
 
