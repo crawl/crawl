@@ -136,12 +136,6 @@ deine Hand
 your hands
 {pl}deine Hände
 %%%%
-your weapon hand
-deine Waffenhand
-%%%%
-your shield hand
-deine Schildhand
-%%%%
 
 # claw (troll/ghoul)
 %%%%
@@ -156,12 +150,6 @@ deine Klaue
 %%%%
 your claws
 {pl}deine Klauen
-%%%%
-your weapon claw
-deine Waffenklaue
-%%%%
-your shield claw
-deine Schildklaue
 %%%%
 
 # paw (felid)
@@ -197,12 +185,6 @@ Haupttentakel
 %%%%
 your tentacles
 {pl}deine Tentakel
-%%%%
-your weapon tentacle
-dein Waffententakel
-%%%%
-your shield tentacle
-dein Schildtentakel
 %%%%
 
 # skin
@@ -287,12 +269,6 @@ your front leg
 your front legs
 {pl}deine Vorderbeine
 %%%%
-your weapon front leg
-{n}dein Waffenvorderbein
-%%%%
-your shield front leg
-{n}dein Schildvorderbein
-%%%%
 # flesh type
 flesh
 Fleisch
@@ -346,12 +322,6 @@ deine sensenartige Klinge
 %%%%
 your scythe-like blades
 {pl}deine sensenartige Klingen
-%%%%
-your weapon scythe-like blade
-deine sensenartige Waffenklinge
-%%%%
-your shield scythe-like blade
-deine sensenartige Schildklinge
 %%%%
 
 ################################
@@ -455,12 +425,6 @@ deine Vorderpfote
 your front paws
 {pl}deine Vorderpfoten
 %%%%
-your weapon front paw
-deine Waffenvorderpfote
-%%%%
-your shield front paw
-deine Schildvorderpfote
-%%%%
 # foot equivalent
 # duplicate: felids also have paws
 #paw
@@ -510,12 +474,6 @@ deine Vorderklaue
 %%%%
 your foreclaws
 {pl}deine Vorderklauen
-%%%%
-your weapon foreclaw
-deine Waffenvorderklaue
-%%%%
-your shield foreclaw
-deine Schildvorderklaue
 %%%%
 
 # draconians transform into specific types of dragon based on their colour
@@ -651,12 +609,6 @@ dein Vorderfuß
 your front trotters
 {pl}deine Vorderfüße
 %%%%
-your weapon front trotter
-dein Waffenvorderfuß
-%%%%
-your shield front trotter
-dein Schildvorderfuß
-%%%%
 # foot-equivalent
 trotter
 Fuß
@@ -744,12 +696,6 @@ dein Zweig
 your branches
 {pl}deine Zweige
 %%%%
-your weapon branch
-dein Waffenzweig
-%%%%
-your shield branch
-dein Schildzweig
-%%%%
 # foot-equivalent
 root
 Wurzel
@@ -827,12 +773,6 @@ deine Nebelschwade
 your misty tendrils
 {pl}deine Nebelschwaden
 %%%%
-your weapon misty tendril
-deine Waffennebelschwade
-%%%%
-your shield misty tendril
-deine Schildnebelschwade
-%%%%
 # foot
 strand
 Nebelfahne
@@ -905,12 +845,6 @@ deine Hyphe
 %%%%
 your hyphae
 {pl}deine Hyphen
-%%%%
-your weapon hypha
-deine Waffenhyphe
-%%%%
-your shield hypha
-deine Schildhyphe
 %%%%
 
 ################################
