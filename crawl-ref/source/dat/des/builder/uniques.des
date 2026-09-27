@@ -165,8 +165,8 @@ DEPTH:  D:3-5
 : place_unique(_G, "Ijyb")
 
 NAME:   uniq_jessica
-DEPTH:  D:1
-PLACE:  D:1
+DEPTH:  D:2
+PLACE:  D:2
 WEIGHT: 5000
 : place_unique(_G, "Jessica")
 
@@ -207,10 +207,10 @@ NAME:   uniq_maurice
 DEPTH:  D:7-12, Orc
 : place_unique(_G, "Maurice")
 
-# Medusa is manually placed in four D:2 vaults
+# Medusa is manually placed in the D:3 themed vaults
 # NAME:   uniq_medusa
-# DEPTH:  D:2
-# PLACE:  D:2
+# DEPTH:  D:3
+# PLACE:  D:3
 # : place_unique(_G, "Medusa")
 
 NAME:   uniq_menkaure

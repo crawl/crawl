@@ -1,5 +1,5 @@
 ############################################################################################
-# Grated Community (by Mu, cleaned up by regret-index & modified by rogga for D:2 placement).
+# Grated Community (by Mu, cleaned up by regret-index & modified by rogga for D:3 placement).
 #
 # A few creatures have built their own little community above ground,
 # complete with quaint little homes and a handful of local shops.
@@ -22,14 +22,14 @@ function grated_community_house_setup(e)
 end
 }}
 
-default-depth: D:2
+default-depth: D:3
 
 NAME:   index_mu_grated_community
 TAGS:   no_rotate no_monster_gen no_item_gen no_descent
 TAGS:   vaults_hard vaults_orient_s no_wall_fixup
 ORIENT: float
-DEPTH:  D:2
-PLACE:  D:2
+DEPTH:  D:3
+PLACE:  D:3
 WEIGHT: 2000
 
 KMONS:  m = Medusa

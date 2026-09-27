@@ -106,7 +106,7 @@ KMONS:   S = gargoyle ; nothing
 KMONS:   T = formicid ; nothing
 KMONS:   U = vine stalker ; nothing
 KMONS:   V = barachi ; nothing
-KMONS:   W = gnoll ; nothing
+KMONS:   W = hobgoblin ; nothing
 KMONS:   X = djinni ; nothing
 KMONS:   Y = centaur ; nothing
 KMONS:   Z = oni ; nothing
@@ -144,7 +144,7 @@ KMONS: M = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
            revenant / tengu ; nothing / merfolk ; nothing / poltergeist / \
            felid / octopode ; nothing / djinni ; nothing / \
            gargoyle ; nothing / formicid ; nothing / vine stalker ; nothing / \
-           barachi ; nothing / gnoll ; nothing / centaur ; nothing / \
+           barachi ; nothing / hobgoblin ; nothing / centaur ; nothing / \
            oni ; nothing / goblin ; nothing
 # Player monsters, zombie versions (undead, vine stalkers, gargoyles and djinni
 # don't leave corpses):
@@ -405,7 +405,7 @@ KMONS:   1 = jelly / endoplasm
 SUBST:   t : U'''', 23 = 0
 : else
 SUBST:   D = V
-KMONS:   1 : gnoll / orc / 0 w:20
+KMONS:   1 : hobgoblin / orc / 0 w:20
 KMONS:   2 : ogre / 0 w:70
 KMONS:   3 : troll / 0 w:70
 SUBST:   t = T
@@ -704,7 +704,7 @@ KMONS:  ! = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
             revenant / tengu ; nothing / merfolk ; nothing / poltergeist / \
             felid / octopode ; nothing / djinni ; nothing / \
             gargoyle ; nothing / formicid ; nothing / vine stalker ; nothing / \
-            barachi ; nothing / gnoll ; nothing / centaur ; nothing / \
+            barachi ; nothing / hobgoblin ; nothing / centaur ; nothing / \
             oni ; nothing / goblin ; nothing
 KPROP:  Kw'! = no_tele_into
 KMASK:  '! = no_item_gen
@@ -738,7 +738,7 @@ KMONS:  ! = human / elf / dwarf ; nothing / kobold ; nothing / mummy / \
             revenant / tengu ; nothing / merfolk ; nothing / poltergeist / \
             felid / octopode ; nothing / djinni ; nothing / \
             gargoyle ; nothing / formicid ; nothing / vine stalker ; nothing / \
-            barachi ; nothing / gnoll ; nothing / centaur ; nothing / \
+            barachi ; nothing / hobgoblin ; nothing / centaur ; nothing / \
             oni ; nothing / goblin ; nothing
 KPROP:  Kw'! = no_tele_into
 KMASK:  '! = no_item_gen
