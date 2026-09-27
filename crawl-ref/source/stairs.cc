@@ -1082,6 +1082,9 @@ void floor_transition(dungeon_feature_type how,
 
     const bool newlevel = load_level(how, LOAD_ENTER_LEVEL, old_level);
 
+    if (player_in_branch(BRANCH_DUNGEON) && you.depth == 2)
+        mpr("Welcome to the Corrupted Forest!");
+
     if (newlevel)
     {
         _new_level_amuses_xom(how, whence, shaft,

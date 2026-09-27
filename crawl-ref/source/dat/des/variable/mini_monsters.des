@@ -3577,7 +3577,11 @@ KMONS:   2 = goblin / kobold
 KMONS:   3 = hobgoblin
 :   else
 KMONS:   2 = gnoll / orc
+:     if you.depth() == 2 then
+KMONS:   3 = Terence / gnoll band w:2, gnoll band, gnoll band
+:     else
 KMONS:   3 = Terence / gnoll band w:2, Sigmund / gnoll band w:2, gnoll band
+:     end
 :   end
 : elseif you.in_branch("Lair") then
 # Specifically winged monsters, not just amphibious.
@@ -3793,7 +3797,11 @@ WEIGHT:  5 (D:1-3), 10
 MONS:    bat / rat / ball python, jackal band, hobgoblin
 : elseif you.depth() < 4 then
 MONS:    bat / rat / ball python / ribbon worm / adder, gnoll band
+:   if you.depth() == 2 then
+KMONS:   3 = gnoll ; halberd . throwing net
+:   else
 KMONS:   3 = Sigmund, gnoll ; halberd . throwing net
+:   end
 : else
 MONS:    adder / scorpion / hound / black bear, gnoll bouda band
 KMONS:   3 = Sigmund, gnoll sergeant
