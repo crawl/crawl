@@ -45,14 +45,14 @@ SPECIAL_FILES = [
     'spl-data.h', 'zap-data.h', 'feature-data.h',
     'item-prop.cc', 'item-name.cc',
     'art-data.txt',
-    'job-data.h', 'form-data.h'
+    'job-data.h',
 ]
 
 IGNORE_FILES = [
     # art-data.h generated from art-data.txt
     'art-data.h',
     # generated from yaml files
-    'species-data.h',
+    'species-data.h', 'form-data.h',
     # these just contain a bunch of compile flags, etc.
     'AppHdr.h', 'AppHdr.cc',
     'build.h', 'compflag.h',
@@ -326,7 +326,7 @@ def is_only_formatting(string):
 
 def is_boolean(string):
     string = string.lower()
-    return string == "false" or string == "true"
+    return string in ["true", "false", "yes", "no"]
 
 def is_integer(string):
     if string == "":
@@ -616,7 +616,30 @@ def extract_key_value(string, sep):
             return ["", ""]
         key = tokens[0].strip()
         value = tokens[1].strip()
+        value = value.strip("'\"")
         return [key, value]
+
+def split_yaml_list(line):
+    strings = []
+    line = re.sub(r".*\[", "", line.strip()).replace(']', '')
+    in_quotes = False
+    string = ""
+    for ch in line:
+        if ch == ',' and not in_quotes:
+            strings.append(string)
+            string = ""
+        else:
+            if ch == '"':
+                in_quotes = not in_quotes
+            string += ch
+    strings.append(string)
+
+    results = []
+    for string in strings:
+        string = string.strip().strip("'\"")
+        if string != "":
+            results.append(string)
+    return results
 
 def process_species_yaml_lines(lines, deprecated):
     strings = []
@@ -678,6 +701,44 @@ def process_species_yaml_lines(lines, deprecated):
 
     return strings
 
+def process_forms_yaml_lines(lines, deprecated):
+    strings = []
+    for line in lines:
+        [key, value] = extract_key_value(line, ":")
+        if key == "":
+            if '[' in line:
+                strings.extend(split_yaml_list(line))
+        elif value == "" or is_boolean(value) or is_integer(value):
+            continue
+        elif key == "unarmed_verbs":
+            if '[' not in value:
+                continue
+            verbs = split_yaml_list(value)
+            for verb in verbs:
+                verb = verb.strip()
+                strings.append("You " + verb + " @arg@@punct@")
+        elif key == "description":
+            strings.append("You turn into " + value)
+            strings.append("You are " + value)
+        elif key == "prayer_action":
+            strings.append("You " + value + " the altar of @arg@.")
+        elif key == "shout_verb":
+            strings.append(value)
+            strings.append(article_a(value))
+        elif key in ["hand_name", "foot_name"]:
+            strings.append(value)
+            strings.append("your " + value)
+            if not value.endswith("s"):
+                value = pluralise(value)
+                strings.append(value)
+                strings.append("your " + value)
+        elif key == "flesh_name":
+            strings.append(value)
+            strings.append("your " + value)
+        elif "name" in key:
+            strings.append(value)
+    return strings
+
 def process_yaml_file(filename):
     strings = []
     with open(filename) as file:
@@ -685,6 +746,9 @@ def process_yaml_file(filename):
     deprecated = "deprecated" in filename
     if "/species/" in filename:
         strings = process_species_yaml_lines(lines, deprecated)
+    elif "/forms/" in filename:
+        if not deprecated:
+            strings = process_forms_yaml_lines(lines, deprecated)
     return { "none": strings }
 
 def is_shop_rebadge_line(line):
@@ -1808,6 +1872,7 @@ else:
         source_files[i] = source_files[i].replace('.a', '.h')
 
     yaml_files = glob.glob("dat/species/*.yaml")
+    yaml_files += glob.glob("dat/forms/*.yaml")
     yaml_files.sort()
 
     lua_files = glob.glob("dat/clua/*.lua")
