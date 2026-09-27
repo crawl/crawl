@@ -1298,6 +1298,7 @@ def process_cplusplus_file(filename):
                     saved_section = None
                 if section not in results:
                     results[section] = []
+
         if is_section_start(line):
             section = extract_section_name(line)
             if section not in results:
@@ -1323,6 +1324,31 @@ def process_cplusplus_file(filename):
                 strings.append(replace_last(format, "%s", reason))
         elif section == "player_silenced_reason":
             strings = list(filter(lambda v: v not in PLAYER_SILENCED_REASONS, strings))
+        elif filename == 'melee-attack.cc':
+            if section == 'melee_attack::set_attack_verb':
+                # player-only attack verbs
+                if "verb_degree" in line:
+                    if len(strings) == 1 and len(results[section]) > 0:
+                        string = strings[0]
+                        strings = []
+                        if string == "balefully":
+                            for sentence in results[section]:
+                                if "clumsily bash" in sentence:
+                                    continue
+                                sentence = re.sub("@arg@.*", "@arg@ " + string + "@punct@", sentence)
+                                if sentence not in results[section]:
+                                    strings.append(sentence)
+                        else:
+                            if not string.startswith("'"):
+                                string = " " + string
+                            sentence = results[section][-1]
+                            results[section][-1] = re.sub("@arg@.*", "@arg@" + string + "@punct@", sentence)
+                elif "attack_verb" in line or len(strings) == 1:
+                    for i in range(len(strings)):
+                        strings[i] = "You " + strings[i] + " @arg@@punct@"
+                elif len(strings) == 2:
+                    string = "You " + strings[0] + " @arg@ " + strings[1] + "@punct@"
+                    strings = [string]
         if strings:
             results[section].extend(strings)
 
