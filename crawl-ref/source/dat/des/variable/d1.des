@@ -5,6 +5,18 @@
 # do not extend into D:2, so the two floors retain separate vault pools.
 ###############################################################################
 
+NAME:    dcchili_d1_basic_shop
+DEPTH:   D:1
+TAGS:    unrand no_monster_gen no_item_gen transparent
+KFEAT:   S = general shop type:Basic suffix:Supplies use_all ; \
+             mundane dagger | mundane short sword | mundane mace | \
+             mundane hand axe | mundane spear | mundane leather armour | \
+             mundane ring mail | mundane buckler | potion of curing | \
+             potion of heal wounds | scroll of teleportation
+MAP
+S
+ENDMAP
+
 NAME:    dcchili_d1_kobold_camp
 DEPTH:   D:1
 WEIGHT:  20
