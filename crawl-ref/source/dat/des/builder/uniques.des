@@ -280,7 +280,7 @@ DEPTH:  D:12-, Lair:3-, Orc:$, Snake:1, Spider:1
 : place_unique(_G, "Rupert")
 
 NAME:   uniq_sigmund
-DEPTH:  D:2-6
+DEPTH:  D:3-6
 : place_unique(_G, "Sigmund")
 
 NAME:   uniq_snorg
