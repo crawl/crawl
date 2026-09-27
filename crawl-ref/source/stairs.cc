@@ -1088,6 +1088,8 @@ void floor_transition(dungeon_feature_type how,
         mpr("There's a small castle on this level.");
     else if (player_in_branch(BRANCH_DUNGEON) && you.depth == 4)
         mpr("Welcome to the Sewer!");
+    else if (player_in_branch(BRANCH_DUNGEON) && you.depth == 5)
+        mpr("Welcome to the Catacomb!");
 
     if (newlevel)
     {
