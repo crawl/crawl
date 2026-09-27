@@ -3176,7 +3176,7 @@ static void _build_dungeon_level()
     const bool d6_thermal_rift = player_in_branch(BRANCH_DUNGEON)
                                  && you.depth == 6;
     const bool themed_dungeon = player_in_branch(BRANCH_DUNGEON)
-                                && you.depth == 4;
+                                && you.depth == 5;
     const bool themed_lair = player_in_branch(BRANCH_LAIR) && you.depth == 1;
     if (d6_thermal_rift)
     {
@@ -4062,9 +4062,9 @@ static bool _builder_normal()
     // Select these pools explicitly: normal seeded game setup can bypass the
     // generic PLACE/depth weighting path used by map-generation tests.
     const map_def *vault = nullptr;
-    if (player_in_branch(BRANCH_DUNGEON) && you.depth == 4)
+    if (player_in_branch(BRANCH_DUNGEON) && you.depth == 5)
     {
-        vault = random_map_for_tag("dcchili_d4_ossuary",
+        vault = random_map_for_tag("dcchili_d5_ossuary",
                                    true, false, false);
     }
     else if (player_in_branch(BRANCH_DUNGEON) && you.depth == 6)
@@ -4093,7 +4093,7 @@ static bool _builder_normal()
         // Both themed floors use floating primary vaults and can accept the
         // usual secondary vaults in their generated surroundings.
         return (player_in_branch(BRANCH_DUNGEON)
-                && (you.depth == 4 || you.depth == 6))
+                && (you.depth == 5 || you.depth == 6))
                || (player_in_branch(BRANCH_LAIR) && you.depth == 1)
                || vault->orient != MAP_ENCOMPASS;
     }
@@ -4982,12 +4982,12 @@ static void _pick_float_exits(vault_placement &place, vector<coord_def> &targets
     vector<coord_def> possible_exits;
 
     // Ossuary destination maps were authored as sealed encompass maps. On
-    // D:4 they are floating primary vaults, so open one route toward each
+    // D:5 they are floating primary vaults, so open one route toward each
     // side. Put a door at the first wall of the tomb and continue the route
     // through its old border, giving the normal layout four edge targets to
     // connect to.
-    if (player_in_branch(BRANCH_DUNGEON) && you.depth == 4
-        && place.map.has_tag("dcchili_d4_ossuary"))
+    if (player_in_branch(BRANCH_DUNGEON) && you.depth == 5
+        && place.map.has_tag("dcchili_d5_ossuary"))
     {
         const coord_def directions[] = {
             coord_def(-1, 0), coord_def(1, 0),
