@@ -1084,6 +1084,8 @@ void floor_transition(dungeon_feature_type how,
 
     if (player_in_branch(BRANCH_DUNGEON) && you.depth == 2)
         mpr("Welcome to the Corrupted Forest!");
+    else if (player_in_branch(BRANCH_DUNGEON) && you.depth == 3)
+        mpr("There's a small castle on this level.");
 
     if (newlevel)
     {
