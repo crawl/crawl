@@ -238,8 +238,8 @@ ENDMAP
 # Main vault.
 NAME:     lemuel_castle_with_subvaults
 TAGS:     layout_city transparent no_monster_gen no_rotate
-DEPTH:    D:2
-PLACE:    D:2
+DEPTH:    D:3
+PLACE:    D:3
 WEIGHT:   2000
 ORIENT:   northwest
 : castle_lemuel_setup(_G)
