@@ -1349,6 +1349,14 @@ def process_cplusplus_file(filename):
                 elif len(strings) == 2:
                     string = "You " + strings[0] + " @arg@ " + strings[1] + "@punct@"
                     strings = [string]
+            elif section == 'melee_attack::mons_attack_verb':
+                # monster-only attack verbs
+                verbs = strings
+                strings = []
+                for verb in verbs:
+                    verb = conjugate_verb(verb)
+                    strings.append("@Arg@ " + verb + " you@punct@")
+                    strings.append("@Arg1@ " + verb + " @arg2@@punct@")
         if strings:
             results[section].extend(strings)
 
