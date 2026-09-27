@@ -344,9 +344,6 @@ static void _setup_tutorial_miscs()
     // A few more will be initialised by the tutorial map.
     tutorial_init_hints();
 
-    // No gold to begin with.
-    you.gold = 0;
-
     // Give them some mana to play around with.
     you.mp_max_adj += 2;
 
@@ -570,6 +567,8 @@ static void _setup_generic(const newgame_def& ng,
     // Give tutorial skills etc
     if (crawl_state.game_is_tutorial())
         _setup_tutorial_miscs();
+
+    you.gold = 270;
 
     _give_basic_knowledge();
 
