@@ -136,12 +136,6 @@ your hand
 your hands
 
 %%%%
-your weapon hand
-
-%%%%
-your shield hand
-
-%%%%
 
 # claw (troll/ghoul)
 %%%%
@@ -155,12 +149,6 @@ your claw
 
 %%%%
 your claws
-
-%%%%
-your weapon claw
-
-%%%%
-your shield claw
 
 %%%%
 
@@ -196,12 +184,6 @@ main tentacles
 #
 %%%%
 your tentacles
-
-%%%%
-your weapon tentacle
-
-%%%%
-your shield tentacle
 
 %%%%
 
@@ -287,12 +269,6 @@ your front leg
 your front legs
 
 %%%%
-your weapon front leg
-
-%%%%
-your shield front leg
-
-%%%%
 # flesh type
 flesh
 
@@ -345,12 +321,6 @@ your scythe-like blade
 
 %%%%
 your scythe-like blades
-
-%%%%
-your weapon scythe-like blade
-
-%%%%
-your shield scythe-like blade
 
 %%%%
 
@@ -455,12 +425,6 @@ your front paw
 your front paws
 
 %%%%
-your weapon front paw
-
-%%%%
-your shield front paw
-
-%%%%
 # foot equivalent
 # duplicate: felids also have paws
 #paw
@@ -509,12 +473,6 @@ your foreclaw
 
 %%%%
 your foreclaws
-
-%%%%
-your weapon foreclaw
-
-%%%%
-your shield foreclaw
 
 %%%%
 
@@ -651,12 +609,6 @@ your front trotter
 your front trotters
 
 %%%%
-your weapon front trotter
-
-%%%%
-your shield front trotter
-
-%%%%
 # foot-equivalent
 trotter
 
@@ -744,12 +696,6 @@ your branch
 your branches
 
 %%%%
-your weapon branch
-
-%%%%
-your shield branch
-
-%%%%
 # foot-equivalent
 root
 
@@ -827,12 +773,6 @@ your misty tendril
 your misty tendrils
 
 %%%%
-your weapon misty tendril
-
-%%%%
-your shield misty tendril
-
-%%%%
 # foot
 strand
 
@@ -904,12 +844,6 @@ your hypha
 
 %%%%
 your hyphae
-
-%%%%
-your weapon hypha
-
-%%%%
-your shield hypha
 
 %%%%
 
