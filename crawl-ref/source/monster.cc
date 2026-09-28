@@ -1337,11 +1337,9 @@ int monster::weapon_score(const item_def& item) const
             val += (dmg + base_dmg) * 7 / 10;
             break;
 
-        // Heavy is actually worse than unbranded weapons in the hands of
-        // enemies with high base damage.
-        case SPWPN_HEAVY:
-            val += (((dmg * 18 / 10) + base_dmg) * 2 / 3) - base_dmg - dmg;
-        break;
+        case SPWPN_VORPAL:
+            val += 1 + (dmg + base_dmg) / 6;
+            break;
 
         case SPWPN_SPEED:
             val += ((dmg + base_dmg) / 2);

@@ -258,7 +258,7 @@ function general_item_setup(e)
     great sword plus:7 randart pre_id /\
     lajatang plus:9 good_item pre_id /\
     lajatang plus:7 randart pre_id /\
-    longbow plus:7 ego:heavy pre_id w:15 /\
+    longbow plus:7 ego:vorpal pre_id w:15 /\
     triple crossbow plus:7 good_item pre_id w:15")
   e.kitem("] = plate armour plus:12 pre_id /\
     plate armour plus:8 good_item pre_id /\
@@ -676,16 +676,16 @@ KITEM: e = rapier plus:2 ego:electrocution pre_id /\
        rapier plus:2 ego:distortion pre_id /\
        rapier plus:2 good_item pre_id
 KITEM: f = war axe plus:2 ego:freezing pre_id /\
-       war axe plus:2 ego:heavy pre_id /\
+       war axe plus:2 ego:vorpal pre_id /\
        war axe plus:2 good_item pre_id w:5 /\
        broad axe plus:1 ego:freezing pre_id /\
-       broad axe plus:1 ego:heavy pre_id /\
+       broad axe plus:1 ego:vorpal pre_id /\
        broad axe plus:1 good_item pre_id w:5
 KITEM: g = dire flail plus:2 ego:protection pre_id /\
-       dire flail plus:2 ego:heavy pre_id /\
+       dire flail plus:2 ego:vorpal pre_id /\
        dire flail plus:2 good_item pre_id w:5 /\
        morningstar plus:2 ego:protection pre_id /\
-       morningstar plus:2 ego:heavy pre_id /\
+       morningstar plus:2 ego:vorpal pre_id /\
        morningstar plus:2 good_item pre_id w:5
 KITEM: h = halberd plus:2 ego:protection pre_id /\
        halberd plus:2 ego:venom pre_id /\
@@ -771,12 +771,12 @@ KITEM: a = dagger ego:electrocution pre_id /\
        dagger ego:draining pre_id /\
        dagger ego:venom pre_id
 KITEM: b = hand axe ego:freezing pre_id /\
-       hand axe ego:heavy pre_id
-KITEM: c = mace ego:heavy pre_id /\
+       hand axe ego:vorpal pre_id
+KITEM: c = mace ego:vorpal pre_id /\
        mace ego:protection pre_id /\
-       flail ego:heavy pre_id /\
+       flail ego:vorpal pre_id /\
        flail ego:protection pre_id
-KITEM: d = trident ego:heavy pre_id
+KITEM: d = trident ego:vorpal pre_id
 KITEM: e = quarterstaff ego:protection pre_id /\
        quarterstaff ego:speed pre_id
 KITEM: f = long sword ego:holy_wrath pre_id /\

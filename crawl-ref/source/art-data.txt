@@ -655,7 +655,7 @@ TILE:     urand_sniper
 VALUE:    800
 TILE_EQ:  SNIPER
 BASE_DELAY: +2
-BRAND:    SPWPN_HEAVY
+BRAND:    SPWPN_VORPAL
 BOOL:     seeinv
 INSCRIP:  Acc+∞
 DESCRIP:  Acc+∞:     It never misses its target.
@@ -1252,7 +1252,7 @@ NAME:      shillelagh "Devastator"
 INSCRIP:   shatter
 OBJ:       OBJ_WEAPONS/WPN_CLUB
 FALLBACK:  OBJ_WEAPONS/WPN_EVENINGSTAR
-FB_BRAND:  SPWPN_HEAVY
+FB_BRAND:  SPWPN_VORPAL
 TYPE:      shillelagh
 TILE:      urand_shillelagh
 TILE_EQ:   SHILLELAGH
@@ -1348,7 +1348,7 @@ PLUS:     +10
 BASE_ACC: +2
 BASE_DAM: +20
 BASE_DELAY: +7
-BRAND:    SPWPN_HEAVY
+BRAND:    SPWPN_VORPAL
 
 # start TAG_MAJOR_VERSION == 34
 ENUM:    HIGH_COUNCIL
@@ -1780,7 +1780,7 @@ TYPE:      lance
 BASE_DAM:  +2
 PLUS:      +5
 COLOUR:    ETC_DISJUNCTION
-BRAND:     SPWPN_HEAVY
+BRAND:     SPWPN_VORPAL
 TILE:      urand_force_lance
 TILE_EQ:   FORCE_LANCE
 DBRAND:    Knockback: It sometimes drives back enemies it hits.

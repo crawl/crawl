@@ -568,8 +568,8 @@ TAGS:   ziggurat_pillar centered unrand no_exits
 DEPTH:  Zig:10-
 WEIGHT: 5
 MONS:   dancing weapon ; any weapon good_item | \
-        giant spiked club good_item ego:heavy w:5 | \
-        giant club good_item ego:heavy w:5
+        giant spiked club good_item ego:vorpal w:5 | \
+        giant club good_item ego:vorpal w:5
 MAP
  1
 1

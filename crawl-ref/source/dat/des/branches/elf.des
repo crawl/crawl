@@ -1868,7 +1868,7 @@ KITEM:   P = staff of fire / randbook disc:fire / wand of flame \
          / scroll of immolation
 KITEM:   Q = staff of earth / randbook disc:earth / wand of digging \
          /  ring of protection / tin of tremorstones \
-         / any weapon ego:protection / any weapon ego:heavy
+         / any weapon ego:protection / any weapon ego:vorpal
 KITEM:   R = staff of cold / randbook disc:ice / wand of iceblast \
          / ring of protection from cold / phial of floods \
          / any weapon ego:freezing / any armour ego:cold_resistance

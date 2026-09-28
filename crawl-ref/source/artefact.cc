@@ -123,7 +123,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
 
     case GOD_TROG:
         // Limited selection of brands.
-        if (brand != SPWPN_HEAVY
+        if (brand != SPWPN_VORPAL
             && brand != SPWPN_FLAMING
             && brand != SPWPN_ANTIMAGIC)
         {
@@ -548,7 +548,7 @@ static void _add_randart_weapon_brand(const item_def &item,
     {
         item_props[ARTP_BRAND] = random_choose_weighted(
             8, SPWPN_DRAINING,
-            8, SPWPN_HEAVY,
+            8, SPWPN_VORPAL,
             8, SPWPN_FLAMING,
             8, SPWPN_FREEZING,
             4, SPWPN_ELECTROCUTION,
@@ -580,7 +580,7 @@ static void _add_randart_weapon_brand(const item_def &item,
             47, SPWPN_FLAMING,
             47, SPWPN_FREEZING,
             35, NUM_SPECIAL_WEAPONS,
-            26, SPWPN_HEAVY,
+            26, SPWPN_VORPAL,
             26, SPWPN_VENOM,
             26, SPWPN_DRAINING,
             13, SPWPN_HOLY_WRATH,

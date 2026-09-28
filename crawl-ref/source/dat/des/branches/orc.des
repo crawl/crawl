@@ -1420,7 +1420,7 @@ TAGS:   no_item_gen no_monster_gen no_pool_fixup
 DEPTH:  Orc
 MONS:   bat, obsidian bat, kobold blastminer
 MONS:   generate_awake orc ; shortbow ego:flaming | shortbow ego:freezing | \
-                             shortbow ego:heavy
+                             shortbow ego:vorpal
 NSUBST: . = 1:3 / 2:4 / 2 : 4.
 # There were arrows here. They're gone now. Sorry
 NSUBST: b = 3:1 / 1:2 / 10:d / 4:e / *: .:20 1:1 d:2 e:2

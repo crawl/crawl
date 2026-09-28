@@ -1185,7 +1185,7 @@ NAME:   bailey_axe_froggy_fort_hellmonk
 TAGS:   bailey_axe no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
 : easy_axe_fighter(_G, "1")
-KMONS:  2 = human ; hand axe ego:heavy | war axe . scale mail | ring mail
+KMONS:  2 = human ; hand axe ego:vorpal | war axe . scale mail | ring mail
 KMONS:  3 = vault guard ; broad axe . chain mail | plate armour
 KMONS:  4 = bullfrog
 KMONS:  5 = prince ribbit, blink frog / cane toad w:1

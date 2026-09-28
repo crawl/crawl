@@ -243,7 +243,7 @@ function fiery_guardians (e, intelligent, village)
 
     -- Weighings back and forth with humanoids or not.
     if crawl.x_chance_in_y(9, 20) or village or intelligent then
-        local ogrestuff = "great mace " .. flame .. " | giant club w:14 ego:heavy"
+        local ogrestuff = "great mace " .. flame .. " | giant club w:14 ego:vorpal"
         local centaurstuff = "shortbow " .. flame
         if village then
             e.mons("two-headed ogre ; " .. ogrestuff .. " . " .. ogrestuff ..

@@ -1038,7 +1038,7 @@ elseif you.mutation("hooves") ~= 3 and you.mutation("talons") ~= 3 then
                              " / pair of boots ego:earth good_item w:12" ..
                              " / pair of boots randart w:2"
 end
-trove_offense(_G, trove_weap_brand(_G, "heavy", true),
+trove_offense(_G, trove_weap_brand(_G, "vorpal", true),
                   trove_standard_magic(_G, "earth", true),
                   trove_good_talisman(_G, nil, "granite talisman"),
                   "earth magic")

@@ -145,7 +145,7 @@ enum brand_type // item_def.special
     SPWPN_PROTECTION,
     SPWPN_DRAINING,
     SPWPN_SPEED,
-    SPWPN_HEAVY,
+    SPWPN_VORPAL, // Formerly Heavy; preserve the numeric ID for saved games.
 #if TAG_MAJOR_VERSION == 34
     SPWPN_FLAME_OLD,   // ranged, only
     SPWPN_FROST_OLD,   // ranged, only

@@ -4408,7 +4408,7 @@ NAME:    hangedman_elemental_death_ray
 TAGS:    transparent patrolling no_descent
 DEPTH:   D:12-, !D:$, Depths, !Depths:$
 ORIENT:  float
-MONS:    arcanist ; staff of fire | quarterstaff ego:heavy . \
+MONS:    arcanist ; staff of fire | quarterstaff ego:vorpal . \
                     robe ego:resistance
 MONS:    occultist ; staff of cold | quarterstaff ego:freezing . \
                      robe ego:resistance
@@ -4466,7 +4466,7 @@ KMONS:  1 = red very ugly thing / white very ugly thing / \
             cyan very ugly thing w:15
 KMONS:  2 = fire dragon / ice dragon
 KMONS:  3 = dancing weapon ; broad axe ego:flaming | scimitar ego:freezing | \
-                             partisan ego:electrocution | flail ego:heavy
+                             partisan ego:electrocution | flail ego:vorpal
 KMONS:  4 = stone giant w:15 / fire giant / frost giant
 KMONS:  5 = spark wasp / catoblepas
 KMONS:  6 = storm dragon / iron dragon / titan / war gargoyle
@@ -4474,7 +4474,7 @@ KMONS:  7 = spriggan defender ; staff of fire | staff of cold | \
                                 staff of air | staff of earth . \
                                 robe ego:resistance good_item pre_id
 KMONS:  8 = tengu reaver ; battleaxe ego:flaming | great sword ego:freezing | \
-                           halberd ego:electrocution | lajatang ego:heavy . \
+                           halberd ego:electrocution | lajatang ego:vorpal . \
                            fire dragon scales | ice dragon scales
 KMONS:  9 = red draconian / white draconian / black draconian
 KMONS:  0 = red draconian stormcaller / white draconian stormcaller / \
@@ -4667,7 +4667,7 @@ ITEM:   book of geomancy / book of the earth / book of iron / \
         manual of earth magic / staff of earth pre_id / \
         ring of protection pre_id / tin of tremorstones / \
         crystal plate armour w:5 / granite talisman w:5
-KITEM:  2 = devastator / eveningstar ego:heavy randart pre_id \
+KITEM:  2 = devastator / eveningstar ego:vorpal randart pre_id \
         / dark maul
 : if you.in_branch("D") then
 :     if you.depth() < 13 then

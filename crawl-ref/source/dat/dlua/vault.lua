@@ -137,7 +137,7 @@ function hall_of_blades_weapon(e)
                                                or "bardiche"
   local types = {"eveningstar", "executioner's axe", polearm_type,
                  "lajatang",  "quick blade", long_blade_type}
-  local egos = {"flaming", "freezing", "electrocution", "heavy",
+  local egos = {"flaming", "freezing", "electrocution", "vorpal",
                 "holy_wrath", "pain", "vampirism",
                 "antimagic", "distortion", "spectral"}
   local weapon_t = util.random_subset(types, 3)

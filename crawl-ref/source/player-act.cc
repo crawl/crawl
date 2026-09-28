@@ -287,8 +287,6 @@ random_var player::attack_delay_with(const item_def *weap, bool melee_only,
         const brand_type brand = get_weapon_brand(*weap);
         if (brand == SPWPN_SPEED)
             attk_delay = div_rand_round(attk_delay * 2, 3);
-        else if (brand == SPWPN_HEAVY)
-            attk_delay = div_rand_round(attk_delay * 3, 2);
     }
 
     // At the moment it never gets this low anyway.
