@@ -452,9 +452,9 @@ static int _intoxicate_monsters(coord_def where, int pow, bool tracer)
 
     if (!tracer && x_chance_in_y(40 + div_rand_round(pow, 3), 100))
     {
-        int dur = max(div_rand_round(90 * BASELINE_DELAY,
-                      mons->get_hit_dice() + 5) + random2(5 * BASELINE_DELAY),
-                      5 * BASELINE_DELAY);
+        int dur = max(div_rand_round(90, mons->get_hit_dice() + 5) + random2(5),
+                      5);
+        dur *= BASELINE_DELAY;
         mons->add_ench(mon_enchant(ENCH_CONFUSION, &you, dur));
         simple_monster_message(*mons, " looks rather confused.");
         return 1;
