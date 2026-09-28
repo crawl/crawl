@@ -48,17 +48,6 @@ void give_specific_item(monster* mon, int thing)
     item_def &mthing = env.item[thing];
     ASSERT(mthing.defined());
 
-    // Keep distortion out of all monsters' starting equipment on D:1.
-    if (level_id::current() == level_id(BRANCH_DUNGEON, 1)
-        && mthing.base_type == OBJ_WEAPONS
-        && get_weapon_brand(mthing) == SPWPN_DISTORTION)
-    {
-        if (is_artefact(mthing))
-            set_artefact_brand(mthing, SPWPN_NORMAL);
-        else
-            _strip_item_ego(mthing);
-    }
-
     dprf(DIAG_MONPLACE, "Giving %s to %s...", mthing.name(DESC_PLAIN).c_str(),
          mon->name(DESC_PLAIN, true).c_str());
 
