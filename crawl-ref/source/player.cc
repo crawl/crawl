@@ -2878,6 +2878,9 @@ unsigned int gain_exp(unsigned int exp_gained)
     if (crawl_state.game_is_arena())
         return 0;
 
+    // Grant 5% extra XP, preserving fractional bonuses on average.
+    exp_gained += div_rand_round(exp_gained, 20);
+
     you.experience_pool += exp_gained;
 
     if (player_under_penance(GOD_HEPLIAKLQANA))
