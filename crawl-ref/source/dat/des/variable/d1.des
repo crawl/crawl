@@ -11,7 +11,9 @@ TAGS:    unrand no_monster_gen no_item_gen transparent
 KFEAT:   S = general shop type:Basic suffix:Supplies use_all ; \
              mundane dagger | mundane short sword | mundane mace | \
              mundane hand axe | mundane spear | mundane leather armour | \
-             mundane ring mail | mundane buckler | potion of curing | \
+             mundane ring mail | mundane buckler | mundane helmet | \
+             mundane hat | mundane cloak | mundane pair of gloves | \
+             mundane pair of boots | mundane barding | potion of curing | \
              potion of heal wounds | scroll of teleportation
 MAP
 S
