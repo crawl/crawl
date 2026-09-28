@@ -1092,6 +1092,8 @@ void floor_transition(dungeon_feature_type how,
         mpr("Welcome to the Catacomb!");
     else if (player_in_branch(BRANCH_DUNGEON) && you.depth == 6)
         mpr("There's a cold and hot theme on this floor.");
+    else if (player_in_branch(BRANCH_DUNGEON) && you.depth == 7)
+        mpr("This looks like an abandoned nature reserve.");
 
     if (newlevel)
     {

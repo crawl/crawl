@@ -3203,7 +3203,8 @@ static void _build_dungeon_level()
                                  && you.depth == 6;
     const bool themed_dungeon = player_in_branch(BRANCH_DUNGEON)
                                 && you.depth == 5;
-    const bool themed_lair = player_in_branch(BRANCH_LAIR) && you.depth == 1;
+    const bool d7_nature_reserve = player_in_branch(BRANCH_DUNGEON)
+                                   && you.depth == 7;
     if (d6_thermal_rift)
     {
         tileidx_t hot_wall;
@@ -3283,14 +3284,14 @@ static void _build_dungeon_level()
             }
         }
     }
-    else if (themed_dungeon || themed_lair)
+    else if (themed_dungeon || d7_nature_reserve)
     {
         tileidx_t wall;
         tileidx_t floor;
-        const string wall_name = themed_lair ? "wall_vines"
-                                             : "stone_wall_ossuary";
-        const string floor_name = themed_lair ? "floor_grass_dark"
-                                              : "floor_sandstone";
+        const string wall_name = d7_nature_reserve ? "wall_vines"
+                                                  : "stone_wall_ossuary";
+        const string floor_name = d7_nature_reserve ? "floor_grass_dark"
+                                                   : "floor_sandstone";
 
         if (tile_dngn_index(wall_name.c_str(), &wall))
         {
@@ -4098,9 +4099,9 @@ static bool _builder_normal()
         vault = random_map_for_tag("dcchili_d6_hot_cold",
                                    true, false, false);
     }
-    else if (player_in_branch(BRANCH_LAIR) && you.depth == 1)
+    else if (player_in_branch(BRANCH_DUNGEON) && you.depth == 7)
     {
-        vault = random_map_for_tag("dcchili_lair1_zoo",
+        vault = random_map_for_tag("dcchili_d7_zoo",
                                    true, false, false);
     }
     else
@@ -4116,11 +4117,10 @@ static bool _builder_normal()
             : "");
         env.level_build_method += " random_map_for_place";
         _ensure_vault_placed_ex(_build_primary_vault(vault), vault);
-        // Both themed floors use floating primary vaults and can accept the
+        // These themed floors use floating primary vaults and can accept the
         // usual secondary vaults in their generated surroundings.
         return (player_in_branch(BRANCH_DUNGEON)
-                && (you.depth == 5 || you.depth == 6))
-               || (player_in_branch(BRANCH_LAIR) && you.depth == 1)
+                && (you.depth == 5 || you.depth == 6 || you.depth == 7))
                || vault->orient != MAP_ENCOMPASS;
     }
 
