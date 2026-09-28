@@ -1164,12 +1164,12 @@ static void _construct_backgrounds_menu(const newgame_def& ng,
                                         UINewGameMenu* ng_menu)
 {
     menu_letter letter = 'a';
-    // Add entries for any job groups with at least one playable background.
+    // On the second screen, only show recommended backgrounds.
     for (job_group& group : jobs_order)
     {
         if (ng.species == SP_UNKNOWN
             || any_of(begin(group.jobs), end(group.jobs), [&ng](job_type job)
-                      { return _job_allowed(ng.species, job) != CC_BANNED; }))
+                      { return _job_allowed(ng.species, job) == CC_UNRESTRICTED; }))
         {
             group.attach(ng, defaults, ng_menu, letter);
         }
@@ -1395,10 +1395,13 @@ protected:
         _add_choice_menu_option(0, 0,
                 text, '+', id, desc);
 
-        _add_choice_menu_option(0, 1,
-                "# - Recommended character", '#', M_VIABLE_CHAR,
-                "Shuffles through random recommended character combinations "
-                "until you accept one.");
+        if (choice_type != C_JOB || ng.species == SP_UNKNOWN)
+        {
+            _add_choice_menu_option(0, 1,
+                    "# - Recommended character", '#', M_VIABLE_CHAR,
+                    "Shuffles through random recommended character combinations "
+                    "until you accept one.");
+        }
 
         _add_choice_menu_option(0, 2,
                 "% - List aptitudes", '%', M_APTITUDES,
@@ -1408,14 +1411,17 @@ protected:
                 "? - Help", '?', M_HELP,
                 "Opens the help screen.");
 
-        _add_choice_menu_option(1, 0,
-                "    * - Random " + choice_name, '*', M_RANDOM,
-                "Picks a random " + choice_name + ".");
+        if (choice_type != C_JOB || ng.species == SP_UNKNOWN)
+        {
+            _add_choice_menu_option(1, 0,
+                    "    * - Random " + choice_name, '*', M_RANDOM,
+                    "Picks a random " + choice_name + ".");
 
-        _add_choice_menu_option(1, 1,
-                "    ! - Random character", '!', M_RANDOM_CHAR,
-                "Shuffles through random character combinations "
-                "until you accept one.");
+            _add_choice_menu_option(1, 1,
+                    "    ! - Random character", '!', M_RANDOM_CHAR,
+                    "Shuffles through random character combinations "
+                    "until you accept one.");
+        }
 
         if ((choice_type == C_JOB && ng.species != SP_UNKNOWN)
             || (choice_type == C_SPECIES && ng.job != JOB_UNKNOWN))
@@ -1431,7 +1437,8 @@ protected:
         _add_choice_menu_option(1, 2,
                 text, ' ', M_ABORT, desc);
 
-        if (_char_defined(defaults))
+        if (_char_defined(defaults)
+            && (choice_type != C_JOB || ng.species == SP_UNKNOWN))
         {
             _add_choice_menu_option(1, 3,
                     "  Tab - " + newgame_char_description(defaults), '\t',
@@ -1552,8 +1559,6 @@ void UINewGameMenu::menu_item_activated(int id)
 void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
                        UINewGameMenu* ng_menu, menu_letter &letter)
 {
-    ng_menu->_add_group_title(name, position);
-
     coord_def pos(position);
 
     for (job_type &job : jobs)
@@ -1565,7 +1570,7 @@ void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
             continue;
 
         if (ng.species != SP_UNKNOWN
-            && _job_allowed(ng.species, job) == CC_BANNED)
+            && _job_allowed(ng.species, job) != CC_UNRESTRICTED)
         {
             continue;
         }
@@ -1581,6 +1586,8 @@ void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
         const bool is_active_item = defaults.job == job;
         const bool recommended = item_status != ITEM_STATUS_RESTRICTED;
 
+        if (pos == position)
+            ng_menu->_add_group_title(name, position);
         ++pos.y;
 
         ng_menu->_add_group_item(
@@ -1600,8 +1607,6 @@ void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
 void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
                        UINewGameMenu* ng_menu, menu_letter &letter)
 {
-    ng_menu->_add_group_title(name, position);
-
     coord_def pos(position);
 
     for (species_type &this_species : species_list)
@@ -1629,6 +1634,8 @@ void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
         const bool is_active_item = defaults.species == this_species;
         const bool recommended = item_status != ITEM_STATUS_RESTRICTED;
 
+        if (pos == position)
+            ng_menu->_add_group_title(name, position);
         ++pos.y;
 
         ng_menu->_add_group_item(
