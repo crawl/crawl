@@ -1256,7 +1256,7 @@ MONS:    rakshasa ; whip good_item | trident good_item | long sword good_item . 
                     ring mail good_item | kite shield good_item . \
                     mundane javelin | boomerang | throwing net
 MONS:    guardian serpent / great orb of eyes / abyssal acolyte band
-ITEM:    potion of curing pre_id / potion of moonshine pre_id
+ITEM:    potion of curing pre_id / potion of curing pre_id
 SUBST:   x = ccccvbb
 MAP
      .x.x
@@ -1426,7 +1426,7 @@ NAME:    hangedman_abyss_or_decor_stagger
 TAGS:    transparent no_pool_fixup decor
 DEPTH:   D:4-, Depths, Abyss
 ITEM:    great mace ego:distortion randart / wand of mindburst pre_id / \
-         dart ego:atropa q:4 w:4 / potion of moonshine pre_id w:4 / \
+         dart ego:atropa q:4 w:4 / potion of curing pre_id w:4 / \
          parchment of alistair's intoxication
 KFEAT:   ^ = trap_harlequin w:7 / trap_devourer w:13
 : if you.in_branch("Abyss") then
