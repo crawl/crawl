@@ -1279,9 +1279,7 @@ cannot affect artificial beings, and the undead will decompose if affected.
 Manifold Assault spell
 
 Warps space into paradoxical configurations to strike many visible foes with
-one melee attack. Power increases the number of foes attacked with one cast,
-though unarmed attacks strike only half as many targets at once, as additional
-care must be taken when warping one's own limbs.
+one melee attack. Power increases the number of foes attacked with one cast.
 
 The time taken for the attack is exactly the same as a normal melee attack.
 Attacks performed this way never miss, but the exact spot struck cannot be

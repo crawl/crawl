@@ -1508,10 +1508,7 @@ spret cast_manifold_assault(actor& agent, int pow, bool fail, bool real,
     }
 
     shuffle_array(targets);
-    // UC is worse at launching multiple manifold assaults, since
-    // shapeshifters have a much easier time casting it.
-    const size_t max_targets = weapon ? 4 + div_rand_round(pow, 25)
-                                      : 2 + div_rand_round(pow, 50);
+    const size_t max_targets = 4 + div_rand_round(pow, 25);
     const size_t target_count = std::min(max_targets, targets.size());
     int animation_delay = 80 / target_count;
 
