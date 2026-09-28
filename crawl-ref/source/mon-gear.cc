@@ -59,16 +59,6 @@ void give_specific_item(monster* mon, int thing)
             _strip_item_ego(mthing);
     }
 
-    // An electrocution proc is too dangerous for a starting character on D:1.
-    if (mon->type == MONS_GOBLIN
-        && level_id::current() == level_id(BRANCH_DUNGEON, 1)
-        && mthing.is_type(OBJ_WEAPONS, WPN_DAGGER)
-        && !is_artefact(mthing)
-        && get_weapon_brand(mthing) == SPWPN_ELECTROCUTION)
-    {
-        _strip_item_ego(mthing);
-    }
-
     dprf(DIAG_MONPLACE, "Giving %s to %s...", mthing.name(DESC_PLAIN).c_str(),
          mon->name(DESC_PLAIN, true).c_str());
 
