@@ -759,6 +759,7 @@ const char* scroll_type_name(int scrolltype)
     case SCR_REVELATION:         return "revelation";
     case SCR_FOG:                return "fog";
     case SCR_ACQUIREMENT:        return "acquirement";
+    case SCR_BRAND_WEAPON:       return "brand weapon"; // Legacy item specs.
     case SCR_BLESS_ITEM:         return "bless item";
     case SCR_VULNERABILITY:      return "vulnerability";
     case SCR_SILENCE:            return "silence";

@@ -6021,6 +6021,10 @@ void unmarshallItem(reader &th, item_def &item)
     if (item.is_type(OBJ_SCROLLS, SCR_IDENTIFY))
         item.sub_type = SCR_REVELATION;
 
+    // Preserve old Brand Weapon stacks as the replacement Chili scroll.
+    if (item.is_type(OBJ_SCROLLS, SCR_BRAND_WEAPON))
+        item.sub_type = SCR_BLESS_ITEM;
+
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_CORPSE_COLOUR
         && item.base_type == OBJ_CORPSES

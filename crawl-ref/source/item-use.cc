@@ -2411,123 +2411,6 @@ static void _bless_item(item_def &item)
     flash_view_delay(UA_PLAYER, WHITE, 300);
 }
 
-static void _brand_weapon(item_def &wpn)
-{
-    you.wield_change = true;
-
-    const string itname = _item_name(wpn);
-
-    _rebrand_weapon(wpn);
-
-    bool success = true;
-    colour_t flash_colour = BLACK;
-
-    switch (get_weapon_brand(wpn))
-    {
-    case SPWPN_VORPAL:
-        flash_colour = YELLOW;
-        mprf("%s emits a brilliant flash of light!", itname.c_str());
-        break;
-
-    case SPWPN_PROTECTION:
-        flash_colour = YELLOW;
-        mprf("%s projects an invisible shield of force!",itname.c_str());
-        break;
-
-    case SPWPN_FLAMING:
-        flash_colour = RED;
-        mprf("%s is engulfed in flames!", itname.c_str());
-        break;
-
-    case SPWPN_FREEZING:
-        flash_colour = LIGHTCYAN;
-        mprf("%s is covered with a thin layer of ice!", itname.c_str());
-        break;
-
-    case SPWPN_DRAINING:
-        flash_colour = DARKGREY;
-        mprf("%s craves living souls!", itname.c_str());
-        break;
-
-    case SPWPN_VAMPIRISM:
-        flash_colour = DARKGREY;
-        mprf("%s thirsts for the lives of mortals!", itname.c_str());
-        break;
-
-    case SPWPN_VENOM:
-        flash_colour = GREEN;
-        mprf("%s drips with poison.", itname.c_str());
-        break;
-
-    case SPWPN_ELECTROCUTION:
-        flash_colour = LIGHTCYAN;
-        mprf("%s crackles with electricity.", itname.c_str());
-        break;
-
-    case SPWPN_CHAOS:
-        flash_colour = random_colour();
-        mprf("%s erupts in a glittering mayhem of colour.", itname.c_str());
-        break;
-
-    case SPWPN_ACID:
-        flash_colour = ETC_SLIME;
-        mprf("%s oozes corrosive slime.", itname.c_str());
-        break;
-
-    case SPWPN_SPECTRAL:
-        flash_colour = BLUE;
-        mprf("%s acquires a faint afterimage.", itname.c_str());
-        break;
-
-    case SPWPN_REBUKE:
-        flash_colour = WHITE;
-        mprf("%s quivers with indignation.", itname.c_str());
-        break;
-
-    case SPWPN_VALOUR:
-        flash_colour = WHITE;
-        mprf("%s thrums with vital power.", itname.c_str());
-        break;
-
-    case SPWPN_ENTANGLING:
-        flash_colour = LIGHTGREEN;
-        mprf("%s erupts in a tangle of vines.", itname.c_str());
-        break;
-
-    case SPWPN_SUNDERING:
-        flash_colour = LIGHTRED;
-        mprf("%s becomes viciously sharp.", itname.c_str());
-        break;
-
-    case SPWPN_CONCUSSION:
-        flash_colour = YELLOW;
-        mprf("%s begins to exert an overwhelming pressure.", itname.c_str());
-        break;
-
-    case SPWPN_DEVIOUS:
-        flash_colour = BLUE;
-        mprf("%s glints wickedly in the shadows.", itname.c_str());
-        break;
-
-    default:
-        success = false;
-        break;
-    }
-
-    if (success)
-    {
-        item_set_appearance(wpn);
-        mprf_nocap("%s", wpn.name(DESC_INVENTORY_EQUIP).c_str());
-        // Might be rebranding to/from protection or evasion.
-        you.redraw_armour_class = true;
-        you.redraw_evasion = true;
-        // Might be removing antimagic.
-        calc_mp();
-        flash_view_delay(UA_PLAYER, flash_colour, 300);
-    }
-    return;
-}
-
 static spret _choose_target_item_for_scroll(bool scroll_known, object_selector selector,
                                             const char* prompt, item_def*& target)
 {
@@ -2553,12 +2436,8 @@ static object_selector _enchant_selector(scroll_type scroll)
 static spret _scroll_choose_weapon(bool alreadyknown, const string &pre_msg,
                                        scroll_type scroll, item_def*& target)
 {
-    // no branding scrolls in chili
-    const bool branding = scroll == false;
-
     spret result = _choose_target_item_for_scroll(alreadyknown, _enchant_selector(scroll),
-                                                  branding ? "Brand which weapon?"
-                                                           : "Enchant which weapon?",
+                                                  "Enchant which weapon?",
                                                   target);
 
     if (alreadyknown && result == spret::success)
