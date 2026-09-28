@@ -1872,9 +1872,11 @@ else:
     for i in range(len(source_files)):
         source_files[i] = source_files[i].replace('.a', '.h')
 
-    yaml_files = glob.glob("dat/species/*.yaml")
-    yaml_files += glob.glob("dat/forms/*.yaml")
+    special_yaml_files = glob.glob("dat/species/*.yaml")
+    special_yaml_files.sort()
+    yaml_files = glob.glob("dat/forms/*.yaml")
     yaml_files.sort()
+    source_files.extend(yaml_files)
 
     lua_files = glob.glob("dat/clua/*.lua")
     lua_files.append("dat/dlua/lm_timed.lua")
@@ -1891,7 +1893,7 @@ else:
     # put some important files first
     # (because if there are duplicate strings, we want them put under these files)
     files = SPECIAL_FILES.copy()
-    files.extend(yaml_files)
+    files.extend(special_yaml_files)
 
     # add wanted source files to list to be processed
     for fname in source_files:
