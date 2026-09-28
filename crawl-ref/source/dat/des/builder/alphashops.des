@@ -74,7 +74,7 @@
        "book of blood", "buckler", "boomerang", "blade talisman",
        "broad axe", "pair of boots", "potion of berserk rage",
        "potion of brilliance", "scroll of butterflies",
-       "scroll of blinking", "scroll of brand weapon" }
+       "scroll of blinking", "scroll of bless item" }
 
       elseif s == "C" then i = { "book of callings", "book of cantrips",
        "club", "book of conjurations",

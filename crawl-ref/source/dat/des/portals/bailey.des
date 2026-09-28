@@ -771,7 +771,7 @@ MONS:   orc warrior ; spear w:5 | trident w:5 | halberd | hand axe | war axe /\
 KMONS:  R = goblin rider
 ITEM:   potion of experience pre_id q:1
 : item(dgn.loot_potions)
-ITEM:   scroll of brand weapon pre_id w:5 / \
+ITEM:   scroll of bless item pre_id w:5 / \
         scroll of acquirement pre_id q:1 w:5 /\
         scroll of enchant weapon pre_id q:2
 ITEM:   scroll of enchant weapon pre_id /\

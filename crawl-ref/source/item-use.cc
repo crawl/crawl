@@ -2545,9 +2545,7 @@ static spret _choose_target_item_for_scroll(bool scroll_known, object_selector s
 
 static object_selector _enchant_selector(scroll_type scroll)
 {
-    if (scroll == SCR_BRAND_WEAPON)
-        return OSEL_BRANDABLE_WEAPON;
-    else if (scroll == SCR_ENCHANT_WEAPON)
+    if (scroll == SCR_ENCHANT_WEAPON)
         return OSEL_ENCHANTABLE_WEAPON;
     die("Invalid scroll type %d for _enchant_selector", (int)scroll);
 }
@@ -2555,7 +2553,8 @@ static object_selector _enchant_selector(scroll_type scroll)
 static spret _scroll_choose_weapon(bool alreadyknown, const string &pre_msg,
                                        scroll_type scroll, item_def*& target)
 {
-    const bool branding = scroll == SCR_BRAND_WEAPON;
+    // no branding scrolls in chili
+    const bool branding = scroll == false;
 
     spret result = _choose_target_item_for_scroll(alreadyknown, _enchant_selector(scroll),
                                                   branding ? "Brand which weapon?"
@@ -2582,42 +2581,6 @@ static spret _handle_bless_item(bool alreadyknown, const string &pre_msg)
 
     _bless_item(*itemp);
     return result;
-}
-
-static spret _handle_brand_weapon(bool alreadyknown, const string &pre_msg)
-{
-    item_def* weapon = nullptr;
-    string letter = "";
-    spret result = spret::success;
-    if (!clua.callfn("c_choose_brand_weapon", ">s", &letter))
-    {
-        if (!clua.error.empty())
-            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
-    }
-    else if (isalpha(letter.c_str()[0]))
-    {
-        item_def &item = you.inv[letter_to_index(letter.c_str()[0])];
-        if (item.defined() && is_brandable_weapon(item, true))
-            weapon = &item;
-    }
-
-    if (!weapon)
-    {
-        result = _scroll_choose_weapon(alreadyknown, pre_msg, SCR_BRAND_WEAPON,
-                                       weapon);
-    }
-
-    if (result != spret::success)
-        return result;
-
-    _brand_weapon(*weapon);
-    return result;
-}
-
-bool uncancel_brand_weapon()
-{
-    spret result = _handle_brand_weapon(false, "");
-    return result != spret::seen_hups;
 }
 
 bool uncancel_bless_item()
@@ -2922,7 +2885,6 @@ static bool _is_cancellable_scroll(scroll_type scroll)
            || scroll == SCR_BLINKING
            || scroll == SCR_ENCHANT_ARMOUR
            || scroll == SCR_AMNESIA
-           || scroll == SCR_BRAND_WEAPON
            || scroll == SCR_ENCHANT_WEAPON
            || scroll == SCR_ACQUIREMENT
            || scroll == SCR_POISON;
@@ -3449,19 +3411,6 @@ bool read(item_def* scroll, dist *target)
 
         break;
 
-    case SCR_BRAND_WEAPON:
-        if (!alreadyknown)
-        {
-            mpr(pre_succ_msg);
-            mpr("It is a scroll of brand weapon.");
-            // included in default force_more_message (to show it before menu)
-
-            result = _run_read_scroll_uncancel(UNC_BRAND_WEAPON, *scroll);
-        }
-        else
-            result = _handle_brand_weapon(alreadyknown, pre_succ_msg);
-
-        break;
     case SCR_BLESS_ITEM:
         if (!alreadyknown)
         {
@@ -3597,7 +3546,6 @@ void handle_post_scroll_effects(item_def* scroll, spret read_result,
     const scroll_type which_scroll = static_cast<scroll_type>(scroll->sub_type);
 
     if (!alreadyknown
-        && which_scroll != SCR_BRAND_WEAPON
         && which_scroll != SCR_ENCHANT_WEAPON
         && which_scroll != SCR_IDENTIFY
         && which_scroll != SCR_ENCHANT_ARMOUR
