@@ -1851,7 +1851,7 @@ ENDMAP
 NAME:   grunt_witch_cave
 MONS:   fenstrider witch, hydra
 ITEM:   spriggan skeleton / elf skeleton
-KITEM:  K = potion of moonshine pre_id w:20 / \
+KITEM:  K = potion of curing pre_id w:20 / \
             potion of mutation pre_id
 KITEM:  * = *
 KFEAT:  K = shallow_water

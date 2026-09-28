@@ -71,7 +71,6 @@ const vector<potion_type> potion_types =
     POT_CANCELLATION,
     POT_AMBROSIA,
     POT_INVISIBILITY,
-    POT_MOONSHINE,
     POT_EXPERIENCE,
     POT_MAGIC,
     POT_BERSERK_RAGE,

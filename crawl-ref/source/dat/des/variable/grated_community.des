@@ -90,7 +90,7 @@ KFEAT:  B = scroll shop type:Wondrous suffix:Manuscripts count:10 \
             scroll of silence
 KFEAT:  C = distillery shop type:Miraculous suffix:Elixirs count:10 \
             greed:35 ; potion of mutation | potion of attraction | \
-            potion of berserk rage | potion of moonshine | \
+            potion of berserk rage | potion of curing | \
             potion of lignification | potion of cancellation
 # Moved back into the main vault. Nicolae's Legendary Smithy sells randarts, but
 # with a guaranteed downside. It's still possible to find something usable, if
