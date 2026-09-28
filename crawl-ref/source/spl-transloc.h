@@ -13,6 +13,7 @@ const int GAVOTTE_DISTANCE = 4;
 spret cast_disjunction(int pow, bool fail);
 void disjunction_spell();
 
+string blink_cooldown_description(int pow);
 spret cast_blink(int pow, bool fail = false);
 void uncontrolled_blink(bool override_stasis = false, int max_dist = LOS_RADIUS);
 spret controlled_blink(bool safe_cancel = true, dist *target = nullptr);

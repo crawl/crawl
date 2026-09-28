@@ -4497,6 +4497,12 @@ static string _player_spell_stats(const spell_type spell)
         failure = failure_rate_to_string(raw_spell_fail(spell));
     description += make_stringf("        Fail: %s", failure.c_str());
 
+    const string effect_string = spell_effect_string(spell);
+    if (effect_string != "") {
+        description += "\n";
+        description += "\n";
+        description += effect_string;
+    }
     const string damage_string = spell_damage_string(spell);
     const string max_dam_string = spell_max_damage_string(spell);
     const int acc = spell_acc(spell);
