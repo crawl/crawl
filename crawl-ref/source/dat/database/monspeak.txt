@@ -2235,7 +2235,7 @@ friendly Cassandra
 @The_monster@ pleads, "Will you not heed even the word of a friend and end this?"
 
 @The_monster@ says, "Even I cannot save you if you persist in this."
-%%%%%
+%%%%
 
 ############ CHUCK ### An avid rock collector.
 Chuck
