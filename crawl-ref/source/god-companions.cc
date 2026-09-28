@@ -1123,7 +1123,7 @@ static int _calc_attack_damage(const monster& apostle)
 {
     const item_def* weapon = apostle.weapon();
     return mons_attack_spec(apostle, 0, false).damage
-           + brand_adjust_weapon_damage(property(*weapon, PWPN_DAMAGE), weapon->brand, false)
+           + property(*weapon, PWPN_DAMAGE)
            + weapon->plus;
 }
 

@@ -1799,7 +1799,7 @@ NSUBST:  123 = 1=.
 # For D:13- and Depths, generate all three ancestor monsters.
 :     else
 MONS:    ogre mage; lajatang ego:freezing / \
-         molten gargoyle ; lajatang ego:heavy
+         molten gargoyle ; lajatang ego:vorpal
 MONS:    spriggan ; dagger ego:draining good_item . robe good_item . \
                     buckler . wand of paralysis / \
          vampire ; dagger ego:draining good_item . robe good_item . \
@@ -2643,7 +2643,7 @@ KITEM:   $S = $ q:7
 KMONS:   P = bush
 # An item deliberately unlikely to be of much value, but which default
 # autoexplore stops to look at, to emphasize entering a gimmick vault.
-KITEM:   ~ = damaged short sword ego:heavy / \
+KITEM:   ~ = damaged short sword ego:vorpal / \
              damaged sling ego:flaming / damaged whip ego:freezing
 KITEM:   ! = any potion q:1 / any scroll q:1 w:5
 KFEAT:   % = cache_of_fruit
@@ -6656,7 +6656,7 @@ TAGS:    temple_overflow_2 temple_overflow_trog temple_overflow_sif_muna
 TAGS:    no_item_gen no_monster_gen patrolling transparent
 COLOUR:  1- = red
 COLOUR:  2' = blue
-: local egos = {["antimagic"] = 1, ["heavy"] = 2, ["flaming"] = 2}
+: local egos = {["antimagic"] = 1, ["vorpal"] = 2, ["flaming"] = 2}
 : if you.absdepth() <= 3 then
 {{
 local enchant = 2 + (crawl.one_chance_in(3) and 1 or 0)

@@ -3206,9 +3206,9 @@ KMONS:   H = frost giant ; great mace ego:freezing w:20 \
 KMONS:   J = frost giant ; great mace ego:freezing randart w:20 \
             | giant club ego:freezing randart w:3 \
             | giant spiked club ego:freezing randart w:2
-KMONS:   K = iron giant ; great mace ego:heavy randart w:20 \
-            | giant club ego:heavy randart w:3 \
-            | giant spiked club ego:heavy randart w:2
+KMONS:   K = iron giant ; great mace ego:vorpal randart w:20 \
+            | giant club ego:vorpal randart w:3 \
+            | giant spiked club ego:vorpal randart w:2
 KITEM:   ? = potion of might q:1 pre_id
 KITEM:   ! = scroll of enchant weapon q:1 pre_id
 KFEAT:   ?TU = T
@@ -4166,14 +4166,14 @@ NSUBST:  % = 1:e / 1:f / 1:| / 2 = |* / 2:*% / *:%
 KMONS:   O = player ghost
 ITEM:    large rock q:2 no_pickup / ring of protection pre_id
 : local e = "staff of earth pre_id / randbook disc:earth numspells:3 / \
-:            great mace ego:heavy / plate armour good_item ego:ponderousness / \
+:            great mace ego:vorpal / plate armour good_item ego:ponderousness / \
 :            medusa talisman w:5"
 : if items.pickable("tin of tremorstones") then
 :   e = e .. (" / tin of tremorstones w:5")
 : end
 : item(e)
 ITEM:    staff of earth randart pre_id / randbook disc:earth numspells:5 / \
-         great mace ego:heavy randart plus:6 pre_id / granite talisman w:5 / \
+         great mace ego:vorpal randart plus:6 pre_id / granite talisman w:5 / \
          crystal plate armour good_item / manual of earth magic w:5
 SUBST:   A : x., B : c.., C : x`, D : x``
 FTILE:   '$%defgh123O = floor_pebble_brown
@@ -4253,7 +4253,7 @@ ITEM:    staff of cold pre_id / war axe ego:freezing pre_id w:15 / \
 ITEM:    staff of air pre_id / dagger ego:electrocution pre_id w:15 / \
          book of air / ring of evasion pre_id w:15 / \
          damaged storm dragon scales w:5 pre_id / eel talisman w:5
-ITEM:    staff of earth pre_id / flail ego:heavy pre_id w:15 / \
+ITEM:    staff of earth pre_id / flail ego:vorpal pre_id w:15 / \
          book of geomancy / ring of protection pre_id w:15 / \
          damaged crystal plate armour w:5 pre_id / medusa talisman w:5
 ITEM:    staff of fire randart pre_id w:5 / \
@@ -4269,7 +4269,7 @@ ITEM:    staff of air randart pre_id w:5 / \
          randbook disc:air slevels:9 / storm dragon scales good_item / \
          eel randart talisman w:5
 ITEM:    staff of earth randart pre_id w:5 / \
-         morningstar ego:heavy good_item pre_id w:15 / \
+         morningstar ego:vorpal good_item pre_id w:15 / \
          randbook disc:earth slevels:9 / crystal plate armour good_item / \
          medusa talisman randart w:5
 KITEM:   D = any magical staff randart artprops:Fire&&rF:1 pre_id / \
@@ -4291,8 +4291,8 @@ KITEM:   F = any magical staff randart artprops:Air&&rElec:1 pre_id / \
              storm dragon scales randart plus:9 pre_id w:15 / \
              storm talisman w:5
 KITEM:   G = any magical staff randart artprops:Earth&&Conj pre_id / \
-             eveningstar randart ego:heavy pre_id / \
-             great mace randart ego:heavy pre_id / \
+             eveningstar randart ego:vorpal pre_id / \
+             great mace randart ego:vorpal pre_id / \
              randbook disc:earth numspells:5 slevels:27 / \
              crystal plate armour randart w:15 / \
              granite talisman w:5

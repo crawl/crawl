@@ -342,7 +342,7 @@ WEIGHT:   1 (D:$), 10
 : if you.in_branch("D") then
 MONS:     gargoyle ; mace ego:freezing | mace ego:electrocution w:20 / \
           yaktaur ; arbalest ego:flaming | arbalest ego:freezing / \
-          salamander ; spear ego:electrocution | spear ego:heavy / \
+          salamander ; spear ego:electrocution | spear ego:vorpal / \
           arcanist / boggart w:2 / deep elf pyromancer
 MONS:     fire crab / rime drake / air elemental / \
           raiju w:5 / raiju perm_ench:shapeshifter w:5 / \

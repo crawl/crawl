@@ -15,7 +15,7 @@ function setup_hydra_weapon(e)
                      ["war axe"] = 8, ["broad axe"] = 12, ["lajatang"] = 2}
 
     -- Basic set of egos with weights.
-    local egos = {["none"] = 30, ["heavy"] = 15, ["freezing"] = 15,
+    local egos = {["none"] = 30, ["vorpal"] = 15, ["freezing"] = 15,
             ["electrocution"] = 10, ["venom"] = 10, ["protection"] = 10,
             ["vampirism"] = 5, ["holy_wrath"] = 5, ["draining"] = 5,
             ["pain"] = 2, ["distortion"] = 2, ["antimagic"] = 2, ["speed"] = 1}
@@ -31,10 +31,10 @@ function wrathful_weapon(class, quality)
     -- the more desirable antimagic brand for randarts, which are trying to be
     -- better quality.
     if quality == "good_item" then
-        egos = {["antimagic"] = 10, ["heavy"] = 10, ["freezing"] = 10}
+        egos = {["antimagic"] = 10, ["vorpal"] = 10, ["freezing"] = 10}
     elseif quality == "randart" then
         -- Increased chance for antimagic.
-        egos = {["antimagic"] = 25, ["heavy"] = 10, ["freezing"] = 10}
+        egos = {["antimagic"] = 25, ["vorpal"] = 10, ["freezing"] = 10}
     else
         error("Unknown weapon quality: " .. quality)
     end

@@ -65,14 +65,15 @@ to holy beings, an additional one-quarter damage to undead and demons, and an
 additional half damage to all others, so long as it pierces armour. Holy beings
 and good god worshippers cannot use this.
 %%%%
-heavy (heavy) weapon ego
+vorpality (vorpal) weapon ego
 
-It deals dramatically more damage, but attacks with it are much slower.
+It inflicts extra physical damage on hits that pierce armour, without slowing
+your attacks.
 %%%%
-heavy (heavy) weapon ego ranged
+vorpality (vorpal) weapon ego ranged
 
-Any ammunition fired from it deals dramatically more damage, but attacks with
-it are much slower.
+Any ammunition fired from it inflicts extra physical damage on hits that pierce
+armour, without slowing your attacks.
 %%%%
 holy wrath (holy) weapon ego
 

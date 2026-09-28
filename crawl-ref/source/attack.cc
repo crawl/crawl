@@ -986,7 +986,7 @@ int attack::adjusted_weapon_damage() const
     if (weapon && weapon->is_type(OBJ_WEAPONS, WPN_ATHAME))
         wdamage = wdamage + target_debuff_count() * 2; // up to 66% of base 6 damage!
 
-    return brand_adjust_weapon_damage(wdamage, damage_brand, true);
+    return wdamage;
 }
 
 int attack::calc_damage()
@@ -1190,7 +1190,8 @@ bool attack::apply_damage_brand(const char *what)
     if (!damage_done
         && (brand == SPWPN_FLAMING || brand == SPWPN_FREEZING
             || brand == SPWPN_HOLY_WRATH || brand == SPWPN_FOUL_FLAME
-            || brand == SPWPN_ANTIMAGIC || brand == SPWPN_VAMPIRISM))
+            || brand == SPWPN_ANTIMAGIC || brand == SPWPN_VAMPIRISM
+            || brand == SPWPN_VORPAL))
     {
         // These brands require some regular damage to function.
         return false;
@@ -1290,6 +1291,10 @@ bool attack::apply_damage_brand(const char *what)
     case SPWPN_DRAINING:
         special_damage_flavour = BEAM_NEG;
         drain_defender();
+        break;
+
+    case SPWPN_VORPAL:
+        special_damage = 1 + random2(damage_done) / 3;
         break;
 
     case SPWPN_VAMPIRISM:

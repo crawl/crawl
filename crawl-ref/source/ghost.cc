@@ -494,7 +494,7 @@ void ghost_demon::init_player_ghost()
                 case STAFF_ALCHEMY: brand = SPWPN_VENOM; break;
                 case STAFF_NECROMANCY: brand = SPWPN_PAIN; break;
                 case STAFF_AIR: brand = SPWPN_ELECTROCUTION; break;
-                case STAFF_EARTH: brand = SPWPN_HEAVY; break;
+                case STAFF_EARTH: brand = SPWPN_VORPAL; break;
                 default: ;
                 }
             }

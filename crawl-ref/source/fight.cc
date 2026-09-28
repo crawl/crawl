@@ -1356,8 +1356,6 @@ int weapon_adjust_delay(const item_def &weapon, int base, bool random)
     const brand_type brand = get_weapon_brand(weapon);
     if (brand == SPWPN_SPEED)
         return random ? div_rand_round(base * 2, 3) : (base * 2) / 3;
-    if (brand == SPWPN_HEAVY)
-        return random ? div_rand_round(base * 3, 2) : (base * 3) / 2;
     return base;
 }
 
@@ -1803,15 +1801,6 @@ int throwing_base_damage_bonus(const item_def &proj, bool random)
     if (random)
         return div_rand_round(you.skill_rdiv(SK_THROWING) * damage_mult, 4);
     return (you.skill(SK_THROWING) * damage_mult) / 4;
-}
-
-int brand_adjust_weapon_damage(int base_dam, int brand, bool random)
-{
-    if (brand != SPWPN_HEAVY)
-        return base_dam;
-    if (random)
-        return div_rand_round(base_dam * 9, 5);
-    return base_dam * 9 / 5;
 }
 
 int resonance_damage_mod(int dam, bool random)

@@ -315,7 +315,7 @@ i-venom BRAND_VENOM
 i-protection BRAND_PROTECTION
 i-draining BRAND_DRAINING
 i-speed BRAND_SPEED
-i-heavy BRAND_HEAVY
+i-vorpal BRAND_VORPAL
 # start TAG_MAJOR_VERSION == 34
 i-flaming BRAND_FLAME
 i-freezing BRAND_FROST

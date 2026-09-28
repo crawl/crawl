@@ -1284,7 +1284,7 @@ MARKER:  a = lua:fog_machine { cloud_type = "thin mist", \
   local equip = {}
   if crawl.coinflip() then
     equip = {"any weapon ego:flaming", "any weapon ego:freezing",
-             "any weapon ego:electrocution", "any weapon ego:heavy"}
+             "any weapon ego:electrocution", "any weapon ego:vorpal"}
   else
     equip = {"pair of gloves ego:fire", "helmet ego:ice",
              "cloak ego:air", "pair of boots ego:earth"}
@@ -1420,7 +1420,7 @@ KFEAT:  P = shallow_water
 KFEAT:  S = weapon shop type:Hydra suffix:Hut count:7 ; falchion ego:flaming | \
     long sword ego:flaming | scimitar ego:flaming | great sword ego:flaming | \
     hand axe ego:flaming | broad axe ego:flaming | war axe ego:flaming | \
-    battleaxe ego:flaming | lajatang ego:heavy | halberd ego:flaming | \
+    battleaxe ego:flaming | lajatang ego:vorpal | halberd ego:flaming | \
     glaive ego:flaming | hand cannon ego:freezing | orcbow ego:freezing | \
     arbalest ego:freezing | shortbow ego:freezing | longbow ego:freezing
 FTILE:  -1wP = floor_grass_dark
@@ -1555,12 +1555,12 @@ TAGS:   transparent extra
 WEIGHT: 3
 # Only deals in items that are probably really heavy.
 KFEAT:  S = general shop type:Mass suffix:Market ; \
-        giant club ego:heavy w:20 | giant spiked club ego:heavy | \
-        great mace ego:heavy | executioner's axe ego:heavy w:2 | \
-        triple sword ego:heavy w:2 | bardiche ego:heavy w:5 | \
-        triple crossbow ego:heavy w:5 | dark maul w:1 | sniper w:1 | \
-        double sword ego:heavy | broad axe ego:heavy | \
-        eveningstar ego:heavy w:5 | morningstar ego:heavy w:5 | \
+        giant club ego:vorpal w:20 | giant spiked club ego:vorpal | \
+        great mace ego:vorpal | executioner's axe ego:vorpal w:2 | \
+        triple sword ego:vorpal w:2 | bardiche ego:vorpal w:5 | \
+        triple crossbow ego:vorpal w:5 | dark maul w:1 | sniper w:1 | \
+        double sword ego:vorpal | broad axe ego:vorpal | \
+        eveningstar ego:vorpal w:5 | morningstar ego:vorpal w:5 | \
         plate armour w:25 | crystal plate armour w:5 | tower shield w:15 | \
         book of the fortress w:15 | large rock w:25 | granite talisman w:15
 MAP
@@ -1772,7 +1772,7 @@ local weaponnames = {"dagger", "short sword", "falchion", "scimitar",
                     "dire flail", "eveningstar w:6",
                     "spear", "halberd", "partisan w:6", "demon trident w:3"}
 local egos = {"chaos", "draining", "distortion", "electrocution",  "flaming",
-              "freezing", "heavy", "speed", "spectral", "protection", "pain"}
+              "freezing", "vorpal", "speed", "spectral", "protection", "pain"}
 local kstr = "S = general shop name:" .. name .. " type:Alliterative " ..
              "suffix:Armaments count:" .. count .. " ; dagger ego:devious | " ..
              scythe("speed") .. " | " .. scythe("spectral")

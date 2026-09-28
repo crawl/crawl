@@ -226,16 +226,16 @@ KITEM:    e = rapier plus:2 ego:electrocution pre_id /\
            rapier plus:2 ego:distortion pre_id /\
            rapier plus:2 good_item pre_id, \
            war axe plus:3 ego:freezing pre_id /\
-           war axe plus:3 ego:heavy pre_id /\
+           war axe plus:3 ego:vorpal pre_id /\
            war axe plus:3 good_item pre_id w:5 /\
            broad axe plus:1 ego:freezing pre_id /\
-           broad axe plus:1 ego:heavy pre_id /\
+           broad axe plus:1 ego:vorpal pre_id /\
            broad axe plus:1 good_item pre_id w:5, \
            dire flail plus:2 ego:protection pre_id /\
-           dire flail plus:2 ego:heavy pre_id /\
+           dire flail plus:2 ego:vorpal pre_id /\
            dire flail plus:2 good_item pre_id w:5 /\
            morningstar plus:2 ego:protection pre_id /\
-           morningstar plus:2 ego:heavy pre_id /\
+           morningstar plus:2 ego:vorpal pre_id /\
            morningstar plus:2 good_item pre_id w:5, \
            partisan plus:2 ego:protection pre_id /\
            partisan plus:2 ego:venom pre_id /\
@@ -824,7 +824,7 @@ KITEM:    b = battleaxe plus:5 good_item pre_id /\
     great sword plus:5 randart pre_id w:5 /\
     lajatang plus:5 good_item pre_id /\
     lajatang plus:5 randart pre_id w:5 /\
-    longbow plus:5 ego:heavy pre_id w:15 /\
+    longbow plus:5 ego:vorpal pre_id w:15 /\
     triple crossbow plus:5 good_item pre_id w:15
 KITEM:    d = plate armour plus:6 pre_id /\
     plate armour plus:4 good_item pre_id /\

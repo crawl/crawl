@@ -1048,7 +1048,7 @@ static int _weapon_brand_reroll_denom(int brand)
     case SPWPN_FLAMING:
     case SPWPN_FREEZING:
     case SPWPN_DRAINING:
-    case SPWPN_HEAVY:
+    case SPWPN_VORPAL:
     case SPWPN_VENOM:
     case SPWPN_PROTECTION:
     case SPWPN_ELECTROCUTION:
@@ -1109,7 +1109,7 @@ static void _adjust_brand(item_def &item, int agent)
     if (agent == GOD_TROG && item.base_type == OBJ_WEAPONS)
     {
         // 75% chance of a brand
-        item.brand = random_choose(SPWPN_NORMAL, SPWPN_HEAVY,
+        item.brand = random_choose(SPWPN_NORMAL, SPWPN_VORPAL,
                                    SPWPN_FLAMING, SPWPN_ANTIMAGIC);
         if (weapon_has_flag(item.sub_type, WPNF_WOODEN)
             && item.brand == SPWPN_FLAMING)

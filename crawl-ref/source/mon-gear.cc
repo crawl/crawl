@@ -48,27 +48,6 @@ void give_specific_item(monster* mon, int thing)
     item_def &mthing = env.item[thing];
     ASSERT(mthing.defined());
 
-    // Keep distortion out of all monsters' starting equipment on D:1.
-    if (level_id::current() == level_id(BRANCH_DUNGEON, 1)
-        && mthing.base_type == OBJ_WEAPONS
-        && get_weapon_brand(mthing) == SPWPN_DISTORTION)
-    {
-        if (is_artefact(mthing))
-            set_artefact_brand(mthing, SPWPN_NORMAL);
-        else
-            _strip_item_ego(mthing);
-    }
-
-    // An electrocution proc is too dangerous for a starting character on D:1.
-    if (mon->type == MONS_GOBLIN
-        && level_id::current() == level_id(BRANCH_DUNGEON, 1)
-        && mthing.is_type(OBJ_WEAPONS, WPN_DAGGER)
-        && !is_artefact(mthing)
-        && get_weapon_brand(mthing) == SPWPN_ELECTROCUTION)
-    {
-        _strip_item_ego(mthing);
-    }
-
     dprf(DIAG_MONPLACE, "Giving %s to %s...", mthing.name(DESC_PLAIN).c_str(),
          mon->name(DESC_PLAIN, true).c_str());
 
@@ -454,7 +433,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     static const vector<pair<brand_type, int>> HELL_KNIGHT_BRANDS = // sum 45
     {   { SPWPN_FLAMING,        13 },
         { SPWPN_DRAINING,       4 },
-        { SPWPN_HEAVY,          4 },
+        { SPWPN_VORPAL,          4 },
         { SPWPN_DISTORTION,     2 },
         { SPWPN_PAIN,           2 },
         { NUM_SPECIAL_WEAPONS,  20 }, // 5/9 chance of brand
@@ -1022,7 +1001,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
               { WPN_GREAT_SWORD,        1 }, },
             { 1, 0, 3 },
             { { SPWPN_DRAINING,      13 }, // total 45
-              { SPWPN_HEAVY,         7 },
+              { SPWPN_VORPAL,         7 },
               { SPWPN_FREEZING,      4 },
               { SPWPN_FLAMING,       4 },
               { SPWPN_PAIN,          2 },
@@ -1092,7 +1071,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { { SPWPN_NORMAL,         20 },
               { SPWPN_FLAMING,        20 },
               { SPWPN_FREEZING,       10 },
-              { SPWPN_HEAVY,          10 },
+              { SPWPN_VORPAL,          10 },
               { SPWPN_ELECTROCUTION,  10 },
               { SPWPN_VENOM,          10 },
               { SPWPN_VAMPIRISM,       5 },
@@ -1263,7 +1242,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         {
             item.base_type = OBJ_WEAPONS;
             item.sub_type = WPN_QUARTERSTAFF;
-            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HEAVY);
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_VORPAL);
         }
         break;
 

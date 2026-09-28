@@ -1326,7 +1326,7 @@ static void _append_skill_target_desc(string &description, skill_type skill,
 
 static string _desc_attack_delay(const item_def &item)
 {
-    // Hide speed/heavy brand from unidentified weapons.
+    // Hide the speed brand from unidentified weapons.
     item_def dummy = item;
     if (!item.is_identified())
     {
@@ -1385,12 +1385,9 @@ string damage_rating(const item_def *item, int *rating_value)
     // Would be great to have a breakdown of UC damage by skill, form, claws etc.
     const int base_dam = item ? property(*item, PWPN_DAMAGE)
                               : unarmed_base_damage(false);
-    // This is just SPWPN_HEAVY.
-    const int post_brand_dam = brand_adjust_weapon_damage(base_dam, brand, false);
-    const int heavy_dam = post_brand_dam - base_dam;
     const int extra_base_dam = thrown ? throwing_base_damage_bonus(*item, false) :
                                !item ? unarmed_base_damage_bonus(false) :
-                                    heavy_dam; // 0 for non-heavy weapons
+                                    0;
     const skill_type skill = item ? _item_training_skill(*item) : SK_UNARMED_COMBAT;
     const int stat_mult = stat_modify_damage(100, skill);
     const bool use_str = weapon_uses_strength(skill);
@@ -1424,8 +1421,6 @@ string damage_rating(const item_def *item, int *rating_value)
                                                        base_dam, extra_base_dam) :
                                   !item ? make_stringf("[%d + %d (UC)]",
                                                        base_dam, extra_base_dam) :
-                   brand == SPWPN_HEAVY ? make_stringf("[%d + %d (Hvy)]",
-                                                       base_dam, extra_base_dam) :
                                           make_stringf("%d", base_dam);
 
     string plusses_desc;
@@ -1439,7 +1434,8 @@ string damage_rating(const item_def *item, int *rating_value)
                                                     : "Slay");
     }
 
-    const string dmg_brand_desc = thrown ? _describe_missile_dmg_brand(*item) : "";
+    const string dmg_brand_desc = thrown ? _describe_missile_dmg_brand(*item)
+                                        : brand == SPWPN_VORPAL ? " + Vorpal" : "";
 
     const string archery_bonus_string = archery ? make_stringf(" x %d%% (Archery)",
             100 + you.wearing_ego(OBJ_ARMOUR, SPARM_ARCHERY) * you.skill (SK_ARMOUR))
@@ -5501,13 +5497,15 @@ static string _brand_damage_string(const monster_info &mi, brand_type brand,
     const char * name = brand_type_name(brand, true);
     int brand_dam;
     // Only include damaging brands
-    // Heavy is included in base damage calculations instead
     switch (brand)
     {
         case SPWPN_FLAMING:
         case SPWPN_FREEZING:
         case SPWPN_DRAINING:
             brand_dam = dam / 2;
+            break;
+        case SPWPN_VORPAL:
+            brand_dam = dam > 0 ? 1 + (dam - 1) / 3 : 0;
             break;
         case SPWPN_CONCUSSION:
             brand_dam = dam * 3 / 4;
@@ -5743,7 +5741,7 @@ static void _attacks_table_row(const monster_info &mi, mon_attack_desc_info &di,
         // (HACK?: Bake in the athame debuff roll into the max display.)
         int base_dam = (wpn->sub_type == WPN_ATHAME) ? property(*wpn, PWPN_DAMAGE) + 4:
                                                        property(*wpn, PWPN_DAMAGE);
-        dam += brand_adjust_weapon_damage(base_dam, get_weapon_brand(*wpn), false) - 1;
+        dam += base_dam - 1;
         if (ranged && mons_class_flag(mi.type, M_ARCHER))
             dam += archer_bonus_damage(mi.hd);
         slaying += wpn->plus;
