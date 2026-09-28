@@ -343,11 +343,11 @@ unseen Searing Breath cast
 Searing Breath cast
 
 @The_monster@吐息的@beam@ @at@ @target@。
-%%%%%
+%%%%
 Electrical Bolt cast
 
 @The_monster@射出的一道@beam@ @at@ @target@！
-%%%%%
+%%%%
 Spit Lava cast
 
 @The_monster@喷吐的熔岩@at@ @target@。
