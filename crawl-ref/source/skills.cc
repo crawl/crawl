@@ -288,6 +288,15 @@ void reassess_starting_skills(bool balance_djinn)
         if (!you.skill_points[sk])
             continue;
 
+        // convert a percentage of gnoll skill points to a manual
+        if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+        {
+            int holdover = you.skill_points[sk] / 2;
+            you.skill_points[sk] -= holdover;
+            ASSERT(you.skill_points[sk] >= 0);
+            you.skill_manual_points[sk] = holdover;
+        }
+
         // Find out what level that earns this character.
         you.skills[sk] = 0;
 
