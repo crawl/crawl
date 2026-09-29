@@ -1600,6 +1600,8 @@ static string _staff_damage_type_string(stave_type staff)
         return "poison";
     case STAFF_CONJURATION:
         return "energy";
+    case STAFF_SUMMONING:
+        return "healing";
     default:
         return "buggy";
     }
