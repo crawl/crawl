@@ -59,6 +59,10 @@
 #include "tileview.h"
 #include "traps.h" // set_shafted
 #include "viewchar.h"
+#ifdef USE_TILE_LOCAL
+#include <SDL_error.h>
+#include <SDL_misc.h>
+#endif
 #include "view.h"
 #ifdef USE_TILE_LOCAL
  #include "windowmanager.h"
@@ -420,10 +424,12 @@ static void _post_init(bool newc)
 
 struct game_modes_menu_item
 {
-    game_type id;
+    int id;
     const char *label;
     const char *description;
 };
+
+static constexpr int STARTUP_CRAWL_COSPLAY_ACADEMY = -1;
 
 static const vector<game_modes_menu_item> entries =
 {
@@ -446,6 +452,8 @@ static const vector<game_modes_menu_item> entries =
         "Pit computer controlled teams versus each other!" },
     {GAME_TYPE_HIGH_SCORES, "High Scores",
         "View the high score list." },
+    {STARTUP_CRAWL_COSPLAY_ACADEMY, "Crawl Cosplay Academy",
+        "Open the Crawl Cosplay Academy website in your browser." },
 };
 
 static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
@@ -462,7 +470,10 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
         auto hbox = make_shared<Box>(Box::HORZ);
         hbox->set_cross_alignment(Widget::Align::CENTER);
         auto tile = make_shared<Image>();
-        tile->set_tile(tile_def(tileidx_gametype(entry.id)));
+        tile->set_tile(tile_def(tileidx_gametype(
+            entry.id == STARTUP_CRAWL_COSPLAY_ACADEMY
+                ? GAME_TYPE_INSTRUCTIONS
+                : static_cast<game_type>(entry.id))));
         tile->set_margin_for_sdl(0, 6, 0, 0);
         hbox->add_child(std::move(tile));
         hbox->add_child(label);
@@ -759,6 +770,7 @@ private:
         case GAME_TYPE_ARENA:
         case GAME_TYPE_HIGH_SCORES:
         case GAME_TYPE_INSTRUCTIONS:
+        case STARTUP_CRAWL_COSPLAY_ACADEMY:
             break;
 
         default:
@@ -952,6 +964,16 @@ void UIStartupMenu::menu_item_activated(int id)
 
     case GAME_TYPE_HIGH_SCORES:
         show_hiscore_table();
+        return;
+
+    case STARTUP_CRAWL_COSPLAY_ACADEMY:
+#ifdef USE_TILE_LOCAL
+        if (SDL_OpenURL("https://www.crawlcosplay.org/cca") < 0)
+            mprf(MSGCH_ERROR, "Couldn't open the Crawl Cosplay Academy website: %s",
+                 SDL_GetError());
+#else
+        mpr("Open https://www.crawlcosplay.org/cca in your web browser.");
+#endif
         return;
 
     default:
