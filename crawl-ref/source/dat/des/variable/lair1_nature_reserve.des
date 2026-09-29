@@ -1,0 +1,3 @@
+# Retired: the nature reserve vaults now live in d7_nature_reserve.des.
+# Keep this file so incremental server data installs overwrite stale copies
+# of the old Lair:1 vault definitions instead of leaving them selectable.

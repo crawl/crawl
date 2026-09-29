@@ -3123,12 +3123,13 @@ static void _build_dungeon_level()
         }
 
         // Add two random god altars to the Corrupted Forest.
-        if (player_in_branch(BRANCH_DUNGEON) && you.depth == 2)
+        if (player_in_branch(BRANCH_DUNGEON)
+            && (you.depth == 2 || you.depth == 3))
         {
             const map_def *altar = find_map_by_name("basic_altar");
             for (int i = 0; i < 2; ++i)
                 _dgn_ensure_vault_placed(altar && _build_secondary_vault(altar),
-                                         false, "D:2 random altar");
+                                         false, "Corrupted Forest random altar");
         }
 
         level_id lid = level_id::current();
@@ -3457,6 +3458,10 @@ static const map_def *_pick_layout(const map_def *vault)
 
     // This is intended for use with primary vaults, so...
     ASSERT(vault);
+
+    // Keep D:3's castle vaults in the Corrupted Forest surroundings.
+    if (player_in_branch(BRANCH_DUNGEON) && you.depth == 3)
+        return find_map_by_name("layout_twisted_forest");
 
     // For centred maps, try to pick a central-type layout first.
     if (vault->orient == MAP_CENTRE)

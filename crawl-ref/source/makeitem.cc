@@ -1343,6 +1343,10 @@ static int _potion_weight(item_rarity_type rarity)
 static void _generate_potion_item(item_def& item, int force_type,
                                   int item_level)
 {
+    // Keep old item specifications from recreating removed moonshine.
+    if (force_type == POT_MOONSHINE)
+        force_type = POT_CURING;
+
     item.quantity = 1;
 
     if (one_chance_in(18))

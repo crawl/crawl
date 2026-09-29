@@ -1047,6 +1047,7 @@ const set<pair<object_class_type, int> > removed_items =
 {
     { OBJ_SCROLLS, SCR_IDENTIFY },
     { OBJ_SCROLLS, SCR_BRAND_WEAPON },
+    { OBJ_POTIONS, POT_MOONSHINE },
 #if TAG_MAJOR_VERSION == 34
     { OBJ_JEWELLERY, AMU_CONTROLLED_FLIGHT },
     { OBJ_JEWELLERY, AMU_CONSERVATION },
@@ -2497,7 +2498,6 @@ static map<potion_type, item_rarity_type> _potion_rarity = {
     { POT_HASTE,        RARITY_UNCOMMON },
     { POT_LIGNIFY,      RARITY_UNCOMMON },
     { POT_ATTRACTION,   RARITY_UNCOMMON },
-    { POT_MOONSHINE,    RARITY_UNCOMMON },
     { POT_MIGHT,        RARITY_UNCOMMON },
     { POT_BRILLIANCE,   RARITY_UNCOMMON },
     { POT_AGILITY,       RARITY_UNCOMMON },

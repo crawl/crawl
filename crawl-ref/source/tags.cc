@@ -6024,6 +6024,8 @@ void unmarshallItem(reader &th, item_def &item)
     // Preserve old Brand Weapon stacks as the replacement Chili scroll.
     if (item.is_type(OBJ_SCROLLS, SCR_BRAND_WEAPON))
         item.sub_type = SCR_BLESS_ITEM;
+    if (item.is_type(OBJ_POTIONS, POT_MOONSHINE))
+        item.sub_type = POT_CURING;
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_CORPSE_COLOUR
@@ -6072,7 +6074,7 @@ void unmarshallItem(reader &th, item_def &item)
             case POT_STRONG_POISON:
             case POT_BLOOD:
             case POT_BLOOD_COAGULATED:
-                item.sub_type = POT_MOONSHINE;
+                item.sub_type = POT_CURING;
                 break;
             case POT_CURE_MUTATION:
                 item.sub_type = POT_BENEFICIAL_MUTATION;

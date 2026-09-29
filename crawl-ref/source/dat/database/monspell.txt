@@ -354,7 +354,7 @@ Chilling Breath cast
 unseen Chilling Breath cast
 
 @_unseen_breath_cast_@
-%%%%%
+%%%%
 Electrical Bolt cast
 
 @The_monster@ shoots out a bolt of @beam@ @at@ @target@!
@@ -406,7 +406,7 @@ unseen Searing Breath cast
 Slug Dart cast
 
 @The_monster@ launches a dart @at@ @target@.
-%%%%%
+%%%%
 Spit Lava cast
 
 @The_monster@ spits lava @at@ @target@.
