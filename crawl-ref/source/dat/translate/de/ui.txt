@@ -759,23 +759,6 @@ TPRegen <lightblue>@num1@,@num2@</lightblue>/Runde
 MPRegen @num1@.@num2@/turn
 MPRegen @num1@,@num2@/Runde
 %%%%
-Faith
-Glaube
-%%%%
-# spirit shield
-%%%%
-# duplicate of item brand
-#Spirit
-#
-%%%%
-# reflection
-%%%%
-Reflect
-Reflex
-%%%%
-Harm
-Leid
-%%%%
 # the following ones show up only if applicable
 %%%%
 Rnd*Rage

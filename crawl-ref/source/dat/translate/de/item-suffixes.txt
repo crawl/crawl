@@ -28,14 +28,14 @@
 @item@ der Kälteresistenz
 %%%%
 
-# resist corrosion and preservation are equivalent
+# these are equivalent
 # the former name is used on rings and the latter on armour
 %%%%
 @item@ of resist corrosion
-@item@ der Korrosionresistenz
+@item@ der Korrosionsresistenz
 %%%%
-@item@ of preservation
-@item@ der Erhaltung
+@item@ of corrosion resistance
+@item@ der Korrosionsresistenz
 %%%%
 
 %%%%
@@ -194,6 +194,96 @@
 # only on artefact lance Wyrmbane
 @item@ of dragon slaying
 @item@ der Drachentötung
+%%%%
+@item@ of rebuke
+@item@ des Rügens
+%%%%
+@item@ of valour
+@item@ des Mutes
+%%%%
+@item@ of entangling
+@item@ der Umschlingung
+%%%%
+@item@ of sundering
+@item@ des Spaltens
+%%%%
+@item@ of concussion
+@item@ der Erschütterung
+%%%%
+@item@ of weakness
+@item@ der Schwäche
+%%%%
+@item@ of vulnerability
+@item@ der Vulnerabilität
+%%%%
+@item@ of foul flame
+@item@ der fauligen Flamme
+%%%%
+@item@ of hurling
+@item@ des Werfens
+%%%%
+@item@ of infusion
+@item@ der Infusion
+%%%%
+@item@ of light
+@item@ des Lichts
+%%%%
+@item@ of wrath
+@item@ des Zorns
+%%%%
+@item@ of mayhem
+@item@ der Hektik
+%%%%
+@item@ of guile
+@item@ der List
+%%%%
+@item@ of energy
+@item@ der Energie
+%%%%
+@item@ of sniping
+@item@ des Scharfschießens
+%%%%
+@item@ of air
+@item@ der Luft
+%%%%
+@item@ of earth
+@item@ der Erde
+%%%%
+@item@ of command
+@item@ des Kommandos
+%%%%
+@item@ of death
+@item@ des Todes
+%%%%
+@item@ of resonance
+@item@ der Resonanz
+%%%%
+@item@ of parrying
+@item@ des Parierens
+%%%%
+@item@ of glass
+@item@ des Glases
+%%%%
+@item@ of pyromania
+@item@ der Pyromanie
+%%%%
+@item@ of stardust
+@item@ des Sternenstaubs
+%%%%
+@item@ of mesmerism
+@item@ des Mesmerismus
+%%%%
+@item@ of attunement
+@item@ der Einstimmung
+%%%%
+@item@ of wildshape
+@item@ der Wildgestalt
+%%%%
+@item@ of chemistry
+@item@ der Chemie
+%%%%
+@item@ of dissipation
+@item@ der Ableitung
 %%%%
 
 #################################
