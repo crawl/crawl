@@ -469,10 +469,11 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
         auto hbox = make_shared<Box>(Box::HORZ);
         hbox->set_cross_alignment(Widget::Align::CENTER);
         auto tile = make_shared<Image>();
-        tile->set_tile(tile_def(tileidx_gametype(
-            entry.id == STARTUP_CRAWL_COSPLAY_ACADEMY
-                ? GAME_TYPE_INSTRUCTIONS
-                : static_cast<game_type>(entry.id))));
+        const tileidx_t icon = entry.id == STARTUP_CRAWL_COSPLAY_ACADEMY
+                               ? TILEG_STARTUP_CRAWL_COSPLAY_ACADEMY
+                               : tileidx_gametype(
+                                     static_cast<game_type>(entry.id));
+        tile->set_tile(tile_def(icon));
         tile->set_margin_for_sdl(0, 6, 0, 0);
         hbox->add_child(std::move(tile));
         hbox->add_child(label);

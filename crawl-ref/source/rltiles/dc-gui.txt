@@ -14,6 +14,7 @@ dungeon_sprint STARTUP_SPRINT
 instructions STARTUP_INSTRUCTIONS
 arena STARTUP_ARENA
 high_scores STARTUP_HIGH_SCORES
+crawl_cosplay_academy STARTUP_CRAWL_COSPLAY_ACADEMY
 
 %include dc-spells.txt
 
