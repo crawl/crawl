@@ -5181,6 +5181,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 {
     // Suppress the message for tremorstones.
     if (YOU_KILL(thrower) && you.see_cell(mon->pos())
+        && damage.num > 0
         && name != "burst of rock shards")
     {
         print_wounds(*mon);
@@ -5738,7 +5739,7 @@ void bolt::affect_monster(monster* mon)
                 mon->name(DESC_THE).c_str(),
                 real_flavour != BEAM_CHAOS ? ""
                     : make_stringf(" with %s", _beam_type_name(flavour).c_str()).c_str(),
-                postac ? "" : " but does no damage",
+                postac || damage.num == 0 ? "" : " but does no damage",
                 attack_strength_punctuation(final).c_str());
         }
 
