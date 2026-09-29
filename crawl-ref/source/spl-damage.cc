@@ -4046,10 +4046,10 @@ bool handle_searing_ray(actor& agent, int turn)
     return true;
 }
 
-dice_def glaciate_damage(int pow, int eff_range)
+dice_def glaciate_damage(int pow, int eff_range, bool random)
 {
     // At or within range 3, this is equivalent to the old Ice Storm damage.
-    return calc_dice(10, (54 + 3 * pow / 2) / eff_range);
+    return calc_dice(10, (54 + 3 * pow / 2) / eff_range, random);
 }
 
 spret cast_glaciate(actor *caster, int pow, coord_def aim)
