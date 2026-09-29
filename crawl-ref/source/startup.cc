@@ -435,6 +435,7 @@ struct game_modes_menu_item
 
 static constexpr int STARTUP_CRAWL_COSPLAY_ACADEMY = -1;
 static constexpr int STARTUP_DUNGEON_CRAWL_FORKS = -2;
+static constexpr int STARTUP_EDIT_INIT = -3;
 
 #ifdef USE_TILE_LOCAL
 static bool _open_startup_url(const char *url)
@@ -447,6 +448,43 @@ static bool _open_startup_url(const char *url)
 #else
     UNUSED(url);
     return false;
+#endif
+}
+
+static string _shell_quote(const string &text)
+{
+    string quoted = "'";
+    for (char c : text)
+        quoted += c == '\'' ? "'\\''" : string(1, c);
+    return quoted + "'";
+}
+
+static bool _edit_init_file()
+{
+    const string path = Options.filename.empty() ? find_crawlrc()
+                                                  : Options.filename;
+#if defined(TARGET_OS_MACOSX)
+    return std::system((string("/usr/bin/open -t ") + _shell_quote(path)).c_str()) == 0;
+#elif defined(TARGET_OS_LINUX)
+    return std::system((string("xdg-open ") + _shell_quote(path)).c_str()) == 0;
+#else
+    string file_url = "file:///";
+    for (unsigned char c : path)
+    {
+        if (c == '\\')
+            file_url += '/';
+        else if (isalnum(c) || c == '/' || c == ':' || c == '-' || c == '_'
+                 || c == '.' || c == '~')
+            file_url += c;
+        else
+        {
+            static const char hex[] = "0123456789ABCDEF";
+            file_url += '%';
+            file_url += hex[c >> 4];
+            file_url += hex[c & 0x0F];
+        }
+    }
+    return _open_startup_url(file_url.c_str());
 #endif
 }
 #endif
@@ -472,6 +510,8 @@ static const vector<game_modes_menu_item> entries =
         "Pit computer controlled teams versus each other!" },
     {GAME_TYPE_HIGH_SCORES, "High Scores",
         "View the high score list." },
+    {STARTUP_EDIT_INIT, "Edit init.txt",
+        "Open the init.txt configuration file in a text editor." },
     {STARTUP_CRAWL_COSPLAY_ACADEMY, "Visit Crawl Cosplay Academy website",
         "Open the Crawl Cosplay Academy website in your browser." },
     {STARTUP_DUNGEON_CRAWL_FORKS, "Visit DungeonCrawlForks.org website",
@@ -497,6 +537,8 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
                 ? static_cast<tileidx_t>(TILEG_STARTUP_CRAWL_COSPLAY_ACADEMY)
                 : entry.id == STARTUP_DUNGEON_CRAWL_FORKS
                     ? static_cast<tileidx_t>(TILE_UNRAND_RIFT)
+                    : entry.id == STARTUP_EDIT_INIT
+                        ? static_cast<tileidx_t>(TILEG_STARTUP_INSTRUCTIONS)
                     : tileidx_gametype(static_cast<game_type>(entry.id));
         tile->set_tile(tile_def(icon));
         tile->set_margin_for_sdl(0, 6, 0, 0);
@@ -795,6 +837,7 @@ private:
         case GAME_TYPE_ARENA:
         case GAME_TYPE_HIGH_SCORES:
         case GAME_TYPE_INSTRUCTIONS:
+        case STARTUP_EDIT_INIT:
         case STARTUP_CRAWL_COSPLAY_ACADEMY:
         case STARTUP_DUNGEON_CRAWL_FORKS:
             break;
@@ -990,6 +1033,20 @@ void UIStartupMenu::menu_item_activated(int id)
 
     case GAME_TYPE_HIGH_SCORES:
         show_hiscore_table();
+        return;
+
+    case STARTUP_EDIT_INIT:
+#ifdef USE_TILE_LOCAL
+        if (!_edit_init_file())
+            mprf(MSGCH_ERROR, "Couldn't open init.txt for editing: %s",
+#if SDL_VERSION_ATLEAST(2, 0, 14)
+                 SDL_GetError());
+#else
+                 "the system text editor could not be launched");
+#endif
+#else
+        mprf("Edit %s with a text editor.", find_crawlrc().c_str());
+#endif
         return;
 
     case STARTUP_CRAWL_COSPLAY_ACADEMY:
