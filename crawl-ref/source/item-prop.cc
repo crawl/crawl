@@ -966,24 +966,24 @@ struct gem_def
 static int Gem_index[NUM_GEM_TYPES];
 static const gem_def Gem_prop[] =
 {
-    { GEM_DUNGEON, "smoky",       BRANCH_DUNGEON, 6000 },
+    { GEM_DUNGEON, "smoky",       BRANCH_DUNGEON, 6429 }, // preserve 15-floor clock
 #if TAG_MAJOR_VERSION == 34
     { GEM_ORC,     "glittering",  BRANCH_ORC,     6000 },
 #endif
     { GEM_ELF,     "shimmering",  BRANCH_ELF,     6000 },
-    { GEM_LAIR,    "earthy",      BRANCH_LAIR,    7500 }, // travel time
+    { GEM_LAIR,    "earthy",      BRANCH_LAIR,    9375 }, // travel time; preserve 5-floor clock
 
-    { GEM_SWAMP,   "mossy",       BRANCH_SWAMP,   4500 }, // small layouts
-    { GEM_SHOALS,  "azure",       BRANCH_SHOALS,  4500 }, // seems faster
-    { GEM_SNAKE,   "jade",        BRANCH_SNAKE,   6000 },
-    { GEM_SPIDER,  "milky-white", BRANCH_SPIDER,  6000 },
+    { GEM_SWAMP,   "mossy",       BRANCH_SWAMP,   6000 }, // small layouts; preserve 4-floor clock
+    { GEM_SHOALS,  "azure",       BRANCH_SHOALS,  6000 }, // seems faster; preserve 4-floor clock
+    { GEM_SNAKE,   "jade",        BRANCH_SNAKE,   8000 }, // preserve 4-floor clock
+    { GEM_SPIDER,  "milky-white", BRANCH_SPIDER,  8000 }, // preserve 4-floor clock
 
-    { GEM_SLIME,   "starry",      BRANCH_SLIME,   1800 }, // usually dived
-    { GEM_VAULTS,  "shining",     BRANCH_VAULTS,  7500 }, // big, travel time
+    { GEM_SLIME,   "starry",      BRANCH_SLIME,   2250 }, // usually dived; preserve 5-floor clock
+    { GEM_VAULTS,  "shining",     BRANCH_VAULTS,  9375 }, // big, travel time; preserve 5-floor clock
     { GEM_CRYPT,   "ivory",       BRANCH_CRYPT,   6000 },
     { GEM_TOMB,    "sanguine",    BRANCH_TOMB,    6000 },
-    { GEM_DEPTHS,  "midnight",    BRANCH_DEPTHS,  7500 }, // big, travel time
-    { GEM_ZOT,     "prismatic",   BRANCH_ZOT,     2000 }, // often dived
+    { GEM_DEPTHS,  "midnight",    BRANCH_DEPTHS, 10000 }, // big, travel time; preserve 4-floor clock
+    { GEM_ZOT,     "prismatic",   BRANCH_ZOT,     2500 }, // often dived; preserve 5-floor clock
 };
 
 struct item_set_def
