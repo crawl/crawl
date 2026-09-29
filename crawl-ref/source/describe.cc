@@ -4198,7 +4198,7 @@ void target_item(item_def &item)
     if (skill == SK_NONE)
         return;
 
-    const int target = _item_training_target(item);
+    const int target = min(270, _item_training_target(item));
     if (target == 0)
         return;
 
