@@ -15,7 +15,7 @@
 // reminder, modifications of the following should obey the licensing, you
 // can't just replace this with your name. Also, this should fit (maybe with
 // multiple lines) in 80 chars.
-#define CRAWL_COPYRIGHT "(c) Copyright 1997-2002 Linley Henzell, 2002-2025 Crawl DevTeam, 2026- Dungeon Crawl Chili DevTeam"
+#define CRAWL_COPYRIGHT "(c) Copyright 1997-2002 Linley Henzell, 2002- Crawl DevTeam, 2026- Dungeon Crawl Chili DevTeam"
 
 #ifdef USE_TILE_WEB
 #  define CRAWL_BUILD_NAME "Console/Webtiles"
