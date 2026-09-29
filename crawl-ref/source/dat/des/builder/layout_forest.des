@@ -125,7 +125,9 @@ TAGS:   overwritable layout allow_dup unrand layout_type_forest
 
   if you.in_branch("crypt") then
     tile("t = dngn_tree_dead")
-  elseif you.in_branch("D") and (you.depth() == 2 or you.depth() == 3) then
+  elseif you.in_branch("D") and you.depth() == 2 then
+    tile("t = dngn_tree_dead")
+  elseif you.in_branch("D") and you.depth() == 3 then
     -- Independently choose an equally weighted style for every tree.
     tile("t = dngn_tree / dngn_tree_yellow / dngn_tree_lightred / " ..
          "dngn_tree_red / dngn_tree_dead / dngn_petrified_tree / " ..
