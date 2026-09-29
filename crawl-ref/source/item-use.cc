@@ -2047,7 +2047,7 @@ bool drink(item_def* potion)
     }
 
     // Check for Delatra's gloves before potentially melding them.
-    bool heal_on_id = you.unrand_equipped(UNRAND_DELATRAS_GLOVES);
+    const bool delatra_equipped = you.unrand_equipped(UNRAND_DELATRAS_GLOVES);
 
     if (!quaff_potion(*potion, did_swing))
         return false;
@@ -2069,14 +2069,14 @@ bool drink(item_def* potion)
                 potion->name(DESC_QUALNAME).c_str());
         }
 
+    if (alreadyknown && delatra_equipped)
+    {
+        mpr("The energy of certainty flows from your fingertips!");
+        potionlike_effect(POT_HEAL_WOUNDS, 40);
+    }
+
     if (!alreadyknown)
     {
-        if (heal_on_id)
-        {
-            mpr("The energy of discovery flows from your fingertips!");
-            potionlike_effect(POT_HEAL_WOUNDS, 40);
-        }
-
         if (dangerous)
         {
             // Xom loves it when you drink an unknown potion and there is
@@ -3436,14 +3436,14 @@ void handle_post_scroll_effects(item_def* scroll, spret read_result,
              article_a(scroll_name).c_str());
     }
 
+    if (alreadyknown && you.unrand_equipped(UNRAND_DELATRAS_GLOVES))
+    {
+        mpr("The energy of certainty flows from your fingertips!");
+        potionlike_effect(POT_MAGIC, 40);
+    }
+
     if (!alreadyknown)
     {
-        if (you.unrand_equipped(UNRAND_DELATRAS_GLOVES))
-        {
-            mpr("The energy of discovery flows from your fingertips!");
-            potionlike_effect(POT_MAGIC, 40);
-        }
-
         if (dangerous)
         {
             // Xom loves it when you read an unknown scroll and there is a
