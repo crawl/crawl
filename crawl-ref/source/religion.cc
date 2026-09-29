@@ -3745,17 +3745,17 @@ static void _join_gozag()
 
 static void _join_okawaru()
 {
-    bool needs_message = false;
+    bool did_message = false;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->was_created_by(you))
+        if (mi->was_created_by(you) && mons_can_hate(mi->type))
         {
-            mi->del_ench(ENCH_SUMMON_TIMER);
-            needs_message = true;
+            if (!did_message)
+                mpr("Your summoned allies are dismissed!");
+            monster_die(**mi, KILL_TIMEOUT, NON_MONSTER);
+            did_message = true;
         }
     }
-    if (needs_message)
-        mpr("Your summoned allies are dismissed!");
 }
 
 /// Setup when joining the sacred cult of Ru.
