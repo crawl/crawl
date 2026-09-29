@@ -61,6 +61,9 @@
 #include "viewchar.h"
 #ifdef USE_TILE_LOCAL
 #include <SDL.h>
+#if SDL_VERSION_ATLEAST(2, 0, 14)
+#include <SDL_misc.h>
+#endif
 #endif
 #include "view.h"
 #ifdef USE_TILE_LOCAL
@@ -71,6 +74,8 @@
  #include "syscalls.h"
 #endif
 #include "version.h"
+
+#include <cstdlib>
 
 using namespace ui;
 
@@ -429,6 +434,22 @@ struct game_modes_menu_item
 };
 
 static constexpr int STARTUP_CRAWL_COSPLAY_ACADEMY = -1;
+static constexpr int STARTUP_DUNGEON_CRAWL_FORKS = -2;
+
+#ifdef USE_TILE_LOCAL
+static bool _open_startup_url(const char *url)
+{
+#if SDL_VERSION_ATLEAST(2, 0, 14)
+    return SDL_OpenURL(url) == 0;
+#elif defined(__APPLE__)
+    // SDL_OpenURL was added in 2.0.14; the bundled SDL is older.
+    return std::system((string("open '") + url + "'").c_str()) == 0;
+#else
+    UNUSED(url);
+    return false;
+#endif
+}
+#endif
 
 static const vector<game_modes_menu_item> entries =
 {
@@ -451,8 +472,10 @@ static const vector<game_modes_menu_item> entries =
         "Pit computer controlled teams versus each other!" },
     {GAME_TYPE_HIGH_SCORES, "High Scores",
         "View the high score list." },
-    {STARTUP_CRAWL_COSPLAY_ACADEMY, "Crawl Cosplay Academy",
+    {STARTUP_CRAWL_COSPLAY_ACADEMY, "Visit Crawl Cosplay Academy website",
         "Open the Crawl Cosplay Academy website in your browser." },
+    {STARTUP_DUNGEON_CRAWL_FORKS, "Visit DungeonCrawlForks.org website",
+        "Open DungeonCrawlForks.org in your browser." },
 };
 
 static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
@@ -469,10 +492,12 @@ static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
         auto hbox = make_shared<Box>(Box::HORZ);
         hbox->set_cross_alignment(Widget::Align::CENTER);
         auto tile = make_shared<Image>();
-        const tileidx_t icon = entry.id == STARTUP_CRAWL_COSPLAY_ACADEMY
-                               ? TILEG_STARTUP_CRAWL_COSPLAY_ACADEMY
-                               : tileidx_gametype(
-                                     static_cast<game_type>(entry.id));
+        const tileidx_t icon =
+            entry.id == STARTUP_CRAWL_COSPLAY_ACADEMY
+                ? static_cast<tileidx_t>(TILEG_STARTUP_CRAWL_COSPLAY_ACADEMY)
+                : entry.id == STARTUP_DUNGEON_CRAWL_FORKS
+                    ? static_cast<tileidx_t>(TILE_UNRAND_RIFT)
+                    : tileidx_gametype(static_cast<game_type>(entry.id));
         tile->set_tile(tile_def(icon));
         tile->set_margin_for_sdl(0, 6, 0, 0);
         hbox->add_child(std::move(tile));
@@ -771,6 +796,7 @@ private:
         case GAME_TYPE_HIGH_SCORES:
         case GAME_TYPE_INSTRUCTIONS:
         case STARTUP_CRAWL_COSPLAY_ACADEMY:
+        case STARTUP_DUNGEON_CRAWL_FORKS:
             break;
 
         default:
@@ -968,11 +994,29 @@ void UIStartupMenu::menu_item_activated(int id)
 
     case STARTUP_CRAWL_COSPLAY_ACADEMY:
 #ifdef USE_TILE_LOCAL
-        if (SDL_OpenURL("https://www.crawlcosplay.org/cca") < 0)
+        if (!_open_startup_url("https://www.crawlcosplay.org/cca"))
             mprf(MSGCH_ERROR, "Couldn't open the Crawl Cosplay Academy website: %s",
+#if SDL_VERSION_ATLEAST(2, 0, 14)
                  SDL_GetError());
 #else
+                 "the system browser could not be launched");
+#endif
+#else
         mpr("Open https://www.crawlcosplay.org/cca in your web browser.");
+#endif
+        return;
+
+    case STARTUP_DUNGEON_CRAWL_FORKS:
+#ifdef USE_TILE_LOCAL
+        if (!_open_startup_url("https://dungeoncrawlforks.org"))
+            mprf(MSGCH_ERROR, "Couldn't open DungeonCrawlForks.org: %s",
+#if SDL_VERSION_ATLEAST(2, 0, 14)
+                 SDL_GetError());
+#else
+                 "the system browser could not be launched");
+#endif
+#else
+        mpr("Open https://dungeoncrawlforks.org in your web browser.");
 #endif
         return;
 
