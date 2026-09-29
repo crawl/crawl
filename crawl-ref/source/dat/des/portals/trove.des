@@ -1387,7 +1387,7 @@ if no_friendlies(_G) == false then
   cons = cons .. " / scroll of summoning q:3 w:2"
 end
 kitem("h = " .. cons)
-kitem("i = scroll of brand weapon q:2 pre_id")
+kitem("i = scroll of bless item q:2 pre_id")
 
 if trove_other_weapon_specialty(_G, "Unarmed Combat") then
   subst("d = e")

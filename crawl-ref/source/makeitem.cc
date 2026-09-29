@@ -1406,6 +1406,8 @@ static void _generate_scroll_item(item_def& item, int force_type, int agent)
     // Handle old item specifications without recreating removed scrolls.
     if (force_type == SCR_IDENTIFY)
         force_type = SCR_REVELATION;
+    else if (force_type == SCR_BRAND_WEAPON)
+        force_type = SCR_BLESS_ITEM;
 
     // determine sub_type:
     if (force_type != OBJ_RANDOM)

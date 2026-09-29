@@ -2411,123 +2411,6 @@ static void _bless_item(item_def &item)
     flash_view_delay(UA_PLAYER, WHITE, 300);
 }
 
-static void _brand_weapon(item_def &wpn)
-{
-    you.wield_change = true;
-
-    const string itname = _item_name(wpn);
-
-    _rebrand_weapon(wpn);
-
-    bool success = true;
-    colour_t flash_colour = BLACK;
-
-    switch (get_weapon_brand(wpn))
-    {
-    case SPWPN_VORPAL:
-        flash_colour = YELLOW;
-        mprf("%s emits a brilliant flash of light!", itname.c_str());
-        break;
-
-    case SPWPN_PROTECTION:
-        flash_colour = YELLOW;
-        mprf("%s projects an invisible shield of force!",itname.c_str());
-        break;
-
-    case SPWPN_FLAMING:
-        flash_colour = RED;
-        mprf("%s is engulfed in flames!", itname.c_str());
-        break;
-
-    case SPWPN_FREEZING:
-        flash_colour = LIGHTCYAN;
-        mprf("%s is covered with a thin layer of ice!", itname.c_str());
-        break;
-
-    case SPWPN_DRAINING:
-        flash_colour = DARKGREY;
-        mprf("%s craves living souls!", itname.c_str());
-        break;
-
-    case SPWPN_VAMPIRISM:
-        flash_colour = DARKGREY;
-        mprf("%s thirsts for the lives of mortals!", itname.c_str());
-        break;
-
-    case SPWPN_VENOM:
-        flash_colour = GREEN;
-        mprf("%s drips with poison.", itname.c_str());
-        break;
-
-    case SPWPN_ELECTROCUTION:
-        flash_colour = LIGHTCYAN;
-        mprf("%s crackles with electricity.", itname.c_str());
-        break;
-
-    case SPWPN_CHAOS:
-        flash_colour = random_colour();
-        mprf("%s erupts in a glittering mayhem of colour.", itname.c_str());
-        break;
-
-    case SPWPN_ACID:
-        flash_colour = ETC_SLIME;
-        mprf("%s oozes corrosive slime.", itname.c_str());
-        break;
-
-    case SPWPN_SPECTRAL:
-        flash_colour = BLUE;
-        mprf("%s acquires a faint afterimage.", itname.c_str());
-        break;
-
-    case SPWPN_REBUKE:
-        flash_colour = WHITE;
-        mprf("%s quivers with indignation.", itname.c_str());
-        break;
-
-    case SPWPN_VALOUR:
-        flash_colour = WHITE;
-        mprf("%s thrums with vital power.", itname.c_str());
-        break;
-
-    case SPWPN_ENTANGLING:
-        flash_colour = LIGHTGREEN;
-        mprf("%s erupts in a tangle of vines.", itname.c_str());
-        break;
-
-    case SPWPN_SUNDERING:
-        flash_colour = LIGHTRED;
-        mprf("%s becomes viciously sharp.", itname.c_str());
-        break;
-
-    case SPWPN_CONCUSSION:
-        flash_colour = YELLOW;
-        mprf("%s begins to exert an overwhelming pressure.", itname.c_str());
-        break;
-
-    case SPWPN_DEVIOUS:
-        flash_colour = BLUE;
-        mprf("%s glints wickedly in the shadows.", itname.c_str());
-        break;
-
-    default:
-        success = false;
-        break;
-    }
-
-    if (success)
-    {
-        item_set_appearance(wpn);
-        mprf_nocap("%s", wpn.name(DESC_INVENTORY_EQUIP).c_str());
-        // Might be rebranding to/from protection or evasion.
-        you.redraw_armour_class = true;
-        you.redraw_evasion = true;
-        // Might be removing antimagic.
-        calc_mp();
-        flash_view_delay(UA_PLAYER, flash_colour, 300);
-    }
-    return;
-}
-
 static spret _choose_target_item_for_scroll(bool scroll_known, object_selector selector,
                                             const char* prompt, item_def*& target)
 {
@@ -2545,9 +2428,7 @@ static spret _choose_target_item_for_scroll(bool scroll_known, object_selector s
 
 static object_selector _enchant_selector(scroll_type scroll)
 {
-    if (scroll == SCR_BRAND_WEAPON)
-        return OSEL_BRANDABLE_WEAPON;
-    else if (scroll == SCR_ENCHANT_WEAPON)
+    if (scroll == SCR_ENCHANT_WEAPON)
         return OSEL_ENCHANTABLE_WEAPON;
     die("Invalid scroll type %d for _enchant_selector", (int)scroll);
 }
@@ -2555,11 +2436,8 @@ static object_selector _enchant_selector(scroll_type scroll)
 static spret _scroll_choose_weapon(bool alreadyknown, const string &pre_msg,
                                        scroll_type scroll, item_def*& target)
 {
-    const bool branding = scroll == SCR_BRAND_WEAPON;
-
     spret result = _choose_target_item_for_scroll(alreadyknown, _enchant_selector(scroll),
-                                                  branding ? "Brand which weapon?"
-                                                           : "Enchant which weapon?",
+                                                  "Enchant which weapon?",
                                                   target);
 
     if (alreadyknown && result == spret::success)
@@ -2582,42 +2460,6 @@ static spret _handle_bless_item(bool alreadyknown, const string &pre_msg)
 
     _bless_item(*itemp);
     return result;
-}
-
-static spret _handle_brand_weapon(bool alreadyknown, const string &pre_msg)
-{
-    item_def* weapon = nullptr;
-    string letter = "";
-    spret result = spret::success;
-    if (!clua.callfn("c_choose_brand_weapon", ">s", &letter))
-    {
-        if (!clua.error.empty())
-            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
-    }
-    else if (isalpha(letter.c_str()[0]))
-    {
-        item_def &item = you.inv[letter_to_index(letter.c_str()[0])];
-        if (item.defined() && is_brandable_weapon(item, true))
-            weapon = &item;
-    }
-
-    if (!weapon)
-    {
-        result = _scroll_choose_weapon(alreadyknown, pre_msg, SCR_BRAND_WEAPON,
-                                       weapon);
-    }
-
-    if (result != spret::success)
-        return result;
-
-    _brand_weapon(*weapon);
-    return result;
-}
-
-bool uncancel_brand_weapon()
-{
-    spret result = _handle_brand_weapon(false, "");
-    return result != spret::seen_hups;
 }
 
 bool uncancel_bless_item()
@@ -2922,7 +2764,6 @@ static bool _is_cancellable_scroll(scroll_type scroll)
            || scroll == SCR_BLINKING
            || scroll == SCR_ENCHANT_ARMOUR
            || scroll == SCR_AMNESIA
-           || scroll == SCR_BRAND_WEAPON
            || scroll == SCR_ENCHANT_WEAPON
            || scroll == SCR_ACQUIREMENT
            || scroll == SCR_POISON;
@@ -3449,19 +3290,6 @@ bool read(item_def* scroll, dist *target)
 
         break;
 
-    case SCR_BRAND_WEAPON:
-        if (!alreadyknown)
-        {
-            mpr(pre_succ_msg);
-            mpr("It is a scroll of brand weapon.");
-            // included in default force_more_message (to show it before menu)
-
-            result = _run_read_scroll_uncancel(UNC_BRAND_WEAPON, *scroll);
-        }
-        else
-            result = _handle_brand_weapon(alreadyknown, pre_succ_msg);
-
-        break;
     case SCR_BLESS_ITEM:
         if (!alreadyknown)
         {
@@ -3597,7 +3425,6 @@ void handle_post_scroll_effects(item_def* scroll, spret read_result,
     const scroll_type which_scroll = static_cast<scroll_type>(scroll->sub_type);
 
     if (!alreadyknown
-        && which_scroll != SCR_BRAND_WEAPON
         && which_scroll != SCR_ENCHANT_WEAPON
         && which_scroll != SCR_IDENTIFY
         && which_scroll != SCR_ENCHANT_ARMOUR

@@ -9,7 +9,7 @@ enum uncancellable_type
 
     UNC_ENCHANT_WEAPON,
     UNC_ENCHANT_ARMOUR,
-    UNC_BRAND_WEAPON,
+    UNC_BRAND_WEAPON, // Reserved for saved actions; resumes as Bless Item.
     UNC_BLESS_ITEM,
     UNC_AMNESIA,
     UNC_BLINKING,

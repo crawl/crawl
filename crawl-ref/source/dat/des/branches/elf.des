@@ -61,7 +61,7 @@ end
 -- Some thematic, limited extra rewards for opening the Hall of Blades.
 function hall_of_blades_extra_rewards(e)
     e.kitem("d = scroll of enchant weapon pre_id q:1")
-    e.kitem("e = scroll of brand weapon pre_id q:1")
+    e.kitem("e = scroll of bless item pre_id q:1")
     e.kitem("f = blade talisman / blade talisman randart w:2")
     e.kitem("g = manual of maces & flails /  manual of axes / \
                  manual of polearms / manual of staves / \
@@ -1720,7 +1720,7 @@ NAME:  nicolae_gammafunk_elf_defective_weapons_storage
 TAGS:  transparent no_monster_gen
 DEPTH: Elf
 KITEM: 123 = % w:20 / scroll of enchant weapon pre_id w:5 \
-       / scroll of brand weapon pre_id w:5
+       / scroll of bless item pre_id w:5
 {{
 -- Fast dancing weapons. This will have chaos, but will be nerfed a lot by
 -- vitrification
@@ -2495,7 +2495,7 @@ NAME:     elven_hall_of_blades_hangedman_original
 ORIENT:   north
 : hall_of_blades_monsters(_G)
 : hall_of_blades_extra_rewards(_G)
-# Two enchant weapon scrolls, third or a brand weapon,
+# Two enchant weapon scrolls, third or a bless item,
 # 33% chance for a blade talisman or 2% chance for a weapons manual.
 SUBST:    e = ed, f = f:33 g:2 .:65
 SHUFFLE:  CD / CD / DC / DC / DD

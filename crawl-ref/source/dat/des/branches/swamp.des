@@ -2762,7 +2762,7 @@ MONS:   20-headed hydra zombie
 ITEM:   scimitar good_item ego:none / glaive good_item ego:none \
         / broad axe good_item ego:none / staff of necromancy / nothing w:40
 : item(dgn.good_aux_armour .. " / nothing w:60")
-ITEM:   scroll of brand weapon / scroll of fear / scroll of teleportation \
+ITEM:   scroll of bless item / scroll of fear / scroll of teleportation \
         / scroll of blinking / nothing w:40
 ITEM:   randbook title:Reanimation_Made_Easy spells:animate_dead numspells:4 \
             disc:necromancy

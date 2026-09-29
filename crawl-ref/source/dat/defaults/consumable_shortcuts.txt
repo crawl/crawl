@@ -10,7 +10,6 @@ consumable_shortcut ^= scroll of blinking:b
 consumable_shortcut ^= scroll of revelation:r
 consumable_shortcut ^= scroll of fog:g
 consumable_shortcut ^= scroll of acquirement:A
-consumable_shortcut ^= scroll of brand weapon:W
 consumable_shortcut ^= scroll of vulnerability:V
 consumable_shortcut ^= scroll of silence:S
 consumable_shortcut ^= scroll of amnesia:x

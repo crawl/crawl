@@ -76,9 +76,7 @@ static bool _resume_uncancel(bool run_success_effect)
     case UNC_ENCHANT_ARMOUR:
         succeeded = uncancel_enchant_armour();
         break;
-    case UNC_BRAND_WEAPON:
-        succeeded = uncancel_brand_weapon();
-        break;
+    case UNC_BRAND_WEAPON: // Legacy interrupted scroll, converted on load.
     case UNC_BLESS_ITEM:
         succeeded = uncancel_bless_item();
         break;

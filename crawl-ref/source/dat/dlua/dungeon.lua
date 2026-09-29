@@ -671,7 +671,7 @@ dgn.good_scrolls = [[
     w:11  scroll of acquirement no_pickup q:1 /
     w:4   scroll of acquirement no_pickup q:2 /
     w:1   scroll of acquirement no_pickup q:3 /
-    w:15  scroll of brand weapon no_pickup q:1 /
+    w:15  scroll of bless item no_pickup q:1 /
     w:15  scroll of torment no_pickup q:1 /
     w:15  scroll of vulnerability no_pickup
     ]]
@@ -691,7 +691,7 @@ dgn.loot_scrolls = [[
     w:8   scroll of revelation /
     w:10  scroll of enchant weapon /
     w:10  scroll of enchant armour /
-    w:5   scroll of brand weapon /
+    w:5   scroll of bless item /
     w:2   scroll of acquirement
     ]]
 

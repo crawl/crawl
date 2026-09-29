@@ -551,7 +551,6 @@ unsigned int item_value(item_def item, bool ident)
             case SCR_SUMMONING:
             case SCR_TORMENT:
             case SCR_SILENCE:
-            case SCR_BRAND_WEAPON:
             case SCR_BLESS_ITEM:
             case SCR_BLINKING:
             case SCR_BUTTERFLIES:

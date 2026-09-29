@@ -9,10 +9,15 @@
 #include "item-use.h"
 #include "item-prop.h"
 #include "item-prop-enum.h"
+#include "item-status-flag-type.h"
 #include "invent.h"
 #include "player-equip.h"
 #include "potion-type.h"
 #include "species.h"
+#include "tags.h"
+#include "makeitem.h"
+#include "env.h"
+#include "uncancellable-type.h"
 
 #include "test_player_fixture.h"
 
@@ -59,6 +64,47 @@ static item_def simple_create_item(object_class_type base_type,
 }
 
 TEST_CASE_METHOD(MockPlayerYouTestsFixture,
+                 "Brand Weapon saves become Bless Item", "[single-file][scroll-compat]")
+{
+    const int subtype = GENERATE(SCR_BRAND_WEAPON, SCR_BLESS_ITEM);
+    item_def original = simple_create_item(OBJ_SCROLLS, subtype);
+    original.rnd = 1;
+    original.quantity = 3;
+    original.inscription = "saved scrolls";
+    vector<unsigned char> bytes;
+    writer output(&bytes);
+    marshallItem(output, original);
+    reader input(bytes, TAG_MINOR_VERSION);
+    item_def restored;
+    unmarshallItem(input, restored);
+    REQUIRE(restored.is_type(OBJ_SCROLLS, SCR_BLESS_ITEM));
+    REQUIRE(restored.quantity == 3);
+    REQUIRE(restored.inscription == original.inscription);
+    REQUIRE(item_type_removed(OBJ_SCROLLS, SCR_BRAND_WEAPON));
+    REQUIRE_FALSE(item_type_removed(OBJ_SCROLLS, SCR_BLESS_ITEM));
+    REQUIRE(consumable_rarity(OBJ_SCROLLS, SCR_BRAND_WEAPON) == RARITY_NONE);
+    REQUIRE(consumable_rarity(OBJ_SCROLLS, SCR_BLESS_ITEM) != RARITY_NONE);
+}
+
+TEST_CASE("Saved scroll action IDs remain stable", "[single-file][scroll-compat]")
+{
+    REQUIRE(UNC_BRAND_WEAPON == 6);
+    REQUIRE(UNC_BLESS_ITEM == 7);
+    REQUIRE(UNC_AMNESIA == 8);
+    REQUIRE(UNC_BLINKING == 9);
+    REQUIRE(UNC_IDENTIFY == 10);
+}
+
+TEST_CASE_METHOD(MockPlayerYouTestsFixture,
+                 "Legacy Brand Weapon requests create Bless Item", "[single-file][scroll-compat]")
+{
+    const int index = items(false, OBJ_SCROLLS, SCR_BRAND_WEAPON, 1);
+    REQUIRE(index != NON_ITEM);
+    CHECK(env.item[index].is_type(OBJ_SCROLLS, SCR_BLESS_ITEM));
+    destroy_item(index);
+}
+
+TEST_CASE_METHOD(MockPlayerYouTestsFixture,
                  "Felids can enchant boots with known scrolls", "[single-file]")
 {
     you.species = SP_FELID;
@@ -68,7 +114,7 @@ TEST_CASE_METHOD(MockPlayerYouTestsFixture,
     item_def scroll = simple_create_item(OBJ_SCROLLS, SCR_ENCHANT_ARMOUR);
     you.inv[0] = simple_create_item(OBJ_ARMOUR, ARM_BOOTS);
     item_def &boots = you.inv[0];
-    boots.flags |= ISFLAG_IDENT_MASK;
+    boots.flags |= ISFLAG_IDENTIFIED;
     REQUIRE(can_equip_item(boots));
 
     SECTION("Unknown and known scrolls both allow enchanting")
@@ -92,7 +138,7 @@ TEST_CASE_METHOD(MockPlayerYouTestsFixture,
 
     SECTION("Weapon enhancement remains blocked")
     {
-        scroll.sub_type = GENERATE(SCR_ENCHANT_WEAPON, SCR_BRAND_WEAPON);
+        scroll.sub_type = SCR_ENCHANT_WEAPON;
         REQUIRE(cannot_read_item_reason(&scroll, false, true)
                 == "There's no point in enhancing weapons you can't use!");
     }

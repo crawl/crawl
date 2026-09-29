@@ -215,7 +215,7 @@ function general_item_setup(e)
           scroll of acquirement q:1 w:1 pre_id /\
           scroll of enchant weapon pre_id q:4 w:2 /\
           scroll of enchant armour pre_id q:4 w:2 /\
-          scroll of brand weapon pre_id")
+          scroll of bless item pre_id")
   e.kitem("| = superb_item pre_id w:66 / star_item pre_id w:33")
   e.kitem("* = star_item pre_id w:66 / any pre_id w:33")
   e.kitem("% = any pre_id")
