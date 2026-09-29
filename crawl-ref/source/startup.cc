@@ -60,8 +60,7 @@
 #include "traps.h" // set_shafted
 #include "viewchar.h"
 #ifdef USE_TILE_LOCAL
-#include <SDL_error.h>
-#include <SDL_misc.h>
+#include <SDL.h>
 #endif
 #include "view.h"
 #ifdef USE_TILE_LOCAL
