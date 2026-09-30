@@ -54,3 +54,6 @@ string getEgoString(const string &key);
 vector<string> getAllFAQKeys();
 string getFAQ_Question(const string &key);
 string getFAQ_Answer(const string &question);
+
+// get a translation of an English string into the user's current language
+string getTranslatedString(const string &original);
