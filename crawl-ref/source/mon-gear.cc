@@ -2567,6 +2567,56 @@ static void _give_book(monster* mon)
 
         give_specific_item(mon, book);
     }
+    // Eustachio's field notes: call a small mammal and another early
+    // Summoning spell.
+    if (mon->type == MONS_EUSTACHIO && coinflip())
+    {
+        const int book = items(false, OBJ_BOOKS, BOOK_CONSTRUCTION, 1);
+        if (book == NON_ITEM)
+            return;
+
+        const vector<spell_type> forced_spell = {SPELL_SUMMON_SMALL_MAMMAL};
+        build_themed_book(env.item[book],
+            forced_spell_filter(forced_spell, capped_spell_filter(4)),
+            forced_book_theme(spschool::summoning), 3, "Eustachio");
+        give_specific_item(mon, book);
+    }
+    // Fannar's notes include his signature ice beast spell.
+    if (mon->type == MONS_FANNAR && coinflip())
+    {
+        const int book = items(false, OBJ_BOOKS, BOOK_CONSTRUCTION, 1);
+        if (book == NON_ITEM)
+            return;
+
+        const vector<spell_type> forced_spell = {SPELL_SUMMON_ICE_BEAST};
+        build_themed_book(env.item[book],
+            forced_spell_filter(forced_spell, capped_spell_filter(6)),
+            forced_book_theme(spschool::ice), 3, "Fannar");
+        give_specific_item(mon, book);
+    }
+    // Josephine's notes focus on the necromantic spells she uses in combat.
+    if (mon->type == MONS_JOSEPHINE && coinflip())
+    {
+        const int book = items(false, OBJ_BOOKS, BOOK_CONSTRUCTION, 1);
+        if (book == NON_ITEM)
+            return;
+
+        const vector<spell_type> forced_spell = {
+            SPELL_VAMPIRIC_DRAINING, SPELL_DISPEL_UNDEAD
+        };
+        build_themed_book(env.item[book],
+            forced_spell_filter(forced_spell, capped_spell_filter(5)),
+            forced_book_theme(spschool::necromancy), 3, "Josephine");
+        give_specific_item(mon, book);
+    }
+}
+
+static void _give_unique_scroll(monster* mon)
+{
+    if (mon->type == MONS_MAURICE && coinflip())
+        mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_ACQUIREMENT;
+    else if (mon->type == MONS_GRINDER && coinflip())
+        mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_TORMENT;
 }
 
 void give_item(monster *mons, int level_number)
@@ -2582,6 +2632,7 @@ void give_item(monster *mons, int level_number)
     _give_shield(mons, 1 + level_number / 2);
     _give_extra_equipment(mons, 1 + level_number / 2);
     _give_book(mons);
+    _give_unique_scroll(mons);
 
     if (mons->type == MONS_ORC_APOSTLE)
         give_apostle_equipment(mons);

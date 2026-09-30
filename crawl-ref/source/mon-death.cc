@@ -3609,6 +3609,22 @@ item_def* monster_die(monster& mons, killer_type killer,
         // since we still need it.
         unwind_var<int> fakehp(mons.hit_points, 1);
         monster_drop_things(&mons, YOU_KILL(killer) || pet_kill);
+
+        if (mons.props.exists(UNIQUE_SCROLL_DROP_KEY))
+        {
+            const int scroll = items(false, OBJ_SCROLLS,
+                mons.props[UNIQUE_SCROLL_DROP_KEY].get_int(), ISPEC_GIFT);
+            if (scroll != NON_ITEM)
+            {
+                int item_index = scroll;
+                const bool placed = move_item_to_grid(&item_index, mwhere);
+                if (placed && item_index != NON_ITEM
+                    && env.item[item_index].defined() && you.see_cell(mwhere)
+                    && !feat_eliminates_items(env.grid(mwhere)))
+                    mprf("%s drops %s.", mons.name(DESC_THE).c_str(),
+                         env.item[item_index].name(DESC_A).c_str());
+            }
+        }
     }
     else
     {

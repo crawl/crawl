@@ -8,6 +8,8 @@
 #include "item-def.h"
 #include "monster-type.h"
 
+constexpr const char* UNIQUE_SCROLL_DROP_KEY = "unique_scroll_drop";
+
 class monster;
 
 void give_specific_item(monster* mon, const item_def& tpl);
