@@ -437,6 +437,10 @@ static constexpr int STARTUP_CRAWL_COSPLAY_ACADEMY = -1;
 static constexpr int STARTUP_DUNGEON_CRAWL_FORKS = -2;
 static constexpr int STARTUP_EDIT_INIT = -3;
 static constexpr int STARTUP_OTHER_GAMEPLAY_OPTIONS = -4;
+static constexpr int STARTUP_VIEW_WEBSITES = -5;
+static constexpr int STARTUP_DUNGEON_CRAWL_CHILI = -6;
+static constexpr int STARTUP_DUNGEON_CRAWL_DISCORD = -7;
+static constexpr int STARTUP_CRAWL_COSPLAY_DISCORD = -8;
 
 #ifdef USE_TILE_LOCAL
 static bool _open_startup_url(const char *url)
@@ -492,7 +496,7 @@ static bool _edit_init_file()
 
 static const vector<game_modes_menu_item> entries =
 {
-    {GAME_TYPE_NORMAL, "Dungeon Crawl",
+    {GAME_TYPE_NORMAL, "Dungeon Crawl Chili",
         "Dungeon Crawl: The main game: full of monsters, items, "
         "gods and danger!" },
     {GAME_TYPE_CUSTOM_SEED, "Choose Game Seed",
@@ -509,10 +513,8 @@ static const vector<game_modes_menu_item> entries =
         "View the high score list." },
     {STARTUP_EDIT_INIT, "Edit init.txt",
         "Open the init.txt configuration file in a text editor." },
-    {STARTUP_CRAWL_COSPLAY_ACADEMY, "Visit Crawl Cosplay Academy website",
-        "Open the Crawl Cosplay Academy website in your browser." },
-    {STARTUP_DUNGEON_CRAWL_FORKS, "Visit DungeonCrawlForks.org website",
-        "Open DungeonCrawlForks.org in your browser." },
+    {STARTUP_VIEW_WEBSITES, "View websites",
+        "Open a project website in your browser." },
 };
 
 static const vector<game_modes_menu_item> other_gameplay_entries =
@@ -523,6 +525,22 @@ static const vector<game_modes_menu_item> other_gameplay_entries =
         "Hard, fixed single level game mode." },
     {GAME_TYPE_ARENA, "The Arena",
         "Pit computer controlled teams versus each other!" },
+};
+
+static const vector<game_modes_menu_item> website_entries =
+{
+    {STARTUP_DUNGEON_CRAWL_CHILI, "Visit DungeonCrawlChili.org website",
+        "Open the Dungeon Crawl Chili website in your browser." },
+    {STARTUP_CRAWL_COSPLAY_ACADEMY, "Visit Crawl Cosplay Academy website",
+        "Open the Crawl Cosplay Academy website in your browser." },
+    {STARTUP_DUNGEON_CRAWL_FORKS, "Visit DungeonCrawlForks.org website",
+        "Open DungeonCrawlForks.org in your browser." },
+    {STARTUP_DUNGEON_CRAWL_DISCORD,
+        "Join Dungeon Crawl Community discord server",
+        "Open the Dungeon Crawl Community Discord invite in your browser." },
+    {STARTUP_CRAWL_COSPLAY_DISCORD,
+        "Join the Crawl Cosplay 2.0 Community discord server",
+        "Open the Crawl Cosplay 2.0 Community Discord invite in your browser." },
 };
 
 static void _add_game_modes_menu_entry(shared_ptr<OuterMenu>& container,
@@ -539,13 +557,22 @@ static void _add_game_modes_menu_entry(shared_ptr<OuterMenu>& container,
     hbox->set_cross_alignment(Widget::Align::CENTER);
     auto tile = make_shared<Image>();
     const tileidx_t icon =
-        entry.id == STARTUP_CRAWL_COSPLAY_ACADEMY
+        entry.id == STARTUP_DUNGEON_CRAWL_CHILI
+            ? static_cast<tileidx_t>(TILEG_STARTUP_STONESOUP)
+            : entry.id == STARTUP_CRAWL_COSPLAY_ACADEMY
             ? static_cast<tileidx_t>(TILEG_STARTUP_CRAWL_COSPLAY_ACADEMY)
-            : entry.id == STARTUP_DUNGEON_CRAWL_FORKS
-                ? static_cast<tileidx_t>(TILE_UNRAND_RIFT)
+                : entry.id == STARTUP_DUNGEON_CRAWL_FORKS
+                    ? static_cast<tileidx_t>(TILE_UNRAND_RIFT)
+                : entry.id == STARTUP_VIEW_WEBSITES
+                    ? static_cast<tileidx_t>(TILE_UNRAND_RIFT)
+                : entry.id == STARTUP_DUNGEON_CRAWL_DISCORD
+                    ? static_cast<tileidx_t>(TILEG_CMD_REPLAY_MESSAGES)
+                : entry.id == STARTUP_CRAWL_COSPLAY_DISCORD
+                    ? static_cast<tileidx_t>(TILEG_CMD_REPLAY_MESSAGES)
                 : entry.id == STARTUP_EDIT_INIT
-                    || entry.id == STARTUP_OTHER_GAMEPLAY_OPTIONS
-                    ? static_cast<tileidx_t>(TILEG_STARTUP_INSTRUCTIONS)
+                    ? static_cast<tileidx_t>(TILEG_CMD_EDIT_PLAYER_TILE)
+                : entry.id == STARTUP_OTHER_GAMEPLAY_OPTIONS
+                    ? static_cast<tileidx_t>(TILEG_STARTUP_SPRINT)
                 : tileidx_gametype(static_cast<game_type>(entry.id));
     tile->set_tile(tile_def(icon));
     tile->set_margin_for_sdl(0, 6, 0, 0);
@@ -794,6 +821,19 @@ public:
             });
         }
 
+        website_menu = make_shared<OuterMenu>(true, 1, website_entries.size());
+        website_menu->set_margin_for_sdl(0, 0, 10, 10);
+        website_menu->set_margin_for_crt(0, 0, 1, 0);
+        website_menu->descriptions = descriptions;
+        for (size_t i = 0; i < website_entries.size(); ++i)
+            _add_game_modes_menu_entry(website_menu, website_entries[i], i);
+        for (auto &w : website_menu->get_buttons())
+        {
+            w->on_focusin_event([w, this](const FocusEvent&) {
+                return this->on_button_focusin(*w);
+            });
+        }
+
         auto other_screen = make_shared<Box>(Box::VERT);
         other_screen->set_cross_alignment(Widget::Align::STRETCH);
         auto other_title = make_shared<Text>(formatted_string(
@@ -808,9 +848,24 @@ public:
         back_hint->set_margin_for_sdl(10, 0, 10, 0);
         other_screen->add_child(std::move(back_hint));
 
+        auto websites_screen = make_shared<Box>(Box::VERT);
+        websites_screen->set_cross_alignment(Widget::Align::STRETCH);
+        auto websites_title = make_shared<Text>(formatted_string(
+            "View websites", YELLOW));
+        websites_title->set_margin_for_crt(0, 1, 1, 0);
+        websites_title->set_margin_for_sdl(0, 0, 10, 0);
+        websites_screen->add_child(std::move(websites_title));
+        websites_screen->add_child(website_menu);
+        auto websites_back_hint = make_shared<Text>(formatted_string(
+            "Esc - Back to main menu", BROWN));
+        websites_back_hint->set_margin_for_crt(1, 0, 1, 0);
+        websites_back_hint->set_margin_for_sdl(10, 0, 10, 0);
+        websites_screen->add_child(std::move(websites_back_hint));
+
         startup_screens = make_shared<Switcher>();
         startup_screens->add_child(main_screen);
         startup_screens->add_child(other_screen);
+        startup_screens->add_child(websites_screen);
         startup_screens->current() = 0;
         m_root->add_child(startup_screens);
 
@@ -888,6 +943,10 @@ private:
         case GAME_TYPE_HIGH_SCORES:
         case GAME_TYPE_INSTRUCTIONS:
         case STARTUP_EDIT_INIT:
+        case STARTUP_VIEW_WEBSITES:
+        case STARTUP_DUNGEON_CRAWL_CHILI:
+        case STARTUP_DUNGEON_CRAWL_DISCORD:
+        case STARTUP_CRAWL_COSPLAY_DISCORD:
         case STARTUP_CRAWL_COSPLAY_ACADEMY:
         case STARTUP_DUNGEON_CRAWL_FORKS:
             break;
@@ -913,6 +972,7 @@ private:
     shared_ptr<Switcher> startup_screens;
     shared_ptr<OuterMenu> game_modes_menu;
     shared_ptr<OuterMenu> other_gameplay_menu;
+    shared_ptr<OuterMenu> website_menu;
     shared_ptr<OuterMenu> save_games_menu;
     // not a `game_type` because it is used for save #s as well
     int selected_game_type;
@@ -971,11 +1031,13 @@ void UIStartupMenu::on_show()
 
         if (key_is_escape(keyn) || keyn == CK_MOUSE_CMD)
         {
-            if (startup_screens->current() == 1)
+            if (startup_screens->current() != 0)
             {
+                const int previous_screen = startup_screens->current();
                 startup_screens->current() = 0;
-                if (auto button = game_modes_menu->get_button_by_id(
-                        STARTUP_OTHER_GAMEPLAY_OPTIONS))
+                const int main_menu_id = previous_screen == 1
+                    ? STARTUP_OTHER_GAMEPLAY_OPTIONS : STARTUP_VIEW_WEBSITES;
+                if (auto button = game_modes_menu->get_button_by_id(main_menu_id))
                     game_modes_menu->scroll_button_into_view(button);
                 return true;
             }
@@ -1089,6 +1151,13 @@ void UIStartupMenu::menu_item_activated(int id)
             other_gameplay_menu->scroll_button_into_view(button);
         return;
 
+    case STARTUP_VIEW_WEBSITES:
+        startup_screens->current() = 2;
+        descriptions->current() = -1;
+        if (auto button = website_menu->get_button(0, 0))
+            website_menu->scroll_button_into_view(button);
+        return;
+
     case GAME_TYPE_ARENA:
         ng_choice.type = GAME_TYPE_ARENA;
         done = true;
@@ -1130,6 +1199,20 @@ void UIStartupMenu::menu_item_activated(int id)
 #endif
         return;
 
+    case STARTUP_DUNGEON_CRAWL_CHILI:
+#ifdef USE_TILE_LOCAL
+        if (!_open_startup_url("https://dungeoncrawlchili.org"))
+            mprf(MSGCH_ERROR, "Couldn't open the Dungeon Crawl Chili website: %s",
+#if SDL_VERSION_ATLEAST(2, 0, 14)
+                 SDL_GetError());
+#else
+                 "the system browser could not be launched");
+#endif
+#else
+        mpr("Open https://dungeoncrawlchili.org in your web browser.");
+#endif
+        return;
+
     case STARTUP_DUNGEON_CRAWL_FORKS:
 #ifdef USE_TILE_LOCAL
         if (!_open_startup_url("https://dungeoncrawlforks.org"))
@@ -1141,6 +1224,34 @@ void UIStartupMenu::menu_item_activated(int id)
 #endif
 #else
         mpr("Open https://dungeoncrawlforks.org in your web browser.");
+#endif
+        return;
+
+    case STARTUP_DUNGEON_CRAWL_DISCORD:
+#ifdef USE_TILE_LOCAL
+        if (!_open_startup_url("https://discord.gg/gMnE5JFcB7"))
+            mprf(MSGCH_ERROR, "Couldn't open the Dungeon Crawl Community Discord invite: %s",
+#if SDL_VERSION_ATLEAST(2, 0, 14)
+                 SDL_GetError());
+#else
+                 "the system browser could not be launched");
+#endif
+#else
+        mpr("Open https://discord.gg/gMnE5JFcB7 in your web browser.");
+#endif
+        return;
+
+    case STARTUP_CRAWL_COSPLAY_DISCORD:
+#ifdef USE_TILE_LOCAL
+        if (!_open_startup_url("https://discord.gg/pW7nqC8Wu3"))
+            mprf(MSGCH_ERROR, "Couldn't open the Crawl Cosplay 2.0 Community Discord invite: %s",
+#if SDL_VERSION_ATLEAST(2, 0, 14)
+                 SDL_GetError());
+#else
+                 "the system browser could not be launched");
+#endif
+#else
+        mpr("Open https://discord.gg/pW7nqC8Wu3 in your web browser.");
 #endif
         return;
 
