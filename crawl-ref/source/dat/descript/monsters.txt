@@ -421,6 +421,9 @@ Medusa
 A snake headed Naga with a petrifying stare.  The only mortal sister of the
 ancient Gorgon, she terrorizes the denizens of the early dungeon. When defeated, 
 her garden of victims will be transformed into an army of vengeful snakes.
+
+<brown>DC Chili change: Medusa has a 50% chance of dropping a Talisman of
+Medusa when she is killed.</brown>
 %%%%
 Menkaure
 
@@ -456,6 +459,9 @@ A weirdly glowing figure, dancing through the twisted air of Pandemonium.
 Monkey King
 
 A large howler monkey who has climbed and clawed his way to the top of his pack.
+
+<brown>DC Chili change: The Monkey King has a 50% chance of dropping a scroll of
+summoning when he is killed.</brown>
 %%%%
 Murray
 
@@ -519,6 +525,9 @@ best option.
 Octavia
 
 A heretic of Gozag.
+
+<brown>DC Chili change: Octavia has a 50% chance of dropping a gift of gold when
+she is killed.</brown>
 %%%%
 Oskar
 
@@ -560,6 +569,9 @@ lust for power. He travels the depths of the Dungeon with his faithful
 entourage in the hopes the Orb will secure his legitimacy for the throne.
 His charming demeanor is so powerful that all but your most trusted allies
 might be swayed to his cause.
+
+<brown>DC Chili change: Regal has a 50% chance of dropping the Octopus King's
+Trident when it is available.</brown>
 %%%%
 Robin
 
@@ -652,6 +664,9 @@ Verity
 
 Once a man, he put his soul into a dragon carved of stone.  He lurks in the
 Lair where his bulk is too hefty to escape and resume the quest for the Orb.
+
+<brown>DC Chili change: Verity has a 50% chance of dropping a Talisman of Statue
+Form when he is killed.</brown>
 %%%%
 Vv
 
