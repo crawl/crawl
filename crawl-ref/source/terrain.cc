@@ -1294,7 +1294,7 @@ void dgn_check_terrain_items(const coord_def &pos, bool preserve_items,
 static void _dgn_check_terrain_monsters(const coord_def &pos)
 {
     if (monster* m = monster_at(pos))
-        m->trigger_movement_effects();
+        m->trigger_movement_effects(MV_PRESERVE_CONSTRICTION);
 }
 
 // Clear blood or off of terrain that shouldn't have it. Also clear of blood if
