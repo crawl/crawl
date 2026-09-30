@@ -1610,7 +1610,7 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
     {
         if (feat_is_escape_hatch(ygrd))
         {
-            if (is_unknown_stair(you.pos()) || !Options.warn_unknown_hatches) 
+            if (is_unknown_stair(you.pos()) || !Options.warn_unknown_hatches)
             {
                 if (!yesno("Really go through this one-way escape hatch?", true, 'n'))
                 {
