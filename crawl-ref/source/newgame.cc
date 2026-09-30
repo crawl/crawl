@@ -40,6 +40,9 @@
 #include "rltiles/tiledef-main.h"
 #include "rltiles/tiledef-feat.h"
 #endif
+#ifdef USE_TILE_WEB
+#include "tileweb.h"
+#endif
 #include "version.h"
 #include "ui.h"
 #include "outer-menu.h"
@@ -1029,6 +1032,11 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
     }
     else if (ng.type == GAME_TYPE_CUSTOM_SEED)
         _choose_seed(ng, choice, defaults);
+
+#ifdef USE_TILE_WEB
+    if (tiles.has_receivers())
+        tiles.send_message("{\"msg\":\"dcchili_intro\"}");
+#endif
 
     _choose_char(ng, choice, defaults);
 
