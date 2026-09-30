@@ -676,7 +676,9 @@ def process_species_yaml_lines(lines, deprecated):
                 value = "Hopp"
             strings.append(value + "ing")
             strings.append(value + "er")
-        elif key in ["genus"] or not deprecated:
+        elif key == "genus":
+            strings.append(article_the(value))
+        elif not deprecated:
             if key == "altar_action":
                 value = "You " + value + " @the_altar@."
             elif key == "adjective":
@@ -684,7 +686,7 @@ def process_species_yaml_lines(lines, deprecated):
             #strings.append("# " + key)
             strings.append(value)
 
-    strings.insert(0, name)
+    strings.insert(0, article_the(name))
     if short_name == None:
         short_name = name[0:2]
     strings.insert(1, short_name)
