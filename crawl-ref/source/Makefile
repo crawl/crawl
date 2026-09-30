@@ -1340,6 +1340,7 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
+              webserver/static/dcchili_intro.png \
               $(TITLEIMGS:%=webserver/static/title_%.png) \
               $(TILEINFOJS:%=webserver/game_data/static/tileinfo-%.js) \
               webserver/webtiles/version.txt \
