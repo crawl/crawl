@@ -537,6 +537,9 @@ int SDLWrapper::init(coord_def *m_windowsz)
     }
     else
     {
+        // Start Tiles in a maximized window. F11 can switch to borderless
+        // desktop fullscreen while preserving this windowed state.
+        flags |= SDL_WINDOW_MAXIMIZED;
         int y = Options.tile_window_height;
         int x = Options.tile_window_width;
         x = (x > 0) ? x : _desktop_width + x;
@@ -959,6 +962,15 @@ int SDLWrapper::wait_event(wm_event *event, int timeout)
     case SDL_KEYDOWN:
         if (Options.tile_key_repeat_delay <= 0 && sdlevent.key.repeat != 0)
             return 0;
+        if (sdlevent.key.keysym.sym == SDLK_F11
+            && !(sdlevent.key.keysym.mod
+                 & (KMOD_SHIFT | KMOD_CTRL | KMOD_ALT | KMOD_GUI)))
+        {
+            const Uint32 flags = SDL_GetWindowFlags(m_window);
+            SDL_SetWindowFullscreen(m_window,
+                flags & SDL_WINDOW_FULLSCREEN ? 0 : SDL_WINDOW_FULLSCREEN_DESKTOP);
+            return 0;
+        }
         event->type = WME_KEYDOWN;
         event->key.state = sdlevent.key.state;
         event->key.keysym.scancode = sdlevent.key.keysym.scancode;
