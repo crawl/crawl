@@ -1360,7 +1360,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         break;
 
     case MONS_REGAL:
-        if (one_chance_in(9) && !get_unique_item_status(UNRAND_OCTOPUS_KING))
+        if (coinflip() && !get_unique_item_status(UNRAND_OCTOPUS_KING))
         {
             force_item = true;
             item.base_type = OBJ_WEAPONS;
@@ -2460,7 +2460,8 @@ static void _give_extra_equipment(monster* mon, int level)
     case MONS_OCTAVIA:
     {
         make_item_for_monster(mon, OBJ_JEWELLERY, NUM_RINGS, 0, 1);
-        give_specific_item(mon, items(false, OBJ_GOLD, 0, ISPEC_GIFT));
+        if (coinflip())
+            give_specific_item(mon, items(false, OBJ_GOLD, 0, ISPEC_GIFT));
     }
     break;
 
@@ -2617,6 +2618,8 @@ static void _give_unique_scroll(monster* mon)
         mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_ACQUIREMENT;
     else if (mon->type == MONS_GRINDER && coinflip())
         mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_TORMENT;
+    else if (mon->type == MONS_MONKEY_KING && coinflip())
+        mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_SUMMONING;
 }
 
 void give_item(monster *mons, int level_number)
