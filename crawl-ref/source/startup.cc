@@ -436,6 +436,7 @@ struct game_modes_menu_item
 static constexpr int STARTUP_CRAWL_COSPLAY_ACADEMY = -1;
 static constexpr int STARTUP_DUNGEON_CRAWL_FORKS = -2;
 static constexpr int STARTUP_EDIT_INIT = -3;
+static constexpr int STARTUP_OTHER_GAMEPLAY_OPTIONS = -4;
 
 #ifdef USE_TILE_LOCAL
 static bool _open_startup_url(const char *url)
@@ -501,13 +502,9 @@ static const vector<game_modes_menu_item> entries =
     {GAME_TYPE_HINTS, "Hints Mode for Dungeon Crawl",
         "A mostly normal game that provides more advanced hints "
         "than the tutorial."},
-    {GAME_TYPE_DESCENT, "Dungeon Descent",
-        "Mode with a branching, one-way path through the Dungeon." },
-    {GAME_TYPE_SPRINT, "Dungeon Sprint",
-        "Hard, fixed single level game mode." },
+    {STARTUP_OTHER_GAMEPLAY_OPTIONS, "Other gameplay options",
+        "Choose another gameplay mode." },
     {GAME_TYPE_INSTRUCTIONS, "Instructions", "Help menu." },
-    {GAME_TYPE_ARENA, "The Arena",
-        "Pit computer controlled teams versus each other!" },
     {GAME_TYPE_HIGH_SCORES, "High Scores",
         "View the high score list." },
     {STARTUP_EDIT_INIT, "Edit init.txt",
@@ -518,48 +515,63 @@ static const vector<game_modes_menu_item> entries =
         "Open DungeonCrawlForks.org in your browser." },
 };
 
+static const vector<game_modes_menu_item> other_gameplay_entries =
+{
+    {GAME_TYPE_DESCENT, "Dungeon Descent",
+        "Mode with a branching, one-way path through the Dungeon." },
+    {GAME_TYPE_SPRINT, "Dungeon Sprint",
+        "Hard, fixed single level game mode." },
+    {GAME_TYPE_ARENA, "The Arena",
+        "Pit computer controlled teams versus each other!" },
+};
+
+static void _add_game_modes_menu_entry(shared_ptr<OuterMenu>& container,
+                                       const game_modes_menu_item& entry,
+                                       int row)
+{
+    if (entry.id == GAME_TYPE_DESCENT && Version::ReleaseType != VER_ALPHA)
+        return;
+
+    auto label = make_shared<Text>();
+
+#ifdef USE_TILE_LOCAL
+    auto hbox = make_shared<Box>(Box::HORZ);
+    hbox->set_cross_alignment(Widget::Align::CENTER);
+    auto tile = make_shared<Image>();
+    const tileidx_t icon =
+        entry.id == STARTUP_CRAWL_COSPLAY_ACADEMY
+            ? static_cast<tileidx_t>(TILEG_STARTUP_CRAWL_COSPLAY_ACADEMY)
+            : entry.id == STARTUP_DUNGEON_CRAWL_FORKS
+                ? static_cast<tileidx_t>(TILE_UNRAND_RIFT)
+                : entry.id == STARTUP_EDIT_INIT
+                    || entry.id == STARTUP_OTHER_GAMEPLAY_OPTIONS
+                    ? static_cast<tileidx_t>(TILEG_STARTUP_INSTRUCTIONS)
+                : tileidx_gametype(static_cast<game_type>(entry.id));
+    tile->set_tile(tile_def(icon));
+    tile->set_margin_for_sdl(0, 6, 0, 0);
+    hbox->add_child(std::move(tile));
+    hbox->add_child(label);
+#endif
+
+    label->set_text(formatted_string(entry.label, WHITE));
+
+    auto btn = make_shared<MenuButton>();
+#ifdef USE_TILE_LOCAL
+    hbox->set_margin_for_sdl(2, 10, 2, 2);
+    btn->set_child(std::move(hbox));
+#else
+    btn->set_child(std::move(label));
+#endif
+    btn->id = entry.id;
+    btn->description = entry.description;
+    btn->highlight_colour = LIGHTGREY;
+    container->add_button(std::move(btn), 0, row);
+}
+
 static void _construct_game_modes_menu(shared_ptr<OuterMenu>& container)
 {
     for (size_t i = 0; i < entries.size(); ++i)
-    {
-        const auto& entry = entries[i];
-        if (entry.id == GAME_TYPE_DESCENT && Version::ReleaseType != VER_ALPHA)
-            continue;
-
-        auto label = make_shared<Text>();
-
-#ifdef USE_TILE_LOCAL
-        auto hbox = make_shared<Box>(Box::HORZ);
-        hbox->set_cross_alignment(Widget::Align::CENTER);
-        auto tile = make_shared<Image>();
-        const tileidx_t icon =
-            entry.id == STARTUP_CRAWL_COSPLAY_ACADEMY
-                ? static_cast<tileidx_t>(TILEG_STARTUP_CRAWL_COSPLAY_ACADEMY)
-                : entry.id == STARTUP_DUNGEON_CRAWL_FORKS
-                    ? static_cast<tileidx_t>(TILE_UNRAND_RIFT)
-                    : entry.id == STARTUP_EDIT_INIT
-                        ? static_cast<tileidx_t>(TILEG_STARTUP_INSTRUCTIONS)
-                    : tileidx_gametype(static_cast<game_type>(entry.id));
-        tile->set_tile(tile_def(icon));
-        tile->set_margin_for_sdl(0, 6, 0, 0);
-        hbox->add_child(std::move(tile));
-        hbox->add_child(label);
-#endif
-
-        label->set_text(formatted_string(entry.label, WHITE));
-
-        auto btn = make_shared<MenuButton>();
-#ifdef USE_TILE_LOCAL
-        hbox->set_margin_for_sdl(2, 10, 2, 2);
-        btn->set_child(std::move(hbox));
-#else
-        btn->set_child(std::move(label));
-#endif
-        btn->id = entry.id;
-        btn->description = entry.description;
-        btn->highlight_colour = LIGHTGREY;
-        container->add_button(std::move(btn), 0, i);
-    }
+        _add_game_modes_menu_entry(container, entries[i], i);
 }
 
 static shared_ptr<MenuButton> _make_newgame_button(int num_chars)
@@ -763,7 +775,44 @@ public:
         grid->column_flex_grow(0) = 1;
         grid->column_flex_grow(1) = 10;
 
-        m_root->add_child(std::move(grid));
+        auto main_screen = make_shared<Box>(Box::VERT);
+        main_screen->set_cross_alignment(Widget::Align::STRETCH);
+        main_screen->add_child(std::move(grid));
+
+        other_gameplay_menu = make_shared<OuterMenu>(
+            true, 1, other_gameplay_entries.size());
+        other_gameplay_menu->set_margin_for_sdl(0, 0, 10, 10);
+        other_gameplay_menu->set_margin_for_crt(0, 0, 1, 0);
+        other_gameplay_menu->descriptions = descriptions;
+        for (size_t i = 0; i < other_gameplay_entries.size(); ++i)
+            _add_game_modes_menu_entry(other_gameplay_menu,
+                                       other_gameplay_entries[i], i);
+        for (auto &w : other_gameplay_menu->get_buttons())
+        {
+            w->on_focusin_event([w, this](const FocusEvent&) {
+                return this->on_button_focusin(*w);
+            });
+        }
+
+        auto other_screen = make_shared<Box>(Box::VERT);
+        other_screen->set_cross_alignment(Widget::Align::STRETCH);
+        auto other_title = make_shared<Text>(formatted_string(
+            "Other gameplay options", YELLOW));
+        other_title->set_margin_for_crt(0, 1, 1, 0);
+        other_title->set_margin_for_sdl(0, 0, 10, 0);
+        other_screen->add_child(std::move(other_title));
+        other_screen->add_child(other_gameplay_menu);
+        auto back_hint = make_shared<Text>(formatted_string(
+            "Esc - Back to main menu", BROWN));
+        back_hint->set_margin_for_crt(1, 0, 1, 0);
+        back_hint->set_margin_for_sdl(10, 0, 10, 0);
+        other_screen->add_child(std::move(back_hint));
+
+        startup_screens = make_shared<Switcher>();
+        startup_screens->add_child(main_screen);
+        startup_screens->add_child(other_screen);
+        startup_screens->current() = 0;
+        m_root->add_child(startup_screens);
 
         string instructions_text;
         // TODO: these can overflow on console 80x24 and won't line-wrap, is
@@ -788,7 +837,7 @@ public:
         if (recent_error_messages())
             instructions_text += " (<red>Errors during initialization!</red>)";
 
-        m_root->add_child(make_shared<Text>(
+        main_screen->add_child(make_shared<Text>(
                         formatted_string::parse_string(instructions_text)));
 
         descriptions->set_margin_for_crt(1, 0, 0, 0);
@@ -828,6 +877,7 @@ private:
         case GAME_TYPE_TUTORIAL:
         case GAME_TYPE_SPRINT:
         case GAME_TYPE_HINTS:
+        case STARTUP_OTHER_GAMEPLAY_OPTIONS:
             // If a game type is chosen, the user expects to start a new game.
             // Just blanking the name it it clashes for now.
             if (_find_save(chars, input_string) != -1)
@@ -860,7 +910,9 @@ private:
     shared_ptr<Box> m_root;
     shared_ptr<Text> input_text;
     shared_ptr<Switcher> descriptions;
+    shared_ptr<Switcher> startup_screens;
     shared_ptr<OuterMenu> game_modes_menu;
+    shared_ptr<OuterMenu> other_gameplay_menu;
     shared_ptr<OuterMenu> save_games_menu;
     // not a `game_type` because it is used for save #s as well
     int selected_game_type;
@@ -919,6 +971,14 @@ void UIStartupMenu::on_show()
 
         if (key_is_escape(keyn) || keyn == CK_MOUSE_CMD)
         {
+            if (startup_screens->current() == 1)
+            {
+                startup_screens->current() = 0;
+                if (auto button = game_modes_menu->get_button_by_id(
+                        STARTUP_OTHER_GAMEPLAY_OPTIONS))
+                    game_modes_menu->scroll_button_into_view(button);
+                return true;
+            }
             // End the game
             return done = end_game = true;
         }
@@ -1020,6 +1080,13 @@ void UIStartupMenu::menu_item_activated(int id)
             ng_choice.name = input_string;
             done = true;
         }
+        return;
+
+    case STARTUP_OTHER_GAMEPLAY_OPTIONS:
+        startup_screens->current() = 1;
+        descriptions->current() = -1;
+        if (auto button = other_gameplay_menu->get_button(0, 0))
+            other_gameplay_menu->scroll_button_into_view(button);
         return;
 
     case GAME_TYPE_ARENA:
