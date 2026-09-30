@@ -384,6 +384,9 @@ sunder
 concuss
 
 %%%%
+devious
+
+%%%%
 vuln
 
 %%%%

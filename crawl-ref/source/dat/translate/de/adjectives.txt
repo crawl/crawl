@@ -540,6 +540,9 @@
 "vampiric "
 "vampirische "
 %%%%
+"devious "
+"heimtückisch "
+%%%%
 
 ################################
 # colours
