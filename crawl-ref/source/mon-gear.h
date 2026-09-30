@@ -9,6 +9,8 @@
 #include "monster-type.h"
 
 constexpr const char* UNIQUE_SCROLL_DROP_KEY = "unique_scroll_drop";
+constexpr const char* UNIQUE_CURARE_DROP_KEY = "unique_curare_drop";
+constexpr const char* UNIQUE_POTION_DROP_KEY = "unique_potion_drop";
 
 class monster;
 

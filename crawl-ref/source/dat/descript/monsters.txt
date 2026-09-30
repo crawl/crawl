@@ -102,11 +102,17 @@ A colossal, battle-scarred death yak wearing the remnants of an ancient
 harness. Cracked bronze bells hang from his horns, sounding commands that the
 beasts of the Lair obey with unsettling precision. He can drive his herd into a
 battle-frenzy before stampeding in a straight line towards his prey.
+
+<brown>DC Chili change: Rusk has a 50% chance of dropping a potion of might
+when he is killed.</brown>
 %%%%
 Katinboo
 
 A cunning, broad-shouldered felid whose claws drip with curare. Katinboo never
 hunts alone for long, calling an ogre and a stubborn mule to join the fight.
+
+<brown>DC Chili change: Katinboo has a 50% chance of dropping 3 curare darts
+when she is killed.</brown>
 %%%%
 Cerebov
 
@@ -532,6 +538,9 @@ she is killed.</brown>
 Oskar
 
 A garbage dwelling denizen of the dungeon.
+
+<brown>DC Chili change: Oskar has a 50% chance of dropping a potion of
+cancellation when he is killed.</brown>
 %%%%
 Pargi
 

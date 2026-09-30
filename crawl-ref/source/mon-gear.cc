@@ -2620,6 +2620,15 @@ static void _give_unique_scroll(monster* mon)
         mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_TORMENT;
     else if (mon->type == MONS_MONKEY_KING && coinflip())
         mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_SUMMONING;
+
+    if (mon->type == MONS_KATINBOO && coinflip())
+        mon->props[UNIQUE_CURARE_DROP_KEY] = true;
+
+    if (mon->type == MONS_RUSK && coinflip())
+        mon->props[UNIQUE_POTION_DROP_KEY] = POT_MIGHT;
+
+    if (mon->type == MONS_OSKAR && coinflip())
+        mon->props[UNIQUE_POTION_DROP_KEY] = POT_CANCELLATION;
 }
 
 void give_item(monster *mons, int level_number)
