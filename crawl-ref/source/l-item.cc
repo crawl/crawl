@@ -1590,7 +1590,9 @@ int lua_push_shop_items_at(lua_State *ls, const coord_def &s)
 
 /*** See what a shop has for sale.
  * Only works when standing at a shop.
- * @treturn array|nil An array of @{Item} objects or nil if not on a shop
+ * @treturn array|nil An array of arrays representing the items or nil if not
+ * on a shop. The inner arrays contain
+ * {@{Item}, int price, boolean is_on_shopping_list}
  * @function shop_inventory
  */
 static int l_item_shop_inventory(lua_State *ls)
@@ -1599,8 +1601,9 @@ static int l_item_shop_inventory(lua_State *ls)
 }
 
 /*** Look at the shopping list.
- * @treturn array|nil Array of @{Item}s on the shopping list or nil if the
- * shopping list is empty
+ * @treturn array|nil Array of arrays representing the items on the shopping
+ * list or nil if the shopping list is empty. The inner arrays contain
+ * {string item_name, int price}
  * @function shopping_list
  */
 static int l_item_shopping_list(lua_State *ls)
