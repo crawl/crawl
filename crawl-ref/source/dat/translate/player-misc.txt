@@ -171,6 +171,10 @@ Stalking
 Ba
 
 %%%%
+# Centaur
+Ce
+
+%%%%
 # Deep Dwarf
 DD
 
@@ -215,6 +219,10 @@ Gh
 Gn
 
 %%%%
+# Halfling
+Ha
+
+%%%%
 # Hill Orc
 HO
 
@@ -255,6 +263,10 @@ Og
 Pa
 
 %%%%
+# Sludge Elf
+SE
+
+%%%%
 # Spriggan
 Sp
 
@@ -273,13 +285,6 @@ Vp
 %%%%
 # Vine Stalker
 VS
-
-%%%%
-
-# obsolete, but could appear in high scores list or as player ghost
-%%%%
-# Halfling
-Ha
 
 %%%%
 
