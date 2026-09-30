@@ -200,12 +200,19 @@ Eustachio
 
 An apprentice summoner with a flowing moustache. He has funny ideas about
 honour.
+
+<brown>DC Chili change: Eustachio has a 50% chance of dropping a small
+Summoning spellbook when he is killed. The book always contains Summon Small
+Mammal.</brown>
 %%%%
 Fannar
 
 A cold-hearted elven sorcerer, draped in robes of high office. They whisper
 grimly to themself as they stalk the dungeon, trailing ice crystals through the
 air behind them.
+
+<brown>DC Chili change: Fannar has a 50% chance of dropping a small Ice spellbook
+when he is killed. The book always contains Summon Ice Beast.</brown>
 %%%%
 Frances
 
@@ -249,6 +256,9 @@ Grinder
 
 An inefficient shadow imp previously employed as a torturer in one of the lower
 circles of Hell. She has a tendency to complain and make inane statements.
+
+<brown>DC Chili change: Grinder has a 50% chance of dropping a scroll of torment
+when she is killed.</brown>
 %%%%
 Grum
 
@@ -300,6 +310,10 @@ Jessica
 
 An evil apprentice sorceress. After the fall of the kingdom she hid in the
 ruins to practice the dark arts.
+
+<brown>DC Chili change: Jessica has a 50% chance of dropping a small spellbook
+when she is killed. If she does drop a book, there is also a 50% chance that
+it will have the Blink spell.</brown>
 %%%%
 Jorgrun
 
@@ -327,6 +341,10 @@ Josephine
 
 A formidable necromancer, committed to her craft even after it left her aged,
 decaying, and half-undead herself.
+
+<brown>DC Chili change: Josephine has a 50% chance of dropping a small Necromancy
+spellbook when she is killed. The book always contains Vampiric Draining and
+Dispel Undead.</brown>
 %%%%
 Khufu
 
@@ -394,6 +412,9 @@ A sly, conniving thief. A self-proclaimed legend, he was one of the most skilled
 and crafty of the thieves and rogues lured by the Orb. The magical parasitic
 vines that have claimed his body still wish to continue his life's work, with a
 back-up plan of both a vicious magic-drinking maw and potent wands.
+
+<brown>DC Chili change: Maurice has a 50% chance of dropping a scroll of
+acquirement when he is killed.</brown>
 %%%%
 Medusa
 
