@@ -28,13 +28,13 @@
 
 %%%%
 
-# resist corrosion and preservation are equivalent
+# these are equivalent
 # the former name is used on rings and the latter on armour
 %%%%
 @item@ of resist corrosion
 
 %%%%
-@item@ of preservation
+@item@ of corrosion resistance
 
 %%%%
 
@@ -193,6 +193,96 @@
 %%%%
 # only on artefact lance Wyrmbane
 @item@ of dragon slaying
+
+%%%%
+@item@ of rebuke
+
+%%%%
+@item@ of valour
+
+%%%%
+@item@ of entangling
+
+%%%%
+@item@ of sundering
+
+%%%%
+@item@ of concussion
+
+%%%%
+@item@ of weakness
+
+%%%%
+@item@ of vulnerability
+
+%%%%
+@item@ of foul flame
+
+%%%%
+@item@ of hurling
+
+%%%%
+@item@ of infusion
+
+%%%%
+@item@ of light
+
+%%%%
+@item@ of wrath
+
+%%%%
+@item@ of mayhem
+
+%%%%
+@item@ of guile
+
+%%%%
+@item@ of energy
+
+%%%%
+@item@ of sniping
+
+%%%%
+@item@ of air
+
+%%%%
+@item@ of earth
+
+%%%%
+@item@ of command
+
+%%%%
+@item@ of death
+
+%%%%
+@item@ of resonance
+
+%%%%
+@item@ of parrying
+
+%%%%
+@item@ of glass
+
+%%%%
+@item@ of pyromania
+
+%%%%
+@item@ of stardust
+
+%%%%
+@item@ of mesmerism
+
+%%%%
+@item@ of attunement
+
+%%%%
+@item@ of wildshape
+
+%%%%
+@item@ of chemistry
+
+%%%%
+@item@ of dissipation
 
 %%%%
 

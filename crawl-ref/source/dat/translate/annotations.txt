@@ -372,6 +372,24 @@ reap
 spect
 
 %%%%
+valour
+
+%%%%
+entangle
+
+%%%%
+sunder
+
+%%%%
+concuss
+
+%%%%
+vuln
+
+%%%%
+foul flame
+
+%%%%
 acid
 
 %%%%
@@ -404,10 +422,13 @@ silver
 disjunct
 
 %%%%
+disperse
 
-# armour egos
 %%%%
-ponderous
+
+# general equipment properties
+%%%%
+Ponderous
 
 %%%%
 Fly
@@ -416,22 +437,97 @@ Fly
 Archmagi
 
 %%%%
-reflect
+Reflect
 
 %%%%
 Spirit
 
 %%%%
-archery
+Faith
 
 %%%%
-repulsion
+Archery
 
 %%%%
-harm
+Repulsion
 
 %%%%
-shadows
+Harm
+
+%%%%
+Shadows
+
+%%%%
+Hurl
+
+%%%%
+Infuse
+
+%%%%
+Light
+
+%%%%
+Mayhem
+
+%%%%
+Guile
+
+%%%%
+Energy
+
+%%%%
+Snipe
+
+%%%%
+Command
+
+%%%%
+Death
+
+%%%%
+Resonance
+
+%%%%
+Parrying
+
+%%%%
+Glass
+
+%%%%
+Pyromania
+
+%%%%
+Stardust
+
+%%%%
+Mesmerism
+
+%%%%
+Attunement
+
+%%%%
+Wildshape
+
+%%%%
+Chemistry
+
+%%%%
+Dissipate
+
+%%%%
+
+# Coglin gizmos
+%%%%
+SpellMotor
+
+%%%%
+Gadgeteer
+
+%%%%
+RevGuard
+
+%%%%
+AutoDazzle
 
 %%%%
 
