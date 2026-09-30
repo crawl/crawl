@@ -171,6 +171,10 @@ Pirschende
 Ba
 Ba
 %%%%
+# Centaur
+Ce
+Ze
+%%%%
 # Deep Dwarf
 DD
 TZ
@@ -215,6 +219,10 @@ Gh
 Gn
 Gn
 %%%%
+# Halfling
+Ha
+Ha
+%%%%
 # Hill Orc
 HO
 HO
@@ -255,6 +263,10 @@ Og
 Pa
 Pa
 %%%%
+# Sludge Elf
+SE
+Se
+%%%%
 # Spriggan
 Sp
 Sp
@@ -274,13 +286,6 @@ Vp
 # Vine Stalker
 VS
 Rp
-%%%%
-
-# obsolete, but could appear in high scores list or as player ghost
-%%%%
-# Halfling
-Ha
-Ha
 %%%%
 
 ##############################################
