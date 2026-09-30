@@ -3625,6 +3625,40 @@ item_def* monster_die(monster& mons, killer_type killer,
                          env.item[item_index].name(DESC_A).c_str());
             }
         }
+
+        if (mons.props.exists(UNIQUE_CURARE_DROP_KEY))
+        {
+            const int darts = items(false, OBJ_MISSILES, MI_DART, ISPEC_GIFT);
+            if (darts != NON_ITEM)
+            {
+                item_def& item = env.item[darts];
+                set_item_ego_type(item, OBJ_MISSILES, SPMSL_CURARE);
+                item.quantity = 3;
+                int item_index = darts;
+                const bool placed = move_item_to_grid(&item_index, mwhere);
+                if (placed && item_index != NON_ITEM
+                    && env.item[item_index].defined() && you.see_cell(mwhere)
+                    && !feat_eliminates_items(env.grid(mwhere)))
+                    mprf("%s drops %s.", mons.name(DESC_THE).c_str(),
+                         env.item[item_index].name(DESC_A).c_str());
+            }
+        }
+
+        if (mons.props.exists(UNIQUE_POTION_DROP_KEY))
+        {
+            const int potion = items(false, OBJ_POTIONS,
+                mons.props[UNIQUE_POTION_DROP_KEY].get_int(), ISPEC_GIFT);
+            if (potion != NON_ITEM)
+            {
+                int item_index = potion;
+                const bool placed = move_item_to_grid(&item_index, mwhere);
+                if (placed && item_index != NON_ITEM
+                    && env.item[item_index].defined() && you.see_cell(mwhere)
+                    && !feat_eliminates_items(env.grid(mwhere)))
+                    mprf("%s drops %s.", mons.name(DESC_THE).c_str(),
+                         env.item[item_index].name(DESC_A).c_str());
+            }
+        }
     }
     else
     {
