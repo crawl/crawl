@@ -1,3 +1,10 @@
+<!-- Applied with the game HTML, before its scripts and images finish loading.
+     This style is removed with #game when returning to the shared lobby. -->
+<style>
+  #loader img {
+    display: none !important;
+  }
+</style>
 <script>
   require.config({
     paths: { "game-{{ version }}": "/gamedata/{{ version }}" },
