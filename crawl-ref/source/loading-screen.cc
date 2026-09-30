@@ -3,9 +3,7 @@
 #ifdef USE_TILE_LOCAL
 
 #include "loading-screen.h"
-#include "files.h"
 #include "options.h"
-#include "random.h"
 #include "state.h"
 #include "ui.h"
 
@@ -55,17 +53,11 @@ static shared_ptr<Text> loading_text;
 static shared_ptr<ui::Popup> popup;
 static string load_complete_msg = "Loading complete, press any key to start.";
 
-static const string _get_title_image()
-{
-    vector<string> files = get_title_files();
-    return files[random2(files.size())];
-}
-
 void loading_screen_open()
 {
     if (!crawl_state.title_screen || in_headless_mode())
         return;
-    auto splash = make_shared<UIShrinkableImage>(_get_title_image());
+    auto splash = make_shared<UIShrinkableImage>("dcchili_intro.png");
     loading_text = make_shared<Text>();
     loading_text->set_margin_for_sdl(15, 0, 0, 0);
     auto vbox = make_shared<Box>(Widget::VERT);
