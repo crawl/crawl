@@ -20,8 +20,6 @@ function (exports, $, key_conversion, chat, comm) {
     var playing = false;
     var logging_in = false;
     var showing_close_message = false;
-    var intro_splash_active = false;
-    var intro_splash_return_layer = "normal";
     var current_hash;
     var exit_reason, exit_message, exit_dump;
     var normal_exit = ["saved", "cancel", "quit", "won", "bailed out", "dead"];
@@ -182,12 +180,6 @@ function (exports, $, key_conversion, chat, comm) {
     function set_layer(layer)
     {
         if (showing_close_message) return;
-
-        if (intro_splash_active && layer != "loader")
-        {
-            intro_splash_return_layer = layer;
-            return;
-        }
 
         hide_prompt();
 
@@ -1084,26 +1076,6 @@ function (exports, $, key_conversion, chat, comm) {
         set_layer("loader");
     }
 
-    function show_dcchili_intro()
-    {
-        intro_splash_return_layer = current_layer == "loader"
-            ? "normal" : current_layer;
-        intro_splash_active = true;
-        $("#loader_text").hide();
-        $("#loader img").hide();
-        $("#dcchili_intro").removeAttr("loading").show();
-        set_layer("loader");
-
-        window.setTimeout(function () {
-            if (!intro_splash_active)
-                return;
-            intro_splash_active = false;
-            $("#dcchili_intro").hide();
-            $("#loader_text").show();
-            set_layer(intro_splash_return_layer);
-        }, 3000);
-    }
-
     function cleanup()
     {
         document.title = "WebTiles - Dungeon Crawl Stone Soup";
@@ -1616,7 +1588,6 @@ function (exports, $, key_conversion, chat, comm) {
         "game_started": crawl_started,
         "game_ended": crawl_ended,
         "server_announcement": server_announcement,
-        "dcchili_intro": show_dcchili_intro,
 
         "login_success": logged_in,
         "login_fail": login_failed,
