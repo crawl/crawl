@@ -3567,7 +3567,7 @@ void clockwork_bee_go_dormant(monster& bee)
     timer.duration = min(timer.duration, random_range(80, 120));
     bee.update_ench(timer);
 
-    // Might have falled into deep water or lava!
+    // Might have fallen into deep water or lava!
     mons_check_pool(&bee, bee.pos(), KILL_RESET);
 }
 
@@ -3621,8 +3621,14 @@ bool clockwork_bee_recharge(actor& agent, monster& bee)
     bee.heal(roll_dice(3, 5));
     bee.add_ench(mon_enchant(ENCH_SUMMON_TIMER, &agent, random_range(400, 500)));
     bee.add_ench(mon_enchant(ENCH_HAUNTING, targ, INFINITE_DURATION));
+
+    // we are pseudo-resummoning, so add Justicar's effect
+    if (agent.is_player() && you.unrand_equipped(UNRAND_JUSTICARS_REGALIA))
+        bee.add_ench(mon_enchant(ENCH_REGENERATION, &you, random_range(300, 500)));
+
     const int pow = agent.is_player() ? calc_spell_power(SPELL_CLOCKWORK_BEE)
                                       : mons_spellpower(*agent.as_monster(), SPELL_CLOCKWORK_BEE);
+
     bee.number = 3 + div_rand_round(pow, 15);
     bee.speed_increment = 80;
 
