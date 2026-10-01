@@ -33,6 +33,7 @@ enum NOTE_TYPES
     NOTE_LOSE_MUTATION,         /* needs: mutation idx, reason (string) */
     NOTE_ID_ITEM,               /* needs: item name (string) */
     NOTE_GET_ITEM,              /* needs: item name (string) */
+    NOTE_START_SKILL,           /* needs: skill id, level */
     NOTE_GAIN_SKILL,            /* needs: skill id, level */
     NOTE_LOSE_SKILL,            /* needs: skill id, level */
     NOTE_SEEN_MONSTER,          /* needs: monster name (string) */

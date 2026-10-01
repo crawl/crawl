@@ -1690,7 +1690,8 @@ static void _sdump_skill_gains(dump_params &par)
     {
         if (note.type == NOTE_XP_LEVEL_CHANGE)
             xl = note.first;
-        else if (note.type == NOTE_GAIN_SKILL || note.type == NOTE_LOSE_SKILL)
+        else if (note.type == NOTE_GAIN_SKILL || note.type == NOTE_LOSE_SKILL
+                || note.type == NOTE_START_SKILL)
         {
             skill_type skill = static_cast<skill_type>(note.first);
             int skill_level = note.second;
