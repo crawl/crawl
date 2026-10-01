@@ -1333,7 +1333,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         break;
 
     case MONS_NIKOLA:
-        if (one_chance_in(100) && !get_unique_item_status(UNRAND_ARC_BLADE))
+        if (coinflip() && !get_unique_item_status(UNRAND_ARC_BLADE))
         {
             make_item_unrandart(item, UNRAND_ARC_BLADE);
             force_item = true;
@@ -1341,7 +1341,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         break;
 
     case MONS_AMAEMON:
-        if (one_chance_in(100) && !get_unique_item_status(UNRAND_SNAKEBITE))
+        if (coinflip() && !get_unique_item_status(UNRAND_SNAKEBITE))
         {
             make_item_unrandart(item, UNRAND_SNAKEBITE);
             force_item = true;
@@ -1381,7 +1381,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         force_item = true;
         item.base_type = OBJ_STAVES;
         item.sub_type = STAFF_ALCHEMY;
-        if (one_chance_in(100) && !get_unique_item_status(UNRAND_OLGREB))
+        if (coinflip() && !get_unique_item_status(UNRAND_OLGREB))
             make_item_unrandart(item, UNRAND_OLGREB);
         break;
 
@@ -1422,7 +1422,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         break;
 
     case MONS_MAGGIE:
-        if (one_chance_in(100) && !get_unique_item_status(UNRAND_WYRMBANE))
+        if (coinflip() && !get_unique_item_status(UNRAND_WYRMBANE))
         {
             make_item_unrandart(item, UNRAND_WYRMBANE);
             item.plus = 9; // Since she's wearing a dragon armour
@@ -1431,7 +1431,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         break;
 
     case MONS_MARGERY:
-        if (one_chance_in(100) && !get_unique_item_status(UNRAND_WYRMBANE))
+        if (coinflip() && !get_unique_item_status(UNRAND_WYRMBANE))
         {
             make_item_unrandart(item, UNRAND_WYRMBANE);
             item.plus = 10 + random2(2); // Now she's killed at least 2 dragons
@@ -1442,14 +1442,14 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     // As someone who's learned the hard way that many have no honour in war,
     // Throatcutter suits Terence perfectly.
     case MONS_TERENCE:
-        if (one_chance_in(100) && !get_unique_item_status(UNRAND_THROATCUTTER))
+        if (coinflip() && !get_unique_item_status(UNRAND_THROATCUTTER))
         {
             make_item_unrandart(item, UNRAND_THROATCUTTER);
             force_item = true;
         }
         break;
     case MONS_GRUNN:
-        if (one_chance_in(100) && !get_unique_item_status(UNRAND_CURSES))
+        if (coinflip() && !get_unique_item_status(UNRAND_CURSES))
         {
             make_item_unrandart(item, UNRAND_CURSES);
             force_item = true;
@@ -2144,7 +2144,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_PARGHIT:
         item.base_type = OBJ_ARMOUR;
         item.sub_type = ARM_GOLDEN_DRAGON_ARMOUR;
-        if (one_chance_in(100) && !get_unique_item_status(UNRAND_DRAGON_KING))
+        if (coinflip() && !get_unique_item_status(UNRAND_DRAGON_KING))
             make_item_unrandart(item, UNRAND_DRAGON_KING);
         else
             item.plus = random_range(6, 9);
@@ -2200,7 +2200,7 @@ int make_mons_armour(monster_type type, int level)
         break;
 
     case MONS_GASTRONOK:
-        if (one_chance_in(10) && !get_unique_item_status(UNRAND_PONDERING))
+        if (coinflip() && !get_unique_item_status(UNRAND_PONDERING))
         {
             force_item = true;
             make_item_unrandart(item, UNRAND_PONDERING);
