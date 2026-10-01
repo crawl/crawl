@@ -447,6 +447,9 @@ reduced to mouldering bandages and dry, brittle bones.
 
 <brown>DC Chili change: Menkaure is almost guaranteed to appear on D:5, a
 catacomb floor. The DCSS Ossuary has been removed.</brown>
+
+<brown>DC Chili change: Menkaure has a 50% chance of dropping either a scroll of
+torment or a ring of positive energy when he is killed.</brown>
 %%%%
 Mennas
 

@@ -2623,6 +2623,14 @@ static void _give_unique_scroll(monster* mon)
     else if (mon->type == MONS_SIGMUND && coinflip())
         mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_BLESS_ITEM;
 
+    if (mon->type == MONS_MENKAURE && coinflip())
+    {
+        if (coinflip())
+            mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_TORMENT;
+        else
+            mon->props[UNIQUE_JEWELLERY_DROP_KEY] = RING_POSITIVE_ENERGY;
+    }
+
     if (mon->type == MONS_KATINBOO && coinflip())
         mon->props[UNIQUE_CURARE_DROP_KEY] = true;
 

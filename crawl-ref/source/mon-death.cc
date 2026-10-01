@@ -3659,6 +3659,22 @@ item_def* monster_die(monster& mons, killer_type killer,
                          env.item[item_index].name(DESC_A).c_str());
             }
         }
+
+        if (mons.props.exists(UNIQUE_JEWELLERY_DROP_KEY))
+        {
+            const int jewellery = items(false, OBJ_JEWELLERY,
+                mons.props[UNIQUE_JEWELLERY_DROP_KEY].get_int(), ISPEC_GIFT);
+            if (jewellery != NON_ITEM)
+            {
+                int item_index = jewellery;
+                const bool placed = move_item_to_grid(&item_index, mwhere);
+                if (placed && item_index != NON_ITEM
+                    && env.item[item_index].defined() && you.see_cell(mwhere)
+                    && !feat_eliminates_items(env.grid(mwhere)))
+                    mprf("%s drops %s.", mons.name(DESC_THE).c_str(),
+                         env.item[item_index].name(DESC_A).c_str());
+            }
+        }
     }
     else
     {
