@@ -2834,6 +2834,8 @@ static string _cannot_use_reason(const item_def &item, bool temp=true)
             can_equip_item(item, temp, &reason);
             return reason;
         }
+    case OBJ_TALISMANS:
+        return cannot_put_on_talisman_reason(item, temp);
     default:
         // Non-equippable types (e.g. ammo) have no can_equip_item reason, but
         // can still be outright forbidden by your god.
