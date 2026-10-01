@@ -320,6 +320,9 @@ ruins to practice the dark arts.
 <brown>DC Chili change: Jessica has a 50% chance of dropping a small spellbook
 when she is killed. If she does drop a book, there is also a 50% chance that
 it will have the Blink spell.</brown>
+
+<brown>DC Chili change: Jessica is almost guaranteed to appear on D:2, a mostly
+forested, semi-open floor with dead trees and at least two altars.</brown>
 %%%%
 Jorgrun
 
@@ -430,6 +433,10 @@ her garden of victims will be transformed into an army of vengeful snakes.
 
 <brown>DC Chili change: Medusa has a 50% chance of dropping a Talisman of
 Medusa when she is killed.</brown>
+
+<brown>DC Chili change: Medusa is guaranteed to appear on D:3, a mostly forested
+floor with corrupted trees. D:3 has eight possible floor layouts, including
+one with a castle.</brown>
 %%%%
 Menkaure
 
@@ -541,6 +548,9 @@ A garbage dwelling denizen of the dungeon.
 
 <brown>DC Chili change: Oskar has a 50% chance of dropping a potion of
 cancellation when he is killed.</brown>
+
+<brown>DC Chili change: Oskar is almost guaranteed to appear on D:4, which is
+BCadren's Sewer.</brown>
 %%%%
 Pargi
 
