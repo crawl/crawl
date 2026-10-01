@@ -1205,7 +1205,7 @@ public:
         m_main_items = make_shared<OuterMenu>(true, 3, 20);
         m_main_items->menu_id = m_choice_type == C_JOB ?
             "background-main" : "species-main";
-        m_main_items->set_margin_for_crt(1, 0);
+        m_main_items->set_margin_for_crt(m_choice_type == C_SPECIES ? 0 : 1, 0);
         m_main_items->set_margin_for_sdl(15, 0);
         m_main_items->descriptions = descriptions;
         m_vbox->add_child(m_main_items);
@@ -1215,10 +1215,14 @@ public:
         max_size() = { 80, INT_MAX };
 #endif
 
-        descriptions->set_margin_for_crt(1, 0);
+        descriptions->set_margin_for_crt(m_choice_type == C_SPECIES ? 0 : 1, 0);
         descriptions->set_margin_for_sdl(0, 0, 15, 0);
         descriptions->current() = -1;
         descriptions->shrink_h = true;
+#ifndef USE_TILE_LOCAL
+        if (m_choice_type == C_SPECIES)
+            descriptions->min_size().height = 4;
+#endif
         m_vbox->add_child(descriptions);
 
         if (m_choice_type == C_JOB)

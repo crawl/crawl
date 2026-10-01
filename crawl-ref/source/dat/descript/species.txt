@@ -119,6 +119,13 @@ Revenant
 Revenants are skeletal undead who are strong at melee combat and can empower
 damage-dealing spells by consuming memories they harvest from their victims.
 %%%%
+Silent Spectre
+
+Silent Spectres are incorporeal undead whose aura of silence prevents nearby
+creatures from casting spells or reading scrolls.
+
+DC Chili change: Silent Spectre was added from the BCadren Crawl fork.
+%%%%
 Spriggan
 
 Very small, very frail and very fast, Spriggans are highly competent stabbers
