@@ -165,7 +165,8 @@ A cunning mass of ooze that hunts down slimes in the Pits. It regards you as a
 competitor and turns its attention to you when no nearby slimes remain.
 
 <brown>DC Chili change: Scave is a new unique created specifically for DC Chili
-and appears only on Slime:1.</brown>
+and appears only on Slime:1. Scave has a 50% chance of dropping a parchment of
+Corrosive Bolt when killed.</brown>
 %%%%
 Donald
 

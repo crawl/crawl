@@ -67,6 +67,7 @@
 #include "spl-other.h"
 #include "spl-summoning.h"
 #include "spl-selfench.h"
+#include "spell-type.h"
 #include "sprint.h" // SPRINT_MULTIPLIER
 #include "state.h"
 #include "stepdown.h"
@@ -3667,6 +3668,23 @@ item_def* monster_die(monster& mons, killer_type killer,
             if (jewellery != NON_ITEM)
             {
                 int item_index = jewellery;
+                const bool placed = move_item_to_grid(&item_index, mwhere);
+                if (placed && item_index != NON_ITEM
+                    && env.item[item_index].defined() && you.see_cell(mwhere)
+                    && !feat_eliminates_items(env.grid(mwhere)))
+                    mprf("%s drops %s.", mons.name(DESC_THE).c_str(),
+                         env.item[item_index].name(DESC_A).c_str());
+            }
+        }
+
+        if (mons.props.exists(UNIQUE_PARCHMENT_DROP_KEY))
+        {
+            const int parchment = items(false, OBJ_BOOKS, BOOK_PARCHMENT,
+                                        ISPEC_GIFT);
+            if (parchment != NON_ITEM)
+            {
+                env.item[parchment].plus = SPELL_CORROSIVE_BOLT;
+                int item_index = parchment;
                 const bool placed = move_item_to_grid(&item_index, mwhere);
                 if (placed && item_index != NON_ITEM
                     && env.item[item_index].defined() && you.see_cell(mwhere)
