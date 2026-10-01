@@ -2620,6 +2620,8 @@ static void _give_unique_scroll(monster* mon)
         mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_TORMENT;
     else if (mon->type == MONS_MONKEY_KING && coinflip())
         mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_SUMMONING;
+    else if (mon->type == MONS_SIGMUND && coinflip())
+        mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_BLESS_ITEM;
 
     if (mon->type == MONS_KATINBOO && coinflip())
         mon->props[UNIQUE_CURARE_DROP_KEY] = true;
