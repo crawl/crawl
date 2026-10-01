@@ -184,12 +184,9 @@ static element_type _ench_beam_to_element(beam_type flavour)
 
 // A simple animated flash from Rupert Smith (expanded to be more
 // generic).
-static void _ench_animation(beam_type flavour, const actor& act, bool force)
+static void _ench_animation(beam_type flavour, const actor& act)
 {
     const coord_def p = act.pos();
-
-    if (!force && act.is_monster() && !act.visible_to(&you))
-        return;
 
     if (!you.see_cell(p))
         return;
@@ -3214,7 +3211,7 @@ void bolt::internal_ouch(int dam)
             ouch(dam, KILLED_BY_BOUNCE, MID_PLAYER, name.c_str());
         else
         {
-            if (self_targeted() && effect_known)
+            if (self_targeted())
                 ouch(dam, KILLED_BY_SELF_AIMED, MID_PLAYER, name.c_str());
             else
                 ouch(dam, KILLED_BY_TARGETING, MID_PLAYER, name.c_str());
@@ -3691,11 +3688,9 @@ void bolt::affect_player_enchantment(bool resistible)
 
     // You didn't resist it.
     if (animate)
-        _ench_animation(effect_known ? real_flavour : BEAM_MAGIC, you, false);
+        _ench_animation(real_flavour, you);
 
     bool nasty = true, nice = false;
-
-    const bool blame_player = god_cares() && YOU_KILL(thrower);
 
     switch (flavour)
     {
@@ -3890,7 +3885,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_BERSERK:
-        you.go_berserk(blame_player);
+        you.go_berserk(YOU_KILL(thrower));
         obvious_effect = true;
         break;
 
@@ -4622,16 +4617,7 @@ void bolt::update_hurt_or_helped(monster* mon)
         if (nasty_to(mon))
             foes_hurt++;
         else if (nice_to(monster_info(mon)))
-        {
             foes_helped++;
-            // Accidentally helped a foe.
-            if (!is_tracer() && !effect_known && mons_is_threatening(*mon))
-            {
-                const int interest =
-                    (flavour == BEAM_INVISIBILITY && can_see_invis) ? 25 : 100;
-                xom_is_stimulated(interest);
-            }
-        }
     }
     else
     {
@@ -4945,11 +4931,7 @@ void bolt::enchantment_affect_monster(monster* mon)
     // Doing this here so that the player gets to see monsters
     // "flicker and vanish" when turning invisible....
     if (animate)
-    {
-        _ench_animation(effect_known ? real_flavour
-                                     : BEAM_MAGIC,
-                        *mon, effect_known);
-    }
+        _ench_animation(real_flavour, *mon);
 
     // Try to hit the monster with the enchantment. The behaviour_event above
     // may have caused a pacified monster to leave the level, so only try to
@@ -5445,13 +5427,6 @@ void bolt::pull_actor(actor *act, int dam)
         act->collide(newpos, agent(), default_collision_damage(ench_power, true).roll());
 
     act->finalise_movement();
-}
-
-// Return true if the player's god will be unforgiving about the effects
-// of this beam.
-bool bolt::god_cares() const
-{
-    return effect_known || effect_wanton;
 }
 
 // Return true if the block succeeded (including reflections.)

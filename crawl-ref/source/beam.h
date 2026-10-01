@@ -200,9 +200,6 @@ struct bolt
 
     bool   affects_nothing = false; // should not hit monsters or features
 
-    bool   effect_known = true;   // did we _know_ this would happen?
-    bool   effect_wanton = false; // could we have guessed it would happen?
-
     bool   no_saving_throw = false;   // whether to ignore any saving throw
                                       // this beam might otherwise have
     int    draw_delay = 15;       // delay used when drawing beam.
@@ -318,7 +315,6 @@ public:
     bool ignores_player() const;
     bool can_knockback(int dam = -1) const;
     bool can_pull(const actor &act, int dam = -1) const;
-    bool god_cares() const; // Will the god be unforgiving about this beam?
     bool is_harmless(const monster* mon) const;
     bool nasty_to(const monster* mon) const;
     bool nice_to(const monster_info& mi) const;

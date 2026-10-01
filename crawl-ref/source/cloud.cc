@@ -2251,7 +2251,6 @@ bool chaos_affects_actor(actor* victim, actor* source)
         beam.glyph        = 0;
         beam.range        = 0;
         beam.colour       = BLACK;
-        beam.effect_known = false;
 
         beam.thrower =
             source && source->is_player()                       ? KILL_YOU
