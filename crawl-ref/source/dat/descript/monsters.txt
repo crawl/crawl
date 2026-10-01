@@ -9,6 +9,9 @@ Agnes
 This spriggan is aged and weathered from years of travel away from the forests
 and swamps that are home to her kin. Her choice of weapon and astonishing speed
 both speak to the training she underwent. Underestimate her at your peril!
+
+<brown>DC Chili change: Agnes has a 50% chance of dropping a potion of haste
+when she is killed.</brown>
 %%%%
 Aizul
 
@@ -91,6 +94,9 @@ An ancient and powerful lich. Like all true liches, Boris is immortal, and will
 regenerate his desiccated skeletal remains even if completely disintegrated.
 The same cannot be said for his many victims over his many centuries, from
 which he collects and channels their dying woes and regrets.
+
+<brown>DC Chili change: Boris has a 50% chance of dropping a potion of
+brilliance when he is killed.</brown>
 %%%%
 Cassandra
 
@@ -232,6 +238,9 @@ A stout warrior who once bested a powerful lord of Pandemonium in combat,
 gaining control over the demon's realm and thanes. The battle left her with a
 deep facial scar, one that she carries as a badge of honour rather than a
 symbol of shame.
+
+<brown>DC Chili change: Frances has a 50% chance of dropping a potion of might
+when she is killed.</brown>
 %%%%
 Frederick
 
@@ -407,6 +416,9 @@ hopelessly lost there. Toyed with by some greater power, she was stuck on the
 hostile plane for nearly a decade. When she finally emerged from the Abyss,
 Louise had become powerful indeed, but had also gone fully insane. She now
 wanders the halls of the dungeon, seeking other adventurers to share her fate.
+
+<brown>DC Chili change: Louise has a 50% chance of dropping a scroll of blinking
+when she is killed.</brown>
 %%%%
 Mara
 
@@ -640,6 +652,9 @@ Rippling muscles, glistening pecs, incredible glutes - Rupert is the peak of
 physical perfection. Even so, his roars seem louder than even his fantastic form
 can explain. Perhaps he holds some talisman that lends supernatural force to his
 bellows?
+
+<brown>DC Chili change: Rupert has a 50% chance of dropping a ring of strength
+when he is killed.</brown>
 %%%%
 Saint Roka
 
