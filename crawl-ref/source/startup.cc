@@ -445,6 +445,7 @@ static constexpr int STARTUP_DUNGEON_CRAWL_CHANGES = -9;
 static constexpr int STARTUP_XTAHUA_WEBTILES = -10;
 static constexpr int STARTUP_PROJECT357_WEBTILES = -11;
 static constexpr int STARTUP_DCF_WEBTILES = -12;
+static constexpr int STARTUP_PLAY_WEBTILES = -13;
 
 #ifdef USE_TILE_LOCAL
 static bool _open_startup_url(const char *url)
@@ -519,6 +520,8 @@ static const vector<game_modes_menu_item> entries =
         "View the high score list." },
     {STARTUP_EDIT_INIT, "Edit init.txt",
         "Open the init.txt configuration file in a text editor." },
+    {STARTUP_PLAY_WEBTILES, "Play online on a WebTiles server",
+        "Choose a WebTiles server to play on." },
     {STARTUP_VIEW_WEBSITES, "View websites",
         "Open a project website in your browser." },
 };
@@ -537,15 +540,6 @@ static const vector<game_modes_menu_item> website_entries =
 {
     {STARTUP_DUNGEON_CRAWL_CHILI, "Visit DungeonCrawlChili.org website",
         "Open the Dungeon Crawl Chili website in your browser." },
-    {STARTUP_DCF_WEBTILES,
-        "Play on dcf.dungeoncrawlforks.org Webtiles server (DC Fajita, Ontario, Canada)",
-        "Open the DC Fajita Webtiles server in your browser." },
-    {STARTUP_XTAHUA_WEBTILES,
-        "Play on crawl.xtahua.com Webtiles server (Paris, France)",
-        "Open the crawl.xtahua.com Webtiles server in your browser." },
-    {STARTUP_PROJECT357_WEBTILES,
-        "Play on crawl.project357.org Webtiles server (CPO, Sydney, Australia)",
-        "Open the crawl.project357.org Webtiles server in your browser." },
     {STARTUP_CRAWL_COSPLAY_ACADEMY, "Visit Crawl Cosplay Academy website",
         "Open the Crawl Cosplay Academy website in your browser." },
     {STARTUP_DUNGEON_CRAWL_FORKS, "Visit DungeonCrawlForks.org website",
@@ -556,6 +550,19 @@ static const vector<game_modes_menu_item> website_entries =
     {STARTUP_CRAWL_COSPLAY_DISCORD,
         "Join the Crawl Cosplay 2.0 Community discord server",
         "Open the Crawl Cosplay 2.0 Community Discord invite in your browser." },
+};
+
+static const vector<game_modes_menu_item> webtiles_entries =
+{
+    {STARTUP_DCF_WEBTILES,
+        "Play on dcf.dungeoncrawlforks.org Webtiles server (DC Fajita, Ontario, Canada)",
+        "Open the DC Fajita Webtiles server in your browser." },
+    {STARTUP_XTAHUA_WEBTILES,
+        "Play on crawl.xtahua.com Webtiles server (CXC, Paris, France)",
+        "Open the crawl.xtahua.com Webtiles server in your browser." },
+    {STARTUP_PROJECT357_WEBTILES,
+        "Play on crawl.project357.org Webtiles server (CPO, Sydney, Australia)",
+        "Open the crawl.project357.org Webtiles server in your browser." },
 };
 
 static void _add_game_modes_menu_entry(shared_ptr<OuterMenu>& container,
@@ -576,6 +583,8 @@ static void _add_game_modes_menu_entry(shared_ptr<OuterMenu>& container,
             ? static_cast<tileidx_t>(TILEG_STARTUP_STONESOUP)
             : entry.id == STARTUP_DUNGEON_CRAWL_CHANGES
             ? static_cast<tileidx_t>(TILEG_STARTUP_STONESOUP)
+            : entry.id == STARTUP_PLAY_WEBTILES
+                ? static_cast<tileidx_t>(TILEG_STARTUP_STONESOUP)
             : entry.id == STARTUP_DCF_WEBTILES
                 ? static_cast<tileidx_t>(TILEG_STARTUP_STONESOUP)
             : entry.id == STARTUP_XTAHUA_WEBTILES
@@ -857,6 +866,19 @@ public:
             });
         }
 
+        webtiles_menu = make_shared<OuterMenu>(true, 1, webtiles_entries.size());
+        webtiles_menu->set_margin_for_sdl(0, 0, 10, 10);
+        webtiles_menu->set_margin_for_crt(0, 0, 1, 0);
+        webtiles_menu->descriptions = descriptions;
+        for (size_t i = 0; i < webtiles_entries.size(); ++i)
+            _add_game_modes_menu_entry(webtiles_menu, webtiles_entries[i], i);
+        for (auto &w : webtiles_menu->get_buttons())
+        {
+            w->on_focusin_event([w, this](const FocusEvent&) {
+                return this->on_button_focusin(*w);
+            });
+        }
+
         auto other_screen = make_shared<Box>(Box::VERT);
         other_screen->set_cross_alignment(Widget::Align::STRETCH);
         auto other_title = make_shared<Text>(formatted_string(
@@ -885,10 +907,25 @@ public:
         websites_back_hint->set_margin_for_sdl(10, 0, 10, 0);
         websites_screen->add_child(std::move(websites_back_hint));
 
+        auto webtiles_screen = make_shared<Box>(Box::VERT);
+        webtiles_screen->set_cross_alignment(Widget::Align::STRETCH);
+        auto webtiles_title = make_shared<Text>(formatted_string(
+            "Play online on a WebTiles server", YELLOW));
+        webtiles_title->set_margin_for_crt(0, 1, 1, 0);
+        webtiles_title->set_margin_for_sdl(0, 0, 10, 0);
+        webtiles_screen->add_child(std::move(webtiles_title));
+        webtiles_screen->add_child(webtiles_menu);
+        auto webtiles_back_hint = make_shared<Text>(formatted_string(
+            "Esc - Back to main menu", BROWN));
+        webtiles_back_hint->set_margin_for_crt(1, 0, 1, 0);
+        webtiles_back_hint->set_margin_for_sdl(10, 0, 10, 0);
+        webtiles_screen->add_child(std::move(webtiles_back_hint));
+
         startup_screens = make_shared<Switcher>();
         startup_screens->add_child(main_screen);
         startup_screens->add_child(other_screen);
         startup_screens->add_child(websites_screen);
+        startup_screens->add_child(webtiles_screen);
         startup_screens->current() = 0;
         m_root->add_child(startup_screens);
 
@@ -967,6 +1004,7 @@ private:
         case GAME_TYPE_INSTRUCTIONS:
         case STARTUP_EDIT_INIT:
         case STARTUP_VIEW_WEBSITES:
+        case STARTUP_PLAY_WEBTILES:
         case STARTUP_DUNGEON_CRAWL_CHILI:
         case STARTUP_DUNGEON_CRAWL_CHANGES:
         case STARTUP_DUNGEON_CRAWL_DISCORD:
@@ -1000,6 +1038,7 @@ private:
     shared_ptr<OuterMenu> game_modes_menu;
     shared_ptr<OuterMenu> other_gameplay_menu;
     shared_ptr<OuterMenu> website_menu;
+    shared_ptr<OuterMenu> webtiles_menu;
     shared_ptr<OuterMenu> save_games_menu;
     // not a `game_type` because it is used for save #s as well
     int selected_game_type;
@@ -1183,6 +1222,13 @@ void UIStartupMenu::menu_item_activated(int id)
         descriptions->current() = -1;
         if (auto button = website_menu->get_button(0, 0))
             website_menu->scroll_button_into_view(button);
+        return;
+
+    case STARTUP_PLAY_WEBTILES:
+        startup_screens->current() = 3;
+        descriptions->current() = -1;
+        if (auto button = webtiles_menu->get_button(0, 0))
+            webtiles_menu->scroll_button_into_view(button);
         return;
 
     case GAME_TYPE_ARENA:
