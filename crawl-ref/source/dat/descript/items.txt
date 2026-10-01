@@ -79,6 +79,9 @@ An ornate and bewitched ritual knife. Even just wielding it will cost a small
 piece of your health, but blows made with it against those suffering negative
 statuses (other than poison) have increased base damage, up to +4 for two
 such baleful ailments. It also empowers your hexes.
+
+<brown>DC Chili change: Athames reach minimum delay at 14 Short Blades skill and
+use the dagger-stabbing modifier.</brown>
 %%%%
 azure gem
 
@@ -574,6 +577,9 @@ iskenderun's plasma blade
 
 A blade somehow crafted from pure energy. It is rumored to be
  the famous mage Iskenderun's favourite letter opener.
+
+<brown>DC Chili change: Iskenderun's Plasma Blade is a dagger-type weapon that
+deals unresistable damage.</brown>
 %%%%
 dart
 
@@ -1290,6 +1296,9 @@ quick blade
 A dagger with an uncanny enchantment upon it, allowing it to strike twice
 for every blow its wielder makes. It takes great skill to use to its full
 potential.
+
+<brown>DC Chili change: Quick blades reach minimum delay at 14 Short Blades
+skill.</brown>
 %%%%
 quill talisman
 
@@ -1300,6 +1309,8 @@ in melee.
 rapier
 
 A slender, sharply pointed sword, with an uncommonly elegant design.
+
+<brown>DC Chili change: Rapiers have 10 base damage.</brown>
 %%%%
 riddle talisman
 

@@ -662,6 +662,8 @@ source of see invisibility, you can find invisible monsters by luring them into
 shallow water, opaque clouds (from a scroll of fog), or a corridor, where their
 movements will be more predictable. If things go south, try teleporting out, or
 leaving the level entirely!
+
+DC Chili change: Monsters no longer blink randomly when they go invisible.
 %%%%
 HINT_NEED_HEALING_INVIS
 

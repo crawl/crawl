@@ -38,10 +38,15 @@ Formicid
 
 Formicids are humanoid ants adept at digging. Their limbs are exceptionally
 strong and they live in a state of permanent stasis.
+
+DC Chili change: Formicids can now wear hats.
 %%%%
 Felid
 
-Felids are many-lived sentient cats. They cannot use armour or weapons.
+Felids are many-lived sentient cats. They cannot use weapons or most armour,
+but can wear hats and boots.
+
+DC Chili change: Felids can now wear hats and boots.
 %%%%
 Gale Centaur
 
@@ -67,6 +72,8 @@ Tengu
 
 Tengu are bird-people who love to fight, both with weapons and spells. They are
 fragile but agile, and eventually learn to fly.
+
+DC Chili change: Tengu can now wear hats.
 %%%%
 Kobold
 
@@ -101,8 +108,10 @@ legs. They move very slowly but are naturally resilient.
 Octopode
 
 Octopodes are a species of amphibious cephalopods. They can wear eight rings
-and one piece of headgear, including either a hat or a helmet, but almost no
-other armour fits them.
+and one piece of headgear, including either a hat or a helmet. They can also
+wear scarves, but almost no other armour fits them.
+
+DC Chili change: Octopodes can now wear scarves.
 %%%%
 Oni
 
