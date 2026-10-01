@@ -1,0 +1,21 @@
+name: "Peregrine the Pilferer"
+enum: peregrine
+glyph: {char: "@", colour: lightmagenta}
+flags: [invis, speaks, warm_blood, unique, male]
+exp: 650
+species: kobold
+genus: kobold
+will: 80
+attacks:
+ - {type: hit, flavour: steal, damage: 12}
+hd: 8
+hp_10x: 570
+ac: 4
+ev: 16
+shout: shout
+intelligence: human
+speed: 12
+uses: weapons_armour
+size: small
+shape: humanoid
+tile: peregrine

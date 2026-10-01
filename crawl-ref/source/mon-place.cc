@@ -1259,6 +1259,11 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             mon->wield_melee_weapon(false);
     }
 
+    // Scave's parchment is generated as a unique death drop, rather than
+    // carried as equipment.
+    if (mon->type == MONS_SCAVE && coinflip())
+        mon->props[UNIQUE_PARCHMENT_DROP_KEY] = true;
+
     if (mon->type == MONS_SLIME_CREATURE && mon->blob_size > 1)
     {
         // Boost HP to what it would have been if it had grown this

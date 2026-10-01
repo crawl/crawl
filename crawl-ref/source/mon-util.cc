@@ -3361,6 +3361,14 @@ bool mons_aligned(const actor *m1, const actor *m2)
     if (mons_is_projectile(m1->type) || mons_is_projectile(m2->type))
         return true; // they won't directly attack each-other, anyway
 
+    if ((m1->type == MONS_SCAVE && m2->type != MONS_SCAVE
+         && mons_genus(m2->type) == MONS_JELLY)
+        || (m2->type == MONS_SCAVE && m1->type != MONS_SCAVE
+            && mons_genus(m1->type) == MONS_JELLY))
+    {
+        return false;
+    }
+
     return mons_atts_aligned(m1->temp_attitude(), m2->temp_attitude());
 }
 

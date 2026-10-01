@@ -1,0 +1,21 @@
+name: "Scave the Devourer of Slime"
+enum: scave
+glyph: {char: "J", colour: lightmagenta}
+flags: [speaks, see_invis, unblindable, amorphous, unique, no_skeleton, gender_neutral]
+resists: {poison: 1, corr: 3}
+exp: 585
+species: jelly
+genus: jelly
+will: 80
+attacks:
+ - {type: hit, flavour: acid, damage: 20}
+ - {type: hit, damage: 14}
+hd: 10
+hp_10x: 720
+ac: 6
+ev: 12
+intelligence: human
+habitat: amphibious
+size: medium
+shape: blob
+tile: scave

@@ -498,6 +498,10 @@ DEPTH:  Slime:2-
 WEIGHT: 100
 : place_unique(_G, "Dissolution")
 
+NAME:   uniq_scave
+DEPTH:  Slime:1
+: place_unique(_G, "Scave the Devourer of Slime")
+
 NAME:   uniq_khufu
 DEPTH:  Tomb, Crypt
 : place_unique(_G, "Khufu band")
