@@ -60,8 +60,9 @@ bool weapon_cleaves(const item_def &item);
 int weapon_hits_per_swing(const item_def &item);
 bool weapon_multihits(const item_def *item);
 void get_cleave_targets(const actor &attacker, const coord_def& def,
-                        vector<actor*> &targets, int range = 1);
-vector<actor*> get_player_attack_targets();
+                        vector<actor*> &targets, int range = 1,
+                        bool only_known = false);
+vector<actor*> get_player_attack_targets(bool only_known = false);
 vector<actor*> get_player_cleave_targets(const coord_def& aim);
 
 class attack;

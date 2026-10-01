@@ -5373,8 +5373,8 @@ bool coglin_spellmotor_attack()
     if (delay > 10 && !x_chance_in_y(10, delay))
         return false;
 
-    // Gather all possible targets in attack range.
-    vector<actor*> targets = get_player_attack_targets();
+    // Gather all known targets in attack range.
+    vector<actor*> targets = get_player_attack_targets(true);
 
     // Test that we have at least one valid non-prompting attack
     vector<actor*> targs;
@@ -5414,8 +5414,8 @@ bool spellclaws_attack(int spell_level)
         return false;
     }
 
-    // Gather all possible targets in attack range
-    vector<actor*> targets = get_player_attack_targets();
+    // Gather all known targets in attack range
+    vector<actor*> targets = get_player_attack_targets(true);
 
     // Then choose the one with the *most* current health (that wouldn't cause
     // a warning prompt for some reason).

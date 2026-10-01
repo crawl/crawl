@@ -1230,10 +1230,10 @@ bool weapon_multihits(const item_def *weap)
 
 // Get a list of all targets that are within attack range of they player at the
 // moment (using the maximum range of either weapon they may have equipped).
-vector<actor*> get_player_attack_targets()
+vector<actor*> get_player_attack_targets(bool only_known)
 {
     vector<actor*> targs;
-    get_cleave_targets(you, coord_def(), targs, you.reach_range());
+    get_cleave_targets(you, coord_def(), targs, you.reach_range(), only_known);
     return targs;
 }
 
@@ -1266,9 +1266,11 @@ vector<actor*> get_player_cleave_targets(const coord_def& aim)
  *                       there isn't one.
  * @param targets[out]   A list to be populated with targets.
  * @param range          Reaching range of this attack (default 1).
+ * @param only_known     If true, only consider targets whose location is known
+ *                       to the attacker.
  */
 void get_cleave_targets(const actor &attacker, const coord_def& def,
-                        vector<actor*> &targets, int range)
+                        vector<actor*> &targets, int range, bool only_known)
 {
     // Prevent scanning invalid coordinates if the attacker dies partway through
     // a cleave (due to hitting explosive creatures, or perhaps other things)
@@ -1284,6 +1286,8 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
         if (!target || !should_cleave_into(attacker, *target))
             continue;
         if (di.radius() > 1 && !can_reach_attack_between(atk, *di, range))
+            continue;
+        if (only_known && !attacker.aware_of(*target))
             continue;
         targets.push_back(target);
     }
