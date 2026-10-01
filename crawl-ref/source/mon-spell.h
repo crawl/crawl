@@ -2730,4 +2730,10 @@ static const mon_spellbook mspell_list[] =
        { SPELL_PHANTOM_MIRROR, 33, MON_SPELL_MAGICAL },
       }
     },
+
+    {  MST_PEREGRINE,
+      {
+       { SPELL_INVISIBILITY, 100, MON_SPELL_WIZARD },
+      }
+    },
 };

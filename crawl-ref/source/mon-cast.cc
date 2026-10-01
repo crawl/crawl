@@ -253,10 +253,24 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _selfench_beam_setup(BEAM_MIGHT),
     } },
     { SPELL_INVISIBILITY, {
-        _should_selfench(ENCH_INVIS),
+        [](const monster &caster)
+        {
+            return ai_action::good_or_impossible(
+                !caster.has_ench(ENCH_INVIS)
+                && (caster.type != MONS_PEREGRINE
+                    || (caster.props.exists(PEREGRINE_INVIS_POTIONS_KEY)
+                        && caster.props[PEREGRINE_INVIS_POTIONS_KEY].get_int() > 0)));
+        },
         [](monster &caster, mon_spell_slot, bolt& beam)
         {
             beam.fire();
+
+            if (caster.type == MONS_PEREGRINE
+                && caster.props.exists(PEREGRINE_INVIS_POTIONS_KEY))
+            {
+                int& potions = caster.props[PEREGRINE_INVIS_POTIONS_KEY].get_int();
+                potions--;
+            }
 
             if (!caster.cannot_move())
             {
