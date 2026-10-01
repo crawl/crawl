@@ -1292,7 +1292,7 @@ static void _sdump_hiscore(dump_params &par)
 
 static void _sdump_monster_list(dump_params &par)
 {
-    string monlist = mpr_monster_list(par.se);
+    string monlist = mpr_monster_list(par.se, true);
     trim_string(monlist);
     while (!monlist.empty())
         par.text += wordwrap_line(monlist, 80) + "\n";
