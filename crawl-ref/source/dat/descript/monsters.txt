@@ -625,6 +625,11 @@ saw in the dungeon to drive him mad, but his shrewd magical tactics and wicked
 scythe now leave little time for his victims to wonder. Despite his reputation
 as a vicious murderer, his grandiose and dramatic ways have earned him the
 admiration of many denizens of the dungeon.
+
+<brown>DC Chili change: Sigmund can no longer appear on D:2.</brown>
+
+<brown>DC Chili change: Sigmund has a 50% chance of dropping a scroll of bless
+item when he is killed.</brown>
 %%%%
 Snorg
 
