@@ -141,6 +141,9 @@ Crazy Yiuf
 A withered old gnoll with a long silver beard, wielding a quarterstaff and
 wearing a cloak. He looks like a figure from mythology! Wait, is his beard held
 on to his ears with hooks?
+
+<brown>DC Chili change: Crazy Yiuf has a 50% chance of dropping a potion of
+mutation when he is killed.</brown>
 %%%%
 Dispater
 
@@ -192,6 +195,9 @@ A jealous sibling of Sigmund (indeed, the youngest of nine brothers). He has
 none of Sigmund's skills in magic, but makes up for it with his skills in
 fighting and a canny head for money. He is eager to prove his superiority by
 killing hapless adventurers with his expensive flail and quick wit.
+
+<brown>DC Chili change: Edmund has a 50% chance of dropping a potion of might
+when he is killed.</brown>
 %%%%
 Enchantress
 
@@ -318,6 +324,9 @@ Ijyb
 A small and shrewd goblin inventor, wearing blue rags coated in soot.
 She claims dominion over this level of the dungeon; trespassers will find
 themselves on the business end of a homemade wand.
+
+<brown>DC Chili change: Ijyb has a 50% chance of dropping a scroll of blinking
+when she is killed.</brown>
 %%%%
 Ilsuiw
 
@@ -525,6 +534,9 @@ and claw upon any adventurer who crosses her path.
 
 This cat doesn't have nine lives, but just one death isn't going to be enough
 to put her down for good.
+
+<brown>DC Chili change: Natasha has a 50% chance of dropping a potion of magic
+when she is killed.</brown>
 %%%%
 Nellie
 
@@ -640,6 +652,9 @@ A mountain hobgoblin, recently come in search of the legendary Orb. Not
 foolhardy or reckless enough to delve into the depths of the Dungeon alone,
 Robin has built a small army of minions. Potential competitors will quickly
 find a stream of screaming goblins flying toward them!
+
+<brown>DC Chili change: Robin has a 50% chance of dropping a scroll of summoning
+when they are killed.</brown>
 %%%%
 Roxanne
 
