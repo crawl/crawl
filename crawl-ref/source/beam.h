@@ -183,6 +183,8 @@ struct bolt
                                   // something. If not set, will use
                                   // "engulfs" if an explosion or cloud
                                   // and "hits" otherwise.
+    bool   plural = false;        // Whether the projectile name is plural.
+                                  // (To control 'does no damage' / 'do no damage')
     int    loudness = 0;          // Noise level on hitting or exploding.
     string hit_noise_msg = "";    // Message to give player for each hit
                                   // monster that isn't in view.

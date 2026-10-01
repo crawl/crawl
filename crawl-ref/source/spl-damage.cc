@@ -5167,6 +5167,7 @@ spret cast_grave_claw(actor& caster, coord_def targ, int pow, bool fail)
     bolt beam(caster, SPELL_GRAVE_CLAW, pow);
     beam.source = beam.target = targ;
     beam.hit_verb = "skewer";
+    beam.plural = true;
     beam.fire();
 
     if (caster.is_player())

@@ -4342,7 +4342,9 @@ void bolt::affect_player()
              you.hp > 0 ? "you" : "your lifeless body",
              real_flavour != BEAM_CHAOS ? ""
                     : make_stringf(" with %s", _beam_type_name(flavour).c_str()).c_str(),
-             final_dam || damage.num == 0 ? "" : " but does no damage",
+             damage.num > 0 && final_dam == 0 ? plural ? " but do no damage"
+                                                       : " but does no damage"
+                                              : "",
              attack_strength_punctuation(final_dam).c_str());
     }
 
@@ -5714,7 +5716,9 @@ void bolt::affect_monster(monster* mon)
                 mon->name(DESC_THE).c_str(),
                 real_flavour != BEAM_CHAOS ? ""
                     : make_stringf(" with %s", _beam_type_name(flavour).c_str()).c_str(),
-                postac || damage.num == 0 ? "" : " but does no damage",
+                damage.num > 0 && postac == 0 ? plural ? " but do no damage"
+                                                        : " but does no damage"
+                                               : "",
                 attack_strength_punctuation(final).c_str());
         }
 
@@ -6261,10 +6265,9 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
                      mon->name(DESC_THE).c_str(),
                      attack_strength_punctuation(dam).c_str());
             } else {
-                const bool plural = mon->heads() > 1;
                 mprf("%s mind%s blasted%s",
                      mon->name(DESC_ITS).c_str(),
-                     plural ? "s are" : " is",
+                     mon->heads() > 1 ? "s are" : " is",
                      attack_strength_punctuation(dam).c_str());
             }
             obvious_effect = true;
