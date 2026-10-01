@@ -1,7 +1,9 @@
 name: Build
 
 on:
-  push: {}
+  push:
+    branches:
+      - master
   pull_request: {}
   release:
     types:
