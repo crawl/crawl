@@ -3445,7 +3445,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         {
             if (mons_base_type(mons) == MONS_KRAKEN)
                 mpr("The kraken's tentacles disappear.");
-            else if (mons.type == MONS_TENTACLED_STARSPAWN)
+            else if (mons_base_type(mons) == MONS_TENTACLED_STARSPAWN)
                 mpr("The starspawn's tentacles wither and die.");
         }
     }

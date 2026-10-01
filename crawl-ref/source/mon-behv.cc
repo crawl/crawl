@@ -986,6 +986,26 @@ void set_nearest_monster_foe(monster* mon, bool also_use_player_vision)
     const bool friendly = mon->friendly();
     const bool neutral  = mon->neutral();
 
+    // Scave hunts slimes before choosing any other monster foe.
+    if (mon->type == MONS_SCAVE)
+    {
+        for (auto di = distance_iterator(mon->pos(), true, true, you.current_vision);
+             di; ++di)
+        {
+            if (!cell_see_cell(mon->pos(), *di, LOS_NO_TRANS))
+                continue;
+
+            monster* foe = monster_at(*di);
+            if (foe && foe != mon && _scave_targets_slime(mon, foe)
+                && foe->visible_to(mon) && !foe->is_firewood()
+                && monster_los_is_valid(mon, *di))
+            {
+                mon->foe = env.mgrid(*di);
+                return;
+            }
+        }
+    }
+
     coord_def center = mon->pos();
     bool second_pass = false;
 

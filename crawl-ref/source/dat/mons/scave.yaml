@@ -1,21 +1,22 @@
 name: "Scave the Devourer of Slime"
 enum: scave
-glyph: {char: "J", colour: lightmagenta}
-flags: [speaks, see_invis, unblindable, amorphous, unique, no_skeleton, gender_neutral]
-resists: {poison: 1, corr: 3}
-exp: 585
-species: jelly
-genus: jelly
-will: 80
+glyph: {char: "X", colour: lightcyan}
+flags: [see_invis, unique, no_skeleton]
+holiness: [nonliving]
+species: tentacled_starspawn
+genus: tentacled_starspawn
+exp: 1507
+will: 120
 attacks:
- - {type: hit, flavour: acid, damage: 20}
- - {type: hit, damage: 14}
-hd: 10
-hp_10x: 720
-ac: 6
-ev: 12
+ - {type: bite, damage: 40}
+ - {type: engulf, damage: 25}
+hd: 16
+hp_10x: 880
+ac: 5
+ev: 5
+spells: tentacled_starspawn
 intelligence: human
-habitat: amphibious
-size: medium
-shape: blob
+uses: open_doors
+size: giant
+shape: misc
 tile: scave

@@ -1249,7 +1249,7 @@ static int _max_tentacles(const monster* mon)
 {
     if (mons_base_type(*mon) == MONS_KRAKEN)
         return MAX_ACTIVE_KRAKEN_TENTACLES;
-    else if (mon->type == MONS_TENTACLED_STARSPAWN)
+    else if (mons_base_type(*mon) == MONS_TENTACLED_STARSPAWN)
         return MAX_ACTIVE_STARSPAWN_TENTACLES;
     else
         return 0;
@@ -1320,7 +1320,7 @@ void mons_create_tentacles(monster* head)
         else if (visible_count > 1)
             mpr("Tentacles reach out from the kraken!");
     }
-    else if (head->type == MONS_TENTACLED_STARSPAWN)
+    else if (mons_base_type(*head) == MONS_TENTACLED_STARSPAWN)
     {
         if (visible_count == 1)
             mpr("A tentacle flies out from the starspawn's body!");
