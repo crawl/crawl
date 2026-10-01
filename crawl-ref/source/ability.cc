@@ -2811,6 +2811,9 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_ELYVILON_PACIFY:
         return make_unique<targeter_pacify>();
 
+    case ABIL_OKAWARU_DUEL:
+        return make_unique<targeter_duel>();
+
     default:
         break;
     }
@@ -3696,7 +3699,12 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_OKAWARU_DUEL:
-        return okawaru_duel(beam.target, fail);
+    {
+        fail_check();
+        okawaru_duel(beam.target);
+        break;
+    }
+
 
     case ABIL_OKAWARU_GIFT_WEAPON:
         if (!okawaru_gift_weapon())

@@ -2947,3 +2947,26 @@ bool targeter_pacify::valid_aim(coord_def a)
     // invisible monster).
     return true;
 }
+
+targeter_duel::targeter_duel()
+    : targeter_smite(&you, LOS_RADIUS)
+{
+}
+
+bool targeter_duel::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    const monster* mon = monster_at(a);
+    if (mon && you.aware_of(*mon))
+    {
+        string reason = unduelable_reason(*mon);
+        if (!reason.empty())
+            return notify_fail(reason);
+    }
+
+    // Either a known-valid monster or an empty tile (which might contain an
+    // invisible monster).
+    return true;
+}

@@ -805,3 +805,10 @@ public:
     targeter_pacify();
     bool valid_aim(coord_def a) override;
 };
+
+class targeter_duel : public targeter_smite
+{
+public:
+    targeter_duel();
+    bool valid_aim(coord_def a) override;
+};

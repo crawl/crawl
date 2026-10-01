@@ -6514,48 +6514,54 @@ bool okawaru_duel_active()
     return false;
 }
 
-spret okawaru_duel(const coord_def& target, bool fail)
+string unduelable_reason(const monster& mons)
+{
+    if (mons.is_peripheral()
+        || !(mons_habitat(mons) & HT_DRY_LAND)
+        || mons.wont_attack()
+        || mons.type == MONS_BOUNDLESS_TESSERACT
+        // You can attempt to duel summons but only if we don't know that
+        // they are summons. Mara Illusions, for example.
+        || monster_info(&mons).is(MB_SUMMONED))
+    {
+        return "You cannot duel that!";
+    }
+
+    if (mons_threat_level(mons) < MTHRT_TOUGH)
+    {
+        return make_stringf("%s is not worthy to be dueled!",
+                            mons.name(DESC_THE).c_str());
+    }
+
+    return "";
+}
+
+void okawaru_duel(const coord_def& target)
 {
     monster* mons = monster_at(target);
-    if (!mons || !you.can_see(*mons))
+
+    // Fishing for an invisible monster and failed to find one.
+    if (!mons)
     {
-        mpr("You can see no monster there to duel!");
-        return spret::abort;
+        canned_msg(MSG_NOTHING_THERE);
+        return;
     }
 
-    if (mons->is_peripheral()
-        || !(mons_habitat(*mons) & HT_DRY_LAND)
-        || mons->wont_attack()
-        || mons->type == MONS_BOUNDLESS_TESSERACT)
+    const string unreason = unduelable_reason(*mons);
+    if (!unreason.empty())
     {
-        mpr("You cannot duel that!");
-        return spret::abort;
+        mpr(unreason);
+        return;
     }
 
-    if (mons_threat_level(*mons) < MTHRT_TOUGH)
-    {
-        simple_monster_message(*mons, " is not worthy to be dueled!");
-        return spret::abort;
-    }
 
     if (mons->is_illusion())
     {
-        fail_check();
         mprf("You challenge %s to single combat, but %s is merely a clone!",
              mons->name(DESC_THE).c_str(),
              mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
-        // Still costs a turn to gain the information.
-        return spret::success;
+        return;
     }
-    // Check this after everything else so as not to waste a turn when trying
-    // to duel a clone that's already invalid to be dueled for other reasons.
-    else if (mons->is_summoned())
-    {
-        mpr("You cannot duel that!");
-        return spret::abort;
-    }
-
-    fail_check();
 
     mprf("You enter into single combat with %s!",
          mons->name(DESC_THE).c_str());
@@ -6576,7 +6582,7 @@ spret okawaru_duel(const coord_def& target, bool fail)
     stop_delay(true);
     down_stairs(DNGN_ENTER_ARENA);
 
-    return spret::success;
+    return;
 }
 
 void okawaru_duel_healing()
