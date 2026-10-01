@@ -23,6 +23,9 @@ Amaemon always knew he was different, but it was still a horrific surprise when
 his demonic heritage manifested. As his body twisted, Amaemon was forced to flee
 far from the surface. The passage of time has only left him more obsessed with
 what he has lost - consumed by poison both physical and spiritual.
+
+<brown>DC Chili change: Amaemon has a 50% chance of dropping Snakebite when it
+is available.</brown>
 %%%%
 Antaeus
 
@@ -42,6 +45,9 @@ flee once more.
 Now she wanders other corners of the dungeon with a small retinue of loyal
 students in tow, seeking a new domain in which they can spin their peerless
 tapestries in peace.
+
+<brown>DC Chili change: Arachne has a 50% chance of dropping the Staff of
+Olgreb when it is available.</brown>
 %%%%
 Asmodeus
 
@@ -239,6 +245,9 @@ A voracious and surprisingly intelligent slug, devoted to eating everything and
 everyone he comes across, with a pointed hat perched rakishly atop his head. He
 acquired the hat the same way he acquired his intelligence and his knowledge of
 spells: by consuming their former owner, a powerful wizard.
+
+<brown>DC Chili change: Gastronok has a 50% chance of dropping the hat of
+Pondering when it is available.</brown>
 %%%%
 Geryon
 
@@ -275,6 +284,9 @@ Grunn
 A brutally twisted undead gnoll in the eternal service of Ereshkigal, lord of
 Tartarus. Legend has it that he sold his soul to return his most beloved hunting
 dog to life. Whether that hound is a member of his current pack, none can say.
+
+<brown>DC Chili change: Grunn has a 50% chance of dropping the Scythe of Curses
+when it is available.</brown>
 %%%%
 Harold
 
@@ -408,12 +420,18 @@ In a distant time, Maggie was apprenticed to the dreaded Hell Knights - but she
 grew impatient. In search of a shortcut to fame and fortune (and somewhat short
 on imagination), she entered the Dungeon and set out to slay a dragon. Now
 having slain one, Maggie sees no reason to stop.
+
+<brown>DC Chili change: Maggie has a 50% chance of dropping Wyrmbane when it is
+available.</brown>
 %%%%
 Margery
 
 A lithe spellcaster in service to the powers of Hell; it is her duty to ensure
 that the inhabitants of the Dungeon never forget their place. She personally
 slew the ancient dragon from whose hide her strange armour is crafted.
+
+<brown>DC Chili change: Margery has a 50% chance of dropping Wyrmbane when it is
+available.</brown>
 %%%%
 Maurice
 
@@ -520,6 +538,9 @@ Nikola
 A brilliant scientist obsessed with electricity. In his attempts to perfect his
 electric golem, he was involved in a terrible accident, and now phases in and
 out of reality.
+
+<brown>DC Chili change: Nikola has a 50% chance of dropping the arc blade when
+it is available.</brown>
 %%%%
 Nobody
 
@@ -565,6 +586,9 @@ An unusually strong troll, his thick frame scarred by many against-the-odds
 victories. He has been wounded so many times that his body has adapted, and now
 heals almost instantly. His necklace of troll claws is a memento of those who
 underestimated him.
+
+<brown>DC Chili change: Parghit has a 50% chance of dropping the scales of the
+Dragon King when they are available.</brown>
 %%%%
 Pikel
 
@@ -659,6 +683,9 @@ Terence
 
 A veteran of a war against the armataurs' elephant-riders. He has recently
 retired to make a new home in the dungeon.
+
+<brown>DC Chili change: Terence has a 50% chance of dropping Throatcutter when it
+is available.</brown>
 %%%%
 Tiamat
 
