@@ -115,7 +115,7 @@ harness. Cracked bronze bells hang from his horns, sounding commands that the
 beasts of the Lair obey with unsettling precision. He can drive his herd into a
 battle-frenzy before stampeding in a straight line towards his prey.
 
-<brown>DC Chili change: Rusk has a 50% chance of dropping a potion of might
+<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Rusk has a 50% chance of dropping a potion of might
 when he is killed.</brown>
 %%%%
 Katinboo
@@ -123,7 +123,7 @@ Katinboo
 A cunning, broad-shouldered felid whose claws drip with curare. Katinboo never
 hunts alone for long, calling an ogre and a stubborn mule to join the fight.
 
-<brown>DC Chili change: Katinboo has a 50% chance of dropping 3 curare darts
+<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Katinboo has a 50% chance of dropping 3 curare darts
 when she is killed.</brown>
 %%%%
 Cerebov
@@ -470,10 +470,10 @@ A snake headed Naga with a petrifying stare.  The only mortal sister of the
 ancient Gorgon, she terrorizes the denizens of the early dungeon. When defeated, 
 her garden of victims will be transformed into an army of vengeful snakes.
 
-<brown>DC Chili change: Medusa has a 50% chance of dropping a Talisman of
+<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Medusa has a 50% chance of dropping a Talisman of
 Medusa when she is killed.</brown>
 
-<brown>DC Chili change: Medusa is guaranteed to appear on D:3, a mostly forested
+<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Medusa is guaranteed to appear on D:3, a mostly forested
 floor with corrupted trees. D:3 has eight possible floor layouts, including
 one with a castle.</brown>
 %%%%
@@ -518,7 +518,7 @@ Monkey King
 
 A large howler monkey who has climbed and clawed his way to the top of his pack.
 
-<brown>DC Chili change: The Monkey King has a 50% chance of dropping a scroll of
+<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. The Monkey King has a 50% chance of dropping a scroll of
 summoning when he is killed.</brown>
 %%%%
 Murray
@@ -590,17 +590,17 @@ Octavia
 
 A heretic of Gozag.
 
-<brown>DC Chili change: Octavia has a 50% chance of dropping a gift of gold when
+<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Octavia has a 50% chance of dropping a gift of gold when
 she is killed.</brown>
 %%%%
 Oskar
 
 A garbage dwelling denizen of the dungeon.
 
-<brown>DC Chili change: Oskar has a 50% chance of dropping a potion of
+<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Oskar has a 50% chance of dropping a potion of
 cancellation when he is killed.</brown>
 
-<brown>DC Chili change: Oskar is almost guaranteed to appear on D:4, which is
+<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Oskar is almost guaranteed to appear on D:4, which is
 BCadren's Sewer.</brown>
 %%%%
 Pargi
@@ -623,7 +623,7 @@ An invisible kobold thief who prowls the Orcish Mines, snatching up useful loot
 left on the floor. He can turn stolen weapons, missiles, and wands against his
 foes.
 
-<brown>DC Chili change: Peregrine can appear only in the Orcish Mines and has a
+<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Peregrine can appear only in the Orcish Mines and has a
 50% chance of dropping a potion of invisibility when killed.</brown>
 %%%%
 Pikel
@@ -652,7 +652,7 @@ entourage in the hopes the Orb will secure his legitimacy for the throne.
 His charming demeanor is so powerful that all but your most trusted allies
 might be swayed to his cause.
 
-<brown>DC Chili change: Regal has a 50% chance of dropping the Octopus King's
+<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Regal has a 50% chance of dropping the Octopus King's
 Trident when it is available.</brown>
 %%%%
 Robin
@@ -761,7 +761,7 @@ Verity
 Once a man, he put his soul into a dragon carved of stone.  He lurks in the
 Lair where his bulk is too hefty to escape and resume the quest for the Orb.
 
-<brown>DC Chili change: Verity has a 50% chance of dropping a Talisman of Statue
+<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Verity has a 50% chance of dropping a Talisman of Statue
 Form when he is killed.</brown>
 %%%%
 Vv
