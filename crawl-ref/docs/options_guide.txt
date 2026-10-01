@@ -151,8 +151,8 @@ The contents of this text are:
 4-c     Notes.
                 user_note_prefix, note_items, note_monsters, note_hp_percent,
                 note_skill_levels, note_all_skill_levels, note_skill_max,
-                note_xom_effects, note_messages, note_chat_messages,
-                note_dgl_messages
+                note_starting_skills, note_xom_effects, note_messages,
+                note_chat_messages, note_dgl_messages
 5-  Miscellaneous.
 5-a     All OS.
                 mouse_input, wiz_mode, explore_mode, char_set, colour,
@@ -2869,6 +2869,10 @@ note_skill_max = true
         skill levels is reached. If note_skill_max is true and
         note_skill_levels is nonempty, notes will be taken whenever
         either of the criteria are met.
+
+note_starting_skills = false
+        Setting this to true will take note of any skill at level 1 or
+        above when you start the game.
 
 note_xom_effects = true
         This will add a note whenever Xom does something.
