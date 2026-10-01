@@ -442,6 +442,9 @@ static constexpr int STARTUP_DUNGEON_CRAWL_CHILI = -6;
 static constexpr int STARTUP_DUNGEON_CRAWL_DISCORD = -7;
 static constexpr int STARTUP_CRAWL_COSPLAY_DISCORD = -8;
 static constexpr int STARTUP_DUNGEON_CRAWL_CHANGES = -9;
+static constexpr int STARTUP_XTAHUA_WEBTILES = -10;
+static constexpr int STARTUP_PROJECT357_WEBTILES = -11;
+static constexpr int STARTUP_DCF_WEBTILES = -12;
 
 #ifdef USE_TILE_LOCAL
 static bool _open_startup_url(const char *url)
@@ -534,6 +537,15 @@ static const vector<game_modes_menu_item> website_entries =
 {
     {STARTUP_DUNGEON_CRAWL_CHILI, "Visit DungeonCrawlChili.org website",
         "Open the Dungeon Crawl Chili website in your browser." },
+    {STARTUP_DCF_WEBTILES,
+        "Play on dcf.dungeoncrawlforks.org Webtiles server (DC Fajita, Ontario, Canada)",
+        "Open the DC Fajita Webtiles server in your browser." },
+    {STARTUP_XTAHUA_WEBTILES,
+        "Play on crawl.xtahua.com Webtiles server (Paris, France)",
+        "Open the crawl.xtahua.com Webtiles server in your browser." },
+    {STARTUP_PROJECT357_WEBTILES,
+        "Play on crawl.project357.org Webtiles server (CPO, Sydney, Australia)",
+        "Open the crawl.project357.org Webtiles server in your browser." },
     {STARTUP_CRAWL_COSPLAY_ACADEMY, "Visit Crawl Cosplay Academy website",
         "Open the Crawl Cosplay Academy website in your browser." },
     {STARTUP_DUNGEON_CRAWL_FORKS, "Visit DungeonCrawlForks.org website",
@@ -564,6 +576,12 @@ static void _add_game_modes_menu_entry(shared_ptr<OuterMenu>& container,
             ? static_cast<tileidx_t>(TILEG_STARTUP_STONESOUP)
             : entry.id == STARTUP_DUNGEON_CRAWL_CHANGES
             ? static_cast<tileidx_t>(TILEG_STARTUP_STONESOUP)
+            : entry.id == STARTUP_DCF_WEBTILES
+                ? static_cast<tileidx_t>(TILEG_STARTUP_STONESOUP)
+            : entry.id == STARTUP_XTAHUA_WEBTILES
+                ? static_cast<tileidx_t>(TILEG_STARTUP_STONESOUP)
+            : entry.id == STARTUP_PROJECT357_WEBTILES
+                ? static_cast<tileidx_t>(TILEG_STARTUP_STONESOUP)
             : entry.id == STARTUP_CRAWL_COSPLAY_ACADEMY
             ? static_cast<tileidx_t>(TILEG_STARTUP_CRAWL_COSPLAY_ACADEMY)
                 : entry.id == STARTUP_DUNGEON_CRAWL_FORKS
@@ -955,6 +973,9 @@ private:
         case STARTUP_CRAWL_COSPLAY_DISCORD:
         case STARTUP_CRAWL_COSPLAY_ACADEMY:
         case STARTUP_DUNGEON_CRAWL_FORKS:
+        case STARTUP_XTAHUA_WEBTILES:
+        case STARTUP_PROJECT357_WEBTILES:
+        case STARTUP_DCF_WEBTILES:
             break;
 
         default:
@@ -1216,6 +1237,48 @@ void UIStartupMenu::menu_item_activated(int id)
 #endif
 #else
         mpr("Open https://dungeoncrawlchili.org in your web browser.");
+#endif
+        return;
+
+    case STARTUP_XTAHUA_WEBTILES:
+#ifdef USE_TILE_LOCAL
+        if (!_open_startup_url("https://crawl.xtahua.com"))
+            mprf(MSGCH_ERROR, "Couldn't open the crawl.xtahua.com Webtiles server: %s",
+#if SDL_VERSION_ATLEAST(2, 0, 14)
+                 SDL_GetError());
+#else
+                 "the system browser could not be launched");
+#endif
+#else
+        mpr("Open https://crawl.xtahua.com in your web browser.");
+#endif
+        return;
+
+    case STARTUP_DCF_WEBTILES:
+#ifdef USE_TILE_LOCAL
+        if (!_open_startup_url("https://dcf.dungeoncrawlforks.org"))
+            mprf(MSGCH_ERROR, "Couldn't open the DC Fajita Webtiles server: %s",
+#if SDL_VERSION_ATLEAST(2, 0, 14)
+                 SDL_GetError());
+#else
+                 "the system browser could not be launched");
+#endif
+#else
+        mpr("Open https://dcf.dungeoncrawlforks.org in your web browser.");
+#endif
+        return;
+
+    case STARTUP_PROJECT357_WEBTILES:
+#ifdef USE_TILE_LOCAL
+        if (!_open_startup_url("https://crawl.project357.org"))
+            mprf(MSGCH_ERROR, "Couldn't open the crawl.project357.org Webtiles server: %s",
+#if SDL_VERSION_ATLEAST(2, 0, 14)
+                 SDL_GetError());
+#else
+                 "the system browser could not be launched");
+#endif
+#else
+        mpr("Open https://crawl.project357.org in your web browser.");
 #endif
         return;
 
