@@ -3191,16 +3191,19 @@ string dithmenos_cannot_marionette_reason()
 {
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!you.can_see(**mi) || mi->wont_attack() || mi->is_firewood())
-            continue;
-
-        if (!mi->has_ench(ENCH_SHADOWLESS))
+        if (!you.can_see(**mi)
+            || mi->wont_attack()
+            || mi->is_firewood()
+            || monster_info(*mi).is(MB_SUMMONED)
+            || mi->has_ench(ENCH_SHADOWLESS))
         {
-            for (const mon_spell_slot slot : mi->spells)
-            {
-                if (valid_marionette_spell(slot.spell))
-                    return "";
-            }
+            continue;
+        }
+
+        for (const mon_spell_slot slot : mi->spells)
+        {
+            if (valid_marionette_spell(slot.spell))
+                return "";
         }
     }
 
@@ -3221,6 +3224,15 @@ spret dithmenos_marionette(monster& target, bool fail)
         return spret::abort;
 
     fail_check();
+
+    // You can target mara illusions but it won't work since they are summons
+    if (target.is_illusion())
+    {
+        mprf("You try to grasp %s shadow with your own but %s is an illusion!",
+          target.name(DESC_ITS).c_str(), target.name(DESC_THE).c_str());
+        // We learned something today
+        return spret::success;
+    }
 
     mprf("You grasp %s shadow with your own and put on a performance!",
           target.name(DESC_ITS).c_str());
