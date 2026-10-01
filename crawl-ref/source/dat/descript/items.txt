@@ -942,6 +942,9 @@ attack at almost unnatural speeds.
 
 A traditional weapon handcrafted by the merfolk of the Shoals, who prefer it
 over most knives, as salt water causes metal edges to rust slowly over time.
+
+<brown>DC Chili change: The leiomano weapon was ported from the BCadren Crawl
+fork. It is found predominantly in Shoals.</brown>
 %%%%
 lightning rod
 
@@ -1115,6 +1118,9 @@ fundamentally linked – the regeneration ends the moment the confusion does.
 potion of beneficial mutation
 
 A potion which grants a supposedly good mutation.
+
+DC Chili change: The potion of beneficial mutation was imported from the
+BCadren Crawl fork.
 %%%%
 potion of berserk rage
 
@@ -1158,16 +1164,25 @@ potion of gain strength
 
 A potion which embues the drinker with permanent extra strength. As this is a 
 mutation effect it can be removed by mutation sources later; however.
+
+DC Chili change: The potion of gain strength was imported from the BCadren
+Crawl fork.
 %%%%
 potion of gain intelligence
 
 A potion which embues the drinker with permanent extra intelligence. As this is a 
 mutation effect it can be removed by mutation sources later; however.
+
+DC Chili change: The potion of gain intelligence was imported from the BCadren
+Crawl fork.
 %%%%
 potion of gain dexterity
 
 A potion which embues the drinker with permanent extra dexterity. As this is a 
 mutation effect it can be removed by mutation sources later; however.
+
+DC Chili change: The potion of gain dexterity was imported from the BCadren
+Crawl fork.
 %%%%
 potion of haste
 
@@ -1468,6 +1483,9 @@ chosen item. This blessing will imbue a magical property upon the chosen weapon,
 shield, armour or staff; replacing the existing one, should one exist. The 
 blessing isn't powerful enough to change the properties of artefacts or those
 imbued with ponderousness.
+
+DC Chili change: The scroll of bless item was imported from the BCadren Crawl
+fork, and the scroll of brand weapon was removed.
 %%%%
 scroll of blinking
 
@@ -1706,6 +1724,9 @@ staff of summoning
 A staff that increases the power of summoning spells cast by its wielder, and
 heals allies touched by it based on the wielders Evocations and Summoning skill.
 Unfortunately, this staff can not be used for harm.
+
+DC Chili change: The staff of summoning was imported from the BCadren Crawl
+fork. It heals allied creatures when used to strike them.
 %%%%
 starry gem
 
