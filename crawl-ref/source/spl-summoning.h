@@ -202,6 +202,7 @@ vector<coord_def> get_wall_ring_spots(const coord_def& center,
                                       int num_walls, bool water_okay = false);
 bool splinterfrost_block_fragment(monster& block, const coord_def& aim);
 
+void update_seismorock (const coord_def pos);
 spret cast_summon_seismosaurus_egg(const actor& agent, int pow, bool fail);
 
 spret cast_phalanx_beetle(const actor& agent, int pow, bool fail);
