@@ -4194,7 +4194,7 @@ static void _do_player_potion()
 
     mprf("Mmmm... tastes like %s.", potion_type_name(potion));
 
-    if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && oni_likes_potion(potion))
+    if (you.has_mutation(MUT_DRUNKEN_BRAWLING))
         oni_drunken_swing();
 
     if (you.form == transformation::mistmane)

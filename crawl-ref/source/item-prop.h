@@ -218,8 +218,6 @@ bool ring_has_stackable_effect(const item_def &item) PURE;
 item_rarity_type consumable_rarity(const item_def &item);
 item_rarity_type consumable_rarity(object_class_type base_type, int sub_type);
 
-bool oni_likes_potion(potion_type type);
-
 // generic item property functions:
 int armour_type_prop(const uint8_t arm, const armour_flag prop) PURE;
 

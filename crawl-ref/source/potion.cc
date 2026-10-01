@@ -110,10 +110,6 @@ public:
         }
         if (!you.can_potion_heal(true) || temp && you.hp == you.hp_max)
         {
-            // It's not useless to drink at full health if you could hit things.
-            if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && !get_player_attack_targets().empty())
-                return true;
-
             if (reason)
                 *reason = "You have no ailments to cure.";
             return false;
@@ -190,10 +186,6 @@ public:
         }
         if (temp && you.hp == you.hp_max)
         {
-            // It's not useless to drink at full health if you could hit things.
-            if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && !get_player_attack_targets().empty())
-                return true;
-
             if (reason)
                 *reason = "Your health is already full.";
             return false;
@@ -608,10 +600,6 @@ public:
         }
         else if (temp && you.magic_points == you.max_magic_points)
         {
-            // It's not useless to drink at full health if you could hit things.
-            if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && !get_player_attack_targets().empty())
-                return true;
-
             if (reason)
                 *reason = "Your magic is already full.";
             return false;
@@ -874,6 +862,18 @@ public:
     static const PotionMoonshine &instance()
     {
         static PotionMoonshine inst; return inst;
+    }
+
+    bool can_quaff(string *reason = nullptr, bool temp = true) const override
+    {
+        if (!temp)
+            return true;
+
+        // Oni drunk brawling will skip this check if any monsters are in range,
+        // so this is entirely for the case where there isn't.
+        if (reason)
+            *reason = "There's no one nearby to share it with.";
+        return false;
     }
 
     bool effect(bool=true, int=40, bool is_potion = true) const override

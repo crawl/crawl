@@ -915,10 +915,8 @@ Whenever a potion restores your health or magic, it restores twice as much.
 %%%%
 drunken brawling mutation
 
-Whenever you drink a potion that restores health or magic, you perform an
-immediate attack against all enemies adjacent to you.
-
-(This includes potions of curing, heal wounds, magic, and ambrosia.)
+Whenever you drink a potion, you perform an immediate attack against all enemies
+within melee range.
 %%%%
 artefact enchanting mutation
 

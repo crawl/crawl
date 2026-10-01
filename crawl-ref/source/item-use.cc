@@ -1904,9 +1904,9 @@ void prompt_inscribe_item()
 
 // Perform a melee attack against every adjacent hostile target, and print a
 // special message if there are any.
-bool oni_drunken_swing()
+bool oni_drunken_swing(bool is_moonshine)
 {
-    // Use the same logic for target-picking that cleaving does
+    // Use mostly the same logic for target-picking that cleaving does
     vector<actor*> targets = get_player_attack_targets();
 
     // Test that we have at least one valid non-prompting attack
@@ -1923,14 +1923,14 @@ bool oni_drunken_swing()
 
     if (!targets.empty())
     {
+        string msg = you.weapon() ? make_stringf("twirl %s", you.weapon()->name(DESC_YOUR).c_str())
+                                  : "flex your muscles";
+
         bool success = false;
-        if (you.weapon())
-        {
-            mprf("You take a swig of the potion and twirl %s.",
-                 you.weapon()->name(DESC_YOUR).c_str());
-        }
+        if (is_moonshine)
+            mprf("You take an eager swig of the potion and %s. Strong stuff!", msg.c_str());
         else
-            mpr("You take a swig of the potion and flex your muscles.");
+            mprf("You take a swig of the potion and %s.", msg.c_str());
 
         for (actor* victim : targets)
         {
@@ -2016,11 +2016,8 @@ bool drink(item_def* potion)
     // Drunken master, swing!
     // We do this *before* actually drinking the potion for nicer messaging.
     bool did_swing = false;
-    if (you.has_mutation(MUT_DRUNKEN_BRAWLING)
-        && oni_likes_potion(static_cast<potion_type>(potion->sub_type)))
-    {
-        did_swing = oni_drunken_swing();
-    }
+    if (you.has_mutation(MUT_DRUNKEN_BRAWLING))
+        did_swing = oni_drunken_swing(potion->sub_type == POT_MOONSHINE);
 
     // Check for Delatra's gloves before potentially melding them.
     bool heal_on_id = you.unrand_equipped(UNRAND_DELATRAS_GLOVES);

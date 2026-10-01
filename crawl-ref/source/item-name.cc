@@ -25,6 +25,7 @@
 #include "env.h" // LSTATE_STILL_WINDS
 #include "errors.h" // sysfail
 #include "evoke.h"
+#include "fight.h"
 #include "god-item.h"
 #include "god-passive.h" // passive_t::want_curses, no_haste
 #include "invent.h"
@@ -2932,17 +2933,6 @@ bool is_good_item(const item_def &item)
         if (!you.can_drink(false)) // still want to pick them up in lichform?
             return false;
 
-        // Recolor healing potions to indicate their additional goodness
-        //
-        // XX: By default, this doesn't actually change the color of anything
-        //     but !ambrosia, since yellow for 'emergency' takes priority over
-        //     cyan for 'good'. Should this get a *new* color?
-        if (you.has_mutation(MUT_DRUNKEN_BRAWLING)
-            && oni_likes_potion(static_cast<potion_type>(item.sub_type)))
-        {
-            return true;
-        }
-
         switch (item.sub_type)
         {
         case POT_EXPERIENCE:
@@ -2977,7 +2967,7 @@ bool is_bad_item(const item_def &item)
         switch (item.sub_type)
         {
         case POT_MOONSHINE:
-            return true;
+            return !you.has_mutation(MUT_DRUNKEN_BRAWLING);
         default:
             return false;
         CASE_REMOVED_POTIONS(item.sub_type);
@@ -3047,6 +3037,8 @@ bool is_dangerous_item(const item_def &item, bool temp)
             // intentional fallthrough
         case POT_LIGNIFY:
         case POT_ATTRACTION:
+        // Is usually useless, but Oni can drink them to attack things.
+        case POT_MOONSHINE:
             return true;
         default:
             return false;
@@ -3286,6 +3278,10 @@ string cannot_drink_item_reason(const item_def *item, bool temp,
 
     // potion of invis can be used even if temp useless, a warning is printed
     if (use_check && ptyp == POT_INVISIBILITY)
+        return "";
+
+    // Oni can drink any potion at any time, provided an enemy is nearby.
+    if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && !get_player_attack_targets().empty())
         return "";
 
     get_potion_effect(ptyp)->can_quaff(&r, true);

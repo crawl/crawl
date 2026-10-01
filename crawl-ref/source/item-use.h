@@ -25,7 +25,7 @@ spret use_an_item_menu(item_def *&target, operation_types oper,
                 function<bool ()> allowcancel = [](){ return true; });
 // Change the lambda to always_true<> when g++ 4.7 support is dropped.
 
-bool oni_drunken_swing();
+bool oni_drunken_swing(bool is_moonshine = false);
 bool drink(item_def* potion = nullptr);
 bool invisibility_target_check(const char* prompt);
 

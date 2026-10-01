@@ -3767,22 +3767,6 @@ string item_name_for_set(item_set_type typ)
     return sub_type_string(it, true);
 }
 
-// Whether drinking this potion will cause a drunken swing
-bool oni_likes_potion(potion_type type)
-{
-    switch (type)
-    {
-        case POT_CURING:
-        case POT_HEAL_WOUNDS:
-        case POT_MAGIC:
-        case POT_AMBROSIA:
-            return true;
-
-        default:
-            return false;
-    }
-}
-
 // Returns whether this item could theoretically be equipped by the player
 // character, ignoring temporary effects, curses, etc.
 bool is_equippable_item(const item_def& item)
