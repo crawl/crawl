@@ -441,6 +441,7 @@ static constexpr int STARTUP_VIEW_WEBSITES = -5;
 static constexpr int STARTUP_DUNGEON_CRAWL_CHILI = -6;
 static constexpr int STARTUP_DUNGEON_CRAWL_DISCORD = -7;
 static constexpr int STARTUP_CRAWL_COSPLAY_DISCORD = -8;
+static constexpr int STARTUP_DUNGEON_CRAWL_CHANGES = -9;
 
 #ifdef USE_TILE_LOCAL
 static bool _open_startup_url(const char *url)
@@ -506,6 +507,8 @@ static const vector<game_modes_menu_item> entries =
     {GAME_TYPE_HINTS, "Hints Mode for Dungeon Crawl",
         "A mostly normal game that provides more advanced hints "
         "than the tutorial."},
+    {STARTUP_DUNGEON_CRAWL_CHANGES, "View webpage of DC Chili changes",
+        "Open the list of DC Chili changes in your web browser." },
     {STARTUP_OTHER_GAMEPLAY_OPTIONS, "Other gameplay options",
         "Choose another gameplay mode." },
     {GAME_TYPE_INSTRUCTIONS, "Instructions", "Help menu." },
@@ -558,6 +561,8 @@ static void _add_game_modes_menu_entry(shared_ptr<OuterMenu>& container,
     auto tile = make_shared<Image>();
     const tileidx_t icon =
         entry.id == STARTUP_DUNGEON_CRAWL_CHILI
+            ? static_cast<tileidx_t>(TILEG_STARTUP_STONESOUP)
+            : entry.id == STARTUP_DUNGEON_CRAWL_CHANGES
             ? static_cast<tileidx_t>(TILEG_STARTUP_STONESOUP)
             : entry.id == STARTUP_CRAWL_COSPLAY_ACADEMY
             ? static_cast<tileidx_t>(TILEG_STARTUP_CRAWL_COSPLAY_ACADEMY)
@@ -945,6 +950,7 @@ private:
         case STARTUP_EDIT_INIT:
         case STARTUP_VIEW_WEBSITES:
         case STARTUP_DUNGEON_CRAWL_CHILI:
+        case STARTUP_DUNGEON_CRAWL_CHANGES:
         case STARTUP_DUNGEON_CRAWL_DISCORD:
         case STARTUP_CRAWL_COSPLAY_DISCORD:
         case STARTUP_CRAWL_COSPLAY_ACADEMY:
@@ -1210,6 +1216,22 @@ void UIStartupMenu::menu_item_activated(int id)
 #endif
 #else
         mpr("Open https://dungeoncrawlchili.org in your web browser.");
+#endif
+        return;
+
+    case STARTUP_DUNGEON_CRAWL_CHANGES:
+#ifdef USE_TILE_LOCAL
+        if (!_open_startup_url(
+                "https://dungeoncrawlchili.org/changesInDCChili.php"))
+            mprf(MSGCH_ERROR, "Couldn't open the DC Chili changes page: %s",
+#if SDL_VERSION_ATLEAST(2, 0, 14)
+                 SDL_GetError());
+#else
+                 "the system browser could not be launched");
+#endif
+#else
+        mpr("Open https://dungeoncrawlchili.org/changesInDCChili.php "
+            "in your web browser.");
 #endif
         return;
 
