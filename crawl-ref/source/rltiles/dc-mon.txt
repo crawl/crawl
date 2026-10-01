@@ -995,6 +995,7 @@ asterion MONS_ASTERION
 %sdir mon/unique
 dissolution MONS_DISSOLUTION
 oskar MONS_OSKAR
+scave MONS_SCAVE
 %sdir mon/amorphous
 endoplasm MONS_ENDOPLASM
 %rim 0

@@ -159,6 +159,14 @@ only Dissolution survived, for they alone turned faithfully to the Slime God.
 Dissolution became a tremendous mass of acidic ooze, yet retained their
 intelligence. They are filled with hatred for anything that can hold a form.
 %%%%
+Scave the Devourer of Slime
+
+A cunning mass of ooze that hunts down slimes in the Pits. It regards you as a
+competitor and turns its attention to you when no nearby slimes remain.
+
+<brown>DC Chili change: Scave is a new unique created specifically for DC Chili
+and appears only on Slime:1.</brown>
+%%%%
 Donald
 
 {{

@@ -81,6 +81,12 @@ static bool _is_valid_foe(monster* mon, unsigned short foe)
             && (mon->has_ench(ENCH_FRENZIED) || !mons_aligned(mon, foe_mons));
 }
 
+static bool _scave_targets_slime(const monster* mon, const monster* foe)
+{
+    return mon->type == MONS_SCAVE && foe->type != MONS_SCAVE
+           && mons_genus(foe->type) == MONS_JELLY;
+}
+
 static void _mon_check_foe_invalid(monster* mon)
 {
     if (!_is_valid_foe(mon, mon->foe))
@@ -309,6 +315,16 @@ void handle_behaviour(monster* mon)
 
     // Validate current target exists.
     _mon_check_foe_invalid(mon);
+
+    // Scave hunts nearby jellies before turning its attention to the player.
+    if (mon->type == MONS_SCAVE
+        && (mon->foe == MHITNOT || mon->foe == MHITYOU))
+    {
+        mon->foe = MHITNOT;
+        set_nearest_monster_foe(mon, true);
+        if (mon->foe == MHITNOT)
+            mon->foe = MHITYOU;
+    }
 
     if (mon->type == MONS_SPECTRAL_WEAPON)
     {
@@ -944,6 +960,7 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
            && foe->visible_to(mon)
            && (foe->friendly() != friendly
                || neutral && !foe->neutral()
+               || _scave_targets_slime(mon, foe)
                || mon->has_ench(ENCH_FRENZIED))
            && !mons_is_projectile(*foe)
            && monster_los_is_valid(mon, p)
