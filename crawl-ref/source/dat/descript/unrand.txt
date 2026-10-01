@@ -723,8 +723,8 @@ A pair of long ultramarine gloves, worn by a famed experimental alchemist in an
 age long past. They channel the energy of discovery, empowering their wearer with
 the force created by a blind step from ignorance to certainty.
 
-DC Chili change: Delatra's gloves heal their wearer when quaffing a known potion
-and restore MP when reading a known scroll.
+<brown>DC Chili change: Delatra's gloves heal their wearer when quaffing a known
+potion and restore MP when reading a known scroll.</brown>
 %%%%
 woodcutter's axe
 
