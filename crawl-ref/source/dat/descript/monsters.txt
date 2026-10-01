@@ -444,6 +444,9 @@ A fair and noble ruler of an ancient and mighty kingdom, mummified after an
 early death. His faithful priests subsequently infused him with great and
 powerful magic, seeking to grant him eternal life. Now he is forgotten and
 reduced to mouldering bandages and dry, brittle bones.
+
+<brown>DC Chili change: Menkaure is almost guaranteed to appear on D:5, a
+catacomb floor. The DCSS Ossuary has been removed.</brown>
 %%%%
 Mennas
 
