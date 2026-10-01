@@ -2666,6 +2666,9 @@ static void _give_unique_scroll(monster* mon)
 
     if (mon->type == MONS_EDMUND && coinflip())
         mon->props[UNIQUE_POTION_DROP_KEY] = POT_MIGHT;
+
+    if (mon->type == MONS_PEREGRINE && coinflip())
+        mon->props[UNIQUE_POTION_DROP_KEY] = POT_INVISIBILITY;
 }
 
 void give_item(monster *mons, int level_number)

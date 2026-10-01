@@ -617,6 +617,15 @@ underestimated him.
 <brown>DC Chili change: Parghit has a 50% chance of dropping the scales of the
 Dragon King when they are available.</brown>
 %%%%
+Peregrine the Pilferer
+
+An invisible kobold thief who prowls the Orcish Mines, snatching up useful loot
+left on the floor. He can turn stolen weapons, missiles, and wands against his
+foes.
+
+<brown>DC Chili change: Peregrine can appear only in the Orcish Mines and has a
+50% chance of dropping a potion of invisibility when killed.</brown>
+%%%%
 Pikel
 
 A wise kobold would fear the forces of Hell, and certainly would not set up a
