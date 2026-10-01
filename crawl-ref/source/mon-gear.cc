@@ -2622,6 +2622,8 @@ static void _give_unique_scroll(monster* mon)
         mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_SUMMONING;
     else if (mon->type == MONS_SIGMUND && coinflip())
         mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_BLESS_ITEM;
+    else if (mon->type == MONS_LOUISE && coinflip())
+        mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_BLINKING;
 
     if (mon->type == MONS_MENKAURE && coinflip())
     {
@@ -2639,6 +2641,18 @@ static void _give_unique_scroll(monster* mon)
 
     if (mon->type == MONS_OSKAR && coinflip())
         mon->props[UNIQUE_POTION_DROP_KEY] = POT_CANCELLATION;
+
+    if (mon->type == MONS_AGNES && coinflip())
+        mon->props[UNIQUE_POTION_DROP_KEY] = POT_HASTE;
+
+    if (mon->type == MONS_FRANCES && coinflip())
+        mon->props[UNIQUE_POTION_DROP_KEY] = POT_MIGHT;
+
+    if (mon->type == MONS_RUPERT && coinflip())
+        mon->props[UNIQUE_JEWELLERY_DROP_KEY] = RING_STRENGTH;
+
+    if (mon->type == MONS_BORIS && coinflip())
+        mon->props[UNIQUE_POTION_DROP_KEY] = POT_BRILLIANCE;
 }
 
 void give_item(monster *mons, int level_number)
