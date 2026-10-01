@@ -628,12 +628,14 @@ Dragon King when they are available.</brown>
 %%%%
 Peregrine the Pilferer
 
-An invisible kobold thief who prowls the Orcish Mines, snatching up useful loot
+An elusive kobold thief who prowls the Orcish Mines, snatching up useful loot
 left on the floor. He can turn stolen weapons, missiles, and wands against his
 foes.
 
-<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Peregrine can appear only in the Orcish Mines and has a
-50% chance of dropping a potion of invisibility when killed.</brown>
+<brown>DC Chili change: This is a new unique created in DC Chili and will likely
+not exist in DCSS for some time. Peregrine can appear only in the Orcish Mines.
+He carries two potions of invisibility to use in combat and has a 50% chance of
+dropping one when killed.</brown>
 %%%%
 Pikel
 

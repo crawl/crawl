@@ -1,7 +1,7 @@
 name: "Peregrine the Pilferer"
 enum: peregrine
 glyph: {char: "@", colour: lightmagenta}
-flags: [invis, speaks, warm_blood, unique, male]
+flags: [speaks, warm_blood, unique, male]
 exp: 650
 species: kobold
 genus: kobold
@@ -16,6 +16,7 @@ shout: shout
 intelligence: human
 speed: 12
 uses: weapons_armour
+spells: peregrine
 size: small
 shape: humanoid
 tile: peregrine

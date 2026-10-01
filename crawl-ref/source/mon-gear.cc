@@ -2667,8 +2667,13 @@ static void _give_unique_scroll(monster* mon)
     if (mon->type == MONS_EDMUND && coinflip())
         mon->props[UNIQUE_POTION_DROP_KEY] = POT_MIGHT;
 
-    if (mon->type == MONS_PEREGRINE && coinflip())
-        mon->props[UNIQUE_POTION_DROP_KEY] = POT_INVISIBILITY;
+    // Peregrine carries two invisibility potions to use in combat.
+    if (mon->type == MONS_PEREGRINE)
+    {
+        mon->props[PEREGRINE_INVIS_POTIONS_KEY] = 2;
+        if (coinflip())
+            mon->props[UNIQUE_POTION_DROP_KEY] = POT_INVISIBILITY;
+    }
 
 }
 
