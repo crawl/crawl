@@ -1,4 +1,5 @@
 name: "Scave the Devourer of Slime"
+enum: scave
 glyph: {char: "J", colour: lightmagenta}
 flags: [speaks, see_invis, unblindable, amorphous, unique, no_skeleton, gender_neutral]
 resists: {poison: 1, corr: 3}
