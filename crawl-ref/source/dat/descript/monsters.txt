@@ -161,8 +161,8 @@ intelligence. They are filled with hatred for anything that can hold a form.
 %%%%
 Scave the Devourer of Slime
 
-A cunning mass of ooze that hunts down slimes in the Pits. It regards you as a
-competitor and turns its attention to you when no nearby slimes remain.
+A tentacled starspawn that hunts down slimes in the Pits. It prioritizes nearby
+slimes over you, lashing out with its tentacles and dragging prey into its maw.
 
 <brown>DC Chili change: Scave is a new unique created specifically for DC Chili
 and appears only on Slime:1. Scave has a 50% chance of dropping a parchment of
