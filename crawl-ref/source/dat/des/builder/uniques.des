@@ -261,6 +261,10 @@ DEPTH:  D:3-4
 WEIGHT: 1
 : place_unique(_G, "Pargi")
 
+NAME:   uniq_peregrine
+DEPTH:  Orc
+: place_unique(_G, "Peregrine the Pilferer")
+
 NAME:   uniq_robin
 DEPTH:  D:2-4
 : place_unique(_G, "Robin band")
