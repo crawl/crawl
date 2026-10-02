@@ -188,16 +188,6 @@ Major Destruction cast
 
 @The_monster@ conjures a destructive force in the name of @possessive_God@!
 %%%%
-Mara Summon cast
-
-@The_monster@ weaves an illusion.
-
-@The_monster@ shimmers.
-%%%%
-unseen Mara summon cast
-
-Something weaves an illusion!
-%%%%
 Orb of Destruction orb spider cast
 
 @The_monster@ weaves a glowing orb of energy.
@@ -267,6 +257,16 @@ Sticky Flame cast
 Stunning Burst cast
 
 @The_monster@ fires a burst of electricity @at@ @target@.
+%%%%
+Summon Illusion cast
+
+@The_monster@ weaves an illusion.
+
+@The_monster@ shimmers.
+%%%%
+unseen Summon Illusion cast
+
+Something weaves an illusion!
 %%%%
 Throw Bolas cast
 
