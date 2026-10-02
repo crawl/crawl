@@ -72,6 +72,26 @@ def _delete_file(file_name: str) -> None:
     os.unlink(file_name)
 
 
+def _replace_text(file_name: str, old: str, new: str) -> None:
+    with open(file_name) as f:
+        text = f.read()
+    if old not in text:
+        raise ValueError(f"Couldn't find {old!r} in {file_name}")
+    with open(file_name, "w") as f:
+        f.write(text.replace(old, new))
+
+
+def _remove_line(file_name: str, line_to_remove: str) -> None:
+    with open(file_name) as f:
+        lines = f.readlines()
+    filtered_lines = [line for line in lines
+                      if line.rstrip("\n") != line_to_remove]
+    if len(filtered_lines) == len(lines):
+        raise ValueError(f"Couldn't find {line_to_remove!r} in {file_name}")
+    with open(file_name, "w") as f:
+        f.writelines(filtered_lines)
+
+
 if __name__ == "__main__":
     SPECIES_BASE = "dat/species"
     for entry in os.scandir(SPECIES_BASE):
@@ -100,6 +120,13 @@ if __name__ == "__main__":
     _delete_file("dat/des/variable/compat.des")
 
     _delete_file("dat/species/deprecated-draconian-mottled.yaml")
+
+    _delete_file("dat/mons/leopard-gecko.yaml")
+    _replace_text("dat/des/portals/sewer.des", "leopard gecko",
+                  "frilled lizard")
+    _remove_line("rltiles/dc-mon.txt", "leopard_gecko MONS_LEOPARD_GECKO")
+    _remove_line("rltiles/dc-corpse.txt",
+                 "leopard_gecko CORPSE_LEOPARD_GECKO")
 
     _delete_file("dat/forms/deprecated-appendage.yaml")
     _delete_file("dat/forms/deprecated-hydra.yaml")
