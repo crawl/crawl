@@ -1316,7 +1316,9 @@ int weapon_min_delay(const item_def &weapon, bool check_speed)
     // Short circuit for lightweights
     if (weapon_has_flag(weapon.sub_type, WPNF_LIGHTWEIGHT)
         && !(weapon.sub_type == WPN_QUICK_BLADE))
+    {
         return 3;
+    }
 
     const int base = property(weapon, PWPN_SPEED);
     if (is_unrandom_artefact(weapon, UNRAND_WOODCUTTERS_AXE))
@@ -1519,9 +1521,11 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
     if (crawl_state.which_god_acting() == GOD_XOM)
         return false;
 
-    if (you.weapon() 
+    if (you.weapon()
         && you.weapon()->is_type(OBJ_STAVES, STAFF_SUMMONING))
+    {
         return false;
+    }
     // The player is ordinarily given a different prompt before this if confused,
     // but if we're merely testing if this attack *could* be bad, we should do
     // the full check anyway.

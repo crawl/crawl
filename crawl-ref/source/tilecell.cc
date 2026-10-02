@@ -399,7 +399,7 @@ static bool _is_seen_shallow(coord_def gc, crawl_view_buffer& vbuf)
 
 static bool _bounds_check(coord_def coord, crawl_view_buffer& vbuf)
 {
-    return (coord.x < 0 || coord.x >= vbuf.size().x || coord.y < 0 || coord.y >= vbuf.size().y);
+    return coord.x < 0 || coord.x >= vbuf.size().x || coord.y < 0 || coord.y >= vbuf.size().y;
 }
 
 static void _pack_default_waves(const coord_def &gc, crawl_view_buffer& vbuf)

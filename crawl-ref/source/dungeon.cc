@@ -1890,9 +1890,9 @@ static int _num_mons_wanted()
 
 static bool _sewer_check(coord_def coord)
 {
-    return (map_bounds(coord)
-        && (env.grid(coord) == DNGN_STONE_WALL || env.grid(coord) == DNGN_METAL_WALL
-        || env.grid(coord) == DNGN_PERMAROCK_WALL || env.grid(coord) == DNGN_ENDLESS_SLUDGE));
+    return map_bounds(coord)
+       && (env.grid(coord) == DNGN_STONE_WALL || env.grid(coord) == DNGN_METAL_WALL
+       || env.grid(coord) == DNGN_PERMAROCK_WALL || env.grid(coord) == DNGN_ENDLESS_SLUDGE);
 }
 
 static void _sewer_water()
@@ -3128,8 +3128,10 @@ static void _build_dungeon_level()
         {
             const map_def *altar = find_map_by_name("basic_altar");
             for (int i = 0; i < 2; ++i)
+            {
                 _dgn_ensure_vault_placed(altar && _build_secondary_vault(altar),
                                          false, "Corrupted Forest random altar");
+            }
         }
 
         level_id lid = level_id::current();

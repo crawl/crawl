@@ -66,7 +66,7 @@ recommended_weapons:
   - short blades
   - polearms
   - staves
-  
+
 # start TAG_MAJOR_VERSION == 34
 create_enum: false
 # end TAG_MAJOR_VERSION

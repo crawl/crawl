@@ -844,8 +844,10 @@ public:
         other_gameplay_menu->set_margin_for_crt(0, 0, 1, 0);
         other_gameplay_menu->descriptions = descriptions;
         for (size_t i = 0; i < other_gameplay_entries.size(); ++i)
+        {
             _add_game_modes_menu_entry(other_gameplay_menu,
                                        other_gameplay_entries[i], i);
+        }
         for (auto &w : other_gameplay_menu->get_buttons())
         {
             w->on_focusin_event([w, this](const FocusEvent&) {
@@ -1332,7 +1334,9 @@ void UIStartupMenu::menu_item_activated(int id)
 #ifdef USE_TILE_LOCAL
         if (!_open_startup_url(
                 "https://dungeoncrawlchili.org/changesInDCChili.php"))
+        {
             mprf(MSGCH_ERROR, "Couldn't open the DC Chili changes page: %s",
+        }
 #if SDL_VERSION_ATLEAST(2, 0, 14)
                  SDL_GetError());
 #else

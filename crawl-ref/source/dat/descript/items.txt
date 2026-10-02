@@ -941,9 +941,9 @@ with almost no hindrance to spellcasting or stealthy movement.
 %%%%
 leiomano
 
-A piece of hardwood carved into a thin, lightweight loop with shark's teeth 
+A piece of hardwood carved into a thin, lightweight loop with shark's teeth
 sewn around the outside to make a cutting edge. The cuts are fairly weak and
-shallow; however, its lightweight construction allows a skilled warrior to 
+shallow; however, its lightweight construction allows a skilled warrior to
 attack at almost unnatural speeds.
 
 A traditional weapon handcrafted by the merfolk of the Shoals, who prefer it
@@ -1168,7 +1168,7 @@ A truly wonderful and very rare drink, which grants experience when consumed.
 %%%%
 potion of gain strength
 
-A potion which embues the drinker with permanent extra strength. As this is a 
+A potion which embues the drinker with permanent extra strength. As this is a
 mutation effect it can be removed by mutation sources later; however.
 
 DC Chili change: The potion of gain strength was imported from the BCadren
@@ -1176,7 +1176,7 @@ Crawl fork.
 %%%%
 potion of gain intelligence
 
-A potion which embues the drinker with permanent extra intelligence. As this is a 
+A potion which embues the drinker with permanent extra intelligence. As this is a
 mutation effect it can be removed by mutation sources later; however.
 
 DC Chili change: The potion of gain intelligence was imported from the BCadren
@@ -1184,7 +1184,7 @@ Crawl fork.
 %%%%
 potion of gain dexterity
 
-A potion which embues the drinker with permanent extra dexterity. As this is a 
+A potion which embues the drinker with permanent extra dexterity. As this is a
 mutation effect it can be removed by mutation sources later; however.
 
 DC Chili change: The potion of gain dexterity was imported from the BCadren
@@ -1490,8 +1490,8 @@ recapture the magical energy bound up with it.
 scroll of bless item
 
 A scroll that confers a priestly blessing from a lesser known diety upon a
-chosen item. This blessing will imbue a magical property upon the chosen weapon, 
-shield, armour or staff; replacing the existing one, should one exist. The 
+chosen item. This blessing will imbue a magical property upon the chosen weapon,
+shield, armour or staff; replacing the existing one, should one exist. The
 blessing isn't powerful enough to change the properties of artefacts or those
 imbued with ponderousness.
 

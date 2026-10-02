@@ -2156,7 +2156,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Kraken";
             else if (species == SP_ONI && skill_rank == 5)
                 result = "Yokozuna";
-            else if (str >= dex && (species == SP_DJINNI 
+            else if (str >= dex && (species == SP_DJINNI
                                  || species == SP_POLTERGEIST
                                  || species == SP_SILENT_SPECTRE)
                         && skill_rank == 5)

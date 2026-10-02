@@ -419,7 +419,7 @@ NSUBST:   ! = 4:! / *:w
 SUBST:    - = WWWW.
 KMONS:    W = cinder newt / clockroach w:30 / \
               sewer rat w:70 / jelly / adder / \
-			  endoplasm w:40 / nothing w:130
+                          endoplasm w:40 / nothing w:130
 KFEAT:    W = W
 KFEAT:    ! = w
 COLOUR:   ! = green
@@ -475,8 +475,8 @@ KFEAT:   w = deep_water
 KFEAT:   W = shallow_water
 SUBST:   c : vc
 : sewer_setup(_G)
-MAP                
-@@@@@@@@cc   ccccccccccc 
+MAP
+@@@@@@@@cc   ccccccccccc
 @........cc  cdedcc3..3cc
 @......2..c  ce<e+2..3.3c
 c+cc..2.2.cc cdedc.2..2.c
@@ -498,11 +498,11 @@ cccccYYYYWYc     VYYZWYYc
     czyyyyzc ceecczyyyyzc
     c1.1.1.ccceecc......c
     cc1.1.1.cc+cc2.....cc
-     c.1.1.1.c.........c 
-     cc.1.1.1.........cc 
-      cccc.2......2cccc  
-         cccc2.2cccc     
-            ccccc        
+     c.1.1.1.c.........c
+     cc.1.1.1.........cc
+      cccc.2......2cccc
+         cccc2.2cccc
+            ccccc
 ENDMAP
 
 ## BIG BADDIE (Pargi) ######################################################
@@ -547,11 +547,11 @@ TAGS:   no_pool_fixup sewer_edge
 ORIENT: east
 NSUBST: 1 = 2:1 / *-
 SUBST:  - = wWWW.
-KMONS:  1 = cinder newt 
+KMONS:  1 = cinder newt
 KMONS:  2 = sewer rat band / kobold brigand band
 KMONS:  3 = bullfrog
 KMONS:  4 = Pargi, bullfrog
-KMONS:  W = withered plant / nothing w:100 
+KMONS:  W = withered plant / nothing w:100
 # slimehead att:passive w:2
 # BCADDO: Restore slimeheads (requires passive attitude)
 KFEAT:  1234W = shallow_water

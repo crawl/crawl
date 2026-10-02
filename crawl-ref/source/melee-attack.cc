@@ -949,9 +949,7 @@ bool melee_attack::handle_phase_hit()
                                     ? attack_verb
                                     : attacker->conj_verb(mons_attack_verb());
             if (attacker->is_player() && weapon && weapon->is_type(OBJ_STAVES, STAFF_SUMMONING))
-            {
                 mprf("You lightly tap %s.", defender_name(true).c_str());
-            }
             else
             {
                 // TODO: Clean this up if possible, checking atype for do / does is ugly

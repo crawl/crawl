@@ -1393,15 +1393,25 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         break;
 
     case MONS_ASMODEUS:
-        force_item = true;
-        make_item_unrandart(item, UNRAND_ASMODEUS);
+        if (coinflip())
+        {
+            force_item = true;
+            make_item_unrandart(item, UNRAND_ASMODEUS);
+        }
+        else
+            item.base_type = OBJ_UNASSIGNED;
         break;
 
     case MONS_GERYON:
         // mv: Probably should be moved out of this switch, but it's not
         // worth it, unless we have more monsters with misc. items.
-        item.base_type = OBJ_MISCELLANY;
-        item.sub_type  = MISC_HORN_OF_GERYON;
+        if (coinflip())
+        {
+            item.base_type = OBJ_MISCELLANY;
+            item.sub_type  = MISC_HORN_OF_GERYON;
+        }
+        else
+            item.base_type = OBJ_UNASSIGNED;
         break;
 
     case MONS_SALAMANDER:
@@ -1793,9 +1803,12 @@ static void _give_shield(monster* mon, int level)
         break;
 
     case MONS_DISPATER:
-        shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_ORB, level);
-        if (shield)
-            make_item_unrandart(*shield, UNRAND_DISPATER);
+        if (coinflip())
+        {
+            shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_ORB, level);
+            if (shield)
+                make_item_unrandart(*shield, UNRAND_DISPATER);
+        }
         break;
 
     case MONS_JEREMIAH:
@@ -2612,7 +2625,7 @@ static void _give_book(monster* mon)
     }
 }
 
-static void _give_unique_scroll(monster* mon)
+static void _give_unique_drops(monster* mon)
 {
     if (mon->type == MONS_MAURICE && coinflip())
         mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_ACQUIREMENT;
@@ -2628,6 +2641,8 @@ static void _give_unique_scroll(monster* mon)
         mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_BLINKING;
     else if (mon->type == MONS_ROBIN && coinflip())
         mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_SUMMONING;
+    else if (mon->type == MONS_ERESHKIGAL && coinflip())
+        mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_SILENCE;
 
     if (mon->type == MONS_MENKAURE && coinflip())
     {
@@ -2642,6 +2657,9 @@ static void _give_unique_scroll(monster* mon)
 
     if (mon->type == MONS_RUSK && coinflip())
         mon->props[UNIQUE_POTION_DROP_KEY] = POT_MIGHT;
+
+    if (mon->type == MONS_ANTAEUS && coinflip())
+        mon->props[UNIQUE_POTION_DROP_KEY] = POT_RESISTANCE;
 
     if (mon->type == MONS_OSKAR && coinflip())
         mon->props[UNIQUE_POTION_DROP_KEY] = POT_CANCELLATION;
@@ -2675,6 +2693,27 @@ static void _give_unique_scroll(monster* mon)
             mon->props[UNIQUE_POTION_DROP_KEY] = POT_INVISIBILITY;
     }
 
+    if (mons_species(mon->type) == MONS_SERPENT_OF_HELL && coinflip())
+    {
+        switch (mon->type)
+        {
+        case MONS_SERPENT_OF_HELL:
+            mon->props[UNIQUE_ARMOUR_DROP_KEY] = ARM_FIRE_DRAGON_ARMOUR;
+            break;
+        case MONS_SERPENT_OF_HELL_COCYTUS:
+            mon->props[UNIQUE_ARMOUR_DROP_KEY] = ARM_ICE_DRAGON_ARMOUR;
+            break;
+        case MONS_SERPENT_OF_HELL_DIS:
+            mon->props[UNIQUE_ARMOUR_DROP_KEY] = ARM_QUICKSILVER_DRAGON_ARMOUR;
+            break;
+        case MONS_SERPENT_OF_HELL_TARTARUS:
+            mon->props[UNIQUE_ARMOUR_DROP_KEY] = ARM_SHADOW_DRAGON_ARMOUR;
+            break;
+        default:
+            break;
+        }
+    }
+
 }
 
 void give_item(monster *mons, int level_number)
@@ -2690,7 +2729,7 @@ void give_item(monster *mons, int level_number)
     _give_shield(mons, 1 + level_number / 2);
     _give_extra_equipment(mons, 1 + level_number / 2);
     _give_book(mons);
-    _give_unique_scroll(mons);
+    _give_unique_drops(mons);
 
     if (mons->type == MONS_ORC_APOSTLE)
         give_apostle_equipment(mons);

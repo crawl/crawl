@@ -1258,7 +1258,7 @@ static bool _is_slow_equip(const item_def& item, bool removing = false)
     if (item.base_type == OBJ_JEWELLERY)
         return jewellery_is_amulet(item.sub_type);
     else if (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_ORB)
-        return removing; 
+        return removing;
     else if (item.base_type == OBJ_ARMOUR)
         return true;
     else if (is_weapon(item))
@@ -1637,9 +1637,7 @@ void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
                     dec_inv_item_quantity(item->link, 1);
                 }
                 else
-                {
                     unequip_item(*item);
-                }
                 continue;
             }
 
@@ -2132,7 +2130,7 @@ static bool god_hates_blessing(const special_armour_type brand)
 {
     if (is_good_god(you.religion) && brand == SPARM_DEATH)
         return true;
-    
+
     if (you_worship(GOD_ZIN) && brand == SPARM_MAYHEM)
         return true;
     /*
@@ -2251,7 +2249,7 @@ static void _rebrand_item(item_def &item)
                                                4, SPARM_WILLPOWER
             );
         }
-        else if (item.base_type == OBJ_ARMOUR 
+        else if (item.base_type == OBJ_ARMOUR
             && ( item.sub_type == ARM_LEATHER_ARMOUR || item.sub_type == ARM_RING_MAIL))
         {
             new_brand = random_choose_weighted(7, SPARM_FIRE_RESISTANCE,
@@ -2274,8 +2272,8 @@ static void _rebrand_item(item_def &item)
                                                7, SPARM_RESONANCE
             );
         }
-        else if (item.base_type == OBJ_ARMOUR 
-            && ( item.sub_type == ARM_CHAIN_MAIL 
+        else if (item.base_type == OBJ_ARMOUR
+            && ( item.sub_type == ARM_CHAIN_MAIL
                 || item.sub_type == ARM_PLATE_ARMOUR
                 || item.sub_type == ARM_CRYSTAL_PLATE_ARMOUR))
         {
@@ -2358,7 +2356,7 @@ static void _rebrand_item(item_def &item)
                                                2, SPARM_RESISTANCE
             );
         }
-        else if (item.base_type == OBJ_ARMOUR 
+        else if (item.base_type == OBJ_ARMOUR
             && ( item.sub_type == ARM_KITE_SHIELD || item.sub_type == ARM_TOWER_SHIELD))
         {
             new_brand = random_choose_weighted(10, SPARM_PROTECTION,

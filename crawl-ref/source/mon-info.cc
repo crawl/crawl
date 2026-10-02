@@ -359,7 +359,7 @@ void monster_info::_populate_as_generic()
 
     backlit = false;
     umbraed = false;
-    
+
     exp = 0;
 
     mitemuse = mons_class_itemuse(type);

@@ -37,6 +37,9 @@ single combat he challenged and slew her, and for this crime he was exiled and
 descended into the Hells. Finding the inhabitants of that place no match for his
 might, Antaeus tore from its substance a fourth Hell, Cocytus, a realm born of
 frozen spite.
+
+<brown>DC Chili change: Antaeus has a 50% chance of dropping a potion of
+resistance when killed.</brown>
 %%%%
 Arachne
 
@@ -57,6 +60,9 @@ Asmodeus
 Greatest and most cunning of the Lords of Hell, Asmodeus was born when the twin
 fires of greed and treachery first sparked to life within a mortal's heart.
 His hideous body is perpetually wreathed in flame.
+
+<brown>DC Chili change: Asmodeus has a 50% chance of dropping the sceptre of
+Asmodeus when killed.</brown>
 %%%%
 Asterion
 
@@ -150,6 +156,9 @@ Dispater
 Greatest and most ruthless of the Lords of Hell, Dispater was born when first an
 iron sword drank mortal blood. They despise mortal vanities, the pursuit of
 ‘reason’ and ‘beauty’ - the only art they enjoy is the art of war.
+
+<brown>DC Chili change: Dispater has a 50% chance of dropping the orb of
+Dispater when killed.</brown>
 %%%%
 Dissolution
 
@@ -219,6 +228,9 @@ Ereshkigal
 Greatest and most inexorable of the Lords of Hell, Ereshkigal was born when
 first a mortal breathed her last. Noiselessly she laughs at lives cut short and
 loved ones separated by untimely death, enwreathed in the silence of the grave.
+
+<brown>DC Chili change: Ereshkigal has a 50% chance of dropping a scroll of
+silence when killed.</brown>
 %%%%
 Erica
 
@@ -277,6 +289,9 @@ Geryon
 
 A huge, three-headed, winged arch-demon, guardian of the four Hells. Legends
 say that his silver horn can summon terrible beasts to aid him in battle.
+
+<brown>DC Chili change: Geryon has a 50% chance of dropping the horn of Geryon
+when killed.</brown>
 %%%%
 Gloorx Vloq
 
@@ -475,8 +490,8 @@ acquirement when he is killed.</brown>
 %%%%
 Medusa
 
-A snake headed Naga with a petrifying stare.  The only mortal sister of the
-ancient Gorgon, she terrorizes the denizens of the early dungeon. When defeated, 
+A snake headed Naga with a petrifying stare. The only mortal sister of the
+ancient Gorgon, she terrorizes the denizens of the early dungeon. When defeated,
 her garden of victims will be transformed into an army of vengeful snakes.
 
 <brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Medusa has a 50% chance of dropping a Talisman of
@@ -769,7 +784,7 @@ particularly skilled in translocation magic.
 %%%%
 Verity
 
-Once a man, he put his soul into a dragon carved of stone.  He lurks in the
+Once a man, he put his soul into a dragon carved of stone. He lurks in the
 Lair where his bulk is too hefty to escape and resume the quest for the Orb.
 
 <brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Verity has a 50% chance of dropping a Talisman of Statue
@@ -809,22 +824,34 @@ Serpent of Hell gehenna
 
 A huge, red-glowing, three-headed dragon, shrouded in damnation. It is
 possessed by the very essence of Gehenna and its eternal fire.
+
+<brown>DC Chili change: The Serpent of Hell has a 50% chance of dropping fire
+dragon armour when killed.</brown>
 %%%%
 Serpent of Hell cocytus
 
 A massive white three-headed dragon, covered with shards of gleaming ice,
 wholly possessed by the nightmarish cold of Cocytus.
+
+<brown>DC Chili change: The Serpent of Hell has a 50% chance of dropping ice
+dragon armour when killed.</brown>
 %%%%
 Serpent of Hell dis
 
 A towering three-headed beast with an army's worth of swords for teeth. Each of
 its scales is a shield with a razored edge.
+
+<brown>DC Chili change: The Serpent of Hell has a 50% chance of dropping
+quicksilver dragon armour when killed.</brown>
 %%%%
 Serpent of Hell tartarus
 
 Seemingly three pairs of lurid magenta eyes hanging in the darkness, the
 outline of a vast, sinuous dragon is just barely perceptible behind. Its malice
 is palpable.
+
+<brown>DC Chili change: The Serpent of Hell has a 50% chance of dropping shadow
+dragon armour when killed.</brown>
 %%%%
 # Non-unique monsters
 abyssal acolyte
@@ -1795,8 +1822,8 @@ its vicious claws.
 %%%%
 giraffe
 
-Far more aggressive than those found outside the dungeon, these giraffes defend 
-their territory by trampling their foes under their long legs and whipping their 
+Far more aggressive than those found outside the dungeon, these giraffes defend
+their territory by trampling their foes under their long legs and whipping their
 own heads to inflict a headbutt from a distance. Their large size and stout frame
 make them fast and intimidating foes.
 %%%%
@@ -3036,7 +3063,7 @@ bulk.
 %%%%
 sewer rat
 
-A rodent with hair of a most peculiar green colour, and a powerful bite. It takes 
+A rodent with hair of a most peculiar green colour, and a powerful bite. It takes
 to the putrid waters of the sewers like a fish and forms large swarms with its kin.
 %%%%
 shadow
