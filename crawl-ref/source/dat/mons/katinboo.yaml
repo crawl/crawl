@@ -22,4 +22,3 @@ uses: starting_equipment
 size: medium
 shape: quadruped_tailless
 tile: katinboo
-corpse_tile: felid
