@@ -260,6 +260,9 @@ Erica
 
 A wild-tempered adventuress. She's quite prideful for an octopode, and brandishes
 their venomous capacity and camouflage talents with cruel force.
+
+<brown>DC Chili change: Erica has a 50% chance of dropping a potion of
+invisibility when killed.</brown>
 %%%%
 Erolcha
 
@@ -486,6 +489,9 @@ An ogre emissary of the Ironbound Order, sent to find and stop intruders before
 they enter the Vaults. Fiercely charismatic, he's rallied a small army of his
 kin, overawing them with the long-range lightning array he wears on his back.
 (The large coin purse he took from the Vaults is also quite persuasive.)
+
+<brown>DC Chili change: Lodul has a 50% chance of dropping a lightning rod
+when killed.</brown>
 %%%%
 Lom Lobon
 
@@ -731,6 +737,9 @@ A wise kobold would fear the forces of Hell, and certainly would not set up a
 highly lucrative transdimensional trade in damned souls. But Pikel is better
 known for his whip than his wisdom, mercilessly tormenting his piteous charges
 as he ferries them to their buyers.
+
+<brown>DC Chili change: Pikel has a 50% chance of dropping a wand of paralysis
+when killed.</brown>
 %%%%
 Polyphemus
 
@@ -745,6 +754,9 @@ rocks when killed.</brown>
 Prince Ribbit
 
 A frog of unusual size, with a tiny crown perched incongruously atop his head.
+
+<brown>DC Chili change: Prince Ribbit has a 50% chance of dropping a parchment
+of Blink when killed.</brown>
 %%%%
 Regal
 
@@ -919,6 +931,9 @@ A master weaponsmith, her flesh melding into steel so smoothly that it's hard to
 tell where one ends and the other begins. She entered the Dungeon to search for
 the secrets of an ancient, long-suppressed cult, said to have exalted metal over
 flesh. The price of knowledge was her humanity - a price she paid eagerly.
+
+<brown>DC Chili change: Zenata has a 50% chance of dropping a scroll of enchant
+weapon when killed.</brown>
 %%%%
 Serpent of Hell gehenna
 

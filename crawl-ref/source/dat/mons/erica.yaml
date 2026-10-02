@@ -1,4 +1,5 @@
 name: "Erica"
+drop_on_death: {chance: 50, item: POT_INVISIBILITY}
 glyph: {char: "x", colour: lightmagenta}
 flags: [speaks, warm_blood, unique, female, no_skeleton]
 exp: 839
