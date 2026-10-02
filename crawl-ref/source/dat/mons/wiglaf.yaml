@@ -1,4 +1,5 @@
 name: "Wiglaf"
+drop_on_death: {chance: 50, item: POT_MIGHT}
 glyph: {char: "g", colour: lightgreen}
 flags: [fighter, speaks, warm_blood, unique, male]
 exp: 1913

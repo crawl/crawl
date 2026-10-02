@@ -1,4 +1,5 @@
 name: "Jory"
+drop_on_death: {chance: 50, item: SCR_TORMENT}
 glyph: {char: "V", colour: lightred}
 flags: [fighter, see_invis, speaks, warm_blood, unique, male]
 resists: {cold: 1}

@@ -286,6 +286,9 @@ Frederick
 A svelte fighter-mage with a gold-rimmed monocle, a keen sense of tradition,
 and the blood of the gods running through his veins. He's here looking for a
 worthy opponent, but he's yet to find one.
+
+<brown>DC Chili change: Frederick has a 50% chance of dropping a potion of
+brilliance when killed.</brown>
 %%%%
 Gastronok
 
@@ -410,6 +413,9 @@ Once a simple village peasant, Jory found himself transformed in undeath into a
 powerful creature. Through the countless centuries unlived since then, he has
 honed his skills in combat and magic, and amassed great wealth and many
 possessions.
+
+<brown>DC Chili change: Jory has a 50% chance of dropping a scroll of torment
+when killed.</brown>
 %%%%
 Joseph
 
@@ -499,8 +505,9 @@ grew impatient. In search of a shortcut to fame and fortune (and somewhat short
 on imagination), she entered the Dungeon and set out to slay a dragon. Now
 having slain one, Maggie sees no reason to stop.
 
-<brown>DC Chili change: Maggie has a 50% chance of dropping Wyrmbane when it is
-available.</brown>
+<brown>DC Chili change: Maggie has a 5% chance of spawning with Wyrmbane when it
+is available; if she has it, it drops as carried equipment. She also has a 50%
+chance of dropping a potion of might when killed.</brown>
 %%%%
 Margery
 
@@ -617,6 +624,9 @@ a lie, she nonetheless seems to be on a first-name basis with many of them.
 More than any other orc still breathing, she knows the blood and sacrifice it
 took to make this place a refuge for her kind. She will not brook its being
 intruded upon by anyone - least of all you.
+
+<brown>DC Chili change: Nergalle has a 50% chance of dropping a parchment of
+Animate Dead when killed.</brown>
 %%%%
 Nessos
 
@@ -830,6 +840,9 @@ Wiglaf
 A cantankerous dwarf wearing a stupid-looking hat. He eyes you sourly, as if
 deciding exactly how much offence he should take to the way you're staring at
 it.
+
+<brown>DC Chili change: Wiglaf has a 50% chance of dropping a potion of might
+when killed.</brown>
 %%%%
 Vashnia
 
