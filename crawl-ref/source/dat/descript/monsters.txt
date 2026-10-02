@@ -71,6 +71,9 @@ the depths of the dungeon for his crimes. Here he lurks in his tattered finery,
 dreaming of a new kingdom. In his lust for power, the minotaur king turned to
 the worship of Makhleb, and Makhleb has rewarded him with horrifying
 destructive might.
+
+<brown>DC Chili change: Asterion has a 50% chance of dropping a potion of
+might when killed.</brown>
 %%%%
 Azrael
 
@@ -368,6 +371,9 @@ Ilsuiw
 
 A deadly merfolk water-witch, who uses her dominion over the tides to draw
 unwitting adventurers to their deaths.
+
+<brown>DC Chili change: Ilsuiw has a 50% chance of dropping a potion of magic
+when killed.</brown>
 %%%%
 Jeremiah
 
@@ -689,6 +695,9 @@ A cyclops shepherd, he is very protective of his charges, whom he watches with
 an undying fervor through his single massive eye. Nevertheless, he won't
 hesitate to use them as projectiles in a pinch; after all, the best defence is
 a good offence.
+
+<brown>DC Chili change: Polyphemus has a 50% chance of dropping three large
+rocks when killed.</brown>
 %%%%
 Prince Ribbit
 
@@ -733,6 +742,9 @@ when he is killed.</brown>
 Saint Roka
 
 A mighty warlord. Some orcs even say they are the Chosen One of Beogh.
+
+<brown>DC Chili change: Saint Roka has a 50% chance of dropping a scroll of
+summoning when killed.</brown>
 %%%%
 Sigmund
 
@@ -765,6 +777,9 @@ Sojobo
 Queen of the tengu, with legendary skill in swordsmanship, tactics, and magic.
 Storytellers claim she once trapped a raging tempest in a bottle and kept it
 as a talisman.
+
+<brown>DC Chili change: Sojobo has a 50% chance of dropping a lightning rod
+when killed.</brown>
 %%%%
 Sonja
 
