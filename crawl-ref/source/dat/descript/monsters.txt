@@ -348,6 +348,9 @@ him. He is now slated to continue the joy of his life for all eternity.
 Although his new form includes a number of large razor-sharp blades growing
 from his demonic appendages, he kept his favourite axe and is eager to let you
 test its edge.
+
+<brown>DC Chili change: Ignacio has a 50% chance of dropping a potion of haste
+when killed.</brown>
 %%%%
 Ijyb
 
@@ -419,6 +422,9 @@ Khufu
 
 An incredibly powerful emperor on the way to godhood. He died quite some time
 ago, but he sees no reason why that should stop him.
+
+<brown>DC Chili change: Khufu has a 50% chance of dropping a wand of digging
+when killed.</brown>
 %%%%
 Kirke
 
@@ -536,6 +542,9 @@ tongue.
 
 Whether or not this angel is that same Mennas is something of a mystery, as he
 seems to have difficulty speaking.
+
+<brown>DC Chili change: Mennas has a 50% chance of dropping a parchment of
+Silence when killed.</brown>
 %%%%
 Mlioglotl
 
