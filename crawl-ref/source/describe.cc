@@ -1600,8 +1600,10 @@ static string _staff_damage_type_string(stave_type staff)
         return "poison";
     case STAFF_CONJURATION:
         return "energy";
+#if TAG_MAJOR_VERSION == 34
     case STAFF_SUMMONING:
         return "healing";
+#endif
     default:
         return "buggy";
     }

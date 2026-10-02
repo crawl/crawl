@@ -878,8 +878,10 @@ static const staff_def Staff_prop[] =
 #if TAG_MAJOR_VERSION == 34
     { STAFF_ENCHANTMENT, "enchantment" },
 #endif
+#if TAG_MAJOR_VERSION == 34
     { STAFF_SUMMONING,   "summoning", SK_SUMMONINGS,
         50, ac_type::normal, BEAM_NONE },
+#endif
     { STAFF_AIR,         "air",         SK_AIR_MAGIC,
         50, ac_type::half,   BEAM_ELECTRICITY },
     { STAFF_EARTH,       "earth",       SK_EARTH_MAGIC,

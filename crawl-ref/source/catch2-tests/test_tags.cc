@@ -81,8 +81,8 @@ TEST_CASE( "Player spells can be decoded", "[single-file]" ) {
     SECTION ("spells stored as shorts can be read") {
         vector<unsigned char> input = {
             0x02, // count
-            0x00, static_cast<unsigned char>(SPELL_MAGIC_DART),
-            0x00, static_cast<unsigned char>(SPELL_FIREBALL),
+            0x00, static_cast<unsigned char>(SPELL_MAGIC_DART), // SPELL_MAGIC_DART
+            0x00, static_cast<unsigned char>(SPELL_FIREBALL), // SPELL_FIREBALL
         };
         auto r = reader(input);
         r.setMinorVersion(TAG_MINOR_SHORT_SPELL_TYPE);
@@ -101,8 +101,8 @@ TEST_CASE( "Player spells can be decoded", "[single-file]" ) {
     SECTION ("removed spells are filtered out") {
         vector<unsigned char> input = {
             0x02, // count
-            0x00, static_cast<unsigned char>(SPELL_STRIKING),
-            0x00, static_cast<unsigned char>(SPELL_FIREBALL),
+            0x00, static_cast<unsigned char>(SPELL_STRIKING), // SPELL_STRIKING
+            0x00, static_cast<unsigned char>(SPELL_FIREBALL), // SPELL_FIREBALL
         };
         auto r = reader(input);
         r.setMinorVersion(TAG_MINOR_SHORT_SPELL_TYPE);

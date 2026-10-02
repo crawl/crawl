@@ -1386,7 +1386,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         break;
 
     case MONS_CEREBOV:
-        if (you.props.exists(CEREBOV_DISARMED_KEY))
+        if (you.props.exists(CEREBOV_DISARMED_KEY) || !coinflip())
             break;
         force_item = true;
         make_item_unrandart(item, UNRAND_CEREBOV);
@@ -2627,6 +2627,29 @@ static void _give_book(monster* mon)
 
 static void _give_unique_drops(monster* mon)
 {
+    // A random Pan lord may leave a wand or evocable miscellany behind.
+    if (mon->type == MONS_PANDEMONIUM_LORD && coinflip())
+    {
+        if (coinflip())
+        {
+            const wand_type wand = random_choose(
+                WAND_FLAME, WAND_PARALYSIS, WAND_DIGGING, WAND_ICEBLAST,
+                WAND_POLYMORPH, WAND_CHARMING, WAND_ACID, WAND_MINDBURST,
+                WAND_LIGHT, WAND_QUICKSILVER, WAND_ROOTS, WAND_WARPING);
+            mon->props[UNIQUE_EVOCABLE_DROP_KEY] = (OBJ_WANDS << 16) | wand;
+        }
+        else
+        {
+            const misc_item_type evocable = random_choose(
+                MISC_BOX_OF_BEASTS, MISC_LIGHTNING_ROD, MISC_PHIAL_OF_FLOODS,
+                MISC_SACK_OF_SPIDERS, MISC_PHANTOM_MIRROR,
+                MISC_TIN_OF_TREMORSTONES, MISC_CONDENSER_VANE,
+                MISC_GRAVITAMBOURINE);
+            mon->props[UNIQUE_EVOCABLE_DROP_KEY] =
+                (OBJ_MISCELLANY << 16) | evocable;
+        }
+    }
+
     if (mon->type == MONS_MAURICE && coinflip())
         mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_ACQUIREMENT;
     else if (mon->type == MONS_GRINDER && coinflip())
@@ -2643,6 +2666,10 @@ static void _give_unique_drops(monster* mon)
         mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_SUMMONING;
     else if (mon->type == MONS_ERESHKIGAL && coinflip())
         mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_SILENCE;
+    else if (mon->type == MONS_GLOORX_VLOQ && coinflip())
+        mon->props[UNIQUE_POTION_DROP_KEY] = POT_INVISIBILITY;
+    else if (mon->type == MONS_LOM_LOBON && coinflip())
+        mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_ACQUIREMENT;
 
     if (mon->type == MONS_MENKAURE && coinflip())
     {
@@ -2680,6 +2707,9 @@ static void _give_unique_drops(monster* mon)
         mon->props[UNIQUE_POTION_DROP_KEY] = POT_MAGIC;
 
     if (mon->type == MONS_CRAZY_YIUF && coinflip())
+        mon->props[UNIQUE_POTION_DROP_KEY] = POT_MUTATION;
+
+    if (mon->type == MONS_MNOLEG && coinflip())
         mon->props[UNIQUE_POTION_DROP_KEY] = POT_MUTATION;
 
     if (mon->type == MONS_EDMUND && coinflip())
