@@ -1,4 +1,5 @@
 name: "Duvessa"
+drop_on_death: {chance: 50, item: POT_MIGHT}
 glyph: {char: "e", colour: blue}
 flags: [fighter, speaks, warm_blood, unique, female]
 exp: 146

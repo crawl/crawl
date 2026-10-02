@@ -81,6 +81,9 @@ might when killed.</brown>
 Azrael
 
 A powerful, belligerent efreet. (Is there any other kind?)
+
+<brown>DC Chili change: Azrael has a 50% chance of dropping a parchment of
+Fireball when killed.</brown>
 %%%%
 Bai Suzhen
 
@@ -211,6 +214,9 @@ Dowan
 A beautiful but vain deep elf with an aptitude for magic and little else. His
 skills are the perfect complement of his twin sister Duvessa's fighting prowess.
 In search of more powerful spells, he journeys to the surface with his sister.
+
+<brown>DC Chili change: Dowan has a 50% chance of dropping a potion of magic
+when killed.</brown>
 %%%%
 Duvessa
 
@@ -218,6 +224,9 @@ A plain-looking deep elven fighter who is technically brilliant in many forms of
 combat, but over-confident because of it. She is complemented by the magical
 skills of her twin brother, Dowan. She journeys to the surface to challenge
 its greatest champions.
+
+<brown>DC Chili change: Duvessa has a 50% chance of dropping a potion of might
+when killed.</brown>
 %%%%
 Edmund
 
@@ -255,6 +264,9 @@ their venomous capacity and camouflage talents with cruel force.
 Erolcha
 
 An especially cunning ogre-mage.
+
+<brown>DC Chili change: Erolcha has a 50% chance of dropping a parchment of
+Fireball when killed.</brown>
 %%%%
 Eustachio
 
@@ -432,6 +444,9 @@ Josephina
 A fearsome necromancer who followed her craft beyond the limits of flesh and
 life. Her pursuit of demonic knowledge left her body ruined, but the powers she
 gained allowed her to rebuild her missing limbs from glittering ice.
+
+<brown>DC Chili change: Josephina has a 50% chance of dropping a parchment of
+Haunt when killed.</brown>
 %%%%
 Josephine
 

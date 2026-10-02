@@ -1,4 +1,5 @@
 name: "Dowan"
+drop_on_death: {chance: 50, item: POT_MAGIC}
 glyph: {char: "e", colour: red}
 flags: [speaks, warm_blood, unique, male]
 exp: 69
