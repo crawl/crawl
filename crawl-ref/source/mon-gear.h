@@ -15,6 +15,7 @@ constexpr const char* PEREGRINE_INVIS_POTIONS_KEY = "peregrine_invis_potions";
 constexpr const char* UNIQUE_JEWELLERY_DROP_KEY = "unique_jewellery_drop";
 constexpr const char* UNIQUE_ARMOUR_DROP_KEY = "unique_armour_drop";
 constexpr const char* UNIQUE_PARCHMENT_DROP_KEY = "unique_parchment_drop";
+constexpr const char* UNIQUE_EVOCABLE_DROP_KEY = "unique_evocable_drop";
 
 class monster;
 

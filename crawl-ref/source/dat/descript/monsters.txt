@@ -136,6 +136,9 @@ Cerebov
 
 A violent and wrathful demon, Cerebov appears as a giant humanoid covered in
 shining golden armour and wielding a huge twisted sword.
+
+<brown>DC Chili change: Cerebov has a 50% chance of dropping the sword of
+Cerebov when killed.</brown>
 %%%%
 Chuck
 
@@ -296,6 +299,9 @@ when killed.</brown>
 Gloorx Vloq
 
 A shadowy figure clothed in profound darkness.
+
+<brown>DC Chili change: Gloorx Vloq has a 50% chance of dropping a potion of
+invisibility when killed.</brown>
 %%%%
 Goji
 
@@ -440,6 +446,9 @@ of magic. Rumoured to be the most learned being in the halls of Pandemonium,
 they are at times sought out by mortal wizards who offer their souls in
 exchange for the secrets of the arcane. Lacking the terrible wrath present in
 most demons, Lom Lobon's single eye instead hides a cold, impartial cruelty.
+
+<brown>DC Chili change: Lom Lobon has a 50% chance of dropping a scroll of
+acquirement when killed.</brown>
 %%%%
 Louise
 
@@ -537,6 +546,9 @@ to become this twisted mass of corruption, now known only as Mlioglotl.
 Mnoleg
 
 A weirdly glowing figure, dancing through the twisted air of Pandemonium.
+
+<brown>DC Chili change: Mnoleg has a 50% chance of dropping a potion of
+mutation when killed.</brown>
 %%%%
 Monkey King
 
@@ -2687,6 +2699,9 @@ pandemonium lord
 
 A formidable demon lord inhabiting the endless halls of Pandemonium. Each one
 is different, with its own set of strengths and weaknesses.
+
+<brown>DC Chili change: A randomly generated Pandemonium lord has a 50% chance
+of dropping a random evocable item when killed.</brown>
 %%%%
 peacekeeper
 
