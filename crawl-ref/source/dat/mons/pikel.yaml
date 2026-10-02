@@ -1,4 +1,5 @@
 name: "Pikel"
+drop_on_death: {chance: 50, item: WAND_PARALYSIS}
 glyph: {char: "K", colour: blue}
 flags: [speaks, warm_blood, unique, male]
 exp: 647

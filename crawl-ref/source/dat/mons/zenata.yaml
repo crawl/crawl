@@ -1,4 +1,5 @@
 name: "Zenata"
+drop_on_death: {chance: 50, item: SCR_ENCHANT_WEAPON}
 glyph: {char: "@", colour: lightgray}
 flags: [speaks, warm_blood, unique, female]
 exp: 1864

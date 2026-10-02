@@ -1,4 +1,5 @@
 name: "Prince Ribbit"
+drop_on_death: {chance: 50, item: SPELL_BLINK}
 glyph: {char: "F", colour: lightcyan}
 flags: [speaks, cold_blood, unique, male]
 exp: 276
