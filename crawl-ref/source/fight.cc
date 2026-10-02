@@ -1521,11 +1521,13 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
     if (crawl_state.which_god_acting() == GOD_XOM)
         return false;
 
+#if TAG_MAJOR_VERSION == 34
     if (you.weapon()
         && you.weapon()->is_type(OBJ_STAVES, STAFF_SUMMONING))
     {
         return false;
     }
+#endif
     // The player is ordinarily given a different prompt before this if confused,
     // but if we're merely testing if this attack *could* be bad, we should do
     // the full check anyway.

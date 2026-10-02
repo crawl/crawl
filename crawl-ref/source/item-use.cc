@@ -2203,7 +2203,11 @@ static void _rebrand_stave(item_def &item)
     stave_type new_brand = old_brand;
     while (old_brand == new_brand || god_hates_brand(new_brand))
     {
+#if TAG_MAJOR_VERSION == 34
         new_brand = random_choose_weighted(1, STAFF_SUMMONING,
+#else
+        new_brand = random_choose_weighted(
+#endif
                                            1, STAFF_FIRE,
                                            1, STAFF_COLD,
                                            1, STAFF_ALCHEMY,

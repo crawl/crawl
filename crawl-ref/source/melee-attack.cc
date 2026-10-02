@@ -900,8 +900,10 @@ bool melee_attack::handle_phase_hit()
     // will be checked early in player_monattack_hit_effects
     damage_done += calc_damage();
 
+#if TAG_MAJOR_VERSION == 34
     if (weapon && weapon->is_type(OBJ_STAVES, STAFF_SUMMONING))
         damage_done = 0;
+#endif
 
     // Calculate and apply infusion costs immediately after we calculate
     // damage, so that later events don't result in us skipping the cost.
@@ -948,9 +950,11 @@ bool melee_attack::handle_phase_hit()
             attack_verb = attacker->is_player()
                                     ? attack_verb
                                     : attacker->conj_verb(mons_attack_verb());
+#if TAG_MAJOR_VERSION == 34
             if (attacker->is_player() && weapon && weapon->is_type(OBJ_STAVES, STAFF_SUMMONING))
                 mprf("You lightly tap %s.", defender_name(true).c_str());
             else
+#endif
             {
                 // TODO: Clean this up if possible, checking atype for do / does is ugly
                 mprf("%s %s %s but %s no damage.",
@@ -1082,8 +1086,12 @@ bool melee_attack::handle_phase_hit()
     }
     do_ooze_flood();
 
+#if TAG_MAJOR_VERSION == 34
     if (attacker->is_player() && weapon
         && !weapon->is_type(OBJ_STAVES, STAFF_SUMMONING))
+#else
+    if (attacker->is_player() && weapon)
+#endif
     {
         // Always upset monster regardless of damage.
         // However, successful stabs inhibit shouting.
@@ -2947,11 +2955,13 @@ void melee_attack::set_attack_verb(int damage)
         weap_type = WPN_UNARMED;
     else if (weapon->base_type == OBJ_STAVES)
     {
+#if TAG_MAJOR_VERSION == 34
         if (weapon->sub_type == STAFF_SUMMONING)
         {
             attack_verb = "lightly tap";
             return;
         }
+#endif
         weap_type = WPN_STAFF;
     }
     else if (weapon->base_type == OBJ_WEAPONS
@@ -3537,6 +3547,7 @@ string melee_attack::staff_message(stave_type staff, int dam) const
                     attacker->conj_verb("blast").c_str(),
                     defender->name(DESC_THE).c_str(),
                     attack_strength_punctuation(dam).c_str());
+#if TAG_MAJOR_VERSION == 34
     case STAFF_SUMMONING:
         return make_stringf(
                     "%s %s %s%s",
@@ -3544,6 +3555,7 @@ string melee_attack::staff_message(stave_type staff, int dam) const
                     attacker->conj_verb("heal").c_str(),
                     defender->name(DESC_THE).c_str(),
                     attack_strength_punctuation(dam).c_str());
+#endif
 
     default:
         return "Something buggy happens! Please report this.";
@@ -3570,6 +3582,7 @@ bool melee_attack::apply_staff_damage()
     dam = resist_adjust_damage(defender, flavour, dam);
     if (staff == STAFF_EARTH && defender->airborne())
         dam /= 3;
+#if TAG_MAJOR_VERSION == 34
     if (staff == STAFF_SUMMONING && mons_aligned(attacker, defender))
     {
         int heal = dam;
@@ -3584,6 +3597,7 @@ bool melee_attack::apply_staff_damage()
     }
     else if (staff == STAFF_SUMMONING && !mons_aligned(attacker, defender))
         dam = 0;
+#endif
     if (dam > 0)
     {
         if (staff == STAFF_FIRE && defender->is_player())
