@@ -1,4 +1,5 @@
 name: "Blorkula the orcula"
+drop_on_death: {chance: 50, item: POT_HASTE}
 glyph: {char: "o", colour: brown}
 flags: [speaks, see_invis, warm_blood, unique, male, no_zombie]
 resists: {cold: 1}
