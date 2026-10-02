@@ -2659,6 +2659,9 @@ static void _give_unique_drops(monster* mon)
     if (mon->type == MONS_KHUFU && coinflip())
         mon->props[UNIQUE_EVOCABLE_DROP_KEY] = (OBJ_WANDS << 16) | WAND_DIGGING;
 
+    if (mon->type == MONS_KIRKE && coinflip())
+        mon->props[UNIQUE_EVOCABLE_DROP_KEY] = (OBJ_WANDS << 16) | WAND_POLYMORPH;
+
     if (mon->type == MONS_MAURICE && coinflip())
         mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_ACQUIREMENT;
     else if (mon->type == MONS_GRINDER && coinflip())
@@ -2680,6 +2683,9 @@ static void _give_unique_drops(monster* mon)
     else if (mon->type == MONS_LOM_LOBON && coinflip())
         mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_ACQUIREMENT;
     else if (mon->type == MONS_IGNACIO && coinflip())
+        mon->props[UNIQUE_POTION_DROP_KEY] = POT_HASTE;
+
+    if (mon->type == MONS_AIZUL && coinflip())
         mon->props[UNIQUE_POTION_DROP_KEY] = POT_HASTE;
 
     if (mon->type == MONS_MENNAS && coinflip())
@@ -2705,12 +2711,23 @@ static void _give_unique_drops(monster* mon)
     if (mon->type == MONS_POLYPHEMUS && coinflip())
         mon->props[UNIQUE_LARGE_ROCK_DROP_KEY] = true;
 
+    if (mon->type == MONS_NESSOS && coinflip())
+        mon->props[UNIQUE_CURARE_DROP_KEY] = true;
+
     if (mon->type == MONS_SAINT_ROKA && coinflip())
         mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_SUMMONING;
 
     if (mon->type == MONS_SOJOBO && coinflip())
         mon->props[UNIQUE_EVOCABLE_DROP_KEY] =
             (OBJ_MISCELLANY << 16) | MISC_LIGHTNING_ROD;
+
+    if (mon->type == MONS_MARA && coinflip())
+        mon->props[UNIQUE_EVOCABLE_DROP_KEY] =
+            (OBJ_MISCELLANY << 16) | MISC_PHANTOM_MIRROR;
+
+    if (mon->type == MONS_XAKKRIXIS && coinflip())
+        mon->props[UNIQUE_EVOCABLE_DROP_KEY] =
+            (OBJ_MISCELLANY << 16) | MISC_CONDENSER_VANE;
 
     if (mon->type == MONS_RUSK && coinflip())
         mon->props[UNIQUE_POTION_DROP_KEY] = POT_MIGHT;

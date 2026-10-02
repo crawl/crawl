@@ -19,6 +19,9 @@ Once the primary guardian serpent of a legendary treasure hoard, she was
 disgraced after thieves looted it while she slept. She seeks to make up for her
 failure by protecting the only treasure the villains overlooked, a single
 precious talisman.
+
+<brown>DC Chili change: Aizul has a 50% chance of dropping a potion of haste
+when killed.</brown>
 %%%%
 Amaemon
 
@@ -439,6 +442,9 @@ Kirke
 
 A master of transformation and treachery. Beware, or you may be the next swine
 to join her herd!
+
+<brown>DC Chili change: Kirke has a 50% chance of dropping a wand of polymorph
+when killed.</brown>
 %%%%
 Lernaean hydra
 
@@ -482,6 +488,9 @@ Mara
 This tall and powerful demon is Mara, Lord of Illusions, mighty among dreamers.
 He is capable of creating intricately detailed illusions, so real that they are
 almost as deadly as the creatures they impersonate.
+
+<brown>DC Chili change: Mara has a 50% chance of dropping a phantom mirror
+when killed.</brown>
 %%%%
 Maggie
 
@@ -613,6 +622,9 @@ Nessos
 
 A centaur warrior, skilled at warfare and deceit. They slew a mighty hydra, and
 now its deadly blood drips, still-fuming, from their arrows.
+
+<brown>DC Chili change: Nessos has a 50% chance of dropping three curare darts
+when killed.</brown>
 %%%%
 Nikola
 
@@ -850,6 +862,9 @@ This one's study of the magical fibres excreted by orb spiders has already led
 to an alchemical breakthrough, allowing them to shape fulminant prisms such that
 their explosions are directed at enemies alone. Alas, their enthusiasm to
 conduct a field test bodes poorly for your health.
+
+<brown>DC Chili change: Xak'krixis has a 50% chance of dropping a condenser vane
+when killed.</brown>
 %%%%
 Xtahua
 
