@@ -1089,7 +1089,9 @@ POP_DEPTHS,
 { // Sewer
   {  1,  1, 1000, FLAT, MONS_CINDER_NEWT },
   {  1,  1,  300, FLAT, MONS_QUOKKA },
+#if TAG_MAJOR_VERSION == 34
   {  1,  1,  200, FLAT, MONS_LEOPARD_GECKO },
+#endif
   {  1,  1,  500, FLAT, MONS_BAT },
   {  1,  1,  500, FLAT, MONS_BALL_PYTHON },
   {  1,  1,  315, FLAT, MONS_DART_SLUG },
