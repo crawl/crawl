@@ -3721,6 +3721,26 @@ item_def* monster_die(monster& mons, killer_type killer,
                 }
             }
         }
+
+        if (mons.props.exists(UNIQUE_EVOCABLE_DROP_KEY))
+        {
+            const int evocable = mons.props[UNIQUE_EVOCABLE_DROP_KEY].get_int();
+            const auto base_type = static_cast<object_class_type>(evocable >> 16);
+            const int subtype = evocable & 0xffff;
+            const int item = items(false, base_type, subtype, ISPEC_GIFT);
+            if (item != NON_ITEM)
+            {
+                int item_index = item;
+                const bool placed = move_item_to_grid(&item_index, mwhere);
+                if (placed && item_index != NON_ITEM
+                    && env.item[item_index].defined() && you.see_cell(mwhere)
+                    && !feat_eliminates_items(env.grid(mwhere)))
+                {
+                    mprf("%s drops %s.", mons.name(DESC_THE).c_str(),
+                         env.item[item_index].name(DESC_A).c_str());
+                }
+            }
+        }
     }
     else
     {
