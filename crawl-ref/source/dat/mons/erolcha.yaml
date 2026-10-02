@@ -1,4 +1,5 @@
 name: "Erolcha"
+drop_on_death: {chance: 50, item: SPELL_FIREBALL}
 glyph: {char: "O", colour: lightblue}
 flags: [see_invis, speaks, warm_blood, unique, female]
 exp: 867

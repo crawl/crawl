@@ -1,4 +1,5 @@
 name: "Azrael"
+drop_on_death: {chance: 50, item: SPELL_FIREBALL}
 glyph: {char: "R", colour: lightred}
 flags: [flies, speaks, unique, male]
 resists: {poison: 1, fire: 3, cold: -1, damnation: 1}

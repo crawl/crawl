@@ -1,4 +1,5 @@
 name: "Josephina"
+drop_on_death: {chance: 50, item: SPELL_HAUNT}
 glyph: {char: "L", colour: lightblue}
 flags: [see_invis, speaks, unique, female]
 resists: {cold: 3}
