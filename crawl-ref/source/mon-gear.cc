@@ -2650,6 +2650,9 @@ static void _give_unique_drops(monster* mon)
         }
     }
 
+    if (mon->type == MONS_KHUFU && coinflip())
+        mon->props[UNIQUE_EVOCABLE_DROP_KEY] = (OBJ_WANDS << 16) | WAND_DIGGING;
+
     if (mon->type == MONS_MAURICE && coinflip())
         mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_ACQUIREMENT;
     else if (mon->type == MONS_GRINDER && coinflip())
@@ -2670,6 +2673,11 @@ static void _give_unique_drops(monster* mon)
         mon->props[UNIQUE_POTION_DROP_KEY] = POT_INVISIBILITY;
     else if (mon->type == MONS_LOM_LOBON && coinflip())
         mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_ACQUIREMENT;
+    else if (mon->type == MONS_IGNACIO && coinflip())
+        mon->props[UNIQUE_POTION_DROP_KEY] = POT_HASTE;
+
+    if (mon->type == MONS_MENNAS && coinflip())
+        mon->props[UNIQUE_SPELL_PARCHMENT_DROP_KEY] = SPELL_SILENCE;
 
     if (mon->type == MONS_MENKAURE && coinflip())
     {
