@@ -562,8 +562,21 @@ static void _builder_assertions()
                     _set_grd(*ri, DNGN_ENDLESS_SLUDGE);
                 else
                 {
-                    die("invalid map border at (%d,%d): %s", ri->x, ri->y,
-                        dungeon_feature_name(env.grid(*ri)));
+                    string border_vaults;
+                    for (const auto &vp : env.level_vaults)
+                    {
+                        const coord_def end = vp->pos + vp->size;
+                        if (ri->x >= vp->pos.x && ri->x < end.x
+                            && ri->y >= vp->pos.y && ri->y < end.y)
+                        {
+                            if (!border_vaults.empty())
+                                border_vaults += ", ";
+                            border_vaults += vp->map.name;
+                        }
+                    }
+                    die("invalid map border at (%d,%d): %s (vaults: %s)",
+                        ri->x, ri->y, dungeon_feature_name(env.grid(*ri)),
+                        border_vaults.empty() ? "none" : border_vaults.c_str());
                 }
             }
 #endif
