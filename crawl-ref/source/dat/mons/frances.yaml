@@ -1,4 +1,5 @@
 name: "Frances"
+drop_on_death: {chance: 50, item: POT_MIGHT}
 glyph: {char: "@", colour: yellow}
 flags: [see_invis, speaks, warm_blood, unique, female]
 exp: 1518

@@ -9,16 +9,12 @@
 #include "monster-type.h"
 
 constexpr const char* UNIQUE_SCROLL_DROP_KEY = "unique_scroll_drop";
-constexpr const char* UNIQUE_CURARE_DROP_KEY = "unique_curare_drop";
-constexpr const char* UNIQUE_LARGE_ROCK_DROP_KEY = "unique_large_rock_drop";
 constexpr const char* UNIQUE_POTION_DROP_KEY = "unique_potion_drop";
 constexpr const char* PEREGRINE_INVIS_POTIONS_KEY = "peregrine_invis_potions";
 constexpr const char* UNIQUE_JEWELLERY_DROP_KEY = "unique_jewellery_drop";
-constexpr const char* UNIQUE_ARMOUR_DROP_KEY = "unique_armour_drop";
 constexpr const char* UNIQUE_PARCHMENT_DROP_KEY = "unique_parchment_drop";
-constexpr const char* UNIQUE_SPELL_PARCHMENT_DROP_KEY =
-    "unique_spell_parchment_drop";
 constexpr const char* UNIQUE_EVOCABLE_DROP_KEY = "unique_evocable_drop";
+constexpr const char* UNIQUE_DATA_DROP_KEY = "unique_data_drop";
 
 class monster;
 

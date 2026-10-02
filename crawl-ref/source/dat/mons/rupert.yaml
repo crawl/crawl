@@ -1,4 +1,5 @@
 name: "Rupert"
+drop_on_death: {chance: 50, item: RING_STRENGTH}
 glyph: {char: "@", colour: lightred}
 flags: [speaks, warm_blood, unique, male]
 exp: 1862

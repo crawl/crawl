@@ -1,4 +1,5 @@
 name: "Crazy Yiuf"
+drop_on_death: {chance: 50, item: POT_MUTATION}
 glyph: {char: "ğ", colour: colour_undef}
 flags: [speaks, warm_blood, unique, male]
 exp: 41

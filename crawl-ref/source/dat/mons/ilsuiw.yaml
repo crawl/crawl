@@ -1,4 +1,5 @@
 name: "Ilsuiw"
+drop_on_death: {chance: 50, item: POT_MAGIC}
 glyph: {char: "m", colour: lightgreen}
 flags: [speaks, warm_blood, unique, female]
 exp: 1338

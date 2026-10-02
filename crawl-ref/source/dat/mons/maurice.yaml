@@ -1,4 +1,5 @@
 name: "Maurice"
+drop_on_death: {chance: 50, item: SCR_ACQUIREMENT}
 glyph: {char: "f", colour: lightgreen}
 flags: [speaks, warm_blood, unique, fast_regen, male, no_skeleton, always_wand]
 exp: 526

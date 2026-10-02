@@ -1,4 +1,5 @@
 name: "Menkaure"
+drop_on_death: {chance: 50, items: [SCR_TORMENT, RING_POSITIVE_ENERGY]}
 glyph: {char: "M", colour: magenta}
 flags: [see_invis, speaks, unique, male]
 resists: {fire: -1, cold: 1}

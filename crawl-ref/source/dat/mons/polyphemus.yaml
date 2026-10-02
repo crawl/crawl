@@ -1,4 +1,5 @@
 name: "Polyphemus"
+drop_on_death: {chance: 50, item: MI_LARGE_ROCK, quantity: 3}
 glyph: {char: "Č", colour: blue}
 flags: [speaks, warm_blood, unique, male]
 exp: 1540

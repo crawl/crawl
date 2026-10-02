@@ -1,4 +1,5 @@
 name: "Aizul"
+drop_on_death: {chance: 50, item: POT_HASTE}
 glyph: {char: "S", colour: lightmagenta}
 flags: [see_invis, speaks, warm_blood, unique, female]
 resists: {poison: 1}

@@ -1,4 +1,5 @@
 name: "Rusk"
+drop_on_death: {chance: 50, item: POT_MIGHT}
 glyph: {char: "Y", colour: lightred}
 flags: [speaks, warm_blood, herd, unique, male]
 exp: 1050

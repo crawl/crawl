@@ -1,4 +1,5 @@
 name: "Scave the Devourer of Slime"
+drop_on_death: {chance: 50, item: SPELL_CORROSIVE_BOLT}
 enum: scave
 glyph: {char: "X", colour: lightcyan}
 flags: [see_invis, unique, no_skeleton]

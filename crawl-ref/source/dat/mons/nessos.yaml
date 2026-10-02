@@ -1,4 +1,5 @@
 name: "Nessos"
+drop_on_death: {chance: 50, item: MI_DART, quantity: 3, brand: SPMSL_CURARE}
 glyph: {char: "c", colour: magenta}
 flags: [speaks, warm_blood, unique, archer, gender_neutral]
 exp: 1043

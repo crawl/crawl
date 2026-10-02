@@ -1,4 +1,5 @@
 name: "Monkey King"
+drop_on_death: {chance: 50, item: SCR_SUMMONING}
 glyph: {char: "A", colour: lightgreen}
 flags: [warm_blood, unique, male]
 exp: 540

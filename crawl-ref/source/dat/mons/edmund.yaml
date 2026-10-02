@@ -1,4 +1,5 @@
 name: "Edmund"
+drop_on_death: {chance: 50, item: POT_MIGHT}
 glyph: {char: "@", colour: red}
 flags: [fighter, speaks, warm_blood, unique, male]
 exp: 165

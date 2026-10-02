@@ -1,4 +1,5 @@
 name: "Mara"
+drop_on_death: {chance: 50, item: MISC_PHANTOM_MIRROR}
 glyph: {char: "R", colour: lightmagenta}
 flags: [see_invis, speaks, unique, male, two_weapons]
 resists: {poison: 1, fire: 2}

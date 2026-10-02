@@ -21,6 +21,7 @@
 #include "makeitem.h"
 #include "misc.h" // december_holidays
 #include "mon-place.h"
+#include "mon-util.h"
 #include "mpr.h"
 #include "randbook.h"
 #include "religion.h" // upgrade_hepliaklqana_weapon
@@ -2656,139 +2657,12 @@ static void _give_unique_drops(monster* mon)
         }
     }
 
-    if (mon->type == MONS_KHUFU && coinflip())
-        mon->props[UNIQUE_EVOCABLE_DROP_KEY] = (OBJ_WANDS << 16) | WAND_DIGGING;
-
-    if (mon->type == MONS_KIRKE && coinflip())
-        mon->props[UNIQUE_EVOCABLE_DROP_KEY] = (OBJ_WANDS << 16) | WAND_POLYMORPH;
-
-    if (mon->type == MONS_MAURICE && coinflip())
-        mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_ACQUIREMENT;
-    else if (mon->type == MONS_GRINDER && coinflip())
-        mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_TORMENT;
-    else if (mon->type == MONS_MONKEY_KING && coinflip())
-        mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_SUMMONING;
-    else if (mon->type == MONS_SIGMUND && coinflip())
-        mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_BLESS_ITEM;
-    else if (mon->type == MONS_LOUISE && coinflip())
-        mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_BLINKING;
-    else if (mon->type == MONS_IJYB && coinflip())
-        mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_BLINKING;
-    else if (mon->type == MONS_ROBIN && coinflip())
-        mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_SUMMONING;
-    else if (mon->type == MONS_ERESHKIGAL && coinflip())
-        mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_SILENCE;
-    else if (mon->type == MONS_GLOORX_VLOQ && coinflip())
-        mon->props[UNIQUE_POTION_DROP_KEY] = POT_INVISIBILITY;
-    else if (mon->type == MONS_LOM_LOBON && coinflip())
-        mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_ACQUIREMENT;
-    else if (mon->type == MONS_IGNACIO && coinflip())
-        mon->props[UNIQUE_POTION_DROP_KEY] = POT_HASTE;
-
-    if (mon->type == MONS_AIZUL && coinflip())
-        mon->props[UNIQUE_POTION_DROP_KEY] = POT_HASTE;
-
-    if (mon->type == MONS_MENNAS && coinflip())
-        mon->props[UNIQUE_SPELL_PARCHMENT_DROP_KEY] = SPELL_SILENCE;
-
-    if (mon->type == MONS_MENKAURE && coinflip())
-    {
-        if (coinflip())
-            mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_TORMENT;
-        else
-            mon->props[UNIQUE_JEWELLERY_DROP_KEY] = RING_POSITIVE_ENERGY;
-    }
-
-    if (mon->type == MONS_KATINBOO && coinflip())
-        mon->props[UNIQUE_CURARE_DROP_KEY] = true;
-
-    if (mon->type == MONS_ASTERION && coinflip())
-        mon->props[UNIQUE_POTION_DROP_KEY] = POT_MIGHT;
-
-    if (mon->type == MONS_ILSUIW && coinflip())
-        mon->props[UNIQUE_POTION_DROP_KEY] = POT_MAGIC;
-
-    if (mon->type == MONS_POLYPHEMUS && coinflip())
-        mon->props[UNIQUE_LARGE_ROCK_DROP_KEY] = true;
-
-    if (mon->type == MONS_NESSOS && coinflip())
-        mon->props[UNIQUE_CURARE_DROP_KEY] = true;
-
-    if (mon->type == MONS_SAINT_ROKA && coinflip())
-        mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_SUMMONING;
-
-    if (mon->type == MONS_SOJOBO && coinflip())
-        mon->props[UNIQUE_EVOCABLE_DROP_KEY] =
-            (OBJ_MISCELLANY << 16) | MISC_LIGHTNING_ROD;
-
-    if (mon->type == MONS_MARA && coinflip())
-        mon->props[UNIQUE_EVOCABLE_DROP_KEY] =
-            (OBJ_MISCELLANY << 16) | MISC_PHANTOM_MIRROR;
-
-    if (mon->type == MONS_XAKKRIXIS && coinflip())
-        mon->props[UNIQUE_EVOCABLE_DROP_KEY] =
-            (OBJ_MISCELLANY << 16) | MISC_CONDENSER_VANE;
-
-    if (mon->type == MONS_RUSK && coinflip())
-        mon->props[UNIQUE_POTION_DROP_KEY] = POT_MIGHT;
-
-    if (mon->type == MONS_ANTAEUS && coinflip())
-        mon->props[UNIQUE_POTION_DROP_KEY] = POT_RESISTANCE;
-
-    if (mon->type == MONS_OSKAR && coinflip())
-        mon->props[UNIQUE_POTION_DROP_KEY] = POT_CANCELLATION;
-
-    if (mon->type == MONS_AGNES && coinflip())
-        mon->props[UNIQUE_POTION_DROP_KEY] = POT_HASTE;
-
-    if (mon->type == MONS_FRANCES && coinflip())
-        mon->props[UNIQUE_POTION_DROP_KEY] = POT_MIGHT;
-
-    if (mon->type == MONS_RUPERT && coinflip())
-        mon->props[UNIQUE_JEWELLERY_DROP_KEY] = RING_STRENGTH;
-
-    if (mon->type == MONS_BORIS && coinflip())
-        mon->props[UNIQUE_POTION_DROP_KEY] = POT_BRILLIANCE;
-
-    if (mon->type == MONS_NATASHA && coinflip())
-        mon->props[UNIQUE_POTION_DROP_KEY] = POT_MAGIC;
-
-    if (mon->type == MONS_CRAZY_YIUF && coinflip())
-        mon->props[UNIQUE_POTION_DROP_KEY] = POT_MUTATION;
-
-    if (mon->type == MONS_MNOLEG && coinflip())
-        mon->props[UNIQUE_POTION_DROP_KEY] = POT_MUTATION;
-
-    if (mon->type == MONS_EDMUND && coinflip())
-        mon->props[UNIQUE_POTION_DROP_KEY] = POT_MIGHT;
-
     // Peregrine carries two invisibility potions to use in combat.
     if (mon->type == MONS_PEREGRINE)
     {
         mon->props[PEREGRINE_INVIS_POTIONS_KEY] = 2;
         if (coinflip())
             mon->props[UNIQUE_POTION_DROP_KEY] = POT_INVISIBILITY;
-    }
-
-    if (mons_species(mon->type) == MONS_SERPENT_OF_HELL && coinflip())
-    {
-        switch (mon->type)
-        {
-        case MONS_SERPENT_OF_HELL:
-            mon->props[UNIQUE_ARMOUR_DROP_KEY] = ARM_FIRE_DRAGON_ARMOUR;
-            break;
-        case MONS_SERPENT_OF_HELL_COCYTUS:
-            mon->props[UNIQUE_ARMOUR_DROP_KEY] = ARM_ICE_DRAGON_ARMOUR;
-            break;
-        case MONS_SERPENT_OF_HELL_DIS:
-            mon->props[UNIQUE_ARMOUR_DROP_KEY] = ARM_QUICKSILVER_DRAGON_ARMOUR;
-            break;
-        case MONS_SERPENT_OF_HELL_TARTARUS:
-            mon->props[UNIQUE_ARMOUR_DROP_KEY] = ARM_SHADOW_DRAGON_ARMOUR;
-            break;
-        default:
-            break;
-        }
     }
 
 }
@@ -2807,6 +2681,10 @@ void give_item(monster *mons, int level_number)
     _give_extra_equipment(mons, 1 + level_number / 2);
     _give_book(mons);
     _give_unique_drops(mons);
+
+    const mon_death_drop &drop = get_monster_data(mons->type)->death_drop;
+    if (drop.chance > 0 && x_chance_in_y(drop.chance, 100))
+        mons->props[UNIQUE_DATA_DROP_KEY] = true;
 
     if (mons->type == MONS_ORC_APOSTLE)
         give_apostle_equipment(mons);

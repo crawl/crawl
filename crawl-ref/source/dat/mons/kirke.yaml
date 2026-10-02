@@ -1,4 +1,5 @@
 name: "Kirke"
+drop_on_death: {chance: 50, item: WAND_POLYMORPH}
 glyph: {char: "@", colour: lightblue}
 flags: [see_invis, speaks, warm_blood, unique, female]
 exp: 1439

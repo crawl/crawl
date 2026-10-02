@@ -1,4 +1,5 @@
 name: "Serpent of Hell"
+drop_on_death: {chance: 50, item: ARM_FIRE_DRAGON_ARMOUR}
 glyph: {char: "D", colour: etc_fire}
 flags: [name_the, crash_doors, flies, see_invis, unique, tall_tile]
 resists: {poison: 1, fire: 3}

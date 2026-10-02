@@ -1,4 +1,5 @@
 name: "Antaeus"
+drop_on_death: {chance: 50, item: POT_RESISTANCE}
 glyph: {char: "Č", colour: white}
 flags: [fighter, see_invis, speaks, warm_blood, unique, male, tall_tile]
 resists: {elec: 3, fire: -1, cold: 2}

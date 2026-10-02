@@ -1,4 +1,5 @@
 name: "Xak'krixis"
+drop_on_death: {chance: 50, item: MISC_CONDENSER_VANE}
 enum: xakkrixis
 glyph: {char: "B", colour: lightgreen}
 flags: [see_invis, speaks, unique, warm_blood, no_skeleton, gender_neutral, burrows]
