@@ -801,7 +801,7 @@ void draw_ring_animation(const coord_def& center, int radius, colour_t colour,
                 colour_t draw_colour = colour_alt != BLACK ? coinflip() ? colour
                                                                         : colour_alt
                                                            : colour;
-                flash_tile(*di, draw_colour, 0, tile);
+                flash_tile(*di, element_colour(draw_colour, *di), 0, tile);
             }
         }
 
