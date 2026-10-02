@@ -4,7 +4,7 @@ flags: [warm_blood, herd, tall_tile]
 exp: 222
 will: 30
 attacks:
- - {type: gore, flavour: reach, damage: 10}
+ - {type: gore, damage: 10, reach: 2}
  - {type: kick, flavour: trample, damage: 12}
 hd: 9
 hp_10x: 305
