@@ -1,4 +1,5 @@
 name: "Maggie"
+drop_on_death: {chance: 50, item: POT_MIGHT}
 glyph: {char: "@", colour: lightred}
 flags: [speaks, warm_blood, unique, female]
 exp: 399

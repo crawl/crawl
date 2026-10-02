@@ -1,4 +1,5 @@
 name: "Frederick"
+drop_on_death: {chance: 50, item: POT_BRILLIANCE}
 glyph: {char: "@", colour: green}
 flags: [fighter, see_invis, speaks, warm_blood, unique, male]
 exp: 5151

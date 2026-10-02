@@ -1,4 +1,5 @@
 name: "Nergalle"
+drop_on_death: {chance: 50, item: SPELL_ANIMATE_DEAD}
 glyph: {char: "o", colour: white}
 flags: [see_invis, speaks, warm_blood, unique, female]
 exp: 779
