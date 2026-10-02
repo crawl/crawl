@@ -1,4 +1,5 @@
 name: "Sojobo"
+drop_on_death: {chance: 50, item: MISC_LIGHTNING_ROD}
 glyph: {char: "Q", colour: lightgreen}
 flags: [flies, fighter, see_invis, speaks, warm_blood, unique, female]
 exp: 3464

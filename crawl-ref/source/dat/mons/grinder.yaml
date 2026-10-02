@@ -1,4 +1,5 @@
 name: "Grinder"
+drop_on_death: {chance: 50, item: SCR_TORMENT}
 glyph: {char: "5", colour: blue}
 flags: [no_ht_wand, speaks, unique, female]
 resists: {poison: 1, cold: 2}

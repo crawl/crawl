@@ -1,4 +1,5 @@
 name: "Mennas"
+drop_on_death: {chance: 50, item: SPELL_SILENCE}
 glyph: {char: "A", colour: lightcyan}
 flags: [flies, fighter, speaks, unique, male]
 resists: {elec: 1, poison: 1}

@@ -1,4 +1,5 @@
 name: "Agnes"
+drop_on_death: {chance: 50, item: POT_HASTE}
 glyph: {char: "i", colour: lightcyan}
 flags: [fighter, see_invis, speaks, warm_blood, unique, female]
 exp: 1441

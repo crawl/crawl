@@ -52,6 +52,7 @@
 #include "mon-cast.h"
 #include "mon-explode.h"
 #include "mon-gear.h"
+#include "mon-util.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-poly.h"
@@ -3611,6 +3612,34 @@ item_def* monster_die(monster& mons, killer_type killer,
         unwind_var<int> fakehp(mons.hit_points, 1);
         monster_drop_things(&mons, YOU_KILL(killer) || pet_kill);
 
+        if (mons.props.exists(UNIQUE_DATA_DROP_KEY))
+        {
+            const mon_death_drop &drop = get_monster_data(mons.type)->death_drop;
+            const mon_death_drop_item &choice = drop.options[
+                random2(drop.option_count)];
+            const int item = items(false,
+                static_cast<object_class_type>(choice.base_type),
+                choice.sub_type, ISPEC_GIFT);
+            if (item != NON_ITEM)
+            {
+                item_def &def = env.item[item];
+                def.quantity = choice.quantity;
+                if (choice.plus >= 0)
+                    def.plus = choice.plus;
+                if (choice.brand >= 0)
+                    set_item_ego_type(def, def.base_type, choice.brand);
+                int item_index = item;
+                const bool placed = move_item_to_grid(&item_index, mwhere);
+                if (placed && item_index != NON_ITEM
+                    && env.item[item_index].defined() && you.see_cell(mwhere)
+                    && !feat_eliminates_items(env.grid(mwhere)))
+                {
+                    mprf("%s drops %s.", mons.name(DESC_THE).c_str(),
+                         env.item[item_index].name(DESC_A).c_str());
+                }
+            }
+        }
+
         if (mons.props.exists(UNIQUE_SCROLL_DROP_KEY))
         {
             const int scroll = items(false, OBJ_SCROLLS,
@@ -3618,46 +3647,6 @@ item_def* monster_die(monster& mons, killer_type killer,
             if (scroll != NON_ITEM)
             {
                 int item_index = scroll;
-                const bool placed = move_item_to_grid(&item_index, mwhere);
-                if (placed && item_index != NON_ITEM
-                    && env.item[item_index].defined() && you.see_cell(mwhere)
-                    && !feat_eliminates_items(env.grid(mwhere)))
-                {
-                    mprf("%s drops %s.", mons.name(DESC_THE).c_str(),
-                         env.item[item_index].name(DESC_A).c_str());
-                }
-            }
-        }
-
-        if (mons.props.exists(UNIQUE_CURARE_DROP_KEY))
-        {
-            const int darts = items(false, OBJ_MISSILES, MI_DART, ISPEC_GIFT);
-            if (darts != NON_ITEM)
-            {
-                item_def& item = env.item[darts];
-                set_item_ego_type(item, OBJ_MISSILES, SPMSL_CURARE);
-                item.quantity = 3;
-                int item_index = darts;
-                const bool placed = move_item_to_grid(&item_index, mwhere);
-                if (placed && item_index != NON_ITEM
-                    && env.item[item_index].defined() && you.see_cell(mwhere)
-                    && !feat_eliminates_items(env.grid(mwhere)))
-                {
-                    mprf("%s drops %s.", mons.name(DESC_THE).c_str(),
-                         env.item[item_index].name(DESC_A).c_str());
-                }
-            }
-        }
-
-        if (mons.props.exists(UNIQUE_LARGE_ROCK_DROP_KEY))
-        {
-            const int rocks = items(false, OBJ_MISSILES, MI_LARGE_ROCK,
-                                    ISPEC_GIFT);
-            if (rocks != NON_ITEM)
-            {
-                item_def& item = env.item[rocks];
-                item.quantity = 3;
-                int item_index = rocks;
                 const bool placed = move_item_to_grid(&item_index, mwhere);
                 if (placed && item_index != NON_ITEM
                     && env.item[item_index].defined() && you.see_cell(mwhere)
@@ -3705,24 +3694,6 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
         }
 
-        if (mons.props.exists(UNIQUE_ARMOUR_DROP_KEY))
-        {
-            const int armour = items(false, OBJ_ARMOUR,
-                mons.props[UNIQUE_ARMOUR_DROP_KEY].get_int(), ISPEC_GIFT);
-            if (armour != NON_ITEM)
-            {
-                int item_index = armour;
-                const bool placed = move_item_to_grid(&item_index, mwhere);
-                if (placed && item_index != NON_ITEM
-                    && env.item[item_index].defined() && you.see_cell(mwhere)
-                    && !feat_eliminates_items(env.grid(mwhere)))
-                {
-                    mprf("%s drops %s.", mons.name(DESC_THE).c_str(),
-                         env.item[item_index].name(DESC_A).c_str());
-                }
-            }
-        }
-
         if (mons.props.exists(UNIQUE_PARCHMENT_DROP_KEY))
         {
             const int parchment = items(false, OBJ_BOOKS, BOOK_PARCHMENT,
@@ -3730,26 +3701,6 @@ item_def* monster_die(monster& mons, killer_type killer,
             if (parchment != NON_ITEM)
             {
                 env.item[parchment].plus = SPELL_CORROSIVE_BOLT;
-                int item_index = parchment;
-                const bool placed = move_item_to_grid(&item_index, mwhere);
-                if (placed && item_index != NON_ITEM
-                    && env.item[item_index].defined() && you.see_cell(mwhere)
-                    && !feat_eliminates_items(env.grid(mwhere)))
-                {
-                    mprf("%s drops %s.", mons.name(DESC_THE).c_str(),
-                         env.item[item_index].name(DESC_A).c_str());
-                }
-            }
-        }
-
-        if (mons.props.exists(UNIQUE_SPELL_PARCHMENT_DROP_KEY))
-        {
-            const int parchment = items(false, OBJ_BOOKS, BOOK_PARCHMENT,
-                                        ISPEC_GIFT);
-            if (parchment != NON_ITEM)
-            {
-                env.item[parchment].plus =
-                    mons.props[UNIQUE_SPELL_PARCHMENT_DROP_KEY].get_int();
                 int item_index = parchment;
                 const bool placed = move_item_to_grid(&item_index, mwhere);
                 if (placed && item_index != NON_ITEM

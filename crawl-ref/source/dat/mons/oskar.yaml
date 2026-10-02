@@ -1,4 +1,5 @@
 name: "Oskar"
+drop_on_death: {chance: 50, item: POT_CANCELLATION}
 glyph: {char: "J", colour: red}
 flags: [eat_doors, speaks, see_invis, unblindable, amorphous, acid_splash, no_skeleton, unique, male]
 resists: {poison: 1, corr: 3}

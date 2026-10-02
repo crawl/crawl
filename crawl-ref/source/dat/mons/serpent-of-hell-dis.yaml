@@ -1,4 +1,5 @@
 name: "Serpent of Hell"
+drop_on_death: {chance: 50, item: ARM_QUICKSILVER_DRAGON_ARMOUR}
 enum: serpent_of_hell_dis
 glyph: {char: "Ď", colour: etc_iron}
 flags: [name_the, crash_doors, see_invis, unique, tall_tile]

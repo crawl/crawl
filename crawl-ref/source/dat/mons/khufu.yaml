@@ -1,4 +1,5 @@
 name: "Khufu"
+drop_on_death: {chance: 50, item: WAND_DIGGING}
 glyph: {char: "M", colour: lightred}
 flags: [see_invis, speaks, unique, male]
 resists: {elec: 1, cold: 1}

@@ -1,4 +1,5 @@
 name: "Robin"
+drop_on_death: {chance: 50, item: SCR_SUMMONING}
 glyph: {char: "g", colour: lightcyan}
 flags: [speaks, warm_blood, unique, gender_neutral]
 exp: 15

@@ -1,4 +1,5 @@
 name: "Ijyb"
+drop_on_death: {chance: 50, item: SCR_BLINKING}
 glyph: {char: "g", colour: blue}
 flags: [speaks, warm_blood, unique, female, always_wand]
 exp: 36

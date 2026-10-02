@@ -8,5 +8,5 @@
     {ac}, {ev}, {spells}, {has_corpse}, {shout},
     {intelligence}, {habitat}, {speed}, {energy_desc},
     {uses}, {size}, {shape}, {god},
-    {{ {tile_desc} }}, {tile_corpse}
+    {{ {tile_desc} }}, {tile_corpse}, {drop_on_death}
 }},

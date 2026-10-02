@@ -1,4 +1,5 @@
 name: "Asterion"
+drop_on_death: {chance: 50, item: POT_MIGHT}
 glyph: {char: "H", colour: lightblue}
 flags: [see_invis, speaks, warm_blood, unique, male]
 exp: 1701

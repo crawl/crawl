@@ -1,4 +1,5 @@
 name: "Saint Roka"
+drop_on_death: {chance: 50, item: SCR_SUMMONING}
 glyph: {char: "o", colour: lightblue}
 flags: [fighter, speaks, warm_blood, unique, gender_neutral]
 exp: 2900

@@ -155,6 +155,85 @@ def parse_num(s, min, max):
         raise ValueError("isn't between %s and %s" % (min, max))
     return s
 
+class DeathDropItem:
+    def __init__(self, base_type=0, sub_type=0, quantity=0, plus=-1,
+                 brand=-1):
+        self.base_type = base_type
+        self.sub_type = sub_type
+        self.quantity = quantity
+        self.plus = plus
+        self.brand = brand
+
+    def __str__(self):
+        return "{%s, %s, %d, %s, %s}" % (
+            self.base_type, self.sub_type, self.quantity, self.plus,
+            self.brand)
+
+class DeathDrop:
+    def __init__(self, chance=0, options=None):
+        self.chance = chance
+        self.options = options or [DeathDropItem(), DeathDropItem()]
+        self.option_count = 0 if options is None else len(options)
+
+    def __str__(self):
+        return "{%d, %d, {%s, %s}}" % (
+            self.chance, self.option_count, self.options[0], self.options[1])
+
+DROP_ITEM_PREFIXES = {
+    'POT_': 'OBJ_POTIONS',
+    'SCR_': 'OBJ_SCROLLS',
+    'WAND_': 'OBJ_WANDS',
+    'MISC_': 'OBJ_MISCELLANY',
+    'RING_': 'OBJ_JEWELLERY',
+    'ARM_': 'OBJ_ARMOUR',
+    'MI_': 'OBJ_MISSILES',
+    'WPN_': 'OBJ_WEAPONS',
+    'BOOK_': 'OBJ_BOOKS',
+}
+
+def parse_death_drop(s):
+    if not isinstance(s, dict) or 'chance' not in s:
+        raise ValueError("expected a 'chance' field")
+    if ('item' in s) == ('items' in s):
+        raise ValueError("expected exactly one of 'item' or 'items'")
+    if set(s) - {'chance', 'item', 'items', 'quantity', 'brand'}:
+        raise ValueError("unexpected death drop field")
+
+    chance = parse_num(s['chance'], 1, 100)
+    quantity = parse_num(s.get('quantity', 1), 1, 99)
+    names = s.get('items', [s.get('item')])
+    if not isinstance(names, list) or not 1 <= len(names) <= 2:
+        raise ValueError("'items' must have one or two entries")
+
+    options = []
+    for name in names:
+        item = parse_str(name)
+        plus = -1
+        brand = -1
+        if item.startswith('SPELL_'):
+            base_type = 'OBJ_BOOKS'
+            sub_type = 'BOOK_PARCHMENT'
+            plus = item
+        else:
+            prefix = next((p for p in DROP_ITEM_PREFIXES
+                           if item.startswith(p)), None)
+            if prefix is None:
+                raise ValueError("unknown item '%s'" % item)
+            base_type = DROP_ITEM_PREFIXES[prefix]
+            sub_type = item
+
+        if 'brand' in s:
+            if (base_type != 'OBJ_MISSILES'
+                    or s['brand'] != 'SPMSL_CURARE'):
+                raise ValueError("unsupported death drop brand")
+            brand = s['brand']
+        options.append(DeathDropItem(base_type, sub_type, quantity, plus,
+                                     brand))
+
+    if len(options) == 1:
+        options.append(DeathDropItem())
+    return DeathDrop(chance, options)
+
 class Glyph:
     def __init__(self, char, colour):
         self.char = char;
@@ -375,6 +454,7 @@ keyfns = {
     'tile': Field(parse_str),
     'tile_variance': Field(parse_tile_variants),
     'corpse_tile': Field(parse_str),
+    'drop_on_death': Field(parse_death_drop),
 }
 
 defaults = {
@@ -390,6 +470,7 @@ defaults = {
     'uses': 'MONUSE_NOTHING',
     'has_corpse': 'false',
     'god': 'GOD_NO_GOD',
+    'drop_on_death': DeathDrop(),
 }
 
 def load_template(templatedir, name):

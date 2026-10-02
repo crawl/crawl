@@ -1,4 +1,5 @@
 name: "Katinboo"
+drop_on_death: {chance: 50, item: MI_DART, quantity: 3, brand: SPMSL_CURARE}
 glyph: {char: "a", colour: lightmagenta}
 flags: [speaks, warm_blood, unique, female]
 exp: 1250
