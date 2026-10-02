@@ -2518,7 +2518,8 @@ bool targeter_marionette::valid_aim(coord_def a)
     if (mons->has_ench(ENCH_SHADOWLESS))
         return notify_fail("Their shadow is too faded to take hold of.");
 
-    if (mons->is_summoned() && !mons->is_illusion())
+    // Only if we know that it's summoned. (So not mara clones)
+    if (monster_info(mons).is(MB_SUMMONED))
         return notify_fail("A summoned shadow is too ephemeral to take hold of.");
 
     if (mons->props[DITHMENOS_MARIONETTE_SPELLS_KEY].get_int() <= 0)
@@ -2939,6 +2940,29 @@ bool targeter_pacify::valid_aim(coord_def a)
     if (mon && you.aware_of(*mon))
     {
         string reason = unpacifiable_reason(*mon);
+        if (!reason.empty())
+            return notify_fail(reason);
+    }
+
+    // Either a known-valid monster or an empty tile (which might contain an
+    // invisible monster).
+    return true;
+}
+
+targeter_duel::targeter_duel()
+    : targeter_smite(&you, LOS_RADIUS)
+{
+}
+
+bool targeter_duel::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    const monster* mon = monster_at(a);
+    if (mon && you.aware_of(*mon))
+    {
+        string reason = unduelable_reason(*mon);
         if (!reason.empty())
             return notify_fail(reason);
     }

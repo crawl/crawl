@@ -244,7 +244,8 @@ spret wu_jian_wall_jump_ability();
 void wu_jian_heavenly_storm();
 
 bool okawaru_duel_active();
-spret okawaru_duel(const coord_def& target, bool fail);
+string unduelable_reason(const monster& mon);
+void okawaru_duel(const coord_def& target);
 void okawaru_duel_healing();
 void okawaru_end_duel(bool kicked_out = false);
 void okawaru_remove_heroism();

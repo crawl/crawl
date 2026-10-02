@@ -3191,16 +3191,19 @@ string dithmenos_cannot_marionette_reason()
 {
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!you.can_see(**mi) || mi->wont_attack() || mi->is_firewood())
-            continue;
-
-        if (!mi->has_ench(ENCH_SHADOWLESS))
+        if (!you.can_see(**mi)
+            || mi->wont_attack()
+            || mi->is_firewood()
+            || monster_info(*mi).is(MB_SUMMONED)
+            || mi->has_ench(ENCH_SHADOWLESS))
         {
-            for (const mon_spell_slot slot : mi->spells)
-            {
-                if (valid_marionette_spell(slot.spell))
-                    return "";
-            }
+            continue;
+        }
+
+        for (const mon_spell_slot slot : mi->spells)
+        {
+            if (valid_marionette_spell(slot.spell))
+                return "";
         }
     }
 
@@ -3221,6 +3224,15 @@ spret dithmenos_marionette(monster& target, bool fail)
         return spret::abort;
 
     fail_check();
+
+    // You can target mara illusions but it won't work since they are summons
+    if (target.is_illusion())
+    {
+        mprf("You try to grasp %s shadow with your own but %s is an illusion!",
+          target.name(DESC_ITS).c_str(), target.name(DESC_THE).c_str());
+        // We learned something today
+        return spret::success;
+    }
 
     mprf("You grasp %s shadow with your own and put on a performance!",
           target.name(DESC_ITS).c_str());
@@ -6514,48 +6526,54 @@ bool okawaru_duel_active()
     return false;
 }
 
-spret okawaru_duel(const coord_def& target, bool fail)
+string unduelable_reason(const monster& mons)
+{
+    if (mons.is_peripheral()
+        || !(mons_habitat(mons) & HT_DRY_LAND)
+        || mons.wont_attack()
+        || mons.type == MONS_BOUNDLESS_TESSERACT
+        // You can attempt to duel summons but only if we don't know that
+        // they are summons. Mara Illusions, for example.
+        || monster_info(&mons).is(MB_SUMMONED))
+    {
+        return "You cannot duel that!";
+    }
+
+    if (mons_threat_level(mons) < MTHRT_TOUGH)
+    {
+        return make_stringf("%s is not worthy to be dueled!",
+                            mons.name(DESC_THE).c_str());
+    }
+
+    return "";
+}
+
+void okawaru_duel(const coord_def& target)
 {
     monster* mons = monster_at(target);
-    if (!mons || !you.can_see(*mons))
+
+    // Fishing for an invisible monster and failed to find one.
+    if (!mons)
     {
-        mpr("You can see no monster there to duel!");
-        return spret::abort;
+        canned_msg(MSG_NOTHING_THERE);
+        return;
     }
 
-    if (mons->is_peripheral()
-        || !(mons_habitat(*mons) & HT_DRY_LAND)
-        || mons->wont_attack()
-        || mons->type == MONS_BOUNDLESS_TESSERACT)
+    const string unreason = unduelable_reason(*mons);
+    if (!unreason.empty())
     {
-        mpr("You cannot duel that!");
-        return spret::abort;
+        mpr(unreason);
+        return;
     }
 
-    if (mons_threat_level(*mons) < MTHRT_TOUGH)
-    {
-        simple_monster_message(*mons, " is not worthy to be dueled!");
-        return spret::abort;
-    }
 
     if (mons->is_illusion())
     {
-        fail_check();
         mprf("You challenge %s to single combat, but %s is merely a clone!",
              mons->name(DESC_THE).c_str(),
              mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
-        // Still costs a turn to gain the information.
-        return spret::success;
+        return;
     }
-    // Check this after everything else so as not to waste a turn when trying
-    // to duel a clone that's already invalid to be dueled for other reasons.
-    else if (mons->is_summoned())
-    {
-        mpr("You cannot duel that!");
-        return spret::abort;
-    }
-
-    fail_check();
 
     mprf("You enter into single combat with %s!",
          mons->name(DESC_THE).c_str());
@@ -6576,7 +6594,7 @@ spret okawaru_duel(const coord_def& target, bool fail)
     stop_delay(true);
     down_stairs(DNGN_ENTER_ARENA);
 
-    return spret::success;
+    return;
 }
 
 void okawaru_duel_healing()
