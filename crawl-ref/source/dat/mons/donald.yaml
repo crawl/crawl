@@ -1,4 +1,5 @@
 name: "Donald"
+drop_on_death: {chance: 50, item: POT_HEAL_WOUNDS}
 glyph: {char: "@", colour: blue}
 flags: [fighter, speaks, warm_blood, unique, male]
 exp: 1374

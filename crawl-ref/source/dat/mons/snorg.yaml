@@ -1,4 +1,5 @@
 name: "Snorg"
+drop_on_death: {chance: 50, item: POT_BERSERK_RAGE}
 glyph: {char: "T", colour: lightgreen}
 flags: [speaks, warm_blood, unique, fast_regen, female]
 exp: 946
