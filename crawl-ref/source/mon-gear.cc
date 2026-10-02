@@ -2696,6 +2696,22 @@ static void _give_unique_drops(monster* mon)
     if (mon->type == MONS_KATINBOO && coinflip())
         mon->props[UNIQUE_CURARE_DROP_KEY] = true;
 
+    if (mon->type == MONS_ASTERION && coinflip())
+        mon->props[UNIQUE_POTION_DROP_KEY] = POT_MIGHT;
+
+    if (mon->type == MONS_ILSUIW && coinflip())
+        mon->props[UNIQUE_POTION_DROP_KEY] = POT_MAGIC;
+
+    if (mon->type == MONS_POLYPHEMUS && coinflip())
+        mon->props[UNIQUE_LARGE_ROCK_DROP_KEY] = true;
+
+    if (mon->type == MONS_SAINT_ROKA && coinflip())
+        mon->props[UNIQUE_SCROLL_DROP_KEY] = SCR_SUMMONING;
+
+    if (mon->type == MONS_SOJOBO && coinflip())
+        mon->props[UNIQUE_EVOCABLE_DROP_KEY] =
+            (OBJ_MISCELLANY << 16) | MISC_LIGHTNING_ROD;
+
     if (mon->type == MONS_RUSK && coinflip())
         mon->props[UNIQUE_POTION_DROP_KEY] = POT_MIGHT;
 

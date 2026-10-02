@@ -3649,6 +3649,26 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
         }
 
+        if (mons.props.exists(UNIQUE_LARGE_ROCK_DROP_KEY))
+        {
+            const int rocks = items(false, OBJ_MISSILES, MI_LARGE_ROCK,
+                                    ISPEC_GIFT);
+            if (rocks != NON_ITEM)
+            {
+                item_def& item = env.item[rocks];
+                item.quantity = 3;
+                int item_index = rocks;
+                const bool placed = move_item_to_grid(&item_index, mwhere);
+                if (placed && item_index != NON_ITEM
+                    && env.item[item_index].defined() && you.see_cell(mwhere)
+                    && !feat_eliminates_items(env.grid(mwhere)))
+                {
+                    mprf("%s drops %s.", mons.name(DESC_THE).c_str(),
+                         env.item[item_index].name(DESC_A).c_str());
+                }
+            }
+        }
+
         if (mons.props.exists(UNIQUE_POTION_DROP_KEY))
         {
             const int potion = items(false, OBJ_POTIONS,
