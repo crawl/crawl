@@ -1202,10 +1202,10 @@ public:
         if (m_choice_type == C_JOB && m_ng.species != SP_UNKNOWN)
         {
             welcome.textcolour(LIGHTGREY);
-            welcome.cprintf("\nOnly recommended backgrounds are shown for this species. "
-                            "You can still create any combo that is not "
-                            "recommended by choosing the background before "
-                            "the species.");
+            welcome.cprintf("\nOnly recommended backgrounds are shown for "
+                            "this species.\nYou can still create any combo "
+                            "that is not recommended\nby choosing the "
+                            "background before the species.");
         }
 #endif
         m_vbox->add_child(make_shared<Text>(welcome));
