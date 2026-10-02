@@ -188,13 +188,13 @@ Major Destruction cast
 
 @The_monster@ conjures a destructive force in the name of @possessive_God@!
 %%%%
-Mara Summon cast
+Summon Illusion cast
 
 @The_monster@ weaves an illusion.
 
 @The_monster@ shimmers.
 %%%%
-unseen Mara summon cast
+unseen Summon Illusion cast
 
 Something weaves an illusion!
 %%%%
