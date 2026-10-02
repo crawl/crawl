@@ -2336,13 +2336,19 @@ int make_mons_armour(monster_type type, int level)
         break;
 
     case MONS_ENCHANTRESS:
-        force_item = true;
-        make_item_unrandart(item, UNRAND_FAERIE);
+        if (coinflip())
+        {
+            force_item = true;
+            make_item_unrandart(item, UNRAND_FAERIE);
+        }
         break;
 
     case MONS_TIAMAT:
-        force_item = true;
-        make_item_unrandart(item, UNRAND_DRAGONSKIN);
+        if (coinflip())
+        {
+            force_item = true;
+            make_item_unrandart(item, UNRAND_DRAGONSKIN);
+        }
         break;
 
     case MONS_NESSOS:

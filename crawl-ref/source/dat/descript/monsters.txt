@@ -225,6 +225,9 @@ Enchantress
 First and most fearful of her kind, the Enchantress rules over the spriggans of
 the dungeon. She wears an opalescent outfit made of dragon skin that shimmers
 with many colours.
+
+<brown>DC Chili change: The Enchantress has a 50% chance of dropping the Faerie
+armour when killed.</brown>
 %%%%
 Ereshkigal
 
@@ -780,6 +783,9 @@ Tiamat
 
 The earthly avatar of Tiamat, deity of dragonkind, here incarnated as a mighty
 draconian warrior. Her scales seem to shimmer and change colour as you watch.
+
+<brown>DC Chili change: Tiamat has a 50% chance of dropping the Dragonskin
+armour when killed.</brown>
 %%%%
 Urug
 
