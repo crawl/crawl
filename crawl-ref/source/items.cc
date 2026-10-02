@@ -2887,13 +2887,9 @@ bool drop_item(int item_dropped, int quant_drop)
         feat_splash_noise(env.grid(you.pos()));
 
     if (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_ORB)
-    {
         you.turn_is_over = false;
-    }
     else
-    {
         you.turn_is_over = true;
-    }
     dec_inv_item_quantity(item_dropped, quant_drop);
 
     you.last_pickup.erase(item_dropped);

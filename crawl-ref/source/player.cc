@@ -1931,7 +1931,7 @@ int player_spec_summ()
 {
     int ss = 0;
     if (you.wearing(OBJ_STAVES, STAFF_SUMMONING))
-        ss += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT); 
+        ss += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
     ss += you.scan_artefacts(ARTP_ENHANCE_SUMM);
 
     return ss;

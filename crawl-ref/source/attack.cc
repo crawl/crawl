@@ -769,9 +769,7 @@ void attack::stab_message()
     defender->props[HELPLESS_KEY] = true;
 
     if (weapon && weapon->is_type(OBJ_STAVES, STAFF_SUMMONING))
-    {
         return;
-    }
 
     switch (stab_bonus)
     {
@@ -1501,7 +1499,7 @@ int attack::player_stab_weapon_bonus(int damage)
     if (player_good_stab())
     {
         // We might be unarmed if we're using the hood of the Assassin.
-        const bool extra_good = using_weapon() && 
+        const bool extra_good = using_weapon() &&
             ( weapon->sub_type == WPN_DAGGER || weapon->sub_type == WPN_ATHAME );
         int bonus = you.dex() * (stab_skill + 100) / (extra_good ? 500 : 1000);
 

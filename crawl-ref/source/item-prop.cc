@@ -1991,16 +1991,20 @@ bool is_brandable_weapon(const item_def &wpn, bool allow_ranged, bool divine)
 bool is_blessable_item(const item_def &item)
 {
     if (is_artefact(item)
-        || (item.base_type == OBJ_ARMOUR && armour_is_hide(item)) 
+        || (item.base_type == OBJ_ARMOUR && armour_is_hide(item))
         || (item.base_type == OBJ_ARMOUR && (get_armour_ego_type(item) == SPARM_PONDEROUSNESS))
     )
+    {
         return false;
+    }
 
 
     if (item.base_type == OBJ_ARMOUR
         || item.base_type == OBJ_WEAPONS
         || item.base_type == OBJ_STAVES)
+    {
         return true;
+    }
 
     return false;
 }

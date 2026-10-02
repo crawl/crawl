@@ -112,7 +112,7 @@ void item_colour(item_def &item)
 }
 
 static weapon_type _determine_weapon_subtype(int item_level, branch_type place)
-{    
+{
     if (one_chance_in(30) && x_chance_in_y(item_level + 3, 100))
     {
         return random_choose(WPN_LAJATANG,
@@ -442,7 +442,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
                                   bool acquirement = false,
                                   monster *mons = nullptr)
 {
-    const branch_type place = (agent == NO_AGENT ? level_id::current().branch 
+    const branch_type place = (agent == NO_AGENT ? level_id::current().branch
                                                 : BRANCH_DUNGEON);
 
     // Determine weapon type.

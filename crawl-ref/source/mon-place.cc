@@ -2422,7 +2422,7 @@ static const map<band_type, vector<member_possibilities>> band_membership = {
     { BAND_SHARD_SHRIKE,        {{{MONS_SHARD_SHRIKE, 1}}}},
     { BAND_SOJOBO,              {{{MONS_TENGU_REAVER, 1}}}},
     { BAND_HOWLER_MONKEY,       {{{MONS_HOWLER_MONKEY, 1}}}},
-    { BAND_MONKEY_KING,         {{{MONS_HOWLER_MONKEY, 1}}}}, 
+    { BAND_MONKEY_KING,         {{{MONS_HOWLER_MONKEY, 1}}}},
     { BAND_WEEPING_SKULLS,      {{{MONS_WEEPING_SKULL, 1}}}},
     { BAND_DIRE_ELEPHANTS,      {{{MONS_DIRE_ELEPHANT, 1}}}},
     { BAND_CAUSTIC_SHRIKE,      {{{MONS_CAUSTIC_SHRIKE, 1}}}},

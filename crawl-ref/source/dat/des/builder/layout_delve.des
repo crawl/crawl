@@ -35,7 +35,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
 
 ##############################################################
 # layout_sewer
-# 
+#
 # A grid of stone chambers with twisted caverns in between.
 #
 NAME: layout_sewer
@@ -45,78 +45,78 @@ ORIENT: encompass
 TAGS: overwritable layout unrand no_exits water_ok
 {{
     if is_validating() then return; end
-	
+
     local gxm, gym = dgn.max_bounds()
 
-	extend_map {width = gxm, height = gym}
-	fill_area{fill = 'x', border = 'X'}
+        extend_map {width = gxm, height = gym}
+        fill_area{fill = 'x', border = 'X'}
 
-	delve(3, 5, 3, crawl.random_range(400, 600), 1)
-	delve(2, 4, 3, crawl.random_range(200, 400), 1)
-	delve(2, 3, 5, crawl.random_range(400, 600), 1)
-	delve(1, 8, 0, crawl.random_range(400, 600), 1)
-	delve(1, 2, 0, crawl.random_range(200, 400), 1)
-	
-	local columns = crawl.random_range(2, 3)
-	local a = 0
-	local b = 0
-	local c = crawl.random_range(20, 50);
-	local d = 'a'
+        delve(3, 5, 3, crawl.random_range(400, 600), 1)
+        delve(2, 4, 3, crawl.random_range(200, 400), 1)
+        delve(2, 3, 5, crawl.random_range(400, 600), 1)
+        delve(1, 8, 0, crawl.random_range(400, 600), 1)
+        delve(1, 2, 0, crawl.random_range(200, 400), 1)
 
-	for x = 1, columns do
-	  if crawl.coinflip() then
-	    a = 4
-		b = 3
-	  else
-	    a = 5
-		b = 4
-	  end
-	  if crawl.coinflip() then
-	    d = 'a'
-	  else
-	    d = 'b'
-	  end
-	  fill_area{x1 = gxm/(columns + 1) * x - a, y1 = 1, x2 = gxm/(columns + 1) * x + b, y2 = gym - 1, fill = 'W', border = d}
-	end
+        local columns = crawl.random_range(2, 3)
+        local a = 0
+        local b = 0
+        local c = crawl.random_range(20, 50);
+        local d = 'a'
+
+        for x = 1, columns do
+          if crawl.coinflip() then
+            a = 4
+                b = 3
+          else
+            a = 5
+                b = 4
+          end
+          if crawl.coinflip() then
+            d = 'a'
+          else
+            d = 'b'
+          end
+          fill_area{x1 = gxm/(columns + 1) * x - a, y1 = 1, x2 = gxm/(columns + 1) * x + b, y2 = gym - 1, fill = 'W', border = d}
+        end
 
     if crawl.coinflip() then
-	  a = 5
-	  b = 4
-	else
-	  a = 6
-	  b = 5
-	end
-	if crawl.coinflip() then
-	  d = 'a'
-	else
-	  d = 'b'
-	end
-	fill_area{x1 = 1, y1 = c - a, x2 = gxm - 1, y2 = c + b, fill = 'W', border = d}
+          a = 5
+          b = 4
+        else
+          a = 6
+          b = 5
+        end
+        if crawl.coinflip() then
+          d = 'a'
+        else
+          d = 'b'
+        end
+        fill_area{x1 = 1, y1 = c - a, x2 = gxm - 1, y2 = c + b, fill = 'W', border = d}
 
-	sewer_iterate()
-	pass_sewer_info(columns, c)
+        sewer_iterate()
+        pass_sewer_info(columns, c)
 
-	subst("W = d")
+        subst("W = d")
 
-	local pool_contents = {}
+        local pool_contents = {}
     pool_contents["w"] = 80
     add_pools { replace = "d",
-			    pool_size = 32 + crawl.random2(16),
-			    contents = pool_contents,
-			    frequency = 5 }
+                            pool_size = 32 + crawl.random2(16),
+                            contents = pool_contents,
+                            frequency = 5 }
 
-	kfeat("pd = shallow_water")
-	kmons("p = withered_plant")
-	kfeat("h = open_sea")
-	colour("w = green")
-	colour("cv  = red")
+        kfeat("pd = shallow_water")
+        kmons("p = withered_plant")
+        kfeat("h = open_sea")
+        colour("w = green")
+        colour("cv  = red")
     colour("Wpd = lightgreen")
 
     connect_adjacent_rooms { max = crawl.random_range(200, 450),
-		min = 50, replace = 'W' }
+                min = 50, replace = 'W' }
     zonify.map_fill_zones(_G, 1, 'x')
 
-	subst("X = x")
+        subst("X = x")
 }}
 
 ##############################################################

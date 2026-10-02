@@ -1707,9 +1707,9 @@ static const mutation_def mut_data[] =
 { MUT_BLACK_MARK, 0, 2, mutflag::good,
   "black mark",
 
-  {"Your melee attacks may debilitate your foes.", 
+  {"Your melee attacks may debilitate your foes.",
    "Your melee attacks may debilitate and engulf your foes.", ""},
-  {"An ominous black mark forms on your body.", 
+  {"An ominous black mark forms on your body.",
    "The black mark grows darker.", ""},
   {"", "", ""},
   TILEG_MUT_BLACK_MARK,
@@ -1718,11 +1718,11 @@ static const mutation_def mut_data[] =
 { MUT_SILENCE_HALO, 3, 3, mutflag::good,
   "halo of silence",
 
-  {"You are surrounded by a small halo of silence.", 
-   "You are surrounded by a halo of silence.", 
+  {"You are surrounded by a small halo of silence.",
+   "You are surrounded by a halo of silence.",
    "You are surrounded by a massive halo of silence."},
-  {"An unnatural silence shrouds you.", 
-   "Your silent shroud expands.", 
+  {"An unnatural silence shrouds you.",
+   "Your silent shroud expands.",
    "Your silent shroud expands."},
   { "The world fills with sound again. Your silence halo fades.",
     "Your halo of unnatural quiet shrinks.",
@@ -2485,8 +2485,8 @@ static const mutation_def mut_data[] =
 
 { MUT_INSUBSTANTIAL, 0, 2, mutflag::good,
   "insubstantial",
-      
-  {"You are insubstantial and cannot be petrified, ensnared, or set on fire.", 
+
+  {"You are insubstantial and cannot be petrified, ensnared, or set on fire.",
    "You are incorporeal and cannot be petrified, ensnared, or set on fire.", ""},
   {"You feel insubstantial.", "You feel completely noncorporeal", ""},
   {"You feel more solid.", "You feel mre substantial", ""},
