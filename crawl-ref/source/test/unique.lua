@@ -39,21 +39,21 @@ end
 
 local function run_unique_tests()
   test_uniques_branch("D", 14)
-  test_uniques_branch("Depths", 4)
-  test_uniques_branch("Dis", 7)
+  test_uniques_branch("Depths", 3)
+  test_uniques_branch("Dis", 6)
 
   for depth = 1, 14 do
     test_uniques_blank("D", depth, 1)
     test_uniques_random("D", depth, 1)
   end
-  for depth = 1, 4 do
+  for depth = 1, 3 do
     test_uniques_blank("Depths", depth, 1)
     test_uniques_random("Depths", depth, 1)
   end
 
-  for depth = 1, 7 do
+  for depth = 1, 6 do
     test_uniques_blank("Dis", depth, 1)
-    if depth < 7 then
+    if depth < 6 then
       -- otherwise we get failures for randomly placed Dispater
       -- getting placed again
       test_uniques_random("Dis", depth, 1)
@@ -61,9 +61,9 @@ local function run_unique_tests()
   end
 
   -- why does this go backwards??
-  for depth = 4, 1, -1 do
+  for depth = 3, 1, -1 do
     test_uniques_blank("Swamp", depth, 1)
-    if depth < 4 then
+    if depth < 3 then
       -- otherwise problem with lernaean, like Dispater above
       test_uniques_random("Swamp", depth, 1)
     end
