@@ -1,4 +1,5 @@
 name: "Vashnia"
+drop_on_death: {chance: 50, item: SPELL_BLINK}
 glyph: {char: "N", colour: lightcyan}
 flags: [see_invis, speaks, warm_blood, unique, archer, female, prefer_ranged]
 resists: {poison: 1}

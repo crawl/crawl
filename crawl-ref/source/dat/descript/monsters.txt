@@ -202,6 +202,9 @@ Donald
 
     return descript
 }}
+
+<brown>DC Chili change: Donald has a 50% chance of dropping a potion of heal
+wounds when killed.</brown>
 %%%%
 Dowan
 
@@ -406,6 +409,9 @@ Jorgrun
 
 A dwarven magician, particularly well-attuned to the dungeon around him. He
 wields powerful earth magic in combat.
+
+<brown>DC Chili change: Jorgrun has a 50% chance of dropping a parchment of
+Iron Shot when killed.</brown>
 %%%%
 Jory
 
@@ -750,6 +756,9 @@ Roxanne
 
 A strikingly realistic sapphire statue of a famous earth mage who disappeared
 after a catastrophic mishap with a magical talisman.
+
+<brown>DC Chili change: Roxanne has a 50% chance of dropping a parchment of
+Lehudib's Crystal Spear when killed.</brown>
 %%%%
 Rupert
 
@@ -786,6 +795,9 @@ Snorg
 A particularly corpulent troll with a short temper and a sizable gut.
 Uninterested in the Orb, Snorg delights in the endless parade of adventurers –
 that is, easy meals — it attracts.
+
+<brown>DC Chili change: Snorg has a 50% chance of dropping a potion of berserk
+rage when killed.</brown>
 %%%%
 Sprozz
 
@@ -848,6 +860,9 @@ Vashnia
 
 An elite marksnaga who leads a skilled team of sharpshooters. She is
 particularly skilled in translocation magic.
+
+<brown>DC Chili change: Vashnia has a 50% chance of dropping a parchment of
+Blink when killed.</brown>
 %%%%
 Verity
 

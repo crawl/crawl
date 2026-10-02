@@ -1,4 +1,5 @@
 name: "Jorgrun"
+drop_on_death: {chance: 50, item: SPELL_IRON_SHOT}
 glyph: {char: "g", colour: lightmagenta}
 flags: [speaks, warm_blood, unique, male]
 exp: 1873
