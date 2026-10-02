@@ -1336,12 +1336,12 @@ void UIStartupMenu::menu_item_activated(int id)
                 "https://dungeoncrawlchili.org/changesInDCChili.php"))
         {
             mprf(MSGCH_ERROR, "Couldn't open the DC Chili changes page: %s",
-        }
 #if SDL_VERSION_ATLEAST(2, 0, 14)
                  SDL_GetError());
 #else
                  "the system browser could not be launched");
 #endif
+        }
 #else
         mpr("Open https://dungeoncrawlchili.org/changesInDCChili.php "
             "in your web browser.");

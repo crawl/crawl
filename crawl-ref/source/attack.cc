@@ -292,11 +292,13 @@ int attack::calc_to_hit(bool random)
     if (mhit == AUTOMATIC_HIT)
         return AUTOMATIC_HIT;
 
+#if TAG_MAJOR_VERSION == 34
     if (mons_aligned(attacker, defender) && using_weapon()
         && weapon->is_type(OBJ_STAVES, STAFF_SUMMONING))
     {
         return AUTOMATIC_HIT;
     }
+#endif
     // hit roll
     const actor &src = stat_source();
     if (src.is_player())
@@ -768,8 +770,10 @@ void attack::stab_message()
 {
     defender->props[HELPLESS_KEY] = true;
 
+#if TAG_MAJOR_VERSION == 34
     if (weapon && weapon->is_type(OBJ_STAVES, STAFF_SUMMONING))
         return;
+#endif
 
     switch (stab_bonus)
     {
@@ -1110,11 +1114,13 @@ bool attack::attack_shield_blocked()
     if (defender->incapacitated() && !defender->divinely_shielded())
         return false;
 
+#if TAG_MAJOR_VERSION == 34
     if (mons_aligned(attacker, defender) && using_weapon()
         && weapon->is_type(OBJ_STAVES, STAFF_SUMMONING))
     {
         return false;
     }
+#endif
 
     const int con_block = random2(attacker->shield_bypass_ability(to_hit));
     int pro_block = defender->shield_bonus();
