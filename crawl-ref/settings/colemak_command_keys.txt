@@ -1,5 +1,17 @@
 # keymap with working vi keys for colemak keyboards
 
+# For technical reasons(next paragraph) force-attack directions are omitted.
+# The user may use ctrl+numpad to force-attack or come up with their own
+# solution.
+
+# If ctrl+direction were bound with colemak keys, ctrl+i would be "force attack
+# right". However, ctrl+i is treated the same as tab on the terminal level so
+# the binding would override the tab key binding, autoattack by default. Were
+# we to make an exception and bind all other movement keys, it would lead to
+# unexpected behavior to users that didn't know about the exception. We leave
+# the handling to the tastes of the user so they can choose their own way of
+# dealing with this.
+
 bindkey = [h] CMD_MOVE_LEFT
 bindkey = [n] CMD_MOVE_DOWN
 bindkey = [e] CMD_MOVE_UP
