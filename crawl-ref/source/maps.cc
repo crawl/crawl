@@ -665,7 +665,7 @@ static bool _apply_vault_grid(map_def &def,
         if (map_bounds(place.pos))
         {
             start = place.pos - size / 2;
-            _fit_region_into_map_bounds(start, size, minivault ? MAPGEN_BORDER : 0);
+            _fit_region_into_map_bounds(start, size, MAPGEN_BORDER);
         }
         else if (minivault)
         {
