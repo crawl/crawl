@@ -418,11 +418,15 @@ TAGS:     no_pool_fixup sewer_cave
 NSUBST:   ! = 4:! / *:w
 SUBST:    - = WWWW.
 KMONS:    W = cinder newt / clockroach w:30 / \
-              sewer rat w:70 / jelly / adder / \
-                          endoplasm w:40 / nothing w:130
+              sewer rat w:40 / jelly / adder / \
+                          endoplasm w:30 / nothing w:300
+KMONS:    Q = nothing
 KFEAT:    W = W
+KFEAT:    Q = shallow_water
 KFEAT:    ! = w
 COLOUR:   ! = green
+COLOUR:   Q = lightgreen
+TILE:     Q = dngn_shallow_water
 KMONS:    ! = prince ribbit, bullfrog
 SHUFFLE:  edfgh$*
 ITEM:     scroll of teleportation w:2 / scroll of blinking
@@ -442,9 +446,9 @@ c-----c--.edf.---!c----c
 ccc---c---.$---w!cc---cc
  cc---c--.----w!cc----c
   c---cc--c-wwccc----cc
-  cc---c--ccccc-----cc
-   @@@@cc-..------ccc
-        cc.----cccc
+  ccQQQc--cccccQQQQQcc
+   @@@@cc-..QQQQQQccc
+        cc.QQQQcccc
          cc-}-ccc
           ccccc
 ENDMAP
