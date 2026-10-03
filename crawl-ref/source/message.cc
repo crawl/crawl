@@ -873,7 +873,7 @@ public:
         }
     }
 
-    void add_history_only_hp_message(const char *source, int amount)
+    void add_history_only_hp_message(const char *source, int change)
     {
         const string prefix = make_stringf("%s (HP +", source);
         flush_prev();
@@ -905,7 +905,7 @@ public:
                             const int previous = std::atoi(text.substr(
                                 prefix.size(), end - prefix.size()).c_str());
                             text = make_stringf("%s%d)", prefix.c_str(),
-                                                previous + amount);
+                                                previous + change);
                             return;
                         }
                     }
@@ -922,7 +922,7 @@ public:
             }
         }
 
-        msgs.push_back(message_line(make_stringf("%s%d)", prefix.c_str(), amount),
+        msgs.push_back(message_line(make_stringf("%s (HP %+d)", source, change),
                        MSGCH_DIAGNOSTICS, POST_MORTEM_HISTORY_PARAM, false));
         if (_temporary)
             temp++;
@@ -2314,10 +2314,17 @@ void record_damage_taken(int damage, int hp_before)
 
 void record_hp_restored(int amount, const char *source)
 {
-    if (amount <= 0 || !crawl_state.game_started || crawl_state.generating_level)
+    if (amount > 0)
+        record_hp_change(amount, source);
+}
+
+void record_hp_change(int change, const char *source)
+{
+    if (!change || !source || !crawl_state.game_started
+        || crawl_state.generating_level)
         return;
 
-    buffer.add_history_only_hp_message(source, amount);
+    buffer.add_history_only_hp_message(source, change);
 }
 
 bool recent_error_messages()

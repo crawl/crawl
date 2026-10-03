@@ -908,7 +908,7 @@ static void _decrement_durations()
         && you.attribute[ATTR_DEATHS_DOOR_HP] > 0
         && you.hp > you.attribute[ATTR_DEATHS_DOOR_HP])
     {
-        set_hp(you.attribute[ATTR_DEATHS_DOOR_HP]);
+        set_hp(you.attribute[ATTR_DEATHS_DOOR_HP], "Death's Door HP cap");
         you.redraw_hit_points = true;
     }
     else if (!you.duration[DUR_DEATHS_DOOR]

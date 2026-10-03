@@ -42,7 +42,7 @@ spret cast_deaths_door(int pow, bool fail)
 
     const int hp = max(div_rand_round(pow, 10), 1);
     you.attribute[ATTR_DEATHS_DOOR_HP] = hp;
-    set_hp(hp);
+    set_hp(hp, "Death's Door HP cap");
 
     if (you.duration[DUR_DEATHS_DOOR] > 25 * BASELINE_DELAY)
         you.duration[DUR_DEATHS_DOOR] = (23 + random2(5)) * BASELINE_DELAY;
@@ -96,7 +96,7 @@ spret cast_revivification(int pow, bool fail)
 
     const int loss = 6 + binomial(9, 8, pow);
     dec_max_hp(loss * you.hp_max / 100);
-    set_hp(you.hp_max);
+    set_hp(you.hp_max, "Revivification");
 
     if (you.duration[DUR_DEATHS_DOOR])
     {

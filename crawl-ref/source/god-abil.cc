@@ -6652,7 +6652,8 @@ void okawaru_end_duel(bool kicked_out)
     _owakwaru_gather_arena_items();
 
     if (you.props.exists(OKAWARU_DUEL_ORIG_HP_KEY))
-        set_hp(you.props[OKAWARU_DUEL_ORIG_HP_KEY].get_int());
+        set_hp(you.props[OKAWARU_DUEL_ORIG_HP_KEY].get_int(),
+               "Okawaru's Duel restoration");
 
     if (you.props.exists(OKAWARU_DUEL_ORIG_MP_KEY))
         set_mp(you.props[OKAWARU_DUEL_ORIG_MP_KEY].get_int());

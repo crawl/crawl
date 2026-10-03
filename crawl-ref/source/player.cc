@@ -3027,7 +3027,9 @@ void calc_hp(bool scale)
         hp = hp * new_max / old_max;
         if (hp < 100)
             hp = 100;
-        set_hp(min(hp / 100, you.hp_max));
+        // Avoid set_hp()'s history entry: calc_hp() records the net change
+        // after rescaling and max-HP clamping below.
+        you.hp = min(hp / 100, you.hp_max);
         you.hit_points_regeneration = hp % 100;
     }
 
@@ -3035,6 +3037,7 @@ void calc_hp(bool scale)
 
     if (oldhp != you.hp || old_max != you.hp_max)
     {
+        record_hp_change(you.hp - oldhp, "Maximum HP adjustment");
         if (_should_stop_resting(you.hp, you.hp_max))
             interrupt_activity(activity_interrupt::full_hp);
         dprf("HP changed: %d/%d -> %d/%d", oldhp, old_max, you.hp, you.hp_max);
@@ -4067,10 +4070,14 @@ void dec_hp(int hp_loss, bool fatal, const char *aux)
     // If it's not fatal, use ouch() so that notes can be taken. If it IS
     // fatal, somebody else is doing the bookkeeping, and we don't want to mess
     // with that.
+    const int old_hp = you.hp;
     if (!fatal && aux)
         ouch(hp_loss, KILLED_BY_SOMETHING, MID_NOBODY, aux);
     else
         you.hp -= hp_loss;
+
+    if (!fatal && !aux)
+        record_hp_change(you.hp - old_hp, "HP cost");
 
     you.redraw_hit_points = true;
 }
@@ -4346,10 +4353,11 @@ void dec_max_hp(int hp_loss)
     you.redraw_hit_points = true;
 }
 
-void set_hp(int new_amount)
+void set_hp(int new_amount, const char *source)
 {
     ASSERT(!crawl_state.game_is_arena());
 
+    const int old_hp = you.hp;
     you.hp = new_amount;
 
     if (you.hp > you.hp_max)
@@ -4357,6 +4365,7 @@ void set_hp(int new_amount)
 
     // Must remain outside conditional, given code usage. {dlb}
     you.redraw_hit_points = true;
+    record_hp_change(you.hp - old_hp, source);
 }
 
 void set_mp(int new_amount)

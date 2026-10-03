@@ -2900,6 +2900,12 @@ bool handle_post_ability_effects(ability_type ability,
     {
         case spret::success:
         {
+            if (hp_cost)
+            {
+                const string hp_cost_source = make_stringf(
+                    "%s HP cost", ability_name(abil.ability).c_str());
+                record_hp_change(-hp_cost, hp_cost_source.c_str());
+            }
             practise_using_ability(abil.ability);
             _finalize_ability_costs(abil, piety_cost, mp_cost, hp_cost);
 

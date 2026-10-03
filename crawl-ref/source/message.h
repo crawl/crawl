@@ -170,6 +170,7 @@ void set_more_autoclear(bool on);
 string get_last_messages(int mcount, bool full = false,
                          bool show_turn_markers = false);
 void record_damage_taken(int damage, int hp_before);
+void record_hp_change(int change, const char *source);
 void record_hp_restored(int amount, const char *source);
 bool recent_error_messages();
 

@@ -1067,6 +1067,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
 
     const spret cast_result = your_spells(spell, 0, !you.divine_exegesis,
                                           nullptr, _target, force_failure);
+    bool hp_cost_refunded = false;
     if (cast_result == spret::abort
         || you.divine_exegesis && cast_result == spret::fail)
     {
@@ -1075,12 +1076,20 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         // Return the MP since the spell is aborted.
         refund_mp(cost);
         if (_majin_charge_hp())
+        {
             refund_hp(hp_cost);
+            hp_cost_refunded = true;
+        }
+        if (hp_cost && !hp_cost_refunded)
+            record_hp_change(-hp_cost, "Spellcasting HP cost");
 
         redraw_screen();
         update_screen();
         return cast_result;
     }
+
+    if (hp_cost)
+        record_hp_change(-hp_cost, "Spellcasting HP cost");
 
     practise_casting(spell, cast_result == spret::success);
     _handle_energy_orb(cost, cast_result);
