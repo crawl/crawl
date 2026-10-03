@@ -4876,7 +4876,10 @@ void handle_player_poison(int delay)
         int oldhp = you.hp;
         ouch(dmg, KILLED_BY_POISON);
         if (you.hp < oldhp)
+        {
             mprf(channel, "You feel %ssick.", adj);
+            record_damage_taken(oldhp - you.hp, oldhp);
+        }
     }
 
     // Now decrease the poison in our system

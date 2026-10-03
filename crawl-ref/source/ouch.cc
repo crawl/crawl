@@ -1424,7 +1424,10 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     }
     you.source_damage += dam;
 
-    record_damage_taken(dam, you.hp);
+    // Poison damage is followed by a more specific "You feel sick" message;
+    // attach its HP annotation there once that message is printed.
+    if (death_type != KILLED_BY_POISON)
+        record_damage_taken(dam, you.hp);
     dec_hp(dam, true);
 
     // Even if we have low HP messages off, we'll still give a
