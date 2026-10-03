@@ -1,4 +1,5 @@
 name: "Royal Jelly"
+drop_on_death: {chance: 50, item: POT_MUTATION}
 glyph: {char: "J", colour: yellow}
 flags: [name_the, eat_doors, see_invis, unblindable, amorphous, unique, acid_splash, no_skeleton, tall_tile]
 resists: {poison: 1, corr: 3}

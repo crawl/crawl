@@ -1,4 +1,5 @@
 name: "Goji"
+drop_on_death: {chance: 50, item: POT_INVISIBILITY}
 glyph: {char: "g", colour: lightblue}
 flags: [flies, fighter, speaks, unique, male, warm_blood]
 exp: 900

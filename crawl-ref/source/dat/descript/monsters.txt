@@ -350,6 +350,9 @@ undermines the moth's own mobility, even a hobbled ghost moth can be a deadly
 adversary.
 
 And Goji? Well. He's also here.
+
+<brown>DC Chili change: Goji has a 50% chance of dropping a potion of
+invisibility when killed, including when his ghost moth survives.</brown>
 %%%%
 Grinder
 
@@ -503,6 +506,9 @@ A huge beast, mightiest of hydras, infamous in myth and legend. It flows
 through the water faster than a human can run, swatting aside trees as though
 they were matchsticks. Its many heads slaver and gnash constantly as it hunts
 for prey to slake its bottomless appetite.
+
+<brown>DC Chili change: The Lernaean hydra has a 50% chance of dropping a
+potion of heal wounds when killed.</brown>
 %%%%
 Lodul
 
@@ -645,6 +651,9 @@ summoning when he is killed.</brown>
 Murray
 
 A demonic skull rolling along the ground.
+
+<brown>DC Chili change: Murray has a 50% chance of dropping a scroll of
+torment when killed.</brown>
 %%%%
 Natasha
 
@@ -706,6 +715,9 @@ history does not remember them.
 
 But one thing is clear: they will fight to change that until every last memory
 they have left burns away.
+
+<brown>DC Chili change: Nobody has a 50% chance of dropping a parchment of
+Death Channel when killed.</brown>
 %%%%
 Norris
 
@@ -947,6 +959,9 @@ One of the Stoneborn, formed untold aeons ago with supreme command over rock.
 Her people shelter deep within the living earth, so whatever has forced Vv
 into the oppressive openness of the Dungeon must be dire indeed. But whatever
 it is, she's not talking...
+
+<brown>DC Chili change: Vv has a 50% chance of dropping a parchment of Bombard
+when killed.</brown>
 %%%%
 Xak'krixis
 
@@ -3109,6 +3124,9 @@ Royal Jelly
 
 A particularly rich and golden gelatinous thing. Smaller jellies swim and pulse
 just below its surface, ready to burst forth at the slightest touch.
+
+<brown>DC Chili change: The Royal Jelly has a 50% chance of dropping a potion
+of mutation when killed.</brown>
 %%%%
 royal mummy
 

@@ -3957,6 +3957,15 @@ item_def* mounted_kill(monster* real_mon, monster_type mc, killer_type killer,
     define_monster(mon); // assumes mc is not a zombie
     mon.flags = real_mon->flags;
 
+    // Goji's rider dies separately from his surviving ghost moth. Transfer
+    // his death-drop roll so the potion belongs to Goji, not to the moth.
+    if (mc == MONS_GOJI_UNMOUNTED
+        && real_mon->props.exists(UNIQUE_DATA_DROP_KEY))
+    {
+        mon.props[UNIQUE_DATA_DROP_KEY] = true;
+        real_mon->props.erase(UNIQUE_DATA_DROP_KEY);
+    }
+
     // Need to copy ENCH_SUMMON_TIMER etc. or we could get real XP/meat from a summon.
     mon.enchantments = real_mon->enchantments;
     mon.ench_cache = real_mon->ench_cache;
