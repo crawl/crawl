@@ -7011,6 +7011,58 @@ static string _desc_splinterfrost_dam(const monster_info &mi)
     return make_stringf("%dd%d", beam.damage.num, beam.damage.size);
 }
 
+static string _monster_death_drop_description(const monster_info &mi)
+{
+    const mon_death_drop &drop = get_monster_data(mi.type)->death_drop;
+    if (drop.chance <= 0 || drop.option_count <= 0)
+        return "";
+
+    vector<string> options;
+    for (int i = 0; i < drop.option_count; ++i)
+    {
+        const mon_death_drop_item &choice = drop.options[i];
+        item_def item;
+        item.base_type = static_cast<object_class_type>(choice.base_type);
+        item.sub_type = choice.sub_type;
+        item.quantity = choice.quantity;
+        item.plus = max(0, choice.plus);
+        item.brand = choice.brand;
+
+        // Use the full name for parchments so their spell is shown. Use the
+        // full name for stacks to show their quantity and missile brand, and
+        // the database name for single items so random enchantments aren't
+        // implied.
+        const bool full_name = item.base_type == OBJ_BOOKS
+                               || item.quantity > 1 || item.brand >= 0;
+        const description_level_type desc = full_name ? DESC_A : DESC_DBNAME;
+        string name = item.name(desc, false, true, false);
+        if (desc == DESC_DBNAME)
+            name = article_a(name);
+        options.push_back(name);
+    }
+
+    string reward;
+    if (options.size() == 1)
+        reward = options[0];
+    else
+    {
+        for (size_t i = 0; i < options.size(); ++i)
+        {
+            if (i > 0)
+                reward += i + 1 == options.size() ? " or " : ", ";
+            reward += options[i];
+        }
+    }
+
+    string note = make_stringf(
+        "<brown>DC Chili change: Uniques have a %d%% chance to drop an item "
+        "when killed. For %s, the item is ",
+        drop.chance, mi.full_name(DESC_PLAIN).c_str());
+    note += options.size() > 1 ? "either " : "";
+    note += reward + ".</brown>";
+    return note;
+}
+
 // Fetches the monster's database description and reads it into inf.
 void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                          bool &has_stat_desc, bool mark_spells)
@@ -7037,6 +7089,13 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     // Don't get description for player ghosts.
     if (mi.type != MONS_PLAYER_GHOST && mi.type != MONS_PLAYER_ILLUSION)
         inf.body << getLongDescription(db_name);
+
+    if (mons_is_unique(mi.type))
+    {
+        const string drop = _monster_death_drop_description(mi);
+        if (!drop.empty())
+            inf.body << "\n" << drop << "\n";
+    }
 
     // And quotes {due}
     inf.quote = getQuoteString(db_name);
