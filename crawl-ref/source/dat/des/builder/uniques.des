@@ -415,8 +415,8 @@ DEPTH:  Depths:2-, Zot, !Zot:$
 : place_unique(_G, "Parghit")
 
 NAME:   uniq_regal
-DEPTH:  Depths:2-, Vaults:3-, !Vaults:$, Crypt, Zot
-: place_unique(_G, "Regal band")
+DEPTH:  Shoals:2-, Snake:2-, Spider:2-, Swamp:2-
+: place_unique(_G, "Regal")
 
 NAME:   uniq_saint_roka
 DEPTH:  Orc:$, Depths:1, Elf:2-, Snake:2-, Vaults
