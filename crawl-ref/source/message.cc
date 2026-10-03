@@ -855,23 +855,39 @@ public:
     {
         const string prefix = make_stringf("%s (HP +", source);
         flush_prev();
-        if (prefix == "Natural regeneration (HP +" && msgs.filled_size() > 0)
+        if (prefix == "Natural regeneration (HP +")
         {
-            message_line &last = msgs[-1];
-            if (last && last.channel == MSGCH_DIAGNOSTICS
-                && last.param == POST_MORTEM_HISTORY_PARAM
-                && last.messages.back().text.compare(0, prefix.size(), prefix) == 0)
+            for (int i = -1, count = msgs.filled_size(); count > 0; --i, --count)
             {
-                const string &text = last.messages.back().text;
-                const size_t end = text.find(')', prefix.size());
-                if (end != string::npos)
+                message_line &msg = msgs[i];
+                if (!msg)
+                    break;
+
+                if (msg.channel == MSGCH_DIAGNOSTICS
+                    && msg.param == POST_MORTEM_HISTORY_PARAM)
                 {
-                    const int previous = std::atoi(text.substr(
-                        prefix.size(), end - prefix.size()).c_str());
-                    last.messages.back().text = make_stringf(
-                        "%s%d)", prefix.c_str(), previous + amount);
-                    return;
+                    string &text = msg.messages.back().text;
+                    if (text.compare(0, prefix.size(), prefix) == 0)
+                    {
+                        const size_t end = text.find(')', prefix.size());
+                        if (end != string::npos)
+                        {
+                            const int previous = std::atoi(text.substr(
+                                prefix.size(), end - prefix.size()).c_str());
+                            text = make_stringf("%s%d)", prefix.c_str(),
+                                                previous + amount);
+                            return;
+                        }
+                    }
+
+                    // Keep natural regeneration separate from explicit heals.
+                    break;
                 }
+
+                // A hit starts a new regeneration interval. Other messages
+                // such as resting notifications may occur between regen ticks.
+                if (msg.messages.back().text.find("(HP -") != string::npos)
+                    break;
             }
         }
 
