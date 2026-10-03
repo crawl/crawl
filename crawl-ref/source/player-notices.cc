@@ -450,34 +450,21 @@ static void _handle_encounter_messages(const vector<monster*> monsters,
 
     _monster_headsup(monsters, single, out);
 
-    // Preserve the Tiles threat marker in message history for nasty uniques.
-    vector<monster*> red_threat_uniques;
-    if (Options.tile_show_threat_levels.find("nasty") != string::npos)
-    {
-        for (monster* mon : monsters)
-        {
-            if (!mons_is_unique(mon->type) || mon->is_summoned()
-                || mon->attitude != ATT_HOSTILE
-                || mons_threat_level(*mon) != MTHRT_NASTY)
-                continue;
-
-            monster_info info(mon);
-            if (Options.tile_show_threat_levels.find("unusual")
-                    != string::npos
-                && info.has_unusual_items())
-                continue;
-
-            red_threat_uniques.push_back(mon);
-        }
-    }
-
     string msg = out.str();
     if (!msg.empty())
         mprf(MSGCH_MONSTER_WARNING, "%s", out.str().c_str());
 
-    for (monster* mon : red_threat_uniques)
+    // Preserve the red threat marker in message history for nasty uniques.
+    for (monster* mon : monsters)
+    {
+        if (!mons_is_unique(mon->type) || mon->is_summoned()
+            || mon->attitude != ATT_HOSTILE
+            || mons_threat_level(*mon) != MTHRT_NASTY)
+            continue;
+
         mprf(MSGCH_DANGER, "%s is a red threat-level encounter!!!",
              mon->name(DESC_THE).c_str());
+    }
 }
 
 static bool _monster_needs_warning(const monster& mon)
