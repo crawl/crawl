@@ -217,6 +217,9 @@ NAME:   uniq_menkaure
 DEPTH:  D:5
 PLACE:  D:5
 WEIGHT: 5000
+veto {{
+  return you.uniques("Menkaure")
+}}
 : place_unique(_G, "Menkaure")
 
 NAME:   uniq_natasha

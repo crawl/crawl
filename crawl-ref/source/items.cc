@@ -621,7 +621,7 @@ void unlink_item(int dest)
 
 void destroy_item(item_def &item, bool never_created)
 {
-    if (!item.defined())
+    if (item.base_type == OBJ_UNASSIGNED)
         return;
 
     if (never_created)
@@ -638,7 +638,7 @@ void destroy_item(int dest, bool never_created)
     // Don't destroy non-items, but this function may be called upon
     // to remove items reduced to zero quantity, so we allow "invalid"
     // objects in.
-    if (dest == NON_ITEM || !env.item[dest].defined())
+    if (dest == NON_ITEM || env.item[dest].base_type == OBJ_UNASSIGNED)
         return;
 
     unlink_item(dest);
