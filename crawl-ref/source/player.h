@@ -1276,7 +1276,7 @@ void pay_hp(int cost);
 void pay_mp(int cost);
 
 void inc_mp(int mp_gain, bool silent = false);
-void inc_hp(int hp_gain, bool silent = false);
+void inc_hp(int hp_gain, bool silent = false, const char *source = "Healing");
 void refund_mp(int cost);
 void refund_hp(int cost);
 void flush_mp();

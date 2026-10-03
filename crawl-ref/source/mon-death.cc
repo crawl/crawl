@@ -2343,7 +2343,7 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
         if (healing)
         {
             canned_msg(MSG_GAIN_HEALTH);
-            inc_hp(hp_heal);
+            inc_hp(hp_heal, false, "Siphoning power from a dying monster");
         }
 
         if (powering)

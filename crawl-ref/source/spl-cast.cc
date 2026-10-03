@@ -3702,7 +3702,7 @@ void death_ego_lifedrain(int splevel)
         {
             mprf("You feel life coursing into your body%s",
                  attack_strength_punctuation(hp_gain).c_str());
-            inc_hp(hp_gain);
+            inc_hp(hp_gain, false, "Vampiric draining");
         }
     }
 }

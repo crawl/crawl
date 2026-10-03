@@ -1252,7 +1252,7 @@ void majin_bo_vampirism(monster &mon, int damage)
     if (hp_boost)
     {
         canned_msg(MSG_GAIN_HEALTH);
-        inc_hp(hp_boost);
+        inc_hp(hp_boost, false, "Vampiric weapon");
     }
 }
 

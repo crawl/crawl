@@ -169,6 +169,7 @@ void set_more_autoclear(bool on);
 
 string get_last_messages(int mcount, bool full = false);
 void record_damage_taken(int damage, int hp_before);
+void record_hp_restored(int amount, const char *source);
 bool recent_error_messages();
 
 int channel_to_colour(msg_channel_type channel, int param = 0);

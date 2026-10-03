@@ -265,7 +265,7 @@ static bool _jelly_eat_missile(const string& proj_name, int damage_done)
         && !one_chance_in(3))
     {
         mprf("Your attached jelly eats the %s!", proj_name.c_str());
-        inc_hp(1 + random2(damage_done));
+        inc_hp(1 + random2(damage_done), false, "Attached jelly");
         canned_msg(MSG_GAIN_HEALTH);
         return true;
     }

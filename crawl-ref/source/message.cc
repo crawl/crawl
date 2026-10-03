@@ -760,6 +760,10 @@ bool any_messages()
 
 typedef circ_vec<message_line, NUM_STORED_MESSAGES> store_t;
 
+// Diagnostic-channel messages with this parameter are stored in the message
+// history for morgues, but are not shown in the game message window.
+static constexpr int POST_MORTEM_HISTORY_PARAM = -1;
+
 static bool is_channel_dumpworthy(msg_channel_type channel)
 {
     return channel != MSGCH_EQUIPMENT
@@ -844,6 +848,17 @@ public:
                 return;
             }
         }
+    }
+
+    void add_history_only_message(const string &text)
+    {
+        flush_prev();
+        msgs.push_back(message_line(text, MSGCH_DIAGNOSTICS,
+                                    POST_MORTEM_HISTORY_PARAM, false));
+        if (_temporary)
+            temp++;
+        else
+            reset_temp();
     }
 
     void roll_back()
@@ -2187,7 +2202,9 @@ string get_last_messages(int mcount, bool full)
         const message_line msg = msgs[i];
         if (!msg)
             break;
-        if (full || is_channel_dumpworthy(msg.channel))
+        if (full || is_channel_dumpworthy(msg.channel)
+            || (msg.channel == MSGCH_DIAGNOSTICS
+                && msg.param == POST_MORTEM_HISTORY_PARAM))
         {
             string line = msg.pure_text_with_repeats();
             string wrapped;
@@ -2216,6 +2233,15 @@ void record_damage_taken(int damage, int hp_before)
     else
         buffer.append_to_last_history_message(
             make_stringf(" (HP -%d)", damage));
+}
+
+void record_hp_restored(int amount, const char *source)
+{
+    if (amount <= 0 || !crawl_state.game_started || crawl_state.generating_level)
+        return;
+
+    buffer.add_history_only_message(make_stringf(
+        "%s (HP +%d)", source, amount));
 }
 
 bool recent_error_messages()
