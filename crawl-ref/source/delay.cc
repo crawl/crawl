@@ -1065,7 +1065,7 @@ bool interrupt_activity(activity_interrupt ai, const activity_interrupt_data &at
     if (ai == activity_interrupt::full_hp && !you.running.notified_hp_full)
     {
         you.running.notified_hp_full = true;
-        mpr("HP restored.");
+        mprf("HP restored. (HP=%d)", you.hp);
     }
     else if (ai == activity_interrupt::full_mp && !you.running.notified_mp_full)
     {

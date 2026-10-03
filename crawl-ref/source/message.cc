@@ -765,6 +765,12 @@ typedef circ_vec<message_line, NUM_STORED_MESSAGES> store_t;
 // history for morgues, but are not shown in the game message window.
 static constexpr int POST_MORTEM_HISTORY_PARAM = -1;
 
+static bool _is_hp_restored_message(const string &text)
+{
+    static const string prefix = "HP restored.";
+    return text.compare(0, prefix.size(), prefix) == 0;
+}
+
 static bool is_channel_dumpworthy(msg_channel_type channel)
 {
     return channel != MSGCH_EQUIPMENT
@@ -794,6 +800,22 @@ public:
 
     void add(const message_line& msg)
     {
+        if (_is_hp_restored_message(msg.pure_text_with_repeats())
+            && msgs.filled_size() > 0)
+        {
+            message_line &last = msgs[-1];
+            static const string natural_regen_prefix =
+                "Natural regeneration (HP +";
+            if (last && last.channel == MSGCH_DIAGNOSTICS
+                && last.param == POST_MORTEM_HISTORY_PARAM
+                && last.messages.back().text.compare(
+                    0, natural_regen_prefix.size(), natural_regen_prefix) == 0)
+            {
+                // The full-health message makes this recovery total redundant.
+                last.channel = MSGCH_EQUIPMENT;
+            }
+        }
+
         string orig_full_text = msg.full_text();
 
         if (!(msg.channel != MSGCH_PROMPT && prev_msg.merge(msg)))
@@ -857,6 +879,14 @@ public:
         flush_prev();
         if (prefix == "Natural regeneration (HP +")
         {
+            // Resting already reports when the player reaches full HP.
+            if (msgs.filled_size() > 0
+                && _is_hp_restored_message(
+                    msgs[-1].messages.back().pure_text()))
+            {
+                return;
+            }
+
             for (int i = -1, count = msgs.filled_size(); count > 0; --i, --count)
             {
                 message_line &msg = msgs[i];
@@ -887,7 +917,7 @@ public:
                 // The full-health notification can occur between regen
                 // callbacks. Any other message marks a new point in the
                 // timeline; don't fold later healing back across it.
-                if (msg.messages.back().pure_text() != "HP restored.")
+                if (!_is_hp_restored_message(msg.messages.back().pure_text()))
                     break;
             }
         }
