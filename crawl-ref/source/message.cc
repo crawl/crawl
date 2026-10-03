@@ -884,9 +884,10 @@ public:
                     break;
                 }
 
-                // A hit starts a new regeneration interval. Other messages
-                // such as resting notifications may occur between regen ticks.
-                if (msg.messages.back().text.find("(HP -") != string::npos)
+                // The full-health notification can occur between regen
+                // callbacks. Any other message marks a new point in the
+                // timeline; don't fold later healing back across it.
+                if (msg.messages.back().pure_text() != "HP restored.")
                     break;
             }
         }
