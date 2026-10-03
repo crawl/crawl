@@ -7,6 +7,7 @@
 
 #include "message.h"
 
+#include <cstdlib>
 #include <sstream>
 
 #include "areas.h"
@@ -850,11 +851,32 @@ public:
         }
     }
 
-    void add_history_only_message(const string &text)
+    void add_history_only_hp_message(const char *source, int amount)
     {
+        const string prefix = make_stringf("%s (HP +", source);
         flush_prev();
-        msgs.push_back(message_line(text, MSGCH_DIAGNOSTICS,
-                                    POST_MORTEM_HISTORY_PARAM, false));
+        if (prefix == "Natural regeneration (HP +" && msgs.filled_size() > 0)
+        {
+            message_line &last = msgs[-1];
+            if (last && last.channel == MSGCH_DIAGNOSTICS
+                && last.param == POST_MORTEM_HISTORY_PARAM
+                && last.messages.back().text.compare(0, prefix.size(), prefix) == 0)
+            {
+                const string &text = last.messages.back().text;
+                const size_t end = text.find(')', prefix.size());
+                if (end != string::npos)
+                {
+                    const int previous = std::atoi(text.substr(
+                        prefix.size(), end - prefix.size()).c_str());
+                    last.messages.back().text = make_stringf(
+                        "%s%d)", prefix.c_str(), previous + amount);
+                    return;
+                }
+            }
+        }
+
+        msgs.push_back(message_line(make_stringf("%s%d)", prefix.c_str(), amount),
+                       MSGCH_DIAGNOSTICS, POST_MORTEM_HISTORY_PARAM, false));
         if (_temporary)
             temp++;
         else
@@ -2240,8 +2262,7 @@ void record_hp_restored(int amount, const char *source)
     if (amount <= 0 || !crawl_state.game_started || crawl_state.generating_level)
         return;
 
-    buffer.add_history_only_message(make_stringf(
-        "%s (HP +%d)", source, amount));
+    buffer.add_history_only_hp_message(source, amount);
 }
 
 bool recent_error_messages()
