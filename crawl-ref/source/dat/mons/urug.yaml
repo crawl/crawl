@@ -1,5 +1,5 @@
 name: "Urug"
-drop_on_death: {chance: 50, item: POT_MIGHT}
+drop_on_death: {chance: 50, item: SCR_ENCHANT_WEAPON}
 glyph: {char: "o", colour: red}
 flags: [fighter, speaks, warm_blood, unique, female]
 exp: 795
