@@ -2735,13 +2735,21 @@ static void _give_unique_unrand_item(monster* mon)
         const int index = unrand_candidates[
             random2(static_cast<int>(unrand_candidates.size()))];
         const unrandart_entry *entry = get_unrand_entry(index);
-        const int item = items(false, entry->base_type, entry->sub_type, 0, 0,
-                               NO_AGENT, false, "", nullptr, mon);
-        if (item == NON_ITEM)
-            return;
+        for (mon_inv_type slot : eligible_slots)
+        {
+            item_def *equipped = mon->mslot_item(slot);
+            if (!equipped || equipped->base_type != entry->base_type
+                || equipped->sub_type != entry->sub_type)
+            {
+                continue;
+            }
 
-        make_item_unrandart(env.item[item], index);
-        give_specific_item(mon, item);
+            // The monster may still be at (0, 0) while its gear is assigned.
+            // Transform in place so it doesn't drop equipment at that position.
+            make_item_unrandart(*equipped, index);
+            item_colour(*equipped);
+            break;
+        }
     }
     else
     {
@@ -2765,9 +2773,9 @@ void give_item(monster *mons, int level_number)
     _give_armour(mons, 1 + level_number / 2);
     _give_shield(mons, 1 + level_number / 2);
     _give_extra_equipment(mons, 1 + level_number / 2);
-    _give_unique_unrand_item(mons);
     _give_book(mons);
     _give_unique_drops(mons);
+    _give_unique_unrand_item(mons);
 
     if (mons->type == MONS_ORC_APOSTLE)
         give_apostle_equipment(mons);

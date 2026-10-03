@@ -2560,6 +2560,19 @@ void save_level(const level_id& lid)
     // Reset any monsters that died/left this action.
     flush_monster_reset();
 
+    // A zero-quantity item can be left behind by older saves or a broken
+    // item operation. It is unusable and would abort TAG34 level serialization.
+    for (int i = 0; i < MAX_ITEMS; ++i)
+    {
+        if (env.item[i].base_type != OBJ_UNASSIGNED
+            && env.item[i].quantity <= 0)
+        {
+            dprf("Removing zero-quantity item in slot %d before saving level.",
+                 i);
+            destroy_item(i, true);
+        }
+    }
+
     // Nail all items to the ground.
     fix_item_coordinates();
 
