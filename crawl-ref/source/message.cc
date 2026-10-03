@@ -2227,7 +2227,7 @@ void clear_message_store()
     buffer.clear();
 }
 
-string get_last_messages(int mcount, bool full)
+string get_last_messages(int mcount, bool full, bool show_turn_markers)
 {
     flush_prev_message();
 
@@ -2236,6 +2236,8 @@ string get_last_messages(int mcount, bool full)
     const store_t& msgs = buffer.get_store();
     // XXX: loop wraps around otherwise. This could be done better.
     mcount = min(mcount, NUM_STORED_MESSAGES);
+    bool have_newer_message = false;
+    int newer_message_turn = -1;
     for (int i = -1; mcount > 0; --i)
     {
         const message_line msg = msgs[i];
@@ -2249,7 +2251,13 @@ string get_last_messages(int mcount, bool full)
             string wrapped;
             while (!line.empty())
                 wrapped += wordwrap_line(line, 79, false, true) + "\n";
+            // Match the underscore turn-end marker used by Ctrl-P.
+            if (show_turn_markers && have_newer_message
+                && newer_message_turn > msg.turn)
+                wrapped = "_" + wrapped;
             text = wrapped + text;
+            newer_message_turn = msg.turn;
+            have_newer_message = true;
         }
         mcount--;
     }

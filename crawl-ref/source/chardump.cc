@@ -777,7 +777,7 @@ static void _sdump_messages(dump_params &par)
     if (Options.dump_message_count > 0)
     {
         par.text += "Message History\n\n";
-        par.text += get_last_messages(Options.dump_message_count);
+        par.text += get_last_messages(Options.dump_message_count, false, true);
     }
 }
 
