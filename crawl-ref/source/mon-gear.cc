@@ -2668,6 +2668,91 @@ static void _give_unique_drops(monster* mon)
 
 }
 
+static void _give_unique_unrand_item(monster* mon)
+{
+    if (!mons_is_unique(mon->type))
+        return;
+
+    if (!one_chance_in(20))
+        return;
+
+    const mon_inv_type equipment_slots[] = {
+        MSLOT_WEAPON, MSLOT_AUX_ARMOUR, MSLOT_ARMOUR,
+        MSLOT_SHIELD, MSLOT_JEWELLERY
+    };
+    vector<mon_inv_type> eligible_slots;
+    vector<int> unrand_candidates;
+
+    // Upgrade a slot the unique already uses, avoiding unusable equipment.
+    for (mon_inv_type slot : equipment_slots)
+    {
+        const item_def *equipped = mon->mslot_item(slot);
+        if (!equipped || is_artefact(*equipped)
+            || (equipped->base_type != OBJ_WEAPONS
+                && equipped->base_type != OBJ_ARMOUR
+                && equipped->base_type != OBJ_JEWELLERY)
+            || (equipped->base_type == OBJ_JEWELLERY
+                && equipped->sub_type >= NUM_RINGS)
+            || (equipped->base_type == OBJ_WEAPONS
+                && equipped->sub_type == WPN_CLUB))
+        {
+            continue;
+        }
+        eligible_slots.push_back(slot);
+    }
+
+    if (eligible_slots.empty())
+        return;
+
+    for (int i = 0; i < NUM_UNRANDARTS; ++i)
+    {
+        const int index = i + UNRAND_START;
+        const unrandart_entry *entry = get_unrand_entry(index);
+        if (!entry || entry->base_type == OBJ_UNASSIGNED
+            || (entry->flags & (UNRAND_FLAG_NOGEN | UNRAND_FLAG_DELETED))
+            || get_unique_item_status(index) != UNIQ_NOT_EXISTS)
+        {
+            continue;
+        }
+
+        for (mon_inv_type slot : eligible_slots)
+        {
+            const item_def *equipped = mon->mslot_item(slot);
+            if (equipped->base_type != entry->base_type
+                || equipped->sub_type != entry->sub_type)
+            {
+                continue;
+            }
+
+            unrand_candidates.push_back(index);
+        }
+    }
+
+    // Split successful rolls evenly. If no matching unrand is available,
+    // use the randart branch so this roll still grants an artefact.
+    if (coinflip() && !unrand_candidates.empty())
+    {
+        const int index = unrand_candidates[
+            random2(static_cast<int>(unrand_candidates.size()))];
+        const unrandart_entry *entry = get_unrand_entry(index);
+        const int item = items(false, entry->base_type, entry->sub_type, 0, 0,
+                               NO_AGENT, false, "", nullptr, mon);
+        if (item == NON_ITEM)
+            return;
+
+        make_item_unrandart(env.item[item], index);
+        give_specific_item(mon, item);
+    }
+    else
+    {
+        const mon_inv_type slot = eligible_slots[
+            random2(static_cast<int>(eligible_slots.size()))];
+        item_def *equipped = mon->mslot_item(slot);
+        if (equipped && make_item_randart(*equipped, true))
+            item_colour(*equipped);
+    }
+}
+
 void give_item(monster *mons, int level_number)
 {
     ASSERT(level_number > -1); // debugging absdepth0 changes
@@ -2680,6 +2765,7 @@ void give_item(monster *mons, int level_number)
     _give_armour(mons, 1 + level_number / 2);
     _give_shield(mons, 1 + level_number / 2);
     _give_extra_equipment(mons, 1 + level_number / 2);
+    _give_unique_unrand_item(mons);
     _give_book(mons);
     _give_unique_drops(mons);
 
