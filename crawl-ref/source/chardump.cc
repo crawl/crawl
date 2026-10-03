@@ -1289,7 +1289,7 @@ static void _sdump_hiscore(dump_params &par)
 
 static void _sdump_monster_list(dump_params &par)
 {
-    string monlist = mpr_monster_list(par.se);
+    string monlist = mpr_monster_list(par.se, par.se);
     trim_string(monlist);
     while (!monlist.empty())
         par.text += wordwrap_line(monlist, 80) + "\n";
@@ -1690,7 +1690,8 @@ static void _sdump_skill_gains(dump_params &par)
     {
         if (note.type == NOTE_XP_LEVEL_CHANGE)
             xl = note.first;
-        else if (note.type == NOTE_GAIN_SKILL || note.type == NOTE_LOSE_SKILL)
+        else if (note.type == NOTE_GAIN_SKILL || note.type == NOTE_LOSE_SKILL
+                || note.type == NOTE_START_SKILL)
         {
             skill_type skill = static_cast<skill_type>(note.first);
             int skill_level = note.second;
