@@ -271,7 +271,7 @@ def pluralise(string):
         return string + "es"
     elif re.search('(simulacrum|eidolon|plasmodium)$', string):
         return string[:-2] + "a"
-    elif string.endswith("djinni"):
+    elif string.lower().endswith("djinni"):
         return string[:-1]
     elif string.endswith("foot"):
         return string[:-4] + "feet"
@@ -647,12 +647,13 @@ def process_species_yaml_lines(lines, deprecated):
     short_name = None
     orc_name = None
     adjective = None
+    genus = None
     child = None
     for line in lines:
         [key, value] = extract_key_value(line, ":")
         if key in ["", "size", "difficulty", "undead_type"]:
             continue
-        if value == "" or is_boolean(value) or is_integer(value):
+        if value == "" or value == "[]" or is_boolean(value) or is_integer(value):
             continue
         if "_" in value or "#" in value or "Buggy" in value or "buggily" in value:
             continue
@@ -677,7 +678,7 @@ def process_species_yaml_lines(lines, deprecated):
             strings.append(value + "ing")
             strings.append(value + "er")
         elif key == "genus":
-            strings.append(article_the(value))
+            genus = value
         elif not deprecated:
             if key == "altar_action":
                 value = "You " + value + " @the_altar@."
@@ -690,16 +691,25 @@ def process_species_yaml_lines(lines, deprecated):
     if short_name == None:
         short_name = name[0:2]
     strings.insert(1, short_name)
+    if genus != None:
+        strings.append(article_the(genus))
+    if not deprecated:
+        genus = genus if genus != None else name
+        plural_genus = pluralise(genus)
+        if plural_genus != genus:
+            strings.append(plural_genus)
 
-    if short_name not in ["LO", "SE", "HE", "Ce", "Ha", "DD", "Pa"]:
+    if short_name not in ["Dg", "LO", "SE", "HE", "Ce", "Ha", "DD", "My", "Pa"] \
+       and name != "Mottled Draconian":
+        # Dg can't worship gods, and the others were removed before any of this
         if child != None:
             # Hep title (changed to use specific child noun in 0.31)
             if adjective == None:
                 adjective = name
-            strings.append(adjective + " " + child)
+            strings.append(article_the(adjective + " " + child))
         if orc_name != None and short_name not in ["Og", "Me"]:
             # orc_name added in 0.32 when Beogh worship was opened up for non-orcs
-            strings.append(orc_name)
+            strings.append(article_the(orc_name))
 
     return strings
 
