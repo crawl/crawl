@@ -2210,7 +2210,7 @@ void record_damage_taken(int damage)
         return;
 
     buffer.append_to_last_history_message(
-        make_stringf(" (HP=-%d)", damage));
+        make_stringf(" (HP -%d)", damage));
 }
 
 bool recent_error_messages()
