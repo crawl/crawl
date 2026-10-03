@@ -1,4 +1,5 @@
 name: "Pargi"
+drop_on_death: {chance: 50, item: POT_HEAL_WOUNDS}
 glyph: {char: "T", colour: green}
 flags: [speaks, warm_blood, unique, fast_regen, male]
 exp: 135

@@ -102,6 +102,9 @@ vigorous orc with a strange obsession with colour instead.
 He wields magic tinged with every hue of the rainbow, and has mastered the art
 of dividing his own form among its many colours to avoid killing blows - though
 even he must rest a while before doing so a second time.
+
+<brown>DC Chili change: Blorkula the orcula has a 50% chance of dropping a
+potion of haste when killed.</brown>
 %%%%
 Boris
 
@@ -603,6 +606,9 @@ Mlioglotl
 A demon prince once possessed a hunger for power that was exceptional even by
 the standards of his kind. He betrayed his realm to Lugonu, and his reward was
 to become this twisted mass of corruption, now known only as Mlioglotl.
+
+<brown>DC Chili change: Mlioglotl has a 50% chance of dropping a parchment of
+Cause Fear when killed.</brown>
 %%%%
 Mnoleg
 
@@ -709,6 +715,9 @@ BCadren's Sewer.</brown>
 Pargi
 
 An unusually weak troll.
+
+<brown>DC Chili change: Pargi has a 50% chance of dropping a potion of heal
+wounds when killed.</brown>
 %%%%
 Parghit
 
@@ -873,6 +882,9 @@ remaining eye is not very good, and she has mistaken you for one.
         return "She smells terrible."
     end
 }}
+
+<brown>DC Chili change: Urug has a 50% chance of dropping a scroll of enchant
+weapon when killed.</brown>
 %%%%
 Wiglaf
 
@@ -924,6 +936,9 @@ when killed.</brown>
 Xtahua
 
 An ancient and mighty dragon.
+
+<brown>DC Chili change: Xtahua has a 50% chance of dropping a potion of
+resistance when killed.</brown>
 %%%%
 Zenata
 
