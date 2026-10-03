@@ -2564,7 +2564,8 @@ void save_level(const level_id& lid)
     // item operation. It is unusable and would abort TAG34 level serialization.
     for (int i = 0; i < MAX_ITEMS; ++i)
     {
-        if (env.item[i].defined() && env.item[i].quantity <= 0)
+        if (env.item[i].base_type != OBJ_UNASSIGNED
+            && env.item[i].quantity <= 0)
         {
             dprf("Removing zero-quantity item in slot %d before saving level.",
                  i);

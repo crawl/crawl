@@ -172,8 +172,10 @@ class DeathDropItem:
 class DeathDrop:
     def __init__(self, chance=0, options=None):
         self.chance = chance
-        self.options = options or [DeathDropItem(), DeathDropItem()]
         self.option_count = 0 if options is None else len(options)
+        self.options = options if options is not None else []
+        while len(self.options) < 2:
+            self.options.append(DeathDropItem())
 
     def __str__(self):
         return "{%d, %d, {%s, %s}}" % (
@@ -230,8 +232,6 @@ def parse_death_drop(s):
         options.append(DeathDropItem(base_type, sub_type, quantity, plus,
                                      brand))
 
-    if len(options) == 1:
-        options.append(DeathDropItem())
     return DeathDrop(chance, options)
 
 class Glyph:

@@ -10,8 +10,6 @@ This spriggan is aged and weathered from years of travel away from the forests
 and swamps that are home to her kin. Her choice of weapon and astonishing speed
 both speak to the training she underwent. Underestimate her at your peril!
 
-<brown>DC Chili change: Agnes has a 50% chance of dropping a potion of haste
-when she is killed.</brown>
 %%%%
 Aizul
 
@@ -20,8 +18,6 @@ disgraced after thieves looted it while she slept. She seeks to make up for her
 failure by protecting the only treasure the villains overlooked, a single
 precious talisman.
 
-<brown>DC Chili change: Aizul has a 50% chance of dropping a potion of haste
-when killed.</brown>
 %%%%
 Amaemon
 
@@ -30,8 +26,7 @@ his demonic heritage manifested. As his body twisted, Amaemon was forced to flee
 far from the surface. The passage of time has only left him more obsessed with
 what he has lost - consumed by poison both physical and spiritual.
 
-<brown>DC Chili change: Amaemon has a 50% chance of dropping Snakebite when it
-is available.</brown>
+<brown>DC Chili change: Uniques have a 50% chance to drop an item when killed. For Amaemon, the item is Snakebite (if available).</brown>
 %%%%
 Antaeus
 
@@ -41,8 +36,6 @@ descended into the Hells. Finding the inhabitants of that place no match for his
 might, Antaeus tore from its substance a fourth Hell, Cocytus, a realm born of
 frozen spite.
 
-<brown>DC Chili change: Antaeus has a 50% chance of dropping a potion of
-resistance when killed.</brown>
 %%%%
 Arachne
 
@@ -55,8 +48,7 @@ Now she wanders other corners of the dungeon with a small retinue of loyal
 students in tow, seeking a new domain in which they can spin their peerless
 tapestries in peace.
 
-<brown>DC Chili change: Arachne has a 50% chance of dropping the Staff of
-Olgreb when it is available.</brown>
+<brown>DC Chili change: Uniques have a 50% chance to drop an item when killed. For Arachne, the item is the Staff of Olgreb (if available).</brown>
 %%%%
 Asmodeus
 
@@ -64,8 +56,7 @@ Greatest and most cunning of the Lords of Hell, Asmodeus was born when the twin
 fires of greed and treachery first sparked to life within a mortal's heart.
 His hideous body is perpetually wreathed in flame.
 
-<brown>DC Chili change: Asmodeus has a 50% chance of dropping the sceptre of
-Asmodeus when killed.</brown>
+<brown>DC Chili change: Uniques have a 50% chance to drop an item when killed. For Asmodeus, the item is the sceptre of Asmodeus.</brown>
 %%%%
 Asterion
 
@@ -75,15 +66,11 @@ dreaming of a new kingdom. In his lust for power, the minotaur king turned to
 the worship of Makhleb, and Makhleb has rewarded him with horrifying
 destructive might.
 
-<brown>DC Chili change: Asterion has a 50% chance of dropping a potion of
-might when killed.</brown>
 %%%%
 Azrael
 
 A powerful, belligerent efreet. (Is there any other kind?)
 
-<brown>DC Chili change: Azrael has a 50% chance of dropping a parchment of
-Fireball when killed.</brown>
 %%%%
 Bai Suzhen
 
@@ -93,8 +80,6 @@ known for quarrelling with saints and flooding unfortunate temples. If pressed
 to her limits, she will reveal her true form, the mere sight of which struck
 her husband dead. Adventurers may wish they were so lucky!
 
-<brown>DC Chili change: Bai Suzhen has a 50% chance of dropping a phial of
-floods when killed, including in her dragon form.</brown>
 %%%%
 Blorkula the orcula
 
@@ -106,8 +91,6 @@ He wields magic tinged with every hue of the rainbow, and has mastered the art
 of dividing his own form among its many colours to avoid killing blows - though
 even he must rest a while before doing so a second time.
 
-<brown>DC Chili change: Blorkula the orcula has a 50% chance of dropping a
-potion of haste when killed.</brown>
 %%%%
 Boris
 
@@ -116,8 +99,6 @@ regenerate his desiccated skeletal remains even if completely disintegrated.
 The same cannot be said for his many victims over his many centuries, from
 which he collects and channels their dying woes and regrets.
 
-<brown>DC Chili change: Boris has a 50% chance of dropping a potion of
-brilliance when he is killed.</brown>
 %%%%
 Cassandra
 
@@ -136,24 +117,21 @@ harness. Cracked bronze bells hang from his horns, sounding commands that the
 beasts of the Lair obey with unsettling precision. He can drive his herd into a
 battle-frenzy before stampeding in a straight line towards his prey.
 
-<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Rusk has a 50% chance of dropping a potion of might
-when he is killed.</brown>
+<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time.</brown>
 %%%%
 Katinboo
 
 A cunning, broad-shouldered felid whose claws drip with curare. Katinboo never
 hunts alone for long, calling an ogre and a stubborn mule to join the fight.
 
-<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Katinboo has a 50% chance of dropping 3 curare darts
-when she is killed.</brown>
+<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time.</brown>
 %%%%
 Cerebov
 
 A violent and wrathful demon, Cerebov appears as a giant humanoid covered in
 shining golden armour and wielding a huge twisted sword.
 
-<brown>DC Chili change: Cerebov has a 50% chance of dropping the sword of
-Cerebov when killed.</brown>
+<brown>DC Chili change: Uniques have a 50% chance to drop an item when killed. For Cerebov, the item is the sword of Cerebov.</brown>
 %%%%
 Chuck
 
@@ -166,8 +144,6 @@ A withered old gnoll with a long silver beard, wielding a quarterstaff and
 wearing a cloak. He looks like a figure from mythology! Wait, is his beard held
 on to his ears with hooks?
 
-<brown>DC Chili change: Crazy Yiuf has a 50% chance of dropping a potion of
-mutation when he is killed.</brown>
 %%%%
 Dispater
 
@@ -175,8 +151,7 @@ Greatest and most ruthless of the Lords of Hell, Dispater was born when first an
 iron sword drank mortal blood. They despise mortal vanities, the pursuit of
 ‘reason’ and ‘beauty’ - the only art they enjoy is the art of war.
 
-<brown>DC Chili change: Dispater has a 50% chance of dropping the orb of
-Dispater when killed.</brown>
+<brown>DC Chili change: Uniques have a 50% chance to drop an item when killed. For Dispater, the item is the orb of Dispater.</brown>
 %%%%
 Dissolution
 
@@ -186,8 +161,6 @@ only Dissolution survived, for they alone turned faithfully to the Slime God.
 Dissolution became a tremendous mass of acidic ooze, yet retained their
 intelligence. They are filled with hatred for anything that can hold a form.
 
-<brown>DC Chili change: Dissolution has a 50% chance of dropping a potion of
-mutation when killed.</brown>
 %%%%
 Scave the Devourer of Slime
 
@@ -195,8 +168,7 @@ A tentacled starspawn that hunts down slimes in the Pits. It prioritizes nearby
 slimes over you, lashing out with its tentacles and dragging prey into its maw.
 
 <brown>DC Chili change: Scave is a new unique created specifically for DC Chili
-and appears only on Slime:1. Scave has a 50% chance of dropping a parchment of
-Corrosive Bolt when killed.</brown>
+and appears only on Slime:1.</brown>
 %%%%
 Donald
 
@@ -215,8 +187,6 @@ Donald
     return descript
 }}
 
-<brown>DC Chili change: Donald has a 50% chance of dropping a potion of heal
-wounds when killed.</brown>
 %%%%
 Dowan
 
@@ -224,8 +194,6 @@ A beautiful but vain deep elf with an aptitude for magic and little else. His
 skills are the perfect complement of his twin sister Duvessa's fighting prowess.
 In search of more powerful spells, he journeys to the surface with his sister.
 
-<brown>DC Chili change: Dowan has a 50% chance of dropping a potion of magic
-when killed.</brown>
 %%%%
 Duvessa
 
@@ -234,8 +202,6 @@ combat, but over-confident because of it. She is complemented by the magical
 skills of her twin brother, Dowan. She journeys to the surface to challenge
 its greatest champions.
 
-<brown>DC Chili change: Duvessa has a 50% chance of dropping a potion of might
-when killed.</brown>
 %%%%
 Edmund
 
@@ -244,8 +210,6 @@ none of Sigmund's skills in magic, but makes up for it with his skills in
 fighting and a canny head for money. He is eager to prove his superiority by
 killing hapless adventurers with his expensive flail and quick wit.
 
-<brown>DC Chili change: Edmund has a 50% chance of dropping a potion of might
-when he is killed.</brown>
 %%%%
 Enchantress
 
@@ -253,8 +217,7 @@ First and most fearful of her kind, the Enchantress rules over the spriggans of
 the dungeon. She wears an opalescent outfit made of dragon skin that shimmers
 with many colours.
 
-<brown>DC Chili change: The Enchantress has a 50% chance of dropping the Faerie
-armour when killed.</brown>
+<brown>DC Chili change: Uniques have a 50% chance to drop an item when killed. For the Enchantress, the item is the Faerie armour.</brown>
 %%%%
 Ereshkigal
 
@@ -262,32 +225,24 @@ Greatest and most inexorable of the Lords of Hell, Ereshkigal was born when
 first a mortal breathed her last. Noiselessly she laughs at lives cut short and
 loved ones separated by untimely death, enwreathed in the silence of the grave.
 
-<brown>DC Chili change: Ereshkigal has a 50% chance of dropping a scroll of
-silence when killed.</brown>
 %%%%
 Erica
 
 A wild-tempered adventuress. She's quite prideful for an octopode, and brandishes
 their venomous capacity and camouflage talents with cruel force.
 
-<brown>DC Chili change: Erica has a 50% chance of dropping a potion of
-invisibility when killed.</brown>
 %%%%
 Erolcha
 
 An especially cunning ogre-mage.
 
-<brown>DC Chili change: Erolcha has a 50% chance of dropping a parchment of
-Fireball when killed.</brown>
 %%%%
 Eustachio
 
 An apprentice summoner with a flowing moustache. He has funny ideas about
 honour.
 
-<brown>DC Chili change: Eustachio has a 50% chance of dropping a small
-Summoning spellbook when he is killed. The book always contains Summon Small
-Mammal.</brown>
+<brown>DC Chili change: Uniques have a 50% chance to drop an item when killed. For Eustachio, the item is a small Summoning spellbook. The book always contains Summon Small Mammal.</brown>
 %%%%
 Fannar
 
@@ -295,8 +250,7 @@ A cold-hearted elven sorcerer, draped in robes of high office. They whisper
 grimly to themself as they stalk the dungeon, trailing ice crystals through the
 air behind them.
 
-<brown>DC Chili change: Fannar has a 50% chance of dropping a small Ice spellbook
-when he is killed. The book always contains Summon Ice Beast.</brown>
+<brown>DC Chili change: Uniques have a 50% chance to drop an item when killed. For Fannar, the item is a small Ice spellbook. The book always contains Summon Ice Beast.</brown>
 %%%%
 Frances
 
@@ -305,8 +259,6 @@ gaining control over the demon's realm and thanes. The battle left her with a
 deep facial scar, one that she carries as a badge of honour rather than a
 symbol of shame.
 
-<brown>DC Chili change: Frances has a 50% chance of dropping a potion of might
-when she is killed.</brown>
 %%%%
 Frederick
 
@@ -314,8 +266,6 @@ A svelte fighter-mage with a gold-rimmed monocle, a keen sense of tradition,
 and the blood of the gods running through his veins. He's here looking for a
 worthy opponent, but he's yet to find one.
 
-<brown>DC Chili change: Frederick has a 50% chance of dropping a potion of
-brilliance when killed.</brown>
 %%%%
 Gastronok
 
@@ -324,23 +274,19 @@ everyone he comes across, with a pointed hat perched rakishly atop his head. He
 acquired the hat the same way he acquired his intelligence and his knowledge of
 spells: by consuming their former owner, a powerful wizard.
 
-<brown>DC Chili change: Gastronok has a 50% chance of dropping the hat of
-Pondering when it is available.</brown>
+<brown>DC Chili change: Uniques have a 50% chance to drop an item when killed. For Gastronok, the item is the hat of Pondering (if available).</brown>
 %%%%
 Geryon
 
 A huge, three-headed, winged arch-demon, guardian of the four Hells. Legends
 say that his silver horn can summon terrible beasts to aid him in battle.
 
-<brown>DC Chili change: Geryon has a 50% chance of dropping the horn of Geryon
-when killed.</brown>
+<brown>DC Chili change: Uniques have a 50% chance to drop an item when killed. For Geryon, the item is the horn of Geryon.</brown>
 %%%%
 Gloorx Vloq
 
 A shadowy figure clothed in profound darkness.
 
-<brown>DC Chili change: Gloorx Vloq has a 50% chance of dropping a potion of
-invisibility when killed.</brown>
 %%%%
 Goji
 
@@ -351,23 +297,17 @@ adversary.
 
 And Goji? Well. He's also here.
 
-<brown>DC Chili change: Goji has a 50% chance of dropping a potion of
-invisibility when killed, including when his ghost moth survives.</brown>
 %%%%
 Grinder
 
 An inefficient shadow imp previously employed as a torturer in one of the lower
 circles of Hell. She has a tendency to complain and make inane statements.
 
-<brown>DC Chili change: Grinder has a 50% chance of dropping a scroll of torment
-when she is killed.</brown>
 %%%%
 Grum
 
 A tough-looking gnoll, wearing the pelt of one of his former war dogs.
 
-<brown>DC Chili change: Grum has a 50% chance of dropping a potion of berserk
-rage when killed.</brown>
 %%%%
 Grunn
 
@@ -375,8 +315,7 @@ A brutally twisted undead gnoll in the eternal service of Ereshkigal, lord of
 Tartarus. Legend has it that he sold his soul to return his most beloved hunting
 dog to life. Whether that hound is a member of his current pack, none can say.
 
-<brown>DC Chili change: Grunn has a 50% chance of dropping the Scythe of Curses
-when it is available.</brown>
+<brown>DC Chili change: Uniques have a 50% chance to drop an item when killed. For Grunn, the item is the Scythe of Curses (if available).</brown>
 %%%%
 Harold
 
@@ -384,8 +323,6 @@ A middle-aged bounty hunter, anxious to retire after one final job. He hopes to
 settle down somewhere and live a quiet life with his family, using the money
 from his final bounty: you.
 
-<brown>DC Chili change: Harold has a 50% chance of dropping a throwing net when
-killed.</brown>
 %%%%
 Ignacio
 
@@ -397,8 +334,6 @@ Although his new form includes a number of large razor-sharp blades growing
 from his demonic appendages, he kept his favourite axe and is eager to let you
 test its edge.
 
-<brown>DC Chili change: Ignacio has a 50% chance of dropping a potion of haste
-when killed.</brown>
 %%%%
 Ijyb
 
@@ -406,16 +341,12 @@ A small and shrewd goblin inventor, wearing blue rags coated in soot.
 She claims dominion over this level of the dungeon; trespassers will find
 themselves on the business end of a homemade wand.
 
-<brown>DC Chili change: Ijyb has a 50% chance of dropping a scroll of blinking
-when she is killed.</brown>
 %%%%
 Ilsuiw
 
 A deadly merfolk water-witch, who uses her dominion over the tides to draw
 unwitting adventurers to their deaths.
 
-<brown>DC Chili change: Ilsuiw has a 50% chance of dropping a potion of magic
-when killed.</brown>
 %%%%
 Jeremiah
 
@@ -426,17 +357,13 @@ searching for the precious dreamshard that will restore their master’s power,
 unsure whether they wake or slumber still. Their dreams leak into reality in
 the form of a constant stream of butterflies.
 
-<brown>DC Chili change: Jeremiah has a 50% chance of dropping a scroll of
-butterflies when killed.</brown>
 %%%%
 Jessica
 
 An evil apprentice sorceress. After the fall of the kingdom she hid in the
 ruins to practice the dark arts.
 
-<brown>DC Chili change: Jessica has a 50% chance of dropping a small spellbook
-when she is killed. If she does drop a book, there is also a 50% chance that
-it will have the Blink spell.</brown>
+<brown>DC Chili change: Uniques have a 50% chance to drop an item when killed. For Jessica, the item is a small spellbook. If she does drop a book, there is also a 50% chance that it will have the Blink spell.</brown>
 
 <brown>DC Chili change: Jessica is almost guaranteed to appear on D:2, a mostly
 forested, semi-open floor with dead trees and at least two altars.</brown>
@@ -446,8 +373,6 @@ Jorgrun
 A dwarven magician, particularly well-attuned to the dungeon around him. He
 wields powerful earth magic in combat.
 
-<brown>DC Chili change: Jorgrun has a 50% chance of dropping a parchment of
-Bombard when killed.</brown>
 %%%%
 Jory
 
@@ -456,15 +381,11 @@ powerful creature. Through the countless centuries unlived since then, he has
 honed his skills in combat and magic, and amassed great wealth and many
 possessions.
 
-<brown>DC Chili change: Jory has a 50% chance of dropping a scroll of torment
-when killed.</brown>
 %%%%
 Joseph
 
 Looks like a mercenary in a stupid-looking hat.
 
-<brown>DC Chili change: Joseph has a 50% chance of dropping a scroll of enchant
-weapon when killed.</brown>
 %%%%
 Josephina
 
@@ -472,33 +393,24 @@ A fearsome necromancer who followed her craft beyond the limits of flesh and
 life. Her pursuit of demonic knowledge left her body ruined, but the powers she
 gained allowed her to rebuild her missing limbs from glittering ice.
 
-<brown>DC Chili change: Josephina has a 50% chance of dropping a parchment of
-Haunt when killed.</brown>
 %%%%
 Josephine
 
 A formidable necromancer, committed to her craft even after it left her aged,
 decaying, and half-undead herself.
 
-<brown>DC Chili change: Josephine has a 50% chance of dropping a small Necromancy
-spellbook when she is killed. The book always contains Vampiric Draining and
-Dispel Undead.</brown>
 %%%%
 Khufu
 
 An incredibly powerful emperor on the way to godhood. He died quite some time
 ago, but he sees no reason why that should stop him.
 
-<brown>DC Chili change: Khufu has a 50% chance of dropping a wand of digging
-when killed.</brown>
 %%%%
 Kirke
 
 A master of transformation and treachery. Beware, or you may be the next swine
 to join her herd!
 
-<brown>DC Chili change: Kirke has a 50% chance of dropping a wand of polymorph
-when killed.</brown>
 %%%%
 Lernaean hydra
 
@@ -507,8 +419,6 @@ through the water faster than a human can run, swatting aside trees as though
 they were matchsticks. Its many heads slaver and gnash constantly as it hunts
 for prey to slake its bottomless appetite.
 
-<brown>DC Chili change: The Lernaean hydra has a 50% chance of dropping a
-potion of heal wounds when killed.</brown>
 %%%%
 Lodul
 
@@ -517,8 +427,6 @@ they enter the Vaults. Fiercely charismatic, he's rallied a small army of his
 kin, overawing them with the long-range lightning array he wears on his back.
 (The large coin purse he took from the Vaults is also quite persuasive.)
 
-<brown>DC Chili change: Lodul has a 50% chance of dropping a lightning rod
-when killed.</brown>
 %%%%
 Lom Lobon
 
@@ -528,8 +436,6 @@ they are at times sought out by mortal wizards who offer their souls in
 exchange for the secrets of the arcane. Lacking the terrible wrath present in
 most demons, Lom Lobon's single eye instead hides a cold, impartial cruelty.
 
-<brown>DC Chili change: Lom Lobon has a 50% chance of dropping a scroll of
-acquirement when killed.</brown>
 %%%%
 Louise
 
@@ -540,8 +446,6 @@ hostile plane for nearly a decade. When she finally emerged from the Abyss,
 Louise had become powerful indeed, but had also gone fully insane. She now
 wanders the halls of the dungeon, seeking other adventurers to share her fate.
 
-<brown>DC Chili change: Louise has a 50% chance of dropping a scroll of blinking
-when she is killed.</brown>
 %%%%
 Mara
 
@@ -549,8 +453,6 @@ This tall and powerful demon is Mara, Lord of Illusions, mighty among dreamers.
 He is capable of creating intricately detailed illusions, so real that they are
 almost as deadly as the creatures they impersonate.
 
-<brown>DC Chili change: Mara has a 50% chance of dropping a phantom mirror
-when killed.</brown>
 %%%%
 Maggie
 
@@ -560,8 +462,7 @@ on imagination), she entered the Dungeon and set out to slay a dragon. Now
 having slain one, Maggie sees no reason to stop.
 
 <brown>DC Chili change: Maggie has a 5% chance of spawning with Wyrmbane when it
-is available; if she has it, it drops as carried equipment. She also has a 50%
-chance of dropping a potion of might when killed.</brown>
+is available; if she has it, it drops as carried equipment.</brown>
 %%%%
 Margery
 
@@ -569,8 +470,7 @@ A lithe spellcaster in service to the powers of Hell; it is her duty to ensure
 that the inhabitants of the Dungeon never forget their place. She personally
 slew the ancient dragon from whose hide her strange armour is crafted.
 
-<brown>DC Chili change: Margery has a 50% chance of dropping Wyrmbane when it is
-available.</brown>
+<brown>DC Chili change: Uniques have a 50% chance to drop an item when killed. For Margery, the item is Wyrmbane (if available).</brown>
 %%%%
 Maurice
 
@@ -579,8 +479,6 @@ and crafty of the thieves and rogues lured by the Orb. The magical parasitic
 vines that have claimed his body still wish to continue his life's work, with a
 back-up plan of both a vicious magic-drinking maw and potent wands.
 
-<brown>DC Chili change: Maurice has a 50% chance of dropping a scroll of
-acquirement when he is killed.</brown>
 %%%%
 Medusa
 
@@ -588,12 +486,11 @@ A snake headed Naga with a petrifying stare. The only mortal sister of the
 ancient Gorgon, she terrorizes the denizens of the early dungeon. When defeated,
 her garden of victims will be transformed into an army of vengeful snakes.
 
-<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Medusa has a 50% chance of dropping a Talisman of
-Medusa when she is killed.</brown>
-
-<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Medusa is guaranteed to appear on D:3, a mostly forested
-floor with corrupted trees. D:3 has eight possible floor layouts, including
-one with a castle.</brown>
+<brown>DC Chili change: Medusa is a new unique created for DC Chili. She has a
+50% chance of spawning with the Talisman of Medusa, which drops as carried
+equipment, and is guaranteed to appear on D:3, a mostly forested floor with
+corrupted trees. D:3 has eight possible floor layouts, including one with a
+castle.</brown>
 %%%%
 Menkaure
 
@@ -605,8 +502,6 @@ reduced to mouldering bandages and dry, brittle bones.
 <brown>DC Chili change: Menkaure is almost guaranteed to appear on D:5, a
 catacomb floor. The DCSS Ossuary has been removed.</brown>
 
-<brown>DC Chili change: Menkaure has a 50% chance of dropping either a scroll of
-torment or a ring of positive energy when he is killed.</brown>
 %%%%
 Mennas
 
@@ -622,8 +517,6 @@ tongue.
 Whether or not this angel is that same Mennas is something of a mystery, as he
 seems to have difficulty speaking.
 
-<brown>DC Chili change: Mennas has a 50% chance of dropping a parchment of
-Silence when killed.</brown>
 %%%%
 Mlioglotl
 
@@ -631,29 +524,22 @@ A demon prince once possessed a hunger for power that was exceptional even by
 the standards of his kind. He betrayed his realm to Lugonu, and his reward was
 to become this twisted mass of corruption, now known only as Mlioglotl.
 
-<brown>DC Chili change: Mlioglotl has a 50% chance of dropping a parchment of
-Cause Fear when killed.</brown>
 %%%%
 Mnoleg
 
 A weirdly glowing figure, dancing through the twisted air of Pandemonium.
 
-<brown>DC Chili change: Mnoleg has a 50% chance of dropping a potion of
-mutation when killed.</brown>
 %%%%
 Monkey King
 
 A large howler monkey who has climbed and clawed his way to the top of his pack.
 
-<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. The Monkey King has a 50% chance of dropping a scroll of
-summoning when he is killed.</brown>
+<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time.</brown>
 %%%%
 Murray
 
 A demonic skull rolling along the ground.
 
-<brown>DC Chili change: Murray has a 50% chance of dropping a scroll of
-torment when killed.</brown>
 %%%%
 Natasha
 
@@ -665,8 +551,6 @@ and claw upon any adventurer who crosses her path.
 This cat doesn't have nine lives, but just one death isn't going to be enough
 to put her down for good.
 
-<brown>DC Chili change: Natasha has a 50% chance of dropping a potion of magic
-when she is killed.</brown>
 %%%%
 Nellie
 
@@ -685,16 +569,12 @@ More than any other orc still breathing, she knows the blood and sacrifice it
 took to make this place a refuge for her kind. She will not brook its being
 intruded upon by anyone - least of all you.
 
-<brown>DC Chili change: Nergalle has a 50% chance of dropping a parchment of
-Animate Dead when killed.</brown>
 %%%%
 Nessos
 
 A centaur warrior, skilled at warfare and deceit. They slew a mighty hydra, and
 now its deadly blood drips, still-fuming, from their arrows.
 
-<brown>DC Chili change: Nessos has a 50% chance of dropping three curare darts
-when killed.</brown>
 %%%%
 Nikola
 
@@ -702,8 +582,7 @@ A brilliant scientist obsessed with electricity. In his attempts to perfect his
 electric golem, he was involved in a terrible accident, and now phases in and
 out of reality.
 
-<brown>DC Chili change: Nikola has a 50% chance of dropping the arc blade when
-it is available.</brown>
+<brown>DC Chili change: Uniques have a 50% chance to drop an item when killed. For Nikola, the item is the arc blade (if available).</brown>
 %%%%
 Nobody
 
@@ -716,8 +595,6 @@ history does not remember them.
 But one thing is clear: they will fight to change that until every last memory
 they have left burns away.
 
-<brown>DC Chili change: Nobody has a 50% chance of dropping a parchment of
-Death Channel when killed.</brown>
 %%%%
 Norris
 
@@ -725,22 +602,18 @@ A relaxed water cultist with a healthy tan and a soothing voice. He
 doesn't really care if it is you or he who dies — “both” would probably be the
 best option.
 
-<brown>DC Chili change: Norris has a 50% chance of dropping a potion of ambrosia
-when killed.</brown>
 %%%%
 Octavia
 
 A heretic of Gozag.
 
-<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Octavia has a 50% chance of dropping a gift of gold when
-she is killed.</brown>
+<brown>DC Chili change: Octavia is a unique created for DC Chili. Uniques have a 50% chance to drop an item when killed. For Octavia, the item is a gift of gold.</brown>
 %%%%
 Oskar
 
 A garbage dwelling denizen of the dungeon.
 
-<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Oskar has a 50% chance of dropping a potion of
-cancellation when he is killed.</brown>
+<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time.</brown>
 
 <brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Oskar is almost guaranteed to appear on D:4, which is
 BCadren's Sewer.</brown>
@@ -749,11 +622,6 @@ Pargi
 
 An unusually weak troll.
 
-<brown>DC Chili change: Pargi has a 50% chance of dropping a potion of heal
-wounds when killed.</brown>
-
-<brown>DC Chili change: Pargi has a 50% chance of dropping a potion of heal
-wounds when killed.</brown>
 %%%%
 Parghit
 
@@ -762,8 +630,7 @@ victories. He has been wounded so many times that his body has adapted, and now
 heals almost instantly. His necklace of troll claws is a memento of those who
 underestimated him.
 
-<brown>DC Chili change: Parghit has a 50% chance of dropping the scales of the
-Dragon King when they are available.</brown>
+<brown>DC Chili change: Uniques have a 50% chance to drop an item when killed. For Parghit, the item is the scales of the Dragon King (if available).</brown>
 %%%%
 Peregrine the Pilferer
 
@@ -771,10 +638,10 @@ An elusive kobold thief who prowls the Orcish Mines, snatching up useful loot
 left on the floor. He can turn stolen weapons, missiles, and wands against his
 foes.
 
-<brown>DC Chili change: This is a new unique created in DC Chili and will likely
-not exist in DCSS for some time. Peregrine can appear only in the Orcish Mines.
-He carries two potions of invisibility to use in combat and has a 50% chance of
-dropping one when killed.</brown>
+<brown>DC Chili change: Peregrine is a unique created for DC Chili and appears
+only in the Orcish Mines. Uniques have a 50% chance to drop an item when killed.
+For Peregrine, the item is one potion of invisibility. He also carries two
+potions of invisibility to use in combat.</brown>
 %%%%
 Pikel
 
@@ -783,8 +650,6 @@ highly lucrative transdimensional trade in damned souls. But Pikel is better
 known for his whip than his wisdom, mercilessly tormenting his piteous charges
 as he ferries them to their buyers.
 
-<brown>DC Chili change: Pikel has a 50% chance of dropping a wand of paralysis
-when killed.</brown>
 %%%%
 Polyphemus
 
@@ -793,15 +658,11 @@ an undying fervor through his single massive eye. Nevertheless, he won't
 hesitate to use them as projectiles in a pinch; after all, the best defence is
 a good offence.
 
-<brown>DC Chili change: Polyphemus has a 50% chance of dropping three large
-rocks when killed.</brown>
 %%%%
 Prince Ribbit
 
 A frog of unusual size, with a tiny crown perched incongruously atop his head.
 
-<brown>DC Chili change: Prince Ribbit has a 50% chance of dropping a parchment
-of Blink when killed.</brown>
 %%%%
 Regal
 
@@ -811,8 +672,7 @@ entourage in the hopes the Orb will secure his legitimacy for the throne.
 His charming demeanor is so powerful that all but your most trusted allies
 might be swayed to his cause.
 
-<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Regal has a 50% chance of dropping the Octopus King's
-Trident when it is available.</brown>
+<brown>DC Chili change: Regal is a unique created for DC Chili. Uniques have a 50% chance to drop an item when killed. For Regal, the item is the Octopus King's Trident (if available).</brown>
 %%%%
 Robin
 
@@ -821,16 +681,12 @@ foolhardy or reckless enough to delve into the depths of the Dungeon alone,
 Robin has built a small army of minions. Potential competitors will quickly
 find a stream of screaming goblins flying toward them!
 
-<brown>DC Chili change: Robin has a 50% chance of dropping a scroll of summoning
-when they are killed.</brown>
 %%%%
 Roxanne
 
 A strikingly realistic sapphire statue of a famous earth mage who disappeared
 after a catastrophic mishap with a magical talisman.
 
-<brown>DC Chili change: Roxanne has a 50% chance of dropping a parchment of
-Lehudib's Crystal Spear when killed.</brown>
 %%%%
 Rupert
 
@@ -839,15 +695,11 @@ physical perfection. Even so, his roars seem louder than even his fantastic form
 can explain. Perhaps he holds some talisman that lends supernatural force to his
 bellows?
 
-<brown>DC Chili change: Rupert has a 50% chance of dropping a ring of strength
-when he is killed.</brown>
 %%%%
 Saint Roka
 
 A mighty warlord. Some orcs even say they are the Chosen One of Beogh.
 
-<brown>DC Chili change: Saint Roka has a 50% chance of dropping a scroll of
-summoning when killed.</brown>
 %%%%
 Sigmund
 
@@ -859,8 +711,6 @@ admiration of many denizens of the dungeon.
 
 <brown>DC Chili change: Sigmund can no longer appear on D:2.</brown>
 
-<brown>DC Chili change: Sigmund has a 50% chance of dropping a scroll of bless
-item when he is killed.</brown>
 %%%%
 Snorg
 
@@ -868,8 +718,6 @@ A particularly corpulent troll with a short temper and a sizable gut.
 Uninterested in the Orb, Snorg delights in the endless parade of adventurers –
 that is, easy meals — it attracts.
 
-<brown>DC Chili change: Snorg has a 50% chance of dropping a potion of berserk
-rage when killed.</brown>
 %%%%
 Sprozz
 
@@ -884,32 +732,26 @@ Queen of the tengu, with legendary skill in swordsmanship, tactics, and magic.
 Storytellers claim she once trapped a raging tempest in a bottle and kept it
 as a talisman.
 
-<brown>DC Chili change: Sojobo has a 50% chance of dropping a lightning rod
-when killed.</brown>
 %%%%
 Sonja
 
 A graceful kobold assassin. Admire her graceful pirouettes, thrill at her
 daring leaps! But watch out for her knives!
 
-<brown>DC Chili change: Sonja has a 50% chance of dropping three curare-tipped
-darts when killed.</brown>
 %%%%
 Terence
 
 A veteran of a war against the armataurs' elephant-riders. He has recently
 retired to make a new home in the dungeon.
 
-<brown>DC Chili change: Terence has a 50% chance of dropping Throatcutter when it
-is available.</brown>
+<brown>DC Chili change: Uniques have a 50% chance to drop an item when killed. For Terence, the item is Throatcutter (if available).</brown>
 %%%%
 Tiamat
 
 The earthly avatar of Tiamat, deity of dragonkind, here incarnated as a mighty
 draconian warrior. Her scales seem to shimmer and change colour as you watch.
 
-<brown>DC Chili change: Tiamat has a 50% chance of dropping the Dragonskin
-armour when killed.</brown>
+<brown>DC Chili change: Uniques have a 50% chance to drop an item when killed. For Tiamat, the item is the Dragonskin armour.</brown>
 %%%%
 Urug
 
@@ -917,16 +759,13 @@ A coarse and lanky orc. Urug lost her eye in a fight with a harpy, and has
 sworn to slay every last one of them. Unfortunately, the vision in her
 remaining eye is not very good, and she has mistaken you for one.
 
-<brown>DC Chili change: Urug has a 50% chance of dropping a potion of might when
-killed.</brown>
+
 {{
     if you.can_smell() then
         return "She smells terrible."
     end
 }}
 
-<brown>DC Chili change: Urug has a 50% chance of dropping a scroll of enchant
-weapon when killed.</brown>
 %%%%
 Wiglaf
 
@@ -934,24 +773,19 @@ A cantankerous dwarf wearing a stupid-looking hat. He eyes you sourly, as if
 deciding exactly how much offence he should take to the way you're staring at
 it.
 
-<brown>DC Chili change: Wiglaf has a 50% chance of dropping a potion of might
-when killed.</brown>
 %%%%
 Vashnia
 
 An elite marksnaga who leads a skilled team of sharpshooters. She is
 particularly skilled in translocation magic.
 
-<brown>DC Chili change: Vashnia has a 50% chance of dropping a parchment of
-Blink when killed.</brown>
 %%%%
 Verity
 
 Once a man, he put his soul into a dragon carved of stone. He lurks in the
 Lair where his bulk is too hefty to escape and resume the quest for the Orb.
 
-<brown>DC Chili change: This is a new unique created in DC Chili and will likely not exist in DCSS for some time. Verity has a 50% chance of dropping a Talisman of Statue
-Form when he is killed.</brown>
+<brown>DC Chili change: Verity is a unique created for DC Chili. Uniques have a 50% chance to drop an item when killed. For Verity, the item is a Talisman of Statue Form.</brown>
 %%%%
 Vv
 
@@ -960,8 +794,6 @@ Her people shelter deep within the living earth, so whatever has forced Vv
 into the oppressive openness of the Dungeon must be dire indeed. But whatever
 it is, she's not talking...
 
-<brown>DC Chili change: Vv has a 50% chance of dropping a parchment of Bombard
-when killed.</brown>
 %%%%
 Xak'krixis
 
@@ -975,15 +807,11 @@ to an alchemical breakthrough, allowing them to shape fulminant prisms such that
 their explosions are directed at enemies alone. Alas, their enthusiasm to
 conduct a field test bodes poorly for your health.
 
-<brown>DC Chili change: Xak'krixis has a 50% chance of dropping a condenser vane
-when killed.</brown>
 %%%%
 Xtahua
 
 An ancient and mighty dragon.
 
-<brown>DC Chili change: Xtahua has a 50% chance of dropping a potion of
-resistance when killed.</brown>
 %%%%
 Zenata
 
@@ -992,32 +820,24 @@ tell where one ends and the other begins. She entered the Dungeon to search for
 the secrets of an ancient, long-suppressed cult, said to have exalted metal over
 flesh. The price of knowledge was her humanity - a price she paid eagerly.
 
-<brown>DC Chili change: Zenata has a 50% chance of dropping a scroll of enchant
-weapon when killed.</brown>
 %%%%
 Serpent of Hell gehenna
 
 A huge, red-glowing, three-headed dragon, shrouded in damnation. It is
 possessed by the very essence of Gehenna and its eternal fire.
 
-<brown>DC Chili change: The Serpent of Hell has a 50% chance of dropping fire
-dragon armour when killed.</brown>
 %%%%
 Serpent of Hell cocytus
 
 A massive white three-headed dragon, covered with shards of gleaming ice,
 wholly possessed by the nightmarish cold of Cocytus.
 
-<brown>DC Chili change: The Serpent of Hell has a 50% chance of dropping ice
-dragon armour when killed.</brown>
 %%%%
 Serpent of Hell dis
 
 A towering three-headed beast with an army's worth of swords for teeth. Each of
 its scales is a shield with a razored edge.
 
-<brown>DC Chili change: The Serpent of Hell has a 50% chance of dropping
-quicksilver dragon armour when killed.</brown>
 %%%%
 Serpent of Hell tartarus
 
@@ -1025,8 +845,6 @@ Seemingly three pairs of lurid magenta eyes hanging in the darkness, the
 outline of a vast, sinuous dragon is just barely perceptible behind. Its malice
 is palpable.
 
-<brown>DC Chili change: The Serpent of Hell has a 50% chance of dropping shadow
-dragon armour when killed.</brown>
 %%%%
 # Non-unique monsters
 abyssal acolyte
@@ -3125,8 +2943,6 @@ Royal Jelly
 A particularly rich and golden gelatinous thing. Smaller jellies swim and pulse
 just below its surface, ready to burst forth at the slightest touch.
 
-<brown>DC Chili change: The Royal Jelly has a 50% chance of dropping a potion
-of mutation when killed.</brown>
 %%%%
 royal mummy
 

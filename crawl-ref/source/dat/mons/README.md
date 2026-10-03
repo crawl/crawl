@@ -14,6 +14,9 @@ Relevant enums are noted with a (filename ➡ enum).
   "program_bug"), or to `enum` otherwise.
   The enum to which this refers is generated from `rltiles/dc-corpse.txt`,
   and, as other enum-based fields, the `TILE_CORPSE_` prefix should be omitted.
+- drop_on_death (`drop_on_death` entry): An item or choice of items that has
+  the given chance to be dropped when the monster dies. The same data is used
+  to describe the drop in the unique's inspection window.
 - energy (`energy` entry): The energy the monster takes for various types
   of actions, influenced by their speed. Lower is faster.
   For possible values see the description of 'energy entry' below.
@@ -104,6 +107,15 @@ each of which may have the following fields:
 - missile (int): energy cost of firing ranged weapons.
 - spell (int): energy cost of casting spells.
   (energy-use-type.h ➡ energy_use_type).
+
+`drop_on_death` entries are associative arrays with the following fields:
+
+- chance (int): The percentage chance that the monster drops an item.
+- item or items (string or list): One item, or a choice of up to two items.
+  Item values use the object-class enum prefixes documented by the parser.
+- quantity (int): The number of items in the drop. Defaults to one.
+- plus (int): An explicit item enchantment, when applicable.
+- brand (string): An explicit missile brand, when applicable.
 
 `glyph` entries are associative arrays with the following fields:
 
