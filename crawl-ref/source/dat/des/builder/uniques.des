@@ -470,7 +470,7 @@ WEIGHT: 50
 : place_unique(_G, "Vashnia band")
 
 NAME:   uniq_verity
-DEPTH:  Lair
+DEPTH:  Lair:2-4
 WEIGHT: 50
 : place_unique(_G, "Verity")
 
