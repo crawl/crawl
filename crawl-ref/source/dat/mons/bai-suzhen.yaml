@@ -1,4 +1,5 @@
 name: "Bai Suzhen"
+drop_on_death: {chance: 50, item: MISC_PHIAL_OF_FLOODS}
 glyph: {char: "d", colour: lightblue}
 flags: [see_invis, speaks, cold_blood, unique, female]
 resists: {elec: 3, poison: 1, cold: 1}

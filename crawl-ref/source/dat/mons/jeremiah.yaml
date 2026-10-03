@@ -1,4 +1,5 @@
 name: "Jeremiah"
+drop_on_death: {chance: 50, item: SCR_BUTTERFLIES}
 glyph: {char: "F", colour: magenta}
 flags: [speaks, unique, gender_neutral]
 exp: 386

@@ -1,4 +1,5 @@
 name: "Norris"
+drop_on_death: {chance: 50, item: POT_AMBROSIA}
 glyph: {char: "@", colour: brown}
 flags: [fighter, see_invis, speaks, warm_blood, unique, male]
 exp: 2329

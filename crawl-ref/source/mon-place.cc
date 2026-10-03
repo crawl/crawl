@@ -1259,6 +1259,11 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             mon->wield_melee_weapon(false);
     }
 
+    // Roll data-defined death drops even for monsters that carry no equipment.
+    const mon_death_drop &drop = get_monster_data(mon->type)->death_drop;
+    if (drop.chance > 0 && x_chance_in_y(drop.chance, 100))
+        mon->props[UNIQUE_DATA_DROP_KEY] = true;
+
     // Scave's parchment is generated as a unique death drop, rather than
     // carried as equipment.
     if (mon->type == MONS_SCAVE && coinflip())
