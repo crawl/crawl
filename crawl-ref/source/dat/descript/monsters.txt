@@ -353,6 +353,9 @@ when she is killed.</brown>
 Grum
 
 A tough-looking gnoll, wearing the pelt of one of his former war dogs.
+
+<brown>DC Chili change: Grum has a 50% chance of dropping a potion of berserk
+rage when killed.</brown>
 %%%%
 Grunn
 
@@ -368,6 +371,9 @@ Harold
 A middle-aged bounty hunter, anxious to retire after one final job. He hopes to
 settle down somewhere and live a quiet life with his family, using the money
 from his final bounty: you.
+
+<brown>DC Chili change: Harold has a 50% chance of dropping a throwing net when
+killed.</brown>
 %%%%
 Ignacio
 
@@ -441,6 +447,9 @@ when killed.</brown>
 Joseph
 
 Looks like a mercenary in a stupid-looking hat.
+
+<brown>DC Chili change: Joseph has a 50% chance of dropping a scroll of enchant
+weapon when killed.</brown>
 %%%%
 Josephina
 
@@ -846,6 +855,9 @@ Sonja
 
 A graceful kobold assassin. Admire her graceful pirouettes, thrill at her
 daring leaps! But watch out for her knives!
+
+<brown>DC Chili change: Sonja has a 50% chance of dropping three curare-tipped
+darts when killed.</brown>
 %%%%
 Terence
 
@@ -868,6 +880,9 @@ Urug
 A coarse and lanky orc. Urug lost her eye in a fight with a harpy, and has
 sworn to slay every last one of them. Unfortunately, the vision in her
 remaining eye is not very good, and she has mistaken you for one.
+
+<brown>DC Chili change: Urug has a 50% chance of dropping a potion of might when
+killed.</brown>
 {{
     if you.can_smell() then
         return "She smells terrible."

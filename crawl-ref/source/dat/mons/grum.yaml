@@ -1,4 +1,5 @@
 name: "Grum"
+drop_on_death: {chance: 50, item: POT_BERSERK_RAGE}
 glyph: {char: "ğ", colour: lightred}
 flags: [speaks, warm_blood, unique, male]
 exp: 191

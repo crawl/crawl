@@ -1,4 +1,5 @@
 name: "Harold"
+drop_on_death: {chance: 50, item: MI_THROWING_NET}
 glyph: {char: "@", colour: lightgreen}
 flags: [fighter, speaks, warm_blood, unique, male]
 exp: 875
