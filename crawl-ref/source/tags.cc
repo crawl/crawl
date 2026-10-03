@@ -6017,6 +6017,14 @@ void unmarshallItem(reader &th, item_def &item)
 
     item.props.clear();
     item.props.read(th);
+    // Iron Shot was replaced by Bombard for players, including parchments
+    // carried in inventory or stored on a level in older Chili saves.
+    if (item.is_type(OBJ_BOOKS, BOOK_PARCHMENT)
+        && item.plus == SPELL_IRON_SHOT)
+    {
+        item.plus = SPELL_BOMBARD;
+    }
+
     // Preserve the usefulness of identify scrolls from older Chili saves.
     if (item.is_type(OBJ_SCROLLS, SCR_IDENTIFY))
         item.sub_type = SCR_REVELATION;
