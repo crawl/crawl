@@ -760,6 +760,10 @@ bool any_messages()
 
 typedef circ_vec<message_line, NUM_STORED_MESSAGES> store_t;
 
+// Keep damage records out of the live message window, but retain them in
+// message history and morgue dumps.
+static constexpr int DAMAGE_HISTORY_PARAM = -1;
+
 class message_store
 {
     store_t msgs;
@@ -823,6 +827,12 @@ public:
 #endif
         if (crawl_state.io_inited && crawl_state.game_started)
             msgwin.add_item(msg.full_text(), p, _temporary);
+    }
+
+    void store_history_only(const message_line& msg)
+    {
+        flush_prev();
+        msgs.push_back(msg);
     }
 
     void roll_back()
@@ -2147,10 +2157,11 @@ void wu_jian_sifu_message(const char *event)
     god_speaks(GOD_WU_JIAN, msg.c_str());
 }
 
-static bool is_channel_dumpworthy(msg_channel_type channel)
+static bool is_channel_dumpworthy(msg_channel_type channel, int param)
 {
     return channel != MSGCH_EQUIPMENT
-           && channel != MSGCH_DIAGNOSTICS
+           && (channel != MSGCH_DIAGNOSTICS
+               || param == DAMAGE_HISTORY_PARAM)
            && channel != MSGCH_TUTORIAL;
 }
 
@@ -2173,7 +2184,7 @@ string get_last_messages(int mcount, bool full)
         const message_line msg = msgs[i];
         if (!msg)
             break;
-        if (full || is_channel_dumpworthy(msg.channel))
+        if (full || is_channel_dumpworthy(msg.channel, msg.param))
         {
             string line = msg.pure_text_with_repeats();
             string wrapped;
@@ -2188,6 +2199,16 @@ string get_last_messages(int mcount, bool full)
     if (!text.empty())
         text += "\n";
     return text;
+}
+
+void record_damage_taken(int damage)
+{
+    if (damage <= 0)
+        return;
+
+    const string text = make_stringf("Damage taken (dmg=%d)", damage);
+    buffer.store_history_only(message_line(text, MSGCH_DIAGNOSTICS,
+                                            DAMAGE_HISTORY_PARAM, false));
 }
 
 bool recent_error_messages()

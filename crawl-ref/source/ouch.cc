@@ -1424,6 +1424,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     }
     you.source_damage += dam;
 
+    record_damage_taken(dam);
     dec_hp(dam, true);
 
     // Even if we have low HP messages off, we'll still give a
