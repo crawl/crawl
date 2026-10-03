@@ -682,7 +682,7 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(item_stack_summary_minimum), 4),
         new IntGameOption(SIMPLE_NAME(level_map_cursor_step), 7, 1, 50),
         new IntGameOption(SIMPLE_NAME(dump_item_origin_price), -1, -1),
-        new IntGameOption(SIMPLE_NAME(dump_message_count), 40),
+        new IntGameOption(SIMPLE_NAME(dump_message_count), 100),
         new IntGameOption(SIMPLE_NAME(food_snacking_frequency), 40, 0, 100),
         new IntGameOption(SIMPLE_NAME(fountain_line_frequency), 40, 0, 100),
         new MultipleChoiceGameOption<kill_dump_options>(
