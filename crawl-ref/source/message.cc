@@ -2313,12 +2313,13 @@ void record_damage_taken(int damage, int hp_before)
         return;
 
     const int hp_after = hp_before - damage;
-    if (hp_after <= 0)
-        buffer.append_to_last_history_message(make_stringf(
-            " (HP -%d, %d -> %d)", damage, hp_before, hp_after));
-    else
-        buffer.append_to_last_history_message(
-            make_stringf(" (HP -%d)", damage));
+    string hp_loss = hp_after <= 0
+        ? make_stringf(" (HP -%d, %d -> %d)", damage, hp_before, hp_after)
+        : make_stringf(" (HP -%d)", damage);
+    if (damage > 10)
+        hp_loss = "<lightred>" + hp_loss + "</lightred>";
+
+    buffer.append_to_last_history_message(hp_loss);
 }
 
 void record_hp_restored(int amount, const char *source)
