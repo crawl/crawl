@@ -2775,6 +2775,7 @@ void give_item(monster *mons, int level_number)
     _give_extra_equipment(mons, 1 + level_number / 2);
     _give_book(mons);
     _give_unique_drops(mons);
+    _give_unique_unrand_item(mons);
 
     if (mons->type == MONS_ORC_APOSTLE)
         give_apostle_equipment(mons);
