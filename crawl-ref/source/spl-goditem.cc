@@ -1252,7 +1252,7 @@ void majin_bo_vampirism(monster &mon, int damage)
     if (hp_boost)
     {
         canned_msg(MSG_GAIN_HEALTH);
-        inc_hp(hp_boost);
+        inc_hp(hp_boost, false, "Vampiric weapon");
     }
 }
 
@@ -1287,7 +1287,7 @@ void dreamshard_shatter()
 
     // Don't die until your next turn.
     you.duration[DUR_POISONING] = 0;
-    set_hp(1);
+    set_hp(1, "Dreamshard Necklace lifesaving");
     you.props[DREAMSHARD_KEY] = true;
     vector<string> dreams = {"life"};
 

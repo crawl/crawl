@@ -7,6 +7,7 @@
 
 #include "message.h"
 
+#include <cstdlib>
 #include <sstream>
 
 #include "areas.h"
@@ -760,6 +761,23 @@ bool any_messages()
 
 typedef circ_vec<message_line, NUM_STORED_MESSAGES> store_t;
 
+// Diagnostic-channel messages with this parameter are stored in the message
+// history for morgues, but are not shown in the game message window.
+static constexpr int POST_MORTEM_HISTORY_PARAM = -1;
+
+static bool _is_hp_restored_message(const string &text)
+{
+    static const string prefix = "HP restored.";
+    return text.compare(0, prefix.size(), prefix) == 0;
+}
+
+static bool is_channel_dumpworthy(msg_channel_type channel)
+{
+    return channel != MSGCH_EQUIPMENT
+           && channel != MSGCH_DIAGNOSTICS
+           && channel != MSGCH_TUTORIAL;
+}
+
 class message_store
 {
     store_t msgs;
@@ -782,6 +800,22 @@ public:
 
     void add(const message_line& msg)
     {
+        if (_is_hp_restored_message(msg.pure_text_with_repeats())
+            && msgs.filled_size() > 0)
+        {
+            message_line &last = msgs[-1];
+            static const string natural_regen_prefix =
+                "Natural regeneration (HP +";
+            if (last && last.channel == MSGCH_DIAGNOSTICS
+                && last.param == POST_MORTEM_HISTORY_PARAM
+                && last.messages.back().text.compare(
+                    0, natural_regen_prefix.size(), natural_regen_prefix) == 0)
+            {
+                // The full-health message makes this recovery total redundant.
+                last.channel = MSGCH_EQUIPMENT;
+            }
+        }
+
         string orig_full_text = msg.full_text();
 
         if (!(msg.channel != MSGCH_PROMPT && prev_msg.merge(msg)))
@@ -823,6 +857,86 @@ public:
 #endif
         if (crawl_state.io_inited && crawl_state.game_started)
             msgwin.add_item(msg.full_text(), p, _temporary);
+    }
+
+    void append_to_last_history_message(const string &suffix)
+    {
+        flush_prev();
+        for (int i = -1, count = msgs.filled_size(); count > 0; --i, --count)
+        {
+            message_line &msg = msgs[i];
+            if (msg && is_channel_dumpworthy(msg.channel))
+            {
+                msg.messages.back().text += suffix;
+                return;
+            }
+        }
+    }
+
+    void add_history_only_hp_message(const char *source, int change)
+    {
+        const bool natural_regeneration =
+            string(source) == "Natural regeneration";
+        const string prefix = make_stringf("%s (HP +", source);
+        flush_prev();
+        if (prefix == "Natural regeneration (HP +")
+        {
+            // Resting already reports when the player reaches full HP.
+            if (msgs.filled_size() > 0
+                && _is_hp_restored_message(
+                    msgs[-1].messages.back().pure_text()))
+            {
+                return;
+            }
+
+            for (int i = -1, count = msgs.filled_size(); count > 0; --i, --count)
+            {
+                message_line &msg = msgs[i];
+                if (!msg)
+                    break;
+
+                if (msg.channel == MSGCH_DIAGNOSTICS
+                    && msg.param == POST_MORTEM_HISTORY_PARAM)
+                {
+                    string &text = msg.messages.back().text;
+                    const string plain_text = msg.messages.back().pure_text();
+                    if (plain_text.compare(0, prefix.size(), prefix) == 0)
+                    {
+                        const size_t end = plain_text.find(')', prefix.size());
+                        if (end != string::npos)
+                        {
+                            const int previous = std::atoi(plain_text.substr(
+                                prefix.size(), end - prefix.size()).c_str());
+                            const string updated = make_stringf(
+                                "%s%d)", prefix.c_str(), previous + change);
+                            text = natural_regeneration
+                                ? "<darkgrey>" + updated + "</darkgrey>"
+                                : updated;
+                            return;
+                        }
+                    }
+
+                    // Keep natural regeneration separate from explicit heals.
+                    break;
+                }
+
+                // The full-health notification can occur between regen
+                // callbacks. Any other message marks a new point in the
+                // timeline; don't fold later healing back across it.
+                if (!_is_hp_restored_message(msg.messages.back().pure_text()))
+                    break;
+            }
+        }
+
+        string text = make_stringf("%s (HP %+d)", source, change);
+        if (natural_regeneration)
+            text = "<darkgrey>" + text + "</darkgrey>";
+        msgs.push_back(message_line(text,
+                       MSGCH_DIAGNOSTICS, POST_MORTEM_HISTORY_PARAM, false));
+        if (_temporary)
+            temp++;
+        else
+            reset_temp();
     }
 
     void roll_back()
@@ -2147,19 +2261,12 @@ void wu_jian_sifu_message(const char *event)
     god_speaks(GOD_WU_JIAN, msg.c_str());
 }
 
-static bool is_channel_dumpworthy(msg_channel_type channel)
-{
-    return channel != MSGCH_EQUIPMENT
-           && channel != MSGCH_DIAGNOSTICS
-           && channel != MSGCH_TUTORIAL;
-}
-
 void clear_message_store()
 {
     buffer.clear();
 }
 
-string get_last_messages(int mcount, bool full)
+string get_last_messages(int mcount, bool full, bool show_turn_markers)
 {
     flush_prev_message();
 
@@ -2168,18 +2275,28 @@ string get_last_messages(int mcount, bool full)
     const store_t& msgs = buffer.get_store();
     // XXX: loop wraps around otherwise. This could be done better.
     mcount = min(mcount, NUM_STORED_MESSAGES);
+    bool have_newer_message = false;
+    int newer_message_turn = -1;
     for (int i = -1; mcount > 0; --i)
     {
         const message_line msg = msgs[i];
         if (!msg)
             break;
-        if (full || is_channel_dumpworthy(msg.channel))
+        if (full || is_channel_dumpworthy(msg.channel)
+            || (msg.channel == MSGCH_DIAGNOSTICS
+                && msg.param == POST_MORTEM_HISTORY_PARAM))
         {
             string line = msg.pure_text_with_repeats();
             string wrapped;
             while (!line.empty())
                 wrapped += wordwrap_line(line, 79, false, true) + "\n";
+            // Match the underscore turn-end marker used by Ctrl-P.
+            if (show_turn_markers && have_newer_message
+                && newer_message_turn > msg.turn)
+                wrapped = "_" + wrapped;
             text = wrapped + text;
+            newer_message_turn = msg.turn;
+            have_newer_message = true;
         }
         mcount--;
     }
@@ -2188,6 +2305,36 @@ string get_last_messages(int mcount, bool full)
     if (!text.empty())
         text += "\n";
     return text;
+}
+
+void record_damage_taken(int damage, int hp_before)
+{
+    if (damage <= 0)
+        return;
+
+    const int hp_after = hp_before - damage;
+    string hp_loss = hp_after <= 0
+        ? make_stringf(" (HP -%d, %d -> %d)", damage, hp_before, hp_after)
+        : make_stringf(" (HP -%d)", damage);
+    if (damage > 10)
+        hp_loss = "<lightred>" + hp_loss + "</lightred>";
+
+    buffer.append_to_last_history_message(hp_loss);
+}
+
+void record_hp_restored(int amount, const char *source)
+{
+    if (amount > 0)
+        record_hp_change(amount, source);
+}
+
+void record_hp_change(int change, const char *source)
+{
+    if (!change || !source || !crawl_state.game_started
+        || crawl_state.generating_level)
+        return;
+
+    buffer.add_history_only_hp_message(source, change);
 }
 
 bool recent_error_messages()

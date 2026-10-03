@@ -131,7 +131,7 @@ public:
             int amount = base;
             if (is_potion)
                 amount = you.scale_potion_healing(amount);
-            inc_hp(amount);
+            inc_hp(amount, false, is_potion ? "Potion of curing" : "Healing effect");
         }
 
         if (ddoor)
@@ -218,7 +218,7 @@ public:
         int amount = base;
         if (is_potion)
             amount = you.scale_potion_healing(amount);
-        inc_hp(amount);
+        inc_hp(amount, false, is_potion ? "Potion of heal wounds" : "Healing effect");
         if (is_potion)
             print_potion_heal_message();
         mpr("You feel much better.");

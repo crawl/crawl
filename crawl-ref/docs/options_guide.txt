@@ -2760,7 +2760,7 @@ dump_item_origin_price = -1
         or equal to this amount. Set this to -1 to prevent selection by
         price.
 
-dump_message_count = 20
+dump_message_count = 100
         The number of last messages to be displayed in character dump
         files.
 

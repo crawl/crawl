@@ -2900,6 +2900,12 @@ bool handle_post_ability_effects(ability_type ability,
     {
         case spret::success:
         {
+            if (hp_cost)
+            {
+                const string hp_cost_source = make_stringf(
+                    "%s HP cost", ability_name(abil.ability).c_str());
+                record_hp_change(-hp_cost, hp_cost_source.c_str());
+            }
             practise_using_ability(abil.ability);
             _finalize_ability_costs(abil, piety_cost, mp_cost, hp_cost);
 
@@ -3173,7 +3179,7 @@ static spret _siphon_essence(bool fail)
     // TODO: move this into transform.cc, use proper scaling and scale meaningfully
     const int skillcap = 19 + get_form()->get_level(3);
     const int healing = div_rand_round(min(damage, skillcap) * 2, 3); // max 67
-    inc_hp(healing);
+    inc_hp(healing, false, "Siphoning life");
     canned_msg(MSG_GAIN_HEALTH);
     return spret::success;
 }
@@ -3796,7 +3802,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         const int pow = min(50, 10 + you.skill_rdiv(SK_INVOCATIONS, 1, 3));
         const int healed = pow + roll_dice(2, pow) - 2;
         mpr("You are healed.");
-        inc_hp(healed);
+        inc_hp(healed, false, "Elyvilon's healing ability");
         break;
     }
 

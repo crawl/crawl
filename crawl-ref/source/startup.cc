@@ -11,6 +11,7 @@
 #include "arena.h"
 #include "branch.h"
 #include "command.h"
+#include "chardump.h"
 #include "coordit.h"
 #include "ctest.h"
 #include "database.h"
@@ -45,6 +46,7 @@
 #include "player-save-info.h"
 #include "shopping.h"
 #include "skills.h"
+#include "scroller.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "stairs.h"
@@ -75,7 +77,9 @@
 #endif
 #include "version.h"
 
+#include <cstdio>
 #include <cstdlib>
+#include <ctime>
 
 using namespace ui;
 
@@ -446,6 +450,65 @@ static constexpr int STARTUP_XTAHUA_WEBTILES = -10;
 static constexpr int STARTUP_PROJECT357_WEBTILES = -11;
 static constexpr int STARTUP_DCF_WEBTILES = -12;
 static constexpr int STARTUP_PLAY_WEBTILES = -13;
+static constexpr int STARTUP_VIEW_LAST_MORGUE = -14;
+
+static void _show_last_morgue()
+{
+    const string morgue_dir = morgue_directory().empty()
+        ? "." : morgue_directory();
+    string latest_file;
+    time_t latest_modtime = 0;
+    for (const string &filename : get_dir_files_ext(morgue_dir, ".txt"))
+    {
+        if (filename.compare(0, 7, "morgue-") != 0)
+            continue;
+
+        const string path = catpath(morgue_dir, filename);
+        const time_t modtime = file_modtime(path);
+        if (latest_file.empty() || modtime > latest_modtime)
+        {
+            latest_file = path;
+            latest_modtime = modtime;
+        }
+    }
+
+    if (latest_file.empty())
+    {
+        mpr("No morgue files were found.");
+        return;
+    }
+
+    FILE *morgue = lk_open("r", latest_file);
+    if (!morgue)
+    {
+        mprf(MSGCH_ERROR, "Couldn't open morgue file: %s",
+             latest_file.c_str());
+        return;
+    }
+
+    formatted_scroller morgue_viewer(FS_PREWRAPPED_TEXT);
+    morgue_viewer.set_tag("morgue");
+    morgue_viewer.set_title(formatted_string("Last morgue file", YELLOW));
+    morgue_viewer.set_more();
+
+    char buf[200];
+    string morgue_text;
+    while (fgets(buf, sizeof buf, morgue) != nullptr)
+    {
+        string line(buf);
+        const size_t newline_pos = line.find_last_of('\n');
+        if (newline_pos != string::npos)
+            line.erase(newline_pos);
+        morgue_text += "<w>" + replace_all(line, "<", "<<") + "</w>\n";
+    }
+    lk_close(morgue);
+
+    column_composer cols(2, 40);
+    cols.add_formatted(0, morgue_text, true);
+    for (const formatted_string &line : cols.formatted_lines())
+        morgue_viewer.add_formatted_string(line, true);
+    morgue_viewer.show();
+}
 
 #ifdef USE_TILE_LOCAL
 static bool _open_startup_url(const char *url)
@@ -518,6 +581,8 @@ static const vector<game_modes_menu_item> entries =
     {GAME_TYPE_INSTRUCTIONS, "Instructions", "Help menu." },
     {GAME_TYPE_HIGH_SCORES, "High Scores",
         "View the high score list." },
+    {STARTUP_VIEW_LAST_MORGUE, "View last morgue file",
+        "Read the most recently updated morgue file." },
     {STARTUP_EDIT_INIT, "Edit init.txt",
         "Open the init.txt configuration file in a text editor." },
     {STARTUP_PLAY_WEBTILES, "Play online on a WebTiles server",
@@ -603,6 +668,8 @@ static void _add_game_modes_menu_entry(shared_ptr<OuterMenu>& container,
                     ? static_cast<tileidx_t>(TILEG_CMD_REPLAY_MESSAGES)
                 : entry.id == STARTUP_EDIT_INIT
                     ? static_cast<tileidx_t>(TILEG_CMD_EDIT_PLAYER_TILE)
+                : entry.id == STARTUP_VIEW_LAST_MORGUE
+                    ? static_cast<tileidx_t>(TILEG_CMD_REPLAY_MESSAGES)
                 : entry.id == STARTUP_OTHER_GAMEPLAY_OPTIONS
                     ? static_cast<tileidx_t>(TILEG_STARTUP_SPRINT)
                 : tileidx_gametype(static_cast<game_type>(entry.id));
@@ -1003,6 +1070,7 @@ private:
 
         case GAME_TYPE_ARENA:
         case GAME_TYPE_HIGH_SCORES:
+        case STARTUP_VIEW_LAST_MORGUE:
         case GAME_TYPE_INSTRUCTIONS:
         case STARTUP_EDIT_INIT:
         case STARTUP_VIEW_WEBSITES:
@@ -1244,6 +1312,10 @@ void UIStartupMenu::menu_item_activated(int id)
 
     case GAME_TYPE_HIGH_SCORES:
         show_hiscore_table();
+        return;
+
+    case STARTUP_VIEW_LAST_MORGUE:
+        _show_last_morgue();
         return;
 
     case STARTUP_EDIT_INIT:

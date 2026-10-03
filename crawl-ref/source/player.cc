@@ -3027,7 +3027,9 @@ void calc_hp(bool scale)
         hp = hp * new_max / old_max;
         if (hp < 100)
             hp = 100;
-        set_hp(min(hp / 100, you.hp_max));
+        // Avoid set_hp()'s history entry: calc_hp() records the net change
+        // after rescaling and max-HP clamping below.
+        you.hp = min(hp / 100, you.hp_max);
         you.hit_points_regeneration = hp % 100;
     }
 
@@ -3035,6 +3037,7 @@ void calc_hp(bool scale)
 
     if (oldhp != you.hp || old_max != you.hp_max)
     {
+        record_hp_change(you.hp - oldhp, "Maximum HP adjustment");
         if (_should_stop_resting(you.hp, you.hp_max))
             interrupt_activity(activity_interrupt::full_hp);
         dprf("HP changed: %d/%d -> %d/%d", oldhp, old_max, you.hp, you.hp_max);
@@ -4067,10 +4070,14 @@ void dec_hp(int hp_loss, bool fatal, const char *aux)
     // If it's not fatal, use ouch() so that notes can be taken. If it IS
     // fatal, somebody else is doing the bookkeeping, and we don't want to mess
     // with that.
+    const int old_hp = you.hp;
     if (!fatal && aux)
         ouch(hp_loss, KILLED_BY_SOMETHING, MID_NOBODY, aux);
     else
         you.hp -= hp_loss;
+
+    if (!fatal && !aux)
+        record_hp_change(you.hp - old_hp, "HP cost");
 
     you.redraw_hit_points = true;
 }
@@ -4278,13 +4285,14 @@ void inc_mp(int mp_gain, bool silent)
 // Note that "max_too" refers to the base potential, the actual
 // resulting max value is subject to penalties, bonuses, and scalings.
 // To avoid message spam, don't take notes when HP increases.
-void inc_hp(int hp_gain, bool silent)
+void inc_hp(int hp_gain, bool silent, const char *source)
 {
     ASSERT(!crawl_state.game_is_arena());
 
     if (hp_gain < 1 || you.hp >= you.hp_max)
         return;
 
+    const int old_hp = you.hp;
     you.hp += hp_gain;
 
     if (you.hp > you.hp_max)
@@ -4300,6 +4308,9 @@ void inc_hp(int hp_gain, bool silent)
 
     if (you.hp == you.hp_max)
         you.check_hp_regen_attunement = true;
+
+    if (source)
+        record_hp_restored(you.hp - old_hp, source);
 }
 
 int undrain_hp(int hp_recovered)
@@ -4342,10 +4353,11 @@ void dec_max_hp(int hp_loss)
     you.redraw_hit_points = true;
 }
 
-void set_hp(int new_amount)
+void set_hp(int new_amount, const char *source)
 {
     ASSERT(!crawl_state.game_is_arena());
 
+    const int old_hp = you.hp;
     you.hp = new_amount;
 
     if (you.hp > you.hp_max)
@@ -4353,6 +4365,7 @@ void set_hp(int new_amount)
 
     // Must remain outside conditional, given code usage. {dlb}
     you.redraw_hit_points = true;
+    record_hp_change(you.hp - old_hp, source);
 }
 
 void set_mp(int new_amount)
@@ -4872,7 +4885,10 @@ void handle_player_poison(int delay)
         int oldhp = you.hp;
         ouch(dmg, KILLED_BY_POISON);
         if (you.hp < oldhp)
+        {
             mprf(channel, "You feel %ssick.", adj);
+            record_damage_taken(oldhp - you.hp, oldhp);
+        }
     }
 
     // Now decrease the poison in our system
@@ -5359,7 +5375,7 @@ void dec_elixir_player(int delay)
 
     const int hp = (delay * you.hp_max / 10) / BASELINE_DELAY;
     if (!you.duration[DUR_DEATHS_DOOR])
-        inc_hp(hp);
+        inc_hp(hp, false, "Elixir of health");
 
     const int mp = (delay * you.max_magic_points / 10) / BASELINE_DELAY;
     inc_mp(mp);
@@ -5383,7 +5399,7 @@ void dec_ambrosia_player(int delay)
     if (!you.duration[DUR_DEATHS_DOOR])
     {
         int heal = you.scale_potion_healing(hp_restoration);
-        inc_hp(heal);
+        inc_hp(heal, false, "Ambrosia");
     }
 
     inc_mp(you.scale_potion_mp_healing(mp_restoration));

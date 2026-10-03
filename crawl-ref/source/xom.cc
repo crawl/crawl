@@ -4523,7 +4523,7 @@ static void _handle_accidental_death(const int orig_hp,
     }
 
     if (pre_mut_hp <= 0)
-        set_hp(min(orig_hp, you.hp_max));
+        set_hp(min(orig_hp, you.hp_max), "Xom's lifesaving");
 
     if (orig_form != you.form)
     {
@@ -5494,7 +5494,7 @@ bool xom_saves_your_life(const kill_method_type death_type)
 
     // Give back some hp.
     if (you.hp < 1)
-        set_hp(1 + random2(you.hp_max/4));
+        set_hp(1 + random2(you.hp_max/4), "Xom's lifesaving");
 
     god_speaks(GOD_XOM, "Xom revives you!");
 

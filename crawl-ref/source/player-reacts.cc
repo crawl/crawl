@@ -908,7 +908,7 @@ static void _decrement_durations()
         && you.attribute[ATTR_DEATHS_DOOR_HP] > 0
         && you.hp > you.attribute[ATTR_DEATHS_DOOR_HP])
     {
-        set_hp(you.attribute[ATTR_DEATHS_DOOR_HP]);
+        set_hp(you.attribute[ATTR_DEATHS_DOOR_HP], "Death's Door HP cap");
         you.redraw_hit_points = true;
     }
     else if (!you.duration[DUR_DEATHS_DOOR]
@@ -1230,6 +1230,7 @@ static void _regenerate_hp_and_mp(int delay)
         you.hit_points_regeneration += total;
     }
 
+    const int hp_before_regeneration = you.hp;
     while (you.hit_points_regeneration >= 100)
     {
         // at low mp, "mana link" restores mp in place of hp
@@ -1239,11 +1240,14 @@ static void _regenerate_hp_and_mp(int delay)
             inc_mp(1);
         }
         else // standard hp regeneration
-            inc_hp(1);
+            inc_hp(1, false, nullptr);
         you.hit_points_regeneration -= 100;
     }
 
     ASSERT_RANGE(you.hit_points_regeneration, 0, 100);
+
+    record_hp_restored(you.hp - hp_before_regeneration,
+                       "Natural regeneration");
 
     // MP Regeneration
     if (player_regenerates_mp())

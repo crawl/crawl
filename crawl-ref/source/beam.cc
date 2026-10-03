@@ -2310,7 +2310,7 @@ static void _vampiric_draining_effect(actor& victim, actor& agent, int damage)
         {
             mprf("You feel life coursing into your body%s",
                  attack_strength_punctuation(hp_gain).c_str());
-            inc_hp(hp_gain);
+            inc_hp(hp_gain, false, "Vampiric draining");
         }
     }
 }

@@ -1419,7 +1419,8 @@ void elyvilon_divine_vigour()
                      40 + you.skill_rdiv(SK_INVOCATIONS, 5, 2));
 
     calc_hp();
-    inc_hp((you.hp_max * you.hp + old_hp_max - 1)/old_hp_max - you.hp);
+    inc_hp((you.hp_max * you.hp + old_hp_max - 1)/old_hp_max - you.hp,
+           false, "Elyvilon's divine vigour");
     calc_mp();
     if (old_mp_max > 0)
     {
@@ -5478,7 +5479,7 @@ void ru_draw_out_power()
 
     int hp_inc = div_rand_round(you.piety(), 16);
     hp_inc += roll_dice(div_rand_round(you.piety(), 20), 6);
-    inc_hp(hp_inc);
+    inc_hp(hp_inc, false, "Ru's Draw Out Power");
     int mp_inc = div_rand_round(you.piety(), 48);
     mp_inc += roll_dice(div_rand_round(you.piety(), 40), 4);
     inc_mp(mp_inc);
@@ -6651,7 +6652,8 @@ void okawaru_end_duel(bool kicked_out)
     _owakwaru_gather_arena_items();
 
     if (you.props.exists(OKAWARU_DUEL_ORIG_HP_KEY))
-        set_hp(you.props[OKAWARU_DUEL_ORIG_HP_KEY].get_int());
+        set_hp(you.props[OKAWARU_DUEL_ORIG_HP_KEY].get_int(),
+               "Okawaru's Duel restoration");
 
     if (you.props.exists(OKAWARU_DUEL_ORIG_MP_KEY))
         set_mp(you.props[OKAWARU_DUEL_ORIG_MP_KEY].get_int());
