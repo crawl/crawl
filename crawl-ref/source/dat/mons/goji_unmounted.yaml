@@ -1,4 +1,5 @@
 name: "Goji"
+drop_on_death: {chance: 50, item: POT_INVISIBILITY}
 enum: goji_unmounted
 glyph: {char: "g", colour: lightblue}
 flags: [fighter, speaks, unique, male, warm_blood]

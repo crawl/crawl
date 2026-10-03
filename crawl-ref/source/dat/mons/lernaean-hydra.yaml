@@ -1,4 +1,5 @@
 name: "Lernaean hydra"
+drop_on_death: {chance: 50, item: POT_HEAL_WOUNDS}
 glyph: {char: "Ď", colour: yellow}
 flags: [name_the, cold_blood, unique, fast_regen, tall_tile]
 resists: {poison: 1}

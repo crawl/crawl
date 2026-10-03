@@ -1,4 +1,5 @@
 name: "Nobody"
+drop_on_death: {chance: 50, item: SPELL_DEATH_CHANNEL}
 enum: NAMELESS_REVENANT
 glyph: {char: "z", colour: white}
 flags: [see_invis, speaks, unique, gender_neutral]

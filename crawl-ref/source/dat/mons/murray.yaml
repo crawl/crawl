@@ -1,4 +1,5 @@
 name: "Murray"
+drop_on_death: {chance: 50, item: SCR_TORMENT}
 glyph: {char: "ž", colour: magenta}
 flags: [see_invis, speaks, unique, male]
 resists: {elec: 1, fire: 2, cold: 2}
