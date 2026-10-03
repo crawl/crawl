@@ -1251,10 +1251,10 @@ MONS:   mummy
 MONS:   ogre zombie w:45 / centaur zombie w:50 / troll zombie w:5
 KMONS:  N = mummy
 KMONS:  O = mummy
+# The central O is a mummy in the sealed room, not an upstairs.
 KITEM:  N = $
 KITEM:  $ = any scroll w:49 / any potion w:49 / any wand w:1 / any ring w:1
 : inkwell_talisman_chance(_G, "?", true, "$")
-KFEAT:  O = stone_stairs_up_i
 KFEAT:  ab = stone_wall
 NSUBST: ` = 2:2 / *:.
 NSUBST: 1 = 25:1 / *:. , 3 = 5:3 / *:.
