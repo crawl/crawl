@@ -760,9 +760,12 @@ bool any_messages()
 
 typedef circ_vec<message_line, NUM_STORED_MESSAGES> store_t;
 
-// Keep damage records out of the live message window, but retain them in
-// message history and morgue dumps.
-static constexpr int DAMAGE_HISTORY_PARAM = -1;
+static bool is_channel_dumpworthy(msg_channel_type channel)
+{
+    return channel != MSGCH_EQUIPMENT
+           && channel != MSGCH_DIAGNOSTICS
+           && channel != MSGCH_TUTORIAL;
+}
 
 class message_store
 {
@@ -829,10 +832,18 @@ public:
             msgwin.add_item(msg.full_text(), p, _temporary);
     }
 
-    void store_history_only(const message_line& msg)
+    void append_to_last_history_message(const string &suffix)
     {
         flush_prev();
-        msgs.push_back(msg);
+        for (int i = -1, count = msgs.filled_size(); count > 0; --i, --count)
+        {
+            message_line &msg = msgs[i];
+            if (msg && is_channel_dumpworthy(msg.channel))
+            {
+                msg.messages.back().text += suffix;
+                return;
+            }
+        }
     }
 
     void roll_back()
@@ -2157,14 +2168,6 @@ void wu_jian_sifu_message(const char *event)
     god_speaks(GOD_WU_JIAN, msg.c_str());
 }
 
-static bool is_channel_dumpworthy(msg_channel_type channel, int param)
-{
-    return channel != MSGCH_EQUIPMENT
-           && (channel != MSGCH_DIAGNOSTICS
-               || param == DAMAGE_HISTORY_PARAM)
-           && channel != MSGCH_TUTORIAL;
-}
-
 void clear_message_store()
 {
     buffer.clear();
@@ -2184,7 +2187,7 @@ string get_last_messages(int mcount, bool full)
         const message_line msg = msgs[i];
         if (!msg)
             break;
-        if (full || is_channel_dumpworthy(msg.channel, msg.param))
+        if (full || is_channel_dumpworthy(msg.channel))
         {
             string line = msg.pure_text_with_repeats();
             string wrapped;
@@ -2206,9 +2209,8 @@ void record_damage_taken(int damage)
     if (damage <= 0)
         return;
 
-    const string text = make_stringf("Damage taken (dmg=%d)", damage);
-    buffer.store_history_only(message_line(text, MSGCH_DIAGNOSTICS,
-                                            DAMAGE_HISTORY_PARAM, false));
+    buffer.append_to_last_history_message(
+        make_stringf(" (HP=-%d)", damage));
 }
 
 bool recent_error_messages()
