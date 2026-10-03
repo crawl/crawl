@@ -875,6 +875,8 @@ public:
 
     void add_history_only_hp_message(const char *source, int change)
     {
+        const bool natural_regeneration =
+            string(source) == "Natural regeneration";
         const string prefix = make_stringf("%s (HP +", source);
         flush_prev();
         if (prefix == "Natural regeneration (HP +")
@@ -897,15 +899,19 @@ public:
                     && msg.param == POST_MORTEM_HISTORY_PARAM)
                 {
                     string &text = msg.messages.back().text;
-                    if (text.compare(0, prefix.size(), prefix) == 0)
+                    const string plain_text = msg.messages.back().pure_text();
+                    if (plain_text.compare(0, prefix.size(), prefix) == 0)
                     {
-                        const size_t end = text.find(')', prefix.size());
+                        const size_t end = plain_text.find(')', prefix.size());
                         if (end != string::npos)
                         {
-                            const int previous = std::atoi(text.substr(
+                            const int previous = std::atoi(plain_text.substr(
                                 prefix.size(), end - prefix.size()).c_str());
-                            text = make_stringf("%s%d)", prefix.c_str(),
-                                                previous + change);
+                            const string updated = make_stringf(
+                                "%s%d)", prefix.c_str(), previous + change);
+                            text = natural_regeneration
+                                ? "<darkgrey>" + updated + "</darkgrey>"
+                                : updated;
                             return;
                         }
                     }
@@ -922,7 +928,10 @@ public:
             }
         }
 
-        msgs.push_back(message_line(make_stringf("%s (HP %+d)", source, change),
+        string text = make_stringf("%s (HP %+d)", source, change);
+        if (natural_regeneration)
+            text = "<darkgrey>" + text + "</darkgrey>";
+        msgs.push_back(message_line(text,
                        MSGCH_DIAGNOSTICS, POST_MORTEM_HISTORY_PARAM, false));
         if (_temporary)
             temp++;
