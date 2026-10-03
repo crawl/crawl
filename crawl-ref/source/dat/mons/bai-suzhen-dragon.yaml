@@ -1,4 +1,5 @@
 name: "Bai Suzhen"
+drop_on_death: {chance: 50, item: MISC_PHIAL_OF_FLOODS}
 enum: bai_suzhen_dragon
 glyph: {char: "Ď", colour: etc_electricity}
 flags: [flies, see_invis, speaks, cold_blood, unique, female, thunder_ring]

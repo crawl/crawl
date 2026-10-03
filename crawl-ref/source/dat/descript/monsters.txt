@@ -92,6 +92,9 @@ in hopes of resurrecting her mortal husband; a noble cause, for a being once
 known for quarrelling with saints and flooding unfortunate temples. If pressed
 to her limits, she will reveal her true form, the mere sight of which struck
 her husband dead. Adventurers may wish they were so lucky!
+
+<brown>DC Chili change: Bai Suzhen has a 50% chance of dropping a phial of
+floods when killed, including in her dragon form.</brown>
 %%%%
 Blorkula the orcula
 
@@ -182,6 +185,9 @@ prophet of their god. When the city was overtaken by its current residents,
 only Dissolution survived, for they alone turned faithfully to the Slime God.
 Dissolution became a tremendous mass of acidic ooze, yet retained their
 intelligence. They are filled with hatred for anything that can hold a form.
+
+<brown>DC Chili change: Dissolution has a 50% chance of dropping a potion of
+mutation when killed.</brown>
 %%%%
 Scave the Devourer of Slime
 
@@ -416,6 +422,9 @@ power binding them into service. Now Jeremiah stumbles through the dungeon,
 searching for the precious dreamshard that will restore their master’s power,
 unsure whether they wake or slumber still. Their dreams leak into reality in
 the form of a constant stream of butterflies.
+
+<brown>DC Chili change: Jeremiah has a 50% chance of dropping a scroll of
+butterflies when killed.</brown>
 %%%%
 Jessica
 
@@ -703,6 +712,9 @@ Norris
 A relaxed water cultist with a healthy tan and a soothing voice. He
 doesn't really care if it is you or he who dies — “both” would probably be the
 best option.
+
+<brown>DC Chili change: Norris has a 50% chance of dropping a potion of ambrosia
+when killed.</brown>
 %%%%
 Octavia
 
@@ -724,6 +736,9 @@ BCadren's Sewer.</brown>
 Pargi
 
 An unusually weak troll.
+
+<brown>DC Chili change: Pargi has a 50% chance of dropping a potion of heal
+wounds when killed.</brown>
 
 <brown>DC Chili change: Pargi has a 50% chance of dropping a potion of heal
 wounds when killed.</brown>

@@ -2683,10 +2683,6 @@ void give_item(monster *mons, int level_number)
     _give_book(mons);
     _give_unique_drops(mons);
 
-    const mon_death_drop &drop = get_monster_data(mons->type)->death_drop;
-    if (drop.chance > 0 && x_chance_in_y(drop.chance, 100))
-        mons->props[UNIQUE_DATA_DROP_KEY] = true;
-
     if (mons->type == MONS_ORC_APOSTLE)
         give_apostle_equipment(mons);
 }

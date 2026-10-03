@@ -1,4 +1,5 @@
 name: "Dissolution"
+drop_on_death: {chance: 50, item: POT_MUTATION}
 glyph: {char: "J", colour: lightmagenta}
 flags: [eat_doors, see_invis, unblindable, amorphous, speaks, burrows, unique, acid_splash, fast_regen, no_skeleton, gender_neutral]
 resists: {poison: 1, corr: 3}
