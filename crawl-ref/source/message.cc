@@ -2204,13 +2204,18 @@ string get_last_messages(int mcount, bool full)
     return text;
 }
 
-void record_damage_taken(int damage)
+void record_damage_taken(int damage, int hp_before)
 {
     if (damage <= 0)
         return;
 
-    buffer.append_to_last_history_message(
-        make_stringf(" (HP -%d)", damage));
+    const int hp_after = hp_before - damage;
+    if (hp_after <= 0)
+        buffer.append_to_last_history_message(make_stringf(
+            " (HP -%d, %d -> %d)", damage, hp_before, hp_after));
+    else
+        buffer.append_to_last_history_message(
+            make_stringf(" (HP -%d)", damage));
 }
 
 bool recent_error_messages()
