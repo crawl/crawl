@@ -4,6 +4,10 @@ __(_suffix_examine
 It has been enchanted to dance through the air and attack under its own power.
 %%%%
 # Uniques
+# DC Chili: Uniques have a 5% chance to have one of their normal weapons,
+# armour pieces, rings, or shields upgraded to an artefact. It is a randart
+# or an available unrandart, chosen by coinflip. If no matching unrandart is
+# available, the randart is used.
 Agnes
 
 This spriggan is aged and weathered from years of travel away from the forests
