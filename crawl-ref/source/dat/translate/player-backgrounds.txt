@@ -7,17 +7,21 @@
 ##############################################
 # Full background
 ##############################################
-%%%%
-the Fighter
 
 %%%%
-the Gladiator
+the Abyssal Knight
 
 %%%%
-the Monk
+the Air Elementalist
 
 %%%%
-the Hunter
+the Alchemist
+
+%%%%
+the Arcane Marksman
+
+%%%%
+the Artificer
 
 %%%%
 the Berserker
@@ -26,74 +30,55 @@ the Berserker
 the Brigand
 
 %%%%
-the Abyssal Knight
-
-%%%%
 the Chaos Knight
-
-%%%%
-the Enchanter
-
-%%%%
-the Transmuter
-
-%%%%
-the Arcane Marksman
-
-%%%%
-the Warper
-
-%%%%
-the Hedge Wizard
-
-%%%%
-the Conjurer
-
-%%%%
-the Summoner
-
-%%%%
-the Necromancer
-
-%%%%
-the Fire Elementalist
-
-%%%%
-the Ice Elementalist
-
-%%%%
-the Air Elementalist
-
-%%%%
-the Earth Elementalist
-
-%%%%
-the Venom Mage
-
-%%%%
-# old name for Hedge Wizard
-the Wizard
-
-%%%%
-the Artificer
-
-%%%%
-the Delver
-
-%%%%
-the Wanderer
-
-%%%%
-the Alchemist
 
 %%%%
 the Cinder Acolyte
 
 %%%%
+the Conjurer
+
+%%%%
+the Delver
+
+%%%%
+the Earth Elementalist
+
+%%%%
+the Enchanter
+
+%%%%
+the Fighter
+
+%%%%
+the Fire Elementalist
+
+%%%%
 the Forgewright
 
 %%%%
+the Gladiator
+
+%%%%
+the Hedge Wizard
+
+%%%%
 the Hexslinger
+
+%%%%
+the Hunter
+
+%%%%
+the Ice Elementalist
+
+%%%%
+the Monk
+
+%%%%
+the Mystic
+
+%%%%
+the Necromancer
 
 %%%%
 the Reaver
@@ -102,10 +87,26 @@ the Reaver
 the Shapeshifter
 
 %%%%
-the Mystic
+the Stalker
 
 %%%%
-the Stalker
+the Summoner
+
+%%%%
+the Transmuter
+
+%%%%
+the Venom Mage
+
+%%%%
+the Wanderer
+
+%%%%
+the Warper
+
+%%%%
+# old name for Hedge Wizard
+the Wizard
 
 %%%%
 
@@ -114,17 +115,21 @@ the Stalker
 # "the <species> <background>"
 # (as in "Welcome, Bob the Minotaur Berserker")
 ##############################################
-%%%%
-the @species@ Fighter
 
 %%%%
-the @species@ Gladiator
+the @species@ Abyssal Knight
 
 %%%%
-the @species@ Monk
+the @species@ Air Elementalist
 
 %%%%
-the @species@ Hunter
+the @species@ Alchemist
+
+%%%%
+the @species@ Arcane Marksman
+
+%%%%
+the @species@ Artificer
 
 %%%%
 the @species@ Berserker
@@ -133,74 +138,55 @@ the @species@ Berserker
 the @species@ Brigand
 
 %%%%
-the @species@ Abyssal Knight
-
-%%%%
 the @species@ Chaos Knight
-
-%%%%
-the @species@ Enchanter
-
-%%%%
-the @species@ Transmuter
-
-%%%%
-the @species@ Arcane Marksman
-
-%%%%
-the @species@ Warper
-
-%%%%
-the @species@ Hedge Wizard
-
-%%%%
-the @species@ Conjurer
-
-%%%%
-the @species@ Summoner
-
-%%%%
-the @species@ Necromancer
-
-%%%%
-the @species@ Fire Elementalist
-
-%%%%
-the @species@ Ice Elementalist
-
-%%%%
-the @species@ Air Elementalist
-
-%%%%
-the @species@ Earth Elementalist
-
-%%%%
-the @species@ Venom Mage
-
-%%%%
-the @species@ Artificer
-
-%%%%
-the @species@ Delver
-
-%%%%
-the @species@ Wanderer
-
-%%%%
-# old name for Hedge Wizard
-the @species@ Wizard
-
-%%%%
-the @species@  Alchemist
 
 %%%%
 the @species@ Cinder Acolyte
 
 %%%%
+the @species@ Conjurer
+
+%%%%
+the @species@ Delver
+
+%%%%
+the @species@ Earth Elementalist
+
+%%%%
+the @species@ Enchanter
+
+%%%%
+the @species@ Fighter
+
+%%%%
+the @species@ Fire Elementalist
+
+%%%%
 the @species@ Forgewright
 
 %%%%
+the @species@ Gladiator
+
+%%%%
+the @species@ Hedge Wizard
+
+%%%%
 the @species@ Hexslinger
+
+%%%%
+the @species@ Hunter
+
+%%%%
+the @species@ Ice Elementalist
+
+%%%%
+the @species@ Monk
+
+%%%%
+the @species@ Mystic
+
+%%%%
+the @species@ Necromancer
 
 %%%%
 the @species@ Reaver
@@ -209,10 +195,26 @@ the @species@ Reaver
 the @species@ Shapeshifter
 
 %%%%
-the @species@ Mystic
+the @species@ Stalker
 
 %%%%
-the @species@ Stalker
+the @species@ Summoner
+
+%%%%
+the @species@ Transmuter
+
+%%%%
+the @species@ Venom Mage
+
+%%%%
+the @species@ Wanderer
+
+%%%%
+the @species@ Warper
+
+%%%%
+# old name for Hedge Wizard
+the @species@ Wizard
 
 %%%%
 
@@ -299,7 +301,7 @@ Hs
 %%%%
 # Hunter
 #Hu (same as Human)
-
+#
 %%%%
 # Ice Elementalist
 IE
@@ -309,6 +311,11 @@ IE
 Mo
 
 %%%%
+# Mystic
+# Same as Mayflytaur
+#My
+#
+%%%%
 # Necromancer
 Ne
 
@@ -316,10 +323,14 @@ Ne
 # Reaver
 # same as Revenant
 #Re
-
+#
 %%%%
 # Shapeshifter
 Sh
+
+%%%%
+# Stalker
+St
 
 %%%%
 # Summoner
@@ -344,15 +355,6 @@ Wr
 %%%%
 # Wizard
 Wz
-
-%%%%
-# Mystic
-# Same as Mayflytaur
-#My
-#
-%%%%
-# Stalker
-St
 
 %%%%
 

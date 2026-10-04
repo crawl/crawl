@@ -7,18 +7,22 @@
 ##############################################
 # Full background
 ##############################################
+
 %%%%
-the Fighter
-{m}der Kämpfer
+the Abyssal Knight
+{m}der Abgrundritter
 %%%%
-the Gladiator
-{m}der Gladiator
+the Air Elementalist
+{m}der Luftmagier
 %%%%
-the Monk
-{m}der Mönch
+the Alchemist
+{m}der Alchemist
 %%%%
-the Hunter
-{m}der Jäger
+the Arcane Marksman
+{m}der Arkane Schütze
+%%%%
+the Artificer
+{m}der Artifizient
 %%%%
 the Berserker
 {m}der Berserker
@@ -26,75 +30,56 @@ the Berserker
 the Brigand
 {m}der Brigant
 %%%%
-the Abyssal Knight
-{m}der Abgrundritter
-%%%%
 the Chaos Knight
 {m}der Chaosritter
-%%%%
-the Enchanter
-{m}der Verzauberer
-%%%%
-the Transmuter
-{m}der Verwandler
-%%%%
-the Arcane Marksman
-{m}der Arkane Schütze
-%%%%
-the Warper
-{m}der Warper
-%%%%
-the Hedge Wizard
-{m}der Heckenzauberer
-%%%%
-the Conjurer
-{m}der Konjurant
-%%%%
-the Summoner
-{m}der Beschwörer
-%%%%
-the Necromancer
-{m}der Nekromant
-%%%%
-the Fire Elementalist
-{m}der Feuermagier
-%%%%
-the Ice Elementalist
-{m}der Eismagier
-%%%%
-the Air Elementalist
-{m}der Luftmagier
-%%%%
-the Earth Elementalist
-{m}der Erdmagier
-%%%%
-the Venom Mage
-{m}der Giftmagier
-%%%%
-# old name for Hedge Wizard
-the Wizard
-{m}der Zauberer
-%%%%
-the Artificer
-{m}der Artifizient
-%%%%
-the Delver
-{m}der Forscher
-%%%%
-the Wanderer
-{m}der Wanderer
-%%%%
-the Alchemist
-{m}der Alchemist
 %%%%
 the Cinder Acolyte
 {m}der Aschenakolyth
 %%%%
+the Conjurer
+{m}der Konjurant
+%%%%
+the Delver
+{m}der Forscher
+%%%%
+the Earth Elementalist
+{m}der Erdmagier
+%%%%
+the Enchanter
+{m}der Verzauberer
+%%%%
+the Fighter
+{m}der Kämpfer
+%%%%
+the Fire Elementalist
+{m}der Feuermagier
+%%%%
 the Forgewright
 {m}der Magieschmied
 %%%%
+the Gladiator
+{m}der Gladiator
+%%%%
+the Hedge Wizard
+{m}der Heckenzauberer
+%%%%
 the Hexslinger
 {m}der Bannschütze
+%%%%
+the Hunter
+{m}der Jäger
+%%%%
+the Ice Elementalist
+{m}der Eismagier
+%%%%
+the Monk
+{m}der Mönch
+%%%%
+the Mystic
+{m}der Mystiker
+%%%%
+the Necromancer
+{m}der Nekromant
 %%%%
 the Reaver
 {m}der Plünderer
@@ -102,11 +87,27 @@ the Reaver
 the Shapeshifter
 {m}der Gestaltwandler
 %%%%
-the Mystic
-{m}der Mystiker
-%%%%
 the Stalker
 {m}der Pirscher
+%%%%
+the Summoner
+{m}der Beschwörer
+%%%%
+the Transmuter
+{m}der Verwandler
+%%%%
+the Venom Mage
+{m}der Giftmagier
+%%%%
+the Wanderer
+{m}der Wanderer
+%%%%
+the Warper
+{m}der Warper
+%%%%
+# old name for Hedge Wizard
+the Wizard
+{m}der Zauberer
 %%%%
 
 ##############################################
@@ -114,18 +115,22 @@ the Stalker
 # "the <species> <background>"
 # (as in "Welcome, Bob the Minotaur Berserker")
 ##############################################
+
 %%%%
-the @species@ Fighter
-{m}der @species@ Kämpfer
+the @species@ Abyssal Knight
+{m}der @species@ Abgrundritter
 %%%%
-the @species@ Gladiator
-{m}der @species@ Gladiator
+the @species@ Air Elementalist
+{m}der @species@ Luftmagier
 %%%%
-the @species@ Monk
-{m}der @species@ Mönch
+the @species@ Alchemist
+{m}der @species@ Alchemist
 %%%%
-the @species@ Hunter
-{m}der @species@ Jäger
+the @species@ Arcane Marksman
+{m}der @species@ Arkane Schütze
+%%%%
+the @species@ Artificer
+{m}der @species@ Artifizient
 %%%%
 the @species@ Berserker
 {m}der @species@ Berserker
@@ -133,75 +138,56 @@ the @species@ Berserker
 the @species@ Brigand
 {m}der @species@ Brigant
 %%%%
-the @species@ Abyssal Knight
-{m}der @species@ Abgrundritter
-%%%%
 the @species@ Chaos Knight
 {m}der @species@ Chaosritter
-%%%%
-the @species@ Enchanter
-{m}der @species@ Verzauberer
-%%%%
-the @species@ Transmuter
-{m}der @species@ Verwandler
-%%%%
-the @species@ Arcane Marksman
-{m}der @species@ Arkane Schütze
-%%%%
-the @species@ Warper
-{m}der @species@ Warper
-%%%%
-the @species@ Hedge Wizard
-{m}der @species@ Heckenzauberer
-%%%%
-the @species@ Conjurer
-{m}der @species@ Konjurant
-%%%%
-the @species@ Summoner
-{m}der @species@ Beschwörer
-%%%%
-the @species@ Necromancer
-{m}der @species@ Nekromant
-%%%%
-the @species@ Fire Elementalist
-{m}der @species@ Feuermagier
-%%%%
-the @species@ Ice Elementalist
-{m}der @species@ Eismagier
-%%%%
-the @species@ Air Elementalist
-{m}der @species@ Luftmagier
-%%%%
-the @species@ Earth Elementalist
-{m}der @species@ Erdmagier
-%%%%
-the @species@ Venom Mage
-{m}der @species@ Giftmagier
-%%%%
-the @species@ Artificer
-{m}der @species@ Artifizient
-%%%%
-the @species@ Delver
-{m}der @species@ Forscher
-%%%%
-the @species@ Wanderer
-{m}der @species@ Wanderer
-%%%%
-# old name for Hedge Wizard
-the @species@ Wizard
-{m}der @species@ Zauberer
-%%%%
-the @species@  Alchemist
-{m}der @species@ Alchemist
 %%%%
 the @species@ Cinder Acolyte
 {m}der @species@ Aschenakolyth
 %%%%
+the @species@ Conjurer
+{m}der @species@ Konjurant
+%%%%
+the @species@ Delver
+{m}der @species@ Forscher
+%%%%
+the @species@ Earth Elementalist
+{m}der @species@ Erdmagier
+%%%%
+the @species@ Enchanter
+{m}der @species@ Verzauberer
+%%%%
+the @species@ Fighter
+{m}der @species@ Kämpfer
+%%%%
+the @species@ Fire Elementalist
+{m}der @species@ Feuermagier
+%%%%
 the @species@ Forgewright
 {m}der @species@ Magieschmied
 %%%%
+the @species@ Gladiator
+{m}der @species@ Gladiator
+%%%%
+the @species@ Hedge Wizard
+{m}der @species@ Heckenzauberer
+%%%%
 the @species@ Hexslinger
 {m}der @species@ Bannschütze
+%%%%
+the @species@ Hunter
+{m}der @species@ Jäger
+%%%%
+the @species@ Ice Elementalist
+{m}der @species@ Eismagier
+%%%%
+the @species@ Monk
+{m}der @species@ Mönch
+%%%%
+the @species@ Mystic
+{m}der @species@ Mystiker
+%%%%
+the @species@ Necromancer
+{m}der @species@ Nekromant
 %%%%
 the @species@ Reaver
 {m}der @species@ Plünderer
@@ -209,11 +195,27 @@ the @species@ Reaver
 the @species@ Shapeshifter
 {m}der @species@ Gestaltwandler
 %%%%
-the @species@ Mystic
-{m}der @species@ Mystiker
-%%%%
 the @species@ Stalker
 {m}der @species@ Pirscher
+%%%%
+the @species@ Summoner
+{m}der @species@ Beschwörer
+%%%%
+the @species@ Transmuter
+{m}der @species@ Verwandler
+%%%%
+the @species@ Venom Mage
+{m}der @species@ Giftmagier
+%%%%
+the @species@ Wanderer
+{m}der @species@ Wanderer
+%%%%
+the @species@ Warper
+{m}der @species@ Warper
+%%%%
+# old name for Hedge Wizard
+the @species@ Wizard
+{m}der @species@ Zauberer
 %%%%
 
 ##############################################
@@ -299,7 +301,7 @@ Bs
 %%%%
 # Hunter
 #Hu (same as Human)
-
+#
 %%%%
 # Ice Elementalist
 IE
@@ -309,6 +311,11 @@ Ei
 Mo
 Mö
 %%%%
+# Mystic
+# Same as Mayflytaur
+#My
+#
+%%%%
 # Necromancer
 Ne
 Ne
@@ -316,11 +323,15 @@ Ne
 # Reaver
 # same as Revenant
 #Re
-
+#
 %%%%
 # Shapeshifter
 Sh
 Gw
+%%%%
+# Stalker
+St
+Pi
 %%%%
 # Summoner
 Su
@@ -345,15 +356,6 @@ Wr
 # Wizard
 Wz
 Zb
-%%%%
-# Mystic
-# Same as Mayflytaur
-#My
-#
-%%%%
-# Stalker
-St
-Pi
 %%%%
 
 ##############################################
