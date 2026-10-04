@@ -129,6 +129,15 @@ spret cast_revivification(int pow, bool fail)
     return spret::success;
 }
 
+string swiftness_duration_description(int power)
+{
+    int min_duration = 12;
+    int max_duration = min(power/2, 30);
+    string description = make_stringf("%d", min_duration);
+    if (max_duration > min_duration)
+        description += make_stringf(" - %d", max_duration);
+    return description;
+}
 spret cast_swiftness(int power, bool fail)
 {
     fail_check();

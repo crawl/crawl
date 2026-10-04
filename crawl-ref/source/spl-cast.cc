@@ -3374,6 +3374,10 @@ string spell_effect_string(spell_type spell, bool evoked, int pow)
     case SPELL_BORGNJORS_REVIVIFICATION:
         description = "Loss to max HP: " + revivification_loss_description(pow);
         break;
+    case SPELL_SWIFTNESS:
+        description = "Swiftness duration: "
+                      + swiftness_duration_description(pow) + " turns.";
+        break;
     default:
         break;
     }

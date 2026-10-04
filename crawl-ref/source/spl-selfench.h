@@ -23,6 +23,7 @@ spret corpse_armour(int pow, bool fail);
 string revivification_loss_description(int pow);
 spret cast_revivification(int pow, bool fail);
 
+string swiftness_duration_description(int power);
 spret cast_swiftness(int power, bool fail);
 
 int cast_selective_amnesia(const string &pre_msg = "");
