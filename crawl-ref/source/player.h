@@ -1295,7 +1295,7 @@ int get_real_mp(bool include_items);
 
 bool player_harmful_contamination();
 int contam_max_damage();
-string describe_contamination(bool verbose = true);
+string describe_contamination(bool verbose = true, bool show_damage = true);
 
 bool sanguine_armour_valid();
 void activate_sanguine_armour();
