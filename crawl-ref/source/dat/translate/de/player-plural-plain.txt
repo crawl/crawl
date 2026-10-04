@@ -16,11 +16,15 @@
 Frogs
 {pl}Frösche
 %%%%
+# Coglin
+Goblins
+{pl}Goblins
+%%%%
 # genus for draconians of all colours
 Draconians
 {pl}Drakonier
 %%%%
-# Deep Dwarf
+# Deep/Mountain Dwarf
 Dwarves
 {pl}Zwerge
 %%%%
@@ -40,9 +44,17 @@ Cats
 Ants
 {pl}Ameisen
 %%%%
+# Gale Centaur
+Centaurs
+{pl}Zentauren
+%%%%
 # Octopode
 Octopi
 {pl}Oktopusse
+%%%%
+# Poltergeist
+Geists
+{pl}Geister
 %%%%
 # Hill Orc
 Orcs
@@ -55,6 +67,9 @@ Orcs
 %%%%
 Barachim
 {pl}Barachim
+%%%%
+Coglins
+{pl}Coglins
 %%%%
 Deep Dwarves
 {pl}Tiefenzwerge
@@ -76,6 +91,9 @@ Felids
 %%%%
 Formicids
 {pl}Formiciden
+%%%%
+Gale Centaurs
+{pl}Sturmwindzentauren
 %%%%
 Gargoyles
 {pl}Gargoyles
@@ -102,6 +120,9 @@ Kobolds
 Minotaurs
 {pl}Minotauren
 %%%%
+Mountain Dwarves
+{pl}Bergzwerge
+%%%%
 Mummies
 {pl}Mumien
 %%%%
@@ -114,8 +135,17 @@ Octopodes
 Ogres
 {pl}Oger
 %%%%
+Onis
+{pl}Onis
+%%%%
 Palentongas
 {pl}Palentongas
+%%%%
+Poltergeists
+{pl}Poltergeister
+%%%%
+Revenants
+{pl}Wiedergänger
 %%%%
 Spriggans
 {pl}Spriggans
