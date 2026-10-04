@@ -1439,9 +1439,11 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
                 mpr("A magical barricade bars your way!");
             }
             else if (down)
-                mpr("You can't go down here!");
+                mpr("You can't go down here! Stand on a downward "
+                    "staircase (<w>></w>) first.");
             else
-                mpr("You can't go up here!");
+                mpr("You can't go up here! Stand on an upward "
+                    "staircase (<w><<</w>) first.");
             return false;
         }
     }

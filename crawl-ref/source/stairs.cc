@@ -371,9 +371,11 @@ static bool _check_stairs(const dungeon_feature_type ftype, bool going_up)
             else if (ftype == DNGN_ABANDONED_SHOP)
                 mpr("This shop has been abandoned, nothing of value remains.");
             else if (going_up)
-                mpr("You can't go up here!");
+                mpr("You can't go up here! Stand on an upward "
+                    "staircase (<w><<</w>) first.");
             else
-                mpr("You can't go down here!");
+                mpr("You can't go down here! Stand on a downward "
+                    "staircase (<w>></w>) first.");
             return false;
         }
     }
