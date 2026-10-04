@@ -985,7 +985,7 @@ static bool _centipede_bauble(item_def& item)
         return false;
     }
 
-    if (!try_equip_item(wpn))
+    if (!try_equip_item(wpn, true))
     {
         destroy_item(index);
         return false;

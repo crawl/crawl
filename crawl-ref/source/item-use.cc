@@ -1488,6 +1488,11 @@ bool try_equip_item(item_def& item, bool instant)
     item_def& real_item = you.inv[_get_item_slot_maybe_with_move(item)];
     if (need_weapon_swap)
         you.equipment.swap_offhand_weapon_to_main();
+
+    // This is normally handled by EquipOnDelay, but not if we're bypassing that.
+    if (instant && you.has_mutation(MUT_SLOW_WIELD))
+        maybe_name_weapon(real_item);
+
     do_equipment_change(&real_item, slot, to_remove, instant);
 
     return true;
