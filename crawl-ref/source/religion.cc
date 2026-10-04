@@ -274,12 +274,12 @@ const vector<vector<god_power>> & get_all_god_powers()
                  "Beogh will send orc apostles to challenge you in battle as you gain piety." },
             { 0, "", "", "You can recruit apostles that you defeat into your service." },
             { 3, "", "", "Your apostles are sometimes healed when you deal damage." },
+            { 5, "walk on water" },
             { 5, ABIL_BEOGH_BLOOD_FOR_BLOOD, "rally a vengeful horde" },
             { 0, ABIL_BEOGH_RECRUIT_APOSTLE, "" },
             { 0, ABIL_BEOGH_DISMISS_APOSTLE_1, ""},
             { 0, ABIL_BEOGH_DISMISS_APOSTLE_2, ""},
             { 0, ABIL_BEOGH_DISMISS_APOSTLE_3, ""},
-            { 5, "walk on water" },
         },
 
         // Jiyva
