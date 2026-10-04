@@ -1822,6 +1822,7 @@ bool spell_no_hostile_in_range(spell_type spell)
         return cast_ignite_poison(&you, -1, false, true) == spret::abort;
 
     case SPELL_STARBURST:
+    case SPELL_SIROCCO:
         return !_multibeam_target_in_range(spell);
 
     case SPELL_HAILSTORM:
