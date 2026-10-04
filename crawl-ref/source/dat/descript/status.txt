@@ -1304,7 +1304,8 @@ them backwards, but your stampede will end as soon as you perform any action
 %%%%
 Indom status
 
-You are rapidly regenerating damage you sustained while stampeding.
+You are rapidly regenerating health (at a rate dependent on your max HP) until
+you have healed the specified amount.
 %%%%
 Salvo status
 
