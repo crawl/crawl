@@ -2210,7 +2210,7 @@ public:
     {
         const int base = you.fishtail
                             || you.has_mutation(MUT_ARMOURED_TAIL)
-                            || you.has_mutation(MUT_WEAKNESS_STINGER)
+                            || you.has_mutation(MUT_STINGER)
                             || you.has_mutation(MUT_WEAKNESS_STINGER)
                             ? 6 : 0;
 
