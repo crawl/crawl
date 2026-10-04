@@ -10436,10 +10436,10 @@ This wall is too hard to dig through.
 Diese Wand ist zu hart zum Durchgraben.
 %%%%
 You @arg@ carefully through the fungus.
-Du {verb-du}@arg@ vorsichtig durch den Pilz.
+Du {verb-you}@arg@ vorsichtig durch den Pilz.
 %%%%
 You @arg@ carefully through the plants.
-Du {verb-du}@arg@ vorsichtig durch die Pflanzen.
+Du {verb-you}@arg@ vorsichtig durch die Pflanzen.
 %%%%
 You can't dig through that.
 Das kannst du nicht durchgraben.
@@ -11238,7 +11238,7 @@ Your amulet attunes itself to your body and you begin to regenerate magic more q
 Dein Amulett stellt sich auf deinen Körper ein und du beginnst, deine Magie schneller zu regenerieren.
 %%%%
 You @arg@ as the wereblood boils in your veins!
-Du {verb-du}@arg@ als das Werblut in deinen Adern kocht!
+Du {verb-you}@arg@ als das Werblut in deinen Adern kocht!
 %%%%
 You feel strangely unstable.
 Du fühlst dich seltsam instabil.
@@ -13609,16 +13609,16 @@ You are unable to make a sound!
 Du kannst kein Geräusch machen!
 %%%%
 You @arg1@ your recitation at @arg2@!
-Du {verb-du}@arg1@ deine Rezitation {dat}@arg2@ entgegen.
+Du {verb-you}@arg1@ deine Rezitation {dat}@arg2@ entgegen.
 %%%%
 You @arg1@ at @arg2@!
-Du {verb-du}@arg1@ {acc}@arg2@ an.
+Du {verb-you}@arg1@ {acc}@arg2@ an.
 %%%%
 You @arg@ wildly!
-Du {verb-du}@arg@ wie wild!
+Du {verb-you}@arg@ wie wild!
 %%%%
 You @arg@ for attention!
-Du {verb-du}@arg@ nach Aufmerksamkeit!
+Du {verb-you}@arg@ nach Aufmerksamkeit!
 %%%%
 
 ##################
