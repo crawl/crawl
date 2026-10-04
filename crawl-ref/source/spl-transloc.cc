@@ -1366,7 +1366,7 @@ void you_teleport_now(string reason, bool manual_tele, bool wizard_tele)
         && !you.props.exists(TELEPORTITIS_SOURCE))
     {
         int&areas = you.props[ABYSS_AREAS_SEEN_KEY].get_int();
-        if (areas > 0 && !you.runes[RUNE_ABYSSAL])
+        if (areas > 0 && !you.runes[RUNE_ABYSSAL] && you.depth >= ABYSSAL_RUNE_MIN_LEVEL)
             need_abyss_rune_warning = true;
         areas = max(0, areas - 2);
     }
