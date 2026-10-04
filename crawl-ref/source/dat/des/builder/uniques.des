@@ -168,6 +168,7 @@ NAME:   uniq_jessica
 DEPTH:  D:2
 PLACE:  D:2
 WEIGHT: 5000
+veto {{ return you.uniques("Jessica") }}
 : place_unique(_G, "Jessica")
 
 NAME:   uniq_jorgrun
