@@ -617,12 +617,12 @@ duration of the call and the species of dragons called depend on spell power.
 %%%%
 Dragon Veins spell
 
-Allow the caster to tap into ley lines of elemental energy which pervade the
+Allows the caster to tap into ley lines of elemental energy which pervade the
 dungeon and channel their destructive power against enemies. Casting it exposes
 up to four dragon veins on adjacent floor tiles - one corresponding to each of
 fire, ice, air, and earth magic. Stepping onto any of them will trigger an
-immediate destructive spellcast targeting up to 3 random enemies with an
-additional property that depends on the element tapped into:
+immediate destructive spellcast at the cost of 1 MP, targeting up to 3 random
+enemies with an additional property that depends on the element tapped into:
 
 Fire (West): Prioritises enemies with the least health. Leaves behind brief fire
 clouds when it kills something.
