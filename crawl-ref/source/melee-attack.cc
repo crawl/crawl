@@ -4952,7 +4952,7 @@ void melee_attack::handle_centipede_poison(int power) const
     if (x_chance_in_y(power + 1, 4))
         defender->poison(attacker, random_range(10, 20) + power * 5);
 
-    if (x_chance_in_y(power - 4, power + 6))
+    if (x_chance_in_y(power - 4, power + 10))
         defender->paralyse(attacker, roll_dice(1, 3));
     else if (x_chance_in_y(power - 2, power + 4))
         defender->slow_down(attacker, roll_dice(1, 3));

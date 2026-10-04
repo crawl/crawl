@@ -976,6 +976,7 @@ static bool _centipede_bauble(item_def& item)
     item_def& wpn = env.item[index];
     wpn.props[ATTACKS_REMAINING_KEY] = random_range(20, 25);
     wpn.plus = div_rand_round(max(0, skill - 40), 10);
+    wpn.plus = min(9, div_rand_round(max(0, skill - 40), 10));
     wpn.flags = ISFLAG_SUMMONED | ISFLAG_IDENTIFIED;
 
     if (!room_in_inventory(wpn))
