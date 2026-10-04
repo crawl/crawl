@@ -632,6 +632,8 @@ string SkillMenuSwitch::get_help()
                 causes.push_back("the Hermit's pendant");
             if (you.has_bane(BANE_DILETTANTE))
                 causes.push_back("the Bane of the Dilettante");
+            if (you.form == transformation::jademantle)
+                causes.push_back("jademantle form");
             if (!result.empty())
                 result += " ";
             result += "Skills reduced by "
