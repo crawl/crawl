@@ -9603,6 +9603,8 @@ bool ench_triggers_trickster(enchant_type ench)
         case ENCH_WRETCHED:
         case ENCH_DEEP_SLEEP:
         case ENCH_VEXED:
+        case ENCH_DIMINISHED_SPELLS:
+        case ENCH_EXPOSED:
             return true;
 
         default:
