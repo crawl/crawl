@@ -1887,12 +1887,12 @@ namespace quiver
         // here is future proofing.
 
         // save compat (or bug compat): initialize to an invalid action if we
-        // are missing the keys altogether
-        if (!source.exists("type") || !source.exists("param"))
+        // are missing the action type altogether
+        if (!source.exists("type"))
             return make_shared<ammo_action>(-1);
 
         const string &type = source["type"].get_string();
-        const int param = source["param"].get_int();
+        const int param = source.exists("param") ? source["param"].get_int() : -1;
 
         // is there something more elegant than this?
         // TODO: use save_key for item_action subtypes?
