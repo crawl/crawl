@@ -786,7 +786,7 @@ class message_store
     int temp; // number of temporary messages
 
 #ifdef USE_TILE_WEB
-    int unsent; // number of messages not yet sent to the webtiles client
+    int unsent; // number of pending history entries, including history-only ones
     int client_rollback;
     bool send_ignore_one;
 #endif
@@ -933,6 +933,11 @@ public:
             text = "<darkgrey>" + text + "</darkgrey>";
         msgs.push_back(message_line(text,
                        MSGCH_DIAGNOSTICS, POST_MORTEM_HISTORY_PARAM, false));
+#ifdef USE_TILE_WEB
+        // send() indexes the pending suffix of msgs, so history-only entries
+        // must count too or they displace visible messages from that suffix.
+        unsent++;
+#endif
         if (_temporary)
             temp++;
         else
@@ -1025,6 +1030,11 @@ public:
         for (int i = -unsent; i < (send_ignore_one ? -1 : 0); ++i)
         {
             message_line& msg = msgs[i];
+            if (msg.channel == MSGCH_DIAGNOSTICS
+                && msg.param == POST_MORTEM_HISTORY_PARAM)
+            {
+                continue;
+            }
             tiles.json_open_object();
             tiles.json_write_string("text", msg.full_text());
             tiles.json_write_int("turn", msg.turn);
