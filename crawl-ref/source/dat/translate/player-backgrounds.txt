@@ -1,0 +1,466 @@
+###############################################################################
+#
+# Player background (aka job)
+#
+###############################################################################
+
+##############################################
+# Full background
+##############################################
+%%%%
+the Fighter
+
+%%%%
+the Gladiator
+
+%%%%
+the Monk
+
+%%%%
+the Hunter
+
+%%%%
+the Berserker
+
+%%%%
+the Brigand
+
+%%%%
+the Abyssal Knight
+
+%%%%
+the Chaos Knight
+
+%%%%
+the Enchanter
+
+%%%%
+the Transmuter
+
+%%%%
+the Arcane Marksman
+
+%%%%
+the Warper
+
+%%%%
+the Hedge Wizard
+
+%%%%
+the Conjurer
+
+%%%%
+the Summoner
+
+%%%%
+the Necromancer
+
+%%%%
+the Fire Elementalist
+
+%%%%
+the Ice Elementalist
+
+%%%%
+the Air Elementalist
+
+%%%%
+the Earth Elementalist
+
+%%%%
+the Venom Mage
+
+%%%%
+# old name for Hedge Wizard
+the Wizard
+
+%%%%
+the Artificer
+
+%%%%
+the Delver
+
+%%%%
+the Wanderer
+
+%%%%
+the Alchemist
+
+%%%%
+the Cinder Acolyte
+
+%%%%
+the Forgewright
+
+%%%%
+the Hexslinger
+
+%%%%
+the Reaver
+
+%%%%
+the Shapeshifter
+
+%%%%
+
+##############################################
+# player character combo
+# "the <species> <background>"
+# (as in "Welcome, Bob the Minotaur Berserker")
+##############################################
+%%%%
+the @species@ Fighter
+
+%%%%
+the @species@ Gladiator
+
+%%%%
+the @species@ Monk
+
+%%%%
+the @species@ Hunter
+
+%%%%
+the @species@ Berserker
+
+%%%%
+the @species@ Brigand
+
+%%%%
+the @species@ Abyssal Knight
+
+%%%%
+the @species@ Chaos Knight
+
+%%%%
+the @species@ Enchanter
+
+%%%%
+the @species@ Transmuter
+
+%%%%
+the @species@ Arcane Marksman
+
+%%%%
+the @species@ Warper
+
+%%%%
+the @species@ Hedge Wizard
+
+%%%%
+the @species@ Conjurer
+
+%%%%
+the @species@ Summoner
+
+%%%%
+the @species@ Necromancer
+
+%%%%
+the @species@ Fire Elementalist
+
+%%%%
+the @species@ Ice Elementalist
+
+%%%%
+the @species@ Air Elementalist
+
+%%%%
+the @species@ Earth Elementalist
+
+%%%%
+the @species@ Venom Mage
+
+%%%%
+the @species@ Artificer
+
+%%%%
+the @species@ Delver
+
+%%%%
+the @species@ Wanderer
+
+%%%%
+# old name for Hedge Wizard
+the @species@ Wizard
+
+%%%%
+the @species@  Alchemist
+
+%%%%
+the @species@ Cinder Acolyte
+
+%%%%
+the @species@ Forgewright
+
+%%%%
+the @species@ Hexslinger
+
+%%%%
+the @species@ Reaver
+
+%%%%
+the @species@ Shapeshifter
+
+%%%%
+
+##############################################
+# Background abbreviations
+##############################################
+
+%%%%
+# Abyssal Knight
+AK
+
+%%%%
+# Air Elementalist
+AE
+
+%%%%
+# Alchemist
+Al
+
+%%%%
+# Arcane Marksman
+AM
+
+%%%%
+# Artificer
+Ar
+
+%%%%
+# Berserker
+Be
+
+%%%%
+# Brigand
+Br
+
+%%%%
+# Chaos Knight
+CK
+
+%%%%
+# Cinder Acolyte
+CA
+
+%%%%
+# Conjurer
+Cj
+
+%%%%
+# Delver
+De
+
+%%%%
+# Earth Elementalist
+EE
+
+%%%%
+# Enchanter
+En
+
+%%%%
+# Fighter
+Fi
+
+%%%%
+# Fire Elementalist
+FE
+
+%%%%
+# Forgewright
+Fw
+
+%%%%
+# Gladiator
+Gl
+
+%%%%
+# Hedge Wizard
+HW
+
+%%%%
+# Hexslinger
+Hs
+
+%%%%
+# Hunter
+#Hu (same as Human)
+
+%%%%
+# Ice Elementalist
+IE
+
+%%%%
+# Monk
+Mo
+
+%%%%
+# Necromancer
+Ne
+
+%%%%
+# Reaver
+# same as Revenant
+#Re
+
+%%%%
+# Shapeshifter
+Sh
+
+%%%%
+# Summoner
+Su
+
+%%%%
+# Transmuter
+Tm
+
+%%%%
+# Venom Mage
+VM
+
+%%%%
+# Wanderer
+Wn
+
+%%%%
+# Warper
+Wr
+
+%%%%
+# Wizard
+Wz
+
+%%%%
+
+##############################################
+# Short-form combos with adjective
+##############################################
+
+%%%%
+# Abyssal Knight
+@adj@@two_letter_code@AK
+
+%%%%
+# Air Elementalist
+@adj@@two_letter_code@AE
+
+%%%%
+# Alchemist
+@adj@@two_letter_code@Al
+
+%%%%
+# Arcane Marksman
+@adj@@two_letter_code@AM
+
+%%%%
+# Artificer
+@adj@@two_letter_code@Ar
+
+%%%%
+# Berserker
+@adj@@two_letter_code@Be
+
+%%%%
+# Brigand
+@adj@@two_letter_code@Br
+
+%%%%
+# Chaos Knight
+@adj@@two_letter_code@CK
+
+%%%%
+# Cinder Acolyte
+@adj@@two_letter_code@CA
+
+%%%%
+# Conjurer
+@adj@@two_letter_code@Cj
+
+%%%%
+# Delver
+@adj@@two_letter_code@De
+
+%%%%
+# Earth Elementalist
+@adj@@two_letter_code@EE
+
+%%%%
+# Enchanter
+@adj@@two_letter_code@En
+
+%%%%
+# Fighter
+@adj@@two_letter_code@Fi
+
+%%%%
+# Fire Elementalist
+@adj@@two_letter_code@FE
+
+%%%%
+# Forgewright
+@adj@@two_letter_code@Fw
+
+%%%%
+# Gladiator
+@adj@@two_letter_code@Gl
+
+%%%%
+# Hedge Wizard
+@adj@@two_letter_code@HW
+
+%%%%
+# Hexslinger
+@adj@@two_letter_code@Hs
+
+%%%%
+# Hunter
+@adj@@two_letter_code@Hu
+
+%%%%
+# Ice Elementalist
+@adj@@two_letter_code@IE
+
+%%%%
+# Monk
+@adj@@two_letter_code@Mo
+
+%%%%
+# Necromancer
+@adj@@two_letter_code@Ne
+
+%%%%
+# Reaver
+@adj@@two_letter_code@Re
+
+%%%%
+# Shapeshifter
+@adj@@two_letter_code@Sh
+
+%%%%
+# Summoner
+@adj@@two_letter_code@Su
+
+%%%%
+# Transmuter
+@adj@@two_letter_code@Tm
+
+%%%%
+# Venom Mage
+@adj@@two_letter_code@VM
+
+%%%%
+# Wanderer
+@adj@@two_letter_code@Wn
+
+%%%%
+# Warper
+@adj@@two_letter_code@Wr
+
+%%%%
+# Wizard
+@adj@@two_letter_code@Wz
+
+%%%%
