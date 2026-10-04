@@ -535,7 +535,7 @@ transform it into a living weapon that merges with one's own body. This weapon
 functions as a reaching short blade whose attacks can poison targets.
 
 After performing a moderate number of attacks with this weapon, it will separate
-itself from its wielder's body and fight alongside you as an independant ally
+itself from its wielder's body and fight alongside you as an independent ally
 for a short time before dying.
 
 Shapeshifting skill increases the power of this centipede in both weapon and
@@ -766,7 +766,7 @@ gecko talisman
 
 The dried remains of a tail shed under duress. Partially transforms the user
 into a hypnogecko, a reptile with remarkable degree of metachrosis. Their
-skin naturally changes colour to blend in with their surrounding, making them
+skin naturally changes colour to blend in with their surroundings, making them
 stealthy, and when badly injured, reflexively shed their own tail and make it
 scintillate with bright colours as a decoy - allowing them to either flee
 or even strike at their distracted predators from a blind spot.
