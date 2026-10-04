@@ -206,6 +206,7 @@ bool splinterfrost_block_fragment(monster& block, const coord_def& aim);
 
 spret cast_summon_seismosaurus_egg(const actor& agent, int pow, bool fail);
 
+int phalanx_beetle_barrier_ac(int pow);
 spret cast_phalanx_beetle(const actor& agent, int pow, bool fail);
 
 dice_def rending_blade_damage(int power, bool include_mp);

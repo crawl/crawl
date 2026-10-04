@@ -4581,6 +4581,10 @@ spret cast_summon_seismosaurus_egg(const actor& agent, int pow, bool fail)
     return spret::success;
 }
 
+int phalanx_beetle_barrier_ac(int pow)
+{
+    return 400 + pow * 3;
+}
 spret cast_phalanx_beetle(const actor& agent, int pow, bool fail)
 {
     if (agent.is_player() && !player_summon_check(MONS_PHALANX_BEETLE))
@@ -4598,7 +4602,7 @@ spret cast_phalanx_beetle(const actor& agent, int pow, bool fail)
         if (agent.is_player())
         {
             mpr("You forge a skittering defender to stand by your side.");
-            you.props[PHALANX_BARRIER_POWER_KEY] = 400 + pow * 3;
+            you.props[PHALANX_BARRIER_POWER_KEY] = phalanx_beetle_barrier_ac(pow);
         }
         else if (you.can_see(agent))
         {
