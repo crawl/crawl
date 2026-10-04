@@ -2124,12 +2124,13 @@ void handle_monster_move(monster* mons)
     }
 
     // Return to the player's side if they've gotten too separated
-    if (mons->type == MONS_HAUNTED_ARMOUR)
+    if (mons->type == MONS_HAUNTED_ARMOUR || mons_is_jade_crystal(mons->type))
     {
-        if (grid_distance(you.pos(), mons->pos()) > 5)
+        const int max_dist = mons->type == MONS_HAUNTED_ARMOUR ? 5 : 8;
+        if (grid_distance(you.pos(), mons->pos()) > max_dist)
         {
             coord_def spot;
-            if (find_habitable_spot_near(you.pos(), MONS_HAUNTED_ARMOUR, 3, spot,
+            if (find_habitable_spot_near(you.pos(), mons->type, 3, spot,
                                          -1, &you))
             {
                 simple_monster_message(*mons, " returns to your side.");
