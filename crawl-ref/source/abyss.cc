@@ -1715,8 +1715,8 @@ void abyss_morph()
 }
 
 
-constexpr int ABYSS_DEPTH_6_TIME = 7500;
-constexpr int ABYSS_DEPTH_7_TIME = 15000;
+constexpr int ABYSS_DEPTH_6_TIME = 10000;
+constexpr int ABYSS_DEPTH_7_TIME = 20000;
 
 // Determine what the 'baseline' Abyss depth is for the player's current XP.
 // (We use skill_cost_level instead of XL to try and be more equitable between
