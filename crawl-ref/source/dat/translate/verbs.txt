@@ -24,12 +24,20 @@ swim
 crawl
 
 %%%%
+# gale centaur
+trot
+
+%%%%
 # naga
 slither
 
 %%%%
 # octopode
 wriggle
+
+%%%%
+# spriggan
+sprint
 
 %%%%
 # tengu
@@ -122,12 +130,20 @@ run
 {verb-you}crawl
 
 %%%%
+# gale centaur
+{verb-you}trot
+
+%%%%
 # naga
 {verb-you}slither
 
 %%%%
 # octopode
 {verb-you}wriggle
+
+%%%%
+# spriggan
+{verb-you}sprint
 
 %%%%
 # tengu

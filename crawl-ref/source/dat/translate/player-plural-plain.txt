@@ -16,11 +16,15 @@
 Frogs
 
 %%%%
+# Coglin
+Goblins
+
+%%%%
 # genus for draconians of all colours
 Draconians
 
 %%%%
-# Deep Dwarf
+# Deep/Mountain Dwarf
 Dwarves
 
 %%%%
@@ -40,8 +44,16 @@ Cats
 Ants
 
 %%%%
+# Gale Centaur
+Centaurs
+
+%%%%
 # Octopode
 Octopi
+
+%%%%
+# Poltergeist
+Geists
 
 %%%%
 # Hill Orc
@@ -54,6 +66,9 @@ Orcs
 ##############################################
 %%%%
 Barachim
+
+%%%%
+Coglins
 
 %%%%
 Deep Dwarves
@@ -75,6 +90,9 @@ Felids
 
 %%%%
 Formicids
+
+%%%%
+Gale Centaurs
 
 %%%%
 Gargoyles
@@ -102,6 +120,9 @@ Kobolds
 Minotaurs
 
 %%%%
+Mountain Dwarves
+
+%%%%
 Mummies
 
 %%%%
@@ -114,7 +135,16 @@ Octopodes
 Ogres
 
 %%%%
+Onis
+
+%%%%
 Palentongas
+
+%%%%
+Poltergeists
+
+%%%%
+Revenants
 
 %%%%
 Spriggans

@@ -52,6 +52,10 @@ Demonic
 Feline
 
 %%%%
+# Gale Centaur
+Equine
+
+%%%%
 Ghoulish
 
 %%%%
@@ -62,6 +66,10 @@ Octopoid
 
 %%%%
 Ogreish
+
+%%%%
+# Poltergeist
+Ghostly
 
 %%%%
 Trollish
@@ -128,12 +136,28 @@ Orcish
 Walker
 
 %%%%
+# Barachi (frog-like)
+Hopper
+
+%%%%
+# Djinni
+Floater
+
+%%%%
+# Gale Centaur
+Trotter
+
+%%%%
 # Naga (snake-like)
 Slitherer
 
 %%%%
 # Octopode (octopus-like)
 Wriggler
+
+%%%%
+# Spriggan
+Sprinter
 
 %%%%
 # Tengu (bird-like)
@@ -149,10 +173,22 @@ Stalker
 Walking
 
 %%%%
+Hopping
+
+%%%%
+Floating
+
+%%%%
+Trotting
+
+%%%%
 Slithering
 
 %%%%
 Wriggling
+
+%%%%
+Sprinting
 
 %%%%
 Gliding
@@ -167,12 +203,20 @@ Stalking
 ##############################################
 
 %%%%
+# Armataur
+At
+
+%%%%
 # Barachi
 Ba
 
 %%%%
 # Centaur
 Ce
+
+%%%%
+# Coglin
+Co
 
 %%%%
 # Deep Dwarf
@@ -207,6 +251,10 @@ Fe
 Fo
 
 %%%%
+# Gale centaur
+GC
+
+%%%%
 # Gargoyle
 Gr
 
@@ -227,12 +275,32 @@ Ha
 HO
 
 %%%%
+# High Elf
+HE
+
+%%%%
 # Human
 Hu
 
 %%%%
 # Kobold
 Ko
+
+%%%%
+# Lava Orc
+LO
+
+%%%%
+# Mayflytaur
+My
+
+%%%%
+# Meteoran
+Me
+
+%%%%
+# Mountain Dwarf
+MD
 
 %%%%
 # Merfolk
@@ -259,8 +327,20 @@ Op
 Og
 
 %%%%
+# Oni
+On
+
+%%%%
 # Palentonga
 Pa
+
+%%%%
+# Poltergeist
+Po
+
+%%%%
+# Revenant
+Re
 
 %%%%
 # Sludge Elf
@@ -386,7 +466,8 @@ Ne
 
 %%%%
 # Reaver
-Re
+# same as Revenant
+#Re
 
 %%%%
 # Shapeshifter
