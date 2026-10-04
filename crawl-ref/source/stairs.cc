@@ -931,7 +931,14 @@ void floor_transition(dungeon_feature_type how,
         // Skip most of these things if returning to the Abyss from a 'portal'
         // eg: Duel, Crucible of Pain, Xom Bazaar...
         if (from_portal)
+        {
+            // But subtract one from generated areas so that Duelling doesn't
+            // rapidly move you towards the rune (but doesn't cost you any
+            // progress, either).
+            if (!you.runes[RUNE_ABYSSAL] && you.depth >= ABYSSAL_RUNE_MIN_LEVEL)
+                you.props[ABYSS_AREAS_SEEN_KEY].get_int()--;
             break;
+        }
         // There are no abyssal stairs that go up, so this whole case is only
         // when going down.
         // -- unless you're a rocketeer!

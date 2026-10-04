@@ -172,7 +172,12 @@ static void _write_abyssal_features()
 // Returns the roll to use to check if we want to create an abyssal rune.
 static int _abyssal_rune_roll()
 {
-    const int chance_mult = have_passive(passive_t::attract_abyssal_rune) ? 2 : 1;
+    // The rune has a lower minimum distance on Abyss:6/7 (so that they are
+    // somewhat less punishing if a player ends up accidentally down there).
+    int chance_mult = have_passive(passive_t::attract_abyssal_rune) ? 2 : 1;
+    if (you.depth > 5)
+        chance_mult += 1;
+
     if (you.runes[RUNE_ABYSSAL] || you.depth < ABYSSAL_RUNE_MIN_LEVEL
         || (you.props[ABYSS_AREAS_SEEN_KEY].get_int() * chance_mult < ABYSS_RUNE_AREAS_MIN))
     {
@@ -1456,7 +1461,9 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask, coord_def map
     // Any rune on the floor prevents the abyssal rune from being generated.
     const bool placed_abyssal_rune = find_floor_item(OBJ_RUNES);
 
-    you.props[ABYSS_AREAS_SEEN_KEY].get_int()++;
+    if (you.depth >= ABYSSAL_RUNE_MIN_LEVEL)
+        you.props[ABYSS_AREAS_SEEN_KEY].get_int()++;
+
 
     dprf(DIAG_ABYSS, "_generate_area(). turns_on_level: %d, rune_on_floor: %s",
          env.turns_on_level, placed_abyssal_rune? "yes" : "no");
