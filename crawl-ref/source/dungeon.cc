@@ -2394,10 +2394,10 @@ static void _dgn_verify_connectivity(unsigned nvaults)
 {
     // After placing vaults, make sure parts of the level have not been
     // disconnected.
-    if (dgn_zones && nvaults != env.level_vaults.size())
+    if (dgn_zones && nvaults != env.level_vaults.size()
+        && !player_in_branch(BRANCH_ABYSS))
     {
-        if (!player_in_branch(BRANCH_ABYSS))
-            _fill_small_disconnected_zones();
+        _fill_small_disconnected_zones();
 
         const int newzones = dgn_count_disconnected_zones(false);
 
