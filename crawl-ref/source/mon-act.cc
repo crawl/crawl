@@ -1331,7 +1331,7 @@ static bool _handle_rending_blade_trigger(monster* blade)
 static void _handle_lightning_spire(monster& spire)
 {
     // 50% chance of casting each turn
-    if (coinflip() || spire.is_silenced())
+    if (coinflip())
         return;
 
     // Gather all eligable targets in sight
