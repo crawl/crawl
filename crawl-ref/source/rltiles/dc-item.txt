@@ -1214,7 +1214,7 @@ i-attraction POT_REMOVEME10
 # start TAG_MAJOR_VERSION == 35
 # i-lignify POT_LIGNIFY
 # i-good-mutation POT_BENEFICIAL_MUTATION
-# i-agility POT_AGILITY POT_ID_LAST
+# i-agility POT_AGILITY
 # end TAG_MAJOR_VERSION
 i-mist POT_MIST POT_ID_LAST
 %back none
