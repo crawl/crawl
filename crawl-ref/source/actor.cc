@@ -18,6 +18,7 @@
 #include "god-passive.h"
 #include "item-prop.h"
 #include "los.h"
+#include "losglobal.h"
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-death.h"
@@ -598,6 +599,10 @@ bool actor::has_invalid_constrictor(bool move) const
     if (!attacker || !attacker->alive())
         return true;
 
+    // All constriction requires no walls be in the way.
+    if (!cell_see_cell(attacker->pos(), pos(), LOS_SOLID))
+        return true;
+
     // Direct constriction (e.g. by nagas and octopode players or AT_CONSTRICT)
     // must happen with aux range. Entangling brand constriction gets to add
     // the polearm range on top of that.
@@ -608,8 +613,6 @@ bool actor::has_invalid_constrictor(bool move) const
 
     // Indirect constriction requires the defender not to move.
     return move
-        // Constriction doesn't work out of LOS, to avoid sauciness.
-        || !attacker->see_cell(pos())
         || !feat_has_solid_floor(env.grid(pos()));
 }
 
