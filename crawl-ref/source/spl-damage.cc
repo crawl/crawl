@@ -4255,7 +4255,7 @@ void seeker_attack(monster& seeker, actor& target, coord_def attack_pos)
 
     place_cloud(seeker_trail_type(seeker), seeker.pos(), 2, &seeker);
 
-    if (target.alive() && seeker.type == MONS_SHOOTING_STAR)
+    if (target.alive() && seeker.type == MONS_SHOOTING_STAR && beam.reflections == 0)
         target.knockback(seeker, 1, 0, "", attack_pos);
 }
 
