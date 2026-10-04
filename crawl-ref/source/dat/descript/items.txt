@@ -765,11 +765,11 @@ The area of effect and duration increases with Evocations skill.
 gecko talisman
 
 The dried remains of a tail shed under duress. Partially transforms the user
-into a hypnogecko, a reptile with remarkable degree of metachrosis. Their
-skin naturally changes colour to blend in with their surroundings, making them
-stealthy, and when badly injured, reflexively shed their own tail and make it
-scintillate with bright colours as a decoy - allowing them to either flee
-or even strike at their distracted predators from a blind spot.
+into a hypnogecko, a reptile with a remarkable degree of metachrosis. Their skin
+naturally changes colour to blend in with their surroundings, making them
+stealthy, and when badly injured, they reflexively shed their own tail and make
+it scintillate with bright colours as a decoy - allowing them to either flee or
+even strike at their distracted predators from a blind spot.
 %%%%
 gem
 
@@ -930,10 +930,10 @@ Causes a great mantle of elementally-attuned crystal to grow out of the wearer's
 head and upper body, increasing their proficiency with fire, ice, earth, and air
 magic, but impairing all other schools.
 
-Each time the wearer casts a spell from one of those 4 schools, it will empower
-the corresponding crystal and unleash a burst of damaging magic. If all four
-crystals become charged at once, the wearer's resistances and fortitude will be
-temporarily enhanced.
+Each time the wearer casts a spell from one of those four schools, it will
+empower the corresponding crystal and unleash a burst of damaging magic. If all
+four crystals become charged at once, the wearer's resistances and fortitude
+will be temporarily enhanced.
 %%%%
 javelin
 
