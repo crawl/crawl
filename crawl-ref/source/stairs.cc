@@ -923,12 +923,14 @@ void floor_transition(dungeon_feature_type how,
     if (shaft)
         how = DNGN_TRAP_SHAFT;
 
-    bool from_arena = old_level.branch == BRANCH_ARENA;
+    const bool from_portal = feat_is_portal_exit(how);
 
     switch (you.where_are_you)
     {
     case BRANCH_ABYSS:
-        if (from_arena)
+        // Skip most of these things if returning to the Abyss from a 'portal'
+        // eg: Duel, Crucible of Pain, Xom Bazaar...
+        if (from_portal)
             break;
         // There are no abyssal stairs that go up, so this whole case is only
         // when going down.
@@ -1024,7 +1026,7 @@ void floor_transition(dungeon_feature_type how,
         if (branch == BRANCH_ARENA)
             okawaru_duel_healing();
 
-        if (branch == BRANCH_GULCH && !from_arena)
+        if (branch == BRANCH_GULCH && !from_portal)
         {
             mpr("Mutagenic energy floods into you!");
             if (you.can_safely_mutate())
@@ -1108,7 +1110,7 @@ void floor_transition(dungeon_feature_type how,
 
     new_level();
 
-    if (is_hell_subbranch(you.where_are_you) && !from_arena)
+    if (is_hell_subbranch(you.where_are_you) && !from_portal)
             _hell_effects();
 
     // this checks both new and old floor because of Okawaru duel
