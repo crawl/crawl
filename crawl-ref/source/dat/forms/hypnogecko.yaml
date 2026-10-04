@@ -6,6 +6,6 @@ talisman: gecko
 skill: {min: 0, max: 7}
 melds: [gloves, body, boots, barding]
 fakemuts:
-  - ["atotomy", "When badly injured, your tail breaks off to distract enemies."]
+  - ["autotomy", "When badly injured, your tail breaks off to distract enemies."]
   - ["", "You have a higher chance of stabbing distracted enemies."]
   - ["stealthy", "You are stealthy."]
