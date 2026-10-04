@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Player - definite, nominative
+# Player species
 #
 ###############################################################################
 
@@ -190,6 +190,176 @@ the Yellow Draconian
 %%%%
 
 ##############################################
+# Species abbreviations
+##############################################
+
+%%%%
+# Armataur
+At
+At
+%%%%
+# Barachi
+Ba
+Ba
+%%%%
+# Centaur
+Ce
+Ze
+%%%%
+# Coglin
+Co
+Co
+%%%%
+# Deep Dwarf
+DD
+TZ
+%%%%
+# Deep Elf
+DE
+TE
+%%%%
+# Demigod
+Dg
+Hg
+%%%%
+# Demonspawn
+Ds
+Db
+%%%%
+# Djinni
+Dj
+Dj
+%%%%
+# Draconian
+Dr
+Dr
+%%%%
+# Felid
+Fe
+Fe
+%%%%
+# Formicid
+Fo
+Fo
+%%%%
+# Gale centaur
+GC
+Sz
+%%%%
+# Gargoyle
+Gr
+Gr
+%%%%
+# Ghoul
+Gh
+Gh
+%%%%
+# Gnoll
+Gn
+Gn
+%%%%
+# Halfling
+Ha
+Ha
+%%%%
+# Hill Orc
+HO
+HO
+%%%%
+# High Elf
+HE
+He
+%%%%
+# Human
+Hu
+Mn
+%%%%
+# Kobold
+Ko
+Ko
+%%%%
+# Lava Orc
+LO
+LO
+%%%%
+# Mayflytaur
+My
+Et
+%%%%
+# Meteoran
+Me
+Me
+%%%%
+# Mountain Dwarf
+MD
+Bz
+%%%%
+# Merfolk
+Mf
+Mv
+%%%%
+# Minotaur
+Mi
+Mi
+%%%%
+# Mummy
+Mu
+Mu
+%%%%
+# Naga
+Na
+Na
+%%%%
+# Octopode
+Op
+Op
+%%%%
+# Ogre
+Og
+Og
+%%%%
+# Oni
+On
+On
+%%%%
+# Palentonga
+Pa
+Pa
+%%%%
+# Poltergeist
+Po
+Po
+%%%%
+# Revenant
+Re
+Wg
+%%%%
+# Sludge Elf
+SE
+Se
+%%%%
+# Spriggan
+Sp
+Sp
+%%%%
+# Tengu
+Te
+Te
+%%%%
+# Troll
+Tr
+Tr
+%%%%
+# Vampire
+Vp
+Vp
+%%%%
+# Vine Stalker
+VS
+Rp
+%%%%
+
+##############################################
 # Player species-orc hybrids
 ##############################################
 
@@ -361,287 +531,170 @@ the Orcula
 %%%%
 
 ##############################################
-# Player genus
-# NOTE: If not listed then species is used
+# Species adjectives
+# (only used in titles)
 ##############################################
 %%%%
-# Barachi
-the Frog
-{m}der Frosch
+Barachian
+Amphibische
 %%%%
-# Coglin
-the Goblin
-{m}der Goblin
+Dwarven
+Zwergische
 %%%%
-# Deep/Mountain Dwarf
-the Dwarf
-{m}der Zwerg
+Elven
+Elfische
 %%%%
-# Deep Elf
-the Elf
-{m}der Elf
+Divine
+Göttliche
 %%%%
-# Demigod
-the God
-{m}der Gott
+Demonic
+Dämonische
 %%%%
-# Felid
-the Cat
-{f}die Katze
+Feline
+Katzenartige
 %%%%
-# Formicid
-the Ant
-{f}die Ameise
+# Gale Centaur
+Equine
+Pferdeartige
 %%%%
-# Octopode
-the Octopus
-{m}der Oktopus
+Ghoulish
+Ghulische
+%%%%
+Merfolkian
+Meervölkische
+%%%%
+Octopoid
+Achtfüßige
+%%%%
+Ogreish
+Ogerische
 %%%%
 # Poltergeist
-the Geist
-{m}der Geist
+Ghostly
+Spukhafte
 %%%%
-# Hill Orc
-the Orc
-{m}der Ork
+Trollish
+Trollische
+%%%%
+Vampiric
+Vampirische
+%%%%
+Orcish
+Orkische
+%%%%
+
+# English adjective is same as the noun, so context required
+%%%%
+# this one same as plural noun
+{adj-e}Djinn
+Magische
+%%%%
+{adj-e}Draconian
+Drakonische
+%%%%
+{adj-e}Formicid
+Insektoide
+%%%%
+{adj-e}Gargoyle
+Gargylische
+%%%%
+{adj-e}Gnoll
+Gnollische
+%%%%
+{adj-e}Human
+Menschliche
+%%%%
+{adj-e}Kobold
+Koboldische
+%%%%
+{adj-e}Minotaur
+Minotaurische
+%%%%
+{adj-e}Mummy
+Untote
+%%%%
+{adj-e}Naga
+Schlängelnde
+%%%%
+{adj-e}Palentonga
+Geschuppte
+%%%%
+{adj-e}Spriggan
+Leichtfüßige
+%%%%
+{adj-e}Tengu
+Fliegende
+%%%%
+{adj-e}Vine Stalker
+Pirschende
 %%%%
 
 ##############################################
-# Player genus uncapitalised
+# Species walking type (used in titles)
 ##############################################
 %%%%
-# Barachi
-the frog
-{m}der Frosch
+# Default
+Walker
+Wanderer
 %%%%
-# Deep Dwarf
-# duplicate of monster
-#the dwarf
-#
+# Barachi (frog-like)
+Hopper
+Hüpfer
 %%%%
-# Deep Elf
-# duplicate of monster
-#the elf
-#
+# Djinni
+Floater
+Schweber
 %%%%
-# Demigod
-the god
-{m}der Gott
+# Gale Centaur
+Trotter
+Trotter
 %%%%
-# Felid
-the cat
-{f}die Katze
+# Naga (snake-like)
+Slitherer
+Kriecher
 %%%%
-# Formicid
-the ant
-{f}die Ameise
+# Octopode (octopus-like)
+Wriggler
+Schlängler
 %%%%
-# Octopode
-the octopus
-{m}der Oktopus
+# Spriggan
+Sprinter
+Sprinter
 %%%%
-# Lava Orc
-# duplicate of monster
-#the orc
-#
+# Tengu (bird-like)
+Glider
+Gleiter
+%%%%
+# Vine Stalker
+Stalker
+Pirscher
 %%%%
 
-##############################################
-# Player background (aka job)
-##############################################
 %%%%
-the Fighter
-{m}der Kämpfer
+Walking
+Wandernde
 %%%%
-the Gladiator
-{m}der Gladiator
+Hopping
+Hüpfende
 %%%%
-the Monk
-{m}der Mönch
+Floating
+Schwebende
 %%%%
-the Hunter
-{m}der Jäger
+Trotting
+Trottende
 %%%%
-the Berserker
-{m}der Berserker
+Slithering
+Kriechende
 %%%%
-the Brigand
-{m}der Brigant
+Wriggling
+Schlängelnde
 %%%%
-the Abyssal Knight
-{m}der Abgrundritter
+Sprinting
+Sprintende
 %%%%
-the Chaos Knight
-{m}der Chaosritter
+Gliding
+Gleitende
 %%%%
-the Enchanter
-{m}der Verzauberer
-%%%%
-the Transmuter
-{m}der Verwandler
-%%%%
-the Arcane Marksman
-{m}der Arkane Schütze
-%%%%
-the Warper
-{m}der Warper
-%%%%
-the Hedge Wizard
-{m}der Heckenzauberer
-%%%%
-the Conjurer
-{m}der Konjurant
-%%%%
-the Summoner
-{m}der Beschwörer
-%%%%
-the Necromancer
-{m}der Nekromant
-%%%%
-the Fire Elementalist
-{m}der Feuermagier
-%%%%
-the Ice Elementalist
-{m}der Eismagier
-%%%%
-the Air Elementalist
-{m}der Luftmagier
-%%%%
-the Earth Elementalist
-{m}der Erdmagier
-%%%%
-the Venom Mage
-{m}der Giftmagier
-%%%%
-# old name for Hedge Wizard
-the Wizard
-{m}der Zauberer
-%%%%
-the Artificer
-{m}der Artifizient
-%%%%
-the Delver
-{m}der Forscher
-%%%%
-the Wanderer
-{m}der Wanderer
-%%%%
-the Alchemist
-{m}der Alchemist
-%%%%
-the Cinder Acolyte
-{m}der Aschenakolyth
-%%%%
-the Forgewright
-{m}der Magieschmied
-%%%%
-the Hexslinger
-{m}der Bannschütze
-%%%%
-the Reaver
-{m}der Plünderer
-%%%%
-the Shapeshifter
-{m}der Gestaltwandler
-%%%%
-
-##############################################
-# player character combo
-# "the <species> <background>"
-# (as in "Welcome, Bob the Minotaur Berserker")
-##############################################
-%%%%
-the @species@ Fighter
-{m}der @species@ Kämpfer
-%%%%
-the @species@ Gladiator
-{m}der @species@ Gladiator
-%%%%
-the @species@ Monk
-{m}der @species@ Mönch
-%%%%
-the @species@ Hunter
-{m}der @species@ Jäger
-%%%%
-the @species@ Berserker
-{m}der @species@ Berserker
-%%%%
-the @species@ Brigand
-{m}der @species@ Brigant
-%%%%
-the @species@ Abyssal Knight
-{m}der @species@ Abgrundritter
-%%%%
-the @species@ Chaos Knight
-{m}der @species@ Chaosritter
-%%%%
-the @species@ Enchanter
-{m}der @species@ Verzauberer
-%%%%
-the @species@ Transmuter
-{m}der @species@ Verwandler
-%%%%
-the @species@ Arcane Marksman
-{m}der @species@ Arkane Schütze
-%%%%
-the @species@ Warper
-{m}der @species@ Warper
-%%%%
-the @species@ Hedge Wizard
-{m}der @species@ Heckenzauberer
-%%%%
-the @species@ Conjurer
-{m}der @species@ Konjurant
-%%%%
-the @species@ Summoner
-{m}der @species@ Beschwörer
-%%%%
-the @species@ Necromancer
-{m}der @species@ Nekromant
-%%%%
-the @species@ Fire Elementalist
-{m}der @species@ Feuermagier
-%%%%
-the @species@ Ice Elementalist
-{m}der @species@ Eismagier
-%%%%
-the @species@ Air Elementalist
-{m}der @species@ Luftmagier
-%%%%
-the @species@ Earth Elementalist
-{m}der @species@ Erdmagier
-%%%%
-the @species@ Venom Mage
-{m}der @species@ Giftmagier
-%%%%
-the @species@ Artificer
-{m}der @species@ Artifizient
-%%%%
-the @species@ Delver
-{m}der @species@ Forscher
-%%%%
-the @species@ Wanderer
-{m}der @species@ Wanderer
-%%%%
-# old name for Hedge Wizard
-the @species@ Wizard
-{m}der @species@ Zauberer
-%%%%
-the @species@  Alchemist
-{m}der @species@ Alchemist
-%%%%
-the @species@ Cinder Acolyte
-{m}der @species@ Aschenakolyth
-%%%%
-the @species@ Forgewright
-{m}der @species@ Magieschmied
-%%%%
-the @species@ Hexslinger
-{m}der @species@ Bannschütze
-%%%%
-the @species@ Reaver
-{m}der @species@ Plünderer
-%%%%
-the @species@ Shapeshifter
-{m}der @species@ Gestaltwandler
+Stalking
+Pirschende
 %%%%

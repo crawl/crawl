@@ -1,16 +1,103 @@
 ###############################################################################
 #
-# Player - plural, plain, nominative
-#
-# The parameter @player_genus_plural@ is included in some messages in
-# monspeak.txt and wpnnoise.txt. Species is used for genus in many cases.
+# Player genus
 #
 ###############################################################################
 
 ##############################################
-# Player genus
+# Player genus singular (used in some player titles)
 # NOTE: If not listed then species is used
 ##############################################
+%%%%
+# Barachi
+the Frog
+{m}der Frosch
+%%%%
+# Coglin
+the Goblin
+{m}der Goblin
+%%%%
+# Deep/Mountain Dwarf
+the Dwarf
+{m}der Zwerg
+%%%%
+# Deep/Sludge/High Elf
+the Elf
+{m}der Elf
+%%%%
+# Demigod
+the God
+{m}der Gott
+%%%%
+# Felid
+the Cat
+{f}die Katze
+%%%%
+# Formicid
+the Ant
+{f}die Ameise
+%%%%
+# Octopode
+the Octopus
+{m}der Oktopus
+%%%%
+# Poltergeist
+the Geist
+{m}der Geist
+%%%%
+# Hill Orc
+the Orc
+{m}der Ork
+%%%%
+
+##############################################
+# Player genus uncapitalised
+# Why is this needed?
+##############################################
+%%%%
+# Barachi
+the frog
+{m}der Frosch
+%%%%
+# Deep Dwarf
+# duplicate of monster
+#the dwarf
+#
+%%%%
+# Deep Elf
+# duplicate of monster
+#the elf
+#
+%%%%
+# Demigod
+the god
+{m}der Gott
+%%%%
+# Felid
+the cat
+{f}die Katze
+%%%%
+# Formicid
+the ant
+{f}die Ameise
+%%%%
+# Octopode
+the octopus
+{m}der Oktopus
+%%%%
+# Lava Orc
+# duplicate of monster
+#the orc
+#
+%%%%
+
+##############################################
+# Player genus plural
+##############################################
+
+# The parameter @player_genus_plural@ is included in some messages in
+# monspeak.txt and wpnnoise.txt. Species is used for genus in many cases.
+
 %%%%
 # Barachi
 Frogs
@@ -28,7 +115,7 @@ Draconians
 Dwarves
 {pl}Zwerge
 %%%%
-# Deep Elf
+# Deep/Sludge/High Elf
 Elves
 {pl}Elfen
 %%%%
@@ -62,7 +149,8 @@ Orcs
 %%%%
 
 ##############################################
-# Player species
+# Player species plural
+# (Needed because species is used for genus in may cases)
 ##############################################
 %%%%
 Barachim
