@@ -3232,7 +3232,7 @@ string talisman_type_name(int type)
     case TALISMAN_QUILL:    return "quill talisman";
     case TALISMAN_INKWELL:  return "inkwell talisman";
     case TALISMAN_VISION:   return "vision talisman";
-    case TALISMAN_GECKO:   return "gecko talisman";
+    case TALISMAN_GECKO:    return "gecko talisman";
     case TALISMAN_PROTEAN:  return "protean talisman";
     case TALISMAN_RIMEHORN: return "rimehorn talisman";
     case TALISMAN_MIST:     return "mist talisman";
