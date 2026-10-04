@@ -482,24 +482,22 @@ public:
     bool can_affect_walls() override { return true; }
 };
 
-// a class for fixed beams at some offset from the player
-class targeter_starburst_beam : public targeter_beam
+class targeter_multibeam : public targeter_beam
 {
 public:
-    targeter_starburst_beam(const actor *a, int _range, int pow, const coord_def &offset);
-    // this is a bit of ui hack: lets us set starburst beams even when the
-    // endpoint would be out of los
-    bool can_affect_unseen() override { return true; }
-    bool valid_aim(coord_def) override { return true; }
-};
+    targeter_multibeam(const actor *a, spell_type spell, int range,
+                       multi_beam_shape shape, int width, int pow,
+                       bool can_aim = true);
+    bool set_aim(coord_def a) override;
+    bool valid_aim(coord_def) override;
 
-class targeter_starburst : public targeter
-{
-public:
-    targeter_starburst(const actor *a, int range, int pow);
-    bool valid_aim(coord_def) override { return true; }
-    aff_type is_affected(coord_def loc) override;
-    vector<targeter_starburst_beam> beams;
+private:
+    bool set_aim_forced(coord_def a);
+
+    bolt prototype;
+    multi_beam_shape shape;
+    int width;
+    bool can_aim;
 };
 
 // A targeter for Eringya's Noxious Bog that finds cells that can be bogged.
@@ -804,4 +802,12 @@ class targeter_pacify : public targeter_smite
 public:
     targeter_pacify();
     bool valid_aim(coord_def a) override;
+};
+
+class targeter_ice_thorns : public targeter_smite
+{
+public:
+    targeter_ice_thorns();
+    bool valid_aim(coord_def a) override;
+    aff_type is_affected(coord_def loc) override;
 };

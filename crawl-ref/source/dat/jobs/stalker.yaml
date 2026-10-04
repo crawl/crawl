@@ -1,0 +1,26 @@
+enum: JOB_STALKER
+name: "Stalker"
+category: Metamorph
+category_priority: 40
+str: 3
+int: 0
+dex: 9
+equipment:
+  - "dagger plus:1"
+  - "gecko talisman"
+  - "mist talisman"
+  - "potion of attraction q:3"
+  - "centipede bauble q:3"
+recommended_species:
+  - merfolk
+  - kobold
+  - spriggan
+  - human
+  - gale centaur
+skills:
+  fighting: 2
+  dodging: 1
+  stealth: 3
+  shapeshifting: 3
+  weapon: 2
+create_enum: false

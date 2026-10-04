@@ -915,10 +915,8 @@ Whenever a potion restores your health or magic, it restores twice as much.
 %%%%
 drunken brawling mutation
 
-Whenever you drink a potion that restores health or magic, you perform an
-immediate attack against all enemies adjacent to you.
-
-(This includes potions of curing, heal wounds, magic, and ambrosia.)
+Whenever you drink a potion, you perform an immediate attack against all enemies
+within melee range.
 %%%%
 artefact enchanting mutation
 
@@ -1259,6 +1257,56 @@ Your gaze has a hypnotic effect on many creatures. Whenever a living, demonic,
 or holy monster first notices you, it may become momentarily dazed, preventing
 it from shouting. Creatures which fail a Willpower check will be dazed for even
 longer.
+%%%%
+glimmercast mutation
+
+Whenever you cast spells while in sight of enemies (or witness monsters cast
+spells themselves), the leftover magical energy will condense into a short-lived
+cloud of glimmer. Touching that cloud will convert it into a small projectile
+which unerringly strikes a nearby enemy.
+
+Other creatures walking into those clouds will merely push them out of the way.
+%%%%
+elemental crystals mutation
+
+Four elemental crystals float alongside you - one corresponding to each of
+Earth, Fire, Air, and Ice magic. Casting a spell of one of those schools will
+cause a matching crystal with enemies in range of it to surge with power,
+damaging up to 3 enemies within 3 tiles and charging it.
+
+When all crystals become fully charged, you will temporarily gain resistance to
+elemental damage and regenerate a small amount of health over time.
+%%%%
+atotomy mutation
+
+When gravely wounded, you automatically shed your tail as a defensive response
+and step away to an adjacent tile. The shed tail will pulse with scintillating
+colours that distract all nearby monsters and force them to attack it instead of
+you.
+
+Your tail will eventually regrow as you explore more of the dungeon.
+%%%%
+gather mist mutation
+
+As you explore, you will gradually condense the dungeon air into potions of mist,
+which allow you to become intangible.
+
+You can carry no more than five of these at a time and they will be destroyed if
+you ever permanently leave this form.
+%%%%
+potion clouds mutation
+
+Whenever you drink a potion, vapours from it are transmuted within your mane. If
+you perform a melee attack shortly thereafter, you will spray hazardous clouds
+in a wide line in the direction of your attack, whose quantity and duration are
+increased by your Shapeshifting skill.
+
+The type of cloud created depends on the potion drank:
+
+ Mist and Curing: Blinding Haze\n
+Berserk Rage: Flame\n
+Mutation: Mutagenic Fog\n
+All Others: Noxious Fumes\n
 %%%%
 # ------ Makhleb destruction flavours ------
 Gehenna destruction mutation

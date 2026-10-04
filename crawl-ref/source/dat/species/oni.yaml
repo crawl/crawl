@@ -12,6 +12,7 @@ aptitudes:
   fighting: 3
   short_blades: -1
   long_blades: -1
+  polearms: -1
   ranged weapons: -3
   armour: -1
   shields: -1
@@ -53,6 +54,7 @@ recommended_jobs:
   - hedge wizard
   - air elementalist
   - fire elementalist
+  - mystic
 recommended_weapons:
   - maces and flails
   - polearms

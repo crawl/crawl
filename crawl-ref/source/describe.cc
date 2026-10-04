@@ -1172,7 +1172,12 @@ static int _item_training_target(const item_def &item)
         return current_skill < min_skill ? min_skill : max_skill;
     }
     if (item.base_type == OBJ_BAUBLES)
-        return get_form(transformation::flux)->min_skill * 10;
+    {
+        if (item.sub_type == BAUBLE_FLUX)
+            return get_form(transformation::flux)->min_skill * 10;
+        else if (item.sub_type == BAUBLE_CENTIPEDE)
+            return CENTIPEDE_BAUBLE_MINSKILL;
+    }
     return 0;
 }
 
@@ -2623,10 +2628,8 @@ static string _describe_lignify_ac()
                         you.armour_class_scaled(1));
 }
 
-string describe_item_rarity(const item_def &item)
+static string _rarity_to_str(item_rarity_type rarity)
 {
-    item_rarity_type rarity = consumable_rarity(item);
-
     switch (rarity)
     {
     case RARITY_VERY_RARE:
@@ -2642,8 +2645,27 @@ string describe_item_rarity(const item_def &item)
     case RARITY_VERY_COMMON:
         return "very common";
     case RARITY_NONE:
+        return "not found normally";
     default:
         return "buggy";
+    }
+}
+
+string describe_item_rarity(const item_def &item, bool terse)
+{
+    item_rarity_type rarity = consumable_rarity(item);
+    string desc = _rarity_to_str(rarity);
+
+    if (terse)
+        return desc;
+
+    if (rarity == RARITY_NONE)
+        return "It cannot be found normally.";
+    else
+    {
+        return make_stringf("It is %s %s.",
+                            article_a(desc).c_str(),
+                            item.base_type == OBJ_POTIONS ? "potion" : "scroll");
     }
 }
 
@@ -2815,6 +2837,8 @@ static string _cannot_use_reason(const item_def &item, bool temp=true)
             can_equip_item(item, temp, &reason);
             return reason;
         }
+    case OBJ_TALISMANS:
+        return cannot_put_on_talisman_reason(item, temp);
     default:
         // Non-equippable types (e.g. ammo) have no can_equip_item reason, but
         // can still be outright forbidden by your god.
@@ -3147,9 +3171,7 @@ string get_item_description(const item_def &item,
                         describe_player_cancellation() << ".";
                 }
             }
-            description << "\n\nIt is "
-                        << article_a(describe_item_rarity(item))
-                        << " potion.";
+            description << "\n\n" << describe_item_rarity(item);
             need_extra_line = false;
         }
         break;
@@ -3178,9 +3200,7 @@ string get_item_description(const item_def &item,
             if (verbose)
                 _uselessness_desc(description, item);
 
-            description << "\n\nIt is "
-                        << article_a(describe_item_rarity(item))
-                        << " scroll.";
+            description << "\n\n" << describe_item_rarity(item);
             need_extra_line = false;
         }
         break;
@@ -3201,9 +3221,12 @@ string get_item_description(const item_def &item,
     case OBJ_BAUBLES:
         if (!is_useless_item(item, false))
         {
-            description << "\n" << _describe_talisman_form(transformation::flux);
-            _append_skill_needed(desc, item, false, "   ");
-            description << desc;
+            if (item.sub_type == BAUBLE_FLUX)
+            {
+                description << "\n" << _describe_talisman_form(transformation::flux);
+                _append_skill_needed(desc, item, false, "   ");
+                description << desc;
+            }
         }
         if (verbose)
             _uselessness_desc(description, item);
@@ -3636,6 +3659,21 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
             long_desc += make_stringf("\nIt does %dd%d damage.", dmg.num, dmg.size);
         }
     }
+    else if (feat_is_dragon_vein(feat))
+    {
+        long_desc += make_stringf("\nIt inflicts %s damage when channelled.",
+                        spell_damage_string(dragon_vein_to_spell(feat),
+                                            false, calc_spell_power(SPELL_DRAGON_VEINS)).c_str());
+    }
+    else if (feat == DNGN_ICE_THORNS)
+    {
+        map_terrain_change_marker* mark = env.markers.get_terrain_change_at(pos, TERRAIN_CHANGE_ICE_THORNS);
+        if (mark)
+        {
+            dice_def dmg = zap_damage(ZAP_ICE_THORNS, mark->power, mark->source_mid != MID_PLAYER, false);
+            long_desc += make_stringf("\nStepping on it inflicts %dd%d damage.", dmg.num, dmg.size);
+        }
+    }
 
     // mention that trees are usually flammable
     // (except for autumnal trees in Wucad Mu's Monastery)
@@ -3998,7 +4036,8 @@ static vector<command_type> _allowed_actions(const item_def& item)
     default:
         break;
     }
-    actions.push_back(CMD_DROP);
+    if (item_is_droppable(item))
+        actions.push_back(CMD_DROP);
     actions.push_back(CMD_ADJUST_INVENTORY);
     if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING)
         && _is_below_training_target(item, false))
@@ -8011,6 +8050,19 @@ static string _describe_talisman_form(transformation form_type)
         _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Bat Swarm Recharge", skill, 0, true, false);
         _maybe_populate_form_table(items, bind(&Form::get_effect_chance, form, placeholders::_1), "Daze Power", skill, 0, false, false);
     }
+    if (form_type == transformation::jademantle)
+        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Crystal HP", skill, 0, true, false);
+    if (form_type == transformation::hypnogecko)
+    {
+        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Shed Tail HP", skill, 0, true, false);
+        _maybe_populate_form_table(items, bind(&Form::get_effect_chance, form, placeholders::_1), "Distraction Stab Chance", skill, 0, true, true);
+    }
+    if (form_type == transformation::mistmane)
+    {
+        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Cloud range", skill, 0, false, false, 10, 1);
+        _maybe_populate_form_table(items, bind(&Form::get_cloud_duration, form, placeholders::_1), "Cloud duration", skill, 0, true, false);
+        _maybe_populate_form_table(items, bind(&Form::get_effect_chance, form, placeholders::_1), "Distill rate", skill, 0, true, false);
+    }
 
     vector<int> column_width;
 
@@ -8054,13 +8106,14 @@ static string _describe_talisman_form(transformation form_type)
         description << "\nClass: " << uppercase_first(holiness_description(form->holiness));
 
     // Now add various one-off bits of (generally non-scaling) data after that
-    TablePrinter pr(4, 80);
+    TablePrinter pr(form_type == transformation::jademantle ? 3 : 4, 80);
     pr.AddRow();
 
     if (form->size != SIZE_CHARACTER)
         pr.AddCell("Size", uppercase_first(get_size_adj(form->size)));
 
     _desc_form_val(pr, "Str", form->str_mod);
+    _desc_form_val(pr, "Int", form->int_mod);
     _desc_form_val(pr, "Dex", form->dex_mod);
 
     _desc_form_resist(pr, MR_RES_FIRE, form->res_fire());
@@ -8093,8 +8146,11 @@ static string _describe_talisman_form(transformation form_type)
         pr.AddCell("Will", "+");
     else if (form_type == transformation::vampire)
         pr.AddCell("Stealth", "++");
-    else if (form_type == transformation::spider)
+    else if (form_type == transformation::spider
+             || form_type == transformation::hypnogecko)
+    {
         pr.AddCell("Stealth", "+");
+    }
     else if (form_type == transformation::aqua)
         pr.AddCell("Reach", "+2");
     else if (form_type == transformation::sphinx)
@@ -8115,9 +8171,17 @@ static string _describe_talisman_form(transformation form_type)
     }
     else if (form_type == transformation::fortress_crab)
         pr.AddCell("Armour egos", "x2");
+    else if (form_type == transformation::jademantle)
+    {
+        pr.AddCell("Elemental magic skill", "+2");
+        pr.AddCell("Other magic skill", "-33%", RED);
+    }
 
-    if (form_type == transformation::vampire || form_type == transformation::sphinx)
+    if (form_type == transformation::vampire || form_type == transformation::sphinx
+        || form_type == transformation::vision)
+    {
         pr.AddCell("SInv", "+");
+    }
 
     // Don't output extra blank lines if there's no content.
     if (pr.NumCells() > 0)

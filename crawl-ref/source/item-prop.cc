@@ -658,6 +658,10 @@ static const weapon_def Weapon_prop[] =
         SK_SHORT_BLADES, SIZE_LITTLE, SIZE_LITTLE,
         WPNF_NO_FLAGS, DAMV_SLICING | DAM_PIERCE, 0, 0, 0, {}},
 #endif
+    // Temporary weapon
+    { WPN_CENTIPEDE,          "assassin centipede",          7,  4, 10,
+        SK_SHORT_BLADES, SIZE_LITTLE, SIZE_LITTLE,
+        DAM_PIERCE, 0, 0, 0, {}},
 
     // Long Blades
     { WPN_FALCHION,              "falchion",               8,  2, 13,
@@ -1191,7 +1195,7 @@ bool item_is_stationary(const item_def &item)
 static bool _is_affordable(const item_def &item)
 {
     // Temp items never count.
-    if (item.flags & ISFLAG_SUMMONED)
+    if (item.summoned())
         return false;
 
     // Already in our grubby mitts.
@@ -1738,8 +1742,11 @@ bool is_enchantable_armour(const item_def &arm, bool unknown)
 // If unknown is true, unidentified weapons will return true.
 bool is_enchantable_weapon(const item_def &wpn, bool unknown)
 {
-    if (wpn.base_type != OBJ_WEAPONS)
+    if (wpn.base_type != OBJ_WEAPONS
+        || wpn.summoned())
+    {
         return false;
+    }
 
     // Artefacts (unless they're random artefacts and you have the relevant
     // mutation) cannot be enchanted.
@@ -1970,7 +1977,7 @@ bool is_brandable_weapon(const item_def &wpn, bool allow_ranged, bool divine)
     if (wpn.base_type != OBJ_WEAPONS)
         return false;
 
-    if (is_artefact(wpn))
+    if (is_artefact(wpn) || wpn.summoned())
         return false;
 
     if (!allow_ranged && is_range_weapon(wpn)
@@ -2381,7 +2388,8 @@ int weapon_reach(const item_def &item)
     if (is_unrandom_artefact(item, UNRAND_RIFT))
         return 3;
     if (item_attack_skill(item) == SK_POLEARMS
-        || is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
+        || is_unrandom_artefact(item, UNRAND_LOCHABER_AXE)
+        || item.is_type(OBJ_WEAPONS, WPN_CENTIPEDE))
     {
         return 2;
     }
@@ -3258,13 +3266,17 @@ string talisman_type_name(int type)
     {
     case TALISMAN_QUILL:    return "quill talisman";
     case TALISMAN_INKWELL:  return "inkwell talisman";
+    case TALISMAN_VISION:   return "vision talisman";
+    case TALISMAN_GECKO:    return "gecko talisman";
     case TALISMAN_PROTEAN:  return "protean talisman";
     case TALISMAN_RIMEHORN: return "rimehorn talisman";
+    case TALISMAN_MIST:     return "mist talisman";
     case TALISMAN_SPIDER:   return "spider talisman";
     case TALISMAN_AQUA:     return "wellspring talisman";
     case TALISMAN_SCARAB:   return "scarab talisman";
     case TALISMAN_MEDUSA:   return "medusa talisman";
     case TALISMAN_SPORE:    return "spore talisman";
+    case TALISMAN_JADE:     return "jade talisman";
     case TALISMAN_MAW:      return "maw talisman";
     case TALISMAN_SERPENT:  return "serpent talisman";
     case TALISMAN_EEL:      return "eel talisman";
@@ -3287,21 +3299,25 @@ static const pair<talisman_type, int> _talisman_tiers[] =
 {
     { TALISMAN_QUILL,       1 },
     { TALISMAN_INKWELL,     1 },
+    { TALISMAN_VISION,      1 },
+    { TALISMAN_GECKO,       1 },
 
     { TALISMAN_RIMEHORN,    2 },
     { TALISMAN_SCARAB,      2 },
     { TALISMAN_MEDUSA,      2 },
     { TALISMAN_SPORE,       2 },
-    { TALISMAN_MAW,         2 },
+    { TALISMAN_JADE,        2 },
+    { TALISMAN_MIST,        2 },
 
     { TALISMAN_SERPENT,     3 },
-    { TALISMAN_BLADE,       3 },
     { TALISMAN_EEL,         3 },
     { TALISMAN_FORTRESS,    3 },
     { TALISMAN_WEREWOLF,    3 },
     { TALISMAN_SPIDER,      3 },
     { TALISMAN_AQUA,        3 },
+    { TALISMAN_MAW,         3 },
 
+    { TALISMAN_BLADE,       4 },
     { TALISMAN_STATUE,      4 },
     { TALISMAN_HIVE,        4 },
     { TALISMAN_DRAGON,      4 },
@@ -3772,6 +3788,13 @@ bool item_known_excluded_from_set(object_class_type type, int sub_type)
     return you.type_ids[item_sets[ist].cls][chosen];
 }
 
+bool item_known_not_to_generate(object_class_type type, int sub_type)
+{
+    return item_known_excluded_from_set(type, sub_type)
+           || (type == OBJ_POTIONS || type == OBJ_SCROLLS)
+               && consumable_rarity(type, sub_type) == RARITY_NONE;
+}
+
 item_set_type item_set_by_name(string name)
 {
     // We could cache this if we wanted to.
@@ -3788,22 +3811,6 @@ string item_name_for_set(item_set_type typ)
     it.base_type = item_sets[typ].cls;
     it.sub_type = item_for_set(typ);
     return sub_type_string(it, true);
-}
-
-// Whether drinking this potion will cause a drunken swing
-bool oni_likes_potion(potion_type type)
-{
-    switch (type)
-    {
-        case POT_CURING:
-        case POT_HEAL_WOUNDS:
-        case POT_MAGIC:
-        case POT_AMBROSIA:
-            return true;
-
-        default:
-            return false;
-    }
 }
 
 // Returns whether this item could theoretically be equipped by the player
@@ -3929,4 +3936,15 @@ bool item_affects_agrid(const item_def& item)
     }
 
     return false;
+}
+
+bool item_is_droppable(const item_def& item)
+{
+    if (item.base_type == OBJ_GIZMOS && item_is_equipped(item))
+        return false;
+
+    if (item.is_type(OBJ_POTIONS, POT_MIST))
+        return false;
+
+    return true;
 }

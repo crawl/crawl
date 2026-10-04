@@ -72,7 +72,7 @@ special_missile_type missile_ego_from_name(string name,
                                            vector<special_missile_type> *partial_matches = nullptr);
 special_armour_type armour_ego_from_name(string name,
                                          vector<special_armour_type> *partial_matches = nullptr);
-string describe_item_rarity(const item_def &item);
+string describe_item_rarity(const item_def &item, bool terse = false);
 void get_item_desc(const item_def &item, describe_info &inf);
 void inscribe_item(item_def &item);
 void target_item(item_def &item);

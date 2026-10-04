@@ -366,6 +366,8 @@ enum tag_minor_version
     TAG_MINOR_FORGET_MONSTERS,     // Forget stale monster memories.
     TAG_MINOR_BASE_TRAINING_TARGETS, // Separate training targets for base skill levels
     TAG_MINOR_SHOP_KEEPER_NAME,    // Seed shopkeeper names from all three keeper_name bytes
+    TAG_MINOR_TERRAIN_CHANGE_POWER, // Marshall power in map_terrain_change_markers
+    TAG_MINOR_TEMPORARY_WEAPONS,   // Implement the ability to give the player transient weapons
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

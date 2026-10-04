@@ -1132,37 +1132,6 @@ static void _construct_species_menu(const newgame_def& ng,
     }
 }
 
-static job_group jobs_order[] =
-{
-    {
-        "Warrior",
-        coord_def(0, 0), 20,
-        { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_HUNTER, JOB_BRIGAND }
-    },
-    {
-        "Zealot",
-        coord_def(0, 6), 25,
-        { JOB_BERSERKER, JOB_CINDER_ACOLYTE, JOB_CHAOS_KNIGHT }
-    },
-    {
-        "Adventurer",
-        coord_def(1, 0), 20,
-        { JOB_ARTIFICER, JOB_SHAPESHIFTER, JOB_WANDERER, JOB_DELVER, }
-    },
-    {
-        "Warrior-mage",
-        coord_def(1, 5), 26,
-        { JOB_WARPER, JOB_HEXSLINGER, JOB_ENCHANTER, JOB_REAVER }
-    },
-    {
-        "Mage",
-        coord_def(2, 0), 22,
-        { JOB_HEDGE_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
-          JOB_FORGEWRIGHT, JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
-          JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_ALCHEMIST }
-    }
-};
-
 /**
  * Helper for _choose_job
  * constructs the menu used and highlights the previous job if there is one
@@ -1172,8 +1141,8 @@ static void _construct_backgrounds_menu(const newgame_def& ng,
                                         UINewGameMenu* ng_menu)
 {
     menu_letter letter = 'a';
-    // On the second screen, only show recommended backgrounds.
-    for (job_group& group : jobs_order)
+    // Add entries for any job groups with at least one playable background.
+    for (job_group& group : job_groups)
     {
         if (ng.species == SP_UNKNOWN
             || any_of(begin(group.jobs), end(group.jobs), [&ng](job_type job)

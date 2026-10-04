@@ -1062,9 +1062,9 @@ static bool _update_statuses(player_info& c)
     bool changed = false;
     unsigned int counter = 0;
     status_info inf;
-    for (unsigned int status = 0; status <= STATUS_LAST_STATUS; ++status)
+    for (status_iterator si; si; ++si)
     {
-        if (!fill_status_info(status, inf)) // this will reset inf itself
+        if (!fill_status_info(*si, inf)) // this will reset inf itself
             continue;
 
         if (!inf.light_text.empty() || !inf.short_text.empty())
@@ -1280,7 +1280,13 @@ void TilesFramework::_send_player(bool force_full)
             json_open_object();
             if (!status.light_text.empty())
             {
-                json_write_string("light", status.light_text);
+                if (!status.light_text_formatted.empty())
+                {
+                    json_write_string("light", status.light_text_formatted);
+                    json_write_bool("use_html", true);
+                }
+                else
+                    json_write_string("light", status.light_text);
                 json_write_string("desc", status_light_description(status));
             }
             if (!status.short_text.empty())

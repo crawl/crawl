@@ -663,7 +663,7 @@ spret cast_spike_launcher(const actor& agent, int pow, bool fail)
     const int timer = agent.is_player() ? 10 : 0;   // Don't delay monster launchers a second turn.
     temp_change_terrain(spot, DNGN_SPIKE_LAUNCHER, dur, TERRAIN_CHANGE_SPIKE_LAUNCHER, agent.mid);
     env.markers.add(new map_active_feature_marker(spot, DNGN_SPIKE_LAUNCHER, agent.mid,
-                    agent.temp_attitude(), pow, dur, timer, true));
+                    agent.attitude(), pow, dur, timer, true));
 
     if (you.see_cell(spot))
     {
@@ -696,4 +696,68 @@ bool has_adjacent_enemy(const coord_def& pos, const actor& viewer)
                 return true;
 
     return false;
+}
+
+static bool _can_place_dragon_vein(const coord_def& pos)
+{
+    return in_bounds(pos) && feat_is_floor(env.grid(pos));
+}
+
+static void _place_dragon_vein(const coord_def& pos, dungeon_feature_type type, int dur)
+{
+    if (!_can_place_dragon_vein(pos))
+        return;
+
+    temp_change_terrain(pos, type, dur, TERRAIN_CHANGE_DRAGON_VEINS, MID_PLAYER);
+}
+
+spret cast_dragon_veins(bool fail)
+{
+    if (!_can_place_dragon_vein(you.pos() + coord_def(0, 1))
+        && !_can_place_dragon_vein(you.pos() + coord_def(0, -1))
+        && !_can_place_dragon_vein(you.pos() + coord_def(1, 0))
+        && !_can_place_dragon_vein(you.pos() + coord_def(-1, 0)))
+    {
+        mpr("You cannot tap into any power from your present location.");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    const int dur = random_range(40, 60);
+
+    end_terrain_changes(you, TERRAIN_CHANGE_DRAGON_VEINS);
+
+    _place_dragon_vein(you.pos() + coord_def(0, -1), DNGN_DRAGON_VEIN_AIR, dur);
+    _place_dragon_vein(you.pos() + coord_def(0, 1), DNGN_DRAGON_VEIN_EARTH, dur);
+    _place_dragon_vein(you.pos() + coord_def(1, 0), DNGN_DRAGON_VEIN_ICE, dur);
+    _place_dragon_vein(you.pos() + coord_def(-1, 0), DNGN_DRAGON_VEIN_FIRE, dur);
+
+    mprf("You tap into the flow of magic beneath your %s.", you.foot_name(true).c_str());
+
+    you.props.erase(DRAGON_VEIN_USED_KEY);
+
+    return spret::success;
+}
+
+spret cast_ice_thorns(const actor& agent, const coord_def& pos, int pow, bool fail)
+{
+    fail_check();
+
+    bool saw_work = false;
+    for (adjacent_iterator ai(pos); ai; ++ai)
+    {
+        if (feat_is_floor(env.grid(*ai)))
+        {
+            temp_change_terrain(*ai, DNGN_ICE_THORNS, random_range(50, 80),
+                                TERRAIN_CHANGE_ICE_THORNS, agent.mid, pow);
+            if (!saw_work && you.see_cell(*ai))
+                saw_work = true;
+        }
+    }
+
+    if (saw_work)
+        mprf("Thorns of ice sprout around %s.", actor_at(pos)->name(DESC_THE).c_str());
+
+    return spret::success;
 }

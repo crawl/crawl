@@ -89,18 +89,18 @@ int actor::skill_rdiv(skill_type sk, int mult, int div) const
 
 bool actor::friendly() const
 {
-    return temp_attitude() == ATT_FRIENDLY;
+    return attitude() == ATT_FRIENDLY;
 }
 
 bool actor::neutral() const
 {
-    const mon_attitude_type att = temp_attitude();
+    const mon_attitude_type att = attitude();
     return att == ATT_NEUTRAL || att == ATT_GOOD_NEUTRAL;
 }
 
 bool actor::good_neutral() const
 {
-    return temp_attitude() == ATT_GOOD_NEUTRAL;
+    return attitude() == ATT_GOOD_NEUTRAL;
 }
 
 int actor::wearing_jewellery(int sub_type) const
@@ -119,15 +119,6 @@ int actor::check_willpower(const actor* source, int power) const
 
     if (source)
         wl = apply_willpower_bypass(*source, wl);
-
-    // Marionettes get better hex success against friends to avoid hex casts
-    // often being wasted with normal monster spellpower.
-    if (source && source->is_monster()
-        && source->as_monster()->attitude == ATT_MARIONETTE
-        && mons_atts_aligned(source->real_attitude(), temp_attitude()))
-    {
-        wl /= 2;
-    }
 
     const int adj_pow = ench_power_stepdown(power);
 

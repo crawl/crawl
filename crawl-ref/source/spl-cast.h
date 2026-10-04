@@ -108,7 +108,7 @@ spret cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL,
                    dist *_target = nullptr, bool force_failure = false);
 
 void inspect_spells();
-bool can_cast_spells(bool quiet = false);
+bool can_cast_spells(bool quiet = false, bool ignore_silence = false);
 void do_cast_spell_cmd(bool force);
 
 int hex_success_chance(const int wl, int powc, int scale,
@@ -127,6 +127,8 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
 spret your_spells(spell_type spell, int powc = 0, bool actual_spell = true,
                   const item_def* const evoked_item = nullptr,
                   dist *_target = nullptr, bool force_failure = false);
+
+void do_post_spellcast_effects(spell_type spell);
 
 extern const char *fail_severity_adjs[];
 

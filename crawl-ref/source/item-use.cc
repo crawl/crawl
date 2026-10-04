@@ -1277,14 +1277,15 @@ static bool _is_slow_equip(const item_def& item, bool removing = false)
  *                   sequence from back to front, before any new item is equipped).
  * @param to_equip   The item slated to be equipped. May be nullptr if no item
  *                   is being equipped.
+ * @param always_fast   If true, treat any gear change as if it could happen
+ *                      instantly.
  *
  * @return True, if the changing gear should continue (either because there were
  *         no warnings, or the player chose to accept them). False, if we should
  *         abort the process.
  */
-bool warn_about_changing_gear(const vector<item_def*>& to_remove,
-                                item_def* to_equip,
-                                bool *fast_orb_removal)
+bool warn_about_changing_gear(const vector<item_def*>& to_remove, item_def* to_equip,
+                              bool always_fast, bool *fast_orb_removal)
 {
     bool local_fast_orb_removal = false;
     if (!fast_orb_removal)
@@ -1327,7 +1328,7 @@ bool warn_about_changing_gear(const vector<item_def*>& to_remove,
     }
 
     string reason;
-    if (needs_delay && !i_feel_safe(false, false, false, true, -1, &reason))
+    if (!always_fast && needs_delay && !i_feel_safe(false, false, false, true, -1, &reason))
     {
         string warning = make_stringf("Spend multiple turns changing equipment while %s?", reason.c_str());
         if (!yesno(warning.c_str(), true, 'n'))
@@ -1362,7 +1363,7 @@ bool warn_about_changing_gear(const vector<item_def*>& to_remove,
     return true;
 }
 
-bool try_equip_item(item_def& item)
+bool try_equip_item(item_def& item, bool instant)
 {
     if (item.base_type == OBJ_TALISMANS)
         return use_talisman(item);
@@ -1490,7 +1491,7 @@ bool try_equip_item(item_def& item)
     //       in our inventory, if the item we are testing is currently on the
     //       foor.
     bool orb_fast_removal = false;
-    if (!warn_about_changing_gear(to_remove, &item, &orb_fast_removal))
+    if (!warn_about_changing_gear(to_remove, &item, instant, &orb_fast_removal))
         return false;
 
     // Now do the actual removal and equipping.
@@ -1499,7 +1500,7 @@ bool try_equip_item(item_def& item)
     item_def& real_item = you.inv[_get_item_slot_maybe_with_move(item)];
     if (need_weapon_swap)
         you.equipment.swap_offhand_weapon_to_main();
-    do_equipment_change(&real_item, slot, to_remove);
+    do_equipment_change(&real_item, slot, to_remove, instant, orb_fast_removal);
 
     return true;
 }
@@ -1598,16 +1599,18 @@ bool handle_chain_removal(vector<item_def*>& to_remove, bool interactive)
  * @param equip_slot   The slot to equip the new item in (if we're equipping one)
  * @param to_remove    A vector of items to remove (possibly empty, if we're not
  *                     removing anything).
+ * @param instant      If true, perform the change immediately, rather than after
+ *                     a delay (even for slow-swap items).
  */
 void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
-                         vector<item_def*> to_remove,
+                         vector<item_def*> to_remove, bool instant,
                          bool orb_fast_removal)
 {
     bool needs_delay = false;
-    if (to_equip && _is_slow_equip(*to_equip, false))
+    if (!instant && to_equip && _is_slow_equip(*to_equip, false))
         needs_delay = true;
     for (const item_def* item : to_remove)
-        if (_is_slow_equip(*item, true)
+        if (!instant && _is_slow_equip(*item, true)
             && !(orb_fast_removal && item->base_type == OBJ_ARMOUR
                  && item->sub_type == ARM_ORB))
         {
@@ -1641,7 +1644,7 @@ void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
                 continue;
             }
 
-            if (_is_slow_equip(*item, true)
+            if (!instant && _is_slow_equip(*item, true)
                 && !(orb_fast_removal && item->base_type == OBJ_ARMOUR
                      && item->sub_type == ARM_ORB))
             {
@@ -1654,8 +1657,16 @@ void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
                 start_delay<EquipOffDelay>(1, *item);
             else
             {
-                mprf("You %s %s.", item_unequip_verb(*item).c_str(),
-                                   item->name(DESC_YOUR).c_str());
+                if (item->is_type(OBJ_WEAPONS, WPN_CENTIPEDE))
+                {
+                    mprf("You rip the centipede off your %s and it falls limp.",
+                         you.arm_name(false).c_str());
+                }
+                else
+                {
+                    mprf("You %s %s.", item_unequip_verb(*item).c_str(),
+                                    item->name(DESC_YOUR).c_str());
+                }
                 unequip_item(*item);
             }
         }
@@ -1663,7 +1674,7 @@ void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
 
     if (to_equip)
     {
-        if (_is_slow_equip(*to_equip, false))
+        if (!instant && _is_slow_equip(*to_equip, false))
             start_delay<EquipOnDelay>(ARMOUR_EQUIP_DELAY, *to_equip, equip_slot);
         else if (needs_delay)
             start_delay<EquipOnDelay>(1, *to_equip, equip_slot);
@@ -1742,10 +1753,10 @@ bool try_unequip_item(item_def& item, bool orb_fast_removal)
     if (!handle_chain_removal(to_remove, true))
         return false;
 
-    if (!warn_about_changing_gear(to_remove, nullptr, nullptr))
+    if (!warn_about_changing_gear(to_remove, nullptr, false, nullptr))
         return false;
 
-    do_equipment_change(nullptr, SLOT_UNUSED, to_remove, orb_fast_removal);
+    do_equipment_change(nullptr, SLOT_UNUSED, to_remove, false, orb_fast_removal);
 
     return true;
 }
@@ -1926,9 +1937,9 @@ void prompt_inscribe_item()
 
 // Perform a melee attack against every adjacent hostile target, and print a
 // special message if there are any.
-bool oni_drunken_swing()
+bool oni_drunken_swing(bool is_moonshine)
 {
-    // Use the same logic for target-picking that cleaving does
+    // Use mostly the same logic for target-picking that cleaving does
     vector<actor*> targets = get_player_attack_targets();
 
     // Test that we have at least one valid non-prompting attack
@@ -1945,14 +1956,14 @@ bool oni_drunken_swing()
 
     if (!targets.empty())
     {
+        string msg = you.weapon() ? make_stringf("twirl %s", you.weapon()->name(DESC_YOUR).c_str())
+                                  : "flex your muscles";
+
         bool success = false;
-        if (you.weapon())
-        {
-            mprf("You take a swig of the potion and twirl %s.",
-                 you.weapon()->name(DESC_YOUR).c_str());
-        }
+        if (is_moonshine)
+            mprf("You take an eager swig of the potion and %s. Strong stuff!", msg.c_str());
         else
-            mpr("You take a swig of the potion and flex your muscles.");
+            mprf("You take a swig of the potion and %s.", msg.c_str());
 
         for (actor* victim : targets)
         {
@@ -2038,11 +2049,8 @@ bool drink(item_def* potion)
     // Drunken master, swing!
     // We do this *before* actually drinking the potion for nicer messaging.
     bool did_swing = false;
-    if (you.has_mutation(MUT_DRUNKEN_BRAWLING)
-        && oni_likes_potion(static_cast<potion_type>(potion->sub_type)))
-    {
-        did_swing = oni_drunken_swing();
-    }
+    if (you.has_mutation(MUT_DRUNKEN_BRAWLING))
+        did_swing = oni_drunken_swing(potion->sub_type == POT_MOONSHINE);
 
     // Check for Delatra's gloves before potentially melding them.
     const bool delatra_equipped = you.unrand_equipped(UNRAND_DELATRAS_GLOVES);

@@ -375,8 +375,7 @@ public:
     }
 
     virtual bool wont_attack() const = 0;
-    virtual mon_attitude_type temp_attitude() const = 0;
-    virtual mon_attitude_type real_attitude() const = 0;
+    virtual mon_attitude_type attitude() const = 0;
     bool friendly() const;
     bool neutral() const;
     bool good_neutral() const;

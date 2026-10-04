@@ -54,7 +54,6 @@
 #define DESCENT_DEBT_KEY "descent_debt"
 #define DESCENT_WATER_BRANCH_KEY "descent_water_branch"
 #define DESCENT_POIS_BRANCH_KEY "descent_poison_branch"
-#define RAMPAGE_HEAL_MAX 7
 #define BLIND_COLOUR_KEY "blind_colour"
 #define TRICKSTER_POW_KEY "trickster_power"
 #define CACOPHONY_XP_KEY "cacophony_xp"
@@ -223,6 +222,11 @@ public:
     transformation default_form;
     // Index into inv[] of the player's current talisman. (-1 if none.)
     int8_t cur_talisman;
+
+    // Index into inv[] of any weapon the player was wielding when they were
+    // granted a temporary weapon, so that they can automatically put it back
+    // on when the effect expires. (-1 if none.)
+    int8_t orig_wpn;
 
     // XXX: ENDOFPACK marks the total size of the player inventory, but we add
     //      a single extra slot after that for purposes of examining EV of
@@ -879,8 +883,7 @@ public:
              bool is_attack_damage = false) override;
 
     bool wont_attack() const override { return true; };
-    mon_attitude_type temp_attitude() const override { return ATT_FRIENDLY; };
-    mon_attitude_type real_attitude() const override { return ATT_FRIENDLY; };
+    mon_attitude_type attitude() const override { return ATT_FRIENDLY; };
 
     monster_type mons_species(bool zombie_base = false) const override;
 

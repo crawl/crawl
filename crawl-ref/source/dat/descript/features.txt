@@ -495,6 +495,29 @@ an empty mutation catalyst
 
 A complex arcane still, cracked open and fully emptied of its contents.
 %%%%
+an earthen dragon vein
+
+An exposed ley line of earth magic. It can be tapped into by stepping on it,
+causing shockwaves that damage the 3 closest enemies. This does greatly reduced
+damage to distant and flying enemies.
+%%%%
+a fiery dragon vein
+
+An exposed ley line of fire magic. It can be tapped into by stepping on it,
+blasting the 3 enemies with the least health with fire. Any enemies killed by
+this will briefly leave behind a cloud of fire.
+%%%%
+an icy dragon vein
+
+An exposed ley line of ice magic. It can be tapped into by stepping on it,
+inflicting cold damage on the 3 enemies with the most health and slowing their
+movement for a short time.
+%%%%
+an airy dragon vein
+
+An exposed ley line of air magic. It can be tapped into by stepping on it,
+blasting the 4 most distant enemies with cutting wind.
+%%%%
 ########################################################################
 ### Branch entrances and exits
 ########################################################################
@@ -889,6 +912,12 @@ A net trap
 A large concealed net launcher hanging from the dungeon's ceiling. Enchanted by
 the power of Zot, whenever an intelligent creature steps here - whether friend
 or foe - the net will land only on you.
+%%%%
+A patch of ice thorns
+
+A patch of ground covered in sharp frozen spines. It deals a small amount of
+damage to any non-flying creature that steps onto it (other than its creator)
+and then crumbles away. Its damage is partially reduced by rC.
 %%%%
 A permanent teleport trap
 

@@ -623,9 +623,9 @@ namespace arena
         {
             if (mons_is_tentacle_or_tentacle_segment(mons->type))
                 continue;
-            if (mons->attitude == ATT_FRIENDLY)
+            if (mons->base_attitude == ATT_FRIENDLY)
                 faction_a.active_members++;
-            else if (mons->attitude == ATT_HOSTILE)
+            else if (mons->base_attitude == ATT_HOSTILE)
                 faction_b.active_members++;
         }
 
@@ -1170,12 +1170,12 @@ void arena_placed_monster(monster* mons)
 {
     if (mons_is_tentacle_or_tentacle_segment(mons->type))
         ; // we don't count tentacles or tentacle segments, even free-standing
-    else if (mons->attitude == ATT_FRIENDLY)
+    else if (mons->base_attitude == ATT_FRIENDLY)
     {
         arena::faction_a.active_members++;
         arena::faction_b.won = false;
     }
-    else if (mons->attitude == ATT_HOSTILE)
+    else if (mons->base_attitude == ATT_HOSTILE)
     {
         arena::faction_b.active_members++;
         arena::faction_a.won = false;
@@ -1189,9 +1189,9 @@ void arena_placed_monster(monster* mons)
 
     if (mons->type == MONS_TEST_SPAWNER)
     {
-        if (mons->attitude == ATT_FRIENDLY)
+        if (mons->base_attitude == ATT_FRIENDLY)
             arena::a_spawners.push_back(mons->mindex());
-        else if (mons->attitude == ATT_HOSTILE)
+        else if (mons->base_attitude == ATT_HOSTILE)
             arena::b_spawners.push_back(mons->mindex());
     }
 
@@ -1255,9 +1255,9 @@ void arena_monster_died(monster* mons, killer_type killer,
 {
     if (mons_is_tentacle_or_tentacle_segment(mons->type))
         ; // part of a monster, or a spell
-    else if (mons->attitude == ATT_FRIENDLY)
+    else if (mons->base_attitude == ATT_FRIENDLY)
         arena::faction_a.active_members--;
-    else if (mons->attitude == ATT_HOSTILE)
+    else if (mons->base_attitude == ATT_HOSTILE)
         arena::faction_b.active_members--;
 
     if (arena::faction_a.active_members > 0
@@ -1283,9 +1283,9 @@ void arena_monster_died(monster* mons, killer_type killer,
         // it's a tie, since it counts as the trap killing everyone.
         else if (mons_self_destructs(*mons) && MON_KILL(killer))
         {
-            if (mons->attitude == ATT_FRIENDLY)
+            if (mons->base_attitude == ATT_FRIENDLY)
                 arena::faction_a.won = true;
-            else if (mons->attitude == ATT_HOSTILE)
+            else if (mons->base_attitude == ATT_HOSTILE)
                 arena::faction_b.won = true;
         }
     }
@@ -1301,9 +1301,9 @@ void arena_monster_died(monster* mons, killer_type killer,
              && killer_index == NON_MONSTER))
     {
         arena::faction *fac = nullptr;
-        if (mons->attitude == ATT_FRIENDLY)
+        if (mons->base_attitude == ATT_FRIENDLY)
             fac = &arena::faction_a;
-        else if (mons->attitude == ATT_HOSTILE)
+        else if (mons->base_attitude == ATT_HOSTILE)
             fac = &arena::faction_b;
 
         if (fac)
@@ -1339,7 +1339,7 @@ void arena_monster_died(monster* mons, killer_type killer,
 
     for (mon_inv_iterator ii(*mons); ii; ++ii)
     {
-        if (ii->flags & ISFLAG_SUMMONED)
+        if (ii->summoned())
             continue;
 
         arena::item_drop_times[ii->index()] = arena::turns;

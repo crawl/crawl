@@ -642,7 +642,7 @@ static bool _is_pet_kill(killer_type killer, int i)
 
     const monster* m = &env.mons[i];
     // This includes charmed monsters.
-    if (m->friendly() || m->attitude == ATT_MARIONETTE)
+    if (m->friendly() || m->attitude() == ATT_MARIONETTE)
         return true;
 
     // Check if the monster was confused by you or a friendly, which
@@ -816,7 +816,7 @@ static bool _vampire_make_thrall(monster* mons, killer_type killer)
     mons->props[NO_ANNOTATE_KEY] = true;
     remove_unique_annotation(mons);
 
-    mons->attitude = ATT_FRIENDLY;
+    mons->base_attitude = ATT_FRIENDLY;
     mons->add_ench(mon_enchant(ENCH_VAMPIRE_THRALL, &you, INFINITE_DURATION));
 
     const int pow = get_form(transformation::vampire)->get_level(10);
@@ -1809,15 +1809,7 @@ static void _martyr_death_wail(monster &mons)
     mons.heal(50000);
 
     // Show brief animation
-    bolt visual;
-    visual.target = mons.pos();
-    visual.source = mons.pos();
-    visual.aimed_at_spot = true;
-    visual.colour = ETC_DARK;
-    visual.glyph      = '*';
-    visual.draw_delay = 100;
-    visual.flavour = BEAM_VISUAL;
-    visual.fire();
+    flash_tile(mons.pos(), DARKGREY, 100);
 
     // Have it instantly flay a few nearby things
     vector <actor*> targets;
@@ -2070,7 +2062,7 @@ static bool should_blame_you_for_kill(int killer_index, bool pet_kill) noexcept
         const monster& m = env.mons[killer_index];
 
         // always blame the player for marionette kills
-        if (m.attitude == ATT_MARIONETTE)
+        if (m.attitude() == ATT_MARIONETTE)
             return true;
 
         const mon_enchant ench = m.get_ench(ENCH_CONFUSION);
@@ -2822,6 +2814,12 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (!you.can_see(mons))
             mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You feel your sun fade away.");
     }
+    else if (mons_is_jade_crystal(mons.type))
+    {
+        jademantle_crystal_uncharge(mons.type);
+        if (real_death && !timeout)
+            you.props[JADEMANTLE_CRYSTAL_REVIVAL_KEY + to_string(mons.type)] = you.elapsed_time + random_range(150, 200);
+    }
     else if (mons.type == MONS_BATTLESPHERE)
         end_battlesphere(&mons, true);
     else if (mons.type == MONS_SPECTRAL_WEAPON)
@@ -2955,14 +2953,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                 did_death_message = true;
 
                 if (armoury->alive() && armoury->see_cell_no_trans(mons.pos()))
-                {
-                    bolt visual;
-                    visual.source = mons.pos();
-                    visual.target = armoury->pos();
-                    visual.flavour = BEAM_VISUAL;
-                    visual.aimed_at_spot = true;
-                    visual.fire();
-                }
+                    bolt::visual_beam(mons.pos(), armoury->pos(), 15, LIGHTCYAN).fire();
             }
         }
         // Let summoned dancing weapons be handled like normal summoned creatures.
@@ -3274,6 +3265,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             {
                 msg = " shrivels and dies.";
             }
+            else if (mons.type == MONS_HYPNOTAIL)
+                msg = " shrivels and falls limp.";
             else
             {
                 if (mons.props.exists(KIKU_WRETCH_KEY))
@@ -3970,7 +3963,7 @@ item_def* mounted_kill(monster* real_mon, monster_type mc, killer_type killer,
     mon.enchantments = real_mon->enchantments;
     mon.ench_cache = real_mon->ench_cache;
 
-    mon.attitude = real_mon->attitude;
+    mon.base_attitude = real_mon->base_attitude;
     mon.damage_friendly = real_mon->damage_friendly;
     mon.damage_total = real_mon->damage_total;
     // Keep the rider's name, if it had one (Mercenary card).
@@ -4552,7 +4545,7 @@ void mons_felid_revive(monster* mons)
         revive_place.y = random2(GYM);
         if (!in_bounds(revive_place)
             || env.grid(revive_place) != DNGN_FLOOR
-            || cloud_at(revive_place)
+            || harmful_cloud_at(revive_place)
             || monster_at(revive_place)
             || env.pgrid(revive_place) & FPROP_NO_TELE_INTO
             || grid_distance(revive_place, mons->pos()) < 9)

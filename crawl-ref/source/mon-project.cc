@@ -313,7 +313,7 @@ dice_def iood_damage(int pow, int dist, bool random)
 
 static void _iood_common_beam_setup(monster& orb, const coord_def& pos, bolt& beam)
 {
-    beam.attitude = orb.attitude;
+    beam.attitude = orb.attitude();
 
     actor *caster = actor_by_mid(orb.summoner);
     if (!caster)        // caster is dead/gone, blame the orb itself (as its
@@ -372,6 +372,7 @@ static void _annihilation_explode_setup(monster& globe, bolt& beam)
     // motivation enough to blast from further away.)
     makhleb_setup_destruction_beam(beam, dist > 1 ? pow : pow / 2, true);
 
+    beam.is_explosion = true;
     if (dist >= 4)
         beam.ex_size = 3;
     else if (dist >= 2)
@@ -388,11 +389,8 @@ static void _annihilation_explode_setup(monster& globe, bolt& beam)
         beam.target = globe.pos();
     }
 
-    if (beam.ex_size > 0)
-    {
-        beam.is_explosion = true;
+    if (beam.ex_size > 1)
         beam.hit_verb = "blasts";
-    }
     else
         beam.hit_verb = "feebly blasts";
 
@@ -408,8 +406,7 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
     if (mon.type == MONS_GLOBE_OF_ANNIHILATION)
     {
         _annihilation_explode_setup(mon, beam);
-        if (beam.ex_size > 0)
-            big_boom = true;
+        big_boom = true;
     }
     else
         _iood_hit_setup(mon, beam);

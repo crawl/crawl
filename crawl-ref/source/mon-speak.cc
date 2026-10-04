@@ -349,7 +349,7 @@ void maybe_mons_speaks(monster* mons)
         return;
 
     // per ef44f8a14, this seems to be handled elsewhere?
-    if (mons->attitude == ATT_NEUTRAL)
+    if (mons->attitude() == ATT_NEUTRAL)
         return;
 
     // too annoying for a permanent companion without more thought put into it

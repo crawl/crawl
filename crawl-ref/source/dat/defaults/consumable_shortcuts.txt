@@ -32,6 +32,7 @@ consumable_shortcut ^= potion of berserk rage:B
 consumable_shortcut ^= potion of mutation:M
 consumable_shortcut ^= potion of resistance:r
 consumable_shortcut ^= potion of lignification:L
+consumable_shortcut ^= potion of mist:t
 
 consumable_shortcut ^= wand of flame:a
 consumable_shortcut ^= wand of acid:b

@@ -337,6 +337,14 @@ bool feat_is_gate(dungeon_feature_type feat)
     }
 }
 
+bool feat_is_dragon_vein(dungeon_feature_type feat)
+{
+    return feat == DNGN_DRAGON_VEIN_AIR
+           || feat == DNGN_DRAGON_VEIN_EARTH
+           || feat == DNGN_DRAGON_VEIN_FIRE
+           || feat == DNGN_DRAGON_VEIN_ICE;
+}
+
 /** What command do you use to traverse this feature?
  *
  *  @param feat the feature.
@@ -1288,7 +1296,7 @@ void dgn_check_terrain_items(const coord_def &pos, bool preserve_items,
 static void _dgn_check_terrain_monsters(const coord_def &pos)
 {
     if (monster* m = monster_at(pos))
-        m->trigger_movement_effects();
+        m->trigger_movement_effects(MV_PRESERVE_CONSTRICTION);
 }
 
 // Clear blood or off of terrain that shouldn't have it. Also clear of blood if
@@ -2098,7 +2106,7 @@ dungeon_feature_type orig_terrain_no_mimic(coord_def pos)
 }
 
 void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
-                         terrain_change_type type, int mid)
+                         terrain_change_type type, int mid, int power)
 {
     dungeon_feature_type old_feat = env.grid(pos);
 
@@ -2129,6 +2137,7 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                 tmarker->new_feature = newfeat;
                 tmarker->duration = dur;
                 tmarker->source_mid = mid;
+                tmarker->power = power;
             }
             // ensure that terrain change happens. Sometimes a terrain
             // change marker can get stuck; this allows re-doing such
@@ -2153,7 +2162,7 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
     map_terrain_change_marker *marker =
         new map_terrain_change_marker(pos, old_feat, newfeat, old_flv.feat,
                                       old_flv.feat_idx, dur, type, mid,
-                                      env.grid_colours(pos));
+                                      env.grid_colours(pos), power);
     env.markers.add(marker);
     _current_terrain_changed(pos, newfeat, false, true, false, 0, 0);
 }
@@ -2276,6 +2285,8 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype, bool expire
         update_grid_colour_knowledge(pos);
         redraw_view_at(pos);
     }
+    else if (ctype == TERRAIN_CHANGE_ICE_THORNS)
+        place_cloud(CLOUD_FAINT_FROST, pos, random_range(2, 4), nullptr);
 
     return true;
 }
@@ -2618,6 +2629,10 @@ void frigid_walls_damage(int delay)
             continue;
 
         int base_dmg = get_form()->get_special_damage().roll();
+
+        if (you.form == transformation::jademantle)
+            base_dmg = div_rand_round(base_dmg, 3);
+
         const int wall_bonus = (wall_count - 1) * 100 / 6;
         base_dmg = div_rand_round(base_dmg * (100 + wall_bonus), 100);
 
@@ -2644,6 +2659,43 @@ void frigid_walls_damage(int delay)
             }
         }
     }
+}
+
+// A creature stepped onto ice thorns. Maybe damage them and maybe remove it.
+void ice_thorns_trigger(actor& victim, const coord_def& pos)
+{
+    // Flying creatures don't interact with ice thorns either way.
+    if (victim.airborne())
+        return;
+
+    ASSERT(env.grid(pos) == DNGN_ICE_THORNS);
+
+    map_terrain_change_marker* mark = env.markers.get_terrain_change_at(pos, TERRAIN_CHANGE_ICE_THORNS);
+
+    actor* owner = actor_by_mid(mark->source_mid);
+
+    // The original caster stepping onto them just removes them.
+    if (&victim == owner)
+    {
+        if (you.see_cell(pos))
+        {
+            mprf("%s icy thorns crumble before %s.",
+                 owner->is_player() ? "Your" : "The",
+                 owner->name(DESC_THE).c_str());
+        }
+        revert_terrain_change(pos, TERRAIN_CHANGE_ICE_THORNS);
+        return;
+    }
+
+    bolt beam(*owner, ZAP_ICE_THORNS, mark->power);
+    beam.source = beam.target = pos;
+    beam.animate = false;
+    beam.hit_verb = "skewer";
+    beam.plural = true;
+    beam.no_anger_allies = true;
+    beam.fire();
+
+    revert_terrain_change(pos, TERRAIN_CHANGE_ICE_THORNS);
 }
 
 static bool _feat_is_descent_upstairs(dungeon_feature_type feat)

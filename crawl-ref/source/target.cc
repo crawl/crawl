@@ -30,6 +30,7 @@
 #include "spl-summoning.h"
 #include "spl-other.h"
 #include "spl-transloc.h"
+#include "spl-zap.h"
 #include "stringutil.h"
 #include "terrain.h"
 
@@ -1094,16 +1095,6 @@ targeter_cloud::targeter_cloud(const actor* act, cloud_type ct, int r,
         origin = aim = act->pos();
 }
 
-static bool _cloudable(coord_def loc, cloud_type ctype, const actor *agent)
-{
-    const cloud_struct *cloud = cloud_at(loc);
-    return in_bounds(loc)
-           && !cell_is_solid(loc)
-           && (!cloud || cloud_is_stronger(ctype, *cloud))
-           && (!is_sanctuary(loc) || is_harmless_cloud(ctype))
-           && (!agent || agent->see_cell_no_trans(loc));
-}
-
 bool targeter_cloud::valid_aim(coord_def a)
 {
     if (agent && (origin - a).rdist() > range)
@@ -1130,7 +1121,7 @@ bool targeter_cloud::valid_aim(coord_def a)
             return notify_fail("You can't place harmful clouds in a "
                                "sanctuary.");
         }
-        ASSERT(_cloudable(a, ctype, agent));
+        ASSERT(cloud_could_place(a, ctype, agent));
     }
     return true;
 }
@@ -1154,7 +1145,7 @@ bool targeter_cloud::set_aim(coord_def a)
         for (coord_def c : queue[d1])
         {
             for (adjacent_iterator ai(c); ai; ++ai)
-                if (_cloudable(*ai, ctype, agent) && !seen.count(*ai))
+                if (cloud_could_place(*ai, ctype, agent) && !seen.count(*ai))
                 {
                     unsigned int d2 = d1 + 1;
                     if (d2 >= queue.size())
@@ -1858,40 +1849,53 @@ aff_type targeter_walls::is_affected(coord_def loc)
     return cell_is_solid(loc) ? AFF_YES : AFF_MAYBE;
 }
 
-// note: starburst is not in spell_to_zap
-targeter_starburst_beam::targeter_starburst_beam(const actor *a, int _range,
-                                                 int pow,
-                                                 const coord_def &offset)
-    : targeter_beam(a, _range, ZAP_BOLT_OF_FIRE, SPELL_STARBURST, pow, 0, 0)
-{
-    set_aim(a->pos() + offset);
-}
-
-targeter_starburst::targeter_starburst(const actor *a, int range, int pow)
-    : targeter()
+// XXX: Some of the arguments passed to targeter_beam are garbage, since we
+//      will mostly ignore its internal beam construction (but really want its
+//      is_affected() logic)
+targeter_multibeam::targeter_multibeam(const actor *a, spell_type spell, int _range,
+                                       multi_beam_shape _shape, int _width, int pow,
+                                       bool _can_aim)
+    : targeter_beam(a, _range, spell_to_zap(spell), spell, pow, 0, 0),
+      shape(_shape), width(_width), can_aim(_can_aim)
 {
     agent = a ? a : &you;
-    // XX code duplication with cast_starburst
-    const vector<coord_def> offsets = { coord_def(range, 0),
-                                        coord_def(range, range),
-                                        coord_def(0, range),
-                                        coord_def(-range, range),
-                                        coord_def(-range, 0),
-                                        coord_def(-range, -range),
-                                        coord_def(0, -range),
-                                        coord_def(range, -range) };
 
-    // extremely brute force...
-    for (auto &o : offsets)
-        beams.push_back(targeter_starburst_beam(agent, range, pow, o));
+    zappy(spell_to_zap(spell), pow, false, prototype);
+    prototype.range = range;
+    prototype.source = a->pos();
+    path_taken.clear();
+
+    // Set a default aim for unidirectional spells.
+    if (!can_aim)
+        set_aim(a->pos() - coord_def(0, 1));
 }
 
-aff_type targeter_starburst::is_affected(coord_def loc)
+bool targeter_multibeam::set_aim(coord_def a)
 {
-    for (auto &t : beams)
-        if (auto r = t.is_affected(loc))
-            return r;
-    return AFF_NO;
+    if (!targeter::set_aim(a))
+        return false;
+
+    prototype.target = a;
+
+    multi_beam multi(prototype, shape, width);
+    path_taken = multi.get_all_affected_cells();
+
+    return true;
+}
+
+bool targeter_multibeam::valid_aim(coord_def a)
+{
+    // A little counterintuitively, unidirectional spells should consider all
+    // spaces valid aims so that they don't darken parts of their beam paths.
+    // UI code elsewhere still won't let you actually change its aim.
+    if (!can_aim)
+        return targeter_beam::valid_aim(a);
+    else
+    {
+        return targeter_beam::valid_aim(a)
+            && a != agent->pos()
+            && adjacent(agent->pos(), a);
+    }
 }
 
 targeter_bog::targeter_bog(const actor *a)
@@ -1937,7 +1941,7 @@ targeter_drain_life::targeter_drain_life()
 bool targeter_drain_life::affects_monster(const monster_info& mon)
 {
     return get_resist(mon.resists(), MR_RES_NEG) < 3
-           && !mons_atts_aligned(agent->temp_attitude(), mon.attitude);
+           && !mons_atts_aligned(agent->attitude(), mon.attitude);
 }
 
 targeter_discord::targeter_discord()
@@ -1972,7 +1976,7 @@ bool targeter_fear::affects_monster(const monster_info& mon)
 {
     return mon.willpower() != WILL_INVULN
            && mon.can_feel_fear
-           && !mons_atts_aligned(agent->temp_attitude(), mon.attitude);
+           && !mons_atts_aligned(agent->attitude(), mon.attitude);
 }
 
 targeter_intoxicate::targeter_intoxicate()
@@ -1995,7 +1999,7 @@ bool targeter_anguish::affects_monster(const monster_info& mon)
 {
     return mon.mintel > I_BRAINLESS
         && mon.willpower() != WILL_INVULN
-        && !mons_atts_aligned(agent->temp_attitude(), mon.attitude)
+        && !mons_atts_aligned(agent->attitude(), mon.attitude)
         && !mon.is(MB_ANGUISH);
 }
 
@@ -2946,4 +2950,38 @@ bool targeter_pacify::valid_aim(coord_def a)
     // Either a known-valid monster or an empty tile (which might contain an
     // invisible monster).
     return true;
+}
+
+targeter_ice_thorns::targeter_ice_thorns()
+    : targeter_smite(&you, LOS_RADIUS, 0, 0, true)
+{
+}
+
+bool targeter_ice_thorns::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+
+    const monster* mon = monster_at(a);
+    if (!mon || !you.can_see(*mon) || mon->wont_attack())
+        return notify_fail("This spell must target an enemy.");
+
+    // Now check that at least one space could place any thorns.
+    for (adjacent_iterator ai(a); ai; ++ai)
+        if (you.see_cell_no_trans(*ai) && feat_is_floor(env.grid(*ai)))
+            return true;
+
+    return notify_fail("There is nowhere near that target where thorns could grow.");
+}
+
+aff_type targeter_ice_thorns::is_affected(coord_def loc)
+{
+    if (valid_aim(aim) && adjacent(aim, loc)
+        && you.see_cell_no_trans(loc)
+        && feat_is_floor(env.grid(loc)))
+    {
+        return AFF_YES;
+    }
+
+    return AFF_NO;
 }

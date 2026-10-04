@@ -15,7 +15,7 @@ note_messages += You (fall|are sucked) into a shaft
 note_monsters += orb of fire, orb of winter, orb of entropy
 note_monsters += ancient lich, dread lich, Sigmund
 
-monster_item_view_features += stair, trap, runelight, purified mutation catalyst
+monster_item_view_features += stair, trap, runelight, purified mutation catalyst, dragon vein
 
 # Dangerous and non-tactical items
 action_panel_filter  = attraction,experience,mutation

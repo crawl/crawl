@@ -188,13 +188,13 @@ struct mgen_data
         // poofing and marionette is a one-shot effect)
         if (_summoner && _summoner->is_monster()
             && (mons_is_player_shadow(*_summoner->as_monster())
-                || _summoner->real_attitude() == ATT_MARIONETTE))
+                || _summoner->attitude() == ATT_MARIONETTE))
         {
             // Summons that would appear around a marionette caster appear
             // around the player instead. (All bets are off it any more custom
             // placement is used.)
             if (pos == _summoner->pos()
-                && _summoner->real_attitude() == ATT_MARIONETTE)
+                && _summoner->attitude() == ATT_MARIONETTE)
             {
                 pos = you.pos();
             }
@@ -208,7 +208,7 @@ struct mgen_data
         summon_duration = duration;
         summon_type = _summon_type;
 
-        if (_summoner && _summoner->temp_attitude() == ATT_HOSTILE
+        if (_summoner && _summoner->attitude() == ATT_HOSTILE
             && you.has_bane(BANE_HUNTED) && pos == _summoner->pos()
             && you.see_cell_no_trans(_summoner->pos()))
         {

@@ -26,6 +26,7 @@
 #include "god-companions.h"
 #include "god-wrath.h" // lucy_check_meddling
 #include "items.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "melee-attack.h"
@@ -638,6 +639,32 @@ protected:
     terrain_change_type type;
 };
 
+class hypnogecko_tail_fineff : public final_effect
+{
+public:
+    void fire() override;
+
+    hypnogecko_tail_fineff()
+        : final_effect(&you, nullptr, you.pos())
+    {
+    }
+protected:
+    bool mergeable(const final_effect&) const override { return true; }
+};
+
+class ephemeral_weapon_end_fineff : public final_effect
+{
+public:
+    void fire() override;
+
+    ephemeral_weapon_end_fineff(item_def& _wpn)
+        : final_effect(&you, nullptr, you.pos()), wpn(_wpn)
+    {
+    }
+protected:
+    bool mergeable(const final_effect&) const override { return false; }
+    item_def& wpn;
+};
 
 // Things to happen when the current attack/etc finishes.
 static vector<final_effect*> _final_effects;
@@ -873,6 +900,16 @@ void schedule_revert_terrain_fineff(const coord_def& pos,
                                     terrain_change_type type)
 {
     _schedule_final_effect(new revert_terrain_fineff(pos, type));
+}
+
+void schedule_hypnogecko_tail_fineff()
+{
+    _schedule_final_effect(new hypnogecko_tail_fineff());
+}
+
+void schedule_ephemeral_weapon_end(item_def& wpn)
+{
+    _schedule_final_effect(new ephemeral_weapon_end_fineff(wpn));
 }
 
 bool mirror_damage_fineff::mergeable(const final_effect &fe) const
@@ -1154,22 +1191,12 @@ void trj_spawn_fineff::fire()
     if (invalid_monster_index(foe) && foe != MHITYOU)
         foe = MHITNOT;
 
-    // Give spawns the same attitude as TRJ; if TRJ is now dead, make them
-    // hostile.
-    const beh_type spawn_beh = trj
-        ? attitude_creation_behavior(trj->as_monster()->attitude)
-        : BEH_HOSTILE;
-
-    // No permanent friendly jellies from a charmed TRJ.
-    if (spawn_beh == BEH_FRIENDLY && !crawl_state.game_is_arena())
-        return;
-
     int spawned = 0;
     for (int i = 0; i < tospawn; ++i)
     {
         const monster_type jelly = royal_jelly_ejectable_monster();
         if (monster *mons = create_monster(
-                              mgen_data(jelly, spawn_beh, posn, foe,
+                              mgen_data(jelly, BEH_HOSTILE, posn, foe,
                                         MG_DONT_COME, GOD_JIYVA)
                               .set_summoned(trj, 0)
                               .set_range(1, LOS_RADIUS)
@@ -1809,12 +1836,9 @@ void pyromania_fineff::fire()
     if (!found)
         return;
 
-    bolt exp;
-    zappy(ZAP_FIREBALL, 50, false, exp);
+    bolt exp(you, ZAP_FIREBALL, 50);
     exp.damage = pyromania_damage();
-    exp.set_agent(&you);
     exp.target = you.pos();
-    exp.source = you.pos();
     exp.ex_size = 3;
 
     mpr("Your orb flickers with a hungry flame!");
@@ -1847,13 +1871,7 @@ void celebrant_bloodrite_fineff::fire()
     int shots_fired = 0;
     int repeats = 0;
 
-    bolt beam;
-    beam.source       = you.pos();
-    beam.source_id    = MID_PLAYER;
-    beam.attitude     = ATT_FRIENDLY;
-    beam.thrower      = KILL_YOU;
-    zappy(ZAP_BLOOD_ARROW, 15 + you.skill(SK_INVOCATIONS, 2), false, beam);
-
+    bolt beam(you, ZAP_BLOOD_ARROW, 15 + you.skill(SK_INVOCATIONS, 2));
     beam.draw_delay   = 10;
 
     // Fire once at every visible target. If that doesn't hit the minimum number
@@ -1934,6 +1952,167 @@ void psychokinetic_burst_fineff::fire()
 void revert_terrain_fineff::fire()
 {
     revert_terrain_change(posn, type);
+}
+
+// Calculate a score for how desireable it is to retreat to a given spot, as
+// part of a hypnogecko tail-dropping effect.
+//
+// (Lower scores are better.)
+static int _movement_score_for(const coord_def& pos)
+{
+    int total_score = 0;
+    for (radius_iterator ri(pos, 2, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    {
+        int score = 0;
+        // Prefer not to shift towards unknown territory
+        if (env.map_knowledge(*ri).feat() == DNGN_UNSEEN)
+            score += 50;
+
+        // But *do* prefer to shift towards spaces not currently in LoS
+        // (ie: corners)
+        if (!cell_see_cell(you.pos(), *ri, LOS_SOLID_SEE))
+            score -= 25;
+
+        // Prefer as few monsters adjacent to this space as possible.
+        if (monster* mon = monster_at(*ri))
+        {
+            if (!mon->wont_attack() && !mon->is_firewood()
+                && you.aware_of(*mon))
+            {
+                score += 50;
+            }
+        }
+
+        // Value conditions 2 tiles away much less than adjacent ones.
+        if (grid_distance(*ri, pos) == 2)
+            score /= 3;
+
+        total_score += score;
+    }
+
+    return total_score;
+}
+
+// Attempt to slip away and leave your shed tail behind.
+// There are two variants on this:
+// 1) Move a step and leave the tail where the player was.
+// 2) Stay in place and leave the tail on an adjacent tile.
+//
+// We always prefer (1), but in cases where either the player cannot move of the
+// tail cannot be placed at the player's location, we attempt to fall back to (2).
+void hypnogecko_tail_fineff::fire()
+{
+    coord_def move_pos;
+
+    mgen_data mg(MONS_HYPNOTAIL, BEH_FRIENDLY, you.pos(), MHITNOT, MG_FORCE_PLACE);
+    mg.set_summoned(&you, MON_SUMM_HYPNOTAIL, random_range(150, 220), false);
+    mg.hp = random_range(10, 14) * get_form(transformation::hypnogecko)->get_effect_size() / 100;
+
+    // Determine either where to move the player or where to drop the tail.
+    if (!monster_habitable_grid(MONS_HYPNOTAIL, you.pos())
+        // A Fedhas character may be standing on a plant.
+        || monster_at(you.pos())
+        || you.cannot_move())
+    {
+        for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
+        {
+            if (!monster_at(*ai) && monster_habitable_grid(MONS_HYPNOTAIL, *ai))
+            {
+                mg.pos = *ai;
+                break;
+            }
+        }
+
+        // Couldn't find a valid spot.
+        if (mg.pos == you.pos())
+            return;
+    }
+    else
+    {
+        int best_score = 10000;
+        int best_count = 0;
+
+        for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        {
+            if (!in_bounds(*ai) || actor_at(*ai)
+                || !you.is_habitable(*ai)
+                || is_feat_dangerous(env.grid(*ai))
+                || feat_is_trap(env.grid(*ai))
+                || harmful_cloud_at(*ai))
+            {
+                continue;
+            }
+
+            const int score = _movement_score_for(*ai);
+
+            mprf("(%d, %d): %d", ai->x, ai->y, score);
+
+            if (score == best_score)
+            {
+                if (one_chance_in(++best_count))
+                    move_pos = *ai;
+            }
+            else if (score < best_score)
+            {
+                best_score = score;
+                best_count = 0;
+                move_pos = *ai;
+            }
+        }
+
+        // Couldn't find anywhere to retreat to.
+        if (move_pos.origin())
+            return;
+
+        you.move_to(move_pos, MV_DEFAULT, true);
+    }
+
+    if (monster* tail = create_monster(mg))
+    {
+        you.props[HYPNOGECKO_LOST_TAIL_KEY].get_int() = random_range(300, 425);
+        for (monster_near_iterator mi(tail->pos(), LOS_NO_TRANS); mi; ++mi)
+        {
+            if (!mi->wont_attack())
+            {
+                mi->add_ench(mon_enchant(ENCH_MISDIRECTED, tail, INFINITE_DURATION));
+                mi->target = tail->pos();
+                mi->foe = tail->mindex();
+            }
+        }
+
+        mprf("You shed your tail %sto distract predators!",
+             !move_pos.origin() ? "and slip away " : "");
+
+        if (!move_pos.origin())
+        {
+            you.clear_constricted();
+            you.stop_being_caught();
+            you.finalise_movement();
+        }
+    }
+}
+
+void ephemeral_weapon_end_fineff::fire()
+{
+    ASSERT(item_is_equipped(wpn));
+
+    const int plus = wpn.plus;
+
+    unequip_item(wpn, false);
+
+    // Assumes the only ephemeral weapon is a centipede. Expand when this changes.
+    mgen_data mg(MONS_ASSASSIN_CENTIPEDE, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
+    mg.set_summoned(&you, MON_SUMM_CENTIPEDE, random_range(600, 900), false);
+    mg.set_range(1, 4);
+    mg.hd = 2 + plus * 4 / 3;
+    if (!you.allies_forbidden() && create_monster(mg))
+        mprf("Your assassin centipede leaps free of your %s with a hiss!", you.arm_name(false).c_str());
+    else
+        mprf("Your assassin centipede withers and dies.");
+
+    if (you.orig_wpn != -1)
+        try_equip_item(you.inv[you.orig_wpn], true);
+    you.orig_wpn = -1;
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

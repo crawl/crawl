@@ -365,7 +365,8 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
 
     if (flavour == BEAM_COLD && slow_cold_blooded
         && (you.get_mutation_level(MUT_COLD_BLOODED)
-            || you.form == transformation::serpent)
+            || you.form == transformation::serpent
+            || you.form == transformation::hypnogecko)
         && you.res_cold() <= 0 && coinflip())
     {
         you.slow_down(0, strength);
@@ -724,7 +725,7 @@ void _maybe_blood_hastes_allies()
     {
         // Try to look for valid allies that aren't already hasted,
         // and which would properly function when given haste.
-        if (mi->alive() && mons_attitude(**mi) == ATT_FRIENDLY
+        if (mi->alive() && mi->attitude() == ATT_FRIENDLY
             && !mi->berserk_or_frenzied() && you.can_see(**mi)
             && !mi->has_ench(ENCH_HASTE)
             && !mi->is_peripheral())
@@ -990,6 +991,18 @@ static void _maybe_eeljolt()
 
     schedule_eeljolt_fineff();
     you.duration[DUR_EELJOLT_COOLDOWN] = 1;
+}
+
+static void _maybe_hynogecko_retreat()
+{
+    if (you.form != transformation::hypnogecko
+        || you.hp * 10 > you.hp_max * 4
+        || you.props.exists(HYPNOGECKO_LOST_TAIL_KEY))
+    {
+        return;
+    }
+
+    schedule_hypnogecko_tail_fineff();
 }
 
 static void _handle_poor_constitution(int dam)
@@ -1326,7 +1339,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     // have somehow killed themselves in the process)
     if (monster* mon_source = monster_by_mid(source, false, /*allow_dead=*/true))
     {
-        if (mon_source->attitude == ATT_MARIONETTE)
+        if (mon_source->attitude() == ATT_MARIONETTE)
             dam = 0;
     }
 
@@ -1468,6 +1481,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         _maybe_hive_swarm();
         _maybe_medusa_lithotoxin();
         _maybe_eeljolt();
+        _maybe_hynogecko_retreat();
         _maybe_trigger_spiteful_blood();
         _maybe_scream(source);
         if (sanguine_armour_valid())

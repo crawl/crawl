@@ -11,8 +11,11 @@
 #include <cstring>
 
 #include "ability.h"
+#include "act-iter.h"
 #include "artefact.h"
 #include "art-enum.h"
+#include "colour.h"
+#include "coordit.h"
 #include "database.h"
 #include "delay.h"
 #include "describe.h"
@@ -27,6 +30,7 @@
 #include "item-name.h"
 #include "item-prop.h"
 #include "items.h"
+#include "makeitem.h"
 #include "message.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -47,7 +51,10 @@
 #include "tag-version.h"
 #include "terrain.h"
 #include "timed-effects.h"
+#include "throw.h"
+#include "tilepick.h"
 #include "traps.h"
+#include "view.h"
 #include "xom.h"
 
 // List of valid monsters newly seen this turn for a sphinx to tell a riddle to.
@@ -161,7 +168,8 @@ Form::Form(const form_entry &fe)
     : short_name(fe.short_name), wiz_name(fe.wiz_name),
       min_skill(fe.min_skill), max_skill(fe.max_skill),
       hp_skill_penalty_mult(fe.hp_skill_penalty_mult),
-      str_mod(fe.str_mod), dex_mod(fe.dex_mod), base_move_speed(fe.move_speed),
+      str_mod(fe.str_mod), int_mod(fe.int_mod), dex_mod(fe.dex_mod),
+      base_move_speed(fe.move_speed),
       blocked_slots(fe.blocked_slots), size(fe.size),
       can_cast(fe.can_cast),
       uc_colour(fe.uc_colour), uc_attack_verbs(fe.uc_attack_verbs),
@@ -1379,6 +1387,155 @@ public:
     }
 };
 
+class FormVision : public Form
+{
+private:
+    FormVision() : Form(transformation::vision) { }
+    DISALLOW_COPY_AND_ASSIGN(FormVision);
+public:
+    static const FormVision &instance() { static FormVision inst; return inst; }
+
+    /**
+     * @ description
+     */
+    string get_description(bool past_tense) const override
+    {
+        return make_stringf("Your third eye %s open.", past_tense ? "was" : "is");
+    }
+
+    /**
+     * Get a message for transforming into this form.
+     */
+    string transform_message() const override
+    {
+        return "Your third eye opens!";
+    }
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const override
+    {
+        return "Your hands return to normal.";
+    }
+};
+
+class FormJademantle : public Form
+{
+private:
+    FormJademantle() : Form(transformation::jademantle) { }
+    DISALLOW_COPY_AND_ASSIGN(FormJademantle);
+public:
+    static const FormJademantle &instance() { static FormJademantle inst; return inst; }
+
+    /**
+     * @ description
+     */
+    string get_description(bool past_tense) const override
+    {
+        return make_stringf("Jade crystal %s your upper body.",
+                            past_tense ? "shrouded" : "shrouds");
+    }
+
+    /**
+     * Get a message for transforming into this form.
+     */
+    string transform_message() const override
+    {
+        return "A mantle of jade grows out of you.";
+    }
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const override
+    {
+        return "Your mantle of jade crumbles away.";
+    }
+
+    // Percentage HP increase of crystals
+    int get_effect_size(int skill = -1) const override
+    {
+        return max(0, scaling_value(FormScaling().Base(100).Scaling(75), skill));
+    }
+};
+
+class FormHypnogecko : public Form
+{
+private:
+    FormHypnogecko() : Form(transformation::hypnogecko) { }
+    DISALLOW_COPY_AND_ASSIGN(FormHypnogecko);
+public:
+    static const FormHypnogecko &instance() { static FormHypnogecko inst; return inst; }
+
+    // Percentage HP increase of shed tail
+    int get_effect_size(int skill = -1) const override
+    {
+        return max(0, scaling_value(FormScaling().Base(100).Scaling(100), skill));
+    }
+
+    // Additional chance to land distraction stabs
+    int get_effect_chance(int skill = -1) const override
+    {
+        return max(0, scaling_value(FormScaling().Base(5).Scaling(10), skill));
+    }
+
+    int regen_bonus(int /*skill*/ = -1) const override { return REGEN_PIP / 4; }
+};
+
+class FormMistmane : public Form
+{
+private:
+    FormMistmane() : Form(transformation::mistmane) { }
+    DISALLOW_COPY_AND_ASSIGN(FormMistmane);
+public:
+    static const FormMistmane &instance() { static FormMistmane inst; return inst; }
+
+    /**
+     * @ description
+     */
+    string get_description(bool past_tense) const override
+    {
+        return make_stringf("Your head %s a mane of billowing mist.",
+                            past_tense ? "was" : "is");
+    }
+
+    /**
+     * Get a message for transforming into this form.
+     */
+    string transform_message() const override
+    {
+        return "Your head dissolves into a mane of billowing mist!";
+    }
+
+    /**
+     * Get a message for untransforming from this form.
+     */
+    string get_untransform_message() const override
+    {
+        return "Your head returns to normal.";
+    }
+
+    // Maximum range of the cloud spew (multiplied by 10, so that 55 is randomly
+    // either 5 or 6).
+    int get_effect_size(int skill = -1) const override
+    {
+        return max(30, scaling_value(FormScaling().Base(30).Scaling(25), skill));
+    }
+
+    // Rate of distilling mist potions
+    int get_effect_chance(int skill = -1) const override
+    {
+        return max(0, scaling_value(FormScaling().Base(100).Scaling(70), skill));
+    }
+
+    // Duration multiplier for spewed clouds
+    int get_cloud_duration(int skill = -1) const override
+    {
+        return max(50, scaling_value(FormScaling().Base(100).Scaling(100), skill));
+    }
+};
+
 static const Form* forms[] =
 {
     &FormNone::instance(),
@@ -1425,6 +1582,10 @@ static const Form* forms[] =
     &FormMedusa::instance(),
     &FormEelHands::instance(),
     &FormSpore::instance(),
+    &FormVision::instance(),
+    &FormJademantle::instance(),
+    &FormHypnogecko::instance(),
+    &FormMistmane::instance(),
 };
 
 const Form* get_form(transformation xform)
@@ -1915,6 +2076,25 @@ bool check_transform_into(transformation which_trans, bool involuntary,
         }
     }
 
+    if (!involuntary && you.form == transformation::mistmane
+                     && you.default_form == transformation::mistmane
+                     && which_trans != transformation::mistmane
+                     && talisman)
+    {
+        for (const item_def& inv : you.inv)
+        {
+            if (inv.is_type(OBJ_POTIONS, POT_MIST))
+            {
+                if (!yesno("Leaving this form will destroy all of your potions of mist! "
+                           "Transform anyway?", true, 'n'))
+                {
+                    return false;
+                }
+                break;
+            }
+        }
+    }
+
     return true;
 }
 
@@ -1995,6 +2175,15 @@ static void _on_enter_form(transformation which_trans)
         you.redraw_evasion = true;
         break;
 
+    case transformation::jademantle:
+        jademantle_handle_crystal_revival(true);
+        break;
+
+    case transformation::mistmane:
+        if (!you.props.exists(MISTMANE_POTION_PROGRESS_KEY))
+            you.props[MISTMANE_POTION_PROGRESS_KEY] = random_range(150, 350);
+        break;
+
     default:
         break;
     }
@@ -2007,10 +2196,14 @@ void set_form(transformation which_trans, int dur, bool scale_hp)
     update_player_symbol();
 
     const int str_mod = get_form(which_trans)->str_mod;
+    const int int_mod = get_form(which_trans)->int_mod;
     const int dex_mod = get_form(which_trans)->dex_mod;
 
     if (str_mod)
         notify_stat_change(STAT_STR, str_mod, true);
+
+    if (int_mod)
+        notify_stat_change(STAT_INT, int_mod, true);
 
     if (dex_mod)
         notify_stat_change(STAT_DEX, dex_mod, true);
@@ -2239,10 +2432,14 @@ void untransform(bool skip_move, bool scale_hp, bool preserve_equipment,
     set_form(transformation::none, 0, scale_hp);
 
     const int str_mod = get_form(old_form)->str_mod;
+    const int int_mod = get_form(old_form)->int_mod;
     const int dex_mod = get_form(old_form)->dex_mod;
 
     if (str_mod)
         notify_stat_change(STAT_STR, -str_mod, true);
+
+    if (int_mod)
+        notify_stat_change(STAT_DEX, -int_mod, true);
 
     if (dex_mod)
         notify_stat_change(STAT_DEX, -dex_mod, true);
@@ -2272,7 +2469,7 @@ void untransform(bool skip_move, bool scale_hp, bool preserve_equipment,
     }
     else if (old_form == transformation::rime_yak)
     {
-        you.duration[DUR_RIME_YAK_AURA] = 0;
+        you.duration[DUR_FRIGID_WALLS_ACTIVE] = 0;
         end_terrain_changes(TERRAIN_CHANGE_RIME_YAK);
     }
     else if (old_form == transformation::werewolf)
@@ -2287,6 +2484,31 @@ void untransform(bool skip_move, bool scale_hp, bool preserve_equipment,
         notify_stat_change();
         you.redraw_armour_class = true;
         you.redraw_evasion = true;
+    }
+    else if (old_form == transformation::jademantle)
+    {
+        for (monster_iterator mi; mi; ++mi)
+            if (mi->was_created_by(MON_SUMM_JADEMANTLE))
+                monster_die(**mi, KILL_TIMEOUT, NON_MONSTER, true);
+    }
+    else if (old_form == transformation::mistmane)
+    {
+        // Only destroy potions if we're leaving the form for real, and not
+        // merely as part of a polymorph.
+        if (you.default_form != transformation::mistmane)
+        {
+            for (const item_def& inv : you.inv)
+            {
+                if (inv.is_type(OBJ_POTIONS, POT_MIST))
+                {
+                    mprf(MSGCH_WARN, "%s evaporate!", inv.name(DESC_YOUR).c_str());
+                    dec_inv_item_quantity(inv.link, inv.quantity);
+                }
+            }
+        }
+
+        you.duration[DUR_VAPOURISE] = 0;
+        you.props.erase(MISTMANE_VAPOUR_KEY);
     }
 
     // If the player is no longer be eligible to equip some of the items that
@@ -2488,6 +2710,11 @@ transformation form_for_talisman(const item_def &talisman)
     return transformation::none;
 }
 
+talisman_type talisman_for_form(transformation form)
+{
+    return _find_form_entry(form).talisman;
+}
+
 void clear_form_info_on_exit()
 {
     for (const form_entry &entry : formdata)
@@ -2657,4 +2884,336 @@ bool vampire_mesmerism_check(monster& mon)
     }
 
     return false;
+}
+
+static monster* _jademantle_make_crystal(monster_type type, bool quiet)
+{
+    mgen_data mg(type, BEH_FRIENDLY, you.pos(), MHITYOU);
+    mg.set_summoned(&you, MON_SUMM_JADEMANTLE, 0, false, false);
+    coord_def pos = you.pos();
+    switch (type)
+    {
+        default:
+        case MONS_JADE_CRYSTAL_AIR:     pos += coord_def(-1, -1);   break;
+        case MONS_JADE_CRYSTAL_EARTH:   pos += coord_def(1, 1);     break;
+        case MONS_JADE_CRYSTAL_FIRE:    pos += coord_def(-1, 1);    break;
+        case MONS_JADE_CRYSTAL_ICE:     pos += coord_def(1, -1);    break;
+    }
+
+    if (in_bounds(pos) && !actor_at(pos) && monster_habitable_grid(type, pos))
+    {
+        mg.pos = pos;
+        mg.flags |= MG_FORCE_PLACE;
+    }
+    else
+        mg.set_range(1, 3);
+
+    if (monster* mon = create_monster(mg))
+    {
+        mon->behaviour = BEH_SEEK;
+        mon->speed_increment = 80;
+        you.props.erase(JADEMANTLE_CRYSTAL_REVIVAL_KEY + to_string(mon->type));
+
+        // Scale HP with shapeshifting skill.
+        mon->max_hit_points = mon->max_hit_points * get_form()->get_effect_size() / 100;
+        mon->hit_points = mon->max_hit_points;
+
+        if (!quiet)
+            mprf("%s finishes recrystalising.", mon->name(DESC_THE).c_str());
+
+        return mon;
+    }
+
+    return nullptr;
+}
+
+void jademantle_handle_crystal_revival(bool quiet)
+{
+    bool found[4] = {};
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->was_created_by(MON_SUMM_JADEMANTLE))
+            found[mi->type - MONS_JADE_CRYSTAL_AIR] = true;
+    }
+
+    for (int i = 0; i < 4; ++i)
+    {
+        if (found[i])
+            continue;
+
+        monster_type mtype = static_cast<monster_type>(MONS_JADE_CRYSTAL_AIR + i);
+        int timer = you.props[JADEMANTLE_CRYSTAL_REVIVAL_KEY + to_string(mtype)].get_int();
+        if (you.elapsed_time >= timer)
+            _jademantle_make_crystal(mtype, quiet);
+    }
+}
+
+static bolt _populate_jade_crystal_surge(monster& crystal)
+{
+    bolt beam(you, ZAP_JADEMANTLE_SHOT, 100);
+    beam.damage = get_form()->get_special_damage();
+    beam.source = crystal.pos();
+    beam.target = crystal.pos();
+
+    if (crystal.type == MONS_JADE_CRYSTAL_FIRE)
+    {
+        beam.flavour = BEAM_FIRE;
+        beam.colour = LIGHTRED;
+        beam.name = "surge of fire";
+    }
+    else if (crystal.type == MONS_JADE_CRYSTAL_ICE)
+    {
+        beam.flavour = BEAM_COLD;
+        beam.colour = LIGHTBLUE;
+        beam.name = "surge of cold";
+    }
+    else if (crystal.type == MONS_JADE_CRYSTAL_AIR)
+    {
+        beam.flavour = BEAM_ELECTRICITY;
+        beam.colour = LIGHTCYAN;
+        beam.name = "surge of electricity";
+    }
+    else if (crystal.type == MONS_JADE_CRYSTAL_EARTH)
+    {
+        beam.flavour = BEAM_SEISMIC;
+        beam.colour = YELLOW;
+        beam.name = "surge of tremors";
+    }
+
+    return beam;
+}
+
+void jademantle_crystal_charge(spell_type spell)
+{
+    const spschools_type ele_schools =
+        get_spell_disciplines(spell) & (spschool::earth | spschool::air | spschool::fire | spschool::ice);
+
+    if (!ele_schools)
+        return;
+
+    int already_charged = 0;
+    vector<monster*> crystals;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->was_created_by(MON_SUMM_JADEMANTLE))
+        {
+            crystals.push_back(*mi);
+            if (mi->has_ench(ENCH_SPELL_CHARGED))
+                ++already_charged;
+        }
+    }
+
+    shuffle_array(crystals);
+
+    bool did_charge = false;
+    for (monster* crystal : crystals)
+    {
+        if (!you.see_cell_no_trans(crystal->pos()) || crystal->has_ench(ENCH_SPELL_CHARGED))
+            continue;
+
+        spschool element = jade_crystal_to_school(crystal->type);
+        if (!(element & ele_schools))
+            continue;
+
+        bolt beam = _populate_jade_crystal_surge(*crystal);
+        beam.draw_delay = 20;
+
+        vector<monster*> targs;
+        for (radius_iterator ri(crystal->pos(), 3, C_SQUARE, LOS_SOLID_SEE, true); ri; ++ri)
+        {
+            if (monster* mon = monster_at(*ri))
+            {
+                if (!mon->wont_attack() && !mon->is_firewood()
+                    && you.see_cell_no_trans(mon->pos()))
+                {
+                    targs.push_back(mon);
+                }
+            }
+        }
+
+        if (targs.empty())
+            continue;
+
+        tileidx_t wave_tile =
+            (element == spschool::air     ? TILE_BOLT_JADE_CHARGE_AIR :
+             element == spschool::earth   ? TILE_BOLT_JADE_CHARGE_EARTH :
+             element == spschool::fire    ? TILE_BOLT_JADE_CHARGE_FIRE :
+             element == spschool::ice     ? TILE_BOLT_JADE_CHARGE_ICE
+                                          : TILE_BOLT_DEFAULT_BLACK);
+
+        draw_ring_animation(crystal->pos(), 3, beam.colour, beam.colour, true, 25, wave_tile);
+        mprf(MSGCH_DURATION, "%s surges with power!", crystal->name(DESC_THE).c_str());
+
+        shuffle_array(targs);
+        for (size_t i = 0; i < targs.size() && i < 3; ++i)
+        {
+            beam.source = beam.target = targs[i]->pos();
+            beam.fire();
+        }
+
+        crystal->heal(1000);
+        crystal->add_ench(mon_enchant(ENCH_SPELL_CHARGED, &you, random_range(150, 200)));
+
+        // Update the status light
+        int& crystal_hud = you.props[JADEMANTLE_CRYSTAL_KEY].get_int();
+        crystal_hud |= static_cast<int>(element);
+
+        did_charge = true;
+        break;
+    }
+
+    if (did_charge && already_charged == 3)
+    {
+        draw_ring_animation(you.pos(), 3, ETC_JADE, ETC_JADE, false, 35);
+        mprf(MSGCH_DURATION, "Your mantle thrums with power.");
+        const int dur = random_range(15, 20);
+        you.increase_duration(DUR_RESISTANCE, dur);
+        you.duration[DUR_INDOMITABLE] += random_range(1500, 2500);
+
+        // Set their charge timers to the same duration, so that you can't have
+        // just one uncharge and immediately rebuff yourself.
+        for (monster* crystal : crystals)
+        {
+            mon_enchant ench = crystal->get_ench(ENCH_SPELL_CHARGED);
+            ench.duration = dur * 10;
+            crystal->update_ench(ench);
+        }
+    }
+}
+
+void jademantle_crystal_uncharge(monster_type type)
+{
+    int& crystals = you.props[JADEMANTLE_CRYSTAL_KEY].get_int();
+    crystals &= ~static_cast<int>(jade_crystal_to_school(type));
+    if (crystals == 0)
+        you.props.erase(JADEMANTLE_CRYSTAL_KEY);
+}
+
+bool jademantle_is_fully_charged()
+{
+    if (you.props.exists(JADEMANTLE_CRYSTAL_KEY))
+    {
+        spschool schools = static_cast<spschool>(you.props[JADEMANTLE_CRYSTAL_KEY].get_int());
+        return (schools & (spschool::air | spschool::earth | spschool::fire | spschool::ice))
+                        == (spschool::air | spschool::earth | spschool::fire | spschool::ice);
+    }
+    return false;
+}
+
+void mistmane_distill_potions(int tiles_explored)
+{
+    int& remaining = you.props[MISTMANE_POTION_PROGRESS_KEY].get_int();
+    while (tiles_explored >= remaining)
+    {
+        tiles_explored -= remaining;
+        remaining = random_range(150, 350);
+
+        int count = 0;
+        for (const item_def& inv : you.inv)
+        {
+            if (inv.is_type(OBJ_POTIONS, POT_MIST))
+            {
+                count = inv.quantity;
+                break;
+            }
+        }
+
+        if (count >= 5)
+            continue;
+
+        int pot = items(false, OBJ_POTIONS, POT_MIST, 0);
+        if (pot != NON_ITEM)
+        {
+            item_def& item = env.item[pot];
+            item.quantity = 1;
+            identify_item(item);
+            if (move_item_to_inv(item, true))
+            {
+                // XXX: Have to do this manually or we'll get an unlinked item
+                //      error (since it was never on the floor).
+                dec_mitm_item_quantity(pot, 1);
+                mprf("You condense the dungeon air into a potion of mist.");
+            }
+            else
+                destroy_item(pot, true);
+        }
+
+    }
+
+    remaining -= tiles_explored;
+}
+
+cloud_type mistmane_cloud_type(potion_type potion)
+{
+    switch (potion)
+    {
+        case POT_MIST:
+        case POT_CURING:
+            return CLOUD_BLINDING_HAZE;
+
+        case POT_BERSERK_RAGE:
+            return CLOUD_FIRE;
+
+        case POT_MUTATION:
+            return CLOUD_MUTAGENIC;
+
+        default:
+            return CLOUD_MEPHITIC;
+    }
+}
+
+void mistmane_quaff_potion(potion_type potion)
+{
+    mprf("The potion decomposes into %s within you.", cloud_type_name(mistmane_cloud_type(potion)).c_str());
+    you.props[MISTMANE_VAPOUR_KEY].get_int() = potion;
+    you.duration[DUR_VAPOURISE] = random_range(40, 60);
+}
+
+void mistmane_spew_potion(const coord_def& target)
+{
+    potion_type potion = static_cast<potion_type>(you.props[MISTMANE_VAPOUR_KEY].get_int());
+    cloud_type ctype = mistmane_cloud_type(potion);
+
+    // Clouds can be placed as far as max_range away, but their chance of this
+    // is based on scaled_range (which is 'range * 10')
+    const int scaled_range = get_form()->get_effect_size();
+    const int max_range = div_round_up(scaled_range, 10);
+
+    bolt path = bolt::path_tracer(you.pos(), target, max_range);
+
+    cloud_struct cloud;
+    cloud.type = ctype;
+    cloud.decay = 100;
+    cloud_info ci(cloud.type, get_cloud_colour(cloud), 3, 0, you.pos(), KILL_YOU);
+
+    bolt visual = bolt::visual_beam(you.pos(), path.path_taken.front(), 10, ci.colour, tileidx_cloud(ci));
+    visual.range = max_range;
+    visual.aimed_at_spot = false;
+    multi_beam multi(visual, MULTI_BEAM_WIDE, 3);
+
+    // Draw the visual beam.
+    multi.fire();
+
+    // Then place clouds along its path.
+    vector<coord_def> spots = multi.get_all_affected_cells();
+    for (coord_def p : spots)
+    {
+        // Clouds at the maximal range have a randomized chance of being placed.
+        if (grid_distance(you.pos(), p) >= max_range - 1
+            && grid_distance(you.pos(), p) > div_rand_round(scaled_range, 10))
+        {
+            continue;
+        }
+
+        int base_dur = 1 + roll_dice(2, 2);
+        if (ctype == CLOUD_MEPHITIC)
+            base_dur += 1;
+        else if (ctype == CLOUD_MUTAGENIC)
+            base_dur += 2;
+
+        place_cloud(ctype, p, div_rand_round(base_dur * get_form()->get_cloud_duration(), 100), &you);
+    }
+
+    mprf("%s billows from you!", cloud_type_name(ctype, true).c_str());
+    you.duration[DUR_VAPOURISE] = 0;
 }

@@ -694,7 +694,8 @@ static vector<pair<string,string>> _get_form_fakemuts()
             result.push_back({p.first, _badmut(p.second)});
 
     // Note: serpent form suppresses any innate cold-bloodedness
-    if (you.form == transformation::serpent)
+    if (you.form == transformation::serpent
+        || you.form == transformation::hypnogecko)
     {
         // XXX Hacky suppression with rC+
         if (you.res_cold())
@@ -3698,8 +3699,8 @@ void maybe_apply_bane_to_monster(monster& mons)
 {
     if (mons.is_peripheral()
         || mons.is_summoned()
-        || mons.attitude != ATT_HOSTILE
-        || mons.temp_attitude() != ATT_HOSTILE)
+        || mons.base_attitude != ATT_HOSTILE
+        || mons.attitude() != ATT_HOSTILE)
     {
         return;
     }
@@ -3718,8 +3719,8 @@ void maybe_apply_bane_to_monster(monster& mons)
     {
         mons.add_ench(mon_enchant(ENCH_WARDING, nullptr, INFINITE_DURATION));
 
-        // Cap the magnitude of number of things affects in extremely dense
-        // situations, preferring
+        // Cap the number of things affected in extremely dense situations,
+        // preferring those closest to the original monster.
         int max_affected = 8;
         for (distance_iterator di(mons.pos(), true, true, LOS_RADIUS); di; ++di)
         {
@@ -3729,7 +3730,7 @@ void maybe_apply_bane_to_monster(monster& mons)
             if (monster* mon2 = monster_at(*di))
             {
                 if (!testbits(mon2->flags, MF_SEEN) && !mon2->is_peripheral()
-                    && mon2->attitude == ATT_HOSTILE)
+                    && mon2->base_attitude == ATT_HOSTILE)
                 {
                     mon2->add_ench(mon_enchant(ENCH_WARDING, nullptr, INFINITE_DURATION));
                     if (--max_affected == 0)

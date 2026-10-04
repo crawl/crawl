@@ -698,6 +698,84 @@ void fill_doll_equipment(dolls_data &result)
         }
         result.parts[TILEP_PART_HAIR] = 0;
         break;
+    case transformation::vision:
+        switch (you.species)
+        {
+        case SP_OCTOPODE:
+            result.parts[TILEP_PART_HELM] = TILEP_BODY_VISION_FORM_OCTOPODE;
+            break;
+        case SP_FELID:
+            result.parts[TILEP_PART_BASE] = TILEP_TRAN_VISION_FELID;
+            break;
+        default:
+            result.parts[TILEP_PART_HELM] = TILEP_BODY_VISION_FORM_HUMANOID;
+            break;
+        }
+        result.parts[TILEP_PART_HAIR] = 0;
+        break;
+    case transformation::jademantle:
+    {
+        const bool charged = jademantle_is_fully_charged();
+        switch (you.species)
+        {
+        case SP_OCTOPODE:
+            result.parts[TILEP_PART_BASE] = charged ? TILEP_TRAN_JADE_OCTOPODE_CHARGED
+                                                    : TILEP_TRAN_JADE_OCTOPODE;
+            break;
+        case SP_FELID:
+            result.parts[TILEP_PART_BASE] = charged ? TILEP_TRAN_JADE_FELID_CHARGED
+                                                    : TILEP_TRAN_JADE_FELID;
+            break;
+        case SP_GALE_CENTAUR:
+            result.parts[TILEP_PART_HELM] = charged ? TILEP_HELM_JADE_FORM_CENTAUR_CHARGED
+                                                    : TILEP_HELM_JADE_FORM_CENTAUR;
+            break;
+        case SP_NAGA:
+            result.parts[TILEP_PART_HELM] = charged ? TILEP_HELM_JADE_FORM_NAGA_CHARGED
+                                                    : TILEP_HELM_JADE_FORM_NAGA;
+            break;
+        default:
+            result.parts[TILEP_PART_HELM] = charged ? TILEP_HELM_JADE_FORM_HUMANOID_CHARGED
+                                                    : TILEP_HELM_JADE_FORM_HUMANOID;
+            result.parts[TILEP_PART_CLOAK] = TILEP_CLOAK_JADE_FORM_HUMANOID_BACK;
+            break;
+        }
+        result.parts[TILEP_PART_HAIR] = 0;
+    }
+        break;
+    case transformation::hypnogecko:
+        switch (you.species)
+        {
+        case SP_GALE_CENTAUR:   ch = TILEP_TRAN_HYPNOGECKO_CENTAUR;     break;
+        case SP_DJINNI:         ch = TILEP_TRAN_HYPNOGECKO_DJINNI;      break;
+        case SP_GARGOYLE:       ch = TILEP_TRAN_HYPNOGECKO_GARGOYLE;    break;
+        case SP_NAGA:           ch = TILEP_TRAN_HYPNOGECKO_NAGA;        break;
+        case SP_FELID:          ch = TILEP_TRAN_HYPNOGECKO_FELID;       break;
+        case SP_OCTOPODE:       ch = TILEP_TRAN_HYPNOGECKO_OCTOPODE;    break;
+        default:                ch = TILEP_TRAN_HYPNOGECKO_HUMANOID;    break;
+        }
+        result.parts[TILEP_PART_BASE]    = ch;
+
+        // Tail-less variants are immediately after the full tile.
+        if (you.props.exists(HYPNOGECKO_LOST_TAIL_KEY))
+            result.parts[TILEP_PART_BASE]++;
+        result.parts[TILEP_PART_LEG]     = 0;
+        break;
+    case transformation::mistmane:
+        switch (you.species)
+        {
+        case SP_OCTOPODE:
+            result.parts[TILEP_PART_BASE] = TILEP_TRAN_MISTMANE_OCTOPODE;
+            break;
+        case SP_FELID:
+            result.parts[TILEP_PART_BASE] = TILEP_TRAN_MISTMANE_FELID;
+            break;
+        default:
+            result.parts[TILEP_PART_HELM] = TILEP_HELM_MISTMANE_FORM_HUMANOID;
+            break;
+        }
+        result.parts[TILEP_PART_HAIR] = 0;
+        break;
     default:
         _fill_doll_equipment_default(result);
         break;

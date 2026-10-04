@@ -222,8 +222,6 @@ bool ring_has_stackable_effect(const item_def &item) PURE;
 item_rarity_type consumable_rarity(const item_def &item);
 item_rarity_type consumable_rarity(object_class_type base_type, int sub_type);
 
-bool oni_likes_potion(potion_type type);
-
 // generic item property functions:
 int armour_type_prop(const uint8_t arm, const armour_flag prop) PURE;
 
@@ -276,6 +274,7 @@ void maybe_mark_set_known(object_class_type type, int sub_type);
 int item_for_set(item_set_type typ);
 bool item_excluded_from_set(object_class_type type, int sub_type);
 bool item_known_excluded_from_set(object_class_type type, int sub_type);
+bool item_known_not_to_generate(object_class_type type, int sub_type);
 item_set_type item_set_by_name(string name);
 string item_name_for_set(item_set_type typ);
 
@@ -306,3 +305,5 @@ void remove_whitespace(string &str);
 int jewellery_usefulness_limit(jewellery_type type);
 
 bool item_affects_agrid(const item_def& item);
+
+bool item_is_droppable(const item_def& item);

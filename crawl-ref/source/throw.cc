@@ -472,7 +472,7 @@ void ranged_attack_beam::initialise_beam(actor &agent, item_def &item)
     {
         const monster* mon = agent.as_monster();
 
-        beam.attitude      = mons_attitude(*mon);
+        beam.attitude      = mon->attitude();
         beam.thrower       = KILL_MON_MISSILE;
     }
 
@@ -731,7 +731,8 @@ bool do_player_ranged_attack(const coord_def& targ, item_def* thrown_projectile,
 // Returns true if a given target will hit at least one enemy, and optionally
 // passes out the first target hit as first_hit.
 static bool _salvo_shot_tracer(coord_def source, coord_def target, bool pierce,
-                               mid_t* first_hit = nullptr)
+                               mid_t* first_hit, int max_range = LOS_RADIUS,
+                               beam_type flavour = BEAM_MISSILE)
 {
     bolt tracer;
     tracer.attitude = ATT_FRIENDLY;
@@ -741,6 +742,8 @@ static bool _salvo_shot_tracer(coord_def source, coord_def target, bool pierce,
     tracer.stop_at_allies = true;
     tracer.damage = dice_def(100, 1);
     tracer.pierce = pierce;
+    tracer.flavour = flavour;
+    tracer.range = max_range;
     targeting_tracer target_tracer;
     tracer.fire(target_tracer);
 
@@ -764,13 +767,15 @@ static bool _salvo_shot_tracer(coord_def source, coord_def target, bool pierce,
 
 // Get a list of up to num_target additional targets that have some unblocked
 // shot path from the player's current position.
-static vector<coord_def> _get_salvo_targets(const coord_def& orig_target, int num_targets)
+vector<coord_def> get_salvo_targets(const coord_def& orig_target, int num_targets,
+                                    int max_range, beam_type flavour)
 {
     mid_t primary;
     vector<coord_def> targs;
 
     // Add primary target from the originating shot.
-    _salvo_shot_tracer(you.pos(), orig_target, false, &primary);
+    if (!orig_target.origin())
+        _salvo_shot_tracer(you.pos(), orig_target, false, &primary, max_range, flavour);
 
     // Scan all visible monsters in LoS for any that *might* have an unblocked
     // shot path.
@@ -793,7 +798,7 @@ static vector<coord_def> _get_salvo_targets(const coord_def& orig_target, int nu
     // find a valid shot.
     for (monster* mon : to_check)
     {
-        coord_def aim = best_ranged_aim(mon->pos(), false, true);
+        coord_def aim = best_ranged_aim(mon->pos(), false, true, max_range);
         if (!aim.origin())
         {
             targs.push_back(aim);
@@ -809,7 +814,7 @@ static vector<coord_def> _get_salvo_targets(const coord_def& orig_target, int nu
 
 static void _fire_salvo(const ranged_attack_beam &pbolt)
 {
-    vector<coord_def> targs = _get_salvo_targets(pbolt.beam.target, 4);
+    vector<coord_def> targs = get_salvo_targets(pbolt.beam.target, 4);
 
     for (coord_def aim : targs)
     {
@@ -1043,12 +1048,7 @@ bool do_west_wind_shot()
 
     if (_salvo_shot_tracer(you.pos(), targ, true, nullptr))
     {
-        bolt wind;
-        wind.source = you.pos();
-        wind.target = targ;
-        wind.pierce = true;
-        wind.set_is_tracer(true);
-        wind.fire();
+        bolt wind = bolt::path_tracer(you.pos(), targ);
 
         // Push monsters from back to front (but never pushing them out of sight)
         for (int i = wind.path_taken.size() - 2; i >= 0; --i)

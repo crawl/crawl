@@ -97,20 +97,17 @@ static void _magic_contamination_effects()
     // radius and damage.
     if (x_chance_in_y(min(2000, you.magic_contamination), 3200))
     {
-        bolt beam;
-
         const int pow = severe ? you.experience_level * 3 / 2
                                : you.experience_level;
-        zappy(ZAP_CONTAM_EXPLOSION, pow, false, beam);
 
-        beam.source       = you.pos();
+        bolt beam(you, ZAP_CONTAM_EXPLOSION, pow);
         beam.target       = you.pos();
         beam.source_id    = MID_YOU_FAULTLESS;
         beam.aux_source   = "a magical explosion";
         beam.ex_size      = severe ? 2 : 1;
 
         // Ignores the player's own AC (it's your body exploding!), but not
-        // enemies.
+        // the AC of enemies.
         beam.ac_rule = ac_type::none;
         beam.is_explosion = false;
         beam.fire();
@@ -259,7 +256,7 @@ static bool _multiplicity_clone(monster* mon)
     {
         bool obviousness; // dummy argument
         monster *clone = clone_mons(mon, true, &obviousness,
-                                    mon->attitude, spot);
+                                    mon->attitude(), spot);
         if (!clone)
             return false;
         clone->foe = mon->foe;
@@ -827,7 +824,7 @@ bool map_malign_gateway_marker::run(int time)
 
                 // Severed tentacles immediately become "hostile" to everyone
                 // (or frenzied)
-                mon->attitude = ATT_NEUTRAL;
+                mon->base_attitude = ATT_NEUTRAL;
                 mons_att_changed(mon);
                 if (!crawl_state.game_is_arena())
                     behaviour_event(mon, ME_ALERT);
@@ -961,7 +958,8 @@ void timeout_terrain_changes(int duration, bool force)
 
         if ((marker->source_mid == MID_PLAYER
              && (marker->change_type == TERRAIN_CHANGE_BOG
-                 || marker->change_type == TERRAIN_CHANGE_BINDING_SIGIL))
+                 || marker->change_type == TERRAIN_CHANGE_BINDING_SIGIL
+                 || marker->change_type == TERRAIN_CHANGE_ICE_THORNS))
             && !you.see_cell(marker->pos))
         {
             marker->duration = 0;
@@ -1239,7 +1237,7 @@ bool map_active_feature_marker::run_spike_launcher(int time)
             if (actor* targ = actor_at(*ai))
             {
                 if (!act->see_cell_no_trans(*ai)
-                    || mons_atts_aligned(attitude, targ->temp_attitude())
+                    || mons_atts_aligned(attitude, targ->attitude())
                     || targ->is_firewood())
                 {
                     continue;

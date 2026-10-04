@@ -1620,6 +1620,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you are already charging a Fortress Blast.";
         break;
 
+    case SPELL_SIROCCO:
+        if (temp && you.duration[DUR_SIROCCO_COOLDOWN])
+            return "you need to wait for the hot winds to gather around you again.";
+        break;
+
     default:
         break;
     }
@@ -1702,7 +1707,7 @@ static bool _lrd_no_hostile_in_range(int pow, int range)
         const monster& mon = **mi;
         if (!you.aware_of(mon) || !mons_is_threatening(mon))
             continue;
-        if (mons_attitude(mon) != ATT_HOSTILE && !mon.has_ench(ENCH_FRENZIED))
+        if (mon.attitude() != ATT_HOSTILE && !mon.has_ench(ENCH_FRENZIED))
             continue;
         if (protected_from_spell(SPELL_LRD, mon, &you))
             continue;
@@ -1718,6 +1723,17 @@ static bool _lrd_no_hostile_in_range(int pow, int range)
     }
 
     return true;
+}
+
+static bool _multibeam_target_in_range(spell_type spell)
+{
+    bolt beam(you, spell, 100);
+    beam.target = you.pos() + coord_def(1, 0);
+    multi_beam tracer_beam(beam, MULTI_BEAM_FAN, 8);
+
+    targeting_tracer tracer = tracer_beam.trace();
+
+    return tracer.foe_info.count > 0;
 }
 
 bool spell_no_hostile_in_range(spell_type spell)
@@ -1756,6 +1772,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_GELLS_GAVOTTE:
     case SPELL_PLATINUM_PARAGON:
     case SPELL_SPLINTERFROST_SHELL:
+    case SPELL_DRAGON_VEINS:
     // This can always potentially hit out-of-LOS, although this is conditional
     // on spell-power.
     case SPELL_FIRE_STORM:
@@ -1805,7 +1822,7 @@ bool spell_no_hostile_in_range(spell_type spell)
         return cast_ignite_poison(&you, -1, false, true) == spret::abort;
 
     case SPELL_STARBURST:
-        return cast_starburst(-1, false, true) == spret::abort;
+        return !_multibeam_target_in_range(spell);
 
     case SPELL_HAILSTORM:
         return cast_hailstorm(-1, false, true) == spret::abort;
@@ -1864,7 +1881,7 @@ bool spell_no_hostile_in_range(spell_type spell)
             if (you.aware_of(mon)
                 && mons_intel(mon) > I_BRAINLESS
                 && mon.willpower() != WILL_INVULN
-                && !mons_atts_aligned(you.temp_attitude(), mon.attitude)
+                && !mons_aligned(&you, &mon)
                 && !mon.has_ench(ENCH_ANGUISH))
             {
                 return false;
@@ -1886,6 +1903,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_DIMENSIONAL_BULLSEYE:
     case SPELL_SURPRISING_CROCODILE:
     case SPELL_SIMULACRUM:
+    case SPELL_ICE_THORNS:
         return !_any_valid_targets(find_spell_targeter(spell, pow, range), range);
 
     case SPELL_POISONOUS_VAPOURS:
@@ -2116,6 +2134,18 @@ bool is_monster_net_escape_spell(spell_type spell)
             || spell == SPELL_BLINK_AWAY
             || spell == SPELL_BLINK_RANGE
             || spell == SPELL_BLINK_CLOSE;
+}
+
+spschool jade_crystal_to_school(monster_type type)
+{
+    switch (type)
+    {
+        case MONS_JADE_CRYSTAL_AIR:     return spschool::air;
+        case MONS_JADE_CRYSTAL_EARTH:   return spschool::earth;
+        case MONS_JADE_CRYSTAL_FIRE:    return spschool::fire;
+        case MONS_JADE_CRYSTAL_ICE:     return spschool::ice;
+        default:                        return spschool::none;
+    }
 }
 
 /* How to regenerate this:

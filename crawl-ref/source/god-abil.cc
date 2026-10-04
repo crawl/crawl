@@ -1163,7 +1163,6 @@ bool zin_recite_to_single_monster(const coord_def& where)
     case zin_eff::ignite_chaos:
         ASSERT(prayertype == RECITE_CHAOTIC);
         {
-            bolt beam;
             dice_def dam_dice(0, 5 + spellpower/7);  // Dice added below if applicable.
             dam_dice.num = degree;
 
@@ -1783,7 +1782,7 @@ bool yred_can_bind_soul(monster* mon)
 {
     return mons_can_be_spectralised(*mon, true, true)
            && !mon->has_ench(ENCH_SOUL_RIPE)
-           && mon->attitude != ATT_FRIENDLY;
+           && mon->base_attitude != ATT_FRIENDLY;
 }
 
 int yred_get_bound_soul_hp(monster_type mt, bool estimate_only)
@@ -1866,7 +1865,7 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
 
     name_zombie_from_mon(*mon, orig);
 
-    mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
+    mon->base_attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
     behaviour_event(mon, ME_ALERT, force_hostile ? &you : 0);
 
     mons_att_changed(mon);
@@ -1943,17 +1942,13 @@ bool fedhas_passthrough_class(const monster_type mc)
 bool fedhas_passthrough(const monster* target)
 {
     return target
-           && fedhas_passthrough_class(target->type)
-           && (mons_species(target->type) != MONS_OKLOB_PLANT
-               || target->attitude != ATT_HOSTILE);
+           && fedhas_passthrough_class(target->type);
 }
 
 bool fedhas_passthrough(const monster_info* target)
 {
     return target
-           && fedhas_passthrough_class(target->type)
-           && (mons_species(target->type) != MONS_OKLOB_PLANT
-               || target->attitude != ATT_HOSTILE);
+           && fedhas_passthrough_class(target->type);
 }
 
 void cheibriados_time_bend(int pow)
@@ -2592,7 +2587,7 @@ void spare_beogh_convert()
         // An invis player converting is ok, for simplicity.
         if (!mon || !cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
             continue;
-        if (mon->attitude != ATT_HOSTILE)
+        if (mon->base_attitude != ATT_HOSTILE)
             continue;
         if (mons_genus(mon->type) != MONS_ORC)
             continue;
@@ -2609,7 +2604,7 @@ void spare_beogh_convert()
                     continue;
                 if (mons_genus(orc->type) != MONS_ORC)
                     continue;
-                if (mon->attitude != ATT_HOSTILE)
+                if (mon->base_attitude != ATT_HOSTILE)
                     continue;
                 witnesses.insert(orc->mid);
             }
@@ -3150,8 +3145,8 @@ static int _dithmenos_marionette_spells_possible(monster& target)
     // Save target state, so we can restore after we test.
     const int old_foe = target.foe;
     const coord_def old_target = target.target;
-    const mon_attitude_type old_attitude = target.attitude;
-    target.attitude = ATT_MARIONETTE;
+    const mon_attitude_type old_attitude = target.base_attitude;
+    target.base_attitude = ATT_MARIONETTE;
 
     int valid_count = 0;
     for (spell_type spell : mon_spells)
@@ -3161,7 +3156,7 @@ static int _dithmenos_marionette_spells_possible(monster& target)
     // Restore state, like nothing even happened
     target.foe = old_foe;
     target.target = old_target;
-    target.attitude = old_attitude;
+    target.base_attitude = old_attitude;
 
     return valid_count;
 }
@@ -3236,7 +3231,7 @@ spret dithmenos_marionette(monster& target, bool fail)
     const int old_foe = target.foe;
     const coord_def old_target = target.target;
     const int old_energy = target.speed_increment;
-    target.attitude = ATT_MARIONETTE;
+    target.base_attitude = ATT_MARIONETTE;
 
     // Attempt to cast all valid spells the monster has, in randomized order,
     // (but using all spells at least once before repeating). End early if the
@@ -3273,7 +3268,7 @@ spret dithmenos_marionette(monster& target, bool fail)
         target.foe = old_foe;
         target.target = old_target;
         target.speed_increment = old_energy;
-        target.attitude = ATT_HOSTILE;
+        target.base_attitude = ATT_HOSTILE;
     }
 
     if (!target.alive())
@@ -4275,11 +4270,8 @@ spret qazlal_disaster_area(bool fail)
             continue;
 
         const monster *mon = monster_at(*ri);
-        if (mon && mons_att_wont_attack(mon->attitude)
-            && !mons_is_projectile(mon->type))
-        {
+        if (mon && mon->wont_attack() && !mon->is_firewood())
             friendlies = true;
-        }
 
         const int range = you.pos().distance_from(*ri);
         if (range <= upheaval_radius)
@@ -5784,17 +5776,11 @@ static bool _get_stomped(monster& mons)
 
 bool uskayaw_stomp()
 {
-    // Demonic guardians are immune but check for other friendlies
-    const bool friendlies = apply_monsters_around_square([] (monster& mons) {
-        return could_harm(&you, &mons) && mons_att_wont_attack(mons.attitude);
-    }, you.pos());
+    vector<coord_def> adj;
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        adj.push_back(*ai);
 
-    // XXX: this 'friendlies' wording feels a little odd, but we do use it in a
-    // a few places already; see spl-vortex.cc, disaster area, etc.
-    if (friendlies
-        && !yesno("There are friendlies around, "
-                  "are you sure you want to hurt them?",
-                  true, 'n'))
+    if (warn_about_bad_targets("The shockwave", adj, nullptr, "Stomp anyway?"))
     {
         canned_msg(MSG_OK);
         return false;
@@ -7180,14 +7166,9 @@ void makhleb_vessel_of_slaughter()
     transform(random_range(70, 110), transformation::slaughter);
     you.transform_uncancellable = true;
 
-    bolt damnation;
-    zappy(ZAP_HURL_DAMNATION, 100, false, damnation);
-    damnation.thrower = KILL_YOU;
-    damnation.source_id = MID_PLAYER;
-    damnation.is_explosion = true;
+    bolt damnation(you, ZAP_HURL_DAMNATION, 100);
     damnation.ex_size = 3;
     damnation.damage = dice_def(3, 7 + you.experience_level);
-    damnation.source = you.pos();
     damnation.target = you.pos();
     damnation.explode(true, true);
 }

@@ -123,7 +123,7 @@ vector<coord_def> get_ignition_blast_sources(const actor *agent,
                                              bool tracer = false);
 spret cast_ignition(const actor *caster, int pow, bool fail);
 
-spret cast_starburst(int pow, bool fail, bool tracer=false);
+spret cast_multibeam(spell_type spell, const coord_def& target, int pow, bool fail);
 
 void seeker_attack(monster& seeker, actor& target,
                    coord_def attack_pos = coord_def());
@@ -192,3 +192,7 @@ void do_catalyst_explosion(coord_def center, const item_def* wpn);
 spret cast_watery_grave();
 
 spret cast_golden_breath(bolt& beam, int power, bool fail);
+spret do_crystal_burst();
+
+spell_type dragon_vein_to_spell(dungeon_feature_type feat);
+void trigger_dragon_vein();

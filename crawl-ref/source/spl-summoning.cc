@@ -1284,7 +1284,7 @@ spret cast_malign_gateway(actor * caster, int pow, bool fail, bool test)
             caster->mid,
             is_player ? BEH_FRIENDLY
                       : attitude_creation_behavior(
-                          caster->as_monster()->attitude),
+                          caster->as_monster()->attitude()),
             "",
             pow);
 
@@ -1986,7 +1986,6 @@ bool trigger_battlesphere(actor* agent)
     beam.flavour     = BEAM_MMISSILE;
     beam.pierce      = false;
     beam.target      = target->pos();
-    beam.attitude    = agent->temp_attitude();
     beam.set_agent(agent);
 
     coord_def fallback_pos;
@@ -3941,13 +3940,7 @@ static void _paragon_tempest(const coord_def& target)
     {
         const coord_def old_pos = paragon->pos();
 
-        bolt visual;
-        visual.flavour = BEAM_VISUAL;
-        visual.colour = WHITE;
-        visual.source = old_pos;
-        visual.target = target;
-        visual.aimed_at_spot = true;
-        visual.fire();
+        bolt::visual_beam(old_pos, target, 15, WHITE).fire();
 
         paragon->move_to(target, MV_INTERNAL);
         paragon->check_redraw(old_pos);
@@ -4047,13 +4040,8 @@ spret cast_platinum_paragon(const coord_def& target, int pow, bool fail)
     paragon->ghost_demon_init();
 
     // Do the landing shockwave.
-    bolt shockwave;
-    shockwave.source_id = paragon->mid;
-    shockwave.source = target;
-    shockwave.target = target;
-    shockwave.is_explosion = true;
-    shockwave.ex_size = 1;
-    zappy(ZAP_PARAGON_IMPACT, pow, true, shockwave);
+    bolt shockwave(*paragon, ZAP_PARAGON_IMPACT, pow);
+    shockwave.source = shockwave.target = target;
     shockwave.explode(true, true);
 
     return spret::success;
@@ -4207,8 +4195,11 @@ static void _do_player_potion()
 
     mprf("Mmmm... tastes like %s.", potion_type_name(potion));
 
-    if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && oni_likes_potion(potion))
+    if (you.has_mutation(MUT_DRUNKEN_BRAWLING))
         oni_drunken_swing();
+
+    if (you.form == transformation::mistmane)
+        mistmane_quaff_potion(potion);
 
     if (you.magic_points < you.max_magic_points)
     {
@@ -4499,7 +4490,7 @@ bool splinterfrost_block_fragment(monster& block, const coord_def& aim)
     bolt beam;
     zappy(ZAP_SPLINTERFROST_FRAGMENT, pow, !agent->is_player(), beam);
     beam.source = block.pos();
-    beam.attitude = block.attitude;
+    beam.attitude = block.attitude();
     beam.set_agent(agent);
     beam.target = aim;
     beam.seen = true;

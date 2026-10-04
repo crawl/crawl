@@ -382,6 +382,14 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             env.invis_knowledge.update(*this);
         break;
 
+    case ENCH_INSUBSTANTIAL:
+        stop_being_caught();
+        stop_being_constricted();
+        del_ench(ENCH_STICKY_FLAME);
+        del_ench(ENCH_PETRIFYING, true, false);
+        del_ench(ENCH_BARBS);
+        break;
+
     default:
         break;
     }
@@ -430,9 +438,9 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             monster* twin = mons_find_elven_twin_of(this);
             if (twin && !twin->has_ench(ENCH_FRENZIED))
-                attitude = twin->attitude;
+                base_attitude = twin->base_attitude;
             else
-                attitude = ATT_HOSTILE;
+                base_attitude = ATT_HOSTILE;
         }
         mons_att_changed(this);
 
@@ -1103,6 +1111,20 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(*this, " divine shield fades away.", true);
         break;
 
+    case ENCH_SPELL_CHARGED:
+        if (mons_is_jade_crystal(type))
+        {
+            jademantle_crystal_uncharge(type);
+            if (!quiet)
+                simple_monster_message(*this, " is no longer glowing with power.");
+        }
+        break;
+
+    case ENCH_INSUBSTANTIAL:
+        if (!quiet && !is_insubstantial())
+            simple_monster_message(*this, " is no longer insubstantial");
+        break;
+
     default:
         break;
     }
@@ -1209,16 +1231,7 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
 
     // We use a beam tracer here since it is better at navigating
     // obstructing walls than merely comparing our relative positions
-    bolt tracer;
-    tracer.pierce          = true;
-    tracer.affects_nothing = true;
-    tracer.target          = mons->pos();
-    tracer.source          = you.pos();
-    tracer.set_is_tracer(true);
-    tracer.aimed_at_spot   = true;
-    tracer.fire();
-
-    const coord_def newpos = tracer.path_taken[0];
+    const coord_def newpos = bolt::path_tracer(you.pos(), mons->pos()).path_taken[0];
 
     if (!in_bounds(newpos)
         || is_feat_dangerous(env.grid(newpos))
@@ -1425,6 +1438,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_PREPARING_TO_LURK:
     case ENCH_PHASE_SHIFT:
     case ENCH_DIVINE_SHIELD:
+    case ENCH_INSUBSTANTIAL:
         decay_enchantment(en);
         break;
 
@@ -1590,7 +1604,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                     mpr("You hear a distant and violent thrashing sound.");
             }
 
-            attitude = ATT_HOSTILE;
+            base_attitude = ATT_HOSTILE;
             mons_att_changed(this);
             if (!crawl_state.game_is_arena())
                 behaviour_event(this, ME_ALERT, &you);
@@ -2186,6 +2200,7 @@ static const char *enchant_names[] =
     "diminished_spells", "orb_cooldown", "sunder_charge",
     "exposed", "briar_cooldown", "stampeding",
     "preparing_to_lurk", "phase_shift", "divine_shield",
+    "insubstantial",
     "buggy", // NUM_ENCHANTMENTS
 };
 

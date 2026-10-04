@@ -11,6 +11,8 @@ using std::vector;
 
 struct dice_def;
 
+constexpr int CENTIPEDE_BAUBLE_MINSKILL = 4;
+
 string manual_skill_names(bool short_text=false);
 
 void wind_blast(actor* agent, int pow, coord_def target);

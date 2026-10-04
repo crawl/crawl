@@ -1,0 +1,33 @@
+enum: JOB_MYSTIC
+name: "Mystic"
+category: Metamorph
+category_priority: 30
+str: 0
+int: 7
+dex: 5
+spells:
+  - SPELL_ICE_THORNS
+  - SPELL_SIROCCO
+  - SPELL_DRAGON_VEINS
+equipment:
+  - "robe"
+  - "vision talisman"
+  - "jade talisman"
+  - "potion of magic"
+recommended_species:
+  - djinni
+  - draconian
+  - oni
+  - human
+  - deep elf
+  - tengu
+  - gnoll
+skills:
+  spellcasting: 3
+  fire magic: 1
+  earth magic: 1
+  air magic: 1
+  ice magic: 1
+  dodging: 2
+  shapeshifting: 3
+create_enum: false

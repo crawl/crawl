@@ -46,6 +46,9 @@ static bool _banned_combination(job_type job, species_type species)
         return true;
     }
 
+    if (job == JOB_STALKER && species::undead_type(species) == US_UNDEAD)
+        return true;
+
     return false;
 }
 

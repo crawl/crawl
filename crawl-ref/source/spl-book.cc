@@ -265,6 +265,11 @@ static unordered_set<int> _player_nonbook_spells =
     // Form spells
     SPELL_RUST_BREATH,
     SPELL_GOLDEN_BREATH,
+    // 'Fake' spells used for triggering Dragon Veins
+    SPELL_DRAGON_VEIN_FIRE,
+    SPELL_DRAGON_VEIN_ICE,
+    SPELL_DRAGON_VEIN_AIR,
+    SPELL_DRAGON_VEIN_EARTH,
 };
 
 bool is_player_spell(spell_type which_spell)

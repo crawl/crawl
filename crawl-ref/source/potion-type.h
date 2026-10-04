@@ -55,6 +55,7 @@ enum potion_type
 #if TAG_MAJOR_VERSION == 34
     POT_DUMMY_AGILITY,
 #endif
+    POT_MIST,
     NUM_POTIONS
 };
 

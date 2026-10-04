@@ -301,7 +301,7 @@ bool maybe_bad_priest_monster(const monster &mons)
     // followers potentially getting cloned on level load, resulting in
     // duplicate mids or a corrupted mid cache depending on ordering. This is
     // now fixed up in tag_read_level_load.
-    return mons.alive() && mons.attitude == ATT_FRIENDLY
+    return mons.alive() && mons.base_attitude == ATT_FRIENDLY
                         && mons.god == GOD_NAMELESS;
 }
 
@@ -618,7 +618,7 @@ void win_apostle_challenge(monster& apostle)
 
     apostle.hit_points = apostle.max_hit_points;
     apostle.timeout_enchantments(10000, true);
-    apostle.attitude = ATT_GOOD_NEUTRAL;
+    apostle.base_attitude = ATT_GOOD_NEUTRAL;
     mons_att_changed(&apostle);
     apostle.stop_constricting_all();
     apostle.stop_being_constricted();
@@ -734,7 +734,7 @@ void beogh_recruit_apostle()
     real->hit_points = real->max_hit_points;
     real->timeout_enchantments();
     real->flags &= ~MF_APOSTLE_BAND;
-    real->attitude = ATT_FRIENDLY;
+    real->base_attitude = ATT_FRIENDLY;
     mons_make_god_gift(*real, GOD_BEOGH);
     mons_att_changed(real);
 
@@ -918,7 +918,7 @@ void beogh_swear_vengeance(const monster& apostle)
         if (mon && !mon->wont_attack() && !mon->is_firewood()
             // This isn't redundant with wont_attack here, but additionally
             // prevents marking frenzied apostles
-            && mon->attitude != ATT_FRIENDLY
+            && mon->base_attitude != ATT_FRIENDLY
             && !mon->is_summoned() && !mon->is_peripheral()
             && !mon->is_vengeance_target())
         {

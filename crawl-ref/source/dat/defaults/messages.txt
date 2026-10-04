@@ -88,6 +88,7 @@ msc += $boring:but (do no|doesn't do any) damage
 msc += $boring:waved at by a branch
 msc += $boring:lunges up near
 msc += $boring:is recalled by Beogh
+msc += $boring:finishes recrystalising
 
 # Ignore Uskayaw *** and **** power loss messages by default; they're spammy.
 msc += mute:Uskayaw will no longer force your foes to helplessly watch your dance\.

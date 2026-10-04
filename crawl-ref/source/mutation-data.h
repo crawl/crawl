@@ -2417,9 +2417,9 @@ static const mutation_def mut_data[] =
 
 { MUT_DRUNKEN_BRAWLING, 0, 1, mutflag::good,
   "drunken brawling",
-  {"Whenever you drink a healing potion, you attack all around you.", "", ""},
-  {"You brawl whenever you drink a healing potion.", "", ""},
-  {"You no longer brawl whenever you drink a healing potion.", "", ""},
+  {"Whenever you drink a potion, you attack all enemies around you.", "", ""},
+  {"You brawl whenever you drink a potion.", "", ""},
+  {"You no longer brawl whenever you drink a potion.", "", ""},
 },
 
 { MUT_ARTEFACT_ENCHANTING, 0, 1, mutflag::good,

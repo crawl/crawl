@@ -266,6 +266,7 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_POISON_VULN] = 0;
         you.duration[DUR_SLIMIFYING] = 0;
         you.duration[DUR_ANTISWIFT] = 0;
+        you.duration[DUR_SIROCCO_COOLDOWN] = 0;
         you.attribute[ATTR_DOOM] = 0;
         you.attribute[ATTR_OSTRACISM] = 0;
         delete_all_temp_mutations("Super heal");
@@ -275,6 +276,7 @@ void wizard_heal(bool super_heal)
         gain_draconian_breath_uses(MAX_DRACONIAN_BREATH);
         gain_grave_claw_soul(true, true);
         you.props[ENKINDLE_CHARGES_KEY].get_int() = enkindle_max_charges();
+        you.props.erase(HYPNOGECKO_LOST_TAIL_KEY);
 
         you.props.erase(COGLIN_GIZMO_KEY);
     }

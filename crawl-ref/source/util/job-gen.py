@@ -101,20 +101,20 @@ class Job(MutableMapping):
             self['tag_major_version_closer'] = ''
         self.print_unknown_warnings(s)
 
-JobGroup = collections.namedtuple('JobGroup', ['position', 'width', 'jobs'])
+JobGroup = collections.namedtuple('JobGroup', ['column', 'jobs'])
 JobGroupEntry = collections.namedtuple('JobGroupEntry', ['priority', 'enum'])
 JOB_GROUPS_TEMPLATE = {
-    'Warrior': JobGroup('coord_def(0, 0)', '15', []),
-    'Adventurer': JobGroup('coord_def(0, 7)', '15', []),
-    'Zealot': JobGroup('coord_def(15, 0)', '20', []),
-    'Warrior-mage': JobGroup('coord_def(35, 0)', '21', []),
-    'Mage': JobGroup('coord_def(56, 0)', '22', []),
+    'Warrior': JobGroup(0, []),
+    'Warrior-mage': JobGroup(0, []),
+    'Zealot': JobGroup(1, []),
+    'Adventurer': JobGroup(1, []),
+    'Metamorph': JobGroup(1, []),
+    'Mage': JobGroup(2, []),
 }
 JOB_GROUP_TEMPLATE = """
     {{
         "{name}",
         {position},
-        {width},
         {{ {jobs} }}
     }},
 """
@@ -199,11 +199,19 @@ def update_job_group(sg, s):
 
 def generate_job_groups(sg):
     out = ''
+    last_col = 0
+    row_count = 0
     for name, group in sg.items():
+
+        if group.column != last_col:
+            row_count = 0
+            last_col = group.column
+
+        group_pos = "coord_def(" + str(group.column) + ", " + str(row_count) + ")"
+        row_count += len(group.jobs) + 1
         out += JOB_GROUP_TEMPLATE.format(
             name = name,
-            position = group.position,
-            width = group.width,
+            position = group_pos,
             jobs = ', '.join(
                 e.enum for e in reversed(sorted(group.jobs))),
         )

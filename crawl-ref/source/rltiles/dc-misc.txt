@@ -401,6 +401,20 @@ slime_wave0 BOLT_SLIME_WAVE
 slime_wave1
 slime_merge BOLT_SLIME_MERGE
 
+jade_air_charge BOLT_JADE_CHARGE_AIR
+jade_earth_charge BOLT_JADE_CHARGE_EARTH
+jade_fire_charge BOLT_JADE_CHARGE_FIRE
+jade_ice_charge BOLT_JADE_CHARGE_ICE
+
+sirocco0 BOLT_SIROCCO
+sirocco1
+sirocco2
+sirocco3
+sirocco4
+sirocco5
+sirocco6
+sirocco7
+
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR
 indicator_2
@@ -535,6 +549,18 @@ cloud_rust0 CLOUD_RUST
 cloud_rust1
 cloud_rust2
 cloud_rust3
+
+cloud_glimmer0 CLOUD_GLIMMER
+cloud_glimmer1
+
+cloud_ice_dust0 CLOUD_FAINT_FROST
+cloud_ice_dust1
+cloud_ice_dust2
+
+cloud_blind0 CLOUD_BLIND
+cloud_blind1
+cloud_blind2
+cloud_blind3
 
 %sdir mon
 fungi_plants/ballistomycete_spore SPORE_OVERLAY

@@ -1004,8 +1004,8 @@ bool cell_vetoes_teleport(const coord_def cell, bool check_monsters,
     if (monster_at(cell) && check_monsters)
         return true;
 
-    // As do all clouds; this may change.
-    if (cloud_at(cell) && !wizard_tele)
+    // As do any harmful clouds.
+    if (harmful_cloud_at(cell) && !wizard_tele)
         return true;
 
     if (cell_is_solid(cell))
@@ -1165,7 +1165,7 @@ static bool _teleport_player(bool wizard_tele, string reason="")
 
 static bool _is_hostile_teleport_target(const monster& mon)
 {
-    return mon.temp_attitude() == ATT_HOSTILE
+    return mon.attitude() == ATT_HOSTILE
             && mons_is_threatening(mon)
             && !testbits(env.pgrid(mon.pos()), FPROP_NO_TELE_INTO);
 }
@@ -1978,7 +1978,7 @@ void attract_monster(monster &mon, int max_move)
     mprf("%s is attracted toward you.", mon.name(DESC_THE).c_str());
 
     _place_tloc_cloud(old_pos);
-    _place_tloc_cloud(ray.pos());
+    place_cloud(CLOUD_MAGIC_TRAIL, ray.pos(), random_range(3, 5), &you);
     mon.check_redraw(old_pos);
     mon.finalise_movement();
 }

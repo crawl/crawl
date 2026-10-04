@@ -111,11 +111,12 @@ static int _shot_score(coord_def target, coord_def aim, bool pierce, bool primar
     }
 }
 
-coord_def best_ranged_aim(const coord_def& target, bool pierce, bool primary_must_be_first)
+coord_def best_ranged_aim(const coord_def& target, bool pierce, bool primary_must_be_first,
+                          int max_range)
 {
     coord_def best_coord = target;
     int best_score = _shot_score(target, target, pierce, primary_must_be_first);
-    for (radius_iterator ri(you.pos(), you.current_vision, C_SQUARE, LOS_SOLID_SEE, true); ri; ++ri)
+    for (radius_iterator ri(you.pos(), min((int)you.current_vision, max_range), C_SQUARE, LOS_SOLID_SEE, true); ri; ++ri)
     {
         // Quickly exclude aim spots that could not possibly include the main target.
         if (_angle_between(you.pos(), target, *ri) > PI / 6)

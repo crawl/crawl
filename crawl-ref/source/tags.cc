@@ -2016,6 +2016,7 @@ static void _tag_construct_you_items(writer &th)
     for (int i = 0; i < ENDOFPACK; ++i)
         marshallItem(th, you.inv[i]);
     marshallByte(th, you.cur_talisman);
+    marshallByte(th, you.orig_wpn);
 
     _marshallFixedBitVector<NUM_RUNE_TYPES>(th, you.runes);
     marshallByte(th, you.obtainable_runes);
@@ -5127,6 +5128,13 @@ static void _tag_read_you_items(reader &th)
         you.cur_talisman = unmarshallByte(th);
 
 #if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_TEMPORARY_WEAPONS)
+        you.orig_wpn = -1;
+    else
+#endif
+        you.orig_wpn = unmarshallByte(th);
+
+#if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_EQUIP_SLOT_REWRITE)
         _convert_old_player_equipment();
 #endif
@@ -6840,7 +6848,7 @@ void marshallMonster(writer &th, const monster& m)
     if (parts & MP_SPELLS)
         _marshallSpells(th, m.spells);
     marshallByte(th, m.god);
-    marshallByte(th, m.attitude);
+    marshallByte(th, m.base_attitude);
     marshallShort(th, m.foe);
     marshallInt(th, m.foe_memory);
     marshallShort(th, m.damage_friendly);
@@ -8083,12 +8091,12 @@ void unmarshallMonster(reader &th, monster& m)
     }
 
     m.god      = static_cast<god_type>(unmarshallByte(th));
-    m.attitude = static_cast<mon_attitude_type>(unmarshallByte(th));
+    m.base_attitude = static_cast<mon_attitude_type>(unmarshallByte(th));
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_CUT_STRICT_NEUTRAL
-        && m.attitude == ATT_OLD_STRICT_NEUTRAL)
+        && m.base_attitude == ATT_OLD_STRICT_NEUTRAL)
     {
-        m.attitude = ATT_GOOD_NEUTRAL;
+        m.base_attitude = ATT_GOOD_NEUTRAL;
     }
 #endif
     m.foe      = unmarshallShort(th);
@@ -8381,7 +8389,7 @@ void unmarshallMonster(reader &th, monster& m)
     // with the original attitude stored in a prop.
     if (m.props.exists("old_attitude"))
     {
-        m.attitude = static_cast<mon_attitude_type>(
+        m.base_attitude = static_cast<mon_attitude_type>(
                                         m.props["old_attitude"].get_short());
         m.props.erase("old_attitude");
     }

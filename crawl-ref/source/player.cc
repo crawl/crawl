@@ -638,7 +638,9 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     }
 
     // First try: move monster onto your position.
-    bool swap = !monster_at(loc) && monster_habitable_grid(mons, loc);
+    // (The player pushes jade crystals instead, so they don't get caught behind them.)
+    bool swap = !mons_is_jade_crystal(mons->type)
+                && !monster_at(loc) && monster_habitable_grid(mons, loc);
 
     // Choose an appropriate habitat square at random around the target.
     if (!swap)
@@ -647,6 +649,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)
             if (!monster_at(*ai) && monster_habitable_grid(mons, *ai)
+                && !feat_is_trap(env.grid(*ai))
                 && one_chance_in(++num_found))
             {
                 loc = *ai;
@@ -875,12 +878,22 @@ void player::finalise_movement(const actor* /*to_blame*/)
 
     if (last_move_pos != pos())
     {
-        cloud_struct* cloud = cloud_at(pos());
-        if (cloud && cloud->type == CLOUD_BLASTMOTES)
-            explode_blastmotes_at(pos()); // schedules a fineff
+        if (cloud_struct* cloud = cloud_at(pos()))
+        {
+            if (cloud->type == CLOUD_BLASTMOTES)
+                explode_blastmotes_at(pos()); // schedules a fineff
+            else if (cloud->type == CLOUD_GLIMMER)
+                enter_glimmer_cloud(*this, pos());
+        }
 
         if (env.grid(pos()) == DNGN_BINDING_SIGIL)
             trigger_binding_sigil(you);
+
+        if (feat_is_dragon_vein(env.grid(pos())))
+            trigger_dragon_vein();
+
+        if (env.grid(pos()) == DNGN_ICE_THORNS)
+            ice_thorns_trigger(you, pos());
 
         apply_cloud_trail(last_move_pos);
 
@@ -3150,6 +3163,7 @@ static void _revenant_spell_gift()
         {SPELL_KINETIC_GRAPNEL, "the bite of steel piercing you"},
         {SPELL_SANDBLAST, "the sting of sand against your skin"},
         {SPELL_POISONOUS_VAPOURS, "the taste of poison filling your lungs"},
+        {SPELL_ICE_THORNS, "icy daggers piercing you"}
     };
 
     vector<spell_type> gift_possibilities;
@@ -3588,6 +3602,9 @@ int player_stealth()
     {
         stealth += (STEALTH_PIP * 2);
     }
+
+    if (you.form == transformation::hypnogecko)
+        stealth += STEALTH_PIP;
 
     if (feat_is_water(env.grid(you.pos())))
     {
@@ -5670,6 +5687,7 @@ player::player()
     form            = transformation::none;
     default_form    = transformation::none;
     cur_talisman    = -1;
+    orig_wpn        = -1;
 
     for (auto &item : inv)
         item.clear();
@@ -6500,6 +6518,32 @@ int player::skill(skill_type sk, int scale, bool real, bool include_temp) const
         level += walking_scroll_skill_bonus(scale);
     }
 
+    if (you.form == transformation::jademantle)
+    {
+        switch (sk)
+        {
+            case SK_ALCHEMY:
+            case SK_NECROMANCY:
+            case SK_SUMMONINGS:
+            case SK_CONJURATIONS:
+            case SK_FORGECRAFT:
+            case SK_TRANSLOCATIONS:
+            case SK_HEXES:
+                level = level * 2 / 3;
+                break;
+
+            case SK_FIRE_MAGIC:
+            case SK_ICE_MAGIC:
+            case SK_EARTH_MAGIC:
+            case SK_AIR_MAGIC:
+               level = level + (2 * scale);
+               break;
+
+            default:
+                break;
+        }
+    }
+
     if (include_temp && skill_has_dilettante_penalty(sk))
     {
         if (sk <= SK_LAST_WEAPON || sk ==  SK_UNARMED_COMBAT)
@@ -7176,7 +7220,9 @@ bool player::is_insubstantial() const
 {
     return form == transformation::wisp
         || form == transformation::storm
-        || has_mutation(MUT_INSUBSTANTIAL);
+        || duration[DUR_INSUBSTANTIAL]
+        || has_mutation(MUT_INSUBSTANTIAL)
+        || has_mutation(MUT_FORMLESS);
 }
 
 bool player::can_silent_cast() const
@@ -7313,7 +7359,7 @@ bool player::res_constrict() const
 
 int player::res_blind() const
 {
-    if (bool(holiness() & MH_PLANT))
+    if (bool(holiness() & MH_PLANT) || you.form == transformation::mistmane)
         return 2;
     else if (undead_state() != US_ALIVE || you.form == transformation::jelly)
         return 1;
@@ -8055,7 +8101,8 @@ bool player::innate_sinv() const
 
     if (form == transformation::jelly
         || form == transformation::sphinx
-        || form == transformation::vampire)
+        || form == transformation::vampire
+        || form == transformation::vision)
     {
         return true;
     }

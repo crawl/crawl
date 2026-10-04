@@ -202,7 +202,7 @@ static void _do_rime_yak_freeze(coord_def targ)
     // Used to tell the game to run the wall damage phase after each player
     // turn. Just needs to be longer than the max possible duration of walls
     // which may exist.
-    you.duration[DUR_RIME_YAK_AURA] = 70;
+    you.duration[DUR_FRIGID_WALLS_ACTIVE] = 70;
 }
 
 bool melee_attack::handle_phase_attempted()
@@ -866,6 +866,12 @@ bool melee_attack::handle_phase_hit()
         if (crawl_state.game_is_hints())
             Hints.hints_melee_counter++;
 
+        if (weapon && weapon->summoned())
+        {
+            if (--mutable_wpn->props[ATTACKS_REMAINING_KEY].get_int() <= 0)
+                schedule_ephemeral_weapon_end(*mutable_wpn);
+        }
+
         // TODO: Remove this (placed here so I can get rid of player_attack)
         if (have_passive(passive_t::convert_orcs)
             && mons_genus(defender->mons_species()) == MONS_ORC
@@ -981,6 +987,9 @@ bool melee_attack::handle_phase_hit()
 
     if (weapon && damage_brand == SPWPN_CONCUSSION)
         handle_concussion_brand(is_unrandom_artefact(*weapon, UNRAND_CARINA));
+
+    if (weapon && weapon->is_type(OBJ_WEAPONS, WPN_CENTIPEDE))
+        handle_centipede_poison(weapon->plus);
 
     if (weapon && testbits(weapon->flags, ISFLAG_CHAOTIC)
         && defender->alive())
@@ -1370,7 +1379,7 @@ void melee_attack::handle_phase_killed()
                             && you.has_mutation(MUT_MAKHLEB_MARK_EXECUTION)
                             && !you.duration[DUR_EXECUTION]
                             && !defender->is_firewood()
-                            && defender->real_attitude() != ATT_FRIENDLY
+                            && !defender->wont_attack()
                             && one_chance_in(5)
     // It's unsatisfying to repeatedly trigger a transformation on the final
     // monster of a group, so let's not cause the player that disappointment.
@@ -1492,6 +1501,12 @@ void melee_attack::handle_phase_end()
     // Give our rending blade one trigger per hit we land.
     if (did_hit && attacker->is_player() && you.props.exists(RENDING_BLADE_MP_KEY))
         trigger_rending_blade();
+
+    if (attacker->is_player() && you.form == transformation::mistmane
+        && you.duration[DUR_VAPOURISE] && defender)
+    {
+        mistmane_spew_potion(defender->pos());
+    }
 
     // Dead but not yet cleaned up, most likely due to an attack flavour that
     // destroys the attacker on-hit.
@@ -5010,14 +5025,10 @@ void melee_attack::do_valour_beam()
     if (!found_targ)
         return;
 
-    bolt beam;
-    zappy(ZAP_VALOUR_BEAM, weapon_damage(), attacker->is_monster(), beam);
-    beam.set_agent(attacker);
+    bolt beam(*attacker, ZAP_VALOUR_BEAM, weapon_damage());
     beam.source = attacker->pos();
-    beam.target = defender->pos();
     beam.range = 4;
     beam.stop_at_allies = true;
-    beam.attitude = attacker->temp_attitude();
     beam.ray = ray;
     beam.chose_ray = true;
 
@@ -5027,6 +5038,23 @@ void melee_attack::do_valour_beam()
         beam.draw_delay = 5;
 
     beam.fire();
+}
+
+void melee_attack::handle_centipede_poison(int power) const
+{
+    if (defender->res_poison() >= 3
+        || defender->res_poison() && !one_chance_in(3))
+    {
+        return;
+    }
+
+    if (x_chance_in_y(power + 1, 4))
+        defender->poison(attacker, random_range(10, 20) + power * 5);
+
+    if (x_chance_in_y(power - 4, power + 6))
+        defender->paralyse(attacker, roll_dice(1, 3));
+    else if (x_chance_in_y(power - 2, power + 4))
+        defender->slow_down(attacker, roll_dice(1, 3));
 }
 
 bool melee_attack::do_knockback(bool slippery)
@@ -5444,8 +5472,8 @@ bool coglin_spellmotor_attack()
     if (delay > 10 && !x_chance_in_y(10, delay))
         return false;
 
-    // Gather all possible targets in attack range.
-    vector<actor*> targets = get_player_attack_targets();
+    // Gather all known targets in attack range.
+    vector<actor*> targets = get_player_attack_targets(true);
 
     // Test that we have at least one valid non-prompting attack
     vector<actor*> targs;
@@ -5485,8 +5513,8 @@ bool spellclaws_attack(int spell_level)
         return false;
     }
 
-    // Gather all possible targets in attack range
-    vector<actor*> targets = get_player_attack_targets();
+    // Gather all known targets in attack range
+    vector<actor*> targets = get_player_attack_targets(true);
 
     // Then choose the one with the *most* current health (that wouldn't cause
     // a warning prompt for some reason).

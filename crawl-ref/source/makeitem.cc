@@ -2224,7 +2224,8 @@ int items(bool allow_uniques,
 
     case OBJ_BAUBLES:
         item.base_type = OBJ_BAUBLES;
-        item.sub_type = BAUBLE_FLUX;
+        item.sub_type = force_type != OBJ_RANDOM ? force_type
+                        : one_chance_in(3) ? BAUBLE_CENTIPEDE : BAUBLE_FLUX;
         item.quantity = random_range(2, 3);
         break;
 

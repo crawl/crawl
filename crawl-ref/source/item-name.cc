@@ -25,6 +25,7 @@
 #include "env.h" // LSTATE_STILL_WINDS
 #include "errors.h" // sysfail
 #include "evoke.h"
+#include "fight.h"
 #include "god-item.h"
 #include "god-passive.h" // passive_t::want_curses, no_haste
 #include "invent.h"
@@ -733,6 +734,8 @@ const char* potion_type_name(int potiontype)
     case POT_BENEFICIAL_MUTATION:  return "beneficial mutation";
     case POT_AGILITY:           return "agility";
 
+    case POT_MIST:              return "mist";
+
     // FIXME: Remove this once known-items no longer uses this as a sentinel.
     default:
                                 return "bugginess";
@@ -1074,6 +1077,16 @@ const char* gizmo_effect_name(int type)
 
         default:
         case SPGIZMO_NORMAL:        return "";
+    }
+}
+
+static const char* _bauble_type_name(int type)
+{
+    switch (static_cast<bauble_type>(type))
+    {
+        default:
+        case BAUBLE_FLUX:       return "flux";
+        case BAUBLE_CENTIPEDE:  return "centipede";
     }
 }
 
@@ -1949,11 +1962,12 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     break;
 
     case OBJ_BAUBLES:
-        buff << "flux bauble";
-    break;
+        buff << _bauble_type_name(sub_type) << " bauble";
+        break;
+
     case OBJ_DETECTED:
         buff << "detected item";
-    break;
+        break;
 
     default:
         buff << "!";
@@ -2055,7 +2069,7 @@ void check_if_everything_is_identified()
         for (const auto s : all_item_subtypes(t))
         {
             if (!item_type_known(t, s)
-                && !item_known_excluded_from_set(t, s)
+                && !item_known_not_to_generate(t, s)
                 && unidentified++)
             {
                 you.props.erase(IDENTIFIED_ALL_KEY);
@@ -2925,17 +2939,6 @@ bool is_good_item(const item_def &item)
         if (!you.can_drink(false)) // still want to pick them up in lichform?
             return false;
 
-        // Recolor healing potions to indicate their additional goodness
-        //
-        // XX: By default, this doesn't actually change the color of anything
-        //     but !ambrosia, since yellow for 'emergency' takes priority over
-        //     cyan for 'good'. Should this get a *new* color?
-        if (you.has_mutation(MUT_DRUNKEN_BRAWLING)
-            && oni_likes_potion(static_cast<potion_type>(item.sub_type)))
-        {
-            return true;
-        }
-
         switch (item.sub_type)
         {
         case POT_EXPERIENCE:
@@ -2970,7 +2973,7 @@ bool is_bad_item(const item_def &item)
         switch (item.sub_type)
         {
         case POT_MOONSHINE:
-            return true;
+            return !you.has_mutation(MUT_DRUNKEN_BRAWLING);
         default:
             return false;
         CASE_REMOVED_POTIONS(item.sub_type);
@@ -3040,6 +3043,8 @@ bool is_dangerous_item(const item_def &item, bool temp)
             // intentional fallthrough
         case POT_LIGNIFY:
         case POT_ATTRACTION:
+        // Is usually useless, but Oni can drink them to attack things.
+        case POT_MOONSHINE:
             return true;
         default:
             return false;
@@ -3280,6 +3285,10 @@ string cannot_drink_item_reason(const item_def *item, bool temp,
 
     // potion of invis can be used even if temp useless, a warning is printed
     if (use_check && ptyp == POT_INVISIBILITY)
+        return "";
+
+    // Oni can drink any potion at any time, provided an enemy is nearby.
+    if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && !get_player_attack_targets().empty())
         return "";
 
     get_potion_effect(ptyp)->can_quaff(&r, true);

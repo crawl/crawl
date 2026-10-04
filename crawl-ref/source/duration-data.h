@@ -7,6 +7,7 @@
 #include "areas.h"
 #include "act-iter.h"
 #include "cloud.h"
+#include "item-name.h"
 #include "mon-death.h"
 #include "god-abil.h"
 #include "god-companions.h"
@@ -21,6 +22,7 @@
 #include "stairs.h" // rise_through_ceiling
 #include "tag-version.h"
 #include "timed-effects.h"
+#include "transform.h"
 
 
 static void _end_invis()
@@ -95,6 +97,13 @@ static void _end_exegesis()
     mprf(MSGCH_DURATION, "Your divinely inspired understanding of %s fades.",
                          spell_title(static_cast<spell_type>(you.props[EXEGESIS_SPELL].get_int())));
     you.props.erase(EXEGESIS_SPELL);
+}
+
+static void _end_vapourise()
+{
+  mprf(MSGCH_DURATION, "Your vapourised %s dissipates without effect.",
+       potion_type_name(static_cast<potion_type>(you.props[MISTMANE_VAPOUR_KEY].get_int())));
+  you.props.erase(MISTMANE_VAPOUR_KEY);
 }
 
 // properties of the duration.
@@ -804,6 +813,19 @@ static const duration_def duration_data[] =
     { DUR_STAMPEDE, WHITE, "Stampede", "", "", "", D_NO_FLAGS, {{ "You stop stampeding."}}},
     { DUR_SALVO, LIGHTBLUE, "Salvo", "", "", "", D_NO_FLAGS},
     { DUR_TAILWIND, LIGHTBLUE, "Tailwind", "ready to rush forward", "tailwind", "", D_NO_FLAGS, {{"Your tailwind grows less brisk."}}},
+    { DUR_SIROCCO_COOLDOWN,
+        YELLOW, "-Sirocco",
+        "on sirocco cooldown", "sirocco cooldown",
+        "You are unable to cast Sirocco.", D_COOLDOWN, {{"You feel hot winds gather around you again."}}},
+    { DUR_INSUBSTANTIAL,
+      LIGHTBLUE, "Insubst",
+      "insubstantial", "insubstantial",
+      "You are insubstantial.", D_DISPELLABLE,
+      {{ "", []() {
+          if (!you.is_insubstantial())
+            mprf(MSGCH_DURATION, "You feel more solid again.");
+          }
+      }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -882,7 +904,7 @@ static const duration_def duration_data[] =
     { DUR_PHALANX_BARRIER, 0, "", "phalanx barrier", "phalanx barrier", "", D_NO_FLAGS},
     { DUR_TRICKSTER_GRACE, 0, "", "", "trickster", "", D_NO_FLAGS, {{""}}},
     { DUR_DROWSY, 0, "Drowsy", "", "drowsy", "", D_NEGATIVE, {{"You feel less drowsy."}}},
-    { DUR_RIME_YAK_AURA, 0, "", "", "cold aura", "", D_NO_FLAGS, {{""}}},
+    { DUR_FRIGID_WALLS_ACTIVE, 0, "", "", "cold aura", "", D_NO_FLAGS, {{""}}},
     { DUR_AUTODODGE, 0, "", "", "autododge", "", D_NO_FLAGS},
     { DUR_DAZED, 0, "", "", "dazed", "", D_NEGATIVE},
     { DUR_CONSTRICTED, 0, "", "", "constricted", "", D_NO_FLAGS},
@@ -893,6 +915,7 @@ static const duration_def duration_data[] =
        {{"The regenerative ooze finishes dripping off of you."}}},
     { DUR_INDOMITABLE, LIGHTBLUE, "Indom", "", "", "", D_NO_FLAGS},
     { DUR_EXEGESIS, WHITE, "Exegesis", "", "", "", D_NO_FLAGS, {{"", _end_exegesis}}},
+    { DUR_VAPOURISE, WHITE, "Vapour", "", "vapourise_ready", "", D_NO_FLAGS, {{"", _end_vapourise}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

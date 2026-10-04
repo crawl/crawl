@@ -393,6 +393,9 @@ bool dec_inv_item_quantity(int obj, int amount)
 
         if (you.last_fired == obj)
             you.last_fired = -1;
+
+        if (you.orig_wpn == obj)
+            you.orig_wpn = -1;
     }
     else
         you.inv[obj].quantity -= amount;
@@ -2819,12 +2822,6 @@ bool drop_item(int item_dropped, int quant_drop)
 
     if (item_is_equipped(item))
     {
-        if (item.base_type == OBJ_GIZMOS)
-        {
-            mpr("That is permanently installed in your exoskeleton.");
-            return false;
-        }
-
         const bool is_wpn = is_weapon(item);
         if (!Options.easy_unequip && !is_wpn)
         {
@@ -3626,7 +3623,7 @@ int get_max_subtype(object_class_type base_type)
         NUM_TALISMANS,
         NUM_GEM_TYPES,
         1,
-        1,
+        NUM_BAUBLES,
     };
     COMPILE_CHECK(ARRAYSZ(max_subtype) == NUM_OBJECT_CLASSES);
 
@@ -4202,10 +4199,16 @@ colour_t item_def::talisman_colour() const
         return BROWN;
     case TALISMAN_INKWELL:
         return BLUE;
+    case TALISMAN_VISION:
+        return ETC_MAGIC;
+    case TALISMAN_GECKO:
+        return ETC_SHIMMER_BLUE;
     case TALISMAN_PROTEAN:
         return ETC_RANDOM;
     case TALISMAN_RIMEHORN:
         return LIGHTBLUE;
+    case TALISMAN_MIST:
+        return ETC_SMOKE;
     case TALISMAN_SPIDER:
         return LIGHTGREEN;
     case TALISMAN_AQUA:
@@ -4216,6 +4219,8 @@ colour_t item_def::talisman_colour() const
         return ETC_POISON;
     case TALISMAN_SPORE:
         return BROWN;
+    case TALISMAN_JADE:
+        return ETC_ELEMENTAL;
     case TALISMAN_MAW:
         return ETC_BLOOD;
     case TALISMAN_SERPENT:
@@ -5009,7 +5014,7 @@ bool maybe_identify_base_type(item_def &item)
     for (int i = item_base; i < item_count + item_base; i++)
     {
         const bool identified = you.type_ids[item.base_type][i]
-                             || item_known_excluded_from_set(item.base_type, i);
+                             || item_known_not_to_generate(item.base_type, i);
         ident_count += identified ? 1 : 0;
     }
 

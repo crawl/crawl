@@ -1458,6 +1458,37 @@ LUAFN(you_zot_orb_monster)
     return 1;
 }
 
+/*** Which of your jademantle crystals are charged?
+ * @treturn string A description of which crystals are currently charged.
+ * @function jademantle_crystals_desc
+ */
+LUAFN(you_jademantle_crystals_desc)
+{
+    if (!you.props.exists(JADEMANTLE_CRYSTAL_KEY))
+        lua_pushstring(ls, "None of your crystals are currently charged.");
+    else
+    {
+        const int elem = you.props[JADEMANTLE_CRYSTAL_KEY].get_int();
+        vector<string> lit_crystals;
+
+        if (elem & (int)spschool::earth)
+            lit_crystals.push_back("earthen");
+        if (elem & (int)spschool::fire)
+            lit_crystals.push_back("fiery");
+        if (elem & (int)spschool::air)
+            lit_crystals.push_back("airy");
+        if (elem & (int)spschool::ice)
+            lit_crystals.push_back("icy");
+
+        string msg = make_stringf("Your %s crystal%s are infused with energy.",
+                                  comma_separated_line(lit_crystals.begin(), lit_crystals.end()).c_str(),
+                                  lit_crystals.size() > 1 ? "s" : "");
+        lua_pushstring(ls, msg.c_str());
+    }
+
+    return 1;
+}
+
 static const struct luaL_Reg you_clib[] =
 {
     { "turn_is_over", you_turn_is_over },
@@ -1606,6 +1637,8 @@ static const struct luaL_Reg you_clib[] =
     { "is_web_immune",     you_is_web_immune },
     { "has_good_stab",      you_has_good_stab },
     { "zot_orb_monster", you_zot_orb_monster },
+
+    { "jademantle_crystals_desc", you_jademantle_crystals_desc },
 
     { nullptr, nullptr },
 };

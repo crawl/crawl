@@ -138,6 +138,21 @@ struct bolt
 {
     bolt();
 
+    // Some convenience constructors for commonly-used setup.
+    bolt(const actor& agent, spell_type origin_spell, int power);
+    bolt(const actor& agent, zap_type ztype, int power);
+
+    // Returns a simple visual beam, used for some vfx.
+    static bolt visual_beam(const coord_def& start, const coord_def& end,
+                            int draw_delay = 15, colour_t colour = WHITE,
+                            tileidx_t tile = 0);
+
+    // Returns a bolt that has traced a path between two given coordinates.
+    // (Its path_taken member will already contain useful information.)
+    static bolt path_tracer(const coord_def& start, const coord_def& end,
+                            int range = LOS_RADIUS,
+                            spell_type origin_spell = SPELL_NO_SPELL);
+
     // INPUT parameters set by caller
     spell_type  origin_spell = SPELL_NO_SPELL; // may remain SPELL_NO_SPELL for
                                                // non-spell beams.
@@ -168,6 +183,8 @@ struct bolt
                                   // something. If not set, will use
                                   // "engulfs" if an explosion or cloud
                                   // and "hits" otherwise.
+    bool   plural = false;        // Whether the projectile name is plural.
+                                  // (To control 'does no damage' / 'do no damage')
     int    loudness = 0;          // Noise level on hitting or exploding.
     string hit_noise_msg = "";    // Message to give player for each hit
                                   // monster that isn't in view.
@@ -185,8 +202,8 @@ struct bolt
 
     bool   affects_nothing = false; // should not hit monsters or features
 
-    bool   effect_known = true;   // did we _know_ this would happen?
-    bool   effect_wanton = false; // could we have guessed it would happen?
+    bool   no_anger_allies = false;  // Damage from this won't anger allies
+                                     // or otherwise be blamed on the player.
 
     bool   no_saving_throw = false;   // whether to ignore any saving throw
                                       // this beam might otherwise have
@@ -266,6 +283,7 @@ private:
 
     bool can_trigger_bullseye = false;
 
+    bool did_initialisation = false;
 public:
     bool is_enchantment() const; // no block/dodge, use willpower
     ac_type effective_ac_rule() const;
@@ -286,6 +304,7 @@ public:
     void fire();
     void fire(beam_tracer& tracer);
     void fire_as_ranged_attack(ranged_attack& atk);
+    bool fire_incremental();
 
     // Returns member short_name if set, otherwise some reasonable string
     // for a short name, most likely the name of the beam's flavour.
@@ -301,7 +320,6 @@ public:
     bool ignores_player() const;
     bool can_knockback(int dam = -1) const;
     bool can_pull(const actor &act, int dam = -1) const;
-    bool god_cares() const; // Will the god be unforgiving about this beam?
     bool is_harmless(const monster* mon) const;
     bool nasty_to(const monster* mon) const;
     bool nice_to(const monster_info& mi) const;
@@ -330,6 +348,10 @@ public:
 private:
     void do_fire();
     void initialise_fire();
+
+    // Handles a single step of the beam firing.
+    bool do_fire_step(bool ignore_wall_monsters = false);
+    void do_post_fire();
 
     // Lots of properties of the beam.
     coord_def pos() const;
@@ -448,6 +470,26 @@ public:
 private:
     vector<coord_def> cells;
     size_t index = 0;
+};
+
+enum multi_beam_shape
+{
+    MULTI_BEAM_FAN,     // Each beam fans out in compass directions from the source
+    MULTI_BEAM_WIDE,    // Each beam fires in the same direction
+};
+struct multi_beam
+{
+    multi_beam(bolt& definition, multi_beam_shape shape, int width);
+
+    targeting_tracer trace();
+    void trace(player_beam_tracer& tracer);
+
+    void fire();
+
+    vector<coord_def> get_all_affected_cells();
+
+private:
+    vector<bolt> internal_beams;
 };
 
 int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,

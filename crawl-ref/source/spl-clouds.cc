@@ -82,17 +82,9 @@ void explode_blastmotes_at(coord_def p)
     // associated with the cloud being deleted.
     delete_cloud(p);
 
-    bolt beam;
-    zappy(ZAP_BLASTMOTE, you.props[BLASTMOTE_POWER_KEY], false, beam);
-
+    bolt beam(you, ZAP_BLASTMOTE, you.props[BLASTMOTE_POWER_KEY]);
     beam.target        = p;
     beam.source        = p;
-    beam.source_id     = MID_PLAYER;
-    beam.attitude      = ATT_FRIENDLY;
-    beam.thrower       = KILL_YOU_MISSILE;
-    beam.is_explosion  = true;
-    beam.ex_size       = 1;
-
     const string boom  = "The cloud of blastmotes explodes!";
     const string sanct = "By Zin's power, the fiery explosion is contained.";
     schedule_explosion_fineff(beam, boom, sanct, EXPLOSION_FINEFF_CONCUSSION,

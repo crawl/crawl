@@ -6,6 +6,7 @@
 #pragma once
 
 #include "description-level-type.h"
+#include "item-status-flag-type.h"
 #include "level-id.h"
 #include "monster-type.h"
 #include "object-class-type.h"
@@ -147,6 +148,8 @@ public:
 
     /** Is this item fully identified? */
     bool is_identified() const;
+
+    bool summoned() const { return flags & ISFLAG_SUMMONED; };
 
     /// If this is a gem, what colour is it in console?
     colour_t gem_colour() const;

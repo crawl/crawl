@@ -1154,7 +1154,7 @@ static bool _shaft_safely()
 
         if (!in_bounds(pos)
             || is_feat_dangerous(env.grid(pos), true)
-            || cloud_at(pos) // XXX: ignore if is_harmless_cloud?
+            || harmful_cloud_at(pos)
             || monster_at(pos)
             || env.pgrid(pos) & FPROP_NO_TELE_INTO
             || _nonfriendly_nearby(pos))
@@ -2295,13 +2295,16 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     crawl_view.set_player_at(you.pos(), load_mode != LOAD_VISITOR);
 
-    // Actually "move" the followers if applicable.
+    // Place transiting monsters.
     if (load_mode == LOAD_ENTER_LEVEL)
+    {
         place_followers();
-
-    // Load monsters in transit.
-    if (load_mode == LOAD_ENTER_LEVEL)
         place_transiting_monsters();
+
+        // Silently recreate crystals on new floor.
+        if (you.form == transformation::jademantle)
+            jademantle_handle_crystal_revival(true);
+    }
 
     if (just_created_level && make_changes)
         replace_boris();

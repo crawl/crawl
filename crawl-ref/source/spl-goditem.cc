@@ -1221,7 +1221,7 @@ void setup_cleansing_flame_beam(bolt &beam, int pow,
 
         beam.thrower   = KILL_MON;
         beam.source_id = attacker->mid;
-        beam.attitude  = attacker->temp_attitude();
+        beam.attitude  = attacker->attitude();
     }
 }
 

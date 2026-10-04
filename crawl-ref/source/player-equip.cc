@@ -1712,12 +1712,15 @@ void equip_effect(int item_slot, bool unmeld, bool msg)
         ash_check_bondage();
 }
 
-static void _unequip_maybe_destroy_item(item_def& item)
+static void _unequip_maybe_destroy_item(item_def& item, bool quiet)
 {
     // Cursed and fragile items should always be destroyed on unequip.
     if ((is_artefact(item) && artefact_property(item, ARTP_FRAGILE))
-        || item.cursed())
+        || item.cursed() || item.summoned())
     {
+        if (item.summoned() && !quiet)
+            mprf("%s crumbles into nothing.", item.name(DESC_YOUR).c_str());
+
         dec_inv_item_quantity(item.link, 1);
     }
 }
@@ -1743,7 +1746,7 @@ void unequip_effect(int item_slot, bool meld, bool msg, bool was_melded,
         invalidate_agrid();
 
     if (!meld && maybe_destroy)
-        _unequip_maybe_destroy_item(item);
+        _unequip_maybe_destroy_item(item, !msg);
 }
 
 ///////////////////////////////////////////////////////////
@@ -1915,6 +1918,14 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
     int special = get_weapon_brand(item);
     if (showMsgs && item.base_type != OBJ_STAVES)
     {
+        // Making the assumption that this is the only way to wield one of these.
+        if (!unmeld && item.sub_type == WPN_CENTIPEDE)
+        {
+            mprf("You grip the centipede bauble in your %s and it winds around "
+                 "your %s and fuses with it.",
+                 you.hand_name(false).c_str(), you.arm_name(false).c_str());
+        }
+
         const string item_name = item.name(DESC_YOUR);
         switch (special)
         {

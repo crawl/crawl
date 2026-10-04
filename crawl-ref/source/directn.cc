@@ -99,7 +99,7 @@ static void _wizard_make_friendly(monster* m)
     if (m == nullptr)
         return;
 
-    mon_attitude_type att = m->attitude;
+    mon_attitude_type att = m->base_attitude;
 
     // Propogate attitude change up to the ultimate head, if this is a tentacle.
     m = &get_tentacle_head(*m);
@@ -111,7 +111,7 @@ static void _wizard_make_friendly(monster* m)
     switch (att)
     {
     case ATT_FRIENDLY:
-        m->attitude = ATT_GOOD_NEUTRAL;
+        m->base_attitude = ATT_GOOD_NEUTRAL;
         m->flags &= ~MF_NO_REWARD;
         m->flags |= MF_WAS_NEUTRAL;
         break;
@@ -119,14 +119,14 @@ static void _wizard_make_friendly(monster* m)
 #if TAG_MAJOR_VERSION == 34
     case ATT_OLD_STRICT_NEUTRAL:
 #endif
-        m->attitude = ATT_NEUTRAL;
+        m->base_attitude = ATT_NEUTRAL;
         break;
     case ATT_NEUTRAL:
-        m->attitude = ATT_HOSTILE;
+        m->base_attitude = ATT_HOSTILE;
         m->flags &= ~MF_WAS_NEUTRAL;
         break;
     case ATT_HOSTILE:
-        m->attitude = ATT_FRIENDLY;
+        m->base_attitude = ATT_FRIENDLY;
         m->flags |= MF_NO_REWARD;
         break;
     // This attitude is transient, so this should be impossible.
@@ -2828,10 +2828,9 @@ bool full_describe_square(const coord_def &c, bool cleanup)
         ++quantity;
     }
 
-    // I'm not sure if features should be included. But it seems reasonable to
-    // at least include what full_describe_view shows
-    if (feat_stair_direction(feat) != CMD_NO_CMD || feat_is_trap(feat)
-        || feat == DNGN_MOULD_PATCH)
+    // Allow more important (and less common) features to be examined even if
+    // there's an item on top of them.
+    if (show_terrain_before_item(feat) || feat == DNGN_DECORATIVE_FLOOR)
     {
         list_features.push_back(c);
         ++quantity;
@@ -2932,7 +2931,7 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
         return true;
     case TARG_HOSTILE:
     case TARG_HOSTILE_OR_EMPTY:
-        return mons_attitude(*mon) == ATT_HOSTILE
+        return mon->attitude() == ATT_HOSTILE
             || mon->has_ench(ENCH_FRENZIED);
     case TARG_FRIEND:
         return mon->friendly();
@@ -3188,7 +3187,9 @@ string feature_description_at(const coord_def& where, bool covering,
             covering_description = ", covered with ice";
 
         if (is_temp_terrain(where) && grid != DNGN_BINDING_SIGIL
-                                   && grid != DNGN_TRAP_DISPERSAL_INACTIVE)
+                                   && grid != DNGN_TRAP_DISPERSAL_INACTIVE
+                                   && grid != DNGN_ICE_THORNS
+                                   && !feat_is_dragon_vein(grid))
         {
             covering_description = ", temporary";
         }

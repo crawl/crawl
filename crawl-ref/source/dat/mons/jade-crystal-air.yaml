@@ -1,0 +1,18 @@
+enum: jade_crystal_air
+name: "airy jade"
+glyph: {char: "¤", colour: lightcyan}
+flags: [flies, see_invis, unblindable, no_poly_to, avatar]
+resists: {elec: 3}
+exp: 0
+holiness: [nonliving]
+will: invuln
+attacks:
+hd: 5
+hp_10x: 140
+ac: 5
+ev: 10
+habitat: wall
+intelligence: brainless
+speed: 40
+size: little
+shape: misc

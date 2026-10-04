@@ -65,7 +65,7 @@ static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
     {
         if (pat.matches(name)
             && _mon_needs_auto_exclude(mon, sleepy)
-            && (mon->attitude == ATT_HOSTILE))
+            && (mon->base_attitude == ATT_HOSTILE))
         {
             return true;
         }

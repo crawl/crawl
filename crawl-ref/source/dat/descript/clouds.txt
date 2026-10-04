@@ -115,7 +115,8 @@ mutagenic fog cloud
 A cloud of pure, unstructured magic, condensed into a scintillating mist;
 essentially toxic magical waste. Creatures venturing within will find
 themselves increasingly contaminated with magical radiation, sufficient amounts
-of which will inflict negative mutations when dissipating.
+of which will inflict negative mutations and even explosions of wild magic when
+dissipating.
 %%%%
 magical condensation cloud
 
@@ -212,3 +213,23 @@ rust cloud
 
 A cloud of oxidising vapour that continuously corrodes and weakens the attacks
 of whatever stands inside it (but does only minimal damage).
+%%%%
+glimmer cloud
+
+A faint cloud of magical residue. Touching this while in Vision form will
+convert it into a small projectile and launch it at a nearby enemy.
+
+Any other entity stepping into it will instead displace the cloud to a nearby
+tile - and if there are no valid targets in range when you do so, it will be
+likewise displaced.
+%%%%
+frost cloud
+
+A cloud of tiny floating ice crystals, glittering in the dungeon air.
+Atmospheric, but harmless.
+%%%%
+blinding haze cloud
+
+A thick haze that blurs the vision of creatures that spend time inside it,
+rendering them temporarily blind. Tougher, more experienced creatures are less
+likely to be affected.

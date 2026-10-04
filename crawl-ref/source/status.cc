@@ -6,6 +6,7 @@
 #include "art-enum.h" // bearserk
 #include "artefact.h"
 #include "branch.h"
+#include "colour.h"
 #include "database.h"
 #include "dungeon.h" // DESCENT_STAIRS_KEY
 #include "duration-type.h"
@@ -1031,6 +1032,46 @@ bool fill_status_info(int status, status_info& inf)
         inf.short_text = make_stringf("salvo (%d)", you.props[SALVO_KEY].get_int());
         break;
 
+    case STATUS_JADEMANTLE_CRYSTALS:
+    {
+        if (you.form == transformation::jademantle && you.props.exists(JADEMANTLE_CRYSTAL_KEY))
+        {
+            inf.light_text = "Crystals";
+            inf.light_colour = LIGHTGREEN;
+
+            const int crystals = you.props[JADEMANTLE_CRYSTAL_KEY].get_int();
+            inf.light_text_formatted =
+                make_stringf("<%s>Cr<%s>ys<%s>ta<%s>ls",
+                            (crystals & (int)spschool::earth) ? "yellow"    : "darkgrey",
+                            (crystals & (int)spschool::fire)  ? "lightred"  : "darkgrey",
+                            (crystals & (int)spschool::air)   ? "lightcyan" : "darkgrey",
+                            (crystals & (int)spschool::ice)   ? "lightblue" : "darkgrey");
+        }
+    }
+    break;
+
+    case STATUS_HYPNOTAIL:
+        if (you.form == transformation::hypnogecko)
+        {
+            if (you.props.exists(HYPNOGECKO_LOST_TAIL_KEY))
+            {
+                inf.light_text = "-Tail";
+                inf.light_colour = YELLOW;
+            }
+        }
+        break;
+
+    case DUR_VAPOURISE:
+    {
+        cloud_struct dummy;
+        dummy.type = mistmane_cloud_type(static_cast<potion_type>(you.props[MISTMANE_VAPOUR_KEY].get_int()));
+        inf.light_text = "Vapour";
+        inf.light_colour = element_colour(get_cloud_colour(dummy), you.pos(), true);
+        inf.short_text = make_stringf("vapourise (%s)", cloud_type_name(dummy.type, true).c_str());
+        inf.long_text = make_stringf("producing %s", cloud_type_name(dummy.type).c_str());
+    }
+    break;
+
     default:
         if (!found)
         {
@@ -1459,4 +1500,82 @@ void duration_end_effect(duration_type dur)
 {
     if (_lookup_duration(dur)->decr.end.on_end)
         _lookup_duration(dur)->decr.end.on_end();
+}
+
+// Order of 'priority' status lights, to be drawn left-to-right on the HUD.
+// Any durations or statuses not listed here will be drawn afterward in enum order.
+static const vector<unsigned int> important_statuses =
+{
+    STATUS_TESSERACT,
+    STATUS_ORB,
+    STATUS_ZOT,
+    STATUS_STAT_ZERO,
+    DUR_PARALYSIS,
+    DUR_CONF,
+    DUR_PETRIFYING,
+    DUR_PETRIFIED,
+    DUR_BERSERK,
+    DUR_TELEPORT,
+    DUR_ENKINDLED,
+    STATUS_MNEMOPHAGE,
+    DUR_HASTE,
+    DUR_SLOW,
+    STATUS_SPEED,
+    DUR_DEATHS_DOOR,
+    DUR_BLINK_COOLDOWN,
+    DUR_BERSERK_COOLDOWN,
+    DUR_EXHAUSTED,
+    DUR_WORD_OF_CHAOS_COOLDOWN,
+    DUR_DEATHS_DOOR_COOLDOWN,
+    DUR_QUAD_DAMAGE,
+    STATUS_SERPENTS_LASH,
+};
+
+status_iterator::status_iterator()
+    : current(0), in_priority_phase(true)
+{
+    done.reset(false);
+}
+
+status_iterator::operator bool() const
+{
+    return current <= STATUS_LAST_STATUS;
+}
+
+int status_iterator::operator *() const
+{
+    if (in_priority_phase)
+        return important_statuses[current];
+    return current;
+}
+
+const int* status_iterator::operator->() const
+{
+    return &current;
+}
+
+void status_iterator::operator ++()
+{
+    if (in_priority_phase)
+    {
+        done.set(important_statuses[current]);
+        if (++current >= (int)important_statuses.size())
+        {
+            in_priority_phase = false;
+            current = -1;
+            ++(*this);
+        }
+    }
+    else
+    {
+        if (current <= STATUS_LAST_STATUS)
+            ++current;
+        while (current < STATUS_LAST_STATUS && done[current])
+            ++current;
+    }
+}
+
+void status_iterator::operator++(int)
+{
+    ++(*this);
 }
