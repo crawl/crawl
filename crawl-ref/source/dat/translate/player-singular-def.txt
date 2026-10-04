@@ -39,6 +39,9 @@ the Armataur
 the Barachi
 
 %%%%
+the Centaur
+
+%%%%
 the Coglin
 
 %%%%
@@ -78,6 +81,12 @@ the Ghoul
 the Gnoll
 
 %%%%
+the Halfling
+
+%%%%
+the High Elf
+
+%%%%
 the Hill Orc
 
 %%%%
@@ -85,6 +94,9 @@ the Human
 
 %%%%
 the Kobold
+
+%%%%
+the Lava Orc
 
 %%%%
 the Mayflytaur
@@ -126,6 +138,9 @@ the Poltergeist
 the Revenant
 
 %%%%
+the Sludge Elf
+
+%%%%
 the Spriggan
 
 %%%%
@@ -139,24 +154,6 @@ the Vampire
 
 %%%%
 the Vine Stalker
-
-%%%%
-
-# really old
-%%%%
-the Halfling
-
-%%%%
-the Centaur
-
-%%%%
-the Sludge Elf
-
-%%%%
-the High Elf
-
-%%%%
-the Lava Orc
 
 %%%%
 

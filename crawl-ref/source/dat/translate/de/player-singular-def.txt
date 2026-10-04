@@ -39,6 +39,9 @@ the Armataur
 the Barachi
 {m}der Barachi
 %%%%
+the Centaur
+{m}der Zentaur
+%%%%
 the Coglin
 {m}der Coglin
 %%%%
@@ -78,6 +81,12 @@ the Ghoul
 the Gnoll
 {m}der Gnoll
 %%%%
+the Halfling
+{m}der Halbling
+%%%%
+the High Elf
+{m}der Hochelf
+%%%%
 the Hill Orc
 {m}der Hügelork
 %%%%
@@ -86,6 +95,9 @@ the Human
 %%%%
 the Kobold
 {m}der Kobold
+%%%%
+the Lava Orc
+{m}der Lava-Ork
 %%%%
 the Mayflytaur
 {m}der Eintagsfliegetaur
@@ -126,6 +138,9 @@ the Poltergeist
 the Revenant
 {m}der Wiedergänger
 %%%%
+the Sludge Elf
+{m}der Schlammelf
+%%%%
 the Spriggan
 {m}der Spriggan
 %%%%
@@ -140,24 +155,6 @@ the Vampire
 %%%%
 the Vine Stalker
 {m}der Rebpirscher
-%%%%
-
-# really old
-%%%%
-the Halfling
-{m}der Halbling
-%%%%
-the Centaur
-{m}der Zentaur
-%%%%
-the Sludge Elf
-{m}der Schlammelf
-%%%%
-the High Elf
-{m}der Hochelf
-%%%%
-the Lava Orc
-{m}der Lava-Ork
 %%%%
 
 ##############################################
