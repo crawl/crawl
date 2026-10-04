@@ -2109,12 +2109,13 @@ Stalkers
   Stalkers are clever metamorphs who specialise in forms which improve their
   subterfuge, allowing them to dispatch distracted enemies or debilitate them
   with noxious clouds. They start with a dagger, some centipede baubles, and
-  hypnotic and mist talismans.
+  gecko and mist talismans.
 
 Mystics
   Mystics are esoteric mages who use talismans to augment their magical
   abilities in unique ways. They start with a selection of spells that draw upon
-  the four elements, as well as vision and fox talismans, and a potion of magic.
+  the four elements, as well as vision and jade talismans, and a potion of
+  magic.
 
 Warrior-mage backgrounds
 ========================
