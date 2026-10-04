@@ -35,6 +35,7 @@
 #include "fineff.h"
 #include "fprop.h"
 #include "ghost.h"
+#include "god-abil.h"
 #include "god-passive.h"
 #include "items.h"
 #include "item-def.h"
@@ -1220,6 +1221,14 @@ static const map<spell_type, mons_spell_logic> marionette_spell_to_logic {
         },
         [] (monster& caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
             cast_polar_vortex(mons_spellpower(caster, SPELL_POLAR_VORTEX), false, true);
+        }
+    } },
+    { SPELL_TROGS_HAND, {
+        [](const monster&) {
+            return ai_action::good_or_impossible(!you.duration[DUR_TROGS_HAND]);
+        },
+        [] (monster& caster, mon_spell_slot /*slot*/, bolt& /*beem*/) {
+            trog_do_trogs_hand(mons_spellpower(caster, SPELL_TROGS_HAND));
         }
     } },
 };
