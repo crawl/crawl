@@ -4237,26 +4237,25 @@ void seeker_attack(monster& seeker, actor& target, coord_def attack_pos)
 
     zap_type ztype = (seeker.type == MONS_FOXFIRE ? ZAP_FOXFIRE : ZAP_SHOOTING_STAR);
 
+    bool seen = you.can_see(seeker);
+
+    // Kill the monster before the beam, which prevents it being hit by its own
+    // beam if reflected by the Warlock's Mirror.
+    if (seeker.alive())
+        monster_die(seeker, KILL_RESET, NON_MONSTER, true);
+
     bolt beam(*summoner, ztype, seeker.get_hit_dice());
     beam.range       = 1;
     beam.source      = seeker.pos();
     beam.target      = target.pos();
+    // Set explicitly because the seeker is dead.
+    beam.seen        = seen;
     beam.hit_verb = (seeker.type == MONS_FOXFIRE ? "burns" : "hits");
     beam.fire();
 
     place_cloud(seeker_trail_type(seeker), seeker.pos(), 2, &seeker);
 
-    const bool do_knockback = target.alive() && seeker.type == MONS_SHOOTING_STAR;
-
-    if (seeker.alive())
-        monster_die(seeker, KILL_RESET, NON_MONSTER, true);
-
-    // XXX: When doing knockback, we need to kill the seeker *first*, since
-    //      seeker_attack can be called when a hostile monster moves 'into' a
-    //      shooting star (which internally swaps with it), and otherwise the
-    //      star itself will block knockback (since it's now 'behind' the
-    //      monster being pushed).
-    if (do_knockback)
+    if (target.alive() && seeker.type == MONS_SHOOTING_STAR)
         target.knockback(seeker, 1, 0, "", attack_pos);
 }
 
