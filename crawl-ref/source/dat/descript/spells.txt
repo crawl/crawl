@@ -1075,7 +1075,7 @@ bypasses cold resistance.
 Ice Thorns spell
 
 Causes a ring of sharp icy thorns to sprout from the ground around a targeted
-enemy. These thorns deal damage to any non-flying creature which step on them
+enemy. These thorns deal damage to any non-flying creature which steps on them
 and then crumble away.
 
 The caster can step onto their own thorns without harm (but they will still
