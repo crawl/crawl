@@ -575,11 +575,11 @@ selection with <w>Enter</w>.
 %%%%
 HINT_FULL_INVENTORY
 
-Sadly, your inventory is limited to 52 items, and it appears your knapsack is
-full. However, this is easy enough to rectify: simply <w>$cmd[CMD_DROP]</w>rop
-some of the stuff you don't need right now. In the drop menu you can then
-comfortably select which items to drop by pressing their inventory
-letter<localtiles>, or by clicking on them</localtiles>.
+Your gear inventory is full: it has 52 slots, including slots for throwing
+weapons. Potions, scrolls, and evokable items use separate inventories, so
+dropping them won't free a gear slot. To make room, <w>$cmd[CMD_DROP]</w>rop
+some gear you don't need right now. In the drop menu, select items by pressing
+their inventory letter<localtiles>, or by clicking on them</localtiles>.
 %%%%
 HINT_SHIFT_RUN
 
