@@ -5484,6 +5484,7 @@ void trigger_dragon_vein()
     }
 
     pay_mp(1);
+    finalize_mp_cost();
     do_post_spellcast_effects(spell);
 
     // If this is your second usage on this spell cast, remove the remaining dragon veins.
