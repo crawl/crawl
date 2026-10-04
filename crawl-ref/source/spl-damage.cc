@@ -2089,7 +2089,7 @@ static int _irradiate_cell(coord_def where, int pow, const actor &agent)
     if (agent.is_player())
         _player_hurt_monster(*act->as_monster(), dam, BEAM_MMISSILE);
     else if (dam)
-        act->hurt(&agent, dam, BEAM_MMISSILE);
+        act->hurt(&agent, dam, BEAM_MMISSILE, KILLED_BY_BEAM, "", "blast of magical radiation");
 
     if (act->alive())
     {
