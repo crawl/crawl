@@ -2353,9 +2353,9 @@ static const mutation_def mut_data[] =
 
 { MUT_FOUL_SHADOW, 0, 3, mutflag::good,
   "foul shadow",
-  {"You are faintly shadowed, very rarely releasing foul flame when damaged in melee.",
+  {"You are faintly shadowed, rarely releasing foul flame when damaged in melee.",
    "You are shadowed, sometimes releasing foul flame when damaged in melee.",
-   "You are darkly shadowed, frequently releasing foul flame when damaged in melee."},
+   "You are darkly shadowed, often releasing foul flame when damaged in melee."},
   {"Your body darkens with foul flame.",
    "Your body becomes darker with foul flame.",
    "Your body becomes darker with foul flame."},
