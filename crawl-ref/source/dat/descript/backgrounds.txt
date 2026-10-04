@@ -121,7 +121,7 @@ fighters (especially when unarmed) at the cost of armour.
 %%%%
 Stalker
 
-Stalkers transform their bodies with talismans to better decieve and debilitate
+Stalkers transform their bodies with talismans to better deceive and debilitate
 their enemies. Eventually they can even transform potions into sprays of harmful
 clouds.
 %%%%
