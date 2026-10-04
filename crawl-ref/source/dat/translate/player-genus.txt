@@ -25,7 +25,7 @@ the Dwarf
 the Elf
 
 %%%%
-# Demigod
+# Demigod (Genus is "Demigod", but Genus_Short is "God")
 the God
 
 %%%%
@@ -52,7 +52,7 @@ the Orc
 
 ##############################################
 # Player genus uncapitalised
-# Why is this needed?
+# (Used in Marks@genus@ title)
 ##############################################
 %%%%
 # Barachi
@@ -68,10 +68,6 @@ the frog
 # duplicate of monster
 #the elf
 #
-%%%%
-# Demigod
-the god
-
 %%%%
 # Felid
 the cat
@@ -119,7 +115,7 @@ Dwarves
 Elves
 
 %%%%
-# Demigod
+# Demigod (Genus is "Demigod", but Genus_Short is "God")
 Gods
 
 %%%%
@@ -148,39 +144,16 @@ Orcs
 
 %%%%
 
-##############################################
-# Player species plural
-# (Needed because species is used for genus in may cases)
-##############################################
-%%%%
-Barachim
-
-%%%%
-Coglins
-
-%%%%
-Deep Dwarves
-
-%%%%
-Deep Elves
-
+# These ones use species as genus
 %%%%
 Demigods
 
 %%%%
-Demonspawns
+# English plural same as singular
+{pl}Demonspawn
 
 %%%%
 Djinn
-
-%%%%
-Felids
-
-%%%%
-Formicids
-
-%%%%
-Gale Centaurs
 
 %%%%
 Gargoyles
@@ -192,32 +165,23 @@ Ghouls
 Gnolls
 
 %%%%
-Hill Orcs
-
-%%%%
 Humans
 
 %%%%
 Kobolds
 
 %%%%
-# same as singular
-#Merfolk
-#Meerwesen
-%%%%
-Minotaurs
+# English plural same as singular
+{pl}Merfolk
 
 %%%%
-Mountain Dwarves
+Minotaurs
 
 %%%%
 Mummies
 
 %%%%
 Nagas
-
-%%%%
-Octopodes
 
 %%%%
 Ogres
@@ -229,16 +193,14 @@ Onis
 Palentongas
 
 %%%%
-Poltergeists
-
-%%%%
 Revenants
 
 %%%%
 Spriggans
 
 %%%%
-Tengus
+# English plural same as singular
+{pl}Tengu
 
 %%%%
 Trolls
