@@ -2832,7 +2832,7 @@ ENDMAP
 
 NAME:   kennysheep_jessica_study
 TAGS:   transparent no_mons_gen
-DEPTH:  D:1
+DEPTH:  D:2
 : if crawl.x_chance_in_y(3, 10) then
 NSUBST: d = 1:e / *:d
 : end
