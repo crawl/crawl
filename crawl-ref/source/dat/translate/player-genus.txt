@@ -66,10 +66,6 @@ Frogs
 Goblins
 
 %%%%
-# genus for draconians of all colours
-Draconians
-
-%%%%
 # Deep/Mountain Dwarf
 Dwarves
 
@@ -117,6 +113,10 @@ Demigods
 
 %%%%
 Djinn
+
+%%%%
+# used for draconians of all colours
+Draconians
 
 %%%%
 Gargoyles
