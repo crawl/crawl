@@ -3151,7 +3151,8 @@ bool mons_can_hate(monster_type type)
         // don't turn foxfire, blocks of ice, etc hostile
         && !mons_class_is_peripheral(type)
         // Thematically just the player poltergeist taking up more tiles
-        && type != MONS_HAUNTED_ARMOUR;
+        && type != MONS_HAUNTED_ARMOUR
+        && type != MONS_HYPNOTAIL;
 }
 
 void check_lovelessness(monster &mons)
