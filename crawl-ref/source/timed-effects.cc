@@ -1173,6 +1173,8 @@ static void _fire_spike_launcher(actor* target, const actor* agent,
     spike.seen = true;
     spike.range = 1;
     spike.hit_verb = "skewers";
+    // Don't upset Ely if this hits a neutral monster
+    spike.no_anger_allies = true;
     spike.set_agent(agent);
 
     dungeon_feature_type feat = orig_terrain(origin);
