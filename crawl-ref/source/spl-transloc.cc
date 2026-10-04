@@ -935,10 +935,10 @@ spret controlled_blink(bool safe_cancel, dist *target)
  */
 string blink_cooldown_description(int pow)
 {
-    string description = "1d3";
+    int duration = 0;
     if (pow != 50)
-        description += make_stringf("+(~%d)", div_round_near(50 - pow, 10));
-    return description;
+        duration = div_round_near(50 - pow, 10);
+    return make_stringf("(%d - %d)", duration+1, duration+3);
 }
 
 /**

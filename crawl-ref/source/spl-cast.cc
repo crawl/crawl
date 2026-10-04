@@ -5,6 +5,7 @@
 
 #include "AppHdr.h"
 
+#include "spell-type.h"
 #include "spl-cast.h"
 
 #include <iomanip>
@@ -3344,7 +3345,7 @@ string spell_effect_string(spell_type spell, bool evoked, int pow)
     switch (spell)
     {
     case SPELL_PASSWALL:
-        description = make_stringf("Bonus AC: ~%d", passwall_ac(pow, false));
+        description = make_stringf("Channeling bonus: ~%d AC.", passwall_ac(pow, false));
         break;
     case SPELL_OZOCUBUS_ARMOUR:
     {
@@ -3352,27 +3353,29 @@ string spell_effect_string(spell_type spell, bool evoked, int pow)
         {
             int ice_armour = ice_armour_ac(you.props[ICY_ARMOUR_KEY].get_int());
             double current_buff_ac = ice_armour / 100.0;
-            description = make_stringf("Current ice armour bonus AC: %.1f\n",
+            description = make_stringf("Current ice armour bonus: %.1f AC.\n",
                                        current_buff_ac);
         }
         double cast_now_ac = ice_armour_ac(pow) / 100.0;
-        description += make_stringf("Next cast bonus AC: %.1f", cast_now_ac);
+        description += make_stringf("Next cast armour bonus: %.1f AC.", cast_now_ac);
         break;
     }
     case SPELL_CALL_IMP:
-        description = make_stringf("Imp's weapon: %+d spear",
+        description = make_stringf("Imp's weapon: %+d spear.",
                                    imp_weapon_modifier(pow));
         break;
     case SPELL_PUTREFACTION:
-        description = make_stringf("Self drain amount: ~%d HP",
+        description = make_stringf("Self drain amount: ~%d HP.",
                                    1 + putrefaction_drain_amount(pow, false)
                                      * get_real_hp(false, false) / 750);
         break;
     case SPELL_BLINK:
-        description = "-Blink duration: " + blink_cooldown_description(pow);
+        description = "-Blink duration: about "
+                      + blink_cooldown_description(pow) + "turns.";
         break;
     case SPELL_BORGNJORS_REVIVIFICATION:
-        description = "Loss to max HP: " + revivification_loss_description(pow);
+        description = "Reduction of max HP: "
+                      + revivification_loss_description(pow) + " HP.";
         break;
     case SPELL_SWIFTNESS:
         description = "Swiftness duration: "
