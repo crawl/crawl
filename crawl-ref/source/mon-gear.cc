@@ -1454,7 +1454,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     // As someone who's learned the hard way that many have no honour in war,
     // Throatcutter suits Terence perfectly.
     case MONS_TERENCE:
-        if (coinflip() && !get_unique_item_status(UNRAND_THROATCUTTER))
+        if (x_chance_in_y(5, 100)
+            && !get_unique_item_status(UNRAND_THROATCUTTER))
         {
             make_item_unrandart(item, UNRAND_THROATCUTTER);
             force_item = true;
