@@ -2448,7 +2448,8 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
         makhleb_crucible_kill(mons);
     }
 
-    if (you.has_bane(BANE_SUCCOUR) && !mons.is_firewood() && !mons.wont_attack())
+    if (you.has_bane(BANE_SUCCOUR) && !RESET_KILL(killer)
+        && !mons.is_firewood() && !mons.wont_attack())
     {
         bool visible_effect = false;
         const int healing = random_range(mons.max_hit_points / 3,
@@ -2594,11 +2595,11 @@ item_def* monster_die(monster& mons, killer_type killer,
     const int monster_killed = mons.mindex();
     const bool hard_reset    = testbits(mons.flags, MF_HARD_RESET);
     const bool timeout       = killer == KILL_TIMEOUT;
-    const bool gives_player_xp = mons_gives_xp(mons, you);
     bool drop_items          = !hard_reset;
     bool in_transit          = false;
     const bool was_banished  = (killer == KILL_BANISHED);
     const bool mons_reset    = RESET_KILL(killer);
+    const bool gives_player_xp = mons_gives_xp(mons, you) && !mons_reset;
     // Whether to record the kill and consider leaving a corpse/gold.
     bool count_kill = !summoned && !timeout
                             && !mons_reset
@@ -3666,11 +3667,8 @@ item_def* monster_die(monster& mons, killer_type killer,
         update_screen();
     }
 
-    if (!mons_reset)
-    {
-        _give_player_experience(player_xp, killer, pet_kill, was_visible,
-                                mons.xp_tracking);
-    }
+    _give_player_experience(player_xp, killer, pet_kill, was_visible,
+                            mons.xp_tracking);
     return corpse;
 }
 
