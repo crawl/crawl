@@ -265,7 +265,7 @@ def pluralise(string):
         return string[:-1] + "ves"
     elif string.endswith("mage") and not string.endswith("damage"):
         return string[:-1] + "i"
-    elif re.search('(gold|fish|folk|spawn|tengu|sheep|swine|efreet|jiangshi|raiju|meliai|kemwar)$', string):
+    elif re.search('(gold|fish|folk|spawn|tengu|sheep|swine|efreet|jiangshi|raiju|meliai|kemwar)$', string, re.IGNORECASE):
         return string
     elif re.search('(ch|sh|x|chon)$', string):
         return string + "es"
