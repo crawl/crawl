@@ -51,43 +51,6 @@ the Orc
 %%%%
 
 ##############################################
-# Player genus uncapitalised
-# (Used in Marks@genus@ title)
-##############################################
-%%%%
-# Barachi
-the frog
-
-%%%%
-# Deep Dwarf
-# duplicate of monster
-#the dwarf
-#
-%%%%
-# Deep Elf
-# duplicate of monster
-#the elf
-#
-%%%%
-# Felid
-the cat
-
-%%%%
-# Formicid
-the ant
-
-%%%%
-# Octopode
-the octopus
-
-%%%%
-# Lava Orc
-# duplicate of monster
-#the orc
-#
-%%%%
-
-##############################################
 # Player genus plural
 ##############################################
 
