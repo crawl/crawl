@@ -2098,6 +2098,9 @@ void ephemeral_weapon_end_fineff::fire()
 
     const int plus = wpn.plus;
 
+    const string name = wpn.props.exists(WEAPON_NAME_KEY) ? wpn.props[WEAPON_NAME_KEY].get_string()
+                                                          : "";
+
     item_def* orig = get_item_swap_back(wpn);
 
     unequip_item(wpn, false);
@@ -2107,8 +2110,14 @@ void ephemeral_weapon_end_fineff::fire()
     mg.set_summoned(&you, MON_SUMM_CENTIPEDE, random_range(600, 900), false);
     mg.set_range(1, 4);
     mg.hd = 2 + plus * 4 / 3;
-    if (!you.allies_forbidden() && create_monster(mg))
+
+    monster* mon;
+    if (!you.allies_forbidden() && (mon = create_monster(mg)))
+    {
+        if (!name.empty())
+            mon->mname = name;
         mprf("Your assassin centipede leaps free of your %s with a hiss!", you.arm_name(false).c_str());
+    }
     else
         mprf("Your assassin centipede withers and dies.");
 
