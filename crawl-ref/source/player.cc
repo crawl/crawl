@@ -5662,7 +5662,6 @@ player::player()
     form            = transformation::none;
     default_form    = transformation::none;
     cur_talisman    = -1;
-    orig_wpn        = -1;
 
     for (auto &item : inv)
         item.clear();
@@ -5793,6 +5792,7 @@ player::player()
     banished_by.clear();
 
     last_mid = 0;
+    last_item_uid = 0;
     last_cast_spell = SPELL_NO_SPELL;
 
     // Non-saved UI state:

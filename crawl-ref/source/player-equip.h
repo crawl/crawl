@@ -11,6 +11,9 @@
 #include "transformation.h"
 #include "object-class-type.h"
 
+// The item uid to swap back to when this temporary item expires.
+#define ITEM_SWAP_BACK_KEY "item_swap_back"
+
 // Represents a single instance of an item being equipped in a slot by a player.
 struct player_equip_entry
 {
@@ -160,3 +163,5 @@ bool acrobat_boost_active();
 bool parrying_boost_active();
 
 void unwield_distortion(bool brand = false);
+
+item_def* get_item_swap_back(const item_def& item);

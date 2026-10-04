@@ -965,8 +965,6 @@ static bool _evoke_ally_only(const item_def &item, bool ident)
 
 static bool _centipede_bauble(item_def& item)
 {
-    const item_def* cur_wpn = you.weapon();
-    const int old_index = cur_wpn ? cur_wpn->link : -1;
     const int skill = you.skill(SK_SHAPESHIFTING, 10);
 
     int index = items(false, OBJ_WEAPONS, WPN_CENTIPEDE, 0);
@@ -994,14 +992,6 @@ static bool _centipede_bauble(item_def& item)
     }
 
     dec_mitm_item_quantity(index, 1);
-
-    // Remember what the player was previously wielding so we can automatically
-    // swap it back when the centipede expires. (Note that it's possible the
-    // player swapped off a fragile item, so ensure that the original weapon
-    // still exists.)
-    if (old_index != -1 && you.inv[old_index].defined())
-        you.orig_wpn = old_index;
-
     dec_inv_item_quantity(item.link, 1);
 
     return true;

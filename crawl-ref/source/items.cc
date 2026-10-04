@@ -393,9 +393,6 @@ bool dec_inv_item_quantity(int obj, int amount)
 
         if (you.last_fired == obj)
             you.last_fired = -1;
-
-        if (you.orig_wpn == obj)
-            you.orig_wpn = -1;
     }
     else
         you.inv[obj].quantity -= amount;
@@ -3709,6 +3706,15 @@ bool item_def::appearance_initialized() const
     return rnd != 0 || is_unrandom_artefact(*this);
 }
 
+// Assigns a unique identifier to this item (if it doesn't already have one)
+// and returns it.
+int item_def::give_unique_id()
+{
+    if (!props.exists(ITEM_UNIQUE_ID))
+        props[ITEM_UNIQUE_ID].get_int() = ++you.last_item_uid;
+
+    return props[ITEM_UNIQUE_ID].get_int();
+}
 
 /**
  * Assuming this item is a randart weapon/armour, what colour is it?

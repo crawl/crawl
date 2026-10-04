@@ -19,6 +19,10 @@
 // extend this in the future, so this should be easier than undoing the change.
 typedef uint32_t iflags_t;
 
+// Key used in cases where a specific item_def must be identified uniquely.
+// (Currently only for original equipment back after temporary equipment ends.)
+#define ITEM_UNIQUE_ID "item_uid"
+
 struct item_def
 {
     object_class_type base_type; ///< basic class (eg OBJ_WEAPON)
@@ -153,6 +157,8 @@ public:
 
     /// If this is a gem, what colour is it in console?
     colour_t gem_colour() const;
+
+    int give_unique_id();
 
 private:
     string name_aux(description_level_type desc, bool terse, bool ident,

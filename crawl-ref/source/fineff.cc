@@ -2098,6 +2098,8 @@ void ephemeral_weapon_end_fineff::fire()
 
     const int plus = wpn.plus;
 
+    item_def* orig = get_item_swap_back(wpn);
+
     unequip_item(wpn, false);
 
     // Assumes the only ephemeral weapon is a centipede. Expand when this changes.
@@ -2110,9 +2112,8 @@ void ephemeral_weapon_end_fineff::fire()
     else
         mprf("Your assassin centipede withers and dies.");
 
-    if (you.orig_wpn != -1)
-        try_equip_item(you.inv[you.orig_wpn], true);
-    you.orig_wpn = -1;
+    if (orig)
+        try_equip_item(*orig, true);
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

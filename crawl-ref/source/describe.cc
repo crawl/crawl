@@ -2935,6 +2935,8 @@ string get_item_description(const item_def &item,
                     << " value: " << item_value(item, true)
                     << "\nannotate: "
                     << stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
+        if (item.props.exists(ITEM_UNIQUE_ID))
+            description << "\nUID: " << item.props[ITEM_UNIQUE_ID].get_int();
     }
 #endif
 

@@ -1603,6 +1603,7 @@ void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
                 needs_delay = true;
     }
 
+    const bool is_summoned = to_equip && to_equip->summoned();
     const bool is_multi = (to_equip != nullptr && !to_remove.empty())
                             || to_remove.size() > 1;
 
@@ -1636,6 +1637,19 @@ void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
                 }
                 unequip_item(*item);
             }
+        }
+
+        // If we're swapping a real item for a temporary item, remember which
+        // item was swapped out.
+        //
+        // (For simplicity, we only do this in cases where a single item was
+        // changed. I'm not sure what more elaborate chain removals might be
+        // involved in this in future, but it's safer to not swap back than do
+        // do poorly-defined things.)
+        if (is_summoned && to_remove.size() == 1 && to_remove[0]->defined())
+        {
+            const mid_t id = to_remove[0]->give_unique_id();
+            to_equip->props[ITEM_SWAP_BACK_KEY].get_int() = id;
         }
     }
 

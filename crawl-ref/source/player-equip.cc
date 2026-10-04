@@ -2884,3 +2884,26 @@ void unwield_distortion(bool brand)
         contaminate_player(random2avg(3000, 3), true);
     }
 }
+
+// If this is a temporary item that stored which permanent item was swapped off
+// to equip it, fetch that item if the player still has it in their inventory.
+item_def* get_item_swap_back(const item_def& item)
+{
+    if (!item.props.exists(ITEM_SWAP_BACK_KEY))
+        return nullptr;
+
+    const mid_t id = item.props[ITEM_SWAP_BACK_KEY].get_int();
+    mprf("Swapping back to %d", id);
+
+    for (int i = 0; i < MAX_GEAR; ++i)
+    {
+        if (you.inv[i].defined()
+            && you.inv[i].props.exists(ITEM_UNIQUE_ID)
+            && (mid_t)you.inv[i].props[ITEM_UNIQUE_ID].get_int() == id)
+        {
+            return &you.inv[i];
+        }
+    }
+
+    return nullptr;
+}

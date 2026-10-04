@@ -1700,6 +1700,7 @@ static bool _calc_score_exists()
 static void _tag_construct_you(writer &th)
 {
     marshallInt(th, you.last_mid);
+    marshallInt(th, you.last_item_uid);
     marshallByte(th, you.raw_piety);
     marshallShort(th, you.pet_target);
 
@@ -2016,7 +2017,6 @@ static void _tag_construct_you_items(writer &th)
     for (int i = 0; i < ENDOFPACK; ++i)
         marshallItem(th, you.inv[i]);
     marshallByte(th, you.cur_talisman);
-    marshallByte(th, you.orig_wpn);
 
     _marshallFixedBitVector<NUM_RUNE_TYPES>(th, you.runes);
     marshallByte(th, you.obtainable_runes);
@@ -3129,6 +3129,12 @@ static void _tag_read_you(reader &th)
     ASSERT_RANGE(crawl_state.type, GAME_TYPE_UNSPECIFIED + 1, NUM_GAME_TYPE);
     // now start reading the chunk proper
     you.last_mid          = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_UNIQUE_ITEM_ID)
+        you.last_item_uid = 0;
+    else
+#endif
+    you.last_item_uid = unmarshallInt(th);
     you.raw_piety             = unmarshallUByte(th);
     ASSERT(you.raw_piety <= MAX_PIETY);
 #if TAG_MAJOR_VERSION == 34
@@ -5128,11 +5134,12 @@ static void _tag_read_you_items(reader &th)
         you.cur_talisman = unmarshallByte(th);
 
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() < TAG_MINOR_TEMPORARY_WEAPONS)
-        you.orig_wpn = -1;
-    else
+    if (th.getMinorVersion() >= TAG_MINOR_TEMPORARY_WEAPONS
+        && th.getMinorVersion() < TAG_MINOR_UNIQUE_ITEM_ID)
+    {
+        unmarshallByte(th);
+    }
 #endif
-        you.orig_wpn = unmarshallByte(th);
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_EQUIP_SLOT_REWRITE)
