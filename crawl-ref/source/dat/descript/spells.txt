@@ -624,16 +624,16 @@ fire, ice, air, and earth magic. Stepping onto any of them will trigger an
 immediate destructive spellcast targeting up to 3 random enemies with an
 additional property that depends on the element tapped into:
 
-Fire (West): Prioritizes enemies with the least health. Leaves behind brief fire
+Fire (West): Prioritises enemies with the least health. Leaves behind brief fire
 clouds when it kills something.
 
-Ice (East): Prioritizes enemies with the most health. Briefly freezes them,
+Ice (East): Prioritises enemies with the most health. Briefly freezes them,
 slowing their movement.
 
-Air (North): Prioritizes the most distant enemies. Unlike the other 3 elements,
+Air (North): Prioritises the most distant enemies. Unlike the other 3 elements,
 does full damage even to distant targets.
 
-Earth (South): Prioritizes the closest enemies. Strikes one fewer target and
+Earth (South): Prioritises the closest enemies. Strikes one fewer target and
 does greatly reduced damage to flying creatures, but enemies hit at close range
 may be staggered.
 
