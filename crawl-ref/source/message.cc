@@ -27,6 +27,7 @@
 #include "religion.h"
 #include "scroller.h"
 #include "sound.h"
+#include "spl-book.h"
 #include "state.h"
 #include "stringutil.h"
 #include "tiles-build-specific.h"
@@ -2157,8 +2158,16 @@ void canned_msg(canned_message_type which_message)
             mpr("You feel a strange sense of stasis.");
             break;
         case MSG_NO_SPELLS:
-            mpr("You don't know any spells.");
+        {
+            string msg = "You don't know any spells.";
+            if (can_learn_spell(true) && player_has_available_spells())
+            {
+                msg += " Press <w>%</w> to view spells available to memorise.";
+                insert_commands(msg, { CMD_MEMORISE_SPELL });
+            }
+            mpr(msg);
             break;
+        }
         case MSG_MANA_INCREASE:
             mpr("You feel your magic capacity increase.");
             break;
