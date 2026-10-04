@@ -7790,7 +7790,8 @@ static void _maybe_note_armour_modifier(vector<vector<string>>& items,
     if (mult[0] == 0 && mult[1] == 0 && mult[2] == 0)
         return;
 
-    const item_def *body_armour = you.body_armour();
+    const item_def *body_armour = you.equipment.get_first_slot_item(
+        SLOT_BODY_ARMOUR, true);
     const int base_ac = body_armour ? you.base_ac_from(*body_armour, 100, false)
                                     : 0;
 
