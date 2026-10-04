@@ -102,6 +102,12 @@ the Reaver
 the Shapeshifter
 {m}der Gestaltwandler
 %%%%
+the Mystic
+{m}der Mystiker
+%%%%
+the Stalker
+{m}der Pirscher
+%%%%
 
 ##############################################
 # player character combo
@@ -202,6 +208,12 @@ the @species@ Reaver
 %%%%
 the @species@ Shapeshifter
 {m}der @species@ Gestaltwandler
+%%%%
+the @species@ Mystic
+{m}der @species@ Mystiker
+%%%%
+the @species@ Stalker
+{m}der @species@ Pirscher
 %%%%
 
 ##############################################
@@ -334,6 +346,15 @@ Wr
 Wz
 Zb
 %%%%
+# Mystic
+# Same as Mayflytaur
+#My
+#
+%%%%
+# Stalker
+St
+Pi
+%%%%
 
 ##############################################
 # Short-form combos with adjective
@@ -428,6 +449,10 @@ Zb
 @adj@@two_letter_code@Mo
 {adj-er}@adj@@two_letter_code@Mö
 %%%%
+# Mystic
+@adj@@two_letter_code@My
+{adj-er}@adj@@two_letter_code@My
+%%%%
 # Necromancer
 @adj@@two_letter_code@Ne
 {adj-er}@adj@@two_letter_code@Ne
@@ -439,6 +464,10 @@ Zb
 # Shapeshifter
 @adj@@two_letter_code@Sh
 {adj-er}@adj@@two_letter_code@Gw
+%%%%
+# Stalker
+@adj@@two_letter_code@St
+{adj-er}@adj@@two_letter_code@Pi
 %%%%
 # Summoner
 @adj@@two_letter_code@Su
