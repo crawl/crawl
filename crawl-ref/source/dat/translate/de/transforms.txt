@@ -43,7 +43,7 @@ bark
 bellst
 %%%%
 # context needed to avoid collision with howl status
-{verb-du}howl
+{verb-you}howl
 heulst
 %%%%
 screech
