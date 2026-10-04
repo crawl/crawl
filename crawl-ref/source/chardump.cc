@@ -249,6 +249,7 @@ static branch_type single_portals[] =
     BRANCH_GAUNTLET,
     BRANCH_ICE_CAVE,
     BRANCH_VOLCANO,
+    BRANCH_GULCH,
     BRANCH_WIZLAB,
     BRANCH_DESOLATION,
 #if TAG_MAJOR_VERSION == 34
