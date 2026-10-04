@@ -7,8 +7,39 @@
 ##############################################
 # Player species
 ##############################################
+
+# Note: If playing on trunk, obsolete species can still appear in the high
+# scores list (and possibly as player ghosts).
+# Armataur (At) - Removed in v0.35
+# Ghoul (Gh) - Removed in 0.33
+# Vampire (Vp) - Removed in 0.33
+# Hill Orc (HO) - Removed in 0.32
+# Meteoran (Me) - Removed in 0.31
+# Ogre (Og) - Removed in 0.31
+# Palentonga (Pa) - Removed in 0.30
+# Mayflytaur (My) - Only existed briefly in 0.29 as an April Fools joke
+# Deep Dwarf (DD) - Removed in 0.29
+# Halfling (Ha) - Removed in 0.27
+# Centaur (Ce) - Removed in 0.26
+# High Elf (HE) - Removed in 0.20
+# Mottled Draconian (subspecies of Draconian) - Removed in 0.20
+# Lava Orc (LO) - Never made it into a stable release, last seen in 0.15 trunk
+# Sludge Elf (SE) - Removed in 0.13
+# Kenku (Ke) - renamed to Tengu in 0.10
+# Gnome (Gm - formerly Gn before the addition of Gnolls) - Removed in 0.5
+# Grey Elf (GE) - Removed in 0.5
+# Ogre-mage (OM) - Merged with Ogres in 0.5
+# Hill Dwarf (HD) - Removed in 0.3
+# Elf (El) - Removed in 0.3
+
+%%%%
+the Armataur
+
 %%%%
 the Barachi
+
+%%%%
+the Coglin
 
 %%%%
 the Deep Dwarf
@@ -35,6 +66,9 @@ the Felid
 the Formicid
 
 %%%%
+the Gale Centaur
+
+%%%%
 the Gargoyle
 
 %%%%
@@ -53,10 +87,19 @@ the Human
 the Kobold
 
 %%%%
+the Mayflytaur
+
+%%%%
 the Merfolk
 
 %%%%
+the Meteoran
+
+%%%%
 the Minotaur
+
+%%%%
+the Mountain Dwarf
 
 %%%%
 the Mummy
@@ -71,7 +114,16 @@ the Octopode
 the Ogre
 
 %%%%
+the Oni
+
+%%%%
 the Palentonga
+
+%%%%
+the Poltergeist
+
+%%%%
+the Revenant
 
 %%%%
 the Spriggan
@@ -90,7 +142,7 @@ the Vine Stalker
 
 %%%%
 
-# obsolete (can still appear in highscores list, and maybe as ghosts)
+# really old
 %%%%
 the Halfling
 
@@ -141,6 +193,177 @@ the Yellow Draconian
 %%%%
 
 ##############################################
+# Player species-orc hybrids
+##############################################
+
+# When worshipping Beogh, you become a kind of hybrid between your original
+# species and an orc. This mechanism was introduced in v0.32, so doesn't apply
+# to any species removed prior to that.
+
+%%%%
+# Armataur (same as Gale Centaur)
+#the Orcataur
+%%%%
+# Barachi
+the Orcphibian
+
+%%%%
+# Coglin
+the Exo-Orc
+
+%%%%
+# Deep Elf
+the Deep Orc
+
+%%%%
+# Demigod
+# can't worship Beogh (or any god)
+%%%%
+# Demonspawn
+the Demon Orc
+
+%%%%
+# Centaur
+the Centorc
+
+%%%%
+# Deep Dwarf
+the Deep Dworc
+
+%%%%
+# Ghoul
+the Rotting Orc
+
+%%%%
+# Hill Orc
+the Antique Orc
+
+%%%%
+# Djinni
+the Orcfreeti
+
+%%%%
+# Draconian
+the Orconian
+
+%%%%
+# Black Draconian
+the Black Orconian
+
+%%%%
+# Green Draconian
+the Green Orconian
+
+%%%%
+# Grey Draconian
+the Grey Orconian
+
+%%%%
+# Pale Draconian
+the Pale Orconian
+
+%%%%
+# Purple Draconian
+the Purple Orconian
+
+%%%%
+# Red Draconian
+the Red Orconian
+
+%%%%
+# White Draconian
+the White Orconian
+
+%%%%
+# Yellow Draconian
+the Yellow Orconian
+
+%%%%
+# Felid
+the Orcat
+
+%%%%
+# Formicid
+the Orcmicid
+
+%%%%
+# Gale Centaur
+the Orcataur
+
+%%%%
+# Gargoyle
+the Gargorcle
+
+%%%%
+# Gnoll
+the Hyenorc
+
+%%%%
+# Human (duplicate of orc genus)
+#the Orc
+%%%%
+# Kobold
+the Orcobold
+
+%%%%
+# Merfolk
+the Merforc
+
+%%%%
+# Minotaur
+the Minotorc
+
+%%%%
+# Mountain Dwarf
+the Mountain Orc
+
+%%%%
+# Mummy
+the Orcish Mummy
+
+%%%%
+# Naga
+the Nagorc
+
+%%%%
+# Octopode
+the Orctopode
+
+%%%%
+# Oni
+the Big Orc
+
+%%%%
+# Poltergeist
+the Phantasmorc
+
+%%%%
+# Revenant
+the Skeletorc
+
+%%%%
+# Spriggan
+the Spriggorc
+
+%%%%
+# Tengu
+the Tengorc
+
+%%%%
+# Troll
+the Trorc
+
+%%%%
+# Vine Stalker
+the Orchid Stalker
+
+%%%%
+# Vampire
+the Orcula
+
+%%%%
+
+##############################################
 # Player genus
 # NOTE: If not listed then species is used
 ##############################################
@@ -149,7 +372,11 @@ the Yellow Draconian
 the Frog
 
 %%%%
-# Deep Dwarf
+# Coglin
+the Goblin
+
+%%%%
+# Deep/Mountain Dwarf
 the Dwarf
 
 %%%%
@@ -173,7 +400,11 @@ the Ant
 the Octopus
 
 %%%%
-# Lava Orc
+# Poltergeist
+the Geist
+
+%%%%
+# Hill Orc
 the Orc
 
 %%%%
