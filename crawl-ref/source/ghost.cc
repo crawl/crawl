@@ -1121,6 +1121,8 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
 #if TAG_MAJOR_VERSION == 34
     case SPELL_CONTROLLED_BLINK:
         return SPELL_BLINK;
+    case SPELL_SIMULACRUM:
+        return SPELL_NO_SPELL;
 #endif
     case SPELL_SWIFTNESS:
         return SPELL_FLEETFOOT;
