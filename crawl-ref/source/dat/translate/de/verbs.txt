@@ -24,6 +24,10 @@ schwimmen
 crawl
 kriechen
 %%%%
+# gale centaur
+trot
+trotten
+%%%%
 # naga
 slither
 schlängeln
@@ -31,6 +35,10 @@ schlängeln
 # octopode
 wriggle
 kriechen
+%%%%
+# spriggan
+sprint
+sprinten
 %%%%
 # tengu
 glide
@@ -124,6 +132,10 @@ schwimmst
 {verb-du}crawl
 kriechst
 %%%%
+# gale centaur
+{verb-du}trot
+trottst
+%%%%
 # naga
 {verb-du}slither
 schlängelst
@@ -131,6 +143,10 @@ schlängelst
 # octopode
 {verb-du}wriggle
 kriechst
+%%%%
+# spriggan
+{verb-du}sprint
+sprintest
 %%%%
 # tengu
 {verb-du}glide

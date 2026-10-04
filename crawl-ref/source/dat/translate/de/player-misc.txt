@@ -52,6 +52,10 @@ Dämonische
 Feline
 Katzenartige
 %%%%
+# Gale Centaur
+Equine
+Pferdeartige
+%%%%
 Ghoulish
 Ghulische
 %%%%
@@ -63,6 +67,10 @@ Achtfüßige
 %%%%
 Ogreish
 Ogerische
+%%%%
+# Poltergeist
+Ghostly
+Spukhafte
 %%%%
 Trollish
 Trollische
@@ -128,6 +136,18 @@ Pirschende
 Walker
 Wanderer
 %%%%
+# Barachi (frog-like)
+Hopper
+Hüpfer
+%%%%
+# Djinni
+Floater
+Schweber
+%%%%
+# Gale Centaur
+Trotter
+Trotter
+%%%%
 # Naga (snake-like)
 Slitherer
 Kriecher
@@ -135,6 +155,10 @@ Kriecher
 # Octopode (octopus-like)
 Wriggler
 Schlängler
+%%%%
+# Spriggan
+Sprinter
+Sprinter
 %%%%
 # Tengu (bird-like)
 Glider
@@ -149,11 +173,23 @@ Pirscher
 Walking
 Wandernde
 %%%%
+Hopping
+Hüpfende
+%%%%
+Floating
+Schwebende
+%%%%
+Trotting
+Trottende
+%%%%
 Slithering
 Kriechende
 %%%%
 Wriggling
 Schlängelnde
+%%%%
+Sprinting
+Sprintende
 %%%%
 Gliding
 Gleitende
@@ -167,6 +203,10 @@ Pirschende
 ##############################################
 
 %%%%
+# Armataur
+At
+At
+%%%%
 # Barachi
 Ba
 Ba
@@ -174,6 +214,10 @@ Ba
 # Centaur
 Ce
 Ze
+%%%%
+# Coglin
+Co
+Co
 %%%%
 # Deep Dwarf
 DD
@@ -207,6 +251,10 @@ Fe
 Fo
 Fo
 %%%%
+# Gale centaur
+GC
+Sz
+%%%%
 # Gargoyle
 Gr
 Gr
@@ -227,6 +275,10 @@ Ha
 HO
 HO
 %%%%
+# High Elf
+HE
+He
+%%%%
 # Human
 Hu
 Mn
@@ -234,6 +286,22 @@ Mn
 # Kobold
 Ko
 Ko
+%%%%
+# Lava Orc
+LO
+LO
+%%%%
+# Mayflytaur
+My
+Et
+%%%%
+# Meteoran
+Me
+Me
+%%%%
+# Mountain Dwarf
+MD
+Bz
 %%%%
 # Merfolk
 Mf
@@ -259,9 +327,21 @@ Op
 Og
 Og
 %%%%
+# Oni
+On
+On
+%%%%
 # Palentonga
 Pa
 Pa
+%%%%
+# Poltergeist
+Po
+Po
+%%%%
+# Revenant
+Re
+Wg
 %%%%
 # Sludge Elf
 SE
@@ -386,8 +466,9 @@ Ne
 Ne
 %%%%
 # Reaver
-Re
-Pl
+# same as Revenant
+#Re
+#Pl
 %%%%
 # Shapeshifter
 Sh

@@ -7,9 +7,40 @@
 ##############################################
 # Player species
 ##############################################
+
+# Note: If playing on trunk, obsolete species can still appear in the high
+# scores list (and possibly as player ghosts).
+# Armataur (At) - Removed in v0.35
+# Ghoul (Gh) - Removed in 0.33
+# Vampire (Vp) - Removed in 0.33
+# Hill Orc (HO) - Removed in 0.32
+# Meteoran (Me) - Removed in 0.31
+# Ogre (Og) - Removed in 0.31
+# Palentonga (Pa) - Removed in 0.30
+# Mayflytaur (My) - Only existed briefly in 0.29 as an April Fools joke
+# Deep Dwarf (DD) - Removed in 0.29
+# Halfling (Ha) - Removed in 0.27
+# Centaur (Ce) - Removed in 0.26
+# High Elf (HE) - Removed in 0.20
+# Mottled Draconian (subspecies of Draconian) - Removed in 0.20
+# Lava Orc (LO) - Never made it into a stable release, last seen in 0.15 trunk
+# Sludge Elf (SE) - Removed in 0.13
+# Kenku (Ke) - renamed to Tengu in 0.10
+# Gnome (Gm - formerly Gn before the addition of Gnolls) - Removed in 0.5
+# Grey Elf (GE) - Removed in 0.5
+# Ogre-mage (OM) - Merged with Ogres in 0.5
+# Hill Dwarf (HD) - Removed in 0.3
+# Elf (El) - Removed in 0.3
+
+%%%%
+the Armataur
+{m}der Armataur
 %%%%
 the Barachi
 {m}der Barachi
+%%%%
+the Coglin
+{m}der Coglin
 %%%%
 the Deep Dwarf
 {m}der Tiefenzwerg
@@ -35,6 +66,9 @@ the Felid
 the Formicid
 {m}der Formicid
 %%%%
+the Gale Centaur
+{m}der Sturmwindzentaur
+%%%%
 the Gargoyle
 {m}der Gargoyle
 %%%%
@@ -53,11 +87,20 @@ the Human
 the Kobold
 {m}der Kobold
 %%%%
+the Mayflytaur
+{m}der Eintagsfliegetaur
+%%%%
 the Merfolk
 {n}das Meerwesen
 %%%%
+the Meteoran
+{m}der Meteoran
+%%%%
 the Minotaur
 {m}der Minotaur
+%%%%
+the Mountain Dwarf
+{m}der Bergzwerg
 %%%%
 the Mummy
 {f}die Mumie
@@ -71,8 +114,17 @@ the Octopode
 the Ogre
 {m}der Oger
 %%%%
+the Oni
+{m}der Oni
+%%%%
 the Palentonga
 {m}der Palentonga
+%%%%
+the Poltergeist
+{m}der Poltergeist
+%%%%
+the Revenant
+{m}der Wiedergänger
 %%%%
 the Spriggan
 {m}der Spriggan
@@ -90,7 +142,7 @@ the Vine Stalker
 {m}der Rebpirscher
 %%%%
 
-# obsolete (can still appear in highscores list, and maybe as ghosts)
+# really old
 %%%%
 the Halfling
 {m}der Halbling
@@ -141,6 +193,177 @@ the Yellow Draconian
 %%%%
 
 ##############################################
+# Player species-orc hybrids
+##############################################
+
+# When worshipping Beogh, you become a kind of hybrid between your original
+# species and an orc. This mechanism was introduced in v0.32, so doesn't apply
+# to any species removed prior to that.
+
+%%%%
+# Armataur (same as Gale Centaur)
+#the Orcataur
+%%%%
+# Barachi
+the Orcphibian
+{f}die Orkphibie
+%%%%
+# Coglin
+the Exo-Orc
+{m}der Exo-Ork
+%%%%
+# Deep Elf
+the Deep Orc
+{m}der Tiefenork
+%%%%
+# Demigod
+# can't worship Beogh (or any god)
+%%%%
+# Demonspawn
+the Demon Orc
+{m}der Dämonenork
+%%%%
+# Centaur
+the Centorc
+{m}der Zentork
+%%%%
+# Deep Dwarf
+the Deep Dworc
+{m}der Tiefenzwork
+%%%%
+# Ghoul
+the Rotting Orc
+{m}der Faulende Ork
+%%%%
+# Hill Orc
+the Antique Orc
+{m}der Antike Ork
+%%%%
+# Djinni
+the Orcfreeti
+{m}der Orkfrit
+%%%%
+# Draconian
+the Orconian
+{m}der Orkonier
+%%%%
+# Black Draconian
+the Black Orconian
+{m}der Schwarze Orkonier
+%%%%
+# Green Draconian
+the Green Orconian
+{m}der Grüne Orkonier
+%%%%
+# Grey Draconian
+the Grey Orconian
+{m}der Graue Orkonier
+%%%%
+# Pale Draconian
+the Pale Orconian
+{m}der Helle Orkonier
+%%%%
+# Purple Draconian
+the Purple Orconian
+{m}der Purpurne Orkonier
+%%%%
+# Red Draconian
+the Red Orconian
+{m}der Rote Orkonier
+%%%%
+# White Draconian
+the White Orconian
+{m}der Weiße Orkonier
+%%%%
+# Yellow Draconian
+the Yellow Orconian
+{m}der Gelbe Orkonier
+%%%%
+# Felid
+the Orcat
+{f}die Orkatze
+%%%%
+# Formicid
+the Orcmicid
+{m}der Orkacid
+%%%%
+# Gale Centaur
+the Orcataur
+{m}der Orkataur
+%%%%
+# Gargoyle
+the Gargorcle
+{m}der Gargorkle
+%%%%
+# Gnoll
+the Hyenorc
+{m}der Hyänork
+%%%%
+# Human (duplicate of orc genus)
+#the Orc
+%%%%
+# Kobold
+the Orcobold
+{m}der Orkbold
+%%%%
+# Merfolk
+the Merforc
+{m}der Meerork
+%%%%
+# Minotaur
+the Minotorc
+{m}der Minotork
+%%%%
+# Mountain Dwarf
+the Mountain Orc
+{m}der Bergork
+%%%%
+# Mummy
+the Orcish Mummy
+{f}die Orkische Mumie
+%%%%
+# Naga
+the Nagorc
+{m}der Nagork
+%%%%
+# Octopode
+the Orctopode
+{m}der Orktopode
+%%%%
+# Oni
+the Big Orc
+{m}der Große Ork
+%%%%
+# Poltergeist
+the Phantasmorc
+{m}der Phantasmork
+%%%%
+# Revenant
+the Skeletorc
+{m}der Skelettork
+%%%%
+# Spriggan
+the Spriggorc
+{m}der Spriggork
+%%%%
+# Tengu
+the Tengorc
+{m}der Tengork
+%%%%
+# Troll
+the Trorc
+{m}der Trork
+%%%%
+# Vine Stalker
+the Orchid Stalker
+{m}der Orchideepirscher
+%%%%
+# Vampire
+the Orcula
+{m}der Orkula
+%%%%
+
+##############################################
 # Player genus
 # NOTE: If not listed then species is used
 ##############################################
@@ -149,7 +372,11 @@ the Yellow Draconian
 the Frog
 {m}der Frosch
 %%%%
-# Deep Dwarf
+# Coglin
+the Goblin
+{m}der Goblin
+%%%%
+# Deep/Mountain Dwarf
 the Dwarf
 {m}der Zwerg
 %%%%
@@ -173,7 +400,11 @@ the Ant
 the Octopus
 {m}der Oktopus
 %%%%
-# Lava Orc
+# Poltergeist
+the Geist
+{m}der Geist
+%%%%
+# Hill Orc
 the Orc
 {m}der Ork
 %%%%
