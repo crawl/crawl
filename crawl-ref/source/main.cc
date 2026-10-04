@@ -2513,7 +2513,8 @@ void process_command(command_type cmd, command_type prev_cmd)
         if (crawl_state.game_is_hints())
             mpr("Unknown command. (For a list of commands type <w>?\?</w>.)");
         else // well, not examine, but...
-            mprf(MSGCH_EXAMINE_FILTER, "Unknown command.");
+            mprf(MSGCH_EXAMINE_FILTER,
+                 "Unknown command. Press <w>?</w> for command help.");
 
         if (feat_is_altar(env.grid(you.pos())))
         {
