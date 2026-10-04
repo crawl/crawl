@@ -3049,6 +3049,7 @@ bool valid_marionette_spell(spell_type spell)
         case SPELL_CALL_TIDE:
         case SPELL_DRUIDS_CALL:
         case SPELL_PHASE_SHIFT:
+        case SPELL_STAMPEDE:
 
         // Would be buggy to try
         case SPELL_CREATE_TENTACLES:
