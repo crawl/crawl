@@ -161,8 +161,8 @@ spret cheibriados_slouch(bool fail);
 void cheibriados_time_step(int pow);
 
 void ashenzari_offer_new_curse();
-bool ashenzari_curse_item();
-bool ashenzari_uncurse_item();
+bool ashenzari_bind_item();
+bool ashenzari_shatter_item();
 string desc_curse_skills(const CrawlVector& curse);
 string curse_abbr(const CrawlStoreValue& curse);
 string curse_name(const CrawlStoreValue& curse);

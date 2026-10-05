@@ -299,13 +299,13 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
         buff << _item_inscription(*this);
     }
 
-    // These didn't have "cursed " prepended; add them here so that
+    // These didn't have "bound " prepended; add them here so that
     // it comes after the inscription.
     if (terse && descrip != DESC_DBNAME && descrip != DESC_BASENAME
         && !qualname
         && is_artefact(*this) && cursed())
     {
-        buff << " (curse)";
+        buff << " (bound)";
     }
 
     return buff.str();
@@ -1480,7 +1480,7 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
 
     const bool identified = ident || weap.is_identified();
 
-    const string curse_prefix = !dbname && !terse && weap.cursed() ? "cursed " : "";
+    const string curse_prefix = !dbname && !terse && weap.cursed() ? "bound " : "";
     const string plus_text = identified && !dbname && !qualname ? _plus_prefix(weap) : "";
     const string chaotic = testbits(weap.flags, ISFLAG_CHAOTIC) ? "chaotic " : "";
     const string replica = testbits(weap.flags, ISFLAG_REPLICA) ? "replica " : "";
@@ -1600,7 +1600,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     }
     case OBJ_ARMOUR:
         if (!terse && cursed())
-            buff << "cursed ";
+            buff << "bound ";
 
         // Don't list unenchantable armor as +0.
         if (identified && !dbname && !qualname && armour_is_enchantable(*this))
@@ -1774,7 +1774,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         const bool is_randart = is_artefact(*this);
 
         if (!terse && cursed())
-            buff << "cursed ";
+            buff << "bound ";
 
         if (is_randart && !dbname)
         {
@@ -1856,7 +1856,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
     case OBJ_STAVES:
         if (!terse && cursed())
-            buff << "cursed ";
+            buff << "bound ";
 
         if (is_artefact(*this) && !dbname)
         {

@@ -811,7 +811,7 @@ void player_equip_set::find_removable_items_for_slot(equipment_slot base_slot,
     }
 
     if (!quiet && !found_item && cursed_item)
-        mprf(MSGCH_PROMPT, "%s is stuck to your body!", cursed_item->name(DESC_YOUR).c_str());
+        mprf(MSGCH_PROMPT, "%s is chained to your body!", cursed_item->name(DESC_YOUR).c_str());
 }
 
 /**

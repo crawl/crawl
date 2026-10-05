@@ -1695,7 +1695,7 @@ bool can_unequip_item(item_def& item, bool silent)
     {
         if (!silent)
         {
-            mprf(MSGCH_PROMPT, "%s is stuck to your body!",
+            mprf(MSGCH_PROMPT, "%s is chained to your body!",
                                 item.name(DESC_YOUR).c_str());
         }
         return false;

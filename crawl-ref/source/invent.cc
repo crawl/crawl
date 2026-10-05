@@ -623,7 +623,7 @@ string no_selectables_message(int item_selector)
             return "You cannot evoke magical items.";
         return "You aren't carrying any items that you can evoke.";
     case OSEL_CURSED_WORN:
-        return "None of your equipped items are cursed.";
+        return "None of your equipped items are bound to you.";
     case OSEL_WORN_ARMOUR:
         return "You aren't wearing any pieces of armour.";
     case OSEL_WORN_JEWELLERY_OR_TALISMAN:
@@ -639,7 +639,7 @@ string no_selectables_message(int item_selector)
     case OSEL_ARTEFACT_WEAPON:
         return "You aren't carrying any artefact melee weapons.";
     case OSEL_CURSABLE:
-        return "You aren't wearing any cursable items.";
+        return "You aren't wearing any items which can be bound.";
     case OSEL_UNCURSED_WORN_RINGS:
         return "You aren't wearing any uncursed rings.";
     case OSEL_QUIVER_ACTION:

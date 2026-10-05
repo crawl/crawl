@@ -410,7 +410,7 @@ Oozemancy ability
 伤害取决于与其相邻的黏性墙壁的数量。
 %%%%
 # 艾申扎利
-Curse Item ability
+Ritual of Binding ability
 
 诅咒一个选定的装备着的物品，将其束缚到穿戴者身上，直到诅咒和物品都被打破。
 被诅咒的物品再也无法被附魔或调整。

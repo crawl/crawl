@@ -626,9 +626,9 @@ static vector<ability_def> &_get_ability_list()
             10, 0, 12, -1, {fail_basis::invo, 80, 4, 25}, abflag::none },
 
         // Ashenzari
-        { ABIL_ASHENZARI_CURSE, "Curse Item",
+        { ABIL_ASHENZARI_BIND, "Ritual of Binding",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
-        { ABIL_ASHENZARI_UNCURSE, "Shatter the Chains",
+        { ABIL_ASHENZARI_SHATTER, "Shatter the Chains",
             0, 0, 0, -1, {fail_basis::invo}, abflag::curse },
 
         // Dithmenos
@@ -985,7 +985,7 @@ const string make_cost_description(ability_type ability)
     if (ability == ABIL_CACOPHONY)
         ret += ", Noise";
 
-    if (ability == ABIL_ASHENZARI_CURSE
+    if (ability == ABIL_ASHENZARI_BIND
         && !you.props[CURSE_KNOWLEDGE_KEY].get_vector().empty())
     {
         ret += ", ";
@@ -1031,7 +1031,7 @@ const string make_cost_description(ability_type ability)
     }
 
     if (abil.flags & abflag::curse)
-        ret += ", Cursed item";
+        ret += ", Bound item";
 
     if (abil.flags & abflag::gold)
     {
@@ -1114,7 +1114,7 @@ static const string _detailed_cost_description(ability_type ability)
     if (abil.flags & abflag::curse)
     {
         have_cost = true;
-        ret << "\nOne cursed item";
+        ret << "\nOne bound item";
     }
 
     if (abil.flags & abflag::torchlight)
@@ -1419,7 +1419,7 @@ static string _curse_desc()
     if (curses.empty())
         return "";
 
-    return "\nIf you bind an item with this curse Ashenzari will enhance "
+    return "\nIf you bind an item with this ritual Ashenzari will enhance "
            "the following skills:\n"
            +  desc_curse_skills(curses) + ".";
 }
@@ -1602,7 +1602,7 @@ string get_ability_desc(const ability_type ability, bool need_title)
 
     switch (ability)
     {
-        case ABIL_ASHENZARI_CURSE:
+        case ABIL_ASHENZARI_BIND:
             lookup += _curse_desc();
             break;
 
@@ -3992,13 +3992,13 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_CHEIBRIADOS_SLOUCH:
         return cheibriados_slouch(fail);
 
-    case ABIL_ASHENZARI_CURSE:
-        if (!ashenzari_curse_item())
+    case ABIL_ASHENZARI_BIND:
+        if (!ashenzari_bind_item())
             return spret::abort;
         break;
 
-    case ABIL_ASHENZARI_UNCURSE:
-        if (!ashenzari_uncurse_item())
+    case ABIL_ASHENZARI_SHATTER:
+        if (!ashenzari_shatter_item())
             return spret::abort;
         break;
 
@@ -4748,8 +4748,8 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_HEPLIAKLQANA_TYPE_ELEMENTALIST:
     case ABIL_HEPLIAKLQANA_TYPE_HEXER:
     case ABIL_HEPLIAKLQANA_IDENTITY: // move this?
-    case ABIL_ASHENZARI_CURSE:
-    case ABIL_ASHENZARI_UNCURSE:
+    case ABIL_ASHENZARI_BIND:
+    case ABIL_ASHENZARI_SHATTER:
     case ABIL_MAKHLEB_BRAND_SELF_1:
     case ABIL_MAKHLEB_BRAND_SELF_2:
     case ABIL_MAKHLEB_BRAND_SELF_3:
@@ -4831,9 +4831,9 @@ vector<ability_type> get_god_abilities(bool ignore_piety, bool ignore_penance)
     if (you_worship(GOD_ASHENZARI))
     {
         if (you.props.exists(AVAILABLE_CURSE_KEY))
-            abilities.push_back(ABIL_ASHENZARI_CURSE);
+            abilities.push_back(ABIL_ASHENZARI_BIND);
         if (ignore_piety || you.raw_piety > ASHENZARI_BASE_PIETY )
-            abilities.push_back(ABIL_ASHENZARI_UNCURSE);
+            abilities.push_back(ABIL_ASHENZARI_SHATTER);
     }
 
     for (const auto& power : get_god_powers(you.religion))

@@ -2478,13 +2478,14 @@ void ashenzari_offer_new_curse()
     const string offer_string = curse_names.empty() ? "" :
                                 (" of " + curse_names);
 
-    mprf(MSGCH_GOD, "Ashenzari invites you to partake of a vision"
-                    " and a curse%s.", offer_string.c_str());
+    mprf(MSGCH_GOD, "Ashenzari invites you to chain yourself with knowledge%s.",
+                    offer_string.c_str());
 }
 
 static void _do_curse_item(item_def &item)
 {
-    mprf("Your %s glows black for a moment.", item.name(DESC_PLAIN).c_str());
+    mprf("You bind %s in chains and feel the brush of Ashenzari's sight against your mind.",
+         item.name(DESC_YOUR).c_str());
     item.flags |= ISFLAG_CURSED;
 
     if (item.base_type == OBJ_WEAPONS)
@@ -2502,17 +2503,17 @@ static void _do_curse_item(item_def &item)
 }
 
 /**
- * Give a prompt to curse an item.
+ * Give a prompt to bind an item.
  *
- * This is the core logic behind Ash's Curse Item ability.
- * Player can abort without penalty.
+ * This is the core logic behind Ash's Ritual of Binding ability.
+ * Player can bind without penalty.
  * Player can curse only worn items.
  *
- * @return       Whether the player cursed anything.
+ * @return       Whether the player bound anything.
  */
-bool ashenzari_curse_item()
+bool ashenzari_bind_item()
 {
-    const string prompt_msg = make_stringf("Curse which item? (Esc to abort)");
+    const string prompt_msg = make_stringf("Bind which item? (Esc to abort)");
     const int item_slot = prompt_invent_item(prompt_msg.c_str(),
                                              menu_type::invlist,
                                              OSEL_CURSABLE, OPER_ANY);
@@ -2523,7 +2524,7 @@ bool ashenzari_curse_item()
 
     if (!item_is_selected(item, OSEL_CURSABLE))
     {
-        mprf(MSGCH_PROMPT, "You cannot curse that!");
+        mprf(MSGCH_PROMPT, "You cannot bind that!");
         return false;
     }
 
@@ -2544,9 +2545,9 @@ bool ashenzari_curse_item()
  *
  * @return      Whether the player uncursed anything.
  */
-bool ashenzari_uncurse_item()
+bool ashenzari_shatter_item()
 {
-    int item_slot = prompt_invent_item("Uncurse and destroy which item?",
+    int item_slot = prompt_invent_item("Unbind and destroy which item?",
                                        menu_type::invlist,
                                        OSEL_CURSED_WORN, OPER_ANY);
     if (prompt_failed(item_slot))
@@ -2556,13 +2557,13 @@ bool ashenzari_uncurse_item()
 
     if (!item_is_selected(item, OSEL_CURSED_WORN))
     {
-        mprf(MSGCH_PROMPT, "You cannot uncurse and destroy that!");
+        mprf(MSGCH_PROMPT, "You cannot unchain and destroy that!");
         return false;
     }
 
     if (item_is_melded(item))
     {
-        mprf(MSGCH_PROMPT, "You cannot shatter the curse on %s while it is "
+        mprf(MSGCH_PROMPT, "You cannot shatter the chains on %s while it is "
                            "melded with your body!",
              item.name(DESC_THE).c_str());
         return false;
@@ -2571,8 +2572,7 @@ bool ashenzari_uncurse_item()
     if (!yesno(make_stringf("Really remove and destroy %s?%s",
                             item.name(DESC_THE).c_str(),
                             you.props.exists(AVAILABLE_CURSE_KEY) ?
-                                " Ashenzari will withdraw the offered vision "
-                                "and curse!"
+                                " Ashenzari will withdraw the current offer of knowledge!"
                                 : "").c_str(),
                             false, 'n'))
     {
@@ -2584,7 +2584,7 @@ bool ashenzari_uncurse_item()
     if (!handle_chain_removal(to_remove, true))
         return false;
 
-    mprf("You shatter the curse binding %s!", item.name(DESC_THE).c_str());
+    mprf("You shatter the chains binding %s!", item.name(DESC_THE).c_str());
 
     for (item_def* _item : to_remove)
     {
@@ -2598,7 +2598,7 @@ bool ashenzari_uncurse_item()
     you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
     if (you.props.exists(AVAILABLE_CURSE_KEY))
     {
-        simple_god_message(" withdraws the vision and curse.");
+        simple_god_message(" withdraws the invitation to bind yourself further.");
         you.props.erase(AVAILABLE_CURSE_KEY);
     }
 
