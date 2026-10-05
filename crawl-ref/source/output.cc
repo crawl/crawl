@@ -1291,9 +1291,15 @@ static void _add_status_light_to_out(int i, vector<status_light>& out)
     if (fill_status_info(i, inf) && !inf.light_text.empty())
     {
         if (!inf.light_text_formatted.empty())
-            out.emplace_back(formatted_string::parse_string(inf.light_text_formatted), i);
+        {
+            string text = localise_in_context("status", inf.light_text_formatted);
+            out.emplace_back(formatted_string::parse_string(text), i);
+        }
         else
-            out.emplace_back(formatted_string(inf.light_text, inf.light_colour), i);
+        {
+            string text = localise_in_context("status", inf.light_text);
+            out.emplace_back(formatted_string(text, inf.light_colour), i);
+        }
     }
 }
 
