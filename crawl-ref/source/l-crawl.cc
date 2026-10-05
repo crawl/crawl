@@ -1041,26 +1041,54 @@ LUARET1(crawl_game_started, boolean, crawl_state.need_save
  * @function stat_gain_prompt
  */
 LUARET1(crawl_stat_gain_prompt, boolean, crawl_state.stat_gain_prompt)
+
+// If running in a user script, use the appropriate RNG.
+// fn must not throw lua errors (or we won't unswitch the RNG), so be sure to
+// parse your parameters outside it.
+template<typename F>
+static auto _use_correct_rng(lua_State *ls, F fn) -> decltype(fn())
+{
+    if (!CLua::is_managed_vm(ls))
+        return fn();
+    rng::generator gen(rng::USER_SCRIPT);
+    return fn();
+}
+
 /*** Return a random number from [0, max).
  * @tparam int max
  * @treturn int
  * @function random2
  * */
-LUARET1(crawl_random2, integer, random2(luaL_safe_checkint(ls, 1)))
+static int crawl_random2(lua_State *ls)
+{
+    const int max = luaL_safe_checkint(ls, 1);
+    lua_pushinteger(ls, _use_correct_rng(ls, [&] { return random2(max); }));
+    return 1;
+}
 /*** Perform a weighted coinflip.
  * @tparam int in
  * @treturn boolean
  * @function one_chance_in
  */
-LUARET1(crawl_one_chance_in, boolean, one_chance_in(luaL_safe_checkint(ls, 1)))
+static int crawl_one_chance_in(lua_State *ls)
+{
+    const int n = luaL_safe_checkint(ls, 1);
+    lua_pushboolean(ls, _use_correct_rng(ls, [&] { return one_chance_in(n); }));
+    return 1;
+}
 /*** Average num random rolls from [0, max).
  * @tparam int max
  * @tparam int num
  * @treturn int
  * @function random2avg
  */
-LUARET1(crawl_random2avg, integer,
-        random2avg(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2)))
+static int crawl_random2avg(lua_State *ls)
+{
+    const int max = luaL_safe_checkint(ls, 1);
+    const int rolls = luaL_safe_checkint(ls, 2);
+    lua_pushinteger(ls, _use_correct_rng(ls, [&] { return random2avg(max, rolls); }));
+    return 1;
+}
 /*** Random number in a range.
  * @tparam int min
  * @tparam int max
@@ -1074,7 +1102,7 @@ static int crawl_random_range(lua_State* ls)
     int nrolls = lua_isnumber(ls, 3) ? luaL_safe_checkint(ls, 3) : 1;
     int result = 0;
     if (nrolls > 0)
-        result = random_range(low, high, nrolls);
+        result = _use_correct_rng(ls, [&] { return random_range(low, high, nrolls); });
     lua_pushinteger(ls, result);
     return 1;
 }
@@ -1082,25 +1110,34 @@ static int crawl_random_range(lua_State* ls)
  * @treturn boolean
  * @function coinflip
  */
-LUARET1(crawl_coinflip, boolean, coinflip())
+LUARET1(crawl_coinflip, boolean, _use_correct_rng(ls, coinflip))
 /*** Roll dice.
  * @tparam[opt=1] int num_dice
  * @tparam int sides
  * @treturn int
  * @function roll_dice
  */
-LUARET1(crawl_roll_dice, integer,
-        lua_gettop(ls) == 1
-        ? roll_dice(1, luaL_safe_checkint(ls, 1))
-        : roll_dice(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2)))
+static int crawl_roll_dice(lua_State *ls)
+{
+    const bool one_arg = lua_gettop(ls) == 1;
+    const int num = one_arg ? 1 : luaL_safe_checkint(ls, 1);
+    const int size = luaL_safe_checkint(ls, one_arg ? 1 : 2);
+    lua_pushinteger(ls, _use_correct_rng(ls, [&] { return roll_dice(num, size); }));
+    return 1;
+}
 /*** Do a random draw.
  * @tparam int x
  * @tparam int y
  * @treturn boolean
  * @function x_chance_in_y
  */
-LUARET1(crawl_x_chance_in_y, boolean, x_chance_in_y(luaL_safe_checkint(ls, 1),
-                                                    luaL_safe_checkint(ls, 2)))
+static int crawl_x_chance_in_y(lua_State *ls)
+{
+    const int x = luaL_safe_checkint(ls, 1);
+    const int y = luaL_safe_checkint(ls, 2);
+    lua_pushboolean(ls, _use_correct_rng(ls, [&] { return x_chance_in_y(x, y); }));
+    return 1;
+}
 /*** Random-round integer division.
  * @tparam int numerator
  * @tparam int denominator
@@ -1114,14 +1151,15 @@ static int crawl_div_rand_round(lua_State* ls)
     if (den == 0)
         lua_pushnil(ls);
     else
-        lua_pushinteger(ls, div_rand_round(num, den));
+        lua_pushinteger(ls,
+            _use_correct_rng(ls, [&] { return div_rand_round(num, den); }));
     return 1;
 }
 /*** A random floating point number in [0,1.0)
  * @treturn number
  * @function random_real
  */
-LUARET1(crawl_random_real, number, random_real())
+LUARET1(crawl_random_real, number, _use_correct_rng(ls, random_real))
 /*** Check if the player really wants to use their weapon.
  * @treturn boolean
  * @function weapon_check

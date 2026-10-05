@@ -105,12 +105,30 @@ namespace rng
         : subgenerator(get_uint64())
     { }
 
+    static PcgRNG _system_rng()
+    {
+        uint64_t seed_key[2];
+        bool seeded = read_urandom((char*)(&seed_key), sizeof(seed_key));
+        ASSERT(seeded);
+        return PcgRNG(seed_key[0], seed_key[1]);
+    }
+
+    // Not seeded so that user Lua can't affect seeded randomness or be used
+    // to recover the seed.
+    static PcgRNG &_user_script_rng()
+    {
+        static PcgRNG rng = _system_rng();
+        return rng;
+    }
+
     PcgRNG *get_generator(rng_type r)
     {
         UNUSED(r);
         ASSERT(_generator != ASSERT_NO_RNG);
         if (_generator == SUB_GENERATOR)
             return _sub_generator;
+        else if (_generator == USER_SCRIPT)
+            return &_user_script_rng();
         else
             return &_global_state[_generator];
     }
@@ -166,10 +184,7 @@ namespace rng
     void seed()
     {
         // seed both state and sequence from system randomness.
-        uint64_t seed_key[2];
-        bool seeded = read_urandom((char*)(&seed_key), sizeof(seed_key));
-        ASSERT(seeded);
-        PcgRNG master = PcgRNG(seed_key[0], seed_key[1]);
+        PcgRNG master = _system_rng();
         _do_seeding(master);
     }
 
