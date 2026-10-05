@@ -134,6 +134,8 @@ TEST_CASE( "Localise German", "[single-file]" )
     {
         CHECK( localise("a short sword") == "ein Kurzschwert" );
         CHECK( localise("m - 2 potions of might") == "m - 2 Tränke der Macht" );
+        CHECK( localise("j - 3 puce potions") == "j - 3 braunrote Zaubertränke" );
+        CHECK( localise("k - 4 murky puce potions") == "k - 4 trübe braunrote Zaubertränke" );
         CHECK( localise("a +2 leather armour" ) == "eine +2 Lederrüstung" );
         CHECK( localise("a +2 leather armour of fire resistance" ) == "eine +2 Lederrüstung der Feuerresistenz" );
         CHECK( localise("a +1 pair of gloves of archery" ) == "ein +1 Paar Handschuhe der Schießkunst" );
