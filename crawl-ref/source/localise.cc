@@ -846,7 +846,7 @@ bool localisation_active()
     return Options.language != lang_t::EN && _initialised;
 }
 
-string localise(const string &s)
+string localise_in_context(const string &context, const string &s)
 {
     if (!localisation_active())
         return s;
@@ -866,7 +866,7 @@ string localise(const string &s)
             result += lines[i];
         else
         {
-            _context = "";
+            _context = context;
             debuglog("IN:  \"%s\"", lines[i].c_str());
             string line = _localise_string(lines[i]);
             debuglog("OUT: \"%s\"", line.c_str());
@@ -875,6 +875,11 @@ string localise(const string &s)
     }
 
     return result;
+}
+
+string localise(const string &s)
+{
+    return localise_in_context("", s);
 }
 
 string localisef(const char* format, ...)

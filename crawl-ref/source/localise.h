@@ -27,3 +27,6 @@ string localisef(const char* format, ...);
 
 // localise formatted string
 formatted_string localise(const formatted_string& fs);
+
+// localise with specific context
+string localise_in_context(const string &context, const string &s);
