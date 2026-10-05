@@ -89,8 +89,6 @@ static inline string _escape_pcnts(const string& s)
     return replace_all(s, "%", "%%");
 }
 
-#define VLOCALISE(...) localise(make_stringf(__VA_ARGS__))
-
 #ifdef USE_TILE_LOCAL
 
 static bool _low_vertical_space()
@@ -137,7 +135,7 @@ y  HPP MPP
  */
 #include <stdarg.h>
 #define CGOTOXY _cgotoxy_touchui
-#define CPRINTF(...) _cprintf_touchui(_escape_pcnts(VLOCALISE(__VA_ARGS__)).c_str())
+#define CPRINTF(...) _cprintf_touchui(_escape_pcnts(localisef(__VA_ARGS__)).c_str())
 #define NOLOC_CPRINTF _cprintf_touchui
 #define NOWRAP_EOL_CPRINTF _nowrap_eol_cprintf_touchui
 
@@ -407,7 +405,7 @@ static void _nowrap_eol_cprintf_touchui(const char *format, ...)
             // don't print these
             break;
         case TOUCH_V_TITL2:
-            buf = VLOCALISE("%s%s", species::get_abbrev(you.species),
+            buf = localisef("%s%s", species::get_abbrev(you.species),
                                     get_job_abbrev(you.char_class));
             cprintf("%s", buf.c_str());
             TOUCH_UI_STATE = TOUCH_S_NULL; // suppress whatever else it was going to print
@@ -420,7 +418,7 @@ static void _nowrap_eol_cprintf_touchui(const char *format, ...)
 
 #else
 #define CGOTOXY cgotoxy
-#define CPRINTF(...) wrapcprintf(_escape_pcnts(VLOCALISE(__VA_ARGS__)).c_str())
+#define CPRINTF(...) wrapcprintf(_escape_pcnts(localisef(__VA_ARGS__)).c_str())
 #define NOLOC_CPRINTF wrapcprintf
 #define NOWRAP_EOL_CPRINTF nowrap_eol_cprintf
 #endif
