@@ -2888,7 +2888,8 @@ static void _log_form_xp(int exp)
 
     // If the player gained enough XP to gain several XLs at once, assign only
     // as much XP to each level as it would take to fully pass through that level.
-    while (you.experience + exp > exp_needed(xp_level + 1))
+    while (xp_level < you.get_max_xl()
+           && you.experience + exp > exp_needed(xp_level + 1))
     {
         const int delta = exp_needed(xp_level + 1) - you.experience - xp_spent;
         you.xp_by_form[xp_level-1][static_cast<int>(you.default_form)] += delta;
