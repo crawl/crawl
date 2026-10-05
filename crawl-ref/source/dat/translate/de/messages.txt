@@ -6950,29 +6950,29 @@ Anzahl der Gegenstände eingeben, die aufgehoben werden sollen, dann den Gegenst
 Original Equipment
 Originalausstattung
 %%%%
-You bought it in a shop @in_location@
-Du hast diesen Gegenstand in einem Laden @in_location@ gekauft
+You bought it in a shop @in_location@.
+Du hast diesen Gegenstand in einem Laden @in_location@ gekauft.
 %%%%
-You acquired it @in_location@
-Du hast diesen Gegenstand @in_location@ erworben
+You acquired it @in_location@.
+Du hast diesen Gegenstand @in_location@ erworben.
 %%%%
-Your wizardly powers created it @in_location@
-Deine Zaubermacht hat diesen Gegenstand @in_location@ geschaffen
+Your wizardly powers created it @in_location@.
+Deine Zaubermacht hat diesen Gegenstand @in_location@ geschaffen.
 %%%%
-@God@ gifted it to you @in_location@
-@God@ hat dir diesen Gegenstand geschenkt @in_location@
+@God@ gifted it to you @in_location@.
+@God@ hat dir diesen Gegenstand geschenkt @in_location@.
 %%%%
-You stumbled upon it @in_location@
-Du bist auf diesen Gegenstand @in_location@ gestoßen
+You stumbled upon it @in_location@.
+Du bist auf diesen Gegenstand @in_location@ gestoßen.
 %%%%
-You subdued it @in_location@
-Du hast diesen Gegenstand @in_location@ besiegt
+You subdued it @in_location@.
+Du hast diesen Gegenstand @in_location@ besiegt.
 %%%%
-You took it off @monster@ @in_location@
-Du hast diesen Gegenstand {dat}@monster@ @in_location@ abgenommen
+You took it off @monster@ @in_location@.
+Du hast diesen Gegenstand {dat}@monster@ @in_location@ abgenommen.
 %%%%
-You found it @in_location@
-Du hast diesen Gegenstand @in_location@ gefunden
+You found it @in_location@.
+Du hast diesen Gegenstand @in_location@ gefunden.
 %%%%
 Are you sure you want to pick up this pile of gold now?
 Bist du sicher, dass du diesen Haufen Gold jetzt aufheben willst?

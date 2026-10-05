@@ -6950,28 +6950,28 @@ Select pick up quantity by entering a number, then select the item
 Original Equipment
 
 %%%%
-You bought it in a shop @in_location@
+You bought it in a shop @in_location@.
 
 %%%%
-You acquired it @in_location@
+You acquired it @in_location@.
 
 %%%%
-Your wizardly powers created it @in_location@
+Your wizardly powers created it @in_location@.
 
 %%%%
-@God@ gifted it to you @in_location@
+@God@ gifted it to you @in_location@.
 
 %%%%
-You stumbled upon it @in_location@
+You stumbled upon it @in_location@.
 
 %%%%
-You subdued it @in_location@
+You subdued it @in_location@.
 
 %%%%
-You took it off @monster@ @in_location@
+You took it off @monster@ @in_location@.
 
 %%%%
-You found it @in_location@
+You found it @in_location@.
 
 %%%%
 Are you sure you want to pick up this pile of gold now?
