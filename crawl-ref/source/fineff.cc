@@ -2083,7 +2083,7 @@ void hypnogecko_tail_fineff::fire()
 
         if (!move_pos.origin())
         {
-            you.clear_constricted();
+            you.stop_being_constricted();
             you.stop_being_caught();
             you.finalise_movement();
         }
