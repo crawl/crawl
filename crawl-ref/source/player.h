@@ -416,6 +416,8 @@ public:
     // Count of various types of actions made.
     map<pair<caction_type, int>, FixedVector<int, 27> > action_count;
 
+    FixedVector<int, NUM_TRANSFORMS> xp_by_form[27];
+
     // Which branches have been noted to have been left during this game.
     FixedBitVector<NUM_BRANCHES> branches_left;
 

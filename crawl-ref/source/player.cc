@@ -2880,6 +2880,27 @@ static void _handle_god_wrath(int exp)
     }
 }
 
+// Log experience gained whatever base form the player was in when they gained it.
+static void _log_form_xp(int exp)
+{
+    int xp_level = you.experience_level;
+    int xp_spent = 0;
+
+    // If the player gained enough XP to gain several XLs at once, assign only
+    // as much XP to each level as it would take to fully pass through that level.
+    while (you.experience + exp > exp_needed(xp_level + 1))
+    {
+        const int delta = exp_needed(xp_level + 1) - you.experience - xp_spent;
+        you.xp_by_form[xp_level-1][static_cast<int>(you.default_form)] += delta;
+        exp -= delta;
+        xp_spent += delta;
+        ++xp_level;
+    }
+
+    // Then assign the rest to their current level.
+    you.xp_by_form[xp_level-1][static_cast<int>(you.default_form)] += exp;
+}
+
 unsigned int gain_exp(unsigned int exp_gained)
 {
     if (crawl_state.game_is_arena())
@@ -2927,6 +2948,8 @@ void apply_exp()
     _handle_cacophony_recharge(skill_xp);
     _handle_batform_recharge(skill_xp);
     _handle_watery_grave_recharge(skill_xp);
+
+    _log_form_xp(exp_gained);
 
     if (player_under_penance(GOD_HEPLIAKLQANA))
         return; // no xp for you!
@@ -5885,6 +5908,9 @@ player::player()
     constricting = nullptr;
 
     clear_deferred_move();
+
+    for (int i = 0; i < 27; ++i)
+        xp_by_form[i].init(0);
 
     // Protected fields:
     clear_place_info();

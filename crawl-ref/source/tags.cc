@@ -1697,6 +1697,14 @@ static bool _calc_score_exists()
     return !lua_isnil(dlua, -1);
 }
 
+static void _marshall_form_xp(writer &th)
+{
+    marshallByte(th, NUM_TRANSFORMS);
+    for (int xl = 0; xl < 27; ++xl)
+        for (int form = 0; form < NUM_TRANSFORMS; ++form)
+            marshallInt(th, you.xp_by_form[xl][form]);
+}
+
 static void _tag_construct_you(writer &th)
 {
     marshallInt(th, you.last_mid);
@@ -2004,6 +2012,8 @@ static void _tag_construct_you(writer &th)
     string revision = "Git:";
     revision += Version::Long;
     marshallString(th, revision);
+
+    _marshall_form_xp(th);
 
     you.props.write(th);
 }
@@ -3114,6 +3124,25 @@ static void _read_old_uncancels(reader& th)
     }
 }
 #endif
+
+static void _unmarshall_form_xp(reader &th)
+{
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_FORM_XP_TRACKING)
+    {
+#endif
+    const int num_forms = unmarshallByte(th);
+    for (int xl = 0; xl < 27; ++xl)
+    {
+        for (int form = 0; form < num_forms; ++form)
+            you.xp_by_form[xl][form] = unmarshallInt(th);
+        for (int form = num_forms; form < NUM_TRANSFORMS; ++form)
+            you.xp_by_form[xl][form] = 0;
+    }
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
+}
 
 static void _tag_read_you(reader &th)
 {
@@ -4786,6 +4815,8 @@ static void _tag_read_you(reader &th)
     EAT_CANARY;
 
     crawl_state.save_rcs_version = unmarshallString(th);
+
+    _unmarshall_form_xp(th);
 
     you.props.clear();
     you.props.read(th);

@@ -2766,7 +2766,7 @@ dump_message_count = 20
 
 dump_order  = header,hiscore,stats,misc,apostles,inventory,skills,spells,
 dump_order += overview,mutations,messages,screenshot,monlist,kills,
-dump_order += notes,screenshots,vaults,skill_gains,action_counts
+dump_order += notes,screenshots,vaults,skill_gains,xp_by_form,action_counts
         (Ordered list option)
         Controls the order of sections in the dump.
 

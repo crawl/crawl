@@ -92,6 +92,7 @@ static void _sdump_vault_list(dump_params &);
 static void _sdump_skill_gains(dump_params &);
 static void _sdump_action_counts(dump_params &);
 static void _sdump_apostles(dump_params &);
+static void _sdump_xp_by_form(dump_params &);
 static void _sdump_separator(dump_params &);
 static void _sdump_lua(dump_params &);
 static void _sdump_dlua_errors(dump_params &);
@@ -152,6 +153,7 @@ static dump_section_handler dump_handlers[] =
     { "action_counts",  _sdump_action_counts },
     { "skill_gains",    _sdump_skill_gains   },
     { "apostles",       _sdump_apostles      },
+    { "xp_by_form",     _sdump_xp_by_form    },
 
     // Conveniences for the .crawlrc artist.
     { "",               _sdump_newline       },
@@ -1763,6 +1765,80 @@ static void _sdump_apostles(dump_params &par)
 
     for (int i = 1; i <= get_num_apostles(); ++i)
         par.text += formatted_string::parse_string(trimmed_string(apostle_short_description(i)) + "\n\n");
+
+    par.text += "\n";
+}
+
+static void _sdump_xp_by_form(dump_params &par)
+{
+    par.text += "Percentage of experience gained in each form (* = 100%):\n\n";
+
+    // Determine which forms the player gained any XP while using (to show only
+    // those in the table), as well as tabulating the total tracked XP gained
+    // per level, so we can calculate percentages later.
+    int xp_by_xl_total[27] = {};
+    bool used_form[NUM_TRANSFORMS] = {};
+    int max_xl = 0;
+    for (int xl = 0; xl < 27; ++xl)
+    {
+        for (int form = 0; form < NUM_TRANSFORMS; ++form)
+        {
+            if (you.xp_by_form[xl][form] > 0)
+            {
+                used_form[form] = true;
+                xp_by_xl_total[xl] += you.xp_by_form[xl][form];
+            }
+        }
+        if (xp_by_xl_total[xl] > 0)
+            max_xl = xl;
+    }
+
+    // Print table header
+    par.text += "Form     XL: |";
+    for (int xl = 1; xl <= max_xl + 1; xl++)
+        par.text += make_stringf("%3d", xl);
+    par.text += " | XLs as\n";
+    par.text += "-------------+";
+    for (int xl = 1; xl <= max_xl + 1; xl++)
+        par.text += "---";
+    par.text += "-+---------\n";
+
+    // Print a row for each form any XP was gained as
+    for (int form = 0; form < NUM_TRANSFORMS; ++form)
+    {
+        if (!used_form[form])
+            continue;
+
+        const char* name = form > 0 ? get_form(static_cast<transformation>(form))->short_name.c_str()
+                                    : "None";
+
+        par.text += make_stringf("%-12s |", name);
+
+        // We define an XL spent 'as' a form as one in which 95% or more of that
+        // level's XP was gained in that form. This is slightly arbitrary, and
+        // might warrant adjustment if we decide to do anything else with these
+        // stats.
+        int xl_as_primary = 0;
+        for (int xl = 0; xl <= max_xl; ++xl)
+        {
+            int xp = you.xp_by_form[xl][form];
+            if (xp > 0)
+            {
+                int perc = xp * 100 / xp_by_xl_total[xl];
+
+                if (perc >= 95)
+                    xl_as_primary++;
+
+                if (perc == 100)
+                    par.text += "  *";
+                else
+                    par.text += make_stringf("%3d", perc);
+            }
+            else
+                par.text += "   ";
+        }
+        par.text += make_stringf(" | %2d\n", xl_as_primary);
+    }
 
     par.text += "\n";
 }

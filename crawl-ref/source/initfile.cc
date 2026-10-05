@@ -698,7 +698,7 @@ const vector<GameOption*> game_options::build_options_list()
             {"header", "hiscore", "stats", "misc",  "apostles", "inventory",
              "skills", "spells", "overview", "mutations", "messages",
              "screenshot", "monlist", "kills", "notes", "screenshots", "vaults",
-             "skill_gains", "action_counts"}),
+             "skill_gains", "xp_by_form", "action_counts"}),
         new ListGameOption<text_pattern>(SIMPLE_NAME(confirm_action), {}, true),
         new MultipleChoiceGameOption<easy_confirm_type>(
             SIMPLE_NAME(easy_confirm),
