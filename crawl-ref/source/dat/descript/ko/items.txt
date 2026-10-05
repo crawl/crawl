@@ -324,9 +324,8 @@ lajatang
 large rock
 
 굉장히 크고 무거운 바위. {{
-    if you.race() == "Ogre"
+    if you.race() == "Oni"
        or you.race() == "Troll"
-       or you.race() == "Formicid"
    then
        return ""
    else

@@ -445,7 +445,7 @@ en croissant de lune à chaque extrémité.
 large rock
 
 Un rocher très lourd et imposant. {{
-    if string.find(you.race(), "Ogre")
+    if you.race() == "Oni"
        or you.race() == "Troll"
     then
         return ""

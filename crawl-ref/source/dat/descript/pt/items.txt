@@ -182,9 +182,8 @@ Esta lança leve foi projetada para ser arremessada e causar muito dano.
 large rock
 
 Uma pedra muito grande e muito pesada. {{
-    if you.race() == "Ogre"
+    if you.race() == "Oni"
        or you.race() == "Troll"
-       or you.race() == "Formicid"
    then
        return ""
    else

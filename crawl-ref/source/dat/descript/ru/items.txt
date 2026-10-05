@@ -214,9 +214,8 @@ lajatang
 large rock
 
 Булыжник, используемый гигантами как снаряд. {{
-    if you.race() == "Ogre"
+    if you.race() == "Oni"
        or you.race() == "Troll"
-       or you.race() == "Formicid"
     then
         return ""
     else

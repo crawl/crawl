@@ -958,7 +958,7 @@ blades at both ends.
 large rock
 
 A very large and very heavy stone. {{
-    if you.race() == "Ogre"
+    if you.race() == "Oni"
        or you.race() == "Troll"
    then
        return ""
