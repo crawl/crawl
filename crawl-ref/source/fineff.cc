@@ -2045,8 +2045,6 @@ void hypnogecko_tail_fineff::fire()
 
             const int score = _movement_score_for(*ai);
 
-            mprf("(%d, %d): %d", ai->x, ai->y, score);
-
             if (score == best_score)
             {
                 if (one_chance_in(++best_count))
