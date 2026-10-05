@@ -1,0 +1,174 @@
+######################################################
+# Miscellaneous
+# -------------
+# miscname.txt: lookup miscellaneous names
+#
+# This file contains a list of names for miscellaneous things.
+######################################################
+%%%%
+# Used by Summon Horrible Things.
+SHT_int_loss
+
+Dein Verstand taumelt, von den Schrecken durch das Portal berührt.
+
+Du zitterst in deiner sterblichen Hülle, vom flüssigen Wahnsinn durch das funkelnde Tor gestreichelt.
+
+# Bal-Sagoth
+Der Beschwörungsritus scheint von deiner geistigen Gesundheit einen nicht unerheblichen Tribut zu fordern.
+
+Du hast eine kurze Vision einer großen schwarzen zyklopischen Stadtlandschaft mit hoch aufragenden stygischen Mauern.
+
+Deine Sicht wird von seltsamen Glyphen verdeckt, die sich schuppenartig winden zu scheinen und ihre Gestalt verändern.
+
+Du fühlst dich unaufhaltsam von einer namenlosen und unerbittlichen Düsternis verfolgt.
+#-----------
+
+Du windest dich in Todesqual, während dein Geist von Schrecken heimgesucht wird, die jenseits sterblicher Vorstellungskraft liegen.
+
+Dein Geist wird von erhabenem Wahnsinn verführt, als du durch das Portal ins Jenseits blickst.
+
+Du gackerst wahnsinnig beim Anblick der unheimlichen Monstrosität.
+
+Du wirst vom Wahnsinn ergriffen!
+
+Der Versuch, die unfassbaren Tiefen der Unendlichkeit zu begreifen, fordert einen Tribut von deinem Verstand.
+
+Deine Gedanken werden unentrinnbar von einem unaufhörlichen Brummen gequält.
+
+Beim Anblick dieser Blasphemie gegen die Schöpfung bricht dein Verstand im Wahnsinn zusammen!
+
+Dein Verstand zerbricht kurz, doch du schaffst es gerade noch, dich zusammenzureißen.
+
+Du spürst, wie dein prekärer Halt an der Vernunft untergraben wird.
+
+Penetrantes Geflüster tiefster Ketzerei dringt unaufhörlich in deine Gedanken ein.
+
+Dein Geist schmerzt vor Abscheu beim Anblick der wogenden Schrecken, die du angerichtet hast.
+
+Nur einen Augenblick lang ist dein Geist vor der gewaltigen Unendlichkeit des Unvorstellbaren entblößt.
+
+Dein Schädel pulsiert und pocht während Worte in einer unaussprechlichen Sprache durch deine Psyche driften.
+
+Ein dünnes, monotones Wiehern von außerhalb der Zeit wird in deinen Ohren immer lauter.
+
+Formlose Schrecken verharren am Rande deines Sichtfeldes und kommen immer näher.
+
+Ein unaufhaltsames Gefühl unerbittlicher Finsternis überkommt dich.
+
+Zusammenhängende, vernünftige Gedanken scheinen dir fremd zu sein.
+
+Ranken des Wahnsinns bohren und winden sich in die dunkelsten Ritzen deines Geistes.
+
+Du ringst darum, die Natur der unbegreiflichen Kräfte zu begreifen, die am Werk sind.
+
+Alptraumhafte Unholde überfallen deine wachen Gedanken!
+
+Brodelnde Schrecken belagern deinen Verstand!
+
+Die Klarheit entgleitet deinem schwachen Griff.
+%%%%
+# How great is the Orb of Zot?
+_great_adj_
+
+fantastische
+
+sagenhafte
+
+fabelhafte
+
+legendäre
+
+transzendente
+%%%%
+welcome_spam
+
+Wirst du dich durchsetzen, wo andere versagt haben? Wirst du die Kugel von Zot finden?
+
+Der Schoß dieses Kerkers birgt das @_great_adj_@ Artefakt, die Kugel von Zot.
+
+Wirst du derjenige sein, der die @_great_adj_@ Kugel von Zot aus den Tiefen holt?
+
+Es heißt, die Kugel von Zot existiert tief in diesem Kerker.
+%%%%
+# things that surround us on Halloween
+_halloween_things_
+
+dämonische Halluzinationen
+
+körperlose Geister
+
+Geister und Gespenster
+
+düstere Gespenster
+
+schreckliche Erscheinungen
+%%%%
+# things you don't want a witch to turn you into
+_a_lowly_
+
+ein Molch
+
+eine Schnecke
+
+eine Kröte
+
+ein Wurm
+%%%%
+welcome_spam Halloween
+
+@welcome_spam@ Seid vorsichtig! Heute Abend ist Halloween.
+
+Die Monster hier sind keine großen Fans von Süßem oder Saurem. Wenn sie dir die Kugel von Zot nicht geben wollen, musst du sie dir nehmen.
+
+Ein schrecklicher Fluch hat dich auf die Suche nach der Kugel von Zot geschickt. Was für eine schreckliche Nacht, um einen Fluch zu haben!
+
+Während du auf der Suche nach der Kugel hinabsteigst, scharen sich @_halloween_things_@ um dich. An diesem Ort spukt es!
+
+Du hörst das Gackern einer Hexe und bist plötzlich im Kerker. Wenn du die Kugel von Zot nicht findest, verwandelst du dich in @_a_lowly_@!
+%%%%
+hell_effect_quiet
+
+{{
+if you.can_smell() then
+    return "Du riechst Schwefel."
+else
+    return "Schwefel regnet von oben herab."
+end
+}}
+
+Du fühlst dich verloren und weit, weit weg von zu Hause...
+
+Du zitterst vor Angst.
+
+Du fühlst eine schreckliche Vorahnung...
+
+Etwas Beängstigendes geschieht.
+
+Du spürst, wie dich ein uraltes Übel beobachtet...
+
+Du fühlst dich plötzlich ganz klein und verletzlich.
+
+Du spürst eine feindliche Präsenz.
+
+"Du wirst diesen Ort nicht verlassen."
+
+"Stirb, Sterblicher!"
+
+"Wir verzeihen nicht denen, die bei uns eindringen!"
+
+"Unbefugte sind hier nicht willkommen!"
+
+"Du gehörst nicht an diesen Ort!"
+
+"Geh jetzt, bevor es zu spät ist!"
+
+"Jetzt haben wir dich!"
+%%%%
+hell_effect_noisy
+
+Ein markerschütternder Schrei durchdringt die Luft!
+
+Du hörst, wie Worte in einer seltsamen und schrecklichen Sprache gesprochen werden...
+
+Du hörst ein teuflisches Gelächter!
+%%%%

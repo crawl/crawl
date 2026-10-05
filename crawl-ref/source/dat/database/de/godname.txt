@@ -1,0 +1,169 @@
+%%%%
+Zin lastname
+
+Zin der Gesetzgeber
+%%%%
+Yredelemnul lastname
+
+Yredelemnul der Dunkle
+%%%%
+Okawaru lastname
+
+Kriegsmeister Okawaru
+%%%%
+Makhleb lastname
+
+Makhleb der Vernichter
+%%%%
+Sif Muna lastname
+
+Sif Muna die Hüterin des Wissens
+%%%%
+Trog lastname
+
+Trog der Zornige
+%%%%
+Elyvilon lastname
+
+Elyvilon der Heiler
+%%%%
+Lugonu lastname
+
+Lugonu der Ungeformte
+%%%%
+Beogh lastname
+
+Beogh der Brigant
+%%%%
+Fedhas lastname
+
+Fedhas Madasch
+%%%%
+Cheibriados lastname
+
+Cheibriados der Nachdenkliche
+%%%%
+Ashenzari lastname
+
+Aschenzari der Gefesselte
+%%%%
+Dithmenos lastname
+
+Dithmenos der Beschattete
+%%%%
+Nemelex Xobeh lastname
+
+Nemelex Xobeh der Trickser
+%%%%
+Gozag lastname
+
+Gozag Ym Sagoz der Gierige
+%%%%
+Qazlal lastname
+
+Qazlal Sturmbringer
+%%%%
+Ru lastname
+
+Ru der Erwachte
+%%%%
+Pakellas lastname
+
+Pakellas der Erfinderische
+%%%%
+Uskayaw lastname
+
+Uskayaw der Feiernde
+%%%%
+Hepliaklqana lastname
+
+Hepliaklqana der Vergessene
+%%%%
+Wu Jian lastname
+
+der Rat von Wu Jian
+%%%%
+# neuter doesn't work well for most of Xom's names in in German, so he's male
+Xom lastname
+
+w:280
+Xom des Chaos
+
+w:5
+Xom der Zufällige
+
+w:5
+Xom der Gott der Zufallszahlen
+
+w:5
+Xom der Ältere Chaosgott
+
+Xom der Knifflige
+
+w:5
+Xom der weniger Vorhersehbare
+
+w:5
+Xom der Unvorhersehbare
+
+Xom der vielen Türen
+
+Xom der Launische
+
+w:5
+Xom der blutigen Laune
+
+w:5
+Xom der erzwungenen Laune
+
+Xom des knochentrockenen Humors
+
+w:5
+Xom des böswilligen Kicherns
+
+w:5
+Xom des bösartigen Kicherns
+
+w:5
+Xom der Psychotiker
+
+w:5
+Xom der Psychopath
+
+w:2
+Xom der Gnomischen Absicht
+
+w:2
+Xom der unsagbaren Absicht
+
+w:2
+Xom der wankelmütigen Absicht
+
+w:2
+Xom der rasch kippenden Absicht
+
+w:2
+Xom der unbekannten Absicht
+
+Xom der Wankelmütige
+
+Xom von unbekannter Absicht
+
+w:4
+Der Xom-Meister
+
+w:2
+Der Xom-Meister, Xom-a-lom-a-ding-dong
+
+w:2
+Der Xom-Meister, Xom-o-Rama
+
+w:2
+Der Xom-Meister, Xom-Xom-bo-Bom, Banana-Fana-fo-Fom
+
+w:5
+Xom der Erzeuger von Turbulenzen
+
+w:5
+Xom der Erzeuger von Diskontinuitäten
+%%%%
