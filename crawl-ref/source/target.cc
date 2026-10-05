@@ -2146,6 +2146,9 @@ bool targeter_chain::set_aim(coord_def a)
 
     chain_targ.clear();
 
+    if (path_taken.empty())
+        return false;
+
     const coord_def pos = path_taken[path_taken.size() - 1];
     monster* targ = monster_at(pos);
     if (!targ || !agent->aware_of(*targ))
