@@ -2415,19 +2415,20 @@ static string ashenzari_curse_knowledge_list()
                               curse_name));
 }
 
-string desc_curse_skills(const CrawlStoreValue& curse)
+string desc_curse_skills(const CrawlVector& curse)
 {
-    const curse_data& c =
-        _ashenzari_curses[static_cast<curse_type>(curse.get_int())];
-
     vector<skill_type> trainable;
+    for (const CrawlStoreValue& val : curse)
+    {
+        const curse_data& c =
+            _ashenzari_curses[static_cast<curse_type>(val.get_int())];
 
-    for (skill_type sk : c.boosted)
-        if (!is_useless_skill(sk))
-            trainable.push_back(sk);
+        for (skill_type sk : c.boosted)
+            if (!is_useless_skill(sk))
+                trainable.push_back(sk);
+    }
 
-    return c.name + ": "
-           + comma_separated_fn(trainable.begin(), trainable.end(), skill_name);
+    return comma_separated_fn(trainable.begin(), trainable.end(), skill_name);
 }
 
 /**

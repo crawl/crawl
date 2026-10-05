@@ -1421,8 +1421,7 @@ static string _curse_desc()
 
     return "\nIf you bind an item with this curse Ashenzari will enhance "
            "the following skills:\n"
-           + comma_separated_fn(curses.begin(), curses.end(), desc_curse_skills,
-                                ".\n", ".\n") + ".";
+           +  desc_curse_skills(curses) + ".";
 }
 
 static string _desc_sac_mut(const CrawlStoreValue &mut_store)
