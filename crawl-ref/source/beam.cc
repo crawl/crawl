@@ -728,21 +728,21 @@ void bolt::initialise_fire()
 
 #ifdef DEBUG_DIAGNOSTICS
     // Not a "real" tracer, merely a range/reachability check.
-    if (quiet_debug)
-        return;
-
-    dprf(DIAG_BEAM, "%s%s%s [%s] (%d,%d) to (%d,%d): "
-          "gl=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
-          (pierce) ? "beam" : "missile",
-          (is_explosion) ? "*" :
-          (is_big_cloud()) ? "+" : "",
-          (is_tracer()) ? " tracer" : "",
-          name.c_str(),
-          source.x, source.y,
-          target.x, target.y,
-          glyph, colour, flavour,
-          hit, damage.num, damage.size,
-          range);
+    if (!quiet_debug)
+    {
+        dprf(DIAG_BEAM, "%s%s%s [%s] (%d,%d) to (%d,%d): "
+              "gl=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
+              (pierce) ? "beam" : "missile",
+              (is_explosion) ? "*" :
+              (is_big_cloud()) ? "+" : "",
+              (is_tracer()) ? " tracer" : "",
+              name.c_str(),
+              source.x, source.y,
+              target.x, target.y,
+              glyph, colour, flavour,
+              hit, damage.num, damage.size,
+              range);
+    }
 #endif
 
     msg_generated = false;
