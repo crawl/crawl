@@ -1,0 +1,1381 @@
+############################################################
+# Outsourced monster speech.
+#
+# insult.txt contains the messages imps and demons apply in
+# Crawl to insult players.
+#
+# For an explanation of how to read insult.txt and how to
+# add new messages, see monster_speech.txt in the docs
+# directory.
+############################################################
+%%%%
+imp_taunt
+
+@run_or_give_up@, du @generic_insult@!
+%%%%
+run_or_give_up
+
+w:6
+@run_away@
+
+w:1
+@give_up@
+%%%%
+demon_taunt
+
+w:1
+@run_away@, du @generic_insult@!
+
+w:2
+@give_up@, du @generic_insult@!
+
+w:3
+@demon_taunt_special@
+%%%%
+demon_taunt_special
+
+@body_or_spiritual_part@ wird mein @meal@!
+
+@give_up@, du leckeres @meal@!
+
+@run_away@ @whilst_thou_can@!
+
+Ich werde @body_or_spiritual_part_acc@ @feast_or_devour@!
+%%%%
+# capitalised "flee" verbs
+run_away
+
+Weg mit dir
+
+Zurück mit dir
+
+Hinfort
+
+Hau ab
+
+Kriech nach Hause
+
+Steig ab
+
+Entfliehe
+
+Fliehe
+
+Fliege
+
+Geh weg
+
+Fort mit dir
+
+Gib auf
+
+Geh und kehre nicht zurück
+
+Verlasse diesen Ort
+
+Raus, raus
+
+Gib auf
+
+Entferne deinen Gestank
+
+Kehre zurück, woher du kamst
+
+Lauf weg
+
+Husch, husch
+
+Husche fort
+
+Husch, husch nach Hause
+
+Schlittere hinfort
+
+Zieh Leine
+
+Schlittere nach Hause
+
+Lass dich hier nicht mehr blicken
+
+Gib Fersengeld
+%%%%
+# capitalised synonyms for "give up"
+give_up
+
+Gib die Hoffnung auf
+
+Akzeptiere dein Scheitern
+
+Akzeptiere deinen Untergang
+
+Akzeptiere dein Verhängnis
+
+Gesteh deine Niederlage ein
+
+Flehe um Gnade
+
+Kapituliere
+
+Verzweifle
+
+Gib dich der Verzweiflung hin
+
+Verleugne dich selbst
+
+Begrüße deine Unterwerfung
+
+Nimm deine Hingabe an
+
+Nimm dein Schicksal an
+
+Nimm dein Scheitern an
+
+Nimm deinen Untergang an
+
+Stell dich deiner Fugue
+
+Stell dich deinem Requiem
+
+Strauchel
+
+Gib nach
+
+Gib auf
+
+Knie
+
+Verzage
+
+Hör auf
+
+Nimm deinen Hut
+
+Ergib dich
+
+Unterwirf dich
+
+Zittere
+
+Gib die Hoffnung auf
+
+Bereue
+
+Schmecke deine Niederlage
+%%%%
+solange du noch kannst
+
+falls du Verstand hast
+
+solange dein Glück anhält
+
+bevor dein Verhängnis dich einholt
+
+damit dich der Tod nicht findet
+
+solange du unversehrt bist
+
+# screen vs. this for undead?
+solange du noch Leben hast
+%%%%
+feast_or_devour
+
+schmausen
+
+verschlingen
+
+verspeisen
+
+verzehren
+
+vernaschen
+
+fressen
+%%%%
+body_or_spiritual_part
+
+w:3
+@important_body_part@
+
+w:1
+@important_spiritual_part@
+%%%%
+important_body_part
+
+Dein Kopf
+
+Dein Gehirn
+
+Dein Herz
+
+Deine Eingeweide
+
+Deine Augen
+
+Deine Lunge
+
+Deine Leber
+
+Deine Kehle
+
+Dein Hals
+
+Deine Gedärme
+
+Dein Schädel
+
+Dein Rückgrat
+%%%%
+important_spiritual_part
+
+Deine Seele
+
+Dein Geist
+
+Dein inneres Licht
+
+Deine Hoffnung
+
+Dein Glaube
+
+Dein Wille
+
+Dein Herz
+
+Dein Verstand
+
+Deine Vernunft
+
+Deine Tapferkeit
+
+Deine Lebenskraft
+
+Deine Vitalität
+%%%%
+body_or_spiritual_part_acc
+
+w:3
+@important_body_part_acc@
+
+w:1
+@important_spiritual_part_acc@
+%%%%
+important_body_part_acc
+
+deinen Kopf
+
+dein Gehirn
+
+dein Herz
+
+deine Eingeweide
+
+deine Augen
+
+deine Lunge
+
+deine Leber
+
+deine Kehle
+
+deinen Hals
+
+deine Gedärme
+
+deinen Schädel
+
+dein Rückgrat
+%%%%
+important_spiritual_part_acc
+
+deine Seele
+
+deinen Geist
+
+dein inneres Licht
+
+deine Hoffnung
+
+deinen Glauben
+
+deinen Willen
+
+dein Herz
+
+deinen Verstand
+
+deine Vernunft
+
+deine Tapferkeit
+
+deine Lebenskraft
+
+deine Vitalität
+%%%%
+meal
+
+Mahl
+
+Speise
+
+Frühstück
+
+Mittagessen
+
+Abendessen
+
+Abendbrot
+
+Zwischenspeise
+
+Gastmahl
+
+Festmahl
+
+Futter
+
+Häppchen
+
+Bissen
+
+Vesper
+%%%%
+#######################################################
+# generic insults consist of three random parts
+#######################################################
+generic_insult
+
+w:5
+@species_insult@
+
+@insult general@
+%%%%
+
+###############################################################
+# adjective1, usually short and/or consisting of one word only
+###############################################################
+insult_adjective1
+
+w:5
+@species_insult_adj1@
+
+@insult general adj1@
+%%%%
+insult general adj1
+
+kunstlos
+
+verwirrt
+
+unzüchtig
+
+sabbernd
+
+stiefellos
+
+stümperhaft
+
+kippend
+
+rüpelhaft
+
+hahnebüchen
+
+geklöppelt
+
+feige
+
+gurrig
+
+geschändet
+
+feucht
+
+heuchlerisch
+
+dröhnend
+
+duckend
+
+eklig
+
+irrend
+
+übertölpelt
+
+katzbuckelnd
+
+kraftlos
+
+schwach
+
+abgespeist
+
+gefoppt
+
+tölpelhaft
+
+schalkhaft
+
+schaumig
+
+überschwänglich
+
+grinsend
+
+ziegenhaft
+
+dickbäuchig
+
+schmuddelig
+
+grässlich
+
+hasserfüllt
+
+unverschämt
+
+ansteckend
+
+schrill
+
+starrköpfig
+
+plump
+
+murmelnd
+
+verstümmelt
+
+quäkend
+
+unausstehlich
+
+abscheulich
+
+fettwanstig
+
+spitz
+
+inkontinent
+
+albern
+
+kotzend
+
+mickrig
+
+anbiedernd
+
+scheinheilig
+
+pflaumengerupft
+
+töpfchentief
+
+pockennarbig
+
+zitternd
+
+bebend
+
+ranzig
+
+taumelnd-reif
+
+grobschlächtig
+
+einfältig
+
+himmelhackend
+
+schwammig
+
+mürrisch
+
+torkelnd
+
+verdreht
+
+schmierig
+
+aus den Angeln gehoben
+
+maulkorblos
+
+eitel
+
+vergiftet
+
+schurkisch
+
+verzerrt
+
+eigensinnig
+
+schmächtig
+
+wertlos
+
+hefig
+%%%%
+##########################################################
+# adjective1, Elf special
+##########################################################
+insult elf adj1
+
+schwächlich
+
+kränklich
+
+gebrechlich
+
+delikat
+
+zerbrechlich
+
+mürrisch
+
+spröde
+
+zart
+
+verrückt
+
+geschminkt
+
+feingliedrig
+
+geckenhaft
+
+federleicht
+
+fadenscheinig
+
+wurzellos
+
+spindeldürr
+
+mickrig
+
+wackelig
+
+zimperlich
+
+unterentwickelt
+%%%%
+##########################################################
+# adjective1, Felid special
+##########################################################
+insult cat adj1
+
+verfilzt
+
+schmutzig
+
+rasend
+
+nichtig
+
+weinerlich
+
+schäbig
+
+unmodisch
+
+verwildert
+
+streunend
+
+klebrig
+
+moschusartig
+
+schleichend
+%%%%
+##########################################################
+# adjective1, Ghoul special
+##########################################################
+insult ghoul adj1
+
+# being old and mouldy
+schimmelig
+
+verschimmelt
+
+muffig
+
+modrig
+
+längst abgelaufen
+
+# falling apart
+wurmstichig
+
+mottenzerfressen
+
+korrodiert
+
+leprös
+
+krebsartig
+
+verwesend
+
+vermodert
+
+dekompostiert
+
+verfallen
+
+infektiös
+
+krank
+
+vergeudet
+
+verrottet
+
+stinkend
+
+faulig
+
+übelriechend
+
+fötid
+
+nekrotisch
+
+aus dem Mund stinkend
+%%%%
+###############################################################
+# adjective2, usually longer and consisting of two words
+###############################################################
+insult_adjective2
+
+w:5
+@species_insult_adj2@
+
+@insult general adj2@
+%%%%
+insult general adj2
+
+niedrig geboren
+
+fledermausjagend
+
+rindersinnig
+
+käferköpfig
+
+hirnverbrannt
+
+streitsüchtig
+
+lehmköpfig
+
+übergriffig
+
+schiefmäulig
+
+trüb verträumt
+
+grabengeboren
+
+verblendet
+
+hundeherzig
+
+vor Angst erstarrt
+
+irritierend
+
+elfenhäutig
+
+fettnasig
+
+sumpfbewohnend
+
+schlabberlippig
+
+flachköpfig
+
+fliegengebissen
+
+kleinkrimineller
+
+der Torheit verfallen
+
+dumm geboren
+
+dummköpfig
+
+verfressen
+
+bauchschmerzenbringend
+
+halbgesichtig
+
+vorwitzig
+
+heckengeboren
+
+höllenverhasst
+
+abergläubig
+
+unruhestiftend
+
+schlecht erzogen
+
+koboldküssend
+
+knotenköpfig
+
+willensschwach
+
+hasenfüßig
+
+schurkisch
+
+mondverwirrt
+
+verstreut
+
+maulwurfsartig
+
+tratschend
+
+nasebohrend
+
+sesselpupsend
+
+zwiebeläugig
+
+bescheuert
+
+spitzbübisch
+
+grobschlächtig
+
+verhätschelt
+
+lüstern
+
+frech
+
+mistgeboren
+
+schafbeißend
+
+sauengesäugt
+
+übellaunig
+
+wundgeplagt
+
+hängebäuchig
+
+lahmarschig
+
+besoffen
+
+frivol
+
+giftkrötig
+
+zehennagelkauend
+
+furzend
+
+albern
+
+iglschnäuzig
+
+wettergegerbt
+
+großmäulig
+
+käfersinnig
+
+fehlerhaft
+%%%%
+##########################################################
+# adjective2, Dwarf special
+##########################################################
+insult dwarf adj2
+
+schmutzfressend
+
+sandschluckend
+
+dreckschleudernd
+
+steingebrochen
+
+goldgeil
+
+kieskriechend
+
+bestechlich
+
+kohlknuddlend
+
+schenkelbeißend
+
+dreckerforschend
+%%%%
+##########################################################
+# adjective2, Felid special
+##########################################################
+insult felid adj2
+
+wurmstichig
+
+räudig
+
+triefäugig
+
+den Tod betrügend
+
+schlitzäugig
+
+knorpelkauend
+
+punktejagend
+
+wundarschig
+
+tastentretend
+
+milchschleckend
+%%%%
+##########################################################
+# adjective2, Tengu special
+##########################################################
+insult tengu adj2
+
+hohlbeinig
+
+federhirnig
+
+schnabeldumm
+
+hennengepickt
+
+leichtgewichtig
+
+gebrechlich
+
+vogelhirnig
+
+federleicht
+
+taubenfüßig
+
+krähenschnablig
+
+elsteräugig
+
+stockentenartig
+%%%%
+##########################################################
+# adjective2, Mummy special
+##########################################################
+insult mummy adj2
+
+# pertaining to dryness and flammability
+ausgetrocknet
+
+getrocknet
+
+muffig
+
+entflammbar
+
+brennbar
+
+entzündlich
+
+entzündbar
+
+schwelend
+
+# pertaining to bandages
+folienumwickelt
+
+mit Kreppband umwickelt
+
+von Klebeband zusammengehalten
+
+ausgefranst
+
+handgewickelt
+
+straff gewickelt
+
+angespannt
+
+prüde
+
+aus dem Grab geraubt
+
+w:30
+@insult undead adj2@
+%%%%
+##########################################################
+# adjective2, Vampire special
+##########################################################
+insult vampire adj2
+
+flatternd
+
+blutsaugend
+
+lichtscheu
+
+blass
+
+fahl
+
+kreidegesichtig
+
+bleichgesichtig
+
+blutarm
+
+blutleer
+
+ausgeblutet
+
+w:20
+@insult undead adj2@
+%%%%
+##########################################################
+# adjective2, undead special
+##########################################################
+insult undead adj2
+
+todesähnlich
+
+leblos
+
+untot
+
+leichenhaft
+
+tot
+%%%%
+insult general
+
+@insult_adjective1@e @insult_adjective2@e Backbirne
+
+@insult_adjective1@es @insult_adjective2@es Gepäck
+
+@insult_adjective1@es @insult_adjective2@es Schnatterrind
+
+@insult_adjective1@es @insult_adjective2@es Seepferdchen
+
+@insult_adjective1@er @insult_adjective2@er Bettler
+
+@insult_adjective1@e @insult_adjective2@e Plaudertasche
+
+@insult_adjective1@e @insult_adjective2@e Blase
+
+@insult_adjective1@er @insult_adjective2@er Bluter
+
+@insult_adjective1@es @insult_adjective2@es Wildschwein
+
+@insult_adjective1@er @insult_adjective2@er Stiefellecker
+
+@insult_adjective1@er @insult_adjective2@er Stümper
+
+@insult_adjective1@er @insult_adjective2@er Räuber
+
+@insult_adjective1@er @insult_adjective2@er Grottenschrat
+
+@insult_adjective1@er @insult_adjective2@er Penner
+
+@insult_adjective1@er @insult_adjective2@er Bussardköder
+
+@insult_adjective1@e @insult_adjective2@e Krebsblüte
+
+@insult_adjective1@er @insult_adjective2@er Klackbecher
+
+@insult_adjective1@e @insult_adjective2@e Muschel
+
+@insult_adjective1@e @insult_adjective2@e Klotzbirne
+
+@insult_adjective1@er @insult_adjective2@er Hahnenkamm
+
+@insult_adjective1@er @insult_adjective2@er Dummkopf
+
+@insult_adjective1@e @insult_adjective2@e Schamkapsel
+
+@insult_adjective1@e @insult_adjective2@e Krabbenlaterne
+
+@insult_adjective1@er @insult_adjective2@er Kreuzflicken
+
+@insult_adjective1@er @insult_adjective2@er Grünschnabel
+
+@insult_adjective1@er @insult_adjective2@er Hohlkopf
+
+@insult_adjective1@es @insult_adjective2@es Todeszeichen
+
+@insult_adjective1@e @insult_adjective2@e Kratzbeere
+
+@insult_adjective1@e @insult_adjective2@e Kla­bus­ter­bee­re
+
+@insult_adjective1@er @insult_adjective2@er Dieb
+
+@insult_adjective1@e @insult_adjective2@e Fledermaus
+
+@insult_adjective1@es @insult_adjective2@es Flachsweibchen
+
+@insult_adjective1@er @insult_adjective2@er Schmarotzer
+
+@insult_adjective1@er @insult_adjective2@er Flickschuster
+
+@insult_adjective1@es @insult_adjective2@es Flittchen
+
+@insult_adjective1@er @insult_adjective2@er Fußlecker
+
+@insult_adjective1@er @insult_adjective2@er Bruder
+
+@insult_adjective1@er @insult_adjective2@er Fustilier
+
+@insult_adjective1@er @insult_adjective2@er Gigolo
+
+@insult_adjective1@er @insult_adjective2@er Gnollschwanz
+
+@insult_adjective1@er @insult_adjective2@er Gonus
+
+@insult_adjective1@er @insult_adjective2@er Gründling
+
+@insult_adjective1@e @insult_adjective2@e Gossenschnepfe
+
+@insult_adjective1@er @insult_adjective2@er Hungerknochen
+
+@insult_adjective1@e @insult_adjective2@e Harpyie
+
+@insult_adjective1@es @insult_adjective2@es Heckenschwein
+
+@insult_adjective1@er @insult_adjective2@er Geheimniskrämer
+
+@insult_adjective1@er @insult_adjective2@er Scherzbold
+
+@insult_adjective1@er @insult_adjective2@er Schafskopf
+
+@insult_adjective1@er @insult_adjective2@er Schwerenöter
+
+@insult_adjective1@er @insult_adjective2@er Flegel
+
+@insult_adjective1@er @insult_adjective2@er Madenkuchen
+
+@insult_adjective1@er @insult_adjective2@er Malzwurm
+
+@insult_adjective1@es @insult_adjective2@es Mammut
+
+@insult_adjective1@er @insult_adjective2@er Bandwurm
+
+@insult_adjective1@er @insult_adjective2@er Bettelmönch
+
+@insult_adjective1@er @insult_adjective2@er Fischdampf
+
+@insult_adjective1@es @insult_adjective2@es Mischmasch
+
+@insult_adjective1@es @insult_adjective2@es Maultier
+
+@insult_adjective1@er @insult_adjective2@er Nerd
+
+@insult_adjective1@er @insult_adjective2@er Scheißhaufen
+
+@insult_adjective1@er @insult_adjective2@er Niemand
+
+@insult_adjective1@es @insult_adjective2@es Nichts
+
+@insult_adjective1@es @insult_adjective2@es Taubenei
+
+@insult_adjective1@es @insult_adjective2@es Viehfutter
+
+@insult_adjective1@es @insult_adjective2@es Pickelchen
+
+@insult_adjective1@e @insult_adjective2@e Pissnelke
+
+@insult_adjective1@er @insult_adjective2@er Topffälscher
+
+@insult_adjective1@er @insult_adjective2@er Stänkerer der Stände
+
+@insult_adjective1@e @insult_adjective2@e Pustel
+
+@insult_adjective1@er @insult_adjective2@er Ausbeuter
+
+@insult_adjective1@er @insult_adjective2@er Kürbis
+
+@insult_adjective1@er @insult_adjective2@er Rattentöter
+
+@insult_adjective1@er @insult_adjective2@er Schurke
+
+@insult_adjective1@er @insult_adjective2@er Aasfresser
+
+@insult_adjective1@er @insult_adjective2@er Stummelschwanz
+
+@insult_adjective1@er @insult_adjective2@er Leibeigener
+
+@insult_adjective1@er @insult_adjective2@er Einfaltspinsel
+
+@insult_adjective1@er @insult_adjective2@er Sportsfreund
+
+@insult_adjective1@er @insult_adjective2@er Schlabberer
+
+@insult_adjective1@er @insult_adjective2@er Schleimpilz
+
+@insult_adjective1@er @insult_adjective2@er Schnabel
+
+@insult_adjective1@e @insult_adjective2@e Schlangenhaut
+
+@insult_adjective1@er @insult_adjective2@er Doxologe
+
+@insult_adjective1@e @insult_adjective2@e Bordsteinschwalbe
+
+@insult_adjective1@er @insult_adjective2@er Oberflächenbewohner
+
+@insult_adjective1@er @insult_adjective2@er Schwadronierer
+
+@insult_adjective1@er @insult_adjective2@er Kesselflicker
+
+@insult_adjective1@er @insult_adjective2@er Knirps
+
+@insult_adjective1@er @insult_adjective2@er Fliesenleger
+
+@insult_adjective1@er @insult_adjective2@er Kumpel
+
+@insult_adjective1@er @insult_adjective2@er Bengel
+
+@insult_adjective1@er @insult_adjective2@er Knappe
+
+@insult_adjective1@er @insult_adjective2@er Lehnsmann
+
+@insult_adjective1@er @insult_adjective2@er Geier
+
+@insult_adjective1@er @insult_adjective2@er Verschwender
+
+@insult_adjective1@e @insult_adjective2@e Bachstelze
+
+@insult_adjective1@es @insult_adjective2@es Molkengesicht
+
+@insult_adjective1@er @insult_adjective2@er Hochstapler
+
+@insult_adjective1@er @insult_adjective2@er Wurmfortsatz
+
+@insult_adjective1@es @insult_adjective2@es Yak-Kötel
+
+@insult_adjective1@es @insult_adjective2@es Zombiefutter
+%%%%
+##########################################################
+# Small species special
+##########################################################
+small_food
+
+@insult_adjective1@er @insult_adjective2@er Knabberling
+
+@insult_adjective1@es @insult_adjective2@es Knusperlein
+
+@insult_adjective1@e @insult_adjective2@e Halbmahlzeit
+
+@insult_adjective1@es @insult_adjective2@es Abendbrötchen
+
+@insult_adjective1@es @insult_adjective2@es Häppchen
+
+@insult_adjective1@er @insult_adjective2@er Happen
+
+@insult_adjective1@er @insult_adjective2@er Bissen
+
+@insult_adjective1@er @insult_adjective2@er Krümel
+
+@insult_adjective1@er @insult_adjective2@er Bissköder
+
+@insult_adjective1@es @insult_adjective2@es Knabbergebäck
+
+@insult_adjective1@er @insult_adjective2@er Knabberspaß
+
+@insult_adjective1@es @insult_adjective2@es Fressen
+
+@insult_adjective1@es @insult_adjective2@es Mundvoll
+
+@insult_adjective1@er @insult_adjective2@er Winzling
+
+@insult_adjective1@er @insult_adjective2@er Leckerbissen
+%%%%
+##########################################################
+# insult, felid special
+##########################################################
+insult felid
+
+@insult_adjective1@es @insult_adjective2@es Kätzchen
+
+@insult_adjective1@er @insult_adjective2@er Flohsack
+
+@insult_adjective1@es @insult_adjective2@es Ungeziefer
+
+@insult_adjective1@er @insult_adjective2@er Klogurgler
+
+@insult_adjective1@er @insult_adjective2@er Kopfwärmer
+
+@insult_adjective1@es @insult_adjective2@es Kupplerkindermädchen
+
+@insult_adjective1@er @insult_adjective2@er Faucher
+
+@insult_adjective1@es @insult_adjective2@es Kochfett
+
+@insult_adjective1@e @insult_adjective2@e Sandzunge
+
+@insult_adjective1@er @insult_adjective2@er Schlingel
+
+@insult_adjective1@er @insult_adjective2@er Fellfatzke
+
+@insult_adjective1@er @insult_adjective2@er Zehenkratzer
+
+@insult_adjective1@er @insult_adjective2@er Dreckmantel
+
+@insult_adjective1@er @insult_adjective2@er Fresssack
+%%%%
+##########################################################
+# insult, Spriggan special
+##########################################################
+insult spriggan
+
+w:100
+@small_food@
+
+@insult_adjective1@er @insult_adjective2@er Rattenreiter
+
+@insult_adjective1@er @insult_adjective2@er Winzling
+
+@insult_adjective1@es @insult_adjective2@es Nüsschen
+
+@insult_adjective1@e @insult_adjective2@e Nullnummer
+
+@insult_adjective1@er @insult_adjective2@er Zauberpfusch
+
+@insult_adjective1@er @insult_adjective2@er Schwächling
+
+@insult_adjective1@er @insult_adjective2@er Hänfling
+
+@insult_adjective1@e @insult_adjective2@e Möchtegernfee
+
+@insult_adjective1@er @insult_adjective2@er Knöchelbeißer
+
+@insult_adjective1@er @insult_adjective2@er Stiefelfleck
+
+@insult_adjective1@er @insult_adjective2@er Nano-Drückeberger
+
+@insult_adjective1@er @insult_adjective2@er Setzling
+
+@insult_adjective1@es @insult_adjective2@es Schrumpfveilchen
+
+@insult_adjective1@es @insult_adjective2@es Weichei
+
+@insult_adjective1@es @insult_adjective2@es Würstchen
+
+@insult_adjective1@er @insult_adjective2@er Kriecher
+%%%%
+##########################################################
+# insult, Minotaur special
+##########################################################
+insult minotaur
+
+@insult_adjective1@es @insult_adjective2@es Rindvieh
+
+@insult_adjective1@e @insult_adjective2@e Rinderbrust
+
+@insult_adjective1@er @insult_adjective2@er Ochsenschädel
+
+@insult_adjective1@er @insult_adjective2@er Grasfresser
+
+@insult_adjective1@es @insult_adjective2@es Kälbergesicht
+
+@insult_adjective1@er @insult_adjective2@er Zweihufer
+
+@insult_adjective1@es @insult_adjective2@es Kälbergehirn
+
+@insult_adjective1@e @insult_adjective2@e Kuh
+
+@insult_adjective1@es @insult_adjective2@es Vieh
+
+@insult_adjective1@es @insult_adjective2@es Hornvieh
+
+@insult_adjective1@er @insult_adjective2@er Hackbraten
+
+@insult_adjective1@e @insult_adjective2@e Frikadelle
+
+@insult_adjective1@e @insult_adjective2@e Muhkuh
+
+@insult_adjective1@es @insult_adjective2@es Rumpsteak
+
+@insult_adjective1@er @insult_adjective2@er Wiederkäuer
+
+@insult_adjective1@es @insult_adjective2@es Kalbfleisch
+
+@insult_adjective1@er @insult_adjective2@er Lendenbraten
+%%%%
+##########################################################
+# insult, mummy special
+##########################################################
+insult mummy
+
+@insult_adjective1@er @insult_adjective2@er Müllsack
+
+@insult_adjective1@er @insult_adjective2@er Toter
+
+@insult_adjective1@er @insult_adjective2@er Grufti
+
+@insult_adjective1@er @insult_adjective2@er Leinensack
+
+@insult_adjective1@er @insult_adjective2@er Leinenbeutel
+
+@insult_adjective1@er @insult_adjective2@er Grabling
+
+@insult_adjective1@es @insult_adjective2@es Mumienchen
+
+@insult_adjective1@es @insult_adjective2@es Leichentuch
+
+@insult_adjective1@es @insult_adjective2@es Wickeltuch
+
+@insult_adjective1@e @insult_adjective2@e Rolle Verbandszeug
+
+@insult_adjective1@es @insult_adjective2@es Mullbündel
+
+@insult_adjective1@es @insult_adjective2@es Stück Baumwollreste
+
+@insult_adjective1@es @insult_adjective2@es Geschenkpapier
+
+# susceptibility to fire
+@insult_adjective1@er @insult_adjective2@er Scheiterhaufen
+
+@insult_adjective1@er @insult_adjective2@er Zunder
+%%%%
+##########################################################
+# insult, Ghoul special
+##########################################################
+insult ghoul
+
+@insult_adjective1@e @insult_adjective2@e Fleischwunde
+
+@insult_adjective1@e @insult_adjective2@e offene Wunde
+
+@insult_adjective1@es @insult_adjective2@es Wrack
+
+@insult_adjective1@er @insult_adjective2@er Schmutzfänger
+
+@insult_adjective1@er @insult_adjective2@er Staubfänger
+
+@insult_adjective1@e @insult_adjective2@e Müllhalde
+
+@insult_adjective1@er @insult_adjective2@er Abfall
+
+@insult_adjective1@er @insult_adjective2@er Müllhaufen
+
+@insult_adjective1@e @insult_adjective2@e Mülldeponie
+
+@insult_adjective1@e @insult_adjective2@e wandelnde Leiche
+%%%%
