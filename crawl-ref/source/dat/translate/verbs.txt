@@ -179,10 +179,6 @@ bite
 sting
 
 %%%%
-# not actually used (" at" is always stripped)
-release spores at
-
-%%%%
 release spores
 
 %%%%
@@ -220,10 +216,6 @@ trample
 
 %%%%
 trunk-slap
-
-%%%%
-# not actually used (" on" is always stripped)
-pounce on
 
 %%%%
 pounce

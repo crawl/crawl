@@ -181,10 +181,6 @@ beißen
 sting
 stechen
 %%%%
-# not actually used (" at" is always stripped)
-release spores at
-Sporen freisetzen auf
-%%%%
 release spores
 Sporen freisetzen
 %%%%
@@ -223,10 +219,6 @@ trampeln
 %%%%
 trunk-slap
 mit dem Schwanz schlagen
-%%%%
-# not actually used (" on" is always stripped)
-pounce on
-anspringen
 %%%%
 pounce
 anspringen

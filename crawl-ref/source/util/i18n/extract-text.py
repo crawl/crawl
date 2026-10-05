@@ -1734,6 +1734,26 @@ def post_process_mon_data_h(input):
     }
     return result
 
+def post_process_mon_util_cc(input):
+    results = {}
+    for section, strings in input.items():
+        if section == "mon_attack_name":
+            infinitives = []
+            messages = []
+            for verb in strings:
+                infinitive = re.sub(' (at|on)$', '', verb)
+                if infinitive == "":
+                    continue
+                infinitives.append(infinitive)
+                if " or " not in verb:
+                    verb = conjugate_verb(verb)
+                    messages.append("@Arg@ " + verb + " you@punct@")
+                    messages.append("@Arg1@ " + verb + " @arg2@@punct@")
+            strings = infinitives
+            strings.extend(messages)
+        results[section] = strings
+    return results
+
 def post_process_spl_data_h(input):
     spells = []
 
@@ -1844,6 +1864,7 @@ specific_post_processing_funcs = {
     'item-name.cc': post_process_item_name_cc,
     'job-data.h': post_process_job_data_h,
     'mon-data.h': post_process_mon_data_h,
+    'mon-util.cc': post_process_mon_util_cc,
     'spl-data.h': post_process_spl_data_h,
     'zap-data.h': post_process_zap_data_h,
 }
