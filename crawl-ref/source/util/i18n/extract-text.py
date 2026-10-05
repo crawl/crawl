@@ -545,68 +545,45 @@ def extract_section_name(line):
 
 # process art-data.txt
 def process_art_data_txt():
-    lines = read_file_lines('art-data.txt')
+    raw_lines = read_file_lines('art-data.txt')
+
+    lines = []
+    for line in raw_lines:
+        if line.lstrip().startswith('#'):
+            continue
+        line = line.rstrip()
+        if len(lines) != 0 and line.startswith(" "):
+            lines[-1] += line
+        else:
+            lines.append(line)
+
     result = []
-
-    name = ''
-    desc = None
-    brand_desc = None
-    has_appearance = False
     for line in lines:
-        if line.startswith('#'):
+        if "DUMMY" in line:
             continue
-        elif line.startswith(' '):
-            if desc is not None:
-                desc += line
-            elif brand_desc is not None:
-                brand_desc += line
-            continue
-
-        if desc is not None:
-            result.append('# note: description for ' + name)
-            result.append(desc)
-            desc = '' if line.startswith('+') else None
-
-        if brand_desc is not None:
-            result.append('# note: brand description for ' + name)
-            result.append(brand_desc)
-            brand_desc = '' if line.startswith('+') else None
-
-        if line.startswith('+'):
-            if desc is not None:
-                desc += line[1:].strip()
-            elif brand_desc is not None:
-                brand_desc += line[1:].strip()
-        elif line.startswith('NAME:'):
-            has_appearance = False
-            name = line.replace('NAME:', '').strip()
-            if 'DUMMY' in name:
+        elif line.startswith('+'):
+            result.append(line[1:].strip())
+        elif ":" in line:
+            tokens = line.split(":", 1)
+            if len(tokens) != 2:
                 continue
-            #result.append('# note: ' + name)
-            if re.search('(boots|gloves|gauntlets|quick blades)', name):
-                if not 'pair of ' in name:
-                    name = 'pair of ' + name
-            result.append(article_the(name))
-        elif 'DUMMY' in name:
-            continue
-        elif line.startswith('APPEAR:'):
-            string = line.replace('APPEAR:', '').strip()
-            result.append('# note: appearance of ' + name + " before it's identified")
-            result.append(article_the(string))
-        elif line.startswith('TYPE:'):
-            string = line.replace('TYPE:', '').strip()
-            result.append('# note: base type of ' + name)
-            result.append(article_the(string))
-        elif line.startswith('INSCRIP:'):
-            string = line.replace('INSCRIP:', '').strip()
-            if string.endswith(','):
-                string = string[0:-1]
-            result.append('# note: annotation for ' + name)
-            result.append(string)
-        elif line.startswith('DESCRIP:'):
-            desc = line.replace('DESCRIP:', '').strip()
-        elif line.startswith('DBRAND:'):
-            brand_desc = line.replace('DBRAND:', '').strip()
+            key = tokens[0].strip()
+            value = tokens[1].strip()
+            if key == "NAME":
+                if re.search('(boots|gloves|gauntlets|quick blades)', value):
+                    if not 'pair of ' in value:
+                        value = 'pair of ' + value
+                result.append(article_the(value))
+            elif key in ["APPEAR", "TYPE"]:
+                result.append(article_the(value))
+            elif key == "INSCRIP":
+                tokens = value.split(",")
+                for tok in tokens:
+                    tok = tok.strip()
+                    if tok != "":
+                        result.append(tok)
+            elif key in ["DESCRIP", "DBRAND"]:
+                result.append(value)
 
     return { "art_data" : result }
 
