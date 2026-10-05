@@ -2271,11 +2271,11 @@ static map<curse_type, curse_data> _ashenzari_curses =
         "Cunning", "Cun",
         { SK_DODGING, SK_STEALTH },
     } },
-#endif
     { CURSE_DEVICES, {
         "Devices", "Dev",
         { SK_EVOCATIONS, SK_SHAPESHIFTING },
     } },
+#endif
     { CURSE_FIRE_MAGIC, {
         "Fire Magic", "Fire",
         { SK_FIRE_MAGIC },
@@ -2344,6 +2344,14 @@ static map<curse_type, curse_data> _ashenzari_curses =
         "Fighting", "Fight",
         { SK_FIGHTING },
     } },
+    { CURSE_EVOCATIONS, {
+        "Evocations", "Evo",
+        { SK_EVOCATIONS },
+    } },
+    { CURSE_SHAPESHIFTING, {
+        "Shapeshifting", "Shape",
+        { SK_SHAPESHIFTING },
+    } },
 };
 
 static bool _curse_is_removed(curse_type curse)
@@ -2358,6 +2366,7 @@ static bool _curse_is_removed(curse_type curse)
         case CURSE_SELF:
         case CURSE_FORTITUDE:
         case CURSE_CUNNING:
+        case CURSE_DEVICES:
             return true;
 #endif
         default:

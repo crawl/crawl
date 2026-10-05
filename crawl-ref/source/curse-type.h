@@ -13,8 +13,8 @@ enum curse_type
     CURSE_SELF,
     CURSE_FORTITUDE,
     CURSE_CUNNING,
-#endif
     CURSE_DEVICES,
+#endif
     CURSE_FIRE_MAGIC,
     CURSE_ICE_MAGIC,
     CURSE_AIR_MAGIC,
@@ -32,5 +32,7 @@ enum curse_type
     CURSE_DODGING,
     CURSE_STEALTH,
     CURSE_FIGHTING,
+    CURSE_EVOCATIONS,
+    CURSE_SHAPESHIFTING,
     NUM_CURSES,
 };
