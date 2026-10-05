@@ -3958,7 +3958,7 @@ unsigned int exp_needed(int lev, int exp_apt)
     switch (lev)
     {
     case 1:
-        level = 1;
+        level = 0;
         break;
     case 2:
         level = 10;
@@ -3987,7 +3987,7 @@ unsigned int exp_needed(int lev, int exp_apt)
     if (exp_apt == -99)
         exp_apt = species::get_exp_modifier(you.species);
 
-    return (unsigned int) ((level - 1) * apt_to_factor(exp_apt - 1));
+    return (unsigned int) (level * apt_to_factor(exp_apt - 1));
 }
 
 // returns bonuses from rings of slaying, etc.
