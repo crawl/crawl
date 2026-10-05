@@ -9869,100 +9869,100 @@ The @arg@ mimic vanishes!
 @Arg@ is a mimic!
 
 %%%%
-@Arg@ hits you from afar
+@Arg@ hits you from afar@punct@
 
 %%%%
-@Arg1@ hits @arg2@ from afar
+@Arg1@ hits @arg2@ from afar@punct@
 
 %%%%
-@Arg@ bites you
+@Arg@ bites you@punct@
 
 %%%%
-@Arg1@ bites @arg2@
+@Arg1@ bites @arg2@@punct@
 
 %%%%
-@Arg@ stings you
+@Arg@ stings you@punct@
 
 %%%%
-@Arg1@ stings @arg2@
+@Arg1@ stings @arg2@@punct@
 
 %%%%
-@Arg@ stings you from afar
+@Arg@ stings you from afar@punct@
 
 %%%%
-@Arg1@ stings @arg2@ from afar
+@Arg1@ stings @arg2@ from afar@punct@
 
 %%%%
-@Arg@ releases spores at you
+@Arg@ releases spores at you@punct@
 
 %%%%
-@Arg1@ releases spores at @arg2@
+@Arg1@ releases spores at @arg2@@punct@
 
 %%%%
-@Arg@ touches you
+@Arg@ touches you@punct@
 
 %%%%
-@Arg1@ touches @arg2@
+@Arg1@ touches @arg2@@punct@
 
 %%%%
-@Arg@ claws you
+@Arg@ claws you@punct@
 
 %%%%
-@Arg1@ claws @arg2@
+@Arg1@ claws @arg2@@punct@
 
 %%%%
-@Arg@ pecks you
+@Arg@ pecks you@punct@
 
 %%%%
-@Arg1@ pecks @arg2@
+@Arg1@ pecks @arg2@@punct@
 
 %%%%
-@Arg@ punches you
+@Arg@ punches you@punct@
 
 %%%%
-@Arg1@ punches @arg2@
+@Arg1@ punches @arg2@@punct@
 
 %%%%
-@Arg@ kicks you
+@Arg@ kicks you@punct@
 
 %%%%
-@Arg1@ kicks @arg2@
+@Arg1@ kicks @arg2@@punct@
 
 %%%%
-@Arg@ tentacle-slaps you
+@Arg@ tentacle-slaps you@punct@
 
 %%%%
-@Arg1@ tentacle-slaps @arg2@
+@Arg1@ tentacle-slaps @arg2@@punct@
 
 %%%%
-@Arg@ tail-slaps you
+@Arg@ tail-slaps you@punct@
 
 %%%%
-@Arg1@ tail-slaps @arg2@
+@Arg1@ tail-slaps @arg2@@punct@
 
 %%%%
-@Arg@ gores you
+@Arg@ gores you@punct@
 
 %%%%
-@Arg1@ gores @arg2@
+@Arg1@ gores @arg2@@punct@
 
 %%%%
-@Arg@ tramples you
+@Arg@ tramples you@punct@
 
 %%%%
-@Arg1@ tramples @arg2@
+@Arg1@ tramples @arg2@@punct@
 
 %%%%
-@Arg@ trunk-slaps you
+@Arg@ trunk-slaps you@punct@
 
 %%%%
-@Arg1@ trunk-slaps @arg2@
+@Arg1@ trunk-slaps @arg2@@punct@
 
 %%%%
-@Arg@ pounces on you
+@Arg@ pounces on you@punct@
 
 %%%%
-@Arg1@ pounces on @arg2@
+@Arg1@ pounces on @arg2@@punct@
 
 %%%%
 Geryon discards his horn.

@@ -9869,101 +9869,101 @@ Die @arg@-Mimik verschwindet!
 @Arg@ is a mimic!
 @Arg@ ist eine Mimik!
 %%%%
-@Arg@ hits you from afar
-@Arg@ trifft dich von weitem
+@Arg@ hits you from afar@punct@
+@Arg@ trifft dich von weitem@punct@
 %%%%
-@Arg1@ hits @arg2@ from afar
-@Arg1@ trifft {acc}@arg2@ von weitem
+@Arg1@ hits @arg2@ from afar@punct@
+@Arg1@ trifft {acc}@arg2@ von weitem@punct@
 %%%%
-@Arg@ bites you
-@Arg@ beißt dich
+@Arg@ bites you@punct@
+@Arg@ beißt dich@punct@
 %%%%
-@Arg1@ bites @arg2@
-@Arg1@ beißt {acc}@arg2@
+@Arg1@ bites @arg2@@punct@
+@Arg1@ beißt {acc}@arg2@@punct@
 %%%%
-@Arg@ stings you
-@Arg@ sticht dich
+@Arg@ stings you@punct@
+@Arg@ sticht dich@punct@
 %%%%
-@Arg1@ stings @arg2@
-@Arg1@ sticht {acc}@arg2@
+@Arg1@ stings @arg2@@punct@
+@Arg1@ sticht {acc}@arg2@@punct@
 %%%%
-@Arg@ stings you from afar
-@Arg@ sticht dich von weitem
+@Arg@ stings you from afar@punct@
+@Arg@ sticht dich von weitem@punct@
 %%%%
-@Arg1@ stings @arg2@ from afar
-@Arg1@ sticht @arg2@ von weitem
+@Arg1@ stings @arg2@ from afar@punct@
+@Arg1@ sticht @arg2@ von weitem@punct@
 %%%%
-@Arg@ releases spores at you
-@Arg@ setzt Sporen auf dich frei
+@Arg@ releases spores at you@punct@
+@Arg@ setzt Sporen auf dich frei@punct@
 %%%%
-@Arg1@ releases spores at @arg2@
-@Arg1@ setzt Sporen auf {dat}@arg2@ frei
+@Arg1@ releases spores at @arg2@@punct@
+@Arg1@ setzt Sporen auf {dat}@arg2@ frei@punct@
 %%%%
-@Arg@ touches you
-@Arg@ berührt dich
+@Arg@ touches you@punct@
+@Arg@ berührt dich@punct@
 %%%%
-@Arg1@ touches @arg2@
-@Arg1@ berührt {acc}@arg2@
+@Arg1@ touches @arg2@@punct@
+@Arg1@ berührt {acc}@arg2@@punct@
 %%%%
-@Arg@ claws you
-@Arg@ zerkratzt dich
+@Arg@ claws you@punct@
+@Arg@ zerkratzt dich@punct@
 %%%%
-@Arg1@ claws @arg2@
-@Arg1@ zerkratzt {acc}@arg2@
+@Arg1@ claws @arg2@@punct@
+@Arg1@ zerkratzt {acc}@arg2@@punct@
 %%%%
-@Arg@ pecks you
-@Arg@ hackt dich
+@Arg@ pecks you@punct@
+@Arg@ hackt dich@punct@
 %%%%
-@Arg1@ pecks @arg2@
-@Arg1@ hackt {acc}@arg2@
+@Arg1@ pecks @arg2@@punct@
+@Arg1@ hackt {acc}@arg2@@punct@
 %%%%
-@Arg@ punches you
-@Arg@ boxt dich
+@Arg@ punches you@punct@
+@Arg@ boxt dich@punct@
 %%%%
-@Arg1@ punches @arg2@
-@Arg1@ boxt {acc}@arg2@
+@Arg1@ punches @arg2@@punct@
+@Arg1@ boxt {acc}@arg2@@punct@
 %%%%
-@Arg@ kicks you
-@Arg@ tritt dich
+@Arg@ kicks you@punct@
+@Arg@ tritt dich@punct@
 %%%%
-@Arg1@ kicks @arg2@
-@Arg1@ tritt {acc}@arg2@
+@Arg1@ kicks @arg2@@punct@
+@Arg1@ tritt {acc}@arg2@@punct@
 %%%%
-@Arg@ tentacle-slaps you
-schlägt dich mit dem Tentakel
+@Arg@ tentacle-slaps you@punct@
+schlägt dich mit dem Tentakel@punct@
 %%%%
-@Arg1@ tentacle-slaps @arg2@
-@Arg1@ schlägt {acc}@arg2@ mit dem Tentakel
+@Arg1@ tentacle-slaps @arg2@@punct@
+@Arg1@ schlägt {acc}@arg2@ mit dem Tentakel@punct@
 %%%%
-@Arg@ tail-slaps you
-@Arg@ schlägt dich mit dem Schwanz
+@Arg@ tail-slaps you@punct@
+@Arg@ schlägt dich mit dem Schwanz@punct@
 %%%%
-@Arg1@ tail-slaps @arg2@
-@Arg1@ schlägt {acc}@arg2@ mit dem Schwanz
+@Arg1@ tail-slaps @arg2@@punct@
+@Arg1@ schlägt {acc}@arg2@ mit dem Schwanz@punct@
 %%%%
-@Arg@ gores you
-@Arg@ spießt dich auf
+@Arg@ gores you@punct@
+@Arg@ spießt dich auf@punct@
 %%%%
-@Arg1@ gores @arg2@
-@Arg1@ spießt {acc}@arg2@ auf
+@Arg1@ gores @arg2@@punct@
+@Arg1@ spießt {acc}@arg2@ auf@punct@
 %%%%
-@Arg@ tramples you
-@Arg@ trampelt dich nieder
+@Arg@ tramples you@punct@
+@Arg@ trampelt dich nieder@punct@
 %%%%
-@Arg1@ tramples @arg2@
-@Arg1@ trampelt {acc}@arg2@ nieder
+@Arg1@ tramples @arg2@@punct@
+@Arg1@ trampelt {acc}@arg2@ nieder@punct@
 %%%%
-@Arg@ trunk-slaps you
-@Arg@ schlägt dich mit dem Rüssel
+@Arg@ trunk-slaps you@punct@
+@Arg@ schlägt dich mit dem Rüssel@punct@
 %%%%
-@Arg1@ trunk-slaps @arg2@
-@Arg1@ schlägt {acc}@arg2@ mit dem Rüssel
+@Arg1@ trunk-slaps @arg2@@punct@
+@Arg1@ schlägt {acc}@arg2@ mit dem Rüssel@punct@
 %%%%
-@Arg@ pounces on you
-@Arg@ stürzt sich auf dich
+@Arg@ pounces on you@punct@
+@Arg@ stürzt sich auf dich@punct@
 %%%%
-@Arg1@ pounces on @arg2@
-@Arg1@ stürzt sich auf {acc}@arg2@
+@Arg1@ pounces on @arg2@@punct@
+@Arg1@ stürzt sich auf {acc}@arg2@@punct@
 %%%%
 Geryon discards his horn.
 Geryon wirft sein Horn ab.
