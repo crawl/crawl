@@ -1362,20 +1362,16 @@ static void _print_status_lights(int y)
     size_t i_light = 0;
     while (true)
     {
-        string text;
-        if (i_light < lights.size())
-            text = localise(lights[i_light].text);
-
         const int end_x = (wherex() - crawl_view.hudp.x)
-                + (i_light < lights.size() ? strwidth(text)
+                + (i_light < lights.size() ? lights[i_light].text.width()
                                            : 10000);
 
         if (end_x <= crawl_view.hudsz.x)
         {
 #ifdef USE_TILE_LOCAL
-            _record_status_light(lights[i_light], strwidth(text));
+            _record_status_light(lights[i_light], lights[i_light].text.width());
 #endif
-            NOWRAP_EOL_CPRINTF("%s", text.c_str());
+            lights[i_light].text.display();
             if (end_x < crawl_view.hudsz.x)
                 NOWRAP_EOL_CPRINTF(" ");
             ++i_light;
@@ -1397,7 +1393,6 @@ static void _print_status_lights(int y)
         size_t i_light = 0;
         if (lights.size() == 1)
         {
-            // i18n: TODO: Fix this
             _record_status_light(lights[0], lights[0].text.width());
             lights[0].text.display();
         }
@@ -1405,13 +1400,11 @@ static void _print_status_lights(int y)
         {
             while (i_light < lights.size() && (int)i_light < crawl_view.hudsz.x - 1)
             {
-                // i18n: TODO: Fix this
-                const string text = localise(lights[i_light].text);
-                const int width = strwidth(text);
                 const bool full = i_light == lights.size() - 1
-                    && width < crawl_view.hudsz.x - wherex();
+                    && lights[i_light].text.width() < crawl_view.hudsz.x - wherex();
                 // Must do this before the print, as it uses the cursor position.
-                _record_status_light(lights[i_light], full ? width : 1);
+                _record_status_light(lights[i_light],
+                                     full ? lights[i_light].text.width() : 1);
                 if (full)
                     lights[i_light].text.display();
                 else if ((int)lights.size() > crawl_view.hudsz.x / 2)
