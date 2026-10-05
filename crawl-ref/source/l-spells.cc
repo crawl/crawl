@@ -3,6 +3,9 @@
  */
 #include "AppHdr.h"
 
+#include <cstdlib>
+#include <cstring>
+
 #include "l-libs.h"
 
 #include "cluautil.h"
@@ -110,10 +113,30 @@ LUAFN(l_spells_min_range)
  * player coordinates.
  * Nil is returned if the spell does not follow a path (eg. smite-targeted
  * spells) or if the spell has zero range.
+ * Managed user Lua queries are rejected when the server enables
+ * CRAWL_SERVER_SECRET_LEVELGEN, since tracing can disclose unknown terrain.
  * @function path
  */
 LUAFN(l_spells_path)
 {
+    // The tracer selects rays using actual terrain, including unknown cells.
+    // Filtering returned coordinates cannot hide terrain-dependent path length
+    // or ray selection. Until there is a wholly knowledge-based preview, deny
+    // this query in protected user Lua before inspecting spell or map state.
+    // Keep the check in the native function so cached aliases cannot bypass it;
+    // trusted Dungeon Lua and actual spell casting retain their normal paths.
+    if (CLua::is_managed_vm(ls))
+    {
+        const char *policy = getenv("CRAWL_SERVER_SECRET_LEVELGEN");
+        if (policy && (!strcmp(policy, "1")
+                       || !strcmp(policy, "true")
+                       || !strcmp(policy, "yes")))
+        {
+            return luaL_error(ls, "spell path queries are disabled for managed "
+                                  "user Lua on this protected server");
+        }
+    }
+
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
     zap_type zap = spell_to_zap(spell);
     int power = calc_spell_power(spell);
