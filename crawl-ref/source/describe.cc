@@ -52,6 +52,7 @@
 #include "jobs.h"
 #include "lang-fake.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "melee-attack.h" // describe_to_hit
 #include "message.h"
@@ -3393,6 +3394,10 @@ static vector<extra_feature_desc> _get_feature_extra_descs(const coord_def &pos)
             tile_def(tileidx_cloud(*cloud)),
         });
     }
+    for (extra_feature_desc &desc: ret)
+    {
+        desc.title = localise(desc.title);
+    }
     return ret;
 }
 
@@ -3499,7 +3504,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
     strip_suffix(db_name, " (summoned)");
     string long_desc = getLongDescription(db_name);
 
-    inf.title = uppercase_first(desc);
+    inf.title = uppercase_first(localise(desc));
     if (!ends_with(desc, ".") && !ends_with(desc, "!")
         && !ends_with(desc, "?") && !desc.empty())
     {
@@ -3722,6 +3727,9 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
     if (pos == you.pos() && you.on_current_level)
         long_desc += "\nYou are here.";
 
+    // i18n: Parts of long_desc will already be in the target language.
+    // If we get "double translation" issues, we will have to do this the long way.
+    long_desc = localise(long_desc);
     inf.body << long_desc;
 
     if (include_extra)
