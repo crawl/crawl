@@ -1985,6 +1985,24 @@
 @num@ zykzyls
 
 %%%%
+@num@ assassin centipedes
+
+%%%%
+@num@ hypnotails
+
+%%%%
+@num@ airy jades
+
+%%%%
+@num@ earthen jades
+
+%%%%
+@num@ fiery jades
+
+%%%%
+@num@ icy jades
+
+%%%%
 
 # slime creatures can merge into bigger slime creatures
 %%%%

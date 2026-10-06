@@ -912,6 +912,21 @@ the purified mutation catalyst
 the runelight
 
 %%%%
+the airy dragon vein
+
+%%%%
+the earthen dragon vein
+
+%%%%
+the fiery dragon vein
+
+%%%%
+the icy dragon vein
+
+%%%%
+the patch of ice thorns
+
+%%%%
 
 ################################
 # With "some" as determiner

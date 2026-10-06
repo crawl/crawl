@@ -215,6 +215,9 @@ manuals
 runes
 
 %%%%
+gems
+
+%%%%
 
 #################################
 # Monster pane annotations (console)

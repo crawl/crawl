@@ -244,6 +244,9 @@
 @num@ potions of might
 
 %%%%
+@num@ potions of mist
+
+%%%%
 @num@ potions of moonshine
 
 %%%%

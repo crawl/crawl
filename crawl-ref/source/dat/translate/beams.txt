@@ -364,6 +364,246 @@ the blast of sapphire shards
 the blast of bone shards
 
 %%%%
+the acid spray
+
+%%%%
+the arc of electricity
+
+%%%%
+the ball of acid
+
+%%%%
+the ball of mud
+
+%%%%
+the beam of energy
+
+%%%%
+the beckoning whirlwind
+
+%%%%
+the billowing rust
+
+%%%%
+the blast
+
+%%%%
+the blazing flames
+
+%%%%
+the blinding ray
+
+%%%%
+the blood arrow
+
+%%%%
+the bolt of antimagic
+
+%%%%
+the bolt of devastation
+
+%%%%
+the bolt of flesh
+
+%%%%
+the bolt of light
+
+%%%%
+the concentrated momentum
+
+%%%%
+the concussive blast
+
+%%%%
+the condensed magic
+
+%%%%
+the creeping shadow
+
+%%%%
+the crushing gravity
+
+%%%%
+the crystallising shot
+
+%%%%
+the curse of agony
+
+%%%%
+the destabilizing rupture
+
+%%%%
+the detonation
+
+%%%%
+the dizzying spores
+
+%%%%
+the doom bolt
+
+%%%%
+the explosive embers
+
+%%%%
+the falling rubble
+
+%%%%
+the fiery plasma
+
+%%%%
+the flame wave
+
+%%%%
+the flashing steel
+
+%%%%
+the fortress blast
+
+%%%%
+the fragment of death
+
+%%%%
+the freeze
+
+%%%%
+the freezing gust
+
+%%%%
+the glacial breath
+
+%%%%
+the glob of mercury
+
+%%%%
+the gout of destruction
+
+%%%%
+the grasping water
+
+%%%%
+the icy flash freeze
+
+%%%%
+the jagged bones
+
+%%%%
+the kinetic grapnel
+
+%%%%
+the malign ofering
+
+%%%%
+the mass of rock
+
+%%%%
+the noxious fumes
+
+%%%%
+the nullifying energy
+
+%%%%
+the phantom echo
+
+%%%%
+the piercing cold
+
+%%%%
+the pyre arrow
+
+%%%%
+the ray of shadow
+
+%%%%
+the rebounding bolt of cold
+
+%%%%
+the rebounding bolt of fire
+
+%%%%
+the rocky spike
+
+%%%%
+the rupture
+
+%%%%
+the salvo of frigid ice
+
+%%%%
+the salvo of icicles
+
+%%%%
+the seething chaos
+
+%%%%
+the seismic shockwave
+
+%%%%
+the shadow bullet
+
+%%%%
+the shadowball
+
+%%%%
+the shadowy lightning
+
+%%%%
+the shard of frigid ice
+
+%%%%
+the shard of hardened shadow
+
+%%%%
+the shards of blighted ice
+
+%%%%
+the shockwave
+
+%%%%
+the shred
+
+%%%%
+the surge of chaos
+
+%%%%
+the swarm of vampire bats
+
+%%%%
+the umbral torchlight
+
+%%%%
+the volatile concoction
+
+%%%%
+the wave of devouring shadow
+
+%%%%
+the whirling bolas
+
+%%%%
+the blast of rock
+
+%%%%
+the blast of wind
+
+%%%%
+the fiery blast
+
+%%%%
+the frigid blast
+
+%%%%
+the glimmering dart
+
+%%%%
+the ice thorns
+
+%%%%
+the scorching wind
+
+%%%%
+the surge of energy
+
+%%%%
 
 # Qazlal Upheaval
 %%%%

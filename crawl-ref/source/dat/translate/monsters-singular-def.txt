@@ -1970,6 +1970,24 @@ the wyrmhole
 the zykzyl
 
 %%%%
+the assassin centipede
+
+%%%%
+the hypnotail
+
+%%%%
+the airy jade
+
+%%%%
+the earthen jade
+
+%%%%
+the fiery jade
+
+%%%%
+the icy jade
+
+%%%%
 
 # subtypes of mutant beast
 %%%%

@@ -1067,6 +1067,21 @@ Doom Bolt
 Doomsaying
 
 %%%%
+Dragon Vein (Air)
+
+%%%%
+Dragon Vein (Earth)
+
+%%%%
+Dragon Vein (Fire)
+
+%%%%
+Dragon Vein (Ice)
+
+%%%%
+Dragon Veins
+
+%%%%
 Enfeeble
 
 %%%%
@@ -1149,6 +1164,9 @@ Hunting Call
 
 %%%%
 Hurl Torchlight
+
+%%%%
+Ice Thorns
 
 %%%%
 Ill Omen
@@ -1335,6 +1353,9 @@ Sign of Ruin
 
 %%%%
 Siphon Essence
+
+%%%%
+Sirocco
 
 %%%%
 Sleetstrike

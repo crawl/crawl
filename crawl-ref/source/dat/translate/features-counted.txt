@@ -206,3 +206,6 @@
 @num@ ornate altars of the Wu Jian Council
 
 %%%%
+@num@ candlelit altars of Ignis
+
+%%%%

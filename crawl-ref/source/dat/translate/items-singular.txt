@@ -840,6 +840,9 @@ the potion of magic
 the potion of might
 
 %%%%
+the potion of mist
+
+%%%%
 the potion of moonshine
 
 %%%%
@@ -1034,6 +1037,18 @@ the talisman of death
 
 %%%%
 the storm talisman
+
+%%%%
+the vision talisman
+
+%%%%
+the gecko talisman
+
+%%%%
+the mist talisman
+
+%%%%
+the jade talisman
 
 %%%%
 
