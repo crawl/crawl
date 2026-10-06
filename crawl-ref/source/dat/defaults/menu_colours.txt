@@ -16,9 +16,9 @@ menu += darkgrey:.*useless_item.*
 # Items disliked by your god.
 menu += $forbidden:.*forbidden.*
 
-# Handle cursed and equipped items early to override other colour settings.
-menu += lightred:.*equipped.* cursed
-menu += red: (a|the) cursed
+# Handle bound and equipped items early to override other colour settings.
+menu += lightred:.*equipped.* bound
+menu += red: (a|the) bound
 menu += lightgreen:.*equipped.*
 
 # Important game items
