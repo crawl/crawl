@@ -3397,7 +3397,8 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_IMPRINT_WEAPON:
         {
             item_def *wpn = nullptr;
-            spret success = use_an_item_menu(wpn, OPER_ANY, OSEL_ARTEFACT_WEAPON,
+            operation_types oper = OPER_ANY;
+            spret success = use_an_item_menu(wpn, oper, OSEL_ARTEFACT_WEAPON,
                                 "Select an artefact weapon to imprint upon your Paragon.",
                                 [=](){return true;});
 

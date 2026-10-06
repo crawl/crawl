@@ -19,7 +19,7 @@
 
 const int ARMOUR_EQUIP_DELAY = 5;
 
-spret use_an_item_menu(item_def *&target, operation_types oper,
+spret use_an_item_menu(item_def *&target, operation_types &oper,
                 int item_type=OSEL_ANY,
                 const char* prompt=nullptr,
                 function<bool ()> allowcancel = [](){ return true; });

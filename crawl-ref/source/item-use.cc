@@ -1015,6 +1015,7 @@ bool use_an_item(operation_types oper, item_def *target)
             target = jewellery[0];
     }
 
+    const operation_types requested_oper = oper;
     spret result = use_an_item_menu(target, oper);
     if (result != spret::success)
         return false;
@@ -1027,6 +1028,9 @@ bool use_an_item(operation_types oper, item_def *target)
         if (oper == OPER_WIELD)
             target = nullptr; // unwield
     }
+
+    if (oper != requested_oper && !_can_generically_use(oper))
+        return false;
 
     ASSERT(oper == OPER_WIELD || target);
     // now we have an item and a specific oper: what to do with the item?
@@ -1784,7 +1788,8 @@ static bool _try_unwield_weapons()
  *
  * @param target A pointer by reference to indicate the object selected.
  * @param item_type The object_class_type or OSEL_* of items to list.
- * @param oper The operation being done to the selected item.
+ * @param oper The operation being done to the selected item. This may be
+ *             changed by the menu for some operations.
  * @param prompt The prompt on the menu title
  * @param allowcancel If the user tries to cancel out of the prompt, run this
  *                    function. If it returns false, continue the prompt rather
@@ -1794,7 +1799,7 @@ static bool _try_unwield_weapons()
  *         does not wish to choose an item, spret::seen_hups if we had to
  *         terminate early due to hups.
  */
-spret use_an_item_menu(item_def *&target, operation_types oper, int item_type,
+spret use_an_item_menu(item_def *&target, operation_types &oper, int item_type,
                        const char* prompt, function<bool ()> allowcancel)
 {
     UseItemMenu menu(oper, item_type, prompt);
@@ -1825,7 +1830,7 @@ spret use_an_item_menu(item_def *&target, operation_types oper, int item_type,
         else if (isadigit(keyin))
         {
             // select by inscription
-            tmp_tgt = digit_inscription_to_item(keyin, oper);
+            tmp_tgt = digit_inscription_to_item(keyin, menu.oper);
             if (tmp_tgt)
                 choice_made = true;
         }
@@ -1866,7 +1871,10 @@ spret use_an_item_menu(item_def *&target, operation_types oper, int item_type,
     }
 
     if (choice_made)
+    {
         target = tmp_tgt;
+        oper = menu.oper;
+    }
 
     ASSERT(!choice_made || target || menu.show_unarmed());
 
@@ -2290,7 +2298,8 @@ static void _brand_weapon(item_def &wpn)
 static spret _choose_target_item_for_scroll(bool scroll_known, object_selector selector,
                                             const char* prompt, item_def*& target)
 {
-    return use_an_item_menu(target, OPER_ANY, selector, prompt,
+    operation_types oper = OPER_ANY;
+    return use_an_item_menu(target, oper, selector, prompt,
                        [=]()
                        {
                            if (scroll_known
