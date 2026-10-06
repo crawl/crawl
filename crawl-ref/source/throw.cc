@@ -222,7 +222,11 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
         if (brand == SPMSL_FRENZY || brand == SPMSL_BLINDING)
         {
             int chance = _get_dart_chance(mi.hd);
-            bool immune = brand == SPMSL_FRENZY && !mi.can_go_frenzy;
+            // Immunity to poison means immunity to dart brands, as in
+            // ranged_attack::dart_check().
+            bool immune = get_resist(mi.mresists, MR_RES_POISON) >= 3;
+            if (brand == SPMSL_FRENZY && !mi.can_go_frenzy)
+                immune = true;
             if (mi.holi & (MH_UNDEAD | MH_NONLIVING))
                 immune = true;
 
