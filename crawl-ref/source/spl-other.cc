@@ -700,7 +700,7 @@ bool has_adjacent_enemy(const coord_def& pos, const actor& viewer)
 
 static bool _can_place_dragon_vein(const coord_def& pos)
 {
-    return in_bounds(pos) && feat_is_floor(env.grid(pos));
+    return in_bounds(pos) && (feat_is_floor(env.grid(pos)) || env.grid(pos) == DNGN_SHALLOW_WATER);
 }
 
 static void _place_dragon_vein(const coord_def& pos, dungeon_feature_type type, int dur)

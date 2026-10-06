@@ -889,8 +889,11 @@ void player::finalise_movement(const actor* /*to_blame*/)
         if (env.grid(pos()) == DNGN_BINDING_SIGIL)
             trigger_binding_sigil(you);
 
-        if (feat_is_dragon_vein(env.grid(pos())))
+        if (feat_is_dragon_vein(env.grid(pos()))
+            || env.markers.get_terrain_change_at(pos(), TERRAIN_CHANGE_DRAGON_VEINS))
+        {
             trigger_dragon_vein();
+        }
 
         if (env.grid(pos()) == DNGN_ICE_THORNS)
             ice_thorns_trigger(you, pos());

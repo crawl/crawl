@@ -69,6 +69,7 @@
 #include "ranged-attack.h" // describe_to_hit
 #include "religion.h"
 #include "rltiles/tiledef-feat.h"
+#include "rltiles/tiledef-icons.h"
 #include "shout.h"
 #include "skills.h"
 #include "species.h"
@@ -3481,8 +3482,26 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
 {
     dungeon_feature_type feat = env.map_knowledge(pos).feat();
 
-    string desc      = feature_description_at(pos, false, DESC_A);
-    string desc_the  = feature_description_at(pos, false, DESC_THE);
+    map_terrain_change_marker* dragon_vein =
+            env.markers.get_terrain_change_at(
+                pos, TERRAIN_CHANGE_DRAGON_VEINS);
+
+    if (dragon_vein)
+        feat = dragon_vein->new_feature;
+
+    string desc;
+    string desc_the;
+
+    if (feat_is_dragon_vein(feat))
+    {
+        desc = feature_description(feat, "", DESC_A);
+        desc_the = feature_description(feat, "", DESC_THE);
+    }
+    else
+    {
+        desc = feature_description_at(pos, false, DESC_A);
+        desc_the = feature_description_at(pos, false, DESC_THE);
+    }
     // remove " leading down", " leading back out of this place", etc.
     // XX maybe just dataify a short form, rather than do this awkward fixup?
     const vector<string> to_trim = {
@@ -3790,6 +3809,15 @@ bool describe_feature_wide(const coord_def& pos, bool do_actions)
         f.body = trimmed_string(inf.body.str());
 #ifdef USE_TILE
         tileidx_t tile = tileidx_feature(pos);
+
+        if (map_terrain_change_marker* dragon_vein =
+                env.markers.get_terrain_change_at(
+                    pos, TERRAIN_CHANGE_DRAGON_VEINS))
+        {
+            tile = TILEI_DRAGON_VEIN_AIR
+                   + (dragon_vein->new_feature - DNGN_DRAGON_VEIN_AIR);
+        }
+
         f.tile = tile_def(tile);
 #endif
         f.quote = trimmed_string(inf.quote);

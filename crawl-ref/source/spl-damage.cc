@@ -5373,7 +5373,19 @@ spell_type dragon_vein_to_spell(dungeon_feature_type feat)
 // spell for most trigger purposes.
 void trigger_dragon_vein()
 {
-    const spell_type spell = dragon_vein_to_spell(env.grid(you.pos()));
+    dungeon_feature_type dragon_vein = env.grid(you.pos());
+
+    if (dragon_vein == DNGN_SHALLOW_WATER)
+    {
+        if (map_terrain_change_marker* marker =
+                env.markers.get_terrain_change_at(you.pos(),
+                                                  TERRAIN_CHANGE_DRAGON_VEINS))
+        {
+            dragon_vein = marker->new_feature;
+        }
+    }
+
+    const spell_type spell = dragon_vein_to_spell(dragon_vein);
     const int pow = calc_spell_power(SPELL_DRAGON_VEINS);
 
     if (!can_cast_spells(true, true))

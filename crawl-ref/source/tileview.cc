@@ -1121,11 +1121,24 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
     else
         tile_env.bk_cloud(gc) = 0;
 
-    // Draw dragon veins on top of monsters or items, when appropriate
-    if (feat_is_dragon_vein(cell.feat())
-        && (cell.monsterinfo() || cell.item()))
+    // Draw dragon veins on top of monsters, items, or shallow water.
+    dungeon_feature_type dragon_vein = cell.feat();
+
+    if (cell.feat() == DNGN_SHALLOW_WATER)
     {
-        tileidx_t tile = TILEI_DRAGON_VEIN_AIR + (cell.feat() - DNGN_DRAGON_VEIN_AIR);
+        if (map_terrain_change_marker* marker =
+                env.markers.get_terrain_change_at(gc, TERRAIN_CHANGE_DRAGON_VEINS))
+        {
+            dragon_vein = marker->new_feature;
+        }
+    }
+
+    if (feat_is_dragon_vein(dragon_vein)
+        && (cell.monsterinfo() || cell.item() || cell.feat() == DNGN_SHALLOW_WATER))
+    {
+        tileidx_t tile =
+            TILEI_DRAGON_VEIN_AIR + (dragon_vein - DNGN_DRAGON_VEIN_AIR);
+
         if (set<tileidx_t>* icons = map_find(tile_env.icons, gc))
             icons->insert(tile);
         else

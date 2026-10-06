@@ -2107,6 +2107,9 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                          terrain_change_type type, int mid, int power)
 {
     dungeon_feature_type old_feat = env.grid(pos);
+    const bool dragon_vein_overlay =
+        type == TERRAIN_CHANGE_DRAGON_VEINS
+        && old_feat == DNGN_SHALLOW_WATER;
 
     // We can't actually change this, so don't add a map marker that will add
     // a confusing 'summoned' to the feature name when examining it.
@@ -2140,8 +2143,10 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
             // ensure that terrain change happens. Sometimes a terrain
             // change marker can get stuck; this allows re-doing such
             // cases. Also probably needed by the else case above.
-            _current_terrain_changed(pos, newfeat, false, true, false,
-                                        0, 0);
+            // Don't change the terrain for a Dragon Vein overlay on shallow water.
+            if (!dragon_vein_overlay)
+                _current_terrain_changed(pos, newfeat, false, true, false,
+                                         0, 0);
             return;
         }
         else
@@ -2162,7 +2167,8 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                                       old_flv.feat_idx, dur, type, mid,
                                       env.grid_colours(pos), power);
     env.markers.add(marker);
-    _current_terrain_changed(pos, newfeat, false, true, false, 0, 0);
+    if (!dragon_vein_overlay)
+        _current_terrain_changed(pos, newfeat, false, true, false, 0, 0);
 }
 
 static bool _revert_terrain_to(coord_def pos, dungeon_feature_type feat)
