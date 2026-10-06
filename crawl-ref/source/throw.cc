@@ -227,8 +227,6 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
             bool immune = get_resist(mi.mresists, MR_RES_POISON) >= 3;
             if (brand == SPMSL_FRENZY && !mi.can_go_frenzy)
                 immune = true;
-            if (mi.holi & (MH_UNDEAD | MH_NONLIVING))
-                immune = true;
 
             string verb = brand == SPMSL_FRENZY ? "frenzy" : "blind";
 
