@@ -61,6 +61,7 @@ vector<coord_def> find_spike_launcher_walls(const coord_def& origin,
                                             const actor* only_useful_to = nullptr);
 spret cast_spike_launcher(const actor& agent, int pow, bool fail);
 
+vector<coord_def> dragon_vein_locations();
 spret cast_dragon_veins(bool fail);
 
 spret cast_ice_thorns(const actor& agent, const coord_def& pos, int pow, bool fail);

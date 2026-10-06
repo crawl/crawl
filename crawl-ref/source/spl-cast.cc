@@ -1445,6 +1445,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                                     false);
     case SPELL_GRAVE_CLAW:
         return make_unique<targeter_smite>(&you, range);
+    case SPELL_DRAGON_VEINS:
+        return make_unique<targeter_multiposition>(&you, dragon_vein_locations());
 
     // at player's position only but not a selfench
     case SPELL_SUBLIMATION_OF_BLOOD:

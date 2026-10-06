@@ -703,6 +703,17 @@ static bool _can_place_dragon_vein(const coord_def& pos)
     return in_bounds(pos) && feat_is_floor(env.grid(pos));
 }
 
+vector<coord_def> dragon_vein_locations()
+{
+    vector<coord_def> result;
+    for (orth_adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        if (_can_place_dragon_vein(*ai))
+            result.push_back(*ai);
+    }
+    return result;
+}
+
 static void _place_dragon_vein(const coord_def& pos, dungeon_feature_type type, int dur)
 {
     if (!_can_place_dragon_vein(pos))
@@ -713,10 +724,8 @@ static void _place_dragon_vein(const coord_def& pos, dungeon_feature_type type, 
 
 spret cast_dragon_veins(bool fail)
 {
-    if (!_can_place_dragon_vein(you.pos() + coord_def(0, 1))
-        && !_can_place_dragon_vein(you.pos() + coord_def(0, -1))
-        && !_can_place_dragon_vein(you.pos() + coord_def(1, 0))
-        && !_can_place_dragon_vein(you.pos() + coord_def(-1, 0)))
+    vector<coord_def> locations = dragon_vein_locations();
+    if (locations.empty())
     {
         mpr("You cannot tap into any power from your present location.");
         return spret::abort;
