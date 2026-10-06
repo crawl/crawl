@@ -48,6 +48,35 @@ one-handed
 willpower
 
 %%%%
+identified
+
+%%%%
+unidentified
+
+%%%%
+forbidden
+
+%%%%
+melee
+
+%%%%
+ranged
+
+%%%%
+# non-random (i.e. fixed) artefact
+unrand
+
+%%%%
+equipped
+
+%%%%
+spellbook
+
+%%%%
+# miscellaneous evocable item
+evoker
+
+%%%%
 
 # attribute +/-
 %%%%
@@ -544,7 +573,18 @@ AutoDazzle
 " (weapon)"
 
 %%%%
+" (offhand)"
+
+%%%%
 " (worn)"
+
+%%%%
+# worn by poltergeist
+" (haunted)"
+
+%%%%
+# coglin gizmo
+" (installed)"
 
 %%%%
 # yes, this is supposed to have leading AND trailing space
