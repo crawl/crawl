@@ -5435,7 +5435,7 @@ void trigger_dragon_vein()
             // Prioritizes the monsters with the most current health.
             sort(targets.begin(), targets.end(),
                  [](const monster* a, const monster* b)
-                    { return a->hit_points < b->hit_points;});
+                    { return a->hit_points > b->hit_points;});
         }
         break;
 
