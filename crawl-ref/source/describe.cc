@@ -2787,7 +2787,7 @@ static string _describe_gizmo(const item_def &item)
                 break;
 
             case SPGIZMO_AUTODAZZLE:
-                desc  = "It sometimes fires a blinding ray at enemies whose attacks "
+                desc = "It sometimes fires a blinding ray at enemies whose attacks "
                        "you dodge.";
                 break;
 
