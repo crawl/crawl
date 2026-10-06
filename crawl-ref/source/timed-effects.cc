@@ -102,9 +102,9 @@ static void _magic_contamination_effects()
 
         bolt beam(you, ZAP_CONTAM_EXPLOSION, pow);
         beam.target       = you.pos();
-        beam.source_id    = MID_YOU_FAULTLESS;
         beam.aux_source   = "a magical explosion";
         beam.ex_size      = severe ? 2 : 1;
+        beam.no_anger_allies = true;
 
         // Ignores the player's own AC (it's your body exploding!), but not
         // the AC of enemies.

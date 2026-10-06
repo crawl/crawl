@@ -5624,7 +5624,7 @@ void bolt::affect_monster(monster* mon)
 
     if (nasty_to(mon))
     {
-        if (agent() && agent()->is_player()  && final > 0 && !no_anger_allies)
+        if (agent() && agent()->is_player() && final > 0 && !no_anger_allies)
             set_attack_conducts(conducts, *mon, you.aware_of(*mon));
     }
 
