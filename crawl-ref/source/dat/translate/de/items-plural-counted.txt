@@ -244,6 +244,9 @@
 @num@ potions of might
 {pl}@num@ Tränke der Macht
 %%%%
+@num@ potions of mist
+{pl}@num@ Tränke des Nebels
+%%%%
 @num@ potions of moonshine
 {pl}@num@ Tränke des Fusels
 %%%%

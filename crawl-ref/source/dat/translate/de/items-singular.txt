@@ -840,6 +840,9 @@ the potion of magic
 the potion of might
 {m}der Trank der Macht
 %%%%
+the potion of mist
+{m}der Trank des Nebels
+%%%%
 the potion of moonshine
 {m}der Trank des Fusels
 %%%%
@@ -1035,6 +1038,18 @@ the talisman of death
 %%%%
 the storm talisman
 {m}der Sturmtalisman
+%%%%
+the vision talisman
+{m}der Visionstalisman
+%%%%
+the gecko talisman
+{m}der Geckotalisman
+%%%%
+the mist talisman
+{m}der Nebeltalisman
+%%%%
+the jade talisman
+{m}der Jadetalisman
 %%%%
 
 #################################

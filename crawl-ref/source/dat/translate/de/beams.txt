@@ -580,6 +580,30 @@ the wave of devouring shadow
 the whirling bolas
 {f}die wirbelnden Bolas
 %%%%
+the blast of rock
+{f}die Fels-Explosion
+%%%%
+the blast of wind
+{m}der Windstoß
+%%%%
+the fiery blast
+{f}die Feuerwelle
+%%%%
+the frigid blast
+{f}die Frostwelle
+%%%%
+the glimmering dart
+{m}der glimmernde Pfeil
+%%%%
+the ice thorns
+{pl}die Eisdornen
+%%%%
+the scorching wind
+{m}der sengende Wind
+%%%%
+the surge of energy
+{f}die Energiewelle
+%%%%
 
 # Qazlal Upheaval
 %%%%

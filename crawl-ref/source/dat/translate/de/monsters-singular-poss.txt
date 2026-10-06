@@ -1970,6 +1970,24 @@ the wyrmhole's
 the zykzyl's
 {m}des Zykzyls
 %%%%
+the assassin centipede's
+{m}des Assassinentausendfüßers
+%%%%
+the hypnotail's
+{m}des Hypnoschwanzes
+%%%%
+the airy jade's
+{f}der luftigen Jade
+%%%%
+the earthen jade's
+{f}der erdigen Jade
+%%%%
+the fiery jade's
+{f}der feurigen Jade
+%%%%
+the icy jade's
+{f}der eisigen Jade
+%%%%
 
 # subtypes of mutant beast
 %%%%

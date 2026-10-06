@@ -214,6 +214,18 @@ talismans of death
 storm talismans
 {pl}Sturmtalismane
 %%%%
+vision talismans
+{pl}Visionstalismane
+%%%%
+gecko talismans
+{pl}Geckotalismane
+%%%%
+mist talismans
+{pl}Nebeltalismane
+%%%%
+jade talismans
+{pl}Jadetalismane
+%%%%
 
 #################################
 # Corpses

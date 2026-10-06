@@ -1985,6 +1985,24 @@
 @num@ zykzyls
 {pl}@num@ Zykzyls
 %%%%
+@num@ assassin centipedes
+{pl}@num@ Assassinentausendfüßer
+%%%%
+@num@ hypnotails
+{pl}@num@ Hypnoschwänze
+%%%%
+@num@ airy jades
+{pl}@num@ luftige Jaden
+%%%%
+@num@ earthen jades
+{pl}@num@ erdige Jaden
+%%%%
+@num@ fiery jades
+{pl}@num@ feurige Jaden
+%%%%
+@num@ icy jades
+{pl}@num@ eisige Jaden
+%%%%
 
 # slime creatures can merge into bigger slime creatures
 %%%%

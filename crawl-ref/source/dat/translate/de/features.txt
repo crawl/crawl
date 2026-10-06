@@ -912,6 +912,21 @@ the purified mutation catalyst
 the runelight
 {n}das Runenlicht
 %%%%
+the airy dragon vein
+{f}die luftige Drachenader
+%%%%
+the earthen dragon vein
+{f}die erdige Drachenader
+%%%%
+the fiery dragon vein
+{f}die feurige Drachenader
+%%%%
+the icy dragon vein
+{f}die eisige Drachenader
+%%%%
+the patch of ice thorns
+{n}das Eisdornengestrüpp
+%%%%
 
 ################################
 # With "some" as determiner

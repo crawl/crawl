@@ -1067,6 +1067,21 @@ Verhängnisstrahl
 Doomsaying
 Unheilsprophezeiung
 %%%%
+Dragon Vein (Air)
+Drachenader (Luft)
+%%%%
+Dragon Vein (Earth)
+Drachenader (Erde)
+%%%%
+Dragon Vein (Fire)
+Drachenader (Feuer)
+%%%%
+Dragon Vein (Ice)
+Drachenader (Eis)
+%%%%
+Dragon Veins
+Drachenadern
+%%%%
 Enfeeble
 Schwächen
 %%%%
@@ -1150,6 +1165,9 @@ Jagdruf
 %%%%
 Hurl Torchlight
 Fackelschein werfen
+%%%%
+Ice Thorns
+Eisdornen
 %%%%
 Ill Omen
 Schlechtes Omen
@@ -1336,6 +1354,9 @@ Zeichen des Untergangs
 %%%%
 Siphon Essence
 Essenz absaugen
+%%%%
+Sirocco
+Scirocco
 %%%%
 Sleetstrike
 Graupelschlag

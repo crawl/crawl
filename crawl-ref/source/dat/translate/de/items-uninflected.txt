@@ -216,6 +216,9 @@ Anleitungen
 runes
 Runen
 %%%%
+gems
+Edelsteine
+%%%%
 
 #################################
 # Monster pane annotations (console)
