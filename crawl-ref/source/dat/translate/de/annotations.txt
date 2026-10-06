@@ -48,6 +48,35 @@ einhändig
 willpower
 Willenskraft
 %%%%
+identified
+identifiziert
+%%%%
+unidentified
+unidentifiziert
+%%%%
+forbidden
+verboten
+%%%%
+melee
+Nahkampf
+%%%%
+ranged
+Fernkampf
+%%%%
+# non-random (i.e. fixed) artefact
+unrand
+unzufällig
+%%%%
+equipped
+ausgestattet
+%%%%
+spellbook
+Zauberbuch
+%%%%
+# miscellaneous evocable item
+evoker
+evozierbar
+%%%%
 
 # attribute +/-
 %%%%
@@ -544,8 +573,19 @@ Autoblenden
 " (weapon)"
 " (Waffe)"
 %%%%
+" (offhand)"
+" (Nebenhand)"
+%%%%
 " (worn)"
 " (angelegt)"
+%%%%
+# worn by poltergeist
+" (haunted)"
+" (heimgesucht)"
+%%%%
+# coglin gizmo
+" (installed)"
+" (installiert)"
 %%%%
 # yes, this is supposed to have leading AND trailing space
 " (carried) "
