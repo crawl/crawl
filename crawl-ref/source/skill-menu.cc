@@ -618,6 +618,8 @@ string SkillMenuSwitch::get_help()
                 causes.push_back("the Charlatan's Orb");
             if (you.form == transformation::walking_scroll)
                 causes.push_back("scribal knowledge");
+            if (you.form == transformation::jademantle)
+                causes.push_back("jademantle form");
             result = "Skills enhanced by "
                      + comma_separated_line(causes.begin(), causes.end())
                      + " are in <green>green</green>.";
