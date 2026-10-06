@@ -765,14 +765,56 @@ void bolt::precalc_agent_properties()
 
 void bolt::choose_ray()
 {
-    if ((!chose_ray || reflections > 0)
-        && !find_ray(source, target, ray, opc_solid_see)
-        // If fire is blocked, at least try a visible path so the
-        // error message is better.
-        && !find_ray(source, target, ray, opc_default))
+    if (chose_ray && reflections == 0)
+        return;
+
+    if (use_player_knowledge)
+    {
+        if (!path_cell_is_known(target)
+            || !find_ray(source, target, ray, opc_map_solid_see)
+               && !find_ray(source, target, ray, opc_map_default))
+        {
+            fallback_ray(source, target, ray);
+        }
+    }
+    else if (!find_ray(source, target, ray, opc_solid_see)
+             // If fire is blocked, at least try a visible path so the
+             // error message is better.
+             && !find_ray(source, target, ray, opc_default))
     {
         fallback_ray(source, target, ray);
     }
+}
+
+bool bolt::path_cell_is_known(const coord_def& p) const
+{
+    return map_bounds(p) && env.map_knowledge(p).feat() != DNGN_UNSEEN;
+}
+
+dungeon_feature_type bolt::path_feat(const coord_def& p) const
+{
+    return use_player_knowledge ? env.map_knowledge(p).feat() : env.grid(p);
+}
+
+bool bolt::path_cell_is_solid(const coord_def& p) const
+{
+    return feat_is_solid(path_feat(p));
+}
+
+monster* bolt::path_monster_at(const coord_def& p) const
+{
+    monster* mon = monster_at(p);
+    if (mon && use_player_knowledge && !you.can_see(*mon))
+        return nullptr;
+    return mon;
+}
+
+actor* bolt::path_actor_at(const coord_def& p) const
+{
+    actor* act = actor_at(p);
+    if (act && act->is_monster())
+        return path_monster_at(p);
+    return act;
 }
 
 // Draw the bolt at p if needed.
@@ -819,7 +861,7 @@ void bolt::draw(const coord_def& p, bool force_refresh)
 // the feature.
 void bolt::bounce()
 {
-    ASSERT(cell_is_solid(ray.pos()));
+    ASSERT(path_cell_is_solid(ray.pos()));
     // Don't bounce player tracers off unknown cells, or cells that we
     // incorrectly thought were non-bouncy.
     if (is_tracer() && agent() == &you)
@@ -838,14 +880,14 @@ void bolt::bounce()
     {
         ray.regress();
     }
-    while (cell_is_solid(ray.pos()));
+    while (path_cell_is_solid(ray.pos()));
 
     extra_range_used += range_used(true);
     bounce_pos = ray.pos();
     bounces++;
     reflect_grid rg;
     for (adjacent_iterator ai(ray.pos(), false); ai; ++ai)
-        rg(*ai - ray.pos()) = cell_is_solid(*ai);
+        rg(*ai - ray.pos()) = path_cell_is_solid(*ai);
     ray.bounce(rg);
     extra_range_used += 2;
 
@@ -859,7 +901,7 @@ void bolt::bounce()
         extra_range_used -= orig_range - range;
     }
 
-    ASSERT(!cell_is_solid(ray.pos()));
+    ASSERT(!path_cell_is_solid(ray.pos()));
 }
 
 void bolt::fake_flavour()
@@ -1121,7 +1163,8 @@ bool bolt::need_regress() const
     //      others obsolete.
     return (is_explosion && !in_explosion_phase)
            || drop_item
-           || cell_is_solid(pos()) && !can_affect_wall(pos())
+           || path_cell_is_solid(pos())
+              && !can_affect_wall(pos(), use_player_knowledge)
            || origin_spell == SPELL_PRIMAL_WAVE;
 }
 
@@ -1132,12 +1175,12 @@ void bolt::affect_cell()
 
     fake_flavour();
 
-    monster *m = monster_at(pos());
+    monster *m = path_monster_at(pos());
 
     // Note that this can change the solidity of the wall.
-    if (cell_is_solid(pos())
+    if (path_cell_is_solid(pos())
         // Wall affecting beams still do even with a monster there.
-        && (!m || can_affect_wall(pos())))
+        && (!m || can_affect_wall(pos(), use_player_knowledge)))
     {
         affect_wall();
     }
@@ -1171,11 +1214,11 @@ void bolt::affect_cell()
             if (!ignored)
                 last_affected_actor_pos = pos();
 
-            const dungeon_feature_type feat = env.grid(pos());
+            const dungeon_feature_type feat = path_feat(pos());
             if (hit == AUTOMATIC_HIT && !ignored
                 // Piercing beams are still stopped by wall monsters
                 // unless they were going to bounce
-                && (!pierce || cell_is_solid(pos())
+                && (!pierce || path_cell_is_solid(pos())
                         && !is_bouncy(feat) && !is_explosion)
                 && (!is_tracer() || (agent() && m->visible_to(agent()))))
             {
@@ -1302,11 +1345,19 @@ void bolt::do_fire()
 // Returns true if the beam should continue;
 bool bolt::do_fire_step(bool ignore_wall_monsters)
 {
-    const dungeon_feature_type feat = env.grid(pos());
+    // Stop short of unknown cells.
+    if (use_player_knowledge && !path_cell_is_known(pos()))
+    {
+        if (pos() != source)
+            ray.regress();
+        return false;
+    }
+
+    const dungeon_feature_type feat = path_feat(pos());
 
     // If requested to stop before hitting allies (or neutrals our god would
     // object to us harming), do so now.
-    const actor* act_at = actor_at(pos());
+    const actor* act_at = path_actor_at(pos());
     if (act_at && stop_at_allies
         && (mons_atts_aligned(attitude, act_at->attitude())
             || (act_at->attitude() == ATT_NEUTRAL
@@ -1333,9 +1384,10 @@ bool bolt::do_fire_step(bool ignore_wall_monsters)
 
 
     bool wall_monster_hit = false;
-    const monster* mon_at = monster_at(pos());
+    const monster* mon_at = path_monster_at(pos());
     // digging is taken care of in affect_cell
-    if (feat_is_solid(feat) && !can_affect_wall(pos())
+    if (feat_is_solid(feat)
+        && !can_affect_wall(pos(), use_player_knowledge)
         && flavour != BEAM_DIGGING)
     {
         // When hitting a wall monster inside a wall, don't bounce or explode
@@ -1365,7 +1417,7 @@ bool bolt::do_fire_step(bool ignore_wall_monsters)
                 {
                     ray.regress();
                 }
-                while (ray.pos() != source && cell_is_solid(ray.pos()));
+                while (ray.pos() != source && path_cell_is_solid(ray.pos()));
 
                 // target is where the explosion is centered, so update it.
                 if (is_explosion && !is_tracer())
@@ -1385,7 +1437,7 @@ bool bolt::do_fire_step(bool ignore_wall_monsters)
     // Roots only have an effect during explosions.
     if (flavour == BEAM_ROOTS)
     {
-        if (cell_is_solid(pos()))
+        if (path_cell_is_solid(pos()))
             affect_wall();
         const actor *victim = actor_at(pos());
         if (victim
@@ -1406,7 +1458,7 @@ bool bolt::do_fire_step(bool ignore_wall_monsters)
     // always in the past, and we don't want to crash
     // if they accidentally pass through a corner.
     // Dig tracers continue through unseen cells.
-    ASSERT(!cell_is_solid(pos())
+    ASSERT(!path_cell_is_solid(pos())
             || is_tracer() && can_affect_wall(pos(), true)
             || mon_at // If there *was* a monster (they might have died by now)
             || affects_nothing); // returning weapons and BEAM_VISUAL
