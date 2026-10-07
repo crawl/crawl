@@ -1091,6 +1091,28 @@ bool melee_attack::handle_phase_hit()
         emit_foul_stench();
     }
 
+    if (attacker->alive()
+        && defender->is_player()
+        && x_chance_in_y(defender->scan_artefacts(ARTP_CHAOS_GUARD), 6))
+    {
+        if (x_chance_in_y(1 + damage_done, damage_done + 15))
+        {
+            // Find the armour doing this, for messaging.
+            // (Choose randomly if there's more than one.)
+            vector<item_def*> eq = you.equipment.get_slot_items(SLOT_ALL_ARMOUR);
+            shuffle_array(eq);
+            for (const item_def* item : eq)
+            {
+                if (testbits(item->flags, ISFLAG_CHAOTIC))
+                {
+                    mprf("Your %s shimmers with wild colours.", item->name(DESC_PLAIN, true, true, false).c_str());
+                    break;
+                }
+            }
+            chaos_affects_actor(attacker, defender);
+        }
+    }
+
     return true;
 }
 

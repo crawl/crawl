@@ -1032,6 +1032,7 @@ static const artefact_prop_data artp_data[] =
     { "Bane", ARTP_VAL_BOOL, 20,     // ARTP_BANE,
         nullptr, []() {return 1;}, 0, 0},
     { "BEnc", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 },  // ARTP_BASE_ENCUMBRANCE,
+    { "*Chaos", ARTP_VAL_BOOL, 0, []() {return 1;}, nullptr, 0, 0 },  // ARTP_CHAOS_GUARD,
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 // weights sum to 1000
@@ -1424,6 +1425,10 @@ void setup_unrandart(item_def &item, bool creating)
 
     for (int i = 0; i < ART_PROPERTIES; i++)
         rap[i] = static_cast<short>(unrand->prpty[i]);
+
+    // Add the corresponding artprop to chaotic armour.
+    if (item.base_type == OBJ_ARMOUR && testbits(item.flags, ISFLAG_CHAOTIC))
+        rap[ARTP_CHAOS_GUARD] = static_cast<short>(1);
 
     item.base_type = unrand->base_type;
     item.sub_type  = unrand->sub_type;

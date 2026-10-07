@@ -78,8 +78,6 @@ public:
 
     bool would_prompt_player();
 
-    static void chaos_affect_actor(actor *victim);
-
     bool player_do_aux_attack(unarmed_attack_type atk);
     bool do_drag();
 

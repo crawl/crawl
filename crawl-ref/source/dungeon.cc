@@ -5168,7 +5168,7 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
     }
 
     if (props.exists(CHAOTIC_ITEM_KEY) && is_unrandom_artefact(item)
-        && item.base_type == OBJ_WEAPONS)
+        && (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_ARMOUR))
     {
         item.flags |= ISFLAG_CHAOTIC;
     }

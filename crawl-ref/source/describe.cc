@@ -503,6 +503,9 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
         { ARTP_BANE,
             "It inflicts you with a random bane when you equip it.",
             prop_note::plain },
+        { ARTP_CHAOS_GUARD,
+            "It may inflict chaotic effects on those who attack you.",
+            prop_note::plain },
     };
     return data;
 }
@@ -595,6 +598,10 @@ static const vector<artefact_prop_type> artprop_annotation_order =
     ARTP_ENHANCE_AIR,
     ARTP_ENHANCE_EARTH,
     ARTP_ENHANCE_ALCHEMY,
+
+    // List after other artprops (since it's harder to list it before all
+    // unrand-specific props).
+    ARTP_CHAOS_GUARD,
 };
 
 static vector<string> _randart_propnames(const item_def& item,
@@ -612,7 +619,10 @@ static vector<string> _randart_propnames(const item_def& item,
     if (is_unrandom_artefact(item))
     {
         entry = get_unrand_entry(item.unrand_idx);
-        if (testbits(item.flags, ISFLAG_CHAOTIC))
+
+        // Chaotic weapons get a second 'fake' brand that must be noted this
+        // way, but chaotic armour get an actual artprop that is listed normally.
+        if (testbits(item.flags, ISFLAG_CHAOTIC) && item.base_type == OBJ_WEAPONS)
             propnames.push_back("chaos,");
     }
     const bool skip_ego = is_unrandom_artefact(item)

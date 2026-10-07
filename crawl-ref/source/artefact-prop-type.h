@@ -93,5 +93,6 @@ enum artefact_prop_type
     ARTP_SILENCE,
     ARTP_BANE,
     ARTP_BASE_ENCUMBRANCE,
+    ARTP_CHAOS_GUARD,
     ARTP_NUM_PROPERTIES
 };

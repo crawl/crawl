@@ -1602,6 +1602,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (!terse && cursed())
             buff << "bound ";
 
+        if (testbits(flags, ISFLAG_CHAOTIC))
+            buff << "chaotic ";
+
         // Don't list unenchantable armor as +0.
         if (identified && !dbname && !qualname && armour_is_enchantable(*this))
             buff << make_stringf("%+d ", plus);
