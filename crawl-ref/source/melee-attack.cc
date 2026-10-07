@@ -1137,8 +1137,8 @@ bool melee_attack::handle_phase_damaged()
         {
             _inflict_deathly_blight(*(defender->as_monster()));
         }
-        if (you.unrand_equipped(UNRAND_CRAB_CLAWS) && defender->alive()
-            && defender->is_monster()
+        if (you.unrand_equipped(UNRAND_CRAB_CLAWS)  && is_attacking_hostiles
+            && defender->alive() && defender->is_monster()
             && x_chance_in_y(damage_done, damage_done + 15)
             && !you.allies_forbidden())
         {
