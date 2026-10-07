@@ -2190,6 +2190,7 @@ static const mutation_def mut_data[] =
   {"You reflexively headbutt those who attack you in melee.", "", ""},
   {"Your retaliatory reflexes feel sharp.", "", ""},
   {"Your retaliatory reflexes feel dull.", "", ""},
+  TILEG_MUT_REFLEXIVE_HEADBUTT,
 },
 
 { MUT_STEAM_RESISTANCE, 0, 1, mutflag::good | mutflag::substance,
