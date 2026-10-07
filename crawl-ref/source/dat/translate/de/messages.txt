@@ -4159,8 +4159,8 @@ Heiligtum
 Disturbance
 Störung
 %%%%
-@Arg1@: <lightgrey>@arg2@</lightgrey>
-@Arg1@: <lightgrey>@arg2@</lightgrey>
+@Arg@: <lightgrey>@any@</lightgrey>
+@Arg@: <lightgrey>@any@</lightgrey>
 %%%%
 Look
 Ansehen
@@ -4174,8 +4174,8 @@ Zielen
 <cyan>Items here: </cyan> @arg@.
 <cyan>Gegenstände hier: </cyan> @arg@.
 %%%%
-<cyan>Here:</cyan> @arg@
-<cyan>Hier:</cyan> @arg@
+<cyan>Here:</cyan> @any@
+<cyan>Hier:</cyan> @any@
 %%%%
 This spell doesn't need a beam path.
 Dieser Zauber braucht keinen Strahl.
