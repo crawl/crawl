@@ -57,6 +57,8 @@ void separate_enclosing_tags(const string& s, string& prefix,
 void separate_prefix_annotation(const string& s, string& annotation, string& rest);
 void separate_postfix_annotation(const string& s, string& annotation, string& rest);
 
+vector<string> separate_sentences(const string &s);
+
 // separate string into 3 types of tokens
 // - plain text
 // - context specifiers (e.g. "{poss}")

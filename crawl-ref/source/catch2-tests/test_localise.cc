@@ -168,6 +168,10 @@ TEST_CASE( "Localise German", "[single-file]" )
                         "Du ziehst Lebenskraft aus Fannar!!" );
         CHECK( localise("The vampire draws life force from you!!!") ==
                         "Der Vampir zieht Lebenskraft aus dir!!!" );
+
+        // Multiple sentences
+        CHECK( localise("This weapon falls into the 'Maces & Flails' category. It is a one-handed weapon.")
+               == "Diese Waffe gehört zur Kategorie 'Keulen & Flegel'. Dies ist eine Einhandwaffe." );
     }
 
     SECTION("Lists")

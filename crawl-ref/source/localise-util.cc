@@ -328,6 +328,32 @@ void separate_postfix_annotation(const string& s, string& annotation, string& re
     }
 }
 
+vector<string> separate_sentences(const string &s)
+{
+    vector<string> result;
+    string rest = s;
+
+    size_t pos = 0;
+    while (!rest.empty())
+    {
+        pos = rest.find_first_of(".!?", pos);
+        if (pos >= rest.length() - 1)
+        {
+            result.push_back(rest);
+            break;
+        }
+        else if (rest[pos+1] == ' ')
+        {
+            result.push_back(rest.substr(0, pos+1));
+            rest = rest.substr(pos+2);
+            pos = 0;
+        }
+        else
+            pos++;
+    }
+    return result;
+}
+
 vector<string> tokenise_parameterised_string(const string& s)
 {
     vector<string> result;

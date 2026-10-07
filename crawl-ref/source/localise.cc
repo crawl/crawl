@@ -857,6 +857,18 @@ static string _localise_string(const string& s, bool fallback_en)
         return result;
     }
 
+    auto sentences = separate_sentences(s);
+    if (sentences.size() > 1)
+    {
+        for (const string &sentence: sentences)
+        {
+            if (!result.empty())
+                result += " ";
+            result += _localise_string(sentence);
+        }
+        return result;
+    }
+
     debuglog("No translation found for \"%s\"", s.c_str());
     return fallback_en ? s : "";
 }
