@@ -1554,6 +1554,10 @@ easy_door = true
 warn_hatches = false
         Ask for confirmation before using a one-way escape hatch or shaft.
 
+warn_unknown_hatches = false
+       If warn_hatches is true, only warn when the destination of a hatch
+       is unknown.
+
 warn_contam_cost = true
         Ask for confirmation before casting a spell with a contam cost, if it
         is possible that casting it at your current level of magic contamination
