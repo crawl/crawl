@@ -5,8 +5,25 @@
 ###############################################################################
 
 ##################
-# item-name.cc
+# item-prop.cc
 ##################
+%%%%
+You learned that @item1@ is actually @item2@.
+Du hast erfahren, dass @item1@ eigentlich @item2@ ist.
+%%%%
+You learned that @items1@ are actually @items2@
+Du hast erfahren, dass @items1@ eigentlich @items2@ sind.
+%%%%
+@Arg@ has recharged.
+@Arg@ ist wieder aufgeladen.
+%%%%
+@Item@ has regained 1 charge.
+@Item@ hat eine Ladung zurückerhalten.
+%%%%
+@Item@ has regained @num@ charges.
+@Item@ hat @num@ Ladungen zurückerhalten.
+%%%%
+
 
 ##################
 # ability.cc
@@ -11414,15 +11431,6 @@ Erwarte nicht, im Wasser unentdeckt zu bleiben.
 %%%%
 Do you really want to go berserk while wielding @arg@?
 Wirklich wüten, während du {acc}@arg@ führst?
-%%%%
-@Arg@ has recharged.
-@Arg@ ist wieder aufgeladen.
-%%%%
-@Arg@ has regained 1 charge.
-@Arg@ hat 1 Ladung zurückerhalten.
-%%%%
-@Arg@ has regained @num@ charges.
-@Arg@ hat @num@ Ladungen zurückerhalten.
 %%%%
 Your life force feels restored.
 Deine Lebenskraft fühlt sich wiederhergestellt.

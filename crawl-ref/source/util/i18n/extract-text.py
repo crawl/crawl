@@ -16,8 +16,8 @@ msg_transforms = {
         "You learned that @items1@ are actually @items2@",
     ],
     "%%s has regained %s charge%s." : [
-        "@Item@ has regained one charge.",
-        "@Item@ has regained @arg@ charges.",
+        "@Item@ has regained 1 charge.",
+        "@Item@ has regained @num@ charges.",
     ],
     "<white>Runes of Zot (</white><%s>%d</%s><white> collected) & Orbs of Power</white>" : [
         "<white>Runes of Zot (@arg@ collected) & Orbs of Power</white>",

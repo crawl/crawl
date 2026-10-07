@@ -5,8 +5,25 @@
 ###############################################################################
 
 ##################
-# item-name.cc
+# item-prop.cc
 ##################
+%%%%
+You learned that @item1@ is actually @item2@.
+
+%%%%
+You learned that @items1@ are actually @items2@
+
+%%%%
+@Arg@ has recharged.
+
+%%%%
+@Item@ has regained 1 charge.
+
+%%%%
+@Item@ has regained @num@ charges.
+
+%%%%
+
 
 ##################
 # ability.cc
@@ -11413,15 +11430,6 @@ Don't expect to remain undetected while in the water.
 
 %%%%
 Do you really want to go berserk while wielding @arg@?
-
-%%%%
-@Arg@ has recharged.
-
-%%%%
-@Arg@ has regained 1 charge.
-
-%%%%
-@Arg@ has regained @num@ charges.
 
 %%%%
 Your life force feels restored.
