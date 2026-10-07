@@ -370,6 +370,7 @@ enum tag_minor_version
     TAG_MINOR_TEMPORARY_WEAPONS,   // Implement the ability to give the player transient weapons
     TAG_MINOR_UNIQUE_ITEM_ID,      // Implement unique item IDs for better-handling transient weapons
     TAG_MINOR_FORM_XP_TRACKING,    // Tracking of how much XP per level was gained in each form
+    TAG_MINOR_MONINFO_SPELLS,      // Marshall monster_info::spells
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
