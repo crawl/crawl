@@ -7,6 +7,7 @@
 #include "AppHdr.h"
 
 #include "english.h"
+#include "localise.h"
 
 #include <cstddef>
 #include <cwctype>
@@ -372,8 +373,12 @@ static string _number_in_words(unsigned num, unsigned period)
                                   : ""));
 }
 
-string number_in_words(unsigned num)
+string number_in_words(unsigned num, bool force)
 {
+    // i18n: Numbers in words are hard to translate
+    if (localisation_active() && !force)
+        return std::to_string(num);
+
     return _number_in_words(num, 0);
 }
 
