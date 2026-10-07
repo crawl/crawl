@@ -39,6 +39,7 @@ static map<string, string> _pregenerated;
 static vector<pair<text_pattern, string>> _patterns;
 
 static bool _initialised = false;
+static bool _paused = false;
 static string _context;
 
 static string _get_pregenerated_translation(const string& s)
@@ -236,6 +237,21 @@ void shutdown_localisation()
     _pregenerated.clear();
     _patterns.clear();
     _initialised = false;
+}
+
+void pause_localisation()
+{
+    _paused = true;
+}
+
+void unpause_localisation()
+{
+    _paused = false;
+}
+
+bool localisation_active()
+{
+    return Options.language != lang_t::EN && _initialised && !_paused;
 }
 
 // low-level translate function
@@ -839,11 +855,6 @@ static string _localise_string(const string& s, bool fallback_en)
 
     debuglog("No translation found for \"%s\"", s.c_str());
     return fallback_en ? s : "";
-}
-
-bool localisation_active()
-{
-    return Options.language != lang_t::EN && _initialised;
 }
 
 string localise_in_context(const string &context, const string &s)

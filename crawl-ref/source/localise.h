@@ -16,6 +16,10 @@ void init_localisation();
 // not mandatory to call this, except in regression tests, where we want to switch languages
 void shutdown_localisation();
 
+void pause_localisation();
+
+void unpause_localisation();
+
 // Is localisation active?
 bool localisation_active();
 
