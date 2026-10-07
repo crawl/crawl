@@ -513,6 +513,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(always_show_exclusions), true),
         new BoolGameOption(SIMPLE_NAME(note_all_skill_levels), false),
         new BoolGameOption(SIMPLE_NAME(note_skill_max), true),
+        new BoolGameOption(SIMPLE_NAME(note_starting_skills), false),
         new BoolGameOption(SIMPLE_NAME(note_xom_effects), true),
         new BoolGameOption(SIMPLE_NAME(note_chat_messages), false),
         new BoolGameOption(SIMPLE_NAME(note_dgl_messages), true),

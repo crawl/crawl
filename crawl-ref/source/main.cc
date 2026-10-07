@@ -779,6 +779,12 @@ static void _take_starting_note()
 
     take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0,
                    notestr.str().c_str()));
+
+    for (skill_type skill = SK_FIRST_SKILL; skill < NUM_SKILLS; ++skill)
+    {
+        if (you.skills[skill] > 0)
+            take_note(Note(NOTE_START_SKILL, skill, you.skills[skill]));
+    }
 }
 
 static void _startup_hints_mode()

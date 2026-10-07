@@ -2869,6 +2869,10 @@ note_skill_max = true
         note_skill_levels is nonempty, notes will be taken whenever
         either of the criteria are met.
 
+note_starting_skills = false
+        Setting this to true will take note of any skill at level 1 or
+        above when you start the game.
+
 note_xom_effects = true
         This will add a note whenever Xom does something.
 
