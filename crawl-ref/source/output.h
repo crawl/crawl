@@ -39,6 +39,8 @@ int equip_slot_by_name(const char *s);
 
 int stealth_pips();
 
+vector<string> player_passive_effects();
+
 void print_overview_screen();
 
 string dump_overview_screen();

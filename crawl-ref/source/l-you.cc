@@ -1390,6 +1390,15 @@ LUAFN(you_status)
     PLUARET(string, status_effects.c_str());
 }
 
+/*** List passive effects.
+ * @treturn table A table of strings describing each passive
+ * @function passives
+ */
+LUAFN(you_passives)
+{
+    return clua_stringtable(ls, player_passive_effects());
+}
+
 /*** Is your quivered action valid?
  * @treturn boolean
  * @function quiver_valid
@@ -1593,6 +1602,7 @@ static const struct luaL_Reg you_clib[] =
     { "constricted",  you_constricted },
     { "constricting", you_constricting },
     { "status",       you_status },
+    { "passives",     you_passives },
     { "immune_to_hex", you_immune_to_hex },
     { "reach_range", you_reach_range },
     { "movement_cost", you_movement_cost },
