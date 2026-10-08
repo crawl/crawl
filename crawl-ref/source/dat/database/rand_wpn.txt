@@ -409,6 +409,8 @@ Fortune-Teller
 
 Oracle
 
+Prognosticator
+
 Seeker
 
 Seer
@@ -420,7 +422,6 @@ Sybil
 Visionary
 
 Water Diviner
-
 %%%%
 _people_name_
 
