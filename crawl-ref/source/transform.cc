@@ -3175,7 +3175,10 @@ void mistmane_spew_potion(const coord_def& target)
     cloud.decay = 100;
     cloud_info ci(cloud.type, get_cloud_colour(cloud), 3, 0, you.pos(), KILL_YOU);
 
-    bolt visual = bolt::visual_beam(you.pos(), path.path_taken.front(), 10, ci.colour, tileidx_cloud(ci));
+    bolt visual = bolt::visual_beam(you.pos(),
+                                    path.path_taken.size() > 0 ? path.path_taken.front()
+                                                               : target,
+                                    10, ci.colour, tileidx_cloud(ci));
     visual.range = max_range;
     visual.aimed_at_spot = false;
     multi_beam multi(visual, MULTI_BEAM_WIDE, 3);
