@@ -1085,13 +1085,11 @@ void wizard_xom_acts()
     msgwin_get_line("What action should Xom take? (Blank = any) " ,
                     specs, sizeof(specs));
 
-    const int severity = random_range(0, HALF_MAX_PIETY);
-
     if (specs[0] == '\0')
     {
         const maybe_bool nice = you_worship(GOD_XOM) ? maybe_bool::maybe :
                                 coinflip();
-        const xom_event_type result = xom_acts(severity, nice);
+        const xom_event_type result = xom_acts(nice);
         dprf("Xom did '%s'.", xom_effect_to_name(result).c_str());
 #ifndef DEBUG_DIAGNOSTICS
         UNUSED(result);
@@ -1107,7 +1105,7 @@ void wizard_xom_acts()
     }
 
     dprf("Okay, Xom is doing '%s'.", xom_effect_to_name(event).c_str());
-    xom_take_action(event, severity);
+    xom_take_action(event, get_tension(GOD_XOM));
 }
 
 void wizard_set_zot_clock()

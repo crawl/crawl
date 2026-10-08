@@ -107,10 +107,10 @@ bool xom_is_nice(int tension = -1);
 const string describe_xom_favour();
 int xom_tension_pips();
 
-xom_event_type xom_acts(int sever, maybe_bool niceness = maybe_bool::maybe,
+xom_event_type xom_acts(maybe_bool niceness = maybe_bool::maybe,
                         int tension = -1, bool debug = false);
-xom_event_type xom_choose_action(bool niceness,  int sever, int tension);
-void xom_take_action(xom_event_type action, int sever);
+xom_event_type xom_choose_action(bool niceness, int tension);
+void xom_take_action(xom_event_type action, int tension);
 
 void xom_maybe_reverts_banishment();
 void xom_check_lost_item(const item_def& item);
