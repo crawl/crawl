@@ -1124,7 +1124,7 @@ BOOL:    elec, poison, notelep, deleted
 NAME:    amulet of Tranquillity
 OBJ:     OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:  ETC_POISON
-TILE:    urand_four_winds
+TILE:    urand_tranquillity
 LIFE:    1
 WILL:    3
 BOOL:    clarity
