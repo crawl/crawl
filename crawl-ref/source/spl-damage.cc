@@ -5486,6 +5486,9 @@ void trigger_dragon_vein()
     finalize_mp_cost();
     do_post_spellcast_effects(spell);
 
+    if (you.duration[DUR_STAMPEDE] && you.has_mutation(MUT_EAST_WIND))
+        you.duration[DUR_STAMPEDE] += you.time_taken;
+
     // If this is your second usage on this spell cast, remove the remaining dragon veins.
     // (Otherwise, just remove the one you stepped on.)
     if (you.props.exists(DRAGON_VEIN_USED_KEY))
