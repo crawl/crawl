@@ -2931,8 +2931,7 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
         return true;
     case TARG_HOSTILE:
     case TARG_HOSTILE_OR_EMPTY:
-        return mon->attitude() == ATT_HOSTILE
-            || mon->has_ench(ENCH_FRENZIED);
+        return mon->hostile() || mon->has_ench(ENCH_FRENZIED);
     case TARG_FRIEND:
         return mon->friendly();
     case TARG_MOVABLE_OBJECT:

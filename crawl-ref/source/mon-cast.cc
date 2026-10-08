@@ -3371,7 +3371,7 @@ static bool _can_force_door_shut(const vector<coord_def>& door_spots)
         {
             // Only attempt to push players and non-hostile monsters out of
             // doorways
-            if (act->attitude() == ATT_HOSTILE)
+            if (act->hostile())
                 return false;
         }
     }

@@ -88,6 +88,11 @@ int actor::skill_rdiv(skill_type sk, int mult, int div) const
     return div_rand_round(skill(sk, mult * 256), div * 256);
 }
 
+bool actor::hostile() const
+{
+    return attitude() == ATT_HOSTILE;
+}
+
 bool actor::friendly() const
 {
     return attitude() == ATT_FRIENDLY;

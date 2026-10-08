@@ -208,7 +208,7 @@ struct mgen_data
         summon_duration = duration;
         summon_type = _summon_type;
 
-        if (_summoner && _summoner->attitude() == ATT_HOSTILE
+        if (_summoner && _summoner->hostile()
             && you.has_bane(BANE_HUNTED) && pos == _summoner->pos()
             && you.see_cell_no_trans(_summoner->pos()))
         {

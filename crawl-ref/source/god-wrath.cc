@@ -408,7 +408,7 @@ void lucy_check_meddling()
 
     vector<monster*> potential_banishees;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-        if (mi->attitude() == ATT_HOSTILE && !mi->is_peripheral())
+        if (mi->hostile() && !mi->is_peripheral())
             potential_banishees.push_back(*mi);
 
     if (potential_banishees.empty())

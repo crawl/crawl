@@ -4363,7 +4363,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         // Damage over time effects are excluded for similar reasons.
         if (agent && agent->is_player()
             && mons_class_gives_xp(type)
-            && (attitude() == ATT_HOSTILE || has_ench(ENCH_FRENZIED))
+            && (hostile() || has_ench(ENCH_FRENZIED))
             && type != MONS_NAMELESS) // hack - no usk piety for miscasts
         {
            did_hurt_monster(*this, amount, flavour, kill_type);

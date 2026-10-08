@@ -1165,7 +1165,7 @@ static bool _teleport_player(bool wizard_tele, string reason="")
 
 static bool _is_hostile_teleport_target(const monster& mon)
 {
-    return mon.attitude() == ATT_HOSTILE
+    return mon.hostile()
             && mons_is_threatening(mon)
             && !testbits(env.pgrid(mon.pos()), FPROP_NO_TELE_INTO);
 }
