@@ -1,24 +1,51 @@
-Stone Soup 0.35 (through 0.35-a0-535-e467b9c7cb )
+Stone Soup 0.35 (through 0.35-a0-1245-e467b9c7cb )
 --------------------------------------------------
 
 Highlights
 ----------
 * A new species: Gale Centaurs, customisable descendants of the Four Winds.
+* Two new shapeshifting backgrounds: Mystics and Stalkers.
 * A new portal: Gulch.
+* Many gods have recieved balance adjustments.
+* Many new unrands can be found throughout the Dungeon.
 
 Artefacts
 ---------
-* New unrand: "Fimbulwinter", a +9 athame which inflicts Doom on monsters hurt
-  by the wielder's cold damage.
-* New unrand: the swamp witch's dragon scales, a +5 set of swamp dragon
-  scales that inflicts poison upon enemies the wearer afflicts with debuffs.
-* New unrands: the fire dragon occultist's scales and ice dragon arcanist
-  scales, +5 and +6 sets of fire / ice dragon scales that help with casting
-  Fire / Ice Magic and apply the Exposed debuff to enemies you injure with
-  fire / cold damage.
-* The Amulet of the Four Winds has been rename the Amulet of Tranquility.
+* New weapon unrands:
+ - "Carina at Dusk", a +9 giant spiked club of concussion that launches
+   shooting stars when it knocks enemies away.
+ - the coolibah bardiche, a +6 bardiche of entangling that floods constricted
+   foes and immerses them in toxic bogs.
+ - "Fimbulwinter", a +9 athame of freezing which inflicts Doom on monsters
+   injured by the wielder's cold damage.
+ - Hana's Scimitar, a +10 scimitar of valour that grants a universal spell
+   enhancer at 80% or more MP.
+ - The Staff of Five Virtues, a +5 lajatang of rebuke that provides additional
+   SH when meeting various skill and stat requirements.
+ - The Stagehand's Sword, a +7 devious short sword that can grant temporary
+   invisibility on attacks depending on how devious its wielder is.
+* New armour unrands:
+ - the arcane splint mail, a +8 chain mail with the Archery ego that
+   applies halo debuffs to enemies hit by ranged weapons or throwing missiles.
+ - the bone scales, a +6 set of pearl dragon scales with increased encumbrance
+   and a Bane in exchange for a Death ego, +3 Slay, +6 SH, and rPois.
+ - the fire dragon occultist's scales and ice dragon arcanist scales, +5 and
+   +6 sets of fire / ice dragon scales that help with casting Fire / Ice Magic
+   and apply the Exposed debuff to enemies you injure with fire / cold damage.
+ - the Forgewarden's cuirass, a +12 plate armour with the Resonance ego and a
+   Forgecraft enhancer that drains piety when first equipped and lowers further
+   piety gains.
+ - the ghost crab claws, a pair of +2 gloves that prevent using weapons or
+   offhand equipment in exchange for a Necromancy enhancer, stat boosts, and a
+   chance to produce spectral mist clouds when striking foes or casting spells.
+ - the swamp witch's dragon scales, a +5 set of swamp dragon scales that
+   inflicts poison upon enemies the wearer afflicts with debuffs.
+* The Amulet of the Four Winds has been renamed the Amulet of Tranquility.
 * The Glaive of Prune is now the Partisan of Prune, and is otherwise unchanged
   aside from the new base weapon type.
+* The Wrath of Trog now has the sundering brand in addition to its antimagic
+  brand, can sunder faster while its wielder is berserk, and preserves some of
+  the wielder's sundering charge when not attacking while berserk.
 * Zephyr has been reworked completely: it is now a +12 longbow of {Dex+5 Fly}
   with the new Salvo property, which makes firing it also fire additional
   shots at up to four other unobstructed foes in range.
@@ -38,6 +65,13 @@ Branches, Environment
     (which doesn't restrict equipment slots).
 * New terrain type: patches of mould, which automatically sprout fungus on top
   of themselves and slowly regrow it whenever it dies.
+* The Abyss has recieved multiple changes:
+  * The guaranteed entrance has been moved from Depths to D:13-15, where it
+    appears as part of a serial vault, with many new entry vaults added.
+  * The Abyssal rune now requires a minimum amount of exploration within the
+    Abyss before it can spawn. Scrolls of teleportation always move the player
+    further away from the rune.
+  * Abyss:1 is mildly easier than before, while Abyss:5-7 are somewhat harder.
 * Troves now contain better weapons, a small additional chances for manuals,
   and more reliably offer bardings to the species which can wear them.
 * Ziggurats now provide fewer potions of experience and more potions of mutation
@@ -71,9 +105,30 @@ Character
       spell school skill.)
   - New autofight_stampede option: allows autofight to trample forward while you
     have the Stampede status.
+* New background: Mystics, shapeshifting spellcasters whose book includes new
+  spells of all four elements. They start with vision and jade talismans and
+  their playstyle encourages them to stay mobile on the battlefield and
+  reshape it to serve them.
+* New background: Stalkers, stealthy shapeshifters who use their gecko and mist
+  talismans, as well as a supply of centipede baubles, to evade or debilitate
+  their foes before dispatching them with lethal precision.
+* Djinni and Gargoyles are no longer immune to the draining weapon brand,
+  Vampiric Draining, Drain Life, Fear, Soul Splinter, or Umbral Torchlight.
+* Gnolls have recieved multiple changes.
+  - Spellcasting and all magic aptitudes were decreased by 1. Shapeshifting, all
+    weapon aptitudes, and Invocations were increased by 1.
+  - Gnoll skills at XL 1 are heavily reduced, but train rapidly over the first
+    few experience levels (approximately catching up to their old levels by
+    XL 7-10)
+* Oni now get their cleaving attack on drinking any potion, rather than just
+  healing potions.
+* Oni now have -1 Polearms aptitude (down from +0).
 * Revenant's spellclaw attacks while Enkindled now properly heal from enhancer
   staff damage.
 * Revenants now have -2 Staves and Evocations aptitude (down from -1).
+* Vine Stalkers are now fully plants, which grants them immunity to blinding and
+  sleep and allows allied plants to fire through them while worshipping Fedhas.
+* Monks now also start with a potion of enlightenment.
 * New mutation: spark swarm, which makes fire and electric damage you deal
   have a high chance to outline foes in light.
 * Removed species: Armataurs.
@@ -86,6 +141,19 @@ Gods
   increase.
 * Worshippers are completely forbidden from using or equipping items and spells
   directly hated by their god, rather than enforcing penance.
+* Ashenzari's Curse Item ability has been renamed and rethemed to Ritual of
+  Binding. Rather than offering boosts to two random groups of related skills,
+  Ashezari offer boosts to three different individual skills (aside from melee
+  weapons and ranged weapons, which remain grouped).
+* Elyvilon has recieved several changes:
+  * 2* worshippers can now use Divine Alms, which costs MP but no piety. This
+    ability heals a single ally, cleanses them of the same debuffs as
+    Purification, and briefly extend the summon duration of anything it heals.
+  * Heal Other has been renamed to Pacify and now only works on hostile
+    monsters.
+  * Divine Vigour has now been replaced with Aura of Vigour, which now doubles
+    the health of all allies in sight of the player, in addition to its previous
+    effect.
 * Hepliaklqana's knight ancestor has received multiple changes.
   * At XL 15, they can bind enemies they hit with their melee attack in place.
   * At XL 19, they learn Bolster (giving them Might + Resistance) instead of
@@ -122,6 +190,16 @@ Gods
     inflicts more draining and Doom when bored on mostly-cleared floors.
   - New Xom effects: mass blinkitis and blinding, mass chaos lace and vexing.
   - Xom's hyper-buffing an ally effect is even stronger than previously.
+* The Shining One has recieved a few ally-centered changes:
+  - Cleansing Flame is now harmless to all allies (instead of only holy ones).
+  - Summoned allies (no matter their type) will never expire while fighting evil
+    monsters.
+  - Their previous ally blessing effects have been replaced. Now, whenever the
+    player kills a monster themselves, there is a piety-based change for TSO to
+    provide one of two blessings to an ally:
+    - Fervor: Causes that ally to perform 3 immediate actions.
+    - Protection: Gives the Divine Shield effect to an injured ally, granting
+      them similar protection as when the player uses it.
 
 Interface and Options
 ---------------------
@@ -133,11 +211,17 @@ Interface and Options
   plants and other firewood.
 * Examining jellies and other acidic slimes now displays the acid splash
   damage for hitting them in melee.
+* Examining venomous monsters now displays how much poison their attacks could
+  inflict.
 * Examining weapons now also mentions when shields would slow down their
   attack delay.
 * The mon_glyph option now supports elemental colours.
+* The in-game look-up help now also includes weapon egos, armour egos, and
+  missile egos.
 * Stash search (ctrl-f) now sorts by categories (putting items before features)
   and then distance, rather than solely by distance.
+* Screen flashes from casting Olgreb's Toxic Radiance, Ozocubu's Refrigeration,
+  and lost souls triggering have all been toned down.
 * New option: alt_shatter_animation, which provides a different visual effect
   for Shatter without any screenshake, set by default as true on Webtiles and
   false otherwise.
@@ -149,8 +233,45 @@ Items
 * New weapon: athames, uncommon one-handed short blades that deal additional
   damage to foes suffering from debuffs (and can have the highest base damage
   of any short blade against sufficiently afflicted foes.)
-* Archery-ego armour now has 66% less encumbrance reduction for the purposes of
-  ranged weapons (up from 50% less).
+* New talismans:
+ - Tier 1:
+  - gecko talismans, providing Hypnogecko Form. This melds gloves, boots, and
+    body armour, and also makes the wearer cold-blooded. In exchange, it
+    provides a small amount of Regen, increased stealth, and whenever the wearer
+    becomes significantly injured, they will automatically shed their tail as
+    a hypnotic distraction - forcing enemies to attack it and enabling
+    distraction stabs. This tail regrows with exploration, rather than time.
+  - vision talismans, providing Vision Form. This melds headwear and gloves,
+    and reduces your max HP by 10%, but provides Int+3, SInv, and the ability
+    to see glimmer clouds left behind after anybody casts spells. Stepping onto
+    glimmer clouds consumes them to fire a weak but irresistable and undodgeable
+    projectile.
+ - Tier 2:
+  - jade talismans, providing Jademantle Form. This melds headwear and cloaks,
+    but creates four jade crystals that flank the caster's diagonals as they
+    travel. Casting elemental spells causes these crystals to damage nearby
+    enemies and when all four are triggered, also increases the wearer's
+    resistances. In addition, this form increases ones skill at elemental magic,
+    but reduces skill in other forms of magic.
+  - mist talismans, providing Mistmane Form. This melds headwear and slows
+    spellcasting, but causes melee attacks made after drinking potions to spray
+    blasts of clouds whose type depends on the potion drunk. It also passively
+    collects potions of mist unique to the form which allow you to briefly
+    become insubstantial.
+* New bauble: centipede baubles, which temporary replaces your weapon with a
+  reaching venomous short blade for a finite number of attacks, after which it
+  falls off as a temporary centipede ally. Its enchantment and strength improves
+  with your Shapeshifting skill, eventually being able to slow or even paralyse
+  enemies.
+* Great maces, giant clubs, and triple swords now have +1 base damage.
+* Bardiches, executioner's axes, and giant spiked clubs now have +2 base damage.
+* Armour of Archery now has 66% less encumbrance reduction for the purposes of
+  ranged weapons (up from 50% less), and boost ranged weapon damage by 1% per
+  point of Armour skill.
+* Armour of Resonance now only provides its damage boost when adjacent to a
+  Forgecraft, but this boost is increased to 2% per level of Forgecraft skill.
+* Potions of lignification now transform players into sacred banyan trees, which
+  have rN+++ and rTorment.
 
 Monsters
 --------
@@ -166,21 +287,70 @@ Monsters
   - Sewage sovereigns, monstrous pigs who stampede rapidly over their foes.
   - Telencephalons, floating brain experiments with psychokinetic retaliation
     effects.
+* New unique: Goji, a spear-wielding goblin riding a ghost moth.
+* Other new monsters:
+  - abyssal acolytes, which grant their allies Manifold Assault.
+  - heralds of the abyss, which warp space and open Malign Gateways.
+* Monster invisibility (and the interface related to it) has received changes:
+  - The UI now displays unambiguous information when an invisible monster is
+    known to be in a specific location (for example, because you walked into
+    it), as well as remembering the presence of nearby invisible monsters whose
+    specific location is currently unknown to the player.
+    - This allows autofight to work seemlessly in many more cases than before,
+      as well as allowing one to examine the known details of currently
+      invisible monsters.
+  - Monsters casting the Invisibility spell are now immediately displaced up to
+    two tiles from their original position (though only to places they could
+    reach by normal movement).
+  - Deep elf knights, draconian knights, ogre mages, and Erolcha have had their
+    Invisibility spell replaced with Phase Shift, which gives them +15 EV and
+    hides their health state unless whoever attacks them has SInv.
+  - Shadow wraiths are mildly stronger and now have unique Lurking behaviour,
+    replacing invisibility: when alerted by a player (through noise or sight),
+    they can choose to reveal themselves near the player's location a short
+    while afterwards. Prior to that point, they cannot be detected or interacted
+    with by any means (besides Ashenzari).
+* Hell knights no longer cast Blink at low HP.
 * Josephina can now cast Dominate Undead.
+* Kirke can no longer cast Invisibility at low HP.
+* Merfolk aquamancers and revenant soulmongers can now cast Blink even
+  when not at low HP.
 * Quicksilver elementals are now amorphous, making them immune to
   constriction-themed effects and resistant to Shatter.
 * Screaming refractions are now nonliving, rather than undead.
 * Thorn hunters have completely new briar patch behaviour, now entrapping
   their foes inside small rings of briars as well as surrounding themselves
   defensively whenever their foe gets close or injures them.
+* Will-o-the-wisps are now immune to fire.
 * Ynoxinuls now summon berserk ufetubi.
 * Monsters are no longer prevented from flanking and swooping while berserk.
+* Monsters are mildly more likely to be found wearing bardings and sphinxes
+  can now be found wearing bardings.
+* Monsters can now pick up and wear one piece of auxillary armour as long
+  as the player hasn't seen that armour yet.
+* Plant monsters are no longer immune to torment, fear, or berserk, and many
+  can be raised as zombies or spectrals.
+* All stationary plants are now will-immune and the willpower of many other
+  plant monsters was increased.
 * Player ghosts now can cast Construct Spike Launcher and Splinterfrost Shell.
 * Many monster glyphs have been reorganised and now use Unicode characters
   by default.
 
 Spells
 ------
+* New spells:
+  - Ice Thorns (L1 Ice / Earth): Creates a ring of ice thorns on the ground
+    around a hostile target which deal partially-irresistable cold damage to
+    any non-flying monsters which step on them.
+  - Sirocco (L2 Fire / Air): Deals partially-irresistable fire damage in an arc
+    of three adjacent tiles, knocking back enemies but also giving them
+    Swiftness. It can only be recharged by standing still for a short while.
+  - Dragon Veins (L3 Fire / Ice / Air / Earth): Creates a dragon vein of each
+    element in immediately-adjacent tiles. Walking over them spends 1 MP
+    to cast a spell dealing damage to two or three random enemies in sight, with
+    different properties depending on the vein's element.
+* Apportation now moves every item in a single space closer, rather than
+  just whatever's on top.
 * The Imbue Servitor and Attune Weapon abilities for Spellspark Servitor and
   Platinum Paragon are now usable by any Sif Muna worshipper with access
   to Divine Exegesis, as long as those spells are in your library.
@@ -194,7 +364,11 @@ Tiles
   - Monsters: bear simulacra.
   - Features: altars to Elyvilon, Okawaru, and Kikubaaqudgha.
   - Items: the partisan of Prune.
-  - Player paper dolls: nearly all melee randart weapons.
+  - Player paper dolls: nearly all melee randart weapons, tree form.
+  - Spell icons: Cold Breath, Fire Breath, Quicksilver Bolt, Steam Ball,
+                 Spit Poison, Steam Ball, Summon Drakes, Summon Eyeballs,
+                 Summon Scorpions.
+  - Mutation icons: Reflexive headbutt, hooves.
   - VFX: Leda's Liquefaction, Eringya's Noxious Bog, Permafrost Eruption, the
          Singing Sword singing, the shillelagh "Devastator"'s blasts, slime
          creatures merging, Drain Life, Mlioglotl's Corruption, nearly all
