@@ -1058,7 +1058,8 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
             return act.is_monster()
                    && (act.type == MONS_UGLY_THING
                        || act.type == MONS_VERY_UGLY_THING
-                       || act.type == MONS_CRAWLING_FLESH_CAGE);
+                       || act.type == MONS_CRAWLING_FLESH_CAGE)
+                   || act.is_peripheral();
         default:
             return false;
     }
