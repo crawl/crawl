@@ -6,7 +6,7 @@ Highlights
 * A new species: Gale Centaurs, customisable descendants of the Four Winds.
 * Two new shapeshifting backgrounds: Mystics and Stalkers.
 * A new portal: Gulch.
-* Many gods have recieved balance adjustments.
+* Many gods have received balance adjustments.
 * Many new unrands can be found throughout the Dungeon.
 
 Artefacts
@@ -40,7 +40,7 @@ Artefacts
    chance to produce spectral mist clouds when striking foes or casting spells.
  - the swamp witch's dragon scales, a +5 set of swamp dragon scales that
    inflicts poison upon enemies the wearer afflicts with debuffs.
-* The Amulet of the Four Winds has been renamed the Amulet of Tranquility.
+* The Amulet of the Four Winds has been renamed the Amulet of Tranquillity.
 * The Glaive of Prune is now the Partisan of Prune, and is otherwise unchanged
   aside from the new base weapon type.
 * The Wrath of Trog now has the sundering brand in addition to its antimagic
@@ -65,7 +65,7 @@ Branches, Environment
     (which doesn't restrict equipment slots).
 * New terrain type: patches of mould, which automatically sprout fungus on top
   of themselves and slowly regrow it whenever it dies.
-* The Abyss has recieved multiple changes:
+* The Abyss has received multiple changes:
   * The guaranteed entrance has been moved from Depths to D:13-15, where it
     appears as part of a serial vault, with many new entry vaults added.
   * The Abyssal rune now requires a minimum amount of exploration within the
@@ -114,9 +114,9 @@ Character
   their foes before dispatching them with lethal precision.
 * Djinni and Gargoyles are no longer immune to the draining weapon brand,
   Vampiric Draining, Drain Life, Fear, Soul Splinter, or Umbral Torchlight.
-* Gnolls have recieved multiple changes.
-  - Spellcasting and all magic aptitudes were decreased by 1. Shapeshifting, all
-    weapon aptitudes, and Invocations were increased by 1.
+* Gnolls have received multiple changes.
+  - Spellcasting and all magic aptitudes are decreased by 1. Shapeshifting, all
+    weapon aptitudes, and Invocations are increased by 1.
   - Gnoll skills at XL 1 are heavily reduced, but train rapidly over the first
     few experience levels (approximately catching up to their old levels by
     XL 7-10)
@@ -143,12 +143,12 @@ Gods
   directly hated by their god, rather than enforcing penance.
 * Ashenzari's Curse Item ability has been renamed and rethemed to Ritual of
   Binding. Rather than offering boosts to two random groups of related skills,
-  Ashezari offer boosts to three different individual skills (aside from melee
+  Ashenzari offers boosts to three different individual skills (aside from melee
   weapons and ranged weapons, which remain grouped).
-* Elyvilon has recieved several changes:
+* Elyvilon has received several changes:
   * 2* worshippers can now use Divine Alms, which costs MP but no piety. This
     ability heals a single ally, cleanses them of the same debuffs as
-    Purification, and briefly extend the summon duration of anything it heals.
+    Purification, and briefly extends the summon duration of anything it heals.
   * Heal Other has been renamed to Pacify and now only works on hostile
     monsters.
   * Divine Vigour has now been replaced with Aura of Vigour, which now doubles
@@ -190,7 +190,7 @@ Gods
     inflicts more draining and Doom when bored on mostly-cleared floors.
   - New Xom effects: mass blinkitis and blinding, mass chaos lace and vexing.
   - Xom's hyper-buffing an ally effect is even stronger than previously.
-* The Shining One has recieved a few ally-centered changes:
+* The Shining One has received a few ally-centered changes:
   - Cleansing Flame is now harmless to all allies (instead of only holy ones).
   - Summoned allies (no matter their type) will never expire while fighting evil
     monsters.
@@ -244,21 +244,21 @@ Items
   - vision talismans, providing Vision Form. This melds headwear and gloves,
     and reduces your max HP by 10%, but provides Int+3, SInv, and the ability
     to see glimmer clouds left behind after anybody casts spells. Stepping onto
-    glimmer clouds consumes them to fire a weak but irresistable and undodgeable
+    glimmer clouds consumes them to fire a weak but irresistible and undodgeable
     projectile.
  - Tier 2:
   - jade talismans, providing Jademantle Form. This melds headwear and cloaks,
     but creates four jade crystals that flank the caster's diagonals as they
     travel. Casting elemental spells causes these crystals to damage nearby
-    enemies and when all four are triggered, also increases the wearer's
-    resistances. In addition, this form increases ones skill at elemental magic,
-    but reduces skill in other forms of magic.
+    enemies and, when all four are triggered, also increases the wearer's
+    resistances. In addition, this form increases one's skill at elemental
+    magic, but reduces skill in other forms of magic.
   - mist talismans, providing Mistmane Form. This melds headwear and slows
     spellcasting, but causes melee attacks made after drinking potions to spray
     blasts of clouds whose type depends on the potion drunk. It also passively
     collects potions of mist unique to the form which allow you to briefly
     become insubstantial.
-* New bauble: centipede baubles, which temporary replaces your weapon with a
+* New bauble: centipede baubles, which temporarily replaces your weapon with a
   reaching venomous short blade for a finite number of attacks, after which it
   falls off as a temporary centipede ally. Its enchantment and strength improves
   with your Shapeshifting skill, eventually being able to slow or even paralyse
@@ -269,7 +269,8 @@ Items
   ranged weapons (up from 50% less), and boost ranged weapon damage by 1% per
   point of Armour skill.
 * Armour of Resonance now only provides its damage boost when adjacent to a
-  Forgecraft, but this boost is increased to 2% per level of Forgecraft skill.
+  Forgecraft construct, but this boost is increased to 2% per level of
+  Forgecraft skill.
 * Potions of lignification now transform players into sacred banyan trees, which
   have rN+++ and rTorment.
 
@@ -326,7 +327,7 @@ Monsters
 * Monsters are no longer prevented from flanking and swooping while berserk.
 * Monsters are mildly more likely to be found wearing bardings and sphinxes
   can now be found wearing bardings.
-* Monsters can now pick up and wear one piece of auxillary armour as long
+* Monsters can now pick up and wear one piece of auxiliary armour as long
   as the player hasn't seen that armour yet.
 * Plant monsters are no longer immune to torment, fear, or berserk, and many
   can be raised as zombies or spectrals.
@@ -340,9 +341,9 @@ Spells
 ------
 * New spells:
   - Ice Thorns (L1 Ice / Earth): Creates a ring of ice thorns on the ground
-    around a hostile target which deal partially-irresistable cold damage to
+    around a hostile target which deal partially-irresistible cold damage to
     any non-flying monsters which step on them.
-  - Sirocco (L2 Fire / Air): Deals partially-irresistable fire damage in an arc
+  - Sirocco (L2 Fire / Air): Deals partially-irresistible fire damage in an arc
     of three adjacent tiles, knocking back enemies but also giving them
     Swiftness. It can only be recharged by standing still for a short while.
   - Dragon Veins (L3 Fire / Ice / Air / Earth): Creates a dragon vein of each
