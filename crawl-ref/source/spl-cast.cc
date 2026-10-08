@@ -1089,13 +1089,6 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         stardust_orb_trigger(cost);
         if (you.unrand_equipped(UNRAND_MAJIN) && one_chance_in(500))
             _majin_speak(spell);
-        if (you.unrand_equipped(UNRAND_CRAB_CLAWS))
-        {
-            int chance = spell_difficulty(spell) + 1;
-            if (spell_typematch(spell, spschool::necromancy))
-                chance *= 2;
-            _trigger_ghost_crab_claws(chance);
-        }
         count_action(CACT_CAST, spell);
     }
 
@@ -1175,6 +1168,14 @@ void do_post_spellcast_effects(spell_type spell)
 
     if (you.form == transformation::jademantle)
         jademantle_crystal_charge(spell);
+
+    if (you.unrand_equipped(UNRAND_CRAB_CLAWS))
+    {
+        int chance = spell_difficulty(spell) + 1;
+        if (spell_typematch(spell, spschool::necromancy))
+            chance *= 2;
+        _trigger_ghost_crab_claws(chance);
+    }
 }
 
 #ifdef WIZARD
