@@ -719,7 +719,7 @@ void fill_doll_equipment(dolls_data &result)
         switch (you.species)
         {
         case SP_OCTOPODE:
-            result.parts[TILEP_PART_BASE] = charged ? TILEP_TRAN_JADE_OCTOPODE_CHARGED
+            result.parts[TILEP_PART_HELM] = charged ? TILEP_TRAN_JADE_OCTOPODE_CHARGED
                                                     : TILEP_TRAN_JADE_OCTOPODE;
             break;
         case SP_FELID:

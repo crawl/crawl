@@ -79,6 +79,10 @@ strong_elec_shot0 BOLT_STRONG_ELEC
 strong_elec_shot1
 strong_elec_shot2
 
+plasma_elec0 BOLT_PLASMA_ELEC
+plasma_elec1
+plasma_elec2
+
 electric_blast0 BOLT_ELECTRIC_BLAST
 electric_blast1
 

@@ -1930,7 +1930,7 @@ _mon_hex_zap(ZAP_VITRIFY, BEAM_VITRIFY),
     DCHAR_FIRED_ZAP,
     true,
     false,
-    TILE_BOLT_STRONG_ELEC,
+    TILE_BOLT_PLASMA_ELEC,
 },
 
 {
