@@ -5965,6 +5965,19 @@ bool could_harm(const actor* agent, const actor* target, bool announce_important
         return false;
     }
 
+    // Ely worshippers refuse to harm neutral monsters.
+    if (agent && agent->is_player() && you_worship(GOD_ELYVILON)
+        && target->attitude() == ATT_NEUTRAL)
+    {
+        if (announce_mundane && you.can_see(*target))
+        {
+            string msg = make_stringf(" permits no harm to come to the repentant %s.",
+                                      target->name(DESC_PLAIN).c_str());
+            simple_god_message(msg.c_str());
+        }
+        return false;
+    }
+
     return true;
 }
 

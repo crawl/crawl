@@ -245,6 +245,7 @@ const vector<vector<god_power>> & get_all_god_powers()
 
         // Elyvilon
         {
+            {-1, "", "", "Elyvilon prevents you from doing harm to neutral creatures."},
             { 1, ABIL_ELYVILON_PURIFICATION, "purify yourself" },
             { 2, ABIL_ELYVILON_PACIFY, "attempt to pacify hostile creatures" },
             { 3, ABIL_ELYVILON_HEAL_SELF, "provide healing for yourself" },
