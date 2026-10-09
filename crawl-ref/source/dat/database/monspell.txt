@@ -1138,6 +1138,14 @@ Electrical Bolt shock serpent cast
 
 @The_monster@ discharges a tendril of electricity.
 %%%%
+Shadow Creatures strange machine cast
+
+VISUAL:Shadows flit across @the_monster@'s surface and appear to come alive.
+%%%%
+Summon Illusion strange machine cast
+
+VISUAL:The shadows dancing upon @the_monster@ coalesce into cruel familiarity.
+%%%%
 sun moth cast
 
 @The_monster_possessive@ wings beat fiercely.
