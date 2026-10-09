@@ -11,6 +11,7 @@ class actor;
 
 spret cast_deaths_door(int pow, bool fail);
 void remove_ice_armour();
+int ice_armour_ac(int pow);
 spret ice_armour(int pow, bool fail);
 
 void fiery_armour();
@@ -19,6 +20,7 @@ int harvest_corpses(const actor &harvester,
                     bool dry_run = false, bool defy_god = false);
 spret corpse_armour(int pow, bool fail);
 
+string revivification_loss_description(int pow);
 spret cast_revivification(int pow, bool fail);
 
 spret cast_swiftness(int power, bool fail);

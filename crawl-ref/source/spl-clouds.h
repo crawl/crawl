@@ -7,6 +7,7 @@ struct bolt;
 class dist;
 class actor;
 
+int putrefaction_drain_amount(int pow, bool random);
 spret cast_putrefaction(monster* target, int pow, bool fail);
 
 spret kindle_blastmotes(int pow, bool fail);
