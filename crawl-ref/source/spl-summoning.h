@@ -122,8 +122,8 @@ monster* create_spectral_weapon(const actor &agent, coord_def pos,
 
 spret cast_infestation(int pow, bolt &beam, bool fail);
 
-void summoned_monster(const monster* mons, const actor* caster,
-                      spell_type spell);
+void expire_oldest_summon_if_capped(const monster* mons, const actor* caster,
+                                    spell_type spell);
 bool summons_are_capped(spell_type spell);
 int summons_limit(spell_type spell, bool player);
 int count_summons(const actor *summoner, spell_type spell);
