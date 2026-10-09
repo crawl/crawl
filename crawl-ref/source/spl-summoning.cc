@@ -2513,13 +2513,30 @@ void expire_oldest_summon_if_capped(const monster *mons, const actor *caster,
 int count_summons(const actor *summoner, spell_type spell)
 {
     int count = 0;
+    set<int> already_seen_bands;
     for (monster_iterator mi; mi; ++mi)
     {
         if (summoner == *mi)
             continue;
 
-        if (mi->was_created_by(*summoner, spell) && mons_aligned(summoner, *mi))
-            count++;
+        if (!mi->was_created_by(*summoner, spell) || !mons_aligned(summoner, *mi))
+            continue;
+
+        // Don't count monsters in bands against the cap for shadow creatures.
+        // See also `expire_oldest_summon_if_capped`.
+        if (spell == SPELL_SHADOW_CREATURES && mi->props.exists(SUMMON_ID_KEY))
+        {
+            const int id = mi->props[SUMMON_ID_KEY].get_int();
+
+            // If we've seen this monster's band already, skip counting it.
+            // Otherwise, add the new band to the list.
+            if (already_seen_bands.count(id) > 0)
+                continue;
+            else
+                already_seen_bands.insert(id);
+        }
+
+        count++;
     }
 
     return count;
