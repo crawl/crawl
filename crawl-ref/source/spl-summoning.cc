@@ -2399,16 +2399,13 @@ int summons_limit(spell_type spell, bool player)
         return player ? cap->player_cap : cap->monster_cap;
 }
 
-static bool _spell_has_variable_cap(spell_type spell)
-{
-    return spell == SPELL_SHADOW_CREATURES;
-}
-
 static void _expire_capped_summon(monster* mon, bool recurse)
 {
     // Timeout the summon
     monster_die(*mon, KILL_TIMEOUT, NON_MONSTER);
 
+    // If the chosen monster was part of a band (summoned by shadow creatures),
+    // timeout the other band members as well.
     if (recurse && mon->props.exists(SUMMON_ID_KEY))
     {
         const int summon_id = mon->props[SUMMON_ID_KEY].get_int();
@@ -2427,53 +2424,50 @@ static void _expire_capped_summon(monster* mon, bool recurse)
 }
 
 // Call when a monster has been summoned, to manage this summoner's caps.
-void summoned_monster(const monster *mons, const actor *caster,
-                      spell_type spell)
+void expire_oldest_summon_if_capped(const monster *mons, const actor *caster,
+                                    spell_type spell)
 {
-    int cap = summons_limit(spell, caster->is_player());
-    if (!cap) // summons aren't capped
+    // Blocks of ice aren't capped, only simulacra are.
+    if (spell == SPELL_SIMULACRUM && mons->type != MONS_SIMULACRUM)
         return;
 
-    // Cap large abominations and tentacled monstrosities separately
+    int cap = summons_limit(spell, caster->is_player());
+    if (!cap) // this spell doesn't have a summons cap
+        return;
+
+    // Cap large abominations and tentacled monstrosities separately.
     if (spell == SPELL_SUMMON_HORRIBLE_THINGS)
     {
-        cap = (mons->type == MONS_ABOMINATION_LARGE ? cap * 3 / 4
-                                                    : cap * 1 / 4);
+        if (mons->type == MONS_ABOMINATION_LARGE)
+            cap = 3 * cap / 4;
+        else
+            cap = cap / 4;
     }
     // Cap the two sphinx types separately.
     else if (spell == SPELL_SPHINX_SISTERS)
         cap = cap / 2;
-    // Only the simulacra themselves are capped with this spell. Blocks of ice
-    // are free.
-    else if (spell == SPELL_SIMULACRUM && mons->type != MONS_SIMULACRUM)
-        return;
 
     monster* oldest_summon = 0;
     int oldest_duration = 0;
+    int count = 1; // counting the just-summoned monster
 
-    // Linked summons that have already been counted once
-    set<int> seen_ids;
+    // For shadow creatures, track which linked summons (bands) have already
+    // been counted. Each band only counts as one monster toward the cap.
+    set<int> already_seen_bands;
 
-    int count = 1;
     for (monster_iterator mi; mi; ++mi)
     {
+        // The newly-summoned monster will never be eligible for dismissal.
         if (mons == *mi)
             continue;
 
-        // Ignore monsters that were not summoned by the caster.
-        if (mi->summoner != caster->mid || !mi->is_summoned()
-            || !mons_aligned(caster, *mi))
-        {
-            continue;
-        }
-
-        // Check that the monster was created by the spell in question.
-        mon_enchant summ = mi->get_ench(ENCH_SUMMON);
-        if (summ.degree != spell)
+        // Ignore monsters that were not summoned by the caster or by this spell.
+        if (!mi->was_created_by(*caster, spell) || !mons_aligned(caster, *mi))
             continue;
 
-        // Count the different summons of various spells separately.
-        // (And don't count blocks of ice at all.)
+        // For most normal spells that can summon multiple different monsters
+        // (so, not shadow creatures), the summoned monster will only displace
+        // a monster of the same type.
         if ((spell == SPELL_SUMMON_HORRIBLE_THINGS
             || spell == SPELL_SIMULACRUM
             || spell == SPELL_SPHINX_SISTERS)
@@ -2482,25 +2476,31 @@ void summoned_monster(const monster *mons, const actor *caster,
             continue;
         }
 
-        if (_spell_has_variable_cap(spell) && mi->props.exists(SUMMON_ID_KEY))
+        // Shadow creatures is given special treatment which allows it to
+        // summon beyond its defined cap, in order to accommodate bands.
+        // This remains under control because monster AI won't choose to
+        // cast the spell in the first place if it's not under the cap.
+        if (spell == SPELL_SHADOW_CREATURES && mi->props.exists(SUMMON_ID_KEY))
         {
             const int id = mi->props[SUMMON_ID_KEY].get_int();
 
-            // Skip any linked summon whose set we have seen already,
-            // otherwise add it to the list of seen summon IDs
-            if (seen_ids.find(id) == seen_ids.end())
-                seen_ids.insert(id);
-            else
+            // If we've seen this monster's band already, skip counting it.
+            // Otherwise, add the new band to the list.
+            if (already_seen_bands.count(id) > 0)
                 continue;
+            else
+                already_seen_bands.insert(id);
         }
 
         count++;
 
-        // If this summon is the closest to expiry, remember it
-        if (!oldest_summon || summ.duration < oldest_duration)
+        int this_duration = mi->get_ench(ENCH_SUMMON).duration;
+
+        // Of all remaining eligible summons, track the one closest to expiry.
+        if (!oldest_summon || this_duration < oldest_duration)
         {
             oldest_summon = *mi;
-            oldest_duration = summ.duration;
+            oldest_duration = this_duration;
         }
     }
 
@@ -2508,6 +2508,8 @@ void summoned_monster(const monster *mons, const actor *caster,
         _expire_capped_summon(oldest_summon, true);
 }
 
+// Provide the total number of summoned creatures attributable to the same
+// combination of summoner and spell.
 int count_summons(const actor *summoner, spell_type spell)
 {
     int count = 0;

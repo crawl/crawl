@@ -1370,8 +1370,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                 mon->props[SUMMON_ID_KEY].get_int() = leader->mid;
             else
             {
-                summoned_monster(mon, mg.summoner,
-                                static_cast<spell_type>(mg.summon_type));
+                spell_type spellty = static_cast<spell_type>(mg.summon_type);
+                expire_oldest_summon_if_capped(mon, mg.summoner, spellty);
             }
         }
 
