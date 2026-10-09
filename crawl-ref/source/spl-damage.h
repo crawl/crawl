@@ -113,7 +113,7 @@ spret cast_toxic_radiance(actor *caster, int pow, bool fail = false,
                                bool tracer = false);
 void toxic_radiance_effect(actor* agent, int mult, bool on_cast = false);
 
-dice_def glaciate_damage(int pow, int eff_range);
+dice_def glaciate_damage(int pow, int eff_range, bool random = true);
 spret cast_glaciate(actor *caster, int pow, coord_def aim);
 
 spret cast_scorch(const actor& agent, int pow, bool fail = false);
