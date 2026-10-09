@@ -2525,6 +2525,34 @@ int count_summons(const actor *summoner, spell_type spell)
     return count;
 }
 
+// For monster spells that summon multiple monsters in a single cast,
+// it's common for the monster to attempt to summon more monsters than the
+// defined summon cap allows. This can result in a large number of monsters
+// being redundantly dismissed in order to make room for newly-summoned ones,
+// which causes unnecessary work and message spam.
+// This helper function exists to limit monsters to only attempting to summon
+// no more than the currently available summon cap.
+// In theory it could be used for player spells as well, though it's possible
+// that players could intentionally be trying to time out older summons.
+int clamp_to_unsummoned_limit(int desired, const actor *summoner, spell_type spell)
+{
+    int cap = summons_limit(spell, summoner->is_player());
+    if (!cap)
+        return desired;
+
+    int available_slots = cap - count_summons(summoner, spell);
+
+    // In theory this number would always be greater than 0 by the time this
+    // function is called, otherwise the monster AI wouldn't be attempting
+    // to cast this spell in the first place.
+    // However, technically, we do have to be careful about negative values,
+    // because shadow creatures might exceed the summon cap due to bands.
+    if (available_slots < 0)
+        available_slots = 0;
+
+    return min(desired, available_slots);
+}
+
 static bool _create_briar_patch(coord_def& target)
 {
     mgen_data mgen = mgen_data(MONS_BRIAR_PATCH, BEH_FRIENDLY, target,
