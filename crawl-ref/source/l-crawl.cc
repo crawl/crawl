@@ -1108,8 +1108,16 @@ LUARET1(crawl_x_chance_in_y, boolean, x_chance_in_y(luaL_safe_checkint(ls, 1),
  * @treturn int
  * @function div_rand_round
  */
-LUARET1(crawl_div_rand_round, integer, div_rand_round(luaL_safe_checkint(ls, 1),
-                                                     luaL_safe_checkint(ls, 2)))
+static int crawl_div_rand_round(lua_State* ls)
+{
+    int num = luaL_safe_checkint(ls, 1);
+    int den = luaL_safe_checkint(ls, 2);
+    if (den == 0)
+        lua_pushnil(ls);
+    else
+        lua_pushinteger(ls, div_rand_round(num, den));
+    return 1;
+}
 /*** A random floating point number in [0,1.0)
  * @treturn number
  * @function random_real
