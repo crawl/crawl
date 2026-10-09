@@ -954,3 +954,9 @@ imagery, but the focus of the scene is obscured by a great dark stain {{
         return "that smells strongly "
     end
 }}of ashes and salt. It seems somehow blasphemous to wear.
+%%%%
+platinum targe
+
+An impractically heavy shield worked from shining metal. Too cumbersome to be of
+any use in the offhand, it can be wielded as a somewhat unconventional weapon
+that improves at both offence and defence as its user's proficiency increases.

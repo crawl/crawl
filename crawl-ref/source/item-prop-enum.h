@@ -745,6 +745,7 @@ enum weapon_type
     WPN_PARTISAN,
     WPN_ATHAME,
     WPN_CENTIPEDE,
+    WPN_TARGE,
 #endif
 
     NUM_WEAPONS,
