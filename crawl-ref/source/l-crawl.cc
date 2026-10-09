@@ -1068,9 +1068,17 @@ LUARET1(crawl_random2avg, integer,
  * @tparam[opt=1] int rolls Average over multiple rolls
  * @function random_range
  */
-LUARET1(crawl_random_range, integer,
-        random_range(luaL_safe_checkint(ls, 1), luaL_safe_checkint(ls, 2),
-                      lua_isnumber(ls, 3)? luaL_safe_checkint(ls, 3) : 1))
+static int crawl_random_range(lua_State* ls)
+{
+    int low = luaL_safe_checkint(ls, 1);
+    int high = luaL_safe_checkint(ls, 2);
+    int nrolls = lua_isnumber(ls, 3) ? luaL_safe_checkint(ls, 3) : 1;
+    int result = 0;
+    if (nrolls > 0)
+        result = random_range(low, high, nrolls);
+    lua_pushinteger(ls, result);
+    return 1;
+}
 /*** Flip a coin.
  * @treturn boolean
  * @function coinflip
