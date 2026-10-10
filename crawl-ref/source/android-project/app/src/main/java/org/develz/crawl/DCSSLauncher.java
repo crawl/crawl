@@ -68,6 +68,7 @@ public class DCSSLauncher extends AppCompatActivity implements AdapterView.OnIte
         findViewById(R.id.startButton).setOnClickListener(this::startGame);
         findViewById(R.id.editInitFile).setOnClickListener(this::editInitFile);
         findViewById(R.id.morgueButton).setOnClickListener(this::openMorgue);
+        findViewById(R.id.morgueStatsButton).setOnClickListener(this::openMorgueStats);
         findViewById(R.id.modsButton).setOnClickListener(this::openMods);
 
         boolean isPC = getPackageManager().hasSystemFeature(PackageManager.FEATURE_PC);
@@ -168,6 +169,12 @@ public class DCSSLauncher extends AppCompatActivity implements AdapterView.OnIte
     // Open morgue
     private void openMorgue(View v) {
         Intent intent = new Intent(getBaseContext(), DCSSMorgue.class);
+        startActivity(intent);
+    }
+
+    // Open morgue statistics
+    private void openMorgueStats(View v) {
+        Intent intent = new Intent(getBaseContext(), DCSSMorgueStatsActivity.class);
         startActivity(intent);
     }
 
