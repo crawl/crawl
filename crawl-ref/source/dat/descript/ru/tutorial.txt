@@ -187,7 +187,7 @@ tutorial2 compare_monster_desc
 <nomouse>нажав <input>$cmd[CMD_LOOK_AROUND]</input> для перехода в режим
 осмотра, а затем <input>$cmd[CMD_TARGET_CYCLE_FORWARD]</input>, чтобы
 перебирать ближайших чудовищ</nomouse>) и сравните их описания (<localtiles>по
-<input>щелчку правой кнопкой</input></localtiles> <nomouse>нажав
+<input>щелчку правой кнопкой</input></localtiles><nomouse>нажав
 <input>$cmd[CMD_TARGET_DESCRIBE]</input>, пока они выбраны в режиме
 осмотра</nomouse>), чтобы понять, через которую из этих клеток пробиваться
 безопаснее.
@@ -215,8 +215,8 @@ tutorial2 throwing
 <localtiles> или <input>щелчком</input> по нему на панели
 рюкзака</localtiles>. Чтобы подтвердить выбранную самой игрой цель, нажмите
 <input>$cmd[CMD_TARGET_SELECT]</input> или <input>Enter</input>. Этот шаг
-можно пропустить и выстрелить по ближайшему чудовищу через <input>shift-
-tab</input> или <input>p</input>.
+можно пропустить и выстрелить по ближайшему чудовищу через
+<input>shift-tab</input> или <input>p</input>.
 %%%%
 tutorial2 wield_bow
 
@@ -371,9 +371,9 @@ tutorial3 wand_fire
 tutorial3 wand_digging
 
 Палочка копания способна разрушать каменные стены. Нажмите
-<input>$cmd[CMD_LOOK_AROUND]][$cmd[CMD_TARGET_DESCRIBE]</input>
-<localtiles>или <input>наведите мышь</input> / <input>щёлкните правой
-кнопкой</input> </localtiles>, чтобы узнать, из чего стена.
+<input>$cmd[CMD_LOOK_AROUND]][$cmd[CMD_TARGET_DESCRIBE]</input><localtiles> или
+<input>наведите мышь</input> / <input>щёлкните правой
+кнопкой</input></localtiles>, чтобы узнать, из чего стена.
 %%%%
 tutorial3 amulet
 
