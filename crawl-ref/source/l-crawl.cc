@@ -1515,6 +1515,9 @@ static int crawl_bane_desc(lua_State *ls)
         return 0;
 
     const bane_type bane = bane_from_name(s);
+    if (bane >= NUM_BANES)
+        return 0;
+
     lua_pushstring(ls, bane_long_description(bane, true).c_str());
     return 1;
 }
