@@ -91,6 +91,25 @@
 #endif
 
 static void _do_xom_event(xom_event_type event_type, int tension);
+static bool _explore_event_is_valid(xom_event_type event, int tension);
+static xom_event_type _xom_choose_action(bool niceness, int tension, bool is_explore = false);
+
+static constexpr int XOM_EXPLORE_THRESHOLD = 910;
+
+#define XOM_QUEUED_EXPLORE_KEY "xom_queued_explore"
+
+enum xom_explore_type
+{
+    // This explore effect is triggered immediately at 0 tension.
+    XOM_EXPLORE_IMMEDIATE,
+
+    // This explore effect is triggered at 0 tension, only if the player is at
+    // least 50% of their max HP
+    XOM_EXPLORE_HEALTHY,
+
+    // This explore effect is delayed until the next time tension raises above 0.
+    XOM_EXPLORE_NEXT_BATTLE,
+};
 
 // Picks 100 random grids from the level and checks whether they've been
 // marked as seen (explored) or known (mapped). If seen_only is true,
@@ -326,6 +345,32 @@ void xom_tick()
     if (x_chance_in_y(2 + you.faith(), 6))
     {
         const int tension = get_tension(GOD_XOM);
+
+        // If we have a queued explore effect, check if now is a good time and
+        // possibly perform one of them.
+        bool did_event = false;
+        if (you.props.exists(XOM_QUEUED_EXPLORE_KEY))
+        {
+            CrawlVector& vec = you.props[XOM_QUEUED_EXPLORE_KEY].get_vector();
+            for (int i = 0; i < vec.size(); ++i)
+            {
+                const xom_event_type event = static_cast<xom_event_type>(vec[i].get_int());
+                if (_explore_event_is_valid(event, tension))
+                {
+                    xom_take_action(event, tension);
+                    vec.erase(i);
+
+                    did_event = true;
+                    break;      // Only one event per tick.
+                }
+            }
+        }
+
+        // We can perform new explore events while waiting on something in the
+        // queue, so long as we didn't do anything else this tick.
+        if (!did_event && tension == 0 && you.attribute[ATTR_XOM_EXPLORE_COUNT] >= XOM_EXPLORE_THRESHOLD)
+            xom_acts_exploration();
+
         const int chance = min(_xom_tension_breakpoints(tension) + 1, 5);
 
         if (x_chance_in_y(chance*chance, 100))
@@ -1870,7 +1915,7 @@ static void _xom_give_mutations(bool good)
     god_speaks(GOD_XOM, good ? _get_xom_speech("good mutations").c_str()
                              : _get_xom_speech("random mutations").c_str());
 
-    const int num_tries = random2(4) + 1;
+    const int num_tries = random2(4) + 1 + good;
 
     const string note = make_stringf("give %smutation%s",
 #ifdef NOTE_DEBUG_XOM
@@ -4352,49 +4397,55 @@ static void _handle_accidental_death(const int orig_hp,
  *
  * xom_event_type name              An action for Xom to take.
  * @param int tension_weight        The chance with visible monsters.
- * @param int zero_tension_weight   The chance without visible monsters.
+ * @param int zero_tension_weight   The chance without visible monsters (but not
+ *                                  when choosing explore actions).
+ * @param int explore_weight        The chance when chosen as an explore action.
  * @param bool valid                A check to see if this action should be done.
  * @param tension                   How much danger we think the player's in.
+ * @param explore_type              If an explore effect, whether this effect
+ *                                  should be delayed until the player heals
+ *                                  or re-enters a battle.
  */
 struct xom_event_data
 {
     xom_event_type name;
     int tension_weight;
     int zero_tension_weight;
+    int explore_weight;
     function<bool(int tension)> valid;
+    xom_explore_type explore_type;
 };
 
 static const vector<xom_event_data> _list_xom_good_actions = {
     {
-        XOM_GOOD_POTION, 500, 0, [](int tn) {return tn > 0;}
+        XOM_GOOD_POTION, 500, 0, 0
     },
     {
-        XOM_GOOD_SPELL, 450, 0, [](int tn)
-        {return tn > 0;}
+        XOM_GOOD_SPELL, 450, 0, 0
     },
     {
-        XOM_GOOD_CONFUSION, 435, 0, [](int /*tn*/)
+        XOM_GOOD_CONFUSION, 435, 0, 0, [](int /*tn*/)
         {return mon_nearby([](monster& mon){ return !mon.wont_attack(); });}
     },
     {
-        XOM_GOOD_ENCHANT_MONSTER, 415, 0, [](int tn)
-        {return tn > 0 && mon_nearby(_choose_enchantable_monster);}
+        XOM_GOOD_ENCHANT_MONSTER, 415, 0, 0, [](int)
+        {return mon_nearby(_choose_enchantable_monster);}
     },
     {
-        XOM_GOOD_SINGLE_ALLY, 400, 60, [](int tn)
+        XOM_GOOD_SINGLE_ALLY, 400, 60, 0, [](int tn)
         {return (tn > 0 || (you.explore_estimate < 25))
                 && !you.allies_forbidden();}
     },
     {
-        XOM_GOOD_POLYMORPH, 275, 0, [](int tn)
-        {return tn > 0 && _xom_mons_poly_target() != nullptr;}
+        XOM_GOOD_POLYMORPH, 275, 0, 0, [](int)
+        {return _xom_mons_poly_target() != nullptr;}
     },
     {
-        XOM_GOOD_ALLIES, 280, 0, [](int tn)
+        XOM_GOOD_ALLIES, 280, 0, 0, [](int tn)
         {return tn > 4 && !you.allies_forbidden();}
     },
     {
-        XOM_GOOD_FORCE_LANCE_FLEET, 230, 0, [](int tn)
+        XOM_GOOD_FORCE_LANCE_FLEET, 230, 0, 0, [](int tn)
         {
             if (tn <= 4)
                 return false;
@@ -4413,14 +4464,8 @@ static const vector<xom_event_data> _list_xom_good_actions = {
         }
     },
     {
-        XOM_GOOD_CLEAVING, 160, 0, [](int tn) {return tn > 0;}
-    },
-    {
-        XOM_GOOD_FLORA_RING, 125, 0, [](int tn)
+        XOM_GOOD_FLORA_RING, 125, 0, 0, [](int)
         {
-            if (tn == 0)
-                return false;
-
             // Check both that there's at least some space to spawn plants
             // and very few smiting-attack monsters around.
             int plant_capacity = 0;
@@ -4442,7 +4487,7 @@ static const vector<xom_event_data> _list_xom_good_actions = {
         }
     },
     {
-        XOM_GOOD_DESTRUCTION, 125, 0, [](int tn)
+        XOM_GOOD_DESTRUCTION, 125, 0, 0, [](int)
         {
             for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
             {
@@ -4453,18 +4498,15 @@ static const vector<xom_event_data> _list_xom_good_actions = {
                     && !adjacent(you.pos(), mi->pos())
                     && (!mi->wont_attack() || you.penance[GOD_XOM]))
                 {
-                    return tn > 0;
+                    return true;
                 }
             }
             return false;
         }
     },
     {
-        XOM_GOOD_DOOR_RING, 110, 0, [](int tn)
+        XOM_GOOD_DOOR_RING, 110, 0, 0, [](int)
         {
-            if (tn == 0)
-                return false;
-
             // Assess each if there's enough room to meaningfully raise a door
             // ring, if there's adjacent hostiles to move so it does anything
             // tactically, and if there's at least visible room to move them to.
@@ -4499,15 +4541,12 @@ static const vector<xom_event_data> _list_xom_good_actions = {
         }
     },
     {
-        XOM_GOOD_MASS_CHARM, 85, 0, [](int tn)
+        XOM_GOOD_MASS_CHARM, 85, 0, 0, [](int tn)
         {return tn > 4 && mon_nearby(_choose_enchantable_monster);}
     },
     {
-        XOM_GOOD_HYPER_ENCHANT_MONSTER, 70, 0, [](int tn)
+        XOM_GOOD_HYPER_ENCHANT_MONSTER, 70, 0, 0, [](int)
         {
-            if (tn == 0)
-                return false;
-
             // First, look for weak present monsters.
             vector<monster*> potential = _xom_find_weak_monsters(false);
 
@@ -4526,26 +4565,26 @@ static const vector<xom_event_data> _list_xom_good_actions = {
         }
     },
     {
-        XOM_GOOD_FOG, 60, 0, [](int tn)
-        {return tn > 0 && !cloud_at(you.pos());}
+        XOM_GOOD_FOG, 60, 0, 0, [](int)
+        {return !cloud_at(you.pos());}
     },
     {
-        XOM_GOOD_FAKE_DESTRUCTION, 50, 0, [](int tn)
-        {return tn > 0 && mon_nearby(_choose_enchantable_monster);}
+        XOM_GOOD_FAKE_DESTRUCTION, 50, 0, 0, [](int)
+        {return mon_nearby(_choose_enchantable_monster);}
     },
     {
         // Not the most interesting if the level is already nearly fully
         // explored (presumably cleared), but it can still occasionally
         // happen for runed door vaults and branch ends.
-        XOM_GOOD_TELEPORT, 40, 590, [](int /*tn*/)
+        XOM_GOOD_TELEPORT, 40, 590, 0, [](int /*tn*/)
         {return (!player_in_branch(BRANCH_ABYSS) && _teleportation_check())
                 && (you.explore_estimate < 80
                 || !x_chance_in_y(you.explore_estimate, 110));}
     },
     {
-        XOM_GOOD_LIGHTNING, 21, 0, [](int tn)
+        XOM_GOOD_LIGHTNING, 21, 0, 0, [](int)
         {
-            if (tn == 0 || !player_in_a_dangerous_place())
+            if (!player_in_a_dangerous_place())
                 return false;
 
             // Make sure there's at least one enemy within
@@ -4562,15 +4601,12 @@ static const vector<xom_event_data> _list_xom_good_actions = {
         }
     },
     {
-        XOM_GOOD_WAVE_OF_DESPAIR, 15, 0, [](int tn)
-        {return tn > 0 && mon_nearby(_choose_enchantable_monster);}
+        XOM_GOOD_WAVE_OF_DESPAIR, 15, 0, 0, [](int)
+        {return mon_nearby(_choose_enchantable_monster);}
     },
     {
-        XOM_GOOD_BLINDING_BLINKITIS, 20, 0, [](int tn)
+        XOM_GOOD_BLINDING_BLINKITIS, 20, 0, 0, [](int)
         {
-            if (tn < 0)
-                return false;
-
             // Calculate that there's at least one adjacent monster,
             // and that total hostile monsters > smiter count * 5.
             int adjacent_hostiles = 0, total_hostiles = 0, smiters = 0;
@@ -4597,11 +4633,8 @@ static const vector<xom_event_data> _list_xom_good_actions = {
         }
     },
     {
-        XOM_GOOD_CHAOS_VEX, 25, 0, [](int tn)
+        XOM_GOOD_CHAOS_VEX, 25, 0, 0, [](int)
         {
-            if (tn < 0)
-                return false;
-
             // Look through all hostile monsters to see if any with attacks
             // that aren't will immune are adjacent to any other monsters.
             for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
@@ -4617,11 +4650,11 @@ static const vector<xom_event_data> _list_xom_good_actions = {
     // despite their flashiness due to how rarely they'll actually come up.
     // Might have more of these come in eventually...
     {
-        XOM_GOOD_SNAKES, 405, 0, [](int /*tn*/)
+        XOM_GOOD_SNAKES, 405, 0,  0, [](int /*tn*/)
         {return mon_nearby(_hostile_snake);}
     },
     {
-        XOM_GOOD_LIGHT_UP_WEBS, 205, 0, [](int tn)
+        XOM_GOOD_LIGHT_UP_WEBS, 205, 0, 0, [](int)
         {
             // Since this is meant to be a good action, don't set the player's
             // tile on fire if they're close to death.
@@ -4631,36 +4664,36 @@ static const vector<xom_event_data> _list_xom_good_actions = {
                 return false;
             }
 
-            return tn > 0 && !_xom_counts_webs().empty();
+            return !_xom_counts_webs().empty();
         }
     },
     {
-        XOM_GOOD_ANIMATE_MON_WPN, 325, 0,[](int tn)
+        XOM_GOOD_ANIMATE_MON_WPN, 325, 0, 0, [](int tn)
         {return tn > 4 && _find_monster_with_animateable_weapon()
                        && !you.allies_forbidden();}
     },
-
-    // Strategic effects that don't care about greater than 0 tension.
-    // TODO: use gift timeout in the background to choose providing strategic
-    // benefits when going to new floors, to make this more controllable and
-    // less scummable.
     {
-        XOM_GOOD_DIVINATION, 420, 500, [](int tn)
-        {return tn <= 24 && (you.explore_estimate < 80
-                || x_chance_in_y(you.explore_estimate, 120));}
-    },
-    {
-        XOM_GOOD_SCENERY, 120, 135, [](int tn)
+        XOM_GOOD_SCENERY, 120, 135, 0, [](int tn)
         {return (tn <= 4) && (!(_xom_scenery_candidates().empty())
                          || one_chance_in(3));}
     },
     {
-        XOM_GOOD_CLOUD_TRAIL, 0, 375, [](int tn)
-        {return (tn == 0) && (you.explore_estimate < 100)
-                          && !you.duration[DUR_CLOUD_TRAIL];}
+        XOM_GOOD_CLOUD_TRAIL, 0, 375, 0, [](int)
+        {return you.explore_estimate < 100 && !you.duration[DUR_CLOUD_TRAIL];}
+    },
+
+    // Exploration effects:
+    {
+        XOM_GOOD_CLEAVING, 0, 0, 160
     },
     {
-        XOM_GOOD_BAZAAR_TRIP, 60, 280, [](int tn)
+        XOM_GOOD_DIVINATION, 0, 0, 80, [](int)
+        {return you.explore_estimate < 80
+                || x_chance_in_y(you.explore_estimate, 120);}
+    },
+    {
+        // Weight is high, since it can't happen early and repeat visits are far rarer
+        XOM_GOOD_BAZAAR_TRIP, 0, 0, 120, [](int)
         {
            // Nesting bazaars makes exploration and shopping lists complain.
            // No leaving Sprint floors in Sprint.
@@ -4678,71 +4711,58 @@ static const vector<xom_event_data> _list_xom_good_actions = {
               return false;
            }
 
-           // Don't interrupt autotravel too often.
-           if (you.explore_estimate> 80
-               && !x_chance_in_y(you.explore_estimate, 120))
-           {
-               return false;
-           }
-
-           // Each bazaar trip reduces the chance of the next, unless things
-           // are going badly enough it'd be funny to save the player.
-           return tn > 28
-                 || (one_chance_in(you.props[XOM_BAZAAR_TRIP_COUNT].get_int() * 6));
+           // Each bazaar trip reduces the chance of the next.
+           return one_chance_in(you.props[XOM_BAZAAR_TRIP_COUNT].get_int() * 5);
         }
     },
     {
-        XOM_GOOD_MUTATION, 32, 400, [](int tn)
-        {return (random2(tn) < 5 // should really revise strategic benefits....
-                 && x_chance_in_y(you.how_mutated(), 54)
-                 && you.can_safely_mutate())
-                 && you.explore_estimate < 95;}
+        XOM_GOOD_MUTATION, 0, 0, 80, [](int)
+        {return x_chance_in_y(you.how_mutated(), 54)
+                && you.can_safely_mutate();}
     },
     {
-        XOM_GOOD_RANDOM_ITEM, 33, 775, [](int tn)
-        {return tn < 20 && you.explore_estimate < 95;}
+        XOM_GOOD_RANDOM_ITEM, 0, 0, 105
     },
     {
-        XOM_GOOD_ACQUIREMENT, 21, 295, [](int tn)
-        {return tn < 20 && you.explore_estimate < 95;}
+        XOM_GOOD_ACQUIREMENT, 0, 0, 45
     },
 };
 
 static const vector<xom_event_data> _list_xom_bad_actions = {
     {
-        XOM_BAD_NOISE, 975, 415, [](int tn)
+        XOM_BAD_NOISE, 975, 415, 0, [](int tn)
         {
             return tn > 0 || !you.penance[GOD_XOM];
         }
     },
     {
-        XOM_BAD_MISCAST_PSEUDO, 825, 715, [](int /*tn*/)
+        XOM_BAD_MISCAST_PSEUDO, 825, 715, 0, [](int /*tn*/)
         {
             return !you.penance[GOD_XOM];
         }
     },
     {
-        XOM_BAD_ENCHANT_MONSTER, 790, 0, [](int tn)
-        {return tn > 0 && mon_nearby(_choose_enchantable_monster);}
+        XOM_BAD_ENCHANT_MONSTER, 790, 0, 0, [](int)
+        {return mon_nearby(_choose_enchantable_monster);}
     },
     {
-        XOM_BAD_BLINK_MONSTERS, 680, 0, [](int tn)
-        {return tn > 0 && mon_nearby(_mon_valid_blink_victim);}
+        XOM_BAD_BLINK_MONSTERS, 680, 0, 0, [](int)
+        {return mon_nearby(_mon_valid_blink_victim);}
     },
     {
-        XOM_BAD_CONFUSION, 610, 0, [](int tn)
-        {return tn > 0 && !you.clarity();}
+        XOM_BAD_CONFUSION, 610, 0, 0, [](int)
+        {return !you.clarity();}
     },
     {
-        XOM_BAD_CHAOS_UPGRADE, 590, 0, [](int /*tn*/)
+        XOM_BAD_CHAOS_UPGRADE, 590, 0, 0, [](int /*tn*/)
         {return mon_nearby(_choose_chaos_upgrade);}
     },
     {
-        XOM_BAD_SWAP_MONSTERS, 540, 0, [](int tn)
-        {return tn > 0 && _rearrangeable_pieces().size();}
+        XOM_BAD_SWAP_MONSTERS, 540, 0, 0, [](int)
+        {return _rearrangeable_pieces().size();}
     },
     {
-        XOM_BAD_TELEPORT, 475, 1460, [](int tn)
+        XOM_BAD_TELEPORT, 475, 1460, 60, [](int tn)
         {
             const int explored = you.explore_estimate;
 
@@ -4752,29 +4772,26 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
         }
     },
     {
-        XOM_BAD_POLYMORPH, 380, 0, [](int tn)
-        {return tn > 0 && _xom_mons_poly_target() != nullptr;}
+        XOM_BAD_POLYMORPH, 380, 0, 0, [](int)
+        {return _xom_mons_poly_target() != nullptr;}
     },
     {
-        XOM_BAD_SUMMON_HOSTILES, 170, 670, [](int tn)
-        {return tn <= 48;}
+        XOM_BAD_SUMMON_HOSTILES, 170, 670, 40, [](int tn)
+        {return tn <= 48;}, XOM_EXPLORE_HEALTHY
     },
     {
-        XOM_BAD_TIME_CONTROL, 133, 0, [](int tn)
-        {return tn > 0 && !you.duration[DUR_HASTE]
+        XOM_BAD_TIME_CONTROL, 133, 0, 0, [](int)
+        {return !you.duration[DUR_HASTE]
          && !you.duration[DUR_SLOW]
          && !you.duration[DUR_PARALYSIS];}
     },
     {
-        XOM_BAD_BRAIN_DRAIN, 100, 0, [](int tn)
-        {return tn > 0 && you.magic_points > 3;}
+        XOM_BAD_BRAIN_DRAIN, 100, 0, 0, [](int)
+        {return you.magic_points > 3;}
     },
     {
-        XOM_BAD_FAKE_SHATTER, 75, 0, [](int tn)
+        XOM_BAD_FAKE_SHATTER, 75, 0, 10, [](int)
         {
-            if (tn == 0)
-                return false;
-
             // Check if there's a reasonable amount of features
             // the fake Xom shatter is likely to collapse.
             int nearby_diggable = 0;
@@ -4794,13 +4811,13 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
         }
     },
     {
-        XOM_BAD_CHAOS_CLOUD, 58, 0, [](int tn)
-        {return tn > 0 && !cloud_at(you.pos());}
+        XOM_BAD_CHAOS_CLOUD, 58, 0, 0, [](int)
+        {return !cloud_at(you.pos());}
     },
     {
-        XOM_BAD_GRANT_WORD_OF_RECALL, 80, 0, [](int tn)
+        XOM_BAD_GRANT_WORD_OF_RECALL, 80, 0, 0, [](int tn)
         {
-            if (tn == 0 || tn > 24 || !_has_min_recall_level())
+            if (tn > 24 || !_has_min_recall_level())
                 return false;
 
             bool recall_ready = false;
@@ -4814,9 +4831,9 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
         }
     },
     {
-        XOM_BAD_SEND_IN_THE_CLONES, 45, 0, [](int tn)
+        XOM_BAD_SEND_IN_THE_CLONES, 45, 0, 0, [](int tn)
         {
-            if (tn == 0 || tn > 24)
+            if (tn > 24)
                 return false;
 
             int clone_capacity = 0;
@@ -4832,7 +4849,7 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
         }
     },
     {
-        XOM_BAD_DOOR_RING, 38, 0, [](int tn)
+        XOM_BAD_DOOR_RING, 38, 0, 0, [](int tn)
         {
             if (tn <= 4)
                 return false;
@@ -4873,41 +4890,32 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
         }
     },
     {
-        XOM_BAD_TORMENT, 6, 0, [](int tn)
-        {return tn > 0 && !you.res_torment();}
+        XOM_BAD_TORMENT, 6, 0, 0, [](int)
+        {return !you.res_torment();}
     },
 
     // Strategic effects.
     {
-        XOM_BAD_MUTATION, 210, 1010, [](int tn)
-        {return tn <= 8 && you.can_safely_mutate();}
+        XOM_BAD_MUTATION, 0, 0, 120, [](int)
+        {return you.can_safely_mutate();}
     },
     {
-        XOM_BAD_DRAINING, 5, 160, [](int /*tn*/)
+        XOM_BAD_DRAINING, 0, 0, 150, [](int /*tn*/)
         {return player_prot_life() < 3;}
     },
     {
-        XOM_BAD_DOOM, 5, 160, [](int tn)
-        {return tn <= 8 && (you.attribute[ATTR_DOOM] < 80 ||
-                            you.penance[GOD_XOM]);}
+        XOM_BAD_DOOM, 0, 0, 120, [](int)
+        {return you.attribute[ATTR_DOOM] < 80 || you.penance[GOD_XOM]
+                || one_chance_in(3);}
     },
     {
-        // Since this is an enum-based vector list and we can't adjust weights
-        // on conditions otherwise, this duplicates the Doom entry to apply
-        // slightly extra Doom on the rN∞ rMut∞ undead. Since direct Banes
-        // require wrath, it shouldn't press on Xom balance.
-        XOM_BAD_DOOM, 50, 100, [](int tn)
-        {return tn <= 8 && you.is_lifeless_undead() &&
-                (you.attribute[ATTR_DOOM] < 80 || you.penance[GOD_XOM]);}
-    },
-    {
-        XOM_BAD_PSEUDO_BANISHMENT, 2, 1, [](int /*tn*/)
+        XOM_BAD_PSEUDO_BANISHMENT, 0, 0, 10, [](int /*tn*/)
         {return !you.penance[GOD_XOM]
                 && !player_in_branch(BRANCH_ABYSS)
                 && !(is_level_on_stack(level_id(BRANCH_ABYSS)));}
     },
     {
-        XOM_BAD_BANISHMENT, 1, 1, [](int /*tn*/)
+        XOM_BAD_BANISHMENT, 0, 0, 1, [](int /*tn*/)
         {return _allow_xom_banishment()
                 && !x_chance_in_y(HALF_MAX_PIETY * 2, 1000)
                 && !player_in_branch(BRANCH_ABYSS)
@@ -4917,30 +4925,72 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
     // Highly circumstantial effects with less total
     // chances than their weight would seem to show.
     {
-        XOM_BAD_MOVING_STAIRS, 215, 0, [](int /*tn*/)
+        XOM_BAD_MOVING_STAIRS, 215, 0, 0, [](int /*tn*/)
         {return !(_nearby_stairs().empty());} // Abyss is always min 2 tension!
     },
     {
-        XOM_BAD_FIDDLE_WITH_DOORS, 95, 5, [](int tn)
+        XOM_BAD_FIDDLE_WITH_DOORS, 95, 5, 0, [](int tn)
         {return ((tn > 4 || (you.explore_estimate < 5)
                  && !you.penance[GOD_XOM])) && !_xom_door_candidates().empty();}
     },
     {
-        XOM_BAD_CLIMB_STAIRS, 55, 0, [](int tn)
-        { return tn > 0 && !(_nearby_stairs().empty()) &&
+        XOM_BAD_CLIMB_STAIRS, 55, 0, 0, [](int)
+        { return !(_nearby_stairs().empty()) &&
                  (feat_stair_direction(env.grid(you.pos())) != CMD_NO_CMD
                  && env.grid(you.pos()) != DNGN_ENTER_SHOP);}
     },
 };
+
+
+static const xom_event_data DUMMY_DATA = {XOM_DID_NOTHING, 0, 0, 0};
+
+static const xom_event_data& _get_event_data(xom_event_type event)
+{
+    for (const xom_event_data& data : _list_xom_bad_actions)
+        if (data.name == event)
+            return data;
+
+    for (const xom_event_data& data : _list_xom_good_actions)
+        if (data.name == event)
+            return data;
+
+    return DUMMY_DATA;
+}
+
+static bool _explore_type_is_valid(xom_explore_type type, int tension)
+{
+    if (type == XOM_EXPLORE_IMMEDIATE)
+        return true;
+    else if (type == XOM_EXPLORE_NEXT_BATTLE && tension <= 0)
+        return false;
+    else if (type == XOM_EXPLORE_HEALTHY
+        && you.hp * random_range(15, 20) < you.hp_max * 10)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+static bool _explore_event_is_valid(xom_event_type event, int tension)
+{
+    const xom_event_data& data = _get_event_data(event);
+
+    if (!_explore_type_is_valid(data.explore_type, tension))
+        return false;
+
+    return !data.valid || data.valid(tension);
+}
 
 /**
  * Try to choose an action for Xom to take.
  *
  * @param niceness      Whether the action should be 'good' for the player.
  * @param tension       How much danger we think the player's currently in.
+ * @param is_explore    Whether this is an exploration effect (ie: a strategic effect)
  * @return              An bad action for Xom to take, e.g. XOM_DID_NOTHING.
  */
-xom_event_type xom_choose_action(bool niceness, int tension)
+static xom_event_type _xom_choose_action(bool niceness, int tension, bool is_explore)
 {
     vector<pair<const xom_event_data&, int>> weighted_list;
     const xom_event_data* action;
@@ -4960,7 +5010,7 @@ xom_event_type xom_choose_action(bool niceness, int tension)
 
     // Choosing any type of good act is less likely at zero tension. Choosing
     // any type of bad action at non-zero tension is likewise less likely.
-    if (niceness && tension == 0 && you_worship(GOD_XOM)
+    if (!is_explore && niceness && tension == 0 && you_worship(GOD_XOM)
         && !x_chance_in_y(1, 2))
     {
 #ifdef NOTE_DEBUG_XOM
@@ -4969,7 +5019,7 @@ xom_event_type xom_choose_action(bool niceness, int tension)
 #endif
         return XOM_DID_NOTHING;
     }
-    else if (!niceness && !you.penance[GOD_XOM] && tension > random2(10)
+    else if (!is_explore && !niceness && !you.penance[GOD_XOM] && tension > random2(10)
              && you_worship(GOD_XOM) && x_chance_in_y(1, 2))
     {
 #ifdef NOTE_DEBUG_XOM
@@ -4981,33 +5031,26 @@ xom_event_type xom_choose_action(bool niceness, int tension)
     }
 
     // Compile the total list based on Xom's niceness and any degree of tension.
-    if (niceness)
+    const vector<xom_event_data>& actions =
+        niceness ? _list_xom_good_actions : _list_xom_bad_actions;
+
+    if (is_explore)
     {
-        if (tension > 0)
-        {
-            for (const xom_event_data &effect : _list_xom_good_actions)
+        for (const xom_event_data &effect : actions)
+            if (effect.explore_weight > 0)
+                weighted_list.push_back({effect, effect.explore_weight});
+    }
+    else if (tension > 0)
+    {
+        for (const xom_event_data &effect : actions)
+            if (effect.tension_weight > 0)
                 weighted_list.push_back({effect, effect.tension_weight});
-        }
-        else
-        {
-            for (const xom_event_data &effect : _list_xom_good_actions)
-                if (effect.zero_tension_weight > 0)
-                    weighted_list.push_back({effect, effect.zero_tension_weight});
-        }
     }
     else
     {
-        if (tension > 0)
-        {
-            for (const xom_event_data &effect : _list_xom_bad_actions)
-                weighted_list.push_back({effect, effect.tension_weight});
-        }
-        else
-        {
-            for (const xom_event_data &effect : _list_xom_bad_actions)
-                if (effect.zero_tension_weight > 0)
-                    weighted_list.push_back({effect, effect.zero_tension_weight});
-        }
+        for (const xom_event_data &effect : actions)
+            if (effect.zero_tension_weight > 0)
+                weighted_list.push_back({effect, effect.zero_tension_weight});
     }
 
     // With the list compiled, roll through action options to find one.
@@ -5021,14 +5064,29 @@ xom_event_type xom_choose_action(bool niceness, int tension)
             break;
 
         // If the action was invalid, set its weight to 0 and try again.
-        if (!action->valid(tension))
+        // (But don't check validity of 'Next combat' explore events, since
+        // those will often not be valid until combat happens.)
+        if (!(is_explore && action->explore_type == XOM_EXPLORE_NEXT_BATTLE)
+            && action->valid && !action->valid(tension))
         {
             find_if(weighted_list.begin(), weighted_list.end(),
                     [action](const pair<const xom_event_data&, int>& entry)
                     {return entry.first.name == action->name;})->second = 0;
         }
         else
+        {
+            // If this is an explore effect that should be deferred to later,
+            // queue it and do nothing right now.
+            if (is_explore
+                && !_explore_type_is_valid(action->explore_type, tension))
+            {
+                CrawlVector& vec = you.props[XOM_QUEUED_EXPLORE_KEY].get_vector();
+                vec.push_back(action->name);
+                return XOM_DID_NOTHING;
+            }
+
             return action->name;
+        }
     }
 
     return XOM_DID_NOTHING;
@@ -5098,9 +5156,31 @@ xom_event_type xom_acts(maybe_bool nice, int tension, bool debug)
 #endif
 
     _calculate_exploration_estimate(true);
-    const xom_event_type action = xom_choose_action(niceness, tension);
+    const xom_event_type action = _xom_choose_action(niceness, tension);
     if (!debug)
         xom_take_action(action, tension);
+
+    return action;
+}
+
+xom_event_type xom_acts_exploration()
+{
+    // Chance of good/bad action is flat, but the first few actions after
+    // worship will always be good.
+    bool nice;
+    if (you.gift_timeout > 0)
+    {
+        nice = true;
+        --you.gift_timeout;
+    }
+    else
+        nice = x_chance_in_y(3, 5);
+
+    _calculate_exploration_estimate(true);
+    const xom_event_type action = _xom_choose_action(nice, 0, true);
+    xom_take_action(action, 0);
+
+    you.attribute[ATTR_XOM_EXPLORE_COUNT] -= XOM_EXPLORE_THRESHOLD;
 
     return action;
 }

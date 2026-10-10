@@ -820,7 +820,17 @@ static like_map divine_likes[] =
         { DID_KILL_HOLY, _yred_kill_response() },
     },
     // GOD_XOM,
-    like_map(),
+    {
+        { DID_EXPLORATION, {
+            nullptr, false, 0, 0, nullptr,
+            [] (int &piety, int &denom, const monster* /*victim*/)
+            {
+                piety = 0;
+                denom = 1;
+                you.attribute[ATTR_XOM_EXPLORE_COUNT] += piety_scale(1);
+            }
+        } },
+    },
     // GOD_VEHUMET,
     DEFAULT_KILL_CONDUCT,
     // GOD_OKAWARU,

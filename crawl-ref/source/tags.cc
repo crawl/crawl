@@ -3776,6 +3776,13 @@ static void _tag_read_you(reader &th)
         you.attribute[ATTR_TEMP_MUT_KILLS] = 1;
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_XOM_EXPLORATION)
+    {
+        you.attribute[ATTR_XOM_EXPLORE_COUNT] = 0;
+        if (you_worship(GOD_XOM))
+            you.gift_timeout = 0;   // Used to be a boredom meter. Is now initial generousity.
+    }
+
 #endif
 
 #if TAG_MAJOR_VERSION == 34

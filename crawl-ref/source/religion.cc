@@ -3845,6 +3845,12 @@ void makhleb_initialize_marks()
         marks.push_back(muts[i]);
 }
 
+static void _join_xom()
+{
+    // Guarantee the first few explore actions are positive.
+    you.gift_timeout = 4;
+}
+
 /// What special things happen when you join a god?
 static const map<god_type, function<void ()>> on_join = {
     { GOD_BEOGH, update_player_symbol },
@@ -3869,7 +3875,8 @@ static const map<god_type, function<void ()>> on_join = {
     { GOD_TROG, join_trog_skills },
     { GOD_ZIN, _join_zin },
     { GOD_MAKHLEB, _join_makhleb },
-    { GOD_JIYVA, []() { you.redraw_armour_class = true; /* slime wall immunity */ }}
+    { GOD_JIYVA, []() { you.redraw_armour_class = true; /* slime wall immunity */ }},
+    { GOD_XOM, _join_xom },
 };
 
 static void _print_good_god_brand_changes(item_def *weapon, bool joining_good)

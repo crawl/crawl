@@ -4,8 +4,8 @@
 
 enum attribute_type
 {
+    ATTR_XOM_EXPLORE_COUNT,     // Pool of exploration interest for Xom's strategic actions
 #if TAG_MAJOR_VERSION == 34
-    ATTR_DIVINE_LIGHTNING_PROTECTION,
     ATTR_DIVINE_REGENERATION,
 #endif
     ATTR_DIVINE_DEATH_CHANNEL,
