@@ -4320,6 +4320,44 @@ static void _xom_cleaving(int)
     take_note(Note(NOTE_XOM_EFFECT, -1, -1, "cleaving"), true);
 }
 
+static const string _player_leg_name()
+{
+    if (form_changes_anatomy())
+        return you.foot_name(true);
+
+    if (you.species == SP_NAGA
+        || you.species == SP_MERFOLK && you.fishtail)
+    {
+        return "tail";
+    }
+    else if (you.species == SP_DJINNI)
+        return "smoke trail";
+    else if (you.species == SP_OCTOPODE)
+        return "tentacles";
+    else
+        return "legs";
+}
+
+static void _xom_reaching(int)
+{
+    god_speaks(GOD_XOM, _get_xom_speech("reaching").c_str());
+
+    you.increase_duration(DUR_REACH, random_range(120, 200));
+
+    const string arms = you.arm_name(true);
+    const string legs = _player_leg_name();
+
+    if (you.species == SP_POLTERGEIST || arms == legs)
+        mprf(MSGCH_DURATION, "Your %s grow incredibly long!", arms.c_str());
+    else
+    {
+        mprf(MSGCH_DURATION, "Your %s and %s grow incredibly long!",
+                               arms.c_str(), legs.c_str());
+    }
+
+    take_note(Note(NOTE_XOM_EFFECT, -1, -1, "reaching"), true);
+}
+
 static void _handle_accidental_death(const int orig_hp,
     const FixedVector<uint8_t, NUM_MUTATIONS> &orig_mutation,
     const transformation orig_form)
@@ -4685,6 +4723,10 @@ static const vector<xom_event_data> _list_xom_good_actions = {
     // Exploration effects:
     {
         XOM_GOOD_CLEAVING, 0, 0, 160
+    },
+    {
+        XOM_GOOD_REACHING, 0, 0, 70, [](int){ return !you.duration[DUR_REACH];},
+        XOM_EXPLORE_NEXT_BATTLE
     },
     {
         XOM_GOOD_DIVINATION, 0, 0, 80, [](int)
@@ -5480,6 +5522,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_FOG, { "fog", _xom_fog }},
     { XOM_GOOD_CLOUD_TRAIL, { "cloud trail", _xom_cloud_trail }},
     { XOM_GOOD_CLEAVING, { "cleaving", _xom_cleaving }},
+    { XOM_GOOD_REACHING, { "reaching", _xom_reaching }},
 
     { XOM_BAD_MISCAST_PSEUDO, { "pseudo-miscast", _xom_pseudo_miscast }},
     { XOM_BAD_NOISE, { "noise", _xom_noise }},

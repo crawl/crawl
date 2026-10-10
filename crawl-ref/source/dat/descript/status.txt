@@ -1369,3 +1369,7 @@ Mistmane status
 
 Your head is a cloud of swirling mist. Any potions you drink will be metabolised
 into clouds of baleful gas which you can expel with your melee attack.
+%%%%
+Reach+ status
+
+The reach of your melee attacks is increased by 3.

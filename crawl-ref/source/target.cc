@@ -1032,7 +1032,7 @@ targeter_cleave::targeter_cleave(coord_def target)
 {
     agent = &you;
     origin = you.pos();
-    bonus_reach = you.form == transformation::aqua ? 2 : 0;
+    bonus_reach = you.reach_range_bonus();
     cleave_range = you.reach_range() - bonus_reach;
     set_aim(target);
 }

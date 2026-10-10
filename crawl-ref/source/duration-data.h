@@ -826,6 +826,11 @@ static const duration_def duration_data[] =
             mprf(MSGCH_DURATION, "You feel more solid again.");
           }
       }}},
+    { DUR_REACH,
+      LIGHTBLUE, "Reach+",
+      "extra reach", "reach+",
+      "Your limbs are incredibly long.", D_NO_FLAGS,
+      {{ "Your limbs return to their normal size." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

@@ -400,8 +400,8 @@ void melee_attack::handle_phase_dodged()
         // Active retaliations on the player's part require you to be able to act.
         if (you.can_see(*attacker) && !you.cannot_act() && !you.confused())
         {
-            const int aux_dist = you.form == transformation::aqua ? 3 : 1;
-            if (grid_distance(defender->pos(), attack_position) <= aux_dist)
+            if (grid_distance(defender->pos(), attack_position)
+                <= you.reach_range_bonus() + 1)
             {
                 if (you.has_mutation(MUT_REFLEXIVE_HEADBUTT)
                     && !you.did_reprisal(REPRISAL_HEADBUTT, attacker->mid)
@@ -1193,9 +1193,9 @@ bool melee_attack::handle_phase_aux()
     {
         // returns whether an aux attack successfully took place
         // additional attacks from cleave don't get aux
-        const int aux_dist = you.form == transformation::aqua ? 3 : 1;
         if (!defender->friendly()
-            && grid_distance(defender->pos(), attack_position) <= aux_dist)
+            && grid_distance(defender->pos(), attack_position)
+               <= you.reach_range_bonus() + 1)
         {
             player_do_aux_attacks();
         }

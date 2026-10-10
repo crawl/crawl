@@ -675,6 +675,12 @@ LUARET1(you_spell_levels, integer, player_spell_levels())
  */
 LUARET1(you_can_smell, boolean, you.can_smell())
 
+/*** Do you have bones?
+ * @treturn boolean
+ * @function has_bones
+ */
+LUARET1(you_has_bones, boolean, you.has_bones())
+
 /*** Do you have claws?
  * @treturn int claws level
  * @function has_claws
@@ -1637,6 +1643,7 @@ static const struct luaL_Reg you_clib[] =
     { "is_level_on_stack", you_is_level_on_stack },
 
     { "can_smell",         you_can_smell },
+    { "has_bones",         you_has_bones },
     { "has_claws",         you_has_claws },
 
     { "los",               you_los },

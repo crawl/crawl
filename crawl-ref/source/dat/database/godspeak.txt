@@ -805,6 +805,24 @@ Xom cleaving
 
 @Xom potion effect@
 %%%%
+Xom reaching
+
+"Have you ever considered the benefits of being very, very long?"
+
+"No, no, those are much too short."
+
+Xom meddles with your body plan.
+
+{{if you.has_bones() then
+    return "Xom rearranges your bones."
+else
+    return "Xom rearranges anatomy you didn't realise you had."
+end
+}}
+
+w:2
+"This is what peak performance looks like, mortal."
+%%%%
 # random divination (magic mapping, detect items, detect creatures)
 Xom divination
 

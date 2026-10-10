@@ -7583,7 +7583,7 @@ bool player::nightvision() const
 
 int player::reach_range(bool include_weapon) const
 {
-    const int bonus = you.form == transformation::aqua ? 2 : 0;
+    const int bonus = reach_range_bonus();
 
     if (!include_weapon)
         return 1 + bonus;
@@ -7598,7 +7598,11 @@ int player::reach_range(bool include_weapon) const
 
 int player::reach_range_bonus() const
 {
-    return you.form == transformation::aqua ? 2 : 0;
+    int bonus = you.form == transformation::aqua ? 2 : 0;
+    if (you.duration[DUR_REACH])
+        bonus += 3;
+
+    return bonus;
 }
 
 monster_type player::mons_species(bool /*zombie_base*/) const
