@@ -31,6 +31,7 @@
 #include "jobs.h"
 #include "lang-fake.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h" // command_to_string
 #include "menu.h"
 #include "message.h"
@@ -309,6 +310,7 @@ static void _cprintf_touchui(const char *format, ...)
     vector<string> parts;
     va_start(args, format);
     buf = vmake_stringf(format, args);
+    buf = localise(buf);
 
     switch (TOUCH_UI_STATE)
     {
@@ -388,6 +390,7 @@ static void _nowrap_eol_cprintf_touchui(const char *format, ...)
     string  buf;
     va_start(args, format);
     buf = vmake_stringf(format, args);
+    buf = localise(buf);
 
     // N.B. this should really be factored out and merged with the other switch-case above
     switch (TOUCH_UI_STATE)
@@ -825,9 +828,11 @@ static void _print_stats_noise(int x, int y)
         CGOTOXY(x + bar_position, y, GOTO_STAT);
         textcolour(LIGHTMAGENTA);
 
-        // This needs to be one extra wide in case silence happens
-        // immediately after super-loud (magenta) noise
-        CPRINTF("Silenced  ");
+        // Erase the noise bar
+        CPRINTF("          ");
+        CGOTOXY(x + bar_position, y, GOTO_STAT);
+
+        CPRINTF("Silenced");
         Noise_Bar.reset(); // so it doesn't display a change bar after silence ends
     }
     else
