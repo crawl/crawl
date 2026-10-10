@@ -1,5 +1,15 @@
 #include "AppHdr.h"
 
+#ifdef REGEX_PCRE2
+    // Statically link pcre on Windows
+    #if defined(TARGET_OS_WINDOWS)
+        #define PCRE2_STATIC
+    #endif
+
+    #define PCRE2_CODE_UNIT_WIDTH 8
+    #include <pcre2.h>
+#endif
+
 #ifdef REGEX_PCRE
     // Statically link pcre on Windows
     #if defined(TARGET_OS_WINDOWS)
@@ -16,9 +26,74 @@
 #include "pattern.h"
 #include "stringutil.h"
 
-#if defined(REGEX_PCRE)
+#if defined(REGEX_PCRE2)
 ////////////////////////////////////////////////////////////////////
-// Perl Compatible Regular Expressions
+// Perl Compatible Regular Expressions (v2)
+
+static void *_compile_pattern(const char *pattern, bool icase)
+{
+    int errorcode;
+    PCRE2_SIZE erroffset;
+    uint32_t flags = PCRE2_UTF;
+    if (icase)
+        flags |= PCRE2_CASELESS;
+
+    return pcre2_compile((PCRE2_SPTR)pattern,
+                         PCRE2_ZERO_TERMINATED,
+                         flags,
+                         &errorcode,
+                         &erroffset,
+                         nullptr);
+}
+
+static void _free_compiled_pattern(void *cp)
+{
+    if (cp)
+        pcre2_code_free((pcre2_code*)cp);
+}
+
+static bool _pattern_match(void *compiled_pattern, const char *text, int length)
+{
+    auto cp = (pcre2_code*)compiled_pattern;
+
+    // Create a match data block the right size for the number of capturing
+    // parentheses in the pattern.
+    auto match_data = pcre2_match_data_create_from_pattern(cp, NULL);
+
+    int rc = pcre2_match(cp, (PCRE2_SPTR)text, length, 0, 0, match_data, 0);
+    pcre2_match_data_free(match_data);
+    return rc >= 0;
+}
+
+static pattern_match _pattern_match_location(void *compiled_pattern,
+                                             const char *text, int length)
+{
+    auto cp = (pcre2_code*)compiled_pattern;
+
+    // Create a match data block the right size for the number of capturing
+    // parentheses in the pattern.
+    auto match_data = pcre2_match_data_create_from_pattern(cp, NULL);
+
+    int rc = pcre2_match(cp, (PCRE2_SPTR)text, length, 0, 0, match_data, 0);
+
+    if (rc >= 0)
+    {
+        auto ovector = pcre2_get_ovector_pointer(match_data);
+        auto result = pattern_match::succeeded(string(text), (int)ovector[0],
+                                               (int)ovector[1]);
+        pcre2_match_data_free(match_data);
+        return result;
+    }
+    else
+    {
+        pcre2_match_data_free(match_data);
+        return pattern_match::failed(string(text));
+    }
+}
+
+#elif defined(REGEX_PCRE)
+////////////////////////////////////////////////////////////////////
+// Perl Compatible Regular Expressions (v1)
 
 static void *_compile_pattern(const char *pattern, bool icase)
 {
