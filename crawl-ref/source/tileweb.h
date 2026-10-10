@@ -52,6 +52,9 @@ struct player_info
     int piety_rank;
     int ostracism_pips;
 
+    // species god line (e.g. "Minotaur of Trog")
+    string species_god;
+
     uint8_t form;
 
     int hp, hp_max, real_hp_max, poison_survival;
