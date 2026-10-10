@@ -1500,7 +1500,11 @@ static int crawl_bane_name(lua_State *ls)
     if (!s || !*s)
         return 0;
 
-    lua_pushstring(ls, uppercase_first(bane_name(bane_from_name(s))).c_str());
+    bane_type bane = bane_from_name(s);
+    if (bane >= NUM_BANES)
+        return 0;
+
+    lua_pushstring(ls, uppercase_first(bane_name(bane)).c_str());
     return 1;
 }
 
