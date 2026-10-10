@@ -405,9 +405,6 @@ bool needs_resolution(monster_type mon_type)
 
 monster_type resolve_monster_type(monster_type mon_type,
                                   monster_type &base_type,
-                                  proximity_type proximity,
-                                  coord_def *pos,
-                                  unsigned mmask,
                                   level_id *place,
                                   bool *want_band,
                                   bool allow_ood)
@@ -494,7 +491,6 @@ monster_type resolve_monster_type(monster_type mon_type,
                 {
                     mon_type =
                         resolve_monster_type(mon_type, base_type,
-                                             proximity, pos, mmask,
                                              place, want_band, allow_ood);
                 }
                 return mon_type;
@@ -507,7 +503,6 @@ monster_type resolve_monster_type(monster_type mon_type,
         {
             mon_type =
                 resolve_monster_type(mon_type, base_type,
-                                        proximity, pos, mmask,
                                         place, want_band, allow_ood);
         }
     }
@@ -655,8 +650,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     const bool allow_ood = !(mg.flags & MG_NO_OOD);
     bool want_band = false;
     level_id place = mg.place;
-    mg.cls = resolve_monster_type(mg.cls, mg.base_type, mg.proximity,
-                                  &mg.pos, mg.map_mask,
+    mg.cls = resolve_monster_type(mg.cls, mg.base_type,
                                   &place, &want_band, allow_ood);
     // Place may have been updated inside resolve_monster_type
     // and then inside pick_random_monster for OOD.
@@ -2873,9 +2867,7 @@ static monster_type _band_member(band_type band, int which,
     case BAND_RANDOM_SINGLE:
     {
         monster_type tmptype = MONS_PROGRAM_BUG;
-        coord_def tmppos;
         return resolve_monster_type(RANDOM_BANDLESS_MONSTER, tmptype,
-                                    PROX_ANYWHERE, &tmppos, 0,
                                     &parent_place, nullptr, allow_ood);
     }
 
@@ -3207,8 +3199,8 @@ monster* create_monster(mgen_data mg, bool fail_msg)
     if (_is_random_monster(mg.cls))
     {
         mg.flags |= MG_PERMIT_BANDS;
-        mg.cls = resolve_monster_type(mg.cls, mg.base_type, mg.proximity,
-                                      &mg.pos, mg.map_mask, &mg.place,
+        mg.cls = resolve_monster_type(mg.cls, mg.base_type,
+                                      &mg.place,
                                       nullptr, false);
     }
 

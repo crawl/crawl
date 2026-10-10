@@ -44,9 +44,6 @@ bool needs_resolution(monster_type mon_type);
 
 monster_type resolve_monster_type(monster_type mon_type,
                                   monster_type &base_type,
-                                  proximity_type proximity = PROX_ANYWHERE,
-                                  coord_def *pos = nullptr,
-                                  unsigned mmask = 0,
                                   level_id *place = nullptr,
                                   bool *want_band = nullptr,
                                   bool allow_ood = true);
