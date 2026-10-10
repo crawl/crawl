@@ -92,10 +92,10 @@ void fiery_armour()
 spret cast_revivification(int pow, bool fail)
 {
     fail_check();
-    mpr("Your body is healed in an amazingly painful way.");
+    mpr("Your body is completely healed.");
 
-    const int loss = 6 + binomial(9, 8, pow);
-    dec_max_hp(loss * you.hp_max / 100);
+    you.doom(random_range(89 - div_rand_round(pow,10), 99 - div_rand_round(pow,20)));
+    drain_player(125 - random2(1 + div_rand_round(pow, 4)), false, true);
     set_hp(you.hp_max);
 
     if (you.duration[DUR_DEATHS_DOOR])
