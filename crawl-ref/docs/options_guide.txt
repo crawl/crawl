@@ -969,6 +969,9 @@ explore_stop += greedy_pickup_smart,greedy_visited_item_stack
 
         runes: like items, but only for runes.
 
+        traps: like items, but only for unsafe traps. Does not stop at
+        shafts or webs or other traps if you are immune to them.
+
 explore_stop_pickup_ignore += <regex>, <regex>, ...
         (List option)
         If explore_stop has greedy_pickup or greedy_pickup_smart set,
