@@ -4960,7 +4960,9 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
                 && !x_chance_in_y(HALF_MAX_PIETY * 2, 1000)
                 && !player_in_branch_recursive(BRANCH_ABYSS);}
     },
-
+    {
+        XOM_BAD_CHAOS_REINFORCEMENTS, 0, 0, 80
+    },
     // Highly circumstantial effects with less total
     // chances than their weight would seem to show.
     {
@@ -5456,6 +5458,81 @@ static void _xom_bad_teleport(int /*sever*/)
     take_note(Note(NOTE_XOM_EFFECT, -1, -1, note), true);
 }
 
+// Finds a random position near some monster which it out of sight of the player
+static coord_def _find_pos_near_monster(monster_type type, vector<monster*>& mon_list)
+{
+    shuffle_array(mon_list);
+
+    coord_def spot;
+    for (monster* mon : mon_list)
+    {
+        if (find_habitable_spot_near(mon->pos(), type, 4, spot, -1, mon))
+        {
+            if (!you.see_cell(spot))
+                return spot;
+        }
+    }
+
+    return coord_def();
+}
+
+/**
+ * Adds a handful of additional monster spawns to the current floor, ideally
+ * near existing monsters, and never in line of sight of the player, with the
+ * chaoslace buff.
+ */
+static void _xom_chaos_reinforcements(int)
+{
+    const int num = random_range(3, 8);
+
+    mgen_data mg(RANDOM_MONSTER, BEH_HOSTILE, coord_def(), MHITNOT,
+                 MG_PERMIT_BANDS, GOD_XOM);
+    mg.proximity = PROX_AWAY_FROM_PLAYER;
+
+    if (env.absdepth0 <= 20)
+        mg.place = level_id(BRANCH_DUNGEON, env.absdepth0 + 1);
+    else
+        mg.place = level_id(BRANCH_DEPTHS, env.absdepth0 - 20);
+
+    vector<monster*> near_targs;
+    for (monster_iterator mi; mi; ++mi)
+        if (mi->hostile() && !mi->is_peripheral() && !you.see_cell(mi->pos()))
+            near_targs.push_back(*mi);
+
+    bool created = false;
+    for (int i = 0; i < num; ++i)
+    {
+        monster_type mtype = resolve_monster_type(RANDOM_MONSTER, mg.base_type,
+                                                  &mg.place, nullptr, false);
+        mg.cls = mtype;
+
+        coord_def spot = _find_pos_near_monster(mtype, near_targs);
+
+        if (!spot.origin())
+        {
+            mg.pos = spot;
+            mg.flags |= MG_FORCE_PLACE;
+        }
+        else
+        {
+            mg.pos = coord_def();
+            mg.flags &= ~MG_FORCE_PLACE;
+        }
+
+        if (monster* mon = place_monster(mg))
+        {
+            mon->add_ench(mon_enchant(ENCH_CHAOS_LACE, nullptr, INFINITE_DURATION));
+            created = true;
+        }
+    }
+
+    if (created)
+    {
+        simple_god_message(" dispatches reinforcements to the rest of the floor.", false, GOD_XOM);
+        take_note(Note(NOTE_XOM_EFFECT, -1, -1, "chaos reinforcements"), true);
+    }
+}
+
 /// Place a one-tile chaos cloud on the player, with minor spreading.
 static void _xom_chaos_cloud(int /*sever*/)
 {
@@ -5555,6 +5632,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BAD_BANISHMENT, { "banishment", _xom_banishment }},
     { XOM_BAD_PSEUDO_BANISHMENT, {"pseudo-banishment",
                                   _xom_pseudo_banishment }},
+    { XOM_BAD_CHAOS_REINFORCEMENTS, {"chaos reinforcements", _xom_chaos_reinforcements }},
 };
 
 static void _do_xom_event(xom_event_type event_type, int tension)
