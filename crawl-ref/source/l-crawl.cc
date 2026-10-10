@@ -33,7 +33,6 @@
 #include "religion.h"
 #include "sound.h"
 #include "state.h"
-#include "state.h"
 #include "stringutil.h"
 #include "throw.h"
 #include "tutorial.h"
