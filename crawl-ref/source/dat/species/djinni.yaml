@@ -7,6 +7,7 @@ difficulty_priority: 70
 species_flags:
   - no_feet
   - no_blood
+  - no_bones
 aptitudes:
   xp: 1
   hp: -1
