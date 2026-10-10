@@ -542,6 +542,8 @@ int raw_spell_fail(spell_type spell, bool enkindled)
     chance2 += 4 * you.get_mutation_level(MUT_ANTI_WIZARDRY);
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_ENERGY))
         chance2 += 10;
+    if (you.unrand_equipped(UNRAND_TARGE))
+        chance2 += 8;
 
     chance2 += you.duration[DUR_VERTIGO] ? 7 : 0;
 

@@ -2465,9 +2465,9 @@ int player_channelling_chance(bool max)
     return 15 + skill * 30 / 27;
 }
 
-static int _sh_from_shield(const item_def &item)
+static int _sh_from_shield(const item_def &item, bool targe = false)
 {
-    const int base_shield = property(item, PARM_AC) * 2;
+    const int base_shield = targe ? 16 : property(item, PARM_AC) * 2;
 
     // bonus applied only to base, see above for effect:
     int shield = base_shield * 50;
@@ -2500,6 +2500,8 @@ int player_shield_class(int scale, bool random, bool include_temp)
     const item_def *shield_item = you.shield();
     if (shield_item)
         shield += _sh_from_shield(*shield_item);
+    if (you.unrand_equipped(UNRAND_TARGE))
+        shield += _sh_from_shield(*you.weapon(), true);
 
     // mutations
     // +4, +6, +8 (displayed values)
