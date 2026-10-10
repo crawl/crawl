@@ -4,6 +4,9 @@
 
 #include "AppHdr.h"
 
+#include <cstdlib>
+#include <cstring>
+
 #include "l-libs.h"
 
 #include "branch.h"
@@ -51,6 +54,50 @@
 //
 // User accessible (clua) functions
 //
+
+static bool _server_env_enabled(const char *name)
+{
+    const char *value = getenv(name);
+    return value && (!strcmp(value, "1")
+                     || !strcmp(value, "true")
+                     || !strcmp(value, "yes"));
+}
+
+static int crawl_managed_gameplay_rng_disabled(lua_State *ls)
+{
+    return luaL_error(ls,
+        "gameplay RNG access is disabled for managed user Lua on this server");
+}
+
+static void _harden_managed_gameplay_rng(lua_State *ls)
+{
+    // User RCs must not observe or advance engine RNG state. Dungeon Lua is
+    // trusted generation code and must retain its original bindings.
+    if (!CLua::is_managed_vm(ls)
+        || !_server_env_enabled("CRAWL_DISABLE_USER_GAMEPLAY_RNG"))
+    {
+        return;
+    }
+
+    static const char * const functions[] =
+    {
+        "random2",
+        "one_chance_in",
+        "random2avg",
+        "coinflip",
+        "roll_dice",
+        "x_chance_in_y",
+        "random_range",
+        "div_rand_round",
+        "random_real",
+        nullptr,
+    };
+    for (const char * const *name = functions; *name; ++name)
+    {
+        lua_pushcfunction(ls, crawl_managed_gameplay_rng_disabled);
+        lua_setfield(ls, -2, *name);
+    }
+}
 
 /*** Print a message.
  * @tparam string message message to print
@@ -1648,6 +1695,9 @@ void cluaopen_crawl(lua_State *ls)
         lua_newtable(ls);
     }
     luaL_setfuncs(ls, crawl_clib, 0);
+    // Replace bindings before exposing the table to RC initialization, so
+    // caching a function in a user variable cannot retain an unguarded alias.
+    _harden_managed_gameplay_rng(ls);
     lua_setglobal(ls, "crawl");
 }
 
