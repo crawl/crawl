@@ -662,7 +662,7 @@ public:
     {
     }
 protected:
-    bool mergeable(const final_effect&) const override { return false; }
+    bool mergeable(const final_effect& eff) const override;
     item_def& wpn;
 };
 
@@ -1004,6 +1004,13 @@ bool beogh_resurrection_fineff::mergeable(const final_effect& fe) const
     const beogh_resurrection_fineff& o =
         static_cast<const beogh_resurrection_fineff&>(fe);
     return ostracism_only == o.ostracism_only;
+}
+
+bool ephemeral_weapon_end_fineff::mergeable(const final_effect& fe) const
+{
+    const ephemeral_weapon_end_fineff& o =
+        static_cast<const ephemeral_weapon_end_fineff&>(fe);
+    return &wpn == &o.wpn;
 }
 
 void mirror_damage_fineff::merge(const final_effect &fe)
