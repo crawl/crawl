@@ -1853,10 +1853,13 @@ collateral damage'.
 vision talisman
 
 A small charm bearing the likeness of an eye. It gives the wearer supernatural
-insight, allowing them to see invisible creatures and also the clouds of magical
-residue left behind whenever beings cast spells. Touching those clouds allows
-them to convert that leftover magic into unnerring projectiles against nearby foes.
-Alas, such wisdom comes at the cost of frailty.
+sight, allowing them to perceive the clouds of magical residue left behind
+whenever beings cast spells. Touching those clouds allows them to convert that
+leftover magic into unnerring projectiles against nearby foes.
+
+This third eye even allows one to see from further distances than would
+otherwise be possible, but be warned - ceatures perceived this way may perceive
+you back.
 %%%%
 wand of acid
 

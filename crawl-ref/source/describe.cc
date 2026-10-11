@@ -8110,6 +8110,11 @@ static string _describe_talisman_form(transformation form_type)
     }
     else if (form_type == transformation::fortress_crab)
         pr.AddCell("Armour egos", "x2");
+    else if (form_type == transformation::vision
+             && !you.has_mutation(MUT_DAYSTALKER))
+    {
+        pr.AddCell("LoS", "+1");
+    }
     else if (form_type == transformation::jademantle)
         pr.AddCell("Non-elemental magic skill", "-33%", RED);
 

@@ -1071,6 +1071,10 @@ void update_vision_range()
     if (you.get_mutation_level(MUT_NIGHTSTALKER))
         you.normal_vision -= you.get_mutation_level(MUT_NIGHTSTALKER);
 
+    // Vision form increases your sight range by 1 (but can't for barachi).
+    if (you.form == transformation::vision)
+        you.normal_vision = min(LOS_MAX_RANGE, you.normal_vision + 1);
+
     // Halo and umbra radius scale with you.normal_vision, so to avoid
     // penalizing players with low LOS from items, don't shrink normal_vision.
     you.current_vision = you.normal_vision;

@@ -1416,7 +1416,7 @@ public:
      */
     string get_untransform_message() const override
     {
-        return "Your hands return to normal.";
+        return "Your third eye closes.";
     }
 };
 
@@ -2177,6 +2177,11 @@ static void _on_enter_form(transformation which_trans)
         you.redraw_evasion = true;
         break;
 
+    case transformation::vision:
+        mpr("You can see so much more now....");
+        update_vision_range();
+        break;
+
     case transformation::jademantle:
         jademantle_handle_crystal_revival(true);
         break;
@@ -2486,6 +2491,11 @@ void untransform(bool skip_move, bool scale_hp, bool preserve_equipment,
         notify_stat_change();
         you.redraw_armour_class = true;
         you.redraw_evasion = true;
+    }
+    else if (old_form == transformation::vision)
+    {
+        mpr("Your vision is no longer so expansive.");
+        update_vision_range();
     }
     else if (old_form == transformation::jademantle)
     {

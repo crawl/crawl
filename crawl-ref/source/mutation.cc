@@ -709,6 +709,9 @@ static vector<pair<string,string>> _get_form_fakemuts()
         }
     }
 
+    if (you.form == transformation::vision && !you.has_mutation(MUT_DAYSTALKER))
+        result.push_back({"", _formmut("You have an extended range of vision and can be seen from far away.")});
+
     if (you.form == transformation::blade
         && you_can_wear(SLOT_BODY_ARMOUR, false) != false)
     {
