@@ -2777,7 +2777,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
     else if (mons.type == MONS_HOARFROST_CANNON && real_death
-             && env.grid(mons.pos()) == DNGN_FLOOR)
+             && feat_is_floor(env.grid(mons.pos())))
     {
         temp_change_terrain(mons.pos(), DNGN_SHALLOW_WATER, random_range(50, 80),
                             TERRAIN_CHANGE_FLOOD);

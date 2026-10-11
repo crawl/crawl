@@ -7147,7 +7147,7 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
         switch (beam.flavour)
         {
             case BEAM_LAVA:
-                if (env.grid(pos) == DNGN_FLOOR && !actor_at(pos)
+                if (feat_is_floor(env.grid(pos)) && !actor_at(pos)
                     && (!made_lava || coinflip()))
                 {
                     temp_change_terrain(

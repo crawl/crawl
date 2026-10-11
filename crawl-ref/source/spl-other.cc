@@ -500,7 +500,7 @@ vector<coord_def> find_sigil_locations(bool tracer)
     vector<coord_def> positions;
     for (radius_iterator ri(you.pos(), 2, C_SQUARE); ri; ++ri)
     {
-        if (you.see_cell(*ri) && env.grid(*ri) == DNGN_FLOOR
+        if (you.see_cell(*ri) && feat_is_floor(env.grid(*ri))
             && (!actor_at(*ri) || (actor_at(*ri) && tracer
                                    && !you.aware_of(*actor_at(*ri)))))
         {

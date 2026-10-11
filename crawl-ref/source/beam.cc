@@ -2240,7 +2240,7 @@ set<coord_def> create_feat_splash(coord_def center,
     for (distance_iterator di(center, true, false, radius); di && number > 0; ++di)
     {
         const dungeon_feature_type feat = env.grid(*di);
-        if ((feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER)
+        if ((feat_is_floor(feat) || feat == DNGN_SHALLOW_WATER)
             && cell_see_cell(center, *di, LOS_NO_TRANS))
         {
             number--;

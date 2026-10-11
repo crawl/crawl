@@ -4232,7 +4232,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         switch (beam.flavour)
         {
             case BEAM_LAVA:
-                if (env.grid(pos) == DNGN_FLOOR && !actor_at(pos) && coinflip())
+                if (feat_is_floor(env.grid(pos)) && !actor_at(pos) && coinflip())
                 {
                     temp_change_terrain(
                         pos, DNGN_LAVA,
