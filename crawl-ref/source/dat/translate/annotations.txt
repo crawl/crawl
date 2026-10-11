@@ -114,83 +114,40 @@ SH@num@
 Stlth
 
 %%%%
-Stlth+
-
-%%%%
-Stlth-
-
-%%%%
 Slay@num@
 
 %%%%
 
 # resistances +/-
 %%%%
+@word@+
+
+%%%%
+@word@++
+
+%%%%
+@word@+++
+
+%%%%
+@word@-
+
+%%%%
+@word@--
+
+%%%%
+@word@---
+
+%%%%
 # fire
 rF
-
-%%%%
-rF+
-
-%%%%
-rF++
-
-%%%%
-rF+++
-
-%%%%
-rF-
-
-%%%%
-rF--
-
-%%%%
-rF---
 
 %%%%
 # cold
 rC
 
 %%%%
-rC+
-
-%%%%
-rC++
-
-%%%%
-rC+++
-
-%%%%
-rC-
-
-%%%%
-rC--
-
-%%%%
-rC---
-
-%%%%
-%%%%
 # negative energy
 rN
-
-%%%%
-rN+
-
-%%%%
-rN++
-
-%%%%
-rN+++
-
-%%%%
-rN-
-
-%%%%
-rN--
-
-%%%%
-rN---
 
 %%%%
 # poison

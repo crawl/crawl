@@ -174,6 +174,7 @@ void init_localisation()
     static const text_pattern punct_arg_patt("@punct[^@]*@", true);
     static const text_pattern glyph_arg_patt("@glyph[^@]*@", true);
     static const text_pattern adj_arg_patt("@adj[^@]*@");
+    static const text_pattern word_arg_patt("@word[^@]*@", true);
     static const text_pattern any_arg_patt("@any[^@]*@");
     static const text_pattern str_arg_patt("@[^@]+@");
     static const text_pattern a_an_patt("^an? ");
@@ -196,6 +197,7 @@ void init_localisation()
         pattern = punct_arg_patt.replace(pattern, "([.!?]+)");
         pattern = glyph_arg_patt.replace(pattern, "(.+)");
         pattern = adj_arg_patt.replace(pattern, "([a-zA-Z0-9 +-]*)");
+        pattern = word_arg_patt.replace(pattern, "([a-zA-Z0-9+-]+)");
         // @any@ allows any chars
         pattern = any_arg_patt.replace(pattern, "(.*)");
         // normal args can't span sentences
