@@ -373,7 +373,7 @@ def get_preprocessed_cpp_lines(filename, strip_whitespace=True):
                 continue
 
         lines = re.sub(r"^\s*#\s*", "#", line)
-        if line.startswith("#include"):
+        if re.match("^ *# *include", line):
             continue
 
         result.append(line)
