@@ -1453,10 +1453,10 @@ public:
         return "Your mantle of jade crumbles away.";
     }
 
-    // Percentage HP increase of crystals
+    // HP of crystals
     int get_effect_size(int skill = -1) const override
     {
-        return max(0, scaling_value(FormScaling().Base(100).Scaling(75), skill));
+        return max(0, scaling_value(FormScaling().Base(13).Scaling(12), skill));
     }
 };
 
@@ -1468,10 +1468,10 @@ private:
 public:
     static const FormHypnogecko &instance() { static FormHypnogecko inst; return inst; }
 
-    // Percentage HP increase of shed tail
+    // HP of shed tail
     int get_effect_size(int skill = -1) const override
     {
-        return max(0, scaling_value(FormScaling().Base(100).Scaling(100), skill));
+        return max(0, scaling_value(FormScaling().Base(12).Scaling(12), skill));
     }
 
     // Additional chance to land distraction stabs
@@ -2879,6 +2879,7 @@ static monster* _jademantle_make_crystal(monster_type type, bool quiet)
 {
     mgen_data mg(type, BEH_FRIENDLY, you.pos(), MHITYOU);
     mg.set_summoned(&you, MON_SUMM_JADEMANTLE, 0, false, false);
+    mg.hp = get_form()->get_effect_size();
     coord_def pos = you.pos();
     switch (type)
     {
@@ -2902,10 +2903,6 @@ static monster* _jademantle_make_crystal(monster_type type, bool quiet)
         mon->behaviour = BEH_SEEK;
         mon->speed_increment = 80;
         you.props.erase(JADEMANTLE_CRYSTAL_REVIVAL_KEY + to_string(mon->type));
-
-        // Scale HP with shapeshifting skill.
-        mon->max_hit_points = mon->max_hit_points * get_form()->get_effect_size() / 100;
-        mon->hit_points = mon->max_hit_points;
 
         if (!quiet)
             mprf("%s finishes recrystalising.", mon->name(DESC_THE).c_str());

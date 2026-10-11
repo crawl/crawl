@@ -2013,7 +2013,7 @@ void hypnogecko_tail_fineff::fire()
 
     mgen_data mg(MONS_HYPNOTAIL, BEH_FRIENDLY, you.pos(), MHITNOT, MG_FORCE_PLACE);
     mg.set_summoned(&you, MON_SUMM_HYPNOTAIL, random_range(150, 220), false);
-    mg.hp = random_range(10, 14) * get_form(transformation::hypnogecko)->get_effect_size() / 100;
+    mg.hp = get_form(transformation::hypnogecko)->get_effect_size();
 
     // Determine either where to move the player or where to drop the tail.
     if (!monster_habitable_grid(MONS_HYPNOTAIL, you.pos())

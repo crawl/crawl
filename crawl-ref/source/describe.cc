@@ -7986,10 +7986,10 @@ static string _describe_talisman_form(transformation form_type)
         _maybe_populate_form_table(items, bind(&Form::get_effect_chance, form, placeholders::_1), "Daze Power", skill, 0, false, false);
     }
     if (form_type == transformation::jademantle)
-        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Crystal HP", skill, 0, true, false);
+        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Crystal HP", skill, 0, false, false);
     if (form_type == transformation::hypnogecko)
     {
-        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Shed Tail HP", skill, 0, true, false);
+        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Shed Tail HP", skill, 0, false, false);
         _maybe_populate_form_table(items, bind(&Form::get_effect_chance, form, placeholders::_1), "Distraction Stab Chance", skill, 0, true, true);
     }
     if (form_type == transformation::mistmane)
