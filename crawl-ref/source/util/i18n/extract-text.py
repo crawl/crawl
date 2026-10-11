@@ -1320,6 +1320,8 @@ def dummy_up_keys(line):
     line = re.sub(r"\b(menu_colour *\([^,]+,[^,]+,)[^,)]+", "$1, dummy", line)
     # 1st arg is context
     line = re.sub(r"(?<=localise_in_context\()[^,]+", "dummy", line)
+    # 1st arg is identifier
+    line = re.sub(r'(json_write_[a-z]+|push_ui_layout) *\( *"[^"]+"', '$1(dummy', line)
     return line
 
 def extract_cpp_strings(line, filter_results):
