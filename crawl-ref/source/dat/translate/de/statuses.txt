@@ -1328,7 +1328,7 @@ Das Zeichen des Wächters auf dir verblasst.
 %%%%
 
 %%%%
-Slay
+{status}Slay
 Töten
 %%%%
 wereblooded

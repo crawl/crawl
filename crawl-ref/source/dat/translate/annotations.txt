@@ -80,41 +80,47 @@ evoker
 
 # attribute +/-
 %%%%
+@word@+@num@
+
+%%%%
+@word@-@num@
+
+%%%%
 # strength
-Str@num@
+Str
 
 %%%%
 # dexterity
-Dex@num@
+Dex
 
 %%%%
 # intelligence
-Int@num@
+Int
 
 %%%%
-HP@num@
+HP
 
 %%%%
-MP@num@
+MP
 
 %%%%
 # armour class
-AC@num@
+AC
 
 %%%%
 # evasion
-EV@num@
+EV
 
 %%%%
 # shields
-SH@num@
+SH
 
 %%%%
 # stealth
 Stlth
 
 %%%%
-Slay@num@
+Slay
 
 %%%%
 

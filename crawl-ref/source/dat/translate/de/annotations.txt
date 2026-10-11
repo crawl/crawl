@@ -80,42 +80,48 @@ evozierbar
 
 # attribute +/-
 %%%%
+@word@+@num@
+@word@+@num@
+%%%%
+@word@-@num@
+@word@-@num@
+%%%%
 # strength
-Str@num@
-Stä@num@
+Str
+Stä
 %%%%
 # dexterity
-Dex@num@
-Ges@num@
+Dex
+Ges
 %%%%
 # intelligence
-Int@num@
-Int@num@
+Int
+Int
 %%%%
-HP@num@
-TP@num@
+HP
+TP
 %%%%
-MP@num@
-MP@num@
+MP
+MP
 %%%%
 # armour class
-AC@num@
-RK@num@
+AC
+RK
 %%%%
 # evasion
-EV@num@
-AW@num@
+EV
+AW
 %%%%
 # shields
-SH@num@
-SCH@num@
+SH
+SCH
 %%%%
 # stealth
 Stlth
 Heiml
 %%%%
-Slay@num@
-Töten@num@
+Slay
+Töten
 %%%%
 
 # resistances +/-
