@@ -210,8 +210,12 @@ static void _climb_message(dungeon_feature_type stair, bool going_up,
 
     if (feat_is_portal(stair))
     {
-        if (stair != DNGN_ENTER_CRUCIBLE)
+        if (stair != DNGN_ENTER_CRUCIBLE
+            && stair != DNGN_ENTER_ARENA
+            && stair != DNGN_ENTER_XOM_ARENA)
+        {
             mpr("The world spins around you as you enter the gateway.");
+        }
     }
     else if (feat_is_escape_hatch(stair))
     {
@@ -893,6 +897,8 @@ void floor_transition(dungeon_feature_type how,
     {
         mpr("Thank you for visiting Hell. Please come again soon.");
     }
+    else if (old_level.branch == BRANCH_XOM_ARENA)
+        mprf("You exit %s.", getMiscString("xom_arena_name").c_str());
 
     if (how == DNGN_EXIT_ABYSS
         || how == DNGN_EXIT_PANDEMONIUM

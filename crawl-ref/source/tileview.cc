@@ -235,6 +235,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         }
         return;
 
+    case BRANCH_XOM_ARENA:
     case BRANCH_PANDEMONIUM:
         flv.floor = tile_dngn_coloured(TILE_FLOOR_DEMONIC, env.floor_colour);
         if (env.rock_colour == LIGHTRED)

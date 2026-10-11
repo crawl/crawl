@@ -1204,6 +1204,11 @@ POP_DEPTHS,
   {  1,  1,   25, FLAT, MONS_SEWAGE_SOVEREIGN },
   {  1,  1,   25, FLAT, MONS_SCRAPSHELL_CHIMERA },
 },
+
+{ // Xom Arena
+  {  1,  1,    5, FLAT, MONS_SHAPESHIFTER },
+},
+
 };
 
 COMPILE_CHECK(ARRAYSZ(population) == NUM_BRANCHES);
@@ -1359,6 +1364,7 @@ static const vector<pop_entry> population_water[] =
     GENERIC_WATER_POP, // Crucible
     GENERIC_WATER_POP, // Necropolis
     GENERIC_WATER_POP, // Gulch
+    GENERIC_WATER_POP, // Xom Arena
 };
 COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
 
@@ -1464,6 +1470,7 @@ static const vector<pop_entry> population_lava[] =
     GENERIC_LAVA_POP, // Crucible
     GENERIC_LAVA_POP, // Necropolis
     GENERIC_LAVA_POP, // Gulch
+    GENERIC_LAVA_POP, // Xom Arena
 };
 
 COMPILE_CHECK(ARRAYSZ(population_lava) == NUM_BRANCHES);

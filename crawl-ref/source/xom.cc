@@ -29,6 +29,8 @@
 #include "english.h"
 #include "env.h"
 #include "errors.h"
+#include "ghost.h"
+#include "god-abil.h"
 #include "god-item.h"
 #include "item-name.h"
 #include "item-prop.h"
@@ -4963,6 +4965,13 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
     {
         XOM_BAD_CHAOS_REINFORCEMENTS, 0, 0, 80
     },
+    {
+        XOM_BAD_DUEL, 25, 0, 60, [](int)
+        {
+            return !player_in_branch_recursive(BRANCH_XOM_ARENA)
+                   && you.experience_level >= 7;
+        }, XOM_EXPLORE_HEALTHY
+    },
     // Highly circumstantial effects with less total
     // chances than their weight would seem to show.
     {
@@ -5533,6 +5542,92 @@ static void _xom_chaos_reinforcements(int)
     }
 }
 
+static void _xom_duel(int)
+{
+    // Save the player's location before we move them.
+    const level_id orig_place = level_id::current();
+
+    stop_delay(true);
+    down_stairs(DNGN_ENTER_XOM_ARENA);
+
+    mgen_data mg(RANDOM_MONSTER, BEH_HOSTILE, you.pos(), MHITNOT,
+                 MG_NONE, GOD_XOM);
+
+    // Three major styles, chosen at random:
+
+    // 1) Some random floor-appropriate monsters
+    if (!one_chance_in(5))
+    {
+        mg.place = orig_place;
+        mg.set_range(4, 8, 3);
+
+        // For places with no natural population table, use the dungeon's.
+        if (orig_place.branch == BRANCH_TEMPLE
+            || orig_place.branch == BRANCH_BAZAAR
+            || orig_place.branch == BRANCH_ARENA
+            || orig_place.branch == BRANCH_TROVE)
+        {
+            mg.place.branch = BRANCH_DUNGEON;
+            mg.place.depth = you.experience_level;
+        }
+        else
+        {
+            if (mg.place.branch == BRANCH_DUNGEON)
+                mg.place.depth += 1;
+            else
+                mg.place.depth += 5;
+        }
+
+        int to_make = 2
+                      + (you.experience_level > 10 ? coinflip() : 0)
+                      + (you.experience_level > 16 ? 1 : 0)
+                      + (you.experience_level >= 25 ? coinflip() : 0);
+
+        for (int i = 0; i < to_make; ++i)
+        {
+            mg.cls = resolve_monster_type(RANDOM_MONSTER, mg.base_type,
+                                          &mg.place, nullptr, false);
+            if (monster* mon = create_monster(mg))
+                behaviour_event(mon, ME_ANNOY, &you, you.pos());
+        }
+    }
+    // 2) A very sad Pan lord
+    else if (!one_chance_in(4) && you.experience_level >= 14)
+    {
+        mg.cls = MONS_PANDEMONIUM_LORD;
+
+        if (monster* mons = create_monster(mg))
+        {
+            // Starting at XL 25, you can get real Pan lords!
+            if (!x_chance_in_y(you.experience_level - 24, 3))
+            {
+                ghost_demon ghd;
+                ghd.init_xom_pandemonium_lord(you.experience_level);
+                mons->spells.clear();
+                mons->set_ghost(ghd);
+                mons->ghost_demon_init();
+                mons->props[XOM_PAN_LORD_DESC] = "most pitiful";
+                behaviour_event(mons, ME_ANNOY, &you, you.pos());
+            }
+        }
+    }
+    // 3) Something completely harmless.
+    else
+    {
+        const int to_make = random_range(8, 12);
+        mg.cls = MONS_BUTTERFLY;
+        for (int i = 0; i < to_make; ++i)
+        {
+            if (monster* mons = create_monster(mg))
+                mons->add_ench(mon_enchant(ENCH_SLOWLY_DYING, nullptr, random_range(30, 60)));
+        }
+    }
+
+    god_speaks(GOD_XOM, _get_xom_speech("duel").c_str());
+
+    take_note(Note(NOTE_XOM_EFFECT, -1, -1, "duel"), true);
+}
+
 /// Place a one-tile chaos cloud on the player, with minor spreading.
 static void _xom_chaos_cloud(int /*sever*/)
 {
@@ -5633,6 +5728,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BAD_PSEUDO_BANISHMENT, {"pseudo-banishment",
                                   _xom_pseudo_banishment }},
     { XOM_BAD_CHAOS_REINFORCEMENTS, {"chaos reinforcements", _xom_chaos_reinforcements }},
+    { XOM_BAD_DUEL, {"duel", _xom_duel }},
 };
 
 static void _do_xom_event(xom_event_type event_type, int tension)

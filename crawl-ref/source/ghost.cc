@@ -423,6 +423,93 @@ void ghost_demon::init_pandemonium_lord(bool friendly)
     colour = one_chance_in(10) ? colour_t{ETC_RANDOM} : random_monster_colour();
 }
 
+static bool _add_if_not_present(monster_spells& spells, spell_type spell)
+{
+    for (mon_spell_slot slot : spells)
+        if (slot.spell == spell)
+            return false;
+
+    spells.push_back({spell, 25, MON_SPELL_MAGICAL});
+
+    return true;
+}
+
+static void _add_dramatic_spell(monster_spells& spells)
+{
+    spell_type spell;
+    do
+    {
+        spell = random_choose_weighted
+        (
+            10, SPELL_FIRE_STORM,
+            10, SPELL_GLACIATE,
+            10, SPELL_POLAR_VORTEX,
+            10, SPELL_CONJURE_BALL_LIGHTNING,
+            10, SPELL_ORB_OF_ELECTRICITY,
+            5, SPELL_PARALYSE,
+            10, SPELL_PLASMA_BEAM,
+            10, SPELL_CORROSIVE_BOLT,
+            5, SPELL_HELLFIRE_MORTAR
+        );
+    }
+    while (!_add_if_not_present(spells, spell));
+}
+
+static void _add_embarassing_spell(monster_spells& spells)
+{
+    spell_type spell;
+    do
+    {
+        spell = random_choose_weighted
+        (
+            10, SPELL_WARNING_CRY,
+            10, SPELL_SEARING_RAY,
+            10, SPELL_SCORCH,
+            10, SPELL_SUMMON_MINOR_DEMON,
+            10, SPELL_SUMMON_SCORPIONS,
+            5, SPELL_UFETUBI_SWARM,
+            10, SPELL_SUMMON_DEMON,
+            10, SPELL_FOXFIRE,
+            10, SPELL_FREEZE,
+            15, SPELL_VENOM_BOLT,
+            15, SPELL_BOLT_OF_MAGMA,
+            15, SPELL_THROW_ICICLE,
+            20, SPELL_BLINK_AWAY
+        );
+    }
+    while (!_add_if_not_present(spells, spell));
+}
+
+void ghost_demon::init_xom_pandemonium_lord(int pow)
+{
+    // Initialise resists and a few other things, though most stats will be overridden.
+    init_pandemonium_lord(false);
+    cloud_ring_ench = ENCH_NONE;
+
+    max_hp = random_range(pow * 4, pow * 5);
+    ac = ac * 2 / 3;
+    ev = ev * 2 / 3;
+    damage = 15 + roll_dice(2, pow / 5);
+    spells.clear();
+
+    // Two modes: 'Scary spells but extremely low HD' and 'Reasonable stats, but low-level spells'
+    if (one_chance_in(3))
+    {
+        xl = random_range(5, max(5, pow / 3));
+        _add_dramatic_spell(spells);
+        _add_dramatic_spell(spells);
+    }
+    else
+    {
+        _add_embarassing_spell(spells);
+        _add_embarassing_spell(spells);
+        _add_embarassing_spell(spells);
+        xl = random_range(pow / 2, pow * 2 / 3);
+        damage += 10;
+        max_hp = max_hp * 12 / 10;
+    }
+}
+
 void ghost_demon::init_player_ghost()
 {
     // don't preserve transformations for ghosty purposes

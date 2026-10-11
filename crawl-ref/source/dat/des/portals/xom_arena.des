@@ -1,0 +1,54 @@
+default-depth: Arena?
+
+{{
+function xom_arena_setup(e)
+    e.tags("no_dump no_item_gen allow_dup")
+    e.orient("encompass")
+    e.kfeat("+ = closed_clear_door")
+    e.kfeat("< = exit_xom_arena")
+    e.kprop("1'< = no_tele_into")
+    e.kmask("1'< = no_monster_gen")
+    e.mons("generate_awake ugly_thing att:good_neutral")
+    e.lua_marker("v", props_marker { veto_destroy="veto" })
+end
+}}
+
+NAME: xom_arena
+: xom_arena_setup(_G)
+MAP
+   vvvvvvvvv
+  vv'1'v'1'vv
+ vv''ooooo''vv
+vv'1oo...oo1'vv
+v''oo.....oo''v
+v1oo.......oo1v
+voo.........oov
+vo.....A.....ov
+voo.........oov
+v1oo.......oo1v
+v''oo.....oo''v
+vv'1oo...oo1'vv
+ vv''oo+oo''vv
+  vv'1o<o1'vv
+   vvvvvvvvv
+ENDMAP
+
+NAME: xom_arena_2
+: xom_arena_setup(_G)
+MAP
+vvvvvvvvvvvvvvv
+vvv'1'o1o'1'vvv
+vvooooooooooovv
+v'o.........o'v
+v1o.b.....b.o1v
+v'o.........o'v
+voo.........oov
+v1o....A....o1v
+voo.........oov
+v'o.........o'v
+v1o.b.....b.o1v
+v'o.........o'v
+vvooooo+ooooovv
+vvv'1'o<o'1'vvv
+vvvvvvvvvvvvvvv
+ENDMAP

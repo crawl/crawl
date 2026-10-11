@@ -444,6 +444,7 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_EXIT_BAZAAR:
     case DNGN_EXIT_TROVE:
     case DNGN_EXIT_ARENA:
+    case DNGN_EXIT_XOM_ARENA:
         return TILE_DNGN_PORTAL;
     case DNGN_EXIT_NECROPOLIS:
         return TILE_DNGN_EXIT_NECROPOLIS;
@@ -4800,6 +4801,8 @@ tileidx_t tileidx_branch(const branch_type br)
         return TILE_DNGN_PORTAL_DESOLATION;
     case BRANCH_ARENA:
         return TILE_DNGN_ALTAR_OKAWARU;
+    case BRANCH_XOM_ARENA:
+        return TILE_DNGN_ALTAR_XOM;
     case BRANCH_CRUCIBLE:
         return TILE_DNGN_ALTAR_MAKHLEB;
     default:

@@ -1163,6 +1163,46 @@ else
     return "plaything"
 end
 }}
+%%%%
+Xom duel
+
+w:50
+Xom invites you to prove yourself in combat! (Or flee; that is also acceptable.)
+
+Xom transports you to a magical carnival.
+
+Xom sets you up on a blind date.
+
+Xom invites you to a fabulous tea party.
+
+"This ought to be fun."
+
+"Entertain your god!"
+
+"Only one may leave!"
+
+"Dance, toys, dance!"
+%%%%
+Xom arena win
+
+w:30
+Xom crowns you victorious!
+
+Xom crowns you mildly entertaining.
+
+Xom crowns you minimally acceptable.
+
+A tiny paper crown materialises on your head.
+
+Xom thinks you've had quite enough fun for the moment.
+
+"See? Making new friends is easy."
+
+Xom puts you back where you came from.
+
+Xom ushers you out before you can damage the room any further.
+
+Xom hoots with approval!
 ######################################
 # Miscellaneous god messages.
 ######################################

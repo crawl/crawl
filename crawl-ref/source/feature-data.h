@@ -564,6 +564,7 @@ PORTAL_ENTRANCE(DNGN_ENTER_WIZLAB, "magical portal", "enter_wizlab", ETC_SHIMMER
 PORTAL_ENTRANCE(DNGN_ENTER_DESOLATION, "crumbling gateway", "enter_desolation", WHITE),
 PORTAL_ENTRANCE(DNGN_ENTER_ARENA, "gate leading to Okawaru's Arena", "enter_arena", WHITE),
 PORTAL_ENTRANCE(DNGN_ENTER_CRUCIBLE, "gate leading to the Crucible of Flesh", "enter_crucible", WHITE),
+PORTAL_ENTRANCE(DNGN_ENTER_XOM_ARENA, "gate leading to Xom's Arena", "enter_xom_arena", ETC_RANDOM),
 #if TAG_MAJOR_VERSION == 34
 PORTAL_EXIT(DNGN_EXIT_PORTAL_VAULT, "gate leading back out of this place", "exit_portal_vault", ETC_SHIMMER_BLUE),
 #endif
@@ -581,6 +582,7 @@ PORTAL_EXIT(DNGN_EXIT_GULCH, "gate leading back out of this place", "exit_gulch"
 PORTAL_EXIT(DNGN_EXIT_WIZLAB, "portal leading out of this place", "exit_wizlab", ETC_SHIMMER_BLUE),
 PORTAL_EXIT(DNGN_EXIT_DESOLATION, "gate leading back out of this place", "exit_desolation", WHITE),
 PORTAL_EXIT(DNGN_EXIT_ARENA, "gate leading back out of this place", "exit_arena", WHITE),
+PORTAL_EXIT(DNGN_EXIT_XOM_ARENA, "gate leading back out of this place", "exit_xom_arena", ETC_RANDOM),
 PORTAL_EXIT(DNGN_EXIT_CRUCIBLE, "gate leading back out of this place", "exit_crucible", WHITE),
 
 #define BRANCH_ENTRANCE(enum, name, vaultname)\

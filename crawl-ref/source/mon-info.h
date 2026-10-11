@@ -16,6 +16,8 @@ using std::vector;
 #define ACTUAL_SPELLCASTER_KEY "actual_spellcaster"
 #define NECROMANCER_KEY "necromancer"
 
+#define XOM_PAN_LORD_DESC "xom_pan_lord_desc"
+
 enum monster_info_flags
 {
     MB_STABBABLE,

@@ -1500,14 +1500,17 @@ static void _place_player(dungeon_feature_type stair_taken,
     you.finalise_movement();
 
     // Dump all arena contents on the player's feet when exiting the arena
-    if (stair_taken == DNGN_EXIT_ARENA && you.props.exists(OKAWARU_DUEL_ITEMS_KEY))
+    if ((stair_taken == DNGN_EXIT_ARENA || stair_taken == DNGN_EXIT_XOM_ARENA)
+        && you.props.exists(OKAWARU_DUEL_ITEMS_KEY))
     {
         // If the player has emerged over deep water / lava, put something solid
         // under us so that items from the duel are not lost
         if ((env.grid(you.pos()) == DNGN_DEEP_WATER && !player_likes_water(true)
              || env.grid(you.pos()) == DNGN_LAVA))
         {
-            env.grid(you.pos()) = DNGN_ALTAR_OKAWARU;
+            env.grid(you.pos()) =
+                stair_taken == DNGN_EXIT_ARENA ? DNGN_ALTAR_OKAWARU
+                                               : DNGN_ALTAR_XOM;
             set_terrain_changed(you.pos());
         }
 

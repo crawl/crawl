@@ -402,6 +402,7 @@ static bool _make_zig(item_def &zig)
 {
     if (feat_is_critical(env.grid(you.pos()))
         || player_in_branch(BRANCH_ARENA)
+        || player_in_branch(BRANCH_XOM_ARENA)
         || is_temp_terrain(you.pos()))
     {
         mpr("You can't place a gateway to a ziggurat here.");

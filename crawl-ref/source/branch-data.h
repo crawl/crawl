@@ -454,6 +454,16 @@ const Branch branches[NUM_BRANCHES] =
       {}
     },
 
+    { BRANCH_XOM_ARENA, NUM_BRANCHES, -1, -1, 1, 0,
+      brflag::no_x_level_travel | brflag::no_items | brflag::fully_map,
+      DNGN_ENTER_XOM_ARENA, DNGN_EXIT_XOM_ARENA, NUM_FEATURES,
+      "Arena?", "Xom's Arena of Wonders", "Arena?",
+      "You are whisked away to a strange place.",
+      BLACK, BLACK,
+      '?', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE,
+      {}
+    },
+
 };
 
 /*
