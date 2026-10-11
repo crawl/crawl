@@ -169,6 +169,9 @@ public:
     // XXX: mistmane-specific
     virtual int get_cloud_duration(int /*skill*/ = -1) const { return 0; }
 
+    // XXX: jademantle-specific
+    virtual int get_skill_bonus(int /*skill*/ = -1) const { return 0; }
+
     virtual int get_effect_size(int /*skill*/ = -1) const { return 0; }
     virtual int get_effect_chance(int /*skill*/ = -1) const { return 0; }
 

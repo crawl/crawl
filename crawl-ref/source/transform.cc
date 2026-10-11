@@ -1458,6 +1458,19 @@ public:
     {
         return max(0, scaling_value(FormScaling().Base(13).Scaling(12), skill));
     }
+
+    // Indomitable HP on fully charging. (...not really a 'chance')
+    int get_effect_chance(int skill = -1) const override
+    {
+        return max(10, scaling_value(FormScaling().Base(15).Scaling(20), skill));
+    }
+
+    // Flat bonus to elemental magic skills (x10).
+    // Caps at +2 at minskill, but is worse below that.
+    int get_skill_bonus(int skill = -1) const
+    {
+        return min(20, max(0, scaling_value(FormScaling().Base(20).Scaling(20), skill)));
+    }
 };
 
 class FormHypnogecko : public Form
@@ -3054,7 +3067,7 @@ void jademantle_crystal_charge(spell_type spell)
         mprf(MSGCH_DURATION, "Your mantle thrums with power.");
         const int dur = random_range(15, 20);
         you.increase_duration(DUR_RESISTANCE, dur);
-        you.duration[DUR_INDOMITABLE] += random_range(1500, 2500);
+        you.duration[DUR_INDOMITABLE] += get_form()->get_effect_chance() * random_range(90, 110);
 
         // Set their charge timers to the same duration, so that you can't have
         // just one uncharge and immediately rebuff yourself.

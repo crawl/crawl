@@ -6537,7 +6537,7 @@ int player::skill(skill_type sk, int scale, bool real, bool include_temp) const
             case SK_ICE_MAGIC:
             case SK_EARTH_MAGIC:
             case SK_AIR_MAGIC:
-               level = level + (2 * scale);
+               level = level + (get_form()->get_skill_bonus() * scale / 10);
                break;
 
             default:
