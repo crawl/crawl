@@ -81,34 +81,34 @@ evozierbar
 # attribute +/-
 %%%%
 # strength
-Str@integer@
-Stä@integer@
+Str@num@
+Stä@num@
 %%%%
 # dexterity
-Dex@integer@
-Ges@integer@
+Dex@num@
+Ges@num@
 %%%%
 # intelligence
-Int@integer@
-Int@integer@
+Int@num@
+Int@num@
 %%%%
-HP@integer@
-TP@integer@
+HP@num@
+TP@num@
 %%%%
-MP@integer@
-MP@integer@
+MP@num@
+MP@num@
 %%%%
 # armour class
-AC@integer@
-RK@integer@
+AC@num@
+RK@num@
 %%%%
 # evasion
-EV@integer@
-AW@integer@
+EV@num@
+AW@num@
 %%%%
 # shields
-SH@integer@
-SCH@integer@
+SH@num@
+SCH@num@
 %%%%
 # stealth
 Stlth
@@ -120,8 +120,8 @@ Heiml+
 Stlth-
 Heiml-
 %%%%
-Slay@integer@
-Töten@integer@
+Slay@num@
+Töten@num@
 %%%%
 
 # resistances +/-

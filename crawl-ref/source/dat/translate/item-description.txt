@@ -14,37 +14,37 @@
 #################################
 
 %%%%
-It affects your AC (@integer@).
+It affects your AC (@num@).
 
 %%%%
-It affects your SH (@integer@).
+It affects your SH (@num@).
 
 %%%%
-It affects your shielding (@integer@).
+It affects your shielding (@num@).
 
 %%%%
-It affects your evasion (@integer@).
+It affects your evasion (@num@).
 
 %%%%
-It affects your strength (@integer@).
+It affects your strength (@num@).
 
 %%%%
-It affects your intelligence (@integer@).
+It affects your intelligence (@num@).
 
 %%%%
-It affects your dexterity (@integer@).
+It affects your dexterity (@num@).
 
 %%%%
-It affects your accuracy and damage with ranged weapons and melee (@integer@).
+It affects your accuracy and damage with ranged weapons and melee (@num@).
 
 %%%%
 It insulates you from electricity.
 
 %%%%
-It affects your health (@integer@).
+It affects your health (@num@).
 
 %%%%
-It affects your magic capacity (@integer@).
+It affects your magic capacity (@num@).
 
 %%%%
 It lets you see invisible.

@@ -14,38 +14,38 @@
 #################################
 
 %%%%
-It affects your AC (@integer@).
-Dieser Gegenstand beeinflusst deine Rüstungsklasse (@integer@).
+It affects your AC (@num@).
+Dieser Gegenstand beeinflusst deine Rüstungsklasse (@num@).
 %%%%
-It affects your SH (@integer@).
-Dieser Gegenstand beeinflusst deinen Schildwert (@integer@).
+It affects your SH (@num@).
+Dieser Gegenstand beeinflusst deinen Schildwert (@num@).
 %%%%
-It affects your shielding (@integer@).
-Dieser Gegenstand beeinflusst deinen Schildwert (@integer@).
+It affects your shielding (@num@).
+Dieser Gegenstand beeinflusst deinen Schildwert (@num@).
 %%%%
-It affects your evasion (@integer@).
-Dieser Gegenstand beeinflusst dein Ausweichen (@integer@).
+It affects your evasion (@num@).
+Dieser Gegenstand beeinflusst dein Ausweichen (@num@).
 %%%%
-It affects your strength (@integer@).
-Dieser Gegenstand beeinflusst deine Stärke (@integer@).
+It affects your strength (@num@).
+Dieser Gegenstand beeinflusst deine Stärke (@num@).
 %%%%
-It affects your intelligence (@integer@).
-Dieser Gegenstand beeinflusst deine Intelligenz (@integer@).
+It affects your intelligence (@num@).
+Dieser Gegenstand beeinflusst deine Intelligenz (@num@).
 %%%%
-It affects your dexterity (@integer@).
-Dieser Gegenstand beeinflusst deine Geschicklichkeit (@integer@).
+It affects your dexterity (@num@).
+Dieser Gegenstand beeinflusst deine Geschicklichkeit (@num@).
 %%%%
-It affects your accuracy and damage with ranged weapons and melee (@integer@).
-Dieser Gegenstand beeinflusst deine Treffsicherheit und deinen Schaden mit Distanzwaffen und im Nahkampf (@integer@).
+It affects your accuracy and damage with ranged weapons and melee (@num@).
+Dieser Gegenstand beeinflusst deine Treffsicherheit und deinen Schaden mit Distanzwaffen und im Nahkampf (@num@).
 %%%%
 It insulates you from electricity.
 Dieser Gegenstand isoliert dich gegen Elektrizität.
 %%%%
-It affects your health (@integer@).
-Dieser Gegenstand beeinflusst deine Gesundheit (@integer@).
+It affects your health (@num@).
+Dieser Gegenstand beeinflusst deine Gesundheit (@num@).
 %%%%
-It affects your magic capacity (@integer@).
-Dieser Gegenstand beeinflusst deine magische Kapazität (@integer@).
+It affects your magic capacity (@num@).
+Dieser Gegenstand beeinflusst deine magische Kapazität (@num@).
 %%%%
 It lets you see invisible.
 Dieser Gegenstand ermöglicht dir Unsichtbares zu sehen.

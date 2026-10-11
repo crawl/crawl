@@ -170,7 +170,6 @@ void init_localisation()
     // convert paramaterised string to regex pattern
     static const text_pattern player_name_patt("@player_name[^@]*@", true);
     static const text_pattern num_arg_patt("@num[^@]*@", true);
-    static const text_pattern int_arg_patt("@integer[^@]*@", true);
     static const text_pattern float_arg_patt("@float[^@]*@", true);
     static const text_pattern punct_arg_patt("@punct[^@]*@", true);
     static const text_pattern glyph_arg_patt("@glyph[^@]*@", true);
@@ -191,8 +190,7 @@ void init_localisation()
         pattern = escape_regex_specials(pattern);
         pattern = replace_all(pattern, "@two_letter_code@", "([A-Z][A-Za-z])");
         pattern = player_name_patt.replace(pattern, "([A-Za-z0-9._ -]+)");
-        pattern = num_arg_patt.replace(pattern, "([0-9]+)");
-        pattern = int_arg_patt.replace(pattern, "([\\+\\-]?[0-9]+)");
+        pattern = num_arg_patt.replace(pattern, "([\\+\\-]?[0-9]+)");
         // float is problematic because decimal point may already be changed by user's locale
         //pattern = float_arg_patt.replace(pattern, "([\\+|\\-]?[0-9]*[\\.,][0-9]+)");
         pattern = punct_arg_patt.replace(pattern, "([.!?]+)");
