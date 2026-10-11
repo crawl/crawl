@@ -1858,8 +1858,13 @@ whenever beings cast spells. Touching those clouds allows them to convert that
 leftover magic into unnerring projectiles against nearby foes.
 
 This third eye even allows one to see from further distances than would
-otherwise be possible, but be warned - ceatures perceived this way may perceive
-you back.
+otherwise be possible{{
+    if you.get_base_mutation_level("+LOS") > 0 then
+        return " (but your own vision is already as long as possible)."
+    else
+        return ", but be warned - ceatures perceived this way may perceive you back."
+    end
+}}
 %%%%
 wand of acid
 
