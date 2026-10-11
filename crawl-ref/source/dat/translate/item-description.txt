@@ -226,7 +226,8 @@ This ancient artefact cannot be changed by magic or mundane means.
 #################################
 
 %%%%
-Base accuracy: @integer@  Base damage: @num@  Base attack delay: @float@
+# accuracy can be infinite (normally shown as "∞", but can be "inf" when charset is ASCII)
+Base accuracy: @arg@  Base damage: @num@  Base attack delay: @float@
 
 %%%%
 Firing bullets:    Base damage: @num@

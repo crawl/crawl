@@ -226,8 +226,9 @@ Dieses uralte Artefakt kann weder durch magische noch weltliche Mittel veränder
 #################################
 
 %%%%
-Base accuracy: @integer@  Base damage: @num@  Base attack delay: @float@
-Grundgenauigkeit: @integer@  Grundschaden: @num@  Grundangriffsverzögerung: @float@
+# accuracy can be infinite (normally shown as "∞", but can be "inf" when charset is ASCII)
+Base accuracy: @arg@  Base damage: @num@  Base attack delay: @float@
+Grundgenauigkeit: @arg@  Grundschaden: @num@  Grundangriffsverzögerung: @float@
 %%%%
 Firing bullets:    Base damage: @num@
 Feuern von Kugeln:    Grundschaden: @num@
