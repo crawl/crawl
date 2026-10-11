@@ -2893,7 +2893,6 @@ item_def* get_item_swap_back(const item_def& item)
         return nullptr;
 
     const mid_t id = item.props[ITEM_SWAP_BACK_KEY].get_int();
-    mprf("Swapping back to %d", id);
 
     for (int i = 0; i < MAX_GEAR; ++i)
     {
