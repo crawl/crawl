@@ -2449,7 +2449,6 @@ static void _choose_curse_knowledge()
     you.props.erase(CURSE_KNOWLEDGE_KEY);
     CrawlVector &curses = you.props[CURSE_KNOWLEDGE_KEY].get_vector();
 
-    //shuffle_array(valid_curses);
     int num_valid = static_cast<int>(valid_curses.size());
 
     for (int i = 0; i < min(num_valid, 3); ++i)
