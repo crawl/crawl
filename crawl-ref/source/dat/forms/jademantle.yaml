@@ -3,6 +3,7 @@ equivalent_mons: shapeshifter
 talisman: jade
 skill: {min: 8, max: 14}
 short_name: Jade
+long_name: jademantle-form
 special_damage: 2d0+(11/14)
 special_damage_name: Surge Dmg
 melds: [helmet, cloak]
