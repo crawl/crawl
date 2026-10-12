@@ -19,10 +19,11 @@ Pietät für das Erforschen des Tempels.
 %%%%
 Orcish Mines
 
-Die Ork-Minen sind voll mit den im Kerker heimischen Höhlenorks, ihren
-humanoiden Arbeitern und haufenweise frisch abgebautem Gold.
-Unternehmungslustige Kaufleute haben Handelsposten eingerichtet, um die Orks
-von letzterem zu befreien.
+In den Orkischen Minen leben Orks, die sich im Kerker niedergelassen haben,
+mit ihren humanoiden Verbündeten und haufenweise frisch abgebautem Gold.
+Geschäftstüchtige Händler, die jedem Besucher etwas verkaufen, haben
+Handelsposten unter den Orks und ihren Verbündeten eingerichtet, um dieses
+Gold gewinnbringend zu nutzen.
 %%%%
 Elven Halls
 
@@ -79,9 +80,11 @@ Schätze, die tief unten in geheimen, unzugänglichen Kammern verborgen sind.
 %%%%
 Vaults
 
-Möglicherweise von einem mächtigen Verrückten erbaut, sollen die Gewölbe
-große Schätze beherbergen. Die großzügig rund um den Eingang verteilen Blutspritzer
-deuten darauf hin, dass hier auch ein gewisses Maß an Gewalt auftritt.
+Die Gewölbe sollen große Schätze als auch versiegelte Übel beherbergen, deren
+Ursprung nur ihren Wächtern bekannt ist: dem Orden der Eisengebundenen.
+Eindringlinge stehen einer organisierten Verteidigung aus einstudierten
+Manövern gegenüber, aus Waffen und Arkanem, belebten Konstrukten, gezwungenen
+Verbündeten und gezähmten Bestien, die alle für ein gemeinsames Ziel kämpfen.
 %%%%
 Crypt
 
@@ -108,23 +111,31 @@ Dis
 Die Eiserne Stadt Dis ist die Heimat vieler der widerstandsfähigsten Wächter
 der Hölle. Diejenigen, die nicht in die Hallen von Dis gehören, werden merken, dass
 die Erde selbst sich ihnen entgegenstellt.
+
+Die Bosheit dieses metallenen Reiches korrodiert Ausrüstung.
 %%%%
 Gehenna
 
 Gehenna ist ein Reich der Lava, der Flammen und der Verdammnis. Auf diejenigen,
 die dort verweilen, werden Feuer und Schwefel herabregnen.
+
+Der beißende Rauch macht Schriftrollen unlesbar.
 %%%%
 Cocytus
 
 Kokytus ist ein bitteres und erfrorenes Ödland. Eindringlinge werden
 feststellen, dass die beißenden Winde und die eisigen Bewohner der Einöde ihr
 Vorankommen erschweren.
+
+Die eisige Kälte lässt Tränke gefrieren.
 %%%%
 Tartarus
 
 Tartarus ist eine zerfallende Unterwelt. Im Laufe der Zeit verzehren die
 Untoten, Dämonen und Teufel dieses Ortes das Leben eines jedem, der es wagt,
 einzutreten.
+
+Der allgegenwärtige Verfall schwächt die Willenskraft von Besuchern.
 %%%%
 Zot
 
@@ -145,17 +156,21 @@ auf diese Versuchsfelder des Wahnsinns schicken. Angeblich hat das Chaos eine
 gewisse Struktur, da Lugonu ein Komplott rund um diesen Ort und seine
 Bewohner aushecken zu scheint.
 
-Portale zum Abgrund gibt es in den Tiefen zuhauf.
+Viele Portale zum Abgrund korrumpieren eine tiefe Ebene des Kerkers.
 
-Der Abgrund besteht aus fünf unendlichen Ebenen. Die Abgrundsrune von Zot kann
+Der Abgrund besteht aus sieben unendlichen Ebenen. Die Abgrundsrune von Zot kann
 ab der dritten Ebene gefunden werden und ist in größeren Tiefen häufiger zu
 finden. Portale, die zurück in den Kerker führen, sind überall im Abgrund
 verstreut und werden häufiger in größeren Tiefen oder beim Tragen der
-Abgrundsrune gefunden. Abenteurer, die sich im Abhrund aufhalten, werden
-unwiderstehlich in die Tiefe gezogen. Durch das Töten von Monstern wird die
-Substanz des Abgrunds verformt und schließlich ein Ausgang geschaffen.
-Weiteres Ausharren wird Löcher in den Abgrund reißen, die den Abstieg in
-tiefere Ebenen ermöglichen.
+Abgrundsrune gefunden.
+
+Durch das Töten von Monstern wird die Substanz des Abgrunds verformt und
+schließlich ein Ausgang geschaffen. Weiteres Ausharren reißt Löcher in den
+Abgrund, die den Abstieg in tiefere Ebenen ermöglichen.
+
+Die Struktur des Abgrunds schenkt den Mächtigen größere Beachtung; egal wie
+sie dort ankommen, stellen erfahrenere Abenteurer fest, dass sie immer tiefer
+in die irrsinnige Weite dieses Reiches hineingezogen werden.
 %%%%
 Pandemonium
 
@@ -202,9 +217,7 @@ und manchmal exotischen Kreaturen bewacht wird. Am Ende wartet ein
 furchterregender Minotaur, der einen großen Haufen Beute bewacht, die er
 von den Leichen törichter Abenteurer geplündert hat.
 
-Vorsicht! Im Spießrutenlauf verhindert mächtige Magie Teleportation über weite Strecken.
-Schlimmer noch, einige dieser Komplexe bieten nur einen Ausgang... in die
-Höhle des Minotaurs.
+Teleportation über weite Strecken ist im Spießrutenlauf unmöglich.
 %%%%
 Bazaar
 
@@ -235,6 +248,19 @@ auflauern. Die Legenden erwähnen auch die wertvollen Gegenstände, die in die
 Abflusstunnel gespült wurden, vergessen und verschimmelt in den feuchten
 Höhlen liegen gelassen.
 %%%%
+Necropolis
+
+Während viele Orte im Kerker den seit langem begrabenen, ruhelosen Toten
+gewidmet sind, werden jene, deren Überreste noch frisch oder verschollen sind,
+in den schwebenden Zeremonienkammern der Nekropole gesammelt. Jede Seele wird
+dort bewahrt und von Wartungspersonal betreut, das sowohl ihr Leben als auch
+den Moment ihres Todes nachstellt und so Besuchern hilft, sich von den
+Verstorbenen zu verabschieden. Mit dem Aufkommen von Abenteurern, die nach der
+Kugel von Zot suchen, wurden diese Reiche umfunktioniert: Solche Geister sind
+von Wut geblendet und unkontrollierbar, also werden sowohl sie als auch ihre
+gestohlenen Besitztümer in diesen Reichen der Versöhnung eingesperrt und
+versiegelt.
+%%%%
 Ossuary
 
 Das Beinhaus ist eine kleine Gruft, die die Überreste und Grabbeigaben einiger
@@ -244,16 +270,19 @@ untoten Bewohner werden Plünderungen wohl kaum dulden.
 %%%%
 Bailey
 
-Der Burghof ist die noch immer bewohnte und gut bewachte Festung eines
-orkischen Fürsten. Die Schätze im Inneren werden sowohl durch physische Barrieren
+Der Burghof ist die besetzte und gut bewachte Festung eines skrupellosen
+Kriegsherrn. Die Schätze im Inneren werden sowohl durch physische Barrieren
 als auch durch eine große Anzahl gut bewaffneter humanoider Krieger geschützt.
 %%%%
 Ice Cave
 
-Die Eishöhle ist eine trostlose, aus massivem Eis geformte Höhle, in der das
-Echo bestialischer Schreie widerhallt. Die kunstvollen Schnitzereien und
-Statuen, die einst die Wände säumten, wurden durch jahrhundertelanges langsames
-Schmelzen und erneutes Gefrieren verformt und unkenntlich gemacht.
+Die {{ if you.branch() == "Elf" or you.branch() == "Swamp" or
+you.branch() == "Snake" or you.branch() == "Shoals" or you.branch() == "Spider"
+then return "Gletscherspalte"; else return "Eishöhle"; end }} ist eine
+trostlose, aus massivem Eis geformte Höhle, in der das Echo bestialischer
+Schreie widerhallt. Die kunstvollen Schnitzereien und Statuen, die einst die
+Wände säumten, wurden durch jahrhundertelanges langsames Schmelzen und erneutes
+Gefrieren verformt und unkenntlich gemacht.
 %%%%
 Volcano
 
@@ -261,6 +290,21 @@ Die aus riesigen Obsidianblöcken errichteten schwülen Kammern des Vulkans
 mögen einst als Tempel für eine seltsame Gottheit gedient haben, vielleicht
 aber auch als Wohnstätte eines mächtigen Feuerriesen. Die Luft flimmert vor
 drückender Hitze und das dumpfe Dröhnen des Vulkanherzens verstummt nie.
+%%%%
+Gulch
+
+Wie der obere Kerker über ein Abwassersystem verfügt, so ist es auch in den
+Gewölben. Diese Abwassersturzrinnen dienen als Auffangraum für angesammelten
+Müll, verschiedene aufgegebene Experimente, ungeordnet eindringende Schädlinge
+und die stark verstümmelten Leichen von Eindringlingen gleichermaßen. Eine große
+Menge mutagener Energie geht von der mystischen Schlacke und dem schimmeligen
+Wasser aus, die dort fließen, sodass bereits das Überschreiten der Schwelle neue
+Besucher vorübergehend mutieren lässt. Dennoch würde das berühmte
+Verteidigungskonzept der Gewölbe niemals eine potenzielle Sicherheitslücke außer
+Acht lassen: Ein geringes Maß an Aufsicht durch straffällig gewordene Wachen
+sorgt gerade noch für genug Kontrolle, um solche Rinnenmonster auf jeden
+loszulassen, der es wagen würde, verborgene Reichtümer aus solchen schmutzigen
+Kammern zu bergen.
 %%%%
 Wizlab
 
@@ -288,3 +332,16 @@ wieder auferstehen würde. Inmitten der Ruinen harren nur noch die letzten
 Kultisten der toten Götter, ihre ketzerischen Konstrukte und die Hüter des
 legendären Kultschatzes aus.
 %%%%
+Arena
+
+Okawarus am meisten begünstigte Anhänger erhalten Zugang zur Arena, um sich
+mit ihren Gegnern zu duellieren.
+%%%%
+Crucible
+
+Der Schmelztiegel des Fleisches ist eine höllische Grube, in der Makhlebs
+ergebenste Anhänger ebenso wie seine verhasstesten Feinde gezwungen werden,
+sich mit Blut zu weihen. Kein vernünftiger Sterblicher würde sich jemals
+freiwillig hierher begeben und doch kann selbst Opfern des größten Zorns des
+Zerstörers der Weg hinaus gewährt werden, sollten sie Gräueltaten verüben,
+die denen der dämonischen Folterer dieses Reiches in nichts nachstehen.
