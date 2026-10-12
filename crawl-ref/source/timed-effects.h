@@ -13,12 +13,14 @@ void handle_time();
 
 int count_malign_gateways(const actor& owner);
 
-bool end_terrain_changes(terrain_change_type type, mid_t source_mid = MID_NOBODY);
+bool end_terrain_changes(terrain_change_type type, mid_t source_mid = MID_NOBODY,
+                         bool update_map_knowledge = false);
 bool end_terrain_changes(const actor& source, terrain_change_type type = NUM_TERRAIN_CHANGE_TYPES);
 
 void end_enkindled_status();
 
-void timeout_terrain_changes(int duration, bool force = false);
+void timeout_terrain_changes(int duration, bool force = false,
+                             bool update_map_knowledge = false);
 
 void update_mould_tracking(const coord_def& pos);
 void setup_environment_effects();

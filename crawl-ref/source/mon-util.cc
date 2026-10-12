@@ -75,6 +75,7 @@
 #include "traps.h"
 #include "unicode.h"
 #include "unwind.h"
+#include "xom.h"
 
 static FixedVector < int, NUM_MONSTERS > mon_entry;
 
@@ -3583,6 +3584,8 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
                          mon.pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
         monster_drop_things(&mon, false, item_is_horn_of_geryon);
     }
+
+    xom_reduce_floor_lock();
 
     // End constriction.
     mon.stop_constricting_all();

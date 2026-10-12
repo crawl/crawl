@@ -296,6 +296,13 @@ void leaving_level_now(dungeon_feature_type stair_used)
     _remove_unstable_monsters();
     cancel_pending_lurkers();
 
+    if (you.attribute[ATTR_XOM_FLOOR_LOCK])
+    {
+        end_terrain_changes(TERRAIN_CHANGE_XOM_SEAL);
+        god_speaks(GOD_XOM, getSpeakString("Xom sneaky congratulations").c_str());
+        you.attribute[ATTR_XOM_FLOOR_LOCK] = 0;
+    }
+
     // Allow players to be interrupted by sensed monsters on their return to this level.
     for (monster_iterator mi; mi; ++mi)
         mi->flags &= ~MF_SENSED;

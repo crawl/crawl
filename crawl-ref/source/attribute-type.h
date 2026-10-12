@@ -28,8 +28,8 @@ enum attribute_type
     ATTR_PURCHASES,            // Gold amount spent at shops.
     ATTR_DONATIONS,            // Gold amount donated to Zin.
     ATTR_MISC_SPENDING,        // Spending for things like ziggurats.
+    ATTR_XOM_FLOOR_LOCK,       // Number of kills remaining before Xom unlocks the floor.
 #if TAG_MAJOR_VERSION == 34
-    ATTR_UNUSED1,              // was ATTR_RND_LVL_BOOKS
     ATTR_NOISES,
     ATTR_SHADOWS,              // Lantern of shadows effect.
     ATTR_UNUSED2,              // was ATTR_FRUIT_FOUND

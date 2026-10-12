@@ -1373,3 +1373,8 @@ into clouds of baleful gas which you can expel with your melee attack.
 Reach+ status
 
 The reach of your melee attacks is increased by 3.
+%%%%
+Lock status
+
+All of the stairs on this floor have been sealed. You must kill a certain number
+of enemies before they will be unlocked again.

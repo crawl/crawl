@@ -46,6 +46,7 @@
 #include "mon-cast.h"
 #include "mon-clone.h"
 #include "mon-death.h"
+#include "mon-pathfind.h"
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "mon-poly.h"
@@ -76,6 +77,7 @@
 #include "tag-version.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "timed-effects.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -95,6 +97,8 @@
 static void _do_xom_event(xom_event_type event_type, int tension);
 static bool _explore_event_is_valid(xom_event_type event, int tension);
 static xom_event_type _xom_choose_action(bool niceness, int tension, bool is_explore = false);
+
+static int _count_reachable_monsters();
 
 static constexpr int XOM_EXPLORE_THRESHOLD = 910;
 
@@ -4972,6 +4976,14 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
                    && you.experience_level >= 7;
         }, XOM_EXPLORE_HEALTHY
     },
+    {
+        XOM_BAD_FLOOR_LOCK, 0, 40, 50, [](int)
+        {
+            return is_connected_branch(you.where_are_you)
+                   && !you.attribute[ATTR_XOM_FLOOR_LOCK]
+                   && _count_reachable_monsters() > 5;
+        }
+    },
     // Highly circumstantial effects with less total
     // chances than their weight would seem to show.
     {
@@ -5639,6 +5651,104 @@ static void _xom_chaos_cloud(int /*sever*/)
     god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());
 }
 
+// A rough count of how many full hostile monsters are available within the
+// player's area (which could count for the floor lock effect).
+static int _count_reachable_monsters()
+{
+    // Pathfinding is a bit intensive, so first do a quick pass to make sure
+    // that there's at least *something* on the floor (excluding monsters in
+    // no_tele_into areas as they are likely to be unreachable or behind runed
+    // doors).
+    bool found = false;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (!mi->is_summoned() && !mi->is_peripheral()
+            && mi->base_attitude == ATT_HOSTILE
+            && !(env.pgrid(mi->pos()) & FPROP_NO_TELE_INTO))
+        {
+            found = true;
+            break;
+        }
+    }
+
+    if (!found)
+        return 0;
+
+    // Now use pathfinding to ensure that the player can reach these monsters.
+
+    // This is slightly hacky; we control terrain traversal ability by picking
+    // a monster whose properties matches the players permanent swimming/flying.
+
+    monster_pathfind pf;
+    monster fake_mons;
+    fake_mons.type = you.permanent_flight() ? MONS_PLAYER_ILLUSION
+                     : you.can_swim(true) ? MONS_MERFOLK
+                     : MONS_ORC;
+    fake_mons.position = you.pos();
+    define_monster(fake_mons);
+
+    pf.fill_traversability(&fake_mons, 60);
+
+    int count = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (!mi->is_summoned() && !mi->is_peripheral()
+            && mi->base_attitude == ATT_HOSTILE
+            && pf.is_reachable(mi->pos()))
+        {
+            ++count;
+        }
+    }
+
+    return count;
+}
+
+// Seal all exits from a floor until the player kills a certain small number of
+// monsters.
+static void _xom_floor_lock(int)
+{
+    int count = _count_reachable_monsters();
+
+    // Just in case.
+    if (count == 0)
+        return;
+
+    const int to_kill = min(count, random_range(5, 12));
+    you.attribute[ATTR_XOM_FLOOR_LOCK] = to_kill;
+
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        if (feat_is_travelable_stair(env.grid(*ri)))
+        {
+            dungeon_feature_type stype;
+            if (feat_stair_direction(env.grid(*ri)) == CMD_GO_UPSTAIRS)
+                stype = DNGN_SEALED_STAIRS_UP;
+            else
+                stype = DNGN_SEALED_STAIRS_DOWN;
+
+            temp_change_terrain(*ri, stype, INFINITE_DURATION,
+                                TERRAIN_CHANGE_XOM_SEAL);
+        }
+    }
+
+    god_speaks(GOD_XOM, _get_xom_speech("floor lock").c_str());
+    mpr("Xom locks all of the stairs on the floor! (Kill monsters to unlock them again.)");
+    take_note(Note(NOTE_XOM_EFFECT, -1, -1, "floor lock"), true);
+}
+
+// On an appropriate kill, maybe progress the floor lock.
+void xom_reduce_floor_lock()
+{
+    if (!you.attribute[ATTR_XOM_FLOOR_LOCK])
+        return;
+
+    if (--you.attribute[ATTR_XOM_FLOOR_LOCK] == 0)
+    {
+        god_speaks(GOD_XOM, _get_xom_speech("congratulations").c_str());
+        end_terrain_changes(TERRAIN_CHANGE_XOM_SEAL, 0, true);
+    }
+}
+
 struct xom_effect_count
 {
     string effect;
@@ -5729,6 +5839,7 @@ static const map<xom_event_type, xom_event> xom_events = {
                                   _xom_pseudo_banishment }},
     { XOM_BAD_CHAOS_REINFORCEMENTS, {"chaos reinforcements", _xom_chaos_reinforcements }},
     { XOM_BAD_DUEL, {"duel", _xom_duel }},
+    { XOM_BAD_FLOOR_LOCK, {"floor_lock", _xom_floor_lock }},
 };
 
 static void _do_xom_event(xom_event_type event_type, int tension)

@@ -1203,6 +1203,35 @@ Xom puts you back where you came from.
 Xom ushers you out before you can damage the room any further.
 
 Xom hoots with approval!
+%%%%
+Xom floor lock
+
+"This is for your own protection."
+
+"Toys shouldn't wander off."
+
+Xom decides to protect an endangered species.
+
+"I can't have my favourite toy go falling down the stairs!"
+
+w:5
+"Dancing on the stairs is bad for your health."
+%%%%
+Xom congratulations
+
+"Well done, mortal."
+
+Xom graciously unlocks the door again.
+
+"Now where did I put that key...."
+
+"Be free, my toy!"
+
+Xom has second-thoughts about your captivity.
+%%%%
+Xom sneaky congratulations
+
+"What a clever toy you are!"
 ######################################
 # Miscellaneous god messages.
 ######################################

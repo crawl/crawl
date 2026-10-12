@@ -1072,6 +1072,16 @@ bool fill_status_info(int status, status_info& inf)
     }
     break;
 
+    case STATUS_FLOOR_LOCK:
+    {
+        if (you.attribute[ATTR_XOM_FLOOR_LOCK] > 0)
+        {
+            inf.light_text = make_stringf("Lock (%d)", you.attribute[ATTR_XOM_FLOOR_LOCK]);
+            inf.light_colour = LIGHTMAGENTA;
+        }
+    }
+    break;
+
     default:
         if (!found)
         {

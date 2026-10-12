@@ -93,7 +93,8 @@ enum xom_event_type
     XOM_BAD_SWAP_MONSTERS,
     XOM_BAD_CHAOS_REINFORCEMENTS,
     XOM_BAD_DUEL,
-    XOM_LAST_BAD_ACT = XOM_BAD_DUEL,
+    XOM_BAD_FLOOR_LOCK,
+    XOM_LAST_BAD_ACT = XOM_BAD_FLOOR_LOCK,
     XOM_LAST_REAL_ACT = XOM_LAST_BAD_ACT,
 
     XOM_PLAYER_DEAD = 100, // player already dead (shouldn't happen)
@@ -129,5 +130,7 @@ void debug_xom_effects();
 #endif
 
 bool move_stair(coord_def stair_pos, bool away, bool allow_under);
+
+void xom_reduce_floor_lock();
 
 void validate_xom_events();

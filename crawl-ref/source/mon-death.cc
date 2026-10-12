@@ -86,6 +86,7 @@
 #include "viewchar.h"
 #include "viewmap.h"
 #include "view.h"
+#include "xom.h"
 
 /**
  * Initialise a corpse item.
@@ -3654,6 +3655,13 @@ item_def* monster_die(monster& mons, killer_type killer,
              && mons.type == MONS_ORC_APOSTLE)
     {
         beogh_follower_banished(mons);
+    }
+
+    if (you.attribute[ATTR_XOM_FLOOR_LOCK]
+        && !mons.is_summoned() && !mons.is_peripheral()
+        && mons.base_attitude == ATT_HOSTILE)
+    {
+        xom_reduce_floor_lock();
     }
 
     crawl_state.dec_mon_acting(&mons);
