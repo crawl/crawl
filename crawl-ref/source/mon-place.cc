@@ -175,12 +175,12 @@ bool monster_habitable_feat(monster_type mt, dungeon_feature_type feat)
 
 bool monster_habitable_grid(const monster* mon, const coord_def& pos)
 {
-    return monster_habitable_feat(mon, env.grid(pos));
+    return in_bounds(pos) && monster_habitable_feat(mon, env.grid(pos));
 }
 
 bool monster_habitable_grid(monster_type mt, const coord_def& pos)
 {
-    return monster_habitable_feat(mt, env.grid(pos));
+    return in_bounds(pos) && monster_habitable_feat(mt, env.grid(pos));
 }
 
 /**
