@@ -198,6 +198,45 @@ a book of Chaos
 a book of the Hunter
 
 %%%%
+a book of the Wilderness
+
+%%%%
+a book of Spontaneous Combustion
+
+%%%%
+a book of Transmutation
+
+%%%%
+a book of Scorching
+
+%%%%
+a book of Movement
+
+%%%%
+a book of Wicked Creation
+
+%%%%
+a book of Maladies
+
+%%%%
+a book of the Fortress
+
+%%%%
+a book of Cryoformation
+
+%%%%
+a book of the Grave
+
+%%%%
+a book of Metalworking
+
+%%%%
+a book of Duality
+
+%%%%
+a book of Contraptions
+
+%%%%
 
 #################################
 # Fixed artefact spellbooks
@@ -233,6 +272,18 @@ a There-And-Back Book
 a Trismegistus Codex
 
 %%%%
+a Compendium of Siegecraft
+
+%%%%
+a Codex of Conductivity
+
+%%%%
+a Handbook of Applied Construction
+
+%%%%
+a Treatise on Traps
+
+%%%%
 
 %%%%
 the Unrestrained Analects
@@ -243,10 +294,18 @@ the Unrestrained Analects
 Ozocubu's Autobiography
 
 %%%%
+Maxwell's Memoranda
+
+%%%%
 Great Wizards, Vol. II
 
 %%%%
 Great Wizards, Vol. VII
+
+%%%%
+# This English title is erroneous. Sojourn means "a short stay".
+# It should either be "Sojourn in" or "Journey through".
+My Sojourn through Swampland
 
 %%%%
 
