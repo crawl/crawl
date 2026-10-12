@@ -1389,3 +1389,9 @@ Rampage+++ status
 
 When moving towards enemies in a straight line, you cover any distance in a
 single step.
+%%%%
+Eisegesis status
+
+You have been granted temporary knowledge of a single spell, which you can cast
+at the cost of magic contamination (proportional to the spell's level and
+reduced by your own experience level) using the Eisegesis ability.

@@ -1443,6 +1443,13 @@ static void _describe_xom_blessing(status_info& inf)
         }
         break;
 
+        case XOM_BLESSING_CHAOS_EISEGESIS:
+            inf.light_text = "Eisegesis";
+            inf.light_text_formatted = "<red>E<lightred>i<yellow>s<green>e<cyan>g<lightcyan>e<blue>s<magenta>i<lightmagenta>s";
+            inf.short_text = make_stringf("blessing of eisegesis (%s)",
+                                          spell_title(static_cast<spell_type>(you.props[EISEGESIS_SPELL].get_int())));
+            break;
+
         default:
         break;
     }

@@ -1284,6 +1284,20 @@ Xom crams your mind full of knowledge.
 Xom inundates you with a year's worth of experiences in a single moment.
 
 You feel a glimmer of Xom's boundless wisdom(?) touch upon you.
+%%%%
+Xom eisegesis
+
+Xom teaches you a maddening secret.
+
+Overwhelming understanding seizes you.
+
+"You could use a new trick."
+
+Xom's power brushes across your mind and you reel.
+
+"Open your mind, my child."
+
+Xom blesses you with insight into chaos.
 ######################################
 # Miscellaneous god messages.
 ######################################

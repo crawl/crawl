@@ -100,6 +100,7 @@
 #include "unicode.h"
 #include "view.h"
 #include "wiz-dgn.h"
+#include "xom.h"
 
 struct generic_cost
 {
@@ -754,6 +755,10 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_IGNIS_RISING_FLAME, "Rising Flame",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
 
+        // Xom
+        { ABIL_XOM_CHAOS_EISEGESIS, "Chaos Eisegesis",
+            0, 0, 0, -1, {fail_basis::xl}, abflag::none },
+
         { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
             0, 0, 0, -1, {fail_basis::invo}, abflag::silence_ok },
         { ABIL_CONVERT_TO_BEOGH, "Convert to Beogh",
@@ -967,6 +972,13 @@ static string _ashenzari_curse_text()
            + ")";
 }
 
+static int _xom_eisegesis_max_contam()
+{
+    const int lv = spell_difficulty(static_cast<spell_type>(you.props[EISEGESIS_SPELL].get_int()));
+    int lv_diff = pow(max(0, lv * 7 / 2 - you.experience_level), 1.4) * 10;
+    return 350 + lv_diff;
+}
+
 const string make_cost_description(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
@@ -984,6 +996,9 @@ const string make_cost_description(ability_type ability)
 
     if (ability == ABIL_CACOPHONY)
         ret += ", Noise";
+
+    if (ability == ABIL_XOM_CHAOS_EISEGESIS)
+        ret += make_stringf(", Contam (up to %d%%)", _xom_eisegesis_max_contam() / 10);
 
     if (ability == ABIL_ASHENZARI_BIND
         && !you.props[CURSE_KNOWLEDGE_KEY].get_vector().empty())
@@ -1122,6 +1137,13 @@ static const string _detailed_cost_description(ability_type ability)
         have_cost = true;
         ret << "\nTorchlight";
     }
+
+    if (abil.ability == ABIL_XOM_CHAOS_EISEGESIS)
+    {
+        have_cost = true;
+        ret << "\nMagic contamination";
+    }
+
     if (!have_cost)
         ret << "nothing.";
 
@@ -1396,6 +1418,12 @@ string ability_name(ability_type ability, bool dbname)
             else
                 return make_stringf("Recast %s", spell_title(static_cast<spell_type>(you.props[EXEGESIS_SPELL].get_int())));
 
+        case ABIL_XOM_CHAOS_EISEGESIS:
+            if (dbname || !you.props.exists(EISEGESIS_SPELL))
+                return "Chaos Eisegesis";
+            else
+                return make_stringf("Eisegesis: %s", spell_title(static_cast<spell_type>(you.props[EISEGESIS_SPELL].get_int())));
+
         default:
             return get_ability_def(ability).name;
     }
@@ -1631,6 +1659,23 @@ string get_ability_desc(const ability_type ability, bool need_title)
             const char* spell_name = spell_title(spell);
             lookup = getLongDescription(make_stringf("%s spell", spell_name));
             lookup += player_spell_desc(spell);
+        }
+        break;
+
+        case ABIL_XOM_CHAOS_EISEGESIS:
+        {
+            unwind_var<bool> exegesis(you.chaos_eisegesis, true);
+
+            lookup = getLongDescription(name + " ability");
+
+            spell_type spell = static_cast<spell_type>(you.props[EISEGESIS_SPELL].get_int());
+            const char* spell_name = spell_title(spell);
+            lookup += "\n";
+            lookup += getLongDescription(make_stringf("%s spell", spell_name));
+            lookup += player_spell_desc(spell);
+
+            lookup += make_stringf("\nUsing this now could inflict up to %d%% magic contamination.",
+                                   _xom_eisegesis_max_contam() / 10);
         }
         break;
 
@@ -3794,6 +3839,20 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         return cast_a_spell(false, static_cast<spell_type>(you.props[EXEGESIS_SPELL].get_int()), nullptr);
     }
 
+    case ABIL_XOM_CHAOS_EISEGESIS:
+    {
+        const int contam_cost = _xom_eisegesis_max_contam();
+        if (warn_about_contam_cost(contam_cost))
+            return spret::abort;
+
+        unwind_var<bool> eisegesis(you.chaos_eisegesis, true);
+        spell_type spell = static_cast<spell_type>(you.props[EISEGESIS_SPELL].get_int());
+        spret ret = your_spells(spell, 0, false);
+        if (ret == spret::success)
+            contaminate_player(random_range(contam_cost / 2, contam_cost));
+        return ret;
+    }
+
     case ABIL_ELYVILON_HEAL_SELF:
     {
         fail_check();
@@ -4382,7 +4441,8 @@ string describe_talent(const talent& tal)
 
     ostringstream desc;
     desc << left
-         << chop_string(ability_name(tal.which), 32)
+         << chop_string(ability_name(tal.which), 31)
+         << " "
          << chop_string(make_cost_description(tal.which), 32)
          << chop_string(failure, 12);
     return trimmed_string(desc.str());
@@ -4491,6 +4551,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     case ABIL_END_TRANSFORMATION:
         return you.form != you.default_form && !you.transform_uncancellable;
     // TODO: other god abilities
+    case ABIL_XOM_CHAOS_EISEGESIS:
+        return you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_CHAOS_EISEGESIS;
     case ABIL_RENOUNCE_RELIGION:
         return !you_worship(GOD_NO_GOD);
     case ABIL_CONVERT_TO_BEOGH:
@@ -4562,6 +4624,7 @@ vector<talent> your_talents(bool include_unusable, bool ignore_piety)
             ABIL_IMBUE_SERVITOR,
             ABIL_IMPRINT_WEAPON,
             ABIL_END_TRANSFORMATION,
+            ABIL_XOM_CHAOS_EISEGESIS,
             ABIL_RENOUNCE_RELIGION,
             ABIL_CONVERT_TO_BEOGH,
             ABIL_EVOKE_BLINK,

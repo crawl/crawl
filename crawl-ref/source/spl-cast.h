@@ -92,6 +92,7 @@ enum class spret
 #define INNATE_SPELLS_KEY "innate_spells"
 
 #define EXEGESIS_SPELL "exegesis_spell"
+#define EISEGESIS_SPELL "eisegesis_spell"
 
 #define fail_check() if (fail) return spret::fail
 

@@ -101,8 +101,12 @@ enum xom_event_type
 
     // Not 'real' events, but in this enum so they can be triggered easily in wizmode
     XOM_BLESSING_CLEAVE,
+    XOM_BLESSING_CHAOS_EISEGESIS,
 
-    XOM_LAST_REAL_ACT = XOM_BLESSING_CLEAVE,
+    // Not even a real blessing, but allows wizmode to select a new blessing at random.
+    XOM_BLESSING_RANDOM,
+
+    XOM_LAST_REAL_ACT = XOM_BLESSING_RANDOM,
 
     XOM_PLAYER_DEAD = 100, // player already dead (shouldn't happen)
     NUM_XOM_EVENTS
@@ -127,7 +131,7 @@ xom_event_type xom_choose_action(bool niceness, int tension,
 
 void xom_check_blessing();
 void xom_give_blessing();
-void xom_remove_blessing();
+string xom_remove_blessing();
 
 void xom_maybe_reverts_banishment();
 void xom_check_lost_item(const item_def& item);

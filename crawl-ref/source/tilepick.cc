@@ -4706,6 +4706,12 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_IGNIS_FOXFIRE;
     case ABIL_IGNIS_RISING_FLAME:
         return TILEG_ABILITY_IGNIS_RISING_FLAME;
+    // Xom
+    case ABIL_XOM_CHAOS_EISEGESIS:
+        if (you.props.exists(EISEGESIS_SPELL))
+            return tileidx_spell(static_cast<spell_type>(you.props[EISEGESIS_SPELL].get_int()));
+        else
+            return TILEG_ABILITY_SIF_MUNA_EXEGESIS;
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:

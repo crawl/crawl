@@ -565,6 +565,10 @@ int raw_spell_fail(spell_type spell, bool enkindled, bool include_temp)
  */
 int calc_spell_power(spell_type spell)
 {
+    // Eisegesis completely ignores your skills and other bonuses
+    if (you.chaos_eisegesis)
+        return 15 + you.experience_level * 5;
+
     int power = _skill_power(spell);
 
     if (you.divine_exegesis)

@@ -443,6 +443,9 @@ public:
     // Examining spell library spells for Sif Muna's ability
     bool           divine_exegesis;
 
+    // Casting a spell via Xom's temporary ability
+    bool           chaos_eisegesis;
+
     // Coordinates of last travel target; note that this is never used by
     // travel itself, only by the level-map to remember the last travel target.
     short travel_x, travel_y;

@@ -17,6 +17,7 @@
 #include "artefact.h"
 #include "branch.h"
 #include "cloud.h"
+#include "colour.h"
 #include "corpse.h"
 #include "coordit.h"
 #include "database.h"
@@ -5958,6 +5959,83 @@ static void _xom_cleaving()
     take_note(Note(NOTE_XOM_EFFECT, -1, -1, note), true);
 }
 
+static const vector<spell_type> _eisegesis_spells =
+{
+    SPELL_HAILSTORM,
+    SPELL_INNER_FLAME,
+    SPELL_PILEDRIVER,
+    SPELL_MEPHITIC_CLOUD,
+    SPELL_TUKIMAS_DANCE,
+    SPELL_BLASTMOTE,
+    SPELL_VAMPIRIC_DRAINING,
+    SPELL_TELEPORT_OTHER,
+    SPELL_AIRSTRIKE,
+    SPELL_BOULDER,
+    SPELL_FULMINANT_PRISM,
+    SPELL_ISKENDERUNS_MYSTIC_BLAST,
+    SPELL_STICKY_FLAME,
+    SPELL_ELECTRIC_CHARGE,
+    SPELL_OLGREBS_TOXIC_RADIANCE,
+    SPELL_SURPRISING_CROCODILE,
+    SPELL_PUTREFACTION,
+    SPELL_INTOXICATE,
+    SPELL_ARCJOLT,
+    SPELL_FIREBALL,
+    SPELL_LRD,
+    SPELL_BORGNJORS_VILE_CLUTCH,
+    SPELL_FREEZING_CLOUD,
+    SPELL_SUMMON_FOREST,
+    SPELL_BOMBARD,
+    SPELL_CONJURE_BALL_LIGHTNING,
+    SPELL_DISPERSAL,
+    SPELL_NOXIOUS_BOG,
+    SPELL_MONARCH_BOMB,
+    SPELL_GELLS_GAVOTTE,
+    SPELL_PERMAFROST_ERUPTION,
+    SPELL_PLASMA_BEAM,
+    SPELL_SIMULACRUM,
+    SPELL_STARBURST,
+    SPELL_FORTRESS_BLAST,
+    SPELL_ENFEEBLE,
+    SPELL_HELLFIRE_MORTAR,
+    SPELL_MAGNAVOLT,
+    SPELL_MALIGN_GATEWAY,
+    SPELL_MANIFOLD_ASSAULT,
+    SPELL_IOOD,
+    SPELL_OZOCUBUS_REFRIGERATION,
+    SPELL_LEHUDIBS_CRYSTAL_SPEAR,
+    SPELL_DISCORD,
+    SPELL_FULSOME_FUSILLADE,
+    SPELL_IGNITION,
+    SPELL_CHAIN_LIGHTNING,
+    SPELL_FIRE_STORM,
+    SPELL_POLAR_VORTEX,
+    SPELL_SHATTER,
+};
+
+static void _xom_eisegesis()
+{
+    const int spell_level = min(9, random_range(you.experience_level / 5 + 2,
+                                                you.experience_level / 3 + 3));
+
+    vector<spell_type> choices;
+    for (int i = 0; i < (int)_eisegesis_spells.size(); ++i)
+        if (spell_difficulty(_eisegesis_spells[i]) == spell_level)
+            choices.push_back(_eisegesis_spells[i]);
+
+    spell_type spell = choices[random2(choices.size())];
+
+    god_speaks(GOD_XOM, _get_xom_speech("eisegesis").c_str());
+    mprf(MSGCH_DURATION, "Xom grants you chaotic knowledge of %s.", spell_title(spell));
+
+    you.props[EISEGESIS_SPELL] = spell;
+
+    const string msg = make_stringf("blessing of eisegesis (%s)", spell_title(spell));
+    take_note(Note(NOTE_XOM_EFFECT, -1, -1, msg), true);
+
+    you.attribute[ATTR_XOM_BLESSING] = XOM_BLESSING_CHAOS_EISEGESIS;
+}
+
 // See if the player's blessing timer has been filled up. And if it has and the
 // tension is zero, give them a new blessing.
 void xom_check_blessing()
@@ -5972,20 +6050,54 @@ void xom_check_blessing()
     }
 }
 
+static const vector<pair<xom_event_type, int>> _blessing_weights =
+{
+    { XOM_BLESSING_CLEAVE, 10},
+    { XOM_BLESSING_CHAOS_EISEGESIS, 30},
+};
+
 void xom_give_blessing()
 {
-    mpr("Give a blessing!");
+    // Don't give the player the same blessing they already have.
+    xom_event_type blessing = XOM_DID_NOTHING;
+    do
+    {
+        blessing = *random_choose_weighted(_blessing_weights);
+    } while (blessing == you.attribute[ATTR_XOM_BLESSING]);
+
+    draw_ring_animation(you.pos(), 5, ETC_RANDOM, ETC_RANDOM, false, 20, TILE_BOLT_CHAOS);
+
+    string removal_msg = xom_remove_blessing();
+    xom_take_action(blessing, 0);
+
+    if (!removal_msg.empty())
+        mpr(removal_msg.c_str());
 }
 
-void xom_remove_blessing()
+// Removes the current Xom blessing and returns a string explaining what happened.
+// (Since it usually needs to be printed after adding the new blessing.)
+string xom_remove_blessing()
 {
+    string msg;
     switch(you.attribute[ATTR_XOM_BLESSING])
     {
+        case XOM_BLESSING_CLEAVE:
+            msg = "Your cleaving frenzy subsides.";
+            you.props.erase(XOM_CLEAVE_BRAND_KEY);
+            break;
+
+        case XOM_BLESSING_CHAOS_EISEGESIS:
+            msg = make_stringf("Your divinely inspired misunderstanding of %s fades.",
+                    spell_title(static_cast<spell_type>(you.props[EISEGESIS_SPELL].get_int())));
+            you.props.erase(EISEGESIS_SPELL);
+            break;
+
         default:
-        break;
+            return "";
     }
 
     you.attribute[ATTR_XOM_BLESSING] = 0;
+    return msg;
 }
 
 struct xom_effect_count
@@ -6083,6 +6195,8 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BAD_MINIBANE, {"minibane", _xom_minibane }},
 
     { XOM_BLESSING_CLEAVE, {"cleaving", [](int){ _xom_cleaving();} }},
+    { XOM_BLESSING_CHAOS_EISEGESIS, { "eisegesis", [](int){ _xom_eisegesis();} }},
+    { XOM_BLESSING_RANDOM, {"blessing", [](int){ xom_give_blessing();} }},
 };
 
 static void _do_xom_event(xom_event_type event_type, int tension)
