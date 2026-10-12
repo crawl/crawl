@@ -237,17 +237,6 @@ Die Gegenstände in diesen Schatzkammern sind wahrscheinlich nützlich, aber
 Vorsicht: Der Zauberer ist schon lange tot und selbst zu Lebzeiten gab er
 keine Geld-zurück-Garantie.
 %%%%
-Sewer
-
-Jeder bewohnte Ort muss seine Abfallprodukte irgendwo beseitigen. Auch der
-Kerker hat eine stinkende Kanalisation und Abflussrohre, voll mit schmutzigem Wasser
-und von den meisten gemieden, aber von Abscheulichen und
-Verzweifelten als Versteck genutzt. Alte Legenden erzählen von gefährlichen Kreaturen,
-die durch das faule, stinkende grüne Wasser pirschen und sich gegenseitig ohne Gnade
-auflauern. Die Legenden erwähnen auch die wertvollen Gegenstände, die in die
-Abflusstunnel gespült wurden, vergessen und verschimmelt in den feuchten
-Höhlen liegen gelassen.
-%%%%
 Necropolis
 
 Während viele Orte im Kerker den seit langem begrabenen, ruhelosen Toten
@@ -260,6 +249,17 @@ Kugel von Zot suchen, wurden diese Reiche umfunktioniert: Solche Geister sind
 von Wut geblendet und unkontrollierbar, also werden sowohl sie als auch ihre
 gestohlenen Besitztümer in diesen Reichen der Versöhnung eingesperrt und
 versiegelt.
+%%%%
+Sewer
+
+Jeder bewohnte Ort muss seine Abfallprodukte irgendwo beseitigen. Auch der
+Kerker hat eine stinkende Kanalisation und Abflussrohre, voll mit schmutzigem Wasser
+und von den meisten gemieden, aber von Abscheulichen und
+Verzweifelten als Versteck genutzt. Alte Legenden erzählen von gefährlichen Kreaturen,
+die durch das faule, stinkende grüne Wasser pirschen und sich gegenseitig ohne Gnade
+auflauern. Die Legenden erwähnen auch die wertvollen Gegenstände, die in die
+Abflusstunnel gespült wurden, vergessen und verschimmelt in den feuchten
+Höhlen liegen gelassen.
 %%%%
 Ossuary
 
