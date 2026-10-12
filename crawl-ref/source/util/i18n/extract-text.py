@@ -1580,6 +1580,13 @@ def post_process_item_name_cc(input):
                 if "Geryon" not in string:
                     new_strings.append(pluralise(string))
                 continue
+            elif section == "_bauble_type_name":
+                string = string + " bauble"
+                new_strings.append(article_the(string))
+                new_strings.append("@num@ " + pluralise(string))
+                continue
+            elif string == " bauble":
+                continue
             elif section == "_book_type_name":
                 if string == "Fixed Theme":
                     continue
@@ -1607,10 +1614,6 @@ def post_process_item_name_cc(input):
                 elif string == "gold piece":
                     new_strings.append(article_the(string))
                     new_strings.append("1 " + string)
-                    new_strings.append("@num@ " + pluralise(string))
-                    continue
-                elif string == "flux bauble":
-                    new_strings.append(article_the(string))
                     new_strings.append("@num@ " + pluralise(string))
                     continue
                 elif not string.endswith(" "):
