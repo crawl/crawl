@@ -1626,8 +1626,11 @@ string get_ability_desc(const ability_type ability, bool need_title)
 
         case ABIL_SIF_MUNA_REPEAT_EXEGESIS:
         {
-            const char* spell_name = spell_title(static_cast<spell_type>(you.props[EXEGESIS_SPELL].get_int()));
+            unwind_var<bool> exegesis(you.divine_exegesis, true);
+            spell_type spell = static_cast<spell_type>(you.props[EXEGESIS_SPELL].get_int());
+            const char* spell_name = spell_title(spell);
             lookup = getLongDescription(make_stringf("%s spell", spell_name));
+            lookup += player_spell_desc(spell);
         }
         break;
 
