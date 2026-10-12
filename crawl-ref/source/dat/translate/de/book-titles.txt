@@ -198,6 +198,45 @@ a book of Chaos
 a book of the Hunter
 {n}ein Buch des Jägers
 %%%%
+a book of the Wilderness
+{n}ein Buch der Wildnis
+%%%%
+a book of Spontaneous Combustion
+{n}ein Buch der spontanen Verbrennung
+%%%%
+a book of Transmutation
+{n}ein Buch der Transmutation
+%%%%
+a book of Scorching
+{n}ein Buch des Anbrennens
+%%%%
+a book of Movement
+{n}ein Buch der Bewegung
+%%%%
+a book of Wicked Creation
+{n}ein Buch der bösen Schöpfung
+%%%%
+a book of Maladies
+{n}ein Buch der Krankheiten
+%%%%
+a book of the Fortress
+{n}ein Buch der Festung
+%%%%
+a book of Cryoformation
+{n}ein Buch der Kryoformung
+%%%%
+a book of the Grave
+{n}ein Buch des Grabes
+%%%%
+a book of Metalworking
+{n}ein Buch der Metallbearbeitung
+%%%%
+a book of Duality
+{n}ein Buch der Dualität
+%%%%
+a book of Contraptions
+{n}ein Buch der Vorrichtungen
+%%%%
 
 #################################
 # Fixed artefact spellbooks
@@ -233,6 +272,18 @@ a There-And-Back Book
 a Trismegistus Codex
 {m}ein Kodex Trismegistus
 %%%%
+a Compendium of Siegecraft
+{n}ein Kompendium der Belagerungskunst
+%%%%
+a Codex of Conductivity
+{m}ein Kodex der Leitfähigkeit
+%%%%
+a Handbook of Applied Construction
+{n}ein Handbuch zum angewandten Bauwesen
+%%%%
+a Treatise on Traps
+{f}eine Abhandlung über Fallen
+%%%%
 
 %%%%
 the Unrestrained Analects
@@ -243,11 +294,19 @@ the Unrestrained Analects
 Ozocubu's Autobiography
 Ozocubus Autobiografie
 %%%%
+Maxwell's Memoranda
+Maxwells Memoranden
+%%%%
 Great Wizards, Vol. II
 Große Zauberer, Band II
 %%%%
 Great Wizards, Vol. VII
 Große Zauberer, Band VII
+%%%%
+# This English title is erroneous. Sojourn means "a short stay".
+# It should either be "Sojourn in" or "Journey through".
+My Sojourn through Swampland
+Meine Reise durchs Sumpfgebiet
 %%%%
 
 #################################
