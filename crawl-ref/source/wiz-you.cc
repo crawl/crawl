@@ -1082,8 +1082,8 @@ void wizard_xom_acts()
 {
     char specs[80];
 
-    msgwin_get_line("What action should Xom take? (Blank = any) " ,
-                    specs, sizeof(specs));
+    msgwin_get_line_autohist("What action should Xom take? (Blank = any) " ,
+                             specs, sizeof(specs));
 
     if (specs[0] == '\0')
     {
