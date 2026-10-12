@@ -3713,7 +3713,7 @@ string spell_range_string(spell_type spell)
 string range_string(int range, int maxrange, int minrange)
 {
     if (range <= 0)
-        return "N/A";
+        return "";
 
     string ret = to_string(range);
     if (maxrange > -1)

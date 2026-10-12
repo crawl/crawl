@@ -1649,7 +1649,8 @@ string get_ability_desc(const ability_type ability, bool need_title)
 
     if (damage_str != "")
         lookup += make_stringf("Damage: %s\n ", damage_str.c_str());
-    lookup += make_stringf("Range: %s\n", range_str.c_str());
+    if (range_str != "")
+        lookup += make_stringf("Range: %s\n", range_str.c_str());
 
     ostringstream res;
     if (need_title)

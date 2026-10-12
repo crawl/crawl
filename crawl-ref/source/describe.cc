@@ -5215,8 +5215,12 @@ static void _get_spell_description(const spell_type spell,
                                 || spell == SPELL_FLASHING_BALESTRA
                                 || spell == SPELL_BECKONING_GALE ? 3 : 0);
 
-        description += "\nRange : ";
-        description += range_string(range, -1, minrange);
+        const string rangestr = range_string(range, -1, minrange);
+        if (!rangestr.empty())
+        {
+            description += "\nRange : ";
+            description += rangestr;
+        }
 
         const string defence_string = spell_defence_string(spell, true, mon_pow);
         const string resist_string = spell_resist_string(spell, true, mon_pow);
