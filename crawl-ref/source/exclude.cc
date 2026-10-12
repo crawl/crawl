@@ -74,17 +74,6 @@ static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
     return false;
 }
 
-// Nightstalker reduces LOS, so reducing the maximum exclusion radius
-// only makes sense. This is only possible because it's a permanent
-// mutation; other sources of LOS reduction should not have this effect.
-// Similarly, Barachim's LOS increase.
-static int _get_full_exclusion_radius()
-{
-    // XXX: dedup with update_vision_range()!
-    return LOS_DEFAULT_RANGE - you.get_mutation_level(MUT_NIGHTSTALKER)
-                             + (you.species == SP_BARACHI ? 1 : 0);
-}
-
 /**
  * Adds auto-exclusions for any monsters in LOS that need them.
  */
@@ -110,7 +99,7 @@ void add_auto_excludes()
             continue;
         if (_need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
         {
-            int radius = _get_full_exclusion_radius();
+            int radius = LOS_MAX_RANGE;
             // Sting and Harpoon Shot's minimum ranges, respectively.
             if (mon->type == MONS_SCRUB_NETTLE)
                 radius = min(radius, 4);
@@ -245,7 +234,10 @@ void exclude_set::add_exclude_points(travel_exclude& ex)
     else
         ex.los.update();
 
-    for (radius_iterator ri(ex.pos, ex.radius, C_SQUARE); ri; ++ri)
+    // Cap the range of any exclusion by the player's default LoS in their
+    // current form and equipment.
+    const int radius = min(ex.radius, (int)you.normal_vision);
+    for (radius_iterator ri(ex.pos, radius, C_SQUARE); ri; ++ri)
         if (ex.affects(*ri))
             exclude_points.insert(*ri);
 }
@@ -521,7 +513,7 @@ void cycle_exclude_radius(const coord_def &p)
             del_exclude(p);
     }
     else
-        set_exclude(p, _get_full_exclusion_radius());
+        set_exclude(p, LOS_MAX_RANGE);
 }
 
 // Remove a possible exclude.

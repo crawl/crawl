@@ -340,7 +340,9 @@ public:
     FixedBitVector<NUM_MISCELLANY>     seen_misc;
     FixedBitVector<NUM_TALISMANS>      seen_talisman;
 
-    uint8_t normal_vision;        // how far the species gets to see
+    uint8_t normal_vision;        // how far you can normally see, including
+                                  // equipment and form, but not other temporary
+                                  // effects.
     uint8_t current_vision;       // current sight radius (cells)
 
     set<coord_def> rampage_hints; // TODO: move this somewhere else

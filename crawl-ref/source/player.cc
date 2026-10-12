@@ -1060,6 +1060,8 @@ monster_type player_mons(bool transform)
 
 void update_vision_range()
 {
+    const int old_vision = you.normal_vision;
+
     you.normal_vision = LOS_DEFAULT_RANGE;
 
     // Daystalker gives +1 base LOS. (currently capped to one level for
@@ -1075,10 +1077,6 @@ void update_vision_range()
     if (you.form == transformation::vision)
         you.normal_vision = min(LOS_MAX_RANGE, you.normal_vision + 1);
 
-    // Halo and umbra radius scale with you.normal_vision, so to avoid
-    // penalizing players with low LOS from items, don't shrink normal_vision.
-    you.current_vision = you.normal_vision;
-
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_METEORAN)
         you.current_vision -= max(0, (bezotting_level() - 1) * 2); // spooky fx
@@ -1086,11 +1084,15 @@ void update_vision_range()
 
     // scarf of shadows gives -1.
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_SHADOWS))
-        you.current_vision -= 1;
+        you.normal_vision -= 1;
 
     // robe of Night.
     if (you.unrand_equipped(UNRAND_NIGHT))
-        you.current_vision = you.current_vision * 3 / 4;
+        you.normal_vision = you.normal_vision * 3 / 4;
+
+    you.current_vision = you.normal_vision;
+
+    // Temporary effects which shouldn't affect exclusion radius:
 
     if (you.duration[DUR_PRIMORDIAL_NIGHTFALL])
     {
@@ -1114,6 +1116,11 @@ void update_vision_range()
 
     ASSERT(you.current_vision >= 0);
     set_los_radius(you.current_vision);
+
+    // If default vision has changed, possibly shrink or expand LoS exclusions
+    // on the current floor.
+    if (you.normal_vision != old_vision)
+        init_exclusion_los();
 }
 
 // For slots where characters may be able to equip some, but not all, possible
