@@ -7,6 +7,7 @@
 #include "areas.h"
 #include "act-iter.h"
 #include "cloud.h"
+#include "database.h"
 #include "item-name.h"
 #include "mon-death.h"
 #include "god-abil.h"
@@ -104,6 +105,12 @@ static void _end_vapourise()
   mprf(MSGCH_DURATION, "Your vapourised %s dissipates without effect.",
        potion_type_name(static_cast<potion_type>(you.props[MISTMANE_VAPOUR_KEY].get_int())));
   you.props.erase(MISTMANE_VAPOUR_KEY);
+}
+
+static void _sage_go_berserk()
+{
+    mprf(MSGCH_DURATION, "%s", getMiscString("sage_go_berserk").c_str());
+    you.go_berserk(true, false);
 }
 
 // properties of the duration.
@@ -831,6 +838,11 @@ static const duration_def duration_data[] =
       "extra reach", "reach+",
       "Your limbs are incredibly long.", D_NO_FLAGS,
       {{ "Your limbs return to their normal size." }}},
+    { DUR_IRRITATED,
+      LIGHTRED, "Irrate",
+      "irrate", "irrate",
+      "You are quickly growing irritated.", D_NO_FLAGS,
+      {{ "", _sage_go_berserk }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

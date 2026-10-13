@@ -673,6 +673,54 @@ public:
     }
 };
 
+class PotionBerserkSage : public PotionEffect
+{
+private:
+    PotionBerserkSage() : PotionEffect(POT_BERSERK_SAGE) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionBerserkSage);
+public:
+    static const PotionBerserkSage &instance()
+    {
+        static PotionBerserkSage inst; return inst;
+    }
+
+    bool can_quaff(string *reason = nullptr, bool temp = true) const override
+    {
+        return you.can_go_berserk(true, true, true, reason, temp);
+    }
+
+    bool effect(bool /*was_known*/ = true, int = 40, bool is_potion = true) const override
+    {
+        if (you.is_lifeless_undead())
+        {
+            mpr("You feel slightly irritated.");
+            return false;
+        }
+
+        const int dur = _scale_pot_duration(random_range(20, 30), is_potion);
+
+        mpr("You gain both the wisdom and the impatience of a great sage.");
+        inc_mp(you.max_magic_points);
+        you.increase_duration(DUR_BRILLIANCE, dur);
+        you.duration[DUR_IRRITATED] = random_range(40, 60);
+
+        return true;
+    }
+
+    bool quaff(bool was_known) const override
+    {
+        if (was_known
+            && (!check_known_quaff() || !berserk_check_wielded_weapon()))
+        {
+            return false;
+        }
+
+        if (effect(was_known))
+            xom_is_stimulated(50);
+        return true;
+    }
+};
+
 /**
  * Is the player able to mutate (temporarily or permanently) & thus unable
  * to drink a mutation-causing potion?  This is a wrapper on `you.can_safely_mutate`.
@@ -962,6 +1010,7 @@ static const unordered_map<potion_type, const PotionEffect*, std::hash<int>> pot
     { POT_RESISTANCE, &PotionResistance::instance(), },
     { POT_LIGNIFY, &PotionLignify::instance(), },
     { POT_MIST, &PotionMist::instance(), },
+    { POT_BERSERK_SAGE, &PotionBerserkSage::instance(), },
 };
 
 const PotionEffect* get_potion_effect(potion_type pot)

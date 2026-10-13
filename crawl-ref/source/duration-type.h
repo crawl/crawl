@@ -317,5 +317,6 @@ enum duration_type
     DUR_INSUBSTANTIAL,
     DUR_VAPOURISE,
     DUR_REACH,
+    DUR_IRRITATED,
     NUM_DURATIONS
 };

@@ -730,6 +730,7 @@ const char* potion_type_name(int potiontype)
     case POT_LIGNIFY:           return "lignification";
 
     case POT_MIST:              return "mist";
+    case POT_BERSERK_SAGE:      return "berserk sage";
 
     // FIXME: Remove this once known-items no longer uses this as a sentinel.
     default:

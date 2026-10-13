@@ -1208,7 +1208,8 @@ i-good-mutation POT_REMOVEME9
 # (corresponds to POT_DUMMY_AGILITY)
 i-attraction POT_REMOVEME10
 # end TAG_MAJOR_VERSION
-i-mist POT_MIST POT_ID_LAST
+i-mist POT_MIST
+i-berserk-rage POT_BERSERK_SAGE POT_ID_LAST
 %back none
 %rim 1
 
