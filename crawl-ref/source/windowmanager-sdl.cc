@@ -933,6 +933,7 @@ int SDLWrapper::send_textinput(wm_event *event)
 int SDLWrapper::wait_event(wm_event *event, int timeout)
 {
     SDL_Event sdlevent;
+    const unsigned int repeat_delay = Options.tile_key_repeat_delay;
 
     if (!m_textinput_queue.empty())
     {
@@ -958,8 +959,11 @@ int SDLWrapper::wait_event(wm_event *event, int timeout)
         _translate_window_event(sdlevent.window, *event);
         break;
     case SDL_KEYDOWN:
-        m_suppress_repeated_textinput =
-            Options.tile_key_repeat_delay <= 0 && sdlevent.key.repeat != 0;
+        if (!sdlevent.key.repeat)
+            m_keydown_tick = sdlevent.key.timestamp;
+        m_suppress_repeated_textinput = sdlevent.key.repeat != 0
+            && (repeat_delay == 0
+                || sdlevent.key.timestamp - m_keydown_tick < repeat_delay);
         if (m_suppress_repeated_textinput)
             return 0;
         event->type = WME_KEYDOWN;
