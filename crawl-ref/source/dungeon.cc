@@ -7527,6 +7527,12 @@ const string *vault_placement::map_feat_rename_at(const coord_def &where,
     return map.feat_rename_at(where - pos, feat);
 }
 
+void vault_placement::map_reset_feat_rename_at(const coord_def &where,
+                                               dungeon_feature_type feat)
+{
+    map.reset_feat_rename_at(where - pos, feat);
+}
+
 void vault_placement::reset()
 {
     if (_current_temple_hash != nullptr)

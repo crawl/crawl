@@ -162,6 +162,8 @@ public:
     string map_name_at(const coord_def &c) const;
     const string *map_feat_rename_at(const coord_def &c,
                                      dungeon_feature_type feat) const;
+    void map_reset_feat_rename_at(const coord_def &c,
+                                  dungeon_feature_type feat);
     dungeon_feature_type feature_at(const coord_def &c);
     bool is_exit(const coord_def &c) const;
     bool is_space(const coord_def &c) const;

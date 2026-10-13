@@ -1170,6 +1170,7 @@ public:
     string name_at(const coord_def &pos) const;
     const string *feat_rename_at(const coord_def &pos,
                                  dungeon_feature_type feat) const;
+    void reset_feat_rename_at(const coord_def &pos, dungeon_feature_type feat);
     string desc_or_name() const;
 
     string describe() const;
