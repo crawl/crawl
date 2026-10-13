@@ -6076,8 +6076,11 @@ int player::rampaging() const
 
     rampage = min(3, rampage);
 
-    if (you.unrand_equipped(UNRAND_SEVEN_LEAGUE_BOOTS))
+    if (you.unrand_equipped(UNRAND_SEVEN_LEAGUE_BOOTS)
+        || you.duration[DUR_RAMPAGE_MAX])
+    {
         rampage = get_los_radius();
+    }
 
     return rampage;
 }

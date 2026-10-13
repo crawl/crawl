@@ -1382,3 +1382,8 @@ of enemies before they will be unlocked again.
 Irrate status
 
 You are rapidly losing patience and will soon go berserk.
+%%%%
+Rampage+++ status
+
+When moving towards enemies in a straight line, you cover any distance in a
+single step.

@@ -58,6 +58,7 @@ enum potion_type
 #endif
     POT_MIST,
     POT_BERSERK_SAGE,
+    POT_EXPEDIENCE,
     NUM_POTIONS
 };
 

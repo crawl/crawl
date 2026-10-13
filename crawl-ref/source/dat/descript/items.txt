@@ -1187,6 +1187,12 @@ potion of enlightenment
 A potion which uplifts both the body and mind of its drinkers, lifting them
 from the ground and increasing their Will to resist the world's temptations.
 %%%%
+potion of expedience
+
+A bitter liquid which makes the imbiber extremely efficient at engaging enemies
+for a short while, causing a single movement to close any distance - whether
+they'd like it to or not.
+%%%%
 potion of experience
 
 A truly wonderful and very rare drink, which grants experience when consumed.

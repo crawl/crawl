@@ -843,6 +843,11 @@ static const duration_def duration_data[] =
       "irrate", "irrate",
       "You are quickly growing irritated.", D_NO_FLAGS,
       {{ "", _sage_go_berserk }}},
+    { DUR_RAMPAGE_MAX,
+      LIGHTBLUE, "Rampage+++",
+      "rampage 7", "rampage+",
+      "You rampage instantly towards enemies.", D_NO_FLAGS,
+      {{ "Your burst of speed ends." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

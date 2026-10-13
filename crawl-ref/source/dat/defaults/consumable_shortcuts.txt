@@ -37,6 +37,7 @@ consumable_shortcut ^= potion of lignification:L
 consumable_shortcut ^= potion of mist:t
 consumable_shortcut ^= potion of moonshine:o
 consumable_shortcut ^= potion of berserk sage:O
+consumable_shortcut ^= potion of expedience:x
 
 consumable_shortcut ^= wand of flame:a
 consumable_shortcut ^= wand of acid:b

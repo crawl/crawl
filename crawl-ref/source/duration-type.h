@@ -318,5 +318,6 @@ enum duration_type
     DUR_VAPOURISE,
     DUR_REACH,
     DUR_IRRITATED,
+    DUR_RAMPAGE_MAX,
     NUM_DURATIONS
 };

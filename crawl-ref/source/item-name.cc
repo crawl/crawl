@@ -731,6 +731,7 @@ const char* potion_type_name(int potiontype)
 
     case POT_MIST:              return "mist";
     case POT_BERSERK_SAGE:      return "berserk sage";
+    case POT_EXPEDIENCE:        return "expedience";
 
     // FIXME: Remove this once known-items no longer uses this as a sentinel.
     default:
@@ -2942,6 +2943,7 @@ bool is_good_item(const item_def &item)
         switch (item.sub_type)
         {
         case POT_EXPERIENCE:
+        case POT_EXPEDIENCE:
             return true;
         default:
             return false;
