@@ -432,7 +432,8 @@ static void _translate_wheel_event(const SDL_MouseWheelEvent &sdl_event,
 }
 
 SDLWrapper::SDLWrapper():
-    m_window(nullptr), m_context(nullptr), prev_keycode(0)
+    m_window(nullptr), m_context(nullptr), prev_keycode(0),
+    m_suppress_repeated_textinput(false)
 {
     m_cursors.fill(nullptr);
 }
@@ -957,7 +958,9 @@ int SDLWrapper::wait_event(wm_event *event, int timeout)
         _translate_window_event(sdlevent.window, *event);
         break;
     case SDL_KEYDOWN:
-        if (Options.tile_key_repeat_delay <= 0 && sdlevent.key.repeat != 0)
+        m_suppress_repeated_textinput =
+            Options.tile_key_repeat_delay <= 0 && sdlevent.key.repeat != 0;
+        if (m_suppress_repeated_textinput)
             return 0;
         event->type = WME_KEYDOWN;
         event->key.state = sdlevent.key.state;
@@ -993,6 +996,9 @@ int SDLWrapper::wait_event(wm_event *event, int timeout)
         break;
     case SDL_TEXTINPUT:
     {
+        // Printable keys also emit text events after repeated keydowns.
+        if (m_suppress_repeated_textinput)
+            return 0;
         ASSERT(m_textinput_queue.empty());
         m_textinput_queue = string(sdlevent.text.text);
         return send_textinput(event);

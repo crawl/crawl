@@ -76,6 +76,7 @@ private:
     void glDebug(const char *msg);
 
     int prev_keycode;
+    bool m_suppress_repeated_textinput;
     string m_textinput_queue;
     array<SDL_Cursor*, NUM_MOUSE_CURSORS> m_cursors;
 };
