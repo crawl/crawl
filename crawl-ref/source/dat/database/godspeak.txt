@@ -1232,6 +1232,22 @@ Xom has second-thoughts about your captivity.
 Xom sneaky congratulations
 
 "What a clever toy you are!"
+%%%%
+Xom knowledge
+
+You feel a rush of knowledge for just a moment.
+
+"Diversify thyself, my child."
+
+"Have you ever considered trying this instead?"
+
+Xom crams your mind full of knowledge.
+
+"Class is now in session."
+
+Xom inundates you with a year's worth of experiences in a single moment.
+
+You feel a glimmer of Xom's boundless wisdom(?) touch upon you.
 ######################################
 # Miscellaneous god messages.
 ######################################

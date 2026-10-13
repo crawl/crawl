@@ -64,6 +64,7 @@
 #include "random-pick.h"
 #include "religion.h"
 #include "shout.h"
+#include "skills.h"
 #include "spl-clouds.h"
 #include "spl-goditem.h"
 #include "spl-monench.h"
@@ -4359,6 +4360,122 @@ static void _xom_reaching(int)
     take_note(Note(NOTE_XOM_EFFECT, -1, -1, "reaching"), true);
 }
 
+// Gives instant training in 3 random skills, strongly favoring those in which
+// the player has very little training (and trying never to pick those in which
+// the player is highly trained).
+static void _xom_random_knowledge(int)
+{
+    // First, calculate skill level of all non-useless skills.
+    vector<pair<int, skill_type>> skill_list;
+    for (int i = SK_FIRST_SKILL; i < SK_LAST_SKILL; ++i)
+    {
+        skill_type skill = static_cast<skill_type>(i);
+        if (!is_useless_skill(skill))
+        {
+            const int val = you.skill(skill, 10, true, false);
+            skill_list.push_back({val, skill});
+        }
+    }
+
+    // Then determine the average of the player's 3 highest skills.
+    sort(skill_list.begin(), skill_list.end(),
+         [](const pair<int, skill_type>& a, const pair<int, skill_type>& b)
+         { return a.first < b.first;});
+
+    int sum = 0;
+    for (int i = max(0, (int)skill_list.size() - 3); i < (int)skill_list.size(); ++i)
+        sum += skill_list[i].first;
+    sum /= 3;
+
+    // Try to skip all skills whose level is greater than 2/3 of the average of
+    // the player's 3 highest skills.
+    const int threshold = sum * 2 / 3;
+    vector<pair<int, skill_type>> low_skill_list = skill_list;
+
+    vector<skill_type> removed_skill;
+    for (int i = skill_list.size() - 1; i >= 0; --i)
+    {
+        if (low_skill_list[i].first > threshold)
+        {
+            removed_skill.push_back(low_skill_list[i].second);
+            low_skill_list.erase(low_skill_list.begin() + i);
+        }
+    }
+
+    // Now remove any skills that would cross-train into a removed skill
+    // (and thus effectively boost them anyway.)
+    for (skill_type removed_sk : removed_skill)
+    {
+        vector<skill_type> cross = get_crosstrain_skills(removed_sk);
+        for (skill_type sk : cross)
+        {
+            for (int i = 0; i < (int)low_skill_list.size(); ++i)
+            {
+                if (sk == low_skill_list[i].second)
+                {
+                    low_skill_list.erase(low_skill_list.begin() + i);
+                    break;
+                }
+            }
+        }
+    }
+
+    god_speaks(GOD_XOM, _get_xom_speech("knowledge").c_str());
+    more();
+
+    vector<skill_type> given_skills;
+
+    // If these criteria have eliminated too many things to even have 3 skills
+    // left, instead pick skills at random from anything that isn't fully trained.
+    int num_wanted = 3;
+    if (low_skill_list.size() < 3)
+    {
+        shuffle_array(skill_list);
+        for (size_t i = 0; i < skill_list.size() && (int)given_skills.size() < num_wanted; ++i)
+        {
+            if (skill_list[i].first < 270)
+            {
+                given_skills.push_back(skill_list[i].second);
+
+                // Invocations is useless, but funny; allow giving it, but also
+                // give a 4th skill, too.
+                if (skill_list[i].second == SK_INVOCATIONS)
+                    num_wanted++;
+            }
+        }
+    }
+    // Otherwise, pick randomly from remaining skills.
+    else
+    {
+        shuffle_array(low_skill_list);
+        for (int i = 0; i < min((int)low_skill_list.size(), num_wanted); ++i)
+        {
+            given_skills.push_back(low_skill_list[i].second);
+            if (low_skill_list[i].second == SK_INVOCATIONS)
+                num_wanted++;
+        }
+    }
+
+    // Now actually give the skill points.
+    vector<string> skill_names;
+    for (skill_type skill : given_skills)
+    {
+        skill_names.push_back(skill_name(skill));
+        int sk_p = pow(you.skill_cost_level, 1.25) * random_range(75, 90);
+
+        // A mild hack to make these gifts less wild on gnolls/djinni
+        if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+            sk_p /= 3;
+        else if (you.has_mutation(MUT_INNATE_CASTER) && is_magic_skill(skill))
+            sk_p /= 6;
+
+        change_skill_points(skill, sk_p, true);
+    }
+
+    string msg = make_stringf("knowledge: %s", comma_separated_line(skill_names.begin(), skill_names.end()).c_str());
+    take_note(Note(NOTE_XOM_EFFECT, -1, -1, msg), true);
+}
+
 static void _handle_accidental_death(const int orig_hp,
     const FixedVector<uint8_t, NUM_MUTATIONS> &orig_mutation,
     const transformation orig_form)
@@ -4767,6 +4884,12 @@ static const vector<xom_event_data> _list_xom_good_actions = {
     },
     {
         XOM_GOOD_ACQUIREMENT, 0, 0, 45
+    },
+    {
+        XOM_GOOD_RANDOM_KNOWLEDGE, 0, 0, 15, [](int)
+        {
+            return true;
+        }
     },
 };
 
@@ -5800,6 +5923,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_CLOUD_TRAIL, { "cloud trail", _xom_cloud_trail }},
     { XOM_GOOD_CLEAVING, { "cleaving", _xom_cleaving }},
     { XOM_GOOD_REACHING, { "reaching", _xom_reaching }},
+    { XOM_GOOD_RANDOM_KNOWLEDGE, { "knowledge", _xom_random_knowledge }},
 
     { XOM_BAD_MISCAST_PSEUDO, { "pseudo-miscast", _xom_pseudo_miscast }},
     { XOM_BAD_NOISE, { "noise", _xom_noise }},
