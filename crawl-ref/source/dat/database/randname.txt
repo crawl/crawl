@@ -1272,8 +1272,6 @@ twitching
 
 coiled
 
-bound
-
 clouded
 
 w:2
