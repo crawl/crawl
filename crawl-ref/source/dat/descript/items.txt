@@ -1548,6 +1548,10 @@ scroll of fog
 A scroll that surrounds the reader with a dense cloud of fog, which can block
 vision temporarily. The fog takes a short time to fully spill out.
 %%%%
+scroll of frog
+
+A scroll that summons a small amphibian companion for a short time.
+%%%%
 scroll of identify
 
 A useful magic scroll which identifies the properties of any unknown object.

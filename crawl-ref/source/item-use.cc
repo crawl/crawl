@@ -2782,6 +2782,7 @@ static unique_ptr<targeter> _get_scroll_targeter(scroll_type which_scroll)
     case SCR_BUTTERFLIES:
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS, 5, 0, 0, 2);
     case SCR_SUMMONING:
+    case SCR_FROG:
         // TODO: shadow creatures targeter doesn't handle band placement very
         //       well, so this is an overestimate.
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 5, 0, 1);
@@ -2865,7 +2866,8 @@ bool scroll_hostile_check(scroll_type which_scroll)
     // no hostile check
     if (which_scroll == SCR_SUMMONING
         || which_scroll == SCR_BLINKING
-        || which_scroll == SCR_BUTTERFLIES)
+        || which_scroll == SCR_BUTTERFLIES
+        || which_scroll == SCR_FROG)
     {
         return true;
     }
@@ -3124,6 +3126,10 @@ bool read(item_def* scroll, dist *target)
 
     case SCR_BUTTERFLIES:
         result = summon_butterflies();
+        break;
+
+    case SCR_FROG:
+        result = summon_frog();
         break;
 
     case SCR_FOG:

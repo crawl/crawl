@@ -963,7 +963,9 @@ i-curse-jewellery SCR_CURSE_JEWELLERY
 %back scroll-brown
 i-poison SCR_POISON
 %back scroll-grey
-i-butterflies SCR_BUTTERFLIES SCR_ID_LAST
+i-butterflies SCR_BUTTERFLIES
+i-frog SCR_FROG SRC_ID_LAST
+i-brand-weapon SCR_PLINKING SCR_ID_LAST
 %back none
 
 ##################OBJ_JEWELLERY

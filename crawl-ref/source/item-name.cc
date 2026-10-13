@@ -763,6 +763,8 @@ const char* scroll_type_name(int scrolltype)
     case SCR_VULNERABILITY:      return "vulnerability";
     case SCR_SILENCE:            return "silence";
     case SCR_AMNESIA:            return "amnesia";
+
+    case SCR_FROG:               return "frog";
 #if TAG_MAJOR_VERSION == 34
     case SCR_HOLY_WORD:          return "holy word";
     case SCR_CURSE_WEAPON:       return "curse weapon";
@@ -3143,6 +3145,7 @@ string cannot_read_item_reason(const item_def *item, bool temp, bool ident,
 
         case SCR_SUMMONING:
         case SCR_BUTTERFLIES:
+        case SCR_FROG:
             if (you.allies_forbidden())
                 return "You cannot coerce anything to answer your summons.";
             break;

@@ -146,6 +146,7 @@ spret summon_spiders(monster &agent, int pow);
 bool summon_swarm_clone(const monster& agent, coord_def target_pos);
 
 spret summon_butterflies();
+spret summon_frog();
 
 int barrelling_boulder_hp(int pow);
 spret cast_broms_barrelling_boulder(actor& agent, coord_def pos, int pow, bool fail);

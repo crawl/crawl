@@ -1182,6 +1182,49 @@ spret summon_shadow_creatures()
     return spret::success;
 }
 
+spret summon_frog()
+{
+    if (!you_can_see_habitable_spot_near(HT_AMPHIBIOUS, 4))
+    {
+        canned_msg(MSG_NO_AVAILABLE_SPACE);
+        return spret::abort;
+    }
+
+    if (stop_summoning_prompt())
+        return spret::abort;
+
+    int pow = random_range(you.experience_level / 2, you.experience_level);
+    monster_type type;
+
+    if (pow >= 18)
+        type = MONS_GOLIATH_FROG;
+    else if (pow >= 12)
+        type = MONS_CANE_TOAD;
+    else if (pow >= 7)
+        type = MONS_BLINK_FROG;
+    else
+        type = MONS_BULLFROG;
+
+    mgen_data mg(type, BEH_FRIENDLY, you.pos(),
+                 MHITYOU, MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD);
+    mg.set_summoned(&you, -1, summ_dur(4));
+    mg.set_range(1, 4);
+
+    if (monster *mons = create_monster(mg))
+    {
+        mons->add_ench(mon_enchant(ENCH_REGENERATION, &you, INFINITE_DURATION));
+
+        if (pow > 22)
+            mons->add_ench(mon_enchant(ENCH_MIGHT, &you, INFINITE_DURATION));
+
+        mpr("You hear a cheerful croaking...");
+    }
+    else
+        mpr("You hear a very distant croak, but nothing seems to happen.");
+
+    return spret::success;
+}
+
 bool can_cast_malign_gateway(const actor& caster)
 {
     return count_malign_gateways(caster) < 1;
