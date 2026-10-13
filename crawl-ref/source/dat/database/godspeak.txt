@@ -38,6 +38,26 @@ Xom grants you an implement of some kind.
 Xom smiles on you.
 
 "Catch!"
+
+"This should solve all your mortal problems."
+
+"You have earned this, mortal."
+
+Xom offers you a trinket.
+
+Xom bestows a priceless treasure upon you.
+
+Clutter rains down from above.
+
+"Surprise!"
+
+You hear rummaging in a distant attic.
+
+w:5
+"A fitting gift for my favourite toy."
+
+w:5
+"My favourite toy didn't want this, so you can have it instead."
 %%%%
 # gifting you an orb
 Xom orb gift
@@ -619,6 +639,22 @@ You hear Xom's maniacal laughter.
 "Suffer!"
 
 Xom's malign attention turns to you for a moment.
+
+"Remember your place, mortal."
+
+"Boring toys must be taught a lesson."
+
+Xom tests your faith.
+
+"Amuse your god!"
+
+Xom smiles daggers at you.
+
+Xom's apathy hits you like a hurricane.
+
+"You require additional motivation, mortal."
+
+"Isn't trouble so much fun?"
 %%%%
 Xom torment all
 
