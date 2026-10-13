@@ -136,9 +136,14 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
 
     // Allow players to answer prompts via clua.
     // XXX: always not currently supported
-    maybe_bool res = clua.callmaybefn("c_answer_prompt", "s", str);
-    if (res.is_bool())
-        return bool(res);
+    static bool doing_c_answer_prompt_hook = false;
+    if (!doing_c_answer_prompt_hook)
+    {
+        unwind_bool no_reentry(doing_c_answer_prompt_hook, true);
+        maybe_bool res = clua.callmaybefn("c_answer_prompt", "s", str);
+        if (res.is_bool())
+            return bool(res);
+    }
 
     string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
 
