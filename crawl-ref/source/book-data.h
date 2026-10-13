@@ -137,7 +137,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SUMMON_HYDRA,
 },
 
-{   // My Sojourn Through Swamps
+{   // My Sojourns in Swampland
     SPELL_MERCURY_ARROW,
     SPELL_CLOCKWORK_BEE,
     SPELL_SURPRISING_CROCODILE,
