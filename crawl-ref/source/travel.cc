@@ -1152,6 +1152,13 @@ command_type travel()
                 continue;
             }
 
+            // Don't wait for icemail if it will never come back.
+            if (type == DUR_ICEMAIL_DEPLETED
+                && you.unrand_equipped(UNRAND_SALAMANDER))
+            {
+                continue;
+            }
+
             // Save the player's position, so we can catch the degenerate case
             // where this results in us waiting indefinitely.
             you.props[AUTO_REST_STATUS_POS] = you.pos();
