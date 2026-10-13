@@ -3593,7 +3593,11 @@ bool add_bane(bane_type bane, string reason, int duration, int mult)
     duration = duration * mult / 100;
 
     if (you.banes[bane] == 0)
-        mprf(MSGCH_WARN, "You are stricken with the %s.", bane_name(bane).c_str());
+    {
+        mprf(MSGCH_WARN, "You are stricken with the %s%s.", bane_name(bane).c_str(),
+             // Xom's meddling, most likely
+             mult <= 20 ? " (...for a very short time)" : "");
+    }
     else
         mprf(MSGCH_WARN, "Your %s grows stronger.", bane_name(bane).c_str());
 

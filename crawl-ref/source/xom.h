@@ -95,7 +95,8 @@ enum xom_event_type
     XOM_BAD_CHAOS_REINFORCEMENTS,
     XOM_BAD_DUEL,
     XOM_BAD_FLOOR_LOCK,
-    XOM_LAST_BAD_ACT = XOM_BAD_FLOOR_LOCK,
+    XOM_BAD_MINIBANE,
+    XOM_LAST_BAD_ACT = XOM_BAD_MINIBANE,
     XOM_LAST_REAL_ACT = XOM_LAST_BAD_ACT,
 
     XOM_PLAYER_DEAD = 100, // player already dead (shouldn't happen)

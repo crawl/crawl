@@ -5102,6 +5102,9 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
                    && _count_reachable_monsters() > 5;
         }
     },
+    {
+        XOM_BAD_MINIBANE, 0, 0, 40
+    },
     // Highly circumstantial effects with less total
     // chances than their weight would seem to show.
     {
@@ -5854,6 +5857,14 @@ static void _xom_floor_lock(int)
     take_note(Note(NOTE_XOM_EFFECT, -1, -1, "floor lock"), true);
 }
 
+static void _xom_minibane(int)
+{
+    god_speaks(GOD_XOM, _get_xom_speech("suffering").c_str());
+    take_note(Note(NOTE_XOM_EFFECT, -1, -1, "minibane"), true);
+    add_bane(NUM_BANES, "Xom's whimsy", 0, 20);
+    more();
+}
+
 // On an appropriate kill, maybe progress the floor lock.
 void xom_reduce_floor_lock()
 {
@@ -5959,6 +5970,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BAD_CHAOS_REINFORCEMENTS, {"chaos reinforcements", _xom_chaos_reinforcements }},
     { XOM_BAD_DUEL, {"duel", _xom_duel }},
     { XOM_BAD_FLOOR_LOCK, {"floor_lock", _xom_floor_lock }},
+    { XOM_BAD_MINIBANE, {"minibane", _xom_minibane }},
 };
 
 static void _do_xom_event(xom_event_type event_type, int tension)
