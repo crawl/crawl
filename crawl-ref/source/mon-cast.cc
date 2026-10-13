@@ -2624,7 +2624,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_DEATH_RATTLE:
         beam.name     = "vile air";
         beam.colour   = DARKGREY;
-        beam.damage   = dice_def(2, 4);
+        beam.damage   = death_rattle_damage();
         beam.hit      = AUTOMATIC_HIT;
         beam.flavour  = BEAM_DEATH_RATTLE;
         beam.foe_ratio = 30;
@@ -2928,6 +2928,11 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
 dice_def eruption_damage()
 {
     return dice_def(3, 24);
+}
+
+dice_def death_rattle_damage()
+{
+  return dice_def(2, 4);
 }
 
 // Can 'binder' bind 'bound's soul with BIND_SOUL?
