@@ -1004,8 +1004,8 @@ At your current experience level, you can hold enough memories to cast a maximum
 of {{return 3 + math.floor(you.xl() * 3 / 20);}} spells in a row this way.
 
 Upon first gaining this ability, you will recall a fragment of your undead
-origins,
-granting knowledge of a damage-dealing spell that can be enhanced in this way.
+origins, granting knowledge of a damage-dealing spell that can be enhanced in
+this way.
 %%%%
 spellclaws mutation
 
