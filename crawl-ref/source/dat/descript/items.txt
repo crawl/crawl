@@ -1862,7 +1862,7 @@ otherwise be possible{{
     if you.get_base_mutation_level("+LOS") > 0 then
         return " (but your own vision is already as long as possible)."
     else
-        return ", but be warned - ceatures perceived this way may perceive you back."
+        return ", but be warned - creatures perceived this way will perceive you back."
     end
 }}
 %%%%
