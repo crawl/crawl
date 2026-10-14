@@ -221,6 +221,8 @@ struct bolt
     // Do we draw animations?
     bool   animate;
     ac_type ac_rule = ac_type::normal;   // How defender's AC affects damage.
+
+    bool use_player_knowledge = false;  // Whether to use player map knowledge
 #ifdef DEBUG_DIAGNOSTICS
     bool   quiet_debug = false;    // Disable any debug spam.
 #endif
@@ -443,6 +445,14 @@ private:
     // methods to change the path
     void bounce();
     void reflect();
+
+    // methods to calculate properties of cells, depending on whether we are
+    // using player knowledge or not.
+    bool path_cell_is_known(const coord_def& p) const;
+    dungeon_feature_type path_feat(const coord_def& p) const;
+    bool path_cell_is_solid(const coord_def& p) const;
+    monster* path_monster_at(const coord_def& p) const;
+    actor* path_actor_at(const coord_def& p) const;
 public:
     void choose_ray();
 
