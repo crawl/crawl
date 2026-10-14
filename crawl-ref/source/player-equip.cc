@@ -2598,8 +2598,8 @@ static void _handle_regen_item_equip(const item_def& item)
     equipment_slot eq_slot = item_equip_slot(item);
     bool plural = (eq_slot == SLOT_BOOTS || eq_slot == SLOT_GLOVES);
     string item_name = is_artefact(item) ? get_artefact_name(item)
-                                         : eq_slot == SLOT_AMULET
-                                         ? "amulet"
+                                         : eq_slot == SLOT_AMULET ? "amulet"
+                                         : item.base_type == OBJ_STAVES ? "staff"
                                          : lowercase_string(equip_slot_name(eq_slot, true));
 
 #if TAG_MAJOR_VERSION == 34

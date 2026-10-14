@@ -1844,7 +1844,7 @@ int player_spec_death()
 {
     int sd = 0;
 
-    if (you.wearing(OBJ_STAVES, STAFF_NECROMANCY))
+    if (you.wearing(OBJ_STAVES, STAFF_NECROMANCY, false, true))
         sd += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sd += you.get_mutation_level(MUT_NECRO_ENHANCER);
@@ -1860,13 +1860,13 @@ int player_spec_fire()
 {
     int sf = 0;
 
-    if (you.wearing(OBJ_STAVES, STAFF_FIRE))
+    if (you.wearing(OBJ_STAVES, STAFF_FIRE, false, true))
         sf += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sf += you.wearing_ego(OBJ_ARMOUR, SPARM_FIRE);
     sf += you.wearing_ego(OBJ_ARMOUR, SPARM_PYROMANIA);
 
-    sf += you.scan_artefacts(ARTP_ENHANCE_FIRE);
+    sf += you.scan_artefacts(ARTP_ENHANCE_FIRE, nullptr, true);
 
     if (you.unrand_equipped(UNRAND_ELEMENTAL_STAFF))
         sf += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
@@ -1878,12 +1878,12 @@ int player_spec_cold()
 {
     int sc = 0;
 
-    if (you.wearing(OBJ_STAVES, STAFF_COLD))
+    if (you.wearing(OBJ_STAVES, STAFF_COLD, false, true))
         sc += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sc += you.wearing_ego(OBJ_ARMOUR, SPARM_ICE);
 
-    sc += you.scan_artefacts(ARTP_ENHANCE_ICE);
+    sc += you.scan_artefacts(ARTP_ENHANCE_ICE, nullptr, true);
 
     if (you.unrand_equipped(UNRAND_ELEMENTAL_STAFF))
         sc += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
@@ -1896,12 +1896,12 @@ int player_spec_earth()
     int se = 0;
 
     // Staves
-    if (you.wearing(OBJ_STAVES, STAFF_EARTH))
+    if (you.wearing(OBJ_STAVES, STAFF_EARTH, false, true))
         se += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     se += you.wearing_ego(OBJ_ARMOUR, SPARM_EARTH);
 
-    se += you.scan_artefacts(ARTP_ENHANCE_EARTH);
+    se += you.scan_artefacts(ARTP_ENHANCE_EARTH, nullptr, true);
 
     if (you.unrand_equipped(UNRAND_ELEMENTAL_STAFF))
         se += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);;
@@ -1914,12 +1914,12 @@ int player_spec_air()
     int sa = 0;
 
     // Staves
-    if (you.wearing(OBJ_STAVES, STAFF_AIR))
+    if (you.wearing(OBJ_STAVES, STAFF_AIR, false, true))
         sa += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sa += you.wearing_ego(OBJ_ARMOUR, SPARM_AIR);
 
-    sa += you.scan_artefacts(ARTP_ENHANCE_AIR);
+    sa += you.scan_artefacts(ARTP_ENHANCE_AIR, nullptr, true);
 
     if (you.unrand_equipped(UNRAND_ELEMENTAL_STAFF))
         sa += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
@@ -1931,10 +1931,10 @@ int player_spec_conj()
 {
     int sc = 0;
 
-    if (you.wearing(OBJ_STAVES, STAFF_CONJURATION))
+    if (you.wearing(OBJ_STAVES, STAFF_CONJURATION, false, true))
         sc += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
-    sc += you.scan_artefacts(ARTP_ENHANCE_CONJ);
+    sc += you.scan_artefacts(ARTP_ENHANCE_CONJ, nullptr, true);
 
     return sc;
 }
@@ -1945,31 +1945,31 @@ int player_spec_hex()
 
     // Demonspawn mutation
     sh += you.get_mutation_level(MUT_HEX_ENHANCER);
-    sh += you.scan_artefacts(ARTP_ENHANCE_HEXES);
+    sh += you.scan_artefacts(ARTP_ENHANCE_HEXES, nullptr, true);
 
     return sh;
 }
 
 int player_spec_summ()
 {
-    return you.scan_artefacts(ARTP_ENHANCE_SUMM);
+    return you.scan_artefacts(ARTP_ENHANCE_SUMM, nullptr, true);
 }
 
 int player_spec_forgecraft()
 {
-    return you.scan_artefacts(ARTP_ENHANCE_FORGECRAFT);
+    return you.scan_artefacts(ARTP_ENHANCE_FORGECRAFT, nullptr, true);
 }
 
 int player_spec_alchemy()
 {
     int sp = 0;
 
-    if (you.wearing(OBJ_STAVES, STAFF_ALCHEMY))
+    if (you.wearing(OBJ_STAVES, STAFF_ALCHEMY, false, true))
         sp += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);
 
     sp += you.wearing_jewellery(AMU_CHEMISTRY);
 
-    sp += you.scan_artefacts(ARTP_ENHANCE_ALCHEMY);
+    sp += you.scan_artefacts(ARTP_ENHANCE_ALCHEMY, nullptr, true);
 
     if (you.unrand_equipped(UNRAND_OLGREB))
         sp += 1 + you.wearing_ego(OBJ_ARMOUR, SPARM_ATTUNEMENT);;
@@ -1979,7 +1979,7 @@ int player_spec_alchemy()
 
 int player_spec_tloc()
 {
-    return you.scan_artefacts(ARTP_ENHANCE_TLOC);
+    return you.scan_artefacts(ARTP_ENHANCE_TLOC, nullptr, true);
 }
 
 // If include_temp is set to false, temporary sources of resistance won't be
@@ -4049,7 +4049,8 @@ int player::slaying(bool throwing, bool random) const
 // possible. If `matches' is non-nullptr, items with nonzero property are
 // pushed onto *matches.
 int player::scan_artefacts(artefact_prop_type which_property,
-                           vector<const item_def *> *matches) const
+                           vector<const item_def *> *matches,
+                           bool check_staff_attunement) const
 {
     // First, fetch the property total from our cache.
     int retval = you.equipment.get_artprop(which_property);
@@ -4062,6 +4063,10 @@ int player::scan_artefacts(artefact_prop_type which_property,
     for (auto& entry : you.equipment.items)
     {
         const item_def& item = entry.get_item();
+
+        if (check_staff_attunement && item.base_type == OBJ_STAVES && !entry.attuned)
+            continue;
+
         if (is_artefact(item) && artefact_property(item, which_property))
             matches->push_back(&item);
     }

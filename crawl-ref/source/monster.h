@@ -291,8 +291,8 @@ public:
                 bool count_plus = 0, bool check_attuned = false) const override;
     int wearing_ego(object_class_type obj_type, int ego) const override;
     int scan_artefacts(artefact_prop_type which_property,
-                       vector<const item_def *> *_unused_matches = nullptr) const
-        override;
+                       vector<const item_def *> *_unused_matches = nullptr,
+                       bool check_staff_attunement = false) const override;
     bool unrand_equipped(int unrand_index, bool include_melded = false) const override;
 
     item_def *mslot_item(mon_inv_type sl) const;

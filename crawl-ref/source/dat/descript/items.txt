@@ -1678,24 +1678,32 @@ A staff that increases the power of air spells cast by its wielder, and
 insulates them from electricity. If the wielder is skilled in Evocations and
 Air Magic, they can shock those struck by it, dealing electrical damage which
 bypasses half of defenders' armour.
+
+[[staff attunement]]
 %%%%
 staff of alchemy
 
 A staff that increases the power of alchemy spells cast by its wielder, and
 protects them from the effects of poison. If the wielder is skilled in
 Evocations and Alchemy, they can envenom those struck by it.
+
+[[staff attunement]]
 %%%%
 staff of cold
 
 A staff that increases the power of ice spells cast by its wielder, and
 protects them from the effects of cold. If the wielder is skilled in Evocations
 and Ice Magic, they can freeze those struck by it.
+
+[[staff attunement]]
 %%%%
 staff of conjuration
 
 A staff that increases the power of conjurations cast by its wielder. If the
 wielder is skilled in Evocations and Conjurations, they can blast those they
 strike with pure energy.
+
+[[staff attunement]]
 %%%%
 staff of necromancy
 
@@ -1703,6 +1711,8 @@ A staff that increases the power of necromantic spells cast by its wielder, and
 protects them from negative energy. If the wielder is skilled in Evocations and
 Necromancy, they can inflict great pain on those living souls they strike,
 dealing negative energy damage which bypasses armour.
+
+[[staff attunement]]
 %%%%
 staff of earth
 
@@ -1710,12 +1720,16 @@ A staff that increases the power of earth spells cast by its wielder. If the
 wielder is skilled in Evocations and Earth magic, they can fracture the ground
 beneath those struck by it, dealing substantial damage - though much less to
 creatures which fly.
+
+[[staff attunement]]
 %%%%
 staff of fire
 
 A staff that increases the power of fire spells cast by its wielder, and
 protects them from the effects of fire. If the wielder is skilled in Evocations
 and Fire Magic, they can burn those struck by it.
+
+[[staff attunement]]
 %%%%
 starry gem
 
@@ -1959,4 +1973,9 @@ wear a pair of very thick, non-absorbent gloves.
 detected item
 
 You have detected an object here, but you do not know what it is.
+%%%%
+staff attunement
+
+Like all magical staves, it must attune itself to the wearer's body while their
+reserves of magic are full in order to enhance their spells or attacks.
 %%%%
