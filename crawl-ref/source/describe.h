@@ -104,7 +104,8 @@ void describe_missile_ego(special_missile_type msl);
 string short_ghost_description(const monster *mon, bool abbrev = false);
 string get_ghost_description(const monster_info &mi, bool concise = false);
 
-string get_skill_description(skill_type skill, bool need_title = false);
+string get_skill_description(skill_type skill, bool need_title = false,
+                             string *spell_fail_details = nullptr);
 
 void describe_skill(skill_type skill);
 
@@ -121,7 +122,8 @@ void describe_hit_chance(int hit_chance, ostringstream &result,
 string get_command_description(const command_type cmd, bool terse);
 
 int show_description(const string &body, const tile_def *tile = nullptr);
-int show_description(const describe_info &inf, const tile_def *tile = nullptr);
+int show_description(const describe_info &inf, const tile_def *tile = nullptr,
+                     const string &extra = "");
 string process_description(const describe_info &inf, bool include_title = true);
 
 const char* get_size_adj(const size_type size, bool ignore_medium = false);

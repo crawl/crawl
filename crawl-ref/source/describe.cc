@@ -123,7 +123,8 @@ int show_description(const string &body, const tile_def *tile)
     return show_description(inf, tile);
 }
 
-int show_description(const describe_info &inf, const tile_def *tile)
+int show_description(const describe_info &inf, const tile_def *tile,
+                     const string &extra)
 {
     auto vbox = make_shared<Box>(Widget::VERT);
 
@@ -168,6 +169,7 @@ int show_description(const describe_info &inf, const tile_def *tile)
         "[<w>!</w>]: Description|<w>Quote</w>",
     };
 
+    shared_ptr<Text> desc_text;
     for (int i = 0; i < (inf.quote.empty() ? 1 : 2); i++)
     {
         const auto &desc = descs[static_cast<int>(i)];
@@ -175,6 +177,8 @@ int show_description(const describe_info &inf, const tile_def *tile)
         auto fs = formatted_string::parse_string(trimmed_string(desc));
         auto text = make_shared<Text>(fs);
         text->set_wrap_text(true);
+        if (i == 0)
+            desc_text = text;
         scroller->set_child(text);
         desc_sw->add_child(std::move(scroller));
         more_sw->add_child(make_shared<Text>(
@@ -196,11 +200,26 @@ int show_description(const describe_info &inf, const tile_def *tile)
     auto popup = make_shared<ui::Popup>(vbox);
 
     bool done = false;
+    bool show_extra = false;
     int lastch;
+    // These both use ! to show more, so can't coexist.
+    ASSERT(inf.quote.empty() || extra.empty());
     popup->on_keydown_event([&](const KeyEvent& ev) {
         lastch = ev.key();
         if (!inf.quote.empty() && (lastch == '!' || lastch == '^'))
             desc_sw->current() = more_sw->current() = 1 - desc_sw->current();
+        else if (!extra.empty() && lastch == '!')
+        {
+            show_extra = !show_extra;
+            desc_text->set_text(formatted_string::parse_string(
+                show_extra ? extra : descs[0]));
+#ifdef USE_TILE_WEB
+            tiles.json_open_object();
+            tiles.json_write_string("body",
+                desc_text->get_text().to_colour_string(LIGHTGREY));
+            tiles.ui_state_change("describe-spell-success", -1);
+#endif
+        }
         else
             done = ui::key_exits_popup(lastch, true);
         return true;
@@ -1970,6 +1989,28 @@ static string _equipment_switchto_string(const item_def &item)
         return "wearing";
 }
 
+static void _largest_spell_fail_change(
+    const FixedVector<int, MAX_KNOWN_SPELLS> &cur_fail,
+    const FixedVector<int, MAX_KNOWN_SPELLS> &next_fail,
+    int &fail_change, int &visible_fail_change)
+{
+    fail_change = 0;
+    visible_fail_change = 0;
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+    {
+        if (cur_fail[i] != next_fail[i])
+        {
+            int new_fail_change = next_fail[i] - cur_fail[i];
+            int new_visible_fail_change = failure_rate_to_int(next_fail[i])
+                                            - failure_rate_to_int(cur_fail[i]);
+            if (abs(new_fail_change) > abs(fail_change))
+                fail_change = new_fail_change;
+            if (abs(new_visible_fail_change) > abs(visible_fail_change))
+                visible_fail_change = new_visible_fail_change;
+        }
+    }
+}
+
 /**
  * Describe how (un)equipping a piece of equipment might change the player's
  * AC/EV/SH, spell failure, and attack delay. We don't include temporary buffs
@@ -1992,23 +2033,9 @@ static string _equipment_property_change_description(const item_def &item,
     else
         next = you.preview_stats_with_specific_item(100, item);
 
-    // Check if any spell failures changed, and save the greatest magnitude that
-    // any of them changed.
-    int fail_change = 0;
-    int visible_fail_change = 0;
-    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
-    {
-        if (cur.fail[i] != next.fail[i])
-        {
-            int new_fail_change = next.fail[i] - cur.fail[i];
-            int new_visible_fail_change = failure_rate_to_int(next.fail[i])
-                                            - failure_rate_to_int(cur.fail[i]);
-            if (abs(new_fail_change) > abs(fail_change))
-                fail_change = new_fail_change;
-            if (abs(new_visible_fail_change) > abs(visible_fail_change))
-                visible_fail_change = new_visible_fail_change;
-        }
-    }
+    int fail_change, visible_fail_change;
+    _largest_spell_fail_change(cur.fail, next.fail, fail_change,
+                               visible_fail_change);
 
     // If we're previewing non-armour and there is no relevant change, print no
     // extra description at all (since almost all items of these types will
@@ -2103,20 +2130,18 @@ static string _equipment_property_change_description(const item_def &item,
     return description;
 }
 
-static string _spell_fail_change_description(const item_def &item,
-                                             bool remove = false)
+static FixedVector<int, MAX_KNOWN_SPELLS> _spell_fail_rates()
 {
-    FixedVector<int, MAX_KNOWN_SPELLS> cur_fail, new_fail;
+    FixedVector<int, MAX_KNOWN_SPELLS> fail;
     for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
-        cur_fail[i] = raw_spell_fail(you.spells[i]);
+        fail[i] = raw_spell_fail(you.spells[i]);
+    return fail;
+}
 
-    if (remove)
-        new_fail = you.preview_stats_without_specific_item(100, item).fail;
-    else if (item.base_type == OBJ_TALISMANS)
-        new_fail = you.preview_stats_in_specific_form(100, item).fail;
-    else
-        new_fail = you.preview_stats_with_specific_item(100, item).fail;
-
+static string _spell_fail_change_list(FixedVector<int, MAX_KNOWN_SPELLS> cur_fail,
+                                      FixedVector<int, MAX_KNOWN_SPELLS> new_fail,
+                                      const string &condition)
+{
     // Check if any spell failures changed.
     int fail_change = 0;
     for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
@@ -2153,8 +2178,8 @@ static string _spell_fail_change_description(const item_def &item,
 
     // Otherwise, generate a complete list of all non-trivial changes
     string desc;
-    desc = make_stringf("If you %s this item, your spell failure would %s:\n",
-                        remove ? "removed" : "equipped",
+    desc = make_stringf("%s, your spell failure would %s:\n",
+                        condition.c_str(),
                         fail_change < 0 ? "worsen" : "improve");
 
     // Sort spells by degree of change in their fail rates (and then by
@@ -2203,6 +2228,22 @@ static string _spell_fail_change_description(const item_def &item,
     }
 
     return desc;
+}
+
+static string _spell_fail_change_description(const item_def &item,
+                                             bool remove = false)
+{
+    FixedVector<int, MAX_KNOWN_SPELLS> new_fail;
+    if (remove)
+        new_fail = you.preview_stats_without_specific_item(100, item).fail;
+    else if (item.base_type == OBJ_TALISMANS)
+        new_fail = you.preview_stats_in_specific_form(100, item).fail;
+    else
+        new_fail = you.preview_stats_with_specific_item(100, item).fail;
+
+    return _spell_fail_change_list(_spell_fail_rates(), new_fail,
+                                   make_stringf("If you %s this item",
+                                                remove ? "removed" : "equipped"));
 }
 
 static string _equipment_property_change(const item_def &item)
@@ -4591,7 +4632,8 @@ static string _player_spell_stats(const spell_type spell)
     return description;
 }
 
-static string _get_skill_defense_change(skill_type skill)
+static string _get_skill_training_change(skill_type skill,
+                                         string *spell_fail_details)
 {
     unwind_var<uint8_t> unwind_skill(you.skills[skill]);
     unwind_var<unsigned int> unwind_sp(you.skill_points[skill]);
@@ -4601,44 +4643,82 @@ static string _get_skill_defense_change(skill_type skill)
     const int cur_ac = you.armour_class_scaled(100);
     const int cur_ev = you.evasion_scaled(100, false);
     const int cur_sh = player_displayed_shield_class(100, false);
+    const FixedVector<int, MAX_KNOWN_SPELLS> cur_fail = _spell_fail_rates();
 
     const double cur_skill = you.skill(skill, 10, true) * 0.1;
-    set_skill_level(skill, cur_skill + 1, true);
+    const bool mastering = cur_skill >= 26;
+    const char* msg = mastering ? "mastering" : "training 1 level of";
 
+    set_skill_level(skill, cur_skill + 1, true);
     const int new_ac = you.armour_class_scaled(100);
     const int new_ev = you.evasion_scaled(100, false);
     const int new_sh = player_displayed_shield_class(100, false);
+    const FixedVector<int, MAX_KNOWN_SPELLS> new_fail = _spell_fail_rates();
 
     const float ac_diff = (float)(new_ac - cur_ac) / 100.0;
     const float ev_diff = (float)(new_ev - cur_ev) / 100.0;
     const float sh_diff = (float)(new_sh - cur_sh) / 100.0;
 
-    const char* msg = (cur_skill >= 26) ? "mastering" : "training 1 level of";
+    int fail_change, visible_fail_change;
+    _largest_spell_fail_change(cur_fail, new_fail, fail_change,
+                               visible_fail_change);
 
+    if (spell_fail_details)
+    {
+        *spell_fail_details = _spell_fail_change_list(cur_fail, new_fail,
+                                  mastering ? "If you mastered this skill"
+                                            : "If you trained 1 level of this skill");
+    }
+
+    string description;
     if (skill == SK_ARMOUR)
     {
-        return make_stringf("\nWith your current stats and equipment, %s "
-                            "this skill would increase your AC by %.1f and "
-                            "your EV by %.1f.",
-                            msg, ac_diff, ev_diff).c_str();
+        description = make_stringf("\nWith your current stats and equipment, %s "
+                                   "this skill would increase your AC by %.1f and "
+                                   "your EV by %.1f.",
+                                   msg, ac_diff, ev_diff);
     }
     else if (skill == SK_DODGING)
     {
-        return make_stringf("\nWith your current stats and equipment, %s "
-                            "this skill would increase your EV by %.1f.",
-                            msg, ev_diff).c_str();
+        description = make_stringf("\nWith your current stats and equipment, %s "
+                                   "this skill would increase your EV by %.1f.",
+                                   msg, ev_diff);
     }
     else if (skill == SK_SHIELDS)
     {
-        return make_stringf("\nWith your current stats and equipment, %s "
-                            "this skill would increase your SH by %.1f.",
-                            msg, sh_diff).c_str();
+        description = make_stringf("\nWith your current stats and equipment, %s "
+                                   "this skill would increase your SH by %.1f.",
+                                   msg, sh_diff);
     }
 
-    return "";
+    if (fail_change != 0)
+    {
+        if (description.empty())
+        {
+            description = make_stringf("\nWith your current stats and "
+                                       "equipment, %s this skill would", msg);
+        }
+        else
+            description += "\nIt would also";
+        description += (fail_change > 0) ? " worsen" : " improve";
+        description += " your spell failure";
+        if (visible_fail_change == 0)
+            description += " trivially.";
+        else
+        {
+            description += make_stringf(" by up to %d%%%s.",
+                                        abs(visible_fail_change),
+                                        spell_fail_details
+                                        && !spell_fail_details->empty()
+                                        ? " (press '!' for details)" : "");
+        }
+    }
+
+    return description;
 }
 
-string get_skill_description(skill_type skill, bool need_title)
+string get_skill_description(skill_type skill, bool need_title,
+                             string *spell_fail_details)
 {
     string lookup = skill_name(skill);
     string result = "";
@@ -4674,11 +4754,8 @@ string get_skill_description(skill_type skill, bool need_title)
         result += "\n";
     }
 
-    if ((skill == SK_ARMOUR || skill == SK_DODGING || skill == SK_SHIELDS)
-        && you.skills[skill] < MAX_SKILL_LEVEL && !is_useless_skill(skill))
-    {
-        result += _get_skill_defense_change(skill);
-    }
+    if (you.skills[skill] < MAX_SKILL_LEVEL && !is_useless_skill(skill))
+        result += _get_skill_training_change(skill, spell_fail_details);
     if (skill == SK_INVOCATIONS)
     {
         if (you.has_mutation(MUT_FORLORN))
@@ -7734,9 +7811,10 @@ void describe_skill(skill_type skill)
 {
     describe_info inf;
     inf.title = skill_name(skill);
-    inf.body << get_skill_description(skill, false);
+    string spell_fail_details;
+    inf.body << get_skill_description(skill, false, &spell_fail_details);
     tile_def tile = tile_def(tileidx_skill(skill, TRAINING_ENABLED));
-    show_description(inf, &tile);
+    show_description(inf, &tile, spell_fail_details);
 }
 
 #ifdef USE_TILE_LOCAL // only used in tiles
