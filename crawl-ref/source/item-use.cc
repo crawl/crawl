@@ -2650,6 +2650,58 @@ static spret _handle_amnesia(bool alreadyknown)
     return spret::success;
 }
 
+static void _plinking_scroll()
+{
+    mprf(MSGCH_DURATION, "A flurry of pebbles and grit begins flying from you!");
+    you.duration[DUR_PLINKING] = random_range(4, 7);
+}
+
+void do_plinking_effect()
+{
+    vector<coord_def> targs = get_salvo_targets(coord_def(), 50);
+
+    bolt beam(you, ZAP_PLINK, 0);
+    beam.stop_at_allies = true;
+    beam.origin_spell = SPELL_PLINKING;
+
+
+    if (--you.duration[DUR_PLINKING] <= 0)
+        mprf(MSGCH_DURATION, "A final flurry of detritus flies from you.");
+
+    for (coord_def targ : targs)
+    {
+        bolt shot = beam;
+        shot.target = targ;
+
+        // Get a special projectile on each shot of the last volley.
+        // XXX: The beam uses the projectile name to determine its effect
+        if (you.duration[DUR_PLINKING] <= 0)
+        {
+            switch (random2(3))
+            {
+                case 0:
+                    shot.name = "tiny gold coin";
+                    shot.tile_beam = TILE_GOLD01;
+                    break;
+
+                case 1:
+                    shot.name = "orange crystal pebble";
+                    break;
+
+                case 2:
+                    shot.name = "fossilised glass eye";
+                    break;
+
+                case 3:
+                    shot.name = "glittering crystal";
+                    break;
+            }
+        }
+
+        shot.fire();
+    }
+}
+
 bool uncancel_amnesia()
 {
     spret result = _handle_amnesia(false);
@@ -3284,6 +3336,10 @@ bool read(item_def* scroll, dist *target)
         else
             result = _handle_amnesia(alreadyknown);
 
+        break;
+
+    case SCR_PLINKING:
+        _plinking_scroll();
         break;
 
     default:

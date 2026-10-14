@@ -1077,6 +1077,9 @@ static void _decrement_durations()
     if (you.duration[DUR_FUSILLADE] && you.time_taken > 0)
         fire_fusillade();
 
+    if (you.duration[DUR_PLINKING] && you.time_taken > 0)
+        do_plinking_effect();
+
     if (you.duration[DUR_CELEBRANT_COOLDOWN] && you.hp == you.hp_max)
     {
         mprf(MSGCH_DURATION, "You are ready to perform a blood rite again.");

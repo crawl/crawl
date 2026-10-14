@@ -848,6 +848,11 @@ static const duration_def duration_data[] =
       "rampage 7", "rampage+",
       "You rampage instantly towards enemies.", D_NO_FLAGS,
       {{ "Your burst of speed ends." }}},
+    { DUR_PLINKING,
+      LIGHTBLUE, "Plink",
+      "plinking", "plink",
+      "You are rapidly tossing pebbles at your foes.", D_NO_FLAGS,
+    },
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

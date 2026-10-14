@@ -2827,6 +2827,18 @@ void bolt::affect_endpoint()
         break;
     }
 
+    case SPELL_PLINKING:
+        if (name == "tiny gold coin")
+        {
+            int gold = items(false, OBJ_GOLD, 0, 0);
+            if (gold != NON_ITEM)
+            {
+                env.item[gold].quantity = 1;
+                move_item_to_grid(&gold, pos());
+            }
+        }
+        break;
+
     default:
         break;
     }
@@ -5345,6 +5357,27 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         mon->knockback(you, 2, 0, "scorching wind");
         mon->add_ench(mon_enchant(ENCH_SWIFT, &you, 200));
         mon->speed_increment -= 5;
+    }
+
+    if (origin_spell == SPELL_PLINKING)
+    {
+        if (name == "orange crystal pebble")
+        {
+            mon->drain_magic(agent(), random_range(50, 70));
+            mon->confuse(agent(), 6);
+        }
+        else if (name == "tiny gold coin")
+        {
+            mon->daze(random_range(3, 5));
+            mon->foe = MHITNOT;
+            mon->target = mon->pos();
+            mon->speed_increment -= 10;
+            simple_monster_message(*mon, " is distracted by the glint of gold.");
+        }
+        else if (name == "fossilised glass eye")
+            mon->vitrify(agent(), random_range(30, 60));
+        else if (name == "glittering crystal")
+            mon->add_ench(mon_enchant(ENCH_BLIND, agent(), random_range(40, 60)));
     }
 }
 

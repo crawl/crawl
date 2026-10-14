@@ -319,5 +319,6 @@ enum duration_type
     DUR_REACH,
     DUR_IRRITATED,
     DUR_RAMPAGE_MAX,
+    DUR_PLINKING,
     NUM_DURATIONS
 };

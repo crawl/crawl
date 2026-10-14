@@ -765,6 +765,7 @@ const char* scroll_type_name(int scrolltype)
     case SCR_AMNESIA:            return "amnesia";
 
     case SCR_FROG:               return "frog";
+    case SCR_PLINKING:           return "plinking";
 #if TAG_MAJOR_VERSION == 34
     case SCR_HOLY_WORD:          return "holy word";
     case SCR_CURSE_WEAPON:       return "curse weapon";

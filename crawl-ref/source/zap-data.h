@@ -2924,4 +2924,20 @@ _mon_hex_zap(ZAP_ILL_OMEN, BEAM_ILL_OMEN),
     TILE_BOLT_SIROCCO,
 },
 
+{
+    ZAP_PLINK,
+    "pebble",
+    new dicedef_calculator<1, 7, 1, 5>,
+    new tohit_calculator<30, 1, 5>,
+    nullptr,
+    nullptr,
+    BROWN,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+    TILE_MI_STONE,
+},
+
 };
