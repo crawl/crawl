@@ -998,10 +998,14 @@ You devour the memories and even the very existence of those you kill, subsuming
 them in the unholy fire that wreathes your body.
 
 Once you have accumulated enough memories, you may choose to burn them all away
-as fuel to greatly enhance your spellcasting for a short period of time.
+as fuel to greatly enhance your damage-dealing spells for a short period of time.
 
 At your current experience level, you can hold enough memories to cast a maximum
 of {{return 3 + math.floor(you.xl() * 3 / 20);}} spells in a row this way.
+
+Upon first gaining this ability, you will recall a fragment of your undead
+origins,
+granting knowledge of a damage-dealing spell that can be enhanced in this way.
 %%%%
 spellclaws mutation
 
