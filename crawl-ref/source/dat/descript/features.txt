@@ -498,7 +498,7 @@ A complex arcane still, cracked open and fully emptied of its contents.
 an earthen dragon vein
 
 An exposed ley line of earth magic. It can be tapped into by stepping on it,
-causing shockwaves that damage the 3 closest enemies. This does greatly reduced
+causing shockwaves that damage the 2 closest enemies. This does greatly reduced
 damage to distant and flying enemies.
 %%%%
 a fiery dragon vein
