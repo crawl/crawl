@@ -960,6 +960,7 @@ public:
     int         tile_update_rate;
     int         tile_runrest_rate;
     int         tile_key_repeat_delay;
+    int         tile_key_repeat_interval;
     int         tile_tooltip_ms;
 
     bool        tile_show_minihealthbar;

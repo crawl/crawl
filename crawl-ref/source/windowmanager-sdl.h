@@ -77,7 +77,10 @@ private:
 
     int prev_keycode;
     bool m_suppress_repeated_textinput;
-    unsigned int m_keydown_tick = 0;
+    unsigned int m_repeat_deadline = 0;
+    int m_repeat_scancode = -1;
+    wm_event m_repeat_event = {};
+    string m_repeat_text;
     string m_textinput_queue;
     array<SDL_Cursor*, NUM_MOUSE_CURSORS> m_cursors;
 };

@@ -933,7 +933,6 @@ int SDLWrapper::send_textinput(wm_event *event)
 int SDLWrapper::wait_event(wm_event *event, int timeout)
 {
     SDL_Event sdlevent;
-    const unsigned int repeat_delay = Options.tile_key_repeat_delay;
 
     if (!m_textinput_queue.empty())
     {
@@ -945,8 +944,40 @@ int SDLWrapper::wait_event(wm_event *event, int timeout)
         // event below.
     }
 
+    const bool repeat = m_repeat_scancode >= 0
+        && Options.tile_key_repeat_delay > 0
+        && (m_repeat_event.key.keysym.sym != 0 || !m_repeat_text.empty());
+    if (repeat)
+    {
+        const unsigned int now = get_ticks();
+        const int remaining = SDL_TICKS_PASSED(now, m_repeat_deadline)
+                              ? 0 : m_repeat_deadline - now;
+        if (timeout < 0 || remaining < timeout)
+            timeout = remaining;
+    }
+
     if (!SDL_WaitEventTimeout(&sdlevent, timeout))
-        return 0;
+    {
+        const unsigned int now = get_ticks();
+        // SDL's poll sentinel can end a zero-timeout wait with events pending.
+        if (!repeat || !SDL_TICKS_PASSED(now, m_repeat_deadline)
+            || SDL_HasEvents(SDL_FIRSTEVENT, SDL_LASTEVENT))
+        {
+            return 0;
+        }
+        const unsigned int interval = Options.tile_key_repeat_interval;
+        // Preserve the cadence, skipping missed repeats instead of queuing them.
+        m_repeat_deadline +=
+            ((now - m_repeat_deadline) / interval + 1) * interval;
+        *event = m_repeat_event;
+        if (!m_repeat_text.empty())
+        {
+            prev_keycode = 0;
+            m_textinput_queue = m_repeat_text;
+            return send_textinput(event);
+        }
+        return 1;
+    }
 
     if (sdlevent.type != SDL_TEXTINPUT)
         prev_keycode = 0;
@@ -955,15 +986,13 @@ int SDLWrapper::wait_event(wm_event *event, int timeout)
     switch (sdlevent.type)
     {
     case SDL_WINDOWEVENT:
+        if (sdlevent.window.event == SDL_WINDOWEVENT_FOCUS_LOST)
+            m_repeat_scancode = -1;
         SDL_SetModState(KMOD_NONE);
         _translate_window_event(sdlevent.window, *event);
         break;
     case SDL_KEYDOWN:
-        if (!sdlevent.key.repeat)
-            m_keydown_tick = sdlevent.key.timestamp;
-        m_suppress_repeated_textinput = sdlevent.key.repeat != 0
-            && (repeat_delay == 0
-                || sdlevent.key.timestamp - m_keydown_tick < repeat_delay);
+        m_suppress_repeated_textinput = sdlevent.key.repeat != 0;
         if (m_suppress_repeated_textinput)
             return 0;
         event->type = WME_KEYDOWN;
@@ -978,6 +1007,16 @@ int SDLWrapper::wait_event(wm_event *event, int timeout)
         if (!event->key.keysym.unicode && event->key.keysym.sym > 0)
             return 0;
 
+        if (event->key.keysym.sym != 0
+            || (sdlevent.key.keysym.sym > 0
+                && !(sdlevent.key.keysym.sym & SDLK_SCANCODE_MASK)))
+        {
+            m_repeat_scancode = sdlevent.key.keysym.scancode;
+            m_repeat_deadline = get_ticks() + Options.tile_key_repeat_delay;
+            m_repeat_event = *event;
+            m_repeat_text.clear();
+        }
+
         // If we're going to accept this keydown, don't generate subsequent
         // textinput events for the same key. This mechanism assumes that a
         // fake textinput will arrive as the immediately following SDL event.
@@ -990,6 +1029,7 @@ int SDLWrapper::wait_event(wm_event *event, int timeout)
  */
         break;
     case SDL_KEYUP:
+        m_repeat_scancode = -1;
         event->type = WME_KEYUP;
         event->key.state = sdlevent.key.state;
         event->key.keysym.scancode = sdlevent.key.keysym.scancode;
@@ -1005,7 +1045,10 @@ int SDLWrapper::wait_event(wm_event *event, int timeout)
             return 0;
         ASSERT(m_textinput_queue.empty());
         m_textinput_queue = string(sdlevent.text.text);
-        return send_textinput(event);
+        const int result = send_textinput(event);
+        if (m_repeat_scancode >= 0 && event->key.keysym.sym != CK_NO_KEY)
+            m_repeat_text = sdlevent.text.text;
+        return result;
     }
     case SDL_MOUSEMOTION:
         event->type = WME_MOUSEMOTION;
@@ -1081,6 +1124,13 @@ void SDLWrapper::delay(unsigned int ms)
 
 bool SDLWrapper::next_event_is(wm_event_type type)
 {
+    if (type == WME_KEYDOWN && m_repeat_scancode >= 0
+        && Options.tile_key_repeat_delay > 0
+        && (m_repeat_event.key.keysym.sym != 0 || !m_repeat_text.empty())
+        && SDL_TICKS_PASSED(get_ticks(), m_repeat_deadline))
+    {
+        return true;
+    }
     // check for enqueued characters from a multi-char textinput event
     // count is floored to 1 for consistency with other event types
     if (type == WME_KEYDOWN && m_textinput_queue.size() > 0)
