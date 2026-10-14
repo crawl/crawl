@@ -2733,6 +2733,33 @@ void clear_form_info_on_exit()
         delete entry.special_dice;
 }
 
+// Returns whether the player's current form was the only base form the player
+// gained XP in, starting at a specific XL. (In other words, they stayed in
+// their current default form essentially the entire time from that point onward.)
+bool player_exclusively_used_form_since(int xl)
+{
+    if (you.experience_level < xl)
+        return false;
+
+    // First check that this form was at least used for every XL since then.
+    for (int i = xl - 1; i < you.experience_level; ++i)
+        if (you.xp_by_form[i][static_cast<int>(you.default_form)] == 0)
+            return false;
+
+    // Now see if any *other* form was used at any point.
+    for (int form = 0; form < NUM_TRANSFORMS; ++form)
+    {
+        if (form == static_cast<int>(you.default_form))
+            continue;
+
+        for (int i = xl - 1; i < you.experience_level; ++i)
+            if (you.xp_by_form[i][form] != 0)
+                return false;
+    }
+
+    return true;
+}
+
 void sphinx_notice_riddle_target(monster* mon)
 {
     if (!mon->is_peripheral() && !mons_aligned(&you, mon))

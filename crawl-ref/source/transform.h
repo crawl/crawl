@@ -387,6 +387,8 @@ transformation form_for_talisman(const item_def &talisman);
 talisman_type talisman_for_form(transformation form);
 void clear_form_info_on_exit();
 
+bool player_exclusively_used_form_since(int xl);
+
 void sphinx_notice_riddle_target(monster* mon);
 void sphinx_check_riddle();
 dice_def player_airstrike_melee_damage(int open_spaces, int skill = -1);
