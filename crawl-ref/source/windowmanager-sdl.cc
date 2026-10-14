@@ -992,7 +992,8 @@ int SDLWrapper::wait_event(wm_event *event, int timeout)
         _translate_window_event(sdlevent.window, *event);
         break;
     case SDL_KEYDOWN:
-        m_suppress_repeated_textinput = sdlevent.key.repeat != 0;
+        m_suppress_repeated_textinput =
+            Options.tile_key_repeat_delay >= 0 && sdlevent.key.repeat != 0;
         if (m_suppress_repeated_textinput)
             return 0;
         event->type = WME_KEYDOWN;
@@ -1007,9 +1008,10 @@ int SDLWrapper::wait_event(wm_event *event, int timeout)
         if (!event->key.keysym.unicode && event->key.keysym.sym > 0)
             return 0;
 
-        if (event->key.keysym.sym != 0
-            || (sdlevent.key.keysym.sym > 0
-                && !(sdlevent.key.keysym.sym & SDLK_SCANCODE_MASK)))
+        if (Options.tile_key_repeat_delay > 0
+            && (event->key.keysym.sym != 0
+                || (sdlevent.key.keysym.sym > 0
+                    && !(sdlevent.key.keysym.sym & SDLK_SCANCODE_MASK))))
         {
             m_repeat_scancode = sdlevent.key.keysym.scancode;
             m_repeat_deadline = get_ticks() + Options.tile_key_repeat_delay;

@@ -922,7 +922,7 @@ const vector<GameOption*> game_options::build_options_list()
         // resolution (see TilesFramework::calculate_default_options)
         new DisabledGameOption({"game_scale"}),
 # endif
-        new IntGameOption(SIMPLE_NAME(tile_key_repeat_delay), 200, 0, INT_MAX),
+        new IntGameOption(SIMPLE_NAME(tile_key_repeat_delay), -1, -1, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_key_repeat_interval), 33, 1, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_window_width), -90, INT_MIN, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_window_height), -90, INT_MIN, INT_MAX),

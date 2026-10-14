@@ -2418,13 +2418,15 @@ tile_runrest_rate = 17
         when running or resting. If Crawl is slow while running or resting,
         increase this number.
 
-tile_key_repeat_delay = 200
+tile_key_repeat_delay = -1
         The number of milliseconds before a held key starts repeating.
-        Setting this option to 0 disables key repeat.
+        Set to -1 to use the system keyboard repeat settings, or 0 to disable
+        key repeat.
 
 tile_key_repeat_interval = 33
-        The number of milliseconds between repeats while a key is held down.
-        Lower values make keys repeat faster. The minimum value is 1.
+        The number of milliseconds between repeats when tile_key_repeat_delay
+        is positive. Lower values make keys repeat faster. The minimum value
+        is 1.
 
 tile_tooltip_ms = 500
         The number of milliseconds before a tooltip appears when hovering the
