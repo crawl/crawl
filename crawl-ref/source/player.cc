@@ -2894,6 +2894,13 @@ static void _handle_god_wrath(int exp)
 // Log experience gained whatever base form the player was in when they gained it.
 static void _log_form_xp(int exp)
 {
+    // We normally consider only the default form (to not mess up the stats due
+    // to hostile polymorph or transient things like !lignification or Vessel of
+    // Slaughter), but Flux form is in a weird inbetween space that makes it
+    // closer to a talisman form, so make an exception for that and track it.
+    const transformation which_trans = you.form == transformation::flux ? you.form
+                                                                        : you.default_form;
+
     int xp_level = you.experience_level;
     int xp_spent = 0;
 
@@ -2903,14 +2910,14 @@ static void _log_form_xp(int exp)
            && you.experience + exp > exp_needed(xp_level + 1))
     {
         const int delta = exp_needed(xp_level + 1) - you.experience - xp_spent;
-        you.xp_by_form[xp_level-1][static_cast<int>(you.default_form)] += delta;
+        you.xp_by_form[xp_level-1][static_cast<int>(which_trans)] += delta;
         exp -= delta;
         xp_spent += delta;
         ++xp_level;
     }
 
     // Then assign the rest to their current level.
-    you.xp_by_form[xp_level-1][static_cast<int>(you.default_form)] += exp;
+    you.xp_by_form[xp_level-1][static_cast<int>(which_trans)] += exp;
 }
 
 unsigned int gain_exp(unsigned int exp_gained)
