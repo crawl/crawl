@@ -490,7 +490,7 @@ SUBST:   W = ., X = x
 ITEM:    throwing net q:1 no_pickup / rapier ego:venom no_pickup w:12 / \
          scimitar ego:venom no_pickup w:8 / any hex wand charges:8 no_pickup / \
          potion of ambrosia q:1 w:3 pre_id / potion of curing w:3 pre_id / \
-         fen folio w:3 / my sojourn through swampland w:3 / \
+         fen folio w:3 / my sojourns in swampland w:3 / \
          dart ego:curare no_pickup w:3 / scarab talisman
 ITEM:    throwing net q:2 no_pickup / quick blade ego:venom randart w:12 / \
          swamp dragon scales randart / potion of ambrosia q:2 w:3 pre_id / \
