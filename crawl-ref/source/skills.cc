@@ -2103,6 +2103,14 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         return "Keeper of the Flame";
     }
 
+    // Large
+    if (you.hp_max >= 1000)
+        return "Hearty";
+
+    // Large (magic edition)
+    if (you.max_magic_points >= 100)
+        return species::walking_verb(you.species) + "ing Leyline";
+
     // Award for being very good at crab
     if (you.form == transformation::fortress_crab
         && best_skill == SK_SHAPESHIFTING && skill_rank == 5)
