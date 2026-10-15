@@ -561,11 +561,18 @@ static void _xom_give_item(object_class_type type, int subtype, int quantity = 0
     snprintf(gift_buf, sizeof(gift_buf), "god gift: %s",
              item.name(DESC_PLAIN).c_str());
 
+    // If the player is over terrain that would destroy the item, place an
+    // altar here for it to land on.
+    if ((env.grid(you.pos()) == DNGN_DEEP_WATER && !player_likes_water(true)
+            || env.grid(you.pos()) == DNGN_LAVA))
+    {
+        env.grid(you.pos()) = DNGN_ALTAR_XOM;
+        set_terrain_changed(you.pos());
+    }
+
     canned_msg(MSG_SOMETHING_APPEARS);
     move_item_to_grid(&thing_created, you.pos());
 
-    if (thing_created == NON_ITEM) // if it fell into lava
-        simple_god_message(" snickers.", false, GOD_XOM);
     take_note(Note(NOTE_XOM_EFFECT, -1, -1, gift_buf), true);
 
     stop_running();
