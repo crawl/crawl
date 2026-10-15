@@ -422,9 +422,10 @@ static spell_type _choose_random_spell(int sever)
 /// Cast a random spell 'through' the player.
 static void _xom_random_spell(int tension)
 {
-    const spell_type spell = _choose_random_spell(tension * 2);
-    int power = you.experience_level * 2
-                + get_tension() + you.runes.count() * 2;
+    const spell_type spell = _choose_random_spell(you.experience_level / 2
+                                                  + tension / 2);
+    int power = you.experience_level * 4
+                + get_tension() * 2 + you.runes.count() * 3;
 
     if (spell == SPELL_NO_SPELL)
         return;
