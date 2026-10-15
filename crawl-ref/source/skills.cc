@@ -2143,6 +2143,13 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
             return "Pinnacle of Evolution";
         }
         break;
+    case transformation::sphinx:
+        if (you.species == SP_HUMAN && best_skill == SK_SHAPESHIFTING
+            && player_exclusively_used_form_since(17))
+        {
+            return "Riddle's Answer";
+        }
+        break;
     default:
         break;
     }
