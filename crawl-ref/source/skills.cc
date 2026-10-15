@@ -2131,6 +2131,11 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
             }
             return "Paleographer";
         }
+        break;
+    case transformation::vision:
+        if (you.species == SP_KOBOLD && player_exclusively_used_form_since(8))
+            return "Farsighted";
+        break;
     case transformation::fortress_crab:
         if (best_skill == SK_SHAPESHIFTING && skill_rank == 5
             && player_exclusively_used_form_since(14))
