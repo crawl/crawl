@@ -535,12 +535,11 @@ static void _xom_acquirement(int)
     more();
 }
 
-/// Create a random item and give it to the player.
-static void _xom_random_item(int)
+static void _xom_give_item(object_class_type type, int subtype, int quantity = 0)
 {
     god_speaks(GOD_XOM, _get_xom_speech("general gift").c_str());
 
-    int thing_created = items(true, OBJ_RANDOM, OBJ_RANDOM,
+    int thing_created = items(true, type, subtype,
                               random_range(0, 200), 0, GOD_XOM);
 
     if (thing_created == NON_ITEM)
@@ -555,6 +554,9 @@ static void _xom_random_item(int)
 
     _try_brand_switch(thing_created);
 
+    if (quantity > 0)
+        item.quantity = quantity;
+
     static char gift_buf[100];
     snprintf(gift_buf, sizeof(gift_buf), "god gift: %s",
              item.name(DESC_PLAIN).c_str());
@@ -568,6 +570,41 @@ static void _xom_random_item(int)
 
     stop_running();
     more();
+}
+
+/// Create a random item and give it to the player.
+static void _xom_random_item(int)
+{
+    _xom_give_item(OBJ_RANDOM, OBJ_RANDOM);
+}
+
+static void _xom_joke_consumable(int)
+{
+    object_class_type type = OBJ_POTIONS;
+    int subtype = POT_BERSERK_SAGE;
+    const int quantity = 1 + coinflip() + one_chance_in(3);
+    switch (random2(4))
+    {
+        case 0:
+            break;
+
+        case 1:
+            subtype = POT_EXPEDIENCE;
+            break;
+
+        case 2:
+            type = OBJ_SCROLLS;
+            subtype = SCR_PLINKING;
+            break;
+
+        case 3:
+            type = OBJ_SCROLLS;
+            subtype = SCR_FROG;
+            break;
+    }
+
+    identify_item_type(type, subtype);
+    _xom_give_item(type, subtype, quantity);
 }
 
 static bool _choose_mutatable_monster(const monster& mon)
@@ -4891,6 +4928,9 @@ static const vector<xom_event_data> _list_xom_good_actions = {
             return true;
         }
     },
+    {
+        XOM_GOOD_JOKE_CONSUMABLE, 0, 0, 70
+    },
 };
 
 static const vector<xom_event_data> _list_xom_bad_actions = {
@@ -5935,6 +5975,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_CLEAVING, { "cleaving", _xom_cleaving }},
     { XOM_GOOD_REACHING, { "reaching", _xom_reaching }},
     { XOM_GOOD_RANDOM_KNOWLEDGE, { "knowledge", _xom_random_knowledge }},
+    { XOM_GOOD_JOKE_CONSUMABLE, {"consumable", _xom_joke_consumable }},
 
     { XOM_BAD_MISCAST_PSEUDO, { "pseudo-miscast", _xom_pseudo_miscast }},
     { XOM_BAD_NOISE, { "noise", _xom_noise }},
