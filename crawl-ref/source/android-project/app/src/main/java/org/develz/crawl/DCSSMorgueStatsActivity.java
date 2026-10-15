@@ -19,7 +19,6 @@ import java.util.Set;
 
 public class DCSSMorgueStatsActivity extends AppCompatActivity
         implements AdapterView.OnItemSelectedListener {
-    private static final String MORGUE_DIR = "/morgue";
     private DCSSMorgueLoadResult loadResult;
     private DCSSMorgueRoster roster;
     private TextView text;
@@ -30,8 +29,8 @@ public class DCSSMorgueStatsActivity extends AppCompatActivity
         setContentView(R.layout.morgue_stats);
         findViewById(R.id.morgueStatsBack).setOnClickListener(view -> finish());
         text = findViewById(R.id.morgueStatsText);
-        File morgueDir = new File(getExternalFilesDir(null) + MORGUE_DIR);
-        loadResult = DCSSMorgueStatsParser.loadFinalMorguesWithAudit(morgueDir);
+        File savesDir = new File(getExternalFilesDir(null), "saves");
+        loadResult = DCSSScoreStatsParser.loadScores(savesDir);
         roster = DCSSMorgueRoster.current();
 
         Spinner filter = findViewById(R.id.morgueStatsFilter);
@@ -84,10 +83,10 @@ public class DCSSMorgueStatsActivity extends AppCompatActivity
     }
 
     static String render(DCSSMorgueStats stats, DCSSMorgueLoadResult audit, String filter) {
-        StringBuilder text = new StringBuilder("Morgue stats\n\n");
+        StringBuilder text = new StringBuilder("Score stats\n\n");
         if (filter.equals("Audit")) {
             text.append("Audit: ").append(audit.getFinalMorgueFiles())
-                    .append(" timestamped final files · ").append(audit.getGames().size())
+                    .append(" score records · ").append(audit.getGames().size())
                     .append(" counted · ").append(audit.getSkippedFiles().size()).append(" skipped\n");
             if (!audit.getSkippedFiles().isEmpty()) {
                 text.append("Skipped: ").append(join(audit.getSkippedFiles(), 3)).append("\n");
@@ -95,7 +94,7 @@ public class DCSSMorgueStatsActivity extends AppCompatActivity
             return text.toString();
         }
         if (stats.getGames() == 0) {
-            return text.append("No final morgues match this view.").toString();
+            return text.append("No score records match this view.").toString();
         }
         text.append("Games: ").append(stats.getGames()).append("    Wins: ").append(stats.getWins())
                 .append("    Win rate: ").append(percent(stats.getWinRate())).append("\n\n");
@@ -129,7 +128,7 @@ public class DCSSMorgueStatsActivity extends AppCompatActivity
     }
 
     private static void appendRecentGames(StringBuilder text, List<DCSSMorgueGame> games) {
-        text.append("\nRecent final morgues\n");
+        text.append("\nRecent scores\n");
         for (int index = 0; index < Math.min(20, games.size()); index++) {
             DCSSMorgueGame game = games.get(index);
             String timestamp = game.getTimestamp();
