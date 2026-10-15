@@ -2111,11 +2111,21 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
     if (you.max_magic_points >= 100)
         return species::walking_verb(you.species) + "ing Leyline";
 
-    // Award for being very good at crab
-    if (you.form == transformation::fortress_crab
-        && best_skill == SK_SHAPESHIFTING && skill_rank == 5)
+    // Form conduct titles. These require exclusively using a form after a
+    // certain level threshold (depending on tier), possibly with some other
+    // requirement. Per dracoomega, put the form exclusivity check last because
+    // it requires a lot of computation
+    switch (you.default_form)
     {
-        return "Pinnacle of Evolution";
+    case transformation::fortress_crab:
+        if (best_skill == SK_SHAPESHIFTING && skill_rank == 5
+            && player_exclusively_used_form_since(14))
+        {
+            return "Pinnacle of Evolution";
+        }
+        break;
+    default:
+        break;
     }
 
     return title;
