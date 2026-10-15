@@ -989,22 +989,17 @@ static void _xom_do_potion(int)
                                      10, POT_INVISIBILITY,
                                      5,  POT_AMBROSIA,
                                      5,  POT_ATTRACTION,
-                                     5,  POT_BERSERK_RAGE,
-                                     1,  POT_EXPERIENCE);
+                                     5,  POT_BERSERK_RAGE);
     }
     while (!get_potion_effect(pot)->can_quaff()); // ugh
-
-    // Experience uses default power, other potions get bonus power.
-    // Curing, heal wounds, magic and berserk rage ignore power.
-    const int pow = pot == POT_EXPERIENCE ? 40 : 150;
 
     god_speaks(GOD_XOM, _get_xom_speech("potion effect").c_str());
 
     _note_potion_effect(pot);
 
-    get_potion_effect(pot)->effect(true, pow);
-
-    level_change(); // need this for !xp - see mantis #3245
+    // Many potions get bonus power.
+    // Curing, heal wounds, magic and berserk rage ignore power.
+    get_potion_effect(pot)->effect(true, 150);
 }
 
 static void _confuse_monster(monster* mons, int dur = 50)
