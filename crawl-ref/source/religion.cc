@@ -77,6 +77,7 @@
 #include "terrain.h"
 #include "transform.h"
 #include "view.h"
+#include "xom.h"
 
 #ifdef DEBUG_RELIGION
 #    define DEBUG_DIAGNOSTICS
@@ -3537,6 +3538,8 @@ static void _apply_monk_bonus()
         ashenzari_offer_new_curse();
         you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 19;
     }
+    else if (you_worship(GOD_XOM))
+        xom_take_action(XOM_GOOD_JOKE_CONSUMABLE, 0);
     else if (you_worship(GOD_USKAYAW))  // Gaining piety past this point does nothing
         gain_piety(15, 1, false);       // of value with this god and looks weird.
     else
