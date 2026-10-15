@@ -2210,7 +2210,14 @@ int player_parrying()
             sh /= 2;
     }
 
-    sh += 10 * you.wearing_ego(OBJ_WEAPONS, SPWPN_REBUKE);
+    // Xom's blessing of cleaving(rebuke) shouldn't stack if the weapon already had it.
+    int rebuke = you.wearing_ego(OBJ_WEAPONS, SPWPN_REBUKE);
+    if (rebuke == 0 && you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_CLEAVE
+                    && you.props[XOM_CLEAVE_BRAND_KEY].get_int() == SPWPN_REBUKE)
+    {
+        rebuke = 1;
+    }
+    sh += 10 * rebuke;
 
     if (you.form == transformation::blade)
         sh += get_form()->get_effect_size() + max(0, you.slaying());
@@ -3926,7 +3933,9 @@ bool player::sunder_is_ready() const
     }
 
     return wearing_ego(OBJ_WEAPONS, SPWPN_SUNDERING)
-            || unrand_equipped(UNRAND_TROG);
+            || unrand_equipped(UNRAND_TROG)
+            || you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_CLEAVE
+               && you.props[XOM_CLEAVE_BRAND_KEY].get_int() == SPWPN_SUNDERING;
 }
 
 /**
@@ -4047,6 +4056,9 @@ int player::slaying(bool throwing, bool random) const
 
     if (you.duration[DUR_DEVIOUS])
         ret += you.props[DEVIOUS_KEY].get_int() * 3;
+
+    if (you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_CLEAVE)
+        ret += 5;
 
     if (you.duration[DUR_HORROR])
         ret -= you.props[HORROR_PENALTY_KEY].get_int();

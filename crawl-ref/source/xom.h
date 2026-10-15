@@ -15,6 +15,7 @@ using std::string;
 
 #define XOM_CLOUD_TRAIL_TYPE_KEY "xom_cloud_trail_type"
 #define XOM_BAZAAR_TRIP_COUNT "xom_bazaar_trip_count"
+#define XOM_CLEAVE_BRAND_KEY "xom_cleave_brand"
 
 struct item_def;
 
@@ -60,7 +61,6 @@ enum xom_event_type
     XOM_GOOD_CHAOS_VEX,
     XOM_GOOD_FOG,
     XOM_GOOD_CLOUD_TRAIL,
-    XOM_GOOD_CLEAVING,
     XOM_GOOD_REACHING,
     XOM_GOOD_RANDOM_KNOWLEDGE,
     XOM_GOOD_JOKE_CONSUMABLE,
@@ -98,7 +98,11 @@ enum xom_event_type
     XOM_BAD_FLOOR_LOCK,
     XOM_BAD_MINIBANE,
     XOM_LAST_BAD_ACT = XOM_BAD_MINIBANE,
-    XOM_LAST_REAL_ACT = XOM_LAST_BAD_ACT,
+
+    // Not 'real' events, but in this enum so they can be triggered easily in wizmode
+    XOM_BLESSING_CLEAVE,
+
+    XOM_LAST_REAL_ACT = XOM_BLESSING_CLEAVE,
 
     XOM_PLAYER_DEAD = 100, // player already dead (shouldn't happen)
     NUM_XOM_EVENTS

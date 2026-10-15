@@ -46,6 +46,7 @@
 #include "traps.h"
 #include "travel.h"
 #include "wiz-you.h"
+#include "xom.h"
 
 
 /*** Helper function to get a skill by name or raise an error
@@ -1519,6 +1520,16 @@ LUAFN(you_jademantle_crystals_desc)
     return 1;
 }
 
+LUAFN(you_xom_bonus_brand)
+{
+    if (you.attribute[ATTR_XOM_BLESSING] = XOM_BLESSING_CLEAVE)
+        lua_pushstring(ls, brand_type_name(static_cast<brand_type>(you.props[XOM_CLEAVE_BRAND_KEY].get_int()), false));
+    else
+        lua_pushstring(ls, "None");
+
+    return 1;
+}
+
 static const struct luaL_Reg you_clib[] =
 {
     { "turn_is_over", you_turn_is_over },
@@ -1672,6 +1683,7 @@ static const struct luaL_Reg you_clib[] =
     { "zot_orb_monster", you_zot_orb_monster },
 
     { "jademantle_crystals_desc", you_jademantle_crystals_desc },
+    { "xom_bonus_brand", you_xom_bonus_brand },
 
     { nullptr, nullptr },
 };

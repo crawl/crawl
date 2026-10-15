@@ -280,7 +280,10 @@ void melee_attack::handle_phase_blocked()
     maybe_trigger_jinxbite();
 
     bool needs_block_message = needs_message;
-    if (defender->wearing_ego(OBJ_WEAPONS, SPWPN_REBUKE))
+    if (defender->wearing_ego(OBJ_WEAPONS, SPWPN_REBUKE)
+        || defender->is_player()
+           && you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_CLEAVE
+           && you.props[XOM_CLEAVE_BRAND_KEY].get_int() == SPWPN_REBUKE)
     {
         actor* best_targ = nullptr;
         for (distance_iterator di(attacker->pos(), true, true, attacker->reach_range()); di; ++di)
@@ -956,10 +959,10 @@ bool melee_attack::handle_phase_hit()
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
 
-    if (weapon && damage_brand == SPWPN_VALOUR)
+    if (damage_brand == SPWPN_VALOUR || xom_extra_brand() == SPWPN_VALOUR)
         do_valour_beam();
 
-    if (weapon && damage_brand == SPWPN_CONCUSSION)
+    if (damage_brand == SPWPN_CONCUSSION || xom_extra_brand() == SPWPN_CONCUSSION)
         handle_concussion_brand(is_unrandom_artefact(*weapon, UNRAND_CARINA));
 
     if (weapon && weapon->is_type(OBJ_WEAPONS, WPN_CENTIPEDE))
@@ -5309,13 +5312,42 @@ int melee_attack::calc_damage()
 bool melee_attack::apply_damage_brand(const char *what)
 {
     // Staff damage overrides any brands
-    return apply_staff_damage() || attack::apply_damage_brand(what);
+    bool ret = apply_staff_damage() || attack::apply_damage_brand(what);
+
+    // Apply the bonus brand from Xom's cleaving blessing
+    const brand_type extra_brand = xom_extra_brand();
+    if (extra_brand != SPWPN_NORMAL)
+    {
+        unwind_var<brand_type> unwind(damage_brand, extra_brand);
+        ret |= attack::apply_damage_brand(what);
+    }
+
+    return ret;
+}
+
+// Is Xom's cleaving blessing applying an additional brand to this attack?
+brand_type melee_attack::xom_extra_brand() const
+{
+    if (attacker->is_player()
+        && you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_CLEAVE)
+    {
+        brand_type xom_brand = static_cast<brand_type>(you.props[XOM_CLEAVE_BRAND_KEY].get_int());
+
+        // Don't apply the special brand twice if the weapon already has that brand.
+        if (damage_brand == xom_brand)
+            return SPWPN_NORMAL;
+        else
+            return xom_brand;
+    }
+
+    return SPWPN_NORMAL;
 }
 
 bool melee_attack::is_sundering_weapon() const
 {
     return damage_brand == SPWPN_SUNDERING
-        || attacker->unrand_equipped(UNRAND_TROG);
+        || attacker->unrand_equipped(UNRAND_TROG)
+        || xom_extra_brand() == SPWPN_SUNDERING;
 }
 
 string mut_aux_attack_desc(mutation_type mut)

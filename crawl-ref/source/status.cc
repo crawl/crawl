@@ -768,14 +768,6 @@ bool fill_status_info(int status, status_info& inf)
         break;
     }
 
-    case DUR_CLEAVE:
-    {
-        const item_def* weapon = you.weapon();
-        if (weapon && weapon_cleaves(*weapon))
-            inf.light_colour = DARKGREY;
-        break;
-    }
-
     case STATUS_ORB:
     {
         if (player_has_orb())
@@ -1440,6 +1432,17 @@ static void _describe_xom_blessing(status_info& inf)
 {
     switch (you.attribute[ATTR_XOM_BLESSING])
     {
+        case XOM_BLESSING_CLEAVE:
+        {
+            const brand_type brand = static_cast<brand_type>(you.props[XOM_CLEAVE_BRAND_KEY].get_int());
+            const string suffix = uppercase_first(brand_type_name(brand, true)).substr(0, 1);
+            inf.light_text = "Cleave+";
+            inf.light_text_formatted = make_stringf("<red>C<yellow>l<green>e<cyan>a<lightblue>v<magenta>e<lightmagenta>+<white>%s",
+                                                    suffix.c_str());
+            inf.short_text = make_stringf("blessing of cleaving (%s)", brand_type_name(brand, false));
+        }
+        break;
+
         default:
         break;
     }

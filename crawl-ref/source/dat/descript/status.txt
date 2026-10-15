@@ -452,9 +452,11 @@ combat as well as the power of your spells.
 
 You are unable to read scrolls.
 %%%%
-Cleave status
+Cleave+ status
 
-Your melee attacks cleave, hitting all adjacent targets.
+You have +5 slaying and your melee attacks cleave. Your weapon also acts as
+though it had the {{return you.xom_bonus_brand()}} brand in addition to its
+normal brand (unless that was already {{return you.xom_bonus_brand()}}).
 %%%%
 Ambros status
 

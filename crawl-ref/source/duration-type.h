@@ -189,8 +189,8 @@ enum duration_type
     DUR_NO_SCROLLS,
 #if TAG_MAJOR_VERSION == 34
     DUR_NEGATIVE_VULN,
-#endif
     DUR_CLEAVE,
+#endif
     DUR_GOZAG_GOLD_AURA,
 #if TAG_MAJOR_VERSION == 34
     DUR_COLLAPSE,

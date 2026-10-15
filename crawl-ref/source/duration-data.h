@@ -609,11 +609,6 @@ static const duration_def duration_data[] =
       {{ "", []() {
           you.redraw_armour_class = true; // includes shields
       }}}},
-    { DUR_CLEAVE,
-      LIGHTBLUE, "Cleave",
-      "cleaving", "cleave",
-      "You are cleaving through your foes.", D_NO_FLAGS,
-      {{ "Your cleaving frenzy subsides." }}},
     { DUR_AMBROSIA, GREEN, "Ambros",
       "ambrosia-drunk", "ambrosia",
       "You are regenerating under the effects of ambrosia.", D_DISPELLABLE },
@@ -1001,5 +996,6 @@ static const duration_def duration_data[] =
     { DUR_SLEEP_IMMUNITY, 0, "", "", "old sleep immunity", "", D_NO_FLAGS, {{""}}},
     { DUR_VILE_CLUTCH_OLD, 0, "", "", "old vile clutch", "", D_NO_FLAGS, {{""}}},
     { DUR_SPIKE_LAUNCHER_ACTIVE, 0, "", "", "old spike launcher", "", D_NO_FLAGS, {{""}}},
+    { DUR_CLEAVE, 0, "", "", "old cleave", "", D_NO_FLAGS, {{""}}},
 #endif
 };

@@ -4344,29 +4344,6 @@ static void _xom_blink_monsters(int)
     }
 }
 
-static void _xom_cleaving(int)
-{
-    god_speaks(GOD_XOM, _get_xom_speech("cleaving").c_str());
-
-    you.increase_duration(DUR_CLEAVE, 10 + random2(100));
-
-    if (const item_def* const weapon = you.weapon())
-    {
-        const bool axe = item_attack_skill(*weapon) == SK_AXES;
-        mprf(MSGCH_DURATION,
-             "%s %s sharp%s", weapon->name(DESC_YOUR).c_str(),
-             conjugate_verb("look", weapon->quantity > 1).c_str(),
-             (axe) ? " (like it always does)." : ".");
-    }
-    else
-    {
-        mprf(MSGCH_DURATION, "%s",
-             you.hands_act("look", "sharp.").c_str());
-    }
-
-    take_note(Note(NOTE_XOM_EFFECT, -1, -1, "cleaving"), true);
-}
-
 static const string _player_leg_name()
 {
     if (form_changes_anatomy())
@@ -4884,9 +4861,6 @@ static const vector<xom_event_data> _list_xom_good_actions = {
     },
 
     // Exploration effects:
-    {
-        XOM_GOOD_CLEAVING, 0, 0, 160
-    },
     {
         XOM_GOOD_REACHING, 0, 0, 70, [](int){ return !you.duration[DUR_REACH];},
         XOM_EXPLORE_NEXT_BATTLE
@@ -5927,6 +5901,63 @@ void xom_reduce_floor_lock()
     }
 }
 
+static void _xom_cleaving()
+{
+    god_speaks(GOD_XOM, _get_xom_speech("cleaving").c_str());
+
+    you.attribute[ATTR_XOM_BLESSING] = XOM_BLESSING_CLEAVE;
+
+    brand_type brand = random_choose(SPWPN_CONCUSSION,
+                                           SPWPN_SUNDERING,
+                                           SPWPN_ENTANGLING,
+                                           SPWPN_VALOUR,
+                                           SPWPN_REBUKE);
+
+    //brand = SPWPN_REBUKE;
+
+    you.props[XOM_CLEAVE_BRAND_KEY] = brand;
+
+    const item_def* const weapon = you.weapon();
+    bool can_plural = false;
+    const string wpn_name = weapon ? weapon->name(DESC_YOUR).c_str()
+                                   : make_stringf("your bare %s", you.hand_name(true, &can_plural).c_str()).c_str();
+    const char* suffix = can_plural ? "them" : "it";
+    string msg;
+
+    switch (brand)
+    {
+        default:
+        case SPWPN_CONCUSSION:
+            msg = make_stringf("%s %s dense and you feel ready to concuss everything with %s.",
+                               wpn_name.c_str(), conjugate_verb("grow", can_plural).c_str(), suffix);
+            break;
+
+        case SPWPN_SUNDERING:
+            msg = make_stringf("%s %s sharply and you feel ready to sunder everything with %s.",
+                               wpn_name.c_str(), conjugate_verb("glint", can_plural).c_str(), suffix);
+            break;
+
+        case SPWPN_ENTANGLING:
+            msg = make_stringf("Vines sprout from %s and you feel ready to entangle everything with %s.",
+                               wpn_name.c_str(), suffix);
+            break;
+
+        case SPWPN_REBUKE:
+            msg = make_stringf("%s %s with scorn and you feel ready to rebuke everything with %s.",
+                               wpn_name.c_str(), conjugate_verb("quiver", can_plural).c_str(), suffix);
+            break;
+
+        case SPWPN_VALOUR:
+            msg = make_stringf("%s %s with valour and you feel ready to face down everything with %s.",
+                               wpn_name.c_str(), conjugate_verb("gleam", can_plural).c_str(), suffix);
+    }
+
+    mpr(msg);
+
+    string note = make_stringf("blessing of cleaving (%s)", brand_type_name(brand, false));
+    take_note(Note(NOTE_XOM_EFFECT, -1, -1, note), true);
+}
+
 // See if the player's blessing timer has been filled up. And if it has and the
 // tension is zero, give them a new blessing.
 void xom_check_blessing()
@@ -6011,7 +6042,6 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_CHAOS_VEX, {"chaos vex", _xom_chaos_vex }},
     { XOM_GOOD_FOG, { "fog", _xom_fog }},
     { XOM_GOOD_CLOUD_TRAIL, { "cloud trail", _xom_cloud_trail }},
-    { XOM_GOOD_CLEAVING, { "cleaving", _xom_cleaving }},
     { XOM_GOOD_REACHING, { "reaching", _xom_reaching }},
     { XOM_GOOD_RANDOM_KNOWLEDGE, { "knowledge", _xom_random_knowledge }},
     { XOM_GOOD_JOKE_CONSUMABLE, {"consumable", _xom_joke_consumable }},
@@ -6051,6 +6081,8 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BAD_DUEL, {"duel", _xom_duel }},
     { XOM_BAD_FLOOR_LOCK, {"floor_lock", _xom_floor_lock }},
     { XOM_BAD_MINIBANE, {"minibane", _xom_minibane }},
+
+    { XOM_BLESSING_CLEAVE, {"cleaving", [](int){ _xom_cleaving();} }},
 };
 
 static void _do_xom_event(xom_event_type event_type, int tension)

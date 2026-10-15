@@ -57,6 +57,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
+#include "xom.h"
 
 /**
  * What are the odds of an HD-checking confusion effect (e.g. Confusing Touch,
@@ -1191,7 +1192,8 @@ bool force_player_cleave(coord_def target)
 bool attack_cleaves(const actor &attacker, const item_def *weap, int attack_num)
 {
     if (attacker.is_player()
-        && (you.form == transformation::storm || you.duration[DUR_CLEAVE]))
+        && (you.form == transformation::storm
+            || you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_CLEAVE))
     {
         return true;
     }

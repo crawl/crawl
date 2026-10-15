@@ -212,6 +212,8 @@ private:
 
     bool can_reach(int dist);
 
+    brand_type xom_extra_brand() const;
+
     item_def *primary_weapon() const;
     item_def *offhand_weapon() const;
 
