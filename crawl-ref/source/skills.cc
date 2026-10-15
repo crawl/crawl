@@ -2117,6 +2117,20 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
     // it requires a lot of computation
     switch (you.default_form)
     {
+    case transformation::walking_scroll:
+        if (player_exclusively_used_form_since(8))
+        {
+            if (piety_rank(you.raw_piety) >= 6)
+            {
+                if (you_worship(GOD_VEHUMET))
+                    return "Tome of Destruction";
+                else if (you_worship(GOD_SIF_MUNA))
+                    return "Divine Tome";
+                else if (you_worship(GOD_KIKUBAAQUDGHA))
+                    return "Book of the Dead";
+            }
+            return "Paleographer";
+        }
     case transformation::fortress_crab:
         if (best_skill == SK_SHAPESHIFTING && skill_rank == 5
             && player_exclusively_used_form_since(14))
