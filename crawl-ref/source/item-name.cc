@@ -1833,6 +1833,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     }
 
     case OBJ_TALISMANS:
+        if (!dbname && !basename && testbits(flags, ISFLAG_CHAOTIC))
+            buff << "chaotic ";
         if (is_random_artefact(*this) && !dbname && !basename)
             buff << get_artefact_name(*this, ident);
         else

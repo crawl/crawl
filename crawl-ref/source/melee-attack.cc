@@ -973,6 +973,16 @@ bool melee_attack::handle_phase_hit()
         apply_damage_brand();
     }
 
+    if (defender->alive()
+        && attacker->is_player()
+        && attacker->scan_artefacts(ARTP_CHAOS_STRIKE)
+        && one_chance_in(6))
+    {
+        unwind_var<brand_type> save_brand(damage_brand);
+        damage_brand = SPWPN_CHAOS;
+        apply_damage_brand();
+    }
+
     // Apply flux form's sfx.
     if (attacker->is_player() && you.form == transformation::flux
         && defender->alive() && defender->is_monster())

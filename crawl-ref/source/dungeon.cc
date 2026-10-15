@@ -5167,10 +5167,19 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         }
     }
 
-    if (props.exists(CHAOTIC_ITEM_KEY) && is_unrandom_artefact(item)
-        && (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_ARMOUR))
+    if (props.exists(CHAOTIC_ITEM_KEY))
     {
-        item.flags |= ISFLAG_CHAOTIC;
+        if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_ARMOUR)
+            && is_unrandom_artefact(item))
+        {
+            item.flags |= ISFLAG_CHAOTIC;
+        }
+        // We need to manually add the artprop here (to the already rolled item)
+        else if (item.base_type == OBJ_TALISMANS && is_artefact(item))
+        {
+            item.flags |= ISFLAG_CHAOTIC;
+            artefact_set_property(item, ARTP_CHAOS_STRIKE, 1);
+        }
     }
 
     if (props.exists(NO_PICKUP_KEY))

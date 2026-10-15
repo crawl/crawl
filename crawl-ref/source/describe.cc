@@ -506,6 +506,9 @@ static const vector<property_descriptor> & _get_all_artp_desc_data()
         { ARTP_CHAOS_GUARD,
             "It may inflict chaotic effects on those who attack you.",
             prop_note::plain },
+        { ARTP_CHAOS_STRIKE,
+            "It may inflict chaos on those you attack in melee.",
+            prop_note::plain },
     };
     return data;
 }
@@ -602,6 +605,7 @@ static const vector<artefact_prop_type> artprop_annotation_order =
     // List after other artprops (since it's harder to list it before all
     // unrand-specific props).
     ARTP_CHAOS_GUARD,
+    ARTP_CHAOS_STRIKE,
 };
 
 static vector<string> _randart_propnames(const item_def& item,
