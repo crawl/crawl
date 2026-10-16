@@ -24,11 +24,14 @@
 #endif
 
 #include "files.h"
+#include "hiscores.h"
 #include "random.h"
 #include "unicode.h"
 
 #ifdef __ANDROID__
 #define HAVE_STAT
+#include "playable.h"
+#include "religion.h"
 #include "player.h"
 #include <errno.h>
 #include <android/asset_manager.h>
@@ -49,6 +52,89 @@ Java_org_libsdl_app_SDLActivity_nativeSaveGame(
 {
     if (you.save)
         save_game(false);
+}
+
+extern "C" JNIEXPORT jintArray JNICALL
+Java_org_develz_crawl_DCSSMorgueRoster_nativeCurrentCounts(
+    JNIEnv *env, jclass)
+{
+    int gods = 0;
+    for (god_iterator god; god; ++god)
+    {
+        if (*god != GOD_NO_GOD && !is_unavailable_god(*god))
+            ++gods;
+    }
+
+    const jint values[] = {
+        (jint) playable_species().size(),
+        (jint) playable_jobs().size(),
+        (jint) gods,
+        (jint) playable_combos().size()
+    };
+    jintArray result = env->NewIntArray(4);
+    if (result)
+        env->SetIntArrayRegion(result, 0, 4, values);
+    return result;
+}
+
+static string _android_score_record(const xlog_fields &fields)
+{
+    static const char *const keys[] = {
+        "end", "sc", "race", "cls", "god", "xl", "place", "turn", "dur",
+        "nrune", "ktyp", "killer", "v"
+    };
+    string record;
+    for (const char *key : keys)
+    {
+        if (!record.empty())
+            record += "\x1f";
+        record += fields.str_field(key);
+    }
+    return record;
+}
+
+extern "C" JNIEXPORT jobjectArray JNICALL
+Java_org_develz_crawl_DCSSScoreReader_nativeReadScores(
+    JNIEnv *env, jclass, jstring saves_directory)
+{
+    vector<string> records;
+    const char *directory = env->GetStringUTFChars(saves_directory, nullptr);
+    if (!directory)
+        return nullptr;
+
+    DIR *dir = opendir(directory);
+    if (dir)
+    {
+        for (dirent *entry; (entry = readdir(dir)); )
+        {
+            const string name(entry->d_name);
+            if (name != "scores" && !starts_with(name, "scores-"))
+                continue;
+            ifstream scores(catpath(directory, name).c_str());
+            for (string line; getline(scores, line); )
+            {
+                if (line.empty())
+                    continue;
+                xlog_fields fields(line);
+                const string record = _android_score_record(fields);
+                if (!fields.str_field("end").empty()
+                    && !fields.str_field("sc").empty()
+                    && !fields.str_field("race").empty()
+                    && !fields.str_field("cls").empty())
+                {
+                    records.push_back(record);
+                }
+            }
+        }
+        closedir(dir);
+    }
+    env->ReleaseStringUTFChars(saves_directory, directory);
+
+    jclass string_class = env->FindClass("java/lang/String");
+    jobjectArray result = env->NewObjectArray(records.size(), string_class, nullptr);
+    for (size_t i = 0; result && i < records.size(); ++i)
+        env->SetObjectArrayElement(result, i, env->NewStringUTF(records[i].c_str()));
+    return result;
 }
 
 int jni_ref_display_size()
