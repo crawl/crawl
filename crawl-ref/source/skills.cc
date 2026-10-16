@@ -2154,6 +2154,7 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         {
             return "Dullahan";
         }
+        break;
     case transformation::spider:
         if (player_exclusively_used_form_since(14))
         {
@@ -2161,12 +2162,14 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
                 return "Wolf Spider";
             return "Arachnophile";
         }
+        break;
     case transformation::eel_hands:
         if (you_worship(GOD_JIYVA) && piety_rank(you.raw_piety) >= 6
             && player_exclusively_used_form_since(14))
         {
             return "Jellied Eel";
         }
+        break;
     case transformation::maw:
         if (player_exclusively_used_form_since(14))
         {
