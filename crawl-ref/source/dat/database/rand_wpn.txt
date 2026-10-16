@@ -1768,6 +1768,8 @@ Pendulum
 
 Sarcophage
 
+Serial Peacemaker
+
 Tormentor
 
 Transmigrator
