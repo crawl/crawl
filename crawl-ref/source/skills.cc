@@ -2150,6 +2150,12 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         {
             return "Dullahan";
         }
+    case transformation::eel_hands:
+        if (you_worship(GOD_JIYVA) && piety_rank(you.raw_piety) >= 6
+            && player_exclusively_used_form_since(14))
+        {
+            return "Jellied Eel";
+        }
     case transformation::maw:
         if (you.species == SP_GALE_CENTAUR && !is_good_god(you.religion)
             && player_exclusively_used_form_since(14))
