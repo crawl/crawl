@@ -2164,10 +2164,14 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
             return "Jellied Eel";
         }
     case transformation::maw:
-        if (you.species == SP_GALE_CENTAUR && !is_good_god(you.religion)
-            && player_exclusively_used_form_since(14))
+        if (player_exclusively_used_form_since(14))
         {
-            return "Black Horse"; // Famine
+            if (you.species == SP_GALE_CENTAUR && !is_good_god(you.religion))
+                return "Black Horse"; // Famine
+            else if (you.species == SP_MERFOLK)
+                return "Piranha";
+
+            return "Insatiable";
         }
         break;
     case transformation::fortress_crab:
