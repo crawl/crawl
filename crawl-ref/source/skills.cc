@@ -2146,6 +2146,13 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         {
             return "Dullahan";
         }
+    case transformation::maw:
+        if (you.species == SP_GALE_CENTAUR && !is_good_god(you.religion)
+            && player_exclusively_used_form_since(14))
+        {
+            return "Black Horse"; // Famine
+        }
+        break;
     case transformation::fortress_crab:
         if (best_skill == SK_SHAPESHIFTING && skill_rank == 5
             && player_exclusively_used_form_since(14))
@@ -2159,6 +2166,10 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         {
             return "Riddle's Answer";
         }
+        break;
+    case transformation::death:
+        if (you.species == SP_GALE_CENTAUR && player_exclusively_used_form_since(20))
+            return "Pale Horse"; // Needs no introduction
         break;
     default:
         break;
@@ -2206,6 +2217,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Hell Knight";
             else if (species == SP_HUMAN && skill_rank == 5 && god == GOD_YREDELEMNUL)
                 result = "Death Knight";
+            else if (species == SP_GALE_CENTAUR && skill_rank == 5 && !is_good_god(god))
+                result = "White Horse"; // Conquest, rather than Conqueror
             break;
 
         case SK_UNARMED_COMBAT:
@@ -2389,6 +2402,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Necrodancer";
             else if (species::is_draconian(species) && skill_rank == 5 && is_good_god(god))
                 result = "Pearl Dragon";
+            else if (species == SP_GALE_CENTAUR && skill_rank == 5 && god == GOD_TROG)
+                result = "Red Horse"; // War
             else if (species == SP_GARGOYLE && skill_rank == 5 && god == GOD_JIYVA)
                 result = "Rockslime";
             else if (species == SP_VINE_STALKER && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
