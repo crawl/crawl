@@ -7110,7 +7110,7 @@ _Sojobo_advice_
 
 @The_monster@ says @to_foe@, "Appear weak when you are strong, and strong when you are weak."
 
-@The_monster@ says @to_foe@, "Know thy enemy, and know thyself."
+@The_monster@ says @to_foe@, "Know thine enemy, and know thyself."
 
 @The_monster@ says @to_foe@, "Let your plans be as dark and impenetrable as the night."
 
