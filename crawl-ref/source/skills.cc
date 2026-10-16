@@ -2150,6 +2150,13 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         {
             return "Dullahan";
         }
+    case transformation::spider:
+        if (player_exclusively_used_form_since(14))
+        {
+            if (you.species == SP_GNOLL)
+                return "Wolf Spider";
+            return "Arachnophile";
+        }
     case transformation::eel_hands:
         if (you_worship(GOD_JIYVA) && piety_rank(you.raw_piety) >= 6
             && player_exclusively_used_form_since(14))
