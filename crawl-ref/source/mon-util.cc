@@ -549,7 +549,7 @@ int monster::wearing_ego(object_class_type obj_type, int special) const
 }
 
 int monster::scan_artefacts(artefact_prop_type ra_prop,
-                            vector<const item_def *> *matches) const
+                            vector<const item_def *> *matches, bool) const
 {
     UNUSED(matches); //TODO: implement this when it will be required somewhere
 

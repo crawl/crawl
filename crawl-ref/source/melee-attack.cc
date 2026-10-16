@@ -3504,8 +3504,11 @@ bool melee_attack::apply_staff_damage()
     if (!weapon)
         return false;
 
-    if (attacker->is_player() && you.get_mutation_level(MUT_NO_ARTIFICE))
+    if (attacker->is_player() && (you.get_mutation_level(MUT_NO_ARTIFICE)
+        || !you.equipment.get_entry_for(*weapon).attuned))
+    {
         return false;
+    }
 
     if (weapon->base_type != OBJ_STAVES
         || item_type_removed(weapon->base_type, weapon->sub_type))
