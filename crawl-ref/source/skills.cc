@@ -2155,6 +2155,14 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
             return "Dullahan";
         }
         break;
+    case transformation::jademantle:
+        if (you.skill(SK_FIRE_MAGIC) > 20 && you.skill(SK_ICE_MAGIC) > 20
+            && you.skill(SK_EARTH_MAGIC) > 20 && you.skill(SK_AIR_MAGIC) > 20
+            && player_exclusively_used_form_since(11))
+        {
+            return "Master Elementalist";
+        }
+        break;
     case transformation::spider:
         if (player_exclusively_used_form_since(14))
         {
