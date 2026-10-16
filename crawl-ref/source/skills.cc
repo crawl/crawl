@@ -2133,8 +2133,12 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         }
         break;
     case transformation::vision:
-        if (you.species == SP_KOBOLD && player_exclusively_used_form_since(8))
-            return "Farsighted";
+        if (player_exclusively_used_form_since(8))
+        {
+            if (you.species == SP_KOBOLD)
+                return "Farsighted";
+            return "Veil Piercer";
+        }
         break;
     case transformation::hypnogecko:
         if (you.species == SP_FELID && player_exclusively_used_form_since(8))
