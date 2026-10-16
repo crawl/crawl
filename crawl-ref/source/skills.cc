@@ -2140,6 +2140,10 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         if (you.species == SP_FELID && player_exclusively_used_form_since(8))
             return "Leopard Gecko";
         break;
+    case transformation::spore:
+        if (you.species == SP_FORMICID && player_exclusively_used_form_since(8))
+            return "Cordyceps Champion";
+        break;
     case transformation::mistmane:
         if (you.species == SP_GALE_CENTAUR && is_evil_god(you.religion)
             && player_exclusively_used_form_since(11))
