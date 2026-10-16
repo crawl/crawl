@@ -2141,7 +2141,7 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
             return "Leopard Gecko";
         break;
     case transformation::spore:
-        if (you.species == SP_FORMICID && player_exclusively_used_form_since(8))
+        if (you.species == SP_FORMICID && player_exclusively_used_form_since(11))
             return "Cordyceps Champion";
         break;
     case transformation::mistmane:
