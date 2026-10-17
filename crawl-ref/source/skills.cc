@@ -2148,6 +2148,12 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         if (you.species == SP_FORMICID && player_exclusively_used_form_since(11))
             return "Cordyceps Champion";
         break;
+    case transformation::sun_scarab:
+        if (best_skill == SK_SHAPESHIFTING && skill_rank == 5
+            && player_exclusively_used_form_since(11))
+        {
+            return "Who Moves the Sun";
+        }
     case transformation::mistmane:
         if (you.species == SP_GALE_CENTAUR && is_evil_god(you.religion)
             && player_exclusively_used_form_since(11))
@@ -2540,7 +2546,8 @@ string player_title(bool the)
             skill_title_by_rank(best, get_skill_rank(you.skills[best]));
     const string article = !the ? ""
                                 : title == "Petite Mort" ? "La "
-                                : title == "Who Hides the Stars" ? ", "
+                                : title == "Who Hides the Stars"
+                                  || title == "Who Moves the Sun" ? ", "
                                 : "the ";
     return article + title;
 }
