@@ -2209,6 +2209,13 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
             return "Riddle's Answer";
         }
         break;
+    case transformation::vampire:
+        if (best_skill == SK_SHAPESHIFTING && skill_rank == 5
+            && player_exclusively_used_form_since(17))
+        {
+            return "Bloodprince";
+        }
+        break;
     case transformation::storm:
         if (you_worship(GOD_QAZLAL) && piety_rank(you.raw_piety) >= 6
             && player_exclusively_used_form_since(17))
