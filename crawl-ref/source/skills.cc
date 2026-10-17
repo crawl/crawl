@@ -2216,6 +2216,17 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
             return "Bloodprince";
         }
         break;
+    case transformation::hive:
+        if (best_skill == SK_INVOCATIONS && skill_rank == 5
+            && player_exclusively_used_form_since(17))
+        {
+            if (you_worship(GOD_TROG)
+                return "Beeserker";
+            if (you_worship(GOD_NO_GOD)
+                return "Endless Swarm";
+            return "Meliai";
+        }
+        break;
     case transformation::statue:
         if (you.species == SP_MINOTAUR && you_worship(GOD_GOZAG)
             && you.gold >= 5000 && player_exclusively_used_form_since(17))
