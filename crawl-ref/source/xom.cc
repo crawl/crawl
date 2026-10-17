@@ -97,7 +97,6 @@
 
 static void _do_xom_event(xom_event_type event_type, int tension);
 static bool _explore_event_is_valid(xom_event_type event, int tension);
-static xom_event_type _xom_choose_action(bool niceness, int tension, bool is_explore = false);
 
 static int _count_reachable_monsters();
 
@@ -5218,7 +5217,7 @@ static bool _explore_event_is_valid(xom_event_type event, int tension)
  * @param is_explore    Whether this is an exploration effect (ie: a strategic effect)
  * @return              An bad action for Xom to take, e.g. XOM_DID_NOTHING.
  */
-static xom_event_type _xom_choose_action(bool niceness, int tension, bool is_explore)
+xom_event_type xom_choose_action(bool niceness, int tension, bool is_explore)
 {
     vector<pair<const xom_event_data&, int>> weighted_list;
     const xom_event_data* action;
@@ -5306,6 +5305,7 @@ static xom_event_type _xom_choose_action(bool niceness, int tension, bool is_exp
             // If this is an explore effect that should be deferred to later,
             // queue it and do nothing right now.
             if (is_explore
+                && !you.penance[GOD_XOM]
                 && !_explore_type_is_valid(action->explore_type, tension))
             {
                 CrawlVector& vec = you.props[XOM_QUEUED_EXPLORE_KEY].get_vector();
@@ -5384,7 +5384,7 @@ xom_event_type xom_acts(maybe_bool nice, int tension, bool debug)
 #endif
 
     _calculate_exploration_estimate(true);
-    const xom_event_type action = _xom_choose_action(niceness, tension);
+    const xom_event_type action = xom_choose_action(niceness, tension);
     if (!debug)
         xom_take_action(action, tension);
 
@@ -5405,7 +5405,7 @@ xom_event_type xom_acts_exploration()
         nice = x_chance_in_y(3, 5);
 
     _calculate_exploration_estimate(true);
-    const xom_event_type action = _xom_choose_action(nice, 0, true);
+    const xom_event_type action = xom_choose_action(nice, 0, true);
     xom_take_action(action, 0);
 
     you.attribute[ATTR_XOM_EXPLORE_COUNT] -= XOM_EXPLORE_THRESHOLD;

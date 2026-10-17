@@ -118,6 +118,8 @@ xom_event_type xom_acts(maybe_bool niceness = maybe_bool::maybe,
                         int tension = -1, bool debug = false);
 xom_event_type xom_acts_exploration();
 void xom_take_action(xom_event_type action, int tension);
+xom_event_type xom_choose_action(bool niceness, int tension,
+                                 bool is_explore = false);
 
 void xom_maybe_reverts_banishment();
 void xom_check_lost_item(const item_def& item);
