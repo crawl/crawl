@@ -2144,6 +2144,10 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         if (you.species == SP_FELID && player_exclusively_used_form_since(8))
             return "Leopard Gecko";
         break;
+     case transformation::quill:
+        if (you.species == SP_SPRIGGAN && player_exclusively_used_form_since(8))
+            return "Hedgehog";
+        break;
     case transformation::spore:
         if (you.species == SP_FORMICID && player_exclusively_used_form_since(11))
             return "Cordyceps Champion";
@@ -2220,9 +2224,9 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         if (best_skill == SK_INVOCATIONS && skill_rank == 5
             && player_exclusively_used_form_since(17))
         {
-            if (you_worship(GOD_TROG)
+            if (you_worship(GOD_TROG))
                 return "Beeserker";
-            if (you_worship(GOD_NO_GOD)
+            if (you_worship(GOD_NO_GOD))
                 return "Endless Swarm";
             return "Meliai";
         }
