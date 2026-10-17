@@ -407,14 +407,10 @@ static bool _make_zig(item_def &zig)
         mpr("You can't place a gateway to a ziggurat here.");
         return false;
     }
-    for (int lev = 1; lev <= brdepth[BRANCH_ZIGGURAT]; lev++)
+    if (player_in_branch_recursive(BRANCH_ZIGGURAT))
     {
-        if (is_level_on_stack(level_id(BRANCH_ZIGGURAT, lev))
-            || you.where_are_you == BRANCH_ZIGGURAT)
-        {
-            mpr("Finish your current ziggurat first!");
-            return false;
-        }
+        mpr("Finish your current ziggurat first!");
+        return false;
     }
 
     ASSERT(in_inventory(zig));

@@ -29,3 +29,4 @@ bool single_level_branch(branch_type branch);
 vector<level_id> all_dungeon_ids();
 
 bool is_level_on_stack(level_id id);
+bool player_in_branch_recursive(branch_type branch);

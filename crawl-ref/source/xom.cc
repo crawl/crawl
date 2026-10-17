@@ -4697,8 +4697,7 @@ static const vector<xom_event_data> _list_xom_good_actions = {
         {
            // Nesting bazaars makes exploration and shopping lists complain.
            // No leaving Sprint floors in Sprint.
-           if (is_level_on_stack(level_id(BRANCH_BAZAAR))
-              || player_in_branch(BRANCH_BAZAAR)
+           if (player_in_branch_recursive(BRANCH_BAZAAR)
               || brdepth[BRANCH_ABYSS] == -1)
            {
               return false;
@@ -4911,15 +4910,13 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
     {
         XOM_BAD_PSEUDO_BANISHMENT, 0, 0, 10, [](int /*tn*/)
         {return !you.penance[GOD_XOM]
-                && !player_in_branch(BRANCH_ABYSS)
-                && !(is_level_on_stack(level_id(BRANCH_ABYSS)));}
+                && !player_in_branch_recursive(BRANCH_ABYSS);}
     },
     {
         XOM_BAD_BANISHMENT, 0, 0, 1, [](int /*tn*/)
         {return _allow_xom_banishment()
                 && !x_chance_in_y(HALF_MAX_PIETY * 2, 1000)
-                && !player_in_branch(BRANCH_ABYSS)
-                && !(is_level_on_stack(level_id(BRANCH_ABYSS)));}
+                && !player_in_branch_recursive(BRANCH_ABYSS);}
     },
 
     // Highly circumstantial effects with less total
