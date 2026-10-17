@@ -2468,7 +2468,8 @@ static void _xom_destruction(bool real)
 
         bolt beam;
 
-        beam.flavour      = BEAM_STICKY_FLAME;
+        beam.flavour      = BEAM_FIRE;
+        beam.origin_spell = SPELL_STICKY_FLAME;
         beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
         beam.damage       = dice_def(dice, 9);
         beam.target       = mi->pos();
