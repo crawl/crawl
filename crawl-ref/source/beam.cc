@@ -6211,7 +6211,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return obvious_effect ? MON_AFFECTED : MON_OTHER; // ?
 
     case BEAM_POLYMORPH:
-        if (mon->polymorph(0))
+        if (mon->polymorph(PPT_WAND))
             obvious_effect = true;
         return MON_AFFECTED;
 

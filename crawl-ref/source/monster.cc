@@ -5302,12 +5302,9 @@ bool monster::polymorph(poly_power_type power)
         return true;
     }
 
-    // Polymorphing a shapeshifter will make it revert to its original
-    // form.
-    if (has_ench(ENCH_GLOWING_SHAPESHIFTER))
-        return monster_polymorph(this, MONS_GLOWING_SHAPESHIFTER, power);
-    if (has_ench(ENCH_SHAPESHIFTER))
-        return monster_polymorph(this, MONS_SHAPESHIFTER, power);
+    // Polymorphing a shapeshifter will change its form at random.
+    if (has_ench(ENCH_SHAPESHIFTER) || has_ench(ENCH_GLOWING_SHAPESHIFTER))
+        return monster_polymorph(this, RANDOM_MONSTER, power);
 
     // Polymorphing a slime creature will usually split it first
     // and polymorph each part separately.
@@ -5322,7 +5319,7 @@ bool monster::polymorph(poly_power_type power)
         return true;
     }
 
-    const monster_type targ = power == PPT_SAME ? RANDOM_POLYMORPH_MONSTER
+    const monster_type targ = power == PPT_WAND ? RANDOM_POLYMORPH_MONSTER
                                                 : RANDOM_MONSTER;
     return monster_polymorph(this, targ, power);
 }

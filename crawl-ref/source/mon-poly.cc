@@ -499,8 +499,8 @@ static int _poly_weight(int orig_hd, int orig_tier, monster_type new_species,
 }
 
 static void _fill_poly_weights(const monster &mons, poly_power_type ppt,
-                               bool hab_match,
-                               map<monster_type, int> &weights)
+                               bool hab_match, map<monster_type, int> &weights,
+                               dungeon_feature_type cur_feat = DNGN_UNSEEN)
 {
     const int orig_tier = mons_demon_tier(mons.type);
     if (orig_tier == -1)
@@ -528,7 +528,14 @@ static void _fill_poly_weights(const monster &mons, poly_power_type ppt,
         if (!_valid_type_morph(mons, species))
             continue; // no polying into statues, same species, etc
 
+        // For poly sets, all candidates must be able to inhabit *any* feature
+        // the original monster can.
         if (hab_match && !_habitat_matches(orig_flies, orig_hab, species))
+            continue;
+
+        // If we're testing a polymorph against a monster's *current* position,
+        // it only needs to be able to inhabit the current feature specifically.
+        if (cur_feat != DNGN_UNSEEN && !monster_habitable_feat(mt, cur_feat))
             continue;
 
         const int weight = _poly_weight(orig_hd, orig_tier, species, ppt);
@@ -577,7 +584,8 @@ static monster_type _poly_from_set(monster &mons)
 }
 
 static monster_type _concretize_target(monster &mons, monster_type target,
-                                       poly_power_type ppt)
+                                       poly_power_type ppt,
+                                       dungeon_feature_type cur_feat)
 {
     switch (target)
     {
@@ -586,7 +594,7 @@ static monster_type _concretize_target(monster &mons, monster_type target,
     case RANDOM_MONSTER:
     {
         map<monster_type, int> weights;
-        _fill_poly_weights(mons, ppt, false, weights);
+        _fill_poly_weights(mons, ppt, false, weights, cur_feat);
         if (weights.empty())
             return MONS_NO_MONSTER;
         const monster_type *chosen = random_choose_weighted<map<monster_type,int>>(weights);
@@ -605,9 +613,6 @@ static monster_type _concretize_target(monster &mons, monster_type target,
 bool monster_polymorph(monster* mons, monster_type targetc,
                        poly_power_type power)
 {
-    // Don't attempt to polymorph a monster that is busy using the stairs.
-    if (mons->flags & MF_TAKING_STAIRS)
-        return false;
     ASSERT(!(mons->flags & MF_BANISHED) || player_in_branch(BRANCH_ABYSS));
 
     // There's not a single valid target on the '&' demon tier, so unless we
@@ -618,7 +623,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
             " appearance momentarily alters.", true);
     }
 
-    targetc = _concretize_target(*mons, targetc, power);
+    targetc = _concretize_target(*mons, targetc, power, env.grid(mons->pos()));
     if (targetc == MONS_NO_MONSTER)
         return simple_monster_message(*mons, " shudders.");
 
@@ -680,10 +685,10 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     // Xom likes watching monsters being polymorphed.
     if (can_see)
     {
-        xom_is_stimulated(mons->is_shapeshifter()               ? 12 :
-                          power == PPT_LESS || mons->friendly() ? 25 :
-                          power == PPT_SAME                     ? 50
-                                                                : 100);
+        xom_is_stimulated(mons->is_shapeshifter()                ? 12 :
+                          power == PPT_LESS || mons->friendly()  ? 25 :
+                          power == PPT_SAME || power == PPT_WAND ? 50
+                                                                 : 100);
     }
 
     return player_messaged;

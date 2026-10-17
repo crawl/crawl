@@ -24,6 +24,7 @@ enum poly_power_type
     PPT_MORE,
     PPT_SAME,
     PPT_SLIME,
+    PPT_WAND,   // Specifically respect the monster's precalculated polymorph set
 };
 
 void monster_drop_things(

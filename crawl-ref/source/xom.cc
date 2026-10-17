@@ -615,11 +615,6 @@ static void _xom_joke_consumable(int)
     _xom_give_item(type, subtype, quantity);
 }
 
-static bool _choose_mutatable_monster(const monster& mon)
-{
-    return mon.alive() && mon.can_safely_mutate();
-}
-
 static bool _choose_enchantable_monster(const monster& mon)
 {
     return mon.alive() && !mon.wont_attack()
@@ -1198,16 +1193,6 @@ static void _xom_polymorph_monster(monster &mons, bool helpful)
     const string old_name = see_old ? mons.full_name(DESC_PLAIN)
                                     : "something unseen";
 
-    if (one_chance_in(8)
-        && !mons_is_ghost_demon(mons.type)
-        && !mons.is_shapeshifter()
-        && mons.holiness() & MH_NATURAL
-        && (you.experience_level > 4 || you.penance[GOD_XOM]))
-    {
-        mons.add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
-                                       : ENCH_SHAPESHIFTER);
-    }
-
     const bool powerup = !(mons.wont_attack() ^ helpful);
 
     if (powerup)
@@ -1220,9 +1205,21 @@ static void _xom_polymorph_monster(monster &mons, bool helpful)
         if (you.experience_level < 10 && !helpful)
             mons.malmutate(nullptr);
     }
-
     else
         mons.polymorph(PPT_LESS);
+
+    // If we do this before the polymorph, it can sometimes make the polymorph
+    // itself fail (by trying to turn the monster into a different tier of
+    // shapeshifter.
+    if (one_chance_in(8)
+        && !mons_is_ghost_demon(mons.type)
+        && !mons.is_shapeshifter()
+        && mons.holiness() & MH_NATURAL
+        && (you.experience_level > 4 || you.penance[GOD_XOM]))
+    {
+        mons.add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
+                                       : ENCH_SHAPESHIFTER);
+    }
 
     const bool see_new = you.can_see(mons);
 
@@ -1254,7 +1251,7 @@ static monster* _xom_mons_poly_target()
     //      Likewise, there's very few plant polymorph options.
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (_choose_mutatable_monster(**mi) && !mi->is_firewood()
+        if (mi->can_polymorph() && !mi->is_firewood()
            && ((env.grid(mi->pos()) != DNGN_DEEP_WATER)
                && (env.grid(mi->pos()) != DNGN_LAVA) || you.experience_level > 4)
            && (!(mi->holiness() & MH_PLANT) || you.experience_level > 8))
