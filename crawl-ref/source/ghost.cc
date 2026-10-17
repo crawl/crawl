@@ -457,11 +457,20 @@ void ghost_demon::init_player_ghost()
     damage = 4;
     brand = SPWPN_NORMAL;
 
-    if (you.weapon())
+    item_def *wielded_weapon = you.weapon();
+
+    // Dual-wielders can also get their offhand weapon, if they have one.
+    if (you.has_innate_mutation(MUT_WIELD_OFFHAND) && coinflip()
+        && you.offhand_weapon())
+    {
+        wielded_weapon = you.offhand_weapon();
+    }
+
+    if (wielded_weapon)
     {
         // This includes ranged weapons, but they're treated as melee.
 
-        const item_def& weapon = *you.weapon();
+        const item_def& weapon = *wielded_weapon;
         if (is_weapon(weapon))
         {
             damage = property(weapon, PWPN_DAMAGE);
