@@ -2216,18 +2216,18 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
             return "Bloodprince";
         }
         break;
-    case transformation::storm:
-        if (you_worship(GOD_QAZLAL) && piety_rank(you.raw_piety) >= 6
-            && player_exclusively_used_form_since(17))
-        {
-            return "Storm of the Century";
-        }
-        break;
     case transformation::statue:
         if (you.species == SP_MINOTAUR && you_worship(GOD_GOZAG)
             && you.gold >= 5000 && player_exclusively_used_form_since(17))
         {
             return "Golden Calf";
+        }
+        break;
+    case transformation::storm:
+        if (you_worship(GOD_QAZLAL) && piety_rank(you.raw_piety) >= 6
+            && player_exclusively_used_form_since(20))
+        {
+            return "Storm of the Century";
         }
         break;
     case transformation::death:
