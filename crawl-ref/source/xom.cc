@@ -4972,7 +4972,7 @@ static const vector<xom_event_data> _list_xom_bad_actions = {
         {return _rearrangeable_pieces().size();}
     },
     {
-        XOM_BAD_TELEPORT, 475, 1460, 60, [](int tn)
+        XOM_BAD_TELEPORT, 375, 0, 25, [](int tn)
         {
             const int explored = you.explore_estimate;
 
