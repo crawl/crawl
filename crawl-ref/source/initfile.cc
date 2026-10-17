@@ -568,7 +568,7 @@ const vector<GameOption*> game_options::build_options_list()
             false,
             [this]() { update_explore_stop_conditions(); }),
         new ListGameOption<string>(ON_SET_NAME(explore_greedy_visit),
-            {"glowing", "artefact"},
+            {"glowing", "artefact", "shop", "faded_altar"},
             false,
             [this]() { update_explore_greedy_visit_conditions(); }),
         new ListGameOption<string>(ON_SET_NAME(travel_avoid_terrain), {}, false,
@@ -3325,6 +3325,9 @@ void game_options::update_explore_greedy_visit_conditions()
         { "artifact", EG_ARTEFACT }, { "artifacts", EG_ARTEFACT },
         { "stack", EG_STACK }, { "stacks", EG_STACK },
         { "pile", EG_STACK }, { "piles", EG_STACK },
+        { "shop", EG_SHOP }, { "shops", EG_SHOP },
+        { "faded_altar", EG_FADED_ALTAR },
+        { "faded_altars", EG_FADED_ALTAR },
     };
     int conditions = EG_NONE;
     for (const string &stop : explore_greedy_visit_option)
