@@ -1784,6 +1784,30 @@ wall_clear_permarock_necropolis1
 wall_clear_permarock_necropolis2
 wall_clear_permarock_necropolis3
 
+metal_wall_xom_a0 METAL_WALL_XOM_A
+metal_wall_xom_a1
+metal_wall_xom_a2
+metal_wall_xom_a3
+metal_wall_xom_a4
+
+%weight 10
+metal_wall_xom_b0 METAL_WALL_XOM_B
+metal_wall_xom_b1
+%weight 6
+metal_wall_xom_b2
+metal_wall_xom_b3
+metal_wall_xom_b4
+
+metal_wall_xom_c0 METAL_WALL_XOM_C
+metal_wall_xom_c1
+metal_wall_xom_c2
+metal_wall_xom_c3
+
+wall_clear_permarock_chaos0 CLEAR_PERMAROCK_CHAOS
+wall_clear_permarock_chaos1
+wall_clear_permarock_chaos2
+wall_clear_permarock_chaos3
+
 %weight 10
 crucible_of_flesh0 WALL_CRUCIBLE
 %weight 6
