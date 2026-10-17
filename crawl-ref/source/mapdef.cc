@@ -2364,6 +2364,40 @@ string map_def::name_at(const coord_def &c) const
     return comma_separated_line(names.begin(), names.end(), ", ", ", ");
 }
 
+const string *map_def::feat_rename_at(const coord_def &c,
+                                      dungeon_feature_type feat) const
+{
+    for (const subvault_place& subvault : subvault_places)
+    {
+        if (c.x >= subvault.tl.x && c.x <= subvault.br.x &&
+            c.y >= subvault.tl.y && c.y <= subvault.br.y &&
+            subvault.subvault->in_map(c - subvault.tl))
+        {
+            if (const string *rename =
+                    subvault.subvault->feat_rename_at(c - subvault.tl, feat))
+            {
+                return rename;
+            }
+        }
+    }
+    return map_find(feat_renames, feat);
+}
+
+void map_def::reset_feat_rename_at(const coord_def &c,
+                                   dungeon_feature_type feat)
+{
+    feat_renames.erase(feat);
+    for (subvault_place& subvault : subvault_places)
+    {
+        if (c.x >= subvault.tl.x && c.x <= subvault.br.x &&
+            c.y >= subvault.tl.y && c.y <= subvault.br.y &&
+            subvault.subvault->in_map(c - subvault.tl))
+        {
+            subvault.subvault->reset_feat_rename_at(c - subvault.tl, feat);
+        }
+    }
+}
+
 string map_def::desc_or_name() const
 {
     return description.empty()? name : description;

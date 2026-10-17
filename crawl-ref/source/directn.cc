@@ -3155,8 +3155,7 @@ string raw_feature_description(const coord_def &where)
 
     if (lv)
     {
-        const auto &renames = lv->map.feat_renames;
-        if (const string *rename = map_find(renames, feat))
+        if (const string *rename = lv->map_feat_rename_at(where, feat))
             return *rename;
     }
 

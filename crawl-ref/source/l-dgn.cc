@@ -809,7 +809,7 @@ static int dgn_reset_feature_name_for(lua_State *ls)
     {
         const string feat_name = lua_tostring(ls, 3);
         const dungeon_feature_type feat = dungeon_feature_by_name(feat_name);
-        env.level_vaults[map_index]->map.feat_renames.erase(feat);
+        env.level_vaults[map_index]->map_reset_feat_rename_at(c, feat);
     }
     return 0;
 }
