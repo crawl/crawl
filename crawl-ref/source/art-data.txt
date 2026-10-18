@@ -2133,6 +2133,23 @@ DESCRIP: Mist:   It may create clouds of spectral mist when the wearer attacks
  a greater chance to produce spectral mist.
 MAX_LEVEL: 11
 
+ENUM:      TARGE
+NAME:      platinum targe
+INSCRIP:   Wiz--
+OBJ:       OBJ_WEAPONS/WPN_TARGE
+FALLBACK:  OBJ_ARMOUR/ARM_KITE_SHIELD
+PLUS:      +4
+BRAND:     SPWPN_HEAVY
+COLOUR:    ETC_IRON
+TILE:      urand_targe
+TILE_EQ:   TARGE
+STR:       +2
+BOOL:      rampage, special
+DESCRIP: It has a base SH value of 8, which is modified by your skills and
+ attributes.
++Wiz--: It greatly reduces the success rate of your spells.
+MAX_LEVEL: 11
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
