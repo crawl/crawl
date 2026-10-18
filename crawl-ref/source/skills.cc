@@ -2118,7 +2118,7 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
     switch (you.default_form)
     {
     case transformation::walking_scroll:
-        if (best_skill == SK_SHAPESHIFTING && player_exclusively_used_form_since(8))
+        if (player_exclusively_used_form_since(8))
         {
             if (piety_rank(you.raw_piety) >= 6)
             {
@@ -2153,8 +2153,7 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
             return "Cordyceps Champion";
         break;
     case transformation::medusa:
-        if (best_skill == SK_SHAPESHIFTING && skill_rank == 5
-            && player_exclusively_used_form_since(11))
+        if (best_skill == SK_SHAPESHIFTING && player_exclusively_used_form_since(11))
         {
             if (you.species == SP_NAGA)
                 return "Gorgon";
@@ -2162,18 +2161,12 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         }
         break;
     case transformation::sun_scarab:
-        if (best_skill == SK_SHAPESHIFTING && skill_rank == 5
-            && player_exclusively_used_form_since(11))
-        {
+        if (best_skill == SK_SHAPESHIFTING && player_exclusively_used_form_since(11))
             return "Who Moves the Sun";
-        }
         break;
     case transformation::rime_yak:
-        if (best_skill == SK_SHAPESHIFTING && skill_rank == 5
-            && player_exclusively_used_form_since(11))
-        {
+        if (best_skill == SK_SHAPESHIFTING && player_exclusively_used_form_since(11))
             return "Little Ice Age";
-        }
         break;
     case transformation::mistmane:
         if (you.species == SP_GALE_CENTAUR && is_evil_god(you.religion)
@@ -2371,12 +2364,9 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             {
                 result = "Weightless Champion";
             }
-            else if (str > intel + dex && species == SP_DEMIGOD
-                        && skill_rank == 5)
-            {
+            else if (str > intel + dex && species == SP_DEMIGOD && skill_rank == 5)
                 result = "Herculean";
-            }
-            else if (str >= 72 && species == SP_MINOTAUR)
+            else if (str > intel + dex && species == SP_MINOTAUR && skill_rank == 5)
                 result = "Yoked";
             else
             {
