@@ -16,7 +16,7 @@ consumable_shortcut ^= scroll of vulnerability:V
 consumable_shortcut ^= scroll of silence:S
 consumable_shortcut ^= scroll of amnesia:x
 consumable_shortcut ^= scroll of poison:p
-consumable_shortcut ^= scroll of butterflies:s
+consumable_shortcut ^= scroll of butterflies:B
 consumable_shortcut ^= scroll of frog:G
 consumable_shortcut ^= scroll of plinking:l
 
