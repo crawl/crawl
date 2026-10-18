@@ -2118,7 +2118,7 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
     switch (you.default_form)
     {
     case transformation::walking_scroll:
-        if (player_exclusively_used_form_since(8))
+        if (best_skill == SK_SHAPESHIFTING && player_exclusively_used_form_since(8))
         {
             if (piety_rank(you.raw_piety) >= 6)
             {
@@ -2133,7 +2133,7 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         }
         break;
     case transformation::vision:
-        if (player_exclusively_used_form_since(8))
+        if (best_skill == SK_SHAPESHIFTING && player_exclusively_used_form_since(8))
         {
             if (you.species == SP_KOBOLD)
                 return "Farsighted";
@@ -2141,15 +2141,15 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         }
         break;
     case transformation::hypnogecko:
-        if (you.species == SP_FELID && player_exclusively_used_form_since(8))
+        if (you.species == SP_FELID && best_skill == SK_SHAPESHIFTING && player_exclusively_used_form_since(8))
             return "Leopard Gecko";
         break;
      case transformation::quill:
-        if (you.species == SP_SPRIGGAN && player_exclusively_used_form_since(8))
+        if (you.species == SP_SPRIGGAN && best_skill == SK_SHAPESHIFTING && player_exclusively_used_form_since(8))
             return "Hedgehog";
         break;
     case transformation::spore:
-        if (you.species == SP_FORMICID && player_exclusively_used_form_since(11))
+        if (you.species == SP_FORMICID && best_skill == SK_SHAPESHIFTING && player_exclusively_used_form_since(11))
             return "Cordyceps Champion";
         break;
     case transformation::medusa:
@@ -2160,12 +2160,14 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
                 return "Gorgon";
             return species::name(you.species, species::SPNAME_GENUS) + " O' War";
         }
+        break;
     case transformation::sun_scarab:
         if (best_skill == SK_SHAPESHIFTING && skill_rank == 5
             && player_exclusively_used_form_since(11))
         {
             return "Who Moves the Sun";
         }
+        break;
     case transformation::rime_yak:
         if (best_skill == SK_SHAPESHIFTING && skill_rank == 5
             && player_exclusively_used_form_since(11))
@@ -2175,7 +2177,7 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         break;
     case transformation::mistmane:
         if (you.species == SP_GALE_CENTAUR && is_evil_god(you.religion)
-            && player_exclusively_used_form_since(11))
+            && best_skill == SK_SHAPESHIFTING && player_exclusively_used_form_since(11))
         {
             return "Dullahan";
         }
@@ -2189,7 +2191,7 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         }
         break;
     case transformation::spider:
-        if (player_exclusively_used_form_since(14))
+        if (best_skill == SK_SHAPESHIFTING && player_exclusively_used_form_since(14))
         {
             if (you.species == SP_GNOLL)
                 return "Wolf Spider";
@@ -2205,6 +2207,7 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
                 return "Lone Wolf";
             return "Pack Leader";
         }
+        break;
     case transformation::serpent:
         if (best_skill == SK_SHAPESHIFTING && skill_rank == 5
             && runes_in_pack() >= you.obtainable_runes
@@ -2215,13 +2218,13 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         break;
     case transformation::eel_hands:
         if (you_worship(GOD_JIYVA) && piety_rank(you.raw_piety) >= 6
-            && player_exclusively_used_form_since(14))
+            && best_skill == SK_SHAPESHIFTING && player_exclusively_used_form_since(14))
         {
             return "Jellied Eel";
         }
         break;
     case transformation::maw:
-        if (player_exclusively_used_form_since(14))
+        if (best_skill == SK_SHAPESHIFTING && player_exclusively_used_form_since(14))
         {
             if (you.species == SP_GALE_CENTAUR && !is_good_god(you.religion))
                 return "Black Horse"; // Famine
@@ -2279,7 +2282,7 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         break;
     case transformation::statue:
         if (you.species == SP_MINOTAUR && you_worship(GOD_GOZAG)
-            && you.gold >= 5000 && player_exclusively_used_form_since(17))
+            && you.gold >= 10000 && player_exclusively_used_form_since(17))
         {
             return "Golden Calf";
         }
