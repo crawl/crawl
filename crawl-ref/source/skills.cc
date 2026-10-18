@@ -2277,6 +2277,13 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
             return "Golden Calf";
         }
         break;
+    case transformation::blade:
+        if ((best_skill == SK_SHORT_BLADES || best_skill == SK_LONG_BLADES)
+            && skill_rank == 5 && player_exclusively_used_form_since(17))
+        {
+            return "Peerless Edge";
+        }
+        break;
     case transformation::storm:
         if (you_worship(GOD_QAZLAL) && piety_rank(you.raw_piety) >= 6
             && player_exclusively_used_form_since(20))
