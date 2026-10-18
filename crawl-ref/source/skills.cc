@@ -2189,6 +2189,15 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
             return "Arachnophile";
         }
         break;
+    case transformation::werewolf:
+        if (best_skill == SK_SHAPESHIFTING && skill_rank == 5
+            && player_exclusively_used_form_since(14))
+        {
+            // Okawaru, or Ru sac love
+            if (you.allies_forbidden())
+                return "Lone Wolf";
+            return "Pack Leader";
+        }
     case transformation::eel_hands:
         if (you_worship(GOD_JIYVA) && piety_rank(you.raw_piety) >= 6
             && player_exclusively_used_form_since(14))
