@@ -2198,6 +2198,14 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
                 return "Lone Wolf";
             return "Pack Leader";
         }
+    case transformation::serpent:
+        if (best_skill == SK_SHAPESHIFTING && skill_rank == 5
+            && runes_in_pack() >= you.obtainable_runes
+            && player_exclusively_used_form_since(14))
+        {
+            return "World Serpent";
+        }
+        break;
     case transformation::eel_hands:
         if (you_worship(GOD_JIYVA) && piety_rank(you.raw_piety) >= 6
             && player_exclusively_used_form_since(14))
