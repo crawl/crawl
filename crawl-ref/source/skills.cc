@@ -2152,6 +2152,14 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         if (you.species == SP_FORMICID && player_exclusively_used_form_since(11))
             return "Cordyceps Champion";
         break;
+    case transformation::medusa:
+        if (best_skill == SK_SHAPESHIFTING && skill_rank == 5
+            && player_exclusively_used_form_since(11))
+        {
+            if (you.species == SP_NAGA)
+                return "Gorgon";
+            return species::name(you.species, species::SPNAME_GENUS) + " O' War";
+        }
     case transformation::sun_scarab:
         if (best_skill == SK_SHAPESHIFTING && skill_rank == 5
             && player_exclusively_used_form_since(11))
