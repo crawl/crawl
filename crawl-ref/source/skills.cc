@@ -2376,6 +2376,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             {
                 result = "Herculean";
             }
+            else if (str >= 72 && species == SP_MINOTAUR)
+                result = "Yoked";
             else
             {
                 result = dex > str ? martial_arts_titles[skill_rank]
@@ -2484,6 +2486,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_ALCHEMY:
             if (species::is_draconian(species) && skill_rank == 5)
                 result = "Swamp Dragon";
+            else if (species == SP_GALE_CENTAUR && is_evil_god(god))
+                result = "Nuckelavee";
             break;
 
         case SK_FIRE_MAGIC:
