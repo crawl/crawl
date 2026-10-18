@@ -2166,6 +2166,13 @@ string special_conduct_title(skill_type best_skill, uint8_t skill_rank)
         {
             return "Who Moves the Sun";
         }
+    case transformation::rime_yak:
+        if (best_skill == SK_SHAPESHIFTING && skill_rank == 5
+            && player_exclusively_used_form_since(11))
+        {
+            return "Little Ice Age";
+        }
+        break;
     case transformation::mistmane:
         if (you.species == SP_GALE_CENTAUR && is_evil_god(you.religion)
             && player_exclusively_used_form_since(11))
