@@ -4529,18 +4529,23 @@ int get_monster_tension(const monster& mons, god_type god)
     const vector<pair<bool, pair<int, int>>> tension_monster_status_checks {
         { mons.has_ench(ENCH_HASTE),                        {3, 2} },
         { mons.berserk_or_frenzied(),                       {3, 2} },
+        { mons.has_ench(ENCH_PARADOX_TOUCHED),              {3, 2} },
         { mons.has_ench(ENCH_ARMED),                        {5, 4} },
         { mons.has_ench(ENCH_CHAOS_LACE),                   {5, 4} },
         { mons.has_ench(ENCH_MIGHT),                        {5, 4} },
         { mons.has_ench(ENCH_EMPOWERED_SPELLS),             {5, 4} },
         { mons.has_ench(ENCH_WORD_OF_RECALL),               {5, 4} },
+        { mons.has_ench(ENCH_PHASE_SHIFT)
+            && !you.can_see_invisible(),                    {5, 4} },
+        { mons.asleep(),                                    {4, 5} },
         { mons.has_ench(ENCH_SLOW),                         {2, 3} },
         { mons.has_ench(ENCH_VEXED),                        {2, 3} },
         { mons.is_silenced() && (mons.is_actual_spellcaster()
             || mons.is_priest()),                           {2, 3} },
-        { mons.asleep(),                                    {4, 5} },
         { mons.confused() || mons.caught(),                 {1, 2} },
         { mons_is_fleeing(mons),                            {1, 2} },
+        { mons.has_ench(ENCH_DAZED),                        {1, 3} },
+        { mons.has_ench(ENCH_MOSTLY_HARMLESS),              {1, 10} },
     };
 
     for (auto &checks : tension_monster_status_checks) {
@@ -4575,18 +4580,25 @@ int get_tension(god_type god)
     }
 
     // At least one monster has to be (possibly) nearby, for tension to count.
-    if (!nearby_monster && !player_in_branch(BRANCH_ABYSS))
+    if (!nearby_monster && !player_in_branch(BRANCH_ABYSS)
+        && !player_on_orb_run())
+    {
         return 0;
+    }
 
-    // XXX: Probably too low, but needs tension use review first.
-    const int scale = 1;
+    // Poison is weird here, as curing it or not is hard to anticipate,
+    // whhile being poisoned beyond one's max health still ticks it down faster.
+    // Here we're counting it for a third of its value by default, but
+    // still capping it in some extraordinary poisoning circumstances.
+    const int scale = 2;
+    int hp = you.hp - (min(you.duration[DUR_POISONING] / 3000, you.hp_max));
 
     int tension = total;
 
     // Tension goes up inversely proportional to the percentage of your max HP.
     // Note: wizmoding up too much HP will break calculations here.
     tension *= (scale + 1) * you.hp_max;
-    tension /= max(you.hp_max + scale * you.hp, 1);
+    tension /= max(you.hp_max + scale * hp, 1);
 
     // Divides by 1 at level 1, 200 at level 27.
     const int exp_lev  = you.get_experience_level();
@@ -4600,8 +4612,12 @@ int get_tension(god_type god)
 
     if (player_on_orb_run())
         tension_min = 3;
-    else if (player_in_branch(BRANCH_ABYSS) || you.cannot_act())
+    else if (player_in_branch(BRANCH_ABYSS)
+             || player_in_branch(BRANCH_CRUCIBLE)
+             || you.cannot_act())
+    {
         tension_min = 2;
+    }
 
     tension = max(tension, tension_min);
 
@@ -4609,15 +4625,16 @@ int get_tension(god_type god)
     // straightforward debuff or location-based tension checks.
     const vector<pair<bool, pair<int, int>>> tension_player_status_checks {
         { you.cannot_act(),                              {10, 1} },
-        { you.duration[DUR_VEXED] > 0,                   {2, 1} },
         { player_on_orb_run(),                           {2, 1} },
         { you.caught(),                                  {2, 1} },
-        { you.duration[DUR_VAINGLORY] > 0,               {5, 3} },
-        { you.is_silenced(),                             {5, 3} },
         { you.form == transformation::fungus
             || you.form == transformation::pig
             || you.form == transformation::tree
-            || you.form == transformation::jelly,        {5, 3} },
+            || you.form == transformation::jelly,        {2, 1} },
+        { you.duration[DUR_VAINGLORY] > 0,               {5, 3} },
+        { you.is_silenced(),                             {5, 3} },
+        { you.form == transformation::bat
+            || you.form == transformation::wisp,         {5, 3} },
         { player_in_branch(BRANCH_ABYSS),                {3, 2} },
         { you.duration[DUR_ATTRACTIVE] > 0,              {3, 2} },
         { you.duration[DUR_NO_CAST] > 0,                 {3, 2} },
@@ -4625,20 +4642,22 @@ int get_tension(god_type god)
         { you.duration[DUR_SENTINEL_MARK] > 0,           {3, 2} },
         { you.duration[DUR_SIGN_OF_RUIN] > 0,            {3, 2} },
         { you.duration[DUR_SLOW] > 0,                    {3, 2} },
-        { you.form == transformation::bat
-            || you.form == transformation::wisp,         {3, 2} },
         { you.duration[DUR_NO_POTIONS] > 0,              {4, 3} },
         { you.duration[DUR_NO_SCROLLS] > 0,              {4, 3} },
         { you.duration[DUR_VITRIFIED] > 0,               {4, 3} },
         { you.is_constricted(),                          {4, 3} },
         { you.petrifying(),                              {4, 3} },
+        { player_in_branch(BRANCH_CRUCIBLE),             {5, 4} },
+        { player_in_branch(BRANCH_ARENA),                {5, 4} },
         { you.duration[DUR_AFRAID] > 0,                  {6, 5} },
         { you.duration[DUR_BLIND] > 0,                   {6, 5} },
         { you.duration[DUR_MESMERISED] > 0,              {6, 5} },
         { env.grid(you.pos()) == DNGN_SHALLOW_WATER && !you.airborne()
             && !you.can_swim(),                          {6, 5} },
+        { you.magic_points <= you.max_magic_points * 3 / 4
+            && (!you_worship(GOD_TROG) || you.spirit_shield(true)),
+                                                         {6, 5} },
         { player_in_branch(BRANCH_PANDEMONIUM),          {9, 8} },
-        { you.magic_points <= you.max_magic_points / 10, {9, 8} },
         { you.duration[DUR_HASTE] > 0,                   {2, 3} },
     };
 
@@ -4651,7 +4670,7 @@ int get_tension(god_type god)
     }
 
     // A few more rather granular effects.
-    // TODO: Track sticky flame and poison here.
+    // TODO: Track sticky flame here.
     if (you.duration[DUR_CORROSION])
         tension = tension * (10 + you.props[CORROSION_KEY].get_int() / 4) / 10;
 
