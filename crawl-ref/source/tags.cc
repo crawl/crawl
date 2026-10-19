@@ -3718,16 +3718,25 @@ static void _tag_read_you(reader &th)
         unmarshallInt(th);
 
 #if TAG_MAJOR_VERSION == 34
-    if (you.attribute[ATTR_DIVINE_REGENERATION])
+    if (th.getMinorVersion() < TAG_MINOR_XOM_EXPLORATION)
     {
-        you.attribute[ATTR_DIVINE_REGENERATION] = 0;
-        you.duration[DUR_TROGS_HAND] = max(you.duration[DUR_TROGS_HAND],
-                                           you.duration[DUR_REGENERATION]);
-        you.duration[DUR_REGENERATION] = 0;
-    }
+        you.attribute[ATTR_XOM_EXPLORE_COUNT] = 0;
+        if (you_worship(GOD_XOM))
+            you.gift_timeout = 0;   // Used to be a boredom meter. Is now initial generousity.
 
-    if (you.attribute[ATTR_DELAYED_FIREBALL])
-        you.attribute[ATTR_DELAYED_FIREBALL] = 0;
+        // Used to be ATTR_DIVINE_REGENERATION
+        if (you.attribute[ATTR_XOM_BLESSING])
+        {
+            you.attribute[ATTR_XOM_BLESSING] = 0;
+            you.duration[DUR_TROGS_HAND] = max(you.duration[DUR_TROGS_HAND],
+                                            you.duration[DUR_REGENERATION]);
+            you.duration[DUR_REGENERATION] = 0;
+        }
+
+        // Used to be ATTR_DELAYED_FIREBALL
+        if (you.attribute[ATTR_XOM_BLESSING_TIMER])
+            you.attribute[ATTR_XOM_BLESSING_TIMER] = 0;
+    }
 
     if (th.getMinorVersion() < TAG_MINOR_ENDLESS_DIVINE_SHIELD)
     {
@@ -3774,13 +3783,6 @@ static void _tag_read_you(reader &th)
         && you.attribute[ATTR_TEMP_MUT_KILLS] > 0)
     {
         you.attribute[ATTR_TEMP_MUT_KILLS] = 1;
-    }
-
-    if (th.getMinorVersion() < TAG_MINOR_XOM_EXPLORATION)
-    {
-        you.attribute[ATTR_XOM_EXPLORE_COUNT] = 0;
-        if (you_worship(GOD_XOM))
-            you.gift_timeout = 0;   // Used to be a boredom meter. Is now initial generousity.
     }
 
 #endif

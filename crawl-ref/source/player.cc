@@ -2874,6 +2874,15 @@ static void _handle_ostracism(int exp)
     player_change_ostracism(-loss);
 }
 
+static void _handle_xom_blessing(int exp)
+{
+    if (!you_worship(GOD_XOM))
+        return;
+
+    int loss = div_rand_round(exp, calc_skill_cost(you.skill_cost_level) * 4 / 3);
+    you.attribute[ATTR_XOM_BLESSING_TIMER] -= loss;
+}
+
 static void _handle_god_wrath(int exp)
 {
     for (god_iterator it; it; ++it)
@@ -2967,6 +2976,8 @@ void apply_exp()
     _handle_cacophony_recharge(skill_xp);
     _handle_batform_recharge(skill_xp);
     _handle_watery_grave_recharge(skill_xp);
+
+    _handle_xom_blessing(skill_xp);
 
     _log_form_xp(exp_gained);
 

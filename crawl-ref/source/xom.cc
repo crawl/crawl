@@ -352,6 +352,9 @@ void xom_tick()
     {
         const int tension = get_tension(GOD_XOM);
 
+        if (tension == 0)
+            xom_check_blessing();
+
         // If we have a queued explore effect, check if now is a good time and
         // possibly perform one of them.
         bool did_event = false;
@@ -5922,6 +5925,36 @@ void xom_reduce_floor_lock()
         god_speaks(GOD_XOM, _get_xom_speech("congratulations").c_str());
         end_terrain_changes(TERRAIN_CHANGE_XOM_SEAL, 0, true);
     }
+}
+
+// See if the player's blessing timer has been filled up. And if it has and the
+// tension is zero, give them a new blessing.
+void xom_check_blessing()
+{
+    if (you.attribute[ATTR_XOM_BLESSING_TIMER] <= 0
+        && you.hp * 3 >= you.hp_max * 2)
+    {
+        xom_give_blessing();
+        you.attribute[ATTR_XOM_BLESSING_TIMER] = random_range(190, 285);
+        if (you.skill_cost_level > 25)
+            you.attribute[ATTR_XOM_BLESSING_TIMER] += random_range(40, 60);
+    }
+}
+
+void xom_give_blessing()
+{
+    mpr("Give a blessing!");
+}
+
+void xom_remove_blessing()
+{
+    switch(you.attribute[ATTR_XOM_BLESSING])
+    {
+        default:
+        break;
+    }
+
+    you.attribute[ATTR_XOM_BLESSING] = 0;
 }
 
 struct xom_effect_count

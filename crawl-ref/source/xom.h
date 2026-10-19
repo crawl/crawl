@@ -121,6 +121,10 @@ void xom_take_action(xom_event_type action, int tension);
 xom_event_type xom_choose_action(bool niceness, int tension,
                                  bool is_explore = false);
 
+void xom_check_blessing();
+void xom_give_blessing();
+void xom_remove_blessing();
+
 void xom_maybe_reverts_banishment();
 void xom_check_lost_item(const item_def& item);
 void xom_check_destroyed_item(const item_def& item);

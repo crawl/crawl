@@ -5,15 +5,11 @@
 enum attribute_type
 {
     ATTR_XOM_EXPLORE_COUNT,     // Pool of exploration interest for Xom's strategic actions
-#if TAG_MAJOR_VERSION == 34
-    ATTR_DIVINE_REGENERATION,
-#endif
+    ATTR_XOM_BLESSING,          // Currently active Xom blessing effect
     ATTR_DIVINE_DEATH_CHANNEL,
     ATTR_CARD_COUNTDOWN,
     ATTR_BANISHMENT_IMMUNITY,   // banishment immunity until
-#if TAG_MAJOR_VERSION == 34
-    ATTR_DELAYED_FIREBALL,      // bwr: reserve fireballs
-#endif
+    ATTR_XOM_BLESSING_TIMER,    // XP timer for Xom to rotate the player's blessing
     ATTR_HELD,                  // caught in a net or web
                                 // (If netted, is the remaining durability of the net.)
     ATTR_ABYSS_ENTOURAGE,       // maximum number of hostile monsters in

@@ -3185,6 +3185,10 @@ void excommunication(bool voluntary, god_type new_god)
             ru_reset_sacrifice_timer();
         break;
 
+    case GOD_XOM:
+        xom_remove_blessing();
+        break;
+
     default:
         break;
     }
@@ -3539,7 +3543,10 @@ static void _apply_monk_bonus()
         you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 19;
     }
     else if (you_worship(GOD_XOM))
+    {
         xom_take_action(XOM_GOOD_JOKE_CONSUMABLE, 0);
+        xom_give_blessing();
+    }
     else if (you_worship(GOD_USKAYAW))  // Gaining piety past this point does nothing
         gain_piety(15, 1, false);       // of value with this god and looks weird.
     else
@@ -3852,6 +3859,8 @@ static void _join_xom()
 {
     // Guarantee the first few explore actions are positive.
     you.gift_timeout = 4;
+
+    you.attribute[ATTR_XOM_BLESSING_TIMER] = 80;
 }
 
 /// What special things happen when you join a god?

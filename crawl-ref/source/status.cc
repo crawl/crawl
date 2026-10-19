@@ -27,6 +27,7 @@
 #include "throw.h"
 #include "transform.h"
 #include "traps.h"
+#include "xom.h"
 #include "zot.h" // bezotting_level
 
 #include "duration-data.h"
@@ -206,6 +207,7 @@ static void _describe_zot(status_info& inf);
 static void _describe_gem(status_info& inf);
 static void _describe_rev(status_info& inf);
 static void _describe_channelled_spell(status_info& inf);
+static void _describe_xom_blessing(status_info& inf);
 
 bool fill_status_info(int status, status_info& inf)
 {
@@ -1082,6 +1084,10 @@ bool fill_status_info(int status, status_info& inf)
     }
     break;
 
+    case STATUS_XOM_BLESSING:
+        _describe_xom_blessing(inf);
+        break;
+
     default:
         if (!found)
         {
@@ -1430,6 +1436,15 @@ static void _describe_channelled_spell(status_info& inf)
     }
 }
 
+static void _describe_xom_blessing(status_info& inf)
+{
+    switch (you.attribute[ATTR_XOM_BLESSING])
+    {
+        default:
+        break;
+    }
+}
+
 /**
  * Does a given duration tick down simply over time?
  *
@@ -1516,6 +1531,7 @@ void duration_end_effect(duration_type dur)
 // Any durations or statuses not listed here will be drawn afterward in enum order.
 static const vector<unsigned int> important_statuses =
 {
+    STATUS_XOM_BLESSING,
     STATUS_TESSERACT,
     STATUS_ORB,
     STATUS_ZOT,
@@ -1580,7 +1596,7 @@ void status_iterator::operator ++()
     {
         if (current <= STATUS_LAST_STATUS)
             ++current;
-        while (current < STATUS_LAST_STATUS && done[current])
+        while (current <= STATUS_LAST_STATUS && done[current])
             ++current;
     }
 }
