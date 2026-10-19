@@ -9842,8 +9842,11 @@ int five_virtues_sh_score()
     int count = 0;
 
     // staves either highest skill or maxed
-    if (is_highest_skill(SK_STAVES) || you.skill(SK_STAVES) >= MAX_SKILL_LEVEL)
+    if (best_skill(SK_FIRST_SKILL, SK_LAST_SKILL) == SK_STAVES
+        || you.skill(SK_STAVES) >= MAX_SKILL_LEVEL)
+    {
         count++;
+    }
 
     // five pips
     if (you.stealth() > 200)

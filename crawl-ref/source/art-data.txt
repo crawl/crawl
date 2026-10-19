@@ -2040,10 +2040,10 @@ TILE_EQ: FIVE_VIRTUES
 BRAND:   SPWPN_REBUKE
 WILL:    1
 BOOL:    fragile
-DESCRIP: VirtueSH: It provides +5 SH for each of five conditions you meet:
- Staves is your highest skill, or is at maximum level; Your stealth is at
- least +++++; Your base invocations skill is at least 15; Your intelligence is
- at least 20; Your base EV is at least 25.
+DESCRIP: VirtueSH: It provides +5 SH for each of five conditions: You have at
+ least 20 intelligence; at least 25 base EV; at least 15 base Invocations skill;
+ at least +++++ stealth; your Staves skill is your highest skill, or is at the
+ maximum skill level.
 +VirtueRefl: If you meet at least three of the five conditions, it provides
  reflection and an extra maximum block per turn.
 
