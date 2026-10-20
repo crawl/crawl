@@ -2805,7 +2805,8 @@ void print_mons_left_view_messages()
     {
         for (auto m : just_seen_queue)
         {
-            if (!m || invalid_monster(m) || !m->alive())
+            // Don't messge for allies, as this gets quite spammy in some cases.
+            if (!m || invalid_monster(m) || !m->alive() || mons_aligned(m, &you))
                 continue;
             // can't use simple_monster_message here, because m is out of view.
             // The monster should be visible to be in this queue.
