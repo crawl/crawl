@@ -75,6 +75,7 @@ void change_skill_points(skill_type sk, int points, bool do_level_up);
 
 bool is_mundane_skill(skill_type sk);
 bool is_magic_skill(skill_type sk);
+int num_magic_skills();
 
 void exercise(skill_type exsk, int deg);
 void train_skills(bool simu = false);
@@ -123,6 +124,7 @@ float species_apt_factor(skill_type sk, species_type sp = you.species);
 float apt_to_factor(int apt);
 unsigned int skill_exp_needed(int lev, skill_type sk,
                               species_type sp = you.species);
+int max_modified_skill_level(skill_type sk);
 int skill_points_for_level(skill_type sk, int scaled_level);
 skill_diff skill_level_to_diffs(skill_type skill, double amount,
     int scaled_training=100, bool base_only=true);

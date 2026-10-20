@@ -2427,12 +2427,12 @@ static int _player_evasion(int final_scale, bool include_temp)
 
 // Returns the spellcasting penalty (increase in spell failure) for the
 // player's worn body armour and shield.
-int player_armour_shield_spell_penalty()
+int player_armour_shield_spell_penalty(bool include_temp)
 {
     const int scale = 100;
 
     int body_armour_penalty =
-        max(19 * you.adjusted_body_armour_penalty(scale), 0);
+        max(19 * you.adjusted_body_armour_penalty(scale, false, include_temp), 0);
 
     // This is actually cutting the base ER of our armour by half (not 1/4th),
     // since that ER has already been squared by this point.
@@ -2440,7 +2440,7 @@ int player_armour_shield_spell_penalty()
         body_armour_penalty /= 4;
 
     const int total_penalty = body_armour_penalty
-                 + 19 * you.adjusted_shield_penalty(scale);
+                 + 19 * you.adjusted_shield_penalty(scale, include_temp);
 
     return max(total_penalty, 0) / scale;
 }
@@ -6452,12 +6452,14 @@ int player::unadjusted_body_armour_penalty(bool archery) const
  * @return          A penalty to EV based quadratically on body armour
  *                  encumbrance.
  */
-int player::adjusted_body_armour_penalty(int scale, bool archery) const
+int player::adjusted_body_armour_penalty(int scale, bool archery,
+                                         bool include_temp) const
 {
     const int base_ev_penalty = unadjusted_body_armour_penalty(archery);
 
     // New formula for effect of str on aevp: (2/5) * evp^2 / (str+3)
-    return 2 * base_ev_penalty * base_ev_penalty * (450 - skill(SK_ARMOUR, 10))
+    return 2 * base_ev_penalty * base_ev_penalty
+           * (450 - skill(SK_ARMOUR, 10, false, include_temp))
            * scale / (5 * (strength() + 3)) / 450;
 }
 
@@ -6467,7 +6469,7 @@ int player::adjusted_body_armour_penalty(int scale, bool archery) const
  * @param scale     A scale to multiply the result by, to avoid precision loss.
  * @return          A penalty to EV based on shield weight.
  */
-int player::adjusted_shield_penalty(int scale) const
+int player::adjusted_shield_penalty(int scale, bool include_temp) const
 {
     const item_def *shield_l = shield();
     if (!shield_l)
@@ -6475,7 +6477,7 @@ int player::adjusted_shield_penalty(int scale) const
 
     const int base_shield_penalty = -property(*shield_l, PARM_EVASION) / 10;
     return 2 * base_shield_penalty * base_shield_penalty
-           * (270 - skill(SK_SHIELDS, 10)) * scale
+           * (270 - skill(SK_SHIELDS, 10, false, include_temp)) * scale
            / (25 + 5 * strength()) / 270;
 }
 
