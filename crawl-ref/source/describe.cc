@@ -1279,6 +1279,15 @@ static string _your_skill_desc(skill_type skill, bool show_target_button,
                             target_button_desc.c_str());
 }
 
+static string _xl_cost_desc(int experience)
+{
+    const int level_diff = xp_to_level_diff(experience / 10, 10);
+    return make_stringf("%s %d.%d XLs",
+                        (you.experience_level + (level_diff + 9) / 10) > 27
+                            ? "the equivalent of" : "about",
+                        level_diff / 10, level_diff % 10);
+}
+
 /**
  * Produce a description of a skill target for items where specific targets are
  * relevant.
@@ -1300,7 +1309,6 @@ static string _skill_target_desc(skill_type skill, int scaled_target,
 
     const skill_diff diffs = skill_level_to_diffs(skill,
                                 (double) scaled_target / 10, training, base);
-    const int level_diff = xp_to_level_diff(diffs.experience / 10, 10);
 
     if (max_training)
         description += "At 100% training ";
@@ -1313,12 +1321,10 @@ static string _skill_target_desc(skill_type skill, int scaled_target,
         description += make_stringf("At a training level of %d%% ", training);
 
     description += make_stringf(
-        "you %sreach %d.%d in %s %d.%d XLs.",
+        "you %sreach %d.%d in %s.",
             hypothetical ? "would " : "",
             scaled_target / 10, scaled_target % 10,
-            (you.experience_level + (level_diff + 9) / 10) > 27
-                                ? "the equivalent of" : "about",
-            level_diff / 10, level_diff % 10);
+            _xl_cost_desc(diffs.experience).c_str());
     if (you.wizard)
     {
         description += make_stringf("\n    (%d xp, %d skp)",
@@ -4866,6 +4872,97 @@ static string _miscast_damage_string(spell_type spell)
          + comma_separated_line(descs.begin(), descs.end(), " or ", "; ");
 }
 
+static int _spell_fail_at_level(spell_type spell, const skill_set &skills,
+                                int level, int *xp = nullptr)
+{
+    unwind_var<FixedVector<uint8_t, NUM_SKILLS>> unwind_skills(you.skills);
+    unwind_var<FixedVector<unsigned int, NUM_SKILLS>>
+        unwind_sp(you.skill_points);
+    unwind_var<unsigned int> unwind_xp(you.total_experience);
+    unwind_var<int> unwind_costlevel(you.skill_cost_level);
+
+    int total_cost = 0;
+    for (skill_type sk : skills)
+    {
+        // Some skills might not be able to reach the level because of
+        // reductions, in which case cap them.
+        const int target = min(level, max_modified_skill_level(sk));
+        if (you.skill(sk, 10, false, false) >= target)
+            continue;
+
+        const skill_diff diffs = skill_level_to_diffs(sk, target / 10.0, 100,
+                                                      false);
+        total_cost += diffs.experience;
+
+        you.skill_points[sk] = skill_points_for_level(sk, target);
+        you.skills[sk] = calc_skill_level_change(sk, you.skills[sk],
+                                                 you.skill_points[sk]);
+        you.total_experience += diffs.experience;
+        check_skill_cost_change(true);
+    }
+
+    if (xp)
+        *xp = total_cost;
+
+    return failure_rate_to_int(raw_spell_fail(spell, false, false));
+}
+
+static string _spell_fail_training_desc(spell_type spell)
+{
+    const int target_fail = 10;
+    if (!you_can_memorise(spell)
+        || failure_rate_to_int(raw_spell_fail(spell, false, false)) <= target_fail)
+    {
+        return "";
+    }
+
+    skill_set skills;
+    spell_skills(spell, skills);
+    if (skills.empty())
+        return "";
+
+    const int max_level = MAX_SKILL_LEVEL * 10;
+    if (_spell_fail_at_level(spell, skills, max_level) > target_fail)
+    {
+        return make_stringf("You cannot reach a failure rate of %d%% for "
+                            "this spell by training only its schools.\n",
+                            target_fail);
+    }
+
+    // Search for the lowest level that reaches the target.
+    int lo = 0;
+    int hi = max_level;
+    while (lo < hi)
+    {
+        const int mid = (lo + hi) / 2;
+        if (_spell_fail_at_level(spell, skills, mid) <= target_fail)
+            hi = mid;
+        else
+            lo = mid + 1;
+    }
+    const int level = hi;
+
+    int experience;
+    _spell_fail_at_level(spell, skills, level, &experience);
+
+    skill_set to_train;
+    for (skill_type sk : skills)
+        if (you.skill(sk, 10, false, false) < min(level, max_modified_skill_level(sk)))
+            to_train.insert(sk);
+
+    string desc = make_stringf("With your current stats and equipment, "
+                               "training %s to %d.%d would reduce your "
+                               "failure rate to %d%%.",
+                               skill_names(to_train).c_str(),
+                               level / 10, level % 10, target_fail);
+    // TODO: would be nice to have something for gnolls, though it's more
+    // confusing to explain as they will necessarily also train spellcasting
+    // and any other relevant spells.
+    if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+        desc += make_stringf(" This would take %s.", _xl_cost_desc(experience).c_str());
+    return desc + "\n";
+}
+
 /**
  * Describe mostly non-numeric player-specific information about a spell.
  *
@@ -4889,6 +4986,8 @@ static string _player_spell_desc(spell_type spell)
                 << (fail_severity(spell) ?
                     " and also " + _miscast_damage_string(spell) : "")
                 << ".\n";
+
+    description << _spell_fail_training_desc(spell);
 
     if (spell == SPELL_BATTLESPHERE)
     {

@@ -373,7 +373,8 @@ static void _apply_post_zap_effect(spell_type spell, coord_def target)
 }
 
 /// XXX: we might want slightly more precision here?
-static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
+static int _apply_spellcasting_success_boosts(spell_type spell, int chance,
+                                              bool include_temp)
 {
     int fail_reduce = 100;
     bool crab = you.form == transformation::fortress_crab;
@@ -396,9 +397,9 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_COMMAND) && spell_typematch(spell, spschool::summoning))
     {
         // stacks multiplicatively in crab form
-        fail_reduce = fail_reduce * 180 / (180 + you.skill(SK_ARMOUR, 10));
+        fail_reduce = fail_reduce * 180 / (180 + you.skill(SK_ARMOUR, 10, false, include_temp));
         if (crab)
-            fail_reduce = fail_reduce * 180 / (180 + you.skill(SK_ARMOUR, 10));
+            fail_reduce = fail_reduce * 180 / (180 + you.skill(SK_ARMOUR, 10, false, include_temp));
     }
 
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_DEATH) && spell_typematch(spell, spschool::necromancy))
@@ -440,7 +441,7 @@ static int _stepdown_spellpower(int power)
     return result;
 }
 
-static int _skill_power(spell_type spell)
+static int _skill_power(spell_type spell, bool include_temp = true)
 {
     int power = 0;
     const spschools_type disciplines = get_spell_disciplines(spell);
@@ -449,10 +450,10 @@ static int _skill_power(spell_type spell)
     {
         for (const auto bit : spschools_type::range())
             if (disciplines & bit)
-                power += you.skill(spell_type2skill(bit), 200);
+                power += you.skill(spell_type2skill(bit), 200, false, include_temp);
         power /= skillcount;
     }
-    return power + you.skill(SK_SPELLCASTING, 50);
+    return power + you.skill(SK_SPELLCASTING, 50, false, include_temp);
 }
 
 
@@ -467,23 +468,23 @@ static int _skill_power(spell_type spell)
  * @return          A failure rate. This is *not* a percentage - for a human-
  *                  readable version, call _get_true_fail_rate().
  */
-int raw_spell_fail(spell_type spell, bool enkindled)
+int raw_spell_fail(spell_type spell, bool enkindled, bool include_temp)
 {
     if (spell == SPELL_NO_SPELL)
         return 10000;
 
-    enkindled = (enkindled || (you.duration[DUR_ENKINDLED])
-                    && spell_can_be_enkindled(spell));
+    enkindled = (enkindled || (include_temp && you.duration[DUR_ENKINDLED]
+                                && spell_can_be_enkindled(spell)));
 
     int chance = 60;
 
     // Don't cap power for failure rate purposes.
     // scale by 6, which I guess was chosen because it seems to work.
     // realistic range for spellpower: -6 to -366 (before scale -1 to -61)
-    chance -= _skill_power(spell) * 6 / 100;
+    chance -= _skill_power(spell, include_temp) * 6 / 100;
     chance -= (you.intel() * 2); // realistic range: -2 to -70
 
-    const int armour_shield_penalty = player_armour_shield_spell_penalty();
+    const int armour_shield_penalty = player_armour_shield_spell_penalty(include_temp);
 
     if (!enkindled)
     {
@@ -543,10 +544,10 @@ int raw_spell_fail(spell_type spell, bool enkindled)
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_ENERGY))
         chance2 += 10;
 
-    chance2 += you.duration[DUR_VERTIGO] ? 7 : 0;
+    chance2 += include_temp && you.duration[DUR_VERTIGO] ? 7 : 0;
 
     // Apply the effects of Vehumet and items of wizardry.
-    chance2 = _apply_spellcasting_success_boosts(spell, chance2);
+    chance2 = _apply_spellcasting_success_boosts(spell, chance2, include_temp);
 
     if (enkindled)
         chance2 = chance2 * 3 / 4 - 5;

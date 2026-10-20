@@ -999,8 +999,9 @@ public:
 
     // Combat-related adjusted penalty calculation methods
     int unadjusted_body_armour_penalty(bool archery = false) const;
-    int adjusted_body_armour_penalty(int scale = 1, bool archery = false) const;
-    int adjusted_shield_penalty(int scale = 1) const;
+    int adjusted_body_armour_penalty(int scale = 1, bool archery = false,
+                                     bool include_temp = true) const;
+    int adjusted_shield_penalty(int scale = 1, bool include_temp = true) const;
 
     // Calculate the bonus (or penalty) the player has to their defenses from
     // temporary effects.
@@ -1165,7 +1166,7 @@ bool is_effectively_light_armour(const item_def *item);
 bool player_effectively_in_light_armour();
 
 int player_shield_racial_factor();
-int player_armour_shield_spell_penalty();
+int player_armour_shield_spell_penalty(bool include_temp = true);
 int player_armour_stealth_penalty();
 
 int player_icemail_armour_class();

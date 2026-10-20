@@ -1695,27 +1695,32 @@ static int _train(skill_type exsk, int &max_exp, bool simu, bool check_targets)
     return skill_inc;
 }
 
+static int _modified_level_at_points(skill_type sk, int points)
+{
+    unwind_var<uint8_t> level(you.skills[sk],
+                              calc_skill_level_change(sk, you.skills[sk], points));
+    unwind_var<unsigned int> skill_points(you.skill_points[sk], points);
+    return you.skill(sk, 10, false, false);
+}
+
+int max_modified_skill_level(skill_type sk)
+{
+    return _modified_level_at_points(sk, skill_exp_needed(MAX_SKILL_LEVEL, sk));
+}
+
 // The skill points required to reach a certain modified skill level.
 // -1 if this level is unreachable due to reductions (e.g. from jademantle).
 int skill_points_for_level(skill_type sk, int scaled_level)
 {
-    unwind_var<unsigned int> points(you.skill_points[sk]);
-    unwind_var<uint8_t> level(you.skills[sk]);
-    auto modified_level = [&](int p)
-    {
-        you.skill_points[sk] = p;
-        you.skills[sk] = calc_skill_level_change(sk, you.skills[sk], p);
-        return you.skill(sk, 10, false, false);
-    };
+    if (max_modified_skill_level(sk) < scaled_level)
+        return -1;
 
     int lo = 0;
     int hi = skill_exp_needed(MAX_SKILL_LEVEL, sk);
-    if (modified_level(hi) < scaled_level)
-        return -1;
     while (lo < hi)
     {
         const int mid = lo + (hi - lo) / 2;
-        if (modified_level(mid) >= scaled_level)
+        if (_modified_level_at_points(sk, mid) >= scaled_level)
             hi = mid;
         else
             lo = mid + 1;
