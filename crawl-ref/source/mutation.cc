@@ -3307,7 +3307,7 @@ void check_demonic_guardian()
             return;
 
         guardian->flags |= MF_NO_REWARD;
-        guardian->flags |= MF_DEMONIC_GUARDIAN;
+        guardian->flags |= MF_GUARDIAN;
 
         // no more guardians for mutlevel+1 to mutlevel+20 turns
         you.duration[DUR_DEMONIC_GUARDIAN] = 10*(mutlevel + random2(20));

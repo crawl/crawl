@@ -258,6 +258,21 @@ static void _remove_unstable_monsters()
     }
 }
 
+static void _transit_xom_followers(level_id destination)
+{
+    if (you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_GUARDIAN)
+    {
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mons_is_xom_guardian(**mi))
+            {
+                mi->set_transit(destination);
+                monster_die(**mi, KILL_RESET, NON_MONSTER);
+            }
+        }
+    }
+}
+
 static void _complete_zig()
 {
     if (!zot_immune())
@@ -265,7 +280,7 @@ static void _complete_zig()
     you.zigs_completed++;
 }
 
-void leaving_level_now(dungeon_feature_type stair_used)
+void leaving_level_now(dungeon_feature_type stair_used, level_id destination)
 {
     if (stair_used == DNGN_EXIT_ZIGGURAT)
     {
@@ -295,6 +310,7 @@ void leaving_level_now(dungeon_feature_type stair_used)
     end_terrain_changes(TERRAIN_CHANGE_GOLUBRIA);
     _remove_unstable_monsters();
     cancel_pending_lurkers();
+    _transit_xom_followers(destination);
 
     if (you.attribute[ATTR_XOM_FLOOR_LOCK])
     {
@@ -839,7 +855,7 @@ void floor_transition(dungeon_feature_type how,
     }
 
     // Fire level-leaving trigger.
-    leaving_level_now(how);
+    leaving_level_now(how, whither);
 
     // Determine this now so the milestones and notes report the correct
     // destination floor.

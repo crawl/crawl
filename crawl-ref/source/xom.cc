@@ -32,6 +32,7 @@
 #include "errors.h"
 #include "ghost.h"
 #include "god-abil.h"
+#include "god-companions.h"
 #include "god-item.h"
 #include "item-name.h"
 #include "item-prop.h"
@@ -6036,6 +6037,74 @@ static void _xom_eisegesis()
     you.attribute[ATTR_XOM_BLESSING] = XOM_BLESSING_CHAOS_EISEGESIS;
 }
 
+static void _xom_guardian()
+{
+    xom_remove_guardians();
+
+    monster_type mon_type = _xom_random_pal(0, true);
+
+    // No statues or butterflies.
+    while (mons_class_is_stationary(mon_type) || !mons_class_is_threatening(mon_type))
+        mon_type = _xom_random_pal(0, true);
+
+    mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM);
+    mg.non_actor_summoner = "Xom";
+    mg.set_summoned(nullptr, MON_SUMM_XOM_GUARDIAN, 0, false, false);
+
+    int count = _xom_pal_minibands(mon_type);
+
+    int made_count = 0;
+    // Proper demons get Pan lord-style names. Other monsters get incongruously bland names.
+    string name = mons_class_holiness(mon_type) == MH_DEMONIC
+                  && mons_class_intel(mon_type) == I_HUMAN
+                    ? make_name()
+                    : do_mon_name_replacements(getRandMonNameString("bland name"));
+    for (int i = 0; i < count; ++i)
+    {
+        if (monster *summons = create_monster(mg))
+        {
+            // Make them a bit more durable than a usual monster of their type.
+            summons->max_hit_points = summons->max_hit_points * 3 / 2;
+            summons->hit_points = summons->max_hit_points;
+
+            summons->flags |= (MF_GUARDIAN | MF_NO_REWARD | MF_HARD_RESET);
+
+            summons->mname = make_stringf("%s%s",
+                                          i == 0 ? "" :
+                                          i == 1 ? "Other " : "Other Other ",
+                                          name.c_str());
+            summons->props[DBNAME_KEY] = mons_class_name(mon_type);
+
+            if (summons->type == MONS_REAPER)
+                _do_chaos_upgrade(*summons->weapon(), summons);
+
+            xom_add_guardian(*summons);
+            ++made_count;
+        }
+    }
+
+    if (made_count > 0)
+    {
+        you.attribute[ATTR_XOM_BLESSING] = XOM_BLESSING_GUARDIAN;
+
+        if (made_count > 1)
+        {
+            god_speaks(GOD_XOM, _get_xom_speech("guardian summon plural").c_str());
+            mprf("Xom grants you %s devoted guardians.", number_in_words(made_count).c_str());
+        }
+        else
+        {
+            god_speaks(GOD_XOM, _get_xom_speech("guardian summon").c_str());
+            mpr("Xom grants you a devoted guardian.");
+        }
+    }
+
+    const string note = make_stringf("blessing of guardians: %d %s",
+                                     made_count,
+                                     mons_type_name(mon_type, DESC_PLAIN).c_str());
+    take_note(Note(NOTE_XOM_EFFECT, -1, -1, note), true);
+}
+
 // See if the player's blessing timer has been filled up. And if it has and the
 // tension is zero, give them a new blessing.
 void xom_check_blessing()
@@ -6054,6 +6123,7 @@ static const vector<pair<xom_event_type, int>> _blessing_weights =
 {
     { XOM_BLESSING_CLEAVE, 10},
     { XOM_BLESSING_CHAOS_EISEGESIS, 30},
+    { XOM_BLESSING_GUARDIAN, 20},
 };
 
 void xom_give_blessing()
@@ -6079,7 +6149,7 @@ void xom_give_blessing()
 string xom_remove_blessing()
 {
     string msg;
-    switch(you.attribute[ATTR_XOM_BLESSING])
+    switch (you.attribute[ATTR_XOM_BLESSING])
     {
         case XOM_BLESSING_CLEAVE:
             msg = "Your cleaving frenzy subsides.";
@@ -6090,6 +6160,12 @@ string xom_remove_blessing()
             msg = make_stringf("Your divinely inspired misunderstanding of %s fades.",
                     spell_title(static_cast<spell_type>(you.props[EISEGESIS_SPELL].get_int())));
             you.props.erase(EISEGESIS_SPELL);
+            break;
+
+        case XOM_BLESSING_GUARDIAN:
+            msg = make_stringf("Xom sends your guardian%s elsewhere.",
+                               xom_guardians.size() > 1 ? "s" : "");
+            xom_remove_guardians();
             break;
 
         default:
@@ -6196,6 +6272,7 @@ static const map<xom_event_type, xom_event> xom_events = {
 
     { XOM_BLESSING_CLEAVE, {"cleaving", [](int){ _xom_cleaving();} }},
     { XOM_BLESSING_CHAOS_EISEGESIS, { "eisegesis", [](int){ _xom_eisegesis();} }},
+    { XOM_BLESSING_GUARDIAN, { "guardian", [](int){ _xom_guardian();} }},
     { XOM_BLESSING_RANDOM, {"blessing", [](int){ xom_give_blessing();} }},
 };
 

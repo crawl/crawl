@@ -72,6 +72,39 @@ w:3
 ####################
 # friendly summons
 ####################
+_xom_guardian_summon_generic_
+
+"You seem to need some help staying out of trouble."
+
+Xom thinks you could use some additional protection.
+%%%%
+Xom guardian summon
+
+"This one will keep you safe."
+
+"Guard the toy, my child."
+
+w:5
+"I'm sure you two will get along fabulously."
+
+w:1
+"This was the only babysitter available on short notice."
+
+w:30
+@_xom_guardian_summon_generic_@
+%%%%
+Xom guardian summon plural
+
+"These ones will keep you safe."
+
+"Guard the toy, my children."
+
+w:5
+"I'm sure all of you will get along fabulously."
+
+w:30
+@_xom_guardian_summon_generic_@
+%%%%
 Xom single summon
 
 "Serve the mortal, my child!"
@@ -1298,6 +1331,32 @@ Xom's power brushes across your mind and you reel.
 "Open your mind, my child."
 
 Xom blesses you with insight into chaos.
+%%%%
+Xom guardian revive
+
+"Try not to let that happen again."
+
+"Don't wander off like that."
+
+You sense Xom's disapproving frown.
+
+w:20
+"Oh no, not @guardian_name@!"
+
+"You mortals are so fragile."
+
+"Died hilariously, I hope!"
+
+"And now for the sequel!"
+
+w:50
+"Your duties are not yet fulfilled."
+
+"That wasn't supposed to happen."
+
+"Amuse me some more."
+
+"Heed your god's command, @guardian_name@."
 ######################################
 # Miscellaneous god messages.
 ######################################

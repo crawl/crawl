@@ -6942,7 +6942,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     pr.AddCell("Int", intelligence_description(mi.intel()));
     if (mi.is(MB_SICK) || mi.is(MB_NO_REGEN))
         pr.AddCell("Regen", "None");
-    else if (mons_class_fast_regen(mi.type) || mi.is(MB_REGENERATION))
+    else if (mons_class_fast_regen(mi.type) || mi.is(MB_REGENERATION) || mi.is(MB_GUARDIAN))
         pr.AddCell("Regen", make_stringf("%d/turn", mi.regen_rate(1)));
                                         // (Wait, what's a 'turn'?)
 

@@ -5884,10 +5884,10 @@ bool shoot_through_actor(const actor* agent, const actor* target, bool announce)
             return true;
         }
 
-        if (agent->is_player() && testbits(mon->flags, MF_DEMONIC_GUARDIAN))
+        if (agent->is_player() && testbits(mon->flags, MF_GUARDIAN))
         {
-            if (announce && you.can_see(*mon))
-                mpr("Your demonic guardian avoids your attack.");
+            if (announce)
+                mpr("Your guardian avoids your attack.");
             return true;
         }
 

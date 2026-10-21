@@ -1069,13 +1069,23 @@ Babs
 
 Betsy
 
+Brenda
+
 Carrie
 
 Deb
 
+Emma
+
+Gertrude
+
 Izzy
 
+Janice
+
 Jen
+
+Joan
 
 Mia
 
@@ -1093,17 +1103,27 @@ Cal
 
 Dave
 
+Dennis
+
 Doug
+
+George
 
 Jeff
 
 Jim
+
+Larry
 
 Mack
 
 Ned
 
 Pete
+
+Steve
+
+Tim
 %%%%
 _cantonese_female_name_
 

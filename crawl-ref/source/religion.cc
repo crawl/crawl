@@ -3188,6 +3188,7 @@ void excommunication(bool voluntary, god_type new_god)
     case GOD_XOM:
         if (you.attribute[ATTR_XOM_BLESSING])
             mpr(xom_remove_blessing());
+        xom_remove_guardians();
         break;
 
     default:

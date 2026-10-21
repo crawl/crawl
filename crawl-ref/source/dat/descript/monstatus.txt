@@ -761,6 +761,11 @@ withering away monstatus
 This creature will die in a few turns.
 ## Not real statuses, but common clauses to add to some others
 %%%%
+your guardian monstatus
+
+Your innate bond with this monster allows you to shoot through it and also
+protects it from any harm you might do to it.
+%%%%
 low-tier stab monstatus
 
 <blue>Melee attacks you make against this creature have a chance (proportional to

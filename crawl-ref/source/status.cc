@@ -1450,6 +1450,13 @@ static void _describe_xom_blessing(status_info& inf)
                                           spell_title(static_cast<spell_type>(you.props[EISEGESIS_SPELL].get_int())));
             break;
 
+        case XOM_BLESSING_GUARDIAN:
+            inf.light_text = "Guardian";
+            inf.light_text_formatted = "<red>G<lightred>u<yellow>a<green>r<lightgreen>d<blue>i<lightblue>a<lightmagenta>n";
+            inf.short_text = make_stringf("blessing of guardians (%s)",
+                                          mons_type_name(xom_guardian_type(), DESC_PLAIN).c_str());
+            break;
+
         default:
         break;
     }

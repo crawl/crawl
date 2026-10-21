@@ -623,6 +623,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_SPECTRALISED);
     if (m->has_ench(ENCH_VAMPIRE_THRALL))
         mb.set(MB_VAMPIRE_THRALL);
+    if (testbits(m->flags, MF_GUARDIAN))
+        mb.set(MB_GUARDIAN);
 
     _add_name_info(m, milev);
     if (milev <= MILEV_NAME)
@@ -987,7 +989,7 @@ int monster_info::regen_rate(int scale) const
     if (!can_regenerate() || is(MB_SICK) /* ? */)
         return 0;
 
-    if (mons_class_fast_regen(type))
+    if (mons_class_fast_regen(type) || is(MB_GUARDIAN))
         rate = mons_class_regen_amount(type) * scale;
     else
     {

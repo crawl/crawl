@@ -25,6 +25,7 @@
 #include "fineff.h"
 #include "ghost.h"
 #include "god-abil.h" // GOZAG_GOLD_AURA_KEY
+#include "god-companions.h"
 #include "god-passive.h"
 #include "god-prayer.h"
 #include "hints.h"
@@ -155,6 +156,7 @@ static void _monster_regenerate(monster* mons)
     }
 
     if (mons_class_fast_regen(mons->type)
+        || (mons->flags & MF_GUARDIAN)
         || _mons_natural_regen_roll(mons))
     {
         mons->heal(mons_class_regen_amount(mons->type));
@@ -2124,7 +2126,8 @@ void handle_monster_move(monster* mons)
     }
 
     // Return to the player's side if they've gotten too separated
-    if (mons->type == MONS_HAUNTED_ARMOUR || mons_is_jade_crystal(mons->type))
+    if (mons->type == MONS_HAUNTED_ARMOUR || mons_is_jade_crystal(mons->type)
+        || mons_is_xom_guardian(*mons))
     {
         const int max_dist = mons->type == MONS_HAUNTED_ARMOUR ? 5 : 8;
         if (grid_distance(you.pos(), mons->pos()) > max_dist)
@@ -2133,11 +2136,11 @@ void handle_monster_move(monster* mons)
             if (find_habitable_spot_near(you.pos(), mons->type, 3, spot,
                                          -1, &you))
             {
-                simple_monster_message(*mons, " returns to your side.");
                 mons->move_to(spot, MV_TRANSLOCATION);
+                simple_monster_message(*mons, " returns to your side.");
             }
             // If returning is impossible, kill it immediately.
-            else
+            else if (!mons_is_xom_guardian(*mons))
             {
                 monster_die(*mons, KILL_RESET, NON_MONSTER);
                 return;

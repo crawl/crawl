@@ -1181,3 +1181,95 @@ string apostle_short_description(int slot)
 
     return str;
 }
+
+vector<xom_guardian_data> xom_guardians;
+
+xom_guardian_data::xom_guardian_data(const monster& m) : respawn_timer(0),
+    lives_remaining(7)
+{
+    guardian = follower(m);
+}
+
+monster* xom_guardian_data::restore()
+{
+    monster* ret = guardian.place(true);
+
+    if (ret)
+    {
+        add_companion(ret);
+
+        if (lives_remaining > 0)
+            --lives_remaining;
+
+        respawn_timer = 0;
+    }
+    return ret;
+}
+
+void xom_add_guardian(monster& guardian)
+{
+    add_companion(&guardian);
+    xom_guardian_data data(guardian);
+    xom_guardians.push_back(guardian);
+}
+
+void xom_check_guardian_revival()
+{
+    for (xom_guardian_data& data : xom_guardians)
+    {
+        if (data.respawn_timer > 0
+            && you.elapsed_time >= data.respawn_timer)
+        {
+            monster* guardian = data.restore();
+            if (!guardian)
+                continue;
+
+            if (data.lives_remaining <= 0)
+            {
+                const int drain = max(1, guardian->get_experience_level() / 3);
+                guardian->add_ench(mon_enchant(ENCH_DRAINED, guardian, INFINITE_DURATION, drain));
+                guardian->add_ench(mon_enchant(ENCH_WEAK, guardian, INFINITE_DURATION));
+                guardian->add_ench(mon_enchant(ENCH_DIMINISHED_SPELLS, guardian, INFINITE_DURATION));
+            }
+
+            string msg = getSpeakString("Xom guardian revive");
+            msg = replace_all(msg, "@guardian_name@", guardian->name(DESC_PLAIN).c_str());
+            god_speaks(GOD_XOM, msg.c_str());
+            god_speaks(GOD_XOM, make_stringf("Xom returns %s to life.", guardian->name(DESC_THE).c_str()).c_str());
+        }
+    }
+}
+
+void xom_guardian_died(monster& mons)
+{
+    for (xom_guardian_data& data : xom_guardians)
+    {
+        if (data.guardian.mons.mid == mons.mid)
+            data.respawn_timer = you.elapsed_time + random_range(300, 700);
+    }
+}
+
+void xom_remove_guardians()
+{
+    for (xom_guardian_data& data : xom_guardians)
+        if (data.respawn_timer == 0)
+            if (monster* mon = monster_by_mid(data.guardian.mons.mid))
+                monster_die(*mon, KILL_RESET, NON_MONSTER);
+
+    xom_guardians.clear();
+
+    remove_all_companions(GOD_XOM);
+}
+
+bool mons_is_xom_guardian(const monster& mon)
+{
+    return (mon.flags & MF_GUARDIAN) && mon.was_created_by(MON_SUMM_XOM_GUARDIAN);
+}
+
+monster_type xom_guardian_type()
+{
+    if (xom_guardians.empty())
+        return MONS_NO_MONSTER;
+
+    return xom_guardians[0].guardian.mons.type;
+}

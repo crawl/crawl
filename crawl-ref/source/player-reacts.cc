@@ -574,6 +574,9 @@ void player_reacts_to_monsters()
     if (you_worship(GOD_USKAYAW))
         _handle_uskayaw_time(you.time_taken);
 
+    if (you_worship(GOD_XOM))
+        xom_check_guardian_revival();
+
     announce_beogh_conversion_offer();
 
     if (player_in_branch(BRANCH_ARENA) && !okawaru_duel_active())

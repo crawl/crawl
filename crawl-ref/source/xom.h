@@ -102,6 +102,7 @@ enum xom_event_type
     // Not 'real' events, but in this enum so they can be triggered easily in wizmode
     XOM_BLESSING_CLEAVE,
     XOM_BLESSING_CHAOS_EISEGESIS,
+    XOM_BLESSING_GUARDIAN,
 
     // Not even a real blessing, but allows wizmode to select a new blessing at random.
     XOM_BLESSING_RANDOM,

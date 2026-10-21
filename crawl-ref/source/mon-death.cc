@@ -3649,6 +3649,8 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
         else if (mons.type == MONS_ORC_APOSTLE)
             beogh_swear_vengeance(mons);
+        else if (mons_is_xom_guardian(mons))
+            xom_guardian_died(mons);
     }
     else if (mons.is_divine_companion()
              && killer == KILL_BANISHED

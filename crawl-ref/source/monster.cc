@@ -36,6 +36,7 @@
 #include "fprop.h"
 #include "ghost.h"
 #include "god-abil.h"
+#include "god-companions.h"
 #include "god-conduct.h"
 #include "god-item.h"
 #include "god-passive.h"
@@ -6778,7 +6779,8 @@ bool monster::is_divine_companion() const
            // be considered companions for most functions - only apostles should
            && ((mons_is_god_gift(*this, GOD_BEOGH) && type == MONS_ORC_APOSTLE)
                || mons_is_god_gift(*this, GOD_YREDELEMNUL)
-               || mons_is_god_gift(*this, GOD_HEPLIAKLQANA))
+               || mons_is_god_gift(*this, GOD_HEPLIAKLQANA)
+               || mons_is_xom_guardian(*this))
            && mons_can_use_stairs(*this);
 }
 
@@ -6888,7 +6890,6 @@ bool monster::angered_by_attacks() const
             && !mons_is_avatar(type)
             && !mons_class_is_zombified(type)
             && !is_divine_companion()
-            && !testbits(flags, MF_DEMONIC_GUARDIAN)
             && !((holiness() & MH_NONLIVING) && mons_intel(*this) == I_BRAINLESS);
 }
 

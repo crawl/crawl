@@ -280,8 +280,9 @@ enum monster_flag_type : uint64_t
     MF_NAME_DEFINITE      = BIT(28),
     /// living monster revived by a lost soul
     MF_SPECTRALISED       = BIT(29),
-    /// is a demonic_guardian
-    MF_DEMONIC_GUARDIAN   = BIT(30),
+    /// is a 'guardian' (from the demonspawn facet or Xom blessing)
+    /// and can be freely shot through by the player
+    MF_GUARDIAN           = BIT(30),
     /// mname should be used for corpses as well
     MF_NAME_SPECIES       = BIT(31),
     /// mname replaces "zombie" etc.; use only for already zombified monsters

@@ -1395,3 +1395,11 @@ Eisegesis status
 You have been granted temporary knowledge of a single spell, which you can cast
 at the cost of magic contamination (proportional to the spell's level and
 reduced by your own experience level) using the Eisegesis ability.
+%%%%
+Guardian status
+
+Xom has granted you a persistant ally, which will accompany you between floors
+and eventually be revived after dying. It is also immune to your attacks and
+can be freely shot through.
+
+After dying a large number of times, it may lose much of its power.

@@ -163,7 +163,7 @@ static void _wizard_go_to_level(const level_pos &pos)
     you.depth         = pos.id.depth;
     _wizard_level_target = pos.id;
 
-    leaving_level_now(stair_taken);
+    leaving_level_now(stair_taken, pos.id);
     load_level(stair_taken, LOAD_ENTER_LEVEL, old_level);
     if (!crawl_state.test)
         save_game_state();
@@ -780,7 +780,7 @@ void wizard_recreate_level()
     if (lev.depth == 1 && lev != BRANCH_DUNGEON)
         stair_taken = branches[lev.branch].entry_stairs;
 
-    leaving_level_now(stair_taken);
+    leaving_level_now(stair_taken, lev);
     delete_level(lev);
     load_level(stair_taken, LOAD_START_GAME, lev);
     if (you.get_place_info().levels_seen > 1)

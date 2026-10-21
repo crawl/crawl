@@ -203,6 +203,7 @@ enum mon_summon_type
     MON_SUMM_JADEMANTLE, // Jademantle crystals
     MON_SUMM_HYPNOTAIL,  // Hypnogecko tail shedding
     MON_SUMM_CENTIPEDE, // Centipede bauble
+    MON_SUMM_XOM_GUARDIAN, // Xom's guardian blessing
 };
 
 #include "mon-flags.h"

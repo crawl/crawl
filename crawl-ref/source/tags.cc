@@ -2341,6 +2341,22 @@ static apostle_data unmarshall_apostle_data(reader &th)
     return a;
 }
 
+static void marshall_xom_guardian(writer &th, const xom_guardian_data &a)
+{
+    marshall_follower(th, a.guardian);
+    marshallInt(th, a.respawn_timer);
+    marshallByte(th, a.lives_remaining);
+}
+
+static xom_guardian_data unmarshall_xom_guardian_data(reader &th)
+{
+    xom_guardian_data a;
+    a.guardian = unmarshall_follower(th);
+    a.respawn_timer = unmarshallInt(th);
+    a.lives_remaining = unmarshallByte(th);
+    return a;
+}
+
 static void marshall_follower_list(writer &th, const m_transit_list &mlist)
 {
     marshallShort(th, mlist.size());
@@ -2710,10 +2726,15 @@ static void _tag_construct_companions(writer &th)
     marshallMap(th, companion_list, _marshall_as_int<mid_t>,
                  marshall_companion);
 
-    const uint8_t size = apostles.size();
+    uint8_t size = apostles.size();
     marshallByte(th, size);
     for (auto &apostle: apostles)
         marshall_apostle(th, apostle);
+
+    size = xom_guardians.size();
+    marshallByte(th, size);
+    for (auto &guardian : xom_guardians)
+        marshall_xom_guardian(th, guardian);
 }
 
 // Save versions 30-32.26 are readable but don't store the names.
@@ -5801,6 +5822,16 @@ static void _tag_read_companions(reader &th)
     int count = unmarshallByte(th);
     for (int i = 0; i < count; ++i)
         apostles.push_back(unmarshall_apostle_data(th));
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_XOM_GUARDIANS)
+        return;
+#endif
+
+    xom_guardians.clear();
+    count = unmarshallByte(th);
+    for (int i = 0; i < count; ++i)
+        xom_guardians.push_back(unmarshall_xom_guardian_data(th));
 }
 
 template <typename Z>
