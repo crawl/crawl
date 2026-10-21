@@ -885,6 +885,782 @@ c       c
 cccDEFccc
 ENDMAP
 
+NAME:  nicolae_shoals_beached_house
+TAGS:  transparent water_ok
+DEPTH: Shoals
+KMONS: . = nothing w:40 / plant
+KFEAT: . = . w:40 / W
+SUBST: x = xxxx., m = mmmm., + = ++++., _ = wwww_
+CLEAR: _
+FTILE: .mx+ = floor_sprouting_ruin / none w:5
+MAP
+      '''
+     '''''
+     xm+mx
+ _xxxx...xxxx_
+_wx..x...x..xw_
+_wm..+...+..mw_
+_wx..x...x..xw_
+ _xxxx...xxxx_
+  _wwxmmmxww_
+   _wwwwwww_
+    _wwwww_
+     _____
+ENDMAP
+
+NAME:   nicolae_shoals_by_george
+TAGS:   transparent water_ok no_tide
+DEPTH:  Shoals:2-
+# Downweighted for size.
+WEIGHT: 5
+KMONS:  1 = plant
+KITEM:  d = any wand w:40 / any misc w:20 / any talisman
+KITEM:  e = any scroll / any parchment
+KITEM:  f = any potion
+KITEM:  g = any armour good_item
+KFEAT:  - = iron_grate
+KFEAT:  1 = . w:70 / W
+KFEAT:  ! = closed_clear_door w:90 / .
+NSUBST: d = 2=d / ', a = . / s, D = 2=% / %* / * / *| / |. / .
+SUBST:  z = sy, m = m:90 ', s = x:90 ', + = +:90 ', y = x:45 w, p = m:45 w
+SUBST:  q = w', ` = w., ~ = w_, " = ._, ' = ':100 W, . = .:70 W, F = 1w, 1 = 1.
+CLEAR:  _
+FTILE:  defgxm'+<-! = floor_sprouting_ruin / none w:5
+MAP
+        ".."   "..1111.@.1111.."
+     ".1111111..1'''''''''''''1."
+     xssmsssmssssssxsmsm!msmsmsx
+     s'''ddd'''''''s'''''''''''m~
+    ~zq''''''''xsxsx'''s'x<x'''sww
+  ~wwpwq'''''''xesfx'''s'xxx'''xxw~
+ ~wwwyww'''''''x's'x'''s'+gx'''-xww
+ wwwwyww'''''''x+x+xss's'xxx'''xxww~
+ wwwwywwq''''''+'''''''''''''''swww~
+~wwwwpwww''''''x's'''''s'''s'''mwww
+wwwwwywwwq'''''x's'''''s'''s'''sww~
+wwwwwywwwq'''''x's'''''s'''s'''sw~
+wwwwwywwq''''''x!xssmssxm!mxm!ms~
+~wwwwwww`.....1''''''''''''!'''mw~
+ ~wwwww`......1''''''''''''m'''mww~
+  ~wwwww`.....1''''''''''''m'''mwww~
+   wwwwww`.....``FF111111..xmmmxwwww~  ~w~
+   ~wwww~   ~wwwwwwww`......11Fwwwwwwwwwww
+    ~ww~   ~wwwwwwwwww``wwwwwwwwwwwxxzzxw~
+     ~~    wwwwwwwwwwwwwwwwwwwwwww`xDDDz~
+           ~wwwwwwwwwwwwwww~ ~wwww`+DDDz
+            ~wwwwwwwwwwwww~   ~www`xDDDa
+                ~wwwww~ ~      ~wwwxzzaa.
+                                 ~wwww~.@
+ENDMAP
+
+NAME:  nicolae_shoals_eyelet_islets_line
+TAGS:  water_ok no_exits luniq_nicoeyelets
+DEPTH: Shoals
+MAP
+ ccc     ccc     ccc     ccc
+ccwcc   ccwcc   ccwcc   ccwcc
+ www     www     www     www
+ccwcc   ccwcc   ccwcc   ccwcc
+ ccc     ccc     ccc     ccc
+ENDMAP
+
+NAME:  nicolae_shoals_eyelet_islets_square
+TAGS:  water_ok no_exits luniq_nicoeyelets
+DEPTH: Shoals
+CLEAR: _
+MAP
+ ccc     ccc
+ccwcc   ccwcc
+cwww     wwwc
+ccwcc   ccwcc
+ c c     c c
+_
+_
+_
+ c c     c c
+ccwcc   ccwcc
+cwww     wwwc
+ccwcc   ccwcc
+ ccc     ccc
+ENDMAP
+
+NAME:  nicolae_shoals_fishbones
+TAGS:  transparent water_ok
+DEPTH: Shoals
+MAP
+ ........  ....
+..cc.c.c....cc.
+.c.c.c.c.c.c...
+.ccccccccccccc.
+...c.c.c.c.c...
+..cc.c.c....cc.
+ ........  ....
+ENDMAP
+
+NAME:   nicolae_shoals_forestry_at_sea
+TAGS:   transparent water_ok
+DEPTH:  Shoals
+KITEM:  d = human skeleton
+SUBST:  ` = W., ~ = Ww, _ = w_, s = t.
+NSUBST: d = d / %*
+CLEAR:  _
+MAP
+   _______
+  __wwwww_____
+ __ww```wwwww___
+ _ww`...````www___
+__w`.sss....``www__
+_ww`.tttttts..``ww_
+_w`.st....tss...`w
+_w`.st.tt.ts....`w
+_ww`.t.dt...WW...W@
+__w`.ttdt.WWWW...W@
+ _w`.stdt.WWWWW..W@
+ _ww`.ttts.WWWW.`W
+ __w`.ssts.WWWW`ww
+  _ww`.stts.WWwwww
+  __w`.ssss.Wwww__
+   _ww`....`www__
+   __ww````www__
+    __wwwwww___
+     ________
+ENDMAP
+
+# https://en.wikipedia.org/wiki/Tetrapod_(structure)
+NAME:  nicolae_shoals_hast_thou_considered_the_tetrapod
+TAGS:  transparent water_ok
+DEPTH: Shoals
+KPROP: DEFHJKLMNOPQ'ST = no_tide
+: if you.depth() == 1 then
+SUBST: S = ]})
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST: S = [{(
+: else
+SUBST: S = ]})[{(
+: end
+: local glyphs = "DEFHJKLMNOPQ"
+: for i = 1, string.len(glyphs), 1 do
+:    subvault(string.sub(glyphs, i, i) .. " : nico_tetrapod")
+: end
+SUBST: . = ....W
+MAP
+    ...........
+ ....EEE...HHH....
+ .DDDEEEFFFHHHJJJ.
+ .DDDEEEFFFHHHJJJ.
+..DDD'''FFF'''JJJ..
+.QQQ'''''''''''KKK.
+.QQQ''T''S''T''KKK.
+.QQQ'''''''''''KKK.
+..PPP'''NNN'''LLL..
+ .PPPOOONNNMMMLLL.
+ .PPPOOONNNMMMLLL.
+ ....OOO...MMM....
+    ...........
+ENDMAP
+
+# "But nicolae, if it's a tetrapod, where's the fourth leg?"
+# Good question! It's sticking straight up towards the viewer.
+NAME:    nicolae_shoals_subtetrapod
+TAGS:    unrand transparent allow_dup no_dump no_tide nico_tetrapod
+DEPTH:   Shoals
+SHUFFLE: Pp
+SUBST:   P = c, p = ., . = ....W
+MAP
+P.p
+pcP
+.Pp
+ENDMAP
+
+NAME:   nicolae_shoals_hexagonal_tidal_flats
+TAGS:   transparent water_ok no_tide
+DEPTH:  Shoals
+NSUBST: p = w / W, q = w / W, r = w / W, s = w / W, u = w / W
+NSUBST: y = w / W, z = w / W
+MAP
+    www
+  WpWxWqW
+ wpxpwqxqw
+ xWpWxWqWx
+WrWxWsWxWuW
+rxrwsxswuxu
+WrWxWsWxWuW
+ xWyWxWzWx
+ wyxywzxzw
+  WyWxWzW
+    www
+ENDMAP
+
+NAME:  nicolae_shoals_infinity_pool
+TAGS:  transparent water_ok no_tide
+DEPTH: Shoals
+SUBST: ` = W., ~ = Ww, _ = w_
+CLEAR: _
+MAP
+        ____
+       wwww___
+      ~~~~www__
+      ....~~ww_
+    @.......~w__
+    ...WWW..~ww_
+  ~...W~~~W..~w__
+ w~..W~www~W.~ww_
+_w~..W~wwww~.~ww___
+_w~..W~wwww~.~wwww___
+_ww~..W~wwwwWwwwwwww___
+__w~...W~~w...w~~~~www__
+ _ww~~....W...W....~~ww_
+ __www~~~~w...w~~W...~w__
+  ___wwwwwwwWwwww~W..~ww_
+    ___wwww~.~wwww~W..~w_
+      ___ww~.~wwww~W..~w_
+        _ww~.W~www~W..~w
+        __w~..W~~~W...~
+         _ww~..WWW...
+         __w~.......@
+          _ww~~....
+          __www~~~~
+           ___wwww
+             ____
+ENDMAP
+
+NAME:  nicolae_shoals_live_berth
+TAGS:  transparent water_ok no_tide luniq_nico_shoals_docked
+DEPTH: Shoals
+SUBST: _ = _w
+CLEAR: _
+MAP
+          _______
+xxxxxxxxxxxwwwwwww
+x..........wwwwwww_
+x.wxwxwxwxwwwwwwww_
++.wwwwwwwwwwwwwwww_
+x.wxwxwxwxwwwwwwww_
+x..........wwwwwww_
+xxxxxxxxxxxwwwwwww
+          _______
+ENDMAP
+
+NAME:  nicolae_shoals_lost_giant_house
+TAGS:  extra no_exits water_ok luniq_nicolostgiant
+SUBST: c = c:50 _
+CLEAR: _
+MAP
+cccccccccccc  cccccccccccc
+cccccccccccc  cccccccccccc
+cc      cc      cc      cc
+cc      cc      cc      cc
+    cc      cc      cc
+    cc      cc      cc
+cc      cc      cc      cc
+cc      cc      cc      cc
+cccccccccccc  cccccccccccc
+cccccccccccc  cccccccccccc
+ENDMAP
+
+NAME:  nicolae_shoals_lost_giant_waterscales
+TAGS:  extra no_exits water_ok luniq_nicolostgiant
+SUBST: c = c:50 _, w = w:50 _
+CLEAR: _
+MAP
+ccwwcc  cc  cc  cc  cc
+ccwwcc  cc  cc  cc  cc
+cc  ccwwcc  cc  cc  cc
+cc  ccwwcc  cc  cc  cc
+cc  cc  ccwwcc  cc  cc
+cc  cc  ccwwcc  cc  cc
+cc  cc  cc  ccwwcc  cc
+cc  cc  cc  ccwwcc  cc
+cc  cc  cc  cc  ccwwcc
+cc  cc  cc  cc  ccwwcc
+ENDMAP
+
+NAME:  nicolae_shoals_lost_giant_waterwheel
+TAGS:  extra no_exits water_ok luniq_nicolostgiant
+SUBST: c = c:50 _
+CLEAR: _
+MAP
+   ccc cccccc ccc
+  cccc cccccc cccc
+ ccc     cc     ccc
+ccccc    cc    ccccc
+cc ccc   cc   ccc cc
+cc  ccc  cc  ccc  cc
+     ccc cc ccc
+cc    cc cc cc    cc
+cc                cc
+cccccccc cc cccccccc
+cccccccc cc cccccccc
+cc                cc
+cc    cc cc cc    cc
+     ccc cc ccc
+cc  ccc  cc  ccc  cc
+cc ccc   cc   ccc cc
+ccccc    cc    ccccc
+ ccc     cc     ccc
+  cccc cccccc cccc
+   ccc cccccc ccc
+ENDMAP
+
+NAME:  nicolae_shoals_kinda_femur_shaped_island
+TAGS:  transparent water_ok no_tide
+DEPTH: Shoals
+SUBST: - = xw, ` = .x, ' = .w, _ = w_
+CLEAR: _
+MAP
+    _...
+  _w....._
+ _ww..w..w_
+ ww..--..ww_
+_...`xx`..ww_
+...-xxx-'..ww_
+..w-xx-ww'....
+....`-www-`....
+ ....'ww-xx-w..
+ _ww..'-xxx-...
+  _ww..`xx`..._
+   _ww..--..ww
+    _w..w..ww_
+     _.....w_
+       ..._
+ENDMAP
+
+NAME:  nicolae_shoals_matching_berths
+TAGS:  transparent water_ok no_tide luniq_nico_shoals_docked
+DEPTH: Shoals
+SUBST: _ = _w
+CLEAR: _
+MAP
+          ________
+         _wwwwwwww_
+xxxxxxxxxxxwwwwwwxxxxxxxxxxx
+x..........wwwwww..........x
+x.wxwxwxwxwwwwwwwwxwxwxwxw.x
++.wwwwwwwwwwwwwwwwwwwwwwww.+
+x.wxwxwxwxwwwwwwwwxwxwxwxw.x
+x..........wwwwww..........x
+xxxxxxxxxxxwwwwwwxxxxxxxxxxx
+         _wwwwwwww_
+          ________
+ENDMAP
+
+NAME:  nicolae_shoals_phragmites
+TAGS:  transparent no_tide
+DEPTH: Shoals
+KMONS: p = plant
+KMONS: P = plant w:40 / nothing
+KITEM: d = human skeleton
+KFEAT: p = W / . w:30
+KFEAT: P = W w:30 / .
+SUBST: _ = _w, - = tp, s = ttt., ` = Ww
+CLEAR: _
+KPROP: d = bloody
+MAP
+    _wwwwww_
+    wwwPPwww_
+ t.tttPPPPwww_
+tt.stt-pPP`www_
+ts..st.pPP`wwww_
+ttt.ttdpPP`wwwww
+t......pPP`wwwww
+..stst.pPP`wwww_
+tttttt-pPP`www_
+ tttttPPPPwww_
+   wwwwPPwww_
+   _wwwwwww_
+ENDMAP
+
+NAME:  nicolae_shoals_pier_reviewed
+TAGS:  transparent water_ok no_tide luniq_nico_shoals_docked
+DEPTH: Shoals
+SUBST: _ = _w
+CLEAR: _
+MAP
+     _________
+    wwwwwwwwwww
+xxxxwwwwwwwwwww_
+x...wxwxwxwxwww_
++............ww_
+x...wxwxwxwxwww_
+xxxxwwwwwwwwwww_
+    wwwwwwwwwww
+     _________
+ENDMAP
+
+NAME:  nicolae_shoals_pier_to_pier
+TAGS:  transparent water_ok no_tide luniq_nico_shoals_docked
+DEPTH: Shoals
+SUBST: _ = _w
+CLEAR: _
+MAP
+     ___________
+    wwwwwwwwwwwww
+xxxxwwwwwwwwwwwwwxxxx
+x...wxwxwxwxwxwxw...x
++...................+
+x...wxwxwxwxwxwxw...x
+xxxxwwwwwwwwwwwwwxxxx
+    wwwwwwwwwwwww
+     ___________
+ENDMAP
+
+NAME:  nicolae_shoals_pier_27_imports
+TAGS:  transparent water_ok no_tide luniq_nico_shoals_docked
+DEPTH: Shoals
+KFEAT: S = any shop
+SUBST: _ = _w
+CLEAR: _
+MAP
+           ________
+     ______wwwwwwww_
+    wwwwwwwwwwwwwww_
+xxxxwwwwwwwwwxwxwww_
+x...wxwxwxwxw...www_
++.............S.xww_
+x...wxwxwxwxw...www_
+xxxxwwwwwwwwwxwxwww_
+    wwwwwwwwwwwwwww_
+     ______wwwwwwww_
+           ________
+ENDMAP
+
+NAME:  nicolae_shoals_plorbo_island
+TAGS:  transparent water_ok
+DEPTH: Shoals
+KMONS: 1 = plant
+SUBST: ' = xw, 1 = 1., _ = _w
+CLEAR: _
+MAP
+    _wwwx@xx
+   _wwxxx.'xxw_
+   wwxx...xxxww
+   xxx..xxx'xww_
+  _x'w.xx....xww
+ _wx'w....ww.xxw_
+ wwxxxxxxxxx.wxx_
+ ww11xx....x.w'x
+_www11x.xx...'xx
+_www11...xxwwxxw
+_www111...xx'xww
+ wwww1111..xxxww
+ _wwww11111xxww_
+  _wwwww1111www
+   _wwwwwwwwwww
+    _wwwwwwwww_
+       _____
+ENDMAP
+
+NAME:  nicolae_shoals_rippling_ripples
+TAGS:  transparent water_ok no_tide
+DEPTH: Shoals
+MAP
+        WWWWWWW
+      WWwwwwwwwWW
+     WwwwWWWWWwwwW
+    WwwWWwwwwwWWwwW
+   WwWWwwWWWWWwwWWwW
+  WwWwwwWwwwwwWwwwWwW
+ WwwWwwWwwWWWwwWwwWwwW
+ WwWwwWwWWwwwWWwWwwWwW
+WwwWwWwWwwWWWwwWwWwWwwW
+WwWwWwwWwWwwwWwWwwWwWwW
+WwWwWwWwWwWWWwWwWwWwWwW
+WwWwWwWwWwWwWwWwWwWwWwW
+WwWwWwWwWwWWWwWwWwWwWwW
+WwWwWwwWwWwwwWwWwwWwWwW
+WwwWwWwWwwWWWwwWwWwWwwW
+ WwWwwWwWWwwwWWwWwwWwW
+ WwwWwwWwwWWWwwWwwWwwW
+  WwWwwwWwwwwwWwwwWwW
+   WwWWwwWWWWWwwWWwW
+    WwwWWwwwwwWWwwW
+     WwwwWWWWWwwwW
+      WWwwwwwwwWW
+        WWWWWWW
+ENDMAP
+
+NAME:   nicolae_shoals_seawalls
+TAGS:   transparent water_ok no_tide
+DEPTH:  Shoals
+NSUBST: D = @ / _, E = @ / _
+SUBST:  ~ = ww_
+CLEAR:  _
+MAP
+         ~wwww~
+         cccccc
+     ~w~ D....E ww~
+     cccccc..cccccc
+www~ D............E ~www
+wcccccc..cccccc..ccccccw
+www~ D............E ~www
+     cccccc..cccccc
+     ~w~ D....E www
+         cccccc
+         ~wwww~
+ENDMAP
+
+NAME:   nicolae_shoals_shantytown
+TAGS:   transparent water_ok no_tide
+DEPTH:  Shoals
+KFEAT:  S = any shop
+SUBST:  - = wcc, _ = w_
+NSUBST: S = 2=S / SGT / G / T / GGTT.
+CLEAR:  _
+MAP
+      --c_
+    _...cwwc
+w.c-cSc...Sc
+w.cS..-.cccc.
+w....S-....c@
+w.Sc.cc..c...
+w..c....Sc.ww
+ww.cc---wcww_
+ _..S...www_
+   ....www_
+    _c--_
+ENDMAP
+
+# Sometimes along the shore you can see tiny holes dug in the sand by crabs
+# and other burrowing creatures. These holes were no doubt made by something
+# much, much larger. They're gone, though. Probably. You'll be fine.
+NAME:   nicolae_shoals_sholes
+TAGS:   transparent water_ok
+DEPTH:  Shoals, !Shoals:$
+KMONS:  1 = plant
+KFEAT:  ^ = shaft
+SUBST:  ` = W., - = Ww, _ = w_
+NSUBST: ' = 4=^ / 3=^. / 6=1 / 6=1. / .
+CLEAR:  _
+MAP
+                __
+               _www
+              _ww---
+              ww--`.@
+             _w--....`
+            _ww-`.''..
+           _ww--..''..-
+         _www--`.'''.`-w
+        _ww---`..''..--w_
+        ww--`...'''.`-ww_
+       _w--...'''...--w_
+      _ww-`.'''...`--ww
+     _ww--..''..`---ww_
+   _www--`.'''.`--www_
+  _ww---`..''..--ww_
+  ww--`...'''.`-ww_
+ _w--...'''...--w_
+_ww-`.'''...`--ww
+_w--..''..`---ww_
+ w-`.'''.`--www_
+  -..''..--ww_
+   ..''.`-ww_
+   `....--w_
+    @.`--ww
+     ---ww_
+      www_
+       __
+ENDMAP
+
+NAME:    nicolae_shoals_shuffling_rosette
+TAGS:    transparent no_tide luniq_nicoshoalshuffle
+DEPTH:   Shoals
+SHUFFLE: Ww.
+MAP
+    ww
+   wwww
+   wwwwWW
+  WWwwWWWww
+  WWW.WWwwww
+ wwWW...wwww
+wwww...WWww
+wwwwWW.WWW
+ wwWWWwwWW
+   WWwwww
+     wwww
+      ww
+ENDMAP
+
+NAME:    nicolae_shoals_shuffling_square
+TAGS:    transparent no_tide luniq_nicoshoalshuffle
+DEPTH:   Shoals
+SHUFFLE: Ww.
+MAP
+    ..
+ WWW..www
+ WWwwWWww
+ Www..WWw
+..w....W..
+..W....w..
+ wWW..wwW
+ wwWWwwWW
+ www..WWW
+    ..
+ENDMAP
+
+NAME:  nicolae_shoals_soggy_cave
+TAGS:  transparent water_ok
+DEPTH: Shoals
+SUBST: ` = w., - = x., _ = x_, . = ..W
+CLEAR: _
+MAP
+     _xxxx_
+   _xxx--xxx_
+  _xxx-..-xxx_
+ _xxx-....-xxx_
+ xxx-..``..-xxx
+_xx-..`ww`..-xx_
+---..`wwww`..---
+@...`wwwwww`...@
+@...`wwwwww`...@
+---..`wwww`..---
+_xx-..`ww`..-xx_
+ xxx-..``..-xxx
+ _xxx-....-xxx_
+  _xxx-..-xxx_
+   _xxx--xxx_
+     _xxxx_
+ENDMAP
+
+NAME:    nicolae_shoals_stairanded
+TAGS:    transparent water_ok no_tide no_descent
+DEPTH:   Shoals:2-, !Shoals:$
+KMONS:   1 = plant
+SHUFFLE: []/()/{}
+SUBST:   ` = x., ~ = Ww., . = .....1, - = .
+MAP
+      wwwwwwwwwwww
+    wwwwwwwwwwwwwwww
+  wwwwww~......~wwwwww
+ wwwww~...`xx`...~wwwww
+wwww~...`xxxxxx`...~wwww
+www..`xxxxxxxxxxxx`..www
+ww~..xx`.`xxxx`.`xx..~ww
+ww...x`---`xx`---`x...ww
+ww.....-[-.xx.-]-.....ww
+ww...x`---`xx`---`x...ww
+ww~..xx`.`xxxx`.`xx..~ww
+www..`xxxxxxxxxxxx`..www
+wwww~...`xxxxxx`...~wwww
+ wwwww~...`xx`...~wwwww
+  wwwwww~......~wwwwww
+    wwwwwwwwwwwwwwww
+      wwwwwwwwwwww
+ENDMAP
+
+NAME:  nicolae_shoals_statuary_house_1
+TAGS:  water_ok no_tide no_exits
+DEPTH: Shoals
+MAP
+cccc    cccc
+cccc    cccc
+ccG      Gcc
+cc        cc
+    GccG
+    cccc
+    cccc
+    GccG
+cc        cc
+ccG      Gcc
+cccc    cccc
+cccc    cccc
+ENDMAP
+
+NAME:  nicolae_shoals_statuary_house_2
+TAGS:  water_ok no_tide no_exits
+DEPTH: Shoals
+MAP
+   cccccc
+   cccccc
+    GccG
+cc   cc   cc
+ccG      Gcc
+cccc    cccc
+cccc    cccc
+ccG      Gcc
+cc   cc   cc
+    GccG
+   cccccc
+   cccccc
+ENDMAP
+
+NAME:  nicolae_shoals_statuary_house_3
+TAGS:  water_ok no_tide no_exits
+DEPTH: Shoals
+CLEAR: _
+MAP
+     ccc
+     cGc
+  Gc     cG
+  cc     cc
+_
+cc   www   cc
+cG   wGw   Gc
+cc   www   cc
+_
+  cc     cc
+  Gc     cG
+     cGc
+     ccc
+ENDMAP
+
+NAME:    nicolae_shoals_tidal_flooding_hallways
+TAGS:    transparent water_ok
+DEPTH:   Shoals
+SHUFFLE: Pp
+SUBST:   P = c, p = .
+MAP
+ w             w
+www...........www
+ wcPc.cpcpc.cPcw
+ .P...........P.
+ .c.cpcPcPcpc.c.
+ ...p.......p...
+ .c.c.cwcwc.c.c.
+ .p.P.wwwww.P.p.
+ .c.c.cwwwc.c.c.
+ .p.P.wwwww.P.p.
+ .c.c.cwcwc.c.c.
+ ...p.......p...
+ .c.cpcPcPcpc.c.
+ .P...........P.
+ wcPc.cpcpc.cPcw
+www...........www
+ w             w
+ENDMAP
+
+NAME:  nicolae_shoals_two_channels
+TAGS:  transparent water_ok no_tide
+DEPTH: Shoals
+KFEAT: @ = W
+MAP
+      .....       wwwww       .....       wwwww
+    ....c....   wwwwcwwww   ....c....   wwwwcwwww
+   ..c.....c.. wwcwwwwwcww ..c.....c.. wwcwwwwwcww
+ WW....   ....Wwwww   wwwwW....   ....Wwwww   wwwwWW
+WWWW..     ..WWWww     wwWWW..     ..WWWww     wwWWWW
+@WcWW       WWcWW       WWcWW       WWcWW       WWcW@
+WWWWww     wwWWW..     ..WWWww     wwWWW..     ..WWWW
+ WWwwww   wwwwW....   ....Wwwww   wwwwW....   ....WW
+   wwcwwwwwcww ..c.....c.. wwcwwwwwcww ..c.....c..
+    wwwwcwwww   ....c....   wwwwcwwww   ....c....
+      wwwww       .....       wwwww       .....
+ENDMAP
+
+NAME:   nicolae_shoals_yet_another_pun_shop
+TAGS:   transparent water_ok
+DEPTH:  Shoals
+KFEAT:  S = general shop type:Messages_'n' suffix:Bottles ; any scroll | \
+            any parchment | any potion w:20
+MAP
+.......
+.nn.nn.
+.nc.cn.
+.ncScn.
+.nc.cn.
+.nn nn.
+.......
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Monster-placing vaults.
