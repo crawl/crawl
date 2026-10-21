@@ -1317,6 +1317,14 @@ static void _append_skill_target_desc(string &description, skill_type skill,
                                         bool base = false)
 {
     const string prefix = "\n" + string(indent, ' ');
+    scaled_target = min(scaled_target, 270);
+    if (!base && skill_points_for_level(skill, scaled_target) < 0)
+    {
+        description += prefix + make_stringf("You cannot currently reach %d.%d.",
+                                             scaled_target / 10,
+                                             scaled_target % 10);
+        return;
+    }
     if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
     {
         description += prefix + _skill_target_desc(skill, scaled_target, 100,
@@ -4644,7 +4652,7 @@ string get_skill_description(skill_type skill, bool need_title)
     result += getLongDescription(lookup);
 
     const int target = you.get_training_target(skill);
-    if (target > 0 && target <= 270 && target > you.skill(skill, 10))
+    if (target > 0 && target <= 270 && target > you.skill(skill, 10, false, false))
     {
         result +=  make_stringf("\nYour current training target is %.1f.",
                                 target / 10.0);
