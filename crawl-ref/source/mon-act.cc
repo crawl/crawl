@@ -3205,6 +3205,10 @@ static bool _mons_can_displace(const monster* mpusher,
     if (mons_is_seeker(*mpushee))
         return !mons_aligned(mpushee, mpusher); // But allies won't do it
 
+    // Monsters will not swap into living spells (which would dissipate them)
+    if (mpushee->type == MONS_LIVING_SPELL)
+        return false;
+
     // OODs should crash into things, not push them around.
     if (mons_is_projectile(*mpusher) || mons_is_projectile(*mpushee))
         return false;

@@ -81,7 +81,7 @@ void player_displace_monster(monster* mons, const coord_def &loc)
         if (loc != you.pos())
             mprf("You push %s out of the way.", mons->name(DESC_THE).c_str());
         // Friendly seekers dissipate when the player swaps into them.
-        else if (mons_is_seeker(*mons))
+        else if (mons_is_seeker(*mons) || mons->type == MONS_LIVING_SPELL)
         {
             simple_monster_message(*mons, " dissipates!", false,
                                 MSGCH_MONSTER_DAMAGE, MDAM_DEAD);

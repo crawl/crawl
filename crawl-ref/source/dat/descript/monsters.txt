@@ -2111,8 +2111,9 @@ give off an eerie red glow.
 %%%%
 living spell
 
-A spell, waiting to cast itself at the first foe that enters its range. Once
-it does, it'll dissipate into the ether.
+A spell given ephemeral form, waiting only for a suitable target to enter its
+range. It will dissipate the moment it casts itself at a foe (or even if swapped
+with by an ally).
 %%%%
 lost soul
 
