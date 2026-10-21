@@ -38,6 +38,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
+#include "unwind.h"
 
 // MAX_COST_LIMIT is the maximum XP amount it will cost to raise a skill
 //                by 10 skill points (ie one standard practice).
@@ -1694,6 +1695,34 @@ static int _train(skill_type exsk, int &max_exp, bool simu, bool check_targets)
     return skill_inc;
 }
 
+// The skill points required to reach a certain modified skill level.
+// -1 if this level is unreachable due to reductions (e.g. from jademantle).
+int skill_points_for_level(skill_type sk, int scaled_level)
+{
+    unwind_var<unsigned int> points(you.skill_points[sk]);
+    unwind_var<uint8_t> level(you.skills[sk]);
+    auto modified_level = [&](int p)
+    {
+        you.skill_points[sk] = p;
+        you.skills[sk] = calc_skill_level_change(sk, you.skills[sk], p);
+        return you.skill(sk, 10, false, false);
+    };
+
+    int lo = 0;
+    int hi = skill_exp_needed(MAX_SKILL_LEVEL, sk);
+    if (modified_level(hi) < scaled_level)
+        return -1;
+    while (lo < hi)
+    {
+        const int mid = lo + (hi - lo) / 2;
+        if (modified_level(mid) >= scaled_level)
+            hi = mid;
+        else
+            lo = mid + 1;
+    }
+    return lo;
+}
+
 /**
  * Calculate the difference in skill points and xp for new skill level `amount`.
  *
@@ -1719,19 +1748,31 @@ skill_diff skill_level_to_diffs(skill_type skill, double amount,
 {
     // TODO: should this use skill_state?
     // TODO: can `amount` be converted to fixed point?
-    double level;
-    double fractional = modf(amount, &level);
-    if (level >= MAX_SKILL_LEVEL)
+    unsigned int target;
+    if (base_only)
     {
-        level = MAX_SKILL_LEVEL;
-        fractional = 0;
-    }
+        double level;
+        double fractional = modf(amount, &level);
+        if (level >= MAX_SKILL_LEVEL)
+        {
+            level = MAX_SKILL_LEVEL;
+            fractional = 0;
+        }
 
-    unsigned int target = skill_exp_needed(level, skill);
-    if (fractional)
+        target = skill_exp_needed(level, skill);
+        if (fractional)
+        {
+            target += (skill_exp_needed(level + 1, skill)
+                      - skill_exp_needed(level, skill)) * fractional + 1;
+        }
+    }
+    else
     {
-        target += (skill_exp_needed(level + 1, skill)
-                  - skill_exp_needed(level, skill)) * fractional + 1;
+        const int needed = skill_points_for_level(skill,
+                                                 (int) round(amount * 10));
+        if (needed < 0)
+            return skill_diff();
+        target = needed;
     }
 
     // We're calculating you.skill_points[skill] and calculating the new
@@ -1739,32 +1780,8 @@ skill_diff skill_level_to_diffs(skill_type skill, double amount,
 
     unsigned int you_skill = you.skill_points[skill];
 
-    if (!base_only)
-    {
-        // Factor in crosstraining bonus at the time of the query.
-        // This will not address the case where some cross-training skills are
-        // also being trained.
-        you_skill += get_crosstrain_points(skill);
-
-        // Estimate the ash bonus, based on current skill levels and piety.
-        // This isn't perfectly accurate, because the boost changes as
-        // skill increases. TODO: exact solution.
-        // It also assumes that piety won't change.
-        if (ash_has_skill_boost(skill))
-            you_skill += ash_skill_point_boost(skill, you.skills[skill] * 10);
-
-        // Factor in wildshape amulet bonus (+5 shapeshifting levels)
-        if (skill == SK_SHAPESHIFTING && you.wearing_jewellery(AMU_WILDSHAPE))
-        {
-            const int wildshape_level = min(you.skills[skill] + 5,
-                                            (int)MAX_SKILL_LEVEL);
-            you_skill += skill_exp_needed(wildshape_level, skill)
-                         - skill_exp_needed(you.skills[skill], skill);
-        }
-
-        if (you.skill_manual_points[skill])
-            target = you_skill + (target - you_skill) / 2;
-    }
+    if (!base_only && you.skill_manual_points[skill] && target > you_skill)
+        target = you_skill + (target - you_skill) / 2;
 
     if (target == you_skill)
         return skill_diff();
