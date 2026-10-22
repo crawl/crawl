@@ -2004,14 +2004,14 @@ VISUAL:@The_monster_possessive@ form shimmers in the rain.
 
 ############ BLORKULA ###
 %%%%
-Blorkula the orcula
+Blorkula the Orcula
 
 @_Blorkula_common_@
 
 w:5
 @_Blorkula_rare_@
 %%%%
-Blorkula the orcula triumphant
+Blorkula the Orcula triumphant
 
 # Rainbow Raider winning against Batman (The Brave and the Bold #194)
 @The_monster@ shouts, "I believe in me!"
@@ -2073,10 +2073,10 @@ VISUAL:@The_monster@ contemplates whether Beogh's temples would look better pain
 
 @The_monster@ says, "Things are no longer grey! Not since my great insight!"
 %%%%
-Blorkula the orcula killed
+Blorkula the Orcula killed
 
 A faint prismatic mist rises from Blorkula's broken form and then dissipates.
-## END Blorkula the orcula ##
+## END Blorkula the Orcula ##
 %%%%
 ############ BORIS ### An ancient lich with the nasty habit of coming back
 Boris
@@ -8722,10 +8722,10 @@ w:1
 __NONE
 %%%%
 # special casing for Blorkula
-related beogh Blorkula the orcula
+related beogh Blorkula the Orcula
 
 # behave like normal Blorkula
-@Blorkula the orcula@
+@Blorkula the Orcula@
 
 # with some Beogh-hostile messages strewn in
 w:4

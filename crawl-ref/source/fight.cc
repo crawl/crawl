@@ -1473,7 +1473,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     if (check_only)
         return true;
 
-    // Listed in the form: "your rat", "Blorkula the orcula".
+    // Listed in the form: "your rat", "Blorkula the Orcula".
     // No "your the Royal Jelly" nor "the the Royal Jelly".
     string mon_name = remove_prepended_the(mon->name(DESC_PLAIN));
     if (!starts_with(adj, "your"))
@@ -1561,7 +1561,7 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
     if (check_only)
         return true;
 
-    // Listed in the form: "your rat", "Blorkula the orcula".
+    // Listed in the form: "your rat", "Blorkula the Orcula".
     string mon_name = !victims.empty() ? victims.describe() : "";
     const bool penance = victims.penance();
 

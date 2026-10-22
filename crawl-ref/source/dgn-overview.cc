@@ -984,7 +984,7 @@ static string unique_name(monster* mons)
         if (strstr(name.c_str(), "Enchantress"))
             name = "Enchantress";
         if (strstr(name.c_str(), "Blorkula"))
-            name = "Blorkula the orcula";
+            name = "Blorkula the Orcula";
     }
     return name;
 }

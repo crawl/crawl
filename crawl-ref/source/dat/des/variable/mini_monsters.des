@@ -2465,7 +2465,7 @@ NAME:    hangedman_minor_magic
 TAGS:    no_monster_gen transparent
 DEPTH:   D:9-11, Orc
 MONS:    crimson imp, white imp, shadow imp, iron imp
-MONS:    orc, orc wizard w:39 / Blorkula the orcula w:1, swamp drake
+MONS:    orc, orc wizard w:39 / Blorkula the Orcula w:1, swamp drake
 KMONS:   0 = orc ; robe . wand of charming | wand of flame
 KMONS:   89 = deep elf pyromancer / deep elf zephyrmancer
 KMONS:   & = obsidian bat
@@ -8975,7 +8975,7 @@ KMONS:   A = gnoll sergeant ; trident . scale mail | chain mail . kite shield
 : kmons("B = wight ; " .. ls .. " | nothing")
 : kmons("C = Eustachio / orc warrior ; " .. ss .. ", " ..
 :            "orc warrior ; " .. ss .. " / nothing")
-: kmons("D = Blorkula the orcula / orc warrior ; " .. gs .. ", " ..
+: kmons("D = Blorkula the Orcula / orc warrior ; " .. gs .. ", " ..
 :           "orc warrior ; " .. gs .. " / nothing")
 : kmons("E = Maurice / kobold brigand ; dart ego:poisoned . " .. ss .. ", " ..
 :           "kobold brigand ; dart ego:poisoned . " .. ss .. " / nothing")
