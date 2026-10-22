@@ -4,9 +4,11 @@
 #include "coord.h"
 #include "god-type.h"
 #include "mgen-enum.h"
+#include "mon-death.h"
 #include "mon-enum.h"
 #include "mon-flags.h"
 #include "mon-util.h"
+#include "monster.h"
 #include "player.h"
 #include "seen-context-type.h"
 #include "xp-tracking-type.h"
@@ -202,6 +204,15 @@ struct mgen_data
             summoner = &you;
             behaviour = BEH_FRIENDLY;
 
+        }
+        // Living spells die immediately upon casting, so attribute anything
+        // they make to the living spell's own owner.
+        else if (_summoner && _summoner->type == MONS_LIVING_SPELL
+                 && _summoner->is_summoned())
+        {
+            summoner = actor_by_mid(_summoner->as_monster()->summoner);
+            if (summoner)
+                behaviour = SAME_ATTITUDE(summoner);
         }
         else
             summoner = _summoner;

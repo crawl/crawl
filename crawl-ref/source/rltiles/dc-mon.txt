@@ -387,10 +387,14 @@ foxfire MONS_FOXFIRE
 marshlight MONS_MARSHLIGHT
 shooting_star MONS_SHOOTING_STAR
 living_spell MONS_LIVING_SPELL
+living_spell_acid MONS_LIVING_SPELL_ACID
+living_spell_antimagic MONS_LIVING_SPELL_ANTIMAGIC
 living_spell_crystal MONS_LIVING_SPELL_CRYSTAL
 living_spell_earth MONS_LIVING_SPELL_EARTH
+living_spell_flesh MONS_LIVING_SPELL_FLESH
 living_spell_holy MONS_LIVING_SPELL_HOLY
 living_spell_ice MONS_LIVING_SPELL_ICE
+living_spell_quicksilver MONS_LIVING_SPELL_QUICKSILVER
 splinterfrost_barricade MONS_SPLINTERFROST_BARRICADE
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/

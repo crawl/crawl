@@ -431,6 +431,15 @@ int zap_ench_power(zap_type z_type, int pow, bool is_monster)
         return pow;
 }
 
+const char* zap_name(zap_type z_type)
+{
+    const zap_info* zinfo = _seek_zap(z_type);
+    if (!zinfo)
+        return "";
+
+    return zinfo->name;
+}
+
 static int _zap_loudness(zap_type zap, spell_type spell)
 {
     const zap_info* zinfo = _seek_zap(zap);
@@ -678,6 +687,12 @@ void bolt::initialise_fire()
     // (Yes, being a kobold does very bad things to the draw strength of every
     // centaur in the dungeon, but that's just life.)
     range = min(range, (int)you.current_vision);
+
+    if (agent() && agent()->type == MONS_LIVING_SPELL
+        && agent()->props.exists(SPELL_DMG_OVERRIDE_KEY))
+    {
+        damage.size = agent()->props[SPELL_DMG_OVERRIDE_KEY].get_int();
+    }
 
     ASSERT_IN_BOUNDS(source);
     ASSERT_RANGE(flavour, BEAM_NONE + 1, BEAM_FIRST_PSEUDO);

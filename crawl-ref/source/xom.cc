@@ -71,6 +71,7 @@
 #include "spl-goditem.h"
 #include "spl-monench.h"
 #include "spl-transloc.h"
+#include "spl-zap.h"
 #include "stairs.h"
 #include "stash.h"
 #include "state.h"
@@ -6105,6 +6106,37 @@ static void _xom_guardian()
     take_note(Note(NOTE_XOM_EFFECT, -1, -1, note), true);
 }
 
+static void _xom_spellstride()
+{
+    you.attribute[ATTR_XOM_BLESSING] = XOM_BLESSING_SPELLSTRIDE;
+
+    spell_type spell = random_choose
+    (
+        SPELL_QUICKSILVER_BOLT,
+        SPELL_CORROSIVE_BOLT,
+        SPELL_BOLT_OF_LIGHT,
+        SPELL_BOLT_OF_FLESH,
+        SPELL_BOLT_OF_DEVASTATION,
+        SPELL_BOLT_OF_ANTIMAGIC
+    );
+
+    you.props[XOM_SPELLSTRIDE_SPELL] = spell;
+
+    string zname = zap_name(spell_to_zap(spell));
+    zname = replace_all(zname, "bolt of ", "");
+
+    string xomspeak = _get_xom_speech("spellstride");
+    xomspeak = replace_all(xomspeak, "@feet@", you.foot_name(true));
+    xomspeak = replace_all(xomspeak, "@beam_type@", zname);
+
+    god_speaks(GOD_XOM, xomspeak.c_str());
+
+    mprf("You manifest living %s spells as you rampage.", lowercase_string(spell_title(spell)).c_str());
+
+    const string msg = make_stringf("blessing of spellstride (%s)", spell_title(spell));
+    take_note(Note(NOTE_XOM_EFFECT, -1, -1, msg), true);
+}
+
 // See if the player's blessing timer has been filled up. And if it has and the
 // tension is zero, give them a new blessing.
 void xom_check_blessing()
@@ -6124,6 +6156,7 @@ static const vector<pair<xom_event_type, int>> _blessing_weights =
     { XOM_BLESSING_CLEAVE, 10},
     { XOM_BLESSING_CHAOS_EISEGESIS, 30},
     { XOM_BLESSING_GUARDIAN, 20},
+    { XOM_BLESSING_SPELLSTRIDE, 10},
 };
 
 void xom_give_blessing()
@@ -6273,6 +6306,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BLESSING_CLEAVE, {"cleaving", [](int){ _xom_cleaving();} }},
     { XOM_BLESSING_CHAOS_EISEGESIS, { "eisegesis", [](int){ _xom_eisegesis();} }},
     { XOM_BLESSING_GUARDIAN, { "guardian", [](int){ _xom_guardian();} }},
+    { XOM_BLESSING_SPELLSTRIDE, { "spellstride", [](int){ _xom_spellstride();} }},
     { XOM_BLESSING_RANDOM, {"blessing", [](int){ xom_give_blessing();} }},
 };
 

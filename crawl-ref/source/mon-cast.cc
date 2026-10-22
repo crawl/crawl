@@ -8228,31 +8228,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                             .set_summoned(mons, spell_cast, summ_dur(1));
             mg.props[CUSTOM_SPELL_LIST_KEY].get_vector().push_back(spell);
             mg.hd = hd;
-            monster* living = create_monster(mg);
-
-           if (living)
-           {
-                if (spell == SPELL_LEHUDIBS_CRYSTAL_SPEAR)
-                {
-                    living->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_CRYSTAL;
-                    living->colour = YELLOW;
-                }
-                else if (spell == SPELL_PETRIFY)
-                {
-                    living->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_EARTH;
-                    living->colour = BROWN;
-                }
-                else if (spell == SPELL_SMITING)
-                {
-                    living->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_HOLY;
-                    living->colour = LIGHTGREEN;
-                }
-                else if (spell == SPELL_ICEBLAST)
-                {
-                    living->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_ICE;
-                    living->colour = LIGHTBLUE;
-                }
-           }
+            create_monster(mg);
         }
         return;
     }

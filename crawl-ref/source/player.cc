@@ -6098,6 +6098,9 @@ int player::rampaging() const
     if (you.duration[DUR_EXECUTION])
         rampage++;
 
+    if (you.attribute[ATTR_XOM_BLESSING] == XOM_BLESSING_SPELLSTRIDE)
+        rampage++;
+
     rampage = min(3, rampage);
 
     if (you.unrand_equipped(UNRAND_SEVEN_LEAGUE_BOOTS)

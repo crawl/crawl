@@ -51,9 +51,7 @@
 #include "stringutil.h"
 #include "tag-version.h"
 #include "terrain.h"
-#ifdef USE_TILE
- #include "rltiles/tiledef-player.h"
-#endif
+#include "rltiles/tiledef-player.h"
 #include "tilepick.h"
 #include "traps.h"
 #include "travel.h"
@@ -900,6 +898,56 @@ static void _abort_monster_creation(monster *mon)
     mon->reset();
 }
 
+static void _assign_living_spell_appearance(monster* mon)
+{
+    switch (mon->spells[0].spell)
+    {
+        case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
+            mon->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_CRYSTAL;
+            mon->colour = YELLOW;
+            break;
+
+        case SPELL_PETRIFY:
+            mon->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_EARTH;
+            mon->colour = BROWN;
+            break;
+
+        case SPELL_BOLT_OF_LIGHT:
+        case SPELL_SMITING:
+            mon->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_HOLY;
+            mon->colour = LIGHTGREEN;
+            break;
+
+        case SPELL_ICEBLAST:
+            mon->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_ICE;
+            mon->colour = LIGHTBLUE;
+            break;
+
+        case SPELL_CORROSIVE_BOLT:
+            mon->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_ACID;
+            mon->colour = YELLOW;
+            break;
+
+        case SPELL_BOLT_OF_FLESH:
+            mon->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_FLESH;
+            mon->colour = LIGHTRED;
+            break;
+
+        case SPELL_BOLT_OF_ANTIMAGIC:
+            mon->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_ANTIMAGIC;
+            mon->colour = MAGENTA;
+            break;
+
+        case SPELL_QUICKSILVER_BOLT:
+            mon->props[MONSTER_TILE_KEY] = TILEP_MONS_LIVING_SPELL_QUICKSILVER;
+            mon->colour = ETC_MAGIC;
+            break;
+
+        default:
+        break;
+    }
+}
+
 static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                    level_id place,
                                    bool force_pos, bool dont_place)
@@ -1266,6 +1314,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->props[SLYMDRA_SLIMES_EATEN_KEY].get_int() = max(0, mon->num_heads - 4);
         slymdra_scale_hp(*mon);
     }
+
+    if (mon->type == MONS_LIVING_SPELL && !mon->spells.empty())
+        _assign_living_spell_appearance(mon);
 
     // Set attitude, behaviour and target.
     mon->base_attitude  = ATT_HOSTILE;

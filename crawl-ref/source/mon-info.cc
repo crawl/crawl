@@ -255,7 +255,8 @@ static bool _is_public_key(string key)
      || key == ORIGINAL_TYPE_KEY
      || key == SPLINTERFROST_POWER_KEY
      || key == TREE_POSITION_KEY
-     || key == XOM_PAN_LORD_DESC)
+     || key == XOM_PAN_LORD_DESC
+     || key == SPELL_DMG_OVERRIDE_KEY)
     {
         return true;
     }

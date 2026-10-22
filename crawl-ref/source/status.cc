@@ -1457,6 +1457,14 @@ static void _describe_xom_blessing(status_info& inf)
                                           mons_type_name(xom_guardian_type(), DESC_PLAIN).c_str());
             break;
 
+        case XOM_BLESSING_SPELLSTRIDE:
+            inf.light_text = "Spellstride";
+            inf.light_text_formatted = "<red>S<lightred>p<yellow>e<green>l<lightgreen>l<lightcyan>s"
+                                       "<cyan>t<blue>r<lightblue>i<magenta>d<lightmagenta>e";
+            inf.short_text = make_stringf("blessing of spellstride (%s)",
+                                          spell_title(static_cast<spell_type>(you.props[XOM_SPELLSTRIDE_SPELL].get_int())));
+            break;
+
         default:
         break;
     }

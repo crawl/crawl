@@ -1357,6 +1357,17 @@ w:50
 "Amuse me some more."
 
 "Heed your god's command, @guardian_name@."
+%%%%
+Xom spellstride
+
+Xom improves your @feet@ with @beam_type@.
+
+w:5
+"Casting spells with your hands is boring. Now you can do better, my child."
+
+"Unleash destruction with your footsteps!"
+
+"Blaze a trail of @beam_type@, my toy!"
 ######################################
 # Miscellaneous god messages.
 ######################################
