@@ -8724,7 +8724,7 @@ __NONE
 # special casing for Blorkula
 related beogh Blorkula the orcula
 
-# behave like normal Blork
+# behave like normal Blorkula
 @Blorkula the orcula@
 
 # with some Beogh-hostile messages strewn in
