@@ -1467,7 +1467,7 @@ public:
 
     // Flat bonus to elemental magic skills (x10).
     // Caps at +2 at minskill, but is worse below that.
-    int get_skill_bonus(int skill = -1) const
+    int get_skill_bonus(int skill = -1) const override
     {
         return min(20, max(0, scaling_value(FormScaling().Base(20).Scaling(20), skill)));
     }
