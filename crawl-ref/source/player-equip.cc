@@ -509,6 +509,9 @@ bool can_equip_item(const item_def& item, bool temp, string* veto_reason,
                 else
                 {
                     found_slot = true;
+                    // Clear any veto reason an earlier slot populated.
+                    if (veto_reason)
+                        *veto_reason = "";
                     break;
                 }
             }
