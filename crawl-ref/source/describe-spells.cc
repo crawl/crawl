@@ -405,6 +405,8 @@ static dice_def _spell_damage(spell_type spell, int hd, int pow)
             return ball_lightning_damage(mons_ball_lightning_hd(pow, false));
         case SPELL_ERUPTION:
             return eruption_damage();
+        case SPELL_DEATH_RATTLE:
+            return death_rattle_damage();
         case SPELL_LRD:
             return base_fragmentation_damage(pow, false);
         case SPELL_AIRSTRIKE:
