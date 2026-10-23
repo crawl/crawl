@@ -1036,8 +1036,7 @@ void seismosaurus_egg_hatch(monster* mons)
         queue_monster_for_action(mons);
 
         // Clean up range indicator
-        for (distance_iterator di(mons->pos(), false, false, 4); di; ++di)
-            env.pgrid(*di) &= ~FPROP_SEISMOROCK;
+        update_seismorock(mons->pos());
 
         return;
     }
