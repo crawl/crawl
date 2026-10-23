@@ -586,7 +586,8 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, opt
     function version(desc)
     {
         var $popup = $(".templates > .describe-generic").clone();
-        $popup.find(".header > span").text(desc.information);
+        $popup.find(".header > span").html(
+            util.formatted_string_to_html(desc.information));
         var $body = $popup.find(".body");
         $body.html(fmt_body_txt(desc.features) + fmt_body_txt(desc.changes));
         var s = scroller($body[0]);
