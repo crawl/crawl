@@ -1155,6 +1155,7 @@ static void _maybe_attune_regen_items()
     bool gained_regen = false;
     bool gained_mana_regen = false;
     bool gained_chemistry = false;
+    bool gained_staff = false;
 
     for (player_equip_entry& entry : you.equipment.items)
     {
@@ -1172,11 +1173,14 @@ static void _maybe_attune_regen_items()
                 gained_regen = true;
             if (arm.is_type(OBJ_JEWELLERY, AMU_CHEMISTRY))
                 gained_chemistry = true;
+            else if (!gained_staff && arm.base_type == OBJ_STAVES)
+                gained_staff = true;
             else if (!gained_mana_regen && is_mana_regen_item(arm))
                 gained_mana_regen = true;
 
             eq_list.push_back(is_artefact(arm) ? get_artefact_name(arm) :
                 entry.slot == SLOT_AMULET ? "amulet" :
+                arm.base_type == OBJ_STAVES ? "staff" :
                     lowercase_string(equip_slot_name(entry.slot, true)));
 
             if (entry.slot == SLOT_BOOTS || entry.slot == SLOT_GLOVES)
@@ -1198,6 +1202,8 @@ static void _maybe_attune_regen_items()
     }
     if (gained_chemistry)
         msgs.emplace_back("extract magic from the potions you drink");
+    if (gained_staff)
+        msgs.emplace_back("enhance your magic and deal additional melee damage");
 
     plural = plural || eq_list.size() > 1;
     string eq_str = comma_separated_line(eq_list.begin(), eq_list.end());
