@@ -291,7 +291,7 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     {
         name = mons->name(DESC_PLAIN, true);
 
-        // "Blorkula the Orcula" and similar.
+        // "Blorkula the Orcula" (if he weren't undead) and similar.
         const size_t the_pos = name.find(" the ");
         if (the_pos != string::npos)
             name = name.substr(0, the_pos);
