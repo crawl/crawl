@@ -3767,10 +3767,7 @@ void monster_cleanup(monster* mons, bool reset)
 
     if (mons->type == MONS_PLATINUM_PARAGON && mons->was_created_by(you, SPELL_PLATINUM_PARAGON))
         you.duration[DUR_PARAGON_ACTIVE] = 0;
-    if (mons->type == MONS_SEISMOSAURUS_EGG)
-        for (distance_iterator di(mons->pos(), false, false, 4); di; ++di)
-            env.pgrid(*di) &= ~FPROP_SEISMOROCK;
-    else if (mons->type == MONS_HELLFIRE_MORTAR && mons->summoner == MID_PLAYER)
+    if (mons->type == MONS_HELLFIRE_MORTAR && mons->summoner == MID_PLAYER)
     {
         const int dur = hellfire_mortar_cooldown_length(mons->props[HELLFIRE_PATH_KEY].get_vector().size());
         you.duration[DUR_HELLFIRE_MORTAR_COOLDOWN] = dur;

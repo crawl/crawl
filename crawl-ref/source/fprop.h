@@ -36,7 +36,7 @@ enum feature_property_type
     FPROP_OLD_BLOOD     = (1 << 18),
     FPROP_ICY           = (1 << 19),
     FPROP_BLASPHEMY     = (1 << 20),
-    FPROP_SEISMOROCK    = (1 << 21),
+    FPROP_UNUSED_4      = (1 << 21), // Used to be seismorock.
     // Don't reveal this tiles when fully mapping a branch on entry
     FPROP_NO_AUTOMAP    = (1 << 22),
     FPROP_MIMIC         = (1 << 23),

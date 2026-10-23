@@ -354,6 +354,8 @@ public:
     virtual int umbra_radius() const = 0;
     // Radius within which trees are awakened.
     virtual int awoken_forest_radius() const = 0;
+    // Radius within which a seismosaurus egg can be triggered.
+    virtual int seismorock_radius() const = 0;
 
     virtual bool affects_agrid() const = 0;
 

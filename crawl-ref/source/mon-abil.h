@@ -20,6 +20,8 @@
 #define SLYMDRA_FAKE_HEADS_KEY "slymdra_fake_heads"
 #define SLYMDRA_SLIMES_EATEN_KEY "slymdra_slimes_eaten"
 
+#define SEISMOSAURUS_EGG_RADIUS 4
+
 class actor;
 class monster;
 struct bolt;

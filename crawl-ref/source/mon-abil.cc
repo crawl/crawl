@@ -1035,10 +1035,6 @@ void seismosaurus_egg_hatch(monster* mons)
         try_mons_cast(*mons, SPELL_SEISMIC_STOMP);
         queue_monster_for_action(mons);
 
-        // Clean up range indicator
-        for (distance_iterator di(mons->pos(), false, false, 4); di; ++di)
-            env.pgrid(*di) &= ~FPROP_SEISMOROCK;
-
         return;
     }
 
@@ -1344,7 +1340,7 @@ bool egg_is_incubating(const monster& egg)
     for (monster_near_iterator mi(parent->pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (!mons_aligned(*mi, &egg) && !mi->is_firewood()
-            && grid_distance(egg.pos(), mi->pos()) <= 4
+            && grid_distance(egg.pos(), mi->pos()) <= SEISMOSAURUS_EGG_RADIUS
             && egg.can_see(**mi))
         {
             return true;

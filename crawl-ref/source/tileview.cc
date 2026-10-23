@@ -1341,7 +1341,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
         cell.flv.floor = _pick_floor_tile(TILE_FLOOR_SLIME_ACIDIC, gc);
     else if (mc.flags & MAP_ICY)
         cell.flv.floor = _pick_floor_tile(TILE_FLOOR_ICY, gc);
-    else if ((env.pgrid(gc) & FPROP_SEISMOROCK) && you.see_cell(gc)
+    else if (mc.flags & MAP_SEISMOROCK && you.see_cell(gc)
              && feat_has_dry_floor(env.grid(gc)))
     {
         // Use the id of the underlying tile to randomize the rock appearance.
