@@ -6,6 +6,7 @@
 #include "l-libs.h"
 
 #include "cluautil.h"
+#include "env.h"
 #include "god-conduct.h"
 #include "religion.h"
 #include "spl-util.h"
@@ -109,7 +110,8 @@ LUAFN(l_spells_min_range)
  * @treturn table|nil a table of {x,y} of the path the spell will take, in
  * player coordinates.
  * Nil is returned if the spell does not follow a path (eg. smite-targeted
- * spells) or if the spell has zero range.
+ * spells), if the spell has zero range, or if the source or target cell is
+ * unknown. The path will stop if it enters unknown terrain.
  * @function path
  */
 LUAFN(l_spells_path)
@@ -133,6 +135,12 @@ LUAFN(l_spells_path)
     s.x = lua_isnumber(ls, 4) ? lua_tointeger(ls, 4) : 0;
     s.y = lua_isnumber(ls, 5) ? lua_tointeger(ls, 5) : 0;
     coord_def src = player2grid(s);
+    if (!in_bounds(src) || env.map_knowledge(src).feat() == DNGN_UNSEEN
+        || !map_bounds(aim) || env.map_knowledge(aim).feat() == DNGN_UNSEEN)
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
 
     bolt beam;
     beam.set_agent(&you);
@@ -140,6 +148,7 @@ LUAFN(l_spells_path)
     beam.attitude = ATT_FRIENDLY;
     zappy(zap, power, false, beam);
     beam.set_is_tracer(true);
+    beam.use_player_knowledge = true;
     beam.range = range;
     beam.target = aim;
     beam.ex_size = 0;
