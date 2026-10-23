@@ -973,19 +973,9 @@ static string unique_name(monster* mons)
     string name = mons->name(DESC_PLAIN, true);
     if (mons->type == MONS_PLAYER_GHOST)
         name += ", " + short_ghost_description(mons, true);
-    else
-    {
-        if (strstr(name.c_str(), "Royal Jelly"))
-            name = "Royal Jelly";
-        if (strstr(name.c_str(), "Lernaean hydra"))
-            name = "Lernaean hydra";
-        if (strstr(name.c_str(), "Serpent of Hell"))
-            name = "Serpent of Hell";
-        if (strstr(name.c_str(), "Enchantress"))
-            name = "Enchantress";
-        if (strstr(name.c_str(), "Blorkula"))
-            name = "Blorkula the Orcula";
-    }
+    // Don't show the Lernaean hydra's number of heads here.
+    else if (strstr(name.c_str(), "Lernaean hydra"))
+        name = "Lernaean hydra";
     return name;
 }
 
