@@ -521,6 +521,7 @@ public:
     bool        jewellery_prompt; // Always prompt for slot when changing jewellery.
     bool        easy_door;       // 'O', 'C' don't prompt with just one door.
     bool        warn_hatches;    // offer a y/n prompt when the player uses an escape hatch
+    bool        warn_unknown_hatches; // only if we don't know where it goes
     bool        warn_contam_cost; // Prompt when casting a spell like Irradiate, with dangerous contam.
     bool        show_resist_percent; // Show resist percentages on the % screen
     bool        always_show_doom_contam; // Always show doom/contam meters, even without doom/contam
