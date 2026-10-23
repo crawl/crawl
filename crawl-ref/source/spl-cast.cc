@@ -3176,7 +3176,7 @@ static dice_def _spell_damage(spell_type spell, int power)
         case SPELL_FROZEN_RAMPARTS:
             return ramparts_damage(power, false);
         case SPELL_FULMINANT_PRISM:
-            return prism_damage(prism_hd(power, false), true);
+            return prism_damage(prism_hd(power, false), true, false);
         case SPELL_HELLFIRE_MORTAR:
             return hellfire_mortar_damage(power);
         case SPELL_IOOD:
