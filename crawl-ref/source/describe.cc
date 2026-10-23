@@ -4799,7 +4799,7 @@ string get_skill_description(skill_type skill, bool need_title,
 static int _mon_hex_pow(const spell_type spell, const monster_info* mi, bool is_wand)
 {
     int pow = is_wand ? mons_wand_power(mi->hd, spell)
-                      : mons_power_for_hd(spell, mi->spell_hd());
+                      : mons_spellpower(*mi, spell);
 
     // Adjust by any power multipliers which may exist in zap definition.
     const zap_type ztype = spell_to_zap(spell);
@@ -5177,8 +5177,8 @@ static void _get_spell_description(const spell_type spell,
 
         }
 
-        const int hd = mon_owner->spell_hd();
-        const int range = mons_spell_range_for_hd(spell, hd, mon_owner->is(MB_PLAYER_SERVITOR));
+        const int mon_pow = mons_spellpower(*mon_owner, spell);
+        const int range = calc_spell_range(spell, mon_pow, mon_owner->is(MB_PLAYER_SERVITOR));
         const int minrange = (spell == SPELL_CALL_DOWN_LIGHTNING
                                 || spell == SPELL_FLASHING_BALESTRA
                                 || spell == SPELL_BECKONING_GALE ? 3 : 0);
@@ -5186,7 +5186,6 @@ static void _get_spell_description(const spell_type spell,
         description += "\nRange : ";
         description += range_string(range, -1, minrange);
 
-        const int mon_pow = mons_power_for_hd(spell, hd);
         const string defence_string = spell_defence_string(spell, true, mon_pow);
         const string resist_string = spell_resist_string(spell, true, mon_pow);
         if (!defence_string.empty())

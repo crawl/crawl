@@ -356,10 +356,10 @@ vector<pair<spell_type,char>> map_chars_to_spells(const spellset &spells)
     return ret;
 }
 
-static string _range_string(const spell_type &spell, const monster_info *mon_owner, int hd)
+static string _range_string(const spell_type &spell, const monster_info *mon_owner)
 {
     auto flags = get_spell_flags(spell);
-    int pow = mons_power_for_hd(spell, hd);
+    int pow = mon_owner ? mons_spellpower(*mon_owner, spell) : 0;
     int range = calc_spell_range(spell, pow, mon_owner && mon_owner->is(MB_PLAYER_SERVITOR));
     const bool has_range = mon_owner
                         && range > 0
@@ -453,17 +453,6 @@ static dice_def _spell_damage(spell_type spell, int hd, int pow)
     return zap_damage(zap, pow, true, false);
 }
 
-static int _spell_hd(spell_type spell, const monster_info &mon_owner)
-{
-    if (spell == SPELL_SEARING_BREATH && mon_owner.type == MONS_XTAHUA)
-        return mon_owner.hd * 3 / 2;
-    if (spell == SPELL_COLD_BREATH && mons_is_draconian(mon_owner.type))
-        return mon_owner.hd * 5 / 6;
-    if (mons_spell_is_spell(spell))
-        return mon_owner.spell_hd();
-    return mon_owner.hd;
-}
-
 static colour_t _spell_colour(spell_type spell)
 {
     switch (spell)
@@ -516,9 +505,9 @@ string spell_effect_string(spell_type spell, const monster_info *mon_owner,
     if (spell == SPELL_CONJURE_LIVING_SPELLS)
         return _describe_living_spells(*mon_owner);
 
-    const int hd = _spell_hd(spell, *mon_owner);
+    const int hd = mon_owner->spell_hd(spell);
     const int pow = is_wand ? mons_wand_power(mon_owner->hd, spell)
-                            : mons_power_for_hd(spell, hd);
+                            : mons_spellpower(*mon_owner, spell);
 
     if (testbits(get_spell_flags(spell), spflag::WL_check))
     {
@@ -645,7 +634,6 @@ static void _describe_book(const spellbook_contents &book,
     const bool doublecolumn = source_item == nullptr;
 
     bool first_line_element = true;
-    const int hd = mon_owner ? mon_owner->spell_hd() : 0;
     for (auto spell : book.spells)
     {
         description.cprintf(" ");
@@ -662,7 +650,7 @@ static void _describe_book(const spellbook_contents &book,
         const char spell_letter = entry != spell_map.end()
                                             ? entry->second : ' ';
 
-        const string range_str = _range_string(spell, mon_owner, hd);
+        const string range_str = _range_string(spell, mon_owner);
         string effect_str = spell_effect_string(spell, mon_owner, book.is_wand);
 
         const string dith_marker = mon_owner
@@ -761,7 +749,6 @@ static void _write_book(const spellbook_contents &book,
 {
     tiles.json_open_object();
     tiles.json_write_string("label", book.label);
-    const int hd = mon_owner ? mon_owner->spell_hd() : 0;
     tiles.json_open_array("spells");
     for (auto spell : book.spells)
     {
@@ -792,7 +779,7 @@ static void _write_book(const spellbook_contents &book,
             effect_str = colourize_str(effect_str, _spell_colour(spell));
         tiles.json_write_string("effect", effect_str);
 
-        string range_str = _range_string(spell, mon_owner, hd);
+        string range_str = _range_string(spell, mon_owner);
         if (range_str.size() > 0)
             tiles.json_write_string("range_string", range_str);
 

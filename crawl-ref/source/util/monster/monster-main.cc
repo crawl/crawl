@@ -263,7 +263,7 @@ static string mi_calc_major_healing(monster* mons)
 static string mons_human_readable_spell_damage_string_fallback(monster* monster,
                                                                spell_type sp)
 {
-    const int pow = mons_power_for_hd(sp, monster->spell_hd(sp));
+    const int pow = mons_spellpower(*monster, sp);
     bolt spell_beam = mons_spell_beam(monster, sp, pow, true);
     switch (sp)
     {

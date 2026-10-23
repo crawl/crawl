@@ -14,6 +14,7 @@ class actor;
 class monster;
 struct bolt;
 struct dice_def;
+struct monster_info;
 
 #define OLD_ARMS_KEY "old_arms"
 #define OLD_ARMS_ALT_KEY "old_arms_alt"
@@ -35,10 +36,9 @@ dice_def death_rattle_damage();
 bool handle_mon_spell(monster* mons);
 
 bool mons_spell_is_spell(spell_type spell);
-int mons_power_for_hd(spell_type spell, int hd);
 int mons_spellpower(const monster &mons, spell_type spell);
+int mons_spellpower(const monster_info &mi, spell_type spell);
 int mons_spell_range(const monster &mons, spell_type spell);
-int mons_spell_range_for_hd(spell_type spell, int hd, bool use_veh_bonus = false);
 int mons_wand_power(int hd, spell_type spell);
 bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
                      bool check_validity = false);
