@@ -516,7 +516,8 @@ movement for a short time.
 an airy dragon vein
 
 An exposed ley line of air magic. It can be tapped into by stepping on it,
-blasting the 4 most distant enemies with cutting wind.
+blasting the 3 most distant enemies with cutting wind. Unlike the other veins,
+damage is not reduced by distance.
 %%%%
 ########################################################################
 ### Branch entrances and exits
