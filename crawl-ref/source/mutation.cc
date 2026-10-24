@@ -909,35 +909,22 @@ static vector<pair<string, string>> _get_fakemuts()
 
 static vector<mutation_type> _get_ordered_mutations()
 {
-    vector<mutation_type> muts;
+    vector<mutation_type> muts, mut_mutable, mut_temporary;
 
-    // First add (non-removable) inborn abilities and demon powers.
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
         mutation_type mut = static_cast<mutation_type>(i);
         if (you.has_innate_mutation(mut))
             muts.push_back(mut);
+        else if (you.has_temporary_mutation(mut))
+            mut_temporary.push_back(mut);
+        else if (you.get_base_mutation_level(mut, false, false, true) > 0)
+            mut_mutable.push_back(mut);
     }
-
-    // Now add removable mutations.
-    for (int i = 0; i < NUM_MUTATIONS; i++)
-    {
-        mutation_type mut = static_cast<mutation_type>(i);
-        if (you.get_base_mutation_level(mut, false, false, true) > 0
-            && !you.has_innate_mutation(mut)
-            && !you.has_temporary_mutation(mut))
-        {
-            muts.push_back(mut);
-        }
-    }
-
-    //Finally, temporary mutations.
-    for (int i = 0; i < NUM_MUTATIONS; i++)
-    {
-        mutation_type mut = static_cast<mutation_type>(i);
-        if (you.has_temporary_mutation(mut))
-            muts.push_back(mut);
-    }
+    // Add (non-removable) inborn abilities and demon powers first, then
+    // removable mutations and finally temporary mutations.
+    muts.insert(muts.end(), mut_mutable.begin(), mut_mutable.end());
+    muts.insert(muts.end(), mut_temporary.begin(), mut_temporary.end());
 
     return muts;
 }
