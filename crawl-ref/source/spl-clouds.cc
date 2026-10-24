@@ -30,6 +30,12 @@
 #include "target.h"
 #include "terrain.h"
 
+int putrefaction_drain_amount(int pow, bool random)
+{
+    return 75 - (random ? div_rand_round(pow * 4, 10)
+                        : div_round_near(pow * 4, 10));
+}
+
 spret cast_putrefaction(monster* target, int pow, bool fail)
 {
     fail_check();
@@ -49,7 +55,7 @@ spret cast_putrefaction(monster* target, int pow, bool fail)
 
     mprf("Rot billows forth from %s wounds!", target->name(DESC_ITS).c_str());
 
-    drain_player(75 - div_rand_round(pow * 4, 10), true, true);
+    drain_player(putrefaction_drain_amount(pow, true), true, true);
 
     return spret::success;
 }
