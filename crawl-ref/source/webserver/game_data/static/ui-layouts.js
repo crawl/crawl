@@ -78,7 +78,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         if (desc.title === "")
             $popup.children(".header").remove();
         else
-            $popup.find(".header > span").html(desc.title);
+            $popup.find(".header > span").text(desc.title);
         $body.html(fmt_body_txt(desc.body + desc.footer));
         var s = scroller($popup.children(".body")[0]);
         s.contentElement.className += " describe-generic-body";
@@ -106,7 +106,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         var $feat_tmpl = $(".templates > .describe-generic");
         desc.feats.forEach(function (feat) {
             var $feat = $feat_tmpl.clone().removeClass("hidden").addClass("describe-feature-feat");
-            $feat.find(".header > span").html(feat.title);
+            $feat.find(".header > span").text(feat.title);
             if (feat.body != feat.title)
                 $feat.find(".body").html(feat.body);
             else
@@ -129,7 +129,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     function describe_item(desc)
     {
         var $popup = $(".templates > .describe-item").clone();
-        $popup.find(".header > span").html(desc.title);
+        $popup.find(".header > span").text(desc.title);
         var $body = $popup.find(".body");
         $body.html(_fmt_spellset_html(desc.body));
         _fmt_spells_list($body, desc.spellset, true);
@@ -166,7 +166,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     function describe_spell(desc)
     {
         var $popup = $(".templates > .describe-spell").clone();
-        $popup.find(".header > span").html(desc.title);
+        $popup.find(".header > span").text(desc.title);
         $popup.find(".body").html(format_spell_html(desc.desc));
         var s = scroller($popup.find(".body")[0]);
         $popup.on("keydown keypress", function (event) {
@@ -191,7 +191,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         var t = main.MISC_CARD, tex = enums.texture.DEFAULT;
         desc.cards.forEach(function (card) {
             var $card = $card_tmpl.clone().removeClass("hidden").addClass("describe-card");
-            $card.find(".header > span").html(card.name);
+            $card.find(".header > span").text(card.name);
             $card.find(".body").html(fmt_body_txt(card.desc));
 
             var canvas = $card.find(".header > canvas");
@@ -345,7 +345,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     function describe_monster(desc)
     {
         var $popup = $(".templates > .describe-generic").clone();
-        $popup.find(".header > span").html(desc.title);
+        $popup.find(".header > span").text(desc.title);
         $popup.find(".body").html(_fmt_spellset_html(desc.body));
         _fmt_spells_list($popup.find(".body"), desc.spellset, false);
 
@@ -408,7 +408,8 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     function version(desc)
     {
         var $popup = $(".templates > .describe-generic").clone();
-        $popup.find(".header > span").html(desc.information);
+        $popup.find(".header > span").html(
+                util.formatted_string_to_html(desc.information));
         var $body = $popup.find(".body");
         $body.html(fmt_body_txt(desc.features) + fmt_body_txt(desc.changes));
         var s = scroller($body[0]);
