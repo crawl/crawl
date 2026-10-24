@@ -2848,7 +2848,7 @@ static void _jiyva_remove_slime_mutations()
                 simple_god_message(" gift of slime is revoked.", true, GOD_JIYVA);
             }
             // XXX: replicates _god_wrath_name()
-            while (_delete_single_mutation_level(static_cast<mutation_type>(i), reason, true));
+            while (delete_single_mutation_level(static_cast<mutation_type>(i), reason, true));
             delete_mutation(static_cast<mutation_type>(i),
                             reason, true, false, true);
         }

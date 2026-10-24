@@ -552,8 +552,16 @@ bool wizard_add_mutation()
         mpr("Ignoring mut resistance to apply mutation.");
 
     msgwin_get_line("Which mutation (name, 'good', 'bad', 'any', "
-                    "'xom', 'slime', 'qazlal')? ",
+                    "'xom', 'slime', 'qazlal', 'temp')? ",
                     specs, sizeof(specs));
+
+    bool temp = !strcasecmp(specs, "temp");
+    auto mutclass = temp ? MUTCLASS_TEMPORARY : MUTCLASS_NORMAL;
+    if (temp)
+    {
+        msgwin_get_line("Which temporary mutation (name, 'good', 'bad', 'any', "
+                        "'xom', 'slime', 'qazlal')? ", specs, sizeof(specs));
+    }
 
     if (specs[0] == '\0')
     {
@@ -565,7 +573,10 @@ bool wizard_add_mutation()
     mutation_type mutat = mutation_from_name(specs, true, &partial_matches);
 
     if (mutat >= CATEGORY_MUTATIONS)
-         return mutate(mutat, "wizard power", true, true);
+    {
+         return mutate(mutat, "wizard power", true, true, false, false,
+                       mutclass);
+    }
 
     if (mutat == NUM_MUTATIONS)
     {
@@ -612,7 +623,19 @@ bool wizard_add_mutation()
         else if (levels > 0)
         {
             for (int i = 0; i < levels; ++i)
-                if (mutate(mutat, "wizard power", true, true))
+            {
+                if (mutate(mutat, "wizard power", true, true, false, false,
+                           mutclass))
+                {
+                    success = true;
+                }
+            }
+        }
+        else if (temp)
+        {
+            int levels2 = min(-levels, you.get_temp_mutation_level(mutat));
+            for (int i = 0; i < levels2; ++i)
+                if (delete_single_mutation_level(mutat, "wizard power", true))
                     success = true;
         }
         else
