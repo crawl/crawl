@@ -2025,7 +2025,7 @@ int player_prot_life(bool allow_random, bool include_temp, bool items)
 
 
 // The baseline time in auts it takes for the player to do an action.
-int player_speed(int scale)
+int player_speed(int scale, bool bulwark_affects)
 {
     int ps = BASELINE_DELAY * scale;
 
@@ -2044,6 +2044,12 @@ int player_speed(int scale)
     if (you.form == transformation::statue || you.duration[DUR_PETRIFYING])
     {
         ps *= 15;
+        ps /= 10;
+    }
+
+    if (bulwark_affects && you.duration[DUR_TECTONIC_BULWARK])
+    {
+        ps *= 13;
         ps /= 10;
     }
 
@@ -2494,6 +2500,16 @@ static int _sh_from_shield(const item_def &item)
     return shield;
 }
 
+static int _tectonic_shield_value()
+{
+    int base = 6;
+    const item_def *body_armour = you.body_armour();
+    if (!body_armour)
+        return base;
+
+    return base - property(*body_armour, PARM_EVASION) / 4;
+}
+
 /**
  * Calculate the SH value used internally.
  *
@@ -2543,6 +2559,16 @@ int player_shield_class(int scale, bool random, bool include_temp)
 
     if (you.unrand_equipped(UNRAND_FIVE_VIRTUES))
         shield += five_virtues_sh_score() * 1000;
+
+    if (include_temp && you.duration[DUR_TECTONIC_BULWARK])
+    {
+        int base = _tectonic_shield_value() * 100;
+        // one-third as effective for the part that "overlaps" another shield
+        if (shield > base)
+            shield += base / 3;
+        else
+            shield += (base - shield) + shield / 3;
+    }
 
     if (you.has_mutation(MUT_RECKLESS))
         shield /= 2;
@@ -6892,7 +6918,7 @@ void player::refresh_rampage_hints()
 {
     rampage_hints.clear();
     const int rampage = you.rampaging();
-    if (!rampage)
+    if (!rampage && !you.duration[DUR_TECTONIC_BULWARK])
         return;
 
     for (coord_def delta : Compass)
@@ -6904,7 +6930,7 @@ void player::refresh_rampage_hints()
         if (!target)
             continue;
 
-        const int dist = min(rampage, (target->pos() - you.pos()).rdist() - 1);
+        const int dist = min(max(rampage, 1), (target->pos() - you.pos()).rdist() - 1);
         for (int i = 1; i <= dist; ++i)
             you.rampage_hints.insert(you.pos() + delta * i);
     }

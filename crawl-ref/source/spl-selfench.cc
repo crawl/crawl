@@ -336,3 +336,16 @@ spret cast_detonation_catalyst(bool fail)
 
     return spret::success;
 }
+
+spret cast_tectonic_bulwark(int pow, bool fail)
+{
+    fail_check();
+
+    mpr("You draw forth great plates of shielding stone.");
+
+    you.set_duration(DUR_TECTONIC_BULWARK,
+        random_range(18 + div_rand_round(pow, 6), 26 + div_rand_round(pow, 4)));
+
+    you.redraw_armour_class = true;
+    return spret::success;
+}

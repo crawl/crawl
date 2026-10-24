@@ -1223,7 +1223,7 @@ int player_spec_forgecraft();
 int player_spec_tloc();
 
 // Delay for a normally-10-aut action
-int player_speed(int scale = 1);
+int player_speed(int scale = 1, bool bulwark_affects = true);
 // Delay for a movement action (ignoring player_speed)
 int player_movement_speed(bool check_terrain = true, bool include_temp = true,
                           int scale = 1);
