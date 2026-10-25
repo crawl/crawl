@@ -408,6 +408,8 @@ int biased_random2(int max, int n)
 double binomial_mean(unsigned n_trials, unsigned trial_prob,
                      unsigned scale)
 {
+    if (scale == 0)
+        scale = 1;
     trial_prob = std::min(trial_prob, scale);
 
     return static_cast<double>(n_trials) * trial_prob / scale;
