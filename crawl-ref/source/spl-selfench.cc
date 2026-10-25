@@ -98,17 +98,18 @@ void fiery_armour()
 
 string revivification_loss_description(int pow)
 {
-     int min_loss = 6 * you.hp_max / 100;
-     int max_loss = 15 * you.hp_max / 100;
-     //if pow is lower than 8 max_loss == mean_loss
-     double mean_loss = (6 + binomial_mean(9, 8, pow)) * you.hp_max / 100;
-     return make_stringf("%d-%d (mean ~%.1f) HP",
-                         min_loss, max_loss, mean_loss);
+    int max_loss = 15 * you.hp_max / 100;
+    int min_loss = (pow <= 8 ? max_loss : 6 * you.hp_max / 100);
+    //Would like to make avg_loss a double but taking the integer division
+    //of the real hp loss formula in account is difficult.
+    int avg_loss = (6 + lround(binomial_mean(9, 8, pow))) * you.hp_max / 100;
+    return make_stringf("%d-%d (avg ~%d)",
+                        min_loss, max_loss, avg_loss);
 }
 
-int _revivification_loss(int pow)
+static int _revivification_loss(int pow)
 {
-   return (6 + binomial(9, 8, pow)) * you.hp_max / 100;
+    return (6 + binomial(9, 8, pow)) * you.hp_max / 100;
 }
 
 spret cast_revivification(int pow, bool fail)
@@ -131,11 +132,11 @@ spret cast_revivification(int pow, bool fail)
 
 string swiftness_duration_description(int power)
 {
-    int min_duration = 12;
-    int max_duration = min(power/2, 30);
-    string description = make_stringf("%d", min_duration);
-    if (max_duration > min_duration)
-        description += make_stringf(" - %d", max_duration);
+    int min_dur = 12;
+    int max_dur = min(power/2, 30);
+    string description = make_stringf("%d", min_dur);
+    if (max_dur > min_dur)
+        description += make_stringf("-%d", max_dur);
     return description;
 }
 spret cast_swiftness(int power, bool fail)
