@@ -142,7 +142,7 @@ static string monster_int(const monster& mon)
 
 static string monster_size(const monster& mon)
 {
-    switch (mon.body_size())
+    switch (mon.body_size(PSIZE_BODY))
     {
     case SIZE_TINY:
         return "tiny";
