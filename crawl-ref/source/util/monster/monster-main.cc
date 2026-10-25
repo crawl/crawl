@@ -263,27 +263,21 @@ static string mi_calc_major_healing(monster* mons)
 static string mons_human_readable_spell_damage_string_fallback(monster* monster,
                                                                spell_type sp)
 {
-    const int pow = mons_spellpower(*monster, sp);
-    bolt spell_beam = mons_spell_beam(monster, sp, pow, true);
     switch (sp)
     {
-        // spells with random effect:
-        case SPELL_MAJOR_DESTRUCTION:
-        case SPELL_LEGENDARY_DESTRUCTION:
-            break;
         case SPELL_MAJOR_HEALING:
             return mi_calc_major_healing(monster);
         case SPELL_MINOR_HEALING:
         case SPELL_HEAL_OTHER:
+        {
+            const int pow = mons_spellpower(*monster, sp);
+            const bolt spell_beam = mons_spell_beam(monster, sp, pow, true);
             return dice_def_string(spell_beam.damage) + "+3";
+        }
 
         default:
             return "";
     }
-
-    if (spell_beam.damage.size && spell_beam.damage.num)
-        return dice_def_string(spell_beam.damage);
-    return "";
 }
 
 /**
@@ -407,17 +401,14 @@ static void record_spell_set(const monster_info* mi, monster* mp, set<string>& s
         ret += spell_name;
         ret += _spell_flag_string(slot);
 
-        for (int j = 0; j < 100; j++)
-        {
-            string damage =
+        const string damage =
             mons_human_readable_spell_damage_string(mi, mp, sp);
-            const auto range = damages.equal_range(spell_name);
-            if (!damage.empty()
-                && none_of(range.first, range.second, [&](const pair<string,string>& entry){ return entry.first == spell_name && entry.second == damage; }))
-            {
-                // TODO: use emplace once we drop g++ 4.7 support
-                damages.insert(make_pair(spell_name, damage));
-            }
+        const auto range = damages.equal_range(spell_name);
+        if (!damage.empty()
+            && none_of(range.first, range.second, [&](const pair<string,string>& entry){ return entry.second == damage; }))
+        {
+            // TODO: use emplace once we drop g++ 4.7 support
+            damages.insert(make_pair(spell_name, damage));
         }
     }
     spell_lists.insert(ret);
