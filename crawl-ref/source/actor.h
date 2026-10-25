@@ -284,7 +284,7 @@ public:
     virtual bool res_constrict() const = 0;
     virtual int res_blind() const = 0;
     int get_res(int res) const;
-    virtual int willpower() const = 0;
+    virtual int willpower(bool items = true) const = 0;
     virtual int check_willpower(const actor* source, int power) const;
     virtual bool no_tele(bool blink = false, bool include_temp = true) const = 0;
     virtual int inaccuracy() const;
