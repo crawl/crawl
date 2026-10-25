@@ -3345,54 +3345,37 @@ string spell_effect_string(spell_type spell, bool evoked, int pow)
     switch (spell)
     {
     case SPELL_PASSWALL:
-        description = make_stringf("Channeling bonus: ~%d AC.", passwall_ac(pow, false));
-        break;
+        return make_stringf("Channeling bonus: ~%d AC.", passwall_ac(pow, false));
     case SPELL_OZOCUBUS_ARMOUR:
     {
-        if (you.duration[DUR_ICY_ARMOUR])
-        {
-            int ice_armour = ice_armour_ac(you.props[ICY_ARMOUR_KEY].get_int());
-            double current_buff_ac = ice_armour / 100.0;
-            description = make_stringf("Current ice armour bonus: %.1f AC.\n",
-                                       current_buff_ac);
-        }
-        double cast_now_ac = ice_armour_ac(pow) / 100.0;
-        description += make_stringf("Next cast armour bonus: %.1f AC.", cast_now_ac);
-        break;
+        double ac_bonus = ice_armour_ac(pow) / 100.0;
+        return make_stringf("Icy armour bonus: %.1f AC.", ac_bonus);
     }
     case SPELL_CALL_IMP:
-        description = make_stringf("Imp's weapon: %+d spear.",
-                                   imp_weapon_modifier(pow));
-        break;
+        return make_stringf("Imp's weapon: %+d spear.",
+                            imp_weapon_modifier(pow));
     case SPELL_PUTREFACTION:
-        description = make_stringf("Self drain amount: ~%d HP.",
-                                   1 + putrefaction_drain_amount(pow, false)
-                                     * get_real_hp(false, false) / 750);
-        break;
+        int drain_amount = 1 + putrefaction_drain_amount(pow, false)
+                            * get_real_hp(false, false) / 750;
+        return make_stringf("Self drain amount: ~%d HP.", drain_amount);
     case SPELL_BLINK:
-        description = "-Blink duration: about "
-                      + blink_cooldown_description(pow) + "turns.";
-        break;
+        return make_stringf("Blink cooldown: %s turns.",
+                            blink_cooldown_description(pow).c_str());
     case SPELL_BORGNJORS_REVIVIFICATION:
-        description = "Reduction of max HP: "
-                      + revivification_loss_description(pow) + " HP.";
-        break;
+        return make_stringf("Reduction of max HP: %s HP.",
+                            revivification_loss_description(pow).c_str());
     case SPELL_SWIFTNESS:
-        description = "Swiftness duration: "
-                      + swiftness_duration_description(pow) + " turns.";
-        break;
+        return make_stringf("Swiftness duration: %s turns.",
+                            swiftness_duration_description(pow).c_str());
     case SPELL_PHALANX_BEETLE:
-        description = make_stringf("Bolster bonus: %.1f AC.",
-                                   phalanx_beetle_barrier_ac(pow) / 100.0);
-        break;
+        double ac_bonus = phalanx_beetle_barrier_ac(pow) / 100.0;
+        return make_stringf("Bolster bonus: %.1f AC.", ac_bonus);
     case SPELL_OLGREBS_TOXIC_RADIANCE:
-        description = "Radiance duration: "
-                      + toxic_radiance_duration_description(pow) + " turns.";
-        break;
+        return make_stringf("Radiance duration: %s turns.",
+                            toxic_radiance_duration_description(pow).c_str());
     default:
-        break;
+        return "";
     }
-    return description;
 }
 int spell_acc(spell_type spell)
 {
