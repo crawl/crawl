@@ -3382,7 +3382,13 @@ string spell_effect_string(spell_type spell, bool evoked, int pow)
                       + swiftness_duration_description(pow) + " turns.";
         break;
     case SPELL_PHALANX_BEETLE:
-        description = make_stringf("Bolster bonus: %.1f AC.", phalanx_beetle_barrier_ac(pow) / 100.0);
+        description = make_stringf("Bolster bonus: %.1f AC.",
+                                   phalanx_beetle_barrier_ac(pow) / 100.0);
+        break;
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
+        description = "Radiance duration: "
+                      + toxic_radiance_duration_description(pow) + " turns.";
+        break;
     default:
         break;
     }

@@ -3531,6 +3531,14 @@ static bool _toxic_can_affect(const actor *act)
     return act->res_poison() < (act->is_player() ? 3 : 1);
 }
 
+string toxic_radiance_duration_description(int pow)
+{
+    int min_dur = 2;
+    int max_dur = std::min(2 + div_round_up(pow, 25), 15);
+    double avg_dur = (2 + 2 + pow / 25.0) / 2;
+    return make_stringf("%d-%d (average %.1f)", min_dur, max_dur, avg_dur);
+}
+
 spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool tracer)
 {
     if (tracer)
