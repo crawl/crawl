@@ -31,6 +31,7 @@ dice_def waterstrike_damage(int spell_hd);
 dice_def resonance_strike_base_damage(int spell_hd);
 
 dice_def eruption_damage();
+dice_def upheaval_damage();
 dice_def death_rattle_damage();
 
 bool handle_mon_spell(monster* mons);

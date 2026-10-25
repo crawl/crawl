@@ -2652,7 +2652,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     // Hack so beam.cc allows us to correctly use that function
     case SPELL_UPHEAVAL:
         beam.flavour     = BEAM_RANDOM;
-        beam.damage      = dice_def(3, 24);
+        beam.damage      = upheaval_damage();
         beam.hit         = AUTOMATIC_HIT;
         beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
         beam.ex_size     = 1;
@@ -2922,6 +2922,11 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
 
 // XXX TODO: make this a zap, probably
 dice_def eruption_damage()
+{
+    return dice_def(3, 24);
+}
+
+dice_def upheaval_damage()
 {
     return dice_def(3, 24);
 }
@@ -7066,7 +7071,7 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
     beam.source_id   = mons.mid;
     beam.source_name = mons.name(DESC_THE).c_str();
     beam.thrower     = KILL_MON_MISSILE;
-    beam.damage      = dice_def(3, 24);
+    beam.damage      = upheaval_damage();
     beam.foe_ratio   = random_range(20, 30);
     beam.hit         = AUTOMATIC_HIT;
     beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);

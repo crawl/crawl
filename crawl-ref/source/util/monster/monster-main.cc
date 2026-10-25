@@ -268,7 +268,6 @@ static string mons_human_readable_spell_damage_string_fallback(monster* monster,
     switch (sp)
     {
         // spells with random effect:
-        case SPELL_UPHEAVAL:
         case SPELL_MAJOR_DESTRUCTION:
         case SPELL_LEGENDARY_DESTRUCTION:
             break;
