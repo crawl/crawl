@@ -3355,9 +3355,11 @@ string spell_effect_string(spell_type spell, bool evoked, int pow)
         return make_stringf("Imp's weapon: %+d spear.",
                             imp_weapon_modifier(pow));
     case SPELL_PUTREFACTION:
+    {
         int drain_amount = 1 + putrefaction_drain_amount(pow, false)
-                            * get_real_hp(false, false) / 750;
+                             * get_real_hp(false, false) / 750;
         return make_stringf("Self drain amount: ~%d HP.", drain_amount);
+    }
     case SPELL_BLINK:
         return make_stringf("Blink cooldown: %s turns.",
                             blink_cooldown_description(pow).c_str());
@@ -3368,8 +3370,10 @@ string spell_effect_string(spell_type spell, bool evoked, int pow)
         return make_stringf("Swiftness duration: %s turns.",
                             swiftness_duration_description(pow).c_str());
     case SPELL_PHALANX_BEETLE:
+    {
         double ac_bonus = phalanx_beetle_barrier_ac(pow) / 100.0;
         return make_stringf("Bolster bonus: %.1f AC.", ac_bonus);
+    }
     case SPELL_OLGREBS_TOXIC_RADIANCE:
         return make_stringf("Radiance duration: %s turns.",
                             toxic_radiance_duration_description(pow).c_str());
