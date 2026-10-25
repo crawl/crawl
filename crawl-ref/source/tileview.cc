@@ -8,6 +8,7 @@
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
+#include "directn.h"
 #include "domino.h"
 #include "domino-data.h"
 #include "dungeon.h"
@@ -27,6 +28,7 @@
 #include "terrain.h"
 #include "tile-flags.h"
 #include "rltiles/tiledef-dngn.h"
+#include "rltiles/tiledef-icons.h"
 #include "rltiles/tiledef-player.h"
 #include "tilemcache.h"
 #include "tilepick.h"
@@ -906,6 +908,18 @@ void tile_draw_map_cells()
         }
 }
 
+void tile_draw_entire_map()
+{
+    for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1));
+         ri; ++ri)
+    {
+        tile_draw_map_cell(*ri);
+#ifdef USE_TILE_WEB
+        tiles.mark_for_redraw(*ri);
+#endif
+    }
+}
+
 static tile_with_flags_t _get_floor_bg(const coord_def& gc)
 {
     tile_with_flags_t bg(TILE_DNGN_UNSEEN, tileidx_unseen_flag(gc));
@@ -1090,8 +1104,13 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
         _tile_place_monster(gc, *cell.monsterinfo());
     else if (cell.item())
     {
-        if (feat_is_stair(cell.feat()))
+        // Stairs draw on top of all items, but corpses will never cover any
+        // interesting terrain.
+        if (feat_is_stair(cell.feat())
+            || cell.item()->base_type == OBJ_CORPSES && is_terrain_interesting(cell.feat()))
+        {
             _tile_place_item_marker(gc, *cell.item(), cell.flags);
+        }
         else
             _tile_place_item(gc, *cell.item(), cell.flags);
     }
@@ -1101,6 +1120,21 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
         _tile_place_cloud(gc, *cell.cloudinfo());
     else
         tile_env.bk_cloud(gc) = 0;
+
+    // Draw dragon veins on top of monsters or items, when appropriate
+    if (feat_is_dragon_vein(cell.feat())
+        && (cell.monsterinfo() || cell.item()))
+    {
+        tileidx_t tile = TILEI_DRAGON_VEIN_AIR + (cell.feat() - DNGN_DRAGON_VEIN_AIR);
+        if (set<tileidx_t>* icons = map_find(tile_env.icons, gc))
+            icons->insert(tile);
+        else
+        {
+            set<tileidx_t> new_icons;
+            new_icons.insert(tile);
+            tile_env.icons[gc] = std::move(new_icons);
+        }
+    }
 }
 
 #ifndef USE_TILE_WEB
@@ -1307,7 +1341,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
         cell.flv.floor = _pick_floor_tile(TILE_FLOOR_SLIME_ACIDIC, gc);
     else if (mc.flags & MAP_ICY)
         cell.flv.floor = _pick_floor_tile(TILE_FLOOR_ICY, gc);
-    else if ((env.pgrid(gc) & FPROP_SEISMOROCK) && you.see_cell(gc)
+    else if (mc.flags & MAP_SEISMOROCK && you.see_cell(gc)
              && feat_has_dry_floor(env.grid(gc)))
     {
         // Use the id of the underlying tile to randomize the rock appearance.

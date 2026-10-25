@@ -638,7 +638,9 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     }
 
     // First try: move monster onto your position.
-    bool swap = !monster_at(loc) && monster_habitable_grid(mons, loc);
+    // (The player pushes jade crystals instead, so they don't get caught behind them.)
+    bool swap = !mons_is_jade_crystal(mons->type)
+                && !monster_at(loc) && monster_habitable_grid(mons, loc);
 
     // Choose an appropriate habitat square at random around the target.
     if (!swap)
@@ -647,6 +649,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)
             if (!monster_at(*ai) && monster_habitable_grid(mons, *ai)
+                && !feat_is_trap(env.grid(*ai))
                 && one_chance_in(++num_found))
             {
                 loc = *ai;
@@ -875,12 +878,22 @@ void player::finalise_movement(const actor* /*to_blame*/)
 
     if (last_move_pos != pos())
     {
-        cloud_struct* cloud = cloud_at(pos());
-        if (cloud && cloud->type == CLOUD_BLASTMOTES)
-            explode_blastmotes_at(pos()); // schedules a fineff
+        if (cloud_struct* cloud = cloud_at(pos()))
+        {
+            if (cloud->type == CLOUD_BLASTMOTES)
+                explode_blastmotes_at(pos()); // schedules a fineff
+            else if (cloud->type == CLOUD_GLIMMER)
+                enter_glimmer_cloud(*this, pos());
+        }
 
         if (env.grid(pos()) == DNGN_BINDING_SIGIL)
             trigger_binding_sigil(you);
+
+        if (feat_is_dragon_vein(env.grid(pos())))
+            trigger_dragon_vein();
+
+        if (env.grid(pos()) == DNGN_ICE_THORNS)
+            ice_thorns_trigger(you, pos());
 
         apply_cloud_trail(last_move_pos);
 
@@ -1047,6 +1060,8 @@ monster_type player_mons(bool transform)
 
 void update_vision_range()
 {
+    const int old_vision = you.normal_vision;
+
     you.normal_vision = LOS_DEFAULT_RANGE;
 
     // Daystalker gives +1 base LOS. (currently capped to one level for
@@ -1058,9 +1073,9 @@ void update_vision_range()
     if (you.get_mutation_level(MUT_NIGHTSTALKER))
         you.normal_vision -= you.get_mutation_level(MUT_NIGHTSTALKER);
 
-    // Halo and umbra radius scale with you.normal_vision, so to avoid
-    // penalizing players with low LOS from items, don't shrink normal_vision.
-    you.current_vision = you.normal_vision;
+    // Vision form increases your sight range by 1 (but can't for barachi).
+    if (you.form == transformation::vision)
+        you.normal_vision = min(LOS_MAX_RANGE, you.normal_vision + 1);
 
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_METEORAN)
@@ -1069,11 +1084,15 @@ void update_vision_range()
 
     // scarf of shadows gives -1.
     if (you.wearing_ego(OBJ_ARMOUR, SPARM_SHADOWS))
-        you.current_vision -= 1;
+        you.normal_vision -= 1;
 
     // robe of Night.
     if (you.unrand_equipped(UNRAND_NIGHT))
-        you.current_vision = you.current_vision * 3 / 4;
+        you.normal_vision = you.normal_vision * 3 / 4;
+
+    you.current_vision = you.normal_vision;
+
+    // Temporary effects which shouldn't affect exclusion radius:
 
     if (you.duration[DUR_PRIMORDIAL_NIGHTFALL])
     {
@@ -1097,6 +1116,11 @@ void update_vision_range()
 
     ASSERT(you.current_vision >= 0);
     set_los_radius(you.current_vision);
+
+    // If default vision has changed, possibly shrink or expand LoS exclusions
+    // on the current floor.
+    if (you.normal_vision != old_vision)
+        init_exclusion_los();
 }
 
 // For slots where characters may be able to equip some, but not all, possible
@@ -2403,12 +2427,12 @@ static int _player_evasion(int final_scale, bool include_temp)
 
 // Returns the spellcasting penalty (increase in spell failure) for the
 // player's worn body armour and shield.
-int player_armour_shield_spell_penalty()
+int player_armour_shield_spell_penalty(bool include_temp)
 {
     const int scale = 100;
 
     int body_armour_penalty =
-        max(19 * you.adjusted_body_armour_penalty(scale), 0);
+        max(19 * you.adjusted_body_armour_penalty(scale, false, include_temp), 0);
 
     // This is actually cutting the base ER of our armour by half (not 1/4th),
     // since that ER has already been squared by this point.
@@ -2416,7 +2440,7 @@ int player_armour_shield_spell_penalty()
         body_armour_penalty /= 4;
 
     const int total_penalty = body_armour_penalty
-                 + 19 * you.adjusted_shield_penalty(scale);
+                 + 19 * you.adjusted_shield_penalty(scale, include_temp);
 
     return max(total_penalty, 0) / scale;
 }
@@ -2516,6 +2540,9 @@ int player_shield_class(int scale, bool random, bool include_temp)
 
     if (include_temp && you.duration[DUR_PARRYING])
         shield += player_parrying() * 200;
+
+    if (you.unrand_equipped(UNRAND_FIVE_VIRTUES))
+        shield += five_virtues_sh_score() * 1000;
 
     if (you.has_mutation(MUT_RECKLESS))
         shield /= 2;
@@ -2864,6 +2891,35 @@ static void _handle_god_wrath(int exp)
     }
 }
 
+// Log experience gained whatever base form the player was in when they gained it.
+static void _log_form_xp(int exp)
+{
+    // We normally consider only the default form (to not mess up the stats due
+    // to hostile polymorph or transient things like !lignification or Vessel of
+    // Slaughter), but Flux form is in a weird inbetween space that makes it
+    // closer to a talisman form, so make an exception for that and track it.
+    const transformation which_trans = you.form == transformation::flux ? you.form
+                                                                        : you.default_form;
+
+    int xp_level = you.experience_level;
+    int xp_spent = 0;
+
+    // If the player gained enough XP to gain several XLs at once, assign only
+    // as much XP to each level as it would take to fully pass through that level.
+    while (xp_level < you.get_max_xl()
+           && you.experience + exp > exp_needed(xp_level + 1))
+    {
+        const int delta = exp_needed(xp_level + 1) - you.experience - xp_spent;
+        you.xp_by_form[xp_level-1][static_cast<int>(which_trans)] += delta;
+        exp -= delta;
+        xp_spent += delta;
+        ++xp_level;
+    }
+
+    // Then assign the rest to their current level.
+    you.xp_by_form[xp_level-1][static_cast<int>(which_trans)] += exp;
+}
+
 unsigned int gain_exp(unsigned int exp_gained)
 {
     if (crawl_state.game_is_arena())
@@ -2911,6 +2967,8 @@ void apply_exp()
     _handle_cacophony_recharge(skill_xp);
     _handle_batform_recharge(skill_xp);
     _handle_watery_grave_recharge(skill_xp);
+
+    _log_form_xp(exp_gained);
 
     if (player_under_penance(GOD_HEPLIAKLQANA))
         return; // no xp for you!
@@ -3133,6 +3191,7 @@ static void _revenant_spell_gift()
         {SPELL_KINETIC_GRAPNEL, "the bite of steel piercing you"},
         {SPELL_SANDBLAST, "the sting of sand against your skin"},
         {SPELL_POISONOUS_VAPOURS, "the taste of poison filling your lungs"},
+        {SPELL_ICE_THORNS, "icy daggers piercing you"}
     };
 
     vector<spell_type> gift_possibilities;
@@ -3574,6 +3633,9 @@ int player_stealth()
         stealth += (STEALTH_PIP * 2);
     }
 
+    if (you.form == transformation::hypnogecko)
+        stealth += STEALTH_PIP;
+
     if (feat_is_water(env.grid(you.pos())))
     {
         if (you.has_mutation(MUT_NIMBLE_SWIMMER))
@@ -3841,13 +3903,19 @@ bool player::cloud_immune(bool items) const
 
 bool player::sunder_is_ready() const
 {
+    int sunder_threshold = SUNDERING_THRESHOLD;
+
+    if (unrand_equipped(UNRAND_TROG) && you.berserk())
+        sunder_threshold -= 2;
+
     if (you.attribute[ATTR_SUNDERING_CHARGE] >= 0
-        && you.attribute[ATTR_SUNDERING_CHARGE] < SUNDERING_THRESHOLD)
+        && you.attribute[ATTR_SUNDERING_CHARGE] < sunder_threshold)
     {
         return false;
     }
 
-    return wearing_ego(OBJ_WEAPONS, SPWPN_SUNDERING);
+    return wearing_ego(OBJ_WEAPONS, SPWPN_SUNDERING)
+            || unrand_equipped(UNRAND_TROG);
 }
 
 /**
@@ -3909,7 +3977,7 @@ unsigned int exp_needed(int lev, int exp_apt)
     switch (lev)
     {
     case 1:
-        level = 1;
+        level = 0;
         break;
     case 2:
         level = 10;
@@ -3938,7 +4006,7 @@ unsigned int exp_needed(int lev, int exp_apt)
     if (exp_apt == -99)
         exp_apt = species::get_exp_modifier(you.species);
 
-    return (unsigned int) ((level - 1) * apt_to_factor(exp_apt - 1));
+    return (unsigned int) (level * apt_to_factor(exp_apt - 1));
 }
 
 // returns bonuses from rings of slaying, etc.
@@ -4515,7 +4583,7 @@ int contam_max_damage()
  * @return      A string describing the player when in the given contamination
  *              level.
  */
-string describe_contamination(bool verbose)
+string describe_contamination(bool verbose, bool show_damage)
 {
     if (you.magic_contamination <= 0)
         return "";
@@ -4542,7 +4610,7 @@ string describe_contamination(bool verbose)
     string msg = verbose ? verbose_desc[lvl] : terse_desc[lvl];
 
     const int dmg = contam_max_damage();
-    if (dmg > 0)
+    if (show_damage && dmg > 0)
         msg = make_stringf("%s (up to %d damage)", msg.c_str(), dmg);
 
     return msg;
@@ -4586,7 +4654,7 @@ void contaminate_player(int change, bool controlled, bool msg)
         if (msg)
         {
             mprf(player_harmful_contamination() ? MSGCH_WARN : MSGCH_PLAIN,
-                 "%s", describe_contamination().c_str());
+                 "%s", describe_contamination(true, false).c_str());
         }
         if (player_harmful_contamination())
             xom_is_stimulated(new_level * 25);
@@ -5766,6 +5834,7 @@ player::player()
     banished_by.clear();
 
     last_mid = 0;
+    last_item_uid = 0;
     last_cast_spell = SPELL_NO_SPELL;
 
     // Non-saved UI state:
@@ -5859,6 +5928,9 @@ player::player()
 
     clear_deferred_move();
 
+    for (int i = 0; i < 27; ++i)
+        xp_by_form[i].init(0);
+
     // Protected fields:
     clear_place_info();
 }
@@ -5874,6 +5946,7 @@ void player::init_skills()
     skill_order.init(MAX_SKILL_ORDER);
     skill_manual_points.init(0);
     training_targets.init(0);
+    base_training_targets.init(0);
     exercises.clear();
     exercises_all.clear();
 }
@@ -6007,6 +6080,23 @@ int player::rampaging() const
         rampage = get_los_radius();
 
     return rampage;
+}
+
+int player::shield_block_limit() const
+{
+    int bonus_blocks = 0;
+
+    if (you.unrand_equipped(UNRAND_FIVE_VIRTUES)
+        && five_virtues_sh_score() >= 3)
+    {
+        bonus_blocks++;
+    }
+
+    const item_def *sh = you.shield();
+
+    if (!sh)
+        return 1 + bonus_blocks;
+    return ::shield_block_limit(*sh) + bonus_blocks;
 }
 
 bool player::is_banished() const
@@ -6362,12 +6452,14 @@ int player::unadjusted_body_armour_penalty(bool archery) const
  * @return          A penalty to EV based quadratically on body armour
  *                  encumbrance.
  */
-int player::adjusted_body_armour_penalty(int scale, bool archery) const
+int player::adjusted_body_armour_penalty(int scale, bool archery,
+                                         bool include_temp) const
 {
     const int base_ev_penalty = unadjusted_body_armour_penalty(archery);
 
     // New formula for effect of str on aevp: (2/5) * evp^2 / (str+3)
-    return 2 * base_ev_penalty * base_ev_penalty * (450 - skill(SK_ARMOUR, 10))
+    return 2 * base_ev_penalty * base_ev_penalty
+           * (450 - skill(SK_ARMOUR, 10, false, include_temp))
            * scale / (5 * (strength() + 3)) / 450;
 }
 
@@ -6377,7 +6469,7 @@ int player::adjusted_body_armour_penalty(int scale, bool archery) const
  * @param scale     A scale to multiply the result by, to avoid precision loss.
  * @return          A penalty to EV based on shield weight.
  */
-int player::adjusted_shield_penalty(int scale) const
+int player::adjusted_shield_penalty(int scale, bool include_temp) const
 {
     const item_def *shield_l = shield();
     if (!shield_l)
@@ -6385,7 +6477,7 @@ int player::adjusted_shield_penalty(int scale) const
 
     const int base_shield_penalty = -property(*shield_l, PARM_EVASION) / 10;
     return 2 * base_shield_penalty * base_shield_penalty
-           * (270 - skill(SK_SHIELDS, 10)) * scale
+           * (270 - skill(SK_SHIELDS, 10, false, include_temp)) * scale
            / (25 + 5 * strength()) / 270;
 }
 
@@ -6445,6 +6537,32 @@ int player::skill(skill_type sk, int scale, bool real, bool include_temp) const
         && sk >= SK_FIRST_MAGIC_SCHOOL && sk <= SK_LAST_MAGIC)
     {
         level += walking_scroll_skill_bonus(scale);
+    }
+
+    if (you.form == transformation::jademantle)
+    {
+        switch (sk)
+        {
+            case SK_ALCHEMY:
+            case SK_NECROMANCY:
+            case SK_SUMMONINGS:
+            case SK_CONJURATIONS:
+            case SK_FORGECRAFT:
+            case SK_TRANSLOCATIONS:
+            case SK_HEXES:
+                level = level * 2 / 3;
+                break;
+
+            case SK_FIRE_MAGIC:
+            case SK_ICE_MAGIC:
+            case SK_EARTH_MAGIC:
+            case SK_AIR_MAGIC:
+               level = level + (get_form()->get_skill_bonus() * scale / 10);
+               break;
+
+            default:
+                break;
+        }
     }
 
     if (include_temp && skill_has_dilettante_penalty(sk))
@@ -7120,6 +7238,7 @@ bool player::is_insubstantial() const
 {
     return form == transformation::wisp
         || form == transformation::storm
+        || duration[DUR_INSUBSTANTIAL]
         || has_mutation(MUT_FORMLESS);
 }
 
@@ -7220,7 +7339,6 @@ bool player::res_torment() const
         return true;
 
     return get_form()->res_neg() == 3
-           || bool(you.holiness() & MH_PLANT)
 #if TAG_MAJOR_VERSION == 34
            || you.unrand_equipped(UNRAND_ETERNAL_TORMENT)
 #endif
@@ -7252,7 +7370,7 @@ bool player::res_constrict() const
 
 int player::res_blind() const
 {
-    if (bool(holiness() & MH_PLANT))
+    if (bool(holiness() & MH_PLANT) || you.form == transformation::mistmane)
         return 2;
     else if (undead_state() != US_ALIVE || you.form == transformation::jelly)
         return 1;
@@ -7994,7 +8112,8 @@ bool player::innate_sinv() const
 
     if (form == transformation::jelly
         || form == transformation::sphinx
-        || form == transformation::vampire)
+        || form == transformation::vampire
+        || form == transformation::vision)
     {
         return true;
     }
@@ -9528,6 +9647,8 @@ bool ench_triggers_trickster(enchant_type ench)
         case ENCH_WRETCHED:
         case ENCH_DEEP_SLEEP:
         case ENCH_VEXED:
+        case ENCH_DIMINISHED_SPELLS:
+        case ENCH_EXPOSED:
             return true;
 
         default:
@@ -9713,4 +9834,31 @@ bool player::did_reprisal(reprisal_type rtype, mid_t target_mid)
 void player::did_trigger(player_trigger_type trigger)
 {
     triggers_done[trigger]++;
+}
+
+int five_virtues_sh_score()
+{
+    int count = 0;
+
+    // staves either highest skill or maxed
+    if (best_skill(SK_FIRST_SKILL, SK_LAST_SKILL) == SK_STAVES
+        || you.skill(SK_STAVES) >= MAX_SKILL_LEVEL)
+    {
+        count++;
+    }
+
+    // five pips
+    if (you.stealth() > 200)
+        count++;
+
+    if (you.skill(SK_INVOCATIONS, 1, true, false) >= 15)
+        count++;
+
+    if (you.intel() >= 20)
+        count++;
+
+    if (_player_evasion(1, false) >= 25)
+        count++;
+
+    return count;
 }

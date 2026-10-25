@@ -1,0 +1,11 @@
+enum: mistmane
+equivalent_mons: shapeshifter
+talisman: mist
+skill: {min: 8, max: 14}
+melds: [helmet]
+fakemuts:
+  - ["potion clouds", "Drinking potions allow you to spray harmful clouds."]
+  - ["gather mist", "You create potions of mist as you explore."]
+  - ["", "You are immune to blinding."]
+badmuts:
+  - ["slow casting", "Your spells take twice as long to cast."]

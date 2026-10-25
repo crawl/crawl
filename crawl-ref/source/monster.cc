@@ -87,7 +87,7 @@ monster::monster()
     : hit_points(0), max_hit_points(0), exp(0),
       speed(0), speed_increment(0), target(), firing_pos(),
       patrol_point(), travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
-      attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
+      base_attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
       enchantments(), flags(), xp_tracking(XP_NON_VAULT),
       base_monster(MONS_NO_MONSTER), number(0), colour(COLOUR_INHERIT),
       foe_memory(0), god(GOD_NO_GOD), ghost(),
@@ -130,15 +130,9 @@ monster &monster::operator = (const monster& mon)
     return *this;
 }
 
+// Reset the monster to a blank slate, and free up its MID slot.
 void monster::reset()
 {
-    mname.clear();
-    enchantments.clear();
-    ench_cache.reset();
-    ench_countdown = 0;
-    inv.init(NON_ITEM);
-    spells.clear();
-
     // Drop the mid_cache entry, but only if it still points at this monster.
     // This is not necessarily true, because a transiting copy may take the
     // spot in the cache.
@@ -149,6 +143,18 @@ void monster::reset()
             env.mid_cache.erase(it);
     }
 
+    clear();
+}
+
+void monster::clear()
+{
+    mname.clear();
+    enchantments.clear();
+    ench_cache.reset();
+    ench_countdown = 0;
+    inv.init(NON_ITEM);
+    spells.clear();
+
     mid             = 0;
     flags           = MF_NO_FLAGS;
     type            = MONS_NO_MONSTER;
@@ -158,7 +164,7 @@ void monster::reset()
     exp             = 0;
     hit_dice        = 0;
     speed_increment = 0;
-    attitude        = ATT_HOSTILE;
+    base_attitude   = ATT_HOSTILE;
     behaviour       = BEH_SLEEP;
     foe             = MHITNOT;
     summoner        = 0;
@@ -197,7 +203,7 @@ void monster::reset()
 
 void monster::init_with(const monster& mon)
 {
-    reset();
+    clear();
 
     mid               = mon.mid;
     mname             = mon.mname;
@@ -216,7 +222,7 @@ void monster::init_with(const monster& mon)
     travel_path       = mon.travel_path;
     inv               = mon.inv;
     spells            = mon.spells;
-    attitude          = mon.attitude;
+    base_attitude     = mon.base_attitude;
     behaviour         = mon.behaviour;
     foe               = mon.foe;
     enchantments      = mon.enchantments;
@@ -257,31 +263,23 @@ void monster::ensure_has_client_id()
         client_id = ++last_client_id;
 }
 
-mon_attitude_type monster::temp_attitude() const
+mon_attitude_type monster::attitude() const
 {
     // This takes priority over everything.
-    if (attitude == ATT_MARIONETTE)
+    if (base_attitude == ATT_MARIONETTE)
         return ATT_MARIONETTE;
 
     if (has_ench(ENCH_FRENZIED))
         return ATT_NEUTRAL;
 
     if (has_ench(ENCH_HEXED))
-    {
-        actor *agent = monster_by_mid(get_ench(ENCH_HEXED).source);
-        if (agent)
-        {
-            ASSERT(agent->is_monster());
-            return agent->as_monster()->attitude;
-        }
-        return ATT_HOSTILE; // ???
-    }
+        return ATT_HOSTILE;
     if (has_ench(ENCH_CHARM) || has_ench(ENCH_FRIENDLY_BRIBED))
         return ATT_FRIENDLY;
     else if (has_ench(ENCH_NEUTRAL_BRIBED))
         return ATT_GOOD_NEUTRAL; // ???
     else
-        return attitude;
+        return base_attitude;
 }
 
 bool monster::swimming() const
@@ -929,13 +927,9 @@ void monster::unequip_message(item_def& item) const
  */
 void monster::do_unequip_effects(item_def &item)
 {
-    if (item.base_type == OBJ_WEAPONS
-        && get_weapon_brand(item) == SPWPN_SPECTRAL)
-    {
-        monster *spectral_weapon = find_spectral_weapon(item);
-        if (spectral_weapon)
-            end_spectral_weapon(spectral_weapon, false);
-    }
+    monster *spectral_weapon = find_spectral_weapon(item);
+    if (spectral_weapon)
+        end_spectral_weapon(spectral_weapon, false);
 
     if (item_affects_agrid(item))
         invalidate_agrid();
@@ -1110,7 +1104,7 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
                                 || eslot == MSLOT_ALT_WEAPON
                                    && mons_wields_two_weapons(*this);
 
-    if (pitem.flags & ISFLAG_SUMMONED)
+    if (pitem.summoned())
     {
         // Monsters sometimes drop summoned items in the process of being
         // initialized and given equipment, but they should never try to do
@@ -3024,12 +3018,12 @@ int monster::off_level_regen_rate() const
 
 bool monster::wont_attack() const
 {
-    return friendly() || good_neutral() || attitude == ATT_MARIONETTE;
+    return friendly() || good_neutral() || base_attitude == ATT_MARIONETTE;
 }
 
 bool monster::pacified() const
 {
-    return (attitude == ATT_NEUTRAL || attitude == ATT_GOOD_NEUTRAL)
+    return (base_attitude == ATT_NEUTRAL || base_attitude == ATT_GOOD_NEUTRAL)
            && testbits(flags, MF_PACIFIED);
 }
 
@@ -3612,7 +3606,7 @@ bool monster::is_unbreathing() const
 
 bool monster::is_insubstantial() const
 {
-    return mons_class_flag(type, M_INSUBSTANTIAL);
+    return mons_class_flag(type, M_INSUBSTANTIAL) || has_ench(ENCH_INSUBSTANTIAL);
 }
 
 bool monster::is_amorphous() const
@@ -4369,7 +4363,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         // Damage over time effects are excluded for similar reasons.
         if (agent && agent->is_player()
             && mons_class_gives_xp(type)
-            && (temp_attitude() == ATT_HOSTILE || has_ench(ENCH_FRENZIED))
+            && (hostile() || has_ench(ENCH_FRENZIED))
             && type != MONS_NAMELESS) // hack - no usk piety for miscasts
         {
            did_hurt_monster(*this, amount, flavour, kill_type);
@@ -4576,7 +4570,7 @@ void monster::ghost_init(bool need_pos)
     ghost_demon_init();
 
     god             = ghost->religion;
-    attitude        = ATT_HOSTILE;
+    base_attitude   = ATT_HOSTILE;
     behaviour       = BEH_WANDER;
     flags           = MF_NO_FLAGS;
     foe             = MHITNOT;
@@ -5202,6 +5196,14 @@ bool monster::cannot_move() const
     return is_stationary() || has_ench(ENCH_BOUND);
 }
 
+// Whether the monster has lost the focus and ability to continue channelling
+// effects like Word of Recall or Searing Ray.
+bool monster::cannot_keep_channelling() const
+{
+    return is_silenced() || cannot_act() || confused() || asleep()
+            || has_ench(ENCH_FEAR);
+}
+
 bool monster::can_burrow() const
 {
     return mons_class_flag(type, M_BURROWS)
@@ -5615,12 +5617,19 @@ void monster::finalise_movement(const actor* to_blame)
     if (!alive())
         return;
 
-    cloud_struct* cloud = cloud_at(pos());
-    if (cloud && cloud->type == CLOUD_BLASTMOTES)
-        explode_blastmotes_at(pos()); // schedules a fineff, so won't kill
+    if (cloud_struct* cloud = cloud_at(pos()))
+    {
+        if (cloud->type == CLOUD_BLASTMOTES)
+            explode_blastmotes_at(pos()); // schedules a fineff, so won't kill
+        else if (cloud->type == CLOUD_GLIMMER)
+            enter_glimmer_cloud(*this, pos());
+    }
 
     if (env.grid(pos()) == DNGN_BINDING_SIGIL)
         trigger_binding_sigil(*this);
+
+    if (env.grid(pos()) == DNGN_ICE_THORNS && last_move_pos != pos())
+        ice_thorns_trigger(*this, pos());
 
     terrain_property_t &prop = env.pgrid(pos());
     if (prop & FPROP_BLOODY)
@@ -5775,8 +5784,8 @@ bool monster::do_shaft()
     if (!is_valid_shaft_level())
         return false;
 
-    // Tentacles are immune to shafting
-    if (mons_is_tentacle_or_tentacle_segment(type))
+    // Tentacles and Blorkula bats are immune to shafting
+    if (mons_is_tentacle_or_tentacle_segment(type) || props.exists(BLORKULA_REVIVAL_TIMER_KEY))
         return false;
 
     level_id lev = shaft_dest();
@@ -6130,7 +6139,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
              && mons_get_damage_level(*this) >= MDAM_SEVERELY_DAMAGED)
     {
         add_ench(mon_enchant(ENCH_DIMINISHED_SPELLS, this, random_range(500, 650)));
-        schedule_stardust_fineff(this, 150, 3, true);
+        schedule_stardust_fineff(this, 150, 3, SHOOTING_STAR_JELLY);
     }
     else if (type == MONS_TELENCEPHALON && !has_ench(ENCH_WEAK)
              && mons_get_damage_level(*this) >= MDAM_SEVERELY_DAMAGED)
@@ -6621,7 +6630,7 @@ item_def* monster::disarm()
         || !adjacent(you.pos(), pos())
         || !you.can_see(*this)
         || !mon_tile_ok
-        || mons_wpn->flags & ISFLAG_SUMMONED
+        || mons_wpn->summoned()
         || type == MONS_ORC_APOSTLE)
     {
         return nullptr;
@@ -6765,7 +6774,7 @@ bool monster::is_illusion() const
 
 bool monster::is_divine_companion() const
 {
-    return attitude == ATT_FRIENDLY
+    return base_attitude == ATT_FRIENDLY
            && !is_summoned()
            // Orcs from Blood for Blood still count as god gifts, but should not
            // be considered companions for most functions - only apostles should
@@ -6846,12 +6855,13 @@ void monster::remove_summons(bool check_attitude)
 {
     for (monster_iterator mi; mi; ++mi)
     {
-        if ((!check_attitude || attitude != mi->attitude)
-            && mi->summoner == mid
-            && mi->is_summoned()
-            && !(mi->flags & MF_PERSISTS))
+        if ((!check_attitude || base_attitude != mi->base_attitude)
+            && mi->summoner == mid)
         {
-            mi->del_ench(ENCH_SUMMON_TIMER);
+            if (mi->is_summoned() && !(mi->flags & MF_PERSISTS))
+                mi->del_ench(ENCH_SUMMON_TIMER);
+            else if (mi->type == MONS_SPECTRAL_WEAPON)
+                end_spectral_weapon(*mi, false);
         }
     }
 }

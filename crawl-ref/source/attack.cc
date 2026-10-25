@@ -126,9 +126,9 @@ bool attack::handle_phase_damaged()
     }
 
     // It's okay if a monster took lethal damage, but we should stop
-    // the combat if it is already cleaned up (e.g. a spectral weapon that
-    // took damage and then noticed that its caster is gone), to prevent
-    // messages referencing the monster after its disappearance.
+    // the combat if it is already cleaned up (e.g. if it fell down a shaft
+    // after dragging), to prevent messages referencing the monster after its
+    // disappearance.
     return defender->is_player() || !invalid_monster(defender->as_monster());
 }
 
@@ -1024,14 +1024,6 @@ int attack::calc_damage()
         damage = player_apply_misc_modifiers(damage);
         damage = player_apply_slaying_bonuses(damage, false);
         damage = player_stab(damage);
-        // A failed stab may have awakened monsters, but that could have
-        // caused the defender to cease to exist (spectral weapons with
-        // missing summoners; or pacified monsters on a stair). FIXME:
-        // The correct thing to do would be either to delay the call to
-        // alert_nearby_monsters (currently in player_stab) until later
-        // in the attack; or to avoid removing monsters in handle_behaviour.
-        if (!defender->alive())
-            return 0;
         damage = player_apply_final_multipliers(damage);
         damage = apply_defender_ac(damage);
         damage = player_apply_postac_multipliers(damage);
@@ -1597,10 +1589,14 @@ void attack::player_stab_check()
     {
         const bool devious = using_weapon()
                                 && get_weapon_brand(*weapon) == SPWPN_DEVIOUS;
+        const int distract_bonus = st == STAB_DISTRACTED && you.form == transformation::hypnogecko
+                                        ? get_form()->get_effect_chance()
+                                        : 0;
         stab_attempt = x_chance_in_y(you.skill_rdiv(wpn_skill, 1, 2)
                                      + you.skill_rdiv(SK_STEALTH, 1, 2)
                                      + you.dex() + 1
-                                     + (devious ? 10 : 0),
+                                     + (devious ? 10 : 0)
+                                     + distract_bonus,
                                      100);
     }
 
@@ -1664,15 +1660,10 @@ void attack::maybe_trigger_autodazzler()
     if (defender->is_player() && you.wearing_ego(OBJ_GIZMOS, SPGIZMO_AUTODAZZLE)
         && one_chance_in(20))
     {
-        bolt proj;
-        zappy(ZAP_AUTODAZZLE, you.get_experience_level(), false, proj);
-
+        bolt proj(you, ZAP_AUTODAZZLE, you.get_experience_level());
         proj.target = attacker->pos();
-        proj.source = you.pos();
-        proj.source_id = MID_PLAYER;
         proj.draw_delay = 5;
-        proj.attitude = ATT_FRIENDLY;
-        proj.thrower = KILL_YOU_MISSILE;
+
         targeting_tracer tracer;
 
         // Make sure the beam path is clear

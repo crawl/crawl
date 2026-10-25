@@ -2004,16 +2004,16 @@ VISUAL:@The_monster_possessive@ form shimmers in the rain.
 
 ############ BLORKULA ###
 %%%%
-Blorkula the orcula
+Blorkula the Orcula
 
 @_Blorkula_common_@
 
 w:5
 @_Blorkula_rare_@
 %%%%
-Blorkula the orcula triumphant
+Blorkula the Orcula triumphant
 
-# Rainbow Raider winning against Batman
+# Rainbow Raider winning against Batman (The Brave and the Bold #194)
 @The_monster@ shouts, "I believe in me!"
 %%%%
 _blorkula_colour_
@@ -2073,10 +2073,10 @@ VISUAL:@The_monster@ contemplates whether Beogh's temples would look better pain
 
 @The_monster@ says, "Things are no longer grey! Not since my great insight!"
 %%%%
-Blorkula the orcula killed
+Blorkula the Orcula killed
 
 A faint prismatic mist rises from Blorkula's broken form and then dissipates.
-## END Blorkula the orcula ##
+## END Blorkula the Orcula ##
 %%%%
 ############ BORIS ### An ancient lich with the nasty habit of coming back
 Boris
@@ -2235,7 +2235,7 @@ friendly Cassandra
 @The_monster@ pleads, "Will you not heed even the word of a friend and end this?"
 
 @The_monster@ says, "Even I cannot save you if you persist in this."
-%%%%%
+%%%%
 
 ############ CHUCK ### An avid rock collector.
 Chuck
@@ -2747,6 +2747,8 @@ alas
 rumpyflump
 
 sizzlefizz
+
+kazark
 %%%%
 ############ DISSOLUTION ### a sentient jelly who used to be human a long time ago
 Dissolution
@@ -7108,7 +7110,7 @@ _Sojobo_advice_
 
 @The_monster@ says @to_foe@, "Appear weak when you are strong, and strong when you are weak."
 
-@The_monster@ says @to_foe@, "Know thy enemy, and know thyself."
+@The_monster@ says @to_foe@, "Know thine enemy, and know thyself."
 
 @The_monster@ says @to_foe@, "Let your plans be as dark and impenetrable as the night."
 
@@ -8720,10 +8722,10 @@ w:1
 __NONE
 %%%%
 # special casing for Blorkula
-related beogh Blorkula the orcula
+related beogh Blorkula the Orcula
 
-# behave like normal Blork
-@Blorkula the orcula@
+# behave like normal Blorkula
+@Blorkula the Orcula@
 
 # with some Beogh-hostile messages strewn in
 w:4

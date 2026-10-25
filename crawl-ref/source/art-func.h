@@ -33,6 +33,7 @@
 #include "exercise.h"      // For practise_evoking
 #include "fight.h"
 #include "fineff.h"        // For the Storm Queen's Shield
+#include "god-abil.h"      // For Forgewarden's cuirass (ru_reject_sacrifices)
 #include "mgen-data.h"     // For Sceptre of Asmodeus
 #include "melee-attack.h"  // For Fungal Fisticloak
 #include "message.h"
@@ -1771,7 +1772,7 @@ static void _FISTICLOAK_world_reacts(item_def */*item*/)
     vector<monster*> targs;
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
         if (monster* mon = monster_at(*ai))
-            if (you.can_see(*mon) && mon->temp_attitude() == ATT_HOSTILE && !mon->is_firewood())
+            if (you.can_see(*mon) && mon->hostile() && !mon->is_firewood())
                 targs.push_back(mon);
 
     if (targs.empty())
@@ -1821,4 +1822,86 @@ static void _ICE_DRAGON_ARCANIST_SCALES_unequip(item_def */*item*/, bool *show_m
 {
     if (!show_msgs || *show_msgs)
         mprf(MSGCH_TALK, "%s", getSpeakString("ice dragon arcanist scales farewell").c_str());
+}
+
+/////////////////////////////////////////////////////
+static void _FIVE_VIRTUES_world_reacts(item_def */*item*/)
+{
+    you.redraw_armour_class = true;
+}
+
+/////////////////////////////////////////////////////
+static void _STAGEHANDS_SWORD_melee_effects(item_def* /*weapon*/, actor* attacker,
+                                  actor* defender, int /*dam*/, melee_attack* /*atk*/)
+{
+    if (!attacker->is_player())
+        return;
+
+    if (defender->is_monster() && !mons_aligned(defender, &you)
+        && mons_class_gives_xp(defender->as_monster()->type) && you.duration[DUR_DEVIOUS])
+    {
+        if (x_chance_in_y(you.props[DEVIOUS_KEY].get_int(), 3) &&
+            (!you.duration[DUR_INVIS] || coinflip()))
+        {
+            mprf("The Stagehand's Sword gleams wickedly %s",
+                you.backlit() ? "but you remain visible."
+                : you.duration[DUR_INVIS] ? "and you become more transparent."
+                : "and you slip into invisibility!");
+            you.increase_duration(DUR_INVIS, 3 + random2(5), 20);
+        }
+    }
+}
+
+/////////////////////////////////////////////////////
+static void _HANAS_SCIMITAR_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
+{
+    if (!unmeld)
+    {
+        if (you.has_mutation(MUT_INNATE_CASTER))
+            _equip_mpr(show_msgs, "You feel unable to tap into the sword's magical power.");
+        else if (!you.skill(SK_SPELLCASTING))
+            _equip_mpr(show_msgs, "You feel strangely lacking in power.");
+        else if (you.magic_points * 100 >= you.max_magic_points * 80)
+            _equip_mpr(show_msgs, "You feel powerful.");
+        else
+            _equip_mpr(show_msgs, "You feel potentially powerful.");
+    }
+}
+
+static void _HANAS_SCIMITAR_unequip(item_def */*item*/, bool *show_msgs)
+{
+    _equip_mpr(show_msgs,"You feel a bit dim.");
+    you.diminish(&you, 10);
+}
+
+static void _FORGEWARDEN_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
+{
+    // This is mostly verbatim from _remove_amulet_of_faith but has a different
+    // condition and needs different messaging
+    if (!unmeld)
+    {
+        if (!faith_has_penalty())
+        {
+            if (you.religion == GOD_NO_GOD && !you.has_mutation(MUT_FORLORN))
+                _equip_mpr(show_msgs, "You feel a strange surge of divine displeasure.");
+            return;
+        }
+        if (you_worship(GOD_RU))
+        {
+            // next sacrifice is going to be delaaaayed.
+            ASSERT(you.raw_piety < piety_breakpoint(5));
+            ru_reject_sacrifices(true);
+            return;
+        }
+
+        if (show_msgs)
+            simple_god_message(" seems less inclined to favour you.");
+
+        // Identical penalty to removing an amulet of faith
+        const int piety_loss = div_rand_round(you.raw_piety, 3);
+        if (show_msgs)
+            mprf(MSGCH_GOD, "You feel less pious.");
+
+        lose_piety(piety_loss);
+    }
 }

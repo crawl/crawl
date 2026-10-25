@@ -57,7 +57,7 @@ static void _setup_base_explosion(bolt & beam, const monster& origin)
         beam.thrower = KILL_MON;
 
     beam.aux_source.clear();
-    beam.attitude = origin.attitude;
+    beam.attitude = origin.attitude();
 }
 
 static int _inferno_power(int hd)
@@ -136,10 +136,10 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
         beam.origin_spell = SPELL_CONJURE_BALL_LIGHTNING;
 }
 
-dice_def prism_damage(int hd, bool fully_powered)
+dice_def prism_damage(int hd, bool fully_powered, bool random)
 {
     const int dice = fully_powered ? 3 : 2;
-    return dice_def(dice, 5 + div_rand_round(hd * 7, 4));
+    return dice_def(dice, 5 + (random ? div_rand_round(hd * 7, 4) : hd * 7 / 4));
 }
 
 static void _setup_prism_explosion(bolt& beam, const monster& origin)
@@ -274,11 +274,11 @@ static const map<monster_type, monster_explosion> explosions {
     } },
     { MONS_FULMINANT_PRISM, {
         _setup_prism_explosion,
-        [](int hd){ return prism_damage(hd, true); }
+        [](int hd){ return prism_damage(hd, true, false); }
     } },
     { MONS_SHADOW_PRISM, {
         _setup_shadow_prism_explosion,
-        [](int hd){ return prism_damage(hd, true); }
+        [](int hd){ return prism_damage(hd, true, false); }
     } },
     { MONS_BENNU, {
         _setup_bennu_explosion,

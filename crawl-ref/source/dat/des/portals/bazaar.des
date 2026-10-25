@@ -416,8 +416,9 @@ SUBST:   A = Y
 SHUFFLE: XY
 SUBST:   X = <, Y = >
 : bazaar_setup(_G)
-: if you.get_base_mutation_level("hated by all") ~= 1 and
-:   you.god() ~= "Okawaru" and crawl.one_chance_in(10) then
+: if not is_validating()
+:   and you.get_base_mutation_level("hated by all") ~= 1
+:   and you.god() ~= "Okawaru" and crawl.one_chance_in(10) then
 TAGS:    no_pool_fixup
 NSUBST:  ? = 2:? / 1:?m / *:m
 SUBST:   w = m, W = w, a = m.

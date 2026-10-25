@@ -740,6 +740,8 @@ unsigned int item_value(item_def item, bool ident)
         case TALISMAN_SCARAB:
         case TALISMAN_MEDUSA:
         case TALISMAN_SPORE:
+        case TALISMAN_JADE:
+        case TALISMAN_MIST:
             valued += 125;
             break;
 
@@ -749,6 +751,8 @@ unsigned int item_value(item_def item, bool ident)
 
         case TALISMAN_QUILL:
         case TALISMAN_INKWELL:
+        case TALISMAN_VISION:
+        case TALISMAN_GECKO:
         default:
             valued += 75;
             break;
@@ -1706,7 +1710,7 @@ string shop_name(const shop_struct& shop)
     {
         uint32_t seed = static_cast<uint32_t>(shop.keeper_name[0])
             | (static_cast<uint32_t>(shop.keeper_name[1]) << 8)
-            | (static_cast<uint32_t>(shop.keeper_name[1]) << 16);
+            | (static_cast<uint32_t>(shop.keeper_name[2]) << 16);
 
         sh_name += apostrophise(make_name(seed)) + " ";
     }

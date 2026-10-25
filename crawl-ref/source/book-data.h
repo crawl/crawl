@@ -38,7 +38,8 @@ static const vector<spell_type> spellbook_templates[] =
 {
 
 {   // Book of Minor Magic
-    SPELL_MAGIC_DART,
+    SPELL_ICE_THORNS,
+    SPELL_SIROCCO,
     SPELL_BLINK,
     SPELL_CALL_IMP,
 },
@@ -136,7 +137,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SUMMON_HYDRA,
 },
 
-{   // My Sojourn Through Swamps
+{   // My Sojourns in Swampland
     SPELL_MERCURY_ARROW,
     SPELL_CLOCKWORK_BEE,
     SPELL_SURPRISING_CROCODILE,
@@ -258,6 +259,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of the Dragon
+    SPELL_DRAGON_VEINS,
     SPELL_CAUSE_FEAR,
     SPELL_FIREBALL,
     SPELL_DRAGON_CALL,

@@ -107,7 +107,7 @@ DEPTH:  D:12-, Orc:$, Elf, !Elf:$, Snake, !Snake:$, Spider, !Spider:$
 
 NAME:   uniq_blorkula_the_orcula
 DEPTH:  D:5-8
-: place_unique(_G, "Blorkula the orcula")
+: place_unique(_G, "Blorkula the Orcula")
 
 NAME:   uniq_cassandra
 DEPTH:  D:9-14, Lair:1

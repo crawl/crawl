@@ -55,6 +55,7 @@ mutations:
 recommended_jobs:
   - gladiator
   - brigand
+  - stalker
   - hunter
   - conjurer
   - air elementalist

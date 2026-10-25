@@ -509,6 +509,9 @@ bool can_equip_item(const item_def& item, bool temp, string* veto_reason,
                 else
                 {
                     found_slot = true;
+                    // Clear any veto reason an earlier slot populated.
+                    if (veto_reason)
+                        *veto_reason = "";
                     break;
                 }
             }
@@ -811,7 +814,7 @@ void player_equip_set::find_removable_items_for_slot(equipment_slot base_slot,
     }
 
     if (!quiet && !found_item && cursed_item)
-        mprf(MSGCH_PROMPT, "%s is stuck to your body!", cursed_item->name(DESC_YOUR).c_str());
+        mprf(MSGCH_PROMPT, "%s is chained to your body!", cursed_item->name(DESC_YOUR).c_str());
 }
 
 /**
@@ -1702,12 +1705,15 @@ void equip_effect(int item_slot, bool unmeld, bool msg)
         ash_check_bondage();
 }
 
-static void _unequip_maybe_destroy_item(item_def& item)
+static void _unequip_maybe_destroy_item(item_def& item, bool quiet)
 {
     // Cursed and fragile items should always be destroyed on unequip.
     if ((is_artefact(item) && artefact_property(item, ARTP_FRAGILE))
-        || item.cursed())
+        || item.cursed() || item.summoned())
     {
+        if (item.summoned() && !quiet)
+            mprf("%s crumbles into nothing.", item.name(DESC_YOUR).c_str());
+
         dec_inv_item_quantity(item.link, 1);
     }
 }
@@ -1733,7 +1739,7 @@ void unequip_effect(int item_slot, bool meld, bool msg, bool was_melded,
         invalidate_agrid();
 
     if (!meld && maybe_destroy)
-        _unequip_maybe_destroy_item(item);
+        _unequip_maybe_destroy_item(item, !msg);
 }
 
 ///////////////////////////////////////////////////////////
@@ -1905,6 +1911,14 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
     int special = get_weapon_brand(item);
     if (showMsgs && item.base_type != OBJ_STAVES)
     {
+        // Making the assumption that this is the only way to wield one of these.
+        if (!unmeld && item.sub_type == WPN_CENTIPEDE)
+        {
+            mprf("You grip the centipede bauble in your %s and it winds around "
+                 "your %s and fuses with it.",
+                 you.hand_name(false).c_str(), you.arm_name(false).c_str());
+        }
+
         const string item_name = item.name(DESC_YOUR);
         switch (special)
         {
@@ -2872,4 +2886,26 @@ void unwield_distortion(bool brand)
         mpr("Space warps into you!");
         contaminate_player(random2avg(3000, 3), true);
     }
+}
+
+// If this is a temporary item that stored which permanent item was swapped off
+// to equip it, fetch that item if the player still has it in their inventory.
+item_def* get_item_swap_back(const item_def& item)
+{
+    if (!item.props.exists(ITEM_SWAP_BACK_KEY))
+        return nullptr;
+
+    const mid_t id = item.props[ITEM_SWAP_BACK_KEY].get_int();
+
+    for (int i = 0; i < MAX_GEAR; ++i)
+    {
+        if (you.inv[i].defined()
+            && you.inv[i].props.exists(ITEM_UNIQUE_ID)
+            && (mid_t)you.inv[i].props[ITEM_UNIQUE_ID].get_int() == id)
+        {
+            return &you.inv[i];
+        }
+    }
+
+    return nullptr;
 }

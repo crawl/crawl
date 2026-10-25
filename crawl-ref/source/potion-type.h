@@ -56,6 +56,7 @@ enum potion_type
     POT_BENEFICIAL_MUTATION,
     POT_DUMMY_AGILITY,
 #endif
+    POT_MIST,
     NUM_POTIONS
 };
 

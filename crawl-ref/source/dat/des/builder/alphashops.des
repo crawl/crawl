@@ -136,7 +136,7 @@
        "amulet of magic regeneration", "potion of might",
        "potion of mutation", "book of the moon", "book of movement",
        "book of maladies", "book of metalworking",
-       "maxwell's memoranda", "my sojourn through swampland" }
+       "maxwell's memoranda", "my sojourns in swampland" }
 
       elseif s == "N" then i = { "book of necromancy", "staff of necromancy",
        "necronomicon", "scroll of noise", "manual of necromancy" }

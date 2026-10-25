@@ -21,6 +21,7 @@
 #include "libutil.h"
 #include "losglobal.h"
 #include "message.h"
+#include "mon-abil.h"
 #include "mon-behv.h"
 #include "mutation.h"
 #include "religion.h"
@@ -117,6 +118,8 @@ static void _actor_areas(actor *a)
     _apply_area(a->pos(), a->umbra_radius(), area_type::umbra);
     _apply_area(a->pos(), a->liquefying_radius(), area_type::liquified, LOS_SOLID, false, true);
     _apply_area(a->pos(), a->awoken_forest_radius(), area_type::awoken_forest, LOS_NO_TRANS);
+    if (a->type == MONS_SEISMOSAURUS_EGG)
+        _apply_area(a->pos(), SEISMOSAURUS_EGG_RADIUS, area_type::seismorock);
 }
 
 /**
@@ -695,13 +698,23 @@ int monster::awoken_forest_radius() const
     return has_ench(ENCH_AWAKEN_FOREST) ? LOS_RADIUS : -1;
 }
 
+/////////////
+// Seismosaurus egg range
+//
+
+bool seismorock_marked(const coord_def& p)
+{
+    return _update_and_check_agrid(p, area_type::seismorock);
+}
+
 bool monster::affects_agrid() const
 {
     return halo_radius() > -1
            || silence_radius() > -1
            || liquefying_radius() > -1
            || umbra_radius() > -1
-           || awoken_forest_radius() > -1;
+           || awoken_forest_radius() > -1
+           || type == MONS_SEISMOSAURUS_EGG;
 }
 
 bool player::affects_agrid() const

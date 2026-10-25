@@ -200,6 +200,9 @@ enum mon_summon_type
     MON_SUMM_STARDUST,  // Orb of Stardust
     MON_SUMM_SPITEFUL_BLOOD, // Spiteful Blood mutation
     MON_SUMM_SPORE,     // Spore form mushrooms
+    MON_SUMM_JADEMANTLE, // Jademantle crystals
+    MON_SUMM_HYPNOTAIL,  // Hypnogecko tail shedding
+    MON_SUMM_CENTIPEDE, // Centipede bauble
 };
 
 #include "mon-flags.h"

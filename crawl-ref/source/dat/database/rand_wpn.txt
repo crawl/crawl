@@ -409,6 +409,8 @@ Fortune-Teller
 
 Oracle
 
+Prognosticator
+
 Seeker
 
 Seer
@@ -420,7 +422,6 @@ Sybil
 Visionary
 
 Water Diviner
-
 %%%%
 _people_name_
 
@@ -863,8 +864,6 @@ Annihilation
 
 Armageddon
 
-Fimbulwinter
-
 Ragnarok
 
 World Downfall
@@ -874,6 +873,8 @@ World's End
 the Apocalypse
 
 the End of Times
+
+the Eschaton
 
 # the Apocalyptic Riders (except Death)
 Famine
@@ -1342,6 +1343,8 @@ Optimism
 
 Orthodoxy
 
+Orthopraxy
+
 Panentheism
 
 Pantheism
@@ -1764,6 +1767,8 @@ Murmur
 Pendulum
 
 Sarcophage
+
+Serial Peacemaker
 
 Tormentor
 

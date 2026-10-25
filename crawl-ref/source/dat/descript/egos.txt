@@ -148,7 +148,8 @@ It enhances your Air magic.
 %%%%
 archery (Archery) armour ego
 
-It has one-third the normal encumbrance for the purpose of ranged combat.
+It has one-third the normal encumbrance for the purpose of ranged combat, and
+slightly increases ranged damage depending on the wearer's armour skill.
 %%%%
 attunement (Attunement) armour ego
 
@@ -171,8 +172,10 @@ It protects you from the effects of acid and corrosion.
 %%%%
 death (Death) armour ego
 
-It empowers your Necromancy spells and improves their success rate, but imposes
-a health cost for other magic.
+It empowers your Necromancy spells and improves their success rate. When you
+cast a Necromancy spell, it may drain the life force of susceptible adjacent
+enemies to heal you; the chance and power of this effect depend on the spell's
+level.
 %%%%
 dexterity (Dex+3) armour ego
 
@@ -302,8 +305,9 @@ It protects you from the effects of both fire and cold.
 %%%%
 resonance (Resonance) armour ego
 
-It improves the success rate of your Forgecraft spells and enhances your melee
-attacks proportionally to your Forgecraft skill.
+It improves the success rate of your Forgecraft spells, and enhances your melee
+attacks proportionally to your Forgecraft skill when you melee an enemy that is
+adjacent to one of your constructs.
 %%%%
 see invisible (SInv) armour ego
 

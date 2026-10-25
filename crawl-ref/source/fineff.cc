@@ -25,6 +25,8 @@
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-wrath.h" // lucy_check_meddling
+#include "items.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "melee-attack.h"
@@ -556,9 +558,9 @@ class stardust_fineff : public final_effect
 public:
     void fire() override;
 
-    stardust_fineff(actor* agent, int _power, int _max, bool _is_star_jelly)
+    stardust_fineff(actor* agent, int _power, int _max, shooting_star_fineff_type _typ)
         : final_effect(agent, nullptr, you.pos()), power(_power), max_stars(_max),
-                                                   is_star_jelly(_is_star_jelly)
+                                                   type(_typ)
     {
     }
 protected:
@@ -566,7 +568,7 @@ protected:
 
     int power;
     int max_stars;
-    bool is_star_jelly;
+    shooting_star_fineff_type type;
 };
 
 class pyromania_fineff : public final_effect
@@ -622,6 +624,47 @@ protected:
     bool mergeable(const final_effect&) const override { return false; }
 };
 
+class revert_terrain_fineff : public final_effect
+{
+public:
+    void fire() override;
+
+    revert_terrain_fineff(const coord_def& pos, terrain_change_type _type)
+        : final_effect(nullptr, nullptr, pos), type(_type)
+    {
+    }
+protected:
+    bool mergeable(const final_effect&) const override { return false; }
+
+    terrain_change_type type;
+};
+
+class hypnogecko_tail_fineff : public final_effect
+{
+public:
+    void fire() override;
+
+    hypnogecko_tail_fineff()
+        : final_effect(&you, nullptr, you.pos())
+    {
+    }
+protected:
+    bool mergeable(const final_effect&) const override { return true; }
+};
+
+class ephemeral_weapon_end_fineff : public final_effect
+{
+public:
+    void fire() override;
+
+    ephemeral_weapon_end_fineff(item_def& _wpn)
+        : final_effect(&you, nullptr, you.pos()), wpn(_wpn)
+    {
+    }
+protected:
+    bool mergeable(const final_effect& eff) const override;
+    item_def& wpn;
+};
 
 // Things to happen when the current attack/etc finishes.
 static vector<final_effect*> _final_effects;
@@ -828,9 +871,9 @@ void schedule_detonation_fineff(const coord_def& pos, const item_def* wpn)
     _schedule_final_effect(new detonation_fineff(pos, wpn));
 }
 
-void schedule_stardust_fineff(actor* agent, int power, int max_stars, bool force_max)
+void schedule_stardust_fineff(actor* agent, int power, int max_stars, shooting_star_fineff_type type)
 {
-    _schedule_final_effect(new stardust_fineff(agent, power, max_stars, force_max));
+    _schedule_final_effect(new stardust_fineff(agent, power, max_stars, type));
 }
 
 void schedule_pyromania_fineff()
@@ -851,6 +894,22 @@ void schedule_eeljolt_fineff()
 void schedule_psychokinetic_burst_fineff(actor* agent)
 {
     _schedule_final_effect(new psychokinetic_burst_fineff(agent));
+}
+
+void schedule_revert_terrain_fineff(const coord_def& pos,
+                                    terrain_change_type type)
+{
+    _schedule_final_effect(new revert_terrain_fineff(pos, type));
+}
+
+void schedule_hypnogecko_tail_fineff()
+{
+    _schedule_final_effect(new hypnogecko_tail_fineff());
+}
+
+void schedule_ephemeral_weapon_end(item_def& wpn)
+{
+    _schedule_final_effect(new ephemeral_weapon_end_fineff(wpn));
 }
 
 bool mirror_damage_fineff::mergeable(const final_effect &fe) const
@@ -945,6 +1004,13 @@ bool beogh_resurrection_fineff::mergeable(const final_effect& fe) const
     const beogh_resurrection_fineff& o =
         static_cast<const beogh_resurrection_fineff&>(fe);
     return ostracism_only == o.ostracism_only;
+}
+
+bool ephemeral_weapon_end_fineff::mergeable(const final_effect& fe) const
+{
+    const ephemeral_weapon_end_fineff& o =
+        static_cast<const ephemeral_weapon_end_fineff&>(fe);
+    return &wpn == &o.wpn;
 }
 
 void mirror_damage_fineff::merge(const final_effect &fe)
@@ -1132,22 +1198,12 @@ void trj_spawn_fineff::fire()
     if (invalid_monster_index(foe) && foe != MHITYOU)
         foe = MHITNOT;
 
-    // Give spawns the same attitude as TRJ; if TRJ is now dead, make them
-    // hostile.
-    const beh_type spawn_beh = trj
-        ? attitude_creation_behavior(trj->as_monster()->attitude)
-        : BEH_HOSTILE;
-
-    // No permanent friendly jellies from a charmed TRJ.
-    if (spawn_beh == BEH_FRIENDLY && !crawl_state.game_is_arena())
-        return;
-
     int spawned = 0;
     for (int i = 0; i < tospawn; ++i)
     {
         const monster_type jelly = royal_jelly_ejectable_monster();
         if (monster *mons = create_monster(
-                              mgen_data(jelly, spawn_beh, posn, foe,
+                              mgen_data(jelly, BEH_HOSTILE, posn, foe,
                                         MG_DONT_COME, GOD_JIYVA)
                               .set_summoned(trj, 0)
                               .set_range(1, LOS_RADIUS)
@@ -1610,6 +1666,13 @@ void spectral_weapon_fineff::fire()
     if (!weapon || !weapon->defined())
         return;
 
+    // Don't animate a weapon that has been dropped in the meantime.
+    if (atkr->is_monster() ? weapon->holding_monster() != atkr->as_monster()
+                           : !item_is_equipped(*weapon))
+    {
+        return;
+    }
+
     const coord_def target = defend->pos();
 
     // Do we already have a spectral weapon?
@@ -1726,12 +1789,15 @@ void stardust_fineff::fire()
     if (count == 0)
         return;
 
-    if (is_star_jelly)
+    if (type == SHOOTING_STAR_JELLY)
         mprf("A flurry of magic pours from %s injured body!", agent->name(DESC_ITS).c_str());
     else
-        mprf("%s orb unleashes a flurry of shooting stars!", agent->name(DESC_ITS).c_str());
+    {
+        mprf("%s %s unleashes a flurry of shooting stars!", agent->name(DESC_ITS).c_str(),
+            type == SHOOTING_STAR_CARINA ? "weapon" : "orb");
+    }
 
-    count = is_star_jelly ? max_stars : min(max_stars, count + 1);
+    count = type == SHOOTING_STAR_JELLY ? max_stars : min(max_stars, count + 1);
     const int foe = agent->is_player() ? int{MHITYOU} : agent->as_monster()->foe;
     for (int i = 0; i < count; ++i)
     {
@@ -1746,10 +1812,13 @@ void stardust_fineff::fire()
             mon->steps_remaining = 12;
     }
 
-    if (agent->is_player())
-        you.duration[DUR_STARDUST_COOLDOWN] = random_range(40, 70);
-    else if (!is_star_jelly)
-        agent->as_monster()->add_ench(mon_enchant(ENCH_ORB_COOLDOWN, agent, random_range(300, 500)));
+    if (type == SHOOTING_STAR_ORB)
+    {
+        if (agent->is_player())
+            you.duration[DUR_STARDUST_COOLDOWN] = random_range(40, 70);
+        else
+            agent->as_monster()->add_ench(mon_enchant(ENCH_ORB_COOLDOWN, agent, random_range(300, 500)));
+    }
 }
 
 void pyromania_fineff::fire()
@@ -1774,12 +1843,9 @@ void pyromania_fineff::fire()
     if (!found)
         return;
 
-    bolt exp;
-    zappy(ZAP_FIREBALL, 50, false, exp);
+    bolt exp(you, ZAP_FIREBALL, 50);
     exp.damage = pyromania_damage();
-    exp.set_agent(&you);
     exp.target = you.pos();
-    exp.source = you.pos();
     exp.ex_size = 3;
 
     mpr("Your orb flickers with a hungry flame!");
@@ -1812,13 +1878,7 @@ void celebrant_bloodrite_fineff::fire()
     int shots_fired = 0;
     int repeats = 0;
 
-    bolt beam;
-    beam.source       = you.pos();
-    beam.source_id    = MID_PLAYER;
-    beam.attitude     = ATT_FRIENDLY;
-    beam.thrower      = KILL_YOU;
-    zappy(ZAP_BLOOD_ARROW, 15 + you.skill(SK_INVOCATIONS, 2), false, beam);
-
+    bolt beam(you, ZAP_BLOOD_ARROW, 15 + you.skill(SK_INVOCATIONS, 2));
     beam.draw_delay   = 10;
 
     // Fire once at every visible target. If that doesn't hit the minimum number
@@ -1894,6 +1954,180 @@ void psychokinetic_burst_fineff::fire()
     for (actor *act : act_list)
         if (!mons_aligned(agent, act) && act->willpower() != WILL_INVULN)
             act->confuse(agent, random_range(2, 5));
+}
+
+void revert_terrain_fineff::fire()
+{
+    revert_terrain_change(posn, type);
+}
+
+// Calculate a score for how desireable it is to retreat to a given spot, as
+// part of a hypnogecko tail-dropping effect.
+//
+// (Lower scores are better.)
+static int _movement_score_for(const coord_def& pos)
+{
+    int total_score = 0;
+    for (radius_iterator ri(pos, 2, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    {
+        int score = 0;
+        // Prefer not to shift towards unknown territory
+        if (env.map_knowledge(*ri).feat() == DNGN_UNSEEN)
+            score += 50;
+
+        // But *do* prefer to shift towards spaces not currently in LoS
+        // (ie: corners)
+        if (!cell_see_cell(you.pos(), *ri, LOS_SOLID_SEE))
+            score -= 25;
+
+        // Prefer as few monsters adjacent to this space as possible.
+        if (monster* mon = monster_at(*ri))
+        {
+            if (!mon->wont_attack() && !mon->is_firewood()
+                && you.aware_of(*mon))
+            {
+                score += 50;
+            }
+        }
+
+        // Value conditions 2 tiles away much less than adjacent ones.
+        if (grid_distance(*ri, pos) == 2)
+            score /= 3;
+
+        total_score += score;
+    }
+
+    return total_score;
+}
+
+// Attempt to slip away and leave your shed tail behind.
+// There are two variants on this:
+// 1) Move a step and leave the tail where the player was.
+// 2) Stay in place and leave the tail on an adjacent tile.
+//
+// We always prefer (1), but in cases where either the player cannot move of the
+// tail cannot be placed at the player's location, we attempt to fall back to (2).
+void hypnogecko_tail_fineff::fire()
+{
+    coord_def move_pos;
+
+    mgen_data mg(MONS_HYPNOTAIL, BEH_FRIENDLY, you.pos(), MHITNOT, MG_FORCE_PLACE);
+    mg.set_summoned(&you, MON_SUMM_HYPNOTAIL, random_range(150, 220), false);
+    mg.hp = get_form(transformation::hypnogecko)->get_effect_size();
+
+    // Determine either where to move the player or where to drop the tail.
+    if (!monster_habitable_grid(MONS_HYPNOTAIL, you.pos())
+        // A Fedhas character may be standing on a plant.
+        || monster_at(you.pos())
+        || you.cannot_move())
+    {
+        for (fair_adjacent_iterator ai(you.pos()); ai; ++ai)
+        {
+            if (!monster_at(*ai) && monster_habitable_grid(MONS_HYPNOTAIL, *ai))
+            {
+                mg.pos = *ai;
+                break;
+            }
+        }
+
+        // Couldn't find a valid spot.
+        if (mg.pos == you.pos())
+            return;
+    }
+    else
+    {
+        int best_score = 10000;
+        int best_count = 0;
+
+        for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        {
+            if (!in_bounds(*ai) || actor_at(*ai)
+                || !you.is_habitable(*ai)
+                || is_feat_dangerous(env.grid(*ai))
+                || feat_is_trap(env.grid(*ai))
+                || harmful_cloud_at(*ai))
+            {
+                continue;
+            }
+
+            const int score = _movement_score_for(*ai);
+
+            if (score == best_score)
+            {
+                if (one_chance_in(++best_count))
+                    move_pos = *ai;
+            }
+            else if (score < best_score)
+            {
+                best_score = score;
+                best_count = 0;
+                move_pos = *ai;
+            }
+        }
+
+        // Couldn't find anywhere to retreat to.
+        if (move_pos.origin())
+            return;
+
+        you.move_to(move_pos, MV_DEFAULT, true);
+    }
+
+    if (monster* tail = create_monster(mg))
+    {
+        you.props[HYPNOGECKO_LOST_TAIL_KEY].get_int() = random_range(300, 425);
+        for (monster_near_iterator mi(tail->pos(), LOS_NO_TRANS); mi; ++mi)
+        {
+            if (!mi->wont_attack())
+            {
+                mi->add_ench(mon_enchant(ENCH_MISDIRECTED, tail, INFINITE_DURATION));
+                mi->target = tail->pos();
+                mi->foe = tail->mindex();
+            }
+        }
+
+        mprf("You shed your tail %sto distract predators!",
+             !move_pos.origin() ? "and slip away " : "");
+
+        if (!move_pos.origin())
+        {
+            you.stop_being_constricted();
+            you.stop_being_caught();
+            you.finalise_movement();
+        }
+    }
+}
+
+void ephemeral_weapon_end_fineff::fire()
+{
+    ASSERT(item_is_equipped(wpn));
+
+    const int plus = wpn.plus;
+
+    const string name = wpn.props.exists(WEAPON_NAME_KEY) ? wpn.props[WEAPON_NAME_KEY].get_string()
+                                                          : "";
+
+    item_def* orig = get_item_swap_back(wpn);
+
+    unequip_item(wpn, false);
+
+    // Assumes the only ephemeral weapon is a centipede. Expand when this changes.
+    mgen_data mg(MONS_ASSASSIN_CENTIPEDE, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
+    mg.set_summoned(&you, MON_SUMM_CENTIPEDE, random_range(600, 900), false);
+    mg.set_range(1, 4);
+    mg.hd = 2 + plus * 4 / 3;
+
+    monster* mon;
+    if (!you.allies_forbidden() && (mon = create_monster(mg)))
+    {
+        if (!name.empty())
+            mon->mname = name;
+        mprf("Your assassin centipede leaps free of your %s with a hiss!", you.arm_name(false).c_str());
+    }
+    else
+        mprf("Your assassin centipede withers and dies.");
+
+    if (orig)
+        try_equip_item(*orig, true);
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

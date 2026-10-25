@@ -47,6 +47,7 @@ void make_mons_leave_level(monster* mon);
 bool monster_needs_los(const monster* mons);
 bool monster_los_is_valid(const monster* mons, const coord_def &p);
 bool monster_los_is_valid(const monster* mons, const actor* targ);
+bool monster_on_wrong_wall_side(const monster* attacker, const monster* target);
 
 void shake_off_monsters(const actor* target);
 

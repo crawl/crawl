@@ -387,7 +387,7 @@ static void _do_medusa_stinger()
     vector<monster*> targs;
     for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
     {
-        if (mi->temp_attitude() == ATT_HOSTILE && !mi->is_firewood()
+        if (mi->hostile() && !mi->is_firewood()
             && grid_distance(you.pos(), mi->pos()) <= 2)
         {
             targs.push_back(*mi);
@@ -1016,7 +1016,7 @@ static bool _missing_weapon(const item_def *weapon, const item_def *offhand)
            && you.form != transformation::tree
            && any_of(you.inv.begin(), you.inv.end(),
                      [](item_def &it) {
-               return is_melee_weapon(it) && can_equip_item(it);
+               return is_melee_weapon(it) && can_equip_item(it, true);
             });
 }
 
@@ -1049,7 +1049,7 @@ bool wielded_weapon_check(string attack_verb)
     if (!result)
         canned_msg(MSG_OK);
 
-    learned_something_new(HINT_WIELD_WEAPON); // for hints mode Rangers
+    learned_something_new(HINT_WIELD_MELEE_WEAPON);
 
     // Don't warn again if you decide to continue your attack.
     if (result)
@@ -1147,15 +1147,15 @@ bool player_unrand_bad_target(const item_def *weapon,
  */
 bool should_cleave_into(const actor &attacker, const actor &defender)
 {
+    // The player should only cleave into neutrals if they're frenzied.
+    if (attacker.is_player() && defender.attitude() == ATT_NEUTRAL
+        && !defender.as_monster()->has_ench(ENCH_FRENZIED))
+    {
+        return false;
+    }
+
     if (could_harm_enemy(&attacker, &defender))
         return true;
-
-    // The player should only cleave into neutrals if they're frenzied.
-    if (attacker.is_player()
-        && mons_attitude(*defender.as_monster()) == ATT_NEUTRAL)
-    {
-        return defender.as_monster()->has_ench(ENCH_FRENZIED);
-    }
 
     // The defender is either immune to the attack's efforts or not an enemy.
     return false;
@@ -1233,10 +1233,10 @@ bool weapon_multihits(const item_def *weap)
 
 // Get a list of all targets that are within attack range of they player at the
 // moment (using the maximum range of either weapon they may have equipped).
-vector<actor*> get_player_attack_targets()
+vector<actor*> get_player_attack_targets(bool only_known)
 {
     vector<actor*> targs;
-    get_cleave_targets(you, coord_def(), targs, you.reach_range());
+    get_cleave_targets(you, coord_def(), targs, you.reach_range(), only_known);
     return targs;
 }
 
@@ -1269,9 +1269,11 @@ vector<actor*> get_player_cleave_targets(const coord_def& aim)
  *                       there isn't one.
  * @param targets[out]   A list to be populated with targets.
  * @param range          Reaching range of this attack (default 1).
+ * @param only_known     If true, only consider targets whose location is known
+ *                       to the attacker.
  */
 void get_cleave_targets(const actor &attacker, const coord_def& def,
-                        vector<actor*> &targets, int range)
+                        vector<actor*> &targets, int range, bool only_known)
 {
     // Prevent scanning invalid coordinates if the attacker dies partway through
     // a cleave (due to hitting explosive creatures, or perhaps other things)
@@ -1287,6 +1289,8 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
         if (!target || !should_cleave_into(attacker, *target))
             continue;
         if (di.radius() > 1 && !can_reach_attack_between(atk, *di, range))
+            continue;
+        if (only_known && !attacker.aware_of(*target))
             continue;
         targets.push_back(target);
     }
@@ -1469,7 +1473,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     if (check_only)
         return true;
 
-    // Listed in the form: "your rat", "Blorkula the orcula".
+    // Listed in the form: "your rat", "Blorkula the Orcula".
     // No "your the Royal Jelly" nor "the the Royal Jelly".
     string mon_name = remove_prepended_the(mon->name(DESC_PLAIN));
     if (!starts_with(adj, "your"))
@@ -1557,7 +1561,7 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
     if (check_only)
         return true;
 
-    // Listed in the form: "your rat", "Blorkula the orcula".
+    // Listed in the form: "your rat", "Blorkula the Orcula".
     string mon_name = !victims.empty() ? victims.describe() : "";
     const bool penance = victims.penance();
 
@@ -1809,11 +1813,11 @@ int brand_adjust_weapon_damage(int base_dam, int brand, bool random)
 
 int resonance_damage_mod(int dam, bool random)
 {
-    if (you.wearing_ego(OBJ_ARMOUR, SPARM_RESONANCE))
-    {
-        dam = random ? div_rand_round(dam * (100 + you.skill_rdiv(SK_FORGECRAFT, 3, 2)), 100)
-                     : dam * (100 + you.skill(SK_FORGECRAFT, 3) / 2) / 100;
-    }
+    int bonus = you.wearing_ego(OBJ_ARMOUR, SPARM_RESONANCE)
+                    * you.skill(SK_FORGECRAFT, 2);
+
+    dam = random ? div_rand_round(dam * (100 + bonus), 100)
+                 : dam * (100 + bonus) / 100;
 
     return dam;
 }

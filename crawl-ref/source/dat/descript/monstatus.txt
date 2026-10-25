@@ -171,15 +171,14 @@ cursed with the promise of agony monstatus
 This creature is cursed, and will lose half its current health after the next time
 the source of the curse hits it with a melee attack.
 %%%%
-damage-immune at range monstatus
-
-This creature suffers no damage from any source which is not currently adjacent to
-them (including clouds, if their creator is non-adjacent).
-%%%%
 dazed monstatus
 
 This creature is temporarily unable to act, but any hostile action will cause it to
 immediately regain its senses.
+%%%%
+deflecting missiles monstatus
+
+This creature has +24 EV when dodging projectiles, whether physical or magical.
 %%%%
 diminished spells monstatus
 
@@ -508,10 +507,6 @@ regenerating monstatus
 
 This creature regenerates health at a greatly increased rate, proportion to their
 maximum health.
-%%%%
-repelling missiles monstatus
-
-This creature has +15 EV when dodging projectiles, whether physical or magical.
 %%%%
 retreating monstatus
 

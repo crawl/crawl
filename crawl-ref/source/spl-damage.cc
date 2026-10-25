@@ -40,6 +40,7 @@
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-death.h"
+#include "mon-place.h"
 #include "mon-tentacle.h"
 #include "mutation.h"
 #include "ouch.h"
@@ -49,6 +50,7 @@
 #include "shout.h"
 #include "spl-clouds.h" // big_cloud
 #include "spl-goditem.h"
+#include "spl-other.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
 #include "spl-zap.h"
@@ -57,6 +59,7 @@
 #include "target.h"
 #include "terrain.h"
 #include "tilepick.h"
+#include "timed-effects.h"
 #include "transform.h"
 #include "traps.h"
 #include "unicode.h"
@@ -578,7 +581,7 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
     else
     {
         hurted = check_your_resists(hurted, beam.flavour, beam.name, 0, doFlavour);
-        if (agent->real_attitude() == ATT_MARIONETTE)
+        if (agent->attitude() == ATT_MARIONETTE)
             hurted = 0;
     }
     dprf("damage done: %d", hurted);
@@ -901,9 +904,7 @@ spret cast_freeze(int pow, monster* mons, bool fail)
     god_conduct_trigger conducts[3];
     set_attack_conducts(conducts, *mons);
 
-    bolt beam;
-    beam.thrower = KILL_YOU;
-    zappy(ZAP_FREEZE, pow, false, beam);
+    bolt beam(you, SPELL_FREEZE, pow);
 
     const int orig_hurted = beam.damage.roll();
     // calculate the resist adjustment to punctuate
@@ -1059,13 +1060,8 @@ spret cast_momentum_strike(int pow, coord_def target, bool fail)
 
     fail_check();
 
-    bolt beam;
-    zappy(ZAP_MOMENTUM_STRIKE, pow, false, beam);
-    beam.source_id    = MID_PLAYER;
-    beam.thrower      = KILL_YOU;
-    beam.attitude     = ATT_FRIENDLY;
-    beam.origin_spell = SPELL_MOMENTUM_STRIKE;
-    beam.source       = beam.target = target;
+    bolt beam(you, SPELL_MOMENTUM_STRIKE, pow);
+    beam.source = beam.target = target;
     beam.fire();
 
     if (!beam.foes_hurt && !beam.friends_hurt) // miss!
@@ -1090,11 +1086,11 @@ static ai_action::goodness _fire_permafrost_at(const actor &agent, int pow,
 {
     const bool mon = agent.is_monster();
 
-    bolt beam, visual;
+    bolt beam;
     targeting_tracer tracer;
     beam.set_is_tracer(is_tracer);
     beam.set_agent(&agent);
-    beam.attitude     = mon ? mons_attitude(*agent.as_monster()) : ATT_FRIENDLY;
+    beam.attitude     = agent.attitude();
     beam.foe_ratio    = 80; // default
     beam.origin_spell = SPELL_PERMAFROST_ERUPTION;
     beam.source = beam.target = target;
@@ -1109,16 +1105,9 @@ static ai_action::goodness _fire_permafrost_at(const actor &agent, int pow,
 
     // To provide a different center graphic from the rest without changing
     // effect messaging order, split the vfx off into BEAM_VISUAL explosions.
-    visual.flavour       = BEAM_VISUAL;
-    visual.colour        = WHITE;
-    visual.set_agent(&agent);
-    visual.tile_explode  = TILE_BOLT_PERMAFROST_COLD;
-    visual.glyph         = dchar_glyph(DCHAR_EXPLOSION);
-    visual.range         = 1;
-    visual.ex_size       = 1;
-    visual.is_explosion  = true;
+    bolt visual = bolt::visual_beam(target, target, 15, WHITE, TILE_BOLT_PERMAFROST_COLD);
+    visual.ex_size = 1;
     visual.explode_delay = beam.explode_delay * 3 / 2;
-    visual.target        = target;
 
     zappy(ZAP_PERMAFROST_ERUPTION_COLD, pow, mon, beam);
     beam.ex_size       = 1;
@@ -1260,6 +1249,13 @@ static bool _init_frag_player(frag_effect &effect)
             effect.damage = frag_damage_type::player_gargoyle;
         return true;
     }
+    else if (you.form == transformation::jademantle)
+    {
+        effect.name       = "blast of jade fragments";
+        effect.colour     = GREEN;
+        effect.damage = frag_damage_type::player_gargoyle;
+        return true;
+    }
     else if (you.species == SP_REVENANT)
     {
         effect.name   = "blast of bone shards";
@@ -1318,6 +1314,10 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     { MONS_PHALANX_BEETLE,    { "metal", CYAN, frag_damage_type::metal } },
     { MONS_SPELLSPARK_SERVITOR, { "metal", CYAN, frag_damage_type::metal } },
     { MONS_PLATINUM_PARAGON,  { "platinum", CYAN, frag_damage_type::metal } },
+    { MONS_JADE_CRYSTAL_AIR,   { "jade", LIGHTCYAN, frag_damage_type::crystal } },
+    { MONS_JADE_CRYSTAL_EARTH, { "jade", LIGHTCYAN, frag_damage_type::crystal } },
+    { MONS_JADE_CRYSTAL_FIRE,  { "jade", LIGHTCYAN, frag_damage_type::crystal } },
+    { MONS_JADE_CRYSTAL_ICE,   { "jade", LIGHTCYAN, frag_damage_type::crystal } },
     { MONS_GLASS_EYE,         { "glass", LIGHTCYAN,
                                 frag_damage_type::crystal } },
     { MONS_SCREAMING_REFRACTION, { "crystal", GREEN,
@@ -1725,6 +1725,7 @@ static int _shatter_player_dice()
     if (you.petrified() || you.petrifying())
         return 6; // reduced later by petrification's damage reduction
     else if (you.form == transformation::statue
+             || you.form == transformation::jademantle
              || you.has_mutation(MUT_STONE_BODY)
              || you.species == SP_REVENANT)
     {
@@ -1759,16 +1760,10 @@ spret cast_shatter(int pow, bool fail)
         // Initial ring, then big explosion.
         draw_ring_animation(you.pos(), you.current_vision, YELLOW, BROWN,
                             true, 15, TILE_BOLT_SHATTER_WAVE_YELLOW);
-        bolt visual;
-        visual.flavour       = BEAM_VISUAL;
-        visual.source        = you.pos();
-        visual.target        = you.pos();
-        visual.colour        = WHITE;
-        visual.tile_explode  = TILE_BOLT_SHATTER_WAVE_WHITE;
+        bolt visual = bolt::visual_beam(you.pos(), you.pos(), 15,
+                                        WHITE, TILE_BOLT_SHATTER_WAVE_WHITE);
         visual.glyph         = dchar_glyph(DCHAR_EXPLOSION);
         visual.ex_size       = you.current_vision;
-        visual.is_explosion  = true;
-        visual.explode_delay = 15;
         visual.explode(true, true);
     }
 
@@ -1851,14 +1846,9 @@ bool mons_shatter(monster* caster, bool actual)
             // Initial shockwave pulse, then faint big explosion.
             draw_ring_animation(caster->pos(), you.current_vision, YELLOW, BROWN,
                                 true, 20, TILE_BOLT_SHATTER_WAVE_YELLOW);
-            bolt visual;
-            visual.flavour       = BEAM_VISUAL;
-            visual.source        = caster->pos();
-            visual.target        = caster->pos();
-            visual.colour        = WHITE;
-            visual.tile_explode  = TILE_BOLT_SHATTER_WAVE_WHITE;
+            bolt visual = bolt::visual_beam(caster->pos(), caster->pos(), 15,
+                                            WHITE, TILE_BOLT_SHATTER_WAVE_WHITE);
             visual.glyph         = dchar_glyph(DCHAR_EXPLOSION);
-            visual.range         = you.current_vision;
             visual.ex_size       = you.current_vision;
             visual.is_explosion  = true;
             visual.explode_delay = 25;
@@ -2103,7 +2093,7 @@ static int _irradiate_cell(coord_def where, int pow, const actor &agent)
     if (agent.is_player())
         _player_hurt_monster(*act->as_monster(), dam, BEAM_MMISSILE);
     else if (dam)
-        act->hurt(&agent, dam, BEAM_MMISSILE);
+        act->hurt(&agent, dam, BEAM_MMISSILE, KILLED_BY_BEAM, "", "blast of magical radiation");
 
     if (act->alive())
     {
@@ -2147,20 +2137,10 @@ spret cast_irradiate(int powc, actor &caster, bool fail)
                                " erupts in a fountain of uncontrolled magic!");
     }
 
-    bolt beam;
-    beam.name = "irradiate";
-    beam.flavour = BEAM_VISUAL;
-    beam.set_agent(&caster);
-    beam.colour = ETC_MUTAGENIC;
-    beam.tile_explode = TILE_BOLT_IRRADIATE;
+    bolt beam = bolt::visual_beam(caster.pos(), caster.pos(), 75, ETC_MUTAGENIC,
+                                  TILE_BOLT_IRRADIATE);
     beam.glyph = dchar_glyph(DCHAR_EXPLOSION);
-    beam.range = 1;
     beam.ex_size = 1;
-    beam.is_explosion = true;
-    beam.explode_delay = beam.explode_delay * 3 / 2;
-    beam.source = caster.pos();
-    beam.target = caster.pos();
-    beam.hit = AUTOMATIC_HIT;
     beam.explode(true, true);
 
     apply_random_around_square([powc, &caster] (coord_def where) {
@@ -2585,17 +2565,6 @@ static void _explosion_square(const actor */*agent*/, bolt beam,
         noisy(spell_effect_noise(spell),square);
 }
 
-// Sets up the visual explosion for ignition and detonation catalyst
-static void _setup_visual_ignition_beam(const actor *agent, bolt &beam)
-{
-    beam.set_agent(agent);
-    beam.flavour        = BEAM_VISUAL;
-    beam.glyph          = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.colour         = RED;
-    beam.ex_size        = 1;
-    beam.is_explosion   = true;
-}
-
 vector<coord_def> get_ignition_blast_sources(const actor *agent, bool tracer)
 {
     // Ignition affects squares that had hostile monsters on them at the time
@@ -2644,8 +2613,7 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
     vector<coord_def> blast_adjacents;
 
     // Used to draw explosion cells
-    bolt beam_visual;
-    _setup_visual_ignition_beam(agent, beam_visual);
+    bolt beam_visual = bolt::visual_beam(coord_def(), coord_def(), 15, RED);
 
     // Used to deal damage; invisible
     bolt beam_actual;
@@ -3176,7 +3144,7 @@ static targeting_tracer _fire_plasma_beam_at(const actor &agent, int pow,
     beam.source       = agent.pos();
     beam.target       = target;
     beam.set_agent(&agent);
-    beam.attitude     = mon ? mons_attitude(*agent.as_monster()) : ATT_FRIENDLY;
+    beam.attitude     = agent.attitude();
     beam.origin_spell = SPELL_PLASMA_BEAM;
     beam.draw_delay   = 5;
     targeting_tracer tracer;
@@ -3705,15 +3673,6 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
     }
 }
 
-static void _setup_unravelling(bolt &beam, int pow, coord_def target)
-{
-    zappy(ZAP_UNRAVELLING, pow, false, beam);
-    beam.set_agent(&you);
-    beam.source = target;
-    beam.target = target;
-    beam.ex_size = 1;
-}
-
 spret cast_unravelling(coord_def target, int pow, bool fail)
 {
     if (cell_is_invalid_target(target))
@@ -3762,8 +3721,9 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
         return spret::success;
     }
 
-    bolt beam;
-    _setup_unravelling(beam, pow, target);
+    bolt beam(you, SPELL_VIOLENT_UNRAVELLING, pow);
+    beam.source = beam.target = target;
+    beam.ex_size = 1;
     beam.fire();
 
     return spret::success;
@@ -3987,10 +3947,7 @@ bool handle_searing_ray(actor& agent, int turn)
             agent.props[SEARING_RAY_AIM_SPOT_KEY] = true;
     }
 
-    bolt beam;
-    beam.thrower = agent.is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
-    beam.range   = spell_range(SPELL_SEARING_RAY, &agent);
-    beam.source  = agent.pos();
+    bolt beam(agent, SPELL_SEARING_RAY, pow);
     beam.target  = agent.props[SEARING_RAY_TARGET_KEY].get_coord();
 
     // If friendlies have moved into the beam path, give a chance to abort
@@ -3999,8 +3956,6 @@ bool handle_searing_ray(actor& agent, int turn)
         stop_channelling_spells();
         return false;
     }
-
-    zappy(zap, pow, false, beam);
 
     // If a channelling monster no longer has a good shot, cancel it and let
     // it do something else.
@@ -4046,10 +4001,10 @@ bool handle_searing_ray(actor& agent, int turn)
     return true;
 }
 
-dice_def glaciate_damage(int pow, int eff_range)
+dice_def glaciate_damage(int pow, int eff_range, bool random)
 {
     // At or within range 3, this is equivalent to the old Ice Storm damage.
-    return calc_dice(10, (54 + 3 * pow / 2) / eff_range);
+    return calc_dice(10, (54 + 3 * pow / 2) / eff_range, random);
 }
 
 spret cast_glaciate(actor *caster, int pow, coord_def aim)
@@ -4131,66 +4086,36 @@ spret cast_glaciate(actor *caster, int pow, coord_def aim)
     return spret::success;
 }
 
-spret cast_starburst(int pow, bool fail, bool is_tracer)
+spret cast_multibeam(spell_type spell, const coord_def& target, int pow, bool fail)
 {
-    int range = spell_range(SPELL_STARBURST, &you);
+    bolt beam(you, spell, pow);
+    beam.target = target;
+    beam.draw_delay = 40;
 
-    vector<coord_def> offsets = { coord_def(range, 0),
-                                coord_def(range, range),
-                                coord_def(0, range),
-                                coord_def(-range, range),
-                                coord_def(-range, 0),
-                                coord_def(-range, -range),
-                                coord_def(0, -range),
-                                coord_def(range, -range) };
+    int beam_width = 1;
+    multi_beam_shape shape = MULTI_BEAM_FAN;
 
-    bolt beam;
-    beam.range        = range;
-    beam.source       = you.pos();
-    beam.source_id    = MID_PLAYER;
-    beam.attitude = ATT_FRIENDLY;
-    beam.thrower      = KILL_YOU_MISSILE;
-    beam.origin_spell = SPELL_STARBURST;
-    beam.draw_delay   = 5;
-    zappy(ZAP_BOLT_OF_FIRE, pow, false, beam);
+    if (spell == SPELL_STARBURST)
+        beam_width = 8;
+    else if (spell == SPELL_SIROCCO)
+        beam_width = 3;
 
-    if (is_tracer)
-    {
-        targeting_tracer tracer;
-        for (const coord_def & offset : offsets)
-        {
-            beam.target = you.pos() + offset;
-            beam.fire(tracer);
-            // something to hit
-            if (tracer.foe_info.count > 0)
-                return spret::success;
-        }
-        return spret::abort;
-    }
+    multi_beam multi(beam, shape, beam_width);
 
     player_beam_tracer tracer;
-    for (const coord_def & offset : offsets)
-    {
-        beam.target = you.pos() + offset;
-        fire_partial_player_tracer(ZAP_BOLT_OF_FIRE, pow, tracer, beam);
-    }
-
+    multi.trace(tracer);
     if (cancel_beam_prompt(beam, tracer))
         return spret::abort;
 
     fail_check();
 
-    // Randomize for nice animations
-    shuffle_array(offsets);
-    for (auto & offset : offsets)
-    {
-        beam.target = you.pos() + offset;
-        beam.fire();
-    }
+    multi.fire();
+
+    if (spell == SPELL_SIROCCO)
+        you.duration[DUR_SIROCCO_COOLDOWN] = random_range(40, 50);
 
     return spret::success;
 }
-
 
 dice_def jinxbite_damage(int pow, bool random)
 {
@@ -4312,53 +4237,26 @@ void seeker_attack(monster& seeker, actor& target, coord_def attack_pos)
 
     zap_type ztype = (seeker.type == MONS_FOXFIRE ? ZAP_FOXFIRE : ZAP_SHOOTING_STAR);
 
-    bolt beam;
-    beam.thrower = seeker.summoner == MID_PLAYER ? KILL_YOU : KILL_MON;
+    bool seen = you.can_see(seeker);
+
+    // Kill the monster before the beam, which prevents it being hit by its own
+    // beam if reflected by the Warlock's Mirror.
+    if (seeker.alive())
+        monster_die(seeker, KILL_RESET, NON_MONSTER, true);
+
+    bolt beam(*summoner, ztype, seeker.get_hit_dice());
     beam.range       = 1;
     beam.source      = seeker.pos();
-    beam.set_agent(summoner);
-    zappy(ztype, seeker.get_hit_dice(), !seeker.friendly(), beam);
     beam.target      = target.pos();
+    // Set explicitly because the seeker is dead.
+    beam.seen        = seen;
     beam.hit_verb = (seeker.type == MONS_FOXFIRE ? "burns" : "hits");
     beam.fire();
 
     place_cloud(seeker_trail_type(seeker), seeker.pos(), 2, &seeker);
 
-    const bool do_knockback = target.alive() && seeker.type == MONS_SHOOTING_STAR;
-
-    if (seeker.alive())
-        monster_die(seeker, KILL_RESET, NON_MONSTER, true);
-
-    // XXX: When doing knockback, we need to kill the seeker *first*, since
-    //      seeker_attack can be called when a hostile monster moves 'into' a
-    //      shooting star (which internally swaps with it), and otherwise the
-    //      star itself will block knockback (since it's now 'behind' the
-    //      monster being pushed).
-    if (do_knockback)
+    if (target.alive() && seeker.type == MONS_SHOOTING_STAR && beam.reflections == 0)
         target.knockback(seeker, 1, 0, "", attack_pos);
-}
-
-/**
- * Hailstorm the given cell. (Per the spell.)
- *
- * @param where     The cell in question.
- * @param pow       The power with which the spell is being cast.
- * @param agent     The agent (player or monster) doing the hailstorming.
- */
-static void _hailstorm_cell(coord_def where, int pow, actor *agent)
-{
-    bolt beam;
-    zappy(ZAP_HAILSTORM, pow, agent->is_monster(), beam);
-    beam.thrower    = agent->is_player() ? KILL_YOU : KILL_MON;
-    beam.source_id  = agent->mid;
-    beam.attitude   = agent->temp_attitude();
-    beam.draw_delay = 0;
-    beam.redraw_per_cell = false;
-    beam.source     = where;
-    beam.target     = where;
-    beam.hit_verb   = "pelts";
-
-    beam.fire();
 }
 
 spret cast_hailstorm(int pow, bool fail, bool tracer)
@@ -4405,13 +4303,30 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
 
     mpr("A cannonade of hail descends around you!");
 
+    bolt beam(you, SPELL_HAILSTORM, pow);
+    beam.animate = false;
+    beam.hit_verb = "pelts";
+
+    vector<coord_def> targs;
     for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS, true);
          ri; ++ri)
     {
-        if (grid_distance(you.pos(), *ri) == 1 || !in_bounds(*ri))
-            continue;
+        if (in_bounds(*ri) && grid_distance(you.pos(), *ri) > 1
+            && !cell_is_invalid_target(*ri))
+        {
+            targs.push_back(*ri);
+        }
+    }
 
-        _hailstorm_cell(*ri, pow, &you);
+    shuffle_array(targs);
+    if (Options.use_animations & UA_BEAM)
+        for (coord_def p : targs)
+            flash_tile(p, element_colour(ETC_ICE, p), 1);
+
+    for (coord_def p : targs)
+    {
+        beam.source = beam.target = p;
+        beam.fire();
     }
 
     if (Options.use_animations & UA_BEAM)
@@ -4420,24 +4335,16 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
     return spret::success;
 }
 
-static void _imb_actor(actor * act, int pow, coord_def source)
+static void _imb_actor(actor * act, int pow)
 {
-    bolt beam;
-    zappy(ZAP_MYSTIC_BLAST, pow, false, beam);
-    beam.source          = source;
-    beam.thrower         = KILL_YOU;
-    beam.source_id       = MID_PLAYER;
-    beam.ench_power      = pow;
-    beam.aimed_at_spot   = true;
-
-    beam.target          = act->pos();
-
-    beam.flavour          = BEAM_VISUAL;
+    // We need to tracer the beam path first to get the proper path for the
+    // knockback to take when affect_actor() is called.
+    bolt beam(you, SPELL_ISKENDERUNS_MYSTIC_BLAST, pow);
+    beam.target = act->pos();
+    beam.affects_nothing = true;
+    beam.animate = false;
     beam.fire();
-
-    zappy(ZAP_MYSTIC_BLAST, pow, false, beam);
     beam.affects_nothing = false;
-
     beam.affect_actor(act);
 }
 
@@ -4468,9 +4375,10 @@ spret cast_imb(int pow, bool fail)
     far_to_near_sorter sorter = { source };
     sort(act_list.begin(), act_list.end(), sorter);
 
+    draw_ring_animation(you.pos(), range, LIGHTMAGENTA, LIGHTMAGENTA, true, 50, TILE_BOLT_MYSTIC_BLAST);
     for (actor *act : act_list)
         if (cell_see_cell(source, act->pos(), LOS_SOLID_SEE)) // sanity check vs dispersal
-            _imb_actor(act, pow, source);
+            _imb_actor(act, pow);
 
     return spret::success;
 }
@@ -5261,14 +5169,10 @@ spret cast_grave_claw(actor& caster, coord_def targ, int pow, bool fail)
 
     flash_tile(targ, WHITE);
 
-    bolt beam;
-    beam.set_agent(&caster);
-    beam.attitude = caster.is_player() ? ATT_FRIENDLY
-                                       : mons_attitude(*caster.as_monster());
-    beam.origin_spell = SPELL_GRAVE_CLAW;
+    bolt beam(caster, SPELL_GRAVE_CLAW, pow);
     beam.source = beam.target = targ;
-    zappy(ZAP_GRAVE_CLAW, pow, caster.is_monster(), beam);
     beam.hit_verb = "skewer";
+    beam.plural = true;
     beam.fire();
 
     if (caster.is_player())
@@ -5349,7 +5253,7 @@ void unleash_fortress_blast(actor& caster)
     bolt blast;
     zappy(ZAP_FORTRESS_BLAST, power, caster.is_monster(), blast);
     blast.set_agent(&caster);
-    blast.attitude = caster.temp_attitude();
+    blast.attitude = caster.attitude();
     blast.source = caster.pos();
     blast.target = caster.pos();
     blast.origin_spell = SPELL_FORTRESS_BLAST;
@@ -5409,9 +5313,7 @@ void do_catalyst_explosion(coord_def center, const item_def* wpn)
 
     int pow = calc_spell_power(SPELL_DETONATION_CATALYST);
 
-    // Identical visual beam to ignition
-    bolt beam_visual;
-    _setup_visual_ignition_beam(&you, beam_visual);
+    bolt beam_visual = bolt::visual_beam(coord_def(), coord_def(), 15, RED);
 
     // The damage beam is different. Not using a zap due to weapon component.
     bolt beam_actual;
@@ -5453,4 +5355,147 @@ void do_catalyst_explosion(coord_def center, const item_def* wpn)
 
     for (coord_def pos : blast_targets)
         _explosion_square(&you, beam_actual, pos, pos == center, SPELL_DETONATION_CATALYST);
+}
+
+spell_type dragon_vein_to_spell(dungeon_feature_type feat)
+{
+    switch (feat)
+    {
+        default:
+        case DNGN_DRAGON_VEIN_AIR:      return SPELL_DRAGON_VEIN_AIR;
+        case DNGN_DRAGON_VEIN_EARTH:    return SPELL_DRAGON_VEIN_EARTH;
+        case DNGN_DRAGON_VEIN_FIRE:     return SPELL_DRAGON_VEIN_FIRE;
+        case DNGN_DRAGON_VEIN_ICE:      return SPELL_DRAGON_VEIN_ICE;
+    }
+}
+
+// Triggers a dragon vein at the player's feet. This counts as casting a real
+// spell for most trigger purposes.
+void trigger_dragon_vein()
+{
+    const spell_type spell = dragon_vein_to_spell(env.grid(you.pos()));
+    const int pow = calc_spell_power(SPELL_DRAGON_VEINS);
+
+    if (!can_cast_spells(true, true))
+    {
+        mpr("You can't tap into the dragon vein in your current state.");
+        return;
+    }
+    else if (!enough_mp(1, true))
+    {
+        mpr("You don't have enough magical energy left to tap into this dragon vein.");
+        return;
+    }
+
+    vector<monster*> targets;
+
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mi->is_firewood()
+            && you.can_see(**mi)
+            && could_harm_enemy(&you, *mi))
+        {
+            targets.push_back(*mi);
+        }
+    }
+
+    if (targets.empty())
+    {
+        mpr("You attempt to draw power from the ground, but there is nothing in range to harm.");
+        return;
+    }
+
+    shuffle_array(targets);
+
+    bolt blast(you, spell, pow);
+    blast.draw_delay = 100;
+    int num_targs = 3;
+
+    switch (spell)
+    {
+        case SPELL_DRAGON_VEIN_AIR:
+        {
+            // Prioritizes most distant targets, but hits more.
+            far_to_near_sorter sorter = {you.pos()};
+            sort(targets.begin(), targets.end(), sorter);
+        }
+        break;
+
+        case SPELL_DRAGON_VEIN_FIRE:
+        {
+            // Prioritizes the monsters with the least current health.
+            sort(targets.begin(), targets.end(),
+                 [](const monster* a, const monster* b)
+                    { return a->hit_points < b->hit_points;});
+        }
+        break;
+
+        case SPELL_DRAGON_VEIN_ICE:
+        {
+            // Prioritizes the monsters with the most current health.
+            sort(targets.begin(), targets.end(),
+                 [](const monster* a, const monster* b)
+                    { return a->hit_points > b->hit_points;});
+        }
+        break;
+
+        default:
+        case SPELL_DRAGON_VEIN_EARTH:
+        {
+            // Prioritizes the closest monsters.
+            near_to_far_sorter sorter = {you.pos()};
+            sort(targets.begin(), targets.end(), sorter);
+
+            num_targs = 2;
+        }
+        break;
+    }
+
+    mprf("You draw %s magic from the ground and channel it!",
+         lowercase_string(spell_schools_string(spell)).c_str());
+
+    const dice_def base_dmg = blast.damage;
+    for (int i = 0; i < num_targs && i < (int)targets.size(); ++i)
+    {
+        monster* mon = targets[i];
+
+        blast.source = blast.target = mon->pos();
+
+        // Dammage falloff with distance
+        const int dist = grid_distance(you.pos(), mon->pos());
+        if (dist > 3 && spell != SPELL_DRAGON_VEIN_AIR)
+        {
+            blast.damage.size = div_rand_round(blast.damage.size * 5 , dist + 2);
+            if (dist >= 5)
+                blast.hit_verb = "weakly hits";
+        }
+
+        blast.fire();
+        blast.damage = base_dmg;
+        blast.hit_verb = "hits";
+
+        if (spell == SPELL_DRAGON_VEIN_EARTH && dist <= 2 && mon->alive()
+            && !one_chance_in(3))
+        {
+            simple_monster_message(*mon, " is staggered.");
+            mon->speed_increment -= random_range(10, 13);
+        }
+    }
+
+    pay_mp(1);
+    finalize_mp_cost();
+    do_post_spellcast_effects(spell);
+
+    if (you.duration[DUR_STAMPEDE] && you.has_mutation(MUT_EAST_WIND))
+        you.duration[DUR_STAMPEDE] += you.time_taken;
+
+    // If this is your second usage on this spell cast, remove the remaining dragon veins.
+    // (Otherwise, just remove the one you stepped on.)
+    if (you.props.exists(DRAGON_VEIN_USED_KEY))
+        end_terrain_changes(you, TERRAIN_CHANGE_DRAGON_VEINS);
+    else
+    {
+        you.props[DRAGON_VEIN_USED_KEY] = true;
+        revert_terrain_change(you.pos(), TERRAIN_CHANGE_DRAGON_VEINS);
+    }
 }

@@ -32,7 +32,7 @@
 vector<Note> note_list;
 int last_screen_turn = -1;
 
-static bool _is_highest_skill(int skill)
+bool is_highest_skill(int skill)
 {
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
@@ -153,8 +153,11 @@ static bool _is_noteworthy(const Note& note)
     // Skills are always noteworthy in order to construct the skill_gains table
     // in the chardump. The options to control display are used in
     // Note::hidden().
-    if (note.type == NOTE_GAIN_SKILL || note.type == NOTE_LOSE_SKILL)
+    if (note.type == NOTE_GAIN_SKILL || note.type == NOTE_LOSE_SKILL
+        || note.type == NOTE_START_SKILL)
+    {
         return true;
+    }
 
     if (note.type == NOTE_DUNGEON_LEVEL_CHANGE)
         return _is_noteworthy_dlevel(note.place);
@@ -290,6 +293,10 @@ string Note::describe(bool when, bool where, bool what) const
         case NOTE_DONATE_MONEY:
             result << "Donated " << first << " gold piece"
                    << (first == 1 ? "" : "s") << " to Zin";
+            break;
+        case NOTE_START_SKILL:
+            result << "Started with skill level " << second
+                   << " in " << skill_name(static_cast<skill_type>(first));
             break;
         case NOTE_GAIN_SKILL:
             result << "Reached skill level " << second
@@ -454,12 +461,14 @@ string Note::describe(bool when, bool where, bool what) const
 
 bool Note::hidden() const
 {
+    if (type == NOTE_START_SKILL)
+        return !Options.note_starting_skills;
     // Hide skill gains that are not enabled by options.
     if (type == NOTE_GAIN_SKILL || type == NOTE_LOSE_SKILL)
     {
         return !(Options.note_all_skill_levels
                  || second <= 27 && Options.note_skill_levels[second]
-                 || Options.note_skill_max && _is_highest_skill(first));
+                 || Options.note_skill_max && is_highest_skill(first));
     }
     // Hide gems being shattered by default.
     if (type == NOTE_GEM_LOST)

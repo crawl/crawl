@@ -73,6 +73,15 @@ arbalest
 A large piece of machinery used for firing bolts, braced with steel and cranked
 with a windlass. It takes some time to load and fire.
 %%%%
+assassin centipede
+
+A living weapon whose forcipules are dagger-sharp and reach is long. Its sting
+can deliver crippling toxins to those it strikes and at higher levels of
+enchantment, can even briefly slow or paralyse foes.
+
+After performing a moderate number of attacks with this, it will separate itself
+from your body to attack foes independently for a short while before dying.
+%%%%
 athame
 
 An ornate and bewitched ritual knife. Even just wielding it will cost a small
@@ -519,6 +528,20 @@ buckler
 
 A small piece of wood and metal, to be strapped on one arm for defence.
 %%%%
+centipede bauble
+
+A tiny figurine of a centipede coiled around a stone. Gripping it tightly will
+transform it into a living weapon that merges with one's own body. This weapon
+functions as a reaching short blade whose attacks can poison targets.
+
+After performing a moderate number of attacks with this weapon, it will separate
+itself from its wielder's body and fight alongside you as an independent ally
+for a short time before dying.
+
+Shapeshifting skill increases the power of this centipede in both weapon and
+insect form, as well the potency of its toxins - eventually allowing it to
+sometimes slow or even paralyse foes.
+%%%%
 chain mail
 
 A suit of armour made entirely out of tiny metal rings.
@@ -722,10 +745,11 @@ fortress talisman
 
 A miniature battlement, carved from a piece of shell. Transforms the wearer into
 a heavily armoured crab, fusing whatever body armour they are wearing into the
-shell in the process. In this form, they are slow-moving, but well-defended and
-even capable of wielding a two-handed weapon in their large main claw. Despite
-all this bulk, they are well-adapted to the water. They can also breathe clouds
-of rust at the cost of their own HP, which corrode and weaken enemies.
+shell and magnifying most of its benefits. In this form, they are slow-moving,
+but well-defended and even capable of wielding a two-handed weapon in their
+large main claw. Despite all this bulk, they are well-adapted to the water. They
+can also breathe clouds of rust at the cost of their own HP, which corrode and
+weaken enemies.
 %%%%
 gell's gravitambourine
 
@@ -737,6 +761,15 @@ draw a large group of monsters into a narrow space and hold any hostile ones in
 place for a short time with inescapable waves of crushing gravity.
 
 The area of effect and duration increases with Evocations skill.
+%%%%
+gecko talisman
+
+The dried remains of a tail shed under duress. Partially transforms the user
+into a hypnogecko, a reptile with a remarkable degree of metachrosis. Their skin
+naturally changes colour to blend in with their surroundings, making them
+stealthy, and when badly injured, they reflexively shed their own tail and make
+it scintillate with bright colours as a decoy - allowing them to either flee or
+even strike at their distracted predators from a blind spot.
 %%%%
 gem
 
@@ -890,6 +923,18 @@ Sigils of fire burn deep within this gem, symbol of the eternal compact between
 naga and salamander. Their bond is that of the poison which scourges the impure
 and the flame which burns away impurity.
 %%%%
+jade talisman
+
+A small statuette carved out of multi-hued jade which thrums with quiet power.
+Causes a great mantle of elementally-attuned crystal to grow out of the wearer's
+head and upper body, increasing their proficiency with fire, ice, earth, and air
+magic, but impairing all other schools.
+
+Each time the wearer casts a spell from one of those four schools, it will
+empower the corresponding crystal and unleash a burst of damaging magic. If all
+four crystals become charged at once, the wearer's resistances and fortitude
+will be temporarily enhanced.
+%%%%
 javelin
 
 A lightweight penetrating spear, designed for throwing. It will pass through the
@@ -913,7 +958,7 @@ blades at both ends.
 large rock
 
 A very large and very heavy stone. {{
-    if you.race() == "Ogre"
+    if you.race() == "Oni"
        or you.race() == "Troll"
    then
        return ""
@@ -998,6 +1043,17 @@ Smooth as a spider's silk, white as the eyes of some crawling thing which has
 lived too long in the dark, this gem buzzes with a fearful potential. Still, to
 a certain eye, it possesses a strange allure...
 %%%%
+mist talisman
+
+A small censer from which pours an endless smoky haze. Transforms the wearer's
+head into a billowing shroud of mist. Any potions they drink in this form will
+be rapidly decomposed into gases which they can expel via melee attacks as
+blasts of harmful clouds. They can also slowly condense the dungeon's air into
+potions of mist, allowing them to become intangible and blind monsters.
+
+However, the lack of typical mouth parts makes it difficult to pronounce
+incantations, greatly slowing the speed at which they cast spells.
+%%%%
 morningstar
 
 A mace with a head covered in short spikes.
@@ -1011,7 +1067,7 @@ this gem. The people of the Swamp, who first carried this stone, struggled
 against insurmountable odds. They failed, but there is much to admire even in
 the ruin of their efforts.
 %%%%
-my sojourn through swampland
+my sojourns in swampland
 
 While purporting itself to be the personal account of a famous naturalist, it
 becomes clear upon reading that this book was compiled from multiple unrelated
@@ -1174,6 +1230,14 @@ A valuable potion which grants an infusion of magical energy.
 potion of might
 
 A potion which greatly increases the power of the drinker's melee attacks.
+%%%%
+potion of mist
+
+A vial of mist which temporarily turns the imbiber's body insubstantial,
+protecting them from constriction, petrification, barbs, sticky flame, webs,
+nets, and being caught by bolas.
+
+It will also end most of those effects if they are already afflicted.
 %%%%
 potion of moonshine
 
@@ -1786,6 +1850,22 @@ A collection of spells that assault everything in sight of the caster,
 unrestrained by petty limitations like 'needing a clear shot' or 'concern about
 collateral damage'.
 %%%%
+vision talisman
+
+A small charm bearing the likeness of an eye. It gives the wearer supernatural
+sight, allowing them to perceive the clouds of magical residue left behind
+whenever beings cast spells. Touching those clouds allows them to convert that
+leftover magic into unnerring projectiles against nearby foes.
+
+This third eye even allows one to see from further distances than would
+otherwise be possible{{
+    if you.get_base_mutation_level("+LOS") > 0 then
+        return " (but your own vision is already as long as possible)."
+    else
+        return ", but be warned - creatures perceived this way will perceive you back."
+    end
+}}
+%%%%
 wand of acid
 
 A magical device which throws bolts of corrosive acid.
@@ -1860,9 +1940,10 @@ and reach to attack from a great distance, though without the precision needed
 to stab from range. From time to time, they can even cause the water around them
 to rise up and drown their enemies.
 
-The malleability of this water even allows them to retain the benefits of their
-physical mutations, but cold attacks can freeze it solid and fire may cause it
-to erupt with steam.
+The malleability of this water preserves most other aspects of the wearer's
+physiology such as their blood and bones, and even allows them to retain the
+benefits of their physical mutations, but cold attacks can freeze it solid and
+fire may cause it to erupt with steam.
 %%%%
 whip
 

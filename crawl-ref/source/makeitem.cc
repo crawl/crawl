@@ -2193,7 +2193,8 @@ int items(bool allow_uniques,
 
     case OBJ_BAUBLES:
         item.base_type = OBJ_BAUBLES;
-        item.sub_type = BAUBLE_FLUX;
+        item.sub_type = force_type != OBJ_RANDOM ? force_type
+                        : one_chance_in(3) ? BAUBLE_CENTIPEDE : BAUBLE_FLUX;
         item.quantity = random_range(2, 3);
         break;
 
@@ -2363,7 +2364,7 @@ void lucky_upgrade_item(item_def& item)
         // Messaging is really weird if we don't do this, and it seems a
         // relatively unimportant freebie.
         identify_item(item);
-        mprf("<cyan>Lucky! %s was actually %s</cyan>!", old_name.c_str(), item.name(DESC_THE).c_str());
+        mprf("<cyan>Lucky! %s is actually %s</cyan>!", old_name.c_str(), item.name(DESC_THE).c_str());
     }
 }
 

@@ -2,7 +2,7 @@ enum: JOB_FORGEWRIGHT
 name: "Forgewright"
 short_name: "Fw"
 category: Mage
-category_priority: 80
+category_priority: 65
 str: 2
 int: 7
 dex: 3

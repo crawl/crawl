@@ -224,6 +224,8 @@ const vault_placement *dgn_place_map(const map_def *map,
                                      bool check_collision,
                                      bool make_no_exits,
                                      const coord_def &pos = INVALID_COORD);
+const vault_placement *dgn_add_vault_to_existing_level(const map_def *mdef,
+                                                       const coord_def &where);
 
 const vault_placement *dgn_safe_place_map(const map_def *map,
                                           bool check_collision,

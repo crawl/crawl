@@ -631,8 +631,6 @@ static void _try_brand_switch(const int item_index)
 
 static void _xom_make_item(object_class_type base, int subtype, int power)
 {
-    god_acting gdact(GOD_XOM);
-
     int thing_created = items(true, base, subtype, power, 0, GOD_XOM);
 
     if (thing_created == NON_ITEM)
@@ -640,14 +638,17 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
         god_speaks(GOD_XOM, "\"No, never mind.\"");
         return;
     }
-    else if (base == OBJ_ARMOUR && subtype == ARM_ORB && one_chance_in(4))
+
+    item_def &item(env.item[thing_created]);
+
+    if (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_ORB)
         god_speaks(GOD_XOM, _get_xom_speech("orb gift").c_str());
 
     _try_brand_switch(thing_created);
 
     static char gift_buf[100];
     snprintf(gift_buf, sizeof(gift_buf), "god gift: %s",
-             env.item[thing_created].name(DESC_PLAIN).c_str());
+             item.name(DESC_PLAIN).c_str());
     take_note(Note(NOTE_XOM_EFFECT, you.raw_piety, -1, gift_buf), true);
 
     canned_msg(MSG_SOMETHING_APPEARS);
@@ -728,7 +729,7 @@ static bool _is_chaos_upgradeable(const item_def &item)
 
     // Only upgrade permanent items, since the player should get a
     // chance to use the item if they can defeat the monster.
-    if (item.flags & ISFLAG_SUMMONED)
+    if (item.summoned())
         return false;
 
     // Blessed weapons are protected, being gifts from good gods.
@@ -753,7 +754,7 @@ static bool _is_chaos_upgradeable(const item_def &item)
 static bool _choose_chaos_upgrade(const monster& mon)
 {
     // Only choose monsters that will attack.
-    if (!mon.alive() || mons_attitude(mon) != ATT_HOSTILE
+    if (!mon.alive() || mon.attitude() != ATT_HOSTILE
         || mons_is_fleeing(mon))
     {
         return false;
@@ -1471,7 +1472,7 @@ static int _xom_random_stickable(const int HD)
 
 static bool _hostile_snake(monster& mon)
 {
-    return mon.attitude == ATT_HOSTILE
+    return mon.base_attitude == ATT_HOSTILE
             && mons_genus(mon.type) == MONS_SNAKE;
 }
 
@@ -1601,7 +1602,7 @@ static monster* _find_monster_with_animateable_weapon()
         const item_def weapon = env.item[mweap];
 
         if (weapon.base_type == OBJ_WEAPONS
-            && !(weapon.flags & ISFLAG_SUMMONED)
+            && !weapon.summoned()
             && weapon.quantity == 1
             && !is_range_weapon(weapon)
             && !is_special_unrandom_artefact(weapon)
@@ -2747,7 +2748,7 @@ static vector<monster*> _xom_find_weak_monsters(bool range)
         // No counting battlespheres or orbs of destruction. Try not to buff
         // the same target multiple times by checking the most prominent ones.
         // Fuzz the HD range to make it harder to deliberately plan around.
-        if (mons_attitude(**mi) == ATT_FRIENDLY
+        if (mi->attitude() == ATT_FRIENDLY
             && !mi->is_peripheral()
             && !(mi->has_ench(ENCH_HASTE) && mi->has_ench(ENCH_INVIS)
                  && mi->has_ench(ENCH_EMPOWERED_SPELLS) && mi->has_ench(ENCH_MIGHT))
@@ -4126,12 +4127,12 @@ static void _xom_send_in_clones(int /*sever*/)
 
         if (hostiles_summon_count < hostile_count)
         {
-            mon->attitude = ATT_HOSTILE;
+            mon->base_attitude = ATT_HOSTILE;
             power = -1;
         }
         else
         {
-            mon->attitude = ATT_FRIENDLY;
+            mon->base_attitude = ATT_FRIENDLY;
             power = 0;
         }
 
@@ -4539,12 +4540,12 @@ static void _handle_accidental_death(const int orig_hp,
 /**
  * A formatting of Xom actions, their chance to happen, and if it should be done.
  *
- * xom_event_type name         An action for Xom to take.
- * @param int tension_weight   The chance with visible monsters.
- * @param int tension_weight   The chance without visible monsters.
- * @param bool valid           A check to see if this action should be done.
- * @param sever                The intended magnitude of the action.
- * @param tension              How much danger we think the player's in.
+ * xom_event_type name              An action for Xom to take.
+ * @param int tension_weight        The chance with visible monsters.
+ * @param int zero_tension_weight   The chance without visible monsters.
+ * @param bool valid                A check to see if this action should be done.
+ * @param sever                     The intended magnitude of the action.
+ * @param tension                   How much danger we think the player's in.
  */
 struct xom_event_data
 {

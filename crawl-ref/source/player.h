@@ -54,7 +54,6 @@
 #define DESCENT_DEBT_KEY "descent_debt"
 #define DESCENT_WATER_BRANCH_KEY "descent_water_branch"
 #define DESCENT_POIS_BRANCH_KEY "descent_poison_branch"
-#define RAMPAGE_HEAL_MAX 7
 #define BLIND_COLOUR_KEY "blind_colour"
 #define TRICKSTER_POW_KEY "trickster_power"
 #define CACOPHONY_XP_KEY "cacophony_xp"
@@ -270,7 +269,9 @@ public:
     FixedVector<training_status, NUM_SKILLS> train_alt; ///< config of other mode
     FixedVector<unsigned int, NUM_SKILLS>  training; ///< percentage of XP used
     FixedVector<unsigned int, NUM_SKILLS> skill_points;
-    FixedVector<unsigned int, NUM_SKILLS> training_targets; ///< Training targets, scaled by 10 (so [0,270]).  0 means no target.
+    /// Training targets, scaled by 10 (so [0,270]).  0 means no target.
+    FixedVector<unsigned int, NUM_SKILLS> training_targets;
+    FixedVector<unsigned int, NUM_SKILLS> base_training_targets;
     int experience_pool; ///< XP waiting to be applied.
     FixedVector<uint8_t, NUM_SKILLS>  skill_order;
     /// manuals
@@ -339,7 +340,9 @@ public:
     FixedBitVector<NUM_MISCELLANY>     seen_misc;
     FixedBitVector<NUM_TALISMANS>      seen_talisman;
 
-    uint8_t normal_vision;        // how far the species gets to see
+    uint8_t normal_vision;        // how far you can normally see, including
+                                  // equipment and form, but not other temporary
+                                  // effects.
     uint8_t current_vision;       // current sight radius (cells)
 
     set<coord_def> rampage_hints; // TODO: move this somewhere else
@@ -409,8 +412,13 @@ public:
     // The biggest assigned monster id so far.
     mid_t last_mid;
 
+    // The biggest assigned unique item id so far.
+    mid_t last_item_uid;
+
     // Count of various types of actions made.
     map<pair<caction_type, int>, FixedVector<int, 27> > action_count;
+
+    FixedVector<int, NUM_TRANSFORMS> xp_by_form[27];
 
     // Which branches have been noted to have been left during this game.
     FixedBitVector<NUM_BRANCHES> branches_left;
@@ -619,6 +627,7 @@ public:
     bool can_water_walk() const;
     int visible_igrd(const coord_def&) const;
     int rampaging() const override;
+    int shield_block_limit() const override;
     bool is_banished() const override;
     bool is_sufficiently_rested(bool starting=false) const; // Up to rest_wait_percent HP and MP.
     bool is_web_immune() const override;
@@ -758,10 +767,11 @@ public:
     int       get_innate_mutation_level(mutation_type mut) const;
     int       get_temp_mutation_level(mutation_type mut) const;
 
-    int       get_training_target(const skill_type sk) const;
-    bool      set_training_target(const skill_type sk, const double target, bool announce=false);
-    bool      set_training_target(const skill_type sk, const int target, bool announce=false);
-    void      clear_training_targets();
+    int       get_training_target(const skill_type sk, bool base=false) const;
+    bool      set_training_target(const skill_type sk, const double target, bool announce=false, bool base=false);
+    bool      set_training_target(const skill_type sk, const int target, bool announce=false, bool base=false);
+    void      clear_training_targets(bool base);
+    void      clear_all_training_targets();
 
     bool      has_temporary_mutation(mutation_type mut) const;
     bool      has_innate_mutation(mutation_type mut) const;
@@ -875,8 +885,7 @@ public:
              bool is_attack_damage = false) override;
 
     bool wont_attack() const override { return true; };
-    mon_attitude_type temp_attitude() const override { return ATT_FRIENDLY; };
-    mon_attitude_type real_attitude() const override { return ATT_FRIENDLY; };
+    mon_attitude_type attitude() const override { return ATT_FRIENDLY; };
 
     monster_type mons_species(bool zombie_base = false) const override;
 
@@ -990,8 +999,9 @@ public:
 
     // Combat-related adjusted penalty calculation methods
     int unadjusted_body_armour_penalty(bool archery = false) const;
-    int adjusted_body_armour_penalty(int scale = 1, bool archery = false) const;
-    int adjusted_shield_penalty(int scale = 1) const;
+    int adjusted_body_armour_penalty(int scale = 1, bool archery = false,
+                                     bool include_temp = true) const;
+    int adjusted_shield_penalty(int scale = 1, bool include_temp = true) const;
 
     // Calculate the bonus (or penalty) the player has to their defenses from
     // temporary effects.
@@ -1156,7 +1166,7 @@ bool is_effectively_light_armour(const item_def *item);
 bool player_effectively_in_light_armour();
 
 int player_shield_racial_factor();
-int player_armour_shield_spell_penalty();
+int player_armour_shield_spell_penalty(bool include_temp = true);
 int player_armour_stealth_penalty();
 
 int player_icemail_armour_class();
@@ -1290,7 +1300,7 @@ int get_real_mp(bool include_items);
 
 bool player_harmful_contamination();
 int contam_max_damage();
-string describe_contamination(bool verbose = true);
+string describe_contamination(bool verbose = true, bool show_damage = true);
 
 bool sanguine_armour_valid();
 void activate_sanguine_armour();
@@ -1372,3 +1382,4 @@ bool need_expiration_warning(coord_def p = you.pos());
 
 bool player_has_orb();
 bool player_on_orb_run();
+int five_virtues_sh_score();

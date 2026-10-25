@@ -14,10 +14,9 @@ Relevant enums are noted with a (filename ➡ enum).
   "program_bug"), or to `enum` otherwise.
   The enum to which this refers is generated from `rltiles/dc-corpse.txt`,
   and, as other enum-based fields, the `TILE_CORPSE_` prefix should be omitted.
-- energy (associative array of string to int mappings): The energy the monster
-  takes for various types of actions. Lower is faster.
-  "move" is a shorthand which sets both `EUT_WALK` and `EUT_SWIM`.
-  (energy-use-type.h ➡ energy_use_type).
+- energy (`energy` entry): The energy the monster takes for various types
+  of actions, influenced by their speed. Lower is faster.
+  For possible values see the description of 'energy entry' below.
 - enum (string): The monster's enum. Defaults to `name`.
   (monster-type.h ➡ monster-type).
 - ✨ev✨ (int): The monster's EV (evasion).
@@ -35,10 +34,10 @@ Relevant enums are noted with a (filename ➡ enum).
   (god-type.h ➡ god_type)
 - habitat (string): The monster's native terrain type. Defaults to "land".
   (mon-enum.h ➡ habitat_type)
-- ✨has_corpse✨ (bool): Whether the monster leaves a corpse behind on death.
+- has_corpse (bool): Whether the monster leaves a corpse behind on death.
   Defaults to false.
 - ✨hd✨ (int): The monster's 'hit dice', or level. Affects many small things.
-- holiness (string): The grand category to which the monster belongs.
+- holiness (list of strings): The grand categories to which the monster belongs.
   Defaults to "natural".
   (mon-holy-type.h ➡ mon_holy_type_flags).
 - ✨hp_10x✨ (int): Ten times the monster's average hit points. (That is, a
@@ -48,9 +47,9 @@ Relevant enums are noted with a (filename ➡ enum).
 - ✨intelligence✨ (string): Affects a variety of small monster AI quirks.
   (mon-enum.h ➡ mon_intel_type)
 - ✨name✨ (string): The monster's name.
-- resists (associative array of string to int mappings): The monster's
-  elemental and other resistances. Note that monsters also often gain further
-  resistances from their holiness.
+- resists (`resists` entry): The monster's elemental and other resistances.
+  Note that monsters also often gain further resistances from their holiness.
+  For possible values see the description of 'resists entry' below.
 - ✨shape✨ (string): The form of the monster's physical body, or lack thereof.
   (mon-enum.h ➡ mon_body_shape)
 - shout (string): The way in which this species shouts when alerted.
@@ -78,13 +77,13 @@ Relevant enums are noted with a (filename ➡ enum).
 - uses (string): The monster's ability to manipulate items and terrain.
   Defaults to "nothing".
   (mon-enum.h ➡ mon_itemuse_type)
-- will (int): The monster's Willpower, or "invuln".
+- will (string): The monster's Willpower, or "invuln".
   Exactly one of this and `will_per_hd` must be set.
 - will_per_hd (int): A multiplier for the monster's `hd` to get its Willpower.
   Exactly one of this and `will` must be set.
 
-`attack` entries are lists of associative arrays, each of which may have the
-following fields:
+`attack` entries are lists (max length 4) of associative arrays,
+each of which may have the following fields:
 
 - ✨type✨ (string): The description of the attack. Largely cosmetic, but note
   that only `hit` and `weap_only`-type attacks can use weapons.
@@ -94,6 +93,17 @@ following fields:
 - flavour: (string): Special effects associated with the attack.
   Defaults to `none`.
   (mon-enum.h ➡ attack_flavour)
+- reach (int): The reach of the attack.
+- cleaves (bool): Whether or not the attack has the cleaving property.
+
+`energy` entries are associative arrays with the following possible fields:
+
+- move (int): energy cost of non-swimming movement.
+- swim (int): energy cost of swimming movement.
+- attack (int): energy cost of attacking in melee.
+- missile (int): energy cost of firing ranged weapons.
+- spell (int): energy cost of casting spells.
+  (energy-use-type.h ➡ energy_use_type).
 
 `glyph` entries are associative arrays with the following fields:
 
@@ -104,7 +114,19 @@ following fields:
   elemental colours.
   (defines.h ➡ COLOURS, or colour.h ➡ element_type)
 
-Monsters may have at most four attacks.
+`resists` entries are associative arrays with the following possible fields:
+
+- elec (int): -1 for rElec-, 1 for rElec+, 3 for immunity.
+- poison (int): -1 for rPois-, 1 for rPois+, 3 for immunity.
+- fire (int): -1 for rF-, 1 for rF+, 2 for rF++, 3 for immunity.
+- cold (int): -1 for rC-, 1 for rC+, 2 for rC++, 3 for immunity.
+- neg (int): 1 for rN+, 2 for rN++, 3 for immunity.
+- corr (int): 1 for rCorr+, 3 for immunity.
+- miasma (int): 1 for rMiasma+.
+- torment (int): 1 for immunity (but normally this is achieved via holiness).
+- petrify (int): 1 for immunity.
+- damnation (int): 1 for immunity.
+- steam (int): 1 for rSteam+.
 
 Note that any fields which refer to enums should be lower-case, and should not
 include the prefix for the enum. For example, one would specify

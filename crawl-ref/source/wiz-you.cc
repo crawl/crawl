@@ -266,6 +266,7 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_POISON_VULN] = 0;
         you.duration[DUR_SLIMIFYING] = 0;
         you.duration[DUR_ANTISWIFT] = 0;
+        you.duration[DUR_SIROCCO_COOLDOWN] = 0;
         you.attribute[ATTR_DOOM] = 0;
         you.attribute[ATTR_OSTRACISM] = 0;
         delete_all_temp_mutations("Super heal");
@@ -275,6 +276,7 @@ void wizard_heal(bool super_heal)
         gain_draconian_breath_uses(MAX_DRACONIAN_BREATH);
         gain_grave_claw_soul(true, true);
         you.props[ENKINDLE_CHARGES_KEY].get_int() = enkindle_max_charges();
+        you.props.erase(HYPNOGECKO_LOST_TAIL_KEY);
 
         you.props.erase(COGLIN_GIZMO_KEY);
     }
@@ -550,8 +552,16 @@ bool wizard_add_mutation()
         mpr("Ignoring mut resistance to apply mutation.");
 
     msgwin_get_line("Which mutation (name, 'good', 'bad', 'any', "
-                    "'xom', 'slime', 'qazlal')? ",
+                    "'xom', 'slime', 'qazlal', 'temp')? ",
                     specs, sizeof(specs));
+
+    bool temp = !strcasecmp(specs, "temp");
+    auto mutclass = temp ? MUTCLASS_TEMPORARY : MUTCLASS_NORMAL;
+    if (temp)
+    {
+        msgwin_get_line("Which temporary mutation (name, 'good', 'bad', 'any', "
+                        "'xom', 'slime', 'qazlal')? ", specs, sizeof(specs));
+    }
 
     if (specs[0] == '\0')
     {
@@ -563,7 +573,10 @@ bool wizard_add_mutation()
     mutation_type mutat = mutation_from_name(specs, true, &partial_matches);
 
     if (mutat >= CATEGORY_MUTATIONS)
-         return mutate(mutat, "wizard power", true, true);
+    {
+         return mutate(mutat, "wizard power", true, true, false, false,
+                       mutclass);
+    }
 
     if (mutat == NUM_MUTATIONS)
     {
@@ -610,7 +623,19 @@ bool wizard_add_mutation()
         else if (levels > 0)
         {
             for (int i = 0; i < levels; ++i)
-                if (mutate(mutat, "wizard power", true, true))
+            {
+                if (mutate(mutat, "wizard power", true, true, false, false,
+                           mutclass))
+                {
+                    success = true;
+                }
+            }
+        }
+        else if (temp)
+        {
+            int levels2 = min(-levels, you.get_temp_mutation_level(mutat));
+            for (int i = 0; i < levels2; ++i)
+                if (delete_single_mutation_level(mutat, "wizard power", true))
                     success = true;
         }
         else

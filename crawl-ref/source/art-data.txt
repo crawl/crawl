@@ -206,6 +206,7 @@ DBRAND:  Sonic Wave: It radiates damaging sonic waves as it strikes, especially
 NAME:    Wrath of Trog
 OBJ:     OBJ_WEAPONS/WPN_BATTLEAXE
 FALLBACK: OBJ_WEAPONS/WPN_EXECUTIONERS_AXE
+INSCRIP: RageSunder
 PLUS:    +8
 COLOUR:  ETC_BLOOD
 TILE:    spwpn_wrath_of_trog
@@ -214,7 +215,11 @@ VALUE:   800
 ANGRY:   50
 BOOL:    rampage
 BRAND:   SPWPN_ANTIMAGIC
-DESCRIP: It causes slowness and exhaustion when equipped.
+DESCRIP: RageSunder: After you perform multiple consecutive attacks, its next
++attack will deal greatly increased damage and also cleave into targets an extra
++space away. This effect charges faster and partially retains its charge between
++attacks while you are berserk.
++It causes slowness and exhaustion when equipped.
 +It extends the wielder's berserk rage when killing foes.
 
 NAME:     mace of Variability
@@ -1116,10 +1121,10 @@ LIFE:    2
 BOOL:    elec, poison, notelep, deleted
 # end TAG_MAJOR_VERSION
 
-NAME:    amulet of Tranquility
+NAME:    amulet of Tranquillity
 OBJ:     OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:  ETC_POISON
-TILE:    urand_four_winds
+TILE:    urand_tranquillity
 LIFE:    1
 WILL:    3
 BOOL:    clarity
@@ -1995,6 +2000,138 @@ DESCRIP: IceExpos:  Whenever you deal cold damage to an enemy without rCold∞,
  non-attack sources, less capable of dodging non-attack projectiles, and mildly
  reducing its Willpower.
 +IceWiz:   It increases the success rate of your Ice Magic spells.
+
+ENUM:    CARINA
+NAME:    giant spiked club "Carina at Dusk"
+INSCRIP: ShootingStar
+OBJ:     OBJ_WEAPONS/WPN_GIANT_SPIKED_CLUB
+PLUS:    +9
+COLOUR:  LIGHTMAGENTA
+TILE:    urand_carina
+TILE_EQ: CARINA
+BRAND:   SPWPN_CONCUSSION
+LIFE:    1
+DESCRIP: ShootingStar: When knocking back an enemy, and on one in four other
+ hits, it spawns a shooting star with power proportional to the damage dealt.
+
+ENUM:    COOLIBAH_BARDICHE
+NAME:    coolibah bardiche
+INSCRIP: ConstrDrown ConstrBog
+OBJ:     OBJ_WEAPONS/WPN_BARDICHE
+PLUS:    +6
+COLOUR:  ETC_WATER
+TILE:    urand_coolibah
+TILE_EQ: COOLIBAH
+BRAND:   SPWPN_ENTANGLING
+BOOL:    poison
+DESCRIP: ConstrDrown: When attacking a constricted enemy, it has a one in three
+ chance to flood their lungs with water.
++ConstrBog: When attacking a constricted enemy, it has a one in three chance to
+ tempoarily transform the ground beneath them into a noxious bog.
+
+ENUM:    FIVE_VIRTUES
+NAME:    staff of Five Virtues
+INSCRIP: VirtueSH VirtueRefl
+OBJ:     OBJ_WEAPONS/WPN_LAJATANG
+PLUS:    +5
+COLOUR:  WHITE
+TILE:    urand_five_virtues
+TILE_EQ: FIVE_VIRTUES
+BRAND:   SPWPN_REBUKE
+WILL:    1
+BOOL:    fragile
+DESCRIP: VirtueSH: It provides +5 SH for each of five conditions: You have at
+ least 20 intelligence; at least 25 base EV; at least 15 base Invocations skill;
+ at least +++++ stealth; your Staves skill is your highest skill, or is at the
+ maximum skill level.
++VirtueRefl: If you meet at least three of the five conditions, it provides
+ reflection and an extra maximum block per turn.
+
+ENUM:    STAGEHANDS_SWORD
+NAME:    Stagehand's Sword
+INSCRIP: DevInvis
+OBJ:     OBJ_WEAPONS/WPN_SHORT_SWORD
+PLUS:    +7
+COLOUR:  BROWN
+TILE:    urand_stagehands_sword
+TILE_EQ: STAGEHAND
+BRAND:   SPWPN_DEVIOUS
+INT:     +6
+DESCRIP: DevInvis: When you attack an enemy while devious, you have a chance to
+ turn invisible. The chance increases the more devious you are.
+
+ENUM:    HANAS_SCIMITAR
+NAME:    Hana's Scimitar
+INSCRIP: ValArchmagi ^Dim
+OBJ:     OBJ_WEAPONS/WPN_SCIMITAR
+PLUS:    +10
+COLOUR:  LIGHTRED
+TILE:    urand_hana_scimitar
+TILE_EQ: HANA
+BRAND:   SPWPN_VALOUR
+MP:      +6
+DESCRIP: ValArchmagi: Enhances your magic if you have at least 80% of your
+ maximum magical power remaining (before spending MP to cast the spell).
++^Dim: Unequipping it temporarily diminishes your spells.
+
+ENUM:    ARCANE_SPLINT
+NAME:    arcane splint mail
+INSCRIP: Corona
+OBJ:     OBJ_ARMOUR/ARM_CHAIN_MAIL
+PLUS:    +8
+COLOUR:  ETC_IRON
+TILE:    urand_arcane_splint
+TILE_EQ: ARCANE_SPLINT
+BRAND:   SPARM_ARCHERY
+STR:     +2
+DEX:     +2
+BOOL:    elec
+DESCRIP: Corona: Enemies hit by the wearer's projectiles are outlined in light.
+
+# This is internally a pds so small/large species can acquire and use it
+ENUM:    BONE_SCALES
+NAME:    bone scales
+OBJ:     OBJ_ARMOUR/ARM_PEARL_DRAGON_ARMOUR
+BASE_ENCUMBRANCE: +7
+PLUS:    +6
+COLOUR:  ETC_BONE
+TILE:    urand_bone_scales
+TILE_EQ: BONE_SCALES
+BRAND:   SPARM_DEATH
+SLAY:    +3
+SH:      +6
+BOOL:    poison, bane
+
+ENUM:    FORGEWARDEN
+NAME:    Forgewarden's cuirass
+INSCRIP: Apostate
+OBJ:     OBJ_ARMOUR/ARM_PLATE_ARMOUR
+PLUS:    +12
+COLOUR:  ETC_FIRE
+TILE:    urand_forgewarden
+TILE_EQ: FORGEWARDEN
+BRAND:   SPARM_RESONANCE
+FIRE:    2
+BOOL:    enh_forge, evil
+DESCRIP: Apostate: Equipping it will reduce your piety. While worn, you gain
+ piety at three quarters of the normal rate.
+
+ENUM:    CRAB_CLAWS
+NAME:    ghost crab claws
+INSCRIP: Mist
+OBJ:     OBJ_ARMOUR/ARM_GLOVES
+PLUS:    +2
+INT:     +2
+STR:     +4
+SLAY:    +4
+COLOUR:  ETC_MAGIC
+TILE:    urand_crab_claws
+TILE_EQ: GLOVE_GREEN
+BOOL:    evil, enh_necro, special
+DESCRIP: Mist:   It may create clouds of spectral mist when the wearer attacks
+ or casts spells, and grants immunity from such clouds. Necromancy spells have
+ a greater chance to produce spectral mist.
+MAX_LEVEL: 11
 
 # This entry must always be last.
 ENUM:   DUMMY2

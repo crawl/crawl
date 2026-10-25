@@ -70,3 +70,5 @@ private:
     bool teleport;
     bool _did_net;
 };
+
+int player_archery_damage_bonus(int dam, bool random);

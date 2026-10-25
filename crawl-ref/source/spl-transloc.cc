@@ -991,7 +991,8 @@ void you_teleport(bool is_hostile, mid_t teleportitis_source)
 
         if (player_in_branch(BRANCH_ABYSS))
         {
-            mpr("You feel the power of the Abyss delaying your translocation!");
+            mprf("You feel the power of the Abyss delaying your translocation%s!",
+                 !you.runes[RUNE_ABYSSAL] ? " and deflecting it away from its rune" : "");
             teleport_delay += 5 + random2(10);
         }
         else if (orb_limits_translocation())
@@ -1015,8 +1016,8 @@ bool cell_vetoes_teleport(const coord_def cell, bool check_monsters,
     if (monster_at(cell) && check_monsters)
         return true;
 
-    // As do all clouds; this may change.
-    if (cloud_at(cell) && !wizard_tele)
+    // As do any harmful clouds.
+    if (harmful_cloud_at(cell) && !wizard_tele)
         return true;
 
     if (cell_is_solid(cell))
@@ -1176,7 +1177,7 @@ static bool _teleport_player(bool wizard_tele, string reason="")
 
 static bool _is_hostile_teleport_target(const monster& mon)
 {
-    return mon.temp_attitude() == ATT_HOSTILE
+    return mon.hostile()
             && mons_is_threatening(mon)
             && !testbits(env.pgrid(mon.pos()), FPROP_NO_TELE_INTO);
 }
@@ -1368,6 +1369,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
 void you_teleport_now(string reason, bool manual_tele, bool wizard_tele)
 {
     bool randtele;
+    bool need_abyss_rune_warning = false;
 
     // While in the Abyss, teleport scrolls will always take the player slightly
     // further away from the rune. (But other effects moving you at random
@@ -1376,6 +1378,8 @@ void you_teleport_now(string reason, bool manual_tele, bool wizard_tele)
         && !you.props.exists(TELEPORTITIS_SOURCE))
     {
         int&areas = you.props[ABYSS_AREAS_SEEN_KEY].get_int();
+        if (areas > 0 && !you.runes[RUNE_ABYSSAL] && you.depth >= ABYSSAL_RUNE_MIN_LEVEL)
+            need_abyss_rune_warning = true;
         areas = max(0, areas - 2);
     }
 
@@ -1387,6 +1391,9 @@ void you_teleport_now(string reason, bool manual_tele, bool wizard_tele)
     }
     else
         randtele = _teleport_player(wizard_tele, reason);
+
+    if (need_abyss_rune_warning)
+        mprf(MSGCH_WARN, "You feel the abyssal rune grow more distant.");
 
     // Xom is amused by teleports that land you in a dangerous place, unless
     // the player is in the Abyss and teleported to escape from all the
@@ -1983,7 +1990,7 @@ void attract_monster(monster &mon, int max_move)
     mprf("%s is attracted toward you.", mon.name(DESC_THE).c_str());
 
     _place_tloc_cloud(old_pos);
-    _place_tloc_cloud(ray.pos());
+    place_cloud(CLOUD_MAGIC_TRAIL, ray.pos(), random_range(3, 5), &you);
     mon.check_redraw(old_pos);
     mon.finalise_movement();
 }

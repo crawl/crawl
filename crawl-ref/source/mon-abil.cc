@@ -282,7 +282,7 @@ static monster* _do_split(monster* thing, const coord_def & target, bool quiet =
 
     // Inflict the new slime with any enchantments on the parent.
     _share_ench_durations(thing, new_slime);
-    new_slime->attitude = thing->attitude;
+    new_slime->base_attitude = thing->base_attitude;
     new_slime->behaviour = thing->behaviour;
     new_slime->flags = thing->flags;
     new_slime->props = thing->props;
@@ -465,7 +465,7 @@ static bool _slime_merge(monster* thing)
         if (!merge_target
             && other_thing
             && other_thing->type == MONS_SLIME_CREATURE
-            && other_thing->attitude == thing->attitude
+            && other_thing->base_attitude == thing->base_attitude
             && other_thing->has_ench(ENCH_CHARM) == thing->has_ench(ENCH_CHARM)
             && other_thing->has_ench(ENCH_HEXED) == thing->has_ench(ENCH_HEXED)
             && other_thing->is_summoned() == thing->is_summoned()
@@ -1035,10 +1035,6 @@ void seismosaurus_egg_hatch(monster* mons)
         try_mons_cast(*mons, SPELL_SEISMIC_STOMP);
         queue_monster_for_action(mons);
 
-        // Clean up range indicator
-        for (distance_iterator di(mons->pos(), false, false, 4); di; ++di)
-            env.pgrid(*di) &= ~FPROP_SEISMOROCK;
-
         return;
     }
 
@@ -1160,19 +1156,11 @@ bool mon_special_ability(monster* mons)
         break;
 
     case MONS_BALL_LIGHTNING:
-        if (mons->attitude == ATT_HOSTILE
-            && grid_distance(you.pos(), mons->pos()) <= 2)
-        {
-            mons->suicide();
-            used = true;
-            break;
-        }
-
-        for (monster_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
+        for (actor_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
         {
             if (mons_aligned(mons, *targ) || targ->is_firewood()
                 || grid_distance(mons->pos(), targ->pos()) > 2
-                || !you.see_cell(targ->pos()))
+                || (mons->friendly() && !you.see_cell(targ->pos())))
             {
                 continue;
             }
@@ -1185,15 +1173,7 @@ bool mon_special_ability(monster* mons)
 
     case MONS_FOXFIRE:
     case MONS_SHOOTING_STAR:
-        if (mons->attitude == ATT_HOSTILE
-            && grid_distance(you.pos(), mons->pos()) == 1)
-        {
-            seeker_attack(*mons, you);
-            used = true;
-            break;
-        }
-
-        for (monster_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
+        for (actor_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
         {
             if (mons_aligned(mons, *targ) || targ->is_firewood()
                 || grid_distance(mons->pos(), targ->pos()) > 1
@@ -1317,6 +1297,22 @@ bool mon_special_ability(monster* mons)
 
         break;
 
+    case MONS_HYPNOTAIL:
+    {
+        for (monster_near_iterator mi(mons->pos(), LOS_NO_TRANS); mi; ++mi)
+        {
+            if (!mi->wont_attack() && !mi->has_ench(ENCH_MISDIRECTED))
+            {
+                if (you.aware_of(**mi))
+                    mprf("%s is distracted by your tail.", mi->name(DESC_THE).c_str());
+                mi->add_ench(mon_enchant(ENCH_MISDIRECTED, mons, INFINITE_DURATION));
+                mi->target = mons->pos();
+                mi->foe = mons->mindex();
+            }
+        }
+    }
+    break;
+
     default:
         break;
     }
@@ -1344,7 +1340,7 @@ bool egg_is_incubating(const monster& egg)
     for (monster_near_iterator mi(parent->pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (!mons_aligned(*mi, &egg) && !mi->is_firewood()
-            && grid_distance(egg.pos(), mi->pos()) <= 4
+            && grid_distance(egg.pos(), mi->pos()) <= SEISMOSAURUS_EGG_RADIUS
             && egg.can_see(**mi))
         {
             return true;
@@ -1468,9 +1464,6 @@ bool pyrrhic_recollection(monster& nobody)
 
     nobody.add_ench(mon_enchant(ENCH_PYRRHIC_RECOLLECTION, &nobody, random_range(300, 500)));
 
-    if (was_injured)
-        monster_blink(&nobody, true, true);
-
     // Don't immediately expire summons (we want them to stick around into the next phase),
     // but at least make them time out a bit faster.
     for (monster_iterator mi; mi; ++mi)
@@ -1489,6 +1482,12 @@ bool pyrrhic_recollection(monster& nobody)
     behaviour_event(&nobody, ME_ALERT);
 
     schedule_avoided_death_fineff(&nobody);
+
+    // This needs to occur after the avoided death fineff is scheduled to avoid
+    // crashes with shafts - MF_PENDING_REVIVAL will prevent the shafting which
+    // otherwise crashes when the fineff triggers.
+    if (was_injured)
+        monster_blink(&nobody, true, true);
 
     return true;
 }
@@ -1531,7 +1530,7 @@ void solar_ember_blast()
         const int damage_done = mons_adjust_flavoured(mon, beam, mon->apply_ac(dmg.roll()));
         mprf("The solar flare engulfs %s%s.", mon->name(DESC_THE).c_str(),
                 damage_done ? "" : " but does no damage");
-        mon->hurt(ember, damage_done, BEAM_FIRE);
+        mon->hurt(&you, damage_done, BEAM_FIRE);
     }
 
     animation_delay(10, true);

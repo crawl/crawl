@@ -147,6 +147,11 @@ void Stash::populate_map_cell_with_item(map_cell& cell)
 
     cell.set_item(items[0]);
 
+    // Corpses aren't important enough to list as being 'beneath' anything.
+    // (Don't waste the player's time examining piles to see purely decorative items.)
+    if (items[0].base_type == OBJ_CORPSES)
+        return;
+
     // Staircases hide drawing items on their tile, so we need to use stack
     // indicators that consider the top item to also be buried.
     const bool top_hidden = feat_is_stair(cell.feat());
@@ -159,7 +164,7 @@ void Stash::populate_map_cell_with_item(map_cell& cell)
         else
             cell.flags |= MAP_MORE_ITEMS;
     }
-    else if (items.size() > 1)
+    else if (items.size() > 1 && items[1].base_type != OBJ_CORPSES)
     {
         if (artefact_in_stack)
             cell.flags |= MAP_MORE_ITEMS_ARTEFACT;
@@ -1391,9 +1396,6 @@ static vector<stash_search_result> _inventory_search(const base_pattern &search)
             res.match = s;
             res.primary_sort = s; // don't use DESC_QUALNAME for inventory items
             res.item = item;
-            // Needs to not be equal to ITEM_IN_INVENTORY so the describe
-            // menu doesn't think it can manipulate the item.
-            res.item.pos = you.pos();
             res.in_inventory = true;
             res.pos = level_pos::current();
             results.push_back(res);

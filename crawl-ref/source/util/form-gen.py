@@ -326,6 +326,7 @@ keyfns = {
 
     'str': Field(lambda s: parse_num(s, -99, 127)),
     'dex': Field(lambda s: parse_num(s, -99, 127)),
+    'int': Field(lambda s: parse_num(s, -99, 127)),
     'size': Field(parse_size),
     'hp_mod': Field(lambda s: parse_num(s, 1, 200)),
     'move_speed': Field(lambda s: parse_num(s, 1, 100)),
@@ -388,6 +389,7 @@ defaults = {
     'resists': [ResVal('MR_NO_FLAGS', 0)],
 
     'str': 0,
+    'int': 0,
     'dex': 0,
     'size': "SIZE_CHARACTER",
     'hp_mod': 100,

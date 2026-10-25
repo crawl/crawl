@@ -46,6 +46,7 @@
 #include "items.h"
 #include "lev-pand.h"
 #include "libutil.h"
+#include "map-knowledge.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
@@ -2393,10 +2394,10 @@ static void _dgn_verify_connectivity(unsigned nvaults)
 {
     // After placing vaults, make sure parts of the level have not been
     // disconnected.
-    if (dgn_zones && nvaults != env.level_vaults.size())
+    if (dgn_zones && nvaults != env.level_vaults.size()
+        && !player_in_branch(BRANCH_ABYSS))
     {
-        if (!player_in_branch(BRANCH_ABYSS))
-            _fill_small_disconnected_zones();
+        _fill_small_disconnected_zones();
 
         const int newzones = dgn_count_disconnected_zones(false);
 
@@ -4580,14 +4581,25 @@ static void _pick_float_exits(vault_placement &place, vector<coord_def> &targets
     }
 }
 
-// Places a map on the current level (minivault or regular vault).
+static void _fixup_vault_added_to_existing_level(
+                                            const vault_placement* vault_place)
+{
+    for (vault_place_iterator vpi(*vault_place); vpi; ++vpi)
+    {
+        const coord_def p = *vpi;
+        env.markers.activate_markers_at(p);
+        set_terrain_changed(p);
+    }
+    env.markers.clear_need_activate();
+}
+
+// Places a map on the currently generating level or place a subvault in a
+// vault.
 //
 // You can specify the centre of the map using "where" for floating vaults
 // and minivaults. "where" is ignored for other vaults. XXX: it might be
 // nice to specify a square that is not the centre, but is identified by
 // a marker in the vault to be placed.
-//
-// NOTE: encompass maps will destroy the existing level!
 //
 // check_collision: If true, the newly placed vault cannot clobber existing
 //          items and monsters (otherwise, items may be destroyed, monsters may
@@ -4603,26 +4615,32 @@ const vault_placement *dgn_place_map(const map_def *mdef,
     if (!mdef)
         return nullptr;
 
-    if (crawl_state.generating_level)
-    {
-        return _build_secondary_vault(mdef, check_collision, make_no_exits,
-                                      where);
-    }
+    const vault_placement* vault_place =
+        _build_secondary_vault(mdef, check_collision, make_no_exits, where);
+    if (!vault_place)
+        return nullptr;
 
+    if (!crawl_state.generating_level)
+        _fixup_vault_added_to_existing_level(vault_place);
+
+    return vault_place;
+}
+
+// Places a map on the current level after the level has been fully generated.
+//
+// You can specify the centre of the map using "where" for floating vaults
+// and minivaults. "where" is ignored for other vaults.
+//
+// NOTE: encompass maps will destroy the existing level!
+const vault_placement *dgn_add_vault_to_existing_level(const map_def *mdef,
+                                                       const coord_def &where)
+{
+    ASSERT(!crawl_state.generating_level);
     bool is_encompass = mdef->orient == MAP_ENCOMPASS;
 
     unwind_bool levgen(crawl_state.generating_level, is_encompass);
     if (is_encompass)
     {
-        if (check_collision)
-        {
-            mprf(MSGCH_DIAGNOSTICS,
-                "Cannot generate encompass map '%s' with check_collision=true",
-                mdef->name.c_str());
-
-            return nullptr;
-        }
-
         // For encompass maps, clear the entire level.
         dgn_reset_level();
         dungeon_events.clear();
@@ -4633,11 +4651,8 @@ const vault_placement *dgn_place_map(const map_def *mdef,
         _vault_feature_heights.reset();
     }
 
-    // XXX: if this calls into dgn_place_map again via lua and
-    // crawl_state.generating_level is not set, _vault_placed_features will be
-    // reset before we use it in _dgn_fixup_map_flavour.
     const vault_placement* vault_place =
-        _build_secondary_vault(mdef, check_collision, make_no_exits, where);
+        _build_secondary_vault(mdef, false, false, where);
     if (!vault_place)
         return nullptr;
 
@@ -4660,18 +4675,14 @@ const vault_placement *dgn_place_map(const map_def *mdef,
         you_teleport_now();
     }
     else
-    {
-        for (vault_place_iterator vpi(*vault_place); vpi; ++vpi)
-        {
-            const coord_def p = *vpi;
-            env.markers.activate_markers_at(p);
-            set_terrain_changed(p);
-        }
-        env.markers.clear_need_activate();
-    }
+        _fixup_vault_added_to_existing_level(vault_place);
 
     setup_environment_effects();
     _dgn_postprocess_level();
+
+    // Transporters would normally be made from map markers by the
+    // level builder.
+    dgn_make_transporters_from_markers();
 
     return vault_place;
 }
@@ -5955,6 +5966,11 @@ bool seen_destroy_feat(dungeon_feature_type old_feat)
             destroy_wall(*ri);
             if (you.see_cell(*ri))
                 seen = true;
+            if (env.map_knowledge(*ri).feat() == old_feat)
+            {
+                update_terrain_knowledge(*ri, !env.map_knowledge(*ri).seen());
+                redraw_view_at(*ri);
+            }
         }
     }
 

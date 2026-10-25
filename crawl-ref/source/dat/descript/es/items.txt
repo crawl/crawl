@@ -272,9 +272,8 @@ cuchillas en forma de media luna en ambos extremos.
 large rock
 
 Un piedra, usada por los gigantes como proyectil. {{
-    if you.race() == "Ogre"
+    if you.race() == "Oni"
        or you.race() == "Troll"
-       or you.race() == "Formicid"
     then
         return ""
     else

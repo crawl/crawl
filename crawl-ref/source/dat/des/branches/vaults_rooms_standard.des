@@ -2939,16 +2939,18 @@ MAP
 ENDMAP
 
 NAME:   nicolae_vaults_variations_on_themes
-TAGS:   vaults_orient_w vaults_orient_e
+TAGS:   vaults_orient_w vaults_orient_e vaults_room
 SUBST:  D : _E, E : _.., F : _H, H : _.., J : _K, K : _.., L : _M, M : _..
 SUBST:  N : _O, O : _.., P : _Q, Q : _.., R : _S, S : _.., Z : _a, a : _..
 SUBST:  p : _q, q : _.., r : _s, s : _..
 NSUBST: 2 = 3 / 2 / ..2, 1 = 3=1 / 112 / .
 NSUBST: * = 2=d / 2=e / 2=de.. / 3=* / .....*1
 CLEAR:  _
-: local ritheme = util.random_from({"magic", "icebox", "garden", "rangers",
-:   "warriorcrypt"})
-: index_vaults_room_themes(_G, ritheme, false)
+: if not is_validating() then
+:   local ritheme = util.random_from({"magic", "icebox", "garden", "rangers",
+:     "warriorcrypt"})
+:   index_vaults_room_themes(_G, ritheme, false)
+: end
 MAP
         **NN**
     **JJ..OO..RR**

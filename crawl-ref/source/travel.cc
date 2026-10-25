@@ -1152,6 +1152,13 @@ command_type travel()
                 continue;
             }
 
+            // Don't wait for icemail if it will never come back.
+            if (type == DUR_ICEMAIL_DEPLETED
+                && you.unrand_equipped(UNRAND_SALAMANDER))
+            {
+                continue;
+            }
+
             // Save the player's position, so we can catch the degenerate case
             // where this results in us waiting indefinitely.
             you.props[AUTO_REST_STATUS_POS] = you.pos();
@@ -3756,41 +3763,26 @@ void LevelInfo::update()
     update_daction_counters(this);
 }
 
-void LevelInfo::set_distance_between_stairs(int a, int b, int dist)
-{
-    // Note dist == 0 is illegal because we can't have two stairs on
-    // the same square.
-    if (dist <= 0 && a != b)
-        dist = -1;
-    stair_distances[a * stairs.size() + b] = dist;
-    stair_distances[b * stairs.size() + a] = dist;
-}
-
 void LevelInfo::update_stair_distances()
 {
     const int nstairs = stairs.size();
     // Now we update distances for all the stairs, relative to all other
-    // stairs.
-    for (int s = 0; s < nstairs - 1; ++s)
+    // stairs. This is not commutative because of transporters.
+    for (int s = 0; s < nstairs; ++s)
     {
-        set_distance_between_stairs(s, s, 0);
-
         // For each stair, we need to ask travel to populate the distance
         // array. Specify the level because this gets called with the player
         // off-level.
         fill_travel_point_distance(stairs[s].position, nullptr, id);
 
-        // Assume movement distance between stairs is commutative,
-        // i.e. going from a->b is the same distance as b->a.
-        for (int other = s + 1; other < nstairs; ++other)
+        for (int other = 0; other < nstairs; ++other)
         {
             const coord_def op = stairs[other].position;
             const int dist = travel_point_distance[op.x][op.y];
-            set_distance_between_stairs(s, other, dist);
+            // Mark unreached stairs as disconnected.
+            stair_distances[s * nstairs + other] = dist > 0 ? dist : -1;
         }
     }
-    if (nstairs)
-        set_distance_between_stairs(nstairs - 1, nstairs - 1, 0);
 }
 
 void LevelInfo::update_transporter(const coord_def& transpos,

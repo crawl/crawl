@@ -1,0 +1,11 @@
+enum: hypnogecko
+equivalent_mons: frilled_lizard
+description: a hypnotic gecko-hybrid.
+short_name: Gecko
+talisman: gecko
+skill: {min: 0, max: 7}
+melds: [gloves, body, boots, barding]
+fakemuts:
+  - ["autotomy", "When badly injured, your tail breaks off to distract enemies."]
+  - ["", "You have a higher chance of stabbing distracted enemies."]
+  - ["stealthy", "You are stealthy."]

@@ -1272,7 +1272,7 @@ namespace quiver
         case ABIL_KIKU_GIFT_CAPSTONE_SPELLS:
         case ABIL_SIF_MUNA_FORGET_SPELL:
         case ABIL_LUGONU_BLESS_WEAPON:
-        case ABIL_ASHENZARI_CURSE:
+        case ABIL_ASHENZARI_BIND:
         case ABIL_RU_REJECT_SACRIFICES:
         case ABIL_HEPLIAKLQANA_IDENTITY:
         case ABIL_HEPLIAKLQANA_TYPE_KNIGHT:
@@ -1887,12 +1887,12 @@ namespace quiver
         // here is future proofing.
 
         // save compat (or bug compat): initialize to an invalid action if we
-        // are missing the keys altogether
-        if (!source.exists("type") || !source.exists("param"))
+        // are missing the action type altogether
+        if (!source.exists("type"))
             return make_shared<ammo_action>(-1);
 
         const string &type = source["type"].get_string();
-        const int param = source["param"].get_int();
+        const int param = source.exists("param") ? source["param"].get_int() : -1;
 
         // is there something more elegant than this?
         // TODO: use save_key for item_action subtypes?

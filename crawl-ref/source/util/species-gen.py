@@ -160,18 +160,17 @@ class Species(MutableMapping):
         self.print_unknown_warnings(s)
 
 SpeciesGroup = collections.namedtuple('SpeciesGroup',
-                                            ['position', 'width', 'species'])
+                                            ['position', 'species'])
 SpeciesGroupEntry = collections.namedtuple('SpeciesGroupEntry',
                                             ['priority', 'enum'])
 SPECIES_GROUPS_TEMPLATE = collections.OrderedDict()
-SPECIES_GROUPS_TEMPLATE['Simple'] = SpeciesGroup('coord_def(0, 0)', '50', [])
-SPECIES_GROUPS_TEMPLATE['Intermediate'] = SpeciesGroup('coord_def(1, 0)', '20', [])
-SPECIES_GROUPS_TEMPLATE['Advanced'] = SpeciesGroup('coord_def(2, 0)', '20', [])
+SPECIES_GROUPS_TEMPLATE['Simple'] = SpeciesGroup('coord_def(0, 0)', [])
+SPECIES_GROUPS_TEMPLATE['Intermediate'] = SpeciesGroup('coord_def(1, 0)', [])
+SPECIES_GROUPS_TEMPLATE['Advanced'] = SpeciesGroup('coord_def(2, 0)', [])
 SPECIES_GROUP_TEMPLATE = """
     {{
         "{name}",
         {position},
-        {width},
         {{ {species} }}
     }},
 """
@@ -332,7 +331,6 @@ def generate_species_groups(sg):
         out += SPECIES_GROUP_TEMPLATE.format(
             name = name,
             position = group.position,
-            width = group.width,
             species = ', '.join(
                 e.enum for e in reversed(sorted(group.species))),
         )

@@ -312,6 +312,9 @@ void give_items_skills(const newgame_def& ng)
     if (you.has_mutation(MUT_NO_ARMOUR)) // i.e. felids
         you.skills[SK_SHIELDS] = 0; // i.e. FeFi
 
+    if (species::undead_type(you.species) == US_UNDEAD)
+        you.skills[SK_SHAPESHIFTING] = 0; // Undead mystics
+
     if (you.has_mutation(MUT_WIELD_OFFHAND))
     {
         // Coglins would rather have two slings than one bow.
@@ -510,6 +513,27 @@ void initial_dungeon_setup()
                                         MONS_ORB_OF_ENTROPY);
 }
 
+static void _set_starting_form(transformation form)
+{
+    // Undead mystics are allowed (if mediocre), but obviously can't start in a form.
+    if (species::undead_type(you.species) == US_UNDEAD)
+        return;
+
+    const talisman_type tal_type = talisman_for_form(form);
+    const item_def* talisman = nullptr;
+    for (auto& item : you.inv)
+    {
+        if (item.is_type(OBJ_TALISMANS, tal_type))
+        {
+            talisman = &item;
+            break;
+        }
+    }
+    ASSERT(talisman);
+    set_default_form(form, talisman);
+    set_form(form, 1);
+}
+
 static void _setup_generic(const newgame_def& ng,
                            bool normal_dungeon_setup /*for catch2-tests*/)
 {
@@ -611,20 +635,11 @@ static void _setup_generic(const newgame_def& ng,
     }
 
     if (you.char_class == JOB_SHAPESHIFTER)
-    {
-        const item_def* talisman = nullptr;
-        for (auto& item : you.inv)
-        {
-            if (item.is_type(OBJ_TALISMANS, TALISMAN_QUILL))
-            {
-                talisman = &item;
-                break;
-            }
-        }
-        ASSERT(talisman);
-        set_default_form(transformation::quill, talisman);
-        set_form(transformation::quill, 1); // hacky...
-    }
+        _set_starting_form(transformation::quill);
+    else if (you.char_class == JOB_MYSTIC)
+        _set_starting_form(transformation::vision);
+    else if (you.char_class == JOB_STALKER)
+        _set_starting_form(transformation::hypnogecko);
 
     reassess_starting_skills(false);
     init_skill_order();

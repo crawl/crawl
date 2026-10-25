@@ -599,18 +599,26 @@ static void _wanderer_random_evokable()
 }
 
 // Create a random low-level talisman in the inventory.
-static void _wanderer_random_talisman()
+static void _wanderer_random_talisman(bool has_spells)
 {
     talisman_type selected_talisman =
         random_choose_weighted(10, TALISMAN_PROTEAN,
                                 5, TALISMAN_RIMEHORN,
                                 5, TALISMAN_SCARAB,
                                 5, TALISMAN_MEDUSA,
-                                5, TALISMAN_MAW,
+                                5, TALISMAN_SPORE,
+                                5, TALISMAN_MIST,
                                10, NUM_TALISMANS);
 
     if (selected_talisman == NUM_TALISMANS)
-        newgame_make_item(OBJ_BAUBLES, BAUBLE_FLUX, random_range(4, 6));
+    {
+        if (has_spells && coinflip())
+            newgame_make_item(OBJ_TALISMANS, TALISMAN_JADE);
+        else if (one_chance_in(3))
+            newgame_make_item(OBJ_BAUBLES, BAUBLE_CENTIPEDE, random_range(4, 6));
+        else
+            newgame_make_item(OBJ_BAUBLES, BAUBLE_FLUX, random_range(4, 6));
+    }
     else
         newgame_make_item(OBJ_TALISMANS, selected_talisman);
 }
@@ -643,7 +651,18 @@ static void _give_wanderer_aux_armour(int plus = 0)
         newgame_make_item(OBJ_ARMOUR, choice, 1, plus);
 }
 
-static vector<spell_type> _wanderer_good_equipment(skill_type skill)
+static bool _wanderer_has_spell_skill(set<skill_type>& skills)
+{
+    for (skill_type sk = SK_FIRST_MAGIC_SCHOOL; sk <= SK_LAST_MAGIC; ++sk)
+    {
+        if (skills.count(sk))
+            return true;
+    }
+
+    return false;
+}
+
+static vector<spell_type> _wanderer_good_equipment(skill_type skill, set<skill_type> & gift_skills)
 {
     switch (skill)
     {
@@ -738,7 +757,7 @@ static vector<spell_type> _wanderer_good_equipment(skill_type skill)
 
     case SK_SHAPESHIFTING:
         // Random low-level talisman
-        _wanderer_random_talisman();
+        _wanderer_random_talisman(_wanderer_has_spell_skill(gift_skills));
         break;
 
     default:
@@ -746,17 +765,6 @@ static vector<spell_type> _wanderer_good_equipment(skill_type skill)
     }
 
     return vector<spell_type>{};
-}
-
-static bool _wanderer_has_spell_skill(set<skill_type>& skills)
-{
-    for (skill_type sk = SK_FIRST_MAGIC_SCHOOL; sk <= SK_LAST_MAGIC; ++sk)
-    {
-        if (skills.count(sk))
-            return true;
-    }
-
-    return false;
 }
 
 static vector<spell_type> _wanderer_decent_equipment(skill_type skill,
@@ -823,12 +831,14 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type skill,
         break;
 
     case SK_SHAPESHIFTING:
-        if (_wanderer_has_spell_skill(gift_skills) && one_chance_in(3))
-            newgame_make_item(OBJ_TALISMANS, TALISMAN_INKWELL);
+        if (_wanderer_has_spell_skill(gift_skills) && coinflip())
+            newgame_make_item(OBJ_TALISMANS, random_choose(TALISMAN_INKWELL, TALISMAN_VISION));
+        else if (one_chance_in(4))
+            newgame_make_item(OBJ_BAUBLES, BAUBLE_CENTIPEDE, random_range(2, 4));
         else if (one_chance_in(3))
             newgame_make_item(OBJ_BAUBLES, BAUBLE_FLUX, random_range(2, 5));
         else
-            newgame_make_item(OBJ_TALISMANS, TALISMAN_QUILL);
+            newgame_make_item(OBJ_TALISMANS, random_choose(TALISMAN_QUILL, TALISMAN_GECKO));
         break;
 
     case SK_STEALTH:
@@ -930,7 +940,7 @@ void create_wanderer()
     // etc.).
 
     set<spell_type> spells;
-    _add_spells(spells, _wanderer_good_equipment(gift_skill_1));
+    _add_spells(spells, _wanderer_good_equipment(gift_skill_1, gift_skills));
     gift_skills.insert(gift_skill_1);
 
     _add_spells(spells, _wanderer_decent_equipment(gift_skill_2, gift_skills));

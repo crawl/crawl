@@ -15,6 +15,7 @@
 #include "killer-type.h"
 #include "monster-type.h"
 #include "spell-type.h"
+#include "terrain-change-type.h"
 
 class actor;
 struct bolt;
@@ -28,6 +29,12 @@ enum explosion_fineff_type : int {
     EXPLOSION_FINEFF_GENERIC,
     EXPLOSION_FINEFF_CONCUSSION,
     EXPLOSION_FINEFF_PYROMANIA,
+};
+
+enum shooting_star_fineff_type : int {
+    SHOOTING_STAR_ORB,
+    SHOOTING_STAR_JELLY,
+    SHOOTING_STAR_CARINA,
 };
 
 void schedule_mirror_damage_fineff(const actor* attack, const actor* defend,
@@ -81,11 +88,15 @@ void schedule_death_spawn_fineff(monster_type mon_type, coord_def pos, int dur,
 void schedule_death_spawn_fineff(mgen_data mg);
 void schedule_detonation_fineff(const coord_def& pos, const item_def* wpn);
 void schedule_stardust_fineff(actor* agent, int power, int max_stars,
-                              bool is_star_jelly = false);
+                              shooting_star_fineff_type type);
 void schedule_pyromania_fineff();
 void schedule_celebrant_bloodrite_fineff();
 void schedule_eeljolt_fineff();
 void schedule_psychokinetic_burst_fineff(actor* agent);
+void schedule_revert_terrain_fineff(const coord_def& pos,
+                                    terrain_change_type type);
+void schedule_hypnogecko_tail_fineff();
+void schedule_ephemeral_weapon_end(item_def& wpn);
 
 void fire_final_effects();
 void clear_final_effects();

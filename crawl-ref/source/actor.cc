@@ -18,6 +18,7 @@
 #include "god-passive.h"
 #include "item-prop.h"
 #include "los.h"
+#include "losglobal.h"
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-death.h"
@@ -42,7 +43,8 @@ bool actor::will_trigger_shaft() const
            // let's pretend that they always make their saving roll
            && !(is_monster()
                 && (mons_is_elven_twin(static_cast<const monster* >(this))
-                    || as_monster()->type == MONS_ORC_APOSTLE));
+                    || as_monster()->type == MONS_ORC_APOSTLE
+                    || testbits(as_monster()->flags, MF_PENDING_REVIVAL)));
 }
 
 level_id actor::shaft_dest() const
@@ -86,20 +88,25 @@ int actor::skill_rdiv(skill_type sk, int mult, int div) const
     return div_rand_round(skill(sk, mult * 256), div * 256);
 }
 
+bool actor::hostile() const
+{
+    return attitude() == ATT_HOSTILE;
+}
+
 bool actor::friendly() const
 {
-    return temp_attitude() == ATT_FRIENDLY;
+    return attitude() == ATT_FRIENDLY;
 }
 
 bool actor::neutral() const
 {
-    const mon_attitude_type att = temp_attitude();
+    const mon_attitude_type att = attitude();
     return att == ATT_NEUTRAL || att == ATT_GOOD_NEUTRAL;
 }
 
 bool actor::good_neutral() const
 {
-    return temp_attitude() == ATT_GOOD_NEUTRAL;
+    return attitude() == ATT_GOOD_NEUTRAL;
 }
 
 int actor::wearing_jewellery(int sub_type) const
@@ -118,15 +125,6 @@ int actor::check_willpower(const actor* source, int power) const
 
     if (source)
         wl = apply_willpower_bypass(*source, wl);
-
-    // Marionettes get better hex success against friends to avoid hex casts
-    // often being wasted with normal monster spellpower.
-    if (source && source->is_monster()
-        && source->as_monster()->attitude == ATT_MARIONETTE
-        && mons_atts_aligned(source->real_attitude(), temp_attitude()))
-    {
-        wl /= 2;
-    }
 
     const int adj_pow = ench_power_stepdown(power);
 
@@ -293,6 +291,12 @@ bool actor::reflection(bool items) const
 {
     if (divinely_shielded())
         return true;
+
+    if (items && is_player() && you.unrand_equipped(UNRAND_FIVE_VIRTUES) &&
+        five_virtues_sh_score() > 3)
+    {
+        return true;
+    }
 
     return items &&
            (wearing_jewellery(AMU_REFLECTION)
@@ -600,6 +604,10 @@ bool actor::has_invalid_constrictor(bool move) const
     if (!attacker || !attacker->alive())
         return true;
 
+    // All constriction requires no walls be in the way.
+    if (!cell_see_cell(attacker->pos(), pos(), LOS_SOLID))
+        return true;
+
     // Direct constriction (e.g. by nagas and octopode players or AT_CONSTRICT)
     // must happen with aux range. Entangling brand constriction gets to add
     // the polearm range on top of that.
@@ -610,8 +618,6 @@ bool actor::has_invalid_constrictor(bool move) const
 
     // Indirect constriction requires the defender not to move.
     return move
-        // Constriction doesn't work out of LOS, to avoid sauciness.
-        || !attacker->see_cell(pos())
         || !feat_has_solid_floor(env.grid(pos()));
 }
 
@@ -762,7 +768,7 @@ void actor::constriction_damage_defender(actor &defender)
     if (damage <= 0 && is_player()
         && you.can_see(defender))
     {
-        exclamations = ", but do no damage.";
+        exclamations = " but do no damage.";
     }
     else
         exclamations = attack_strength_punctuation(damage);

@@ -61,7 +61,6 @@ static monsterentry mondata[] =
     AXED_MON(MONS_MONSTROUS_ITEM_MIMIC, "monstrous item mimic")
     AXED_MON(MONS_DEEP_DWARF_BERSERKER, "deep dwarf berserker")
     AXED_MON(MONS_AGATE_SNAIL, "agate snail")
-    AXED_MON(MONS_GIANT_CENTIPEDE, "giant centipede")
     AXED_MON(MONS_ANCIENT_BEAR, "ancient bear")
     AXED_MON(MONS_ROTTING_DEVIL, "rotting devil")
     AXED_MON(MONS_IGNIS, "ignis")

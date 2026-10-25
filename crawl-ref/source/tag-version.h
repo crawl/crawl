@@ -364,6 +364,13 @@ enum tag_minor_version
     TAG_MINOR_MIMIC_PROP,          // Move flag for mimics from env.level_map_mask to env.pgrid
     TAG_MINOR_MON_ATTACK_DEF_RANGE,// Add 'range' and 'cleaving' members to mon_attack_def
     TAG_MINOR_FORGET_MONSTERS,     // Forget stale monster memories.
+    TAG_MINOR_BASE_TRAINING_TARGETS, // Separate training targets for base skill levels
+    TAG_MINOR_SHOP_KEEPER_NAME,    // Seed shopkeeper names from all three keeper_name bytes
+    TAG_MINOR_TERRAIN_CHANGE_POWER, // Marshall power in map_terrain_change_markers
+    TAG_MINOR_TEMPORARY_WEAPONS,   // Implement the ability to give the player transient weapons
+    TAG_MINOR_UNIQUE_ITEM_ID,      // Implement unique item IDs for better-handling transient weapons
+    TAG_MINOR_FORM_XP_TRACKING,    // Tracking of how much XP per level was gained in each form
+    TAG_MINOR_MONINFO_SPELLS,      // Marshall monster_info::spells
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

@@ -152,6 +152,14 @@ public:
     }
 
     /**
+     * @return whether this delay can be interrupted at the moment.
+     */
+    virtual bool can_be_interrupted() const
+    {
+        return true;
+    }
+
+    /**
      * @return whether this is a delay which relocates the player,
      * which are generally uninterruptible but are interrupted by teleport.
      * Note that no stairs are necessarily involved.
@@ -270,6 +278,7 @@ class EquipOffDelay : public Delay
 {
     item_def& equip;
     bool was_prompted = false;
+    bool finishing = false;
 
     void start() override;
 
@@ -288,6 +297,13 @@ public:
     { }
 
     bool try_interrupt(bool force = false) override;
+
+    // Don't interrupt during finish() if a distortion unwield puts us in
+    // danger.
+    bool can_be_interrupted() const override
+    {
+        return !finishing;
+    }
 
     const char* name() const override
     {

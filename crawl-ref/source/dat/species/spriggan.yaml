@@ -51,9 +51,10 @@ recommended_jobs:
   - artificer
   - warper
   - enchanter
-  - conjurer
   - earth elementalist
   - alchemist
+  - mystic
+  - stalker
 recommended_weapons:
   - short blades
 

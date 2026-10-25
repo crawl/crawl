@@ -16,6 +16,7 @@
 #include "directn.h"
 #include "env.h"
 #include "fight.h"
+#include "fineff.h"
 #include "item-prop.h"
 #include "items.h"
 #include "item-use.h"
@@ -442,6 +443,8 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
         if (mon.max_hit_points > mon.hit_points)
             fd.player.hits++;
     }
+
+    fire_final_effects();
 
     fd.player.damage(mon.max_hit_points - mon.hit_points);
     fd.monster.damage(you.hp_max - you.hp);

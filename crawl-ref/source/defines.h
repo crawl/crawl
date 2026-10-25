@@ -187,7 +187,7 @@ const int AGILITY_BONUS = 5;
 #define MAX_RUNES 15
 
 // Size of unique_items in player class
-#define MAX_UNRANDARTS 150
+#define MAX_UNRANDARTS 255
 
 // Haste/slow boost.
 #define haste_mul(x) div_rand_round((x) * 3, 2)
@@ -322,6 +322,7 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define BLOCKED_DEADLINE_KEY "blocked_deadline"
 #define BROTHERS_KEY "brothers_count"
 #define OLD_HEADS_KEY "old_heads"
+#define ORIGINAL_HEADS_KEY "original_heads"
 #define ELY_WRATH_HEALED_KEY "ely_wrath_healed"
 #define CAN_CLIMB_KEY "can_climb"
 #define SPEECH_PREFIX_KEY "speech_prefix"
@@ -336,6 +337,7 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define PROTEAN_TARGET_KEY "protean_target"
 #define PASSWALL_ARMOUR_KEY "passwall_armour"
 #define SOUL_SPLINTERED_KEY "soul_splintered"
+#define ATTACKS_REMAINING_KEY "attacks_remaining"
 
 #define HELPLESS_KEY "helpless"
 #define POISONER_KEY "poisoner"

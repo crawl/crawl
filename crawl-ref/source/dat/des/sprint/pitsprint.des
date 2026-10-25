@@ -136,7 +136,7 @@ function base_monster_setup(e)
   e.kmons("H = Crazy Yiuf / Duvessa band / Edmund / Ijyb /\
                Grinder / Jessica / Menkaure / Pargi / Pikel band /\
                Prince Ribbit / Robin band / Sigmund / Terence")
-  e.kmons("I = Amaemon / Blorkula the orcula / Erica / Erolcha / Eustachio /\
+  e.kmons("I = Amaemon / Blorkula the Orcula / Erica / Erolcha / Eustachio /\
                Fannar / Gastronok / Grum band / Harold / Jeremiah / Joseph /\
                Josephine / Maurice / Nergalle / Lodul / Sonja / Sprozz / Urug")
   e.kmons("J = Agnes / Aizul / Azrael band / Donald / Frances / Jorgrun /\

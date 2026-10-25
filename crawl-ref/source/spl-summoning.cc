@@ -726,7 +726,7 @@ bool summon_holy_warrior(int pow, bool punish)
                  punish ? BEH_HOSTILE : BEH_FRIENDLY,
                  you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, GOD_SHINING_ONE);
     mg.set_summoned(punish ? 0 : &you, SPELL_NO_SPELL,
-                    punish ? 0 : random_range(80, 110) + pow / 2);
+                    punish ? 0 : random_range(800, 1100) + pow * 5);
 
     if (punish)
     {
@@ -1215,7 +1215,7 @@ bool is_gateway_target(const actor& caster, coord_def location, bool only_known)
         if (!only_known)
             return false;
 
-        if (creature->visible_to(&caster))
+        if (caster.aware_of(*creature))
             return false;
     }
 
@@ -1289,7 +1289,7 @@ spret cast_malign_gateway(actor * caster, int pow, bool fail, bool test)
             caster->mid,
             is_player ? BEH_FRIENDLY
                       : attitude_creation_behavior(
-                          caster->as_monster()->attitude),
+                          caster->as_monster()->attitude()),
             "",
             pow);
 
@@ -1405,7 +1405,7 @@ spret cast_summon_forest(actor* caster, int pow, bool fail, bool test)
              && !feat_is_endless(env.grid(*di))
              && x_chance_in_y(pow, 150)
              && (!act || act->is_habitable_feat(DNGN_TREE)))
-            || (env.grid(*di) == DNGN_FLOOR && x_chance_in_y(pow, 1250)
+            || (feat_is_floor(env.grid(*di)) && x_chance_in_y(pow, 1250)
                 && !act && !plant_forbidden_at(*di, true)))
         {
             temp_change_terrain(*di, DNGN_TREE, duration,
@@ -1926,7 +1926,6 @@ static bool _battlesphere_should_fire(actor* target,
 
 static void _fire_battlesphere(monster* battlesphere, bolt& beam)
 {
-    beam.thrower = battlesphere->summoner == MID_PLAYER ? KILL_YOU : KILL_MON;
     beam.set_is_tracer(false);
 
     battlesphere->foe = actor_at(beam.target)->mindex();
@@ -1991,8 +1990,7 @@ bool trigger_battlesphere(actor* agent)
     beam.flavour     = BEAM_MMISSILE;
     beam.pierce      = false;
     beam.target      = target->pos();
-    beam.source_id   = battlesphere->mid;
-    beam.attitude    = mons_attitude(*battlesphere);
+    beam.set_agent(agent);
 
     coord_def fallback_pos;
     // First, just try to fire from our present position
@@ -2406,16 +2404,13 @@ int summons_limit(spell_type spell, bool player)
         return player ? cap->player_cap : cap->monster_cap;
 }
 
-static bool _spell_has_variable_cap(spell_type spell)
-{
-    return spell == SPELL_SHADOW_CREATURES;
-}
-
 static void _expire_capped_summon(monster* mon, bool recurse)
 {
     // Timeout the summon
     monster_die(*mon, KILL_TIMEOUT, NON_MONSTER);
 
+    // If the chosen monster was part of a band (summoned by shadow creatures),
+    // timeout the other band members as well.
     if (recurse && mon->props.exists(SUMMON_ID_KEY))
     {
         const int summon_id = mon->props[SUMMON_ID_KEY].get_int();
@@ -2434,53 +2429,50 @@ static void _expire_capped_summon(monster* mon, bool recurse)
 }
 
 // Call when a monster has been summoned, to manage this summoner's caps.
-void summoned_monster(const monster *mons, const actor *caster,
-                      spell_type spell)
+void expire_oldest_summon_if_capped(const monster *mons, const actor *caster,
+                                    spell_type spell)
 {
-    int cap = summons_limit(spell, caster->is_player());
-    if (!cap) // summons aren't capped
+    // Blocks of ice aren't capped, only simulacra are.
+    if (spell == SPELL_SIMULACRUM && mons->type != MONS_SIMULACRUM)
         return;
 
-    // Cap large abominations and tentacled monstrosities separately
+    int cap = summons_limit(spell, caster->is_player());
+    if (!cap) // this spell doesn't have a summons cap
+        return;
+
+    // Cap large abominations and tentacled monstrosities separately.
     if (spell == SPELL_SUMMON_HORRIBLE_THINGS)
     {
-        cap = (mons->type == MONS_ABOMINATION_LARGE ? cap * 3 / 4
-                                                    : cap * 1 / 4);
+        if (mons->type == MONS_ABOMINATION_LARGE)
+            cap = 3 * cap / 4;
+        else
+            cap = cap / 4;
     }
     // Cap the two sphinx types separately.
     else if (spell == SPELL_SPHINX_SISTERS)
         cap = cap / 2;
-    // Only the simulacra themselves are capped with this spell. Blocks of ice
-    // are free.
-    else if (spell == SPELL_SIMULACRUM && mons->type != MONS_SIMULACRUM)
-        return;
 
     monster* oldest_summon = 0;
     int oldest_duration = 0;
+    int count = 1; // counting the just-summoned monster
 
-    // Linked summons that have already been counted once
-    set<int> seen_ids;
+    // For shadow creatures, track which linked summons (bands) have already
+    // been counted. Each band only counts as one monster toward the cap.
+    set<int> already_seen_bands;
 
-    int count = 1;
     for (monster_iterator mi; mi; ++mi)
     {
+        // The newly-summoned monster will never be eligible for dismissal.
         if (mons == *mi)
             continue;
 
-        // Ignore monsters that were not summoned by the caster.
-        if (mi->summoner != caster->mid || !mi->is_summoned()
-            || !mons_aligned(caster, *mi))
-        {
-            continue;
-        }
-
-        // Check that the monster was created by the spell in question.
-        mon_enchant summ = mi->get_ench(ENCH_SUMMON);
-        if (summ.degree != spell)
+        // Ignore monsters that were not summoned by the caster or by this spell.
+        if (!mi->was_created_by(*caster, spell) || !mons_aligned(caster, *mi))
             continue;
 
-        // Count the different summons of various spells separately.
-        // (And don't count blocks of ice at all.)
+        // For most normal spells that can summon multiple different monsters
+        // (so, not shadow creatures), the summoned monster will only displace
+        // a monster of the same type.
         if ((spell == SPELL_SUMMON_HORRIBLE_THINGS
             || spell == SPELL_SIMULACRUM
             || spell == SPELL_SPHINX_SISTERS)
@@ -2489,25 +2481,31 @@ void summoned_monster(const monster *mons, const actor *caster,
             continue;
         }
 
-        if (_spell_has_variable_cap(spell) && mi->props.exists(SUMMON_ID_KEY))
+        // Shadow creatures is given special treatment which allows it to
+        // summon beyond its defined cap, in order to accommodate bands.
+        // This remains under control because monster AI won't choose to
+        // cast the spell in the first place if it's not under the cap.
+        if (spell == SPELL_SHADOW_CREATURES && mi->props.exists(SUMMON_ID_KEY))
         {
             const int id = mi->props[SUMMON_ID_KEY].get_int();
 
-            // Skip any linked summon whose set we have seen already,
-            // otherwise add it to the list of seen summon IDs
-            if (seen_ids.find(id) == seen_ids.end())
-                seen_ids.insert(id);
-            else
+            // If we've seen this monster's band already, skip counting it.
+            // Otherwise, add the new band to the list.
+            if (already_seen_bands.count(id) > 0)
                 continue;
+            else
+                already_seen_bands.insert(id);
         }
 
         count++;
 
-        // If this summon is the closest to expiry, remember it
-        if (!oldest_summon || summ.duration < oldest_duration)
+        int this_duration = mi->get_ench(ENCH_SUMMON).duration;
+
+        // Of all remaining eligible summons, track the one closest to expiry.
+        if (!oldest_summon || this_duration < oldest_duration)
         {
             oldest_summon = *mi;
-            oldest_duration = summ.duration;
+            oldest_duration = this_duration;
         }
     }
 
@@ -2515,19 +2513,66 @@ void summoned_monster(const monster *mons, const actor *caster,
         _expire_capped_summon(oldest_summon, true);
 }
 
+// Provide the total number of summoned creatures attributable to the same
+// combination of summoner and spell.
 int count_summons(const actor *summoner, spell_type spell)
 {
     int count = 0;
+    set<int> already_seen_bands;
     for (monster_iterator mi; mi; ++mi)
     {
         if (summoner == *mi)
             continue;
 
-        if (mi->was_created_by(*summoner, spell) && mons_aligned(summoner, *mi))
-            count++;
+        if (!mi->was_created_by(*summoner, spell) || !mons_aligned(summoner, *mi))
+            continue;
+
+        // Don't count monsters in bands against the cap for shadow creatures.
+        // See also `expire_oldest_summon_if_capped`.
+        if (spell == SPELL_SHADOW_CREATURES && mi->props.exists(SUMMON_ID_KEY))
+        {
+            const int id = mi->props[SUMMON_ID_KEY].get_int();
+
+            // If we've seen this monster's band already, skip counting it.
+            // Otherwise, add the new band to the list.
+            if (already_seen_bands.count(id) > 0)
+                continue;
+            else
+                already_seen_bands.insert(id);
+        }
+
+        count++;
     }
 
     return count;
+}
+
+// For monster spells that summon multiple monsters in a single cast,
+// it's common for the monster to attempt to summon more monsters than the
+// defined summon cap allows. This can result in a large number of monsters
+// being redundantly dismissed in order to make room for newly-summoned ones,
+// which causes unnecessary work and message spam.
+// This helper function exists to limit monsters to only attempting to summon
+// no more than the currently available summon cap.
+// In theory it could be used for player spells as well, though it's possible
+// that players could intentionally be trying to time out older summons.
+int clamp_to_unsummoned_limit(int desired, const actor *summoner, spell_type spell)
+{
+    int cap = summons_limit(spell, summoner->is_player());
+    if (!cap)
+        return desired;
+
+    int available_slots = cap - count_summons(summoner, spell);
+
+    // In theory this number would always be greater than 0 by the time this
+    // function is called, otherwise the monster AI wouldn't be attempting
+    // to cast this spell in the first place.
+    // However, technically, we do have to be careful about negative values,
+    // because shadow creatures might exceed the summon cap due to bands.
+    if (available_slots < 0)
+        available_slots = 0;
+
+    return min(desired, available_slots);
 }
 
 static bool _create_briar_patch(coord_def& target)
@@ -3946,13 +3991,7 @@ static void _paragon_tempest(const coord_def& target)
     {
         const coord_def old_pos = paragon->pos();
 
-        bolt visual;
-        visual.flavour = BEAM_VISUAL;
-        visual.colour = WHITE;
-        visual.source = old_pos;
-        visual.target = target;
-        visual.aimed_at_spot = true;
-        visual.fire();
+        bolt::visual_beam(old_pos, target, 15, WHITE).fire();
 
         paragon->move_to(target, MV_INTERNAL);
         paragon->check_redraw(old_pos);
@@ -4052,13 +4091,8 @@ spret cast_platinum_paragon(const coord_def& target, int pow, bool fail)
     paragon->ghost_demon_init();
 
     // Do the landing shockwave.
-    bolt shockwave;
-    shockwave.source_id = paragon->mid;
-    shockwave.source = target;
-    shockwave.target = target;
-    shockwave.is_explosion = true;
-    shockwave.ex_size = 1;
-    zappy(ZAP_PARAGON_IMPACT, pow, true, shockwave);
+    bolt shockwave(*paragon, ZAP_PARAGON_IMPACT, pow);
+    shockwave.source = shockwave.target = target;
     shockwave.explode(true, true);
 
     return spret::success;
@@ -4212,8 +4246,11 @@ static void _do_player_potion()
 
     mprf("Mmmm... tastes like %s.", potion_type_name(potion));
 
-    if (you.has_mutation(MUT_DRUNKEN_BRAWLING) && oni_likes_potion(potion))
+    if (you.has_mutation(MUT_DRUNKEN_BRAWLING))
         oni_drunken_swing();
+
+    if (you.form == transformation::mistmane)
+        mistmane_quaff_potion(potion);
 
     if (you.magic_points < you.max_magic_points)
     {
@@ -4504,7 +4541,7 @@ bool splinterfrost_block_fragment(monster& block, const coord_def& aim)
     bolt beam;
     zappy(ZAP_SPLINTERFROST_FRAGMENT, pow, !agent->is_player(), beam);
     beam.source = block.pos();
-    beam.attitude = block.attitude;
+    beam.attitude = block.attitude();
     beam.set_agent(agent);
     beam.target = aim;
     beam.seen = true;
@@ -4537,10 +4574,6 @@ spret cast_summon_seismosaurus_egg(const actor& agent, int pow, bool fail)
     {
         mpr("A rock-encrusted egg appears nearby and begins to stir.");
         mons->add_ench(mon_enchant(ENCH_HATCHING, &agent, random_range(6, 9)));
-
-        // Mark all terrain in range.
-        for (distance_iterator di(mons->pos(), false, false, 4); di; ++di)
-            env.pgrid(*di) |= FPROP_SEISMOROCK;
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);

@@ -265,6 +265,11 @@ static unordered_set<int> _player_nonbook_spells =
     // Form spells
     SPELL_RUST_BREATH,
     SPELL_GOLDEN_BREATH,
+    // 'Fake' spells used for triggering Dragon Veins
+    SPELL_DRAGON_VEIN_FIRE,
+    SPELL_DRAGON_VEIN_ICE,
+    SPELL_DRAGON_VEIN_AIR,
+    SPELL_DRAGON_VEIN_EARTH,
 };
 
 bool is_player_spell(spell_type which_spell)
@@ -1144,7 +1149,7 @@ bool book_has_title(const item_def &book)
         || book.sub_type == BOOK_BIOGRAPHIES_VII
         || book.sub_type == BOOK_MAXWELL
         || book.sub_type == BOOK_UNRESTRAINED
-        || book.sub_type == BOOK_SWAMP_SOJOURN)
+        || book.sub_type == BOOK_SWAMP_SOJOURNS)
     {
         return true;
     }

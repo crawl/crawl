@@ -256,9 +256,8 @@ stanowi morderczy dla wrogów taniec.
 large rock
 
 Wielki głaz, używany przez gigantów jako pocisk. {{
-    if you.race() == "Ogre"
+    if you.race() == "Oni"
         or you.race() == "Troll"
-        or you.race() == "Formicid"
     then
         return ""
     else

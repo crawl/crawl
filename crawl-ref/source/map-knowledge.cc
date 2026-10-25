@@ -440,29 +440,32 @@ static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
     // cache this (DS with passive mapping autoexploring could be 5000 calls
     // in a second or so).
     static FixedArray<uint8_t, GXM, GYM> cache;
-    static int cache_seed = -1;
+    static bool cache_valid = false;
+    static uint64_t cached_seed = -1;
+    static level_id cached_level;
 
     if (random)
     {
-        cache_seed = -1;
+        cache_valid = false;
         for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
             for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
                 cache[x][y] = random2(100);
         return cache;
     }
 
-    // must not produce the magic value (-1)
-    int seed = ((static_cast<int>(you.where_are_you) << 8) + you.depth)
-             ^ (you.game_seed & 0x7fffffff);
-
-    if (seed == cache_seed)
+    const level_id cur = level_id::current();
+    if (cache_valid && cached_seed == you.game_seed && cached_level == cur)
         return cache;
 
-    cache_seed = seed;
+    cache_valid = true;
+    cached_seed = you.game_seed;
+    cached_level = cur;
 
+    rng::subgenerator subgen(you.game_seed,
+                             hash3(you.where_are_you, you.depth, 0));
     for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
         for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
-            cache[x][y] = hash_with_seed(100, seed, y * GXM + x);
+            cache[x][y] = random2(100);
 
     return cache;
 }

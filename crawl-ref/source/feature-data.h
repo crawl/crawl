@@ -274,6 +274,41 @@ static feature_def feat_defs[] =
 },
 
 {
+    DNGN_DRAGON_VEIN_AIR, "an airy dragon vein", "dragon_vein_air",
+    DCHAR_TRAP, NUM_DCHAR_TYPES,
+    COLOUR_IS(LIGHTCYAN),
+    FFT_NONE, MF_FLOOR,
+},
+
+{
+    DNGN_DRAGON_VEIN_EARTH, "an earthen dragon vein", "dragon_vein_earth",
+    DCHAR_TRAP, NUM_DCHAR_TYPES,
+    COLOUR_IS(BROWN),
+    FFT_NONE, MF_FLOOR,
+},
+
+{
+    DNGN_DRAGON_VEIN_FIRE, "a fiery dragon vein", "dragon_vein_fire",
+    DCHAR_TRAP, NUM_DCHAR_TYPES,
+    COLOUR_IS(LIGHTRED),
+    FFT_NONE, MF_FLOOR,
+},
+
+{
+    DNGN_DRAGON_VEIN_ICE, "an icy dragon vein", "dragon_vein_ice",
+    DCHAR_TRAP, NUM_DCHAR_TYPES,
+    COLOUR_IS(BROWN),
+    FFT_NONE, MF_FLOOR,
+},
+
+{
+    DNGN_ICE_THORNS, "a patch of ice thorns", "ice_thorns",
+    DCHAR_TRAP, NUM_DCHAR_TYPES,
+    COLOUR_IS(LIGHTBLUE),
+    FFT_NONE, MF_FLOOR,
+},
+
+{
     DNGN_MOULD_PATCH, "a patch of mould", "mould_patch",
     DCHAR_SHALLOW_WAVY, NUM_DCHAR_TYPES,
     COLOUR_IS(LIGHTGREY),

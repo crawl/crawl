@@ -181,6 +181,8 @@ morphic
 
 neodymium
 
+nickel
+
 nominal
 
 nondeterministic
@@ -248,6 +250,9 @@ shock
 
 sinusoidal
 
+# Shazam (Captain Marvel)
+sivanium
+
 sonic
 
 spiral
@@ -291,6 +296,9 @@ utility
 
 vacuum
 
+# Legion of Super-Heroes
+valorium
+
 vanadium
 
 variable
@@ -302,6 +310,9 @@ vertical
 voltage
 
 voltaic
+
+# Calvin and Hobbes
+zarnium
 
 @gizmo_modifier@axial
 

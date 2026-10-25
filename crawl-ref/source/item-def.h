@@ -6,6 +6,7 @@
 #pragma once
 
 #include "description-level-type.h"
+#include "item-status-flag-type.h"
 #include "level-id.h"
 #include "monster-type.h"
 #include "object-class-type.h"
@@ -17,6 +18,10 @@
 // however, since free bits are exhausted, it's very likely we'll have to
 // extend this in the future, so this should be easier than undoing the change.
 typedef uint32_t iflags_t;
+
+// Key used in cases where a specific item_def must be identified uniquely.
+// (Currently only for original equipment back after temporary equipment ends.)
+#define ITEM_UNIQUE_ID "item_uid"
 
 struct item_def
 {
@@ -148,8 +153,12 @@ public:
     /** Is this item fully identified? */
     bool is_identified() const;
 
+    bool summoned() const { return flags & ISFLAG_SUMMONED; };
+
     /// If this is a gem, what colour is it in console?
     colour_t gem_colour() const;
+
+    int give_unique_id();
 
 private:
     string name_aux(description_level_type desc, bool terse, bool ident,

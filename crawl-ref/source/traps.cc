@@ -703,15 +703,22 @@ bool is_valid_shaft_level(bool respect_brflags)
     return (brdepth[place.branch] - place.depth) >= 1;
 }
 
-static bool& _shafted_in(const Branch &branch)
+static string _shafted_key(branch_type branch)
 {
-    return you.props[make_stringf("shafted_in_%s", branch.abbrevname)].get_bool();
+    return make_stringf("shafted_in_%s", branches[branch].abbrevname);
 }
 
 /// Mark the player as having been shafted in the current branch.
 void set_shafted()
 {
-    _shafted_in(branches[you.where_are_you]) = true;
+    you.props[_shafted_key(you.where_are_you)] = true;
+}
+
+/// Has the player already been shafted in the given branch?
+bool shafted_in(branch_type branch)
+{
+    const string key = _shafted_key(branch);
+    return you.props.exists(key) && you.props[key].get_bool();
 }
 
 /**
@@ -727,7 +734,7 @@ static bool _is_valid_shaft_effect_level()
     // Don't shaft the player when we can't, or when we already did once this game
     // in this branch, or when it would be into a dangerous end.
     return is_valid_shaft_level()
-           && !_shafted_in(branch)
+           && !shafted_in(place.branch)
            && !(branch.branch_flags & brflag::dangerous_end
                 && brdepth[place.branch] - place.depth == 1);
 }

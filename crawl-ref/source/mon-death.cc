@@ -640,7 +640,7 @@ static bool _is_pet_kill(killer_type killer, int i)
 
     const monster* m = &env.mons[i];
     // This includes charmed monsters.
-    if (m->friendly() || m->attitude == ATT_MARIONETTE)
+    if (m->friendly() || m->attitude() == ATT_MARIONETTE)
         return true;
 
     // Check if the monster was confused by you or a friendly, which
@@ -814,7 +814,7 @@ static bool _vampire_make_thrall(monster* mons, killer_type killer)
     mons->props[NO_ANNOTATE_KEY] = true;
     remove_unique_annotation(mons);
 
-    mons->attitude = ATT_FRIENDLY;
+    mons->base_attitude = ATT_FRIENDLY;
     mons->add_ench(mon_enchant(ENCH_VAMPIRE_THRALL, &you, INFINITE_DURATION));
 
     const int pow = get_form(transformation::vampire)->get_level(10);
@@ -1551,7 +1551,7 @@ static string _derived_undead_message(const monster &mons, monster_type which_z,
 static void _make_derived_undead(monster* mons, bool quiet,
                                  monster_type which_z, beh_type beh,
                                  int spell, god_type god,
-                                 string msg = "", string fail_msg = "",
+                                 string msg = "",
                                  function<bool ()> should_trigger = []() {
                                     return true;
                                 }
@@ -1621,21 +1621,8 @@ static void _make_derived_undead(monster* mons, bool quiet,
     if (msg.empty())
         msg = "A " + mist + " mist starts to gather...";
 
-    if (fail_msg.empty())
-        fail_msg = "A " + mist + " mist gathers momentarily, then fades.";
-
     if (mons->mons_species() == MONS_HYDRA || mons->type == MONS_SLYMDRA)
-    {
-        // No undead 0-headed hydras, sorry.
-        if (mons->heads() == 0)
-        {
-            if (!quiet)
-                mpr(fail_msg);
-            return;
-        }
-        else
-            mg.props[MGEN_NUM_HEADS] = mons->heads();
-    }
+        mg.props[MGEN_NUM_HEADS] = mons->props[ORIGINAL_HEADS_KEY].get_int();
 
     string agent_name = "";
     if (mons->has_ench(ENCH_BOUND_SOUL))
@@ -1820,15 +1807,7 @@ static void _martyr_death_wail(monster &mons)
     mons.heal(50000);
 
     // Show brief animation
-    bolt visual;
-    visual.target = mons.pos();
-    visual.source = mons.pos();
-    visual.aimed_at_spot = true;
-    visual.colour = ETC_DARK;
-    visual.glyph      = '*';
-    visual.draw_delay = 100;
-    visual.flavour = BEAM_VISUAL;
-    visual.fire();
+    flash_tile(mons.pos(), DARKGREY, 100);
 
     // Have it instantly flay a few nearby things
     vector <actor*> targets;
@@ -1968,10 +1947,8 @@ static bool _mons_reaped(actor &killer, monster& victim)
     beh_type beh = SAME_ATTITUDE(&killer);
     string msg = victim.name(DESC_ITS) + " spirit is torn from " +
                      victim.pronoun(PRONOUN_POSSESSIVE) + " body!";
-    string fail_msg = victim.name(DESC_ITS) + " spirit is momentarily torn from " +
-                          victim.pronoun(PRONOUN_POSSESSIVE) + " body, then fades!";
     _make_derived_undead(&victim, !you.can_see(victim), MONS_SPECTRAL_THING, beh,
-                         MON_SUMM_WPN_REAP, GOD_NO_GOD, msg, fail_msg);
+                         MON_SUMM_WPN_REAP, GOD_NO_GOD, msg);
 
     return true;
 }
@@ -2083,7 +2060,7 @@ static bool should_blame_you_for_kill(int killer_index, bool pet_kill) noexcept
         const monster& m = env.mons[killer_index];
 
         // always blame the player for marionette kills
-        if (m.attitude == ATT_MARIONETTE)
+        if (m.attitude() == ATT_MARIONETTE)
             return true;
 
         const mon_enchant ench = m.get_ench(ENCH_CONFUSION);
@@ -2471,7 +2448,8 @@ static void _player_on_kill_effects(monster& mons, killer_type killer,
         makhleb_crucible_kill(mons);
     }
 
-    if (you.has_bane(BANE_SUCCOUR) && !mons.is_firewood() && !mons.wont_attack())
+    if (you.has_bane(BANE_SUCCOUR) && !RESET_KILL(killer)
+        && !mons.is_firewood() && !mons.wont_attack())
     {
         bool visible_effect = false;
         const int healing = random_range(mons.max_hit_points / 3,
@@ -2617,11 +2595,11 @@ item_def* monster_die(monster& mons, killer_type killer,
     const int monster_killed = mons.mindex();
     const bool hard_reset    = testbits(mons.flags, MF_HARD_RESET);
     const bool timeout       = killer == KILL_TIMEOUT;
-    const bool gives_player_xp = mons_gives_xp(mons, you);
     bool drop_items          = !hard_reset;
     bool in_transit          = false;
     const bool was_banished  = (killer == KILL_BANISHED);
     const bool mons_reset    = RESET_KILL(killer);
+    const bool gives_player_xp = mons_gives_xp(mons, you) && !mons_reset;
     // Whether to record the kill and consider leaving a corpse/gold.
     bool count_kill = !summoned && !timeout
                             && !mons_reset
@@ -2799,7 +2777,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
     else if (mons.type == MONS_HOARFROST_CANNON && real_death
-             && env.grid(mons.pos()) == DNGN_FLOOR)
+             && feat_is_floor(env.grid(mons.pos())))
     {
         temp_change_terrain(mons.pos(), DNGN_SHALLOW_WATER, random_range(50, 80),
                             TERRAIN_CHANGE_FLOOD);
@@ -2834,6 +2812,12 @@ item_def* monster_die(monster& mons, killer_type killer,
         you.props[SOLAR_EMBER_REVIVAL_KEY].get_int() = you.elapsed_time + random_range(200, 320);
         if (!you.can_see(mons))
             mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You feel your sun fade away.");
+    }
+    else if (mons_is_jade_crystal(mons.type))
+    {
+        jademantle_crystal_uncharge(mons.type);
+        if (real_death && !timeout)
+            you.props[JADEMANTLE_CRYSTAL_REVIVAL_KEY + to_string(mons.type)] = you.elapsed_time + random_range(150, 200);
     }
     else if (mons.type == MONS_BATTLESPHERE)
         end_battlesphere(&mons, true);
@@ -2968,14 +2952,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                 did_death_message = true;
 
                 if (armoury->alive() && armoury->see_cell_no_trans(mons.pos()))
-                {
-                    bolt visual;
-                    visual.source = mons.pos();
-                    visual.target = armoury->pos();
-                    visual.flavour = BEAM_VISUAL;
-                    visual.aimed_at_spot = true;
-                    visual.fire();
-                }
+                    bolt::visual_beam(mons.pos(), armoury->pos(), 15, LIGHTCYAN).fire();
             }
         }
         // Let summoned dancing weapons be handled like normal summoned creatures.
@@ -3040,7 +3017,10 @@ item_def* monster_die(monster& mons, killer_type killer,
             {
                 if (dynamic_cast<map_malign_gateway_marker*>(mark)->tentacle == mons.mid)
                 {
-                    revert_terrain_change(mark->pos, TERRAIN_CHANGE_MALIGN_GATEWAY);
+                    // Defer the terrain change because beams don't like walls
+                    // to disappear while they process them.
+                    schedule_revert_terrain_fineff(mark->pos,
+                                                   TERRAIN_CHANGE_MALIGN_GATEWAY);
                     env.markers.remove(mark);
                 }
             }
@@ -3284,6 +3264,8 @@ item_def* monster_die(monster& mons, killer_type killer,
             {
                 msg = " shrivels and dies.";
             }
+            else if (mons.type == MONS_HYPNOTAIL)
+                msg = " shrivels and falls limp.";
             else
             {
                 if (mons.props.exists(KIKU_WRETCH_KEY))
@@ -3534,8 +3516,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                                  BEH_FRIENDLY,
                                  SPELL_DEATH_CHANNEL,
                                  static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
-                                 "", "",
-                                 should_trigger);
+                                 "", should_trigger);
         }
         else if (!you_worship(GOD_YREDELEMNUL))
             (_reaping_brand(mons));
@@ -3686,11 +3667,8 @@ item_def* monster_die(monster& mons, killer_type killer,
         update_screen();
     }
 
-    if (!mons_reset)
-    {
-        _give_player_experience(player_xp, killer, pet_kill, was_visible,
-                                mons.xp_tracking);
-    }
+    _give_player_experience(player_xp, killer, pet_kill, was_visible,
+                            mons.xp_tracking);
     return corpse;
 }
 
@@ -3789,10 +3767,7 @@ void monster_cleanup(monster* mons, bool reset)
 
     if (mons->type == MONS_PLATINUM_PARAGON && mons->was_created_by(you, SPELL_PLATINUM_PARAGON))
         you.duration[DUR_PARAGON_ACTIVE] = 0;
-    if (mons->type == MONS_SEISMOSAURUS_EGG)
-        for (distance_iterator di(mons->pos(), false, false, 4); di; ++di)
-            env.pgrid(*di) &= ~FPROP_SEISMOROCK;
-    else if (mons->type == MONS_HELLFIRE_MORTAR && mons->summoner == MID_PLAYER)
+    if (mons->type == MONS_HELLFIRE_MORTAR && mons->summoner == MID_PLAYER)
     {
         const int dur = hellfire_mortar_cooldown_length(mons->props[HELLFIRE_PATH_KEY].get_vector().size());
         you.duration[DUR_HELLFIRE_MORTAR_COOLDOWN] = dur;
@@ -3851,7 +3826,7 @@ item_def* mounted_kill(monster* real_mon, monster_type mc, killer_type killer,
     mon.enchantments = real_mon->enchantments;
     mon.ench_cache = real_mon->ench_cache;
 
-    mon.attitude = real_mon->attitude;
+    mon.base_attitude = real_mon->base_attitude;
     mon.damage_friendly = real_mon->damage_friendly;
     mon.damage_total = real_mon->damage_total;
     // Keep the rider's name, if it had one (Mercenary card).
@@ -4433,7 +4408,7 @@ void mons_felid_revive(monster* mons)
         revive_place.y = random2(GYM);
         if (!in_bounds(revive_place)
             || env.grid(revive_place) != DNGN_FLOOR
-            || cloud_at(revive_place)
+            || harmful_cloud_at(revive_place)
             || monster_at(revive_place)
             || env.pgrid(revive_place) & FPROP_NO_TELE_INTO
             || grid_distance(revive_place, mons->pos()) < 9)

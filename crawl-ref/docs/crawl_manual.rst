@@ -2082,12 +2082,6 @@ Artificers
   help them through the early Dungeon. Wands have a limited number of uses,
   though, so they'll want to upgrade from their club ASAP.
 
-Shapeshifters
-  Shapeshifters use talismans to shift their body into different forms,
-  granting them uncanny power but making them unable to use some items.
-  They enter the dungeon with two talismans, some flux baubles, and a
-  potion of lignification.
-
 Wanderers
   Wanderers are "jacks-of-all-trades, masters of none". They start the game
   with a random assortment of skills, items, and maybe spells.
@@ -2097,6 +2091,31 @@ Delvers
   surface of the Dungeon. They're equipped with a wide variety of magical escape
   tools, and are well advised to use them to travel to earlier dungeon floors as
   quickly as possible.
+
+Metamorph backgrounds
+=====================
+
+Metamorphs use talismans to transform their bodies, giving them a variety of
+strange and unique power, but often limiting the equipment they can wear.
+
+Shapeshifters
+  Shapeshifters are melee combatants, trained in unarmed combat and capable of
+  eventually transforming into a variety of bestial forms. They enter the
+  dungeon with some flux baubles, a potion of lignification, and quill and
+  protean talismans - the latter of which will only reveal its true form as they
+  gain Shapeshifting skill.
+
+Stalkers
+  Stalkers are clever metamorphs who specialise in forms which improve their
+  subterfuge, allowing them to dispatch distracted enemies or debilitate them
+  with noxious clouds. They start with a dagger, some centipede baubles, and
+  gecko and mist talismans.
+
+Mystics
+  Mystics are esoteric mages who use talismans to augment their magical
+  abilities in unique ways. They start with a selection of spells that draw upon
+  the four elements, as well as vision and jade talismans, and a potion of
+  magic.
 
 Warrior-mage backgrounds
 ========================

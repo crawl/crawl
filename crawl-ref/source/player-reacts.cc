@@ -1019,6 +1019,9 @@ static void _decrement_durations()
         sun_scarab_spawn_ember(false);
     }
 
+    if (you.form == transformation::jademantle)
+        jademantle_handle_crystal_revival();
+
     const bool sanguine_armour_is_valid = sanguine_armour_valid();
     if (sanguine_armour_is_valid)
         activate_sanguine_armour();
@@ -1302,6 +1305,17 @@ static void _do_eel_flavour_msg()
     mprf(MSGCH_TALK, "%s", msg.c_str());
 }
 
+static void _update_sunder_status()
+{
+    if (you.attribute[ATTR_SUNDERING_CHARGE] > 0
+        && you.unrand_equipped(UNRAND_TROG) && you.berserk())
+    {
+        you.attribute[ATTR_SUNDERING_CHARGE]--;
+    }
+    else
+        you.attribute[ATTR_SUNDERING_CHARGE] = 0;
+}
+
 void player_reacts()
 {
     // don't allow reactions while stair peeking in descent mode
@@ -1362,7 +1376,7 @@ void player_reacts()
 
     actor_apply_toxic_bog(&you);
 
-    if (you.duration[DUR_RIME_YAK_AURA])
+    if (you.duration[DUR_FRIGID_WALLS_ACTIVE])
         frigid_walls_damage(you.time_taken);
 
     _regenerate_hp_and_mp(you.time_taken);
@@ -1375,7 +1389,7 @@ void player_reacts()
     if (you.attempted_attack)
         update_parrying_status();
     else
-        you.attribute[ATTR_SUNDERING_CHARGE] = 0;
+        _update_sunder_status();
 
     // Translocations and possibly other duration decrements can
     // escape a player from beholders and fearmongers. These should

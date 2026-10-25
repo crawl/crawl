@@ -38,7 +38,6 @@ struct job_group
 {
     const char* name;   ///< Name of the group.
     coord_def position; ///< Relative coordinates of the title.
-    int width;          ///< Column width.
     vector<job_type> jobs; ///< List of jobs in the group.
 
     /// A method to attach the group to a freeform.
@@ -50,7 +49,6 @@ struct species_group
 {
     const char* name;   ///< Name of the group.
     coord_def position; ///< Relative coordinates of the title.
-    int width;          ///< Column width.
     vector<species_type> species_list; ///< List of species in the group.
 
     /// A method to attach the group to a freeform.

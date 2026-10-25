@@ -1158,8 +1158,8 @@ will not happen again until your health fully recovers.
 %%%%
 Aqua status
 
-Your body is composed of elemental water that can reach to attack and drown
-enemies.
+Your body is composed mostly of elemental water that can reach to attack and
+drown enemies.
 %%%%
 Sphinx status
 
@@ -1304,7 +1304,8 @@ them backwards, but your stampede will end as soon as you perform any action
 %%%%
 Indom status
 
-You are rapidly regenerating damage you sustained while stampeding.
+You are rapidly regenerating health (at a rate dependent on your max HP) until
+you have healed the specified amount.
 %%%%
 Salvo status
 
@@ -1324,3 +1325,47 @@ this way at a greatly reduced piety cost.
 
 You have recently discharged a full-power jolt of electricity and cannot do this
 again until you fully heal.
+%%%%
+-Sirocco status
+
+You have recently cast Sirocco and cannot cast it again until you spend several
+turns without moving.
+%%%%
+Vision status
+
+Your third eye is open, allowing you to see the magical energy left over from
+spellcasting and convert it into damaging projectiles.
+%%%%
+Jade status
+
+A mass of elemental crystal shrouds your upper body, granting you increased
+skill with elemental magic and the ability to unleash it in a powerful burst.
+%%%%
+Crystals status
+
+{{ return you.jademantle_crystals_desc()}}
+%%%%
+Gecko status
+
+You are a hypnogecko, a stealthy lizard who can shed their own tail as a decoy
+when badly injured.
+%%%%
+-Tail status
+
+You have recently shed your tail and need to explore more of the dungeon before
+it can grow back again.
+%%%%
+Insubst status
+
+Your body is insubstantial, granting you immunity to constriction, petrification,
+barbs, sticky flame, webs, nets, and being caught by bolas.
+%%%%
+Vapour status
+
+A gaseous mixture from a recently-consumed potion swirls within you. Your next
+melee attack will spew clouds based on the type of potion that was quaffed.
+%%%%
+Mistmane status
+
+Your head is a cloud of swirling mist. Any potions you drink will be metabolised
+into clouds of baleful gas which you can expel with your melee attack.

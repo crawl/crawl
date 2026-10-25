@@ -349,7 +349,6 @@ private:
     void update_stair_distances();
     void sync_all_branch_stairs();
     void sync_branch_stairs(const stair_info *si);
-    void set_distance_between_stairs(int a, int b, int dist);
     void fixup();
 
 private:

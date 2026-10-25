@@ -1081,7 +1081,7 @@ static int you_have_rune(lua_State *ls)
 /*** Are you intrinsically immune to this particular hex spell?
  * @tparam string spell name
  * @treturn boolean
- * @function you_immune_to_hex
+ * @function immune_to_hex
  */
 static int you_immune_to_hex(lua_State *ls)
 {
@@ -1303,6 +1303,7 @@ LUAFN(you_train_skill)
 
 /*** Get a training target.
  * @tparam string name
+ * @tparam[opt=false] boolean base target the base skill level
  * @treturn number
  * @function get_training_target
  */
@@ -1311,12 +1312,14 @@ LUAFN(you_get_training_target)
     skill_type sk = l_skill(ls);
     if (sk > NUM_SKILLS)
         return 0;
-    PLUARET(number, (double) you.get_training_target(sk) * 0.1);
+    const bool base = lua_toboolean(ls, 2);
+    PLUARET(number, (double) you.get_training_target(sk, base) * 0.1);
 }
 
 /*** Set a training target.
  * @tparam string name
  * @tparam number target
+ * @tparam[opt=false] boolean base target the base skill level
  * @treturn number|nil if successfully set the new target
  * @function set_training_target
  */
@@ -1325,7 +1328,8 @@ LUAFN(you_set_training_target)
     skill_type sk = l_skill(ls);
     if (sk > NUM_SKILLS)
         return 0;
-    if (!you.set_training_target(sk, luaL_checknumber(ls, 2), true))
+    const bool base = lua_toboolean(ls, 3);
+    if (!you.set_training_target(sk, luaL_checknumber(ls, 2), true, base))
         return 0; // not a full-on error
     return 1;
 }
@@ -1384,6 +1388,30 @@ LUAFN(you_status)
     if (which)
         PLUARET(boolean, false);
     PLUARET(string, status_effects.c_str());
+}
+
+/*** List passive effects.
+ * @treturn table A table of strings describing each passive
+ * @function passives
+ */
+LUAFN(you_passives)
+{
+    return clua_stringtable(ls, player_passive_effects());
+}
+
+/*** Checks which spell you are channelling.
+ * @treturn string|nil The name of the spell being channelled or nil if the
+ * player is not channelling a spell.
+ * @function channelled_spell
+ */
+LUAFN(you_channelled_spell)
+{
+    const spell_type spell = (spell_type)you.attribute[ATTR_CHANNELLED_SPELL];
+    if (spell == SPELL_NO_SPELL)
+        lua_pushnil(ls);
+    else
+        lua_pushstring(ls, spell_title(spell));
+    return 1;
 }
 
 /*** Is your quivered action valid?
@@ -1450,6 +1478,37 @@ LUAFN(you_zot_orb_monster)
     }
     else
         lua_pushnil(ls);
+
+    return 1;
+}
+
+/*** Which of your jademantle crystals are charged?
+ * @treturn string A description of which crystals are currently charged.
+ * @function jademantle_crystals_desc
+ */
+LUAFN(you_jademantle_crystals_desc)
+{
+    if (!you.props.exists(JADEMANTLE_CRYSTAL_KEY))
+        lua_pushstring(ls, "None of your crystals are currently charged.");
+    else
+    {
+        const int elem = you.props[JADEMANTLE_CRYSTAL_KEY].get_int();
+        vector<string> lit_crystals;
+
+        if (elem & (int)spschool::earth)
+            lit_crystals.push_back("earthen");
+        if (elem & (int)spschool::fire)
+            lit_crystals.push_back("fiery");
+        if (elem & (int)spschool::air)
+            lit_crystals.push_back("airy");
+        if (elem & (int)spschool::ice)
+            lit_crystals.push_back("icy");
+
+        string msg = make_stringf("Your %s crystal%s are infused with energy.",
+                                  comma_separated_line(lit_crystals.begin(), lit_crystals.end()).c_str(),
+                                  lit_crystals.size() > 1 ? "s" : "");
+        lua_pushstring(ls, msg.c_str());
+    }
 
     return 1;
 }
@@ -1558,7 +1617,9 @@ static const struct luaL_Reg you_clib[] =
     { "constricted",  you_constricted },
     { "constricting", you_constricting },
     { "status",       you_status },
+    { "passives",     you_passives },
     { "immune_to_hex", you_immune_to_hex },
+    { "channelled_spell", you_channelled_spell},
     { "reach_range", you_reach_range },
     { "movement_cost", you_movement_cost },
 
@@ -1602,6 +1663,8 @@ static const struct luaL_Reg you_clib[] =
     { "is_web_immune",     you_is_web_immune },
     { "has_good_stab",      you_has_good_stab },
     { "zot_orb_monster", you_zot_orb_monster },
+
+    { "jademantle_crystals_desc", you_jademantle_crystals_desc },
 
     { nullptr, nullptr },
 };

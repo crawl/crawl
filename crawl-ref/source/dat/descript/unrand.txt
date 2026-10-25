@@ -444,7 +444,7 @@ amulet of Cekugob
 A strange-looking piece of crystal on an ordinary-looking string, with an odd
 selection of powers.
 %%%%
-amulet of Tranquility
+amulet of Tranquillity
 
 A pendant made of purest jade. It grants its wearer immense willpower and
 mental fortitude.
@@ -856,6 +856,15 @@ An extravagant crown of gold filigree and glittering jewels that even a king
 could feel immodest wearing. It grants its wearer a regal aura the match of any
 in heaven and also a great deal of unearned confidence.
 %%%%
+ghost crab claws
+
+A large pair of ghostly claws fashioned into gloves by a fenstrider coven for
+use in necromantic rites. The magically inclined and pugilistically favoured
+alike may grasp their connection with the spirits of the dead, but these pincers
+make grasping anything else an exercise in frustration.
+
+(This item prohibits the use of a weapon or shield while equipped.)
+%%%%
 swamp witch's dragon scales
 
 A flamboyant suit of ancient armour that has led to many minor schisms between
@@ -890,3 +899,58 @@ elder dragon occultist Zmysua was quite infamous, and led to the both of them
 seeking out endless mystic augmentations seeking more time for reconciliation-
 even now, these scales still reverberate with hunger to return to what remains
 of their opposite beyond death.
+%%%%
+giant spiked club "Carina at Dusk"
+
+Even the trolls have their share of nature poets, glassy-eyed dreamers, and
+starving artists. This is the masterwork of one such restless soul, a paean to
+the heavens far above.
+%%%%
+coolibah bardiche
+
+A massive polearm hewn in one piece from a coolibah tree. Its blade is no less
+sharp for being made of wood, and those caught in its enchanted branches will
+soon find themselves at home in the bog from which this deadly weapon sprouted.
+%%%%
+staff of Five Virtues
+
+The staff of a venerable master monk who drove away her foes as easily as her
+attachments and (so the legend says) eventually transcended life and death
+altogether. A worthy wielder may unlock the staff's great potential, provided
+they follow its former owner's peculiar ideas of balance and comportment.
+%%%%
+Stagehand's Sword
+
+An unassuming sword resembling a prop weapon for theatrical use. But behold!
+A twist here, a press there, and the real blade springs forth; glittering,
+wicked, murderous. Has it killed before? If so, it left no witnesses. Shall it
+kill for you? If you're sly enough, it will do just as you like.
+%%%%
+Hana's Scimitar
+
+The favored sword of one of the battlemage Yara's most illustrious pupils, an
+alleged demigoddess who often boasted that one spell and one slash were enough
+to settle any battle. Indeed, all of her duels ended in just such a fashion,
+including her last.
+%%%%
+arcane splint mail
+
+A truly ancient set of armour designed for maximum protection and flexibility.
+Evidently intended for use by mounted hexslingers, its magic wards and sigils
+are in a hopeless state of disrepair. Nevertheless, some traces of their power
+still remain.
+%%%%
+bone scales
+
+The half-stitched, or half-unstitched, torso of a bone dragon, fashioned (if one
+may call it that) into a truly wretched piece of armour. Its jagged bones seem
+to pulse with unlife, awaiting the command of some unholy master.
+%%%%
+Forgewarden's cuirass
+
+A bronze chestpiece of masterful make. It is etched all over with religious
+imagery, but the focus of the scene is obscured by a great dark stain {{
+    if you.can_smell() then
+        return "that smells strongly "
+    end
+}}of ashes and salt. It seems somehow blasphemous to wear.

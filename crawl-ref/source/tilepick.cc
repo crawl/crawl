@@ -211,6 +211,16 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_TOXIC_BOG;
     case DNGN_MUD:
         return TILE_LIQUEFACTION;
+    case DNGN_DRAGON_VEIN_AIR:
+        return TILE_DNGN_DRAGON_VEIN_AIR;
+    case DNGN_DRAGON_VEIN_EARTH:
+        return TILE_DNGN_DRAGON_VEIN_EARTH;
+    case DNGN_DRAGON_VEIN_FIRE:
+        return TILE_DNGN_DRAGON_VEIN_FIRE;
+    case DNGN_DRAGON_VEIN_ICE:
+        return TILE_DNGN_DRAGON_VEIN_ICE;
+    case DNGN_ICE_THORNS:
+        return TILE_DNGN_ICE_THORNS;
     case DNGN_MOULD_PATCH:
         if (player_in_branch(BRANCH_GULCH))
             return TILE_DNGN_MOULD_PATCH_GULCH;
@@ -2463,6 +2473,14 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 return TILEP_MONS_STAR_JELLY_EXPENDED;
             return base;
 
+        case MONS_JADE_CRYSTAL_AIR:
+        case MONS_JADE_CRYSTAL_EARTH:
+        case MONS_JADE_CRYSTAL_FIRE:
+        case MONS_JADE_CRYSTAL_ICE:
+            if (mon.is(MB_FULLY_CHARGED))
+                return base + 1;
+            return base;
+
         case MONS_DANCING_WEAPON:
         {
             // Use item tile.
@@ -2792,7 +2810,6 @@ static const map<monster_info_flags, tileidx_t> monster_status_icons = {
     { MB_ANTIMAGIC, TILEI_ANTIMAGIC },
     { MB_DAZED, TILEI_DAZED },
     { MB_PARTIALLY_CHARGED, TILEI_PARTIALLY_CHARGED },
-    { MB_FULLY_CHARGED, TILEI_FULLY_CHARGED },
     { MB_FIRE_VULN, TILEI_FIRE_VULN },
     { MB_CONCENTRATE_VENOM, TILEI_CONC_VENOM },
     { MB_DEFLECT_MSL, TILEI_DEFLECT_MISSILES },
@@ -2862,6 +2879,8 @@ set<tileidx_t> status_icons_for(const monster_info &mons)
             icons.insert(status.second);
     if (mons.is(MB_PHASE_SHIFT) && !tileidx_monster_phase_shift(mons.type))
         icons.insert(TILEI_PHASE_SHIFT);
+    if (mons.is(MB_FULLY_CHARGED) && !mons_is_jade_crystal(mons.type))
+        icons.insert(TILEI_FULLY_CHARGED);
     return icons;
 }
 
@@ -2898,6 +2917,7 @@ set<tileidx_t> status_icons_for_player()
 #ifdef USE_TILE
     if (you.is_constricted() && _should_show_player_status_icon("constr"))
         icons.insert(TILEI_CONSTRICTED);
+
     if (you.has_mutation(MUT_MNEMOPHAGE)
         && you.props[ENKINDLE_CHARGES_KEY].get_int() == enkindle_max_charges()
         || you.duration[DUR_ENKINDLED])
@@ -2906,6 +2926,7 @@ set<tileidx_t> status_icons_for_player()
     }
     if (you.duration[DUR_ENKINDLED])
         icons.insert(TILEI_ENKINDLED_2);
+
     for (auto status : player_status_icons)
     {
         if (you.duration[status.first]
@@ -2914,6 +2935,7 @@ set<tileidx_t> status_icons_for_player()
             icons.insert(status.second.first);
         }
     }
+
 #endif
     return icons;
 }
@@ -3065,6 +3087,7 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_QUICK_BLADE:           return TILE_WPN_QUICK_BLADE;
     case WPN_RAPIER:                return TILE_WPN_RAPIER;
     case WPN_ATHAME:                return TILE_WPN_ATHAME;
+    case WPN_CENTIPEDE:             return TILE_WPN_CENTIPEDE;
     case WPN_FALCHION:              return TILE_WPN_FALCHION;
     case WPN_LONG_SWORD:            return TILE_WPN_LONG_SWORD;
     case WPN_GREAT_SWORD:           return TILE_WPN_GREAT_SWORD;
@@ -3449,6 +3472,8 @@ static tileidx_t _tileidx_talisman(const item_def &item)
     {
     case TALISMAN_INKWELL:  return TILE_TALISMAN_INKWELL;
     case TALISMAN_QUILL:    return TILE_TALISMAN_QUILL;
+    case TALISMAN_VISION:   return TILE_TALISMAN_VISION;
+    case TALISMAN_GECKO:    return TILE_TALISMAN_GECKO;
     case TALISMAN_PROTEAN:  return TILE_TALISMAN_PROTEAN;
     case TALISMAN_RIMEHORN: return TILE_TALISMAN_RIMEHORN;
     case TALISMAN_SCARAB:   return TILE_TALISMAN_SCARAB;
@@ -3457,6 +3482,8 @@ static tileidx_t _tileidx_talisman(const item_def &item)
     case TALISMAN_AQUA:     return TILE_TALISMAN_AQUA;
     case TALISMAN_SERPENT:  return TILE_TALISMAN_SNAKE;
     case TALISMAN_SPORE:    return TILE_TALISMAN_SPORE;
+    case TALISMAN_JADE:     return TILE_TALISMAN_JADE;
+    case TALISMAN_MIST:     return TILE_TALISMAN_MIST;
     case TALISMAN_MAW:      return TILE_TALISMAN_MAW;
     case TALISMAN_EEL:      return TILE_TALISMAN_EEL;
     case TALISMAN_BLADE:    return TILE_TALISMAN_BLADE;
@@ -3713,7 +3740,10 @@ tileidx_t tileidx_item(const item_def &item)
         return TILE_GIZMO + item.rnd % tile_main_count(TILE_GIZMO);
 
     case OBJ_BAUBLES:
-        return TILE_BAUBLE_FLUX;
+        if (item.sub_type == BAUBLE_FLUX)
+            return TILE_BAUBLE_FLUX;
+        else
+            return TILE_BAUBLE_CENTIPEDE;
 
     case OBJ_DETECTED:
         return TILE_UNSEEN_ITEM;
@@ -3936,6 +3966,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
     case TILE_BOLT_HARPOON_SHOT:
     case TILE_BOLT_METAL_SPLINTERS:
     case TILE_BOLT_FROSTFIRE:
+    case TILE_BOLT_SIROCCO:
     case TILE_MI_DART0:
     case TILE_MI_JAVELIN0:
     case TILE_MI_THROWING_NET0:
@@ -4005,15 +4036,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dir, int dist)
 
 tileidx_t tileidx_zap(int colour, coord_def pos)
 {
-    switch (colour)
-    {
-    case ETC_HOLY:
-        colour = YELLOW;
-        break;
-    default:
-        colour = element_colour(colour, pos);
-        break;
-    }
+    colour = element_colour(colour, pos);
 
     if (colour < 1)
         colour = 7;
@@ -4575,9 +4598,9 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_CHEIBRIADOS_DISTORTION:
         return TILEG_ABILITY_CHEIBRIADOS_TEMPORAL_DISTORTION;
     // Ashenzari
-    case ABIL_ASHENZARI_CURSE:
+    case ABIL_ASHENZARI_BIND:
         return TILEG_ABILITY_ASHENZARI_CURSE;
-    case ABIL_ASHENZARI_UNCURSE:
+    case ABIL_ASHENZARI_SHATTER:
         return TILEG_ABILITY_ASHENZARI_UNCURSE;
     // Dithmenos
     case ABIL_DITHMENOS_SHADOWSLIP:
@@ -4824,6 +4847,10 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
             return TILEG_JOB_CHAOS_KNIGHT;
         case JOB_SHAPESHIFTER:
             return TILEG_JOB_SHAPESHIFTER;
+        case JOB_MYSTIC:
+            return TILEG_JOB_MYSTIC;
+        case JOB_STALKER:
+            return TILEG_JOB_STALKER;
         case JOB_MONK:
             return TILEG_JOB_MONK;
         case JOB_WARPER:

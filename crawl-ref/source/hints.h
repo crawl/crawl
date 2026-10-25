@@ -103,6 +103,9 @@ enum hints_event_type
     // warning
     HINT_RUN_AWAY,
     HINT_RETREAT_CASTER,
+#if TAG_MAJOR_VERSION > 34
+    HINT_WIELD_MELEE_WEAPON,
+#endif
     HINT_WIELD_WEAPON,
     HINT_NEED_HEALING,
     HINT_NEED_POISON_HEALING,
@@ -139,6 +142,9 @@ enum hints_event_type
     HINT_MALEVOLENCE,
     HINT_OPPORTUNITY_ATTACK,
     HINT_ON_FIRE,
+#if TAG_MAJOR_VERSION == 34
+    HINT_WIELD_MELEE_WEAPON,
+#endif
     HINT_EVENTS_NUM
 };
 

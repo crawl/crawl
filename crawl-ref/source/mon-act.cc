@@ -809,14 +809,8 @@ static bool _handle_swoop_or_flank(monster& mons)
 
     coord_def target = defender->pos();
 
-    bolt tracer;
-    tracer.source = mons.pos();
-    tracer.target = target;
-    tracer.set_is_tracer(true);
-    tracer.pierce = true;
-    tracer.fire();
-
-    for (unsigned int j = 0; j < tracer.path_taken.size() - 1; ++j)
+    bolt tracer = bolt::path_tracer(mons.pos(), target);
+    for (int j = 0; j < (int)tracer.path_taken.size() - 1; ++j)
     {
         if (tracer.path_taken[j] != target)
             continue;
@@ -1201,7 +1195,7 @@ static bool _scan_rending_blade_paths(coord_def start,
                     continue;
 
                 // Don't hurt allies.
-                if (mons_atts_aligned(ATT_FRIENDLY, act->temp_attitude()))
+                if (mons_atts_aligned(ATT_FRIENDLY, act->attitude()))
                 {
                     enemy_power = 0;
                     break;
@@ -1234,13 +1228,9 @@ static bool _scan_rending_blade_paths(coord_def start,
 
 static void _fire_rending_blade(monster& blade, coord_def target, int pow)
 {
-    bolt slash;
-    zappy(ZAP_RENDING_SLASH, pow, true, slash);
+    bolt slash(blade, ZAP_RENDING_SLASH, pow);
+    slash.set_agent(&you);
     slash.range = 4;
-    slash.source = blade.pos();
-    slash.source_id = blade.mid;
-    slash.thrower = KILL_MON_MISSILE;
-    slash.origin_spell = SPELL_RENDING_BLADE;
     slash.target = target;
     slash.aimed_at_spot = true;
     slash.hit_verb = "slices through";
@@ -1341,7 +1331,7 @@ static bool _handle_rending_blade_trigger(monster* blade)
 static void _handle_lightning_spire(monster& spire)
 {
     // 50% chance of casting each turn
-    if (coinflip() || spire.is_silenced())
+    if (coinflip())
         return;
 
     // Gather all eligable targets in sight
@@ -2134,12 +2124,13 @@ void handle_monster_move(monster* mons)
     }
 
     // Return to the player's side if they've gotten too separated
-    if (mons->type == MONS_HAUNTED_ARMOUR)
+    if (mons->type == MONS_HAUNTED_ARMOUR || mons_is_jade_crystal(mons->type))
     {
-        if (grid_distance(you.pos(), mons->pos()) > 5)
+        const int max_dist = mons->type == MONS_HAUNTED_ARMOUR ? 5 : 8;
+        if (grid_distance(you.pos(), mons->pos()) > max_dist)
         {
             coord_def spot;
-            if (find_habitable_spot_near(you.pos(), MONS_HAUNTED_ARMOUR, 3, spot,
+            if (find_habitable_spot_near(you.pos(), mons->type, 3, spot,
                                          -1, &you))
             {
                 simple_monster_message(*mons, " returns to your side.");
@@ -2281,10 +2272,16 @@ void handle_monster_move(monster* mons)
 
     if (mons->has_ench(ENCH_CHANNEL_SEARING_RAY))
     {
+        if (mons->cannot_keep_channelling())
+        {
+            mons->del_ench(ENCH_CHANNEL_SEARING_RAY, true, false);
+            if (you.can_see(*mons))
+                mprf("%s searing ray is interrupted.", mons->name(DESC_ITS).c_str());
+        }
         // If we are continuing to fire searing ray, remain in place.
         // XXX: Doesn't track how many turns this has been channelled, but that
         //      doesn't presently matter.
-        if (handle_searing_ray(*mons, 1))
+        else if (handle_searing_ray(*mons, 1))
         {
             mons->speed_increment -= non_move_energy;
             return;
@@ -2440,6 +2437,7 @@ void handle_monster_move(monster* mons)
             && !is_sanctuary(mons->pos())
             && (!(mons_aligned(mons, targ) || mons_is_seeker(*targ))
                 || mons->has_ench(ENCH_FRENZIED))
+            && !monster_on_wrong_wall_side(mons, targ)
             && monster_los_is_valid(mons, targ))
         {
             // Figure out if they fight.
@@ -2462,7 +2460,9 @@ void handle_monster_move(monster* mons)
             mons->props.erase(BLOCKED_DEADLINE_KEY);
         }
 
-        if (invalid_monster(mons) || mons->is_stationary())
+        if (invalid_monster(mons) || mons->is_stationary()
+            // Can't move on its own, but can be swapped with or pushed
+            || mons->type == MONS_HYPNOTAIL)
         {
             if (mons->speed_increment == old_energy)
                 mons->speed_increment -= non_move_energy;
@@ -2780,7 +2780,7 @@ void clear_monster_flags()
 static void _update_monster_attitude(monster *mon)
 {
     if (mons_can_hate(mon->type))
-        mon->attitude = ATT_HOSTILE;
+        mon->base_attitude = ATT_HOSTILE;
 }
 
 vector<monster *> just_seen_queue;
@@ -2805,7 +2805,9 @@ void print_mons_left_view_messages()
     {
         for (auto m : just_seen_queue)
         {
-            if (!m || invalid_monster(m) || !m->alive())
+            // Don't message for safe monsters, as this gets quite spammy in
+            // some cases.
+            if (!m || invalid_monster(m) || !m->alive() || mons_is_always_safe(m))
                 continue;
             // can't use simple_monster_message here, because m is out of view.
             // The monster should be visible to be in this queue.
@@ -3472,6 +3474,11 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         if (!monster_los_is_valid(mons, targ))
             return false;
 
+        // Don't leak info to the player by hitting their allies from the other
+        // side of walls.
+        if (monster_on_wrong_wall_side(mons, targmonster))
+            return false;
+
         // Cut down plants only when no alternative, or they're
         // our target.
         if (targmonster->is_firewood() && mons->target != targ)
@@ -3495,7 +3502,10 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
 
     // Friendlies shouldn't try to move onto the player's
     // location, if they are aiming for some other target.
-    if (mons->foe != MHITYOU
+    // (And jade crystals shouldn't at all, to keep from being stuck on the
+    // player instead of fanning out to their desired positions around you.)
+    if ((mons->foe != MHITYOU
+         || mons_is_jade_crystal(mons->type))
         && targ == you.pos()
         && (mons->foe != MHITNOT || mons->is_patrolling())
         && !_unfriendly_or_impaired(*mons))
@@ -4106,16 +4116,10 @@ static bool _monster_move(monster* mons, coord_def& delta)
     const bool digs = _mons_can_cast_dig(mons, false) && feat_is_diggable(feat);
     if (digs)
     {
-        bolt beem;
         // XXX: Check for antimagic causing failure at this point. Ideally,
         //      monster spellcasting functions could allow this without duplication.
         if (_mons_can_cast_dig(mons, true))
-        {
-            setup_mons_cast(mons, beem, SPELL_DIG);
-            beem.target = target;
-            mons_cast(mons, beem, SPELL_DIG,
-                        mons->spell_slot_flags(SPELL_DIG));
-        }
+            try_mons_cast(*mons, SPELL_DIG, target);
         else
             simple_monster_message(*mons, " falters for a moment.");
         mons->lose_energy(EUT_SPELL);

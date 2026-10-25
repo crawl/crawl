@@ -97,7 +97,9 @@ action will cancel the Dig status.
 Shaft Self ability
 
 Sends you to a random position one to three floors down, as if you jumped into
-a shaft trap. It takes some time to dig the shaft.
+a shaft trap. It takes some time to dig the shaft, and requires solid, dry
+ground beneath you. You cannot shaft yourself while standing on stairs or
+portals or while in watery terrain.
 %%%%
 Evoke Blink ability
 
@@ -718,15 +720,16 @@ Calls forth acidic ooze from the walls of the dungeon around you, damaging foes
 depending on the number of slimy walls they remain adjacent to.
 %%%%
 # Ashenzari
-Curse Item ability
+Ritual of Binding ability
 
-Curses a chosen equipped item, binding it to the wearer until the curse
-and the item both are broken. Cursed items can no longer be enchanted or
-modified.
+Binds a chosen equipped item to the wearer in exchange for a sliver of
+Ashenzari's knowledge. Items bound in this way can no longer be enchanted
+or modified by most means, and cannot be removed without shattering them.
 %%%%
 Shatter The Chains ability
 
-Destroys a chosen cursed equipped item, relieving the wearer of the curse.
+Destroys a chosen bound item, relieving the wearer of its weight, but lessening
+their favour in Ashenzari's eyes.
 %%%%
 # Dithmenos
 Shadowslip ability

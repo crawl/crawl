@@ -338,9 +338,8 @@ med halvmåneformede klinger i begge ender.
 large rock
 
 En meget stor og meget tung sten. {{
-    if you.race() == "Ogre"
+    if you.race() == "Oni"
        or you.race() == "Troll"
-       or you.race() == "Formicid"
     then
         return ""
     else

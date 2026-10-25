@@ -92,5 +92,6 @@ enum artefact_prop_type
     ARTP_ENHANCE_FORGECRAFT,
     ARTP_SILENCE,
     ARTP_BANE,
+    ARTP_BASE_ENCUMBRANCE,
     ARTP_NUM_PROPERTIES
 };

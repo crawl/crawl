@@ -667,6 +667,13 @@ void init_element_colours()
                               {20,  LIGHTGREEN},
                               {100, LIGHTGREY},
                             }));
+    add_element_colour(new random_element_colour_calc(
+                            ETC_JADE, "jade",
+                            { {10,  LIGHTBLUE},
+                              {10,  LIGHTRED},
+                              {10,  LIGHTCYAN},
+                              {10,  YELLOW},
+                            }));
     // redefined by Lua later
     add_element_colour(new element_colour_calc(
                             ETC_DISCO, "disco", _etc_random

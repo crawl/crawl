@@ -180,7 +180,7 @@ static bool _aura_could_affect(const aura_data& aura,
         return false;
 
     // Is the victim the right alignment?
-    if (mons_atts_aligned(source_attitude, victim.temp_attitude()) == aura.is_hostile)
+    if (mons_atts_aligned(source_attitude, victim.attitude()) == aura.is_hostile)
         return false;
 
     // Is the aura something that should affect firewood?
@@ -206,7 +206,7 @@ static bool _aura_could_affect(const aura_data& aura,
                                const actor& victim)
 {
     return _aura_could_affect(aura, mon_source.pos(), mon_source.mid,
-                              mon_source.temp_attitude(), victim);
+                              mon_source.attitude(), victim);
 }
 
 static void _update_aura(const aura_data& aura, const coord_def& source_pos,
@@ -275,7 +275,7 @@ void mons_update_aura(const monster& mon)
 
     const aura_data aura = _get_aura_for(mon);
 
-    _update_aura(aura, mon.pos(), mon.mid, mon.temp_attitude());
+    _update_aura(aura, mon.pos(), mon.mid, mon.attitude());
 }
 
 static const aura_data AURA_OF_VIGOR = {ENCH_DOUBLED_VIGOUR, 1, false};

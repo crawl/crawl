@@ -71,7 +71,7 @@ monsters to be replaced when they die. For example,
 
     crawl -arena "respawn rat v rat"
 
-will make it so that when one rat dies another takes it's place,
+will make it so that when one rat dies another takes its place,
 resulting in an endless fight between two rats.
 
                                    Commands

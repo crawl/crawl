@@ -779,6 +779,12 @@ static void _take_starting_note()
 
     take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0,
                    notestr.str().c_str()));
+
+    for (skill_type skill = SK_FIRST_SKILL; skill < NUM_SKILLS; ++skill)
+    {
+        if (you.skills[skill] > 0)
+            take_note(Note(NOTE_START_SKILL, skill, you.skills[skill]));
+    }
 }
 
 static void _startup_hints_mode()
@@ -1640,7 +1646,8 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
 
     // Only give the slimy stair warning on Slime:1. If below that, they're already stuck anyway.
     if (down && player_in_branch(BRANCH_SLIME) && you.depth == 1
-        && !you.royal_jelly_dead && !you_worship(GOD_JIYVA))
+        && !you.royal_jelly_dead && !you_worship(GOD_JIYVA)
+        && ygrd != DNGN_TRANSPORTER && ygrd != DNGN_PASSAGE_OF_GOLUBRIA)
     {
         if (!yesno("You will be unable to climb back up again until you either destroy or join "
                    "the power ruling this place. Continue?", true, 'n'))

@@ -34,13 +34,13 @@ w:3
 %%%%
 demon_taunt_special
 
-Thy @body_or_spiritual_part@ shall be my @meal@!
+Now @thy_body_or_spiritual_part@ shall be my @meal@!
 
 @give_up@, thou tasty @meal@!
 
 @run_away@ @whilst_thou_can@!
 
-I @will_or_shall@ @feast_or_devour@ thy @body_or_spiritual_part@!
+I @will_or_shall@ @feast_or_devour@ @thy_body_or_spiritual_part@!
 %%%%
 # capitalised "flee" verbs
 run_away
@@ -185,13 +185,13 @@ whilst thou art whole
 # screen vs. this for undead?
 whilst life thou hast
 %%%%
-body_or_spiritual_part
+thy_body_or_spiritual_part
 
 w:3
-@important_body_part@
+@thine_important_body_part@
 
 w:1
-@important_spiritual_part@
+@thine_important_spiritual_part@
 %%%%
 will_or_shall
 
@@ -205,57 +205,57 @@ feast on
 
 devour
 %%%%
-important_body_part
+thine_important_body_part
 
-head
+thy head
 
-brain
+thy brain
 
-heart
+thy heart
 
-viscera
+thy viscera
 
-eyes
+thine eyes
 
-lungs
+thy lungs
 
-liver
+thy liver
 
-throat
+thy throat
 
-neck
+thy neck
 
-gizzard
+thy gizzard
 
-skull
+thy skull
 
-spine
+thy spine
 %%%%
-important_spiritual_part
+thine_important_spiritual_part
 
-soul
+thy soul
 
-spirit
+thy spirit
 
-inner light
+thine inner light
 
-hope
+thy hope
 
-faith
+thy faith
 
-will
+thy will
 
-heart
+thy heart
 
-mind
+thy mind
 
-sanity
+thy sanity
 
-fortitude
+thy fortitude
 
-life force
+thy life force
 
-vitality
+thy vitality
 %%%%
 meal
 

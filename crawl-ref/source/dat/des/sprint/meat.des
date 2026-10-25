@@ -140,7 +140,7 @@
 
   function weapon_creation(e)
     if you.get_base_mutation_level("no weapons or thrown items") == 1 then
-      e.kitem("{ = ring of slaying plus:27000")
+      e.kitem("{ = ring of slaying plus:27000 pre_id")
     else
       e.kitem("{ = axe_of_woe")
     end
@@ -404,8 +404,8 @@ NSUBST:    ' = 1:& / *:.
     "</red>")
 
 }}
-KITEM:     + = ring of see invisible
-KITEM:     * = ring of protection from fire
+KITEM:     + = ring of see invisible pre_id
+KITEM:     * = ring of protection from fire pre_id
 SUBST:     1 = 1.
 KPROP:     - = no_tele_into
 KFEAT:     _ = altar_makhleb

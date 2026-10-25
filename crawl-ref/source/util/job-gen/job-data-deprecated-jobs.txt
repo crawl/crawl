@@ -52,14 +52,4 @@
     weapon_choice::none,
     { },
 } },
-
-{ JOB_STALKER, {
-    "St", "Stalker",
-    0, 0, 0,
-    { },
-    { },
-    { },
-    weapon_choice::none,
-    { },
-} },
 #endif

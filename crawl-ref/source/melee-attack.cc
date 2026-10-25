@@ -45,8 +45,10 @@
 #include "nearby-danger.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-clouds.h" // ghost crab claws
 #include "spl-damage.h"
 #include "spl-goditem.h"
+#include "spl-monench.h" // is_valid_tempering_target
 #include "spl-summoning.h" //AF_SPIDER
 #include "state.h"
 #include "stepdown.h"
@@ -200,7 +202,7 @@ static void _do_rime_yak_freeze(coord_def targ)
     // Used to tell the game to run the wall damage phase after each player
     // turn. Just needs to be longer than the max possible duration of walls
     // which may exist.
-    you.duration[DUR_RIME_YAK_AURA] = 70;
+    you.duration[DUR_FRIGID_WALLS_ACTIVE] = 70;
 }
 
 bool melee_attack::handle_phase_attempted()
@@ -610,7 +612,8 @@ void melee_attack::do_vampire_lifesteal()
         if (!stab_attempt && !x_chance_in_y(2, 3))
             return;
 
-        const bool can_heal = actor_can_drain_life_from(you, *mon);
+        const bool can_heal = actor_can_drain_life_from(you, *mon)
+                              && mon->res_negative_energy() < 3;
         const bool can_enthrall = stab_attempt && !mon->is_summoned()
                                   && !mon->alive()
                                   && mon->holiness() & (MH_NATURAL | MH_PLANT | MH_DEMONIC);
@@ -635,7 +638,7 @@ void melee_attack::do_vampire_lifesteal()
 
         if (can_heal)
         {
-            int heal = random2(damage_done);
+            int heal = resist_adjust_damage(mon, BEAM_NEG, random2(damage_done));
             if (heal > 0 && you.hp < you.hp_max && !you.duration[DUR_DEATHS_DOOR])
             {
                 you.heal(heal);
@@ -645,7 +648,7 @@ void melee_attack::do_vampire_lifesteal()
     }
 }
 
-void melee_attack::handle_concussion_brand()
+void melee_attack::handle_concussion_brand(bool unrand)
 {
     const coord_def old_pos = defender->pos();
     bool did_move = false;
@@ -685,6 +688,9 @@ void melee_attack::handle_concussion_brand()
     {
         schedule_trample_follow_fineff(attacker, old_pos);
     }
+
+    if (unrand && damage_done > 0 && (did_move || one_chance_in(4)))
+            schedule_stardust_fineff(attacker, 20 + damage_done * 3 / 2, 1, SHOOTING_STAR_CARINA);
 }
 
 static void _apply_flux_contam(monster &m)
@@ -805,6 +811,27 @@ void melee_attack::grow_burstshrooms(int hd)
         mprf("Mushrooms sprout behind %s.", defender->name(DESC_THE).c_str());
 }
 
+static void _trigger_coolibah_bardiche(actor* attacker, actor* defender, int dam)
+{
+    if (defender->is_constricted() && defender->alive() && dam)
+    {
+        if (one_chance_in(3))
+            defender->floodify(attacker, min(20 + random2(dam * 6), 80));
+
+        coord_def pos = defender->pos();
+
+        if (one_chance_in(3) && in_bounds(pos) && env.grid(pos) != DNGN_DEEP_WATER
+            && env.grid(pos) != DNGN_LAVA && env.grid(pos) != DNGN_TOXIC_BOG)
+        {
+            mprf("A bog forms beneath %s!", defender->name(DESC_THE).c_str());
+            temp_change_terrain(pos, DNGN_TOXIC_BOG, min(20 + random2(dam * 6), 80),
+                TERRAIN_CHANGE_BOG, attacker->mid);
+
+            flash_tile(pos, LIGHTGREEN, 0, TILE_BOLT_BOG_FLASH);
+        }
+    }
+}
+
 /* An attack has been determined to have hit something
  *
  * Handles to-hit effects for both attackers and defenders,
@@ -823,6 +850,12 @@ bool melee_attack::handle_phase_hit()
     {
         if (crawl_state.game_is_hints())
             Hints.hints_melee_counter++;
+
+        if (weapon && weapon->summoned())
+        {
+            if (--mutable_wpn->props[ATTACKS_REMAINING_KEY].get_int() <= 0)
+                schedule_ephemeral_weapon_end(*mutable_wpn);
+        }
 
         // TODO: Remove this (placed here so I can get rid of player_attack)
         if (have_passive(passive_t::convert_orcs)
@@ -915,6 +948,11 @@ bool melee_attack::handle_phase_hit()
 
     maybe_trigger_jinxbite();
 
+    // Using a separate function and not a melee unrand effect because this
+    // needs to check constriction status before applying the entangling brand
+    if (weapon && is_unrandom_artefact(*weapon, UNRAND_COOLIBAH_BARDICHE))
+        _trigger_coolibah_bardiche(attacker, defender, damage_done);
+
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
 
@@ -922,7 +960,10 @@ bool melee_attack::handle_phase_hit()
         do_valour_beam();
 
     if (weapon && damage_brand == SPWPN_CONCUSSION)
-        handle_concussion_brand();
+        handle_concussion_brand(is_unrandom_artefact(*weapon, UNRAND_CARINA));
+
+    if (weapon && weapon->is_type(OBJ_WEAPONS, WPN_CENTIPEDE))
+        handle_centipede_poison(weapon->plus);
 
     if (weapon && testbits(weapon->flags, ISFLAG_CHAOTIC)
         && defender->alive())
@@ -1095,6 +1136,14 @@ bool melee_attack::handle_phase_damaged()
             && defender->is_monster())
         {
             _inflict_deathly_blight(*(defender->as_monster()));
+        }
+        if (you.unrand_equipped(UNRAND_CRAB_CLAWS)  && is_attacking_hostiles
+            && defender->alive() && defender->is_monster()
+            && x_chance_in_y(damage_done, damage_done + 15)
+            && !you.allies_forbidden())
+        {
+            big_cloud(CLOUD_SPECTRAL, &you, defender->pos(),
+                random_range(12, 20), 4 + random2(5));
         }
         if (you.form == transformation::sun_scarab && defender->alive() && coinflip())
             sear_defender();
@@ -1297,7 +1346,7 @@ void melee_attack::handle_phase_killed()
                             && you.has_mutation(MUT_MAKHLEB_MARK_EXECUTION)
                             && !you.duration[DUR_EXECUTION]
                             && !defender->is_firewood()
-                            && defender->real_attitude() != ATT_FRIENDLY
+                            && !defender->wont_attack()
                             && one_chance_in(5)
     // It's unsatisfying to repeatedly trigger a transformation on the final
     // monster of a group, so let's not cause the player that disappointment.
@@ -1419,6 +1468,12 @@ void melee_attack::handle_phase_end()
     // Give our rending blade one trigger per hit we land.
     if (did_hit && attacker->is_player() && you.props.exists(RENDING_BLADE_MP_KEY))
         trigger_rending_blade();
+
+    if (attacker->is_player() && you.form == transformation::mistmane
+        && you.duration[DUR_VAPOURISE] && defender)
+    {
+        mistmane_spew_potion(defender->pos());
+    }
 
     // Dead but not yet cleaned up, most likely due to an attack flavour that
     // destroys the attacker on-hit.
@@ -2155,7 +2210,7 @@ public:
     {
         const int base = you.fishtail
                             || you.has_mutation(MUT_ARMOURED_TAIL)
-                            || you.has_mutation(MUT_WEAKNESS_STINGER)
+                            || you.has_mutation(MUT_STINGER)
                             || you.has_mutation(MUT_WEAKNESS_STINGER)
                             ? 6 : 0;
 
@@ -2654,7 +2709,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             mprf("You %s %s%s.",
                     aux_verb.c_str(),
                     defender->name(DESC_THE).c_str(),
-                    you.can_see(*defender) ? ", but do no damage" : "");
+                    you.can_see(*defender) ? " but do no damage" : "");
         }
 
         if (atk == UNAT_MEDUSA_STINGER)
@@ -2757,6 +2812,21 @@ int melee_attack::player_apply_misc_modifiers(int damage)
     return damage;
 }
 
+static bool _player_construct_adjacent(coord_def pos)
+{
+    for (adjacent_iterator ai(pos); ai; ++ai)
+    {
+        monster* mon = monster_at(*ai);
+        if (mon && is_valid_tempering_target(*mon, you, true))
+        {
+            mprf("Your blow resonates through %s.", mon->name(DESC_THE).c_str());
+            return true;
+        }
+    }
+
+    return false;
+}
+
 // Multipliers to be applied to the final (pre-stab, pre-AC) damage.
 // It might be tempting to try to pick and choose what pieces of the damage
 // get affected by such multipliers, but putting them at the end is the
@@ -2772,7 +2842,11 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
     damage = martial_damage_mod(damage);
 
     // resonance armour damage modifier
-    damage = resonance_damage_mod(damage, true);
+    if (you.wearing_ego(OBJ_ARMOUR, SPARM_RESONANCE)
+            && _player_construct_adjacent(defender->pos()))
+    {
+        damage = resonance_damage_mod(damage, true);
+    }
 
     // Electric charge bonus.
     if (charge_pow > 0 && defender->res_elec() <= 0)
@@ -4852,14 +4926,10 @@ void melee_attack::do_valour_beam()
     if (!found_targ)
         return;
 
-    bolt beam;
-    zappy(ZAP_VALOUR_BEAM, weapon_damage(), attacker->is_monster(), beam);
-    beam.set_agent(attacker);
+    bolt beam(*attacker, ZAP_VALOUR_BEAM, weapon_damage());
     beam.source = attacker->pos();
-    beam.target = defender->pos();
     beam.range = 4;
     beam.stop_at_allies = true;
-    beam.attitude = attacker->temp_attitude();
     beam.ray = ray;
     beam.chose_ray = true;
 
@@ -4869,6 +4939,23 @@ void melee_attack::do_valour_beam()
         beam.draw_delay = 5;
 
     beam.fire();
+}
+
+void melee_attack::handle_centipede_poison(int power) const
+{
+    if (defender->res_poison() >= 3
+        || defender->res_poison() && !one_chance_in(3))
+    {
+        return;
+    }
+
+    if (x_chance_in_y(power + 1, 4))
+        defender->poison(attacker, random_range(10, 20) + power * 5);
+
+    if (x_chance_in_y(power - 4, power + 10))
+        defender->paralyse(attacker, roll_dice(1, 3));
+    else if (x_chance_in_y(power - 2, power + 4))
+        defender->slow_down(attacker, roll_dice(1, 3));
 }
 
 bool melee_attack::do_knockback(bool slippery)
@@ -5195,7 +5282,8 @@ bool melee_attack::apply_damage_brand(const char *what)
 
 bool melee_attack::is_sundering_weapon() const
 {
-    return damage_brand == SPWPN_SUNDERING;
+    return damage_brand == SPWPN_SUNDERING
+        || attacker->unrand_equipped(UNRAND_TROG);
 }
 
 string mut_aux_attack_desc(mutation_type mut)
@@ -5285,8 +5373,8 @@ bool coglin_spellmotor_attack()
     if (delay > 10 && !x_chance_in_y(10, delay))
         return false;
 
-    // Gather all possible targets in attack range.
-    vector<actor*> targets = get_player_attack_targets();
+    // Gather all known targets in attack range.
+    vector<actor*> targets = get_player_attack_targets(true);
 
     // Test that we have at least one valid non-prompting attack
     vector<actor*> targs;
@@ -5326,8 +5414,8 @@ bool spellclaws_attack(int spell_level)
         return false;
     }
 
-    // Gather all possible targets in attack range
-    vector<actor*> targets = get_player_attack_targets();
+    // Gather all known targets in attack range
+    vector<actor*> targets = get_player_attack_targets(true);
 
     // Then choose the one with the *most* current health (that wouldn't cause
     // a warning prompt for some reason).

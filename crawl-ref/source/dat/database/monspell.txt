@@ -188,16 +188,6 @@ Major Destruction cast
 
 @The_monster@ conjures a destructive force in the name of @possessive_God@!
 %%%%
-Mara Summon cast
-
-@The_monster@ weaves an illusion.
-
-@The_monster@ shimmers.
-%%%%
-unseen Mara summon cast
-
-Something weaves an illusion!
-%%%%
 Orb of Destruction orb spider cast
 
 @The_monster@ weaves a glowing orb of energy.
@@ -267,6 +257,16 @@ Sticky Flame cast
 Stunning Burst cast
 
 @The_monster@ fires a burst of electricity @at@ @target@.
+%%%%
+Summon Illusion cast
+
+@The_monster@ weaves an illusion.
+
+@The_monster@ shimmers.
+%%%%
+unseen Summon Illusion cast
+
+Something weaves an illusion!
 %%%%
 Throw Bolas cast
 
@@ -354,7 +354,7 @@ Chilling Breath cast
 unseen Chilling Breath cast
 
 @_unseen_breath_cast_@
-%%%%%
+%%%%
 Electrical Bolt cast
 
 @The_monster@ shoots out a bolt of @beam@ @at@ @target@!
@@ -406,7 +406,7 @@ unseen Searing Breath cast
 Slug Dart cast
 
 @The_monster@ launches a dart @at@ @target@.
-%%%%%
+%%%%
 Spit Lava cast
 
 @The_monster@ spits lava @at@ @target@.
@@ -1137,6 +1137,14 @@ sphinx cast
 Electrical Bolt shock serpent cast
 
 @The_monster@ discharges a tendril of electricity.
+%%%%
+Shadow Creatures strange machine cast
+
+VISUAL:Shadows flit across @the_monster@'s surface and appear to come alive.
+%%%%
+Summon Illusion strange machine cast
+
+VISUAL:The shadows dancing upon @the_monster@ coalesce into cruel familiarity.
 %%%%
 sun moth cast
 

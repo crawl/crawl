@@ -121,6 +121,9 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_ATHAME:
         tile = TILEP_HAND1_ATHAME;
         break;
+    case WPN_CENTIPEDE:
+        tile = TILEP_HAND1_CENTIPEDE;
+        break;
     case WPN_DEMON_BLADE:
         tile = TILEP_HAND1_DEMON_BLADE;
         break;
@@ -747,7 +750,6 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_LEG]   = TILEP_LEG_BELT_REDBROWN;
             break;
 
-#if TAG_MAJOR_VERSION == 34
         case JOB_STALKER:
             parts[TILEP_PART_HELM]  = TILEP_HELM_HOOD_GREEN;
             parts[TILEP_PART_BODY]  = TILEP_BODY_LEATHER_JACKET;
@@ -758,7 +760,6 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_CLOAK] = TILEP_CLOAK_GREEN;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_BROWN2;
             break;
-#endif
 
         case JOB_BRIGAND:
             parts[TILEP_PART_HELM]  = TILEP_HELM_MASK_NINJA_BLACK;
@@ -840,6 +841,13 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_RAINBOW;
             parts[TILEP_PART_HAND1] = TILEP_HAND1_STAFF_RUBY;
             parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_MAGENTA_DIM;
+            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
+            break;
+
+        case JOB_MYSTIC:
+            parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_WHITE_GREEN;
+            parts[TILEP_PART_HAND1] = TILEP_HAND1_GANDALF;
+            parts[TILEP_PART_HAND2] = TILEP_HAND2_SPARK;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             break;
 

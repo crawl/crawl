@@ -692,7 +692,7 @@ lajatang
 large rock
 
 一块沉重的巨石。{{
-    if you.race() == "Ogre"
+    if you.race() == "Oni"
        or you.race() == "Troll"
    then
        return ""

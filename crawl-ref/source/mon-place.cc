@@ -175,12 +175,12 @@ bool monster_habitable_feat(monster_type mt, dungeon_feature_type feat)
 
 bool monster_habitable_grid(const monster* mon, const coord_def& pos)
 {
-    return monster_habitable_feat(mon, env.grid(pos));
+    return in_bounds(pos) && monster_habitable_feat(mon, env.grid(pos));
 }
 
 bool monster_habitable_grid(monster_type mt, const coord_def& pos)
 {
-    return monster_habitable_feat(mt, env.grid(pos));
+    return in_bounds(pos) && monster_habitable_feat(mt, env.grid(pos));
 }
 
 /**
@@ -1083,7 +1083,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->mname = mg.mname;
 
     if (mg.props.exists(MGEN_NUM_HEADS))
-        mon->num_heads = mg.props[MGEN_NUM_HEADS];
+        mons_set_starting_heads(*mon, mg.props[MGEN_NUM_HEADS].get_int());
     if (mg.props.exists(MGEN_BLOB_SIZE))
         mon->blob_size = mg.props[MGEN_BLOB_SIZE];
     if (mg.props.exists(MGEN_TENTACLE_CONNECT))
@@ -1211,7 +1211,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             mon->props[TUKIMA_WEAPON] = true;
         }
         else
-            give_item(mon, place.absdepth(), mg.is_summoned());
+            give_item(mon, place.absdepth());
 
 
         // Dancing weapons *always* have a weapon. Fail to create them
@@ -1239,7 +1239,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     else if (mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT
              && !mg.props.exists(KIKU_WRETCH_KEY))
     {
-        give_item(mon, place.absdepth(), mg.is_summoned());
+        give_item(mon, place.absdepth());
         // Give these monsters a second weapon. - bwr
         if (mons_class_wields_two_weapons(mg.cls))
             give_weapon(mon, place.absdepth());
@@ -1274,8 +1274,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     }
 
     // Set attitude, behaviour and target.
-    mon->attitude  = ATT_HOSTILE;
-    mon->behaviour = mg.behaviour;
+    mon->base_attitude  = ATT_HOSTILE;
+    mon->behaviour      = mg.behaviour;
 
     // Statues cannot sleep (nor wander but it means they are a bit
     // more aware of the player than they'd be otherwise).
@@ -1291,20 +1291,20 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     {
         if (mg.behaviour == BEH_FRIENDLY)
         {
-            mon->attitude = ATT_FRIENDLY;
-            mon->flags   |= MF_NO_REWARD;
+            mon->base_attitude = ATT_FRIENDLY;
+            mon->flags        |= MF_NO_REWARD;
         }
 
         if (mg.behaviour == BEH_GOOD_NEUTRAL)
         {
-            mon->attitude = ATT_GOOD_NEUTRAL;
-            mon->flags   |= MF_WAS_NEUTRAL;
+            mon->base_attitude = ATT_GOOD_NEUTRAL;
+            mon->flags        |= MF_WAS_NEUTRAL;
         }
 
         if (mg.behaviour == BEH_NEUTRAL)
         {
-            mon->attitude = ATT_NEUTRAL;
-            mon->flags   |= MF_WAS_NEUTRAL;
+            mon->base_attitude = ATT_NEUTRAL;
+            mon->flags        |= MF_WAS_NEUTRAL;
         }
 
         mon->behaviour = BEH_WANDER;
@@ -1370,12 +1370,12 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                 mon->props[SUMMON_ID_KEY].get_int() = leader->mid;
             else
             {
-                summoned_monster(mon, mg.summoner,
-                                static_cast<spell_type>(mg.summon_type));
+                spell_type spellty = static_cast<spell_type>(mg.summon_type);
+                expire_oldest_summon_if_capped(mon, mg.summoner, spellty);
             }
         }
 
-        if (mon->attitude == ATT_HOSTILE && you.has_bane(BANE_HUNTED))
+        if (mon->base_attitude == ATT_HOSTILE && you.has_bane(BANE_HUNTED))
             mon->add_ench(mon_enchant(ENCH_HAUNTING, &you, INFINITE_DURATION));
     }
 
@@ -1385,7 +1385,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
         // Copy the underlying attitude of the parent, along with any temporary
         // changes to it.
-        mon->attitude = parent->attitude;
+        mon->base_attitude = parent->base_attitude;
         if (parent->has_ench(ENCH_CHARM))
             mon->add_ench(parent->get_ench(ENCH_CHARM));
         if (parent->has_ench(ENCH_HEXED))
@@ -1563,7 +1563,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     // If MG_AUTOFOE is set, find the nearest valid foe and point this monster
     // towards it immediately.
-    if (mg.flags & MG_AUTOFOE && (mon->attitude == ATT_FRIENDLY
+    if (mg.flags & MG_AUTOFOE && (mon->base_attitude == ATT_FRIENDLY
                                   || mg.behaviour == BEH_CHARMED))
     {
         set_nearest_monster_foe(mon, true);
@@ -3151,7 +3151,8 @@ bool mons_can_hate(monster_type type)
         // don't turn foxfire, blocks of ice, etc hostile
         && !mons_class_is_peripheral(type)
         // Thematically just the player poltergeist taking up more tiles
-        && type != MONS_HAUNTED_ARMOUR;
+        && type != MONS_HAUNTED_ARMOUR
+        && type != MONS_HYPNOTAIL;
 }
 
 void check_lovelessness(monster &mons)
@@ -3159,7 +3160,7 @@ void check_lovelessness(monster &mons)
     if (!mons_can_hate(mons.type) || !mons.wont_attack())
         return;
 
-    mons.attitude = ATT_HOSTILE;
+    mons.base_attitude = ATT_HOSTILE;
     mons.del_ench(ENCH_CHARM);
     behaviour_event(&mons, ME_ALERT, &you);
     mprf("%s feels only hate for you!", mons.name(DESC_THE).c_str());
@@ -3315,7 +3316,7 @@ bool you_can_see_habitable_spot_near(coord_def pos, habitat_type habitat,
             continue;
 
         actor* blocking_actor = actor_at(*ri);
-        if (blocking_actor && blocking_actor->visible_to(&you)
+        if (blocking_actor && you.aware_of(*blocking_actor)
             && (ignore_summons_of == SPELL_NO_SPELL
                 || !blocking_actor->was_created_by(you, ignore_summons_of)))
         {

@@ -50,6 +50,7 @@
 #include "showsymb.h"
 #include "skills.h"
 #include "state.h"
+#include "status.h"
 #include "stringutil.h"
 #include "throw.h"
 #include "tile-flags.h"
@@ -1061,9 +1062,9 @@ static bool _update_statuses(player_info& c)
     bool changed = false;
     unsigned int counter = 0;
     status_info inf;
-    for (unsigned int status = 0; status <= STATUS_LAST_STATUS; ++status)
+    for (status_iterator si; si; ++si)
     {
-        if (!fill_status_info(status, inf)) // this will reset inf itself
+        if (!fill_status_info(*si, inf)) // this will reset inf itself
             continue;
 
         if (!inf.light_text.empty() || !inf.short_text.empty())
@@ -1279,20 +1280,14 @@ void TilesFramework::_send_player(bool force_full)
             json_open_object();
             if (!status.light_text.empty())
             {
-                json_write_string("light", status.light_text);
-                // split off any extra info, e.g. counts for things like Zot
-                // and Flay. (Status db descriptions never have spaces.)
-                string dbname = split_string(" ", status.light_text, true, true, 1)[0];
-                // Don't claim Zot is impending when it's not near.
-                if (dbname == "Zot" && status.light_colour == WHITE)
-                    dbname = "Zot count";
-                string dbdesc = getLongDescription(dbname + " status");
-
-                // add expiring description
-                if (status.short_text.find(" (expiring)") != std::string::npos)
-                    dbdesc += " (expiring)";
-
-                json_write_string("desc", dbdesc.size() ? dbdesc : "No description found");
+                if (!status.light_text_formatted.empty())
+                {
+                    json_write_string("light", status.light_text_formatted);
+                    json_write_bool("use_html", true);
+                }
+                else
+                    json_write_string("light", status.light_text);
+                json_write_string("desc", status_light_description(status));
             }
             if (!status.short_text.empty())
                 json_write_string("text", status.short_text);

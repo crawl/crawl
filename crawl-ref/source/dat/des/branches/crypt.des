@@ -20,7 +20,7 @@ function crypt_drop_grates(data, triggerable, triggerer, marker, ev)
 
     local did_change = false
     for replica in iter.replica_iterator("wall_phase", 1) do
-        if dgn.feature_name(dgn.grid(replica.x, replica.y)) == "iron_grate" or dgn.feature_name(dgn.grid(replica.x, replica.y)) == "trap_mechanical" then
+        if dgn.feature_name(dgn.grid(replica.x, replica.y)) == "iron_grate" or dgn.feature_name(dgn.grid(replica.x, replica.y)) == "trap_pressure_plate" then
           if you.see_cell(replica.x, replica.y) then
             did_change = true
           end

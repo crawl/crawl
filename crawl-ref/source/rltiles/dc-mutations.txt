@@ -254,6 +254,7 @@ nightstalker_2
 nightstalker_3
 inhibited_regeneration INHIBITED_REGENERATION
 mertail MERTAIL
+reflexive_headbutt REFLEXIVE_HEADBUTT
 in_touch_with_death_1 IN_TOUCH_WITH_DEATH
 in_touch_with_death_2
 no_drink NO_DRINK

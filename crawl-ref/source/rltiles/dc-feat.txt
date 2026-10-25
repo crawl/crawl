@@ -554,6 +554,9 @@ zot DNGN_TRAP_ZOT
 passage_of_golubria DNGN_TRAP_GOLUBRIA
 pressure_plate DNGN_TRAP_PLATE
 binding_sigil DNGN_BINDING_SIGIL
+ice_thorn0 DNGN_ICE_THORNS
+ice_thorn1
+ice_thorn2
 
 # order matters (tilepick.c tileidx_feature())
 cobweb_none_0 DNGN_TRAP_WEB
@@ -882,6 +885,11 @@ transporter_landing_site DNGN_TRANSPORTER_LANDING
 
 mould_patch0 DNGN_MOULD_PATCH
 mould_patch1
+
+air_vein DNGN_DRAGON_VEIN_AIR
+earth_vein DNGN_DRAGON_VEIN_EARTH
+fire_vein DNGN_DRAGON_VEIN_FIRE
+ice_vein DNGN_DRAGON_VEIN_ICE
 
 purified_mutation_catalyst DNGN_PURIFIED_MUTATION_CATALYST
 empty_mutation_catalyst DNGN_EMPTY_MUTATION_CATALYST

@@ -52,7 +52,8 @@
 // Inventory menu shenanigans
 
 static void _get_inv_items_to_show(vector<const item_def*> &v,
-                                   int selector, int excluded_slot = -1);
+                                   int selector, int excluded_slot = -1,
+                                   bool droppable_only = false);
 
 InvTitle::InvTitle(Menu *mn, const string &title, invtitle_annotator tfn)
     : MenuEntry(title, MEL_TITLE)
@@ -622,7 +623,7 @@ string no_selectables_message(int item_selector)
             return "You cannot evoke magical items.";
         return "You aren't carrying any items that you can evoke.";
     case OSEL_CURSED_WORN:
-        return "None of your equipped items are cursed.";
+        return "None of your equipped items are bound to you.";
     case OSEL_WORN_ARMOUR:
         return "You aren't wearing any pieces of armour.";
     case OSEL_WORN_JEWELLERY_OR_TALISMAN:
@@ -638,7 +639,7 @@ string no_selectables_message(int item_selector)
     case OSEL_ARTEFACT_WEAPON:
         return "You aren't carrying any artefact melee weapons.";
     case OSEL_CURSABLE:
-        return "You aren't wearing any cursable items.";
+        return "You aren't wearing any items which can be bound.";
     case OSEL_UNCURSED_WORN_RINGS:
         return "You aren't wearing any uncursed rings.";
     case OSEL_QUIVER_ACTION:
@@ -652,7 +653,8 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
                              function<MenuEntry* (MenuEntry*)> procfn)
 {
     vector<const item_def *> tobeshown;
-    _get_inv_items_to_show(tobeshown, item_selector, excluded_slot);
+    _get_inv_items_to_show(tobeshown, item_selector, excluded_slot,
+                           type == menu_type::drop);
 
     load_items(tobeshown, procfn, 'a', true, true);
 
@@ -1379,13 +1381,15 @@ bool item_is_selected(const item_def &i, int selector)
 }
 
 static void _get_inv_items_to_show(vector<const item_def*> &v,
-                                   int selector, int excluded_slot)
+                                   int selector, int excluded_slot,
+                                   bool droppable_only)
 {
     for (const auto &item : you.inv)
     {
         if (item.defined()
             && item.link != excluded_slot
-            && item_is_selected(item, selector))
+            && item_is_selected(item, selector)
+            && (!droppable_only || item_is_droppable(item)))
         {
             v.push_back(&item);
         }
@@ -1445,8 +1449,8 @@ static int _invent_select(const char *title = nullptr,
     menu.f_selitem = selitemfn;
     if (filter)
         menu.set_select_filter(*filter);
-    menu.load_inv_items(item_selector, excluded_slot);
     menu.set_type(type);
+    menu.load_inv_items(item_selector, excluded_slot);
 
     // Don't override title if there are no items.
     if (title && menu.item_count())
@@ -1641,8 +1645,11 @@ bool maybe_warn_about_removing(const item_def& item)
         prompt += "Really remove ";
 
     // now ask
-    if (item.cursed())
+    if (item.cursed() || (item.summoned())
+        || (is_artefact(item) && artefact_property(item, ARTP_FRAGILE)))
+    {
         prompt += "and destroy ";
+    }
     prompt += item.name(DESC_INVENTORY);
     prompt += "?";
     return yesno(prompt.c_str(), false, 'n');
@@ -1707,7 +1714,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
 
     if ((oper == OPER_EQUIP || oper == OPER_UNEQUIP))
     {
-        if (item.is_type(OBJ_JEWELLERY, AMU_FAITH)
+        if ((item.is_type(OBJ_JEWELLERY, AMU_FAITH)
+            || is_unrandom_artefact(item, UNRAND_FORGEWARDEN))
             && faith_has_penalty())
         {
             return true;
@@ -1727,6 +1735,15 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             return true;
         }
     }
+
+    if (oper == OPER_UNEQUIP && is_unrandom_artefact(item, UNRAND_VICTORY)
+        && item.props[VICTORY_STAT_KEY].get_int() > 0)
+    {
+        return true;
+    }
+
+    if (oper == OPER_UNEQUIP && (item.summoned()))
+        return true;
 
     return false;
 }

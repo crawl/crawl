@@ -1232,10 +1232,42 @@ static void _print_stats_qv(int y)
 
 struct status_light
 {
-    status_light(int c, string t) : colour(c), text(t) {}
-    colour_t colour;
-    string text;
+    status_light(formatted_string str, int _status = -1)
+        : text(str), status(_status) {}
+    formatted_string text;
+    int status;
 };
+
+#ifdef USE_TILE_LOCAL
+struct status_light_area
+{
+    int x;
+    int y;
+    int width;
+    int status;
+};
+
+// The areas of the screen with status lights, used to draw tooltips.
+static vector<status_light_area> _status_light_areas;
+
+// Record a status light starting at the current cursor position - call this
+// before printing the status.
+static void _record_status_light(const status_light& light, int width)
+{
+    _status_light_areas.push_back({wherex() - crawl_view.hudp.x,
+                                   wherey() - crawl_view.hudp.y,
+                                   width, light.status});
+}
+
+int status_light_at(int x, int y)
+{
+    for (const status_light_area& area : _status_light_areas)
+        if (area.y == y && x >= area.x && x < area.x + area.width)
+            return area.status;
+
+    return -1;
+}
+#endif
 
 static void _add_status_light_to_out(int i, vector<status_light>& out)
 {
@@ -1243,8 +1275,10 @@ static void _add_status_light_to_out(int i, vector<status_light>& out)
 
     if (fill_status_info(i, inf) && !inf.light_text.empty())
     {
-        status_light sl(inf.light_colour, inf.light_text);
-        out.push_back(sl);
+        if (!inf.light_text_formatted.empty())
+            out.emplace_back(formatted_string::parse_string(inf.light_text_formatted), i);
+        else
+            out.emplace_back(formatted_string(inf.light_text, inf.light_colour), i);
     }
 }
 
@@ -1261,8 +1295,10 @@ static void _add_status_light_to_out(int i, vector<status_light>& out)
 // using the '@' command. Things like confusion and sticky flame
 // hide their amounts and are thus always the same colour (so
 // we're not really exposing any new information). --bwr
-static void _get_status_lights(vector<status_light>& out)
+static vector<status_light> _get_status_lights()
 {
+    vector<status_light> out;
+
 #ifdef DEBUG_DIAGNOSTICS
     if (mouse_control::current_mode() != MOUSE_MODE_NORMAL
         || !(you.running > 0 || you.running < 0 && Options.travel_delay == -1))
@@ -1270,56 +1306,20 @@ static void _get_status_lights(vector<status_light>& out)
         static char static_pos_buf[80];
         snprintf(static_pos_buf, sizeof(static_pos_buf),
                  "%2d,%2d", you.pos().x, you.pos().y);
-        out.emplace_back(LIGHTGREY, static_pos_buf);
+        out.emplace_back(formatted_string(static_pos_buf, LIGHTGREY));
     }
 #endif
 
-    // We used to have to hardcode every status, now we just hardcode the
-    // statuses important enough to appear first. (Rightmost)
-    const unsigned int important_statuses[] =
-    {
-        STATUS_TESSERACT,
-        STATUS_ORB,
-        STATUS_ZOT,
-        STATUS_STAT_ZERO,
-        DUR_PARALYSIS,
-        DUR_CONF,
-        DUR_PETRIFYING,
-        DUR_PETRIFIED,
-        DUR_BERSERK,
-        DUR_TELEPORT,
-        DUR_ENKINDLED,
-        STATUS_MNEMOPHAGE,
-        DUR_HASTE,
-        DUR_SLOW,
-        STATUS_SPEED,
-        DUR_DEATHS_DOOR,
-        DUR_BLINK_COOLDOWN,
-        DUR_BERSERK_COOLDOWN,
-        DUR_EXHAUSTED,
-        DUR_WORD_OF_CHAOS_COOLDOWN,
-        DUR_DEATHS_DOOR_COOLDOWN,
-        DUR_QUAD_DAMAGE,
-        STATUS_SERPENTS_LASH,
-    };
+    for (status_iterator si; si; ++si)
+        _add_status_light_to_out(*si, out);
 
-    bitset<STATUS_LAST_STATUS + 1> done;
-    for (unsigned important : important_statuses)
-    {
-        _add_status_light_to_out(important, out);
-        done.set(important);
-    }
-
-    for (unsigned status = 0; status <= STATUS_LAST_STATUS ; ++status)
-        if (!done[status])
-            _add_status_light_to_out(status, out);
+    return out;
 }
 
 static void _print_status_lights(int y)
 {
-    vector<status_light> lights;
+    vector<status_light> lights = _get_status_lights();
     static int last_number_of_lights = 0;
-    _get_status_lights(lights);
     if (lights.empty() && last_number_of_lights == 0)
     {
         you.redraw_status_lights = false;
@@ -1340,6 +1340,7 @@ static void _print_status_lights(int y)
 #endif
 
 #ifdef USE_TILE_LOCAL
+    _status_light_areas.clear();
     if (!_is_using_small_layout())
     {
 #endif
@@ -1347,13 +1348,15 @@ static void _print_status_lights(int y)
     while (true)
     {
         const int end_x = (wherex() - crawl_view.hudp.x)
-                + (i_light < lights.size() ? strwidth(lights[i_light].text)
+                + (i_light < lights.size() ? lights[i_light].text.width()
                                            : 10000);
 
         if (end_x <= crawl_view.hudsz.x)
         {
-            textcolour(lights[i_light].colour);
-            NOWRAP_EOL_CPRINTF("%s", lights[i_light].text.c_str());
+#ifdef USE_TILE_LOCAL
+            _record_status_light(lights[i_light], lights[i_light].text.width());
+#endif
+            lights[i_light].text.display();
             if (end_x < crawl_view.hudsz.x)
                 NOWRAP_EOL_CPRINTF(" ");
             ++i_light;
@@ -1375,23 +1378,32 @@ static void _print_status_lights(int y)
         size_t i_light = 0;
         if (lights.size() == 1)
         {
-            textcolour(lights[0].colour);
-            CPRINTF("%s", lights[0].text.c_str());
+            _record_status_light(lights[0], lights[0].text.width());
+            lights[0].text.display();
         }
         else
         {
             while (i_light < lights.size() && (int)i_light < crawl_view.hudsz.x - 1)
             {
-                textcolour(lights[i_light].colour);
-                if (i_light == lights.size() - 1
-                    && strwidth(lights[i_light].text) < crawl_view.hudsz.x - wherex())
-                {
-                    CPRINTF("%s",lights[i_light].text.c_str());
-                }
+                const bool full = i_light == lights.size() - 1
+                    && lights[i_light].text.width() < crawl_view.hudsz.x - wherex();
+                // Must do this before the print, as it uses the cursor position.
+                _record_status_light(lights[i_light],
+                                     full ? lights[i_light].text.width() : 1);
+                if (full)
+                    lights[i_light].text.display();
                 else if ((int)lights.size() > crawl_view.hudsz.x / 2)
-                    CPRINTF("%.1s",lights[i_light].text.c_str());
+                {
+                    // Print the colour tag and then the first character.
+                    lights[i_light].text.display(0, 0);
+                    CPRINTF("%c",lights[i_light].text[0]);
+                }
                 else
-                    CPRINTF("%.1s ",lights[i_light].text.c_str());
+                {
+                    // Print the colour tag and then the first character.
+                    lights[i_light].text.display(0, 0);
+                    CPRINTF("%c ",lights[i_light].text[0]);
+                }
                 ++i_light;
             }
         }
@@ -1790,8 +1802,18 @@ static string _get_monster_name(const monster_info& mi, int count, bool fullname
     return desc;
 }
 
+static string _monster_list_entry(const monster_info& mi, int count,
+                                  bool show_glyph)
+{
+    string entry = _get_monster_name(mi, count, true);
+    if (show_glyph)
+        entry += make_stringf(" (%s)", stringize_glyph(get_mons_glyph(mi).ch).c_str());
+    return entry;
+}
+
 static string _describe_from_list(string prefix,
-                                  const vector<monster_info>& mons)
+                                  const vector<monster_info>& mons,
+                                  bool show_glyphs)
 {
     if (mons.empty())
         return "";
@@ -1803,13 +1825,13 @@ static string _describe_from_list(string prefix,
     {
         if (i > 0 && monster_info::less_than(mons[i-1], mons[i]))
         {
-            describe.push_back(_get_monster_name(mons[i-1], count, true).c_str());
+            describe.push_back(_monster_list_entry(mons[i-1], count, show_glyphs));
             count = 0;
         }
         count++;
     }
 
-    describe.push_back(_get_monster_name(mons[mons.size()-1], count, true).c_str());
+    describe.push_back(_monster_list_entry(mons[mons.size()-1], count, show_glyphs));
 
     if (describe.size() == 1)
         msg += describe[0];
@@ -1821,7 +1843,8 @@ static string _describe_from_list(string prefix,
 
 // If past is true, the messages should be printed in the past tense
 // because they're needed for the morgue dump.
-string mpr_monster_list(bool past)
+// If show_glyphs is true, print the glyph for each monster in parenthesis.
+string mpr_monster_list(bool past, bool show_glyphs)
 {
     // Get monsters via the monster_pane_info, sorted by difficulty.
     // (But separate visible and invisible monsters, for better wording.)
@@ -1839,8 +1862,14 @@ string mpr_monster_list(bool past)
         return msg;
     }
 
-    string vis_describe = _describe_from_list(past ? "could see " : "can see ", mons);
-    string invis_describe = _describe_from_list(past ? "were aware of " : "are aware of ", invis_mons);
+    string vis_describe = _describe_from_list(
+        past ? "could see " : "can see ",
+        mons,
+        show_glyphs);
+    string invis_describe = _describe_from_list(
+        past ? "were aware of " : "are aware of ",
+        invis_mons,
+        show_glyphs);
 
     if (invis_describe.empty())
         return "You " + vis_describe + ".";
@@ -2745,7 +2774,7 @@ static string _rampage_passive_string()
     return desc;
 }
 
-static string _extra_passive_effects()
+vector<string> player_passive_effects()
 {
     vector<string> passives;
 
@@ -2849,6 +2878,12 @@ static string _extra_passive_effects()
                                                           : "MP").c_str());
     }
 
+    return passives;
+}
+
+static string _extra_passive_effects()
+{
+    const vector<string> passives = player_passive_effects();
     if (passives.empty())
         return "no passive effects";
     else

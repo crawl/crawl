@@ -198,7 +198,7 @@ void debug_item_scan()
         {
             debug_dump_item(name, i, env.item[i], "Bad special value:");
         }
-        else if (env.item[i].flags & ISFLAG_SUMMONED && in_bounds(env.item[i].pos))
+        else if (env.item[i].summoned() && in_bounds(env.item[i].pos))
             debug_dump_item(name, i, env.item[i], "Summoned item on floor:");
     }
 

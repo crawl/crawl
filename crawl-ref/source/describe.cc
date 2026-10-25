@@ -123,7 +123,8 @@ int show_description(const string &body, const tile_def *tile)
     return show_description(inf, tile);
 }
 
-int show_description(const describe_info &inf, const tile_def *tile)
+int show_description(const describe_info &inf, const tile_def *tile,
+                     const string &extra)
 {
     auto vbox = make_shared<Box>(Widget::VERT);
 
@@ -168,6 +169,7 @@ int show_description(const describe_info &inf, const tile_def *tile)
         "[<w>!</w>]: Description|<w>Quote</w>",
     };
 
+    shared_ptr<Text> desc_text;
     for (int i = 0; i < (inf.quote.empty() ? 1 : 2); i++)
     {
         const auto &desc = descs[static_cast<int>(i)];
@@ -175,6 +177,8 @@ int show_description(const describe_info &inf, const tile_def *tile)
         auto fs = formatted_string::parse_string(trimmed_string(desc));
         auto text = make_shared<Text>(fs);
         text->set_wrap_text(true);
+        if (i == 0)
+            desc_text = text;
         scroller->set_child(text);
         desc_sw->add_child(std::move(scroller));
         more_sw->add_child(make_shared<Text>(
@@ -196,11 +200,26 @@ int show_description(const describe_info &inf, const tile_def *tile)
     auto popup = make_shared<ui::Popup>(vbox);
 
     bool done = false;
+    bool show_extra = false;
     int lastch;
+    // These both use ! to show more, so can't coexist.
+    ASSERT(inf.quote.empty() || extra.empty());
     popup->on_keydown_event([&](const KeyEvent& ev) {
         lastch = ev.key();
         if (!inf.quote.empty() && (lastch == '!' || lastch == '^'))
             desc_sw->current() = more_sw->current() = 1 - desc_sw->current();
+        else if (!extra.empty() && lastch == '!')
+        {
+            show_extra = !show_extra;
+            desc_text->set_text(formatted_string::parse_string(
+                show_extra ? extra : descs[0]));
+#ifdef USE_TILE_WEB
+            tiles.json_open_object();
+            tiles.json_write_string("body",
+                desc_text->get_text().to_colour_string(LIGHTGREY));
+            tiles.ui_state_change("describe-spell-success", -1);
+#endif
+        }
         else
             done = ui::key_exits_popup(lastch, true);
         return true;
@@ -1172,7 +1191,12 @@ static int _item_training_target(const item_def &item)
         return current_skill < min_skill ? min_skill : max_skill;
     }
     if (item.base_type == OBJ_BAUBLES)
-        return get_form(transformation::flux)->min_skill * 10;
+    {
+        if (item.sub_type == BAUBLE_FLUX)
+            return get_form(transformation::flux)->min_skill * 10;
+        else if (item.sub_type == BAUBLE_CENTIPEDE)
+            return CENTIPEDE_BAUBLE_MINSKILL;
+    }
     return 0;
 }
 
@@ -1255,6 +1279,15 @@ static string _your_skill_desc(skill_type skill, bool show_target_button,
                             target_button_desc.c_str());
 }
 
+static string _xl_cost_desc(int experience)
+{
+    const int level_diff = xp_to_level_diff(experience / 10, 10);
+    return make_stringf("%s %d.%d XLs",
+                        (you.experience_level + (level_diff + 9) / 10) > 27
+                            ? "the equivalent of" : "about",
+                        level_diff / 10, level_diff % 10);
+}
+
 /**
  * Produce a description of a skill target for items where specific targets are
  * relevant.
@@ -1265,7 +1298,7 @@ static string _your_skill_desc(skill_type skill, bool show_target_button,
  * value.
  */
 static string _skill_target_desc(skill_type skill, int scaled_target,
-                                        unsigned int training)
+                                        unsigned int training, bool base)
 {
     string description = "";
     scaled_target = min(scaled_target, 270);
@@ -1275,8 +1308,7 @@ static string _skill_target_desc(skill_type skill, int scaled_target,
                                     (training != you.training[skill]);
 
     const skill_diff diffs = skill_level_to_diffs(skill,
-                                (double) scaled_target / 10, training, false);
-    const int level_diff = xp_to_level_diff(diffs.experience / 10, 10);
+                                (double) scaled_target / 10, training, base);
 
     if (max_training)
         description += "At 100% training ";
@@ -1289,12 +1321,10 @@ static string _skill_target_desc(skill_type skill, int scaled_target,
         description += make_stringf("At a training level of %d%% ", training);
 
     description += make_stringf(
-        "you %sreach %d.%d in %s %d.%d XLs.",
+        "you %sreach %d.%d in %s.",
             hypothetical ? "would " : "",
             scaled_target / 10, scaled_target % 10,
-            (you.experience_level + (level_diff + 9) / 10) > 27
-                                ? "the equivalent of" : "about",
-            level_diff / 10, level_diff % 10);
+            _xl_cost_desc(diffs.experience).c_str());
     if (you.wizard)
     {
         description += make_stringf("\n    (%d xp, %d skp)",
@@ -1308,15 +1338,27 @@ static string _skill_target_desc(skill_type skill, int scaled_target,
  * current training rate.
  */
 static void _append_skill_target_desc(string &description, skill_type skill,
-                                        int scaled_target, int indent)
+                                        int scaled_target, int indent,
+                                        bool base = false)
 {
     const string prefix = "\n" + string(indent, ' ');
+    scaled_target = min(scaled_target, 270);
+    if (!base && skill_points_for_level(skill, scaled_target) < 0)
+    {
+        description += prefix + make_stringf("You cannot currently reach %d.%d.",
+                                             scaled_target / 10,
+                                             scaled_target % 10);
+        return;
+    }
     if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
-        description += prefix + _skill_target_desc(skill, scaled_target, 100);
+    {
+        description += prefix + _skill_target_desc(skill, scaled_target, 100,
+                                                   base);
+    }
     if (you.training[skill] > 0 && you.training[skill] < 100)
     {
         description += prefix + _skill_target_desc(skill, scaled_target,
-                                                    you.training[skill]);
+                                                   you.training[skill], base);
     }
 }
 
@@ -1367,6 +1409,8 @@ string damage_rating(const item_def *item, int *rating_value)
     }
 
     const bool thrown = item && item->base_type == OBJ_MISSILES;
+    const bool archery = item && is_range_weapon(*item)
+                              && you.wearing_ego(OBJ_ARMOUR, SPARM_ARCHERY);
     if (item && !thrown && !is_weapon(*item))
         return "0.";
 
@@ -1407,6 +1451,10 @@ string damage_rating(const item_def *item, int *rating_value)
     rating /= DAM_RATE_SCALE;
     rating += plusses;
 
+    // this is a final damage multiplier, it applies after enchant
+    if (archery)
+        rating = player_archery_damage_bonus(rating, false);
+
     if (rating_value)
         *rating_value = rating;
 
@@ -1431,8 +1479,12 @@ string damage_rating(const item_def *item, int *rating_value)
 
     const string dmg_brand_desc = thrown ? _describe_missile_dmg_brand(*item) : "";
 
+    const string archery_bonus_string = archery ? make_stringf(" x %d%% (Archery)",
+            100 + you.wearing_ego(OBJ_ARMOUR, SPARM_ARCHERY) * you.skill (SK_ARMOUR))
+                                               : "";
+
     return make_stringf(
-        "%d (Base %s x %d%% (%s) x %d%% (%s)%s)%s.",
+        "%d (Base %s x %d%% (%s) x %d%% (%s)%s)%s%s.",
         rating,
         base_dam_desc.c_str(),
         stat_mult,
@@ -1440,7 +1492,8 @@ string damage_rating(const item_def *item, int *rating_value)
         skill_mult,
         use_weapon_skill ? "Skill" : "Fight",
         plusses_desc.c_str(),
-        dmg_brand_desc.c_str());
+        dmg_brand_desc.c_str(),
+        archery_bonus_string.c_str());
 }
 
 static string _weapon_ego_key(brand_type ego)
@@ -1500,13 +1553,23 @@ brand_type weapon_ego_from_name(string name, vector<brand_type> *partial_matches
     return wpn;
 }
 
+// Check whether this item is actually in the player's inventory, rather than
+// merely a copy of an inventory item (as stash search creates), which we must
+// not interact with.
+static bool _is_original_inventory_item(const item_def &item)
+{
+    return in_inventory(item)
+           && item.link >= 0 && item.link <= ENDOFPACK
+           && &item == &you.inv[item.link];
+}
+
 static void _append_skill_needed(string &description, const item_def &item,
                                  bool indent = true, string skill_padding = "")
 {
     const skill_type skill = _item_training_skill(item);
     const int target_skill = _item_training_target(item);
     const bool below_target = _is_below_training_target(item, true);
-    const bool can_set_target = below_target && in_inventory(item)
+    const bool can_set_target = below_target && _is_original_inventory_item(item)
                                 && !you.has_mutation(MUT_DISTRIBUTED_TRAINING);
     const bool useful = !is_useless_item(item) && crawl_state.need_save;
     if (useful)
@@ -1541,21 +1604,88 @@ static void _append_penalty(string &description, const item_def *source,
     description += ".";
 }
 
+// Max damage from a magical staff with a given amount of staff & evo skill
+static int _staff_max_damage(stave_type staff, int staff_skill, int evo_skill)
+{
+    return max(0, (2 * staff_skill + evo_skill) * staff_damage_mult(staff) / 80 - 1);
+}
+
+// Chance to activate the bonus staff damage, as a percentage.
+static int _staff_proc_chance(int staff_skill, int evo_skill)
+{
+    int chance = (evo_skill * 200 + staff_skill * 100) / 30;
+
+    if (chance > 100)
+        return 100;
+
+    return chance;
+}
+
+static string _staff_damage_type_string(stave_type staff)
+{
+    // "earth" tries to communicate the damage reduction when flying
+    // XXX "conj" isn't a damage type, but we want to communicate
+    // that the damage is flat staff bonus damage somehow.
+    switch (staff)
+    {
+    case STAFF_FIRE:
+        return "fire";
+    case STAFF_COLD:
+        return "cold";
+    case STAFF_AIR:
+        return "elec";
+    case STAFF_EARTH:
+        return "earth";
+    case STAFF_NECROMANCY:
+        return "pain";
+    case STAFF_ALCHEMY:
+        return "poison";
+    case STAFF_CONJURATION:
+        return "energy";
+    default:
+        return "buggy";
+    }
+}
+
+static string _player_staff_damage_string(const item_def &item)
+{
+    // Sac artifice fully prevents staff bonus damage, even though you can
+    // "normally" get some without training Evocations.
+    if (you.get_mutation_level(MUT_NO_ARTIFICE))
+    {
+        return make_stringf("Your inability to use magical devices prevents you"
+                            " from drawing on the full power of this staff in "
+                            "melee.");
+    }
+
+    const stave_type staff = static_cast<stave_type>(item.sub_type);
+    int staff_magic_skill = you.skill(staff_skill(staff));
+    int evo_skill = you.skill(SK_EVOCATIONS);
+
+    int proc_chance = _staff_proc_chance(staff_magic_skill, evo_skill);
+    int maxdam = _staff_max_damage(staff, staff_magic_skill, you.skill(SK_EVOCATIONS));
+
+    if (proc_chance == 0 || maxdam == 0)
+    {
+        return make_stringf("Your skills are insufficient to deal any "
+                            "additional %s damage using this staff.",
+                            _staff_damage_type_string(staff).c_str());
+    }
+
+    return make_stringf("At your current Evocations and %s skills, it has a "
+                        "%d%% chance to deal up to %d additional %s damage%s.",
+                        skill_name(staff_skill(staff)),
+                        proc_chance,
+                        maxdam,
+                        _staff_damage_type_string(staff).c_str(),
+                        staff == STAFF_EARTH ? " that is resisted by flying"
+                        : "");
+}
+
 static void _append_weapon_stats(string &description, const item_def &item)
 {
     const int base_dam = property(item, PWPN_DAMAGE);
     const int mindelay_skill = _item_training_target(item);
-
-    if (item.base_type == OBJ_STAVES
-        && item.is_identified()
-        && staff_skill(static_cast<stave_type>(item.sub_type)) != SK_NONE
-        && is_useless_skill(staff_skill(static_cast<stave_type>(item.sub_type))))
-    {
-        description += make_stringf(
-            "Your inability to study %s prevents you from drawing on the"
-            " full power of this staff in melee.\n\n",
-            skill_name(staff_skill(static_cast<stave_type>(item.sub_type))));
-    }
 
     if (is_unrandom_artefact(item, UNRAND_WOE))
     {
@@ -1600,7 +1730,8 @@ static void _append_weapon_stats(string &description, const item_def &item)
 
     const item_def *shield = you.shield();
     if (you.skill(SK_SHIELDS) < MAX_SKILL_LEVEL
-        && you_can_wear(SLOT_OFFHAND) != false)
+        && you_can_wear(SLOT_OFFHAND) != false
+        && you.hands_reqd(item) == HANDS_ONE)
     {
         if (shield)
         {
@@ -1624,6 +1755,12 @@ static void _append_weapon_stats(string &description, const item_def &item)
     {
         description += _desc_attack_delay(item);
         description += "\nDamage rating: " + damage_rating(&item);
+        if (item.base_type == OBJ_STAVES
+            && item.is_identified()
+            && staff_skill(static_cast<stave_type>(item.sub_type)) != SK_NONE)
+        {
+            description += "\n" + _player_staff_damage_string(item);
+        }
     }
 
     const string brand_desc = _describe_weapon_brand(item);
@@ -1858,6 +1995,28 @@ static string _equipment_switchto_string(const item_def &item)
         return "wearing";
 }
 
+static void _largest_spell_fail_change(
+    const FixedVector<int, MAX_KNOWN_SPELLS> &cur_fail,
+    const FixedVector<int, MAX_KNOWN_SPELLS> &next_fail,
+    int &fail_change, int &visible_fail_change)
+{
+    fail_change = 0;
+    visible_fail_change = 0;
+    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
+    {
+        if (cur_fail[i] != next_fail[i])
+        {
+            int new_fail_change = next_fail[i] - cur_fail[i];
+            int new_visible_fail_change = failure_rate_to_int(next_fail[i])
+                                            - failure_rate_to_int(cur_fail[i]);
+            if (abs(new_fail_change) > abs(fail_change))
+                fail_change = new_fail_change;
+            if (abs(new_visible_fail_change) > abs(visible_fail_change))
+                visible_fail_change = new_visible_fail_change;
+        }
+    }
+}
+
 /**
  * Describe how (un)equipping a piece of equipment might change the player's
  * AC/EV/SH, spell failure, and attack delay. We don't include temporary buffs
@@ -1880,23 +2039,9 @@ static string _equipment_property_change_description(const item_def &item,
     else
         next = you.preview_stats_with_specific_item(100, item);
 
-    // Check if any spell failures changed, and save the greatest magnitude that
-    // any of them changed.
-    int fail_change = 0;
-    int visible_fail_change = 0;
-    for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
-    {
-        if (cur.fail[i] != next.fail[i])
-        {
-            int new_fail_change = next.fail[i] - cur.fail[i];
-            int new_visible_fail_change = failure_rate_to_int(next.fail[i])
-                                            - failure_rate_to_int(cur.fail[i]);
-            if (abs(new_fail_change) > abs(fail_change))
-                fail_change = new_fail_change;
-            if (abs(new_visible_fail_change) > abs(visible_fail_change))
-                visible_fail_change = new_visible_fail_change;
-        }
-    }
+    int fail_change, visible_fail_change;
+    _largest_spell_fail_change(cur.fail, next.fail, fail_change,
+                               visible_fail_change);
 
     // If we're previewing non-armour and there is no relevant change, print no
     // extra description at all (since almost all items of these types will
@@ -1991,20 +2136,18 @@ static string _equipment_property_change_description(const item_def &item,
     return description;
 }
 
-static string _spell_fail_change_description(const item_def &item,
-                                             bool remove = false)
+static FixedVector<int, MAX_KNOWN_SPELLS> _spell_fail_rates()
 {
-    FixedVector<int, MAX_KNOWN_SPELLS> cur_fail, new_fail;
+    FixedVector<int, MAX_KNOWN_SPELLS> fail;
     for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
-        cur_fail[i] = raw_spell_fail(you.spells[i]);
+        fail[i] = raw_spell_fail(you.spells[i]);
+    return fail;
+}
 
-    if (remove)
-        new_fail = you.preview_stats_without_specific_item(100, item).fail;
-    else if (item.base_type == OBJ_TALISMANS)
-        new_fail = you.preview_stats_in_specific_form(100, item).fail;
-    else
-        new_fail = you.preview_stats_with_specific_item(100, item).fail;
-
+static string _spell_fail_change_list(FixedVector<int, MAX_KNOWN_SPELLS> cur_fail,
+                                      FixedVector<int, MAX_KNOWN_SPELLS> new_fail,
+                                      const string &condition)
+{
     // Check if any spell failures changed.
     int fail_change = 0;
     for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
@@ -2041,8 +2184,8 @@ static string _spell_fail_change_description(const item_def &item,
 
     // Otherwise, generate a complete list of all non-trivial changes
     string desc;
-    desc = make_stringf("If you %s this item, your spell failure would %s:\n",
-                        remove ? "removed" : "equipped",
+    desc = make_stringf("%s, your spell failure would %s:\n",
+                        condition.c_str(),
                         fail_change < 0 ? "worsen" : "improve");
 
     // Sort spells by degree of change in their fail rates (and then by
@@ -2091,6 +2234,22 @@ static string _spell_fail_change_description(const item_def &item,
     }
 
     return desc;
+}
+
+static string _spell_fail_change_description(const item_def &item,
+                                             bool remove = false)
+{
+    FixedVector<int, MAX_KNOWN_SPELLS> new_fail;
+    if (remove)
+        new_fail = you.preview_stats_without_specific_item(100, item).fail;
+    else if (item.base_type == OBJ_TALISMANS)
+        new_fail = you.preview_stats_in_specific_form(100, item).fail;
+    else
+        new_fail = you.preview_stats_with_specific_item(100, item).fail;
+
+    return _spell_fail_change_list(_spell_fail_rates(), new_fail,
+                                   make_stringf("If you %s this item",
+                                                remove ? "removed" : "equipped"));
 }
 
 static string _equipment_property_change(const item_def &item)
@@ -2523,10 +2682,8 @@ static string _describe_lignify_ac()
                         you.armour_class_scaled(1));
 }
 
-string describe_item_rarity(const item_def &item)
+static string _rarity_to_str(item_rarity_type rarity)
 {
-    item_rarity_type rarity = consumable_rarity(item);
-
     switch (rarity)
     {
     case RARITY_VERY_RARE:
@@ -2540,8 +2697,27 @@ string describe_item_rarity(const item_def &item)
     case RARITY_VERY_COMMON:
         return "very common";
     case RARITY_NONE:
+        return "not found normally";
     default:
         return "buggy";
+    }
+}
+
+string describe_item_rarity(const item_def &item, bool terse)
+{
+    item_rarity_type rarity = consumable_rarity(item);
+    string desc = _rarity_to_str(rarity);
+
+    if (terse)
+        return desc;
+
+    if (rarity == RARITY_NONE)
+        return "It cannot be found normally.";
+    else
+    {
+        return make_stringf("It is %s %s.",
+                            article_a(desc).c_str(),
+                            item.base_type == OBJ_POTIONS ? "potion" : "scroll");
     }
 }
 
@@ -2632,9 +2808,8 @@ static string _describe_item_curse(const item_def &item)
 
     ostringstream desc;
 
-    desc << "\nIt has a curse which improves the following skills:\n";
-    desc << comma_separated_fn(curses.begin(), curses.end(), desc_curse_skills,
-                               ".\n", ".\n") << ".";
+    desc << "\nIt bears a divine curse which improves your skill at ";
+    desc << desc_curse_skills(curses) << ".";
 
     return desc.str();
 }
@@ -2667,7 +2842,7 @@ static string _describe_gizmo(const item_def &item)
                 break;
 
             case SPGIZMO_AUTODAZZLE:
-                desc  = "It sometimes fires a blinding ray at enemies whose attacks "
+                desc = "It sometimes fires a blinding ray at enemies whose attacks "
                        "you dodge.";
                 break;
 
@@ -2713,6 +2888,8 @@ static string _cannot_use_reason(const item_def &item, bool temp=true)
             can_equip_item(item, temp, &reason);
             return reason;
         }
+    case OBJ_TALISMANS:
+        return cannot_put_on_talisman_reason(item, temp);
     default:
         // Non-equippable types (e.g. ammo) have no can_equip_item reason, but
         // can still be outright forbidden by your god.
@@ -2812,6 +2989,8 @@ string get_item_description(const item_def &item,
                     << " value: " << item_value(item, true)
                     << "\nannotate: "
                     << stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
+        if (item.props.exists(ITEM_UNIQUE_ID))
+            description << "\nUID: " << item.props[ITEM_UNIQUE_ID].get_int();
     }
 #endif
 
@@ -3045,9 +3224,7 @@ string get_item_description(const item_def &item,
                         describe_player_cancellation() << ".";
                 }
             }
-            description << "\n\nIt is "
-                        << article_a(describe_item_rarity(item))
-                        << " potion.";
+            description << "\n\n" << describe_item_rarity(item);
             need_extra_line = false;
         }
         break;
@@ -3076,9 +3253,7 @@ string get_item_description(const item_def &item,
             if (verbose)
                 _uselessness_desc(description, item);
 
-            description << "\n\nIt is "
-                        << article_a(describe_item_rarity(item))
-                        << " scroll.";
+            description << "\n\n" << describe_item_rarity(item);
             need_extra_line = false;
         }
         break;
@@ -3099,9 +3274,12 @@ string get_item_description(const item_def &item,
     case OBJ_BAUBLES:
         if (!is_useless_item(item, false))
         {
-            description << "\n" << _describe_talisman_form(transformation::flux);
-            _append_skill_needed(desc, item, false, "   ");
-            description << desc;
+            if (item.sub_type == BAUBLE_FLUX)
+            {
+                description << "\n" << _describe_talisman_form(transformation::flux);
+                _append_skill_needed(desc, item, false, "   ");
+                description << desc;
+            }
         }
         if (verbose)
             _uselessness_desc(description, item);
@@ -3534,6 +3712,21 @@ void get_feature_desc(const coord_def &pos, describe_info &inf, bool include_ext
             long_desc += make_stringf("\nIt does %dd%d damage.", dmg.num, dmg.size);
         }
     }
+    else if (feat_is_dragon_vein(feat))
+    {
+        long_desc += make_stringf("\nIt inflicts %s damage when channelled.",
+                        spell_damage_string(dragon_vein_to_spell(feat),
+                                            false, calc_spell_power(SPELL_DRAGON_VEINS)).c_str());
+    }
+    else if (feat == DNGN_ICE_THORNS)
+    {
+        map_terrain_change_marker* mark = env.markers.get_terrain_change_at(pos, TERRAIN_CHANGE_ICE_THORNS);
+        if (mark)
+        {
+            dice_def dmg = zap_damage(ZAP_ICE_THORNS, mark->power, mark->source_mid != MID_PLAYER, false);
+            long_desc += make_stringf("\nStepping on it inflicts %dd%d damage.", dmg.num, dmg.size);
+        }
+    }
 
     // mention that trees are usually flammable
     // (except for autumnal trees in Wucad Mu's Monastery)
@@ -3831,7 +4024,7 @@ static vector<command_type> _allowed_actions(const item_def& item)
 
     // this is a copy, we can't do anything with it. (Probably via stash
     // search.)
-    if (!valid_item_index(item.index()) && !in_inventory(item))
+    if (!valid_item_index(item.index()) && !_is_original_inventory_item(item))
         return actions;
 
     // XX CMD_ACTIVATE
@@ -3896,7 +4089,8 @@ static vector<command_type> _allowed_actions(const item_def& item)
     default:
         break;
     }
-    actions.push_back(CMD_DROP);
+    if (item_is_droppable(item))
+        actions.push_back(CMD_DROP);
     actions.push_back(CMD_ADJUST_INVENTORY);
     if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING)
         && _is_below_training_target(item, false))
@@ -4099,7 +4293,7 @@ void target_item(item_def &item)
     if (skill == SK_NONE)
         return;
 
-    const int target = _item_training_target(item);
+    const int target = min(270, _item_training_target(item));
     if (target == 0)
         return;
 
@@ -4450,7 +4644,8 @@ static string _player_spell_stats(const spell_type spell)
     return description;
 }
 
-static string _get_skill_defense_change(skill_type skill)
+static string _get_skill_training_change(skill_type skill,
+                                         string *spell_fail_details)
 {
     unwind_var<uint8_t> unwind_skill(you.skills[skill]);
     unwind_var<unsigned int> unwind_sp(you.skill_points[skill]);
@@ -4460,44 +4655,82 @@ static string _get_skill_defense_change(skill_type skill)
     const int cur_ac = you.armour_class_scaled(100);
     const int cur_ev = you.evasion_scaled(100, false);
     const int cur_sh = player_displayed_shield_class(100, false);
+    const FixedVector<int, MAX_KNOWN_SPELLS> cur_fail = _spell_fail_rates();
 
     const double cur_skill = you.skill(skill, 10, true) * 0.1;
-    set_skill_level(skill, cur_skill + 1, true);
+    const bool mastering = cur_skill >= 26;
+    const char* msg = mastering ? "mastering" : "training 1 level of";
 
+    set_skill_level(skill, cur_skill + 1, true);
     const int new_ac = you.armour_class_scaled(100);
     const int new_ev = you.evasion_scaled(100, false);
     const int new_sh = player_displayed_shield_class(100, false);
+    const FixedVector<int, MAX_KNOWN_SPELLS> new_fail = _spell_fail_rates();
 
     const float ac_diff = (float)(new_ac - cur_ac) / 100.0;
     const float ev_diff = (float)(new_ev - cur_ev) / 100.0;
     const float sh_diff = (float)(new_sh - cur_sh) / 100.0;
 
-    const char* msg = (cur_skill >= 26) ? "mastering" : "training 1 level of";
+    int fail_change, visible_fail_change;
+    _largest_spell_fail_change(cur_fail, new_fail, fail_change,
+                               visible_fail_change);
 
+    if (spell_fail_details)
+    {
+        *spell_fail_details = _spell_fail_change_list(cur_fail, new_fail,
+                                  mastering ? "If you mastered this skill"
+                                            : "If you trained 1 level of this skill");
+    }
+
+    string description;
     if (skill == SK_ARMOUR)
     {
-        return make_stringf("\nWith your current stats and equipment, %s "
-                            "this skill would increase your AC by %.1f and "
-                            "your EV by %.1f.",
-                            msg, ac_diff, ev_diff).c_str();
+        description = make_stringf("\nWith your current stats and equipment, %s "
+                                   "this skill would increase your AC by %.1f and "
+                                   "your EV by %.1f.",
+                                   msg, ac_diff, ev_diff);
     }
     else if (skill == SK_DODGING)
     {
-        return make_stringf("\nWith your current stats and equipment, %s "
-                            "this skill would increase your EV by %.1f.",
-                            msg, ev_diff).c_str();
+        description = make_stringf("\nWith your current stats and equipment, %s "
+                                   "this skill would increase your EV by %.1f.",
+                                   msg, ev_diff);
     }
     else if (skill == SK_SHIELDS)
     {
-        return make_stringf("\nWith your current stats and equipment, %s "
-                            "this skill would increase your SH by %.1f.",
-                            msg, sh_diff).c_str();
+        description = make_stringf("\nWith your current stats and equipment, %s "
+                                   "this skill would increase your SH by %.1f.",
+                                   msg, sh_diff);
     }
 
-    return "";
+    if (fail_change != 0)
+    {
+        if (description.empty())
+        {
+            description = make_stringf("\nWith your current stats and "
+                                       "equipment, %s this skill would", msg);
+        }
+        else
+            description += "\nIt would also";
+        description += (fail_change > 0) ? " worsen" : " improve";
+        description += " your spell failure";
+        if (visible_fail_change == 0)
+            description += " trivially.";
+        else
+        {
+            description += make_stringf(" by up to %d%%%s.",
+                                        abs(visible_fail_change),
+                                        spell_fail_details
+                                        && !spell_fail_details->empty()
+                                        ? " (press '!' for details)" : "");
+        }
+    }
+
+    return description;
 }
 
-string get_skill_description(skill_type skill, bool need_title)
+string get_skill_description(skill_type skill, bool need_title,
+                             string *spell_fail_details)
 {
     string lookup = skill_name(skill);
     string result = "";
@@ -4511,7 +4744,7 @@ string get_skill_description(skill_type skill, bool need_title)
     result += getLongDescription(lookup);
 
     const int target = you.get_training_target(skill);
-    if (target > 0 && target <= 270 && target > you.skill(skill, 10))
+    if (target > 0 && target <= 270 && target > you.skill(skill, 10, false, false))
     {
         result +=  make_stringf("\nYour current training target is %.1f.",
                                 target / 10.0);
@@ -4521,11 +4754,20 @@ string get_skill_description(skill_type skill, bool need_title)
         result += "\n";
     }
 
-    if ((skill == SK_ARMOUR || skill == SK_DODGING || skill == SK_SHIELDS)
-        && you.skills[skill] < MAX_SKILL_LEVEL && !is_useless_skill(skill))
+    const int base_target = you.get_training_target(skill, true);
+    if (base_target > 0 && base_target <= 270
+        && base_target > you.skill(skill, 10, true))
     {
-        result += _get_skill_defense_change(skill);
+        result += make_stringf("\nYour current base training target is %.1f.",
+                               base_target / 10.0);
+
+        _append_skill_target_desc(result, skill, base_target, 0, true);
+
+        result += "\n";
     }
+
+    if (you.skills[skill] < MAX_SKILL_LEVEL && !is_useless_skill(skill))
+        result += _get_skill_training_change(skill, spell_fail_details);
     if (skill == SK_INVOCATIONS)
     {
         if (you.has_mutation(MUT_FORLORN))
@@ -4563,7 +4805,7 @@ string get_skill_description(skill_type skill, bool need_title)
 static int _mon_hex_pow(const spell_type spell, const monster_info* mi, bool is_wand)
 {
     int pow = is_wand ? mons_wand_power(mi->hd, spell)
-                      : mons_power_for_hd(spell, mi->spell_hd());
+                      : mons_spellpower(*mi, spell);
 
     // Adjust by any power multipliers which may exist in zap definition.
     const zap_type ztype = spell_to_zap(spell);
@@ -4636,6 +4878,112 @@ static string _miscast_damage_string(spell_type spell)
          + comma_separated_line(descs.begin(), descs.end(), " or ", "; ");
 }
 
+static int _spell_fail_at_level(spell_type spell, const skill_set &skills,
+                                int level, int *xp = nullptr)
+{
+    unwind_var<FixedVector<uint8_t, NUM_SKILLS>> unwind_skills(you.skills);
+    unwind_var<FixedVector<unsigned int, NUM_SKILLS>>
+        unwind_sp(you.skill_points);
+    unwind_var<unsigned int> unwind_xp(you.total_experience);
+    unwind_var<int> unwind_costlevel(you.skill_cost_level);
+
+    // Model training the skills.
+    // For normal-skilling species, we train these one at a time, adding up the
+    // cost (and raising it by increasing total_experience).
+    // For djinni and gnolls, we instead find the max cost to raise any of them
+    // to the desired level, assuming in the case of djinni that they train
+    // only magic skills. Neither takes into account the effect of raising
+    // skills not asked for, like spellcasting or armour.
+    const bool restricted = you.has_mutation(MUT_DISTRIBUTED_TRAINING)
+                            || you.has_mutation(MUT_INNATE_CASTER);
+    int total_cost = 0;
+    int max_cost = 0;
+    for (skill_type sk : skills)
+    {
+        // Some skills might not be able to reach the level because of
+        // reductions, in which case cap them.
+        const int target = min(level, max_modified_skill_level(sk));
+        if (you.skill(sk, 10, false, false) >= target)
+            continue;
+
+        int training_amount = you.has_mutation(MUT_DISTRIBUTED_TRAINING)
+            ? you.training[sk] : you.has_mutation(MUT_INNATE_CASTER)
+            ? 100 / num_magic_skills() : 100;
+        const skill_diff diffs = skill_level_to_diffs(sk, target / 10.0,
+                                                      training_amount,
+                                                      false);
+        total_cost += diffs.experience;
+        max_cost = max(max_cost, diffs.experience);
+
+        you.skill_points[sk] = skill_points_for_level(sk, target);
+        you.skills[sk] = calc_skill_level_change(sk, you.skills[sk],
+                                                 you.skill_points[sk]);
+        // Raise cost for the next skill.
+        if (!restricted)
+        {
+            you.total_experience += diffs.experience;
+            check_skill_cost_change(true);
+        }
+    }
+
+    if (xp)
+        *xp = restricted ? max_cost : total_cost;
+
+    return failure_rate_to_int(raw_spell_fail(spell, false, false));
+}
+
+static string _spell_fail_training_desc(spell_type spell)
+{
+    const int target_fail = 10;
+    if (!you_can_memorise(spell)
+        || failure_rate_to_int(raw_spell_fail(spell, false, false)) <= target_fail)
+    {
+        return "";
+    }
+
+    skill_set skills;
+    spell_skills(spell, skills);
+    if (skills.empty())
+        return "";
+
+    const int max_level = MAX_SKILL_LEVEL * 10;
+    if (_spell_fail_at_level(spell, skills, max_level) > target_fail)
+    {
+        return make_stringf("You cannot reach a failure rate of %d%% for "
+                            "this spell by training only its schools.\n",
+                            target_fail);
+    }
+
+    // Search for the lowest level that reaches the target.
+    int lo = 0;
+    int hi = max_level;
+    while (lo < hi)
+    {
+        const int mid = (lo + hi) / 2;
+        if (_spell_fail_at_level(spell, skills, mid) <= target_fail)
+            hi = mid;
+        else
+            lo = mid + 1;
+    }
+    const int level = hi;
+
+    int experience;
+    _spell_fail_at_level(spell, skills, level, &experience);
+
+    skill_set to_train;
+    for (skill_type sk : skills)
+        if (you.skill(sk, 10, false, false) < min(level, max_modified_skill_level(sk)))
+            to_train.insert(sk);
+
+    string desc = make_stringf("With your current stats and equipment, "
+                               "training %s to %d.%d would reduce your "
+                               "failure rate to %d%%.",
+                               skill_names(to_train).c_str(),
+                               level / 10, level % 10, target_fail);
+    desc += make_stringf(" This would take %s.", _xl_cost_desc(experience).c_str());
+    return desc + "\n";
+}
+
 /**
  * Describe mostly non-numeric player-specific information about a spell.
  *
@@ -4659,6 +5007,8 @@ static string _player_spell_desc(spell_type spell)
                 << (fail_severity(spell) ?
                     " and also " + _miscast_damage_string(spell) : "")
                 << ".\n";
+
+    description << _spell_fail_training_desc(spell);
 
     if (spell == SPELL_BATTLESPHERE)
     {
@@ -4833,8 +5183,8 @@ static void _get_spell_description(const spell_type spell,
 
         }
 
-        const int hd = mon_owner->spell_hd();
-        const int range = mons_spell_range_for_hd(spell, hd, mon_owner->is(MB_PLAYER_SERVITOR));
+        const int mon_pow = mons_spellpower(*mon_owner, spell);
+        const int range = calc_spell_range(spell, mon_pow, mon_owner->is(MB_PLAYER_SERVITOR));
         const int minrange = (spell == SPELL_CALL_DOWN_LIGHTNING
                                 || spell == SPELL_FLASHING_BALESTRA
                                 || spell == SPELL_BECKONING_GALE ? 3 : 0);
@@ -4842,7 +5192,6 @@ static void _get_spell_description(const spell_type spell,
         description += "\nRange : ";
         description += range_string(range, -1, minrange);
 
-        const int mon_pow = mons_power_for_hd(spell, hd);
         const string defence_string = spell_defence_string(spell, true, mon_pow);
         const string resist_string = spell_resist_string(spell, true, mon_pow);
         if (!defence_string.empty())
@@ -5441,12 +5790,6 @@ static string _brand_damage_string(const monster_info &mi, brand_type brand,
     return make_stringf(" + %d (%s)", brand_dam, name);
 }
 
-// Max damage from a magical staff with a given amount of staff & evo skill
-static int _staff_max_damage(stave_type staff, int staff_skill, int evo_skill)
-{
-    return max(0, (2 * staff_skill + evo_skill) * staff_damage_mult(staff) / 80 - 1);
-}
-
 // Describe the damage from a monster's magical staff
 static string _monster_staff_damage_string(const monster_info &mi,
                                            stave_type staff)
@@ -5459,16 +5802,7 @@ static string _monster_staff_damage_string(const monster_info &mi,
     else
         staff_skill = mi.is_actual_spellcaster() ? mi.hd : mi.hd / 3;
 
-    // "earth" tries to communicate the damage reduction when flying
-    // XXX "conj" isn't a damage type, but we want to communicate
-    // that the damage is flat staff bonus damage somehow.
-    string dam_type_string = staff == STAFF_FIRE          ? "fire"
-                           : staff == STAFF_COLD          ? "cold"
-                           : staff == STAFF_AIR           ? "elec"
-                           : staff == STAFF_EARTH         ? "earth"
-                           : staff == STAFF_NECROMANCY    ? "drain" // pain?
-                           : staff == STAFF_ALCHEMY       ? "poison"
-                           /*staff == STAFF_CONJURATION*/ : "conj";
+    string dam_type_string = _staff_damage_type_string(staff);
 
     return make_stringf(" + %d (%s)",
                         _staff_max_damage(staff, staff_skill, evo_skill),
@@ -5660,7 +5994,7 @@ static void _attacks_table_row(const monster_info &mi, mon_attack_desc_info &di,
     int real_dam = dam;
     if (!ranged)
     {
-        if (mi.is(MB_STRONG) || mi.is(MB_BERSERK))
+        if (mi.is(MB_STRONG) || mi.is(MB_BERSERK) || mi.is(MB_FRENZIED))
             real_dam = real_dam * 3 / 2;
         if (mi.is(MB_TEMPERED))
             real_dam = real_dam * 5 / 4;
@@ -6740,6 +7074,11 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     if (mons_class_flag(mi.type, M_BURROWS))
         result << uppercase_first(pronoun) << " can burrow through diggable terrain.\n";
 
+    // check item use to exclude ranged dancing weapons, who will fire in melee
+    // range, but don't really "use" a weapon.
+    if (mons_class_flag(mi.type, M_PREFER_RANGED) && mi.itemuse() > MONUSE_OPEN_DOORS)
+        result << uppercase_first(pronoun) << " can use ranged and thrown weapons in melee range.\n";
+
     if (mons_class_flag(mi.type, M_ACID_SPLASH))
     {
         result << uppercase_first(pronoun) << " "
@@ -7562,7 +7901,7 @@ string get_ghost_description(const monster_info &mi, bool concise)
     }
 #endif
 
-    gstr << mi.mname << " the "
+    gstr << mi.mname << " "
          << title
          << ", " << _xl_rank_name(mi.i_ghost.xl_rank) << " ";
 
@@ -7591,9 +7930,10 @@ void describe_skill(skill_type skill)
 {
     describe_info inf;
     inf.title = skill_name(skill);
-    inf.body << get_skill_description(skill, false);
+    string spell_fail_details;
+    inf.body << get_skill_description(skill, false, &spell_fail_details);
     tile_def tile = tile_def(tileidx_skill(skill, TRAINING_ENABLED));
-    show_description(inf, &tile);
+    show_description(inf, &tile, spell_fail_details);
 }
 
 #ifdef USE_TILE_LOCAL // only used in tiles
@@ -7654,7 +7994,8 @@ static void _maybe_note_armour_modifier(vector<vector<string>>& items,
     if (mult[0] == 0 && mult[1] == 0 && mult[2] == 0)
         return;
 
-    const item_def *body_armour = you.body_armour();
+    const item_def *body_armour = you.equipment.get_first_slot_item(
+        SLOT_BODY_ARMOUR, true);
     const int base_ac = body_armour ? you.base_ac_from(*body_armour, 100, false)
                                     : 0;
 
@@ -7849,6 +8190,23 @@ static string _describe_talisman_form(transformation form_type)
         _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Bat Swarm Recharge", skill, 0, true, false);
         _maybe_populate_form_table(items, bind(&Form::get_effect_chance, form, placeholders::_1), "Daze Power", skill, 0, false, false);
     }
+    if (form_type == transformation::jademantle)
+    {
+        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Crystal HP", skill, 0, false, false);
+        _maybe_populate_form_table(items, bind(&Form::get_effect_chance, form, placeholders::_1), "Charge heal", skill, 0, false, false);
+        _maybe_populate_form_table(items, bind(&Form::get_skill_bonus, form, placeholders::_1), "Elem skill", skill, 0, false, true, 10, 1);
+    }
+    if (form_type == transformation::hypnogecko)
+    {
+        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Shed Tail HP", skill, 0, false, false);
+        _maybe_populate_form_table(items, bind(&Form::get_effect_chance, form, placeholders::_1), "Distraction Stab Chance", skill, 0, true, true);
+    }
+    if (form_type == transformation::mistmane)
+    {
+        _maybe_populate_form_table(items, bind(&Form::get_effect_size, form, placeholders::_1), "Cloud range", skill, 0, false, false, 10, 1);
+        _maybe_populate_form_table(items, bind(&Form::get_cloud_duration, form, placeholders::_1), "Cloud duration", skill, 0, true, false);
+        _maybe_populate_form_table(items, bind(&Form::get_effect_chance, form, placeholders::_1), "Distill rate", skill, 0, true, false);
+    }
 
     vector<int> column_width;
 
@@ -7892,13 +8250,14 @@ static string _describe_talisman_form(transformation form_type)
         description << "\nClass: " << uppercase_first(holiness_description(form->holiness));
 
     // Now add various one-off bits of (generally non-scaling) data after that
-    TablePrinter pr(4, 80);
+    TablePrinter pr(form_type == transformation::jademantle ? 2 : 4, 80);
     pr.AddRow();
 
     if (form->size != SIZE_CHARACTER)
         pr.AddCell("Size", uppercase_first(get_size_adj(form->size)));
 
     _desc_form_val(pr, "Str", form->str_mod);
+    _desc_form_val(pr, "Int", form->int_mod);
     _desc_form_val(pr, "Dex", form->dex_mod);
 
     _desc_form_resist(pr, MR_RES_FIRE, form->res_fire());
@@ -7931,8 +8290,11 @@ static string _describe_talisman_form(transformation form_type)
         pr.AddCell("Will", "+");
     else if (form_type == transformation::vampire)
         pr.AddCell("Stealth", "++");
-    else if (form_type == transformation::spider)
+    else if (form_type == transformation::spider
+             || form_type == transformation::hypnogecko)
+    {
         pr.AddCell("Stealth", "+");
+    }
     else if (form_type == transformation::aqua)
         pr.AddCell("Reach", "+2");
     else if (form_type == transformation::sphinx)
@@ -7951,9 +8313,21 @@ static string _describe_talisman_form(transformation form_type)
     {
         pr.AddCell("Melee damage", "-50%", RED);
     }
+    else if (form_type == transformation::fortress_crab)
+        pr.AddCell("Armour egos", "x2");
+    else if (form_type == transformation::vision
+             && !you.has_mutation(MUT_DAYSTALKER))
+    {
+        pr.AddCell("LoS", "+1");
+    }
+    else if (form_type == transformation::jademantle)
+        pr.AddCell("Non-elemental magic skill", "-33%", RED);
 
-    if (form_type == transformation::vampire || form_type == transformation::sphinx)
+    if (form_type == transformation::vampire || form_type == transformation::sphinx
+        || form_type == transformation::vision)
+    {
         pr.AddCell("SInv", "+");
+    }
 
     // Don't output extra blank lines if there's no content.
     if (pr.NumCells() > 0)

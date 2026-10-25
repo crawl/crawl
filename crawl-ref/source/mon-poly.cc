@@ -84,7 +84,7 @@ void monster_drop_things(monster* mons,
         if (item == NON_ITEM || !suitable(env.item[item]))
             continue;
 
-        if (testbits(env.item[item].flags, ISFLAG_SUMMONED))
+        if (env.item[item].summoned())
         {
             item_was_destroyed(env.item[item]);
             mons->unequip(slot);
@@ -291,7 +291,7 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     {
         name = mons->name(DESC_PLAIN, true);
 
-        // "Blorkula the orcula" and similar.
+        // "Blorkula the Orcula" (if he weren't undead) and similar.
         const size_t the_pos = name.find(" the ");
         if (the_pos != string::npos)
             name = name.substr(0, the_pos);
@@ -743,8 +743,8 @@ void slimify_monster(monster* mon)
     // If a monster slimifies and you're not with Jiyva, it shouldn't change
     // that monster's attitude any more than other polymorph does. If you are
     // with Jiyva, either let it stay friendly or make it non-hostile.
-    if (you_worship(GOD_JIYVA) && mon->attitude != ATT_FRIENDLY)
-        mon->attitude = ATT_GOOD_NEUTRAL;
+    if (you_worship(GOD_JIYVA) && mon->base_attitude != ATT_FRIENDLY)
+        mon->base_attitude = ATT_GOOD_NEUTRAL;
 
     mons_make_god_gift(*mon, GOD_JIYVA);
 

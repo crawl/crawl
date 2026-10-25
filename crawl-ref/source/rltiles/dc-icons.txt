@@ -183,6 +183,13 @@ demon_pentagram4 DEMON_NUM4
 demon_pentagram5 DEMON_NUM5
 %rim 0
 
+%sdir dngn
+
+air_vein_overlay DRAGON_VEIN_AIR
+earth_vein_overlay DRAGON_VEIN_EARTH
+fire_vein_overlay DRAGON_VEIN_FIRE
+ice_vein_overlay DRAGON_VEIN_ICE
+
 %sdir misc
 ray ITEM_SLOT_SELECTED
 

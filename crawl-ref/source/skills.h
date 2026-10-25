@@ -23,6 +23,7 @@ struct skill_state
     FixedVector<unsigned int, NUM_SKILLS> training;
     FixedVector<unsigned int, NUM_SKILLS> skill_points;
     FixedVector<unsigned int, NUM_SKILLS> training_targets;
+    FixedVector<unsigned int, NUM_SKILLS> base_training_targets;
     FixedVector<uint8_t, NUM_SKILLS>      skill_order;
     FixedVector<unsigned int, NUM_SKILLS> skill_manual_points;
     int skill_cost_level;
@@ -74,6 +75,7 @@ void change_skill_points(skill_type sk, int points, bool do_level_up);
 
 bool is_mundane_skill(skill_type sk);
 bool is_magic_skill(skill_type sk);
+int num_magic_skills();
 
 void exercise(skill_type exsk, int deg);
 void train_skills(bool simu = false);
@@ -122,6 +124,8 @@ float species_apt_factor(skill_type sk, species_type sp = you.species);
 float apt_to_factor(int apt);
 unsigned int skill_exp_needed(int lev, skill_type sk,
                               species_type sp = you.species);
+int max_modified_skill_level(skill_type sk);
+int skill_points_for_level(skill_type sk, int scaled_level);
 skill_diff skill_level_to_diffs(skill_type skill, double amount,
     int scaled_training=100, bool base_only=true);
 
@@ -133,8 +137,8 @@ void dump_skills(string &text);
 int skill_bump(skill_type skill, int scale = 1, bool allow_random = true);
 void fixup_skills();
 
-bool target_met(skill_type sk);
-bool target_met(skill_type sk, unsigned int target);
+bool target_met(skill_type sk, bool base);
+bool target_met(skill_type sk, unsigned int target, bool base);
 bool check_training_target(skill_type sk);
 bool check_training_targets();
 

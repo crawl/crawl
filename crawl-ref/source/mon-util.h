@@ -245,6 +245,7 @@ bool mons_is_the(monster_type mc);
 bool mons_is_pghost(monster_type mc);
 bool mons_is_draconian_job(monster_type mc);
 bool mons_is_hepliaklqana_ancestor(monster_type mc);
+bool mons_is_jade_crystal(monster_type mc);
 
 int mutant_beast_tier(int xl);
 
@@ -363,6 +364,7 @@ monster_type draconian_colour_for_job(monster_type job);
 monster_type draconian_job_for_colour(monster_type colour);
 
 void define_monster(monster& mons, bool friendly = false);
+void mons_set_starting_heads(monster& mons, int heads);
 
 void mons_pacify(monster& mon, mon_attitude_type att = ATT_GOOD_NEUTRAL,
                  bool no_xp = false);
@@ -383,7 +385,6 @@ bool mons_aligned(const actor *m1, const actor *m2);
 bool mons_atts_aligned(mon_attitude_type fr1, mon_attitude_type fr2);
 
 bool mons_att_wont_attack(mon_attitude_type fr);
-mon_attitude_type mons_attitude(const monster& m);
 
 // Whether the monster is temporarily confused (class_too = false)
 // or confused at all (class_too = true; temporarily or by class).

@@ -513,6 +513,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(always_show_exclusions), true),
         new BoolGameOption(SIMPLE_NAME(note_all_skill_levels), false),
         new BoolGameOption(SIMPLE_NAME(note_skill_max), true),
+        new BoolGameOption(SIMPLE_NAME(note_starting_skills), false),
         new BoolGameOption(SIMPLE_NAME(note_xom_effects), true),
         new BoolGameOption(SIMPLE_NAME(note_chat_messages), false),
         new BoolGameOption(SIMPLE_NAME(note_dgl_messages), true),
@@ -698,7 +699,7 @@ const vector<GameOption*> game_options::build_options_list()
             {"header", "hiscore", "stats", "misc",  "apostles", "inventory",
              "skills", "spells", "overview", "mutations", "messages",
              "screenshot", "monlist", "kills", "notes", "screenshots", "vaults",
-             "skill_gains", "action_counts"}),
+             "skill_gains", "xp_by_form", "action_counts"}),
         new ListGameOption<text_pattern>(SIMPLE_NAME(confirm_action), {}, true),
         new MultipleChoiceGameOption<easy_confirm_type>(
             SIMPLE_NAME(easy_confirm),

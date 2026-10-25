@@ -245,6 +245,7 @@ const vector<vector<god_power>> & get_all_god_powers()
 
         // Elyvilon
         {
+            {-1, "", "", "Elyvilon prevents you from doing harm to neutral creatures."},
             { 1, ABIL_ELYVILON_PURIFICATION, "purify yourself" },
             { 2, ABIL_ELYVILON_PACIFY, "attempt to pacify hostile creatures" },
             { 3, ABIL_ELYVILON_HEAL_SELF, "provide healing for yourself" },
@@ -274,12 +275,12 @@ const vector<vector<god_power>> & get_all_god_powers()
                  "Beogh will send orc apostles to challenge you in battle as you gain piety." },
             { 0, "", "", "You can recruit apostles that you defeat into your service." },
             { 3, "", "", "Your apostles are sometimes healed when you deal damage." },
+            { 5, "walk on water" },
             { 5, ABIL_BEOGH_BLOOD_FOR_BLOOD, "rally a vengeful horde" },
             { 0, ABIL_BEOGH_RECRUIT_APOSTLE, "" },
             { 0, ABIL_BEOGH_DISMISS_APOSTLE_1, ""},
             { 0, ABIL_BEOGH_DISMISS_APOSTLE_2, ""},
             { 0, ABIL_BEOGH_DISMISS_APOSTLE_3, ""},
-            { 5, "walk on water" },
         },
 
         // Jiyva
@@ -1661,20 +1662,20 @@ bool mons_is_god_gift(const monster& mon, god_type god)
 bool is_yred_undead_follower(const monster& mon)
 {
     return mon.alive() && mon.holiness() & MH_UNDEAD
-           && mon.attitude == ATT_FRIENDLY
+           && mon.base_attitude == ATT_FRIENDLY
            && mons_is_god_gift(mon, GOD_YREDELEMNUL);
 }
 
 bool is_apostle_follower(const monster& mon)
 {
-    return mon.alive() && mon.attitude == ATT_FRIENDLY
+    return mon.alive() && mon.base_attitude == ATT_FRIENDLY
            && mon.type == MONS_ORC_APOSTLE;
 }
 
 bool is_fellow_slime(const monster& mon)
 {
     return mon.alive() && mons_is_slime(mon)
-           && mon.attitude == ATT_GOOD_NEUTRAL
+           && mon.base_attitude == ATT_GOOD_NEUTRAL
            && mons_is_god_gift(mon, GOD_JIYVA);
 }
 
@@ -2322,7 +2323,8 @@ void dock_piety(int piety_loss, int penance, bool no_lecture)
 // Scales a piety number, applying modifiers (faith).
 int piety_scale(int piety)
 {
-    return piety + (you.faith() * div_rand_round(piety, 4));
+    return piety + (you.faith() * div_rand_round(piety, 4))
+            - (you.unrand_equipped(UNRAND_FORGEWARDEN) * div_rand_round(piety, 4));
 }
 
 /** Gain or lose piety to reach a certain value.
@@ -2846,7 +2848,7 @@ static void _jiyva_remove_slime_mutations()
                 simple_god_message(" gift of slime is revoked.", true, GOD_JIYVA);
             }
             // XXX: replicates _god_wrath_name()
-            while (_delete_single_mutation_level(static_cast<mutation_type>(i), reason, true));
+            while (delete_single_mutation_level(static_cast<mutation_type>(i), reason, true));
             delete_mutation(static_cast<mutation_type>(i),
                             reason, true, false, true);
         }
@@ -3261,6 +3263,14 @@ bool god_forbids_form(god_type which_god, transformation which_trans)
 
     if (which_god == GOD_OKAWARU && which_trans == transformation::hive)
         return true;
+
+    if (which_god == GOD_TROG
+        && (which_trans == transformation::vision
+            || which_trans == transformation::jademantle))
+    {
+        return true;
+    }
+
     return false;
 }
 
@@ -3488,8 +3498,13 @@ void set_god_ability_slots()
     for (const god_power& power : get_all_god_powers()[you.religion])
     {
         if (power.abil != ABIL_NON_ABILITY
-            // hep ident goes to G, so don't take b for it (hack alert)
+            // Skip abilities that get assigned letters elsewhere. We only
+            // need to do this for abilities that are not the last powers
+            // in their gods list.
             && power.abil != ABIL_HEPLIAKLQANA_IDENTITY
+            && power.abil != ABIL_HEPLIAKLQANA_TYPE_KNIGHT
+            && power.abil != ABIL_HEPLIAKLQANA_TYPE_ELEMENTALIST
+            && power.abil != ABIL_HEPLIAKLQANA_TYPE_HEXER
             && find(begin(you.ability_letter_table),
                     end(you.ability_letter_table), power.abil)
                == end(you.ability_letter_table)
@@ -3731,17 +3746,17 @@ static void _join_gozag()
 
 static void _join_okawaru()
 {
-    bool needs_message = false;
+    bool did_message = false;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->was_created_by(you))
+        if (mi->was_created_by(you) && mons_can_hate(mi->type))
         {
-            mi->del_ench(ENCH_SUMMON_TIMER);
-            needs_message = true;
+            if (!did_message)
+                mpr("Your summoned allies are dismissed!");
+            monster_die(**mi, KILL_TIMEOUT, NON_MONSTER);
+            did_message = true;
         }
     }
-    if (needs_message)
-        mpr("Your summoned allies are dismissed!");
 }
 
 /// Setup when joining the sacred cult of Ru.
@@ -4429,7 +4444,7 @@ int get_monster_tension(const monster& mons, god_type god)
     if (mons_is_irrelevant(&mons))
         return 0;
 
-    const mon_attitude_type att = mons_attitude(mons);
+    const mon_attitude_type att = mons.attitude();
 
     if (mons.helpless())
         return 0;

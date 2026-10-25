@@ -75,18 +75,22 @@ void player_displace_monster(monster* mons, const coord_def &loc)
     ASSERT(monster_habitable_grid(mons, loc));
     ASSERT(!monster_at(loc));
 
-    // Friendly seekers dissipate when the player swaps into them.
-    if (loc != you.pos())
-        mprf("You push %s out of the way.", mons->name(DESC_THE).c_str());
-    else if (mons_is_seeker(*mons))
+    // Don't print message for pushing crystals since this happens constantly.
+    if (!mons_is_jade_crystal(mons->type))
     {
-        simple_monster_message(*mons, " dissipates!", false,
-                               MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
-        monster_die(*mons, KILL_RESET, NON_MONSTER, true);
-        return;
+        if (loc != you.pos())
+            mprf("You push %s out of the way.", mons->name(DESC_THE).c_str());
+        // Friendly seekers dissipate when the player swaps into them.
+        else if (mons_is_seeker(*mons))
+        {
+            simple_monster_message(*mons, " dissipates!", false,
+                                MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+            monster_die(*mons, KILL_RESET, NON_MONSTER, true);
+            return;
+        }
+        else
+            mprf("You swap places with %s.", mons->name(DESC_THE).c_str());
     }
-    else
-        mprf("You swap places with %s.", mons->name(DESC_THE).c_str());
 
     mons->move_to(loc, MV_ALLOW_OVERLAP, true);
 }
@@ -579,17 +583,7 @@ monster* get_rampage_target(coord_def move)
     const int tracer_range = you.current_vision;
     const coord_def tracer_target = you.pos() + (move * tracer_range);
 
-    bolt beam;
-    beam.aimed_at_spot   = true;
-    beam.target          = tracer_target;
-    beam.source_name     = "you";
-    beam.source          = you.pos();
-    beam.source_id       = MID_PLAYER;
-    beam.thrower         = KILL_YOU;
-    beam.pierce          = true;
-    beam.affects_nothing = true;
-    beam.set_is_tracer(true);
-    beam.fire();
+    bolt beam = bolt::path_tracer(you.pos(), tracer_target, tracer_range);
 
     // Iterate the tracer to see if the first visible target is a hostile mons.
     for (coord_def p : beam.path_taken)
@@ -910,9 +904,9 @@ static bool _handle_player_step(const coord_def& targ, int& delay, const int del
     bool fedhas_move = false;
 
     // If we can't move, and don't have a non-move action, stop. We sometimes want
-    // to hit invisible monsters, but if we can't see them and can't move, it leaks
-    // information to allow the player to hit them.
-    if ((!mon || !mon->visible_to(&you))
+    // to hit invisible monsters, but if we aren't aware of their location and
+    // can't move, it leaks information to allow the player to hit them.
+    if ((!mon || !you.aware_of(*mon))
         && you.cannot_move()
         && !feat_is_closed_door(env.grid(targ)))
     {
@@ -923,10 +917,10 @@ static bool _handle_player_step(const coord_def& targ, int& delay, const int del
     // First, check for fighting a monster.
     if (mon)
     {
-        if (mon->temp_attitude() == ATT_NEUTRAL
+        if (mon->attitude() == ATT_NEUTRAL
             && !mon->has_ench(ENCH_FRENZIED)
             && !you.confused()
-            && mon->visible_to(&you))
+            && you.aware_of(*mon))
         {
             simple_monster_message(*mon, " refuses to make way for you. "
                             "(Use ctrl+direction or * direction to attack.)");
@@ -1060,7 +1054,7 @@ static bool _handle_player_step(const coord_def& targ, int& delay, const int del
             const monster* current = monster_at(you.pos());
             if (!current || !fedhas_passthrough(current))
             {
-                mprf("You %s carefully through the %s.",
+                mprf("You %s slowly and carefully through the %s.",
                         _get_move_verb(rampaging).c_str(),
                     mons_genus(mon->type) == MONS_FUNGUS ? "fungus"
                                                          : "plants");
@@ -1272,6 +1266,8 @@ void move_player_action(coord_def move)
             you.duration[DUR_NO_HOP] += you.time_taken;
         if (you.duration[DUR_MESMERISM_COOLDOWN])
             you.duration[DUR_MESMERISM_COOLDOWN] += you.time_taken;
+        if (you.duration[DUR_SIROCCO_COOLDOWN])
+            you.duration[DUR_SIROCCO_COOLDOWN] += you.time_taken;
 
         if (!did_attack && (num_steps > 1 || did_stampede) && you.has_mutation(MUT_STAMPEDE))
             did_attack |= do_west_wind_shot();

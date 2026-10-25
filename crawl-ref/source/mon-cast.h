@@ -14,6 +14,7 @@ class actor;
 class monster;
 struct bolt;
 struct dice_def;
+struct monster_info;
 
 #define OLD_ARMS_KEY "old_arms"
 #define OLD_ARMS_ALT_KEY "old_arms_alt"
@@ -30,21 +31,27 @@ dice_def waterstrike_damage(int spell_hd);
 dice_def resonance_strike_base_damage(int spell_hd);
 
 dice_def eruption_damage();
+dice_def upheaval_damage();
+dice_def death_rattle_damage();
+
+dice_def healing_beam_dice(int spell_hd);
+string describe_mons_healing(spell_type spell, int spell_hd);
 
 bool handle_mon_spell(monster* mons);
 
 bool mons_spell_is_spell(spell_type spell);
-int mons_power_for_hd(spell_type spell, int hd);
 int mons_spellpower(const monster &mons, spell_type spell);
+int mons_spellpower(const monster_info &mi, spell_type spell);
 int mons_spell_range(const monster &mons, spell_type spell);
-int mons_spell_range_for_hd(spell_type spell, int hd, bool use_veh_bonus = false);
 int mons_wand_power(int hd, spell_type spell);
 bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
                      bool check_validity = false);
 void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                mon_spell_slot_flags slot_flags, bool do_noise = true);
 bool is_mons_cast_possible(monster& mons, spell_type spell);
-bool try_mons_cast(monster& mons, spell_type spell);
+bool try_mons_cast(monster& mons, spell_type spell, const coord_def& target = coord_def(-1, -1));
+void mons_post_cast_effects(monster* mons, spell_type spell_cast,
+                            mon_spell_slot_flags flags);
 void mons_cast_noise(monster* mons, const bolt &pbolt,
                      spell_type spell_cast, mon_spell_slot_flags slot_flags);
 bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,

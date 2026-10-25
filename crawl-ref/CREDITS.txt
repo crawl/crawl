@@ -99,6 +99,7 @@
     Austin Appleby
     araganzar
     argonaut
+    Argyros
     ArmiesAndCastles
     Juha Arpiainen
     Arxale
@@ -140,6 +141,7 @@
     Ian Caltabiano
     David Candido
     Edgar Carballo
+    carf
     caryoscelus
     Cedor
     Cerol
@@ -192,6 +194,7 @@
     Floodkiller
     floraline
     Flugkiller
+    foosh
     Brett Foster
     Kyle Fox
     Perry Fraser
@@ -318,6 +321,7 @@
     Jonathon Nooner
     NormalPerson7
     Michael Nowack
+    A. Noyd
     Erkki Nurmi
     Mattias Nyberg
     nyra
@@ -344,6 +348,7 @@
     Pedro
     Pekkekke
     person50605
+    pumpkincat
     Alejandro Ramirez
     Rytis Petronis
     Arlen Phillips
@@ -390,6 +395,7 @@
     Brett Scarborough
     Roderick Schertler
     sdynet
+    SeijiOokami
     SentientSupper
     Roman Sêk
     Brennan Shacklett

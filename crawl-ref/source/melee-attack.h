@@ -202,8 +202,9 @@ private:
     void handle_spectral_brand();
     void do_valour_beam();
     bool is_sundering_weapon() const;
-    void handle_concussion_brand();
+    void handle_concussion_brand(bool unrand = false);
     void grow_burstshrooms(int hd);
+    void handle_centipede_poison(int power) const;
 
     // Spell effects.
     void maybe_trigger_detonation();

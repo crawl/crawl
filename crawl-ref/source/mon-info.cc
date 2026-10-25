@@ -524,7 +524,7 @@ monster_info::monster_info(const monster* m, int milev)
     pos = m->pos();
     mid = m->mid;
 
-    attitude = mons_attitude(*m);
+    attitude = m->attitude();
 
     type = m->type;
     base_type = m->base_monster;
@@ -613,7 +613,7 @@ monster_info::monster_info(const monster* m, int milev)
         // This displays an icon over the monster, and a status line when
         // examining them, which looks a little weird and unnecessary for
         // friendly monsters, as it's *always* the case with them.
-        if (m->real_attitude() != ATT_FRIENDLY)
+        if (m->base_attitude != ATT_FRIENDLY)
             mb.set(MB_UNREWARDING);
     }
 
@@ -704,7 +704,7 @@ monster_info::monster_info(const monster* m, int milev)
         }
         else if (m->foe == MHITNOT
                  && m->behaviour != BEH_BATTY
-                 && m->attitude == ATT_HOSTILE)
+                 && m->hostile())
         {
             mb.set(MB_UNAWARE);
         }
@@ -894,7 +894,7 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->props.exists(SOUL_SPLINTERED_KEY))
         mb.set(MB_SOUL_SPLINTERED);
 
-    if (m->type == MONS_ASPIRING_FLESH)
+    if (m->type == MONS_ASPIRING_FLESH && m->props.exists(PROTEAN_TARGET_KEY))
         props[PROTEAN_TARGET_KEY] = m->props[PROTEAN_TARGET_KEY];
 
     if (m->type == MONS_PLATINUM_PARAGON)
@@ -1051,6 +1051,10 @@ string monster_info::db_name() const
 
     if (type == MONS_SENSED)
         return get_monster_data(base_type)->name;
+
+    // Otherwise the game gets confused over the weapon and monster having the same name.
+    if (type == MONS_ASSASSIN_CENTIPEDE)
+        return "assassin centipede monster";
 
     return get_monster_data(type)->name;
 }
@@ -1790,7 +1794,7 @@ int monster_info::reach_range(bool items) const
             const int wpn_reach = weapon_reach(*weapon);
             for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
                 if (attack[i].type == AT_HIT || attack[i].type == AT_WEAP_ONLY)
-                    range = max(range, attack[i].reach + wpn_reach);
+                    range = max(range, attack[i].reach + wpn_reach - 1);
         }
     }
 

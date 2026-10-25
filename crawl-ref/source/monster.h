@@ -74,7 +74,7 @@ public:
     vector<coord_def> travel_path;
     FixedVector<short, NUM_MONSTER_SLOTS> inv;
     monster_spells spells;
-    mon_attitude_type attitude;
+    mon_attitude_type base_attitude;
     beh_type behaviour;
     unsigned short foe;
     int8_t ench_countdown;
@@ -134,8 +134,7 @@ public:
 
     void set_hit_dice(int new_hd);
 
-    mon_attitude_type temp_attitude() const override;
-    mon_attitude_type real_attitude() const override { return attitude; }
+    mon_attitude_type attitude() const override;
 
     // Returns true if the monster is named with a proper name, or is
     // a player ghost.
@@ -432,6 +431,7 @@ public:
     bool is_skeletal() const override;
     bool is_spiny() const;
     bool paralysed() const override;
+    bool cannot_keep_channelling() const;
     bool cannot_move() const override;
     bool cannot_act() const override;
     bool helpless() const override;
@@ -615,6 +615,7 @@ private:
     void unequip_weapon_message(item_def &item) const;
     void unequip_armour_message(item_def &item) const;
 
+    void clear();
     void init_with(const monster& mons);
 
     int armour_bonus(const item_def &item) const;

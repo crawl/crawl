@@ -101,14 +101,15 @@ void surge_power_wand(const int mp_cost);
 int list_spells(bool toggle_with_I = true, bool transient = false,
                 bool viewing = false, bool allow_preselect = true,
                 const string &title = "cast");
-int raw_spell_fail(spell_type spell, bool enkindled = false);
+int raw_spell_fail(spell_type spell, bool enkindled = false,
+                   bool include_temp = true);
 int calc_spell_power(spell_type spell);
 
 spret cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL,
                    dist *_target = nullptr, bool force_failure = false);
 
 void inspect_spells();
-bool can_cast_spells(bool quiet = false);
+bool can_cast_spells(bool quiet = false, bool ignore_silence = false);
 void do_cast_spell_cmd(bool force);
 
 int hex_success_chance(const int wl, int powc, int scale,
@@ -127,6 +128,8 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
 spret your_spells(spell_type spell, int powc = 0, bool actual_spell = true,
                   const item_def* const evoked_item = nullptr,
                   dist *_target = nullptr, bool force_failure = false);
+
+void do_post_spellcast_effects(spell_type spell);
 
 extern const char *fail_severity_adjs[];
 
@@ -157,6 +160,7 @@ string spell_noise_string(spell_type spell, int chop_wiz_display_width = 0);
 
 void spell_skills(spell_type spell, set<skill_type> &skills);
 void do_demonic_magic(int pow, int rank);
+void death_ego_lifedrain(int splevel);
 
 bool channelled_spell_active(spell_type spell);
 void start_channelling_spell(spell_type spell, string reminder_msg = "", bool do_effect = true);

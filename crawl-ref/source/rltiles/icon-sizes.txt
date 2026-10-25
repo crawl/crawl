@@ -19,6 +19,10 @@ pyrrhic: 0
 frenzied: 0
 unseen_invis_known: 0
 unseen_invis_remembered: 0
+dragon_vein_air: 0
+dragon_vein_earth: 0
+dragon_vein_fire: 0
+dragon_vein_ice: 0
 
 drain: 6
 might: 6

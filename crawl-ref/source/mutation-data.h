@@ -2190,6 +2190,7 @@ static const mutation_def mut_data[] =
   {"You reflexively headbutt those who attack you in melee.", "", ""},
   {"Your retaliatory reflexes feel sharp.", "", ""},
   {"Your retaliatory reflexes feel dull.", "", ""},
+  TILEG_MUT_REFLEXIVE_HEADBUTT,
 },
 
 { MUT_STEAM_RESISTANCE, 0, 1, mutflag::good | mutflag::substance,
@@ -2353,9 +2354,9 @@ static const mutation_def mut_data[] =
 
 { MUT_FOUL_SHADOW, 0, 3, mutflag::good,
   "foul shadow",
-  {"You are faintly shadowed, very rarely releasing foul flame when damaged in melee.",
+  {"You are faintly shadowed, rarely releasing foul flame when damaged in melee.",
    "You are shadowed, sometimes releasing foul flame when damaged in melee.",
-   "You are darkly shadowed, frequently releasing foul flame when damaged in melee."},
+   "You are darkly shadowed, often releasing foul flame when damaged in melee."},
   {"Your body darkens with foul flame.",
    "Your body becomes darker with foul flame.",
    "Your body becomes darker with foul flame."},
@@ -2384,9 +2385,9 @@ static const mutation_def mut_data[] =
 
 { MUT_DRUNKEN_BRAWLING, 0, 1, mutflag::good,
   "drunken brawling",
-  {"Whenever you drink a healing potion, you attack all around you.", "", ""},
-  {"You brawl whenever you drink a healing potion.", "", ""},
-  {"You no longer brawl whenever you drink a healing potion.", "", ""},
+  {"Whenever you drink a potion, you attack all enemies around you.", "", ""},
+  {"You brawl whenever you drink a potion.", "", ""},
+  {"You no longer brawl whenever you drink a potion.", "", ""},
 },
 
 { MUT_ARTEFACT_ENCHANTING, 0, 1, mutflag::good,

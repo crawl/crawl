@@ -258,6 +258,7 @@ enum enchant_type
     ENCH_PREPARING_TO_LURK,
     ENCH_PHASE_SHIFT,
     ENCH_DIVINE_SHIELD,
+    ENCH_INSUBSTANTIAL,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
