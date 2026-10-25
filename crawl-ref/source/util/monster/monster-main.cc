@@ -11,6 +11,7 @@
 #include "describe-spells.h"
 #include "describe.h" // get_item_description
 #include "fight.h" // spines_damage
+#include "ghost.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "items.h"
@@ -601,6 +602,29 @@ static string canned_reports[][2] = {
                  " | Res: sanity | XP: ∞ | Int: god | Sz: !!!"))},
 };
 
+// Partial copy from monster::willpower(), not accounting for items
+static std::string _get_willpower_description(const monster & mon)
+{
+    const int type_wl = (get_monster_data(mon.type))->willpower;
+    // Negative values get multiplied with monster hit dice.
+    int willpower = type_wl < 0 ?
+    mon.get_hit_dice() * -type_wl * 4 / 3 :
+    mons_class_willpower(mon.type, mon.base_monster);
+    // ghost demon struct overrides the monster values if it is non-negative
+    if (mons_is_ghost_demon(mon.type) && mon.ghost->willpower >= 0)
+     willpower = mon.ghost->willpower;
+    if (willpower == WILL_INVULN)
+    {
+      return colour(LIGHTMAGENTA, "will(invuln)");
+    }
+    if (willpower == 0)
+    {
+      return "";
+    }
+    return colour(MAGENTA,
+      make_stringf("will(%d)", willpower));
+}
+
 int main(int argc, char* argv[])
 {
     alarm(5);
@@ -1167,33 +1191,14 @@ int main(int argc, char* argv[])
 
         printf("%s", monsterflags.c_str());
 
-        if (me->willpower == 5000)
+        const auto willpower_description = _get_willpower_description(mon);
+        if (!willpower_description.empty())
         {
-            if (monsterresistances.empty())
-                monsterresistances = " | Res: ";
-            else
-                monsterresistances += ", ";
-            monsterresistances += colour(LIGHTMAGENTA, "will(invuln)");
-        }
-        else if (me->willpower < 0)
-        {
-            const int res = (mbase) ? mbase->willpower : me->willpower;
-            if (monsterresistances.empty())
-                monsterresistances = " | Res: ";
-            else
-                monsterresistances += ", ";
-            monsterresistances +=
-                colour(MAGENTA,
-                       "will(" + to_string(hd * res * 4 / 3 * -1) + ")");
-        }
-        else if (me->willpower > 0)
-        {
-            if (monsterresistances.empty())
-                monsterresistances = " | Res: ";
-            else
-                monsterresistances += ", ";
-            monsterresistances += colour(
-                MAGENTA, "will(" + to_string(me->willpower) + ")");
+          if (monsterresistances.empty())
+            monsterresistances = " | Res: ";
+          else
+            monsterresistances += ", ";
+          monsterresistances += willpower_description;
         }
 
         const resists_t res(shapeshifter ? me->resists :
