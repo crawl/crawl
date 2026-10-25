@@ -1450,7 +1450,7 @@ static function<void(bolt&, const monster&, int)> _zap_setup(spell_type spell)
 
 static void _setup_healing_beam(bolt &beam, const monster &caster)
 {
-    beam.damage   = dice_def(2, caster.spell_hd(SPELL_MINOR_HEALING) / 2);
+    beam.damage   = healing_beam_dice(caster.spell_hd(SPELL_MINOR_HEALING));
     beam.flavour  = BEAM_HEALING;
 }
 
@@ -2934,6 +2934,46 @@ dice_def upheaval_damage()
 dice_def death_rattle_damage()
 {
     return dice_def(2, 4);
+}
+
+dice_def healing_beam_dice(int spell_hd)
+{
+    return dice_def(2, spell_hd / 2);
+}
+
+static const int MAJOR_HEALING_MIN = 50;
+static const int WOODWEAL_MIN = 35;
+
+static int _major_healing_max(int spell_hd)
+{
+    return MAJOR_HEALING_MIN + spell_hd * 10 - 1;
+}
+
+static int _woodweal_max(int spell_hd)
+{
+    return WOODWEAL_MIN + spell_hd * 3 - 1;
+}
+
+string describe_mons_healing(spell_type spell, int spell_hd)
+{
+    switch (spell)
+    {
+    case SPELL_MINOR_HEALING:
+    case SPELL_HEAL_OTHER:
+    {
+        const dice_def dice = healing_beam_dice(spell_hd);
+        if (!dice.num || !dice.size)
+            return make_stringf("%d", HEALING_BEAM_BONUS);
+        return make_stringf("%dd%d+%d", dice.num, dice.size, HEALING_BEAM_BONUS);
+    }
+    case SPELL_MAJOR_HEALING:
+        return make_stringf("%d-%d", MAJOR_HEALING_MIN,
+                            _major_healing_max(spell_hd));
+    case SPELL_WOODWEAL:
+        return make_stringf("%d-%d", WOODWEAL_MIN, _woodweal_max(spell_hd));
+    default:
+        return "";
+    }
 }
 
 // Can 'binder' bind 'bound's soul with BIND_SOUL?
@@ -7945,14 +7985,22 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     case SPELL_WOODWEAL:
-        if (mons->heal(35 + random2(mons->spell_hd(spell_cast) * 3)))
+    {
+        const int amount = random_range(
+            WOODWEAL_MIN, _woodweal_max(mons->spell_hd(spell_cast)));
+        if (mons->heal(amount))
             simple_monster_message(*mons, " is healed.");
         return;
+    }
 
     case SPELL_MAJOR_HEALING:
-        if (mons->heal(50 + random2avg(mons->spell_hd(spell_cast) * 10, 2)))
+    {
+        const int amount = random_range(
+            MAJOR_HEALING_MIN, _major_healing_max(mons->spell_hd(spell_cast)), 2);
+        if (mons->heal(amount))
             simple_monster_message(*mons, " is healed.");
         return;
+    }
 
     case SPELL_BERSERKER_RAGE:
         mons->props.erase(BROTHERS_KEY);

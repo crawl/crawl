@@ -34,6 +34,9 @@ dice_def eruption_damage();
 dice_def upheaval_damage();
 dice_def death_rattle_damage();
 
+dice_def healing_beam_dice(int spell_hd);
+string describe_mons_healing(spell_type spell, int spell_hd);
+
 bool handle_mon_spell(monster* mons);
 
 bool mons_spell_is_spell(spell_type spell);

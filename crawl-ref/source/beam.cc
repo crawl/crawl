@@ -6367,7 +6367,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_HEALING:
-        if (mon->heal(3 + damage.roll()))
+        if (mon->heal(HEALING_BEAM_BONUS + damage.roll()))
         {
             if (mon->hit_points == mon->max_hit_points)
             {

@@ -476,6 +476,11 @@ static colour_t _spell_colour(spell_type spell)
             return LIGHTGRAY;
         case SPELL_LAUNCH_SPORANGIUM:
             return YELLOW;
+        case SPELL_MINOR_HEALING:
+        case SPELL_HEAL_OTHER:
+        case SPELL_MAJOR_HEALING:
+        case SPELL_WOODWEAL:
+            return LIGHTGREEN;
         default:
             break;
     }
@@ -564,6 +569,10 @@ string spell_effect_string(spell_type spell, const monster_info *mon_owner,
             zap_damage(ZAP_HOARFROST_BULLET, pow, true, false).size,
             zap_damage(ZAP_HOARFROST_BULLET_FINALE, pow, true, false).size);
     }
+
+    const string heal_str = describe_mons_healing(spell, hd);
+    if (!heal_str.empty())
+        return make_stringf("(%s)", heal_str.c_str());
 
     const dice_def dam = _spell_damage(spell, hd, pow);
     if (dam.num == 0 || dam.size == 0)

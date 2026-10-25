@@ -29,6 +29,7 @@ using std::vector;
 
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
                                     // from remaining range
+#define HEALING_BEAM_BONUS 3
 
 class monster;
 class ranged_attack;

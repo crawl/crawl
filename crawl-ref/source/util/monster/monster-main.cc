@@ -252,43 +252,13 @@ static string dice_def_string(dice_def dice)
                            make_stringf("%dd%d", dice.num, dice.size);
 }
 
-static string mi_calc_major_healing(monster* mons)
-{
-    const int min = 50;
-    const int max = min + mons->spell_hd(SPELL_MAJOR_HEALING) * 10 - 1;
-    return make_stringf("%d-%d", min, max);
-}
-
-// Fallback used for spells not having damage displayed in game
-static string mons_human_readable_spell_damage_string_fallback(monster* monster,
-                                                               spell_type sp)
-{
-    switch (sp)
-    {
-        case SPELL_MAJOR_HEALING:
-            return mi_calc_major_healing(monster);
-        case SPELL_MINOR_HEALING:
-        case SPELL_HEAL_OTHER:
-        {
-            const int pow = mons_spellpower(*monster, sp);
-            const bolt spell_beam = mons_spell_beam(monster, sp, pow, true);
-            return dice_def_string(spell_beam.damage) + "+3";
-        }
-
-        default:
-            return "";
-    }
-}
-
 /**
  * @return e.g.: "2d6", "5-12".
  */
-static string mons_human_readable_spell_damage_string(const monster_info* mi, monster* mon, spell_type sp)
+static string mons_human_readable_spell_damage_string(const monster_info* mi, spell_type sp)
 {
     string str = spell_effect_string(sp, mi);
-    if (str.empty())
-        return mons_human_readable_spell_damage_string_fallback(mon, sp);
-    if (str.front() == '(' && str.back() == ')')
+    if (!str.empty() && str.front() == '(' && str.back() == ')')
         str = str.substr(1, str.size() - 2);
     return str;
 }
@@ -388,7 +358,7 @@ static void record_spell_set(const monster_info* mi, monster* mp, set<string>& s
                 ret += make_stringf("head %d: ", k + 1)
                        + shorten_spell_name(rawname) + " (";
                 ret +=
-                    mons_human_readable_spell_damage_string(mi, mp, breath) + ")";
+                    mons_human_readable_spell_damage_string(mi, breath) + ")";
             }
             ret += "}";
 
@@ -402,7 +372,7 @@ static void record_spell_set(const monster_info* mi, monster* mp, set<string>& s
         ret += _spell_flag_string(slot);
 
         const string damage =
-            mons_human_readable_spell_damage_string(mi, mp, sp);
+            mons_human_readable_spell_damage_string(mi, sp);
         const auto range = damages.equal_range(spell_name);
         if (!damage.empty()
             && none_of(range.first, range.second, [&](const pair<string,string>& entry){ return entry.second == damage; }))
