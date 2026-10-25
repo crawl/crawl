@@ -395,7 +395,7 @@ int biased_random2(int max, int n)
 /** Mean of a binomial distribution.
  *
  * Returns the mean value of successes in a sequence of independent trials with
- * fixed probability. *
+ * fixed probability.
  *
  * @param n_trials The number of trials.
  * @param trial_prob The numerator of the probability of success of each trial.
