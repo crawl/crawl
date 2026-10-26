@@ -11,7 +11,6 @@
 #include "describe-spells.h"
 #include "describe.h" // get_item_description
 #include "fight.h" // spines_damage
-#include "ghost.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "items.h"

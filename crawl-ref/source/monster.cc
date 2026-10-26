@@ -3969,7 +3969,7 @@ int monster::res_corr() const
  *
  * @return              The monster's willpower value.
  */
-int monster::willpower() const
+int monster::willpower(bool items) const
 {
     if (mons_invuln_will(*this))
         return WILL_INVULN;
