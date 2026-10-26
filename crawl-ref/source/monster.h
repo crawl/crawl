@@ -403,7 +403,7 @@ public:
     bool res_constrict() const override;
     int res_blind()  const override;
     resists_t all_resists() const;
-    int willpower() const override;
+    int willpower(bool items = true) const override;
     bool no_tele(bool blink = false, bool /*include_temp*/ = true) const override;
     int slaying(bool throwing = false, bool random = true) const override;
     bool antimagic_susceptible() const override;

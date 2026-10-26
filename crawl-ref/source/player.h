@@ -917,7 +917,7 @@ public:
     bool res_petrify(bool include_temp = true) const override;
     bool res_constrict() const override;
     int res_blind() const override;
-    int willpower() const override;
+    int willpower(bool items = true) const override;
     bool no_tele(bool blink = false, bool include_temp = true) const override;
     string no_tele_reason(bool blink = false, bool include_temp = true) const;
     int slaying(bool throwing = false, bool random = true) const override;
@@ -1203,7 +1203,7 @@ int player_res_poison(bool allow_random = true, bool include_temp = true,
                       bool items = true, bool forms = true);
 int player_res_corrosion(bool allow_random = true, bool include_temp = true,
                          bool items = true);
-int player_willpower(bool include_temp = true);
+int player_willpower(bool include_temp = true, bool items = true);
 
 int player_shield_class(int scale = 1, bool random = true,
                         bool include_temp = true);

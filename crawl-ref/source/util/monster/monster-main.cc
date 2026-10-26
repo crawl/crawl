@@ -605,22 +605,11 @@ static string canned_reports[][2] = {
 // Partial copy from monster::willpower(), not accounting for items
 static std::string _get_willpower_description(const monster & mon)
 {
-    const int type_wl = (get_monster_data(mon.type))->willpower;
-    // Negative values get multiplied with monster hit dice.
-    int willpower = type_wl < 0 ?
-    mon.get_hit_dice() * -type_wl * 4 / 3 :
-    mons_class_willpower(mon.type, mon.base_monster);
-    // ghost demon struct overrides the monster values if it is non-negative
-    if (mons_is_ghost_demon(mon.type) && mon.ghost->willpower >= 0)
-     willpower = mon.ghost->willpower;
+    const auto willpower = mon.willpower();
     if (willpower == WILL_INVULN)
-    {
-      return colour(LIGHTMAGENTA, "will(invuln)");
-    }
+        return colour(LIGHTMAGENTA, "will(invuln)");
     if (willpower == 0)
-    {
-      return "";
-    }
+        return "";
     return colour(MAGENTA,
       make_stringf("will(%d)", willpower));
 }
