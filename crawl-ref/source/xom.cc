@@ -6137,6 +6137,16 @@ static void _xom_spellstride()
     take_note(Note(NOTE_XOM_EFFECT, -1, -1, msg), true);
 }
 
+static void _xom_mannequins()
+{
+    you.attribute[ATTR_XOM_BLESSING] = XOM_BLESSING_MANNEQUINS;
+
+    god_speaks(GOD_XOM, _get_xom_speech("mannequin").c_str());
+    mprf("Xom raises dopplegangers of enemies you slay yourself.");
+
+    take_note(Note(NOTE_XOM_EFFECT, -1, -1, "blessing of mannequins"), true);
+}
+
 // See if the player's blessing timer has been filled up. And if it has and the
 // tension is zero, give them a new blessing.
 void xom_check_blessing()
@@ -6157,6 +6167,7 @@ static const vector<pair<xom_event_type, int>> _blessing_weights =
     { XOM_BLESSING_CHAOS_EISEGESIS, 30},
     { XOM_BLESSING_GUARDIAN, 20},
     { XOM_BLESSING_SPELLSTRIDE, 10},
+    { XOM_BLESSING_MANNEQUINS, 10},
 };
 
 void xom_give_blessing()
@@ -6199,6 +6210,15 @@ string xom_remove_blessing()
             msg = make_stringf("Xom sends your guardian%s elsewhere.",
                                xom_guardians.size() > 1 ? "s" : "");
             xom_remove_guardians();
+            break;
+
+        case XOM_BLESSING_MANNEQUINS:
+            msg = "Xom cuts the strings.";
+            for (monster_iterator mi; mi; ++mi)
+                if (mi->was_created_by(MON_SUMM_XOM_MANNEQUIN))
+                    monster_die(**mi, KILL_TIMEOUT, NON_MONSTER);
+            you.props.erase(XOM_MANNEQUIN_TROUPE);
+            you.duration[DUR_XOM_MANNEQUIN_TIMER] = 0;
             break;
 
         default:
@@ -6307,6 +6327,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_BLESSING_CHAOS_EISEGESIS, { "eisegesis", [](int){ _xom_eisegesis();} }},
     { XOM_BLESSING_GUARDIAN, { "guardian", [](int){ _xom_guardian();} }},
     { XOM_BLESSING_SPELLSTRIDE, { "spellstride", [](int){ _xom_spellstride();} }},
+    { XOM_BLESSING_MANNEQUINS, { "mannequins", [](int){ _xom_mannequins();} }},
     { XOM_BLESSING_RANDOM, {"blessing", [](int){ xom_give_blessing();} }},
 };
 

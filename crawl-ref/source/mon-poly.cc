@@ -160,7 +160,7 @@ static bool _valid_type_morph(const monster &mons, monster_type new_mclass)
         || new_mclass != mons_species(new_mclass)
         || new_mclass == mons_species(mons.type)
         // They act as separate polymorph classes on their own.
-        || mons_class_is_zombified(new_mclass)
+        || mons_class_is_derived(new_mclass)
 
         // Pan lords aren't uniques, but they might as well be.
         || new_mclass == MONS_PANDEMONIUM_LORD
@@ -340,8 +340,8 @@ void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
     mons->number       = 0;
 
     // Note: define_monster(*) will clear out all enchantments! - bwr
-    if (!slimified && mons_is_zombified(*mons))
-        define_zombie(mons, targetc, mons->type);
+    if (!slimified && mons->is_derived())
+        define_derived_monster(mons, targetc, mons->type);
     else
     {
         mons->type         = targetc;

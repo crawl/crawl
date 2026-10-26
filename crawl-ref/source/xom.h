@@ -17,6 +17,7 @@ using std::string;
 #define XOM_BAZAAR_TRIP_COUNT "xom_bazaar_trip_count"
 #define XOM_CLEAVE_BRAND_KEY "xom_cleave_brand"
 #define XOM_SPELLSTRIDE_SPELL "spellstride_spell"
+#define XOM_MANNEQUIN_TROUPE "mannequin_troupe"
 
 struct item_def;
 
@@ -105,6 +106,7 @@ enum xom_event_type
     XOM_BLESSING_CHAOS_EISEGESIS,
     XOM_BLESSING_GUARDIAN,
     XOM_BLESSING_SPELLSTRIDE,
+    XOM_BLESSING_MANNEQUINS,
 
     // Not even a real blessing, but allows wizmode to select a new blessing at random.
     XOM_BLESSING_RANDOM,

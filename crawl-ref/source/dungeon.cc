@@ -5515,7 +5515,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
             return 0;
         }
 
-        const monster_type montype = mons_class_is_zombified(type)
+        const monster_type montype = mons_class_is_derived(type)
                                      ? fixup_zombie_type(type, mspec.monbase)
                                      : type;
 
@@ -5525,7 +5525,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
 
     if (type == RANDOM_MONSTER)
     {
-        if (mons_class_is_zombified(mspec.monbase))
+        if (mons_class_is_derived(mspec.monbase))
             type = pick_local_zombifiable_monster(mspec.place, mspec.monbase, coord_def());
         else
         {
@@ -5589,9 +5589,9 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
 
     mg.pos = where;
 
-    if (mons_class_is_zombified(mg.base_type))
+    if (mons_class_is_derived(mg.base_type))
     {
-        if (mons_class_is_zombified(mg.cls))
+        if (mons_class_is_derived(mg.cls))
             mg.base_type = MONS_NO_MONSTER;
         else
             swap(mg.base_type, mg.cls);

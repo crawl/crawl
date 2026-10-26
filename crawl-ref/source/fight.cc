@@ -556,6 +556,8 @@ bool mons_fight(monster *attacker, actor *defender, bool *did_hit, bool simu)
     ASSERT(attacker); // XXX: change to actor &attacker
     ASSERT(defender); // XXX: change to actor &defender
 
+    const bool was_firewood = defender->is_firewood();
+
     // A dead defender would result in us returning true without actually
     // taking an action. But allow just passing our turn if we try to attack a
     // monster mid-revival (since they're still actually supposed to be there).
@@ -628,6 +630,9 @@ bool mons_fight(monster *attacker, actor *defender, bool *did_hit, bool simu)
 
     if (attacker->type == MONS_ANCESTOR_KNIGHT && attacker->get_experience_level() >= 10)
         _knight_pinning_attack(attacker);
+
+    if (attacker->type == MONS_MANNEQUIN && !was_firewood)
+        attacker->hurt(attacker, div_rand_round(attacker->max_hit_points, 15));
 
     return true;
 }

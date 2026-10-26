@@ -1,0 +1,16 @@
+name: "mannequin"
+glyph: {char: "I", colour: green}
+flags: [no_regen]
+holiness: [nonliving]
+will: invuln
+attacks:
+ - {type: hit, damage: 1}
+hd: 1
+hp_10x: 60
+ac: 4
+ev: 15
+intelligence: human
+uses: starting_equipment
+size: medium
+shape: humanoid
+tile: mannequin_elf

@@ -343,8 +343,8 @@ struct monster_info_base
 struct monster_info : public monster_info_base
 {
     static bool less_than(const monster_info& m1,
-                          const monster_info& m2, bool zombified = true,
-                          bool fullname = true);
+                          const monster_info& m2,
+                          bool consolidate = false);
 
     static bool less_than_wrapper(const monster_info& m1,
                                   const monster_info& m2);

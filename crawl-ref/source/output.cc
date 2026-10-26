@@ -1881,14 +1881,14 @@ string mpr_monster_list(bool past, bool show_glyphs)
 
 #ifndef USE_TILE_LOCAL
 static void _print_next_monster_desc(const vector<monster_info>& mons,
-                                     int& start, bool zombified = false)
+                                     int& start, bool consolidate = false)
 {
     // Skip forward to past the end of the range of identical monsters.
     unsigned int end;
     for (end = start + 1; end < mons.size(); ++end)
     {
         // Array is sorted, so if !(m1 < m2), m1 and m2 are "equal".
-        if (monster_info::less_than(mons[start], mons[end], zombified, zombified))
+        if (monster_info::less_than(mons[start], mons[end], consolidate))
             break;
     }
     // Postcondition: all monsters in [start, end) are "equal"
@@ -1946,7 +1946,7 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
         {
             int desc_colour;
             string desc;
-            mons_to_string_pane(desc, desc_colour, zombified,
+            mons_to_string_pane(desc, desc_colour, !consolidate,
                                 mons, start, count);
             textcolour(desc_colour);
             if (strwidth(desc) > available && available > 1)
@@ -2003,7 +2003,7 @@ int update_monster_pane()
 
             lines_needed = mons.size();
             for (unsigned int i = 1; i < mons.size(); i++)
-                if (!monster_info::less_than(mons[i-1], mons[i], false, false))
+                if (!monster_info::less_than(mons[i-1], mons[i], true))
                     --lines_needed;
         }
 
@@ -2022,7 +2022,7 @@ int update_monster_pane()
             CGOTOXY(1, 1 + i_print, GOTO_MLIST);
             // i_mons is incremented by _print_next_monster_desc
             if (i_print >= skip_lines && i_mons < (int) mons.size())
-                _print_next_monster_desc(mons, i_mons, full_info);
+                _print_next_monster_desc(mons, i_mons, !full_info);
             else
                 CPRINTF("%s", blank.c_str());
         }

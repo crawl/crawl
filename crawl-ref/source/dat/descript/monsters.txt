@@ -2135,6 +2135,15 @@ A violet-scaled serpent with faintly glowing eyes. It thirsts for magic as well
 as flesh, and its bite can drink dry the magical reservoirs of even a powerful
 mage in no time.
 %%%%
+mannequin
+
+A wooden theatre prop that moves as if possessed by a glimmer of another
+creature's skill and memory. It leaps to and fro with grace that is far from
+wooden, but its abilities often prove too much for its body - slowly falling
+apart with every action it takes besides moving.
+
+It refuses to acknowledge any instructions besides its own instinct.
+%%%%
 manticore
 
 A hideous cross-breed, bearing the features of a human and a lion, with great

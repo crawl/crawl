@@ -1408,3 +1408,8 @@ Spellstride status
 
 You can rampage quickly towards monsters, and when you do, you spend 1 MP per
 step to create a living beam spell in your trail.
+%%%%
+Troupe status
+
+Slaying corporeal foes yourself will cause Xom to gift you mannequins in their
+image once the battle is ended.

@@ -377,8 +377,8 @@ bool monster::can_drown() const
 
 size_type monster::body_size(size_part_type psize, bool /* base */) const
 {
-    const monster_type base_type = mons_is_zombified(*this) ? base_monster
-                                                            : type;
+    const monster_type base_type = is_derived() ? base_monster
+                                                : type;
     return mons_class_body_size(base_type, psize, blob_size);
 }
 
@@ -1714,8 +1714,8 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
         return false;
 
     const monster_type genus = mons_genus(mons_species(true));
-    const monster_type base_type = mons_is_zombified(*this) ? base_monster
-                                                            : type;
+    const monster_type base_type = is_derived() ? base_monster
+                                                : type;
     equipment_slot slot = get_armour_slot(item);
 
     // Don't let centaurs try to put on boots, etc.
@@ -3111,15 +3111,15 @@ int monster::missile_repulsion() const
 }
 
 /**
- * What AC bonus or penalty does a given zombie type apply to the base
+ * What AC bonus or penalty does a given derived monster type apply to the base
  * monster type's?
  *
- * @param type      The type of zombie. (Skeleton, simulac, etc)
+ * @param type      The type of derived. (Skeleton, simulacrum, etc)
  * @return          The ac modifier to apply to the base monster's AC.
  */
-static int _zombie_ac_modifier(monster_type type)
+static int _derived_mon_ac_modifier(monster_type type)
 {
-    ASSERT(mons_class_is_zombified(type));
+    ASSERT(mons_class_is_derived(type));
 
     switch (type)
     {
@@ -3132,7 +3132,7 @@ static int _zombie_ac_modifier(monster_type type)
         case MONS_BOUND_SOUL:
             return 2;
         default:
-            die("invalid zombie type %d (%s)", type,
+            die("invalid derived monster type %d (%s)", type,
                 mons_class_name(type));
     }
 }
@@ -3154,8 +3154,8 @@ int monster::base_armour_class() const
     if (mons_is_ghost_demon(type))
         return ghost->ac;
 
-    // derived undead ac mods
-    if (mons_class_is_zombified(type))
+    // derived ac mods
+    if (mons_class_is_derived(type) && type != MONS_MANNEQUIN)
     {
         // handle weird zombies for which type isn't enough to reconstruct ac
         // (e.g. zombies with jobs & demonghost zombies)
@@ -3163,7 +3163,7 @@ int monster::base_armour_class() const
                                 props[ZOMBIE_BASE_AC_KEY].get_int() :
                                 get_monster_data(base_monster)->AC;
 
-        return _zombie_ac_modifier(type) + base_ac;
+        return _derived_mon_ac_modifier(type) + base_ac;
     }
 
     // Hepliaklqana ancestors scale with xl.
@@ -3259,20 +3259,20 @@ int monster::armour_class() const
 }
 
 /**
- * What EV bonus or penalty does a given zombie type apply to the base
+ * What EV bonus or penalty does a given derived monster type apply to the base
  * monster type's?
  *
- * @param type      The type of zombie. (Skeleton, simulac, etc)
+ * @param type      The type of derived monster. (Skeleton, simulacrum, etc)
  * @return          The ev modifier to apply to the base monster's EV.
  */
-static int _zombie_ev_modifier(monster_type type)
+static int _derived_mon_ev_modifier(monster_type type)
 {
-    ASSERT(mons_class_is_zombified(type));
+    ASSERT(mons_class_is_derived(type));
 
     switch (type)
     {
         case MONS_BOUND_SOUL:
-            return  2;
+            return 2;
         case MONS_ZOMBIE:
         case MONS_SIMULACRUM:
         case MONS_SPECTRAL_THING:
@@ -3280,7 +3280,7 @@ static int _zombie_ev_modifier(monster_type type)
         case MONS_DRAUGR:
             return -7;
         default:
-            die("invalid zombie type %d (%s)", type,
+            die("invalid derived monster type %d (%s)", type,
                 mons_class_name(type));
     }
 }
@@ -3297,7 +3297,7 @@ int monster::base_evasion() const
         return ghost->ev;
 
     // zombie, skeleton, etc ac mods
-    if (mons_class_is_zombified(type))
+    if (mons_class_is_derived(type) && type != MONS_MANNEQUIN)
     {
         // handle weird zombies for which type isn't enough to reconstruct ev
         // (e.g. zombies with jobs & demonghost zombies)
@@ -3305,7 +3305,7 @@ int monster::base_evasion() const
                                 props[ZOMBIE_BASE_EV_KEY].get_int() :
                                 get_monster_data(base_monster)->ev;
 
-        return _zombie_ev_modifier(type) + base_ev;
+        return _derived_mon_ev_modifier(type) + base_ev;
     }
 
     const int base_ev = get_monster_data(type)->ev;
@@ -4094,7 +4094,7 @@ bool monster::is_banished() const
 
 monster_type monster::mons_species(bool zombie_base) const
 {
-    if (zombie_base && mons_class_is_zombified(type))
+    if (zombie_base && mons_class_is_derived(type))
         return ::mons_species(base_monster);
     return ::mons_species(type);
 }
@@ -4913,6 +4913,11 @@ bool monster::is_actual_spellcaster() const
 bool monster::is_shapeshifter() const
 {
     return has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER);
+}
+
+bool monster::is_derived() const
+{
+    return mons_class_is_derived(type);
 }
 
 void monster::scale_hp(int num, int den)
@@ -6789,7 +6794,7 @@ bool monster::is_dragonkind() const
     if (actor::is_dragonkind())
         return true;
 
-    if (mons_is_zombified(*this) && mons_class_is_draconic(base_monster))
+    if (is_derived() && mons_class_is_draconic(base_monster))
         return true;
 
     if (mons_is_ghost_demon(type) && species::is_draconian(ghost->species))
@@ -6810,6 +6815,7 @@ bool monster::is_jumpy() const
 {
     return type == MONS_JUMPING_SPIDER
         || type == MONS_BOULDER_BEETLE
+        || type == MONS_MANNEQUIN
         || mons_species() == MONS_BARACHI;
 }
 
@@ -6825,6 +6831,9 @@ int monster::spell_hd(spell_type spell) const
         if (type == MONS_ANCESTOR_ELEMENTALIST && get_experience_level() >= 13)
             hd += 5;
     }
+    if (type == MONS_MANNEQUIN)
+        hd = max(1, hd / 2);
+
     if (has_ench(ENCH_IDEALISED))
         hd *= 2;
     if (has_ench(ENCH_FIGMENT))
@@ -6888,7 +6897,7 @@ bool monster::angered_by_attacks() const
 {
     return !has_ench(ENCH_FRENZIED)
             && !mons_is_avatar(type)
-            && !mons_class_is_zombified(type)
+            && !mons_class_is_derived(type)
             && !is_divine_companion()
             && !((holiness() & MH_NONLIVING) && mons_intel(*this) == I_BRAINLESS);
 }

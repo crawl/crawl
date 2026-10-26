@@ -191,6 +191,8 @@ static int _get_mons_colour(const monster_info& mi)
             col = WHITE;
         else if (mi.type == MONS_SPECTRAL_THING && mi.hd > 10)
             col = LIGHTGREEN;
+        else if (mi.type == MONS_MANNEQUIN && mi.hd > 10)
+            col = LIGHTGREEN;
     }
 
     if (mi.is(MB_ROLLING))

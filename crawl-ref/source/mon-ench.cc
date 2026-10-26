@@ -1477,7 +1477,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
 
         // Zombies don't take damage from flopping about on land.
-        if (mons_is_zombified(*this))
+        if (is_derived())
             break;
 
         hurt(me.agent(), 1 + random2(5), BEAM_NONE);

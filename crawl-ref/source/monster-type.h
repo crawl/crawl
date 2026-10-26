@@ -355,6 +355,7 @@ enum monster_type                      // env.mons[].type
     MONS_PLATINUM_PARAGON,
     MONS_WALKING_ALEMBIC,
     MONS_SOLAR_EMBER,
+    MONS_MANNEQUIN,
 #endif
     MONS_ORB_OF_FIRE,    // Swords renamed to fit -- bwr
 #if TAG_MAJOR_VERSION > 34
@@ -1453,6 +1454,7 @@ enum monster_type                      // env.mons[].type
     MONS_JADE_CRYSTAL_FIRE,
     MONS_JADE_CRYSTAL_ICE,
     MONS_HYPNOTAIL,
+    MONS_MANNEQUIN,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

@@ -200,6 +200,9 @@ public:
     // Has ENCH_SHAPESHIFTER or ENCH_GLOWING_SHAPESHIFTER.
     bool is_shapeshifter() const;
 
+    // Whether this monster is of a derived type, such as a zombie or simulacrum
+    bool is_derived() const;
+
     int threat_range(bool include_lof_requiring = true, bool include_lof_ignoring = true) const;
 
 #ifdef DEBUG_ENCH_CACHE_DIAGNOSTICS

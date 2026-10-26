@@ -4213,7 +4213,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec,
             {
                 // Is this a modified monster?
                 if (nspec.monbase != MONS_PROGRAM_BUG
-                    && mons_class_is_zombified(static_cast<monster_type>(nspec.type)))
+                    && mons_class_is_derived(static_cast<monster_type>(nspec.type)))
                 {
                     mspec.monbase = static_cast<monster_type>(nspec.type);
                 }
@@ -4367,14 +4367,14 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
 {
     static const char *zombie_types[] =
     {
-        " zombie", " draugr", " simulacrum", " spectre", nullptr
+        " zombie", " draugr", " simulacrum", " spectre", " mannequin", nullptr
     };
 
     // This order must match zombie_types, indexed from one.
     static const monster_type zombie_montypes[] =
     {
         MONS_PROGRAM_BUG, MONS_ZOMBIE, MONS_DRAUGR, MONS_SIMULACRUM,
-        MONS_SPECTRAL_THING,
+        MONS_SPECTRAL_THING, MONS_MANNEQUIN,
     };
 
     int mod = ends_with(s, zombie_types);
@@ -4411,6 +4411,10 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
     spec.type = zombie_montypes[mod];
     switch (spec.type)
     {
+    case MONS_MANNEQUIN:
+        if (!mons_is_unique(spec.monbase))
+            return;
+        break;
     case MONS_SIMULACRUM:
     case MONS_SPECTRAL_THING:
         if (mons_class_can_be_spectralised(spec.monbase))

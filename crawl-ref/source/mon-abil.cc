@@ -765,7 +765,7 @@ static bool _will_starcursed_scream(monster* mon)
 static bool _lost_soul_affectable(const monster &mons)
 {
     // zombies are boring
-    if (mons_is_zombified(mons))
+    if (mons.is_derived())
         return false;
 
     // undead can be reknit, naturals ghosted, everyone else is out of luck

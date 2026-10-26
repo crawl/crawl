@@ -282,7 +282,7 @@ static void _translate_tentacle_ref(monster_info& mi, const monster* m,
         // If the tentacle and the other segment are no longer adjacent
         // (distortion etc.), just treat them as not connected.
         if (adjacent(m->pos(), h_pos)
-            && !mons_is_zombified(*other))
+            && !other->is_derived())
         {
             mi.props[key] = h_pos - m->pos();
         }
@@ -946,8 +946,8 @@ int monster_info::get_known_max_hp() const
         return props[KNOWN_MAX_HP_KEY].get_int();
 
     const int scale = 100;
-    const int base_avg_hp = mons_class_is_zombified(type) ?
-                            derived_undead_avg_hp(type, hd, scale) :
+    const int base_avg_hp = mons_class_is_derived(type) ?
+                            derived_mon_avg_hp(type, hd, scale) :
                             mons_avg_hp(type, scale);
     int mhp = base_avg_hp;
     if (props.exists(VAULT_HD_KEY))
@@ -1067,7 +1067,7 @@ string monster_info::_core_name() const
 {
     monster_type nametype = type;
 
-    if (mons_class_is_zombified(type))
+    if (mons_class_is_derived(type))
     {
         if (mons_is_unique(base_type))
             nametype = mons_species(base_type);
@@ -1192,7 +1192,7 @@ string monster_info::_apply_adjusted_description(description_level_type desc,
 string monster_info::common_name(description_level_type desc) const
 {
     const string core = _core_name();
-    const bool nocore = mons_class_is_zombified(type)
+    const bool nocore = mons_class_is_derived(type)
                           && mons_is_unique(base_type)
                           // XXX: Hack to keep zombified Gehenna SoH's name.
                           && (base_type == mons_species(base_type)
@@ -1282,6 +1282,9 @@ string monster_info::common_name(description_level_type desc) const
         if (base_type != type)
             ss << (nocore ? "" : " ") << "shaped block of ice";
         break;
+    case MONS_MANNEQUIN:
+        ss << " manequinn";
+        break;
     default:
         break;
     }
@@ -1352,12 +1355,12 @@ string monster_info::full_name(description_level_type desc) const
 bool monster_info::less_than_wrapper(const monster_info& m1,
                                      const monster_info& m2)
 {
-    return monster_info::less_than(m1, m2, true);
+    return monster_info::less_than(m1, m2, false);
 }
 
 // Sort monsters by (in that order): attitude, difficulty, type, visibility status
 bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
-                             bool zombified, bool fullname)
+                             bool consolidate)
 {
     // This awkward ordering (checking m2 before m1) is required to satisfy
     // std::sort's contract. Specifically, if m1 and m2 are both ancestors
@@ -1376,7 +1379,7 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
 
     // Force plain but different coloured draconians to be treated like the
     // same sub-type.
-    if (!zombified
+    if (consolidate
         && mons_is_base_draconian(m1.type)
         && mons_is_base_draconian(m2.type))
     {
@@ -1417,9 +1420,9 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
     if (m1.is(MB_SPECTRALISED) != m2.is(MB_SPECTRALISED))
         return m2.is(MB_SPECTRALISED);
 
-    if (zombified)
+    if (!consolidate)
     {
-        if (mons_class_is_zombified(m1.type))
+        if (mons_class_is_derived(m1.type))
         {
             // Because of the type checks above, if one of the two is zombified, so
             // is the other, and of the same type.
@@ -1445,7 +1448,7 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
     if (m1.is(MB_REMEMBERED_INVIS) != m2.is(MB_REMEMBERED_INVIS))
         return m2.is(MB_REMEMBERED_INVIS);
 
-    if (fullname || mons_is_pghost(m1.type))
+    if (!consolidate || mons_is_pghost(m1.type))
         return m1.mname < m2.mname;
 
     return false;
@@ -1782,7 +1785,7 @@ bool monster_info::can_regenerate() const
 
 int monster_info::reach_range(bool items) const
 {
-    const monsterentry *e = get_monster_data(mons_class_is_zombified(type)
+    const monsterentry *e = get_monster_data(mons_class_is_derived(type)
                                              ? base_type : type);
     ASSERT(e);
     int range = 1;

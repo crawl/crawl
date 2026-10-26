@@ -5346,6 +5346,14 @@ void mons_post_cast_effects(monster* mons, spell_type spell_cast, mon_spell_slot
             }
         }
     }
+
+    // Don't make mannequins fall apart merely on jumping back and forth (which
+    // they do a lot).
+    if (mons->type == MONS_MANNEQUIN
+        && !is_monster_net_escape_spell(spell_cast))
+    {
+        mons->hurt(mons, div_rand_round(mons->max_hit_points, 15));
+    }
 }
 
 /**

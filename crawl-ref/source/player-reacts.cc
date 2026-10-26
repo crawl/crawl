@@ -495,6 +495,51 @@ static void _handle_hoarding()
     }
 }
 
+// Hande Xom delayed gifting of a mannequin army (and tracking of continuous
+// time spent with no enemies in sight)
+static void _handle_xom_mannequins(int time_taken)
+{
+    if (you.attribute[ATTR_XOM_BLESSING] != XOM_BLESSING_MANNEQUINS)
+        return;
+
+    const bool hostiles = there_are_monsters_nearby(true, true, false);
+    if (hostiles)
+        you.duration[DUR_XOM_MANNEQUIN_TIMER] = 70;
+    else if (!hostiles && you.duration[DUR_XOM_MANNEQUIN_TIMER])
+    {
+        if (you.duration[DUR_XOM_MANNEQUIN_TIMER] <= time_taken)
+        {
+            you.duration[DUR_XOM_MANNEQUIN_TIMER] = 0;
+
+            CrawlVector& mon_list = you.props[XOM_MANNEQUIN_TROUPE].get_vector();
+            int created_count = 0;
+            for (int i = 0; i < mon_list.size(); ++i)
+            {
+                mgen_data mg = mgen_data(MONS_MANNEQUIN, BEH_COPY, you.pos(),
+                                          MHITYOU, MG_AUTOFOE | MG_FORCE_PLACE)
+                         .set_summoned(&you, MON_SUMM_XOM_MANNEQUIN, 0, false)
+                         .set_range(1, LOS_RADIUS);
+                mg.base_type = static_cast<monster_type>(mon_list[i].get_int());
+
+                if (create_monster(mg))
+                    ++created_count;
+            }
+
+            if (created_count > 1 && one_chance_in(8))
+                god_speaks(GOD_XOM, getSpeakString("Xom mannequin gift").c_str());
+
+            if (created_count > 1)
+                mpr("Some mannequins begin to dance....");
+            else if (created_count > 0)
+                mpr("A mannequin begins to dance....");
+
+            you.props.erase(XOM_MANNEQUIN_TROUPE);
+        }
+        else
+            you.duration[DUR_XOM_MANNEQUIN_TIMER] -= time_taken;
+    }
+}
+
 /**
  * Player reactions after monster and cloud activities in the turn are finished.
  */
@@ -564,7 +609,6 @@ void player_reacts_to_monsters()
             mprf(MSGCH_DURATION, "Your orb has finished recharging its magic.");
     }
 
-
     if (_decrement_a_duration(DUR_PHALANX_BARRIER, you.time_taken))
         you.redraw_armour_class = true;
 
@@ -576,6 +620,8 @@ void player_reacts_to_monsters()
 
     if (you_worship(GOD_XOM))
         xom_check_guardian_revival();
+
+    _handle_xom_mannequins(you.time_taken);
 
     announce_beogh_conversion_offer();
 

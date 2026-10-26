@@ -271,6 +271,10 @@ static void _transit_xom_followers(level_id destination)
             }
         }
     }
+
+    // No pulling mannequins between floors, even if you do it during the delay
+    // between killing and gifting.
+    you.props.erase(XOM_MANNEQUIN_TROUPE);
 }
 
 static void _complete_zig()

@@ -1837,9 +1837,9 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
 
     const monster orig = *mon;
 
-    // Use the original monster type as the zombified type here, to get
+    // Use the original monster type as the derived type here, to get
     // the proper stats from it.
-    define_zombie(mon, mon->type, MONS_BOUND_SOUL);
+    define_derived_monster(mon, mon->type, MONS_BOUND_SOUL);
 
     if (orig.has_hydra_multi_attack())
         mons_set_starting_heads(*mon, orig.props[ORIGINAL_HEADS_KEY].get_int());

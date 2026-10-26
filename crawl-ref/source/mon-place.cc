@@ -520,8 +520,9 @@ monster_type fixup_zombie_type(const monster_type cls,
     // habitat they had in life.
     // XXX: consider replacing the latter check with monster_class_flies(cls)
     // and adjusting vaults that use spectral krakens.
-    if (!mons_class_is_zombified(cls) || cls == MONS_BOUND_SOUL
-        || cls == MONS_SPECTRAL_THING || cls == MONS_SIMULACRUM)
+    if (!mons_class_is_derived(cls) || cls == MONS_BOUND_SOUL
+        || cls == MONS_SPECTRAL_THING || cls == MONS_SIMULACRUM
+        || cls == MONS_MANNEQUIN)
     {
         return cls;
     }
@@ -864,6 +865,27 @@ static void _place_twister_clouds(monster *mon)
     polar_vortex_damage(mon, -10);
 }
 
+// Give melee-range mannequins Blink Close, give ranged attacking mannequins
+// Blink Range, and increase overall cast rates of mannequin spells to make
+// mages more consistent at doing their thing while they're alive.
+static void _adjust_mannequin_spells(monster* mon)
+{
+    if (mon->threat_range(true, true) > 2)
+    {
+        mon->spells.push_back({SPELL_BLINK_RANGE, 30, MON_SPELL_NATURAL | MON_SPELL_SHORT_RANGE});
+        mon->flags |= MF_CAUTIOUS;
+    }
+    else
+        mon->spells.push_back({SPELL_BLINK_CLOSE, 35, MON_SPELL_NATURAL | MON_SPELL_LONG_RANGE});
+
+    int total_freq = 0;
+    for (mon_spell_slot& spell : mon->spells)
+        total_freq += spell.freq;
+
+    mon->props[CUSTOM_SPELLS_KEY] = true;
+    normalize_spell_freq(mon->spells, min(150, total_freq * 3 / 2));
+}
+
 static void _place_monster_maybe_override_god(monster *mon, monster_type cls,
                                               level_id place)
 {
@@ -1052,14 +1074,14 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     }
 
     // Generate a brand shiny new monster, or zombie.
-    if (mons_class_is_zombified(mg.cls))
+    if (mons_class_is_derived(mg.cls))
     {
         monster_type ztype = mg.base_type;
 
         if (ztype == MONS_NO_MONSTER || ztype == RANDOM_MONSTER)
             ztype = pick_local_zombifiable_monster(place, mg.cls, fpos);
 
-        define_zombie(mon, ztype, mg.cls);
+        define_derived_monster(mon, ztype, mg.cls);
 
         if (!mg.mname.empty())
             name_zombie_from_class(*mon, ztype, mg.mname);
@@ -1278,6 +1300,12 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
         mon->colour = wpn->get_colour();
     }
+    // Give them items by pretending to be the base monster
+    else if (mg.cls == MONS_MANNEQUIN)
+    {
+        unwind_var<monster_type> rewind(mon->type, mon->base_monster);
+        give_item(mon, place.absdepth());
+    }
     else if (mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT
              && !mg.props.exists(KIKU_WRETCH_KEY))
     {
@@ -1479,7 +1507,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         if (mg.summon_type == SPELL_SPECTRAL_CLOUD)
             blame_prefix = "called from beyond by ";
     }
-    else if (mons_class_is_zombified(mg.cls))
+    else if (mons_class_is_derived(mg.cls))
         blame_prefix = "animated by ";
     else if (mg.cls == MONS_ELDRITCH_TENTACLE
              || mg.cls == MONS_ELDRITCH_TENTACLE_SEGMENT)
@@ -1582,6 +1610,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // done after come in view ones.
     if (mon->type == MONS_TWISTER && !dont_place)
         _place_twister_clouds(mon);
+
+    if (mon->type == MONS_MANNEQUIN)
+        _adjust_mannequin_spells(mon);
 
     if (!(mg.flags & MG_FORCE_BEH)
         && !crawl_state.game_is_arena()
@@ -1695,14 +1726,14 @@ bool zombie_picker::veto(monster_type mt)
 static bool _mc_too_slow_for_slow_zombies(monster_type mon)
 {
     // zombies slower than the player are boring!
-    return mons_class_zombie_base_speed(mons_species(mon), true) < BASELINE_DELAY;
+    return mons_class_derived_base_speed(MONS_ZOMBIE, mons_species(mon)) < BASELINE_DELAY;
 }
 
 // Use this one for spectrals and draugr, who don't get a speed penalty.
 static bool _mc_too_slow_for_normal_undead(monster_type mon)
 {
     // zombies slower than the player are boring!
-    return mons_class_zombie_base_speed(mons_species(mon), false) < BASELINE_DELAY;
+    return mons_class_base_speed(mons_species(mon)) < BASELINE_DELAY;
 }
 
 static bool _mc_bad_wretch(monster_type mon)
@@ -1758,7 +1789,8 @@ monster_type pick_local_zombifiable_monster(level_id place,
     place.depth = min(place.depth, branch_zombie_cap(place.branch));
     place.depth = max(1, place.depth);
 
-    const bool is_slow = (cs != MONS_SPECTRAL_THING && cs != MONS_DRAUGR);
+    const bool is_slow = (cs != MONS_SPECTRAL_THING && cs != MONS_DRAUGR
+                          && cs != MONS_MANNEQUIN);
     mon_pick_vetoer veto = for_wretch ? _mc_bad_wretch :
                            really_in_d ? (is_slow ? _mc_too_slow_for_slow_zombies
                                                   : _mc_too_slow_for_normal_undead)
@@ -1776,23 +1808,23 @@ monster_type pick_local_zombifiable_monster(level_id place,
     return mt;
 }
 
-void roll_zombie_hp(monster* mon)
+void roll_derived_mon_hp(monster* mon)
 {
     ASSERT(mon); // TODO: change to monster &mon
-    ASSERT(mons_class_is_zombified(mon->type));
+    ASSERT(mons_class_is_derived(mon->type));
 
-    const int avg_hp_10x = derived_undead_avg_hp(mon->type,
-                                                 mon->get_hit_dice());
+    const int avg_hp_10x = derived_mon_avg_hp(mon->type,
+                                              mon->get_hit_dice());
     const int hp = hit_points(avg_hp_10x);
     mon->max_hit_points = max(hp, 1);
     mon->hit_points     = mon->max_hit_points;
 }
 
-void define_zombie(monster* mon, monster_type ztype, monster_type cs)
+void define_derived_monster(monster* mon, monster_type ztype, monster_type cs)
 {
     ASSERT(ztype != MONS_NO_MONSTER);
     ASSERT(!invalid_monster_type(ztype));
-    ASSERT(mons_class_is_zombified(cs));
+    ASSERT(mons_class_is_derived(cs));
 
     // Set type to the original type to calculate appropriate stats.
     mon->type         = ztype;
@@ -1801,11 +1833,14 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
 
     // Zombies and such can't cast spells, except they should still be
     // able to make tentacles!
-    monster_spells oldspells = mon->spells;
-    mon->spells.clear();
-    for (const mon_spell_slot &slot : oldspells)
-        if (slot.spell == SPELL_CREATE_TENTACLES)
-            mon->spells.push_back(slot);
+    if (cs != MONS_MANNEQUIN)
+    {
+        monster_spells oldspells = mon->spells;
+        mon->spells.clear();
+        for (const mon_spell_slot &slot : oldspells)
+            if (slot.spell == SPELL_CREATE_TENTACLES)
+                mon->spells.push_back(slot);
+    }
 
     // handle zombies with jobs & ghostdemon zombies; they otherwise
     // wouldn't store enough information for us to recreate them right.
@@ -1819,10 +1854,7 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
     mon->base_monster = ztype;
 
     mon->colour       = COLOUR_INHERIT;
-    mon->speed        = ((cs == MONS_SPECTRAL_THING || cs == MONS_BOUND_SOUL
-                          || cs == MONS_DRAUGR)
-                            ? mons_class_base_speed(mon->base_monster)
-                            : mons_class_zombie_base_speed(mon->base_monster, true));
+    mon->speed        = mons_class_derived_base_speed(cs, mon->base_monster);
 
     // Turn off all melee ability flags except dual-wielding.
     mon->flags       &= (~MF_MELEE_MASK | MF_TWO_WEAPONS);
@@ -1833,7 +1865,7 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
     if (!mons_class_can_regenerate(mon->base_monster))
         mon->flags   |= MF_NO_REGEN;
 
-    roll_zombie_hp(mon);
+    roll_derived_mon_hp(mon);
 }
 
 /// Under what conditions should a band spawn with a monster?
@@ -3177,8 +3209,8 @@ bool god_hates_monster(monster_type type)
     dummy.type = type;
 
     // no spellcasting/etc zombies currently; pick something that always works
-    if (mons_class_is_zombified(type))
-        define_zombie(&dummy, MONS_GOBLIN, type);
+    if (mons_class_is_derived(type))
+        define_derived_monster(&dummy, MONS_GOBLIN, type);
     else
         define_monster(dummy);
 

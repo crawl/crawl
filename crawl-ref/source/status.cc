@@ -1465,6 +1465,18 @@ static void _describe_xom_blessing(status_info& inf)
                                           spell_title(static_cast<spell_type>(you.props[XOM_SPELLSTRIDE_SPELL].get_int())));
             break;
 
+        case XOM_BLESSING_MANNEQUINS:
+        {
+            const int count = you.props.exists(XOM_MANNEQUIN_TROUPE)
+                                ? you.props[XOM_MANNEQUIN_TROUPE].get_vector().size() : 0;
+            inf.light_text = "Troupe";
+            string count_msg = make_stringf("<lightblue>(+%d)</lightblue>", count);
+            inf.light_text_formatted = make_stringf("<red>T<yellow>r<green>o<cyan>u<lightblue>p<magenta>e %s",
+                                                    count > 0 ? count_msg.c_str() : "");
+            inf.short_text = "blessing of mannequins";
+            break;
+        }
+
         default:
         break;
     }

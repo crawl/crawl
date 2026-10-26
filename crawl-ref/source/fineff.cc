@@ -396,12 +396,12 @@ protected:
     string name;
 };
 
-class make_derived_undead_fineff : public final_effect
+class make_derived_mon_fineff : public final_effect
 {
 public:
     void fire() override;
 
-    make_derived_undead_fineff(coord_def pos, mgen_data _mg, int _xl,
+    make_derived_mon_fineff(coord_def pos, mgen_data _mg, int _xl,
         const string& _agent, const string& _msg,
         function<bool ()> _should_trigger, bool _act_immediately)
         : final_effect(0, 0, pos), mg(_mg), experience_level(_xl),
@@ -801,16 +801,16 @@ void schedule_infestation_death_fineff(coord_def pos, const string& name)
     _schedule_final_effect(new infestation_death_fineff(pos, name));
 }
 
-void schedule_make_derived_undead_fineff(coord_def pos, mgen_data mg, int xl,
-                                         const string& agent,
-                                         const string& msg,
-                                         function<bool ()> should_trigger,
-                                         bool act_immediately)
+void schedule_make_derived_mon_fineff(coord_def pos, mgen_data mg, int xl,
+                                      const string& agent,
+                                      const string& msg,
+                                      function<bool ()> should_trigger,
+                                      bool act_immediately)
 {
-    _schedule_final_effect(new make_derived_undead_fineff(pos, mg, xl, agent,
-                                                          msg,
-                                                          should_trigger,
-                                                          act_immediately));
+    _schedule_final_effect(new make_derived_mon_fineff(pos, mg, xl, agent,
+                                                       msg,
+                                                       should_trigger,
+                                                       act_immediately));
 }
 
 void schedule_mummy_death_curse_fineff(const actor* attack,
@@ -1558,35 +1558,35 @@ void infestation_death_fineff::fire()
     }
 }
 
-void make_derived_undead_fineff::fire()
+void make_derived_mon_fineff::fire()
 {
     if (!should_trigger())
         return;
 
-    monster *undead = create_monster(mg);
-    if (!undead)
+    monster *mon = create_monster(mg);
+    if (!mon)
         return;
 
-    if (!message.empty() && you.can_see(*undead))
+    if (!message.empty() && you.can_see(*mon))
         mpr(message);
 
     // If the original monster has been levelled up, its HD might be
     // different from its class HD, in which case its HP should be
     // rerolled to match.
-    if (undead->get_experience_level() != experience_level)
+    if (mon->get_experience_level() != experience_level)
     {
-        undead->set_hit_dice(max(experience_level, 1));
-        roll_zombie_hp(undead);
+        mon->set_hit_dice(max(experience_level, 1));
+        roll_derived_mon_hp(mon);
     }
 
     if (!agent.empty())
-        mons_add_blame(undead, "animated by " + agent);
+        mons_add_blame(mon, "animated by " + agent);
 
     if (act_immediately)
     {
-        undead->flags &= ~MF_JUST_SUMMONED;
-        undead->speed_increment = 80;
-        queue_monster_for_action(undead);
+        mon->flags &= ~MF_JUST_SUMMONED;
+        mon->speed_increment = 80;
+        queue_monster_for_action(mon);
     }
 }
 

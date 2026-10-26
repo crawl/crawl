@@ -314,7 +314,7 @@ int max_corpse_chunks(monster_type mc);
 int mons_class_base_speed(monster_type mc);
 mon_energy_usage mons_class_energy(monster_type mc);
 mon_energy_usage mons_energy(const monster& mon);
-int mons_class_zombie_base_speed(monster_type zombie_base_mc, bool slow);
+int mons_class_derived_base_speed(monster_type derived_type, monster_type base_mon);
 int mons_base_speed(const monster& mon);
 
 bool monster_class_flies(monster_type mc);
@@ -326,8 +326,7 @@ bool mons_class_fast_regen(monster_type mc);
 int mons_class_regen_amount(monster_type mc);
 int mons_leash_range(monster_type mc);
 int mons_zombie_size(monster_type mc);
-monster_type mons_zombie_base(const monster& mon);
-bool mons_class_is_zombified(monster_type mc);
+bool mons_class_is_derived(monster_type mc);
 bool mons_class_is_animated_weapon(monster_type type);
 bool mons_class_is_animated_object(monster_type type);
 bool mons_class_is_remnant(monster_type type);
@@ -337,12 +336,13 @@ bool mons_class_leaves_hide(monster_type mc);
 bool mons_class_leaves_wand(monster_type mc);
 bool mons_class_leaves_organ(monster_type mc);
 bool mons_class_has_soul(monster_type mc);
-bool mons_is_zombified(const monster& mons);
 bool mons_class_can_be_zombified(monster_type mc);
 bool mons_can_be_zombified(const monster& mon);
 bool mons_class_can_be_spectralised(monster_type mc, bool divine = false);
 bool mons_can_be_spectralised(const monster& mon, bool divine = false,
                               bool only_known = false);
+bool mons_class_can_be_mannequin(monster_type mc);
+bool mons_can_be_mannequin(const monster& mon, bool only_known = false);
 bool mons_class_can_use_stairs(monster_type mc);
 bool mons_class_can_use_transporter(monster_type mc);
 bool mons_can_use_stairs(const monster& mon,
@@ -583,7 +583,7 @@ bool apply_visible_monsters(monster_func mf,
                             const coord_def& center = you.pos(),
                             los_type los = LOS_NO_TRANS);
 
-int derived_undead_avg_hp(monster_type mtype, int hd, int scale = 10);
+int derived_mon_avg_hp(monster_type mtype, int hd, int scale = 10);
 
 int touch_of_beogh_hp_mult(const monster& mon);
 

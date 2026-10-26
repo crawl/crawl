@@ -320,5 +320,6 @@ enum duration_type
     DUR_IRRITATED,
     DUR_RAMPAGE_MAX,
     DUR_PLINKING,
+    DUR_XOM_MANNEQUIN_TIMER,
     NUM_DURATIONS
 };

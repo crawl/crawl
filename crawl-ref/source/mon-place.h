@@ -75,9 +75,9 @@ monster_type pick_local_zombifiable_monster(level_id place,
 
 monster_type pick_local_wretch(level_id place);
 
-void roll_zombie_hp(monster* mon);
+void roll_derived_mon_hp(monster* mon);
 
-void define_zombie(monster* mon, monster_type ztype, monster_type cs);
+void define_derived_monster(monster* mon, monster_type ztype, monster_type cs);
 
 class level_id;
 
