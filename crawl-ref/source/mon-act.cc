@@ -2667,7 +2667,7 @@ static void _post_monster_move(monster* mons)
     // dormant if it is following a player who was adjacent to it at the start
     // of the player's own move)
     if (mons->type == MONS_BLAZEHEART_GOLEM)
-         _check_blazeheart_golem_link(*mons);
+        _check_blazeheart_golem_link(*mons);
 
     if (mons->type == MONS_WATER_NYMPH
         || mons->type == MONS_ELEMENTAL_WELLSPRING
