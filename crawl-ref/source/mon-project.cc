@@ -339,6 +339,7 @@ static void _iood_common_beam_setup(monster& orb, const coord_def& pos, bolt& be
     beam.source = pos;
     beam.target = pos;
     beam.hit = AUTOMATIC_HIT;
+    beam.animate = false;
     beam.source_name = orb.props[IOOD_CASTER].get_string();
 }
 

@@ -1200,7 +1200,6 @@ static void _fire_spike_launcher(actor* target, const actor* agent,
             break;
     }
 
-    flash_tile(target->pos(), CYAN);
     spike.fire();
 }
 

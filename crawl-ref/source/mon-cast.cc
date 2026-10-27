@@ -864,6 +864,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
                 if (!mi->is_peripheral() && could_harm_enemy(&caster, *mi))
                     targs.push_back(*mi);
 
+            beam.animate = false;
             const unsigned int num_targs = (targs.size() * random_range(30, 50) / 100)
                                            + 1;
             shuffle_array(targs);
@@ -989,9 +990,8 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             const coord_def targ = _mons_bomblet_target(caster);
             beam.source = targ;
             beam.target = targ;
-            beam.draw_delay = 80;
+            beam.draw_delay = 100;
             beam.fire();
-            flash_tile(targ, WHITE, 110, TILE_BOLT_BOMBLET_LAUNCH);
             monarch_deploy_bomblet(caster, targ, true);
         },
         _zap_setup(SPELL_DEPLOY_BOMBLET) } },
@@ -1767,6 +1767,7 @@ static bool _cast_seismic_stomp(const monster& caster, bolt& beam, bool check_on
     }
     animation_delay(50, true);
 
+    beam.animate = false;
     for (size_t i = 0; i < targs.size() && i < num_targs; ++i)
     {
         if (!targs[i]->alive())
@@ -1817,6 +1818,8 @@ static bool _cast_landbreaker(const monster& caster, bolt& beam, bool check_only
             flash_tile(targs[i]->pos(), YELLOW, 0);
     }
     animation_delay(50, true);
+
+    beam.animate = false;
 
     mgen_data rubble(MONS_PILE_OF_DEBRIS, BEH_COPY, coord_def(), MHITNOT);
     rubble.hd = 2;
