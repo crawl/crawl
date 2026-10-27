@@ -3377,6 +3377,9 @@ string spell_effect_string(spell_type spell, bool evoked, int pow)
     case SPELL_OLGREBS_TOXIC_RADIANCE:
         return make_stringf("Duration: %s turns.",
                             toxic_radiance_duration_description(pow).c_str());
+    case SPELL_MAXWELLS_COUPLING:
+        return make_stringf("Duration: %s turns.",
+                            maxwells_coupling_charge_description(pow).c_str());
     default:
         return "";
     }

@@ -4603,6 +4603,10 @@ vector<monster *> find_maxwells_possibles()
     }
     return result;
 }
+string maxwells_coupling_charge_description(int pow)
+{
+    return make_stringf("%d-%d", 3, 3 + div_round_up((200 - pow) * 4, 200));
+}
 
 spret cast_maxwells_coupling(int pow, bool fail, bool tracer)
 {
